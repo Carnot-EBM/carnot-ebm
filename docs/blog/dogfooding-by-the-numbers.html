@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carnot Dogfooding by the Numbers — Carnot Blog</title>
+  <meta name="description" content="639 experiments. 65 brace bugs caught. Zero false-positive violations. What 26 days of running Carnot's verification stack on its own development tells us about constraint-based code analysis in production.">
+  <meta property="og:title" content="Carnot Dogfooding by the Numbers: 639 Experiments, Zero False Positives">
+  <meta property="og:description" content="What 26 days of running Carnot's verification stack on its own development tells us about constraint-based code analysis in production.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://carnot-ebm.org/blog/dogfooding-by-the-numbers.html">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M30,50 Q30,20 50,20 Q70,20 70,50 Q70,80 50,80 Q30,80 30,50' fill='none' stroke='%23f97316' stroke-width='8'/><circle cx='50' cy='50' r='10' fill='%23f97316'/></svg>">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #030712;
+      --bg-glass: rgba(15, 23, 42, 0.4);
+      --bg-glass-hover: rgba(30, 41, 59, 0.6);
+      --text: rgba(255, 255, 255, 0.95);
+      --text-muted: rgba(255, 255, 255, 0.6);
+      --accent-energy: #f97316;
+      --accent-verify: #0ea5e9;
+      --accent-reason: #a855f7;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(255, 255, 255, 0.15);
+      --font-heading: 'Space Grotesk', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: var(--font-body); background: var(--bg); color: var(--text);
+      line-height: 1.7; -webkit-font-smoothing: antialiased;
+    }
+    a { color: var(--accent-verify); text-decoration: none; border-bottom: 1px dotted var(--accent-verify); }
+    a:hover { color: var(--accent-energy); border-bottom-color: var(--accent-energy); }
+
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(3, 7, 18, 0.85); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      max-width: 1280px; margin: 0 auto; padding: 1rem 2rem;
+      display: flex; align-items: center; justify-content: space-between; gap: 2rem;
+    }
+    .nav-logo {
+      font-family: var(--font-heading); font-size: 1.5rem; font-weight: 700;
+      color: var(--text); display: flex; align-items: center; gap: 0.5rem;
+      border: none;
+    }
+    .nav-logo svg { width: 28px; height: 28px; }
+    .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+    .nav-links a { color: var(--text-muted); font-size: 0.9rem; border: none; }
+    .nav-links a:hover { color: var(--text); }
+
+    article { max-width: 760px; margin: 0 auto; padding: 4rem 2rem 2rem; }
+
+    .post-meta {
+      font-family: var(--font-mono); font-size: 0.85rem;
+      color: var(--text-muted); margin-bottom: 1rem;
+      display: flex; gap: 1.5rem;
+    }
+    .post-tag {
+      font-family: var(--font-heading); font-size: 0.7rem; font-weight: 700;
+      color: var(--accent-verify); text-transform: uppercase;
+      letter-spacing: 0.05em; margin-bottom: 1rem; display: block;
+    }
+    h1 {
+      font-family: var(--font-heading); font-size: clamp(2rem, 5vw, 3.25rem);
+      font-weight: 800; line-height: 1.15; margin-bottom: 1.5rem;
+    }
+    .lede {
+      font-size: 1.2rem; color: var(--text-muted);
+      margin-bottom: 3rem; line-height: 1.6;
+    }
+    h2 {
+      font-family: var(--font-heading); font-size: 1.75rem;
+      font-weight: 700; margin: 3rem 0 1.25rem; line-height: 1.2;
+    }
+    h3 {
+      font-family: var(--font-heading); font-size: 1.25rem;
+      font-weight: 700; margin: 2.5rem 0 1rem;
+    }
+    article p { margin-bottom: 1.25rem; font-size: 1.05rem; }
+    article p code, article li code, article td code {
+      font-family: var(--font-mono); font-size: 0.92em;
+      background: var(--bg-glass); padding: 0.15em 0.4em;
+      border-radius: 4px; color: var(--accent-energy);
+      border: 1px solid var(--border);
+    }
+    article ul, article ol { margin: 0 0 1.5rem 1.5rem; }
+    article li { margin-bottom: 0.5rem; }
+
+    .stat-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem; margin: 2rem 0;
+    }
+    .stat-card {
+      background: var(--bg-glass); border: 1px solid var(--border);
+      border-radius: 12px; padding: 1.5rem;
+    }
+    .stat-num {
+      font-family: var(--font-heading); font-size: 2.5rem; font-weight: 800;
+      color: var(--accent-energy); line-height: 1; margin-bottom: 0.5rem;
+    }
+    .stat-label {
+      font-family: var(--font-mono); font-size: 0.8rem;
+      color: var(--text-muted); text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .keypoint {
+      background: linear-gradient(135deg, rgba(14, 165, 233, 0.08), rgba(168, 85, 247, 0.04));
+      border: 1px solid var(--border-hover);
+      border-radius: 12px; padding: 1.5rem 2rem; margin: 2rem 0;
+    }
+    .keypoint strong { color: var(--accent-verify); font-family: var(--font-heading); }
+
+    pre {
+      background: var(--bg-glass); border: 1px solid var(--border);
+      border-radius: 8px; padding: 1.25rem 1.5rem; margin: 1.5rem 0;
+      overflow-x: auto; font-family: var(--font-mono); font-size: 0.9rem;
+      color: #cbd5e1; line-height: 1.6;
+    }
+    pre code { background: none; border: none; padding: 0; color: inherit; }
+
+    table {
+      width: 100%; border-collapse: collapse; margin: 1.5rem 0;
+      font-size: 0.95rem;
+    }
+    th, td {
+      padding: 0.75rem 1rem; text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    th {
+      font-family: var(--font-heading); font-weight: 700;
+      color: var(--text); background: var(--bg-glass);
+    }
+
+    .further-reading {
+      background: var(--bg-glass); border: 1px solid var(--border);
+      border-radius: 12px; padding: 2rem; margin: 3rem 0 2rem;
+    }
+    .further-reading h3 { margin-top: 0; }
+
+    .back-link {
+      display: inline-block; margin-bottom: 2rem;
+      font-family: var(--font-mono); font-size: 0.9rem;
+      color: var(--text-muted); border: none;
+    }
+    .back-link:hover { color: var(--accent-energy); }
+
+    footer {
+      max-width: 1280px; margin: 4rem auto 2rem; padding: 2rem;
+      text-align: center; color: var(--text-muted); font-size: 0.85rem;
+      border-top: 1px solid var(--border);
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">
+      <svg viewBox="0 0 100 100"><path d="M30,50 Q30,20 50,20 Q70,20 70,50 Q70,80 50,80 Q30,80 30,50" fill="none" stroke="#f97316" stroke-width="8"/><circle cx="50" cy="50" r="10" fill="#f97316"/></svg>
+      Carnot
+    </a>
+    <ul class="nav-links">
+      <li><a href="/">Home</a></li>
+      <li><a href="/blog/">Blog</a></li>
+      <li><a href="https://github.com/Carnot-EBM/carnot-ebm">GitHub</a></li>
+      <li><a href="https://huggingface.co/Carnot-EBM">HuggingFace</a></li>
+    </ul>
+  </div>
+</nav>
+
+<article>
+
+<a href="/blog/" class="back-link">&larr; Back to blog</a>
+
+<span class="post-tag">Operations</span>
+
+<h1>Carnot Dogfooding by the Numbers</h1>
+
+<div class="post-meta">
+  <span>2026-04-29</span>
+  <span>~7 min read</span>
+</div>
+
+<p class="lede">
+  For 26 days, every experiment that Carnot's research conductor generates has passed through Carnot's own constraint-extraction and Z3 arithmetic verification before commit. We just looked at the numbers from that loop. Here is what 639 self-verified experiments tell us about constraint-based code analysis in production.
+</p>
+
+<h2>The numbers</h2>
+
+<div class="stat-grid">
+  <div class="stat-card">
+    <div class="stat-num">639</div>
+    <div class="stat-label">Experiments self-verified</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-num">65</div>
+    <div class="stat-label">Brace bugs auto-fixed</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-num">0</div>
+    <div class="stat-label">False-positive code violations</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-num">0</div>
+    <div class="stat-label">False-positive Z3 violations</div>
+  </div>
+</div>
+
+<p>
+  Two numbers worth noting: the <em>real bugs caught</em> (65 brace-pattern fixes) and the <em>false positives raised</em> (zero). On 639 experiments. Across 26 days.
+</p>
+
+<h2>What dogfooding means here</h2>
+
+<p>
+  Carnot is, among other things, an open-source framework for verifying LLM-generated code using constraint-based energy models &mdash; Z3 SMT for arithmetic claims, type-system checks for structural correctness, property-based fuzzing for semantic execution, and a few more layers we will write about elsewhere.
+</p>
+
+<p>
+  The unusual thing about Carnot is that it generates a lot of its own code. The project's autoresearch conductor (<code>scripts/research_conductor.py</code>) drives an LLM-based research loop: each milestone, the conductor proposes ~10-15 experiments, an agent (Sonnet by default, Opus for harder cases) writes each experiment as a Python script, the script runs, results are committed, and the cycle repeats.
+</p>
+
+<p>
+  This means the project produces a steady stream of LLM-generated Python and YAML <em>that needs to actually work</em> &mdash; not as a benchmark output, but as production code committed to <code>main</code>. Hallucinated function signatures, malformed YAML, broken arithmetic claims in docstrings: any of these breaks the next iteration of the loop.
+</p>
+
+<p>
+  So: <strong>we run Carnot's own verification stack on Carnot's own generated code, before commit.</strong> Eat your own cooking. The verification step lives at <code>scripts/research_conductor.py:_dogfood_verify_generated_code()</code> and runs after every successful experiment. The data we are about to discuss lives at <code>ops/dogfood-memory.json</code>.
+</p>
+
+<h2>What the pipeline checks</h2>
+
+<p>
+  After each generated experiment commits, the conductor runs five checks in sequence. Each is cheap (a few hundred milliseconds) and persists state to the dogfood memory:
+</p>
+
+<ol>
+  <li>
+    <strong>Brace validation on YAML prompts.</strong> The conductor uses templated YAML prompts with placeholders like <code>{project_root}</code> and <code>{date}</code>. If the LLM hallucinates a literal <code>{some_other_thing}</code> in a generated prompt, Python's <code>.format()</code> blows up at runtime. We pre-validate by attempting <code>.format(project_root="/test", date="20260101")</code>. If it raises, we auto-fix the offending braces by replacing <code>{x}</code> with <code>(x)</code>.
+  </li>
+  <li>
+    <strong>CodeExtractor static analysis</strong> on new <code>.py</code> files. Walks the AST, extracts type signatures, return-value bounds, and call-site constraints. Compares against any constraints declared in docstrings.
+  </li>
+  <li>
+    <strong>Z3ArithmeticExtractor.</strong> Parses arithmetic claims in code comments and docstrings (e.g., "<code># this should be in [0, 1]</code>"), encodes them as Z3 formulas, and proves the claim against the surrounding code. Zero false positives by construction &mdash; Z3 is a decision procedure, not a heuristic.
+  </li>
+  <li>
+    <strong>LLMConstraintExtractor.</strong> An LLM-based pass over docstrings for natural-language claims that don't reduce to Z3 arithmetic ("<code># this function is symmetric</code>"). Lower precision than Z3 (1 false positive per ~91 in our tests), but catches things Z3 can't.
+  </li>
+  <li>
+    <strong>Constraint tracker update.</strong> Persists what we found to <code>ops/dogfood-memory.json</code> so future runs build on prior knowledge.
+  </li>
+</ol>
+
+<h2>What 65 caught bugs look like</h2>
+
+<p>
+  All 65 caught bugs were in category 1: brace-pattern errors in YAML-templated prompts. The pattern that recurs:
+</p>
+
+<pre><code>tasks:
+  - id: exp1234-some-experiment
+    prompt: |
+      You are working on the Carnot framework.
+      The goal is to compute {arbitrary_thing} from {input_data}.
+      ...</code></pre>
+
+<p>
+  The LLM, when generating a new experiment task, inserted natural-language placeholders like <code>{arbitrary_thing}</code> that look reasonable in context but break <code>str.format()</code> downstream when the conductor tries to substitute <code>{project_root}</code> and <code>{date}</code>.
+</p>
+
+<p>
+  The dogfooding pipeline catches each one before it can propagate. The auto-fix is conservative: replace each non-template brace with parentheses (<code>{arbitrary_thing}</code> &rarr; <code>(arbitrary_thing)</code>), so the prompt stays human-readable but no longer crashes <code>.format()</code>.
+</p>
+
+<p>
+  Without this pipeline, every one of those 65 bugs would have shown up as a stillborn experiment in the next iteration &mdash; the conductor's <code>.format()</code> call would raise <code>KeyError</code>, the experiment would skip, and someone (us) would have to chase down the YAML manually. At one bug every ~10 experiments, that's roughly an interruption every 2-3 hours of conductor wall-clock.
+</p>
+
+<div class="keypoint">
+  <strong>The hidden cost of LLM-generated code is the long tail of low-grade bugs.</strong>
+  Each one is trivial. The aggregate is operationally crippling. Constraint-based pre-flight verification is the right tool because the failures are repetitive and rule-based, not creative.
+</div>
+
+<h2>What zero false positives means</h2>
+
+<p>
+  Across 639 experiments, the CodeExtractor, Z3ArithmeticExtractor, and LLMConstraintExtractor combined raised zero false positives that survived to a flagged commit. (We track these as <code>code_violations</code>, <code>z3_violations</code>, and <code>llm_violations</code> in the memory file. All three are at zero.)
+</p>
+
+<p>
+  This is partly by design. Z3 is a decision procedure, so its claims are formally provable; false positives there would be a bug in our encoding. The CodeExtractor checks types and bounds extracted from the code itself against assertions in the same code, so a violation is unambiguously real. The LLM extractor is the noisy one, but we tuned its threshold during early development to err toward false negatives (silent passes) rather than false positives (noisy interruptions).
+</p>
+
+<p>
+  The trade-off is that we know we miss some bugs &mdash; but we also know we don't generate operator interruptions. In a research loop where the conductor runs unattended overnight, that asymmetry is the right call.
+</p>
+
+<h2>What this isn't</h2>
+
+<p>
+  We want to be careful not to overclaim. The 639/65/0/0 numbers say nothing about Carnot's verification capability on <em>arbitrary</em> code. Specifically:
+</p>
+
+<ul>
+  <li>
+    <strong>The 639 experiments are mostly Carnot-generated, not arbitrary.</strong> They follow a template (<code>scripts/experiment_template.py</code>), have predictable structure, and exercise a narrow distribution of patterns. The dogfooding pipeline learned its checks from this distribution.
+  </li>
+  <li>
+    <strong>The Z3 arithmetic claims are usually simple.</strong> Things like <code>this counter is non-negative</code> or <code>this index is in [0, n]</code>. We have not yet verified anything as gnarly as a deep numerical proof.
+  </li>
+  <li>
+    <strong>The pipeline is not a CI guardrail.</strong> It runs after-the-fact on the conductor's own generated code, not on every PR. A separate <code>pre-commit</code> hook stack handles arbitrary-developer commits.
+  </li>
+  <li>
+    <strong>Operator-time bugs are still possible.</strong> The pipeline catches generated-code bugs. Operator-introduced bugs (this morning's verdict-reproducibility incident; an inverted AUROC implementation discovered yesterday) require different machinery.
+  </li>
+</ul>
+
+<h2>Why we are publishing this</h2>
+
+<p>
+  Foundation-model self-distillation discussions tend to focus on the largest, most visible parts: the model, the pretraining data, the alignment loop. Less visible &mdash; but operationally load-bearing &mdash; is the question of whether the system that <em>generates code as part of training</em> can verify its own output as a precondition for the next iteration.
+</p>
+
+<p>
+  Our forthcoming position paper argues that for verifier-filtered self-distillation to converge to truth, the verifier suite must satisfy three structural axioms (<em>Logically Grounded Discrete Domains</em>: discrete Boolean topology, epistemic orthogonality, absolute oracular grounding). The dogfooding pipeline is a sub-scale demonstration of the operational discipline this requires. 639 experiments verified at zero false-positive cost is what the discipline looks like in practice.
+</p>
+
+<div class="keypoint">
+  <strong>The operational rule:</strong> if your training loop generates code that the next iteration depends on, the same energy framework you apply to the model's outputs should apply to the loop's own internals. Eat your own cooking. The data above is what 26 days of doing that looks like.
+</div>
+
+<h2>What's next</h2>
+
+<p>
+  Three directions we're tracking:
+</p>
+
+<ol>
+  <li>
+    <strong>Recursive Phase 3 application.</strong> Once the multi-verifier rotation architecture lands (currently in change-proposal scope), apply it recursively to Carnot's own development loop &mdash; rotate the conductor through orthogonal verifier suites, measure $\Phi$ on Carnot's own output stream. The forthcoming position paper formalises this.
+  </li>
+  <li>
+    <strong>Reproducibility audit.</strong> Yesterday we observed a flagship verdict change between two reruns of the same experiment (different random seeds). The dogfooding pipeline doesn't currently catch verdict instability; a sibling proposal scopes that audit for the next milestone.
+  </li>
+  <li>
+    <strong>External adoption.</strong> The dogfood pipeline has been load-bearing for 26 days; we plan to package the Z3ArithmeticExtractor and CodeExtractor as a standalone library so other LLM-research projects can reuse the discipline.
+  </li>
+</ol>
+
+<div class="further-reading">
+  <h3>Further reading</h3>
+  <ul>
+    <li>The first article in this series: <a href="verifier-accuracy-paradox.html">The Verifier Accuracy Paradox</a> &mdash; on why perfectly accurate verifiers provide zero information.</li>
+    <li>Carnot codebase: <a href="https://github.com/Carnot-EBM/carnot-ebm">github.com/Carnot-EBM/carnot-ebm</a></li>
+    <li>The dogfooding pipeline: <code>scripts/research_conductor.py:_dogfood_verify_generated_code()</code></li>
+    <li>Persistent memory: <code>ops/dogfood-memory.json</code></li>
+    <li>Z3 SMT solver: <a href="https://github.com/Z3Prover/z3">github.com/Z3Prover/z3</a></li>
+  </ul>
+</div>
+
+</article>
+
+<footer>
+  Carnot is open-source under Apache 2.0.
+  <br>
+  <a href="https://github.com/Carnot-EBM/carnot-ebm">github.com/Carnot-EBM/carnot-ebm</a>
+</footer>
+
+</body>
+</html>
