@@ -921,6 +921,41 @@ def _deliverable_exists(task: dict) -> bool:
     return True
 
 
+def _artifact_is_finished(task: dict) -> bool:
+    """Return True iff the task's artifact (if any) is NOT bootstrap-only.
+
+    Used to re-validate a prior log OK: a task may have been logged "OK"
+    because the conductor's pytest self-heal passed, even though Sonnet
+    short-circuited and the artifact is still status=running. Trusting the
+    log OK in that case poisons the cache forever — see fast-path bootstrap
+    proposal.
+
+    Tasks without a deliverable field (planning steps, retros, doc-only
+    work) trivially return True so that the log OK alone is trusted.
+    """
+    deliverable = task.get("deliverable")
+    if not deliverable:
+        return True
+    path = PROJECT_ROOT / deliverable
+    if not path.exists():
+        return True  # no artifact yet to poison the OK; trust the log
+    try:
+        with path.open("r", encoding="utf-8") as fh:
+            payload = json.load(fh)
+    except (OSError, json.JSONDecodeError):
+        return True  # legacy / non-JSON: preserve old behavior
+    status = payload.get("status") if isinstance(payload, dict) else None
+    if isinstance(status, str) and status.lower() in _BOOTSTRAP_STATUSES:
+        logger.warning(
+            "Prior log OK for task %r is poisoned: artifact %s status=%r; scheduling re-run.",
+            task.get("title", task.get("id", "?"))[:50],
+            deliverable,
+            status,
+        )
+        return False
+    return True
+
+
 # ---------------------------------------------------------------------------
 # Exclusion manifest — RETRO-067 wire-in (2026-04-20)
 # ---------------------------------------------------------------------------
@@ -1036,8 +1071,15 @@ def pick_next_task(completed_log: str) -> dict | None:
         # which caused an infinite retry loop in milestone 2026.04.33.
         title_prefix = task["title"][:50].strip()
 
-        # Signal 1: log says OK
-        if title_prefix in completed_titles:
+        # Signal 1: log says OK — but re-validate against artifact status. A
+        # prior OK can be poisoned by Sonnet's "CRITICAL: write artifact FIRST"
+        # bootstrap pattern: the conductor's pytest self-heal passed (logged
+        # OK) but Sonnet hit max-turns before updating the artifact's status
+        # field from "running" → "success". Without this guard, the task is
+        # forever marked done while downstream gates read the bootstrap
+        # `false` fields and GATE_BLOCK indefinitely. See
+        # openspec/change-proposals/conductor-fastpath-bootstrap-skip.md.
+        if title_prefix in completed_titles and _artifact_is_finished(task):
             continue
 
         # Signal 2: deliverable already exists (built but not logged)
