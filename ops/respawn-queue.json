@@ -1,7 +1,25 @@
 {
-  "schema": "carnot.respawn_queue.v1",
-  "description": "Tasks retired due to environmental causes (NOT merit-based failures). The .82+ planner reads this queue and emits respawn tasks with auto-populated prior_failures blocks. See openspec/change-proposals/no-permanent-retirement-on-environmental-failures.md for the policy.",
+  "schema": "carnot.respawn_queue.v2",
+  "description": "Tasks retired due to environmental causes (NOT merit-based). The .82+ planner reads this queue and emits respawn tasks with auto-populated prior_failures blocks AND explicit variance per attempt. See openspec/change-proposals/no-permanent-retirement-on-environmental-failures.md for the policy. Per the operator directive (2026-04-29 evening), each respawn applies *deliberate variance* to address a different hypothetical failure cause — pure retry without variance is forbidden.",
   "last_updated": "2026-04-29",
+  "variance_ladder": {
+    "_doc": "Each respawn attempt applies one or more variance dimensions. Order matters: cheaper/smaller variances tried first.",
+    "attempt_1": {
+      "name": "tier_escalation",
+      "description": "Move up the model + max_turns ladder. If Sonnet+30 failed, try Opus+100. If Opus+100 failed, the variance ladder advances to attempt_2 (backend rotation).",
+      "variance_dimensions": ["model", "max_turns"]
+    },
+    "attempt_2": {
+      "name": "backend_rotation",
+      "description": "Switch agent backend (claude → codex / gemini). Different training distribution → different failure modes. Especially relevant for code-heavy tasks where Codex's training corpus may avoid Claude-specific stalls.",
+      "variance_dimensions": ["agent_type", "model"]
+    },
+    "attempt_3": {
+      "name": "decomposition",
+      "description": "Operator-driven: split the experiment into N smaller sub-experiments, each with smaller scope. Surfaced via planner prompt asking for decomposition. Permanent retirement only fires if even the decomposed sub-experiments fail with merit verdicts.",
+      "variance_dimensions": ["scope_decomposition"]
+    }
+  },
   "queue": [
     {
       "original_id": "exp1039-conductor-fastpath-gate-coercion",
@@ -19,8 +37,24 @@
       ],
       "respawn_attempt": 1,
       "max_respawn_attempts": 3,
-      "model": "opus",
-      "max_turns": 100,
+      "variance_strategy": "tier_escalation",
+      "variance_applied": {
+        "from_original": {
+          "model": "opus",
+          "max_turns": 100,
+          "agent_type": "claude"
+        },
+        "to_respawn_1": {
+          "model": "opus",
+          "max_turns": 100,
+          "agent_type": "claude",
+          "rationale": "Original was already opus+100 — the failure was environmental (test wedge + timeout bug), now fixed in 7a13304d + b2c73a08. Same model/turns is the *minimum* variance for attempt 1. If respawn-1 fails too, attempt 2 escalates to codex (different code-generation distribution + different training corpus may avoid the same stall pattern)."
+        }
+      },
+      "next_attempt_variance_plan": {
+        "if_respawn_1_fails": "attempt_2: agent_type=codex, model=gpt-5.5, max_turns=100 (backend rotation — Codex may handle the multi-step infrastructure work differently)",
+        "if_respawn_2_fails": "attempt_3: decomposition — split into 3 sub-experiments: (a) bootstrap-skip patch only, (b) gate-coercion logic only, (c) integration test only"
+      },
       "depends_on_respawn": []
     },
     {
@@ -39,8 +73,24 @@
       ],
       "respawn_attempt": 1,
       "max_respawn_attempts": 3,
-      "model": "opus",
-      "max_turns": 100,
+      "variance_strategy": "tier_escalation",
+      "variance_applied": {
+        "from_original": {
+          "model": "opus",
+          "max_turns": 25,
+          "agent_type": "claude"
+        },
+        "to_respawn_1": {
+          "model": "opus",
+          "max_turns": 100,
+          "agent_type": "claude",
+          "rationale": "Original max_turns=25 was the explicit failure mode (max_turns_FAIL was the first retirement verdict). Attempt 1 quadruples the budget to 100. If still fails at 100 turns, attempt 2 rotates to a more code-corpus-heavy backend (Codex) for the pip-install boilerplate."
+        }
+      },
+      "next_attempt_variance_plan": {
+        "if_respawn_1_fails": "attempt_2: agent_type=codex, model=gpt-5.5, max_turns=100 (Codex's training corpus has more pip-install + ROCm setup patterns)",
+        "if_respawn_2_fails": "attempt_3: decomposition — split into (a) torch+ROCm pip install verification, (b) DualGPU detection, (c) live inference smoke test"
+      },
       "depends_on_respawn": []
     },
     {
@@ -60,12 +110,28 @@
       ],
       "respawn_attempt": 1,
       "max_respawn_attempts": 3,
-      "model": "sonnet",
-      "max_turns": 50,
+      "variance_strategy": "tier_escalation_with_dependency_resolution",
+      "variance_applied": {
+        "from_original": {
+          "model": "sonnet",
+          "max_turns": 50,
+          "agent_type": "claude",
+          "gate_dependency": "exp1039.gate_coercion_fixed = true (BLOCKED)"
+        },
+        "to_respawn_1": {
+          "model": "sonnet",
+          "max_turns": 50,
+          "agent_type": "claude",
+          "rationale": "Original failure was 100% gate-dependency (the experiment never actually ran — it gate-blocked before launch). Attempt 1 sequences this AFTER exp1039 respawn produces the gate field. No model variance needed for attempt 1; the variance is the dependency resolution itself."
+        }
+      },
+      "next_attempt_variance_plan": {
+        "if_respawn_1_fails": "attempt_2: model=opus, max_turns=100 + remove the gate (run unguarded with explicit pre-check) — eliminates the gate-block failure mode entirely while preserving the experiment's actual scope",
+        "if_respawn_2_fails": "attempt_3: decomposition — split into per-tier integration tests (ThinkPRM-only, SpilledEnergy-only, SC-Energy-only, Ising-only)"
+      },
       "depends_on_respawn": [
         "exp1039-conductor-fastpath-gate-coercion"
-      ],
-      "notes": "Must respawn AFTER exp1039 respawn produces the gate_coercion_fixed=true artifact. Planner should order this after exp1039's respawn in the .82 task sequence."
+      ]
     }
   ]
 }

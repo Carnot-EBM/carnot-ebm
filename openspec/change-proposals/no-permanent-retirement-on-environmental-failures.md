@@ -52,6 +52,70 @@ All three are now retried-environmental-fix-in-place but absent any
 auto-respawn mechanism, the .82 planner will skip them on the
 principle of "they were retired, leave them alone."
 
+## The variance discipline (CRITICAL)
+
+**Per the operator directive (2026-04-29 evening):** *"The definition
+of insanity is repeating the same thing and expecting a different
+outcome. Each of the subsequent retries must have some variance
+applied to attempt to work around whatever might have caused the
+previous failed attempts."*
+
+**Pure retry without variance is forbidden.** Each respawn attempt
+must apply *deliberate variance* to address a different hypothetical
+failure cause. The variance ladder progresses from cheap/small
+variances to expensive/large ones, and stops at decomposition rather
+than infinite retries.
+
+### Variance ladder (mandatory ordering)
+
+**Attempt 1 (tier escalation):** move up the model + max_turns
+ladder. Variance dimensions: `model` (sonnet → opus), `max_turns`
+(25/30/50 → 100). Rationale: many environmental failures are
+capacity-bound, not logic-bound; a stronger model with more turns
+often clears them.
+
+**Attempt 2 (backend rotation):** switch agent backend
+(claude → codex / gemini). Different training distributions →
+different failure modes. Especially relevant for code-heavy tasks
+where Codex's broader code corpus may avoid Claude-specific stall
+patterns. Variance dimensions: `agent_type`, `model` (vendor-specific
+identifier).
+
+**Attempt 3 (decomposition):** operator-driven split into N smaller
+sub-experiments, each with smaller scope. Permanent retirement only
+fires if even the decomposed sub-experiments fail with *merit*
+verdicts (not environmental). Variance dimension: `scope_decomposition`.
+
+### Dependency-resolution variance (special case)
+
+When the failure mode is GATE_BLOCK on a retired upstream, the
+*variance* for attempt 1 may be the dependency resolution itself
+(running the upstream respawn first), not a model/turns change. If
+the upstream respawn produces the gated field, the downstream
+respawn becomes a normal task at its original scope.
+
+If the upstream respawn also fails, the downstream's attempt 2
+variance is "remove the gate, run unguarded with explicit pre-check"
+— eliminates the gate-block failure mode entirely while preserving
+the experiment's actual scope.
+
+### Variance is mandatory in the queue schema
+
+Each queue entry MUST include:
+
+- `variance_strategy`: one of `tier_escalation`, `backend_rotation`,
+  `decomposition`, `tier_escalation_with_dependency_resolution`.
+- `variance_applied`: explicit dict comparing `from_original` vs.
+  `to_respawn_N` parameters with a `rationale` field explaining
+  *why* this variance addresses the failure mode.
+- `next_attempt_variance_plan`: the planned variance for the *next*
+  respawn if this one fails. Pre-committing the next variance keeps
+  the planner honest — no panic-retry-with-same-config when an
+  attempt fails.
+
+The schema validator (Mechanism A test coverage) refuses to load a
+respawn entry without these fields populated.
+
 ## Solution: respawn queue + auto-respawn discipline
 
 ### Mechanism A: respawn queue (file-backed)
