@@ -1121,7 +1121,17 @@ def pick_next_task(completed_log: str) -> dict | None:
         if status == "OK":
             completed_titles.add(title)
             fail_counts[title] = 0  # Reset on success
-        elif status in ("FAIL", "REVERT", "SKIP", "NOOP"):
+        elif status in ("FAIL", "REVERT", "SKIP", "NOOP", "GATE_BLOCK"):
+            # GATE_BLOCK added 2026-04-29: when an upstream task retires
+            # (hits MAX_FAILURES) without producing the artifact a downstream
+            # gate references, the downstream task gate-blocks indefinitely
+            # on every iteration — pick_next_task keeps picking it because
+            # GATE_BLOCK was previously not counted as a failure. Observed
+            # in .81: exp1039 retired (3 SKIP/FAIL), exp1044 then
+            # GATE_BLOCKed on exp1039.gate_coercion_fixed every iteration
+            # for ~30 min, blocking exp1045+ from being picked. Counting
+            # GATE_BLOCK as a failure mode lets MAX_FAILURES retire the
+            # task after 3 consecutive gate-blocks, unblocking the cascade.
             fail_counts[title] = fail_counts.get(title, 0) + 1
 
     # Ensure tasks are loaded from YAML
