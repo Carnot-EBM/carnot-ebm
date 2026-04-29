@@ -93,3 +93,62 @@ def test_malformed_json_falls_back_to_skip(tmp_path, monkeypatch):
     deliverable.parent.mkdir(parents=True)
     deliverable.write_text("{not valid json")
     assert research_conductor._deliverable_exists(_make_task("results/exp.json")) is True
+
+
+# ---------------------------------------------------------------------------
+# _artifact_is_finished — Signal 1 re-validation guard
+# ---------------------------------------------------------------------------
+#
+# A prior log "OK" can be poisoned: the conductor's pytest self-heal passed
+# (logged OK) but Sonnet hit max-turns before updating the artifact's status
+# from "running" to "success". The fix is for `pick_next_task` to consult
+# `_artifact_is_finished` after Signal 1 to detect the poisoned-OK case.
+
+
+def test_artifact_finished_no_deliverable():
+    """Tasks without a deliverable trivially trust the log OK."""
+    assert research_conductor._artifact_is_finished({"id": "plan"}) is True
+
+
+def test_artifact_finished_missing_file(tmp_path, monkeypatch):
+    """Tasks with a deliverable path that doesn't exist yet trust the log OK
+    (the OK may be a planning step that doesn't write the artifact yet)."""
+    monkeypatch.setattr(research_conductor, "PROJECT_ROOT", tmp_path)
+    assert research_conductor._artifact_is_finished(_make_task("results/x.json")) is True
+
+
+def test_artifact_finished_running_status_poisoned(tmp_path, monkeypatch):
+    """The poisoned-OK case: artifact has status=running. Must invalidate."""
+    monkeypatch.setattr(research_conductor, "PROJECT_ROOT", tmp_path)
+    deliverable = tmp_path / "results" / "exp.json"
+    deliverable.parent.mkdir(parents=True)
+    deliverable.write_text(json.dumps({"status": "running"}))
+    assert research_conductor._artifact_is_finished(_make_task("results/exp.json")) is False
+
+
+@pytest.mark.parametrize("status", ["blocked", "partial", "in_progress"])
+def test_artifact_finished_other_bootstrap_statuses_poisoned(tmp_path, monkeypatch, status):
+    """All bootstrap statuses invalidate a prior log OK."""
+    monkeypatch.setattr(research_conductor, "PROJECT_ROOT", tmp_path)
+    deliverable = tmp_path / "results" / "exp.json"
+    deliverable.parent.mkdir(parents=True)
+    deliverable.write_text(json.dumps({"status": status}))
+    assert research_conductor._artifact_is_finished(_make_task("results/exp.json")) is False
+
+
+def test_artifact_finished_success_status_trusts_ok(tmp_path, monkeypatch):
+    """status=success means the OK is real."""
+    monkeypatch.setattr(research_conductor, "PROJECT_ROOT", tmp_path)
+    deliverable = tmp_path / "results" / "exp.json"
+    deliverable.parent.mkdir(parents=True)
+    deliverable.write_text(json.dumps({"status": "success", "result": 42}))
+    assert research_conductor._artifact_is_finished(_make_task("results/exp.json")) is True
+
+
+def test_artifact_finished_no_status_trusts_ok(tmp_path, monkeypatch):
+    """Legacy artifacts (no status field) trust the log OK."""
+    monkeypatch.setattr(research_conductor, "PROJECT_ROOT", tmp_path)
+    deliverable = tmp_path / "results" / "exp.json"
+    deliverable.parent.mkdir(parents=True)
+    deliverable.write_text(json.dumps({"data": "old"}))
+    assert research_conductor._artifact_is_finished(_make_task("results/exp.json")) is True
