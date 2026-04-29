@@ -100,15 +100,17 @@ except (ImportError, AttributeError):
     _watchdog = None
 
 # ---------------------------------------------------------------------------
-# Step 3: ExperimentTemplate scaffolding
+# Step 3: ExperimentTemplate scaffolding (deferred to main())
+#
+# Creating the template AND calling tmpl.setup() at module scope is a bug:
+# it acquires the REQ-INFRA-072 single-run flock on import. Test modules
+# that import helpers from this script (test_experiment_561_tier1_relay_real)
+# would inherit that import-time setup, and if another conductor instance
+# of exp561 is running, the test's pytest worker hits sys.exit(0) inside
+# acquire(), which cascades to xdist KeyError: <WorkerController>. Move
+# the lifecycle calls to main() so that import-only consumers (tests) do
+# not trigger the lock or any other setup-side-effect.
 # ---------------------------------------------------------------------------
-tmpl = ExperimentTemplate(
-    exp_id=561,
-    title="Tier 1 Self-Learning Relay Real Data",
-    deliverable="results/experiment_561_tier1_relay_real.json",
-    requires_gpu=False,
-)
-tmpl.setup()
 
 # ---------------------------------------------------------------------------
 # Constants
@@ -345,6 +347,20 @@ def run_session(
 
 
 def main() -> None:
+    # ------------------------------------------------------------------
+    # Step 3 (deferred from module top-level): create + setup the
+    # ExperimentTemplate. setup() acquires the single-run flock — must
+    # not run on bare import (would crash test workers). See module-top
+    # comment.
+    # ------------------------------------------------------------------
+    tmpl = ExperimentTemplate(
+        exp_id=561,
+        title="Tier 1 Self-Learning Relay Real Data",
+        deliverable="results/experiment_561_tier1_relay_real.json",
+        requires_gpu=False,
+    )
+    tmpl.setup()
+
     # ------------------------------------------------------------------
     # Step 4: Load Exp 554 FP patterns — gate if not available.
     # ------------------------------------------------------------------
