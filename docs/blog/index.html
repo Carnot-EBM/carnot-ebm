@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog — Carnot</title>
+  <meta name="description" content="Notes from the Carnot project on energy-based verification, self-distillation theory, and hardware-accelerated EBMs.">
+  <meta property="og:title" content="Blog — Carnot">
+  <meta property="og:description" content="Notes from the Carnot project on energy-based verification, self-distillation theory, and hardware-accelerated EBMs.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://carnot-ebm.org/blog/">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M30,50 Q30,20 50,20 Q70,20 70,50 Q70,80 50,80 Q30,80 30,50' fill='none' stroke='%23f97316' stroke-width='8'/><circle cx='50' cy='50' r='10' fill='%23f97316'/></svg>">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #030712;
+      --bg-glass: rgba(15, 23, 42, 0.4);
+      --bg-glass-hover: rgba(30, 41, 59, 0.6);
+      --text: rgba(255, 255, 255, 0.95);
+      --text-muted: rgba(255, 255, 255, 0.6);
+      --accent-energy: #f97316;
+      --accent-verify: #0ea5e9;
+      --accent-reason: #a855f7;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(255, 255, 255, 0.15);
+      --font-heading: 'Space Grotesk', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: var(--font-body); background: var(--bg); color: var(--text);
+      line-height: 1.6; -webkit-font-smoothing: antialiased;
+    }
+    a { color: var(--accent-verify); text-decoration: none; }
+    a:hover { color: var(--accent-energy); }
+
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(3, 7, 18, 0.85); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      max-width: 1280px; margin: 0 auto; padding: 1rem 2rem;
+      display: flex; align-items: center; justify-content: space-between; gap: 2rem;
+    }
+    .nav-logo {
+      font-family: var(--font-heading); font-size: 1.5rem; font-weight: 700;
+      color: var(--text); display: flex; align-items: center; gap: 0.5rem;
+    }
+    .nav-logo svg { width: 28px; height: 28px; }
+    .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+    .nav-links a { color: var(--text-muted); font-size: 0.9rem; }
+    .nav-links a:hover { color: var(--text); }
+
+    main {
+      max-width: 800px; margin: 0 auto; padding: 4rem 2rem;
+    }
+    h1 {
+      font-family: var(--font-heading); font-size: clamp(2.5rem, 6vw, 4rem);
+      font-weight: 800; line-height: 1.1; margin-bottom: 1rem;
+    }
+    .subtitle {
+      color: var(--text-muted); font-size: 1.1rem; margin-bottom: 4rem;
+    }
+    .post-list { list-style: none; }
+    .post-card {
+      display: block; padding: 2rem; margin-bottom: 1.5rem;
+      background: var(--bg-glass); border: 1px solid var(--border);
+      border-radius: 16px; transition: all 0.2s;
+      text-decoration: none; color: inherit;
+    }
+    .post-card:hover {
+      background: var(--bg-glass-hover); border-color: var(--border-hover);
+      transform: translateY(-2px);
+    }
+    .post-tag {
+      font-family: var(--font-heading); font-size: 0.7rem; font-weight: 700;
+      color: var(--accent-energy); text-transform: uppercase;
+      letter-spacing: 0.05em; margin-bottom: 0.75rem; display: block;
+    }
+    .post-title {
+      font-family: var(--font-heading); font-size: 1.5rem;
+      font-weight: 700; margin-bottom: 0.75rem; color: var(--text);
+    }
+    .post-excerpt { color: var(--text-muted); margin-bottom: 1rem; }
+    .post-meta {
+      font-size: 0.85rem; color: var(--text-muted);
+      font-family: var(--font-mono); display: flex; gap: 1rem;
+    }
+
+    footer {
+      max-width: 1280px; margin: 4rem auto 2rem; padding: 2rem;
+      text-align: center; color: var(--text-muted); font-size: 0.85rem;
+      border-top: 1px solid var(--border);
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">
+      <svg viewBox="0 0 100 100"><path d="M30,50 Q30,20 50,20 Q70,20 70,50 Q70,80 50,80 Q30,80 30,50" fill="none" stroke="#f97316" stroke-width="8"/><circle cx="50" cy="50" r="10" fill="#f97316"/></svg>
+      Carnot
+    </a>
+    <ul class="nav-links">
+      <li><a href="/">Home</a></li>
+      <li><a href="/blog/">Blog</a></li>
+      <li><a href="https://github.com/Carnot-EBM/carnot-ebm">GitHub</a></li>
+      <li><a href="https://huggingface.co/Carnot-EBM">HuggingFace</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main>
+  <h1>Blog</h1>
+  <p class="subtitle">Notes from the Carnot project on energy-based verification, self-distillation theory, and hardware-accelerated EBMs.</p>
+
+  <ul class="post-list">
+
+    <li>
+      <a href="verifier-accuracy-paradox.html" class="post-card">
+        <span class="post-tag">Theory</span>
+        <h2 class="post-title">The Verifier Accuracy Paradox: Why Your Perfect Verifier Provides Zero Information</h2>
+        <p class="post-excerpt">
+          A counterintuitive result from our analysis of verifier-filtered self-distillation: the better your verifier, the less information it gives you. Perfect accuracy means zero discriminatory signal. To sculpt a model toward truth, your verifier must make mistakes.
+        </p>
+        <div class="post-meta">
+          <span>2026-04-29</span>
+          <span>~10 min read</span>
+        </div>
+      </a>
+    </li>
+
+  </ul>
+</main>
+
+<footer>
+  Carnot is open-source under Apache 2.0.
+  <br>
+  <a href="https://github.com/Carnot-EBM/carnot-ebm">github.com/Carnot-EBM/carnot-ebm</a>
+</footer>
+
+</body>
+</html>
