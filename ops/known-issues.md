@@ -4,6 +4,32 @@
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.81 planner — hard pickup per CLAUDE.md)
 
+### NEW 2026-04-29: conductor-fastpath-bootstrap-skip (HIGH PRIORITY — milestone .80 wedged)
+
+**`openspec/change-proposals/conductor-fastpath-bootstrap-skip.md`**
+(1 exp, patch + tests + proposal already drafted 2026-04-29) — closes
+the structural root cause of the 2026-04-29 milestone .80 wedge.
+
+`_deliverable_exists()` was treating bootstrap-only artifacts
+(`status: "running"`, written by Sonnet's "CRITICAL: write artifact
+FIRST" defensive pattern *before* the real work) as completed
+deliverables. exp1028 wrote a bootstrap stub, hit max-turns or
+short-circuited, never updated to `pre_test_fixed: true`, and the
+fast-path skipped every retry. exp1030 GATE_BLOCKed on the false
+field forever; milestone wedged.
+
+**Already implemented**: `scripts/research_conductor.py`
+status-aware fast-path + `tests/python/test_conductor_deliverable_status.py`
+(12 tests passing). The .81 task is to merge, replay the .80 wedge
+(rm exp1028 artifact, restart conductor, confirm re-run), and
+retire exp1030's GATE_BLOCK history.
+
+This is the **third** consecutive milestone with a wedge requiring
+operator-attention-reduction infra (after `conductor-supervisor.md`
+and `roadmap-schema-validation.md`). Hard-pickup for .81.
+
+Estimated: 1 hour for .81 close-out (already implemented).
+
 ### NEW 2026-04-29: verdict-reproducibility-audit (high priority)
 
 **`openspec/change-proposals/verdict-reproducibility-audit.md`**
