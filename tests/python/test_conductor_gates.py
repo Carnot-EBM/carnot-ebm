@@ -25,6 +25,8 @@ sys.path.insert(0, str(SCRIPTS_DIR))
 from conductor_gates import (  # noqa: E402
     GateCheckResult,
     GateResult,
+    _coerce_gate_value,
+    _eval_op,
     evaluate_gates,
     select_max_turns,
     write_blocked_artifact,
@@ -312,8 +314,11 @@ def test_write_blocked_artifact_returns_none_for_unparseable_id(tmp_path):
 
 
 def test_select_max_turns_default_when_absent():
-    """Default 50 mirrors the historical hard-coded value."""
-    assert select_max_turns({}) == 50
+    """Default raised 50→100 on 2026-04-28 after .80 cascade evidence:
+    Exps 1028 / 1029 both hit the 50-turn cap on tasks that were
+    genuinely making progress. 100 is the upper bound enforced by
+    select_max_turns. See scripts/conductor_gates.py docstring."""
+    assert select_max_turns({}) == 100
 
 
 def test_select_max_turns_picks_yaml_value():
@@ -322,20 +327,20 @@ def test_select_max_turns_picks_yaml_value():
 
 
 def test_select_max_turns_clamps_negative():
-    """Negative or zero → fall back to default rather than letting the agent fail."""
-    assert select_max_turns({"max_turns": 0}) == 50
-    assert select_max_turns({"max_turns": -10}) == 50
+    """Negative or zero → fall back to default (100) rather than letting the agent fail."""
+    assert select_max_turns({"max_turns": 0}) == 100
+    assert select_max_turns({"max_turns": -10}) == 100
 
 
 def test_select_max_turns_clamps_excessive():
-    """Values above 100 fall back — bounds protect against runaway costs."""
-    assert select_max_turns({"max_turns": 500}) == 50
+    """Values above 100 fall back to default — bounds protect against runaway costs."""
+    assert select_max_turns({"max_turns": 500}) == 100
 
 
 def test_select_max_turns_rejects_non_int():
     """A string or float in YAML is rejected rather than coerced silently."""
-    assert select_max_turns({"max_turns": "twenty"}) == 50
-    assert select_max_turns({"max_turns": 20.5}) == 50
+    assert select_max_turns({"max_turns": "twenty"}) == 100
+    assert select_max_turns({"max_turns": 20.5}) == 100
 
 
 def test_select_max_turns_custom_default():
@@ -403,3 +408,94 @@ def test_real_shape_82x_cascade(tmp_path):
     assert result.gates_evaluated[0].passed is True
     assert result.gates_evaluated[1].passed is False
     assert "delta_overall" in result.gates_evaluated[1].artifact_field
+
+
+# ---------------------------------------------------------------------------
+# _coerce_gate_value + bool-aware == / != — the .80 wedge fix.
+# Regression guard: exp1030 GATE_BLOCKed three times in milestone .80
+# because the YAML expected `True` (Python bool) while the upstream artifact
+# at one point carried the string "True" (or vice versa). These tests pin
+# the bool-coercion behavior so the wedge cannot recur silently.
+# ---------------------------------------------------------------------------
+
+
+def test_coerce_gate_value_passes_bools_unchanged():
+    assert _coerce_gate_value(True) is True
+    assert _coerce_gate_value(False) is False
+
+
+def test_coerce_gate_value_truthy_strings_become_true():
+    for s in ("True", "true", "TRUE", "1", "yes", "y", "on"):
+        assert _coerce_gate_value(s) is True, f"failed for {s!r}"
+
+
+def test_coerce_gate_value_falsy_strings_become_false():
+    for s in ("False", "false", "FALSE", "0", "no", "n", "off"):
+        assert _coerce_gate_value(s) is False, f"failed for {s!r}"
+
+
+def test_coerce_gate_value_non_bool_strings_passthrough():
+    # Verdict strings, hex ids, free-form text must NOT be silently coerced.
+    for s in ("preflight_complete", "no_improvement", "exp_823", "running"):
+        assert _coerce_gate_value(s) == s
+
+
+def test_coerce_gate_value_numbers():
+    assert _coerce_gate_value(0) is False
+    assert _coerce_gate_value(1) is True
+    assert _coerce_gate_value(0.0) is False
+    assert _coerce_gate_value(0.7) is True
+
+
+def test_eval_op_eq_string_true_against_bool_true_passes():
+    """The .80 wedge: actual='True' (string) vs expected=True (bool)."""
+    passed, _ = _eval_op("True", "==", True)
+    assert passed is True
+
+
+def test_eval_op_eq_bool_true_against_string_true_passes():
+    """Symmetric direction: actual=True vs expected='True'."""
+    passed, _ = _eval_op(True, "==", "True")
+    assert passed is True
+
+
+def test_eval_op_eq_string_false_against_bool_false_passes():
+    passed, _ = _eval_op("False", "==", False)
+    assert passed is True
+
+
+def test_eval_op_eq_string_one_against_bool_true_passes():
+    passed, _ = _eval_op("1", "==", True)
+    assert passed is True
+
+
+def test_eval_op_neq_handles_bool_coercion():
+    """!= must also coerce so the symmetric case stays consistent."""
+    passed, _ = _eval_op("True", "!=", True)
+    assert passed is False  # string True does NOT differ from bool True
+
+
+def test_eval_op_eq_strings_unaffected():
+    """No-bool-on-either-side: behavior is unchanged for string equality."""
+    passed, _ = _eval_op("preflight_complete", "==", "preflight_complete")
+    assert passed is True
+    passed, _ = _eval_op("running", "==", "success")
+    assert passed is False
+
+
+def test_evaluate_gates_string_true_against_bool_true_passes(tmp_path):
+    """End-to-end: gate succeeds even when artifact stores 'True' as string."""
+    _seed_artifact(tmp_path, 1028, "preflight_v30", {"pre_test_fixed": "True"})
+    task = {
+        "id": "exp1030-triple-integration",
+        "gated_on": [
+            {
+                "upstream": "exp1028-preflight-v30",
+                "artifact_field": "pre_test_fixed",
+                "op": "==",
+                "value": True,
+            }
+        ],
+    }
+    result = evaluate_gates(task, results_dir=tmp_path)
+    assert result.passed is True, result.summary
