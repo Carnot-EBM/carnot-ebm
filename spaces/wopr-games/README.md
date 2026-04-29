@@ -1,3 +1,17 @@
+---
+title: WOPR Games
+emoji: "\U0001F4BE"
+colorFrom: green
+colorTo: gray
+sdk: gradio
+sdk_version: "4.44.1"
+app_file: app.py
+pinned: false
+license: apache-2.0
+short_description: "Carnot energy-based reasoning demos in a WarGames CRT terminal"
+hardware: cpu-basic
+---
+
 # WOPR Games — Carnot Energy-Based Reasoning Demos
 
 > *"GREETINGS PROFESSOR FALKEN."*
