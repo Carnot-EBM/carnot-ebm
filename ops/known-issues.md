@@ -4,6 +4,33 @@
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.81 planner — hard pickup per CLAUDE.md)
 
+### NEW 2026-04-29: differential-agent-routing (MEDIUM PRIORITY — pre-emptive Opus for complex tasks)
+
+**`openspec/change-proposals/differential-agent-routing.md`**
+(schema + tests + docs already shipped 2026-04-29) — planner discipline
+to set `model: opus` on tasks in four complex categories:
+1. Hardware integration (FPGA, ROCm, KV260, DualGPU)
+2. Schema / preflight infrastructure
+3. Multi-step coordination experiments
+4. Bootstrap-and-bail risk (`CRITICAL: write artifact FIRST` prompts)
+
+Across milestone .80, 11 Opus escalations occurred reactively across
+13 tasks. Pre-classification of the ~3 hardware/infra tasks would have
+saved ~30 min wall-clock and prevented the bootstrap-and-bail wedge
+that required 5 patches and 3 hours to close.
+
+The schema validator (`scripts/roadmap_schema.py`) now formally
+recognizes `model: Literal["sonnet", "opus"] | None = None` and
+`escalate_on_max_turns: bool = True`. The planner prompt at
+`_plan_next_milestone()` documents the four heuristic categories.
+
+**Acceptance for .81 mandatory pickup:** the .81 planner output must
+include `model: opus` on at least the KV260 work, any ROCm/DualGPU
+tasks, and any preflight/schema/manifest tasks. The conductor reads
+the field; no further code changes needed.
+
+Estimated: 0 hours (no code; planner discipline only).
+
 ### NEW 2026-04-29: conductor-fastpath-bootstrap-skip (HIGH PRIORITY — milestone .80 wedged)
 
 **`openspec/change-proposals/conductor-fastpath-bootstrap-skip.md`**
