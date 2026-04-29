@@ -2916,7 +2916,7 @@ def research_step(
                 logger.info("Documentation reconciliation committed (in-process)")
             else:
                 logger.info("No doc changes from in-process reconciler")
-            log_step(task["title"], "OK", test_summary)
+            _log_experiment_completion(task, test_summary)
             return True
         except Exception:
             logger.exception("In-process doc reconciliation failed; falling back to Haiku")
@@ -2929,12 +2929,37 @@ def research_step(
         # *before* any git operation, so the iteration-start "preserve
         # uncommitted work" sweep can't grab the in-flight recon's diff.
         _submit_async_recon(lambda t=task, p=push, ts=timestamp: _run_haiku_doc_reconcile(t, p, ts))
-        log_step(task["title"], "OK", test_summary)
+        _log_experiment_completion(task, test_summary)
         return True
 
     _run_haiku_doc_reconcile(task, push, timestamp)
-    log_step(task["title"], "OK", test_summary)
+    _log_experiment_completion(task, test_summary)
     return True
+
+
+def _log_experiment_completion(task: dict, test_summary: str) -> None:
+    """Log a research step's completion, downgrading OK -> FAIL when the
+    artifact is bootstrap-only (Sonnet bailed without updating it).
+
+    Without this guard, the conductor counts a Sonnet bootstrap-and-bail run
+    as OK based purely on pytest passing -- the .80 milestone wedge symptom
+    observed 2026-04-29: exp1028 bootstrapped status='running', Sonnet exited
+    cleanly, pytest passed, conductor logged OK. The artifact never reached
+    pre_test_fixed=true and exp1030 GATE_BLOCKed forever on the false field.
+
+    The downgrade lets MAX_FAILURES_PER_TASK kick in after 3 attempts so the
+    burn loop terminates and the operator gets a visible signal in the log
+    rather than a silent infinite OK cycle.
+    """
+    if not _artifact_is_finished(task):
+        deliverable = task.get("deliverable", "<no deliverable>")
+        log_step(
+            task["title"],
+            "FAIL",
+            f"artifact_not_updated_past_bootstrap (deliverable={deliverable}); pytest: {test_summary}",
+        )
+        return
+    log_step(task["title"], "OK", test_summary)
 
 
 def _run_haiku_doc_reconcile(task: dict, push: bool, timestamp: datetime) -> None:
