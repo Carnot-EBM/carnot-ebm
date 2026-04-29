@@ -100,8 +100,47 @@ class ResearchTask(BaseModel):
     # See:
     #   - scripts/research_conductor.py:2659 (task_model = task.get("model"))
     #   - openspec/change-proposals/differential-agent-routing.md
-    model: Literal["sonnet", "opus"] | None = None
+    #
+    # NOTE: when agent_type is "codex" or "gemini", `model` is interpreted as
+    # the model identifier within that agent's namespace (e.g. "gpt-5.5",
+    # "gemini-3.1-pro-preview"). The Literal here intentionally includes only
+    # Claude-specific identifiers; for other agent types, model_must_match_agent_type
+    # validator below relaxes to accept any str (since we can't enumerate every
+    # vendor's catalogue).
+    model: Literal["sonnet", "opus"] | str | None = None  # type: ignore[valid-type]
     escalate_on_max_turns: bool = True
+
+    # Multi-agent routing (2026-04-29 evening). Per-task agent backend
+    # selection orthogonal to `model` above. The conductor supports four
+    # backends — claude (default), codex, gemini, opencode — selected at
+    # process startup via the AGENT_TYPE env var. Setting agent_type on a
+    # task overrides AGENT_TYPE for that task only, falling back to the
+    # process default when None.
+    #
+    # Routing heuristics for the planner:
+    #   - claude (default): synthesis-heavy tasks, retros, planning, hardware
+    #     integration, position paper drafting, multi-file coordination
+    #   - codex (gpt-5.5): formulaic code generation — WOPR cartridges,
+    #     verifier implementations, test scaffolding, PyO3 bindings,
+    #     sampler implementations, dataset pipelines
+    #   - gemini (Ultra): long-context analysis (1M tokens) — failure-ledger
+    #     pattern detection across milestone history, architecture coherence
+    #     audits across the full Phase-3 → Phase-7 chain, multi-paper
+    #     literature synthesis, multimodal verification (FPGA bitstream /
+    #     oscilloscope traces in future)
+    #   - opencode: experimental; not currently used in production
+    #
+    # CAVEAT: Gemini Deep Think is NOT exposed via the standard API as of
+    # 2026-04-29 — only via consumer Gemini app (Google AI Ultra subscription)
+    # or the early-access program. agent_type=gemini routes to standard
+    # Gemini API thinking mode, which is roughly comparable to Sonnet's
+    # extended thinking but NOT the deeper Deep Think mode used for the
+    # six-round Phase-3 → Phase-7 architectural derivation chain.
+    #
+    # See:
+    #   - openspec/change-proposals/multi-agent-routing.md
+    #   - scripts/research_conductor.py (per-task agent_type override path)
+    agent_type: Literal["claude", "codex", "gemini", "opencode"] | None = None
 
     @field_validator("deliverable")
     @classmethod
@@ -111,6 +150,39 @@ class ResearchTask(BaseModel):
                 f"deliverable must start with 'results/' and end with '.json', got: {v!r}"
             )
         return v
+
+    @model_validator(mode="after")
+    def model_must_match_agent_type(self) -> "ResearchTask":
+        """Cross-field validator: model identifier must be valid for the agent_type.
+
+        For agent_type=claude (or None, falling through to default Claude), the
+        model field is restricted to {sonnet, opus} — typos like 'sonet' or
+        'haiku' (retired) or 'gpt-4' (wrong vendor) are caught at parse time.
+
+        For other agent types (codex/gemini/opencode), the model field accepts
+        any non-empty string because the schema can't enumerate every vendor's
+        model catalogue. Operator/planner is responsible for picking valid
+        identifiers per agent.
+        """
+        if self.model is None:
+            return self
+        effective_agent_type = self.agent_type or "claude"
+        if effective_agent_type == "claude":
+            if self.model not in ("sonnet", "opus"):
+                raise ValueError(
+                    f"For agent_type=claude (or default), model must be 'sonnet' "
+                    f"or 'opus'; got {self.model!r}. If you intended a different "
+                    f"agent backend, set agent_type=codex/gemini/opencode."
+                )
+        else:
+            if not isinstance(self.model, str) or not self.model.strip():
+                raise ValueError(
+                    f"For agent_type={effective_agent_type!r}, model must be a "
+                    f"non-empty string identifying the vendor's model "
+                    f"(e.g. 'gpt-5.5' for codex, 'gemini-3.1-pro-preview' for "
+                    f"gemini); got {self.model!r}."
+                )
+        return self
 
 
 class Roadmap(BaseModel):
