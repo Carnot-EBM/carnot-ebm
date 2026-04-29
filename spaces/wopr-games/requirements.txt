@@ -1,2 +1,4 @@
 gradio>=5.0,<6.0
 numpy>=1.26
+# Python 3.13 removed the audioop stdlib module; pydub (a gradio dep) still needs it.
+audioop-lts; python_version >= "3.13"
