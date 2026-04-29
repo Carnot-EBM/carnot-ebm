@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Verifier Accuracy Paradox — Carnot Blog</title>
+  <meta name="description" content="A counterintuitive result from verifier-filtered self-distillation: better verifiers carry less information. Perfect accuracy means zero signal. The proof, the mechanism, and what it means for foundation-model self-improvement.">
+  <meta property="og:title" content="The Verifier Accuracy Paradox: Why Your Perfect Verifier Provides Zero Information">
+  <meta property="og:description" content="A counterintuitive result from verifier-filtered self-distillation: better verifiers carry less information. Perfect accuracy means zero signal.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://carnot-ebm.org/blog/verifier-accuracy-paradox.html">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M30,50 Q30,20 50,20 Q70,20 70,50 Q70,80 50,80 Q30,80 30,50' fill='none' stroke='%23f97316' stroke-width='8'/><circle cx='50' cy='50' r='10' fill='%23f97316'/></svg>">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <script>
+    MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+  <style>
+    :root {
+      --bg: #030712;
+      --bg-glass: rgba(15, 23, 42, 0.4);
+      --bg-glass-hover: rgba(30, 41, 59, 0.6);
+      --text: rgba(255, 255, 255, 0.95);
+      --text-muted: rgba(255, 255, 255, 0.6);
+      --accent-energy: #f97316;
+      --accent-verify: #0ea5e9;
+      --accent-reason: #a855f7;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(255, 255, 255, 0.15);
+      --font-heading: 'Space Grotesk', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: var(--font-body); background: var(--bg); color: var(--text);
+      line-height: 1.7; -webkit-font-smoothing: antialiased;
+    }
+    a { color: var(--accent-verify); text-decoration: none; border-bottom: 1px dotted var(--accent-verify); }
+    a:hover { color: var(--accent-energy); border-bottom-color: var(--accent-energy); }
+
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(3, 7, 18, 0.85); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      max-width: 1280px; margin: 0 auto; padding: 1rem 2rem;
+      display: flex; align-items: center; justify-content: space-between; gap: 2rem;
+    }
+    .nav-logo {
+      font-family: var(--font-heading); font-size: 1.5rem; font-weight: 700;
+      color: var(--text); display: flex; align-items: center; gap: 0.5rem;
+      border: none;
+    }
+    .nav-logo svg { width: 28px; height: 28px; }
+    .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+    .nav-links a { color: var(--text-muted); font-size: 0.9rem; border: none; }
+    .nav-links a:hover { color: var(--text); }
+
+    article {
+      max-width: 760px; margin: 0 auto; padding: 4rem 2rem 2rem;
+    }
+
+    .post-meta {
+      font-family: var(--font-mono); font-size: 0.85rem;
+      color: var(--text-muted); margin-bottom: 1rem;
+      display: flex; gap: 1.5rem;
+    }
+    .post-tag {
+      font-family: var(--font-heading); font-size: 0.7rem; font-weight: 700;
+      color: var(--accent-energy); text-transform: uppercase;
+      letter-spacing: 0.05em; margin-bottom: 1rem; display: block;
+    }
+    h1 {
+      font-family: var(--font-heading); font-size: clamp(2rem, 5vw, 3.25rem);
+      font-weight: 800; line-height: 1.15; margin-bottom: 1.5rem;
+    }
+    .lede {
+      font-size: 1.2rem; color: var(--text-muted);
+      margin-bottom: 3rem; line-height: 1.6;
+    }
+    h2 {
+      font-family: var(--font-heading); font-size: 1.75rem;
+      font-weight: 700; margin: 3rem 0 1.25rem; line-height: 1.2;
+    }
+    h3 {
+      font-family: var(--font-heading); font-size: 1.25rem;
+      font-weight: 700; margin: 2.5rem 0 1rem;
+    }
+    article p { margin-bottom: 1.25rem; font-size: 1.05rem; }
+    article p code, article li code {
+      font-family: var(--font-mono); font-size: 0.92em;
+      background: var(--bg-glass); padding: 0.15em 0.4em;
+      border-radius: 4px; color: var(--accent-energy);
+      border: 1px solid var(--border);
+    }
+    article ul, article ol { margin: 0 0 1.5rem 1.5rem; }
+    article li { margin-bottom: 0.5rem; }
+    article blockquote {
+      border-left: 3px solid var(--accent-energy);
+      padding: 1rem 1.5rem; margin: 1.5rem 0;
+      background: var(--bg-glass); border-radius: 0 8px 8px 0;
+      color: var(--text-muted); font-style: italic;
+    }
+
+    .equation {
+      background: var(--bg-glass); border: 1px solid var(--border);
+      border-radius: 12px; padding: 1.5rem 2rem; margin: 1.5rem 0;
+      overflow-x: auto;
+    }
+    .keypoint {
+      background: linear-gradient(135deg, rgba(249, 115, 22, 0.08), rgba(168, 85, 247, 0.04));
+      border: 1px solid var(--border-hover);
+      border-radius: 12px; padding: 1.5rem 2rem; margin: 2rem 0;
+    }
+    .keypoint strong { color: var(--accent-energy); font-family: var(--font-heading); }
+
+    .footnote {
+      font-size: 0.9rem; color: var(--text-muted);
+      padding: 1.5rem 0; margin-top: 3rem;
+      border-top: 1px solid var(--border);
+    }
+    .further-reading {
+      background: var(--bg-glass); border: 1px solid var(--border);
+      border-radius: 12px; padding: 2rem; margin: 3rem 0 2rem;
+    }
+    .further-reading h3 { margin-top: 0; }
+    .further-reading ul { margin-bottom: 0; }
+
+    .back-link {
+      display: inline-block; margin-bottom: 2rem;
+      font-family: var(--font-mono); font-size: 0.9rem;
+      color: var(--text-muted); border: none;
+    }
+    .back-link:hover { color: var(--accent-energy); }
+
+    footer {
+      max-width: 1280px; margin: 4rem auto 2rem; padding: 2rem;
+      text-align: center; color: var(--text-muted); font-size: 0.85rem;
+      border-top: 1px solid var(--border);
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">
+      <svg viewBox="0 0 100 100"><path d="M30,50 Q30,20 50,20 Q70,20 70,50 Q70,80 50,80 Q30,80 30,50" fill="none" stroke="#f97316" stroke-width="8"/><circle cx="50" cy="50" r="10" fill="#f97316"/></svg>
+      Carnot
+    </a>
+    <ul class="nav-links">
+      <li><a href="/">Home</a></li>
+      <li><a href="/blog/">Blog</a></li>
+      <li><a href="https://github.com/Carnot-EBM/carnot-ebm">GitHub</a></li>
+      <li><a href="https://huggingface.co/Carnot-EBM">HuggingFace</a></li>
+    </ul>
+  </div>
+</nav>
+
+<article>
+
+<a href="/blog/" class="back-link">&larr; Back to blog</a>
+
+<span class="post-tag">Theory</span>
+
+<h1>The Verifier Accuracy Paradox: Why Your Perfect Verifier Provides Zero Information</h1>
+
+<div class="post-meta">
+  <span>2026-04-29</span>
+  <span>~10 min read</span>
+</div>
+
+<p class="lede">
+  A counterintuitive result from our analysis of verifier-filtered self-distillation:
+  the better your verifier, the less information it carries. A verifier with zero false-negatives provides exactly zero discriminatory signal. To sculpt a model toward truth, your verifier <em>must make mistakes</em>. Here is why, and what it implies for foundation-model self-improvement.
+</p>
+
+<h2>The setup</h2>
+
+<p>
+  Modern foundation-model training increasingly relies on <em>self-distillation</em>: the model generates candidate outputs, a verifier filters them by quality, and the model retrains on the filtered set. Repeat. The hope is that the filter pulls the model toward truth.
+</p>
+
+<p>
+  Whether this works is an open theoretical question. Recent work by Hector Zenil
+  (<a href="https://arxiv.org/abs/2601.05280">arXiv:2601.05280</a>) gave a sharp condition: the loop converges to truth only if every iteration receives a non-vanishing exogenous grounding signal — formally, a per-round mixing rate $\alpha_t$ with $\inf_t \alpha_t > 0$. Without it, the model becomes a random walk and collapses.
+</p>
+
+<p>
+  In our work on the <a href="https://github.com/Carnot-EBM/carnot-ebm">Carnot</a> project, we have been studying verifier-based self-distillation specifically. Here, the grounding signal $\alpha_t$ is not abstract: it is exactly what the verifier provides. So the natural question is:
+</p>
+
+<div class="keypoint">
+  <strong>How much information does a verifier inject per round?</strong>
+  Specifically, if a verifier $E$ accepts or rejects each candidate output, what is the mutual information $I(E; \mu_P)$ between its output and the true data distribution $\mu_P$?
+</div>
+
+<h2>The naive expectation</h2>
+
+<p>
+  Intuitively, a more accurate verifier should provide more information. A perfect verifier — one with zero false-positives and zero false-negatives — should provide the maximum possible signal, since its accept/reject is a noiseless readout of correctness.
+</p>
+
+<p>
+  The math says the opposite.
+</p>
+
+<h2>The derivation</h2>
+
+<p>
+  Let $E: \mathcal{X} \to \{0, 1\}$ be a Boolean verifier evaluating outputs $X$ drawn from the truth distribution $\mu_P$. Define:
+</p>
+
+<ul>
+  <li><strong>False-positive rate (FPR):</strong> probability that $E$ accepts an incorrect output.</li>
+  <li><strong>False-negative rate (FNR):</strong> probability that $E$ rejects a correct output.</li>
+</ul>
+
+<p>
+  Now compute the mutual information $I(E(X); X)$ when $X \sim \mu_P$:
+</p>
+
+<div class="equation">
+$$I(E(X); X) = H(E(X)) - H(E(X) \mid X)$$
+</div>
+
+<p>
+  Here is the move. Since $E(X)$ is a deterministic function of $X$, the conditional entropy $H(E(X) \mid X) = 0$. So:
+</p>
+
+<div class="equation">
+$$I(E; \mu_P) = H(E(X))$$
+</div>
+
+<p>
+  And here is the trap. Under $X \sim \mu_P$, the verifier <em>only sees truth</em>. It never encounters incorrect outputs in this evaluation. So FPR is unobservable — the verifier's behaviour on non-truth simply does not appear in this calculation. The only randomness is whether $E$ correctly accepts the truth, which is governed entirely by FNR:
+</p>
+
+<div class="equation">
+$$\boxed{\; I(E; \mu_P) = h(\text{FNR}) \;}$$
+</div>
+
+<p>
+  where $h(p) = -p \log p - (1-p)\log(1-p)$ is the binary entropy function.
+</p>
+
+<p>
+  This binary entropy is <em>maximized</em> at $\text{FNR} = 0.5$ (giving $h = 1$ bit) and <em>minimized</em> at $\text{FNR} \in \{0, 1\}$ (giving $h = 0$ bits).
+</p>
+
+<h2>The paradox</h2>
+
+<div class="keypoint">
+  <strong>A perfect verifier provides zero information.</strong>
+  When $\text{FNR} = 0$ (verifier always accepts truth), the output $E(X) = 1$ identically, so its entropy is zero, and the verifier carries no signal about $X$. The model learns nothing.
+</div>
+
+<p>
+  Why? Because the verifier's job is to <em>discriminate</em>. Discrimination requires variance. A "yes-to-everything-true" verifier has no variance under truth. Its filter does nothing — every truth-sample passes — so it cannot reweight the distribution toward anything.
+</p>
+
+<p>
+  A verifier that occasionally <em>fails</em> on truth, however, induces real variance in its accept/reject pattern. That variance carries bits. Those bits are the grounding signal Zenil's theorem demands.
+</p>
+
+<p>
+  The bound is sharp: for an $\varepsilon$-accurate verifier (FNR $\leq \varepsilon$), the maximum information per round is $h(\varepsilon)$. For typical safety thresholds:
+</p>
+
+<ul>
+  <li>$\varepsilon = 0.01$ (99% accurate): $h(0.01) \approx 0.081$ bits</li>
+  <li>$\varepsilon = 0.05$ (95% accurate): $h(0.05) \approx 0.286$ bits</li>
+  <li>$\varepsilon = 0.10$ (90% accurate): $h(0.10) \approx 0.469$ bits</li>
+  <li>$\varepsilon = 0.50$ (coin flip): $h(0.50) = 1.000$ bit (theoretical max)</li>
+</ul>
+
+<p>
+  Higher accuracy &rArr; less information. The relationship is not just non-monotonic; it is <em>inverted</em> in the regime that practitioners aim for.
+</p>
+
+<h2>Why this matters</h2>
+
+<p>
+  Suppose you want to self-distill a foundation model on a high-stakes task with a $k$-verifier suite. The total information available per round is bounded above by $\sum_i h(\varepsilon_i)$. If your verifiers are individually 95% accurate, you have at most $k \times 0.286$ bits per round.
+</p>
+
+<p>
+  For a task whose truth distribution has, say, $H(\mu_P) \approx 50$ bits of conditional entropy (a generous upper bound for code-repair-scale tasks), reaching truth would take roughly $50 / (k \times 0.286) \approx 175 / k$ rounds — and that is assuming every bit is independent and useful. With realistic correlation across verifiers, far more.
+</p>
+
+<p>
+  This is the <strong>Boolean Information Bottleneck</strong>: <em>any</em> static array of accurate Boolean verifiers has a fundamental information ceiling that grows only logarithmically with the verifier accuracy. Spending more compute on more-accurate verifiers gives <em>diminishing</em> returns. Spending it on more-numerous verifiers helps, but only if their information is independent.
+</p>
+
+<h2>The way out</h2>
+
+<p>
+  In Carnot's analysis we found that the architecture's <em>composition rule</em> dictates whether the bottleneck binds. Specifically, the trick is to <em>deliberately make verifiers worse</em> in a particular way.
+</p>
+
+<p>
+  Consider AND-composing $m$ independent base verifiers: a candidate must pass <em>all</em> of them. The composite verifier's FNR satisfies $\text{FNR}_{\text{AND}} = 1 - \prod_i (1 - \text{FNR}_i)$. For $m = 14$ base verifiers each with $\varepsilon = 0.05$:
+</p>
+
+<div class="equation">
+$$\text{FNR}_{\text{AND}} = 1 - (0.95)^{14} \approx 0.512$$
+</div>
+
+<p>
+  A verifier suite that rejects more than half of correct candidates &mdash; rather than 5% of them &mdash; is <em>far less individually useful</em>. But its information capacity has soared:
+</p>
+
+<div class="equation">
+$$h(0.512) \approx 1.00 \text{ bit per composite}$$
+</div>
+
+<p>
+  versus 0.286 bits per individual base verifier. That is a 3.5&times; increase in information density per evaluation.
+</p>
+
+<p>
+  AND-composition is, in this sense, an <em>entropy maximizer</em>. By pulling the composite FNR toward 0.5 (the binary-entropy-maximum), it converts accurate-but-information-poor verifiers into mediocre-but-information-rich ones.
+</p>
+
+<div class="keypoint">
+  <strong>The architectural insight:</strong>
+  optimizing each verifier for accuracy is the wrong objective. Optimizing the <em>suite's composite information capacity</em> is the right one. AND-composition is one way to do it; there are others.
+</div>
+
+<h2>Connection to broader practice</h2>
+
+<p>
+  This result has uncomfortable implications for several common training schemes:
+</p>
+
+<ul>
+  <li>
+    <strong>Reward modeling.</strong> Training a reward model to be more accurate often <em>reduces</em> its information density, holding the rest of the training loop fixed. The standard intuition that "better reward models give better gradients" needs revision under this framework.
+  </li>
+  <li>
+    <strong>Constitutional AI / RLAIF loops.</strong> If the constitutional verifier becomes nearly perfect, its signal vanishes. The system needs to either build deliberate variance into the verifier (e.g., adversarial perturbations) or compose multiple verifiers to expand information density.
+  </li>
+  <li>
+    <strong>Self-rewarding language models.</strong> A model that perfectly judges its own outputs provides zero learning signal. The judge must <em>err</em> in ways correlated with errors in the policy &mdash; the same mechanism that powers AND-composition.
+  </li>
+  <li>
+    <strong>Constraint-based verification (Carnot's domain).</strong> A Z3 SMT solver applied to formal correctness has FNR exactly zero on satisfiable formulas. So Z3 alone provides zero information about which valid programs to prefer. The architecture <em>requires</em> non-Boolean adjacent verifiers (property-based fuzzing, semantic checks) to bring information into the system.
+  </li>
+</ul>
+
+<h2>The rule of thumb</h2>
+
+<p>
+  If your training loop has any verifier-filtering mechanism, ask: <em>what fraction of true-output candidates does the filter reject?</em> If the answer is "almost none," the filter is providing almost no information per round. The model is learning slowly, or not at all, regardless of how much compute you throw at it.
+</p>
+
+<p>
+  The fix is not better verifiers. It is composing your existing ones in a way that pulls the rejection rate toward 50% &mdash; the Shannon-channel maximum &mdash; while keeping the rejected set genuinely correlated with errors in the policy.
+</p>
+
+<p>
+  This is a recipe for a foundation-model self-distillation architecture, and it is the central insight underlying Carnot's Phase 3 design. We will write more about that architecture &mdash; and prove, formally, that it saturates the corresponding lower bound &mdash; in our position paper, currently in preparation.
+</p>
+
+<div class="further-reading">
+  <h3>Further reading</h3>
+  <ul>
+    <li>Zenil, H. (2026). <em>On the Limits of Self-Improving in Large Language Models: The Singularity Is Not Near Without Symbolic Model Synthesis.</em> <a href="https://arxiv.org/abs/2601.05280">arXiv:2601.05280</a></li>
+    <li>Apple. (2026). <em>Embarrassingly Simple Self-Distillation Improves Code Generation.</em> Adversarial baseline that this framework predicts must rely on residual base-model grounding to avoid collapse over multiple rounds.</li>
+    <li>Carnot project. <em>A Mathematical Foundation for Phase 3 Self-Distillation</em> &mdash; position paper in preparation. This blog post draws on one section of that work.</li>
+    <li>The Carnot codebase: <a href="https://github.com/Carnot-EBM/carnot-ebm">github.com/Carnot-EBM/carnot-ebm</a></li>
+  </ul>
+</div>
+
+<div class="footnote">
+  <strong>About this post.</strong> This is the first in a series of notes from the Carnot project on energy-based verification, self-distillation theory, and hardware-accelerated EBMs. If you want to follow along, watch the <a href="https://github.com/Carnot-EBM/carnot-ebm">GitHub repository</a> or check back at <a href="/blog/">/blog/</a> for new entries.
+</div>
+
+</article>
+
+<footer>
+  Carnot is open-source under Apache 2.0.
+  <br>
+  <a href="https://github.com/Carnot-EBM/carnot-ebm">github.com/Carnot-EBM/carnot-ebm</a>
+</footer>
+
+</body>
+</html>
