@@ -94,6 +94,44 @@
       "depends_on_respawn": []
     },
     {
+      "original_id": "exp1046-zenil-alpha-t-fr11",
+      "title_stub": "Zenil alpha_t Grounding + Phase-3 AND-Composition k=5 (FR-11 MANDATORY SELF-LEARNING)",
+      "retire_milestone": "2026.04.81",
+      "retire_verdicts": [
+        "artifact_not_updated_past_bootstrap_FAIL",
+        "artifact_not_updated_past_bootstrap_FAIL",
+        "artifact_not_updated_past_bootstrap_FAIL"
+      ],
+      "diagnosed_root_cause": "Sonnet hit max-turns 30 three times consecutively, writing the bootstrap stub on each attempt but never reaching step 5 (FINAL ARTIFACT UPDATE). The Zenil alpha_t + Phase-3 AND-composition work is too complex for 30 turns — same capacity-bound failure mode as exp1028 in .80 milestone. Patches 4975668f / 3d0ef3c1 / 43b19e40 correctly detected the bootstrap-and-bail and refused to log OK; the experiment is retiring honestly rather than wedging the milestone.",
+      "fixes_landed": [
+        "4975668f",
+        "3d0ef3c1",
+        "43b19e40"
+      ],
+      "respawn_attempt": 1,
+      "max_respawn_attempts": 3,
+      "variance_strategy": "tier_escalation",
+      "variance_applied": {
+        "from_original": {
+          "model": "sonnet",
+          "max_turns": 30,
+          "agent_type": "claude"
+        },
+        "to_respawn_1": {
+          "model": "opus",
+          "max_turns": 100,
+          "agent_type": "claude",
+          "rationale": "All 3 retirement verdicts were 'artifact_not_updated_past_bootstrap' — capacity-bound, not logic-bound. Sonnet+30 wasn't enough to complete the multi-step work. Attempt 1 escalates to Opus+100 (3.3x turn budget + stronger model). The Zenil alpha_t empirical validation is high-priority (validates today's Phase-3 architecture) so worth the Opus quota."
+        }
+      },
+      "next_attempt_variance_plan": {
+        "if_respawn_1_fails": "attempt_2: agent_type=codex, model=gpt-5.5, max_turns=100 (backend rotation — Codex's training corpus has more JAX/Optax + KAN training implementations; the Zenil+Phase-3 work is heavy on numerical optimization patterns where Codex may handle the artifact-update step more reliably)",
+        "if_respawn_2_fails": "attempt_3: decomposition — split into (a) alpha_t grounding metric implementation only, (b) Phase-3 AND-composition k=5 wiring only, (c) FR-11 self-learning loop integration only. Each sub-experiment ~50 turns of Sonnet."
+      },
+      "depends_on_respawn": [],
+      "priority_note": "HIGH — this is the empirical validation of today's 9-round Deep Think Phase-3 architecture chain. The position paper benefits from this experiment landing successfully."
+    },
+    {
       "original_id": "exp1044-triple-integration-v7",
       "title_stub": "Triple Integration E2E v7 — Post Gate Coercion Fix",
       "retire_milestone": "2026.04.81",
