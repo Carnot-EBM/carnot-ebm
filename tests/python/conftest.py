@@ -19,3 +19,18 @@ sys.path.insert(0, str(repo_root))
 
 # Disable JAX GPU for testing (CPU only)
 jax.config.update("jax_platform_name", "cpu")
+
+# Pytest collection exclusions:
+# - quarantine/ — tests we've explicitly removed from default discovery.
+# - test_conductor_supervisor.py — spawns subprocess.Popen of the real
+#   supervisor, which then SIGTERMs the running conductor as "orphan"
+#   (observed 4× on 2026-04-28). Quarantined version stays in
+#   tests/python/quarantine/. Conductor self-heal sometimes regenerates
+#   the file at the un-quarantined path; this ignore stops pytest
+#   discovering it.
+collect_ignore_glob = [
+    "quarantine/**",
+]
+collect_ignore = [
+    "test_conductor_supervisor.py",
+]

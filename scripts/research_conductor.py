@@ -3061,9 +3061,51 @@ def main() -> int:
     print()
 
     iteration = 0
+    HEARTBEAT_FILE = PROJECT_ROOT / "ops" / "conductor-heartbeat.json"
+    STATE_FILE = PROJECT_ROOT / "ops" / "conductor-state.json"
+
+    def _write_heartbeat(phase: str, iter_n: int) -> None:
+        """Write the heartbeat + state files the supervisor reads.
+
+        Without these, conductor_supervisor.py treats the running
+        conductor as an orphan and SIGTERMs it (observed 2026-04-28
+        at 23:26Z, 23:41Z, 23:54Z, 23:57Z).
+
+        Heartbeat format must use `%Y-%m-%dT%H:%M:%SZ` (no microseconds,
+        Z suffix) — supervisor's strptime parser is strict.
+        State file records the conductor's PID so the orphan reaper
+        recognizes the legitimate conductor and doesn't SIGTERM it.
+        """
+        now_z = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
+        try:
+            HEARTBEAT_FILE.parent.mkdir(parents=True, exist_ok=True)
+            HEARTBEAT_FILE.write_text(
+                json.dumps(
+                    {
+                        "pid": os.getpid(),
+                        "iteration": iter_n,
+                        "phase": phase,
+                        "last_beat": now_z,
+                    }
+                )
+            )
+            STATE_FILE.write_text(
+                json.dumps(
+                    {
+                        "pid": os.getpid(),
+                        "iteration": iter_n,
+                        "phase": phase,
+                        "started_at": now_z,
+                    }
+                )
+            )
+        except Exception:
+            logger.exception("Heartbeat/state write failed (non-fatal)")
+
     while True:
         iteration += 1
         logger.info("--- Iteration %d ---", iteration)
+        _write_heartbeat("iteration_start", iteration)
 
         iter_start = time.time()
         try:
@@ -3108,6 +3150,7 @@ def main() -> int:
             chunk = min(60, total_seconds - slept)
             time.sleep(chunk)
             slept += chunk
+            _write_heartbeat("sleeping", iteration)
             if slept % 300 == 0 and slept < total_seconds:
                 logger.info("...sleeping, %d/%d min elapsed", slept // 60, sleep_min)
         logger.info("Sleep complete — resuming")
