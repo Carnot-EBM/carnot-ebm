@@ -30,6 +30,51 @@ models make errors the regex can't parse.
 - The constraint EXTRACTION is the bottleneck — too crude for real models
 - The self-learning, dogfooding, and conductor infrastructure works well
 
+## Active Research Thread: Phase-3 → Phase-7 Architecture Chain (2026-04-29)
+
+**Status:** 6 Deep Think rounds completed in one session; 1 capstone
+round (Phase-7) queued for after Deep Think quota resets at 16:30Z.
+
+**One-line summary:** A complete defensive architecture for verifier-
+filtered self-distillation has been derived, with closed-form bounds
+at every defence layer (Phase-3 through Phase-6), one named open
+problem (FIFO Churn Gap), and a candidate fix (Hope-style continuum
+memory) queued for Phase-7 derivation.
+
+**The arc:**
+- Phase-3 (rotation + AND + transversality): static specification gaming
+- Phase-4 (factorized curriculum + UCM + DVS): concept drift
+- Phase-5 (predictive LLT-UCM): detection latency, Information-Action Bottleneck
+- Phase-6 (multi-scale ensemble + $\theta_F^*$ + Manifold Substitution): Whip + Shadow Boundary attacks
+- Phase-7 (continuum memory, proposed): Cyclic Recurrence / FIFO Churn Gap
+
+**Cross-validation discipline finding:** Carnot's qualitative
+survival predictions are well-calibrated; **specific architectural
+prescriptions are systematically wrong**. The position paper will
+include a cross-validation discipline appendix as its own
+contribution.
+
+**Hardware-deployment correction (load-bearing for the conductor):**
+Round-9's $k = 15$ AND-composition is **infeasible on single-chain
+FPGA**. Pivot: $k_{\max} = 5$ + parallel PT-SB chains + Manifold
+Substitution. KV260 experiments must be re-scoped before any FPGA
+prototype tape-out.
+
+**Canonical references:**
+- Architecture: `_bmad/architecture.md` → "Phase-3 → Phase-7
+  Defence-Layer Stack"
+- Position paper: `docs/position-paper-outline.md`
+- Per-round derivations: `docs/research-notes/*-deep-think-*.md`
+- Hope integration: `docs/research-notes/nested-learning-hope-relevance.md`
+
+**Next concrete actions:**
+1. Wait for Deep Think quota reset (16:30Z), then send Phase-7 prompt
+2. After Phase-7 round, write position paper draft (target arxiv
+   submission ~2026-05-15)
+3. Re-scope KV260 work in milestone .81 to $k_{\max} = 5$
+4. Update DVS pipeline spec to enforce three acceptance criteria
+   ($\Lambda^*$, $K^*$, $\theta_F^*$) before next .80+ FPGA attempts
+
 ## Current Strategic Goals (in priority order)
 
 1. **Rebuild constraint extraction for real models** — HIGHEST PRIORITY.

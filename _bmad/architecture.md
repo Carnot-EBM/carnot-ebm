@@ -210,3 +210,96 @@ Cross-refs:
 - `memory/project_zenil_alpha_grounding.md`
 - `research-references.md` → "Zenil 2026 self-improvement limits"
 - `openspec/change-proposals/continuous-to-ising-transpiler.md` (Phase 2 module)
+
+## Phase-3 → Phase-7 Defence-Layer Stack
+
+**Last reconciled:** 2026-04-29 (after a six-round Deep Think
+derivation chain). Canonical reference for the active architectural
+defence layers. Publication framing in
+`docs/position-paper-outline.md`; per-round derivations in
+`docs/research-notes/*-deep-think-*.md`.
+
+### Stack overview
+
+| Phase | Threat | Mechanism | Status |
+|---|---|---|---|
+| 3 | Static specification gaming | Rotation defence + AND-composition + transversality | Closed-form bounds |
+| 4 | Concept drift | Factorized per-verifier curriculum + UCM + DVS | Closed-form bounds |
+| 5 | Detection latency | Predictive Local Linear Trend UCM | Information-Action Bottleneck |
+| 6 | Whip Attack + Shadow Boundary | Multi-scale half-octave ensemble + $\theta_F^*$-rejection + Manifold Substitution | Closed-form bounds |
+| 7 (proposed) | Cyclic Recurrence (FIFO Churn Gap) | Continuum memory (Hope-inspired) | Pending Deep Think Round-7 |
+
+### Key closed-form theorems (canonical)
+
+**Round-12 (corrected) saturation** (under $Z_t < 1$ normalization):
+$\delta_\infty = C_Z \cdot \|\nu_0^\perp\|$, $C_Z = \prod_t Z_t^{-1} > 1$.
+
+**Curriculum exponential gain:** $\Delta C_Z \propto \exp(\|\nu_0^\parallel\|^2)$.
+
+**DVS quality threshold:** $\Lambda^* = Z_{k+1}$.
+
+**PAC-Bayes audit budget:** $K^* = \tilde{O}((d+\log(1/\delta))/Z_{k+1}^2)$.
+
+**Information-Action Bottleneck (Phase-5):**
+$\Delta_{\text{lat}}^{\min} = \dot{\rho}(\tau_{\text{action}} - \tau^*)^+ + z\sigma_{\text{pred}}(\tau^*)$.
+
+**Optimal LLT window:** $W^* = (72 \sigma_{\hat{\rho}}^2/\ddot{\rho}^2)^{1/5}$.
+
+**Phase-6 multi-scale parameters:**
+- Spacing $b^* = \sqrt{2}$ (half-octave; dyadic leaks 68% Whip evasion)
+- Per-scale confidence $z_{1-\delta_m}^* \approx \sqrt{C - 2\ln(W_m)}$ (looser at longer scales)
+- Base $W_0^* = (12 z_0^2 \sigma_{\hat{\rho}}^2 / (f_s \dot{\rho}_{\max}^2))^{1/3}$
+
+**Geometric transversality floor:**
+$\theta_F^* \approx k \sigma_{\max} \sqrt{\tau_1 / \tau_{\text{mix-budget}}}$
+— linear in $k\sigma_{\max}$, not inverse.
+
+**Phase-6 saturation:**
+$\delta_\infty^{\text{Phase-6}} = C_Z [\Delta_{\text{churn}} + (12 z_0^2 \sigma_{\hat{\rho}}^2 \dot{\rho}_{\max}/f_s)^{1/3} + z_{M-1}^* \sigma_{\text{pred}}(W_{M-1})]$.
+
+### Hardware portability theorem
+
+> *"Provided individual verifier constraint manifolds intersect
+> transversally ($\theta_F > 0$), Carnot's parallel-tempered
+> AND-composition architecture guarantees strictly polynomial MCMC
+> sampling latency across discrete FPGA Glauber dynamics, continuous
+> thermodynamic samplers, and optical photonic substrates."*
+
+Substrate-specific deployment:
+
+| Substrate | Max $k$ | Topology | Bit-width |
+|---|---|---|---|
+| KV260 / VU9P FPGA | 4–5 | Parallel PT-SB chains | 8–16 bit/chain |
+| Extropic XTR-0 | 15+ | Continuous thermodynamic | Analog (no $\kappa$) |
+| Photonic Ising | 15+ | Optical interference | Speed-of-light additive |
+
+**Round-9's $k=15$ was hardware-infeasible on single-chain FPGA.**
+Geodesic-convexity is *not* preserved under AND-composition;
+heterogeneous strictness creates $\kappa = \sigma_{\max}/\sigma_{\min}$
+ill-conditioning. Pivot: $k\leq 5$ + Manifold-Substitution + PT-SB
+parallel chains on FPGA; $k=15$ acceptable on Extropic / photonic.
+
+### Operational implications
+
+1. **KV260 experiments target $k_{\max} = 5$** (re-scope before
+   FPGA prototype tape-out).
+2. **DVS enforces three acceptance criteria** ($\Lambda^*$, $K^*$,
+   $\theta_F^*$).
+3. **Manifold Substitution** replaces FIFO eviction when $\theta_F^*$
+   check fails (zero audit inflation).
+4. **UCM is multi-scale** — single-window predictive UCM is *worse
+   than reactive* against slow-stealth.
+5. **Curriculum schedule smoothed** near bang-bang $\sqrt{C}$ to
+   avoid first-order phase transition's exponential re-mixing.
+
+### Cross-refs
+
+- `docs/position-paper-outline.md` — publication framing
+- `docs/research-notes/concept-drift-deep-think-results.md` (Round-13)
+- `docs/research-notes/round12-renormalization-deep-think-results.md`
+- `docs/research-notes/dvs-quality-curriculum-deep-think-results.md`
+- `docs/research-notes/predictive-ucm-deep-think-results.md`
+- `docs/research-notes/and-composition-mixing-deep-think-results.md`
+- `docs/research-notes/phase6-ensemble-thetaF-deep-think-results.md`
+- `docs/research-notes/phase7-continuum-memory-deep-think-prompt.md` (capstone, pending)
+- `docs/research-notes/nested-learning-hope-relevance.md`
