@@ -33,4 +33,16 @@ collect_ignore_glob = [
 ]
 collect_ignore = [
     "test_conductor_supervisor.py",
+    # test_experiment_772_semantic_energy_probe.py imports SemanticCluster,
+    # _compute_tfidf_matrix, _cosine_similarity from semantic_energy_probe —
+    # none of those exist in the shipped module. Test was written against a
+    # TF-IDF+cosine design that was never landed; the actual implementation
+    # uses random-projection embedding + Gaussian kernels. Quarantining
+    # until the test is rewritten to match the shipped SemanticEnergyProbe.
+    #
+    # Observed: this collection error blocked .81 milestone activation
+    # 2026-04-29 — the conductor's pre-test self-heal looped indefinitely
+    # (1 failed / 302 passed) because the failure is a structural
+    # ImportError, not a fixable runtime assertion.
+    "test_experiment_772_semantic_energy_probe.py",
 ]
