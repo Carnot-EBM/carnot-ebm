@@ -411,21 +411,77 @@ cargo tarpaulin --workspace --exclude carnot-python --out Html --fail-under 100
 | Python linting | ruff, mypy (strict) |
 | Pre-commit | .pre-commit-config.yaml |
 
-## GPU Resources (two systems with distinct roles)
+## Hardware Acceleration Portfolio
 
-1. **Local ROCm GPU (AMD Radeon 890M, gfx1150)** — for heavyweight ML workloads:
-   running local LLMs, EBT training, activation extraction, experiments. PyTorch
-   2.11.0+rocm7.2 with native gfx1150 support, 67 GB unified memory. Requires
-   `sg render -c '...'` for GPU group access and
-   `TORCH_ROCM_AOTRITON_ENABLE_EXPERIMENTAL=1` for flash attention. Use
-   `.cuda()` on model and inputs.
-2. **WebGPU gateway (`carnot-webgpu-gateway`)** — for Carnot's OWN energy
-   computations only (Ising batch eval, SAT constraints, repair). Distributes
-   WGSL compute shaders to browser GPUs over WebSocket. NOT a path for running
-   transformers or training.
+Carnot's hardware-acceleration paths, ordered by current investment
+priority. Updated 2026-04-30 after FPGA re-scope + user clarification
+that GPU + NPU paths continue.
 
-Do not confuse these: ROCm runs LLMs locally, fast; WebGPU distributes energy
-evaluations across many small GPUs in browsers.
+### Active acceleration paths (continue investing)
+
+1. **2x NVIDIA RTX 3090 (CUDA) — PRIMARY for training**:
+   Discrete dual-GPU rig. Use onnxruntime-gpu (CUDA EP), PyTorch
+   CUDA build. 48 GB discrete VRAM. Headline performance + Phase-3
+   prototype training target. When forced to choose ONE backend,
+   pick CUDA: more VRAM, mature tooling, every paper/tool ships
+   CUDA first.
+
+2. **AMD Strix Point gfx1150 APU (ROCm) — SECONDARY for portability**:
+   Integrated GPU on the dev laptop. PyTorch 2.11.0+rocm7.2 with
+   native gfx1150 support, 67 GB unified memory (shared with CPU).
+   Requires `sg render -c '...'` for GPU group access and
+   `TORCH_ROCM_AOTRITON_ENABLE_EXPERIMENTAL=1` for flash attention.
+   Use `.cuda()` on model and inputs.
+
+3. **NPU (consumer edge devices) — SOVEREIGNTY ANCHOR**:
+   2026-era consumer hardware ships with NPUs: Intel AI Boost, AMD
+   Ryzen AI / XDNA, Apple Silicon Neural Engine, Qualcomm Hexagon
+   (Snapdragon X), etc. ONNX Runtime supports them via execution
+   providers (DirectML on Windows, OpenVINO on Intel, CoreML on
+   Apple, Qualcomm QNN, Ryzen AI EP). **Strategic value:** Carnot's
+   verifier (Phase 1) and inference-time deep EBM (Phase 3
+   deployment) can run on consumer hardware without a $700 discrete
+   GPU. This is the load-bearing technical foundation for the
+   sovereignty / decentralization claim.
+
+4. **WebGPU gateway (`carnot-webgpu-gateway`)** — for Carnot's OWN
+   energy computations only (Ising batch eval, SAT constraints,
+   repair). Distributes WGSL compute shaders to browser GPUs over
+   WebSocket. NOT a path for running transformers or training.
+
+### Future production hardware (research-class, monitor for availability)
+
+5. **Extropic Z1** (ASIC for thermodynamic computing): planned
+   production hardware target. Awaiting public Z1 specs + SDK
+   availability.
+
+6. **Photonic** (research-grade chips, long-horizon): no near-term
+   action.
+
+### Re-scoped (proof-of-concept tier only)
+
+7. **KV260 FPGA** (POC tier, not production): demonstrates "energy
+   evaluable in dedicated hardware" on simple quadratic-Ising
+   constraints (exp1041 / exp1068 / exp1081 with sampler-correctness
+   caveats). The deep-EBM-on-FPGA aspiration is FUTURE WORK, not
+   load-bearing — see `docs/research-notes/phase3-architecture-blindspot-audit-results.md`
+   for the 5 FATAL findings that drove the re-scope.
+
+### How to apply
+
+- **New training experiments:** default to CUDA path (`.cuda()`,
+  onnxruntime-gpu). RTX 3090 rig.
+- **Verifier deployment / edge inference:** include NPU EP support
+  via onnxruntime (DirectML, OpenVINO, CoreML, QNN, Ryzen AI as
+  appropriate). Sovereignty claims anchor here.
+- **Position paper sovereignty story:** anchor to NPU-class hardware
+  ("runs on the laptop you already own"), not GPU-class.
+- onnxruntime-rocm and onnxruntime-gpu are mutually exclusive in a
+  single venv (same `import onnxruntime` name) — pick CUDA on the
+  dev machine; NPU EPs are usually separate runtime distributions.
+- Don't propose new FPGA-bitstream-redesign tasks (re-scoped); do
+  propose Extropic Z1 vendor / hardware-access tasks if Z1 is
+  approaching availability.
 
 ## SOTA Local Models (mandatory for new experiments)
 
