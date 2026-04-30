@@ -25,6 +25,52 @@ work is on hold.
 To re-enable: remove this constraint section AND remove exp1065 from
 `scripts/conductor_exclusion_manifest.json`.
 
+## MANDATORY-NEXT-MILESTONE PRIORITIES (.85 planner — hard pickup per CLAUDE.md)
+
+### NEW 2026-04-30: FPGA-vs-GPU Ising Baseline (HIGH PRIORITY — paper-blocking)
+
+**Problem:** exp1081 (.84) shipped a "fpga_speedup_confirmed_measured"
+verdict comparing FPGA (KV260) latency to **CPU**, not GPU. Reported
+12,788× speedup at N=64 is real but against an overhead-bound JAX
+CPU baseline, not a serious accelerator. Hardware-acceleration
+claims in the paper need a GPU comparison or they get torched in
+review.
+
+**Task spec (`openspec/change-proposals/fpga-vs-gpu-ising-baseline.md`
+recommended):**
+
+- Title: "FPGA vs GPU Ising Sampler Benchmark — onnxruntime-gpu CUDA EP"
+- Hardware: KV260 (FPGA), 2x RTX 3090 (GPU via onnxruntime-gpu CUDA EP),
+  JAX/numpy CPU. All three already installed and verified working
+  (commit `b53fe63a` accepts CUDA EP, `onnxruntime-gpu 1.25.1` in venv).
+- Workload: Ising sampling at N ∈ {64, 128, 256, 512, 1024} spins,
+  matched to exp1081 columns.
+- Metrics: per-sample latency (µs), throughput (samples/sec), and
+  if instrumentable, power-per-sample (KV260 ~5W, RTX 3090 ~350W).
+- Output schema must include `gpu_latencies_us`, `cpu_latencies_us`
+  (re-measured with batched inference, NOT JAX-dispatch-bound),
+  `fpga_latencies_us`, `crossover_n_spins_fpga_beats_gpu` (may be
+  None if GPU dominates), `perf_per_watt_advantage`.
+- Honest verdict tokens:
+  - `fpga_beats_gpu_below_N_X` — FPGA wins raw latency below some N
+  - `gpu_dominates_all_N` — GPU wins everywhere on raw latency
+  - `fpga_better_perf_per_watt_only` — GPU wins raw, FPGA wins watts
+  - `fpga_better_at_batch_size_1` — FPGA wins single-sample, GPU
+    wins batched (likely outcome — FPGA has no batching overhead)
+
+**Why this matters:**
+
+The position paper's Phase 2 hardware section currently rests on
+exp1081's CPU comparison. As written, that's a strawman. Either we
+add the GPU baseline OR we re-frame Phase 2 as
+"edge-portability/sovereignty" rather than raw-speedup-over-GPU. Both
+are defensible but the paper has to be explicit. The data has to
+exist either way.
+
+**Reservation:** count this against the .85 milestone's reserved
+infrastructure-class slots. It's load-bearing for paper credibility,
+not exploratory research.
+
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.82 planner — hard pickup per CLAUDE.md)
 
 ### NEW 2026-04-29: no-permanent-retirement-on-environmental-failures (HIGH PRIORITY — research-progress discipline)
