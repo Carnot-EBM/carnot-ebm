@@ -481,37 +481,125 @@ def run_agent(
 
             def _rescue_via_deliverable(reason: str, elapsed: float) -> tuple[bool, str] | None:
                 """After a timeout-kill, give the experiment a 60s grace
-                window to flush its deliverable. The exp1057 incident
-                (2026-04-30) showed Sonnet's subprocess writing a
-                complete success artifact 4 min AFTER the conductor's
-                kill — the work was done, only the stdout was silent.
-                Mark the run as success if the deliverable lands.
+                window to flush its deliverable, then validate it before
+                accepting.
+
+                Per "scientific method" discipline (2026-04-30 user
+                directive): we don't accept partially-run experiments
+                as total successes. A rescue is valid ONLY when:
+
+                  1. Artifact exists and is fresh (mtime >= start_time)
+                  2. JSON parses cleanly
+                  3. status is NOT in _BOOTSTRAP_STATUSES (running,
+                     blocked, partial, in_progress)
+                  4. honest_verdict (if present) does NOT match any
+                     _PARTIAL_TOKENS / _BLOCKED_TOKENS / _FAILED_TOKENS
+                     pattern — these indicate the experiment ran but
+                     did not satisfy its acceptance criteria
+
+                A bootstrap-only artifact, a "partial_some_below_x"
+                verdict, or a "blocked_*" verdict produces no rescue;
+                the original timeout-FAIL stands.
                 """
                 if not deliverable_path:
                     return None
                 rescue_path = PROJECT_ROOT / deliverable_path
                 rescue_deadline = time.time() + 60.0
+                # Reuse the verdict-token sets from the doc reconciler
+                # so rescue policy can't drift from the milestone-retro
+                # policy.
+                try:
+                    sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
+                    from in_process_doc_reconcile import (  # type: ignore[import-not-found]
+                        _BLOCKED_TOKENS,
+                        _FAILED_TOKENS,
+                        _PARTIAL_TOKENS,
+                    )
+
+                    untrustworthy_tokens = _PARTIAL_TOKENS + _BLOCKED_TOKENS + _FAILED_TOKENS
+                except ImportError:
+                    untrustworthy_tokens = (
+                        "partial",
+                        "inverted",
+                        "insufficient",
+                        "no_improvement",
+                        "still_wrong",
+                        "no_delta",
+                        "below",
+                        "regression",
+                        "negative",
+                        "flat",
+                        "plateau",
+                        "collapsed",
+                        "blocked",
+                        "failed",
+                        "timed_out",
+                        "exception",
+                        "tolerance_exceeded",
+                        "marginal",
+                        "incorrect",
+                    )
+
                 while time.time() < rescue_deadline:
                     if rescue_path.exists():
                         try:
                             mtime = rescue_path.stat().st_mtime
                         except OSError:
                             mtime = 0
-                        # Accept any artifact that was last touched
-                        # AFTER this run started (covers delayed writes
-                        # by post-kill child processes).
                         if mtime >= start_time:
+                            # Validate the artifact's status + verdict
+                            try:
+                                with rescue_path.open("r", encoding="utf-8") as fh:
+                                    payload = json.load(fh)
+                            except (OSError, json.JSONDecodeError) as exc:
+                                logger.warning(
+                                    "Rescue candidate %s present but unparseable (%s) — refusing",
+                                    deliverable_path,
+                                    exc,
+                                )
+                                return None
+
+                            if not isinstance(payload, dict):
+                                logger.warning(
+                                    "Rescue candidate %s is not a JSON object — refusing",
+                                    deliverable_path,
+                                )
+                                return None
+
+                            status = payload.get("status")
+                            if isinstance(status, str) and status.lower() in _BOOTSTRAP_STATUSES:
+                                logger.warning(
+                                    "Rescue refused: %s status=%r is bootstrap-only",
+                                    deliverable_path,
+                                    status,
+                                )
+                                return None
+
+                            verdict = payload.get("honest_verdict")
+                            if isinstance(verdict, str):
+                                vlow = verdict.lower()
+                                if any(tok in vlow for tok in untrustworthy_tokens):
+                                    logger.warning(
+                                        "Rescue refused: %s honest_verdict=%r is untrustworthy "
+                                        "(matches partial/blocked/failed token)",
+                                        deliverable_path,
+                                        verdict,
+                                    )
+                                    return None
+
                             logger.info(
                                 "%s rescued via deliverable post-%s "
-                                "(elapsed %.1f min, mtime %.1fs after start)",
+                                "(elapsed %.1f min, status=%r, verdict=%r)",
                                 AGENT_DISPLAY,
                                 reason,
                                 elapsed / 60,
-                                mtime - start_time,
+                                status,
+                                verdict,
                             )
                             full_output_local = "".join(output_lines)
                             return True, (
-                                f"[rescued via deliverable after {reason}] "
+                                f"[rescued via deliverable after {reason}; "
+                                f"status={status} verdict={verdict}] "
                                 f"{full_output_local[-1500:]}"
                             )
                     time.sleep(2.0)
