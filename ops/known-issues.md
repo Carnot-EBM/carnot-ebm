@@ -1,6 +1,29 @@
 # Carnot — Known Issues
 
-**Last Updated:** 2026-04-29
+**Last Updated:** 2026-04-30
+
+## OPERATOR CONSTRAINTS (planner: do NOT propose tasks that violate these)
+
+### 2026-04-30: codex backend integration paused
+
+User directive (2026-04-30 ~10:50Z): *"let's stop trying to add a
+codex backend for now"*. The codex CLI's `config.toml` rejects our
+`model_providers` block as containing reserved keys. Three .82 tasks
+(exp1060, exp1061) and exp1065 in .83 cycled and retired without
+producing artifacts. The .82/.83 planner-derived multi-agent routing
+work is on hold.
+
+**Planner instructions:**
+- Do NOT propose new tasks with `agent_type: codex`.
+- Do NOT propose "fix codex config" tasks (exp1065 is retired via
+  exclusion manifest).
+- Multi-agent routing infrastructure changes are still allowed,
+  but treat codex as deprecated until this constraint is lifted.
+- Gemini routing is unaffected — exp1074 (.83 fr11-alpha-t-live-v3)
+  retains `agent_type: gemini`.
+
+To re-enable: remove this constraint section AND remove exp1065 from
+`scripts/conductor_exclusion_manifest.json`.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.82 planner — hard pickup per CLAUDE.md)
 
