@@ -870,15 +870,23 @@ def run_tests(full: bool = False) -> tuple[bool, str]:
         if not existing:
             existing = ["tests/python/test_cli.py"]
 
-        # Pre-flight timeout: 300s. Originally 120s, but Exp 445's
-        # test_boltzmann_repair.py alone takes ~210s (genuine training loop
-        # inside test fixtures). Bumping to 300s avoids spurious pre-flight
-        # failures that trigger the 30-turn self-heal cycle for no reason.
+        # Pre-flight timeout: 1200s (20 min). Originally 120s, then 300s.
+        # 2026-04-30: bumped from 300s after the .84 smart-subset hit
+        # 32 minutes wall time on a 29-file subset. The 5-min cap was
+        # SIGKILLing pytest mid-run, producing empty SKIP messages and
+        # blocking exp1078 (Position Paper v2) for two consecutive
+        # iterations with no diagnostic output. The smart-subset has
+        # grown organically as more test files land — the timeout needs
+        # to scale with it.
+        #
+        # If the smart-subset exceeds 20 min, the planner should split
+        # individual experiment scripts (the 30+ min cost is concentrated
+        # in 1-2 slow training-loop tests, not the bulk of the suite).
         rc, stdout, stderr = _pytest_run(
             [venv_pytest]
             + existing
             + ["-q", "--no-header", "-n", "0", "--no-cov", "-o", "addopts="],
-            timeout=300,
+            timeout=1200,
         )
 
     # Find the summary line
