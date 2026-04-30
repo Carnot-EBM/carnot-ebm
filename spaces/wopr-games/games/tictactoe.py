@@ -18,6 +18,7 @@ the lesson Joshua learns.
 
 from __future__ import annotations
 
+import random
 from dataclasses import dataclass
 
 from games._base import StepResult, WOPRGame
@@ -63,10 +64,18 @@ def is_terminal(board: list[str]) -> bool:
     return winner(board) is not None or " " not in board
 
 
-def _minimax(board: list[str], player: str) -> tuple[int, int | None]:
+def _minimax(
+    board: list[str], player: str, rng: random.Random | None = None
+) -> tuple[int, int | None]:
     """Return (score, best_move). Score: +1 X-wins, -1 O-wins, 0 draw.
 
     Joshua's algorithm: pure minimax with no pruning needed (game is tiny).
+
+    If ``rng`` is supplied, ties between equally-optimal moves are broken
+    randomly. Without random tie-breaking the engine always plays the
+    first equally-optimal move (i=0 corner) and every game is identical
+    — the user complaint that triggered this change. Joshua still plays
+    perfectly; it just doesn't always play the SAME perfect game.
     """
     w = winner(board)
     if w == "X":
@@ -77,21 +86,27 @@ def _minimax(board: list[str], player: str) -> tuple[int, int | None]:
         return 0, None
 
     best_score = -2 if player == "X" else 2
-    best_move: int | None = None
+    best_moves: list[int] = []
 
     for i in range(9):
         if board[i] != " ":
             continue
         board[i] = player
         opponent = "O" if player == "X" else "X"
-        score, _ = _minimax(board, opponent)
+        score, _ = _minimax(board, opponent, rng=rng)
         board[i] = " "
 
-        if player == "X" and score > best_score or player == "O" and score < best_score:
+        if (player == "X" and score > best_score) or (player == "O" and score < best_score):
             best_score = score
-            best_move = i
+            best_moves = [i]
+        elif score == best_score:
+            best_moves.append(i)
 
-    return best_score, best_move
+    if not best_moves:
+        return best_score, None
+    if rng is not None and len(best_moves) > 1:
+        return best_score, rng.choice(best_moves)
+    return best_score, best_moves[0]
 
 
 def tictactoe_energy(state: TicTacToeState) -> float:
@@ -111,6 +126,11 @@ class TicTacToeGame(WOPRGame[TicTacToeState, int]):
     name = "TIC-TAC-TOE"
     description = "JOSHUA PLAYS ITSELF. SHALL WE PLAY A GAME?"
     accent_color = "#39ff14"
+
+    def __init__(self, seed: int | None = None):
+        # seed=None → fresh randomness each instance, so each game varies
+        # in tie-breaks even though both players still play optimally.
+        self._rng = random.Random(seed)
 
     def initial_state(self) -> TicTacToeState:
         return TicTacToeState(board=[" "] * 9, next_player="X")
@@ -155,8 +175,10 @@ class TicTacToeGame(WOPRGame[TicTacToeState, int]):
                 annotation=annotation,
             )
 
-        # Pick the optimal move for the current player
-        _, move = _minimax(state.board[:], state.next_player)
+        # Pick an optimal move for the current player; ties broken randomly
+        # so each game tells a different story even though both players
+        # still play perfectly.
+        _, move = _minimax(state.board[:], state.next_player, rng=self._rng)
         if move is None:
             return StepResult(
                 state=state,

@@ -109,7 +109,10 @@ class SudokuGame(WOPRGame[SudokuState, tuple[int, int, int]]):
     description = "9x9 CONSTRAINT-SATISFACTION. ENERGY = VIOLATIONS."
     accent_color = "#39ff14"
 
-    def __init__(self, puzzle: SudokuGrid | None = None, seed: int | None = 42):
+    def __init__(self, puzzle: SudokuGrid | None = None, seed: int | None = None):
+        # seed=None → fresh randomness each instance, so the
+        # simulated-annealing trajectory differs every run even on the
+        # same puzzle. Pass a seed only for reproduction in tests.
         self.puzzle = [row[:] for row in (puzzle or DEMO_PUZZLE)]
         self.clues = [[v != 0 for v in row] for row in self.puzzle]
         self.empties_per_row = _empty_cells_per_row(self.puzzle, self.clues)
