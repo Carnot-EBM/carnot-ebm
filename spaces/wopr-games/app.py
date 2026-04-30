@@ -160,13 +160,35 @@ def handle_terminal(text: str, history: list[dict]):
     # Append the user's typed line to the transcript right away.
     history = list(history) + [{"role": "user", "text": text}]
 
-    # 1. Try cartridge load
+    # 1a. AGAIN / REPLAY / RETRY → re-run the last cartridge in history.
+    if text.strip().lower() in {"again", "replay", "retry", "another", "more"}:
+        last_cart = None
+        for entry in reversed(history):
+            stash = entry.get("_cartridge")
+            if stash:
+                last_cart = stash
+                break
+        if last_cart is None:
+            history.append(
+                {
+                    "role": "wopr",
+                    "text": "NO PRIOR CARTRIDGE LOADED. TYPE 'LIST GAMES' TO BEGIN.",
+                }
+            )
+            yield (_render_history(history), gr.update(), gr.update(), history, "")
+            return
+        # Reuse the cartridge name as if the user typed it.
+        text = last_cart
+
+    # 1b. Try cartridge load
     cartridge = match_cartridge_load(text, ALL_GAMES)
     if cartridge is not None:
+        # Stash the cartridge name so AGAIN / REPLAY can find it later.
         history.append(
             {
                 "role": "wopr",
                 "text": f"LOADING CARTRIDGE: {cartridge.name}.",
+                "_cartridge": cartridge.name,
             }
         )
         history.append(
@@ -243,7 +265,11 @@ def handle_terminal(text: str, history: list[dict]):
         history.append(
             {
                 "role": "system",
-                "text": "READY. TYPE ANOTHER COMMAND OR LOAD A NEW CARTRIDGE.",
+                "text": (
+                    "READY. TYPE 'AGAIN' TO REPLAY  |  "
+                    "'LIST GAMES' FOR OTHER CARTRIDGES  |  "
+                    "ANY OTHER COMMAND TO CONTINUE."
+                ),
             }
         )
         yield (
