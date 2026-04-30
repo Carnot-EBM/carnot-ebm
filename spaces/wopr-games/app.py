@@ -336,6 +336,11 @@ def build_app() -> gr.Blocks:
                 )
                 game_viz = gr.HTML(value="")
                 energy_bar = gr.HTML(value="")
+                # REPEAT button — single click re-runs the most-recent
+                # cartridge with fresh randomness. Equivalent to typing
+                # AGAIN in the terminal but always visible next to the
+                # game-state panel for one-click access.
+                repeat_button = gr.Button("▶ REPEAT", variant="secondary", elem_id="wopr-repeat")
 
         with gr.Row():
             terminal_input = gr.Textbox(
@@ -357,6 +362,16 @@ def build_app() -> gr.Blocks:
         terminal_input.submit(
             fn=handle_terminal,
             inputs=[terminal_input, history_state],
+            outputs=outputs,
+        )
+
+        def _trigger_repeat(history: list[dict]):
+            """Synthesize an AGAIN command and stream the same handler."""
+            yield from handle_terminal("AGAIN", history)
+
+        repeat_button.click(
+            fn=_trigger_repeat,
+            inputs=[history_state],
             outputs=outputs,
         )
 
