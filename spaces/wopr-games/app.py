@@ -197,6 +197,13 @@ def handle_terminal(text: str, history: list[dict]):
                 "text": f"&gt; {cartridge.description}",
             }
         )
+        # WarGames immersion: David asked Joshua "is this a game or is it
+        # real?" and Joshua replied "WHAT'S THE DIFFERENCE?" — but the
+        # iconic line of cartridge selection in the film is when WOPR
+        # asks "NUMBER OF PLAYERS:" and David types 0, signalling that
+        # Joshua plays itself. Echoing that on every cartridge load.
+        history.append({"role": "wopr", "text": "NUMBER OF PLAYERS: 0"})
+        history.append({"role": "wopr", "text": "JOSHUA WILL PLAY ALONE."})
         history.append({"role": "system", "text": "CARNOT MINIMISATION ENGAGED."})
 
         # Stream the solve, appending each step's annotation to history.
