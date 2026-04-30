@@ -610,9 +610,37 @@ def run_tests(full: bool = False) -> tuple[bool, str]:
     logger.info("Running test suite%s...", " (FULL)" if full else " (smart subset)")
     venv_pytest = str(PROJECT_ROOT / ".venv" / "bin" / "pytest")
 
+    # Pre-tests are GATING, not live experiments. Strip CARNOT_FORCE_LIVE
+    # from the pytest env so live-mode-only tests (e.g. GPU EP presence
+    # assertions in test_experiment_259_onnxruntime_gpu.py) don't fail the
+    # gate when the dev environment lacks the asserted hardware build.
+    #
+    # 2026-04-30 incident: conductor's startup env had CARNOT_FORCE_LIVE=1
+    # which un-skipped test_cuda_ep_present_when_gpu_available, asserting
+    # CUDAExecutionProvider on a ROCm/AMD dev machine. The single failure
+    # caused exp1054 (KV260) to SKIP twice (02:26Z, 02:47Z) on what is
+    # actually unrelated infrastructure.
+    pretest_env = {k: v for k, v in os.environ.items() if k != "CARNOT_FORCE_LIVE"}
+
+    def _pytest_run(cmd: list[str], timeout: int) -> tuple[int, str, str]:
+        try:
+            result = subprocess.run(
+                cmd,
+                capture_output=True,
+                text=True,
+                cwd=str(PROJECT_ROOT),
+                timeout=timeout,
+                env=pretest_env,
+            )
+            return result.returncode, result.stdout, result.stderr
+        except subprocess.TimeoutExpired:
+            return -1, "", "Command timed out"
+        except Exception as exc:
+            return -1, "", str(exc)
+
     if full:
         # Full suite — used after successful experiment commit
-        rc, stdout, stderr = run_cmd(
+        rc, stdout, stderr = _pytest_run(
             [
                 venv_pytest,
                 "tests/python",
@@ -671,7 +699,7 @@ def run_tests(full: bool = False) -> tuple[bool, str]:
         # test_boltzmann_repair.py alone takes ~210s (genuine training loop
         # inside test fixtures). Bumping to 300s avoids spurious pre-flight
         # failures that trigger the 30-turn self-heal cycle for no reason.
-        rc, stdout, stderr = run_cmd(
+        rc, stdout, stderr = _pytest_run(
             [venv_pytest]
             + existing
             + ["-q", "--no-header", "-n", "0", "--no-cov", "-o", "addopts="],
