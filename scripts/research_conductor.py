@@ -479,6 +479,44 @@ def run_agent(
                 WALL_CLOCK_TIMEOUT > 0 and elapsed_total > HARD_CAP_MULTIPLIER * WALL_CLOCK_TIMEOUT
             )
 
+            def _rescue_via_deliverable(reason: str, elapsed: float) -> tuple[bool, str] | None:
+                """After a timeout-kill, give the experiment a 60s grace
+                window to flush its deliverable. The exp1057 incident
+                (2026-04-30) showed Sonnet's subprocess writing a
+                complete success artifact 4 min AFTER the conductor's
+                kill — the work was done, only the stdout was silent.
+                Mark the run as success if the deliverable lands.
+                """
+                if not deliverable_path:
+                    return None
+                rescue_path = PROJECT_ROOT / deliverable_path
+                rescue_deadline = time.time() + 60.0
+                while time.time() < rescue_deadline:
+                    if rescue_path.exists():
+                        try:
+                            mtime = rescue_path.stat().st_mtime
+                        except OSError:
+                            mtime = 0
+                        # Accept any artifact that was last touched
+                        # AFTER this run started (covers delayed writes
+                        # by post-kill child processes).
+                        if mtime >= start_time:
+                            logger.info(
+                                "%s rescued via deliverable post-%s "
+                                "(elapsed %.1f min, mtime %.1fs after start)",
+                                AGENT_DISPLAY,
+                                reason,
+                                elapsed / 60,
+                                mtime - start_time,
+                            )
+                            full_output_local = "".join(output_lines)
+                            return True, (
+                                f"[rescued via deliverable after {reason}] "
+                                f"{full_output_local[-1500:]}"
+                            )
+                    time.sleep(2.0)
+                return None
+
             if hard_cap_hit:
                 # Backstop: even with output, don't run more than 4× the soft cap.
                 logger.warning(
@@ -492,6 +530,9 @@ def run_agent(
                     proc.wait(timeout=10)
                 except subprocess.TimeoutExpired:
                     pass
+                rescued = _rescue_via_deliverable("hard-cap", elapsed_total)
+                if rescued is not None:
+                    return rescued
                 full_output = "".join(output_lines)
                 return False, (
                     f"Hard wall-clock cap after {int(elapsed_total)}s. "
@@ -510,6 +551,9 @@ def run_agent(
                     proc.wait(timeout=10)
                 except subprocess.TimeoutExpired:
                     pass
+                rescued = _rescue_via_deliverable("idle-timeout", elapsed_total)
+                if rescued is not None:
+                    return rescued
                 full_output = "".join(output_lines)
                 return False, (
                     f"Wall-clock+idle timeout after {int(elapsed_total)}s "
