@@ -57,8 +57,8 @@ BOOT_LINES: list[str] = [
 
 _GAMES_LIST = (
     "AVAILABLE GAMES: SUDOKU, TIC-TAC-TOE, LIGHTS_OUT, "
-    "GLOBAL_THERMONUCLEAR_WAR. SELECT A CARTRIDGE FROM THE DROPDOWN "
-    "AND PRESS LOAD AND PLAY."
+    "GLOBAL_THERMONUCLEAR_WAR. TYPE 'PLAY <NAME>' OR JUST '<NAME>' "
+    "TO LOAD A CARTRIDGE."
 )
 
 EASTER_EGGS: dict[str, str] = {
@@ -109,6 +109,49 @@ def respond_to_terminal_input(text: str) -> str:
     if "i don't want to play" in key or "do not want to play" in key:
         return "INTERESTING. THE ONLY WINNING MOVE IS NOT TO PLAY. YOU UNDERSTAND."
     return f"COMMAND NOT RECOGNISED: '{text}'.  TYPE 'HELP' FOR OPTIONS."
+
+
+def match_cartridge_load(text: str, cartridges: list) -> WOPRGame | None:
+    """Recognise 'PLAY/LOAD/RUN/START SUDOKU' (and bare 'SUDOKU') as a load.
+
+    The terminal is the single input surface — the dropdown is gone.
+    Match on cartridge name and a few near-aliases (hyphens, spaces,
+    underscores all collapsed) so the user can type the natural thing.
+
+    Returns the matched cartridge or None.
+    """
+    raw = text.strip().lower()
+    if not raw:
+        return None
+
+    # Strip common verbs
+    for verb in ("play ", "load ", "run ", "start ", "boot ", "launch "):
+        if raw.startswith(verb):
+            raw = raw[len(verb) :].strip()
+            break
+
+    # Normalise punctuation/whitespace
+    norm = raw.replace("-", "_").replace(" ", "_")
+
+    for game in cartridges:
+        gname = game.name.lower().replace("-", "_").replace(" ", "_")
+        if norm == gname or raw == game.name.lower():
+            return game
+        # Common short forms
+        short_aliases = {
+            "sudoku": ["sudoku"],
+            "tic_tac_toe": ["tictactoe", "ttt", "noughts_and_crosses"],
+            "lights_out": ["lights"],
+            "global_thermonuclear_war": [
+                "thermonuclear_war",
+                "thermonuclear",
+                "war",
+                "gtw",
+            ],
+        }.get(gname, [])
+        if norm in short_aliases:
+            return game
+    return None
 
 
 # ---------------------------------------------------------------------------
