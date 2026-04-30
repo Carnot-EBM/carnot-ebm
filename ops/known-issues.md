@@ -27,49 +27,85 @@ To re-enable: remove this constraint section AND remove exp1065 from
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.85 planner — hard pickup per CLAUDE.md)
 
-### NEW 2026-04-30: FPGA-vs-GPU Ising Baseline (HIGH PRIORITY — paper-blocking)
+### REVISED 2026-04-30: Phase-2 Hardware Story Re-Scope (HIGH PRIORITY — paper-shaping)
 
-**Problem:** exp1081 (.84) shipped a "fpga_speedup_confirmed_measured"
-verdict comparing FPGA (KV260) latency to **CPU**, not GPU. Reported
-12,788× speedup at N=64 is real but against an overhead-bound JAX
-CPU baseline, not a serious accelerator. Hardware-acceleration
-claims in the paper need a GPU comparison or they get torched in
-review.
+**SUPERSEDES the FPGA-vs-GPU baseline task originally proposed
+earlier 2026-04-30.** That task is no longer load-bearing because the
+Phase-3 architecture audit (5 FATAL findings, see
+`docs/research-notes/phase3-architecture-blindspot-audit-results.md`)
+showed the FPGA-deep-EBM path requires multi-month bitstream
+redesign that doesn't fit Carnot's actual production hardware
+roadmap.
 
-**Task spec (`openspec/change-proposals/fpga-vs-gpu-ising-baseline.md`
-recommended):**
+**User direction 2026-04-30 ~22:30Z:** *"I am less interested in FPGA
+with the future looking more Extropic Z1 or photonic. Option C + D
+sounds like the most realistic to me."*
 
-- Title: "FPGA vs GPU Ising Sampler Benchmark — onnxruntime-gpu CUDA EP"
-- Hardware: KV260 (FPGA), 2x RTX 3090 (GPU via onnxruntime-gpu CUDA EP),
-  JAX/numpy CPU. All three already installed and verified working
-  (commit `b53fe63a` accepts CUDA EP, `onnxruntime-gpu 1.25.1` in venv).
-- Workload: Ising sampling at N ∈ {64, 128, 256, 512, 1024} spins,
-  matched to exp1081 columns.
-- Metrics: per-sample latency (µs), throughput (samples/sec), and
-  if instrumentable, power-per-sample (KV260 ~5W, RTX 3090 ~350W).
-- Output schema must include `gpu_latencies_us`, `cpu_latencies_us`
-  (re-measured with batched inference, NOT JAX-dispatch-bound),
-  `fpga_latencies_us`, `crossover_n_spins_fpga_beats_gpu` (may be
-  None if GPU dominates), `perf_per_watt_advantage`.
+**The new Phase-2 framing for the position paper:**
+
+- KV260 (FPGA) is **proof-of-concept tier** — demonstrates that
+  energy is evaluable in dedicated hardware on simple
+  quadratic-Ising constraint problems. exp1041 / exp1068 / exp1081
+  remain valid as engineering proof-points but with sampler-
+  correctness caveats from audit Finding #2 (synchronous parallel
+  Glauber on arbitrary J doesn't preserve detailed balance).
+- For deep-NN energies and complex constraint composition (k=15+
+  verifiers), Carnot's production hardware path is **Extropic Z1 (when
+  available) and longer-term photonic**, NOT KV260 bitstream
+  redesign.
+- The deep-EBM-on-FPGA aspiration is documented as **future work**
+  with the 5 FATAL audit findings as known constraints any future
+  redesign must address.
+
+**Task spec for .85+: Sampler-Correctness Validation + GPU-Phase-2
+Comparison (revised scope):**
+
+- Title: "Phase-2 Sampler Correctness Audit — KV260 caveats + GPU
+  baseline"
+- Goal: validate exp1081's headline numbers under sampler-correct
+  conditions. Either constrain J to bipartite-block structure
+  (preserving detailed balance under synchronous-parallel Glauber)
+  OR re-port speedup numbers as comparing different
+  distributions and flag the academic caveat.
+- Add GPU Ising baseline (onnxruntime-gpu CUDA EP, 2x RTX 3090,
+  already installed) for honest acceleration comparison.
+- Output schema: `gpu_latencies_us`, `cpu_latencies_us` (compute-
+  bound, NOT JAX-dispatch-bound), `fpga_latencies_us_caveated`,
+  `sampler_distribution_difference_KL` (KL divergence between FPGA
+  sampler output and correct CPU Gibbs at small N).
 - Honest verdict tokens:
-  - `fpga_beats_gpu_below_N_X` — FPGA wins raw latency below some N
-  - `gpu_dominates_all_N` — GPU wins everywhere on raw latency
-  - `fpga_better_perf_per_watt_only` — GPU wins raw, FPGA wins watts
-  - `fpga_better_at_batch_size_1` — FPGA wins single-sample, GPU
-    wins batched (likely outcome — FPGA has no batching overhead)
+  - `fpga_poc_validated_with_caveats` — KV260 demonstrates POC, GPU
+    is the production hardware for complex constraints
+  - `fpga_sampler_distribution_mismatch_documented` — Finding #2
+    confirmed empirically, documented as future-work
+  - `extropic_z1_path_unblock_required` — Z1 hardware availability
+    is the gating step for production hardware claims
 
 **Why this matters:**
 
-The position paper's Phase 2 hardware section currently rests on
-exp1081's CPU comparison. As written, that's a strawman. Either we
-add the GPU baseline OR we re-frame Phase 2 as
-"edge-portability/sovereignty" rather than raw-speedup-over-GPU. Both
-are defensible but the paper has to be explicit. The data has to
-exist either way.
+The position paper's Phase-2 section now anchors to:
+1. KV260 as POC for "energy in dedicated hardware" (with caveats)
+2. Extropic Z1 as the planned production hardware (per CLAUDE.md
+   roadmap)
+3. Photonic as the long-horizon vision
 
-**Reservation:** count this against the .85 milestone's reserved
-infrastructure-class slots. It's load-bearing for paper credibility,
-not exploratory research.
+This is a defensible, honest story that doesn't require a
+multi-month FPGA bitstream redesign and doesn't lie about what we
+shipped.
+
+**Action for .85 planner:**
+
+- DO propose a Phase-2 sampler-correctness validation task (above
+  spec)
+- DO propose Extropic Z1 vendor-relationship / hardware-access tasks
+  if Z1 is approaching availability
+- DO NOT propose new FPGA bitstream redesign tasks
+- DO NOT propose deep-EBM-on-KV260 tasks (architecture audit shows
+  this is a multi-month rabbit hole)
+
+**Reservation:** sampler-correctness validation counts against .85's
+reserved infrastructure-class slots; Extropic vendor work is
+exploratory research not infrastructure.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.82 planner — hard pickup per CLAUDE.md)
 
