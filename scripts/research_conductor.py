@@ -455,26 +455,69 @@ def run_agent(
                         deliverable_last_sig = sig
                         deliverable_stable_since = now
 
-            # Wall-clock timeout (applies to all agents, including Claude):
-            # prevents the kind of 90+ min silent hang we saw on Exp 426 where
-            # the subprocess was alive but making no detectable progress.
+            # Progress-aware wall-clock timeout (applies to all agents):
+            # prevents the kind of 90+ min silent hang we saw on Exp 426 while
+            # allowing legitimate long-running training runs (e.g. exp1057
+            # Probe Ensemble — 20+ min Sonnet was killed mid-progress).
+            #
+            # Algorithm: the hard `WALL_CLOCK_TIMEOUT` is a *soft* cap. Once
+            # exceeded, kill ONLY if the subagent has been silent for more
+            # than IDLE_GRACE seconds. While output is fresh, extend the
+            # budget. Backstop at HARD_CAP_MULTIPLIER × WALL_CLOCK_TIMEOUT
+            # so a chatty-but-stuck process can't run forever.
+            #
+            # 2026-04-30: introduced after exp1057 Probe Ensemble v6 hit a
+            # hard 1201s wall-clock kill mid-training despite making real
+            # progress. The user wants long training runs to complete as
+            # long as they're actually doing work.
+            IDLE_GRACE = 300  # 5 min of silence before we consider the run stuck
+            HARD_CAP_MULTIPLIER = 4  # absolute backstop relative to soft cap
             elapsed_total = now - start_time
-            if WALL_CLOCK_TIMEOUT > 0 and elapsed_total > WALL_CLOCK_TIMEOUT:
+            elapsed_silence = now - last_output_time
+            soft_cap_hit = WALL_CLOCK_TIMEOUT > 0 and elapsed_total > WALL_CLOCK_TIMEOUT
+            hard_cap_hit = (
+                WALL_CLOCK_TIMEOUT > 0 and elapsed_total > HARD_CAP_MULTIPLIER * WALL_CLOCK_TIMEOUT
+            )
+
+            if hard_cap_hit:
+                # Backstop: even with output, don't run more than 4× the soft cap.
                 logger.warning(
-                    "%s exceeded wall-clock timeout (%d min), killing process group",
+                    "%s exceeded HARD wall-clock cap (%d min, %d× soft), killing process group",
                     AGENT_DISPLAY,
-                    WALL_CLOCK_TIMEOUT // 60,
+                    (HARD_CAP_MULTIPLIER * WALL_CLOCK_TIMEOUT) // 60,
+                    HARD_CAP_MULTIPLIER,
                 )
-                _kill_subagent_group("wall-clock")
+                _kill_subagent_group("wall-clock-hard")
                 try:
                     proc.wait(timeout=10)
                 except subprocess.TimeoutExpired:
                     pass
                 full_output = "".join(output_lines)
                 return False, (
-                    f"Wall-clock timeout after {int(elapsed_total)}s. "
+                    f"Hard wall-clock cap after {int(elapsed_total)}s. "
                     f"Last output: {full_output[-300:]}"
                 )
+            elif soft_cap_hit and elapsed_silence > IDLE_GRACE:
+                # Past the soft cap and the subagent has gone quiet — kill.
+                logger.warning(
+                    "%s past soft wall-clock cap (%d min) AND silent %ds — killing",
+                    AGENT_DISPLAY,
+                    WALL_CLOCK_TIMEOUT // 60,
+                    int(elapsed_silence),
+                )
+                _kill_subagent_group("wall-clock-idle")
+                try:
+                    proc.wait(timeout=10)
+                except subprocess.TimeoutExpired:
+                    pass
+                full_output = "".join(output_lines)
+                return False, (
+                    f"Wall-clock+idle timeout after {int(elapsed_total)}s "
+                    f"({int(elapsed_silence)}s silence). "
+                    f"Last output: {full_output[-300:]}"
+                )
+            # else: either still within soft cap, or past it but actively
+            # producing output. Let the run continue.
 
         try:
             proc.wait(timeout=30)
