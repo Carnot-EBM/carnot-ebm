@@ -1206,6 +1206,62 @@ def compute_adaptive_sleep_min(iter_duration_s: float, interval_min: int) -> tup
 _BOOTSTRAP_STATUSES = frozenset({"running", "blocked", "partial", "in_progress"})
 
 
+def _verdict_is_untrustworthy(payload: dict) -> tuple[bool, str | None]:
+    """Return (is_untrustworthy, verdict_string).
+
+    An artifact whose ``honest_verdict`` matches any
+    ``_PARTIAL_TOKENS`` / ``_BLOCKED_TOKENS`` / ``_FAILED_TOKENS``
+    substring should not be cached as a completed task — the
+    experiment ran but did not satisfy its acceptance criteria.
+
+    Per user directive 2026-04-30: "we don't want to accept only
+    partially run experiments as total successes. we need to be able
+    to trust our experiments for the scientific method to work."
+
+    Reuses the verdict-token sets from in_process_doc_reconcile so
+    the cache policy can't drift from milestone-retro policy. Falls
+    back to a hard-coded list if the import fails.
+    """
+    verdict = payload.get("honest_verdict") if isinstance(payload, dict) else None
+    if not isinstance(verdict, str):
+        return False, None
+    vlow = verdict.lower()
+    try:
+        sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
+        from in_process_doc_reconcile import (  # type: ignore[import-not-found]
+            _BLOCKED_TOKENS,
+            _FAILED_TOKENS,
+            _PARTIAL_TOKENS,
+        )
+
+        tokens = _PARTIAL_TOKENS + _BLOCKED_TOKENS + _FAILED_TOKENS
+    except ImportError:
+        tokens = (
+            "partial",
+            "inverted",
+            "insufficient",
+            "no_improvement",
+            "still_wrong",
+            "no_delta",
+            "below",
+            "regression",
+            "negative",
+            "flat",
+            "plateau",
+            "collapsed",
+            "blocked",
+            "failed",
+            "timed_out",
+            "exception",
+            "tolerance_exceeded",
+            "marginal",
+            "incorrect",
+        )
+    if any(tok in vlow for tok in tokens):
+        return True, verdict
+    return False, verdict
+
+
 def _deliverable_exists(task: dict) -> bool:
     """Check if a task's deliverable file already exists *and is finished*.
 
@@ -1246,6 +1302,16 @@ def _deliverable_exists(task: dict) -> bool:
             status,
         )
         return False
+    if isinstance(payload, dict):
+        untrust, verdict = _verdict_is_untrustworthy(payload)
+        if untrust:
+            logger.info(
+                "Deliverable %s exists but honest_verdict=%r is partial/blocked/failed; "
+                "not skipping (will re-run rather than accept partial as success)",
+                deliverable,
+                verdict,
+            )
+            return False
     return True
 
 
@@ -1281,6 +1347,17 @@ def _artifact_is_finished(task: dict) -> bool:
             status,
         )
         return False
+    if isinstance(payload, dict):
+        untrust, verdict = _verdict_is_untrustworthy(payload)
+        if untrust:
+            logger.warning(
+                "Prior log OK for task %r is poisoned: artifact %s "
+                "honest_verdict=%r (partial/blocked/failed); scheduling re-run.",
+                task.get("title", task.get("id", "?"))[:50],
+                deliverable,
+                verdict,
+            )
+            return False
     return True
 
 
