@@ -159,9 +159,11 @@ def main() -> None:
         deliverable="results/experiment_664_dualgpu_retrain.json",
         requires_gpu=True,
     )
-    tmpl.setup()
 
     # --- CI stub: skip entire GPU experiment when CARNOT_FORCE_LIVE is not set ---
+    # MUST run before tmpl.setup() — setup() calls assert_live_env_if_gpu()
+    # which raises RuntimeError when CARNOT_FORCE_LIVE != "1", preempting the
+    # CI-stub fallback and turning a graceful CI-mode skip into a hard failure.
     if os.environ.get("CARNOT_FORCE_LIVE") != "1":
         artifact = tmpl.build_result(
             {
@@ -184,6 +186,10 @@ def main() -> None:
             json.dump(artifact, f, indent=2)
         tmpl.assert_deliverable_written()
         return
+
+    # Live path: now safe to call setup() — CARNOT_FORCE_LIVE is set, so
+    # assert_live_env_if_gpu() inside setup() will pass.
+    tmpl.setup()
 
     # --- GPU detection ---
     try:
