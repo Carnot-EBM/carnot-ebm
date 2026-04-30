@@ -1,5 +1,29 @@
 # FPGA vs GPU Ising Sampler Benchmark — paper-blocking
 
+> **2026-04-30 RE-SCOPE NOTICE:** This proposal was drafted before the
+> Phase-3 architecture blind-spot audit (which identified 5 FATAL
+> findings — see `docs/research-notes/phase3-architecture-blindspot-audit-results.md`)
+> and before the user's direction to pivot future hardware bets to
+> Extropic Z1 + photonic rather than continue the FPGA-deep-EBM
+> rabbit hole.
+>
+> **The proposal scope is reduced.** Instead of a full FPGA-vs-GPU
+> headline comparison, the .85+ task is now a **Phase-2 Sampler
+> Correctness Audit + GPU Baseline** (see `ops/known-issues.md`
+> revised entry). The audit Finding #2 means exp1081's
+> synchronous-parallel-Glauber on arbitrary J doesn't preserve
+> detailed balance — any FPGA-vs-GPU comparison must validate sampler
+> correctness first OR explicitly caveat the comparison.
+>
+> The original spec below is preserved for reference but **superseded**
+> by the new known-issues.md entry. Future hardware claims rest on
+> Extropic Z1 + photonic, not on FPGA bitstream redesign.
+
+---
+
+## ORIGINAL PROPOSAL (SUPERSEDED, KEPT FOR REFERENCE)
+
+
 ## Why
 
 Milestone .84's exp1081 "FPGA Scale Benchmark" shipped with a
