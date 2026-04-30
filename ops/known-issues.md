@@ -27,6 +27,82 @@ To re-enable: remove this constraint section AND remove exp1065 from
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.85 planner — hard pickup per CLAUDE.md)
 
+### NEW 2026-04-30: Phase Prototype + Empirical Validation + Adversarial Check Discipline (5 LOAD-BEARING TASKS)
+
+**Background:** the Phase-3 architecture blind-spot audit caught 5
+FATAL findings three rigorous theoretical Deep Think rounds missed.
+The new MANDATORY discipline (see CLAUDE.md "Phase Prototype +
+Empirical Validation + Adversarial Check Discipline") requires every
+phase prototype + empirical pass/fail criteria + adversarial check
+BEFORE scaling. The current state is architecture-heavy / prototype-
+light / adversarial-check-rare, which is exactly the foundation-
+of-cards failure mode the user flagged.
+
+**Five .85 tasks the planner MUST propose:**
+
+1. **`exp10XX-phase1a-adversarial-verifier-robustness-audit`**
+   Goal: measure false-pass rate of shipping Carnot verifiers on
+   adversarially-crafted outputs (LLM-generated, designed to fool
+   each verifier). Acceptance: false-pass < 5% on canonical attack
+   patterns. Output: per-verifier robustness scorecard.
+   Phase: 1a. Reservation: infrastructure-class slot.
+
+2. **`exp10XX-phase1c-verifier-joint-null-space-measurement`**
+   Goal: empirically measure `dim(∩_i ker E_i)` for the existing
+   k verifiers (4-6 today, Round 9 calls for 15+). Acceptance: joint
+   null-space dimension < 5% of input space. Output: empirical
+   bound for AND-composition viability.
+   Phase: 1c. Reservation: infrastructure-class slot.
+
+3. **`exp10XX-phase2a-sampler-correctness-audit`** (revised from
+   prior FPGA-vs-GPU baseline task, see entry below for details)
+   Goal: KL divergence between KV260 FPGA samples and correct CPU
+   Gibbs samples on a deliberately frustrated J matrix. Empirically
+   confirm or refute audit Finding #2 (synchronous parallel Glauber
+   non-equilibrium). Acceptance: KL < ε OR documented caveat in
+   exp1081's headline measurement.
+   Phase: 2a. Reservation: infrastructure-class slot.
+
+4. **`exp10XX-phase3a-pre-prototype-adversarial-round`**
+   Goal: BEFORE writing the DBAE-EBM prototype code, run a hostile-
+   reviewer round on the prototype IMPLEMENTATION (not architecture).
+   Specifically find ways the prototype could silently pass
+   acceptance-gate numbers without actually working: degenerate
+   identity encoders, decoder LM-prior overpowering bottleneck, EBM
+   converging to constants, etc. Output: list of failure modes the
+   prototype MUST detect via instrumentation.
+   Phase: 3a. Reservation: research-class slot.
+
+5. **`exp10XX-diagnostic-instrumentation-library`**
+   Goal: single shared Python module providing α_t tracking, joint
+   null-space estimation, KL divergence measurement, decoded-text
+   diversity scoring, manifold-coverage metrics. Used by every
+   phase prototype. Acceptance: 100% test coverage + integration
+   tests showing every diagnostic produces meaningful values on a
+   small reference setup.
+   Phase: cross-cutting infrastructure. Reservation: infrastructure-
+   class slot.
+
+**Why these are MANDATORY for .85:**
+
+- The discipline is now codified in CLAUDE.md as MANDATORY (see the
+  new "Phase Prototype + Empirical Validation + Adversarial Check
+  Discipline" section).
+- Each task addresses a specific empirical-or-adversarial gap
+  identified by the framework at
+  `docs/research-notes/phase-prototype-and-validation-framework.md`.
+- Without these, the .85 milestone perpetuates the current
+  "architecture-heavy / prototype-light / adversarial-check-rare"
+  pattern that today's audit identified as the foundation-of-cards
+  failure mode.
+
+**Reservation accounting:** 4 of these 5 tasks count against .85's
+reserved infrastructure-class slots. The .85 milestone budget
+should reflect that 4 of ~13 task slots are pre-allocated to this
+discipline.
+
+---
+
 ### REVISED 2026-04-30: Phase-2 Hardware Story Re-Scope (HIGH PRIORITY — paper-shaping)
 
 **SUPERSEDES the FPGA-vs-GPU baseline task originally proposed

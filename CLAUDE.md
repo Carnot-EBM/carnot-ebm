@@ -219,6 +219,75 @@ honest discipline at the planner layer alone.
 - **The energy function is ground truth.** It cannot be gamed. This is the invariant across all three phases.
 - **No-doomed-rerun discipline:** see "Failed-Experiment Rerun Discipline" above.
 
+## Phase Prototype + Empirical Validation + Adversarial Check Discipline (MANDATORY)
+
+**Origin:** 2026-04-30 Phase-3 architecture blind-spot audit caught
+5 FATAL findings that three rigorous theoretical Deep Think rounds
+missed. Lesson: *unless we have adversarial checks at each phase
+boundary, we are building a house of cards that cannot function in
+the end.*
+
+Every Carnot phase (1a/1b/1c/1d... 2a/2b/2c... 3a/3b/3c...) must
+satisfy three requirements before ANY scaling decision is committed:
+
+1. **Software prototype** — concrete code artifact in the repo, not
+   just an architecture document. The prototype must be runnable
+   end-to-end at small scale (e.g., 6,500-pair FoVer corpus for
+   Phase-3 substrate).
+
+2. **Empirical validation criteria** — a documented list of
+   measurable pass/fail tests with explicit thresholds. Examples:
+   `inf_t α_t > 0.1` over 100 MLD steps; decoder
+   `joint-constraint pass rate > 85%`; verifier joint null-space
+   `dim < 5%` of input space; FPGA sampler `KL(P_fpga || P_gibbs) < ε`.
+
+3. **Adversarial check** — a hostile-reviewer round explicitly
+   commissioned to find ways the prototype could pass acceptance
+   gates without actually working. Required BEFORE scaling, not
+   after. Examples of the attack patterns to demand:
+   - Could the encoder be learning a degenerate identity?
+   - Could the decoder be ignoring the bottleneck and using language-
+     model prior alone?
+   - Could the EBM be converging to a single low-energy point?
+   - Could the verifier suite share a pathological joint null space?
+   - Could the hardware sampler be sampling from a different
+     distribution than the model intends?
+
+**Empirical instrumentation IS adversarial check at scale.** A
+prototype that emits the right diagnostics surfaces architecture-
+level flaws automatically. A prototype that doesn't will let
+flaws ship. Therefore every phase prototype MUST include the
+diagnostic instrumentation for EVERY theoretical concern the phase
+rests on (α_t tracking, joint null-space estimation, KL divergence,
+decoded-text diversity, etc.).
+
+**Cross-phase verification.** Every phase artifact must produce
+empirical pass/fail data visible to downstream phases. A Phase-3
+prototype that depends on Phase-1c's k=15 AND-composition must
+VERIFY at integration time that Phase-1c's empirical claims hold
+on the deployed verifier suite — not trust them.
+
+**Planner instructions:**
+
+- When proposing tasks for any phase, include the prototype +
+  empirical-criteria + adversarial-check trio. A task that proposes
+  scaling without one of these three is rejected.
+- The .85+ planner has 5 candidate tasks already filed under this
+  discipline (see `ops/known-issues.md`):
+  1. Phase 1a Adversarial Verifier Robustness Audit
+  2. Phase 1c Verifier Joint Null-Space Measurement
+  3. Phase 2a Sampler Correctness Audit
+  4. Phase 3a Pre-Prototype Adversarial Round
+  5. Diagnostic instrumentation library
+- Architecture-level Deep Think rounds remain valuable but cannot
+  substitute for empirical instrumentation. Treat any architecture
+  decision as provisional until the phase prototype confirms
+  empirically.
+
+**Cross-references:**
+- Full framework: `docs/research-notes/phase-prototype-and-validation-framework.md`
+- Audit precedent: `docs/research-notes/phase3-architecture-blindspot-audit-results.md`
+
 ## Overdue-Priority Forcing Function (MANDATORY)
 
 If a `ops/known-issues.md` "MANDATORY-NEXT-MILESTONE PRIORITIES" entry has been
