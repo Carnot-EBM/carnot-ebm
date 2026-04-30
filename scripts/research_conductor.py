@@ -1518,7 +1518,17 @@ def pick_next_task(completed_log: str) -> dict | None:
         if status == "OK":
             completed_titles.add(title)
             fail_counts[title] = 0  # Reset on success
-        elif status in ("FAIL", "REVERT", "SKIP", "NOOP", "GATE_BLOCK"):
+        elif status in ("FAIL", "REVERT", "SKIP", "NOOP", "GATE_BLOCK", "DOOMED_RERUN_BLOCK"):
+            # DOOMED_RERUN_BLOCK added 2026-04-30: when the failure-ledger
+            # pre-launch check rejects a task because its YAML lacks
+            # prior_failures matching a scope-similar prior failure, the
+            # task can never run as written. Without counting this as a
+            # fail, the conductor loops forever — observed in .84 with
+            # exp1080 SemEnergy Probe v1 cycling 4+ blocks at ~10 min each.
+            # Same structural fix as the GATE_BLOCK count from earlier
+            # today (commit 4e46ede6) — the only "variance" available is
+            # editing the YAML, which the conductor can't do, so we should
+            # retire after MAX_FAILURES_PER_TASK rather than loop.
             # GATE_BLOCK added 2026-04-29: when an upstream task retires
             # (hits MAX_FAILURES) without producing the artifact a downstream
             # gate references, the downstream task gate-blocks indefinitely
