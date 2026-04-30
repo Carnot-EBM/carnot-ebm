@@ -1078,6 +1078,54 @@ def _check_auroc_anomaly(task: dict) -> None:
         f.write(_json.dumps(record) + "\n")
 
 
+def _classify_retirement(exp_id: str, verdict: str | None) -> str:
+    """Classify a task's retirement cause as 'environmental' or 'merit'.
+
+    Per the no-permanent-retirement-on-environmental-failures policy
+    (openspec/change-proposals/no-permanent-retirement-on-environmental-failures.md):
+
+    - **environmental** = the task didn't get a fair shot. Pre-tests
+      were broken, the conductor hit max-turns, an upstream gate was
+      missing, the GPU was unavailable, etc. These should be respawned
+      with variance applied — the experiment hypothesis hasn't been
+      tested yet.
+    - **merit** = the task ran cleanly and the hypothesis didn't hold
+      (below baseline, no improvement, regression). Don't auto-respawn;
+      the planner has to decide whether to retry with different scope.
+
+    Conservative default: empty/None verdict → "merit" (don't auto-respawn
+    when we have no signal). Compound verdicts are matched by substring,
+    case-insensitive.
+
+    Spec: REQ-CONDUCTOR-RETIRE-CLASSIFY, SCENARIO-RETIRE-1, -2.
+    """
+    if not verdict or not isinstance(verdict, str):
+        return "merit"
+    vlow = verdict.lower()
+
+    environmental_tokens = (
+        "pre_tests_failing",
+        "max_turns",
+        "gate_block",
+        "gate_check_failed",
+        "blocked_no_live_gpu",
+        "blocked_prereq",
+        "scaffold_only",
+        "blocked_gate_check_failed",
+        "envpropagation",
+        # Conductor log status codes that indicate environmental failure.
+        # SKIP/FAIL alone are too ambiguous in isolation, but SKIP is
+        # almost always environmental (pre-test self-heal failed) and
+        # FAIL with the surrounding context tokens above is too.
+        "skip",
+        "fail: max_turns",
+        "fail: pre",
+    )
+    if any(tok in vlow for tok in environmental_tokens):
+        return "environmental"
+    return "merit"
+
+
 def log_step(task: str, status: str, details: str = "") -> None:
     """Append to conductor log."""
     timestamp = datetime.now(UTC).strftime("%Y-%m-%d %H:%M UTC")
