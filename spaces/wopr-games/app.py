@@ -1,16 +1,16 @@
 """WOPR Games — Gradio Space entry point.
 
+Single-input UX: the terminal is the only surface. Users type
+commands like ``LOAD SUDOKU`` or ``PLAY GLOBAL THERMONUCLEAR WAR``;
+easter eggs (``JOSHUA``, ``CHESS``, ``HELP``…) work in the same
+input. The right panel renders the live game state. There is no
+dropdown — selecting a cartridge IS the act of typing its name.
+
 Run locally:
-    python -m spaces.wopr_games.app
+    python app.py
 
-Run on HuggingFace Space: this file is the entry point that
-HuggingFace looks for. The rest of the package is shipped alongside
-in `spaces/wopr-games/`.
-
-The page presents a CRT-terminal aesthetic with one cartridge
-selectable at a time. Each cartridge implements `WOPRGame`; the
-shell handles all the WOPR flavour (boot sequence, terminal
-streaming, energy bar, easter eggs).
+On HuggingFace Space: this file is the entry point. The rest of the
+package ships alongside (``games/``, ``wopr_shell.py``, etc.).
 """
 
 from __future__ import annotations
@@ -19,12 +19,13 @@ import gradio as gr
 from games import ALL_GAMES
 from wopr_shell import (
     BOOT_LINES,
+    match_cartridge_load,
+    render_energy_bar,
     respond_to_terminal_input,
-    stream_solve,
 )
 
 # ---------------------------------------------------------------------------
-# WOPR-themed CSS — phosphor green on black, scanlines, glow
+# WOPR-themed CSS — phosphor green on black, blink, glow
 # ---------------------------------------------------------------------------
 
 WOPR_CSS = """
@@ -68,64 +69,200 @@ input, textarea, select {
 
 
 # ---------------------------------------------------------------------------
+# Terminal rendering helpers
+# ---------------------------------------------------------------------------
+
+
+def _wrap_terminal(inner_html: str) -> str:
+    """Wrap inner content in the WOPR CRT-terminal frame."""
+    return (
+        '<div style="background:#000;border:2px solid #39ff14;'
+        "padding:16px 20px;min-height:340px;max-height:520px;overflow-y:auto;"
+        "font-family:JetBrains Mono,Courier New,monospace;"
+        "box-shadow:0 0 24px rgba(57,255,20,0.25);"
+        'border-radius:4px;">' + inner_html + "</div>"
+    )
+
+
+def _render_history(history: list[dict]) -> str:
+    """Render the running terminal transcript as HTML.
+
+    Each entry is a dict {role: 'user'|'wopr'|'system', text: str}.
+    Last 80 lines kept to avoid runaway DOM.
+    """
+    lines = []
+    for entry in history[-80:]:
+        role = entry.get("role", "wopr")
+        text = entry.get("text", "")
+        if role == "user":
+            lines.append(
+                f'<div style="color:#9aff9a;font-family:JetBrains Mono,monospace;'
+                f'font-size:13px;line-height:1.4;">&gt; {text}</div>'
+            )
+        elif role == "system":
+            lines.append(
+                f'<div style="color:#5aff5a;font-family:JetBrains Mono,monospace;'
+                f'font-size:12px;line-height:1.4;font-style:italic;">'
+                f"[{text}]</div>"
+            )
+        else:  # wopr
+            lines.append(
+                f'<div style="color:#39ff14;font-family:JetBrains Mono,monospace;'
+                f'font-size:13px;line-height:1.4;">{text}</div>'
+            )
+    return _wrap_terminal("".join(lines))
+
+
+def _initial_history() -> list[dict]:
+    """Boot-sequence transcript shown on page load."""
+    history: list[dict] = []
+    for line in BOOT_LINES:
+        if not line:
+            continue
+        history.append({"role": "wopr", "text": line})
+    history.append(
+        {
+            "role": "system",
+            "text": (
+                "TYPE A COMMAND. TRY: LIST GAMES  |  PLAY SUDOKU  |  "
+                "JOSHUA  |  CHESS  |  GLOBAL THERMONUCLEAR WAR"
+            ),
+        }
+    )
+    return history
+
+
+# ---------------------------------------------------------------------------
 # Gradio handlers
 # ---------------------------------------------------------------------------
 
-GAMES_BY_NAME = {g.name: g for g in ALL_GAMES}
-
 
 def boot_html() -> str:
-    """Static boot-sequence HTML rendered on page load."""
-    lines = []
-    for line in BOOT_LINES:
-        if not line:
-            lines.append('<div style="height:6px;"></div>')
-        else:
-            lines.append(
-                f'<div style="color:#39ff14;font-family:JetBrains Mono,monospace;'
-                f'font-size:14px;line-height:1.4;">&gt; {line}</div>'
-            )
-    inner = "".join(lines)
-    return (
-        '<div style="background:#000;border:2px solid #39ff14;'
-        "padding:16px 20px;min-height:200px;"
-        "font-family:JetBrains Mono,Courier New,monospace;"
-        "box-shadow:0 0 24px rgba(57,255,20,0.25);"
-        'border-radius:4px;">' + inner + "</div>"
-    )
+    """Static initial terminal contents."""
+    return _render_history(_initial_history())
 
 
-def run_cartridge(game_name: str):
-    """Generator: stream a cartridge solve to the UI."""
-    cartridge = GAMES_BY_NAME.get(game_name)
-    if cartridge is None:
-        empty = f'<div style="color:#ff3939;">UNKNOWN CARTRIDGE: {game_name}</div>'
-        yield empty, empty, ""
+def handle_terminal(text: str, history: list[dict]):
+    """Single input handler.
+
+    - If the input matches a cartridge load command, stream the solve.
+    - Otherwise treat as easter egg / help / unknown.
+
+    Yields (terminal_html, viz_html, energy_bar_html, history_state, input_clear).
+    Generator: streams multiple yields during cartridge solve, single yield
+    for easter eggs.
+    """
+    text = text.strip()
+    if not text:
+        yield (_render_history(history), gr.update(), gr.update(), history, "")
         return
-    yield from stream_solve(cartridge, max_iterations=5000, yield_every=25)
 
+    # Append the user's typed line to the transcript right away.
+    history = list(history) + [{"role": "user", "text": text}]
 
-def handle_terminal_input(text: str, history: list[tuple[str, str]]):
-    """Respond to user terminal input with WarGames easter eggs."""
+    # 1. Try cartridge load
+    cartridge = match_cartridge_load(text, ALL_GAMES)
+    if cartridge is not None:
+        history.append(
+            {
+                "role": "wopr",
+                "text": f"LOADING CARTRIDGE: {cartridge.name}.",
+            }
+        )
+        history.append(
+            {
+                "role": "wopr",
+                "text": f"&gt; {cartridge.description}",
+            }
+        )
+        history.append({"role": "system", "text": "CARNOT MINIMISATION ENGAGED."})
+
+        # Stream the solve, appending each step's annotation to history.
+        state = cartridge.initial_state()
+        initial_energy = cartridge.energy(state)
+        last_energy = initial_energy
+        max_iterations = 5000
+        yield_every = 25
+
+        # First frame: show initial state
+        yield (
+            _render_history(history),
+            cartridge.visualize(state, initial_energy),
+            render_energy_bar(
+                initial_energy,
+                max(initial_energy, 1.0),
+                accent=cartridge.accent_color,
+            ),
+            history,
+            "",
+        )
+
+        for iteration in range(max_iterations):
+            step = cartridge.carnot_step(state, iteration)
+            state = step.state
+            should_yield = (
+                iteration % yield_every == 0 or step.is_solved or step.energy < last_energy
+            )
+            if should_yield:
+                history.append(
+                    {
+                        "role": "wopr",
+                        "text": f"[ITER {iteration:04d}] {step.annotation}",
+                    }
+                )
+                yield (
+                    _render_history(history),
+                    cartridge.visualize(state, step.energy),
+                    render_energy_bar(
+                        step.energy,
+                        max(initial_energy, 1.0),
+                        accent=cartridge.accent_color,
+                    ),
+                    history,
+                    "",
+                )
+                last_energy = step.energy
+            if step.is_solved:
+                break
+
+        final_energy = cartridge.energy(state)
+        if cartridge.is_solved(state):
+            history.append(
+                {
+                    "role": "wopr",
+                    "text": (f"SOLVED AT ITER {iteration}. FINAL ENERGY: {final_energy:.2f}."),
+                }
+            )
+        else:
+            history.append(
+                {
+                    "role": "wopr",
+                    "text": (f"ITER LIMIT REACHED. FINAL ENERGY: {final_energy:.2f}."),
+                }
+            )
+        history.append(
+            {
+                "role": "system",
+                "text": "READY. TYPE ANOTHER COMMAND OR LOAD A NEW CARTRIDGE.",
+            }
+        )
+        yield (
+            _render_history(history),
+            cartridge.visualize(state, final_energy),
+            render_energy_bar(
+                final_energy,
+                max(initial_energy, 1.0),
+                accent=cartridge.accent_color,
+            ),
+            history,
+            "",
+        )
+        return
+
+    # 2. Easter egg / help / unknown
     response = respond_to_terminal_input(text)
-    history = history + [(text, response)]
-    transcript_html_lines = []
-    for user_text, bot_text in history[-10:]:
-        transcript_html_lines.append(
-            f'<div style="color:#9aff9a;font-family:JetBrains Mono,monospace;'
-            f'font-size:13px;">&gt; {user_text}</div>'
-        )
-        transcript_html_lines.append(
-            f'<div style="color:#39ff14;font-family:JetBrains Mono,monospace;'
-            f'font-size:13px;margin-bottom:6px;">{bot_text}</div>'
-        )
-    transcript_html = (
-        '<div style="background:#000;border:1px solid #39ff14;padding:10px;'
-        'min-height:80px;font-family:JetBrains Mono,monospace;">'
-        + "".join(transcript_html_lines)
-        + "</div>"
-    )
-    return transcript_html, history, ""
+    history.append({"role": "wopr", "text": response})
+    yield (_render_history(history), gr.update(), gr.update(), history, "")
 
 
 # ---------------------------------------------------------------------------
@@ -149,6 +286,8 @@ def build_app() -> gr.Blocks:
             "</p>"
         )
 
+        history_state = gr.State(_initial_history())
+
         with gr.Row():
             with gr.Column(scale=2):
                 gr.HTML(
@@ -166,47 +305,26 @@ def build_app() -> gr.Blocks:
                 energy_bar = gr.HTML(value="")
 
         with gr.Row():
-            cartridge_dropdown = gr.Dropdown(
-                choices=[g.name for g in ALL_GAMES],
-                value=ALL_GAMES[0].name,
-                label="SELECT CARTRIDGE",
+            terminal_input = gr.Textbox(
+                label="",
+                placeholder="> _",
+                lines=1,
                 interactive=True,
+                scale=5,
+                show_label=False,
             )
-            run_button = gr.Button("LOAD AND PLAY", variant="primary")
+            submit_button = gr.Button("ENTER", variant="primary", scale=1)
 
-        with gr.Row(), gr.Column():
-            gr.HTML(
-                '<h3 style="color:#39ff14;font-family:JetBrains Mono,monospace;">'
-                "TYPE A COMMAND  (try: JOSHUA, CHESS, GLOBAL THERMONUCLEAR WAR)"
-                "</h3>"
-            )
-            terminal_history_state = gr.State([])
-            with gr.Row():
-                terminal_input = gr.Textbox(
-                    label="",
-                    placeholder="> ",
-                    lines=1,
-                    interactive=True,
-                )
-                submit_button = gr.Button("SEND", variant="secondary")
-            terminal_response = gr.HTML(value="")
-
-        # Wire it up
-        run_button.click(
-            fn=run_cartridge,
-            inputs=[cartridge_dropdown],
-            outputs=[terminal_display, game_viz, energy_bar],
-        )
-
+        outputs = [terminal_display, game_viz, energy_bar, history_state, terminal_input]
         submit_button.click(
-            fn=handle_terminal_input,
-            inputs=[terminal_input, terminal_history_state],
-            outputs=[terminal_response, terminal_history_state, terminal_input],
+            fn=handle_terminal,
+            inputs=[terminal_input, history_state],
+            outputs=outputs,
         )
         terminal_input.submit(
-            fn=handle_terminal_input,
-            inputs=[terminal_input, terminal_history_state],
-            outputs=[terminal_response, terminal_history_state, terminal_input],
+            fn=handle_terminal,
+            inputs=[terminal_input, history_state],
+            outputs=outputs,
         )
 
         gr.HTML(
