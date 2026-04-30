@@ -114,6 +114,7 @@ import concurrent.futures
 import contextlib
 import datetime
 import gc
+import hashlib
 import json
 import logging
 import os
@@ -478,6 +479,60 @@ class EnvPropagationGuard:
 
 
 # ---------------------------------------------------------------------------
+# Reproducibility checksum helper
+# ---------------------------------------------------------------------------
+
+
+def _compute_repro_checksum(
+    seed: int,
+    code_files: list[str],
+    data_path: str | None = None,
+) -> str:
+    """Return a 16-character hex reproducibility checksum.
+
+    Why a checksum: after the 2026-04-29 exp1031 verdict flip (fr11_loop_closed
+    at 21:12Z vs carnot_filter_below_baseline at 01:13Z), the project needs a
+    lightweight fingerprint that makes *what environment produced this verdict*
+    auditable. The checksum is NOT a guarantee of bit-exact reproduction (GPU
+    non-determinism prevents that); it IS a signal that the same seed + code +
+    data were used, so verdict differences must be attributed to GPU noise or
+    model-load variance rather than code changes.
+
+    The hash covers:
+    - The integer seed (first 8 bytes, big-endian) — seed changes ⟹ hash changes.
+    - Content of each code file in ``code_files`` that exists on disk.
+    - Content of ``data_path`` if provided and it exists on disk.
+
+    Parameters
+    ----------
+    seed:
+        Integer RNG seed recorded in the artifact.
+    code_files:
+        List of file paths to include in the hash (typically the experiment
+        script and any helper modules it imports from this repo).
+    data_path:
+        Optional path to the primary dataset file consumed by the experiment.
+
+    Returns
+    -------
+    str
+        First 16 hex characters of the SHA-256 digest — short enough to embed
+        in a JSON artifact without clutter, long enough to detect accidental
+        code-or-data drift.
+    """
+    h = hashlib.sha256()
+    h.update(seed.to_bytes(8, "big"))
+    for path in code_files:
+        if os.path.exists(path):
+            with open(path, "rb") as fp:
+                h.update(fp.read())
+    if data_path and os.path.exists(data_path):
+        with open(data_path, "rb") as fp:
+            h.update(fp.read())
+    return h.hexdigest()[:16]
+
+
+# ---------------------------------------------------------------------------
 # InferenceResult
 # ---------------------------------------------------------------------------
 
@@ -540,6 +595,7 @@ class ExperimentTemplate:
         *,
         requires_gpu: bool = False,
         repo_root: Path | None = None,
+        seed: int = 42,
     ) -> None:
         # REQ-INFRA-070: source the session-env file FIRST so that vars written
         # by a prior apply_env_autofix() call (in a different process/invocation)
@@ -552,6 +608,11 @@ class ExperimentTemplate:
         self.title = title
         self.deliverable = deliverable
         self.requires_gpu = requires_gpu
+        # Random seed for verdict-reproducibility discipline (2026-04-29 incident).
+        # Default 42 preserves backward compatibility for experiments that don't
+        # care about reproducibility; pass seed=<N> to ExperimentTemplate() to
+        # override. The seed is applied in setup() and recorded in every artifact.
+        self.random_seed: int = seed
         self._repo_root: Path = repo_root if repo_root is not None else _get_repo_root()
         self.checkpoint: dict[str, Any] | None = None
         self._started_at: str = _utc_now()
@@ -1085,6 +1146,26 @@ class ExperimentTemplate:
         # Try to resume from checkpoint
         self.checkpoint = self.checkpoint_resume()
         self._t0 = time.perf_counter()  # reset timer after setup I/O
+
+        # Canonical RNG initialisation — verdict-reproducibility discipline (2026-04-29).
+        # Seeds numpy, stdlib random, and JAX's default PRNG key from self.random_seed
+        # so that stochastic experiment operations produce the same values across reruns
+        # with the same seed. torch is seeded only when it is importable (GPU experiments).
+        import random as _random
+        import numpy as _np
+
+        _np.random.seed(self.random_seed)
+        _random.seed(self.random_seed)
+        os.environ["JAX_DEFAULT_PRNG_SEED"] = str(self.random_seed)
+        try:
+            import torch as _torch  # noqa: PLC0415
+
+            # AttributeError covers tests that monkey-patch sys.modules['torch']
+            # with a SimpleNamespace stub lacking manual_seed.
+            if hasattr(_torch, "manual_seed"):
+                _torch.manual_seed(self.random_seed)
+        except ImportError:
+            pass
 
     # ------------------------------------------------------------------
     # assert_deliverable_written()
@@ -1781,6 +1862,8 @@ class ExperimentTemplate:
         cost_usd: float | None = None,
         decision_class: str | list[str] | None = None,
         metrics_used: list[str] | None = None,
+        code_files: list[str] | None = None,
+        data_path: str | None = None,
         **extra_fields: Any,
     ) -> dict[str, Any]:
         """Build a standardised result artifact with all required fields.
@@ -1809,6 +1892,14 @@ class ExperimentTemplate:
             ``{"detect", "verify", "repair"}``.  Raises ``ValueError`` on an
             unknown class so typos do not silently corrupt the
             retrospective's slice-by-class view.
+        code_files : list[str], optional
+            Paths to source files to include in the reproducibility checksum.
+            Typically ``[__file__]`` from the calling experiment script.
+            When omitted, only the seed is hashed (weaker but still recorded).
+        data_path : str, optional
+            Path to the primary dataset consumed by this experiment, included
+            in the reproducibility checksum so that data changes are detectable
+            across reruns even when the code and seed are identical.
         **extra_fields
             Additional top-level fields (e.g. ``stall_root_cause="..."``,
             ``custom_tag="hello"``).
@@ -1829,6 +1920,16 @@ class ExperimentTemplate:
         finished_at = _utc_now()
         duration_s = round(time.perf_counter() - self._t0, 3)
 
+        # Reproducibility checksum — always computed so every artifact is auditable.
+        # Records (seed + code content + data content) as a 16-char SHA256 prefix.
+        # On rerun: if the checksum matches the prior artifact, any verdict difference
+        # is attributable to GPU/hardware noise rather than code or data drift.
+        repro_checksum = _compute_repro_checksum(
+            seed=self.random_seed,
+            code_files=code_files or [],
+            data_path=data_path,
+        )
+
         result: dict[str, Any] = {
             "experiment": self.exp_id,
             "title": self.title,
@@ -1837,6 +1938,8 @@ class ExperimentTemplate:
             "finished_at": finished_at,
             "duration_s": duration_s,
             "status": status,
+            "random_seed": self.random_seed,
+            "reproducibility_checksum": repro_checksum,
         }
 
         # Optional economics fields (included only when the caller provides them).
@@ -1861,6 +1964,11 @@ class ExperimentTemplate:
         # walks `results/experiment_*.json` and lists deliverables tagged
         # with the now-known-buggy version. Without this field, every bug
         # discovery requires a manual grep+interpret pass.
+        # Always emit metrics_used so downstream tools can identify which metric
+        # implementation produced the numbers in this artifact. "unknown" signals
+        # a pre-provenance artifact or an experiment that omitted the field.
+        result["metrics_used"] = metrics_used if metrics_used is not None else "unknown"
+
         if metrics_used is not None:
             try:
                 from carnot.eval import __version__ as _eval_version
