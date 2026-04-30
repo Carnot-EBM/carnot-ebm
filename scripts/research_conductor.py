@@ -1198,6 +1198,24 @@ def pick_next_task(completed_log: str) -> dict | None:
     # Ensure tasks are loaded from YAML
     _ensure_tasks_loaded()
 
+    # Pre-compute the set of retired upstream task IDs so downstream tasks
+    # whose gates reference them can be skipped immediately rather than
+    # GATE_BLOCK-retried 3 times each.
+    #
+    # Why this matters (2026-04-30 incident): exp1050-pretest-surgery
+    # retired after 3 fails. Three downstream tasks gated on its
+    # pre_tests_fixed artifact (exp1051, exp1052, exp1053) then each
+    # GATE_BLOCK-cycled 3 times = 9 wasted iterations × ~10 min each
+    # = ~90 min of pure overhead before the cascade settled. Velocity
+    # collapsed to 0 successes per 2.5 hours in milestone .82.
+    retired_task_ids: set[str] = set()
+    for task in RESEARCH_TASKS:
+        title_prefix = task["title"][:50].strip()
+        if fail_counts.get(title_prefix, 0) >= MAX_FAILURES_PER_TASK:
+            tid = task.get("id")
+            if tid:
+                retired_task_ids.add(tid)
+
     # Find first task not yet completed AND not failed too many times
     for task in RESEARCH_TASKS:
         # Strip to match .strip() applied to parsed log entries — otherwise
@@ -1237,6 +1255,28 @@ def pick_next_task(completed_log: str) -> dict | None:
         if fail_counts.get(title_prefix, 0) >= MAX_FAILURES_PER_TASK:
             logger.warning(
                 "Skipping '%s' — failed %d times", title_prefix, fail_counts[title_prefix]
+            )
+            continue
+
+        # Signal 4.5: upstream gate target retired. Pre-emptively skip
+        # rather than GATE_BLOCK-retrying 3 times. See retired_task_ids
+        # comment block above for the .82 incident this prevents.
+        gated_on = task.get("gated_on") or []
+        retired_upstreams = [
+            g.get("upstream")
+            for g in gated_on
+            if isinstance(g, dict) and g.get("upstream") in retired_task_ids
+        ]
+        if retired_upstreams:
+            logger.warning(
+                "Skipping '%s' — upstream(s) retired: %s",
+                title_prefix,
+                ", ".join(retired_upstreams),
+            )
+            log_step(
+                title_prefix,
+                "GATE_BLOCK",
+                f"Pre-emptive skip: upstream retired ({', '.join(retired_upstreams)})",
             )
             continue
 
@@ -2910,6 +2950,39 @@ def research_step(
             task["title"],
             "ESCALATE_OPUS",
             f"Sonnet max-turns at {task_max_turns}; retrying with Opus 100 turns",
+        )
+        success, output = run_agent(
+            prompt,
+            max_turns=100,
+            timeout=1800,
+            model_override="opus",
+            deliverable_path=task.get("deliverable"),
+        )
+
+    # Opus-budget-extension on max-turns failure (2026-04-30).
+    # When a task is pre-routed to Opus via differential agent routing
+    # but the planner picked an under-budgeted max_turns (e.g. 50),
+    # the C+E pattern above doesn't help — model is already opus, so
+    # the FIRST escalation arm is skipped. The task hits max-turns and
+    # FAILs with no further recovery attempt. Velocity collapse on
+    # exp1050-pretest-surgery-respawn-queue (.82 first task, load-bearing)
+    # produced 1 FAIL + 2 SKIPs before retiring.
+    if (
+        not success
+        and task_model == "opus"
+        and task_max_turns < 100
+        and (task_agent_type or AGENT_TYPE) == "claude"
+        and "Reached max turns" in output
+        and task.get("escalate_on_max_turns", True)
+    ):
+        logger.warning(
+            "Opus hit max-turns (%d) on pre-routed task; retrying with 100 turns",
+            task_max_turns,
+        )
+        log_step(
+            task["title"],
+            "ESCALATE_OPUS_100",
+            f"Opus max-turns at {task_max_turns}; retrying with 100 turns",
         )
         success, output = run_agent(
             prompt,
