@@ -1018,18 +1018,46 @@ def run_tests(full: bool = False) -> tuple[bool, str]:
             timeout=1200,
         )
 
-    # Find the summary line
+    # Find the summary line + capture failed/errored test names so the
+    # self-heal path has more than a count to work with. Without this the
+    # conductor logs only "551 passed, 7 errors" and the operator has no
+    # way to identify which tests actually failed without a re-run.
     summary = ""
+    failed_names: list[str] = []
+    in_short_summary = False
     for line in (stdout or stderr).splitlines():
-        if "passed" in line or "failed" in line:
-            summary = line.strip()
-            break
+        stripped = line.strip()
+        if not summary and ("passed" in line or "failed" in line):
+            summary = stripped
+        if stripped.startswith("=") and "short test summary" in stripped:
+            in_short_summary = True
+            continue
+        if in_short_summary:
+            if stripped.startswith("="):
+                in_short_summary = False
+                continue
+            if stripped.startswith(("FAILED ", "ERROR ", "FAILED\t", "ERROR\t")):
+                # Lines look like: "ERROR tests/python/test_x.py::test_y - reason"
+                head = stripped.split(" - ", 1)[0]
+                parts = head.split(None, 1)
+                if len(parts) == 2:
+                    failed_names.append(f"{parts[0]} {parts[1]}")
     success = rc == 0
     if success:
         # Persist this fingerprint so the next iteration can short-circuit.
         # Computed pre-run; pytest itself doesn't write source files, and
         # if anything else did, we'd cache the post-state on next entry.
         _save_pretest_cache(current_fp, summary, mode)
+    elif failed_names:
+        # Log up to 10 failed/errored test ids so the journal records the
+        # diagnostic detail. Operators can grep journalctl for these names
+        # instead of having to re-run pytest themselves.
+        logger.warning(
+            "Pre-test failures (showing %d of %d): %s",
+            min(10, len(failed_names)),
+            len(failed_names),
+            "; ".join(failed_names[:10]),
+        )
     return success, summary
 
 
