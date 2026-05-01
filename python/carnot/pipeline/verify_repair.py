@@ -385,6 +385,7 @@ class VerifyRepairPipeline:
         nup_probe_threshold: float = 0.5,
         enable_constraint_accumulation: bool = False,
         second_model_spec: dict[str, str] | None = None,
+        and_compose_verifier: Any | None = None,
     ) -> None:
         """Initialize the verify-repair pipeline.
 
@@ -457,6 +458,17 @@ class VerifyRepairPipeline:
         # subsequent sessions can retrieve it.  Default False preserves existing
         # behaviour for callers that do not pass a store.
         self._enable_constraint_accumulation = enable_constraint_accumulation
+        # k=5 AND-composition ensemble (Phase 1d, Exp 1121).
+        # When and_compose_verifier is None, the default k=5 ensemble is built.
+        # Callers may pass a custom AndCompositionVerifier or None to keep default.
+        if and_compose_verifier is None:
+            from carnot.verify.and_composition_verifier import (
+                build_default_verifier_ensemble,
+            )
+
+            self._and_compose_verifier = build_default_verifier_ensemble()
+        else:
+            self._and_compose_verifier = and_compose_verifier
 
         # Restore persisted learning state if session_memory was provided
         # and a prior session exists on disk.  Restoring here (before
@@ -1556,6 +1568,22 @@ class VerifyRepairPipeline:
                     "spectral_entropy_mean": _spectral_result["spectral_entropy_mean"],
                     "n_steps": len(_spectral_steps),
                 }
+
+        # AND-composition ensemble verdict (Phase 1d, REQ-VERIFY-1121).
+        # Run k=5 AND-compose as an advisory signal. Records per-verifier scores
+        # in the certificate so downstream callers can inspect them. Does NOT
+        # short-circuit or override result.verified (advisory, additive only).
+        if self._and_compose_verifier is not None:
+            try:
+                _and_result = self._and_compose_verifier.verify(question, response)
+                result.certificate["and_compose_k5"] = {
+                    "verified": _and_result.verified,
+                    "k": _and_result.k,
+                    "per_verifier_scores": _and_result.per_verifier_scores,
+                    "per_verifier_verified": _and_result.per_verifier_verified,
+                }
+            except Exception as _exc:
+                logger.debug("AND-compose ensemble degraded: %s", _exc)
 
         if tracker is not None:
             self._update_tracker(tracker, result)
