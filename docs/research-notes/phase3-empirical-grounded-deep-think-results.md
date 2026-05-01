@@ -321,3 +321,25 @@ valid and pending** — its Q3 (0.8B vs SOTA tier reconciliation),
 Q4 (parallel-track vs sequential Block-and-Resolve), and Q5 (silent
 failure modes) cover concerns the k-ceiling Round 2 did not
 address.
+
+**Cross-reference: FPGA Round 2 results (2026-05-01) refuted Round 1
+of THIS document's Q2 sampler ranking.** The Round 1 Q2 ranked
+"Option 8: Abandon FPGA, redirect to Z1" as Rank 1. The FPGA Round 2
+(`fpga-sampler-corrected-architecture-deep-think-round2-results.md`)
+demolishes this — Z1 has no independent peer-reviewed exact-Gibbs
+benchmark; pivoting production to it is an "existential risk."
+
+**Updated Q2 ranking after FPGA Round 2:**
+
+| Round 1 | Round 2 (FPGA) | Notes |
+|---|---|---|
+| Rank 1: Z1 pivot | **Rank 3-4: Z1 future architecture (deferred)** | No silicon validation; build CPU emulator only |
+| Rank 2: Sequential | **Rank 1-2: Sequential Glauber on χ≤4 Fast-Path** | The realistic shippable |
+| Rank 2: Chromatic | **Rank 2: Chromatic 1-milestone χ≤4 hardcoded** | ~15.6× speedup, not 3,200× |
+| (no rank): Honesty Benchmark | **NEW MANDATORY**: measure χ before publishing speedup | exp1081's 13,061× headline now suspect |
+
+**The exp1081 13,061× FPGA speedup currently cited in position paper
+v2 (exp1091) is empirically suspect.** Round 2 (FPGA) notes the CPU
+baseline was unoptimized Python; against optimized C++ the actual
+multiplier is much smaller. Position paper v3 framing must
+recalibrate this claim before 2026-05-15 publication deadline.
