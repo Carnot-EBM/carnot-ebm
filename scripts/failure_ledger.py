@@ -195,18 +195,98 @@ def _lcs_length(a: str, b: str) -> int:
     return best
 
 
+# 2026-05-01: scaffolding tokens that appear across many scopes and
+# should not count toward overlap. Examples: "phase" appears in every
+# Phase-* task; "v1"/"v2" are version markers; "audit" appears in
+# every audit task. Without this filter, sharing a single scaffolding
+# word produces false-positive doomed-rerun matches.
+_SCAFFOLDING_TOKENS = frozenset(
+    {
+        "phase",
+        "tier",
+        "audit",
+        "test",
+        "tests",
+        "fix",
+        "fixes",
+        "v1",
+        "v2",
+        "v3",
+        "v4",
+        "v5",
+        "v6",
+        "v7",
+        "v8",
+        "v9",
+        "v10",
+        "v11",
+        "v12",
+        "v13",
+        "v14",
+        "v15",
+        "v16",
+        "v17",
+        "exp",
+        "experiment",
+        "and",
+        "the",
+        "for",
+        "with",
+        "live",  # nearly every task is "live"
+        "milestone",
+        "retrospective",
+        "retro",
+        "complete",
+        "implementation",
+        "deliverable",
+        "from",
+        "into",
+    }
+)
+
+
+def _meaningful_tokens(scope: str) -> set[str]:
+    """Tokenize a scope signature and filter to substantive tokens.
+
+    Splits on '-' (scope-signature separator), lowercases, drops
+    tokens shorter than 3 characters, drops scaffolding tokens
+    that appear across many task families. Returns a set so order
+    and duplication are normalized.
+
+    Used by `_scopes_overlap` to require that two scopes share at
+    least 2 substantive tokens before flagging them as related.
+    """
+    return {t for t in scope.lower().split("-") if len(t) >= 3 and t not in _SCAFFOLDING_TOKENS}
+
+
 def _scopes_overlap(a: str, b: str, min_chars: int = _SCOPE_OVERLAP_MIN) -> bool:
-    """Two scope signatures match if their longest common contiguous
-    substring is >= min_chars (case-insensitive).
+    """Two scope signatures match if BOTH conditions hold:
 
-    Substring (not subsequence) — we want `sota-code-repair` and
-    `code-repair-v8-gemma4` to match on `code-repair` (11 chars),
-    but we don't want `live-benchmark` and `live-cascade` to match
-    on the disconnected `live-` (5 chars).
+    1. Their longest common contiguous substring is >= min_chars
+       (case-insensitive). This is the original conservative-bias
+       check from earlier — `sota-code-repair` and `code-repair-v8-
+       gemma4` match on `code-repair` (11 chars).
 
-    Conservative bias: false positives (blocking a legitimate
-    iteration) are more expensive than false negatives (letting a
-    doomed rerun through). The 8-character minimum is intentional.
+    2. They share at least 2 distinct substantive tokens (post-
+       scaffolding-filter). This is the 2026-05-01 fix that prevents
+       single-keyword false positives like exp1090 (diagnostic-
+       instrumentation-library) matching exp605 (extractor-
+       diagnostic) on the single token "diagnostic", or exp1093
+       (phase-1c-verifier-joint-null-space-measurement) matching
+       exp1092 (phase-1a-adversarial-verifier-robustness-audit)
+       on the single token "verifier".
+
+    Empirical .85 incidents that motivated this fix:
+    - exp1090 false-matched 2 priors on single token "diagnostic"
+    - exp1092 false-matched 18 priors on single tokens
+      "verifier"/"adversarial"
+    - exp1093 false-matched 10 priors on single tokens
+      "verifier"/"null-space"
+
+    Conservative bias retained: substring length >= min_chars catches
+    the "code-repair" stem; token-overlap >= 2 catches the meaningful
+    cross-cut. Both are necessary; either alone produces false
+    positives or false negatives.
     """
     if not a or not b:
         return False
@@ -214,7 +294,12 @@ def _scopes_overlap(a: str, b: str, min_chars: int = _SCOPE_OVERLAP_MIN) -> bool
     b_l = b.lower()
     if len(a_l) < min_chars or len(b_l) < min_chars:
         return False
-    return _lcs_length(a_l, b_l) >= min_chars
+    if _lcs_length(a_l, b_l) < min_chars:
+        return False
+    # 2026-05-01: require >=2 distinct meaningful tokens overlap.
+    a_tokens = _meaningful_tokens(a_l)
+    b_tokens = _meaningful_tokens(b_l)
+    return len(a_tokens & b_tokens) >= 2
 
 
 class FailureLedger:
