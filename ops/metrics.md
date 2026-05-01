@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-05-01 Milestone 2026.04.87 Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-05-01T20:22:48Z | 2026-05-01T20:40:17Z | Plan milestone 2026.04.87. Read 12 project files (research-program.md, _bmad/prd.md, _bmad/architecture.md, ops/status.md, ops/changelog.md, research-complete.yaml via agent, research-roadmap.yaml, openspec/change-proposals/, ops/known-issues.md, research-references.md, research-hardware-wishlist.md, results/operational_retro_2026_04_86.json, results/experiment_1114_milestone_retro_86.json, results/experiment_1110_rlvr_ssd_v2.json, results/experiment_1108_ensemble_diversity_v2.json, results/experiment_1109_kv260_ising_sampler_v3.json, results/experiment_1111_thinkprm_v2_retrain.json, results/experiment_1115_position_paper_v3.json, results/experiment_1113_arxiv_latex_bundle.json, results/experiment_1112_llm_failure_exemplar_corpus.json, hardware/kv260/ising_sampler_v4_spec.md). arxiv scan: 7 new papers added to research-references.md (arXiv 2504.13134 EBRM energy inversion root cause; arXiv 2509.21154 GRPO=PRM self-learning; arXiv 2604.14853 Lagrangian cascade routing; arXiv 2602.16143 Dual-BRAM Ising 800-node FPGA; arXiv 2604.17109 p-Bit inertia parallel fix; arXiv 2603.06621 Reward Under Attack; arXiv 2505.11730 optimal verification granularity). Three biggest gaps: (1) arXiv submission blocked (pdflatex absent) with 2026-05-15 CRITICAL deadline — fix: install tectonic or submit .tex bundle directly; (2) energy inversion on SOTA outputs (mean_correct=0.689 > mean_incorrect=0.621, OOD distribution shift per arXiv 2504.13134) — fix: extend FoVer with 1000+ SOTA outputs, retrain; (3) RLVR+SSD 3 consecutive honest negatives — replaced with GRPO+ThinkPRM v2 continuous reward (arXiv 2509.21154). Designed 11 experiments (exp1116-exp1126): Phase 0 arXiv submission (exp1116, opus, max_turns:30, CRITICAL) + infrastructure hardening v3 (exp1117, opus, max_turns:45, CRITICAL — manifest dispatch + doc async + bootstrap grace + corpus fast-eval); Phase 1 GRPO energy PRM (exp1118, opus, GPU, max_turns:55, grace_period_s:1800, prior_failures: exp1110/1099/1083); Phase 2 FoVer SOTA extension v5 (exp1119, sonnet, GPU, max_turns:50, grace_period_s:1800) + energy verifier retrain + inversion fix (exp1120, sonnet, GPU, gated on exp1119.fover_sota_pairs_added_above_7000, prior_failures: exp1100/1115); Phase 3 k=5 production wiring (exp1121, sonnet, max_turns:35, no GPU); Phase 4 KV260 v4 Python simulation (exp1122, opus, max_turns:50, prior_failures: exp1109/1094); Phase 5 Lagrangian cascade router (exp1123, sonnet, max_turns:40); Phase 6 WOPR Hashi cartridge (exp1124, codex, max_turns:30) + gallery update (exp1125, sonnet, gated on exp1124.hashi_cartridge_shipped); Phase 7 retro (exp1126). 11 success criteria. Wrote research-references.md (7 papers prepended), openspec/change-proposals/research-roadmap-v87.md, research-roadmap-next.yaml. Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. | ~280k |
+
+---
+
 ## Session: 2026-05-01 Milestone 2026.04.86 Planning
 
 ### Turn Log

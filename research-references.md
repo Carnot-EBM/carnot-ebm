@@ -4,6 +4,109 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-05-01 arxiv Scan (Milestone 2026.04.87 Planning)
+
+### Energy-Based Reward Models for Robust Language Model Alignment (EBRM)
+- **Paper:** arXiv 2504.13134 (April 2025, revised August 2025)
+- **What:** Root-cause analysis of energy inversion on RL-trained model outputs. Frames reward
+  overoptimization as a distribution shift problem: when a policy is trained against a reward
+  model (verifier), outputs drift out-of-distribution and the reward model's energy assignments
+  become miscalibrated. Proposes EBRM with label-noise-aware training and strategic initialization
+  to maintain calibration under RL optimization pressure.
+- **Relevance to Carnot:** THIS IS THE CANONICAL EXPLANATION for exp1100/exp1115's energy inversion
+  finding (mean_correct_energy=0.689 > mean_incorrect_energy=0.621 on SOTA outputs). The mechanism
+  is OOD shift: FoVer was trained on base-model GSM8K solutions; SOTA model outputs (Qwen3.6-35B,
+  Gemma4-31B) are heavily RL-optimized and outside the training distribution. EBRM's noise-
+  filtering + strategic init is the concrete fix. Exp1120 (energy verifier retrain with SOTA
+  corpus extension) should implement the EBRM noise-filtering approach.
+- **Concrete experiment:** Exp 1120 — retrain SOS-KAN on FoVer v5 (SOTA model outputs included)
+  using label-noise-aware training. Gate: does mean_correct_energy < mean_incorrect_energy
+  post-retrain?
+- **When to incorporate:** Milestone .87 exp1119/exp1120.
+
+### GRPO is Secretly a Process Reward Model
+- **Paper:** arXiv 2509.21154 (September 2025)
+- **What:** Proves that vanilla GRPO already implements an implicit PRM via Monte Carlo completions
+  over shared prefixes. The "hidden PRM" can be surfaced and enhanced without extra training cost.
+  The group-relative advantage estimation is equivalent to a per-step reward model trained on
+  completion groups sharing a common prefix.
+- **Relevance to Carnot:** Establishes that the GRPO training loop IS a natural integration point
+  for Carnot's explicit energy verifier. Carnot's ThinkPRM v2 (AUROC=0.9946) can replace GRPO's
+  implicit MC-sampled reward with a calibrated energy-based reward, giving higher signal quality
+  while preserving GRPO's training dynamics. Simplifies the RLVR+SSD replacement: no need for
+  a separate SSD loop; GRPO + energy reward replaces both RLVR and SSD.
+- **Concrete experiment:** Exp 1118 — GRPO with ThinkPRM v2 as explicit PRM reward signal.
+- **When to incorporate:** Milestone .87 exp1118.
+
+### Adaptive Test-Time Compute Allocation via Constrained Policy Optimization (Lagrangian)
+- **Paper:** arXiv 2604.14853 (April 2026)
+- **What:** Frames adaptive compute allocation as a Lagrangian dual problem. The global budget
+  constraint (total cascade cost across N queries ≤ B) decomposes to per-instance supervised
+  classification via the KKT dual variable. A lightweight MLP trained on (input features) →
+  (cascade depth) prediction achieves +12.8% on MATH under matched compute budget vs fixed
+  allocation. Input features: question length, initial model confidence, CoT step count.
+- **Relevance to Carnot:** Directly implements the compute-optimal cascade routing that
+  Carnot's Meta-EBM Cascade Router theorized but left as an "exact-DP solution." The Lagrangian
+  dual reduction is simpler than the DP formulation and can use Carnot's initial energy score
+  as the primary input feature. Exp1100 found SOTA outputs need mean cascade depth 2.20 vs
+  FoVer's 1.08 — adaptive routing would right-size depth per query.
+- **Concrete experiment:** Exp 1123 — implement Lagrangian cascade router using Carnot energy
+  score + ThinkPRM confidence as features; train on FoVer; measure savings vs fixed k=5.
+- **When to incorporate:** Milestone .87 exp1123.
+
+### Energy-Efficient p-Bit Simulated Annealer with Dual BRAM Architecture
+- **Paper:** arXiv 2602.16143 (February 2026)
+- **What:** 800-node fully-connected Ising machine on Xilinx ZC706 (same Zynq-7000 family as
+  KV260). Dual BRAM delay-line architecture achieves 50% power reduction, 90% LUT reduction
+  vs prior p-bit designs. Update cadence: 50 MHz clock, 800 spins × 16-bit couplings in BRAM.
+  Still requires Vivado for synthesis (Zynq-class).
+- **Relevance to Carnot:** Demonstrates that the KV260's BRAM architecture is sufficient for
+  800+ node Ising machines — 6× above Carnot's current 64-node POC. The 90% LUT reduction
+  suggests Carnot's v4 sparse K=16 architecture is over-engineered at N=64; could scale
+  directly to N=256 or N=512 with the dual-BRAM pattern.
+- **Concrete experiment:** Incorporate dual-BRAM design pattern into v4/v5 Verilog spec review.
+- **When to incorporate:** Milestone .87 exp1122 (KV260 v4 Python sim + architecture review).
+
+### A Fully Parallel Probabilistic Ising Machine with Inertia for Real-Time Applications
+- **Paper:** arXiv 2604.17109 (April 2026)
+- **What:** Adds per-spin inertia (EMA momentum) to p-bit update dynamics to enable fully
+  parallel (synchronous) updates without the solution-quality degradation that normally afflicts
+  synchronous schemes (period-2 oscillations, detailed-balance violation). Inertia damps
+  frustrated spin states, preventing oscillation. 35-150x speedup on 200-spin benchmarks.
+  Demonstrated for 5G MIMO detection in real-time (10 MHz decode rate).
+- **Relevance to Carnot:** Directly validates Carnot's v4 design choice (inertia + synchronous).
+  The paper's proof that inertia enables correct parallel updates is the theoretical foundation
+  for exp1109's finding that v3 (sequential, KL=0.025) is correct and v1 (parallel, KL=3.07)
+  is not — the inertia term bridges them. The v4 Verilog (ising_sampler_v4.v) already
+  implements this; exp1122 should validate it in Python simulation.
+- **Concrete experiment:** Exp 1122 — Python simulate v4 inertia dynamics; measure KL(v4||Gibbs).
+- **When to incorporate:** Milestone .87 exp1122.
+
+### Reward Under Attack: Analyzing the Robustness and Hackability of Process Reward Models
+- **Paper:** arXiv 2603.06621 (February 2026)
+- **What:** Three-tier diagnostic framework for PRM hackability: stylistic attacks, logically
+  corrupted reasoning, gradient-based adversarial attacks. Key finding: 43% of reward gain
+  attributable to stylistic shortcuts (padding, formatting) rather than reasoning quality.
+  Near-perfect PRM scores (>0.9) achievable with <4% ground-truth accuracy. Released
+  PRM-BiasBench adversarial evaluation suite.
+- **Relevance to Carnot:** Confirms Carnot's null-space mimicry attack analysis (memory:
+  project_null_space_mimicry_attack.md). The 43% stylistic-shortcut finding is the PRM
+  equivalent of Boolean E perfectly mimicking orthogonality stall. PRM-BiasBench is a ready-
+  made adversarial test suite to run against Carnot's k=5 AND-composition verifier to measure
+  how many stylistic attack exemplars the ensemble catches vs individual verifiers.
+- **When to incorporate:** Future milestone — validate k=5 AND-compose robustness on PRM-BiasBench.
+
+### Rethinking Optimal Verification Granularity for Compute-Efficient Test-Time Scaling
+- **Paper:** arXiv 2505.11730 (May 2025)
+- **What:** Derives that step-level verification is compute-optimal only when per-step error
+  probability exceeds a threshold; below that threshold, response-level verification dominates.
+  The crossover depends on chain length and step error rate. Provides a closed-form criterion.
+- **Relevance to Carnot:** Informs when to use ThinkPRM v2 (step-level, expensive) vs SOS-KAN
+  (response-level, fast). The criterion can be operationalized using Carnot's per-tier latencies:
+  Tier 0a ThinkPRM at ~50ms/query vs Tier 0c SemEnergy at 0.017ms/query. Suggests that SemEnergy
+  should be the default path except when step error rate is high.
+- **When to incorporate:** Cascade depth optimization (exp1123) and Tier 0a/0c threshold tuning.
+
 ## 2026-05-01 arxiv Scan (Milestone 2026.04.86 Planning)
 
 ### A Unified Performance–Cost Landscape of Parallel p-bit Ising Machines Based on Update Dynamics
