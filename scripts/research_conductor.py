@@ -3415,7 +3415,14 @@ def research_step(
             project_root=PROJECT_ROOT,
             date=timestamp.strftime("%Y%m%d"),
         )
-    except (KeyError, IndexError) as e:
+    except (KeyError, IndexError, ValueError) as e:
+        # 2026-05-01 fix: also catch ValueError ("unmatched '{' in format spec")
+        # which fires when a prompt embeds LaTeX-like nested braces (e.g.
+        # `\author{Ian \texttt{x@y}}`). exp1116 incident: planner Sonnet wrote
+        # an arXiv-submission prompt with raw \author{...\texttt{...}}; raw
+        # str.format() crashed the iteration before fallback could run. The
+        # fallback's str-replace leaves other braces alone, which is what the
+        # downstream agent actually wants for LaTeX prompts.
         logger.warning("Prompt format error in %s: %s — using raw prompt", task.get("id", "?"), e)
         prompt = raw_prompt.replace("{project_root}", str(PROJECT_ROOT)).replace(
             "{date}", timestamp.strftime("%Y%m%d")
