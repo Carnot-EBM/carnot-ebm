@@ -260,3 +260,5 @@ If you finish the real work |
 | 2026-05-01 19:47 UTC | arXiv Submission Bundle — LaTeX Conversion + PDF C | OK | 311 passed, 3 warnings in 13.06s |
 | 2026-05-01 20:02 UTC | Milestone 2026.04.86 Retrospective — 12-Criterion  | ESCALATE_OPUS | Sonnet max-turns at 20; retrying with Opus 100 turns |
 | 2026-05-01 20:05 UTC | Milestone 2026.04.86 Retrospective — 12-Criterion  | OK | 81 passed, 1 warning in 3.88s |
+| 2026-05-01 20:41 UTC | Plan milestone 2026.04.87 | OK | 11 tasks proposed |
+| 2026-05-01 20:51 UTC | Milestone 2026.04.87 activated | OK | 11 tasks queued |
