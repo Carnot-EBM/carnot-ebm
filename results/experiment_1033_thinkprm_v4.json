@@ -1,0 +1,104 @@
+{
+  "experiment": 1033,
+  "title": "ThinkPRM Probe v4: train & evaluate on expanded FoVer corpus",
+  "run_date": "20260429",
+  "started_at": "2026-04-29T13:05:17Z",
+  "finished_at": "2026-04-29T13:05:17Z",
+  "duration_s": 0.015,
+  "status": "success",
+  "honest_verdict": "probe_trained_below_threshold",
+  "n_labeled_pairs_used": 85,
+  "n_train": 67,
+  "n_test": 18,
+  "model_used": "ci_stub",
+  "auroc_thinkprm_trained": 0.5,
+  "auroc_zeroshot_baseline": 0.5,
+  "delta_vs_zeroshot": 0.0,
+  "f1_thinkprm_trained": 0.7143,
+  "precision": 0.5556,
+  "recall": 1.0,
+  "probe_weight": 0.104553,
+  "probe_bias": 0.11035,
+  "epoch_log": [
+    {
+      "epoch": 50,
+      "loss": 0.687728,
+      "train_auroc": 0.5,
+      "train_f1": 0.7115
+    },
+    {
+      "epoch": 100,
+      "loss": 0.687681,
+      "train_auroc": 0.5,
+      "train_f1": 0.7115
+    },
+    {
+      "epoch": 150,
+      "loss": 0.68768,
+      "train_auroc": 0.5,
+      "train_f1": 0.7115
+    },
+    {
+      "epoch": 200,
+      "loss": 0.68768,
+      "train_auroc": 0.5,
+      "train_f1": 0.7115
+    }
+  ],
+  "phase_timings_s": [
+    {
+      "name": "load_corpus",
+      "elapsed_s": 0.0
+    },
+    {
+      "name": "load_llm",
+      "elapsed_s": 0.001
+    },
+    {
+      "name": "extract_features",
+      "elapsed_s": 0.003
+    },
+    {
+      "name": "zeroshot_auroc",
+      "elapsed_s": 0.0
+    },
+    {
+      "name": "train_probe",
+      "elapsed_s": 0.01
+    },
+    {
+      "name": "evaluate",
+      "elapsed_s": 0.0
+    }
+  ],
+  "auroc_target": 0.75,
+  "delta_target": 0.1,
+  "delta_target_met": false,
+  "schema": [
+    "auroc_target",
+    "auroc_thinkprm_trained",
+    "auroc_zeroshot_baseline",
+    "delta_target",
+    "delta_target_met",
+    "delta_vs_zeroshot",
+    "duration_s",
+    "epoch_log",
+    "experiment",
+    "f1_thinkprm_trained",
+    "finished_at",
+    "honest_verdict",
+    "model_used",
+    "n_labeled_pairs_used",
+    "n_test",
+    "n_train",
+    "phase_timings_s",
+    "precision",
+    "probe_bias",
+    "probe_weight",
+    "recall",
+    "run_date",
+    "started_at",
+    "status",
+    "title"
+  ]
+}

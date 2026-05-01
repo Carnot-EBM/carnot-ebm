@@ -1,0 +1,102 @@
+{
+  "experiment": 1055,
+  "title": "FoVer Corpus Expansion v4: GSM8K + real MetaQA",
+  "run_date": "20260430",
+  "started_at": "2026-04-30T03:39:04Z",
+  "finished_at": "2026-04-30T03:39:25Z",
+  "duration_s": 21.013,
+  "status": "success",
+  "random_seed": 42,
+  "reproducibility_checksum": "a6bb133cb1e3638a",
+  "phase_timings_s": [
+    {
+      "name": "gguf_check",
+      "elapsed_s": 0.001
+    },
+    {
+      "name": "load_prior_corpus",
+      "elapsed_s": 0.001
+    },
+    {
+      "name": "gsm8k_z3_labeling",
+      "elapsed_s": 1.965
+    },
+    {
+      "name": "load_metaqa_model",
+      "elapsed_s": 2.59
+    },
+    {
+      "name": "metaqa_validation",
+      "elapsed_s": 16.383
+    },
+    {
+      "name": "build_corpus",
+      "elapsed_s": 0.01
+    },
+    {
+      "name": "save",
+      "elapsed_s": 0.062
+    }
+  ],
+  "metrics_used": "unknown",
+  "n_prior_pairs": 216,
+  "gguf_downloaded": true,
+  "gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/04028bd1aa552ebf46a986375418cb92ffeae774/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+  "gguf_loader_note": "llama_cpp not installed; MetaQA used transformers fallback",
+  "metaqa_model_used": "Qwen/Qwen3.5-0.8B",
+  "n_z3_confirmed_new": 6332,
+  "n_metamorphic_validated": 1,
+  "n_metamorphic_ambiguous": 94,
+  "n_total_pairs": 6548,
+  "n_train_pairs": 5240,
+  "n_test_pairs": 1308,
+  "corpus_v4_path": "data/fover_corpus_v4.json",
+  "train_path": "data/fover_train_v4.json",
+  "test_path": "data/fover_test_v4.json",
+  "honest_verdict": "corpus_expanded_500plus",
+  "prior_failures": [
+    {
+      "experiment_id": "experiment_1029_fover_expansion_v2",
+      "verdict": "partial_z3_only",
+      "diagnosed_root_cause": "MetaQA stub; only 85 new pairs from 500 MATH problems",
+      "addressed_by": "Switched to GSM8K (larger dataset with explicit arithmetic annotations)",
+      "retire_if_same_verdict": false
+    },
+    {
+      "experiment_id": "experiment_1043_fover_expansion_v3",
+      "verdict": "partial_200plus",
+      "diagnosed_root_cause": "resolve_cached_gguf() picks newest HF snapshot by mtime; newest snapshot is metadata-only (no .gguf files) \u2192 returns None \u2192 MetaQA stub mode \u2192 n_metamorphic_validated=0",
+      "addressed_by": "1. _find_gguf_in_all_snapshots() scans all snapshots, not just newest. 2. MetaQA falls back to Qwen/Qwen3.5-0.8B via transformers when llama_cpp absent. 3. GSM8K provides 6x more labeled steps than hendrycks_math for same problem count.",
+      "retire_if_same_verdict": false
+    }
+  ],
+  "schema": [
+    "corpus_v4_path",
+    "duration_s",
+    "experiment",
+    "finished_at",
+    "gguf_downloaded",
+    "gguf_loader_note",
+    "gguf_path",
+    "honest_verdict",
+    "metaqa_model_used",
+    "metrics_used",
+    "n_metamorphic_ambiguous",
+    "n_metamorphic_validated",
+    "n_prior_pairs",
+    "n_test_pairs",
+    "n_total_pairs",
+    "n_train_pairs",
+    "n_z3_confirmed_new",
+    "phase_timings_s",
+    "prior_failures",
+    "random_seed",
+    "reproducibility_checksum",
+    "run_date",
+    "started_at",
+    "status",
+    "test_path",
+    "title",
+    "train_path"
+  ]
+}

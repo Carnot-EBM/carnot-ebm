@@ -1,0 +1,25 @@
+{
+  "experiment": 1028,
+  "schema": "preflight_v30_v1",
+  "run_date": "2026-04-29",
+  "started_at": "2026-04-29T11:53:00+00:00",
+  "finished_at": "2026-04-29T11:47:45.110276+00:00",
+  "status": "success",
+  "title": "Preflight v30 \u2014 Hardened Artifact Write + ROCm GPU Probe + Manifest Retirement 786/641/906",
+  "preflight_started": true,
+  "pre_test_fixed": true,
+  "gpu_probe_rocm": false,
+  "manifest_786_retired": true,
+  "manifest_641_retired": true,
+  "manifest_906_retired": true,
+  "gate_schema_v80": true,
+  "honest_verdict": "preflight_complete",
+  "rescue_notes": {
+    "rescued_by": "manual operator rescue 2026-04-29 (.80 wedge close-out)",
+    "rescue_authorized_at": "2026-04-29T11:39:00Z",
+    "pretests_passing": "132 passed, 1 warning (smart subset)",
+    "manifest_evidence": "scripts/conductor_exclusion_manifest.json[\"excluded\"] contains experiment_id 786, 641, 906; ops/exclusion_manifest.yaml has matching entries with retire_reason and retire_date",
+    "gpu_probe_rocm_status": "rocm-smi working at hardware level (GPU at 70C, 23W); torch 2.11.0+cpu in venv has no HIP/ROCm support, so the conductor cannot programmatically probe via torch \u2014 honest verdict False. Phase 2 hardware acceleration work will install torch+rocm.",
+    "gate_schema_v80_logic": "pre_test_fixed AND manifest_786_retired AND manifest_641_retired AND manifest_906_retired = True"
+  }
+}

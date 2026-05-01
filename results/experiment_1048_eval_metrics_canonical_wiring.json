@@ -1,0 +1,44 @@
+{
+  "experiment": "exp1048-eval-metrics-canonical-wiring",
+  "title": "Eval-Metrics Canonical Wiring + Differential-Agent-Routing Validation",
+  "run_date": "20260429",
+  "started_at": "2026-04-29T22:00:39Z",
+  "finished_at": "2026-04-29T22:00:39Z",
+  "duration_s": 0.001,
+  "status": "success",
+  "random_seed": 42,
+  "reproducibility_checksum": "0f7e4ffac241a6e6",
+  "metrics_used": [
+    "auroc"
+  ],
+  "metrics_provenance": {
+    "auroc": "carnot.eval.metrics.auroc:v1.0"
+  },
+  "metrics_used_field_deployed": true,
+  "auroc_anomaly_detector_wired": true,
+  "n_legacy_metric_users": 782,
+  "model_field_validated": true,
+  "tests_passing": 5,
+  "honest_verdict": "eval_metrics_wired_routing_validated",
+  "summary": "Wired metrics_used into build_result() (default 'unknown'); added _check_auroc_anomaly() to conductor self-heal (edge values 0.0/0.001/0.999/1.0 \u2192 ops/supervisor-alerts.json); audit script no longer crashes on list-shaped JSON; 782 legacy artifacts lack provenance tag (retroactive backfill not in scope).",
+  "schema": [
+    "auroc_anomaly_detector_wired",
+    "duration_s",
+    "experiment",
+    "finished_at",
+    "honest_verdict",
+    "metrics_provenance",
+    "metrics_used",
+    "metrics_used_field_deployed",
+    "model_field_validated",
+    "n_legacy_metric_users",
+    "random_seed",
+    "reproducibility_checksum",
+    "run_date",
+    "started_at",
+    "status",
+    "summary",
+    "tests_passing",
+    "title"
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "experiment": 1098,
+  "schema": "potts_machine_q3_verilog_v1",
+  "run_date": "2026-05-01",
+  "started_at": "2026-05-01T10:36:06.756270+00:00",
+  "finished_at": "2026-05-01T10:36:09.869406+00:00",
+  "duration_s": 3.113,
+  "status": "success",
+  "title": "Potts Machine q=3 Verilog + Python Simulation",
+  "python_sim_written": true,
+  "python_sim_validated": true,
+  "verilog_file_written": true,
+  "verilog_synthesis_area_estimate_lut": 60568,
+  "verilog_fits_kv260_budget": true,
+  "tests_passing": 5,
+  "honest_verdict": "potts_sim_and_rtl_complete",
+  "kv260_lut_budget": 117000,
+  "python_validation": {
+    "energy_nonincreasing_in_expectation": true,
+    "mean_initial_energy": -80.0,
+    "mean_final_energy": -240.0,
+    "distribution_has_three_states": true,
+    "states_seen": [
+      0,
+      1,
+      2
+    ]
+  },
+  "verilog_inspection": {
+    "exists": true,
+    "complete": true,
+    "checks": {
+      "module": true,
+      "n_spins": true,
+      "q_states": true,
+      "beta": true,
+      "two_bit_spins": true,
+      "softmax": true,
+      "lfsr2": true,
+      "axi_lite": true
+    }
+  },
+  "pytest": {
+    "returncode": 0,
+    "tests_passing": 5,
+    "summary": "rootdir: /home/ianblenke/github.com/ianblenke/carnot\nconfigfile: pyproject.toml\nplugins: xdist-3.8.0, cov-7.1.0, anyio-4.13.0, hypothesis-6.152.3\ncreated: 4/4 workers\n4 workers [5 items]\n\n.....                                                                    [100%]\n============================== 5 passed in 1.86s ==============================="
+  }
+}

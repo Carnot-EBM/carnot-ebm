@@ -1,0 +1,33 @@
+{
+  "experiment": 1027,
+  "title": "Conductor Supervisor Daemon",
+  "run_date": "2026-04-29T09:55:32Z",
+  "schema": "1.0",
+  "duration_s": 53,
+  "supervisor_running": true,
+  "heartbeat_interval_s": 30,
+  "orphan_reap_interval_s": 60,
+  "state_reconcile_interval_s": 120,
+  "test_results": {
+    "test_pid_file_written_and_cleaned_up": "pass",
+    "test_heartbeat_stale_fires_alert": "pass",
+    "test_heartbeat_missing_fires_alert": "pass",
+    "test_heartbeat_fresh_no_alert": "pass",
+    "test_orphan_reaper_kills_extra_pids": "pass",
+    "test_log_handle_reset_archives_and_truncates": "pass"
+  },
+  "dry_run_exit_code": 0,
+  "implementation_notes": {
+    "lines_of_code": 340,
+    "llm_calls": 0,
+    "files_added": [
+      "scripts/conductor_supervisor.py",
+      "tests/python/test_conductor_supervisor.py"
+    ],
+    "auto_recovery_whitelist": [
+      "orphan_reap",
+      "log_handle_reset"
+    ]
+  },
+  "honest_verdict": "supervisor_complete"
+}

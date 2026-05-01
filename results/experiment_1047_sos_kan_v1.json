@@ -1,0 +1,52 @@
+{
+  "experiment": 1047,
+  "title": "SOS-KAN v1: SOS-Integrated KAN with type-level monotonicity invariants",
+  "run_date": "2026-04-29T21:41:05Z",
+  "started_at": "2026-04-29T21:40:24Z",
+  "finished_at": "2026-04-29T21:41:05Z",
+  "duration_s": 41.2,
+  "status": "success",
+  "schema": "experiment_result_v1",
+  "honest_verdict": "sos_kan_invariants_confirmed",
+  "auroc_sos_kan": 0.6042,
+  "auroc_kaem_baseline": 0.4958,
+  "auroc_no_regression": true,
+  "n_monotonicity_violations": 0,
+  "invariants_hold": true,
+  "n_pairs_used": 216,
+  "tests_passing": 5,
+  "n_train": 172,
+  "n_test": 44,
+  "n_epochs": 150,
+  "n_splines": 8,
+  "n_sos_basis": 2,
+  "n_features": 16,
+  "sos_kan_train_time_s": 5.94,
+  "kaem_train_time_s": 33.65,
+  "loss_initial": 0.689201,
+  "loss_final": 0.659765,
+  "loss_converging": true,
+  "n_invariant_samples_tested": 16000,
+  "n_nonneg_violations": 0,
+  "n_monotone_violations": 0,
+  "n_total_invariant_violations": 0,
+  "fpga_estimate": {
+    "sos_kan_luts": 1280,
+    "sos_kan_dsps": 7296,
+    "sos_kan_bram_36k": 1,
+    "kaem_baseline_luts": 1280,
+    "kaem_baseline_dsps": 384,
+    "dsp_overhead_ratio": 19.0,
+    "lut_savings_pct": 0.0,
+    "sos_basis_multiplications": 1024,
+    "kaem_spline_multiplications": 128,
+    "fpga_note": "SOS maps N^2 MACs to DSP48 cascades; KAEMEnergy uses N lookup+interp"
+  },
+  "prior_failures_addressed": [
+    {
+      "experiment_id": "exp992_kan_milp_v2",
+      "verdict": "milp_fixed_all_violations",
+      "addressed_by": "SOS parameterization makes violations structurally impossible. V is unconstrained; W=V@V^T is PSD; psi'(x)=B(x)^T W B(x)=||V^T B(x)||^2 >= 0."
+    }
+  ]
+}

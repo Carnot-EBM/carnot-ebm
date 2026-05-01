@@ -1,0 +1,33 @@
+{
+  "experiment": 1080,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-04-30",
+  "started_at": "2026-04-30T20:05:04.423024+00:00",
+  "finished_at": "2026-04-30T20:05:04.423024+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "SemEnergy Probe v1 \u2014 Tier 0c Logit-Space Energy Detector (arXiv 2508.14496)",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "2 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: no prior_failures field on task",
+  "gates_evaluated": [
+    {
+      "upstream": "exp573-energy-per-token-calibration",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Research Finding: rapl_unavailable"
+    },
+    {
+      "upstream": "exp772-semantic-energy-probe",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Research Finding: semantic_energy_below_baseline"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}

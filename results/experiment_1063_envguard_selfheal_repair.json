@@ -1,0 +1,34 @@
+{
+  "schema": "carnot.experiment.v1",
+  "experiment": "exp1063-envguard-selfheal-repair-v1",
+  "experiment_id": 1063,
+  "title": "EnvPropagationGuard Self-Heal Repair v1 + Fix 1 Remaining Failing Test",
+  "run_date": "2026-04-30T09:16:20.935877+00:00",
+  "status": "success",
+  "honest_verdict": "envguard_fixed_tests_green",
+  "envguard_crash_location": "scripts/experiment_template.py:1135 (assert_live_env_if_gpu called from setup())",
+  "envguard_fix_applied": true,
+  "self_heal_graceful_confirmed": true,
+  "n_failing_tests_before": 1,
+  "n_failing_tests_after": 0,
+  "remaining_test_fixed": true,
+  "envguard_fixed": true,
+  "n_envguard_tests_written": 4,
+  "diagnosis": {
+    "symptom": "Conductor SKIP with truncated message 'EnvPropagationGuard failed to load CARNOT_ variables' across 3 milestones (.75, .82, .83 start)",
+    "root_cause": "ExperimentTemplate.setup() called assert_live_env_if_gpu() unconditionally. When run_tests() strips CARNOT_FORCE_LIVE from pretest env (the .80 fix), and pytest collection imports an experiment script that calls tmpl.setup() at module level with requires_gpu=True, the assert raises RuntimeError during import. The single-run lock acquisition was already gated on _caller_main_module() == '__main__'; the assert was not. The asymmetry was the bug.",
+    "fix": "scripts/experiment_template.py: gate assert_live_env_if_gpu() on _caller_main_module() == '__main__', mirroring the lock skip. Production fail-fast contract preserved for direct script invocations.",
+    "additional_fix": "research-roadmap.yaml: add prior_failures blocks to exp1072-sos-kan-v3-neural-gram and exp1076-milestone-retro-83 so test_linter_passes_clean_on_active_80_roadmap passes against the active .83 roadmap. This was the '1 failed' in the KV260 SKIP x3 pre-test gate."
+  },
+  "test_summary_after_fix": "144 passed, 1 warning in 5.48s",
+  "envguard_test_summary": "4 passed, 1 warning in 3.54s",
+  "files_modified": [
+    "scripts/experiment_template.py",
+    "research-roadmap.yaml"
+  ],
+  "files_added": [
+    "tests/python/test_envguard_selfheal.py",
+    "scripts/experiment_1063_envguard_selfheal_repair.py",
+    "results/experiment_1063_envguard_selfheal_repair.json"
+  ]
+}

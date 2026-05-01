@@ -1,0 +1,50 @@
+{
+  "schema": "carnot.experiment.v1",
+  "experiment": "exp1064-pretest-surgery-respawn-queue-v2",
+  "experiment_id": 1064,
+  "title": "Pre-test Surgery + Respawn Queue Bootstrap (Respawn v2 of exp1050)",
+  "run_date": "2026-04-30T09:44:21.531944+00:00",
+  "status": "success",
+  "honest_verdict": "pre_tests_fixed_queue_seeded",
+  "n_failing_tests_before": 0,
+  "n_failing_tests_after": 0,
+  "pre_tests_fixed": true,
+  "respawn_queue_seeded": true,
+  "n_queued": 7,
+  "n_queued_required_minimum": 6,
+  "n_queued_required_six_present": true,
+  "classify_retirement_implemented": true,
+  "respawn_tests_passing": 8,
+  "predecessor_experiment": "exp1050-pretest-surgery-respawn-queue",
+  "predecessor_retire_milestone": "2026.04.82",
+  "predecessor_failure_mode": "EnvPropagationGuard import-time crash + max_turns wedge during .82 \u2014 see results/experiment_1063_envguard_selfheal_repair.json for the in-place fix that unblocked this respawn",
+  "variance_strategy": "tier_escalation",
+  "variance_applied": {
+    "from_predecessor": {
+      "model": "sonnet",
+      "max_turns": 50
+    },
+    "to_this_attempt": {
+      "model": "opus",
+      "max_turns": 100
+    },
+    "rationale": "Predecessor blocked on EnvGuard crash; exp1063 fixed it. Tier escalation gives the queue-seeding work enough headroom to complete the JSON edit + helper add + 8 tests in one pass."
+  },
+  "files_modified": [
+    "ops/respawn-queue.json",
+    "scripts/research_conductor.py"
+  ],
+  "files_added": [
+    "tests/python/test_respawn_queue.py",
+    "scripts/experiment_1064_pretest_surgery_respawn_queue_v2.py",
+    "results/experiment_1064_pretest_surgery_respawn_queue_v2.json"
+  ],
+  "queued_experiments": [
+    "exp1039-conductor-fastpath-gate-coercion",
+    "exp1042-dualgpu-rocm-torch-v4",
+    "exp1044-triple-integration-v7",
+    "exp1050-pretest-surgery-respawn-queue",
+    "exp1051-parallel-conductor-tier-a",
+    "exp1053-dualgpu-rocm-torch-v5"
+  ]
+}

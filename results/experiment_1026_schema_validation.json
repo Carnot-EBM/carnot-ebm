@@ -1,0 +1,77 @@
+{
+  "experiment": "1026-schema-validation",
+  "experiment_id": "exp1026-schema-validation",
+  "title": "Roadmap Schema Validation + Prior-Failures YAML Linter (MANDATORY INFRASTRUCTURE)",
+  "milestone": "2026.04.80",
+  "run_date": "2026-04-29",
+  "status": "success",
+  "honest_verdict": "schema_validation_complete",
+
+  "schema_validation_installed": true,
+  "lint_gate_active": true,
+  "pydantic_version": "2.12.5",
+
+  "violations_in_79_roadmap": 2,
+  "violations_in_80_roadmap": 0,
+
+  "linter_run_active_roadmap": {
+    "path": "research-roadmap.yaml",
+    "schema_errors": 0,
+    "prior_failure_violations": 0,
+    "exit_code": 0
+  },
+  "linter_run_next_roadmap": {
+    "path": "research-roadmap-next.yaml",
+    "note": "research-roadmap-next.yaml does not exist (current milestone .80 is active and not yet swapped). Linter on this path returns a single 'File not found' schema error; this is expected steady-state behaviour and not a violation of the .80 roadmap content itself."
+  },
+
+  "deliverables": {
+    "schema_module": "scripts/roadmap_schema.py",
+    "linter": "scripts/validate_prior_failures.py",
+    "tests": "tests/python/test_roadmap_schema.py",
+    "conductor_wiring_sites": [
+      "scripts/research_conductor.py:825 (load_research_tasks)",
+      "scripts/research_conductor.py:1029 (pick_next_task)",
+      "scripts/research_conductor.py:1664 (_activate_next_roadmap)"
+    ]
+  },
+
+  "test_results": {
+    "test_valid_research_task_validates_without_error": "pass",
+    "test_invalid_gate_op_raises_validation_error": "pass",
+    "test_deliverable_must_start_with_results_and_end_json": "pass",
+    "test_linter_reports_violations_on_synthetic_79_style_roadmap": "pass",
+    "test_linter_passes_clean_on_active_80_roadmap": "pass",
+    "test_roadmap_milestone_must_match_each_task_milestone": "pass",
+    "test_prior_failure_round_trips_through_yaml": "pass"
+  },
+  "test_summary": {
+    "total": 7,
+    "passed": 7,
+    "failed": 0,
+    "duration_s": 16.18
+  },
+
+  "fail_open_decision": {
+    "current_milestone": "2026.04.80",
+    "mode": "fail_open",
+    "rationale": "Schema validation logs warnings via _warn_if_roadmap_invalid() at all three conductor wiring sites; the conductor never blocks on a schema warning during .80. This is intentional rollout discipline: collect a milestone of warnings to confirm no false positives before flipping to fail-closed in .81.",
+    "flip_to_fail_closed_in": "2026.04.81"
+  },
+
+  "addressed_recurring_failure": {
+    "failure_mode": "DOOMED_RERUN_BLOCK from missing prior_failures field",
+    "occurrences_prevented_retroactively": {
+      "milestone_77": 4,
+      "milestone_78": 4,
+      "milestone_79": 2,
+      "total": 10
+    },
+    "mechanism": "Linter scans every task title against archived experiment titles; flags tasks with >=3 token overlap that lack prior_failures. Planner can run linter pre-commit to self-check; conductor warns at activation/load/pick time."
+  },
+
+  "known_constraints": [
+    "Token-overlap heuristic uses a stopword list to suppress recurring task categories (preflight, retrospective, manifest, etc.). Future planners that introduce a genuinely new recurring category will need the stopword list updated.",
+    "Fail-open mode means the .80 milestone will still launch malformed roadmaps; the warning surfaces in conductor logs but does not block. Flip-to-fail-closed deferred to .81 per planned rollout."
+  ]
+}

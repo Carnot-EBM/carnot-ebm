@@ -1,0 +1,195 @@
+{
+  "experiment": 1079,
+  "title": "Live SOTA benchmark v2: GSM8K + HumanEval with Qwen3.6-35B-A3B",
+  "run_date": "20260430",
+  "started_at": "2026-04-30T18:49:01Z",
+  "finished_at": "2026-04-30T18:54:34Z",
+  "duration_s": 332.77,
+  "status": "success",
+  "random_seed": 42,
+  "reproducibility_checksum": "6766b9d510712e93",
+  "cost_usd": 0.0,
+  "decision_class": [
+    "verify",
+    "repair"
+  ],
+  "phase_timings_s": [
+    {
+      "name": "model_load",
+      "model": "Qwen3.6-35B-A3B",
+      "elapsed_s": 40.656
+    },
+    {
+      "name": "gsm8k_data_load",
+      "elapsed_s": 2.088
+    },
+    {
+      "name": "gsm8k_inference",
+      "elapsed_s": 185.486
+    },
+    {
+      "name": "humaneval_data_load",
+      "elapsed_s": 1.243
+    },
+    {
+      "name": "humaneval_inference",
+      "elapsed_s": 103.153
+    }
+  ],
+  "metrics_used": "unknown",
+  "models_used": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF"
+  ],
+  "inference_mode": "live_gpu",
+  "cuda_device_count": 2,
+  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+  "gsm8k_n_questions": 100,
+  "gsm8k_baseline_accuracy": 0.34,
+  "gsm8k_corrected_accuracy": 0.34,
+  "gsm8k_net_improvement": 0.0,
+  "gsm8k_extraction_tp_rate": 0.0,
+  "gsm8k_batch_log": [
+    {
+      "batch_id": 0,
+      "batch_size": 8,
+      "batch_time_s": 15.658
+    },
+    {
+      "batch_id": 2,
+      "batch_size": 8,
+      "batch_time_s": 14.282
+    },
+    {
+      "batch_id": 4,
+      "batch_size": 8,
+      "batch_time_s": 14.91
+    },
+    {
+      "batch_id": 6,
+      "batch_size": 8,
+      "batch_time_s": 14.767
+    },
+    {
+      "batch_id": 8,
+      "batch_size": 8,
+      "batch_time_s": 15.499
+    },
+    {
+      "batch_id": 10,
+      "batch_size": 8,
+      "batch_time_s": 15.119
+    },
+    {
+      "batch_id": 12,
+      "batch_size": 8,
+      "batch_time_s": 14.663
+    },
+    {
+      "batch_id": 14,
+      "batch_size": 8,
+      "batch_time_s": 15.444
+    },
+    {
+      "batch_id": 16,
+      "batch_size": 8,
+      "batch_time_s": 14.933
+    },
+    {
+      "batch_id": 18,
+      "batch_size": 8,
+      "batch_time_s": 14.348
+    },
+    {
+      "batch_id": 20,
+      "batch_size": 8,
+      "batch_time_s": 13.965
+    },
+    {
+      "batch_id": 22,
+      "batch_size": 8,
+      "batch_time_s": 14.196
+    },
+    {
+      "batch_id": 24,
+      "batch_size": 4,
+      "batch_time_s": 7.689
+    }
+  ],
+  "humaneval_n_problems": 50,
+  "humaneval_pass_at_1_before": 0.0,
+  "humaneval_pass_at_1_after": 0.36,
+  "humaneval_net_improvement": 0.36,
+  "humaneval_batch_log": [
+    {
+      "batch_id": 0,
+      "batch_size": 8,
+      "batch_time_s": 11.789
+    },
+    {
+      "batch_id": 2,
+      "batch_size": 8,
+      "batch_time_s": 12.041
+    },
+    {
+      "batch_id": 4,
+      "batch_size": 8,
+      "batch_time_s": 18.566
+    },
+    {
+      "batch_id": 6,
+      "batch_size": 8,
+      "batch_time_s": 26.525
+    },
+    {
+      "batch_id": 8,
+      "batch_size": 8,
+      "batch_time_s": 14.715
+    },
+    {
+      "batch_id": 10,
+      "batch_size": 8,
+      "batch_time_s": 17.837
+    },
+    {
+      "batch_id": 12,
+      "batch_size": 2,
+      "batch_time_s": 1.677
+    }
+  ],
+  "honest_verdict": "positive_humaneval_only",
+  "partial_completion": false,
+  "force_live_env": "1",
+  "schema": [
+    "cost_usd",
+    "cuda_device_count",
+    "decision_class",
+    "duration_s",
+    "experiment",
+    "finished_at",
+    "force_live_env",
+    "gsm8k_baseline_accuracy",
+    "gsm8k_batch_log",
+    "gsm8k_corrected_accuracy",
+    "gsm8k_extraction_tp_rate",
+    "gsm8k_n_questions",
+    "gsm8k_net_improvement",
+    "honest_verdict",
+    "humaneval_batch_log",
+    "humaneval_n_problems",
+    "humaneval_net_improvement",
+    "humaneval_pass_at_1_after",
+    "humaneval_pass_at_1_before",
+    "inference_mode",
+    "metrics_used",
+    "model_path",
+    "models_used",
+    "partial_completion",
+    "phase_timings_s",
+    "random_seed",
+    "reproducibility_checksum",
+    "run_date",
+    "started_at",
+    "status",
+    "title"
+  ]
+}

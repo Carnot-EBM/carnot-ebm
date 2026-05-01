@@ -1,0 +1,40 @@
+{
+  "experiment": 1037,
+  "title": "KV260 First Light v6 \u2014 SSH Unblock + Bitstream Load",
+  "run_date": "2026-04-29T14:22:18Z",
+  "schema": "kv260_first_light_v6",
+  "duration_s": 13,
+  "board_ip": "192.168.51.98",
+  "ssh_reachable": true,
+  "ssh_approach_used": "direct",
+  "ssh_user": "ubuntu",
+  "bitstream_loaded": false,
+  "bitstream_load_diag": "carnot_ising_v4: Load Error: -1",
+  "smoke_test_passed": null,
+  "energy_distribution_nonuniform": null,
+  "smoke_test_stats": null,
+  "kv260_guide_written": true,
+  "guide_commands": [
+    "ssh ubuntu@192.168.51.98  # confirm pubkey login still works",
+    "ssh ubuntu@192.168.51.98 'ls /lib/firmware/xilinx/carnot_ising_v4/'  # verify firmware staged",
+    "# On host: cd output/carnot_ising_v4_bd && bootgen -arch zynqmp -process_bitstream bin -image carnot.bif",
+    "scp output/carnot_ising_v4_bd/carnot_ising_v4.bit.bin ubuntu@192.168.51.98:/lib/firmware/xilinx/carnot_ising_v4/",
+    "ssh ubuntu@192.168.51.98 'sudo xmutil unloadapp; sudo xmutil loadapp carnot_ising_v4'  # then re-run smoke test"
+  ],
+  "honest_verdict": "guide_written",
+  "notes": {
+    "prior_failures": [
+      {
+        "experiment_id": "exp1022_kv260_first_light_v5",
+        "verdict": "blocked_by_preflight_gate",
+        "addressed_by": "v6 is non-gated on preflight per .80 milestone spec"
+      },
+      {
+        "experiment_id": "exp993_kv260_board_programming_v3",
+        "verdict": "board_unreachable_human_required",
+        "addressed_by": "v6 uses known IP 192.168.51.98 + tries ubuntu user"
+      }
+    ],
+    "scp_ok": true
+  }
+}
