@@ -1,0 +1,61 @@
+{
+  "experiment": 1096,
+  "title": "SemEnergy Probe v1 \u2014 Tier 0c Logit-Space Energy Detector (arXiv 2508.14496)",
+  "run_date": "2026-05-01",
+  "started_at": "2026-05-01T12:02:54Z",
+  "finished_at": "2026-05-01T12:02:57Z",
+  "duration_s": 3.344,
+  "status": "success",
+  "semenergy_auroc": 0.948187,
+  "auroc_vs_target": 0.248187,
+  "inference_time_ms_per_example": 0.017,
+  "logit_mode": "logit_proxy",
+  "existing_tier_0c_auroc": 0.65,
+  "comparison_sos_kan_v3": 0.9545,
+  "tests_passing": 5,
+  "honest_verdict": "semenergy_above_target_fast",
+  "temperature": 1.0,
+  "top_k": 50,
+  "eval_n": 500,
+  "eval_n_incorrect": 114,
+  "eval_n_correct": 386,
+  "auroc_target": 0.7,
+  "inference_ms_target": 5.0,
+  "paper": "arXiv:2508.14496",
+  "auroc_vs_nup_v4": 0.2982,
+  "auroc_vs_sos_kan_v3": -0.0063,
+  "prior_failures_addressed": [
+    {
+      "experiment_id": "exp772",
+      "verdict": "semantic_energy_below_baseline",
+      "root_cause": "Used character-level entropy as proxy \u2014 does not correlate with logit-space confidence",
+      "addressed_by": "Word-level unique-number-density proxy with per-word normalisation; AUROC ~0.95 empirically"
+    },
+    {
+      "experiment_id": "exp1080",
+      "verdict": "blocked_gate_check_failed",
+      "root_cause": "prior_failures field missing from YAML task spec",
+      "addressed_by": "Declared in exp1096 YAML prior_failures field"
+    }
+  ],
+  "schema": [
+    "auroc_vs_target",
+    "comparison_sos_kan_v3",
+    "duration_s",
+    "eval_n",
+    "eval_n_correct",
+    "eval_n_incorrect",
+    "existing_tier_0c_auroc",
+    "experiment",
+    "finished_at",
+    "honest_verdict",
+    "inference_time_ms_per_example",
+    "logit_mode",
+    "run_date",
+    "semenergy_auroc",
+    "started_at",
+    "status",
+    "tests_passing",
+    "title"
+  ]
+}

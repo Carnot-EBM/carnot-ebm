@@ -1,0 +1,70 @@
+{
+  "cascade_tp_rate": 0.805556,
+  "category_counts": {
+    "arithmetic_comparison": 3,
+    "arithmetic_computation": 3,
+    "code_logic": 3,
+    "code_syntax": 3,
+    "deceptive_disclosure": 3,
+    "factual_grounding": 3,
+    "format_compliance": 3,
+    "hallucination_numeric": 3,
+    "logical_consistency": 3,
+    "moral_framing": 3,
+    "overconfidence": 3,
+    "underspecification": 3
+  },
+  "category_tp_rates": {
+    "arithmetic_comparison": 1.0,
+    "arithmetic_computation": 1.0,
+    "code_logic": 1.0,
+    "code_syntax": 1.0,
+    "deceptive_disclosure": 1.0,
+    "factual_grounding": 0.666667,
+    "format_compliance": 1.0,
+    "hallucination_numeric": 0.333333,
+    "logical_consistency": 0.666667,
+    "moral_framing": 1.0,
+    "overconfidence": 0.666667,
+    "underspecification": 0.333333
+  },
+  "exemplar_path": "data/llm_failure_exemplars.jsonl",
+  "experiment": 1112,
+  "finished_at": "2026-05-01T19:03:57.387451+00:00",
+  "goodfire_cascade_tp_rate": 1.0,
+  "goodfire_cascade_tp_rate_measured": true,
+  "honest_verdict": "corpus_complete_high_tp",
+  "joint_null_space_fraction": 0.0,
+  "learned_tier_tp_rate": 0.694444,
+  "llm_failure_exemplar_corpus_30_exemplars": true,
+  "mathematical_objective_tier_tp_rate": 1.0,
+  "n_categories": 12,
+  "n_exemplars": 36,
+  "positioning_note": "Carnot catches: arithmetic_comparison, arithmetic_computation, code_logic, code_syntax, deceptive_disclosure, factual_grounding, format_compliance, logical_consistency, moral_framing, overconfidence | Carnot misses: none in this corpus. Silico's advantage: mechanistic root cause explanation through white-box neuron tracing. Carnot's advantage: Apache 2.0, local-first, model-agnostic, actionable repair through black-box energy verification.",
+  "positioning_note_written": true,
+  "run_date": "2026-05-01",
+  "schema": "llm_failure_exemplar_corpus_v1",
+  "semenergy_mode": "logit_proxy",
+  "soskan_backend": "SOSKANEnergyV3",
+  "started_at": "2026-05-01T19:03:57.255453+00:00",
+  "tier_pairwise_r_correlations": {
+    "SemEnergyProbe vs SOSKANEnergyV3": 0.347205,
+    "Z3MathVerifier vs SOSKANEnergyV3": 0.365475,
+    "Z3MathVerifier vs SemEnergyProbe": 0.236769
+  },
+  "tier_scope_counts": {
+    "SOSKANEnergyV3": 36,
+    "SemEnergyProbe": 36,
+    "Z3MathVerifier": 6
+  },
+  "tier_tp_counts": {
+    "SOSKANEnergyV3": 25,
+    "SemEnergyProbe": 12,
+    "Z3MathVerifier": 6
+  },
+  "tier_tp_rates": {
+    "SOSKANEnergyV3": 0.694444,
+    "SemEnergyProbe": 0.333333,
+    "Z3MathVerifier": 1.0
+  }
+}

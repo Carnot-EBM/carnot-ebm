@@ -82,6 +82,17 @@ _OP_PATTERNS: list[tuple[re.Pattern[str], str]] = [
     (re.compile(r"(\d+(?:\.\d+)?)\s+divided by\s+(\d+(?:\.\d+)?)"), "/"),
 ]
 
+# Equation-style pattern: "47 + 28 = 75" — the format SOTA instruction-tuned models
+# like Qwen3.6-35B and Gemma-4 consistently output in their CoT traces.
+# The prose patterns above only match text-math ("47 plus 28 gives 75"); they miss
+# symbolic arithmetic entirely, which is why extraction_tp_rate was 0 in exp1079
+# even though the model was making arithmetic errors.
+# Handles optional thousands-comma formatting (e.g. "1,234 + 5,678 = 6,912").
+_EQ_INLINE_RE = re.compile(
+    r"(-?\d+(?:,\d{3})*(?:\.\d+)?)\s*([+\-*/])\s*(-?\d+(?:,\d{3})*(?:\.\d+)?)"
+    r"\s*=\s*(-?\d+(?:,\d{3})*(?:\.\d+)?)"
+)
+
 # Trailing claim: "gives N", "gives us N", "is N", "equals N", "= N"
 _RESULT_PATTERN = re.compile(
     r"(?:gives us|gives|equals|is)\s+(\d+(?:\.\d+)?)",
@@ -121,6 +132,23 @@ def _mock_extract_expression(step_text: str) -> str | None:
         b = int(b_str) if b_str.isdigit() else float(b_str)
         c = int(c_str) if c_str.isdigit() else float(c_str)
 
+        return f"{a} {op_sym} {b} == {c}"
+
+    # Equation-style fallback: handles "47 + 28 = 75" which SOTA instruction-tuned
+    # models emit in their CoT traces.  The prose patterns above only fire on text-math
+    # ("47 plus 28 gives 75"); equation-style had 0% match rate on exp1079 GSM8K corpus.
+    eq_match = _EQ_INLINE_RE.search(step_text)
+    if eq_match:
+        a_str, op_sym, b_str, c_str = eq_match.groups()
+        # Strip thousands-comma separators before numeric conversion
+        a_str = a_str.replace(",", "")
+        b_str = b_str.replace(",", "")
+        c_str = c_str.replace(",", "")
+
+        def _to_num(s: str) -> int | float:
+            return int(s) if "." not in s else float(s)
+
+        a, b, c = _to_num(a_str), _to_num(b_str), _to_num(c_str)
         return f"{a} {op_sym} {b} == {c}"
 
     return None

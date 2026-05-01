@@ -1,0 +1,39 @@
+{
+  "experiment": "experiment_1099_rlvr_ssd_integration_v1",
+  "schema": "carnot-experiment-v1",
+  "run_date": "2026-05-01T13:09:56Z",
+  "duration_s": 0.0,
+  "n_training_examples": 150,
+  "energy_threshold_used": 0.0,
+  "energy_all_zero": true,
+  "baseline_fraction_correct": 0.5333,
+  "condition_A_rlvr_only": 0.5333,
+  "condition_B_ssd_only": 0.4,
+  "condition_C_rlvr_ssd": 0.4,
+  "condition_D_onpolicy_ssd": 1.0,
+  "condition_A_detail": {
+    "n_accepted": 150,
+    "fraction_correct": 0.5333333333333333,
+    "degenerate": true
+  },
+  "condition_B_detail": {
+    "n_questions": 100,
+    "fraction_correct": 0.4
+  },
+  "condition_C_detail": {
+    "n_accepted": 150,
+    "n_questions": 100,
+    "fraction_correct": 0.4
+  },
+  "condition_D_detail": {
+    "n_selected": 80,
+    "fraction_correct": 1.0,
+    "fallback_used": true
+  },
+  "best_condition": "rlvr_only",
+  "improvement_over_baseline": 0.0,
+  "gpu_finetuning_available": false,
+  "tests_passing": 3,
+  "honest_verdict": "no_improvement_honest_negative",
+  "notes": "All energy_scores in dataset are 0.0 (pre-filtered by carnot_and_compose_k5). Energy filter is degenerate \u2014 accepts every entry at threshold=median=0.0. Condition A = baseline. Condition D fallback used (energy<median never true). Conditions B/C show SSD majority-vote accuracy over question-level aggregation. Honest negative result: Carnot energy differentiation not observable in this corpus."
+}

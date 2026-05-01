@@ -1,5 +1,25 @@
 # Carnot — Session Metrics
 
+## Session: 2026-05-01 Milestone 2026.04.86 Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-05-01T14:39:29Z | 2026-05-01T14:56:29Z | Plan milestone 2026.04.86. Read 12 project files (research-program.md, ops/status.md, ops/changelog.md, research-roadmap.yaml, ops/known-issues.md, research-hardware-wishlist.md, results/experiment_1103_milestone_retro_85.json, results/operational_retro_2026_04_85.json, results/experiment_1099_rlvr_ssd_integration_v1.json, openspec/change-proposals/failure-ledger-v2-and-planner-discipline.md, results/experiment_1096_semenergy_probe_v1.json, results/experiment_1092_phase1a_adversarial_verifier_robustness_audit.json). arxiv scan: 6 new papers added to research-references.md (arXiv 2604.01564 unified p-bit landscape, arXiv 2603.25910 synchronous p-bit oscillation observability, arXiv 2511.22888 APRM adversarial PRM, arXiv 2604.13602 reward hacking survey, arXiv 2601.20802 SDPO self-distillation, arXiv 2504.01005 when to solve vs verify). 3 biggest gaps: (1) Phase 1a blocked 3 consecutive milestones — ALL 18 prior failures now identified from exp1092 blocked artifact; (2) verifier ensemble r_corr=0.656 (threshold 0.5) — need 3 structurally orthogonal verifiers; (3) RLVR+SSD degenerate corpus (energy_all_zero=True from AND-compose pre-filter) — fix: top-k energy selection, no pre-filtering. Designed 11 experiments (exp1104–exp1114) across 8 phases: Phase 0 failure-ledger v2 Issues 4+5 (exp1104 keyword tightener+fingerprint cache, unconditional MANDATORY first, opus); Phase 1 failure-ledger v2 Issues 1+2+3 (exp1105 title-prefix+cap-race+mtime fix, gated on exp1104); Phase 2 Phase 1a audit UNBLOCKED (exp1106, ALL 18 prior_failures declared, gated on exp1104.keyword_match_fix_deployed, with APRM AUROC attack pattern); Phase 3 verifier diversity expansion (exp1107 3 new verifiers, exp1108 r_corr re-measurement gated on exp1107, both Opus); Phase 4 RLVR+SSD v2 (exp1109 ThinkPRM retrain on 7349-example PRM corpus, exp1110 RLVR+SSD v2 DualGPU MANDATORY, gated on exp1109); Phase 5 arXiv submission (exp1111 p-bit sequential sampler KV260 Glauber fix, exp1112 SOTA continuous self-learning Zenil α_t with SemEnergy gate); Phase 6 arXiv LaTeX bundle (exp1113, gated on exp1091.arxiv_pdf_url_obtained OR exp1091.latex_bundle_written); Phase 7 retro (exp1114). 12 success criteria. DualGPU MANDATORY in exp1110 (18th consecutive idle — hard constraint). Wrote research-references.md (6 papers prepended), openspec/change-proposals/research-roadmap-v86.md, research-roadmap-next.yaml. Did NOT modify research-roadmap.yaml or scripts/research_conductor.py (conductor surgery is in exp1104/1105 with explicit EXCEPTION clauses). | ~250k |
+
+---
+
+## Session: 2026-05-01 Milestone 2026.04.85 Operational Retrospective
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-05-01T14:36:17Z | 2026-05-01T14:38:58Z | Milestone 2026.04.85 operational process retrospective. Read ops/metrics.md, ops/changelog.md, docs/roadmap.md, results/experiment_1103_milestone_retro_85.json. Analyzed 1010 min / 258 experiments. Wall time -96 min (-8.7%) vs .84 (1106 min) — eighth consecutive below .58 baseline (1010 min, -70.4% below). 13/14 criteria met (92.9%). PRIMARY BOTTLENECK: exp906 exclusion manifest regression third consecutive milestone (35 min); in-process doc reconcile overhead (28 min blocking pass for Exp 950); DualGPU 18th idle milestone. Phase 1a adversarial audit blocked third consecutive (planner prior_failures gap for 18 upstream experiments). Conductor stable-deliverable-detection false-positive on exp1090 (stale artifact mtime). RESEARCH BRIGHT SPOTS: position paper arXiv-ready (exp1091 Opus fallback); SemEnergy AUROC=0.948 at 0.017ms (exp1096); N-Queens E=0 (exp1097); FPGA KL=3.07 mismatch confirmed (exp1094); GSM8K extraction TP fixed (exp1101). Estimated 19% (190 min) recoverable. Wrote results/operational_retro_2026_04_85.json (schema=carnot.operational_retro.v59). Appended changelog entry. Appended row to docs/roadmap.md Completed Milestones table. | ~30k |
+
+---
+
 ## Session: 2026-05-01 Milestone 2026.04.85 Planning
 
 ### Turn Log
@@ -2266,3 +2286,4 @@
 | planning-70 | 2026-04-26T02:14:41Z | 2026-04-26T02:18:49Z | Milestone 2026.04.70 research planning: confirmed .69 zero-run (YAML key error), arxiv scan (5 papers), wrote research-roadmap-v70.md + research-roadmap-next.yaml (13 exps 904-916). | ~4m8s |
 | planning-72 | 2026-04-26T13:07:12Z | 2026-04-26T13:19:07Z | Milestone 2026.04.72 research planning: read 10 project files + all .71 exp result JSONs (917-928); arxiv scan (5 papers: Symbolic-KAN 2603.23854, SC-Energy 2503.10695, GRPO-VPS 2604.20659, EORM 2505.14999, DebugRepair 2604.19305); wrote research-roadmap-v72.md + research-roadmap-next.yaml (12 exps 929-940). Root cause: 7/12 .71 experiments blocked by missing prior_failures; SC-Energy missing prior_failures for 7 experiments; math repair needs SOTA model (E4B 12% baseline). | ~12m |
 | planning-73 | 2026-04-26T14:00:00Z | 2026-04-26T17:04:07Z | Milestone 2026.04.73 research planning: read 10 project files + .72 retro JSON; retrieved actual verdicts for 9 prior experiments via grep; arxiv scan (4 papers: ThinkPRM 2504.16828, E-MVL 2604.04606, IIPC 2602.03950, AdaDec 2506.08980) appended to research-references.md; wrote openspec/change-proposals/research-roadmap-v73.md (12 success criteria, 6 phases, architecture diagram) + research-roadmap-next.yaml (11 exps 941-951: preflight, SOTA math repair, scratchpad repair, SC-Energy v2 with all 8 prior_failures, ThinkPRM Tier 2.9, Tier 2.8 live GPU, DRIFTProbe v3 depth-recurrent, Symbolic-KAN real FoVer, Spilled Energy Tier 0, E-MVL sparsified Ising, retro). | ~3h4m |
+| exp1103 | 2026-05-01T14:09:41Z | 2026-05-01T14:14:50Z | Milestone .85 retro: evaluated 14 criteria (13 MET/1 NOT_MET), wrote results/experiment_1103_milestone_retro_85.json, script + 45 tests | ~5m9s |

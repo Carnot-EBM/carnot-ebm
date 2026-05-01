@@ -16279,3 +16279,82 @@ deployable — a sovereignty requirement (CLAUDE.md decentralization rule 5).
 **And** incoherent responses receive energy below sc_threshold
 
 **Spec traces:** REQ-VERIFY-160, Exp 1001, milestone .78
+
+## REQ-VERIFY-1107: Structurally Diverse CPU Verifier Ensemble
+
+Carnot SHALL provide three lightweight verifier kernels whose scores are not based
+on token-level fluency statistics: Z3MathVerifier, ASTStructureVerifier, and
+SemanticConsistencyVerifier.
+
+- REQ-VERIFY-1107-1: Each verifier SHALL expose `score(text: str) -> float` and
+  return an energy in [0, 1], where 0.0 means no detected violation.
+- REQ-VERIFY-1107-2: Empty or unparseable input SHALL return neutral energy 0.5
+  instead of raising.
+- REQ-VERIFY-1107-3: Z3MathVerifier SHALL extract explicit arithmetic equations
+  and numeric comparisons from text and score the fraction whose claimed result
+  violates deterministic arithmetic, using Z3 when available and a safe
+  arithmetic fallback otherwise.
+- REQ-VERIFY-1107-4: ASTStructureVerifier SHALL score Python syntax and general
+  bracket/sentence structure without loading a model or using GPU resources.
+- REQ-VERIFY-1107-5: SemanticConsistencyVerifier SHALL detect cross-sentence
+  direct contradictions and repeated numeric variable claims with conflicting
+  values.
+- REQ-VERIFY-1107-6: Exp 1107 SHALL write a JSON artifact reporting test counts,
+  Z3 availability, pairwise Pearson correlations on 100 FoVer examples, maximum
+  correlation with SOS-KAN/mock SOS-KAN, deployment status, and honest verdict.
+
+### SCENARIO-VERIFY-1107: Diverse Verifiers Score Arithmetic, Structure, And Consistency
+
+**Given** explicit arithmetic, Python code, and multi-sentence reasoning text
+**When** the three diverse verifiers score the inputs
+**Then** arithmetic mistakes receive higher Z3MathVerifier energy than correct
+  arithmetic
+**And** invalid Python syntax receives higher ASTStructureVerifier energy than
+  valid Python
+**And** numeric contradictions receive higher SemanticConsistencyVerifier energy
+  than consistent repeated claims
+**And** every score is a float in [0, 1]
+
+**Spec traces:** REQ-VERIFY-1107, Exp 1107
+
+## REQ-VERIFY-1112: LLM Failure Exemplar Corpus Cascade Evaluation
+
+Carnot SHALL provide an offline LLM-failure exemplar corpus and deterministic
+cascade evaluation artifact that compares black-box Carnot verification against
+closed-source white-box mechanistic interpretability positioning.
+
+- REQ-VERIFY-1112-1: The corpus SHALL be written to
+  `data/llm_failure_exemplars.jsonl` with at least 30 exemplars across at least
+  10 categories, and each exemplar SHALL include id, category, source, prompt,
+  buggy_response, correct_response, mechanistic_root_cause, carnot_energy_score,
+  carnot_verdict, and carnot_tier_detected fields.
+- REQ-VERIFY-1112-2: The corpus SHALL include at least three exemplars for each
+  required category: arithmetic_comparison, arithmetic_computation,
+  logical_consistency, factual_grounding, code_syntax, code_logic,
+  overconfidence, underspecification, hallucination_numeric, and
+  format_compliance.
+- REQ-VERIFY-1112-3: The cascade SHALL score every buggy response with
+  Z3MathVerifier, SemEnergyProbe, and SOSKANEnergyV3 when available, while
+  preserving honest unavailable-tier accounting if a learned tier cannot load.
+- REQ-VERIFY-1112-4: The result artifact SHALL be written to
+  `results/experiment_1112_llm_failure_exemplar_corpus_v1.json` and include
+  n_exemplars, n_categories, exemplar_path, tier_tp_rates,
+  mathematical_objective_tier_tp_rate, learned_tier_tp_rate,
+  llm_failure_exemplar_corpus_30_exemplars,
+  goodfire_cascade_tp_rate_measured, positioning_note_written, and
+  honest_verdict.
+- REQ-VERIFY-1112-5: The positioning note SHALL state which categories Carnot
+  catches above TP > 0.5, which categories it misses below TP < 0.2, Silico's
+  white-box root-cause advantage, and Carnot's Apache-2.0 local-first
+  model-agnostic repair advantage.
+
+### SCENARIO-VERIFY-1112: Failure Exemplars Produce Cascade TP Rates
+
+**Given** the LLM failure exemplar corpus
+**When** `scripts/experiment_1112_llm_failure_exemplar_corpus_v1.py` runs
+**Then** the JSONL corpus contains at least 30 scored exemplars
+**And** the result artifact reports per-tier true-positive rates
+**And** the arithmetic-comparison objective tier TP rate is measured separately
+**And** the positioning note is present and under 300 words
+
+**Spec traces:** REQ-VERIFY-1112, Exp 1112

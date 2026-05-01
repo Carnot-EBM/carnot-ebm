@@ -188,3 +188,75 @@
 | 2026-04-30 20:58 UTC | Potts Machine q=3 Verilog + Python Simulation — Co | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-04-30 21:08 UTC | Potts Machine q=3 Verilog + Python Simulation — Co | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-04-30 21:18 UTC | Potts Machine q=3 Verilog + Python Simulation — Co | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-04-30 21:28 UTC | RLVR+SSD Integration v1 — Carnot Verifier + Self-D | DOOMED_RERUN_BLOCK | 7 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-04-30 21:38 UTC | RLVR+SSD Integration v1 — Carnot Verifier + Self-D | DOOMED_RERUN_BLOCK | 7 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-04-30 21:48 UTC | RLVR+SSD Integration v1 — Carnot Verifier + Self-D | DOOMED_RERUN_BLOCK | 7 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-04-30 22:41 UTC | Step-Level PRM Data Generation — MCTS-Based ThinkP | OK | 555 passed, 3 warnings in 1038.64s (0:17:18) |
+| 2026-04-30 22:51 UTC | Cascade Validation on SOTA Model Outputs — Tier Br | DOOMED_RERUN_BLOCK | 9 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-04-30 23:01 UTC | Cascade Validation on SOTA Model Outputs — Tier Br | DOOMED_RERUN_BLOCK | 9 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-04-30 23:11 UTC | Cascade Validation on SOTA Model Outputs — Tier Br | DOOMED_RERUN_BLOCK | 9 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-04-30 23:21 UTC | WOPR N-Queens Cartridge — Ising Ground-State for C | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-04-30 23:32 UTC | WOPR N-Queens Cartridge — Ising Ground-State for C | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-04-30 23:42 UTC | WOPR N-Queens Cartridge — Ising Ground-State for C | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-04-30 23:52 UTC | Gemini Worktree Conductor Tier B — MANDATORY (3 mi | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-01 00:38 UTC | Gemini Worktree Conductor Tier B — MANDATORY (3 mi | SKIP | Pre-tests failing, self-heal failed: 551 passed, 3 warnings, 7 errors in 1021.86 |
+| 2026-05-01 01:36 UTC | FPGA Scale Benchmark — KV260 vs CPU Ising at 64→10 | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-01 02:03 UTC | FPGA Scale Benchmark — KV260 vs CPU Ising at 64→10 | OK | cache hit: 558 passed, 3 warnings in 1019.24s (0:16:59) |
+| 2026-05-01 02:31 UTC | Gemini Worktree Conductor Tier B — MANDATORY (3 mi | OK | Deliverable already exists in repo |
+| 2026-05-01 02:31 UTC | HuggingFace Spaces Gallery Update — Deploy N-Queen | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1086-wopr-nqueens-cartridge) |
+| 2026-05-01 03:12 UTC | Milestone 2026.04.84 Retrospective — Evaluate All  | OK | 561 passed, 3 warnings in 1009.95s (0:16:49) |
+| 2026-05-01 03:42 UTC | FPGA Scale Benchmark — KV260 vs CPU Ising at 64→10 | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1081_fpga_sc |
+| 2026-05-01 03:52 UTC | HuggingFace Spaces Gallery Update — Deploy N-Queen | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1086-wopr-nqueens-cartridge) |
+| 2026-05-01 04:21 UTC | Plan next milestone | FAIL | Claude Code error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
+| 2026-05-01 04:31 UTC | HuggingFace Spaces Gallery Update — Deploy N-Queen | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1086-wopr-nqueens-cartridge) |
+| 2026-05-01 04:31 UTC | Milestone 2026.04.85 activated | OK | 14 tasks queued |
+| 2026-05-01 04:41 UTC | Diagnostic Instrumentation Library — α_t tracking, | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-01 05:28 UTC | Diagnostic Instrumentation Library — α_t tracking, | OK | 594 passed, 3 warnings in 1016.90s (0:16:56) |
+| 2026-05-01 06:22 UTC | Position Paper v2 — arXiv Submission Prep (CRITICA | OK | Deliverable already exists in repo |
+| 2026-05-01 06:23 UTC | Phase 1a Adversarial Verifier Robustness Audit — F | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1090-diagnostic-instrumentation-library |
+| 2026-05-01 06:33 UTC | Phase 1a Adversarial Verifier Robustness Audit — F | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1090-diagnostic-instrumentation-library |
+| 2026-05-01 06:43 UTC | Phase 1a Adversarial Verifier Robustness Audit — F | DOOMED_RERUN_BLOCK | 18 prior failure(s) match this task's scope but prior_failures field is missing  |
+| 2026-05-01 06:53 UTC | Phase 1c Verifier Joint Null-Space Measurement — d | DOOMED_RERUN_BLOCK | 10 prior failure(s) match this task's scope but prior_failures field is missing  |
+| 2026-05-01 07:03 UTC | Phase 1c Verifier Joint Null-Space Measurement — d | DOOMED_RERUN_BLOCK | 10 prior failure(s) match this task's scope but prior_failures field is missing  |
+| 2026-05-01 07:51 UTC | Phase 1c Verifier Joint Null-Space Measurement — d | OK | 594 passed, 3 warnings in 1009.08s (0:16:49) |
+| 2026-05-01 08:41 UTC | Phase 2a Sampler Correctness Audit — KV260 KL Dive | OK | 598 passed, 3 warnings in 1009.05s (0:16:49) |
+| 2026-05-01 09:32 UTC | Phase 3a Pre-Prototype Adversarial Round — DBAE-EB | OK | 602 passed, 3 warnings in 1006.95s (0:16:46) |
+| 2026-05-01 09:59 UTC | Potts Machine q=3 Verilog + Python Simulation (Cod | FAIL | Claude Code error: e once the deliverable is valid.
+If you finish the real work |
+| 2026-05-01 10:54 UTC | Potts Machine q=3 Verilog + Python Simulation (Cod | OK | 622 passed, 3 warnings in 1011.13s (0:16:51) |
+| 2026-05-01 12:20 UTC | SemEnergy Probe v1 — Tier 0c Logit-Space Energy De | OK | 627 passed, 3 warnings in 1011.64s (0:16:51) |
+| 2026-05-01 12:55 UTC | WOPR N-Queens Cartridge — Ising Ground-State for C | OK | 209 passed, 3 warnings in 9.34s |
+| 2026-05-01 13:11 UTC | RLVR+SSD Integration v1 — Three-Way Comparison (St | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1099_rlvr_ss |
+| 2026-05-01 13:21 UTC | RLVR+SSD Integration v1 — Three-Way Comparison (St | OK | Deliverable already exists in repo |
+| 2026-05-01 13:29 UTC | Cascade Validation on SOTA Model Outputs — Tier Br | OK | 218 passed, 3 warnings in 9.44s |
+| 2026-05-01 13:46 UTC | GSM8K Extraction Diagnostic + VeriCoT Fix — Root-C | OK | 218 passed, 3 warnings in 10.59s |
+| 2026-05-01 13:59 UTC | HuggingFace Spaces Gallery Update — Deploy N-Queen | OK | 222 passed, 3 warnings in 10.41s |
+| 2026-05-01 14:14 UTC | Milestone 2026.04.85 Retrospective — 14-criterion eval | OK | 13/14 criteria met; phase1a blocked again (18 gate mismatches); 45 tests pass |
+| 2026-05-01 14:15 UTC | Milestone 2026.04.85 Retrospective — Evaluate All  | ESCALATE_OPUS | Sonnet max-turns at 20; retrying with Opus 100 turns |
+| 2026-05-01 14:20 UTC | Milestone 2026.04.85 Retrospective — Evaluate All  | OK | 230 passed, 3 warnings in 10.87s |
+| 2026-05-01 14:57 UTC | Plan milestone 2026.04.86 | OK | 11 tasks proposed |
+| 2026-05-01 15:07 UTC | Milestone 2026.04.86 activated | OK | 12 tasks queued |
+| 2026-05-01 15:26 UTC | Failure-Ledger v2 (Issues 1+5+manifest) — experime | ESCALATE_OPUS_100 | Opus max-turns at 45; retrying with 100 turns |
+| 2026-05-01 15:27 UTC | Failure-Ledger v2 (Issues 1+5+manifest) — experime | OK | 275 passed, 3 warnings in 9.78s |
+| 2026-05-01 15:43 UTC | Failure-Ledger v2 (Issues 2+3+4) — cap reset on fi | ESCALATE_OPUS_100 | Opus max-turns at 40; retrying with 100 turns |
+| 2026-05-01 15:47 UTC | Failure-Ledger v2 (Issues 2+3+4) — cap reset on fi | OK | 279 passed, 3 warnings in 10.42s |
+| 2026-05-01 16:07 UTC | Phase 1a Adversarial Verifier Robustness Audit v2  | SKIP | Pre-tests failing, self-heal failed: 8 failed, 281 passed, 3 warnings in 9.50s |
+| 2026-05-01 16:25 UTC | Phase 1a Adversarial Verifier Robustness Audit v2  | OK | 279 passed, 3 warnings in 11.73s |
+| 2026-05-01 16:44 UTC | New Diverse Verifiers v1 — Z3 Math + AST Code + Se | OK | 283 passed, 3 warnings in 10.13s |
+| 2026-05-01 17:01 UTC | Verifier Ensemble Diversity v2 — 6-Verifier Suite  | ESCALATE_OPUS | Sonnet max-turns at 30; retrying with Opus 100 turns |
+| 2026-05-01 17:12 UTC | Verifier Ensemble Diversity v2 — 6-Verifier Suite  | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1108_ensembl |
+| 2026-05-01 17:22 UTC | Verifier Ensemble Diversity v2 — 6-Verifier Suite | OK | Deliverable already exists in repo |
+| 2026-05-01 17:31 UTC | KV260 Ising Sampler v3 — Sequential Single-Site Up | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1109_kv260_i |
+| 2026-05-01 17:41 UTC | KV260 Ising Sampler v3 — Sequential Single-Site Up | OK | Deliverable already exists in repo |
+| 2026-05-01 17:55 UTC | RLVR+SSD v2 — Non-Degenerate Energy Corpus with SO | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1110_rlvr_ss |
+| 2026-05-01 18:06 UTC | RLVR+SSD v2 — Non-Degenerate Energy Corpus with SO | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1110_rlvr_ss |
+| 2026-05-01 18:08 UTC | RLVR+SSD v2 — Non-Degenerate Energy Corpus with SO | OK | Deliverable already exists in repo |
+| 2026-05-01 18:17 UTC | ThinkPRM v2 Retrain on 7349-Step PRM Corpus — Tier | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1111_thinkpr |
+| 2026-05-01 18:35 UTC | ThinkPRM v2 Retrain on 7349-Step PRM Corpus — Tier | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1111_thinkpr |
+| 2026-05-01 18:46 UTC | ThinkPRM v2 Retrain on 7349-Step PRM Corpus — Tier | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1111_thinkpr |
+| 2026-05-01 18:54 UTC | ThinkPRM v2 Retrain on 7349-Step PRM Corpus — Tier | OK | Deliverable already exists in repo |
+| 2026-05-01 19:06 UTC | LLM Failure Exemplar Corpus v1 — Goodfire Silico C | OK | 307 passed, 3 warnings in 13.12s |
+<<<<<<< Updated upstream
+=======
+| 2026-05-01 19:26 UTC | Position Paper v3 — Architectural Framework & Empi | OK | cache hit: 307 passed, 3 warnings in 13.12s |
+>>>>>>> Stashed changes

@@ -1,0 +1,68 @@
+{
+  "experiment": "experiment_1106_phase1a_adversarial_verifier_robustness_audit_v2",
+  "run_date": "2026-05-01T16:23:41.463413+00:00",
+  "schema": "carnot-experiment-v1",
+  "duration_s": 0.04,
+  "n_examples_tested": 100,
+  "attack_types_tested": [
+    "stylistic_padding",
+    "structured_formatting",
+    "ipt_isomorphic_permutation",
+    "verbosity_inflation",
+    "confidence_signaling"
+  ],
+  "false_pass_rate_per_attack": {
+    "stylistic_padding": 0.0,
+    "structured_formatting": 0.0,
+    "ipt_isomorphic_permutation": 0.0,
+    "verbosity_inflation": 0.0,
+    "confidence_signaling": 0.0
+  },
+  "max_false_pass_rate": 0.0,
+  "phase1a_false_pass_below_5pct": true,
+  "phase1a_acceptance_met": true,
+  "ipt_consistency_score": 0.0,
+  "vulnerable_attack_types": [],
+  "tests_passing": 4,
+  "honest_verdict": "phase1a_robust_all_attacks",
+  "verifier_load_notes": [
+    "SemEnergyProbe loaded OK",
+    "SOSKANEnergyV3 class imported OK (text-only audit uses SemEnergyProbe)",
+    "NullSpaceEstimator loaded OK"
+  ],
+  "verifier_used": "SemEnergyProbe.score_response_proxy",
+  "corpus": "data/fover_corpus_v4.json",
+  "n_correct_examples": 50,
+  "n_incorrect_examples": 50,
+  "null_space_fraction": 0.58,
+  "null_space_r_correlations": {
+    "stylistic_padding_vs_structured_formatting": 0.9983,
+    "stylistic_padding_vs_ipt_isomorphic_permutation": 0.0971,
+    "structured_formatting_vs_ipt_isomorphic_permutation": 0.0851
+  },
+  "mean_correct_energy": -0.9488,
+  "mean_incorrect_energy": -0.501,
+  "ipt_delta_per_example_stats": {
+    "mean": 0.0,
+    "std": 0.0,
+    "max": 0.0001
+  },
+  "reference_papers": [
+    "arXiv:2511.22888 (APRM \u2014 stylistic shortcuts inflate PRM scores)",
+    "arXiv:2603.06621 (Reward Under Attack \u2014 padding/formatting inflates rewards)",
+    "arXiv:2604.15149 (LLMs Gaming Verifiers \u2014 IPT isomorphic permutation test)"
+  ],
+  "prior_attempts": [
+    {
+      "experiment_id": "exp1092",
+      "milestone": ".85",
+      "blocked_by": "conductor gate mismatch"
+    },
+    {
+      "experiment_id": "exp1092-first-attempt",
+      "milestone": ".84",
+      "blocked_by": "conductor gate mismatch"
+    }
+  ],
+  "status": "success"
+}

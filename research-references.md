@@ -4,6 +4,100 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-05-01 arxiv Scan (Milestone 2026.04.86 Planning)
+
+### A Unified Performance–Cost Landscape of Parallel p-bit Ising Machines Based on Update Dynamics
+- **Paper:** arXiv 2604.01564 (March 2026)
+- **What:** Systematic analysis of synchronous vs asynchronous update schemes in p-bit Ising
+  machines under realistic hardware constraints (finite delay, time-multiplexed p-bit reuse,
+  limited DAC precision). Key finding: synchronous updates are NOT inherently unstable but
+  suffer oscillations under excessive simultaneity. Time-multiplexed p-bit reuse achieves
+  stable synchronous operation at less than half the hardware cost of optimized async designs.
+  Low-resolution DACs (3-4 bits) suffice when annealing timing is properly tuned.
+- **Relevance to Carnot:** DIRECTLY addresses Phase 2a finding (exp1094): KV260 synchronous
+  parallel Glauber loses detailed balance on frustrated J (KL=3.07). The paper's time-
+  multiplexed p-bit reuse is the design pattern for KV260 v3 bitstream. Exp1109 (KV260
+  sequential/time-multiplexed redesign) should use this paper as the implementation reference.
+- **Concrete experiment:** Exp 1109 (KV260 Ising sampler v3 — time-multiplexed synchronous
+  updates) — target KL(FPGA||Gibbs) < 0.05.
+- **When to incorporate:** Milestone .86 Phase 3 FPGA redesign.
+
+### Finite-Time Observability of Oscillatory Instabilities in Synchronous p-bit Dynamics
+- **Paper:** arXiv 2603.25910 (March 2026)
+- **What:** Synchronous tick-random p-bit dynamics can induce period-2 oscillations on
+  frustrated topologies (e.g., antiferromagnetic rings), degrading optimization performance.
+  Derives a graph-dependent criterion (finite-time observability matrix) that predicts
+  whether unstable modes amplify within a finite observation window — enabling pre-synthesis
+  detection of whether a given coupling topology will oscillate.
+- **Relevance to Carnot:** Theoretical explanation for exp1094's KL=3.07 result. The KV260's
+  64-spin antiferromagnetic ring (frustrated J) is exactly the topology where synchronous
+  oscillations are predicted. The graph criterion can be used to validate whether the
+  KV260 v3 bitstream's sequential update scheme avoids the oscillation. Position paper
+  Phase 2a finding section should cite both this paper and arXiv 2604.01564.
+- **Concrete experiment:** Exp 1109 — verify the redesigned coupling topology satisfies the
+  finite-time observability criterion before hardware deployment.
+- **When to incorporate:** Milestone .86 FPGA redesign (exp1109) + position paper v3.
+
+### Adversarial Training for Process Reward Models (APRM)
+- **Paper:** arXiv 2511.22888 (November 2025)
+- **What:** Introduces APRMs where a Generator learns to produce reasoning errors to deceive
+  a PRM while the PRM concurrently learns to detect them. +3.4pp over strongest PRM baseline,
+  +5.3pp on out-of-distribution tasks. Addresses the core PRM failure mode: poor generalization
+  to novel errors due to static training data.
+- **Relevance to Carnot:** Phase 1a adversarial verifier robustness audit (exp1106). APRM's
+  adversarial generator + verifier co-training is exactly the attack model for measuring
+  false-pass rate. The Generator plays the role of the attacker; Carnot's verifier (SOS-KAN,
+  ThinkPRM) plays the Discriminator. Use APRM attack patterns to generate the 100-example
+  adversarial corpus for exp1106. +5.3pp OOD result also motivates verifier adversarial
+  co-training as a future enhancement.
+- **Concrete experiment:** Exp 1106 (Phase 1a adversarial audit v2) — use APRM-style attack
+  patterns (stylistic padding, formatting, IPT isomorphic perturbation) as the adversarial
+  probe. Future: APRM-style co-training to harden Carnot verifiers.
+- **When to incorporate:** Milestone .86 Phase 1a (exp1106) + future hardening.
+
+### Reward Hacking in the Era of Large Models: Mechanisms, Emergent Misalignment, Challenges
+- **Paper:** arXiv 2604.13602 (April 2026)
+- **What:** Survey of reward hacking mechanisms in large model RL. Key finding: optimization
+  pressure systematically drives the policy into the null space of the proxy evaluator (the
+  "proxy gap"). RLVR creates a proxy gap by rewarding checkable final answers while ignoring
+  reasoning steps, incentivizing guessing, fabricated reasoning, and tool misuse. Identifies
+  null-space exploitation as the fundamental mechanism.
+- **Relevance to Carnot:** Strongest independent confirmation of Carnot's null-space defense
+  framework (Phase 1c, Phase 3). The "proxy gap" framing maps directly to Carnot's verifier
+  null space. Position paper Section 3 should cite this survey alongside arXiv 2603.06621
+  and arXiv 2604.15149 to establish the attack taxonomy. The paper's mitigation analysis
+  (diverse verifiers, process-level verification) validates Carnot's architectural approach.
+- **Concrete experiment:** No new experiment needed — incorporate into position paper v3
+  Section 3 (Related Work + Threat Model).
+- **When to incorporate:** Position paper Section 3 + exp1106 context.
+
+### Reinforcement Learning via Self-Distillation (SDPO)
+- **Paper:** arXiv 2601.20802 (January 2026)
+- **What:** SDPO: policy gradient where advantages are estimated using a self-teacher
+  (same model in inference-time mode as the "privileged" teacher). Implementation requires
+  minor changes to standard RLVR pipelines. Addresses distribution shift in off-policy
+  distillation by keeping teacher and student on-policy.
+- **Relevance to Carnot:** Third SSD variant (alongside arXiv 2604.03128 and arXiv 2601.18734)
+  for the RLVR+SSD integration track. The self-teacher advantage estimation is compatible
+  with Carnot's energy verifier as the reward signal: the teacher generates multiple
+  completions, Carnot selects the lowest-energy one, SDPO trains the student on the advantage.
+  Particularly relevant for exp1110 (RLVR+SSD v2 non-degenerate corpus) as an alternative
+  training algorithm when on-policy distribution matters.
+- **When to incorporate:** Exp 1110 RLVR+SSD v2 — compare SDPO vs standard SSD training.
+
+### When To Solve, When To Verify: Compute-Optimal Problem Solving and Generative Verification
+- **Paper:** arXiv 2504.01005 (April 2025)
+- **What:** Derives a compute-optimal policy for allocating budget between solving (generating
+  candidates) and verification (checking candidates). Key result: verification is most
+  valuable when solutions are hard to generate but easy to check. Introduces GenRM framing
+  where verification is itself a next-token-prediction task.
+- **Relevance to Carnot:** Directly informs Carnot's cascade depth optimization question
+  (exp1100 found SOTA outputs need mean_depth=2.20 vs FoVer's 1.08). The compute-optimal
+  verification budget allocation provides a principled framework for setting per-tier
+  exit thresholds. Position paper Section 5 should cite this for the cascade efficiency
+  argument.
+- **When to incorporate:** Position paper v3 Section 5 (cascade efficiency).
+
 ## 2026-05-01 arxiv Scan (Milestone 2026.04.85 Planning)
 
 ### Reward Under Attack: PRM Robustness and Hackability
