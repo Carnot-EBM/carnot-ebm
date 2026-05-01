@@ -258,3 +258,4 @@ If you finish the real work |
 | 2026-05-01 19:06 UTC | LLM Failure Exemplar Corpus v1 — Goodfire Silico C | OK | 307 passed, 3 warnings in 13.12s |
 | 2026-05-01 19:26 UTC | Position Paper v3 — Architectural Framework & Empi | OK | cache hit: 307 passed, 3 warnings in 13.12s |
 | 2026-05-01 19:47 UTC | arXiv Submission Bundle — LaTeX Conversion + PDF C | OK | 311 passed, 3 warnings in 13.06s |
+| 2026-05-01 20:02 UTC | Milestone 2026.04.86 Retrospective — 12-Criterion  | ESCALATE_OPUS | Sonnet max-turns at 20; retrying with Opus 100 turns |
