@@ -1,1513 +1,1363 @@
-milestone: 2026.04.85
-milestone_title: Phase Discipline Infrastructure + Position Paper arXiv + Gate-Blocked Recovery
-milestone_doc: openspec/change-proposals/research-roadmap-v85.md
+milestone: 2026.04.86
+milestone_title: Failure-Ledger v2 + Phase 1a Unblocked + Verifier Diversity + FPGA Sequential Sampler + arXiv Submission
+milestone_doc: openspec/change-proposals/research-roadmap-v86.md
 tasks:
 
-- id: exp1090-diagnostic-instrumentation-library
-  milestone: 2026.04.85
-  deliverable: results/experiment_1090_diagnostic_instrumentation_library.json
-  title: "Diagnostic Instrumentation Library — α_t tracking, KL divergence, null-space estimation (cross-cutting infrastructure)"
+- id: exp1104-failure-ledger-v2-issues-1-5-manifest
+  milestone: 2026.04.86
+  deliverable: results/experiment_1104_failure_ledger_v2_id_keyword_manifest.json
+  title: "Failure-Ledger v2 (Issues 1+5+manifest) — experiment_id counting, keyword tightening, dispatch-time manifest enforcement"
   model: opus
-  # 2026-05-01 operator patch: planner's failure-ledger audit missed
-  # this task. The conductor's name-similarity heuristic matched 2
-  # prior failures via the keyword "diagnostic" — but neither is in
-  # actual scope. exp605 was about LLM-output extractor recall;
-  # exp706 was about Gemma-4 VR (visual-reasoning) prompt diagnostics.
-  # exp1090's scope is alpha_t / KL / null-space measurement
-  # instrumentation — net-new infrastructure, not a respawn.
-  prior_failures:
-    - experiment_id: exp605-extractor-diagnostic-v4
-      verdict: gate_closed_recall_below_threshold
-      addressed_by: "FALSE-POSITIVE SCOPE MATCH. exp605 was about LLM-output extractor recall (does the extractor catch all numeric answers in model responses?). exp1090 is about adding alpha_t / KL / null-space measurement instrumentation as a shared library (python/carnot/eval/diagnostics.py). Different code path, different data, different failure mode. Conductor's name-similarity matcher tripped on the keyword 'diagnostic' alone."
-      retire_if_same_verdict: false
-    - experiment_id: exp706-gemma4-vr-diagnostic
-      verdict: failure_mode_identified
-      addressed_by: "FALSE-POSITIVE SCOPE MATCH. exp706 was a Gemma-4 visual-reasoning prompt diagnostic — investigating why VR prompts produce specific failure modes. exp1090 is an instrumentation library for verifier metrics. Different code path, different model class, different research question. Conductor's name-similarity matcher tripped on the keyword 'diagnostic' alone."
-      retire_if_same_verdict: false
+  max_turns: 45
+  estimated_wall_time_min: 40
+  priority: critical
+  requires_gpu: false
   prompt: |
     CONTEXT:
-    CLAUDE.md Phase Prototype + Empirical Validation + Adversarial Check Discipline (MANDATORY):
-    Every phase prototype must include diagnostic instrumentation for ALL theoretical concerns
-    before scaling. Currently this instrumentation does not exist as a shared library.
+    Three conductor regressions caused task retirements in .84 and .85 that did not reflect
+    legitimately-doomed research. This experiment fixes all three in a single surgery pass.
+    EXCEPTION: This IS a conductor infrastructure experiment. You ARE permitted to modify
+    scripts/research_conductor.py.
 
-    Milestone .84 also revealed that the planner consistently omits required prior_failures
-    YAML declarations. A validation scan of research-complete.yaml is needed to confirm that
-    .85 roadmap YAML has properly declared prior_failures for all carry-forward experiments.
+    ISSUE 1 — Title-prefix failure-count inheritance (HIGH PRIORITY):
+    `pick_next_task()` calls `_count_failures_for_task(task)` which scans ops/conductor-log.md
+    for entries whose title-prefix matches the current task. A .86 task with the same TITLE
+    as a retired .84 task inherits .84's failure count, causing premature retirement before the
+    prior_failures discipline check fires. Root: exp1096 SemEnergy and exp1097 N-Queens both
+    retired in .85 from inherited .84 counts. Fix: count failures by experiment_id (from the
+    artifact path in the log entry), NOT title prefix. Fall back to title-prefix only for legacy
+    log entries written before this schema change.
+
+    ISSUE 5 — Coarse keyword matcher triggers false doomed-rerun detection (HIGH PRIORITY):
+    `FailureLedger.is_doomed_rerun()` (or equivalent) currently requires only 1 keyword overlap
+    to flag a task as matching a prior failure. Root: exp1106 Phase 1a is blocked by 18 false-
+    positive matches on the single keyword "adversarial" OR "verifier" alone. Fix: require ≥2
+    scope-vocabulary keywords from the task title to match a prior failure title. Use exact word
+    set intersection: |words(task_title) ∩ words(prior_title)| >= 2.
+
+    MANIFEST ENFORCEMENT — Dispatch-time exclusion check missing (MEDIUM PRIORITY):
+    ops/exclusion_manifest.yaml has exp906 listed as retired since milestone .80 (Preflight v30).
+    exp906 has appeared as the slowest experiment for 3 CONSECUTIVE milestones (.83, .84, .85)
+    despite this retirement. Root: the conductor checks the manifest at planning/validation time
+    but NOT at dispatch time for experiments already indexed in research-complete.yaml's re-scan
+    loop. Fix: add manifest check at dispatch time in `pick_next_task()` (or equivalent dispatch
+    function): if task.id is in exclusion_manifest, skip it regardless of research-complete index.
 
     EXISTING CODE TO READ FIRST:
-    - python/carnot/eval/ (list existing evaluation modules — look for any alpha_t or diagnostics)
-    - python/carnot/eval/phi_test.py (Phi measurement module — understand existing patterns)
-    - python/carnot/models/sos_kan.py (SOSKANEnergyV3 — the verifier to instrument)
-    - research-roadmap-next.yaml (the .85 roadmap — read the prior_failures declarations)
-    - results/experiment_1089_milestone_retro_84.json (understand what was blocked in .84)
+    - scripts/research_conductor.py (read fully — find _count_failures_for_task, is_doomed_rerun
+      or equivalent, pick_next_task, dispatch logic)
+    - ops/exclusion_manifest.yaml (confirm exp906 entry exists)
+    - ops/conductor-log.md (read first 50 lines to understand log entry schema)
+    - openspec/change-proposals/failure-ledger-v2-and-planner-discipline.md (full proposal)
 
-    TASK PART 1 — DIAGNOSTIC LIBRARY:
-    Create python/carnot/eval/diagnostics.py with the following classes:
+    TASK:
+    1. Find the exact function names in research_conductor.py for:
+       - failure counting (by title-prefix currently)
+       - doomed-rerun detection (keyword matching)
+       - dispatch/task selection
+       - exclusion manifest checking
+    2. Implement Issue 1 fix: modify failure counting to use experiment_id when available
+       in the log entry. The log entry format should be extended to include `id: <exp_id>` so
+       future entries are parseable by ID. Add backward-compatible parsing.
+    3. Implement Issue 5 fix: change keyword matching threshold from 1 → 2 keywords.
+       Use word tokenization (split on whitespace, lowercase, strip punctuation).
+    4. Implement manifest enforcement: add dispatch-time exclusion check. Any task whose
+       ID or deliverable path matches an exclusion manifest entry must be skipped at dispatch
+       with log entry: "SKIP: exclusion_manifest retirement [id] applied at dispatch".
+    5. Write tests (at minimum 4):
+       tests/python/test_failure_ledger_v2.py:
+       - test_count_by_id_not_title_prefix
+       - test_keyword_matcher_requires_two_keywords
+       - test_manifest_dispatch_time_enforcement_skips_retired
+       - test_legacy_log_entries_still_counted_by_prefix_fallback
 
-    class AlphaT:
-        """
-        Tracks the fraction of training data that comes from exogenously-grounded
-        sources (verifier signal vs. model self-generation). Per Zenil Theorem 5:
-        inf_t alpha_t > 0 required for self-distillation convergence.
-        Usage: alpha = AlphaT(); alpha.record(n_verified=45, n_self=55); print(alpha.current())
-        """
-        def __init__(self): self.total = 0; self.verified = 0
-        def record(self, n_verified: int, n_self: int) -> None: ...
-        def current(self) -> float: ...  # verified / total
-        def series(self) -> list[float]: ...
+    PLANNER SELF-AUDIT (P1 from known-issues.md):
+    Read research-roadmap-next.yaml (this file). For each task in the .86 roadmap:
+    Check whether its title shares ≥2 scope-vocabulary keywords with any entry in
+    research-complete.yaml. For any task that does, verify prior_failures is declared.
+    Report: n_tasks_checked, n_tasks_needing_prior_failures, n_tasks_with_prior_failures_declared.
 
-    class KLDivergenceEstimator:
-        """
-        Estimates KL(P || Q) from finite samples using the Kullback-Leibler
-        plug-in estimator with Laplace smoothing. Used to compare FPGA sampler
-        distribution vs. correct CPU Gibbs distribution (Phase 2a audit).
-        """
-        def estimate(self, p_samples: np.ndarray, q_samples: np.ndarray,
-                     n_bins: int = 50) -> float: ...
-        def kl_confidence_interval(self, n_samples: int, alpha: float = 0.05) -> float: ...
-
-    class NullSpaceEstimator:
-        """
-        Estimates the dimension of the joint kernel ∩_i ker(E_i) for k verifiers.
-        Method: PCA on residuals — vectors where all verifiers score near-zero.
-        Uses r-correlation metric from arXiv 2604.12086 to measure verifier diversity.
-        """
-        def fit(self, X: np.ndarray, verifier_scores: np.ndarray) -> None: ...
-        def joint_null_space_fraction(self) -> float: ...  # dim(∩_i ker E_i) / dim(input space)
-        def r_correlation(self, i: int, j: int) -> float: ...  # correlation between verifier i and j
-
-    class DecodedTextDiversity:
-        """
-        Measures diversity of decoded text outputs — prevents degenerate decoder collapse.
-        Entropy-based: E_diversity = -Σ p(token) log p(token) across k generated samples.
-        Low diversity = decoder is ignoring bottleneck and using LM prior alone.
-        """
-        def compute(self, texts: list[str]) -> float: ...  # normalized entropy in [0,1]
-        def is_degenerate(self, threshold: float = 0.3) -> bool: ...
-
-    Include test utilities:
-    def make_test_verifiers(n: int = 3) -> list[callable]:
-        """Returns n simple test verifiers for unit testing diagnostics."""
-
-    TASK PART 2 — WRITE TESTS (100% coverage, at least 6):
-    tests/python/test_diagnostics.py:
-    - alpha_t_tracks_verified_fraction_correctly
-    - alpha_t_returns_zero_for_no_verified_examples
-    - kl_divergence_is_zero_for_identical_distributions
-    - kl_divergence_is_positive_for_different_distributions
-    - null_space_fraction_is_small_for_diverse_verifiers
-    - null_space_fraction_is_large_for_correlated_verifiers
-    - decoded_text_diversity_is_low_for_repeated_outputs
-    - decoded_text_diversity_is_high_for_diverse_outputs
-
-    TASK PART 3 — PRIOR FAILURES SCAN:
-    Read research-roadmap-next.yaml (the .85 roadmap).
-    For each task with carry-forward scope, verify prior_failures is declared.
-    Report: n_tasks_checked, n_tasks_with_prior_failures, any_missing.
-    If any task is missing prior_failures: flag it (do NOT block the experiment, just report).
+    PLANNER COHERENCE CHECK (P2 from known-issues.md):
+    Scan research-roadmap-next.yaml for any task where model: opus AND agent_type: codex
+    (or any cross-vendor model/agent mismatch). Report any violations.
 
     CONCRETE STEPS:
-    - python -c "import os; files = os.listdir('python/carnot/eval/'); print(sorted(files))"
-    - (read existing eval modules for patterns)
-    - (implement python/carnot/eval/diagnostics.py)
-    - JAX_PLATFORMS=cpu python -c "from python.carnot.eval.diagnostics import AlphaT, KLDivergenceEstimator, NullSpaceEstimator; print('imports OK')"
-    - JAX_PLATFORMS=cpu pytest tests/python/test_diagnostics.py -v --cov=python/carnot/eval/diagnostics
-    - (scan research-roadmap-next.yaml for prior_failures completeness)
-    - Write results/experiment_1090_diagnostic_instrumentation_library.json
+    - grep -n "_count_failures\|is_doomed_rerun\|pick_next_task\|exclusion_manifest" scripts/research_conductor.py
+    - (read relevant functions)
+    - (implement Issue 1: id-based counting)
+    - (implement Issue 5: 2-keyword threshold)
+    - (implement manifest dispatch-time enforcement)
+    - JAX_PLATFORMS=cpu pytest tests/python/test_failure_ledger_v2.py -v
+    - (planner self-audit of research-roadmap-next.yaml)
+    - Write results/experiment_1104_failure_ledger_v2_id_keyword_manifest.json
 
-    ARTIFACT FIELDS:
-    - diagnostics_library_written: bool
-    - diagnostics_library_path: str ("python/carnot/eval/diagnostics.py")
-    - classes_implemented: list[str] (AlphaT, KLDivergenceEstimator, NullSpaceEstimator, DecodedTextDiversity)
+    REQUIRED ARTIFACT FIELDS:
+    - failure_ledger_id_fix_deployed: bool (True if Issue 1 implemented and tested)
+    - failure_ledger_keyword_threshold_deployed: bool (True if Issue 5 implemented)
+    - manifest_dispatch_enforcement_deployed: bool (True if manifest check added)
     - tests_written: int
     - tests_passing: int
-    - coverage_pct: float (target 100%)
-    - prior_failures_scan_n_tasks: int
-    - prior_failures_scan_n_with_declarations: int
-    - prior_failures_scan_missing: list[str] (task IDs missing declarations, ideally empty)
-    - honest_verdict: "library_complete_tests_pass" | "library_complete_tests_partial" | "library_stub_only" | "failed"
+    - planner_audit_n_tasks_checked: int
+    - planner_audit_n_needing_prior_failures: int
+    - planner_audit_n_with_declarations: int
+    - planner_audit_cross_vendor_violations: list[str] (should be empty)
+    - honest_verdict: "all_three_fixes_deployed" | "two_of_three_deployed" | "partial" | "failed"
 
-    Run: JAX_PLATFORMS=cpu python scripts/experiment_1090_diagnostic_instrumentation_library.py
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
+    Run: JAX_PLATFORMS=cpu python scripts/experiment_1104_failure_ledger_v2_id_keyword_manifest.py
+    Do NOT push.
 
-  priority: critical
-  requires_gpu: false
-  max_turns: 35
-  estimated_wall_time_min: 35
-
-- id: exp1091-position-paper-v2-arxiv-prep
-  milestone: 2026.04.85
-  deliverable: results/experiment_1091_position_paper_v2_arxiv_prep.json
-  title: "Position Paper v2 — arXiv Submission Prep (CRITICAL: deadline 2026-05-15, Opus route)"
+- id: exp1105-failure-ledger-v2-issues-2-3-4
+  milestone: 2026.04.86
+  deliverable: results/experiment_1105_failure_ledger_v2_cap_mtime_fingerprint.json
+  title: "Failure-Ledger v2 (Issues 2+3+4) — cap reset on fix-commit, stable-deliverable mtime, pre-test fingerprint cache"
   model: opus
-  prior_failures:
-    - experiment_id: exp1078-position-paper-v2-arxiv-prep
-      verdict: arxiv_prep_not_run_gemini_paused
-      addressed_by: "exp1078 in .84 was routed through gemini-3.1-pro-preview (agent_type: gemini). The gemini backend was paused mid-milestone due to 429 rate limits (user directive 2026-05-01). The paper never ran. This experiment uses Opus (default Claude model: opus) — no gemini dependency. Same task scope: read ALL source material, produce arXiv-ready v2 with 5 figure scripts, complete references, technical review of theorems, arXiv metadata."
-      retire_if_same_verdict: false
+  max_turns: 40
+  estimated_wall_time_min: 35
+  priority: high
+  requires_gpu: false
   prompt: |
     CONTEXT:
-    CRITICAL: arXiv submission target 2026-05-15. The position paper draft v1 (6267 words,
-    8 sections) was written in .83 (exp1075). The v2 arXiv prep experiment (exp1078) never
-    ran in .84 because the gemini backend was 429-rate-limited mid-milestone.
+    Three additional conductor bugs from .85 that caused incorrect task retirements and false
+    stale-artifact kills. Fix all three in a single surgery pass.
+    EXCEPTION: This IS a conductor infrastructure experiment. You ARE permitted to modify
+    scripts/research_conductor.py.
 
-    Route: Opus (NO gemini). You have 200K token context — use it to read all source material.
+    ISSUE 2 — 3-fail cap races operator patches (MEDIUM PRIORITY):
+    When a task fails 3 times with 10-min sleeps, the cap fires in ~30 minutes. Operator
+    response time (diagnose + patch + commit) is sometimes longer. Exp1092 retired 7 minutes
+    before the operator patch landed. Fix: when a commit touches a task's roadmap entry,
+    deliverable artifact path, or upstream dependency artifact since the most recent failure,
+    reset the failure counter to 0 for that task. Detection: check git log --since=<last_failure_time>
+    for commits touching the task's deliverable path or id.
 
-    KEY RESULTS TO INCORPORATE:
-    - FR-11 alpha_t=0.38 live on Qwen3.6-35B-A3B SOTA MoE (exp1077, honest_verdict confirmed)
-    - HumanEval +36% pass@1 improvement — FIRST POSITIVE with SOTA IT model (exp1079)
-    - SOS-KAN v3 AUROC=0.9545 on 6548-pair FoVer corpus (exp1072)
-    - ThinkPRM AUROC=0.9885 (exp1033)
-    - KV260 FPGA: 24.83μs at 64 spins (exp1068) — board unreachable in .84 (honest caveat)
-    - Step-level PRM: 7349 examples generated (exp1084)
+    ISSUE 3 — Stable-deliverable-detection uses 60s unchanged mtime (HIGH PRIORITY):
+    The conductor reads an existing artifact and checks whether it's been unchanged for 60s to
+    determine if it's the "current" deliverable. Root: exp1090's Opus subagent was killed before
+    writing the new artifact because a stale `blocked` artifact from a prior iteration was read
+    as "deliverable already exists." Fix: require `artifact.mtime > task.start_time`. Any artifact
+    older than the task's start timestamp is stale by definition. Use os.path.getmtime() and compare
+    against the recorded task_start timestamp.
 
-    KEY NEW PAPERS (from .85 arxiv scan — incorporate in related work):
-    - arXiv 2508.17440: Photonic KAN+Ising Platform — ONLY paper co-locating KAN+Ising hardware
-    - arXiv 2603.06621: Reward Under Attack — confirms Carnot's null-space defense is necessary
-    - arXiv 2604.15149: LLMs Gaming Verifiers — empirical null-space mimicry attack
-    - arXiv 2510.23972: Efficient Hardware EBM Architecture (Extropic co-authors)
-    - arXiv 2512.15605: ARMs are secretly EBMs — theoretical bijection
+    ISSUE 4 — Pre-test fingerprint cache saves START state (LOW PRIORITY):
+    The fingerprint cache is computed at the start of the pre-test run. If a commit lands during
+    the pre-test, the cache misses on subsequent iterations because the START fingerprint no longer
+    matches. Fix: save the END fingerprint (computed after the pre-test run completes, not before
+    it starts). This allows cache hits when the pre-test files haven't changed since last run.
+
+    DOC RECONCILIATION BATCHING (from .85 retro recommendations):
+    The doc reconciler currently runs inline per-experiment in a 28-minute blocking pass.
+    Add a simple batching flag: if CARNOT_BATCH_DOC_RECONCILE=1 (default: 0), defer all
+    doc reconcile writes to an end-of-batch queue rather than executing inline. The queue
+    flushes when the conductor finishes each experiment batch. This is a low-risk additive
+    change — the flag is off by default.
 
     EXISTING CODE TO READ FIRST:
-    - docs/position-paper-draft-v1.md (FULL draft — read completely before writing)
-    - _bmad/architecture.md (Phase-3 → Phase-7 section — canonical theorem references)
-    - docs/research-notes/ (list directory, then read the files that exist)
-    - results/experiment_1072_sos_kan_v3_neural_gram.json (AUROC=0.9545)
-    - results/experiment_1077_fr11_alpha_t_sota_v4.json (alpha_t=0.38, inference_mode=live_gpu)
-    - results/experiment_1079_live_sota_benchmark_v2.json (HumanEval +36%)
-    - research-references.md (sections: .84 and .85 planning scans — read NEW papers)
+    - scripts/research_conductor.py (find cap checking, artifact mtime detection, pre-test
+      fingerprint, doc reconciliation hooks)
+    - openspec/change-proposals/failure-ledger-v2-and-planner-discipline.md (full proposal)
 
-    TASK PART 1 — TECHNICAL REVIEW:
-    For each theorem in draft v1 Sections 3 and 6:
-    1. Find the original derivation in docs/research-notes/
-    2. Verify the conclusion matches the derivation
-    3. Flag discrepancies as "REVIEW: ..." comments in the new draft
-    4. Verify arXiv IDs in reference list are correctly formatted
-
-    TASK PART 2 — FIGURE SCRIPTS (5 matplotlib scripts):
-    Create docs/figures/ directory and write:
-
-    Figure 1: docs/figures/fig1_cascade_architecture.py
-    - ASCII + matplotlib architecture diagram of the 4-tier cascade
-    - Tier 0a (ThinkPRM) → Tier 0b (SpilledEnergy) → Tier 2 (SOS-KAN) → Tier 3 (Ising)
-    - Show skip-tier percentages from exp1073 (Tier 0a=4/50, 0b=25/50, 2=13/50, 3=8/50)
-    - FPGA acceleration path for Tier 3
-
-    Figure 2: docs/figures/fig2_sos_kan_auroc.py
-    - ROC curve from FoVer corpus evaluation
-    - Mark AUROC=0.9545 (SOS-KAN v3) and AUROC=0.9885 (ThinkPRM)
-    - Compare to naive baseline (0.5)
-
-    Figure 3: docs/figures/fig3_fpga_latency.py
-    - Bar chart: CPU ~290ms vs KV260 24.83μs at 64 spins
-    - Include note: "KV260 board unreachable in exp1081; crossover extrapolated"
-    - Theoretical crossover at N_spins estimated from scaling theory
-
-    Figure 4: docs/figures/fig4_alpha_t.py
-    - alpha_t results: 0.78 (Qwen3.5-0.8B, exp1074) and 0.38 (Qwen3.6-35B, exp1077)
-    - Annotate: "lower alpha_t on SOTA model expected — harder to distinguish from temperature"
-    - Show Zenil bound: any alpha_t > 0 maintains self-distillation convergence
-
-    Figure 5: docs/figures/fig5_humaneval_improvement.py
-    - HumanEval pass@1 before (0.0%) vs after (36%) Carnot correction
-    - Label: "Qwen3.6-35B-A3B-GGUF, live GPU, honest result"
-    - Footnote: GSM8K math extraction TP=0 (extraction bottleneck documented)
-
-    TASK PART 3 — DRAFT V2:
-    Produce docs/position-paper-draft-v2.md with:
-    1. Abstract: include alpha_t=0.38 live result, HumanEval +36%, AUROC=0.9545
-    2. Section 2 (related work): cite arXiv 2508.17440, 2603.06621, 2604.15149, 2512.15605
-    3. Section 5 (empirical): update with actual live GPU numbers from .84 experiments
-    4. Figure placeholders: [FIGURE 1: Cascade Architecture], etc.
-    5. All REVIEW comments from Part 1 addressed or flagged
-    6. Complete reference list with correct arXiv IDs
-
-    TASK PART 4 — ARXIV METADATA:
-    Create docs/arxiv-metadata.yaml:
-    - primary_category: cs.LG
-    - secondary_categories: [cs.AI, quant-ph, cs.NE]
-    - keywords: energy-based models, LLM verification, hallucination detection,
-        Ising machine, constrained generation, FPGA, KAN, self-distillation, process reward
-    - msc_codes: [68T07, 82B20]
-    - estimated_pages: 12-15
-    - target_journal: arXiv preprint + NeurIPS 2026 submission
-    - submission_target_date: "2026-05-15"
+    TASK:
+    1. Find the 3-fail cap enforcement code, artifact staleness check, and fingerprint cache
+       in research_conductor.py.
+    2. Implement Issue 2: git-log-based cap reset. On each task attempt, before incrementing
+       the failure counter, check git log for commits since the last failure touching this
+       task's deliverable path. If found, reset counter to 0.
+    3. Implement Issue 3: mtime>task_start check. Replace the "unchanged for 60s" heuristic
+       with `os.path.getmtime(deliverable_path) > task_start_time`.
+    4. Implement Issue 4: end-fingerprint cache. Compute fingerprint AFTER pre-test, not BEFORE.
+    5. Add CARNOT_BATCH_DOC_RECONCILE flag (no-op if 0, queue-and-flush if 1).
+    6. Write tests (at minimum 3):
+       tests/python/test_failure_ledger_v2_cap.py:
+       - test_cap_resets_when_fix_commit_lands
+       - test_stale_artifact_detected_by_mtime
+       - test_end_fingerprint_cache_survives_mid_run_commit
 
     CONCRETE STEPS:
-    - ls docs/research-notes/ (list existing research notes)
-    - (read docs/position-paper-draft-v1.md COMPLETELY)
-    - (read each docs/research-notes/*.md file that exists)
-    - (read result JSONs for .84 key experiments)
-    - (read research-references.md for new papers)
-    - (write 5 figure scripts in docs/figures/)
-    - (write docs/position-paper-draft-v2.md)
-    - (write docs/arxiv-metadata.yaml)
-    - Write results/experiment_1091_position_paper_v2_arxiv_prep.json
+    - grep -n "mtime\|getmtime\|unchanged\|fingerprint\|fail_count\|cap\|doc_reconcile" scripts/research_conductor.py
+    - (read relevant sections)
+    - (implement fixes)
+    - JAX_PLATFORMS=cpu pytest tests/python/test_failure_ledger_v2_cap.py -v
+    - Write results/experiment_1105_failure_ledger_v2_cap_mtime_fingerprint.json
 
-    ARTIFACT FIELDS:
-    - draft_v2_path: str ("docs/position-paper-draft-v2.md")
-    - draft_v2_written: bool
-    - word_count_v2: int (target >= 7000)
-    - figure_scripts_written: int (target 5)
-    - figures_directory: str ("docs/figures/")
-    - theorems_reviewed: int
-    - theorem_discrepancies_found: int
-    - reference_list_complete: bool
-    - arxiv_metadata_written: bool
-    - new_papers_cited: list[str] (arXiv IDs of papers from .85 scan incorporated)
-    - live_results_incorporated: bool (alpha_t=0.38, HumanEval +36%)
-    - honest_verdict: "arxiv_ready" | "draft_complete_figures_pending" | "draft_partial_major_gaps" | "failed"
+    REQUIRED ARTIFACT FIELDS:
+    - failure_ledger_cap_reset_deployed: bool
+    - stable_deliverable_mtime_fix_deployed: bool
+    - end_fingerprint_cache_deployed: bool
+    - doc_reconcile_batch_flag_added: bool
+    - tests_written: int
+    - tests_passing: int
+    - honest_verdict: "all_four_fixes_deployed" | "three_of_four_deployed" | "partial" | "failed"
 
-    Run: python scripts/experiment_1091_position_paper_v2_arxiv_prep.py
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
+    Run: JAX_PLATFORMS=cpu python scripts/experiment_1105_failure_ledger_v2_cap_mtime_fingerprint.py
+    Do NOT push.
 
-  priority: critical
-  requires_gpu: false
-  max_turns: 80
-  estimated_wall_time_min: 70
-
-- id: exp1092-phase1a-adversarial-verifier-robustness-audit
-  milestone: 2026.04.85
-  deliverable: results/experiment_1092_phase1a_adversarial_verifier_robustness_audit.json
-  title: "Phase 1a Adversarial Verifier Robustness Audit — False-Pass Rate < 5% on Canonical Attack Patterns"
+- id: exp1106-phase1a-adversarial-verifier-robustness-audit-v2
+  milestone: 2026.04.86
+  deliverable: results/experiment_1106_phase1a_adversarial_verifier_robustness_audit_v2.json
+  title: "Phase 1a Adversarial Verifier Robustness Audit v2 — False-Pass Rate < 5% (3rd attempt — all 18 prior_failures declared)"
   gated_on:
-    - upstream: exp1090-diagnostic-instrumentation-library
-      artifact_field: diagnostics_library_written
+    - upstream: exp1104-failure-ledger-v2-issues-1-5-manifest
+      artifact_field: failure_ledger_id_fix_deployed
       op: '=='
       value: true
-  # 2026-05-01 operator patch: planner missed prior_failures audit. The
-  # conductor's name-similarity heuristic matched 18 prior failures via
-  # the keywords "verifier" / "adversarial" alone — but every match is
-  # a different research question (thinkprm/vprm step verifiers,
-  # gsm-symbolic-adversarial benchmarks, adversarial-gsm8k, etc).
-  # exp1092's actual scope is novel: measuring false-pass rate of
-  # SHIPPING Carnot verifiers (SOSKANEnergyV3, IsingEnergy, etc.) on
-  # adversarially-crafted outputs designed to fool each verifier — net
-  # new capability, not a respawn.
   prior_failures:
-    - experiment_id: bulk-false-positive-keyword-match-verifier-adversarial
-      verdict: scope_keyword_match_only_no_real_recurrence
-      addressed_by: "FALSE-POSITIVE BULK MATCH. The conductor's name-similarity heuristic matched 18 prior failures (exp1007/1008/1017/1019 thinkprm/vprm step verifiers, exp355/429/468/479/490/504 gsm-symbolic-adversarial benchmarks, exp454 vprm comparison, exp706 gemma-vr, etc.) on the keywords 'verifier' or 'adversarial' alone. None of them are in scope of Phase 1a's research question: 'measure the false-pass rate of shipping Carnot verifiers on adversarially-crafted attacker-LLM outputs designed to fool each individual verifier'. The matched priors were either (a) infrastructure issues (gpu_required, gate_check_failed) unrelated to robustness measurement, (b) different verifier classes (PRM step-level vs. Carnot energy-level), or (c) different attack surfaces (math-reasoning gsm-symbolic vs. canonical attack patterns from arXiv 2604.15149). Phase 1a uses NullSpaceEstimator + DecodedTextDiversity from exp1090's new diagnostics.py library — neither existed when any prior 'verifier' or 'adversarial' experiment ran, so by construction this is novel capability, not recurrence."
+    - experiment_id: exp1007-thinkprm-step-verifier
+      verdict: thinkprm_below_threshold
+      addressed_by: "FALSE-POSITIVE SCOPE MATCH. exp1007 was a ThinkPRM step-level verifier experiment measuring process reward model accuracy on reasoning chain steps. exp1106's scope is measuring the FALSE-PASS RATE of shipping Carnot verifiers (SOSKANEnergyV3, IsingEnergy, SemEnergy) on adversarially-crafted attacker outputs — a different code path, different attack model, different metric. exp1007 never measured false-pass rate on adversarial attacks; it measured AUROC on clean evaluation data. With Issue 5 keyword tightening (exp1104), 'thinkprm step verifier' requires 2 matching keywords to trigger gate; 'verifier' alone is insufficient."
       retire_if_same_verdict: false
+    - experiment_id: exp1008-vprm-rule-based-step-verifier
+      verdict: vprm_rule_based_below_threshold
+      addressed_by: "FALSE-POSITIVE SCOPE MATCH. exp1008 was a VPRM rule-based step verifier — measuring rule-based process rewards on reasoning chains. exp1106 measures adversarial false-pass rate on Carnot's energy-based verifiers. Different verifier class (rule-based PRM vs energy-based EBM), different metric (step accuracy vs false-pass rate), different attack model (none vs APRM-style attacks)."
+      retire_if_same_verdict: false
+    - experiment_id: exp1017-thinkprm-step-verifier-v3
+      verdict: thinkprm_v3_partial
+      addressed_by: "FALSE-POSITIVE SCOPE MATCH. exp1017 was ThinkPRM v3 step verifier accuracy measurement. exp1106 is adversarial false-pass rate measurement on Carnot's energy verifiers. Unrelated scope."
+      retire_if_same_verdict: false
+    - experiment_id: exp355-adversarial-gsm8k-benchmark
+      verdict: simulated_inference_invalid
+      addressed_by: "FALSE-POSITIVE SCOPE MATCH. exp355 was a GSM8K adversarial benchmark testing robustness to adversarially-modified math questions (model accuracy under symbolic perturbation). exp1106 tests whether Carnot's verifiers can be fooled by stylistic attacks on LLM OUTPUTS (not question perturbation). Different attack surface: exp355 attacks the question; exp1106 attacks the answer's stylistic form to fool the verifier."
+      retire_if_same_verdict: false
+    - experiment_id: exp429-adversarial-live
+      verdict: live_benchmark_needs_human_triggered_run
+      addressed_by: "FALSE-POSITIVE SCOPE MATCH. exp429 was a live adversarial benchmark run testing model accuracy on adversarially-modified inputs. exp1106 tests verifier robustness to stylistic gaming attacks (padding, formatting, IPT). Different research question."
+      retire_if_same_verdict: false
+    - experiment_id: exp454-vprm-verifier
+      verdict: vprm_better
+      addressed_by: "FALSE-POSITIVE SCOPE MATCH. exp454 was a VPRM-vs-ThinkPRM comparison experiment. exp1106 is an adversarial audit of Carnot's energy verifiers. Unrelated scope."
+      retire_if_same_verdict: false
+    - experiment_id: exp468-gsm-symbolic-adversarial
+      verdict: gpu_required
+      addressed_by: "FALSE-POSITIVE SCOPE MATCH. exp468 was a GSM-Symbolic adversarial benchmark for model math robustness (different questions, not verifier attacks). exp1106 is a verifier robustness audit. Different attack surface and research question. Also: exp1106 requires_gpu=False (uses pre-scored FoVer corpus, no live model inference needed)."
+      retire_if_same_verdict: false
+    - experiment_id: exp479-gsm-symbolic-adversarial-live
+      verdict: gpu_required
+      addressed_by: "FALSE-POSITIVE SCOPE MATCH. Same reason as exp468. exp479 tested live model robustness to symbolic adversarial questions; exp1106 tests verifier robustness to stylistic gaming attacks."
+      retire_if_same_verdict: false
+    - experiment_id: exp490-gsm-symbolic-adversarial-v3
+      verdict: gpu_required
+      addressed_by: "FALSE-POSITIVE SCOPE MATCH. Same reason as exp468/479. GSM-Symbolic adversarial v3 is about model accuracy under question perturbation; exp1106 is about verifier false-pass rate under output stylistic attacks."
+      retire_if_same_verdict: false
+    - experiment_id: exp504-gsm-symbolic-adversarial-v4
+      verdict: gpu_required
+      addressed_by: "FALSE-POSITIVE SCOPE MATCH. Same reason as exp490. Keyword match on 'adversarial' alone is insufficient — requires ≥2 keywords per Issue 5 fix."
+      retire_if_same_verdict: false
+    - experiment_id: exp516-gsm-symbolic-adversarial-v5
+      verdict: thesis_rejected
+      addressed_by: "FALSE-POSITIVE SCOPE MATCH. exp516 tested the GSM-Symbolic adversarial thesis (model accuracy regression under structural question perturbation) and found the thesis was rejected. exp1106 is a verifier false-pass rate audit. Different thesis, different metric, different attack surface."
+      retire_if_same_verdict: false
+    - experiment_id: exp534-potts-machine-verifier
+      verdict: no_advantage
+      addressed_by: "FALSE-POSITIVE SCOPE MATCH. exp534 was a Potts machine verifier (q=3 energy model for partial-credit constraint verification). It tested whether the Potts energy model outperformed binary Ising as a verifier — a correctness-on-clean-data question. exp1106 is an adversarial robustness audit using attack patterns. Different experimental question."
+      retire_if_same_verdict: false
+    - experiment_id: exp642-causal-verifier
+      verdict: causal_improves
+      addressed_by: "FALSE-POSITIVE SCOPE MATCH. exp642 tested a causal verifier (causal consistency checking for LLM reasoning). The 'verifier' keyword triggered the match but the research questions are unrelated: exp642 measured causal verifier accuracy; exp1106 measures adversarial false-pass rate of energy-based verifiers."
+      retire_if_same_verdict: false
+    - experiment_id: exp647-otv-verifier
+      verdict: otv_not_viable_keep_eorm
+      addressed_by: "FALSE-POSITIVE SCOPE MATCH. exp647 tested an OTV (optimal transport verifier) vs EORM. Keyword 'verifier' triggered match. exp1106's scope is adversarial robustness audit of shipping Carnot verifiers — unrelated to OTV vs EORM comparison."
+      retire_if_same_verdict: false
+    - experiment_id: exp658-specguard-verifier
+      verdict: specguard_below_threshold
+      addressed_by: "FALSE-POSITIVE SCOPE MATCH. exp658 tested SpecGuard, a specification-based verifier for code. The 'verifier' keyword triggered match. exp1106 is an energy-based adversarial audit. Different verifier architecture, different research question."
+      retire_if_same_verdict: false
+    - experiment_id: exp681-adversarial-vr
+      verdict: adversarial_blocked
+      addressed_by: "FALSE-POSITIVE SCOPE MATCH. exp681 was blocked (adversarial_blocked verdict) on an adversarial visual reasoning task. Keywords 'adversarial' triggered match. exp1106 is a verifier energy-based false-pass rate audit — completely different domain (text energy vs visual reasoning). exp1106 also does not require GPU."
+      retire_if_same_verdict: false
+    - experiment_id: exp695-formal-step-verifier
+      verdict: tier_28_no_candidate
+      addressed_by: "FALSE-POSITIVE SCOPE MATCH. exp695 was a formal step verifier experiment (Tier 2.8 candidate search). 'verifier' keyword triggered match. exp1106 is an adversarial audit of energy verifiers; exp695 tested whether formal step verification could be a Tier 2.8 candidate. Unrelated scope."
+      retire_if_same_verdict: false
+    - experiment_id: exp972-kan-milp-formal-verification
+      verdict: kan_violations_found
+      addressed_by: "FALSE-POSITIVE SCOPE MATCH. exp972 was about KAN MILP formal verification — checking monotonicity constraints on KAN splines using MILP solvers. Keywords 'formal verification' triggered match. exp1106 is adversarial robustness measurement on energy-based verifiers; exp972 was about verifying mathematical properties of KAN models themselves. Different subject matter, different code path."
+      retire_if_same_verdict: false
+    - experiment_id: exp1092-phase1a-adversarial-verifier-robustness-audit
+      verdict: blocked_gate_check_failed
+      addressed_by: "DIRECT PREDECESSOR. exp1092 in .85 was blocked by conductor gate-check because prior_failures was missing for all 18 upstream experiments. exp1106 (this experiment) declares ALL 18 prior_failures explicitly. Additionally, exp1104 deploys Issue 5 (keyword tightening to ≥2 keywords), which prevents the conductor from generating false-positive gate matches on keyword 'adversarial' or 'verifier' alone. The root cause (missing prior_failures) is fully addressed; the structural defense (tightened keyword matcher) is newly deployed."
+      retire_if_same_verdict: true
+  max_turns: 55
+  estimated_wall_time_min: 45
+  priority: critical
+  requires_gpu: false
   prompt: |
     CONTEXT:
     CLAUDE.md Phase Prototype + Empirical Validation + Adversarial Check Discipline (MANDATORY):
-    Known-issues.md tasks item #1: Phase 1a adversarial verifier robustness audit.
-    Acceptance: false-pass rate < 5% on canonical attack patterns.
+    This is the THIRD attempt at Phase 1a adversarial verifier robustness audit. The prior two
+    attempts (exp1092 in .85, exp1092-first-attempt in .84) were both blocked by conductor gate
+    mismatches. This attempt has ALL 18 prior_failures declared.
 
-    arXiv 2603.06621 (Reward Under Attack) shows PRMs are hackable: gradient-based attacks
-    inflate verifier scores on invalid trajectories via stylistic shortcuts (long preambles,
-    structured formatting, indentation tricks) rather than correctness. 43% of reward gains
-    come from these shortcuts.
+    Acceptance gate: phase1a_false_pass_below_5pct — max false-pass rate < 5% across 5 attack types.
 
-    arXiv 2604.15149 (LLMs Gaming Verifiers) introduces Isomorphic Perturbation Testing (IPT):
-    take a verified output, apply structure-preserving permutation (e.g., rename variables,
-    reorder equivalent steps), check if verifier score changes. If score changes dramatically,
-    the verifier is exploiting surface form, not semantics.
+    New reference papers for this experiment:
+    - arXiv 2511.22888 (APRM): adversarial attack patterns — stylistic shortcuts inflate PRM scores
+      on invalid trajectories by 43%. Use these attack patterns as the adversarial probe suite.
+    - arXiv 2603.06621 (Reward Under Attack): gradient-based attacks inflate rewards via padding
+      and formatting. Confirms the attack model.
+    - arXiv 2604.15149 (LLMs Gaming Verifiers): Isomorphic Perturbation Testing (IPT) —
+      structure-preserving permutation that should not change correctness score.
 
     EXISTING CODE TO READ FIRST:
-    - python/carnot/eval/diagnostics.py (just written by exp1090 — use KLDivergenceEstimator)
+    - python/carnot/eval/diagnostics.py (AlphaT, KLDivergenceEstimator, NullSpaceEstimator,
+      DecodedTextDiversity — use NullSpaceEstimator for residual analysis)
     - python/carnot/models/sos_kan.py (SOSKANEnergyV3 — primary verifier to audit)
-    - python/carnot/verify/thinkprm_probe.py (ThinkPRM — secondary verifier to audit)
-    - data/fover_corpus_v4.json (6548 labeled pairs — use for attack generation)
+    - python/carnot/verify/semenergy_probe.py (SemEnergy probe from exp1096)
+    - data/fover_corpus_v4.json (6548 labeled pairs — use for adversarial corpus generation)
     - results/experiment_1072_sos_kan_v3_neural_gram.json (AUROC=0.9545 — baseline)
+    - results/experiment_1096_semenergy_probe_v1.json (AUROC=0.948 — baseline)
 
     TASK:
     1. LOAD VERIFIERS:
-       from python.carnot.models.sos_kan import SOSKANEnergyV3
-       from python.carnot.verify.thinkprm_probe import ThinkPRMProbe
-       # Initialize both verifiers
+       - SOSKANEnergyV3 from python.carnot.models.sos_kan
+       - SemEnergy probe from python.carnot.verify.semenergy_probe (if available)
+       Fall back to dummy energy scorer if verifier cannot be loaded (report in artifact).
 
-    2. LOAD ATTACK CORPUS (100 adversarial examples):
-       Take 50 correct FoVer examples (label=correct). Apply each of these attacks:
-       a. Stylistic padding attack: prefix 3-5 filler sentences ("Let me think step by step...",
-          "I'll approach this systematically...", etc.) before the actual reasoning
-       b. Structured formatting attack: wrap the response in markdown headers and bullet points
-          without changing mathematical content
-       c. IPT isomorphic perturbation: rename all named entities (x→y, "John"→"Alice") in the
-          correct reasoning chain; the permuted version should be equally correct
-       d. Verbosity inflation attack: repeat each key reasoning step twice with slight rewording
-       e. Confidence signaling attack: add confident phrases at the end
-          ("I am certain this is correct", "This answer is definitely right")
+    2. BUILD ADVERSARIAL CORPUS (100 examples):
+       Take 50 CORRECT and 50 INCORRECT examples from data/fover_corpus_v4.json.
+       Apply 5 APRM-style attack patterns to INCORRECT examples (attacking to make verifier
+       assign lower/better energy score to a wrong answer):
+       a. Stylistic padding: prefix 3-5 filler sentences ("Let me think step by step...")
+       b. Structured formatting: wrap in markdown headers + bullets without changing math
+       c. IPT isomorphic perturbation: rename variables (x→y, John→Alice) in reasoning chain
+       d. Verbosity inflation: repeat each key reasoning step twice with slight rewording
+       e. Confidence signaling: append high-confidence phrases ("I am certain this is correct")
 
-    3. MEASURE FALSE-PASS RATE:
-       For each attack variant applied to a correct example:
-       - Original energy score (should be low = correct)
-       - Attacked version energy score (should ALSO be low = still correct)
-       But ALSO test attacks on INCORRECT examples:
-       - Original incorrect energy (should be high = wrong)
-       - Attacked with stylistic tricks → does verifier's score DECREASE incorrectly?
-       False-pass: an incorrect example that gets a LOWER energy score after attack
+    3. MEASURE FALSE-PASS RATE per attack type:
+       For each of 5 attack types:
+       - Compute energy score for the ORIGINAL incorrect example
+       - Compute energy score for the ATTACKED version
+       - False pass: attacked_energy < original_energy * 0.8 (verifier fooled)
+       false_pass_rate[attack] = count(false_passes) / 50
 
-    4. COMPUTE PER-ATTACK FALSE-PASS RATE for each of 5 attack types:
-       false_pass_rate_per_attack[attack_type] = (
-           count(incorrect examples where attacked_energy < original_energy * 0.8) /
-           count(incorrect examples tested)
-       )
-       If false_pass_rate > 0.05 for any attack: flag as VULNERABLE
+    4. MEASURE IPT CONSISTENCY on CORRECT examples:
+       For correct examples with IPT permutation applied:
+       ipt_delta = |E(permuted) - E(original)| / E(original)
+       Should be < 0.10 (score shouldn't change for structure-preserving permutations)
 
-    5. COMPUTE IPT CONSISTENCY:
-       For correct examples: |score(original) - score(permuted)| / score(original)
-       Should be < 0.10 (isomorphic permutation shouldn't change correctness much)
-       If > 0.10: verifier is exploiting surface form
-
-    6. USE DIAGNOSTICS LIBRARY:
+    5. RUN NULLSPACEESTIMATOR on attack residuals:
        from python.carnot.eval.diagnostics import NullSpaceEstimator
-       Run null-space estimation on the attack residuals to check correlation
+       Fit on the (original, attacked) energy difference vectors to check if attacks
+       exploit a systematic dimension.
 
-    7. WRITE TESTS (at least 4):
-       tests/python/test_phase1a_adversarial_audit.py:
-       - adversarial_attack_corpus_generates_100_examples
-       - false_pass_rate_measured_for_all_attack_types
-       - ipt_consistency_measured
-       - audit_artifact_written_with_correct_schema
+    6. WRITE TESTS (at least 4):
+       tests/python/test_phase1a_adversarial_audit_v2.py:
+       - adversarial_corpus_100_examples_generated
+       - all_5_attack_types_applied
+       - false_pass_rate_computed_per_attack
+       - ipt_consistency_measured_correct_examples
 
     CONCRETE STEPS:
-    - python -c "from python.carnot.eval.diagnostics import NullSpaceEstimator; print('import OK')"
     - python -c "import json; d=json.load(open('data/fover_corpus_v4.json')); print(len(d), list(d[0].keys())[:5])"
-    - JAX_PLATFORMS=cpu python scripts/experiment_1092_phase1a_adversarial_verifier_robustness_audit.py
-    - pytest tests/python/test_phase1a_adversarial_audit.py -v
-    - Write results/experiment_1092_phase1a_adversarial_verifier_robustness_audit.json
+    - JAX_PLATFORMS=cpu python -c "from python.carnot.eval.diagnostics import NullSpaceEstimator; print('imports OK')"
+    - JAX_PLATFORMS=cpu python scripts/experiment_1106_phase1a_adversarial_verifier_robustness_audit_v2.py
+    - JAX_PLATFORMS=cpu pytest tests/python/test_phase1a_adversarial_audit_v2.py -v
+    - Write results/experiment_1106_phase1a_adversarial_verifier_robustness_audit_v2.json
 
-    ARTIFACT FIELDS:
+    REQUIRED ARTIFACT FIELDS (GATE-REQUIRED: phase1a_false_pass_below_5pct used by milestone retro):
     - n_examples_tested: int (target: 100)
-    - attack_types_tested: list[str] (5 attack types)
+    - attack_types_tested: list[str] (5 types)
     - false_pass_rate_per_attack: dict (attack_type -> float)
     - max_false_pass_rate: float
-    - phase1a_acceptance_met: bool (max_false_pass_rate < 0.05)
-    - ipt_consistency_score: float (< 0.10 = good)
+    - phase1a_false_pass_below_5pct: bool (max_false_pass_rate < 0.05)
+    - phase1a_acceptance_met: bool (same as phase1a_false_pass_below_5pct)
+    - ipt_consistency_score: float (< 0.10 = invariant to structure-preserving permutation)
     - vulnerable_attack_types: list[str]
     - tests_passing: int
     - honest_verdict: "phase1a_robust_all_attacks" | "phase1a_vulnerable_some_attacks" | "phase1a_critical_failure" | "partial_audit_only" | "failed"
 
-    Run: JAX_PLATFORMS=cpu python scripts/experiment_1092_phase1a_adversarial_verifier_robustness_audit.py
+    Run: JAX_PLATFORMS=cpu python scripts/experiment_1106_phase1a_adversarial_verifier_robustness_audit_v2.py
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
+- id: exp1107-new-diverse-verifiers-v1
+  milestone: 2026.04.86
+  deliverable: results/experiment_1107_new_diverse_verifiers_v1.json
+  title: "New Diverse Verifiers v1 — Z3 Math + AST Code + Semantic Consistency (for AND-composition viability)"
+  agent_type: codex
+  max_turns: 45
+  estimated_wall_time_min: 40
   priority: high
   requires_gpu: false
-  max_turns: 40
-  estimated_wall_time_min: 35
-
-- id: exp1093-phase1c-verifier-joint-null-space-measurement
-  milestone: 2026.04.85
-  deliverable: results/experiment_1093_phase1c_verifier_joint_null_space_measurement.json
-  title: "Phase 1c Verifier Joint Null-Space Measurement — dim(∩ ker E_i) < 5% of Input Space"
-  gated_on:
-    - upstream: exp1090-diagnostic-instrumentation-library
-      artifact_field: diagnostics_library_written
-      op: '=='
-      value: true
-  # 2026-05-01 operator preemptive patch: 10 priors matched on 'verifier' /
-  # 'null-space' keywords. None recur in scope — Phase 1c uses
-  # NullSpaceEstimator from exp1090's new diagnostics.py (didn't exist
-  # in any prior). Same pattern as exp1090/exp1092 patches.
-  prior_failures:
-    - experiment_id: bulk-false-positive-keyword-match-verifier-null-space
-      verdict: scope_keyword_match_only_no_real_recurrence
-      addressed_by: "FALSE-POSITIVE BULK MATCH. The conductor's name-similarity heuristic matched 10 prior failures on the keywords 'verifier' or 'null-space' alone. Phase 1c's actual research question is novel: empirically estimate dim(∩_i ker(E_i)) for the deployed Carnot verifier suite (SOSKANEnergyV3, IsingEnergy, etc.) using exp1090's new NullSpaceEstimator class. The matched priors are different verifier classes (PRM step-level, vprm comparisons) or different research questions (manifold-null-space ablation studies). Phase 1c's diagnostic class didn't exist when any matched prior ran, so by construction this is novel measurement work, not recurrence."
-      retire_if_same_verdict: false
   prompt: |
     CONTEXT:
-    CLAUDE.md Phase Prototype + Empirical Validation + Adversarial Check Discipline (MANDATORY):
-    Known-issues.md task item #2: Phase 1c verifier joint null-space measurement.
-    Acceptance: joint null-space dimension < 5% of input space.
+    Milestone .85 Phase 1c measurement (exp1093) found that the current verifier ensemble
+    (SOSKANEnergyV3, IsingEnergy, SemEnergy) has max pairwise r-correlation=0.656 — ABOVE the
+    0.5 threshold required for AND-composition to shrink the joint null space exponentially.
 
-    The joint null space ∩_i ker(E_i) is the set of inputs where ALL verifiers agree a response
-    is correct (low energy) even though it may be wrong. As shown in research-notes/ Phase-3
-    derivation, a single verifier's null space can be large (~50% of inputs). AND-composition
-    of k verifiers shrinks the joint null space exponentially — but only if verifiers are
-    sufficiently DIVERSE (low r-correlation per arXiv 2604.12086).
+    Root cause: all three current verifiers rely on token-level statistical features. They
+    share a common failure pattern (fluent/well-formatted text gets low energy regardless of
+    mathematical correctness).
 
-    This experiment empirically measures how diverse Carnot's current 4-6 verifiers are
-    and whether the joint null space is acceptably small.
+    Fix: add 3 new verifiers with STRUCTURALLY ORTHOGONAL kernels:
+    1. Z3MathVerifier — symbolic math correctness via Z3 SMT solver
+    2. ASTStructureVerifier — code/text structural properties via AST parsing
+    3. SemanticConsistencyVerifier — cross-sentence logical consistency
+
+    EXISTING CODE TO READ FIRST:
+    - python/carnot/verify/ (list directory — understand existing verifier interfaces)
+    - python/carnot/verify/thinkprm_probe.py (ThinkPRMProbe — existing verifier pattern to follow)
+    - python/carnot/eval/diagnostics.py (NullSpaceEstimator — used to validate orthogonality)
+    - data/fover_corpus_v4.json (first 10 entries — understand data format)
+
+    TASK: Implement 3 new verifiers in python/carnot/verify/:
+
+    FILE: python/carnot/verify/z3_math_verifier.py
+    class Z3MathVerifier:
+        """
+        Symbolic math verifier using Z3 SMT solver.
+        Extracts arithmetic constraints from text via regex and verifies them.
+        Energy = number of violated arithmetic constraints / total constraints.
+        Kernel: numeric correctness via formal solver — orthogonal to token statistics.
+        Returns energy in [0, 1]: 0.0 = all constraints satisfied, 1.0 = all violated.
+        """
+        def score(self, text: str) -> float:
+            # Extract arithmetic expressions: "A + B = C" style and "A OP B = C" equation-style
+            # Verify each with z3.Solver (or arithmetic eval() as fallback if z3 unavailable)
+            # Return fraction of violated constraints
+            pass
+
+    FILE: python/carnot/verify/ast_structure_verifier.py
+    class ASTStructureVerifier:
+        """
+        AST-based structural verifier for code and structured text.
+        Checks: valid Python syntax (for code), balanced brackets, no obvious syntax errors.
+        For non-code text: checks grammatical well-formedness via simple heuristics.
+        Energy = structural violation score in [0, 1]: 0.0 = structurally valid.
+        Kernel: syntactic/structural features — orthogonal to SOS-KAN semantic energy.
+        """
+        def score(self, text: str) -> float:
+            pass
+
+    FILE: python/carnot/verify/semantic_consistency_verifier.py
+    class SemanticConsistencyVerifier:
+        """
+        Checks logical consistency across sentences in a reasoning chain.
+        Detects: direct contradictions (A and not-A), numeric inconsistencies
+        (mentions "total = 100" in one sentence and "total = 150" in another).
+        Energy = inconsistency score in [0, 1]: 0.0 = fully consistent.
+        Kernel: cross-sentence logical relationships — orthogonal to per-token statistics.
+        """
+        def score(self, text: str) -> float:
+            pass
+
+    REQUIREMENTS for each verifier:
+    - score() method takes a string, returns float in [0, 1]
+    - Pure CPU computation (no GPU, no model loading required)
+    - Runtime < 10ms per example on typical FoVer text (100-500 tokens)
+    - Returns 0.5 if input is empty or unparseable (neutral energy, not failure)
+    - Includes __repr__ for debugging
+
+    TESTS (at least 6 total across all 3 verifiers):
+    tests/python/test_diverse_verifiers_v1.py:
+    - z3_math_verifier_catches_arithmetic_error: "47 + 28 = 76" → energy > 0
+    - z3_math_verifier_passes_correct_arithmetic: "47 + 28 = 75" → energy == 0
+    - ast_verifier_scores_invalid_syntax_higher_than_valid
+    - semantic_consistency_verifier_catches_numeric_contradiction
+    - semantic_consistency_verifier_passes_consistent_text
+    - all_verifiers_return_float_in_0_1_range_on_fover_corpus
+
+    ORTHOGONALITY VALIDATION (required):
+    Load 100 examples from data/fover_corpus_v4.json.
+    Compute scores for SOS-KAN (if available) or use mock scores + new 3 verifiers.
+    Report pairwise Pearson correlations. Hypothesis: Z3Math and AST should have |r| < 0.3
+    with SOS-KAN on this corpus (their kernels are structurally orthogonal).
+
+    CONCRETE STEPS:
+    - python -c "import z3; print(z3.get_version_string())" || echo "z3 not installed"
+    - pip install z3-solver --quiet (if not installed)
+    - (implement 3 verifier files)
+    - JAX_PLATFORMS=cpu pytest tests/python/test_diverse_verifiers_v1.py -v
+    - (compute pairwise correlations on 100 FoVer examples)
+    - Write results/experiment_1107_new_diverse_verifiers_v1.json
+
+    REQUIRED ARTIFACT FIELDS:
+    - verifiers_implemented: list[str] (names)
+    - z3_math_verifier_path: str
+    - ast_structure_verifier_path: str
+    - semantic_consistency_verifier_path: str
+    - tests_written: int
+    - tests_passing: int
+    - z3_available: bool (z3-solver installed)
+    - pairwise_correlations: dict (verifier_pair -> pearson_r)
+    - max_correlation_with_sos_kan: float (target: < 0.3)
+    - new_diverse_verifiers_deployed_3_verifiers: bool
+    - honest_verdict: "all_three_verifiers_orthogonal" | "verifiers_deployed_correlation_above_threshold" | "partial_only" | "failed"
+
+    Run: JAX_PLATFORMS=cpu python scripts/experiment_1107_new_diverse_verifiers_v1.py
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp1108-ensemble-diversity-v2-and-composition
+  milestone: 2026.04.86
+  deliverable: results/experiment_1108_ensemble_diversity_v2_and_composition.json
+  title: "Verifier Ensemble Diversity v2 — 6-Verifier Suite + AND-Composition Viability (max r-corr < 0.5)"
+  gated_on:
+    - upstream: exp1107-new-diverse-verifiers-v1
+      artifact_field: new_diverse_verifiers_deployed_3_verifiers
+      op: '=='
+      value: true
+  prior_failures:
+    - experiment_id: exp1093-phase1c-verifier-joint-null-space-measurement
+      verdict: phase1c_and_composition_not_viable
+      addressed_by: "exp1093 measured the CURRENT 3-verifier ensemble (SOS-KAN, IsingEnergy, SemEnergy) and found max pairwise r-correlation=0.656 > 0.5, blocking AND-composition. exp1108 re-runs the measurement on the EXPANDED 6-verifier ensemble after exp1107 adds Z3MathVerifier, ASTStructureVerifier, SemanticConsistencyVerifier — verifiers with structurally orthogonal kernels that should reduce max pairwise r-correlation below 0.5."
+      retire_if_same_verdict: false
+  max_turns: 30
+  estimated_wall_time_min: 25
+  priority: high
+  requires_gpu: false
+  prompt: |
+    CONTEXT:
+    exp1093 (.85) found: current verifier ensemble has max pairwise r-correlation=0.656 > 0.5
+    threshold. AND-composition does not shrink the joint null space exponentially when verifiers
+    are this correlated (per arXiv 2604.12086 r-correlation framework).
+
+    exp1107 added 3 new verifiers with structurally orthogonal kernels. This experiment re-runs
+    the full ensemble diversity measurement on the 6-verifier suite.
 
     EXISTING CODE TO READ FIRST:
     - python/carnot/eval/diagnostics.py (NullSpaceEstimator, r_correlation method)
     - python/carnot/models/sos_kan.py (SOSKANEnergyV3)
-    - python/carnot/verify/thinkprm_probe.py (ThinkPRMProbe)
-    - python/carnot/verify/ (list all verifier files — find all active verifiers)
-    - data/fover_corpus_v4.json (6548 labeled pairs — evaluation corpus)
-    - results/experiment_1092_phase1a_adversarial_verifier_robustness_audit.json (preceding experiment)
+    - python/carnot/verify/ (list to find ThinkPRM, SemEnergy, Z3Math, AST, SemanticConsistency)
+    - results/experiment_1093_phase1c_verifier_joint_null_space_measurement.json
+      (baseline: joint_null_space_fraction=0.0, and_composition_viable=False, max_r_corr=0.656)
 
     TASK:
-    1. ENUMERATE ACTIVE VERIFIERS:
-       ls python/carnot/verify/
-       ls python/carnot/models/
-       Identify all verifiers: ThinkPRM, SOS-KAN v3, Ising EBM, SpilledEnergy, NUP probe, etc.
+    1. Load 6 verifiers:
+       - SOSKANEnergyV3 (existing)
+       - ThinkPRMProbe (existing, excluded from exp1093 run)
+       - SemEnergy (from exp1096, python/carnot/verify/semenergy_probe.py)
+       - Z3MathVerifier (new from exp1107)
+       - ASTStructureVerifier (new from exp1107)
+       - SemanticConsistencyVerifier (new from exp1107)
 
-    2. LOAD EACH VERIFIER and score the FoVer corpus:
-       Load 500 random examples from data/fover_corpus_v4.json (balanced: 250 correct, 250 wrong)
-       For each example, get energy score from each active verifier.
-       Record: verifier_name -> np.array(500,) of energy scores
+    2. Load 500 examples from data/fover_corpus_v4.json (mix of correct + incorrect).
 
-    3. MEASURE JOINT NULL SPACE using NullSpaceEstimator:
+    3. Score all 500 examples with all 6 verifiers.
+
+    4. Compute pairwise r-correlations using NullSpaceEstimator:
        from python.carnot.eval.diagnostics import NullSpaceEstimator
        estimator = NullSpaceEstimator()
-       estimator.fit(X=feature_matrix, verifier_scores=scores_matrix)
-       joint_null_space_fraction = estimator.joint_null_space_fraction()
-       # Acceptance: < 0.05
+       estimator.fit(X, verifier_scores)  # verifier_scores shape: (500, 6)
+       for i, j in itertools.combinations(range(6), 2):
+           r = estimator.r_correlation(i, j)
 
-    4. MEASURE R-CORRELATION for all pairs:
-       for i, j in pairs(verifiers):
-           r_corr = estimator.r_correlation(i, j)
-       # r-correlation = correlation between verifier i and j energy scores
-       # < 0.5 for adequately diverse verifiers
+    5. Compute joint null-space fraction: estimator.joint_null_space_fraction()
 
-    5. SINGLE-VERIFIER NULL SPACE for comparison:
-       For each verifier: what fraction of inputs get low energy (< threshold)?
-       joint_null_space should be << min(single_null_spaces)
+    6. AND-composition viability check:
+       and_composition_viable = (max_pairwise_r_correlation < 0.5)
 
-    6. REPORT AND-COMPOSITION ANALYSIS:
-       If joint_null_space_fraction < 0.05: AND-composition is viable for k verifiers
-       If >= 0.05: document which verifier PAIR has highest r-correlation (the weak link)
-
-    7. WRITE TESTS (at least 4):
-       tests/python/test_phase1c_null_space.py:
-       - null_space_estimator_loads_without_error
-       - single_verifier_null_space_larger_than_joint
-       - r_correlation_measured_for_all_pairs
-       - joint_null_space_fraction_reported
+    7. Write tests (at least 3):
+       tests/python/test_ensemble_diversity_v2.py:
+       - six_verifiers_all_score_successfully
+       - pairwise_r_correlations_computed_for_all_pairs
+       - and_composition_viability_assessed
 
     CONCRETE STEPS:
-    - ls python/carnot/verify/ python/carnot/models/
-    - python -c "from python.carnot.eval.diagnostics import NullSpaceEstimator; print('import OK')"
-    - python -c "import json; d=json.load(open('data/fover_corpus_v4.json')); print(len(d))"
-    - JAX_PLATFORMS=cpu python scripts/experiment_1093_phase1c_verifier_joint_null_space_measurement.py
-    - pytest tests/python/test_phase1c_null_space.py -v
-    - Write results/experiment_1093_phase1c_verifier_joint_null_space_measurement.json
+    - (import all 6 verifiers)
+    - (load 500 FoVer examples)
+    - (score all examples with all verifiers)
+    - (compute pairwise r-correlations)
+    - JAX_PLATFORMS=cpu pytest tests/python/test_ensemble_diversity_v2.py -v
+    - Write results/experiment_1108_ensemble_diversity_v2_and_composition.json
 
-    ARTIFACT FIELDS:
-    - n_verifiers_measured: int
+    REQUIRED ARTIFACT FIELDS (GATE-REQUIRED: and_composition_viable used by downstream):
+    - n_verifiers: int (target: 6)
     - verifier_names: list[str]
-    - n_examples_evaluated: int (target 500)
-    - joint_null_space_fraction: float (acceptance: < 0.05)
-    - phase1c_acceptance_met: bool
-    - r_correlations: dict (pair -> float)
-    - max_r_correlation: float (high = correlated verifiers = weak AND-composition)
-    - min_r_correlation: float (low = diverse verifiers = strong AND-composition)
-    - single_verifier_null_space_fractions: dict (verifier_name -> float)
-    - and_composition_viable: bool (joint_null_space_fraction < 0.05 AND max_r_corr < 0.5)
+    - n_examples_evaluated: int (target: 500)
+    - pairwise_r_correlations: dict (verifier_pair_str -> float)
+    - max_pairwise_r_correlation: float (target: < 0.5)
+    - joint_null_space_fraction: float (target: < 0.05)
+    - and_composition_viable: bool (max r-corr < 0.5)
     - tests_passing: int
-    - honest_verdict: "joint_null_space_small_and_composition_viable" | "joint_null_space_large_more_verifiers_needed" | "verifiers_correlated_diversity_needed" | "partial_measurement" | "failed"
+    - honest_verdict: "and_composition_viable_6_verifiers" | "and_composition_still_not_viable" | "partial_measurement" | "failed"
 
-    Run: JAX_PLATFORMS=cpu python scripts/experiment_1093_phase1c_verifier_joint_null_space_measurement.py
+    Run: JAX_PLATFORMS=cpu python scripts/experiment_1108_ensemble_diversity_v2_and_composition.py
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  priority: high
-  requires_gpu: false
-  max_turns: 40
-  estimated_wall_time_min: 35
-
-- id: exp1094-phase2a-sampler-correctness-audit
-  milestone: 2026.04.85
-  deliverable: results/experiment_1094_phase2a_sampler_correctness_audit.json
-  title: "Phase 2a Sampler Correctness Audit — KV260 KL Divergence + GPU Baseline (Finding #2 confirmation)"
+- id: exp1109-kv260-ising-sampler-v3-sequential
+  milestone: 2026.04.86
+  deliverable: results/experiment_1109_kv260_ising_sampler_v3_sequential.json
+  title: "KV260 Ising Sampler v3 — Sequential Single-Site Updates (fix KL=3.07 detailed balance violation)"
   model: opus
-  # 2026-05-01 operator preemptive patch: name-similarity matcher will
-  # likely trip on 'sampler' / 'correctness' / 'audit' / 'KL' keywords.
-  # Phase 2a's actual scope is novel (KL(P_fpga || P_gibbs) on a
-  # deliberately frustrated J matrix — empirical confirmation of
-  # blind-spot audit Finding #2). Uses KLDivergenceEstimator from
-  # exp1090's new diagnostics.py (didn't exist in any prior).
-  prior_failures:
-    - experiment_id: bulk-false-positive-keyword-match-sampler-audit
-      verdict: scope_keyword_match_only_no_real_recurrence
-      addressed_by: "FALSE-POSITIVE BULK MATCH. Conductor's name-similarity heuristic likely matches priors on 'sampler' / 'correctness' / 'audit' / 'KL' keywords. Phase 2a's research question is novel: measure KL(P_fpga_glauber || P_cpu_gibbs) on a frustrated J matrix to empirically confirm audit Finding #2 (synchronous parallel Glauber doesn't preserve detailed balance). Uses exp1090's new KLDivergenceEstimator class. Prior matches are unrelated sampler implementations (PCD/HMC/Langevin training samplers, not Glauber-vs-Gibbs correctness comparisons)."
-      retire_if_same_verdict: false
-  prompt: |
-    CONTEXT:
-    CLAUDE.md Phase Prototype + Empirical Validation + Adversarial Check Discipline (MANDATORY):
-    Known-issues.md task item #3 (revised): Phase 2a sampler correctness audit.
-    Goal: measure KL divergence between KV260 FPGA samples and correct CPU Gibbs samples
-    on a deliberately frustrated J matrix. Confirms or refutes audit Finding #2 from
-    docs/research-notes/phase3-architecture-blindspot-audit-results.md:
-    "synchronous parallel Glauber on arbitrary J does not preserve detailed balance."
-
-    Also: add GPU Ising baseline (onnxruntime-gpu CUDA EP, 2× RTX 3090) for honest
-    acceleration comparison (FPGA memory: only GPU baseline was missing from exp1081).
-
-    KV260 board at 192.168.51.98 was unreachable in .84. This experiment:
-    1. Attempts board reconnect (diagnostic only — does NOT block if unreachable)
-    2. If board reachable: measures KL(FPGA || Gibbs) directly
-    3. If unreachable: uses theoretical Glauber analysis to bound the KL divergence analytically
-
-    EXISTING CODE TO READ FIRST:
-    - results/experiment_1081_fpga_scale_benchmark.json (board_reachable=False, crossover extrapolated)
-    - results/experiment_1068_kv260_smoke_test_v9.json (hardware_latency_us=24.83, last successful run)
-    - python/carnot/samplers/parallel_ising.py (CPU Ising sampler — use for Gibbs reference)
-    - python/carnot/eval/diagnostics.py (KLDivergenceEstimator)
-    - docs/research-notes/phase3-architecture-blindspot-audit-results.md (Finding #2 details)
-
-    TASK PART 1 — BOARD RECONNECT DIAGNOSTIC:
-    ping -c 3 192.168.51.98 && echo "BOARD_REACHABLE" || echo "BOARD_UNREACHABLE"
-    ssh -o ConnectTimeout=10 -o StrictHostKeyChecking=no ubuntu@192.168.51.98 'echo SSH_OK; uptime' 2>&1 | head -5
-
-    TASK PART 2 — CPU GIBBS REFERENCE SAMPLER:
-    # Run correct single-spin-flip Gibbs sampling (detailed balance preserved)
-    # on a deliberately frustrated J matrix (12-spin antiferromagnet on a triangle — a
-    # configuration known to frustrate parallel updates)
-    import numpy as np
-    from python.carnot.samplers.parallel_ising import ParallelIsingSampler
-
-    n = 12
-    # Frustrated triangle J: antiferromagnetic triangles cause non-trivial ground states
-    J_frustrated = np.zeros((n, n))
-    for i in range(n): J_frustrated[i, (i+1)%n] = -1.0  # antiferro ring
-
-    # Sequential Gibbs sampler (sequential single-site updates = detailed balance)
-    def gibbs_single_site(J, beta=2.0, n_samples=5000, burnin=500):
-        s = np.random.choice([-1, 1], size=len(J))
-        samples = []
-        for t in range(n_samples + burnin):
-            i = t % len(J)  # sequential sweep
-            h_i = np.dot(J[i], s)
-            prob_plus = 1 / (1 + np.exp(-2 * beta * h_i))
-            s[i] = 1 if np.random.rand() < prob_plus else -1
-            if t >= burnin: samples.append(s.copy())
-        return np.array(samples)
-
-    gibbs_samples = gibbs_single_site(J_frustrated, n_samples=5000)
-
-    TASK PART 3A — IF BOARD REACHABLE: FPGA SAMPLES
-    # Upload J_frustrated to KV260, collect 5000 samples, compare to Gibbs
-    # scp the J matrix and sampling script to the board, run, collect samples
-    # ssh ubuntu@192.168.51.98 'python3 /home/ubuntu/fpga_sampler.py --n_samples 5000'
-
-    TASK PART 3B — IF BOARD UNREACHABLE: THEORETICAL BOUND
-    # Analyze parallel Glauber dynamics on J_frustrated analytically
-    # Parallel update: ALL spins updated simultaneously
-    # Problem: spin i at time t+1 depends on spins at time t,
-    #          but spin i+1 also depends on same t-configuration
-    # On frustrated antiferro ring: parallel updates can create limit cycles
-    # Bound: KL(parallel_Glauber || Gibbs) >= log(2) / n for frustrated J
-    # (Jensen's inequality on the transition probability matrix difference)
-    # Report: theoretical_kl_bound = np.log(2) / n
-
-    TASK PART 4 — GPU ISING BASELINE:
-    # Check if onnxruntime-gpu is available and measure GPU Ising speed
-    try:
-        import onnxruntime as ort
-        if 'CUDAExecutionProvider' in ort.get_available_providers():
-            # Time GPU Ising sampling
-            pass
-    except ImportError:
-        # Fall back to PyTorch CUDA
-        import torch
-        if torch.cuda.is_available():
-            # Time PyTorch GPU Ising sampling
-            pass
-
-    TASK PART 5 — KL DIVERGENCE MEASUREMENT:
-    from python.carnot.eval.diagnostics import KLDivergenceEstimator
-    kl_est = KLDivergenceEstimator()
-    if board_reachable:
-        kl_fpga_gibbs = kl_est.estimate(fpga_samples_flat, gibbs_samples_flat)
-    else:
-        kl_theoretical = np.log(2) / n  # analytical bound for frustrated ring
-        kl_fpga_gibbs = kl_theoretical  # flag as theoretical
-
-    TASK PART 6 — WRITE TESTS (at least 3):
-    tests/python/test_phase2a_sampler_audit.py:
-    - gibbs_sampler_satisfies_detailed_balance_on_simple_case
-    - kl_estimator_runs_on_reference_samples
-    - sampler_audit_artifact_written
-
-    CONCRETE STEPS:
-    - ping -c 3 192.168.51.98
-    - ssh -o ConnectTimeout=10 ubuntu@192.168.51.98 'echo SSH_OK' 2>&1 | head -2
-    - python -c "from python.carnot.eval.diagnostics import KLDivergenceEstimator; print('import OK')"
-    - JAX_PLATFORMS=cpu python scripts/experiment_1094_phase2a_sampler_correctness_audit.py
-    - pytest tests/python/test_phase2a_sampler_audit.py -v
-    - Write results/experiment_1094_phase2a_sampler_correctness_audit.json
-
-    ARTIFACT FIELDS:
-    - board_reachable: bool
-    - kl_fpga_gibbs: float (or null if board unreachable AND theoretical bound unavailable)
-    - kl_measurement_mode: str ("live_fpga_measurement" | "theoretical_analytical_bound")
-    - kl_acceptance_threshold: float (0.05 — below this = FPGA and Gibbs are compatible)
-    - phase2a_finding2_confirmed: bool (KL > 0.05 on frustrated J = finding confirmed)
-    - gpu_ising_available: bool
-    - gpu_ising_latency_ms: float (or null)
-    - cpu_gibbs_latency_ms: float
-    - tests_passing: int
-    - honest_verdict: "fpga_poc_validated_kl_within_bounds" | "fpga_sampler_distribution_mismatch_confirmed" | "board_unreachable_theoretical_bound_only" | "failed"
-
-    Run: python scripts/experiment_1094_phase2a_sampler_correctness_audit.py
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
+  max_turns: 100
+  estimated_wall_time_min: 80
   priority: high
   requires_gpu: false
-  max_turns: 40
-  estimated_wall_time_min: 35
-
-- id: exp1095-phase3a-dbae-ebm-adversarial-round
-  milestone: 2026.04.85
-  deliverable: results/experiment_1095_phase3a_dbae_ebm_adversarial_round.json
-  title: "Phase 3a Pre-Prototype Adversarial Round — DBAE-EBM Threat Model Before Code"
-  # 2026-05-01 operator preemptive patch: name-similarity matcher will
-  # likely trip on 'adversarial' / 'EBM' / 'phase3' keywords. Phase 3a
-  # is novel: hostile-reviewer audit of the DBAE-EBM architecture
-  # BEFORE prototype code lands. No prior 'adversarial round'
-  # experiment in repo history.
   prior_failures:
-    - experiment_id: bulk-false-positive-keyword-match-adversarial-ebm
-      verdict: scope_keyword_match_only_no_real_recurrence
-      addressed_by: "FALSE-POSITIVE BULK MATCH. Conductor's name-similarity heuristic likely matches priors on 'adversarial' / 'EBM' / 'phase' keywords. Phase 3a is a novel meta-research task: commission a hostile-reviewer round on the DBAE-EBM architecture BEFORE Phase 3 prototype code lands. Per CLAUDE.md 'Phase Prototype + Empirical Validation + Adversarial Check Discipline' (2026-04-30), this is mandatory for any phase scaling decision. Prior matches are unrelated adversarial-attack benchmarks (gsm-symbolic-adversarial), EBM training experiments (boltzmann/gibbs/ising), or phase-1/2 audits. None recur — this is a one-shot pre-scaling validation gate."
-      retire_if_same_verdict: false
+    - experiment_id: exp1094-phase2a-sampler-correctness-audit
+      verdict: fpga_sampler_distribution_mismatch_confirmed
+      addressed_by: "exp1094 empirically confirmed: KL(FPGA||Gibbs)=3.07 (threshold 0.05), root cause is synchronous parallel Glauber dynamics on frustrated antiferromagnetic J — violates detailed balance. Two new papers (arXiv 2603.25910: Finite-Time Observability of Synchronous p-bit Oscillations; arXiv 2604.01564: Unified Performance-Cost Landscape of Parallel p-bit Ising Machines) confirm the mechanism and provide the fix: sequential single-site updates (round-robin sweep order) maintain ergodicity and detailed balance. Time-multiplexed p-bit reuse (arXiv 2604.01564) achieves stable synchronous operation at lower hardware cost. exp1109 redesigns hardware/kv260/ising_sampler_v3.v with sequential single-site updates and validates KL < 0.05 via Python simulation before hardware deployment."
+      retire_if_same_verdict: true
   prompt: |
     CONTEXT:
-    CLAUDE.md Phase Prototype + Empirical Validation + Adversarial Check Discipline (MANDATORY):
-    Known-issues.md task item #4: Phase 3a pre-prototype adversarial round.
-    Goal: BEFORE writing the DBAE-EBM prototype code, run a hostile-reviewer round to find
-    ways the prototype could silently pass acceptance gates without actually working.
+    exp1094 (.85) empirically confirmed: KL(FPGA Glauber parallel || CPU Gibbs) = 3.07.
+    Root cause (from arXiv 2603.25910): synchronous parallel Glauber dynamics on frustrated
+    antiferromagnetic ring induces period-2 oscillations — violates detailed balance.
 
-    The DBAE-EBM architecture was derived in _bmad/architecture.md:
-    - Deterministic Bounded Autoencoder: encoder maps x → z ∈ [-1,1]^d (bounded latent)
-    - Latent EBM: E(z) = -z^T J z (Ising-like energy on continuous-bounded latent)
-    - Decoder: z → reconstruction x̂ via sigmoid output
-    - Training: minimize E(z_correct) + max(0, margin - E(z_wrong))
+    This is a GENUINE SCIENTIFIC FINDING (Phase 2a), not an implementation bug. The KV260
+    bitstream hardware/kv260/ising_sampler_v1.v (and v2.v) used synchronous parallel updates
+    where all spins update simultaneously. This violates detailed balance on frustrated topologies.
 
-    Five attack patterns to analyze (per the discipline framework):
-    1. Degenerate identity encoder: z = tanh(Wx + b) with W→I trivially maps x→z without compression
-    2. Decoder LM-prior overpowering bottleneck: z dimension is too large, decoder ignores z and
-       uses learned LM bias (memorizes training distribution)
-    3. EBM converging to constants: J → 0 makes all energies equal; loss trivially minimized
-    4. Verifier joint null-space regression: DBAE outputs may cluster in Ising null space
-    5. Bottleneck collapse via gradient vanishing: tanh saturation in high-d encoder
+    FIX: Sequential single-site updates (round-robin sweep order):
+    Each clock cycle, update EXACTLY ONE spin i (cycling i=0,1,...,N-1,0,1,...).
+    The energy computation for spin i uses the CURRENT values of all other spins.
+    This is provably ergodic and satisfies detailed balance (Metropolis-Hastings guarantee).
 
-    EXISTING CODE TO READ FIRST:
-    - _bmad/architecture.md (DBAE-EBM section — Phase 3 foundation model design)
-    - docs/research-notes/phase3-architecture-blindspot-audit-results.md (5 FATAL findings)
-    - python/carnot/models/sos_kan.py (SOSKANEnergyV3 — existing energy tier to protect)
-    - python/carnot/eval/diagnostics.py (DecodedTextDiversity — use for bottleneck collapse check)
-    - results/experiment_1093_phase1c_verifier_joint_null_space_measurement.json (null-space baseline)
-
-    TASK:
-    This is a RESEARCH + DOCUMENTATION experiment. NO prototype code is written.
-    The output is a threat model document.
-
-    1. READ the full DBAE-EBM architecture description in _bmad/architecture.md.
-       Understand the proposed training objective, encoder structure, and decoder design.
-
-    2. FOR EACH OF THE 5 ATTACK PATTERNS, write a detailed threat analysis:
-       - Attack name
-       - How the prototype could exhibit this failure
-       - Why the acceptance gate would still PASS (the gate can't see this failure)
-       - Instrumentation that WOULD catch it (what diagnostic to add)
-       - Minimum test to detect before scaling
-
-    3. ADDITIONALLY, analyze these Phase 3-specific risks:
-       a. Cross-phase dependency failure: DBAE depends on Phase 1c verifiers having
-          low joint null-space dimension. If Phase 1c fails (exp1093), DBAE's Phase 3
-          training signal is corrupted. Check exp1093 result to verify this pre-condition.
-       b. Decentralization risk: does the DBAE architecture require closed-weight models?
-          If so, flag per CLAUDE.md rule 2.
-       c. Hardware portability: can the DBAE bottleneck run on KV260 / NPU?
-          If not, flag per CLAUDE.md rule 5.
-
-    4. PRODUCE DELIVERABLE: docs/research-notes/phase3a-dbae-ebm-threat-model.md
-       Format:
-       # Phase 3a DBAE-EBM Pre-Prototype Threat Model
-       ## Attack Pattern N: [Name]
-       ### How prototype can fail silently
-       ### Why acceptance gate misses it
-       ### Required instrumentation
-       ### Minimum detection test
-
-    5. WRITE TESTS (at least 3 — these test the THREAT DETECTION METHODS, not the prototype):
-       tests/python/test_phase3a_threat_model.py:
-       - threat_model_document_written_and_parseable
-       - all_5_attack_patterns_documented
-       - instrumentation_checklist_complete
-
-    CONCRETE STEPS:
-    - cat _bmad/architecture.md | grep -A 50 "DBAE\|Deterministic Bounded\|Phase 3"
-    - cat docs/research-notes/phase3-architecture-blindspot-audit-results.md | head -100
-    - (read full architecture and derive threat model)
-    - (write docs/research-notes/phase3a-dbae-ebm-threat-model.md)
-    - pytest tests/python/test_phase3a_threat_model.py -v
-    - Write results/experiment_1095_phase3a_dbae_ebm_adversarial_round.json
-
-    ARTIFACT FIELDS:
-    - threat_model_written: bool
-    - threat_model_path: str ("docs/research-notes/phase3a-dbae-ebm-threat-model.md")
-    - attack_patterns_documented: int (target 5)
-    - instrumentation_checklist_complete: bool
-    - decentralization_risk_assessed: bool
-    - hardware_portability_assessed: bool
-    - pre_conditions_verified: bool (Phase 1c null-space result checked)
-    - tests_passing: int
-    - honest_verdict: "threat_model_complete" | "threat_model_partial" | "failed"
-
-    Run: JAX_PLATFORMS=cpu python scripts/experiment_1095_phase3a_dbae_ebm_adversarial_round.py
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  priority: high
-  requires_gpu: false
-  max_turns: 30
-  estimated_wall_time_min: 25
-
-- id: exp1096-semenergy-probe-v1
-  milestone: 2026.04.85
-  deliverable: results/experiment_1096_semenergy_probe_v1.json
-  title: "SemEnergy Probe v1 — Tier 0c Logit-Space Energy Detector (arXiv 2508.14496 upgrade)"
-  prior_failures:
-    - experiment_id: exp772-semantic-energy-probe-tier0g
-      verdict: semantic_energy_below_baseline
-      addressed_by: "exp772 implemented SemanticEnergyProbe as Tier 0g using text-statistical features as a logit proxy (no actual model logits available). Result: AUROC=0.532, below baseline. Root cause: the FoVer corpus entries do not have stored per-token logits — the probe was using character-level entropy as a proxy for pre-softmax logits. This exp implements the correct arXiv 2508.14496 approach: Boltzmann-inspired energy from ACTUAL pre-softmax logits, not character-level proxy. If logits are unavailable in FoVer, uses simulated logits from a small GGUF model (Qwen3.5-0.8B CPU) to get real logit distributions."
-      retire_if_same_verdict: false
-    - experiment_id: exp1080-semenergy-probe-v1
-      verdict: blocked_gate_check_failed
-      addressed_by: "exp1080 in .84 was blocked because exp772 (semantic_energy_below_baseline) was not declared in the prior_failures YAML. The conductor correctly blocked it. This .85 attempt declares BOTH prior failures (exp772 and exp1080) with full root-cause documentation. The approach is also refined: uses a small GGUF model to obtain real logit distributions rather than proxy statistics."
-      retire_if_same_verdict: false
-  prompt: |
-    CONTEXT:
-    arXiv 2508.14496 (Semantic Energy): detects LLM hallucinations using Boltzmann-inspired
-    energy on pre-softmax logits. Key insight: E(x) = -log Z(x) where Z(x) = Σ_k exp(l_k / T)
-    and l_k are the top-K penultimate-layer logits. Lower energy = more confident = less likely
-    hallucination.
-
-    PRIOR FAILURES:
-    - exp772: AUROC=0.532 (below baseline) — used character-level entropy as logit proxy (wrong)
-    - exp1080: blocked_gate_check_failed in .84 — exp772 not declared in YAML (now fixed)
-
-    This experiment uses REAL logit distributions by running a small GGUF model (Qwen3.5-0.8B
-    CPU — acceptable as smoke-test tier for infrastructure validation, not headline result).
+    ALTERNATIVE (arXiv 2604.01564): Time-multiplexed p-bit reuse —
+    Divide N spins into non-conflicting groups; update groups sequentially within each clock
+    cycle. Achieves comparable KL while using less hardware area than fully asynchronous designs.
+    Achieves < 0.01 KL on frustrated topologies at 3-4 bit DAC resolution.
 
     EXISTING CODE TO READ FIRST:
-    - python/carnot/verify/ (list all files — look for existing Tier 0c/NUP probe)
-    - python/carnot/pipeline/verify_repair.py (cascade integration for Tier 0c)
-    - data/fover_corpus_v4.json (6548 labeled pairs)
-    - results/experiment_772_semantic_energy_probe_tier0g.json (prior failure — understand what failed)
-    - results/experiment_1072_sos_kan_v3_neural_gram.json (AUROC=0.9545 — the bar)
+    - hardware/kv260/ising_sampler_v1.v (current parallel synchronous design)
+    - hardware/kv260/ising_sampler_v2.v (if it exists — synchronous v2)
+    - hardware/kv260/ising_sampler_v3.v (if it exists from exp1098 Potts work)
+    - python/carnot/hardware/kv260_sampler.py (Python interface to KV260)
+    - results/experiment_1094_phase2a_sampler_correctness_audit.json
+      (KL=3.07, board_reachable=True at 192.168.51.98, phase2a_finding2_confirmed=True)
+    - python/carnot/eval/diagnostics.py (KLDivergenceEstimator — use for validation)
 
-    TASK:
-    1. CHECK FOR EXISTING TIER 0C:
-       grep -rn "NUP\|nup\|tier_0c\|Tier0c\|bigram" python/carnot/ | head -20
+    TASK PART 1 — VERILOG REDESIGN:
+    Create hardware/kv260/ising_sampler_v3.v implementing sequential single-site updates:
 
-    2. IMPLEMENT SemEnergyProbe in python/carnot/verify/semenergy_probe.py:
-       class SemEnergyProbe:
-           """
-           Computes Boltzmann-inspired energy from pre-softmax logits.
-           Per arXiv 2508.14496: E(x) = -log Z(x) where Z(x) = Σ_k exp(l_k / T)
-           and l_k are the top-K penultimate-layer logits.
-           Lower energy = confident = less likely hallucination.
-           When real logits unavailable: estimates from response text statistics
-           using length-normalized perplexity as a proxy (clearly labeled as proxy mode).
-           """
-           def __init__(self, temperature: float = 1.0, top_k: int = 50): ...
-           def compute_energy(self, logits: np.ndarray) -> float: ...
-           def score_response_real_logits(self, token_logits: list[np.ndarray]) -> float: ...
-           def score_response_proxy(self, text: str) -> float: ...
+    Key design changes:
+    1. Add spin_select counter: reg [$clog2(N_SPINS)-1:0] spin_select;
+    2. Each clock cycle: update ONLY spin_select spin using current neighbor values
+    3. Increment spin_select (mod N_SPINS) each cycle
+    4. The energy computation is local: E_i = J[i,:] · s (dot product with all spins)
+    5. Gibbs probability: p(s_i=+1) = sigmoid(-β * ΔE_i) where ΔE_i = E(s_i=-1) - E(s_i=+1)
+    6. Use LFSR for random bit (same as existing design)
+    7. AXI-Lite interface stays identical to v1/v2 (backward compatible)
 
-    3. OBTAIN REAL LOGITS (if GGUF available):
-       Try to load Qwen3.5-0.8B via llama.cpp to get per-token logit distributions
-       for 100 FoVer examples. If llama.cpp unavailable: fall back to proxy mode.
-       Report logit_mode: "real_logits" or "logit_proxy"
+    TASK PART 2 — PYTHON SIMULATION VALIDATION:
+    Before hardware deployment, validate in Python simulation:
+    Implement SynchronousIsingSamplerV3 in python/carnot/hardware/sampler_sim.py:
+    - Uses exact same sequential sweep order as Verilog
+    - Runs on the same frustrated antiferromagnetic ring used in exp1094
+      (N=8 spins, antiferromagnetic J = -1 for all adjacent pairs, periodic boundary)
+    - Runs 10,000 steps, collects spin configuration histogram
+    - Computes KL(sim_v3 || true_Gibbs) using KLDivergenceEstimator
 
-    4. EVALUATE ON 500 FOVER EXAMPLES:
-       - Compute SemEnergy score for each example
-       - Compute AUROC (sklearn.metrics.roc_auc_score, true label from FoVer)
-       - Measure inference time per example (target < 5ms)
+    Target: KL(v3_sim || Gibbs) < 0.05 (vs current parallel 3.07)
 
-    5. COMPARE TIERS:
-       - SemEnergy AUROC
-       - existing Tier 0c baseline (if found)
-       - SOS-KAN v3: 0.9545 (from exp1072)
-       - Random baseline: 0.50
+    TASK PART 3 — HARDWARE DEPLOYMENT (if KV260 reachable):
+    If board at 192.168.51.98 is reachable AND Vivado is installed:
+    - Synthesize ising_sampler_v3.bit (use existing TCL script, update RTL path)
+    - Deploy to KV260 via dfx-mgr-client
+    - Run hardware validation: measure KL(hardware_v3 || Gibbs) on 10,000 samples
+    If board unreachable OR Vivado unavailable: report kv260_deployed=False,
+    python_sim_validated=True — simulation result is the primary deliverable.
 
-    6. WRITE TESTS (at least 4):
-       tests/python/test_semenergy_probe.py:
-       - semenergy_higher_for_uncertain_outputs
-       - semenergy_lower_for_confident_outputs
-       - semenergy_inference_time_under_5ms
-       - semenergy_auroc_above_07_on_fover (can use proxy mode)
+    STRETCH GOAL — Potts v2 sequential:
+    If the base Ising v3 sequential design validates (KL < 0.05), also update
+    hardware/kv260/potts_sampler_v2.v to use sequential updates (same fix pattern).
 
-    CONCRETE STEPS:
-    - grep -rn "NUP\|nup\|tier_0c\|bigram" python/carnot/ | head -20
-    - (implement python/carnot/verify/semenergy_probe.py)
-    - python -c "import json; d=json.load(open('data/fover_corpus_v4.json')); print(len(d), list(d[0].keys())[:6])"
-    - JAX_PLATFORMS=cpu python scripts/experiment_1096_semenergy_probe_v1.py
-    - pytest tests/python/test_semenergy_probe.py -v
-    - Write results/experiment_1096_semenergy_probe_v1.json
-
-    ARTIFACT FIELDS:
-    - semenergy_auroc: float (target > 0.70)
-    - auroc_vs_target: float (semenergy_auroc - 0.70)
-    - inference_time_ms_per_example: float (target < 5.0)
-    - logit_mode: str ("real_logits" | "logit_proxy")
-    - existing_tier_0c_auroc: float (or null if not found)
-    - comparison_sos_kan_v3: float (0.9545)
-    - tests_passing: int
-    - honest_verdict: "semenergy_above_target_fast" | "semenergy_above_target_slow" | "semenergy_below_target" | "logit_proxy_only_architecture_correct" | "failed"
-
-    Run: JAX_PLATFORMS=cpu python scripts/experiment_1096_semenergy_probe_v1.py
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  priority: medium
-  requires_gpu: false
-  max_turns: 40
-  estimated_wall_time_min: 35
-
-- id: exp1097-wopr-nqueens-cartridge
-  milestone: 2026.04.85
-  deliverable: results/experiment_1097_wopr_nqueens_cartridge.json
-  title: "WOPR N-Queens Cartridge — Ising Ground-State for Classical CSP (Codex, prior_failures declared)"
-  agent_type: codex
-  prior_failures:
-    - experiment_id: exp1070-wopr-gtw-cartridge-v2
-      verdict: cartridge_shipped
-      addressed_by: "exp1070 shipped the Global Thermonuclear War (GTW) WOPR cartridge — different game, different Ising encoding (GTW uses a city-targeting constraint graph, not an N-Queens placement). The WOPRGame interface introduced by exp1070 is the correct interface to follow. exp1070 is a PREDECESSOR, not a failure — declared here to satisfy the conductor gate-check which matched overlapping WOPR game scope."
-      retire_if_same_verdict: false
-    - experiment_id: exp1071-wopr-lights-out-cartridge-v2
-      verdict: cartridge_shipped
-      addressed_by: "exp1071 shipped the Lights Out cartridge — different game (binary Ising ground state on a 5x5 toggle-light board). The Lights Out cartridge serves as the reference implementation pattern for N-Queens. exp1071 is a PREDECESSOR, not a failure — declared to satisfy gate-check overlap on WOPR game scope."
-      retire_if_same_verdict: false
-    - experiment_id: exp1086-wopr-nqueens-cartridge
-      verdict: blocked_gate_check_failed
-      addressed_by: "exp1086 in .84 was blocked because exp1070 and exp1071 were not declared as prior experiments in the YAML. The conductor correctly blocked it. This .85 attempt declares all three predecessors with correct root-cause documentation. The implementation scope is identical to exp1086's intended scope (N-Queens Ising ground-state, 64 spins, max 50000 iterations)."
-      retire_if_same_verdict: false
-  prompt: |
-    CONTEXT:
-    WOPR gallery is live at HuggingFace Spaces (exp1069, space_deployed=true).
-    N-Queens was blocked in .84 (exp1086) because prior cartridge experiments weren't declared.
-    This experiment uses agent_type: codex (formulaic CSP-to-Ising encoding).
-
-    EXISTING CODE TO READ FIRST:
-    - spaces/wopr-games/games/ (list files — find lights_out.py and gtw.py as reference)
-    - spaces/wopr-games/games/lights_out.py (Ising encoding pattern to follow)
-    - spaces/wopr-games/app.py (WOPRGame interface — must implement)
-    - python/carnot/samplers/parallel_ising.py (ParallelIsingSampler)
-
-    TASK:
-    Implement spaces/wopr-games/games/nqueens.py following the WOPRGame interface.
-
-    N-Queens Ising encoding (N=8, 64 spins):
-    - Spin s_(ij) ∈ {{0,1}} at row i, col j (queen placed / not placed)
-    - Row constraint: Σ_j s_(ij) = 1 for each row i → J[i*8+j, i*8+k] = -penalty for j≠k
-    - Column constraint: Σ_i s_(ij) = 1 for each col j → J[i*8+j, k*8+j] = -penalty for i≠k
-    - Diagonal constraint: s_(ij) + s_(kl) ≤ 1 if |i-k|=|j-l| → J[i*8+j, k*8+l] = -penalty
-    - Energy E = -Σ s_(ij) * s_(kl) * J[ij,kl] (ground state E=0 ↔ valid placement)
-
-    WOPR display:
-    - 8×8 chessboard: 'Q' for queen, '.' for empty
-    - "THREAT ASSESSMENT: N-QUEENS CONFIGURATION — COMPUTING OPTIMAL PLACEMENT..."
-    - Animation every 1000 steps showing queen positions
-    - At E=0: "OPTIMAL CONFIGURATION ACHIEVED. ENERGY = 0. NO TWO PIECES THREATEN EACH OTHER."
-
-    Tests in tests/python/test_nqueens_cartridge.py (at least 5):
-    - nqueens_coupling_matrix_has_correct_row_constraints
-    - nqueens_coupling_matrix_has_correct_column_constraints
-    - nqueens_energy_zero_for_known_valid_8queens_solution
-    - nqueens_energy_positive_for_invalid_placement
-    - nqueens_ising_reaches_ground_state_within_50000_iters
+    WRITE TESTS (at least 4):
+    tests/python/test_kv260_v3_sequential.py:
+    - sequential_sampler_updates_one_spin_per_step
+    - sequential_sampler_kl_below_005_on_frustrated_ring
+    - sequential_vs_parallel_kl_comparison_sequential_is_lower
+    - verilog_v3_file_exists_and_has_spin_select_counter
 
     CONCRETE STEPS:
-    - ls spaces/wopr-games/games/
-    - cat spaces/wopr-games/games/lights_out.py | head -60
-    - (implement spaces/wopr-games/games/nqueens.py)
-    - pytest tests/python/test_nqueens_cartridge.py -v
-    - Write results/experiment_1097_wopr_nqueens_cartridge.json
+    - cat hardware/kv260/ising_sampler_v1.v | head -80  (understand current design)
+    - ping -c 1 192.168.51.98 || echo "KV260 unreachable"
+    - which vivado || echo "Vivado not on PATH"
+    - (implement ising_sampler_v3.v with sequential updates)
+    - (implement SynchronousIsingSamplerV3 Python sim)
+    - JAX_PLATFORMS=cpu python -c "from python.carnot.eval.diagnostics import KLDivergenceEstimator; print('KLDiv OK')"
+    - (run Python simulation, compute KL)
+    - (hardware deployment if board reachable + Vivado available)
+    - JAX_PLATFORMS=cpu pytest tests/python/test_kv260_v3_sequential.py -v
+    - Write results/experiment_1109_kv260_ising_sampler_v3_sequential.json
 
-    ARTIFACT FIELDS:
-    - cartridge_file_written: bool
-    - n_queens: int (must be 8)
-    - n_spins: int (must be 64)
-    - final_energy: float (must be 0.0 in tests)
-    - n_iterations_to_solution: int
+    REQUIRED ARTIFACT FIELDS:
+    - verilog_v3_written: bool
+    - verilog_v3_path: str ("hardware/kv260/ising_sampler_v3.v")
+    - uses_sequential_updates: bool (True if spin_select counter present)
+    - python_sim_validated: bool (True if sim KL < 0.05)
+    - kl_sim_v3_vs_gibbs: float (target: < 0.05)
+    - kl_parallel_v1_vs_gibbs: float (reference: 3.07 from exp1094)
+    - kv260_deployed: bool (hardware deployment attempted)
+    - kv260_board_reachable: bool
+    - kl_hardware_v3_vs_gibbs: float (null if not deployed)
+    - kv260_v3_kl_measured_below_threshold: bool (kl_sim_v3_vs_gibbs < 0.05)
     - tests_passing: int
-    - honest_verdict: "cartridge_shipped" | "cartridge_partial_energy_nonzero" | "failed"
+    - honest_verdict: "kl_below_threshold_hardware" | "kl_below_threshold_simulation_only" | "kl_above_threshold" | "sim_not_run" | "failed"
 
-    Run: python scripts/experiment_1097_wopr_nqueens_cartridge.py
+    Run: JAX_PLATFORMS=cpu python scripts/experiment_1109_kv260_ising_sampler_v3_sequential.py
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  priority: medium
-  requires_gpu: false
-  max_turns: 35
-  estimated_wall_time_min: 30
-
-- id: exp1098-potts-machine-q3-verilog
-  milestone: 2026.04.85
-  deliverable: results/experiment_1098_potts_machine_q3_verilog.json
-  title: "Potts Machine q=3 Verilog + Python Simulation (Codex RTL, prior_failures declared)"
-  agent_type: codex
+- id: exp1110-rlvr-ssd-v2-nondegenerate-live-gpu
+  milestone: 2026.04.86
+  deliverable: results/experiment_1110_rlvr_ssd_v2_nondegenerate_live_gpu.json
+  title: "RLVR+SSD v2 — Non-Degenerate Energy Corpus with SOTA Live GPU Inference (DualGPU MANDATORY)"
   model: opus
+  max_turns: 55
+  estimated_wall_time_min: 75
+  priority: high
+  requires_gpu: true
   prior_failures:
-    - experiment_id: exp534-potts-machine-verifier
-      verdict: no_advantage
-      addressed_by: "exp534 tested PottsMachineVerifier as a Python verifier for constraint checking (q=3 energy scores). The result (no_advantage) means the Potts verifier showed no accuracy improvement over binary Ising on the constraint verification task. However, this experiment's scope is DIFFERENT: it implements the Potts machine as HARDWARE RTL (Verilog) + a validated Python simulation of the RTL. The RTL deliverable is the primary goal — hardware synthesis capability for partial-credit constraint scoring. The Python 'no_advantage' finding informs the acceptance criteria: the Python simulation is validated structurally (energy decreases, correct 3-state distribution), NOT by accuracy on verifier benchmarks (that was exp534's scope)."
-      retire_if_same_verdict: false
-    - experiment_id: exp1082-potts-machine-q3-verilog
-      verdict: blocked_gate_check_failed
-      addressed_by: "exp1082 in .84 was blocked because exp534 was not declared in the prior_failures YAML. The conductor correctly blocked it. This .85 attempt declares both exp534 and exp1082 with correct root-cause documentation. The implementation scope is identical to exp1082's intended scope."
-      retire_if_same_verdict: false
-  prompt: |
-    CONTEXT:
-    Binary Ising (q=2) encodes (violated=+1, satisfied=-1). Potts machine (q=3) encodes
-    (correct=0, partial=1, violated=2) — enabling partial-credit constraint scoring.
-    arXiv 2602.04200 confirms sparse coupling structure preserved for q=3, FPGA-compatible.
-
-    PRIOR FINDINGS:
-    - exp534: Potts verifier showed no accuracy improvement on constraint checking vs Ising
-    - This experiment's deliverable is DIFFERENT: Verilog RTL + validated Python simulation
-    - The Python simulation validates the RTL logic (energy monotone, 3-state distribution)
-
-    EXISTING CODE TO READ FIRST:
-    - hardware/kv260/ising_sampler_v2.v (synchronous v2 — base for Potts extension)
-    - python/carnot/verify/potts_machine.py (from exp534 — Python verifier)
-    - research-hardware-wishlist.md (Potts Machine Motivation section)
-
-    TASK PART 1 — PYTHON SIMULATION:
-    Create python/carnot/samplers/potts_sampler.py:
-    class PottsSampler:
-        """q=3 Potts machine sampler via synchronous checkerboard update.
-        State: each spin in {{0,1,2}}. Energy: E = -Σ J_ij * δ(s_i, s_j).
-        Update: for spin i, compute E_i(a) for a in {{0,1,2}}, sample from Softmax(-β * E_i).
-        """
-        def __init__(self, n_spins: int, q: int = 3, beta: float = 2.0): ...
-        def sample(self, J: np.ndarray, n_steps: int = 1000) -> np.ndarray: ...
-        def energy(self, J: np.ndarray, spins: np.ndarray) -> float: ...
-
-    Validate on 16-spin test:
-    - Energy monotonically non-increasing in expectation
-    - Distribution of final states uses all 3 values (not degenerate)
-
-    TASK PART 2 — VERILOG RTL:
-    Create hardware/kv260/potts_sampler_v1.v based on ising_sampler_v2.v structure:
-    - 2 bits per spin (encodes {{0,1,2}})
-    - 3-entry softmax unit: exp(-β*E_i(a)) for a in {{0,1,2}} using 8-bit fixed-point
-    - Categorical sampler from 2-bit LFSR
-    - AXI-Lite interface compatible with ising_sampler_v2.v register map
-    - Parameters: N_SPINS=64 (default), Q_STATES=3, BETA_FIXED=8'h40 (β=2.0)
-
-    TASK PART 3 — TESTS (at least 5):
-    tests/python/test_potts_sampler.py:
-    - potts_sampler_q3_energy_nonincreasing_in_expectation
-    - potts_sampler_q3_reaches_low_energy_configuration
-    - potts_sampler_q3_distribution_has_three_states
-    - potts_vs_ising_q2_equivalent_on_two_state_boundary
-    - potts_verilog_file_exists_with_n_spins_parameter
-
-    CONCRETE STEPS:
-    - cat hardware/kv260/ising_sampler_v2.v | head -60  (understand structure)
-    - (implement python/carnot/samplers/potts_sampler.py)
-    - JAX_PLATFORMS=cpu python -c "from python.carnot.samplers.potts_sampler import PottsSampler; print('import OK')"
-    - JAX_PLATFORMS=cpu python scripts/experiment_1098_potts_machine_q3_verilog.py
-    - (create hardware/kv260/potts_sampler_v1.v)
-    - pytest tests/python/test_potts_sampler.py -v
-    - Write results/experiment_1098_potts_machine_q3_verilog.json
-
-    ARTIFACT FIELDS:
-    - python_sim_written: bool
-    - python_sim_validated: bool (energy non-increasing + 3-state distribution)
-    - verilog_file_written: bool
-    - verilog_synthesis_area_estimate_lut: int
-    - verilog_fits_kv260_budget: bool (budget: 117K LUT)
-    - tests_passing: int
-    - honest_verdict: "potts_sim_and_rtl_complete" | "potts_sim_only_rtl_stub" | "failed"
-
-    Run: JAX_PLATFORMS=cpu python scripts/experiment_1098_potts_machine_q3_verilog.py
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  priority: medium
-  requires_gpu: false
-  max_turns: 40
-  estimated_wall_time_min: 35
-
-- id: exp1099-rlvr-ssd-integration-v1
-  milestone: 2026.04.85
-  deliverable: results/experiment_1099_rlvr_ssd_integration_v1.json
-  title: "RLVR+SSD Integration v1 — Three-Way Comparison (Standalone, prior_failures declared)"
-  prior_failures:
-    - experiment_id: exp467-live-200q-vericot-vprm
-      verdict: deferred_to_gpu
-      addressed_by: "exp467 deferred to GPU due to resource constraints. This experiment runs in SELECTION MODE (no GPU fine-tuning required) — uses existing data/fr11_zenil_distill_v2.jsonl for RLVR scoring, no new model training unless GPU is available. Standalone experiment with no GPU gate."
-      retire_if_same_verdict: false
-    - experiment_id: exp927-draftconditioned-tier28
-      verdict: blocked_gate_check_failed
-      addressed_by: "exp927 was a DraftConditioned Tier 2.8 integration experiment that was blocked by gate-check. Scope differs: this experiment is specifically RLVR+SSD selection comparison (not DraftConditioned integration). The conductor matched scope overlap because both experiments integrate with the verification pipeline."
-      retire_if_same_verdict: false
-    - experiment_id: exp955-triple-integration-sc-spilled
-      verdict: blocked_gate_check_failed
-      addressed_by: "exp955 was Triple Integration v1 (blocked by pre-test failures). This RLVR+SSD experiment does not require the full cascade pipeline — it uses energy scores from existing data (fr11_zenil_distill_v2.jsonl) for the RLVR condition, not a live cascade run."
-      retire_if_same_verdict: false
-    - experiment_id: exp978-triple-integration-v2
-      verdict: blocked_gate_check_failed
-      addressed_by: "exp978 was Triple Integration v2 (also blocked). Same distinction as exp955 — RLVR+SSD is a self-distillation comparison experiment, not a cascade integration."
-      retire_if_same_verdict: false
-    - experiment_id: exp990-triple-integration-e2e-v3
-      verdict: blocked_gate_check_failed
-      addressed_by: "exp990 was Triple Integration E2E v3 (blocked). RLVR+SSD uses energy scores for filtering, not cascade deployment."
-      retire_if_same_verdict: false
-    - experiment_id: exp1014-triple-integration-e2e-v5
-      verdict: blocked_gate_check_failed
-      addressed_by: "exp1014 was Triple Integration E2E v5 (blocked). Same distinction — this experiment is about self-distillation conditioning on verifier signal, not cascade deployment."
-      retire_if_same_verdict: false
-    - experiment_id: exp1044-triple-integration-e2e-v7
-      verdict: blocked_gate_check_failed
-      addressed_by: "exp1044 was Triple Integration E2E v7 (blocked by gate coercion bug). RLVR+SSD uses pre-existing verifier scores from data files, no gate dependency."
+    - experiment_id: exp1099-rlvr-ssd-integration-v1
+      verdict: no_improvement_honest_negative
+      addressed_by: "exp1099 root cause: all energy scores were 0.0 because the training corpus had been pre-filtered by carnot_and_compose_k5, making every entry pass all verifiers (no violations). The energy filter was degenerate at threshold=median=0.0 — accepts everything. exp1110 fixes both failure modes: (1) generates a FRESH corpus of SOTA model outputs (Qwen3.6-35B-A3B-GGUF, live GPU) WITHOUT AND-compose pre-filtering, using raw individual-verifier scores; (2) uses top-k energy selection (select top 30th percentile by energy score) rather than median threshold. Non-zero energy distribution is guaranteed because the SOTA model does produce some errors, and individual verifiers will flag them even when AND-compose would not."
       retire_if_same_verdict: false
     - experiment_id: exp1083-rlvr-ssd-integration-v1
       verdict: blocked_gate_check_failed
-      addressed_by: "exp1083 in .84 was blocked because exp1014/1044/467/927/955/978/990 were not declared in the prior_failures YAML. The conductor correctly blocked it. This .85 attempt declares ALL 8 prior experiments with correct root-cause documentation. Same scope as exp1083."
+      addressed_by: "exp1083 in .84 was blocked by missing prior_failures gate. exp1110 declares all prior failures including exp1083."
       retire_if_same_verdict: false
-  gated_on:
-    - upstream: exp1091-position-paper-v2-arxiv-prep
-      artifact_field: live_results_incorporated
-      op: '=='
-      value: true
   prompt: |
     CONTEXT:
-    arXiv 2604.03128 (Self-Distilled RLVR) + arXiv 2601.18734 (Self-Distilled Reasoner).
-    Carnot's energy filter IS the RLVR signal (Zenil α_t = verifier contribution).
-    Milestone .83 closed the FR-11 loop (alpha_t=0.38 on SOTA model, exp1077).
+    exp1099 (.85) honest_verdict=no_improvement (energy_all_zero=True). Root cause:
+    the training corpus was pre-filtered by carnot_and_compose_k5 — meaning every example
+    ALREADY had energy=0.0 (all verifiers agreed = no violations). The energy filter was
+    completely degenerate: selecting by "energy < median = 0.0" accepts everything.
 
-    TRAINING DATA: data/fr11_zenil_distill_v2.jsonl (200+ entries from exp1077 + prior FR-11 runs)
-    REFERENCE RESULT: exp1079 GSM8K baseline_accuracy=0.34 (Qwen3.6-35B-A3B live GPU)
+    This experiment fixes both root causes:
+    1. Generate a FRESH, UNFILTERED corpus from SOTA model live inference
+    2. Use top-k energy selection instead of median threshold
 
-    EXISTING CODE TO READ FIRST:
-    - results/experiment_1031_energy_ssd_v3.json (Energy-Selection SSD baseline)
-    - python/carnot/pipeline/verify_repair.py (energy filter)
-    - python/carnot/models/sos_kan.py (SOSKANEnergyV3 — verifier)
-    - data/fr11_zenil_distill_v2.jsonl (training data — check n_entries)
-    - results/experiment_1079_live_sota_benchmark_v2.json (live baseline for comparison)
+    CRITICAL: DualGPU (both RTX 3090s) MUST be used for SOTA model inference.
+    This is the 18th consecutive milestone with both GPUs at 0% utilization.
+    Use DualGPURunner from python/carnot/pipeline/dualgpu.py (or equivalent).
 
-    TASK — THREE-WAY SELECTION EXPERIMENT (no GPU fine-tuning required):
+    MODEL: unsloth/Qwen3.6-35B-A3B-GGUF (flagship MoE) for inference.
+    This is MANDATORY per CLAUDE.md. Do not use 0.8B or E4B models as headline.
 
-    Load data/fr11_zenil_distill_v2.jsonl — each entry has:
-    {{question, response, correct, verifier_verdict, energy_score, alpha_t_contributes}}
-
-    CONDITION A — RLVR-only (Carnot energy filter, no distillation):
-    - For each entry, apply energy threshold filter (energy < threshold → accept)
-    - Metric: fraction of accepted entries that are correct
-    - Compare to random baseline (fraction correct in full dataset)
-
-    CONDITION B — SSD-only (majority-vote self-selection, no verifier):
-    - Group entries by question
-    - For each question, select response by majority-vote among all responses
-    - Metric: fraction of majority-selected responses that are correct
-
-    CONDITION C — RLVR+SSD (Carnot filter then majority-vote):
-    - Apply energy filter first
-    - Among accepted responses, select by majority-vote
-    - Metric: fraction of selected responses that are correct
-
-    Also implement arXiv 2601.18734 on-policy SSD variant (selection only):
-    CONDITION D — On-policy SSD (per-token divergence proxy):
-    - Score: for each entry, reward = correct? 1.0 : 0.0 (ground truth oracle)
-    - Select: prefer entries where correct=True AND energy_score < median
-    - Metric: fraction of selected entries that are correct
-
-    REPORT FOUR-WAY COMPARISON vs. baseline:
-    - baseline_fraction_correct (from full dataset)
-    - condition_A_fraction_correct
-    - condition_B_fraction_correct
-    - condition_C_fraction_correct
-    - condition_D_fraction_correct
-    - best_condition
-
-    WRITE TESTS (at least 3):
-    tests/python/test_rlvr_ssd.py:
-    - four_conditions_run_without_error
-    - energy_filter_selects_correct_more_often_than_random
-    - rlvr_ssd_result_reported_honestly
-
-    CONCRETE STEPS:
-    - python -c "import json; lines=open('data/fr11_zenil_distill_v2.jsonl').readlines(); print(len(lines), json.loads(lines[0]).keys())"
-    - JAX_PLATFORMS=cpu python scripts/experiment_1099_rlvr_ssd_integration_v1.py
-    - pytest tests/python/test_rlvr_ssd.py -v
-    - Write results/experiment_1099_rlvr_ssd_integration_v1.json
-
-    ARTIFACT FIELDS:
-    - n_training_examples: int
-    - baseline_fraction_correct: float (from full dataset)
-    - condition_A_rlvr_only: float
-    - condition_B_ssd_only: float
-    - condition_C_rlvr_ssd: float
-    - condition_D_onpolicy_ssd: float
-    - best_condition: str
-    - improvement_over_baseline: float (best_condition - baseline)
-    - gpu_finetuning_available: bool (report but don't require)
-    - tests_passing: int
-    - honest_verdict: "rlvr_ssd_wins" | "rlvr_only_wins" | "ssd_only_wins" | "no_improvement_honest_negative" | "failed"
-
-    Run: JAX_PLATFORMS=cpu python scripts/experiment_1099_rlvr_ssd_integration_v1.py
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  priority: medium
-  requires_gpu: false
-  max_turns: 40
-  estimated_wall_time_min: 35
-
-- id: exp1100-cascade-validation-sota-outputs
-  milestone: 2026.04.85
-  deliverable: results/experiment_1100_cascade_validation_sota_outputs.json
-  title: "Cascade Validation on SOTA Model Outputs — Tier Breakdown on Real Qwen3.6-35B Answers"
-  prior_failures:
-    - experiment_id: exp432-live-cascade-baseline
-      verdict: synthetic_fallback
-      addressed_by: "exp432 fell back to synthetic inference. This experiment uses exp1079's real SOTA model outputs (100 Qwen3.6-35B GSM8K + HumanEval responses, inference_mode=live_gpu, honest_verdict=positive_humaneval_only). The exp1079 artifact exists and has real outputs."
-      retire_if_same_verdict: false
-    - experiment_id: exp453-vericot-step-validator
-      verdict: vericot_better
-      addressed_by: "exp453 confirmed VeriCoT detected violations in real IT model outputs. This experiment uses exp453's insight that step-level extraction works — runs the cascade tier breakdown on exp1079's full output set."
-      retire_if_same_verdict: false
-    - experiment_id: exp485-ppsebm-real-data
-      verdict: ppsebm_validated_real
-      addressed_by: "exp485 validated PPSEBM on real data. This experiment focuses specifically on the multi-tier cascade (Tier 0a→0b→2→3) tier-exit distribution — different scope from PPSEBM validation."
-      retire_if_same_verdict: false
-    - experiment_id: exp657-jepa-cascade-deployment
-      verdict: blocked_on_exp646
-      addressed_by: "exp657 was blocked by JEPA gate. This experiment does not depend on JEPA — uses ThinkPRM (Tier 0a) and SOS-KAN (Tier 2), not JEPA."
-      retire_if_same_verdict: false
-    - experiment_id: exp705-jepa-v17-gate-failed
-      verdict: jepa_v17_gate_failed_v18_specced
-      addressed_by: "exp705 was blocked by JEPA v17 OOD AUROC gate. This experiment does not use JEPA."
-      retire_if_same_verdict: false
-    - experiment_id: exp778-jepa-v19-tier35
-      verdict: blocked_ood_auc_below_gate
-      addressed_by: "exp778 blocked by JEPA OOD AUROC gate. This experiment does not use JEPA."
-      retire_if_same_verdict: false
-    - experiment_id: exp784-jepa-v20-cascade
-      verdict: blocked_ood_auc_below_gate
-      addressed_by: "exp784 blocked by JEPA OOD AUROC gate. This experiment does not use JEPA."
-      retire_if_same_verdict: false
-    - experiment_id: exp882-live-cascade-v7-gemma
-      verdict: live_no_improvement
-      addressed_by: "exp882 used Gemma4-E4B-it base model (not instruction-tuned) and the old ArithmeticExtractor. This experiment uses exp1079's Qwen3.6-35B-A3B instruction-tuned SOTA model outputs — fundamentally different input quality."
-      retire_if_same_verdict: false
-    - experiment_id: exp946-tier28-live-gpu-validation
-      verdict: tier28_live_validated
-      addressed_by: "exp946 validated Tier 2.8 (DraftConditioned) on live GPU. This experiment validates the FULL cascade (all 4 tiers, tier-exit distribution) on SOTA model outputs — different scope."
-      retire_if_same_verdict: false
-    - experiment_id: exp1085-cascade-validation-sota-outputs
-      verdict: blocked_gate_check_failed
-      addressed_by: "exp1085 in .84 was blocked because 9 predecessor experiments were not declared in prior_failures YAML. This .85 attempt declares all 10 predecessors. Same scope as exp1085 — uses exp1079's real SOTA model outputs."
-      retire_if_same_verdict: false
-  gated_on:
-    - upstream: exp1079-live-sota-benchmark-v2
-      artifact_field: humaneval_net_improvement
-      op: '>'
-      value: 0.0
-  prompt: |
-    CONTEXT:
-    The triple integration cascade was validated in exp1073 on FoVer synthetic data (50 questions).
-    exp1079 generated 100 REAL GSM8K + 50 HumanEval responses from Qwen3.6-35B-A3B GGUF
-    (honest_verdict='positive_humaneval_only', humaneval_net_improvement=0.36).
-
-    This experiment takes those real SOTA model outputs and runs them through the full cascade
-    to measure tier-exit distribution. Key question: on SOTA model outputs, does most traffic
-    exit at Tier 0a (ThinkPRM, fastest) or does it need Tier 3 (Ising, slowest)?
-
-    gated_on: exp1079.humaneval_net_improvement > 0.0 (confirmed: 0.36 from .84)
+    Reference papers:
+    - arXiv 2604.03128 (Self-Distilled RLVR): on-policy self-distillation training recipe
+    - arXiv 2601.20802 (SDPO): self-teacher advantage estimation
+    - arXiv 2601.18734 (Self-Distilled Reasoner): per-token divergence training objective
 
     EXISTING CODE TO READ FIRST:
-    - results/experiment_1079_live_sota_benchmark_v2.json (find output file path or data fields)
-    - results/experiment_1073_triple_integration_e2e_v9.json (cascade reference: tier exits)
-    - python/carnot/pipeline/verify_repair.py (ThreeTierPipeline or VerifyRepairPipeline)
-    - python/carnot/verify/thinkprm_probe.py (Tier 0a)
-    - python/carnot/models/sos_kan.py (Tier 2)
+    - python/carnot/pipeline/ (list directory — find DualGPURunner)
+    - python/carnot/verify/semenergy_probe.py (fast energy scorer for corpus filtering)
+    - python/carnot/models/sos_kan.py (SOSKANEnergyV3 — for energy scoring)
+    - scripts/experiment_template.py (ExperimentTemplate, BatchedInferenceRunner)
+    - results/experiment_1099_rlvr_ssd_integration_v1.json
+      (baseline: energy_all_zero=True, condition_A_fraction_correct=0.5333)
+    - results/experiment_1077_fr11_alpha_t_sota_v4.json
+      (SOTA model used: Qwen3.6-35B-A3B-GGUF, inference_mode=live_gpu)
+
+    MODEL_SPECS = [
+      {"name": "Qwen3.6-35B-A3B", "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+       "gpu": "dual", "loader": "llama.cpp"}
+    ]
 
     TASK:
-    1. LOAD REAL LLM OUTPUTS from exp1079:
-       python -c "import json; d=json.load(open('results/experiment_1079_live_sota_benchmark_v2.json')); print(list(d.keys())[:10])"
-       Find where the actual questions/responses are stored (output_path field or inline).
 
-    2. RUN FULL CASCADE on each output (target: all 100 GSM8K responses):
-       For each response, step through tier by tier:
-       - Tier 0a (ThinkPRM): energy score. If confidence high → exit here (skip)
-       - Tier 0b (SpilledEnergy): check logit discrepancy. If within bounds → exit
-       - Tier 2 (SOS-KAN): feature-based energy. If within bounds → exit
-       - Tier 3 (Ising): full sampling. Record exit tier and energy.
+    PART 1 — GENERATE FRESH CORPUS (DualGPU required):
+    1. Setup DualGPURunner (use both RTX 3090s for inference throughput)
+    2. Run Qwen3.6-35B-A3B-GGUF on 200 GSM8K questions (first 200 from standard split)
+    3. For each question: generate 2 candidate answers (temperature=0.7 and temperature=0.1)
+    4. For each answer: compute raw energy scores from individual verifiers:
+       - SemEnergy (from python.carnot.verify.semenergy_probe)
+       - Z3MathVerifier (from python.carnot.verify.z3_math_verifier if exp1107 succeeded)
+       - Fallback: use vericot_validator.py VeriCoT score (TP rate from exp1101 fix)
+    5. Verify energy distribution is non-degenerate: assert energy scores are NOT all 0.0
+       (if energy_all_zero: report honest negative and stop)
 
-    3. MEASURE TIER-EXIT DISTRIBUTION on SOTA outputs:
-       Compare to exp1073 FoVer results: {{0a: 4/50, 0b: 25/50, 2: 13/50, 3: 8/50}}
-       Hypothesis: SOTA model has fewer violations → more exit at Tier 0a (faster cascade)
+    PART 2 — RLVR CONDITION (energy selection):
+    From the 200-question corpus:
+    - Condition A (baseline): use all 400 answers, no filtering
+    - Condition B (RLVR): select top-30th-percentile by energy score (highest energy = more
+      violations = harder examples to get right). Use ONLY these high-energy examples for
+      RLVR signal (they were wrong; teach model to avoid them).
+    - Compute fraction_correct for both conditions on a held-out 50-question eval set.
 
-    4. ENERGY ORDERING CHECK:
-       For questions where exp1079 found a correction (HumanEval improvement):
-       - Is incorrect_energy > correct_energy? (should be true for cascade to work)
-       mean_correct_energy vs. mean_incorrect_energy
+    PART 3 — SSD CONDITION (low-energy selection):
+    - Condition C (SSD): select top-30th-percentile LOWEST energy answers (most correct).
+      These are the teacher signals for self-distillation.
+    - Compare fraction_correct with baseline.
 
-    5. EFFICIENCY ANALYSIS:
-       Average cascade depth (1.0 = all exit Tier 0a, 3.0 = all reach Tier 3)
-       On SOTA model: expected 1.0–1.5 (most questions easy for SOTA, exit fast)
+    Note: "training" here means selection/weighting of examples for next iteration —
+    we are NOT fine-tuning the GGUF model weights (that would require HF fine-tuning loop).
+    Instead, we are EVALUATING whether energy-based filtering improves the effective accuracy
+    of the answer selection process. This is the legitimate test of RLVR+SSD filtering.
+
+    WRITE TESTS (at least 4):
+    tests/python/test_rlvr_ssd_v2.py:
+    - sota_model_corpus_has_nonzero_energy_distribution
+    - rlvr_condition_uses_top_k_not_median
+    - ssd_condition_selects_low_energy_answers
+    - both_conditions_evaluated_on_held_out_set
+
+    CONCRETE STEPS:
+    - python -c "import torch; print(torch.cuda.device_count(), [torch.cuda.get_device_name(i) for i in range(torch.cuda.device_count())])"
+    - python -c "from scripts.experiment_template import ExperimentTemplate; tmpl = ExperimentTemplate(1110, 'RLVR+SSD v2', 'results/experiment_1110_rlvr_ssd_v2_nondegenerate_live_gpu.json', requires_gpu=True); tmpl.setup()"
+    - (load SOTA model via DualGPU)
+    - (generate 200-question corpus)
+    - (compute energy scores)
+    - (assert non-degenerate distribution)
+    - (compute RLVR and SSD conditions)
+    - JAX_PLATFORMS=cpu pytest tests/python/test_rlvr_ssd_v2.py -v
+    - Write results/experiment_1110_rlvr_ssd_v2_nondegenerate_live_gpu.json
+
+    REQUIRED ARTIFACT FIELDS:
+    - model_used: str ("unsloth/Qwen3.6-35B-A3B-GGUF")
+    - inference_mode: str ("live_gpu" | "simulation_fallback")
+    - dualgpu_used: bool (MUST be true for live_gpu mode)
+    - n_questions: int (target: 200)
+    - energy_all_zero: bool (MUST be false for non-degenerate result)
+    - energy_distribution_min: float
+    - energy_distribution_max: float
+    - energy_distribution_nonzero_fraction: float
+    - baseline_fraction_correct: float
+    - rlvr_condition_fraction_correct: float
+    - ssd_condition_fraction_correct: float
+    - improvement_over_baseline: float (max(rlvr, ssd) - baseline)
+    - rlvr_ssd_v2_non_degenerate_honest_result: bool (energy_all_zero == False)
+    - tests_passing: int
+    - honest_verdict: "positive_improvement" | "honest_negative_non_degenerate" | "honest_negative_degenerate_again" | "gpu_unavailable" | "failed"
+
+    Run: python scripts/experiment_1110_rlvr_ssd_v2_nondegenerate_live_gpu.py
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp1111-thinkprm-v2-retrain-7349-prm
+  milestone: 2026.04.86
+  deliverable: results/experiment_1111_thinkprm_v2_retrain_7349_prm.json
+  title: "ThinkPRM v2 Retrain on 7349-Step PRM Corpus — Tier 3 Continuous Self-Learning (target AUROC >= 0.995)"
+  model: opus
+  max_turns: 55
+  estimated_wall_time_min: 70
+  priority: high
+  requires_gpu: true
+  prompt: |
+    CONTEXT:
+    research-program.md MANDATE: every milestone must include at least one continuous
+    self-learning experiment (Tiers 1-4). This experiment is Tier 3 (JEPA-Style Predictive
+    Verification): retrain the step-level process reward model (ThinkPRM) on the expanded
+    corpus from exp1084 (7349 step-level labeled examples, 3.7× the original corpus size).
+
+    Current ThinkPRM (exp1033, arXiv 2504.16828): AUROC=0.9885 on FoVer corpus.
+    Training data at that time: ~2000 step-level pairs.
+    New training data: data/step_level_prm_training.jsonl (7349 examples from exp1084).
+
+    Hypothesis: more data → higher AUROC. Target: AUROC >= 0.995 (beating current 0.9885).
+    The ThinkPRM's Zenil α_t = verified_step_labels / total_labels. With 7349 labels
+    from live GPU inference (exp1084), α_t ≈ 0.38 (matching the exp1077 live measurement).
+
+    This satisfies the "continuous self-learning" requirement: the verifier improves AS
+    MORE LABELED DATA ACCUMULATES from the pipeline, without requiring external annotation.
+
+    MODEL_SPECS = [
+      {"name": "Qwen3.5-0.8B", "hf_id": "Qwen/Qwen3.5-0.8B", "gpu": 0}
+    ]
+    Note: ThinkPRM backbone is a small supervised model (not a generative GGUF).
+    Use 0.8B as backbone for the PRM head (this is a classification task, not generation).
+
+    EXISTING CODE TO READ FIRST:
+    - python/carnot/verify/thinkprm_probe.py (ThinkPRMProbe architecture)
+    - data/step_level_prm_training.jsonl (7349 training examples — check first 5 entries)
+    - data/fover_corpus_v4.json (evaluation corpus for final AUROC measurement)
+    - results/experiment_1033_thinkprm_v4.json (baseline: AUROC=0.9885, training_data_size)
+
+    TASK:
+    1. Load data/step_level_prm_training.jsonl (7349 step-level labeled examples).
+       Verify format: {question, step, label, energy_score} or similar.
+       Split: 80% train (5879 examples), 20% eval (1470 examples).
+
+    2. Initialize ThinkPRM backbone:
+       - Load Qwen3.5-0.8B as the backbone language model
+       - Add a regression/classification head for step-level correctness scoring
+       - If ThinkPRMProbe already has a trainable head: load existing weights and fine-tune
+       - If not: train from scratch on the 7349-example corpus
+
+    3. Training loop:
+       - Loss: binary cross-entropy on step-level correctness labels
+       - Optimizer: AdamW, lr=1e-4, 3 epochs
+       - Batch size: 16 (adjust for GPU memory)
+       - Early stopping: if val_loss doesn't improve for 2 epochs
+       - Track: train_loss, val_loss, val_auroc per epoch
+
+    4. Evaluation on FoVer corpus:
+       - Load data/fover_corpus_v4.json (use 500 examples for eval speed)
+       - Compute AUROC using retrained ThinkPRM v2 scores
+       - Compare: v1 AUROC=0.9885 → v2 target AUROC >= 0.995
+
+    5. Compute α_t:
+       from python.carnot.eval.diagnostics import AlphaT
+       alpha = AlphaT()
+       # How many of the 7349 training labels came from live GPU verifier signal (not simulation)?
+       # From exp1084: these were MCTS-generated with Carnot cascade as scorer → α_t ≈ 0.38
+       alpha.record(n_verified=int(7349 * 0.38), n_self=int(7349 * 0.62))
+       print(f"α_t = {alpha.current():.3f}")  # Should be > 0 (Zenil convergence condition)
 
     6. WRITE TESTS (at least 3):
-       tests/python/test_cascade_sota.py:
-       - cascade_runs_on_real_llm_output_without_error
-       - tier_exit_distribution_reported
-       - energy_ordering_correct_for_improved_examples
+       tests/python/test_thinkprm_v2.py:
+       - thinkprm_v2_trains_without_error_on_prm_corpus
+       - thinkprm_v2_auroc_above_baseline_on_fover_eval
+       - alpha_t_above_zero_zenil_condition
 
     CONCRETE STEPS:
-    - python -c "import json; d=json.load(open('results/experiment_1079_live_sota_benchmark_v2.json')); print(list(d.keys()))"
-    - JAX_PLATFORMS=cpu python scripts/experiment_1100_cascade_validation_sota_outputs.py
-    - pytest tests/python/test_cascade_sota.py -v
-    - Write results/experiment_1100_cascade_validation_sota_outputs.json
+    - python -c "import torch; print(torch.cuda.device_count(), torch.cuda.get_device_name(0))"
+    - head -n 5 data/step_level_prm_training.jsonl
+    - python -c "import json; lines = open('data/step_level_prm_training.jsonl').readlines(); print(len(lines), json.loads(lines[0]).keys())"
+    - (load backbone model)
+    - (train ThinkPRM v2 on 7349 examples)
+    - (evaluate on FoVer corpus)
+    - JAX_PLATFORMS=cpu pytest tests/python/test_thinkprm_v2.py -v
+    - Write results/experiment_1111_thinkprm_v2_retrain_7349_prm.json
 
-    ARTIFACT FIELDS:
-    - n_outputs_run: int (target >= 50)
-    - model_name: str (from exp1079)
-    - tier_0a_exits: int
-    - tier_0b_exits: int
-    - tier_2_exits: int
-    - tier_3_exits: int
-    - mean_cascade_depth: float (1.0=all Tier0a, 4.0=all Tier3)
-    - mean_correct_energy: float
-    - mean_incorrect_energy: float
-    - incorrect_energy_gt_correct: bool (should be true)
-    - cascade_efficiency_note: str
+    REQUIRED ARTIFACT FIELDS:
+    - training_examples: int (7349)
+    - train_epochs_completed: int
+    - final_train_loss: float
+    - final_val_loss: float
+    - thinkprm_v2_auroc: float (target >= 0.995)
+    - thinkprm_v1_auroc_baseline: float (0.9885)
+    - auroc_improvement: float (v2 - v1)
+    - thinkprm_v2_auroc_above_099: bool (thinkprm_v2_auroc >= 0.99)
+    - alpha_t_training_corpus: float (target > 0.0)
+    - gpu_used: bool
     - tests_passing: int
-    - honest_verdict: "cascade_validated_sota_efficient" | "cascade_validated_sota_inefficient" | "cascade_error_on_real_outputs" | "upstream_data_not_found" | "failed"
+    - honest_verdict: "auroc_above_995" | "auroc_improved_below_995" | "auroc_no_improvement" | "training_failed" | "failed"
 
-    Run: JAX_PLATFORMS=cpu python scripts/experiment_1100_cascade_validation_sota_outputs.py
+    Run: python scripts/experiment_1111_thinkprm_v2_retrain_7349_prm.py
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
+- id: exp1112-llm-failure-exemplar-corpus-v1
+  milestone: 2026.04.86
+  deliverable: results/experiment_1112_llm_failure_exemplar_corpus_v1.json
+  title: "LLM Failure Exemplar Corpus v1 — Goodfire Silico Comparison + Carnot Cascade TP Rate"
+  agent_type: codex
+  max_turns: 35
+  estimated_wall_time_min: 35
   priority: medium
   requires_gpu: false
-  max_turns: 35
-  estimated_wall_time_min: 30
+  prompt: |
+    CONTEXT:
+    ops/known-issues.md SHOULD entry: LLM Failure Exemplar Corpus + Goodfire Silico Comparison.
 
-- id: exp1101-gsm8k-extraction-diagnostic-fix
-  milestone: 2026.04.85
-  deliverable: results/experiment_1101_gsm8k_extraction_diagnostic_fix.json
-  title: "GSM8K Extraction Diagnostic + VeriCoT Fix — Root-Cause for TP=0 on Math Reasoning (2 Consecutive Milestones)"
-  # 2026-05-01 operator preemptive patch: name-similarity matcher will
-  # likely trip on 'GSM8K' / 'diagnostic' / 'extraction' keywords —
-  # specifically the same exp605/exp706 false-matches that hit exp1090.
-  # This task IS a real follow-up to a prior gap (TP=0 on math reasoning
-  # for 2 consecutive milestones), but the matched priors aren't the
-  # right ones — the actual carry-forward would be exp987 etc.
+    Goodfire's Silico (MIT Tech Review 2026-04-30) is a closed-source white-box mechanistic
+    interpretability tool that catalogs named, reproducible LLM failure modes:
+    - 9.11 > 9.9: mathematical comparison error from Bible/version-numbering interference
+    - Trolley problem moral framing bias
+    - Deceptive disclosure suppression
+
+    Carnot's complementary positioning: Silico tells you WHY a model said something wrong
+    (white-box neuron tracing). Carnot tells you THAT it said something wrong and HOW to
+    fix it (black-box energy verification + repair). A complete stack uses both.
+
+    This experiment builds data/llm_failure_exemplars.jsonl and tests Carnot's cascade on it.
+
+    EXISTING CODE TO READ FIRST:
+    - python/carnot/verify/ (list all verifier files — understand cascade structure)
+    - python/carnot/eval/diagnostics.py (use for analysis)
+    - data/fover_corpus_v4.json (first 3 entries — understand format for comparison)
+
+    TASK PART 1 — BUILD data/llm_failure_exemplars.jsonl:
+    Create ≥30 exemplars in JSONL format, each entry:
+    {
+      "id": "exemplar_001",
+      "category": "arithmetic_comparison" | "logical_consistency" | "factual_error" |
+                   "moral_framing" | "numeric_precision" | "code_bug" | ... (≥10 categories),
+      "source": "goodfire_published" | "carnot_internal" | "literature",
+      "prompt": "What is larger, 9.11 or 9.9?",
+      "buggy_response": "9.11 is larger because 11 > 9",
+      "correct_response": "9.9 is larger because 0.11 < 0.9",
+      "mechanistic_root_cause": "decimal comparison confusion — model treats 9.11 as version number",
+      "carnot_energy_score": null,  # filled in by Part 2
+      "carnot_verdict": null,       # filled in by Part 2
+      "carnot_tier_detected": null  # filled in by Part 2
+    }
+
+    Required exemplar categories (build ≥3 per category, ≥10 categories):
+    1. arithmetic_comparison: 9.11>9.9, version numbers, float comparison errors
+    2. arithmetic_computation: wrong arithmetic with plausible-looking steps
+    3. logical_consistency: contradicts itself within a reasoning chain
+    4. factual_grounding: states incorrect facts with high confidence
+    5. code_syntax: valid-looking code with subtle syntax error
+    6. code_logic: valid syntax but logical bug (off-by-one, wrong operator)
+    7. overconfidence: wrong answer stated with absolute certainty
+    8. underspecification: ambiguous prompt answered without clarifying assumptions
+    9. hallucination_numeric: fabricated statistics or numbers that sound plausible
+    10. format_compliance: correct content but wrong output format
+
+    TASK PART 2 — CASCADE EVALUATION:
+    For each exemplar, score the BUGGY RESPONSE through the Carnot cascade:
+    - Z3MathVerifier (from exp1107 if available — arithmetic_comparison should catch 9.11>9.9)
+    - SemEnergy (from python.carnot.verify.semenergy_probe)
+    - SOSKANEnergyV3 (if available)
+    Report per-tier TP rate:
+    TP[tier] = count(exemplars where tier detects bug) / count(exemplars in scope for tier)
+    Report: mathematical_objective_tier_tp_rate (Z3, should be >0.9 for arithmetic_comparison)
+    vs learned_tier_tp_rate (SOS-KAN, expected lower for structural bugs)
+
+    TASK PART 3 — CARNOT vs SILICO POSITIONING:
+    Write a brief positioning note (≤300 words) in results:
+    "Carnot catches: [categories with TP>0.5] | Carnot misses: [categories with TP<0.2]
+     Silico's advantage: mechanistic root cause explanation (white-box)
+     Carnot's advantage: Apache 2.0, local-first, model-agnostic, actionable repair"
+
+    CONCRETE STEPS:
+    - (design 30+ exemplar entries covering 10+ categories)
+    - (write data/llm_failure_exemplars.jsonl)
+    - python -c "import json; exs = [json.loads(l) for l in open('data/llm_failure_exemplars.jsonl')]; print(len(exs), set(e['category'] for e in exs))"
+    - (score each exemplar through cascade)
+    - (compute per-tier TP rates)
+    - Write results/experiment_1112_llm_failure_exemplar_corpus_v1.json
+
+    REQUIRED ARTIFACT FIELDS:
+    - n_exemplars: int (target: >= 30)
+    - n_categories: int (target: >= 10)
+    - exemplar_path: str ("data/llm_failure_exemplars.jsonl")
+    - tier_tp_rates: dict (tier_name -> tp_rate)
+    - mathematical_objective_tier_tp_rate: float (Z3Math on arithmetic_comparison)
+    - learned_tier_tp_rate: float (SOS-KAN overall)
+    - llm_failure_exemplar_corpus_30_exemplars: bool (n_exemplars >= 30)
+    - goodfire_cascade_tp_rate_measured: bool
+    - positioning_note_written: bool
+    - honest_verdict: "corpus_complete_high_tp" | "corpus_complete_low_tp" | "corpus_partial" | "failed"
+
+    Run: JAX_PLATFORMS=cpu python scripts/experiment_1112_llm_failure_exemplar_corpus_v1.py
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp1115-position-paper-v3-strategic-rewrite
+  milestone: 2026.04.86
+  deliverable: results/experiment_1115_position_paper_v3_strategic_rewrite.json
+  title: "Position Paper v3 — Architectural Framework & Empirical Bounds Pivot (CRITICAL DEADLINE 2026-05-15)"
+  model: opus
+  max_turns: 80
+  estimated_wall_time_min: 90
+  priority: critical
+  requires_gpu: false
+  # 2026-05-01 operator-inserted task. The .86 planner queued exp1113
+  # (arXiv LaTeX bundle prep) but missed the strategic narrative pivot
+  # recommended by Deep Think Round 6 (paper v3 framing,
+  # `docs/research-notes/position-paper-v3-framing-deep-think-results.md`).
+  # Without this task, exp1113 will compile a paper whose v2 narrative
+  # ("we built a flawless verification machine") will not survive peer
+  # review given the .85 empirical recalibrations: 13,061x FPGA headline
+  # is empirically suspect, k=15 AND-composition refuted, Z1 production
+  # pivot lacks silicon validation, and the SOTA energy-ordering inversion
+  # contradicts the working-thesis. The pivot weaponizes those
+  # recalibrations AS the scientific contribution.
   prior_failures:
-    - experiment_id: tp_zero_on_math_reasoning_2_consecutive_milestones
-      verdict: TP_zero_persistent_across_milestones
-      addressed_by: "Acknowledged carry-forward: GSM8K/MATH true-positive rate has been zero across 2 consecutive milestones (.83-.84). This task explicitly targets root-cause diagnosis of the extraction pipeline + VeriCoT fix. The conductor's name-similarity matcher likely additionally surfaces unrelated priors via the keywords 'diagnostic' / 'extraction' (e.g., exp605 extractor recall, exp706 gemma VR diagnostic) — those are FALSE-POSITIVE matches and not in scope. Real root-cause focus: why does the verifier-cascade output TP=0 on numeric-answer questions? Hypothesis: regex extraction rejects valid responses (e.g., LaTeX-formatted answers) before they reach the verifier."
+    - experiment_id: exp1091-position-paper-v2-arxiv-prep
+      verdict: arxiv_ready
+      addressed_by: "exp1091 produced v2 with verdict 'arxiv_ready' but the .85 empirical findings (exp1093 D_eff=1.603, exp1094 KL=3.07 detailed-balance violation, exp1100 cascade-Pareto-suboptimal, exp1099 honest-negative on pre-filtered corpus, .85 retro energy-ordering inversion) recalibrated v2's headline claims. The v3 task is NOT a re-run; it is a strategic narrative pivot from 'SOTA-beating system paper' to 'Architectural Framework & Empirical Bounds paper' as recommended by Deep Think Round 6 (docs/research-notes/position-paper-v3-framing-deep-think-results.md). Different scope, different argument structure, different claim recalibration."
       retire_if_same_verdict: false
   prompt: |
     CONTEXT:
-    GSM8K extraction has returned extraction_tp_rate=0 for TWO consecutive milestones:
-    - exp1079 (.84): VeriCoTStepValidator on Qwen3.6-35B-A3B GGUF → TP=0 on 100 GSM8K
-    - Previous benchmarks (Exps 439-441 in .33): ArithmeticExtractor → TP=0 on IT models
+    CRITICAL DEADLINE: arXiv submission target 2026-05-15 (14 days from 2026-05-01).
+    Effective work deadline: 2026-05-13 (allowing 1 day for compilation + submission).
 
-    This means Carnot CANNOT detect mathematical reasoning errors in live GSM8K responses
-    despite having the correct answer available for comparison. This is the research-program.md
-    #1 priority: "Rebuild constraint extraction for real models — HIGHEST PRIORITY."
+    Position paper v2 is at docs/position-paper-draft-v2.md (53,214 bytes, exp1091).
+    HOWEVER, v2's narrative is "Carnot beats SOTA at LLM verification" which is no longer
+    defensible given .85 empirical recalibrations. Deep Think Round 6 (paper v3 framing)
+    recommends the "Architectural Framework & Empirical Bounds" pivot.
 
-    exp1079's honest_verdict was 'positive_humaneval_only' — code verification works (+36%),
-    math reasoning extraction is broken. This is a diagnostic + fix experiment.
-
-    EXISTING CODE TO READ FIRST:
-    - python/carnot/verify/vericot_validator.py (VeriCoTStepValidator — the extraction that was
-      supposed to work; read carefully to understand what it extracts)
-    - results/experiment_1079_live_sota_benchmark_v2.json (find where the 100 GSM8K
-      responses are stored — look for output_path or sample_data field)
-    - results/experiment_453_vericot_step_validator.json (TP=8/20 on 20 questions — what worked?)
-    - research-program.md (Section 1: two approaches — NSVIF/Z3 and LLM-as-extractor)
-
-    TASK PART 1 — DIAGNOSTIC (find WHY TP=0):
-    1. Load 20 wrong GSM8K answers from exp1079 output file (if available).
-       If output not in JSON: generate 10 simple wrong GSM8K answers synthetically:
-       {{"question": "What is 15 + 27?", "response": "15 + 27 = 43. The answer is 43.",
-        "correct_answer": "42", "is_correct": false}}
-       (Use known-wrong arithmetic as synthetic diagnostic corpus)
-
-    2. Run VeriCoTStepValidator on each wrong answer and print:
-       - What steps it extracted (all the CoT steps)
-       - What violations it found (or why none)
-       - What the verifier decision was
-
-    3. Identify root cause from the following candidates:
-       a. VeriCoT extracts no steps (step decomposition fails on GSM8K format)
-       b. VeriCoT extracts steps but finds no constraint violations (threshold too high)
-       c. VeriCoT finds violations but doesn't count them as TP (threshold calibration)
-       d. The 35B model makes non-arithmetic errors (wrong setup, not wrong arithmetic)
-       e. VeriCoT only finds violations in Z3-style formal steps, not informal math text
-
-    TASK PART 2 — IMPLEMENT FIX:
-    Based on diagnostic, implement at least ONE of:
-
-    Option A: NSVIF/Z3 approach (if root cause is informal math text):
-    - Parse each arithmetic step as a Z3 formula (e.g., "15 + 27 = 43" → z3.assert(15+27 != 43))
-    - Z3 checks if the step is arithmetically valid
-    - Flag steps where Z3 finds contradiction
-
-    Option B: LLM-as-extractor approach (if root cause is complex language):
-    - Use a TINY local LLM (Qwen3.5-0.8B CPU) to extract: "what arithmetic claims does this text make?"
-    - Then verify each extracted claim with simple Python eval()
-    - No Z3 needed — just Python arithmetic
-
-    Option C: Threshold recalibration (if root cause is calibration):
-    - Recalibrate VeriCoT violation threshold using exp453's known-TP examples
-    - Report: what threshold gives TP=8/20 on exp453 corpus (the known-working examples)?
-    - Apply that threshold to exp1079 corpus
-
-    TASK PART 3 — EVALUATE FIX:
-    Run the fixed extractor on the 20 wrong GSM8K answers (or synthetic wrong answers).
-    Target: extraction_tp_rate > 0.0 (any improvement from 0)
-
-    TASK PART 4 — WRITE TESTS (at least 4):
-    tests/python/test_gsm8k_extraction_fix.py:
-    - extractor_diagnoses_root_cause_not_none
-    - fixed_extractor_detects_wrong_arithmetic_in_synthetic_example
-    - fixed_extractor_tp_rate_above_zero_on_wrong_answers
-    - extraction_fix_does_not_regress_humaneval_performance
-
-    CONCRETE STEPS:
-    - python -c "from python.carnot.verify.vericot_validator import VeriCoTStepValidator; print('import OK')"
-    - python -c "import json; d=json.load(open('results/experiment_1079_live_sota_benchmark_v2.json')); print([k for k in d.keys()])"
-    - (find 20 wrong GSM8K responses in exp1079 output or generate 10 synthetic)
-    - (run VeriCoTStepValidator diagnostically — print step decomposition and violation search)
-    - (identify root cause)
-    - (implement fix: Option A, B, or C)
-    - JAX_PLATFORMS=cpu python scripts/experiment_1101_gsm8k_extraction_diagnostic_fix.py
-    - pytest tests/python/test_gsm8k_extraction_fix.py -v
-    - Write results/experiment_1101_gsm8k_extraction_diagnostic_fix.json
-
-    ARTIFACT FIELDS:
-    - root_cause_diagnosed: bool
-    - root_cause: str (one of: "step_decomposition_fails", "threshold_miscalibrated", "no_arithmetic_errors_35b_makes_semantic_errors", "vericot_requires_formal_steps", "other")
-    - fix_approach: str ("nsvif_z3" | "llm_as_extractor" | "threshold_recalibration" | "none_needed")
-    - baseline_tp_rate: float (0.0 from exp1079)
-    - fixed_tp_rate: float (target > 0.0)
-    - n_examples_tested: int
-    - tests_passing: int
-    - honest_verdict: "extraction_fixed_tp_above_zero" | "extraction_diagnosed_root_cause_fix_pending" | "extraction_35b_makes_no_extractable_errors" | "failed"
-
-    Run: JAX_PLATFORMS=cpu python scripts/experiment_1101_gsm8k_extraction_diagnostic_fix.py
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  priority: high
-  requires_gpu: false
-  max_turns: 40
-  estimated_wall_time_min: 35
-
-- id: exp1102-hf-spaces-gallery-update
-  milestone: 2026.04.85
-  deliverable: results/experiment_1102_hf_spaces_gallery_update.json
-  title: "HuggingFace Spaces Gallery Update — Deploy N-Queens + Any Pending Cartridges"
-  gated_on:
-    - upstream: exp1097-wopr-nqueens-cartridge
-      artifact_field: final_energy
-      op: '=='
-      value: 0.0
-  prompt: |
-    CONTEXT:
-    WOPR gallery is live at HuggingFace Spaces (exp1069, space_deployed=true).
-    N-Queens cartridge was written in exp1097 (final_energy=0.0 required by gate).
-    Per .84 retro recommendation: decouple gallery update from single cartridge — also
-    deploy any other pending/undeployed changes.
-
-    EXISTING CODE TO READ FIRST:
-    - results/experiment_1069_wopr_sudoku_hf_deploy.json (deployment pattern — SOPS token)
-    - spaces/wopr-games/ (gallery directory — find deploy.py and app.py)
-    - spaces/wopr-games/games/ (should contain nqueens.py from exp1097)
-
-    TASK:
-    1. RETRIEVE HF_TOKEN (same pattern as exp1069):
-       sops -d secrets/hf_token.enc.yaml 2>/dev/null || sops -d ops/secrets.yaml 2>/dev/null
-       If SOPS fails: check env HF_TOKEN directly.
-
-    2. VERIFY cartridge exists:
-       ls spaces/wopr-games/games/nqueens.py && echo "cartridge_found"
-
-    3. UPDATE app.py:
-       grep -n "games\|cartridge\|register" spaces/wopr-games/app.py | head -20
-       Add N-Queens to GAME_REGISTRY. Also check if any other cartridges are implemented
-       but not registered (grep for .py files in games/ not in app.py GAME_REGISTRY).
-
-    4. DEPLOY:
-       cd spaces/wopr-games
-       python deploy.py --token <HF_TOKEN>
-       OR: huggingface-cli upload Carnot-EBM/wopr-games spaces/wopr-games/ --repo-type space
-
-    5. VERIFY deployment:
-       curl -s --max-time 30 "https://huggingface.co/spaces/Carnot-EBM/wopr-games" | head -5
-
-    ARTIFACT FIELDS:
-    - cartridge_found: bool
-    - hf_token_found: bool
-    - hf_token_source: str
-    - n_cartridges_deployed: int
-    - app_py_updated: bool
-    - deploy_attempted: bool
-    - gallery_updated: bool
-    - live_http_status: int (200 = deployed)
-    - honest_verdict: "gallery_updated_n_queens_live" | "deploy_attempted_verify_pending" | "upstream_cartridge_missing" | "hf_token_not_found" | "failed"
-
-    Run: python scripts/experiment_1102_hf_spaces_gallery_update.py
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  priority: medium
-  requires_gpu: false
-  max_turns: 25
-  estimated_wall_time_min: 20
-
-- id: exp1103-milestone-retro-85
-  milestone: 2026.04.85
-  deliverable: results/experiment_1103_milestone_retro_85.json
-  title: "Milestone 2026.04.85 Retrospective — Evaluate All 14 Success Criteria"
-  prompt: |
-    CONTEXT:
-    Milestone 2026.04.85 has completed. Evaluate all 14 success criteria and write the retrospective.
-
-    EXISTING CODE TO READ FIRST:
-    - openspec/change-proposals/research-roadmap-v85.md (milestone design doc — read success criteria)
-    - results/experiment_1090_diagnostic_instrumentation_library.json
-    - results/experiment_1091_position_paper_v2_arxiv_prep.json
-    - results/experiment_1092_phase1a_adversarial_verifier_robustness_audit.json
+    EXISTING CODE / DOCUMENTS TO READ FIRST:
+    - docs/position-paper-draft-v2.md (CURRENT v2; read fully)
+    - docs/research-notes/position-paper-v3-framing-deep-think-results.md
+      (Deep Think Round 6 — the strategic pivot recommendation)
+    - docs/research-notes/and-composition-k-ceiling-deep-think-results.md
+      (Welch bound + Participation Ratio + det(Sigma) math)
+    - docs/research-notes/phase3-empirical-grounded-deep-think-round2-results.md
+      (k=8 ceiling, 4-stage training, Mock Cascade)
+    - docs/research-notes/fpga-sampler-corrected-architecture-deep-think-round2-results.md
+      (15.6x speedup recalibration, chi <= 4 Fast-Path, Z1 deferral)
+    - docs/research-notes/async-replay-buffer-schema-deep-think-results.md
+      (SP-IWPER + N_max formula + Stage-4 step-gating)
     - results/experiment_1093_phase1c_verifier_joint_null_space_measurement.json
+      (D_eff=1.603 measurement)
     - results/experiment_1094_phase2a_sampler_correctness_audit.json
-    - results/experiment_1095_phase3a_dbae_ebm_adversarial_round.json
-    - results/experiment_1096_semenergy_probe_v1.json
-    - results/experiment_1097_wopr_nqueens_cartridge.json
-    - results/experiment_1098_potts_machine_q3_verilog.json
+      (KL=3.07 detailed-balance violation)
     - results/experiment_1099_rlvr_ssd_integration_v1.json
+      (no_improvement_honest_negative on pre-filtered corpus)
     - results/experiment_1100_cascade_validation_sota_outputs.json
-    - results/experiment_1101_gsm8k_extraction_diagnostic_fix.json
-    - results/experiment_1102_hf_spaces_gallery_update.json
+      (cascade_validated_sota_inefficient + energy ordering inversion observation)
+    - results/experiment_1089_milestone_retro_84.json (retro context)
+    - reference_phase3_deep_think_synthesis.md (memory-stored synthesis if accessible)
 
-    SUCCESS CRITERIA TO EVALUATE:
-    1. diagnostics_library_written (exp1090.diagnostics_library_written == true)
-    2. position_paper_arxiv_ready (exp1091.arxiv_metadata_written == true)
-    3. phase1a_false_pass_below_5pct (exp1092.phase1a_acceptance_met == true)
-    4. phase1c_null_space_below_5pct (exp1093.phase1c_acceptance_met == true)
-    5. phase2a_sampler_validated (exp1094.honest_verdict != "failed")
-    6. phase3a_threat_model_written (exp1095.threat_model_written == true)
-    7. semenergy_probe_auroc_above_07 (exp1096.semenergy_auroc > 0.70)
-    8. nqueens_cartridge_shipped (exp1097.final_energy == 0.0)
-    9. potts_sim_validated (exp1098.python_sim_validated == true)
-    10. rlvr_ssd_honest_result (exp1099.honest_verdict != "failed")
-    11. cascade_validated_sota_outputs (exp1100.n_outputs_run >= 50)
-    12. gsm8k_extraction_fixed (exp1101.fixed_tp_rate > 0.0)
-    13. gallery_updated_hf_spaces (exp1102.gallery_updated == true)
-    14. retro_complete (this artifact)
+    THE STRATEGIC PIVOT (per Deep Think Round 6):
+    From v2's "we built a flawless verification machine" narrative
+    To v3's "we designed the rigorous EBM architecture necessary to expose and quantify
+            the hidden bottlenecks of decentralized LLM verification"
 
-    TASK:
-    1. For each criterion, read the relevant artifact and determine MET / NOT_MET.
-    2. Build criteria_results dict with one-line detail per criterion.
-    3. Identify top 3 successes and top 3 gaps for milestone .86.
-    4. Write process observations (patterns, what worked, what to improve).
-    5. APPEND (do NOT overwrite) to ops/changelog.md with one-paragraph milestone summary.
-    6. APPEND (do NOT overwrite) to ops/conductor-log.md with the milestone results table.
-    7. APPEND (do NOT overwrite) to ops/status.md with new session section.
-    8. APPEND (do NOT overwrite) to ops/metrics.md turn log with this session.
-    9. Write results/experiment_1103_milestone_retro_85.json.
+    TASK — execute Deep Think Round 6's 28-hour plan, condensed for this experiment.
+    Round 6 specifies 6 critical-path tasks (Tasks 1-6 of 7); Task 7 is the LaTeX bundle
+    that exp1113 will handle. THIS task covers 1-6.
 
-    IMPORTANT: APPEND to all ops/ files — do NOT overwrite.
-    ARTIFACT FIELDS:
-    - criteria_results: dict (14 keys: MET / NOT_MET)
-    - criteria_met: int
-    - criteria_total: int (14)
-    - criteria_detail: dict (one-line explanation per criterion)
-    - milestone_successes: list[str] (top 3)
-    - biggest_gaps_86: list[str] (top 3 gaps for next milestone)
-    - process_observations: list[str]
-    - honest_verdict: str (format: "milestone_N_of_14_criteria_met_<summary>")
+    TASK 1 — Math & Inversion Triage (priority 1, blocks all other tasks):
+    - Verify the math: replace v2's geometric-mean cos^k(theta_F) approximation with
+      sqrt(det(Sigma)). Cite Welch/Rankin Simplex bound formula k* <= floor((1-r_max)/
+      (alpha^2-r_max)). Plug in alpha^2=0.66 (empirical), r_max=0.5 -> k* <= 3.125.
+    - Investigate the energy ordering inversion JUST ENOUGH to confirm it is an OOD
+      shift (Goodhart's Law / reward hacking) rather than a Python sign-bug. Look at
+      experiment_1100's artifact mean_correct=0.689 vs mean_incorrect=0.621.
+      DO NOT try to empirically solve the inversion in this task; document it as an
+      open methodological question.
+    - Draft the Welch bound application + Participation Ratio (D_eff=1.603) descriptive
+      paragraphs.
 
-    Run: python scripts/experiment_1103_milestone_retro_85.py
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
+    TASK 2 — Restructure & Intro Rewrite (priority 1, establishes narrative scaffold):
+    - Execute the "Empirical Bounds" pivot in the Abstract and Introduction.
+    - Title must signal "framework + bounds" NOT "SOTA-beating verification."
+      Suggested working title: "Carnot: An Architectural Framework for Mapping the
+      Empirical Bounds of LLM Verification" (operator may refine).
+    - Section structure (8-10 pages, per Deep Think Round 6 Q2):
+      § 1 Introduction (15%) — the Pivot: structural walls + Phase 3-7 as measuring apparatus
+      § 2 Carnot Architectural Framework (20%) — 9-round Zenil derivation as blueprint
+      § 3 Theoretical Bounds of Verification Composition (20%) — Welch + det(Sigma) +
+          D_eff=1.6 + k_max=8
+      § 4 Hardware Acceleration & Sampling Limits (15%) — 15.6x + KL=3.07 + chi<=4
+      § 5 Empirical Realities & Anomalies (15%) — foreground honest negatives
+      § 6 Decentralization & Deployment Sovereignty (10%) — engineering-first vs Goodfire
+      § 7 Conclusion & Roadmap (5%)
 
+    TASK 3 — Hardware Recalibration (4 hours):
+    - Strip out 13,061x speedup; replace with rigorous 15.6x vs optimized C++ baseline.
+    - Strip Z1 production claims; defer to "future research direction pending independent
+      silicon benchmarking."
+    - Insert KL=3.07 detailed-balance failure as JUSTIFICATION for the chi<=4 Fast-Path
+      Sparse-Constraint Accelerator architecture.
+    - Cite FPGA Round 2 results (docs/research-notes/fpga-sampler-corrected-architecture-deep-think-round2-results.md).
+
+    TASK 4 — Foreground Negatives as Contribution (4 hours):
+    - Group 4 honest negatives under "The Structural Friction of LLM Verification":
+      * exp1099 brittleness of pre-filtering
+      * exp1100 cascades Pareto-suboptimal
+      * exp1093 D_int=1.6 motivates Welch bound
+      * exp1094 KL=3.07 justifies CPU fallback
+    - Frame as "the successful output of our architectural telemetry"
+    - DO NOT bury in appendices; foreground as the contribution.
+
+    TASK 5 — Reviewer Adversarial Defenses (4 hours):
+    - Inject preemptive sentences for top-3 anticipated reviewer critiques:
+      a) "FPGA speedup is toy trick / detailed-balance violation"
+      b) "Verifiers correlated; k-composition invalid"
+      c) "Energy inversion invalidates thesis"
+    - Use the EXACT defense sentences from Deep Think Round 6 Q4 verbatim
+      (docs/research-notes/position-paper-v3-framing-deep-think-results.md).
+    - Engineering-first positioning vs Goodfire Silico (Q5: complementary
+      local-first architecture, not philosophical war).
+
+    TASK 6 — Bibliography Update (2 hours):
+    - Add citations: Welch 1974 (Rankin/Simplex bound), Schaul et al. 2016 (PER),
+      Du & Mordatch 2019 (replay-buffer EBM), Goodfire Silico (MIT Tech Review
+      2026-04-30), the 5 .85-scan papers (2508.17440, 2603.06621, 2604.15149,
+      2510.23972, 2512.15605).
+
+    OUTPUT:
+    - docs/position-paper-draft-v3.md — the rewritten paper (NOT v2 with edits;
+      a structural rewrite per the new outline)
+    - docs/figures/ — recomputed figures using v3 framing (delete fig5_humaneval_improvement
+      if it conveys the wrong "SOTA-beating" message; replace with figures showing the
+      Welch bound and chi<=4 Fast-Path tradeoff)
+    - results/experiment_1115_position_paper_v3_strategic_rewrite.json — the artifact
+
+    REQUIRED ARTIFACT FIELDS:
+    - paper_v3_path: "docs/position-paper-draft-v3.md"
+    - word_count: int (target 6000-8000 for 8-10 pages)
+    - sections_count: int (target 7)
+    - claims_recalibrated: list[str] (each must be one of: 13061x->15.6x,
+        k=15->k_max=8, Z1->future-work, Phase-3-trained->preliminary-prototype,
+        energy-ordering->OOD-anomaly)
+    - honest_negatives_foregrounded: list[str] (exp1099, exp1100, exp1093, exp1094)
+    - reviewer_defenses_injected: list[str] (3 critiques addressed)
+    - bibliography_additions: list[str] (Welch, Schaul, Du-Mordatch, Goodfire,
+        and the 5 .85-scan paper IDs)
+    - claude_code_completion_status: str
+    - honest_verdict: one of:
+      * "v3_strategic_rewrite_complete_arxiv_ready" (full pivot executed)
+      * "v3_partial_critical_path_complete" (Tasks 1+2 done, 3-6 partial)
+      * "v3_blocked_pending_inversion_resolution" (Task 1 surfaced architectural concern)
+      * "failed" (catch-all)
+
+    Do NOT push (operator handles arXiv submission). Do NOT modify
+    scripts/research_conductor.py. Do NOT touch ops/changelog.md, ops/status.md, or
+    _bmad/traceability.md (the conductor's reconciliation step handles those).
+
+  gated_on: []
+  estimated_pages: 8-10
+  acceptance:
+    - paper_v3_path file exists with word_count between 6000 and 9000
+    - claims_recalibrated covers all 5 (13061x, k=15, Z1, Phase-3-readiness, energy-inversion)
+    - honest_negatives_foregrounded covers all 4 (exp1099/1100/1093/1094)
+    - reviewer_defenses_injected covers 3 critiques
+    - honest_verdict is one of the 4 valid values
+
+- id: exp1113-arxiv-latex-bundle-prep
+  milestone: 2026.04.86
+  deliverable: results/experiment_1113_arxiv_latex_bundle_prep.json
+  title: "arXiv Submission Bundle — LaTeX Conversion + PDF Compilation + GitHub Pages (CRITICAL DEADLINE 2026-05-15)"
+  model: opus
+  max_turns: 65
+  estimated_wall_time_min: 60
   priority: critical
   requires_gpu: false
+  # 2026-05-01 operator-added gating: exp1113 compiles the v3 strategic
+  # rewrite from exp1115 (docs/position-paper-draft-v3.md), NOT v2.
+  # v2's narrative does not survive .85 recalibrations per Deep Think
+  # Round 6 (docs/research-notes/position-paper-v3-framing-deep-think-results.md).
+  gated_on:
+    - upstream: exp1115-position-paper-v3-strategic-rewrite
+      artifact_field: paper_v3_path
+      op: '=='
+      value: "docs/position-paper-draft-v3.md"
+  prompt: |
+    [OPERATOR NOTE 2026-05-01]: This task compiles
+    docs/position-paper-draft-v3.md from exp1115, NOT
+    docs/position-paper-draft-v2.md. v3 implements the strategic pivot
+    from "SOTA-beating system" to "Architectural Framework & Empirical
+    Bounds" per Deep Think Round 6. The v2 narrative is empirically
+    indefensible after .85 recalibrations (13,061x FPGA, k=15
+    AND-comp, Z1 production pivot). Read v3 + Deep Think Round 6
+    results before writing LaTeX.
+
+    ORIGINAL CONTEXT (planner-written, retained):
+    CRITICAL DEADLINE: arXiv submission target 2026-05-15 (14 days from 2026-05-01).
+    Position paper v2 is arXiv-ready: docs/position-paper-draft-v2.md (7113 words, exp1091).
+    arxiv-metadata.yaml is written with all required fields.
+    5 matplotlib figure scripts are in docs/figures/.
+    arXiv requires LaTeX source or PDF. The paper is in Markdown; conversion is needed.
+
+    EXISTING CODE TO READ FIRST:
+    - docs/position-paper-draft-v2.md (FULL PAPER — read completely)
+    - docs/arxiv-metadata.yaml (submission metadata)
+    - docs/figures/ (list figure scripts — fig1_cascade_architecture.py through fig5_humaneval_improvement.py)
+    - docs/index.html (landing page — update with paper link)
+
+    TASK PART 1 — COMPILE FIGURES:
+    Run each figure script and save as both PNG (for paper) and PDF (for arXiv):
+    cd docs/figures/
+    for f in fig1_cascade_architecture.py fig2_sos_kan_auroc.py fig3_fpga_latency.py fig4_alpha_t.py fig5_humaneval_improvement.py:
+        JAX_PLATFORMS=cpu python $f
+        # Scripts should save fig{N}.pdf and fig{N}.png
+
+    TASK PART 2 — MARKDOWN TO LATEX:
+    Convert docs/position-paper-draft-v2.md to docs/arxiv-paper/main.tex:
+    Method: pandoc --from markdown --to latex --standalone --bibliography docs/carnot.bib
+            -o docs/arxiv-paper/main.tex docs/position-paper-draft-v2.md
+    If pandoc not available: write the LaTeX manually (paper is 7113 words = ~15 pages).
+
+    LaTeX structure:
+    \documentclass[10pt]{article}
+    \usepackage{amsmath, amssymb, graphicx, hyperref}
+    \title{Carnot: Energy-Based Verification for LLM Outputs with Hardware-Accelerated Sampling}
+    \author{[Author Placeholder — operator fills before submission]}
+    Sections: 1.Introduction, 2.Related Work, 3.Architecture, 4.Empirical Results,
+    5.Self-Distillation Convergence, 6.Hardware Acceleration, 7.Conclusion, References
+
+    Use BibTeX citations matching the arXiv IDs in position-paper-draft-v2.md references section.
+    Create docs/arxiv-paper/carnot.bib with all referenced papers.
+
+    TASK PART 3 — ARXIV BUNDLE:
+    Create docs/arxiv-paper/ directory with:
+    - main.tex (from Part 2)
+    - carnot.bib (bibliography)
+    - figures/fig1.pdf through fig5.pdf (from Part 1)
+    - README_ARXIV.txt (submission instructions: "pdflatex main.tex, bibtex main, pdflatex main.tex x2")
+
+    Validate: pdflatex main.tex (in docs/arxiv-paper/)
+    If pdflatex not installed: report latex_available=False, bundle_written=True,
+    validation_status="bundle_ready_for_pdflatex_elsewhere"
+
+    TASK PART 4 — GITHUB PAGES UPDATE:
+    Update docs/index.html:
+    1. Add "Preprint" section with link to docs/position-paper-draft-v2.md
+    2. Update results section: add HumanEval +36%, SemEnergy AUROC=0.948, FPGA KL finding
+    3. Add "Paper (arXiv preprint — submitted 2026-05-15)" placeholder link
+    4. Keep all existing content (CLAUDE.md: never remove existing content)
+
+    CONCRETE STEPS:
+    - ls docs/figures/ (list existing figure scripts)
+    - which pandoc || echo "pandoc not installed"
+    - which pdflatex || echo "pdflatex not installed"
+    - pip install matplotlib --quiet (if needed for figure compilation)
+    - JAX_PLATFORMS=cpu python docs/figures/fig1_cascade_architecture.py (test one figure)
+    - (compile all 5 figures)
+    - (convert Markdown to LaTeX)
+    - (create docs/arxiv-paper/main.tex + carnot.bib)
+    - (create arXiv bundle)
+    - (validate with pdflatex if available)
+    - (update docs/index.html)
+    - Write results/experiment_1113_arxiv_latex_bundle_prep.json
+
+    REQUIRED ARTIFACT FIELDS:
+    - figures_compiled: int (target: 5)
+    - figures_pdf_generated: bool
+    - latex_conversion_method: str ("pandoc" | "manual" | "failed")
+    - main_tex_path: str ("docs/arxiv-paper/main.tex")
+    - bibliography_path: str ("docs/arxiv-paper/carnot.bib")
+    - arxiv_bundle_path: str ("docs/arxiv-paper/")
+    - pdflatex_validation_status: str
+    - latex_available: bool
+    - github_pages_updated: bool
+    - arxiv_bundle_complete: bool (main_tex_path exists AND figures_compiled >= 5)
+    - submission_ready_checklist: list[str] (items remaining before submission)
+    - honest_verdict: "bundle_complete_pdf_validated" | "bundle_complete_latex_not_installed" | "bundle_partial" | "failed"
+
+    Run: JAX_PLATFORMS=cpu python scripts/experiment_1113_arxiv_latex_bundle_prep.py
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp1114-milestone-retro-86
+  milestone: 2026.04.86
+  deliverable: results/experiment_1114_milestone_retro_86.json
+  title: "Milestone 2026.04.86 Retrospective — 12-Criterion Evaluation"
   max_turns: 20
-  estimated_wall_time_min: 15
+  estimated_wall_time_min: 20
+  priority: low
+  requires_gpu: false
+  prompt: |
+    CONTEXT:
+    Evaluate milestone 2026.04.86 against 12 success criteria and write operational retro.
+    Follow the standard operational_retro schema.
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_1104_failure_ledger_v2_id_keyword_manifest.json
+    - results/experiment_1105_failure_ledger_v2_cap_mtime_fingerprint.json
+    - results/experiment_1106_phase1a_adversarial_verifier_robustness_audit_v2.json
+    - results/experiment_1107_new_diverse_verifiers_v1.json
+    - results/experiment_1108_ensemble_diversity_v2_and_composition.json
+    - results/experiment_1109_kv260_ising_sampler_v3_sequential.json
+    - results/experiment_1110_rlvr_ssd_v2_nondegenerate_live_gpu.json
+    - results/experiment_1111_thinkprm_v2_retrain_7349_prm.json
+    - results/experiment_1112_llm_failure_exemplar_corpus_v1.json
+    - results/experiment_1113_arxiv_latex_bundle_prep.json
+    - ops/conductor-log.md (last 100 lines for slowest-5 analysis)
+
+    TASK:
+    1. Read all 10 experiment result JSONs above.
+    2. For each of the 12 success criteria, check the relevant artifact field:
+       1. failure_ledger_id_fix_deployed (exp1104)
+       2. failure_ledger_mtime_cap_manifest_deployed (exp1105.failure_ledger_cap_reset_deployed AND stable_deliverable_mtime_fix_deployed AND manifest_dispatch_enforcement_deployed)
+       3. phase1a_false_pass_below_5pct (exp1106)
+       4. new_diverse_verifiers_deployed_3_verifiers (exp1107)
+       5. and_composition_viable_r_corr_below_05 (exp1108.and_composition_viable)
+       6. kv260_v3_kl_measured_below_threshold (exp1109.kv260_v3_kl_measured_below_threshold)
+       7. rlvr_ssd_v2_non_degenerate_honest_result (exp1110.rlvr_ssd_v2_non_degenerate_honest_result)
+       8. thinkprm_v2_auroc_above_099 (exp1111.thinkprm_v2_auroc_above_099)
+       9. llm_failure_exemplar_corpus_30_exemplars (exp1112)
+       10. goodfire_cascade_tp_rate_measured (exp1112.goodfire_cascade_tp_rate_measured)
+       11. arxiv_bundle_complete (exp1113)
+       12. retro_complete (this experiment — True by definition)
+    3. Identify slowest-5 experiments from conductor-log.md.
+    4. Identify structural bottlenecks (DualGPU idle streak, doc reconciliation, etc.).
+    5. Append completed milestone row to docs/roadmap.md table.
+    6. Write ops/metrics.md turn log entry for this session.
+    7. Update ops/status.md with what's working and what's next for .87.
+
+    CONCRETE STEPS:
+    - (read all 10 result JSONs)
+    - tail -n 100 ops/conductor-log.md
+    - (evaluate all 12 criteria)
+    - (append to docs/roadmap.md)
+    - (update ops/status.md and ops/metrics.md)
+    - Write results/experiment_1114_milestone_retro_86.json
+
+    REQUIRED ARTIFACT FIELDS:
+    - criteria_results: dict (12 criteria name -> bool)
+    - criteria_met: int
+    - criteria_total: int (12)
+    - criteria_pct: float
+    - slowest_experiments: list[dict] (rank, id, title, duration_min, diagnosis)
+    - bottlenecks_identified: list[str]
+    - improvements_suggested: list[str]
+    - dualgpu_consecutive_idle_count: int (should decrease from 18 if exp1110 used GPU)
+    - retro_complete: bool (True)
+    - honest_verdict: str
+
+    Run: JAX_PLATFORMS=cpu python scripts/experiment_1114_milestone_retro_86.py
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
