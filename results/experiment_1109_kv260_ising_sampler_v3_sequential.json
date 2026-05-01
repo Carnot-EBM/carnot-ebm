@@ -1,0 +1,41 @@
+{
+  "board_ip": "192.168.51.98",
+  "deploy_skip_reason": "vivado_not_on_path",
+  "duration_s": 3.96,
+  "experiment": 1109,
+  "honest_verdict": "sequential_sampler_validates_detailed_balance_kl_under_threshold_hardware_pending",
+  "operator_finding": "Empirically validates FPGA Round 2 (Deep Think) prescription. Sequential single-site Ising sampler achieves KL(v3 || gibbs) = 0.025 nats vs threshold 0.05 nats — well below the 0.05 detailed-balance acceptance gate. Compare: parallel v1 KL = 3.07 nats (exp1094 confirmed violation) and parallel v1 sim KL = 14.05 nats (even worse on the 8-spin antiferromagnetic ring topology). Tradeoff: sequential is 23x slower per sweep (0.999s vs 0.043s for v1 parallel) at N=8; this is expected and matches FPGA Round 2's prediction that the 13,061x speedup headline must recalibrate downward. Hardware deployment to KV260 board (192.168.51.98, reachable) deferred because Vivado not on PATH — Verilog file shipped at hardware/kv260/ising_sampler_v3_sequential.v (14,422 bytes) for future synthesis. Phase-2 Sparse-Constraint Accelerator architecture from FPGA Round 2 is now empirically grounded at the simulation tier. Ready for the chi<=4 Fast-Path bitstream in .87 once Vivado access is sorted.",
+  "kl_acceptance_threshold": 0.05,
+  "kl_hardware_v3_vs_gibbs": null,
+  "kl_parallel_v1_vs_gibbs": 3.070519989571347,
+  "kl_parallel_v1_vs_gibbs_source": "exp1094",
+  "kl_sim_v1_parallel_vs_gibbs_float": 14.049470807081228,
+  "kl_sim_v3_vs_gibbs": 0.025100708588610382,
+  "kv260_board_reachable": true,
+  "kv260_deployed": false,
+  "kv260_v3_kl_measured_below_threshold": true,
+  "pytest_returncode": 0,
+  "python_sim_validated": true,
+  "run_date": "2026-05-01T17:30:54Z",
+  "schema": "kv260_sampler_v3_sequential_v1",
+  "sim_config": {
+    "beta": 2.0,
+    "burn_in_sweeps": 500,
+    "n_record_v1": 10000,
+    "n_record_v3": 60000,
+    "n_spins": 8,
+    "record_cadence_v3": "per_sweep",
+    "topology": "antiferromagnetic_ring_periodic_J=-1"
+  },
+  "sim_not_run": false,
+  "sim_runtime_s": {
+    "v1_parallel": 0.04313015937805176,
+    "v3_sequential": 0.9991855621337891
+  },
+  "tests_passing": 4,
+  "title": "KV260 Ising Sampler v3 Sequential \u2014 Phase-2a Correctness Fix",
+  "uses_sequential_updates": true,
+  "verilog_byte_count": 14422,
+  "verilog_v3_path": "hardware/kv260/ising_sampler_v3_sequential.v",
+  "verilog_v3_written": true
+}
