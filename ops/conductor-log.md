@@ -256,8 +256,5 @@ If you finish the real work |
 | 2026-05-01 18:46 UTC | ThinkPRM v2 Retrain on 7349-Step PRM Corpus — Tier | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1111_thinkpr |
 | 2026-05-01 18:54 UTC | ThinkPRM v2 Retrain on 7349-Step PRM Corpus — Tier | OK | Deliverable already exists in repo |
 | 2026-05-01 19:06 UTC | LLM Failure Exemplar Corpus v1 — Goodfire Silico C | OK | 307 passed, 3 warnings in 13.12s |
-<<<<<<< Updated upstream
-=======
 | 2026-05-01 19:26 UTC | Position Paper v3 — Architectural Framework & Empi | OK | cache hit: 307 passed, 3 warnings in 13.12s |
->>>>>>> Stashed changes
 | 2026-05-01 19:47 UTC | arXiv Submission Bundle — LaTeX Conversion + PDF C | OK | 311 passed, 3 warnings in 13.06s |
