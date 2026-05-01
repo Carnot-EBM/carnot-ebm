@@ -1,0 +1,32 @@
+{
+  "experiment": "exp1117-infrastructure-hardening-v3",
+  "schema": "experiment_result_v1",
+  "title": "Infrastructure Hardening v3 \u2014 close the four .86-retro bottlenecks",
+  "run_date": "2026-05-01",
+  "started_at": "2026-05-01T21:28:34.312949+00:00",
+  "finished_at": "2026-05-01T21:28:37.848746+00:00",
+  "duration_s": 3.535797,
+  "status": "success",
+  "honest_verdict": "all_four_fixes_deployed",
+  "dispatch_manifest_verified": true,
+  "doc_reconcile_batch_default_set": true,
+  "grace_period_schema_added": true,
+  "fast_eval_flag_added": true,
+  "estimated_savings_min": 111,
+  "savings_breakdown_min": {
+    "dispatch_manifest": 35,
+    "doc_reconcile_batch_default": 28,
+    "grace_period_s_no_premature_kills": 35,
+    "fast_eval_corpus_sampling": 13
+  },
+  "tests_written": 4,
+  "tests_passing": 4,
+  "test_file": "tests/python/test_infrastructure_hardening_v3.py",
+  "tests": [
+    "test_retired_experiment_blocked_at_dispatch",
+    "test_doc_reconcile_batch_mode_default",
+    "test_grace_period_applied_before_bootstrap_guard",
+    "test_fast_eval_samples_500_pairs"
+  ],
+  "notes": "Three of the four code changes were wired into research_conductor.py and verify_repair.py before this experiment ran (per the .86 retro emergency patch). exp1117 additionally fixed a load-bearing YAML structural bug in ops/exclusion_manifest.yaml: orphan top-level list entries (exp906/exp786/exp641 + 3 scope retirements) made the file unparseable, so failure_ledger_v2.is_excluded_by_manifest had been silently fail-opening since .80 \u2014 the dispatch-time enforcement only became truly live in .87 with this fix. exp1117 also adds the regression-tripwire test suite + this artifact, which .87 onward will read to confirm the fixes survive future edits."
+}

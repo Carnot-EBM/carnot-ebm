@@ -88,6 +88,63 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
+
+# ---------------------------------------------------------------------------
+# CARNOT_FAST_EVAL — corpus subsampling for architecture sweeps (exp1117)
+# ---------------------------------------------------------------------------
+#
+# Architecture sweeps that iterate the full FoVer corpus (6,548 pairs) on CPU
+# burn 10–15 min/experiment that contributes nothing toward the actual
+# architecture decision — the comparison signal saturates well below 1k
+# pairs.  Setting ``CARNOT_FAST_EVAL=1`` in the experiment environment opts
+# the experiment into a 500-pair random sample (deterministic seed).  The
+# flag is OFF by default — headline-result experiments must run on the full
+# corpus or the verdict isn't reproducible.
+#
+# Per-experiment opt-in (recommended pattern):
+#
+#     pairs = load_full_corpus()
+#     pairs = maybe_subsample_corpus(pairs)  # honours CARNOT_FAST_EVAL
+#
+# Or guard at the loader call site:
+#
+#     if os.getenv("CARNOT_FAST_EVAL", "0") == "1":
+#         pairs = random.sample(pairs, min(500, len(pairs)))
+#
+# The conductor does NOT set this flag for queued tasks — it's an
+# experiment-script-level tool for the architecture-sweep tier only.
+def maybe_subsample_corpus(
+    items: list,
+    sample_size: int = 500,
+    seed: int = 0xC417,  # noqa: B008
+) -> list:
+    """Return a 500-pair random subset when ``CARNOT_FAST_EVAL=1``.
+
+    Otherwise returns ``items`` unchanged.  The seed is fixed so a re-run
+    of the same experiment lands the same subset, preserving the only
+    reproducibility guarantee fast-eval can offer.  Callers that need a
+    different seed can pass it explicitly.
+
+    Parameters
+    ----------
+    items:
+        The full corpus (any iterable that ``random.Random.sample`` accepts).
+    sample_size:
+        Target sample size.  When ``len(items) <= sample_size`` the input
+        is returned unchanged so a small corpus is never over-sampled.
+    seed:
+        RNG seed for the subset.  Defaults to a fixed sentinel.
+    """
+    if os.environ.get("CARNOT_FAST_EVAL", "0") != "1":
+        return items
+    if len(items) <= sample_size:
+        return items
+    import random as _random
+
+    rng = _random.Random(seed)
+    return rng.sample(list(items), sample_size)
+
+
 # ---------------------------------------------------------------------------
 # Rust backend auto-detection
 # ---------------------------------------------------------------------------
