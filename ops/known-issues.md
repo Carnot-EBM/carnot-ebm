@@ -260,6 +260,64 @@ per CLAUDE.md "Overdue-Priority Forcing Function" (this is the first
 milestone these are pending; if .86 doesn't pick them up, .87 must
 treat them as ≥2-milestone-overdue mandatory).
 
+### NEW 2026-05-01: LLM Failure Exemplar Corpus + Goodfire Silico Comparison
+
+**Background:** MIT Technology Review 2026-04-30 published an article
+on Goodfire's Silico, a closed-source white-box mechanistic
+interpretability tool for open-weight LLMs (Qwen 3 etc.). It catalogs
+specific named, reproducible LLM failure modes — `9.11 > 9.9`
+mathematical error from Bible/version-numbering interference, trolley-
+problem moral framing, deceptive disclosure suppression. These are
+benchmark anchors for any verifier suite.
+
+Carnot's positioning: complementary, not competitive. Silico tells
+you WHY a model said something wrong (white-box neuron tracing);
+Carnot tells you THAT it said something wrong and HOW to fix it
+(black-box energy verification + repair). A complete LLM-reliability
+stack uses both. Silico is closed-source + proprietary + open-weight-
+only; Carnot is Apache 2.0 + local-first + LLM-agnostic.
+
+**Three .86 tasks the planner SHOULD propose:**
+
+1. **`exp10XX-llm-failure-exemplar-corpus-v1`**
+   Goal: build `data/llm_failure_exemplars.jsonl` with named, reproducible
+   failure modes — Goodfire's published exemplars + project-internal
+   findings. Each entry: prompt, buggy response, mechanistic root
+   cause, Carnot verdict, Carnot repair, whether Carnot caught it.
+   Acceptance: ≥30 exemplars, ≥10 categories, integrated into
+   Phase 1a verifier robustness audit dataset.
+   Effort: ~3-4 hr (mostly research + format design).
+
+2. **`exp10XX-goodfire-exemplar-cascade-tp-rate`**
+   Goal: feed Goodfire's published exemplar prompts through Carnot's
+   verifier cascade and report TP rate per verifier tier. Tests the
+   mathematical-objective tier (Z3-based numeric extraction should
+   catch 9.11>9.9 trivially) versus the learned tier (KAN/SOS-KAN).
+   Acceptance: report TP rate per tier on ≥15 Goodfire-style
+   exemplars; if mathematical-objective tier achieves >90%, validates
+   Carnot's engineering claim vs the "alchemy precision" critique
+   from Leonard Bereska in the article.
+   Effort: ~2 hr.
+
+3. **Position paper v3 framing delta** (could be folded into
+   exp10XX-position-paper-v3 if .86 has one):
+   - Explicit complementary-vs-competitive positioning with
+     mechanistic interpretability (Silico, Anthropic circuit analysis,
+     OpenAI transformer-debugger, Neuronpedia)
+   - Distinguish epistemic status of mathematical-objective verifiers
+     (Z3, AST, Ising — genuinely engineering) from learned verifiers
+     (KAN, SOS-KAN — precision-added alchemy)
+   - Decentralization advantage: Carnot Apache 2.0 + local-first vs
+     Silico closed-source + Goodfire-service-required
+
+**Why this is "SHOULD" not "MUST":** the failure-exemplar corpus is
+a force-multiplier for Phase 1a (already mandatory). It augments
+existing work; it doesn't replace any of the 5 failure-ledger v2
+fixes. Planner can defer one but not all.
+
+**See also:** `feedback_failure_ledger_gaps.md` (Issues 1-5 + planner
+deltas P1-P3) and `reference_goodfire_silico.md` (context).
+
 ### Carry-forward from .85 (operator-retired tasks the .86 planner
 MUST re-propose with proper prior_failures from start)
 
