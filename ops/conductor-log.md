@@ -269,3 +269,4 @@ If you finish the real work |
 | 2026-05-01 22:10 UTC | GRPO with ThinkPRM v2 Energy Reward — Continuous S | OK | Deliverable already exists in repo |
 | 2026-05-01 22:21 UTC | FoVer SOTA Domain Extension v5 — 1000+ SOTA Model  | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1119_fover_s |
 | 2026-05-01 22:31 UTC | FoVer SOTA Domain Extension v5 — 1000+ SOTA Model | OK | Deliverable already exists in repo |
+| 2026-05-01 22:39 UTC | Energy Verifier Retrain on SOTA Corpus — Energy In | OK | 131 passed, 1 warning in 5.47s |

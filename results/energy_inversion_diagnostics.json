@@ -1,0 +1,23 @@
+{
+  "mode": "summary_only",
+  "summary_stats_available": {
+    "exp1100_OOD_initial": {
+      "mean_correct_energy": 0.689124,
+      "mean_incorrect_energy": 0.620972,
+      "delta_E": -0.06815199999999999,
+      "n": 100
+    },
+    "exp1120_post_retrain": {
+      "mean_correct_energy": 1.647559,
+      "mean_incorrect_energy": 2.096007,
+      "delta_E": 0.4484480000000002,
+      "n": 50
+    }
+  },
+  "summary_stats_missing": [
+    "exp1099_RLVR_baseline",
+    "exp1110_nondegenerate",
+    "exp1118_grpo"
+  ],
+  "diagnostic_status": "Tests B/C/D require per-pair JSONL that has never been emitted by any experiment. The right structural fix is to amend experiment_1100, _1110, _1118, _1120 to also emit results/experiment_NNNN_per_pair.jsonl alongside the summary JSON. ~10 lines per script."
+}
