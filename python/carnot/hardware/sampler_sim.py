@@ -338,3 +338,184 @@ def kl_against_true_gibbs(
     # true_gibbs_distribution but defensive against future edits).
     q_safe = np.clip(q, 1e-300, None)
     return float(np.sum(p_smooth * np.log(p_smooth / q_safe)))
+
+
+class SparseInertiaIsingSamplerV4:
+    """Bit-accurate reference for the v4 sparse-coupling, EMA-inertia design.
+
+    **What v4 changes vs v3:**
+        * Coupling is SPARSE: each spin reads only K neighbours instead
+          of all N-1. This is what makes N=128 fit in the XCK26 LUT
+          budget (~36K LUTs vs the ~290K dense estimate).
+        * Per-spin EMA inertia: ``h_ema[i] <- alpha * h_ema[i] +
+          (1 - alpha) * h_inst[i]`` where h_inst is the sparse local
+          field. Inertia is the load-bearing trick from arXiv 2604.17109
+          ("p-bit inertia enables correct parallel updates"): it
+          smooths out the period-2 limit cycle that fully-parallel
+          synchronous Glauber falls into on frustrated graphs.
+        * Update rule is ALL-AT-ONCE PARALLEL: every spin reads the same
+          snapshot of the previous step's spin vector, and all spins
+          commit on the same clock edge. This is the speed advantage —
+          one sweep per clock cycle, not N — and is the design v3
+          sequential gave up to fix detailed balance.
+
+    **Two update modes (matching the spec + LFSR option):**
+        * ``mode="stochastic"`` (default for sampling experiments):
+          ``p(s_i = +1) = sigmoid(2 * beta * h_ema[i])``. This is the
+          p-bit interpretation of the LFSR-driven "simulated annealing
+          mode" the v4 spec mentions. KL against true Gibbs is meaningful
+          only for this mode at finite temperature.
+        * ``mode="deterministic"``: ``s_i = sign(h_ema[i])`` (with the
+          tie convention that h_ema >= 0 maps to +1, matching the RTL
+          MSB rule). This is pure E-MVL — the constraint-satisfaction
+          quench the spec intends. It does NOT sample any Boltzmann
+          distribution at finite beta; it converges to a deterministic
+          fixed point. KL on deterministic samples is therefore not a
+          fair correctness statement, only a fixed-point characterisation.
+
+    **The KL-vs-Gibbs hypothesis under test:**
+        With alpha > 0 (genuine inertia), parallel synchronous updates
+        on the EMA-smoothed field should converge to a distribution
+        close to the true Boltzmann. Sweeping alpha at fixed beta
+        empirically locates the "best inertia" knob that v3 sequential
+        avoids needing because it updates one spin at a time.
+    """
+
+    def __init__(
+        self,
+        n_spins: int,
+        k_neighbors: int,
+        alpha_ema: float,
+        beta_temperature: float,
+        seed: int = 0,
+        mode: str = "stochastic",
+    ) -> None:
+        if not 0.0 <= alpha_ema < 1.0:
+            raise ValueError(f"alpha_ema must be in [0, 1), got {alpha_ema}")
+        if k_neighbors > n_spins:
+            raise ValueError(f"k_neighbors ({k_neighbors}) must be <= n_spins ({n_spins})")
+        if mode not in {"stochastic", "deterministic"}:
+            raise ValueError(f"mode must be 'stochastic' or 'deterministic', got {mode!r}")
+        self.n_spins = n_spins
+        self.k_neighbors = k_neighbors
+        self.alpha_ema = float(alpha_ema)
+        self.beta = float(beta_temperature)
+        self.mode = mode
+        self._rng = np.random.default_rng(seed)
+        # Hot start: all spins +1 (matches v4 RTL reset behaviour).
+        self.s = np.ones(n_spins, dtype=np.int8)
+        # Per-spin EMA field register (matches RTL h_ema[0:N-1]).
+        self.h_ema = np.zeros(n_spins, dtype=np.float64)
+
+    @staticmethod
+    def build_ring_topology(
+        n_spins: int, k: int, j_value: float = -1.0
+    ) -> tuple[np.ndarray, np.ndarray]:
+        """Return (nbr_idx, J_sparse) for a K-nearest-neighbour ring.
+
+        For each spin i the K neighbours are split symmetrically:
+            * the K/2 spins to the right (i+1, ..., i+K/2)
+            * the K/2 spins to the left  (i-1, ..., i-K/2)
+        all wrapped modulo N. J_sparse is filled with ``j_value`` on
+        every (i, k) entry.
+
+        ``j_value = -1.0`` recreates the antiferromagnetic ring used by
+        exp1094 (with K=2 reproducing the immediate-neighbour structure
+        of that test). Larger K thickens the ring into a banded
+        topology, which is what v4 actually targets in hardware.
+
+        Args:
+            n_spins: Number of spins in the ring.
+            k: Sparse fan-out (must be even, <= n_spins, with k/2 left + k/2 right).
+            j_value: Coupling coefficient applied to every neighbour edge.
+
+        Returns:
+            Tuple ``(nbr_idx, J_sparse)`` of shape ``(n_spins, k)`` each.
+        """
+        if k % 2 != 0:
+            raise ValueError(f"k must be even (k/2 left + k/2 right), got {k}")
+        if k > n_spins:
+            raise ValueError(f"k ({k}) must be <= n_spins ({n_spins})")
+        nbr_idx = np.zeros((n_spins, k), dtype=np.int32)
+        j_sparse = np.full((n_spins, k), float(j_value), dtype=np.float64)
+        half = k // 2
+        for i in range(n_spins):
+            for kk in range(k):
+                # Match the v4 RTL pattern: first half = right offsets +1..+K/2,
+                # second half = left offsets -K/2..-1.
+                offset = (kk + 1) if kk < half else (kk - k)
+                nbr_idx[i, kk] = (i + offset) % n_spins
+        return nbr_idx, j_sparse
+
+    def sweep(
+        self,
+        spins: np.ndarray,
+        nbr_idx: np.ndarray,
+        j_sparse: np.ndarray,
+    ) -> np.ndarray:
+        """Run one parallel synchronous sweep of the v4 dynamics.
+
+        The instance state ``self.h_ema`` is mutated in place (matches
+        the RTL register update). The returned array is the new spin
+        configuration after the parallel commit.
+
+        Sequence of operations (per the v4 spec / Verilog ``comb_field``
+        block followed by ``seq_update``):
+            1. Snapshot ``spins`` so that all N field sums read the
+               PRE-update neighbour values (synchronous discipline).
+            2. ``h_inst[i] = sum_k J_sparse[i, k] * spins[nbr_idx[i, k]]``.
+            3. ``h_ema[i] <- alpha * h_ema[i] + (1 - alpha) * h_inst[i]``.
+            4. Map h_ema[i] to a new spin via the configured mode.
+
+        Args:
+            spins: ``(n_spins,)`` array of {-1,+1} values, the previous
+                step's configuration.
+            nbr_idx: ``(n_spins, k)`` neighbour index table.
+            j_sparse: ``(n_spins, k)`` coupling coefficients.
+
+        Returns:
+            ``(n_spins,)`` int8 array of the updated configuration.
+        """
+        s_old = np.asarray(spins, dtype=np.float64)
+        # Vectorised sparse field accumulation:
+        #   neighbour_spins[i, k] = s_old[nbr_idx[i, k]]
+        #   h_inst[i] = sum_k J_sparse[i, k] * neighbour_spins[i, k]
+        neighbour_spins = s_old[nbr_idx]
+        h_inst = np.sum(j_sparse * neighbour_spins, axis=1)
+        # EMA update — same arithmetic as the RTL h_ema register.
+        self.h_ema = self.alpha_ema * self.h_ema + (1.0 - self.alpha_ema) * h_inst
+        if self.mode == "deterministic":
+            # E-MVL majority vote: sign of EMA field. Treat h_ema >= 0 as
+            # +1 (matches the RTL MSB convention, where MSB=0 -> +1).
+            new_s = np.where(self.h_ema >= 0.0, 1, -1).astype(np.int8)
+        else:
+            # p-bit / Glauber on the EMA field. p_plus[i] = sigmoid(2*beta*h_ema[i]).
+            p_plus = 1.0 / (1.0 + np.exp(-2.0 * self.beta * self.h_ema))
+            u = self._rng.random(self.n_spins)
+            new_s = np.where(u < p_plus, 1, -1).astype(np.int8)
+        self.s = new_s
+        return new_s
+
+    def sample(
+        self,
+        nbr_idx: np.ndarray,
+        j_sparse: np.ndarray,
+        n_steps: int,
+        burn_in_sweeps: int = 0,
+    ) -> np.ndarray:
+        """Run ``burn_in_sweeps`` warm-up + ``n_steps`` recorded sweeps.
+
+        Recording cadence is one sample per parallel sweep (the natural
+        unit for v4 — one clock cycle per sweep). The burn-in is applied
+        before recording so the EMA register and spin state escape their
+        all-+1 hot-start bias.
+
+        Returns ``(n_steps, n_spins)`` int8 array of recorded configs.
+        """
+        for _ in range(burn_in_sweeps):
+            self.sweep(self.s, nbr_idx, j_sparse)
+        out = np.empty((n_steps, self.n_spins), dtype=np.int8)
+        for t in range(n_steps):
+            self.sweep(self.s, nbr_idx, j_sparse)
+            out[t] = self.s
+        return out

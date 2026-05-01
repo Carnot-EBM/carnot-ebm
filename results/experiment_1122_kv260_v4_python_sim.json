@@ -1,0 +1,103 @@
+{
+  "alpha_sweep_runtime_s": 2.12,
+  "best_alpha_ema": 0.1,
+  "board_ip": "192.168.51.98",
+  "current_firmware_dirs": [
+    "carnot_ising_v2_n64",
+    "carnot_ising_v4",
+    "k24-starter-kits",
+    "k26-starter-kits"
+  ],
+  "deterministic_emvl": {
+    "alpha_ema": 0.5,
+    "kl_vs_gibbs": 29.296460038719566,
+    "n_steps": 2000,
+    "note": "Pure E-MVL sign(h_ema) is not a finite-temperature Boltzmann sampler. KL is reported for completeness and is expected to be large; do not gate on it.",
+    "runtime_s": 0.02
+  },
+  "duration_s": 6.66,
+  "experiment": 1122,
+  "hardware_board_reachable": true,
+  "hardware_board_state": {
+    "firmware_dirs": [
+      "carnot_ising_v2_n64",
+      "carnot_ising_v4",
+      "k24-starter-kits",
+      "k26-starter-kits"
+    ],
+    "rc": 0,
+    "reachable": true,
+    "uio_nodes": [
+      "/dev/uio0",
+      "/dev/uio1",
+      "/dev/uio2",
+      "/dev/uio3",
+      "/dev/uio4"
+    ],
+    "xdma_nodes": []
+  },
+  "hardware_kl_measured": false,
+  "hardware_load_attempt": "skipped_no_vivado_and_existing_firmware_observed",
+  "hardware_synthesis_attempted": false,
+  "honest_verdict": "v4_kl_above_threshold",
+  "kl_v1_parallel_baseline": 3.07,
+  "kl_v3_sequential_baseline": 0.025,
+  "kl_v4_below_threshold": false,
+  "kl_v4_best": 0.13378728443178275,
+  "kl_v4_threshold": 0.05,
+  "kv260_v4_kl_measured": true,
+  "openxc7_install_attempted": false,
+  "openxc7_install_skip_reason": "pip unavailable in research host environment AND device family unsupported by tool",
+  "openxc7_support_note": "openXC7 supports Artix-7 / Kintex-7 / Spartan-7 only (7-series). KV260 = Zynq UltraScale+ MPSoC (XCZU5EV) \u2014 outside openXC7 scope. Vivado required for v4 bitstream.",
+  "openxc7_zynq_supported": false,
+  "per_alpha": [
+    {
+      "alpha_ema": 0.1,
+      "below_threshold": false,
+      "kl_v4_vs_gibbs": 0.13378728443178275,
+      "runtime_s": 0.58
+    },
+    {
+      "alpha_ema": 0.3,
+      "below_threshold": false,
+      "kl_v4_vs_gibbs": 0.7177384610263012,
+      "runtime_s": 0.46
+    },
+    {
+      "alpha_ema": 0.5,
+      "below_threshold": false,
+      "kl_v4_vs_gibbs": 0.717615768131962,
+      "runtime_s": 0.48
+    },
+    {
+      "alpha_ema": 0.7,
+      "below_threshold": false,
+      "kl_v4_vs_gibbs": 0.7176292378196403,
+      "runtime_s": 0.58
+    }
+  ],
+  "run_date": "2026-05-01T23:14:18Z",
+  "schema": "kv260_v4_python_sim_v1",
+  "sim_config": {
+    "beta": 2.0,
+    "burn_in_sweeps": 500,
+    "k_neighbors": 2,
+    "mode": "stochastic_pbit_glauber_on_ema_field",
+    "n_record": 60000,
+    "n_spins": 8,
+    "record_cadence": "per_sweep",
+    "topology": "antiferromagnetic_ring_periodic_J=-1"
+  },
+  "title": "KV260 Ising Sampler v4 \u2014 Sparse + Inertia Python Simulation",
+  "v4_rtl_has_h_ema": true,
+  "v4_rtl_has_nbr_idx": true,
+  "v4_rtl_has_sign_bit_rule": true,
+  "v4_rtl_path": "hardware/kv260/ising_sampler_v4.v",
+  "v4_rtl_read": true,
+  "v4_spec_mentions_inertia": true,
+  "v4_spec_mentions_sparse": true,
+  "v4_spec_mentions_synchronous": true,
+  "v4_spec_path": "hardware/kv260/ising_sampler_v4_spec.md",
+  "v4_spec_read": true,
+  "vivado_available": false
+}
