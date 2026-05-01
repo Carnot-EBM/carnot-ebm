@@ -4509,3 +4509,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-01: Infrastructure Hardening v3 — Dispatch Manifest + Doc Async + Bootstrap Grace + Fast-Eval Flag (✅ Complete) — honest_verdict=all_four_fixes_deployed; results/experiment_1117_infrastructure_hardening_v3.json
 - 2026-05-01: FoVer SOTA Domain Extension v5 — 1000+ SOTA Model Outputs for Energy Inversion Fix (❌ Failed) — honest_verdict=failed; results/experiment_1119_fover_sota_extension_v5.json
 - 2026-05-01: Energy Verifier Retrain on SOTA Corpus — Energy Inversion Fix (gated on exp1119) (✅ Complete) — honest_verdict=inversion_fixed_ordering_correct; results/experiment_1120_energy_verifier_retrain_sota.json
+- 2026-05-01: AND-Composition k=5 Production Wiring — VerifyRepairPipeline Default Ensemble (✅ Complete) — honest_verdict=k5_deployed_and_benchmarked; results/experiment_1121_k5_and_compose_production.json
