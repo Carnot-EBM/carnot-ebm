@@ -83,6 +83,63 @@ historical record per CLAUDE.md no-pruning policy.
 > - ~~Multi-agent routing infrastructure changes are still allowed,
 >   but treat codex as deprecated until this constraint is lifted.~~
 
+## DEFERRED / PARKED ITEMS (planner may propose, not mandatory)
+
+### 2026-05-01: paperbanana for diagrams + infographics (parked, not yet adopted)
+
+**Background:** the project currently produces figures via matplotlib
+(numerics) + manual architecture diagrams. User asked whether
+Gemini's "Deep Research → infographic" feature, OpenAI's gpt-image-2,
+or `https://github.com/llmsresearch/paperbanana` could replace or
+augment that pipeline. Research conducted 2026-05-01 ~00:25Z.
+
+**Findings (summary):**
+
+- **Gemini infographic-from-Deep-Research:** consumer-app-only, NOT
+  exposed as a public API endpoint. Gemini's standalone image-gen
+  API does exist (`gemini-3-pro-image-preview`, `gemini-2.5-flash-
+  image`) and supports stylized text in diagrams, but that's a
+  separate product. Closed-weight, decentralization-degraded tier.
+- **OpenAI gpt-image-2 ("Images 2.0"):** shipped 2026-04-21, full
+  API early May 2026. ~99% text accuracy, holds 100+ objects,
+  reasoning-before-render. Best raw fidelity for technical
+  infographics. ~$0.006 low / $0.053 med / $0.211 high per image.
+  Closed-weight, decentralization-degraded tier.
+- **paperbanana** (`llmsresearch/paperbanana`): MIT, 1,386 stars,
+  active (last commit 2026-04-22). Agentic wrapper that
+  orchestrates a VLM planner/critic + image-gen model through a
+  7-agent pipeline. Calls `gpt-image-2` / `gemini-3-pro-image-
+  preview` under the hood; BYO-API-key (OpenAI / Azure / Gemini /
+  OpenRouter). Has Graphviz vector export — sovereignty path.
+  Provides CLI, Python API, MCP server, Gradio UI, batch manifests,
+  PDF input.
+
+**Why this is parked, not mandatory:**
+
+The project's current matplotlib + manual diagram pipeline is
+working. Position paper v1 (exp1075) drafted 6,267 words without
+an infographic-generation pipeline. There is no urgent failure
+mode, just an "if we want better hero figures for the position
+paper / GitHub Pages, this is the cleanest abstraction." Decision
+to adopt is value-judgment, not a blocker.
+
+**If a future planner picks this up, the right shape:**
+
+1. Keep matplotlib mandatory (rule 1 — local-first numerics).
+2. Add `paperbanana` as the integration layer (rule 7 — vendor
+   adapter through abstract protocol, with Graphviz vector export
+   as the sovereign default).
+3. Add `CARNOT_IMAGE_BACKEND={none, gemini, openai, paperbanana-
+   graphviz}` env flag, default `none`.
+4. Use only for hero figures (architecture overview, phase-3
+   defence stack diagram, hardware portfolio map). Statistical
+   plots stay on matplotlib.
+5. SOPS-encrypted credentials per CLAUDE.md security rules.
+
+**Not blocking anything; revisit when:** position paper v2 needs
+better figures, or when GitHub Pages launches and needs hero
+graphics, or when a contributor offers to do the integration.
+
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.85 planner — hard pickup per CLAUDE.md)
 
 ### NEW 2026-04-30: Phase Prototype + Empirical Validation + Adversarial Check Discipline (5 LOAD-BEARING TASKS)
