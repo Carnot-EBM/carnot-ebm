@@ -194,6 +194,23 @@ def _build_agent_command(
         )
 
     if effective_agent_type == "codex":
+        # 2026-04-30 fix: removed the
+        #   `-c model_providers.openai.stream_idle_timeout_ms=120000`
+        # override that was killing every codex invocation in
+        # milestones .82-.84 with "Error loading config.toml:
+        # model_providers contains reserved". Newer codex CLI versions
+        # (verified on 0.125.0) treat the `model_providers.*` key
+        # namespace as reserved and reject `-c` overrides into it.
+        # Direct invocation without this override works correctly:
+        # tested with `codex exec --color never --model gpt-5.5
+        # --ephemeral - <<< "What is 17+25?"` returning the expected
+        # answer with full session metadata.
+        #
+        # The original "stall fix #2" intent (2-min stream idle
+        # protection) is now redundant — the conductor's own
+        # progress-aware wall-clock timeout (commit 9683ea5e) catches
+        # silent stalls at the orchestrator layer regardless of the
+        # codex CLI's internal timeout.
         return (
             [
                 bin_path,
@@ -208,8 +225,6 @@ def _build_agent_command(
                 "--ephemeral",  # Prevent session file accumulation (stall fix #3)
                 "-c",
                 "agents.job_max_runtime_seconds=1200",  # 20 min cap (stall fix #2)
-                "-c",
-                "model_providers.openai.stream_idle_timeout_ms=120000",  # 2 min idle (stall fix #2)
                 "-",
             ],
             prompt,

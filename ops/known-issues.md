@@ -4,26 +4,43 @@
 
 ## OPERATOR CONSTRAINTS (planner: do NOT propose tasks that violate these)
 
-### 2026-04-30: codex backend integration paused
+### ~~2026-04-30: codex backend integration paused~~ (RESOLVED 2026-05-01 ~00:15Z)
 
-User directive (2026-04-30 ~10:50Z): *"let's stop trying to add a
-codex backend for now"*. The codex CLI's `config.toml` rejects our
-`model_providers` block as containing reserved keys. Three .82 tasks
-(exp1060, exp1061) and exp1065 in .83 cycled and retired without
-producing artifacts. The .82/.83 planner-derived multi-agent routing
-work is on hold.
+**Resolution:** the failure root cause was diagnosed and fixed.
+Codex CLI 0.125.0 rejects the conductor's `-c model_providers.openai.
+stream_idle_timeout_ms=120000` override because `model_providers.*`
+is now a reserved key namespace. The conductor was injecting this
+flag on every codex invocation, producing the "model_providers
+contains reserved" error before the prompt could run.
 
-**Planner instructions:**
-- Do NOT propose new tasks with `agent_type: codex`.
-- Do NOT propose "fix codex config" tasks (exp1065 is retired via
-  exclusion manifest).
-- Multi-agent routing infrastructure changes are still allowed,
-  but treat codex as deprecated until this constraint is lifted.
-- Gemini routing is unaffected — exp1074 (.83 fr11-alpha-t-live-v3)
-  retains `agent_type: gemini`.
+**Fix shipped (this commit):** removed the offending `-c` override
+from `_build_agent_command()`. Direct codex invocation tested in this
+session: `codex exec --color never --model gpt-5.5 --ephemeral - <<<
+"What is 17+25?"` correctly returned the expected answer with full
+session metadata (model gpt-5.5, xhigh reasoning, 2174 tokens used).
 
-To re-enable: remove this constraint section AND remove exp1065 from
-`scripts/conductor_exclusion_manifest.json`.
+**Codex routing is now re-enabled.** The .85+ planner MAY propose
+`agent_type: codex` tasks subject to the standard discipline
+(prior_failures hygiene, etc.). Gemini routing remains active
+alongside it. The previously-retired exp1065 entry stays in the
+exclusion manifest because that specific scope is no longer needed —
+codex already works after the fix; we don't need a "fix codex
+config" experiment.
+
+The original constraint text is preserved below (struck-through) for
+historical record per CLAUDE.md no-pruning policy.
+
+> ~~User directive (2026-04-30 ~10:50Z): "let's stop trying to add a
+> codex backend for now". The codex CLI's config.toml rejects our
+> model_providers block as containing reserved keys. Three .82 tasks
+> (exp1060, exp1061) and exp1065 in .83 cycled and retired without
+> producing artifacts.~~
+>
+> ~~Planner instructions:~~
+> - ~~Do NOT propose new tasks with agent_type: codex.~~
+> - ~~Do NOT propose "fix codex config" tasks~~
+> - ~~Multi-agent routing infrastructure changes are still allowed,
+>   but treat codex as deprecated until this constraint is lifted.~~
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.85 planner — hard pickup per CLAUDE.md)
 
