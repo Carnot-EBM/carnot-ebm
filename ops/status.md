@@ -1,5 +1,67 @@
 # Carnot — Operational Status
 
+## Session 2026-05-01 — Milestone 2026.04.87 Planning Complete
+
+**Milestone 2026.04.86 COMPLETE (11/12 criteria met). Milestone 2026.04.87 PLANNED.**
+
+### .86 Recap (final)
+- **MET (11/12):** failure_ledger_issue4_5_deployed, failure_ledger_issues_1_3_deployed, phase1a_false_pass_below_5pct (0% false-pass rate — FINALLY), verifier_diversity_expanded, thinkprm_retrained_7349 (AUROC=0.9946), rlvr_ssd_honest_result_v2 (negative — 3rd consecutive), kv260_sequential_glauber_validated (KL=0.025 in Python sim), zenil_alpha_t_continuous_self_learning, arxiv_bundle_complete (pdflatex absent, compilation deferred), llm_failure_exemplar_corpus_v1, retro
+- **NOT MET (1):** and_composition_viable_r_corr_below_05 — k=6 BLOCKED (ThinkPRMProbe×Z3MathVerifier r=0.507); k=5 subset viable at max_r=0.462; Phase-1d target updated to k=5
+- **Key bottlenecks:** exp906 FOURTH consecutive regression (35 min); bootstrap-artifact guard 7 false fires (35 min); in-process doc reconcile blocking 28 min; DualGPU streak broken (was 18 consecutive idle, now 2)
+- **Key wins:** Phase 1a UNBLOCKED after 3 consecutive blocked milestones; Failure-Ledger v2 shipped (all 4 issues); ThinkPRM v2 AUROC=0.9946; arXiv bundle complete
+
+### .87 Design (Exps 1116–1126, estimated ~500 min)
+
+**Phase 0 — CRITICAL + Infrastructure (unconditional MANDATORY):**
+- exp1116: arXiv PDF compilation + submission (opus, max_turns:30) — install tectonic / submit .tex bundle to arXiv; 2026-05-15 CRITICAL deadline
+- exp1117: Infrastructure hardening v3 (opus, max_turns:45) — manifest dispatch-time fix (exp906 5th regression prevention) + doc async + bootstrap grace_period_s + corpus fast-eval
+
+**Phase 1 — GRPO Energy PRM (GPU, replaces RLVR+SSD):**
+- exp1118: GRPO with ThinkPRM v2 as PRM reward (opus, DualGPU, max_turns:55, grace_period_s:1800) — continuous reward from AUROC=0.9946 signal; 3 prior honest negatives (exp1083/1099/1110)
+
+**Phase 2 — Energy Inversion Fix:**
+- exp1119: FoVer SOTA Extension v5 (sonnet, GPU, max_turns:50) — 1000+ SOTA outputs labeled by Z3+AST (not ThinkPRM to avoid circularity); gated: none
+- exp1120: Energy verifier retrain + inversion fix (sonnet, GPU, max_turns:50) — EBRM noise-filtering + SOTA corpus; gated on exp1119.fover_sota_pairs_added_above_7000; prior: exp1100/1115
+
+**Phase 3 — k=5 Production Deployment:**
+- exp1121: AND-composition k=5 production wiring (sonnet, max_turns:35, no GPU) — wire [SOSKANEnergyV3, SemEnergyProbe, ASTStructureVerifier, SemanticConsistencyVerifier, Z3MathVerifier] as VerifyRepairPipeline default; ThinkPRM stays as standalone Tier 0a
+
+**Phase 4 — FPGA v4 Python Simulation:**
+- exp1122: KV260 v4 sparse+inertia Python sim (opus, max_turns:50, no GPU) — Python sim of ising_sampler_v4.v (sparse K=16 + E-MVL + EMA inertia); KL(v4||Gibbs) measurement; prior: exp1109/1094
+
+**Phase 5 — Adaptive Cascade Routing:**
+- exp1123: Lagrangian cascade router (sonnet, max_turns:40) — per-instance MLP with budget constraint (arXiv 2604.14853); compare vs fixed cascade on GSM8K subset
+
+**Phase 6 — WOPR Gallery:**
+- exp1124: WOPR Hashi puzzle cartridge (codex, max_turns:30) — bridge constraints (integer-flow + planarity); E=0 at convergence
+- exp1125: HF Spaces gallery update (sonnet, max_turns:20) — gated on exp1124.hashi_cartridge_shipped
+
+**Phase 7 — Retro:**
+- exp1126: Milestone 2026.04.87 retrospective
+
+### 11 Success Criteria
+1. arxiv_submitted_or_bundle_uploaded (exp1116) — CRITICAL deadline 2026-05-15
+2. infrastructure_3_bottlenecks_fixed (exp1117) — manifest dispatch + doc async + bootstrap grace
+3. grpo_energy_prm_honest_result (exp1118) — GRPO run completes with honest result
+4. fover_sota_pairs_above_7000 (exp1119)
+5. energy_inversion_measured_post_retrain (exp1120)
+6. k5_and_compose_production_deployed (exp1121)
+7. kv260_v4_kl_measured (exp1122)
+8. adaptive_cascade_savings_measured (exp1123)
+9. hashi_cartridge_shipped (exp1124)
+10. gallery_updated (exp1125)
+11. retro_complete (exp1126)
+
+### Key Architectural Decisions for .87
+- DualGPU MANDATORY for exp1118 (streak was broken in .86 — don't let it creep back)
+- No gemini agent_type (429-rate-limited since .84)
+- Codex for WOPR Hashi (formulaic bridge constraints — integer-flow + planarity)
+- FoVer SOTA extension (exp1119) gates energy retrain (exp1120) — prerequisite
+- ThinkPRM NOT in k=5 AND-compose ensemble (ThinkPRM×Z3Math r=0.507 at k=6); ThinkPRM stays as standalone Tier 0a
+- GRPO replaces RLVR+SSD — 3 consecutive honest negatives retired the RLVR+SSD architecture
+
+---
+
 ## Session 2026-05-01 — Milestone 2026.04.86 Planning Complete
 
 **Milestone 2026.04.85 COMPLETE (13/14 criteria met). Milestone 2026.04.86 PLANNED.**
