@@ -1,0 +1,83 @@
+{
+  "experiment": 1090,
+  "schema": "diagnostic_library_v1",
+  "run_date": "2026-05-01",
+  "started_at": "2026-05-01T05:08:37+00:00",
+  "finished_at": "2026-05-01T05:11:08+00:00",
+  "duration_s": 151.0,
+  "status": "success",
+  "title": "Diagnostic Instrumentation Library — α_t tracking, KL divergence, null-space estimation (cross-cutting infrastructure)",
+  "honest_verdict": "diagnostic_library_shipped",
+  "summary": "python/carnot/eval/diagnostics.py shipped with 4 instrumentation classes + 1 test-verifier helper. Each class is the canonical implementation referenced by the 4 phase-validation experiments downstream (exp1092 Phase-1a, exp1093 Phase-1c, exp1094 Phase-2a, exp1095 Phase-3a) and by the FR-11 self-distillation loop's α_t convergence guarantee.",
+  "files_created": [
+    "python/carnot/eval/diagnostics.py"
+  ],
+  "files_modified": [],
+  "classes_implemented": {
+    "AlphaT": {
+      "purpose": "Zenil exogenous-grounding fraction tracker — records (n_verified, n_self) per training step and computes verified/total ratio. The Zenil Theorem 5 condition `inf_t alpha_t > 0` is the load-bearing convergence guarantee for FR-11 self-distillation.",
+      "methods": ["record", "current", "series"],
+      "smoke_test": "AlphaT().record(n_verified=45, n_self=55).current() == 0.45 OK"
+    },
+    "KLDivergenceEstimator": {
+      "purpose": "Plug-in KL(P || Q) estimator with Laplace smoothing; used by Phase-2a sampler-correctness audits to compare an FPGA Glauber sampler's empirical distribution against the correct CPU Gibbs reference.",
+      "methods": ["estimate", "kl_confidence_interval"],
+      "smoke_test": "import callable, no exceptions OK"
+    },
+    "NullSpaceEstimator": {
+      "purpose": "Joint kernel of k verifiers' kernels — joint-null-space dimension estimator plus r-correlation pairwise diversity metric from arXiv 2604.12086. Phase-1c audits use this to verify the ensemble's joint null space stays below 5% of input space.",
+      "methods": ["fit", "joint_null_space_fraction", "r_correlation"],
+      "smoke_test": "make_test_verifiers(n=3) produces 3 callable verifiers with correct output shape OK"
+    },
+    "DecodedTextDiversity": {
+      "purpose": "Token-entropy diversity score that flags degenerate decoder collapse (decoder ignoring its bottleneck and reverting to language-model prior). Phase-3a DBAE-EBM adversarial audits depend on this to detect identity-decoder pathology.",
+      "methods": ["compute", "is_degenerate"],
+      "smoke_test": "import callable, no exceptions OK"
+    },
+    "make_test_verifiers": {
+      "purpose": "Helper that builds n synthetic verifier callables with non-overlapping kernels — used in unit tests of NullSpaceEstimator to assert joint-null-space fraction stays low on a well-behaved ensemble.",
+      "methods": ["[function]"],
+      "smoke_test": "make_test_verifiers(n=3) returns list of Callable, output shape (100,) for X.shape=(100,8) OK"
+    }
+  },
+  "spec_coverage": [
+    "REQ-DIAG-001 alpha_t tracking",
+    "REQ-DIAG-002 KL divergence estimation",
+    "REQ-DIAG-003 joint null-space estimation",
+    "REQ-DIAG-004 decoded-text diversity",
+    "REQ-DIAG-005 test verifier utilities"
+  ],
+  "prior_failures": [
+    {
+      "experiment_id": "exp605-extractor-diagnostic-v4",
+      "verdict": "gate_closed_recall_below_threshold",
+      "false_positive_match_keyword": "diagnostic",
+      "actual_scope": "LLM-output extractor recall — does the extractor catch numeric answers in model responses?",
+      "exp1090_scope": "alpha_t / KL / null-space measurement instrumentation library",
+      "is_real_recurrence": false
+    },
+    {
+      "experiment_id": "exp706-gemma4-vr-diagnostic",
+      "verdict": "failure_mode_identified",
+      "false_positive_match_keyword": "diagnostic",
+      "actual_scope": "Gemma-4 visual-reasoning prompt diagnostic",
+      "exp1090_scope": "verifier metrics instrumentation library",
+      "is_real_recurrence": false
+    }
+  ],
+  "downstream_consumers": [
+    "exp1092 Phase-1a Adversarial Verifier Robustness Audit (uses NullSpaceEstimator + DecodedTextDiversity)",
+    "exp1093 Phase-1c Verifier Joint Null-Space Measurement (uses NullSpaceEstimator)",
+    "exp1094 Phase-2a Sampler Correctness Audit (uses KLDivergenceEstimator)",
+    "exp1095 Phase-3a DBAE-EBM Adversarial Round (uses AlphaT + DecodedTextDiversity)",
+    "FR-11 Self-Distillation Loop (uses AlphaT for inf_t alpha_t > 0 monitoring)"
+  ],
+  "operator_note": "This artifact was written manually 2026-05-01 ~05:25Z by the operator. The conductor's iteration 6 attempt at 05:08:37Z called Opus to produce the deliverable; Opus correctly authored python/carnot/eval/diagnostics.py (15043 bytes, 4 classes + helper) but did NOT update this artifact JSON before the conductor's stable-deliverable-detection killed the subagent at 05:11:08Z (60s of unchanged mtime on the OLD blocked artifact). Opus also made an out-of-scope edit to research-roadmap.yaml (auto-correcting set notation {0,1} -> interval (0,1) in exp1097/exp1098 prompts), which the operator reverted. This artifact reconstructs the deliverable from the actual diagnostics.py code that landed.",
+  "follow_up_for_conductor": "The 'stable deliverable detection' heuristic in scripts/research_conductor.py needs to verify mtime > task_start_time, not just 'unchanged for 60s'. Otherwise a stale-blocked artifact from a prior iteration reads as 'task complete' immediately. Park as low-priority (manual artifact ship is a 5-min workaround when this fires).",
+  "code_files": [
+    "python/carnot/eval/diagnostics.py"
+  ],
+  "decision_class": "build",
+  "cost_usd": 0.0,
+  "notes": "exp1090 is load-bearing infrastructure for the entire phase-validation discipline codified in CLAUDE.md on 2026-04-30. The 4 phase-validation experiments (exp1092-1095) all import from this module. Without this experiment landing, the phase-validation discipline cannot actually be enforced empirically."
+}
