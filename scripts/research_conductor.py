@@ -2719,45 +2719,57 @@ def _dogfood_verify_generated_code() -> None:
 
                 with open(yaml_path) as f:
                     data = _yaml.safe_load(f)
+                # 2026-05-01 fix: only auto-fix when at least one prompt
+                # actually fails .format(). Previously this code would
+                # unconditionally rewrite every `{X}` in the YAML, even
+                # when the prompts were syntactically valid — e.g., the
+                # task instructions for exp1097 N-Queens (`Spin in {0,1}`),
+                # exp1098 Potts (`q ∈ {0,1,2}`), and exp1099 RLVR-SSD
+                # (`{question, response, correct, ...}`) describe sets
+                # and dict literals respectively, NOT format placeholders,
+                # and never needed fixing. The previous fix also converted
+                # `{X}` to `(X)`, which is a category error: sets and
+                # open-intervals are mathematically distinct objects.
+                #
+                # New behavior: gate rewrite on actual KeyError/ValueError
+                # from .format(). If no prompt fails, leave the YAML
+                # alone. If any prompt fails, ESCAPE the offending braces
+                # by doubling them ({X} → {{X}}). After .format(), the
+                # double-brace collapses back to a literal `{X}` — the
+                # original semantics are preserved.
+                had_brace_error = False
                 for t in data.get("tasks", []):
                     prompt = t.get("prompt", "")
                     try:
                         prompt.format(project_root="/test", date="20260101")
                     except (KeyError, ValueError) as e:
+                        had_brace_error = True
                         logger.warning(
                             "DOGFOOD: Brace error in %s task %s: %s — auto-fixing",
                             yaml_file,
                             t.get("id", "?"),
                             e,
                         )
-                        # Auto-fix: replace non-template braces
-                        import re
 
-                        fixed = prompt
-                        fixed = re.sub(
-                            r"\{([^}]+)\}",
-                            lambda m: (
-                                m.group(0)
-                                if m.group(1) in ("project_root", "date")
-                                else "(" + m.group(1) + ")"
-                            ),
-                            fixed,
-                        )
-                        t["prompt"] = fixed
-                # Rewrite using string replacement to preserve comments
-                raw = yaml_path.read_text()
-                import re as _re
+                # Only rewrite the YAML if at least one prompt actually
+                # fails .format(). Skip the rewrite otherwise.
+                if had_brace_error:
+                    raw = yaml_path.read_text()
+                    import re as _re
 
-                def _fix_braces(m):
-                    inner = m.group(1)
-                    if inner in ("project_root", "date"):
-                        return m.group(0)
-                    return "(" + inner + ")"
+                    def _fix_braces(m):
+                        inner = m.group(1)
+                        # Skip already-escaped braces (don't double-escape).
+                        # Skip the two known format placeholders.
+                        if inner in ("project_root", "date"):
+                            return m.group(0)
+                        return "{{" + inner + "}}"
 
-                fixed_raw = _re.sub(r"\{([^}]+)\}", _fix_braces, raw)
-                if fixed_raw != raw:
-                    yaml_path.write_text(fixed_raw)
-                    logger.info("DOGFOOD: Auto-fixed brace escaping in %s", yaml_file)
+                    # Only match single braces, not already-escaped doubles.
+                    fixed_raw = _re.sub(r"(?<!\{)\{([^{}]+)\}(?!\})", _fix_braces, raw)
+                    if fixed_raw != raw:
+                        yaml_path.write_text(fixed_raw)
+                        logger.info("DOGFOOD: Auto-fixed brace escaping in %s", yaml_file)
             except Exception as e:
                 logger.debug("DOGFOOD: YAML check skipped: %s", e)
 
