@@ -7643,6 +7643,57 @@ Spec: REQ-INFRA-038, SCENARIO-INFRA-046
 **And** `SessionHealthResult.honest_verdict == 'session_thermal_blocked'`
 **And** `conductor_session_health.py` exits with code 1
 
+### REQ-INFRA-039: Pre-test Fingerprint Cache Short-Circuits run_tests()
+
+The conductor's `run_tests()` shall consult a fingerprint cache at
+`ops/.pretest-cache.json` before running pytest. The fingerprint shall
+be a SHA-256 over `(relpath, mtime_ns, size)` tuples for every `.py`
+file under `python/carnot/`, `tests/python/`, `scripts/`, plus the
+build manifests `pyproject.toml`, `Cargo.toml`, `uv.lock`. When the
+current fingerprint matches the cache and the cache mode is at least
+as strong as the requested mode, `run_tests()` shall return
+`(True, "cache hit: <summary>")` without invoking pytest. Mode
+strength: `full` is stronger than `subset`; a green `full` cache
+satisfies a `subset` request, but a green `subset` cache does NOT
+satisfy a `full` request.
+
+**Why this matters:** pre-tests dominate conductor wall time. Empirical
+data from milestones .80–.84 shows ~17 min/task in the full-suite
+path and ~32 min in the smart-subset path. Across a 13-task milestone
+that is ~3.7 hours of pure pre-test wall time, while the experiments
+themselves average 2-5 min each. In steady state most iterations do
+not change source code at all (the conductor is reading roadmap YAML,
+writing artifacts, committing JSON results), so the test outcomes
+cannot have changed since the last green run.
+
+**Implementation Status:** Done (2026-05-01, this commit). Functions
+`_compute_pretest_fingerprint`, `_load_pretest_cache`,
+`_save_pretest_cache`, `_pretest_cache_satisfies` in
+`scripts/research_conductor.py`. Cache file `ops/.pretest-cache.json`
+is gitignored (local-only; rebuilt on first green run after each
+conductor restart).
+
+Spec: REQ-INFRA-039, SCENARIO-INFRA-047, SCENARIO-INFRA-048
+
+### SCENARIO-INFRA-047: Cache Hit Skips Pytest
+
+**Given** `ops/.pretest-cache.json` containing `{fingerprint: F,
+mode: 'full', summary: '517 passed in 1036.91s'}`
+**And** the current repo fingerprint computed at `run_tests(full=False)`
+entry equals `F`
+**When** `run_tests(full=False)` is called
+**Then** the function returns `(True, "cache hit: 517 passed in 1036.91s")`
+**And** no pytest subprocess is spawned
+
+### SCENARIO-INFRA-048: Subset Cache Does Not Satisfy Full Request
+
+**Given** `ops/.pretest-cache.json` containing `{fingerprint: F,
+mode: 'subset', ...}`
+**And** the current repo fingerprint equals `F`
+**When** `run_tests(full=True)` is called
+**Then** the cache hit is rejected (subset cannot satisfy full)
+**And** the real pytest subprocess is spawned
+
 ### REQ-BENCH-025: Live 100q Benchmark Uses GPUVRAMGate Before Model Load
 
 The Exp 476 live precision benchmark shall use `GPUVRAMGate(min_free_gb=8.0, wait_seconds=60)`
