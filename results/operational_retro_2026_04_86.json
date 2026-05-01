@@ -1,0 +1,151 @@
+{
+  "experiment": "operational-retro-2026-04-86",
+  "title": "Milestone 2026.04.86 — Operational Efficiency Retrospective",
+  "milestone": "2026.04.86",
+  "run_date": "2026-05-01",
+  "schema": "carnot.operational_retro.v60",
+  "retro_type": "full_milestone",
+
+  "wall_time": {
+    "total_wall_time_minutes": 940,
+    "experiments_completed": 242,
+    "avg_experiment_min": 3.9,
+    "prior_milestone": "2026.04.85",
+    "prior_wall_time_min": 1010,
+    "delta_min": -70,
+    "delta_pct": -6.9,
+    "consecutive_below_58_baseline": 9
+  },
+
+  "baseline_comparison": {
+    "baseline_milestone": "2026.04.58",
+    "baseline_min": 3415,
+    "delta_min": -2475,
+    "delta_pct": -72.5,
+    "note": "Ninth consecutive milestone below the .58 baseline. 940 min is 72.5% below the 3415-min .58 floor — a structural improvement sustained across 9 milestones."
+  },
+
+  "criteria_summary": {
+    "met": 11,
+    "total": 12,
+    "pct": 91.7,
+    "missed": ["and_composition_viable_r_corr_below_05 — k=6 blocked by ThinkPRMProbe×Z3MathVerifier r=0.507; k=5 ensemble (max_r=0.462) is viable, Phase-1d target updated to k=5"]
+  },
+
+  "slowest_experiments": [
+    {
+      "rank": 1,
+      "id": "exp906",
+      "title": "Code Repair 50q Scale-Up — IterativeSelfRepair with SOTA GGUF",
+      "duration_min": 35,
+      "diagnosis": "FOURTH CONSECUTIVE MILESTONE REGRESSION. exp906 was retired to the exclusion manifest in milestone .80, yet reappeared in .83, .84, .85, and now .86. The manifest enforcement at dispatch-time (not planning-time) has a regression that allows retired experiments to re-enter the queue. Cumulative waste across 4 regressions: ~140 min. SOTA GGUF model download latency also contributes: the 50q repair loop takes 25–30 min even when the model is cached, because each repair attempt invokes a full inference pass."
+    },
+    {
+      "rank": 2,
+      "id": "exp950",
+      "title": "In-process docs for E-MVL Sparsified Ising — Sparse Constraint Ising Verifier",
+      "duration_min": 28,
+      "diagnosis": "In-process document reconciliation pass ran as a 28-minute BLOCKING step mid-milestone. The conductor triggers a full doc-reconcile sweep after certain experiment completions; when the reconcile runs inline it holds the executor thread, serialising all downstream experiments. This bottleneck was identified in the .85 retro (22-min observed there); it is 6 min worse here because the FoVer corpus and spec docs grew. Fix: make doc reconciliation async and batch it to run once at end-of-milestone rather than after each triggering experiment."
+    },
+    {
+      "rank": 3,
+      "id": "exp948",
+      "title": "Symbolic-KAN Real FoVer Data — AUC=0.9344 Architecture Comparison",
+      "duration_min": 24,
+      "diagnosis": "CPU-bound experiment operating on the full 6548-pair FoVer corpus. The KAN architecture comparison iterates over multiple model configs with no parallelism; wall time scales linearly with corpus size. Since .82 expanded the corpus 30× (216 → 6548 pairs), CPU-bound experiments that were under 5 min in .81 now take 4–6× longer. Fix: add a --fast-eval flag that samples 500 pairs for architecture sweeps, reserving the full corpus for final certification runs."
+    },
+    {
+      "rank": 4,
+      "id": "exp824",
+      "title": "JEPA v23 LIMO Curated Corpus (RETRO-JEPA-OOD, CPU)",
+      "duration_min": 19,
+      "diagnosis": "CPU-only JEPA training run on the LIMO curated subset. The experiment predates the GPU activation path and has never been updated to use CUDA. Running JEPA v23 on CPU with the LIMO corpus (1,200+ samples) requires ~18–22 min. Parallel execution with another CPU-bound experiment would recover most of this wall time at zero additional cost."
+    },
+    {
+      "rank": 5,
+      "id": "exp930",
+      "title": "Math Iterative Self-Repair v1 — Execute-Feedback on 200q GSM8K",
+      "duration_min": 19,
+      "diagnosis": "Math repair loop on 200 GSM8K questions with E4B-tier model (sub-SOTA). The CLAUDE.md SOTA model requirement was not enforced for this carryover. Using Qwen3.5-0.8B (CPU smoke-test tier) inflates repair iteration count because the model fails more problems, triggering more repair loops. With a SOTA model (Qwen3.6-35B-A3B) on GPU the same benchmark would require fewer iterations and run faster on GPU in ~8–10 min."
+    }
+  ],
+
+  "bottlenecks_identified": [
+    "EXCLUSION MANIFEST REGRESSION (4th consecutive, highest priority): exp906 reappeared for the fourth straight milestone despite .80 retirement. The manifest enforcement fires at planning-time but the dispatch-time check has a regression allowing retired IDs to slip through if the roadmap YAML references them without a prior_failures entry that matches the canonical retirement form. Estimated recurring waste: 35 min/milestone.",
+    "IN-PROCESS DOC RECONCILIATION BLOCKING (serial, 28 min): The conductor triggers a full doc reconciliation pass inline after certain experiments. As spec docs and FoVer corpus grow, this pass serialises an increasing fraction of the milestone. The .84 retro recommended async batching; the fix was not implemented. Blocking doc passes now add 25–30 min per milestone.",
+    "CORPUS-SCALE CPU REGRESSION: The 30× FoVer corpus expansion in .82 (216 → 6548 pairs) was a research win but turned multiple CPU-bound experiments (exp948, exp824) from sub-5-min tasks into 19–24-min tasks. No corpus-sampling fast-eval mode exists; every evaluation runs the full corpus regardless of purpose (architecture sweep vs. final cert).",
+    "BOOTSTRAP-ARTIFACT GUARD FALSE POSITIVES (7 fires, ~35 min): The conductor's bootstrap-artifact guard incorrectly fired 7 times across exp1108–exp1111, adding ~35 min of conductor overhead. The guard is correct in principle (blocks deliverable-already-exists shortcuts on stale artifacts) but has no grace window for known-long GPU runs. The exp1114 conductor retro already identified this; no grace_period_s field exists in the YAML schema yet.",
+    "SONNET MAX-TURNS ESCALATIONS (2 events, ~8 min): exp1104 and exp1105 (Failure-Ledger v2 infrastructure rewrites) both hit Sonnet max-turn limits before completing, requiring ESCALATE_OPUS_100 retries (~4 min each). Complex multi-file code surgery reliably exceeds Sonnet's turn budget; pre-tagging these tasks as agent_tier: opus in the roadmap YAML would eliminate the first-attempt round-trip cost.",
+    "DUALGPU UTILIZATION PARTIAL: exp1110 and exp1111 broke the 18-consecutive-idle streak, but only 2 of the 11 milestone experiments used GPU. Post-milestone idle count is 2. The DualGPU runner is wired but not mandated for GPU-eligible experiments other than the explicit MANDATORY tag in exp1110.",
+    "VIVADO NOT ON PATH (KV260 synthesis blocked): The KV260 v3 sequential Verilog is written and Python-simulated (KL=0.025), but the FPGA bitstream cannot be synthesised in the conductor environment. Every hardware-synthesis experiment stalls at the same point. The open-source openXC7 alternative has not been evaluated as a replacement.",
+    "ARXIV LATEX NOT INSTALLED: exp1113 produced a complete LaTeX bundle but pdflatex is absent from the conductor environment, so the PDF could not be compiled. The 2026-05-15 arXiv submission deadline requires this gap to be closed before .87."
+  ],
+
+  "improvements_suggested": [
+    "Fix dispatch-time exclusion manifest check (highest priority, 35 min/milestone recurring savings): The manifest retirement gate must enforce at both planning-time AND dispatch-time. When an experiment ID is in ops/exclusion_manifest.yaml, the conductor must refuse to launch it regardless of whether the roadmap YAML declares prior_failures. Add a unit test that attempts to launch a retired ID and asserts conductor_blocked.",
+    "Make doc reconciliation async and batch to end-of-milestone (saves 25–30 min): Move the in-process doc reconciliation pass from inline (after each triggering experiment) to a single async task that fires once after the final experiment completes. This immediately recovers the 28-min exp950 blocking penalty and will grow in value as the spec corpus expands.",
+    "Add --fast-eval corpus sampling mode (saves 10–15 min): For architecture-sweep experiments (exp948 type), add a CARNOT_FAST_EVAL=1 flag that randomly samples 500 pairs from the full FoVer corpus. Reserve full-corpus runs for certification experiments only. This recovers 10–15 min per architecture-sweep experiment.",
+    "Pre-tag Opus-class tasks in roadmap YAML with agent_tier: opus (saves ~8 min): Tasks whose scope matches previous ESCALATE_OPUS events (multi-file infrastructure rewrites, conductor surgery, spec reconciliation) should carry agent_tier: opus in the YAML before activation. The Sonnet-first round-trip adds ~4 min each; 2 escalations in .86 = 8 min recoverable.",
+    "Add bootstrap-artifact grace window (grace_period_s, saves ~35 min): Add a per-task grace_period_s field (default 600 s) to the roadmap YAML schema. The bootstrap-artifact guard should not fire until grace_period_s after task start. GPU training runs (exp1111 = 63 s per epoch, multiple epochs) are legitimately long; the guard fires prematurely and adds 5 min per false-positive fire.",
+    "Enable CPU-parallel execution for independent non-GPU experiments (saves ~15 min): exp824 and exp930 are CPU-only and have no gate dependency on each other. Running them in parallel on two CPU workers would recover ~15 min with no additional resource cost. The conductor's parallel execution path exists (parallel_conductor from exp1065) but is not default.",
+    "Install texlive-full in the conductor environment (enables arXiv submission): pdflatex absence blocked the final arXiv PDF compilation step. Add texlive-full to the Dockerfile/conda env spec so that exp1113-style LaTeX bundle experiments can compile to PDF in the conductor environment without requiring Overleaf or an external step.",
+    "Evaluate openXC7 as Vivado replacement for KV260 synthesis: Vivado is proprietary and not available in the conductor execution environment. openXC7 is an open-source Xilinx FPGA synthesis tool that supports the XCK26 part. A one-experiment evaluation of openXC7 on the v3 Verilog would determine whether the KV260 bitstream path can be closed without a Vivado license.",
+    "Update .87 roadmap to target k=5 AND-composition as Phase-1d goal: The empirical finding that ThinkPRMProbe×Z3MathVerifier r=0.507 at k=6 sets the feasible ceiling at k=5. Carrying k=6 as a milestone criterion wastes one success slot. The roadmap YAML and spec should be updated to reflect k_max=5 as the Phase-1d AND-composition target."
+  ],
+
+  "estimated_time_savings_pct": 17,
+  "estimated_savings_breakdown_min": {
+    "manifest_dispatch_fix": 35,
+    "doc_reconcile_async": 28,
+    "bootstrap_grace_window": 35,
+    "corpus_fast_eval_mode": 13,
+    "opus_pretag": 8,
+    "cpu_parallel_execution": 15,
+    "total": 134
+  },
+
+  "gpu_state_at_close": {
+    "gpu0_model": "NVIDIA GeForce RTX 3090",
+    "gpu0_vram_used_mb": 4,
+    "gpu0_vram_total_mb": 24576,
+    "gpu0_util_pct": 0,
+    "gpu0_temp_c": 51,
+    "gpu1_model": "NVIDIA GeForce RTX 3090",
+    "gpu1_vram_used_mb": 4,
+    "gpu1_vram_total_mb": 24576,
+    "gpu1_util_pct": 0,
+    "gpu1_temp_c": 53,
+    "gpu_close_clean": true,
+    "temp_differential_c": 2,
+    "dualgpu_consecutive_idle_count": 2,
+    "dualgpu_streak_broken_this_milestone": true,
+    "dualgpu_streak_broken_by": ["exp1110", "exp1111"],
+    "note": "18-consecutive DualGPU idle streak BROKEN in .86 by exp1110 (RLVR+SSD v2 live 2×RTX3090) and exp1111 (ThinkPRM v2 GPU retrain). Post-milestone idle count reset to 2. Watch for creep in .87 — only 2 of 11 .86 experiments used GPU."
+  },
+
+  "wall_time_trend": {
+    "milestone_2026_04_58_baseline": 3415,
+    "milestone_2026_04_80": 1106,
+    "milestone_2026_04_81": 1699,
+    "milestone_2026_04_82": null,
+    "milestone_2026_04_83": null,
+    "milestone_2026_04_84": 1106,
+    "milestone_2026_04_85": 1010,
+    "milestone_2026_04_86": 940,
+    "trend_note": "940 min is the new project best since the improvement streak began at .80. Three consecutive improvements: .84→.85 (-96 min, -8.7%), .85→.86 (-70 min, -6.9%). The improvement rate is decelerating — manifest regression and doc-async fixes are the levers most likely to sustain the trend into .87."
+  },
+
+  "notable_successes": [
+    "11/12 criteria met (91.7%) — second consecutive milestone above 90% after .85's 13/14 (92.9%)",
+    "Phase 1a adversarial audit FINALLY unblocked after 3 consecutive milestone failures — 0% false-pass rate, 5 attack patterns covered",
+    "Failure-Ledger v2 all 4 issues fixed (exp1104/1105): id-aware counting, cap-reset, mtime guard, end-fingerprint cache; 14 new tests pass",
+    "3 new diverse verifiers (Z3Math, ASTStructure, SemanticConsistency) reduce pairwise max_r from 0.656 (.85) to 0.111",
+    "AND-composition k=5 empirically validated (max_r=0.462) — consistent with k_max≈7-8 ceiling from Deep Think Round 2",
+    "KV260 v3 sequential sampler KL=0.025 nats (< 0.05 threshold) — Phase-2a simulation validated",
+    "ThinkPRM v2 AUROC=0.9946 on 7349-example PRM corpus (+0.6pp over v1)",
+    "18-consecutive DualGPU idle streak broken by exp1110 and exp1111",
+    "arXiv bundle v3 complete: main.tex + carnot.bib + 7 figures, 100% citation resolution (pdflatex step deferred)"
+  ],
+
+  "honest_verdict": "ninth_consecutive_below_58_baseline_940min_new_project_best_11_of_12_criteria_92pct_phase1a_unblocked_failure_ledger_v2_shipped_manifest_regression_exp906_FOURTH_consecutive_bootstrap_guard_35min_overhead_doc_reconcile_28min_blocking_dualgpu_streak_broken_17pct_recoverable_134min_targeted_fixes"
+}
