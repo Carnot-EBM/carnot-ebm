@@ -84,61 +84,68 @@ retired_experiments:
     completed_milestone: "2026.04.68"
     reason: "discriminative JEPA OOD failure — retired via exp887 gate"
 
-# Added by Exp 890 — retire_if_same_verdict triggered
-- id: GGUF-model-download-for-code-repair
-  reason: |
-    CLI approach also failed; 12 total attempts (Exps 857-890). Code repair via GGUF models is retired — use transformers loader (Exp 881) instead.
+# exp1117 (.87) YAML structural fix — the entries below were previously
+# loose top-level list items that broke yaml.safe_load with a ParserError,
+# so failure_ledger_v2.is_excluded_by_manifest silently fail-opened against
+# the live manifest from .80 onward.  Now grouped under retired_extras: so
+# the dispatch-time check actually consults them.  See exp1117 deliverable.
+retired_extras:
+  # Added by Exp 890 — retire_if_same_verdict triggered
+  - id: GGUF-model-download-for-code-repair
+    reason: |
+      CLI approach also failed; 12 total attempts (Exps 857-890). Code repair via GGUF models is retired — use transformers loader (Exp 881) instead.
 
-# Added by Exp 901 — retire_if_same_verdict triggered (same pimi_improved_below_5x as Exp 889)
-- id: iCE40-PIMI-sparse-adjacency
-  reason: |
-    Three structural strategies + parallel update strategy all failed to reach 5x sweep reduction
-    on the N=8 ring+chord ferromagnetic graph. Exps 860 (2x), 876 (2-4x), 889 (4.33x), 901 (4.33x).
-    Retired after Exp 901 (FINAL attempt per research-roadmap-v69.md).
-    Root finding: ring+chord graph has degree=3 already; sparse k=3,4,5 == dense for this graph.
-    The 15-25x speedup in arXiv 2604.17109 requires harder, larger, denser constraint problems.
-  experiment_ids: [860, 876, 889, 901]
-  milestone: "2026.04.69"
+  # Added by Exp 901 — retire_if_same_verdict triggered (same pimi_improved_below_5x as Exp 889)
+  - id: iCE40-PIMI-sparse-adjacency
+    reason: |
+      Three structural strategies + parallel update strategy all failed to reach 5x sweep reduction
+      on the N=8 ring+chord ferromagnetic graph. Exps 860 (2x), 876 (2-4x), 889 (4.33x), 901 (4.33x).
+      Retired after Exp 901 (FINAL attempt per research-roadmap-v69.md).
+      Root finding: ring+chord graph has degree=3 already; sparse k=3,4,5 == dense for this graph.
+      The 15-25x speedup in arXiv 2604.17109 requires harder, larger, denser constraint problems.
+    experiment_ids: [860, 876, 889, 901]
+    milestone: "2026.04.69"
 
-# Added by Exp 914 — retire_if_same_verdict triggered (pimi_no_improvement at N=64)
-# Maximum achieved sweeps_reduction across all strategies: 0.99x
-- experiment_scope: "iCE40 PIMI research N=64 (hardware/kv260/ising_pimi_*.v + python/carnot/samplers/*pimi*.py)"
-  reason: |
-    retire_if_same_verdict triggered by Exp 914: all four strategies
-    (EMA checkerboard, EMA alpha sweep, synchronous parallel, sparse adjacency)
-    failed to reach 5x sweep reduction. Max achieved: 0.99x at N=64.
-    Exp 901 already retired N=8 scope; Exp 914 closes N=64.
-    The 15-25x paper speedup (arXiv 2604.17109) requires harder frustrated
-    spin-glass problems at larger scale with more frustrated constraints.
-    KV260 FPGA track remains viable but PIMI specifically is retired.
-  retired_milestone: "2026.04.70"
-  experiment_ids: [860, 876, 889, 901, 914]
+  # Added by Exp 914 — retire_if_same_verdict triggered (pimi_no_improvement at N=64)
+  # Maximum achieved sweeps_reduction across all strategies: 0.99x
+  - experiment_scope: "iCE40 PIMI research N=64 (hardware/kv260/ising_pimi_*.v + python/carnot/samplers/*pimi*.py)"
+    reason: |
+      retire_if_same_verdict triggered by Exp 914: all four strategies
+      (EMA checkerboard, EMA alpha sweep, synchronous parallel, sparse adjacency)
+      failed to reach 5x sweep reduction. Max achieved: 0.99x at N=64.
+      Exp 901 already retired N=8 scope; Exp 914 closes N=64.
+      The 15-25x paper speedup (arXiv 2604.17109) requires harder frustrated
+      spin-glass problems at larger scale with more frustrated constraints.
+      KV260 FPGA track remains viable but PIMI specifically is retired.
+    retired_milestone: "2026.04.70"
+    experiment_ids: [860, 876, 889, 901, 914]
 
-# Added by Exp 952 preflight — governance retirement for persistent zero-progress carryovers
-- experiment_id: 786
-  completed_milestone: "2026.04.74"
-  reason: |
-    Gemma4 OOM Fix v3 + VR Threshold Grid has appeared for 4+ consecutive milestones with
-    honest_verdict=blocked_no_live_gpu. Root cause: no live GPU available during conductor
-    runs. The OOM fix scope is superseded by the SOTA GGUF pre-download preflight (Exp 952).
-    Retired to prevent continued wall-time burn with zero research value.
-  retire_if_same_verdict: true
+  # Added by Exp 952 preflight — governance retirement for persistent zero-progress carryovers
+  - experiment_id: 786
+    completed_milestone: "2026.04.74"
+    reason: |
+      Gemma4 OOM Fix v3 + VR Threshold Grid has appeared for 4+ consecutive milestones with
+      honest_verdict=blocked_no_live_gpu. Root cause: no live GPU available during conductor
+      runs. The OOM fix scope is superseded by the SOTA GGUF pre-download preflight (Exp 952).
+      Retired to prevent continued wall-time burn with zero research value.
+    retire_if_same_verdict: true
 
-- experiment_id: 641
-  completed_milestone: "2026.04.74"
-  reason: |
-    HermesVerifierAdapter v2 Live Step-by-Step Generation Loop returned hermes_v2_no_improvement
-    verdict. RETRO-070 critical path was 14+ consecutive milestone carryovers with no improvement
-    signal. The Hermes v2 live-loop approach is superseded by paragraph-boundary batching
-    (Exp 841) and the VJEPA/DualGPU migration. Retired to free conductor capacity.
-  retire_if_same_verdict: true
-  # Added by Exp 957 (jepa_retired verdict)
-  - JEPA-v17-v22-all-ood-below-target
+  - experiment_id: 641
+    completed_milestone: "2026.04.74"
+    reason: |
+      HermesVerifierAdapter v2 Live Step-by-Step Generation Loop returned hermes_v2_no_improvement
+      verdict. RETRO-070 critical path was 14+ consecutive milestone carryovers with no improvement
+      signal. The Hermes v2 live-loop approach is superseded by paragraph-boundary batching
+      (Exp 841) and the VJEPA/DualGPU migration. Retired to free conductor capacity.
+    retire_if_same_verdict: true
+    # Note: an orphan "- JEPA-v17-v22-all-ood-below-target" stub used to live
+    # here as a comment-style append; it had no integer experiment_id and was
+    # not parseable, so it has been removed during the exp1117 cleanup.
 
-- experiment_id: 906
-  completed_milestone: "2026.04.79"
-  reason: |
-    Preflight v30 retirement (Exp 1028): Exp 906 accumulated no-progress verdicts across
-    milestones .77, .78, .79 — three consecutive milestone carryovers without advancement.
-    Retired by manifest enforcement step to prevent continued conductor wall-time burn.
-  retire_if_same_verdict: true
+  - experiment_id: 906
+    completed_milestone: "2026.04.79"
+    reason: |
+      Preflight v30 retirement (Exp 1028): Exp 906 accumulated no-progress verdicts across
+      milestones .77, .78, .79 — three consecutive milestone carryovers without advancement.
+      Retired by manifest enforcement step to prevent continued conductor wall-time burn.
+    retire_if_same_verdict: true
