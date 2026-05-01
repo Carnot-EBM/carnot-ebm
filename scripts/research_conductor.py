@@ -1511,6 +1511,20 @@ def _verdict_is_untrustworthy(payload: dict) -> tuple[bool, str | None]:
     if not isinstance(verdict, str):
         return False, None
     vlow = verdict.lower()
+    # 2026-05-01 fix (Issue 7): verdicts ending in `_honest_negative` are
+    # deliberately-named confirmations that the hypothesis didn't pan out —
+    # a valid scientific finding, not a partially-run experiment. The
+    # earlier user directive (2026-04-30) was about not accepting partial
+    # runs as success; an explicitly-honest-negative result is the
+    # experiment running fully and reporting truthfully. Don't re-run
+    # these. Empirical .85 incident: exp1099 RLVR-SSD reported
+    # `no_improvement_honest_negative` because its corpus had been
+    # pre-filtered to all-zero energies (Carnot energy filter
+    # tautologically accepts everything when all scores are 0). The
+    # finding is correct and reproducible; cycling it 3 more times via
+    # the fail-cap is wasted wall time.
+    if vlow.endswith("_honest_negative") or vlow.endswith("_honest_null"):
+        return False, verdict
     try:
         sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
         from in_process_doc_reconcile import (  # type: ignore[import-not-found]
