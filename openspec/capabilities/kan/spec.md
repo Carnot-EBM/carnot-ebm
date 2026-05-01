@@ -79,6 +79,7 @@ Then the result is 5016 (= 8 * 32 * 19 + 8 * 19).
 | REQ-KAN-003 | Proposed | Exp 724 target: 3000-example balanced dataset |
 | REQ-KAN-004 | Proposed | Exp 724 target: 16 knots/spline in v3 KAN |
 | REQ-KAN-020 | Implemented | Exp 866: LUT analysis complete. N=8 MLP-bound=14400 > 7680 (over budget). ISING_PRIORITY. |
+| REQ-MODEL-SOS-001 | Implemented | Exp 1047: SOSKANEnergy confirmed 0 violations on 16000 test points. |
 
 ## REQ-KAN-020: KAEMEnergy FPGA LUT Budget Analyzability
 
@@ -116,3 +117,36 @@ Given KANHardwareAnalyzer(n_inputs=8, n_hidden=16, n_knots=10, luts_per_segment=
 When total_lut_estimate() is called,
 Then layer1_luts=12800, layer2_luts=1600, total_luts=14400,
      within_budget=False (14400 > 7680).
+
+## REQ-MODEL-SOS-001: SOSKANEnergy MUST guarantee ψ'(x) >= 0 as a type-level property
+
+SOSKANEnergy MUST guarantee ψ'(x) >= 0 (monotonicity) as a type-level property,
+with zero violations possible regardless of parameter values V and c.
+
+**Rationale:**
+    KAEMEnergy's post-hoc isotonic projection (enforce_monotonicity) fixes violations
+    AFTER they occur during training. This is the wrong framing: violations can
+    accumulate within an epoch, the MILP verifier must re-run after each epoch, and
+    the projection changes the energy landscape in a non-gradient direction.
+
+    SOSKANEnergy uses the SOS (Sum-of-Squares) parameterization:
+        ψ'(x) = ||V^T B(x)||² = B(x)^T (V V^T) B(x) >= 0
+    for any unconstrained V. No projection, no constraint, no post-hoc repair.
+    The verifier can be run ONCE and the invariant holds forever.
+
+    Exp 1047 confirmed: 0 monotonicity violations on 16,000 random test points
+    (1,000 × 16 features) with adversarially large random V matrices.
+
+**Acceptance criteria:**
+    - `SOSKANEnergy(n_sos_basis=2, ...)` instantiates without error.
+    - `verify_invariants(n_samples=1000)` returns `n_monotone_violations == 0`
+      for any V (including V set to large random values post-construction).
+    - `forward(x) >= 0` for any x in [-1, 1]^n_features.
+    - AUROC >= 0.50 on FoVer corpus (no regression from KAEMEnergy baseline).
+    - Training is 5x faster than KAEMEnergy (no projection overhead).
+
+### SCENARIO-MODEL-SOS-001: zero violations on adversarial V
+
+Given SOSKANEnergy with V overwritten to random N(0, 10) values,
+When verify_invariants(n_samples=1000) is called,
+Then n_monotone_violations == 0 and invariants_hold == True.

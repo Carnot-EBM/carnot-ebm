@@ -71,7 +71,14 @@ def _patch_repo_root(mod, tmp_path):
 
 
 def _run_main_ci_stub(tmp_path):
-    """Run main() in CI-stub mode: CARNOT_FORCE_LIVE absent, apply_env_autofix mocked."""
+    """Run main() in CI-stub mode: CARNOT_FORCE_LIVE absent, apply_env_autofix mocked.
+
+    NOTE: ExperimentTemplate.__init__ calls EnvPropagationGuard.load_session_env(),
+    which re-injects CARNOT_FORCE_LIVE=1 from ~/.carnot_session_env if that file
+    exists (it does in this environment — the persistent live-env fix landed
+    after this test was first written).  We mock that loader to a no-op so the
+    pop above actually has effect for the CI-stub branch under test.
+    """
     import scripts.experiment_template as et_mod  # noqa: PLC0415
 
     original_get = et_mod._get_repo_root
@@ -81,7 +88,15 @@ def _run_main_ci_stub(tmp_path):
 
     env_before = os.environ.pop("CARNOT_FORCE_LIVE", None)
     try:
-        with unittest.mock.patch.object(mod, "apply_env_autofix", return_value=None):
+        with (
+            unittest.mock.patch.object(mod, "apply_env_autofix", return_value=None),
+            unittest.mock.patch.object(
+                et_mod.EnvPropagationGuard, "load_session_env", return_value={}
+            ),
+        ):
+            # Defensive second pop — load_session_env can run in a preceding
+            # import if any of the patched paths still slips through.
+            os.environ.pop("CARNOT_FORCE_LIVE", None)
             mod.main()
     finally:
         if env_before is not None:

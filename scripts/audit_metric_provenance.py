@@ -58,7 +58,10 @@ def main() -> int:
     flagged_pairs = set()
     for spec in args.flag_buggy:
         if ":" not in spec:
-            print(f"warning: --flag-buggy {spec!r} not in func:version format, skipping", file=sys.stderr)
+            print(
+                f"warning: --flag-buggy {spec!r} not in func:version format, skipping",
+                file=sys.stderr,
+            )
             continue
         flagged_pairs.add(spec.strip())
 
@@ -76,6 +79,9 @@ def main() -> int:
             data = json.loads(path.read_text())
         except (OSError, json.JSONDecodeError):
             continue
+        if not isinstance(data, dict):
+            no_provenance.append(path.name)
+            continue
         prov = data.get("metrics_provenance")
         if not isinstance(prov, dict) or not prov:
             no_provenance.append(path.name)
@@ -86,7 +92,9 @@ def main() -> int:
             for flag in flagged_pairs:
                 flag_func = flag.split(":", 1)[0]
                 if version_string.startswith(f"carnot.eval.metrics.{flag_func}:") and (
-                    flag in version_string or flag.endswith(":") or flag.split(":", 1)[1] in version_string
+                    flag in version_string
+                    or flag.endswith(":")
+                    or flag.split(":", 1)[1] in version_string
                 ):
                     flagged_deliverables.append((path.name, version_string))
 
@@ -94,7 +102,9 @@ def main() -> int:
     print("Metrics Provenance Audit")
     print("=" * 72)
     print()
-    print(f"Total experiment_*.json files: {len(no_provenance) + sum(len(v) for v in by_provenance.values())}")
+    print(
+        f"Total experiment_*.json files: {len(no_provenance) + sum(len(v) for v in by_provenance.values())}"
+    )
     print(f"  With metrics_provenance: {sum(len(v) for v in by_provenance.values())}")
     print(f"  Without (pre-2026-04-28 or no metrics): {len(no_provenance)}")
     print()

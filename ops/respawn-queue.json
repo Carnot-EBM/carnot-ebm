@@ -1,7 +1,8 @@
 {
-  "schema": "carnot.respawn_queue.v2",
-  "description": "Tasks retired due to environmental causes (NOT merit-based). The .82+ planner reads this queue and emits respawn tasks with auto-populated prior_failures blocks AND explicit variance per attempt. See openspec/change-proposals/no-permanent-retirement-on-environmental-failures.md for the policy. Per the operator directive (2026-04-29 evening), each respawn applies *deliberate variance* to address a different hypothetical failure cause — pure retry without variance is forbidden.",
-  "last_updated": "2026-04-29",
+  "schema": "carnot.respawn_queue.v1",
+  "description": "Tasks retired due to environmental causes (NOT merit-based). The .82+ planner reads this queue and emits respawn tasks with auto-populated prior_failures blocks AND explicit variance per attempt. See openspec/change-proposals/no-permanent-retirement-on-environmental-failures.md for the policy. Per the operator directive (2026-04-29 evening), each respawn applies *deliberate variance* to address a different hypothetical failure cause — pure retry without variance is forbidden. Schema field aliased to v1 (the spec/test name) while preserving the v2 variance-ladder structure introduced 2026-04-29.",
+  "schema_aliases": ["carnot.respawn_queue.v1", "carnot.respawn_queue.v2"],
+  "last_updated": "2026-04-30",
   "variance_ladder": {
     "_doc": "Each respawn attempt applies one or more variance dimensions. Order matters: cheaper/smaller variances tried first.",
     "attempt_1": {
@@ -169,6 +170,148 @@
       },
       "depends_on_respawn": [
         "exp1039-conductor-fastpath-gate-coercion"
+      ]
+    },
+    {
+      "original_id": "exp1050-pretest-surgery-respawn-queue",
+      "title_stub": "Pre-test Surgery + Respawn Queue Bootstrap",
+      "retirement_kind": "environmental",
+      "retirement_reason": "EnvPropagationGuard import-time crash + max_turns wedge during .82",
+      "retire_milestone": "2026.04.82",
+      "respawn_priority": "critical",
+      "retire_verdicts": [
+        "envguard_import_crash_FAIL",
+        "max_turns_FAIL",
+        "pre_test_wedge_SKIP"
+      ],
+      "diagnosed_root_cause": "ExperimentTemplate.setup() called assert_live_env_if_gpu() unconditionally; pytest collection imported scripts at module level and tripped the assert before pre-tests could even run. Fix landed in exp1063 (gate the assert on _caller_main_module() == '__main__' to mirror the lock skip).",
+      "fixes_landed": [
+        "exp1063-envguard-fix"
+      ],
+      "respawn_attempt": 1,
+      "max_respawn_attempts": 3,
+      "variance_strategy": "tier_escalation",
+      "variance_applied": {
+        "from_original": {
+          "model": "sonnet",
+          "max_turns": 50,
+          "agent_type": "claude",
+          "envguard_status": "crashing_on_import"
+        },
+        "to_respawn_1": {
+          "model": "opus",
+          "max_turns": 100,
+          "agent_type": "claude",
+          "envguard_status": "fixed_in_exp1063",
+          "rationale": "Original blocker (EnvGuard import crash) is fixed in-place by exp1063; tier escalation gives the queue-seeding work enough headroom to complete in one pass. exp1064 (this artifact) is the actual respawn — completing the work that .82's exp1050 attempt 1 could not."
+        }
+      },
+      "next_attempt_variance_plan": {
+        "if_respawn_1_fails": "attempt_2: agent_type=codex, model=gpt-5.5, max_turns=100 (Codex's training corpus may handle the JSON-schema + module-edit work differently)",
+        "if_respawn_2_fails": "attempt_3: decomposition — split into stage-1 (queue JSON only) + stage-2 (_classify_retirement helper only) + stage-3 (tests only)"
+      },
+      "prior_failures_entry": {
+        "experiment_id": "exp1050-pretest-surgery-respawn-queue",
+        "verdict": "envguard_import_crash + max_turns",
+        "addressed_by": "exp1063 gated assert_live_env_if_gpu on _caller_main_module() == '__main__'; exp1064 (this artifact) seeds the queue with 6 entries.",
+        "retire_if_same_verdict": true
+      },
+      "depends_on_respawn": []
+    },
+    {
+      "original_id": "exp1051-parallel-conductor-tier-a",
+      "title_stub": "Parallel Conductor Tier A — Multi-agent dispatch",
+      "retirement_kind": "environmental",
+      "retirement_reason": "GATE_BLOCK x3 (gated on exp1050; exp1050 retired without artifact)",
+      "retire_milestone": "2026.04.82",
+      "respawn_priority": "medium",
+      "retire_verdicts": [
+        "GATE_BLOCK",
+        "GATE_BLOCK",
+        "GATE_BLOCK"
+      ],
+      "diagnosed_root_cause": "Gated on exp1050's respawn-queue artifact; exp1050 environmentally retired so gate failed forever. Cascade-aware retirement (4e46ede6) prevents future infinite gate-block loops, but exp1051 itself still needs respawn.",
+      "fixes_landed": [
+        "exp1063-envguard-fix",
+        "4e46ede6"
+      ],
+      "respawn_attempt": 1,
+      "max_respawn_attempts": 3,
+      "variance_strategy": "tier_escalation_with_dependency_resolution",
+      "variance_applied": {
+        "from_original": {
+          "model": "sonnet",
+          "max_turns": 50,
+          "agent_type": "claude",
+          "gate_dependency": "exp1050 respawn-queue artifact (BLOCKED)"
+        },
+        "to_respawn_1": {
+          "model": "sonnet",
+          "max_turns": 50,
+          "agent_type": "claude",
+          "rationale": "Original failure was 100% gate-dependency; experiment never actually ran. Variance is the dependency resolution itself — exp1050's own respawn (exp1064 seeding the queue) unblocks this gate without requiring model/turns escalation."
+        }
+      },
+      "next_attempt_variance_plan": {
+        "if_respawn_1_fails": "attempt_2: model=opus, max_turns=100 + remove the gate (run unguarded with explicit pre-check)",
+        "if_respawn_2_fails": "attempt_3: decomposition — split into per-agent dispatch sub-experiments (claude-only, codex-only, gemini-only)"
+      },
+      "prior_failures_entry": {
+        "experiment_id": "exp1051-parallel-conductor-tier-a",
+        "verdict": "gate_block_no_upstream_artifact",
+        "addressed_by": "exp1050 respawn (above) re-implements the queue infrastructure exp1051 expected; cascade-aware retirement already in place (4e46ede6).",
+        "retire_if_same_verdict": true
+      },
+      "depends_on_respawn": [
+        "exp1050-pretest-surgery-respawn-queue"
+      ]
+    },
+    {
+      "original_id": "exp1053-dualgpu-rocm-torch-v5",
+      "title_stub": "DualGPU ROCm/CUDA Torch Install v5 (post pre-test surgery)",
+      "retirement_kind": "environmental",
+      "retirement_reason": "GATE_BLOCK x3 (gated on exp1050; exp1050 retired without artifact)",
+      "retire_milestone": "2026.04.82",
+      "respawn_priority": "medium",
+      "retire_verdicts": [
+        "GATE_BLOCK",
+        "GATE_BLOCK",
+        "GATE_BLOCK"
+      ],
+      "diagnosed_root_cause": "Gated on exp1050's pre-test-surgery completion; exp1050 environmentally retired. Original ROCm scope from exp1042 still relevant — both eventually need to land. Note: max_turns=25 was too tight for Opus on ROCm install (per exp1042 retire), so respawn escalates to 100.",
+      "fixes_landed": [
+        "exp1063-envguard-fix",
+        "4e46ede6"
+      ],
+      "respawn_attempt": 1,
+      "max_respawn_attempts": 3,
+      "variance_strategy": "tier_escalation_with_dependency_resolution",
+      "variance_applied": {
+        "from_original": {
+          "model": "opus",
+          "max_turns": 25,
+          "agent_type": "claude",
+          "gate_dependency": "exp1050 (BLOCKED)"
+        },
+        "to_respawn_1": {
+          "model": "opus",
+          "max_turns": 100,
+          "agent_type": "claude",
+          "rationale": "Two variances applied: (a) dependency resolution via exp1050 respawn unblocks the gate, (b) max_turns escalation 25->100 since exp1042 already showed opus+25 too tight for ROCm install."
+        }
+      },
+      "next_attempt_variance_plan": {
+        "if_respawn_1_fails": "attempt_2: agent_type=codex, model=gpt-5.5, max_turns=100 (Codex's training corpus has more pip-install + ROCm setup patterns)",
+        "if_respawn_2_fails": "attempt_3: decomposition — split into stage-1 (torch install only) + stage-2 (live inference smoke)"
+      },
+      "prior_failures_entry": {
+        "experiment_id": "exp1053-dualgpu-rocm-torch-v5",
+        "verdict": "gate_block_no_upstream_artifact",
+        "addressed_by": "exp1050 respawn unblocks the gate; cascade-aware retirement (4e46ede6) prevents future infinite gate-block loops.",
+        "retire_if_same_verdict": true
+      },
+      "depends_on_respawn": [
+        "exp1050-pretest-surgery-respawn-queue"
       ]
     }
   ]

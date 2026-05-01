@@ -1,0 +1,300 @@
+{
+  "schema": "carnot.operational_retro.v56",
+  "retro_type": "full_milestone_augmented",
+  "milestone": "2026.04.81",
+  "milestone_theme": "Infrastructure Close-Out + Hardware Unblocks + Probe Ensemble — KV260 First Light + SOS-KAN Invariants + Pre-Test Deadlock",
+  "run_date": "2026-04-29",
+  "generated_at": "2026-04-29T23:34:22Z",
+
+  "total_wall_time_minutes": 1699,
+  "experiments_completed": 382,
+  "avg_minutes_per_experiment": 4.45,
+  "experiment_range": "1039-1049",
+  "new_milestone_experiments": 11,
+  "new_experiments_successful": 4,
+  "new_experiments_partial_or_blocked": 7,
+
+  "wall_time_vs_prior_milestone": {
+    "prior_milestone": "2026.04.80",
+    "prior_wall_time_minutes": 1938,
+    "delta_minutes": -239,
+    "delta_pct": -12.3,
+    "note": "Ninth or tenth consecutive wall-time improvement. Improvement is partially structural: exclusion manifest retirement of Exps 786/641/906 in .80 delivers ~154 min/milestone recurring savings, which is now compounding. Remaining -85 min reflects per-experiment latency improvement and count reduction."
+  },
+  "wall_time_vs_58_baseline": {
+    "baseline_minutes": 3415,
+    "delta_minutes": -1716,
+    "delta_pct": -50.2,
+    "consecutive_below_baseline": 6,
+    "baseline_note": "SIXTH CONSECUTIVE BELOW .58 BASELINE. 1699 min is now 50.2% below the .58 baseline — the project has structurally halved its milestone wall time since the 3415-min benchmark. First time below 1700 min."
+  },
+
+  "slowest_experiments": [
+    {
+      "rank": 1,
+      "experiment_id": 786,
+      "duration_minutes": 77,
+      "title": "Gemma4 OOM Fix v3 + VR Threshold Grid (GPU REQUIRED)",
+      "consecutive_appearances": 21,
+      "classification": "manifest_enforcement_gap_or_log_artifact",
+      "note": "Exp 786 was retired to the exclusion manifest by Exp 1028 Preflight v30 in .80. Its appearance as the slowest experiment in .81 suggests one of two things: (1) the manifest was applied in .80 but the conductor's cumulative experiment history still reports its all-time slow-run record as the observed worst-case, or (2) the experiment ran one additional time before the manifest filter engaged. Either way, the 77-min entry in the conductor log is a measurement artifact of the cumulative-history tracking approach, not a new 77-min experiment in .81. This must be diagnosed to confirm: if it re-ran, the manifest enforcement is broken. If it is a history artifact, the conductor log should suppress retired experiments from the slowest-N report."
+    },
+    {
+      "rank": 2,
+      "experiment_id": 906,
+      "duration_minutes": 35,
+      "title": "Code Repair 50q Scale-Up — IterativeSelfRepair with Gemma4",
+      "consecutive_appearances": 8,
+      "classification": "manifest_enforcement_gap_or_log_artifact",
+      "note": "Same as Exp 786 — retired to manifest in .80 but appearing in .81 conductor log. Same diagnosis applies: either a final un-intercepted run or a cumulative-history reporting artifact. If it ran, manifest enforcement gap must be closed. 35-min overhead per occurrence."
+    },
+    {
+      "rank": 3,
+      "experiment_id": 759,
+      "duration_minutes": 33,
+      "title": "Iterative 2-Round Code Repair Live — HumanEval (GPU REQUIRED)",
+      "consecutive_appearances": 3,
+      "classification": "research_experiment_gpu_required",
+      "note": "Third consecutive slow appearance. GPU-required iterative repair loop — overhead likely comes from SOTA GGUF download before inference (not pre-cached) plus the multi-round repair loop time budget. Root cause: SOTA model not pre-downloaded in preflight. Fix: pre-download GGUFs in Phase 0 preflight before any GPU experiment runs."
+    },
+    {
+      "rank": 4,
+      "experiment_id": 950,
+      "duration_minutes": 28,
+      "title": "In-process docs for Exp 950: E-MVL Sparsified Ising — Sparse Constraints",
+      "consecutive_appearances": 2,
+      "classification": "doc_reconciliation_inline",
+      "note": "Second consecutive appearance of this doc-reconciliation pattern. In-process doc passes run inline with the experiment queue, blocking all downstream experiments. These are not research experiments — they do not advance criteria. They should be moved to an async or end-of-milestone batch phase. 28 min of idle-path time with no research output."
+    },
+    {
+      "rank": 5,
+      "experiment_id": 742,
+      "duration_minutes": 27,
+      "title": "RETRO-033 VR Confirmation 200q Trial — Second Seed (GPU REQUIRED)",
+      "consecutive_appearances": 3,
+      "classification": "closed_retro_rerun",
+      "note": "RETRO-033 was definitively closed in .57 (Exp 742, +0.00510 pp, two independent 200q seeds). Appearing for the third time in milestone slowest-5 despite closure. The conductor has no filter on research-complete.yaml retro_closed=True entries. This experiment should never appear in another milestone slowest-N report. Fix: conductor pre-launch check against research-complete.yaml retro_closed field."
+    }
+  ],
+
+  "slowest_5_composition_vs_80": {
+    "composition_changed": false,
+    "new_entrants": [],
+    "exits": [],
+    "note": "Slowest-5 composition IDENTICAL to .80 (786, 906, 759, 950-doc, 742). Third consecutive milestone with 950-doc and 742 appearing. Manifest retirement may not have filtered 786/906 from the conductor log's reported worst-case. No composition improvement despite structural manifest retirement — the reporting mechanism must be fixed alongside enforcement."
+  },
+
+  "pre_test_suite_analysis": {
+    "is_milestone_bottleneck": true,
+    "failing_tests_at_launch": 4,
+    "passing_tests_at_launch": 318,
+    "expanding_suite_from_80": "88 → 132 passing in .80 (Exp 1028 added 44 tests)",
+    "root_cause": "Exp 1028 expanded the pre-test suite from 88 to 132 passing tests in .80 but introduced at least one test that subsequently failed, leaving 4 broken tests when .81 launched. These failures blocked Exp 1039 (gate coercion fix) on all three attempts: SKIP (1 failed/302 passed), FAIL (max turns 30), SKIP (4 failed/318 passed).",
+    "cascade_impact": "Exp 1039 never produced an artifact → Exp 1044 (Triple Integration v7) GATE_BLOCK x3 because its gate exp1039-conductor-fastpath-gate-coercion.gate_coercion_fixed had no artifact to evaluate against. Fourth consecutive milestone Triple Integration has failed.",
+    "fix_required": "Diagnose and repair the 4 failing pre-tests as the VERY FIRST task in .82 (Phase 0, no gate dependency, no blocking condition). This must be mandatory before any other experiment runs. Pre-test suite must be 0 failures before milestone activates.",
+    "milestone_impact_estimate_minutes": 120,
+    "note": "The pre-test deadlock is the single largest bottleneck in .81. It cascaded from a single suite-expansion oversight in .80 to block an infrastructure fix, which blocked Triple Integration, which has now failed four consecutive milestones."
+  },
+
+  "gate_cascade_analysis": {
+    "this_milestone_triple_integration_attempts": 3,
+    "root_cause": "Exp 1039 (gate coercion fix) never produced an artifact — blocked by pre-test failures on all three attempts. Exp 1044 (Triple Integration v7) was gated on exp1039.gate_coercion_fixed — received no artifact, GATE_BLOCKed x3. This is the fourth consecutive milestone Triple Integration has failed: .80 (gate coercion string vs bool), .81 (gate fix never landed due to pre-test failures).",
+    "consecutive_triple_integration_failures": 4,
+    "pattern": "Every upstream dependency failure cascades to Triple Integration because it sits at the bottom of the gate chain. Pre-test repair must be decoupled from gate-coercion fix in .82 — run pre-test repair standalone first, then gate coercion fix can succeed.",
+    "fix_needed": "Break the dependency chain: (1) repair 4 failing pre-tests unconditionally; (2) re-run gate coercion fix with clean pre-tests; (3) only then gate Triple Integration on gate_coercion_fixed=True."
+  },
+
+  "gpu_utilization": {
+    "dual_gpu_consecutive_idle_milestones": 16,
+    "dual_gpu_wiring_status": "no_artifact_exp1042",
+    "exp1042_verdict": "no_artifact_produced",
+    "exp1042_attempts": 3,
+    "exp1042_attempt_details": "FAIL (max turns 25), SKIP (pre-tests failing), SKIP (pre-tests failing)",
+    "exp1046_verdict": "blocked_no_live_gpu",
+    "exp1046_attempts": 3,
+    "exp1046_attempt_details": "3x artifact_not_updated_past_bootstrap — fastpath bootstrap wedge active, Qwen3.6-35B-A3B GGUF not in cache, synthetic_fallback disabled",
+    "torch_flavor": "cpu_only_2.11.0+cpu",
+    "fix_available": "Install torch 2.11.0+rocm7.2 per CLAUDE.md GPU Resources section. One pip install command unblocks all GPU-gated experiments.",
+    "cumulative_foregone_savings_minutes": 960,
+    "gpu_close_state": {
+      "gpu0_model": "NVIDIA GeForce RTX 3090",
+      "gpu0_vram_mb": 4,
+      "gpu0_vram_total_mb": 24576,
+      "gpu0_util_pct": 0,
+      "gpu0_temp_c": 49,
+      "gpu1_model": "NVIDIA GeForce RTX 3090",
+      "gpu1_vram_mb": 4,
+      "gpu1_vram_total_mb": 24576,
+      "gpu1_util_pct": 0,
+      "gpu1_temp_c": 46,
+      "temp_differential_c": 3
+    },
+    "gpu_close_clean": true,
+    "gpu_close_clean_streak": 17,
+    "note": "Both GPUs idle at 0% utilization. 4 MB each is normal driver baseline, not a zombie. 17th consecutive clean close. DualGPU live inference has been available in hardware for 16 milestones but blocked by wrong torch build."
+  },
+
+  "zombie_process_status": {
+    "zombie_detected": false,
+    "gpu0_vram_mb": 4,
+    "gpu1_vram_mb": 4,
+    "note": "No zombie processes. 4 MB per GPU is the driver initialization baseline. GPU Zombie Killer stable for 17th consecutive milestone."
+  },
+
+  "parallelization_analysis": {
+    "cpu_only_experiments_succeeded": [1040, 1047, 1048],
+    "cpu_only_experiments_blocked": [],
+    "hardware_dependent_experiments_failed": [1039, 1042, 1046],
+    "parallelizable_pairs": [
+      "Exp 1047 (SOS-KAN, CPU-only) and Exp 1048 (eval metrics, CPU-only) are independent and could run in parallel — both completed cleanly on Opus escalation.",
+      "Exp 1040 (verdict reproducibility, CPU-only) is independent of all hardware experiments — could run concurrently with any GPU experiment.",
+      "Exp 1043 (FoVer expansion) is partially CPU-only (Z3 labeling) but MetaQA branch needs GPU. Could be split into two phases."
+    ],
+    "parallelization_blocked_by": "Gate dependencies prevent parallelization of infrastructure chain: Exp 1039 must precede Exp 1044. Pre-test repair must precede Exp 1039. Until pre-tests are clean, the entire infrastructure chain is serial and fragile.",
+    "recommendation": "In .82, run CPU-only independent experiments (Exps 1047-class, 1048-class) in parallel with infrastructure repair. Do not block theory/analysis experiments on hardware readiness."
+  },
+
+  "doc_reconciliation_analysis": {
+    "is_bottleneck": true,
+    "worst_case_minutes": 28,
+    "classification": "inline_blocking",
+    "pattern": "In-process doc reconciliation passes (Exp 950-class) run as full inline conductor turns, blocking all downstream experiments. They are not gated on any deliverable and produce no experiment artifact.",
+    "fix": "Batch doc reconciliation at end-of-milestone or run async in background. Do not queue doc passes as conductor experiments in the critical path."
+  },
+
+  "kv260_analysis": {
+    "milestone_result": "FIRST LIGHT ACHIEVED",
+    "bitstream_loaded": true,
+    "load_result": "carnot_ising_v2_n64: Loaded with slot_handle 0 | state=operating",
+    "smoke_test_passed": false,
+    "smoke_test_blocker": "All samples returned 0x0 — sampler reset not deasserted",
+    "remaining_step": "Single register write to deassert reset on sampler control register via SSH",
+    "fix_for_82": "SSH into KV260, write sampler control register reset=0, run smoke test. This is one SSH command away from smoke_test_passed=True.",
+    "historical_note": "7 attempts across milestones .75 through .81 to load a bitstream. Attempt .81 succeeded: bootgen is installed on the board (/usr/bin/bootgen v2022.2), dtbo firmware-name path symlink workaround works, FPGA fabric programmed for the first time."
+  },
+
+  "fover_expansion_analysis": {
+    "target_pairs": 500,
+    "achieved_pairs": 216,
+    "pairs_at_prior_milestone": 85,
+    "new_pairs_z3_confirmed": 197,
+    "overlap_removed": 66,
+    "metamorphic_validated": 0,
+    "consecutive_milestone_stub": 2,
+    "verdict": "partial_z3_only_216_of_500",
+    "root_cause": "MetaQA generator ran but the required GGUF model (Qwen3.6-35B-A3B or gemma-4-26B-A4B) was not in local cache — early-exit with 0 metamorphic pairs. Generator silently stub-outs when model is missing instead of raising a clear blocked_model_not_cached error.",
+    "downstream_impact": "Exp 1045 (probe ensemble): best_probe_auroc=0.5694 vs target 0.72 — all three probes (ThinkPRM, GS-KAN, NK-KAEM) below target due to insufficient training data.",
+    "fix_for_82": "Pre-download all three SOTA GGUFs as Phase 0 preflight. MetaQA generator must emit blocked_model_not_cached status instead of empty result. Gate all probe experiments on n_total_pairs >= 300."
+  },
+
+  "fastpath_bootstrap_wedge_analysis": {
+    "still_active": true,
+    "affected_experiments": [1046],
+    "wedge_description": "artifact_not_updated_past_bootstrap — conductor launched Exp 1046 (Zenil alpha_t) 3 times; each time the bootstrap stub was accepted as the experiment result without actual execution. This is identical to the wedge that Exp 1039 was designed to fix.",
+    "circular_dependency": "Exp 1039 was designed to fix the bootstrap wedge. Pre-test failures prevented Exp 1039 from running. Exp 1046 then triggered the bootstrap wedge 3 times, wasting 3 conductor turns.",
+    "fix": "Pre-test repair (Phase 0, .82) unblocks Exp 1039, which patches the bootstrap wedge, which prevents Exp 1046-class 3x wasted launches."
+  },
+
+  "escalate_opus_analysis": {
+    "escalations_this_milestone": 2,
+    "escalations_that_succeeded": 2,
+    "escalations_that_failed": 0,
+    "experiments": [1047, 1048],
+    "note": "Exps 1047 (SOS-KAN) and 1048 (eval metrics) were CPU-only with clear scope — Opus escalation succeeded cleanly on first attempt. Hardware experiments (1039, 1042) were never escalated to Opus; they SKIP/FAIL-ed due to pre-test failures before escalation could help. Pre-emptive Opus routing for hardware-dependent experiments remains unactivated."
+  },
+
+  "new_experiment_outcomes": {
+    "exp1039_conductor_fastpath_gate_coercion": "no_artifact — SKIP (1 failed pre-test), FAIL (max turns 30), SKIP (4 failed pre-tests). Gate coercion bug not fixed.",
+    "exp1040_verdict_reproducibility_audit": "success — stability_rate=1.0 (5/5 flagship verdicts stable), seed_discipline_deployed=True, reproducibility_checksum_deployed=True. Static audit (not full execution rerun).",
+    "exp1041_kv260_first_light_v7": "partial — bitstream_loaded=True (first time), state=operating, smoke_test=failed (reset not deasserted). One register write from smoke_test_passed.",
+    "exp1042_dualgpu_rocm_torch_v4": "no_artifact — FAIL (max turns 25), SKIP (pre-tests failing), SKIP (pre-tests failing). torch ROCm still not installed.",
+    "exp1043_fover_expansion_v3": "partial — n_total_pairs=216 (target 500, prior 85). Z3 labeling works; MetaQA stub (0 metamorphic pairs). 2.54x growth but 43% of target.",
+    "exp1044_triple_integration_v7": "blocked — GATE_BLOCK x3 on exp1039.gate_coercion_fixed (no artifact). Fourth consecutive milestone without Triple Integration result.",
+    "exp1045_probe_ensemble_v5": "partial — best_probe_auroc=0.5694 (ThinkPRM text_features), GS-KAN=0.4534, NK-KAEM=0.5631. All below 0.72 target. nk_convergence_speedup=0.546 (slower than Adam). Root cause: insufficient FoVer corpus.",
+    "exp1046_zenil_alpha_t_fr11": "blocked — blocked_no_live_gpu x3. Qwen3.6-35B-A3B not cached. Fastpath bootstrap wedge active.",
+    "exp1047_sos_kan_v1": "success — auroc_sos_kan=0.6042 vs baseline=0.4958 (+0.108). n_monotonicity_violations=0, n_nonneg_violations=0 across 16,000 samples. invariants_hold=True. First type-level energy invariant deployed.",
+    "exp1048_eval_metrics_canonical_wiring": "success — _check_auroc_anomaly() deployed, metrics_used field wired, model field validated, 5 tests passing. auroc_anomaly_detector_wired=True.",
+    "exp1049_milestone_retro_81": "success — 6/13 criteria evaluated; artifact written."
+  },
+
+  "criteria_met": {
+    "gate_coercion_fixed": false,
+    "wedge_replay_clean": false,
+    "verdict_stability_80pct": true,
+    "seed_discipline_deployed": true,
+    "kv260_bitstream_loaded": true,
+    "dualgpu_live_inference": false,
+    "fover_500_pairs": false,
+    "triple_integration_all_tiers": false,
+    "best_probe_auroc_072": false,
+    "alpha_t_measured": false,
+    "sos_kan_no_regression": true,
+    "eval_metrics_wired": true,
+    "milestone_retro_written": true
+  },
+  "criteria_met_count": 6,
+  "criteria_total": 13,
+
+  "bottlenecks_identified": [
+    "PRE-TEST SUITE DEADLOCK (highest severity): 4 failing pre-tests blocked Exp 1039 (gate coercion fix) on all 3 attempts. This cascaded to block Exp 1044 (Triple Integration v7, GATE_BLOCK x3 — 4th consecutive milestone failure). Exp 1028 in .80 expanded the suite from 88 to 132 tests but left 4 broken. Combined impact: entire infrastructure repair chain dead-locked for the full milestone. Estimated waste: ~120 min across blocked experiments plus unrealized Triple Integration work.",
+    "GATE COERCION BUG STILL LIVE (4th consecutive milestone affected): String 'True' vs bool True in gate evaluator was not fixed because Exp 1039 never ran. Every future milestone that gates on a boolean field from a prior experiment runs the risk of this bug. The fix is one line in the gate evaluator; the blocker is pre-test failures.",
+    "DUALGPU LIVE INFERENCE BLOCKED BY WRONG TORCH BUILD (16TH CONSECUTIVE IDLE): torch 2.11.0+cpu installed; ROCm variant needed. Exp 1042 produced no artifact (all 3 attempts blocked by pre-test failures or max-turns). Exp 1046 (alpha_t) also blocked. Cumulative foregone savings: ~960 min across 16 milestones. Remaining fix: one pip install before any GPU experiment.",
+    "FASTPATH BOOTSTRAP WEDGE STILL ACTIVE: Exp 1046 triggered artifact_not_updated_past_bootstrap 3 times. The wedge fix (Exp 1039) never landed because pre-tests blocked it. Circular dependency: fix cannot run because pre-tests fail; wedge wastes turns because fix never ran.",
+    "FOVER METAMORPHIC GENERATOR STILL STUB (2nd consecutive milestone, 0 pairs): MetaQA generator silently returns 0 metamorphic pairs when the GGUF model is not cached (no error, no blocked status). 216/500 pairs achieved (43% of target). All probe experiments (ThinkPRM AUROC=0.5694, GS-KAN=0.4534, NK-KAEM=0.5631) below the 0.72 target — insufficient training data.",
+    "EXP 786/906 APPARENT RE-APPEARANCE DESPITE MANIFEST RETIREMENT: Both retired experiments appear as the two slowest in the conductor log. Either (a) they ran one final time before manifest enforcement engaged (enforcement gap) or (b) the conductor log reports cumulative worst-case history rather than new-run timing (measurement artifact). Either interpretation is a problem: enforcement gaps must be closed; measurement artifacts inflate perceived slowest-N and hide actual bottlenecks.",
+    "CLOSED-RETRO EXP 742 THIRD CONSECUTIVE APPEARANCE (27 min): RETRO-033 closed definitively in .57; Exp 742 now appearing for the third time in milestone slowest-5. No conductor filter on research-complete.yaml retro_closed field.",
+    "IN-PROCESS DOC RECONCILIATION INLINE (28 min, 2nd consecutive): Exp 950-class doc passes block the conductor queue with non-research work. Async batching would move 28+ min off the critical path.",
+    "ESCALATE_OPUS NOT ACTIVATED FOR HARDWARE EXPERIMENTS: Exp 1039 and Exp 1042 failed on pre-test failures before Opus escalation could help — the differential routing commit is not activated. For experiments where Sonnet reliably hits max-turns or is blocked by environment setup, pre-emptive Opus routing is the correct policy."
+  ],
+
+  "improvements_suggested": [
+    "REPAIR 4 FAILING PRE-TESTS AS PHASE 0 MANDATORY IN .82 (highest ROI): Before any other experiment runs, diagnose and fix the 4 broken pre-tests (4 failed/318 passed at .81 launch). Must have 0 failures before milestone activates. This unblocks: Exp 1039 (gate coercion fix), Exp 1042 (DualGPU ROCm), the bootstrap wedge fix, and ultimately Triple Integration. Estimated unlock: ~150 min of blocked work.",
+    "INSTALL TORCH ROCM IN PREFLIGHT AS MANDATORY ENVIRONMENT CHECK: torch 2.11.0+rocm7.2 is one pip install. Add to Phase 0 preflight: verify dualgpu_live_inference=True before any GPU experiment is queued. If false, install ROCm torch and verify. Eliminates 16-milestone streak of idle RTX 3090s.",
+    "PRE-DOWNLOAD SOTA GGUFS IN PHASE 0 PREFLIGHT: Verify all three SOTA GGUFs (Qwen3.6-35B-A3B, gemma-4-31B-it, gemma-4-26B-A4B) are locally cached before the milestone runs. Eliminates: Exp 759-class 33-min download overhead per GPU experiment; MetaQA generator stub-out; Exp 1046-class blocked_no_live_gpu. Estimated savings: 30-60 min/milestone.",
+    "IMPLEMENT METAQA GENERATOR (REPLACE STUB): MetaQA branch must emit blocked_model_not_cached when the GGUF is absent (not silently return 0 pairs). Once GGUF is pre-downloaded, implement actual metamorphic mutation + Z3 relabeling. Gate all probe experiments on n_total_pairs >= 300 to prevent sub-chance AUROC training runs.",
+    "DEASSERT KV260 SAMPLER RESET REGISTER (ONE SSH COMMAND): bitstream_loaded=True, state=operating. Write sampler control register reset=0 via SSH. smoke_test_passed=True is one command away from being the first hardware sampler benchmark milestone.",
+    "FILTER CLOSED-RETRO EXPERIMENTS FROM CONDUCTOR QUEUE: Add conductor pre-launch check: if experiment_id is in research-complete.yaml with retro_closed=True, skip it with a note in the conductor log. Prevents Exp 742-class reappearances permanently (27 min saved this milestone, growing cumulative waste).",
+    "DIAGNOSE EXP 786/906 CONDUCTOR LOG REPORTING (manifest enforcement vs log artifact): Determine whether these retired experiments actually ran in .81 or appear due to cumulative-history timing reports. If they ran, close the enforcement gap. If log artifacts, fix the slowest-N report to exclude retired experiments. This also affects measurement accuracy for slowest-5 tracking.",
+    "BATCH OR ASYNC DOC RECONCILIATION PASSES: Exp 950-class in-process doc passes (28 min) should run asynchronously or be batched at milestone end. Do not queue them as blocking conductor turns in the critical-path experiment queue.",
+    "ACTIVATE PRE-EMPTIVE OPUS ROUTING FOR HARDWARE EXPERIMENTS: The differential agent routing commit is ready. Activate for: KV260 experiments, DualGPU environment setup, bootstrap wedge repair, multi-criterion retro. Eliminates max-turns failures on these experiment classes.",
+    "PLACE RETRO EXPERIMENT FIRST, NOT LAST: Conductor aborted before reaching Exp 1038 in .80 and nearly failed to reach Exp 1049 in .81. Place the retro at position 2 (after mandatory pre-test repair preflight) to guarantee it is always written even if the conductor stops early."
+  ],
+
+  "estimated_time_savings": {
+    "near_term_recoverable_minutes": 290,
+    "near_term_recoverable_pct": 17.1,
+    "structural_maximum_pct": 30.0,
+    "breakdown": {
+      "pre_test_repair_unlocks_infrastructure_chain": 150,
+      "torch_rocm_dualgpu_live_inference_savings": 60,
+      "sota_gguf_predownload_savings": 45,
+      "closed_retro_filter_exp742_class": 27,
+      "async_doc_reconciliation": 28,
+      "escalate_opus_hardware_experiments": 15,
+      "kv260_smoke_test_unblocking": 0,
+      "total_near_term": 290
+    },
+    "note": "Manifest retirement from .80 is already realized (-154 min/milestone structural). The next highest-ROI fix is the pre-test suite repair, which has a cascading unlock value of ~150 min (gate coercion fix + DualGPU environment + Triple Integration)."
+  },
+
+  "structural_wins_this_milestone": [
+    "KV260 bitstream loaded for the first time after 7 consecutive attempts across milestones .75–.81 (Exp 1041, carnot_ising_v2_n64 state=operating). Board is programmed. One register write from smoke_test_passed.",
+    "SOS-KAN type-level monotonicity invariants deployed (Exp 1047, 0 violations across 16,000 samples). ψ'(x) = ||V^T B(x)||^2 >= 0 by construction — first type-level energy invariant in the project.",
+    "Eval metrics canonical wiring deployed (Exp 1048) — _check_auroc_anomaly() pages operator on edge AUROC values (0.0/0.001/0.999/1.0); metrics_used field wired into build_result(); inverted-AUROC bug class closed for future experiments.",
+    "Verdict stability and seed discipline deployed (Exp 1040) — reproducibility_checksum field wired, random_seed field added to build_result() schema. Flagship experiment verdicts stable at 1.0 on static audit.",
+    "Wall time structurally below 1700 min for the first time (1699 min) — sixth consecutive below .58 baseline, now 50.2% below the 3415-min benchmark."
+  ],
+
+  "trend_analysis": {
+    "wall_time_trend": "continued_improvement_structural_compounding",
+    "delta_minutes": -239,
+    "delta_pct": -12.3,
+    "improvement_partially_structural": true,
+    "structural_component": "manifest_retirement_154_min_per_milestone_recurring_from_80",
+    "count_effect_estimate_minutes": 59,
+    "rate_effect_estimate_minutes": 26,
+    "note": "The -239 min reduction from .80 is partially structural (manifest retirement now recurring) and partially from count reduction (441→382 experiments, ~59 min) and latency improvement. Wall time is now 50.2% below the .58 baseline. Further improvement requires resolving the pre-test deadlock chain."
+  },
+
+  "honest_verdict": "milestone_6_of_13_criteria_met_KV260_FIRST_LIGHT_SOS_KAN_INVARIANTS_EVAL_METRICS_WIRED_PRE_TEST_DEADLOCK_BLOCKED_GATE_COERCION_FIX_AND_TRIPLE_INTEGRATION_FOURTH_CONSECUTIVE_DUALGPU_16TH_IDLE_960min_FOREGONE_FOVER_216_of_500_PROBE_AUROC_0pt5694_below_0pt72_BOOTSTRAP_WEDGE_STILL_ACTIVE_1699min_minus239min_minus12pt3pct_SIXTH_CONSECUTIVE_BELOW_58_BASELINE_50pt2pct_below_17pt1pct_near_term_recoverable_290min_30pct_structural"
+}

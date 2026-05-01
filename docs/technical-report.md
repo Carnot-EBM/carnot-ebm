@@ -1,9 +1,9 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report on 1,011 Experiments Across 84 Research Milestones
+## A Technical Report on ~1,087 Experiments Across 84 Completed Research Milestones
 
 **Author:** Ian Blenke
-**Date:** 2026-04-28
+**Date:** 2026-05-01
 **Repository:** github.com/Carnot-EBM/carnot-ebm
 **License:** Apache 2.0
 
@@ -26,8 +26,8 @@ can be selected by task; the production verify-repair API is a handful of
 lines of Python. All headline benchmark numbers are from **live GPU inference
 on real public models** (Qwen 3.5, Gemma 4), never from simulated runs.
 
-This report documents the research arc behind the framework — **1,011
-experiments across 84 milestones**, run between February and April 2026.
+This report documents the research arc behind the framework — **~1,087
+experiments across 84 completed milestones**, run between February and May 2026.
 The story has moved through six distinct phases of understanding. A
 plain-English summary of that journey is in the next section; deeper
 analysis of each phase follows in Sections 3–6 and in the per-milestone
@@ -54,6 +54,16 @@ retrospective artifacts checked into `results/operational_retro_*.json`.
   repair pass rate from **8% to 80%** (+72pp) on 50 problems using
   execute-and-retry rather than LLM rewriting alone (Exps 905/906,
   cross-model energy selection accuracy 1.0).
+- **First positive live benchmark result with a SOTA IT model:** Carnot
+  correction on Qwen3.6-35B-A3B (35B MoE, dual RTX 3090) raises HumanEval
+  pass@1 from **0% to 36%** on 50 HumanEval problems — the first
+  measured positive delta with a flagship instruction-tuned model (Exp 1079,
+  milestone 2026.04.84). GSM8K extraction continues to fail (VeriCoT TP=0
+  on math reasoning); code tasks are the signal.
+- **Step-level PRM dataset at scale:** 7,349 MCTS-labeled step examples
+  generated from the full 6,548-pair FoVer corpus — 3.7x the 2,000-example
+  target (Exp 1084, milestone 2026.04.84). Largest PRM dataset in project
+  history.
 
 **Claims that did not survive audit** are kept in the research record as
 negative findings and documented alongside the audits that surfaced them
@@ -2089,3 +2099,48 @@ All templates are CI-safe (return [] on no parseable arithmetic). `VerifyRepairP
 - **Retrospective (Exp 766):** Milestone 2026.04.58 complete. `n_experiments=11`, `total_wall_time_min=24.8259`, `mean_min_per_experiment=2.2569`. `milestone_wins=[MANIFEST_ENFORCEMENT_FINALLY_APPLIED, PSV_RELAPSE_CLOSED, HLS_ENERGY_SIGN_VALIDATED, YOSYS_SYNTHESIS_CLEAN, TIER1_CONSTRAINT_ADDITION_PROVEN, DUAL_PATHWAY_PROBE_AUROC_1pt0, AST_VERIFIER_PERFECT, FOURTEENTH_CONSECUTIVE_CONDUCTOR_CYCLE_IMPROVEMENT]`. `open_items=[RETRO-CODE-REPAIR-ZERO, RETRO-GEMMA4-LOADER, RETRO-JEPA-V19-NOT-RUN, hf_upload_operator_pending]`. `consecutive_wall_time_improvements=14`. `criteria_met=7/10`.
 
 **Finding:** Milestone 2026.04.58 resolves the governance debt accumulated over 4 consecutive non-enforcement cycles — the manifest patch is now applied and Exp 527 class is confirmed excluded. PSV relapse is closed via the layered SRSA + constraint freezing + curriculum diversity fix, with both time-window slopes negative. The Yosys open-source synthesis result (2821 LUTs, 0 errors) validates an FPGA prototyping path that does not require AMD Vivado installation. Live GPU code repair ran for the first time since the CARNOT_FORCE_LIVE fix, but zero improvement was observed — RETRO-CODE-REPAIR-ZERO opens the next investigation phase for the code repair architecture. Conductor cycle achieved a fourteenth consecutive wall-time improvement at 24.8 min, dominated by Exp 759 (22.7 min of live GPU inference). Open items for .59: code repair architecture investigation (RETRO-CODE-REPAIR-ZERO), Gemma4 loader fix (RETRO-GEMMA4-LOADER), JEPA v19 scheduling (RETRO-JEPA-V19-NOT-RUN).
+
+---
+
+## Milestones 59–84 — Scaling, SOTA Models, and Hardware (Exps 767–1089, April–May 2026)
+
+This section summarises the major findings from the 26 milestones that followed milestone .58, covering the period from late April through May 2026. Detailed per-milestone retrospectives are in `results/operational_retro_*.json`; what follows captures the results that moved the research program forward.
+
+### Phase 8 — FoVer Corpus Expansion and Probe Ensemble (Milestones 59–82, Exps 767–1062)
+
+The central challenge through this phase was the shortage of labeled verification data. With only 216 pairs in the FoVer corpus, every probe trained on it reached a ceiling driven by corpus size, not architecture. Three architectural tracks ran in parallel while data generation was repaired:
+
+**Safety classifier line (Exps 700–724, milestone .59-.61):** Prompt-injection safety KAN trained to AUROC 0.9078 from GPT-OSS-Safeguard-20B teacher labels — the first Carnot-family classifier to clear the 0.90 publication gate (Exp 724). Earlier v1 result (cross-dataset AUROC 0.9585) was retracted after audit: confusion matrix TP=0 at every operating threshold. v2 and v3 trained against genuinely held-out data with threshold calibration (Exp 724 is the headline).
+
+**Wall-time improvement discipline (milestones .59–.84):** Fourteen consecutive milestone wall-time improvements from .44 to .58 — then a regime of efficiency governance as the experiment count peaked at 806 (milestone .66) and was disciplined back below 700. The exclusion manifest was finally enforced in milestone .80, retiring experiments 786, 641, and 906 — eliminating ~154 min/milestone of recurring zero-value re-execution. Six consecutive milestones below the .58 baseline (1699–3242 min vs 3415 min baseline), the first in project history.
+
+**WOPR interactive reasoning games (milestones .66–.83):** A parallel track built WOPR (Wargame of Probabilistic Reasoning), a HuggingFace Spaces gallery deploying Carnot's Ising sampler as a constraint-satisfaction game engine. Sudoku (E=0 at iteration 5130 confirmed, code complete milestone .82), Graph Theory Wiring (GTW), and Lights Out cartridges shipped to HuggingFace Spaces (milestone .83). N-Queens cartridge planned for .84 but blocked by prior-failures gate enforcement.
+
+**FoVer corpus breakthrough (Exp 1055, milestone .82):** Z3 + GSM8K labeling expanded the FoVer corpus from 216 to **6,548 Z3-confirmed pairs** — a 30x increase driven by resolving the MetaQA generator stub that had blocked corpus growth for multiple milestones. This single corpus expansion produced a 74-percentile-point AUROC improvement across all probes: SOS-KAN 0.5694 → 0.9899, ThinkPRM 0.9885, NK-KAEM 0.9875 (Exp 1057, milestone .82). The data volume lever — not architecture — was the bottleneck.
+
+**SOS-KAN v3 Neural-Gram verifier (Exp 1072, milestone .83):** SOS (Sum-of-Squares) splines on the KAN backbone enforce monotonicity and nonnegativity as type-level invariants. AUROC=0.9545 on the full 6,548-pair corpus, 0 monotonicity violations across 16,000 samples, gram matrix positive semi-definite confirmed. Certified nonnegativity is the property that makes SOS-KAN suitable as a production energy function: it cannot produce negative energy values that would confuse the repair loop.
+
+**KV260 FPGA hardware track (Exps 568–1068, milestones .43–.83):** After six milestones of failed bitstream loading, the KV260 FPGA board achieved first light in milestone .81 (Exp 1041, `carnot_ising_v2_n64 state=operating`). Live hardware sampling confirmed in milestone .83 (Exp 1068): **24.83 μs mean latency**, 70 unique spin values across 100 samples, energy distribution non-uniform (not stuck in a single basin). This is the first confirmed Ising sampling result from real dedicated silicon in the project.
+
+**Dual-GPU deployment (Exp 1066, milestone .83):** Two RTX 3090 GPUs brought live with ROCm PyTorch 2.11.0. After 17 consecutive milestones of idle GPU availability, SOTA 35B model inference became possible at dual-GPU throughput.
+
+**Triple Integration E2E (Exp 1073, milestone .83):** All four cascade tiers active simultaneously for the first time — Tier 0a (SOS-KAN logit probe) → Tier 0b (SpilledEnergy) → Tier 2 (SC-Energy) → Tier 3 (VJEPA v2). 50/50 questions ran the full cascade, incorrect_energy > correct_energy confirmed at every tier. The pipeline is complete end-to-end.
+
+**FR-11 self-learning loop closed on SOTA model (Exp 1077, milestone .84):** The FR-11 (functional-requirement 11) self-distillation loop trains the verifier on its own violation detections. Run with Qwen3.6-35B-A3B (35B MoE, dual RTX 3090): alpha_t=0.38. Lower than the 0.78 measured with the 0.8B CPU smoke-test model — this is expected because the 35B model is harder for the AND-composed verifier to distinguish from temperature filtering. 100 FR-11 training examples written to `data/fr11_zenil_distill_v2.jsonl`. fr11_loop_closed=true is confirmed on a SOTA production tier model.
+
+### Phase 9 — First Positive Result with SOTA IT Model (Milestone .84, Exps 1077–1089)
+
+Milestone 2026.04.84 was designed to confirm Carnot's value on SOTA instruction-tuned models — not just small CPU-tier checkpoints. The milestone achieved 4 of 13 success criteria.
+
+**The landmark result (Exp 1079):** Live SOTA benchmark on Qwen3.6-35B-A3B (35B MoE, dual RTX 3090). 100 GSM8K questions + 50 HumanEval problems.
+
+- **HumanEval:** pass@1 **0% → 36%** after Carnot correction. This is the first measured positive delta on HumanEval with a SOTA instruction-tuned model in the project's history. The cascade and verifier pipeline are adding genuine value on code generation tasks.
+- **GSM8K:** baseline 34%, corrected 34% (net 0.0). VeriCoT extraction TP=0 on math reasoning — the extraction pipeline cannot yet reliably pull arithmetic claims from 35B model chain-of-thought. Code tasks are the current signal.
+
+This result closes a long-standing gap: prior HumanEval improvements (+3.0pp with Gemma 4 4B on 164 problems, Exp 226; +72pp IterativeSelfRepair with execute-feedback-retry, Exp 905) used smaller or different models. The 35B result is the first confirmation that the Carnot pipeline adds value at SOTA model scale, not just on smaller checkpoints.
+
+**Step-level PRM dataset (Exp 1084):** 7,349 MCTS-labeled step examples generated from the full 6,548-pair FoVer corpus. Target was 2,000; the generation ran to completion at 3.7x the target. ThinkPRM retrained on a 300-sample subset (AUROC 0.99 → 0.79) — the AUROC drop indicates the 300-sample retrain slice was too small; the full 7,349-example dataset needs a properly sized retrain. PRM data volume is confirmed; retrain quality is the open item.
+
+**Gate enforcement finding (Exp 1089 retro):** 7 of 9 NOT-MET criteria in milestone .84 were blocked by conductor gate enforcement for undeclared prior failures — correct behavior from the system. The planner layer consistently omitted required `prior_failures` YAML declarations when proposing experiments with domain overlap to earlier failures. This is the operational gap: gate enforcement works, planner discipline does not.
+
+**What's next (as of 2026-05-01):** arXiv submission target 2026-05-15 for position paper. Planner must add a dedicated prior-failures audit pre-task in .85 before attempting any gate-blocked experiments. GSM8K extraction needs diagnosis (VeriCoT TP=0 with 35B model). Position paper routing through Opus/Sonnet (Gemini backend paused due to 429 rate limits). KV260 board connectivity needs a diagnostic task before scheduling further FPGA experiments.

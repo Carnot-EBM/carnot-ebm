@@ -883,7 +883,7 @@ tasks:
     Implement spaces/wopr-games/games/nqueens.py following the WOPRGame interface.
 
     N-Queens Ising encoding (N=8, 64 spins):
-    - Spin s_(ij) ∈ {0,1} at row i, col j (queen placed / not placed)
+    - Spin s_(ij) ∈ {{0,1}} at row i, col j (queen placed / not placed)
     - Row constraint: Σ_j s_(ij) = 1 for each row i → J[i*8+j, i*8+k] = -penalty for j≠k
     - Column constraint: Σ_i s_(ij) = 1 for each col j → J[i*8+j, k*8+j] = -penalty for i≠k
     - Diagonal constraint: s_(ij) + s_(kl) ≤ 1 if |i-k|=|j-l| → J[i*8+j, k*8+l] = -penalty
@@ -961,8 +961,8 @@ tasks:
     Create python/carnot/samplers/potts_sampler.py:
     class PottsSampler:
         """q=3 Potts machine sampler via synchronous checkerboard update.
-        State: each spin in {0,1,2}. Energy: E = -Σ J_ij * δ(s_i, s_j).
-        Update: for spin i, compute E_i(a) for a in {0,1,2}, sample from Softmax(-β * E_i).
+        State: each spin in {{0,1,2}}. Energy: E = -Σ J_ij * δ(s_i, s_j).
+        Update: for spin i, compute E_i(a) for a in {{0,1,2}}, sample from Softmax(-β * E_i).
         """
         def __init__(self, n_spins: int, q: int = 3, beta: float = 2.0): ...
         def sample(self, J: np.ndarray, n_steps: int = 1000) -> np.ndarray: ...
@@ -974,8 +974,8 @@ tasks:
 
     TASK PART 2 — VERILOG RTL:
     Create hardware/kv260/potts_sampler_v1.v based on ising_sampler_v2.v structure:
-    - 2 bits per spin (encodes {0,1,2})
-    - 3-entry softmax unit: exp(-β*E_i(a)) for a in {0,1,2} using 8-bit fixed-point
+    - 2 bits per spin (encodes {{0,1,2}})
+    - 3-entry softmax unit: exp(-β*E_i(a)) for a in {{0,1,2}} using 8-bit fixed-point
     - Categorical sampler from 2-bit LFSR
     - AXI-Lite interface compatible with ising_sampler_v2.v register map
     - Parameters: N_SPINS=64 (default), Q_STATES=3, BETA_FIXED=8'h40 (β=2.0)
@@ -1075,7 +1075,7 @@ tasks:
     TASK — THREE-WAY SELECTION EXPERIMENT (no GPU fine-tuning required):
 
     Load data/fr11_zenil_distill_v2.jsonl — each entry has:
-    {question, response, correct, verifier_verdict, energy_score, alpha_t_contributes}
+    {{question, response, correct, verifier_verdict, energy_score, alpha_t_contributes}}
 
     CONDITION A — RLVR-only (Carnot energy filter, no distillation):
     - For each entry, apply energy threshold filter (energy < threshold → accept)
@@ -1221,7 +1221,7 @@ tasks:
        - Tier 3 (Ising): full sampling. Record exit tier and energy.
 
     3. MEASURE TIER-EXIT DISTRIBUTION on SOTA outputs:
-       Compare to exp1073 FoVer results: {0a: 4/50, 0b: 25/50, 2: 13/50, 3: 8/50}
+       Compare to exp1073 FoVer results: {{0a: 4/50, 0b: 25/50, 2: 13/50, 3: 8/50}}
        Hypothesis: SOTA model has fewer violations → more exit at Tier 0a (faster cascade)
 
     4. ENERGY ORDERING CHECK:
@@ -1307,8 +1307,8 @@ tasks:
     TASK PART 1 — DIAGNOSTIC (find WHY TP=0):
     1. Load 20 wrong GSM8K answers from exp1079 output file (if available).
        If output not in JSON: generate 10 simple wrong GSM8K answers synthetically:
-       {"question": "What is 15 + 27?", "response": "15 + 27 = 43. The answer is 43.",
-        "correct_answer": "42", "is_correct": false}
+       {{"question": "What is 15 + 27?", "response": "15 + 27 = 43. The answer is 43.",
+        "correct_answer": "42", "is_correct": false}}
        (Use known-wrong arithmetic as synthetic diagnostic corpus)
 
     2. Run VeriCoTStepValidator on each wrong answer and print:
