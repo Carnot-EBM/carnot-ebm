@@ -21,11 +21,52 @@ session metadata (model gpt-5.5, xhigh reasoning, 2174 tokens used).
 
 **Codex routing is now re-enabled.** The .85+ planner MAY propose
 `agent_type: codex` tasks subject to the standard discipline
-(prior_failures hygiene, etc.). Gemini routing remains active
-alongside it. The previously-retired exp1065 entry stays in the
-exclusion manifest because that specific scope is no longer needed —
-codex already works after the fix; we don't need a "fix codex
-config" experiment.
+(prior_failures hygiene, etc.). The previously-retired exp1065 entry
+stays in the exclusion manifest because that specific scope is no
+longer needed — codex already works after the fix; we don't need a
+"fix codex config" experiment.
+
+### 2026-05-01: gemini backend routing paused (rate-limit useless)
+
+**User directive (2026-05-01 ~00:20Z):** *"I'm going to recommend that
+you disable the gemini bridge due to the ridiculous 429 throttling
+which makes it essentially useless."*
+
+**Empirical finding 2026-05-01 ~00:17Z:** direct test of the conductor's
+exact gemini invocation (`gemini -p '...' --yolo --model
+gemini-3.1-pro-preview`) succeeded for a trivial math question (returned
+"42") but a single read-only file-inspection task tripped a `429 Too
+Many Requests` from `cloudcode-pa.googleapis.com/v1internal:
+streamGenerateContent`. The CLI silently retried and recovered, but
+this is the *floor* of what we'd ask gemini to do — any actual
+agentic loop with multiple tool calls would compound retries until
+either the conductor wall-clock kills it or the rate-limit budget
+refills. The preview-tier `gemini-3.1-pro-preview` model is too
+restrictively rate-limited for autonomous research use.
+
+**Historical evidence:** exp1074 (Gemini routing test, .83) +
+exp1078 (Gemini Worktree Conductor, .83) + exp1087 (Gemini Worktree
+Tier B, .84) all FAILed before reaching useful output. The bridge
+was wired but never produced a milestone artifact.
+
+**Planner instructions:**
+- Do NOT propose new tasks with `agent_type: gemini` until this
+  constraint is lifted.
+- Do NOT propose "fix gemini bridge" or "fix gemini rate limit"
+  tasks — the rate limit is upstream Google preview-tier policy,
+  not something we can patch.
+- The multi-agent-routing change proposal at
+  `openspec/change-proposals/multi-agent-routing.md` remains
+  conceptually valid; just defer the gemini implementation.
+- Three viable backends remain: claude (default), codex (re-enabled
+  this session), opencode (wired but never tested).
+
+**To re-enable:** any of the following would lift the constraint —
+(a) Google ships a non-preview-tier gemini-3.x model with sane rate
+limits, (b) we obtain Vertex AI API access with paid-tier quotas,
+or (c) we implement local rate-limit-aware retry with exponential
+backoff at the conductor layer that gracefully degrades to claude
+on persistent 429.
 
 The original constraint text is preserved below (struck-through) for
 historical record per CLAUDE.md no-pruning policy.
