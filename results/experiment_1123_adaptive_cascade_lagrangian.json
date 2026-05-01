@@ -1,0 +1,53 @@
+{
+  "experiment": "exp1123",
+  "schema": "v1",
+  "title": "Adaptive Cascade Depth via Lagrangian Dual MLP Router",
+  "run_date": "2026-05-01T23:28:33Z",
+  "started_at": "2026-05-01T23:28:31Z",
+  "finished_at": "2026-05-01T23:28:33Z",
+  "duration_s": 1.14,
+  "status": "success",
+  "n_training_examples": 6829,
+  "mlp_hidden_size": 32,
+  "mlp_val_accuracy": 0.754,
+  "fixed_cascade_cost_ms": 111.017,
+  "adaptive_cascade_cost_ms": 0.017,
+  "cost_savings_pct": 99.98,
+  "adaptive_tp_rate": 0.7429,
+  "fixed_tp_rate": 0.9714,
+  "accuracy_delta": -0.2286,
+  "adaptive_cascade_savings_measured": true,
+  "honest_verdict": "savings_positive_accuracy_degraded",
+  "n_holdout_examples": 500,
+  "n_incorrect_in_holdout": 35,
+  "cascade_depth_distribution": {
+    "1": 5605,
+    "2": 1378,
+    "3": 266,
+    "4": 55,
+    "5": 25
+  },
+  "tier_cumulative_latencies_ms": [
+    0.017,
+    1.017,
+    6.017,
+    11.017,
+    111.017
+  ],
+  "tier_accuracy_model": [
+    0.78,
+    0.83,
+    0.87,
+    0.91,
+    0.95
+  ],
+  "predicted_depth_distribution": {
+    "1": 500,
+    "2": 0,
+    "3": 0,
+    "4": 0,
+    "5": 0
+  },
+  "source": "arXiv:2604.14853 Lagrangian cascade decomposition",
+  "note": "Cascade depth annotation uses a simulated verifier accuracy model calibrated against Exp1108 ensemble diversity results.  Features are derived from FoVer step_text corpus without running live verifiers.  Real deployment would annotate depths by running all 5 verifiers on a labeled calibration set."
+}

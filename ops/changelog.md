@@ -4511,3 +4511,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-01: Energy Verifier Retrain on SOTA Corpus — Energy Inversion Fix (gated on exp1119) (✅ Complete) — honest_verdict=inversion_fixed_ordering_correct; results/experiment_1120_energy_verifier_retrain_sota.json
 - 2026-05-01: AND-Composition k=5 Production Wiring — VerifyRepairPipeline Default Ensemble (✅ Complete) — honest_verdict=k5_deployed_and_benchmarked; results/experiment_1121_k5_and_compose_production.json
 - 2026-05-01: KV260 v4 Sparse+Inertia Python Simulation — Validate KL(v4||Gibbs) < 0.05 (⚠️ Research Finding) — honest_verdict=v4_kl_above_threshold; results/experiment_1122_kv260_v4_python_sim.json
+- 2026-05-01: Adaptive Cascade Routing with Lagrangian Dual — Compute-Optimal Verification (✅ Complete) — honest_verdict=savings_positive_accuracy_degraded; results/experiment_1123_adaptive_cascade_lagrangian.json
