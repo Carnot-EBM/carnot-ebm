@@ -1523,7 +1523,16 @@ def _verdict_is_untrustworthy(payload: dict) -> tuple[bool, str | None]:
     # tautologically accepts everything when all scores are 0). The
     # finding is correct and reproducible; cycling it 3 more times via
     # the fail-cap is wasted wall time.
-    if vlow.endswith("_honest_negative") or vlow.endswith("_honest_null"):
+    # Broadened 2026-05-01 18:00Z: recognize `honest_negative` /
+    # `honest_null` / `honest_neutral` ANYWHERE in verdict, not just
+    # at the end. .86 incidents: exp1108 produced
+    # `and_composition_still_not_viable` (no honest_* marker — needed
+    # operator rename), exp1109 produced `kl_below_threshold_simulation_only`
+    # (also no marker — needed operator rename), exp1110 produced
+    # `honest_negative_non_degenerate` (marker present but in middle,
+    # not suffix). The original endsWith check missed the middle case.
+    HONEST_FINDING_TOKENS = ("honest_negative", "honest_null", "honest_neutral")
+    if any(tok in vlow for tok in HONEST_FINDING_TOKENS):
         return False, verdict
     try:
         sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
