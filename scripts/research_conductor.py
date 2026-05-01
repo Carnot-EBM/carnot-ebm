@@ -28,6 +28,7 @@ from __future__ import annotations
 
 import argparse
 import concurrent.futures
+import hashlib
 import json
 import logging
 import os
@@ -790,13 +791,126 @@ def preflight_gpu_reap() -> dict:
     }
 
 
+# 2026-05-01 fingerprint cache for pre-tests.
+#
+# Pre-tests dominate conductor wall time: ~17 min/task in the full-suite
+# path, ~32 min in the smart-subset path. Multiplied across a ~13-task
+# milestone that's ~3.7 hours of pure pre-test wall time per milestone,
+# while the experiments themselves average 2-5 min each. In steady state
+# most iterations do not change source code at all (the conductor is
+# reading roadmap YAML, writing artifacts, committing JSON results — the
+# test outcomes cannot have changed since the last green run).
+#
+# The cache short-circuits run_tests() when the fingerprint of all .py
+# files under python/carnot/, tests/python/, scripts/ — plus
+# pyproject.toml, Cargo.toml, uv.lock — matches the fingerprint at the
+# last green pre-test for an equivalent or stronger mode. (A green
+# full-suite satisfies a subset request; a green subset does not satisfy
+# a full request.)
+PRETEST_CACHE_FILE = PROJECT_ROOT / "ops" / ".pretest-cache.json"
+PRETEST_FINGERPRINT_DIRS = ("python/carnot", "tests/python", "scripts")
+PRETEST_FINGERPRINT_FILES = ("pyproject.toml", "Cargo.toml", "uv.lock")
+
+
+def _compute_pretest_fingerprint() -> str:
+    """Hash mtimes + sizes of files that could affect test outcomes.
+
+    Two runs with the same fingerprint must produce the same test results
+    (modulo flaky tests). Fingerprint changes when any tracked .py file
+    is added, removed, modified, or when build manifest files change.
+    """
+    h = hashlib.sha256()
+    for d in PRETEST_FINGERPRINT_DIRS:
+        root = PROJECT_ROOT / d
+        if not root.exists():
+            continue
+        for f in sorted(root.rglob("*.py")):
+            try:
+                stat = f.stat()
+            except OSError:
+                continue
+            try:
+                rel = f.relative_to(PROJECT_ROOT).as_posix()
+            except ValueError:
+                continue
+            h.update(f"{rel}:{stat.st_mtime_ns}:{stat.st_size}\n".encode())
+    for fname in PRETEST_FINGERPRINT_FILES:
+        f = PROJECT_ROOT / fname
+        if not f.exists():
+            continue
+        try:
+            stat = f.stat()
+        except OSError:
+            continue
+        h.update(f"{fname}:{stat.st_mtime_ns}:{stat.st_size}\n".encode())
+    return h.hexdigest()
+
+
+def _load_pretest_cache() -> dict:
+    """Load the pretest fingerprint cache. Returns empty dict on any error."""
+    try:
+        return json.loads(PRETEST_CACHE_FILE.read_text())
+    except (OSError, json.JSONDecodeError):
+        return {}
+
+
+def _save_pretest_cache(fingerprint: str, summary: str, mode: str) -> None:
+    """Persist the green-pre-test fingerprint so the next run can short-circuit."""
+    payload = {
+        "fingerprint": fingerprint,
+        "summary": summary,
+        "mode": mode,
+        "saved_at": datetime.now(UTC).isoformat(),
+    }
+    try:
+        PRETEST_CACHE_FILE.parent.mkdir(parents=True, exist_ok=True)
+        PRETEST_CACHE_FILE.write_text(json.dumps(payload, indent=2))
+    except OSError as exc:
+        logger.warning("Failed to write pre-test cache: %s", exc)
+
+
+def _pretest_cache_satisfies(mode: str, current_fp: str, cache: dict) -> bool:
+    """Whether a cached green pre-test satisfies the requested mode.
+
+    A green full-suite cache satisfies both subset and full requests.
+    A green subset cache satisfies subset requests only — a full request
+    must run a real full suite even if subset previously passed.
+    """
+    if cache.get("fingerprint") != current_fp:
+        return False
+    cached_mode = cache.get("mode")
+    if mode == "subset":
+        return cached_mode in ("full", "subset")
+    if mode == "full":
+        return cached_mode == "full"
+    return False
+
+
 def run_tests(full: bool = False) -> tuple[bool, str]:
     """Run tests. Uses smart subset by default, full suite when full=True.
 
     Smart subset: runs only core tests + tests for recently changed files.
     This takes ~30-60s instead of ~8 min for the full 2300+ test suite.
     Full suite is used for post-commit validation.
+
+    2026-05-01: short-circuits when a fingerprint-cache hit indicates no
+    test-relevant file has changed since the last green pre-test of the
+    requested (or stronger) mode.
     """
+    mode = "full" if full else "subset"
+    current_fp = _compute_pretest_fingerprint()
+    cache = _load_pretest_cache()
+    if _pretest_cache_satisfies(mode, current_fp, cache):
+        cached_summary = cache.get("summary", "(no summary)")
+        cached_mode = cache.get("mode", "?")
+        logger.info(
+            "Pre-test SKIPPED — fingerprint %s matches last green %s (cached summary: %s)",
+            current_fp[:12],
+            cached_mode,
+            cached_summary,
+        )
+        return True, f"cache hit: {cached_summary}"
+
     logger.info("Running test suite%s...", " (FULL)" if full else " (smart subset)")
     venv_pytest = str(PROJECT_ROOT / ".venv" / "bin" / "pytest")
 
@@ -910,7 +1024,13 @@ def run_tests(full: bool = False) -> tuple[bool, str]:
         if "passed" in line or "failed" in line:
             summary = line.strip()
             break
-    return rc == 0, summary
+    success = rc == 0
+    if success:
+        # Persist this fingerprint so the next iteration can short-circuit.
+        # Computed pre-run; pytest itself doesn't write source files, and
+        # if anything else did, we'd cache the post-state on next entry.
+        _save_pretest_cache(current_fp, summary, mode)
+    return success, summary
 
 
 def git_status() -> str:
