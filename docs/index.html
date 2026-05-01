@@ -300,7 +300,7 @@
     </div>
     <div class="stats-bar" aria-label="Live-GPU headline numbers">
       <div class="stat"><div class="stat-num">99.3%</div><div class="stat-label">Wrong code detected</div></div>
-      <div class="stat"><div class="stat-num">+3.0pp</div><div class="stat-label">HumanEval (live GPU)</div></div>
+      <div class="stat"><div class="stat-num">+36pp</div><div class="stat-label">HumanEval (SOTA 35B model)</div></div>
       <div class="stat"><div class="stat-num">+4.9pp</div><div class="stat-label">Typed-constraint tasks</div></div>
       <div class="stat"><div class="stat-num">1 line</div><div class="stat-label">pip install carnot</div></div>
     </div>
@@ -582,6 +582,24 @@
         <h3 class="r-title">143 tests, 0 failures; SC-Energy wired as default Tier 2</h3>
         <div class="r-meter"><div class="r-bar" style="width: 100%; background: #22c55e;"></div></div>
         <div class="r-stats"><span class="r-before">SCEnergyEnergyAdapter replaces VJEPA v2 as production OOD gate; VJEPA retained as fallback</span> <span class="r-after">Milestone .78 &mdash; Exp 1001</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">FoVer corpus expansion &mdash; Z3 + GSM8K labeling (30x growth)</span>
+        <h3 class="r-title">AUROC 0.57 &rarr; 0.99 via 30x corpus expansion</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 99%; background: #22c55e;"></div></div>
+        <div class="r-stats"><span class="r-before">6,548 Z3-confirmed pairs (from 216); SOS-KAN 0.9899, ThinkPRM 0.9885, NK-KAEM 0.9875</span> <span class="r-after">74-percentile-point lift &mdash; Exps 1055/1057</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Live benchmark &mdash; SOTA 35B model (Qwen3.6-35B-A3B, dual RTX 3090)</span>
+        <h3 class="r-title">HumanEval pass@1: 0% &rarr; 36% after Carnot correction</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 36%; background: #22c55e;"></div></div>
+        <div class="r-stats"><span class="r-before">First positive delta with a SOTA instruction-tuned model; GSM8K extraction still failing (VeriCoT TP=0)</span> <span class="r-after">Milestone .84 &mdash; Exp 1079</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Step-level PRM dataset &mdash; MCTS-based labeling from FoVer corpus</span>
+        <h3 class="r-title">7,349 step-labeled examples (3.7x target)</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 100%; background: #a855f7;"></div></div>
+        <div class="r-stats"><span class="r-before">Target was 2,000; largest PRM dataset in project history; ThinkPRM retrain AUROC 0.99&rarr;0.79 on 300-sample subset (full retrain pending)</span> <span class="r-after">Milestone .84 &mdash; Exp 1084</span></div>
       </div>
     </div>
 

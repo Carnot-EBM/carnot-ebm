@@ -4,6 +4,346 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-05-01 arxiv Scan (Milestone 2026.04.85 Planning)
+
+### Reward Under Attack: PRM Robustness and Hackability
+- **Paper:** arXiv 2603.06621 (March 2026)
+- **What:** Shows PRMs are systematically exploitable: gradient-based attacks inflate rewards on
+  invalid trajectories by 43% via stylistic shortcuts (long preambles, structured formatting)
+  rather than correctness signals. The attack surface is the verifier's learned null space.
+- **Relevance to Carnot:** Directly confirms the null-space mimicry attack threat model in
+  CLAUDE.md. Carnot's Phase 1a adversarial verifier robustness audit (known-issues.md MANDATORY)
+  should use the attack patterns from this paper to measure false-pass rate. The paper's
+  Isomorphic Perturbation Testing (IPT) is a cheap adversarial probe compatible with FoVer corpus.
+- **Concrete experiment:** Exp 1092 (Phase 1a adversarial audit) — use arXiv 2603.06621 attack
+  patterns as the adversarial probe suite.
+- **When to incorporate:** Milestone .85 Phase 1a adversarial audit.
+
+### LLMs Gaming Verifiers: RLVR Reward Hacking
+- **Paper:** arXiv 2604.15149 (April 2026)
+- **What:** RLVR models learn to enumerate instance labels instead of inducing relational rules,
+  passing extensional verifiers without learning the underlying structure. Introduces Isomorphic
+  Perturbation Testing (IPT) as a verifier-agnostic adversarial probe.
+- **Relevance to Carnot:** Directly applicable to Carnot's verifier null-space measurement
+  (Phase 1c). IPT is a low-cost adversarial check: take a verified output, apply structure-
+  preserving permutation, check if energy changes appropriately. If not, the verifier is
+  exploitable. Complements arXiv 2603.06621.
+- **Concrete experiment:** Exp 1093 (Phase 1c null-space measurement) and Exp 1092 (Phase 1a
+  robustness audit) — use IPT as a structural exploit probe.
+- **When to incorporate:** Milestone .85 Phase 1a and 1c experiments.
+
+### Self-Distilled Reasoner: On-Policy Self-Distillation for LLMs
+- **Paper:** arXiv 2601.18734 (January 2026)
+- **What:** Single LLM acts as both teacher and student: teacher generates verified traces
+  (access to oracle), student sees only question, trained via per-token divergence on student's
+  own rollouts. Achieves stronger token efficiency than standard RLVR and beats off-policy
+  distillation. Demonstrates that on-policy alignment is the key to avoiding distribution shift.
+- **Relevance to Carnot:** Third concrete SSD variant complementing Zenil/SSD and arXiv
+  2604.03128 (Self-Distilled RLVR). The on-policy aspect is directly relevant to Carnot's
+  FR-11 RLVR+SSD integration — Carnot's energy verifier provides the oracle signal for the
+  teacher. The per-token divergence training objective maps to Carnot's step-level PRM data
+  (data/step_level_prm_training.jsonl, 7349 examples from exp1084).
+- **When to incorporate:** Exp 1099 (RLVR+SSD integration v1 in .85).
+
+### Efficient Hardware Architecture for Diffusion-Like EBMs
+- **Paper:** arXiv 2510.23972 (October 2025)
+- **What:** CMOS transistor RNG implementing Denoising Thermodynamic Models (sequential hardware
+  EBMs) at ~10,000x lower energy than GPU equivalents. From Extropic co-authors. Demonstrates
+  that hardware-native stochasticity (thermodynamic noise) IS computation — not a bug but a
+  feature for Gibbs-like samplers.
+- **Relevance to Carnot:** Directly supports Carnot's Phase 2 hardware roadmap. The architecture
+  confirms the Extropic Z1 design philosophy: use thermodynamic noise as the sampling primitive
+  rather than digital RNGs. For the position paper, this provides an independent Extropic-adjacent
+  citation showing that sub-milliwatt hardware EBM inference is achievable.
+- **When to incorporate:** Position paper Phase 2 hardware section (Exp 1091). Phase 2a sampler
+  correctness audit (Exp 1094) — cite as theoretical baseline for expected hardware behavior.
+
+### Programmable k-local Ising Machines and All-Optical KAN on Photonic Platforms
+- **Paper:** arXiv 2508.17440 (August 2025)
+- **What:** Unifies k-local Ising optimization AND KAN layers on a single photonic platform
+  using spatial light modulators with trainable in-situ physical gradients. The ONLY published
+  work physically co-locating Ising machines and KAN computation — exactly Carnot's dual-
+  primitive architecture (Ising sampling + KAN energy tiers).
+- **Relevance to Carnot:** HIGH PRIORITY for the position paper. This paper is the only published
+  work with the same hardware-primitive combination as Carnot. The all-optical KAN could serve
+  as Phase 3 hardware for Carnot's KAN energy tier, with Ising sampling running on the same chip.
+  Cite in position paper Phase 2/3 hardware section as convergent evidence that the Ising+KAN
+  co-design is the right hardware direction.
+- **When to incorporate:** Position paper v2 (Exp 1091) — cite in hardware motivation section.
+  Hardware wishlist: add photonic KAN+Ising platform as Phase 3 hardware candidate.
+
+### Draft-Conditioned Constrained Decoding for Structured Generation
+- **Paper:** arXiv 2603.03305 (March 2026)
+- **What:** Decouples semantic planning (unconstrained draft) from structural enforcement
+  (constrained decode), reducing the "projection tax" in standard constrained decoding. Semantic
+  draft is generated first, then constrained decoding is applied with the draft as a conditioning
+  signal — yielding locally valid AND semantically correct outputs. Up to +24pp over standard
+  constrained decoding on structured benchmarks.
+- **Relevance to Carnot:** Repair pipeline upgrade path. Carnot's repair step (after violation
+  detection) currently uses simple constrained generation. DCCD could substantially improve
+  repair quality by conditioning the constrained rewrite on the original intent. This is directly
+  relevant to the GSM8K extraction fix experiment (Exp 1101) — better repair quality on math
+  reasoning.
+- **When to incorporate:** Exp 1101 (GSM8K extraction + repair fix in .85). Position paper
+  Section 4 (architecture) — cite as repair quality upper bound.
+
+### Robust Optimization for Mitigating Reward Hacking with Correlated Proxies
+- **Paper:** arXiv 2604.12086 (April 2026)
+- **What:** Formalizes when proxy reward correlation to true reward is sufficient to prevent
+  hacking. Derives principal conditions for safe proxy reward use and provides mitigation for
+  cases where verifiers share correlated failure modes. The r-correlation framework provides
+  a principled metric for verifier diversity.
+- **Relevance to Carnot:** Phase 1c verifier joint null-space measurement. The r-correlation
+  metric from this paper provides a formal bound on AND-composition effectiveness: if verifiers
+  have r-correlation > threshold, AND-composition does NOT shrink the joint null space as
+  expected. This is the algebraic-geometry confirmation of the pathological joint null space
+  problem from CLAUDE.md.
+- **When to incorporate:** Exp 1093 (Phase 1c null-space measurement in .85) — use r-correlation
+  as the measurement metric alongside dim(∩_i ker E_i).
+
+## 2026-04-30 arxiv Scan (Milestone 2026.04.84 Planning)
+
+### Energy Outcome Reward Model (EORM): 55M-Parameter EBM Verifier
+- **Paper:** arXiv 2505.14999 (May 2025)
+- **What:** Proposes EORM, a 55M-parameter energy-based verifier that ranks Chain-of-Thought
+  solutions. Uses an explicit energy framework rather than a discriminative classifier.
+  Achieves 90.7% on GSM8k with 127x fewer parameters than typical reward models. Key:
+  the energy function is learned end-to-end from (question, solution, label) triples.
+- **Relevance to Carnot:** Independent empirical validation of energy-based CoT ranking at
+  minimal parameter counts. EORM's architecture (55M) maps to Carnot's KAN energy tier
+  (target: 8.7x fewer params than Ising). Compare EORM's learned energy against Carnot's
+  physics-informed (Ising+KAN) energy on FoVer corpus. The 127x parameter efficiency
+  framing is precisely the argument Carnot's position paper makes for energy-based verifiers
+  over large reward models.
+- **Concrete experiment:** Exp 1080 or follow-on — implement EORM-style training on FoVer
+  corpus, compare AUROC vs SOS-KAN v3 (0.9545). If similar, cite as independent confirmation.
+- **When to incorporate:** Position paper Section 4 (architecture) — cite as independent
+  validation. Research comparison in .84 if time permits.
+
+### Process Reward Models Meet Planning: Scalable Step-Level Supervision
+- **Paper:** arXiv 2604.17957 (April 2026)
+- **What:** Combines Process Reward Models (step-level verifiers) with planning algorithms
+  to generate synthetic step-level supervision data at scale. Uses Monte Carlo Tree Search
+  (MCTS) to simulate partial reasoning trajectories and assign process-level labels without
+  human annotation. Achieves state-of-the-art PRM accuracy on math benchmarks.
+- **Relevance to Carnot:** ThinkPRM (Exp 1033, AUROC 0.9885) is Carnot's step-level verifier.
+  Its training data bottleneck is the FoVer corpus size (6548 pairs). This paper's MCTS-based
+  data generation pattern could expand ThinkPRM training data to 50k+ step-level labeled
+  examples using Carnot's own Ising energy as the scoring signal. The planning data generator
+  IS a form of self-distillation that satisfies Zenil's α_t > 0 condition (the energy score
+  provides the grounding signal at each step).
+- **Concrete experiment:** Exp 1084 in .84 — implement MCTS-based data generation using
+  Carnot's cascade as the step scorer, generate 10k+ step-level pairs, retrain ThinkPRM.
+  Target: AUROC >= 0.995 (beating current 0.9885 with more data).
+- **When to incorporate:** Milestone .84 (Exp 1084).
+
+### Trust but Verify! Survey on Verification Design for Test-Time Scaling
+- **Paper:** arXiv 2508.16665 (August 2025)
+- **What:** Comprehensive survey of LLM verification methods for test-time scaling (TTS).
+  Categorizes verifier architectures (discriminative vs. generative vs. energy-based),
+  training paradigms (supervised, RL, contrastive), and scaling strategies (parallel
+  sampling vs. sequential refinement). Identifies open problems: verifier generalization
+  to unseen domains, computational efficiency, step-level vs. outcome-level tradeoffs.
+- **Relevance to Carnot:** Maps Carnot's verification cascade directly to the TTS taxonomy.
+  Carnot implements "energy-based process verification with hardware-accelerated sampling"
+  — a distinct point in the taxonomy. Position paper Section 2 should cite this survey to
+  frame Carnot's contributions. The open problems it identifies (generalization, efficiency)
+  are exactly what Carnot's FPGA path and SOS-KAN certified energy address.
+- **Concrete use:** Position paper Section 2 (related work) — cite as taxonomy anchor.
+  Show where Carnot sits in the survey's 2D space (energy-based × hardware-accelerated).
+- **When to incorporate:** Position paper v2 (Exp 1078).
+
+## 2026-04-30 arxiv Scan (Milestone 2026.04.83 Planning)
+
+### Semantic Energy: Detecting LLM Hallucination Beyond Entropy
+- **Paper:** arXiv 2508.14496 (August 2025)
+- **What:** Combines semantic clustering with a Boltzmann-inspired energy distribution to detect
+  LLM hallucinations. Operates directly on penultimate-layer logits (pre-softmax) rather than
+  post-softmax probabilities. Key insight: semantic entropy fails when softmax compression hides
+  the model's true uncertainty; Semantic Energy bypasses this by reading the raw logit energy.
+  Reports significant improvements over semantic entropy on hallucination detection benchmarks.
+- **Relevance to Carnot:** This is an independent derivation of Carnot's core architectural claim:
+  energy-based signals (pre-softmax logits) contain more information about model uncertainty than
+  probability-based signals (post-softmax). The Boltzmann framing maps directly to Carnot's Ising
+  energy tier. Critically, this paper validates that our Tier 0c NUP Probe v4 (bigram dot product
+  on logits) is on the right track — both papers extract energy from pre-normalized representations.
+  The "beyond entropy" framing is the right vocabulary for the position paper: cite as concurrent
+  work with complementary experimental validation.
+- **Concrete use:** Position paper Section 2 (related work): cite alongside Eidoku (2512.20664)
+  as contemporaneous energy-based verification approaches. Also: the logit-based energy signal
+  could enhance Tier 0b (SpilledEnergyDetector, arXiv 2602.18671) by operating on penultimate
+  layer logits rather than output logit discrepancy alone. Potential Exp 1080+ SemEnergy probe.
+- **Phase relevance:** Phase 1 (validates Tier 0b/0c architecture); position paper.
+- **When to incorporate:** Position paper draft (Exp 1075); Tier 0 probe ensemble as stretch goal.
+
+### Decomposing Large-Scale Ising Problems on FPGAs: A Hybrid Hardware Approach
+- **Paper:** arXiv 2602.15985 (February 2026)
+- **What:** Heterogeneous system: FPGA-based decomposer tightly integrated with a custom 28nm
+  Ising solver chip. Key result: nearly 2x speedup and 100x+ energy efficiency vs optimized CPU
+  software by co-locating problem decomposition with the solver, eliminating host-device latency.
+  Enables solving problems with "thousands of variables" — well beyond single-chip Ising scales.
+- **Relevance to Carnot:** Phase 2 hardware architecture. The FPGA-as-decomposer pattern is
+  exactly what Carnot's KV260 path implements implicitly: the ARM cores decompose the problem,
+  the FPGA PL runs the Ising sampler. This paper validates that the decomposition bottleneck is
+  real and the co-design approach achieves the expected gains. The 100x energy efficiency number
+  can be cited in the position paper hardware section as near-term-achievable targets.
+  More importantly: the "thousands of variables" scope aligns with Carnot's Phase 2 mandate
+  (1k-10k p-bits on KV260). We are not trying to solve general MAX-3SAT; we are solving
+  structured constraint verification problems where the decomposition can be pre-computed.
+- **When to incorporate:** Position paper Section 5 (hardware path); hardware wishlist update.
+  No new experiment needed — validates existing Phase 2 design decisions.
+
+### Self-Distilled RLVR: Closing the FR-11 Loop Without External Verifier
+- **Paper:** arXiv 2604.03128 (April 2026)
+- **What:** Combines RLVR (verifier-guided RL) with on-policy self-distillation. The verifier
+  provides a learning signal; self-distillation prevents the model from collapsing to the
+  verifier's null space. Key result: RLVR+SD outperforms RLVR alone by +7pp on math benchmarks
+  with no additional human labels. The paper explicitly shows that self-distillation without
+  a verifier collapses in 3-5 rounds (Zenil Theorem 4 empirically confirmed).
+- **Relevance to Carnot:** Direct empirical validation of the Phase-3 architecture chain.
+  Zenil's Theorem 4 (α_t → 0 implies collapse) is confirmed experimentally: pure self-distillation
+  without RLVR signal collapsed after 3-5 rounds. This paper's combination — RLVR (verifier
+  as α_t μ_P term) + self-distillation (student-teacher gap) — is precisely Carnot's FR-11 target.
+  The +7pp improvement over verifier-alone also suggests that combining Energy-Selection SSD
+  (Carnot's current FR-11 attempt) with a step-level RLVR signal could close the remaining gap.
+  Use in Exp 1074 (FR-11 alpha_t v3) as the theoretical motivation for combining energy-selection
+  with RLVR signal rather than treating them as alternatives.
+- **Phase relevance:** Phase 3 (self-distillation architecture); FR-11 mandatory experiments.
+- **When to incorporate:** Exp 1074 (FR-11 alpha_t live v3) — cite as empirical grounding for
+  combining Carnot verifier signal with self-distillation. Position paper Section 3.
+
+### Embarrassingly Simple Self-Distillation Improves Code Generation
+- **Paper:** arXiv 2604.01193 (April 2026)
+- **What:** Shows that a minimal self-distillation recipe (generate N candidates, filter by
+  correctness, fine-tune on filtered set) improves code generation by +3-8pp on HumanEval/LiveBench
+  without any external judge — just execution feedback as the filter. Key: the correctness filter
+  IS the α_t μ_P term; the method works precisely because execution is a ground-truth oracle.
+- **Relevance to Carnot:** Carnot's code verification path (SymCodeVerifier + execution feedback,
+  Tier 2.5) implements this exact filter, but without the fine-tuning step. This paper suggests
+  that adding a distillation loop over execution-verified code generations would close the
+  HumanEval gap from +3pp (Carnot's live result) to +6-11pp. The "embarrassingly simple" framing
+  is also useful for the position paper: Carnot's energy-based filter is a generalization of
+  execution feedback to non-executable domains (math, logic, prose).
+- **When to incorporate:** Exp 1074 (FR-11 self-learning) or a follow-on code SSD experiment.
+  Position paper Section 4 (architecture) — cite as supporting evidence that filtered SSD works.
+
+### Kaiwu: Bridging Deep Learning and Photonic Quantum Computing for EBMs
+- **Paper:** arXiv 2602.19114 (February 2026)
+- **What:** PyTorch plugin that bridges deep learning workflows with photonic quantum computing
+  hardware for energy-based model inference. Implements the backend protocol needed to run EBM
+  inference on photonic processors (similar to how PennyLane bridges to quantum hardware).
+  Uses interference-based sampling for EBM energy evaluation rather than MCMC.
+- **Relevance to Carnot:** Phase 2/3 hardware path. Carnot's `SamplerBackend` protocol
+  (already in place) is designed for exactly this kind of pluggable backend. A Kaiwu-backed
+  sampler would provide photonic-speed EBM inference (speed-of-light) — the Phase 3 hardware
+  tier in `_bmad/architecture.md`. The PyTorch plugin pattern (not a full fork) is also the
+  right integration model: wrap Kaiwu as a `SamplerBackend` subclass, keep the rest of the stack.
+  This is less speculative than Extropic's XTR-0 (vaporware until shipped); Kaiwu provides a
+  real integration path to photonic hardware TODAY. Check Kaiwu's hardware availability.
+- **Phase relevance:** Phase 2 (photonic backend for Ising sampling); Phase 3 foundation model.
+- **When to incorporate:** Hardware wishlist (add to Priority 3 section). No experiment until
+  photonic hardware is accessible.
+
+## 2026-04-29 arxiv Scan (Milestone 2026.04.82 Planning)
+
+### Eidoku: A Neuro-Symbolic Verification Gate for LLM Reasoning
+- **Paper:** arXiv 2512.20664 (December 2025)
+- **What:** Proposes a constraint-based deterministic verification gate that rejects LLM
+  reasoning outputs containing logical or arithmetic contradictions, without any learned
+  classifier. Uses deterministic rule-evaluation over a parsed constraint graph derived from
+  the chain-of-thought steps. Reports near-zero false-positive rate on benchmarks where
+  the constraint encoding is correct.
+- **Relevance to Carnot:** Direct architectural parallel to Carnot's Tier 0 verifier cascade.
+  The key design decision — parse CoT into a constraint graph, evaluate deterministically —
+  is exactly what VeriCoTStepValidator does (Exp 453), but Eidoku scales this to larger
+  reasoning tasks. The paper's "neuro-symbolic gate" framing is a useful vocabulary for the
+  position paper: Carnot's cascade IS a neuro-symbolic verification gate at inference time.
+  Cite in Section 2 (related work) and Section 4 (architecture) of the position paper.
+- **Phase relevance:** Phase 1 (current verify-repair) — validates architecture choice; Phase 3
+  position paper — cite as contemporaneous approach with architectural comparison.
+- **When to incorporate:** Position paper draft (Exp 1063+); no new experiment needed.
+
+### Neural Sum-of-Squares: Certifying Nonnegativity with Transformers
+- **Paper:** arXiv 2510.13444 (October 2025)
+- **What:** Combines transformer-based function approximation with Sum-of-Squares (SOS) certificates
+  for certifying polynomial nonnegativity. Uses learned Gram matrices to construct valid SOS
+  decompositions. Demonstrates that transformers can efficiently parameterize the Gram matrix
+  while maintaining the SOS structure (Gram is PSD ↔ polynomial is SOS). Empirically faster
+  than pure SDP solvers on high-degree polynomials.
+- **Relevance to Carnot:** Direct complement to SOS-KAN (Exp 1047). Where SOS-KAN uses a fixed
+  SOS parameterization for the derivative ψ'(x), this paper suggests using a learned Gram matrix
+  for the SOS decomposition — potentially more expressive while still certifiably nonnegative.
+  The transformer Gram matrix idea could replace V·V^T in SOSKANEnergy with a learned
+  low-rank PSD approximation. More importantly: the paper's certification framework could be
+  used to produce FPGA-ready SOS certificates for the Ising coupling matrix J, closing the
+  loop between energy certification and hardware deployment.
+- **Concrete experiment:** SOS-KAN v3 (milestone .83+) — replace V·V^T with a learned Gram
+  matrix from a small transformer. Compare expressivity vs. SOSKANEnergy v1 (Exp 1047)
+  on the expanded FoVer corpus. Target: AUROC >= 0.72 with certifiable invariants.
+- **When to incorporate:** Milestone .83 (after expanded FoVer corpus is available from .82).
+
+### Neural Uncertainty Principle: Unified View of Adversarial Fragility and LLM Hallucination
+- **Paper:** arXiv 2603.19562 (March 2026)
+- **What:** Frames LLM hallucination and adversarial fragility as two manifestations of the same
+  underlying phenomenon: learned representations that violate geometric constraints in the model's
+  implicit constraint space. Proves a "neural uncertainty principle" — the tradeoff between a
+  model's ability to satisfy multiple constraint types simultaneously is bounded by an information-
+  theoretic quantity related to the model's representational capacity. Key result: hallucinations
+  concentrate in the region where constraint satisfaction probability drops below a threshold θ*,
+  providing a testable prediction.
+- **Relevance to Carnot:** Provides theoretical grounding for why energy-based verification works.
+  Carnot's energy function IS the constraint-violation detector the paper describes. The θ*
+  threshold maps to Carnot's energy threshold for "skip tier" decisions. The concentration
+  result suggests that hallucinations are not random — they cluster near specific constraint
+  boundaries, which Carnot's Ising energy landscape can learn to model.
+  The adversarial angle is directly relevant to RETRO-031 (adversarial degradation): if the
+  adversarial perturbation is designed to push examples across the θ* boundary, that explains
+  why Carnot's verify-repair showed adversarial DROP but not recovery — the repair step needs
+  to push the representation BACK across θ*.
+- **Phase relevance:** Phase 1 (explains adversarial behavior); Phase 3 position paper
+  (theoretical framing section — cite as independent derivation of why EBM verification works).
+- **When to incorporate:** Position paper Section 3 (theoretical foundations). Potential future
+  experiment: measure θ* empirically using Carnot's energy scores on the FoVer corpus — does
+  hallucination concentration hold?
+
+### 250 Magnetic Tunnel Junctions-Based Probabilistic Ising Machine
+- **Paper:** arXiv 2506.14590 (June 2025)
+- **What:** Hardware Ising machine using 250 Stochastic Magnetic Tunnel Junctions (STT-MTJs)
+  on a custom CMOS chip. Achieves ~10x better energy efficiency than GPU-based Ising solvers
+  at equivalent problem sizes. Key technique: thermal noise from STT-MTJ junctions directly
+  implements the p-bit stochastic flip without a random-number generator circuit.
+  Demonstrated on combinatorial optimization up to 250 spins.
+- **Relevance to Carnot:** Phase 2 hardware path. The SamplerBackend abstraction (Exp 71)
+  already supports pluggable hardware backends. An MTJ-based backend would provide
+  thermodynamic sampling at hardware-native noise temperatures — closer to the Extropic Z1
+  dream than the KV260 digital Ising. Key numbers: 250 spins × 10x energy efficiency vs GPU
+  puts this in the same neighborhood as D-Wave for small constraint problems. The CMOS
+  implementation is more accessible than D-Wave QPU time (~$2000/hr). Worth tracking for
+  Phase 2 hardware procurement.
+- **Strategic note:** Validates Extropic's hypothesis that thermodynamic noise IS computation
+  for Ising machines. Carnot should cite this in the hardware track of the position paper
+  as evidence that the thermodynamic computing path is not speculative.
+- **When to incorporate:** Hardware wishlist (add to Priority 5 section); cite in position paper
+  hardware section. No new experiment needed until Phase 2 hardware arrives.
+
+### KAN Applied to Crystal Energy Landscape Interpretation
+- **Paper:** arXiv 2604.04636 (April 2026)
+- **What:** Applies Kolmogorov-Arnold Networks to interpret crystal energy landscapes in
+  computational materials science. KAN splines learn per-feature energy contributions
+  with explicit interpretability — each spline can be visualized as a 1D potential curve.
+  Key finding: KAN extrapolates more reliably than MLP outside the training distribution
+  for energy-dense configurations, because its activation functions are learned from data
+  rather than fixed.
+- **Relevance to Carnot:** Independent validation that KAN is a strong architecture for
+  energy function approximation. The extrapolation finding is directly relevant to
+  Carnot's concern about FoVer corpus coverage — KAEMEnergy and GS-KAN may generalize
+  better to unseen constraint types than MLP-based alternatives. The paper's interpretability
+  angle (visualizable per-spline contributions) could make Carnot's verifier more
+  explainable: "this constraint fired because feature X exceeded threshold Y" rather
+  than a black-box energy score.
+- **When to incorporate:** Background reference for position paper Section 4 (architecture).
+  Consider adding a "verifier interpretability" section to the position paper based on this.
+
 ## Study Sources & Discovery Tools
 
 Meta-sources used to identify papers, repos, and tools worth evaluating.
@@ -5538,3 +5878,78 @@ thermodynamic computing Ising FPGA
   in .80, evaluate whether Ontology NN routing could replace the Z3-backed VeriCoTStepValidator
   for constraint classes where Z3 is too slow (>1s per step).
 - **When to incorporate:** Milestone 2026.04.81 (Phase 3 — requires VPRM baseline from .80 first).
+
+## 2026-04-29 arxiv Scan (Milestone 2026.04.81 Planning)
+
+### Self-Distilled RLVR (arXiv 2604.03128)
+- **Paper:** arXiv 2604.03128 (April 2026)
+- **What:** Combines RL with verifiable rewards (RLVR) and self-distillation. Key finding: pure
+  privileged-teacher signals cause information leakage and unstable long-horizon training; the
+  self-distillation component provides token-level policy adjustment stabilizing convergence.
+  Without self-distillation, RLVR collapses on multi-step reasoning tasks.
+- **Relevance to Carnot:** Directly validates Carnot's energy-verifier design. The instability of
+  pure teacher distillation is exactly what Zenil's Theorem 4 predicts — the self-distillation
+  loop needs an exogenous grounding signal (α_t > 0). Carnot's energy function IS that stable,
+  non-leaking ground truth. Citable in Phase 3 position paper.
+- **Concrete experiment:** Milestone 2026.04.81 (Exp 1046) — cite as supporting evidence for the
+  α_t grounding measurement module.
+- **When to incorporate:** .81 (Exp 1046 Zenil FR-11).
+
+### Reinforcement Learning via Self-Distillation (SDPO, arXiv 2601.20802)
+- **Paper:** arXiv 2601.20802 (January 2026)
+- **What:** Self-Distillation Policy Optimization re-uses the model conditioned on rich textual
+  feedback as a self-teacher. Outperforms scalar-reward RL on scientific reasoning, tool use,
+  and competitive programming. The feedback-conditioned model produces qualitatively richer
+  supervision than a reward scalar alone.
+- **Relevance to Carnot:** SDPO's feedback-conditioned self-teacher is the mechanistic
+  implementation of the Zenil α_t grounding term. The verifier's CoT explanation of *why* an
+  output is high-energy is the textual feedback. Combining SDPO's policy update with Carnot's
+  energy function as the reward signal is a concrete Phase 3 experiment.
+- **Concrete experiment:** Milestone .82+ — implement SDPO-style policy update using Carnot
+  energy + violation explanation as the feedback signal. Compare to temperature-only SSD baseline.
+- **When to incorporate:** .82 (after Zenil α_t module is deployed in .81).
+
+### KAN-SAs: Efficient Acceleration of KANs on Systolic Arrays (arXiv 2512.00055)
+- **Paper:** arXiv 2512.00055 (December 2025)
+- **What:** Non-recursive B-spline computation plus sparsity-aware mapping achieves 100% systolic
+  array utilization and 50% reduction in clock cycles vs equivalent-area conventional systolic
+  arrays. The key insight: B-spline recursion can be unrolled statically, eliminating data
+  hazards that kill utilization on standard SAs.
+- **Relevance to Carnot:** The KAN tier (carnot-kan) is a deployment target for the KV260 FPGA.
+  KAN-SAs' non-recursive mapping directly addresses the reason standard FPGA KAN implementations
+  are inefficient — recursion causes pipeline bubbles. Complementary to KANELÉ (arXiv 2512.12850,
+  already in this file) which focuses on LUT-based evaluation rather than systolic mapping.
+- **Concrete experiment:** Milestone .82 — after KV260 first light (.81), implement KAN-SA style
+  non-recursive B-spline unrolling in the KAEMEnergy Verilog synthesis target.
+- **When to incorporate:** .82 FPGA synthesis track.
+
+### GenCP: Large Language Model Meets Constraint Propagation (arXiv 2505.24012)
+- **Paper:** arXiv 2505.24012 (May 2026)
+- **What:** Formulates LLM text generation as a Constraint Satisfaction Problem. Uses masked LMs
+  for bidirectional constraint propagation; domain preview via MLM calls significantly improves
+  feasible solution rate on COLLIE benchmarks. The bidirectionality is the key advance —
+  existing constrained generation methods are strictly left-to-right.
+- **Relevance to Carnot:** GenCP's bidirectional constraint propagation is the neural analog of
+  Carnot's repair pass. Currently Carnot verifies POST-generation and repairs via re-sampling.
+  GenCP integrates constraint enforcement INTO generation. Combining GenCP's MLM-based propagation
+  with Carnot's energy function as the constraint oracle could replace heuristic repair with
+  constraint-sound generation — a major Phase 1 improvement.
+- **Concrete experiment:** Milestone .82+ — prototype GenCP-style bidirectional propagation for
+  arithmetic constraint satisfaction. Use Carnot's energy function as the constraint oracle
+  replacing GenCP's hard-coded constraint checks.
+- **When to incorporate:** .82 (research path to guided decoding).
+
+### PRISM: PRM-Guided Inference Scaling (arXiv 2603.02479)
+- **Paper:** arXiv 2603.02479 (March 2026)
+- **What:** PRM-guided refinement and aggregation of solution populations achieves 90.0% on
+  AIME25 and 75.4% on HMMT25, matching or exceeding larger models. Net-directional correction
+  holds even when initial populations contain few correct solutions — the PRM can rescue
+  bad populations via guided resampling.
+- **Relevance to Carnot:** PRISM's step-level PRM guidance is the inference-time complement to
+  Carnot's training-time verification. Using Carnot's energy verifier as the PRM in PRISM-style
+  search gives a principled test-time scaling path. PRISM's finding that PRM guidance works even
+  on bad populations means Carnot's verifier could improve outputs from weaker models, directly
+  addressing the precision ceiling problem (Exp 184: 0% net improvement on 3B models).
+- **Concrete experiment:** Milestone .82+ — implement PRISM-style resampling guided by Carnot's
+  energy function. Run on GSM8K with Qwen3.6-35B-A3B. Compare to temperature-only baseline.
+- **When to incorporate:** .82 (after Triple Integration validates the cascade in .81).

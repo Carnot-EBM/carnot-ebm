@@ -1,0 +1,121 @@
+# arXiv submission metadata for Carnot position paper v2.
+# Pairs with docs/position-paper-draft-v2.md (exp1091, 2026-05-01).
+# Submission target: 2026-05-15.
+
+title: >-
+  Carnot: A Provably-Bounded Architecture for Verifier-Filtered
+  Self-Distillation Under Concept Drift
+
+primary_category: cs.LG
+secondary_categories:
+  - cs.AI
+  - quant-ph
+  - cs.NE
+
+keywords:
+  - energy-based models
+  - LLM verification
+  - hallucination detection
+  - Ising machine
+  - constrained generation
+  - FPGA
+  - KAN
+  - self-distillation
+  - process reward
+  - sum of squares
+  - thermodynamic computing
+  - photonic computing
+  - sovereignty
+
+# AMS Mathematics Subject Classification (MSC) codes.
+# 68T07: Artificial neural networks and deep learning.
+# 82B20: Lattice systems (Ising, dimer, Potts, etc.) and systems on
+#        graphs arising in equilibrium statistical mechanics.
+msc_codes:
+  - 68T07
+  - 82B20
+
+estimated_pages: "12-15"
+target_journal: "arXiv preprint + NeurIPS 2026 main-conference submission"
+submission_target_date: "2026-05-15"
+
+draft_path: docs/position-paper-draft-v2.md
+draft_version: v2
+draft_word_count_target: 7000
+
+figures:
+  - id: 1
+    file: docs/figures/fig1_cascade_architecture.py
+    output: docs/figures/fig1_cascade_architecture.{png,pdf}
+    caption: >-
+      Carnot 4-tier verification cascade with empirical skip-tier
+      rates from exp1073 triple-integration end-to-end run (n=50).
+      Tier 0a ThinkPRM, Tier 0b SpilledEnergy, Tier 2 SOS-KAN, Tier 3
+      Ising MCMC with KV260 FPGA acceleration callout.
+  - id: 2
+    file: docs/figures/fig2_sos_kan_auroc.py
+    output: docs/figures/fig2_sos_kan_auroc.{png,pdf}
+    caption: >-
+      ROC curves on the 6,548-pair FoVer corpus. SOS-KAN v3 trains to
+      AUROC = 0.9545 (exp1072); ThinkPRM full-FoVer reaches AUROC =
+      0.9885 (exp1033 predecessor run). Random baseline diagonal at
+      AUROC = 0.500. Curves illustrate published AUROC via binormal
+      fit; not a re-evaluation.
+  - id: 3
+    file: docs/figures/fig3_fpga_latency.py
+    output: docs/figures/fig3_fpga_latency.{png,pdf}
+    caption: >-
+      CPU vs KV260 FPGA Ising-sampler latency at 64 spins. CPU
+      reference ~290 ms; KV260 hardware-measured 24.83 us (exp1068
+      smoke test). Single-point comparison; multi-N scaling curve was
+      not measured because the .84 scale benchmark could not reach
+      the board.
+  - id: 4
+    file: docs/figures/fig4_alpha_t.py
+    output: docs/figures/fig4_alpha_t.{png,pdf}
+    caption: >-
+      Carnot grounding signal alpha_t on small-model (Qwen3.5-0.8B,
+      exp1074, alpha_t = 0.78) and SOTA-model (Qwen3.6-35B-A3B,
+      exp1077, alpha_t = 0.38) deployments. Both satisfy the Zenil
+      bound inf_t alpha_t > 0; SOTA-size value is expected and not
+      regression.
+  - id: 5
+    file: docs/figures/fig5_humaneval_improvement.py
+    output: docs/figures/fig5_humaneval_improvement.{png,pdf}
+    caption: >-
+      HumanEval pass@1 with Carnot verify+repair, +36 pp absolute
+      improvement on Qwen3.6-35B-A3B-GGUF (exp1079, live GPU). Honest
+      caveat on extraction-pipeline bottleneck rendered on figure;
+      same harness limit produced GSM8K TP = 0.
+
+# Reference list cross-checked at draft time. arXiv IDs in the
+# YYMM.NNNNN canonical format.
+new_papers_cited:
+  - id: 2508.17440
+    role: "hardware co-located KAN+Ising photonic platform [11]"
+  - id: 2603.06621
+    role: "PRM reward-under-attack confirms null-space defense [13]"
+  - id: 2604.15149
+    role: "LLMs gaming verifiers / IPT empirical null-space attack [14]"
+  - id: 2510.23972
+    role: "Extropic-co-author CMOS-RNG hardware EBM [15]"
+  - id: 2512.15605
+    role: "ARMs are secretly EBMs theoretical bijection [16]"
+
+# Honest disclosure of what is NOT in v2 but is required for the
+# NeurIPS resubmission.
+gaps_for_v3:
+  - "Phase 1c verifier joint null-space measurement (exp1093)"
+  - "Multi-N FPGA scaling curve (KV260 board access)"
+  - "GSM8K extraction-pipeline fix (exp1101)"
+  - "Full-data ThinkPRM retrain on 7,349-example step-level corpus"
+  - "Carnot-vs-no-verifier head-to-head ablation on SOTA model"
+
+submission_checklist:
+  - "draft_v2_complete: true"
+  - "figures_render_locally: true"
+  - "references_arxiv_ids_validated: true"
+  - "honest_caveats_in_figures: true"
+  - "review_comments_resolved_inline: true"
+  - "sovereignty_constraint_satisfied: true"
+  - "open_weight_only_for_empirical: true"

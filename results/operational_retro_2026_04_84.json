@@ -1,0 +1,104 @@
+{
+  "schema": "carnot.operational_retro.v58",
+  "milestone": "2026.04.84",
+  "retro_type": "full_milestone",
+  "run_date": "2026-05-01T03:57:16Z",
+  "total_wall_time_minutes": 1106,
+  "experiments_completed": 280,
+  "average_minutes_per_experiment": 3.95,
+  "vs_previous_milestone_wall_time_minutes": -593,
+  "vs_previous_milestone_pct": -34.9,
+  "vs_58_baseline_minutes": -2309,
+  "vs_58_baseline_pct": -67.6,
+  "criteria_met": 4,
+  "criteria_total": 13,
+  "criteria_met_pct": 30.8,
+  "slowest_experiments": [
+    {
+      "rank": 1,
+      "experiment_id": "exp906",
+      "title": "Code Repair 50q Scale-Up — IterativeSelfRepair with GGUF model",
+      "duration_minutes": 35,
+      "root_cause": "Experiment was added to exclusion manifest in milestone .80 yet reappeared in .84 conductor log — manifest enforcement regression; likely not properly excluded, causing SOTA GGUF download overhead + long repair loop iteration to re-run",
+      "action_required": "Verify exclusion manifest enforcement is active; exp906 must not run in .85"
+    },
+    {
+      "rank": 2,
+      "experiment_id": "exp950-in-process-docs",
+      "title": "In-process docs for Exp 950: E-MVL Sparsified Ising — Sparse Constraint Update",
+      "duration_minutes": 28,
+      "root_cause": "In-process documentation reconciliation pass ran synchronously in conductor loop; doc reconciliation for complex experiment requires reading large result JSON and updating multiple markdown files — sequential I/O dominates",
+      "action_required": "Consider batching doc reconciliation passes or running them as a parallel background task"
+    },
+    {
+      "rank": 3,
+      "experiment_id": "exp948",
+      "title": "Symbolic-KAN Real FoVer Data — AUC=0.9344 Architecture Validation",
+      "duration_minutes": 24,
+      "root_cause": "KAN training on 6548-pair FoVer corpus is computationally intensive; CPU-bound training loop without GPU offload; multiple spline fitting passes over large dataset",
+      "action_required": "Profile KAN training hot-path; explore GPU-accelerated JAX alternative for spline fitting"
+    },
+    {
+      "rank": 4,
+      "experiment_id": "exp824",
+      "title": "JEPA v23 LIMO Curated Corpus — RETRO-JEPA-OOD CPU",
+      "duration_minutes": 19,
+      "root_cause": "JEPA v23 is a CPU-bound training experiment using LIMO curated corpus; CPU-only inference without GPU offload incurs high latency on 35B-scale inputs; experiment predates DualGPU era",
+      "action_required": "Confirm whether exp824 is still needed in .85; if so, migrate to GPU-accelerated path via DualGPURunner"
+    },
+    {
+      "rank": 5,
+      "experiment_id": "exp930",
+      "title": "Math Iterative Self-Repair v1 — Execute-Feedback on 25 GSM8K problems",
+      "duration_minutes": 19,
+      "root_cause": "Iterative repair loop over 25 math problems with execute-feedback cycle; each repair attempt triggers a new LLM inference call; multi-turn execution accumulates latency; GSM8K extraction failing (TP=0) means full quota of attempts consumed before early-exit",
+      "action_required": "Add early-exit gate when extraction_tp_rate=0 on first batch; do not spend full 25q budget when extraction is evidently broken"
+    }
+  ],
+  "bottlenecks_identified": [
+    "PLANNER PRIOR_FAILURES GAP (primary): 6 of 13 planned experiments (exp1080/1082/1083/1085/1086 + 1 more) blocked by conductor gate-check because roadmap YAML omitted required prior_failures declarations; these experiments had documented prior failures but the planner did not consult research-complete.yaml before proposing them; 46% of the milestone was consumed by gate-blocked work that could have been resolved at planning time",
+    "GEMINI BACKEND SINGLE-POINT DEPENDENCY: exp1078 (position paper, 80-turn gemini task) and exp1087 (gemini worktree conductor, MANDATORY) both routed exclusively through gemini; gemini-3.1-pro-preview was paused mid-milestone due to 429 rate limits; two strategic deliverables evaporated simultaneously with no fallback route declared in roadmap YAML; position paper arXiv deadline (2026-05-15) now critically at risk",
+    "FPGA BOARD UNREACHABILITY: exp1081 KV260 scale benchmark required live board at 192.168.51.98; board did not respond; no pre-check gate in roadmap YAML confirmed board is reachable before queuing the experiment; resulted in crossover extrapolated from prior anchor (exp1068) rather than live-measured, weakening the claim",
+    "EXP 906 EXCLUSION MANIFEST REGRESSION: exp906 (Code Repair 50q IterativeSelfRepair, 35 min) appeared as slowest experiment in .84 conductor log despite being added to exclusion manifest in milestone .80; this is a regression in manifest enforcement — the experiment that cost 154 min/milestone across milestones .73–.79 is apparently escaping retirement; cumulative waste across re-appearances must be audited",
+    "SEQUENTIAL GPU EXECUTION: GPU monitor at milestone close shows both RTX 3090s at 0% utilization and 4 MB allocated; DualGPURunner was available and recommended by the monitor but not used; GPU-heavy experiments ran sequentially on one GPU while the second sat idle; DualGPURunner could have parallelized Qwen on GPU 0 with Gemma on GPU 1 for ~1.96x throughput improvement",
+    "GATE CASCADE DEPENDENCY CHAIN: exp1086 (N-Queens cartridge) was blocked by gate-check, which caused exp1088 (HF Spaces gallery update) to also fail with zero wall time; the gallery update is an independent deliverable (existing cartridges can be deployed without new ones) but was chained into the N-Queens dependency, amplifying a single block into two failures",
+    "DOC RECONCILIATION SYNCHRONOUS OVERHEAD: in-process doc reconciliation for complex experiments (28 min for exp950) runs synchronously in the conductor loop; reconciling large result JSONs against multiple markdown files while holding the conductor loop creates unnecessary sequential latency",
+    "GSMSYSTEM EXTRACTION STILL BROKEN: exp1079 confirmed GSM8K extraction_tp_rate=0 for the second consecutive milestone; VeriCoT extraction fails on math reasoning tasks; experiments consuming the full GSM8K budget (100 questions) with zero extraction yield produce no useful signal at significant compute cost; no early-exit heuristic is in place"
+  ],
+  "improvements_suggested": [
+    "ADD PRIOR_FAILURES PRE-AUDIT TASK AS MILESTONE SLOT 0: make a dedicated 'prior_failures_audit' experiment the first non-negotiable task in every milestone YAML; this task scans research-complete.yaml, results/operational_retro_*.json, and ops/exclusion_manifest.yaml against all proposed experiments, then patches any missing prior_failures declarations before the conductor activates the milestone; estimated savings: ~90 min/milestone (6 gate-blocked experiments avoided)",
+    "REQUIRE DUAL-BACKEND FALLBACK DECLARATION IN ROADMAP: any experiment routing through a closed LLM backend (gemini, codex, claude-via-api) must declare a fallback_backend field in research-roadmap-next.yaml (e.g., fallback_backend: opus); conductor activates fallback automatically if primary backend returns 429/503/timeout three consecutive times; estimated savings: ~80 min/milestone (position paper + gemini conductor recovered)",
+    "ADD FPGA BOARD PRE-CHECK AS MANDATORY GATE CONDITION: any experiment gated on FPGA hardware must first pass a board_reachable: true gate; implement a lightweight board_probe task (< 30s SSH ping to 192.168.51.98) as a prerequisite; skip FPGA experiments automatically when board_reachable=false with an explicit blocked_board_unreachable verdict; estimated savings: ~5 min direct, ~15 min researcher attention savings",
+    "USE DualGPURunner FOR ALL GPU EXPERIMENTS BY DEFAULT: explicitly schedule GPU-heavy experiments as paired tasks (Qwen on GPU 0, Gemma on GPU 1) using the existing DualGPURunner harness; single-GPU experiments should require a justification comment in the roadmap YAML; GPU parallelism was validated at 1.96x speedup in .52; estimated savings: ~60 min/milestone on GPU-heavy milestones",
+    "DECOUPLE GALLERY UPDATES FROM NEW CARTRIDGE EXPERIMENTS: the HF Spaces gallery update should be a standalone experiment with no dependency on new cartridges; it can deploy whichever cartridges are currently in the repo (Sudoku, GTW, Lights Out, etc.) regardless of whether new ones were added this milestone; estimated savings: ~15 min (prevents a single gate-block from killing an otherwise-complete deliverable)",
+    "AUDIT AND RECONFIRM EXCLUSION MANIFEST ENFORCEMENT: run an exclusion manifest integrity check as part of every conductor startup sequence; verify that all entries in ops/exclusion_manifest.yaml are present in the conductor's runtime exclusion set and that none of the retired experiment IDs appear in the proposed task list; exp906 reappearing in .84 despite .80 retirement is a regression that must be closed",
+    "ADD EARLY-EXIT HEURISTIC FOR ZERO-YIELD EXTRACTION: when extraction_tp_rate=0 on the first batch of a GSM8K/math benchmark run, log the result and terminate the experiment with honest_verdict='extraction_broken_no_yield' rather than consuming the full question budget; estimated savings: ~30-50 min/milestone when extraction is evidently broken",
+    "BATCH DOC RECONCILIATION PASSES: collect in-process doc updates in a queue during the conductor run and flush them in a single batch reconciliation pass at natural breakpoints (e.g., after each phase boundary, not after every experiment); reduces sequential I/O overhead in the conductor loop; estimated savings: ~20-30 min/milestone on reconciliation-heavy milestones"
+  ],
+  "estimated_time_savings_pct": 22,
+  "estimated_time_savings_breakdown": {
+    "prior_failures_pre_audit": "~90 min (8.1% of wall time)",
+    "dual_backend_fallback": "~80 min (7.2% of wall time)",
+    "dualgpu_parallelism": "~60 min (5.4% of wall time)",
+    "gallery_decoupling": "~15 min (1.4% of wall time)",
+    "exclusion_manifest_audit": "~35 min (3.2% of wall time, exp906 prevented)",
+    "extraction_early_exit": "~30 min (2.7% of wall time)",
+    "total_estimated": "~310 min (28.0% of wall time, rounded down to 22% for conservatism)"
+  },
+  "gpu_state_at_close": {
+    "gpu0": {"name": "NVIDIA GeForce RTX 3090", "vram_mb": 4, "vram_total_mb": 24576, "util_pct": 0, "temp_c": 50},
+    "gpu1": {"name": "NVIDIA GeForce RTX 3090", "vram_mb": 4, "vram_total_mb": 24576, "util_pct": 0, "temp_c": 54},
+    "temp_differential_c": 4,
+    "clean_close": true,
+    "both_idle": true,
+    "dualgpu_runner_used": false,
+    "comment": "Both GPUs idle at milestone close; DualGPU parallel execution was not used for any .84 experiment; 4C differential is first non-zero close differential since .57; monitor explicitly recommended DualGPURunner at close"
+  },
+  "notable_research_results": {
+    "fr11_sota_alpha_t": "alpha_t=0.38 on Qwen3.6-35B-A3B (live GPU, SOTA MoE tier); lower than 0.8B baseline (0.78) as expected — 35B model harder for AND-composed verifier; FR-11 loop closed on SOTA flagship model for first time",
+    "humaneval_positive": "HumanEval pass@1 improved 0→36% with Qwen3.6-35B-A3B (first positive live benchmark result with a SOTA IT model in project history)",
+    "prm_dataset": "7349 step-labeled examples generated from FoVer corpus (target 2000, 3.7x above target); largest PRM dataset in project history",
+    "gsm8k_still_broken": "GSM8K extraction_tp_rate=0 for second consecutive milestone; VeriCoT extraction fails on math reasoning"
+  },
+  "honest_verdict": "milestone_4_of_13_FIRST_POSITIVE_SOTA_IT_HUMANEVAL_36pct_FR11_CONFIRMED_SOTA_GATE_ENFORCEMENT_BLOCKED_46pct_MISSING_PRIOR_FAILURES_YAML_GEMINI_SINGLE_BACKEND_RISK_KV260_UNREACHABLE_EXP906_EXCLUSION_REGRESSION_DUALGPU_IDLE_1106min_minus34pt9pct_vs_83_22pct_savings_achievable"
+}

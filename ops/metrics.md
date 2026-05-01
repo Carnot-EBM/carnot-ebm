@@ -1,5 +1,75 @@
 # Carnot — Session Metrics
 
+## Session: 2026-05-01 Milestone 2026.04.85 Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-05-01T04:01:12Z | 2026-05-01T04:19:51Z | Planned milestone 2026.04.85 "Phase Discipline Infrastructure + Position Paper arXiv + Gate-Blocked Recovery". Read all 11 required project files (research-program.md, _bmad/prd.md, ops/status.md, ops/changelog.md, research-complete.yaml via Bash, research-roadmap.yaml, openspec/change-proposals/, ops/conductor-log.md, research-references.md, research-hardware-wishlist.md, ops/known-issues.md). Read .84 retro JSON (exp1089: 4/13 met, 6 gate-blocked, gemini paused). arxiv scan via general-purpose subagent: 10 papers found; 7 new papers added to research-references.md (arXiv 2603.06621 PRM hackability, 2604.15149 IPT probe/LLMs gaming verifiers, 2601.18734 on-policy SSD, 2510.23972 Extropic EBM hardware, 2508.17440 Photonic KAN+Ising, 2603.03305 draft-conditioned decoding, 2604.12086 r-correlation). Root cause analysis: (1) 6/13 experiments gate-blocked by missing prior_failures YAML — fixed by exhaustive scan of research-complete.yaml; (2) gemini backend paused mid-milestone — position paper lost; (3) 5 mandatory phase discipline tasks still undelivered (3+ milestones overdue). Designed 14 experiments (exp1090-exp1103): Phase 0 diagnostic library (exp1090, opus, no-GPU, unconditional), Phase 1 position paper v2 (exp1091, opus, 80-turns, prior_failures: exp1078), Phase 2 mandatory discipline (exp1092 Phase-1a adversarial, exp1093 Phase-1c null-space, exp1094 Phase-2a sampler, exp1095 Phase-3a DBAE adversarial), Phase 3 gate-blocked carry-forwards (exp1096 SemEnergy, exp1097 N-Queens/codex, exp1098 Potts/codex+opus, exp1099 RLVR+SSD, exp1100 cascade SOTA), Phase 4 GSM8K fix (exp1101), Phase 5 gallery (exp1102 gated), Phase 6 retro (exp1103). All 6 carry-forward exps have complete prior_failures. No gemini agent_type. Wrote openspec/change-proposals/research-roadmap-v85.md + research-roadmap-next.yaml. Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. | ~200k |
+
+---
+
+## Session: 2026-05-01 Milestone 2026.04.84 Operational Retrospective
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-05-01T03:57:16Z | 2026-05-01T04:00:33Z | Milestone 2026.04.84 operational process retrospective. Read ops/metrics.md, ops/changelog.md, docs/roadmap.md, results/experiment_1089_milestone_retro_84.json, results/experiment_1081_fpga_scale_benchmark.json, results/experiment_1077_fr11_alpha_t_sota_v4.json, results/experiment_1079_live_sota_benchmark_v2.json, ops/conductor-log.md. Analyzed 1106 min / 280 experiments. Wall time -593 min (-34.9%) vs .83 — seventh consecutive below .58 baseline (67.6% below). 4/13 criteria met. Primary bottleneck: 6/13 experiments gate-blocked by missing prior_failures YAML at planner layer. Gemini backend paused mid-milestone (position paper + gemini conductor lost). Exp906 exclusion manifest regression (reappeared despite .80 retirement). KV260 board unreachable. DualGPU idle (0% utilization at close). HumanEval +36% with Qwen3.6-35B-A3B (first positive SOTA IT result). FR-11 alpha_t=0.38 SOTA confirmed. 7349-step PRM dataset. Wrote results/operational_retro_2026_04_84.json (schema=carnot.operational_retro.v58). Appended changelog entry. Appended row to docs/roadmap.md Completed Milestones table. | ~28k |
+
+---
+
+## Session: 2026-04-30 Milestone 2026.04.84 Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-30T15:04:57Z | 2026-04-30T15:18:12Z | Planned milestone 2026.04.84 "FR-11 SOTA Validation + Position Paper arXiv + FPGA Scale + RLVR-SSD Integration". Read all 11 required project files (research-program.md, _bmad/prd.md, ops/status.md, ops/changelog.md tail, research-complete.yaml head, research-roadmap.yaml, ops/conductor-log.md, research-references.md, research-hardware-wishlist.md, ops/known-issues.md). Read .83 result JSONs: exp1076 retro (14/15 criteria met), exp1074 FR-11 alpha_t (Qwen3.5-0.8B — model tier violation), exp1073 triple integration (cascade confirmed), exp1068 KV260 smoke (24.83μs, 70 unique values). arxiv scan via Explore subagent: 10 papers found. 3 new papers added to research-references.md (EORM arXiv 2505.14999; PRMs Meet Planning arXiv 2604.17957; Trust+Verify survey arXiv 2508.16665). 3 biggest gaps: (1) FR-11 alpha_t used Qwen3.5-0.8B not SOTA model — must re-run; (2) position paper draft not arXiv-ready — missing figures, metadata; (3) no live benchmark with positive result from SOTA IT model. Gemini worktree conductor mandatory (3 milestones overdue). Designed 13 experiments (Exps 1077–1089): Phase 0 FR-11 SOTA v4 (exp1077, opus, GPU, MANDATORY first); Phase 1 position paper v2 arXiv prep (exp1078, gemini, 80 turns); Phase 2 live SOTA IT benchmark v2 (exp1079, GPU, gated on 1077), SemEnergy probe v1 (exp1080), FPGA scale benchmark (exp1081, opus), Potts machine q=3 (exp1082, opus), RLVR+SSD v1 (exp1083, gated on 1079), PRM data generation (exp1084), cascade SOTA validation (exp1085, gated on 1079); Phase 3 WOPR N-Queens cartridge (exp1086), gemini worktree conductor Tier B (exp1087, opus, MANDATORY), HF Spaces gallery update (exp1088, gated on 1086), retro (exp1089). Total: 550 min estimated, 3 GPU tasks, 4 gated tasks, 13 success criteria. Wrote research-roadmap-next.yaml + openspec/change-proposals/research-roadmap-v84.md. Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. | ~180k |
+
+---
+
+## Session: 2026-04-30 Milestone 2026.04.83 Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-30T07:08:05Z | 2026-04-30T07:23:12Z | Planned milestone 2026.04.83 "EnvGuard Surgery + Codex Config + DualGPU + WOPR Deploy + Position Paper Draft". Read results/experiment_1062_milestone_retro_82.json (.82: 3/13 criteria met) + 10 project files from prior context (research-program.md, _bmad/prd.md, _bmad/architecture.md, ops/status.md, ops/changelog.md, research-roadmap.yaml, ops/known-issues.md, ops/conductor-log.md tail, openspec/change-proposals/research-roadmap-v82.md, research-roadmap-next.yaml). Root cause analysis of .82: (1) EnvPropagationGuard self-heal crash = new primary blocker — self-heal hook crashes when CARNOT_ vars absent, distinct from .81 "4 failing tests" pattern; cascades to kill gate coercion + DualGPU + Triple Integration + Zenil chain; (2) Codex config.toml "model_providers contains reserved" error blocked WOPR cartridges x6 — new failure class; (3) .82 successes: FoVer 216→6548 pairs (30x data → AUROC 0.5694→0.9899, 74pp lift); WOPR Sudoku code complete. arxiv scan (2026-04-30): 5 new papers added to research-references.md (Semantic Energy hallucination arXiv 2508.14496; Ising FPGA decomposition arXiv 2602.15985; Self-Distilled RLVR arXiv 2604.03128; Self-Distillation code generation arXiv 2604.01193; Kaiwu photonic EBM arXiv 2602.19114). Designed 14 experiments (Exps 1063–1076) across 7 phases. Phase 0: exp1063 EnvGuard repair (unconditional, model: opus, max_turns: 40). Phase 1: exp1064 pre-test surgery v2 + respawn queue, exp1065 Codex config fix + parallel conductor Tier A (both gated on exp1063.envguard_fixed). Phase 2: exp1066 DualGPU ROCm v6, exp1067 gate coercion v3 (gated on exp1064.pre_tests_fixed). Phase 3: exp1068 KV260 smoke v9 (gated on exp1063.remaining_test_fixed — different gate than pre-test surgery), exp1069 WOPR Sudoku HF deploy (standalone, retrieve HF_TOKEN from SOPS). Phase 4: exp1070 WOPR GTW v2, exp1071 WOPR Lights Out v2 (agent_type: codex, gated on exp1065.codex_routing_validated). Phase 5: exp1072 SOS-KAN v3 Neural Gram Matrix (standalone), exp1073 Triple Integration v9 (gated on exp1067), exp1074 FR-11 alpha_t v3 (gated on exp1066). Phase 6: exp1075 position paper (agent_type: gemini). Phase 7: exp1076 retro. 15 success criteria. Wrote openspec/change-proposals/research-roadmap-v83.md and research-roadmap-next.yaml. Updated docs/roadmap.md (added .82 completed milestone row), ops/changelog.md (.82 conductor retro entry + .83 planning entry), ops/status.md (.83 planning complete). Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. | ~220k |
+
+---
+
+## Session: 2026-04-29 Milestone 2026.04.82 Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-29T23:38:49Z | 2026-04-29T23:51:25Z | Planned milestone 2026.04.82 "Pre-Test Surgery + Respawn Queue + WOPR Gallery + Parallel Conductor + KV260 Smoke". Read 11 required project files + .81 experiment result JSONs (exp1039-1049). Root causes of .81 6/13 failure: (1) pre-test suite deadlock — 4 failing tests (from Exp 1028 .80 expansion) blocked Exp 1039 gate-coercion fix on 3 attempts, cascaded to block Exp 1044 Triple Integration (4th consecutive GATE_BLOCK); (2) bootstrap wedge — `_deliverable_exists()` treated `status: "running"` stubs as completed deliverables, Exp 1046 hit `artifact_not_updated_past_bootstrap` x3; (3) FoVer MetaQA GGUF not cached — silent early exit, n_metamorphic_validated=0 across .80 and .81 (216/500 pairs stalled); (4) DualGPU 16th consecutive idle — torch 2.11.0+cpu confirmed, CUDA wheel never successfully installed. KV260 bitstream loaded (Exp 1041, state=operating), smoke_test=False (reset not deasserted — one register write away). SOS-KAN 0 violations/16k samples (Exp 1047). MANDATORY .82 pickups from known-issues.md: no-permanent-retirement-on-environmental-failures (respawn queue: exp1039/1042/1044), parallel-multi-agent-conductor (dual-conductor), WOPR gallery (Sudoku v1 + Global Thermonuclear War + Lights Out). Arxiv scan: 5 new papers appended to research-references.md (2512.20664 Eidoku neuro-symbolic gate, 2510.13444 Neural SOS, 2603.19562 Neural Uncertainty Principle, 2506.14590 MTJ Ising Machine, 2604.04636 KAN Crystal Energies). Designed 13 experiments (Exps 1050-1062): Phase 0 pre-test surgery + respawn queue (exp1050, UNCONDITIONAL), Phase 1 parallel conductor + gate coercion v2 + DualGPU v5 (exp1051-1053), Phase 2 KV260 smoke + FoVer v4 + Triple Integration v8 (exp1054-1056), Phase 3 probe ensemble v6 + Zenil alpha_t FR-11 v2 + WOPR gallery 3-task sprint (exp1057-1061), Phase 4 retro (exp1062). Wrote openspec/change-proposals/research-roadmap-v82.md and research-roadmap-next.yaml. All re-proposed tasks have prior_failures. model: opus applied to pre-test surgery + WOPR Sudoku + hardware tasks. exp1058 (Zenil FR-11) gated on exp1053.dualgpu_live==true. Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. | ~190k |
+
+---
+
+## Session: 2026-04-29 Milestone 2026.04.81 Operational Retrospective
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-29T23:32:46Z | 2026-04-29T23:38:05Z | Milestone 2026.04.81 operational process retrospective. Read ops/metrics.md, ops/changelog.md, docs/roadmap.md, results/operational_retro_2026_04_80.json, results/experiment_1049_milestone_retro_81.json + selected experiment result JSONs. Analyzed 1699 min / 382 experiments. Wall time -239 min (-12.3%) vs .80 (1938 min). Sixth consecutive below .58 baseline (1699 min, -50.2%). Pre-test suite deadlock (4 broken tests from .80 Exp 1028 expansion) blocked Exp 1039 (gate coercion fix, 3 SKIP/FAIL/SKIP attempts) → cascaded to block Exp 1044 Triple Integration (GATE_BLOCK x3) — 4th consecutive failure. KV260 first light: bitstream_loaded=True (Exp 1041, state=operating), smoke_test=False (reset not deasserted). SOS-KAN type-level invariants (Exp 1047, 0 violations/16k samples). Eval metrics _check_auroc_anomaly() wired (Exp 1048). DualGPU 16th idle (no torch ROCm). Exp 786/906 apparent re-appearance in conductor log despite manifest retirement. Exp 742 closed-retro third consecutive appearance. FoVer 216/500 pairs. Wrote results/operational_retro_2026_04_81.json (schema=carnot.operational_retro.v56). Appended changelog entry. Appended row to docs/roadmap.md Completed Milestones table. | ~22k |
+
+---
+
+## Session: 2026-04-29 Milestone 2026.04.81 Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-29T15:00:15Z | 2026-04-29T15:12:39Z | Planned milestone 2026.04.81 "Infrastructure Close-Out + Hardware Unblocks + Probe Ensemble". Read 11 required project files + .80 experiment result JSONs (1026-1038). Root causes of .80 5/13 failure: (1) gate coercion bug — YAML "True" string != Python bool True, 3 GATE_BLOCKs + 1 FAIL + 2 SKIP on Triple Integration (exp1030); (2) FoVer MetaQA generator was empty stub — exp1029 ran 2.267s, 0 MetaQA candidates, 85 pairs vs 500+ target; (3) torch CPU-only build — nvidia-smi confirms 2x RTX 3090 but torch 2.11.0+cpu cannot do live inference; (4) KV260 .bit vs .bit.bin format mismatch — bootgen conversion needed; (5) non-reproducible verdicts — exp1031 produced two different honest_verdicts from same code. Arxiv scan: 5 new papers appended to research-references.md (2604.03128 Self-Distilled RLVR, 2601.20802 SDPO, 2512.00055 KAN-SAs systolic arrays, 2505.24012 GenCP bidirectional, 2603.02479 PRISM). Designed 11 experiments (Exps 1039-1049): Phase 0 infrastructure (gate coercion fix + fastpath bootstrap skip, verdict reproducibility audit), Phase 1 hardware unblocks (KV260 bitstream v7, DualGPU ROCm/CUDA v4), Phase 2 corpus+cascade (FoVer v3 MetaQA fix, Triple Integration v7, probe ensemble v5), Phase 3 self-learning+theory (Zenil α_t FR-11 mandatory, SOS-KAN reparameterization, eval-metrics wiring), Phase 4 retro. Wrote openspec/change-proposals/research-roadmap-v81.md and research-roadmap-next.yaml. All re-proposed tasks have prior_failures. model: opus applied to hardware/infra tasks (1039, 1041, 1042). exp1044 gated on exp1039.gate_coercion_fixed==true; exp1045 gated on exp1043.n_total_pairs>=200. Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. | ~185k |
+
+---
+
 ## Session: 2026-04-28 Milestone 2026.04.79 Planning
 
 ### Turn Log

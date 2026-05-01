@@ -1132,7 +1132,19 @@ class ExperimentTemplate:
 
         # REQ-INFRA-070: assert CARNOT_FORCE_LIVE is set for GPU experiments
         # BEFORE kill_gpu_zombies() or any GPU work starts.
-        self.assert_live_env_if_gpu()
+        #
+        # Import-time skip (2026-04-30, milestone .83): mirrors the lock skip
+        # above. The conductor's run_tests() strips CARNOT_FORCE_LIVE from
+        # the pretest env so that live-mode-only assertions don't gate the
+        # smart-subset suite. When a test imports an experiment script that
+        # calls tmpl.setup() at module-level, the assert previously raised
+        # RuntimeError("EnvPropagationGuard failed to load CARNOT_FORCE_LIVE=1")
+        # — which the conductor surfaced as the cryptic "EnvPropagationGuard
+        # failed to load CARNOT_ variables" SKIP for three milestones (.75,
+        # .82). The assert is only meaningful when the script is invoked
+        # directly; during pytest collection/import it is a false alarm.
+        if _caller_module == "__main__":
+            self.assert_live_env_if_gpu()
 
         # REQ-INFRA-074: kill GPU zombies FIRST — before any model loading.
         # Zombie processes from prior experiments may hold VRAM that would cause

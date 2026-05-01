@@ -110,6 +110,13 @@ traceable to a checked-in experiment artifact under `results/`.
 | KAN-MILP formal property verification (monotonicity, output range, boundary) | **3 properties verified** via MILP; 11 violations found in untrained model | Exp 972 |
 | KAN-MILP monotonicity enforcement (isotonic projection fix) | **11 violations eliminated**; 1.89x inference speedup post-fix; zero violations in production model | Exp 992 |
 | SC-Energy Tier 2 production wiring as OOD detector | **143 tests, 0 failures**; `SCEnergyEnergyAdapter` replaces VJEPA v2 as default Tier 2 (VJEPA retained as fallback) | Exp 1001 |
+| FoVer corpus 30x expansion (Z3 + GSM8K labeling) | **6,548 pairs** (from 216); probe AUROC 0.5694 → **0.9899** (SOS-KAN), 0.9885 (ThinkPRM), 0.9875 (NK-KAEM) — 74-percentile-point lift | Exps 1055/1057 |
+| SOS-KAN v3 Neural-Gram energy verifier on full corpus | **AUROC=0.9545** on 6,548-pair FoVer corpus; 0 monotonicity violations across 16,000 samples; gram matrix PSD confirmed | Exp 1072 |
+| Triple Integration E2E cascade (all 4 tiers active) | **50/50 questions** ran full cascade: Tier 0a → 0b → 2 → 3; incorrect_energy > correct_energy confirmed | Exp 1073 |
+| KV260 FPGA Ising sampler live hardware sampling | **24.83μs mean latency**; 70 unique spin values across 100 samples, 0 failures; energy distribution non-uniform confirmed | Exp 1068 |
+| FR-11 self-learning loop with SOTA 35B model (live GPU) | **alpha_t=0.38** with Qwen3.6-35B-A3B (35B MoE, live dual-GPU inference); fr11_loop_closed=true; 100 training examples appended | Exp 1077 |
+| First positive live benchmark with SOTA IT model on HumanEval (Qwen3.6-35B-A3B) | HumanEval pass@1 **0% → 36%** after Carnot correction (first-ever positive delta with a SOTA instruction-tuned model); GSM8K extraction still failing (VeriCoT TP=0) | Exp 1079 |
+| Step-level PRM dataset at scale (MCTS-based labeling, full FoVer corpus) | **7,349 step-labeled examples** generated (target was 2,000); largest PRM dataset in project history | Exp 1084 |
 
 Deeper analysis of these — including everything that **didn't** work and
 why — is in the [technical report](docs/technical-report.md). Per-milestone
@@ -144,7 +151,7 @@ claim we publish.
 ## Where to go next
 
 - **[Technical report](docs/technical-report.md)** — the full research arc
-  across 1,011 experiments and 84 milestones, structured as six phases with
+  across ~1,087 experiments across 84 completed milestones, structured as six phases with
   a plain-English timeline of what we tried, what failed, what stuck.
 - **[Roadmap](docs/roadmap.md)** — current milestone, upcoming milestones,
   hardware track, and Phase 3 (Kona-parity foundation-model) direction.

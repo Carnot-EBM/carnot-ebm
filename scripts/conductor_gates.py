@@ -92,17 +92,77 @@ class GateCheckResult:
     summary: str = ""
 
 
+_TRUE_TOKENS = frozenset({"true", "1", "yes", "y", "on"})
+_FALSE_TOKENS = frozenset({"false", "0", "no", "n", "off"})
+
+
+def _coerce_gate_value(v: Any) -> Any:
+    """Normalize a value that should be treated as a Boolean.
+
+    Background: milestone .80 wedged because exp1030 had a gate of the
+    form ``upstream.pre_test_fixed == True`` (Python bool, parsed from
+    YAML) but the *upstream* artifact at one point contained the string
+    "True" (or vice versa, depending on how Sonnet serialized the
+    artifact). Python's ``==`` says ``"True" != True``, so the gate
+    blocked even though the upstream had "really" succeeded.
+
+    This helper maps the common bool-ish shapes onto Python bool:
+      - bool stays bool
+      - common truthy/falsy strings (case-insensitive) -> bool
+      - 0/1 ints/floats -> bool
+      - everything else -> unchanged (caller decides)
+
+    The caller (``_eval_op``) only invokes this when at least one side
+    of an ``==``/``!=`` comparison is itself a bool, so a string-equality
+    gate like ``honest_verdict == "preflight_complete"`` is *not*
+    rewritten — the function returns the original string in that case.
+    Narrow scope is deliberate: we are fixing the bool-coercion wedge,
+    not changing how every gate compares values.
+    """
+    if isinstance(v, bool):
+        return v
+    if isinstance(v, str):
+        low = v.strip().lower()
+        if low in _TRUE_TOKENS:
+            return True
+        if low in _FALSE_TOKENS:
+            return False
+        return v  # not a bool-ish string; leave it alone
+    if isinstance(v, (int, float)):
+        return bool(v)
+    return v
+
+
 def _eval_op(actual: Any, op: str, expected: Any) -> tuple[bool, str]:
     """Apply a single comparison operator. Returns (passed, reason).
 
     The `reason` string is human-readable and goes straight into the
     blocked artifact when the gate fails. Designed so a reader can
     diagnose the block from the artifact alone, without re-running.
+
+    Bool coercion: when either side of an ``==``/``!=`` is a Python
+    bool, both sides are passed through ``_coerce_gate_value`` so that
+    string "True"/"true"/"1" matches Python ``True`` and string
+    "False"/"false"/"0" matches Python ``False``. This closes the
+    .80 wedge where the gate evaluator reported
+    ``actual='True' == expected=True -> False``. See the
+    ``conductor-fastpath-bootstrap-skip`` proposal sibling fix for
+    full context.
     """
     if op == "==":
-        return actual == expected, f"actual={actual!r} == expected={expected!r}"
+        a, e = (
+            (_coerce_gate_value(actual), _coerce_gate_value(expected))
+            if isinstance(actual, bool) or isinstance(expected, bool)
+            else (actual, expected)
+        )
+        return a == e, f"actual={actual!r} == expected={expected!r}"
     if op == "!=":
-        return actual != expected, f"actual={actual!r} != expected={expected!r}"
+        a, e = (
+            (_coerce_gate_value(actual), _coerce_gate_value(expected))
+            if isinstance(actual, bool) or isinstance(expected, bool)
+            else (actual, expected)
+        )
+        return a != e, f"actual={actual!r} != expected={expected!r}"
     if op in (">", ">=", "<", "<=") and (actual is None or expected is None):
         return (
             False,

@@ -6,7 +6,21 @@ Spec coverage: REQ-AUTO-013, SCENARIO-AUTO-010
 from __future__ import annotations
 
 import json
+import sys
+import types
 from unittest.mock import MagicMock, patch
+
+# When the real `openai` package is not installed in the test environment,
+# `@patch("openai.OpenAI")` would raise ModuleNotFoundError before reaching
+# the test body.  We install a tiny stub module so the patch target resolves
+# and the test exercises the consolidator's runtime branch (which itself
+# performs its own `from openai import OpenAI` and gracefully degrades on
+# ImportError).  The stub never gets called — the @patch replaces it — so
+# its OpenAI attribute is just a placeholder.
+if "openai" not in sys.modules:
+    _openai_stub = types.ModuleType("openai")
+    _openai_stub.OpenAI = MagicMock  # placeholder; @patch replaces this
+    sys.modules["openai"] = _openai_stub
 
 from carnot.autoresearch.consolidator import (
     ConsolidatorConfig,

@@ -1,5 +1,222 @@
 # Carnot — Operational Status
 
+## Session 2026-05-01 — Milestone 2026.04.85 Planning Complete
+
+**Milestone 2026.04.84 COMPLETE (4/13 criteria met). Milestone 2026.04.85 PLANNED.**
+
+### .84 Recap (final)
+- **MET:** FR-11 alpha_t=0.38 SOTA MoE confirmed; HumanEval +36% first positive SOTA result; 7349-step PRM dataset (3.7x target); retro
+- **NOT MET (9 criteria):** 6 experiments gate-blocked (missing prior_failures YAML); gemini backend paused (position paper + gemini conductor lost); KV260 board unreachable
+
+### .85 Design (Exps 1090–1103, target ~490 min)
+
+**Phase 0 — Diagnostic Infrastructure (unconditional, MANDATORY):**
+- exp1090: Diagnostic instrumentation library — α_t tracking, KL divergence, joint null-space estimation, manifold coverage (model: opus, no GPU)
+
+**Phase 1 — Position Paper (parallel with Phase 0, CRITICAL deadline 2026-05-15):**
+- exp1091: Position paper v2 arXiv prep — Opus route, figures + tech review + arXiv metadata (prior_failures: exp1078 gemini-paused)
+
+**Phase 2 — Mandatory Phase Discipline (4 MANDATORY tasks, gated or standalone):**
+- exp1092: Phase 1a adversarial verifier robustness audit (gated on exp1090, false-pass rate < 5%)
+- exp1093: Phase 1c verifier joint null-space measurement (gated on exp1090, null-space dim < 5%)
+- exp1094: Phase 2a sampler correctness audit (KV260 reconnect + GPU baseline, standalone)
+- exp1095: Phase 3a DBAE-EBM pre-prototype adversarial round (threat model doc, standalone)
+
+**Phase 3 — Gate-Blocked Carry-Forwards (all prior_failures declared):**
+- exp1096: SemEnergy probe v1 (prior_failures: exp772+exp1080)
+- exp1097: WOPR N-Queens cartridge (codex, prior_failures: exp1070+exp1071+exp1086)
+- exp1098: Potts machine q=3 Verilog+Python (codex+opus, prior_failures: exp534+exp1082)
+- exp1099: RLVR+SSD integration v1 (prior_failures: 8 exps)
+- exp1100: Cascade validation on SOTA outputs (gated on exp1079.humaneval_net_improvement>0, prior_failures: 10 exps)
+
+**Phase 4 — Research Breakthrough:**
+- exp1101: GSM8K extraction diagnostic + VeriCoT fix (2nd consecutive TP=0)
+
+**Phase 5 — Gallery:**
+- exp1102: HF Spaces gallery update (gated on exp1097.final_energy==0.0)
+
+**Phase 6 — Retro:**
+- exp1103: Milestone retrospective
+
+### 14 Success Criteria
+1. diagnostics_library_written (exp1090)
+2. position_paper_arxiv_ready (exp1091)
+3. phase1a_false_pass_below_5pct (exp1092)
+4. phase1c_null_space_below_5pct (exp1093)
+5. phase2a_sampler_validated (exp1094)
+6. phase3a_threat_model_written (exp1095)
+7. semenergy_probe_auroc_above_07 (exp1096)
+8. nqueens_cartridge_shipped (exp1097)
+9. potts_sim_validated (exp1098)
+10. rlvr_ssd_honest_result (exp1099)
+11. cascade_validated_sota_outputs (exp1100)
+12. gsm8k_extraction_fixed (exp1101)
+13. gallery_updated_hf_spaces (exp1102)
+14. retro_complete (exp1103)
+
+### Key Architectural Decisions for .85
+- No gemini agent_type (429-rate-limited): all long-context via Opus
+- Codex re-enabled: N-Queens (exp1097) + Potts RTL (exp1098) routed to codex
+- prior_failures exhaustively declared for all 6 gate-blocked carry-forwards
+- Position paper MANDATORY first (parallel with infra) — arXiv deadline 2026-05-15
+
+### What's Working (as of .84)
+- FR-11 alpha_t=0.38 SOTA MoE confirmed live GPU (Qwen3.6-35B-A3B)
+- HumanEval pass@1: 0% → 36% with Carnot correction on SOTA model (first positive)
+- 7349 step-level PRM training examples (3.7× target)
+- SOS-KAN v3 AUROC=0.9545 on 6548-pair FoVer corpus
+- ThinkPRM AUROC=0.9885 (Tier 0a verifier)
+- KV260 FPGA: 24.83μs latency confirmed (POC tier)
+- WOPR gallery live: Sudoku + GTW + Lights Out on HuggingFace Spaces
+- DualGPU: 2× RTX 3090 CUDA 12 live
+
+### What's Next
+- Conductor executes research-roadmap-next.yaml starting with exp1090+exp1091 in parallel
+- exp1090 (diagnostic library) is unconditional, gates exp1092/1093
+- exp1091 (position paper) runs independently via Opus (no gemini)
+- arXiv submission target: 2026-05-15
+- GSM8K extraction fix (exp1101) critical — 2 consecutive milestones at TP=0
+
+---
+
+## Session 2026-04-30 — Milestone 2026.04.84 Planning Complete
+
+**Milestone 2026.04.83 COMPLETE (14/15 criteria met). Milestone 2026.04.84 PLANNED.**
+
+### .84 Design (Exps 1077–1089, target ~550 min)
+
+**Phase 0 — FR-11 SOTA (MANDATORY FIRST, Opus, GPU):**
+- exp1077: FR-11 alpha_t SOTA v4 — re-run with Qwen3.6-35B-A3B-GGUF (0.8B result from .83 cannot be headline)
+
+**Phase 1 — Position Paper (gemini, parallel with Phase 0):**
+- exp1078: Position paper v2 arXiv prep — figures + tech review + arXiv metadata (target 2026-05-15)
+
+**Phase 2 — Real LLM Benchmark (gated on exp1077 GPU confirmed):**
+- exp1079: Live SOTA IT model benchmark v2 (100 GSM8K + 50 HumanEval, VeriCoT extraction)
+- exp1080: SemEnergy probe v1 (arXiv 2508.14496 logit-space energy, Tier 0c upgrade)
+
+**Phase 3 — FPGA Expansion (standalone):**
+- exp1081: FPGA scale benchmark 64→1024 spins (KV260 vs CPU crossover point)
+- exp1082: Potts machine q=3 Verilog + Python simulation (RTL + simulation)
+
+**Phase 4 — Research (standalone + gated):**
+- exp1083: RLVR+SSD integration v1 (gated on exp1079, arXiv 2604.03128 recipe)
+- exp1084: Step-level PRM data generation (arXiv 2604.17957 MCTS pattern)
+- exp1085: Cascade validation on SOTA model outputs (gated on exp1079)
+
+**Phase 5 — WOPR + Gemini Conductor:**
+- exp1086: WOPR N-Queens cartridge (Ising ground-state, harder than Lights Out)
+- exp1087: Gemini worktree conductor Tier B (MANDATORY — 3 milestones overdue)
+- exp1088: HF Spaces gallery update (gated on exp1086, deploy N-Queens)
+
+**Phase 6 — Retro:**
+- exp1089: Milestone retrospective
+
+### 13 Success Criteria
+1. fr11_alpha_t_sota_confirmed (exp1077)
+2. position_paper_arxiv_ready (exp1078)
+3. live_benchmark_honest_result (exp1079)
+4. semenergy_probe_auroc_above_07 (exp1080)
+5. fpga_speedup_vs_cpu (exp1081)
+6. potts_simulation_validated (exp1082)
+7. rlvr_ssd_honest_result (exp1083)
+8. prm_data_generated (exp1084)
+9. cascade_validated_sota_outputs (exp1085)
+10. nqueens_cartridge_shipped (exp1086)
+11. gemini_worktree_implemented (exp1087)
+12. gallery_updated_hf_spaces (exp1088)
+13. retro_complete (exp1089)
+
+### What's Working (as of .83)
+- FR-11 loop closed: alpha_t=0.78 with Qwen3.5-0.8B (must re-run with SOTA — see exp1077)
+- SOS-KAN v3 AUROC=0.9545 on 6548-pair FoVer corpus (certified nonnegativity)
+- Triple integration cascade: all 4 tiers active (Tier 0a→0b→2→3), 50/50 questions
+- KV260 FPGA: 24.83μs latency, 70 unique values — hardware Ising sampling confirmed
+- DualGPU: 2x RTX 3090 CUDA 12 live — SOTA 35B model inference now possible
+- WOPR gallery live: Sudoku + GTW + Lights Out on HuggingFace Spaces
+- Position paper draft v1: 6267 words, 8 sections — arXiv prep needed
+
+### What's Next
+- Conductor executes research-roadmap-next.yaml starting with exp1077 (MANDATORY first)
+- exp1077 runs unconditionally (no gate dependency) with Opus model on GPU
+- exp1078 runs in parallel via gemini agent (long-context position paper review)
+- arXiv submission target: 2026-05-15
+
+---
+
+## Session 2026-04-30 — Milestone 2026.04.83 Planning Complete
+
+**Milestone 2026.04.82 COMPLETE (3/13 criteria met). Milestone 2026.04.83 IN PROGRESS.**
+
+### .82 Results Summary
+- **MET:** FoVer corpus expanded 216→6548 pairs (30x); probe AUROC breakthrough (SOS-KAN 0.9899, ThinkPRM 0.9885, NK-KAEM 0.9875); retro written
+- **NOT MET (10 criteria):** All infrastructure work blocked by EnvPropagationGuard self-heal crash (new failure mode); Codex config.toml reserved-key error blocked WOPR cartridges x6; WOPR Sudoku code complete but HF_TOKEN absent; DualGPU 17th idle; KV260 smoke still 1 pre-test failing
+
+### .83 Design (Exps 1063–1076, target ~1,600 min)
+
+**Phase 0 — Meta-Prerequisite (unconditional):**
+- exp1063: EnvPropagationGuard self-heal repair (model: opus, max_turns: 40) — fixes the .82 crash before any other infrastructure work
+
+**Phase 1 — Infrastructure Surgery (gated on exp1063.envguard_fixed):**
+- exp1064: Pre-test surgery v2 + respawn queue implementation
+- exp1065: Codex agent config.toml fix + parallel conductor Tier A validation
+
+**Phase 2 — Environmental Respawns (gated on exp1064.pre_tests_fixed):**
+- exp1066: DualGPU ROCm torch install v6
+- exp1067: Gate coercion fix v3
+
+**Phase 3 — Hardware + Deploy:**
+- exp1068: KV260 smoke test v9 (gated on exp1063.remaining_test_fixed)
+- exp1069: WOPR Sudoku HuggingFace deploy (standalone — retrieve HF_TOKEN from SOPS)
+
+**Phase 4 — WOPR Cartridges (agent_type: codex, gated on exp1065.codex_routing_validated):**
+- exp1070: WOPR GTW cartridge v2
+- exp1071: WOPR Lights Out cartridge v2
+
+**Phase 5 — Research:**
+- exp1072: SOS-KAN v3 Neural Gram Matrix (standalone, uses expanded FoVer corpus)
+- exp1073: Triple Integration E2E v9 (gated on exp1067.gate_coercion_fixed)
+- exp1074: FR-11 alpha_t live v3 (gated on exp1066.dualgpu_live)
+
+**Phase 6 — Position Paper:**
+- exp1075: Draft v1 (agent_type: gemini, standalone)
+
+**Phase 7 — Retro:**
+- exp1076: Milestone retrospective
+
+### 15 Success Criteria
+1. envguard_fixed (exp1063)
+2. pre_tests_fixed (exp1064)
+3. respawn_queue_seeded (exp1064)
+4. codex_routing_validated (exp1065)
+5. parallel_conductor_deployed (exp1065)
+6. dualgpu_live (exp1066)
+7. gate_coercion_fixed (exp1067)
+8. kv260_smoke_test_passed (exp1068)
+9. wopr_sudoku_deployed (exp1069)
+10. wopr_gtw_cartridge_shipped (exp1070)
+11. wopr_lights_out_cartridge_shipped (exp1071)
+12. sos_kan_v3_auroc_above_099 (exp1072)
+13. triple_integration_all_tiers (exp1073)
+14. fr11_alpha_t_live (exp1074)
+15. retro_complete (exp1076)
+
+### What's Working (as of .82)
+- FoVer corpus: 6548 Z3-confirmed pairs (13x above 500-pair target)
+- Probe ensemble: SOS-KAN AUROC 0.9899, ThinkPRM 0.9885, NK-KAEM 0.9875
+- WOPR Sudoku: code complete, all 4 easter eggs pass local tests, Ising E=0 at iter 5130
+- KV260 bitstream: loaded (state=operating since Exp 1041); 1 pre-test failing blocks smoke test
+- Gate mechanism: circuit-breaker behavior validated (.82 gates produced correct blocked artifacts)
+- Independent research tracks run successfully even when infrastructure chain fails
+
+### What's Next
+- Conductor executes research-roadmap-next.yaml starting with exp1063 (EnvGuard repair)
+- All 14 tasks loaded and ready; exp1063 is unconditional first
+- WOPR deploy (exp1069) just needs SOPS HF_TOKEN retrieval — code is production-ready
+- Position paper (exp1075) assembles all research notes into arXiv draft (~2026-05-15 target)
+
+---
+
 ## Session 2026-04-21 PM — KV260 hardware track + prompt-injection EBM spec
 
 **Context:** User-driven session (not conductor-originated).  Three landing strips advanced:
