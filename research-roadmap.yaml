@@ -275,6 +275,20 @@ tasks:
       artifact_field: diagnostics_library_written
       op: '=='
       value: true
+  # 2026-05-01 operator patch: planner missed prior_failures audit. The
+  # conductor's name-similarity heuristic matched 18 prior failures via
+  # the keywords "verifier" / "adversarial" alone — but every match is
+  # a different research question (thinkprm/vprm step verifiers,
+  # gsm-symbolic-adversarial benchmarks, adversarial-gsm8k, etc).
+  # exp1092's actual scope is novel: measuring false-pass rate of
+  # SHIPPING Carnot verifiers (SOSKANEnergyV3, IsingEnergy, etc.) on
+  # adversarially-crafted outputs designed to fool each verifier — net
+  # new capability, not a respawn.
+  prior_failures:
+    - experiment_id: bulk-false-positive-keyword-match-verifier-adversarial
+      verdict: scope_keyword_match_only_no_real_recurrence
+      addressed_by: "FALSE-POSITIVE BULK MATCH. The conductor's name-similarity heuristic matched 18 prior failures (exp1007/1008/1017/1019 thinkprm/vprm step verifiers, exp355/429/468/479/490/504 gsm-symbolic-adversarial benchmarks, exp454 vprm comparison, exp706 gemma-vr, etc.) on the keywords 'verifier' or 'adversarial' alone. None of them are in scope of Phase 1a's research question: 'measure the false-pass rate of shipping Carnot verifiers on adversarially-crafted attacker-LLM outputs designed to fool each individual verifier'. The matched priors were either (a) infrastructure issues (gpu_required, gate_check_failed) unrelated to robustness measurement, (b) different verifier classes (PRM step-level vs. Carnot energy-level), or (c) different attack surfaces (math-reasoning gsm-symbolic vs. canonical attack patterns from arXiv 2604.15149). Phase 1a uses NullSpaceEstimator + DecodedTextDiversity from exp1090's new diagnostics.py library — neither existed when any prior 'verifier' or 'adversarial' experiment ran, so by construction this is novel capability, not recurrence."
+      retire_if_same_verdict: false
   prompt: |
     CONTEXT:
     CLAUDE.md Phase Prototype + Empirical Validation + Adversarial Check Discipline (MANDATORY):
