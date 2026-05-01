@@ -157,6 +157,11 @@
       "experiment_id": 1065,
       "completed_milestone": "2026.04.83",
       "reason": "2026-04-30 user directive: pause codex backend integration. Codex config.toml fix no longer needed."
+    },
+    {
+      "experiment_id": 1087,
+      "completed_milestone": "2026.04.84",
+      "reason": "2026-05-01 user directive: gemini backend paused due to gemini-3.1-pro-preview 429 rate-limiting. Empirical test in interactive session this morning confirmed even single read-only file-inspection tasks trip 429s — the underlying research question this experiment was meant to answer is already answered. Future planners must NOT propose agent_type: gemini tasks until upstream quota improves (see ops/known-issues.md for re-enable conditions). The infrastructure for gemini-worktree routing remains in scripts/research_conductor.py:166 as parking-lot code; lifting the pause is a documentation update, not new infrastructure work."
     }
   ]
 }
