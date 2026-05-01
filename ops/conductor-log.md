@@ -265,3 +265,7 @@ If you finish the real work |
 | 2026-05-01 21:08 UTC | arXiv PDF Compilation + Submission — CRITICAL dead | OK | 81 passed, 1 warning in 4.39s |
 | 2026-05-01 21:23 UTC | Infrastructure Hardening v3 — Dispatch Manifest +  | ESCALATE_OPUS_100 | Opus max-turns at 45; retrying with 100 turns |
 | 2026-05-01 21:29 UTC | Infrastructure Hardening v3 — Dispatch Manifest +  | OK | 145 passed, 1 warning in 4.85s |
+| 2026-05-01 22:00 UTC | GRPO with ThinkPRM v2 Energy Reward — Continuous S | FAIL | Claude Code error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
+| 2026-05-01 22:10 UTC | GRPO with ThinkPRM v2 Energy Reward — Continuous S | OK | Deliverable already exists in repo |
+| 2026-05-01 22:21 UTC | FoVer SOTA Domain Extension v5 — 1000+ SOTA Model  | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1119_fover_s |
+| 2026-05-01 22:31 UTC | FoVer SOTA Domain Extension v5 — 1000+ SOTA Model | OK | Deliverable already exists in repo |
