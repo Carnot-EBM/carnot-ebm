@@ -1737,7 +1737,28 @@ def pick_next_task(completed_log: str) -> dict | None:
     completed_titles = set()
     fail_counts: dict[str, int] = {}
 
-    for line in completed_log.splitlines():
+    # 2026-05-01 fix (Issue 1): scope fail-counting to the current milestone
+    # only. Previously, .85's exp1096 SemEnergy Probe inherited 4 fails from
+    # .84's exp1080 SemEnergy Probe (same title) and was retired before the
+    # planner's prior_failures: block could even be evaluated. Same for
+    # exp1097 N-Queens vs .84's exp1086. The right semantics: when the
+    # planner re-proposes a previously-retired task in a new milestone,
+    # the new attempt is a NEW experiment with possibly-new approach
+    # (codified via prior_failures: addressed_by) and deserves its own
+    # fail-count budget, not inheritance from .84.
+    #
+    # Mechanic: find the most recent "Milestone X activated" line and only
+    # count fails that occurred AFTER that marker. Pre-activation fails
+    # belong to a prior milestone's count and have already had their cap
+    # consequences play out there.
+    log_lines = completed_log.splitlines()
+    activation_index = -1
+    for i, line in enumerate(log_lines):
+        if "Milestone" in line and "activated" in line:
+            activation_index = i  # Keep the LAST activation line index
+    fail_counting_lines = log_lines[activation_index + 1 :] if activation_index >= 0 else log_lines
+
+    for line in fail_counting_lines:
         parts = line.split("|")
         if len(parts) < 4:
             continue
