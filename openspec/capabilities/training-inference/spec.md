@@ -71,6 +71,15 @@ The system shall define a `Sampler` trait/protocol:
 - `sample_chain(&self, ...) -> Vec<Array>` — return full chain for diagnostics
 - Parallel Ising Gibbs sampler (`parallel_ising.py`): checkerboard updates, simulated annealing schedules, and thrml-compatible `parallel_sample_states` wrapper
 
+### REQ-HASHI-001: WOPR Hashi Ising Cartridge
+
+The system shall expose a WOPR Hashi cartridge where:
+- each possible horizontal or vertical bridge between adjacent visible islands is encoded as one spin
+- spin +1 means the bridge is present and spin -1 means the bridge is absent
+- island degree penalties are zero exactly when every island has its requested number of bridges
+- crossing penalties are positive when orthogonal bridges share an empty grid cell
+- the canonical 5x5 puzzle converges to a connected zero-energy solution
+
 ### REQ-SAMPLE-005: FPGA Ising Architecture And Register Map
 
 The system shall define a KV260-class FPGA Ising sampler architecture for
@@ -1241,6 +1250,7 @@ human-readable string of the full energy function, e.g.:
 | REQ-SAMPLE-001 | Implemented | Implemented | 6 Rust + 4 Python |
 | REQ-SAMPLE-002 | Implemented | Implemented | 6 Rust + 2 Python |
 | REQ-SAMPLE-003 | Implemented | Implemented | 2 Rust + 30+ Python (incl. parallel Ising) |
+| REQ-HASHI-001 | N/A | Implemented | 4 Python |
 | REQ-SAMPLE-004 | Not Started | Implemented | 8 Python |
 | REQ-SAMPLE-005 | Not Started | Implemented | 6 Python |
 | REQ-SAMPLE-006 | Not Started | Implemented | 10 Python |

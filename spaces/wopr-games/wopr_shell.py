@@ -57,7 +57,7 @@ BOOT_LINES: list[str] = [
 
 _GAMES_LIST = (
     "AVAILABLE GAMES: SUDOKU, TIC-TAC-TOE, LIGHTS_OUT, "
-    "GLOBAL_THERMONUCLEAR_WAR. TYPE 'PLAY <NAME>' OR JUST '<NAME>' "
+    "GLOBAL_THERMONUCLEAR_WAR, N_QUEENS, HASHI. TYPE 'PLAY <NAME>' OR JUST '<NAME>' "
     "TO LOAD A CARTRIDGE."
 )
 
@@ -149,6 +149,7 @@ def match_cartridge_load(text: str, cartridges: list) -> WOPRGame | None:
                 "war",
                 "gtw",
             ],
+            "hashi": ["bridges", "hashiwokakero"],
         }.get(gname, [])
         if norm in short_aliases:
             return game
