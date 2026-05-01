@@ -284,3 +284,40 @@ it could silently fail empirically:
 - **Diagnostic:** `OODEnergyMarginAnalyzer` (measuring the ΔE scalar
   specifically between ground-truth valid samples and single-
   character logic inversion errors).
+
+---
+
+## Cross-reference correction (added 2026-05-01)
+
+**Round 1's specific prescription on k was REFUTED by the
+k-ceiling Round 2 response** (`and-composition-k-ceiling-deep-think-results.md`).
+
+| Round 1 (this document) said | k-ceiling Round 2 corrected to |
+|---|---|
+| k_max = 5-7 (heuristic, D_int ≈ 5 via pigeonhole) | **k_max ≈ 7-8** via Welch/Rankin bound derivation |
+| k=5 r=0.3 is mathematically superior to k=15 r=0.55 | **k=10 r=0.4 is OPTIMAL** per exact Gaussian copula tail integral |
+| Train Phase-3 on k=5 once Phase-1d ships | Train Phase-3 on **k ≈ 7-8 with strict mechanism orthogonality**; k=10 r=0.4 sweet spot if achievable |
+
+**Welch bound math (Round 2):** k* ≤ ⌊(1−r_max)/(α²−r_max)⌋. For
+α²=0.66, r_max=0.5: k* ≤ 3.125 within the homogeneous text-probe
+cluster. To exceed this requires crossing the "mechanism gap" to
+formal-verification (Z3-AST), runtime-execution (gVisor), or
+combinatorial-encoding (Ising/Potts) families.
+
+**Joint evasion probability (Round 2 exact integral):**
+- k=5 r=0.30: 4.12×10⁻⁶
+- **k=10 r=0.40: 1.20×10⁻⁶ (OPTIMAL)**
+- k=15 r=0.55: 8.36×10⁻⁶
+
+**Implication for the Phase-3 Block-and-Resolve workflow (Round 1's
+P5):** Phase-1d's exit gate must be empirical k_max ≤ 8 with
+strict pairwise r ≤ 0.45 across mechanism-gap-spanning probes —
+NOT "k=5 with r<0.3" as Round 1 specified. exp1104 is the gate
+experiment, defined in the k-ceiling Round 2 results document.
+
+**The Round 2 adversarial follow-up to this document
+(`phase3-empirical-grounded-deep-think-round2-prompt.md`) remains
+valid and pending** — its Q3 (0.8B vs SOTA tier reconciliation),
+Q4 (parallel-track vs sequential Block-and-Resolve), and Q5 (silent
+failure modes) cover concerns the k-ceiling Round 2 did not
+address.
