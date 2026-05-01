@@ -1,0 +1,41 @@
+{
+  "experiment": 1094,
+  "title": "Phase 2a Sampler Correctness Audit",
+  "run_date": "2026-05-01T08:22:42Z",
+  "schema": "phase2a_sampler_correctness_audit_v1",
+  "duration_s": 6,
+  "board_ip": "192.168.51.98",
+  "board_reachable": true,
+  "fpga_smoke_stats": {
+    "samples": 200,
+    "failed": 0,
+    "unique_values": 102,
+    "min_popcount": 7,
+    "max_popcount": 31,
+    "mean_popcount": 15.61,
+    "latency_us_mean": 27.57742302492261,
+    "latency_us_min": 24.709966965019703,
+    "latency_us_max": 40.66096153110266
+  },
+  "n_spins": 12,
+  "beta": 2.0,
+  "n_gibbs_samples": 5000,
+  "n_parallel_samples": 5000,
+  "kl_fpga_gibbs": 3.070519989571347,
+  "kl_measurement_mode": "software_parallel_glauber_proxy",
+  "kl_acceptance_threshold": 0.05,
+  "kl_theoretical_bound": 0.057762265046662105,
+  "phase2a_finding2_confirmed": true,
+  "gibbs_mean_popcount": 6.0,
+  "parallel_mean_popcount": 5.999,
+  "gpu_ising_available": true,
+  "gpu_ising_latency_ms": 0.08716803495190106,
+  "gpu_backend": "torch_cuda",
+  "cpu_gibbs_latency_ms": 0.015963719924911857,
+  "tests_passing": 4,
+  "honest_verdict": "fpga_sampler_distribution_mismatch_confirmed",
+  "notes": {
+    "rationale": "Bitstream J is hardware-fixed; live FPGA portion is a latency/health probe only. KL is measured between the in-process software parallel-Glauber sampler and single-site Gibbs on a 12-spin frustrated antiferromagnetic ring, the canonical small case where parallel Glauber loses detailed balance.",
+    "future_work": "Programmable-J KV260 bitstream + on-board KL measurement against the same J_frustrated would replace kl_measurement_mode='software_parallel_glauber_proxy' with 'live_fpga_measurement'."
+  }
+}

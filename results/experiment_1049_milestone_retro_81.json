@@ -1,0 +1,70 @@
+{
+  "experiment": 1049,
+  "milestone": "2026.04.81",
+  "title": "Milestone 2026.04.81 Retrospective — 13-Criterion Evaluation",
+  "run_date": "2026-04-29T23:15:36Z",
+  "schema": "carnot.operational_retro.v56",
+  "criteria_results": {
+    "gate_coercion_fixed": false,
+    "wedge_replay_clean": false,
+    "verdict_stability_80pct": true,
+    "seed_discipline_deployed": true,
+    "kv260_bitstream_loaded": true,
+    "dualgpu_live_inference": false,
+    "fover_500_pairs": false,
+    "triple_integration_all_tiers": false,
+    "best_probe_auroc_072": false,
+    "alpha_t_measured": false,
+    "sos_kan_no_regression": true,
+    "eval_metrics_wired": true,
+    "retro_complete": true
+  },
+  "criteria_met": 6,
+  "criteria_total": 13,
+  "criteria_detail": {
+    "gate_coercion_fixed": "Exp 1039 never produced a result artifact. Conductor log shows 3 attempts: SKIP (pre-tests failing, 1 failed/302 passed), FAIL (max turns 30), SKIP (pre-tests failing, 4 failed/318 passed). No results/experiment_1039_*.json file exists. Criterion: gate_coercion_fixed=true. Verdict: NOT MET.",
+    "wedge_replay_clean": "Exp 1039 same artifact — never completed. wedge_replay_clean field never written. Verdict: NOT MET.",
+    "verdict_stability_80pct": "Exp 1040: stability_rate=1.0 (5/5 flagship verdicts stable), seed_discipline_deployed=True, reproducibility_checksum_deployed=True. Target was >=0.80. Verdict: MET (static audit; full execution-stability rerun deferred per audit_note).",
+    "seed_discipline_deployed": "Exp 1040: seed_discipline_deployed=True, random_seed field added to build_result() schema. Verdict: MET.",
+    "kv260_bitstream_loaded": "Exp 1041: bitstream_loaded=True, bitstream_load_diag='carnot_ising_v2_n64: Loaded with slot_handle 0 | state=operating'. Smoke test failed (all samples returned 0x0 — reset not deasserted). Criterion requires bitstream_loaded=true only. Verdict: MET.",
+    "dualgpu_live_inference": "Exp 1042 never produced a result artifact. Conductor log shows: FAIL (max turns 25), SKIP (pre-tests failing), SKIP (pre-tests failing). No results/experiment_1042_*.json file exists. Verdict: NOT MET.",
+    "fover_500_pairs": "Exp 1043: n_total_pairs=216 (prior 85 + 197 new Z3-confirmed - 66 overlap). Target was >=500. MetaQA generator still stub mode (n_metamorphic_validated=0). Verdict: NOT MET (partial — 2.54x growth but 43% of target).",
+    "triple_integration_all_tiers": "Exp 1044: GATE_BLOCK x3. Gate exp1039-conductor-fastpath-gate-coercion.gate_coercion_fixed failed because Exp 1039 artifact does not exist. status=blocked, honest_verdict=blocked_gate_check_failed. Verdict: NOT MET (cascaded from gate_coercion_fixed failure).",
+    "best_probe_auroc_072": "Exp 1045: best_probe_auroc=0.5694 (ThinkPRM, text_features). GS-KAN AUROC=0.4534, NK-KAEM=0.5631. All three below target 0.72. nk_convergence_speedup=0.546 (slower than Adam baseline). Verdict: NOT MET.",
+    "alpha_t_measured": "Exp 1046: blocked_no_live_gpu. alpha_t_measured=False, fr11_examples_written=0. Ran 3 times with artifact_not_updated_past_bootstrap each time. Qwen3.6-35B-A3B GGUF not in HF cache; synthetic_fallback explicitly disabled. Verdict: NOT MET.",
+    "sos_kan_no_regression": "Exp 1047: auroc_no_regression=True. auroc_sos_kan=0.6042 vs auroc_kaem_baseline=0.4958 (improvement). n_monotonicity_violations=0, n_nonneg_violations=0 across 16,000 invariant samples. invariants_hold=True. Verdict: MET.",
+    "eval_metrics_wired": "Exp 1048: auroc_anomaly_detector_wired=True, metrics_used_field_deployed=True, model_field_validated=True, tests_passing=5. _check_auroc_anomaly() landed in conductor self-heal loop. Verdict: MET.",
+    "retro_complete": "This artifact. Verdict: MET."
+  },
+  "per_experiment_verdicts": {
+    "exp1039_conductor_fastpath_gate_coercion": "no_artifact_produced",
+    "exp1040_verdict_reproducibility_audit": "stability_measured_discipline_deployed",
+    "exp1041_kv260_first_light_v7": "bitstream_loaded_smoke_pending",
+    "exp1042_dualgpu_rocm_torch_v4": "no_artifact_produced",
+    "exp1043_fover_expansion_v3": "partial_200plus",
+    "exp1044_triple_integration_v7": "blocked_gate_check_failed",
+    "exp1045_probe_ensemble_v5": "partial_some_below_0.72",
+    "exp1046_zenil_alpha_t_fr11": "blocked_no_live_gpu",
+    "exp1047_sos_kan_v1": "sos_kan_invariants_confirmed",
+    "exp1048_eval_metrics_canonical_wiring": "eval_metrics_wired_routing_validated",
+    "exp1049_milestone_retro_81": "retro_complete"
+  },
+  "milestone_successes": [
+    "KV260 bitstream loaded (Exp 1041, bitstream_loaded=True): After 7 attempts across milestones .75–.81, carnot_ising_v2_n64 is in state=operating on the physical board. Key discoveries: bootgen is installed on the board itself (/usr/bin/bootgen v2022.2), the v4 dtbo uses a firmware-name path that required a symlink workaround. FPGA fabric is programmed for the first time; only the sampler control register (reset deassert) remains.",
+    "SOS-KAN type-level monotonicity invariants confirmed (Exp 1047, auroc_no_regression=True, 0 violations across 16,000 samples): SOS-on-derivative re-parameterization makes KAN monotonicity violations structurally impossible — ψ'(x) = B(x)^T W B(x) = ||V^T B(x)||^2 >= 0 by construction. AUROC 0.6042 vs KAEM baseline 0.4958. First type-level energy invariant deployed.",
+    "Eval metrics canonical wiring deployed (Exp 1048): _check_auroc_anomaly() now pages the operator when edge AUROC values (0.0/0.001/0.999/1.0) are written to any experiment result; metrics_used field wired into build_result(); model field parsing validated. Closes the inverted-AUROC bug class for future experiments."
+  ],
+  "biggest_gaps_82": [
+    "Exp 1039 deadlock pattern still live: gate coercion fix and fastpath bootstrap skip cannot be deployed because pre-tests are failing (4 tests broken at 17:10 UTC attempt). The failing tests block the infrastructure fix; the infrastructure fix is needed to unblock Exp 1044 Triple Integration. Root cause: .80 added new tests that introduced test failures; these were never repaired before .81 launched. Fix for .82: diagnose and repair the 4 failing pre-tests FIRST (before any other experiment runs), then re-run Exp 1039. This should be a Phase 0 MANDATORY item with no gate dependency.",
+    "FoVer MetaQA generator still stub (0 metamorphic pairs across v2 and v3, now 2 consecutive milestones): n_total_pairs=216 vs target 500. The MetaQA branch ran but the model (Qwen3.6-35B-A3B GGUF or gemma-4-26B-A4B) is not cached locally, causing early-exit. All probe AUROC scores (best=0.5694) are depressed by insufficient training data. Fix for .82: pre-download GGUFs as a Phase 0 preflight step; the MetaQA generator should not silently stub-out when the model is missing — it should block with a clear model-not-cached error.",
+    "GPU-gated experiments blocked for 3+ consecutive milestones (DualGPU .79/.80/.81, Zenil alpha_t .81 x3): Exp 1042 (torch ROCm install) and Exp 1046 (alpha_t FR-11) both failed because live GPU inference is unavailable. This is the same root cause as .79/.80 DualGPU failures. The conductor keeps scheduling these without a resolved GPU environment. Fix for .82: establish a GPU environment health check at milestone activation time; if dualgpu_live=False from last attempt, schedule the torch install as a mandatory prerequisite before any GPU experiment in the roadmap."
+  ],
+  "process_observations": [
+    "Gate coercion deadlock pattern: Exp 1039 was designed to fix the gate coercion bug, but pre-test failures prevented it from running. Triple Integration v7 was then gated on Exp 1039's artifact — and GATE_BLOCKed x3. This is the fourth consecutive milestone Triple Integration has failed. The pre-test failures are a higher-priority blocker than any research experiment; future milestones must include a mandatory pre-test-repair step as the very first task.",
+    "Fastpath bootstrap wedge still active: Exp 1046 (Zenil alpha_t) triggered artifact_not_updated_past_bootstrap 3 times (21:04, 21:16 UTC). The conductor kept launching it because the bootstrap stub was not being recognized as incomplete. This is exactly the Exp 1039 fix that never landed. Confirming the bug is still live and causing wasted cycles.",
+    "KV260 first light is a real win with a clear next step: bitstream_loaded=True for the first time. The remaining blocker is a single register write (deassert reset on sampler control register). The board is reachable, bootgen works, firmware loads. This is one SSH command away from smoke_test_passed=True.",
+    "SOS-KAN and Eval Metrics (Exps 1047, 1048) ran cleanly on first Opus escalation attempt — these are CPU-only experiments with clear scopes. The pattern is consistent: hardware-dependent and infrastructure-repair experiments fail repeatedly; theory/analysis experiments succeed. .82 should front-load the hardware and infrastructure repairs to unblock the research experiments.",
+    "Verdict stability audit (Exp 1040) achieved stability_rate=1.0 but noted it was a static (readable) audit not a full execution rerun. The audit_note explicitly deferred the stronger claim. This is honest but means the criterion is met at a lower bar than intended."
+  ],
+  "honest_verdict": "milestone_6_of_13_criteria_met_hardware_partial_gate_fix_blocked"
+}

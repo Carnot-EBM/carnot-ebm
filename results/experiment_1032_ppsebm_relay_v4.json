@@ -1,0 +1,42 @@
+{
+  "experiment": 1032,
+  "schema": "carnot.ppsebm_relay_v4.v1",
+  "run_date": "2026-04-29",
+  "started_at": "2026-04-29T12:48:00.060903+00:00",
+  "finished_at": "2026-04-29T12:48:02.295277+00:00",
+  "duration_s": 2.234,
+  "status": "success",
+  "title": "PPSEBM Relay v4: FoVer expanded corpus training + FR-11 live relay",
+  "honest_verdict": "relay_live",
+  "n_violation_pairs_used": 29,
+  "ppsebm_auroc": 0.6875,
+  "n_real_violations": 5,
+  "relay_live": true,
+  "n_train_items": 67,
+  "n_test_items": 18,
+  "n_train_violations": 30,
+  "n_test_violations": 8,
+  "vocab_size": 2178,
+  "auroc_target": 0.7,
+  "auroc_achieved": false,
+  "model_used": "unsloth/gemma-4-31B-it-GGUF (not cached \u2014 synthetic relay fallback)",
+  "relay_memory_path": "/home/ianblenke/github.com/ianblenke/carnot/data/ppsebm_relay_memory.jsonl",
+  "n_relay_records": 10,
+  "prior_failures": [
+    {
+      "experiment_id": "exp1003_ppsebm_relay",
+      "verdict": "below_gate_9_violations",
+      "addressed_by": "Exp 1029 expanded corpus to 29 violations; gate satisfied."
+    },
+    {
+      "experiment_id": "exp1005_ppsebm_relay_v2",
+      "verdict": "gate_check_failed_9_violations",
+      "addressed_by": "Exp 1029 expanded corpus to 29 violations; gate satisfied."
+    },
+    {
+      "experiment_id": "exp1024_ppsebm_relay_v3",
+      "verdict": "blocked_fover_never_ran",
+      "addressed_by": "Exp 1029 completed with n_violation_pairs=29."
+    }
+  ]
+}

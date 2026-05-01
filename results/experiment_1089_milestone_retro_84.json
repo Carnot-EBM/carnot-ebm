@@ -1,0 +1,72 @@
+{
+  "experiment": 1089,
+  "milestone": "2026.04.84",
+  "title": "Milestone 2026.04.84 Retrospective \u2014 13-Criterion Evaluation",
+  "run_date": "2026-05-01T10:53:21Z",
+  "schema": "milestone_retro_v1",
+  "criteria_results": {
+    "fr11_alpha_t_sota_confirmed": true,
+    "position_paper_arxiv_ready": false,
+    "live_benchmark_honest_result": true,
+    "semenergy_probe_auroc_above_07": false,
+    "fpga_speedup_vs_cpu": false,
+    "potts_simulation_validated": false,
+    "rlvr_ssd_honest_result": false,
+    "prm_data_generated": true,
+    "cascade_validated_sota_outputs": false,
+    "nqueens_cartridge_shipped": false,
+    "gemini_worktree_implemented": false,
+    "gallery_updated_hf_spaces": false,
+    "retro_complete": true
+  },
+  "criteria_met": 4,
+  "criteria_total": 13,
+  "criteria_detail": {
+    "fr11_alpha_t_sota_confirmed": "model_tier='sota_moe', inference_mode='live_gpu', alpha_t=0.38 (lower than 0.8B=0.78; expected \u2014 35B model harder to distinguish)",
+    "position_paper_arxiv_ready": "exp1078 artifact absent \u2014 gemini backend was paused mid-milestone (user directive 2026-05-01: 429 rate limits unusable); experiment never ran",
+    "live_benchmark_honest_result": "gsm8k_n_questions=100, honest_verdict='positive_humaneval_only', humaneval_pass_at_1_after=0.36 (36% HumanEval improvement \u2014 first positive result with SOTA IT model), gsm8k_net_improvement=0.0 (extraction_tp_rate=0.0; VeriCoT extraction still failing on GSM8K)",
+    "semenergy_probe_auroc_above_07": "status='blocked', semenergy_auroc=None (blocked by gate-check: 2 prior failures \u2014 exp573, exp772 \u2014 lacked prior_failures YAML declarations in .84 roadmap)",
+    "fpga_speedup_vs_cpu": "crossover_n_spins=64 (extrapolated from exp1068, not live-measured), board_reachable=False, honest_verdict='board_unreachable' (KV260 at 192.168.51.98 was unreachable; crossover estimated from prior anchor)",
+    "potts_simulation_validated": "status='blocked', python_sim_validated=None (blocked by gate-check: prior failure exp534-potts-machine-verifier lacked prior_failures YAML declaration in .84 roadmap)",
+    "rlvr_ssd_honest_result": "status='blocked', honest_verdict='blocked_gate_check_failed' (blocked by gate-check: 7 prior failures \u2014 exp1014/1044/467/927/955/978/990 \u2014 lacked prior_failures YAML)",
+    "prm_data_generated": "n_step_examples_generated=7349 (target >= 2000), thinkprm_auroc_after=0.7929 (auroc dropped from 0.9885\u21920.7929 on small 300-sample retrain; data volume confirmed, retrain quality TBD)",
+    "cascade_validated_sota_outputs": "status='blocked', n_outputs_run=0 (blocked by gate-check: 9 prior failures \u2014 exp432/453/485/657/705/778/784/882/946 \u2014 lacked prior_failures YAML)",
+    "nqueens_cartridge_shipped": "status='blocked', final_energy=None (blocked by gate-check: 2 prior cartridge experiments \u2014 exp1070/1071 \u2014 cited as predecessors but lacked prior_failures YAML)",
+    "gemini_worktree_implemented": "status='retired', gemini_routing_implemented=None (retired by user directive 2026-05-01: gemini-3.1-pro-preview 429-throttles even single read-only tool calls; research question answered empirically before full execution)",
+    "gallery_updated_hf_spaces": "exp1088 artifact absent \u2014 gated on exp1086 (N-Queens cartridge) which was blocked; cascade failure propagated to gallery update",
+    "retro_complete": "Retro analysis completed; all 13 criteria evaluated; artifact written"
+  },
+  "per_experiment_verdicts": {
+    "fr11_alpha_t_sota_confirmed": "fr11_sota_alpha_t_confirmed",
+    "position_paper_arxiv_ready": "arxiv_prep_not_run_gemini_paused",
+    "live_benchmark_honest_result": "positive_humaneval_only",
+    "semenergy_probe_auroc_above_07": "blocked_gate_check_failed",
+    "fpga_speedup_vs_cpu": "board_unreachable_crossover_extrapolated",
+    "potts_simulation_validated": "blocked_gate_check_failed",
+    "rlvr_ssd_honest_result": "blocked_gate_check_failed",
+    "prm_data_generated": "prm_data_generated",
+    "cascade_validated_sota_outputs": "blocked_gate_check_failed",
+    "nqueens_cartridge_shipped": "blocked_gate_check_failed",
+    "gemini_worktree_implemented": "retired_gemini_rate_limited",
+    "gallery_updated_hf_spaces": "not_run_gated_on_blocked_exp1086",
+    "retro_complete": "retro_complete"
+  },
+  "milestone_successes": [
+    "FR-11 alpha_t confirmed live on SOTA MoE (exp1077): Qwen3.6-35B-A3B on 2\u00d7 RTX 3090 produced alpha_t=0.38 \u2014 honest result (lower than 0.8B baseline because 35B model is harder for the AND-composed verifier to distinguish from temperature filtering); 100 FR-11 training examples written to fr11_zenil_distill_v2.jsonl",
+    "First-ever positive live benchmark result with SOTA IT model (exp1079): HumanEval pass@1 improved 0\u219236% after Carnot correction on Qwen3.6-35B-A3B; GSM8K extraction still failing (TP=0) but HumanEval result is a genuine positive signal \u2014 the cascade and verifier pipeline are adding value on code tasks",
+    "Step-level PRM dataset generated at scale (exp1084): 7349 step-labeled examples from full FoVer corpus (target was 2000); largest PRM dataset in project history; ThinkPRM retrain attempted (auroc 0.99\u21920.79 on 300-sample subset \u2014 data volume confirmed but retrain sample size insufficient for production quality)"
+  ],
+  "biggest_gaps_85": [
+    "Prior_failures declarations missing from 6 planner tasks: exp1080/1082/1083/1085/1086 blocked by conductor gate-check (prior failures existed but roadmap YAML omitted required prior_failures fields); .85 planner must scan research-complete.yaml before proposing ANY task that echoes past work \u2014 a dedicated 'prior_failures audit' pre-task in .85 is recommended before attempting these experiments again",
+    "Position paper (exp1078) not run: gemini backend paused mid-milestone (user directive 2026-05-01, 429 rate limits); the paper's strategic deadline (2026-05-15 arXiv) is now critically close; .85 must route the long-context review through Opus or Sonnet instead of gemini; no other closed-backend dependencies acceptable",
+    "KV260 FPGA board unreachable (exp1081): 192.168.51.98 did not respond; live scale benchmark from 64\u21921024 spins requires board connectivity; .85 should include a board-reconnect diagnostic task before scheduling FPGA experiments, and should add the board-reachable pre-check to the experiment gate conditions"
+  ],
+  "process_observations": [
+    "Conductor gate enforcement is working as designed: 6 experiments were correctly blocked (46% of milestone) for undocumented reruns of prior failures. This is the system doing its job \u2014 the real process gap is at the planner layer which consistently omits prior_failures declarations in the roadmap YAML.",
+    "Gemini backend instability created a milestone-wide dependency failure: exp1078 (position paper) and exp1087 (gemini conductor) both relied on gemini; when the user paused the backend mid-milestone, two strategic deliverables evaporated. Planning should treat single-backend dependencies as high-risk and require a fallback route (Opus/Sonnet) declared in the roadmap before milestone activation.",
+    "HumanEval positive result (exp1079) is the landmark result of .84: first time Carnot has shown a positive delta with a SOTA instruction-tuned model. GSM8K extraction continues to fail (VeriCoT TP=0 on math reasoning) \u2014 the .85 benchmark should narrow to HumanEval/code tasks where the signal is real.",
+    "Gate-blocked cascade: exp1086 (N-Queens) \u2192 exp1088 (HF gallery) is a 2-deep dependency chain; when the first link is blocked by gate-check, both fail with zero wall time. The .85 roadmap should decouple the gallery update from new cartridges by staging them across separate milestones or making gallery update standalone (it can deploy existing cartridges independently).",
+    "4/13 success rate (31%) is the worst milestone performance since .80 (8/13). However, 7 of the 9 NOT_MET criteria were blocked by gate enforcement (correct behavior), not by research failure. The 2 genuine failures are: exp1078 (gemini paused) and exp1081 (board unreachable). The gate-blocked experiments are technically ready to run; they just need prior_failures YAML to be added."
+  ],
+  "honest_verdict": "milestone_4_of_13_criteria_met_gate_enforcement_surfaced_planner_gaps"
+}

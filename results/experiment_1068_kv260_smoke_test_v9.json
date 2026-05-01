@@ -1,0 +1,61 @@
+{
+  "experiment": 1068,
+  "title": "KV260 Ising sampler smoke test v9 \u2014 start/poll/read SPIN_OUT",
+  "run_date": "2026-04-30T11:55:11Z",
+  "schema": "kv260_smoke_test_v9",
+  "duration_s": 5,
+  "board_ip": "192.168.51.98",
+  "ssh_reachable": true,
+  "control_register_found": true,
+  "control_register_offset_hex": "0x0000",
+  "spin_out_register_offset_hex": "0xA010",
+  "uio_device": "/dev/uio4",
+  "axi_base_hex": "0xA0000000",
+  "reset_method_tried": "uio4_mmap_control_reg_toggle",
+  "reset_deasserted": true,
+  "smoke_test_passed": true,
+  "energy_distribution_nonuniform": true,
+  "unique_values": 70,
+  "hardware_latency_us": 24.82834388501942,
+  "smoke_stats": {
+    "samples": 100,
+    "failed": 0,
+    "unique_values": 70,
+    "min_value": 10922,
+    "max_value": 4294967295,
+    "min_popcount": 7,
+    "max_popcount": 32,
+    "mean_popcount": 15.81,
+    "energy_range": 25,
+    "first_5_hex": [
+      "0xec13b946",
+      "0x8da77258",
+      "0xd57f802a",
+      "0xb946ec13",
+      "0x8d8d8d8d"
+    ],
+    "latency_us_min": 24.190056137740612,
+    "latency_us_max": 40.08004907518625,
+    "latency_us_mean": 24.82834388501942,
+    "pre_status": 4,
+    "pre_control": 1
+  },
+  "smoke_error": null,
+  "guide_v4_written": false,
+  "honest_verdict": "smoke_test_passed_latency_measured",
+  "notes": {
+    "v9_changes_vs_v3": [
+      "Reads SPIN_OUT at offset 0xA010 (v3 read CONTROL at 0x0000 by mistake)",
+      "Cycles CONTROL[1] (RESET) between samples to re-arm the FSM",
+      "Polls CONTROL[2] (DONE) instead of using a fixed sleep",
+      "Records per-sample latency via time.perf_counter on the board"
+    ],
+    "prior_failures": [
+      {
+        "experiment_id": "exp1041_kv260_first_light_v7",
+        "verdict": "bitstream_loaded_smoke_pending",
+        "addressed_by": "v9 reads the correct SPIN_OUT offset (0xA010) and cycles the FSM via CONTROL[1] RESET between samples"
+      }
+    ]
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "experiment": 1041,
+  "title": "KV260 First Light v7 \u2014 bitstream loaded on FPGA fabric",
+  "run_date": "2026-04-29T17:53:11Z",
+  "schema": "kv260_first_light_v7",
+  "duration_s": 13,
+  "board_ip": "192.168.51.98",
+  "ssh_user": "ubuntu",
+  "ssh_reachable": true,
+  "bootgen_found": true,
+  "bootgen_path": "/usr/bin/bootgen",
+  "bootgen_location": "board",
+  "bit_to_bin_converted": true,
+  "bitstream_loaded": true,
+  "bitstream_load_diag": "carnot_ising_v2_n64: Loaded with slot_handle 0 | state=operating",
+  "smoke_test_passed": false,
+  "energy_distribution_nonuniform": false,
+  "smoke_test_stats": {
+    "samples": 100,
+    "unique_values": 1,
+    "min_value": 0,
+    "max_value": 0,
+    "min_popcount": 0,
+    "max_popcount": 0,
+    "mean_popcount": 0.0,
+    "energy_range": 0,
+    "first_5_hex": [
+      "0x0",
+      "0x0",
+      "0x0",
+      "0x0",
+      "0x0"
+    ]
+  },
+  "smoke_test_error": null,
+  "kv260_guide_v2_written": false,
+  "honest_verdict": "bitstream_loaded_smoke_pending",
+  "notes": {
+    "v7_changes_vs_v6": [
+      "Discovered bootgen is on the board itself (/usr/bin/bootgen, v2022.2)",
+      "Discovered xmutil prefixes accelerator name to firmware-name path",
+      "Discovered the v4 dtbo references the stale v2_n64 firmware-name",
+      "Used v2_n64 accelerator load path with v4 .bit.bin via symlink"
+    ],
+    "next_step_if_smoke_pending": "Read hardware/kv260/build_bd.tcl to find the sampler's control/start register and write a 1 to deassert reset.",
+    "prior_failures": [
+      {
+        "experiment_id": "exp1037_kv260_v6",
+        "verdict": "guide_written",
+        "addressed_by": "v7 actually executes the bootgen+load chain on the board"
+      },
+      {
+        "experiment_id": "exp1022_kv260_first_light_v5",
+        "verdict": "blocked_by_preflight_gate",
+        "addressed_by": "v7 inherits v6's non-gated path"
+      }
+    ]
+  }
+}

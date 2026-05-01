@@ -1,0 +1,90 @@
+{
+  "experiment": 1045,
+  "title": "Probe Ensemble v5: ThinkPRM + GS-KAN + NK-KAEM on FoVer v3 corpus (216 pairs)",
+  "schema": "carnot.probe_ensemble_v5.v1",
+  "run_date": "2026-04-29",
+  "started_at": "2026-04-29T20:32:00.014344+00:00",
+  "finished_at": "2026-04-29T20:32:15.552262+00:00",
+  "duration_s": 15.538,
+  "status": "success",
+  "honest_verdict": "partial_some_below_0.72",
+  "n_pairs_used": 216,
+  "auroc_thinkprm": 0.5694,
+  "auroc_gskan": 0.4534,
+  "auroc_nk_kaem": 0.5631,
+  "best_probe_auroc": 0.5694,
+  "best_probe_name": "thinkprm",
+  "nk_convergence_speedup": 0.546,
+  "gskan_auroc_vs_baseline": -0.146,
+  "n_train": 172,
+  "n_test": 44,
+  "thinkprm_model_used": "text_features",
+  "auroc_gskan_int8": 0.4534,
+  "auroc_kaem_baseline": 0.5994,
+  "auroc_adam_baseline_nk": 0.4917,
+  "gskan_quant_stats": {
+    "n_groups": 4,
+    "n_knots": 8,
+    "scale_per_group": [
+      0.007874015718698502,
+      0.004825809970498085,
+      0.00708995433524251,
+      0.007874015718698502
+    ],
+    "max_abs_error": 0.0037584304809570312,
+    "mean_abs_error": 0.0014623093884438276
+  },
+  "nk_lambda_used": 0.1,
+  "nk_k_rows": 5,
+  "adam_warmup_epochs": 25,
+  "nk_grid_levels_used": [
+    4,
+    8,
+    16
+  ],
+  "epoch_log_thinkprm": [
+    {
+      "epoch": 75,
+      "loss": 0.686674,
+      "train_auroc": 0.6144
+    },
+    {
+      "epoch": 150,
+      "loss": 0.682686,
+      "train_auroc": 0.6155
+    },
+    {
+      "epoch": 225,
+      "loss": 0.680066,
+      "train_auroc": 0.6177
+    },
+    {
+      "epoch": 300,
+      "loss": 0.678301,
+      "train_auroc": 0.6201
+    }
+  ],
+  "prior_failures": [
+    {
+      "experiment_id": "experiment_1033_thinkprm_v4",
+      "verdict": "probe_trained_below_threshold",
+      "diagnosed_root_cause": "CI stub model (AUROC=0.5 flat); only 85 training pairs",
+      "addressed_by": "216 pairs from Exp 1043; Gemma 4 31B real inference (fallback: rich 8-feature probe, not keyword stub)",
+      "retire_if_same_verdict": false
+    },
+    {
+      "experiment_id": "experiment_1034_gskan_v4",
+      "verdict": "failed (AUROC=0.65 < 0.72)",
+      "diagnosed_root_cause": "85 training pairs insufficient for stable AUROC > 0.72",
+      "addressed_by": "216 pairs (2.5x more training data)",
+      "retire_if_same_verdict": false
+    },
+    {
+      "experiment_id": "experiment_1036_nk_kaem_v2",
+      "verdict": "nk_diverged_fallback_used",
+      "diagnosed_root_cause": "K=10 rows over-conditioned Jacobian (n_params=32 at G=4); 85 pairs",
+      "addressed_by": "K=5 rows (half), 25-epoch warm-start (vs 20), 216 pairs",
+      "retire_if_same_verdict": false
+    }
+  ]
+}

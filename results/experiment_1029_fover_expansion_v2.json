@@ -1,0 +1,35 @@
+{
+  "experiment": 1029,
+  "title": "FoVer Corpus Expansion v2: MATH dataset + MetaQA weak labeling",
+  "run_date": "2026-04-29",
+  "started_at": "2026-04-29T10:25:08.085102+00:00",
+  "finished_at": "2026-04-29T10:25:10.351644+00:00",
+  "duration_s": 2.267,
+  "status": "success",
+  "schema": "carnot.fover_expansion_v2.v1",
+  "honest_verdict": "partial_z3_only",
+  "n_labeled_pairs": 66,
+  "n_violation_pairs": 29,
+  "n_metamorphic_candidates": 0,
+  "n_metamorphic_z3_agreement": 0,
+  "corpus_path": "data/fover_corpus_expanded.json",
+  "n_prior_pairs": 57,
+  "n_math_problems": 500,
+  "n_total_pairs": 85,
+  "n_train_pairs": 67,
+  "n_test_pairs": 18,
+  "train_path": "data/fover_train.json",
+  "test_path": "data/fover_test.json",
+  "prior_failures": [
+    {
+      "experiment_id": "experiment_542_fover_expansion",
+      "verdict": "synthetic_fallback",
+      "addressed_by": "Using real MATH dataset (lighteval/MATH) with Z3 annotation of extracted arithmetic steps from real solutions, not synthetic GSM8K templates."
+    },
+    {
+      "experiment_id": "experiment_1016_fover_expansion_v2",
+      "verdict": "DOOMED_RERUN_BLOCKED_no_prior_failures_field",
+      "addressed_by": "This experiment includes the required prior_failures field and addresses both upstream failures."
+    }
+  ]
+}

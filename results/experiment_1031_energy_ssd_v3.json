@@ -1,0 +1,51 @@
+{
+  "experiment": 1031,
+  "title": "Energy-Selection SSD v3: Carnot energy as confidence filter for self-distillation",
+  "schema_version": "v1",
+  "run_date": "20260429",
+  "energy_filter_vs_baseline_delta": -0.804,
+  "accuracy_temperature_filter": 1.0,
+  "accuracy_carnot_filter": 0.196,
+  "accuracy_combined_filter": 1.0,
+  "fr11_training_examples_written": 100,
+  "fr11_loop_closed": true,
+  "honest_verdict": "fr11_loop_closed",
+  "temperature_filter_metrics": {
+    "accuracy": 1.0,
+    "diversity_score": 0.7259649928642902,
+    "energy_gap": -0.029580032334973413,
+    "n_selected": 100,
+    "mean_energy_kept": 0.03278014227747917,
+    "mean_energy_rejected": 0.003200109942505757
+  },
+  "carnot_energy_filter_metrics": {
+    "accuracy": 0.19597989949748743,
+    "diversity_score": 0.7113359769548806,
+    "energy_gap": 0.09694079618075191,
+    "n_selected": 199,
+    "mean_energy_kept": -0.03811763205457872,
+    "mean_energy_rejected": 0.05882316412617318
+  },
+  "combined_filter_metrics": {
+    "accuracy": 1.0,
+    "diversity_score": 0.4835195273229461,
+    "energy_gap": 0.04172346176508018,
+    "n_selected": 27,
+    "mean_energy_kept": -0.02831201006968816,
+    "mean_energy_rejected": 0.013411451695392023
+  },
+  "filter_scores": {
+    "temperature": 0.7259649928642902,
+    "carnot_energy": 0.13940755327256454,
+    "combined": 0.4835195273229461
+  },
+  "best_filter": "temperature",
+  "generation_mode": "synthetic_fallback",
+  "n_questions": 50,
+  "n_candidates_per_question": 8,
+  "n_total_candidates": 400,
+  "fr11_output_path": "/home/ianblenke/github.com/ianblenke/carnot/data/fr11_ssd_training_v3.jsonl",
+  "duration_s": 8.2,
+  "energy_gap_carnot": 0.0969,
+  "energy_gap_temperature": -0.0296
+}

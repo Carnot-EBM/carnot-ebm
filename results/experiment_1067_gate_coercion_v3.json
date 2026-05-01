@@ -1,0 +1,47 @@
+{
+  "schema": "carnot.experiment.v1",
+  "experiment": "exp1067-gate-coercion-v3",
+  "experiment_id": 1067,
+  "title": "Conductor fastpath + gate-coercion replay verification (v3)",
+  "run_date": "2026-04-30T11:39:30.333591+00:00",
+  "started_at": "2026-04-30T11:39:30.333591+00:00",
+  "finished_at": "2026-04-30T11:39:32.834190+00:00",
+  "duration_s": 2.501,
+  "status": "success",
+  "honest_verdict": "both_fixes_deployed_verified",
+  "fastpath_fix_present": true,
+  "fastpath_detail": {
+    "running_treated_as_unfinished": true,
+    "success_treated_as_finished": true
+  },
+  "gate_coercion_fixed": true,
+  "gate_coercion_detail": {
+    "True_str": true,
+    "true_str": true,
+    "TRUE_str": true,
+    "one_str": true,
+    "yes_str": true,
+    "False_str": true,
+    "false_str": true,
+    "zero_str": true,
+    "True_native": true,
+    "False_native": true,
+    "int_one": true,
+    "int_zero": true,
+    "non_bool_string_passthrough": true
+  },
+  "deliverable_status_tests_passing": 23,
+  "deliverable_status_tests_total": 23,
+  "deliverable_status_tests_tail": "tests/python/test_conductor_deliverable_status.py::test_log_completion_fail_when_artifact_bootstrap \n[gw1] [ 95%] PASSED tests/python/test_conductor_deliverable_status.py::test_log_completion_ok_when_no_deliverable \n[gw0] [100%] PASSED tests/python/test_conductor_deliverable_status.py::test_log_completion_fail_when_artifact_bootstrap \n\n============================== 23 passed in 1.62s ==============================",
+  "wedge_replay_clean": true,
+  "gate_coercion_replay_clean": true,
+  "predecessor_experiments": [
+    "exp1039-conductor-fastpath-gate-coercion"
+  ],
+  "fix_locations": {
+    "fastpath": "scripts/research_conductor.py:_deliverable_exists",
+    "gate_coercion": "scripts/conductor_gates.py:_coerce_gate_value"
+  },
+  "change_proposal": "openspec/change-proposals/conductor-fastpath-bootstrap-skip.md",
+  "decision_class": "verify"
+}

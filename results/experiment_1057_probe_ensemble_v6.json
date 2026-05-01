@@ -1,0 +1,76 @@
+{
+  "experiment": 1057,
+  "title": "Probe Ensemble v6: ThinkPRM+GS-KAN+NK-KAEM+SOSKAN on FoVer v4 corpus (6548 pairs)",
+  "schema": "carnot.probe_ensemble_v6.v1",
+  "run_date": "2026-04-30",
+  "started_at": "2026-04-30T05:23:29.948853+00:00",
+  "finished_at": "2026-04-30T05:40:28.317986+00:00",
+  "status": "success",
+  "honest_verdict": "partial_some_below_0.72",
+  "n_pairs_used": 6548,
+  "auroc_thinkprm": 0.9885,
+  "auroc_gskan": 0.2638,
+  "auroc_nk_kaem": 0.9875,
+  "auroc_sos_kan": 0.9899,
+  "best_probe_auroc": 0.9899,
+  "best_probe_name": "sos_kan",
+  "nk_convergence_speedup": 0.5017,
+  "n_train": 5240,
+  "n_test": 1308,
+  "n_feature_dims": 16,
+  "thinkprm_model_used": "Qwen/Qwen3-0.6B",
+  "auroc_gskan_int8": 0.5063,
+  "auroc_adam_baseline_nk": 0.2636,
+  "gskan_quant_stats": {
+    "n_groups": 4,
+    "n_knots": 8,
+    "scale_per_group": [
+      0.0034288191236555576,
+      0.0030312673188745975,
+      0.0011929942993447185,
+      0.0016490498092025518
+    ],
+    "max_abs_error": 0.0011307895183563232,
+    "mean_abs_error": 0.00024060276336967945
+  },
+  "nk_lambda_used": 0.1,
+  "nk_k_rows": 5,
+  "adam_warmup_epochs": 25,
+  "nk_grid_levels_used": [
+    4,
+    8,
+    16
+  ],
+  "epoch_log_thinkprm": [
+    {
+      "epoch": 75,
+      "loss": 0.105761,
+      "train_auroc": 0.9951
+    },
+    {
+      "epoch": 150,
+      "loss": 0.074121,
+      "train_auroc": 0.9951
+    },
+    {
+      "epoch": 225,
+      "loss": 0.068314,
+      "train_auroc": 0.9951
+    },
+    {
+      "epoch": 300,
+      "loss": 0.066848,
+      "train_auroc": 0.9951
+    }
+  ],
+  "prior_failures": [
+    {
+      "experiment_id": "experiment_1045_probe_ensemble_v5",
+      "verdict": "partial_some_below_0.72",
+      "diagnosed_root_cause": "216 training pairs insufficient; ThinkPRM used text_features (no model inference); GS-KAN used score-matching (uninformative for classification)",
+      "addressed_by": "6548 pairs (30x more); real Qwen3-0.6B inference for all probes; contrastive Adam loss for GS-KAN; vectorized NK for genuine speedup measurement",
+      "retire_if_same_verdict": false
+    }
+  ],
+  "duration_s": 1018.369
+}

@@ -1,0 +1,84 @@
+{
+  "experiment": 1040,
+  "title": "Verdict Reproducibility Audit \u2014 seed discipline + flagship stability",
+  "run_date": "20260429",
+  "started_at": "2026-04-29T17:29:41Z",
+  "finished_at": "2026-04-29T17:29:41Z",
+  "duration_s": 0.063,
+  "status": "success",
+  "random_seed": 42,
+  "reproducibility_checksum": "9bd5542d79000e45",
+  "seed_discipline_deployed": true,
+  "reproducibility_checksum_deployed": true,
+  "n_flagships_audited": 5,
+  "n_flagships_stable": 5,
+  "stability_rate": 1.0,
+  "flagship_audit_results": [
+    {
+      "exp_id": 1026,
+      "result_file": "results/experiment_1026_schema_validation.json",
+      "stored_verdict": "schema_validation_complete",
+      "script_exists": false,
+      "dry_run_ok": null,
+      "dry_run_detail": "no_script",
+      "verdict_readable": true
+    },
+    {
+      "exp_id": 1027,
+      "result_file": "results/experiment_1027_conductor_supervisor.json",
+      "stored_verdict": "supervisor_complete",
+      "script_exists": false,
+      "dry_run_ok": null,
+      "dry_run_detail": "no_script",
+      "verdict_readable": true
+    },
+    {
+      "exp_id": 1029,
+      "result_file": "results/experiment_1029_fover_expansion_v2.json",
+      "stored_verdict": "partial_z3_only",
+      "script_exists": true,
+      "dry_run_ok": true,
+      "dry_run_detail": "syntax_ok",
+      "verdict_readable": true
+    },
+    {
+      "exp_id": 1031,
+      "result_file": "results/experiment_1031_energy_ssd_v3.json",
+      "stored_verdict": "fr11_loop_closed",
+      "script_exists": true,
+      "dry_run_ok": true,
+      "dry_run_detail": "syntax_ok",
+      "verdict_readable": true
+    },
+    {
+      "exp_id": 1032,
+      "result_file": "results/experiment_1032_ppsebm_relay_v4.json",
+      "stored_verdict": "relay_live",
+      "script_exists": true,
+      "dry_run_ok": true,
+      "dry_run_detail": "syntax_ok",
+      "verdict_readable": true
+    }
+  ],
+  "audit_note": "Static audit only: verdict_readable checks that stored JSON has an honest_verdict field. Full execution-stability audit (rerun + compare verdict label) requires live GPU/LLM and is deferred.",
+  "honest_verdict": "stability_measured_discipline_deployed",
+  "schema": [
+    "audit_note",
+    "duration_s",
+    "experiment",
+    "finished_at",
+    "flagship_audit_results",
+    "honest_verdict",
+    "n_flagships_audited",
+    "n_flagships_stable",
+    "random_seed",
+    "reproducibility_checksum",
+    "reproducibility_checksum_deployed",
+    "run_date",
+    "seed_discipline_deployed",
+    "stability_rate",
+    "started_at",
+    "status",
+    "title"
+  ]
+}

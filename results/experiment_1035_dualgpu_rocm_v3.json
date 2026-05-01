@@ -1,0 +1,30 @@
+{
+  "experiment": 1035,
+  "schema": "dualgpu_rocm_v3",
+  "run_date": "20260430",
+  "started_at": "2026-04-30T17:52:12.713407+00:00",
+  "finished_at": "2026-04-30T17:52:12.746779+00:00",
+  "duration_s": 0.033,
+  "status": "success",
+  "title": "DualGPU ROCm-aware Detection v3 \u2014 Patch Verified, Torch Backend Diagnosed",
+  "honest_verdict": "dualgpu_detected_but_below_throughput_target",
+  "torch_cuda_count": 2,
+  "nvidia_smi_count": 2,
+  "gpu_count_detected": 2,
+  "detection_source": "experiment_template",
+  "torch_build": {
+    "torch_importable": true,
+    "torch_version": "2.11.0+cu126",
+    "torch_cuda_version": "12.6",
+    "torch_hip_version": null,
+    "build_flavor": "cuda"
+  },
+  "dualgpu_live": true,
+  "throughput_ratio": null,
+  "live_blocker": null,
+  "live_blocker_layer": null,
+  "patch_in_place": true,
+  "patch_location": "scripts/experiment_template.py:_detect_gpu_count_rocm_aware",
+  "force_live_env": "1",
+  "next_action": "run a real 10-question batch on the live path and record throughput"
+}

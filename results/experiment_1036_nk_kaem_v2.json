@@ -1,0 +1,43 @@
+{
+  "experiment": 1036,
+  "title": "Newton-Kaczmarz optimizer for KAEMEnergy with multilevel spline grids",
+  "run_date": "2026-04-29",
+  "started_at": "2026-04-29T14:01:36.440550+00:00",
+  "finished_at": "2026-04-29T14:01:36.440550+00:00",
+  "duration_s": 2.592,
+  "status": "success",
+  "schema": "carnot.nk_kaem_v2.v1",
+  "honest_verdict": "nk_diverged_fallback_used",
+  "adam_wall_time_s": 0.666,
+  "nk_wall_time_s": 1.021,
+  "convergence_speedup": 0.6526,
+  "auroc_adam": 0.4125,
+  "auroc_nk_multilevel": 0.3625,
+  "auroc_no_regression": false,
+  "nk_lambda_used": 1.0,
+  "grid_levels_used": [
+    4,
+    8,
+    16
+  ],
+  "n_train": 67,
+  "n_test": 18,
+  "n_vars": 8,
+  "adam_baseline_epochs": 100,
+  "adam_warmup_epochs": 20,
+  "nk_k_rows": 10,
+  "nk_convergence_tol": 0.0001,
+  "prior_failures": [
+    {
+      "experiment_id": "experiment_936_kan_tier4_real_data",
+      "verdict": "unstable_nk_diverged",
+      "addressed_by": "Adam warm-start for 20 epochs at G=4 before NK; per-layer LR decay lr_i = base_lr/(1+i); gradient clipping ||\u0394w|| <= 1.0; fallback \u03bb=1.0 if divergence detected.",
+      "retire_if_same_verdict": true
+    },
+    {
+      "experiment_id": "experiment_1021",
+      "verdict": "DOOMED_RERUN_BLOCK",
+      "addressed_by": "This experiment includes prior_failures field per CLAUDE.md discipline."
+    }
+  ]
+}

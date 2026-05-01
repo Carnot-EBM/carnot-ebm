@@ -1,0 +1,40 @@
+{
+  "experiment": 1093,
+  "schema": "phase1c_null_space_v1",
+  "run_date": "2026-05-01",
+  "started_at": "2026-05-01T07:32:43.948993+00:00",
+  "finished_at": "2026-05-01T07:32:44.038403+00:00",
+  "duration_s": 0.09,
+  "status": "success",
+  "title": "Phase 1c Verifier Joint Null-Space Measurement",
+  "n_verifiers_measured": 3,
+  "verifier_names": [
+    "SpilledEnergyDetector",
+    "NUPProbeV4",
+    "PCIBProbe"
+  ],
+  "n_examples_evaluated": 364,
+  "joint_null_space_fraction": 0.0,
+  "phase1c_acceptance_met": true,
+  "r_correlations": {
+    "SpilledEnergyDetector vs NUPProbeV4": 0.656405,
+    "SpilledEnergyDetector vs PCIBProbe": 0.546147,
+    "NUPProbeV4 vs PCIBProbe": 0.406075
+  },
+  "max_r_correlation": 0.656405,
+  "min_r_correlation": 0.406075,
+  "single_verifier_null_space_fractions": {
+    "SpilledEnergyDetector": 0.005495,
+    "NUPProbeV4": 0.021978,
+    "PCIBProbe": 0.065934
+  },
+  "and_composition_viable": false,
+  "tests_passing": 4,
+  "honest_verdict": "verifiers_correlated_diversity_needed",
+  "analysis": {
+    "joint_null_space_threshold": 0.05,
+    "r_correlation_threshold": 0.5,
+    "r_diverse_enough": false,
+    "note": "AND-composition shrinks the joint null space exponentially in k only when verifiers have low pairwise r-correlation (high diversity). The three Tier-0 text probes used here are training-free and available without GPU/network. ThinkPRMProbe was excluded from this run because it requires a GGUF model not cached in this environment."
+  }
+}

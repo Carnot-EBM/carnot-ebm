@@ -1,0 +1,59 @@
+{
+  "experiment": 1059,
+  "title": "WOPR Games HuggingFace Space \u2014 Sudoku v1",
+  "schema": "carnot.wopr_spaces_sudoku.v1",
+  "run_date": "2026-04-30",
+  "started_at": "2026-04-30T04:58:00.860308+00:00",
+  "finished_at": "2026-04-30T04:58:02.472493+00:00",
+  "duration_s": 1.612,
+  "status": "success",
+  "honest_verdict": "code_complete_deploy_pending",
+  "space_code_complete": true,
+  "space_deployed": false,
+  "space_url": null,
+  "easter_eggs_implemented": 4,
+  "sudoku_solver_energy_reaches_zero": true,
+  "local_test_passed": true,
+  "import_ok": true,
+  "import_error": null,
+  "easter_egg_details": [
+    {
+      "query": "LIST GAMES",
+      "expected_substr": "AVAILABLE GAMES",
+      "response": "AVAILABLE GAMES: SUDOKU, TIC-TAC-TOE, LIGHTS_OUT, GLOBAL_THERMONUCLEAR_WAR. TYPE 'PLAY <NAME>' OR JUST '<NAME>' TO LOAD A CARTRIDGE.",
+      "passed": true
+    },
+    {
+      "query": "GLOBAL THERMONUCLEAR WAR",
+      "expected_substr": "NICE GAME OF CHESS",
+      "response": "WOULDN'T YOU PREFER A NICE GAME OF CHESS?",
+      "passed": true
+    },
+    {
+      "query": "HOW ABOUT A NICE GAME OF CHESS",
+      "expected_substr": "SUDOKU",
+      "response": "LET'S PLAY SUDOKU INSTEAD.",
+      "passed": true
+    },
+    {
+      "query": "GREETINGS PROFESSOR FALKEN",
+      "expected_substr": "SHALL WE PLAY A GAME",
+      "response": "GREETINGS. SHALL WE PLAY A GAME?",
+      "passed": true
+    }
+  ],
+  "solver_summary": {
+    "initial_energy": 55.0,
+    "final_energy": 0.0,
+    "solved_iter": 5130,
+    "restarts": 0,
+    "total_iters": 5130,
+    "wall_clock_s": 0.327,
+    "reaches_zero": true
+  },
+  "deploy_token_present": false,
+  "deploy_note": "HF_TOKEN absent. Ship locally via `cd spaces/wopr-games && python app.py` for verification.",
+  "spaces_dir": "spaces/wopr-games",
+  "decision_class": "verify",
+  "cost_usd": 0.0
+}

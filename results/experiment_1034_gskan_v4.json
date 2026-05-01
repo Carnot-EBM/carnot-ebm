@@ -1,0 +1,66 @@
+{
+  "experiment": 1034,
+  "title": "GS-KAN v4: Group-Shared KAN + QuantKAN INT8 for KV260 FPGA budget",
+  "run_date": "2026-04-29T13:24:03.244335Z",
+  "started_at": "2026-04-29T13:23:46.339792Z",
+  "finished_at": "2026-04-29T13:24:03.244367Z",
+  "duration_s": 16.9,
+  "status": "success",
+  "schema": "experiment_result_v1",
+  "honest_verdict": "failed",
+  "auroc_gskan_fp32": 0.65,
+  "auroc_gskan_int8": 0.65,
+  "auroc_kaem_baseline": 0.6875,
+  "int8_quantized": true,
+  "int8_degradation": 0.0,
+  "quant_stats": {
+    "n_groups": 4,
+    "n_knots": 8,
+    "scale_per_group": [
+      0.004440182354301214,
+      0.007874015718698502,
+      0.007874015718698502,
+      0.007874015718698502
+    ],
+    "max_abs_error": 0.003734588623046875,
+    "mean_abs_error": 0.0010006045922636986
+  },
+  "fpga_lut_estimate_fp32": 480,
+  "fpga_lut_estimate_int8": 256,
+  "fpga_dsp48_estimate": 176,
+  "fpga_bram_estimate": 1,
+  "fpga_lut_baseline_kaem": 1280,
+  "fpga_dsp48_baseline_kaem": 384,
+  "fpga_lut_reduction_pct": 80.0,
+  "rm_metric": 0.2,
+  "bop_metric": 1536,
+  "nabs_metric": 0.1891,
+  "n_vars": 16,
+  "n_groups": 4,
+  "n_knots": 8,
+  "n_epochs": 150,
+  "n_train": 67,
+  "n_test": 18,
+  "kaem_train_time_s": 15.36,
+  "gskan_train_time_s": 1.03,
+  "param_counts": {
+    "fp32_params": 48,
+    "fp32_ctrl_params": 32,
+    "fp32_proj_params": 16,
+    "int8_ctrl_params": 32,
+    "int8_scale_params": 4,
+    "int8_proj_params": 16
+  },
+  "prior_failures_addressed": [
+    {
+      "experiment_id": "exp1009_gskan_v2",
+      "verdict": "pre_test_comparison_failure",
+      "addressed_by": "Implemented GS-KAN in numpy (not JAX) to avoid JAX tracing issues"
+    },
+    {
+      "experiment_id": "exp1019_gskan_v3",
+      "verdict": "blocked_preflight_dependency",
+      "addressed_by": "Standalone experiment \u2014 no preflight dependency"
+    }
+  ]
+}

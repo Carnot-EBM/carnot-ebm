@@ -1,0 +1,96 @@
+{
+  "experiment": 1085,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-04-30",
+  "started_at": "2026-04-30T23:11:40.879028+00:00",
+  "finished_at": "2026-04-30T23:11:40.879028+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Cascade Validation on SOTA Model Outputs \u2014 Tier Breakdown on Real Qwen3.6-35B Answers",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "9 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: no prior_failures field on task",
+  "gates_evaluated": [
+    {
+      "upstream": "exp432-jitrl-live-validation",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Research Finding: synthetic_fallback"
+    },
+    {
+      "upstream": "exp453-vericot-validator",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Research Finding: vericot_better"
+    },
+    {
+      "upstream": "exp485-ppsebm-real-data-validation",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Research Finding: ppsebm_validated_real"
+    },
+    {
+      "upstream": "exp657-jepa-cascade-deploy",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Blocked: blocked_on_exp646"
+    },
+    {
+      "upstream": "exp705-jepa-v17-cascade-deploy",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u274c Failed: jepa_v17_gate_failed_v18_specced"
+    },
+    {
+      "upstream": "exp778-jepa-v19-cascade-deploy",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Blocked: blocked_ood_auc_below_gate"
+    },
+    {
+      "upstream": "exp784-jepa-v20-cascade-deploy",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Blocked: blocked_ood_auc_below_gate"
+    },
+    {
+      "upstream": "exp882-live-cascade-v7-gemma4",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Research Finding: live_no_improvement"
+    },
+    {
+      "upstream": "exp946-tier28-live-gpu-validation",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Research Finding: tier28_live_validated"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
