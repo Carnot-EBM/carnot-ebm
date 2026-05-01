@@ -140,7 +140,142 @@ to adopt is value-judgment, not a blocker.
 better figures, or when GitHub Pages launches and needs hero
 graphics, or when a contributor offers to do the integration.
 
-## MANDATORY-NEXT-MILESTONE PRIORITIES (.85 planner — hard pickup per CLAUDE.md)
+## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
+
+### NEW 2026-05-01: Failure-Ledger v2 + Planner Discipline (5 STRUCTURAL FIXES + 3 PLANNER-PROMPT DELTAS)
+
+**Background:** milestone .85 lost 4 of 14 tasks (exp1092, exp1096,
+exp1097, exp1098-first-attempt) to conductor-mechanism bugs and
+planner-discipline gaps, NOT to legitimately-doomed research. Each
+retirement was either prevented or recovered through manual operator
+patches. Without structural fixes, .86+ will hit identical walls.
+
+The 5 substantive findings that DID land in .85 (exp1090 diagnostic
+library, exp1091 position paper arxiv-ready, exp1093 verifiers
+correlated, exp1094 FPGA Glauber violates detailed balance, exp1095
+DBAE-EBM threat model) prove the phase-validation discipline works
+WHEN the surrounding plumbing doesn't sabotage tasks before they run.
+
+Full proposal: `openspec/change-proposals/failure-ledger-v2-and-planner-discipline.md`
+
+**The 5 structural conductor fixes the .86 planner MUST propose:**
+
+1. **`exp10XX-failure-ledger-v2-issue-1-id-not-title`**
+   Goal: count failures by `experiment_id`, not title-prefix.
+   Acceptance: a milestone .Y task with the same title as a
+   retired .X task does NOT inherit .X's failure count if their
+   experiment IDs differ. Empirical .85 evidence: exp1096 SemEnergy
+   Probe and exp1097 N-Queens Cartridge both retired silently from
+   inherited .84 counts.
+   Effort: ~2 hours. Code: `scripts/research_conductor.py:_count_failures_for_task`,
+   `log_step`, schema of `ops/conductor-log.md` (add `id:` field).
+
+2. **`exp10XX-failure-ledger-v2-issue-2-cap-reset-on-patch`**
+   Goal: reset 3-fail cap when a fix-shaped commit lands between
+   attempts. Acceptance: 3 manual failures + a commit touching the
+   task's deliverable or roadmap entry must NOT auto-skip the task
+   on next iteration. Empirical .85 evidence: exp1092 retired 7 min
+   before operator patch landed.
+   Effort: ~3 hours.
+
+3. **`exp10XX-failure-ledger-v2-issue-3-stable-deliverable-mtime`**
+   Goal: stable-deliverable detection requires `mtime > task_start_time`,
+   not just "unchanged for 60s". Acceptance: an Opus task starting
+   with a stale `blocked` artifact pre-existing on disk is NOT killed
+   within 60s on the false positive. Empirical .85 evidence: exp1090
+   first attempt, Opus killed before writing the new artifact.
+   Effort: ~1 hour.
+
+4. **`exp10XX-failure-ledger-v2-issue-4-cache-end-fingerprint`**
+   Goal: pre-test fingerprint cache saves the END fingerprint, not
+   the START. Acceptance: a `.py` change committed mid-pre-test gets
+   captured in the cache; next iteration cache-hits the post-commit
+   state. Empirical .85 evidence: iterations 6 and 7 both cache-missed
+   because operator commits during pre-test invalidated the start
+   fingerprint.
+   Effort: ~30 min.
+
+5. **`exp10XX-failure-ledger-v2-issue-5-coarse-keyword-matcher`**
+   Goal: tighten `FailureLedger.is_doomed_rerun()` matcher to require
+   ≥2 scope-vocabulary keyword overlap (Option A) or cosine ≥ 0.7 via
+   sentence-transformer (Option B). Acceptance: a task titled "Phase
+   1c Verifier Joint Null-Space Measurement" does NOT match "Phase 1a
+   Adversarial Verifier Robustness Audit" as a doomed prior despite
+   sharing "Verifier". Empirical .85 evidence: exp1090 tripped 2
+   priors on "diagnostic", exp1092 tripped 18 on "verifier"/"adversarial",
+   exp1093 tripped 10 on "verifier"/"null-space" — all false positives.
+   Effort: ~1 hour for Option A.
+
+**The 3 planner-prompt deltas the .86 planner MUST self-apply:**
+
+P1. **Always emit `prior_failures:` blocks for any task whose title
+or scope words appear in `research-complete.yaml`.** The .85 planner
+emitted 6 of 14; operator patched 6 more. Net 12 of 14 needed it.
+Future planners must query research-complete.yaml before drafting
+each task and emit the block proactively (not reactively).
+
+P2. **Never emit cross-vendor `model:` overrides on tasks with
+non-default `agent_type:`.** The .85 planner emitted `model: opus`
+on `agent_type: codex` tasks (exp1097, exp1098), causing codex CLI
+HTTP 400. The conductor's snap-fix at commit `1f1aef51` neutralizes
+this at the conductor layer, but the planner should not emit invalid
+combinations in the first place. Document the per-vendor model
+namespace in the planner prompt.
+
+P3. **Document gate-required artifact fields explicitly.** For any
+task with `gated_on:`, the upstream task's prompt must enumerate the
+gate-required fields under "REQUIRED ARTIFACT FIELDS:" so manual
+operator artifact reconstructions get the schema right. Empirical .85
+evidence: exp1090's manual reconstruction missed
+`diagnostics_library_written: true`, GATE_BLOCKing exp1092 twice
+before the operator could patch.
+
+**Activation-guard additions (3 cross-checks):**
+
+The conductor's existing planner-output validator must additionally
+enforce:
+
+A1. prior_failures completeness — every task whose title shares ≥2
+    scope-vocabulary keywords with a prior failure carries a matching
+    prior_failures: entry.
+
+A2. agent_type/model coherence — every task's model belongs to its
+    agent_type's vendor namespace.
+
+A3. gate-field cross-reference — every `gated_on.artifact_field` is
+    enumerated in the upstream task's prompt's REQUIRED ARTIFACT
+    FIELDS section.
+
+If validation fails, the activation-guard does NOT swap
+`research-roadmap-next.yaml` → `research-roadmap.yaml`. Writes a
+`planner-validation-failed` artifact and pings the operator.
+
+**Why this is in MANDATORY-NEXT-MILESTONE PRIORITIES, not just a
+proposal.** Without these structural fixes, .86 will hit identical
+walls. The 5 structural fixes total ~7-8 hours of operator effort
+spread across the milestone — each phase independently shippable and
+reduces the manual-patch burden by an estimated 30-50% per phase.
+The .86 planner MUST allocate at least 3 of the 5 issues as tasks,
+per CLAUDE.md "Overdue-Priority Forcing Function" (this is the first
+milestone these are pending; if .86 doesn't pick them up, .87 must
+treat them as ≥2-milestone-overdue mandatory).
+
+### Carry-forward from .85 (operator-retired tasks the .86 planner
+MUST re-propose with proper prior_failures from start)
+
+1. **exp1092 Phase 1a Adversarial Verifier Robustness Audit** —
+   measure false-pass rate of shipping Carnot verifiers on
+   adversarially-crafted attacker-LLM outputs. Phase-validation
+   MANDATORY task #1 of 5. Lost to 3-fail cap race in .85.
+
+2. **exp1096 SemEnergy Probe v1 (Tier 0c Logit-Space Energy
+   Detection)** — 4-fail title-prefix inheritance from .84.
+   Re-propose with explicit `prior_failures:` block addressing all
+   of exp1080's verdicts.
+
+3. **exp1097 WOPR N-Queens Cartridge** — 3-fail title-prefix
+   inheritance from .84's exp1086. Re-propose with explicit
+   `prior_failures:` block.
 
 ### NEW 2026-04-30: Phase Prototype + Empirical Validation + Adversarial Check Discipline (5 LOAD-BEARING TASKS)
 
