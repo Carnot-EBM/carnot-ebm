@@ -1,0 +1,98 @@
+{
+  "experiment": 1081,
+  "title": "FPGA vs CPU Ising scaling benchmark \u2014 KV260 latency at N=64..1024",
+  "run_date": "20260501",
+  "started_at": "2026-05-01T03:50:43Z",
+  "finished_at": "2026-05-01T03:50:56Z",
+  "duration_s": 12.961,
+  "status": "success",
+  "random_seed": 42,
+  "reproducibility_checksum": "048da691c725f822",
+  "cost_usd": 0.0,
+  "decision_class": "verify",
+  "metrics_used": "unknown",
+  "board_ip": "192.168.51.98",
+  "board_reachable": true,
+  "ssh_ok": true,
+  "fpga_live_probe": null,
+  "cpu_latencies_ms": {
+    "64": 324.294,
+    "128": 285.937,
+    "256": 266.335,
+    "512": 278.704,
+    "1024": 278.527
+  },
+  "cpu_theoretical_ms": {
+    "64": 290.0,
+    "128": 1160.0,
+    "256": 4640.0,
+    "512": 18560.0,
+    "1024": 74240.0
+  },
+  "fpga_latency_64_us": 24.82834388501942,
+  "fpga_latencies_us": {
+    "64": 24.828,
+    "128": 49.657,
+    "256": 99.313,
+    "512": 198.627,
+    "1024": 397.254
+  },
+  "extrapolation_mode": "mixed",
+  "vivado_synthesis_attempted": true,
+  "crossover_n_spins": 64,
+  "theoretical_crossover_n_float": 0.005479,
+  "speedup_per_n": {
+    "64": 13061.62,
+    "128": 5758.24,
+    "256": 2681.77,
+    "512": 1403.15,
+    "1024": 701.13
+  },
+  "max_speedup_measured": 13061.62,
+  "honest_verdict": "fpga_speedup_confirmed_measured",
+  "scaling_model": {
+    "fpga": "linear: latency_us(N) = 24.83 * (N/64)",
+    "cpu_theoretical": "quadratic: latency_ms(N) = 290 * (N/64)^2",
+    "cpu_measured": "empirically flat in [64,1024] \u2014 Python/JAX dispatch dominates"
+  },
+  "anchors": {
+    "fpga_n64_us_from_exp1068": 24.82834388501942,
+    "cpu_baseline_ms_from_exp568": 290.0
+  },
+  "notes": {
+    "vivado_install_path_checked": "/tools/Xilinx/Vivado/2025.2/bin/vivado",
+    "rerun_for_n_gt_64_requires": "Vivado 2025.2 + ising_sampler_v2.v parameter override (set N_SPINS=128/256/512/1024 in build_bd.tcl) + 25-60 min synth/P&R/bitstream/load via dfx-mgr."
+  },
+  "schema": [
+    "anchors",
+    "board_ip",
+    "board_reachable",
+    "cost_usd",
+    "cpu_latencies_ms",
+    "cpu_theoretical_ms",
+    "crossover_n_spins",
+    "decision_class",
+    "duration_s",
+    "experiment",
+    "extrapolation_mode",
+    "finished_at",
+    "fpga_latencies_us",
+    "fpga_latency_64_us",
+    "fpga_live_probe",
+    "honest_verdict",
+    "max_speedup_measured",
+    "metrics_used",
+    "notes",
+    "random_seed",
+    "reproducibility_checksum",
+    "run_date",
+    "scaling_model",
+    "speedup_per_n",
+    "ssh_ok",
+    "started_at",
+    "status",
+    "theoretical_crossover_n_float",
+    "title",
+    "vivado_synthesis_attempted"
+  ]
+}
