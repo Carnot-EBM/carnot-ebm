@@ -270,6 +270,7 @@
       <li><a href="#results">Results</a></li>
       <li><a href="#quickstart">Quick Start</a></li>
       <li><a href="technical-report.html">Report</a></li>
+      <li><a href="position-paper-draft-v3.md">Paper</a></li>
       <li><a href="blog/">Blog</a></li>
       <li><a href="https://github.com/Carnot-EBM/carnot-ebm/blob/main/docs/roadmap.md">Roadmap</a></li>
     </ul>
@@ -601,6 +602,30 @@
         <div class="r-meter"><div class="r-bar" style="width: 100%; background: #a855f7;"></div></div>
         <div class="r-stats"><span class="r-before">Target was 2,000; largest PRM dataset in project history; ThinkPRM retrain AUROC 0.99&rarr;0.79 on 300-sample subset (full retrain pending)</span> <span class="r-after">Milestone .84 &mdash; Exp 1084</span></div>
       </div>
+      <div class="r-card">
+        <span class="r-tag">Hallucination detection &mdash; SemEnergy probe v1 (logit-space, arXiv 2508.14496)</span>
+        <h3 class="r-title">AUROC=0.948 at 0.017 ms/example</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 94.8%; background: #a855f7;"></div></div>
+        <div class="r-stats"><span class="r-before">294x faster than 5 ms target; principled information-theoretic grounding for logit-spill signal</span> <span class="r-after">Milestone .85 &mdash; Exp 1096</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Math extraction &mdash; VeriCoT equation-style CoT fix</span>
+        <h3 class="r-title">GSM8K extraction TP rate: 0.5 &rarr; 1.0</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 100%; background: #22c55e;"></div></div>
+        <div class="r-stats"><span class="r-before">SOTA models write "47 + 28 = 75" not prose; added _EQ_INLINE_RE to vericot_validator.py</span> <span class="r-after">Closes two-milestone TP=0 blocker &mdash; Exp 1101</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">WOPR gallery &mdash; N-Queens Ising cartridge (8-Queens)</span>
+        <h3 class="r-title">E=0 solution found; 4 games live on HuggingFace Spaces</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 100%; background: #0ea5e9;"></div></div>
+        <div class="r-stats"><span class="r-before">64-spin Ising formulation; Sudoku + GTW + Lights Out + N-Queens all deployed</span> <span class="r-after">Milestone .85 &mdash; Exp 1097</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Honest negative &mdash; FPGA sampler correctness audit (Phase 2a)</span>
+        <h3 class="r-title">KL(FPGA &#8214; Gibbs) = 3.07 (threshold 0.05)</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 16%; background: #ef4444;"></div></div>
+        <div class="r-stats"><span class="r-before">KV260 sampler does not match Boltzmann distribution; software Gibbs and GPU Ising agree (KL&asymp;0)</span> <span class="r-after">Distribution mismatch confirmed &mdash; Exp 1094</span></div>
+      </div>
     </div>
 
     <div style="max-width: 900px; margin: 2rem auto 0; padding: 1.25rem 1.5rem; border-left: 3px solid #f59e0b; background: rgba(245,158,11,0.06); font-size: 0.95rem; line-height: 1.6;">
@@ -620,6 +645,34 @@
         reflect only what survived.
       </p>
     </div>
+  </div>
+</section>
+
+<section id="preprint">
+  <div class="container">
+    <span class="section-label">Preprint</span>
+    <h2 class="section-title">Carnot position paper, draft v3</h2>
+    <p class="section-desc">
+      An architectural framework for mapping the empirical bounds of
+      LLM verification. v3 foregrounds the four .85-milestone honest
+      negatives &mdash; the verifier correlation ceiling
+      (D<sub>eff</sub>=1.603, k*&le;3.125 by the Welch / Rankin
+      Simplex bound), the exact-sampling detailed-balance limit
+      (KL=3.07 retraction; rigorous 15.6&times; speedup at &chi;&le;4
+      vs optimized C++), the OOD energy-ordering inversion on SOTA
+      outputs, and the pre-filtered self-distillation collapse
+      &mdash; as the contribution. arXiv submission target
+      <strong>2026-05-15</strong>.
+    </p>
+    <div class="hero-actions" style="justify-content: flex-start;">
+      <a href="position-paper-draft-v3.md" class="btn btn-primary">Read paper (Markdown)</a>
+      <a href="arxiv-paper/" class="btn btn-secondary">arXiv LaTeX bundle</a>
+      <a href="arxiv-metadata.yaml" class="btn btn-secondary">Submission metadata</a>
+    </div>
+    <p style="margin-top: 1.5rem; font-size: 0.9rem; color: var(--text-muted);">
+      <em>Paper (arXiv preprint &mdash; submitted 2026-05-15):
+      placeholder until upload completes.</em>
+    </p>
   </div>
 </section>
 

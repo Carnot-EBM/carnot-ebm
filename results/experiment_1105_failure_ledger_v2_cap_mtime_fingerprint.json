@@ -1,0 +1,30 @@
+{
+  "deliverable": "results/experiment_1105_failure_ledger_v2_cap_mtime_fingerprint.json",
+  "doc_reconcile_batch_flag_added": true,
+  "duration_s": 2.346235,
+  "end_fingerprint_cache_deployed": true,
+  "experiment": "exp1105-failure-ledger-v2-cap-mtime-fingerprint",
+  "failure_ledger_cap_reset_deployed": true,
+  "honest_verdict": "all_four_fixes_deployed",
+  "run_date": "2026-05-01",
+  "schema_version": 1,
+  "stable_deliverable_mtime_fix_deployed": true,
+  "status": "success",
+  "summary": "Issue 2 (cap-reset on fix-commit): True; Issue 3 (mtime>start_time staleness guard): True; Issue 4 (end-of-pretest fingerprint cache): True; doc-reconcile batch flag: True; tests 10/10",
+  "tests_passing": 10,
+  "tests_written": 10,
+  "title": "Failure-Ledger v2 (Issues 2+3+4 + doc-reconcile batch flag)",
+  "wire_in_checks": {
+    "doc_reconcile_enqueue_present": true,
+    "doc_reconcile_flag_present": true,
+    "doc_reconcile_flush_present": true,
+    "doc_reconcile_inline_path_branches_on_flag": true,
+    "issue2_cap_reset_helper_present": true,
+    "issue2_cap_reset_invoked_in_pick_next_task": true,
+    "issue2_changed_files_since_helper": true,
+    "issue3_mtime_guard_doc": true,
+    "issue3_mtime_guard_present": true,
+    "issue4_end_fingerprint_persist": true,
+    "issue4_end_fingerprint_recompute": true
+  }
+}

@@ -1,0 +1,104 @@
+{
+  "experiment": 1103,
+  "milestone": "2026.04.85",
+  "retro_type": "operational_process",
+  "schema": "carnot.operational_retro.v59",
+  "generated_at": "2026-05-01T14:37:33Z",
+  "total_wall_time_minutes": 1010,
+  "experiments_completed": 258,
+  "avg_minutes_per_experiment": 4.0,
+  "criteria_met_count": 13,
+  "criteria_total": 14,
+  "criteria_pct": 92.9,
+  "wall_time_vs_prior_milestone": {
+    "prior_milestone": "2026.04.84",
+    "prior_wall_time_minutes": 1106,
+    "delta_minutes": -96,
+    "delta_pct": -8.7,
+    "trend": "improvement_eighth_consecutive_below_58_baseline"
+  },
+  "slowest_experiments": [
+    {
+      "rank": 1,
+      "experiment_id": "exp906",
+      "title": "Code Repair 50q Scale-Up — IterativeSelfRepair with GGUF",
+      "duration_minutes": 35,
+      "diagnosis": "EXCLUSION MANIFEST REGRESSION (THIRD CONSECUTIVE MILESTONE): exp906 was retired to ops/exclusion_manifest.yaml in .80 (Preflight v30). It appeared as the slowest experiment in .84 and again here in .85. The manifest file exists and has the correct entry, but the conductor does not enforce it at dispatch time for experiments already indexed in research-complete.yaml's re-scan loop. This recurring 35 min waste will continue every milestone until the dispatch-time enforcement bug is fixed."
+    },
+    {
+      "rank": 2,
+      "experiment_id": "exp950_docs",
+      "title": "In-process docs for Exp 950: E-MVL Sparsified Ising — Sparse Constraint",
+      "duration_minutes": 28,
+      "diagnosis": "Doc reconciliation ran as a blocking inline step serialized with the main conductor thread. The .84 retro recommended batching doc passes but the fix was not implemented. A 28-minute blocking doc pass for a single experiment is disproportionate and indicates the doc reconciler is re-reading large corpus files on each invocation."
+    },
+    {
+      "rank": 3,
+      "experiment_id": "exp948",
+      "title": "Symbolic-KAN Real FoVer Data — AUC=0.9344 Architecture",
+      "duration_minutes": 24,
+      "diagnosis": "GGUF model loading overhead combined with FoVer corpus I/O on a CPU-only inference path. DualGPU parallelism was available (RTX 3090s confirmed at 2.02x speedup) but this experiment was dispatched sequentially. No concurrent experiment ran during this 24-minute window."
+    },
+    {
+      "rank": 4,
+      "experiment_id": "exp824",
+      "title": "JEPA v23 LIMO Curated Corpus (RETRO-JEPA-OOD, CPU)",
+      "duration_minutes": 19,
+      "diagnosis": "CPU-only JEPA training on 24th iteration of the JEPA line. No retire_if_same_verdict gate was applied despite 20+ consecutive JEPA versions across 20+ milestones. The JEPA v23 result should be compared against v22's gate outcome; if the verdict matches, this experiment should be retired from future milestones per CLAUDE.md no-doomed-rerun discipline."
+    },
+    {
+      "rank": 5,
+      "experiment_id": "exp930",
+      "title": "Math Iterative Self-Repair v1 — Execute-Feedback on GSM8K",
+      "duration_minutes": 19,
+      "diagnosis": "Math repair loop with execute-feedback. Prior retrospecticve (.84) documented this as 'model_ceiling_confirmed' when run on E4B-tier models. If the .85 run used an E4B or 0.8B model rather than a SOTA GGUF (Qwen3.6-35B or Gemma-4-31B), the result is CLAUDE.md-prohibited as a headline result and the 19 min was wasted. Requires model tier audit."
+    }
+  ],
+  "bottlenecks_identified": [
+    "EXCLUSION MANIFEST REGRESSION (THIRD CONSECUTIVE MILESTONE): exp906 (35 min) appeared as the slowest experiment despite retirement in .80. The manifest file has the correct entry but conductor does not enforce it at dispatch time for experiments in the research-complete.yaml re-scan loop. Cumulative waste: 35 min this milestone, ~70 min across .84+.85, ~105 min total since .80 should have retired it.",
+    "IN-PROCESS DOC RECONCILIATION OVERHEAD: Exp 950 in-process docs ran as a 28-minute blocking step serialized with the conductor. Doc reconciliation is re-reading large corpus files on every invocation rather than operating on a delta. The .84 retro recommended batching doc passes but this was not implemented between milestones.",
+    "DUALGPU IDLE (18TH CONSECUTIVE MILESTONE): both RTX 3090s closed at 0% utilization (4MB VRAM each). DualGPURunner is wired, confirmed at 2.02x speedup, and both GPUs were healthy throughout .85. No experiment was dispatched via DualGPURunner. Estimated 60-80 min/milestone foregone.",
+    "PHASE 1A ADVERSARIAL AUDIT BLOCKED THIRD CONSECUTIVE MILESTONE: exp1092 gate-blocked because the planner omitted prior_failures declarations for 18 upstream experiments. This is the identical root cause as .84 (6 missing declarations) and .83. The planner's scope-match heuristic matches 'verifier robustness' tasks too broadly and the YAML is not populated exhaustively enough to clear the conductor's gate-check.",
+    "CONDUCTOR STABLE-DELIVERABLE-DETECTION FALSE-POSITIVE: exp1090 (diagnostics library, the first task of the milestone) — conductor read a stale blocked artifact from a prior iteration as 'deliverable already exists' and killed the Opus subagent before the new artifact was written. Operator manually authored the artifact. This incident delayed the critical first task and required human intervention.",
+    "SEQUENTIAL FAST EXPERIMENTS: infrastructure experiments exp1093 (0.09s), exp1095 (6.5s), exp1096 (3.3s), exp1097 (4.3s), exp1098 (3.1s) were dispatched sequentially. These have no inter-dependencies and could have been parallelized in a single conductor batch dispatch, saving approximately 10-12 minutes.",
+    "LEGACY JEPA CHAIN CONSUMING BUDGET: exp824 (JEPA v23, 19 min, CPU-only) is the 24th iteration of the JEPA line. No retire_if_same_verdict gate has been applied to the JEPA chain despite a pattern of below-threshold OOD-AUC results across 20+ consecutive milestones. Each appearance consumes ~19 min of milestone budget without a path to the OOD-AUC gate."
+  ],
+  "improvements_suggested": [
+    "FIX EXCLUSION MANIFEST DISPATCH-TIME ENFORCEMENT (HIGH PRIORITY, 35 min/milestone): conductor must check ops/exclusion_manifest.yaml at experiment dispatch time, not only at planning/validation time. The research-complete.yaml re-scan loop must also check the manifest before re-queueing any experiment. This is a one-function fix in scripts/research_conductor.py's _is_excluded() call site.",
+    "FIX STABLE-DELIVERABLE-DETECTION TO USE TASK-START-TIME MTIME: replace the '60s unchanged mtime' heuristic with a comparison against the task's recorded start_time. An artifact that predates the task start is by definition stale. This prevents operator-intervention incidents like exp1090.",
+    "BATCH DOC RECONCILIATION PASSES: collect all in-process doc writes into a single batched reconcile at the end of each experiment batch rather than running inline per-experiment. The reconciler should operate on a delta (only files changed since last reconcile) rather than re-reading the full corpus. Estimated savings: 15-25 min/milestone.",
+    "MANDATE DUALGPU DISPATCH FOR 2+ CONCURRENT GPU EXPERIMENTS (60-80 min/milestone): any milestone with 2+ GPU-dependent experiments must dispatch at least one pair via DualGPURunner. The DualGPU path is confirmed working (2.02x speedup, Exps 684/685). Make this a conductor activation-gate requirement, not an optional recommendation.",
+    "POPULATE PRIOR_FAILURES EXHAUSTIVELY IN PLANNER FOR PHASE-SCOPED TASKS: before finalizing YAML for any task whose title contains 'phase', 'verifier', 'robustness', 'audit', or 'adversarial', the planner must grep research-complete.yaml for ALL experiments with scope overlap and populate prior_failures for each. Phase 1a has been blocked 3 consecutive milestones by this exact gap. The planner prompt at _plan_next_milestone() should include a mandatory pre-flight: 'search research-complete.yaml for verifier+robustness tasks and enumerate all prior_failures entries before writing the YAML'.",
+    "APPLY RETIRE_IF_SAME_VERDICT TO JEPA CHAIN AT VERSION >= 20: any JEPA experiment at version >= 20 must carry a retire_if_same_verdict: true gate. If the experiment's OOD-AUC result matches or falls below the prior version's result, the entire JEPA-versioned line is retired and the slot is freed for a structurally different verifier architecture.",
+    "PARALLELIZE SUB-SECOND INFRASTRUCTURE EXPERIMENTS: introduce a 'parallel-batch' dispatch mode in the conductor for experiments with no inter-dependencies and expected duration < 30s. The exp1093-1098 cluster (all <7s, no dependencies) should have been dispatched as a single parallel batch, saving ~12 minutes of conductor overhead."
+  ],
+  "estimated_time_savings_pct": 19,
+  "estimated_time_savings_minutes": 190,
+  "time_savings_breakdown": {
+    "manifest_enforcement_fix_min": 35,
+    "dualgpu_parallelism_min": 80,
+    "doc_batching_min": 22,
+    "parallel_fast_experiments_min": 12,
+    "stable_deliverable_mtime_fix_min": 18,
+    "phase1a_prior_failures_fix_min": 23
+  },
+  "gpu_state_at_close": {
+    "gpu0_util_pct": 0,
+    "gpu1_util_pct": 0,
+    "gpu0_vram_mb": 4,
+    "gpu1_vram_mb": 4,
+    "gpu0_temp_c": 52,
+    "gpu1_temp_c": 51,
+    "temp_differential_c": 1,
+    "consecutive_idle_milestones": 18,
+    "assessment": "CLEAN_BUT_IDLE — 18th consecutive milestone closed with both GPUs at 0% utilization. GPU close is thermally clean (1C differential) but DualGPURunner was not used in .85 despite being confirmed at 2.02x speedup and both GPUs being healthy throughout the milestone."
+  },
+  "process_observations": [
+    "13/14 criteria met (92.9%) — significant improvement from .84's 4/13 (31%). The structural fix was complete prior_failures declarations for carry-forward experiments (exp1096-1102), which allowed 6/6 gate-blocked .84 experiments to clear gates and run in .85.",
+    "The dominant bottleneck is no longer gate-blocking (addressed by prior_failures discipline) but infrastructure regressions: exclusion manifest enforcement (exp906 reappearing as slowest-5 for the 3rd consecutive milestone) and doc reconciliation overhead (28 min blocking pass for a single experiment).",
+    "The Opus route for the position paper (exp1091) succeeded cleanly after gemini was paused in .84, confirming that dual-backend fallback routing recovers strategic deliverables. The .86 planner should apply this pattern to all strategic single-backend tasks.",
+    "The diagnostics library (exp1090) incident confirms the stable-deliverable-detection mtime heuristic is too coarse. The fix is mechanical and high-priority: any artifact with mtime < task start_time is stale regardless of whether it has been unchanged for 60s.",
+    "Six sub-second infrastructure experiments (exp1093-1098) ran sequentially, each completing in under 7 seconds. The conductor's single-threaded dispatch loop is the bottleneck here. A parallel-batch dispatch mode would collapse their combined ~45s of actual computation into a single 7s window."
+  ],
+  "honest_verdict": "milestone_1010min_258exps_13_of_14_criteria_STRONG_RECOVERY_92pct_EXP906_MANIFEST_REGRESSION_THIRD_CONSECUTIVE_35min_DUALGPU_18TH_IDLE_60-80min_FOREGONE_PHASE1A_BLOCKED_THIRD_CONSECUTIVE_DOC_RECONCILE_28MIN_BOTTLENECK_19pct_190min_ESTIMATED_RECOVERABLE"
+}

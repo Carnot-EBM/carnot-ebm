@@ -1,6 +1,6 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report on ~1,087 Experiments Across 84 Completed Research Milestones
+## A Technical Report on ~1,103 Experiments Across 85 Completed Research Milestones
 
 **Author:** Ian Blenke
 **Date:** 2026-05-01
@@ -26,8 +26,8 @@ can be selected by task; the production verify-repair API is a handful of
 lines of Python. All headline benchmark numbers are from **live GPU inference
 on real public models** (Qwen 3.5, Gemma 4), never from simulated runs.
 
-This report documents the research arc behind the framework — **~1,087
-experiments across 84 completed milestones**, run between February and May 2026.
+This report documents the research arc behind the framework — **~1,103
+experiments across 85 completed milestones**, run between February and May 2026.
 The story has moved through six distinct phases of understanding. A
 plain-English summary of that journey is in the next section; deeper
 analysis of each phase follows in Sections 3–6 and in the per-milestone
@@ -2143,4 +2143,34 @@ This result closes a long-standing gap: prior HumanEval improvements (+3.0pp wit
 
 **Gate enforcement finding (Exp 1089 retro):** 7 of 9 NOT-MET criteria in milestone .84 were blocked by conductor gate enforcement for undeclared prior failures — correct behavior from the system. The planner layer consistently omitted required `prior_failures` YAML declarations when proposing experiments with domain overlap to earlier failures. This is the operational gap: gate enforcement works, planner discipline does not.
 
-**What's next (as of 2026-05-01):** arXiv submission target 2026-05-15 for position paper. Planner must add a dedicated prior-failures audit pre-task in .85 before attempting any gate-blocked experiments. GSM8K extraction needs diagnosis (VeriCoT TP=0 with 35B model). Position paper routing through Opus/Sonnet (Gemini backend paused due to 429 rate limits). KV260 board connectivity needs a diagnostic task before scheduling further FPGA experiments.
+**What's next (from .84, now resolved in .85):** arXiv submission target 2026-05-15 for position paper (exp1091 confirmed arxiv_ready). GSM8K extraction TP=0 fixed in exp1101 (equation-style CoT now parsed). KV260 board connectivity: FPGA sampler distribution mismatch confirmed in exp1094 (KL=3.07 vs 0.05 threshold).
+
+---
+
+### Phase 10 — Phase Validation Discipline and Honest Negatives (Milestone .85, Exps 1090–1103)
+
+Milestone 2026.04.85 achieved 13 of 14 success criteria — the strongest multi-criteria performance since the project adopted the 14-criterion evaluation framework.
+
+**Diagnostic instrumentation library (Exp 1090):** Four canonical instrumentation classes shipped to `python/carnot/eval/diagnostics.py`: `AlphaT`, `KLDivergenceEstimator`, `NullSpaceEstimator`, and `DecodedTextDiversity`. These are the measurement tools the phase-validation discipline in CLAUDE.md requires at every phase boundary. Without these classes, phase-validation criteria cannot be computed empirically — they existed only as architectural aspirations before this experiment.
+
+**Phase 1c verifier joint null-space measurement (Exp 1093):** Three production verifiers measured (SpilledEnergyDetector, NUPProbeV4, PCIBProbe) on 364 examples. joint_null_space_fraction=0.0 — the phase1c acceptance criterion passes. However, max_r_correlation=0.656 between verifier pairs: the verifiers are correlated. AND-composition (which exponentially shrinks kernels only when verifiers are *independent*) is less powerful than the Phase-3 architecture assumes. and_composition_viable=False at current verifier diversity. The Phase-3 plan requires verifier diversity expansion before k=15 AND-composition delivers its theoretical guarantees.
+
+**Phase 2a FPGA sampler correctness audit — honest negative (Exp 1094):** FPGA sampler distribution mismatch confirmed. KL divergence (FPGA vs Gibbs reference) = 3.07, against a 0.05 acceptance threshold — 61x over budget. The software Gibbs and parallel Glauber samplers agree (KL≈0), so the reference is correct and the mismatch is in the hardware path. GPU Ising sampler measured as a new baseline: 0.087 ms/sample at N=12 (CPU Gibbs: 0.016 ms/sample; GPU advantage emerges at larger N). Any claim about hardware-accelerated Boltzmann sampling from the KV260 is gated on resolving this mismatch.
+
+**Phase 3a DBAE-EBM threat model (Exp 1095):** Adversarial threat model written for the Deterministic Bounded Autoencoder + Latent EBM Phase-3 architecture. Documents five attack patterns that could allow a prototype to pass acceptance gates without actually working — the "degenerate identity encoder", "decoder ignoring bottleneck", "EBM converging to single basin", "verifier suite sharing pathological null space", and "hardware sampler sampling from wrong distribution". All five are now explicitly instrumentable using the exp1090 diagnostic library.
+
+**SemEnergy probe v1 (Exp 1096):** AUROC=0.948 on 500 examples using logit-space energy from arXiv 2508.14496. Inference time 0.017 ms/example (294x faster than the 5 ms target). Comparison to existing probes: SOS-KAN v3 AUROC=0.9545 (SemEnergy within noise). SemEnergy provides a principled information-theoretic grounding for the logit-spill signal — it is the "why" behind SpilledEnergy's empirical AUROC=1.0 result. The theoretical foundation makes the probe more defensible for the position paper.
+
+**N-Queens WOPR cartridge (Exp 1097):** 8-Queens Ising solver shipped as WOPR cartridge. E=0 solution found at iteration 3001; 64-spin Ising formulation confirmed. Gallery now has four interactive constraint-satisfaction games: Sudoku, Graph Theory Wiring, Lights Out, and N-Queens. All deployed on HuggingFace Spaces (exp1102).
+
+**Potts machine q=3 (Exp 1098):** Verilog RTL and Python simulation complete for a 3-state Potts machine. The Potts machine generalizes Ising from binary spins to q-state spins, enabling constraint classes with non-binary alphabets (clause-satisfaction over alphabets, coloring problems, etc.). This is a hardware prototype toward richer energy landscapes than the current binary Ising formulation.
+
+**RLVR + SSD integration — honest negative (Exp 1099):** No improvement over baseline. Energy filter is degenerate: all energy scores = 0.0 from AND-composition at k=5, so energy-selected SSD cannot apply preference signals. Condition D (on-policy SSD with majority-vote fallback) reports accuracy=1.0, but this is the degenerate case where the fallback always fires. The honest result: SSD integration requires non-degenerate energy scores as input. Root cause identified — k=5 AND-composition pre-filters every example to E=0, collapsing the energy gradient that SSD requires.
+
+**Cascade validation on SOTA outputs — honest mixed result (Exp 1100):** 100 SOTA model outputs from Qwen3.6-35B-A3B run through the full cascade. mean_cascade_depth=2.20 (vs 2.0 on FoVer data). Tier 0a early-exit rate: 20% (vs 8% on FoVer), meaning SOTA outputs defeat the early-exit probes more often and require deeper cascade evaluation. incorrect_energy > correct_energy: False — the hypothesis that SOTA incorrect outputs have higher cascade energy than correct outputs is not confirmed on this sample. Cascade is functional end-to-end; the energy ordering hypothesis needs architecture investigation before it can support confident repair decisions on SOTA-scale outputs.
+
+**GSM8K extraction fix (Exp 1101):** Root cause of two-consecutive-milestone VeriCoT TP=0 diagnosed and fixed. SOTA models (Qwen3.6-35B, Gemma-4) write equation-style CoT ("47 + 28 = 75") while the old extractor required prose operators ("47 plus 28 gives 75"). Added `_EQ_INLINE_RE` to `python/carnot/extraction/vericot_validator.py`. Fixed TP rate: 0.5 → 1.0 on 20 test examples (10 equation-style + 10 prose, both now correctly parsed). This unblocks GSM8K math extraction for all future SOTA benchmarks.
+
+**Milestone .85 summary (Exp 1103):** 13/14 criteria met. The one NOT-MET criterion was phase1a_false_pass_below_5pct (exp1092 blocked by gate-check failure on the gating experiment). 13/14 represents the strongest multi-criteria recovery after .84's 4/13.
+
+**What's open (as of 2026-05-01):** Phase 1a adversarial verifier robustness audit still needs its blocking gate resolved. Verifier diversity expansion is required before Phase-3 AND-composition scales to k=15 with theoretical guarantees. FPGA sampler distribution mismatch (KL=3.07) requires root-cause investigation before hardware-accelerated sampling claims can be published. Energy ordering for SOTA model outputs needs architecture investigation (incorrect energy not reliably above correct energy on SOTA outputs). GSM8K extraction is now fixed and should be retested in the next live SOTA benchmark run.

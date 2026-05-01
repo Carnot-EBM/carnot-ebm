@@ -7,6 +7,7 @@ interface every cartridge must satisfy.
 
 from games._base import WOPRGame
 from games.lights_out import LightsOutGame
+from games.nqueens import NQueensGame
 from games.sudoku import SudokuGame
 from games.thermonuclear_war import ThermonuclearWarGame
 from games.tictactoe import TicTacToeGame
@@ -16,6 +17,7 @@ ALL_GAMES: list[WOPRGame] = [
     TicTacToeGame(),
     LightsOutGame(),
     ThermonuclearWarGame(),
+    NQueensGame(),
 ]
 
 __all__ = [
@@ -24,5 +26,6 @@ __all__ = [
     "TicTacToeGame",
     "LightsOutGame",
     "ThermonuclearWarGame",
+    "NQueensGame",
     "ALL_GAMES",
 ]

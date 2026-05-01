@@ -739,8 +739,8 @@ tasks:
       (SOTA model used: Qwen3.6-35B-A3B-GGUF, inference_mode=live_gpu)
 
     MODEL_SPECS = [
-      {"name": "Qwen3.6-35B-A3B", "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
-       "gpu": "dual", "loader": "llama.cpp"}
+      {{"name": "Qwen3.6-35B-A3B", "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+       "gpu": "dual", "loader": "llama.cpp"}}
     ]
 
     TASK:
@@ -840,7 +840,7 @@ tasks:
     MORE LABELED DATA ACCUMULATES from the pipeline, without requiring external annotation.
 
     MODEL_SPECS = [
-      {"name": "Qwen3.5-0.8B", "hf_id": "Qwen/Qwen3.5-0.8B", "gpu": 0}
+      {{"name": "Qwen3.5-0.8B", "hf_id": "Qwen/Qwen3.5-0.8B", "gpu": 0}}
     ]
     Note: ThinkPRM backbone is a small supervised model (not a generative GGUF).
     Use 0.8B as backbone for the PRM head (this is a classification task, not generation).
@@ -853,7 +853,7 @@ tasks:
 
     TASK:
     1. Load data/step_level_prm_training.jsonl (7349 step-level labeled examples).
-       Verify format: {question, step, label, energy_score} or similar.
+       Verify format: {{question, step, label, energy_score}} or similar.
        Split: 80% train (5879 examples), 20% eval (1470 examples).
 
     2. Initialize ThinkPRM backbone:
@@ -880,7 +880,7 @@ tasks:
        # How many of the 7349 training labels came from live GPU verifier signal (not simulation)?
        # From exp1084: these were MCTS-generated with Carnot cascade as scorer → α_t ≈ 0.38
        alpha.record(n_verified=int(7349 * 0.38), n_self=int(7349 * 0.62))
-       print(f"α_t = {alpha.current():.3f}")  # Should be > 0 (Zenil convergence condition)
+       print(f"α_t = {{alpha.current():.3f}}")  # Should be > 0 (Zenil convergence condition)
 
     6. WRITE TESTS (at least 3):
        tests/python/test_thinkprm_v2.py:
@@ -947,7 +947,7 @@ tasks:
 
     TASK PART 1 — BUILD data/llm_failure_exemplars.jsonl:
     Create ≥30 exemplars in JSONL format, each entry:
-    {
+    {{
       "id": "exemplar_001",
       "category": "arithmetic_comparison" | "logical_consistency" | "factual_error" |
                    "moral_framing" | "numeric_precision" | "code_bug" | ... (≥10 categories),
@@ -959,7 +959,7 @@ tasks:
       "carnot_energy_score": null,  # filled in by Part 2
       "carnot_verdict": null,       # filled in by Part 2
       "carnot_tier_detected": null  # filled in by Part 2
-    }
+    }}
 
     Required exemplar categories (build ≥3 per category, ≥10 categories):
     1. arithmetic_comparison: 9.11>9.9, version numbers, float comparison errors
@@ -1224,7 +1224,7 @@ tasks:
     cd docs/figures/
     for f in fig1_cascade_architecture.py fig2_sos_kan_auroc.py fig3_fpga_latency.py fig4_alpha_t.py fig5_humaneval_improvement.py:
         JAX_PLATFORMS=cpu python $f
-        # Scripts should save fig{N}.pdf and fig{N}.png
+        # Scripts should save fig{{N}}.pdf and fig{{N}}.png
 
     TASK PART 2 — MARKDOWN TO LATEX:
     Convert docs/position-paper-draft-v2.md to docs/arxiv-paper/main.tex:
@@ -1233,10 +1233,10 @@ tasks:
     If pandoc not available: write the LaTeX manually (paper is 7113 words = ~15 pages).
 
     LaTeX structure:
-    \documentclass[10pt]{article}
-    \usepackage{amsmath, amssymb, graphicx, hyperref}
-    \title{Carnot: Energy-Based Verification for LLM Outputs with Hardware-Accelerated Sampling}
-    \author{[Author Placeholder — operator fills before submission]}
+    \documentclass[10pt]{{article}}
+    \usepackage{{amsmath, amssymb, graphicx, hyperref}}
+    \title{{Carnot: Energy-Based Verification for LLM Outputs with Hardware-Accelerated Sampling}}
+    \author{{[Author Placeholder — operator fills before submission]}}
     Sections: 1.Introduction, 2.Related Work, 3.Architecture, 4.Empirical Results,
     5.Self-Distillation Convergence, 6.Hardware Acceleration, 7.Conclusion, References
 

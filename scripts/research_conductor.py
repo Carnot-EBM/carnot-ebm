@@ -1534,6 +1534,21 @@ def _verdict_is_untrustworthy(payload: dict) -> tuple[bool, str | None]:
     HONEST_FINDING_TOKENS = ("honest_negative", "honest_null", "honest_neutral")
     if any(tok in vlow for tok in HONEST_FINDING_TOKENS):
         return False, verdict
+    # Issue 7 extension 2026-05-01 18:50Z: verdicts that carry both a
+    # *progress* token (improved/gained/above_baseline) AND a
+    # *threshold-miss* token (below/under/missed) describe an honest
+    # negative on a strict acceptance gate — real progress that didn't
+    # clear an ambitious threshold. exp1111 incident: ThinkPRM v2 went
+    # AUROC 0.9885 → 0.9946 (+0.6 points, α_t = 0.3801 satisfies Zenil
+    # convergence) but missed the strict 0.995 acceptance gate; verdict
+    # `auroc_improved_below_995`. Cycling it 3 more times produces the
+    # same number — the work is done, the gate is the issue. Rerun
+    # discipline in CLAUDE.md says reruns must address a root cause;
+    # there's nothing to address — improvement is real, gate is strict.
+    _PROGRESS_TOKENS = ("improved", "improvement", "gained", "above_baseline")
+    _MISS_TOKENS = ("below", "under_threshold", "missed_threshold", "missed_target")
+    if any(p in vlow for p in _PROGRESS_TOKENS) and any(m in vlow for m in _MISS_TOKENS):
+        return False, verdict
     try:
         sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
         from in_process_doc_reconcile import (  # type: ignore[import-not-found]

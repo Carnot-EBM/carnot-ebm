@@ -1,5 +1,71 @@
 # Carnot — Operational Status
 
+## Session 2026-05-01 — Milestone 2026.04.86 Planning Complete
+
+**Milestone 2026.04.85 COMPLETE (13/14 criteria met). Milestone 2026.04.86 PLANNED.**
+
+### .85 Recap (final)
+- **MET (13/14):** diagnostics_library, position_paper_arxiv_ready (7113 words, 5 figure scripts), phase1c_null_space, phase2a_sampler_validated (KL=3.07 FPGA mismatch confirmed), phase3a_threat_model, semenergy_probe_auroc=0.948@0.017ms, nqueens_cartridge (E=0), rlvr_ssd_honest_result (negative), cascade_validated, gsm8k_extraction_fixed (TP 0→1.0), gallery_updated, retro
+- **NOT MET (1):** phase1a_false_pass_below_5pct — blocked 3rd consecutive milestone (planner omitted prior_failures for all 18 upstream experiments)
+- **Key bottlenecks:** exp906 exclusion manifest regression 3rd consecutive (35 min), DualGPU 18th consecutive idle, in-process doc reconcile 28min blocking pass, Phase 1a prior_failures gap
+
+### .86 Design (Exps 1104–1114, estimated ~470 min)
+
+**Phase 0 — Failure-Ledger v2 Issues 4+5 (unconditional MANDATORY first):**
+- exp1104: Keyword tightener + fingerprint cache fix (model: opus, no GPU) — removes regex over-match that blocks Phase 1a + fixes duplicate detection
+
+**Phase 1 — Failure-Ledger v2 Issues 1+2+3 (gated on exp1104):**
+- exp1105: Title-prefix inheritance + cap-race + mtime false-positive fix (gated on exp1104.keyword_match_fix_deployed)
+
+**Phase 2 — Phase 1a UNBLOCKED (gated on exp1104.keyword_match_fix_deployed):**
+- exp1106: Phase 1a adversarial verifier robustness audit — ALL 18 prior_failures declared, APRM attack pattern, false-pass rate < 5%
+
+**Phase 3 — Verifier Diversity Expansion:**
+- exp1107: Add 3 structurally orthogonal verifiers (Z3Math, AST-complexity, SemanticConsistency) — standalone, opus
+- exp1108: r_corr re-measurement (gated on exp1107.verifiers_registered, target < 0.5)
+
+**Phase 4 — Continuous Self-Learning (ThinkPRM + RLVR+SSD v2):**
+- exp1109: ThinkPRM retrain on 7349-example PRM corpus — standalone, GPU, Sonnet
+- exp1110: RLVR+SSD v2 — DualGPU MANDATORY (18 consecutive idle), top-k energy selection, no pre-filtering (gated on exp1109.thinkprm_model_path)
+
+**Phase 5 — Hardware + Continuous Self-Learning:**
+- exp1111: KV260 sequential Glauber sampler — Verilog fix for detailed-balance violation (p-bit period-2 oscillation), KL divergence target < 0.1
+- exp1112: SOTA continuous Zenil α_t self-learning with SemEnergy energy gate (standalone, GPU)
+
+**Phase 6 — arXiv Bundle:**
+- exp1113: Pandoc LaTeX + pdflatex compilation of position paper v2, GitHub Pages update (gated on exp1091.arxiv_pdf_url_obtained OR exp1091.latex_bundle_written)
+
+**Phase 7 — Retro:**
+- exp1114: Milestone 2026.04.86 retrospective
+
+### 12 Success Criteria
+1. failure_ledger_issue4_5_deployed (exp1104)
+2. failure_ledger_issues_1_3_deployed (exp1105)
+3. phase1a_false_pass_below_5pct (exp1106) — 3rd consecutive attempt, now gated on keyword fix
+4. verifier_diversity_expanded (exp1107)
+5. r_corr_below_0p5 (exp1108)
+6. thinkprm_retrained_7349 (exp1109)
+7. rlvr_ssd_honest_result_v2 (exp1110)
+8. kv260_sequential_glauber_validated (exp1111)
+9. zenil_alpha_t_continuous_self_learning (exp1112)
+10. arxiv_bundle_submitted (exp1113)
+11. position_paper_pdf_generated (exp1113)
+12. retro_complete (exp1114)
+
+### Key Architectural Decisions for .86
+- Conductor surgery in exp1104/1105 has explicit EXCEPTION clause permitting scripts/research_conductor.py modification
+- Phase 1a gated on keyword fix (exp1104) being live first — addresses 3rd consecutive block root cause
+- DualGPU MANDATORY hard constraint in exp1110 prompt (not a recommendation) — 18 consecutive idle milestones
+- No gemini agent_type (429-rate-limited): all long-context via Opus
+- RLVR+SSD v2 uses top-k energy selection without AND-compose pre-filtering (addresses energy_all_zero root cause)
+- ALL 18 Phase 1a prior_failures declared exhaustively in exp1106 YAML
+
+### What's Next
+- Conductor should execute research-roadmap-next.yaml (milestone 2026.04.86)
+- exp1104 must run first (unconditional, MANDATORY) before any other experiment
+
+---
+
 ## Session 2026-05-01 — Milestone 2026.04.85 Planning Complete
 
 **Milestone 2026.04.84 COMPLETE (4/13 criteria met). Milestone 2026.04.85 PLANNED.**

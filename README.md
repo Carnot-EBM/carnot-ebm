@@ -117,6 +117,12 @@ traceable to a checked-in experiment artifact under `results/`.
 | FR-11 self-learning loop with SOTA 35B model (live GPU) | **alpha_t=0.38** with Qwen3.6-35B-A3B (35B MoE, live dual-GPU inference); fr11_loop_closed=true; 100 training examples appended | Exp 1077 |
 | First positive live benchmark with SOTA IT model on HumanEval (Qwen3.6-35B-A3B) | HumanEval pass@1 **0% → 36%** after Carnot correction (first-ever positive delta with a SOTA instruction-tuned model); GSM8K extraction still failing (VeriCoT TP=0) | Exp 1079 |
 | Step-level PRM dataset at scale (MCTS-based labeling, full FoVer corpus) | **7,349 step-labeled examples** generated (target was 2,000); largest PRM dataset in project history | Exp 1084 |
+| SemEnergy probe v1 (logit-space energy, arXiv 2508.14496) | **AUROC=0.948**, inference 0.017 ms/example (294x faster than 5 ms target); principled information-theoretic grounding for logit-spill signal | Exp 1096 |
+| WOPR N-Queens cartridge (8-Queens Ising solver) | **E=0 solution** at iteration 3001; gallery now has 4 games (Sudoku, GTW, Lights Out, N-Queens) live on HuggingFace Spaces | Exp 1097 |
+| Phase 1c verifier joint null-space measurement | **joint_null_space_fraction=0.0** (acceptance criterion met); max_r_correlation=0.656 — verifiers correlated, AND-composition diversity expansion required before k=15 scales | Exp 1093 |
+| GSM8K VeriCoT extraction fix (equation-style CoT) | **TP rate: 0.5 → 1.0**; SOTA models write "47 + 28 = 75" not prose; added `_EQ_INLINE_RE` to vericot_validator.py; closes two-milestone TP=0 blocker | Exp 1101 |
+| FPGA sampler correctness audit — honest negative | **KL(FPGA ‖ Gibbs) = 3.07** (threshold 0.05); distribution mismatch confirmed; software Gibbs and GPU Ising agree (KL≈0); KV260 does not yet sample from Boltzmann distribution | Exp 1094 |
+| RLVR + SSD integration — honest negative | **No improvement** over baseline; energy filter degenerate (all scores 0.0 from k=5 AND-composition); SSD requires non-degenerate energy gradient as input | Exp 1099 |
 
 Deeper analysis of these — including everything that **didn't** work and
 why — is in the [technical report](docs/technical-report.md). Per-milestone
