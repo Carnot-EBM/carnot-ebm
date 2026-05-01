@@ -164,6 +164,46 @@ def _build_agent_command(
     else:
         model = DEFAULT_MODEL_BY_TYPE[effective_agent_type]
 
+    # 2026-05-01 fix: model_override is meaningful only when agent_type
+    # matches the override's vendor namespace. The .85 planner emitted
+    # `model: opus` on tasks with `agent_type: codex` (exp1097, exp1098),
+    # then codex CLI rejected the Anthropic model with HTTP 400:
+    # "The 'opus' model is not supported when using Codex with a ChatGPT
+    # account." Snap any cross-vendor model name to the agent_type's
+    # default. Anthropic names (sonnet/opus/haiku/claude-*) only make
+    # sense for agent_type=claude; gpt-/o1-/codex-* only for codex;
+    # gemini-* only for gemini.
+    _ANTHROPIC_NAMES = ("sonnet", "opus", "haiku")
+    if effective_agent_type == "codex":
+        if any(model.lower().startswith(p) for p in _ANTHROPIC_NAMES) or model.startswith(
+            "claude-"
+        ):
+            logger.warning(
+                "Cross-vendor model override ignored: agent_type=codex got model=%s; "
+                "snapping to default %s",
+                model,
+                DEFAULT_MODEL_BY_TYPE["codex"],
+            )
+            model = DEFAULT_MODEL_BY_TYPE["codex"]
+    elif effective_agent_type == "gemini":
+        if any(model.lower().startswith(p) for p in _ANTHROPIC_NAMES) or model.startswith("gpt-"):
+            logger.warning(
+                "Cross-vendor model override ignored: agent_type=gemini got model=%s; "
+                "snapping to default %s",
+                model,
+                DEFAULT_MODEL_BY_TYPE["gemini"],
+            )
+            model = DEFAULT_MODEL_BY_TYPE["gemini"]
+    elif effective_agent_type == "claude":
+        if model.startswith(("gpt-", "gemini-", "o1-")):
+            logger.warning(
+                "Cross-vendor model override ignored: agent_type=claude got model=%s; "
+                "snapping to default %s",
+                model,
+                DEFAULT_MODEL_BY_TYPE["claude"],
+            )
+            model = DEFAULT_MODEL_BY_TYPE["claude"]
+
     if effective_agent_type == "gemini":
         return (
             [
