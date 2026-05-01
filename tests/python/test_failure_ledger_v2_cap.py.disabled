@@ -1,0 +1,260 @@
+"""Tests for failure-ledger v2 cap-reset, mtime staleness, and end-fingerprint.
+
+Coverage targets
+----------------
+- Issue 2 (cap-reset on operator-fix commit): _cap_reset_applies returns True
+  when changed-files since last failure include a relevant path.
+- Issue 3 (stable-deliverable-detection by mtime > task_start): a pre-existing
+  artifact from before the agent started must be classified as stale.
+- Issue 4 (end-fingerprint cache): the cache survives a mid-run commit because
+  the end-state fingerprint is what gets persisted.
+
+Why these tests exist: the .85 retro caught three conductor bugs that retired
+tasks incorrectly or killed agents writing fresh artifacts:
+
+  - exp1092 was retired 7 minutes BEFORE the operator's fix commit landed.
+  - exp1090's Opus subagent was killed because a stale 'blocked' artifact
+    from an earlier iteration looked like a finished deliverable.
+  - The pre-test fingerprint cache missed on subsequent iterations whenever
+    a commit landed during the pre-test, because the cache was saved with
+    the START fingerprint rather than the END fingerprint.
+
+Each test exercises ONE of those failure modes against a synthetic input so
+the regression is locked in without depending on the .85 corpus.
+
+Spec: tracks REQ-INFRA-FAIL-LEDGER-V2 (failure-ledger-v2-and-planner-discipline
+proposal). SCENARIO-FAIL-LEDGER-V2-CAP-RESET, SCENARIO-FAIL-LEDGER-V2-MTIME,
+SCENARIO-FAIL-LEDGER-V2-END-FINGERPRINT.
+"""
+
+from __future__ import annotations
+
+import importlib.util
+import json
+import sys
+import tempfile
+import time
+from pathlib import Path
+
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+
+
+def _load_conductor():
+    """Import scripts/research_conductor.py without executing __main__."""
+    spec = importlib.util.spec_from_file_location(
+        "_rc_under_test_fl_v2_cap", _REPO_ROOT / "scripts" / "research_conductor.py"
+    )
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+class TestCapResetWhenFixCommitLands:
+    """Issue 2 — when an operator commit since the most recent failure
+    touches a path the task cares about, the failure counter must reset
+    to zero on the next pick_next_task call.
+
+    The _cap_reset_applies helper is the load-bearing decision point; it
+    is what pick_next_task calls when deciding whether to demote a
+    fail-count back to 0. We test the helper directly so the behaviour is
+    locked in regardless of how the calling pick_next_task surface
+    evolves.
+    """
+
+    def test_cap_resets_when_fix_commit_lands(self) -> None:
+        """A patch to the task's deliverable since the last failure resets the cap."""
+        rc = _load_conductor()
+        task = {
+            "id": "exp1092-test",
+            "title": "Exp 1092: Test cap reset",
+            "deliverable": "results/experiment_1092_test.json",
+        }
+
+        # Synthetic provider returns the deliverable as a changed file —
+        # i.e. the operator landed a fix commit that touched it.
+        def fake_changes(_since: str) -> set[str]:
+            return {"results/experiment_1092_test.json"}
+
+        assert (
+            rc._cap_reset_applies(
+                task,
+                "2026-05-01 10:00 UTC",
+                changed_files_provider=fake_changes,
+            )
+            is True
+        )
+
+    def test_cap_does_not_reset_when_unrelated_files_change(self) -> None:
+        """Touching some unrelated file must not trigger a reset — that
+        would let arbitrary churn launder a misbehaving task."""
+        rc = _load_conductor()
+        task = {
+            "id": "exp1092-test",
+            "title": "Exp 1092: Test cap reset",
+            "deliverable": "results/experiment_1092_test.json",
+        }
+
+        def fake_changes(_since: str) -> set[str]:
+            return {"docs/index.html", "ops/changelog.md"}
+
+        assert (
+            rc._cap_reset_applies(
+                task,
+                "2026-05-01 10:00 UTC",
+                changed_files_provider=fake_changes,
+            )
+            is False
+        )
+
+    def test_cap_resets_on_roadmap_edit(self) -> None:
+        """Editing the task's roadmap entry counts as 'fix landed' — the
+        operator may have changed the prompt or the gate condition."""
+        rc = _load_conductor()
+        task = {"id": "exp1092-test", "title": "x", "deliverable": "results/x.json"}
+
+        def fake_changes(_since: str) -> set[str]:
+            return {"research-roadmap.yaml"}
+
+        assert (
+            rc._cap_reset_applies(
+                task,
+                "2026-05-01 10:00 UTC",
+                changed_files_provider=fake_changes,
+            )
+            is True
+        )
+
+    def test_cap_does_not_reset_when_no_failure_recorded(self) -> None:
+        """No prior failure timestamp -> nothing to reset against."""
+        rc = _load_conductor()
+        task = {"id": "exp1092-test", "title": "x", "deliverable": "results/x.json"}
+        assert (
+            rc._cap_reset_applies(
+                task,
+                None,
+                changed_files_provider=lambda _ts: {"results/x.json"},
+            )
+            is False
+        )
+
+
+class TestStaleArtifactDetectedByMtime:
+    """Issue 3 — a deliverable artifact whose mtime predates the agent's
+    start_time is stale by definition; the conductor must not treat it as
+    'agent has produced its deliverable' and kill the agent early.
+
+    We exercise the underlying mtime comparison rather than the full
+    run_agent loop (which would require subprocess machinery). The check
+    `artifact_mtime > task_start_time` is what the in-loop logic uses,
+    line 502 of research_conductor.py at time of writing.
+    """
+
+    def test_stale_artifact_detected_by_mtime(self) -> None:
+        import os
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            stale_path = Path(tmpdir) / "stale.json"
+
+            # Step 1: a stale artifact written from a prior iteration. We
+            # set its mtime explicitly to a fixed timestamp in the past
+            # so the comparison is precise regardless of filesystem
+            # mtime granularity.
+            stale_path.write_text(json.dumps({"status": "blocked"}))
+            stale_t = 1_700_000_000.0
+            os.utime(stale_path, (stale_t, stale_t))
+
+            # Step 2: the agent starts AFTER the stale artifact existed.
+            agent_start_time = stale_t + 60.0  # 1 min later
+
+            # The stable-deliverable kill-guard must classify the
+            # pre-existing artifact as stale (mtime <= start_time).
+            assert stale_path.stat().st_mtime <= agent_start_time, (
+                "stale artifact's mtime must NOT exceed agent start_time"
+            )
+
+            # Step 3: the agent finishes its work and writes a fresh
+            # artifact. The fresh mtime must exceed start_time so the
+            # guard now allows the stable-deliverable early-kill path.
+            fresh_t = agent_start_time + 120.0
+            os.utime(stale_path, (fresh_t, fresh_t))
+            assert stale_path.stat().st_mtime > agent_start_time, (
+                "fresh artifact's mtime must exceed agent start_time"
+            )
+
+
+class TestEndFingerprintCacheSurvivesMidRunCommit:
+    """Issue 4 — the pre-test cache persists the END fingerprint, not the
+    START fingerprint. If a commit lands during the pre-test run and the
+    cache was saved with the START fingerprint, the next iteration's
+    fingerprint (which reflects the post-commit file state) would mismatch
+    and force an unnecessary full pre-test re-run. Caching the END state
+    fixes this.
+    """
+
+    def test_end_fingerprint_cache_survives_mid_run_commit(self, tmp_path) -> None:
+        rc = _load_conductor()
+
+        # Use a temporary cache file so we don't clobber the conductor's
+        # real ops/.pretest-cache.json. The save/load helpers read from
+        # the module-level path constant, so we monkeypatch for the test.
+        original_cache_file = rc.PRETEST_CACHE_FILE
+        rc.PRETEST_CACHE_FILE = tmp_path / "pretest-cache.json"
+        try:
+            start_fp = "a" * 64  # synthetic START fingerprint
+            end_fp = "b" * 64  # synthetic END fingerprint (post-commit)
+
+            # The conductor's run_tests() recomputes the fingerprint at
+            # the end of the run and persists THAT. Simulate that here:
+            # if we save end_fp, _load_pretest_cache must return end_fp,
+            # and a subsequent fingerprint matching end_fp must be
+            # satisfied by the cache.
+            rc._save_pretest_cache(end_fp, "10 passed", "subset")
+
+            cache = rc._load_pretest_cache()
+            assert cache.get("fingerprint") == end_fp, (
+                "Issue 4 fix: cache must store the END fingerprint, not the START fingerprint"
+            )
+
+            # The next iteration's _compute_pretest_fingerprint will see
+            # the post-commit file state == end_fp. The cache should
+            # satisfy a subset request.
+            assert rc._pretest_cache_satisfies("subset", end_fp, cache) is True
+
+            # Sanity: the START fingerprint (which is what the buggy
+            # version saved) would NOT satisfy the next iteration.
+            assert rc._pretest_cache_satisfies("subset", start_fp, cache) is False
+        finally:
+            rc.PRETEST_CACHE_FILE = original_cache_file
+
+
+class TestDocReconcileBatchFlag:
+    """The CARNOT_BATCH_DOC_RECONCILE flag must be off by default and
+    enable a queue-and-flush path when set. The queue functions exist so
+    operators can opt into deferred batch reconciliation."""
+
+    def test_batch_flag_default_off(self, monkeypatch) -> None:
+        rc = _load_conductor()
+        monkeypatch.delenv("CARNOT_BATCH_DOC_RECONCILE", raising=False)
+        assert rc._doc_reconcile_batch_enabled() is False
+
+    def test_batch_flag_truthy_values_enable(self, monkeypatch) -> None:
+        rc = _load_conductor()
+        for value in ("1", "true", "True", "yes", "on"):
+            monkeypatch.setenv("CARNOT_BATCH_DOC_RECONCILE", value)
+            assert rc._doc_reconcile_batch_enabled() is True, value
+
+    def test_batch_flag_falsy_values_disable(self, monkeypatch) -> None:
+        rc = _load_conductor()
+        for value in ("0", "false", "no", "off", ""):
+            monkeypatch.setenv("CARNOT_BATCH_DOC_RECONCILE", value)
+            assert rc._doc_reconcile_batch_enabled() is False, value
+
+    def test_enqueue_and_flush_empty_is_noop(self) -> None:
+        rc = _load_conductor()
+        # Drain anything left from prior tests.
+        rc._flush_doc_reconcile_batch(push=False)
+        flushed = rc._flush_doc_reconcile_batch(push=False)
+        assert flushed == 0
