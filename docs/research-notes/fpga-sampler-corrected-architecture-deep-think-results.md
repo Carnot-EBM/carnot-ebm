@@ -201,3 +201,38 @@ commits to Chromatic Glauber as the corrected architecture. The
 core question for Round 4: **what is the empirical chromatic
 number distribution of Carnot's actual deployed J matrices, and
 does that distribution support the ~1,000–3,000× speedup claim?**
+
+---
+
+## Round 2 outcome (added 2026-05-01)
+
+The adversarial Round 2 follow-up was dispatched and returned
+substantive results. **See `fpga-sampler-corrected-architecture-deep-think-round2-results.md`** for the full Round 2 response.
+
+**Round 2 demolished specific Round 1 prescriptions:**
+
+| Round 1 prescription | Round 2 verdict |
+|---|---|
+| ~3,200× speedup at k=4 chromatic | **REFUTED** — actual ~15.6× vs optimized C++ CPU. Round 1 ignored 4-cycle pipeline stalls and divided by an unoptimized Python baseline. |
+| Pivot production to Extropic Z1 | **REFUTED** — Z1 has zero independent peer-reviewed exact-Gibbs benchmark. Pivoting on vendor marketing is an existential risk. |
+| 2-milestone shipping plan | **MODIFIED** — 1-milestone χ≤4 Fast-Path is the realistic shippable. |
+| Chromatic preserves detailed balance | **CONFIRMED** (theoretical), but practically vulnerable to FPGA quantization + PRNG correlations. |
+| ST2 bipartite-J incompatibility | **CONFIRMED**. |
+
+**The exp1081 13,061× FPGA headline is now empirically suspect.**
+Round 2 notes the CPU baseline was unoptimized Python (~52µs);
+against optimized C++ the actual multiplier is much smaller. The
+position paper v2 (exp1091, deadline 2026-05-15) currently cites
+this 13,061× number. **Before publication, the number must be
+either retracted, recalibrated against optimized C++, or
+contextualized as "speedup against vendor-equivalent
+unoptimized-Python baseline."**
+
+**Round 2's recommended Phase-2 .86 task list (4 tasks):**
+- Task .86.1 (Honesty Benchmark): CPU DSatur on 100 Carnot J matrices, measure median + 95th percentile χ.
+- Task .86.2 (Stall Recalibration): Vivado ILA cycle-accurate AXI-Lite pipeline measurement.
+- Task .86.3 (Amdahl's Law Audit): CPU DSatur vs FPGA sweep time benchmark.
+- Task .86.4 (Fast-Path Prototyping): 1-milestone χ≤4 Sparse-Constraint Accelerator bitstream spec.
+
+These supersede Round 1's "ship Chromatic Glauber bitstream + Z1
+SDK integration in 2 milestones" prescription.
