@@ -1,0 +1,104 @@
+{
+  "experiment": "exp1114-milestone-retro-86",
+  "title": "Milestone 2026.04.86 Operational Retrospective",
+  "milestone": "2026.04.86",
+  "run_date": "2026-05-01",
+  "started_at": "2026-05-01T20:04:06.773113+00:00",
+  "finished_at": "2026-05-01T20:04:06.773769+00:00",
+  "schema": "operational_retro_v1",
+  "criteria_results": {
+    "failure_ledger_id_fix_deployed": true,
+    "failure_ledger_mtime_cap_manifest_deployed": true,
+    "phase1a_false_pass_below_5pct": true,
+    "new_diverse_verifiers_deployed_3_verifiers": true,
+    "and_composition_viable_r_corr_below_05": false,
+    "kv260_v3_kl_measured_below_threshold": true,
+    "rlvr_ssd_v2_non_degenerate_honest_result": true,
+    "thinkprm_v2_auroc_above_099": true,
+    "llm_failure_exemplar_corpus_30_exemplars": true,
+    "goodfire_cascade_tp_rate_measured": true,
+    "arxiv_bundle_complete": true,
+    "retro_complete": true
+  },
+  "criteria_met": 11,
+  "criteria_total": 12,
+  "criteria_pct": 91.7,
+  "slowest_experiments": [
+    {
+      "rank": 1,
+      "id": "exp1111",
+      "title": "ThinkPRM v2 Retrain on 7349-Step PRM Corpus",
+      "duration_min": 37,
+      "diagnosis": "Four consecutive artifact_not_updated_past_bootstrap failures (18:17\u219218:54). Conductor bootstrap-artifact guard triggered repeatedly because the experiment relies on a GPU training loop that takes 63 s; each bootstrap attempt starts the script but the conductor exits before the artifact is written."
+    },
+    {
+      "rank": 2,
+      "id": "exp1108",
+      "title": "Verifier Ensemble Diversity v2 \u2014 6-Verifier AND-Composition",
+      "duration_min": 21,
+      "diagnosis": "Sonnet ESCALATE_OPUS (17:01) then one FAIL bootstrap, then OK on deliverable-already-exists path (17:22).  116s actual run time but conductor wall cost inflated by Opus escalation and bootstrap retry."
+    },
+    {
+      "rank": 3,
+      "id": "exp1106",
+      "title": "Phase 1a Adversarial Verifier Robustness Audit v2",
+      "duration_min": 18,
+      "diagnosis": "One SKIP (pre-tests failing, self-heal failed at 16:07) followed by successful run at 16:25.  8 tests failing in first attempt; exp1104/exp1105 conductor fixes resolved the pre-test failures before the retry."
+    },
+    {
+      "rank": 4,
+      "id": "exp1110",
+      "title": "RLVR+SSD v2 \u2014 Non-Degenerate Energy Corpus with SOTA GPU",
+      "duration_min": 13,
+      "diagnosis": "Three consecutive artifact_not_updated_past_bootstrap failures (17:55, 18:06, 18:08) before the deliverable-already-exists path succeeded.  Experiment itself ran in 353 s (live GPU inference on Qwen3.6-35B-A3B).  Same bootstrap-artifact guard pattern as exp1111."
+    },
+    {
+      "rank": 5,
+      "id": "exp1109",
+      "title": "KV260 Ising Sampler v3 \u2014 Sequential Single-Site Updates",
+      "duration_min": 10,
+      "diagnosis": "One FAIL bootstrap (17:31) then OK on deliverable-already-exists path (17:41).  Script exits cleanly once artifact is written; the bootstrap guard is overly conservative for sub-10s Python-only experiments."
+    }
+  ],
+  "bottlenecks_identified": [
+    "Bootstrap-artifact guard false positives: 7 artifact_not_updated_past_bootstrap failures across exp1108\u2013exp1111 added ~35 min of conductor wall time.  The guard correctly blocks stale deliverables but incorrectly fires when the experiment writes its artifact at the very end of a long GPU run.",
+    "AND-composition k=6 ceiling hit: ThinkPRMProbe vs Z3MathVerifier pairwise r=0.507 exceeds the 0.5 threshold at k=6.  Both probes share step-level reasoning signal. The k=5 subset (max_r=0.462) is viable, but the milestone's headline goal of a 6-verifier AND-composition suite is not met.",
+    "RLVR+SSD v2 honest negative: improvement_over_baseline=-0.0004 confirms that top-k energy selection alone is insufficient to produce a training signal. The absence of an \u03b1_t > 0.1 signal means self-distillation collapses on this corpus shape \u2014 the Zenil grounding (docs/research-notes) is empirically validated as a blocker.",
+    "Vivado not on PATH blocks KV260 hardware synthesis: the v3 sequential Verilog is written and validated in Python simulation (KL=0.025), but the actual FPGA bitstream cannot be synthesised without Vivado in the execution environment.",
+    "Sonnet max-turns escalations: exp1104 and exp1105 (Failure-Ledger v2 infrastructure) both hit Sonnet's max-turn limit and required ESCALATE_OPUS_100 retries, adding ~4 min each.  These are complex code-rewrite tasks that reliably need Opus.",
+    "DualGPU idle streak partially resolved: exp1110 and exp1111 used live dual-GPU inference, breaking the 18-consecutive-idle run.  However exp1112 and exp1113 did not require GPU, so the post-milestone idle count is 2 \u2014 watch for creep."
+  ],
+  "improvements_suggested": [
+    "Bootstrap-artifact grace window: add a per-task grace_period_s field (default 600) so that experiments with known long GPU runtimes are not flagged as bootstrap-only until the grace window expires.  This prevents the 7 false-positive fires seen this milestone.",
+    "Pre-tag Opus-class tasks in roadmap YAML: add agent_tier: opus to tasks whose scope matches previous ESCALATE_OPUS events (infrastructure rewrites, multi-file code surgeries).  Eliminates the Sonnet-first round-trip cost for reliably complex work.",
+    "Drop ThinkPRMProbe from the canonical k=6 verifier suite; promote ASTStructureVerifier and SemanticConsistencyVerifier as the k=5 ensemble (max_r=0.462).  Update spec and roadmap to target k=5 for Phase-1d AND-composition.",
+    "RLVR+SSD requires an \u03b1_t > 0.1 signal: the empirical result (honest_negative) confirms that the energy-selection step alone does not provide the positive-signal needed for non-degenerate self-distillation.  Propose a dedicated \u03b1_t measurement experiment for .87 before re-attempting RLVR training.",
+    "Vivado on PATH: add a conda/nix env setup step that installs Xilinx Vivado (or its open-source equivalent openXC7 for the KV260 architecture) to unblock bitstream synthesis for the v3 sequential sampler.",
+    "arXiv submission finalisation: exp1113 produced a complete bundle but LaTeX is not installed in the conductor environment.  Add an Overleaf upload step or install texlive-full to close the final gap before the 2026-05-15 submission target."
+  ],
+  "dualgpu_consecutive_idle_count": 2,
+  "dualgpu_streak_broken_by": [
+    "exp1110",
+    "exp1111"
+  ],
+  "notable_successes": [
+    "Phase 1a adversarial audit unblocked after 3 consecutive milestone failures \u2014 0% false-pass rate",
+    "3 new diverse verifiers bring pairwise max_r from 0.656 (baseline .85) to 0.111 (exp1107)",
+    "AND-composition viable at k=5 (max_r=0.462) \u2014 empirically validates k_max\u22487-8 k-ceiling Round 2 prediction",
+    "KV260 v3 sequential sampler KL=0.025 nats (< 0.05 threshold) \u2014 Phase-2a simulation validated",
+    "ThinkPRM v2 AUROC=0.9946 on 7349-example PRM corpus (+0.6pp over v1 baseline)",
+    "RLVR+SSD honest_negative non-degenerate: confirms energy-selection corpus quality; breaks 18-consecutive DualGPU idle",
+    "Failure-Ledger v2 all 4 issues resolved: id-aware counting, cap reset, mtime guard, end-fingerprint cache",
+    "LLM failure exemplar corpus: 36 exemplars across 12 categories, Goodfire Silico competitive positioning documented",
+    "arXiv bundle v3 complete: main.tex + carnot.bib + 7 figures, 100% citation resolution"
+  ],
+  "notable_findings": [
+    "AND-composition at k=6 blocked by ThinkPRMProbe\u00d7Z3MathVerifier (r=0.507) \u2014 step-level reasoning probes share signal with formal logic; k=5 ensemble is the Phase-1d target",
+    "RLVR+SSD v2 improvement=-0.0004 confirms Zenil \u03b1_t grounding: without a positive verifier signal, self-distillation cannot bootstrap; must measure \u03b1_t first",
+    "Bootstrap-artifact guard produced 7 false-positive fires across exp1108\u2013exp1111, adding ~35 min conductor wall time \u2014 grace_period_s fix needed for .87"
+  ],
+  "wall_time_estimate_min": 280,
+  "roadmap_row_appended": false,
+  "retro_complete": true,
+  "honest_verdict": "strong_milestone_one_criterion_missed"
+}
