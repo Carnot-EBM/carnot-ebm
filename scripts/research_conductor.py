@@ -489,7 +489,22 @@ def run_agent(
                     deliverable_stable_since = None
                     deliverable_last_sig = None
                 if sig is not None:
-                    if sig == deliverable_last_sig:
+                    # 2026-05-01 fix (Issue 3): require mtime > start_time
+                    # before allowing the stable-deliverable kill. If the
+                    # file pre-exists from a prior iteration (e.g., a
+                    # status='blocked' artifact from DOOMED_RERUN_BLOCK),
+                    # the new agent has not yet started writing — killing
+                    # at the 60s mark on stale-but-unchanged file is a
+                    # false positive. Empirical .85 incident: exp1090's
+                    # Opus was killed after 2.5 min of unchanged stale
+                    # blocked artifact, before it could write the new
+                    # diagnostics_library_v1 deliverable.
+                    if st.st_mtime <= start_time:
+                        # Pre-existing stale artifact; agent hasn't
+                        # written yet. Reset the stability tracker.
+                        deliverable_stable_since = None
+                        deliverable_last_sig = sig
+                    elif sig == deliverable_last_sig:
                         if deliverable_stable_since is None:
                             deliverable_stable_since = now
                         elif now - deliverable_stable_since >= DELIVERABLE_STABLE_SECS:
@@ -1084,10 +1099,21 @@ def run_tests(full: bool = False) -> tuple[bool, str]:
                     failed_names.append(f"{parts[0]} {parts[1]}")
     success = rc == 0
     if success:
-        # Persist this fingerprint so the next iteration can short-circuit.
-        # Computed pre-run; pytest itself doesn't write source files, and
-        # if anything else did, we'd cache the post-state on next entry.
-        _save_pretest_cache(current_fp, summary, mode)
+        # 2026-05-01 fix (Issue 4): persist the END-of-pretest fingerprint,
+        # not the START fingerprint. If files changed during the pre-test
+        # run (e.g., operator commits while the conductor was busy), the
+        # START fingerprint is stale by the time the run finishes — saving
+        # it causes the next iteration to cache-miss because the current
+        # fingerprint reflects post-commit state. Recomputing here captures
+        # the actual state we just verified green.
+        end_fp = _compute_pretest_fingerprint()
+        if end_fp != current_fp:
+            logger.info(
+                "Pre-test fingerprint changed during run (%s -> %s); caching END state",
+                current_fp[:12],
+                end_fp[:12],
+            )
+        _save_pretest_cache(end_fp, summary, mode)
     elif failed_names:
         # Log up to 10 failed/errored test ids so the journal records the
         # diagnostic detail. Operators can grep journalctl for these names
