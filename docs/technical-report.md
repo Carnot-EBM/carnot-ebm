@@ -1,6 +1,6 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report on ~1,138 Experiments Across 88 Completed Research Milestones
+## A Technical Report Through Exp 1138 Across 88 Completed Research Milestones
 
 **Author:** Ian Blenke
 **Date:** 2026-05-02
@@ -98,7 +98,7 @@ checked into `results/operational_retro_*.json`.
   and the source bundle was verified; manual upload remains pending before
   2026-05-15 (Exps 1127/1135).
 - **Milestone 2026.04.88 closed at 10/11 criteria:** the full operational
-  retro records 794 minutes / 209 experiment events, 10.9% faster than .87.
+  retro records 781 minutes / 206 experiment events, 12.3% faster than .87.
   The missed criterion was WOPR Slitherlink, blocked by missing
   `prior_failures` metadata (Exp 1138; operational retro .88).
 
@@ -2291,7 +2291,7 @@ Milestone 2026.04.87 met **11 of 11 success criteria** — the first perfect mil
 
 ### Phase 13 — k=5 Repair, GRPO v2, and Adversarial Bias Audit (Milestone .88, Exps 1127–1138)
 
-Milestone 2026.04.88 met **10 of 11 success criteria** in a **145-minute active execution window**. The full operational retro records **794 minutes / 209 experiment events** for the surrounding milestone process. The missed criterion was the Slitherlink WOPR cartridge, which correctly blocked at the conductor pre-gate because the task omitted required `prior_failures` metadata for five matching WOPR cartridge predecessors.
+Milestone 2026.04.88 met **10 of 11 success criteria** in a **145-minute active execution window**. The full operational retro records **781 minutes / 206 experiment events** for the surrounding milestone process. The missed criterion was the Slitherlink WOPR cartridge, which correctly blocked at the conductor pre-gate because the task omitted required `prior_failures` metadata for five matching WOPR cartridge predecessors.
 
 **arXiv PDF compilation (Exp 1127):** `docs/arxiv-paper/main.pdf` compiled successfully with tectonic and the v3 source bundle was verified. arXiv submission is not complete: manual upload remains pending before the 2026-05-15 deadline. The honest verdict is `pdf_compiled_upload_pending`.
 
