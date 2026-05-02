@@ -4513,3 +4513,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-01: KV260 v4 Sparse+Inertia Python Simulation — Validate KL(v4||Gibbs) < 0.05 (⚠️ Research Finding) — honest_verdict=v4_kl_above_threshold; results/experiment_1122_kv260_v4_python_sim.json
 - 2026-05-01: Adaptive Cascade Routing with Lagrangian Dual — Compute-Optimal Verification (✅ Complete) — honest_verdict=savings_positive_accuracy_degraded; results/experiment_1123_adaptive_cascade_lagrangian.json
 - 2026-05-01: WOPR Hashi Puzzle Cartridge — Bridge Counting + Ising Ground-State (codex) (⚠️ Research Finding) — honest_verdict=e0_achieved; results/experiment_1124_wopr_hashi_cartridge.json
+- 2026-05-02: HF Spaces Gallery Update — Deploy Hashi Cartridge + Benchmark Results (✅ Complete) — honest_verdict=deployed_live; results/experiment_1125_hf_spaces_gallery_update.json
