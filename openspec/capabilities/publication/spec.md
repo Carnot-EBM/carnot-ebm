@@ -54,6 +54,23 @@ script MUST emit an `honest_verdict` field in the result artifact with one of:
 - `"publication_ready_with_caveats"` — provenance valid but cross-model blocked
 - `"publication_blocked_no_primary_result"` — Exp 679 gate fails
 
+### REQ-PUBLISH-004: Position Paper v3 Findings Update Artifact
+
+The arXiv position-paper update script MUST verify that
+`docs/arxiv-paper/main.tex` incorporates the milestone .87-.88 findings before
+emitting `results/experiment_1135_position_paper_v3_findings_update.json`.
+The artifact MUST record:
+
+- the paper sections modified
+- whether the GRPO + ThinkPRM v2 result was integrated
+- whether the exp1120 energy-inversion fix was integrated
+- whether the exp1130 Zenil `alpha_t` post-retrain result was integrated
+- whether HIVE arXiv:2604.26139 was added to Related Work
+- a closed-set `honest_verdict`
+
+The script MUST derive the reported numerical values from the checked-in
+experiment result JSON files rather than hard-coding them in the artifact.
+
 ## Scenarios
 
 ### SCENARIO-PUBLISH-001: All Headline Numbers Have Live-GPU Provenance
@@ -77,6 +94,16 @@ script MUST emit an `honest_verdict` field in the result artifact with one of:
 **Then** `honest_verdict == "publication_blocked_no_primary_result"`
  AND `publication_ready == False`
 
+### SCENARIO-PUBLISH-004: Position Paper Findings Fully Integrated
+
+**Given** the exp1118, exp1120, exp1121, exp1129, and exp1130 result files exist
+AND the position paper includes the milestone .87-.88 findings
+**When** the findings-update script runs
+**Then** the deliverable JSON reports the Abstract, Results, and Related Work
+sections as modified
+AND `honest_verdict == "fully_updated"`
+AND every required integration boolean is true
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -84,3 +111,4 @@ script MUST emit an `honest_verdict` field in the result artifact with one of:
 | REQ-PUBLISH-001 | Implemented | Exp 700 provenance audit |
 | REQ-PUBLISH-002 | Implemented | Exp 700 model card draft |
 | REQ-PUBLISH-003 | Implemented | Exp 700 gate logic |
+| REQ-PUBLISH-004 | Implemented | Exp 1135 position paper findings update |

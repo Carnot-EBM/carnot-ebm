@@ -16358,3 +16358,73 @@ closed-source white-box mechanistic interpretability positioning.
 **And** the positioning note is present and under 300 words
 
 **Spec traces:** REQ-VERIFY-1112, Exp 1112
+
+## REQ-VERIFY-1131: Lagrangian Cascade v2 Uses Verifier-Score Features
+
+The adaptive cascade router SHALL correct the Exp1123 shallow-depth collapse by
+training on per-example verifier-score features rather than text-only proxies.
+
+Sub-requirements:
+- REQ-VERIFY-1131-1: The router feature vector SHALL include
+  `sem_energy_score`, normalized response length, and normalized `Step N:`
+  marker count.
+- REQ-VERIFY-1131-2: The router MLP SHALL use hidden_size=128 with two ReLU
+  hidden layers and five output depth classes.
+- REQ-VERIFY-1131-3: The Lagrangian dual variable SHALL increase by 0.01 after
+  any training batch whose incorrect-example TP rate is below 0.90.
+- REQ-VERIFY-1131-4: The Exp1131 artifact SHALL include `mlp_hidden_size`,
+  `verifier_score_features_used`, `min_tp_constraint`, `adaptive_tp_rate`,
+  `fixed_tp_rate`, `accuracy_delta`, `cost_savings_pct`,
+  `cascade_v2_accuracy_delta_above_neg05`, `cost_savings_pct_positive`, and
+  the required honest-verdict enum.
+
+**Implementation Status:** Planned (Exp 1131)
+
+### SCENARIO-VERIFY-1131: Exp1131 Artifact Reports Accuracy-Preserving Savings
+
+**Given** a FoVer holdout evaluated by the v2 Lagrangian cascade router
+**When** the Exp1131 artifact is written
+**Then** `adaptive_tp_rate >= 0.90 * fixed_tp_rate`
+**And** `accuracy_delta > -0.05`
+**And** `cost_savings_pct > 0`
+**And** `honest_verdict` is one of the REQ-VERIFY-1131 allowed values
+
+**Spec traces:** REQ-VERIFY-1131, Exp 1131
+**Implementation Status:** Planned (Exp 1131)
+
+## REQ-VERIFY-1133: PRM-BiasBench-Style Stylistic Attack Evaluation
+
+Carnot SHALL provide a deterministic PRM-BiasBench-style adversarial evaluation
+for the repaired k=5 AND-composition verifier ensemble, gated on Exp 1128's
+`k5_ensemble_auroc_above_08 == True` artifact.
+
+- REQ-VERIFY-1133-1: The experiment SHALL generate exactly 20 exemplars each
+  for stylistic padding, length-biased incorrect answers, and format-gaming
+  incorrect answers using Python templates rather than LLM generation.
+- REQ-VERIFY-1133-2: The experiment SHALL score every exemplar with the k=5
+  AND-composition verifier and SemEnergyProbe alone, and SHALL record whether
+  each path flags the exemplar as suspicious.
+- REQ-VERIFY-1133-3: The experiment artifact SHALL be written to
+  `results/experiment_1133_prm_biasbench_adversarial_test.json` and include
+  `n_stylistic_attacks`, `n_length_bias_attacks`, `n_format_gaming_attacks`,
+  `k5_attack_tp_rate`, `semenergy_alone_attack_tp_rate`, `z3_attack_immune`,
+  `and_composition_advantage`, `prm_biasbench_attack_tp_measured`, and
+  `honest_verdict`.
+- REQ-VERIFY-1133-4: The experiment SHALL report whether AND-composition is
+  more robust than SemEnergyProbe alone, with the allowed `honest_verdict`
+  values `k5_more_robust_than_individual`, `k5_similar_to_individual`,
+  `individual_more_robust`, and `z3_dominates_style_irrelevant`.
+
+### SCENARIO-VERIFY-1133: k=5 Ensemble Scores PRM-BiasBench-Style Attacks
+
+**Given** Exp 1128 reports `k5_ensemble_auroc_above_08 == True`
+**When** `scripts/experiment_1133_prm_biasbench_adversarial_test.py` runs
+**Then** the result artifact contains 60 generated attacks across the three
+attack families
+**And** the artifact reports k=5 and SemEnergyProbe-alone attack true-positive
+rates
+**And** the artifact records whether Z3 catches arithmetic errors regardless of
+stylistic padding
+**And** the honest verdict is one of the four allowed verdict strings
+
+**Spec traces:** REQ-VERIFY-1133, Exp 1133

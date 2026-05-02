@@ -1342,6 +1342,53 @@ If OOD AUC <= 0.75, RETRO-JEPA-OOD-V20 MUST be filed.
 
 ---
 
+## REQ-FR11-1130: Post-Retrain Zenil Alpha Measurement MUST Compare Against Exp1077 Baseline
+
+**Given** Exp 1077 established a SOTA-tier Zenil alpha_t baseline of 0.38 for
+Qwen3.6-35B-A3B
+**And** Exp 1120 retrained SOSKANEnergyV3 on the FoVer v5 SOTA corpus with
+validation AUROC 0.977419 and corrected energy ordering
+**When** Exp 1130 scores 50 SOTA model outputs with the retrained energy
+verifier
+**Then** the artifact SHALL include alpha_t_prior, alpha_t_post_retrain,
+alpha_t_improved, verifier_auroc_used, n_evaluation_examples, inference_mode,
+fr11_self_learning_data_point_logged, zenil_alpha_t_post_retrain_measured, and
+honest_verdict
+**And** honest_verdict SHALL be one of "alpha_t_improved",
+"alpha_t_unchanged", "alpha_t_degraded", or "measurement_incomplete".
+
+### REQ-FR11-1130 Sub-requirements
+
+- REQ-FR11-1130-1: alpha_t_prior SHALL equal 0.38 from Exp 1077.
+- REQ-FR11-1130-2: verifier_auroc_used SHALL equal the Exp 1120
+  retrained_auroc_val when the Exp 1120 artifact is available.
+- REQ-FR11-1130-3: alpha_t_improved SHALL be true iff
+  alpha_t_post_retrain > alpha_t_prior.
+- REQ-FR11-1130-4: inference_mode SHALL be "live_gpu" for new Qwen3.6-35B-A3B
+  generations or "cached" for cached SOTA outputs.
+- REQ-FR11-1130-5: zenil_alpha_t_post_retrain_measured SHALL be true whenever
+  the artifact is written.
+
+### SCENARIO-FR11-1130: Improved Post-Retrain Alpha Is Classified Correctly
+
+**Given** alpha_t_prior = 0.38 and alpha_t_post_retrain = 0.52
+**When** the Exp 1130 artifact payload is built
+**Then** alpha_t_improved is true
+**And** honest_verdict is "alpha_t_improved".
+
+### SCENARIO-FR11-1131: Cached Measurement Remains Honest
+
+**Given** live Qwen3.6-35B-A3B generation is unavailable
+**When** Exp 1130 falls back to cached SOTA rows
+**Then** inference_mode is "cached"
+**And** n_evaluation_examples records the number of scored cached examples
+**And** zenil_alpha_t_post_retrain_measured is true.
+
+**Spec traces:** REQ-FR11-1130, SCENARIO-FR11-1130, SCENARIO-FR11-1131
+**Implementation Status:** Implemented (scripts/experiment_1130_zenil_alpha_t_post_retrain.py, Exp 1130)
+
+---
+
 ## REQ-LEARN-056: IsingConstraintGenerator MUST Read Error Patterns and Synthesise Coupling Rows
 
 **Given** a list of ErrorPattern objects accumulated from session memory

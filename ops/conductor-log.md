@@ -298,3 +298,9 @@ If you finish the real work |
 | 2026-05-02 02:20 UTC | PRM-BiasBench Adversarial Test on k=5 AND-Compose | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1128-sos-kan-root-cause-k5-fix) |
 | 2026-05-02 02:27 UTC | KV260 Ising Sampler v4 — Beta/Alpha Self-Adaptive  | OK | 81 passed, 1 warning in 4.28s |
 | 2026-05-02 02:44 UTC | SOS-KAN Polarity Fix v2 — k=5 Ensemble Net-Positiv | OK | 100 passed, 1 warning in 6.17s |
+| 2026-05-02 02:59 UTC | Zenil α_t Re-Measurement v2 — Post-Retrain Verifie | OK | 81 passed, 1 warning in 4.26s |
+| 2026-05-02 03:12 UTC | PRM-BiasBench Adversarial Test on k=5 AND-Compose | OK | Deliverable already exists in repo |
+| 2026-05-02 03:23 UTC | Position Paper v3 — Integrate .87/.88 Experimental | OK | 93 passed, 1 warning in 14.94s |
+| 2026-05-02 03:36 UTC | Cascade Routing v3 — Accuracy-Preserving Lagrangia | OK | 98 passed, 1 warning in 4.09s |
+| 2026-05-02 03:38 UTC | WOPR Slitherlink Puzzle Cartridge — Loop Constrain | DOOMED_RERUN_BLOCK | 5 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-02 03:40 UTC | WOPR Slitherlink Puzzle Cartridge — Loop Constrain | DOOMED_RERUN_BLOCK | 5 prior failure(s) match this task's scope but prior_failures field is missing o |
