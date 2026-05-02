@@ -29,7 +29,8 @@ Qwen3.6-35B-A3B), never from simulated runs; hardware, ensemble, and
 adversarial-audit results are labeled by artifact provenance.
 
 This report documents the research arc behind the framework — **~1,138
-experiments across 88 completed milestones**, run between February and May 2026.
+experiments through Exp 1138 across 88 completed milestones**, run between
+February and May 2026.
 The story now spans activation-based negative results, constraint-based
 verification, live SOTA-model benchmarks, production verifier ensembles,
 hardware sampler audits, and continuous self-learning. A plain-English
@@ -2260,7 +2261,7 @@ Milestone 2026.04.86 met 11 of 12 success criteria.
 
 ### Phase 12 — Energy Inversion Fix, GRPO, and Production k=5 Deployment (Milestone .87, Exps 1116–1126)
 
-Milestone 2026.04.87 met **11 of 11 success criteria** — the first perfect milestone score in the project's history — in only **219 wall-clock minutes** (project record).
+Milestone 2026.04.87 met **11 of 11 success criteria** — the first perfect milestone score in the project's history. The operational retro recorded **891 minutes / 231 experiment events**, the tenth consecutive milestone below the .58 baseline and a project best at the time.
 
 **arXiv submission bundle (Exp 1116):** `carnot-arxiv-v3.tar.gz` (121 KB) assembled ahead of the 2026-05-15 deadline. Manual upload step still required (pdflatex absent from conductor environment; tectonic install deferred). The full .tex bundle, figures, and arXiv metadata are ready.
 
@@ -2280,7 +2281,7 @@ Milestone 2026.04.87 met **11 of 11 success criteria** — the first perfect mil
 
 **WOPR Hashi cartridge + gallery update (Exps 1124/1125):** Hashi (bridges puzzle) implemented as a WOPR cartridge with integer-flow + planarity constraints. E=0 achieved at convergence iteration 1. Gallery deployed with 6 cartridges total (live HTTP 200 confirmed). Gallery now includes: Sudoku, Graph Theory Wiring, Lights Out, N-Queens, Hashi, and one additional cartridge.
 
-**Milestone .87 summary:** 11/11 criteria met. Wall time 219 min — the fastest complete milestone in project history, representing a 74% improvement from the 3,415-minute .58 baseline. Slowest experiment: GRPO training at 29 min (training_wall_budget_hit=True). The infrastructure bottlenecks fixed in exp1117 are now expected to save ~111 min/milestone going forward.
+**Milestone .87 summary:** 11/11 criteria met. Operational wall time was 891 min, a 73.9% improvement from the 3,415-minute .58 baseline and the project-best full-cycle wall time until .88 improved it again. Slowest experiment: GRPO training at 29 min (training_wall_budget_hit=True). The infrastructure bottlenecks fixed in exp1117 are now expected to save ~111 min/milestone going forward.
 
 ---
 
