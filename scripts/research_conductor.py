@@ -84,6 +84,14 @@ AGENT_MODEL = os.environ.get("AGENT_MODEL", DEFAULT_MODEL)
 # of Claude Opus 4.7 system card for the three-tier gating decision.
 AGENT_MODEL_PLANNER = os.environ.get("AGENT_MODEL_PLANNER")  # e.g. "opus"
 AGENT_MODEL_RETRO = os.environ.get("AGENT_MODEL_RETRO")  # e.g. "opus"
+# 2026-05-02 fix: per-role agent_type overrides. When AGENT_TYPE=codex
+# globally (Anthropic-quota conservation), the planner role specifically
+# stalls at 180s silence on 50-turn YAML generation (codex/gpt-5.5
+# observed twice in .88→.89 transition). These overrides let operators
+# pin the planner+retro to claude (small Anthropic burn ~$1-2 per
+# milestone) while experiments stay on codex (bulk savings preserved).
+AGENT_TYPE_PLANNER = os.environ.get("AGENT_TYPE_PLANNER")  # e.g. "claude"
+AGENT_TYPE_RETRO = os.environ.get("AGENT_TYPE_RETRO")  # e.g. "claude"
 CONDUCTOR_LOG = PROJECT_ROOT / "ops" / "conductor-log.md"
 DOGFOOD_MEMORY_FILE = PROJECT_ROOT / "ops" / "dogfood-memory.json"
 AGENT_DISPLAY_BY_TYPE = {
@@ -2239,7 +2247,12 @@ def _run_operational_retrospective(push: bool = True) -> bool:
     # Retrospective benefits from Opus-class honest self-evaluation (anti-
     # sycophancy + anti-scheming training makes it less likely to paper over
     # failures). Set AGENT_MODEL_RETRO=opus to enable; defaults to Sonnet.
-    success, output = run_agent(retro_prompt, max_turns=15, model_override=AGENT_MODEL_RETRO)
+    success, output = run_agent(
+        retro_prompt,
+        max_turns=15,
+        model_override=AGENT_MODEL_RETRO,
+        agent_type_override=AGENT_TYPE_RETRO,
+    )
 
     if success:
         logger.info("Operational retrospective complete")
@@ -2368,7 +2381,11 @@ IMPORTANT:
     # Planner benefits from Opus-class synthesis (big-context design of 12-13
     # coherent experiments). Set AGENT_MODEL_PLANNER=opus to enable; defaults to Sonnet.
     success, output = run_agent(
-        planning_prompt, max_turns=50, timeout=1200, model_override=AGENT_MODEL_PLANNER
+        planning_prompt,
+        max_turns=50,
+        timeout=1200,
+        model_override=AGENT_MODEL_PLANNER,
+        agent_type_override=AGENT_TYPE_PLANNER,
     )
 
     if not success:
@@ -2742,7 +2759,11 @@ def _plan_next_milestone(push: bool = True) -> bool:
     # Planner benefits from Opus-class synthesis (big-context design of 12-13
     # coherent experiments). Set AGENT_MODEL_PLANNER=opus to enable; defaults to Sonnet.
     success, output = run_agent(
-        planning_prompt, max_turns=50, timeout=1200, model_override=AGENT_MODEL_PLANNER
+        planning_prompt,
+        max_turns=50,
+        timeout=1200,
+        model_override=AGENT_MODEL_PLANNER,
+        agent_type_override=AGENT_TYPE_PLANNER,
     )
 
     if not success:
