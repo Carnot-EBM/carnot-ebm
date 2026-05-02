@@ -1,0 +1,35 @@
+{
+  "experiment": 1128,
+  "schema": "sos_kan_root_cause_k5_fix",
+  "run_date": "2026-05-02",
+  "started_at": "2026-05-02T02:41:30Z",
+  "finished_at": "2026-05-02T02:41:31Z",
+  "duration_s": 0.98,
+  "status": "success",
+  "title": "SOSKANEnergyV3 Root Cause Diagnosis and k=5 Ensemble Fix",
+  "sos_kan_root_cause": "not_converged",
+  "sos_kan_root_cause_detail": "Feature normalization mismatch: training used data-driven per-column min/max normalization (features in full [-1,1]); inference used fixed anchors (0,10),(0,1),(0,1) which compresses FoVer features to ~[-0.4,0.5]. Model operates in a different region of the feature space at inference, causing near-equal energies with inverted comparison direction => AUROC 0.333. Fix: fit_from_corpus() stores training stats and score() uses those stats for inference normalization.",
+  "sos_kan_energy_on_correct_before": 1.436,
+  "sos_kan_energy_on_incorrect_before": 1.6915,
+  "polarity_inverted_at_inference": false,
+  "fix_applied": "Added SOSKANEnergyV3Adapter.fit_from_corpus() that stores per-column (min,max) normalization stats from the training corpus. score() now calls _featurize() which applies those stored stats instead of the fixed-anchor _extract_text_features(). Also fixed fit() to call self._v.fit() not the non-existent self._v.train().",
+  "k5_ensemble_auroc_before": 0.5547,
+  "k5_ensemble_auroc_after": 0.9402,
+  "k5_ensemble_auroc_above_08": true,
+  "sos_kan_individual_auroc_after": 0.9902,
+  "benchmark_individual_aurocs_after": {
+    "SOSKANEnergyV3": 0.9904,
+    "SemEnergyProbe": 0.908,
+    "ASTStructureVerifier": 0.5625,
+    "SemanticConsistencyVerifier": 0.5294,
+    "Z3MathVerifier": 0.6871
+  },
+  "benchmark_individual_best_after": "SOSKANEnergyV3",
+  "benchmark_n_examples": 500,
+  "sos_kan_root_cause_identified": true,
+  "honest_verdict": "fixed_k5_above_08",
+  "spec": [
+    "REQ-VERIFY-1121",
+    "SCENARIO-PHASE1D-001"
+  ]
+}

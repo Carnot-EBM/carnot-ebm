@@ -161,10 +161,14 @@ class SOSKANEnergyV3Adapter:
     (all parameters at initialization values), the output is treated as
     a neutral 0.5 energy to avoid false positives.
 
-    For production use, call fit(X_train, y_train) before wiring into the
-    ensemble. In the default (untrained) state the adapter is conservative:
-    it never produces a violation, preserving the behaviour of not having
-    this verifier at all.
+    For production use, call fit_from_corpus(examples) with a list of FoVer
+    corpus dicts (keys: step_text, label). This method stores the training
+    normalization statistics so inference features are extracted with the
+    identical normalization, eliminating the train/inference distribution
+    mismatch that caused AUROC 0.333 in Exp 1121 (Exp 1128 root-cause fix).
+
+    Do NOT call fit(X, y) directly with pre-normalized X unless you also
+    call set_feature_stats(stats) with matching per-column (min, max) tuples.
     """
 
     def __init__(self) -> None:
@@ -172,28 +176,86 @@ class SOSKANEnergyV3Adapter:
 
         self._v = SOSKANEnergyV3(n_splines=8, rank=4, n_features=3, hidden_dim=16, seed=1121)
         self._trained = False
+        # Per-column (min, max) normalization anchors stored at training time.
+        # None = use fixed anchors from _extract_text_features (legacy path).
+        self._feature_stats: list[tuple[float, float]] | None = None
 
     @property
     def name(self) -> str:
         return "SOSKANEnergyV3"
 
+    def set_feature_stats(self, stats: list[tuple[float, float]]) -> None:
+        """Store per-column (min, max) normalization anchors from the training set.
+
+        Call this after extracting raw features from the training corpus so
+        that score() uses the identical min/max mapping as training. Without
+        this, the model operates on features in a compressed range and predicts
+        with inverted polarity (Exp 1121 AUROC 0.333 root cause).
+
+        stats: list of (min_val, max_val) per feature column, length == n_features.
+        """
+        self._feature_stats = list(stats)
+
+    def fit_from_corpus(
+        self,
+        examples: list[dict],
+        n_epochs: int = 100,
+        lr: float = 3e-3,
+    ) -> None:
+        """Train SOSKANEnergyV3 from FoVer corpus dicts with consistent normalization.
+
+        Extracts raw features from each example's step_text, computes per-column
+        min/max across the TRAINING set, normalizes to [-1, 1], stores the stats,
+        and calls self._v.fit(). At inference, score() uses the stored stats so
+        training and inference features are in the same space.
+
+        examples: list of dicts with keys 'step_text' and 'label' (correct/incorrect).
+        """
+        import numpy as np
+
+        texts = [ex.get("step_text", "") for ex in examples]
+        ys = np.array([1.0 if ex["label"] == "correct" else 0.0 for ex in examples])
+
+        arr = _extract_raw_features(texts)
+        stats = [(float(arr[:, i].min()), float(arr[:, i].max())) for i in range(arr.shape[1])]
+        self.set_feature_stats(stats)
+        X = _apply_feature_stats(arr, stats)
+
+        self._v.fit(X, ys, n_epochs=n_epochs, lr=lr)
+        self._trained = True
+
     def fit(self, X: object, y: object) -> None:
         """Train the underlying SOSKANEnergyV3 on labelled feature data.
 
-        X: (n, 3) float array in [-1, 1]^3.
+        X: (n, 3) float array in [-1, 1]^3, pre-normalized by the caller.
         y: (n,) float array with 1.0 = correct, 0.0 = incorrect.
+
+        Prefer fit_from_corpus() for end-to-end training that automatically
+        stores matching normalization stats for inference.
         """
-        self._v.train(X, y)  # type: ignore[arg-type]
+        self._v.fit(X, y)  # type: ignore[arg-type]
         self._trained = True
+
+    def _featurize(self, text: str) -> "object":
+        """Extract and normalize a single text using stored training stats.
+
+        Falls back to fixed-anchor normalization if no stats are stored
+        (untrained or legacy-mode adapter).
+        """
+        import numpy as np
+
+        if self._feature_stats is None:
+            return _extract_text_features(text)
+
+        arr = _extract_raw_features([text])  # (1, 3)
+        return _apply_feature_stats(arr, self._feature_stats)[0]  # (3,)
 
     def score(self, text: str) -> float:
         """Return normalized energy in [0, 1]; 0.5 if model is untrained."""
         if not self._trained:
             return 0.5
 
-        import numpy as np
-
-        feats = _extract_text_features(text)
+        feats = self._featurize(text)
         raw = self._v.energy(feats)
         # Raw energy is non-negative; normalize relative to trained model range.
         # Clip at 2.0 to avoid unbounded values producing 1.0 for every string.
@@ -203,6 +265,51 @@ class SOSKANEnergyV3Adapter:
 # ---------------------------------------------------------------------------
 # Text feature extraction for SOSKANEnergyV3
 # ---------------------------------------------------------------------------
+
+
+def _extract_raw_features(texts: "list[str]") -> "object":
+    """Extract unnormalized feature matrix from a list of texts.
+
+    Returns shape (n, 3) float64 array with columns:
+        0: log(1 + len(text))   — response length signal
+        1: numeric token density — math-content signal
+        2: vocabulary richness  — unique/total words
+
+    Used by fit_from_corpus() and _apply_feature_stats() to separate the
+    raw extraction step from the normalization step.  Keeping them separate
+    lets the adapter store per-column (min, max) anchors from the TRAINING
+    corpus and reuse them at inference — eliminating the train/inference
+    distribution mismatch that caused AUROC 0.333 in Exp 1121.
+    """
+    import numpy as np
+
+    feats = []
+    for text in texts:
+        words = text.split()
+        n_words = max(len(words), 1)
+        num_count = sum(1 for w in words if any(c.isdigit() for c in w))
+        unique_count = len(set(words))
+        feats.append([float(np.log(len(text) + 1)), num_count / n_words, unique_count / n_words])
+    return np.array(feats, dtype=np.float64)
+
+
+def _apply_feature_stats(arr: "object", stats: "list[tuple[float, float]]") -> "object":
+    """Normalize each column of arr to [-1, 1] using stored (min, max) stats.
+
+    stats: list of (min_val, max_val) per column, from _extract_raw_features
+        on the training set.  Applying the same stats to inference features
+        guarantees that the model operates on the same feature distribution
+        it was trained on.
+    """
+    import numpy as np
+
+    arr = np.array(arr, dtype=np.float64).copy()
+    for i, (lo, hi) in enumerate(stats):
+        if hi > lo:
+            arr[:, i] = np.clip(2.0 * (arr[:, i] - lo) / (hi - lo) - 1.0, -1.0, 1.0)
+        else:
+            arr[:, i] = 0.0
+    return arr
 
 
 def _extract_text_features(text: str) -> object:
