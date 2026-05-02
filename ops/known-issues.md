@@ -164,6 +164,41 @@ infrastructure compatibility.
 to the 4 EBT/ARC-AGI-3 tasks filed at 06:25Z, which now subsume the
 seed-iq-verification task — verification done):
 
+0. **`exp11XX-snap-validity-sweep`** [HIGHEST PRIORITY — NEW 2026-05-02 08:10Z, runs FIRST]
+   Goal: implement and run the pre-prototype diagnostic specified by
+   Deep Think Q8 (action representation). Sample 10,000 continuous
+   states uniformly from the existing Phase-3 DBAE-EBM bounded latent
+   `z ∈ [-1, 1]^d`. Map them to discrete actions using the nearest-
+   neighbor snap operator. Run each snapped action through the fast,
+   deterministic ARC-AGI-3 rule engine to verify structural legality.
+   Crucially: NO k=5 ensemble calls — this is a CHEAP gating
+   diagnostic that runs in ~30 minutes of compute, ~1-2 days of code.
+
+   Acceptance: ≥95% of snapped continuous states resolve to legally
+   executable ARC-AGI-3 moves given the current board state. If
+   <95%, Option A (continuous relaxation + nearest-neighbor snap)
+   fails before HMC sampler implementation begins; Phase-4 must
+   pivot to Option B (simplex HMC) or Option C (field dynamics)
+   despite Q8's recommendation against them.
+
+   This is the FIRST pre-flight task (runs before
+   exp11XX-hmc-compatibility-diagnostics) because it's strictly
+   cheaper and answers a separate question (action representation
+   validity vs. sampler regime). Two fail-fast diagnostics in
+   sequence, total 3-7 days, are strictly cheaper than committing
+   to a 2-week HMC implementation that may fail on either axis.
+
+   Phase: 3 inference-mode prerequisite. Reservation: highest-
+   priority research-class slot for .90 (sequential before HMC
+   diagnostics).
+
+   **Cross-references:**
+   `docs/research-notes/hmc-discrete-action-representation-deep-think-results.md`
+   has the full Q8 verdict including Option A/B/C taxonomy, why
+   Option A wins for Carnot specifically, and the unresolvable
+   "phantom valley" uncertainty that requires live HMC trajectory
+   instrumentation.
+
 1. **`exp11XX-hmc-compatibility-diagnostics`** [HIGHEST PRIORITY — REVISED 2026-05-02 08:00Z]
    Goal: implement and run the 4 diagnostics specified by Deep Think
    Q7 on Carnot's existing post-exp1128 k=5 ensemble + ~100 synthetic
