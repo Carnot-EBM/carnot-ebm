@@ -315,3 +315,4 @@ If you finish the real work |
 | 2026-05-02 05:08 UTC | Plan next milestone | FAIL | Codex CLI error: Stalled after 180s silence. Last output:  |
 | 2026-05-02 05:42 UTC | Plan milestone 2026.04.89 | OK | 13 tasks proposed |
 | 2026-05-02 05:44 UTC | Milestone 2026.04.89 activated | OK | 13 tasks queued |
+| 2026-05-02 05:46 UTC | arXiv Final Submission Close-Out v3 — PDF with GRP | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
