@@ -164,20 +164,58 @@ infrastructure compatibility.
 to the 4 EBT/ARC-AGI-3 tasks filed at 06:25Z, which now subsume the
 seed-iq-verification task — verification done):
 
-1. **`exp11XX-active-inference-minimal-prototype`** [HIGHEST PRIORITY]
-   Goal: implement minimal active-inference agent using Carnot's k=N
-   verifier ensemble as the free-energy approximation. Test on 5-10
-   ARC-AGI-3 puzzles. Tools: PyMC + JAX-NumPyro for HMC sampling on
-   small generative models; Carnot k=N verifier as likelihood.
-   Hypothesis: Carnot's verify-repair loop is mathematically
-   equivalent to active inference under the FEP, just framed
-   differently — this task tests that hypothesis directly.
-   Acceptance: solve rate measured + per-puzzle action efficiency
-   vs. Seed IQ's published numbers; Bayes factor for "Carnot k=N
-   verifier ≈ free-energy approximation" hypothesis.
-   Phase: 4 exploratory (parallel to Phase 3 prototype, NOT
-   replacement). Reservation: research-class slot, .91 first
-   feasible window after Phase-3 Stage 1 begins.
+1. **`exp11XX-hmc-sampler-on-carnot-ebm`** [HIGHEST PRIORITY — REVISED 2026-05-02 07:10Z]
+   Goal: swap the Langevin/Gibbs sampler in Carnot's existing
+   energy-minimization loop for Hamiltonian Monte Carlo (HMC),
+   using `∇E` from the k=5 AND-composed verifier ensemble (Phase-1
+   production) and the DBAE-EBM (Phase-3 prototype, when ready).
+   The energy landscape is unchanged; only the sampler dynamics change.
+   Background: the second deep-research document (2026-05-02
+   "Continuous vs Discrete" paradigms PDF) establishes that
+   `score(x) = ∇_x log p(x) = -∇_x E(x)` — Carnot's energy gradient
+   IS the score function for diffusion-style and HMC-style sampling.
+   Therefore Phase 4 is NOT a paradigm pivot but an inference-mode
+   extension of the existing Phase 1+3 infrastructure.
+   Tools: Numpyro / JAX HMC primitives, leveraging Carnot's
+   existing JAX backend (per pyproject + ROCm/CUDA setup).
+   No new generative model class required — `∇E` already exists
+   from k=5 ensemble + DBAE-EBM.
+   Hypothesis: HMC sampling on Carnot's `∇E` matches Seed IQ's
+   action-efficiency on ARC-AGI-3 because both use the same
+   gradient primitive on a calibrated energy landscape.
+   Acceptance: (a) HMC convergence ≥2× faster than Langevin/Gibbs
+   on FoVer eval at matched accuracy, (b) on 10-puzzle ARC-AGI-3
+   subset, action-count efficiency within 50% of Seed IQ's published
+   numbers (Seed IQ: 173 actions on VC33 vs human 307; 75 actions on
+   FT09 vs human 163). 50% threshold = "directionally correct";
+   <50% = "Carnot's k=N landscape is materially less calibrated than
+   Seed IQ's; investigate calibration".
+   Phase: 3 inference-mode extension (NOT a separate Phase 4 build).
+   Reservation: research-class slot, .91 or earlier — significantly
+   lower-risk than the prior "active-inference minimal prototype"
+   formulation, which built a separate PyMC agent on a separate
+   generative model. This task uses Carnot's existing infrastructure.
+
+   **What this REPLACES**: the prior `exp11XX-active-inference-
+   minimal-prototype` (filed earlier 2026-05-02 06:40Z) is now
+   superseded. The "Continuous vs Discrete" deep-research document
+   showed the paradigms share the same gradient primitive; building
+   a separate active-inference agent was a category error. Refile.
+
+2. **`exp11XX-diffusion-of-thought-inference-mode`** [HIGH PRIORITY]
+   Goal: add Diffusion of Thought (DoT) iterative latent refinement
+   as a second inference mode for Carnot's existing energy landscape.
+   Variable timestep count (T ∈ {1, 5, 25, 125}) for compute/accuracy
+   trade-off. The same `∇E` from k=5 ensemble drives the reverse
+   denoising process; DoT is mathematically Markovian (each refinement
+   step depends only on its immediate predecessor), so this is a clean
+   inference-mode addition without architectural change.
+   Acceptance: monotonic accuracy improvement with timestep count
+   on FoVer + GSM8K + ARC subset; Pareto frontier (compute vs accuracy)
+   published. Compare to autoregressive CoT on the same prompts at
+   matched compute budget.
+   Phase: 3 inference-mode extension. Reservation: research-class
+   slot, pairs with the HMC task above.
 
 2. **`exp11XX-themesis-collaboration-outreach`**
    Goal: draft outreach email to Themesis (Denise Holt / Denis O.)
