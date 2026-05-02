@@ -285,3 +285,8 @@ If you finish the real work |
 | 2026-05-02 01:29 UTC | SOSKANEnergyV3 Root Cause Diagnosis + k=5 AND-Comp | DOOMED_RERUN_BLOCK | 3 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-02 01:32 UTC | SOSKANEnergyV3 Root Cause Diagnosis + k=5 AND-Comp | DOOMED_RERUN_BLOCK | 3 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-02 01:34 UTC | SOSKANEnergyV3 Root Cause Diagnosis + k=5 AND-Comp | DOOMED_RERUN_BLOCK | 3 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-02 01:56 UTC | GRPO Energy PRM Full Training v2 — DualGPU MANDATO | OK | 81 passed, 1 warning in 4.32s |
+| 2026-05-02 01:58 UTC | Zenil alpha_t Measurement with Post-Retrain Verifi | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-02 02:00 UTC | Zenil alpha_t Measurement with Post-Retrain Verifi | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-02 02:02 UTC | Zenil alpha_t Measurement with Post-Retrain Verifi | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-02 02:04 UTC | Lagrangian Cascade v2 — Accuracy-Preserving Router | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1128-sos-kan-root-cause-k5-fix) |
