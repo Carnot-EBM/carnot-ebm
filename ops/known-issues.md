@@ -142,6 +142,103 @@ graphics, or when a contributor offers to do the integration.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### NEW 2026-05-02: Phase-3 Thinking-Mode Composition (4 candidate tasks)
+
+**Background:** the EBM/EBT thinking story for Phase 3 needs three
+orthogonal inference-time scaling axes integrated, each grounded in
+2025 literature: Apple SSD (no-verifier self-distillation, +12.9pp
+LiveCodeBench), Google's Diffusion of Thought (parallel iterative
+refinement at test time, EBM-native via Langevin dynamics), and
+MCTS-style reasoning (tree search with verifier as value function,
+o1/o3-class). Each is independently shippable; all three together
+form the "Thinking with EBMs" narrative section for the v4 paper.
+
+**Why these are mandatory for .90+** (after the .88-.89 prototype
+infrastructure lands):
+
+The current Phase-3 prototype design (DBAE-EBM 4-stage + SP-IWPER +
+22-quantity diagnostic library + Decoupled Dual-Stream hybrid) covers
+the *training* story. It does NOT yet cover the *inference-time
+thinking* story. As foundation models like Mythos push 10T params with
+explicit inference-time RL (o3-class), Carnot must position EBM/EBT
+inference-time scaling as a structurally different paradigm — not just
+"transformer + verify-repair" but "energy landscape + iterative
+refinement + tree search". Without this, the v4 paper risks being read
+as "yet another verify-repair pipeline" rather than "the alternative
+to autoregressive thinking."
+
+**The 4 candidate tasks the .90 planner MUST consider:**
+
+1. **`exp11XX-ssd-bootstrap-stage0`**
+   Goal: run Apple-style self-distillation on the base model BEFORE
+   DBAE Stage-1 pretraining begins. SSD initializes representations
+   without relying on verifier signal; energy-verification then runs
+   on top of an already-bootstrapped base. Hybrid (FR-11 + Energy-
+   Selection SSD per memory:project_ssd_self_distillation.md).
+   Acceptance: SSD-bootstrapped base shows ≥5pp improvement on
+   FoVer eval before DBAE pretraining; combined SSD+DBAE+EBM achieves
+   AUROC > best-of-three-individual-paths on held-out SOTA corpus.
+   Phase: 3 (pre-Stage-1). Reservation: research-class slot.
+   **Adversarial baseline:** if SSD alone matches Carnot's verify-
+   repair on LiveCodeBench (Apple's published 12.9pp), the verifier
+   complexity must justify itself empirically — this task forces
+   that comparison early.
+
+2. **`exp11XX-langevin-inference-sweep`**
+   Goal: at Phase-3 inference time, run K Langevin steps on the
+   latent z to lower energy before decoding. Sweep K ∈ {1, 5, 25,
+   125} and measure accuracy-vs-compute curve. EBMs do diffusion
+   natively (∇_z E is the score function); this task makes that
+   inference-time mode explicit.
+   Acceptance: monotonic accuracy improvement across K with Pareto-
+   optimal K identified; K=125 mode shows ≥3pp gain over K=1 on
+   FoVer + GSM8K + ARC subset.
+   Phase: 3 (post-Stage-2). Reservation: research-class slot.
+   **Strategic anchor for v4 paper:** "EBM thinking scales differently
+   from CoT — more compute = lower energy, not more tokens."
+
+3. **`exp11XX-mcts-verify-repair-wrapper`**
+   Goal: add MCTS-style tree-search wrapper around the existing
+   verify-repair pipeline. At each generation step, expand top-K
+   candidates, score by AND-composed k=5 energy, continue from
+   highest-scoring branch. The verifier ensemble IS the value
+   function (calibrated at AUROC=0.94 post-exp1128).
+   Acceptance: MCTS-wrapped pipeline beats single-shot generation
+   by ≥5pp on at least one of {GSM8K, HumanEval, ARC subset}.
+   Phase: 1 production (deployable today). Reservation: research-
+   class slot.
+   **Computational caveat:** tree depth × branching factor × energy
+   eval cost. Should sweep depth ∈ {1, 3, 9} and beam_width ∈ {2, 8}
+   to find practical operating point.
+
+4. **`exp11XX-thinking-scaling-comparison`**
+   Goal: combine all three (SSD-bootstrap + Langevin refinement +
+   MCTS) and measure the compute-vs-accuracy Pareto frontier
+   against autoregressive CoT scaling on the same base model.
+   This is the headline empirical anchor for the v4 paper's
+   "Thinking with EBMs" section.
+   Acceptance: composed pipeline establishes ≥10pp accuracy gap
+   over autoregressive CoT at matched inference compute on at least
+   one held-out benchmark; Pareto frontier curves published.
+   Phase: 3 (post-prototype validation). Reservation: research-
+   class slot, depends on tasks 1-3 + Phase-3 prototype.
+
+**Cross-references for planner context:**
+- memory/project_ssd_self_distillation.md (Apple SSD adversarial baseline)
+- memory/project_dbae_ebm_phase3.md (Phase-3 substrate)
+- memory/project_zenil_alpha_grounding.md (α_t as inference-time signal)
+- docs/research-notes/phase3-substrate-contamination-deep-think-results.md
+  (held-out suite + 6 contamination diagnostics — apply to thinking modes too)
+
+**Why this is in MANDATORY-NEXT-MILESTONE PRIORITIES, not just a memory:**
+the EBT thinking story is publication-track material. Without these tasks
+landing, the v4 paper can document Phase-1 production wiring + Phase-3
+training architecture but cannot make the "thinking scales differently"
+empirical claim that distinguishes Carnot from o1/o3-class autoregressive
+reasoning. Worth ≥4 reserved-slot tasks across .90-.92.
+
+---
+
 ### NEW 2026-05-01: Failure-Ledger v2 + Planner Discipline (5 STRUCTURAL FIXES + 3 PLANNER-PROMPT DELTAS)
 
 **Background:** milestone .85 lost 4 of 14 tasks (exp1092, exp1096,
