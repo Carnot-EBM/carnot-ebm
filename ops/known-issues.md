@@ -140,6 +140,35 @@ to adopt is value-judgment, not a blocker.
 better figures, or when GitHub Pages launches and needs hero
 graphics, or when a contributor offers to do the integration.
 
+## PUBLICATION HOLD (.91+ planner — operator directive 2026-05-02 11:35Z)
+
+**arXiv submission is ON HOLD until Phase 4 firm pivot answer.**
+
+The 2026-05-15 deadline is NOT a hard constraint. Quality of
+architectural framing matters more than hitting the date.
+
+**Operator-required for arXiv submission resumption:**
+
+Phase 4 must show at least:
+- exp1155 HMC compatibility regime determined (running NOW in .90)
+- exp1156 conditional sampler operational on Carnot's k=5 + DBAE
+- At least one ARC-AGI-3 or comparable result demonstrating Phase 4's
+  EBM-thinking advantage over autoregressive baselines
+- Paper revisions integrating Phase 4 prelim results (replacing
+  the placeholder Section 7 acknowledgment of Themesis)
+
+**Planner directive:**
+
+Do NOT propose `arxiv-submit`, `arxiv-final-submission`, or any other
+publication-trigger task in .91+ milestones until this hold is
+lifted explicitly by the operator. Paper-revision tasks (e.g.,
+"integrate exp11XX results into Section 7") are fine; auto-submit
+tasks are not.
+
+**Memory: `feedback_publication_holds_until_phase4_pivot.md`**
+
+---
+
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
 ### NEW 2026-05-02 (06:40Z): Seed IQ Verified — Active-Inference Phase 4 Track (3 candidate tasks)
