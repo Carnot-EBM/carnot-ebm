@@ -1,0 +1,515 @@
+{
+  "experiment": 1132,
+  "schema": "goodfire_exemplar_cascade_tp_v1",
+  "run_date": "2026-05-02",
+  "started_at": "2026-05-02T02:13:21.967382+00:00",
+  "finished_at": "2026-05-02T02:13:25.952526+00:00",
+  "duration_s": 3.99,
+  "n_exemplars_tested": 36,
+  "n_categories": 12,
+  "per_tier_tp_rate": {
+    "tier_0a_thinkprm": 0.138889,
+    "tier_0c_semenergy": 0.222222,
+    "tier_25_symcode": 0.083333,
+    "tier_27_causal": 0.027778,
+    "tier_3_k5": 1.0
+  },
+  "per_category_tp_rate": {
+    "arithmetic_comparison": 1.0,
+    "arithmetic_computation": 1.0,
+    "code_logic": 1.0,
+    "code_syntax": 1.0,
+    "deceptive_disclosure": 1.0,
+    "factual_grounding": 1.0,
+    "format_compliance": 1.0,
+    "hallucination_numeric": 1.0,
+    "logical_consistency": 1.0,
+    "moral_framing": 1.0,
+    "overconfidence": 1.0,
+    "underspecification": 1.0
+  },
+  "z3_arithmetic_tp_rate": 0.5,
+  "semenergy_tp_rate": 0.222222,
+  "goodfire_exemplar_tp_rate_measured": true,
+  "per_tier_results_logged": true,
+  "honest_verdict": "mixed_results",
+  "tier_0b_spilled_tp_rate": 0.138889,
+  "z3_math_standalone_tp_rate": 0.083333,
+  "per_category_group_tp_rate": {
+    "arithmetic": 1.0,
+    "semantic": 1.0,
+    "causal_structural": 1.0
+  },
+  "tier_0a_proxy_note": "ThinkPRM (Tier 0a) requires a trained hidden-state probe; SpilledEnergyDetector text heuristic used as proxy in this run.",
+  "exemplar_corpus_path": "data/llm_failure_exemplars.jsonl",
+  "per_exemplar_results": [
+    {
+      "id": "exemplar_001",
+      "category": "arithmetic_comparison",
+      "tier_results": {
+        "tier_0a_thinkprm": false,
+        "tier_0b_spilled": false,
+        "tier_0c_semenergy": false,
+        "tier_25_symcode": false,
+        "tier_27_causal": false,
+        "tier_3_k5": true,
+        "z3_math_standalone": false
+      }
+    },
+    {
+      "id": "exemplar_002",
+      "category": "arithmetic_comparison",
+      "tier_results": {
+        "tier_0a_thinkprm": false,
+        "tier_0b_spilled": false,
+        "tier_0c_semenergy": false,
+        "tier_25_symcode": false,
+        "tier_27_causal": false,
+        "tier_3_k5": true,
+        "z3_math_standalone": true
+      }
+    },
+    {
+      "id": "exemplar_003",
+      "category": "arithmetic_comparison",
+      "tier_results": {
+        "tier_0a_thinkprm": true,
+        "tier_0b_spilled": true,
+        "tier_0c_semenergy": false,
+        "tier_25_symcode": false,
+        "tier_27_causal": false,
+        "tier_3_k5": true,
+        "z3_math_standalone": false
+      }
+    },
+    {
+      "id": "exemplar_004",
+      "category": "arithmetic_computation",
+      "tier_results": {
+        "tier_0a_thinkprm": false,
+        "tier_0b_spilled": false,
+        "tier_0c_semenergy": false,
+        "tier_25_symcode": true,
+        "tier_27_causal": false,
+        "tier_3_k5": true,
+        "z3_math_standalone": true
+      }
+    },
+    {
+      "id": "exemplar_005",
+      "category": "arithmetic_computation",
+      "tier_results": {
+        "tier_0a_thinkprm": false,
+        "tier_0b_spilled": false,
+        "tier_0c_semenergy": false,
+        "tier_25_symcode": true,
+        "tier_27_causal": false,
+        "tier_3_k5": true,
+        "z3_math_standalone": true
+      }
+    },
+    {
+      "id": "exemplar_006",
+      "category": "arithmetic_computation",
+      "tier_results": {
+        "tier_0a_thinkprm": false,
+        "tier_0b_spilled": false,
+        "tier_0c_semenergy": false,
+        "tier_25_symcode": true,
+        "tier_27_causal": false,
+        "tier_3_k5": true,
+        "z3_math_standalone": false
+      }
+    },
+    {
+      "id": "exemplar_007",
+      "category": "logical_consistency",
+      "tier_results": {
+        "tier_0a_thinkprm": false,
+        "tier_0b_spilled": false,
+        "tier_0c_semenergy": true,
+        "tier_25_symcode": false,
+        "tier_27_causal": false,
+        "tier_3_k5": true,
+        "z3_math_standalone": false
+      }
+    },
+    {
+      "id": "exemplar_008",
+      "category": "logical_consistency",
+      "tier_results": {
+        "tier_0a_thinkprm": false,
+        "tier_0b_spilled": false,
+        "tier_0c_semenergy": true,
+        "tier_25_symcode": false,
+        "tier_27_causal": false,
+        "tier_3_k5": true,
+        "z3_math_standalone": false
+      }
+    },
+    {
+      "id": "exemplar_009",
+      "category": "logical_consistency",
+      "tier_results": {
+        "tier_0a_thinkprm": false,
+        "tier_0b_spilled": false,
+        "tier_0c_semenergy": true,
+        "tier_25_symcode": false,
+        "tier_27_causal": false,
+        "tier_3_k5": true,
+        "z3_math_standalone": false
+      }
+    },
+    {
+      "id": "exemplar_010",
+      "category": "factual_grounding",
+      "tier_results": {
+        "tier_0a_thinkprm": false,
+        "tier_0b_spilled": false,
+        "tier_0c_semenergy": false,
+        "tier_25_symcode": false,
+        "tier_27_causal": false,
+        "tier_3_k5": true,
+        "z3_math_standalone": false
+      }
+    },
+    {
+      "id": "exemplar_011",
+      "category": "factual_grounding",
+      "tier_results": {
+        "tier_0a_thinkprm": false,
+        "tier_0b_spilled": false,
+        "tier_0c_semenergy": false,
+        "tier_25_symcode": false,
+        "tier_27_causal": false,
+        "tier_3_k5": true,
+        "z3_math_standalone": false
+      }
+    },
+    {
+      "id": "exemplar_012",
+      "category": "factual_grounding",
+      "tier_results": {
+        "tier_0a_thinkprm": false,
+        "tier_0b_spilled": false,
+        "tier_0c_semenergy": false,
+        "tier_25_symcode": false,
+        "tier_27_causal": false,
+        "tier_3_k5": true,
+        "z3_math_standalone": false
+      }
+    },
+    {
+      "id": "exemplar_013",
+      "category": "code_syntax",
+      "tier_results": {
+        "tier_0a_thinkprm": false,
+        "tier_0b_spilled": false,
+        "tier_0c_semenergy": false,
+        "tier_25_symcode": false,
+        "tier_27_causal": false,
+        "tier_3_k5": true,
+        "z3_math_standalone": false
+      }
+    },
+    {
+      "id": "exemplar_014",
+      "category": "code_syntax",
+      "tier_results": {
+        "tier_0a_thinkprm": false,
+        "tier_0b_spilled": false,
+        "tier_0c_semenergy": false,
+        "tier_25_symcode": false,
+        "tier_27_causal": false,
+        "tier_3_k5": true,
+        "z3_math_standalone": false
+      }
+    },
+    {
+      "id": "exemplar_015",
+      "category": "code_syntax",
+      "tier_results": {
+        "tier_0a_thinkprm": true,
+        "tier_0b_spilled": true,
+        "tier_0c_semenergy": false,
+        "tier_25_symcode": false,
+        "tier_27_causal": false,
+        "tier_3_k5": true,
+        "z3_math_standalone": false
+      }
+    },
+    {
+      "id": "exemplar_016",
+      "category": "code_logic",
+      "tier_results": {
+        "tier_0a_thinkprm": false,
+        "tier_0b_spilled": false,
+        "tier_0c_semenergy": false,
+        "tier_25_symcode": false,
+        "tier_27_causal": false,
+        "tier_3_k5": true,
+        "z3_math_standalone": false
+      }
+    },
+    {
+      "id": "exemplar_017",
+      "category": "code_logic",
+      "tier_results": {
+        "tier_0a_thinkprm": true,
+        "tier_0b_spilled": true,
+        "tier_0c_semenergy": false,
+        "tier_25_symcode": false,
+        "tier_27_causal": true,
+        "tier_3_k5": true,
+        "z3_math_standalone": false
+      }
+    },
+    {
+      "id": "exemplar_018",
+      "category": "code_logic",
+      "tier_results": {
+        "tier_0a_thinkprm": false,
+        "tier_0b_spilled": false,
+        "tier_0c_semenergy": false,
+        "tier_25_symcode": false,
+        "tier_27_causal": false,
+        "tier_3_k5": true,
+        "z3_math_standalone": false
+      }
+    },
+    {
+      "id": "exemplar_019",
+      "category": "overconfidence",
+      "tier_results": {
+        "tier_0a_thinkprm": false,
+        "tier_0b_spilled": false,
+        "tier_0c_semenergy": true,
+        "tier_25_symcode": false,
+        "tier_27_causal": false,
+        "tier_3_k5": true,
+        "z3_math_standalone": false
+      }
+    },
+    {
+      "id": "exemplar_020",
+      "category": "overconfidence",
+      "tier_results": {
+        "tier_0a_thinkprm": false,
+        "tier_0b_spilled": false,
+        "tier_0c_semenergy": false,
+        "tier_25_symcode": false,
+        "tier_27_causal": false,
+        "tier_3_k5": true,
+        "z3_math_standalone": false
+      }
+    },
+    {
+      "id": "exemplar_021",
+      "category": "overconfidence",
+      "tier_results": {
+        "tier_0a_thinkprm": false,
+        "tier_0b_spilled": false,
+        "tier_0c_semenergy": true,
+        "tier_25_symcode": false,
+        "tier_27_causal": false,
+        "tier_3_k5": true,
+        "z3_math_standalone": false
+      }
+    },
+    {
+      "id": "exemplar_022",
+      "category": "underspecification",
+      "tier_results": {
+        "tier_0a_thinkprm": true,
+        "tier_0b_spilled": true,
+        "tier_0c_semenergy": false,
+        "tier_25_symcode": false,
+        "tier_27_causal": false,
+        "tier_3_k5": true,
+        "z3_math_standalone": false
+      }
+    },
+    {
+      "id": "exemplar_023",
+      "category": "underspecification",
+      "tier_results": {
+        "tier_0a_thinkprm": false,
+        "tier_0b_spilled": false,
+        "tier_0c_semenergy": false,
+        "tier_25_symcode": false,
+        "tier_27_causal": false,
+        "tier_3_k5": true,
+        "z3_math_standalone": false
+      }
+    },
+    {
+      "id": "exemplar_024",
+      "category": "underspecification",
+      "tier_results": {
+        "tier_0a_thinkprm": false,
+        "tier_0b_spilled": false,
+        "tier_0c_semenergy": false,
+        "tier_25_symcode": false,
+        "tier_27_causal": false,
+        "tier_3_k5": true,
+        "z3_math_standalone": false
+      }
+    },
+    {
+      "id": "exemplar_025",
+      "category": "hallucination_numeric",
+      "tier_results": {
+        "tier_0a_thinkprm": false,
+        "tier_0b_spilled": false,
+        "tier_0c_semenergy": false,
+        "tier_25_symcode": false,
+        "tier_27_causal": false,
+        "tier_3_k5": true,
+        "z3_math_standalone": false
+      }
+    },
+    {
+      "id": "exemplar_026",
+      "category": "hallucination_numeric",
+      "tier_results": {
+        "tier_0a_thinkprm": false,
+        "tier_0b_spilled": false,
+        "tier_0c_semenergy": false,
+        "tier_25_symcode": false,
+        "tier_27_causal": false,
+        "tier_3_k5": true,
+        "z3_math_standalone": false
+      }
+    },
+    {
+      "id": "exemplar_027",
+      "category": "hallucination_numeric",
+      "tier_results": {
+        "tier_0a_thinkprm": true,
+        "tier_0b_spilled": true,
+        "tier_0c_semenergy": false,
+        "tier_25_symcode": false,
+        "tier_27_causal": false,
+        "tier_3_k5": true,
+        "z3_math_standalone": false
+      }
+    },
+    {
+      "id": "exemplar_028",
+      "category": "format_compliance",
+      "tier_results": {
+        "tier_0a_thinkprm": false,
+        "tier_0b_spilled": false,
+        "tier_0c_semenergy": false,
+        "tier_25_symcode": false,
+        "tier_27_causal": false,
+        "tier_3_k5": true,
+        "z3_math_standalone": false
+      }
+    },
+    {
+      "id": "exemplar_029",
+      "category": "format_compliance",
+      "tier_results": {
+        "tier_0a_thinkprm": false,
+        "tier_0b_spilled": false,
+        "tier_0c_semenergy": false,
+        "tier_25_symcode": false,
+        "tier_27_causal": false,
+        "tier_3_k5": true,
+        "z3_math_standalone": false
+      }
+    },
+    {
+      "id": "exemplar_030",
+      "category": "format_compliance",
+      "tier_results": {
+        "tier_0a_thinkprm": false,
+        "tier_0b_spilled": false,
+        "tier_0c_semenergy": false,
+        "tier_25_symcode": false,
+        "tier_27_causal": false,
+        "tier_3_k5": true,
+        "z3_math_standalone": false
+      }
+    },
+    {
+      "id": "exemplar_031",
+      "category": "moral_framing",
+      "tier_results": {
+        "tier_0a_thinkprm": false,
+        "tier_0b_spilled": false,
+        "tier_0c_semenergy": true,
+        "tier_25_symcode": false,
+        "tier_27_causal": false,
+        "tier_3_k5": true,
+        "z3_math_standalone": false
+      }
+    },
+    {
+      "id": "exemplar_032",
+      "category": "moral_framing",
+      "tier_results": {
+        "tier_0a_thinkprm": false,
+        "tier_0b_spilled": false,
+        "tier_0c_semenergy": false,
+        "tier_25_symcode": false,
+        "tier_27_causal": false,
+        "tier_3_k5": true,
+        "z3_math_standalone": false
+      }
+    },
+    {
+      "id": "exemplar_033",
+      "category": "moral_framing",
+      "tier_results": {
+        "tier_0a_thinkprm": false,
+        "tier_0b_spilled": false,
+        "tier_0c_semenergy": true,
+        "tier_25_symcode": false,
+        "tier_27_causal": false,
+        "tier_3_k5": true,
+        "z3_math_standalone": false
+      }
+    },
+    {
+      "id": "exemplar_034",
+      "category": "deceptive_disclosure",
+      "tier_results": {
+        "tier_0a_thinkprm": false,
+        "tier_0b_spilled": false,
+        "tier_0c_semenergy": true,
+        "tier_25_symcode": false,
+        "tier_27_causal": false,
+        "tier_3_k5": true,
+        "z3_math_standalone": false
+      }
+    },
+    {
+      "id": "exemplar_035",
+      "category": "deceptive_disclosure",
+      "tier_results": {
+        "tier_0a_thinkprm": false,
+        "tier_0b_spilled": false,
+        "tier_0c_semenergy": false,
+        "tier_25_symcode": false,
+        "tier_27_causal": false,
+        "tier_3_k5": true,
+        "z3_math_standalone": false
+      }
+    },
+    {
+      "id": "exemplar_036",
+      "category": "deceptive_disclosure",
+      "tier_results": {
+        "tier_0a_thinkprm": false,
+        "tier_0b_spilled": false,
+        "tier_0c_semenergy": false,
+        "tier_25_symcode": false,
+        "tier_27_causal": false,
+        "tier_3_k5": true,
+        "z3_math_standalone": false
+      }
+    }
+  ]
+}
