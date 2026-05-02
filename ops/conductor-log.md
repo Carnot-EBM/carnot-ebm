@@ -294,3 +294,5 @@ If you finish the real work |
 | 2026-05-02 02:15 UTC | Goodfire LLM Failure Exemplar Cascade TP Rate — Pe | OK | 113 passed, 1 warning in 3.92s |
 | 2026-05-02 02:17 UTC | Lagrangian Cascade v2 — Accuracy-Preserving Router | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1128-sos-kan-root-cause-k5-fix) |
 | 2026-05-02 02:17 UTC | PRM-BiasBench Adversarial Test on k=5 AND-Compose | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1128-sos-kan-root-cause-k5-fix) |
+| 2026-05-02 02:20 UTC | Lagrangian Cascade v2 — Accuracy-Preserving Router | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1128-sos-kan-root-cause-k5-fix) |
+| 2026-05-02 02:20 UTC | PRM-BiasBench Adversarial Test on k=5 AND-Compose | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1128-sos-kan-root-cause-k5-fix) |
