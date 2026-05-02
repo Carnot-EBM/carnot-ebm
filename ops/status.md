@@ -1,5 +1,66 @@
 # Carnot — Operational Status
 
+## Session 2026-05-02 — Milestone 2026.04.89 Planning Complete
+
+**Milestone 2026.04.88 COMPLETE (10/11 criteria met). Milestone 2026.04.89 PLANNED.**
+
+### .88 Recap (final)
+- **MET (10/11):** arxiv_pdf_compiled_tectonic (exp1127 — PDF compiled 328KB, manual upload pending, paper UPDATED in exp1135 AFTER compilation so recompile needed in .89), sos_kan_polarity_fixed_k5_auroc_above_threshold (exp1128 — AUROC=0.9402 fixed, root cause normalization mismatch, SOSKANEnergyV3 individual AUROC=0.9902), grpo_training_budget_not_hit_honest_result (exp1129 — improvement_over_baseline=+8.51pp, DualGPU confirmed), zenil_alpha_t_post_retrain_measured (exp1130 — alpha_t=0.52, improved from 0.38), cascade_v2_accuracy_degradation_below_10pp (exp1131 — savings=3.2%, accuracy_delta=0.0pp), goodfire_exemplar_cascade_tp_measured (exp1132 — k=5 TP=100%, Tier 0=77%, Tier 1=92%), kv260_v4_kl_measured_post_adaptive_tuning (exp1134 — kl_v4_best=0.1128, self-adaptive catastrophic KL=31.89), position_paper_v3_updated (exp1135), retro_complete (exp1138)
+- **NOT MET (1):** slitherlink_cartridge_shipped (exp1136 BLOCKED — conductor gate found 5 prior_failure matches without prior_failures field in YAML; exp1137 gallery update cascaded blocked)
+- **Critical open items for .89:** arXiv manual upload still pending (PDF ready but paper updated after compilation — recompile needed in exp1139); WOPR Slitherlink blocked (4 prior failures, WOPR scope match); KV260 v4 topology wall (synchronous Glauber violates detailed balance; DC-continuous relaxation needed)
+
+### .89 Design (Exps 1139–1151, estimated ~340 min)
+
+**Phase 0 — arXiv CRITICAL (unconditional, MANDATORY first):**
+- exp1139: arXiv final submission v3 (opus, max_turns:25) — recompile PDF from updated main.tex (exp1135 integration), provide exact manual upload steps for arxiv.org; DEADLINE 2026-05-15
+
+**Phase 1 — Governance + Slitherlink Rescue:**
+- exp1140: Roadmap gate prior-failures audit (codex/gpt-5.5, max_turns:20) — scan research-roadmap-next.yaml for any gated experiments missing prior_failures; backfill to prevent future blocking
+- exp1141: WOPR Slitherlink rescue (codex/gpt-5.5, max_turns:35, prior_failures: exp1136/1060/1061/1097 all declared) — Hamiltonian loop + planarity constraints; E=0 at convergence
+
+**Phase 2 — Verification Certificates:**
+- exp1142: BEAVER-lite certificate tier (codex/gpt-5.5, max_turns:40) — prefix-closed constraint bounding P(bad_output); distribution-level guarantee (arXiv 2512.05439)
+- exp1143: HalluGuard cascade router v3 (sonnet, max_turns:35, prior_failures: exp1123/1131) — data-driven vs reasoning-driven hallucination routing features; improve cheap-tier TP from 13% toward 50%
+
+**Phase 3 — Benchmark + Distillation:**
+- exp1144: CCTU micro-benchmark adapter (codex/gpt-5.5, GPU, max_turns:45, grace_period_s:1800) — wire 200-task CCTU constrained tool-use corpus (arXiv 2603.15309) into cascade evaluation harness
+- exp1145: Goodfire cheap-tier distillation (sonnet, max_turns:35, gated on exp1143.halluguard_routing_feature_measured) — use HalluGuard routing signal to distill expensive k=5 knowledge into Tier 0/1
+
+**Phase 4 — Self-Learning + Hardware:**
+- exp1146: GRPO reflection reward v3 (opus, DualGPU MANDATORY, max_turns:60, grace_period_s:2400, prior_failures: exp1129/1118/1110) — r_reflect = E_before - E_after from 1-step repair; w_reflect=0.3; closes FR-11 self-learning loop
+- exp1147: HardNet++ projection repair (codex/gpt-5.5, max_turns:35, prior_failures: exp905) — constraint projection via HardNet++ gradient normalization (arXiv 2602.17109)
+- exp1148: MetaCluster SOS-KAN compression (codex/gpt-5.5, max_turns:30, prior_failures: exp1128/1072/1047) — K-means centroid codebook compression for SOS-KAN (arXiv 2510.19105); target: model size <50% with AUC within 2%
+- exp1149: KV260 v5 DC-continuous diagnostic (opus, max_turns:40, prior_failures: exp1134/1122) — DC decomposition relaxation (arXiv 2509.01928); relaxes binary spins to [-1,+1] continuous; avoids synchronous Glauber detailed-balance violation
+- exp1150: Extropic Z1/THRML integration packet (sonnet, max_turns:35) — JAX THRML simulation + Z1 early-access API scaffold; target: map SOS-KAN energy function to XTR-0 hardware interface
+
+**Phase 5 — Retro:**
+- exp1151: Milestone 2026.04.89 retrospective (codex/gpt-5.5, max_turns:20)
+
+### 13 Success Criteria
+1. arxiv_final_pdf_recompiled_and_upload_steps_provided (exp1139) — CRITICAL 2026-05-15
+2. gate_prior_failures_audit_complete (exp1140) — prevent future blocking
+3. slitherlink_cartridge_shipped (exp1141) — carried from .88
+4. beaver_lite_certificate_deployed (exp1142)
+5. halluguard_routing_feature_measured (exp1143)
+6. cctu_micro_benchmark_adapter_complete (exp1144)
+7. goodfire_cheap_tier_distillation_honest_result (exp1145)
+8. grpo_reflection_reward_v3_honest_result (exp1146) — DualGPU MANDATORY
+9. hardnet_projection_repair_honest_result (exp1147)
+10. metacluster_sos_kan_compression_honest_result (exp1148)
+11. kv260_v5_dc_continuous_kl_measured (exp1149)
+12. extropic_integration_packet_shipped (exp1150)
+13. retro_complete (exp1151)
+
+### Key Architectural Decisions for .89
+- DualGPU MANDATORY for exp1146 (GRPO reflection reward — 3rd consecutive attempt, must not idle)
+- No gemini agent_type (429-rate-limited)
+- codex/gpt-5.5 for formulaic constraint work (exp1140/1141/1142/1147/1148/1151)
+- exp1139 opus for arXiv (long-context PDF + paper synthesis, CRITICAL)
+- exp1145 gated on exp1143.halluguard_routing_feature_measured — distillation requires routing signal first
+- All repeated experiments have prior_failures blocks with addressed_by explanations
+
+---
+
 ## Session 2026-05-02 — Milestone 2026.04.88 Planning Complete
 
 **Milestone 2026.04.87 COMPLETE (11/11 criteria met — FIRST PERFECT SCORE). Milestone 2026.04.88 PLANNED.**
