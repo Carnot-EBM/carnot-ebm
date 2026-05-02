@@ -1,0 +1,98 @@
+{
+  "experiment": "1138_milestone_retro_88",
+  "schema": "milestone_retro_v2",
+  "run_date": "2026-05-02T03:52:19Z",
+  "milestone": "2026.04.88",
+  "criteria_results": {
+    "arxiv_pdf_compiled_or_bundle_manually_uploaded": true,
+    "sos_kan_polarity_fixed_k5_auroc_above_threshold": true,
+    "grpo_training_budget_not_hit_honest_result": true,
+    "zenil_alpha_t_post_retrain_measured": true,
+    "cascade_v2_accuracy_degradation_below_10pp": true,
+    "goodfire_exemplar_cascade_tp_measured": true,
+    "prm_bias_adversarial_test_honest_result": true,
+    "kv260_v4_kl_measured_post_adaptive_tuning": true,
+    "position_paper_v3_updated": true,
+    "slitherlink_cartridge_shipped": false,
+    "retro_complete": true
+  },
+  "criteria_met": 10,
+  "criteria_total": 11,
+  "experiment_honest_verdicts": {
+    "exp1127": "pdf_compiled_upload_pending",
+    "exp1128": "fixed_k5_above_08",
+    "exp1129": "positive_improvement",
+    "exp1130": "alpha_t_improved",
+    "exp1131": "savings_accuracy_both_positive",
+    "exp1132": "mixed_results",
+    "exp1133": "z3_dominates_style_irrelevant",
+    "exp1134": "kl_improved_not_below_threshold",
+    "exp1135": "fully_updated",
+    "exp1136": "blocked_gate_check_failed",
+    "exp1137": "MISSING"
+  },
+  "notable_successes": [
+    "SOS-KAN/k=5 repair was decisive: k5 AUROC 0.9402, SOS-KAN individual AUROC 0.9902.",
+    "GRPO v2 completed 100 training questions without hitting the training budget and improved held-out accuracy by 8.51 pp.",
+    "Zenil alpha_t improved from 0.38 to 0.52 after retraining.",
+    "Cascade v2 preserved accuracy while reducing cost: accuracy_delta=0.000, cost_savings_pct=3.2.",
+    "PRM-BiasBench-style attack test showed k=5 TP rate 100.0% with zero attack false positives."
+  ],
+  "failures_or_partials": [
+    "arXiv is not submitted: PDF compiled with tectonic, but manual upload remains pending before 2026-05-15.",
+    "GRPO v2 evaluation was partial: evaluation_wall_budget_hit=True, n_eval_questions=47/50.",
+    "Goodfire cascade measurement was mixed: standalone Z3 TP rate 0.083; artifact verdict=mixed_results.",
+    "KV260 v4 improved but missed the KL gate: best KL 0.1128 vs threshold 0.05.",
+    "Slitherlink cartridge did not ship: blocked_gate_check_failed at conductor_pre_gate.",
+    "HF Spaces Slitherlink gallery artifact is missing because exp1137 was gated on the blocked exp1136 source (/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1137_hf_spaces_gallery_update.json)."
+  ],
+  "bottlenecks_identified": [
+    "Prior-failures metadata remains the main operational bottleneck: exp1128, exp1130, and exp1136 all hit repeated DOOMED_RERUN_BLOCK events, while exp1131/exp1133/exp1137 were gate-blocked downstream.",
+    "Gate dependency state is stale across retries: exp1128 eventually succeeded, but dependent exp1131 and exp1133 spent 55-92 minutes in the slowest-five window before the conductor accepted their artifacts.",
+    "KV260 v4 remains unresolved at the topology level: parameter tuning improved KL from 0.134 to 0.1128 but did not reach the 0.05 gate, and self-adaptive lambda made the distribution much worse."
+  ],
+  "slowest_experiments": [
+    {
+      "rank": 1,
+      "id": "exp1131",
+      "duration_min": 92.0,
+      "first_seen_utc": "2026-05-02 02:04",
+      "last_seen_utc": "2026-05-02 03:36"
+    },
+    {
+      "rank": 2,
+      "id": "exp1128",
+      "duration_min": 75.0,
+      "first_seen_utc": "2026-05-02 01:29",
+      "last_seen_utc": "2026-05-02 02:44"
+    },
+    {
+      "rank": 3,
+      "id": "exp1130",
+      "duration_min": 61.0,
+      "first_seen_utc": "2026-05-02 01:58",
+      "last_seen_utc": "2026-05-02 02:59"
+    },
+    {
+      "rank": 4,
+      "id": "exp1133",
+      "duration_min": 55.0,
+      "first_seen_utc": "2026-05-02 02:17",
+      "last_seen_utc": "2026-05-02 03:12"
+    },
+    {
+      "rank": 5,
+      "id": "exp1132",
+      "duration_min": 5.0,
+      "first_seen_utc": "2026-05-02 02:10",
+      "last_seen_utc": "2026-05-02 02:15"
+    }
+  ],
+  "exp906_appeared_in_slowest5": false,
+  "wall_time_minutes": 145.0,
+  "wall_time_baseline_minutes": 891.0,
+  "wall_time_improvement_vs_prior_minutes": 746.0,
+  "wall_time_improvement_vs_prior_pct": 83.7,
+  "retro_complete": true,
+  "honest_verdict": "10_of_11_criteria_met"
+}

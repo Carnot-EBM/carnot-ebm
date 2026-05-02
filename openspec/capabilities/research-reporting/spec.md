@@ -104,6 +104,28 @@ Re-running the research-scan workflow shall refresh the Exp 210 sections in
 `results/experiment_210_results.json` without duplicating the section body in
 the markdown documents.
 
+### REQ-REPORT-009: Milestone Retrospective Artifact
+
+Milestone retrospective workflows shall read the authoritative experiment
+result JSONs for the milestone, evaluate every planned success criterion from
+those source fields, and write a machine-readable result artifact that includes:
+
+- `milestone`
+- `criteria_results`
+- `criteria_met`
+- `criteria_total`
+- `notable_successes`
+- `failures_or_partials`
+- `bottlenecks_identified`
+- `slowest_experiments`
+- `wall_time_minutes`
+- `wall_time_improvement_vs_prior_minutes`
+- `retro_complete`
+- `honest_verdict`
+
+Missing gated experiment artifacts shall count as unmet criteria and shall be
+reported explicitly rather than fabricated as successes.
+
 ## Scenarios
 
 ### SCENARIO-REPORT-001: Nested Live Provenance Is Promoted
@@ -147,6 +169,15 @@ missing provenance rather than as a validated live result
 **When** the research-scan workflow runs again
 **Then** the Exp 210 section bodies are replaced in place
 **And** the docs do not accumulate duplicate Exp 210 blocks
+
+### SCENARIO-REPORT-006: Missing Gated Artifact Counts As Unmet
+
+**Given** a milestone retrospective expects a gated result artifact
+**And** that artifact is missing because the upstream experiment was blocked
+**When** the retrospective evaluates the milestone criteria
+**Then** the gated criterion is false
+**And** the retrospective artifact reports the missing source in
+`failures_or_partials`
 
 ### REQ-PUBLISH-003: HuggingFace README Accuracy Audit
 
@@ -229,5 +260,6 @@ embed live-GPU benchmark results from Exp 328 when available.
 | REQ-REPORT-006 | `scripts/experiment_210_research_scan.py`, `research-references.md` | `tests/python/test_experiment_210_research_scan.py` | Implemented |
 | REQ-REPORT-007 | `scripts/experiment_210_research_scan.py`, `research-studying.md` | `tests/python/test_experiment_210_research_scan.py` | Implemented |
 | REQ-REPORT-008 | `scripts/experiment_210_research_scan.py` | `tests/python/test_experiment_210_research_scan.py` | Implemented |
+| REQ-REPORT-009 | `scripts/experiment_1138_milestone_retro_88.py` | `tests/python/test_experiment_1138_milestone_retro_88.py` | Implemented |
 | REQ-PUBLISH-003 | `scripts/experiment_317_hf_publish.py` | `tests/python/test_experiment_317_hf_publish.py` | Implemented |
 | REQ-PUBLISH-004 | `scripts/experiment_330_hf_live_publish.py` | `tests/python/test_experiment_330_hf_live_publish.py` | Implemented |
