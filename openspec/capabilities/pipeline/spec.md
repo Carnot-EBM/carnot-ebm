@@ -1875,6 +1875,46 @@ pre-filter zero-cost compared to ThinkProbe (~50–200 ms secondary LLM call).
 
 **Spec traces:** REQ-PROBE-022
 
+### REQ-VERIFY-1143: HalluGuard Cascade Router v3 Features
+
+The Lagrangian cascade router experiment MUST extend the Exp 1131 verifier-score
+router inputs from three features to five features by adding:
+
+- `entropy_proxy`: unique token count divided by total token count for the response.
+- `embedding_distance`: cosine distance from the query embedding to the FoVer
+  training-set centroid, using a local sentence-transformers
+  `all-MiniLM-L6-v2` encoder when available.
+
+The Exp 1143 artifact MUST record the feature-count change, FoVer train/holdout
+sizes, adaptive TP rate, fixed TP rate, accuracy delta, cost savings, whether the
+HalluGuard features were measured, and whether the features explain ThinkPRM
+misses on the Goodfire exemplar failure set.
+
+**Acceptance criteria:**
+- The router feature vector has five columns in the order
+  `sem_energy_score`, `response_length`, `step_count`, `entropy_proxy`,
+  `embedding_distance`.
+- The MLP keeps the Exp 1131 two-hidden-layer 128-unit architecture with a
+  five-feature input layer.
+- `results/experiment_1143_halluguard_cascade_router_v3.json` includes
+  `halluguard_features_added`, `n_router_features_before`,
+  `n_router_features_after`, `training_set_size`, `holdout_set_size`,
+  `adaptive_tp_rate`, `fixed_tp_rate`, `accuracy_delta`, `cost_savings_pct`,
+  `halluguard_features_explain_goodfire_failures`,
+  `halluguard_routing_feature_measured`, and `honest_verdict`.
+
+**Spec traces:** Exp 1143, HalluGuard data/reasoning decomposition
+
+### SCENARIO-VERIFY-1143: HalluGuard Features Route ThinkPRM Misses to k=5
+
+**Given** the FoVer training corpus and the Goodfire exemplar cascade artifact,
+**When** Exp 1143 trains the five-feature Lagrangian cascade router and scores
+Goodfire exemplars missed by ThinkPRM,
+**Then** the artifact reports whether high `entropy_proxy` or high
+`embedding_distance` predicts routing those misses to the k=5 full cascade.
+
+**Spec traces:** REQ-VERIFY-1143
+
 ### SCENARIO-PROBE-023: Benchmark AUROC and Honest Verdict on Synthetic Corpus
 
 **Given** a SpilledEnergyDetector and 200 synthetic responses (100 correct, 100 hallucinated)

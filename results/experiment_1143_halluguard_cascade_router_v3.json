@@ -1,0 +1,66 @@
+{
+  "experiment": "exp1143",
+  "schema": "v1",
+  "title": "HalluGuard cascade router v3 with entropy and embedding distance",
+  "run_date": "2026-05-02T07:43:29Z",
+  "duration_s": 8.21,
+  "status": "success",
+  "mlp_hidden_size": 128,
+  "mlp_hidden_layer_count": 2,
+  "mlp_val_accuracy": 0.98,
+  "verifier_score_features_used": [
+    "sem_energy_score",
+    "response_length",
+    "step_count",
+    "entropy_proxy",
+    "embedding_distance"
+  ],
+  "halluguard_features_added": [
+    "entropy_proxy",
+    "embedding_distance"
+  ],
+  "n_router_features_before": 3,
+  "n_router_features_after": 5,
+  "training_set_size": 5000,
+  "holdout_set_size": 500,
+  "min_tp_constraint": 0.9,
+  "lambda_final": 0.0,
+  "adaptive_tp_rate": 1.0,
+  "fixed_tp_rate": 1.0,
+  "accuracy_delta": 0.0,
+  "fixed_cascade_cost_ms": 111.017,
+  "adaptive_cascade_cost_ms": 106.133,
+  "cost_savings_pct": 4.4,
+  "halluguard_features_explain_goodfire_failures": true,
+  "halluguard_routing_feature_measured": true,
+  "honest_verdict": "features_explain_goodfire_failures",
+  "embedding_backend": "sentence-transformers:sentence-transformers/all-MiniLM-L6-v2",
+  "entropy_threshold": 0.75,
+  "embedding_distance_threshold": 0.85,
+  "goodfire_thinkprm_miss_count": 31,
+  "goodfire_thinkprm_miss_k5_route_rate": 1.0,
+  "goodfire_hallu_feature_flag_rate": 0.9032,
+  "predicted_depth_distribution": {
+    "1": 22,
+    "2": 0,
+    "3": 0,
+    "4": 0,
+    "5": 478
+  },
+  "cascade_depth_distribution": {
+    "1": 22,
+    "2": 464,
+    "3": 3,
+    "4": 1,
+    "5": 10
+  },
+  "tier_cumulative_latencies_ms": [
+    0.017,
+    1.017,
+    6.017,
+    11.017,
+    111.017
+  ],
+  "source": "arXiv:2601.18753 HalluGuard data/reasoning decomposition",
+  "note": "Exp1143 extends the Exp1131 Lagrangian router with entropy_proxy and embedding_distance features to estimate reasoning-driven instability and data-driven mismatch."
+}
