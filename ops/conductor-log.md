@@ -318,3 +318,4 @@ If you finish the real work |
 | 2026-05-02 05:46 UTC | arXiv Final Submission Close-Out v3 — PDF with GRP | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-02 05:48 UTC | arXiv Final Submission Close-Out v3 — PDF with GRP | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-02 05:50 UTC | arXiv Final Submission Close-Out v3 — PDF with GRP | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-02 06:20 UTC | Roadmap Gate and Prior-Failures Audit Script v1 —  | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed, 1 warning in 4.13s |
