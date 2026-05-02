@@ -7,6 +7,10 @@
 **Date Designed:** 2026-05-02  
 **Prerequisite:** Milestone 2026.04.88 retro complete (Exp 1138)
 
+**Decentralization implications:** .89 preserves Carnot's local-first path: headline LLM work uses
+mandated local GGUF models, closed APIs are not required for core results, and the Extropic/KV260
+tasks are optional hardware-readiness paths rather than vendor lock-in.
+
 ---
 
 ## What Milestone 2026.04.88 Proved
@@ -83,6 +87,13 @@ this roadmap was designed:
 - **Extropic XTR-0/Z1 updates:** TSU hardware path and THRML software integration.
 - **Logical Intelligence Kona/Aleph updates:** neural theorem-proving target for future bridges.
 - **MARCH (arXiv 2603.24579):** multi-agent information-asymmetric self-checking.
+- **NRGPT (arXiv 2512.16762) and transformer intrinsic-optimizer framing (arXiv 2511.00907):**
+  useful Phase 3 seeds for energy-native autoregressive inference and accelerated energy updates,
+  but not .89 critical path.
+- **DiffuTruth / Energy of Falsehood (arXiv 2602.11364):** candidate factuality feature for
+  future Goodfire cheap-tier work if HalluGuard features are insufficient.
+- **MCP Solver and PyCSP3 repositories:** practical solver/backend patterns for the CCTU adapter
+  and future CSP benchmark expansion.
 
 ---
 

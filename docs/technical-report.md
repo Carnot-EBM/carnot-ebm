@@ -87,9 +87,15 @@ checked into `results/operational_retro_*.json`.
 - **PRM-BiasBench-style adversarial audit:** the k=5 ensemble caught
   **60/60** style, length, and format attacks with zero attack false positives;
   SemEnergy alone caught 20/60 (Exp 1133).
+- **Goodfire exemplar cascade measurement:** Tier-3 k=5 caught **36/36**
+  failure exemplars across 12 categories, while standalone low-tier rates
+  remained weak (SemEnergy=0.2222, standalone Z3=0.0833) (Exp 1132).
 - **KV260 v4 remains an honest negative:** parameter tuning improved KL
   **0.134 → 0.1128**, but the sampler is still above the 0.05 correctness gate
   (Exp 1134).
+- **arXiv package v3:** `docs/arxiv-paper/main.pdf` compiled with tectonic
+  and the source bundle was verified; manual upload remains pending before
+  2026-05-15 (Exps 1127/1135).
 
 **Claims that did not survive audit** are kept in the research record as
 negative findings and documented alongside the audits that surfaced them
@@ -1229,7 +1235,7 @@ The architecture is model-agnostic (Experiment 69), scales to 5000+ variables (E
 | Research conductor | Autonomous Claude Code agent loop, YAML-driven | N/A | Experimental |
 | PyPI packaging | `pip install carnot`, extras for rust/mcp/cuda/llm | Integration tests | Beta |
 
-**Total:** **20,845** Python test items are currently collected in the repo (`.venv/bin/python -m pytest tests/python --collect-only -q --no-header`, 3 skipped during collection). This is a collection count, not a claim that the full suite passes; full validation remains command-specific and is documented in the relevant experiment artifacts.
+**Total:** **20,903** Python test items are currently collected in the repo (`.venv/bin/pytest --collect-only -q`, 3 skipped during collection). This is a collection count, not a claim that the full suite passes; full validation remains command-specific and is documented in the relevant experiment artifacts.
 
 ---
 
@@ -2280,7 +2286,7 @@ Milestone 2026.04.87 met **11 of 11 success criteria** — the first perfect mil
 
 ### Phase 13 — k=5 Repair, GRPO v2, and Adversarial Bias Audit (Milestone .88, Exps 1127–1138)
 
-Milestone 2026.04.88 met **10 of 11 success criteria** in **145 wall-clock minutes**. The missed criterion was the Slitherlink WOPR cartridge, which correctly blocked at the conductor pre-gate because the task omitted required `prior_failures` metadata for five matching WOPR cartridge predecessors.
+Milestone 2026.04.88 met **10 of 11 success criteria** in a **145-minute active execution window**. The full operational retro records **794 minutes / 209 experiment events** for the surrounding milestone process. The missed criterion was the Slitherlink WOPR cartridge, which correctly blocked at the conductor pre-gate because the task omitted required `prior_failures` metadata for five matching WOPR cartridge predecessors.
 
 **arXiv PDF compilation (Exp 1127):** `docs/arxiv-paper/main.pdf` compiled successfully with tectonic and the v3 source bundle was verified. arXiv submission is not complete: manual upload remains pending before the 2026-05-15 deadline. The honest verdict is `pdf_compiled_upload_pending`.
 
