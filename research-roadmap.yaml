@@ -73,6 +73,44 @@ tasks:
   estimated_wall_time_min: 30
   priority: high
   requires_gpu: false
+  prior_failures:
+    - experiment_id: exp1047-sos-kan-reparameterization
+      verdict: kan_reparam_partial
+      addressed_by: |
+        exp1047 introduced the SOSKANEnergyV3 reparameterization. It shipped
+        but no production AUROC was measured at the time. exp1128 is the FIRST
+        attempt to measure the verifier's individual AUROC against a
+        held-out FoVer eval set — discovers AUROC=0.3333 (below chance,
+        polarity inverted). Addresses by fixing polarity OR retraining with
+        correct labels.
+      retire_if_same_verdict: false
+    - experiment_id: exp1072-sos-kan-v3-neural-gram
+      verdict: neural_gram_shipped
+      addressed_by: |
+        exp1072 evolved the SOSKAN to v3 with neural-gram extension. Same
+        polarity / label issue that exp1128 is now diagnosing — exp1072 was
+        about architecture, not about training-label correctness. exp1128
+        addresses the orthogonal label/polarity issue.
+      retire_if_same_verdict: false
+    - experiment_id: exp1108-ensemble-diversity-v2-and-composition
+      verdict: and_composition_viable_at_k5_subset_k6_above_threshold_honest_negative
+      addressed_by: |
+        exp1108 measured pairwise correlations and confirmed k=5 subset has
+        max r < 0.5, but did NOT measure individual verifier AUROC. The
+        diversity finding (mechanism-orthogonal) is correct; the AUROC issue
+        with SOSKANEnergyV3 was orthogonal and unexposed by exp1108's
+        correlation methodology. exp1128 measures and fixes it directly.
+      retire_if_same_verdict: false
+    - experiment_id: exp1121-k5-and-compose-production
+      verdict: k5_deployed_and_benchmarked
+      addressed_by: |
+        exp1121 wired the k=5 ensemble to production but the verdict
+        "k5_deployed_and_benchmarked" obscured that the ensemble AUROC=0.5547
+        is WORSE than the best individual verifier (SemEnergyProbe AUROC=
+        0.8964) due to SOSKANEnergyV3's inverted polarity. exp1128 is the
+        explicit follow-up fixing the SOSKANEnergyV3 polarity/training so
+        the production wiring becomes net-positive.
+      retire_if_same_verdict: false
   prompt: |
     CONTEXT:
     The k=5 AND-compose ensemble was deployed in exp1121 but benchmarked WORSE than the
