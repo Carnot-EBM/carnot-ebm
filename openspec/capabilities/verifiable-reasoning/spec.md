@@ -16428,3 +16428,42 @@ stylistic padding
 **And** the honest verdict is one of the four allowed verdict strings
 
 **Spec traces:** REQ-VERIFY-1133, Exp 1133
+
+## REQ-VERIFY-1142: BEAVER-Lite Arithmetic Certificate Tier
+
+Carnot SHALL provide a BEAVER-lite probability-mass certificate prototype for
+GSM8K-style arithmetic answer constraints.
+
+- REQ-VERIFY-1142-1: The certificate tier SHALL define a prefix-closed final
+  answer constraint where a terminal response is valid only when the response
+  text ends with an integer in the inclusive range [0, 9999].
+- REQ-VERIFY-1142-2: The bounder SHALL enumerate a deterministic top-K token
+  prefix frontier, score each completed prefix against the final-integer
+  constraint, and report the empirical violation rate across the K completions.
+- REQ-VERIFY-1142-3: The bounder SHALL compute a BEAVER-lite unsafe-mass upper
+  bound by log-sum-exp aggregation of the logprob mass assigned to terminal
+  prefixes that already violate the prefix-closed constraint.
+- REQ-VERIFY-1142-4: When llama.cpp logprob access is unavailable, the bounder
+  SHALL fall back to deterministic mock logprobs and expose
+  `mock_logprobs_used=True` in both API results and the experiment artifact.
+- REQ-VERIFY-1142-5: Exp 1142 SHALL write
+  `results/experiment_1142_beaver_lite_certificate_tier.json` with
+  `beaver_lite_bounder_written`, `module_path`, `n_sample_questions`,
+  `n_completions_sampled`, `mock_logprobs_used`, `unsafe_mass_bound`,
+  `empirical_violation_rate`, `bound_gap`, `bound_is_sound`,
+  `beaver_lite_bound_reported`, and `honest_verdict`.
+
+**Implementation Status:** Implemented (Exp 1142)
+
+### SCENARIO-VERIFY-1142: BEAVER-Lite Reports Sound Unsafe-Mass Bound
+
+**Given** a sample GSM8K-style arithmetic question
+**When** `BEAVERLiteBounder.bound_prefix_violation()` enumerates 50 completions
+**Then** each completion is scored against the terminal final-integer constraint
+**And** the result reports a BEAVER-lite unsafe-mass upper bound in [0, 1]
+**And** the empirical violation rate is in [0, 1]
+**And** `bound_gap = unsafe_mass_bound - empirical_violation_rate`
+**And** the Exp 1142 artifact records whether live llama.cpp logprobs or mock
+logprobs were used
+
+**Spec traces:** REQ-VERIFY-1142, Exp 1142
