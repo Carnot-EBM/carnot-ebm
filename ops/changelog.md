@@ -4545,3 +4545,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-02: WOPR Slitherlink Puzzle Cartridge Rescue — Loop Constraint Ising Encoding (⚠️ Research Finding) — honest_verdict=e0_achieved; results/experiment_1141_wopr_slitherlink_rescue.json
 - 2026-05-02: BEAVER-Lite Deterministic Prefix Constraint Bounder — Unsafe Mass Certificates (⚠️ Research Finding) — honest_verdict=sound_bound_mock_logprobs; results/experiment_1142_beaver_lite_certificate_tier.json
 - 2026-05-02: HalluGuard NTK Cascade Router v3 — Data-vs-Reasoning Routing Feature (⚠️ Research Finding) — honest_verdict=features_explain_goodfire_failures; results/experiment_1143_halluguard_cascade_router_v3.json
+- 2026-05-02: CCTU 25-Task Micro-Benchmark Adapter — Constrained Tool-Use with Local SOTA GGUF (✅ Complete) — honest_verdict=carnot_positive_delta; results/experiment_1144_cctu_micro_benchmark_adapter.json
