@@ -111,6 +111,27 @@ tasks:
         explicit follow-up fixing the SOSKANEnergyV3 polarity/training so
         the production wiring becomes net-positive.
       retire_if_same_verdict: false
+    - experiment_id: exp693-jepa-v15-root-cause
+      verdict: root_cause_identified_v16_specced
+      addressed_by: |
+        FALSE-POSITIVE MATCH: the conductor's keyword matcher flagged this
+        prior because both titles contain "root cause" — but exp693 is about
+        JEPA architecture diagnosis, completely unrelated to SOSKANEnergyV3
+        verifier polarity. This entry is included to satisfy the rerun-
+        discipline check; it does not represent a real prior failure of
+        this work.
+      retire_if_same_verdict: false
+    - experiment_id: exp833-constraint-delta-root-cause
+      verdict: write_path_missing
+      addressed_by: |
+        FALSE-POSITIVE MATCH: keyword matcher flagged this prior because
+        both titles contain "root cause" — but exp833 is about constraint
+        delta diagnosis, completely unrelated to SOSKANEnergyV3 polarity.
+        Included to satisfy rerun-discipline check; not a real prior failure
+        of this work. Suggests the matcher's scaffolding-token list should
+        also exclude "root", "cause", "diagnosis" — filed for future Issue 5
+        refinement.
+      retire_if_same_verdict: false
   prompt: |
     CONTEXT:
     The k=5 AND-compose ensemble was deployed in exp1121 but benchmarked WORSE than the
@@ -287,6 +308,16 @@ tasks:
   estimated_wall_time_min: 30
   priority: medium
   requires_gpu: true
+  prior_failures:
+    - experiment_id: exp1046-zenil-alpha-t-fr11
+      verdict: blocked_no_live_gpu
+      addressed_by: |
+        exp1046 was blocked because no live GPU was available for measurement.
+        exp1130 explicitly requires_gpu=true and runs after the dual-GPU
+        ROCm path landed (post-exp1120). The original measurement
+        constraint that blocked exp1046 has been resolved by infrastructure
+        improvements; this is the same task with the GPU prerequisite met.
+      retire_if_same_verdict: true
   prompt: |
     CONTEXT:
     The energy verifier was retrained in exp1120 on 7329-pair SOTA corpus: AUROC improved to
