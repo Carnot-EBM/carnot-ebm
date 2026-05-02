@@ -4,6 +4,162 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-05-02 arxiv/OpenReview Scan (Milestone 2026.04.89 Planning)
+
+### BEAVER: An Efficient Deterministic LLM Verifier
+- **Paper:** arXiv 2512.05439 (December 2025); ICLR 2026 VerifAI-2 workshop.
+- **Source:** https://arxiv.org/abs/2512.05439 and https://huggingface.co/papers/2512.05439
+- **What:** Computes deterministic, sound probability bounds that an LLM's output distribution
+  satisfies prefix-closed semantic constraints. Uses token-trie/frontier data structures and
+  reports 6-8x tighter bounds plus 3-4x more high-risk-instance discovery than baselines.
+- **Relevance to Carnot:** Carnot currently certifies sampled outputs, not the probability mass
+  of all possible bad outputs. BEAVER is the clearest path to adding a certificate tier above
+  k=5 AND-compose: "given this prompt and verifier, at most p_bad mass violates constraints."
+- **Concrete experiment:** Build a BEAVER-lite bounder for arithmetic prefix constraints on
+  SOTA local GGUF models, compare bound tightness and runtime against empirical sampling.
+- **When to incorporate:** Milestone .89 Phase 1 or 2, after .88 fixed k=5 AUROC.
+
+### HalluGuard: Demystifying Data-Driven and Reasoning-Driven Hallucinations in LLMs
+- **Paper:** arXiv 2601.18753 (January 2026, revised March 2026); accepted ICLR 2026.
+- **Source:** https://arxiv.org/abs/2601.18753 and https://huggingface.co/papers/2601.18753
+- **What:** Decomposes hallucination risk into data-driven mismatch and reasoning-driven
+  decoding instability. Introduces an NTK-geometry score evaluated across 10 benchmarks,
+  11 baselines, and 9 LLM backbones.
+- **Relevance to Carnot:** .88 Goodfire results showed Tier 3 k=5 catches all curated
+  exemplars, while early learned tiers remain weak. HalluGuard's two-source decomposition
+  can become a routing feature: send representation-mismatch cases to factual/semantic
+  checks and decoding-instability cases to energy-guided repair.
+- **Concrete experiment:** Add HalluGuard-style NTK features to the cascade router and test
+  whether Goodfire mixed verdicts become explainable by data-vs-reasoning failure class.
+- **When to incorporate:** Milestone .89 cascade calibration.
+
+### CCTU: A Benchmark for Tool Use under Complex Constraints
+- **Paper:** arXiv 2603.15309 (March 2026).
+- **Source:** https://arxiv.org/abs/2603.15309 and https://huggingface.co/papers/2603.15309
+- **What:** 200 tool-use tasks with explicit complex constraints, averaging seven constraint
+  types and >4,700-token prompts. Includes executable step-level constraint validation.
+  No tested model exceeded 20% completion when all constraints had to be satisfied.
+- **Relevance to Carnot:** This is a natural FR-12 benchmark for agentic verification. It
+  stresses resource, behavior, toolset, and response constraints, not just GSM8K arithmetic.
+- **Concrete experiment:** Build a 25-task CCTU micro-benchmark adapter that runs local SOTA
+  GGUF models through Carnot's verifier cascade and executable validator.
+- **When to incorporate:** Milestone .89 or .90; strong candidate for the next non-GSM8K
+  credibility benchmark.
+
+### Benchmarking GNNs in Solving Hard Constraint Satisfaction Problems / RandCSPBench
+- **Paper:** arXiv 2602.18419 (February 2026, revised March 2026).
+- **Source:** https://arxiv.org/abs/2602.18419
+- **What:** Physics-grounded benchmark suite for random CSPs in the hard phase-transition
+  regime. Finds classical methods still outperform current GNN approaches on genuinely
+  hard CSPs.
+- **Relevance to Carnot:** Prevents another "easy-instance win" trap. WOPR cartridges and
+  verifier benchmarks should include hard-regime CSP instances, not just human-solvable toys.
+- **Concrete experiment:** Add RandCSPBench-style hard instances to the WOPR/game-cartridge
+  harness and compare Carnot Ising/KAN against WalkSAT/Belief Propagation baselines.
+- **When to incorporate:** Milestone .89 WOPR rescue/hardness audit.
+
+### HardNet++: Nonlinear Constraint Enforcement in Neural Networks
+- **Paper:** arXiv 2604.19669 (April 2026).
+- **Source:** https://arxiv.org/abs/2604.19669
+- **What:** Differentiable constraint layer that iteratively adjusts neural outputs through
+  damped local linearizations to satisfy linear and nonlinear equality/inequality constraints.
+- **Relevance to Carnot:** Directly relevant to verifier repair: instead of only scoring and
+  asking an LLM to repair, continuous numeric/certified domains can project outputs back into
+  the feasible set before returning to text.
+- **Concrete experiment:** Prototype a HardNet++-style projection repair layer for continuous
+  arithmetic/range constraints and compare it to current prompt-based repair.
+- **When to incorporate:** Milestone .89 Phase 3 repair-quality work.
+
+### KKT-Hardnet: Physics-Informed Neural Networks with Hard Nonlinear Equality and Inequality Constraints
+- **Paper:** arXiv 2507.08124 (July 2025; revised August 2025).
+- **Source:** https://arxiv.org/abs/2507.08124 and https://github.com/SOULS-TAMU/kkt-hardnet
+- **What:** Enforces constraints to machine precision by differentiably projecting outputs onto
+  a feasible region through KKT conditions, avoiding soft penalty balancing.
+- **Relevance to Carnot:** Complements HardNet++ with a KKT projection route. Useful for
+  Phase 3 continuous latent repair where the energy minimizer must obey hard constraints by
+  construction.
+- **Concrete experiment:** Compare KKT-Hardnet vs HardNet++ projection on small Carnot
+  constraint-repair tasks, with violation residual as the primary metric.
+- **When to incorporate:** Milestone .89 if repair projection is prioritized; otherwise .90.
+
+### EBT-Policy: Energy Unlocks Emergent Physical Reasoning Capabilities
+- **Paper:** arXiv 2510.27545 (October 2025).
+- **Source:** https://arxiv.org/abs/2510.27545 and https://energy-based-transformers.github.io/related.html
+- **What:** Extends Energy-Based Transformers to action-trajectory policies. Reports fewer
+  inference steps than diffusion policies on some tasks, energy-scaled Langevin dynamics,
+  dynamic stopping by gradient/energy convergence, and zero-shot recovery behavior.
+- **Relevance to Carnot:** Provides a concrete training/stability recipe for Phase 3 continuous
+  latent reasoning: energy-scaled step sizes, pre-sample normalization, Nesterov acceleration,
+  gradient clipping, and dynamic compute allocation.
+- **Concrete experiment:** Apply EBT-Policy's adaptive Langevin/dynamic-stop recipe to the
+  Phase 3 continuous EBM prototype on FoVer latent traces; measure convergence steps and
+  alpha_t sensitivity.
+- **When to incorporate:** Milestone .89 Phase 4 prototype seed.
+
+### MetaCluster: Enabling Deep Compression of Kolmogorov-Arnold Network
+- **Paper:** arXiv 2510.19105 (October 2025, revised February 2026).
+- **Source:** https://arxiv.org/abs/2510.19105
+- **What:** Compresses KAN coefficient vectors with a meta-learner plus centroid codebook,
+  reporting up to 80x parameter reduction on standard tasks and 124.1x on equation modeling.
+- **Relevance to Carnot:** SOS-KAN/k=5 now works after .88 but KAN memory footprint matters
+  for local-first edge deployment and NPU/FPGA portability. MetaCluster could shrink KAN
+  verifier checkpoints without losing AUROC.
+- **Concrete experiment:** Compress the .88 SOSKANEnergyV3 checkpoint with a centroid codebook
+  and compare AUROC, latency, and serialized size.
+- **When to incorporate:** Milestone .89 after k=5 checkpoint stabilization.
+
+### Energy-Time-Accuracy Tradeoffs in Thermodynamic Computing
+- **Paper:** arXiv 2601.04358 (January 2026).
+- **Source:** https://arxiv.org/abs/2601.04358
+- **What:** Derives energy-delay-deficiency limits for thermodynamic computing and quasi-optimal
+  control protocols for stochastic sampling without prior knowledge of the solution.
+- **Relevance to Carnot:** .88 KV260 v4 tuning improved KL but missed the 0.05 gate. This paper
+  gives a principled framing for "accuracy vs time vs energy" rather than treating KL alone as
+  the only hardware acceptance metric.
+- **Concrete experiment:** Add EDDP-style energy-time-accuracy reporting to SamplerBackend
+  diagnostics for CPU Gibbs, KV260 simulation, and future TSU/thrml runs.
+- **When to incorporate:** Milestone .89 hardware diagnostics.
+
+### Extropic XTR-0 / Z1 Hardware Status
+- **Source:** https://extropic.ai/hardware and https://extropic.ai/software
+- **What:** XTR-0 is described as a Q3 2025 experimental testing platform with low-latency
+  communication between Extropic chips and a traditional processor. Z1 is listed as early
+  access 2026, with hundreds of thousands of probabilistic circuits per chip and millions
+  per card. THRML remains the public JAX simulation stack for TSU-style PGMs/EBMs.
+- **Relevance to Carnot:** User direction already re-scoped KV260 to POC tier. Z1 early access
+  is now close enough that Carnot should prepare a concrete hardware-access packet: minimal
+  EBM kernels, SamplerBackend API requirements, and acceptance tests.
+- **Concrete experiment:** Draft an Extropic early-access integration packet and THRML parity
+  benchmark so Carnot can move when Z1/XTR access opens.
+- **When to incorporate:** Milestone .89 hardware path.
+
+### Logical Intelligence Kona/Aleph Updates
+- **Source:** https://logicalintelligence.com/kona-ebms-energy-based-models,
+  https://logicalintelligence.com/blog/aleph-solves-putnambench, and
+  https://logicalintelligence.com/blog/energy-based-models-for-reasoning
+- **What:** Kona is positioned as a non-autoregressive EBRM for critical systems, with LLMs
+  used for interface/orchestration. Aleph is described as an orchestration layer using Lean
+  proof checking, reportedly solving 668/672 PutnamBench problems when paired with GPT-5.2.
+- **Relevance to Carnot:** Strong external validation of Carnot's "LLM as interface, EBM as
+  verifier/reasoner" framing. Also sharpens the competitive benchmark: formal proof or tool-use
+  verification, not only GSM8K.
+- **Concrete experiment:** Add a Lean/SMT proof-certificate micro-benchmark to Carnot's
+  verifier suite, using local SOTA GGUF generation plus deterministic Lean/Z3 checking.
+- **When to incorporate:** Milestone .89 or .90, depending on arXiv submission urgency.
+
+### MARCH: Multi-Agent Reinforced Self-Check for LLM Hallucination
+- **Paper:** arXiv 2603.24579 (March 2026).
+- **Source:** https://arxiv.org/abs/2603.24579 and https://github.com/Qwen-Applications/MARCH
+- **What:** Uses solver/proposer/checker agents with deliberate information asymmetry, then
+  trains the pipeline by multi-agent reinforcement learning to reduce hallucination and
+  self-confirmation bias.
+- **Relevance to Carnot:** Carnot already separates extraction, verification, and repair. MARCH
+  suggests a self-learning variant where claim extraction and checking are trained with blinded
+  roles to avoid the generator's original error contaminating the verifier.
+- **Concrete experiment:** Create an information-asymmetric claim-check loop over Goodfire/CCTU
+  exemplars and compare against current single-pass LLM-as-extractor.
+- **When to incorporate:** Milestone .89 self-learning phase.
+
 ## 2026-05-02 arxiv Scan (Milestone 2026.04.88 Planning)
 
 ### DRA-GRPO: Diverse Reasoning Paths for Mathematical Reasoning

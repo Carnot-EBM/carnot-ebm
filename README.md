@@ -130,8 +130,10 @@ artifact under `results/`.
 | GRPO + ThinkPRM v2 as explicit PRM reward | v1: **24% → 28%** (+4pp); v2: **19.15% → 27.66%** (+8.51pp) after 100 training questions, DRA diversity, and CPPO proxy reuse; eval partial at 47/50 | Exps 1118/1129 |
 | Zenil alpha_t after energy retrain | **0.38 → 0.52** on 50 live-GPU Qwen3.6-35B-A3B examples; self-learning signal improved after inversion fix | Exp 1130 |
 | Lagrangian cascade v2 | Accuracy preserved (**0.0pp delta**) with **3.2%** cost savings after adding verifier-score features; v1 had -22.86pp accuracy degradation | Exp 1131 |
+| Goodfire exemplar cascade measurement | Tier-3 k=5 caught **36/36** failure exemplars across 12 categories; standalone low-tier rates remained weak | Exp 1132 |
 | PRM-BiasBench-style adversarial audit | k=5 ensemble caught **60/60** style, length, and format attacks with 0 attack FPs; SemEnergy alone caught 20/60 | Exp 1133 |
 | FPGA sampler correctness audit — honest negative | **KL(FPGA ‖ Gibbs) = 3.07** (v1 parallel); sequential Glauber v3 KL=0.025; v4 tuning improved **0.134 → 0.1128** but remains above 0.05 threshold | Exps 1094/1109/1122/1134 |
+| arXiv package v3 | PDF compiled with tectonic; source bundle verified; manual upload still pending before **2026-05-15** | Exps 1127/1135 |
 | WOPR Slitherlink cartridge — honest blocked result | Not shipped: conductor pre-gate blocked the task because prior-failures metadata was missing for five matching WOPR cartridge predecessors | Exp 1136 |
 
 Deeper analysis of these — including everything that **didn't** work and

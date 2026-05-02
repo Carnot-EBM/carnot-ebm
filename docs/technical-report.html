@@ -234,6 +234,15 @@ checked into <code>results/operational_retro_*.json</code>.</p>
   <strong>19.15% → 27.66%</strong> (+8.51pp; evaluation partial at 47/50) (Exp 1129).</li>
 <li><strong>Continuous self-learning signal improved:</strong> Zenil alpha_t increased
   <strong>0.38 → 0.52</strong> after the energy retrain (Exp 1130).</li>
+<li><strong>Lagrangian cascade v2 repaired the adaptive-router regression:</strong>
+  accuracy delta was <strong>0.0pp</strong> with <strong>3.2%</strong> cost savings after adding
+  verifier-score features (Exp 1131).</li>
+<li><strong>PRM-BiasBench-style adversarial audit:</strong> the k=5 ensemble caught
+  <strong>60/60</strong> style, length, and format attacks with zero attack false positives;
+  SemEnergy alone caught 20/60 (Exp 1133).</li>
+<li><strong>KV260 v4 remains an honest negative:</strong> parameter tuning improved KL
+  <strong>0.134 → 0.1128</strong>, but the sampler is still above the 0.05 correctness gate
+  (Exp 1134).</li>
 </ul>
 <p><strong>Claims that did not survive audit</strong> are kept in the research record as
 negative findings and documented alongside the audits that surfaced them
@@ -734,8 +743,14 @@ are uneven. Some of the Phase 4 and Phase 5 work is documented at the
 milestone level only because each milestone's honest verdict includes the
 field context. We prioritized keeping the record honest over polishing
 the narrative.</p>
-<h2 id="headline-results-live-gpu-only">Headline Results (Live GPU Only)</h2>
-<p>All primary benchmark rows below are from live GPU inference. The replay and trace-memory rows are follow-on analytics over those same live artifacts. Earlier milestones produced simulated results that appeared positive but were artifacts of unrealistic baselines — those are documented in the history sections as negative findings but are not included in headline numbers.</p>
+<h2 id="headline-results-provenance-labeled">Headline Results (Provenance-Labeled)</h2>
+<p>Primary model-generation benchmark rows below are from live GPU inference.
+Corpus, hardware, infrastructure, ensemble, and adversarial-audit rows are
+included only with explicit provenance labels. The replay and trace-memory rows
+are follow-on analytics over live artifacts. Earlier milestones produced
+simulated results that appeared positive but were artifacts of unrealistic
+baselines — those are documented in the history sections as negative findings
+but are not included as model-generation headline claims.</p>
 <table>
 <thead>
 <tr>
@@ -922,6 +937,62 @@ the narrative.</p>
 <td>[SOSKANEnergyV3, SemEnergyProbe, ASTStructureVerifier, SemanticConsistencyVerifier, Z3MathVerifier]; ThinkPRM standalone Tier 0a</td>
 <td>Exp 1121</td>
 </tr>
+<tr>
+<td>k=5 AND-compose ensemble repair</td>
+<td>AUROC <strong>0.5547</strong></td>
+<td>AUROC <strong>0.9402</strong></td>
+<td>Corpus-fitted SOS-KAN normalization fixed the production ensemble; SOS-KAN individual AUROC=0.9902</td>
+<td>Exp 1128</td>
+</tr>
+<tr>
+<td>GRPO + ThinkPRM v2 PRM reward (full training)</td>
+<td>19.15%</td>
+<td><strong>27.66%</strong></td>
+<td>+8.51pp after 100 training questions; live-GPU eval partial at 47/50</td>
+<td>Exp 1129</td>
+</tr>
+<tr>
+<td>Zenil alpha_t after energy retrain</td>
+<td>0.38</td>
+<td><strong>0.52</strong></td>
+<td>50 live-GPU Qwen3.6-35B-A3B examples; self-learning signal improved after inversion fix</td>
+<td>Exp 1130</td>
+</tr>
+<tr>
+<td>Lagrangian cascade v2</td>
+<td>Fixed cascade cost 111.017 ms; TP=1.0</td>
+<td>Adaptive cost 107.465 ms; TP=1.0</td>
+<td><strong>3.2%</strong> cost savings with <strong>0.0pp</strong> accuracy delta after verifier-score features</td>
+<td>Exp 1131</td>
+</tr>
+<tr>
+<td>Goodfire exemplar cascade</td>
+<td>Standalone tiers weak</td>
+<td>Tier-3 k=5 TP <strong>36/36</strong></td>
+<td>Mixed result: the ensemble catches all categories, but single-tier claims are not yet defensible</td>
+<td>Exp 1132</td>
+</tr>
+<tr>
+<td>PRM-BiasBench-style adversarial audit</td>
+<td>SemEnergy catches 20/60</td>
+<td>k=5 ensemble catches <strong>60/60</strong></td>
+<td>Style, length, and format attacks; zero attack false positives</td>
+<td>Exp 1133</td>
+</tr>
+<tr>
+<td>KV260 v4 sampler tuning — honest negative</td>
+<td>KL <strong>0.134</strong></td>
+<td>KL <strong>0.1128</strong></td>
+<td>Improved but still above the 0.05 correctness gate; v3 sequential remains the reference at KL=0.025</td>
+<td>Exp 1134</td>
+</tr>
+<tr>
+<td>arXiv package v3</td>
+<td>Source bundle assembled</td>
+<td>PDF compiled with tectonic</td>
+<td>Manual upload still pending before 2026-05-15; honest verdict <code>pdf_compiled_upload_pending</code></td>
+<td>Exps 1127/1135</td>
+</tr>
 </tbody>
 </table>
 <h3 id="pending-validation-not-yet-headline">Pending Validation (Not Yet Headline)</h3>
@@ -945,7 +1016,13 @@ the narrative.</p>
 </tbody>
 </table>
 <h3 id="simulation-vs-reality">Simulation vs Reality</h3>
-<p>Current provenance snapshot (2026-04-18): <strong>15 live GPU artifacts</strong>, <strong>5 simulated artifacts</strong>, <strong>95 unverified artifacts</strong>, and <strong>1 software-model artifact</strong>. Only the live GPU subset informs the headline benchmark table above. The software-model artifact is Exp 228, which validates the FPGA control path in software simulation rather than claiming synthesized hardware throughput.</p>
+<p>Current provenance snapshot (2026-05-02): model-generation claims in the
+headline table remain live-GPU only. Corpus/ensemble, hardware, infrastructure,
+and adversarial-audit rows are included with their artifact provenance and are
+not presented as live model-generation benchmarks. The latest honest negatives
+are explicit: KV260 v4 tuning improved KL to 0.1128 but missed the 0.05 sampler
+correctness gate, and the Slitherlink WOPR cartridge blocked at conductor
+pre-gate because required prior-failures metadata was missing.</p>
 <h2 id="1-introduction">1. Introduction</h2>
 <h3 id="11-the-hallucination-problem">1.1 The Hallucination Problem</h3>
 <p>Large Language Models generate text by predicting the most probable next token. This produces fluent output but provides no mechanism to verify logical consistency, factual accuracy, or constraint satisfaction. When an LLM generates an incorrect early token, the error cascades irrecoverably through the remaining sequence.</p>
