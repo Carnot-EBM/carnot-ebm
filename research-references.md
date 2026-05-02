@@ -4,6 +4,104 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-05-02 arxiv Scan (Milestone 2026.04.88 Planning)
+
+### DRA-GRPO: Diverse Reasoning Paths for Mathematical Reasoning
+- **Paper:** arXiv 2505.09655 (May 2025)
+- **What:** Addresses GRPO mode collapse — when N completions per question are semantically
+  redundant, gradient signal degrades. Penalizes cosine-similarity among the group's reasoning
+  paths; forces exploration. Achieves consistent MATH benchmark improvements across 7B-70B models
+  without extra compute.
+- **Relevance to Carnot:** exp1118 hit training_wall_budget_hit=True with only 42/50 questions
+  completed; the group's 8 completions per question were likely near-identical (mode collapse).
+  DRA-GRPO's diversity penalty is the concrete fix for exp1129 (GRPO full training v2): adding
+  semantic diversity to the group-relative advantage prevents gradient washout and allows longer
+  training runs on fewer examples.
+- **Concrete experiment:** Exp 1129 — GRPO full training v2 with DRA-GRPO diversity penalty;
+  n_training=100, budget_s=600, compare advantage_stdev with and without diversity term.
+- **When to incorporate:** Milestone .88 exp1129.
+
+### Why Does Self-Distillation (Sometimes) Degrade Reasoning Capability?
+- **Paper:** arXiv 2603.24472 (March 2026)
+- **What:** Analyzes failure modes of self-distillation for mathematical reasoning. Key finding:
+  self-distillation degrades when the teacher and student share a "reasoning mode" — the student
+  amplifies existing errors rather than learning from successes. The failure correlates with
+  response diversity collapse (all outputs converge to the same reasoning path).
+- **Relevance to Carnot:** Theoretical grounding for why 3 consecutive RLVR+SSD attempts
+  (exp1083/1099/1110) produced honest negatives. The binary reward (correct/incorrect) drove
+  homogenization; GRPO's group-relative advantage avoids this. Confirms Carnot's architectural
+  pivot from SSD to GRPO+energy is theoretically well-motivated.
+- **When to incorporate:** Background context for exp1129 GRPO v2 design; cite in position paper
+  §4 (self-distillation limitations) as additional motivation for energy-grounded GRPO.
+
+### Continuous Energy Ising Machine via Difference-of-Convex Programming
+- **Paper:** arXiv 2509.01928 (September 2025)
+- **What:** Relaxes binary spins to continuous [-1,+1] variables; decomposes the Ising energy into
+  difference-of-convex (DC) components; solves via alternating DC-Prog iterations. Achieves better
+  optima than simulated annealing on benchmark Ising instances by escaping binary quantization
+  traps during search, then rounding to binary at end.
+- **Relevance to Carnot:** This is an alternative continuous-to-Ising search strategy that
+  complements our Gray-code visible-spin encoder. The DC relaxation path avoids the period-2
+  oscillation problem that exp1094/1122 found in KV260 synchronous updates — the continuous
+  solver has no fixed-point instability. Could be the fallback when FPGA Glauber exceeds KL
+  threshold. Position paper Phase 2a section should cite.
+- **Concrete experiment:** Future — incorporate DC-Prog as a software Ising solver alternative to
+  Python Gibbs in the SamplerBackend; benchmark KL vs continuous v4 Python sim.
+- **When to incorporate:** Milestone .89+ after KV260 v4 hardware synthesis is unblocked.
+
+### Self-Adaptive Ising Machines for Constrained Optimization via Lagrange Relaxation
+- **Paper:** arXiv 2501.04971 (January 2025)
+- **What:** Ising machines typically require manual penalty coefficient tuning (λ) for hard
+  constraints. This paper derives a self-adaptive scheme where λ updates automatically based on
+  constraint violation measurements. Achieves near-oracle constraint satisfaction without hand-
+  tuning. Works with FPGA Ising machines and simulated annealing.
+- **Relevance to Carnot:** Directly fixes the KV260 v4 parameter sensitivity problem (exp1122:
+  KL=0.134 at best alpha=0.1). Instead of sweeping beta/alpha manually (exp1134), the self-
+  adaptive scheme learns the optimal penalty coefficient automatically. The Lagrange dual update
+  rule is hardware-friendly: just increment λ by violation_count × learning_rate after each sweep.
+- **Concrete experiment:** Exp 1134 (KV260 v4 parameter tuning) — add self-adaptive λ update to
+  the Python simulation and measure whether KL drops below 0.05 without manual beta sweep.
+- **When to incorporate:** Milestone .88 exp1134.
+
+### CPPO: Accelerating Group Relative Policy Optimization
+- **Paper:** arXiv 2503.22342 (March 2026)
+- **What:** Reuses responses from nearby timesteps as "proxy group members" instead of generating
+  N fresh completions per question. Achieves 3.48x wallclock speedup on MATH benchmark with no
+  accuracy loss. Proxy group members are selected by embedding similarity to current question.
+- **Relevance to Carnot:** exp1118 hit training_wall_budget=240s with 42/50 questions; CPPO's
+  proxy group reuse would complete all 100 training questions within the same 600s budget. The
+  FoVer corpus (7329 pairs) provides a natural similarity pool for proxy selection. Integration
+  cost: ~20 lines of code on top of the existing GRPO loop in exp1118.
+- **Concrete experiment:** Exp 1129 (GRPO v2) — use CPPO proxy reuse strategy; target 100
+  training questions within 600s budget; compare advantage_stdev with/without proxy reuse.
+- **When to incorporate:** Milestone .88 exp1129.
+
+### GRPO with Reflection Reward for Self-Reflective Mathematical Reasoning
+- **Paper:** arXiv 2603.14041 (March 2026)
+- **What:** Integrates a reflection reward into GRPO that scores whether the model identifies
+  and corrects its own errors across multiple attempts. The reflection reward r_reflect = Δ(accuracy)
+  between attempt 1 and attempt k, encouraging self-correction. +4.7pp on MATH-500.
+- **Relevance to Carnot:** Carnot's verify-repair cycle IS a structured reflection loop: verify
+  returns a constraint violation signal; repair is the correction attempt. The reflection reward
+  is naturally grounded in Carnot's energy: r_reflect = E_before - E_after for each repair step.
+  This is a cleaner formulation than the binary RLVR loss.
+- **Concrete experiment:** Follow-up to exp1129 — add reflection reward (E_before - E_after per
+  repair step) to GRPO advantage; compare to pure ThinkPRM v2 reward signal.
+- **When to incorporate:** Milestone .89 (after GRPO full run in .88 establishes baseline).
+
+### HIVE: Hidden-Evidence Verification for Hallucination Detection
+- **Paper:** arXiv 2604.26139 (April 2026)
+- **What:** Framing hallucination detection as verification against "hidden evidence" — implicit
+  constraints derivable from the question and context without external knowledge bases. Achieves
+  state-of-the-art on TruthfulQA and HaluEval benchmarks. Uses a chain-of-verification that
+  extracts implicit constraints, checks them, and aggregates into a confidence score.
+- **Relevance to Carnot:** HIVE's constraint extraction from implicit context is what Carnot's
+  LogicExtractor and NLConstraintExtractor attempt. HIVE's verification pipeline maps onto
+  Carnot's Tier 2.5 (SymCodeVerifier) for code and Tier 3 (Ising) for constraint satisfaction.
+  HIVE results on TruthfulQA/HaluEval are benchmarks Carnot can target for the position paper.
+- **When to incorporate:** Milestone .88/89 position paper §5 (Related Work + Carnot benchmarks
+  against HIVE on HaluEval-GSM8K subset).
+
 ## 2026-05-01 arxiv Scan (Milestone 2026.04.87 Planning)
 
 ### Energy-Based Reward Models for Robust Language Model Alignment (EBRM)
