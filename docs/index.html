@@ -403,8 +403,8 @@
     <span class="section-label">What you can check</span>
     <h2 class="section-title">Four kinds of answer, one framework</h2>
     <p class="section-desc">
-      Carnot ships with four built-in checkers, each tuned for a different kind
-      of LLM output. Pick one, or let the pipeline route automatically.
+      Carnot ships with a routed verifier stack tuned for different kinds of
+      LLM output. Pick one, or let the pipeline route automatically.
     </p>
 
     <div class="bento-grid">
@@ -459,10 +459,10 @@
     <span class="section-label">Evidence</span>
     <h2 class="section-title">What we measured</h2>
     <p class="section-desc">
-      Every number below is from a live inference run on a real GPU, on a
-      well-known public benchmark, with the experiment artifact checked into
-      the repo. No simulated "synthetic-only" wins are mixed in. Each card
-      links back to the experiment number so you can read the raw result.
+      Every number below is backed by a checked-in experiment artifact. Model
+      benchmark rows use live GPU inference on public models; infrastructure,
+      hardware, ensemble, and adversarial-audit rows are labeled by provenance.
+      No simulated "synthetic-only" wins are mixed in.
     </p>
     <div class="results-grid">
       <div class="r-card">
@@ -610,6 +610,12 @@
         <div class="r-stats"><span class="r-before">50 live-GPU Qwen3.6-35B-A3B examples; inversion-fixed verifier used</span> <span class="r-after">Milestone .88 &mdash; Exp 1130</span></div>
       </div>
       <div class="r-card">
+        <span class="r-tag">Cascade routing &mdash; Lagrangian v2</span>
+        <h3 class="r-title">0.0pp accuracy delta with 3.2% cost savings</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 96.8%; background: #22c55e;"></div></div>
+        <div class="r-stats"><span class="r-before">Verifier-score features fixed v1's -22.86pp accuracy regression</span> <span class="r-after">Milestone .88 &mdash; Exp 1131</span></div>
+      </div>
+      <div class="r-card">
         <span class="r-tag">Live benchmark &mdash; SOTA 35B model (Qwen3.6-35B-A3B, dual RTX 3090)</span>
         <h3 class="r-title">HumanEval pass@1: 0% &rarr; 36% after Carnot correction</h3>
         <div class="r-meter"><div class="r-bar" style="width: 36%; background: #22c55e;"></div></div>
@@ -650,6 +656,12 @@
         <h3 class="r-title">k=5 ensemble catches 60/60 attacks</h3>
         <div class="r-meter"><div class="r-bar" style="width: 100%; background: #22c55e;"></div></div>
         <div class="r-stats"><span class="r-before">Style, length, and format attacks; SemEnergy alone caught 20/60</span> <span class="r-after">Milestone .88 &mdash; Exp 1133</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Exemplar cascade &mdash; Goodfire failure corpus</span>
+        <h3 class="r-title">Tier-3 k=5 catches 36/36 exemplars</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 100%; background: #f59e0b;"></div></div>
+        <div class="r-stats"><span class="r-before">Standalone tiers remain weak; SemEnergy=0.2222, Z3=0.0833</span> <span class="r-after">Mixed result &mdash; Exp 1132</span></div>
       </div>
     </div>
 

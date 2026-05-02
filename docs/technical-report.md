@@ -81,6 +81,15 @@ checked into `results/operational_retro_*.json`.
   **19.15% → 27.66%** (+8.51pp; evaluation partial at 47/50) (Exp 1129).
 - **Continuous self-learning signal improved:** Zenil alpha_t increased
   **0.38 → 0.52** after the energy retrain (Exp 1130).
+- **Lagrangian cascade v2 repaired the adaptive-router regression:**
+  accuracy delta was **0.0pp** with **3.2%** cost savings after adding
+  verifier-score features (Exp 1131).
+- **PRM-BiasBench-style adversarial audit:** the k=5 ensemble caught
+  **60/60** style, length, and format attacks with zero attack false positives;
+  SemEnergy alone caught 20/60 (Exp 1133).
+- **KV260 v4 remains an honest negative:** parameter tuning improved KL
+  **0.134 → 0.1128**, but the sampler is still above the 0.05 correctness gate
+  (Exp 1134).
 
 **Claims that did not survive audit** are kept in the research record as
 negative findings and documented alongside the audits that surfaced them
@@ -626,9 +635,15 @@ field context. We prioritized keeping the record honest over polishing
 the narrative.
 
 
-## Headline Results (Live GPU Only)
+## Headline Results (Provenance-Labeled)
 
-All primary benchmark rows below are from live GPU inference. The replay and trace-memory rows are follow-on analytics over those same live artifacts. Earlier milestones produced simulated results that appeared positive but were artifacts of unrealistic baselines — those are documented in the history sections as negative findings but are not included in headline numbers.
+Primary model-generation benchmark rows below are from live GPU inference.
+Corpus, hardware, infrastructure, ensemble, and adversarial-audit rows are
+included only with explicit provenance labels. The replay and trace-memory rows
+are follow-on analytics over live artifacts. Earlier milestones produced
+simulated results that appeared positive but were artifacts of unrealistic
+baselines — those are documented in the history sections as negative findings
+but are not included as model-generation headline claims.
 
 | Benchmark | Baseline | +Carnot | Delta | Experiment |
 |-----------|----------|---------|-------|------------|
@@ -657,6 +672,14 @@ All primary benchmark rows below are from live GPU inference. The replay and tra
 | Energy inversion fix — AUROC=0.9774 post-retrain | correct=0.689 > incorrect=0.621 (inverted) | AUROC **0.9774**; ordering restored | Correct 0.689→1.648, incorrect 0.621→2.096; EBRM noise-filter + SOTA corpus resolved OOD distribution shift | Exp 1120 |
 | GRPO + ThinkPRM v2 PRM reward (first positive) | 24% (baseline) | **28%** (+4pp on 25-question holdout) | Breaks 3-consecutive RLVR+SSD negative streak; N=8 group completions, ThinkPRM v2 as continuous reward | Exp 1118 |
 | k=5 AND-compose ensemble — production deployment | standalone best AUROC=0.8964 (SemEnergyProbe) | **k5 ensemble production default** | [SOSKANEnergyV3, SemEnergyProbe, ASTStructureVerifier, SemanticConsistencyVerifier, Z3MathVerifier]; ThinkPRM standalone Tier 0a | Exp 1121 |
+| k=5 AND-compose ensemble repair | AUROC **0.5547** | AUROC **0.9402** | Corpus-fitted SOS-KAN normalization fixed the production ensemble; SOS-KAN individual AUROC=0.9902 | Exp 1128 |
+| GRPO + ThinkPRM v2 PRM reward (full training) | 19.15% | **27.66%** | +8.51pp after 100 training questions; live-GPU eval partial at 47/50 | Exp 1129 |
+| Zenil alpha_t after energy retrain | 0.38 | **0.52** | 50 live-GPU Qwen3.6-35B-A3B examples; self-learning signal improved after inversion fix | Exp 1130 |
+| Lagrangian cascade v2 | Fixed cascade cost 111.017 ms; TP=1.0 | Adaptive cost 107.465 ms; TP=1.0 | **3.2%** cost savings with **0.0pp** accuracy delta after verifier-score features | Exp 1131 |
+| Goodfire exemplar cascade | Standalone tiers weak | Tier-3 k=5 TP **36/36** | Mixed result: the ensemble catches all categories, but single-tier claims are not yet defensible | Exp 1132 |
+| PRM-BiasBench-style adversarial audit | SemEnergy catches 20/60 | k=5 ensemble catches **60/60** | Style, length, and format attacks; zero attack false positives | Exp 1133 |
+| KV260 v4 sampler tuning — honest negative | KL **0.134** | KL **0.1128** | Improved but still above the 0.05 correctness gate; v3 sequential remains the reference at KL=0.025 | Exp 1134 |
+| arXiv package v3 | Source bundle assembled | PDF compiled with tectonic | Manual upload still pending before 2026-05-15; honest verdict `pdf_compiled_upload_pending` | Exps 1127/1135 |
 
 ### Pending Validation (Not Yet Headline)
 
@@ -668,7 +691,13 @@ The following results are mechanistically promising but remain behind a live-val
 
 ### Simulation vs Reality
 
-Current provenance snapshot (2026-04-18): **15 live GPU artifacts**, **5 simulated artifacts**, **95 unverified artifacts**, and **1 software-model artifact**. Only the live GPU subset informs the headline benchmark table above. The software-model artifact is Exp 228, which validates the FPGA control path in software simulation rather than claiming synthesized hardware throughput.
+Current provenance snapshot (2026-05-02): model-generation claims in the
+headline table remain live-GPU only. Corpus/ensemble, hardware, infrastructure,
+and adversarial-audit rows are included with their artifact provenance and are
+not presented as live model-generation benchmarks. The latest honest negatives
+are explicit: KV260 v4 tuning improved KL to 0.1128 but missed the 0.05 sampler
+correctness gate, and the Slitherlink WOPR cartridge blocked at conductor
+pre-gate because required prior-failures metadata was missing.
 
 ## 1. Introduction
 

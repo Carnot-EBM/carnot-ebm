@@ -1,301 +1,346 @@
-# Research Roadmap — Milestone 2026.04.88
+# Research Roadmap — Milestone 2026.04.89
 
-**Title:** arXiv Submission + AND-Compose k=5 Fix + GRPO Full Training + Cascade Calibration + Verifier Robustness
+**Title:** Final Submission + Bounded Verification + CCTU Benchmark + Continuous Self-Learning Repair + Hardware Readiness
 
-**CalVer:** 2026.04.88 (sequence increment from 2026.04.87)
-**Planned Experiments:** Exps 1127–1138 (12 experiments)
-**Date Designed:** 2026-05-02
-**Prerequisite:** Milestone 2026.04.87 retro complete (Exp 1126)
+**CalVer:** 2026.04.89 (sequence increment from 2026.04.88)  
+**Planned Experiments:** Exps 1139–1151 (13 experiments)  
+**Date Designed:** 2026-05-02  
+**Prerequisite:** Milestone 2026.04.88 retro complete (Exp 1138)
 
 ---
 
-## What Milestone 2026.04.87 Proved
+## What Milestone 2026.04.88 Proved
 
-Milestone .87 met all 11 success criteria (first perfect run in project history). Key results:
+Milestone .88 met 10 of 11 success criteria. It converted several .87 "promising but incomplete"
+threads into stronger evidence, while surfacing three practical gaps that should define .89.
 
 **Wins:**
-- **Energy inversion FIXED:** Mean correct energy 0.689→1.648, mean incorrect 0.621→2.096. AUROC=0.9774 post-retrain on 7329-pair corpus. Root cause confirmed: FoVer was trained on base-model outputs; SOTA RL-optimized outputs caused OOD distribution shift. Fix: extend corpus with SOTA outputs + EBRM noise filtering.
-- **GRPO + ThinkPRM v2 first POSITIVE result:** +4pp (24%→28%) on 25-question holdout, breaking 3-consecutive RLVR+SSD negative streak. DualGPU used. Training wall budget hit at 240s (only 42/50 questions completed).
-- **All 4 infrastructure bottlenecks deployed (exp1117):** dispatch manifest YAML structural bug fixed, CARNOT_BATCH_DOC_RECONCILE defaulted to 1, grace_period_s schema added, CARNOT_FAST_EVAL flag added. Estimated 111 min/milestone savings going forward.
-- **WOPR Hashi cartridge:** E=0 at convergence. Gallery updated.
+- **k=5 AND-compose fixed:** SOSKANEnergyV3 root cause was non-convergence, not a simple sign
+  error. Retraining/repair lifted SOS-KAN individual AUROC to 0.9902 and the k=5 ensemble AUROC
+  to **0.9402**, clearing the >0.8 target.
+- **GRPO + ThinkPRM v2 improved again:** 100-question training used DualGPU and produced
+  **+8.51pp** improvement over baseline. Advantage standard deviation rose to 0.125, but remains
+  below the desired >0.15 diversity target. Evaluation completed 47/50 holdout questions.
+- **Zenil alpha_t improved:** post-retrain alpha_t reached **0.52** vs prior 0.38, strengthening
+  the continuous self-learning signal.
+- **Cascade v2 preserved accuracy:** Lagrangian cascade v2 achieved **3.2% cost savings** with
+  **0.0pp accuracy delta** after adding verifier-score features.
+- **Adversarial style probes did not fool k=5:** PRM-BiasBench-style attacks had **100% TP rate**
+  under k=5; Z3 dominated style-irrelevant failures.
+- **Position paper updated:** .88 findings were incorporated into the paper draft.
 
-**Critical findings for .88:**
-- **k=5 AND-compose AUROC=0.5547 < individual best SemEnergyProbe AUROC=0.8964.** SOSKANEnergyV3 individual AUROC=0.333 (below chance). The ensemble is WORSE than the best individual verifier due to SOSKANEnergyV3 adding anti-correlated noise. Root cause and fix are mandatory before k=5 is used as the production default.
-- **GRPO training wall budget hit:** 240s budget was too tight; only 42/50 training questions processed. Need 600s budget and 100 training questions for a full proof-of-concept.
-- **Lagrangian cascade router accuracy degraded 22.9pp** vs fixed cascade (TP 0.743 vs 0.971). The MLP router lacks verifier-score features; accuracy/cost balance needs retuning.
-- **arXiv manual upload still required:** pdflatex/tectonic absent from conductor environment; 2026-05-15 deadline is 13 days away. **HIGHEST URGENCY.**
+**Partials and failures:**
+- **arXiv is still not fully submitted:** exp1127 compiled a PDF, but `arxiv_submitted=false`.
+  Manual upload remains the highest operational priority before the 2026-05-15 deadline.
+- **Goodfire-style exemplars are caught late:** k=5 catches all 36 curated exemplars, but cheap
+  tiers remain weak: ThinkPRM 13.9%, SemEnergy 22.2%, SymCode 8.3%, Causal 2.8%, Z3 standalone
+  8.3%. The cascade is accurate because it escalates, not because early tiers are calibrated.
+- **KV260 sampler remains above target:** v4 tuning improved KL to 0.1128, still above the
+  <0.05 threshold. Self-adaptive lambda worsened the mismatch, suggesting a topology/update-rule
+  issue rather than a scalar-parameter issue.
+- **Slitherlink did not ship:** exp1136 was blocked by a stale gate/prior-failures path, and the
+  HF gallery update was consequently absent.
+- **Roadmap hygiene still leaks time:** stale `prior_failures` and gate metadata caused false
+  block/waste patterns despite the conductor itself being stable.
+
+---
+
+## Three Biggest Gaps Between Current State and PRD Vision
+
+1. **Verified reasoning still lacks distribution-level certificates.**  
+   k=5 is now strong on sampled outputs, but Carnot does not yet bound the probability mass of
+   invalid outputs under a model distribution. The PRD's verifiable-reasoning vision needs a
+   certificate tier: "under these constraints, unsafe mass is <= p." BEAVER-style deterministic
+   bounds are the most direct next step.
+
+2. **The cascade is too dependent on expensive late tiers.**  
+   .88 proved k=5 can catch curated failures, but early tiers are poorly calibrated for Goodfire
+   exemplar classes. Practical local-first verification needs cheap routing that knows when to
+   escalate, especially for data-driven vs reasoning-driven hallucination modes.
+
+3. **Continuous self-learning and hardware are not yet closed loops.**  
+   GRPO and alpha_t improved, but the system is not yet using its own repair attempts as a
+   persistent self-learning signal. Hardware is also still a simulation story: KV260 KL remains
+   above target, and Extropic/thermodynamic paths need concrete integration packets before the
+   architecture can claim hardware readiness.
+
+---
+
+## External Findings Incorporated
+
+The 2026-05-02 literature and ecosystem scan added the following to `research-references.md` before
+this roadmap was designed:
+
+- **BEAVER (arXiv 2512.05439):** deterministic probability bounds for semantic constraints.
+- **HalluGuard (arXiv 2601.18753):** data-driven vs reasoning-driven hallucination decomposition.
+- **CCTU (arXiv 2603.15309):** constrained tool-use benchmark with executable validators.
+- **RandCSPBench (arXiv 2602.18419):** hard-regime CSP benchmark to avoid easy-instance wins.
+- **HardNet++ (arXiv 2604.19669) and KKT-Hardnet (arXiv 2507.08124):** differentiable hard
+  constraint projection for repair.
+- **EBT-Policy (arXiv 2510.27545):** adaptive Langevin dynamics for behavior-space EBMs.
+- **MetaCluster KAN compression (arXiv 2510.19105):** prototype-clustered KAN compression.
+- **Energy-Time-Accuracy thermodynamic computing (arXiv 2601.04358):** hardware benchmark framing.
+- **Extropic XTR-0/Z1 updates:** TSU hardware path and THRML software integration.
+- **Logical Intelligence Kona/Aleph updates:** neural theorem-proving target for future bridges.
+- **MARCH (arXiv 2603.24579):** multi-agent information-asymmetric self-checking.
 
 ---
 
 ## Architecture Diagram
 
 ```
-                    Carnot Verification Cascade (.88 target state)
-                    ═══════════════════════════════════════════════
+                 Carnot .89 Target Architecture
+                 ==============================
 
-User Query
+Inputs: math, code, tool-use, curated hallucination exemplars, hard CSPs
     │
     ▼
-Tier 0a: ThinkPRM v2 ──────────────────── AUROC=0.9946 (step-level)
-    │ verdict=uncertain
-    ▼
-Tier 0b: SpilledEnergyDetector ─────────── logit-discrepancy (fast)
-    │ high_spill=False
-    ▼
-Tier 0c: SemEnergyProbe ────────────────── AUROC=0.8964 (0.017ms)  ← PRIMARY
-    │ score≤threshold
-    ▼
-Tier 3: k=5 AND-compose [NEEDS FIX] ─────  AUROC=0.5547 → target >0.80
-    │   SOSKANEnergyV3*  0.333 → FIX
-    │   SemEnergyProbe   0.896
-    │   ASTStructure     0.556
-    │   SemConsistency   0.528
-    │   Z3MathVerifier   0.691
-    │ (*SOSKANEnergyV3 is the bottleneck; fix or replace)
-    ▼
-Repair: GRPO-energy-PRM guided (target: full training >32% accuracy)
+SOTA Local Generation
+    ├─ unsloth/Qwen3.6-35B-A3B-GGUF
+    ├─ unsloth/gemma-4-31B-it-GGUF
+    └─ unsloth/gemma-4-26B-A4B-it-GGUF
     │
     ▼
-Certificate + Lagrangian Router v2 (target accuracy_delta > -5pp)
+Cheap Tiers + Router v3
+    ├─ ThinkPRM v2
+    ├─ SemEnergy
+    ├─ HalluGuard-style NTK/data-vs-reasoning features
+    └─ Goodfire exemplar calibration
+    │           │
+    │           └── escalate when cheap tiers are low-confidence
+    ▼
+k=5 AND-compose verifier (AUROC 0.9402 from .88)
+    ├─ SOSKANEnergyV3
+    ├─ SemEnergyProbe
+    ├─ ASTStructureVerifier
+    ├─ SemanticConsistencyVerifier
+    └─ Z3MathVerifier
+    │
+    ├── BEAVER-lite certificate tier
+    │       └─ bound unsafe probability mass for prefix-closed constraints
+    │
+    ├── Executable benchmark tier
+    │       └─ CCTU 25-task adapter for tool-use constraints
+    │
+    └── Repair + self-learning loop
+            ├─ GRPO reflection reward: r = E_before - E_after
+            ├─ HardNet++/KKT projection repair for numeric constraints
+            └─ persistent repair trace corpus for FR-11
+
+Hardware readiness path
+    ├─ KV260 v5 DC-continuous Ising diagnostic (software parity first)
+    └─ Extropic Z1/XTR-0 integration packet + ETA benchmark spec
 ```
 
 ---
 
 ## Phase Descriptions
 
-### Phase 0 — arXiv Submission (CRITICAL, unconditional, run first)
+### Phase 0 — Release Blockers and Roadmap Hygiene
 
-**exp1127: arXiv PDF Compilation + Final Submission**
+**exp1139: arXiv Final Submission Close-Out**
 
-The arXiv bundle (121KB tar.gz) was built in exp1116 with author identity filled. The only
-remaining blockers: pdflatex/tectonic not installed and no browser session. This experiment
-tries pip install tectonic as a self-contained LaTeX engine (no system packages needed), then
-compiles the PDF, and produces an exact checklist for the manual arXiv submission. Deadline:
-2026-05-15. Every day of delay reduces review buffer.
+The position paper is no longer a writing problem; it is an operational submission problem. This
+task must use the exp1127 PDF/artifacts, verify the latest PDF and source bundle, and either record
+the arXiv submission ID or produce the exact remaining manual actions with no ambiguity.
 
-Acceptance: arxiv_submitted=True OR (pdf_compiled=True AND manual_steps_complete_enough_to_submit_today).
+Acceptance: `arxiv_submitted=true` with `arxiv_id`, or a checked artifact proving
+`pdf_compiled=true` and `manual_upload_steps_remaining` is precise enough to complete immediately.
 
-### Phase 1 — AND-Compose k=5 Fix (MANDATORY)
+**exp1140: Roadmap Gate/Prior-Failures Audit v1**
 
-**exp1128: SOSKANEnergyV3 Root Cause + k=5 AND-Compose Repair**
+.88 lost Slitherlink and wasted agent calls on stale gate/prior-failure metadata. Because the
+conductor itself is not to be modified in .89 planning, this experiment builds an external audit
+script and report that checks the new roadmap for structured gates, stale upstream IDs, missing
+prior-failure declarations on carry-forwards, and unsupported model/agent combinations.
 
-SOSKANEnergyV3 individual AUROC=0.333 means it is producing INVERTED scores — the model is
-below chance, actively degrading the k=5 ensemble. Root causes to diagnose:
-1. Energy score polarity inverted (higher energy = correct when it should = incorrect)
-2. Model not converged / trained on inverted labels
-3. SOS-KAN gradient normalization causing activation saturation
+Acceptance: `roadmap_gate_audit_passed=true`, with a report covering all .89 tasks.
 
-Fix plan: (a) inspect SOSKANEnergyV3 score output on known-correct vs known-incorrect examples;
-(b) if polarity inverted, flip sign in output layer; (c) re-train with fresh label check;
-(d) if unfixable, replace with DualSOSKANEnergyProbe using calibrated isotonic regression
-wrapper. After fix, re-run k=5 benchmark on 500-example holdout. Target: k5 AUROC > 0.80.
+**exp1141: WOPR Slitherlink Rescue**
 
-Acceptance: sos_kan_root_cause_identified=True AND k5_ensemble_auroc_above_08=True.
+Slitherlink is a formulaic constraint cartridge, and .88 did not fail on the modeling problem. The
+rescue should explicitly declare the exp1136 blocked-gate failure and implement the cartridge with
+hard-regime test instances informed by RandCSPBench.
 
-### Phase 2 — GRPO Full Training (GPU, DualGPU MANDATORY)
+Acceptance: `slitherlink_cartridge_shipped=true`, `e_zero_at_convergence=true`, with tests.
 
-**exp1129: GRPO Energy PRM Full Training v2**
+### Phase 1 — Bounded Verification and Benchmark Breadth
 
-exp1118 proved GRPO+ThinkPRM v2 is positive (+4pp) but hit the training wall at 240s. This
-experiment runs the full training with: n_training=100 questions, budget_s=600, N=8 completions
-per question, ThinkPRM v2 as continuous reward. Applies DRA-GRPO diversity penalty (arXiv
-2505.09655) to prevent mode collapse on the 8-completion groups. Uses CPPO proxy reuse strategy
-(arXiv 2503.22342) to reduce inference cost per group. Evaluates on 50 holdout questions.
+**exp1142: BEAVER-Lite Deterministic Bounder**
 
-Target: improvement_over_baseline > 0.05 (5pp improvement on 50-question holdout). DualGPU
-MANDATORY — this will not run on single GPU in 600s budget.
+Carnot needs a certificate tier above sampled verification. This task implements a local, scoped
+BEAVER-lite bounder for prefix-closed arithmetic constraints using SOTA local GGUF models, compares
+bound tightness to empirical sampling, and records whether token-logprob access is sufficient.
 
-Prior failures: exp1118 (training_wall_budget_hit=True, 240s too tight for 50 questions).
+Acceptance: `beaver_lite_bounder_written=true`, `unsafe_mass_bound_reported=true`.
 
-Acceptance: grpo_v2_honest_result=True AND improvement_over_baseline recorded.
+**exp1143: HalluGuard Cascade Router v3**
 
-### Phase 3 — Continuous Self-Learning (GPU)
+The router should learn why cheap tiers fail, not just that they fail. Add HalluGuard-style features
+for data-driven mismatch vs reasoning-driven decoding instability and test whether these explain
+Goodfire exemplar routing.
 
-**exp1130: Zenil α_t Measurement with Post-Retrain Verifier**
+Acceptance: `halluguard_features_added=true`, with cost savings and TP-rate deltas measured.
 
-The verifier was retrained on 7329-pair SOTA corpus with AUROC=0.9774 (exp1120). The prior
-α_t measurement (exp1112) used the pre-retrain verifier. Re-measure α_t = μ_P(E_verifier) with
-the new verifier on 50 live SOTA model outputs. If α_t > 0.38 (prior) the retrained verifier
-is grounding self-distillation better. Log as a FR-11 continuous self-learning data point.
+**exp1144: CCTU 25-Task Local SOTA Adapter**
 
-Acceptance: zenil_alpha_t_post_retrain_measured=True.
+CCTU is the right next FR-12 benchmark: agentic tool-use under explicit constraints with executable
+validation. This task builds a 25-task local adapter and runs at least one mandated SOTA GGUF model.
 
-### Phase 4 — Cascade and Router Calibration
+Acceptance: `cctu_adapter_written=true`, `cctu_tasks_evaluated>=25`, and executable validation
+rates reported.
 
-**exp1131: Lagrangian Cascade v2 — Accuracy-Preserving Router**
+**exp1145: Goodfire Cheap-Tier Distillation v1**
 
-exp1123 achieved 99.98% cascade cost savings but at -22.9pp accuracy (TP 0.743 vs 0.971 fixed).
-The MLP was trained without verifier-score features — the router had no signal about correctness.
-Fix: (a) extract SemEnergyProbe score + ThinkPRM confidence as input features; (b) increase
-MLP hidden size 32→128; (c) add minimum-TP constraint to the Lagrangian dual (min TP rate ≥ 0.90
-at any cascade depth). Target: accuracy_delta > -5pp vs fixed cascade while preserving >40% cost
-savings.
+After exp1143 identifies the weak-tier failure classes, this task distills the curated Goodfire
+exemplar signal into cheap-tier thresholds/features without weakening k=5 safety.
 
-Prior failures: exp1123 (accuracy_delta=-0.2286, no verifier-score features, MLP=32 hidden).
+Acceptance: `cheap_tier_tp_rate_improved=true`, with SemEnergy/ThinkPRM cheap-tier TP rate and
+false-positive deltas reported.
 
-Acceptance: cascade_v2_accuracy_delta_above_neg05=True AND cost_savings_pct_positive=True.
+### Phase 2 — Continuous Self-Learning and Repair
 
-### Phase 5 — Verifier Robustness Validation
+**exp1146: GRPO Reflection Reward v3**
 
-**exp1132: Goodfire LLM Failure Exemplar Cascade TP Rate**
+This is the mandatory continuous self-learning experiment. It adds a repair-grounded reward:
+`r_reflect = E_before - E_after`, using the model's own failed and repaired outputs as persistent
+training signal. It must use mandated SOTA local GGUF models and DualGPU.
 
-From known-issues.md: exp1112 built the LLM failure exemplar corpus (data/llm_failure_exemplars.jsonl,
-≥30 named failure modes). Now feed those exemplars through the full Carnot verifier cascade and
-measure per-tier TP rate. Key test: does Z3MathVerifier catch "9.11 > 9.9" (arithmetic error from
-version-number interference)? Does SemEnergyProbe catch trolley-problem moral framing errors?
-Results validate Carnot's engineering claim vs mechanistic interpretability tools.
+Acceptance: `reflection_reward_integrated=true`, `improvement_over_baseline>=0.09` or an honest
+negative with advantage-diversity diagnostics.
 
-Acceptance: goodfire_exemplar_tp_rate_measured=True AND per_tier_results_logged=True.
+**exp1147: HardNet++ / KKT Projection Repair**
 
-**exp1133: PRM-BiasBench Adversarial Test on k=5 Ensemble**
+Prompt-based repair is expensive and unstable for numeric constraints. This task prototypes a
+projection layer for continuous arithmetic/range constraints and compares it to current prompt
+repair.
 
-arXiv 2603.06621 released PRM-BiasBench: adversarial exemplars targeting stylistic shortcuts
-in PRMs (43% of PRM reward attributable to formatting/padding, not reasoning quality). Test the
-k=5 AND-compose ensemble against PRM-BiasBench-style stylistic attacks to measure how many are
-caught vs missed. Tests whether AND-composition provides better null-space coverage than individual
-verifiers against style-based gaming.
+Acceptance: `projection_repair_written=true`, with violation-rate and latency comparisons.
 
-Acceptance: prm_biasbench_attack_tp_measured=True.
+**exp1148: MetaCluster SOS-KAN Compression**
 
-### Phase 6 — Hardware Path
+SOS-KAN is now strong but may be too heavy for cheap-tier use and hardware paths. This task tests
+whether MetaCluster-style prototype compression preserves AUROC while shrinking the model.
 
-**exp1134: KV260 v4 Beta/Alpha Self-Adaptive Parameter Tuning**
+Acceptance: `sos_kan_compressed=true`, `auroc_drop<=0.02`, and `size_reduction_factor>=5`.
 
-exp1122 Python simulation showed KL=0.134 at best (alpha=0.1, beta=2.0), above 0.05 threshold.
-Retro suggested trying beta=3.0/4.0. This experiment: (a) implements self-adaptive λ update
-from arXiv 2501.04971 (Lagrange Ising) to auto-tune penalty coefficients; (b) sweeps beta=2-5
-at alpha=0.1; (c) alpha sweep 0.02-0.2 at best beta; (d) if KL still above 0.05, documents
-the parameter space boundary and updates the RTL spec with empirically-derived feasibility limits
-(e.g., "KL < 0.05 requires beta > 6.0, which exceeds 16-bit fixed-point range on XCZU5EV").
+### Phase 3 — Hardware Readiness and Retro
 
-Prior failures: exp1122 (KL=0.134, above 0.05, best_alpha_ema=0.1 insufficient).
+**exp1149: KV260 v5 DC-Continuous Ising Diagnostic**
 
-Acceptance: kv260_v4_kl_below_05=True OR kv260_v4_feasibility_limits_documented=True.
+.88 tuning suggests the mismatch is structural. This task prototypes a DC-continuous Ising software
+fallback, compares it to v4, and frames results with energy-time-accuracy diagnostics.
 
-### Phase 7 — Position Paper + WOPR Gallery
+Acceptance: `kv260_v5_diagnostic_complete=true`, with KL and ETA metrics reported.
 
-**exp1135: Position Paper v3 — Integrate .87/.88 Experimental Findings**
+**exp1150: Extropic Z1/XTR-0 Integration Packet**
 
-Position paper main.tex needs the .87 experimental results integrated: energy inversion fix
-(AUROC 0.977), GRPO first positive (+4pp), k=5 AND-compose deployment, cascade cost savings.
-Also: add Related Work comparison to HIVE (arXiv 2604.26139) as a complementary hallucination
-detection system. Target: main.tex ready to re-compile with new experimental section.
+Carnot needs a concrete hardware integration packet before vendor hardware arrives. This task
+produces a THRML parity benchmark spec, minimal EBM workload suite, and early-access checklist for
+Extropic Z1/XTR-0.
 
-Acceptance: position_paper_findings_updated=True.
+Acceptance: `extropic_integration_packet_written=true`, with benchmark workload files.
 
-**exp1136: WOPR Slitherlink Puzzle Cartridge**
+**exp1151: Milestone 2026.04.89 Retrospective**
 
-Next WOPR game: Slitherlink (Nikoli/Nurikabe loop puzzle). Each cell has a clue digit 0-3
-encoding how many of its 4 edges are part of the loop. Ising spins encode edge membership.
-Energy = (violated clue penalties) + (loop connectivity penalty). E=0 iff exactly one closed
-loop visits all constrained edges. agent_type: codex (formulaic graph constraint encoding).
+Evaluate all success criteria, gate outcomes, runtime, SOTA-model compliance, and whether the
+release, certification, self-learning, and hardware-readiness questions advanced.
 
-Acceptance: slitherlink_cartridge_shipped=True AND canonical_e_at_convergence==0.0.
-
-**exp1137: HF Spaces Gallery Update**
-
-Deploy Slitherlink cartridge to HF Spaces gallery. Gated on exp1136.slitherlink_cartridge_shipped.
-
-Acceptance: gallery_updated=True.
-
-### Phase 8 — Retrospective
-
-**exp1138: Milestone 2026.04.88 Retrospective**
-
-Standard operational retrospective. Measure: criteria met/total, wall time vs .87 (891 min),
-slowest-5 composition (does exp906 FINALLY absent? exp1117 fixed the YAML structural bug).
-Document whether the 111 min/milestone infrastructure savings from exp1117 are observable in .88.
+Acceptance: `retro_complete=true`.
 
 ---
 
 ## Dependency Graph
 
 ```
-exp1127 (arXiv CRITICAL) ─ unconditional
-exp1128 (AND-compose fix) ─ unconditional
-exp1129 (GRPO v2, GPU) ─── unconditional, DualGPU MANDATORY
-exp1130 (Zenil α_t) ─────── unconditional, GPU
-exp1131 (cascade v2) ─────── unconditional (uses FoVer corpus)
-exp1132 (Goodfire TP) ─────── unconditional (uses exp1112 exemplar corpus)
-exp1133 (PRM-BiasBench) ─── gated on exp1128.k5_ensemble_auroc_above_08 (needs fixed ensemble)
-exp1134 (KV260 v4 tuning) ── unconditional
-exp1135 (position paper) ─── gated on exp1129.grpo_v2_honest_result AND exp1130.zenil_alpha_t_post_retrain_measured
-exp1136 (Slitherlink) ─────── unconditional (codex)
-exp1137 (gallery) ─────────── gated on exp1136.slitherlink_cartridge_shipped
-exp1138 (retro) ──────────── last
+Phase 0:
+  exp1139  arXiv final submission close-out
+  exp1140  roadmap gate/prior-failures audit
+  exp1141  Slitherlink rescue
+
+Phase 1:
+  exp1142  BEAVER-lite certificate tier
+  exp1143  HalluGuard router v3
+      └── exp1145 Goodfire cheap-tier distillation
+  exp1144  CCTU 25-task adapter
+
+Phase 2:
+  exp1146  GRPO reflection reward continuous self-learning
+  exp1147  HardNet++/KKT projection repair
+  exp1148  MetaCluster SOS-KAN compression
+
+Phase 3:
+  exp1149  KV260 v5 DC-continuous Ising diagnostic
+  exp1150  Extropic Z1/XTR-0 integration packet
+  exp1151  milestone retro
 ```
+
+Structured conductor gates:
+- exp1145 is gated on `exp1143.halluguard_features_added == true`.
+- exp1151 is intentionally ungated so the milestone always produces a retro, even if upstream tasks fail.
 
 ---
 
 ## Hardware Requirements
 
-- **DualGPU (2x RTX 3090 CUDA):** exp1129 (GRPO v2) — MANDATORY. exp1130 (Zenil α_t) — preferred.
-- **CPU only:** exp1127, 1128, 1131, 1132, 1133, 1134, 1135, 1136, 1137, 1138.
-- **KV260 FPGA (192.168.51.98):** exp1134 — board is reachable; hardware sampling attempted only if Python simulation resolves KL.
-- **Vivado:** Still not installed. exp1134 stays Python simulation only.
+| Area | Tasks | Required Hardware | Notes |
+|------|-------|-------------------|-------|
+| SOTA local LLM inference | exp1142, exp1144, exp1146 | 2x RTX 3090 preferred | Use mandated GGUF models; small legacy models only for CPU smoke tests. |
+| DualGPU training | exp1146 | 2x RTX 3090 | Mandatory for GRPO reflection reward. |
+| CPU-only diagnostics | exp1140, exp1141, exp1143, exp1145, exp1147, exp1148, exp1151 | Workstation CPU | Avoid live model calls unless explicitly required. |
+| KV260 path | exp1149 | No live KV260 required | Software diagnostic first; Vivado still not assumed installed. |
+| Extropic path | exp1150 | No hardware required | Produces integration packet for future Z1/XTR-0 access. |
 
 ---
 
-## 11 Success Criteria
+## Success Criteria
 
-1. **arxiv_submitted_or_pdf_compiled** (exp1127) — CRITICAL. 2026-05-15 deadline.
-2. **sos_kan_root_cause_identified** (exp1128) — inverted AUROC diagnosed and fixed.
-3. **k5_ensemble_auroc_above_08** (exp1128) — ensemble better than individual best.
-4. **grpo_v2_honest_result** (exp1129) — full training run, improvement recorded.
-5. **zenil_alpha_t_post_retrain_measured** (exp1130) — FR-11 self-learning data point.
-6. **cascade_v2_accuracy_delta_above_neg05** (exp1131) — cost savings without accuracy collapse.
-7. **goodfire_exemplar_tp_rate_measured** (exp1132) — per-tier TP on named failure modes.
-8. **prm_biasbench_adversarial_tp_measured** (exp1133) — stylistic attack resistance measured.
-9. **kv260_v4_kl_below_05_or_feasibility_documented** (exp1134) — KV260 v4 path resolved.
-10. **position_paper_v3_findings_integrated** (exp1135) — arXiv main.tex ready to recompile.
-11. **retro_complete** (exp1138).
+1. `arxiv_submitted_or_manual_packet_finalized` (exp1139) — CRITICAL before 2026-05-15.
+2. `roadmap_gate_audit_passed` (exp1140) — no stale gates or missing carry-forward prior_failures.
+3. `slitherlink_cartridge_shipped` (exp1141) — E=0 at convergence with tests.
+4. `beaver_lite_bound_reported` (exp1142) — unsafe-mass bound and empirical comparison written.
+5. `halluguard_router_features_measured` (exp1143) — data-vs-reasoning features evaluated.
+6. `cctu_adapter_honest_result` (exp1144) — 25 constrained tool-use tasks evaluated.
+7. `goodfire_cheap_tier_tp_improved_or_honest_negative` (exp1145).
+8. `grpo_reflection_reward_honest_result` (exp1146) — continuous self-learning requirement.
+9. `projection_repair_honest_result` (exp1147).
+10. `sos_kan_compression_honest_result` (exp1148).
+11. `kv260_v5_diagnostic_honest_result` (exp1149).
+12. `extropic_integration_packet_written` (exp1150).
+13. `retro_complete` (exp1151).
 
----
-
-## Key Architectural Decisions for .88
-
-- **No gemini agent_type** (429-rate-limited since .84).
-- **Codex for WOPR Slitherlink** (formulaic graph constraint encoding — codex excels at these).
-- **DualGPU MANDATORY for exp1129** — hard constraint in prompt (failure mode from exp1118).
-- **SOSKANEnergyV3 fix BEFORE PRM-BiasBench test** — exp1133 gated on exp1128 fixing the ensemble; testing a broken k=5 against adversarial exemplars would produce invalid baseline.
-- **exp1127 runs unconditionally FIRST** — arXiv deadline risk increases every day.
-- **grace_period_s: 2400 for exp1129** — GRPO training at 600s + inference at 160s = 760s minimum; add margin.
-- **No manifest for exp906 expected** — exp1117 fixed the YAML structural bug; if exp906 appears in .88 slowest-5, that is a new regression requiring investigation.
+Passing threshold: 10 of 13 success criteria, with exp1139, exp1146, and exp1151 treated as
+mandatory strategic criteria.
 
 ---
 
-## New arxiv Findings Incorporated
+## Key Decisions for .89
 
-| Paper | arXiv ID | Incorporated in |
-|-------|----------|-----------------|
-| DRA-GRPO: Diverse Reasoning Paths | 2505.09655 | exp1129 diversity penalty |
-| CPPO: 3.48x GRPO Acceleration | 2503.22342 | exp1129 proxy reuse |
-| Why Self-Distillation Degrades | 2603.24472 | position paper §4 |
-| Continuous Ising via DC Programming | 2509.01928 | future exp (milestone .89+) |
-| Self-Adaptive Ising Machines | 2501.04971 | exp1134 self-adaptive λ |
-| GRPO + Reflection Reward | 2603.14041 | future exp (milestone .89) |
-| HIVE Hallucination Verification | 2604.26139 | position paper Related Work |
+- **Run release close-out first.** The arXiv deadline is calendar-bound and must not be buried under
+  research tasks.
+- **Do not modify `scripts/research_conductor.py` in .89 tasks.** Roadmap/gate hygiene is handled
+  by an external audit script/report.
+- **Use mandated SOTA local GGUF models for every LLM experiment.** Legacy small models are allowed
+  only as CPU smoke tests.
+- **No Gemini routing.** Gemini remains unsuitable for scheduled milestone work due to recent 429
+  pauses; Codex is used only for formulaic Slitherlink code.
+- **Treat k=5 as a strong verifier but not a certificate.** BEAVER-lite is introduced to begin
+  distribution-level guarantees.
+- **Treat KV260 KL as a structural diagnostic problem.** .89 should test an alternate continuous/DC
+  formulation instead of another scalar sweep.
 
 ---
 
 ## Estimated Wall Time
 
-| Experiment | Model | GPU | Est. Min |
-|-----------|-------|-----|---------|
-| exp1127 arXiv | opus | no | 20 |
-| exp1128 AND-compose fix | sonnet | no | 30 |
-| exp1129 GRPO v2 | opus | DualGPU | 50 |
-| exp1130 Zenil α_t | sonnet | GPU | 30 |
-| exp1131 Cascade v2 | sonnet | no | 25 |
-| exp1132 Goodfire TP | sonnet | no | 25 |
-| exp1133 PRM-BiasBench | sonnet | no | 25 |
-| exp1134 KV260 v4 | opus | no | 35 |
-| exp1135 Position paper | sonnet | no | 25 |
-| exp1136 Slitherlink | codex | no | 20 |
-| exp1137 Gallery | sonnet | no | 15 |
-| exp1138 Retro | sonnet | no | 15 |
-| **Total** | | | **~315 min** |
+| Phase | Experiments | Estimate |
+|-------|-------------|----------|
+| Phase 0 release/hygiene | exp1139-exp1141 | 90 min |
+| Phase 1 verification breadth | exp1142-exp1145 | 200 min |
+| Phase 2 self-learning/repair | exp1146-exp1148 | 240 min |
+| Phase 3 hardware/retro | exp1149-exp1151 | 190 min |
+| **Total** | **13 experiments** | **~720 min** |
 
-Total estimated wall time: ~315 min (well below .87's 891 min — these experiments are focused
-and directly follow from clear .87 findings, avoiding long exploratory GPU runs except where
-mandatory).
+The estimate is intentionally higher than .88 because .89 includes three SOTA-local model tasks, one
+DualGPU self-learning run, and two hardware-readiness tasks. The structured gates and audit task are
+expected to avoid the specific stale-gate failure class that blocked Slitherlink in .88.
