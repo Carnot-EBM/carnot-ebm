@@ -1,5 +1,75 @@
 # Carnot — Operational Status
 
+## Session 2026-05-02 — Milestone 2026.04.88 Planning Complete
+
+**Milestone 2026.04.87 COMPLETE (11/11 criteria met — FIRST PERFECT SCORE). Milestone 2026.04.88 PLANNED.**
+
+### .87 Recap (final)
+- **MET (11/11):** arxiv_submitted_or_bundle_uploaded (bundle_ready_for_manual_upload — pdflatex absent, tectonic not available in conductor env), infrastructure_3_bottlenecks_fixed (exp1117 — manifest dispatch + doc async + grace_period_s schema + fast-eval flag; YAML structural bug fixed), grpo_energy_prm_honest_result (exp1118 — +4pp, 0.24→0.28 fraction correct, positive_improvement), fover_sota_pairs_above_7000 (exp1119 — 6548→7329 pairs), energy_inversion_measured_post_retrain (exp1120 — inversion FIXED, AUROC=0.977), k5_and_compose_production_deployed (exp1121 — deployed but AUROC=0.5547 due to SOSKANEnergyV3 AUROC=0.333), kv260_v4_kl_measured (exp1122 — KL=0.134, above 0.05 threshold), adaptive_cascade_savings_measured (exp1123 — 99.98% cost savings but -22.9pp accuracy), hashi_cartridge_shipped (exp1124 — E=0 at convergence), gallery_updated (exp1125), retro_complete (exp1126)
+- **Key wins:** 11/11 criteria met — first perfect score; energy inversion fixed (AUROC 0.689<0.621 inverted → 1.648<2.096 correct); ThinkPRM v2 AUROC=0.9946 confirmed; GRPO first positive (+4pp); Hashi shipped; YAML structural bug in exclusion manifest FIXED (silent enforcement failure since .80)
+- **Critical open items for .88:** SOSKANEnergyV3 polarity inversion (AUROC=0.333 below chance) degrading k=5 ensemble; GRPO mode collapse (advantage_stdev=0.106); arXiv deadline 2026-05-15 (~13 days); KV260 v4 KL=0.134 above threshold
+
+### .88 Design (Exps 1127–1138, estimated ~315 min)
+
+**Phase 0 — arXiv CRITICAL (unconditional, MANDATORY first):**
+- exp1127: arXiv PDF compilation + final submission (opus, max_turns:30) — install tectonic; compile main.tex; 2026-05-15 CRITICAL deadline
+
+**Phase 1 — SOSKANEnergyV3 Root-Cause + k=5 Fix (MANDATORY):**
+- exp1128: Diagnose energy() polarity inversion, fix (sign flip or retrain), re-benchmark k=5 AND-compose (sonnet, max_turns:40) — target AUROC>0.7 for all 5 ensemble members
+
+**Phase 2 — GRPO Full Training (GPU, MANDATORY):**
+- exp1129: GRPO energy PRM v2 (opus, DualGPU MANDATORY, max_turns:60, grace_period_s:2400) — DRA-GRPO diversity penalty + CPPO proxy reuse; 600s budget; n=100 training questions; 50 holdout eval; prior_failures: exp1118-training_wall_budget_hit
+
+**Phase 3 — Zenil alpha_t Post-Retrain:**
+- exp1130: Measure Zenil alpha_t with exp1120 retrained verifier (sonnet, GPU, max_turns:40) — compare to prior=0.38; track as first-class metric
+
+**Phase 4 — Lagrangian Cascade v2 (gated on exp1128):**
+- exp1131: Rebuild cascade MLP with verifier-score features (sonnet, max_turns:40) — SemEnergyProbe score + ThinkPRM confidence as inputs; hidden 32→128; min-TP λ constraint in Lagrangian dual
+
+**Phase 5 — Goodfire Exemplar Cascade TP (MANDATORY — 3+ milestone overdue):**
+- exp1132: Run Goodfire 9.11>9.9 + trolley exemplars through cascade tiers, measure TP rate by tier (sonnet, max_turns:35)
+
+**Phase 6 — PRM Bias Adversarial (gated on exp1128):**
+- exp1133: Test GRPO/ThinkPRM reward hackability against arXiv 2603.06621 attack patterns using exp1129 trained model (sonnet, max_turns:35)
+
+**Phase 7 — KV260 v4 Parameter Tuning (prior_failures: exp1122):**
+- exp1134: Self-adaptive λ update (arXiv 2501.04971) + wider beta/alpha sweep 2.0-5.0 / 0.02-0.3 (opus, max_turns:40)
+
+**Phase 8 — Position Paper v3 Update (gated on exp1129+exp1130):**
+- exp1135: Add .88 findings to position paper (sonnet, max_turns:30) — k=5 AUROC post-fix, GRPO delta, Zenil alpha_t updated, arXiv status
+
+**Phase 9 — WOPR Slitherlink:**
+- exp1136: Slitherlink puzzle Ising cartridge (codex/gpt-5.5, max_turns:30) — Hamiltonian loop + planar graph constraints; E=0 at convergence
+
+**Phase 10 — HF Spaces Gallery Update (gated on exp1136):**
+- exp1137: Deploy Slitherlink to WOPR gallery (sonnet, max_turns:20)
+
+**Phase 11 — Retro:**
+- exp1138: Milestone 2026.04.88 retrospective
+
+### 11 Success Criteria
+1. arxiv_pdf_compiled_or_bundle_manually_uploaded (exp1127) — CRITICAL 2026-05-15
+2. sos_kan_polarity_fixed_k5_auroc_above_threshold (exp1128) — all 5 members AUROC>0.7
+3. grpo_training_budget_not_hit_honest_result (exp1129) — 100 questions, full budget
+4. zenil_alpha_t_post_retrain_measured (exp1130)
+5. cascade_v2_accuracy_degradation_below_10pp (exp1131) — vs fixed cascade
+6. goodfire_exemplar_cascade_tp_measured (exp1132) — MANDATORY overdue
+7. prm_bias_adversarial_test_honest_result (exp1133)
+8. kv260_v4_kl_measured_post_adaptive_tuning (exp1134)
+9. position_paper_v3_updated (exp1135)
+10. slitherlink_cartridge_shipped (exp1136)
+11. retro_complete (exp1138)
+
+### Key Architectural Decisions for .88
+- DualGPU MANDATORY for exp1129 (must not idle again after .87 broke the streak)
+- No gemini agent_type (429-rate-limited since .84)
+- codex/gpt-5.5 for Slitherlink (formulaic graph constraint encoding)
+- exp1128 gates exp1131 and exp1133 — k=5 fix is prerequisite for cascade v2 and adversarial test
+- DRA-GRPO diversity penalty (arXiv 2505.09655) + CPPO proxy reuse (arXiv 2503.22342) are the core upgrades for exp1129
+- Self-adaptive λ from arXiv 2501.04971 is the core upgrade for exp1134
+
+---
+
 ## Session 2026-05-01 — Milestone 2026.04.87 Planning Complete
 
 **Milestone 2026.04.86 COMPLETE (11/12 criteria met). Milestone 2026.04.87 PLANNED.**

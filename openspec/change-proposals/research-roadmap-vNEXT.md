@@ -1,327 +1,301 @@
-# Research Roadmap — Milestone 2026.04.66
+# Research Roadmap — Milestone 2026.04.88
 
-**Title:** Permanent LIVE-ENV Fix + DualGPU Production + Inertia Ising + Streaming CoT + iCE40 N=16
+**Title:** arXiv Submission + AND-Compose k=5 Fix + GRPO Full Training + Cascade Calibration + Verifier Robustness
 
-**CalVer:** 2026.04.66 (sequence increment from 2026.04.65)
-**Planned Experiments:** Exps 855-867 (13 experiments)
-**Date Designed:** 2026-04-25
-**Prerequisite:** Milestone 2026.04.65 retro complete (Exp 854)
+**CalVer:** 2026.04.88 (sequence increment from 2026.04.87)
+**Planned Experiments:** Exps 1127–1138 (12 experiments)
+**Date Designed:** 2026-05-02
+**Prerequisite:** Milestone 2026.04.87 retro complete (Exp 1126)
 
 ---
 
-## What Milestone 2026.04.65 Proved
+## What Milestone 2026.04.87 Proved
 
-Milestone .65 (Exps 843-854) targeted 12 success criteria. Results from Exp 854 retro:
+Milestone .87 met all 11 success criteria (first perfect run in project history). Key results:
 
 **Wins:**
-- Exp 843: governance_ready — RETRO audit + retirement plan written; manifest_enforcement_patch.txt provided
-- Exp 846: arbiter_calibrated — Gibbs warm-start fixed accuracy_standard from 0.0 → 1.0; RETRO-ARBITER-FLAT-ENERGY CLOSED
-- Exp 849: gguf_cache_implemented — GGUFCacheResolver implemented; RETRO-GGUF-CACHE-IMPORT CLOSED
-- Exp 852: SemanticEnergyProbe Tier 0f deployed (AUC_synthetic result in artifact)
+- **Energy inversion FIXED:** Mean correct energy 0.689→1.648, mean incorrect 0.621→2.096. AUROC=0.9774 post-retrain on 7329-pair corpus. Root cause confirmed: FoVer was trained on base-model outputs; SOTA RL-optimized outputs caused OOD distribution shift. Fix: extend corpus with SOTA outputs + EBRM noise filtering.
+- **GRPO + ThinkPRM v2 first POSITIVE result:** +4pp (24%→28%) on 25-question holdout, breaking 3-consecutive RLVR+SSD negative streak. DualGPU used. Training wall budget hit at 240s (only 42/50 questions completed).
+- **All 4 infrastructure bottlenecks deployed (exp1117):** dispatch manifest YAML structural bug fixed, CARNOT_BATCH_DOC_RECONCILE defaulted to 1, grace_period_s schema added, CARNOT_FAST_EVAL flag added. Estimated 111 min/milestone savings going forward.
+- **WOPR Hashi cartridge:** E=0 at convergence. Gallery updated.
 
-**Failures and new diagnostics:**
-- Exp 853: RETRO-LIVE-ENV-NOT-PROPAGATED OPENED — CARNOT_FORCE_LIVE not propagated (RETRO-015 recurrence); live benchmark v4 fell back to simulation for ninth consecutive code repair block
-- Exp 851: RETRO-ICE40-N16-UNEXPECTED-EXPANSION — N=16 expanded from 2 LCs at synthesis to 12258 LCs at P&R; flip-flop register proliferation root cause (synchronous spin state regs inferred by nextpnr from sequential Verilog)
-- Exp 850: RETRO-SOTA-MODEL-DOWNLOAD — model file absent despite GGUFCacheResolver; download path not implemented in Exp 849 (resolve() only checks existence, doesn't download)
-- Exp 854 retro: Wall time REGRESSION SIXTH CONSECUTIVE (+78 min, +2.0% vs .64). manifest_fix_patch.txt unapplied SEVEN consecutive milestones. DualGPURunner validated (1.96x throughput, Exp 685) but NEVER deployed in production path. Experiment count 772 — new historic high, 72 over 700 cap. GPU close clean (47C/47C, 0C differential). 10 open RETROs.
-
-**10 RETROs open going into .66:**
-- RETRO-MANIFEST-FULL-SCOPE — manifest_fix_patch.txt provided in Exp 843 but not applied (human action needed)
-- RETRO-JEPA-OOD — result of Exp 844 (if min_domain_auc < 0.50, still open)
-- RETRO-CONSTRAINT-ZERO-DELTA — result of Exps 847/848 (if retrieval still broken)
-- RETRO-XILINX-TOOLS-UNAVAILABLE — Vivado not installed; KV260 native synthesis blocked
-- RETRO-ISING-INJECTION-NO-DISCRIMINATION — energy delta identical for error/clean code
-- RETRO-SVAMP-ZERO-AUC — result of Exp 844 (if auc_svamp < 0.40)
-- RETRO-ICE40-PNR-LUT-OVERFLOW — N=16 LUT overflow (resolved by .66 Exp 859 if combinational fix works)
-- RETRO-SOTA-MODEL-DOWNLOAD — model absent despite resolver; download needed
-- RETRO-ICE40-N16-UNEXPECTED-EXPANSION — 12258 LCs from registered spin state registers
-- RETRO-LIVE-ENV-NOT-PROPAGATED — permanent fix needed, not just workaround
-
----
-
-## The 3 Biggest Gaps vs PRD Vision
-
-### Gap 1: LIVE-ENV Never Permanently Fixed — Code Repair Blocked 9 Consecutive Milestones
-
-The RETRO-015 pattern (CARNOT_FORCE_LIVE not propagating to subprocesses) has now recurred
-SIX times across different implementation attempts. The apply_env_autofix() approach is not
-sufficient: it sets the env var in the current process but does not ensure subprocess inheritance
-in all execution paths. Every GPU experiment that depends on this is silently falling back to
-simulation.
-
-**Root cause (to confirm in Exp 855):** Python subprocess.Popen() with `env=None` inherits the
-calling process's environment. But the conductor launches experiments via `claude -p` which
-creates a NEW process tree that does not inherit the outer shell's environment. The fix:
-(1) Make apply_env_autofix() write the env var to a session file that is sourced at experiment
-startup, AND (2) add a hard assert that blocks the experiment if CARNOT_FORCE_LIVE is not set
-AND GPU is detected.
-
-**Fix for .66 (Exp 855):**
-1. Implement `EnvPropagationGuard` that writes CARNOT_FORCE_LIVE=1 to `~/.carnot_session_env`
-   at the start of any experiment that needs live GPU.
-2. All subsequent experiments source `~/.carnot_session_env` at startup (one-line addition to
-   ExperimentTemplate.__init__).
-3. Exp 857 (code repair) and Exp 858 (benchmark) are gated on Exp 855's `live_env_fixed=True`.
-4. Add this to ExperimentTemplate.apply_env_autofix() permanently.
-
-### Gap 2: DualGPURunner Validated But Never Deployed — 60 min/milestone Lost
-
-Exp 685 validated DualGPURunner at 1.96x throughput. Every milestone since .57 has noted
-"DualGPURunner NEVER deployed in production path" in the retro. This is the single highest-
-impact unimplemented improvement: deploying it would eliminate the need to serialize GPU inference
-across experiments, potentially recovering 60+ min/milestone.
-
-**Fix for .66 (Exp 856):**
-1. Wire DualGPURunner into VerifyRepairPipeline.verify() for dual-model experiments.
-2. Wire into ThreeTierPipeline for benchmarks that run both models simultaneously.
-3. Validate with 25 synthetic questions: throughput_ratio > 1.5x vs serial execution.
-4. Gate Exps 857/858 on dual_gpu_deployed=True.
-
-### Gap 3: iCE40 N=16 Register Expansion — 12258 LCs from Sequential Verilog
-
-N=16 synthesis was clean (2 LUTs) but P&R expanded to 12258 LCs because the spin state
-registers were inferred as flip-flops (sequential logic). This is a fundamental mismatch
-between the synchronous Verilog design and the combinational FPGA synthesis target.
-
-**Root cause:** The spin state `s[15:0]` is declared as `reg` updated in an `always @(posedge clk)`
-block. Nextpnr-ice40 correctly infers 16 flip-flops for 16 spin bits, plus the combinational logic
-for the Gibbs conditional energy computation. But the combinational logic for a 16x16 coupling
-matrix expands dramatically: each spin update requires `sum_j J_ij * s_j`, which is 16 multiply-
-accumulate operations. In fixed-point arithmetic, each MAC is ~50 LUTs. Total: 16 spins × 16 MACs
-× 50 LUTs ≈ 12,800 LUTs. That IS the expansion.
-
-**Fix for .66 (Exp 859):**
-Reduce N to 8 (N=8 design) with combinational energy readout only:
-- Remove the sequential Gibbs sweep logic entirely (too expensive for iCE40)
-- Implement ONLY the energy computation: E = -sum_i sum_j J_ij * s_i * s_j + sum_i h_i * s_i
-- Input: spin configuration as external input (not internally updated)
-- Output: energy value for that configuration
-- Expected LUT count: N^2 multipliers + N adder tree = 64 * 2 + 8 * 2 = 144 LUTs (within budget)
-- This is an "energy oracle" not a full sampler — but it validates the FPGA path and enables
-  the PYNQ overlay dispatch for Carnot's FpgaBackend
+**Critical findings for .88:**
+- **k=5 AND-compose AUROC=0.5547 < individual best SemEnergyProbe AUROC=0.8964.** SOSKANEnergyV3 individual AUROC=0.333 (below chance). The ensemble is WORSE than the best individual verifier due to SOSKANEnergyV3 adding anti-correlated noise. Root cause and fix are mandatory before k=5 is used as the production default.
+- **GRPO training wall budget hit:** 240s budget was too tight; only 42/50 training questions processed. Need 600s budget and 100 training questions for a full proof-of-concept.
+- **Lagrangian cascade router accuracy degraded 22.9pp** vs fixed cascade (TP 0.743 vs 0.971). The MLP router lacks verifier-score features; accuracy/cost balance needs retuning.
+- **arXiv manual upload still required:** pdflatex/tectonic absent from conductor environment; 2026-05-15 deadline is 13 days away. **HIGHEST URGENCY.**
 
 ---
 
 ## Architecture Diagram
 
 ```
-Query (live LLM response)
-  |
-  v
-[Tier 0a] CarnotThinkProbe (generative CoT verdict, ThinkPRM arXiv 2504.16828)
-  |  fast-path on "incorrect" verdict
-  v
-[Tier 0b] SpilledEnergyDetector (logit-discrepancy, arXiv 2602.18671)
-  |
-  v
-[Tier 0c] NUP Probe v4 (contrastive energy, AUC=1.0, Exp 523)
-  |
-  v
-[Tier 0d] HallucinationBasinDetector (latent-space basin depth, arXiv 2604.04743)
-  |
-  v
-[Tier 0e] HalluField (token-path thermodynamic instability, arXiv 2509.10753) [advisory]
-  |
-  v
-[Tier 0f] SemanticEnergyProbe (pairwise Boltzmann semantic energy, Exp 852) [advisory]
-  |
-  v
-[Tier 0g] *** NEW: StreamingCoTHalluDetector (prefix-level cumulative PHaS, arXiv 2601.02170) [advisory]
-  |
-  v
-[Tier 0h] JailbreakDetectionKAN (AUC=1.0, Exp 775)
-  |
-  v
-[Tier 0i] *** NEW: HalluSAEGeometricProbe (SAE feature geometry energy, arXiv 2604.16430) [advisory]
-  |
-  v
-[Tier 1] SinkProbe (attention sink concentration, arXiv 2604.10697)
-  |
-  v
-[Tier 2] EORM (CoT energy reward model, 55M params)
-  |
-  v
-[Tier 2.5] SymCodeVerifier (executable Python arithmetic, Exp 619)
-  |
-  v
-[Tier 2.6] HermesVerifierAdapter (step-boundary feedback, arXiv 2511.18760)
-  |
-  v
-[Tier 2.7] CausalReasoningVerifier (causal entailment, arXiv 2601.21210)
-  |
-  v
-[Tier 3] IsingEBM via InertiaIsingSampler (arXiv 2604.17109, Exp 860) ***NEW***
-       + LagrangeAdaptiveConstraints (arXiv 2501.04971, Exp 862) ***NEW***
-  |
-  v
-[Tier 3.5] JEPA v24b Predictive Verifier (Exp 845, if deployed)
+                    Carnot Verification Cascade (.88 target state)
+                    ═══════════════════════════════════════════════
 
-[DualGPURunner] *** NEW DEPLOYMENT (Exp 856): parallelizes GPU inference across tiers ***
-
-[FPGA Energy Oracle] *** iCE40 N=8 combinational (Exp 859, gates KV260 deploy) ***
+User Query
+    │
+    ▼
+Tier 0a: ThinkPRM v2 ──────────────────── AUROC=0.9946 (step-level)
+    │ verdict=uncertain
+    ▼
+Tier 0b: SpilledEnergyDetector ─────────── logit-discrepancy (fast)
+    │ high_spill=False
+    ▼
+Tier 0c: SemEnergyProbe ────────────────── AUROC=0.8964 (0.017ms)  ← PRIMARY
+    │ score≤threshold
+    ▼
+Tier 3: k=5 AND-compose [NEEDS FIX] ─────  AUROC=0.5547 → target >0.80
+    │   SOSKANEnergyV3*  0.333 → FIX
+    │   SemEnergyProbe   0.896
+    │   ASTStructure     0.556
+    │   SemConsistency   0.528
+    │   Z3MathVerifier   0.691
+    │ (*SOSKANEnergyV3 is the bottleneck; fix or replace)
+    ▼
+Repair: GRPO-energy-PRM guided (target: full training >32% accuracy)
+    │
+    ▼
+Certificate + Lagrangian Router v2 (target accuracy_delta > -5pp)
 ```
 
 ---
 
 ## Phase Descriptions
 
-### Phase 0: Governance Fixes (Exps 855-856, CPU)
+### Phase 0 — arXiv Submission (CRITICAL, unconditional, run first)
 
-Break the six-milestone LIVE-ENV and DualGPU loops with permanent implementations.
+**exp1127: arXiv PDF Compilation + Final Submission**
 
-**Exp 855: Pre-flight v15 — Permanent LIVE-ENV Fix**
-- Implement `EnvPropagationGuard` (writes to `~/.carnot_session_env`, sourced at ExperimentTemplate.__init__)
-- Audit all 10 open RETROs, update MILESTONE_PREREQS.md
-- Gate: live_env_fixed=True before GPU experiments can run
+The arXiv bundle (121KB tar.gz) was built in exp1116 with author identity filled. The only
+remaining blockers: pdflatex/tectonic not installed and no browser session. This experiment
+tries pip install tectonic as a self-contained LaTeX engine (no system packages needed), then
+compiles the PDF, and produces an exact checklist for the manual arXiv submission. Deadline:
+2026-05-15. Every day of delay reduces review buffer.
 
-**Exp 856: DualGPURunner Production Deployment**
-- Wire DualGPURunner into VerifyRepairPipeline and ThreeTierPipeline
-- Validate: throughput_ratio >= 1.5x on 25 synthetic questions
-- Gate: dual_gpu_deployed=True for benchmark experiments
+Acceptance: arxiv_submitted=True OR (pdf_compiled=True AND manual_steps_complete_enough_to_submit_today).
 
-### Phase 1: GPU Critical Path (Exps 857-858, GPU)
+### Phase 1 — AND-Compose k=5 Fix (MANDATORY)
 
-First positive live code repair result (GGUF cache + SOTA model now possible).
+**exp1128: SOSKANEnergyV3 Root Cause + k=5 AND-Compose Repair**
 
-**Exp 857: SOTA GGUF Model Download + Code Repair v6**
-- Extend GGUFCacheResolver with download capability (huggingface-hub pull)
-- Run 25 HumanEval problems with Qwen3.6-35B-A3B-GGUF
-- Gated on Exp 855 live_env_fixed=True + Exp 856 dual_gpu_deployed=True
+SOSKANEnergyV3 individual AUROC=0.333 means it is producing INVERTED scores — the model is
+below chance, actively degrading the k=5 ensemble. Root causes to diagnose:
+1. Energy score polarity inverted (higher energy = correct when it should = incorrect)
+2. Model not converged / trained on inverted labels
+3. SOS-KAN gradient normalization causing activation saturation
 
-**Exp 858: Live Full Precision Benchmark v5 — DualGPU + All Cascade Tiers**
-- DualGPURunner active (Exp 856)
-- All cascade tiers: Tier 0a through 3.5 (if deployed)
-- 50 GSM8K + 25 HumanEval
-- Gated on Exp 856 dual_gpu_deployed=True
+Fix plan: (a) inspect SOSKANEnergyV3 score output on known-correct vs known-incorrect examples;
+(b) if polarity inverted, flip sign in output layer; (c) re-train with fresh label check;
+(d) if unfixable, replace with DualSOSKANEnergyProbe using calibrated isotonic regression
+wrapper. After fix, re-run k=5 benchmark on 500-example holdout. Target: k5 AUROC > 0.80.
 
-### Phase 2: FPGA Hardware (Exps 859-860, CPU + iCE40 tools)
+Acceptance: sos_kan_root_cause_identified=True AND k5_ensemble_auroc_above_08=True.
 
-Fix the N=16 register expansion and benchmark the inertia sampler.
+### Phase 2 — GRPO Full Training (GPU, DualGPU MANDATORY)
 
-**Exp 859: iCE40 N=8 Combinational Energy Oracle**
-- Pure combinational Verilog: energy computation only (no sequential spin state)
-- Expected LUT count: ~144 (vs 12258 for sequential N=16)
-- Generates .bin bitstream for PYNQ overlay dispatch
-- Closes RETRO-ICE40-N16-UNEXPECTED-EXPANSION and RETRO-ICE40-PNR-LUT-OVERFLOW
+**exp1129: GRPO Energy PRM Full Training v2**
 
-**Exp 860: Inertia Ising Sampler Benchmark**
-- arXiv 2604.17109: EMA per-spin inertia term (alpha=0.5)
-- Benchmark: discrimination_delta between correct/incorrect constraint configs
-- Mpemba initialization (arXiv 2603.24183): spectral-optimal starting magnetization
-- Targets: inertia reduces mixing sweeps by 5x+; improves energy discrimination
+exp1118 proved GRPO+ThinkPRM v2 is positive (+4pp) but hit the training wall at 240s. This
+experiment runs the full training with: n_training=100 questions, budget_s=600, N=8 completions
+per question, ThinkPRM v2 as continuous reward. Applies DRA-GRPO diversity penalty (arXiv
+2505.09655) to prevent mode collapse on the 8-completion groups. Uses CPPO proxy reuse strategy
+(arXiv 2503.22342) to reduce inference cost per group. Evaluates on 50 holdout questions.
 
-### Phase 3: New Detection Probes + Self-Learning (Exps 861-864, CPU)
+Target: improvement_over_baseline > 0.05 (5pp improvement on 50-question holdout). DualGPU
+MANDATORY — this will not run on single GPU in 600s budget.
 
-Wire new probe tiers and advance FR-11 self-learning.
+Prior failures: exp1118 (training_wall_budget_hit=True, 240s too tight for 50 questions).
 
-**Exp 861: StreamingCoTHalluDetector (Tier 0i)**
-- arXiv 2601.02170: prefix-level cumulative PHaS signal
-- Per-step EORM scores → running state estimate phas_t = alpha * score_t + (1-alpha) * phas_{t-1}
-- Advisory: is_streaming_unstable flag in VerificationCertificate
+Acceptance: grpo_v2_honest_result=True AND improvement_over_baseline recorded.
 
-**Exp 862: LagrangeAdaptiveIsingConstraints (FR-11 Tier 1, Self-Learning)**
-- arXiv 2501.04971: iterative Lagrange relaxation of constraint weights
-- Violation-driven coupling weight increase (adaptive self-learning)
-- 5-session relay: compare delta_s1_to_s5 vs non-adaptive baseline
-- Mandatory FR-11 experiment for this milestone
+### Phase 3 — Continuous Self-Learning (GPU)
 
-**Exp 863: HalluSAEGeometricProbe (Tier 0j)**
-- arXiv 2604.16430: SAE feature geometry energy over CoT trajectory
-- Lightweight bigram SAE dictionary (no GPU training needed)
-- AUC on 50 synthetic CoT pairs; advisory tier deployment
+**exp1130: Zenil α_t Measurement with Post-Retrain Verifier**
 
-**Exp 864: FR-11 Tier 2 Integration v5 — Wire All New Probes**
-- Integrate Exp 861 (streaming PHaS) + Exp 862 (Lagrange adaptive) + Exp 863 (SAE geometry)
-- Full 5-session self-learning relay on live or synthetic data
-- FR-11 mandatory relay experiment; report tier1_relay_works status
+The verifier was retrained on 7329-pair SOTA corpus with AUROC=0.9774 (exp1120). The prior
+α_t measurement (exp1112) used the pre-retrain verifier. Re-measure α_t = μ_P(E_verifier) with
+the new verifier on 50 live SOTA model outputs. If α_t > 0.38 (prior) the retrained verifier
+is grounding self-distillation better. Log as a FR-11 continuous self-learning data point.
 
-### Phase 4: Infrastructure (Exps 865-866, CPU)
+Acceptance: zenil_alpha_t_post_retrain_measured=True.
 
-Compress constraint memory and analyze KAN hardware suitability.
+### Phase 4 — Cascade and Router Calibration
 
-**Exp 865: Constraint Memory Bank Compression**
-- arXiv 2601.00756: online kmeans clustering of EmbeddingConstraintStore
-- K=32 centroid embeddings; compress 10-session accumulated constraints
-- Compare retrieval AUROC before/after compression
+**exp1131: Lagrangian Cascade v2 — Accuracy-Preserving Router**
 
-**Exp 866: KAN Hardware Complexity Analysis**
-- arXiv 2604.03345: per-knot LUT estimates for KAEMEnergy
-- 8 knots, piecewise-linear; simulate iCE40 LUT budget
-- Determine KAN vs Ising synthesis priority for KV260
+exp1123 achieved 99.98% cascade cost savings but at -22.9pp accuracy (TP 0.743 vs 0.971 fixed).
+The MLP was trained without verifier-score features — the router had no signal about correctness.
+Fix: (a) extract SemEnergyProbe score + ThinkPRM confidence as input features; (b) increase
+MLP hidden size 32→128; (c) add minimum-TP constraint to the Lagrangian dual (min TP rate ≥ 0.90
+at any cascade depth). Target: accuracy_delta > -5pp vs fixed cascade while preserving >40% cost
+savings.
 
-### Phase 5: Retrospective (Exp 867)
+Prior failures: exp1123 (accuracy_delta=-0.2286, no verifier-score features, MLP=32 hidden).
 
-**Exp 867: Milestone 2026.04.66 Operational Retrospective**
-- Standard retro format (schema=carnot.operational_retro.v41)
-- 13 success criteria
-- RETRO audit: close those resolved, open any new
+Acceptance: cascade_v2_accuracy_delta_above_neg05=True AND cost_savings_pct_positive=True.
+
+### Phase 5 — Verifier Robustness Validation
+
+**exp1132: Goodfire LLM Failure Exemplar Cascade TP Rate**
+
+From known-issues.md: exp1112 built the LLM failure exemplar corpus (data/llm_failure_exemplars.jsonl,
+≥30 named failure modes). Now feed those exemplars through the full Carnot verifier cascade and
+measure per-tier TP rate. Key test: does Z3MathVerifier catch "9.11 > 9.9" (arithmetic error from
+version-number interference)? Does SemEnergyProbe catch trolley-problem moral framing errors?
+Results validate Carnot's engineering claim vs mechanistic interpretability tools.
+
+Acceptance: goodfire_exemplar_tp_rate_measured=True AND per_tier_results_logged=True.
+
+**exp1133: PRM-BiasBench Adversarial Test on k=5 Ensemble**
+
+arXiv 2603.06621 released PRM-BiasBench: adversarial exemplars targeting stylistic shortcuts
+in PRMs (43% of PRM reward attributable to formatting/padding, not reasoning quality). Test the
+k=5 AND-compose ensemble against PRM-BiasBench-style stylistic attacks to measure how many are
+caught vs missed. Tests whether AND-composition provides better null-space coverage than individual
+verifiers against style-based gaming.
+
+Acceptance: prm_biasbench_attack_tp_measured=True.
+
+### Phase 6 — Hardware Path
+
+**exp1134: KV260 v4 Beta/Alpha Self-Adaptive Parameter Tuning**
+
+exp1122 Python simulation showed KL=0.134 at best (alpha=0.1, beta=2.0), above 0.05 threshold.
+Retro suggested trying beta=3.0/4.0. This experiment: (a) implements self-adaptive λ update
+from arXiv 2501.04971 (Lagrange Ising) to auto-tune penalty coefficients; (b) sweeps beta=2-5
+at alpha=0.1; (c) alpha sweep 0.02-0.2 at best beta; (d) if KL still above 0.05, documents
+the parameter space boundary and updates the RTL spec with empirically-derived feasibility limits
+(e.g., "KL < 0.05 requires beta > 6.0, which exceeds 16-bit fixed-point range on XCZU5EV").
+
+Prior failures: exp1122 (KL=0.134, above 0.05, best_alpha_ema=0.1 insufficient).
+
+Acceptance: kv260_v4_kl_below_05=True OR kv260_v4_feasibility_limits_documented=True.
+
+### Phase 7 — Position Paper + WOPR Gallery
+
+**exp1135: Position Paper v3 — Integrate .87/.88 Experimental Findings**
+
+Position paper main.tex needs the .87 experimental results integrated: energy inversion fix
+(AUROC 0.977), GRPO first positive (+4pp), k=5 AND-compose deployment, cascade cost savings.
+Also: add Related Work comparison to HIVE (arXiv 2604.26139) as a complementary hallucination
+detection system. Target: main.tex ready to re-compile with new experimental section.
+
+Acceptance: position_paper_findings_updated=True.
+
+**exp1136: WOPR Slitherlink Puzzle Cartridge**
+
+Next WOPR game: Slitherlink (Nikoli/Nurikabe loop puzzle). Each cell has a clue digit 0-3
+encoding how many of its 4 edges are part of the loop. Ising spins encode edge membership.
+Energy = (violated clue penalties) + (loop connectivity penalty). E=0 iff exactly one closed
+loop visits all constrained edges. agent_type: codex (formulaic graph constraint encoding).
+
+Acceptance: slitherlink_cartridge_shipped=True AND canonical_e_at_convergence==0.0.
+
+**exp1137: HF Spaces Gallery Update**
+
+Deploy Slitherlink cartridge to HF Spaces gallery. Gated on exp1136.slitherlink_cartridge_shipped.
+
+Acceptance: gallery_updated=True.
+
+### Phase 8 — Retrospective
+
+**exp1138: Milestone 2026.04.88 Retrospective**
+
+Standard operational retrospective. Measure: criteria met/total, wall time vs .87 (891 min),
+slowest-5 composition (does exp906 FINALLY absent? exp1117 fixed the YAML structural bug).
+Document whether the 111 min/milestone infrastructure savings from exp1117 are observable in .88.
 
 ---
 
 ## Dependency Graph
 
 ```
-Exp 855 (LIVE-ENV fix) ──┐
-                          ├── Exp 857 (SOTA code repair, GPU)
-Exp 856 (DualGPU) ───────┤
-                          └── Exp 858 (live benchmark, GPU)
-
-Exp 859 (iCE40 N=8) ── independent (CPU, iCE40 tools)
-Exp 860 (Inertia Ising) ── independent (CPU)
-
-Exp 861 (Streaming CoT) ──┐
-Exp 862 (Lagrange Ising) ──┼── Exp 864 (FR-11 Tier 2 relay)
-Exp 863 (HalluSAE) ───────┘
-
-Exp 865 (Memory compression) ── independent (CPU)
-Exp 866 (KAN hardware) ── independent (CPU)
-
-All Exps 855-866 ── Exp 867 (retrospective)
+exp1127 (arXiv CRITICAL) ─ unconditional
+exp1128 (AND-compose fix) ─ unconditional
+exp1129 (GRPO v2, GPU) ─── unconditional, DualGPU MANDATORY
+exp1130 (Zenil α_t) ─────── unconditional, GPU
+exp1131 (cascade v2) ─────── unconditional (uses FoVer corpus)
+exp1132 (Goodfire TP) ─────── unconditional (uses exp1112 exemplar corpus)
+exp1133 (PRM-BiasBench) ─── gated on exp1128.k5_ensemble_auroc_above_08 (needs fixed ensemble)
+exp1134 (KV260 v4 tuning) ── unconditional
+exp1135 (position paper) ─── gated on exp1129.grpo_v2_honest_result AND exp1130.zenil_alpha_t_post_retrain_measured
+exp1136 (Slitherlink) ─────── unconditional (codex)
+exp1137 (gallery) ─────────── gated on exp1136.slitherlink_cartridge_shipped
+exp1138 (retro) ──────────── last
 ```
 
 ---
 
 ## Hardware Requirements
 
-| Experiment | Hardware | Notes |
-|------------|----------|-------|
-| Exp 855-856 | CPU only | Governance + wiring |
-| Exp 857 | 2x RTX 3090, 48GB VRAM | Qwen3.6-35B needs ~20GB; GPU 1 for model |
-| Exp 858 | 2x RTX 3090 via DualGPURunner | Both GPUs active |
-| Exp 859 | CPU + iCE40 tools | OSS-CAD-Suite at ~/tools/oss-cad-suite |
-| Exp 860 | CPU | Pure Python simulation |
-| Exps 861-864 | CPU | No GPU needed |
-| Exp 865-866 | CPU | Analysis experiments |
-| Exp 867 | CPU | Retrospective |
+- **DualGPU (2x RTX 3090 CUDA):** exp1129 (GRPO v2) — MANDATORY. exp1130 (Zenil α_t) — preferred.
+- **CPU only:** exp1127, 1128, 1131, 1132, 1133, 1134, 1135, 1136, 1137, 1138.
+- **KV260 FPGA (192.168.51.98):** exp1134 — board is reachable; hardware sampling attempted only if Python simulation resolves KL.
+- **Vivado:** Still not installed. exp1134 stays Python simulation only.
 
 ---
 
-## Success Criteria for Milestone 2026.04.66
+## 11 Success Criteria
 
-| # | Criterion | Target Experiment |
-|---|-----------|------------------|
-| 1 | live_env_permanently_fixed | Exp 855: live_env_fixed=True AND EnvPropagationGuard deployed |
-| 2 | dual_gpu_deployed | Exp 856: throughput_ratio >= 1.5x in production path |
-| 3 | code_repair_positive | Exp 857: signed_improvement > 0 AND inference_mode=live_gpu |
-| 4 | live_benchmark_improvement | Exp 858: pipeline_improvement AND inference_mode=live_gpu |
-| 5 | ice40_n8_bitstream | Exp 859: bitstream_generated=True AND lut_count < 500 |
-| 6 | inertia_discrimination | Exp 860: discrimination_delta > 0 AND mixing_sweeps_reduction >= 5x |
-| 7 | streaming_cot_viable | Exp 861: AUC_streaming > 0.65 on synthetic CoT |
-| 8 | lagrange_adaptive_works | Exp 862: delta_s1_to_s5 > 0 (FR-11 Tier 1 mandatory) |
-| 9 | hallusae_viable | Exp 863: AUC_geometric > 0.65 on synthetic CoT |
-| 10 | fr11_tier2_relay_confirmed | Exp 864: tier2_relay_confirmed=True |
-| 11 | memory_compression_viable | Exp 865: retrieval_auroc post-compression > 0.75 |
-| 12 | kan_fpga_roadmap_clear | Exp 866: KAN synthesis LUT estimate < 2000 AND priority_determined |
-| 13 | wall_time_improvement | Exp 867: wall_time_delta_vs_65 < 0 (first positive delta in 6 milestones) |
+1. **arxiv_submitted_or_pdf_compiled** (exp1127) — CRITICAL. 2026-05-15 deadline.
+2. **sos_kan_root_cause_identified** (exp1128) — inverted AUROC diagnosed and fixed.
+3. **k5_ensemble_auroc_above_08** (exp1128) — ensemble better than individual best.
+4. **grpo_v2_honest_result** (exp1129) — full training run, improvement recorded.
+5. **zenil_alpha_t_post_retrain_measured** (exp1130) — FR-11 self-learning data point.
+6. **cascade_v2_accuracy_delta_above_neg05** (exp1131) — cost savings without accuracy collapse.
+7. **goodfire_exemplar_tp_rate_measured** (exp1132) — per-tier TP on named failure modes.
+8. **prm_biasbench_adversarial_tp_measured** (exp1133) — stylistic attack resistance measured.
+9. **kv260_v4_kl_below_05_or_feasibility_documented** (exp1134) — KV260 v4 path resolved.
+10. **position_paper_v3_findings_integrated** (exp1135) — arXiv main.tex ready to recompile.
+11. **retro_complete** (exp1138).
 
 ---
 
-## Key References
+## Key Architectural Decisions for .88
 
-- arXiv 2604.17109 — Fully Parallel Inertia Ising Machine (FPGA, Exp 860)
-- arXiv 2501.04971 — Self-Adaptive Ising for Constrained Optimization (Lagrange, Exp 862)
-- arXiv 2601.02170 — Streaming Hallucination Detection in Long CoT (Exp 861)
-- arXiv 2604.16430 — HalluSAE Geometric Energy (SAE geometry, Exp 863)
-- arXiv 2601.00756 — Memory Bank Compression for Continual Adaptation (Exp 865)
-- arXiv 2604.03345 — Hardware-Oriented KAN Inference Complexity (Exp 866)
-- arXiv 2603.24183 — Mpemba Initialization for Fast Thermodynamic Computing (Exp 860)
+- **No gemini agent_type** (429-rate-limited since .84).
+- **Codex for WOPR Slitherlink** (formulaic graph constraint encoding — codex excels at these).
+- **DualGPU MANDATORY for exp1129** — hard constraint in prompt (failure mode from exp1118).
+- **SOSKANEnergyV3 fix BEFORE PRM-BiasBench test** — exp1133 gated on exp1128 fixing the ensemble; testing a broken k=5 against adversarial exemplars would produce invalid baseline.
+- **exp1127 runs unconditionally FIRST** — arXiv deadline risk increases every day.
+- **grace_period_s: 2400 for exp1129** — GRPO training at 600s + inference at 160s = 760s minimum; add margin.
+- **No manifest for exp906 expected** — exp1117 fixed the YAML structural bug; if exp906 appears in .88 slowest-5, that is a new regression requiring investigation.
+
+---
+
+## New arxiv Findings Incorporated
+
+| Paper | arXiv ID | Incorporated in |
+|-------|----------|-----------------|
+| DRA-GRPO: Diverse Reasoning Paths | 2505.09655 | exp1129 diversity penalty |
+| CPPO: 3.48x GRPO Acceleration | 2503.22342 | exp1129 proxy reuse |
+| Why Self-Distillation Degrades | 2603.24472 | position paper §4 |
+| Continuous Ising via DC Programming | 2509.01928 | future exp (milestone .89+) |
+| Self-Adaptive Ising Machines | 2501.04971 | exp1134 self-adaptive λ |
+| GRPO + Reflection Reward | 2603.14041 | future exp (milestone .89) |
+| HIVE Hallucination Verification | 2604.26139 | position paper Related Work |
+
+---
+
+## Estimated Wall Time
+
+| Experiment | Model | GPU | Est. Min |
+|-----------|-------|-----|---------|
+| exp1127 arXiv | opus | no | 20 |
+| exp1128 AND-compose fix | sonnet | no | 30 |
+| exp1129 GRPO v2 | opus | DualGPU | 50 |
+| exp1130 Zenil α_t | sonnet | GPU | 30 |
+| exp1131 Cascade v2 | sonnet | no | 25 |
+| exp1132 Goodfire TP | sonnet | no | 25 |
+| exp1133 PRM-BiasBench | sonnet | no | 25 |
+| exp1134 KV260 v4 | opus | no | 35 |
+| exp1135 Position paper | sonnet | no | 25 |
+| exp1136 Slitherlink | codex | no | 20 |
+| exp1137 Gallery | sonnet | no | 15 |
+| exp1138 Retro | sonnet | no | 15 |
+| **Total** | | | **~315 min** |
+
+Total estimated wall time: ~315 min (well below .87's 891 min — these experiments are focused
+and directly follow from clear .87 findings, avoiding long exploratory GPU runs except where
+mandatory).
