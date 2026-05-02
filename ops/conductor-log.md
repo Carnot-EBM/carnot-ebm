@@ -290,3 +290,4 @@ If you finish the real work |
 | 2026-05-02 02:00 UTC | Zenil alpha_t Measurement with Post-Retrain Verifi | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-02 02:02 UTC | Zenil alpha_t Measurement with Post-Retrain Verifi | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-02 02:04 UTC | Lagrangian Cascade v2 — Accuracy-Preserving Router | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1128-sos-kan-root-cause-k5-fix) |
+| 2026-05-02 02:10 UTC | Goodfire LLM Failure Exemplar Cascade TP Rate — Pe | ESCALATE_OPUS | Sonnet max-turns at 35; retrying with Opus 100 turns |
