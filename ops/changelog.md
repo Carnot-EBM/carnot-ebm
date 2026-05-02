@@ -4526,3 +4526,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-02: arXiv PDF Compilation + Final Submission — CRITICAL 2026-05-15 deadline (⚠️ Research Finding) — honest_verdict=pdf_compiled_upload_pending; results/experiment_1127_arxiv_final_submission.json
 - 2026-05-02: GRPO Energy PRM Full Training v2 — DualGPU MANDATORY (600s budget, 100 questions) (✅ Complete) — honest_verdict=positive_improvement; results/experiment_1129_grpo_energy_prm_v2.json
 - 2026-05-02: Goodfire LLM Failure Exemplar Cascade TP Rate — Per-Tier Verification Coverage (⚠️ Research Finding) — honest_verdict=mixed_results; results/experiment_1132_goodfire_exemplar_cascade_tp.json
+- 2026-05-02: KV260 Ising Sampler v4 — Beta/Alpha Self-Adaptive Parameter Tuning (⚠️ Research Finding) — honest_verdict=kl_improved_not_below_threshold; results/experiment_1134_kv260_v4_parameter_tuning.json
