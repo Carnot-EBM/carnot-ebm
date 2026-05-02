@@ -97,6 +97,10 @@ checked into `results/operational_retro_*.json`.
 - **arXiv package v3:** `docs/arxiv-paper/main.pdf` compiled with tectonic
   and the source bundle was verified; manual upload remains pending before
   2026-05-15 (Exps 1127/1135).
+- **Milestone 2026.04.88 closed at 10/11 criteria:** the full operational
+  retro records 794 minutes / 209 experiment events, 10.9% faster than .87.
+  The missed criterion was WOPR Slitherlink, blocked by missing
+  `prior_failures` metadata (Exp 1138; operational retro .88).
 
 **Claims that did not survive audit** are kept in the research record as
 negative findings and documented alongside the audits that surfaced them
@@ -2279,7 +2283,7 @@ Milestone 2026.04.87 met **11 of 11 success criteria** — the first perfect mil
 
 **Adaptive cascade via Lagrangian router (Exp 1123):** Lagrangian dual MLP router (arXiv 2604.14853) trained on 6,829 FoVer examples. Cost savings: 99.98% (0.017ms vs 111ms fixed cascade). However, accuracy degraded 22.86pp (TP 0.743 vs 0.971 fixed). The MLP predicts depth=1 for all holdout examples — underfitting. Fix for .88: increase hidden size 32→128 and add verifier-score features. Honest negative on accuracy; the architectural approach is sound.
 
-**WOPR Hashi cartridge + gallery update (Exps 1124/1125):** Hashi (bridges puzzle) implemented as a WOPR cartridge with integer-flow + planarity constraints. E=0 achieved at convergence iteration 1. Gallery deployed with 6 cartridges total (live HTTP 200 confirmed). Gallery now includes: Sudoku, Graph Theory Wiring, Lights Out, N-Queens, Hashi, and one additional cartridge.
+**WOPR Hashi cartridge + gallery update (Exps 1124/1125):** Hashi (bridges puzzle) implemented as a WOPR cartridge with integer-flow + planarity constraints. E=0 achieved at convergence iteration 1. Gallery deployed with 6 cartridges total (live HTTP 200 confirmed). Gallery now includes: Sudoku, Tic-Tac-Toe, Lights Out, Global Thermonuclear War, N-Queens, and Hashi.
 
 **Milestone .87 summary:** 11/11 criteria met. Operational wall time was 891 min, a 73.9% improvement from the 3,415-minute .58 baseline and the project-best full-cycle wall time until .88 improved it again. Slowest experiment: GRPO training at 29 min (training_wall_budget_hit=True). The infrastructure bottlenecks fixed in exp1117 are now expected to save ~111 min/milestone going forward.
 
@@ -2290,6 +2294,8 @@ Milestone 2026.04.87 met **11 of 11 success criteria** — the first perfect mil
 Milestone 2026.04.88 met **10 of 11 success criteria** in a **145-minute active execution window**. The full operational retro records **794 minutes / 209 experiment events** for the surrounding milestone process. The missed criterion was the Slitherlink WOPR cartridge, which correctly blocked at the conductor pre-gate because the task omitted required `prior_failures` metadata for five matching WOPR cartridge predecessors.
 
 **arXiv PDF compilation (Exp 1127):** `docs/arxiv-paper/main.pdf` compiled successfully with tectonic and the v3 source bundle was verified. arXiv submission is not complete: manual upload remains pending before the 2026-05-15 deadline. The honest verdict is `pdf_compiled_upload_pending`.
+
+**Gate-state / gallery cascade finding (Exp 1136/1137):** Slitherlink did not ship because the conductor pre-gate found five matching WOPR cartridge predecessors without a valid `prior_failures` declaration. That blocked the downstream HF Spaces Slitherlink gallery update as well; there is no `experiment_1137_hf_spaces_gallery_update.json` artifact for .88.
 
 **SOS-KAN/k=5 ensemble repair (Exp 1128):** The k=5 production ensemble shipped in Exp 1121 but benchmarked poorly because SOS-KAN used fixed inference normalization anchors instead of the training corpus statistics. Exp 1128 added corpus-fitted normalization. k=5 AUROC improved **0.5547 → 0.9402**, and SOS-KAN individual AUROC reached **0.9902**.
 
