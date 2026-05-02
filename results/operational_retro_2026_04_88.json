@@ -1,0 +1,122 @@
+{
+  "experiment": "operational-retro-2026-04-88",
+  "title": "Milestone 2026.04.88 - Operational Efficiency Retrospective",
+  "milestone": "2026.04.88",
+  "run_date": "2026-05-02",
+  "schema": "carnot.operational_retro.v62",
+  "retro_type": "full_milestone",
+  "total_wall_time_minutes": 795,
+  "experiments_completed": 210,
+  "avg_experiment_min": 3.79,
+  "prior_milestone": "2026.04.87",
+  "prior_wall_time_minutes": 891,
+  "delta_minutes": -96,
+  "delta_pct": -10.8,
+  "source_notes": [
+    "Uses the provided full-milestone timing data as authoritative: 795 minutes, 210 completed experiments, 4 minutes average per experiment.",
+    "results/experiment_1138_milestone_retro_88.json records a narrower 145-minute active .88 execution window; that artifact is used only for gate/retry context, not for total wall time."
+  ],
+  "slowest_experiments": [
+    {
+      "rank": 1,
+      "id": "exp906",
+      "duration_min": 35,
+      "title": "Code Repair 50q Scale-Up - IterativeSelfRepair with Gemma4",
+      "diagnosis": "Recurring legacy code-repair scale-up remains the top wall-time anchor. It combines a sequential execute-feedback-retry loop, model-load/inference overhead, and a retired/carryover experiment path that has repeatedly bypassed exclusion discipline. The operational issue is not research difficulty; it is that an already-known expensive task keeps re-entering the queue instead of being retired, shortened, batched, or explicitly scheduled on DualGPURunner."
+    },
+    {
+      "rank": 2,
+      "id": "exp950",
+      "duration_min": 28,
+      "title": "In-process docs for Exp 950: E-MVL Sparsified Ising - Sparse Connectivity for KV260 RTL Optimization",
+      "diagnosis": "The doc reconciliation pass ran inline and blocked the executor. A documentation update should not serialize the experiment queue for 28 minutes. This indicates that the doc-reconcile path is still coupled to experiment completion instead of being batched asynchronously at milestone end."
+    },
+    {
+      "rank": 3,
+      "id": "exp948",
+      "duration_min": 24,
+      "title": "Symbolic-KAN Real FoVer Data - AUC=0.9344 Architecture Comparison",
+      "diagnosis": "CPU-bound architecture evaluation continues to run against the full FoVer corpus. Since the FoVer corpus grew from hundreds to thousands of pairs, full-corpus sweeps are now inappropriate for exploratory architecture comparisons. A fast-eval sample mode would keep the exploratory pass short and reserve full-corpus evaluation for final certification."
+    },
+    {
+      "rank": 4,
+      "id": "exp930",
+      "duration_min": 19,
+      "title": "Math Iterative Self-Repair v1 - Execute-Feedback on GSM8K",
+      "diagnosis": "The math repair loop is inherently serial when every failed attempt triggers another execute-feedback cycle. It is a candidate for batching, stricter cap/early-stop rules, and GPU/DualGPU execution when using SOTA model tiers. Without those controls, low-value retry tails consume wall time disproportionate to their operational value."
+    },
+    {
+      "rank": 5,
+      "id": "exp905",
+      "duration_min": 17,
+      "title": "IterativeSelfRepair v1 - Execute-Feedback-Retry on HumanEval",
+      "diagnosis": "This earlier code-repair loop remains expensive because repairs are evaluated sequentially across questions. It should be treated as a benchmark fixture: cache model outputs where valid, batch execution across questions, and avoid rerunning the full 25-question loop unless the milestone explicitly changes the repair algorithm."
+    }
+  ],
+  "bottlenecks_identified": [
+    "Slowest-five work is still dominated by recurring carryover/legacy tasks rather than fresh .88 experiments. The top five consumed 123 minutes, or 15.5% of the total milestone wall time.",
+    "Dispatch-time retirement and carryover discipline is still leaky. exp906 remained the slowest item at 35 minutes even though prior retros repeatedly identified it as a recurring manifest/retirement regression.",
+    "Doc reconciliation is still inefficient. exp950 consumed 28 minutes as an in-process documentation pass, which means docs are still blocking the main execution queue instead of running as an async milestone-close task.",
+    "Full-corpus CPU sweeps are being used where sampled fast-eval runs would be sufficient. exp948 spent 24 minutes on a Symbolic-KAN/FoVer architecture pass that should have used a bounded sample before final certification.",
+    "GPU utilization was not efficient at close. The GPU monitor reported both RTX 3090s at 0% utilization with only 4 MB allocated on each GPU, and the monitor explicitly recommended DualGPURunner parallelism.",
+    "No GPU zombie process was present in the closeout monitor report. scripts/gpu_monitor.py only marks zombies above 1024 MB VRAM after more than 10 idle minutes; the observed 4 MB per GPU and empty process list are idle driver allocations, not resource-wasting zombies.",
+    "Independent work was not parallelized aggressively enough. CPU-bound docs/corpus sweeps, code-repair benchmark fixtures, Goodfire measurement, KV260 parameter sweeps, and post-gate analysis could have overlapped when they had no direct dependency.",
+    "Pre-flight was not the main broad bottleneck in this milestone, but gate checks still created friction. The .88 milestone artifact records repeated DOOMED_RERUN_BLOCK events for exp1128, exp1130, and exp1136, plus downstream gate blocks for exp1131, exp1133, and exp1137.",
+    "Gate dependency state was stale across retries. The milestone artifact shows exp1128 eventually succeeded, while dependent exp1131 and exp1133 still spent long periods in a slowest-five window before the conductor accepted the updated artifact state.",
+    "The active .88 execution missed one planned delivery because exp1136 failed conductor pre-gate checks, which also kept the exp1137 HF Spaces gallery artifact missing."
+  ],
+  "questions_answered": {
+    "which_experiments_took_longest_and_why": "The longest full-milestone items were exp906 at 35 min, exp950 at 28 min, exp948 at 24 min, exp930 at 19 min, and exp905 at 17 min. The common pattern is recurring legacy work plus serial execution: retired code-repair loops, inline doc reconciliation, and full-corpus CPU sweeps.",
+    "was_gpu_utilization_efficient": "No. Closeout GPU state showed two RTX 3090s idle at 0% utilization with 4 MB allocated each and no compute processes. exp1129 did use the DualGPU path, but DualGPU was not applied as the default policy for every GPU-eligible task or used to overlap independent Qwen/Gemma workloads.",
+    "were_there_zombie_processes": "No GPU zombies were detected. The monitor reported an empty process list and no warnings; the 4 MB allocations do not cross the gpu_monitor.py zombie threshold and are not meaningful VRAM waste.",
+    "could_experiments_have_been_parallelized": "Yes. The doc reconciliation pass should have been async; exp948-style CPU sweeps could run beside code-repair fixtures; independent Goodfire/KV260/adversarial-analysis work could overlap; and GPU tasks should default to DualGPURunner unless explicitly opted out.",
+    "was_preflight_a_bottleneck": "Not as a broad suite. The bottleneck was narrower: conductor pre-gate and prior-failures metadata checks caused repeated DOOMED_RERUN_BLOCK and stale downstream gate state, including the blocked exp1136/exp1137 path.",
+    "were_doc_reconciliation_passes_efficient": "No. A 28-minute in-process docs pass is operationally inefficient. Reconciliation should be batched, change-scoped, and run once at milestone close, not inline after an experiment completion event.",
+    "what_tooling_changes_would_speed_next_milestone": "Dispatch-time retirement enforcement, async doc reconciliation, fast-eval corpus sampling, automatic DualGPURunner for GPU-eligible tasks, stale-gate refresh after artifact writes, and parallel groups for independent CPU tasks are the highest-leverage changes."
+  },
+  "improvements_suggested": [
+    "Make dispatch-time retirement enforcement mandatory before any research queue launch. Add a regression test that attempts to dispatch exp906 and asserts it is blocked when retired.",
+    "Move doc reconciliation out of the in-process experiment path. Batch docs/spec/ops reconciliation once at milestone close, and add a conductor test that doc reconciliation cannot block the main executor thread.",
+    "Add CARNOT_FAST_EVAL=1 for FoVer/Symbolic-KAN architecture sweeps. Sample a fixed 500-pair subset for exploratory runs and reserve the full corpus for certification artifacts.",
+    "Default every requires_gpu experiment to DualGPURunner unless it explicitly opts out. The runner should place complementary Qwen/Gemma or verifier/model workloads on GPU 0 and GPU 1 automatically.",
+    "Add a gate-state refresh after every successful artifact write. Downstream gated experiments should re-check dependency artifacts immediately rather than waiting through stale slowest-five windows.",
+    "Add roadmap-level parallel_group metadata for independent CPU tasks. Doc updates, corpus sweeps, Goodfire measurement, KV260 parameter sweeps, and benchmark fixtures should co-run when their dependencies do not conflict.",
+    "Introduce benchmark-fixture caching for iterative repair experiments. Reuse unchanged model outputs, cap retry tails, and rerun only changed algorithmic components rather than the full HumanEval/GSM8K loop.",
+    "Treat conductor_pre_gate failures as first-class operational failures. The exp1136/exp1137 path shows that a single gate-check failure can erase a planned deliverable; the next milestone should produce a machine-readable reason and an automatic remediation task."
+  ],
+  "estimated_time_savings_pct": 18,
+  "estimated_savings_breakdown_min": {
+    "retire_or_block_exp906": 35,
+    "async_doc_reconciliation": 28,
+    "fast_eval_for_full_corpus_sweeps": 15,
+    "dualgpu_and_cpu_parallelization": 30,
+    "gate_state_refresh_and_pre_gate_remediation": 35,
+    "total_recoverable_minutes": 143,
+    "pct_of_795_min_wall_time": 18.0
+  },
+  "gpu_state_at_close": {
+    "timestamp_utc": "2026-05-02T04:06:57.443903+00:00",
+    "gpu0_model": "NVIDIA GeForce RTX 3090",
+    "gpu0_vram_used_mb": 4,
+    "gpu0_vram_total_mb": 24576,
+    "gpu0_util_pct": 0,
+    "gpu0_temp_c": 49,
+    "gpu1_model": "NVIDIA GeForce RTX 3090",
+    "gpu1_vram_used_mb": 4,
+    "gpu1_vram_total_mb": 24576,
+    "gpu1_util_pct": 0,
+    "gpu1_temp_c": 55,
+    "processes_detected": 0,
+    "zombies_detected": 0,
+    "gpu_close_clean": true,
+    "operational_verdict": "clean_but_underutilized"
+  },
+  "wall_time_trend": {
+    "milestone_2026_04_87_minutes": 891,
+    "milestone_2026_04_88_minutes": 795,
+    "delta_minutes": -96,
+    "delta_pct": -10.8,
+    "trend_note": "The milestone improved versus .87, but the remaining recoverable time is still concentrated in known infrastructure issues rather than research work."
+  },
+  "honest_verdict": "795min_210_experiments_avg_3pt79min_10pt8pct_faster_than_87_no_gpu_zombies_but_dualgpu_underused_doc_reconcile_28min_blocking_exp906_still_top_slowest_gate_metadata_stale_18pct_recoverable_next_milestone"
+}
