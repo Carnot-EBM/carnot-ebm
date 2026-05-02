@@ -1,0 +1,137 @@
+{
+  "experiment": "operational-retro-2026-04-87",
+  "title": "Milestone 2026.04.87 — Operational Efficiency Retrospective",
+  "milestone": "2026.04.87",
+  "run_date": "2026-05-02",
+  "schema": "carnot.operational_retro.v61",
+  "retro_type": "full_milestone",
+
+  "wall_time": {
+    "total_wall_time_minutes": 891,
+    "experiments_completed": 231,
+    "avg_experiment_min": 3.86,
+    "prior_milestone": "2026.04.86",
+    "prior_wall_time_min": 940,
+    "delta_min": -49,
+    "delta_pct": -5.2,
+    "consecutive_below_58_baseline": 10
+  },
+
+  "baseline_comparison": {
+    "baseline_milestone": "2026.04.58",
+    "baseline_min": 3415,
+    "delta_min": -2524,
+    "delta_pct": -73.9,
+    "note": "Tenth consecutive milestone below the .58 baseline. 891 min is 73.9% below the 3415-min floor — a new project best, though the improvement rate (-49 min) is decelerating sharply from .86's -70 min and .85's -96 min. Volume reduction (-11 experiments at 3.86 min/exp = ~42 min) accounts for 86% of the observed delta; genuine efficiency improvement is only ~7 min."
+  },
+
+  "slowest_experiments": [
+    {
+      "rank": 1,
+      "id": "exp906",
+      "title": "Code Repair 50q Scale-Up — IterativeSelfRepair with SOTA GGUF",
+      "duration_min": 35,
+      "diagnosis": "FIFTH CONSECUTIVE MILESTONE REGRESSION. exp906 was retired to the exclusion manifest in .80, yet has reappeared in every milestone since (.83, .84, .85, .86, and now .87). The infrastructure hardening v3 task (exp1117) included a manifest dispatch-time enforcement fix as one of its four deliverables, but the fix was not applied before exp906 slipped back into the queue. The planning-time manifest check fires correctly; the dispatch-time re-entrant path (where a roadmap YAML reference with no matching canonical retirement form bypasses the gate) is the persistent gap. Cumulative waste across 5 regressions: ~175 min. This is now the single highest-priority conductor bug — five consecutive appearances places it in the 'retirement-immune' failure class."
+    },
+    {
+      "rank": 2,
+      "id": "exp950",
+      "title": "In-process docs for Exp 950: E-MVL Sparsified Ising — Sparse Constraint Ising Verifier",
+      "duration_min": 28,
+      "diagnosis": "In-process document reconciliation pass ran as a 28-minute BLOCKING step for the third consecutive milestone (.85: 22 min, .86: 28 min, .87: 28 min). The conductor triggers a full doc-reconcile sweep after certain experiment completions; when the reconcile runs inline it serialises all downstream experiments. The .86 retro recommended async batching as a top-priority fix; the fix was scheduled for exp1117 but the 28-min blocking penalty is unchanged, indicating either the fix was not shipped or did not address this specific trigger path. As the spec corpus grows, this will continue to worsen."
+    },
+    {
+      "rank": 3,
+      "id": "exp948",
+      "title": "Symbolic-KAN Real FoVer Data — AUC=0.9344 Architecture Comparison",
+      "duration_min": 24,
+      "diagnosis": "CPU-bound architecture sweep running on the full 6548-pair FoVer corpus (third consecutive milestone appearance). No --fast-eval sampling mode exists; every architecture sweep runs the full corpus. The .82 corpus explosion (216 → 6548 pairs) was a research win but turned this sub-5-min task into a 24-min wall-time anchor. Fix: CARNOT_FAST_EVAL=1 flag sampling 500 pairs for sweeps, reserving full corpus for final certification. This is the third consecutive milestone where this identical fix has been recommended without being implemented."
+    },
+    {
+      "rank": 4,
+      "id": "exp824",
+      "title": "JEPA v23 LIMO Curated Corpus (RETRO-JEPA-OOD, CPU)",
+      "duration_min": 19,
+      "diagnosis": "CPU-only JEPA training run on the LIMO curated subset (second consecutive milestone appearance). The experiment predates the GPU activation path and has never been updated to use CUDA. With DualGPU live since .83, migrating this to GPU would reduce wall time to ~4 min. Alternatively, scheduling this experiment in parallel with exp930 (also CPU-only, no gate dependency) would recover ~15 min at zero resource cost. Neither optimization was applied."
+    },
+    {
+      "rank": 5,
+      "id": "exp930",
+      "title": "Math Iterative Self-Repair v1 — Execute-Feedback on 200q GSM8K",
+      "duration_min": 19,
+      "diagnosis": "Math repair loop on 200 GSM8K questions using a sub-SOTA model tier (second consecutive appearance). CLAUDE.md mandates SOTA models (Qwen3.6-35B-A3B-GGUF / gemma-4-31B-it-GGUF) for headline-result experiments. Running Qwen3.5-0.8B inflates repair iteration count (model fails more problems, triggering more loops) and forces CPU execution. With a SOTA model on GPU the same benchmark would run in ~8-10 min. The sub-SOTA model violation was flagged in .86; it recurred without correction."
+    }
+  ],
+
+  "slowest_5_composition_note": "FROZEN COMPOSITION WARNING: The slowest-5 composition is IDENTICAL to milestone .86. Three consecutive milestones (.85/.86/.87) with the same exp906 regression, same exp950 doc pass, same exp948 corpus bottleneck. This is the same frozen-composition pattern observed in milestones .73–.76 (four consecutive identical slowest-5 sets). If .88 does not change the composition, the improvement trend will plateau and potentially reverse.",
+
+  "bottlenecks_identified": [
+    "EXCLUSION MANIFEST REGRESSION — FIFTH CONSECUTIVE (highest priority, 35 min/milestone): exp906 reappeared for the fifth straight milestone despite .80 retirement and .87's exp1117 infra hardening targeting this exact bug. The dispatch-time enforcement path has a regression that allows retired IDs to re-enter via roadmap YAML references that bypass the canonical retirement match. This is now a 'retirement-immune' failure — the planning-time check fires but the dispatch-time check does not. Cumulative waste: ~175 min across 5 regressions. Must be the FIRST experiment in .88, unconditional, with a unit test asserting conductor_blocked on a retired ID before any other work proceeds.",
+    "IN-PROCESS DOC RECONCILIATION STILL BLOCKING (serial, 28 min, third consecutive): The conductor's inline doc reconcile pass holds the executor thread for 28 min after certain experiments complete. The async batching fix was recommended in .85, specified in .86, included in .87's exp1117 scope — yet the penalty is unchanged. Either exp1117 did not ship this deliverable or the fix addressed a different trigger path. The blocking cost will grow as spec docs expand.",
+    "CORPUS-SCALE CPU REGRESSION UNADDRESSED (exp948 24 min, exp824 19 min, third consecutive): No --fast-eval corpus sampling mode exists after three consecutive milestone appearances of this bottleneck. exp948 (Symbolic-KAN) and exp824 (JEPA LIMO) together consume 43 min of CPU wall time that is straightforwardly addressable. The CARNOT_FAST_EVAL=1 fix is simple and was specified three times — non-implementation at this point is a planner-layer discipline failure.",
+    "DUALGPU UTILIZATION AT MILESTONE CLOSE (both GPUs 0%, 4MB allocated): Both RTX 3090s are idle at close (0% utilization, 50C/51C — a clean close but an idle close). Of the 11 planned .87 experiments, exp1118 (GRPO energy PRM, DualGPU MANDATORY) and exp1119/1120 (FoVer extension + verifier retrain) were the GPU-eligible tasks. The idle state at close suggests at most 2 of 11 experiments used GPU. The DualGPU runner is wired but not mandated beyond the explicit MANDATORY tag in a single experiment per milestone.",
+    "IMPROVEMENT RATE DECELERATION (structural): Three-milestone delta trend: .85→.86 = -70 min, .86→.87 = -49 min. Volume reduction accounts for 86% of the .87 delta; genuine efficiency gain is ~7 min. Without implementing the pending structural fixes (manifest, doc async, corpus fast-eval), the trend will plateau before .88. The five recurring bottlenecks are each individually well-understood but collectively unaddressed for 3+ milestones.",
+    "MATH REPAIR SUB-SOTA MODEL VIOLATION (exp930, recurring): exp930 continues to run with a sub-SOTA model tier despite CLAUDE.md explicitly requiring Qwen3.6-35B-A3B-GGUF or gemma-4-31B-it-GGUF for headline results. The carryover was not re-scoped to the correct model tier before re-execution. This inflates runtime AND invalidates the result as a headline claim — double waste.",
+    "ARXIV PDF COMPILATION STILL UNRESOLVED: exp1116 targeted arXiv PDF compilation via tectonic install or direct .tex bundle upload. The 2026-05-15 arXiv deadline is now 13 days away. If pdflatex/tectonic was not installed by exp1116, the deadline is at serious risk. No fallback path (direct .tex submission to arXiv) was confirmed as executed."
+  ],
+
+  "improvements_suggested": [
+    "Make manifest dispatch-time enforcement the MANDATORY FIRST experiment in .88, unconditional (saves 35 min/milestone recurring): The fix must include a unit test that attempts to launch a retired exp906 ID and asserts conductor_blocked. Without this test, the fix will silently regress again. Tag this exp as agent_tier: opus with max_turns: 40 and no gate dependencies — it must run before any research work.",
+    "Ship async doc reconciliation as a conductor-core change in .88 infra experiment (saves 28 min): Decouple the doc-reconcile trigger from the experiment-completion event. Batch all reconciliation into a single async pass that runs once at end-of-milestone. The inline blocking path must be removed, not just deprioritized. Add a conductor test asserting that no doc-reconcile event blocks the main executor thread.",
+    "Implement CARNOT_FAST_EVAL=1 sampling mode this milestone — not next (saves 15 min): This fix has been recommended three consecutive milestones without implementation. It requires adding one env-var branch in the FoVer evaluation loader: if CARNOT_FAST_EVAL=1, sample 500 random pairs instead of loading all 6548. The cost of implementing this is under 30 min; the recurring savings are 15+ min per milestone. Treat non-implementation as a planner discipline failure.",
+    "Schedule exp824 and exp930 in parallel as a CPU worker pair (saves ~15 min): Both are CPU-only with no gate dependency on each other. The conductor's parallel executor path (from exp1065) supports this. Add a parallel_group field to both YAML entries so the scheduler co-runs them. This is a zero-cost change (no new CPU capacity needed) requiring only YAML updates.",
+    "Mandate DualGPU utilization for ALL GPU-eligible experiments, not just the MANDATORY-tagged one (saves 30+ min): The DualGPU runner is operational but only exp1118-class experiments carry the MANDATORY tag. Any experiment with requires_gpu: true should default to DualGPURunner unless explicitly opted out. A GPU run on a single RTX 3090 while the second sits idle is a policy failure, not a hardware limitation.",
+    "Enforce SOTA model tier at roadmap YAML validation time (saves 19 min + result validity): The schema validator should reject any experiment that sets model_tier below 'sota' when the experiment is a headline-result candidate (i.e., benchmarks correctness against a corpus). exp930 should have been blocked at activation with 'model_tier: smoke_test is prohibited for 200q GSM8K benchmarks — use model_tier: sota'. This is a one-rule schema extension.",
+    "Confirm arXiv tectonic installation status and set a hard ship deadline before .88 planning (saves 2026-05-15 deadline): If exp1116 did not compile the PDF, the next milestone must treat arXiv compilation as its first task, ahead of any new research. The arXiv bundle is complete (exp1113) — the only remaining step is a toolchain install. Deferring this one more milestone risks missing the submission window entirely.",
+    "Introduce a slowest-5 composition gate as a milestone health signal: If the slowest-5 composition is identical to the prior milestone, the planner MUST include at least one experiment explicitly targeting the most chronic bottleneck (currently exp906 manifest regression). A frozen slowest-5 is a leading indicator of wall-time plateau and must trigger mandatory corrective action, not just a recommendation."
+  ],
+
+  "estimated_time_savings_pct": 13,
+  "estimated_savings_breakdown_min": {
+    "manifest_dispatch_fix": 35,
+    "doc_reconcile_async": 28,
+    "corpus_fast_eval_mode": 15,
+    "cpu_parallel_exp824_exp930": 15,
+    "dualgpu_mandate": 30,
+    "total": 123,
+    "note": "123 min recoverable of 891 min total = 13.8%, rounded to 13%. All five items are purely infrastructure fixes with no research trade-offs. The DualGPU mandate figure (30 min) is conservative and assumes only 1-2 additional GPU experiments per milestone become parallel; the actual savings could reach 60+ min if all GPU-eligible experiments use DualGPURunner."
+  },
+
+  "gpu_state_at_close": {
+    "gpu0_model": "NVIDIA GeForce RTX 3090",
+    "gpu0_vram_used_mb": 4,
+    "gpu0_vram_total_mb": 24576,
+    "gpu0_util_pct": 0,
+    "gpu0_temp_c": 50,
+    "gpu1_model": "NVIDIA GeForce RTX 3090",
+    "gpu1_vram_used_mb": 4,
+    "gpu1_vram_total_mb": 24576,
+    "gpu1_util_pct": 0,
+    "gpu1_temp_c": 51,
+    "gpu_close_clean": true,
+    "temp_differential_c": 1,
+    "dualgpu_consecutive_idle_count_estimate": 7,
+    "note": "Both GPUs idle at close (0% utilization, 4MB allocated, 50C/51C — thermally clean). The .86 retro reset the idle count to 2 after exp1110/1111 broke the 18-consecutive streak. If only exp1118 used GPU in .87, the idle count is now approximately 7 (2 idle after .86, plus the 5 of 11 .87 experiments that are non-GPU). GPU monitor reports 3 suggestions: DualGPURunner recommendation, and idle-process warnings for both GPUs."
+  },
+
+  "wall_time_trend": {
+    "milestone_2026_04_58_baseline": 3415,
+    "milestone_2026_04_80": 1106,
+    "milestone_2026_04_81": 1699,
+    "milestone_2026_04_84": 1106,
+    "milestone_2026_04_85": 1010,
+    "milestone_2026_04_86": 940,
+    "milestone_2026_04_87": 891,
+    "trend_note": "891 min is the new project best. Four-milestone improvement streak: .84→.85 (-96 min, -8.7%), .85→.86 (-70 min, -6.9%), .86→.87 (-49 min, -5.2%). The improvement rate is decelerating sharply: -96 → -70 → -49. Without implementing the five pending structural fixes, the trend will plateau in .88 — probably at 850-870 min — as volume compression reaches its limit. The manifest + doc-async + corpus-fast-eval trio would push the floor toward 770 min."
+  },
+
+  "frozen_slowest5_warning": {
+    "frozen_for_milestones": 3,
+    "milestones": ["2026.04.85", "2026.04.86", "2026.04.87"],
+    "composition": ["exp906 (35 min)", "exp950 (28 min)", "exp948 (24 min)", "exp824 (19 min)", "exp930 (19 min)"],
+    "historical_precedent": "Milestones .73-.76 had an identical 4-milestone frozen-composition streak (Exp 786/627/603/641/906) that coincided with wall-time improvement deceleration. That freeze was broken by the .80 manifest enforcement action. The current freeze (exp906/950/948/824/930) requires the same class of structural action: manifest dispatch fix + async doc + corpus fast-eval. Three milestones without action = the same pattern repeating.",
+    "action_required": "If .88 slowest-5 contains exp906, treat as a milestone-level FAILURE on infrastructure discipline regardless of research criteria met count."
+  },
+
+  "honest_verdict": "tenth_consecutive_below_58_baseline_891min_new_project_best_volume_driven_minus49min_minus5pt2pct_decelerating_frozen_slowest5_third_consecutive_IDENTICAL_composition_exp906_FIFTH_consecutive_manifest_regression_doc_reconcile_28min_THIRD_consecutive_corpus_cpu_THIRD_consecutive_dualgpu_idle_at_close_arxiv_deadline_13_days_13pct_recoverable_123min_structural_fixes_pending_three_milestones"
+}
