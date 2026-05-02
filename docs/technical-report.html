@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Technical Report - A Technical Report on ~1,138 Experiments Across 88 Completed Research Milestones</title>
-  <meta name="description" content="Carnot technical report: A Technical Report on ~1,138 Experiments Across 88 Completed Research Milestones. Live GPU benchmarks with statistical confidence intervals, honest negative results, and a public experiment history with provenance labels for every headline claim.">
+  <title>Technical Report - A Technical Report Through Exp 1138 Across 88 Completed Research Milestones</title>
+  <meta name="description" content="Carnot technical report: A Technical Report Through Exp 1138 Across 88 Completed Research Milestones. Live GPU benchmarks with statistical confidence intervals, honest negative results, and a public experiment history with provenance labels for every headline claim.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M30,50 Q30,20 50,20 Q70,20 70,50 Q70,80 50,80 Q30,80 30,50' fill='none' stroke='%23f97316' stroke-width='8'/><circle cx='50' cy='50' r='10' fill='%23f97316'/></svg>">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -160,7 +160,7 @@
 
 <article>
 <h1 id="carnot-energy-based-verification-for-llm-output">Carnot: Energy-Based Verification for LLM Output</h1>
-<h2 id="a-technical-report-on-1138-experiments-across-88-completed-research-milestones">A Technical Report on ~1,138 Experiments Across 88 Completed Research Milestones</h2>
+<h2 id="a-technical-report-through-exp-1138-across-88-completed-research-milestones">A Technical Report Through Exp 1138 Across 88 Completed Research Milestones</h2>
 <p><strong>Author:</strong> Ian Blenke
 <strong>Date:</strong> 2026-05-02
 <strong>Repository:</strong> github.com/Carnot-EBM/carnot-ebm
@@ -251,7 +251,7 @@ checked into <code>results/operational_retro_*.json</code>.</p>
   and the source bundle was verified; manual upload remains pending before
   2026-05-15 (Exps 1127/1135).</li>
 <li><strong>Milestone 2026.04.88 closed at 10/11 criteria:</strong> the full operational
-  retro records 794 minutes / 209 experiment events, 10.9% faster than .87.
+  retro records 781 minutes / 206 experiment events, 12.3% faster than .87.
   The missed criterion was WOPR Slitherlink, blocked by missing
   <code>prior_failures</code> metadata (Exp 1138; operational retro .88).</li>
 </ul>
@@ -2782,7 +2782,7 @@ amplify, while being transparent about the 67% of errors that require richer sem
 <p><strong>Milestone .87 summary:</strong> 11/11 criteria met. Operational wall time was 891 min, a 73.9% improvement from the 3,415-minute .58 baseline and the project-best full-cycle wall time until .88 improved it again. Slowest experiment: GRPO training at 29 min (training_wall_budget_hit=True). The infrastructure bottlenecks fixed in exp1117 are now expected to save ~111 min/milestone going forward.</p>
 <hr>
 <h3 id="phase-13-k5-repair-grpo-v2-and-adversarial-bias-audit-milestone-88-exps-11271138">Phase 13 — k=5 Repair, GRPO v2, and Adversarial Bias Audit (Milestone .88, Exps 1127–1138)</h3>
-<p>Milestone 2026.04.88 met <strong>10 of 11 success criteria</strong> in a <strong>145-minute active execution window</strong>. The full operational retro records <strong>794 minutes / 209 experiment events</strong> for the surrounding milestone process. The missed criterion was the Slitherlink WOPR cartridge, which correctly blocked at the conductor pre-gate because the task omitted required <code>prior_failures</code> metadata for five matching WOPR cartridge predecessors.</p>
+<p>Milestone 2026.04.88 met <strong>10 of 11 success criteria</strong> in a <strong>145-minute active execution window</strong>. The full operational retro records <strong>781 minutes / 206 experiment events</strong> for the surrounding milestone process. The missed criterion was the Slitherlink WOPR cartridge, which correctly blocked at the conductor pre-gate because the task omitted required <code>prior_failures</code> metadata for five matching WOPR cartridge predecessors.</p>
 <p><strong>arXiv PDF compilation (Exp 1127):</strong> <code>docs/arxiv-paper/main.pdf</code> compiled successfully with tectonic and the v3 source bundle was verified. arXiv submission is not complete: manual upload remains pending before the 2026-05-15 deadline. The honest verdict is <code>pdf_compiled_upload_pending</code>.</p>
 <p><strong>Gate-state / gallery cascade finding (Exp 1136/1137):</strong> Slitherlink did not ship because the conductor pre-gate found five matching WOPR cartridge predecessors without a valid <code>prior_failures</code> declaration. That blocked the downstream HF Spaces Slitherlink gallery update as well; there is no <code>experiment_1137_hf_spaces_gallery_update.json</code> artifact for .88.</p>
 <p><strong>SOS-KAN/k=5 ensemble repair (Exp 1128):</strong> The k=5 production ensemble shipped in Exp 1121 but benchmarked poorly because SOS-KAN used fixed inference normalization anchors instead of the training corpus statistics. Exp 1128 added corpus-fitted normalization. k=5 AUROC improved <strong>0.5547 → 0.9402</strong>, and SOS-KAN individual AUROC reached <strong>0.9902</strong>.</p>
