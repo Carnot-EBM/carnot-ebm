@@ -164,43 +164,107 @@ infrastructure compatibility.
 to the 4 EBT/ARC-AGI-3 tasks filed at 06:25Z, which now subsume the
 seed-iq-verification task — verification done):
 
-1. **`exp11XX-hmc-sampler-on-carnot-ebm`** [HIGHEST PRIORITY — REVISED 2026-05-02 07:10Z]
-   Goal: swap the Langevin/Gibbs sampler in Carnot's existing
-   energy-minimization loop for Hamiltonian Monte Carlo (HMC),
-   using `∇E` from the k=5 AND-composed verifier ensemble (Phase-1
-   production) and the DBAE-EBM (Phase-3 prototype, when ready).
-   The energy landscape is unchanged; only the sampler dynamics change.
-   Background: the second deep-research document (2026-05-02
-   "Continuous vs Discrete" paradigms PDF) establishes that
-   `score(x) = ∇_x log p(x) = -∇_x E(x)` — Carnot's energy gradient
-   IS the score function for diffusion-style and HMC-style sampling.
-   Therefore Phase 4 is NOT a paradigm pivot but an inference-mode
-   extension of the existing Phase 1+3 infrastructure.
-   Tools: Numpyro / JAX HMC primitives, leveraging Carnot's
-   existing JAX backend (per pyproject + ROCm/CUDA setup).
-   No new generative model class required — `∇E` already exists
-   from k=5 ensemble + DBAE-EBM.
-   Hypothesis: HMC sampling on Carnot's `∇E` matches Seed IQ's
-   action-efficiency on ARC-AGI-3 because both use the same
-   gradient primitive on a calibrated energy landscape.
-   Acceptance: (a) HMC convergence ≥2× faster than Langevin/Gibbs
-   on FoVer eval at matched accuracy, (b) on 10-puzzle ARC-AGI-3
-   subset, action-count efficiency within 50% of Seed IQ's published
-   numbers (Seed IQ: 173 actions on VC33 vs human 307; 75 actions on
-   FT09 vs human 163). 50% threshold = "directionally correct";
-   <50% = "Carnot's k=N landscape is materially less calibrated than
-   Seed IQ's; investigate calibration".
-   Phase: 3 inference-mode extension (NOT a separate Phase 4 build).
-   Reservation: research-class slot, .91 or earlier — significantly
-   lower-risk than the prior "active-inference minimal prototype"
-   formulation, which built a separate PyMC agent on a separate
-   generative model. This task uses Carnot's existing infrastructure.
+1. **`exp11XX-hmc-compatibility-diagnostics`** [HIGHEST PRIORITY — REVISED 2026-05-02 08:00Z]
+   Goal: implement and run the 4 diagnostics specified by Deep Think
+   Q7 on Carnot's existing post-exp1128 k=5 ensemble + ~100 synthetic
+   test examples (mixed safe/boundary). Classify Carnot's `∇E` into
+   one of three regimes (A: HMC works; B: needs preconditioning;
+   C: HMC inappropriate). NO GPU required; ~3-5 days of focused work.
+   This is a STRICTLY CHEAPER prerequisite to building any sampler;
+   it transforms a 2-week HMC implementation that may never converge
+   into a 3-5 day risk-check.
 
-   **What this REPLACES**: the prior `exp11XX-active-inference-
-   minimal-prototype` (filed earlier 2026-05-02 06:40Z) is now
-   superseded. The "Continuous vs Discrete" deep-research document
-   showed the paradigms share the same gradient primitive; building
-   a separate active-inference agent was a category error. Refile.
+   The 4 diagnostics (Deep Think Q7 verdict):
+   - **D1 Symplectic Reversibility**: forward leapfrog L steps, negate
+     momentum, backward L steps; measure `||x_0 - x_rev||`. Low
+     distance = detailed-balance preserved.
+   - **D2 Hamiltonian Energy Conservation**: variance of `|ΔH|` over
+     multi-step trajectories. Bounded low variance = log-density
+     smooth enough for leapfrog.
+   - **D3 Cross-Component Gradient Norm Disparity**: ratio of
+     max-component-variance to min-component-variance across the
+     5 verifier components. Near-unity = isotropic; orders-of-
+     magnitude = preconditioning needed.
+   - **D4 Continuous Subspace Recovery**: simulate leapfrog using
+     ONLY `w_Sem ∇E_Sem + w_PRM ∇E_ThinkPRM`. Stable `|ΔH|` here
+     while full-ensemble `|ΔH|` explodes = continuous components
+     compatible, discrete components are the strict bottleneck.
+
+   Acceptance: regime classification {A, B, C} reported with all
+   4 diagnostic outputs documented; if Regime C, additional
+   diagnostics for fallback selection (Blocked Gibbs / Langevin /
+   Surrogate) reported.
+
+   Phase: 3 inference-mode prerequisite. Reservation: highest-
+   priority research-class slot for .90 — every Phase-4 sampler
+   task is downstream of this diagnostic.
+
+   **Cross-references:**
+   `docs/research-notes/hmc-on-heterogeneous-energy-gradient-deep-think-results.md`
+   has the full diagnostic specifications, regime signatures, and
+   fallback-diagnostic chains.
+
+2. **`exp11XX-hmc-sampler-CONDITIONAL`** [HIGH PRIORITY — REGIME-DEPENDENT]
+   Goal: implement the appropriate sampler based on Task #1's regime
+   classification. The form of this task is determined by the
+   diagnostic outcome:
+
+   **If Regime A (HMC works directly):**
+   - Vanilla NumPyro HMC primitive on Carnot's `∇E`
+   - Default leapfrog + adaptive step-size
+   - ~5-10 days of implementation
+   - Acceptance: HMC convergence ≥2× faster than Langevin/Gibbs on
+     FoVer eval at matched accuracy.
+
+   **If Regime B (preconditioning needed):**
+   - NumPyro HMC + per-component mass matrix `M`
+   - `M` aligned with inverse covariance of aggregated gradients
+     (Deep Think's preconditioning principle)
+   - Verify preconditioner *solves* (vs. *masks*) via post-hoc
+     constraint-violation rate check on samples
+   - ~7-12 days
+   - Acceptance: same as Regime A + sampled outputs maintain
+     constraint compliance ≥95% (Z3/AST/JSON validity).
+
+   **If Regime C (HMC inappropriate):**
+   - Choose fallback per Deep Think's diagnostic chain:
+     - Blocked Gibbs/Metropolis-within-Gibbs (if D4 strict pass)
+     - Langevin with adaptive step (if L=1 OK, L>1 fails)
+     - Surrogate-gradient HMC (if linear probe R² high)
+   - ~10-15 days
+   - Acceptance: chosen fallback achieves convergence on FoVer
+     eval; document why the alternative fallbacks were rejected
+     by their respective diagnostics.
+
+   In all three cases, after sampler is operational:
+   - On 10-puzzle ARC-AGI-3 subset, measure action-count efficiency
+     vs Seed IQ's published numbers (VC33: 173 vs human 307;
+     FT09: 75 vs human 163; LS20: 433 vs human 546)
+   - Within 50% of Seed IQ = "directionally correct"; <50% =
+     "Carnot's k=N landscape is materially less calibrated; investigate"
+
+   Phase: 3 inference-mode extension. Reservation: research-class
+   slot in .91 (or .92 if Task #1 reveals Regime C requiring a more
+   substantial fallback build).
+
+3. **`exp11XX-topological-fencing-mitigation`** [DEFERRED — .92+]
+   Goal: address the unresolvable uncertainty Deep Think Q7 flagged.
+   Even if Tasks #1 + #2 confirm local HMC compatibility, the global
+   manifold connectivity of Carnot's valid Z3/AST/JSON regions is
+   only diagnosable via long-horizon chains on the full Task #2
+   prototype. If long-horizon mixing fails (severe pseudo-ergodicity,
+   chain stuck in single mode), this task implements parallel
+   tempering across modes or mode-jumping moves.
+   Phase: 3 inference-mode extension. Reservation: deferred research-
+   class slot, only triggered if Task #2 reveals topological fencing.
+
+   **What this REPLACES**: the prior `exp11XX-hmc-sampler-on-carnot-ebm`
+   task (filed earlier 2026-05-02 07:10Z) was monolithic. Deep Think
+   Q7's response showed it should split into a cheap diagnostic
+   prerequisite + a regime-conditional sampler implementation +
+   a deferred topological-fencing fallback. The 3-task split is
+   strictly lower-risk than the monolithic version: failure modes
+   are caught at 3-5 days instead of 2-3 weeks.
 
 2. **`exp11XX-diffusion-of-thought-inference-mode`** [HIGH PRIORITY]
    Goal: add Diffusion of Thought (DoT) iterative latent refinement
