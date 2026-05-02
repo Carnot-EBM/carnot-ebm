@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Technical Report - A Technical Report on ~1,126 Experiments Across 87 Completed Research Milestones</title>
-  <meta name="description" content="Carnot technical report: A Technical Report on ~1,126 Experiments Across 87 Completed Research Milestones. Live GPU benchmarks with statistical confidence intervals, honest negative results, and a public experiment history with provenance labels for every headline claim.">
+  <title>Technical Report - A Technical Report on ~1,138 Experiments Across 88 Completed Research Milestones</title>
+  <meta name="description" content="Carnot technical report: A Technical Report on ~1,138 Experiments Across 88 Completed Research Milestones. Live GPU benchmarks with statistical confidence intervals, honest negative results, and a public experiment history with provenance labels for every headline claim.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M30,50 Q30,20 50,20 Q70,20 70,50 Q70,80 50,80 Q30,80 30,50' fill='none' stroke='%23f97316' stroke-width='8'/><circle cx='50' cy='50' r='10' fill='%23f97316'/></svg>">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -160,9 +160,9 @@
 
 <article>
 <h1 id="carnot-energy-based-verification-for-llm-output">Carnot: Energy-Based Verification for LLM Output</h1>
-<h2 id="a-technical-report-on-1126-experiments-across-87-completed-research-milestones">A Technical Report on ~1,126 Experiments Across 87 Completed Research Milestones</h2>
+<h2 id="a-technical-report-on-1138-experiments-across-88-completed-research-milestones">A Technical Report on ~1,138 Experiments Across 88 Completed Research Milestones</h2>
 <p><strong>Author:</strong> Ian Blenke
-<strong>Date:</strong> 2026-05-01
+<strong>Date:</strong> 2026-05-02
 <strong>Repository:</strong> github.com/Carnot-EBM/carnot-ebm
 <strong>License:</strong> Apache 2.0</p>
 <hr>
@@ -178,15 +178,19 @@ for a repair pass.</p>
 <p>The framework is built in Rust plus Python/JAX and ships today as
 <code>pip install carnot</code>. Four energy-model tiers (KAN, Ising, Gibbs, Boltzmann)
 can be selected by task; the production verify-repair API is a handful of
-lines of Python. All headline benchmark numbers are from <strong>live GPU inference
-on real public models</strong> (Qwen 3.5, Gemma 4), never from simulated runs.</p>
-<p>This report documents the research arc behind the framework — <strong>~1,126
-experiments across 87 completed milestones</strong>, run between February and May 2026.
-The story has moved through six distinct phases of understanding. A
-plain-English summary of that journey is in the next section; deeper
-analysis of each phase follows in Sections 3–6 and in the per-milestone
-retrospective artifacts checked into <code>results/operational_retro_*.json</code>.</p>
-<p><strong>Defensible headline results (live GPU, public benchmarks):</strong></p>
+lines of Python. Headline model-generation benchmark numbers are from
+<strong>live GPU inference on real public models</strong> (Qwen 3.5, Gemma 4,
+Qwen3.6-35B-A3B), never from simulated runs; hardware, ensemble, and
+adversarial-audit results are labeled by artifact provenance.</p>
+<p>This report documents the research arc behind the framework — <strong>~1,138
+experiments across 88 completed milestones</strong>, run between February and May 2026.
+The story now spans activation-based negative results, constraint-based
+verification, live SOTA-model benchmarks, production verifier ensembles,
+hardware sampler audits, and continuous self-learning. A plain-English
+summary of that journey is in the next section; deeper analysis follows in
+the body of the report and in the per-milestone retrospective artifacts
+checked into <code>results/operational_retro_*.json</code>.</p>
+<p><strong>Defensible headline results (provenance-labeled artifacts):</strong></p>
 <ul>
 <li><strong>99.3%</strong> of wrong code is flagged on the 164-problem HumanEval benchmark;
   property-based tests catch six bugs the official test suite misses (Exp 226).</li>
@@ -211,12 +215,25 @@ retrospective artifacts checked into <code>results/operational_retro_*.json</cod
   correction on Qwen3.6-35B-A3B (35B MoE, dual RTX 3090) raises HumanEval
   pass@1 from <strong>0% to 36%</strong> on 50 HumanEval problems — the first
   measured positive delta with a flagship instruction-tuned model (Exp 1079,
-  milestone 2026.04.84). GSM8K extraction continues to fail (VeriCoT TP=0
-  on math reasoning); code tasks are the signal.</li>
+  milestone 2026.04.84). GSM8K extraction failed in that run but was fixed
+  in Exp 1101 by adding equation-style chain-of-thought parsing.</li>
 <li><strong>Step-level PRM dataset at scale:</strong> 7,349 MCTS-labeled step examples
   generated from the full 6,548-pair FoVer corpus — 3.7x the 2,000-example
   target (Exp 1084, milestone 2026.04.84). Largest PRM dataset in project
   history.</li>
+<li><strong>ThinkPRM v2 retrain:</strong> AUROC <strong>0.9946</strong> on the full 7,349-example PRM
+  corpus, improving over the 0.9885 v1 baseline (Exp 1111).</li>
+<li><strong>Energy inversion fixed on SOTA outputs:</strong> FoVer expanded to <strong>7,329</strong>
+  pairs, then EBRM retraining restored correct energy ordering with
+  AUROC <strong>0.9774</strong> (Exps 1119/1120).</li>
+<li><strong>Production k=5 verifier ensemble repaired:</strong> k=5 AND-compose AUROC
+  improved <strong>0.5547 → 0.9402</strong> after fitting SOS-KAN normalization stats
+  from the corpus; SOS-KAN individual AUROC reached <strong>0.9902</strong> (Exp 1128).</li>
+<li><strong>GRPO + ThinkPRM v2 self-learning:</strong> v2 completed 100 training questions
+  without hitting the training budget and improved held-out accuracy
+  <strong>19.15% → 27.66%</strong> (+8.51pp; evaluation partial at 47/50) (Exp 1129).</li>
+<li><strong>Continuous self-learning signal improved:</strong> Zenil alpha_t increased
+  <strong>0.38 → 0.52</strong> after the energy retrain (Exp 1130).</li>
 </ul>
 <p><strong>Claims that did not survive audit</strong> are kept in the research record as
 negative findings and documented alongside the audits that surfaced them
@@ -1384,7 +1401,7 @@ result = pipeline.verify_and_repair(
 <p>The constraint pipeline dog-foods itself as a "fourth gate" in the autoresearch evaluator. When the orchestrator evaluates a hypothesis, it extracts verifiable claims via the NL and code constraint extractors, then verifies them via Ising sampling. This catches bogus hypotheses that pass energy, time, and memory gates but make false claims about their results.</p>
 <hr>
 <h2 id="7-principles-learned">7. Principles Learned</h2>
-<p>From the activation-based phase of a research program that now spans 280+ experiments across 25 milestones, we distilled 14 principles. Principles 1-3 describe what works. Principles 4-14 describe what doesn't work for activation-based hallucination detection — these systematic negative results are the project's primary contribution to the literature, saving other researchers months of dead ends.</p>
+<p>From the activation-based phase of a research program that now spans ~1,138 experiments across 88 milestones, we distilled 14 principles. Principles 1-3 describe what works. Principles 4-14 describe what doesn't work for activation-based hallucination detection — these systematic negative results are the project's primary contribution to the literature, saving other researchers months of dead ends.</p>
 <h3 id="what-works">What works</h3>
 <ol>
 <li>
@@ -1437,7 +1454,7 @@ result = pipeline.verify_and_repair(
 <p>The failure of Principles 4-14 establishes a fundamental limit: <strong>you cannot detect factual hallucination without access to factual knowledge.</strong> No internal signal can distinguish true from false statements about the external world. The solution is to bring external knowledge into the verification loop — as constraints. This is the insight that drove the paradigm shift from Phase 1 to Phase 2, and the constraint pipeline's 100% detection rate (Experiment 56) vs activation EBMs' 50% practical rate validates it empirically.</p>
 <hr>
 <h2 id="8-the-production-architecture">8. The Production Architecture</h2>
-<p>The architecture that emerged from 280+ experiments:</p>
+<p>The architecture that emerged from ~1,138 experiments:</p>
 <pre><code>User Question
      |
      v
@@ -1600,7 +1617,7 @@ Verified + Repaired Answer
 </tr>
 </tbody>
 </table>
-<p><strong>Total:</strong> <strong>3,126</strong> Python/integration tests are currently collected in the repo. The latest documented full Python validation is <strong>3,100 passed, 26 skipped</strong> at <strong>99.10%</strong> coverage, and the packaged-verification integration/E2E checks are also passing.</p>
+<p><strong>Total:</strong> <strong>20,845</strong> Python test items are currently collected in the repo (<code>.venv/bin/python -m pytest tests/python --collect-only -q --no-header</code>, 3 skipped during collection). This is a collection count, not a claim that the full suite passes; full validation remains command-specific and is documented in the relevant experiment artifacts.</p>
 <hr>
 <h2 id="11-reproduction">11. Reproduction</h2>
 <pre><code class="language-bash"># Clone and setup
@@ -1651,7 +1668,7 @@ make research-loop
 </code></pre>
 <hr>
 <h2 id="12-conclusion">12. Conclusion</h2>
-<p>Across <strong>230+ experiments</strong> on 16 model families spanning 350M to 35B parameters, <strong>23 research milestones</strong>, and a complete arc from failed activation approaches through simulation artifact discovery to credible live results, we reached a clear three-part conclusion.</p>
+<p>Across <strong>~1,138 experiments</strong> on model families spanning 350M to 35B parameters, <strong>88 research milestones</strong>, and a complete arc from failed activation approaches through simulation artifact discovery to credible live results, we reached a clear three-part conclusion.</p>
 <h3 id="part-1-activation-based-detection-fails">Part 1: Activation-based detection fails</h3>
 <p>Activation-based EBMs detect model confidence, not factual correctness. The 75-88% test-set accuracy is statistically real but practically misleading — in deployment, the EBM agrees with ground truth only 50% of the time. Four compounding effects defeat activation-based detection:</p>
 <ol>
@@ -1678,7 +1695,7 @@ make research-loop
 <li><strong>HumanEval 50 dual-model (Exp 220):</strong> +2.0pp on both Qwen and Gemma</li>
 </ul>
 <h3 id="the-story">The story</h3>
-<p>The trajectory of this project is: we tried the obvious approach (train an EBM on activations to detect hallucination), learned through 38 experiments that it fundamentally cannot work for factual verification, identified the root cause (internal signals capture confidence, not truth), pivoted to encoding external knowledge as formal constraints, discovered that early constraint results were simulation artifacts, rebuilt extraction for real instruction-tuned models, proved that code verification (+3.0pp HumanEval) and typed constraint verification (+4.9pp) work on live GPU inference, calibrated semantic verification on live artifacts without overstating what it fixes, documented the honest flat-delta Qwen PBT follow-up plus its <strong>17/23</strong> wrong-baseline detections and <strong>2</strong> weak-harness misses, showed that newer self-learning improves retrieval quality before it improves held-out task success, added provenance-labeled FPGA blocker and replay artifacts, distilled the strongest code traces into reusable spec-backed checks, packaged the PBT path as a standalone API, CLI, and 7-tool MCP surface, deployed DualGPURunner achieving 1.98x throughput in production, permanently fixed the LIVE-ENV propagation bug that blocked live benchmarks for seven milestones, synthesized the first iCE40 N=8 combinational energy oracle (134 LUTs), and confirmed StreamingCoT Tier 0g hallucination detection at AUC=1.0 and constraint memory compression at 31.25x while preserving AUROC=1.0 — all across <strong>961 experiments and 80 milestones</strong>.</p>
+<p>The trajectory of this project is: we tried the obvious approach (train an EBM on activations to detect hallucination), learned through 38 experiments that it fundamentally cannot work for factual verification, identified the root cause (internal signals capture confidence, not truth), pivoted to encoding external knowledge as formal constraints, discovered that early constraint results were simulation artifacts, rebuilt extraction for real instruction-tuned models, proved that code verification (+3.0pp HumanEval) and typed constraint verification (+4.9pp) work on live GPU inference, calibrated semantic verification on live artifacts without overstating what it fixes, documented the honest flat-delta Qwen PBT follow-up plus its <strong>17/23</strong> wrong-baseline detections and <strong>2</strong> weak-harness misses, showed that newer self-learning improves retrieval quality before it improves held-out task success, added provenance-labeled FPGA blocker and replay artifacts, distilled the strongest code traces into reusable spec-backed checks, packaged the PBT path as a standalone API, CLI, and 7-tool MCP surface, deployed DualGPURunner achieving 1.98x throughput in production, fixed LIVE-ENV propagation, synthesized open FPGA energy-oracle paths, expanded FoVer to 7,329 pairs, repaired the SOTA-output energy inversion, deployed and then fixed the k=5 verifier ensemble, and obtained the first positive GRPO + ThinkPRM v2 self-learning result — all across <strong>~1,138 experiments and 88 milestones</strong>.</p>
 <p>The LLM handles language. The Ising model handles logic. Each does what it's best at. And someday, the Ising model runs on thermodynamic hardware.</p>
 <hr>
 <h2 id="13-pre-trained-models">13. Pre-trained Models</h2>
@@ -1737,13 +1754,13 @@ make research-loop
 <li><strong>Plan.</strong> When all tasks in a milestone complete, a planning agent reads <code>research-program.md</code> (human-written goals) and autonomously designs the next milestone — selecting experiments, ordering dependencies, and writing full conductor-ready prompts.</li>
 <li><strong>Repeat.</strong> The loop runs until a circuit breaker halts it after N consecutive failures.</li>
 </ol>
-<p>In a 50-iteration run with Claude 3.5 Sonnet as the proposer, the loop achieved near-optimal energy on two benchmark functions (DoubleWell: 0.0001, Rosenbrock: 0.0092) before the circuit breaker engaged at iteration 18. The research conductor now drives a 23-milestone research record that spans 257+ experiments with automatic milestone archival and transition.</p>
+<p>In a 50-iteration run with Claude 3.5 Sonnet as the proposer, the loop achieved near-optimal energy on two benchmark functions (DoubleWell: 0.0001, Rosenbrock: 0.0092) before the circuit breaker engaged at iteration 18. The research conductor now drives an 88-milestone research record spanning ~1,138 experiments with automatic milestone archival and transition.</p>
 <p>The energy function serves as the objective judge — no human evaluation or LLM-as-judge is needed. This is a key advantage of the EBM paradigm: the mathematics provides ground truth.</p>
 <hr>
 <h2 id="15-limitations">15. Limitations</h2>
 <ol>
 <li>
-<p><strong>Model scale.</strong> Live LLM experiments use Qwen3.5-0.8B and Gemma4-E4B (small models). Results may differ on larger models where hallucination rates are lower and constraint patterns differ.</p>
+<p><strong>Model scale.</strong> Live LLM experiments now include both smaller public models (Qwen3.5-0.8B, Gemma4-E4B) and Qwen3.6-35B-A3B. Results remain model- and task-specific; larger or differently trained models can shift hallucination rates and constraint patterns.</p>
 </li>
 <li>
 <p><strong>Constraint coverage.</strong> The pipeline can only verify claims for which constraints exist. Semantic claims ("the logic is sound") and factual claims without a knowledge base escape verification. Experiment 73 quantifies this gap.</p>
@@ -2649,7 +2666,7 @@ amplify, while being transparent about the 67% of errors that require richer sem
 <p><strong>Cascade validation on SOTA outputs — honest mixed result (Exp 1100):</strong> 100 SOTA model outputs from Qwen3.6-35B-A3B run through the full cascade. mean_cascade_depth=2.20 (vs 2.0 on FoVer data). Tier 0a early-exit rate: 20% (vs 8% on FoVer), meaning SOTA outputs defeat the early-exit probes more often and require deeper cascade evaluation. incorrect_energy &gt; correct_energy: False — the hypothesis that SOTA incorrect outputs have higher cascade energy than correct outputs is not confirmed on this sample. Cascade is functional end-to-end; the energy ordering hypothesis needs architecture investigation before it can support confident repair decisions on SOTA-scale outputs.</p>
 <p><strong>GSM8K extraction fix (Exp 1101):</strong> Root cause of two-consecutive-milestone VeriCoT TP=0 diagnosed and fixed. SOTA models (Qwen3.6-35B, Gemma-4) write equation-style CoT ("47 + 28 = 75") while the old extractor required prose operators ("47 plus 28 gives 75"). Added <code>_EQ_INLINE_RE</code> to <code>python/carnot/extraction/vericot_validator.py</code>. Fixed TP rate: 0.5 → 1.0 on 20 test examples (10 equation-style + 10 prose, both now correctly parsed). This unblocks GSM8K math extraction for all future SOTA benchmarks.</p>
 <p><strong>Milestone .85 summary (Exp 1103):</strong> 13/14 criteria met. The one NOT-MET criterion was phase1a_false_pass_below_5pct (exp1092 blocked by gate-check failure on the gating experiment). 13/14 represents the strongest multi-criteria recovery after .84's 4/13.</p>
-<p><strong>What's open (as of 2026-05-01):</strong> Phase 1a adversarial verifier robustness audit still needs its blocking gate resolved. Verifier diversity expansion is required before Phase-3 AND-composition scales to k=15 with theoretical guarantees. FPGA sampler distribution mismatch (KL=3.07) requires root-cause investigation before hardware-accelerated sampling claims can be published. Energy ordering for SOTA model outputs needs architecture investigation (incorrect energy not reliably above correct energy on SOTA outputs). GSM8K extraction is now fixed and should be retested in the next live SOTA benchmark run.</p>
+<p><strong>Post-.88 status:</strong> Phase 1a is unblocked and k=5, not k=15, is the current production AND-composition target. Energy ordering on SOTA outputs was repaired by Exp 1120 and k=5 ensemble AUROC was repaired by Exp 1128. The remaining open items are narrower: arXiv upload is still manual, GRPO v2 needs a full 50-question evaluation, KV260 v4 remains above the KL gate, and Slitherlink needs valid prior-failures metadata before rerun.</p>
 <hr>
 <h3 id="phase-11-failure-ledger-v2-verifier-diversity-and-thinkprm-v2-milestone-86-exps-11041114">Phase 11 — Failure-Ledger v2, Verifier Diversity, and ThinkPRM v2 (Milestone .86, Exps 1104–1114)</h3>
 <p>Milestone 2026.04.86 met 11 of 12 success criteria.</p>
@@ -2675,6 +2692,18 @@ amplify, while being transparent about the 67% of errors that require richer sem
 <p><strong>Adaptive cascade via Lagrangian router (Exp 1123):</strong> Lagrangian dual MLP router (arXiv 2604.14853) trained on 6,829 FoVer examples. Cost savings: 99.98% (0.017ms vs 111ms fixed cascade). However, accuracy degraded 22.86pp (TP 0.743 vs 0.971 fixed). The MLP predicts depth=1 for all holdout examples — underfitting. Fix for .88: increase hidden size 32→128 and add verifier-score features. Honest negative on accuracy; the architectural approach is sound.</p>
 <p><strong>WOPR Hashi cartridge + gallery update (Exps 1124/1125):</strong> Hashi (bridges puzzle) implemented as a WOPR cartridge with integer-flow + planarity constraints. E=0 achieved at convergence iteration 1. Gallery deployed with 6 cartridges total (live HTTP 200 confirmed). Gallery now includes: Sudoku, Graph Theory Wiring, Lights Out, N-Queens, Hashi, and one additional cartridge.</p>
 <p><strong>Milestone .87 summary:</strong> 11/11 criteria met. Wall time 219 min — the fastest complete milestone in project history, representing a 74% improvement from the 3,415-minute .58 baseline. Slowest experiment: GRPO training at 29 min (training_wall_budget_hit=True). The infrastructure bottlenecks fixed in exp1117 are now expected to save ~111 min/milestone going forward.</p>
+<hr>
+<h3 id="phase-13-k5-repair-grpo-v2-and-adversarial-bias-audit-milestone-88-exps-11271138">Phase 13 — k=5 Repair, GRPO v2, and Adversarial Bias Audit (Milestone .88, Exps 1127–1138)</h3>
+<p>Milestone 2026.04.88 met <strong>10 of 11 success criteria</strong> in <strong>145 wall-clock minutes</strong>. The missed criterion was the Slitherlink WOPR cartridge, which correctly blocked at the conductor pre-gate because the task omitted required <code>prior_failures</code> metadata for five matching WOPR cartridge predecessors.</p>
+<p><strong>arXiv PDF compilation (Exp 1127):</strong> <code>docs/arxiv-paper/main.pdf</code> compiled successfully with tectonic and the v3 source bundle was verified. arXiv submission is not complete: manual upload remains pending before the 2026-05-15 deadline. The honest verdict is <code>pdf_compiled_upload_pending</code>.</p>
+<p><strong>SOS-KAN/k=5 ensemble repair (Exp 1128):</strong> The k=5 production ensemble shipped in Exp 1121 but benchmarked poorly because SOS-KAN used fixed inference normalization anchors instead of the training corpus statistics. Exp 1128 added corpus-fitted normalization. k=5 AUROC improved <strong>0.5547 → 0.9402</strong>, and SOS-KAN individual AUROC reached <strong>0.9902</strong>.</p>
+<p><strong>GRPO energy PRM v2 (Exp 1129):</strong> The v2 GRPO run used ThinkPRM v2 as a continuous reward, DRA diversity penalty, and CPPO proxy reuse. It completed <strong>100 training questions</strong> without hitting the 600s training budget. Evaluation was partial at 47/50 questions because the evaluation wall budget was hit, but the held-out result was positive: baseline <strong>19.15%</strong>, trained <strong>27.66%</strong>, improvement <strong>+8.51pp</strong>.</p>
+<p><strong>Zenil alpha_t post-retrain (Exp 1130):</strong> After the SOTA energy retrain, alpha_t improved <strong>0.38 → 0.52</strong> on 50 live-GPU Qwen3.6-35B-A3B examples. This is a first-class self-learning metric showing that the inversion fix improved the usable disagreement signal.</p>
+<p><strong>Lagrangian cascade v2 (Exp 1131):</strong> Adding verifier-score features and increasing the hidden layer to 128 resolved the v1 collapse. Accuracy delta was <strong>0.0pp</strong> versus the fixed cascade, and cost savings were <strong>3.2%</strong>. This is much smaller than v1's 99.98% cost saving, but it no longer trades away accuracy.</p>
+<p><strong>Goodfire exemplar cascade measurement (Exp 1132):</strong> The 36-exemplar failure corpus produced a mixed result. Tier-3 k=5 caught all categories, but standalone low-tier rates were weak: ThinkPRM proxy 0.1389, SemEnergy 0.2222, SymCode 0.0833, causal 0.0278, and standalone Z3 0.0833. The finding is that the ensemble is doing the work; single-tier exemplar claims are not defensible yet.</p>
+<p><strong>PRM-BiasBench-style adversarial audit (Exp 1133):</strong> On 60 deterministic style, length, and format attacks, the k=5 ensemble caught <strong>60/60</strong> with zero attack false positives. SemEnergy alone caught <strong>20/60</strong>. Z3 dominated format and length attacks, while SemEnergy was only relevant for stylistic cases. AND-composition provided the robustness margin.</p>
+<p><strong>KV260 v4 parameter tuning (Exp 1134):</strong> Parameter tuning improved v4 KL <strong>0.134 → 0.1128</strong>, but it remains above the 0.05 threshold. Self-adaptive lambda made the distribution much worse. The honest conclusion is that the v4 sparse+EMA topology is not yet a correct Gibbs sampler; v3 sequential remains the correctness reference at KL=0.025.</p>
+<p><strong>Milestone .88 summary (Exp 1138):</strong> 10/11 criteria met. Major wins: k=5 fixed to AUROC 0.9402, GRPO v2 +8.51pp, alpha_t 0.52, cascade v2 accuracy preserved, PRM-bias attack audit passed. Major open items: arXiv upload remains manual, GRPO evaluation still needs the full 50-question run, KV260 v4 remains above the KL gate, and WOPR Slitherlink needs a valid prior-failures declaration before rerun.</p>
 </article>
 
 <footer>
