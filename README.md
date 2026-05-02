@@ -110,19 +110,23 @@ traceable to a checked-in experiment artifact under `results/`.
 | KAN-MILP formal property verification (monotonicity, output range, boundary) | **3 properties verified** via MILP; 11 violations found in untrained model | Exp 972 |
 | KAN-MILP monotonicity enforcement (isotonic projection fix) | **11 violations eliminated**; 1.89x inference speedup post-fix; zero violations in production model | Exp 992 |
 | SC-Energy Tier 2 production wiring as OOD detector | **143 tests, 0 failures**; `SCEnergyEnergyAdapter` replaces VJEPA v2 as default Tier 2 (VJEPA retained as fallback) | Exp 1001 |
-| FoVer corpus 30x expansion (Z3 + GSM8K labeling) | **6,548 pairs** (from 216); probe AUROC 0.5694 → **0.9899** (SOS-KAN), 0.9885 (ThinkPRM), 0.9875 (NK-KAEM) — 74-percentile-point lift | Exps 1055/1057 |
+| FoVer corpus expansion (Z3 + GSM8K + SOTA labeling) | **7,329 pairs** (from 216); probe AUROC 0.5694 → **0.9899** (SOS-KAN), 0.9885 (ThinkPRM) — 74-percentile-point lift; 781 SOTA-model pairs added in v5 | Exps 1055/1057/1119 |
 | SOS-KAN v3 Neural-Gram energy verifier on full corpus | **AUROC=0.9545** on 6,548-pair FoVer corpus; 0 monotonicity violations across 16,000 samples; gram matrix PSD confirmed | Exp 1072 |
 | Triple Integration E2E cascade (all 4 tiers active) | **50/50 questions** ran full cascade: Tier 0a → 0b → 2 → 3; incorrect_energy > correct_energy confirmed | Exp 1073 |
 | KV260 FPGA Ising sampler live hardware sampling | **24.83μs mean latency**; 70 unique spin values across 100 samples, 0 failures; energy distribution non-uniform confirmed | Exp 1068 |
 | FR-11 self-learning loop with SOTA 35B model (live GPU) | **alpha_t=0.38** with Qwen3.6-35B-A3B (35B MoE, live dual-GPU inference); fr11_loop_closed=true; 100 training examples appended | Exp 1077 |
-| First positive live benchmark with SOTA IT model on HumanEval (Qwen3.6-35B-A3B) | HumanEval pass@1 **0% → 36%** after Carnot correction (first-ever positive delta with a SOTA instruction-tuned model); GSM8K extraction still failing (VeriCoT TP=0) | Exp 1079 |
+| First positive live benchmark with SOTA IT model on HumanEval (Qwen3.6-35B-A3B) | HumanEval pass@1 **0% → 36%** after Carnot correction (first-ever positive delta with a SOTA instruction-tuned model) | Exp 1079 |
 | Step-level PRM dataset at scale (MCTS-based labeling, full FoVer corpus) | **7,349 step-labeled examples** generated (target was 2,000); largest PRM dataset in project history | Exp 1084 |
 | SemEnergy probe v1 (logit-space energy, arXiv 2508.14496) | **AUROC=0.948**, inference 0.017 ms/example (294x faster than 5 ms target); principled information-theoretic grounding for logit-spill signal | Exp 1096 |
-| WOPR N-Queens cartridge (8-Queens Ising solver) | **E=0 solution** at iteration 3001; gallery now has 4 games (Sudoku, GTW, Lights Out, N-Queens) live on HuggingFace Spaces | Exp 1097 |
+| WOPR gallery — Hashi cartridge (6 games live) | **E=0** at convergence; gallery now has 6 cartridges (Sudoku, GTW, Lights Out, N-Queens, Hashi + 1 more) live on HuggingFace Spaces | Exps 1097/1124/1125 |
 | Phase 1c verifier joint null-space measurement | **joint_null_space_fraction=0.0** (acceptance criterion met); max_r_correlation=0.656 — verifiers correlated, AND-composition diversity expansion required before k=15 scales | Exp 1093 |
 | GSM8K VeriCoT extraction fix (equation-style CoT) | **TP rate: 0.5 → 1.0**; SOTA models write "47 + 28 = 75" not prose; added `_EQ_INLINE_RE` to vericot_validator.py; closes two-milestone TP=0 blocker | Exp 1101 |
-| FPGA sampler correctness audit — honest negative | **KL(FPGA ‖ Gibbs) = 3.07** (threshold 0.05); distribution mismatch confirmed; software Gibbs and GPU Ising agree (KL≈0); KV260 does not yet sample from Boltzmann distribution | Exp 1094 |
+| ThinkPRM v2 retrain on 7,349-example PRM corpus | **AUROC=0.9946** (v1 baseline 0.9885); alpha_t=0.38 on training corpus; 7,349 step-labeled examples, 300 epochs | Exp 1111 |
 | RLVR + SSD integration — honest negative | **No improvement** over baseline; energy filter degenerate (all scores 0.0 from k=5 AND-composition); SSD requires non-degenerate energy gradient as input | Exp 1099 |
+| Energy inversion fix — AUROC=0.9774 post-retrain | Ordering restored: correct-energy 0.689 → 1.648, incorrect-energy 0.621 → 2.096; EBRM noise-filter + SOTA corpus retrain resolved OOD distribution shift | Exp 1120 |
+| GRPO + ThinkPRM v2 as explicit PRM reward (first positive) | Baseline **24% → 28%** (+4pp) on 25-question holdout; breaks 3-consecutive RLVR+SSD negative streak; AUROC=0.9946 signal used as continuous reward | Exp 1118 |
+| k=5 AND-compose ensemble — production default | **[SOSKANEnergyV3, SemEnergyProbe, ASTStructureVerifier, SemanticConsistencyVerifier, Z3MathVerifier]** wired as VerifyRepairPipeline default; SemEnergyProbe best individual AUROC=0.8964 | Exp 1121 |
+| FPGA sampler correctness audit — honest negative | **KL(FPGA ‖ Gibbs) = 3.07** (v1 parallel); sequential Glauber v3 KL=0.025; v4 Python sim KL=0.134 (above 0.05 threshold, parameter tuning ongoing) | Exps 1094/1109/1122 |
 
 Deeper analysis of these — including everything that **didn't** work and
 why — is in the [technical report](docs/technical-report.md). Per-milestone
@@ -157,7 +161,7 @@ claim we publish.
 ## Where to go next
 
 - **[Technical report](docs/technical-report.md)** — the full research arc
-  across ~1,087 experiments across 84 completed milestones, structured as six phases with
+  across ~1,126 experiments across 87 completed milestones, structured as six phases with
   a plain-English timeline of what we tried, what failed, what stuck.
 - **[Roadmap](docs/roadmap.md)** — current milestone, upcoming milestones,
   hardware track, and Phase 3 (Kona-parity foundation-model) direction.

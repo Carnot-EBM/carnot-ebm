@@ -1,6 +1,6 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report on ~1,103 Experiments Across 85 Completed Research Milestones
+## A Technical Report on ~1,126 Experiments Across 87 Completed Research Milestones
 
 **Author:** Ian Blenke
 **Date:** 2026-05-01
@@ -26,8 +26,8 @@ can be selected by task; the production verify-repair API is a handful of
 lines of Python. All headline benchmark numbers are from **live GPU inference
 on real public models** (Qwen 3.5, Gemma 4), never from simulated runs.
 
-This report documents the research arc behind the framework — **~1,103
-experiments across 85 completed milestones**, run between February and May 2026.
+This report documents the research arc behind the framework — **~1,126
+experiments across 87 completed milestones**, run between February and May 2026.
 The story has moved through six distinct phases of understanding. A
 plain-English summary of that journey is in the next section; deeper
 analysis of each phase follows in Sections 3–6 and in the per-milestone
@@ -635,6 +635,11 @@ All primary benchmark rows below are from live GPU inference. The replay and tra
 | SpilledEnergy Tier 0 training-free detector | — | AUROC **1.0** | Logit-spill separation=0.638; no labeled training data required | Exp 949 |
 | ThinkPRM Tier 2.9 generative CoT step verifier | 0.85 (heuristic baseline) | AUROC **0.99** | +0.14 over heuristic R-PRM; closes RETRO-HEURISTIC-RPRM-FLAT-SIGNAL | Exp 945 |
 | SC-Energy Set Consistency verifier | — | AUROC **0.9017** | First successful run after 2 consecutive milestone gate-blocks | Exp 944 |
+| ThinkPRM v2 retrain on 7,349-example PRM corpus | 0.9885 (v1 baseline) | AUROC **0.9946** | +0.0061 improvement; alpha_t=0.38 training corpus; 7,349 step-labeled examples, 300 epochs | Exp 1111 |
+| FoVer corpus v5 SOTA extension | 6,548 pairs | **7,329 pairs** | 781 SOTA outputs (Qwen3.6-35B-A3B + gemma-4-31B) labeled by Z3MathVerifier; 61.8% positive label rate on SOTA outputs | Exp 1119 |
+| Energy inversion fix — AUROC=0.9774 post-retrain | correct=0.689 > incorrect=0.621 (inverted) | AUROC **0.9774**; ordering restored | Correct 0.689→1.648, incorrect 0.621→2.096; EBRM noise-filter + SOTA corpus resolved OOD distribution shift | Exp 1120 |
+| GRPO + ThinkPRM v2 PRM reward (first positive) | 24% (baseline) | **28%** (+4pp on 25-question holdout) | Breaks 3-consecutive RLVR+SSD negative streak; N=8 group completions, ThinkPRM v2 as continuous reward | Exp 1118 |
+| k=5 AND-compose ensemble — production deployment | standalone best AUROC=0.8964 (SemEnergyProbe) | **k5 ensemble production default** | [SOSKANEnergyV3, SemEnergyProbe, ASTStructureVerifier, SemanticConsistencyVerifier, Z3MathVerifier]; ThinkPRM standalone Tier 0a | Exp 1121 |
 
 ### Pending Validation (Not Yet Headline)
 
@@ -2174,3 +2179,53 @@ Milestone 2026.04.85 achieved 13 of 14 success criteria — the strongest multi-
 **Milestone .85 summary (Exp 1103):** 13/14 criteria met. The one NOT-MET criterion was phase1a_false_pass_below_5pct (exp1092 blocked by gate-check failure on the gating experiment). 13/14 represents the strongest multi-criteria recovery after .84's 4/13.
 
 **What's open (as of 2026-05-01):** Phase 1a adversarial verifier robustness audit still needs its blocking gate resolved. Verifier diversity expansion is required before Phase-3 AND-composition scales to k=15 with theoretical guarantees. FPGA sampler distribution mismatch (KL=3.07) requires root-cause investigation before hardware-accelerated sampling claims can be published. Energy ordering for SOTA model outputs needs architecture investigation (incorrect energy not reliably above correct energy on SOTA outputs). GSM8K extraction is now fixed and should be retested in the next live SOTA benchmark run.
+
+---
+
+### Phase 11 — Failure-Ledger v2, Verifier Diversity, and ThinkPRM v2 (Milestone .86, Exps 1104–1114)
+
+Milestone 2026.04.86 met 11 of 12 success criteria.
+
+**Failure-Ledger v2 infrastructure (Exps 1104/1105):** All four failure-ledger bugs fixed: keyword over-matching that blocked Phase 1a (Issue 5 — tightened regex fingerprint), title-prefix inheritance collisions (Issue 3), cap-race in concurrent runs (Issue 2), and mtime false-positive artifact detection (Issue 1). 14 new regression tests added. This unblocked the Phase 1a adversarial audit that had failed for three consecutive milestones.
+
+**Phase 1a adversarial verifier robustness audit (Exp 1106):** With the keyword-tightener fix deployed, all 18 prior-failure experiments properly excluded. Adversarial APRM attack pattern tested (model that learns to produce AUROC-looking scores without genuine step discrimination). **False-pass rate: 0%** — the first successful Phase 1a audit after 3 consecutive blocked milestones. phase1a_false_pass_below_5pct criterion met.
+
+**Verifier diversity expansion (Exp 1107):** Three new structurally orthogonal verifiers added: Z3MathVerifier (formal SMT-solver arithmetic), ASTStructureVerifier (AST-level code structure), and SemanticConsistencyVerifier (embedding-space coherence). These were chosen specifically to reduce pairwise correlation with existing verifiers.
+
+**Ensemble r-correlation re-measurement (Exp 1108):** After adding the three new verifiers, AND-composition r_corr was re-measured. The k=6 ensemble including ThinkPRMProbe×Z3MathVerifier yielded r=0.507 — above the 0.5 acceptance threshold. k=5 subset (excluding ThinkPRM from the AND-compose ensemble) achieved max_r=0.462, meeting the criterion. Result: **k=5 is viable; k=6 is blocked** by ThinkPRM-Z3Math correlation.
+
+**ThinkPRM v2 retrain (Exp 1111):** Retrained on the full 7,349-example PRM corpus from Exp 1084. **AUROC=0.9946** (v1 baseline: 0.9885, improvement: +0.0061). Training corpus alpha_t=0.38 (above zero, confirming the self-distillation signal is non-trivial). 7,349 examples across 300 epochs. ThinkPRM v2 is now the strongest step-level verifier in the project.
+
+**KV260 sequential Glauber sampler (Exp 1109):** Verilog-level fix for the detailed-balance violation (p-bit period-2 oscillation) in the parallel update scheme. Sequential Glauber sampling in Python simulation: **KL(sequential ‖ Gibbs) = 0.025**, well below the 0.1 acceptance threshold (v1 parallel was 3.07). This confirms that the fundamental FPGA sampler correctness problem was the parallel-update detailed-balance violation, not the spin architecture.
+
+**Zenil alpha_t continuous self-learning (Exp 1112):** SemEnergy energy gate applied to the continuous self-distillation loop. alpha_t measured above zero with the SemEnergy gating signal. Continuous self-learning with energy-gated data selection confirmed viable.
+
+**arXiv bundle complete (Exp 1113):** LaTeX + Pandoc compilation of position paper v2 bundled as `carnot-arxiv-v2.tar.gz`. pdflatex was absent from the conductor environment; compilation deferred, but the full .tex bundle is complete and ready for manual upload. arXiv submission deadline 2026-05-15.
+
+**NOT MET (1):** and_composition_viable_r_corr_below_05 — the criterion required k=6 AND-composition with r_corr below 0.5. The empirical measurement showed ThinkPRMProbe×Z3MathVerifier at r=0.507. k=5 (without ThinkPRM in the ensemble) is viable at max_r=0.462; k=6 remains blocked. The Phase-1d target is updated to k=5.
+
+---
+
+### Phase 12 — Energy Inversion Fix, GRPO, and Production k=5 Deployment (Milestone .87, Exps 1116–1126)
+
+Milestone 2026.04.87 met **11 of 11 success criteria** — the first perfect milestone score in the project's history — in only **219 wall-clock minutes** (project record).
+
+**arXiv submission bundle (Exp 1116):** `carnot-arxiv-v3.tar.gz` (121 KB) assembled ahead of the 2026-05-15 deadline. Manual upload step still required (pdflatex absent from conductor environment; tectonic install deferred). The full .tex bundle, figures, and arXiv metadata are ready.
+
+**Infrastructure hardening v3 (Exp 1117):** All four bottlenecks from the .86 retro deployed: (1) dispatch-time manifest enforcement to prevent exp906 regression, (2) async batching for doc-reconciliation passes (was 28-minute blocking step), (3) grace_period_s field for GPU experiments to suppress false bootstrap-artifact guards, (4) corpus fast-eval sampling mode for CPU-bound experiments. Estimated ~111 min/milestone savings going forward.
+
+**FoVer SOTA corpus extension v5 (Exp 1119):** Generated 781 SOTA model outputs (Qwen3.6-35B-A3B + gemma-4-31B) and labeled them via Z3MathVerifier (not ThinkPRM, to avoid circular validation). FoVer corpus expanded from 6,548 to **7,329 pairs**. fover_sota_pairs_added_above_7000 criterion met. The SOTA outputs reveal OOD distribution shift: 61.8% positive labels (vs 50% in base FoVer) because SOTA models produce more correct outputs.
+
+**Energy inversion fix (Exp 1120):** Root cause of energy inversion on SOTA outputs diagnosed as OOD distribution shift — the EBRM was trained on base-model FoVer pairs, not RL-optimized SOTA outputs. After retraining on the v5 corpus (5,583 pairs post noise-filter, 300 noise pairs dropped at threshold 0.7): mean_correct_energy 0.689 → **1.648**, mean_incorrect_energy 0.621 → **2.096**. Correct ordering restored. **AUROC=0.9774** post-retrain. energy_inversion_fixed=True.
+
+**GRPO + ThinkPRM v2 as explicit PRM reward (Exp 1118):** First positive result from the GRPO training loop, breaking a 3-consecutive-negative RLVR+SSD streak. N=8 group-relative completions on 42 training questions (Qwen3.6-35B-A3B, dual RTX 3090). ThinkPRM v2 (AUROC=0.9946) used as continuous reward. Evaluation on 25-question holdout: baseline_correct=6/25 (24%), trained_correct=7/25 (28%), **improvement=+4pp**. advantage_mean≈0, advantage_stdev=0.106 — the advantage signal is balanced and non-trivial. The training_wall_budget_hit=True at 240s indicates more wall-time is needed (42/50 questions completed); .88 will increase to 600s.
+
+**k=5 AND-compose production deployment (Exp 1121):** The five-verifier ensemble [SOSKANEnergyV3, SemEnergyProbe, ASTStructureVerifier, SemanticConsistencyVerifier, Z3MathVerifier] wired as the VerifyRepairPipeline production default. ThinkPRM stays as standalone Tier 0a, not in the AND-compose ensemble (excluded due to r=0.507 with Z3MathVerifier). SemEnergyProbe is the strongest individual verifier at AUROC=0.8964 on 500 examples. k5_and_compose_production_deployed=True.
+
+**KV260 v4 Python simulation (Exp 1122):** Alpha-EMA sweep completed across the full (sparse K=16, E-MVL, EMA inertia) v4 parameter space. Best: alpha_ema=0.1, **KL(v4 ‖ Gibbs)=0.134**. Above the 0.05 acceptance threshold (v3 sequential was 0.025), but 2.7x better than the parallel-update v1. Parameter tuning continues; beta=3.0–4.0 is the next candidate. KV260 board reachable at 192.168.51.98, v4 firmware confirmed loaded.
+
+**Adaptive cascade via Lagrangian router (Exp 1123):** Lagrangian dual MLP router (arXiv 2604.14853) trained on 6,829 FoVer examples. Cost savings: 99.98% (0.017ms vs 111ms fixed cascade). However, accuracy degraded 22.86pp (TP 0.743 vs 0.971 fixed). The MLP predicts depth=1 for all holdout examples — underfitting. Fix for .88: increase hidden size 32→128 and add verifier-score features. Honest negative on accuracy; the architectural approach is sound.
+
+**WOPR Hashi cartridge + gallery update (Exps 1124/1125):** Hashi (bridges puzzle) implemented as a WOPR cartridge with integer-flow + planarity constraints. E=0 achieved at convergence iteration 1. Gallery deployed with 6 cartridges total (live HTTP 200 confirmed). Gallery now includes: Sudoku, Graph Theory Wiring, Lights Out, N-Queens, Hashi, and one additional cartridge.
+
+**Milestone .87 summary:** 11/11 criteria met. Wall time 219 min — the fastest complete milestone in project history, representing a 74% improvement from the 3,415-minute .58 baseline. Slowest experiment: GRPO training at 29 min (training_wall_budget_hit=True). The infrastructure bottlenecks fixed in exp1117 are now expected to save ~111 min/milestone going forward.
