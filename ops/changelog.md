@@ -4523,3 +4523,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-01: WOPR Hashi Puzzle Cartridge — Bridge Counting + Ising Ground-State (codex) (⚠️ Research Finding) — honest_verdict=e0_achieved; results/experiment_1124_wopr_hashi_cartridge.json
 - 2026-05-02: HF Spaces Gallery Update — Deploy Hashi Cartridge + Benchmark Results (✅ Complete) — honest_verdict=deployed_live; results/experiment_1125_hf_spaces_gallery_update.json
 - 2026-05-02: Milestone 2026.04.87 Retrospective — Evaluate All 11 Success Criteria (⚠️ Research Finding) — honest_verdict=11_of_11_criteria_met; results/experiment_1126_milestone_retro_87.json
+- 2026-05-02: arXiv PDF Compilation + Final Submission — CRITICAL 2026-05-15 deadline (⚠️ Research Finding) — honest_verdict=pdf_compiled_upload_pending; results/experiment_1127_arxiv_final_submission.json
