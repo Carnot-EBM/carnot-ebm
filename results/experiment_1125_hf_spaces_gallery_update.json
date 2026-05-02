@@ -1,24 +1,24 @@
 {
-  "experiment": 1125,
-  "schema": "blocked_gate_check_v1",
-  "run_date": "2026-05-02",
-  "started_at": "2026-05-02T00:01:36.794645+00:00",
-  "finished_at": "2026-05-02T00:01:36.794645+00:00",
-  "duration_s": 0.0,
-  "status": "blocked",
-  "title": "HF Spaces Gallery Update \u2014 Deploy Hashi Cartridge + Benchmark Results",
-  "honest_verdict": "blocked_gate_check_failed",
-  "gate_check_summary": "1 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: no prior_failures field on task",
-  "gates_evaluated": [
-    {
-      "upstream": "exp1102-hf-spaces-gallery-update",
-      "artifact_field": "rerun_discipline",
-      "op": "prior_failures_required",
-      "expected": "non-empty entry naming this prior",
-      "actual": null,
-      "passed": false,
-      "reason": "\u26a0\ufe0f Research Finding: gallery_updated_n_queens_live"
-    }
-  ],
-  "blocked_at_layer": "conductor_pre_gate"
+  "experiment": "exp1125_hf_spaces_gallery_update",
+  "title": "HuggingFace Spaces gallery update \u2014 Hashi cartridge + benchmarks",
+  "schema": "carnot.hf_spaces_gallery_update.v1",
+  "run_date": "2026-05-02T00:17:14Z",
+  "duration_s": 1.304,
+  "hashi_cartridge_local": true,
+  "hashi_cartridge_deployed": true,
+  "benchmark_results_updated": true,
+  "missing_benchmark_markers": [],
+  "n_cartridges_deployed": 6,
+  "hf_token_found": true,
+  "hf_token_source": "sops:secrets/hf_token.enc.yaml",
+  "deploy_attempted": true,
+  "gallery_updated": true,
+  "deploy_succeeded": true,
+  "deploy_error": null,
+  "live_http_status": 200,
+  "live_url": "https://huggingface.co/spaces/Carnot-EBM/wopr-games",
+  "space_url": "https://huggingface.co/spaces/Carnot-EBM/wopr-games/commit/ca9d20bc43ba4d21ddce04e57d0c1b4ac9260507",
+  "honest_verdict": "deployed_live",
+  "cost_usd": 0.0,
+  "decision_class": "deploy"
 }
