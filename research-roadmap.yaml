@@ -793,6 +793,24 @@ tasks:
       artifact_field: hashi_cartridge_shipped
       op: '=='
       value: true
+  prior_failures:
+    - experiment_id: exp1102-hf-spaces-gallery-update
+      verdict: gallery_updated_n_queens_live
+      addressed_by: |
+        exp1102 was NOT a failure — it succeeded with verdict
+        gallery_updated_n_queens_live. The failure-ledger v2 keyword matcher
+        flagged the scope overlap (both tasks update the same HF Spaces
+        gallery) but this is a legitimate follow-on update, not a rerun.
+        exp1125 adds the Hashi cartridge from exp1124 plus updated benchmark
+        numbers from exp1108/1111/1120/1112. No prior failure to address.
+      retire_if_same_verdict: false
+    - experiment_id: exp1088-hf-spaces-gallery-update
+      verdict: gallery_updated
+      addressed_by: |
+        exp1088 was the original HF Spaces gallery deployment in .84.
+        Successful. exp1125 is the .87 follow-on adding Hashi cartridge +
+        refreshed benchmark numbers from .85/.86/.87 milestones.
+      retire_if_same_verdict: false
   prompt: |
     CONTEXT:
     The WOPR HuggingFace Spaces gallery (Sudoku, GTW, Lights Out, N-Queens) needs updating with:
