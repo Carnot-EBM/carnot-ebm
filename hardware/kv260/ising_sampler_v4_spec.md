@@ -153,3 +153,15 @@ new sparse format. The v3 Python driver (`hardware/kv260/kv260_driver.py`) needs
 3. Run synthesis targeting XCK26 and verify LUT count < 117,120
 4. Update `hardware/kv260/synth_ising.tcl` to target v4
 5. Re-run Exp 568 (KV260 bringup) with v4 bitfile
+
+## Empirical Feasibility (Exp 1134)
+
+Experiment 1134 mapped the (beta, alpha) plane on the N=8
+antiferromagnetic ring (the same topology exp1094/1122 used). The
+Phase-2a acceptance threshold is KL < 0.05 against the closed-form
+Gibbs distribution at the same beta.
+
+- Best KL achieved on this run: 0.1128 at beta=2.0, alpha_ema=0.1.
+- Prior best (exp1122): 0.134.
+- log(KL) was not monotone-decreasing in beta over the swept range. Parallel-EMA dynamics on this topology do not converge to the true Boltzmann distribution as beta grows; v4 is not the right architecture for KL-correctness on antiferromagnetic ring problems.
+

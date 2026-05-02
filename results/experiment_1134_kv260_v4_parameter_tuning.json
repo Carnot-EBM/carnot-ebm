@@ -1,0 +1,200 @@
+{
+  "alpha_for_beta_sweep": 0.1,
+  "alpha_sweep_grid": [
+    0.02,
+    0.05,
+    0.1,
+    0.15,
+    0.2,
+    0.3
+  ],
+  "best_alpha": 0.1,
+  "best_beta": 2.0,
+  "beta_sweep_grid": [
+    2.0,
+    3.0,
+    4.0,
+    5.0
+  ],
+  "burn_in_sweeps": 500,
+  "combined_best": {
+    "alpha_ema": 0.1,
+    "below_threshold": false,
+    "beta": 2.0,
+    "j_scale": 1.0,
+    "kl_v4_vs_gibbs": 0.8436272358790118,
+    "runtime_s": 0.372
+  },
+  "duration_s": 5.69,
+  "experiment": 1134,
+  "feasibility_beta_estimate": null,
+  "feasibility_fit_intercept_log_kl": -3.49846127192304,
+  "feasibility_fit_note": "log(KL) is non-decreasing in beta over the swept range \u2014 parallel-EMA dynamics do not converge to true Gibbs as the system gets colder. v4 hypothesis falsified at this topology and alpha; consider switching to v3 sequential or trying larger K.",
+  "feasibility_fit_slope_log_kl": 1.6260489443893769,
+  "feasibility_notes": "log(KL) is non-decreasing in beta over the swept range \u2014 parallel-EMA dynamics do not converge to true Gibbs as the system gets colder. v4 hypothesis falsified at this topology and alpha; consider switching to v3 sequential or trying larger K.",
+  "honest_verdict": "kl_improved_not_below_threshold",
+  "k_neighbors": 2,
+  "kl_v4_at_best_alpha": 0.1127718014422604,
+  "kl_v4_at_best_beta": 0.7308539561858605,
+  "kl_v4_below_05": false,
+  "kl_v4_best": 0.1127718014422604,
+  "kl_v4_prior": 0.134,
+  "kl_v4_threshold": 0.05,
+  "kl_v4_with_self_adaptive": 31.893700066833517,
+  "kv260_v4_kl_below_05_or_feasibility_documented": true,
+  "n_record": 60000,
+  "n_spins": 8,
+  "parameter_space_mapped": true,
+  "per_alpha": [
+    {
+      "alpha_ema": 0.02,
+      "below_threshold": false,
+      "beta": 2.0,
+      "j_scale": 1.0,
+      "kl_v4_vs_gibbs": 11.813525662788003,
+      "runtime_s": 0.488
+    },
+    {
+      "alpha_ema": 0.05,
+      "below_threshold": false,
+      "beta": 2.0,
+      "j_scale": 1.0,
+      "kl_v4_vs_gibbs": 1.8610917919934724,
+      "runtime_s": 0.386
+    },
+    {
+      "alpha_ema": 0.1,
+      "below_threshold": false,
+      "beta": 2.0,
+      "j_scale": 1.0,
+      "kl_v4_vs_gibbs": 0.1127718014422604,
+      "runtime_s": 0.506
+    },
+    {
+      "alpha_ema": 0.15,
+      "below_threshold": false,
+      "beta": 2.0,
+      "j_scale": 1.0,
+      "kl_v4_vs_gibbs": 0.7244682189026581,
+      "runtime_s": 0.397
+    },
+    {
+      "alpha_ema": 0.2,
+      "below_threshold": false,
+      "beta": 2.0,
+      "j_scale": 1.0,
+      "kl_v4_vs_gibbs": 0.7195023268432795,
+      "runtime_s": 0.372
+    },
+    {
+      "alpha_ema": 0.3,
+      "below_threshold": false,
+      "beta": 2.0,
+      "j_scale": 1.0,
+      "kl_v4_vs_gibbs": 0.7179115108583419,
+      "runtime_s": 0.438
+    }
+  ],
+  "per_beta": [
+    {
+      "alpha_ema": 0.1,
+      "below_threshold": false,
+      "beta": 2.0,
+      "j_scale": 1.0,
+      "kl_v4_vs_gibbs": 0.7308539561858605,
+      "runtime_s": 0.525
+    },
+    {
+      "alpha_ema": 0.1,
+      "below_threshold": false,
+      "beta": 3.0,
+      "j_scale": 1.0,
+      "kl_v4_vs_gibbs": 3.5309298582905186,
+      "runtime_s": 0.389
+    },
+    {
+      "alpha_ema": 0.1,
+      "below_threshold": false,
+      "beta": 4.0,
+      "j_scale": 1.0,
+      "kl_v4_vs_gibbs": 31.296862436611832,
+      "runtime_s": 0.5
+    },
+    {
+      "alpha_ema": 0.1,
+      "below_threshold": false,
+      "beta": 5.0,
+      "j_scale": 1.0,
+      "kl_v4_vs_gibbs": 79.78237825572191,
+      "runtime_s": 0.667
+    }
+  ],
+  "run_date": "2026-05-02T02:25:01Z",
+  "schema": "kv260_v4_parameter_tuning_v1",
+  "self_adaptive_adaptation_runtime_s": 0.007,
+  "self_adaptive_alpha": 0.1,
+  "self_adaptive_below_threshold": false,
+  "self_adaptive_beta": 2.0,
+  "self_adaptive_checkpoint": 50,
+  "self_adaptive_eta": 0.01,
+  "self_adaptive_lambda0": 1.0,
+  "self_adaptive_lambda_applied": true,
+  "self_adaptive_lambda_final": 40.99999999999948,
+  "self_adaptive_lambda_grew": true,
+  "self_adaptive_total_sweeps": 500,
+  "self_adaptive_trajectory": [
+    {
+      "lambda": 5.0000000000000036,
+      "n_violations_post_sweep": 8,
+      "sweep": 50
+    },
+    {
+      "lambda": 9.000000000000007,
+      "n_violations_post_sweep": 8,
+      "sweep": 100
+    },
+    {
+      "lambda": 13.00000000000001,
+      "n_violations_post_sweep": 8,
+      "sweep": 150
+    },
+    {
+      "lambda": 16.999999999999993,
+      "n_violations_post_sweep": 8,
+      "sweep": 200
+    },
+    {
+      "lambda": 20.999999999999908,
+      "n_violations_post_sweep": 8,
+      "sweep": 250
+    },
+    {
+      "lambda": 24.999999999999822,
+      "n_violations_post_sweep": 8,
+      "sweep": 300
+    },
+    {
+      "lambda": 28.999999999999737,
+      "n_violations_post_sweep": 8,
+      "sweep": 350
+    },
+    {
+      "lambda": 32.99999999999965,
+      "n_violations_post_sweep": 8,
+      "sweep": 400
+    },
+    {
+      "lambda": 36.99999999999957,
+      "n_violations_post_sweep": 8,
+      "sweep": 450
+    },
+    {
+      "lambda": 40.99999999999948,
+      "n_violations_post_sweep": 8,
+      "sweep": 500
+    }
+  ],
+  "self_adaptive_won": false,
+  "title": "KV260 Ising Sampler v4 \u2014 Parameter Tuning + Self-Adaptive Lambda",
+  "v4_spec_updated": true
+}
