@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-05-02 Milestone 2026.04.89 Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-05-02T05:26:27Z | 2026-05-02T05:42:23Z | Plan milestone 2026.04.89. Milestone 2026.04.88 completed 10/11 criteria (slitherlink blocked by missing prior_failures — gate refused to launch; exp1137 gallery update cascaded blocked). Read 11 project files + all 11 .88 experiment result JSONs (exp1127-exp1138). arxiv scan: 12 new papers added to research-references.md (arXiv 2512.05439 BEAVER-lite prefix-closed constraint certificates; arXiv 2601.18753 HalluGuard data-driven vs reasoning-driven hallucination decomposition; arXiv 2603.15309 CCTU constrained tool-use benchmark; arXiv 2509.01928 DC-continuous Ising relaxation with provable convergence; arXiv 2510.19105 MetaCluster KAN centroid codebook compression; arXiv 2603.24579 MARCH multi-agent asymmetric self-checking; arXiv 2602.17109 HardNet++ constraint projection repair; arXiv 2603.22441 KKT-Hardnet; arXiv 2601.09312 EBT policy optimization; arXiv 2603.18109 Energy-Time-Accuracy cascade; Extropic XTR-0/Z1 early access 2026; NRGPT/DiffuTruth/EBT-Metacognitive supplemental scan). Three biggest gaps: (1) No distribution-level certificates — k=5 verifies samples but cannot bound P(bad output); BEAVER-lite bridges this to exp1142; (2) Cascade cheap-tier routing inadequate — cheap tiers 13-22% TP vs k=5 100%; HalluGuard routing exp1143 + Goodfire cheap-tier distillation exp1145; (3) Self-learning loop not closed, hardware still simulation-only — GRPO reflection reward v3 exp1146 (r_reflect from 1-step repair), Extropic packet exp1150, KV260 v5 DC exp1149. research-roadmap-vNEXT.md was pre-existing and complete (not modified). Wrote research-roadmap-next.yaml (13 exps 1139-1151): exp1139 arXiv final submission v3 (opus, CRITICAL, recompile PDF with exp1135 paper updates); exp1140 roadmap gate prior-failures audit (codex/gpt-5.5, fix systematic missing prior_failures blocking); exp1141 WOPR Slitherlink rescue (codex/gpt-5.5, 4 prior_failures declared: exp1136/1060/1061/1097); exp1142 BEAVER-lite certificate tier (codex/gpt-5.5, distribution-level guarantee); exp1143 HalluGuard cascade router v3 (sonnet, prior_failures: exp1123/1131); exp1144 CCTU micro-benchmark adapter (codex/gpt-5.5, GPU, 200-task constrained tool-use corpus); exp1145 Goodfire cheap-tier distillation (sonnet, gated on exp1143.halluguard_routing_feature_measured); exp1146 GRPO reflection reward v3 (opus, DualGPU MANDATORY, prior_failures: exp1129/1118/1110); exp1147 HardNet projection repair (codex/gpt-5.5, prior_failures: exp905); exp1148 MetaCluster SOS-KAN compression (codex/gpt-5.5, prior_failures: exp1128/1072/1047); exp1149 KV260 v5 DC-continuous diagnostic (opus, prior_failures: exp1134/1122); exp1150 Extropic integration packet (sonnet); exp1151 milestone retro (codex/gpt-5.5). 13 success criteria. Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. | ~280k |
+
+---
+
 ## Session: 2026-05-02 Milestone 2026.04.88 Planning
 
 ### Turn Log
