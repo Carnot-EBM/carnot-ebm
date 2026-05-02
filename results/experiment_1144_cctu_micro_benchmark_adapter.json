@@ -1,0 +1,2533 @@
+{
+  "baseline_completion_rate": 0.04,
+  "baseline_results": [
+    {
+      "checks": [
+        {
+          "constraint_id": "cctu-micro-000-numeric-score",
+          "constraint_type": "numeric",
+          "detail": "score=None, expected_range=[10, 100]",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-000-semantic-answer",
+          "constraint_type": "semantic",
+          "detail": "expected_answer='2007-11-7'",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-000-resource-tools",
+          "constraint_type": "resource",
+          "detail": "tool_calls=[], expected_count=1",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-000-format-markdown_bold",
+          "constraint_type": "format",
+          "detail": "expected bold markdown answer",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-000-length",
+          "constraint_type": "length",
+          "detail": "word_count=140, max=90",
+          "passed": false
+        }
+      ],
+      "completion_rate": 0.2,
+      "passed": false,
+      "repair_used": false,
+      "source_row_id": "0",
+      "task_id": "cctu-micro-000",
+      "verifier_scores": {
+        "ast_structure": 0.3333333333333333,
+        "semenergy": -0.08580893549505918,
+        "z3_math": 0.5
+      },
+      "violated_types": [
+        "format",
+        "length",
+        "numeric",
+        "resource"
+      ]
+    },
+    {
+      "checks": [
+        {
+          "constraint_id": "cctu-micro-001-numeric-score",
+          "constraint_type": "numeric",
+          "detail": "score=None, expected_range=[10, 100]",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-001-semantic-answer",
+          "constraint_type": "semantic",
+          "detail": "expected_answer='Mishal Al-Ahmad Al-Jaber Al-Sabah.'",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-001-resource-tools",
+          "constraint_type": "resource",
+          "detail": "tool_calls=[], expected_count=2",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-001-format-json_answer",
+          "constraint_type": "format",
+          "detail": "invalid json: Expecting value",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-001-length",
+          "constraint_type": "length",
+          "detail": "word_count=156, max=90",
+          "passed": false
+        }
+      ],
+      "completion_rate": 0.0,
+      "passed": false,
+      "repair_used": false,
+      "source_row_id": "1",
+      "task_id": "cctu-micro-001",
+      "verifier_scores": {
+        "ast_structure": 0.3333333333333333,
+        "semenergy": -0.07659264915996158,
+        "z3_math": 0.5
+      },
+      "violated_types": [
+        "format",
+        "length",
+        "numeric",
+        "resource",
+        "semantic"
+      ]
+    },
+    {
+      "checks": [
+        {
+          "constraint_id": "cctu-micro-002-numeric-score",
+          "constraint_type": "numeric",
+          "detail": "score=None, expected_range=[10, 100]",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-002-semantic-answer",
+          "constraint_type": "semantic",
+          "detail": "expected_answer='2007-10-10'",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-002-resource-tools",
+          "constraint_type": "resource",
+          "detail": "tool_calls=['game_release_date_finder', 'calculate'], expected_count=2",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-002-format-python_code",
+          "constraint_type": "format",
+          "detail": "invalid python code: invalid syntax",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-002-length",
+          "constraint_type": "length",
+          "detail": "word_count=36, max=90",
+          "passed": true
+        }
+      ],
+      "completion_rate": 0.6,
+      "passed": false,
+      "repair_used": false,
+      "source_row_id": "2",
+      "task_id": "cctu-micro-002",
+      "verifier_scores": {
+        "ast_structure": 0.3333333333333333,
+        "semenergy": -0.32521117698399643,
+        "z3_math": 0.5
+      },
+      "violated_types": [
+        "format",
+        "numeric"
+      ]
+    },
+    {
+      "checks": [
+        {
+          "constraint_id": "cctu-micro-003-numeric-score",
+          "constraint_type": "numeric",
+          "detail": "score=85, expected_range=[10, 100]",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-003-semantic-answer",
+          "constraint_type": "semantic",
+          "detail": "expected_answer='128'",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-003-resource-tools",
+          "constraint_type": "resource",
+          "detail": "tool_calls=['election_results_analyzer'], expected_count=1",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-003-format-answer_prefix",
+          "constraint_type": "format",
+          "detail": "expected FINAL: ANSWER:",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-003-length",
+          "constraint_type": "length",
+          "detail": "word_count=70, max=90",
+          "passed": true
+        }
+      ],
+      "completion_rate": 0.8,
+      "passed": false,
+      "repair_used": false,
+      "source_row_id": "3",
+      "task_id": "cctu-micro-003",
+      "verifier_scores": {
+        "ast_structure": 0.3333333333333333,
+        "semenergy": -0.16325689015558573,
+        "z3_math": 0.5
+      },
+      "violated_types": [
+        "format"
+      ]
+    },
+    {
+      "checks": [
+        {
+          "constraint_id": "cctu-micro-004-numeric-score",
+          "constraint_type": "numeric",
+          "detail": "score=None, expected_range=[10, 100]",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-004-semantic-answer",
+          "constraint_type": "semantic",
+          "detail": "expected_answer='Al-Aqsa Mosque'",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-004-resource-tools",
+          "constraint_type": "resource",
+          "detail": "tool_calls=['event_locator', 'calculate'], expected_count=2",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-004-format-table",
+          "constraint_type": "format",
+          "detail": "expected markdown answer table",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-004-length",
+          "constraint_type": "length",
+          "detail": "word_count=50, max=90",
+          "passed": true
+        }
+      ],
+      "completion_rate": 0.6,
+      "passed": false,
+      "repair_used": false,
+      "source_row_id": "4",
+      "task_id": "cctu-micro-004",
+      "verifier_scores": {
+        "ast_structure": 0.3333333333333333,
+        "semenergy": -0.2329247219862971,
+        "z3_math": 0.5
+      },
+      "violated_types": [
+        "format",
+        "numeric"
+      ]
+    },
+    {
+      "checks": [
+        {
+          "constraint_id": "cctu-micro-005-numeric-score",
+          "constraint_type": "numeric",
+          "detail": "score=50, expected_range=[10, 100]",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-005-semantic-answer",
+          "constraint_type": "semantic",
+          "detail": "expected_answer='Abdel Fattah el-Sisi.'",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-005-resource-tools",
+          "constraint_type": "resource",
+          "detail": "tool_calls=['event_outcome_retriever', 'calculate'], expected_count=2",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-005-format-markdown_bold",
+          "constraint_type": "format",
+          "detail": "expected bold markdown answer",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-005-length",
+          "constraint_type": "length",
+          "detail": "word_count=55, max=90",
+          "passed": true
+        }
+      ],
+      "completion_rate": 1.0,
+      "passed": true,
+      "repair_used": false,
+      "source_row_id": "5",
+      "task_id": "cctu-micro-005",
+      "verifier_scores": {
+        "ast_structure": 0.0,
+        "semenergy": -0.21374816076966047,
+        "z3_math": 0.5
+      },
+      "violated_types": []
+    },
+    {
+      "checks": [
+        {
+          "constraint_id": "cctu-micro-006-numeric-score",
+          "constraint_type": "numeric",
+          "detail": "score=None, expected_range=[10, 100]",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-006-semantic-answer",
+          "constraint_type": "semantic",
+          "detail": "expected_answer='Michel Barnier'",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-006-resource-tools",
+          "constraint_type": "resource",
+          "detail": "tool_calls=[], expected_count=1",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-006-format-json_answer",
+          "constraint_type": "format",
+          "detail": "invalid json: Expecting value",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-006-length",
+          "constraint_type": "length",
+          "detail": "word_count=171, max=90",
+          "passed": false
+        }
+      ],
+      "completion_rate": 0.2,
+      "passed": false,
+      "repair_used": false,
+      "source_row_id": "6",
+      "task_id": "cctu-micro-006",
+      "verifier_scores": {
+        "ast_structure": 0.3333333333333333,
+        "semenergy": -0.06700151237307711,
+        "z3_math": 0.5
+      },
+      "violated_types": [
+        "format",
+        "length",
+        "numeric",
+        "resource"
+      ]
+    },
+    {
+      "checks": [
+        {
+          "constraint_id": "cctu-micro-007-numeric-score",
+          "constraint_type": "numeric",
+          "detail": "score=None, expected_range=[10, 100]",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-007-semantic-answer",
+          "constraint_type": "semantic",
+          "detail": "expected_answer='Brazil, China'",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-007-resource-tools",
+          "constraint_type": "resource",
+          "detail": "tool_calls=[], expected_count=2",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-007-format-python_code",
+          "constraint_type": "format",
+          "detail": "invalid python code: unterminated string literal (detected at line 11)",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-007-length",
+          "constraint_type": "length",
+          "detail": "word_count=168, max=90",
+          "passed": false
+        }
+      ],
+      "completion_rate": 0.2,
+      "passed": false,
+      "repair_used": false,
+      "source_row_id": "7",
+      "task_id": "cctu-micro-007",
+      "verifier_scores": {
+        "ast_structure": 0.3333333333333333,
+        "semenergy": -0.06944372059717392,
+        "z3_math": 0.5
+      },
+      "violated_types": [
+        "format",
+        "length",
+        "numeric",
+        "resource"
+      ]
+    },
+    {
+      "checks": [
+        {
+          "constraint_id": "cctu-micro-008-numeric-score",
+          "constraint_type": "numeric",
+          "detail": "score=None, expected_range=[10, 100]",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-008-semantic-answer",
+          "constraint_type": "semantic",
+          "detail": "expected_answer='Fuad Shukr'",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-008-resource-tools",
+          "constraint_type": "resource",
+          "detail": "tool_calls=[], expected_count=2",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-008-format-answer_prefix",
+          "constraint_type": "format",
+          "detail": "expected FINAL: ANSWER:",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-008-length",
+          "constraint_type": "length",
+          "detail": "word_count=143, max=90",
+          "passed": false
+        }
+      ],
+      "completion_rate": 0.2,
+      "passed": false,
+      "repair_used": false,
+      "source_row_id": "8",
+      "task_id": "cctu-micro-008",
+      "verifier_scores": {
+        "ast_structure": 0.3333333333333333,
+        "semenergy": -0.08282122591825886,
+        "z3_math": 0.5
+      },
+      "violated_types": [
+        "format",
+        "length",
+        "numeric",
+        "resource"
+      ]
+    },
+    {
+      "checks": [
+        {
+          "constraint_id": "cctu-micro-009-numeric-score",
+          "constraint_type": "numeric",
+          "detail": "score=None, expected_range=[10, 100]",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-009-semantic-answer",
+          "constraint_type": "semantic",
+          "detail": "expected_answer='2007-09-13'",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-009-resource-tools",
+          "constraint_type": "resource",
+          "detail": "tool_calls=['historical_event_finder'], expected_count=1",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-009-format-table",
+          "constraint_type": "format",
+          "detail": "expected markdown answer table",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-009-length",
+          "constraint_type": "length",
+          "detail": "word_count=21, max=90",
+          "passed": true
+        }
+      ],
+      "completion_rate": 0.6,
+      "passed": false,
+      "repair_used": false,
+      "source_row_id": "9",
+      "task_id": "cctu-micro-009",
+      "verifier_scores": {
+        "ast_structure": 0.3333333333333333,
+        "semenergy": -0.5574871199780895,
+        "z3_math": 0.5
+      },
+      "violated_types": [
+        "format",
+        "numeric"
+      ]
+    },
+    {
+      "checks": [
+        {
+          "constraint_id": "cctu-micro-010-numeric-score",
+          "constraint_type": "numeric",
+          "detail": "score=None, expected_range=[10, 100]",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-010-semantic-answer",
+          "constraint_type": "semantic",
+          "detail": "expected_answer='United Kingdom'",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-010-resource-tools",
+          "constraint_type": "resource",
+          "detail": "tool_calls=[], expected_count=2",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-010-format-markdown_bold",
+          "constraint_type": "format",
+          "detail": "expected bold markdown answer",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-010-length",
+          "constraint_type": "length",
+          "detail": "word_count=139, max=90",
+          "passed": false
+        }
+      ],
+      "completion_rate": 0.2,
+      "passed": false,
+      "repair_used": false,
+      "source_row_id": "10",
+      "task_id": "cctu-micro-010",
+      "verifier_scores": {
+        "ast_structure": 0.75,
+        "semenergy": -0.08478930130344921,
+        "z3_math": 0.5
+      },
+      "violated_types": [
+        "format",
+        "length",
+        "numeric",
+        "resource"
+      ]
+    },
+    {
+      "checks": [
+        {
+          "constraint_id": "cctu-micro-011-numeric-score",
+          "constraint_type": "numeric",
+          "detail": "score=None, expected_range=[10, 100]",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-011-semantic-answer",
+          "constraint_type": "semantic",
+          "detail": "expected_answer='2001-9-17'",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-011-resource-tools",
+          "constraint_type": "resource",
+          "detail": "tool_calls=[], expected_count=2",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-011-format-json_answer",
+          "constraint_type": "format",
+          "detail": "invalid json: Expecting value",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-011-length",
+          "constraint_type": "length",
+          "detail": "word_count=117, max=90",
+          "passed": false
+        }
+      ],
+      "completion_rate": 0.2,
+      "passed": false,
+      "repair_used": false,
+      "source_row_id": "11",
+      "task_id": "cctu-micro-011",
+      "verifier_scores": {
+        "ast_structure": 0.75,
+        "semenergy": -0.10413194050156258,
+        "z3_math": 0.5
+      },
+      "violated_types": [
+        "format",
+        "length",
+        "numeric",
+        "resource"
+      ]
+    },
+    {
+      "checks": [
+        {
+          "constraint_id": "cctu-micro-012-numeric-score",
+          "constraint_type": "numeric",
+          "detail": "score=None, expected_range=[10, 100]",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-012-semantic-answer",
+          "constraint_type": "semantic",
+          "detail": "expected_answer='2023-10-13'",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-012-resource-tools",
+          "constraint_type": "resource",
+          "detail": "tool_calls=['corporate_event_finder'], expected_count=1",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-012-format-python_code",
+          "constraint_type": "format",
+          "detail": "expected parseable Python block containing answer",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-012-length",
+          "constraint_type": "length",
+          "detail": "word_count=65, max=90",
+          "passed": true
+        }
+      ],
+      "completion_rate": 0.8,
+      "passed": false,
+      "repair_used": false,
+      "source_row_id": "12",
+      "task_id": "cctu-micro-012",
+      "verifier_scores": {
+        "ast_structure": 0.3333333333333333,
+        "semenergy": -0.18437160556697116,
+        "z3_math": 0.5
+      },
+      "violated_types": [
+        "numeric"
+      ]
+    },
+    {
+      "checks": [
+        {
+          "constraint_id": "cctu-micro-013-numeric-score",
+          "constraint_type": "numeric",
+          "detail": "score=None, expected_range=[10, 100]",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-013-semantic-answer",
+          "constraint_type": "semantic",
+          "detail": "expected_answer='2001-04-01'",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-013-resource-tools",
+          "constraint_type": "resource",
+          "detail": "tool_calls=[], expected_count=2",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-013-format-answer_prefix",
+          "constraint_type": "format",
+          "detail": "expected FINAL: ANSWER:",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-013-length",
+          "constraint_type": "length",
+          "detail": "word_count=127, max=90",
+          "passed": false
+        }
+      ],
+      "completion_rate": 0.2,
+      "passed": false,
+      "repair_used": false,
+      "source_row_id": "13",
+      "task_id": "cctu-micro-013",
+      "verifier_scores": {
+        "ast_structure": 0.75,
+        "semenergy": -0.09451981907426678,
+        "z3_math": 0.5
+      },
+      "violated_types": [
+        "format",
+        "length",
+        "numeric",
+        "resource"
+      ]
+    },
+    {
+      "checks": [
+        {
+          "constraint_id": "cctu-micro-014-numeric-score",
+          "constraint_type": "numeric",
+          "detail": "score=None, expected_range=[10, 100]",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-014-semantic-answer",
+          "constraint_type": "semantic",
+          "detail": "expected_answer='2023-10-22'",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-014-resource-tools",
+          "constraint_type": "resource",
+          "detail": "tool_calls=[], expected_count=2",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-014-format-table",
+          "constraint_type": "format",
+          "detail": "expected markdown answer table",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-014-length",
+          "constraint_type": "length",
+          "detail": "word_count=119, max=90",
+          "passed": false
+        }
+      ],
+      "completion_rate": 0.2,
+      "passed": false,
+      "repair_used": false,
+      "source_row_id": "14",
+      "task_id": "cctu-micro-014",
+      "verifier_scores": {
+        "ast_structure": 0.75,
+        "semenergy": -0.1016715295725296,
+        "z3_math": 0.5
+      },
+      "violated_types": [
+        "format",
+        "length",
+        "numeric",
+        "resource"
+      ]
+    },
+    {
+      "checks": [
+        {
+          "constraint_id": "cctu-micro-015-numeric-score",
+          "constraint_type": "numeric",
+          "detail": "score=None, expected_range=[10, 100]",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-015-semantic-answer",
+          "constraint_type": "semantic",
+          "detail": "expected_answer='2024-6-23'",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-015-resource-tools",
+          "constraint_type": "resource",
+          "detail": "tool_calls=[], expected_count=1",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-015-format-markdown_bold",
+          "constraint_type": "format",
+          "detail": "expected bold markdown answer",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-015-length",
+          "constraint_type": "length",
+          "detail": "word_count=150, max=90",
+          "passed": false
+        }
+      ],
+      "completion_rate": 0.2,
+      "passed": false,
+      "repair_used": false,
+      "source_row_id": "15",
+      "task_id": "cctu-micro-015",
+      "verifier_scores": {
+        "ast_structure": 0.3333333333333333,
+        "semenergy": -0.08008475611056906,
+        "z3_math": 0.5
+      },
+      "violated_types": [
+        "format",
+        "length",
+        "numeric",
+        "resource"
+      ]
+    },
+    {
+      "checks": [
+        {
+          "constraint_id": "cctu-micro-016-numeric-score",
+          "constraint_type": "numeric",
+          "detail": "score=None, expected_range=[10, 100]",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-016-semantic-answer",
+          "constraint_type": "semantic",
+          "detail": "expected_answer='2023-10-31'",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-016-resource-tools",
+          "constraint_type": "resource",
+          "detail": "tool_calls=[], expected_count=2",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-016-format-json_answer",
+          "constraint_type": "format",
+          "detail": "invalid json: Expecting value",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-016-length",
+          "constraint_type": "length",
+          "detail": "word_count=161, max=90",
+          "passed": false
+        }
+      ],
+      "completion_rate": 0.2,
+      "passed": false,
+      "repair_used": false,
+      "source_row_id": "16",
+      "task_id": "cctu-micro-016",
+      "verifier_scores": {
+        "ast_structure": 0.3333333333333333,
+        "semenergy": -0.0749147215600084,
+        "z3_math": 0.5
+      },
+      "violated_types": [
+        "format",
+        "length",
+        "numeric",
+        "resource"
+      ]
+    },
+    {
+      "checks": [
+        {
+          "constraint_id": "cctu-micro-017-numeric-score",
+          "constraint_type": "numeric",
+          "detail": "score=None, expected_range=[10, 100]",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-017-semantic-answer",
+          "constraint_type": "semantic",
+          "detail": "expected_answer='165'",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-017-resource-tools",
+          "constraint_type": "resource",
+          "detail": "tool_calls=[], expected_count=2",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-017-format-python_code",
+          "constraint_type": "format",
+          "detail": "invalid python code: unterminated string literal (detected at line 4)",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-017-length",
+          "constraint_type": "length",
+          "detail": "word_count=143, max=90",
+          "passed": false
+        }
+      ],
+      "completion_rate": 0.2,
+      "passed": false,
+      "repair_used": false,
+      "source_row_id": "17",
+      "task_id": "cctu-micro-017",
+      "verifier_scores": {
+        "ast_structure": 0.3333333333333333,
+        "semenergy": -0.08427944091148105,
+        "z3_math": 0.5
+      },
+      "violated_types": [
+        "format",
+        "length",
+        "numeric",
+        "resource"
+      ]
+    },
+    {
+      "checks": [
+        {
+          "constraint_id": "cctu-micro-018-numeric-score",
+          "constraint_type": "numeric",
+          "detail": "score=50, expected_range=[10, 100]",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-018-semantic-answer",
+          "constraint_type": "semantic",
+          "detail": "expected_answer='2023-10-8'",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-018-resource-tools",
+          "constraint_type": "resource",
+          "detail": "tool_calls=['historical_event_finder'], expected_count=1",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-018-format-answer_prefix",
+          "constraint_type": "format",
+          "detail": "expected FINAL: ANSWER:",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-018-length",
+          "constraint_type": "length",
+          "detail": "word_count=125, max=90",
+          "passed": false
+        }
+      ],
+      "completion_rate": 0.6,
+      "passed": false,
+      "repair_used": false,
+      "source_row_id": "18",
+      "task_id": "cctu-micro-018",
+      "verifier_scores": {
+        "ast_structure": 0.3333333333333333,
+        "semenergy": -0.09648398746802309,
+        "z3_math": 0.5
+      },
+      "violated_types": [
+        "format",
+        "length"
+      ]
+    },
+    {
+      "checks": [
+        {
+          "constraint_id": "cctu-micro-019-numeric-score",
+          "constraint_type": "numeric",
+          "detail": "score=None, expected_range=[10, 100]",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-019-semantic-answer",
+          "constraint_type": "semantic",
+          "detail": "expected_answer='75'",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-019-resource-tools",
+          "constraint_type": "resource",
+          "detail": "tool_calls=[], expected_count=2",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-019-format-table",
+          "constraint_type": "format",
+          "detail": "expected markdown answer table",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-019-length",
+          "constraint_type": "length",
+          "detail": "word_count=135, max=90",
+          "passed": false
+        }
+      ],
+      "completion_rate": 0.2,
+      "passed": false,
+      "repair_used": false,
+      "source_row_id": "19",
+      "task_id": "cctu-micro-019",
+      "verifier_scores": {
+        "ast_structure": 0.3333333333333333,
+        "semenergy": -0.0886767009274587,
+        "z3_math": 0.5
+      },
+      "violated_types": [
+        "format",
+        "length",
+        "numeric",
+        "resource"
+      ]
+    },
+    {
+      "checks": [
+        {
+          "constraint_id": "cctu-micro-020-numeric-score",
+          "constraint_type": "numeric",
+          "detail": "score=None, expected_range=[10, 100]",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-020-semantic-answer",
+          "constraint_type": "semantic",
+          "detail": "expected_answer='Australia'",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-020-resource-tools",
+          "constraint_type": "resource",
+          "detail": "tool_calls=[], expected_count=2",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-020-format-markdown_bold",
+          "constraint_type": "format",
+          "detail": "expected bold markdown answer",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-020-length",
+          "constraint_type": "length",
+          "detail": "word_count=146, max=90",
+          "passed": false
+        }
+      ],
+      "completion_rate": 0.4,
+      "passed": false,
+      "repair_used": false,
+      "source_row_id": "20",
+      "task_id": "cctu-micro-020",
+      "verifier_scores": {
+        "ast_structure": 0.0,
+        "semenergy": -0.0814839258418232,
+        "z3_math": 0.5
+      },
+      "violated_types": [
+        "length",
+        "numeric",
+        "resource"
+      ]
+    },
+    {
+      "checks": [
+        {
+          "constraint_id": "cctu-micro-021-numeric-score",
+          "constraint_type": "numeric",
+          "detail": "score=1, expected_range=[10, 100]",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-021-semantic-answer",
+          "constraint_type": "semantic",
+          "detail": "expected_answer='The Ohrid Agreement'",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-021-resource-tools",
+          "constraint_type": "resource",
+          "detail": "tool_calls=[], expected_count=1",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-021-format-json_answer",
+          "constraint_type": "format",
+          "detail": "invalid json: Expecting value",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-021-length",
+          "constraint_type": "length",
+          "detail": "word_count=133, max=90",
+          "passed": false
+        }
+      ],
+      "completion_rate": 0.2,
+      "passed": false,
+      "repair_used": false,
+      "source_row_id": "21",
+      "task_id": "cctu-micro-021",
+      "verifier_scores": {
+        "ast_structure": 0.5,
+        "semenergy": -0.09023507482978886,
+        "z3_math": 0.5
+      },
+      "violated_types": [
+        "format",
+        "length",
+        "numeric",
+        "resource"
+      ]
+    },
+    {
+      "checks": [
+        {
+          "constraint_id": "cctu-micro-022-numeric-score",
+          "constraint_type": "numeric",
+          "detail": "score=42, expected_range=[10, 100]",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-022-semantic-answer",
+          "constraint_type": "semantic",
+          "detail": "expected_answer='3'",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-022-resource-tools",
+          "constraint_type": "resource",
+          "detail": "tool_calls=[], expected_count=2",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-022-format-python_code",
+          "constraint_type": "format",
+          "detail": "invalid python code: unterminated string literal (detected at line 4)",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-022-length",
+          "constraint_type": "length",
+          "detail": "word_count=139, max=90",
+          "passed": false
+        }
+      ],
+      "completion_rate": 0.4,
+      "passed": false,
+      "repair_used": false,
+      "source_row_id": "22",
+      "task_id": "cctu-micro-022",
+      "verifier_scores": {
+        "ast_structure": 0.75,
+        "semenergy": -0.08600957696433326,
+        "z3_math": 0.5
+      },
+      "violated_types": [
+        "format",
+        "length",
+        "resource"
+      ]
+    },
+    {
+      "checks": [
+        {
+          "constraint_id": "cctu-micro-023-numeric-score",
+          "constraint_type": "numeric",
+          "detail": "score=None, expected_range=[10, 100]",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-023-semantic-answer",
+          "constraint_type": "semantic",
+          "detail": "expected_answer='Israel'",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-023-resource-tools",
+          "constraint_type": "resource",
+          "detail": "tool_calls=[], expected_count=2",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-023-format-answer_prefix",
+          "constraint_type": "format",
+          "detail": "expected FINAL: ANSWER:",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-023-length",
+          "constraint_type": "length",
+          "detail": "word_count=132, max=90",
+          "passed": false
+        }
+      ],
+      "completion_rate": 0.2,
+      "passed": false,
+      "repair_used": false,
+      "source_row_id": "23",
+      "task_id": "cctu-micro-023",
+      "verifier_scores": {
+        "ast_structure": 0.75,
+        "semenergy": -0.09015623359096038,
+        "z3_math": 0.5
+      },
+      "violated_types": [
+        "format",
+        "length",
+        "numeric",
+        "resource"
+      ]
+    },
+    {
+      "checks": [
+        {
+          "constraint_id": "cctu-micro-024-numeric-score",
+          "constraint_type": "numeric",
+          "detail": "score=None, expected_range=[10, 100]",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-024-semantic-answer",
+          "constraint_type": "semantic",
+          "detail": "expected_answer='2007-07-24'",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-024-resource-tools",
+          "constraint_type": "resource",
+          "detail": "tool_calls=[], expected_count=1",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-024-format-table",
+          "constraint_type": "format",
+          "detail": "expected markdown answer table",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-024-length",
+          "constraint_type": "length",
+          "detail": "word_count=127, max=90",
+          "passed": false
+        }
+      ],
+      "completion_rate": 0.2,
+      "passed": false,
+      "repair_used": false,
+      "source_row_id": "24",
+      "task_id": "cctu-micro-024",
+      "verifier_scores": {
+        "ast_structure": 0.75,
+        "semenergy": -0.0952560867154621,
+        "z3_math": 0.5
+      },
+      "violated_types": [
+        "format",
+        "length",
+        "numeric",
+        "resource"
+      ]
+    }
+  ],
+  "carnot_delta_pp": 0.08,
+  "carnot_guided_completion_rate": 0.12,
+  "cctu_adapter_honest_result": true,
+  "cctu_adapter_written": true,
+  "constraint_types_tested": [
+    "format",
+    "length",
+    "numeric",
+    "resource",
+    "semantic"
+  ],
+  "decision_class": [
+    "verify",
+    "repair"
+  ],
+  "duration_s": 104.085,
+  "experiment": 1144,
+  "finished_at": "2026-05-02T08:02:54Z",
+  "guided_results": [
+    {
+      "checks": [
+        {
+          "constraint_id": "cctu-micro-000-numeric-score",
+          "constraint_type": "numeric",
+          "detail": "score=95, expected_range=[10, 100]",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-000-semantic-answer",
+          "constraint_type": "semantic",
+          "detail": "expected_answer='2007-11-7'",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-000-resource-tools",
+          "constraint_type": "resource",
+          "detail": "tool_calls=['historical_event_finder'], expected_count=1",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-000-format-markdown_bold",
+          "constraint_type": "format",
+          "detail": "expected bold markdown answer",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-000-length",
+          "constraint_type": "length",
+          "detail": "word_count=135, max=90",
+          "passed": false
+        }
+      ],
+      "completion_rate": 0.8,
+      "passed": false,
+      "repair_used": true,
+      "source_row_id": "0",
+      "task_id": "cctu-micro-000",
+      "verifier_scores": {
+        "ast_structure": 0.0,
+        "semenergy": -0.08802089039630027,
+        "z3_math": 0.5
+      },
+      "violated_types": [
+        "length"
+      ]
+    },
+    {
+      "checks": [
+        {
+          "constraint_id": "cctu-micro-001-numeric-score",
+          "constraint_type": "numeric",
+          "detail": "score=None, expected_range=[10, 100]",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-001-semantic-answer",
+          "constraint_type": "semantic",
+          "detail": "expected_answer='Mishal Al-Ahmad Al-Jaber Al-Sabah.'",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-001-resource-tools",
+          "constraint_type": "resource",
+          "detail": "tool_calls=['political_successor_finder', 'calculate'], expected_count=2",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-001-format-json_answer",
+          "constraint_type": "format",
+          "detail": "invalid json: Expecting value",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-001-length",
+          "constraint_type": "length",
+          "detail": "word_count=158, max=90",
+          "passed": false
+        }
+      ],
+      "completion_rate": 0.4,
+      "passed": false,
+      "repair_used": true,
+      "source_row_id": "1",
+      "task_id": "cctu-micro-001",
+      "verifier_scores": {
+        "ast_structure": 0.3333333333333333,
+        "semenergy": -0.07454100420152827,
+        "z3_math": 0.5
+      },
+      "violated_types": [
+        "format",
+        "length",
+        "numeric"
+      ]
+    },
+    {
+      "checks": [
+        {
+          "constraint_id": "cctu-micro-002-numeric-score",
+          "constraint_type": "numeric",
+          "detail": "score=10, expected_range=[10, 100]",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-002-semantic-answer",
+          "constraint_type": "semantic",
+          "detail": "expected_answer='2007-10-10'",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-002-resource-tools",
+          "constraint_type": "resource",
+          "detail": "tool_calls=['game_release_date_finder', 'calculate', 'game_release_date_finder', 'calculate'], expected_count=2",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-002-format-python_code",
+          "constraint_type": "format",
+          "detail": "invalid python code: invalid syntax",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-002-length",
+          "constraint_type": "length",
+          "detail": "word_count=89, max=90",
+          "passed": true
+        }
+      ],
+      "completion_rate": 0.6,
+      "passed": false,
+      "repair_used": true,
+      "source_row_id": "2",
+      "task_id": "cctu-micro-002",
+      "verifier_scores": {
+        "ast_structure": 0.0,
+        "semenergy": -0.13663705070247983,
+        "z3_math": 0.5
+      },
+      "violated_types": [
+        "format",
+        "resource"
+      ]
+    },
+    {
+      "checks": [
+        {
+          "constraint_id": "cctu-micro-003-numeric-score",
+          "constraint_type": "numeric",
+          "detail": "score=None, expected_range=[10, 100]",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-003-semantic-answer",
+          "constraint_type": "semantic",
+          "detail": "expected_answer='128'",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-003-resource-tools",
+          "constraint_type": "resource",
+          "detail": "tool_calls=[], expected_count=1",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-003-format-answer_prefix",
+          "constraint_type": "format",
+          "detail": "expected FINAL: ANSWER:",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-003-length",
+          "constraint_type": "length",
+          "detail": "word_count=124, max=90",
+          "passed": false
+        }
+      ],
+      "completion_rate": 0.2,
+      "passed": false,
+      "repair_used": true,
+      "source_row_id": "3",
+      "task_id": "cctu-micro-003",
+      "verifier_scores": {
+        "ast_structure": 0.75,
+        "semenergy": -0.09637152013742444,
+        "z3_math": 0.5
+      },
+      "violated_types": [
+        "format",
+        "length",
+        "numeric",
+        "resource"
+      ]
+    },
+    {
+      "checks": [
+        {
+          "constraint_id": "cctu-micro-004-numeric-score",
+          "constraint_type": "numeric",
+          "detail": "score=70, expected_range=[10, 100]",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-004-semantic-answer",
+          "constraint_type": "semantic",
+          "detail": "expected_answer='Al-Aqsa Mosque'",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-004-resource-tools",
+          "constraint_type": "resource",
+          "detail": "tool_calls=['event_locator', 'calculate'], expected_count=2",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-004-format-table",
+          "constraint_type": "format",
+          "detail": "expected markdown answer table",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-004-length",
+          "constraint_type": "length",
+          "detail": "word_count=49, max=90",
+          "passed": true
+        }
+      ],
+      "completion_rate": 0.8,
+      "passed": false,
+      "repair_used": true,
+      "source_row_id": "4",
+      "task_id": "cctu-micro-004",
+      "verifier_scores": {
+        "ast_structure": 0.0,
+        "semenergy": -0.24356215101929016,
+        "z3_math": 0.5
+      },
+      "violated_types": [
+        "format"
+      ]
+    },
+    {
+      "checks": [
+        {
+          "constraint_id": "cctu-micro-005-numeric-score",
+          "constraint_type": "numeric",
+          "detail": "score=50, expected_range=[10, 100]",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-005-semantic-answer",
+          "constraint_type": "semantic",
+          "detail": "expected_answer='Abdel Fattah el-Sisi.'",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-005-resource-tools",
+          "constraint_type": "resource",
+          "detail": "tool_calls=['event_outcome_retriever', 'calculate'], expected_count=2",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-005-format-markdown_bold",
+          "constraint_type": "format",
+          "detail": "expected bold markdown answer",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-005-length",
+          "constraint_type": "length",
+          "detail": "word_count=55, max=90",
+          "passed": true
+        }
+      ],
+      "completion_rate": 1.0,
+      "passed": true,
+      "repair_used": false,
+      "source_row_id": "5",
+      "task_id": "cctu-micro-005",
+      "verifier_scores": {
+        "ast_structure": 0.0,
+        "semenergy": -0.21374816076966047,
+        "z3_math": 0.5
+      },
+      "violated_types": []
+    },
+    {
+      "checks": [
+        {
+          "constraint_id": "cctu-micro-006-numeric-score",
+          "constraint_type": "numeric",
+          "detail": "score=95, expected_range=[10, 100]",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-006-semantic-answer",
+          "constraint_type": "semantic",
+          "detail": "expected_answer='Michel Barnier'",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-006-resource-tools",
+          "constraint_type": "resource",
+          "detail": "tool_calls=['political_event_search'], expected_count=1",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-006-format-json_answer",
+          "constraint_type": "format",
+          "detail": "invalid json: Expecting value",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-006-length",
+          "constraint_type": "length",
+          "detail": "word_count=12, max=90",
+          "passed": true
+        }
+      ],
+      "completion_rate": 0.8,
+      "passed": false,
+      "repair_used": true,
+      "source_row_id": "6",
+      "task_id": "cctu-micro-006",
+      "verifier_scores": {
+        "ast_structure": 0.0,
+        "semenergy": -0.9347761801680998,
+        "z3_math": 0.5
+      },
+      "violated_types": [
+        "format"
+      ]
+    },
+    {
+      "checks": [
+        {
+          "constraint_id": "cctu-micro-007-numeric-score",
+          "constraint_type": "numeric",
+          "detail": "score=None, expected_range=[10, 100]",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-007-semantic-answer",
+          "constraint_type": "semantic",
+          "detail": "expected_answer='Brazil, China'",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-007-resource-tools",
+          "constraint_type": "resource",
+          "detail": "tool_calls=[], expected_count=2",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-007-format-python_code",
+          "constraint_type": "format",
+          "detail": "invalid python code: unterminated string literal (detected at line 4)",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-007-length",
+          "constraint_type": "length",
+          "detail": "word_count=127, max=90",
+          "passed": false
+        }
+      ],
+      "completion_rate": 0.2,
+      "passed": false,
+      "repair_used": true,
+      "source_row_id": "7",
+      "task_id": "cctu-micro-007",
+      "verifier_scores": {
+        "ast_structure": 0.75,
+        "semenergy": -0.09369720584993428,
+        "z3_math": 0.5
+      },
+      "violated_types": [
+        "format",
+        "length",
+        "numeric",
+        "resource"
+      ]
+    },
+    {
+      "checks": [
+        {
+          "constraint_id": "cctu-micro-008-numeric-score",
+          "constraint_type": "numeric",
+          "detail": "score=100, expected_range=[10, 100]",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-008-semantic-answer",
+          "constraint_type": "semantic",
+          "detail": "expected_answer='Fuad Shukr'",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-008-resource-tools",
+          "constraint_type": "resource",
+          "detail": "tool_calls=['event_personnel_identifier', 'calculate'], expected_count=2",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-008-format-answer_prefix",
+          "constraint_type": "format",
+          "detail": "expected FINAL: ANSWER:",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-008-length",
+          "constraint_type": "length",
+          "detail": "word_count=17, max=90",
+          "passed": true
+        }
+      ],
+      "completion_rate": 1.0,
+      "passed": true,
+      "repair_used": true,
+      "source_row_id": "8",
+      "task_id": "cctu-micro-008",
+      "verifier_scores": {
+        "ast_structure": 0.3333333333333333,
+        "semenergy": -0.6599543656975644,
+        "z3_math": 0.5
+      },
+      "violated_types": []
+    },
+    {
+      "checks": [
+        {
+          "constraint_id": "cctu-micro-009-numeric-score",
+          "constraint_type": "numeric",
+          "detail": "score=None, expected_range=[10, 100]",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-009-semantic-answer",
+          "constraint_type": "semantic",
+          "detail": "expected_answer='2007-09-13'",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-009-resource-tools",
+          "constraint_type": "resource",
+          "detail": "tool_calls=[], expected_count=1",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-009-format-table",
+          "constraint_type": "format",
+          "detail": "expected markdown answer table",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-009-length",
+          "constraint_type": "length",
+          "detail": "word_count=108, max=90",
+          "passed": false
+        }
+      ],
+      "completion_rate": 0.2,
+      "passed": false,
+      "repair_used": true,
+      "source_row_id": "9",
+      "task_id": "cctu-micro-009",
+      "verifier_scores": {
+        "ast_structure": 0.75,
+        "semenergy": -0.11230551160557602,
+        "z3_math": 0.5
+      },
+      "violated_types": [
+        "format",
+        "length",
+        "numeric",
+        "resource"
+      ]
+    },
+    {
+      "checks": [
+        {
+          "constraint_id": "cctu-micro-010-numeric-score",
+          "constraint_type": "numeric",
+          "detail": "score=None, expected_range=[10, 100]",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-010-semantic-answer",
+          "constraint_type": "semantic",
+          "detail": "expected_answer='United Kingdom'",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-010-resource-tools",
+          "constraint_type": "resource",
+          "detail": "tool_calls=['event_location_finder', 'calculate'], expected_count=2",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-010-format-markdown_bold",
+          "constraint_type": "format",
+          "detail": "expected bold markdown answer",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-010-length",
+          "constraint_type": "length",
+          "detail": "word_count=100, max=90",
+          "passed": false
+        }
+      ],
+      "completion_rate": 0.6,
+      "passed": false,
+      "repair_used": true,
+      "source_row_id": "10",
+      "task_id": "cctu-micro-010",
+      "verifier_scores": {
+        "ast_structure": 0.0,
+        "semenergy": -0.12116074104854296,
+        "z3_math": 0.5
+      },
+      "violated_types": [
+        "length",
+        "numeric"
+      ]
+    },
+    {
+      "checks": [
+        {
+          "constraint_id": "cctu-micro-011-numeric-score",
+          "constraint_type": "numeric",
+          "detail": "score=None, expected_range=[10, 100]",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-011-semantic-answer",
+          "constraint_type": "semantic",
+          "detail": "expected_answer='2001-9-17'",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-011-resource-tools",
+          "constraint_type": "resource",
+          "detail": "tool_calls=[], expected_count=2",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-011-format-json_answer",
+          "constraint_type": "format",
+          "detail": "invalid json: Expecting value",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-011-length",
+          "constraint_type": "length",
+          "detail": "word_count=109, max=90",
+          "passed": false
+        }
+      ],
+      "completion_rate": 0.0,
+      "passed": false,
+      "repair_used": true,
+      "source_row_id": "11",
+      "task_id": "cctu-micro-011",
+      "verifier_scores": {
+        "ast_structure": 0.75,
+        "semenergy": -0.11205928114757133,
+        "z3_math": 0.5
+      },
+      "violated_types": [
+        "format",
+        "length",
+        "numeric",
+        "resource",
+        "semantic"
+      ]
+    },
+    {
+      "checks": [
+        {
+          "constraint_id": "cctu-micro-012-numeric-score",
+          "constraint_type": "numeric",
+          "detail": "score=None, expected_range=[10, 100]",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-012-semantic-answer",
+          "constraint_type": "semantic",
+          "detail": "expected_answer='2023-10-13'",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-012-resource-tools",
+          "constraint_type": "resource",
+          "detail": "tool_calls=['corporate_event_finder'], expected_count=1",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-012-format-python_code",
+          "constraint_type": "format",
+          "detail": "invalid python code: invalid syntax",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-012-length",
+          "constraint_type": "length",
+          "detail": "word_count=123, max=90",
+          "passed": false
+        }
+      ],
+      "completion_rate": 0.4,
+      "passed": false,
+      "repair_used": true,
+      "source_row_id": "12",
+      "task_id": "cctu-micro-012",
+      "verifier_scores": {
+        "ast_structure": 0.75,
+        "semenergy": -0.09832818523020499,
+        "z3_math": 0.5
+      },
+      "violated_types": [
+        "format",
+        "length",
+        "numeric"
+      ]
+    },
+    {
+      "checks": [
+        {
+          "constraint_id": "cctu-micro-013-numeric-score",
+          "constraint_type": "numeric",
+          "detail": "score=None, expected_range=[10, 100]",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-013-semantic-answer",
+          "constraint_type": "semantic",
+          "detail": "expected_answer='2001-04-01'",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-013-resource-tools",
+          "constraint_type": "resource",
+          "detail": "tool_calls=[], expected_count=2",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-013-format-answer_prefix",
+          "constraint_type": "format",
+          "detail": "expected FINAL: ANSWER:",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-013-length",
+          "constraint_type": "length",
+          "detail": "word_count=105, max=90",
+          "passed": false
+        }
+      ],
+      "completion_rate": 0.0,
+      "passed": false,
+      "repair_used": true,
+      "source_row_id": "13",
+      "task_id": "cctu-micro-013",
+      "verifier_scores": {
+        "ast_structure": 0.75,
+        "semenergy": -0.11464230423410837,
+        "z3_math": 0.5
+      },
+      "violated_types": [
+        "format",
+        "length",
+        "numeric",
+        "resource",
+        "semantic"
+      ]
+    },
+    {
+      "checks": [
+        {
+          "constraint_id": "cctu-micro-014-numeric-score",
+          "constraint_type": "numeric",
+          "detail": "score=None, expected_range=[10, 100]",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-014-semantic-answer",
+          "constraint_type": "semantic",
+          "detail": "expected_answer='2023-10-22'",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-014-resource-tools",
+          "constraint_type": "resource",
+          "detail": "tool_calls=[], expected_count=2",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-014-format-table",
+          "constraint_type": "format",
+          "detail": "expected markdown answer table",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-014-length",
+          "constraint_type": "length",
+          "detail": "word_count=127, max=90",
+          "passed": false
+        }
+      ],
+      "completion_rate": 0.2,
+      "passed": false,
+      "repair_used": true,
+      "source_row_id": "14",
+      "task_id": "cctu-micro-014",
+      "verifier_scores": {
+        "ast_structure": 0.75,
+        "semenergy": -0.09670552643080824,
+        "z3_math": 0.5
+      },
+      "violated_types": [
+        "format",
+        "length",
+        "numeric",
+        "resource"
+      ]
+    },
+    {
+      "checks": [
+        {
+          "constraint_id": "cctu-micro-015-numeric-score",
+          "constraint_type": "numeric",
+          "detail": "score=95, expected_range=[10, 100]",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-015-semantic-answer",
+          "constraint_type": "semantic",
+          "detail": "expected_answer='2024-6-23'",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-015-resource-tools",
+          "constraint_type": "resource",
+          "detail": "tool_calls=['historical_event_finder'], expected_count=1",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-015-format-markdown_bold",
+          "constraint_type": "format",
+          "detail": "expected bold markdown answer",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-015-length",
+          "constraint_type": "length",
+          "detail": "word_count=50, max=90",
+          "passed": true
+        }
+      ],
+      "completion_rate": 1.0,
+      "passed": true,
+      "repair_used": true,
+      "source_row_id": "15",
+      "task_id": "cctu-micro-015",
+      "verifier_scores": {
+        "ast_structure": 0.3333333333333333,
+        "semenergy": -0.2386279813168226,
+        "z3_math": 0.5
+      },
+      "violated_types": []
+    },
+    {
+      "checks": [
+        {
+          "constraint_id": "cctu-micro-016-numeric-score",
+          "constraint_type": "numeric",
+          "detail": "score=None, expected_range=[10, 100]",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-016-semantic-answer",
+          "constraint_type": "semantic",
+          "detail": "expected_answer='2023-10-31'",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-016-resource-tools",
+          "constraint_type": "resource",
+          "detail": "tool_calls=[], expected_count=2",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-016-format-json_answer",
+          "constraint_type": "format",
+          "detail": "invalid json: Expecting value",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-016-length",
+          "constraint_type": "length",
+          "detail": "word_count=107, max=90",
+          "passed": false
+        }
+      ],
+      "completion_rate": 0.2,
+      "passed": false,
+      "repair_used": true,
+      "source_row_id": "16",
+      "task_id": "cctu-micro-016",
+      "verifier_scores": {
+        "ast_structure": 0.75,
+        "semenergy": -0.11477324442037119,
+        "z3_math": 0.5
+      },
+      "violated_types": [
+        "format",
+        "length",
+        "numeric",
+        "resource"
+      ]
+    },
+    {
+      "checks": [
+        {
+          "constraint_id": "cctu-micro-017-numeric-score",
+          "constraint_type": "numeric",
+          "detail": "score=None, expected_range=[10, 100]",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-017-semantic-answer",
+          "constraint_type": "semantic",
+          "detail": "expected_answer='165'",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-017-resource-tools",
+          "constraint_type": "resource",
+          "detail": "tool_calls=[], expected_count=2",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-017-format-python_code",
+          "constraint_type": "format",
+          "detail": "invalid python code: unterminated string literal (detected at line 4)",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-017-length",
+          "constraint_type": "length",
+          "detail": "word_count=112, max=90",
+          "passed": false
+        }
+      ],
+      "completion_rate": 0.2,
+      "passed": false,
+      "repair_used": true,
+      "source_row_id": "17",
+      "task_id": "cctu-micro-017",
+      "verifier_scores": {
+        "ast_structure": 0.75,
+        "semenergy": -0.10894349885205755,
+        "z3_math": 0.5
+      },
+      "violated_types": [
+        "format",
+        "length",
+        "numeric",
+        "resource"
+      ]
+    },
+    {
+      "checks": [
+        {
+          "constraint_id": "cctu-micro-018-numeric-score",
+          "constraint_type": "numeric",
+          "detail": "score=None, expected_range=[10, 100]",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-018-semantic-answer",
+          "constraint_type": "semantic",
+          "detail": "expected_answer='2023-10-8'",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-018-resource-tools",
+          "constraint_type": "resource",
+          "detail": "tool_calls=[], expected_count=1",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-018-format-answer_prefix",
+          "constraint_type": "format",
+          "detail": "expected FINAL: ANSWER:",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-018-length",
+          "constraint_type": "length",
+          "detail": "word_count=107, max=90",
+          "passed": false
+        }
+      ],
+      "completion_rate": 0.2,
+      "passed": false,
+      "repair_used": true,
+      "source_row_id": "18",
+      "task_id": "cctu-micro-018",
+      "verifier_scores": {
+        "ast_structure": 0.75,
+        "semenergy": -0.11414708193988359,
+        "z3_math": 0.5
+      },
+      "violated_types": [
+        "format",
+        "length",
+        "numeric",
+        "resource"
+      ]
+    },
+    {
+      "checks": [
+        {
+          "constraint_id": "cctu-micro-019-numeric-score",
+          "constraint_type": "numeric",
+          "detail": "score=None, expected_range=[10, 100]",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-019-semantic-answer",
+          "constraint_type": "semantic",
+          "detail": "expected_answer='75'",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-019-resource-tools",
+          "constraint_type": "resource",
+          "detail": "tool_calls=['historical_event_data_retriever', 'calculate'], expected_count=2",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-019-format-table",
+          "constraint_type": "format",
+          "detail": "expected markdown answer table",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-019-length",
+          "constraint_type": "length",
+          "detail": "word_count=27, max=90",
+          "passed": true
+        }
+      ],
+      "completion_rate": 0.6,
+      "passed": false,
+      "repair_used": true,
+      "source_row_id": "19",
+      "task_id": "cctu-micro-019",
+      "verifier_scores": {
+        "ast_structure": 0.3333333333333333,
+        "semenergy": -0.43769789105710977,
+        "z3_math": 0.5
+      },
+      "violated_types": [
+        "format",
+        "numeric"
+      ]
+    },
+    {
+      "checks": [
+        {
+          "constraint_id": "cctu-micro-020-numeric-score",
+          "constraint_type": "numeric",
+          "detail": "score=95, expected_range=[10, 100]",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-020-semantic-answer",
+          "constraint_type": "semantic",
+          "detail": "expected_answer='Australia'",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-020-resource-tools",
+          "constraint_type": "resource",
+          "detail": "tool_calls=['individual_movement_tracker', 'calculate'], expected_count=2",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-020-format-markdown_bold",
+          "constraint_type": "format",
+          "detail": "expected bold markdown answer",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-020-length",
+          "constraint_type": "length",
+          "detail": "word_count=183, max=90",
+          "passed": false
+        }
+      ],
+      "completion_rate": 0.8,
+      "passed": false,
+      "repair_used": true,
+      "source_row_id": "20",
+      "task_id": "cctu-micro-020",
+      "verifier_scores": {
+        "ast_structure": 0.0,
+        "semenergy": -0.0640116833921241,
+        "z3_math": 0.5
+      },
+      "violated_types": [
+        "length"
+      ]
+    },
+    {
+      "checks": [
+        {
+          "constraint_id": "cctu-micro-021-numeric-score",
+          "constraint_type": "numeric",
+          "detail": "score=None, expected_range=[10, 100]",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-021-semantic-answer",
+          "constraint_type": "semantic",
+          "detail": "expected_answer='The Ohrid Agreement'",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-021-resource-tools",
+          "constraint_type": "resource",
+          "detail": "tool_calls=[], expected_count=1",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-021-format-json_answer",
+          "constraint_type": "format",
+          "detail": "invalid json: Expecting value",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-021-length",
+          "constraint_type": "length",
+          "detail": "word_count=132, max=90",
+          "passed": false
+        }
+      ],
+      "completion_rate": 0.2,
+      "passed": false,
+      "repair_used": true,
+      "source_row_id": "21",
+      "task_id": "cctu-micro-021",
+      "verifier_scores": {
+        "ast_structure": 0.75,
+        "semenergy": -0.09119682231524809,
+        "z3_math": 0.5
+      },
+      "violated_types": [
+        "format",
+        "length",
+        "numeric",
+        "resource"
+      ]
+    },
+    {
+      "checks": [
+        {
+          "constraint_id": "cctu-micro-022-numeric-score",
+          "constraint_type": "numeric",
+          "detail": "score=None, expected_range=[10, 100]",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-022-semantic-answer",
+          "constraint_type": "semantic",
+          "detail": "expected_answer='3'",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-022-resource-tools",
+          "constraint_type": "resource",
+          "detail": "tool_calls=['political_term_tracker', 'calculate'], expected_count=2",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-022-format-python_code",
+          "constraint_type": "format",
+          "detail": "invalid python code: invalid syntax",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-022-length",
+          "constraint_type": "length",
+          "detail": "word_count=14, max=90",
+          "passed": true
+        }
+      ],
+      "completion_rate": 0.6,
+      "passed": false,
+      "repair_used": true,
+      "source_row_id": "22",
+      "task_id": "cctu-micro-022",
+      "verifier_scores": {
+        "ast_structure": 0.3333333333333333,
+        "semenergy": -0.8358002667752327,
+        "z3_math": 0.5
+      },
+      "violated_types": [
+        "format",
+        "numeric"
+      ]
+    },
+    {
+      "checks": [
+        {
+          "constraint_id": "cctu-micro-023-numeric-score",
+          "constraint_type": "numeric",
+          "detail": "score=None, expected_range=[10, 100]",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-023-semantic-answer",
+          "constraint_type": "semantic",
+          "detail": "expected_answer='Israel'",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-023-resource-tools",
+          "constraint_type": "resource",
+          "detail": "tool_calls=[], expected_count=2",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-023-format-answer_prefix",
+          "constraint_type": "format",
+          "detail": "expected FINAL: ANSWER:",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-023-length",
+          "constraint_type": "length",
+          "detail": "word_count=101, max=90",
+          "passed": false
+        }
+      ],
+      "completion_rate": 0.0,
+      "passed": false,
+      "repair_used": true,
+      "source_row_id": "23",
+      "task_id": "cctu-micro-023",
+      "verifier_scores": {
+        "ast_structure": 0.75,
+        "semenergy": -0.11919123584927757,
+        "z3_math": 0.5
+      },
+      "violated_types": [
+        "format",
+        "length",
+        "numeric",
+        "resource",
+        "semantic"
+      ]
+    },
+    {
+      "checks": [
+        {
+          "constraint_id": "cctu-micro-024-numeric-score",
+          "constraint_type": "numeric",
+          "detail": "score=None, expected_range=[10, 100]",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-024-semantic-answer",
+          "constraint_type": "semantic",
+          "detail": "expected_answer='2007-07-24'",
+          "passed": true
+        },
+        {
+          "constraint_id": "cctu-micro-024-resource-tools",
+          "constraint_type": "resource",
+          "detail": "tool_calls=[], expected_count=1",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-024-format-table",
+          "constraint_type": "format",
+          "detail": "expected markdown answer table",
+          "passed": false
+        },
+        {
+          "constraint_id": "cctu-micro-024-length",
+          "constraint_type": "length",
+          "detail": "word_count=110, max=90",
+          "passed": false
+        }
+      ],
+      "completion_rate": 0.2,
+      "passed": false,
+      "repair_used": true,
+      "source_row_id": "24",
+      "task_id": "cctu-micro-024",
+      "verifier_scores": {
+        "ast_structure": 0.75,
+        "semenergy": -0.11027551670109668,
+        "z3_math": 0.5
+      },
+      "violated_types": [
+        "format",
+        "length",
+        "numeric",
+        "resource"
+      ]
+    }
+  ],
+  "honest_verdict": "carnot_positive_delta",
+  "inference_mode": "live_gpu",
+  "metrics_provenance": {
+    "completion_rate": "carnot.eval.metrics.completion_rate:v1.0",
+    "constraint_tp_rate": "carnot.eval.metrics.constraint_tp_rate:v1.0"
+  },
+  "metrics_used": [
+    "constraint_tp_rate",
+    "completion_rate"
+  ],
+  "model_resolution": {
+    "llama_cpp_loader_attempted": true,
+    "loader_path": "carnot.pipeline.gemma4_quantized_loader.Gemma4QuantizedLoader",
+    "loader_status": "live",
+    "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf"
+  },
+  "model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+  "n_tasks_defined": 25,
+  "n_tasks_evaluated": 25,
+  "per_constraint_tp_rate": {
+    "format": 0.24,
+    "length": 0.32,
+    "numeric": 0.32,
+    "resource": 0.48,
+    "semantic": 0.88
+  },
+  "random_seed": 1144,
+  "reproducibility_checksum": "a604bc122d0e6ffc",
+  "run_date": "20260502",
+  "schema": [
+    "baseline_completion_rate",
+    "baseline_results",
+    "carnot_delta_pp",
+    "carnot_guided_completion_rate",
+    "cctu_adapter_honest_result",
+    "cctu_adapter_written",
+    "constraint_types_tested",
+    "decision_class",
+    "duration_s",
+    "experiment",
+    "finished_at",
+    "guided_results",
+    "honest_verdict",
+    "inference_mode",
+    "metrics_provenance",
+    "metrics_used",
+    "model_resolution",
+    "model_used",
+    "n_tasks_defined",
+    "n_tasks_evaluated",
+    "per_constraint_tp_rate",
+    "random_seed",
+    "reproducibility_checksum",
+    "run_date",
+    "started_at",
+    "status",
+    "title"
+  ],
+  "started_at": "2026-05-02T08:01:09Z",
+  "status": "success",
+  "title": "CCTU Micro-Benchmark",
+  "invariant_violations": []
+}

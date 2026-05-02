@@ -16467,3 +16467,51 @@ GSM8K-style arithmetic answer constraints.
 logprobs were used
 
 **Spec traces:** REQ-VERIFY-1142, Exp 1142
+
+## REQ-VERIFY-1144: CCTU Micro-Benchmark Adapter
+
+Carnot SHALL provide a 25-task CCTU-style micro-benchmark adapter for
+constrained tool-use verification against FR-12 constraint sets.
+
+- REQ-VERIFY-1144-1: The adapter SHALL write
+  `data/cctu_micro_benchmark_25.json` with exactly 25 tasks. Each task SHALL
+  include a system prompt describing available tools, a user request, an
+  expected answer, source provenance, and 3 to 5 explicit constraints. Every
+  constraint SHALL include an executable validator specification.
+- REQ-VERIFY-1144-2: The runner SHALL select a mandated SOTA GGUF model,
+  preferring `unsloth/Qwen3.6-35B-A3B-GGUF` and falling back to
+  `unsloth/gemma-4-26B-A4B-it-GGUF`, through the llama.cpp-compatible loader
+  path. When the loader or GPU path is unavailable, the runner SHALL use
+  deterministic mock inference and expose `inference_mode="mock"`.
+- REQ-VERIFY-1144-3: The validation cascade SHALL run numeric checks through
+  `Z3MathVerifier`, semantic checks through `SemEnergyProbe`, and structural
+  or code-format checks through `ASTStructureVerifier`, while also executing
+  deterministic resource, toolset, length, and response-format validators.
+- REQ-VERIFY-1144-4: The experiment SHALL compare baseline responses against
+  Carnot-guided responses produced after verifier feedback, and SHALL report
+  per-constraint-type true-positive rates, baseline completion rate,
+  Carnot-guided completion rate, and percentage-point delta.
+- REQ-VERIFY-1144-5: Exp 1144 SHALL write
+  `results/experiment_1144_cctu_micro_benchmark_adapter.json` with
+  `cctu_adapter_written`, `n_tasks_defined`, `n_tasks_evaluated`,
+  `model_used`, `inference_mode`, `constraint_types_tested`,
+  `per_constraint_tp_rate`, `baseline_completion_rate`,
+  `carnot_guided_completion_rate`, `carnot_delta_pp`,
+  `cctu_adapter_honest_result`, and `honest_verdict`. The allowed verdicts
+  SHALL be `carnot_positive_delta`, `carnot_neutral`, `carnot_negative`, and
+  `mock_inference_only`.
+
+**Implementation Status:** Planned (Exp 1144)
+
+### SCENARIO-VERIFY-1144: CCTU Adapter Produces Honest Constraint Results
+
+**Given** 25 CCTU-style tool-use tasks with executable constraint validators
+**When** `scripts/experiment_1144_cctu_micro_benchmark_adapter.py` runs
+**Then** the adapter writes the task JSON and result artifact
+**And** the artifact records whether live GGUF inference or deterministic mock
+inference was used
+**And** each response is checked by the Carnot cascade and deterministic
+validators before completion rates are reported
+**And** mock inference artifacts use `honest_verdict="mock_inference_only"`
+
+**Spec traces:** REQ-VERIFY-1144, Exp 1144
