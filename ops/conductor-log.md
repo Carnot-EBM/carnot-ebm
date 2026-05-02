@@ -296,3 +296,4 @@ If you finish the real work |
 | 2026-05-02 02:17 UTC | PRM-BiasBench Adversarial Test on k=5 AND-Compose | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1128-sos-kan-root-cause-k5-fix) |
 | 2026-05-02 02:20 UTC | Lagrangian Cascade v2 — Accuracy-Preserving Router | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1128-sos-kan-root-cause-k5-fix) |
 | 2026-05-02 02:20 UTC | PRM-BiasBench Adversarial Test on k=5 AND-Compose | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1128-sos-kan-root-cause-k5-fix) |
+| 2026-05-02 02:27 UTC | KV260 Ising Sampler v4 — Beta/Alpha Self-Adaptive  | OK | 81 passed, 1 warning in 4.28s |
