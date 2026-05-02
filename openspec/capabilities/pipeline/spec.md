@@ -1915,6 +1915,58 @@ Goodfire exemplars missed by ThinkPRM,
 
 **Spec traces:** REQ-VERIFY-1143
 
+### REQ-VERIFY-1145: Goodfire Cheap-Tier Distillation Calibration
+
+The Goodfire cheap-tier distillation experiment MUST read the Exp 1143
+HalluGuard diagnostic and the Exp 1132 Goodfire cascade artifact, then score the
+Goodfire exemplar corpus with the same cheap-tier score conventions used by Exp
+1132:
+
+- `ThinkPRM`: the Tier 0a SpilledEnergy proxy score with the default threshold
+  `0.372`.
+- `SemEnergy`: `SemEnergyProbe.score_response_proxy` with the default threshold
+  `-0.5`.
+
+The experiment SHALL treat the k=5 label as positive ground truth for every
+Goodfire exemplar, find the true-positive-maximizing threshold for each cheap
+tier, and apply only the HalluGuard-feature-consistent threshold adjustment:
+lower the ThinkPRM threshold when `entropy_proxy` is the dominant missed-failure
+feature, or lower the SemEnergy threshold when `embedding_distance` is dominant.
+The adjusted cheap tier SHALL use OR-logic across ThinkPRM and SemEnergy.
+
+The artifact SHALL be written to
+`results/experiment_1145_goodfire_cheap_tier_distillation.json` and include
+`n_exemplars`, `thinkprm_tp_before`, `semenergy_tp_before`,
+`combined_cheap_tp_before`, `thinkprm_threshold_adjusted`,
+`semenergy_threshold_adjusted`, `combined_cheap_tp_after`,
+`false_positive_rate_after`, `cheap_tier_tp_rate_improved`, and
+`honest_verdict`.
+
+**Acceptance criteria:**
+- The baseline rates match Exp 1132 for the 36-exemplar Goodfire corpus:
+  `thinkprm_tp_before=0.138889` and `semenergy_tp_before=0.222222`.
+- `combined_cheap_tp_after` is computed with OR-logic over the adjusted
+  ThinkPRM and SemEnergy flags.
+- `false_positive_rate_after` is measured on 100 correct FoVer examples.
+- `honest_verdict` is one of
+  `cheap_tier_calibrated_tp_improved`, `calibration_no_improvement`,
+  `threshold_trade_off_fp_increase`, or `honest_negative`.
+
+**Spec traces:** Exp 1145, REQ-VERIFY-1143, Exp 1132
+
+### SCENARIO-VERIFY-1145: Entropy-Driven Cheap-Tier Misses Lower ThinkPRM Threshold
+
+**Given** the Exp 1143 artifact reports HalluGuard features explain the Goodfire
+cheap-tier misses,
+**And** `entropy_proxy` flags misses more often than `embedding_distance`,
+**When** Exp 1145 calibrates cheap-tier thresholds and evaluates Goodfire
+exemplars plus 100 correct FoVer examples,
+**Then** the artifact reports a ThinkPRM threshold adjustment, leaves the
+SemEnergy threshold unadjusted, improves combined cheap-tier TP under OR-logic,
+and records whether that improvement persists by category.
+
+**Spec traces:** REQ-VERIFY-1145
+
 ### SCENARIO-PROBE-023: Benchmark AUROC and Honest Verdict on Synthetic Corpus
 
 **Given** a SpilledEnergyDetector and 200 synthetic responses (100 correct, 100 hallucinated)
