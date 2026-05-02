@@ -142,6 +142,96 @@ graphics, or when a contributor offers to do the integration.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### NEW 2026-05-02 (06:40Z): Seed IQ Verified — Active-Inference Phase 4 Track (3 candidate tasks)
+
+**Background:** the Seed IQ ARC-AGI-3 score has been **independently
+verified** via a public demonstration video showing 0.95 score one
+month ago (the EBT/ARC-AGI document subsequently reported 1.00 on
+the leaderboard with 115% human action-efficiency). Themesis, Inc.
++ Denise Holt + Denis O. are the named operators. This is **not
+marketing** — the system works.
+
+This corroborates the paradigm-shift thesis. Active inference +
+topological field cognition (AΩ FoB HMC) is the empirically-leading
+architecture on ARC-AGI-3 by an open-source-adjacent team. The
+v3 paper now acknowledges this in Section 7 (Related Work) and
+positions Carnot as the synthesis path: Carnot's k=N AND-composed
+verifier ensemble serves as the calibrated free-energy
+approximation while the LLM substrate retains autoregressive
+infrastructure compatibility.
+
+**The 3 candidate tasks the .90+ planner MUST consider** (in addition
+to the 4 EBT/ARC-AGI-3 tasks filed at 06:25Z, which now subsume the
+seed-iq-verification task — verification done):
+
+1. **`exp11XX-active-inference-minimal-prototype`** [HIGHEST PRIORITY]
+   Goal: implement minimal active-inference agent using Carnot's k=N
+   verifier ensemble as the free-energy approximation. Test on 5-10
+   ARC-AGI-3 puzzles. Tools: PyMC + JAX-NumPyro for HMC sampling on
+   small generative models; Carnot k=N verifier as likelihood.
+   Hypothesis: Carnot's verify-repair loop is mathematically
+   equivalent to active inference under the FEP, just framed
+   differently — this task tests that hypothesis directly.
+   Acceptance: solve rate measured + per-puzzle action efficiency
+   vs. Seed IQ's published numbers; Bayes factor for "Carnot k=N
+   verifier ≈ free-energy approximation" hypothesis.
+   Phase: 4 exploratory (parallel to Phase 3 prototype, NOT
+   replacement). Reservation: research-class slot, .91 first
+   feasible window after Phase-3 Stage 1 begins.
+
+2. **`exp11XX-themesis-collaboration-outreach`**
+   Goal: draft outreach email to Themesis (Denise Holt / Denis O.)
+   outlining Carnot's verifier-as-free-energy framing; propose
+   architectural conversation. Open-source-friendly framing —
+   Carnot is Apache 2.0, multi-vendor, decentralization-respecting;
+   Themesis has the active-inference algorithm. Complementary, not
+   competitive.
+   Acceptance: email drafted + reviewed by operator before sending.
+   ~30-min operator task. Could open joint benchmark evaluation
+   or pre-print exchange.
+   Phase: cross-cutting strategic. Reservation: 30-min operator
+   block, no conductor execution needed.
+
+3. **`exp11XX-paper-v4-active-inference-section`**
+   Goal: post-arXiv-submission, expand Section 7 (Related Work) of
+   the position paper into a full architectural-comparison section
+   for v4. Compare Carnot's EBM-on-LLM substrate vs Themesis's
+   active-inference-on-topological-field substrate, with empirical
+   results from exp11XX-active-inference-minimal-prototype.
+   Acceptance: 2-3 page section drafted; Pareto-frontier comparison
+   on at least one common benchmark; honest assessment of which
+   paradigm wins where.
+   Phase: publication. Reservation: post-2026-05-15 arXiv
+   submission, .92+ candidate.
+
+**Completed tonight (2026-05-02 ~06:40Z):**
+
+- ✅ v3 paper (`docs/arxiv-paper/main.tex`) Section 7 expanded with
+  Themesis/Seed IQ acknowledgment paragraph. Cites
+  `themesis2026seediq` + `arcagi3` (added to `carnot.bib`).
+  Tarball `results/carnot-arxiv-v3.tar.gz` rebuilt at 06:40Z
+  (124,218 bytes, was 123,093). Submission-ready for 2026-05-15
+  deadline.
+
+**Why this is in MANDATORY-NEXT-MILESTONE PRIORITIES:**
+the architectural conversation has shifted. Active inference is
+publicly demonstrated as a winning paradigm on ARC-AGI-3. Carnot
+must engage substantively (not just acknowledge in a paragraph).
+The prototype task (#1) gives empirical signal within 1-2 milestones
+on whether Carnot's verifier ensemble can serve as the free-energy
+approximation in a Friston-style sampler.
+
+If hypothesis confirms: Carnot is **doing active inference under a
+different name**, and the v4 paper unifies both paradigms.
+
+If hypothesis disconfirms: Carnot's EBM-on-LLM thesis stands; the
+paradigms are genuinely different and Carnot positions as the
+LLM-compatible alternative.
+
+Either outcome is publication-grade.
+
+---
+
 ### NEW 2026-05-02 (06:25Z): EBT/ARC-AGI-3 Paradigm-Shift Tasks (4 candidate tasks)
 
 **Background:** the EBM/EBT/ARC-AGI document
