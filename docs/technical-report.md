@@ -1,6 +1,6 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report Through Exp 1138 Across 88 Completed Research Milestones
+## A Technical Report — 1138 Experiments Across 88 Completed Research Milestones (Through Exp 1138)
 
 **Author:** Ian Blenke
 **Date:** 2026-05-02
