@@ -2964,3 +2964,53 @@ GGUF file:
     ``{"success": False, "error": ...}`` rather than raising
 
 Spec: REQ-INFRA-074, SCENARIO-INFRA-083 (Exp 890)
+
+
+---
+
+## REQ-INFRA-075: Roadmap Gate and Prior-Failures Pre-Conductor Audit
+
+**REQ-INFRA-075**: A standalone roadmap audit script MUST validate a
+new research roadmap before conductor dispatch without modifying
+`scripts/research_conductor.py`. The audit MUST report structured counts
+and line-item failure details for:
+
+1. `GATE_UPSTREAM_EXISTS`: every `gated_on[].upstream` task id must exist
+   in the same roadmap YAML.
+2. `PRIOR_FAILURES_COVERAGE`: every roadmap task must be compared against
+   `research-complete.yaml`; when its title shares at least two
+   substantive scope keywords with any prior task, the roadmap task must
+   contain a non-empty `prior_failures` field.
+3. `MODEL_AGENT_COHERENCE`: `agent_type: codex` tasks must use
+   `model: gpt-5.5`, and `agent_type: gemini` must be rejected.
+4. `GATE_FIELD_CROSS_REF`: each `gated_on[].artifact_field` must appear in
+   the upstream task prompt's `REQUIRED ARTIFACT FIELDS:` section.
+
+The audit result MUST include the required Exp 1140 artifact fields:
+`n_tasks_audited`, gate upstream counts, prior-failure counts,
+model-agent coherence failure count, gate-field cross-reference failure
+count, pass/fail status, failure details, `audit_script_written`, and
+`honest_verdict`.
+
+### SCENARIO-INFRA-084: Roadmap Audit Flags Missing Upstream and Artifact Field
+
+Given a roadmap task gated on an unknown upstream id, the audit reports a
+`GATE_UPSTREAM_EXISTS` failure. Given a gate that references an upstream
+task but names an artifact field absent from that upstream prompt's
+`REQUIRED ARTIFACT FIELDS:` section, the audit reports a
+`GATE_FIELD_CROSS_REF` failure.
+
+### SCENARIO-INFRA-085: Roadmap Audit Flags Missing Prior Failures
+
+Given a new roadmap task whose title shares at least two substantive
+scope keywords with a task in `research-complete.yaml`, the audit reports
+a `PRIOR_FAILURES_COVERAGE` failure unless the new task has a non-empty
+`prior_failures` field.
+
+### SCENARIO-INFRA-086: Roadmap Audit Flags Unsupported Agent Routing
+
+Given a roadmap task with `agent_type: codex` and a model other than
+`gpt-5.5`, or any roadmap task with `agent_type: gemini`, the audit
+reports a `MODEL_AGENT_COHERENCE` failure.
+
+Spec: REQ-INFRA-075, SCENARIO-INFRA-084, SCENARIO-INFRA-085, SCENARIO-INFRA-086 (Exp 1140)
