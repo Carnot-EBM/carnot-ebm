@@ -1,0 +1,51 @@
+{
+  "experiment": "exp1131",
+  "schema": "v1",
+  "title": "Lagrangian Cascade v2 with verifier-score features",
+  "run_date": "2026-05-02T03:33:21Z",
+  "duration_s": 0.9,
+  "status": "success",
+  "n_training_examples": 5000,
+  "n_holdout_examples": 500,
+  "mlp_hidden_size": 128,
+  "mlp_val_accuracy": 0.984,
+  "verifier_score_features_used": [
+    "sem_energy_score",
+    "response_length",
+    "step_count"
+  ],
+  "min_tp_constraint": 0.9,
+  "lambda_final": 0.0,
+  "adaptive_tp_rate": 1.0,
+  "fixed_tp_rate": 1.0,
+  "accuracy_delta": 0.0,
+  "fixed_cascade_cost_ms": 111.017,
+  "adaptive_cascade_cost_ms": 107.465,
+  "cost_savings_pct": 3.2,
+  "cascade_v2_accuracy_delta_above_neg05": true,
+  "cost_savings_pct_positive": true,
+  "honest_verdict": "savings_accuracy_both_positive",
+  "predicted_depth_distribution": {
+    "1": 16,
+    "2": 0,
+    "3": 0,
+    "4": 0,
+    "5": 484
+  },
+  "cascade_depth_distribution": {
+    "1": 236,
+    "2": 5133,
+    "3": 28,
+    "4": 8,
+    "5": 95
+  },
+  "tier_cumulative_latencies_ms": [
+    0.017,
+    1.017,
+    6.017,
+    11.017,
+    111.017
+  ],
+  "source": "arXiv:2604.14853 Lagrangian cascade decomposition",
+  "note": "Exp1131 adds SemEnergyProbe-derived verifier scores to the router inputs and applies per-batch lambda updates when the incorrect-example TP constraint is violated."
+}
