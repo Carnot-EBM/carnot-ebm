@@ -9,6 +9,7 @@ from games._base import WOPRGame
 from games.hashi import HashiGame
 from games.lights_out import LightsOutGame
 from games.nqueens import NQueensGame
+from games.slitherlink import SlitherlinkGame
 from games.sudoku import SudokuGame
 from games.thermonuclear_war import ThermonuclearWarGame
 from games.tictactoe import TicTacToeGame
@@ -20,6 +21,7 @@ ALL_GAMES: list[WOPRGame] = [
     ThermonuclearWarGame(),
     NQueensGame(),
     HashiGame(),
+    SlitherlinkGame(),
 ]
 
 __all__ = [
@@ -30,5 +32,6 @@ __all__ = [
     "ThermonuclearWarGame",
     "NQueensGame",
     "HashiGame",
+    "SlitherlinkGame",
     "ALL_GAMES",
 ]

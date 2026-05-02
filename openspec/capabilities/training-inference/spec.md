@@ -80,6 +80,16 @@ The system shall expose a WOPR Hashi cartridge where:
 - crossing penalties are positive when orthogonal bridges share an empty grid cell
 - the canonical 5x5 puzzle converges to a connected zero-energy solution
 
+### REQ-SLITHERLINK-001: WOPR Slitherlink Ising Cartridge
+
+The system shall expose a WOPR Slitherlink cartridge where:
+- each horizontal or vertical dot-grid edge is encoded as one spin
+- spin +1 means the edge is in the loop and spin -1 means the edge is absent
+- clue penalties are zero exactly when every clued cell has its requested number of adjacent loop edges
+- dot degree penalties are zero exactly when every dot has degree 0 or degree 2
+- the all-off state receives a positive empty-loop penalty
+- the canonical 3x3 diamond puzzle has 24 spins and converges to a connected zero-energy loop
+
 ### REQ-SAMPLE-005: FPGA Ising Architecture And Register Map
 
 The system shall define a KV260-class FPGA Ising sampler architecture for
@@ -1251,6 +1261,7 @@ human-readable string of the full energy function, e.g.:
 | REQ-SAMPLE-002 | Implemented | Implemented | 6 Rust + 2 Python |
 | REQ-SAMPLE-003 | Implemented | Implemented | 2 Rust + 30+ Python (incl. parallel Ising) |
 | REQ-HASHI-001 | N/A | Implemented | 4 Python |
+| REQ-SLITHERLINK-001 | N/A | Implemented | 5 Python |
 | REQ-SAMPLE-004 | Not Started | Implemented | 8 Python |
 | REQ-SAMPLE-005 | Not Started | Implemented | 6 Python |
 | REQ-SAMPLE-006 | Not Started | Implemented | 10 Python |

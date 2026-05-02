@@ -125,7 +125,7 @@ def _initial_history() -> list[dict]:
             "role": "system",
             "text": (
                 "TYPE A COMMAND. TRY: LIST GAMES  |  PLAY SUDOKU  |  "
-                "JOSHUA  |  CHESS  |  GLOBAL THERMONUCLEAR WAR"
+                "PLAY SLITHERLINK  |  JOSHUA  |  CHESS  |  GLOBAL THERMONUCLEAR WAR"
             ),
         }
     )
