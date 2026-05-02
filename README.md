@@ -79,9 +79,11 @@ beyond CPUs. A prototype runs on a KV260 FPGA board as of April 2026.
 
 ## Headline results
 
-All benchmark numbers below are from **live GPU inference on real public
-models** (Qwen 3.5, Gemma 4), never from simulated runs. Every result is
-traceable to a checked-in experiment artifact under `results/`.
+Headline model benchmark numbers below are from **live GPU inference on real
+public models** (Qwen 3.5, Gemma 4, Qwen3.6-35B-A3B), never from simulated
+runs. Infrastructure, hardware, and adversarial-audit rows are labeled by
+artifact provenance. Every result is traceable to a checked-in experiment
+artifact under `results/`.
 
 | What we measured | Result | Source |
 |---|---|---|
@@ -124,9 +126,13 @@ traceable to a checked-in experiment artifact under `results/`.
 | ThinkPRM v2 retrain on 7,349-example PRM corpus | **AUROC=0.9946** (v1 baseline 0.9885); alpha_t=0.38 on training corpus; 7,349 step-labeled examples, 300 epochs | Exp 1111 |
 | RLVR + SSD integration — honest negative | **No improvement** over baseline; energy filter degenerate (all scores 0.0 from k=5 AND-composition); SSD requires non-degenerate energy gradient as input | Exp 1099 |
 | Energy inversion fix — AUROC=0.9774 post-retrain | Ordering restored: correct-energy 0.689 → 1.648, incorrect-energy 0.621 → 2.096; EBRM noise-filter + SOTA corpus retrain resolved OOD distribution shift | Exp 1120 |
-| GRPO + ThinkPRM v2 as explicit PRM reward (first positive) | Baseline **24% → 28%** (+4pp) on 25-question holdout; breaks 3-consecutive RLVR+SSD negative streak; AUROC=0.9946 signal used as continuous reward | Exp 1118 |
-| k=5 AND-compose ensemble — production default | **[SOSKANEnergyV3, SemEnergyProbe, ASTStructureVerifier, SemanticConsistencyVerifier, Z3MathVerifier]** wired as VerifyRepairPipeline default; SemEnergyProbe best individual AUROC=0.8964 | Exp 1121 |
-| FPGA sampler correctness audit — honest negative | **KL(FPGA ‖ Gibbs) = 3.07** (v1 parallel); sequential Glauber v3 KL=0.025; v4 Python sim KL=0.134 (above 0.05 threshold, parameter tuning ongoing) | Exps 1094/1109/1122 |
+| SOS-KAN/k=5 production fix | k=5 ensemble AUROC **0.5547 → 0.9402** after fitting corpus normalization stats; SOS-KAN individual AUROC **0.9902** | Exp 1128 |
+| GRPO + ThinkPRM v2 as explicit PRM reward | v1: **24% → 28%** (+4pp); v2: **19.15% → 27.66%** (+8.51pp) after 100 training questions, DRA diversity, and CPPO proxy reuse; eval partial at 47/50 | Exps 1118/1129 |
+| Zenil alpha_t after energy retrain | **0.38 → 0.52** on 50 live-GPU Qwen3.6-35B-A3B examples; self-learning signal improved after inversion fix | Exp 1130 |
+| Lagrangian cascade v2 | Accuracy preserved (**0.0pp delta**) with **3.2%** cost savings after adding verifier-score features; v1 had -22.86pp accuracy degradation | Exp 1131 |
+| PRM-BiasBench-style adversarial audit | k=5 ensemble caught **60/60** style, length, and format attacks with 0 attack FPs; SemEnergy alone caught 20/60 | Exp 1133 |
+| FPGA sampler correctness audit — honest negative | **KL(FPGA ‖ Gibbs) = 3.07** (v1 parallel); sequential Glauber v3 KL=0.025; v4 tuning improved **0.134 → 0.1128** but remains above 0.05 threshold | Exps 1094/1109/1122/1134 |
+| WOPR Slitherlink cartridge — honest blocked result | Not shipped: conductor pre-gate blocked the task because prior-failures metadata was missing for five matching WOPR cartridge predecessors | Exp 1136 |
 
 Deeper analysis of these — including everything that **didn't** work and
 why — is in the [technical report](docs/technical-report.md). Per-milestone
@@ -161,8 +167,8 @@ claim we publish.
 ## Where to go next
 
 - **[Technical report](docs/technical-report.md)** — the full research arc
-  across ~1,126 experiments across 87 completed milestones, structured as six phases with
-  a plain-English timeline of what we tried, what failed, what stuck.
+  across ~1,138 experiments across 88 completed milestones, with a
+  plain-English timeline of what we tried, what failed, what stuck.
 - **[Roadmap](docs/roadmap.md)** — current milestone, upcoming milestones,
   hardware track, and Phase 3 (Kona-parity foundation-model) direction.
 - **[`openspec/capabilities/`](openspec/capabilities/)** — per-capability

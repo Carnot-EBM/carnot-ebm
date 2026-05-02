@@ -299,11 +299,11 @@
       <a href="https://github.com/Carnot-EBM/carnot-ebm/blob/main/docs/getting-started.md" class="btn btn-primary">Get Started</a>
       <a href="technical-report.html" class="btn btn-secondary">How it works</a>
     </div>
-    <div class="stats-bar" aria-label="Live-GPU headline numbers">
-      <div class="stat"><div class="stat-num">99.3%</div><div class="stat-label">Wrong code detected</div></div>
-      <div class="stat"><div class="stat-num">+36pp</div><div class="stat-label">HumanEval (SOTA 35B model)</div></div>
-      <div class="stat"><div class="stat-num">+4.9pp</div><div class="stat-label">Typed-constraint tasks</div></div>
-      <div class="stat"><div class="stat-num">1 line</div><div class="stat-label">pip install carnot</div></div>
+    <div class="stats-bar" aria-label="Project headline numbers">
+      <div class="stat"><div class="stat-num">1,138</div><div class="stat-label">Experiments</div></div>
+      <div class="stat"><div class="stat-num">88</div><div class="stat-label">Completed milestones</div></div>
+      <div class="stat"><div class="stat-num">20,845</div><div class="stat-label">Python tests collected</div></div>
+      <div class="stat"><div class="stat-num">0.9402</div><div class="stat-label">k=5 ensemble AUROC</div></div>
     </div>
   </div>
 </section>
@@ -445,8 +445,9 @@
           For chain-of-thought answers, each step can be checked against the
           ones before it. A verified-fact memory catches contradictions that
           span several steps &mdash; the classic "confident but inconsistent"
-          failure. Works across the sampling backends the project ships
-          (KAN for accuracy, Ising for speed).
+          failure. The production default now uses a five-verifier
+          AND-compose ensemble with SOS-KAN, SemEnergy, AST, semantic
+          consistency, and Z3 checks.
         </p>
       </div>
     </div>
@@ -591,10 +592,28 @@
         <div class="r-stats"><span class="r-before">7,329 pairs (from 216); 781 SOTA outputs added in v5; SOS-KAN 0.9899, ThinkPRM 0.9885, NK-KAEM 0.9875</span> <span class="r-after">74-percentile-point lift &mdash; Exps 1055/1057/1119</span></div>
       </div>
       <div class="r-card">
+        <span class="r-tag">Production ensemble &mdash; SOS-KAN normalization fix</span>
+        <h3 class="r-title">k=5 AND-compose AUROC: 0.5547 &rarr; 0.9402</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 94.02%; background: #22c55e;"></div></div>
+        <div class="r-stats"><span class="r-before">SOS-KAN individual AUROC=0.9902 after corpus-fitted normalization</span> <span class="r-after">Milestone .88 &mdash; Exp 1128</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Self-learning &mdash; GRPO + ThinkPRM v2</span>
+        <h3 class="r-title">19.15% &rarr; 27.66% (+8.51pp)</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 27.66%; background: #22c55e;"></div></div>
+        <div class="r-stats"><span class="r-before">100 training questions; training budget no longer hit; eval partial at 47/50</span> <span class="r-after">Milestone .88 &mdash; Exp 1129</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Continuous self-learning &mdash; Zenil alpha_t</span>
+        <h3 class="r-title">alpha_t: 0.38 &rarr; 0.52 after retrain</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 52%; background: #a855f7;"></div></div>
+        <div class="r-stats"><span class="r-before">50 live-GPU Qwen3.6-35B-A3B examples; inversion-fixed verifier used</span> <span class="r-after">Milestone .88 &mdash; Exp 1130</span></div>
+      </div>
+      <div class="r-card">
         <span class="r-tag">Live benchmark &mdash; SOTA 35B model (Qwen3.6-35B-A3B, dual RTX 3090)</span>
         <h3 class="r-title">HumanEval pass@1: 0% &rarr; 36% after Carnot correction</h3>
         <div class="r-meter"><div class="r-bar" style="width: 36%; background: #22c55e;"></div></div>
-        <div class="r-stats"><span class="r-before">First positive delta with a SOTA instruction-tuned model; GSM8K extraction still failing (VeriCoT TP=0)</span> <span class="r-after">Milestone .84 &mdash; Exp 1079</span></div>
+        <div class="r-stats"><span class="r-before">First positive delta with a SOTA instruction-tuned model; GSM8K extraction fixed later in Exp 1101</span> <span class="r-after">Milestone .84 &mdash; Exp 1079</span></div>
       </div>
       <div class="r-card">
         <span class="r-tag">Step-level PRM dataset &mdash; MCTS-based labeling from FoVer corpus</span>
@@ -615,16 +634,22 @@
         <div class="r-stats"><span class="r-before">SOTA models write "47 + 28 = 75" not prose; added _EQ_INLINE_RE to vericot_validator.py</span> <span class="r-after">Closes two-milestone TP=0 blocker &mdash; Exp 1101</span></div>
       </div>
       <div class="r-card">
-        <span class="r-tag">WOPR gallery &mdash; N-Queens Ising cartridge (8-Queens)</span>
-        <h3 class="r-title">E=0 solution found; 4 games live on HuggingFace Spaces</h3>
+        <span class="r-tag">WOPR gallery &mdash; Hashi + N-Queens Ising cartridges</span>
+        <h3 class="r-title">Hashi E=0; 6 games live on HuggingFace Spaces</h3>
         <div class="r-meter"><div class="r-bar" style="width: 100%; background: #0ea5e9;"></div></div>
-        <div class="r-stats"><span class="r-before">64-spin Ising formulation; Sudoku + GTW + Lights Out + N-Queens all deployed</span> <span class="r-after">Milestone .85 &mdash; Exp 1097</span></div>
+        <div class="r-stats"><span class="r-before">Sudoku, GTW, Lights Out, N-Queens, Hashi, plus one additional cartridge</span> <span class="r-after">Milestones .85/.87 &mdash; Exps 1097/1124/1125</span></div>
       </div>
       <div class="r-card">
         <span class="r-tag">Honest negative &mdash; FPGA sampler correctness audit (Phase 2a)</span>
-        <h3 class="r-title">KL(FPGA &#8214; Gibbs) = 3.07 (threshold 0.05)</h3>
-        <div class="r-meter"><div class="r-bar" style="width: 16%; background: #ef4444;"></div></div>
-        <div class="r-stats"><span class="r-before">KV260 sampler does not match Boltzmann distribution; software Gibbs and GPU Ising agree (KL&asymp;0)</span> <span class="r-after">Distribution mismatch confirmed &mdash; Exp 1094</span></div>
+        <h3 class="r-title">v4 KL improved 0.134 &rarr; 0.1128, still above 0.05 gate</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 22%; background: #ef4444;"></div></div>
+        <div class="r-stats"><span class="r-before">v1 parallel KL=3.07; v3 sequential KL=0.025; v4 topology still unresolved</span> <span class="r-after">Exps 1094/1109/1122/1134</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Adversarial audit &mdash; PRM-BiasBench-style attacks</span>
+        <h3 class="r-title">k=5 ensemble catches 60/60 attacks</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 100%; background: #22c55e;"></div></div>
+        <div class="r-stats"><span class="r-before">Style, length, and format attacks; SemEnergy alone caught 20/60</span> <span class="r-after">Milestone .88 &mdash; Exp 1133</span></div>
       </div>
     </div>
 
@@ -654,14 +679,10 @@
     <h2 class="section-title">Carnot position paper, draft v3</h2>
     <p class="section-desc">
       An architectural framework for mapping the empirical bounds of
-      LLM verification. v3 foregrounds the four .85-milestone honest
-      negatives &mdash; the verifier correlation ceiling
-      (D<sub>eff</sub>=1.603, k*&le;3.125 by the Welch / Rankin
-      Simplex bound), the exact-sampling detailed-balance limit
-      (KL=3.07 retraction; rigorous 15.6&times; speedup at &chi;&le;4
-      vs optimized C++), the OOD energy-ordering inversion on SOTA
-      outputs, and the pre-filtered self-distillation collapse
-      &mdash; as the contribution. arXiv submission target
+      LLM verification. The current draft includes the .88 findings:
+      the SOS-KAN/k=5 fix, GRPO v2 positive result, alpha_t improvement,
+      cascade v2 reroute, and the KV260 v4 KL caveat. The PDF now compiles
+      with tectonic; manual arXiv upload remains pending before
       <strong>2026-05-15</strong>.
     </p>
     <div class="hero-actions" style="justify-content: flex-start;">
@@ -670,8 +691,8 @@
       <a href="arxiv-metadata.yaml" class="btn btn-secondary">Submission metadata</a>
     </div>
     <p style="margin-top: 1.5rem; font-size: 0.9rem; color: var(--text-muted);">
-      <em>Paper (arXiv preprint &mdash; submitted 2026-05-15):
-      placeholder until upload completes.</em>
+      <em>Paper PDF compiled 2026-05-02; arXiv upload pending until the
+      manual submission step is complete.</em>
     </p>
   </div>
 </section>
