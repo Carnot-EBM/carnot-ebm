@@ -1,27 +1,60 @@
 # Active Inference Phase-4 Architectural Bridge
 
 **Status:** Committed research direction (2026-05-02 user directive).
-Runs as Phase 4 alongside Phase 3 (DBAE-EBM-on-LLM), not as a
-replacement. Decision-changing within 1-2 milestones.
+**Sharpened 2026-05-02 07:10Z** based on the "Continuous vs Discrete
+Paradigms" deep-research document: this is NOT a paradigm pivot, it
+is an **inference-mode extension** of Carnot's existing Phase 1+3
+infrastructure.
+
+The original framing (Phase 4 as a "separate active-inference agent
+built on PyMC") was a category error. The mathematical equivalence
+`score(x) = ∇_x log p(x) = -∇_x E(x)` means Carnot's existing energy
+gradient IS the score function for both HMC sampling AND diffusion-
+of-thought refinement. We don't need a separate paradigm — we need
+a different sampler on top of the existing `∇E`.
 
 **Date drafted:** 2026-05-02
-**Source:** Themesis Seed IQ public demonstration on ARC-AGI-3
-(0.95 demo + 1.00 reported leaderboard); EBT/ARC-AGI-3 document
-positioning Carnot-EBM as a named exemplar of the post-autoregressive
-paradigm shift.
+**Date sharpened:** 2026-05-02 07:10Z
+**Sources:**
+- Themesis Seed IQ public demonstration on ARC-AGI-3
+  (0.95 demo + 1.00 reported leaderboard, 115% human action-efficiency)
+- EBT/ARC-AGI-3 document positioning Carnot-EBM as paradigm exemplar
+- "Continuous vs Discrete Paradigms" deep-research document
+  (the score=energy-gradient equivalence)
 
 ---
 
-## The hypothesis
+## The hypothesis (sharpened 2026-05-02 07:10Z)
 
-> **Carnot's k=N AND-composed verifier ensemble can serve as a
-> calibrated approximation to the variational free-energy lower
-> bound under Karl Friston's Free Energy Principle.**
+> **Carnot's existing energy landscape — defined by the k=N AND-
+> composed verifier ensemble plus the DBAE-EBM — provides the
+> exact `∇E` gradient required for both HMC sampling and diffusion-
+> of-thought iterative refinement. Phase 4 swaps the sampler, not
+> the paradigm.**
 
-If this hypothesis holds, Carnot's verify-repair loop is
-mathematically equivalent to active inference, just framed in
-machine-learning terminology rather than computational neuroscience
-terminology. Phase 4 tests this directly.
+The mathematical bridge is exact, not approximate:
+
+```
+score(x) = ∇_x log p(x) = -∇_x E(x)   [for Boltzmann-distributed EBM]
+```
+
+A diffusion model's reverse denoising process uses `score(x)` to
+move samples toward high-probability regions. HMC uses the same
+`∇_x log p(x)` as the "force" pushing the system toward higher
+probability. Carnot's energy function provides this gradient natively.
+
+Therefore:
+
+- **Phase 1 today** (Langevin/Gibbs sampler on `∇E`) is one
+  point in the family of `∇E`-using inference algorithms.
+- **Diffusion of Thought** is the same `∇E` with a different
+  sampling schedule (forward noise → reverse denoise).
+- **HMC sampling** is the same `∇E` with momentum-augmented
+  dynamics (avoids random-walk inefficiency).
+
+Phase 4 tests whether HMC + DoT-style sampling on Carnot's
+existing `∇E` reproduces Seed IQ's claimed action-efficiency on
+ARC-AGI-3, which would empirically validate the equivalence.
 
 ## Mathematical bridge
 
@@ -77,56 +110,77 @@ The verify-repair iteration count is therefore the number of
 HMC/Langevin steps in active-inference language. The k=5 ensemble's
 calibration is the FEP's `p(x, z)` accuracy.
 
-## What's the same vs. different vs. Phase 3
+## What's the same vs. different (revised 2026-05-02 07:10Z)
 
-| Component | Phase 3 (DBAE-EBM) | Phase 4 (active inference) |
-|---|---|---|
-| **Energy primitive** | EBM weights `θ` produce `E(x, y)` | Generative model `p(x, z)` produces `F[q]` |
-| **Substrate** | LLM base + DBAE encoder + Latent EBM | Continuous belief field on small generative model |
-| **Sampler** | Langevin / Gibbs on Ising | HMC on continuous manifold |
-| **Inference loop** | Verify → repair → verify | Perception update → action update → re-observe |
-| **Verifier role** | Loss / training signal for EBM | Likelihood for `p(x, z)` |
-| **Tokens** | LLM tokens | Zero (per Seed IQ design) |
-| **Test-time compute** | Refinement steps + verifier evals | HMC chain length |
-| **Hardware fit** | Z1 (Ising), KV260 (sampler) | Photonic (continuous wave) |
+The earlier table treated Phase 4 as a separate paradigm with its
+own substrate, generative model, and energy primitive. Per the
+score=energy-gradient equivalence, that framing was wrong. The
+correct table:
 
-## The minimal prototype
+| Component | Carnot today (Phase 1) | Phase 3 prototype | Phase 4 inference modes |
+|---|---|---|---|
+| **Energy landscape** | k=5 verifier ensemble | + DBAE-EBM | UNCHANGED — same `E(x)` |
+| **Energy gradient `∇E`** | Computed on demand | Computed on demand | UNCHANGED — same `∇E` |
+| **Sampler** | Langevin / Gibbs / direct rejection | + Langevin on latent | **HMC + diffusion-of-thought** |
+| **Inference loop** | Verify → repair | Verify → repair → DBAE refine | + HMC trajectories on `∇E` |
+| **Tokens** | LLM tokens | LLM tokens | UNCHANGED |
+| **Test-time compute** | Verifier evals + repair iterations | + Langevin steps | + HMC steps + diffusion timesteps |
+| **Hardware fit** | KV260 sampler validates `∇E` eval | Z1 thermodynamic Ising | Z1 + photonic (continuous gradient flow) |
+
+**The crucial observation:** every "Phase 4" change is in the right-
+most column only. The energy landscape, the verifier ensemble, the
+DBAE encoder, the LLM substrate — all unchanged from Phase 3. We
+add HMC and diffusion-of-thought as new inference modes alongside
+the existing Langevin/Gibbs.
+
+This makes Phase 4 lower-risk than originally framed:
+- ✅ No new generative model class
+- ✅ No new training pipeline
+- ✅ No new verifier suite
+- ✅ Reuses Carnot's existing JAX backend (HMC primitives in NumPyro)
+- ✅ Falsifiable in 1 milestone instead of 2
+
+## The minimal prototype (revised 2026-05-02 07:10Z)
 
 ### Goal
 
-Test whether a tiny active-inference agent (no transformer) using
-Carnot's k=N verifier ensemble as the FEP likelihood can match
-or approach Seed IQ's published numbers on a small ARC-AGI-3 subset.
+Test whether HMC sampling on Carnot's existing `∇E` (k=5 verifier
+ensemble + DBAE-EBM) reproduces Seed IQ's action-efficiency on a
+small ARC-AGI-3 subset. Same energy landscape, different sampler.
 
 ### Specification
 
-**Generative model `p(x, z)`:**
-- `z`: latent state representing inferred environmental priors
-  (invariances, constraints, transition rules, affordances)
-- `x`: observation = current grid state + action history
-- Parameterization: small Bayesian network or learned latent space
-  (e.g., 16-dim continuous vector with structured priors)
+**Energy function — UNCHANGED from Phase 3:**
+- `E(x, y) = -log s_ensemble(x, y)` where `s_ensemble` is the k=5
+  AND-composed verifier score on candidate output `y` given prompt `x`.
+- Post-exp1128: ensemble AUROC = 0.94. Calibration error bounded.
+- For ARC-AGI-3: `E` extends to evaluate (state, candidate action)
+  pairs by treating the action's predicted outcome as the candidate
+  output.
 
-**Variational posterior `q(z)`:**
-- Gaussian with diagonal covariance (mean-field assumption)
-- Initialized from prior; updated via HMC
+**Gradient `∇_y E(x, y)` — exists natively:**
+- Computed via autograd on the verifier ensemble's neural components
+  (semantic embedding, ThinkPRM, etc.) and finite-difference for
+  symbolic verifiers (Z3, JSON schema). Carnot's existing JAX
+  backend supports this.
 
-**Likelihood from Carnot:**
-- `p(x | z) ∝ exp(-E_carnot(x, action(z)))` where `E_carnot` is the
-  k=N AND-composed energy on the candidate action's predicted
-  outcome
-- This is the architectural bridge — Carnot's existing infrastructure
-  (k=5 ensemble at AUROC=0.94 post-exp1128) provides the likelihood
+**HMC sampler — NEW:**
+- Numpyro `HMC` primitive on `y` with `∇E` as the negative score.
+- Step size, momentum, leapfrog steps tuned per Numpyro defaults.
+- Chain length: K HMC steps per action selection. Sweep K ∈ {25, 100, 400}.
 
-**Action selection:**
-- Sample `K` candidate actions
-- Compute `E_carnot(x, y_i)` for each predicted outcome `y_i`
-- Take action with lowest expected free energy
+**Action selection (ARC-AGI-3 application):**
+- For each candidate action: roll out predicted next-state `s'` via
+  the environment simulator.
+- Compute `E_carnot(x, s')` using the verifier ensemble.
+- Use HMC to sample from the posterior `p(action | x) ∝ exp(-E)`.
+- Take MAP action (lowest energy in the chain).
 
-**Sampler:**
-- PyMC or JAX-NumPyro for HMC on `q(z)`
-- ~100-1000 HMC steps per action selection
-- No GPU required for prototype scale
+**Diffusion-of-Thought mode (separate inference variant):**
+- Initialize `y` from random noise.
+- Iteratively refine via `y_{t-1} = y_t - η ∇_y E(x, y_t) + noise(σ_t)`
+  for T timesteps (forward noise schedule reversed).
+- Sweep T ∈ {1, 5, 25, 125} for compute/accuracy curve.
 
 ### Acceptance criteria
 
