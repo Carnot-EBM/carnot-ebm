@@ -120,7 +120,7 @@ artifact under `results/`.
 | First positive live benchmark with SOTA IT model on HumanEval (Qwen3.6-35B-A3B) | HumanEval pass@1 **0% → 36%** after Carnot correction (first-ever positive delta with a SOTA instruction-tuned model) | Exp 1079 |
 | Step-level PRM dataset at scale (MCTS-based labeling, full FoVer corpus) | **7,349 step-labeled examples** generated (target was 2,000); largest PRM dataset in project history | Exp 1084 |
 | SemEnergy probe v1 (logit-space energy, arXiv 2508.14496) | **AUROC=0.948**, inference 0.017 ms/example (294x faster than 5 ms target); principled information-theoretic grounding for logit-spill signal | Exp 1096 |
-| WOPR gallery — Hashi cartridge (6 games live) | **E=0** at convergence; gallery now has 6 cartridges (Sudoku, GTW, Lights Out, N-Queens, Hashi + 1 more) live on HuggingFace Spaces | Exps 1097/1124/1125 |
+| WOPR gallery — Hashi cartridge (6 games live) | **E=0** at convergence; gallery now has 6 cartridges (Sudoku, Tic-Tac-Toe, Lights Out, Global Thermonuclear War, N-Queens, Hashi) live on HuggingFace Spaces | Exps 1097/1124/1125 |
 | Phase 1c verifier joint null-space measurement | **joint_null_space_fraction=0.0** (acceptance criterion met); max_r_correlation=0.656 — verifiers correlated, AND-composition diversity expansion required before k=15 scales | Exp 1093 |
 | GSM8K VeriCoT extraction fix (equation-style CoT) | **TP rate: 0.5 → 1.0**; SOTA models write "47 + 28 = 75" not prose; added `_EQ_INLINE_RE` to vericot_validator.py; closes two-milestone TP=0 blocker | Exp 1101 |
 | ThinkPRM v2 retrain on 7,349-example PRM corpus | **AUROC=0.9946** (v1 baseline 0.9885); alpha_t=0.38 on training corpus; 7,349 step-labeled examples, 300 epochs | Exp 1111 |
