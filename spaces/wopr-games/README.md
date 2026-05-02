@@ -43,17 +43,41 @@ You can:
 
 ## Cartridges shipped
 
-- ✅ **Sudoku v1** — the canonical constraint-satisfaction demo
-- ✅ **Tic-Tac-Toe** — the literal WarGames game (forced draw)
-- ✅ **Global Thermonuclear War** — *"A STRANGE GAME. THE ONLY WINNING MOVE IS NOT TO PLAY."*
-- ✅ **Lights Out** — XOR-based grid puzzle (perfect Carnot-Ising fit)
+- **Sudoku v1** — the canonical constraint-satisfaction demo
+- **Tic-Tac-Toe** — the literal WarGames game (forced draw)
+- **Global Thermonuclear War** — *"A STRANGE GAME. THE ONLY WINNING MOVE IS NOT TO PLAY."*
+- **Lights Out** — XOR-based grid puzzle (perfect Carnot-Ising fit)
+- **N-Queens** — classical combinatorial CSP; Ising spins encode queen placement
+- **Hashi** — bridge-count CSP; planar graph connectivity via spin variables (exp1124)
 
 ## Cartridges planned
 
 See `openspec/change-proposals/wopr-games-gallery-extension.md` in
-the main repo for the full 16-cartridge plan: N-Queens, Connect
-Four, Nonograms, Conway's Life-reverse, Slitherlink, Hex, Hashi,
-Sokoban, Cryptarithmetic, Mastermind, optionally Chess.
+the main repo for the full 16-cartridge plan: Connect Four,
+Nonograms, Conway's Life-reverse, Slitherlink, Hex, Sokoban,
+Cryptarithmetic, Mastermind, optionally Chess.
+
+## Benchmark results (live GPU, 2026-05-01)
+
+All results from GPU-verified experiments on the Carnot FoVer evaluation corpus.
+
+| Metric | Value | Source |
+|--------|-------|--------|
+| ThinkPRM v2 AUROC (eval 500 FoVer) | 0.9946 | exp1111 |
+| ThinkPRM v1 AUROC baseline | 0.9885 | exp1111 |
+| AUROC improvement v1 -> v2 | +0.0061 | exp1111 |
+| k=5 AND-composition max pairwise r | 0.462 | exp1108/exp1121 |
+| k=5 AND-composition production deployed | yes | exp1121 |
+| Energy verifier retrain AUROC (post-inversion fix) | 0.9774 | exp1120 |
+| Energy inversion fixed after retrain | yes | exp1120 |
+| LLM failure exemplar corpus size | 36 exemplars | exp1112 |
+| Mathematical-objective category TP rate | 100% (arithmetic+code) | exp1112 |
+| Cascade TP rate (all 12 categories) | 80.6% | exp1112 |
+
+The k=5 AND-composition empirically validates the k_max~7-8 architectural
+assumption: 14 of 15 pairwise correlations fall below the r=0.5 threshold,
+confirming that cross-mechanism diversity (Z3 + AST + Semantic) drives
+ensemble decorrelation.
 
 ## Architecture
 
@@ -67,7 +91,9 @@ spaces/wopr-games/
 │   ├── sudoku.py            # Sudoku cartridge
 │   ├── tictactoe.py         # Tic-Tac-Toe cartridge
 │   ├── lights_out.py        # Lights Out cartridge
-│   └── thermonuclear_war.py # The non-game game
+│   ├── thermonuclear_war.py # The non-game game
+│   ├── nqueens.py           # N-Queens CSP cartridge
+│   └── hashi.py             # Hashi bridge-count cartridge (exp1124)
 ├── requirements.txt
 └── README.md
 ```
