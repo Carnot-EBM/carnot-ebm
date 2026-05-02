@@ -240,9 +240,15 @@ checked into <code>results/operational_retro_*.json</code>.</p>
 <li><strong>PRM-BiasBench-style adversarial audit:</strong> the k=5 ensemble caught
   <strong>60/60</strong> style, length, and format attacks with zero attack false positives;
   SemEnergy alone caught 20/60 (Exp 1133).</li>
+<li><strong>Goodfire exemplar cascade measurement:</strong> Tier-3 k=5 caught <strong>36/36</strong>
+  failure exemplars across 12 categories, while standalone low-tier rates
+  remained weak (SemEnergy=0.2222, standalone Z3=0.0833) (Exp 1132).</li>
 <li><strong>KV260 v4 remains an honest negative:</strong> parameter tuning improved KL
   <strong>0.134 → 0.1128</strong>, but the sampler is still above the 0.05 correctness gate
   (Exp 1134).</li>
+<li><strong>arXiv package v3:</strong> <code>docs/arxiv-paper/main.pdf</code> compiled with tectonic
+  and the source bundle was verified; manual upload remains pending before
+  2026-05-15 (Exps 1127/1135).</li>
 </ul>
 <p><strong>Claims that did not survive audit</strong> are kept in the research record as
 negative findings and documented alongside the audits that surfaced them
@@ -1694,7 +1700,7 @@ Verified + Repaired Answer
 </tr>
 </tbody>
 </table>
-<p><strong>Total:</strong> <strong>20,845</strong> Python test items are currently collected in the repo (<code>.venv/bin/python -m pytest tests/python --collect-only -q --no-header</code>, 3 skipped during collection). This is a collection count, not a claim that the full suite passes; full validation remains command-specific and is documented in the relevant experiment artifacts.</p>
+<p><strong>Total:</strong> <strong>20,903</strong> Python test items are currently collected in the repo (<code>.venv/bin/pytest --collect-only -q</code>, 3 skipped during collection). This is a collection count, not a claim that the full suite passes; full validation remains command-specific and is documented in the relevant experiment artifacts.</p>
 <hr>
 <h2 id="11-reproduction">11. Reproduction</h2>
 <pre><code class="language-bash"># Clone and setup
@@ -2771,7 +2777,7 @@ amplify, while being transparent about the 67% of errors that require richer sem
 <p><strong>Milestone .87 summary:</strong> 11/11 criteria met. Wall time 219 min — the fastest complete milestone in project history, representing a 74% improvement from the 3,415-minute .58 baseline. Slowest experiment: GRPO training at 29 min (training_wall_budget_hit=True). The infrastructure bottlenecks fixed in exp1117 are now expected to save ~111 min/milestone going forward.</p>
 <hr>
 <h3 id="phase-13-k5-repair-grpo-v2-and-adversarial-bias-audit-milestone-88-exps-11271138">Phase 13 — k=5 Repair, GRPO v2, and Adversarial Bias Audit (Milestone .88, Exps 1127–1138)</h3>
-<p>Milestone 2026.04.88 met <strong>10 of 11 success criteria</strong> in <strong>145 wall-clock minutes</strong>. The missed criterion was the Slitherlink WOPR cartridge, which correctly blocked at the conductor pre-gate because the task omitted required <code>prior_failures</code> metadata for five matching WOPR cartridge predecessors.</p>
+<p>Milestone 2026.04.88 met <strong>10 of 11 success criteria</strong> in a <strong>145-minute active execution window</strong>. The full operational retro records <strong>794 minutes / 209 experiment events</strong> for the surrounding milestone process. The missed criterion was the Slitherlink WOPR cartridge, which correctly blocked at the conductor pre-gate because the task omitted required <code>prior_failures</code> metadata for five matching WOPR cartridge predecessors.</p>
 <p><strong>arXiv PDF compilation (Exp 1127):</strong> <code>docs/arxiv-paper/main.pdf</code> compiled successfully with tectonic and the v3 source bundle was verified. arXiv submission is not complete: manual upload remains pending before the 2026-05-15 deadline. The honest verdict is <code>pdf_compiled_upload_pending</code>.</p>
 <p><strong>SOS-KAN/k=5 ensemble repair (Exp 1128):</strong> The k=5 production ensemble shipped in Exp 1121 but benchmarked poorly because SOS-KAN used fixed inference normalization anchors instead of the training corpus statistics. Exp 1128 added corpus-fitted normalization. k=5 AUROC improved <strong>0.5547 → 0.9402</strong>, and SOS-KAN individual AUROC reached <strong>0.9902</strong>.</p>
 <p><strong>GRPO energy PRM v2 (Exp 1129):</strong> The v2 GRPO run used ThinkPRM v2 as a continuous reward, DRA diversity penalty, and CPPO proxy reuse. It completed <strong>100 training questions</strong> without hitting the 600s training budget. Evaluation was partial at 47/50 questions because the evaluation wall budget was hit, but the held-out result was positive: baseline <strong>19.15%</strong>, trained <strong>27.66%</strong>, improvement <strong>+8.51pp</strong>.</p>

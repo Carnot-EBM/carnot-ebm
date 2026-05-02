@@ -4,6 +4,110 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-05-02 Supplemental Scan (Milestone 2026.04.89 Planning)
+
+### NRGPT: An Energy-based Alternative for GPT
+- **Paper:** arXiv 2512.16762 (December 2025); ICLR 2026 paper page also visible on
+  OpenReview.
+- **Source:** https://arxiv.org/abs/2512.16762 and
+  https://openreview.net/pdf?id=B3Muyi2zgo
+- **What:** Recasts a GPT-style causal language model as an energy-based dynamical
+  system where the inference update explores token states on an energy landscape. The
+  authors report competitive small-language-model results on Shakespeare, ListOPS, and
+  OpenWebText, with evidence that the energy landscape regularizes overfitting.
+- **Relevance to Carnot:** Strengthens the Phase 3 bridge: Carnot does not have to
+  leap directly from verifier wrapper to full EBT. A minimal GPT-to-energy rewrite can
+  be studied as an intermediate "energy-native autoregressive" baseline using FoVer
+  traces and local GGUF generations.
+- **Concrete experiment:** Add a small NRGPT-inspired recurrent energy block to the
+  Phase 3 continuous EBM prototype and compare ListOPS/FoVer trace energy ordering
+  against the existing DBAE/continuous-EBM baseline.
+- **When to incorporate:** Milestone .90+ after .89 closes the arXiv and certificate
+  blockers; use as a Phase 3 prototype seed, not a .89 critical-path task.
+
+### Transformers as Intrinsic Optimizers: Forward Inference through the Energy Principle
+- **Paper:** arXiv 2511.00907 (November 2025).
+- **Source:** https://arxiv.org/abs/2511.00907
+- **What:** Presents a unified energy view of transformer attention: standard softmax
+  attention can be interpreted as Helmholtz-free-energy minimization, and variants based
+  on momentum, Nesterov acceleration, and Newton-style updates can be derived from the
+  same framework.
+- **Relevance to Carnot:** EBT-Policy already motivates adaptive Langevin/dynamic-stop
+  inference; this paper gives a transformer-internal analogue. Carnot's Phase 3
+  continuous-latent prototype should test whether Nesterov-style energy updates reduce
+  the number of verifier-gradient refinement steps.
+- **Concrete experiment:** In a future continuous-EBM prototype, compare plain
+  gradient descent, momentum, Nesterov, and approximate-Newton latent repair on FoVer
+  trace embeddings. Metrics: energy decrease per step, invalid-output residual, and
+  alpha_t sensitivity.
+- **When to incorporate:** Phase 3 prototype follow-up after .89's bounded-verification
+  work.
+
+### DiffuTruth / The Energy of Falsehood
+- **Paper:** arXiv 2602.11364 (February 2026).
+- **Source:** https://arxiv.org/abs/2602.11364 and
+  https://huggingface.co/papers/2602.11364
+- **What:** Uses a discrete text diffusion reconstruction stress test and an NLI critic
+  to define a semantic energy for factual claims. Reports unsupervised FEVER AUROC 0.725
+  and improved zero-shot generalization on HOVER.
+- **Relevance to Carnot:** This is a concrete thermodynamic factuality probe that is
+  orthogonal to k=5 math/code verifiers and HalluGuard routing. It is most useful for
+  TruthfulQA/HaluEval-style factual grounding, where Carnot's current strong signals are
+  weaker than in arithmetic/code.
+- **Concrete experiment:** Add a DiffuTruth-style "semantic reconstruction stress" probe
+  for factual claim exemplars and measure whether it raises Goodfire cheap-tier TP rate
+  without increasing false positives.
+- **When to incorporate:** Milestone .90 factual-grounding phase, or .89 only if the
+  Goodfire cheap-tier distillation task needs another feature source.
+
+### EBT Metacognitive Reasoning for Code Generation
+- **Paper:** OpenReview MetaGenAI 2025 poster, "A Pipeline for Assessing Metacognitive
+  Reasoning in Energy-Based Transformers while Generating Code" (published November
+  2025).
+- **Source:** https://openreview.net/forum?id=FrY7CU3U3p
+- **What:** Proposes feedback-aware EBT inference for code generation, dynamically
+  scaling the number of forward passes based on external feedback and optional
+  human-in-the-loop control.
+- **Relevance to Carnot:** Carnot's HumanEval win came from verification/repair outside
+  the generator. This paper suggests a benchmark shape for Phase 3: the energy model
+  should decide when more "thinking depth" is warranted during code repair, not use a
+  fixed iteration count.
+- **Concrete experiment:** Extend the HumanEval repair harness with an adaptive
+  energy-depth controller: stop when verifier energy delta plateaus; allocate more
+  repair iterations only when AST/Z3 residuals remain high.
+- **When to incorporate:** Milestone .90 code-verification scaling, after .89 CCTU
+  adapter broadens agentic benchmark coverage.
+
+### MCP Solver: Symbolic Solvers via Model Context Protocol
+- **Repo / paper:** `szeider/mcp-solver`; companion SAT 2025 paper "Bridging Language
+  Models and Symbolic Solvers via the Model Context Protocol."
+- **Source:** https://github.com/szeider/mcp-solver
+- **What:** MCP server exposing MiniZinc, PySAT, MaxSAT, Z3, and Clingo tools to LLMs
+  through a common edit/solve interface.
+- **Relevance to Carnot:** CCTU and tool-use verification need executable validators
+  and symbolic backends. Carnot already has an MCP server; this repo offers a direct
+  integration pattern for solver-backed tool-use constraints without inventing another
+  protocol.
+- **Concrete experiment:** In the CCTU adapter, compare Carnot's existing Z3 verifier
+  path to an MCP-solver-style backend shim for MiniZinc/PySAT tasks.
+- **When to incorporate:** Milestone .89 exp1144 implementation detail or .90
+  tool-use broadening.
+
+### PyCSP3 Models Repository
+- **Repo:** `xcsp3team/PyCSP3-models`
+- **Source:** https://github.com/xcsp3team/PyCSP3-models
+- **What:** MIT-licensed repository with 400+ CSP/COP models and data, categorized
+  into academic, crafted, realistic, recreational, and single-instance problem families.
+- **Relevance to Carnot:** Provides a broad, maintained source of constraint problems
+  for WOPR cartridge hardness audits and RandCSPBench-style easy-instance avoidance.
+  It is especially useful for adding non-puzzle industrial/academic CSPs to the Ising
+  verifier benchmark suite.
+- **Concrete experiment:** Add a PyCSP3 import/translation audit to the WOPR/CSP harness:
+  select 10 small CSPs, translate to Carnot energy terms, and compare against a classical
+  solver baseline.
+- **When to incorporate:** Milestone .90+ after Slitherlink rescue; use as benchmark
+  expansion rather than blocking .89.
+
 ## 2026-05-02 arxiv/OpenReview Scan (Milestone 2026.04.89 Planning)
 
 ### BEAVER: An Efficient Deterministic LLM Verifier
