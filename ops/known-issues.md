@@ -142,6 +142,110 @@ graphics, or when a contributor offers to do the integration.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### NEW 2026-05-02 (06:25Z): EBT/ARC-AGI-3 Paradigm-Shift Tasks (4 candidate tasks)
+
+**Background:** the EBM/EBT/ARC-AGI document
+(local: `~/.claude/uploads/.../EBM_EBT_Reasoning_and_ARCAGI.pdf`)
+positions Carnot-EBM as a named exemplar of the post-autoregressive
+paradigm shift, alongside the Seed IQ system. The document outlines
+empirical anchors and architectural components Carnot can adopt.
+The most urgent claim: **Seed IQ scored 100% on ARC-AGI-3 with 115%
+human action-efficiency** (2,674 actions vs human baseline 7,534-8,073),
+while frontier autoregressive LLMs all scored below 1% (Gemini 3.1 Pro
+0.37%, GPT-5.4 0.26%, Opus 4.6 0.25%, Grok-4.20 0.00%).
+
+If the Seed IQ claim is real, it is the most consequential data point
+in the field — and forces a pivot decision (active inference + topological
+geometry vs. Carnot's current LLM-based path). Verify before committing.
+
+**The 4 candidate tasks the .90+ planner MUST consider:**
+
+1. **`exp11XX-seed-iq-arc-agi-3-verification`**
+   Goal: independently verify the Seed IQ 100% ARC-AGI-3 leaderboard
+   claim. Fetch the public ARC-AGI-3 leaderboard at
+   https://arcprize.org/leaderboard, cross-reference the Seed IQ
+   (Active Inference) entry, and document: (a) is the score real,
+   (b) what's the action-count efficiency, (c) what's the verification
+   provenance.
+   Acceptance: independent screenshot + page-fetch of the leaderboard
+   showing Seed IQ score + action count; verdict
+   `seed_iq_100pct_verified` or `seed_iq_unverified_marketing` or
+   `seed_iq_score_lower_than_claimed`.
+   Phase: cross-cutting strategic. Reservation: research-class slot,
+   highest priority — informs whether Carnot pivots to active
+   inference as Phase 4 or stays the EBM-on-LLM course.
+
+2. **`exp11XX-sc-energy-7th-verifier`**
+   Goal: add Set-Consistency Energy Network (SC-Energy, ACL 2025) as
+   the 7th member of Carnot's k=N verifier ensemble. SC-Energy uses
+   a compact RoBERTa-base architecture and reportedly outperforms
+   GPT-4o on out-of-distribution logical inconsistency detection. It
+   treats statements as a set, learning compatibility via margin loss
+   in the (X×Y)* space. Mechanism-orthogonal to existing 5 (Z3,
+   gVisor, semantic, ThinkPRM, JSON schema), so adding it should
+   preserve Welch ceiling while raising joint coverage.
+   Acceptance: SC-Energy individual AUROC > 0.65 on FoVer eval AND
+   pairwise correlation r < 0.5 with each of the existing 5; k=6
+   ensemble AUROC > current k=5 (which post-exp1128 = 0.94).
+   Phase: 1 production extension. Reservation: research-class slot.
+
+3. **`exp11XX-nrgpt-per-token-energy-inference`**
+   Goal: implement NRGPT-style per-token energy evaluation with
+   variable-computation early stopping (more FLOPs to difficult
+   reasoning nodes, fast pass on trivial tokens). Extends the
+   `langevin-inference-sweep` task from the prior 2026-05-02 filing
+   by allowing K (refinement steps) to be per-token rather than
+   global. The cited paper (NRGPT, OpenReview B3Muyi2zgo) is the
+   architectural specification.
+   Acceptance: NRGPT-mode inference shows >1.5x compute savings vs.
+   uniform-K Langevin at matched accuracy on at least one of {GSM8K,
+   HumanEval, ARC subset}; per-token energy histograms show
+   non-uniform distribution (energy concentrates on hard tokens).
+   Phase: 3 (post-Stage-2). Reservation: research-class slot. Pairs
+   with the langevin-inference-sweep task.
+
+4. **`exp11XX-hmtt-tokenizer-investigation`**
+   Goal: investigate Hybrid Math-Text Tokenizer (HMTT) as a Phase-3
+   substrate decision. Standard BPE destructively compresses math
+   tokens, ruining logical structure (per the document). HMTT
+   preserves symbolic granularity, enabling the Recursive Logic
+   Subsystem (k=N verifier ensemble) to operate on the same token
+   stream the base LLM emits. Without HMTT, Z3-AST verifier sees
+   different tokens than the base produces.
+   Acceptance: HMTT prototype implemented for math-heavy tokens
+   (numbers, operators, comparators, equality, etc.); tokenization
+   round-trip preserves logical structure on 100 FoVer eval
+   examples; Z3-AST verifier success rate on HMTT-tokenized output
+   ≥ baseline.
+   Phase: 3 (pre-Stage-1 substrate). Reservation: infrastructure-
+   class slot. May gate the .91+ Phase-3 prototype kickoff if
+   identified as load-bearing.
+
+**Cross-references for planner context:**
+- `~/.claude/uploads/.../EBM_EBT_Reasoning_and_ARCAGI.pdf`
+  (the source document with Seed IQ + Carnot-EBM positioning)
+- `memory/project_dbae_ebm_phase3.md` (Phase-3 substrate)
+- arXiv 2507.02092v1 (EBT scaling — empirical anchor: 55M EBT
+  beats 127× larger ARLM on GSM8k, 90.7%)
+- ACL 2025.acl-long.1599 (SC-Energy paper)
+- OpenReview B3Muyi2zgo (NRGPT)
+- arxiv 2603.24621v1 (ARC-AGI-3 paper)
+
+**Why this is in MANDATORY-NEXT-MILESTONE PRIORITIES, not just a memory:**
+Task #1 (Seed IQ verification) is a **decision-changing experiment**.
+If the 100% ARC-AGI-3 score is real, Carnot's Phase 4 must be
+active-inference oriented. Without verification, the v4 paper risks
+either (a) making the wrong architectural bet, or (b) being scooped
+by Themesis publishing first. Tasks #2-4 are additive enhancements
+that compound regardless of #1's outcome — they each strengthen
+the EBM/EBT thinking story Phase 3 is building.
+
+Worth ≥4 reserved-slot tasks across .90-.92 milestones, plus task #1
+should be the highest-priority pickup in .90 (cheap, urgent, decision-
+changing).
+
+---
+
 ### NEW 2026-05-02: Phase-3 Thinking-Mode Composition (4 candidate tasks)
 
 **Background:** the EBM/EBT thinking story for Phase 3 needs three
