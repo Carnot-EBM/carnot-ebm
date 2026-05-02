@@ -372,7 +372,15 @@ def run_agent(
         # Stall detection: only for Codex (which has a known infinite-hang bug).
         # Claude doesn't stall — it either completes or hits the turn limit.
         # Setting to 0 disables the stall detector.
-        STALL_TIMEOUT = 0 if AGENT_TYPE == "claude" else 180  # disabled for Claude, 3 min Codex
+        # 2026-05-02 fix: STALL_TIMEOUT was using module-level AGENT_TYPE, which
+        # ignored per-call agent_type_override. With AGENT_TYPE=codex globally
+        # for quota conservation but AGENT_TYPE_PLANNER=claude override, the
+        # planner ran on Sonnet but kept the codex 180s stall threshold. Sonnet
+        # legitimately thinks longer than 180s for 50-turn YAML drafting, so
+        # the planner kept getting killed. Resolve based on the effective agent
+        # type for this call (claude → 0/disabled, codex/gemini → 180s).
+        _effective_for_stall = agent_type_override or AGENT_TYPE
+        STALL_TIMEOUT = 0 if _effective_for_stall == "claude" else 180
 
         def _kill_subagent_group(reason: str) -> None:
             """Kill the subagent AND every descendant process in its process group.
