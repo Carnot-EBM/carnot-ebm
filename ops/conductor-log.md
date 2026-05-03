@@ -464,3 +464,4 @@ If you finish the real work |
 | 2026-05-03 11:51 UTC | GRPO v5 + TinyV v2 — DualGPU MANDATORY, Gated on G | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1192-llama-cpp-gpu-offload-fix-v2) |
 | 2026-05-03 11:51 UTC | GRPO-VPS Step-Level Process Supervision via Causal | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-03 12:13 UTC | Phase 4 ARC-AGI-3 Harder Puzzles — BFS-Intractable | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-03 12:35 UTC | Phase 4 ARC-AGI-3 Harder Puzzles — BFS-Intractable | SKIP | Pre-tests failing, self-heal failed:  |
