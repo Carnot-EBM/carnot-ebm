@@ -456,3 +456,6 @@ If you finish the real work |
 | 2026-05-03 11:42 UTC | Paper v5 Critical ISSUE-1 to ISSUE-5 — Retry with  | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-03 11:47 UTC | Paper v6 Recompile + arXiv Bundle v7 — Post-Integr | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1193-paper-v5-critical-issues-retry) |
 | 2026-05-03 11:47 UTC | GRPO v5 + TinyV v2 — DualGPU MANDATORY, Gated on G | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1192-llama-cpp-gpu-offload-fix-v2) |
+| 2026-05-03 11:47 UTC | GRPO-VPS Step-Level Process Supervision via Causal | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-03 11:49 UTC | Paper v6 Recompile + arXiv Bundle v7 — Post-Integr | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1193-paper-v5-critical-issues-retry) |
+| 2026-05-03 11:49 UTC | GRPO v5 + TinyV v2 — DualGPU MANDATORY, Gated on G | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1192-llama-cpp-gpu-offload-fix-v2) |
