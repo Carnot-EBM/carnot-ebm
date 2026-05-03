@@ -535,3 +535,4 @@ If you finish the real work |
 | 2026-05-03 22:09 UTC | Phase 5-C — Adversarial Probe: 3 Attack Classes vs | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1224_phase5c |
 | 2026-05-03 22:27 UTC | Phase 5-C — Adversarial Probe: 3 Attack Classes vs | FAIL | Codex CLI error: Error: Reached max turns (40) |
 | 2026-05-03 22:31 UTC | Phase 5-C — Adversarial Probe: 3 Attack Classes vs | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1224_phase5c |
+| 2026-05-03 22:36 UTC | LLMs Gaming Verifiers Defense — Single-Verifier RL | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1225_llms_ga |
