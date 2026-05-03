@@ -2005,3 +2005,80 @@ SHALL be set to `0.0` so the sample contributes no GRPO gradient signal.
 **When** Exp 1173 starts
 **Then** it writes a blocked artifact with `dualgpu_confirmed=False`
 **And** `training_completed=False`.
+
+## REQ-LEARN-1184: GRPO v5 Continuous TinyV v2 Reward + DualGPU Tensor Split
+
+Exp 1184 SHALL train Qwen3.6-35B-A3B-GGUF with GRPO using a continuous
+ThinkPRM v2 energy reward (TinyV v2 reward shaping) instead of binary
+correctness, and SHALL split inference across two RTX 3090 GPUs with
+`tensor_split=[0.5, 0.5]` so the 35B model fits in 48 GiB of combined
+VRAM.
+
+The total per-completion reward in the full phase is
+
+    r_total = 0.6 * r_energy + 0.4 * r_reflect
+
+where `r_energy` is the continuous ThinkPRM v2 score in `[0, 1]` and
+`r_reflect` is the Exp 1159 reflection reward. The structural warm-up
+phase preserves Exp 1159's reflection-only schedule.
+
+### REQ-LEARN-1184 Sub-requirements
+
+- REQ-LEARN-1184-1: Exp 1184 SHALL refuse to train on CPU. Before any
+  training step, the script SHALL verify the active `llama.cpp` runtime
+  reports `llama_supports_gpu_offload()=True` AND that
+  `torch.cuda.device_count() >= 2`. If either check fails it SHALL
+  write a `gpu_offload_prerequisite_not_met` artifact and exit
+  cleanly without training.
+- REQ-LEARN-1184-2: The continuous TinyV v2 reward weights SHALL be
+  `tinyv_v2_energy_weight=0.6` and `tinyv_v2_reflection_weight=0.4`,
+  validated as non-negative floats that sum to `1.0` (within
+  `1e-9`).
+- REQ-LEARN-1184-3: Exp 1184 SHALL evaluate on the 47-question FoVer
+  validation slice, emit `n_eval_questions=47` on success, and report
+  `grpo_v5_pass_rate` as the fraction of those 47 questions answered
+  correctly by the trained model's best-of-N selection.
+- REQ-LEARN-1184-4: The GRPO v4 baseline pass rate
+  (`grpo_v4_baseline_pass_rate`) SHALL be sourced from Exp 1159's
+  `trained_fraction_correct` (`0.26`), and the headline delta SHALL be
+  `grpo_v5_delta_pp = grpo_v5_pass_rate - grpo_v4_baseline_pass_rate`.
+- REQ-LEARN-1184-5: The artifact SHALL include
+  `gpu_offload_prerequisite_met`, `training_completed`,
+  `dualgpu_confirmed`, `training_tokens_per_sec`,
+  `grpo_v4_baseline_pass_rate`, `grpo_v5_pass_rate`,
+  `grpo_v5_delta_pp`, `tinyv_v2_mean_reward`, `n_eval_questions`,
+  and `honest_verdict`.
+- REQ-LEARN-1184-6: `honest_verdict` SHALL be one of
+  `grpo_v5_above_v4`, `grpo_v5_regression_vs_v4`, `grpo_v5_no_delta`,
+  `gpu_offload_prerequisite_not_met`, or `training_wall_hit`.
+- REQ-LEARN-1184-7: Exp 1184 SHALL load the GGUF with
+  `n_gpu_layers=-1`, `tensor_split=[0.5, 0.5]`, and `main_gpu=0` to
+  split the 35B model across two RTX 3090s, and SHALL set
+  `dualgpu_confirmed=True` only when GPU offload is verified AND
+  `cuda_device_count >= 2`.
+
+### SCENARIO-LEARN-1184: Continuous TinyV v2 Reward Mixes Energy and Reflection
+
+**Given** a completion with ThinkPRM v2 energy score `0.8`
+**And** a reflection reward `0.5`
+**When** Exp 1184 computes the total reward in the full phase
+**Then** the emitted reward equals `0.6 * 0.8 + 0.4 * 0.5 = 0.68`.
+
+### SCENARIO-LEARN-1185: GPU Offload Prerequisite Blocks Training
+
+**Given** the active `llama.cpp` runtime cannot offload layers to GPU
+**When** Exp 1184 starts
+**Then** it writes a blocked artifact with
+  `gpu_offload_prerequisite_met=False`,
+  `training_completed=False`,
+  `dualgpu_confirmed=False`,
+**And** `honest_verdict="gpu_offload_prerequisite_not_met"`
+**And** does NOT attempt CPU training.
+
+### SCENARIO-LEARN-1186: GRPO v5 Delta Maps to Honest Verdict
+
+**Given** Exp 1184 finishes evaluation with `grpo_v5_pass_rate=0.32`
+**And** `grpo_v4_baseline_pass_rate=0.26`
+**When** the verdict is derived
+**Then** `grpo_v5_delta_pp` equals `0.06`
+**And** `honest_verdict` equals `"grpo_v5_above_v4"`.
