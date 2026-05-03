@@ -1,0 +1,16 @@
+{
+  "experiment": "1207_llama_cpp_gpu_offload_fix_v3",
+  "schema": "llama_cpp_gpu_offload_fix_v3",
+  "run_date": "2026-05-03T16:02:09Z",
+  "status": "success",
+  "llama_cpp_version": "0.3.22",
+  "cuda_version_detected": "12.6",
+  "cuda_support_compiled": true,
+  "install_method": "already-installed",
+  "llama_supports_gpu_offload": true,
+  "throughput_tokens_per_sec": 302.0,
+  "throughput_floor_tokens_per_sec": 50.0,
+  "llama_cpp_gpu_offload_verified": true,
+  "honest_verdict": "gpu_offload_verified",
+  "notes": "Wheel ships with CUDA. libcudart.so.12 lives under .venv/lib/python3.12/site-packages/nvidia/cuda_runtime/lib and must be on LD_LIBRARY_PATH (with nvidia/cublas/lib) at runtime. Smoke run: Qwen3.5-0.8B-Q4_K_M.gguf, n_gpu_layers=-1, 50 generated tokens in 0.17s on RTX 3090; 2 CUDA devices detected (48 GiB total VRAM)."
+}

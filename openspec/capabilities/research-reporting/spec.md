@@ -229,6 +229,50 @@ Missing gated experiment artifacts shall count as unmet criteria. Blocked
 artifacts shall only satisfy criteria that explicitly require an honest verdict
 rather than a successful metric.
 
+### REQ-REPORT-015: llama.cpp GPU Offload Verification Artifact
+
+The Exp 1207 GPU-offload verification workflow shall produce
+`results/experiment_1207_llama_cpp_gpu_offload_fix_v3.json` recording whether
+the locally installed `llama-cpp-python` build has CUDA support compiled in
+and reaches a usable inference throughput. The artifact shall include:
+
+- `llama_cpp_version`
+- `cuda_version_detected`
+- `cuda_support_compiled`
+- `install_method` (one of `pre-built-wheel`, `source-cmake-cuda`,
+  `already-installed`)
+- `llama_supports_gpu_offload`
+- `throughput_tokens_per_sec`
+- `llama_cpp_gpu_offload_verified`
+- `honest_verdict` (one of `gpu_offload_verified`,
+  `partial_offload_cpu_fallback`, `gpu_offload_failed`)
+
+`llama_cpp_gpu_offload_verified` shall be `true` exactly when
+`cuda_support_compiled` is `true` and `throughput_tokens_per_sec` meets or
+exceeds 50.0. The honest verdict shall map directly from these inputs:
+`gpu_offload_verified` when both conditions hold, `partial_offload_cpu_fallback`
+when CUDA support is compiled but throughput falls below the threshold, and
+`gpu_offload_failed` when CUDA support is not compiled.
+
+### REQ-REPORT-014: Retro Boundary Fix Documentation
+
+The Exp 1204 retro-template fix workflow shall document the .94 resolution for
+the `Retro Task Boundary Too Tight` known-issues entry without removing the
+historical issue text. The workflow shall write
+`results/experiment_1204_retro_template_step0_fix.json` with:
+
+- `retro_boundary_issue_found`
+- `resolution_note_added`
+- `known_issues_file_updated`
+- `retro_template_updated`
+- `honest_verdict`
+
+The resolution note shall state that Exp 1215 uses the STEP 0 skeleton pattern
+and opus/100 turns. `retro_template_updated` shall be true exactly when the
+resolution note was added during the workflow run. If the known-issues entry is
+already resolved, the workflow shall not duplicate the note and shall report
+`honest_verdict == "already_resolved"`.
+
 ## Scenarios
 
 ### SCENARIO-REPORT-001: Nested Live Provenance Is Promoted
@@ -330,6 +374,33 @@ honest reporting
 **And** `publication_hold_status == "active"`
 **And** `honest_verdict == "milestone_failed"`
 
+### SCENARIO-REPORT-011: Exp 1204 Adds Retro Boundary Resolution Note
+
+**Given** `ops/known-issues.md` contains the `Retro Task Boundary Too Tight`
+entry
+**And** the Exp 1215 milestone-retro roadmap task uses STEP 0 and
+`max_turns: 100`
+**When** the Exp 1204 retro-template fix workflow runs
+**Then** `ops/known-issues.md` gains the .94 resolution note without pruning
+the original entry
+**And** `results/experiment_1204_retro_template_step0_fix.json` reports
+`retro_boundary_issue_found == true`
+**And** `resolution_note_added == true`
+**And** `known_issues_file_updated == true`
+**And** `retro_template_updated == true`
+**And** `honest_verdict == "template_updated"`
+
+### SCENARIO-REPORT-012: Exp 1207 Records GPU Offload Verification
+
+**Given** the local `llama-cpp-python` build reports
+`llama_supports_gpu_offload == True`
+**And** a smoke-test sustains at least 50 tokens per second
+**When** the Exp 1207 GPU-offload verification workflow runs
+**Then** `results/experiment_1207_llama_cpp_gpu_offload_fix_v3.json` reports
+`cuda_support_compiled == true`
+**And** `llama_cpp_gpu_offload_verified == true`
+**And** `honest_verdict == "gpu_offload_verified"`
+
 
 ### REQ-PUBLISH-003: HuggingFace README Accuracy Audit
 
@@ -417,5 +488,7 @@ embed live-GPU benchmark results from Exp 328 when available.
 | REQ-REPORT-011 | `scripts/experiment_1177_milestone_retro_91.py`, `results/experiment_1177_milestone_retro_91.json` | `tests/python/test_experiment_1177_milestone_retro_91.py` | Implemented |
 | REQ-REPORT-012 | `scripts/experiment_1190_milestone_retro_92.py`, `results/experiment_1190_milestone_retro_92.json` | `tests/python/test_experiment_1190_milestone_retro_92.py` | Implemented |
 | REQ-REPORT-013 | `scripts/experiment_1202_milestone_retro_93.py`, `results/experiment_1202_milestone_retro_93.json` | `tests/python/test_experiment_1202_milestone_retro_93.py` | Implemented |
+| REQ-REPORT-014 | `python/carnot/reporting/retro_template_step0_fix.py`, `results/experiment_1204_retro_template_step0_fix.json` | `tests/python/test_retro_template_step0_fix.py` | Implemented |
+| REQ-REPORT-015 | `python/carnot/reporting/llama_cpp_gpu_offload_fix.py`, `results/experiment_1207_llama_cpp_gpu_offload_fix_v3.json` | `tests/python/test_llama_cpp_gpu_offload_fix.py` | Implemented |
 | REQ-PUBLISH-003 | `scripts/experiment_317_hf_publish.py` | `tests/python/test_experiment_317_hf_publish.py` | Implemented |
 | REQ-PUBLISH-004 | `scripts/experiment_330_hf_live_publish.py` | `tests/python/test_experiment_330_hf_live_publish.py` | Implemented |

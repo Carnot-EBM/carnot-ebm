@@ -78,6 +78,53 @@ class Z3MathVerifier:
             return 0.5
         return float(max(0.0, min(1.0, violations / checked)))
 
+    def verify_step(self, step_text: str) -> float:
+        """Return arithmetic violation probability for step_text.
+
+        Implements REQ-LEARN-1209-2: scalar signal for GRPO-VPS step-level
+        process supervision.  Return value is in [0.0, 1.0] where 0.0 means
+        all arithmetic claims check out (or none found) and 1.0 means every
+        arithmetic claim is detectably wrong.
+
+        Differs from score() in one way: when no arithmetic claims are found
+        in the text, returns 0.0 (no detected violation) rather than the
+        score() sentinel of 0.5 (neutral/unknown).  Step-level supervision
+        treats absence of checkable arithmetic as a non-violation.
+
+        Args:
+            step_text: Text of a single reasoning step.
+
+        Returns:
+            Float in [0.0, 1.0].
+
+        Spec: REQ-LEARN-1209-2, SCENARIO-LEARN-1212
+        """
+        if not step_text or not step_text.strip():
+            return 0.0
+        equations = self._extract_equations(step_text)
+        comparisons = self._extract_comparisons(step_text)
+        if not equations and not comparisons:
+            return 0.0  # no checkable arithmetic → no detected violation
+        violations = 0
+        checked = 0
+        for left, right in equations:
+            try:
+                checked += 1
+                if not self._equation_holds(left, right):
+                    violations += 1
+            except Exception:
+                return 0.5
+        for left, op, right in comparisons:
+            try:
+                checked += 1
+                if not self._comparison_holds(left, op, right):
+                    violations += 1
+            except Exception:
+                return 0.5
+        if checked == 0:
+            return 0.0
+        return float(max(0.0, min(1.0, violations / checked)))
+
     def _extract_equations(self, text: str) -> list[tuple[str, str]]:
         normalized = _normalize_math_text(text)
         equations: list[tuple[str, str]] = []

@@ -484,3 +484,25 @@ If you finish the real work |
 | 2026-05-03 14:32 UTC | Pre-Test Suite Diagnostics + Fix — Unblock 9 SKIP  | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1203_pre_tes |
 | 2026-05-03 15:00 UTC | Pre-Test Suite Diagnostics + Fix — Unblock 9 SKIP  | FAIL | Codex CLI error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
 | 2026-05-03 15:21 UTC | Pre-Test Suite Diagnostics + Fix — Unblock 9 SKIP  | OK | cache hit: 81 passed, 1 warning in 5.31s |
+| 2026-05-03 15:32 UTC | Retro Template Fix — Document STEP 0 Skeleton Patt | OK | 81 passed, 1 warning in 8.29s |
+| 2026-05-03 15:38 UTC | Paper v5 Critical ISSUE-1 to ISSUE-5 — Retry v3 wi | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1205_paper_v |
+| 2026-05-03 15:46 UTC | Paper v5 Critical ISSUE-1 to ISSUE-5 — Retry v3 wi | OK | 88 passed, 1 warning in 5.45s |
+| 2026-05-03 15:50 UTC | Paper v6 Recompile + arXiv Bundle v8 — Post-Critic | OK | cache hit: 96 passed, 1 warning in 5.08s |
+| 2026-05-03 15:54 UTC | llama.cpp GPU Offload Fix v3 — STEP 0 + skip_pre_t | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1207_llama_c |
+| 2026-05-03 16:02 UTC | llama.cpp GPU Offload Fix v3 — STEP 0 + skip_pre_t | OK | 96 passed, 1 warning in 4.93s |
+| 2026-05-03 16:07 UTC | GRPO v5 + TinyV v2 — DualGPU MANDATORY, Gated on G | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1208_grpo_v5 |
+| 2026-05-03 16:21 UTC | GRPO v5 + TinyV v2 — DualGPU MANDATORY, Gated on G | ESCALATE_OPUS_100 | Opus max-turns at 60; retrying with 100 turns |
+| 2026-05-03 16:26 UTC | GRPO v5 + TinyV v2 — DualGPU MANDATORY, Gated on G | OK | 106 passed, 1 warning in 8.18s |
+| 2026-05-03 16:31 UTC | GRPO-VPS Step-Level Process Supervision via Causal | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1209_grpo_vp |
+| 2026-05-03 16:40 UTC | GRPO-VPS Step-Level Process Supervision via Causal | OK | 150 passed, 1 warning in 6.84s |
+| 2026-05-03 16:45 UTC | Phase 4 ARC-AGI-3 Harder Puzzles v2 — BFS-Intracta | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1210_phase4_ |
+| 2026-05-03 17:09 UTC | Phase 4 ARC-AGI-3 Harder Puzzles v2 — BFS-Intracta | FAIL | Codex CLI error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
+| 2026-05-03 17:14 UTC | Phase 4 ARC-AGI-3 Harder Puzzles v2 — BFS-Intracta | OK | cache hit: 200 passed, 1 warning in 8.24s |
+| 2026-05-03 17:19 UTC | FoVer Expansion v7 — Hard Negatives + SOTA GGUF Mo | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1211_fover_e |
+| 2026-05-03 17:29 UTC | FoVer Expansion v7 — Hard Negatives + SOTA GGUF Mo | ESCALATE_OPUS | Sonnet max-turns at 50; retrying with Opus 100 turns |
+| 2026-05-03 17:32 UTC | FoVer Expansion v7 — Hard Negatives + SOTA GGUF Mo | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1211_fover_e |
+| 2026-05-03 17:45 UTC | FoVer Expansion v7 — Hard Negatives + SOTA GGUF Mo | OK | 261 passed, 1 warning in 7.96s |
+| 2026-05-03 17:50 UTC | Self-Learning Tier 1 v2 — Constraint ADDITION from | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1212_tier1_c |
+| 2026-05-03 18:04 UTC | Self-Learning Tier 1 v2 — Constraint ADDITION from | ESCALATE_OPUS | Sonnet max-turns at 40; retrying with Opus 100 turns |
+| 2026-05-03 18:10 UTC | Self-Learning Tier 1 v2 — Constraint ADDITION from | OK | 261 passed, 1 warning in 7.16s |
+| 2026-05-03 18:15 UTC | SDPO Dense Reward Distillation — Energy Verifier a | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1213_sdpo_de |

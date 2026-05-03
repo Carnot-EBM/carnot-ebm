@@ -2137,3 +2137,139 @@ rollouts so negative rewards remain exact verifier boundaries.
 **Then** all REQ-LEARN-1187-5 fields are present
 **And** `latent_grpo_delta_pp` equals
 `latent_grpo_pass_rate - grpo_v4_baseline_pass_rate`.
+
+---
+
+## REQ-LEARN-1208: GRPO v5 TinyV Confidence Abstention vs v4 Floor
+
+Exp 1208 SHALL retry GRPO v5 with TinyV confidence abstention on the
+35B Qwen3.6-A3B GGUF after Exp 1207 verifies the active llama.cpp
+runtime supports GPU offload.  When a verifier confidence score sits
+inside an uncertainty band (default `[0.3, 0.7]`), the rollout's reward
+contribution SHALL be skipped (abstention).  This is the "Spurious
+Rewards" hypothesis test: v4's +10pp gain came from the structural
+warm-up; v5 must beat that floor by `>3pp` for the energy verifier to
+add real signal beyond structure.
+
+### REQ-LEARN-1208 Sub-requirements
+
+- REQ-LEARN-1208-1: Exp 1208 SHALL refuse to run training when either
+  `llama_cpp.llama_supports_gpu_offload()` is False or
+  `torch.cuda.device_count() < 2`, writing a blocked artifact with
+  `honest_verdict="blocked_no_gpu_offload"` or `"blocked_no_dualgpu"`
+  respectively.
+- REQ-LEARN-1208-2: `tinyv_confidence_abstain(confidence, low=0.3,
+  high=0.7)` SHALL return True when `low <= confidence <= high` and
+  False otherwise; the band is inclusive on both ends so a score
+  exactly at `0.3` or `0.7` is considered uncertain.
+- REQ-LEARN-1208-3: `apply_tinyv_abstention(confidences, rewards)`
+  SHALL return `(filtered_rewards, abstention_count)` where each
+  `rewards[i]` is replaced with `0.0` when the matching `confidences[i]`
+  triggers abstention; the lengths of the inputs MUST match.
+- REQ-LEARN-1208-4: The v4 baseline floor SHALL be encoded as
+  `v4_baseline_improvement_pp=10.0`, sourced from Exp 1159's measured
+  +10pp delta over the .60 GRPO baseline.
+- REQ-LEARN-1208-5: `beats_spurious_reward_threshold` SHALL be True iff
+  `improvement_over_baseline_pp > 3.0`, encoding the arXiv 2506.10947
+  Spurious Rewards paper's threshold for "energy verifier adds signal
+  beyond structure."
+- REQ-LEARN-1208-6: The artifact SHALL include `llama_cpp_gpu_offload`,
+  `cuda_device_count`, `dualgpu_confirmed`, `model_used`,
+  `training_completed`, `tinyv_abstention_count`,
+  `tinyv_abstention_rate`, `v4_baseline_improvement_pp`,
+  `v5_fraction_correct_before`, `v5_fraction_correct_after`,
+  `improvement_over_baseline_pp`,
+  `beats_spurious_reward_threshold`,
+  `dualgpu_gpu0_utilization_pct`, `dualgpu_gpu1_utilization_pct`,
+  and `honest_verdict`.
+- REQ-LEARN-1208-7: `honest_verdict` SHALL be exactly one of
+  `improvement_above_v4`, `improvement_below_v4`,
+  `improvement_equal_v4`, `blocked_no_gpu_offload`,
+  `blocked_no_dualgpu`, or `training_wall_hit`.
+
+### SCENARIO-LEARN-1208: TinyV Abstention Triggers Inside Uncertainty Band
+
+**Given** verifier confidences `[0.10, 0.45, 0.55, 0.80, 0.30, 0.70]`
+**And** matching rewards `[1.0, 0.5, 0.7, 0.9, 0.6, 0.8]`
+**When** Exp 1208 applies TinyV abstention with the default `[0.3, 0.7]` band
+**Then** the filtered rewards equal `[1.0, 0.0, 0.0, 0.9, 0.0, 0.0]`
+**And** the abstention count equals `4`.
+
+### SCENARIO-LEARN-1209: Spurious-Reward Threshold Decides Verdict
+
+**Given** Exp 1208 finishes with `v5_fraction_correct_before=0.40`
+**And** `v5_fraction_correct_after=0.55`
+**And** `v4_baseline_improvement_pp=10.0`
+**When** the artifact is built
+**Then** `improvement_over_baseline_pp` equals `5.0`
+**And** `beats_spurious_reward_threshold` is True
+**And** `honest_verdict` equals `"improvement_above_v4"`.
+
+### SCENARIO-LEARN-1210: Missing GPU Offload Blocks Training Honestly
+
+**Given** the active llama.cpp runtime reports `gpu_supports_offload=False`
+**When** Exp 1208 starts
+**Then** it writes a blocked artifact with `training_completed=False`
+**And** `honest_verdict="blocked_no_gpu_offload"`
+**And** does not attempt CPU training of the 35B model.
+
+---
+
+## REQ-LEARN-1209: GRPO-VPS Step-Level Process Supervision
+
+Exp 1209 SHALL measure whether step-level process supervision (arXiv 2604.20659
+GRPO-VPS) improves over outcome-only rewards when Carnot's existing step-level
+verifiers (CausalReasoningVerifier and Z3MathVerifier) provide the per-step
+signal.  The experiment evaluates on 50 GSM8K-style math questions.
+
+### REQ-LEARN-1209 Sub-requirements
+
+- REQ-LEARN-1209-1: `CausalReasoningVerifier.verify_step(step_text, prior_step)`
+  SHALL return a float in `[0.0, 1.0]` representing the causal violation
+  probability for `step_text` given `prior_step`; `0.0` means no detected
+  causal error, `1.0` means clear violation.  Prior step may be `None` for
+  the first step.
+- REQ-LEARN-1209-2: `Z3MathVerifier.verify_step(step_text)` SHALL return a
+  float in `[0.0, 1.0]` representing the arithmetic violation probability for
+  `step_text`; `0.0` means all arithmetic claims check out, `1.0` means at
+  least one arithmetic claim is detectably wrong.
+- REQ-LEARN-1209-3: `segment_reward(step_text, step_index, prior_step)` SHALL
+  return `0.5 * (1.0 - causal_score) + 0.5 * (1.0 - z3_score)` clamped to
+  `[0.0, 1.0]`, where `causal_score` comes from REQ-LEARN-1209-1 and
+  `z3_score` comes from REQ-LEARN-1209-2.
+- REQ-LEARN-1209-4: `aggregate_step_rewards(per_step_rewards, gamma)` SHALL
+  return the discounted sum `sum(r * gamma**i for i, r in enumerate(rewards))`
+  for decay factor `gamma` defaulting to `0.9`.
+- REQ-LEARN-1209-5: The artifact SHALL include `n_questions_evaluated`,
+  `causal_verifier_violations_pct`, `z3_verifier_violations_pct`,
+  `step_reward_correctness_correlation`, `outcome_baseline_accuracy`,
+  `grpo_vps_accuracy`, `grpo_vps_delta_pp`, `grpo_vps_step_delta_measured`,
+  `model_used`, and `honest_verdict`.
+- REQ-LEARN-1209-6: `honest_verdict` SHALL be exactly one of
+  `step_supervision_improves_over_outcome`, `step_supervision_no_delta`,
+  `step_supervision_degrades`, or `insufficient_step_signal`.
+
+### SCENARIO-LEARN-1211: Causal Verifier Returns Zero for Consistent Step
+
+**Given** a prior step "There are 12 apples in 3 bags"
+**And** a current step "Each bag has 4 apples"
+**When** `CausalReasoningVerifier().verify_step(step, prior)` is called
+**Then** the result is less than `0.5` (no clear violation detected).
+
+### SCENARIO-LEARN-1212: Z3 Verifier Catches Wrong Arithmetic
+
+**Given** a step text "3 + 4 = 8"
+**When** `Z3MathVerifier().verify_step(step)` is called
+**Then** the result is greater than `0.5` (arithmetic violation detected).
+
+### SCENARIO-LEARN-1213: Segment Reward Is Symmetric Average
+
+**Given** `causal_score=0.2` and `z3_score=0.4`
+**When** `segment_reward` is computed
+**Then** the result equals `0.5*(1.0-0.2) + 0.5*(1.0-0.4)` = `0.7`.
+
+### SCENARIO-LEARN-1214: Aggregate Step Rewards Uses Geometric Decay
+
+**Given** per-step rewards `[1.0, 1.0, 1.0]` and decay `gamma=0.9`
+**When** `aggregate_step_rewards` is called
+**Then** the result equals `1.0 + 0.9 + 0.81` = `2.71`.
