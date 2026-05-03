@@ -4625,3 +4625,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-03: Paper v5 Recompile + arXiv Bundle v6 — Final Compilation after Integrity Fixes (⚠️ Research Finding) — honest_verdict=audit_failures_remain; results/experiment_1183_paper_v5_recompile_arxiv_bundle_v6.json
 - 2026-05-03: Paper v5 Recompile + arXiv Bundle v6 — Final Compilation after Integrity Fixes (⚠️ Research Finding) — honest_verdict=audit_failures_remain; results/experiment_1183_paper_v5_recompile_arxiv_bundle_v6.json
 - 2026-05-03: Paper v5 Recompile + arXiv Bundle v6 — Final Compilation after Integrity Fixes (⚠️ Research Finding) — honest_verdict=audit_failures_remain; results/experiment_1183_paper_v5_recompile_arxiv_bundle_v6.json
+- 2026-05-03: GRPO v5 + TinyV v2 — DualGPU MANDATORY, ThinkPRM v2 Continuous Reward (after GPU offload fix) (⚠️ Research Finding) — honest_verdict=gpu_offload_prerequisite_not_met; results/experiment_1184_grpo_v5_tinyv_v2_dualGPU.json
