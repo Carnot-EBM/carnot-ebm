@@ -4699,3 +4699,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-03: Phase 5-B — In-Situ Training Loop with Verifier-Ensemble Grounding (exp_NEXT_B) (⚠️ Research Finding) — honest_verdict=in_progress; results/experiment_1223_phase5b_insitu_training_loop.json
 - 2026-05-03: Phase 5-C — Adversarial Probe: 3 Attack Classes vs In-Situ Training Defense (exp_NEXT_C) (⚠️ Research Finding) — honest_verdict=in_progress; results/experiment_1224_phase5c_adversarial_probe.json
 - 2026-05-03: Phase 5-C — Adversarial Probe: 3 Attack Classes vs In-Situ Training Defense (exp_NEXT_C) (⚠️ Research Finding) — honest_verdict=partial_attack_success_revision_needed; results/experiment_1224_phase5c_adversarial_probe.json
+- 2026-05-03: LLMs Gaming Verifiers Defense — Single-Verifier RLVR Gaming vs k=5 AND-Compose Defense (⚠️ Research Finding) — honest_verdict=in_progress; results/experiment_1225_llms_gaming_verifiers_defense.json
