@@ -186,6 +186,64 @@ record:
   AND `high_severity_fixed == 5`
   AND `honest_verdict == "all_5_high_resolved"`
 
+### REQ-PUBLISH-008: Medium/Low-Severity Integrity Fixes (ISSUE-11 through ISSUE-18)
+
+The paper-v5 medium/low remediation script MUST verify that
+`docs/arxiv-paper/main.tex` and `docs/arxiv-paper/carnot.bib` contain all
+eight fixes before emitting
+`results/experiment_1182_paper_v5_medium_low_issues_11_18.json`. The
+artifact MUST record:
+
+- `issue_11_thinkprm_citation_fixed`: the ThinkPRM AUROC=0.9885 claim names
+  exp1111 v1 and the exp1111 v2 retrain artifact.
+- `issue_12_holdout_n_stated`: FoVer holdout claims disclose `n=50 holdout`
+  and cross-reference exp1121's production-corpus AUROC=0.3333 reading.
+- `issue_13_nrgpt_disclosure_added`: any NRGPT citation discloses
+  AUROC_n1=0.9209, AUROC_n3=0.9158, and `n_iters_monotone=False`, or the
+  artifact records that NRGPT is not cited in the paper.
+- `issue_14_soskan_auroc_reconciled`: every SOS-KAN/SOSKAN AUROC claim names
+  its corpus and sample size.
+- `issue_15_fig2_caveat_added`: the Figure 2 caption states that the binormal
+  curve is fit from published AUROC rather than re-evaluated on held-out data.
+- `issue_16_bib_stubs_removed`: count of stub/fabricated bibliography entries
+  removed after audit.
+- `issue_17_k15_caption_tightened`: Table 1 explains that k=15 is the
+  theoretical maximum from Theorem 3.2 and not an experimentally achieved
+  result.
+- `issue_18_hardware_scope_added`: the hardware-portability theorem states
+  that only KV260 FPGA has been empirically verified at submission time.
+- `medium_low_issues_fixed`: count of issues resolved (must equal 8).
+- `honest_verdict`: one of "all_8_medium_low_resolved" | "partial_fix" |
+  "blocked".
+
+### REQ-PUBLISH-009: Paper Numerical Claim Audit
+
+The paper numerical-claim audit script MUST scan `docs/arxiv-paper/main.tex`
+for numerical claims using the configured paper-claim regex, count how many
+claims have a following `(expNNNN)` artifact citation within 200 characters,
+load the corresponding `results/experiment_NNNN_*.json` artifacts, and verify
+that cited numerical values match artifact fields after documented LaTeX and
+unit normalization. The script MUST report:
+
+- `n_claims_total`
+- `n_claims_with_artifact_citation`
+- `n_claims_verified`
+- `n_mismatches`
+
+The script MUST exit nonzero when any mismatch exists or when
+`n_claims_with_artifact_citation / n_claims_total < 0.8`.
+
+### SCENARIO-PUBLISH-008: All Medium/Low Fixes And Claim Audit Verified
+
+**Given** the position paper source, bibliography, and local experiment result
+artifacts exist
+**When** the exp1182 remediation script runs
+**Then** all eight issue booleans are True
+  AND `paper_claim_audit_script_active` is True
+  AND `paper_claim_audit_n_mismatches == 0`
+  AND `medium_low_issues_fixed == 8`
+  AND `honest_verdict == "all_8_medium_low_resolved"`
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -197,3 +255,5 @@ record:
 | REQ-PUBLISH-005 | Proposed | Exp 1153 final arXiv v4 bundle artifact |
 | REQ-PUBLISH-006 | Proposed | Exp 1167 Phase 4 Section 7 revision artifact |
 | REQ-PUBLISH-007 | Implemented | Exp 1181 paper v5 high-severity fixes ISSUE-6..10 |
+| REQ-PUBLISH-008 | Proposed | Exp 1182 paper v5 medium/low fixes ISSUE-11..18 |
+| REQ-PUBLISH-009 | Proposed | Exp 1182 paper numerical-claim audit script |

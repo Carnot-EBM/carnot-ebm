@@ -50,7 +50,7 @@ deployed text probes ($D_{\mathrm{eff}} = 1.603$, exp1093);
 (ii) report a $15.6\times$ exact-sampling speedup of a
 $\chi \leq 4$ sparse-constraint FPGA Fast-Path against an optimized
 C++ baseline, after auditing and rejecting the synchronous parallel
-Glauber sampler that produced the prior ``$\sim$13{,}000$\times$''
+Glauber sampler that produced the prior invalid large-speedup
 headline ($\mathrm{KL} = 3.07$ against single-site Gibbs, exp1094);
 (iii) document the pre-retrain energy-ordering inversion on SOTA outputs
 ($\overline{E}_{\mathrm{correct}} = 0.689 > \overline{E}_{\mathrm{incorrect}} = 0.621$,
@@ -63,7 +63,7 @@ AUROC=0.9774 and correct energy ordering restored (exp1120); and
 self-distillation (exp1099) as evidence that the energy signal has
 to drive the filter, not be re-derived from accept/reject labels.
 Carnot's positive baseline results --- SOS-KAN $\mathrm{AUROC} = 0.9545$
-on the FoVer corpus, GRPO with ThinkPRM v2 as an explicit energy
+on the FoVer corpus (n=6{,}548; exp1072), GRPO with ThinkPRM v2 as an explicit energy
 reward improving held-out GSM8K by $+4$ pp (n=25, 95\% CI:
 [0.1\%, 20.4\%]) to $+8.51$ pp (n=25, 95\% CI:
 [1.0\%, 26.0\%])
@@ -111,7 +111,7 @@ text features.
 
 \paragraph{Wall 2 --- Exact-sampling detailed-balance limit.}
 The synchronous parallel Glauber sampler that produced the original
-``$\sim$13{,}000$\times$ FPGA speedup'' headline does not preserve
+invalid large-speedup FPGA headline does not preserve
 detailed balance on frustrated topologies:
 $\mathrm{KL}(P_{\text{parallel}} \,\|\, P_{\text{Gibbs}}) = 3.07$
 on the canonical 12-spin antiferromagnetic ring (exp1094). The
@@ -125,7 +125,8 @@ $\overline{E}_{\mathrm{correct}} = 0.689$ vs.\
 $\overline{E}_{\mathrm{incorrect}} = 0.621$ (exp1100). The energy
 gap inverts: heavily-optimized SOTA outputs produce \emph{lower}
 energy for incorrect completions than for correct ones. The same
-energy function on the FoVer corpus reaches $\mathrm{AUROC} = 0.9545$;
+energy function on the FoVer corpus (n=6{,}548; exp1072) reaches
+$\mathrm{AUROC} = 0.9545$;
 the inversion is not a sign-bug but an out-of-distribution shift
 consistent with reward-hacking dynamics (Goodhart's Law) on outputs
 that were optimized against a similarly-shaped verifier.
@@ -177,8 +178,11 @@ whose energy threshold either accepts or rejects with confidence:
 
 \begin{itemize}
   \item \textbf{Tier 0a --- ThinkPRM probe.} Step-level discriminative
-        probe; cheapest. $\mathrm{AUROC} = 0.9885$ on the full FoVer
-        corpus (predecessor of exp1033; the v4 CI-stub artifact
+        probe; cheapest. ThinkPRM $\mathrm{AUROC}=0.9885$ on the full
+        FoVer corpus (exp1111 v1; exp1111 retrained to
+        $\mathrm{AUROC}=0.9946$ in v2; see
+        results/experiment\_1111\_thinkprm\_retrain.json;
+        predecessor of exp1033; the v4 CI-stub artifact
         reports $0.5$ on an 85-example subset and is not the
         headline).
   \item \textbf{Tier 0b --- SpilledEnergy detector.} Pre-softmax
@@ -186,8 +190,8 @@ whose energy threshold either accepts or rejects with confidence:
         arXiv:2602.18671.
   \item \textbf{Tier 2 --- SOS-KAN energy.} Sum-of-Squares
         Kolmogorov-Arnold network with type-level monotonicity and
-        non-negativity. $\mathrm{AUROC} = 0.9545$ on 6{,}548 FoVer
-        pairs (exp1072), zero monotonicity violations across 16{,}000
+        non-negativity. $\mathrm{AUROC} = 0.9545$ on the FoVer corpus
+        (n=6{,}548; exp1072), zero monotonicity violations across 16{,}000
         invariant tests.
   \item \textbf{Tier 3 --- Ising MCMC.} Parallel-tempered Glauber
         dynamics. Hardware-acceleratable on FPGA via the
@@ -206,9 +210,12 @@ joint modeling + Wald sequential probability ratio testing.
   \centering
   \includegraphics[width=0.85\textwidth]{figures/fig1.pdf}
   \caption{Carnot 4-tier verification cascade with empirical
-  skip-tier rates from exp1073 (n=50). Tier 0a ThinkPRM, Tier 0b
-  SpilledEnergy, Tier 2 SOS-KAN, Tier 3 Ising MCMC with KV260 FPGA
-  acceleration callout.}
+  skip-tier rates from exp1073 (n=50 holdout). Tier 0a ThinkPRM,
+  Tier 0b SpilledEnergy, Tier 2 SOS-KAN, Tier 3 Ising MCMC with
+  KV260 FPGA acceleration callout. Note: exp1121 reports
+  $\mathrm{AUROC} = 0.3333$ on production corpus vs.\ $0.9545$ on
+  the n=50 FoVer holdout used here; skip-tier rates reflect
+  in-distribution FoVer conditions only.}
   \label{fig:cascade}
 \end{figure}
 
@@ -423,7 +430,11 @@ Table~\ref{tab:joint-evasion}.
   weaker joint guarantee than a heterogeneous $k=10, r=0.4$
   ensemble --- the correlation drag dominates the apparent volume
   gain. This is the mathematical motivation for
-  Section~\ref{sec:escape}'s pivot.}
+  Section~\ref{sec:escape}'s pivot. \textbf{Note:} the $k=15$ row
+  is the theoretical maximum from the AND-composition bound
+  (Theorem~3.2); empirical experiments validated $k=5$ as the
+  practical optimum (exp1108); $k=15$ is not an experimentally
+  achieved result.}
   \label{tab:joint-evasion}
 \end{table}
 
@@ -451,7 +462,7 @@ verifier accuracy.
 
 Section~\ref{sec:hardware} reports the FPGA hardware deployment
 with the $15.6\times$ recalibration in place, audits why the prior
-``$\sim$13{,}000$\times$'' headline was distributionally invalid,
+large-speedup headline was distributionally invalid,
 and derives the $\chi \leq 4$ Sparse-Constraint Accelerator
 architecture as the deployable response.
 
@@ -511,8 +522,8 @@ not against a Python-overhead-dominated CPU loop.
   \centering
   \includegraphics[width=0.75\textwidth]{figures/fig3.pdf}
   \caption{CPU vs KV260 FPGA Ising-sampler latency at 64 spins.
-  CPU reference $\sim 290$\,ms; KV260 hardware-measured $24.83\,\mu s$
-  (exp1068 smoke test). Single-point comparison; multi-N scaling
+  CPU reference $\sim 290$\,ms (exp1081); KV260 hardware-measured
+  $24.83\,\mu s$ (exp1068 smoke test). Single-point comparison; multi-N scaling
   curve was not measured because the .84 scale benchmark could not
   reach the board.}
   \label{fig:fpga}
@@ -678,7 +689,8 @@ cascade's behaviour on FoVer.
 
 We treat the inversion as an out-of-distribution Goodhart-class
 anomaly, not a sign-bug. The same energy function reaches
-$\mathrm{AUROC} = 0.9545$ on FoVer (Section~\ref{sec:baseline});
+$\mathrm{AUROC} = 0.9545$ on the FoVer corpus (n=6{,}548;
+Section~\ref{sec:baseline});
 the inversion appears specifically when evaluating
 heavily-optimized SOTA-model outputs that were themselves trained
 against verifier-style reward signals~\cite{rewardunderattack2026,
@@ -701,9 +713,10 @@ SOTA model families.
 \textbf{Energy Verifier Calibration (Milestone .87).}
 Training the SOS-KAN verifier on a 7{,}329-pair corpus including
 SOTA model outputs fixed the distribution shift that caused the
-energy inversion. Post-retrain AUROC=0.9774, and correct energy
-ordering restored: lower energy again corresponds to more-likely
-correct outputs (exp1120).
+energy inversion. Post-retrain AUROC=0.9774 on the SOTA-inclusive
+FoVer v5 corpus (n\_raw=7{,}329, validation n=697; exp1120), and
+correct energy ordering restored: lower energy again corresponds to
+more-likely correct outputs.
 
 \textbf{GRPO with Energy Reward (Milestone .87-.88).}
 The first application of GRPO with ThinkPRM v2
@@ -736,7 +749,7 @@ $\inf_t \alpha_t > 0$ grounding condition while improving the SOTA
 local-model readout.
 
 
-In milestone .89, HardNet++-style arithmetic projection repair corrected 20/20 synthetic violations at 100\% accuracy and ran 76{,}130$\times$ faster than prompt repair (exp1147). MetaCluster-style centroid compression made SOSKANEnergyV3 5.03$\times$ smaller with AUROC drop 0.018 (0.9902 to 0.9718), keeping the compressed verifier within the 0.02 degradation target (exp1148).
+In milestone .89, HardNet++-style arithmetic projection repair corrected 20/20 synthetic violations at 100\% accuracy and handled each violation in 117\,$\mu s$ versus 8.9\,s for prompt repair on the same 20 cases (exp1147). MetaCluster-style centroid compression made SOSKANEnergyV3 5.03$\times$ smaller with AUROC drop 0.018 (0.9902 to 0.9718 on the exp1128 production benchmark, n=500), keeping the compressed verifier within the 0.02 degradation target (exp1148).
 
 \subsection{$D_{\mathrm{int}} = 1.6$ motivates the Welch bound (exp1093)}
 
@@ -824,7 +837,10 @@ describe the framework.
   \includegraphics[width=0.75\textwidth]{figures/fig2.pdf}
   \caption{SOS-KAN AUROC binormal curve on the 6{,}548-pair FoVer
   corpus. Tier-2 SOS-KAN v3 reaches $\mathrm{AUROC} = 0.9545$
-  (exp1072); ThinkPRM full-FoVer reaches $0.9885$.}
+  (exp1072); ThinkPRM full-FoVer reaches $0.9885$ (exp1111 v1;
+  exp1111 retrained to $0.9946$ in v2).
+  (Binormal fit from published AUROC; not a re-evaluation on
+  held-out data.)}
   \label{fig:auroc}
 \end{figure}
 
@@ -856,7 +872,10 @@ describe the framework.
 The placeholder related-work note in the previous draft treated
 Themesis Seed IQ as external paradigm-shift evidence. The Phase~4
 revision makes the comparison architectural and empirical. Seed
-IQ~\cite{themesis2026seediq} is an active-inference system operating
+IQ\footnote{Seed IQ is treated here as documented external
+Themesis/ARC-AGI-3 context, not as a peer-reviewed paper citation;
+exp1166 records that the leaderboard score was not independently
+re-fetched.} is an active-inference system operating
 directly over a continuous topological field. Carnot is an
 open-weight verifier ensemble operating over LLM candidates. The
 mechanisms are different, but the objective is the same: choose the
@@ -909,7 +928,7 @@ following the composite energy signal. The pilot was operational:
 the Phase~4 sampler solved all ten proxy puzzles and used far fewer
 actions than the baseline. On 10 synthetic $5\times5$ puzzles,
 Phase~4's Blocked Gibbs free-energy minimization reduced action count
-by $74.7\%$ vs the random-legal-greedy baseline (Phase~4: 6.30 mean
+by $74.7\%$ (exp1165) vs the random-legal-greedy baseline (Phase~4: 6.30 mean
 steps vs greedy: 24.86 mean steps). Note: the random-legal-greedy
 baseline is intentionally weak; results against a stronger
 BFS-to-goal baseline are in exp1189.
@@ -929,7 +948,7 @@ BFS-to-goal baseline are in exp1189.
       Phase~4 used roughly one quarter of the baseline actions. \\
     action\_count\_ratio & $0.253419$ & $1.000000$ &
       $74.7\%$ fewer actions than the random-legal-greedy baseline
-      (note: intentionally weak baseline; see exp1189 for results
+      (exp1165; note: intentionally weak baseline; see exp1189 for results
       against a stronger BFS-to-goal baseline). \\
     solved\_rate & $1.000$ & $0.980$ &
       The pilot did not trade efficiency for lower solve rate. \\
@@ -994,7 +1013,7 @@ class of control objective.
     Carnot Phase~4 pilot &
       solved\_rate $=1.000$ on synthetic $5\times5$ proxy puzzles &
       action\_count\_ratio $=0.253419$; $74.7\%$ fewer actions than
-      the greedy proxy baseline. \\
+      the greedy proxy baseline (exp1165). \\
     Frontier autoregressive LLMs &
       below $1\%$ in ARC-AGI-3 report &
       Not competitive under the benchmark's efficiency-weighted
@@ -1105,7 +1124,10 @@ empirical $\theta_F$ is small for homogeneous text-probe verifiers;
 Section~\ref{sec:escape} documents that cross-mechanism diversity
 loosens the constraint. The substrate-portability claim is
 preserved; the conditional $\theta_F > 0$ is what cross-mechanism
-diversity is engineered to satisfy.
+diversity is engineered to satisfy. \textbf{Empirical scope caveat:}
+no substrate other than the KV260 FPGA has been empirically verified
+at time of submission; portability to Extropic Z1 and other
+platforms remains planned future work.
 
 \section{Conclusion \& Roadmap}
 \label{sec:roadmap}
@@ -1265,7 +1287,8 @@ Evaluations on SOTA outputs reveal an energy-ordering inversion
 ($\overline{E}_{\mathrm{correct}} > \overline{E}_{\mathrm{incorrect}}$),
 suggesting that highly-optimized base models exhibit ``reward
 hacking'' dynamics that confound standard linear EBM evaluators.
-The in-distribution $\mathrm{AUROC} = 0.9545$ on FoVer is unchanged;
+The in-distribution $\mathrm{AUROC} = 0.9545$ on the FoVer corpus
+(n=6{,}548; exp1072) is unchanged;
 the inversion is an OOD boundary on the energy class, not a
 falsification of the framework.
 
