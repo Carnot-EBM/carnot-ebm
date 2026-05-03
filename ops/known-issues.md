@@ -198,6 +198,71 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### NEW 2026-05-03 (22:55Z): Verifier Joint-Orthogonality Audit (.96 mandatory)
+
+**Background:** Phase-5-C adversarial probe (exp1224, .95 milestone) empirically demonstrated Spera Theorem 9.2 (arXiv:2603.15973) on Carnot's k=3 in-situ ensemble. Attack 2 (pairwise verifier correlation exploitation) succeeded with P(V_i | V_j) = 1.000 across all pairs — the conditional acceptance matrix was fully saturated. Effective ensemble size collapsed from k=3 to k=1; only V1 (changes_grid) provided genuinely independent signal. The decoder's `snap_to_action` quadrant-anchor mechanism structurally guaranteed V0 (in_bounds) for ALL inputs and V2 (no_duplicate_cells) for MOST, making them vacuous.
+
+The exp1224 artifact's revision note (quoted verbatim) frames the lesson:
+
+> Per Spera Theorem 9.2 (arXiv:2603.15973): verifier ensembles must be designed for joint-kernel orthogonality, not just individual coverage.
+
+**Implication for paper-v6's k=6 claim:** "k=6 formal distinctness" is the headline novelty claim per DR-2 §5 ("the unprecedented scale of formal distinctness applied specifically to Turing-complete self-referential codebase modification"). If 3 of 6 verifier pairs in the production ensemble are structurally correlated (plausible suspects: AST + JSON-schema; Z3 + ThinkPRM; Semantic + ThinkPRM), effective k drops to ~3 and the headline claim weakens. This must be empirically measured BEFORE paper-v6 submits, not after reviewers ask.
+
+**Mandatory .96 (or .97 if .96 full) pickup:**
+
+```
+1. MEASURE pairwise conditional acceptance probability matrix P(V_i | V_j)
+   across the production k=6 ensemble {Z3, AST, semantic, ThinkPRM, JSON,
+   SC-Energy} on a calibration corpus. Use FoVer test set or equivalent
+   diverse-distribution corpus (NOT in-distribution training set —
+   correlation must hold under representative deployment data).
+
+2. FLAG any pair with P(V_i | V_j) > 0.7 (DR-2 threshold; exp1224 hit 1.0).
+   Report the full 6x6 matrix in the artifact and as a paper-v6 figure.
+
+3. FOR EACH FLAGGED PAIR, choose one of:
+   (a) REPLACE one verifier with a structurally independent alternative.
+       Candidates per exp1224 pattern: verifiers whose acceptance regions
+       differ in mechanism, not just in surface check. Document why the
+       replacement is structurally orthogonal (cite the decoder/output
+       geometry, not just the verifier name).
+   (b) MERGE the pair explicitly in paper-v6: "V_i and V_j are jointly
+       counted as one effective verifier; the headline claim is k_eff=N
+       where N is the count of structurally independent acceptance regions."
+       This is the honest framing if (a) is infeasible.
+
+4. UPDATE PAPER-V6 to report:
+   - Full 6x6 P(V_i|V_j) matrix as a heatmap figure
+   - effective k after orthogonality audit (either k=6 if all pairs <0.7,
+     or k_eff < 6 with explicit accounting)
+   - Methodology paragraph: "verifier ensembles must be designed for
+     joint-kernel orthogonality, not just individual coverage" with
+     Spera 2026 + exp1224 + exp1108 as triadic citations.
+
+5. PROPAGATE the orthogonality requirement to .97 Phase-5 intermediate-
+   scale derisking (exp_NEXT_E): the k=5+ ensemble used at intermediate
+   scale must pass the same audit threshold before scale-up commits.
+```
+
+**Why this is in MANDATORY-NEXT-MILESTONE PRIORITIES:**
+
+Three escalating reasons:
+
+1. **Paper-v6 publication-blocking.** DR-2 explicitly identifies the k=6 formal distinctness as Carnot's "unprecedented" novelty. If reviewers ask "what is the joint-kernel orthogonality of your k=6?" and we have no measurement, the headline claim fails review. exp1224 surfaced this on a k=3 toy ensemble; we cannot ship paper-v6 without measuring on the production k=6.
+
+2. **Phase-5 production scale-up gate.** exp_NEXT_E (intermediate-scale, .96/.97) per the Phase-5 derisking proposal will run on a k=5+ ensemble. If we scale up without auditing orthogonality at toy scale, intermediate-scale failures will be ambiguously attributable to either insufficient capacity OR vacuous verifier overlap — burning 30-60 GPU-hours on noise.
+
+3. **Spera Theorem 9.2 was the most important DR-2 finding.** It bounds Carnot's defensible claim formally (joint null space detection is coNP-complete). exp1224 produced empirical evidence that this bound is NOT theoretical — the k=1-effective collapse happens at toy scale on a real Carnot ensemble. The mandatory .96 audit is the operational response to that finding; without it, the .95 lesson goes unlearned.
+
+**Cross-references:**
+- exp1224 artifact: `results/experiment_1224_phase5c_adversarial_probe.json`
+- Spera Theorem 9.2 memory: `memory/reference_spera_theorem_92.md`
+- DR-2 synthesis: `docs/research-notes/multi-verifier-ensemble-defense-deep-research-results.md`
+- Phase-5 derisking proposal: `openspec/change-proposals/in-situ-training-phase5-derisking.md` (intermediate-scale section needs propagation of this requirement)
+- Joint null space precedent: `memory/project_pathological_joint_null_space.md` (exp1108)
+
+---
+
 ### NEW 2026-05-03 (21:55Z): Paper-v6 Related Work Overhaul (.94 or .95 mandatory)
 
 **Background:** Google Deep Research dive 2026-05-03 ~21:30Z surfaced 5 critical papers and a structural thesis-sentence revision for paper-v6's positioning. Prior draft framed Carnot's contribution loosely; the literature now demands precise novelty boundaries.
