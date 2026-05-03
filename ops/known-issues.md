@@ -198,6 +198,36 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### NEW 2026-05-03 (13:55Z): Retro Task Boundary Too Tight (artifact_not_updated_past_bootstrap)
+
+**Background:** .92 exp1190 retro retired with `artifact_not_updated_past_bootstrap` × 3. .93 exp1202 retro is repeating the pattern (FAIL #1 at 13:44Z). Heavy retro work (read 12 artifacts + analyze + write structured JSON) doesn't fit within the YAML-configured max_turns budget. Codex hits the boundary mid-analysis, exits without writing the final artifact, conductor logs FAIL.
+
+**Why it's recurring:** the project's milestone artifacts have grown over time. Retro budgets that worked for .89/.90 (lighter milestones) don't fit .92/.93 (more cascade complexity to characterize). Retro tasks routed to codex (per AGENT_TYPE_RETRO=codex for quota conservation) don't get the opus-100 max-turns escalation tier.
+
+**Mandatory .94 fix (one or more of):**
+
+A. **Increase retro max_turns from 25 to 60-100.** Change in planner's retro template at `_plan_next_milestone()`. ~5 line edit. Risk: longer wall-time per retro.
+
+B. **STEP 1 = write artifact skeleton FIRST in retro prompt.** Forces codex to commit a status="success" stub early in the task, then fill in detail. If turn budget runs out mid-analysis, the artifact still exists at status="success" with whatever was completed. ~10 line prompt addition.
+
+C. **Route retros back to claude (revert AGENT_TYPE_RETRO).** Restores opus-100 escalation for retros specifically. Costs quota on every retro (1-2x/day).
+
+D. **Recommended: A + B combined.** Longer budget + explicit early-write instruction. Belt-and-braces.
+
+**Estimated cost:** ~30 min for option D (A + B + light testing).
+
+**Why this is in MANDATORY-NEXT-MILESTONE PRIORITIES:**
+
+Two consecutive milestones have lost their retro to this pattern. Without retros, planner Sonnet reads less context for the next milestone. Compounds operational discipline issues. Each retired retro = lost meta-reflection insight.
+
+**Cross-references:**
+- exp1190 retired pattern: ops/conductor-log.md 2026-05-03 06:01Z-06:15Z
+- exp1202 in-flight pattern: ops/conductor-log.md 2026-05-03 13:44Z onward
+- Planner retro template: scripts/research_conductor.py `_plan_next_milestone()` retro section
+- Related: this is a SUBSET of the broader artifact_not_updated_past_bootstrap pattern (5 .92 retirements + counting in .93) but specific to retro tasks where the fix is well-scoped
+
+---
+
 ### NEW 2026-05-03 (13:05Z): Auto-Populate prior_failures from Failure-Ledger at Plan Time
 
 **Background:** 7 DOOMED_RERUN_BLOCK false-positives observed in tonight's session: exp1162 (KANELE, 2 priors), exp1169 (FoVer SOTA v6, 6 priors), exp1172 (NRGPT-per-token, 2 priors), exp1174 (BiKA, 1 prior), exp1175 (Connect Four, 6 priors), exp1188 (Hex, 7 priors), exp1198 (FoVer v7, 5 priors). Each one required ~5 min of operator outer-loop intervention to recover (read priors, write per-prior addressed_by paragraph, append OK to log).
