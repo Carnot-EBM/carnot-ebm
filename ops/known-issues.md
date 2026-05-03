@@ -140,24 +140,46 @@ to adopt is value-judgment, not a blocker.
 better figures, or when GitHub Pages launches and needs hero
 graphics, or when a contributor offers to do the integration.
 
-## PUBLICATION HOLD (.91+ planner — operator directive 2026-05-02 11:35Z)
+## PUBLICATION HOLD (.91+ planner — operator directive 2026-05-02 11:35Z, EXTENDED 2026-05-02 18:40Z)
 
-**arXiv submission is ON HOLD until Phase 4 firm pivot answer.**
+**arXiv submission is ON HOLD until Phase 4 firm pivot answer + figure-integrity audit.**
 
 The 2026-05-15 deadline is NOT a hard constraint. Quality of
-architectural framing matters more than hitting the date.
+architectural framing AND honest figures matter more than hitting the date.
 
 **Operator-required for arXiv submission resumption:**
 
-Phase 4 must show at least:
-- exp1155 HMC compatibility regime determined (running NOW in .90)
-- exp1156 conditional sampler operational on Carnot's k=5 + DBAE
-- At least one ARC-AGI-3 or comparable result demonstrating Phase 4's
-  EBM-thinking advantage over autoregressive baselines
-- Paper revisions integrating Phase 4 prelim results (replacing
-  the placeholder Section 7 acknowledgment of Themesis)
+Phase 4 conditions (status as of 2026-05-02 17:37Z):
+- ✓ exp1155 HMC compatibility regime determined (Regime C — Blocked Gibbs path)
+- ✓ exp1156 conditional sampler operational (KL=0.023 vs Boltzmann)
+- ✓ exp1165 ARC-AGI-3-class result (74.7% action reduction, 100% solve, 5x5 synthetic)
+- ✓ exp1167 paper v4 Phase-4 section integration (PDF recompiled, 348KB)
 
-**Planner directive:**
+**Figure-integrity conditions (NEW 2026-05-02 18:40Z):**
+- ❌ fig3 (`docs/figures/fig3_fpga_latency.py`) BLOCKING:
+  - CPU baseline 290ms is "order-of-magnitude estimate", not measured
+  - Per-200-sample-sweep CPU vs per-sample FPGA = apples-to-oranges (200x inflation)
+  - Actual per-sample speedup is ~58x, not the displayed ~11,680x
+  - "Extrapolated" caveat below chart while misleading speedup badge in highlighted box at top
+  - Per CLAUDE.md "All headline results must have live GPU provenance" — fig3 violates the standard
+- ❌ FULL FIGURE AUDIT REQUIRED on remaining 6 figures (fig1/2/4/5/6/7):
+  - For each: are CPU/baseline numbers actually measured or extrapolated?
+  - For each: do the headline numbers match what the experiment artifact says?
+  - For each: are caveats prominent vs buried below chart?
+- ❌ HARDWARE-CLAIM AUDIT REQUIRED on all numerical claims in main.tex:
+  - 15.6x speedup vs C++ Gibbs claim (line 535) — measured or theoretical?
+  - 24.83µs FPGA latency claim — exp1068 source verified
+  - 11680x speedup claim (figure) — depends on disputed CPU baseline
+  - All "X times faster" / "Y% improvement" headline numbers traced to artifacts
+
+**exp1167 verdict downgrade (manual override 2026-05-02 18:40Z):**
+
+`results/experiment_1167_paper_v4_phase4_section.json`:
+- Was: `paper_ready_for_arxiv_hold_lift: true`, `honest_verdict: paper_v4_phase4_complete_arxiv_ready`
+- Now: `paper_ready_for_arxiv_hold_lift: false`, `honest_verdict: paper_v4_phase4_section_added_fpga_figure_blocking`
+- See `manual_override_2026_05_02T18_40Z` field for full audit trail
+
+**Planner directive (UPDATED):**
 
 Do NOT propose `arxiv-submit`, `arxiv-final-submission`, or any other
 publication-trigger task in .91+ milestones until this hold is
@@ -165,11 +187,188 @@ lifted explicitly by the operator. Paper-revision tasks (e.g.,
 "integrate exp11XX results into Section 7") are fine; auto-submit
 tasks are not.
 
+**Mandatory .92 (or earlier) tasks for hold-lift:**
+1. **Figure-integrity audit** — read every `docs/figures/*.py` script, trace every constant to a measured artifact in `results/`, document any "estimate" or "extrapolated" baseline. Refuse to publish any figure where headline numbers don't reduce to measured experimental data.
+2. **Hardware-claim audit** — sweep main.tex for all numerical claims, trace each to its source artifact, downgrade or remove any claim that doesn't reduce to measured data.
+3. **fig3 fix** — re-render with only what was measured (single-bar exp1068 24.83µs), OR run real CPU benchmark for the same N=64 / per-sample basis, OR remove the figure.
+
 **Memory: `feedback_publication_holds_until_phase4_pivot.md`**
 
 ---
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
+
+### NEW 2026-05-02 (22:50Z): Watchdog Insufficient for Single-Test Catastrophic Load — Need prlimit/cgroup Preemptive Cap
+
+**Background:** exp1178 shipped a `PytestMemoryWatchdog` post-test detection plugin (per-test threshold 500MB delta, session cumulative 8GB). Verdict was `watchdog_operational`. **However, the recurring 35GB+ RSS spike pattern persisted immediately after exp1178 OK'd** — exp1179 codex's pre-test self-heal triggered another worker hitting 39GB RSS within 6 minutes, requiring another manual operator SIGTERM intervention.
+
+**Root cause:** the shipped watchdog detects gradual leaks (delta after each test) and cumulative session breach. It does NOT prevent a single-test catastrophic load — when a llama.cpp test or BEAVER live test loads a 35GB model in one shot, the watchdog can only flag it AFTER the load completes; by then the system is already at risk of OOM.
+
+**Mandatory .93 fix:**
+
+The right tool for **preemptive prevention** is OS-level hard memory cap, not Python-level post-test detection. Three valid implementations:
+
+1. **prlimit wrapper** — modify `scripts/research_conductor.py` self-heal pytest invocation from `pytest tests/python -q` to `prlimit --as=8589934592 -- pytest tests/python -q`. Address-space limit kills any process exceeding 8GB cleanly. Single-line edit.
+
+2. **systemd-run scope** — `systemd-run --user --scope -p MemoryMax=8G -p MemorySwapMax=0 -- pytest tests/python -q`. cgroup-based cap. More robust than prlimit (handles fork bombs).
+
+3. **xdist worker MemoryMax** — pass `--memory-cap=8G` to a custom xdist plugin that wraps each worker spawn with cgroup. Most precise, most engineering work.
+
+**Why this is in MANDATORY-NEXT-MILESTONE PRIORITIES:**
+
+The pattern is now **6 occurrences in 5 hours** on 2026-05-02 (17:18, 19:33, 20:04, 21:18, 21:33, 22:48). Each requires manual operator SIGTERM. exp1178's watchdog plugin technically discharged its task description ("Per-Test RSS Monitoring + Session Cumulative Limit") but did NOT solve the operational problem. .93 must close the gap with a preemptive cap — option 1 (prlimit) is the ~10-line fix that actually prevents the spike.
+
+**Cross-reference:**
+- exp1178 deliverable: `python/carnot/testing/pytest_memory_watchdog.py`, `tests/python/conftest.py` wire-in (post-test detection, working but insufficient)
+- exp1178 task definition gap: planner Sonnet specified the watchdog as "Per-Test RSS Monitoring + Session Cumulative Limit" — codex correctly built that, but neither party caught that "Per-Test" + "Session" detection misses single-test catastrophic loads
+- Earlier known-issues entry (2026-05-02 21:35Z) flagged the recurring spike pattern but didn't specify "preemptive cap" vs "post-test detection" as the discriminating axis
+
+---
+
+### NEW 2026-05-02 (21:35Z): Pytest Worker Memory Watchdog — Stop the Recurring Load-Spike Pattern
+
+**Background:** session-long pattern of codex pre-test self-heal spawning pytest with xdist workers, where one worker balloons to ~35GB RSS / 1100-1500% CPU and load average climbs to 18-22. Five recurring spikes during this single session (2026-05-02): 17:18, 19:33, 20:04, 21:18, 21:33. Each one required manual operator intervention (SIGTERM codex, SIGKILL orphan pytest workers) to prevent OOM. **This is the load-bearing operator-attention drain that the conductor-supervisor proposal was designed to eliminate.**
+
+**Root cause:** when codex's self-heal mode runs `pytest tests/python -q` (the full suite, ~21k tests), some test loads llama.cpp models (likely BEAVER live tests) or runs large NumPy operations. xdist workers each consume an independent copy of the loaded model in memory. One worker hitting a memory-heavy test in its load order = OOM risk.
+
+**Mandatory .92 fix (one or more of):**
+
+1. **Pre-test memory cap** — wrap pytest invocations in `systemd-run --user --scope -p MemoryMax=8G ...` or `prlimit --as=8589934592 pytest ...`. If any worker exceeds 8GB, OS kills it cleanly. No 35GB workers possible.
+
+2. **Subset-only self-heal** — instead of running the full pytest suite, restrict self-heal to tests directly related to the failing one. The 21k-test suite includes BEAVER live + NRGPT + GRPO + KV260 — most are irrelevant to a given failing pre-test. Subset gating reduces both wall time and memory pressure.
+
+3. **Process-watchdog daemon** — separate process that polls `ps aux` every 10s, identifies any pytest worker exceeding (e.g.) 16GB RSS or 90% CPU sustained, SIGKILLs it. Conductor sees the test fail, decides next step normally — but the spike is bounded. Implementation: ~50 lines Python + systemd timer.
+
+4. **Conductor-side pre-test scope reduction** — modify the self-heal command in `scripts/research_conductor.py` to use `pytest tests/python --ignore=tests/python/test_beaver_lite_live_logprobs.py --ignore=tests/python/test_phase4_sampler.py --ignore=tests/python/test_experiment_1170*` etc. These are the heavy tests; excluding them from pre-test self-heal preserves the gate's purpose without the memory cost.
+
+**Recommended priority:** option 1 (memory cap) is the cheapest and most immediate. ~30 min of work, ships as a 2-line edit to the pytest-invocation command in `scripts/research_conductor.py`. Combined with option 4 (scope reduction) gives belt-and-braces.
+
+**Why this is in MANDATORY-NEXT-MILESTONE PRIORITIES:**
+
+The pattern has manifested 5 times in 4 hours. Without a fix, it manifests in .92 too, requiring continued operator-attention drain. The conductor-supervisor v1 (exp1027) was designed to handle exactly this class of issue but was never wired in to do active memory-watchdog. .92 should either complete that wire-in OR ship a simpler memory-cap pre-test wrapper.
+
+**Cross-reference:** Memory `incident_2026_04_26_swap_saturation.md` documented an earlier instance of this pattern. The conductor-process-isolation proposal at `openspec/change-proposals/conductor-process-isolation.md` is related but addresses orphan-on-shutdown, not in-flight memory explosion.
+
+---
+
+### NEW 2026-05-02 (20:05Z): GRPO v5 Routing Bug — Re-propose with claude/opus
+
+**Background:** exp1173 GRPO v5 + TinyV failed twice in .91 because the YAML had `model: opus` but no `agent_type:` field. Under global `AGENT_TYPE=codex`, that silently routes to codex/gpt-5.5 — ignoring the opus intent the planner had written. Both FAILs were codex-side (stall + dualgpu_confirmed=False bug). The task likely retires from .91 with all 3 attempts on the wrong backend.
+
+**Fix shipped 2026-05-02 20:05Z:** added `agent_type: claude` to research-roadmap.yaml@exp1173 + `failover_on_stall: true` defensive marker.
+
+**Mandatory .92 pickup:**
+- Re-propose GRPO v5 + TinyV False-Negative Correction in .92 with explicit `agent_type: claude, model: opus` + DualGPU MANDATORY + grace_period_s:2400
+- Include `prior_failures:` block citing exp1173 .91 retirement with addressed_by: "previous attempts routed to codex/gpt-5.5 instead of claude/opus due to YAML routing bug; this attempt uses explicit agent_type=claude"
+- The +10pp v4 baseline from exp1159 is the floor; v5 should match or exceed
+
+**Why this is in MANDATORY-NEXT-MILESTONE PRIORITIES:**
+
+The GRPO trajectory is the strongest self-learning signal in the project (+10pp from v3→v4). Losing v5 to a routing bug rather than scientific failure would be a real cost. Without explicit pickup, .92 planner Sonnet may interpret 3 FAILs as "GRPO v5 not viable" rather than "GRPO v5 was misrouted."
+
+**Cross-reference:** Memory `feedback_anthropic_quota_codex_default.md` documented the codex-default policy; this incident shows that policy needs an exception path for tasks with `model: opus` YAML hint.
+
+---
+
+### NEW 2026-05-02 (18:50Z): Paper Integrity Audit — 18 Issues Block Publication
+
+**Background:** operator audit + adversarial sub-agent review found 18 integrity issues in `docs/arxiv-paper/main.tex` and the 7 figures. The PR-blocking class is **5 critical issues** that violate CLAUDE.md "All headline results must have live GPU provenance". Full plan at `openspec/change-proposals/paper-v5-integrity-remediation.md`.
+
+**Critical issues (each individually blocks arXiv submission):**
+
+```
+ISSUE-1 fig3 11680x speedup
+  fig3_fpga_latency.py:32-36, 78-87
+  CPU 290ms is "order-of-magnitude estimate" (per docstring), comparison is
+  per-200-sample-sweep CPU vs per-sample FPGA. Real per-sample speedup is ~58x.
+  REMEDIATION: pull figure OR re-render with exp1094 measured CPU (15.96µs/sweep)
+
+ISSUE-2 KL=3.07 cited as FPGA-measured is software proxy
+  main.tex:469-481
+  exp1094.kl_measurement_mode = "software_parallel_glauber_proxy".
+  Bitstream J is hardware-fixed; live FPGA portion is latency probe only.
+  REMEDIATION: rewrite all "FPGA KL=3.07" to "software-proxy KL; bitstream KL
+  not yet measured on-board"
+
+ISSUE-3 15.6x speedup baseline is hand-typed code constant
+  fig7_chi4_fastpath.py:46
+  CPU_GIBBS_PER_SWEEP_NS = 1000.0  # "~1 microsecond" — no artifact reference.
+  exp1094 actual measured CPU = 15.96µs = 16x slower than the paper's guess.
+  Real ratio would be ~249x not 15.6x; or retract the speedup entirely.
+  REMEDIATION: run real optimized C++ Gibbs benchmark with cited artifact ID
+  OR retract the 15.6x headline number
+
+ISSUE-4 76,130x HardNet++ speedup is apples-to-oranges
+  main.tex:730 (exp1147)
+  117µs CPU array code vs 8.93s LLM API roundtrip = not a "speedup" architecturally.
+  REMEDIATION: reframe to "117µs per violation vs 8.9s for prompt repair on
+  the same 20 cases" — drop multiplicative speedup framing
+
+ISSUE-5 exp1121 hides verifier collapse
+  main.tex:714-721
+  Paper frames k=5 AUROC=0.5547 as deployment milestone. Hidden:
+  SOSKANEnergyV3 — the verifier with claimed 0.9545 AUROC — scored 0.3333
+  (worse than random!) on the production corpus.
+  REMEDIATION: add explicit text acknowledging OOD collapse — strengthens
+  Wall 3 (verifier null space) narrative rather than weakens it
+```
+
+**High-severity issues (5):**
+
+```
+ISSUE-6  GRPO +8.51pp on n=47, eval_wall_budget_hit=True
+  main.tex:705-712 (exp1118/1129)
+  Add binomial CI; small-sample caveat as prominent as headline number
+
+ISSUE-7  HumanEval +36pp against broken extraction baseline (0.0%)
+  main.tex:792-799, fig5
+  Reframe as "after extraction-fix" not "+36pp absolute"; move to anomaly section
+
+ISSUE-8  alpha_t=0.38 ignores k=5 disagreement with ground truth
+  main.tex:783-792, fig4
+  exp1077: 24/100 ground-truth-correct examples were rejected by k=5 AND-compose
+  used to compute alpha_t. Add this caveat.
+
+ISSUE-9  Phase-4 pilot baseline trivial (98% solve), monotone fraction on N=3
+  main.tex:892-922 (exp1165)
+  free_energy_values=[0,0,0] only 3 entries; baseline already solves 98%.
+  Add stronger baseline (BFS / shortest-action) before "evidence of free-energy guidance"
+
+ISSUE-10 Seed IQ row in Table 5 marked documented_fallback / not_confirmed
+  main.tex:944-948, 962-977
+  exp1166 seed_iq_score_confirmed=False; cited as established leaderboard fact.
+  Add footnote: "documented fallback evidence; not independently re-fetched"
+```
+
+**Medium-severity issues (5):**
+
+```
+ISSUE-11 ThinkPRM AUROC=0.9885 cited as "predecessor of exp1033" — no traceable artifact
+ISSUE-12 Retrained verifier holdout n=50 not stated; exp1121 contradicts the "fix generalizes" claim
+ISSUE-13 NRGPT n_iters_monotone=False — energy recurrence does NOT actually decrease monotonically
+ISSUE-14 Two SOS-KAN AUROCs (0.9902 vs 0.9545) unreconciled across sections
+ISSUE-15 fig2 ROC curves are binormal-fit synthesizations; caveat missing from paper caption
+```
+
+**Low-severity issues (3):**
+
+```
+ISSUE-16 Bibliography stub audit needed (4 suspect entries: themesis2026seediq, hive2026,
+         llmsgamingverifiers2026, rewardunderattack2026)
+ISSUE-17 Table 1 k=15 retracted-row framing OK; flag for caption note
+ISSUE-18 Hardware-portability theorem claim covers FPGA/Z1/photonic; only KV260 measured
+```
+
+**Why this is in MANDATORY-NEXT-MILESTONE PRIORITIES:**
+
+The paper is the load-bearing artifact for the publication-hold-lift gate. The audit revealed that exp1167's `paper_ready_for_arxiv_hold_lift: true` was incorrect — manually downgraded 2026-05-02 18:40Z. Until ISSUES 1-5 are resolved, the paper remains non-publishable per CLAUDE.md standards. Reserved-infrastructure-slot rule: .92 (and any subsequent milestone until hold lifts) MUST include at least 5 paper-integrity tasks (one per critical issue) with prior_failures blocks documenting the audit finding.
+
+**Cross-references:**
+- Full paper-v5 remediation plan: `openspec/change-proposals/paper-v5-integrity-remediation.md`
+- Manual override on exp1167: `results/experiment_1167_paper_v4_phase4_section.json#manual_override_2026_05_02T18_40Z`
+- Memory: `feedback_paper_integrity_audit.md`
+
+---
 
 ### NEW 2026-05-02 (06:40Z): Seed IQ Verified — Active-Inference Phase 4 Track (3 candidate tasks)
 

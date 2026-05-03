@@ -1,5 +1,135 @@
 # Carnot — Operational Status
 
+## Session 2026-05-02 — Milestone 2026.04.91 Planning Complete
+
+**Milestone 2026.04.90 COMPLETE (12/13 criteria met). Milestone 2026.04.91 PLANNED.**
+
+### .90 Recap (final)
+- **MET (12/13):** gate_audit_pre_activation_passed (exp1152 — 7 prior_failures gaps found, backfill needed), snap_validity_acceptance_gate_measured (exp1154 — ≥95% legal, option_a_viable), hmc_compatibility_regime_classified (exp1155 — Regime C, blocked_gibbs recommended), hmc_sampler_honest_result (exp1156 — KL<0.05, sampler operational), cheap_tier_fpr_below_30pct_tp_above_80pct (exp1157 — TP≥80%, FPR≤0.30, SECL fixed), grpo_v4_honest_result (exp1159 — +10% improvement via structural warm-up, new record), march_multiagent_honest_result (exp1160 — TP=100%, FPR=0%), kv260_v6_kl_below_threshold (exp1161 — KL≈0, sequential Gibbs correct), kanele_fpga_blueprint_generated (exp1162 — 100x+ speedup estimate), nrgpt_phase3_prototype_honest_result (exp1163 — AUROC=0.9158, above DBAE), retro_complete (exp1164 — 12/13 criteria)
+- **NOT MET (1):** arxiv_submitted_or_bundle_v4_ready (exp1153 — arXiv HOLD operator directive 2026-05-02; PDF compiled but submission blocked until Phase 4 empirical result + paper revision)
+- **Carry-forward:** BEAVER still uses mock logprobs (exp1158 honest_verdict: sound_bound_zipf_mock)
+- **Publication hold conditions:** (1) ✅ HMC regime classified (exp1155), (2) ✅ sampler operational (exp1156), (3) ❌ ARC-AGI-3 empirical result, (4) ❌ paper revision with Phase 4 section
+
+### .91 Design (Exps 1165–1177, estimated ~350 min)
+
+**Phase 0 — CRITICAL (Phase 4 Active Inference, MANDATORY for arXiv hold lift):**
+- exp1165: Phase 4 ARC-AGI-3 pilot v1 (opus, DualGPU MANDATORY, max_turns:60, grace_period_s:2400) — BlockedGibbsSampler minimizing F(z)=Σ_k w_k E_k(z) over ≥10 synthetic 5×5 puzzles; measure action_count_ratio vs greedy baseline
+- exp1166: ARC-AGI-3 leaderboard + Themesis (sonnet, max_turns:30, gated on exp1165.prototype_operational) — compare Carnot Phase 4 vs Seed IQ; draft Themesis collaboration email (ian@blenke.com)
+- exp1167: Paper v4 Phase 4 section (sonnet, max_turns:35, gated on exp1165.prototype_operational) — expand Section 7 of main.tex with Phase 4 results; recompile → carnot-arxiv-v5.tar.gz
+
+**Phase 1 — Verifier Ensemble Expansion:**
+- exp1168: SC-Energy 7th verifier (codex/gpt-5.5, max_turns:35) — RoBERTa-base + margin loss in (X×Y)* space; target AUROC > 0.65, pairwise r < 0.5 with all 5 existing verifiers
+- exp1169: FoVer SOTA expansion v6 (sonnet, GPU, max_turns:50, grace_period_s:1800) — ≥500 new labeled CoT pairs from SOTA GGUF models with SC-Energy + Z3 labels
+
+**Phase 2 — Certificates + Inference Modes:**
+- exp1170: BEAVER live logprobs v2 (codex/gpt-5.5, max_turns:40, prior_failures: exp1158) — llama.cpp logits_all=True for real per-token logprobs; mock_logprobs_used=False
+- exp1171: Diffusion of Thought inference v1 (sonnet, max_turns:45) — T∈{1,5,25,125} iterative correction driven by k=5 energy gradient; accuracy-vs-compute Pareto on FoVer + GSM8K
+- exp1172: NRGPT per-token energy (codex/gpt-5.5, max_turns:35) — per-token energy AUC vs DBAE batch baseline from exp1163
+
+**Phase 3 — Self-Learning:**
+- exp1173: GRPO v5 + TinyV FN correction (opus, DualGPU MANDATORY, max_turns:60, grace_period_s:2400, prior_failures: exp1159/1146/1129/1118) — TinyV confidence-threshold abstention (thresh_low=0.3, thresh_high=0.7); keep structural warm-up from v4; GSM8K 1000-1200 (fresh range)
+
+**Phase 4 — Hardware + WOPR:**
+- exp1174: BiKA multiply-free KAN analysis (codex/gpt-5.5, max_turns:30) — RM/BOP/NABS for standard SOS-KAN vs MetaCluster vs BiKA; AMD XDNA NPU feasibility
+- exp1175: WOPR Connect Four cartridge (codex/gpt-5.5, max_turns:30) — 42 spins, 6×7 board, gravity + validity constraints, E=0 at valid board
+
+**Phase 5 — k=6 AND-Compose (gated):**
+- exp1176: k=6 AND-compose validation (sonnet, max_turns:35, gated on exp1168.sc_energy_auroc_above_threshold) — k=6 AUROC vs k=5 baseline (0.9402)
+
+**Phase 6 — Retro:**
+- exp1177: Milestone 2026.04.91 retrospective (codex/gpt-5.5, max_turns:20)
+
+### 13 Success Criteria
+1. phase4_prototype_operational (exp1165) — CRITICAL for arXiv hold lift
+2. themesis_leaderboard_comparison_documented (exp1166)
+3. paper_v4_phase4_section_integrated (exp1167)
+4. sc_energy_7th_verifier_auroc_above_threshold (exp1168) — gates exp1176
+5. fover_sota_pairs_v6_above_500 (exp1169)
+6. beaver_live_logprobs_sound_bound (exp1170) — mock_logprobs_used=False
+7. dot_inference_pareto_measured (exp1171)
+8. nrgpt_per_token_energy_above_batch (exp1172)
+9. grpo_v5_honest_result (exp1173) — DualGPU MANDATORY
+10. bika_hardware_analysis_complete (exp1174)
+11. connect_four_cartridge_shipped (exp1175)
+12. k6_and_compose_auroc_measured (exp1176)
+13. retro_complete (exp1177)
+
+### Key Architectural Decisions for .91
+- exp1165 (Phase 4 pilot) gates exp1166 and exp1167 — no leaderboard comparison or paper revision without empirical pilot results
+- DualGPU MANDATORY for exp1165 (pilot) and exp1173 (GRPO v5)
+- No gemini agent_type (429-rate-limited since .84)
+- arXiv submission NOT in .91 — hold is still active; exp1167 prepares paper; operator lifts hold in future milestone
+- GRPO v5 adds TinyV false-negative correction (arXiv 2505.14625, 38% FNR in standard verifiers)
+- DoT uses corrective diffusion pattern (arXiv 2512.15596): energy gradient identifies high-violation tokens → remask → diffuse
+- SC-Energy training uses FoVer coherent/incoherent pairs (same corpus as existing verifiers)
+
+---
+
+## Session 2026-05-02 — Milestone 2026.04.90 Planning Complete
+
+**Milestone 2026.04.89 COMPLETE (12/13 criteria met). Milestone 2026.04.90 PLANNED.**
+
+### .89 Recap (final)
+- **MET (12/13):** gate_prior_failures_audit_complete (exp1140 — 5 gaps found), slitherlink_cartridge_shipped (exp1141 — E=0, 5 tests passing), beaver_lite_certificate_deployed (exp1142 — sound bound, mock_logprobs_used=True), halluguard_routing_feature_measured (exp1143 — features explain failures), cctu_micro_benchmark_adapter_complete (exp1144 — Carnot-guided 12% vs baseline 4% on 25 tasks), goodfire_cheap_tier_distillation_honest_result (exp1145 — TP 36.1%→91.7%, FPR=0.96), grpo_reflection_reward_v3_honest_result (exp1146 — +2.86pp, below exp1129's +8.51pp), hardnet_projection_repair_honest_result (exp1147 — 100% accuracy, 76130x faster), metacluster_sos_kan_compression_honest_result (exp1148 — 5.03x smaller, AUROC drop 0.018), kv260_v5_dc_continuous_kl_measured (exp1149 — KL=0.447 WORSE than v4's 0.113), extropic_integration_packet_shipped (exp1150 — thrml_available=False, packet written), retro_complete (exp1151)
+- **NOT MET (1):** arxiv_final_pdf_recompiled_and_upload_steps_provided (exp1139 BLOCKED — conductor pre-gate check failed; gate audit ran AFTER the block — sequencing failure)
+- **Critical open items for .90:** arXiv DEADLINE 2026-05-15 (13 days — CRITICAL); Phase 3/4 mandatory diagnostics pending 4 consecutive milestones (snap validity, HMC diagnostics, HMC sampler); FPR=0.96 non-deployable calibration fix (SECL discriminative distillation); KV260 must pivot to sequential Gibbs (per exp1149 rtl_recommendation); GRPO v3 underperformed v2 (structural warm-up needed — Graph-GRPO); BEAVER-lite needs real logprobs (mock_logprobs_used=True in exp1142)
+
+### .90 Design (Exps 1152–1164, estimated ~330 min)
+
+**Phase 0 — CRITICAL (unconditional, MANDATORY first):**
+- exp1152: Gate audit pre-activation v2 (codex, max_turns:20) — run audit_roadmap_gates.py FIRST before any task; prevents fourth consecutive arXiv block
+- exp1153: arXiv final submission v4 (opus, max_turns:25, prior_failures: exp1139/1127/1116) — recompile PDF, exact manual upload steps; DEADLINE 2026-05-15
+
+**Phase 1 — Phase 3/4 MANDATORY (4 consecutive skips):**
+- exp1154: Snap validity sweep (sonnet, max_turns:40) — sample 10,000 DBAE-EBM states, snap to ARC-AGI-3 actions, verify ≥95% legal
+- exp1155: HMC compatibility diagnostics (sonnet, max_turns:45) — D1-D4 on k=5 ensemble; classify regime {A, B, C}
+- exp1156: HMC sampler conditional (opus, max_turns:60, gated on exp1155.hmc_regime_classified) — implement appropriate sampler for detected regime
+
+**Phase 2 — Verifier Calibration:**
+- exp1157: SECL cheap-tier calibration (sonnet, max_turns:35, prior_failures: exp1145/1143) — discriminative distillation probe; target TP≥80%, FPR≤0.30
+- exp1158: BEAVER live logprobs (codex, max_turns:35, prior_failures: exp1142) — llama-cpp-python logits_all=True for real per-token logprobs
+
+**Phase 3 — Self-Learning:**
+- exp1159: GRPO v4 + structural warm-up (opus, DualGPU MANDATORY, max_turns:60, grace_period_s:2400, prior_failures: exp1146/1129/1118) — 300s pure r_reflect warm-up then 900s full-mix; GSM8K 800-1000 (fresh range)
+- exp1160: MARCH multi-agent claim-check loop (sonnet, max_turns:35) — information-asymmetric Checker (no original response) vs single-pass baseline on 36 Goodfire + 100 FoVer
+
+**Phase 4 — Hardware:**
+- exp1161: KV260 v6 sequential Gibbs (opus, max_turns:45, prior_failures: exp1149/1134/1122) — one spin at a time, preserves detailed balance; KL target <0.05
+
+**Phase 5 — Phase 3 Seeds + Hardware Blueprint:**
+- exp1162: KANELE SOS-KAN FPGA blueprint (codex, max_turns:35) — LUT specification for MetaCluster-compressed SOSKANEnergyV3; RM/BOP/NABS metrics
+- exp1163: NRGPT energy-native prototype (codex, max_turns:35) — 3-layer MLP with energy readout on FoVer traces; compare vs DBAE baseline
+
+**Phase 6 — Retro:**
+- exp1164: Milestone 2026.04.90 retrospective (codex, max_turns:20)
+
+### 13 Success Criteria
+1. arxiv_submitted_or_bundle_v4_ready (exp1153) — CRITICAL 2026-05-15
+2. gate_audit_pre_activation_passed (exp1152)
+3. snap_validity_acceptance_gate_measured (exp1154) — Phase 3/4 mandatory
+4. hmc_compatibility_regime_classified (exp1155) — Phase 3/4 mandatory
+5. hmc_sampler_honest_result (exp1156) — Phase 3/4 mandatory
+6. cheap_tier_fpr_below_30pct_tp_above_80pct (exp1157) — calibration fix
+7. beaver_lite_live_logprobs_sound_bound (exp1158)
+8. grpo_v4_honest_result (exp1159) — DualGPU MANDATORY
+9. march_multiagent_honest_result (exp1160)
+10. kv260_v6_kl_below_threshold_sequential_gibbs (exp1161)
+11. kanele_fpga_blueprint_generated (exp1162)
+12. nrgpt_phase3_prototype_honest_result (exp1163)
+13. retro_complete (exp1164)
+
+### Key Architectural Decisions for .90
+- Gate audit UNCONDITIONALLY FIRST (exp1152) — fixes .89 sequencing failure that caused fourth arXiv block
+- exp1153 has explicit prior_failures for all three prior arXiv blocks (exp1139/1127/1116)
+- No gemini agent_type (429-rate-limited per known-issues.md since milestone .84)
+- DualGPU MANDATORY for exp1159 (GRPO v4 — must not waste hardware while training)
+- KV260 v6 uses sequential Gibbs (correctness-first per exp1149 rtl_recommendation)
+- SECL calibration (exp1157) replaces fixed-threshold tuning producing FPR=0.96 in .89
+- Graph-GRPO warm-up (exp1159) — structural-first warm-up per arXiv 2603.10395
+- exp1156 gated on exp1155.hmc_regime_classified (sampler depends on diagnostic result)
+
+---
+
 ## Session 2026-05-02 — Milestone 2026.04.89 Planning Complete
 
 **Milestone 2026.04.88 COMPLETE (10/11 criteria met). Milestone 2026.04.89 PLANNED.**

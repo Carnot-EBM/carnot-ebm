@@ -1,0 +1,152 @@
+{
+  "experiment": "operational-retro-2026-04-89",
+  "title": "Milestone 2026.04.89 - Operational Efficiency Retrospective",
+  "milestone": "2026.04.89",
+  "run_date": "2026-05-02",
+  "schema": "carnot.operational_retro.v63",
+  "retro_type": "full_milestone",
+  "total_wall_time_minutes": 692,
+  "experiments_completed": 180,
+  "avg_experiment_min": 3.84,
+  "prior_milestone": "2026.04.88",
+  "prior_wall_time_minutes": 794,
+  "delta_minutes": -102,
+  "delta_pct": -12.8,
+  "source_notes": [
+    "Uses the provided full-milestone timing data as authoritative: 692 minutes, 180 completed experiments, 3.84 minutes average per experiment.",
+    "results/experiment_1151_milestone_retro_89.json records a narrower 257-minute active .89 execution window; that artifact is used for gate/retry context and research verdicts, not for total wall time.",
+    "The slowest-5 items in the full conductor log (exp906/exp950/exp948/exp930/exp905) are carryover/residual experiments from the broader queue, distinct from the 13 new .89-scheduled experiments. The .89 experiment retro (exp1151) records exp1140/exp1146 as the slowest within the active .89 batch."
+  ],
+  "slowest_experiments": [
+    {
+      "rank": 1,
+      "id": "exp906",
+      "duration_min": 35,
+      "title": "Code Repair 50q Scale-Up — IterativeSelfRepair with Gemma4",
+      "milestone_appearances": 7,
+      "diagnosis": "SEVENTH CONSECUTIVE MILESTONE REGRESSION. This retired experiment reappears in the conductor queue because dispatch-time enforcement has not been applied. The execution itself is expensive (sequential execute-feedback-retry loop across 50 code-repair questions with a large GGUF model), but the operational failure is upstream: a manifest-retired ID should never reach the dispatch stage. Cumulative waste across 7 consecutive regressions is approximately 245 minutes — the equivalent of 61 average-length experiments. The fix is a single dispatch-time guard, not a research decision."
+    },
+    {
+      "rank": 2,
+      "id": "exp950",
+      "duration_min": 28,
+      "title": "In-process docs for Exp 950: E-MVL Sparsified Ising — Sparse Connectivity for KV260 RTL Optimization",
+      "milestone_appearances": 4,
+      "diagnosis": "FOURTH CONSECUTIVE MILESTONE OCCURRENCE. The doc reconciliation pass still runs inline, blocking the main executor for 28 minutes. The async-batching fix recommended in retros .86, .87, and .88 has not shipped. Documentation reconciliation has no research dependency that requires inline execution; it should run once at milestone close as a non-blocking background task."
+    },
+    {
+      "rank": 3,
+      "id": "exp948",
+      "duration_min": 24,
+      "title": "Symbolic-KAN Real FoVer Data — AUC=0.9344 Architecture Comparison",
+      "milestone_appearances": 4,
+      "diagnosis": "FOURTH CONSECUTIVE MILESTONE OCCURRENCE. This CPU-bound architecture evaluation sweeps the full FoVer corpus (6548+ pairs) for what is an exploratory comparison rather than a certification run. Since the FoVer corpus was expanded 30x in .82, exploratory sweeps have become disproportionately expensive. CARNOT_FAST_EVAL=1 with a bounded 500-pair subsample has been recommended for four consecutive milestones without being implemented."
+    },
+    {
+      "rank": 4,
+      "id": "exp930",
+      "duration_min": 19,
+      "title": "Math Iterative Self-Repair v1 — Execute-Feedback on GSM8K",
+      "milestone_appearances": 2,
+      "diagnosis": "Serial math repair loop with per-question execute-feedback cycles. The latency is inherent to the algorithm, but it is aggravated by running against a SOTA GGUF model without batching or GPU parallelism. An early-stop rule (exit once a question is repaired) and batched GPU execution via DualGPURunner would reduce wall time without changing the research scope."
+    },
+    {
+      "rank": 5,
+      "id": "exp905",
+      "duration_min": 17,
+      "title": "IterativeSelfRepair v1 — Execute-Feedback-Retry on HumanEval",
+      "milestone_appearances": 2,
+      "diagnosis": "Same root cause as exp930: a sequential repair loop evaluated across 25 HumanEval questions without batching. This experiment is a benchmark fixture — its algorithm has not changed in recent milestones. Output caching for unchanged algorithmic components would reduce redundant evaluation. In .90, this should be treated as a stable fixture with cached baseline outputs, requiring only incremental re-evaluation on changed components."
+    }
+  ],
+  "bottlenecks_identified": [
+    "Dispatch-time retirement enforcement is still absent. exp906 appeared as the slowest full-queue experiment for the seventh consecutive milestone at 35 minutes. The exclusion manifest retirement exists at the planning layer but not at the conductor dispatch layer. A single pre-dispatch guard would eliminate this permanently.",
+    "In-process doc reconciliation blocked the execution queue for 28 minutes (fourth consecutive milestone). The async-batching fix has been recommended in retros .86, .87, and .88 without being implemented. This is the highest-leverage single engineering action available.",
+    "Full-corpus CPU sweeps continue for exploratory architecture comparisons. exp948 ran the full 6548-pair FoVer corpus for a non-certification pass, spending 24 minutes. CARNOT_FAST_EVAL=1 with a 500-pair subsample has been recommended for four consecutive milestones.",
+    "The gate audit experiment (exp1140) ran AFTER the release-critical arXiv task (exp1139) was blocked. exp1140 found 5 prior_failures gaps including the gap that had already blocked exp1139. Ordering the gate audit before milestone activation would prevent release-critical tasks from hitting avoidable gate failures.",
+    "arXiv submission blocked for the third consecutive milestone (.87 deferred, .88 compiled but manual upload pending, .89 exp1139 blocked at conductor_pre_gate). The combination of missing prior_failures fields and late-running gate audits has kept this release-critical deliverable deferred for three milestones.",
+    "GPU utilization was not efficient at milestone close. Both RTX 3090s reported 0% utilization and 4 MB VRAM each. exp1146 (GRPO reflection reward v3) did use the DualGPU path, but no other .89 experiment defaulted to DualGPURunner. Non-GPU-eligible tasks were not automatically co-scheduled on the GPU-resident Qwen/Gemma workers.",
+    "No GPU zombie processes were detected. The monitor reported an empty process list. The 4 MB VRAM allocations on each GPU are idle driver residuals below the gpu_monitor.py zombie threshold and do not represent resource waste.",
+    "Frozen slowest-5 composition persists for a fourth consecutive milestone (.86/.87/.88/.89 all share the same top-5 items from the broader queue). This is the same composition-freeze pattern that appeared at milestones .73-.76 before infrastructure investment ended it. The pattern signals that per-experiment efficiency is no longer improving and that volume reduction is the sole source of wall-time gains.",
+    "Per-experiment latency is flat. The observed average was 3.84 min/exp in .89 vs 3.80 min/exp in .88. The -102 minute improvement over .88 is entirely explained by volume reduction: 29 fewer experiments at 3.84 min/exp = 111 minutes. No genuine per-experiment efficiency gain is present in this milestone.",
+    "Hardware sampling tasks continue to yield honest negatives without a clear correctness-first baseline. KV260 v5 DC-continuous KL regressed from 0.1128 to 0.4469 (-0.3341 delta). The .89 retro identified this as a topology/access blocker requiring correctness-first sequential Gibbs before further parameter sweeps."
+  ],
+  "questions_answered": {
+    "which_experiments_took_longest_and_why": "In the full 692-minute conductor queue, the five slowest experiments were exp906 (35 min), exp950 docs (28 min), exp948 (24 min), exp930 (19 min), and exp905 (17 min) — all recurring legacy/carryover items. Within the active .89 research batch specifically, the two longest were exp1140 (gate audit, 42 min) and exp1146 (GRPO DualGPU reflection reward, 32 min). The full-queue slowest-5 are not research-driven; they are governance failures that have persisted for four consecutive milestones.",
+    "was_gpu_utilization_efficient": "No. Milestone-close GPU state showed both RTX 3090s at 0% utilization with 4 MB VRAM each and no active compute processes. exp1146 used the DualGPU path for GRPO training (32 minutes), but that was the only GPU-eligible task that reached DualGPURunner. The GPU monitor explicitly recommended running Qwen on GPU 0 and Gemma on GPU 1 simultaneously for idle tasks.",
+    "were_there_zombie_processes": "No GPU zombies were present. The gpu_monitor.py process list was empty at close. The 4 MB per-GPU allocations are idle driver residuals and do not cross the zombie threshold (1024 MB VRAM + 10 idle minutes). The close was operationally clean.",
+    "could_experiments_have_been_parallelized": "Yes. Doc reconciliation should be async; exploratory corpus sweeps (exp948) could run beside code-repair benchmark fixtures; the gate audit (exp1140) could overlap with non-gated research tasks; and GPU tasks should default to DualGPURunner to co-schedule independent Qwen/Gemma workloads on separate GPUs.",
+    "was_preflight_a_bottleneck": "The gate audit (exp1140) was not a pre-flight bottleneck — it ran after activation. The bottleneck was the ordering: the gate audit should run before activation to backfill prior_failures gaps before they block research-critical tasks. In .89, exp1139 (arXiv recompile, CRITICAL) was blocked at conductor_pre_gate before exp1140 ran and exposed the gap causing the block.",
+    "were_doc_reconciliation_passes_efficient": "No. The 28-minute in-process doc reconciliation pass (exp950) blocked the main executor for the fourth consecutive milestone. This pass has zero research dependencies that require inline execution. Batching all doc/spec/ops reconciliation to a single async milestone-close task would eliminate this bottleneck entirely.",
+    "what_tooling_changes_would_speed_next_milestone": "The five highest-leverage changes in priority order: (1) dispatch-time retirement enforcement to prevent exp906 and other manifest-retired experiments from re-entering the queue; (2) async doc reconciliation — batch doc passes to milestone close; (3) CARNOT_FAST_EVAL=1 for exploratory FoVer/Symbolic-KAN runs; (4) gate audit before milestone activation, not as experiment 2 after critical tasks have already failed; (5) DualGPURunner as the default policy for all requires_gpu tasks."
+  },
+  "improvements_suggested": [
+    "Add a dispatch-time retirement guard: before any experiment is dispatched to a conductor worker, check the exclusion manifest. If the ID is retired, emit a blocked artifact immediately without spawning a worker. Add a regression test that attempts to dispatch exp906 and asserts it is blocked. This eliminates a 35-minute recurring regression that has appeared seven consecutive milestones.",
+    "Move doc reconciliation out of the in-process executor path. All spec/ops/changelog doc updates should be batched into a single async task that runs once at milestone close. Add a conductor test asserting that doc reconciliation cannot block the main executor thread. This recovers 28 minutes per milestone.",
+    "Implement CARNOT_FAST_EVAL=1 sampling mode for FoVer/Symbolic-KAN architecture sweeps. Sample a bounded 500-pair subset for exploratory runs; reserve full-corpus evaluation for final certification artifacts only. This reduces exp948-class CPU sweeps from 24 minutes to approximately 9 minutes.",
+    "Run the roadmap gate audit before milestone activation, not as a sequenced research experiment. The prior_failures audit (exp1140) should be a planning-phase action that backfills YAML gaps before the conductor processes any gate-checked task. Alternatively, treat exp1140 as a pre-flight step with ordering priority = 0 and hold all gated experiments until it completes.",
+    "Default every requires_gpu experiment to DualGPURunner unless explicitly opted out. The runner should assign complementary Qwen and Gemma model workloads to GPU 0 and GPU 1 automatically, enabling parallel inference for any milestone that includes two GPU-eligible tasks.",
+    "Cap iterative-repair experiment retry tails. For exp905/exp930-class loops, set a per-question retry limit and an early-exit rule (stop when repaired or when the maximum allowed failures are reached). Cache model outputs for unchanged algorithmic components to avoid re-running the full HumanEval or GSM8K loop each milestone.",
+    "Adopt a correctness-first hardware sampling policy for KV260 and Extropic. Before proposing parameter sweeps, the .90 planner should verify that sequential Gibbs (not parallel) is running correctly on the target hardware. The DC-continuous KL regression from 0.1128 to 0.4469 in .89 confirms that adding algorithmic complexity before baseline correctness is established wastes experiment budget.",
+    "Track the arXiv submission task as a CRITICAL-first-position experiment with a fallback route. In three consecutive milestones (.87/.88/.89), the arXiv task has been deferred, compiled-but-not-submitted, or blocked. The .90 planner must position the arXiv task at position 1 with all prior_failures pre-filled and verified before activation."
+  ],
+  "estimated_time_savings_pct": 16,
+  "estimated_savings_breakdown_min": {
+    "retire_or_block_exp906_dispatch_enforcement": 35,
+    "async_doc_reconciliation": 28,
+    "fast_eval_for_corpus_sweeps": 15,
+    "dualgpu_defaults_and_cpu_parallelization": 20,
+    "gate_audit_before_activation": 15,
+    "total_recoverable_minutes": 113,
+    "pct_of_692_min_wall_time": 16.3
+  },
+  "gpu_state_at_close": {
+    "timestamp_utc": "2026-05-02T10:25:28.567470+00:00",
+    "gpu0_model": "NVIDIA GeForce RTX 3090",
+    "gpu0_vram_used_mb": 4,
+    "gpu0_vram_total_mb": 24576,
+    "gpu0_util_pct": 0,
+    "gpu0_temp_c": 46,
+    "gpu1_model": "NVIDIA GeForce RTX 3090",
+    "gpu1_vram_used_mb": 4,
+    "gpu1_vram_total_mb": 24576,
+    "gpu1_util_pct": 0,
+    "gpu1_temp_c": 48,
+    "processes_detected": 0,
+    "zombies_detected": 0,
+    "gpu_close_clean": true,
+    "operational_verdict": "clean_but_underutilized"
+  },
+  "wall_time_trend": {
+    "milestone_2026_04_85_minutes": 1010,
+    "milestone_2026_04_86_minutes": 940,
+    "milestone_2026_04_87_minutes": 891,
+    "milestone_2026_04_88_minutes": 794,
+    "milestone_2026_04_89_minutes": 692,
+    "baseline_2026_04_58_minutes": 3415,
+    "pct_below_baseline": 79.7,
+    "consecutive_milestones_below_baseline": 12,
+    "trend_note": "The 692-minute milestone is the twelfth consecutive below the .58 baseline and a new project best. However, the -102 min improvement over .88 is entirely volume-driven: 29 fewer experiments at 3.84 min/exp = 111 min, which exceeds the observed savings. Per-experiment latency is flat (3.84 vs 3.80 min/exp). The improvement rate has decelerated to a level where further volume reduction will not yield meaningful wall-time gains without addressing the frozen slowest-5 composition."
+  },
+  "composition_freeze_analysis": {
+    "consecutive_frozen_milestones": 4,
+    "frozen_since": "2026.04.86",
+    "frozen_experiments": ["exp906", "exp950", "exp948", "exp930", "exp905"],
+    "prior_freeze_precedent": "Milestones .73-.76 showed a four-milestone composition freeze that preceded the infrastructure investment in .77-.80. The current freeze matches that pattern and signals that per-experiment efficiency gains require governance action, not just volume reduction.",
+    "risk": "If the slowest-5 composition does not change in .90, the project will enter a structural efficiency plateau where wall-time improvements require ever-larger volume reductions to appear in the total figure."
+  },
+  "research_quality_summary": {
+    "criteria_met": 12,
+    "criteria_total": 13,
+    "missed_criterion": "arxiv_final_pdf_recompiled_and_upload_steps_provided",
+    "missed_reason": "exp1139 blocked at conductor_pre_gate due to missing prior_failures field; gate audit ran after the block occurred",
+    "notable_successes": [
+      "WOPR Slitherlink cartridge shipped E=0.0, 5 tests passing (rescued from .88 gate-block, exp1141)",
+      "HardNet projection repair: 100.0% accuracy at 117.3 us, 76130x faster than prompt repair (exp1147)",
+      "MetaCluster SOS-KAN compression: 5.03x smaller model, only 0.0184 AUROC drop, energy_correlation=0.9966 (exp1148)",
+      "Goodfire cheap-tier distillation: combined TP 36.1% to 91.7% via entropy_proxy (exp1145; FPR=0.96 prevents immediate deployment)",
+      "CCTU constrained tool-use: Carnot-guided 12% vs baseline 4% on 25/25 tasks with live Qwen3.6-35B-A3B-GGUF (exp1144)"
+    ]
+  },
+  "honest_verdict": "692min_180_experiments_avg_3pt84min_12pt8pct_faster_than_88_twelfth_consecutive_project_best_but_all_improvement_volume_driven_exp906_seventh_consecutive_regression_doc_reconcile_28min_fourth_consecutive_arxiv_blocked_third_consecutive_dualgpu_idle_at_close_frozen_slowest5_fourth_consecutive_16pct_recoverable_12_of_13_criteria_met"
+}

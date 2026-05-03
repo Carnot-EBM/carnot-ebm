@@ -328,6 +328,102 @@ honest_verdict="pimi_improved_below_5x".  iCE40 PIMI retired to exclusion_manife
 
 ---
 
+### REQ-HW-042
+
+**Title:** KV260 v5 DC-continuous Ising diagnostic MUST compare against v4 Gibbs KL
+
+**Description:**
+Experiment 1149 MUST provide a Python software diagnostic for a candidate KV260 v5
+Ising sampler that relaxes binary spins to continuous values in `[-1, +1]`, decomposes
+the dense Ising coupling matrix into positive and negative eigenspectrum parts, and
+uses a clipped DC/proximal-gradient update before thresholding back to `{-1, +1}`.
+The diagnostic MUST run on three deterministic J matrices, compare empirical
+`KL(v5_dc || CPU_Gibbs)` against the prior v4 KL result from Exp 1134, and emit a JSON
+artifact with the required v5 viability fields.
+
+**Acceptance criteria:**
+- The implementation reports `algorithm = "dc_continuous_relaxation"` and tests exactly
+  three deterministic J matrices.
+- The implementation computes and records `kl_v5_best`, `kl_v5_below_threshold`,
+  `kl_improvement_over_v4`, `kv260_v5_diagnostic_complete`, `rtl_recommendation`, and
+  an honest verdict from the approved Exp 1149 vocabulary.
+- The implementation records energy-time-accuracy fields including energy at convergence,
+  wall-clock seconds, and final constraint-satisfaction accuracy for each matrix.
+- Unit tests reference `REQ-HW-042` or `SCENARIO-HW-042` and validate the DC split,
+  thresholded output, verdict mapping, and artifact schema before the diagnostic is run.
+
+**Implementation status:** Implemented (Exp 1149)
+
+---
+
+### SCENARIO-HW-042
+
+**Scenario:** DC-continuous diagnostic writes a complete v5 artifact.
+
+**Given:** Exp 1134 reported `kl_v4_best=0.1128` and catastrophic self-adaptive lambda
+KL, and Exp 1122 provides the v4 Python-simulation structure.
+**When:** `scripts/experiment_1149_kv260_v5_dc_continuous_diagnostic.py` runs.
+**Then:** `results/experiment_1149_kv260_v5_dc_continuous_diagnostic.json` is written
+with the required schema fields, three J-matrix measurements, energy-time-accuracy
+metrics, and an honest verdict documenting whether v5 is threshold-viable or only an
+improvement over v4.
+
+**Implementation status:** Implemented (Exp 1149)
+
+---
+
+### REQ-HW-045
+
+**Title:** KV260 v6 sequential Gibbs sampler MUST preserve detailed balance by single-site updates
+
+**Description:**
+Experiment 1161 MUST provide a Python reference for the KV260 v6 Ising sampler
+that updates exactly one spin per Gibbs step in strict round-robin order
+`i_t = t mod N`.  For the selected spin, the sampler MUST hold all other spins
+fixed, compute `h_i = sum_j J_ij * s_j + b_i`, and draw `s_i = +1` with
+probability `sigmoid(2 * beta * h_i)`.
+
+The diagnostic MUST reuse the three deterministic Exp 1149 N=8, K=2 signed-ring
+J matrices generated from seeds 1134, 1135, and 1136, compare the v6 sampler
+against a CPU sequential-Gibbs reference for 10,000 steps per matrix, and report
+whether mean KL is below the 0.05 threshold.  It MUST also exercise the KV260 v4
+target topology at N=128, K=16 using sparse ring connectivity and report the
+same v6-vs-CPU KL gate for that topology without enumerating `2**128` states.
+
+**Acceptance criteria:**
+- `SequentialGibbsSampler.sample(J, b, n_spins, n_steps, beta, seed)` returns
+  `n_steps` strict single-site Gibbs samples with update index `t mod n_spins`.
+- The Exp 1161 artifact reports `algorithm = "sequential_gibbs"`, the three N=8
+  KL measurements, the N=128 K=16 KL measurement, v4/v5 improvement fields, the
+  required threshold booleans, and an honest verdict from the approved Exp 1161
+  vocabulary.
+- `hardware/kv260/ising_sampler_v6_spec.md` documents one-spin-per-clock RTL
+  pseudocode with `s[N]` state registers, `h[N]` field-cache registers, and the
+  per-cycle update semantics.
+- Unit tests reference `REQ-HW-045` or `SCENARIO-HW-045` and validate the
+  single-site update order, J-matrix reuse, artifact schema, N=128 sparse graph
+  support, and RTL pseudocode deliverable.
+
+**Implementation status:** Implemented (Exp 1161)
+
+---
+
+### SCENARIO-HW-045
+
+**Scenario:** Sequential Gibbs v6 writes a KL-correct KV260 artifact and RTL spec.
+
+**Given:** Exp 1149 reported `kl_v5_best ~= 0.447` and recommended sequential
+Gibbs for KL-correct RTL, and Exp 1134 reported `kl_v4_best ~= 0.1128`.
+**When:** `scripts/experiment_1161_kv260_v6_sequential_gibbs.py` runs.
+**Then:** `results/experiment_1161_kv260_v6_sequential_gibbs.json` is written
+with the required schema fields, `kl_v6_below_threshold_n8 = true`, the N=128
+K=16 topology result, positive KL improvements over v4 and v5, and
+`rtl_spec_written = true` pointing to `hardware/kv260/ising_sampler_v6_spec.md`.
+
+**Implementation status:** Implemented (Exp 1161)
+
+---
+
 ## Implementation Status
 
 | REQ | Status | Experiment |
@@ -338,4 +434,6 @@ honest_verdict="pimi_improved_below_5x".  iCE40 PIMI retired to exclusion_manife
 | REQ-HW-039 | Pending | Exp 714 |
 | REQ-HW-040 | Implemented | Exp 757 |
 | REQ-HW-041 | Implemented (retired) | Exp 901 |
+| REQ-HW-042 | Implemented | Exp 1149 |
+| REQ-HW-045 | Implemented | Exp 1161 |
 | REQ-FPGA-030 | Implemented | Exp 859 |

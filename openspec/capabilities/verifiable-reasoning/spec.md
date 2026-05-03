@@ -16468,6 +16468,90 @@ logprobs were used
 
 **Spec traces:** REQ-VERIFY-1142, Exp 1142
 
+## REQ-VERIFY-1158: BEAVER-Lite Live Logprob Certificate
+
+Carnot SHALL provide an Exp 1158 workflow that reuses the BEAVER-lite
+certificate tier with real llama.cpp token logprobs when available, and with a
+deterministic non-uniform Zipf mock only when llama.cpp is unavailable.
+
+- REQ-VERIFY-1158-1: The workflow SHALL evaluate exactly three GSM8K-style
+  arithmetic questions through `BEAVERLiteBounder.bound_prefix_violation()`.
+- REQ-VERIFY-1158-2: When llama.cpp and a cached GGUF model are available, the
+  workflow SHALL construct the llama.cpp-backed bounder with `logits_all=True`
+  through the existing `LlamaCppLogprobProvider` path and report
+  `mock_logprobs_used=False`.
+- REQ-VERIFY-1158-3: When llama.cpp is unavailable, the workflow SHALL use a
+  deterministic Zipf-distributed mock logprob provider, document the
+  `pip install llama-cpp-python` install command, and report both
+  `mock_logprobs_used=True` and `zipf_mock_used=True`.
+- REQ-VERIFY-1158-4: The Exp 1158 artifact SHALL include
+  `llama_cpp_available`, `model_used`, `mock_logprobs_used`,
+  `n_questions_evaluated`, `unsafe_mass_bound_live`,
+  `empirical_violation_rate_live`, `bound_gap_live`,
+  `bound_is_sound_live`, `unsafe_mass_bound_mock_prior`,
+  `bound_tighter_than_mock`, `beaver_lite_live_logprobs_sound_bound`, and
+  `honest_verdict`.
+- REQ-VERIFY-1158-5: The workflow SHALL set `honest_verdict` to one of
+  `sound_bound_live_logprobs`, `sound_bound_zipf_mock`,
+  `llm_not_available_blocked`, or `bound_violated_bug`, and SHALL set
+  `bound_tighter_than_mock=True` only when `unsafe_mass_bound_live < 0.400`.
+
+**Implementation Status:** Implemented (Exp 1158)
+
+### SCENARIO-VERIFY-1158: BEAVER-Lite Reports Live-Or-Zipf Sound Bound
+
+**Given** three GSM8K-style arithmetic questions
+**When** `scripts/experiment_1158_beaver_lite_live_logprobs.py` runs
+**Then** it writes `results/experiment_1158_beaver_lite_live_logprobs.json`
+**And** llama.cpp availability, model identity, and mock-vs-live mode are
+recorded honestly
+**And** the artifact reports the BEAVER-lite unsafe-mass bound, empirical
+violation rate, bound gap, soundness flag, and comparison against the 0.400 Exp
+1142 mock prior
+**And** unavailable llama.cpp uses the deterministic Zipf mock rather than the
+Exp 1142 uniform mock.
+
+**Spec traces:** REQ-VERIFY-1158, Exp 1158
+
+## REQ-VERIFY-1170: BEAVER-Lite llama.cpp Token Logprobs v2
+
+Carnot SHALL provide an Exp 1170 workflow that computes BEAVER-lite bounds from
+llama.cpp completion token logprobs produced with `logits_all=True`, and SHALL
+report mock fallback provenance honestly when live logprobs cannot be obtained.
+
+- REQ-VERIFY-1170-1: The live provider SHALL construct `llama_cpp.Llama` with
+  `logits_all=True` and request completion logprobs from the llama.cpp
+  completion call.
+- REQ-VERIFY-1170-2: The live provider SHALL extract
+  `completion["choices"][0]["logprobs"]["token_logprobs"]`, discard only `None`
+  placeholder values, and use the remaining token logprobs as the generated
+  completion path log probability.
+- REQ-VERIFY-1170-3: Exp 1170 SHALL evaluate 10 prompts from the local FoVer
+  corpus when available, falling back to built-in FoVer-style prompts only when
+  the corpus is unavailable.
+- REQ-VERIFY-1170-4: Exp 1170 SHALL write
+  `results/experiment_1170_beaver_live_logprobs_v2.json` with
+  `mock_logprobs_used`, `logprobs_source`, `bound_is_sound`,
+  `sample_bound_values`, `n_test_prompts_run`, and `honest_verdict`.
+- REQ-VERIFY-1170-5: `honest_verdict` SHALL be one of
+  `live_logprobs_sound_bound`, `logprobs_unavailable_mock_fallback`, or
+  `bound_computation_failed`, and live success SHALL report
+  `mock_logprobs_used=False` and `logprobs_source="llama_cpp_logits_all"`.
+
+**Implementation Status:** Proposed (Exp 1170)
+
+### SCENARIO-VERIFY-1170: BEAVER-Lite Uses llama.cpp Completion Logprobs
+
+**Given** a llama.cpp-compatible provider that returns completion
+`token_logprobs`
+**When** Exp 1170 evaluates 10 FoVer prompts
+**Then** the BEAVER-lite bound computation reports probability bounds in [0, 1]
+**And** the artifact records whether live llama.cpp logprobs or Zipf mock
+fallback logprobs were used
+**And** live success records `mock_logprobs_used=False`.
+
+**Spec traces:** REQ-VERIFY-1170, Exp 1170
+
 ## REQ-VERIFY-1144: CCTU Micro-Benchmark Adapter
 
 Carnot SHALL provide a 25-task CCTU-style micro-benchmark adapter for
@@ -16515,3 +16599,191 @@ validators before completion rates are reported
 **And** mock inference artifacts use `honest_verdict="mock_inference_only"`
 
 **Spec traces:** REQ-VERIFY-1144, Exp 1144
+
+### REQ-VERIFY-1147: Arithmetic Projection Repair
+
+Carnot SHALL provide a deterministic projection repair layer for simple
+arithmetic equality violations emitted by the math verifier, where:
+
+- A repair object accepts a response string and a Z3-style arithmetic violation
+  dictionary.
+- The repair extracts the violated equation from the violation metadata or the
+  response text.
+- For equations with one arithmetic-expression side and one claimed numeric
+  side, the repair computes the exact arithmetic result locally without any LLM
+  call.
+- The repair returns a patched response where the claimed numeric side is
+  replaced with the computed value.
+- Exp 1147 SHALL write
+  `results/experiment_1147_hardnet_projection_repair.json` with projection
+  accuracy, projection latency in microseconds, prompt-repair latency in
+  seconds, speedup factor, and an honest verdict.
+
+**Implementation Status:** Implemented (Exp 1147)
+
+### SCENARIO-VERIFY-1147: Projection Repair Fixes Synthetic Arithmetic Violations
+
+**Given** 20 synthetic responses containing violated arithmetic equations
+**When** `ArithmeticProjectionRepair.repair()` is applied to each violation
+**Then** every repaired response satisfies `Z3MathVerifier`
+**And** the Exp 1147 artifact reports `n_violations_tested=20`,
+`projection_repair_accuracy`, `projection_repair_latency_us`,
+`prompt_repair_latency_s`, `speedup_factor`, and `honest_verdict`.
+
+**Spec traces:** REQ-VERIFY-1147, Exp 1147
+
+## REQ-VERIFY-1157: SECL Cheap-Tier Discriminative Calibration
+
+Carnot SHALL provide a deterministic SECL-style calibration experiment for the
+cheap verification tier that corrects Exp 1145's recall-only threshold failure.
+
+- REQ-VERIFY-1157-1: The experiment SHALL read
+  `results/experiment_1145_goodfire_cheap_tier_distillation.json` and report
+  the applied ThinkPRM and SemEnergy thresholds alongside their default values.
+- REQ-VERIFY-1157-2: The calibration set SHALL contain the 36 Goodfire failure
+  exemplars and 200 FoVer rows labeled `correct`.
+- REQ-VERIFY-1157-3: Each row SHALL compute a continuous cheap-tier risk score
+  from ThinkPRM and SemEnergy scores and a discriminative signal approximating
+  `P("True" | "Is this response correct?")` from ThinkPRM logprob when present
+  or `sigmoid(thinkprm_score)` otherwise.
+- REQ-VERIFY-1157-4: The calibration probe SHALL be a deterministic logistic
+  regression over `[cheap_tier_score, discriminative_signal]` with class weights
+  `{0: 1.0, 1: FPR_budget / TP_target}` using `FPR_budget=0.30` and
+  `TP_target=0.80`.
+- REQ-VERIFY-1157-5: The result artifact SHALL be written to
+  `results/experiment_1157_secl_cheap_tier_calibration.json` and include
+  `n_exemplars`, `n_correct_examples`, `thinkprm_fpr_exp1145`,
+  `thinkprm_tp_exp1145`, `secl_tp_rate`, `secl_fpr`,
+  `precision_recall_improved`, `discriminative_signal_used`,
+  `cheap_tier_fpr_below_30pct`, `cheap_tier_tp_above_80pct`, and
+  `honest_verdict`.
+
+**Implementation Status:** Planned (Exp 1157)
+
+### SCENARIO-VERIFY-1157: SECL Calibration Reduces Exp1145 False Positives
+
+**Given** the Goodfire exemplar corpus, 200 FoVer correct examples, and the
+Exp 1145 threshold artifact
+**When** `scripts/experiment_1157_secl_cheap_tier_calibration.py` runs
+**Then** the result artifact reports Exp 1145's `TP=0.917` and `FPR=0.96`
+**And** the SECL probe uses the discriminative signal feature
+**And** the SECL operating point reports whether `secl_tp_rate >= 0.80` and
+`secl_fpr <= 0.30`
+**And** `honest_verdict` is one of the four REQ-VERIFY-1157 verdict strings.
+
+**Spec traces:** REQ-VERIFY-1157, Exp 1157
+
+## REQ-VERIFY-1168: SC-Energy Verifier k=6 Gate
+
+Carnot SHALL provide an SC-Energy verifier module that scores set-level
+logical compatibility for question/response statement sets and emits the
+Exp 1168 k=6 viability artifact.
+
+- REQ-VERIFY-1168-1: `SCEnergyVerifier` SHALL expose
+  `encode(statements: list[str])`, `energy(response: str, context: str)`, and
+  `train(coherent_pairs, incoherent_pairs, n_epochs=10)`.
+- REQ-VERIFY-1168-2: `encode()` SHALL use RoBERTa-style CLS pooling through
+  the `transformers` backend when available and SHALL return a two-dimensional
+  numeric embedding array with one row per statement.
+- REQ-VERIFY-1168-3: `energy()` SHALL return a Python float where higher values
+  indicate lower set compatibility between context and response statements.
+- REQ-VERIFY-1168-4: `train()` SHALL optimize the margin objective
+  `max(0, margin - (E_incoherent - E_coherent))` and return `self`.
+- REQ-VERIFY-1168-5: Exp 1168 SHALL write
+  `results/experiment_1168_sc_energy_7th_verifier.json` with SC-Energy AUROC,
+  pairwise correlations against the existing k=5 verifiers, k6 viability, and
+  one of the required honest-verdict strings.
+
+**Implementation Status:** Planned (Exp 1168)
+
+### SCENARIO-VERIFY-1168: SC-Energy Gate Reports AUROC And Orthogonality
+
+**Given** a FoVer holdout and the existing k=5 verifier suite
+**When** `scripts/experiment_1168_sc_energy_7th_verifier.py` runs
+**Then** the result artifact records `sc_energy_auroc`, five pairwise
+correlations, `all_r_below_0.5`, `k6_viable`, and the verifier module path
+**And** `k6_viable` is true only when AUROC is above 0.65 and all five
+correlations are below 0.5.
+
+**Spec traces:** REQ-VERIFY-1168, Exp 1168
+
+## REQ-VERIFY-1169: FoVer SOTA Expansion v6 SC-Energy Labels
+
+Carnot SHALL append a new Exp 1169 FoVer corpus expansion for SC-Energy
+training and k=6 Z3 validation, preserving the prior corpus rather than
+overwriting it.
+
+- REQ-VERIFY-1169-1: The experiment SHALL discover the current FoVer corpus
+  size from the latest valid FoVer result JSON and SHALL append new rows to
+  `data/fover_corpus.jsonl` without truncating existing rows.
+- REQ-VERIFY-1169-2: The experiment SHALL sample 200 GSM8K, 100 HumanEval, and
+  200 ARC-Challenge prompts and SHALL run SOTA GGUF standard-response
+  generation through `BatchedInferenceRunner` with `batch_size=8`.
+- REQ-VERIFY-1169-3: For each sampled prompt, the experiment SHALL emit a
+  standard response row and an adversarial row with a deliberately injected
+  step-2/step-3 error for incoherent SC-Energy training.
+- REQ-VERIFY-1169-4: Each emitted row SHALL include SC-Energy labels
+  (`coherent` or `incoherent`) derived from `z3_pass`, `ast_valid`, and
+  `no_semantic_contradiction`, plus a source label among `gsm8k`,
+  `humaneval`, and `arc_challenge`.
+- REQ-VERIFY-1169-5: Exp 1169 SHALL write
+  `results/experiment_1169_fover_sota_expansion_v6.json` with `n_new_pairs`,
+  `fover_sota_pairs_v6_above_500`, `n_coherent`, `n_incoherent`,
+  `n_z3_labeled`, `n_sc_energy_labeled`, `label_breakdown`,
+  `total_corpus_size`, and the required honest-verdict enum.
+
+**Implementation Status:** Planned (Exp 1169)
+
+### SCENARIO-VERIFY-1169: FoVer v6 Emits Complete SC-Energy Labels
+
+**Given** an existing FoVer corpus and cached SOTA GGUF model weights
+**When** `scripts/experiment_1169_fover_sota_expansion_v6.py` runs
+**Then** at least 500 new labeled rows are appended when live generation is
+available
+**And** the artifact reports coherent/incoherent counts, Z3 label count,
+SC-Energy label count, source breakdown, cumulative corpus size, and one of
+the required honest-verdict strings.
+
+**Spec traces:** REQ-VERIFY-1169, Exp 1169
+
+## REQ-VERIFY-1176: k=6 AND-Composition SC-Energy Validation
+
+Carnot SHALL provide a deterministic Exp 1176 validation workflow that measures
+whether adding SC-Energy to the repaired production k=5 AND-composition
+ensemble improves FoVer AUROC before any production pipeline wiring is changed.
+
+- REQ-VERIFY-1176-1: The workflow SHALL load the Exp 1168 SC-Energy gate
+  artifact and instantiate `SCEnergyVerifier` from the recorded model metadata,
+  using the deterministic Exp 1168 training fallback when no checkpoint weights
+  are present in the artifact.
+- REQ-VERIFY-1176-2: The workflow SHALL evaluate exactly 200 held-out FoVer
+  examples that were not used for Exp 1168 SC-Energy training.
+- REQ-VERIFY-1176-3: The k=6 score SHALL be the conservative AND-composition
+  energy `max(E_1, ..., E_6)` over `SOSKANEnergyV3`, `SemEnergyProbe`,
+  `ASTStructureVerifier`, `SemanticConsistencyVerifier`, `Z3MathVerifier`, and
+  `SCEnergyVerifier`.
+- REQ-VERIFY-1176-4: The workflow SHALL compute k=6 AUROC, pairwise Pearson
+  correlations between SC-Energy and each of the five existing verifiers on the
+  200-example evaluation set, and the marginal gain versus the Exp 1128 k=5
+  AUROC baseline of 0.9402.
+- REQ-VERIFY-1176-5: Exp 1176 SHALL write
+  `results/experiment_1176_k6_and_compose_validation.json` with
+  `k5_auroc_baseline`, `k6_auroc`, `k6_above_k5`,
+  `k6_and_compose_auroc_measured`, `sc_energy_r_corr_on_eval`,
+  `sc_energy_marginal_gain`, and the required honest-verdict enum, without
+  modifying `VerifyRepairPipeline` production wiring.
+
+**Implementation Status:** Planned (Exp 1176)
+
+### SCENARIO-VERIFY-1176: k=6 Validation Reports AUROC And Correlation
+
+**Given** Exp 1168 reports `sc_energy_auroc_above_threshold == True` and
+`k6_viable == True`
+**When** `scripts/experiment_1176_k6_and_compose_validation.py` runs
+**Then** it scores 200 held-out FoVer examples with the repaired k=5 ensemble
+and SC-Energy
+**And** it writes the Exp 1176 artifact with the required AUROC, marginal-gain,
+pairwise-correlation, and honest-verdict fields
+**And** production k=5 pipeline wiring remains unchanged.
+
+**Spec traces:** REQ-VERIFY-1176, Exp 1176

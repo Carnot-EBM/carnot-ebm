@@ -202,7 +202,15 @@ has not actually used Carnot's hardware lineage.
 Phase 3 experiments MUST populate the `honest_verdict` schema field with one of:
 `stage1_primitives_only`, `stage2_toy_converged`, `stage2_toy_diverged`,
 `stage3_verify_repair_internalised`, `stage3_verify_repair_regressed`,
-`stage4_backend_swap_verified`, `stage4_backend_swap_failed`, or
+`stage4_backend_swap_verified`, `stage4_backend_swap_failed`,
+`option_a_viable_above_95pct`, `option_a_marginal_90_to_95pct`,
+`option_a_failed_below_90pct`, `phase3_continuous_ebm_not_found`, or
+`regime_A_hmc_viable`, `regime_B_preconditioning_needed`,
+`regime_C_hmc_inappropriate`, `sampler_kl_below_05_viable`,
+`sampler_kl_above_05_needs_tuning`, `regime_c_langevin_deployed`,
+`phase4_better_than_baseline`, `phase4_tied_with_baseline`,
+`phase4_worse_than_baseline`, `prototype_only_no_convergence`,
+`diagnostics_partial_pipeline_not_found`, `pipeline_not_found_blocked`, or
 `blocked_*` for dependency failures.
 
 **Rationale:** Phase 3 is where optimistic claims are most tempting. The
@@ -214,6 +222,240 @@ the cross-dataset 0.96 AUROC, the 1.0 JEPA OOD AUC) must extend here.
 - Any experiment script under `scripts/experiment_*phase3*.py` or
   `scripts/experiment_*kona*.py` asserts at exit that its artifact contains a
   non-empty `honest_verdict` matching the enum above.
+
+### REQ-KONA-008: Latent-to-Validity Snap Sweep
+
+Before Phase 4 commits to Option A (continuous relaxation plus nearest-neighbor
+snap), Carnot MUST run a snap-validity diagnostic against the Phase 3 bounded
+continuous latent space `z in [-1, 1]^d`. The diagnostic samples 10,000
+continuous states uniformly from the latent hypercube, snaps each state to the
+nearest discrete action, checks whether the snapped action is legally executable,
+and emits `snap_validity_rate = n_legal_snaps / 10000`.
+
+When a deterministic ARC-AGI-3 rule engine is not available in the repository,
+the diagnostic MUST use a synthetic proxy: a deterministic set of legal action
+points drawn from the 0.1-spaced grid in `[-1, 1]^d`, with nearest-neighbor
+Euclidean snap and `proxy_used=True` in the artifact. The proxy action space MUST
+be capped to at most 1,000 actions, matching the Q8 assumption that per-turn
+action spaces are small enough for cheap snapping.
+
+**Rationale:** Q8 identifies the snap sweep as the cheapest pre-prototype check
+for whether Option A is viable. If fewer than 95% of continuous states snap to
+legal actions, Phase 4 should pivot before investing in the HMC sampler.
+
+**Acceptance criteria:**
+
+- The artifact includes `latent_dim`, `n_states_sampled`, `n_legal_snaps`,
+  `snap_validity_rate`, `snap_validity_gate_passed`,
+  `phase4_option_a_viable`, `proxy_used`, `action_space_description`, and
+  `honest_verdict`.
+- `snap_validity_gate_passed` and `phase4_option_a_viable` are both true iff
+  `snap_validity_rate >= 0.95`.
+- `honest_verdict` is `option_a_viable_above_95pct` at or above 95%,
+  `option_a_marginal_90_to_95pct` from 90% inclusive to below 95%, and
+  `option_a_failed_below_90pct` below 90%.
+- If the Phase 3 `ContinuousEBM` cannot be loaded, the artifact emits
+  `honest_verdict='phase3_continuous_ebm_not_found'`.
+
+### REQ-KONA-009: HMC Compatibility Diagnostics
+
+Before Phase 4 commits to Hamiltonian Monte Carlo over the continuous latent
+space, Carnot MUST run the Deep Think Q7 diagnostics against the current k=5
+AND-composed verifier energy bridge. The diagnostic samples random latent
+vectors with dimension `latent_dim` taken from the Exp 1154 snap-validity
+artifact, evaluates D1 symplectic reversibility, D2 Hamiltonian energy
+conservation, D3 cross-component gradient norm disparity, and D4 continuous
+subspace recovery, and emits a regime classification in `{A, B, C}`.
+
+When the k=5 verifier bridge includes text, symbolic, or otherwise
+non-autodifferentiable components, the diagnostic MUST use central finite
+differences for gradients and record `gradient_method="numerical_fd"` in the
+artifact. The artifact MUST include the required D1-D4 scalar fields, per-
+diagnostic regime signals, `hmc_regime_classified=True`, `hmc_regime`,
+`recommended_sampler`, and `honest_verdict`.
+
+**Rationale:** Q7 identifies these diagnostics as the cheap pre-prototype check
+that prevents spending Phase 4 implementation time on HMC when the verifier
+gradient is discontinuous, badly conditioned, or only usable after
+preconditioning.
+
+**Acceptance criteria:**
+
+- `scripts/experiment_1155_hmc_compatibility_diagnostics.py` reads
+  `results/experiment_1154_snap_validity_sweep.json` for `latent_dim` and
+  writes `results/experiment_1155_hmc_compatibility_diagnostics.json`.
+- D1, D2, and D3 regime signals use the thresholds specified in the Exp 1155
+  task prompt: D1 A/B/C at `<0.01`, `<0.1`, otherwise C; D2 A/B/C at `<0.1`,
+  `<1.0`, otherwise C; D3 A/B/C at `<10`, `<100`, otherwise C.
+- The final HMC regime is the worst of the D1-D3 signals, with sampler
+  recommendations `hmc`, `preconditioned_hmc`, or a Regime C fallback selected
+  from D4.
+- D4 reports whether low continuous-subspace Hamiltonian variance with high
+  full-ensemble variance identifies discrete verifier components as the
+  bottleneck.
+
+### REQ-KONA-010: Regime-Conditional Phase 4 Sampler
+
+Phase 4 MUST deploy the sampler recommended by the Exp 1155 HMC compatibility
+artifact. Regime A uses NumPyro NUTS, Regime B uses preconditioned HMC with a
+diagonal SoftAbs-style mass rescaling, Regime C with a D4 discrete-component
+bottleneck uses blocked Gibbs for discrete verifier coordinates plus Langevin
+updates for continuous verifier coordinates, and general Regime C uses adaptive
+SGLD.
+
+The implementation MUST expose `python/carnot/samplers/phase4_sampler.py` with
+`Phase4Sampler`, which satisfies the `SamplerBackend` structural protocol and
+provides `sample(energy_fn, init_state, n_steps, **kwargs) -> samples` for
+continuous-latent energy functions. The experiment artifact for Exp 1156 MUST
+include `hmc_regime_used`, `sampler_algorithm`, `sampler_module`,
+`sampler_written`, `n_validation_examples`, `acceptance_rate`,
+`kl_divergence_vs_boltzmann`, `n_tests_passing`,
+`active_inference_sampler_ready`, `hmc_sampler_honest_result`, and
+`honest_verdict`.
+
+**Rationale:** Exp 1155 showed that direct HMC is inappropriate for the current
+k=5 verifier bridge because symbolic verifier coordinates create a discrete
+bottleneck. Phase 4 should therefore follow the diagnostic result rather than
+ship a sampler whose assumptions are already known to be false.
+
+**Acceptance criteria:**
+
+- `Phase4Sampler.from_exp1155(...)` selects `blocked_gibbs` when the artifact has
+  `hmc_regime="C"` and `d4_discrete_components_bottleneck=true`.
+- Regime C blocked Gibbs samples remain finite and bounded in the latent cube,
+  update at least one discrete coordinate by Gibbs/MH flips, and return a chain
+  with shape `(n_steps, latent_dim)`.
+- `scripts/experiment_1156_hmc_sampler_conditional.py` validates 100 synthetic
+  latent examples for 1,000 sampler steps each, estimates KL divergence against a
+  Boltzmann reference at `T=1`, and writes the required Exp 1156 JSON fields.
+
+### REQ-KONA-011: NRGPT Energy Recurrence Seed
+
+A Phase 3 architecture-seed experiment MUST evaluate whether an NRGPT-style
+energy recurrence improves FoVer binary classification over the current
+ContinuousEBM-shaped baseline. The recurrence takes a fixed FoVer embedding
+`z`, applies bounded gradient descent on a learned 3-layer MLP energy
+`E(z)`, and trains a linear classification head on the refined state.
+
+The experiment MUST evaluate exactly 5,000 training examples and 500 held-out
+examples when enough FoVer labels are available, MUST compare `n_iters=1` and
+`n_iters=3` under the same learned energy function, and MUST emit the required
+Exp 1163 artifact fields:
+`n_training_pairs`, `n_eval_pairs`, `baseline_auroc`, `nrgpt_auroc_n1`,
+`nrgpt_auroc_n3`, `nrgpt_above_baseline`, `n_iters_monotone`,
+`energy_block_module_written`, `fover_data_source`,
+`nrgpt_phase3_prototype_honest_result`, and `honest_verdict`.
+
+**Rationale:** NRGPT claims that a GPT-style hidden state can be retrofitted
+with an energy-based iterative refinement step. Carnot needs a small, honest
+Phase 3 seed before committing that architecture to the foundation-model path.
+
+**Acceptance criteria:**
+
+- `python/carnot/phase3/nrgpt_energy.py` exposes `NRGPTEnergyBlock`, whose
+  forward pass preserves embedding shape and applies `n_iters` bounded
+  gradient-descent updates on a learned 3-layer MLP scalar energy.
+- `scripts/experiment_1163_nrgpt_energy_native_prototype.py` writes
+  `results/experiment_1163_nrgpt_energy_native_prototype.json` with every
+  required field and an honest verdict from the Exp 1163 enum.
+- The artifact reports whether `n_iters=3` beats the baseline and whether
+  `n_iters=3 >= n_iters=1`; it MUST NOT coerce a negative or tied result into
+  a positive verdict.
+
+### REQ-KONA-012: Phase 4 Active Inference Pilot
+
+Phase 4 MUST include a small active-inference pilot that composes a k=5 verifier
+ensemble into a scalar variational free energy over the bounded latent cube,
+minimises that energy with the Regime C Phase 4 sampler, snaps the minimised
+latent to a legal action, and compares the selected actions against a random
+legal-action baseline on at least ten deterministic ARC-AGI-3-like synthetic
+5x5 puzzles.
+
+The pilot artifact MUST include `prototype_operational`, `n_puzzles_evaluated`,
+`phase4_mean_action_count`, `baseline_mean_action_count`,
+`action_count_ratio`, `phase4_solved_rate`, `baseline_solved_rate`,
+`energy_trace_monotone_fraction`, `free_energy_values`,
+`comparison_to_seed_iq`, `blocked_gibbs_params`, and `honest_verdict`.
+
+**Rationale:** Exp 1154 established that bounded continuous latents can snap to
+legal action representatives, Exp 1155 selected Regime C, and Exp 1156 deployed
+blocked Gibbs. The next check is whether minimising the AND-composed verifier
+free energy produces measurably more efficient action selection than an
+uninformed legal-action baseline.
+
+**Acceptance criteria:**
+
+- `ActiveInferencePilot.minimize_free_energy(...)` returns a bounded latent and
+  an energy trace whose last value is no greater than the initial value when the
+  sampler finds an improving state.
+- `ARC3PuzzleEnv` exposes ten named 5x5 synthetic puzzles with 3-5 legal actions
+  per step and finite 3-10 step solution traces.
+- `scripts/experiment_1165_phase4_active_inference_pilot_v1.py` runs five
+  episodes per puzzle per method, writes the required artifact fields, and sets
+  `honest_verdict` from the measured Phase 4/baseline action-count ratio.
+
+### REQ-KONA-013: ARC-AGI-3 Leaderboard Positioning and Themesis Outreach
+
+Phase 4 MUST include a positioning artifact that cross-references the Exp 1165
+active-inference pilot against the public ARC-AGI-3 leaderboard context and
+drafts operator-reviewed Themesis outreach without sending mail automatically.
+
+The artifact MUST include `seed_iq_score_confirmed`, `seed_iq_score`,
+`seed_iq_action_efficiency`, `carnot_phase4_action_count_ratio`,
+`leaderboard_comparison_table`, `themesis_email_drafted`,
+`themesis_email_text`, and `honest_verdict`.
+
+**Rationale:** Exp 1165 measured Carnot's free-energy minimisation prototype on
+synthetic ARC-AGI-3-like puzzles. The next step is to document the honest
+relationship between that pilot, Seed IQ's active-inference result, and weak
+autoregressive ARC-AGI-3 baselines before any collaboration outreach is sent.
+
+**Acceptance criteria:**
+
+- `scripts/experiment_1166_arc_agi3_leaderboard_themesis_outreach.py` fetches
+  the ARC Prize leaderboard context when available and falls back to the
+  documented Seed IQ values from `ops/known-issues.md` when a Seed IQ row is not
+  independently exposed.
+- The comparison table includes Seed IQ, Carnot Phase 4, and frontier
+  autoregressive LLM rows, with Carnot fields derived from Exp 1165 rather than
+  hard-coded independently.
+- The Themesis email draft names Denise Holt / Denis O., uses
+  `ian@blenke.com`, stays under 300 words, and frames Carnot as Apache 2.0,
+  decentralization-respecting, multi-vendor, and complementary to Seed IQ.
+
+### REQ-KONA-014: NRGPT Per-Token Energy Inference
+
+The NRGPT Phase 3 seed MUST expose per-token energy evaluation over FoVer
+responses. `NRGPTEnergyModel.energy_per_token(response_tokens)` MUST process
+tokens sequentially through a recurrent hidden state, apply a linear energy
+readout at each token boundary, and return one scalar energy per input token.
+`NRGPTEnergyModel.batch_energy(response)` MUST preserve the batch-level contract
+by returning the sum of the per-token energies for the tokenized response.
+
+The Exp 1172 runner MUST compare per-token FoVer localization against the
+Exp 1163 batch AUROC baseline and write:
+`per_token_auroc`, `batch_auroc_baseline`, `per_token_above_batch`,
+`nrgpt_per_token_energy_above_batch`, `energy_spike_localization_rate`, and
+`honest_verdict`.
+
+**Rationale:** Exp 1163 showed that batch-level NRGPT energy recurrence can beat
+the ContinuousEBM-shaped FoVer baseline. DoT masking and per-token GRPO reward
+need a finer signal that identifies where response energy spikes rather than
+only whether the whole response is risky.
+
+**Acceptance criteria:**
+
+- `python/carnot/phase3/nrgpt_energy.py` exposes `NRGPTEnergyModel` with
+  `energy_per_token(response_tokens: list[str]) -> list[float]` and
+  `batch_energy(response: str) -> float`.
+- Correct FoVer-style arithmetic responses produce low, stable per-token energy;
+  incorrect arithmetic responses produce their maximum energy within two tokens
+  of the detected error token when such a token can be located.
+- `scripts/experiment_1172_nrgpt_per_token_energy_inference.py` writes
+  `results/experiment_1172_nrgpt_per_token_energy_inference.json` with every
+  required Exp 1172 field and an honest verdict from
+  `per_token_improves_auroc`, `per_token_tied_with_batch`, or
+  `per_token_worse_than_batch`.
 
 ## Scenarios
 
@@ -275,6 +517,101 @@ backend (GPU or FpgaBackend when available)
 
 **Spec traces:** REQ-KONA-001, REQ-KONA-007
 
+### SCENARIO-KONA-007: Q8 Snap Validity Sweep Gates Option A
+
+**Given** the Phase 3 `ContinuousEBM` latent dimension and no checked-in
+ARC-AGI-3 rule engine
+**When** `scripts/experiment_1154_snap_validity_sweep.py` samples 10,000 states
+from `[-1, 1]^d` and snaps them to the synthetic legal action grid
+**Then** it writes `results/experiment_1154_snap_validity_sweep.json` with
+`n_states_sampled=10000`, the required REQ-KONA-008 fields, `proxy_used=True`,
+and `phase4_option_a_viable == snap_validity_gate_passed`
+
+**Spec traces:** REQ-KONA-008
+
+### SCENARIO-KONA-008: Q7 HMC Diagnostics Classify The Verifier Gradient
+
+**Given** the Exp 1154 snap-validity artifact contains `latent_dim`
+**When** `scripts/experiment_1155_hmc_compatibility_diagnostics.py` runs the
+D1-D4 diagnostics with finite-difference gradients on the k=5 verifier energy
+bridge
+**Then** it writes `results/experiment_1155_hmc_compatibility_diagnostics.json`
+with all required REQ-KONA-009 fields
+**And** the artifact records a classified regime, a sampler recommendation, and
+`gradient_method="numerical_fd"` when symbolic components are present.
+
+**Spec traces:** REQ-KONA-009
+
+### SCENARIO-KONA-009: Exp 1156 Deploys The Regime-Conditional Sampler
+
+**Given** `results/experiment_1155_hmc_compatibility_diagnostics.json` classifies
+the HMC regime and recommends a sampler
+**When** `scripts/experiment_1156_hmc_sampler_conditional.py` runs
+**Then** it instantiates the matching `Phase4Sampler`, validates 100 synthetic
+latent examples, estimates KL divergence against the `ContinuousEBM` Boltzmann
+reference, and writes `results/experiment_1156_hmc_sampler_conditional.json`
+with the required schema fields.
+
+**Spec traces:** REQ-KONA-010
+
+### SCENARIO-KONA-010: Exp 1163 Writes Honest NRGPT Comparison
+
+**Given** FoVer labels are available from `data/fover_dataset.jsonl` or the
+pipeline-generated FoVer corpus
+**When** `scripts/experiment_1163_nrgpt_energy_native_prototype.py` runs
+**Then** it trains the ContinuousEBM-shaped baseline and NRGPT recurrence on
+5,000 examples, evaluates both on 500 held-out examples, and writes the required
+REQ-KONA-011 artifact fields.
+
+**Spec traces:** REQ-KONA-011
+
+### SCENARIO-KONA-011: NRGPT Iteration Count Is Reported Without Bias
+
+**Given** a learned `NRGPTEnergyBlock` and the same FoVer split
+**When** classifiers are evaluated after `n_iters=1` and `n_iters=3`
+**Then** the artifact sets `n_iters_monotone` to true iff
+`nrgpt_auroc_n3 >= nrgpt_auroc_n1`, regardless of whether either NRGPT variant
+beats the baseline.
+
+**Spec traces:** REQ-KONA-011
+
+### SCENARIO-KONA-012: Exp 1165 Measures Phase 4 Active Inference
+
+**Given** Exp 1154 snap validity passed, Exp 1155 recommended blocked Gibbs, and
+Exp 1156 reported `sampler_kl_below_05_viable`
+**When** `scripts/experiment_1165_phase4_active_inference_pilot_v1.py` evaluates
+the active-inference pilot and random legal-action baseline on ten synthetic
+ARC-AGI-3-like puzzles
+**Then** it writes `results/experiment_1165_phase4_active_inference_pilot_v1.json`
+with all REQ-KONA-012 fields and an honest verdict derived from the measured
+action-count ratio.
+
+**Spec traces:** REQ-KONA-012
+
+### SCENARIO-KONA-013: Exp 1166 Documents Leaderboard Context and Outreach
+
+**Given** Exp 1165 has written `action_count_ratio` and `phase4_solved_rate`
+**When** `scripts/experiment_1166_arc_agi3_leaderboard_themesis_outreach.py`
+runs
+**Then** it writes
+`results/experiment_1166_arc_agi3_leaderboard_themesis_outreach.json` with all
+REQ-KONA-013 fields, an honest verdict that distinguishes current leaderboard
+confirmation from fallback documentation, and a ready-for-review outreach email.
+
+**Spec traces:** REQ-KONA-013
+
+### SCENARIO-KONA-014: Exp 1172 Localizes NRGPT Energy Spikes
+
+**Given** FoVer responses and the Exp 1163 batch AUROC baseline artifact are
+available
+**When** `scripts/experiment_1172_nrgpt_per_token_energy_inference.py` runs
+**Then** it evaluates per-token energy spikes against located arithmetic error
+tokens, compares the per-token AUROC with the Exp 1163 batch baseline, and
+writes the required REQ-KONA-014 artifact fields without converting a tied or
+negative result into a positive verdict.
+
+**Spec traces:** REQ-KONA-014
+
 ## Out of scope
 
 The following are deliberately **not** required by this capability:
@@ -301,6 +638,26 @@ The following are deliberately **not** required by this capability:
 - **Stage 2 demo:** not started.
 - **Stage 3 internalisation:** not started (Phase 1 maturity dependency).
 - **Stage 4 hardware binding:** gated on Phase 2 scale-up.
+- **Phase 4 action-representation preflight:** snap-validity sweep specified by
+  REQ-KONA-008; implementation lives in
+  `python/carnot/phase3/snap_validity.py` and
+  `scripts/experiment_1154_snap_validity_sweep.py`. HMC compatibility
+  diagnostics are specified by REQ-KONA-009 and implemented in
+  `python/carnot/phase3/hmc_compatibility.py` and
+  `scripts/experiment_1155_hmc_compatibility_diagnostics.py`. The
+  regime-conditional sampler is specified by REQ-KONA-010.
+- **NRGPT architecture seed:** specified by REQ-KONA-011; implementation lives
+  in `python/carnot/phase3/nrgpt_energy.py` and
+  `scripts/experiment_1163_nrgpt_energy_native_prototype.py`.
+- **Phase 4 active-inference pilot:** specified by REQ-KONA-012; implementation
+  lives in `python/carnot/phase3/active_inference_pilot.py` and
+  `scripts/experiment_1165_phase4_active_inference_pilot_v1.py`.
+- **ARC-AGI-3 positioning and Themesis outreach:** specified by REQ-KONA-013;
+  implementation lives in
+  `scripts/experiment_1166_arc_agi3_leaderboard_themesis_outreach.py`.
+- **NRGPT per-token energy inference:** specified by REQ-KONA-014; implementation
+  lives in `python/carnot/phase3/nrgpt_energy.py` and
+  `scripts/experiment_1172_nrgpt_per_token_energy_inference.py`.
 
 First concrete next experiment:
 `experiment_XXX_rdt_primitive_convergence.py` — implement the RDT scaffold and

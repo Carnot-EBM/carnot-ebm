@@ -1820,3 +1820,188 @@ new knot count so the model fine-tunes from a meaningful initialisation.
 **And** honest_verdict is 'tier2_code_memory_works'
 
 **Spec traces:** REQ-LEARN-060
+
+---
+
+## REQ-LEARN-1146: GRPO Reflection Reward Uses One-Step Repair Energy Delta
+
+**Given** the Exp 1146 GRPO self-learning loop samples a completion for a GSM8K
+question
+**When** the reward for that completion is computed
+**Then** the loop SHALL compute `r_total = r_thinkprm + 0.3 * r_reflect`
+**And** `r_reflect` SHALL be `(E_before - E_after) / E_before` when
+`E_before > 0`, otherwise `0.0`
+**And** `r_reflect` SHALL be clipped to `[-1.0, 1.0]`
+**And** `E_after` SHALL be measured after exactly one Carnot verifier-guided
+repair attempt, not a full multi-step repair loop
+**And** the experiment artifact SHALL record `reflection_reward_integrated=True`,
+`reflection_weight=0.3`, `n_repair_steps_per_completion=1`,
+`alpha_t_at_training=0.52`, and `fr11_self_learning_signal_used=True`.
+
+### REQ-LEARN-1146 Sub-requirements
+
+- REQ-LEARN-1146-1: Exp 1146 SHALL block honestly with
+  `honest_verdict="blocked_no_dualgpu"` when `torch.cuda.device_count() < 2`
+  or CUDA is unavailable.
+- REQ-LEARN-1146-2: Exp 1146 SHALL use GSM8K train indices `[600, 700)` and
+  evaluation indices `[750, 800)` to avoid Exp 1129's `[500, 600)` training
+  slice.
+- REQ-LEARN-1146-3: Exp 1146 SHALL retain DRA-GRPO diversity penalty and CPPO
+  proxy reuse from Exp 1129 while replacing the score used for advantages with
+  the repair-grounded total reward.
+- REQ-LEARN-1146-4: Exp 1146 SHALL map outcomes to one of
+  `reflection_positive_above_0851`, `positive_below_exp1129`, `neutral`,
+  `negative_regression`, or `blocked_no_dualgpu`.
+
+### SCENARIO-LEARN-1146: One-Step Repair Lowers Energy and Raises Reward
+
+**Given** a completion with `E_before=4.0`
+**And** Carnot verifier feedback produces a one-step repaired response with
+`E_after=1.0`
+**When** Exp 1146 computes the reflection reward
+**Then** `r_reflect` equals `0.75`
+**And** a ThinkPRM score of `0.40` produces `r_total=0.625` with
+`reflection_weight=0.3`
+**And** the repair generator is invoked once for that completion.
+
+### SCENARIO-LEARN-1147: DualGPU Blocker Artifact Is Honest
+
+**Given** CUDA is unavailable or fewer than two CUDA devices are visible
+**When** Exp 1146 runs
+**Then** it writes `results/experiment_1146_grpo_reflection_reward_v3.json`
+with `dualgpu_used=False`
+**And** `honest_verdict` equals `blocked_no_dualgpu`
+**And** required reflection-reward schema fields are still present.
+
+---
+
+## REQ-LEARN-1159: GRPO v4 Structural Warm-Up Separates Reflection Reward Before Full ThinkPRM Mixing
+
+Exp 1159 SHALL run the GRPO reflection-reward experiment as a two-phase
+structural-first schedule.  Phase 1 is a 300 second warm-up that uses only
+the repairability objective (`r_total = r_reflect`, `w_thinkprm=0.0`).
+Phase 2 is a 900 second full training phase that restores the mixed reward
+(`r_total = r_thinkprm + 0.3 * r_reflect`).  This avoids the Exp 1146 failure
+mode where ThinkPRM and reflection rewards were mixed from the first step.
+
+### REQ-LEARN-1159 Sub-requirements
+
+- REQ-LEARN-1159-1: Exp 1159 SHALL block honestly with
+  `honest_verdict="blocked_no_dualgpu"` and `dualgpu_used=False` when the
+  active runtime sees fewer than two CUDA devices.
+- REQ-LEARN-1159-2: Exp 1159 SHALL use GSM8K training indices `[800, 900)` and
+  evaluation indices `[950, 1000)` so the run is fresh relative to Exp 1129
+  and Exp 1146.
+- REQ-LEARN-1159-3: Phase 1 SHALL use `group_size_n=8`,
+  `warmup_seconds=300`, `r_total=r_reflect`, `w_thinkprm=0.0`, DRA-GRPO
+  diversity penalty enabled, and CPPO proxy reuse disabled.
+- REQ-LEARN-1159-4: Phase 2 SHALL use `training_seconds=900`,
+  `r_total=r_thinkprm + 0.3 * r_reflect`, DRA-GRPO diversity penalty enabled,
+  and CPPO proxy reuse enabled.
+- REQ-LEARN-1159-5: The experiment artifact SHALL include
+  `dualgpu_used`, `cuda_device_count`, `warmup_seconds`, `training_seconds`,
+  `training_wall_budget_hit`, `advantage_stdev_warmup`,
+  `advantage_stdev_full`, `n_eval_questions`, `baseline_fraction_correct`,
+  `trained_fraction_correct`, `improvement_over_baseline`,
+  `improvement_vs_exp1129`, `reflection_weight`, `structural_warmup_used`,
+  `grpo_v4_honest_result`, and `honest_verdict`.
+- REQ-LEARN-1159-6: Exp 1159 SHALL map outcomes to one of
+  `structural_warmup_above_0851`, `positive_below_exp1129`, `neutral`,
+  `negative_regression`, or `blocked_no_dualgpu`, where
+  `improvement_vs_exp1129 = improvement_over_baseline - 0.0851`.
+
+### SCENARIO-LEARN-1159: Structural Warm-Up Uses Reflection-Only Before Full Reward
+
+**Given** aligned ThinkPRM scores `[0.4, 0.7]`
+**And** reflection rewards `[0.5, -0.25]`
+**When** Exp 1159 computes Phase 1 rewards
+**Then** the total rewards equal `[0.5, -0.25]`
+**And** CPPO proxy reuse is disabled for the warm-up phase.
+
+**When** Exp 1159 computes Phase 2 rewards
+**Then** the total rewards equal `[0.55, 0.625]`
+**And** CPPO proxy reuse is enabled for the full phase.
+
+### SCENARIO-LEARN-1160: GRPO v4 Blocked Artifact Retains Required Schema
+
+**Given** the active runtime sees fewer than two CUDA devices
+**When** Exp 1159 runs
+**Then** it writes `results/experiment_1159_grpo_v4_structural_warmup.json`
+with `dualgpu_used=False`
+**And** `honest_verdict` equals `blocked_no_dualgpu`
+**And** all REQ-LEARN-1159-5 artifact fields are present.
+
+---
+
+## REQ-LEARN-1173: GRPO v5 Applies TinyV False-Negative Abstention After Structural Warm-Up
+
+Exp 1173 SHALL preserve Exp 1159's two-phase structural warm-up schedule and
+add TinyV-style false-negative correction only after the 300 second
+reflection-only warm-up. During the full reward-mixing phase, if the ThinkPRM
+confidence for a completion is in the calibrated uncertainty interval
+`[fn_abstain_thresh_low, fn_abstain_thresh_high]`, the completion's total reward
+SHALL be set to `0.0` so the sample contributes no GRPO gradient signal.
+
+### REQ-LEARN-1173 Sub-requirements
+
+- REQ-LEARN-1173-1: Exp 1173 SHALL keep `warmup_seconds=300`,
+  `training_seconds=900`, `group_size_n=8`, warm-up reward
+  `r_total=r_reflect`, full-phase reward
+  `r_total=r_thinkprm + 0.3 * r_reflect`, DRA-GRPO diversity penalty enabled,
+  and CPPO proxy reuse enabled only for the full phase.
+- REQ-LEARN-1173-2: Exp 1173 SHALL use GSM8K training indices `[1000, 1200)`
+  and evaluation indices `[1200, 1250)` to avoid overlap with the prior GRPO
+  runs.
+- REQ-LEARN-1173-3: The default TinyV uncertainty interval SHALL use
+  `fn_abstain_thresh_low=0.3` and `fn_abstain_thresh_high=0.7`; both endpoints
+  are inclusive and the thresholds SHALL be validated as ordered values in
+  `[0.0, 1.0]`.
+- REQ-LEARN-1173-4: When a full-phase completion abstains, the artifact SHALL
+  count it toward `fn_abstention_rate`, the raw pre-abstention reward SHALL be
+  retained in per-question diagnostics, and the emitted score used by GRPO
+  SHALL be exactly `0.0`.
+- REQ-LEARN-1173-5: The experiment artifact SHALL include
+  `improvement_over_baseline`, `v4_baseline`, `fn_abstention_rate`,
+  `fn_threshold_tuned`, `training_completed`, `dualgpu_confirmed`,
+  `grpo_v5_honest_result`, and `honest_verdict`.
+- REQ-LEARN-1173-6: Exp 1173 SHALL map outcomes to one of
+  `tinyv_improves_over_v4`, `tinyv_tied_with_v4`, `tinyv_degrades_v4`, or
+  `training_wall_hit`, where the v4 comparison baseline is
+  `v4_baseline=0.10`.
+- REQ-LEARN-1173-7: Exp 1173 SHALL set `dualgpu_confirmed=True` only when at
+  least two CUDA devices are visible and the active `llama.cpp` runtime reports
+  GPU layer offload support; otherwise it SHALL write a blocked artifact rather
+  than run the GGUF model on CPU.
+
+### SCENARIO-LEARN-1173: TinyV Abstention Zeroes Uncertain Full-Phase Rewards
+
+**Given** a full-phase completion with ThinkPRM confidence `0.5`
+**And** `fn_abstain_thresh_low=0.3`
+**And** `fn_abstain_thresh_high=0.7`
+**When** Exp 1173 computes the reward
+**Then** the raw mixed reward is recorded for diagnostics
+**And** the emitted reward used by GRPO equals `0.0`
+**And** the sample increments the TinyV abstention count.
+
+### SCENARIO-LEARN-1174: Structural Warm-Up Does Not Use TinyV Abstention
+
+**Given** the Exp 1173 warm-up phase is active
+**When** a completion has any ThinkPRM confidence in the TinyV uncertainty interval
+**Then** the warm-up reward remains `r_total=r_reflect`
+**And** the sample is not counted as a TinyV abstention.
+
+### SCENARIO-LEARN-1175: GRPO v5 Artifact Reports Honest TinyV Outcome
+
+**Given** Exp 1173 finishes training and evaluation
+**When** `improvement_over_baseline` is compared against `v4_baseline=0.10`
+**Then** the artifact records the TinyV abstention rate and threshold
+**And** `grpo_v5_honest_result=True`
+**And** `honest_verdict` uses only the REQ-LEARN-1173-6 labels.
+
+### SCENARIO-LEARN-1176: CPU-Only Llama Runtime Blocks Live GRPO v5
+
+**Given** two CUDA devices are visible
+**And** the active `llama.cpp` runtime does not support GPU layer offload
+**When** Exp 1173 starts
+**Then** it writes a blocked artifact with `dualgpu_confirmed=False`
+**And** `training_completed=False`.

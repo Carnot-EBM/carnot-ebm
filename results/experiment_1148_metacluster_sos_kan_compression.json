@@ -1,0 +1,98 @@
+{
+  "experiment": 1148,
+  "schema": "metacluster_sos_kan_compression",
+  "run_date": "2026-05-02",
+  "started_at": "2026-05-02T09:29:42Z",
+  "finished_at": "2026-05-02T09:29:43Z",
+  "duration_s": 0.28,
+  "status": "success",
+  "title": "MetaCluster SOS-KAN Compression",
+  "sos_kan_compressed": true,
+  "auroc_original": 0.9902,
+  "auroc_original_measured": 0.990228,
+  "auroc_compressed": 0.971753,
+  "auroc_drop": 0.018447,
+  "auroc_drop_within_02": true,
+  "size_original_bytes": 13592,
+  "size_compressed_bytes": 2704,
+  "size_reduction_factor": 5.026627,
+  "n_centroids": 32,
+  "energy_correlation": 0.996599,
+  "honest_verdict": "compressed_within_02_auroc_5x_smaller",
+  "compression_blocks": [
+    "W2",
+    "b2"
+  ],
+  "compressed_vector_count": 192,
+  "compressed_index_storage": "fixed_width_bitpacked",
+  "all_coefficient_vector_count": 227,
+  "n_kan_basis_functions": 8,
+  "coefficients_per_spline": 4,
+  "parameter_blocks": [
+    {
+      "name": "W1",
+      "shape": [
+        16,
+        3
+      ],
+      "vector_count": 16,
+      "vector_width": 3
+    },
+    {
+      "name": "b1",
+      "shape": [
+        16
+      ],
+      "vector_count": 16,
+      "vector_width": 1
+    },
+    {
+      "name": "W2",
+      "shape": [
+        96,
+        16
+      ],
+      "vector_count": 96,
+      "vector_width": 16
+    },
+    {
+      "name": "b2",
+      "shape": [
+        96
+      ],
+      "vector_count": 96,
+      "vector_width": 1
+    },
+    {
+      "name": "c",
+      "shape": [
+        3
+      ],
+      "vector_count": 3,
+      "vector_width": 1
+    }
+  ],
+  "feature_stats": [
+    [
+      2.39789527,
+      7.52348131
+    ],
+    [
+      0.03703704,
+      1.0
+    ],
+    [
+      0.38016529,
+      1.0
+    ]
+  ],
+  "benchmark_n_examples": 500,
+  "checkpoint_path": null,
+  "checkpoint_path_found": false,
+  "model_source": "retrained_exp1128_recipe_no_checkpoint_path_in_artifact",
+  "exp1128_sos_kan_individual_auroc_after": 0.9902,
+  "spec": [
+    "REQ-KAN-1148",
+    "SCENARIO-KAN-1148"
+  ]
+}

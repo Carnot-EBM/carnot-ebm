@@ -1,0 +1,28 @@
+{
+  "schema": "carnot.phase4_active_inference_pilot.v1",
+  "experiment": 1165,
+  "run_date": "2026-05-02",
+  "prototype_operational": true,
+  "n_puzzles_evaluated": 10,
+  "phase4_mean_action_count": 6.3,
+  "baseline_mean_action_count": 24.86,
+  "action_count_ratio": 0.25341914722445696,
+  "phase4_solved_rate": 1.0,
+  "baseline_solved_rate": 0.98,
+  "energy_trace_monotone_fraction": 1.0,
+  "free_energy_values": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "comparison_to_seed_iq": "Our prototype on 5x5 synthetic puzzles reduced action count by 74.7% vs a random legal-action greedy baseline. Seed IQ published VC33=173 actions, FT09=75 actions, and LS20=433 actions on full ARC-AGI-3; those harder 30x30 results are directionally consistent with the free-energy minimization principle implemented here, but this artifact is a small-scale synthetic pilot.",
+  "blocked_gibbs_params": {
+    "n_sweeps": 1000,
+    "n_blocks": 10,
+    "step_size": 0.01
+  },
+  "honest_verdict": "phase4_better_than_baseline",
+  "snap_validity_verdict": "option_a_viable_above_95pct",
+  "hmc_regime_used": "C",
+  "sampler_honest_verdict": "sampler_kl_below_05_viable"
+}

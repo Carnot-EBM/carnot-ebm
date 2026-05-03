@@ -1,0 +1,47 @@
+{
+  "experiment": 1162,
+  "schema": "kanele_sos_kan_fpga_blueprint_v1",
+  "run_date": "2026-05-02T15:47:28Z",
+  "duration_s": 0.007319,
+  "status": "success",
+  "title": "KANELE SOS-KAN FPGA Blueprint",
+  "sos_kan_n_inputs": 3,
+  "sos_kan_k_splines": 8,
+  "sos_kan_n_knots": 8,
+  "sos_kan_rank": 4,
+  "sos_kan_hidden_dim": 16,
+  "n_lut_points": 256,
+  "lut_storage_bytes": 6144,
+  "lut_table_shape": [
+    3,
+    8,
+    256
+  ],
+  "lut_table_sha256": "53dcb9f436a02a0130d079c6ee24cf82bf607480e673f033c1cc7a4256b1c8f4",
+  "rm_per_inference": 24,
+  "bop_per_inference": 192,
+  "nabs_per_inference": 75,
+  "total_cycles": 36,
+  "q8_operand_width": 8,
+  "kv260_clock_hz": 300000000.0,
+  "estimated_fpga_latency_us": 0.12,
+  "cpu_baseline_latency_ms": 289.0,
+  "estimated_speedup_factor": 2408333.333333,
+  "blueprint_written": true,
+  "blueprint_path": "hardware/kv260/sos_kan_lut_blueprint.md",
+  "auroc_compressed": 0.9718,
+  "size_compressed_bytes": 2704,
+  "n_centroids": 32,
+  "energy_correlation": 0.996599,
+  "kanele_fpga_blueprint_generated": true,
+  "honest_verdict": "blueprint_generated_speedup_above_100x",
+  "spec": [
+    "REQ-KAN-1162",
+    "SCENARIO-KAN-1162"
+  ],
+  "model_source": "_carnot_sos_kan_direct.SOSKANEnergyV3",
+  "notes": [
+    "Specification only; Vivado synthesis was not run.",
+    "Complexity counts cover the LUTized SOS-KAN spline datapath."
+  ]
+}

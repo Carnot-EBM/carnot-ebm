@@ -1,0 +1,38 @@
+{
+  "schema": "carnot.arc_agi3_leaderboard_themesis_outreach.v1",
+  "experiment": 1166,
+  "run_date": "2026-05-02",
+  "leaderboard_url": "https://arcprize.org/leaderboard",
+  "leaderboard_v3_data_url": "https://arcprize.org/media/data/leaderboard/v3.json",
+  "leaderboard_data_generated_at": "2026-05-01T18:58:56.508Z",
+  "leaderboard_evidence_source": "documented_fallback",
+  "seed_iq_score_confirmed": false,
+  "seed_iq_score": 1.0,
+  "seed_iq_independently_documented_demo_score": 0.95,
+  "seed_iq_confirmation_note": "Current ARC Prize fetch did not expose a Seed IQ row; using ops/known-issues.md fallback values. The 0.95 public demo is documented there as independently verified, but this run did not independently confirm the reported 1.00 leaderboard score.",
+  "seed_iq_action_efficiency": "115% of human baseline (2674 vs human 7534-8073 actions)",
+  "carnot_phase4_action_count_ratio": 0.25341914722445696,
+  "carnot_phase4_solved_rate": 1.0,
+  "leaderboard_comparison_table": [
+    {
+      "system_name": "Seed IQ (Active Inference)",
+      "score": 1.0,
+      "action_efficiency": "115% of human baseline (2674 vs human 7534-8073 actions)"
+    },
+    {
+      "system_name": "Carnot Phase 4 pilot",
+      "score": "solved_rate=1.000 on synthetic 5x5 ARC-AGI-3-like puzzles",
+      "action_efficiency": "action_count_ratio=0.253419; 74.7% fewer actions than greedy baseline"
+    },
+    {
+      "system_name": "Frontier LLMs (autoregressive)",
+      "score": "<1% per arXiv 2603.24621",
+      "action_efficiency": "Not competitive on ARC-AGI-3; reported scores remain below 1%."
+    }
+  ],
+  "positioning_narrative": "Seed IQ is the full ARC-AGI-3 active-inference reference point: reported score=1.0 with 115% of human baseline (2674 vs human 7534-8073 actions); that reported leaderboard row was not independently confirmed by the current ARC Prize fetch. Carnot Phase 4 is not yet a full ARC-AGI-3 result: Exp 1165 is a ten-puzzle synthetic pilot with solved_rate=1.000 and action_count_ratio=0.253419, or 74.7% fewer actions than the greedy baseline. Relative to autoregressive frontier LLMs below 1%, the pilot supports positioning Carnot as a verifier/free-energy bridge to active inference, not as a Seed IQ competitor.",
+  "themesis_email_drafted": true,
+  "themesis_email_word_count": 149,
+  "themesis_email_text": "To: Denise Holt / Denis O. at Themesis\nFrom: Ian Blenke <ian@blenke.com>\nSubject: Carnot EBM + Active Inference — Architectural Collaboration?\n\nDenise, Denis,\n\nI'm Ian Blenke, maintainer of Carnot, an Apache 2.0, decentralization-respecting, multi-vendor EBM verification project.\n\nCarnot's k=5 verifier ensemble minimizes a variational free-energy proxy, F(z) = sum_k w_k E_k(z), which appears aligned with Friston-style active inference. Our Phase 4 pilot on synthetic ARC-AGI-3-like puzzles reached solved_rate=1.000 with action_count_ratio=0.253419 versus a greedy legal-action baseline, a 74.7% action reduction.\n\nThemesis appears to have the stronger active-inference/topological-field algorithm; Carnot has an open verifier ensemble that may serve as a calibrated free-energy approximation around LLM infrastructure. This feels complementary, not competitive.\n\nWould you be open to a 30-minute architectural conversation? Concrete options: joint benchmark evaluation, pre-print exchange, or a technical review of whether Carnot's verifier ensemble could plug into Seed IQ as an approximation layer.\n\nIan\nian@blenke.com\n",
+  "honest_verdict": "leaderboard_unavailable_email_drafted"
+}

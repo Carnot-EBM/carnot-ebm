@@ -80,6 +80,9 @@ Then the result is 5016 (= 8 * 32 * 19 + 8 * 19).
 | REQ-KAN-004 | Proposed | Exp 724 target: 16 knots/spline in v3 KAN |
 | REQ-KAN-020 | Implemented | Exp 866: LUT analysis complete. N=8 MLP-bound=14400 > 7680 (over budget). ISING_PRIORITY. |
 | REQ-MODEL-SOS-001 | Implemented | Exp 1047: SOSKANEnergy confirmed 0 violations on 16000 test points. |
+| REQ-KAN-1148 | Proposed | Exp 1148 target: MetaCluster-style centroid compression for SOSKANEnergyV3 with AUROC drop <= 0.02 and >=5x shrink. |
+| REQ-KAN-1162 | Implemented | Exp 1162: KANELE-style Q8 LUT blueprint and hardware-complexity artifact generated for the compressed SOSKANEnergyV3 shape. |
+| REQ-KAN-1174 | Proposed | Exp 1174 target: BiKA multiply-free complexity analysis for SOSKANEnergyV3, MetaCluster, and AMD XDNA NPU feasibility. |
 
 ## REQ-KAN-020: KAEMEnergy FPGA LUT Budget Analyzability
 
@@ -150,3 +153,122 @@ with zero violations possible regardless of parameter values V and c.
 Given SOSKANEnergy with V overwritten to random N(0, 10) values,
 When verify_invariants(n_samples=1000) is called,
 Then n_monotone_violations == 0 and invariants_hold == True.
+
+## REQ-KAN-1148: SOSKANEnergyV3 centroid codebook compression
+
+SOSKANEnergyV3 compression MUST replace repeated learned coefficient vectors
+with a K=32 centroid codebook plus per-vector centroid indices, then reconstruct
+a numerically usable SOSKANEnergyV3 instance from that compressed payload.
+
+**Rationale:**
+    Exp 1128 fixed the SOSKANEnergyV3 training/inference normalization path and
+    reported individual AUROC=0.9902 on the 500-example FoVer benchmark.  That
+    verifier is now accurate enough to matter, but its neural-Gram coefficient
+    head is larger than ideal for cheap-tier routing and NPU/FPGA deployment.
+    MetaCluster-style centroid codebooks test whether the repeated KAN
+    coefficient vectors can be stored compactly while preserving the energy
+    ordering that drives AUROC.
+
+**Acceptance criteria:**
+    - `compress_sos_kan_v3(..., n_centroids=32)` stores float centroid arrays
+      and integer index arrays instead of dense coefficient vectors.
+    - `reconstruct_sos_kan_v3()` returns an SOSKANEnergyV3 with the same
+      architecture fields and finite energies.
+    - The exp1148 artifact records `auroc_original=0.9902`,
+      `auroc_compressed`, `auroc_drop`, `energy_correlation`,
+      `size_original_bytes`, `size_compressed_bytes`, and
+      `size_reduction_factor`.
+    - `auroc_drop_within_02` is true iff `auroc_original - auroc_compressed <= 0.02`.
+    - The success verdict requires both `auroc_drop <= 0.02` and
+      `size_reduction_factor >= 5.0`.
+
+### SCENARIO-KAN-1148: reconstruct SOSKANEnergyV3 from centroid codebook
+
+Given a trained SOSKANEnergyV3 and its learned coefficient vectors,
+When the vectors are clustered into 32 centroids and reconstructed by expanding
+indices back to centroid vectors,
+Then the reconstructed model has the original parameter shapes, finite energies
+on FoVer features, and an exp1148 artifact with the required verdict fields.
+
+## REQ-KAN-1162: SOSKANEnergyV3 KANELE FPGA LUT blueprint
+
+Experiment 1162 MUST generate a KANELE-style FPGA blueprint for the compressed
+SOSKANEnergyV3 energy function shape from Exp 1148 without requiring RTL
+synthesis.  The blueprint MUST identify the SOS-KAN input count, spline-basis
+count, knot-grid size, Q8 LUT storage, hardware-oriented complexity metrics
+(`RM`, `BOP`, `NABS`), KV260 latency estimate, CPU-baseline comparison, and the
+compressed AUROC inherited from Exp 1148.
+
+**Rationale:**
+    Exp 1148 showed that the fixed Exp 1128 SOSKANEnergyV3 shape can be reduced
+    by a K=32 centroid codebook while keeping AUROC within 0.02 of the original
+    model.  KANELE-style FPGA work maps KAN univariate spline basis functions to
+    LUTs.  Before RTL exists, Carnot needs a deterministic table specification
+    and platform-independent complexity report that can be reviewed without
+    Vivado.
+
+**Acceptance criteria:**
+    - The runner derives `sos_kan_n_inputs`, `sos_kan_k_splines`, and
+      `sos_kan_n_knots` from SOSKANEnergyV3/Exp 1148 structure rather than
+      hard-coding an unrelated architecture.
+    - The Q8 table specification samples every hat basis function at
+      `n_lut_points=256` uniformly over `[-1, 1]` and reports
+      `lut_storage_bytes = n_inputs * k_splines * n_lut_points`.
+    - The artifact reports `rm_per_inference`, `bop_per_inference`,
+      `nabs_per_inference`, `estimated_fpga_latency_us`,
+      `cpu_baseline_latency_ms=289.0`, `estimated_speedup_factor`,
+      `blueprint_written`, `blueprint_path`, `auroc_compressed`,
+      `kanele_fpga_blueprint_generated`, and an approved honest verdict.
+    - `hardware/kv260/sos_kan_lut_blueprint.md` documents the LUT index formula,
+      Q8 interpolation datapath, accumulation schedule, and no-Vivado status.
+
+### SCENARIO-KAN-1162: write compressed SOS-KAN Q8 LUT blueprint
+
+Given the Exp 1148 compressed SOSKANEnergyV3 result with K=32 centroids,
+When `scripts/experiment_1162_kanele_sos_kan_fpga_blueprint.py` runs,
+Then `results/experiment_1162_kanele_sos_kan_fpga_blueprint.json` is written
+with the required schema fields and
+`hardware/kv260/sos_kan_lut_blueprint.md` contains the deterministic Q8 LUT
+blueprint for the SOS-KAN basis structure.
+
+## REQ-KAN-1174: BiKA multiply-free SOS-KAN hardware analysis
+
+Experiment 1174 MUST analyze whether the Exp 1148/1162 SOSKANEnergyV3 shape can
+be mapped to a BiKA-style multiply-free datapath by replacing floating-point
+multiplications with precomputed-log2 bit-shift approximations.  The analysis
+MUST report platform-independent `RM`, `BOP`, and `NABS` metrics for the
+standard SOSKANEnergyV3, the MetaCluster-compressed SOS-KAN, and the
+8-bit BiKA approximation, then classify AMD XDNA NPU feasibility.
+
+**Rationale:**
+    Exp 1162 proved that the compressed SOS-KAN spline structure can be described
+    as Q8 LUT tables for KV260.  BiKA is the arithmetic layer below that
+    blueprint: replacing learned-coefficient multiplies with shifts/adds can
+    remove the float32 multiplier requirement for AMD XDNA NPUs and reduce FPGA
+    resource pressure before RTL synthesis.
+
+**Acceptance criteria:**
+    - `BiKAComplexityAnalyzer.analyze_standard_kan(model)` returns a
+      `HardwareMetrics` object with integer `RM`, `BOP`, `NABS`, and
+      `estimated_lut_count` values derived from SOSKANEnergyV3 architecture.
+    - `BiKAComplexityAnalyzer.analyze_bika_kan(model, precision_bits=8)` returns
+      zero real multiplications and models BOP as `standard_RM * 16` for the
+      8-bit shift-plus-comparison approximation.
+    - `BiKAComplexityAnalyzer.compare(standard_metrics, bika_metrics)` reports a
+      resource-reduction percentage in the 27.73% to 51.54% BiKA paper band and
+      an NPU feasibility verdict in the approved vocabulary.
+    - `scripts/experiment_1174_bika_hardware_analysis.py` writes
+      `results/experiment_1174_bika_hardware_analysis.json` with
+      `standard_kan_rm`, `standard_kan_bop`, `compressed_kan_rm`,
+      `compressed_kan_bop`, `bika_kan_nabs`, `bika_resource_reduction_pct`,
+      `npu_feasibility_verdict`, `estimated_npu_inference_us`,
+      `bika_hardware_analysis_complete`, and an approved honest verdict.
+
+### SCENARIO-KAN-1174: write BiKA hardware analysis artifact
+
+Given the Exp 1148 MetaCluster compression artifact and Exp 1162 KANELE LUT
+blueprint,
+When `scripts/experiment_1174_bika_hardware_analysis.py` runs,
+Then `results/experiment_1174_bika_hardware_analysis.json` is written with the
+required schema fields, the SOS-KAN architecture values, multiply-free BiKA
+metrics, and an honest AMD XDNA NPU feasibility verdict.

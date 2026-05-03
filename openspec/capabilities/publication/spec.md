@@ -71,6 +71,34 @@ The artifact MUST record:
 The script MUST derive the reported numerical values from the checked-in
 experiment result JSON files rather than hard-coding them in the artifact.
 
+### REQ-PUBLISH-005: arXiv Final Submission v4 Bundle Artifact
+
+The arXiv final-submission runner MUST verify that
+`docs/arxiv-paper/main.tex` contains the GRPO v2 `+8.51` pp result and the
+milestone .89 projection-repair and MetaCluster compression summaries before
+emitting `results/experiment_1153_arxiv_final_submission_v4.json`. The runner
+MUST recompile `docs/arxiv-paper/main.pdf`, repack
+`results/carnot-arxiv-v4.tar.gz`, and record browser-ready manual arXiv upload
+steps. The artifact MUST include closed-set booleans for paper integrations,
+PDF and bundle verification, submission state, and an `honest_verdict` from the
+allowed v4 final-submission verdict set.
+
+### REQ-PUBLISH-006: Phase 4 Active-Inference Section 7 Artifact
+
+The arXiv Phase 4 revision runner MUST verify that
+`docs/arxiv-paper/main.tex` expands Section 7 from the placeholder
+Themesis/Seed IQ acknowledgment into a substantive empirical-comparison
+section before emitting
+`results/experiment_1167_paper_v4_phase4_section.json`. The revised section
+MUST include four numbered subsections covering theoretical equivalence,
+Exp 1165 pilot results, Exp 1166 ARC-AGI-3 leaderboard context, and an honest
+gap analysis. The runner MUST verify that the paper includes the Exp 1165
+`action_count_ratio`, Seed IQ leaderboard context, and the statement that
+Carnot's `F(z)=sum_k w_k E_k(z)` is a variational-free-energy approximation.
+It MUST recompile `docs/arxiv-paper/main.pdf`, repack
+`results/carnot-arxiv-v5.tar.gz`, and emit the required closed-set
+`honest_verdict`.
+
 ## Scenarios
 
 ### SCENARIO-PUBLISH-001: All Headline Numbers Have Live-GPU Provenance
@@ -104,6 +132,28 @@ sections as modified
 AND `honest_verdict == "fully_updated"`
 AND every required integration boolean is true
 
+### SCENARIO-PUBLISH-005: Final Submission Bundle Ready For Manual Upload
+
+**Given** the position paper source exists and the exp1147 and exp1148 result
+artifacts exist
+**When** the exp1153 final-submission runner executes
+**Then** the paper contains the GRPO v2, projection-repair, and MetaCluster
+summaries
+AND `docs/arxiv-paper/main.pdf` is recompiled
+AND `results/carnot-arxiv-v4.tar.gz` is verified
+AND the deliverable JSON contains exact manual arXiv upload steps
+
+### SCENARIO-PUBLISH-006: Phase 4 Section Ready For Hold-Lift Review
+
+**Given** the position paper source and Exp 1165/1166 result artifacts exist
+AND Section 7 contains the four Phase 4 active-inference comparison
+subsections
+**When** the exp1167 Phase 4 paper-revision runner executes
+**Then** `docs/arxiv-paper/main.pdf` is recompiled
+AND `results/carnot-arxiv-v5.tar.gz` is verified
+AND the deliverable JSON reports `paper_ready_for_arxiv_hold_lift = True`
+AND `honest_verdict == "paper_v4_phase4_complete_arxiv_ready"`
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -112,3 +162,5 @@ AND every required integration boolean is true
 | REQ-PUBLISH-002 | Implemented | Exp 700 model card draft |
 | REQ-PUBLISH-003 | Implemented | Exp 700 gate logic |
 | REQ-PUBLISH-004 | Implemented | Exp 1135 position paper findings update |
+| REQ-PUBLISH-005 | Proposed | Exp 1153 final arXiv v4 bundle artifact |
+| REQ-PUBLISH-006 | Proposed | Exp 1167 Phase 4 Section 7 revision artifact |

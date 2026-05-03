@@ -1500,6 +1500,60 @@ Then: Each row has at most top_k non-zero entries, corresponding to the largest 
 
 **Implementation Status:** Implemented (Exp 637)
 
+## REQ-SAMPLE-040: Extropic Z1/XTR-0 THRML integration packet and backend stub
+
+Carnot SHALL provide an Extropic early-access integration packet and a
+`ThrmlSamplerBackend` adapter stub that preserve the existing `SamplerBackend`
+shape while Z1/XTR-0 hardware and SDK access are unavailable.
+
+Acceptance criteria:
+- `docs/hardware/extropic_integration_packet.md` documents the minimal Carnot
+  EBM workload that Z1 must support: Ising sampling, spin state read/write, and
+  energy evaluation.
+- The packet documents `ThermoSamplerBackend` interface requirements,
+  acceptance gates `KL(Z1 || CPU_Gibbs) < 0.05` and latency `< 1ms` for 128
+  spins, and a fallback plan using THRML CPU simulation when Z1 is unavailable.
+- `python/carnot/samplers/thrml_backend.py` exposes `ThrmlSamplerBackend` as a
+  `SamplerBackend` implementation. When `CARNOT_TSU_DEVICE` is unset it SHALL
+  route `sample()` and `minimize_energy()` to the CPU Gibbs backend. When
+  `CARNOT_TSU_DEVICE` is set it SHALL raise `NotImplementedError` rather than
+  pretending to access hardware.
+- `scripts/experiment_1150_extropic_integration_packet.py` SHALL probe THRML
+  availability, run a 100-spin THRML parity benchmark only when import succeeds,
+  and emit `results/experiment_1150_extropic_integration_packet.json` with the
+  roadmap-required schema and honest verdict vocabulary.
+
+**Implementation Status:** Implemented (Exp 1150)
+
+### SCENARIO-SAMPLE-066: THRML backend falls back honestly without TSU hardware
+
+Given: `CARNOT_TSU_DEVICE` is unset.
+When: `ThrmlSamplerBackend.sample()` or `minimize_energy()` is called with a
+small Ising problem.
+Then: The backend returns boolean samples from the CPU Gibbs fallback and reports
+the fallback execution path honestly.
+
+**Implementation Status:** Implemented (Exp 1150)
+
+### SCENARIO-SAMPLE-067: TSU hardware path is explicit until SDK access exists
+
+Given: `CARNOT_TSU_DEVICE` is set to a requested Z1/XTR-0 device label.
+When: `ThrmlSamplerBackend.sample()` or `minimize_energy()` is called.
+Then: The backend raises `NotImplementedError` with a message naming the missing
+Extropic TSU hardware/SDK integration.
+
+**Implementation Status:** Implemented (Exp 1150)
+
+### SCENARIO-SAMPLE-068: Extropic packet artifact records THRML availability
+
+Given: Experiment 1150 runs in an environment with or without importable THRML.
+When: `scripts/experiment_1150_extropic_integration_packet.py` completes.
+Then: The deliverable JSON records THRML availability, packet/backend paths,
+whether the interface is documented, optional THRML latency, and an honest
+verdict from the approved vocabulary.
+
+**Implementation Status:** Implemented (Exp 1150)
+
 ## REQ-MODEL-031: SCEnergyModel — Set-Level Energy Function for Statement Consistency (Exp 944)
 
 SCEnergyModel SHALL implement a permutation-invariant set-level energy function that assigns

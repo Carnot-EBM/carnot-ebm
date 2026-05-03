@@ -1967,6 +1967,53 @@ and records whether that improvement persists by category.
 
 **Spec traces:** REQ-VERIFY-1145
 
+### REQ-VERIFY-1160: MARCH Blinded Multi-Agent Claim Check
+
+The MARCH experiment MUST implement a lightweight three-role self-check loop
+over the Goodfire exemplar corpus:
+
+- Solver output is the candidate response already present in each corpus row.
+- Proposer extracts 2-4 atomic verifiable claims from the response with local
+  deterministic rules rather than a live LLM call.
+- Checker evaluates each extracted claim while blinded to the original response;
+  the checker input contract is only the original question plus the extracted
+  claim. Numeric claims SHALL be routed through `Z3MathVerifier` or equivalent
+  exact arithmetic checks, while non-numeric claims SHALL use deterministic
+  rule-based checks scoped to the question and claim.
+- A response SHALL be marked hallucinated when any blinded claim check fails.
+
+The experiment SHALL evaluate all 36 Goodfire exemplars and 100 correct FoVer
+examples, write `results/experiment_1160_march_multiagent_claim_check.json`,
+and include at least these artifact fields:
+`n_exemplars`, `n_correct_examples`, `thinkprm_baseline_tp`,
+`semenergy_baseline_tp`, `march_tp_rate`, `march_fpr`,
+`march_tp_above_baseline`, `claims_per_response_mean`,
+`blinded_checker_used`, `march_multiagent_honest_result`, and
+`honest_verdict`.
+
+**Acceptance criteria:**
+- `thinkprm_baseline_tp` is reported as `0.139` and
+  `semenergy_baseline_tp` is reported as `0.222`, matching Exp 1132 to the
+  precision requested by Exp 1160.
+- `blinded_checker_used` and `march_multiagent_honest_result` are `true`.
+- `march_tp_above_baseline` is true iff `march_tp_rate > 0.222`.
+- `honest_verdict` is one of `march_tp_above_semenergy_baseline`,
+  `march_tp_between_baselines`, `march_below_all_baselines`, or
+  `extractor_failed`.
+
+**Spec traces:** Exp 1160, REQ-VERIFY-1145, Exp 1132
+
+### SCENARIO-VERIFY-1160: Blinded Checker Flags Goodfire Claims Without Original Response
+
+**Given** a Goodfire exemplar with a buggy response and an original question,
+**When** the Proposer extracts atomic claims and the Checker validates each
+claim using only `(question, claim)`,
+**Then** the per-claim result records that the original response was not visible
+to the checker,
+**And** the response-level MARCH verdict is hallucinated if any claim fails.
+
+**Spec traces:** REQ-VERIFY-1160
+
 ### SCENARIO-PROBE-023: Benchmark AUROC and Honest Verdict on Synthetic Corpus
 
 **Given** a SpilledEnergyDetector and 200 synthetic responses (100 correct, 100 hallucinated)

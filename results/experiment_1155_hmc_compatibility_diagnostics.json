@@ -1,0 +1,45 @@
+{
+  "schema": "carnot.hmc_compatibility_diagnostics.v1",
+  "experiment": 1155,
+  "run_date": "2026-05-02",
+  "latent_dim": 10,
+  "d1_symplectic_reversibility_error_mean": 1.991188334033467e-14,
+  "d1_regime_signal": "A",
+  "d2_hamiltonian_variance": 0.18213380167140727,
+  "d2_regime_signal": "B",
+  "d3_gradient_disparity_ratio": 1000000000000.0,
+  "d3_regime_signal": "C",
+  "d4_subspace_delta_h_variance": 8.021356562797492e-15,
+  "d4_full_delta_h_variance": 0.18213380167140727,
+  "d4_discrete_components_bottleneck": true,
+  "gradient_method": "numerical_fd",
+  "hmc_regime_classified": true,
+  "hmc_regime": "C",
+  "recommended_sampler": "blocked_gibbs",
+  "honest_verdict": "regime_C_hmc_inappropriate",
+  "seed": 1155,
+  "n_diagnostic_points": 100,
+  "step_size": 0.01,
+  "d1_leapfrog_steps": 10,
+  "d2_leapfrog_steps": 20,
+  "finite_difference_eps": 1e-05,
+  "component_names": [
+    "SOSKANEnergyV3",
+    "SemEnergyProbe",
+    "ASTStructureVerifier",
+    "SemanticConsistencyVerifier",
+    "Z3MathVerifier"
+  ],
+  "continuous_subspace_component_names": [
+    "SemEnergyProbe",
+    "ThinkPRMProbe"
+  ],
+  "d3_component_gradient_norm_variances": {
+    "SOSKANEnergyV3": 2.2113596175287205,
+    "SemEnergyProbe": 5.658542934812522e-05,
+    "ASTStructureVerifier": 0.0,
+    "SemanticConsistencyVerifier": 0.0008784642464768938,
+    "Z3MathVerifier": 0.0
+  },
+  "latent_energy_bridge": "finite-difference latent proxy for text/symbolic k=5 verifiers; SOSKANEnergyV3 is evaluated directly, text-only verifier families use deterministic latent proxy energies"
+}

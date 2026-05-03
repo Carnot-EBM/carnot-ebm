@@ -126,6 +126,54 @@ those source fields, and write a machine-readable result artifact that includes:
 Missing gated experiment artifacts shall count as unmet criteria and shall be
 reported explicitly rather than fabricated as successes.
 
+### REQ-REPORT-010: Milestone .90 Operational Retrospective
+
+The Exp 1164 milestone .90 retrospective workflow shall read the authoritative
+Exp 1152 through Exp 1163 result JSON artifacts, plus the conductor log and the
+prior Exp 1151 retrospective, and write
+`results/experiment_1164_milestone_retro_90.json` with:
+
+- `milestone` set to `2026.04.90`
+- 13 criteria results, including the self-referential retrospective criterion
+- top-level honest verdicts recorded for each Exp 1152 through Exp 1163 source
+  artifact
+- `exp906_appeared_in_slowest5`, derived from .90 conductor-log spans only
+- `arxiv_submission_status`, derived from `exp1153.arxiv_submitted`
+- `phase34_mandatory_tasks_complete`, true only when Exp 1154, Exp 1155, and
+  Exp 1156 all exist and have honest verdicts
+- `kv260_v6_kl_below_threshold`, derived from
+  `exp1161.kv260_v6_kl_below_threshold_sequential_gibbs`
+- .90 wall time and wall-time delta versus the Exp 1151 .89 baseline of
+  257 minutes
+- exactly three bottlenecks for .91 planning
+- `honest_verdict` formatted as `N_of_13_criteria_met`
+
+Missing source artifacts shall count as unmet criteria and shall be reported in
+`failures_or_partials`.
+
+### REQ-REPORT-011: Milestone .91 Success-Criteria Retrospective
+
+The Exp 1177 milestone .91 retrospective workflow shall read the authoritative
+Exp 1165 through Exp 1176 result JSON artifacts and write
+`results/experiment_1177_milestone_retro_91.json` with:
+
+- `milestone` set to `2026.04.91`
+- `criteria_total` set to `13`
+- `criteria_met`, derived from the source fields for all 12 prior experiments
+  plus the self-referential retrospective criterion
+- `criteria_status`, mapping each planned criterion to `MET`, `NOT_MET`, or
+  `GATE_BLOCKED`
+- `phase4_hold_lift_ready`, true only when
+  `exp1167.paper_ready_for_arxiv_hold_lift == true`
+- `top_3_successes`, `top_3_gaps`, and `open_items_for_92`
+- `honest_verdict` formatted as `N_of_13_criteria_met`
+
+The workflow shall not infer publication readiness from structural paper
+completion alone: the Phase 4 hold-lift flag must follow the current Exp 1167
+artifact after any operator override. Missing artifacts shall count as
+`NOT_MET`, and explicitly blocked gated results shall be surfaced as
+`GATE_BLOCKED` rather than as successful criteria.
+
 ## Scenarios
 
 ### SCENARIO-REPORT-001: Nested Live Provenance Is Promoted
@@ -178,6 +226,31 @@ missing provenance rather than as a validated live result
 **Then** the gated criterion is false
 **And** the retrospective artifact reports the missing source in
 `failures_or_partials`
+
+### SCENARIO-REPORT-007: Milestone .90 Gates Are Derived From Source Fields
+
+**Given** Exp 1152 through Exp 1163 source artifacts exist
+**And** Exp 1153 has `arxiv_submitted == false`
+**And** Exp 1161 has
+`kv260_v6_kl_below_threshold_sequential_gibbs == true`
+**When** the Exp 1164 retrospective workflow runs
+**Then** the artifact reports `arxiv_submission_status == "upload_pending"`
+**And** it reports `kv260_v6_kl_below_threshold == true`
+**And** its honest verdict matches the number of true criteria out of 13
+
+### SCENARIO-REPORT-008: Milestone .91 Publication Hold Follows Exp 1167
+
+**Given** Exp 1165 through Exp 1176 source artifacts exist
+**And** Exp 1167 has `paper_ready_for_arxiv_hold_lift == false` after an
+operator figure-integrity override
+**And** Exp 1173 has `status == "blocked"` with
+`grpo_v5_honest_result == false`
+**When** the Exp 1177 retrospective workflow runs
+**Then** `phase4_hold_lift_ready == false`
+**And** `paper_v4_phase4_section_integrated == NOT_MET`
+**And** `grpo_v5_honest_result == GATE_BLOCKED`
+**And** `honest_verdict` matches the number of met criteria out of 13
+
 
 ### REQ-PUBLISH-003: HuggingFace README Accuracy Audit
 
@@ -261,5 +334,7 @@ embed live-GPU benchmark results from Exp 328 when available.
 | REQ-REPORT-007 | `scripts/experiment_210_research_scan.py`, `research-studying.md` | `tests/python/test_experiment_210_research_scan.py` | Implemented |
 | REQ-REPORT-008 | `scripts/experiment_210_research_scan.py` | `tests/python/test_experiment_210_research_scan.py` | Implemented |
 | REQ-REPORT-009 | `scripts/experiment_1138_milestone_retro_88.py` | `tests/python/test_experiment_1138_milestone_retro_88.py` | Implemented |
+| REQ-REPORT-010 | `scripts/experiment_1164_milestone_retro_90.py`, `results/experiment_1164_milestone_retro_90.json` | `tests/python/test_experiment_1164_milestone_retro_90.py` | Implemented |
+| REQ-REPORT-011 | `scripts/experiment_1177_milestone_retro_91.py`, `results/experiment_1177_milestone_retro_91.json` | `tests/python/test_experiment_1177_milestone_retro_91.py` | Implemented |
 | REQ-PUBLISH-003 | `scripts/experiment_317_hf_publish.py` | `tests/python/test_experiment_317_hf_publish.py` | Implemented |
 | REQ-PUBLISH-004 | `scripts/experiment_330_hf_live_publish.py` | `tests/python/test_experiment_330_hf_live_publish.py` | Implemented |

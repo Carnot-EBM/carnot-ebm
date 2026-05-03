@@ -1565,6 +1565,53 @@ def _verdict_is_untrustworthy(payload: dict) -> tuple[bool, str | None]:
     _MISS_TOKENS = ("below", "under_threshold", "missed_threshold", "missed_target")
     if any(p in vlow for p in _PROGRESS_TOKENS) and any(m in vlow for m in _MISS_TOKENS):
         return False, verdict
+    # Issue 3 v2 fix 2026-05-02 12:35Z: explicit-acceptance-gate token
+    # override. Some experiments encode acceptance compositionally with
+    # "below" or "above" pointing at threshold values (which the partial-
+    # token check would otherwise flag as failure):
+    #   exp1156 sampler_kl_below_05_viable      (KL < 0.5  = passing)
+    #   exp1157 calibrated_tp_above_80_fpr_below_30  (TP > 80, FPR < 30 = passing)
+    # The Issue 7 extension above catches `improved + below` but not the
+    # `viable + below` or `calibrated + below` patterns. Both verdicts had
+    # genuinely-positive artifacts that the conductor retired despite real
+    # success. The token list below is the explicit-acceptance whitelist
+    # that overrides partial-detection. Three retirements in 24 hours
+    # (exp1118 GRPO, exp1156 HMC sampler, exp1157 SECL calibration) drove
+    # the fix.
+    _EXPLICIT_ACCEPTANCE_TOKENS = (
+        "_viable",  # exp1156: sampler_kl_below_05_viable
+        "calibrated_",  # exp1157: calibrated_tp_above_80_fpr_below_30
+        "_acceptance_met",  # explicit acceptance-met marker
+        "_passes_gate",  # explicit passes-gate marker
+        "_within_tolerance",  # within tolerance (positive)
+        "_meets_target",  # explicit meets-target marker
+    )
+    # _NEGATIVE_VIABLE_PATTERNS: explicit negations that contain "_viable"
+    # but mean "NOT viable". Without this guard, `not_viable`,
+    # `still_not_viable`, etc. would match `_viable` in the acceptance
+    # whitelist above and silently pass as success. Order matters: check
+    # negations BEFORE applying the acceptance override.
+    _NEGATIVE_VIABLE_PATTERNS = ("not_viable", "non_viable", "unviable")
+    # Defensive guard: even if an acceptance token is present, refuse to
+    # override partial-detection if the verdict ALSO contains a clearly-
+    # negative context word. Catches hypothetical strings like
+    # `non_viable_collapse`, `calibrated_but_collapsed`, etc.
+    _CLEARLY_NEGATIVE_CONTEXT = (
+        "collapse",
+        "broken",
+        "wedged",
+        "diverged",
+        "garbage",
+        "useless",
+        "stalled_out",
+        "degraded",
+        "regress",
+    )
+    has_acceptance = any(tok in vlow for tok in _EXPLICIT_ACCEPTANCE_TOKENS)
+    has_negative_viable = any(p in vlow for p in _NEGATIVE_VIABLE_PATTERNS)
+    has_clearly_negative = any(p in vlow for p in _CLEARLY_NEGATIVE_CONTEXT)
+    if has_acceptance and not has_negative_viable and not has_clearly_negative:
+        return False, verdict
     try:
         sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
         from in_process_doc_reconcile import (  # type: ignore[import-not-found]

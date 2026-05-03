@@ -4,6 +4,240 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-05-02 Scan (Milestone 2026.04.92 Planning)
+
+### Latent-GRPO: Latent-Space Group Relative Policy Optimization
+- **Paper:** arXiv 2604.27998 (April 2026).
+- **What:** Novel GRPO variant combining invalid-sample masking (skip reward signal for trivially
+  easy samples where all completions score the same) with one-sided noise sampling (add structured
+  noise only to incorrect samples, not correct ones). Reports 7.86-point improvement on low-difficulty
+  tasks and 3-4x shorter reasoning chains vs standard GRPO.
+- **Relevance to Carnot:** GRPO v5 (exp1173/.91) blocked by llama.cpp GPU offload issue. Latent-GRPO's
+  invalid-sample masking directly complements TinyV false-negative correction: when energy is ~uniform
+  across completions (trivial sample), mask the reward signal — this is orthogonal to TinyV which masks
+  when verifier confidence is uncertain. One-sided noise is also complementary: correct samples get no
+  noise (energy stays low), incorrect samples get noise to push energy higher. Could apply both
+  improvements on top of GRPO v5 architecture.
+- **Concrete experiment:** Apply Latent-GRPO invalid-sample masking (skip when energy_std < threshold
+  across completions) + one-sided noise to Carnot's GRPO energy training. Compare vs GRPO v4 (+10pp)
+  and GRPO v5 baseline. Run standalone without llama.cpp GPU dependency (use CPU for scoring).
+- **When to incorporate:** Milestone .92 Phase 5, exp1187.
+
+### GRPO-VPS: GRPO with Verifiable Process Supervision
+- **Paper:** arXiv 2604.20659 (April 2026).
+- **What:** Addresses credit assignment for intermediate reasoning steps in GRPO. Rather than a single
+  outcome reward, computes per-step rewards using a process verifier. Improves on GRPO by attributing
+  credit to the specific reasoning step that caused the correct/incorrect outcome.
+- **Relevance to Carnot:** Carnot has per-step verifiers: CausalReasoningVerifier (Tier 2.7),
+  SymCodeVerifier (Tier 2.5), Z3MathVerifier (Tier 3). These naturally produce step-level verification
+  signals. Wiring them as GRPO-VPS process rewards could attribute training signal to the exact step
+  where an arithmetic error occurred, rather than blaming the whole chain.
+- **Concrete experiment:** Wire CausalReasoningVerifier + Z3MathVerifier as per-step reward signals in
+  GRPO. Compare step-level vs outcome-level improvement_over_baseline on held-out GSM8K.
+- **When to incorporate:** .93 or later (after GRPO v5 GPU offload issue is resolved).
+
+### Energy-Based Diffusion Language Models
+- **Paper:** arXiv 2410.21357 (October 2024, still relevant 2026).
+- **What:** EBM-guided diffusion for text generation. Uses energy function to guide the reverse
+  diffusion process — high-energy states get higher noise, low-energy states are preserved. Provides
+  the theoretical connection between EBM verification and diffusion-based text correction.
+- **Relevance to Carnot:** DoT inference (exp1171/.91) found AUROC=0.5 at all T values — the energy
+  gradient didn't capture any per-token signal. This paper's EBM-diffusion formulation suggests a
+  different approach: instead of computing energy deltas per token (which may be too fine-grained for
+  a sequence-level EBM), use the EBM energy to guide a diffusion process over full sequences. The
+  score matching framework in this paper could replace the token-masking approach that failed in DoT.
+- **Concrete experiment:** Redesign DoT using EBM-diffusion formulation: energy over full sequence
+  guides noise schedule (high energy = high noise = mask more tokens). Compare vs failed per-token
+  masking from exp1171.
+- **When to incorporate:** Milestone .92 DoT diagnosis task, exp1186.
+
+### Active Inference AI Systems for Scientific Discovery
+- **Paper:** arXiv 2506.21329 (2026).
+- **What:** Integrates active inference (Friston free-energy framework) with LLMs using chain-of-thought
+  reasoning and Expected Free Energy (EFE) minimization. Demonstrates EFE as a principled decision
+  criterion for agentic AI systems in scientific discovery tasks.
+- **Relevance to Carnot:** Phase 4 (exp1165) implemented Blocked Gibbs free-energy minimization for
+  ARC-AGI-3. This paper provides independent theoretical grounding: EFE minimization IS what Carnot's
+  Phase 4 implements. The paper's formalization of EFE = Σ_k E_k(z) for multi-verifier systems maps
+  directly to Carnot's k=N AND-composed energy F(z) = Σ_k w_k E_k(z). Useful for extending Phase 4
+  theory in the position paper and for motivating exp1189 (stronger baseline pilot).
+- **Concrete experiment:** Cite in paper Phase 4 section (already in exp1167's scope). No separate
+  experiment needed; use for theoretical grounding in the position paper v5.
+- **When to incorporate:** Paper integrity task (exp1180/1181) — add citation to Section 7.
+
+### Physical Analog KANs via Reconfigurable Nonlinear Processors
+- **Paper:** arXiv 2602.07518 (February 2026).
+- **What:** Implements KANs using physical analog hardware (reconfigurable nonlinear processors).
+  Demonstrates that KAN spline activations map naturally to analog nonlinear hardware, providing
+  inference without digital multiplication — all operations are physical analog transformations.
+- **Relevance to Carnot:** BiKA (arXiv 2602.23455) achieves multiply-free KAN via bit-shifts. Physical
+  analog KANs go further: no digital computation at all. The SOS-KAN verifier (AUROC=0.9902) could
+  potentially be implemented as an analog circuit, enabling sub-nanosecond energy evaluation on future
+  Extropic-class hardware. Medium-term: after Extropic Z1 ships, this architecture is the hardware
+  target for the verifier.
+- **Concrete experiment:** Not yet — monitor Extropic Z1 availability. File for hardware roadmap.
+- **When to incorporate:** .93+ after Extropic Z1 early-access or comparable analog hardware.
+
+## 2026-05-02 Scan (Milestone 2026.04.91 Planning)
+
+### TinyV: Reducing False Negatives in Verification Improves RL Training
+- **Paper:** arXiv 2505.14625 (May 2025).
+- **Source:** https://arxiv.org/abs/2505.14625
+- **What:** Reveals 38% false negative rate in standard LLM output verifiers — correct responses
+  are rejected due to format/notation mismatches. TinyV replaces strict exact-match with a
+  lightweight model that tolerates superficial variation. Directly improves RL training signal
+  quality by reducing reward noise from false negatives.
+- **Relevance to Carnot:** GRPO v4 (exp1159) achieved +10% improvement with structural warm-up;
+  false negatives in the ThinkPRM/energy verifier reward signal may still be introducing noise.
+  TinyV's false-negative correction logic applied to Carnot's PRM threshold could improve GRPO v5.
+  Also relevant for calibration: the 38% FNR means Carnot's SECL calibration fix (exp1157) may
+  still leave 38% of real improvements uncaptured in the reward signal.
+- **Concrete experiment:** Apply TinyV-style false-negative correction to GRPO v5 energy reward:
+  when verifier confidence is below threshold, abstain from reward signal rather than penalizing.
+  Compare action_count and improvement_over_baseline vs GRPO v4 baseline (+10%).
+- **When to incorporate:** Milestone .91 GRPO v5 design.
+
+### BiKA: Ultra-Lightweight Multiply-Free KAN Hardware Accelerator
+- **Paper:** arXiv 2602.23455 (February 2026).
+- **Source:** https://arxiv.org/abs/2602.23455
+- **What:** Proposes a multiply-free KAN architecture where spline activations are approximated
+  via bit-shifts and additions only. Reports 27.73-51.54% reduction in hardware resource usage
+  vs standard KAN implementations while maintaining competitive accuracy.
+- **Relevance to Carnot:** SOS-KAN (SOSKANEnergyV3, AUROC=0.9902) is the cheapest load-bearing
+  verifier; MetaCluster compressed it to 5.03x smaller (exp1148). BiKA is the next step toward
+  NPU-native deployment: replace multiplications with bit-shift approximations in the spline layers.
+  This enables the verifier to run on AMD XDNA NPU and future Extropic Z1 without floating-point
+  hardware. Pairs with KANELE (arXiv 2512.12850) LUT-based design flow.
+- **Concrete experiment:** Apply BiKA multiply-free architecture to SOSKANEnergyV3; compute
+  RM/BOP/NABS metrics from arXiv 2604.03345; compare hardware cost vs standard SOS-KAN, MetaCluster
+  compressed variant, and KANELE blueprint. Report NPU deployment feasibility.
+- **When to incorporate:** Milestone .91 hardware portfolio analysis.
+
+### GRPO is Secretly a Process Reward Model
+- **Paper:** arXiv 2509.21154 (September 2025).
+- **Source:** https://arxiv.org/abs/2509.21154
+- **What:** Proves that GRPO with an outcome reward model is mathematically equivalent to a
+  PRM-aware RL objective. The group-normalized advantage in GRPO implicitly computes
+  step-level credit assignment. Clarifies when outcome-level vs step-level reward gives different
+  gradients.
+- **Relevance to Carnot:** Carnot's GRPO uses ThinkPRM v2 (AUROC=0.9946) as the energy-reward
+  signal. This paper confirms the theoretical grounding: GRPO + ThinkPRM is PRM-aware RL by
+  construction. Useful when explaining the self-learning mechanism in the position paper v4.
+- **Concrete experiment:** Use this paper as theoretical justification for the GRPO+PRM framing
+  in the position paper v4 Phase 4 section. No separate experiment needed; cite in paper.
+- **When to incorporate:** Paper v4 Phase 4 integration (milestone .91 exp1167).
+
+### Corrective Diffusion Language Models
+- **Paper:** arXiv 2512.15596 (December 2025).
+- **Source:** https://arxiv.org/abs/2512.15596
+- **What:** Post-training method that teaches diffusion language models to correct targeted
+  tokens via masked diffusion and parallel iterative refinement. Achieves correction-oriented
+  text generation without full regeneration.
+- **Relevance to Carnot:** The Diffusion of Thought (DoT) inference mode proposed in
+  known-issues.md needs a concrete implementation pattern. Corrective diffusion provides
+  a masked-token refinement scheme where Carnot's energy gradient identifies WHICH tokens
+  to remask, and the diffusion model proposes corrections. This is more targeted than
+  full DoT and better matches Carnot's verifier-guided repair philosophy.
+- **Concrete experiment:** Implement DoT inference mode using corrective diffusion's masked
+  refinement pattern: (1) energy gradient identifies high-violation tokens → mark as remask
+  candidates; (2) diffusion step proposes corrections for marked tokens; (3) re-verify.
+  Compare vs full Blocked Gibbs and vs autoregressive repair on FoVer + 50 GSM8K.
+- **When to incorporate:** Milestone .91 Diffusion of Thought inference mode.
+
+### ARC-AGI-3: A New Challenge for Frontier Agentic Intelligence
+- **Paper:** arXiv 2603.24621 (March 2026).
+- **Source:** https://arxiv.org/abs/2603.24621
+- **What:** Third iteration of the ARC-AGI benchmark, requiring goal inference and sequential
+  planning over novel grid transformations. Frontier autoregressive LLMs all score below 1%;
+  Seed IQ (active inference) scores 100% with 115% human action-efficiency.
+- **Relevance to Carnot:** Phase 4 arc: Carnot's Blocked Gibbs free-energy minimization on
+  k=5 AND-composed verifier = active inference under a different name. The exp1154 snap operator
+  confirmed ≥95% valid action coverage. Pilot on 10 representative ARC-AGI-3 puzzle types
+  is the empirical gate for lifting the arXiv publication hold.
+- **Concrete experiment:** Phase 4 ARC-AGI-3 minimal pilot: 10 synthetic puzzles, Blocked Gibbs
+  free-energy minimization → action selection → compare action-count vs greedy baseline and
+  Seed IQ published numbers (VC33: 173 actions, FT09: 75 actions, LS20: 433 actions).
+- **When to incorporate:** Milestone .91 Phase 0 CRITICAL (exp1165).
+
+## 2026-05-02 Scan (Milestone 2026.04.90 Planning)
+
+### KANELÉ: KAN FPGA Deployment with 2700x Speedup
+- **Paper:** arXiv 2512.12850 (December 2025).
+- **Source:** https://arxiv.org/abs/2512.12850
+- **What:** First systematic design flow for implementing KANs on FPGAs via co-optimization
+  of training, quantization, and pruning. Spline activations map naturally to LUT structures.
+  Reports up to 2700x speedup and orders-of-magnitude resource savings over prior KAN-on-FPGA
+  approaches, with competitive inference quality.
+- **Relevance to Carnot:** SOS-KAN (SOSKANEnergyV3, AUROC=0.9902) is the load-bearing cheap
+  verifier. MetaCluster compression (.89 exp1148) achieved 5.03x size reduction. KANELÉ is the
+  next step: a literal FPGA blueprint that turns the compressed KAN into an RTL-synthesizable
+  LUT table, targeting the KV260 or a future Alveo for sub-microsecond energy evaluation.
+- **Concrete experiment:** Generate a KANELÉ-style FPGA LUT blueprint from the exp1148
+  compressed SOSKANEnergyV3 checkpoint; compute hardware complexity metrics (RM, BOP, NABS)
+  per arXiv 2604.03345; compare estimated FPGA latency vs CPU baseline (289ms).
+- **When to incorporate:** Milestone .90 hardware phase.
+
+### Hardware-Oriented Inference Complexity of KANs
+- **Paper:** arXiv 2604.03345 (April 2026).
+- **Source:** https://arxiv.org/abs/2604.03345
+- **What:** Derives platform-independent metrics for KAN hardware complexity: Real Multiplications
+  (RM), Bit Operations (BOP), and Number of Additions and Bit-Shifts (NABS), across B-spline,
+  Gaussian RBF, Chebyshev, and Fourier KAN variants. Computable from network structure alone,
+  enabling early-stage architectural comparison without full synthesis.
+- **Relevance to Carnot:** Enables objective comparison between SOS-KAN, compressed SOS-KAN
+  (exp1148), and the KANELÉ FPGA target. Use RM/BOP/NABS to guide model selection for NPU/FPGA
+  deployment without waiting for synthesis runs.
+- **Concrete experiment:** Include in the KANELÉ blueprint experiment (.90) as the complexity
+  analysis output. Compare original SOS-KAN vs MetaCluster-compressed vs FPGA-LUT form.
+- **When to incorporate:** Milestone .90 alongside KANELÉ blueprint.
+
+### SECL: Self-Calibrating Language Models via Test-Time Discriminative Distillation
+- **Paper:** arXiv 2604.09624 (April 2026).
+- **Source:** https://arxiv.org/abs/2604.09624
+- **What:** Test-time training method that exploits the gap between LLMs' expressed confidence
+  and their better-calibrated internal signal ("Is this correct?" token probability). Only
+  adapts when input distribution shifts (6-26% of the question stream). Reduces Expected
+  Calibration Error by 56-78% across models and domains.
+- **Relevance to Carnot:** exp1145 (.89) achieved 91.7% TP on Goodfire exemplars but
+  false_positive_rate=0.96 — the threshold adjustment was too aggressive. SECL's discriminative
+  distillation provides a theoretically grounded recalibration: train the cheap-tier router on
+  the discriminative "Is this response correct?" signal rather than a fixed threshold, removing
+  the TP/FP trade-off. This directly addresses the .89 bottleneck identified in the retro.
+- **Concrete experiment:** Replace exp1145's fixed threshold adjustment with SECL-style
+  test-time discriminative calibration on the Goodfire exemplar corpus; target TP>=80%, FPR<=0.30.
+- **When to incorporate:** Milestone .90 verifier calibration phase.
+
+### Graph-GRPO: Structural Constraint Reinforcement Learning
+- **Paper:** arXiv 2603.10395 (March 2026).
+- **Source:** https://arxiv.org/abs/2603.10395
+- **What:** Two-stage GRPO training that first optimizes with a simplified structural constraint
+  objective, then uses the resulting checkpoint to initialize full RL with multi-objective
+  optimization. Designed for molecule generation but the structural-constraint-first pre-training
+  idea is domain-general.
+- **Relevance to Carnot:** exp1146 GRPO reflection reward v3 produced +2.86pp vs +8.51pp from
+  exp1129. The structural-constraint-first phase could explain the gap: GRPO v3 mixed the
+  reflection reward (structural) with ThinkPRM (semantic) from the start. A Graph-GRPO-inspired
+  warm-up phase that trains ONLY on reflection reward r_reflect for the first N steps, then
+  mixes in ThinkPRM, could improve stability.
+- **Concrete experiment:** Incorporate structural-first GRPO warm-up into exp1159 GRPO v4.
+- **When to incorporate:** Milestone .90 GRPO v4 design.
+
+### Active Inference for Self-Organizing Multi-LLM Systems
+- **Paper:** arXiv 2412.10425 (December 2024).
+- **Source:** https://arxiv.org/abs/2412.10425
+- **What:** Integrates active inference with LLM agents as a cognitive layer dynamically
+  adjusting prompts and search strategies through principled information-seeking behavior.
+  The active inference framework computes expected free energy to select information-gathering
+  actions that minimize uncertainty about the world model.
+- **Relevance to Carnot:** Phase 4 track (committed, mandatory for .90+): Carnot's k=5
+  AND-composed verifier ensemble serves as the calibrated free-energy approximation while the
+  LLM substrate retains autoregressive infrastructure. This paper provides a concrete multi-LLM
+  instantiation pattern that maps directly to Carnot's existing verifier + LLM architecture.
+- **Concrete experiment:** Phase 4 active inference pilot: implement a minimal variational
+  free-energy loop using exp1128 k=5 ensemble as the precision-weighted prediction error;
+  validate on 50 FoVer examples (Phase-4 committed track).
+- **When to incorporate:** Milestone .90 Phase 4 mandatory track.
+
 ## 2026-05-02 Supplemental Scan (Milestone 2026.04.89 Planning)
 
 ### NRGPT: An Energy-based Alternative for GPT
