@@ -83,6 +83,7 @@ Then the result is 5016 (= 8 * 32 * 19 + 8 * 19).
 | REQ-KAN-1148 | Proposed | Exp 1148 target: MetaCluster-style centroid compression for SOSKANEnergyV3 with AUROC drop <= 0.02 and >=5x shrink. |
 | REQ-KAN-1162 | Implemented | Exp 1162: KANELE-style Q8 LUT blueprint and hardware-complexity artifact generated for the compressed SOSKANEnergyV3 shape. |
 | REQ-KAN-1174 | Proposed | Exp 1174 target: BiKA multiply-free complexity analysis for SOSKANEnergyV3, MetaCluster, and AMD XDNA NPU feasibility. |
+| REQ-KAN-1199 | Proposed | Exp 1199 target: KANtize-style 8-bit/4-bit SOSKANEnergyV3 spline quantization with endpoint-sensitive precision and safetensors export. |
 
 ## REQ-KAN-020: KAEMEnergy FPGA LUT Budget Analyzability
 
@@ -272,3 +273,39 @@ When `scripts/experiment_1174_bika_hardware_analysis.py` runs,
 Then `results/experiment_1174_bika_hardware_analysis.json` is written with the
 required schema fields, the SOS-KAN architecture values, multiply-free BiKA
 metrics, and an honest AMD XDNA NPU feasibility verdict.
+
+## REQ-KAN-1199: KANtize-style SOSKANEnergyV3 spline quantization
+
+Experiment 1199 MUST quantize SOSKANEnergyV3 spline-control parameters at 8-bit
+and 4-bit precision while assigning endpoint spline control points twice the
+interior bit width, then evaluate AUROC, memory size, latency, and deployment
+readiness on the FoVer holdout.
+
+**Rationale:**
+    Exp 1128 established a full-precision SOSKANEnergyV3 AUROC reference of
+    0.9902 on the 500-example FoVer benchmark.  KANtize-style low-bit spline
+    quantization tests whether the same verifier can be represented cheaply
+    enough for consumer edge hardware.  Endpoint spline values are quantized
+    with higher precision because endpoint perturbations are more sensitive
+    than interior perturbations in spline functions.
+
+**Acceptance criteria:**
+    - Interior SOSKANEnergyV3 spline rows SHALL be rounded to the nearest
+      `1/(2^bits - 1)` interval for `bits in {8, 4}`.
+    - First and last spline-control rows SHALL be rounded separately with
+      `2 * bits` precision.
+    - Non-spline head parameters SHALL remain exact in the quantized model.
+    - `scripts/experiment_1199_kantize_soskan_4bit_quantization.py` SHALL write
+      `results/experiment_1199_kantize_soskan_4bit_quantization.json` with
+      full-precision, 8-bit, and 4-bit AUROC and size fields, 4-bit latency,
+      safetensors checkpoint path, threshold booleans, and an honest verdict.
+    - The 4-bit safetensors export SHALL contain a quantized SOSKANEnergyV3
+      checkpoint with architecture and quantization metadata.
+
+### SCENARIO-KAN-1199: evaluate and export quantized SOSKANEnergyV3
+
+Given the Exp 1128 SOSKANEnergyV3 FoVer setup,
+When `scripts/experiment_1199_kantize_soskan_4bit_quantization.py` runs,
+Then it evaluates 32-bit, 8-bit, and 4-bit AUROC, measures packed model sizes
+and 4-bit per-sample latency, exports the 4-bit quantized checkpoint as
+safetensors, and reports whether `soskan_4bit_auroc >= 0.97`.

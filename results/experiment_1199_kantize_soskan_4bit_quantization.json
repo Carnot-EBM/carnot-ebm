@@ -1,0 +1,83 @@
+{
+  "experiment": 1199,
+  "schema": "kantize_soskan_4bit_quantization",
+  "run_date": "2026-05-03",
+  "started_at": "2026-05-03T13:17:07Z",
+  "finished_at": "2026-05-03T13:17:08Z",
+  "duration_s": 0.26,
+  "status": "success",
+  "title": "KANtize SOSKANEnergyV3 4-bit/8-bit Quantization",
+  "soskan_full_precision_auroc": 0.990228,
+  "soskan_8bit_auroc": 0.990228,
+  "soskan_4bit_auroc": 0.990137,
+  "soskan_full_precision_size_mb": 0.006481,
+  "soskan_8bit_size_mb": 0.002201,
+  "soskan_4bit_size_mb": 0.001228,
+  "soskan_4bit_inference_latency_ms": 0.038038,
+  "kantize_4bit_checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1199_soskan_energy_v3_q4.safetensors",
+  "kantize_auroc_maintained_above_0p97": true,
+  "edge_deployment_ready": true,
+  "honest_verdict": "4bit_auroc_above_threshold",
+  "soskan_class": "carnot.models.sos_kan.SOSKANEnergyV3",
+  "model_source": "retrained_exp1128_recipe_no_exp1128_checkpoint_path",
+  "checkpoint_discovery": {
+    "checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1130_soskan_energy_v3_retrained.npz",
+    "checkpoint_found": true,
+    "checkpoint_loadable": true,
+    "checkpoint_architecture": {
+      "n_splines": 8,
+      "rank": 8,
+      "n_features": 16,
+      "hidden_dim": 32
+    },
+    "checkpoint_metadata": {
+      "schema": "carnot.exp1130.soskan_energy_v3_checkpoint.v1",
+      "source_experiment": 1120,
+      "n_splines": 8,
+      "rank": 8,
+      "n_features": 16,
+      "hidden_dim": 32,
+      "seed": 42,
+      "energy_threshold": 16.968410131236514,
+      "retrained_auroc": 0.9774193548387097,
+      "n_training_pairs": 5583,
+      "n_val_pairs": 697,
+      "final_train_loss": 0.02011489330739949
+    }
+  },
+  "exp1128_reference_auroc": 0.9902,
+  "benchmark_n_examples": 500,
+  "feature_stats": [
+    [
+      2.39789527,
+      7.52348131
+    ],
+    [
+      0.03703704,
+      1.0
+    ],
+    [
+      0.38016529,
+      1.0
+    ]
+  ],
+  "quantization": {
+    "spline_parameter_names": [
+      "W2",
+      "b2"
+    ],
+    "interior_8bit_interval": "1/255",
+    "endpoint_8bit_interval": "1/65535",
+    "interior_4bit_interval": "1/15",
+    "endpoint_4bit_interval": "1/255",
+    "non_spline_parameters": [
+      "W1",
+      "b1",
+      "c"
+    ]
+  },
+  "spec": [
+    "REQ-KAN-1199",
+    "SCENARIO-KAN-1199"
+  ]
+}

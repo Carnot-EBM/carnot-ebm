@@ -1,0 +1,267 @@
+{
+  "experiment": "1202_milestone_retro_93",
+  "schema": "milestone_retro_v3",
+  "run_date": "2026-05-03T13:53:25Z",
+  "milestone": "2026.04.93",
+  "criteria_results": {
+    "prlimit_memory_cap_active": true,
+    "llama_cpp_gpu_offload_verified": false,
+    "critical_issues_fixed_5_of_5": false,
+    "arxiv_bundle_v7_ready": false,
+    "grpo_v5_honest_result": false,
+    "grpo_vps_step_delta_measured": false,
+    "phase4_bfs_intractable_fraction_above_50pct": false,
+    "fover_v7_pairs_above_500": false,
+    "kantize_auroc_maintained_above_0p97": true,
+    "tier1_online_addition_honest_verdict": false,
+    "nonogram_cartridge_shipped": false,
+    "retro_complete": true
+  },
+  "criteria_status": {
+    "prlimit_memory_cap_active": "PASS",
+    "llama_cpp_gpu_offload_verified": "FAIL",
+    "critical_issues_fixed_5_of_5": "FAIL",
+    "arxiv_bundle_v7_ready": "FAIL",
+    "grpo_v5_honest_result": "FAIL",
+    "grpo_vps_step_delta_measured": "FAIL",
+    "phase4_bfs_intractable_fraction_above_50pct": "FAIL",
+    "fover_v7_pairs_above_500": "FAIL",
+    "kantize_auroc_maintained_above_0p97": "PASS",
+    "tier1_online_addition_honest_verdict": "FAIL",
+    "nonogram_cartridge_shipped": "FAIL",
+    "retro_complete": "PASS"
+  },
+  "criteria_detail": {
+    "prlimit_memory_cap_active": {
+      "criterion": "prlimit_memory_cap_active",
+      "experiment": "exp1191",
+      "field": "rlimit_as_set",
+      "actual": true,
+      "status": "PASS",
+      "met": true,
+      "detail": "Exp1191 must set a hard RLIMIT_AS memory cap."
+    },
+    "llama_cpp_gpu_offload_verified": {
+      "criterion": "llama_cpp_gpu_offload_verified",
+      "experiment": "exp1192",
+      "field": "llama_cpp_gpu_offload_verified",
+      "actual": null,
+      "status": "FAIL",
+      "met": false,
+      "detail": "Exp1192 must verify llama.cpp CUDA offload."
+    },
+    "critical_issues_fixed_5_of_5": {
+      "criterion": "critical_issues_fixed_5_of_5",
+      "experiment": "exp1193",
+      "field": "critical_issues_fixed",
+      "actual": null,
+      "status": "FAIL",
+      "met": false,
+      "detail": "Exp1193 must fix all five critical paper-integrity issues."
+    },
+    "arxiv_bundle_v7_ready": {
+      "criterion": "arxiv_bundle_v7_ready",
+      "experiment": "exp1194",
+      "field": "arxiv_bundle_v7_ready",
+      "actual": null,
+      "status": "FAIL",
+      "met": false,
+      "detail": "Exp1194 must produce the v7 arXiv bundle."
+    },
+    "grpo_v5_honest_result": {
+      "criterion": "grpo_v5_honest_result",
+      "experiment": "exp1195",
+      "field": "honest_verdict",
+      "actual": null,
+      "status": "FAIL",
+      "met": false,
+      "detail": "Exp1195 must report any honest GRPO v5 outcome, including blocked counts."
+    },
+    "grpo_vps_step_delta_measured": {
+      "criterion": "grpo_vps_step_delta_measured",
+      "experiment": "exp1196",
+      "field": "grpo_vps_step_delta_measured",
+      "actual": null,
+      "status": "FAIL",
+      "met": false,
+      "detail": "Exp1196 must measure the GRPO-VPS step-level delta."
+    },
+    "phase4_bfs_intractable_fraction_above_50pct": {
+      "criterion": "phase4_bfs_intractable_fraction_above_50pct",
+      "experiment": "exp1197",
+      "field": "phase4_bfs_intractable_fraction_above_50pct",
+      "actual": null,
+      "status": "FAIL",
+      "met": false,
+      "detail": "Exp1197 must show BFS intractability above 50 percent."
+    },
+    "fover_v7_pairs_above_500": {
+      "criterion": "fover_v7_pairs_above_500",
+      "experiment": "exp1198",
+      "field": "fover_v7_pairs_above_500",
+      "actual": null,
+      "status": "FAIL",
+      "met": false,
+      "detail": "Exp1198 must generate at least 500 FoVer v7 pairs."
+    },
+    "kantize_auroc_maintained_above_0p97": {
+      "criterion": "kantize_auroc_maintained_above_0p97",
+      "experiment": "exp1199",
+      "field": "kantize_auroc_maintained_above_0p97",
+      "actual": true,
+      "status": "PASS",
+      "met": true,
+      "detail": "Exp1199 must keep 4-bit SOSKAN AUROC at or above 0.97."
+    },
+    "tier1_online_addition_honest_verdict": {
+      "criterion": "tier1_online_addition_honest_verdict",
+      "experiment": "exp1200",
+      "field": "tier1_online_addition_honest_verdict",
+      "actual": null,
+      "status": "FAIL",
+      "met": false,
+      "detail": "Exp1200 must report the Tier 1 online-addition verdict field."
+    },
+    "nonogram_cartridge_shipped": {
+      "criterion": "nonogram_cartridge_shipped",
+      "experiment": "exp1201",
+      "field": "nonogram_cartridge_shipped",
+      "actual": null,
+      "status": "FAIL",
+      "met": false,
+      "detail": "Exp1201 must ship the Nonogram WOPR cartridge."
+    },
+    "retro_complete": {
+      "criterion": "retro_complete",
+      "experiment": null,
+      "field": "retro_complete",
+      "actual": true,
+      "status": "PASS",
+      "met": true,
+      "detail": "Exp1202 retrospective artifact was assembled."
+    }
+  },
+  "criteria_met": 3,
+  "criteria_total": 12,
+  "criteria_score_pct": 25.0,
+  "slowest_tasks": [
+    {
+      "rank": 1,
+      "id": "exp1193",
+      "duration_min": 89.0,
+      "attempts_seen": 3
+    },
+    {
+      "rank": 2,
+      "id": "exp1192",
+      "duration_min": 88.0,
+      "attempts_seen": 3
+    },
+    {
+      "rank": 3,
+      "id": "exp1197",
+      "duration_min": 35.0,
+      "attempts_seen": 3
+    },
+    {
+      "rank": 4,
+      "id": "exp1200",
+      "duration_min": 5.0,
+      "attempts_seen": 3
+    },
+    {
+      "rank": 5,
+      "id": "exp1194",
+      "duration_min": 4.0,
+      "attempts_seen": 3
+    }
+  ],
+  "slowest_5_tasks": [
+    {
+      "rank": 1,
+      "id": "exp1193",
+      "duration_min": 89.0,
+      "attempts_seen": 3
+    },
+    {
+      "rank": 2,
+      "id": "exp1192",
+      "duration_min": 88.0,
+      "attempts_seen": 3
+    },
+    {
+      "rank": 3,
+      "id": "exp1197",
+      "duration_min": 35.0,
+      "attempts_seen": 3
+    },
+    {
+      "rank": 4,
+      "id": "exp1200",
+      "duration_min": 5.0,
+      "attempts_seen": 3
+    },
+    {
+      "rank": 5,
+      "id": "exp1194",
+      "duration_min": 4.0,
+      "attempts_seen": 3
+    }
+  ],
+  "publication_hold_status": "active",
+  "dualgpu_utilization": {
+    "available": false,
+    "gpu0_utilization_pct": null,
+    "gpu1_utilization_pct": null,
+    "source": "exp1195",
+    "reason": "MISSING"
+  },
+  "grpo_trajectory": {
+    "v3_improvement_pp": 2.86,
+    "v4_improvement_pp": 10.0,
+    "v5_result": "MISSING",
+    "v5_improvement_over_baseline_pp": null,
+    "v5_honest_verdict": "MISSING"
+  },
+  "significant_findings": [
+    "prlimit is active at 8GB, but .93 still had missing gated artifacts (exp1192, exp1193, exp1194, exp1195, exp1197) before those research criteria could be evaluated.",
+    "Publication remains on hold: critical paper fixes and arXiv bundle v7 did not produce passing artifacts, and operator approval is still required.",
+    "KANtize was the clear positive result with 4-bit AUROC=0.990137; the other blocked tracks were exp1196, exp1198, exp1200, exp1201."
+  ],
+  "open_items_for_94": [
+    "Fix pre-test/self-heal reliability so missing artifacts like exp1192, exp1193, and exp1197 stop retiring before producing evidence.",
+    "Rerun exp1192 llama.cpp GPU offload and keep exp1195 GRPO v5 gated until CUDA offload is verified.",
+    "Rerun exp1193 critical paper-integrity fixes, then exp1194 arXiv bundle v7; keep the publication hold active until operator approval.",
+    "Auto-populate prior_failures from the failure ledger at plan time to prevent false DOOMED_RERUN_BLOCK outcomes on build-on-prior tasks.",
+    "Carry forward the blocked Phase 4, FoVer v7, Tier 1 addition, and Nonogram work with explicit prior-failure classifications."
+  ],
+  "missing_artifacts": [
+    "exp1192",
+    "exp1193",
+    "exp1194",
+    "exp1195",
+    "exp1197"
+  ],
+  "blocked_artifacts": [
+    "exp1196",
+    "exp1198",
+    "exp1200",
+    "exp1201"
+  ],
+  "experiment_honest_verdicts": {
+    "exp1191": "prlimit_active",
+    "exp1192": "MISSING",
+    "exp1193": "MISSING",
+    "exp1194": "MISSING",
+    "exp1195": "MISSING",
+    "exp1196": "blocked_gate_check_failed",
+    "exp1197": "MISSING",
+    "exp1198": "blocked_gate_check_failed",
+    "exp1199": "4bit_auroc_above_threshold",
+    "exp1200": "blocked_gate_check_failed",
+    "exp1201": "blocked_gate_check_failed",
+    "exp1202": "milestone_failed"
+  },
+  "retro_complete": true,
+  "honest_verdict": "milestone_failed"
+}

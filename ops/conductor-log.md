@@ -469,3 +469,12 @@ If you finish the real work |
 | 2026-05-03 12:58 UTC | FoVer Expansion v7 — Hard Negatives + SOTA GGUF Mo | DOOMED_RERUN_BLOCK | 5 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-03 13:00 UTC | FoVer Expansion v7 — Hard Negatives + SOTA GGUF Mo | DOOMED_RERUN_BLOCK | 5 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-03 13:02 UTC | FoVer Expansion v7 — Hard Negatives + SOTA GGUF Mo | DOOMED_RERUN_BLOCK | 5 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-03 13:19 UTC | KANtize SOS-KAN 4-bit Quantization — Edge Deployme | OK | 81 passed, 1 warning in 5.91s |
+| 2026-05-03 13:21 UTC | Self-Learning Tier 1 v2 — Constraint ADDITION from | DOOMED_RERUN_BLOCK | 5 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-03 13:24 UTC | Self-Learning Tier 1 v2 — Constraint ADDITION from | DOOMED_RERUN_BLOCK | 5 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-03 13:26 UTC | Self-Learning Tier 1 v2 — Constraint ADDITION from | DOOMED_RERUN_BLOCK | 5 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-03 13:28 UTC | WOPR Nonogram (Picross) Game Cartridge — Row/Colum | DOOMED_RERUN_BLOCK | 7 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-03 13:30 UTC | WOPR Nonogram (Picross) Game Cartridge — Row/Colum | DOOMED_RERUN_BLOCK | 7 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-03 13:32 UTC | WOPR Nonogram (Picross) Game Cartridge — Row/Colum | DOOMED_RERUN_BLOCK | 7 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-03 13:44 UTC | Milestone 2026.04.93 Retrospective | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1202_milesto |
+| 2026-05-03 13:49 UTC | Milestone 2026.04.93 Retrospective | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1202_milesto |
