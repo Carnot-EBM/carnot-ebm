@@ -17,8 +17,8 @@ call. No fine-tuning. No access to model weights.
 
 Rust + Python/JAX, Apache 2.0, `pip install carnot`.
 
-Current public research record: **1,190 experiments across 102 completed
-milestones**, through Exp 1190 on 2026-05-03.
+Current public research record: **1,202 experiments across 103 completed
+milestones**, through Exp 1202 on 2026-05-03.
 
 ## Install and run
 
@@ -160,6 +160,9 @@ experiment artifact under `results/`.
 | Latent-GRPO energy reward | Invalid-sample masking + one-sided noise produced **0.0pp** delta (**46% → 46%**) on the 100-row FoVer proxy | Exp 1187 |
 | WOPR Hex game cartridge | 7x7 Hex cartridge operational; Gibbs energy player beat random **90%** of games and tied greedy at **50%** | Exp 1188 |
 | Phase 4 stronger-baseline audit | On 10 synthetic 5x5 and 10 synthetic 10x10 puzzles, Phase 4 tied BFS with action ratio **1.0**; no advantage claim survives yet | Exp 1189 |
+| Prlimit memory cap | `RLIMIT_AS=8GB` deployed through `conftest.py::pytest_configure`; new watchdog checks still pass, but .93 later showed the pre-test/self-heal path needs repair | Exp 1191 |
+| KANtize SOS-KAN 4-bit quantization | 4-bit SOS-KAN preserved **AUROC=0.990137** vs full-precision **0.990228**, with **0.038 ms/example** inference latency and edge safetensors export | Exp 1199 |
+| Milestone .93 status | **3/12 criteria met**; five planned artifacts went missing and four were blocked by prior-failure gate handling, so paper, GRPO v5, FoVer v7, Phase 4, Tier 1, and Nonogram work carry forward | Exp 1202 |
 | Extropic Z1/XTR-0 integration packet | THRML backend stub and hardware integration packet shipped; live THRML benchmark blocked because `thrml_available=false` | Exp 1150 |
 | arXiv package v5/v6 + publication hold | v5 compiled at **347.83 KB**; v6 bundle attempt is blocked by missing critical-issue artifact Exp 1180. Hold remains active until all **18/18** issues and audit hooks pass | Exps 1167/1183 |
 
@@ -201,7 +204,7 @@ claim we publish.
 ## Where to go next
 
 - **[Technical report](docs/technical-report.md)** — the full research arc
-  through Exp 1190 across 102 completed milestones, with a
+  through Exp 1202 across 103 completed milestones, with a
   plain-English timeline of what we tried, what failed, what stuck.
 - **[Roadmap](docs/roadmap.md)** — current milestone, upcoming milestones,
   hardware track, and Phase 3 (Kona-parity foundation-model) direction.
@@ -405,7 +408,7 @@ See the [technical report](docs/technical-report.md) for the full research recor
 
 ## 14 Principles Learned
 
-Hard-won lessons from the activation-based phase of a research program that now spans Exp 1-1190 across 102 milestones and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
+Hard-won lessons from the activation-based phase of a research program that now spans Exp 1-1202 across 103 milestones and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
 
 ### What works
 1. **The model's own logprobs are the best energy.** No external EBM needed for rejection sampling — the LLM's own confidence is already an energy function. Simple, practical, +10%.
@@ -453,7 +456,7 @@ See [docs/usage-guide.md](docs/usage-guide.md) for detailed setup and usage inst
 
 All tiers implement the same `EnergyFunction` trait (Rust) / protocol (Python), so algorithms written against the interface work with any tier.
 
-**When to use which:** KAN is the default for constraint verification (most accurate per parameter). Ising is for real-time guided decoding and hardware deployment (fastest sampling, maps to physical p-bits). They complement each other — KAN for accuracy, Ising for speed.
+**When to use which:** KAN is the default for constraint verification (most accurate per parameter). Exp 1199 adds an edge-deployment path by preserving SOS-KAN AUROC at **0.990137** after 4-bit quantization. Ising is for real-time guided decoding and hardware deployment (fastest sampling, maps to physical p-bits). They complement each other — KAN for accuracy, Ising for speed.
 
 ### Hardware Path
 

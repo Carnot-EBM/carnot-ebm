@@ -163,6 +163,58 @@ and \texttt{paper\_claim\_audit.py}) are first steps toward automating
 this attention burden. Until they cover the full claim space, the
 operator remains the ultimate selection pressure.
 
+\paragraph{Where Carnot sits in the non-autoregressive landscape.}
+The 2025--2026 literature on alternatives to autoregressive transformer
+LLMs has produced rapid progress along five architectural families,
+each with distinct strengths and well-documented weaknesses. Energy-
+Based Transformers~\cite{gladstone2025ebt} (Gladstone et al., ICLR 2026)
+demonstrate System 2 thinking emerging from unsupervised energy
+minimization, outscaling standard transformers by up to 35\% on
+data, batch size, parameters, and FLOPs --- but with severe documented
+mode collapse on highly multimodal discrete language distributions.
+Score-based and discrete diffusion language models, exemplified by
+LLaDA~\cite{nie2025llada} (Nie et al., ICLR 2026, 8B parameters),
+match LLaMA3 8B at identical compute budget and natively resolve
+the reversal curse, but face latency bottlenecks against KV-cached
+autoregressive generation and lack scaling evidence beyond 8B.
+Energy-Based GPT alternatives such as NRGPT~\cite{lee2024nrgpt}
+unify GPT mechanics with energy mechanics via per-token preconditioned
+gradient descent, demonstrating theoretical elegance but suffering
+catastrophic overfitting on long training runs. Continuous-latent
+reasoning architectures including Coconut~\cite{hao2024coconut}
+and the closed-source commercial Kona 1.0 from Logical Intelligence
+operate inference in dense vector spaces, achieving large advantages
+on planning and formal verification (Kona reports 96.2\% Sudoku
+solve rate in 313\,ms without external Python execution), but the
+strongest demonstrations remain either training-curriculum-heavy
+(Coconut) or closed-source (Kona, SeedIQ).
+
+Across these families, the consensus position --- echoed by Yann LeCun
+and reflected in deployment patterns --- is that energy-based
+alternatives are \emph{complementary, not replacements}, for general
+language generation but \emph{strictly superior} for formal logic,
+verification, and execution governance. The vision for production
+systems is a multi-modal ecosystem in which an EBM or continuous-latent
+substrate executes constrained reasoning and an autoregressive language
+model serves as the user-facing semantic interface.
+
+\paragraph{Carnot's contribution: open-source externally-grounded EBM.}
+Carnot positions itself in the gap between Kona's verifiable grounding
+(closed-source, mission-critical-only) and EBT/NRGPT's open-source
+pre-training (lacking external grounding). The framework's contribution
+is not novel \emph{energy-based modeling} (EBT comprehensively claimed
+the System-2-from-energy-minimization territory), nor novel
+\emph{bidirectional generation} (LLaDA owns the reversal-curse-via-
+diffusion territory), nor novel \emph{continuous-space reasoning}
+(JEPA, Coconut, and Kona collectively claimed that ground). What is
+novel is the combination: an \emph{open-source, externally-grounded
+EBM substrate that defends against reward hacking via formally-distinct
+verifier ensembles} (Sections~\ref{sec:verifier-ensemble} and
+\ref{sec:eai}). Specifically, Carnot addresses the multimodal-text
+collapse problem documented for bidirectional EBTs by replacing
+unsupervised energy bound with a k-AND-composed external verifier
+ensemble that constrains the energy landscape to formally valid outputs.
+
 \paragraph{Position.} We do not claim Carnot constitutes a major
 evolutionary transition. Müller et al.\ explicitly resist premature
 classification of current systems, and we agree. We claim something
@@ -214,6 +266,46 @@ governance are operationally combined.
 ID arXiv:2512.16762 is correct; primary citation field for the §2.3
 sequential-thermalization proof. Bibliography validation per ISSUE-16
 in paper integrity audit.)
+
+@inproceedings{gladstone2025ebt,
+  title={Energy-Based Transformers are Scalable Learners and Thinkers},
+  author={Gladstone, Alex and others},
+  booktitle={ICLR},
+  year={2026},
+  note={arXiv:2507.02092; code at github.com/alexiglad/EBT; outscales Transformer++ by up to 35\% on data/batch/params/FLOPs; demonstrates System 2 emerging from unsupervised energy minimization; documented mode collapse on multimodal text distributions},
+}
+
+@inproceedings{nie2025llada,
+  title={Large Language Diffusion Models},
+  author={Nie, et al.},
+  booktitle={ICLR},
+  year={2026},
+  note={arXiv:2502.09992; 8B parameter masked-diffusion LM matching LLaMA3 8B at $10^{23}$ FLOPs; natively solves reversal curse; weights+code public on HuggingFace},
+}
+
+@article{hao2024coconut,
+  title={Training Large Language Models to Reason in a Continuous Latent Space},
+  author={Hao, et al.},
+  journal={arXiv preprint arXiv:2412.06769},
+  year={2024},
+  note={``Coconut'' Chain of Continuous Thought; +5\% MathQA, latent BFS via superposition; multi-stage curriculum},
+}
+
+@article{ma2026odar,
+  title={{ODAR}: Principled Adaptive Routing for {LLM} Reasoning via Active Inference},
+  author={Ma, et al.},
+  journal={arXiv preprint arXiv:2602.23681},
+  year={2026},
+  note={Variational free energy objective for routing between Fast/Slow agents; complements rather than replaces LLMs},
+}
+
+@misc{logicalintelligence2026kona,
+  title={{Kona 1.0}: Energy-Based Reasoning Model},
+  author={{Logical Intelligence}},
+  year={2026},
+  howpublished={Commercial release. Yann LeCun chair of technical research board.},
+  note={Closed-source. 96.2\% Sudoku solve rate in 313\,ms without Python execution; targets formal verification, semiconductor design, energy grid infrastructure},
+}
 
 @misc{brooks2026theconversation,
   title={Evolvable {AI}: are we on the brink of the next major evolutionary transition?},
