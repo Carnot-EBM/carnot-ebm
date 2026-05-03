@@ -420,6 +420,160 @@ def sample_energy_matching(
     return best_x
 
 
+class BoltzmannGPTLayer:
+    """Energy recurrence block inspired by arXiv 2601.17094 Boltzmann-GPT.
+
+    Uses visible-hidden Boltzmann coupling: E(v,h) = -v^T W h - b^T v - c^T h.
+    For a sequence of tokens, compute the energy of the visible-token state v
+    conditioned on a learned hidden representation h. Higher energy = lower
+    Boltzmann-GPT score (lower energy = more likely under the Boltzmann distribution).
+
+    **Why Boltzmann-GPT vs NRGPT?**
+        NRGPT (arXiv:2405.XXXXX) uses an autoregressive recurrence over token
+        energies — the energy of each token depends on the previous hidden state.
+        Boltzmann-GPT (arXiv 2601.17094) instead uses a bipartite visible-hidden
+        coupling matrix W, computing a joint energy for the entire token sequence as
+        a unit.  The two architectures differ in how they aggregate evidence:
+        NRGPT is sequential, Boltzmann-GPT is holistic.
+
+    **Seed initialisation (no training performed):**
+        Weights are randomly initialised with a fixed NumPy seed.  This measures
+        whether the random Boltzmann architecture captures any structural signal
+        before learning — a necessary sanity-check before investing in contrastive
+        training.  AUROC near 0.5 is expected; any score above 0.6 would suggest
+        the architecture has useful inductive biases.
+
+    **Why small random init (not zeros)?**
+        Zero W, b, c → E(v,h) = 0 for all inputs → constant score → degenerate
+        AUROC.  Small random weights give non-degenerate but untrained scores,
+        which is the correct baseline for a seed experiment.
+
+    Attributes:
+        W: Visible-hidden coupling matrix, shape (visible_dim, hidden_dim).
+        b: Visible bias, shape (visible_dim,).
+        c: Hidden bias, shape (hidden_dim,).
+
+    Spec: REQ-PHASE3-BOLTZMANN-001
+    """
+
+    def __init__(
+        self,
+        hidden_dim: int = 16,
+        visible_dim: int = 16,
+        seed: int = 42,
+    ) -> None:
+        rng = np.random.default_rng(seed)
+        # Small random init: non-degenerate scores without training.
+        # std=0.01 keeps energy values in a reasonable range given normalised inputs.
+        self.W: np.ndarray = rng.standard_normal((visible_dim, hidden_dim)) * 0.01
+        self.b: np.ndarray = np.zeros(visible_dim)
+        self.c: np.ndarray = np.zeros(hidden_dim)
+        self._visible_dim = visible_dim
+        self._hidden_dim = hidden_dim
+
+    def energy(self, v: np.ndarray, h: np.ndarray) -> float:
+        """Boltzmann energy: E = -v^T W h - b^T v - c^T h.
+
+        **Why negative?**
+            The Boltzmann distribution assigns probability proportional to
+            exp(-E/T).  Lower energy = higher probability.  The minus signs
+            in E = -v^T W h - b^T v - c^T h mean positive W_ij, positive v_i,
+            positive h_j all *lower* the energy, i.e., are mutually reinforcing.
+
+        Args:
+            v: Visible state, shape (visible_dim,).  Values in [0, 1] from
+               normalised token embeddings.
+            h: Hidden state, shape (hidden_dim,).  Values in (0, 1) from
+               mean-field sigmoid activation.
+
+        Returns:
+            Scalar energy value (float).  Lower = more coherent / likely.
+        """
+        return float(-(v @ self.W @ h) - (self.b @ v) - (self.c @ h))
+
+    def score(self, token_sequence: list[str]) -> float:
+        """Score a token sequence: lower energy = higher Boltzmann-GPT score.
+
+        **Scoring pipeline:**
+            1. Embed tokens → visible vector v (bigram frequency projection)
+            2. Infer hidden state h from v (mean-field sigmoid)
+            3. Return -E(v, h) so that *higher score = lower energy = more likely*
+
+        This sign convention aligns with NRGPT: both scorers return a value
+        where higher = the LLM response is more likely to be correct.
+
+        Args:
+            token_sequence: List of string tokens (e.g. from str.split()).
+
+        Returns:
+            Float score.  Higher = more likely to be a correct LLM response.
+        """
+        v = self._embed_tokens(token_sequence)
+        h = self._infer_hidden(v)
+        return -self.energy(v, h)
+
+    def _embed_tokens(self, token_sequence: list[str]) -> np.ndarray:
+        """Map string tokens to a fixed-size visible vector.
+
+        **Method: character bigram frequency projection.**
+            For each token, count all consecutive character pairs (bigrams).
+            Map each bigram to a bucket in [0, visible_dim) via hash % visible_dim.
+            Accumulate counts, then L2-normalise to keep energy values bounded.
+
+        **Why bigrams?**
+            Single character counts lose word-boundary information.  Longer n-grams
+            are sparse on short sequences.  Bigrams are a standard compromise for
+            fast, hardware-portable text embeddings that preserve some morphological
+            signal without learned parameters.
+
+        **Why hash-modulo projection?**
+            Deterministic, O(n) in text length, no vocabulary required, portable
+            to any hardware (no lookup tables).  The loss from hash collisions is
+            acceptable for a seed experiment — a trained embedding would replace this.
+
+        Args:
+            token_sequence: List of string tokens.
+
+        Returns:
+            Array of shape (visible_dim,) with L2 norm 1 (or uniform if empty).
+        """
+        counts = np.zeros(self._visible_dim, dtype=np.float64)
+        for token in token_sequence:
+            for i in range(len(token) - 1):
+                # Python's built-in hash is deterministic within a process session
+                # but varies across Python versions. Use ord() to be reproducible.
+                bigram_hash = (ord(token[i]) * 31 + ord(token[i + 1])) % self._visible_dim
+                counts[bigram_hash] += 1.0
+        norm = np.linalg.norm(counts)
+        if norm > 1e-10:
+            return counts / norm
+        # Empty or single-character tokens: uniform distribution over visible units
+        return np.full(self._visible_dim, 1.0 / self._visible_dim)
+
+    def _infer_hidden(self, v: np.ndarray) -> np.ndarray:
+        """Mean-field hidden state: h = sigmoid(W^T v + c).
+
+        **Why mean-field?**
+            The exact posterior p(h|v) ∝ exp(v^T W h + c^T h) factorises for
+            binary hidden units: p(h_j = 1 | v) = σ(v^T W_j + c_j).  This is the
+            mean-field approximation, exact for binary hidden units in an RBM.
+            It maps the visible state v to a soft hidden activation in (0, 1)^hidden_dim.
+
+        **Connection to arXiv 2601.17094:**
+            Boltzmann-GPT uses the hidden state h as a world-model representation
+            that "summarises" the context so far.  The mean-field inference step
+            here is the bottom-up pass; training would add a top-down correction.
+
+        Args:
+            v: Visible state, shape (visible_dim,).
+
+        Returns:
+            Hidden activations, shape (hidden_dim,), values in (0, 1).
+        """
+        logit = v @ self.W + self.c  # shape (hidden_dim,)
+        return 1.0 / (1.0 + np.exp(-logit))
+
+
 def compare_samplers(
     model: ContinuousEBM,
     ising_ground_state: np.ndarray,
