@@ -170,7 +170,38 @@ class BatchingHookRunner:
             in_staged = vpath in staged_resolved or any(
                 vpath.endswith(sf) or sf.endswith(vpath) for sf in self.staged_files
             )
-            if in_staged:
+            if in_staged and not _violation_is_exempted(v):
                 result.append(v)
 
         return result
+
+
+def _violation_is_exempted(violation: BatchingViolation) -> bool:
+    """Check if a violation is marked exempt via inline comment.
+
+    A violation is exempted if any line within ±5 lines of the violation
+    contains the marker ``# batching-check: exempt`` (optionally with a
+    trailing reason). This lets scripts where sequential loops are
+    SCIENTIFICALLY CORRECT (e.g. GRPO with per-question gradient updates)
+    pass the hook without --no-verify.
+
+    Mechanism added 2026-05-03 (operator directive: "fail forward, never
+    revert, never lose transient assets"). The prior pattern required
+    --no-verify to commit GRPO scripts, which both bypassed real checks
+    and triggered pre-commit's staged_files_only stash-restore cycle that
+    silently lost unstaged work on hook failure.
+
+    Example exemption marker:
+        for q in questions:  # batching-check: exempt-grpo-per-question-gradient
+
+    The reason after ``exempt-`` is human-readable; the script's purpose
+    documents WHY sequential is correct.
+    """
+    try:
+        lines = Path(violation.script_path).read_text(encoding="utf-8").splitlines()
+    except (OSError, UnicodeDecodeError):
+        return False
+    start = max(0, violation.line_no - 6)
+    end = min(len(lines), violation.line_no + 5)
+    window = "\n".join(lines[start:end])
+    return "# batching-check: exempt" in window
