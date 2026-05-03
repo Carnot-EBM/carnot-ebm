@@ -2435,3 +2435,44 @@ default weights `0.5/0.3/0.2`
 
 **Given** `prereq_ok=False`
 **Then** the verdict equals `"blocked_no_gpu"`.
+
+## REQ-LEARN-1221: GRPO-v6 FSPO Per-Token Factuality Weighting + VPS Step Supervision Combined
+
+**Purpose:** Extend GRPO-VPS (Exp 1220) with FSPO-style per-token advantage
+weighting so that training signal is attributed to individual tokens rather than
+whole steps.
+
+- REQ-LEARN-1221-1: `compute_fspo_vps_advantage(step_rewards, factuality_scores,
+  tokens_per_step)` SHALL compute, for each token T in step S, the advantage
+  `group_normalize(step_rewards)[S] * factuality_scores[S]`.
+- REQ-LEARN-1221-2: `select_best_completion(completions, advantages)` SHALL
+  return the completion whose sum of per-token advantages is highest.
+- REQ-LEARN-1221-3: `derive_fspo_honest_verdict(fspo_delta_pp)` SHALL return
+  `"fspo_improves_over_vps"` when `fspo_delta_pp > 0`,
+  `"fspo_matches_vps"` when `fspo_delta_pp == 0`, and
+  `"fspo_degrades_vps"` when `fspo_delta_pp < 0`.
+- REQ-LEARN-1221-4: The artifact SHALL include `n_questions_evaluated`,
+  `n_completions_per_question`, `vps_baseline_accuracy`, `fspo_vps_accuracy`,
+  `fspo_delta_pp`, `fspo_improves_over_vps`, `model_used`,
+  `grpo_v6_fspo_delta_measured`, and `honest_verdict`.
+
+### SCENARIO-LEARN-1226: FSPO Advantage Inherits Step Factuality Score
+
+**Given** one step with `step_reward=0.8`, `factuality_score=0.5` and 3 tokens
+**When** `compute_fspo_vps_advantage` runs with these values
+**Then** each token in that step has advantage `0.5 * normalized_reward`.
+
+### SCENARIO-LEARN-1227: Best Completion Is Highest Sum of Token Advantages
+
+**Given** two completions with total token advantages `[1.2, 0.4]`
+**When** `select_best_completion` is called
+**Then** the completion with advantage sum `1.2` is returned.
+
+### SCENARIO-LEARN-1228: Verdict Maps Delta to FSPO Outcome
+
+**Given** `fspo_delta_pp=3.0`
+**When** `derive_fspo_honest_verdict` runs
+**Then** the verdict equals `"fspo_improves_over_vps"`.
+
+**Given** `fspo_delta_pp=-2.0`
+**Then** the verdict equals `"fspo_degrades_vps"`.
