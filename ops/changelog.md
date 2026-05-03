@@ -4705,3 +4705,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-03: WOPR Futoshiki Puzzle Cartridge — Inequality Constraint Ising EBM (⚠️ Research Finding) — honest_verdict=in_progress; results/experiment_1227_wopr_futoshiki_cartridge.json
 - 2026-05-03: WOPR Futoshiki Puzzle Cartridge — Inequality Constraint Ising EBM (⚠️ Research Finding) — honest_verdict=in_progress; results/experiment_1227_wopr_futoshiki_cartridge.json
 - 2026-05-03: WOPR Futoshiki Puzzle Cartridge — Inequality Constraint Ising EBM (⚠️ Research Finding) — honest_verdict=futoshiki_shipped_e0_at_solution; results/experiment_1227_wopr_futoshiki_cartridge.json
+- 2026-05-03: Milestone 2026.04.95 Retrospective — STEP 0 Pattern, claude/opus, max_turns:100 (⚠️ Research Finding) — honest_verdict=in_progress; results/experiment_1228_milestone_retro_95.json
