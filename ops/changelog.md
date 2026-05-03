@@ -4704,3 +4704,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-03: Boltzmann-GPT Phase-3 Seed Integration — EBM World Model + Language Generation Bridge (⚠️ Research Finding) — honest_verdict=boltzmann_gpt_below_nrgpt; results/experiment_1226_boltzmann_gpt_phase3_seed.json
 - 2026-05-03: WOPR Futoshiki Puzzle Cartridge — Inequality Constraint Ising EBM (⚠️ Research Finding) — honest_verdict=in_progress; results/experiment_1227_wopr_futoshiki_cartridge.json
 - 2026-05-03: WOPR Futoshiki Puzzle Cartridge — Inequality Constraint Ising EBM (⚠️ Research Finding) — honest_verdict=in_progress; results/experiment_1227_wopr_futoshiki_cartridge.json
+- 2026-05-03: WOPR Futoshiki Puzzle Cartridge — Inequality Constraint Ising EBM (⚠️ Research Finding) — honest_verdict=futoshiki_shipped_e0_at_solution; results/experiment_1227_wopr_futoshiki_cartridge.json
