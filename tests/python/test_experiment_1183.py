@@ -222,6 +222,23 @@ def test_audit_runners_normalize_missing_output_and_exceptions(
     assert exp1183.run_paper_claim_audit().returncode == 124
 
 
+def test_run_script_and_numeric_count_edge_cases(tmp_path: Path) -> None:
+    """REQ-PUBLISH-010: subprocess and audit-count helpers stay deterministic."""
+    script = tmp_path / "ok.py"
+    script.write_text("print('ok')\n", encoding="utf-8")
+
+    result = exp1183._run_script(script, timeout_s=10)
+
+    assert result.returncode == 0
+    assert result.stdout.strip() == "ok"
+    assert exp1183._numeric_count(True) == 0
+    assert exp1183._numeric_count(None) == 0
+    assert exp1183._numeric_count([1, 2, 3]) == 3
+    assert exp1183._numeric_count(("x",)) == 1
+    assert exp1183._numeric_count({"a", "b"}) == 2
+    assert exp1183._numeric_count(object()) == 0
+
+
 def test_compile_latex_branches(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """REQ-PUBLISH-010: LaTeX compile reports tool and command failures honestly."""
     paper = tmp_path / "main.tex"
@@ -401,6 +418,51 @@ def test_run_records_bundle_with_audit_failure_without_blocking_bundle(
     assert artifact["honest_verdict"] == "audit_failures_remain"
 
 
+def test_run_records_compilation_failed_when_bundle_not_ready(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """SCENARIO-PUBLISH-010: missing source inputs produce compilation_failed."""
+    results = tmp_path / "results"
+    _write_prereqs(results)
+    paper = tmp_path / "docs" / "arxiv-paper" / "main.tex"
+    bib = tmp_path / "docs" / "arxiv-paper" / "carnot.bib"
+    pdf = tmp_path / "docs" / "arxiv-paper" / "main.pdf"
+    _write_paper(paper, "11680 only")
+
+    clean_figure = exp1183.AuditRun(0, "{}", "", {"untraced_constants": 0}, True)
+    clean_claims = exp1183.AuditRun(0, "{}", "", {"n_mismatches": 0, "passes": True}, True)
+    monkeypatch.setattr(exp1183, "run_figure_integrity_audit", lambda: clean_figure)
+    monkeypatch.setattr(exp1183, "run_paper_claim_audit", lambda: clean_claims)
+    monkeypatch.setattr(
+        exp1183,
+        "try_compile_latex",
+        lambda *args, **kwargs: {
+            "compiled": False,
+            "pdflatex_available": True,
+            "bibtex_available": True,
+            "output_pdf_exists": False,
+            "log_tail": "compile failed",
+        },
+    )
+    monkeypatch.setattr(
+        exp1183, "build_arxiv_bundle", lambda *args, **kwargs: str(tmp_path / "missing.tar.gz")
+    )
+
+    artifact = exp1183.run(
+        paper_tex=paper,
+        paper_bib=bib,
+        paper_pdf=pdf,
+        results_dir=results,
+        output_path=results / "experiment_1183_paper_v5_recompile_arxiv_bundle_v6.json",
+        bundle_path=tmp_path / "missing.tar.gz",
+    )
+
+    assert artifact["pdf_compiles_without_error"] is False
+    assert artifact["arxiv_bundle_v6_ready"] is False
+    assert artifact["fabricated_constants_remaining"] == 1
+    assert artifact["honest_verdict"] == "compilation_failed"
+
+
 def test_run_records_clean_ready_bundle(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """REQ-PUBLISH-010: successful audits and bundle produce the ready verdict."""
     results = tmp_path / "results"
@@ -448,3 +510,48 @@ def test_run_records_clean_ready_bundle(tmp_path: Path, monkeypatch: pytest.Monk
     assert artifact["arxiv_bundle_v6_ready"] is True
     assert artifact["4_test_full_pass"] is True
     assert artifact["honest_verdict"] == "arxiv_bundle_v6_ready"
+
+
+def test_main_prints_artifact_and_exits_on_blocked_or_failed(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """REQ-PUBLISH-010: CLI exits nonzero for blocked or compilation-failed gates."""
+    monkeypatch.setattr(
+        exp1183,
+        "run",
+        lambda: {
+            "prerequisites_met": False,
+            "honest_verdict": "audit_failures_remain",
+        },
+    )
+
+    with pytest.raises(SystemExit) as blocked:
+        exp1183.main()
+
+    assert blocked.value.code == 1
+    assert '"prerequisites_met": false' in capsys.readouterr().out
+
+    monkeypatch.setattr(
+        exp1183,
+        "run",
+        lambda: {
+            "prerequisites_met": True,
+            "honest_verdict": "compilation_failed",
+        },
+    )
+
+    with pytest.raises(SystemExit) as failed:
+        exp1183.main()
+
+    assert failed.value.code == 1
+
+    monkeypatch.setattr(
+        exp1183,
+        "run",
+        lambda: {
+            "prerequisites_met": True,
+            "honest_verdict": "arxiv_bundle_v6_ready",
+        },
+    )
+    exp1183.main()
+    assert '"arxiv_bundle_v6_ready"' in capsys.readouterr().out
