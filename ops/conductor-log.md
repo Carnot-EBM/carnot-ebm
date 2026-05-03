@@ -468,3 +468,4 @@ If you finish the real work |
 | 2026-05-03 12:48 UTC | Phase 4 ARC-AGI-3 Harder Puzzles — BFS-Intractable | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-03 12:58 UTC | FoVer Expansion v7 — Hard Negatives + SOTA GGUF Mo | DOOMED_RERUN_BLOCK | 5 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-03 13:00 UTC | FoVer Expansion v7 — Hard Negatives + SOTA GGUF Mo | DOOMED_RERUN_BLOCK | 5 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-03 13:02 UTC | FoVer Expansion v7 — Hard Negatives + SOTA GGUF Mo | DOOMED_RERUN_BLOCK | 5 prior failure(s) match this task's scope but prior_failures field is missing o |
