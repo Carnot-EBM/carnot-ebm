@@ -4692,3 +4692,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-03: GRPO v5 Regression Diagnosis — Root-Cause Analysis of -35pp vs v4 Baseline (⚠️ Research Finding) — honest_verdict=root_cause_identified; results/experiment_1219_grpo_v5_regression_diagnosis.json
 - 2026-05-03: GRPO-VPS Full Training Run — Step-Level Supervision via CausalReasoning + Z3Math (⚠️ Research Finding) — honest_verdict=in_progress; results/experiment_1220_grpo_vps_full_training.json
 - 2026-05-03: GRPO-VPS Full Training Run — Step-Level Supervision via CausalReasoning + Z3Math (⚠️ Research Finding) — honest_verdict=vps_training_beats_v4; results/experiment_1220_grpo_vps_full_training.json
+- 2026-05-03: GRPO v6 — FSPO Per-Token Factuality Weighting + VPS Step Supervision Combined (⚠️ Research Finding) — honest_verdict=in_progress; results/experiment_1221_grpo_v6_fspo_vps_combined.json
