@@ -199,6 +199,30 @@ The system shall probe each transformer layer independently to find where halluc
 **And** the best layer's test accuracy exceeds layers with lower separation
 **And** results include per-layer accuracy, gap, and train/test counts
 
+### REQ-INFER-017: Diffusion-of-Thought Text Refinement
+
+The system SHALL expose `DiffusionOfThought` as an inference-time refinement
+mode over an existing verifier ensemble energy.  The refinement SHALL split a
+response into whitespace tokens, estimate each token's violation contribution
+by comparing the original response energy against the energy after masking that
+token, propose deterministic replacement candidates when no inpainter LLM is
+available, and iteratively select the replacement that minimises composite
+energy.
+
+The refinement SHALL support timestep counts `T in {1, 5, 25, 125}` for
+compute/accuracy trade-off reporting.  Each call SHALL return the refined text
+and an energy trace that includes the initial energy and one entry per
+refinement step.
+
+### SCENARIO-INFER-017-001: DoT Masks And Repairs High-Energy Tokens
+
+**Given** a verifier ensemble that assigns higher energy to an arithmetic
+violation token
+**When** `DiffusionOfThought.refine()` runs for one or more steps
+**Then** the highest-energy token is selected for candidate replacement
+**And** the returned energy trace is non-increasing
+**And** the refined response has no higher composite energy than the baseline
+
 ## Implementation Status
 
 | Requirement | Python | Tests |
@@ -213,3 +237,4 @@ The system shall probe each transformer layer independently to find where halluc
 | REQ-INFER-014 | Implemented | 35 Python |
 | REQ-INFER-015 | Implemented | 14 Python |
 | REQ-INFER-016 | Implemented | 10 Python |
+| REQ-INFER-017 | Implemented | 7 Python |

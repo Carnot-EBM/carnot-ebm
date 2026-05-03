@@ -3013,4 +3013,47 @@ Given a roadmap task with `agent_type: codex` and a model other than
 `gpt-5.5`, or any roadmap task with `agent_type: gemini`, the audit
 reports a `MODEL_AGENT_COHERENCE` failure.
 
-Spec: REQ-INFRA-075, SCENARIO-INFRA-084, SCENARIO-INFRA-085, SCENARIO-INFRA-086 (Exp 1140)
+### SCENARIO-INFRA-087: Pre-Activation Audit Artifact Records ArXiv Prior Coverage
+
+Given a planned milestone roadmap, the Exp 1152 pre-activation runner MUST
+execute the roadmap audit before conductor activation and write a JSON
+artifact containing the audit counts, failure details with fix guidance,
+`roadmap_gate_audit_passed`, and an
+`arxiv_task_prior_failures_complete` boolean. That boolean MUST be true
+only when task `exp1153-arxiv-final-submission-v4` declares prior
+failures for `exp1139-arxiv-final-submission-v3`,
+`exp1127-arxiv-pdf-compilation-final-submission`, and
+`exp1116-arxiv-pdf-compilation-submission`.
+
+Spec: REQ-INFRA-075, SCENARIO-INFRA-084, SCENARIO-INFRA-085, SCENARIO-INFRA-086, SCENARIO-INFRA-087 (Exp 1140, Exp 1152)
+
+---
+
+## REQ-INFRA-076: Pytest RSS Memory Watchdog
+
+**REQ-INFRA-076**: The Python pytest suite MUST install a memory watchdog from
+`tests/python/conftest.py` that records process `ru_maxrss` before and after each
+test. The watchdog MUST:
+
+1. Record a per-test RSS baseline during `pytest_runtest_setup(item)`.
+2. Record RSS again during `pytest_runtest_teardown(item, nextitem)` and compute
+   a per-test delta in megabytes.
+3. Fail any test whose RSS delta exceeds 500 MB with a message beginning
+   `Memory leak: +`.
+4. Track cumulative positive RSS deltas across the pytest session.
+5. At session finish, when cumulative RSS growth exceeds 8192 MB, emit a warning
+   that includes the top five per-test RSS deltas and write a
+   `results/pytest_memory_{timestamp}.log` file.
+
+### SCENARIO-INFRA-088: Runaway Test Is Failed Before Session OOM
+
+Given a pytest test that retains more than 500 MB of additional resident memory
+after its setup baseline is recorded, the teardown watchdog fails that test with
+`Memory leak: +{delta}MB` and keeps the remaining pytest session bounded by
+recording the offender for the session summary.
+
+### SCENARIO-INFRA-089: Session Growth Emits Operator Artifact
+
+Given a pytest session whose cumulative positive RSS deltas exceed 8192 MB, the
+watchdog emits a warning naming the top five RSS-delta tests and writes a
+timestamped `results/pytest_memory_*.log` artifact for conductor diagnostics.

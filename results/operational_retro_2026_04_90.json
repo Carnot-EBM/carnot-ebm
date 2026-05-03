@@ -1,0 +1,188 @@
+{
+  "experiment": "operational-retro-2026-04-90",
+  "title": "Milestone 2026.04.90 - Operational Efficiency Retrospective",
+  "milestone": "2026.04.90",
+  "run_date": "2026-05-02",
+  "schema": "carnot.operational_retro.v64",
+  "retro_type": "full_milestone",
+  "total_wall_time_minutes": 586,
+  "experiments_completed": 144,
+  "avg_experiment_min": 4.07,
+  "prior_milestone": "2026.04.89",
+  "prior_wall_time_minutes": 692,
+  "delta_minutes": -106,
+  "delta_pct": -15.3,
+  "source_notes": [
+    "Uses the provided full-milestone timing data as authoritative: 586 minutes, 144 completed experiments, 4.07 minutes average per experiment.",
+    "results/experiment_1164_milestone_retro_90.json records a narrower 314-minute active .90 execution window across 13 scheduled experiments (exp1152-exp1164). That artifact provides research verdicts, criteria results, and within-batch timing; the full conductor log (586 min, 144 exp) is used for total wall time and full-queue bottleneck analysis.",
+    "The slowest-5 items in the full conductor log (exp906/exp950/exp948/exp930/exp905) are carryover/residual queue experiments. Within the active .90 batch, the slowest were exp1162 (67 min), exp1163 (66 min), and exp1156 (54 min). The full-queue carryover items still dominate the slowest-5 because dispatch-time retirement enforcement has not shipped.",
+    "Per-experiment latency averages conflate two distinct populations: 13 active .90 experiments at 24.2 min/exp average and 131 carryover queue items at 2.08 min/exp average. The combined 4.07 min/exp figure is not directly comparable to prior milestones' averages, which had different batch/carryover ratios.",
+    "GPU state at close was provided as: GPU 0 NVIDIA RTX 3090, 4/24576 MB, 0% util, 49C; GPU 1 NVIDIA RTX 3090, 4/24576 MB, 0% util, 49C. No zombie processes detected."
+  ],
+  "slowest_experiments": [
+    {
+      "rank": 1,
+      "id": "exp906",
+      "duration_min": 35,
+      "title": "Code Repair 50q Scale-Up — IterativeSelfRepair with Gemma4",
+      "milestone_appearances": 8,
+      "diagnosis": "EIGHTH CONSECUTIVE MILESTONE REGRESSION. This manifest-retired experiment continues to appear in the full conductor queue because the dispatch-time retirement guard has not been implemented. This is the same finding reported in retros .83 through .89 — seven prior recommendations without action. The experiment itself is expensive (sequential execute-feedback-retry across 50 code-repair questions with a large GGUF model), but the operational failure is purely infrastructural: a single pre-dispatch manifest lookup would block this permanently. Cumulative waste across 8 consecutive regressions is approximately 280 minutes — equivalent to 69 average-length experiments."
+    },
+    {
+      "rank": 2,
+      "id": "exp950",
+      "duration_min": 28,
+      "title": "In-process docs for Exp 950: E-MVL Sparsified Ising — Sparse Connectivity for KV260 RTL Optimization",
+      "milestone_appearances": 5,
+      "diagnosis": "FIFTH CONSECUTIVE MILESTONE OCCURRENCE. The in-process doc reconciliation pass still runs inline, blocking the main executor for 28 minutes. The async-batching fix has been recommended in retros .86, .87, .88, and .89 without being shipped. Doc reconciliation has no research dependency requiring inline execution; it can run as a single background task at milestone close without affecting any gate condition. This is the highest-leverage single engineering action still available."
+    },
+    {
+      "rank": 3,
+      "id": "exp948",
+      "duration_min": 24,
+      "title": "Symbolic-KAN Real FoVer Data — AUC=0.9344 Architecture Comparison",
+      "milestone_appearances": 5,
+      "diagnosis": "FIFTH CONSECUTIVE MILESTONE OCCURRENCE. This CPU-bound architecture evaluation sweeps the full 6548-pair FoVer corpus for an exploratory comparison that is not a certification run. CARNOT_FAST_EVAL=1 with a bounded 500-pair subsample has been recommended for five consecutive milestones without being implemented. At 24 minutes per occurrence across 5 milestones, the cumulative waste from not implementing fast-eval is approximately 120 minutes."
+    },
+    {
+      "rank": 4,
+      "id": "exp930",
+      "duration_min": 19,
+      "title": "Math Iterative Self-Repair v1 — Execute-Feedback on GSM8K",
+      "milestone_appearances": 3,
+      "diagnosis": "Third consecutive appearance. Serial math repair loop with per-question execute-feedback cycles against a SOTA GGUF model without batching or GPU parallelism. An early-stop rule (exit once repaired) and batched GPU execution would reduce wall time without changing research scope. This experiment is a benchmark fixture and should use cached baseline outputs with incremental re-evaluation on changed components only."
+    },
+    {
+      "rank": 5,
+      "id": "exp905",
+      "duration_min": 17,
+      "title": "IterativeSelfRepair v1 — Execute-Feedback-Retry on HumanEval",
+      "milestone_appearances": 3,
+      "diagnosis": "Third consecutive appearance. Same root cause as exp930: sequential repair loop across 25 HumanEval questions without output caching or batched GPU execution. As a stable benchmark fixture whose algorithm has not changed across milestones, this should run with cached baseline outputs and re-evaluate only the changed components."
+    }
+  ],
+  "active_batch_slowest_experiments": [
+    {
+      "rank": 1,
+      "id": "exp1162",
+      "duration_min": 67,
+      "title": "KANELE FPGA Blueprint",
+      "diagnosis": "Longest active .90 experiment. Hit repeated pre-gate blocks before manual operator recovery was needed. The conductor's pre-gate retry budget is not capped — when a gate condition is transiently unavailable, the experiment re-queues indefinitely rather than auto-advancing or alerting. Blueprint was ultimately generated successfully (FPGA estimated 2408333x speedup). The 67-minute wall time includes several retry spans that should have been automated."
+    },
+    {
+      "rank": 2,
+      "id": "exp1163",
+      "duration_min": 66,
+      "title": "NRGPT Phase 3 Native Prototype",
+      "diagnosis": "Second-longest active .90 experiment. Codex stalled after 180 seconds of no output while pytest ran synchronously — this stall triggered the mid-milestone codex-stall-to-opus failover feature that was shipped during this milestone. Without the failover, the experiment would have been killed and retired. NRGPT beat the baseline (AUROC 0.9158 vs 0.8874 baseline). The 66-minute wall time includes the codex stall window and the subsequent opus retry. The pre-configured STALL_TIMEOUT=0 override for long pytest runs was not in place before activation."
+    },
+    {
+      "rank": 3,
+      "id": "exp1156",
+      "duration_min": 54,
+      "title": "HMC Sampler Conditional",
+      "diagnosis": "54-minute GPU sampler experiment including bootstrap/stale-artifact recovery loops. The HMC sampler reached KL 0.0231 (below 0.05 threshold). The 54-minute wall time is partially inherent (sampler correctness validation requires full-length chains) and partially avoidable (artifact freshness check delays from the bootstrap guard triggering on warm restarts)."
+    }
+  ],
+  "bottlenecks_identified": [
+    "Dispatch-time retirement enforcement is absent for the eighth consecutive milestone. exp906 (manifest-retired) remains the slowest full-queue experiment at 35 minutes per occurrence. The exclusion manifest exists at the planning layer but not at the conductor dispatch layer. Cumulative waste: ~280 minutes across 8 regressions.",
+    "In-process doc reconciliation blocked the execution queue for 28 minutes — fifth consecutive milestone. The async-batching fix has been recommended in retros .86, .87, .88, and .89 without being shipped. Cumulative waste from inaction: ~140 minutes across 5 milestones.",
+    "Full-corpus exploratory CPU sweeps (exp948, 24 min) continue for non-certification passes — fifth consecutive milestone without CARNOT_FAST_EVAL=1. Cumulative waste: ~120 minutes across 5 milestones.",
+    "Frozen slowest-5 full-queue composition persists for a FIFTH consecutive milestone (.86/.87/.88/.89/.90 all share exp906/exp950/exp948/exp930/exp905). This is now LONGER than the four-milestone .73-.76 freeze that preceded infrastructure investment. The pattern now constitutes a structural efficiency plateau: per-experiment latency for the carryover queue can no longer improve without governance action on these specific bottlenecks.",
+    "Pre-gate retry budget is uncapped. exp1162 (KANELE FPGA blueprint) required manual operator recovery after repeated pre-gate blocks. The conductor has no auto-advance mechanism when a gate condition is transiently unavailable for more than N retries. This added approximately 20 minutes to exp1162's wall time.",
+    "Codex stall window is not pre-configured for pytest-heavy tasks. exp1163 (NRGPT) stalled at 180 seconds while pytest ran synchronously, triggering a mid-milestone emergency fix (codex-stall-to-opus failover). The failover was effective but reactive: a per-role STALL_TIMEOUT override table in the conductor config would have prevented the stall without requiring a mid-milestone code change.",
+    "Gate audit placed first (exp1152) but found 7 prior_failures gaps rather than confirming clean state. This means gate_audit_pre_activation_passed=false. The audit is now correctly ordered before research tasks, which is an improvement, but the audit criteria need to require zero gaps as the pass condition — finding gaps still allows gated tasks to proceed.",
+    "Per-experiment latency average increased for the first time in the efficiency streak: 4.07 min/exp vs 3.84 min/exp in .89. The increase is concentration-driven (exp1162 67 min + exp1163 66 min + exp1156 54 min) rather than a broad degradation. The 131 carryover queue items averaged only 2.08 min/exp (faster than prior milestones). The combined average is not directly comparable across milestones with different batch/carryover ratios.",
+    "GPU utilization was idle at milestone close. Both RTX 3090s reported 0% utilization and 4 MB VRAM each. exp1159 (GRPO v4) used the DualGPU path, but no other GPU-eligible task defaulted to DualGPURunner. The 4 MB per-GPU VRAM allocations are idle driver residuals below the gpu_monitor.py zombie threshold.",
+    "No GPU zombie processes were detected. Process list empty at close. GPU close was operationally clean."
+  ],
+  "questions_answered": {
+    "which_experiments_took_longest_and_why": "In the full 586-minute conductor queue, the five slowest were the same carryover items as .89: exp906 (35 min, eighth consecutive regression), exp950 docs (28 min, fifth consecutive blocking pass), exp948 (24 min, fifth consecutive full-corpus sweep), exp930 (19 min), exp905 (17 min). Within the active .90 research batch, the three longest were exp1162 (67 min, pre-gate retry loops), exp1163 (66 min, codex stall triggering opus failover), and exp1156 (54 min, HMC sampler with bootstrap recovery). The active .90 experiments do not appear in the full-queue slowest-5 because the combined full-queue average masks the within-batch distribution.",
+    "was_gpu_utilization_efficient": "No. Milestone-close GPU state showed both RTX 3090s at 0% utilization and 4 MB VRAM each. exp1159 (GRPO v4 structural warmup) used the DualGPU path successfully and achieved 10.0% improvement_over_baseline. No other .90 experiment defaulted to DualGPURunner. The GPU monitor explicitly recommended running Qwen on GPU 0 and Gemma on GPU 1 simultaneously.",
+    "were_there_zombie_processes": "No. The gpu_monitor.py process list was empty at milestone close. The 4 MB per-GPU VRAM allocations are idle driver residuals below the zombie threshold (1024 MB VRAM + 10 idle minutes). The close was operationally clean.",
+    "could_experiments_have_been_parallelized": "Yes. The gate audit (exp1152) ran correctly at position 1, which is the right ordering. Doc reconciliation should be async at milestone close. Exploratory corpus sweeps (exp948) could run beside benchmark fixtures (exp905/exp930) without sequencing constraints. GPU tasks should default to DualGPURunner. The pre-gate retry loop in exp1162 could have been parallelized with non-gated tasks while waiting for the gate condition to resolve.",
+    "was_preflight_a_bottleneck": "Partial improvement. The gate audit (exp1152) was placed correctly at position 1 this milestone — a structural change from .89 where it ran after research-critical tasks had already failed. The audit found 7 prior_failures gaps, which is valuable signal. However, finding gaps does not itself block gated tasks — the audit is diagnostic, not enforcement. The missing piece is automatic YAML backfill when gaps are found, before any gated task is dispatched.",
+    "were_doc_reconciliation_passes_efficient": "No. The 28-minute in-process doc reconciliation pass (exp950) blocked the main executor for the fifth consecutive milestone. The async-batching fix has been recommended in retros .86, .87, .88, and .89. Batching all doc/spec/ops reconciliation into a single async milestone-close task would recover 28 minutes per milestone without any research impact.",
+    "what_tooling_changes_would_speed_next_milestone": "Six highest-leverage changes in priority order: (1) Dispatch-time retirement guard — before dispatching any experiment, check the exclusion manifest; if retired, emit a blocked artifact immediately. Eliminates exp906 (35 min, eighth consecutive regression). (2) Async doc reconciliation — batch all spec/ops/changelog doc updates to milestone close, non-blocking. Recovers 28 min/milestone. (3) CARNOT_FAST_EVAL=1 for exploratory FoVer/Symbolic-KAN sweeps — 500-pair subsample for non-certification passes. Saves ~15 min. (4) Pre-configured STALL_TIMEOUT=0 for codex tasks running pytest — prevents the exp1163 class of stall without requiring mid-milestone emergency fixes. Saves ~20 min. (5) Pre-gate retry cap with auto-advance — after N failed pre-gate attempts, alert operator and either advance or park the task. Prevents the exp1162 class of indefinite retry loops. Saves ~15 min. (6) DualGPURunner as default policy for requires_gpu tasks — both GPUs idle at close with only exp1159 having used DualGPU."
+  },
+  "improvements_suggested": [
+    "Add a dispatch-time retirement guard: before any experiment ID is dispatched to a conductor worker, check the exclusion manifest and emit a blocked artifact immediately if retired. Add a regression test that attempts to dispatch exp906 and asserts it is blocked before any worker is spawned. This eliminates 35 minutes of recurring wall time that has now appeared for eight consecutive milestones.",
+    "Move all doc reconciliation out of the in-process executor. Batch spec/ops/changelog doc passes into a single async task at milestone close. Add a conductor test asserting that doc reconciliation cannot block the main executor thread. Recovers 28 minutes per milestone — this change has been recommended in five consecutive retros without being shipped.",
+    "Implement CARNOT_FAST_EVAL=1 sampling mode for FoVer and Symbolic-KAN exploratory sweeps. Reserve full-corpus evaluation (6548 pairs) for final certification artifacts only; sample 500 pairs for architecture comparisons and ablations. Reduces exp948-class sweeps from 24 minutes to approximately 9 minutes.",
+    "Pre-configure STALL_TIMEOUT=0 in a per-role override table in the conductor config for all codex tasks whose pytest step exceeds 60 seconds. The mid-milestone codex-stall-to-opus failover shipped in .90 is effective but reactive; the pre-configuration approach makes this proactive. This prevents the exp1163 class of 180-second stall window and removes the need for mid-milestone emergency code changes.",
+    "Add a pre-gate retry cap with operator alert. When a task's pre-gate check fails for more than N consecutive attempts (suggested: 3), the conductor should either auto-advance the task with a warning artifact or park it and alert the operator. The exp1162 pattern (repeated pre-gate blocks requiring manual recovery) adds minutes of uncontrolled wait time that should be bounded.",
+    "Make DualGPURunner the default policy for all requires_gpu experiments. Assign Qwen and Gemma model workloads to GPU 0 and GPU 1 automatically unless the task explicitly opts out. exp1159 (GRPO v4) demonstrated 10.0% improvement_over_baseline using the DualGPU path — this should be the standard, not the exception.",
+    "Gate audit enforcement tightening. exp1152 (gate audit, position 1) found 7 prior_failures gaps — which means the audit correctly identified the structural risk. The missing step is automatic YAML backfill before any gated experiment is dispatched. The audit should not terminate until the YAML is clean (0 gaps); if gaps are unfillable by automation, gated tasks should be held.",
+    "Adopt output caching for stable benchmark fixture experiments. exp905 (HumanEval IterativeSelfRepair) and exp930 (GSM8K Math Repair) have not changed algorithms across three consecutive milestones. Cache model outputs for unchanged algorithmic components; re-evaluate only on changed verifier or repair logic. This converts repeated full sweeps into incremental delta evaluations."
+  ],
+  "estimated_time_savings_pct": 21,
+  "estimated_savings_breakdown_min": {
+    "retire_or_block_exp906_dispatch_enforcement": 35,
+    "async_doc_reconciliation": 28,
+    "fast_eval_for_corpus_sweeps": 15,
+    "codex_stall_timeout_preconfig": 20,
+    "pre_gate_retry_cap": 15,
+    "dualgpu_defaults": 15,
+    "total_recoverable_minutes": 128,
+    "pct_of_586_min_wall_time": 21.8
+  },
+  "gpu_state_at_close": {
+    "timestamp_utc": "2026-05-02T16:29:24Z",
+    "gpu0_model": "NVIDIA GeForce RTX 3090",
+    "gpu0_vram_used_mb": 4,
+    "gpu0_vram_total_mb": 24576,
+    "gpu0_util_pct": 0,
+    "gpu0_temp_c": 49,
+    "gpu1_model": "NVIDIA GeForce RTX 3090",
+    "gpu1_vram_used_mb": 4,
+    "gpu1_vram_total_mb": 24576,
+    "gpu1_util_pct": 0,
+    "gpu1_temp_c": 49,
+    "processes_detected": 0,
+    "zombies_detected": 0,
+    "gpu_close_clean": true,
+    "operational_verdict": "clean_but_underutilized"
+  },
+  "wall_time_trend": {
+    "milestone_2026_04_86_minutes": 940,
+    "milestone_2026_04_87_minutes": 891,
+    "milestone_2026_04_88_minutes": 794,
+    "milestone_2026_04_89_minutes": 692,
+    "milestone_2026_04_90_minutes": 586,
+    "baseline_2026_04_58_minutes": 3415,
+    "pct_below_baseline": 82.8,
+    "consecutive_milestones_below_baseline": 13,
+    "trend_note": "The 586-minute milestone is a new project best and the thirteenth consecutive below the .58 baseline. However, the -106 min improvement over .89 is volume-driven: 36 fewer experiments at 4.07 min/exp = 146 min predicted from volume reduction, partially offset by a per-experiment latency increase to 4.07 min/exp (+0.23 vs .89's 3.84). The apparent latency regression is concentration-driven: exp1162 (67 min), exp1163 (66 min), and exp1156 (54 min) inflate the average. The 131 carryover queue items averaged only 2.08 min/exp, which is faster than prior milestones. The combined average of 4.07 min/exp is not directly comparable to prior milestones with different batch/carryover ratios."
+  },
+  "composition_freeze_analysis": {
+    "consecutive_frozen_milestones": 5,
+    "frozen_since": "2026.04.86",
+    "frozen_experiments": ["exp906", "exp950", "exp948", "exp930", "exp905"],
+    "prior_freeze_precedent": "Milestones .73-.76 showed a four-milestone composition freeze before infrastructure investment ended it. The current freeze (.86-.90) has now EXCEEDED that precedent. The five frozen experiments have collectively consumed approximately 661 minutes across the five milestones (exp906: 175 min, exp950: 140 min, exp948: 120 min, exp930: 95 min, exp905: 85 min). These experiments are not research-critical: they are governance failures, I/O bottlenecks, and non-certification sweeps that can be fixed without altering research scope.",
+    "risk": "At five consecutive frozen milestones, the project has entered a structural efficiency plateau where the frozen items alone consume 661/586 = 113% of a typical milestone's budget across the streak. The pattern will not break without shipping at least two of the three highest-leverage fixes: dispatch-time retirement guard (exp906), async doc reconciliation (exp950), or fast-eval sampling (exp948)."
+  },
+  "research_quality_summary": {
+    "criteria_met": 12,
+    "criteria_total": 13,
+    "missed_criterion": "gate_audit_pre_activation_passed",
+    "missed_reason": "exp1152 found 7 prior_failures gaps — the audit correctly identified structural risk but the gaps were not backfilled before gated tasks were dispatched, so the pass condition was not met",
+    "notable_successes": [
+      "Phase 3/4 mandatory sampler chain completed: snap validity 100.0%, Regime C classified (HMC inappropriate for Regime C), and blocked sequential Gibbs sampler reached KL 0.0231 (exp1154/1155/1156)",
+      "SECL calibration fixed the .89 cheap-tier precision failure: TP 91.7%, FPR 21.0% versus the prior FPR=0.96 (exp1157)",
+      "GRPO v4 structural warm-up recovered self-learning gain: improvement_over_baseline=10.0%, 50 eval questions, DualGPU used (exp1159, beats prior v3 result of +2.86pp)",
+      "MARCH multi-agent claim checking: TP 100.0%, FPR 0.0% (exp1160)",
+      "KV260 v6 sequential Gibbs: mean KL 0.0000 — closes the sampler correctness gap opened by parallel Glauber detailed-balance violation (exp1161)",
+      "KANELE FPGA blueprint: estimated 2408333x speedup, hardware-oriented KAN complexity metrics computed (exp1162)",
+      "NRGPT energy recurrence prototype: AUROC 0.9158 above baseline 0.8874, Phase 3/4 energy-recurrence path seeded (exp1163)",
+      "arXiv v4 recompiled and bundle ready (exp1153, arxiv_submission_status=upload_pending under Phase 4 publication hold)"
+    ]
+  },
+  "new_bottleneck_class_identified": {
+    "name": "codex_pytest_stall",
+    "description": "Codex agent calls pytest synchronously in self-heal mode. A typical pytest run on the Carnot test suite takes 3-4 minutes, which exceeds the 180-second no-output stall window that triggers the conductor's kill signal. This causes codex tasks with test suites to be killed before research work begins, requiring opus failover or operator intervention.",
+    "first_occurrence": "exp1163 (NRGPT prototype, 2026-05-02)",
+    "fix_shipped": "codex-stall-to-opus failover deployed mid-milestone 2026-05-02 15:58 UTC. opt-in per task via failover_on_stall: true. This is a reactive fix.",
+    "recommended_proactive_fix": "Add per-role STALL_TIMEOUT override table to conductor config: codex tasks whose prompts include pytest invocations should default to STALL_TIMEOUT=0 (same as opus), eliminating the 180-second kill window before it fires. The opt-in failover remains as a safety net for unexpected stalls."
+  },
+  "honest_verdict": "586min_144_experiments_avg_4pt07min_15pt3pct_faster_than_89_thirteenth_consecutive_project_best_new_project_best_volume_driven_exp906_EIGHTH_consecutive_regression_exp950_doc_reconcile_FIFTH_consecutive_exp948_FIFTH_consecutive_frozen_slowest5_FIFTH_consecutive_exceeds_prior_73_76_four_milestone_precedent_codex_pytest_stall_new_bottleneck_class_opus_failover_shipped_mid_milestone_GRPO_v4_structural_warmup_10pct_improvement_KV260_v6_KL_0_0000_Phase3_4_mandatory_complete_arXiv_v4_compiled_upload_pending_12_of_13_criteria_met_21pct_recoverable"
+}

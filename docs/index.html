@@ -300,10 +300,10 @@
       <a href="technical-report.html" class="btn btn-secondary">How it works</a>
     </div>
     <div class="stats-bar" aria-label="Project headline numbers">
-      <div class="stat"><div class="stat-num">1,138</div><div class="stat-label">Through Exp 1138</div></div>
-      <div class="stat"><div class="stat-num">88</div><div class="stat-label">Milestones complete</div></div>
-      <div class="stat"><div class="stat-num">20,903</div><div class="stat-label">Python test items</div></div>
-      <div class="stat"><div class="stat-num">0.9402</div><div class="stat-label">.88 k=5 AUROC</div></div>
+      <div class="stat"><div class="stat-num">1,177</div><div class="stat-label">Through Exp 1177</div></div>
+      <div class="stat"><div class="stat-num">91</div><div class="stat-label">Milestones complete</div></div>
+      <div class="stat"><div class="stat-num">21,270</div><div class="stat-label">Python test items</div></div>
+      <div class="stat"><div class="stat-num">11/13</div><div class="stat-label">.91 criteria met</div></div>
     </div>
   </div>
 </section>
@@ -435,7 +435,8 @@
         <p class="bento-text">
           For structured outputs (JSON, function arguments, tool calls), Carnot
           checks type shapes and value bounds. <strong>+4.9 points</strong> on a
-          typed-constraint benchmark over the raw model.
+          typed-constraint benchmark over the raw model, and <strong>4% &rarr; 12%</strong>
+          completion on the CCTU constrained tool-use micro-benchmark.
         </p>
       </div>
       <div class="bento-card span-2">
@@ -447,7 +448,10 @@
           span several steps &mdash; the classic "confident but inconsistent"
           failure. The production default now uses a five-verifier
           AND-compose ensemble with SOS-KAN, SemEnergy, AST, semantic
-          consistency, and Z3 checks.
+          consistency, and Z3 checks, plus an information-asymmetric MARCH
+          claim-check loop for high-risk responses. A seventh SC-Energy
+          verifier is under evaluation; the latest k=6 test did not beat
+          the k=5 default, so k=5 remains the production ensemble.
         </p>
       </div>
     </div>
@@ -461,8 +465,9 @@
     <p class="section-desc">
       Every number below is backed by a checked-in experiment artifact. Model
       benchmark rows use live GPU inference on public models; infrastructure,
-      hardware, ensemble, and adversarial-audit rows are labeled by provenance.
-      No simulated "synthetic-only" wins are mixed in.
+      hardware, ensemble, synthetic-pilot, and adversarial-audit rows are
+      labeled by provenance. Synthetic pilots are included only when the card
+      says so; they are not model-generation headline claims.
     </p>
     <div class="results-grid">
       <div class="r-card">
@@ -586,10 +591,10 @@
         <div class="r-stats"><span class="r-before">SCEnergyEnergyAdapter replaces VJEPA v2 as production OOD gate; VJEPA retained as fallback</span> <span class="r-after">Milestone .78 &mdash; Exp 1001</span></div>
       </div>
       <div class="r-card">
-        <span class="r-tag">FoVer corpus expansion &mdash; Z3 + GSM8K + SOTA labeling (34x growth)</span>
-        <h3 class="r-title">AUROC 0.57 &rarr; 0.99 via 34x corpus expansion</h3>
+        <span class="r-tag">FoVer corpus expansion &mdash; Z3 + GSM8K + SOTA labeling (38.6x growth)</span>
+        <h3 class="r-title">AUROC 0.57 &rarr; 0.99; corpus now 8,329 pairs</h3>
         <div class="r-meter"><div class="r-bar" style="width: 99%; background: #22c55e;"></div></div>
-        <div class="r-stats"><span class="r-before">7,329 pairs (from 216); 781 SOTA outputs added in v5; SOS-KAN 0.9899, ThinkPRM 0.9885, NK-KAEM 0.9875</span> <span class="r-after">74-percentile-point lift &mdash; Exps 1055/1057/1119</span></div>
+        <div class="r-stats"><span class="r-before">7,329 pairs in v5 plus 1,000 SC-Energy-labeled SOTA pairs in v6</span> <span class="r-after">74-percentile-point lift &mdash; Exps 1055/1057/1119/1169</span></div>
       </div>
       <div class="r-card">
         <span class="r-tag">Production ensemble &mdash; SOS-KAN normalization fix</span>
@@ -602,6 +607,12 @@
         <h3 class="r-title">19.15% &rarr; 27.66% (+8.51pp)</h3>
         <div class="r-meter"><div class="r-bar" style="width: 27.66%; background: #22c55e;"></div></div>
         <div class="r-stats"><span class="r-before">100 training questions; training budget no longer hit; eval partial at 47/50</span> <span class="r-after">Milestone .88 &mdash; Exp 1129</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Self-learning &mdash; GRPO v4 structural warm-up</span>
+        <h3 class="r-title">16% &rarr; 26% (+10pp)</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 26%; background: #22c55e;"></div></div>
+        <div class="r-stats"><span class="r-before">DualGPU live run; 50-question eval; +1.49pp vs Exp 1129</span> <span class="r-after">Milestone .90 &mdash; Exp 1159</span></div>
       </div>
       <div class="r-card">
         <span class="r-tag">Continuous self-learning &mdash; Zenil alpha_t</span>
@@ -641,15 +652,15 @@
       </div>
       <div class="r-card">
         <span class="r-tag">WOPR gallery &mdash; Hashi + N-Queens Ising cartridges</span>
-        <h3 class="r-title">Hashi E=0; 6 games live on HuggingFace Spaces</h3>
+        <h3 class="r-title">Hashi E=0; Slitherlink E=0 rescue shipped</h3>
         <div class="r-meter"><div class="r-bar" style="width: 100%; background: #0ea5e9;"></div></div>
-        <div class="r-stats"><span class="r-before">Sudoku, Tic-Tac-Toe, Lights Out, Global Thermonuclear War, N-Queens, Hashi</span> <span class="r-after">Milestones .85/.87 &mdash; Exps 1097/1124/1125</span></div>
+        <div class="r-stats"><span class="r-before">Slitherlink canonical puzzle converged in 1 iteration; 24 spins, app registered</span> <span class="r-after">Milestones .87/.89 &mdash; Exps 1124/1125/1141</span></div>
       </div>
       <div class="r-card">
         <span class="r-tag">Honest negative &mdash; FPGA sampler correctness audit (Phase 2a)</span>
-        <h3 class="r-title">v4 KL improved 0.134 &rarr; 0.1128, still above 0.05 gate</h3>
-        <div class="r-meter"><div class="r-bar" style="width: 22%; background: #ef4444;"></div></div>
-        <div class="r-stats"><span class="r-before">v1 parallel KL=3.07; v3 sequential KL=0.025; v4 topology still unresolved</span> <span class="r-after">Exps 1094/1109/1122/1134</span></div>
+        <h3 class="r-title">v6 sequential Gibbs KL=0.0000 vs CPU</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 100%; background: #22c55e;"></div></div>
+        <div class="r-stats"><span class="r-before">v5 regressed to 0.4469; v6 restores detailed balance by design</span> <span class="r-after">Milestone .90 &mdash; Exp 1161</span></div>
       </div>
       <div class="r-card">
         <span class="r-tag">Adversarial audit &mdash; PRM-BiasBench-style attacks</span>
@@ -664,16 +675,118 @@
         <div class="r-stats"><span class="r-before">Standalone tiers remain weak; SemEnergy=0.2222, Z3=0.0833</span> <span class="r-after">Mixed result &mdash; Exp 1132</span></div>
       </div>
       <div class="r-card">
-        <span class="r-tag">Preprint package &mdash; arXiv v3</span>
-        <h3 class="r-title">PDF compiled; manual upload pending</h3>
-        <div class="r-meter"><div class="r-bar" style="width: 75%; background: #f59e0b;"></div></div>
-        <div class="r-stats"><span class="r-before">Tectonic build + verified source bundle; not submitted yet</span> <span class="r-after">Deadline 2026-05-15 &mdash; Exps 1127/1135</span></div>
+        <span class="r-tag">Cascade routing &mdash; HalluGuard v3</span>
+        <h3 class="r-title">0.0pp accuracy delta with 4.4% cost savings</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 95.6%; background: #22c55e;"></div></div>
+        <div class="r-stats"><span class="r-before">Entropy + embedding-distance features flagged 90.32% of Goodfire misses</span> <span class="r-after">Milestone .89 &mdash; Exp 1143</span></div>
       </div>
       <div class="r-card">
-        <span class="r-tag">Honest blocked result &mdash; WOPR Slitherlink</span>
-        <h3 class="r-title">Blocked at conductor pre-gate</h3>
-        <div class="r-meter"><div class="r-bar" style="width: 0%; background: #ef4444;"></div></div>
-        <div class="r-stats"><span class="r-before">Missing prior-failures metadata for 5 matching cartridge predecessors</span> <span class="r-after">Milestone .88 &mdash; Exp 1136</span></div>
+        <span class="r-tag">Tool use &mdash; CCTU constrained micro-benchmark</span>
+        <h3 class="r-title">Completion rate: 4% &rarr; 12%</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 12%; background: #22c55e;"></div></div>
+        <div class="r-stats"><span class="r-before">25 live-GPU Qwen3.6-35B-A3B tasks; semantic TP=0.88</span> <span class="r-after">Milestone .89 &mdash; Exp 1144</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Cheap-tier distillation &mdash; Goodfire</span>
+        <h3 class="r-title">TP 91.7%, FPR 21.0%</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 91.7%; background: #22c55e;"></div></div>
+        <div class="r-stats"><span class="r-before">SECL probe fixed Exp 1145's 96% false-positive failure</span> <span class="r-after">Milestone .90 &mdash; Exp 1157</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Repair &mdash; HardNet++-style projection</span>
+        <h3 class="r-title">100% arithmetic repair at 117 us</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 100%; background: #22c55e;"></div></div>
+        <div class="r-stats"><span class="r-before">20/20 Z3-passing repairs; ~76,130x faster than prompt repair</span> <span class="r-after">Milestone .89 &mdash; Exp 1147</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Compression &mdash; MetaCluster SOS-KAN</span>
+        <h3 class="r-title">5.03x smaller with AUROC drop 0.0184</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 97.18%; background: #22c55e;"></div></div>
+        <div class="r-stats"><span class="r-before">AUROC 0.9902 &rarr; 0.9718; energy correlation 0.9966</span> <span class="r-after">Milestone .89 &mdash; Exp 1148</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Certificates &mdash; BEAVER-lite</span>
+        <h3 class="r-title">Live llama.cpp logprobs; sound bound</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 100%; background: #22c55e;"></div></div>
+        <div class="r-stats"><span class="r-before">Exp 1158 was sound but mocked; Exp 1170 sets mock_logprobs_used=false</span> <span class="r-after">Milestone .91 &mdash; Exp 1170</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Phase 3/4 sampler &mdash; HMC diagnostic pivot</span>
+        <h3 class="r-title">Blocked Gibbs KL=0.0231</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 97.7%; background: #22c55e;"></div></div>
+        <div class="r-stats"><span class="r-before">HMC classified Regime C; discrete components bottleneck continuous HMC</span> <span class="r-after">Milestone .90 &mdash; Exps 1155/1156</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Claim checking &mdash; MARCH blinded checker</span>
+        <h3 class="r-title">TP 100%, FPR 0%</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 100%; background: #22c55e;"></div></div>
+        <div class="r-stats"><span class="r-before">Beats SemEnergy 22.2% and ThinkPRM 13.9% cheap-tier baselines</span> <span class="r-after">Milestone .90 &mdash; Exp 1160</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Hardware blueprint &mdash; KANELE SOS-KAN FPGA</span>
+        <h3 class="r-title">0.12 us estimated latency</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 100%; background: #0ea5e9;"></div></div>
+        <div class="r-stats"><span class="r-before">2,408,333x estimate vs CPU baseline; specification only, no Vivado synthesis</span> <span class="r-after">Milestone .90 &mdash; Exp 1162</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Phase 3 seed &mdash; NRGPT energy-native prototype</span>
+        <h3 class="r-title">AUROC 0.8874 &rarr; 0.9209</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 92.09%; background: #a855f7;"></div></div>
+        <div class="r-stats"><span class="r-before">Energy recurrence helps, but 3 iterations dipped to 0.9158</span> <span class="r-after">Milestone .90 &mdash; Exp 1163</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Phase 4 active inference &mdash; ARC-AGI-3-style pilot</span>
+        <h3 class="r-title">100% solved; 74.7% fewer actions</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 100%; background: #22c55e;"></div></div>
+        <div class="r-stats"><span class="r-before">10 synthetic 5x5 puzzles, action_count_ratio=0.2534 vs greedy baseline</span> <span class="r-after">Small-scale pilot &mdash; Exp 1165</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Verifier expansion &mdash; SC-Energy seventh verifier</span>
+        <h3 class="r-title">AUROC=1.0; correlations below 0.5</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 100%; background: #a855f7;"></div></div>
+        <div class="r-stats"><span class="r-before">Max listed correlation below threshold on Exp 1168 eval</span> <span class="r-after">k=6 still underperforms &mdash; Exps 1168/1176</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Diffusion of Thought &mdash; inference-time correction</span>
+        <h3 class="r-title">+4pp accuracy; diminishing returns</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 50%; background: #f59e0b;"></div></div>
+        <div class="r-stats"><span class="r-before">T=1 already captured the gain; AUROC stayed 0.5 through T=125</span> <span class="r-after">Non-monotone &mdash; Exp 1171</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Phase 3 seed &mdash; NRGPT per-token energy</span>
+        <h3 class="r-title">Per-token AUROC=0.9982</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 99.82%; background: #22c55e;"></div></div>
+        <div class="r-stats"><span class="r-before">Batch baseline AUROC=0.8874; error-token localization rate=1.0</span> <span class="r-after">Milestone .91 &mdash; Exp 1172</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Hardware &mdash; BiKA SOS-KAN NPU analysis</span>
+        <h3 class="r-title">39.6% resource reduction estimate</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 39.6%; background: #0ea5e9;"></div></div>
+        <div class="r-stats"><span class="r-before">Multiply-free BiKA estimate; NPU verdict feasible</span> <span class="r-after">No accuracy benchmark &mdash; Exp 1174</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">WOPR gallery &mdash; Connect Four cartridge</span>
+        <h3 class="r-title">42-spin cartridge; 10 tests passing</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 100%; background: #0ea5e9;"></div></div>
+        <div class="r-stats"><span class="r-before">Valid boards E=0; gravity violation repaired to E=0 sampled state</span> <span class="r-after">Milestone .91 &mdash; Exp 1175</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Honest negative &mdash; k=6 AND-compose</span>
+        <h3 class="r-title">k=6 AUROC 0.8973 vs k=5 0.9240</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 89.73%; background: #f59e0b;"></div></div>
+        <div class="r-stats"><span class="r-before">SC-Energy remained low-correlation but lowered ensemble AUROC</span> <span class="r-after">k=5 stays default &mdash; Exp 1176</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Hardware &mdash; Extropic Z1/XTR-0 packet</span>
+        <h3 class="r-title">THRML backend stub shipped; benchmark blocked</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 50%; background: #f59e0b;"></div></div>
+        <div class="r-stats"><span class="r-before">Integration packet written; thrml_available=false on this host</span> <span class="r-after">Milestone .89 &mdash; Exp 1150</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Preprint package &mdash; arXiv v5</span>
+        <h3 class="r-title">Phase 4 section compiled; hold remains</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 50%; background: #f59e0b;"></div></div>
+        <div class="r-stats"><span class="r-before">347.83 KB PDF + v5 bundle verified; paper_ready=false after integrity audit</span> <span class="r-after">Figure/claim remediation required &mdash; Exp 1167</span></div>
       </div>
     </div>
 
@@ -688,6 +801,9 @@
           ranking score, not a working classifier.</li>
         <li>A JEPA discriminator that hit 1.0 AUC on validation collapsed to
           0.47 on a genuinely held-out test.</li>
+        <li>A highlighted FPGA speedup figure in the draft paper mixed an
+          estimated CPU sweep with a per-sample FPGA number; the paper is now
+          held until the full figure and hardware-claim audit is remediated.</li>
       </ul>
       <p style="margin: 0.6rem 0 0 0;">Each was retracted, the audit that
         surfaced it is in the public research record, and the headlines above
@@ -700,23 +816,23 @@
 <section id="preprint">
   <div class="container">
     <span class="section-label">Preprint</span>
-    <h2 class="section-title">Carnot position paper, draft v3</h2>
+    <h2 class="section-title">Carnot position paper, arXiv draft</h2>
     <p class="section-desc">
       An architectural framework for mapping the empirical bounds of
-      LLM verification. The current draft includes the .88 findings:
-      the SOS-KAN/k=5 fix, GRPO v2 positive result, alpha_t improvement,
-      cascade v2 reroute, and the KV260 v4 KL caveat. The PDF now compiles
-      with tectonic; manual arXiv upload remains pending before
-      <strong>2026-05-15</strong>.
+      LLM verification. The current draft includes the .91 Phase 4 pilot and
+      leaderboard-context section, and the v5 source bundle compiles with
+      tectonic. arXiv submission is intentionally on hold after the
+      2026-05-02 paper-integrity audit found figure and hardware-claim issues
+      that must be fixed before upload.
     </p>
     <div class="hero-actions" style="justify-content: flex-start;">
-      <a href="position-paper-draft-v3.md" class="btn btn-primary">Read paper (Markdown)</a>
+      <a href="position-paper-draft-v3.md" class="btn btn-primary">Read source draft</a>
       <a href="arxiv-paper/" class="btn btn-secondary">arXiv LaTeX bundle</a>
       <a href="arxiv-metadata.yaml" class="btn btn-secondary">Submission metadata</a>
     </div>
     <p style="margin-top: 1.5rem; font-size: 0.9rem; color: var(--text-muted);">
-      <em>Paper PDF compiled 2026-05-02; arXiv upload pending until the
-      manual submission step is complete.</em>
+      <em>Paper PDF compiled 2026-05-02; arXiv hold remains active until all
+      18 paper-integrity audit issues and the figure/claim hooks are resolved.</em>
     </p>
   </div>
 </section>

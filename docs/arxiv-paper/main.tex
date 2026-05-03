@@ -720,11 +720,14 @@ production path. The initial benchmark reports AUROC=0.5547 versus
 deployment milestone and diagnostic baseline, not as a new accuracy
 headline.
 
-\textbf{Zenil alpha_t self-distillation grounding (Milestone .88).}
-With the retrained verifier, alpha_t measured at 0.52 versus the
+\textbf{Zenil $\alpha_t$ self-distillation grounding (Milestone .88).}
+With the retrained verifier, $\alpha_t$ measured at 0.52 versus the
 prior 0.38 on Qwen3.6-35B-A3B (exp1130), preserving the
 $\inf_t \alpha_t > 0$ grounding condition while improving the SOTA
 local-model readout.
+
+
+In milestone .89, HardNet++-style arithmetic projection repair corrected 20/20 synthetic violations at 100\% accuracy and ran 76{,}130$\times$ faster than prompt repair (exp1147). MetaCluster-style centroid compression made SOSKANEnergyV3 5.03$\times$ smaller with AUROC drop 0.018 (0.9902 to 0.9718), keeping the compressed verifier within the 0.02 degradation target (exp1148).
 
 \subsection{$D_{\mathrm{int}} = 1.6$ motivates the Welch bound (exp1093)}
 
@@ -830,49 +833,190 @@ describe the framework.
   \label{fig:humaneval}
 \end{figure}
 
-\section{Related Work}
-\label{sec:related}
+\section{Phase 4: Carnot as Active Inference (Empirical Comparison)}
+\label{sec:phase4-active-inference}
 
-\paragraph{Hallucination detection and hidden-evidence verification.}
-HIVE~\cite{hive2026} detects hallucinations through hidden-evidence
-chain-of-verification against implicit constraints in diffusion LLM
-trajectories. Carnot is complementary: while HIVE detects that
-something is wrong, Carnot additionally provides energy-guided
-repair and supports local-first deployment via open-weight models.
-The distinction matters operationally. A detector can reject or
-annotate a hallucination; Carnot's cascade is designed to route the
-same signal into verifier composition, calibration, and repair
-without depending on a closed-frontier oracle.
+\subsection{Theoretical equivalence: free energy and Carnot $k=N$}
 
-\paragraph{Active inference and topological field cognition (Seed IQ).}
-Concurrent work by Themesis, Inc.~\cite{themesis2026seediq}
-demonstrates that an active-inference agent grounded in Karl
-Friston's Free Energy Principle, implemented as Hamiltonian Monte
-Carlo on a continuous geometric field of belief, achieves
-near-perfect performance on the interactive ARC-AGI-3
-benchmark~\cite{arcagi3} (publicly demonstrated at $0.95$, with
-reported leaderboard standing at $1.00$ and $115\%$ human
-action-efficiency: $2{,}674$ actions vs. human baseline
-$7{,}534$--$8{,}073$). Frontier autoregressive LLMs --- including
-GPT-5.4, Opus 4.6, and Gemini 3.1 Pro --- score below $1\%$ on the
-same benchmark, including a $0.00\%$ Grok-4.20 baseline. The Seed
-IQ system uses zero text tokens, no reinforcement learning, and no
-centralized control; cognition is maintained as a continuous
-geometric field rather than as token sequences. We position
-Carnot's work as the architectural \emph{synthesis} path: the
-$k$-of-$N$ AND-composed verifier ensemble in Section~\ref{sec:framework}
-serves as a calibrated approximation to the free-energy lower
-bound under active inference, while Carnot's open-weight LLM
-substrate retains compatibility with the dominant
-autoregressive infrastructure. Phase~3 in our roadmap
-(Section~\ref{sec:roadmap}) targets the EBM-on-LLM substrate
-explicitly; a Phase~4 active-inference exploratory track is
-filed for milestone .91+ to test whether Carnot's verifier
-ensemble can serve as a free-energy approximation in a
-Friston-style sampler. We anticipate that the two paradigms ---
-EBM-on-LLM and active-inference-on-topological-field --- are
-empirically complementary: each fails differently and each
-admits hybrid composition that the other does not.
+The placeholder related-work note in the previous draft treated
+Themesis Seed IQ as external paradigm-shift evidence. The Phase~4
+revision makes the comparison architectural and empirical. Seed
+IQ~\cite{themesis2026seediq} is an active-inference system operating
+directly over a continuous topological field. Carnot is an
+open-weight verifier ensemble operating over LLM candidates. The
+mechanisms are different, but the objective is the same: choose the
+next belief/action state by minimizing an energy-like scalar that
+combines evidence, constraint violation, and expected future cost.
+
+In Friston-style active inference, the variational free energy can
+be written schematically as
+\[
+  \mathcal{F}(q)
+  = \mathbb{E}_{q(s)}[\log q(s) - \log p(o,s)],
+\]
+where $q(s)$ is the agent's approximate posterior over latent
+states and $p(o,s)$ is the generative model tying observations to
+states. Minimizing $\mathcal{F}$ simultaneously improves posterior
+fit and lowers surprise. Carnot's $k=N$ verifier composition has
+the same form after the verifier energies are interpreted as
+factorized negative log evidence:
+\[
+  F_{\mathrm{Carnot}}(z)
+  = \sum_{k=1}^{N} w_k E_k(z).
+\]
+In shorthand, $F(z)=\sum_k w_k E_k(z) \leftrightarrow$ variational
+free energy: each $E_k$ is a calibrated energy term for one
+constraint family, $w_k$ is the precision or reliability assigned
+to that family, and minimizing $F$ selects candidates whose joint
+posterior mass is largest under the verifier ensemble.
+
+This is not merely a naming analogy. SC-Energy~\cite{scenergyacl2025}
+learns set-consistency as an energy over statement collections,
+while Carnot learns and composes energies over candidate LLM
+outputs. Both are finite, deployable instances of the same
+statistical move: convert consistency evidence into an energy
+landscape, then search for low-energy states. Seed IQ pushes this
+move to the policy level by making the entire interactive
+perception/action loop a free-energy minimization process. Carnot's
+Phase~4 hypothesis is therefore that the verifier sum used in
+Sections~\ref{sec:framework}--\ref{sec:empirical} can act as the
+free-energy surface for an active-inference sampler, rather than
+only as a reject/repair score after an LLM has already generated a
+candidate.
+
+\subsection{Phase 4 pilot results}
+
+Experiment~1165 tested that hypothesis on a deliberately small
+synthetic proxy before claiming anything about full ARC-AGI-3. The
+setup used ten $5\times5$ ARC-AGI-3-like puzzles, a legal-action
+greedy baseline, and a Phase~4 sampler that chose actions by
+following the composite energy signal. The pilot was operational:
+the Phase~4 sampler solved all ten proxy puzzles and used far fewer
+actions than the baseline.
+
+\begin{table}[ht]
+  \centering
+  \caption{Exp1165 Phase~4 active-inference pilot on ten synthetic
+  $5\times5$ ARC-AGI-3-like puzzles. Lower action count is better;
+  monotone energy traces indicate that the sampler did not win by
+  random drift away from the energy objective.}
+  \label{tab:phase4-pilot}
+  \begin{tabular}{p{4.2cm} p{2.6cm} p{2.6cm} p{4.2cm}}
+    \toprule
+    Metric & Carnot Phase~4 & Baseline & Interpretation \\
+    \midrule
+    Mean action count & $6.30$ & $24.86$ &
+      Phase~4 used roughly one quarter of the baseline actions. \\
+    action\_count\_ratio & $0.253419$ & $1.000000$ &
+      $74.7\%$ fewer actions than the greedy legal-action baseline. \\
+    solved\_rate & $1.000$ & $0.980$ &
+      The pilot did not trade efficiency for lower solve rate. \\
+    Energy-trace monotone fraction & $1.000$ & -- &
+      Every recorded trace moved monotonically under the measured
+      free-energy proxy. \\
+    Free-energy sample values & $[0.0, 0.0, 0.0]$ & -- &
+      Terminal proxy states reached zero measured residual energy on
+      the sampled solved cases. \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+The honest reading is narrow. Exp1165 is evidence that Carnot's
+energy composition can guide a sampler in a toy active-inference
+loop. It is not evidence that Carnot has solved ARC-AGI-3. The
+useful result is the measured direction of travel: the same
+composite energy used elsewhere in this paper for verification and
+repair also behaved like a control objective when placed inside an
+action loop. That is the empirical bridge from an EBM-on-LLM
+verifier to a free-energy agent.
+
+\subsection{ARC-AGI-3 leaderboard context}
+
+ARC-AGI-3~\cite{arcagi3} is the correct external reference point
+because it evaluates interactive, instruction-free, efficiency-
+weighted skill acquisition rather than static input/output puzzle
+completion. The benchmark report states that humans solve $100\%$
+of the environments while frontier AI systems tested as of March
+2026 score below $1\%$. That gap is exactly where an
+active-inference interpretation matters: the agent must explore,
+infer goals, maintain a world model, and act efficiently.
+
+Experiment~1166 placed Carnot beside the public Seed IQ and
+frontier-LLM context. The current ARC Prize fetch available to the
+experiment did not expose a directly verifiable Seed IQ row, so the
+artifact records the leaderboard value as documented fallback
+evidence rather than as an independently re-fetched confirmation.
+The comparison is therefore intentionally asymmetric: Seed IQ is
+the full-scale active-inference reference point; Carnot Phase~4 is a
+prototype showing that Carnot's verifier energy can enter the same
+class of control objective.
+
+\begin{table}[ht]
+  \centering
+  \caption{Exp1166 positioning table. Seed IQ is reported at full
+  ARC-AGI-3 scale; Carnot Phase~4 is a synthetic pilot and is not a
+  leaderboard entry.}
+  \label{tab:arcagi3-context}
+  \begin{tabular}{p{4.0cm} p{3.0cm} p{6.0cm}}
+    \toprule
+    System & Reported score & Action-efficiency context \\
+    \midrule
+    Seed IQ (Themesis active inference) &
+      $1.00$ reported; $0.95$ public demonstration &
+      $115\%$ of human baseline, $2{,}674$ actions vs. human
+      $7{,}534$--$8{,}073$ actions. \\
+    Carnot Phase~4 pilot &
+      solved\_rate $=1.000$ on synthetic $5\times5$ proxy puzzles &
+      action\_count\_ratio $=0.253419$; $74.7\%$ fewer actions than
+      the greedy proxy baseline. \\
+    Frontier autoregressive LLMs &
+      below $1\%$ in ARC-AGI-3 report &
+      Not competitive under the benchmark's efficiency-weighted
+      interactive scoring. \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+This table is the main publication-status change relative to the
+hold-triggering draft. The previous paragraph acknowledged Seed IQ
+as paradigm-shift evidence but did not say what Carnot had measured.
+The revised section says exactly what was measured, what was not
+measured, and why the comparison is still technically meaningful:
+both systems instantiate free-energy minimization, but at different
+scales and with different substrates.
+
+\subsection{Gap analysis and future work}
+
+The gap is large. Carnot Phase~4 currently operates on ten
+synthetic $5\times5$ proxy puzzles. ARC-AGI-3 uses real interactive
+environments with larger grids, hidden goals, long-horizon action
+dependencies, and scoring tied to human action baselines. Seed IQ's
+claim is a full ARC-AGI-3-scale active-inference result; Carnot's
+claim is a prototype-scale demonstration that its verifier ensemble
+can be used as a free-energy control surface.
+
+Scaling Carnot from the pilot to ARC-AGI-3 requires four concrete
+steps. First, the state representation must move from small
+synthetic grids to the benchmark's full $30\times30$ observation and
+action interface. Second, the energy terms must include transition
+model error, novelty, and expected information gain, not only
+terminal constraint satisfaction. Third, the sampler must support
+long-horizon planning without collapsing back into autoregressive
+token search. Fourth, the evaluation must report the same
+efficiency-weighted metrics as ARC-AGI-3, including action counts,
+solved environments, failed environments, and human-normalized
+scores.
+
+This also clarifies Carnot's relationship to surrounding related
+work. HIVE~\cite{hive2026} detects hidden-evidence hallucinations;
+SC-Energy scores set consistency; Seed IQ acts directly in a
+free-energy field; Carnot composes deployable verifier energies
+around open-weight LLM infrastructure. The Phase~4 path is not to
+declare the LLM substrate sufficient. It is to test whether Carnot's
+local-first verifier stack can become the energy surface underneath
+an active-inference loop, while preserving the repair, provenance,
+and hardware-portability properties that motivated the framework in
+the first place.
 
 \section{Decentralization \& Deployment Sovereignty}
 \label{sec:sovereignty}

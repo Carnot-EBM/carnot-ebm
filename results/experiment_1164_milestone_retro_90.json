@@ -1,0 +1,104 @@
+{
+  "experiment": "1164_milestone_retro_90",
+  "schema": "milestone_retro_v2",
+  "run_date": "2026-05-02T16:15:15Z",
+  "milestone": "2026.04.90",
+  "criteria_results": {
+    "arxiv_submitted_or_bundle_v4_ready": true,
+    "gate_audit_pre_activation_passed": false,
+    "snap_validity_acceptance_gate_measured": true,
+    "hmc_compatibility_regime_classified": true,
+    "hmc_sampler_honest_result": true,
+    "cheap_tier_fpr_below_30pct_tp_above_80pct": true,
+    "beaver_lite_live_logprobs_sound_bound": true,
+    "grpo_v4_honest_result": true,
+    "march_multiagent_honest_result": true,
+    "kv260_v6_kl_below_threshold_sequential_gibbs": true,
+    "kanele_fpga_blueprint_generated": true,
+    "nrgpt_phase3_prototype_honest_result": true,
+    "retro_complete": true
+  },
+  "criteria_met": 12,
+  "criteria_total": 13,
+  "experiment_honest_verdicts": {
+    "exp1152": "prior_failures_gaps_found",
+    "exp1153": "paper_updated_recompiled",
+    "exp1154": "option_a_viable_above_95pct",
+    "exp1155": "regime_C_hmc_inappropriate",
+    "exp1156": "sampler_kl_below_05_viable",
+    "exp1157": "calibrated_tp_above_80_fpr_below_30",
+    "exp1158": "sound_bound_zipf_mock",
+    "exp1159": "structural_warmup_above_0851",
+    "exp1160": "march_tp_above_semenergy_baseline",
+    "exp1161": "kl_near_zero_algorithm_correct",
+    "exp1162": "blueprint_generated_speedup_above_100x",
+    "exp1163": "nrgpt_above_baseline_energy_recurrence_helps",
+    "exp1164": "12_of_13_criteria_met"
+  },
+  "notable_successes": [
+    "Phase 3/4 mandatory sampler chain completed: snap validity 100.0%, Regime C classified, and blocked Gibbs reached KL 0.0231.",
+    "SECL calibration fixed the .89 cheap-tier precision failure: TP 91.7%, FPR 21.0% versus the prior 96.0% FPR.",
+    "GRPO v4 structural warm-up recovered the self-learning gain: improvement_over_baseline=10.0%, 50 eval questions, DualGPU used.",
+    "MARCH claim checking beat cheap-tier baselines with information asymmetry: TP 100.0%, FPR 0.0%.",
+    "KV260 v6 sequential Gibbs closed the sampler correctness gap: mean KL 0.0000 below 0.05.",
+    "KANELE/NRGPT seeded Phase 3 hardware and architecture paths: FPGA estimated 2408333x speedup and NRGPT AUROC 0.9158 above baseline 0.8874."
+  ],
+  "failures_or_partials": [
+    "Gate audit did not pass: exp1152 found 7 prior_failures gaps, so gate_audit_pre_activation_passed is the single unmet criterion.",
+    "arXiv was not submitted by the operator: exp1153 produced the recompiled PDF and bundle, but arxiv_submission_status=upload_pending.",
+    "BEAVER-lite remained a fallback probability run because llama_cpp_available=False; the sound bound used Zipf/mock logprobs.",
+    "NRGPT beat the baseline but recurrence was not monotone: n_iters=3 AUROC 0.9158 was below n_iters=1 AUROC 0.9209."
+  ],
+  "bottlenecks_identified": [
+    "Gate metadata remains brittle: exp1152 still found seven prior_failures gaps and exp1162 hit repeated pre-gate blocks before manual recovery.",
+    "Execution was slowed by bootstrap/stale-artifact and pre-test recovery loops: exp1156, exp1157, exp1158, exp1162, and exp1163 all consumed retry spans.",
+    "External/live dependencies remain unresolved: arXiv is upload-pending under the Phase 4 publication hold, and BEAVER-lite still lacks real llama.cpp logprobs."
+  ],
+  "slowest_experiments": [
+    {
+      "rank": 1,
+      "id": "exp1162",
+      "duration_min": 67.0,
+      "first_seen_utc": "2026-05-02 14:43",
+      "last_seen_utc": "2026-05-02 15:50"
+    },
+    {
+      "rank": 2,
+      "id": "exp1163",
+      "duration_min": 66.0,
+      "first_seen_utc": "2026-05-02 14:58",
+      "last_seen_utc": "2026-05-02 16:04"
+    },
+    {
+      "rank": 3,
+      "id": "exp1156",
+      "duration_min": 54.0,
+      "first_seen_utc": "2026-05-02 11:52",
+      "last_seen_utc": "2026-05-02 12:46"
+    },
+    {
+      "rank": 4,
+      "id": "exp1157",
+      "duration_min": 20.0,
+      "first_seen_utc": "2026-05-02 12:26",
+      "last_seen_utc": "2026-05-02 12:46"
+    },
+    {
+      "rank": 5,
+      "id": "exp1158",
+      "duration_min": 15.0,
+      "first_seen_utc": "2026-05-02 13:26",
+      "last_seen_utc": "2026-05-02 13:41"
+    }
+  ],
+  "exp906_appeared_in_slowest5": false,
+  "arxiv_submission_status": "upload_pending",
+  "phase34_mandatory_tasks_complete": true,
+  "kv260_v6_kl_below_threshold": true,
+  "wall_time_minutes": 314.0,
+  "wall_time_baseline_minutes": 257.0,
+  "wall_time_improvement_vs_prior_minutes": -57.0,
+  "wall_time_delta_vs_prior_minutes": 57.0,
+  "retro_complete": true,
+  "honest_verdict": "12_of_13_criteria_met"
+}

@@ -1,0 +1,105 @@
+{
+  "experiment": "1151_milestone_retro_89",
+  "schema": "milestone_retro_v2",
+  "run_date": "2026-05-02T10:11:22Z",
+  "milestone": "2026.04.89",
+  "criteria_results": {
+    "arxiv_final_pdf_recompiled_and_upload_steps_provided": false,
+    "gate_prior_failures_audit_complete": true,
+    "slitherlink_cartridge_shipped": true,
+    "beaver_lite_certificate_deployed": true,
+    "halluguard_routing_feature_measured": true,
+    "cctu_micro_benchmark_adapter_complete": true,
+    "goodfire_cheap_tier_distillation_honest_result": true,
+    "grpo_reflection_reward_v3_honest_result": true,
+    "hardnet_projection_repair_honest_result": true,
+    "metacluster_sos_kan_compression_honest_result": true,
+    "kv260_v5_dc_continuous_kl_measured": true,
+    "extropic_integration_packet_shipped": true,
+    "retro_complete": true
+  },
+  "criteria_met": 12,
+  "criteria_total": 13,
+  "experiment_honest_verdicts": {
+    "exp1139": "blocked_gate_check_failed",
+    "exp1140": "prior_failures_gaps_found",
+    "exp1141": "e0_achieved",
+    "exp1142": "sound_bound_mock_logprobs",
+    "exp1143": "features_explain_goodfire_failures",
+    "exp1144": "carnot_positive_delta",
+    "exp1145": "cheap_tier_calibrated_tp_improved",
+    "exp1146": "positive_below_exp1129",
+    "exp1147": "projection_accurate_and_fast",
+    "exp1148": "compressed_within_02_auroc_5x_smaller",
+    "exp1149": "kl_unchanged_topology_wall",
+    "exp1150": "thrml_not_available_packet_written"
+  },
+  "notable_successes": [
+    "Slitherlink rescue shipped the carried .88 WOPR cartridge: canonical puzzle E=0.0, 5 tests passing, convergence in 1 iteration.",
+    "CCTU micro-benchmark ran 25/25 constrained tool-use tasks with live GPU unsloth/Qwen3.6-35B-A3B-GGUF: baseline 4% to Carnot-guided 12%.",
+    "Goodfire cheap-tier distillation lifted combined cheap-tier TP from 36.1% to 91.7% using entropy_proxy.",
+    "Projection repair was exact and fast: 100.0% accuracy at 117.3 us, 76130x faster than prompt repair.",
+    "MetaCluster SOS-KAN compression met both gates: 5.03x smaller, AUROC drop 0.0184, energy correlation 0.9966."
+  ],
+  "failures_or_partials": [
+    "arXiv close-out did not run: exp1139 was blocked at conductor_pre_gate with verdict blocked_gate_check_failed; arxiv_submission_status=not_run.",
+    "Roadmap gate audit was useful but late: exp1140 found 5 prior_failures gaps, including the exp1139 gap that had already blocked the release-critical arXiv task.",
+    "BEAVER-lite produced a sound bound, but only with mock logprobs: unsafe_mass_bound=0.400, empirical_violation_rate=0.400.",
+    "Goodfire cheap-tier TP improved, but the calibration is not production-ready: false_positive_rate_after=0.96.",
+    "GRPO reflection reward underperformed exp1129: improvement_over_baseline=2.86 pp, advantage_stdev=0.123, n_eval_questions=35/50.",
+    "KV260 v5 DC-continuous diagnostic was an honest negative: KL 0.4469 vs prior v4 0.1128; improvement -0.3341.",
+    "Extropic integration packet shipped without a live THRML benchmark because thrml_available=False."
+  ],
+  "bottlenecks_identified": [
+    "Run roadmap gate audits before activation and backfill prior_failures immediately: exp1139 was release-critical but blocked before the audit exposed the same missing field.",
+    "Tighten verifier calibration rather than only recall: Goodfire cheap-tier TP reached 91.7%, but 96% false positives mean the threshold move is not deployable.",
+    "Treat hardware sampling as a topology/access blocker: KV260 DC-continuous KL regressed and THRML/Z1 remained unavailable, so .90 needs correctness-first sequential Gibbs or real hardware access before more parameter sweeps."
+  ],
+  "slowest_experiments": [
+    {
+      "rank": 1,
+      "id": "exp1140",
+      "duration_min": 42.0,
+      "first_seen_utc": "2026-05-02 06:20",
+      "last_seen_utc": "2026-05-02 07:02"
+    },
+    {
+      "rank": 2,
+      "id": "exp1146",
+      "duration_min": 32.0,
+      "first_seen_utc": "2026-05-02 08:33",
+      "last_seen_utc": "2026-05-02 09:05"
+    },
+    {
+      "rank": 3,
+      "id": "exp1139",
+      "duration_min": 4.0,
+      "first_seen_utc": "2026-05-02 05:46",
+      "last_seen_utc": "2026-05-02 05:50"
+    },
+    {
+      "rank": 4,
+      "id": "exp1141",
+      "duration_min": 0.0,
+      "first_seen_utc": "2026-05-02 07:16",
+      "last_seen_utc": "2026-05-02 07:16"
+    },
+    {
+      "rank": 5,
+      "id": "exp1142",
+      "duration_min": 0.0,
+      "first_seen_utc": "2026-05-02 07:30",
+      "last_seen_utc": "2026-05-02 07:30"
+    }
+  ],
+  "exp906_appeared_in_slowest5": false,
+  "roadmap_gate_audit_caught_blocking_gaps": true,
+  "roadmap_gate_audit_gap_count": 5,
+  "arxiv_submission_status": "not_run",
+  "wall_time_minutes": 257.0,
+  "wall_time_baseline_minutes": 145.0,
+  "wall_time_improvement_vs_prior_minutes": -112.0,
+  "wall_time_improvement_vs_prior_pct": -77.2,
+  "retro_complete": true,
+  "honest_verdict": "12_of_13_criteria_met"
+}

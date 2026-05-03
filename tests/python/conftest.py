@@ -2,6 +2,7 @@
 
 import os
 import sys
+import warnings
 from pathlib import Path
 
 # Must be set before any JAX import to prevent CUDA backend probing.
@@ -12,6 +13,8 @@ os.environ.setdefault("JAX_PLATFORMS", "cpu")
 
 import jax
 import pytest
+
+from carnot.testing.pytest_memory_watchdog import MemoryLeakDetected, PytestMemoryWatchdog
 
 # Add repo root to sys.path so tests can import from scripts/
 repo_root = Path(__file__).parent.parent.parent
@@ -60,3 +63,34 @@ collect_ignore = [
     "test_experiment_1031_energy_ssd_v3.py",
     "test_experiment_1043_fover_expansion_v3.py",
 ]
+
+
+def _get_memory_watchdog(config) -> PytestMemoryWatchdog:
+    watchdog = getattr(config, "_carnot_memory_watchdog", None)
+    if watchdog is None:
+        watchdog = PytestMemoryWatchdog()
+        config._carnot_memory_watchdog = watchdog
+    return watchdog
+
+
+def pytest_configure(config) -> None:
+    config._carnot_memory_watchdog = PytestMemoryWatchdog()
+
+
+@pytest.hookimpl(tryfirst=True)
+def pytest_runtest_setup(item) -> None:
+    _get_memory_watchdog(item.config).record_setup(item)
+
+
+@pytest.hookimpl(trylast=True)
+def pytest_runtest_teardown(item, nextitem) -> None:
+    try:
+        _get_memory_watchdog(item.config).record_teardown(item)
+    except MemoryLeakDetected as exc:
+        pytest.fail(str(exc), pytrace=False)
+
+
+def pytest_sessionfinish(session, exitstatus) -> None:
+    report = _get_memory_watchdog(session.config).finish_session(Path(session.config.rootpath))
+    if report is not None:
+        warnings.warn(pytest.PytestWarning(report.warning), stacklevel=2)

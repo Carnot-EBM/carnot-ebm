@@ -1,0 +1,53 @@
+{
+  "experiment": 1174,
+  "schema": "bika_sos_kan_hardware_analysis_v1",
+  "run_date": "2026-05-02T20:30:29Z",
+  "duration_s": 0.00023,
+  "status": "success",
+  "title": "BiKA SOS-KAN Hardware Analysis",
+  "sos_kan_spline_control_points_per_dimension": 8,
+  "sos_kan_rank": 4,
+  "sos_kan_n_features": 3,
+  "sos_kan_hidden_dim": 16,
+  "sos_kan_linear_layers": [
+    {
+      "in_features": 3,
+      "out_features": 16
+    },
+    {
+      "in_features": 16,
+      "out_features": 96
+    }
+  ],
+  "standard_kan_rm": 2547,
+  "standard_kan_bop": 81504,
+  "standard_kan_nabs": 2352,
+  "standard_estimated_lut_count": 27822,
+  "compressed_kan_rm": 1523,
+  "compressed_kan_bop": 48736,
+  "compressed_kan_nabs": 1328,
+  "compressed_estimated_lut_count": 16558,
+  "bika_kan_rm": 0,
+  "bika_kan_bop": 40752,
+  "bika_kan_nabs": 4899,
+  "bika_estimated_lut_count": 16795,
+  "bika_resource_reduction_pct": 39.634,
+  "npu_feasibility_verdict": "npu_feasible",
+  "estimated_npu_inference_us": 0.004899,
+  "bika_hardware_analysis_complete": true,
+  "honest_verdict": "bika_feasible_for_npu",
+  "metacluster_size_reduction_factor": 5.026627,
+  "metacluster_n_centroids": 32,
+  "kanele_rm_per_inference": 24,
+  "kanele_nabs_per_inference": 75,
+  "xdna_int8_tops_assumption": 1.0,
+  "precision_bits": 8,
+  "spec": [
+    "REQ-KAN-1174",
+    "SCENARIO-KAN-1174"
+  ],
+  "notes": [
+    "BiKA metrics are complexity estimates only; no accuracy benchmark was run.",
+    "MetaCluster RM assumes W2 centroid dot-products can be reused in hardware."
+  ]
+}

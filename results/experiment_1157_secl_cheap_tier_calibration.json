@@ -1,0 +1,66 @@
+{
+  "cheap_tier_fpr_below_30pct": true,
+  "cheap_tier_tp_above_80pct": true,
+  "class_weight_correct": 1.0,
+  "class_weight_failure": 0.37499999999999994,
+  "discriminative_signal_used": true,
+  "duration_s": 0.22,
+  "exp1145_thresholds": {
+    "semenergy": {
+      "adjusted": false,
+      "applied": -0.5,
+      "default": -0.5
+    },
+    "thinkprm": {
+      "adjusted": true,
+      "applied": 0.0,
+      "default": 0.372
+    }
+  },
+  "experiment": 1157,
+  "feature_names": [
+    "cheap_tier_score",
+    "discriminative_signal"
+  ],
+  "fpr_budget": 0.3,
+  "honest_verdict": "calibrated_tp_above_80_fpr_below_30",
+  "n_correct_examples": 200,
+  "n_exemplars": 36,
+  "n_flagged_correct": 42,
+  "n_flagged_failures": 33,
+  "note": "Exp1157 adds a SECL-style discriminative calibration probe to avoid Exp1145's recall-only threshold that produced a 0.96 false-positive rate.",
+  "operating_threshold": 0.02583091,
+  "precision_recall_improved": true,
+  "probe": {
+    "class_weights": {
+      "0": 1.0,
+      "1": 0.37499999999999994
+    },
+    "coefficients": [
+      -2.6208906,
+      -0.47944728
+    ],
+    "feature_mean": [
+      0.22241429,
+      0.61198033
+    ],
+    "feature_scale": [
+      0.31362473,
+      0.06254738
+    ],
+    "intercept": -4.84713051,
+    "operating_threshold": 0.02583091
+  },
+  "run_date": "2026-05-02",
+  "schema": "secl_cheap_tier_calibration_v1",
+  "secl_fpr": 0.21,
+  "secl_tp_rate": 0.916667,
+  "semenergy_default_threshold_exp1145": -0.5,
+  "semenergy_threshold_after_exp1145": -0.5,
+  "started_at": "2026-05-02T12:35:47.230113+00:00",
+  "thinkprm_default_threshold_exp1145": 0.372,
+  "thinkprm_fpr_exp1145": 0.96,
+  "thinkprm_threshold_after_exp1145": 0.0,
+  "thinkprm_tp_exp1145": 0.917,
+  "tp_target": 0.8
+}

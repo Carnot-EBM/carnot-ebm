@@ -1,0 +1,114 @@
+{
+  "algorithm": "dc_continuous_relaxation",
+  "best_alpha": 0.01,
+  "duration_s": 2.567,
+  "energy_at_convergence": -5.770515344226219,
+  "energy_time_accuracy_reported": true,
+  "experiment": 1149,
+  "final_accuracy": 86.62109375,
+  "honest_verdict": "kl_unchanged_topology_wall",
+  "j_matrix_source": "exp1134 artifact did not persist raw matrices; exp1149 uses three deterministic signed weighted K=2 ring matrices generated from seeds 1134, 1135, 1136.",
+  "k_neighbors_small_n": 2,
+  "kl_improvement_over_v4": -0.33410326159023657,
+  "kl_threshold": 0.05,
+  "kl_v4_best_prior": 0.1128,
+  "kl_v4_sparse_measured_mean": 2.449954168945349,
+  "kl_v4_with_self_adaptive_prior": 31.893,
+  "kl_v5_below_threshold": false,
+  "kl_v5_best": 0.4469032615902366,
+  "kv260_v5_diagnostic_complete": true,
+  "kv260_v5_kl_below_threshold": false,
+  "n_j_matrices_tested": 3,
+  "n_spins": 8,
+  "per_alpha_summary": [
+    {
+      "alpha": 0.01,
+      "mean_energy_at_convergence": -5.770515344226219,
+      "mean_final_accuracy": 86.62109375,
+      "mean_kl_v5": 0.4469032615902366
+    },
+    {
+      "alpha": 0.02,
+      "mean_energy_at_convergence": -5.879221984550064,
+      "mean_final_accuracy": 87.06868489583333,
+      "mean_kl_v5": 0.4719831261836252
+    },
+    {
+      "alpha": 0.05,
+      "mean_energy_at_convergence": -5.954317349164868,
+      "mean_final_accuracy": 87.28230794270833,
+      "mean_kl_v5": 0.6225250273752444
+    },
+    {
+      "alpha": 0.1,
+      "mean_energy_at_convergence": -5.991209788284494,
+      "mean_final_accuracy": 87.310791015625,
+      "mean_kl_v5": 0.8881551487508937
+    }
+  ],
+  "per_matrix_v4_sparse": [
+    {
+      "burn_in_sweeps": 250,
+      "kl_v4_sparse_vs_cpu_gibbs": 2.748900356818552,
+      "matrix_id": "exp1134_seeded_j0",
+      "n_record": 4096,
+      "wall_clock_s": 0.043493
+    },
+    {
+      "burn_in_sweeps": 250,
+      "kl_v4_sparse_vs_cpu_gibbs": 2.0109992914109567,
+      "matrix_id": "exp1134_seeded_j1",
+      "n_record": 4096,
+      "wall_clock_s": 0.041451
+    },
+    {
+      "burn_in_sweeps": 250,
+      "kl_v4_sparse_vs_cpu_gibbs": 2.589962858606538,
+      "matrix_id": "exp1134_seeded_j2",
+      "n_record": 4096,
+      "wall_clock_s": 0.043212
+    }
+  ],
+  "per_matrix_v5": [
+    {
+      "alpha": 0.01,
+      "convergence_fraction": 0.0546875,
+      "energy_at_convergence": -5.5938869449586,
+      "final_accuracy": 86.529541015625,
+      "iterations_mean": 296.094482421875,
+      "kl_v5_vs_cpu_gibbs": 0.41617487236021955,
+      "matrix_id": "exp1134_seeded_j0",
+      "n_restarts": 4096,
+      "wall_clock_s": 0.153899
+    },
+    {
+      "alpha": 0.01,
+      "convergence_fraction": 0.016845703125,
+      "energy_at_convergence": -5.909731392224524,
+      "final_accuracy": 86.676025390625,
+      "iterations_mean": 298.732177734375,
+      "kl_v5_vs_cpu_gibbs": 0.48771411698484585,
+      "matrix_id": "exp1134_seeded_j1",
+      "n_restarts": 4096,
+      "wall_clock_s": 0.153867
+    },
+    {
+      "alpha": 0.01,
+      "convergence_fraction": 0.034912109375,
+      "energy_at_convergence": -5.807927695495532,
+      "final_accuracy": 86.65771484375,
+      "iterations_mean": 297.90771484375,
+      "kl_v5_vs_cpu_gibbs": 0.43682079542564434,
+      "matrix_id": "exp1134_seeded_j2",
+      "n_restarts": 4096,
+      "wall_clock_s": 0.152063
+    }
+  ],
+  "rtl_recommendation": "Keep v5 in software research; use sequential Gibbs for KL-correct RTL until a DC-continuous design includes a Boltzmann-correct stochastic correction layer.",
+  "run_date": "2026-05-02T09:46:29Z",
+  "schema": "kv260_v5_dc_continuous_diagnostic_v1",
+  "title": "KV260 Ising v5 \u2014 DC-Continuous Relaxation Diagnostic (Software Parity)",
+  "v4_spec_path": "hardware/kv260/ising_sampler_v4_spec.md",
+  "v4_spec_topology": "KV260 v4 target N=128, K=16; exp1134 parity used N=8, K=2",
+  "wall_clock_s": 0.459829
+}

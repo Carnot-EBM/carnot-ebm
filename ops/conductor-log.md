@@ -326,3 +326,90 @@ If you finish the real work |
 | 2026-05-02 07:46 UTC | HalluGuard NTK Cascade Router v3 — Data-vs-Reasoni | OK | 81 passed, 1 warning in 5.23s |
 | 2026-05-02 08:05 UTC | CCTU 25-Task Micro-Benchmark Adapter — Constrained | OK | 81 passed, 1 warning in 6.40s |
 | 2026-05-02 08:19 UTC | Goodfire Cheap-Tier Calibration — Distill k=5 Sign | OK | 81 passed, 1 warning in 4.85s |
+| 2026-05-02 08:33 UTC | GRPO Reflection Reward v3 — Energy-Delta Repair Si | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1146_grpo_re |
+| 2026-05-02 08:43 UTC | GRPO Reflection Reward v3 — Energy-Delta Repair Si | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1146_grpo_re |
+| 2026-05-02 09:05 UTC | GRPO Reflection Reward v3 — Energy-Delta Repair Si | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1146_grpo_re |
+| 2026-05-02 09:16 UTC | HardNet++-Style Projection Repair Layer for Arithm | OK | 89 passed, 1 warning in 6.26s |
+| 2026-05-02 09:32 UTC | MetaCluster SOS-KAN Compression — 5x Checkpoint Sh | OK | 118 passed, 1 warning in 8.47s |
+| 2026-05-02 09:49 UTC | KV260 Ising v5 — DC-Continuous Relaxation Diagnost | OK | 130 passed, 1 warning in 7.29s |
+| 2026-05-02 10:01 UTC | Extropic Z1/XTR-0 Integration Packet — THRML Parit | OK | 161 passed, 1 warning in 9.61s |
+| 2026-05-02 10:14 UTC | Milestone 2026.04.89 Retrospective | OK | 172 passed, 1 warning in 11.03s |
+| 2026-05-02 10:47 UTC | Plan milestone 2026.04.90 | OK | 13 tasks proposed |
+| 2026-05-02 10:50 UTC | Milestone 2026.04.90 activated | OK | 13 tasks queued |
+| 2026-05-02 10:59 UTC | Gate Audit Pre-Activation v2 — Runs First, Fixes P | OK | 178 passed, 1 warning in 11.04s |
+| 2026-05-02 11:10 UTC | arXiv Final Submission v4 — Recompile PDF, Bundle, | OK | 181 passed, 1 warning in 11.61s |
+| 2026-05-02 11:21 UTC | Phase 3/4 Snap Validity Sweep — 10k DBAE-EBM State | OK | 184 passed, 1 warning in 10.53s |
+| 2026-05-02 11:36 UTC | Phase 3/4 HMC Compatibility Diagnostics D1-D4 — k= | OK | 206 passed, 1 warning in 12.68s |
+| 2026-05-02 11:52 UTC | Phase 3/4 HMC Sampler Conditional — Implement Regi | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1156_hmc_sam |
+| 2026-05-02 11:59 UTC | Phase 3/4 HMC Sampler Conditional — Implement Regi | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1156_hmc_sam |
+| 2026-05-02 12:12 UTC | Phase 3/4 HMC Sampler Conditional — Implement Regi | FAIL | Codex CLI error: Stalled after 180s silence. Last output: failing test detail |
+| 2026-05-02 12:26 UTC | SECL-Guided Cheap-Tier Calibration — Fix FPR=0.96  | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1157_secl_ch |
+| 2026-05-02 12:32 UTC | SECL-Guided Cheap-Tier Calibration — Fix FPR=0.96  | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1157_secl_ch |
+| 2026-05-02 12:38 UTC | SECL-Guided Cheap-Tier Calibration — Fix FPR=0.96  | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1157_secl_ch |
+| 2026-05-02 12:46 UTC | Phase 3/4 HMC Sampler Conditional — Implement Regi | OK | Deliverable already exists in repo |
+| 2026-05-02 12:46 UTC | SECL-Guided Cheap-Tier Calibration — Fix FPR=0.96 | OK | Deliverable already exists in repo |
+| 2026-05-02 13:26 UTC | BEAVER-lite with Real llama.cpp Logprobs — Live Pr | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-02 13:34 UTC | BEAVER-lite with Real llama.cpp Logprobs — Live Pr | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-02 13:39 UTC | BEAVER-lite with Real llama.cpp Logprobs — Live Pr | FAIL | Codex CLI error: [Errno 122] Disk quota exceeded |
+| 2026-05-02 13:41 UTC | BEAVER-lite with Real llama.cpp Logprobs — Live Pr | OK | Deliverable already exists in repo |
+| 2026-05-02 14:14 UTC | GRPO Reflection Reward v4 — Structural Warm-up Pha | OK | 250 passed, 1 warning in 15.35s |
+| 2026-05-02 14:29 UTC | MARCH Multi-Agent Information-Asymmetric Claim-Che | OK | 266 passed, 1 warning in 9.61s |
+| 2026-05-02 14:41 UTC | KV260 v6 Sequential Gibbs Correctness Pivot — Deta | OK | 278 passed, 1 warning in 14.27s |
+| 2026-05-02 14:43 UTC | KANELE SOS-KAN FPGA Blueprint — LUT Specification  | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-02 14:45 UTC | KANELE SOS-KAN FPGA Blueprint — LUT Specification  | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-02 14:47 UTC | KANELE SOS-KAN FPGA Blueprint — LUT Specification  | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-02 14:51 UTC | KANELE SOS-KAN FPGA Blueprint — LUT Specification  | OK | Outer-loop recovery: prior_failures field added to research-roadmap.yaml (exp1072 + exp1148, both successful upstreams misclassified as failures by ledger token-match); fail-count reset; task ready to launch |
+| 2026-05-02 14:58 UTC | NRGPT Energy-Native LLM Prototype — Phase 3 Archit | FAIL | Codex CLI error: Stalled after 180s silence. Last output: refore correct arit |
+| 2026-05-02 15:28 UTC | KANELE SOS-KAN FPGA Blueprint — LUT Specification  | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-02 15:37 UTC | KANELE SOS-KAN FPGA Blueprint — LUT Specification  | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-02 15:50 UTC | KANELE SOS-KAN FPGA Blueprint — LUT Specification  | OK | 291 passed, 1 warning in 9.92s |
+| 2026-05-02 16:04 UTC | NRGPT Energy-Native LLM Prototype — Phase 3 Archit | OK | 301 passed, 1 warning in 17.03s |
+| 2026-05-02 16:18 UTC | Milestone 2026.04.90 Retrospective | OK | 311 passed, 1 warning in 16.00s |
+| 2026-05-02 16:53 UTC | Plan milestone 2026.04.91 | OK | 13 tasks proposed |
+| 2026-05-02 16:55 UTC | Milestone 2026.04.91 activated | OK | 13 tasks queued |
+| 2026-05-02 17:14 UTC | Phase 4 Active Inference ARC-AGI-3 Pilot v1 — Bloc | OK | 317 passed, 1 warning in 17.07s |
+| 2026-05-02 17:25 UTC | ARC-AGI-3 Leaderboard Comparison + Themesis Collab | OK | 324 passed, 1 warning in 15.29s |
+| 2026-05-02 17:37 UTC | Position Paper v4 — Phase 4 Active Inference Secti | OK | 331 passed, 1 warning in 16.39s |
+| 2026-05-02 17:56 UTC | SC-Energy 7th Verifier — Set-Consistency Energy Ne | OK | 334 passed, 1 warning in 15.76s |
+| 2026-05-02 17:58 UTC | FoVer SOTA Domain Expansion v6 — 500+ Labeled Pair | DOOMED_RERUN_BLOCK | 6 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-02 18:00 UTC | FoVer SOTA Domain Expansion v6 — 500+ Labeled Pair | DOOMED_RERUN_BLOCK | 6 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-02 18:02 UTC | FoVer SOTA Domain Expansion v6 — 500+ Labeled Pair | DOOMED_RERUN_BLOCK | 6 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-02 18:04 UTC | FoVer SOTA Domain Expansion v6 — 500+ Labeled Pair | OK | Outer-loop recovery: prior_failures field added to research-roadmap.yaml (6 priors documented: exp1119/1055/1043/1029/1016/542 — mix of partial successes and synthetic fallbacks, each addressed by different upstream improvements); fail-count reset; task ready to launch |
+| 2026-05-02 18:36 UTC | FoVer SOTA Domain Expansion v6 — 500+ Labeled Pair | OK | 362 passed, 1 warning in 17.73s |
+| 2026-05-02 18:53 UTC | BEAVER Live Logprobs v2 — Real Per-Token Probabili | OK | 362 passed, 1 warning in 16.86s |
+| 2026-05-02 19:08 UTC | Diffusion of Thought Inference Mode v1 — Energy-Gu | OK | 366 passed, 1 warning in 13.15s |
+| 2026-05-02 19:10 UTC | NRGPT Per-Token Energy Inference — Token-Level Ene | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-02 19:12 UTC | NRGPT Per-Token Energy Inference — Token-Level Ene | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-02 19:14 UTC | NRGPT Per-Token Energy Inference — Token-Level Ene | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-02 19:19 UTC | NRGPT Per-Token Energy Inference — Token-Level Ene | OK | Outer-loop recovery: prior_failures field added (exp1163 NRGPT batch-level prototype + exp573 RAPL — neither is a true failure for token-level NRGPT scope); fail-count reset; task ready to launch |
+| 2026-05-02 19:34 UTC | GRPO v5 + TinyV False-Negative Correction — Energy | FAIL | Codex CLI error: artifact["dualgpu_confirmed"] is False
++    assert artifact[ |
+| 2026-05-02 19:47 UTC | NRGPT Per-Token Energy Inference — Token-Level Ene | OK | 380 passed, 1 warning in 11.06s |
+| 2026-05-02 19:59 UTC | GRPO v5 + TinyV False-Negative Correction — Energy | FAIL | Codex CLI error: Stalled after 180s silence. Last output: 60894' in /home/ian |
+| 2026-05-02 20:12 UTC | GRPO v5 + TinyV False-Negative Correction — Energy | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1173_grpo_v5 |
+| 2026-05-02 20:14 UTC | BiKA Multiply-Free KAN Hardware Analysis — RM/BOP/ | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-02 20:17 UTC | BiKA Multiply-Free KAN Hardware Analysis — RM/BOP/ | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-02 20:19 UTC | BiKA Multiply-Free KAN Hardware Analysis — RM/BOP/ | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-02 20:19 UTC | BiKA Multiply-Free KAN Hardware Analysis — RM/BOP/ | OK | Outer-loop recovery: prior_failures field added (exp866 kan_over_budget — addressed by BiKA's multiply-free architecture, fundamentally different input class); fail-count reset; task ready to launch |
+| 2026-05-02 20:33 UTC | BiKA Multiply-Free KAN Hardware Analysis — RM/BOP/ | OK | 386 passed, 1 warning in 17.55s |
+| 2026-05-02 20:35 UTC | WOPR Connect Four Cartridge — Ising Ground-State f | DOOMED_RERUN_BLOCK | 6 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-02 20:38 UTC | WOPR Connect Four Cartridge — Ising Ground-State f | DOOMED_RERUN_BLOCK | 6 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-02 20:40 UTC | WOPR Connect Four Cartridge — Ising Ground-State f | DOOMED_RERUN_BLOCK | 6 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-02 20:49 UTC | WOPR Connect Four Cartridge — Ising Ground-State f | OK | Outer-loop recovery: prior_failures field added (6 priors documented: 4 successful WOPR cartridges + 2 prior gate-blocker resolutions); fail-count reset; task ready to launch |
+| 2026-05-02 20:56 UTC | k=6 AND-Compose Validation — SC-Energy 7th Verifie | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1176_k6_and_ |
+| 2026-05-02 21:19 UTC | WOPR Connect Four Cartridge — Ising Ground-State f | FAIL | Codex CLI error: ards map +1 to RED and generated boards fill."""
++    spin_b |
+| 2026-05-02 21:26 UTC | WOPR Connect Four Cartridge — Ising Ground-State f | OK | cache hit: 422 passed, 1 warning in 11.54s |
+| 2026-05-02 21:34 UTC | k=6 AND-Compose Validation — SC-Energy 7th Verifie | FAIL | Codex CLI error:  configured xdist and coverage settings. It discovered 21,20 |
+| 2026-05-02 21:40 UTC | k=6 AND-Compose Validation — SC-Energy 7th Verifie | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1176_k6_and_ |
+| 2026-05-02 21:49 UTC | Milestone 2026.04.91 Retrospective — Evaluate All  | OK | 422 passed, 1 warning in 21.04s |
+| 2026-05-02 22:25 UTC | Plan milestone 2026.04.92 | OK | 13 tasks proposed |
+| 2026-05-02 22:27 UTC | Milestone 2026.04.92 activated | OK | 13 tasks queued |
+| 2026-05-02 22:40 UTC | Pytest Memory Watchdog — Per-Test RSS Monitoring + | OK | 427 passed, 1 warning in 10.89s |
+| 2026-05-02 22:49 UTC | llama.cpp GPU Offload Fix — Rebuild with LLAMA_CUD | SKIP | Pre-tests failing, self-heal failed: E        +  where 0 = CompletedProcess(args |
+| 2026-05-02 23:31 UTC | llama.cpp GPU Offload Fix — Rebuild with LLAMA_CUD | SKIP | Pre-tests failing, self-heal failed: E        +  where 0 = CompletedProcess(args |
+| 2026-05-02 23:49 UTC | llama.cpp GPU Offload Fix — Rebuild with LLAMA_CUD | SKIP | Pre-tests failing, self-heal failed: E        +  where 0 = CompletedProcess(args |
+| 2026-05-03 00:31 UTC | Paper v5 Integrity — Critical ISSUE-1 to ISSUE-5 + | SKIP | Pre-tests failing, self-heal failed: E        +  where 0 = CompletedProcess(args |
+| 2026-05-03 01:13 UTC | Paper v5 Integrity — Critical ISSUE-1 to ISSUE-5 + | SKIP | Pre-tests failing, self-heal failed: E        +  where 0 = CompletedProcess(args |
+| 2026-05-03 01:19 UTC | Paper v5 Integrity — Critical ISSUE-1 to ISSUE-5 + | SKIP | Pre-tests failing, self-heal failed: E        +  where 0 = CompletedProcess(args |
+| 2026-05-03 01:43 UTC | Paper v5 Integrity — High-Severity ISSUE-6 to ISSU | SKIP | Pre-tests failing, self-heal failed: E        +  where 0 = CompletedProcess(args |

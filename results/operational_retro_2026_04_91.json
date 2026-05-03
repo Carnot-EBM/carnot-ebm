@@ -1,0 +1,148 @@
+{
+  "experiment": "operational-retro-2026-04-91",
+  "title": "Milestone 2026.04.91 - Operational Efficiency Retrospective",
+  "milestone": "2026.04.91",
+  "run_date": "2026-05-02",
+  "schema": "carnot.operational_retro.v65",
+  "retro_type": "operational_efficiency",
+  "total_wall_time_minutes": 495,
+  "experiments_completed": 113,
+  "reported_avg_experiment_min": 4,
+  "avg_experiment_min": 4.38,
+  "prior_milestone": "2026.04.90",
+  "prior_wall_time_minutes": 586,
+  "delta_minutes": -91,
+  "delta_pct": -15.5,
+  "source_notes": [
+    "Uses the provided milestone timing data as authoritative: 495 minutes, 113 completed experiments, reported average approximately 4 minutes per experiment.",
+    "The arithmetic average is 495 / 113 = 4.38 minutes per experiment; the provided '4 minutes' figure is treated as rounded operational shorthand.",
+    "ops/changelog.md records the active .91 experiment range as exp1165-exp1177 and the research milestone result as 11 of 13 criteria met.",
+    "results/experiment_1177_milestone_retro_91.json is research-focused and records two missed criteria: paper_v4_phase4_section_integrated=false and grpo_v5_honest_result=false. This artifact focuses on execution efficiency rather than research merit.",
+    "GPU close state was provided as a gpu_monitor.py report at 2026-05-02T22:01:53.785811+00:00: both RTX 3090s idle, 4 MB allocated each, 0% utilization, no process list, and three underutilization suggestions."
+  ],
+  "slowest_experiments": [
+    {
+      "rank": 1,
+      "id": "exp906",
+      "duration_min": 35,
+      "title": "Code Repair 50q Scale-Up - IterativeSelfRepair with Gemma4",
+      "why_slow": "Recurring full-queue carryover benchmark. The underlying workload is inherently expensive because it runs sequential execute-feedback-retry loops across 50 code-repair questions with a large model, but the operational problem is that this retired/carryover item still reaches dispatch. A dispatch-time retirement guard would remove the entire 35-minute recurrence."
+    },
+    {
+      "rank": 2,
+      "id": "exp950_docs",
+      "duration_min": 28,
+      "title": "In-process docs for Exp 950: E-MVL Sparsified Ising - Sparse Connectivity for KV260 RTL Optimization",
+      "why_slow": "Inline documentation reconciliation blocked the executor. This pass has no dependency that requires occupying the experiment execution lane; it should be batched as an asynchronous milestone-close reconciliation task."
+    },
+    {
+      "rank": 3,
+      "id": "exp948",
+      "duration_min": 24,
+      "title": "Symbolic-KAN Real FoVer Data - AUC=0.9344 Architecture",
+      "why_slow": "CPU-bound full-corpus FoVer architecture sweep. For exploratory/non-certification comparisons, the run should use a bounded fast-eval sample and reserve full-corpus sweeps for final certification artifacts."
+    },
+    {
+      "rank": 4,
+      "id": "exp930",
+      "duration_min": 19,
+      "title": "Math Iterative Self-Repair v1 - Execute-Feedback on GSM8K",
+      "why_slow": "Sequential repair loop with per-question feedback and limited batching. Stable benchmark fixtures should cache unchanged baseline outputs, batch model calls, and rerun only components changed by the current milestone."
+    },
+    {
+      "rank": 5,
+      "id": "exp905",
+      "duration_min": 17,
+      "title": "IterativeSelfRepair v1 - Execute-Feedback-Retry on HumanEval",
+      "why_slow": "Same fixture pattern as exp930: repeated serial execute-feedback-retry work where cached outputs, early-stop rules, and batched GPU execution would reduce wall time without changing the benchmark's purpose."
+    }
+  ],
+  "bottlenecks_identified": [
+    "Frozen slowest-five composition persisted into .91: exp906, exp950 docs, exp948, exp930, and exp905 remain the top wall-time consumers. The milestone improved overall wall time, but the improvement was mostly volume-driven rather than evidence that these bottlenecks were fixed.",
+    "Dispatch-time retirement/carryover enforcement is still incomplete. exp906 consumed 35 minutes again despite being a recurring retired/carryover slow-path item from prior retros.",
+    "Documentation reconciliation is still inline. The 28-minute exp950 docs pass directly blocked the execution queue and is the clearest non-research bottleneck.",
+    "Full-corpus CPU sweeps are still used for exploratory work. exp948 consumed 24 minutes where a fast-eval sample would likely have been sufficient until final certification.",
+    "Benchmark fixtures are still rerun serially. exp930 and exp905 consumed 36 combined minutes and should use cached baselines, delta evaluation, batching, and early-stop rules.",
+    "GPU utilization was inefficient at milestone close. Both RTX 3090s were idle at 0% utilization with only 4 MB allocated each. The gpu_monitor.py suggestions explicitly recommended DualGPURunner with Qwen on GPU 0 and Gemma on GPU 1.",
+    "No GPU zombie processes were detected from the provided monitor report. The 4 MB allocations are below gpu_monitor.py's zombie threshold of at least 1024 MB for more than 10 idle minutes and look like driver residual allocations rather than resource leaks.",
+    "GRPO v5 exposed a GPU-offload infrastructure gap rather than a research bottleneck: exp1173 hit the training wall with dualgpu_confirmed=false because the llama.cpp runtime lacked GPU offload support. That should be caught before dispatch for DualGPU-mandatory work.",
+    "Pre-flight testing was not the primary .91 bottleneck. No pre-flight suite item appears in the slowest-five timing list. The remaining gate/runtime failures were more specific: publication figure/hardware-claim audit readiness and llama.cpp GPU-offload availability.",
+    "Several .91 experiments were independent after exp1168/exp1169 and could have run concurrently with doc reconciliation or stable benchmark fixture reruns. GPU-eligible model work should also default to dual-GPU parallel execution instead of occupying one sequential lane."
+  ],
+  "questions_answered": {
+    "which_experiments_took_longest_and_why": "The slowest five were exp906 at 35 minutes, exp950 in-process docs at 28 minutes, exp948 at 24 minutes, exp930 at 19 minutes, and exp905 at 17 minutes. The reasons were recurring dispatch of retired/carryover benchmarks, inline doc reconciliation, full-corpus CPU sweeps, and serial repair fixture execution.",
+    "was_gpu_utilization_efficient": "No. Both RTX 3090s were idle at close: 4/24576 MB on each GPU, 0% utilization, 53-54C. The monitor recommended DualGPURunner for simultaneous Qwen/Gemma execution.",
+    "were_there_zombie_processes": "No zombies were evident in the provided report. gpu_monitor.py defines zombies as processes using at least 1024 MB VRAM, idle for more than 10 minutes, with CPU/wall ratio below 1%. The report only showed 4 MB allocated per GPU and no process list.",
+    "could_any_experiments_have_been_parallelized": "Yes. Inline docs could run asynchronously, exp905/exp930 benchmark fixtures could run in parallel with CPU doc/spec work, and GPU-eligible model jobs should default to DualGPURunner. Independent Phase 2/3 tasks after the SC-Energy/FoVer gate could also run in separate lanes.",
+    "was_the_preflight_test_suite_a_bottleneck": "Not materially in .91. It was not in the slowest-five list. The dominant pre-dispatch issues were absent runtime capabilities and publication-audit readiness, not a large pre-flight test-suite wall.",
+    "were_doc_reconciliation_passes_efficient": "No. exp950's 28-minute in-process doc pass was the second-slowest item and should be an asynchronous milestone-close batch.",
+    "what_tooling_infrastructure_changes_would_speed_next_milestone": "Prioritize dispatch-time retirement guard, async doc reconciliation, CARNOT_FAST_EVAL for exploratory sweeps, cached/delta benchmark fixture evaluation, DualGPURunner as the default GPU policy, and a pre-dispatch GPU-offload probe for llama.cpp/DualGPU-mandatory experiments."
+  },
+  "improvements_suggested": [
+    "Add a dispatch-time retirement guard that checks the exclusion manifest immediately before worker spawn and emits a skipped/blocked artifact without launching the experiment. Include exp906 as a regression test case.",
+    "Move doc reconciliation out of the main experiment lane. Batch ops/spec/changelog/docs reconciliation as a single asynchronous milestone-close task and fail the milestone only on reconciliation errors, not while blocking active experiments.",
+    "Implement CARNOT_FAST_EVAL=1 for exploratory FoVer/Symbolic-KAN sweeps. Default to a bounded 500-pair or stratified sample unless the task is explicitly marked certification/full-corpus.",
+    "Cache stable benchmark fixture outputs for exp905/exp930-style repair loops. Recompute only changed repair/verifier logic and batch model calls across questions where possible.",
+    "Make DualGPURunner the default for requires_gpu experiments. Assign Qwen-class and Gemma-class workloads to separate RTX 3090s unless a task opts out with a reason.",
+    "Add a pre-dispatch GPU-offload capability probe for llama.cpp and other local inference backends. DualGPU-mandatory experiments should not launch until GPU offload is verified.",
+    "Split milestone execution lanes into CPU-doc, CPU-eval, GPU-model, and gated-publication queues. This would let doc reconciliation and stable CPU sweeps proceed without holding GPU-critical work.",
+    "Make the pre-flight suite report both duration and blocking reason per check. .91 was not pre-flight-bound, but richer timing would prevent future bottleneck attribution from relying on operator inference.",
+    "Record per-experiment start/end timestamps and GPU occupancy in ops/metrics.md automatically so operational retros do not need to infer efficiency from slowest-five excerpts and close-state snapshots."
+  ],
+  "estimated_time_savings_pct": 22,
+  "estimated_savings_breakdown_min": {
+    "dispatch_time_retirement_guard_exp906": 35,
+    "async_doc_reconciliation_exp950": 28,
+    "fast_eval_for_exp948_class_sweeps": 15,
+    "cached_batched_repair_fixtures_exp930_exp905": 18,
+    "dualgpu_default_for_gpu_eligible_work": 15,
+    "gpu_offload_preflight_for_grpo_class_tasks": 10,
+    "gross_recoverable_minutes": 121,
+    "pct_of_495_min_wall_time": 24.4,
+    "conservative_estimated_savings_pct": 22,
+    "note": "The headline estimate is conservative because some savings overlap when queues run in parallel."
+  },
+  "gpu_state_at_close": {
+    "timestamp_utc": "2026-05-02T22:01:53.785811+00:00",
+    "gpu0_model": "NVIDIA GeForce RTX 3090",
+    "gpu0_vram_used_mb": 4,
+    "gpu0_vram_total_mb": 24576,
+    "gpu0_util_pct": 0,
+    "gpu0_temp_c": 53,
+    "gpu1_model": "NVIDIA GeForce RTX 3090",
+    "gpu1_vram_used_mb": 4,
+    "gpu1_vram_total_mb": 24576,
+    "gpu1_util_pct": 0,
+    "gpu1_temp_c": 54,
+    "zombies_detected": 0,
+    "gpu_close_clean": true,
+    "operational_verdict": "clean_but_underutilized"
+  },
+  "wall_time_trend": {
+    "milestone_2026_04_88_minutes": 794,
+    "milestone_2026_04_89_minutes": 692,
+    "milestone_2026_04_90_minutes": 586,
+    "milestone_2026_04_91_minutes": 495,
+    "delta_vs_90_minutes": -91,
+    "delta_vs_90_pct": -15.5,
+    "baseline_2026_04_58_minutes": 3415,
+    "pct_below_baseline": 85.5,
+    "trend_note": "495 minutes is another project-best wall time, but the slowest-five freeze shows the system is still carrying avoidable recurring overhead."
+  },
+  "research_context_not_primary_scope": {
+    "criteria_met": 11,
+    "criteria_total": 13,
+    "missed_criteria": [
+      "paper_v4_phase4_section_integrated",
+      "grpo_v5_honest_result"
+    ],
+    "notable_results_for_roadmap_context": [
+      "Phase 4 ARC-AGI-3 active inference pilot operational and better than baseline.",
+      "BEAVER live logprobs used real probabilities and produced a sound bound.",
+      "NRGPT per-token energy improved AUROC over the batch baseline.",
+      "BiKA analysis found NPU feasibility and Connect Four WOPR cartridge shipped with E=0 at convergence.",
+      "k=6 AND-compose was measured but did not improve over k=5."
+    ]
+  },
+  "honest_verdict": "495min_113_experiments_avg_4pt38min_15pt5pct_faster_than_90_new_project_best_frozen_slowest5_persists_exp906_35min_exp950_docs_28min_exp948_24min_exp930_19min_exp905_17min_gpus_idle_no_zombies_preflight_not_primary_bottleneck_doc_reconcile_inefficient_22pct_conservative_recoverable_next_milestone"
+}

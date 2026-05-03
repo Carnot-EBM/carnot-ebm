@@ -31,6 +31,7 @@ from __future__ import annotations
 
 import json
 import os
+import time
 from pathlib import Path
 
 
@@ -92,11 +93,25 @@ class AtomicResultWriter:
         # Step 2: ensure parent directory exists.
         self._final.parent.mkdir(parents=True, exist_ok=True)
 
-        # Step 3: write to .tmp (not the final path).
-        self._tmp.write_text(serialised, encoding="utf-8")
+        # Step 3: write to a per-write temp path. The public ``.tmp`` path is
+        # retained for backwards-compatible failure diagnostics, but using it
+        # directly is unsafe when pytest-xdist imports old experiment scripts in
+        # multiple workers and they all write the same deliverable at import time.
+        tmp = self._tmp.with_name(f"{self._tmp.name}.{os.getpid()}.{time.monotonic_ns()}")
+        tmp.write_text(serialised, encoding="utf-8")
 
         # Step 4: atomic rename — replaces final path in one kernel operation.
-        os.rename(str(self._tmp), str(self._final))
+        try:
+            os.rename(str(tmp), str(self._final))
+        except Exception:
+            # Preserve the historical ``<path>.tmp`` forensic artifact expected by
+            # existing tests and operators. Best-effort only: the original error is
+            # the one callers need to see.
+            try:
+                self._tmp.write_text(tmp.read_text(encoding="utf-8"), encoding="utf-8")
+            except OSError:
+                pass
+            raise
 
     # ------------------------------------------------------------------
     # verify_exists()

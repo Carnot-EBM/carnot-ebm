@@ -1,0 +1,20 @@
+{
+  "schema": "carnot.paper_v4_phase4_section.v1",
+  "experiment": 1167,
+  "run_date": "2026-05-02T17:34:37Z",
+  "section7_expanded": true,
+  "n_subsections_added": 4,
+  "phase4_results_in_paper": true,
+  "leaderboard_comparison_in_paper": true,
+  "theoretical_equivalence_stated": true,
+  "pdf_recompiled": true,
+  "pdf_size_kb": 347.83,
+  "bundle_path": "results/carnot-arxiv-v5.tar.gz",
+  "bundle_verified": true,
+  "paper_ready_for_arxiv_hold_lift": false,
+  "honest_verdict": "paper_v4_phase4_section_added_fpga_figure_blocking",
+  "manual_override_2026_05_02T18_40Z": {
+    "operator": "ian@blenke.com via outer-loop session",
+    "reason": "Operator audit found fig3 (docs/figures/fig3_fpga_latency.py) integrity issues that block arXiv submission: (1) CPU baseline 290ms is documented as 'order-of-magnitude estimate', not measured; (2) comparison is apples-to-oranges — CPU number is per-200-sample-sweep but FPGA number is per-sample, inflating the speedup ratio by ~200x; the actual per-sample speedup is ~58x not the displayed ~11,680x; (3) the 'extrapolated' caveat is rendered below the chart while the misleading 'speedup ~11680x' badge sits in a highlighted yellow box at top — a reviewer skimming sees the badge, not the caveat. The exp1167 codex correctly produced a v4 PDF with all the structural changes (Phase-4 section, leaderboard comparison, theoretical equivalence statement, recompilation, bundle), but did NOT audit pre-existing figures for integrity. Per CLAUDE.md 'All headline results must have live GPU provenance', fig3's headline 11680x speedup violates the documentation standard. Original verdict 'paper_v4_phase4_complete_arxiv_ready=true' is downgraded to 'paper_v4_phase4_section_added_fpga_figure_blocking'. Full audit of all 7 figures + all hardware claims required before paper_ready_for_arxiv_hold_lift can flip back to true. Tracked as MANDATORY-NEXT-MILESTONE in ops/known-issues.md."
+  }
+}

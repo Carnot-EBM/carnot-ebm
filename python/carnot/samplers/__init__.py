@@ -25,8 +25,10 @@ try:
         ParallelDenseIsingInertia,
     )
     from .parallel_ising import AnnealingSchedule, ParallelIsingSampler
+    from .phase4_sampler import Phase4Sampler
     from .potts_sampler import PottsSampler
     from .synchronous_ising import SynchronousIsingSampler
+    from .thrml_backend import ThrmlSamplerBackend
 except ModuleNotFoundError as exc:
     if exc.name != "jax":
         raise
@@ -38,6 +40,7 @@ else:
         "LangevinSampler",
         "HMCSampler",
         "ParallelIsingSampler",
+        "Phase4Sampler",
         "AnnealingSchedule",
         "FPGAIsingSampler",
         "FpgaBackend",
@@ -54,6 +57,7 @@ else:
         "JEPARetrainResult",
         "SynchronousIsingSampler",
         "PottsSampler",
+        "ThrmlSamplerBackend",
         "ParallelDenseIsingConfig",
         "ParallelDenseIsingInertia",
     ]

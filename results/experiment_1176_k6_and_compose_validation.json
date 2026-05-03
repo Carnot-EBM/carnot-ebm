@@ -1,0 +1,58 @@
+{
+  "and_composition_rule": "final_energy=max(E_1,...,E_6)",
+  "decision_note": "k=6 does not beat k=5 even though SC-Energy correlations remain below the 0.5 viability threshold on this evaluation set.",
+  "duration_s": 0.408,
+  "eval_corpus_path": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_test_v4.json",
+  "experiment": 1176,
+  "finished_at": "2026-05-02T21:37:38.169228+00:00",
+  "follow_up_task": "",
+  "honest_verdict": "k6_no_improvement",
+  "k5_auroc_baseline": 0.9402,
+  "k5_auroc_on_eval": 0.92403,
+  "k5_verifiers": [
+    "SOSKANEnergyV3",
+    "SemEnergyProbe",
+    "ASTStructureVerifier",
+    "SemanticConsistencyVerifier",
+    "Z3MathVerifier"
+  ],
+  "k6_above_k5": false,
+  "k6_added_verifier": "SCEnergyVerifier",
+  "k6_and_compose_auroc_measured": true,
+  "k6_auroc": 0.897344,
+  "largest_sc_energy_overlap": "SOSKANEnergyV3",
+  "max_abs_sc_energy_r_corr": 0.482054,
+  "n_correct": 178,
+  "n_eval_examples": 200,
+  "n_incorrect": 22,
+  "pipeline_modified": false,
+  "run_date": "2026-05-02",
+  "sc_energy_marginal_gain": -0.042856,
+  "sc_energy_r_corr_on_eval": {
+    "ASTStructureVerifier": 0.139702,
+    "SOSKANEnergyV3": -0.482054,
+    "SemEnergyProbe": -0.403436,
+    "SemanticConsistencyVerifier": -0.212261,
+    "Z3MathVerifier": -0.037303
+  },
+  "sc_energy_source": {
+    "checkpoint_loaded": false,
+    "checkpoint_note": "Exp1168 artifact records model metadata but no serialized SC-Energy weights.",
+    "exp1168_artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1168_sc_energy_7th_verifier.json",
+    "fover_labeled_pairs_path": "/home/ianblenke/github.com/ianblenke/carnot/results/fover_labeled_steps_v21_multi.json",
+    "hidden_dim": 128,
+    "model_name": "roberta-base",
+    "n_contrastive_pairs": 60,
+    "n_exp1168_eval_pairs": 12,
+    "n_train_pairs": 48,
+    "sc_energy_loading_mode": "deterministic_retrain_from_exp1168_artifact"
+  },
+  "schema": "k6_and_compose_validation",
+  "spec": [
+    "REQ-VERIFY-1176",
+    "SCENARIO-VERIFY-1176"
+  ],
+  "started_at": "2026-05-02T21:37:37.761045+00:00",
+  "status": "success",
+  "title": "k=6 AND-Composition Validation with SC-Energy"
+}
