@@ -4688,3 +4688,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-03: Pre-Commit staged_files_only + batching-check Fix — Eliminate Silent Data Loss (⚠️ Research Finding) — honest_verdict=in_progress; results/experiment_1216_precommit_staged_files_only_fix.json
 - 2026-05-03: Pre-Commit staged_files_only + batching-check Fix — Eliminate Silent Data Loss (✅ Complete) — honest_verdict=data_loss_fixed; results/experiment_1216_precommit_staged_files_only_fix.json
 - 2026-05-03: Paper v6 Related Work Overhaul — 5 Citations + Novelty Boundary + Thesis Sentence (✅ Complete) — honest_verdict=related_work_overhaul_complete; results/experiment_1218_paper_v6_related_work_overhaul.json
+- 2026-05-03: GRPO v5 Regression Diagnosis — Root-Cause Analysis of -35pp vs v4 Baseline (⚠️ Research Finding) — honest_verdict=in_progress; results/experiment_1219_grpo_v5_regression_diagnosis.json
