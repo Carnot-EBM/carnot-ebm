@@ -3705,7 +3705,7 @@ def research_step(
         and task_model != "opus"
         and (task_agent_type or AGENT_TYPE) == "claude"
         and "Reached max turns" in output
-        and task.get("escalate_on_max_turns", True)
+        and task.get("escalate_on_max_turns", False)  # Default flipped True→False 2026-05-03 ~14:55Z (quota emergency: 76% used, 3d to reset). Opus-100 retry burns $2-5/escalation × 5-7 escalations/milestone = $10-35 of claude quota that we can't afford this week. Tasks that would have escalated now just FAIL — they retire normally, get re-proposed in next milestone with better task definition. Set escalate_on_max_turns: true on individual high-leverage tasks (Phase-4 anchors, paper-v6 critical) if needed. Re-flip to True after Wednesday noon reset.
     ):
         logger.warning(
             "%s hit max-turns (%d); escalating to Opus 100 turns",
@@ -3739,7 +3739,7 @@ def research_step(
         and task_max_turns < 100
         and (task_agent_type or AGENT_TYPE) == "claude"
         and "Reached max turns" in output
-        and task.get("escalate_on_max_turns", True)
+        and task.get("escalate_on_max_turns", False)  # Default flipped True→False 2026-05-03 ~14:55Z (quota emergency: 76% used, 3d to reset). Opus-100 retry burns $2-5/escalation × 5-7 escalations/milestone = $10-35 of claude quota that we can't afford this week. Tasks that would have escalated now just FAIL — they retire normally, get re-proposed in next milestone with better task definition. Set escalate_on_max_turns: true on individual high-leverage tasks (Phase-4 anchors, paper-v6 critical) if needed. Re-flip to True after Wednesday noon reset.
     ):
         logger.warning(
             "Opus hit max-turns (%d) on pre-routed task; retrying with 100 turns",
