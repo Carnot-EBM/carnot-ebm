@@ -314,9 +314,131 @@ in paper integrity audit.)
   howpublished={The Conversation, UNSW Sydney},
   url={https://www.unsw.edu.au/newsroom/news/2026/05/evolvable-ai-are-we-on-the-brink-of-the-next-major-evolutionary-transition},
 }
+
+@article{spera2026noncomposability,
+  title={Safety is Non-Compositional: A Formal Framework for Capability-Based {AI} Systems},
+  author={Spera, C.},
+  journal={arXiv preprint arXiv:2603.15973},
+  year={2026},
+  month={March},
+  note={Theorem 9.2: detecting joint null spaces in AND-composed verifiers is coNP-complete; safety strictly non-compositional. Directed Hypergraph Closure mechanics. Formally explains Carnot exp1108 vacuous-dead-code finding.},
+}
+
+@article{patil2026sentinelagent,
+  title={{SentinelAgent}: Intent-Verified Delegation Chains for Securing Federal Multi-Agent {AI} Systems},
+  author={Patil, K.},
+  journal={arXiv preprint arXiv:2604.02767},
+  year={2026},
+  month={April},
+  note={7-check Delegation Chain Calculus combining 6 deterministic + 1 probabilistic verification properties. Achieves 100\% TPR at 0\% FPR on DelegationBench v4 across 126 evasion combinations. Closest direct architectural peer to Carnot in literature; differs in domain (federated API delegation vs Turing-complete codebase modification).},
+}
+
+@inproceedings{caf2026composable,
+  title={Composable Assurance for {AI} Alignment: A Framework for Formal Safety Assertions},
+  booktitle={Proceedings of AAAI 2026},
+  number={41151},
+  year={2026},
+  note={Composition Calculus over Formal Safety Assertions (FSAs); dynamic Directed Acyclic Graph of safety evidence; pre-deployment compliance gate that automatically blocks deployment when assertion dependencies are invalidated.},
+}
+
+@article{wang2026trinityguard,
+  title={{TrinityGuard}: A Unified Framework for Safeguarding Multi-Agent Systems},
+  author={Wang, et al.},
+  journal={arXiv preprint arXiv:2603.15408},
+  year={2026},
+  month={February},
+  note={LLM Judge Factory ensemble; OWASP GenAI Top 10 grounded; three-tier taxonomy (atomic / inter-agent / system-level). Neural-only ensemble subject to correlated pretraining biases; baseline for Carnot's heterogeneous-distinctness positioning.},
+}
+
+@article{leanatlas2026,
+  title={Lean Atlas: An Integrated Proof Environment for Scalable Human-{AI} Collaborative Formalization},
+  journal={arXiv preprint arXiv:2604.16347},
+  year={2026},
+  note={Lean 4 type-checking + neural semantic verification. Differentiates ``value dependencies'' (logical compiler guaranteed) from ``type dependencies'' (require external semantic verification). Mandates human-AI hybrid; precedes Carnot in formal+neural ensemble pattern.},
+}
+
+@article{omar2026medice,
+  title={{Med-ICE}: Enhancing Factual Accuracy in Medical {AI} through Autonomous Multi-Agent Consensus},
+  author={Omar, et al.},
+  journal={medRxiv},
+  year={2026},
+  note={Iterative Consensus Ensemble; semantic-similarity (not exact-string) consensus; clinical AI diagnostic domain; lacks deterministic formal bounds.},
+}
 ```
 
 (Verify that Brooks is indeed senior author of the PNAS paper before listing him as a co-author in `muller2026evolvable`. The UNSW article identifies him as Scientia Professor of Evolution and the public-facing voice; first author is Müller per EurekAlert. Bibliography validation per ISSUE-16 in audit punch-list.)
+
+The Spera/SentinelAgent/CAF/TrinityGuard/Lean Atlas/Med-ICE block was added 2026-05-03 ~22:00Z post DR-2 Deep Research synthesis. Source: `multi-verifier-ensemble-defense-deep-research-results.md`. Each entry's `note` field documents what aspect Carnot must engage in Related Work + Limitations.
+
+---
+
+## DR-2 mandatory additions (Related Work + Limitations)
+
+The DR-2 Deep Research dive identified two prose blocks paper-v6 MUST contain. Both are committed-to-memory (`feedback_paper_integrity_audit.md` and `project_pathological_joint_null_space.md`).
+
+### Block A — comparator paragraph (Related Work)
+
+Insert after the Sakana DGM discussion in Related Work:
+
+```latex
+\paragraph{Concurrent multi-verifier defenses.}
+Concurrent work converges on multi-verifier defenses for self-improving
+agents. SentinelAgent~\citep{patil2026sentinelagent} implements a
+7-check Delegation Chain Calculus combining formal authority/scope
+checks with probabilistic intent verification, achieving 100\% TPR at
+0\% FPR on DelegationBench v4 across 126 evasion combinations. The
+Composable Assurance Framework~\citep{caf2026composable} formalizes a
+Composition Calculus over Formal Safety Assertions for MLOps pipelines.
+Lean Atlas~\citep{leanatlas2026} bridges Lean 4 type-checking with
+neural semantic verification for math proofs. Med-ICE~\citep{omar2026medice}
+and TrinityGuard~\citep{wang2026trinityguard} represent the Neural
+Consensus Ensemble line, but inherit correlated pretraining biases that
+prove fundamentally limited under adversarial optimization pressure.
+Carnot's contribution is the unprecedented scale of formal distinctness
+($k=6$ heterogeneous verifiers) applied specifically to the high-threat
+domain of Turing-complete self-referential codebase modification --- the
+Sakana DGM threat domain not addressed by SentinelAgent (federated API
+delegation) or Lean Atlas (static math proofs).
+```
+
+### Block B — Joint Null Space limitation (Limitations)
+
+Insert as a standalone paragraph in Limitations:
+
+```latex
+\paragraph{Joint Null Space and Safety Non-Compositionality.}
+Spera's Theorem 9.2~\citep{spera2026noncomposability} formally proves
+that AND-composed verifier ensembles are non-compositional in the
+safety domain: heterogeneous verifiers individually incapable of
+permitting a forbidden state can collectively allow it through emergent
+conjunctive dependencies (the \emph{Joint Null Space}). Detecting these
+joint null spaces is \textbf{coNP-complete} --- computationally
+intractable as the agent scales. Our \texttt{exp1108} vacuous-dead-code
+finding is the textbook empirical instance: dead code passes Z3
+(vacuous logical truth), AST (syntactic validity), and liveness
+(compiles) checks simultaneously, satisfying every component while
+violating real-world utility. The $k=6$ ensemble drastically reduces
+but does not eliminate this risk; deployment at AGI scale must pair the
+ensemble with continuous out-of-band external grounding and
+human-in-the-loop review. Spera's bound is therefore not a Carnot-
+specific limitation but a general theoretical constraint on any
+heterogeneous AND-composed safety architecture.
+```
+
+### Architectural Vulnerability Matrix (optional figure)
+
+DR-2 produced a 3×3 matrix Carnot may want to include as a figure (page 13 of source PDF):
+
+|  | Monolithic (DGM) | Neural Consensus (TrinityGuard) | Heterogeneous AND (Carnot) |
+|--|------------------|--------------------------------|---------------------------|
+| Token Obfuscation | High Risk | Medium Risk | **Low Risk** |
+| Logic Subversion (vacuous) | High Risk | Medium Risk | **Medium Risk** |
+| Objective Hacking | High Risk | High Risk | **Low Risk** |
+
+Carnot is genuinely Low-Risk on Objective Hacking and Token Obfuscation,
+but Medium-Risk on Logic Subversion (the Spera/exp1108 corner). This
+honest framing is more credible than claiming uniform Low-Risk and is
+required for paper-v6 integrity.
 
 ---
 
