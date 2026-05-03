@@ -1,5 +1,16 @@
 # Carnot — Operational Status
 
+**Last Updated:** 2026-05-03 (Milestone 2026.04.94 operational retrospective complete)
+
+## Session 2026-05-03 — Milestone 2026.04.94 Operational Retrospective Complete
+
+**Milestone 2026.04.94 operational retro COMPLETE.**
+
+- Artifact written: `results/operational_retro_2026_04_94.json`
+- Timing scope analyzed: 78 min wall time, 7 completed experiments, 11 min average
+- Operational diagnosis: serialized docs/reconciliation and corpus sweeps dominated the slowest-five list; both RTX 3090s were idle at closeout with no formal gpu_monitor.py zombie
+- Next-milestone leverage: enforce skeleton-first artifacts, async doc reconciliation, DualGPURunner-by-default scheduling, fast-eval/cached corpus sweeps, and branch-level parallelism
+
 ## Session 2026-05-03 — Milestone 2026.04.94 Planning Complete
 
 **Milestone 2026.04.93 COMPLETE (3/12 criteria met — infrastructure failure dominated). Milestone 2026.04.94 PLANNED.**
