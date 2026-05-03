@@ -421,3 +421,4 @@ If you finish the real work |
 | 2026-05-03 02:50 UTC | Paper v5 Integrity — Medium/Low ISSUE-11 to ISSUE- | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1182_paper_v |
 | 2026-05-03 02:56 UTC | Paper v5 Integrity — Medium/Low ISSUE-11 to ISSUE- | OK | 81 passed, 1 warning in 6.60s |
 | 2026-05-03 03:02 UTC | Paper v5 Recompile + arXiv Bundle v6 — Final Compi | ESCALATE_OPUS | Sonnet max-turns at 25; retrying with Opus 100 turns |
+| 2026-05-03 03:12 UTC | Paper v5 Recompile + arXiv Bundle v6 — Final Compi | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1183_paper_v |
