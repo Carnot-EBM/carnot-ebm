@@ -111,6 +111,33 @@ provided initial state.
 - The returned energy is less than or equal to the initial energy.
 - For the bundled 5x5 puzzle, the solver reaches a zero-energy valid solution.
 
+### REQ-FUTOSHIKI-001: Futoshiki Latin-Inequality Energy
+
+The Futoshiki cartridge MUST expose an `n x n` grid for sizes 5 through 9 where
+each cell stores a value in `{1..n}`. Its energy MUST be the sum of Latin-square
+row and column penalties plus adjacent-cell inequality penalties, and MUST be
+zero if and only if every row, every column, and every `<` or `>` relation is
+satisfied.
+
+**Acceptance criteria:**
+- `FutoshikiPuzzle.generate(n=5)` returns a 5x5 puzzle with values in `{1..5}`
+  and adjacent inequality constraints.
+- A known 5x5 solution has energy 0.0.
+- A random mismatched grid has positive energy.
+- A Latin-valid grid that violates an inequality has positive energy.
+
+### REQ-FUTOSHIKI-002: Futoshiki Parallel Ising Solver
+
+The Futoshiki cartridge solver MUST invoke `ParallelIsingSampler` while
+searching for a low-energy value grid and MUST return a state whose energy is no
+worse than a provided deterministic mismatched grid for the bundled 5x5 puzzle.
+
+**Acceptance criteria:**
+- `FutoshikiSolver.solve(puzzle, max_iter=...)` invokes `ParallelIsingSampler`.
+- The returned grid has shape `(n, n)`.
+- The returned grid energy is less than or equal to the initial mismatched grid
+  energy.
+
 ## Scenarios
 
 ### SCENARIO-CONNECT4-001: Empty Board Ground State
@@ -188,6 +215,39 @@ four-in-a-row patterns
 
 **Spec traces:** REQ-NONOGRAM-002
 
+### SCENARIO-FUTOSHIKI-001: Known 5x5 Ground State
+
+**Given** a 5x5 Futoshiki puzzle with a known solution and adjacent
+inequalities
+**When** the known solution is scored
+**Then** the Latin-inequality energy is 0.0.
+
+**Spec traces:** REQ-FUTOSHIKI-001
+
+### SCENARIO-FUTOSHIKI-002: Mismatched Grid Has Positive Energy
+
+**Given** the same 5x5 Futoshiki puzzle
+**When** a deterministic random value grid is scored
+**Then** the Latin-inequality energy is positive.
+
+**Spec traces:** REQ-FUTOSHIKI-001
+
+### SCENARIO-FUTOSHIKI-003: Inequality Violation Has Positive Energy
+
+**Given** the same 5x5 Futoshiki puzzle
+**When** a Latin-valid grid violates a declared inequality
+**Then** the Latin-inequality energy is positive.
+
+**Spec traces:** REQ-FUTOSHIKI-001
+
+### SCENARIO-FUTOSHIKI-004: Solver Reduces Energy
+
+**Given** a 5x5 Futoshiki puzzle and an initial mismatched grid
+**When** `FutoshikiSolver` runs
+**Then** it invokes `ParallelIsingSampler` and returns a lower-energy grid.
+
+**Spec traces:** REQ-FUTOSHIKI-002
+
 ## Implementation Status
 
 | Requirement | Status | Experiment |
@@ -200,6 +260,8 @@ four-in-a-row patterns
 | REQ-HEX-003 | Implemented | Exp 1188 |
 | REQ-NONOGRAM-001 | Implemented | Exp 1214 |
 | REQ-NONOGRAM-002 | Implemented | Exp 1214 |
+| REQ-FUTOSHIKI-001 | Implemented | Exp 1227 |
+| REQ-FUTOSHIKI-002 | Implemented | Exp 1227 |
 | SCENARIO-CONNECT4-001 | Implemented | Exp 1175 |
 | SCENARIO-CONNECT4-002 | Implemented | Exp 1175 |
 | SCENARIO-CONNECT4-003 | Implemented | Exp 1175 |
@@ -209,3 +271,7 @@ four-in-a-row patterns
 | SCENARIO-NONOGRAM-001 | Implemented | Exp 1214 |
 | SCENARIO-NONOGRAM-002 | Implemented | Exp 1214 |
 | SCENARIO-NONOGRAM-003 | Implemented | Exp 1214 |
+| SCENARIO-FUTOSHIKI-001 | Implemented | Exp 1227 |
+| SCENARIO-FUTOSHIKI-002 | Implemented | Exp 1227 |
+| SCENARIO-FUTOSHIKI-003 | Implemented | Exp 1227 |
+| SCENARIO-FUTOSHIKI-004 | Implemented | Exp 1227 |
