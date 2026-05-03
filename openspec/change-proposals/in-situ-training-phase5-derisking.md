@@ -142,6 +142,20 @@ Production-scale modes (3):
 
 **Cost:** 30-60 GPU-hours, 2-3 weeks.
 
+**Comparator-set benchmarks (NEW 2026-05-03 21:55Z post Deep Research):**
+
+Per Deep Research's "Architectures to Explicitly Compare Against" guidance, exp_NEXT_E must include head-to-head benchmark comparisons against the open-source non-AR comparator set:
+
+```
+Comparator         | Citation                  | Comparison axis          | Why it matters
+NRGPT              | arXiv:2512.16762          | per-token energy + AUROC | Carnot's external grounding differs from NRGPT's purely internal integration
+LLaDA              | arXiv:2502.09992 (8B)     | text-task AUROC          | Gold standard for open-source non-AR; Carnot must explain how it differs from masked diffusion
+Coconut            | arXiv:2412.06769          | latent-reasoning AUROC + | Demonstrates training curriculum efficiency vs Coconut's multi-stage unrolling
+                                                training compute
+```
+
+If exp_NEXT_E exists without these comparator benchmarks, the paper-v6 reviewers (per Deep Research's strategic-positioning guidance) will flag the omission. Including them costs ~5-10 additional GPU-hours but is mandatory for paper-v6 publication readiness.
+
 ## Acceptance criteria for "Phase-5 derisked"
 
 ```

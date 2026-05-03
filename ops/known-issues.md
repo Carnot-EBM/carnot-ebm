@@ -198,6 +198,66 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### NEW 2026-05-03 (21:55Z): Paper-v6 Related Work Overhaul (.94 or .95 mandatory)
+
+**Background:** Google Deep Research dive 2026-05-03 ~21:30Z surfaced 5 critical papers and a structural thesis-sentence revision for paper-v6's positioning. Prior draft framed Carnot's contribution loosely; the literature now demands precise novelty boundaries.
+
+**Mandatory .94 (or .95 if .94 full) pickup:**
+
+```
+1. ADD 5 BIBLIOGRAPHY ENTRIES (already drafted in paper-v5-decentralization-section-draft.md):
+     gladstone2025ebt           arXiv:2507.02092  ICLR 2026  open-source
+     nie2025llada                arXiv:2502.09992  ICLR 2026  open-source 8B
+     hao2024coconut              arXiv:2412.06769            open-source
+     ma2026odar                  arXiv:2602.23681            open-source
+     logicalintelligence2026kona Commercial release          closed-source
+
+2. ADOPT NEW THESIS SENTENCE for paper-v6:
+   "Open-source EXTERNALLY-GROUNDED EBM that solves multimodal text
+    collapse" — fills the gap between Kona (closed enterprise) and
+    EBTs/NRGPT (open but lacking external grounding).
+
+3. APPLY NOVELTY-BOUNDARY DISCIPLINE:
+     CANNOT claim novelty over:
+       - "energy minimization for System 2 thinking without reward models"
+         (EBT owns this — Gladstone 2025/2026 ICLR comprehensively solved)
+       - "bidirectional generation solving reversal curse"
+         (LLaDA owns this — Nie 2025 decisive proof)
+       - "reasoning in continuous space rather than discrete tokens"
+         (must heavily acknowledge JEPA / Coconut / Kona prior art)
+     
+     CAN claim novelty over:
+       - Open-source externally-grounded EBM combination
+       - Multi-verifier ensemble defending against in-situ reward hacking
+       - Solving multimodal text collapse via verifier-constrained energy
+
+4. INSERT "Where Carnot sits in the non-autoregressive landscape" PARAGRAPH
+   (already drafted in paper-v5-decentralization-section-draft.md)
+   covering 5 architectural families with explicit comparator citations.
+
+5. ALIGN WITH INDUSTRY CONSENSUS:
+   "complementary not replacement" — EBM as System 2, AR LLM as semantic
+   interface. Multi-modal ecosystem is the AGI vision. Position Carnot
+   AS this System 2 component, NOT as wholesale AR replacement.
+```
+
+**Why this is in MANDATORY-NEXT-MILESTONE PRIORITIES:**
+
+The Deep Research dive found 5 papers that paper-v6 reviewers WILL flag as missing if not cited. Continuing without addressing this means:
+- Reviewers will reject paper-v6 as out-of-touch with 2025-2026 literature
+- Carnot's "novelty" claims will be challenged on EBT/LLaDA/Coconut precedence grounds
+- The publication-hold-lift gate I worked toward all night becomes invalidated by Related Work failure
+
+Estimated work: ~1 hour to integrate all 5 changes. Synthesis and draft already prepared in `docs/research-notes/energy-based-llm-alternatives-deep-research-results.md`.
+
+**Cross-references:**
+- Synthesis: `docs/research-notes/energy-based-llm-alternatives-deep-research-results.md`
+- Source PDF: `docs/research-notes/energy-based-llm-alternatives-deep-research-source.pdf`
+- Updated draft: `docs/research-notes/paper-v5-decentralization-section-draft.md`
+- ISSUE-16 reframing: paper integrity audit punch-list
+
+---
+
 ### NEW 2026-05-03 (20:35Z): NRGPT Frozen-Prefix Evaluation (optional, .95 or .96)
 
 **Background:** Deep Think Q10 (2026-05-03 ~20:30Z) interpreted exp1163's `n_iters_monotone=False` as architectural-by-design (cascaded multi-agent inference, causal-mask sequential thermalization per NRGPT §2.3), not a failure. Verdict: NRGPT survives Phase-3 scale-up without architectural revision; paper-v6 framing fix is sufficient.
