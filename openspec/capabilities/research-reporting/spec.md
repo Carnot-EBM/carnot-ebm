@@ -254,6 +254,36 @@ exceeds 50.0. The honest verdict shall map directly from these inputs:
 when CUDA support is compiled but throughput falls below the threshold, and
 `gpu_offload_failed` when CUDA support is not compiled.
 
+### REQ-REPORT-016: Milestone .95 Success-Criteria Retrospective
+
+The Exp 1228 milestone .95 retrospective workflow shall read the authoritative
+Exp 1216 through Exp 1227 result JSON artifacts, plus the conductor log and the
+current known-issues publication-hold notes, and write
+`results/experiment_1228_milestone_retro_95.json` with:
+
+- `milestone` set to `2026.04.95`
+- `criteria_total` set to `13`
+- `criteria_met` and `criteria_score_pct`, derived from all 13 planned
+  milestone success criteria
+- `criteria_results`, mapping the 13 planned criteria to boolean pass/fail
+  values
+- `slowest_tasks`, derived from milestone conductor-log spans when available
+- `publication_hold_status`, reflecting the current publication hold in
+  `ops/known-issues.md`
+- `grpo_trajectory`, including v4 `+10pp`, v5 `-35pp`, VPS evaluation `+24pp`,
+  VPS training result, and v6 FSPO result
+- `phase5_derisking_status`, summarizing Phase 5 A/B/C outcomes
+- exactly three `significant_findings`
+- exactly five `open_items_for_96`
+- `retro_complete == true`
+- `honest_verdict` set to `milestone_complete`, `milestone_partial`, or
+  `milestone_failed`
+
+Missing source artifacts shall count as unmet criteria except for criteria that
+explicitly require the artifact to exist with any honest verdict. Partial or
+in-progress artifacts shall only satisfy criteria when their named source field
+is true.
+
 ### REQ-REPORT-014: Retro Boundary Fix Documentation
 
 The Exp 1204 retro-template fix workflow shall document the .94 resolution for
@@ -401,6 +431,19 @@ the original entry
 **And** `llama_cpp_gpu_offload_verified == true`
 **And** `honest_verdict == "gpu_offload_verified"`
 
+### SCENARIO-REPORT-013: Milestone .95 Partial Results Stay Honest
+
+**Given** Exp 1216 through Exp 1227 source artifacts exist
+**And** Exp 1217 is blocked without `autofill_script_exists == true`
+**And** Exp 1221 has `grpo_v6_fspo_delta_measured == false`
+**And** Exp 1225 has `gaming_defense_measured == false`
+**When** the Exp 1228 retrospective workflow runs
+**Then** those three criteria count as false
+**And** the retrospective criterion counts as true
+**And** the artifact reports `criteria_met == 10`
+**And** `publication_hold_status == "active"`
+**And** `honest_verdict == "milestone_partial"`
+
 
 ### REQ-PUBLISH-003: HuggingFace README Accuracy Audit
 
@@ -490,5 +533,6 @@ embed live-GPU benchmark results from Exp 328 when available.
 | REQ-REPORT-013 | `scripts/experiment_1202_milestone_retro_93.py`, `results/experiment_1202_milestone_retro_93.json` | `tests/python/test_experiment_1202_milestone_retro_93.py` | Implemented |
 | REQ-REPORT-014 | `python/carnot/reporting/retro_template_step0_fix.py`, `results/experiment_1204_retro_template_step0_fix.json` | `tests/python/test_retro_template_step0_fix.py` | Implemented |
 | REQ-REPORT-015 | `python/carnot/reporting/llama_cpp_gpu_offload_fix.py`, `results/experiment_1207_llama_cpp_gpu_offload_fix_v3.json` | `tests/python/test_llama_cpp_gpu_offload_fix.py` | Implemented |
+| REQ-REPORT-016 | `scripts/experiment_1228_milestone_retro_95.py`, `results/experiment_1228_milestone_retro_95.json` | `tests/python/test_experiment_1228_milestone_retro_95.py` | Implemented |
 | REQ-PUBLISH-003 | `scripts/experiment_317_hf_publish.py` | `tests/python/test_experiment_317_hf_publish.py` | Implemented |
 | REQ-PUBLISH-004 | `scripts/experiment_330_hf_live_publish.py` | `tests/python/test_experiment_330_hf_live_publish.py` | Implemented |
