@@ -132,12 +132,14 @@ def compute_energy(question: str, response: str) -> float:
 
     Spec: REQ-LEARN-1213-2
     """
-    from carnot.pipeline.causal_reasoning_verifier import CausalReasoningVerifier  # noqa: PLC0415
-    from carnot.verify.z3_math_verifier import Z3MathVerifier  # noqa: PLC0415
-
+    # Split before importing heavy verifiers — empty responses return early
+    # without paying the ~700MB import cost of CausalReasoningVerifier + Z3.
     steps = [s.strip() for s in response.split("\n") if s.strip()]
     if not steps:
         return 1.0
+
+    from carnot.pipeline.causal_reasoning_verifier import CausalReasoningVerifier  # noqa: PLC0415
+    from carnot.verify.z3_math_verifier import Z3MathVerifier  # noqa: PLC0415
 
     causal_v = CausalReasoningVerifier()
     z3_v = Z3MathVerifier()

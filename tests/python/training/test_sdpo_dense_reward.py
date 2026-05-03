@@ -334,12 +334,50 @@ def test_build_sdpo_artifact_fields_empty_raises() -> None:
 
 
 def test_compute_energy_correct_step_low_energy() -> None:
-    """A well-formed correct step should have energy near 0 (few violations)."""
+    """A well-formed correct step should have energy near 0 (few violations).
+
+    CausalReasoningVerifier and Z3MathVerifier modules are pre-inserted into
+    sys.modules as lightweight mocks before compute_energy is called.  This
+    prevents loading the real NLP/Z3 modules (~700MB) inside the per-test
+    memory watchdog window.  Both mocked verifiers return 0.0 (no violations)
+    so the expected energy is 0.0.
+    """
+    import sys  # noqa: PLC0415
+    from types import ModuleType  # noqa: PLC0415
+    from unittest.mock import MagicMock  # noqa: PLC0415
+
     from carnot.training.sdpo_dense_reward import compute_energy  # noqa: PLC0415
 
-    response = "12 apples + 8 apples = 20 apples.\nThe answer is 20."
-    energy = compute_energy("How many apples?", response)
+    causal_instance = MagicMock()
+    causal_instance.verify_step.return_value = 0.0
+    z3_instance = MagicMock()
+    z3_instance.verify_step.return_value = 0.0
+
+    causal_mod = ModuleType("carnot.pipeline.causal_reasoning_verifier")
+    causal_mod.CausalReasoningVerifier = MagicMock(return_value=causal_instance)  # type: ignore[attr-defined]
+
+    z3_mod = ModuleType("carnot.verify.z3_math_verifier")
+    z3_mod.Z3MathVerifier = MagicMock(return_value=z3_instance)  # type: ignore[attr-defined]
+
+    causal_key = "carnot.pipeline.causal_reasoning_verifier"
+    z3_key = "carnot.verify.z3_math_verifier"
+    old_causal = sys.modules.pop(causal_key, None)
+    old_z3 = sys.modules.pop(z3_key, None)
+    sys.modules[causal_key] = causal_mod
+    sys.modules[z3_key] = z3_mod
+    try:
+        response = "12 apples + 8 apples = 20 apples.\nThe answer is 20."
+        energy = compute_energy("How many apples?", response)
+    finally:
+        del sys.modules[causal_key]
+        del sys.modules[z3_key]
+        if old_causal is not None:
+            sys.modules[causal_key] = old_causal
+        if old_z3 is not None:
+            sys.modules[z3_key] = old_z3
+
     assert 0.0 <= energy <= 1.0
+    assert energy == 0.0
 
 
 def test_compute_energy_empty_response_returns_one() -> None:
