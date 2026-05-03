@@ -523,3 +523,4 @@ If you finish the real work |
 | 2026-05-03 20:38 UTC | GRPO v5 Regression Diagnosis — Root-Cause Analysis | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1219_grpo_v5 |
 | 2026-05-03 20:45 UTC | GRPO v5 Regression Diagnosis — Root-Cause Analysis | OK | 81 passed, 1 warning in 4.72s |
 | 2026-05-03 20:50 UTC | GRPO-VPS Full Training Run — Step-Level Supervisio | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1220_grpo_vp |
+| 2026-05-03 21:03 UTC | GRPO-VPS Full Training Run — Step-Level Supervisio | OK | 81 passed, 1 warning in 5.16s |
