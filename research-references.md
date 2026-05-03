@@ -4,6 +4,48 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-05-03 Scan (Milestone 2026.04.93 Planning)
+
+### Spurious Rewards in RLVR: Random Rewards Achieve 73% of GRPO Gains
+- **Paper:** arXiv 2506.10947 (2026).
+- **What:** RLVR training with GRPO can improve MATH-500 by 21.4pp using randomly-assigned rewards, vs 29.1pp from ground-truth rewards. Approximately 73% of the GRPO performance gain comes from the training *structure* (group sampling, advantage normalization) rather than the reward signal itself.
+- **Relevance to Carnot:** Challenges the assumption that improving reward quality (TinyV, GRPO-VPS) will yield proportional gains. The first 73% of Carnot's GRPO improvement may be structural; the remaining 27% is where reward quality actually matters. Implies Latent-GRPO (exp1187: no_delta) may not have failed because of poor masking — it may have failed because the energy reward signal is not in the upper 27%. Recalibrate expectations for GRPO v5: meaningful improvement over v4 (+10pp) would confirm Carnot's energy reward is in the load-bearing 27%.
+- **Concrete experiment:** Compare GRPO v5 (energy-reward) vs a GRPO-random-reward ablation on the same training set. If v5 beats random by >3pp, the energy verifier contributes real signal. File as follow-on to exp1195.
+- **When to incorporate:** .93 as GRPO v5 interpretation context; .94 for ablation if v5 succeeds.
+
+### LaDiR: Latent Diffusion Enhances LLMs for Text Reasoning
+- **Paper:** arXiv 2510.04573 (October 2025).
+- **What:** LaDiR (Latent Diffusion Reasoner) constructs a structured latent reasoning space using a VAE that encodes reasoning steps into thought-token blocks, then runs a latent diffusion model over those blocks for iterative refinement. Key finding: latent diffusion over compact thought representations generalizes better than token-level diffusion.
+- **Relevance to Carnot:** DoT (exp1186) retired because per-token EBM energy gradients were flat (AUROC=0.5 at all T). LaDiR's approach — encode full reasoning chains into a compact latent, then diffuse over the latent — could replace per-token masking with sequence-level EBM guidance on the VAE latent. The DBAE (Deterministic Bounded Autoencoder) from Phase 3 would be the encoder; the Ising EBM would score latent states. This is a principled redesign of DoT that avoids the token-granularity problem.
+- **Concrete experiment:** Redesign DoT using LaDiR pattern: DBAE encodes CoT steps → latent EBM scores → diffusion over latents → decode corrected reasoning chain. Benchmark on FoVer vs failed per-token DoT (exp1171/1186).
+- **When to incorporate:** .94+ after DBAE substrate is further validated.
+
+### R-Zero: Self-Evolving Reasoning LLM via Challenger/Solver Co-Evolution
+- **Paper:** arXiv 2508.05004 (August 2025).
+- **What:** A base model is split into two roles — Challenger (rewarded for generating hard tasks) and Solver (rewarded for solving them). The two roles co-evolve via RL, with the Challenger's difficulty signal bootstrapping the Solver's improvement. No human-curated curriculum required.
+- **Relevance to Carnot:** Carnot's Phase 4 active inference (exp1165/1189) needs harder puzzles than synthetic trivially-solvable ones. R-Zero's Challenger mechanism could generate harder ARC-AGI-3 style puzzles where the Challenger is rewarded if BFS is intractable (state-space > 100k) but Phase 4 can solve them. This would create an auto-curriculum that scales puzzle difficulty with Carnot's Phase 4 capability.
+- **Concrete experiment:** Implement a simple Challenger model that generates ARC-style 15x15 grids where BFS exceeds 100k states, rewarded for creating Phase-4-solvable-but-BFS-hard puzzles. Run Solver (Phase 4 energy minimization) against Challenger-generated puzzles.
+- **When to incorporate:** .94+ after Phase 4 baseline is validated (exp1197 must first show Phase 4 can beat BFS on intractable cases).
+
+### ARC-NCA: Developmental NCA-Based Solutions for ARC-AGI
+- **Paper:** arXiv 2505.08778 (May 2025).
+- **What:** Neural Cellular Automata (NCA) that learn local developmental rules to solve ARC-AGI tasks without explicit reasoning chains. The NCA evolves a grid state using learned local update rules, converging to the target output.
+- **Relevance to Carnot:** Phase 4's active inference model minimizes free energy over a grid state — similar convergence semantics to NCA. ARC-NCA's local update rules are interpretable as constraint-satisfying transformations, which map naturally to Carnot's Ising constraint encoding. Could hybridize: use NCA to generate candidate solutions, Carnot energy to score and select them.
+- **When to incorporate:** .94+ as comparative baseline for Phase 4 puzzle results.
+
+### KANtize: Low-Bit Quantization of KAN for Efficient Inference
+- **Paper:** arXiv 2603.17230 (March 2026).
+- **What:** Explores 4-bit and 8-bit quantization of KAN spline functions for efficient inference. Key finding: 8-bit KAN quantization preserves >99% of full-precision accuracy; 4-bit shows ~2% accuracy degradation but achieves 2x memory reduction. Spline endpoint quantization is more sensitive than interior quantization.
+- **Relevance to Carnot:** SOS-KAN verifier (AUROC=0.9902) could be deployed on AMD XDNA NPU or other edge hardware with 4-bit quantization (~2.2MB model size). The 2% AUROC degradation (0.9902 → ~0.9700) would still exceed Carnot's k=5 ensemble target (0.9240 AUROC). Critical for sovereignty claim: constraint verification on consumer hardware.
+- **Concrete experiment:** Apply 4-bit/8-bit quantization to SOS-KAN energy verifier. Measure AUROC pre/post quantization. If AUROC stays above 0.97, the quantized model is production-ready for edge deployment.
+- **When to incorporate:** Milestone .93 exp1199.
+
+### GRPO-VPS: Step-Level Process Supervision for GRPO
+- **Paper:** arXiv 2604.20659 (April 2026) — already in .91 scan.
+- **New finding:** Segment-wise process signals computed as change in model's belief in the correct answer across consecutive reasoning segments. Up to 2.6pp improvement on math and 13.7% reasoning-length reduction. Attribute credit to the specific reasoning step that caused the error.
+- **Relevance update:** Carnot's CausalReasoningVerifier (Tier 2.7) + Z3MathVerifier (Tier 3) produce step-level signals. Wiring them as GRPO-VPS segment rewards directly assigns credit to the step where a carry-forward error occurred.
+- **Concrete experiment:** exp1196 in .93 — wire step-verifiers as GRPO-VPS segment rewards. Compare against GRPO v4 (+10pp) baseline.
+
 ## 2026-05-02 Scan (Milestone 2026.04.92 Planning)
 
 ### Latent-GRPO: Latent-Space Group Relative Policy Optimization

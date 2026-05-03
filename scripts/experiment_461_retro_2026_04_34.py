@@ -579,7 +579,9 @@ def _build_artifact(retro: MilestoneRetro2026_04_34, tmpl: ExperimentTemplate) -
         "meta_reflection": retro.meta_reflection,
         "honest_verdict": retro.honest_verdict,
     }
-    return tmpl.build_result(data, status="success")
+    artifact = tmpl.build_result(data, status="success")
+    artifact["schema"] = "carnot.operational_retro.v1"
+    return artifact
 
 
 # ---------------------------------------------------------------------------

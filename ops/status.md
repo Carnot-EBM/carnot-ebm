@@ -1,5 +1,64 @@
 # Carnot — Operational Status
 
+## Session 2026-05-03 — Milestone 2026.04.93 Planning Complete
+
+**Milestone 2026.04.92 COMPLETE (10/13 criteria met). Milestone 2026.04.93 PLANNED.**
+
+### .92 Recap (final)
+- **MET (10/13):** exp1178_watchdog_operational, exp1181_high_severity_fixed, exp1182_medium_low_fixed, exp1184_grpo_v5_result_honest (honest: gpu_offload_prerequisite_not_met), exp1185_sc_energy_regularized (k6 retired), exp1186_dot_diagnosis_complete (DoT retired), exp1187_latent_grpo_delta_honest (no_delta), exp1188_hex_game_operational (win_rate=0.9), exp1189_phase4_stronger_baseline (phase4_tied_with_bfs), exp1190_retro_complete
+- **NOT MET (3):** exp1179_gpu_offload_verified (MISSING — 60 min install timeout), exp1180_critical_issues_fixed (MISSING — 55 turn limit), exp1183_arxiv_bundle_v6_ready (FAIL — gated on exp1180)
+- **Retirements:** k=6 AND-compose (k6 AUROC=0.903 < k5=0.924), DoT EBM-diffusion (AUROC=0.5 at all temperatures), Latent-GRPO (no_delta — insufficient invalid samples)
+- **Publication hold:** Active — 5 critical issues remain (ISSUE-1 to ISSUE-5); 13/18 total resolved
+
+### .93 Design (Exps 1191–1202, estimated ~380 min)
+
+**Phase 0 — Infrastructure (MANDATORY, unconditional):**
+- exp1191: prlimit memory cap — resource.setrlimit RLIMIT_AS 8GB in conftest.py pytest_configure (codex/gpt-5.5, max_turns:20)
+- exp1192: llama.cpp GPU offload fix v2 — pre-built CUDA wheel, verify >=50 tok/s (claude/opus, max_turns:50, prior_failures:exp1179)
+
+**Phase 1 — Paper Integrity:**
+- exp1193: Paper critical ISSUE-1 to ISSUE-5 retry — minimal-first strategy, drop fig3 if speedup <2x per exp1094 (claude/opus, max_turns:60, prior_failures:exp1180, retire_if_same_verdict:true)
+- exp1194: Paper v6 recompile + arXiv bundle v7 (claude/sonnet, max_turns:25, gated on exp1193.critical_issues_fixed>=5)
+
+**Phase 2 — Self-Learning MANDATORY:**
+- exp1195: GRPO v5 + TinyV v2 DualGPU — tensor_split=[0.5,0.5], 300s structural warm-up, TinyV abstention thresh_low=0.3/high=0.7 (claude/opus, max_turns:60, grace_period_s:2400, gated on exp1192.llama_cpp_gpu_offload_verified=true, prior_failures: exp1184/1173/1159/1146)
+- exp1196: GRPO-VPS step-level process supervision — CausalReasoningVerifier+Z3MathVerifier as segment GRPO rewards (claude/sonnet, max_turns:40)
+
+**Phase 3 — Research:**
+- exp1197: Phase 4 harder 15x15+ puzzles where BFS hits 100k state cap (claude/opus, max_turns:50, prior_failures:exp1189)
+- exp1198: FoVer expansion v7 hard negatives — confidence 0.35-0.65, Qwen3.6-35B+gemma-4-31B, >=500 pairs (claude/sonnet, GPU, max_turns:50)
+- exp1199: KANtize SOS-KAN 4-bit quantization — AUROC>0.97 at 4-bit, NPU safetensors export (codex/gpt-5.5, max_turns:35)
+
+**Phase 4 — Self-Learning Tier 1:**
+- exp1200: Online constraint reweighting v2 with constraint ADDITION from memory patterns (claude/sonnet, max_turns:40)
+
+**Phase 5 — WOPR + Retro:**
+- exp1201: WOPR Nonogram cartridge — run-length E=0 at valid solution (codex/gpt-5.5, max_turns:30)
+- exp1202: Milestone 2026.04.93 retrospective (codex/gpt-5.5, max_turns:20)
+
+### 12 Success Criteria
+1. prlimit_memory_cap_active (exp1191)
+2. llama_cpp_gpu_offload_verified (exp1192) — gates exp1195
+3. critical_issues_fixed_5_of_5 (exp1193) — gates exp1194
+4. arxiv_bundle_v7_ready (exp1194)
+5. grpo_v5_honest_result (exp1195) — DualGPU MANDATORY
+6. grpo_vps_step_delta_measured (exp1196)
+7. phase4_bfs_intractable_fraction_above_50pct (exp1197)
+8. fover_v7_pairs_above_500 (exp1198)
+9. kantize_auroc_maintained_above_0p97 (exp1199)
+10. tier1_online_addition_honest_verdict (exp1200)
+11. nonogram_cartridge_shipped (exp1201)
+12. retro_complete (exp1202)
+
+### Key Architectural Decisions for .93
+- exp1192 gates exp1195: no GRPO v5 without confirmed GPU offload (prevents fifth wasted attempt)
+- exp1193 uses opus with max_turns:60 and minimal-first strategy (drop fig3 rather than rewrite it)
+- k=6 AND-compose officially retired; DoT officially retired — no further experiments without redesign
+- No gemini agent_type (429-rate-limited since milestone .84)
+- Spurious Rewards (arXiv 2506.10947): GRPO v5 must beat v4 by >3pp to confirm energy reward signal beyond structure
+
+---
+
 ## Session 2026-05-02 — Milestone 2026.04.91 Planning Complete
 
 **Milestone 2026.04.90 COMPLETE (12/13 criteria met). Milestone 2026.04.91 PLANNED.**

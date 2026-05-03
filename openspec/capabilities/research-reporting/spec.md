@@ -174,6 +174,31 @@ artifact after any operator override. Missing artifacts shall count as
 `NOT_MET`, and explicitly blocked gated results shall be surfaced as
 `GATE_BLOCKED` rather than as successful criteria.
 
+### REQ-REPORT-012: Milestone .92 Paper-Integrity Retrospective
+
+The Exp 1190 milestone .92 retrospective workflow shall read the authoritative
+Exp 1178 through Exp 1189 result JSON artifacts and write
+`results/experiment_1190_milestone_retro_92.json` with:
+
+- `milestone` set to `2026.04.92`
+- `criteria_total` set to `13`
+- `criteria_met` and `criteria_score_pct`, derived from all 13 roadmap
+  success criteria
+- `paper_integrity_issues_resolved`, derived from Exp 1180 through Exp 1182
+- `publication_hold_lifted`, true only when all 18 integrity issues are
+  resolved, both audit scripts are active, the full paper audit passes, and
+  operator approval is present
+- `grpo_v5_result`, `k6_viable`, `k6_retired`, `dot_retired`,
+  `latent_grpo_delta_pp`, `hex_operational`, and
+  `phase4_stronger_baseline_result`, all derived from source artifacts
+- `slowest_task_id`, derived from milestone conductor-log spans when available
+- `open_items_for_93`
+- `honest_verdict` set to `milestone_complete`, `milestone_partial`, or
+  `milestone_failed`
+
+Missing gated experiment artifacts shall count as unmet criteria and shall be
+reported explicitly rather than inferred from downstream blocked artifacts.
+
 ## Scenarios
 
 ### SCENARIO-REPORT-001: Nested Live Provenance Is Promoted
@@ -250,6 +275,18 @@ operator figure-integrity override
 **And** `paper_v4_phase4_section_integrated == NOT_MET`
 **And** `grpo_v5_honest_result == GATE_BLOCKED`
 **And** `honest_verdict` matches the number of met criteria out of 13
+
+### SCENARIO-REPORT-009: Milestone .92 Hold Remains Until Full Audit Passes
+
+**Given** Exp 1178 through Exp 1189 source artifacts exist
+**And** Exp 1179 and Exp 1180 are missing
+**And** Exp 1183 reports `4_test_full_pass == false`
+**When** the Exp 1190 retrospective workflow runs
+**Then** the missing source artifacts count as unmet criteria
+**And** `publication_hold_lifted == false`
+**And** `open_items_for_93` includes the missing GPU-offload and critical
+paper-integrity tasks
+**And** `honest_verdict == "milestone_partial"`
 
 
 ### REQ-PUBLISH-003: HuggingFace README Accuracy Audit
@@ -336,5 +373,6 @@ embed live-GPU benchmark results from Exp 328 when available.
 | REQ-REPORT-009 | `scripts/experiment_1138_milestone_retro_88.py` | `tests/python/test_experiment_1138_milestone_retro_88.py` | Implemented |
 | REQ-REPORT-010 | `scripts/experiment_1164_milestone_retro_90.py`, `results/experiment_1164_milestone_retro_90.json` | `tests/python/test_experiment_1164_milestone_retro_90.py` | Implemented |
 | REQ-REPORT-011 | `scripts/experiment_1177_milestone_retro_91.py`, `results/experiment_1177_milestone_retro_91.json` | `tests/python/test_experiment_1177_milestone_retro_91.py` | Implemented |
+| REQ-REPORT-012 | `scripts/experiment_1190_milestone_retro_92.py`, `results/experiment_1190_milestone_retro_92.json` | `tests/python/test_experiment_1190_milestone_retro_92.py` | Implemented |
 | REQ-PUBLISH-003 | `scripts/experiment_317_hf_publish.py` | `tests/python/test_experiment_317_hf_publish.py` | Implemented |
 | REQ-PUBLISH-004 | `scripts/experiment_330_hf_live_publish.py` | `tests/python/test_experiment_330_hf_live_publish.py` | Implemented |

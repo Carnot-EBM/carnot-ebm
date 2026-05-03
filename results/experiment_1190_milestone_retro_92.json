@@ -1,0 +1,250 @@
+{
+  "experiment": "1190_milestone_retro_92",
+  "schema": "milestone_retro_v3",
+  "run_date": "2026-05-03T06:12:10Z",
+  "milestone": "2026.04.92",
+  "criteria_results": {
+    "exp1178_watchdog_operational": true,
+    "exp1179_gpu_offload_verified": false,
+    "exp1180_critical_issues_fixed": false,
+    "exp1181_high_severity_fixed": true,
+    "exp1182_medium_low_fixed": true,
+    "exp1183_arxiv_bundle_v6_ready": false,
+    "exp1184_grpo_v5_result_honest": true,
+    "exp1185_sc_energy_regularized": true,
+    "exp1186_dot_diagnosis_complete": true,
+    "exp1187_latent_grpo_delta_honest": true,
+    "exp1188_hex_game_operational": true,
+    "exp1189_phase4_stronger_baseline": true,
+    "exp1190_retro_complete": true
+  },
+  "criteria_status": {
+    "exp1178_watchdog_operational": "PASS",
+    "exp1179_gpu_offload_verified": "FAIL",
+    "exp1180_critical_issues_fixed": "FAIL",
+    "exp1181_high_severity_fixed": "PASS",
+    "exp1182_medium_low_fixed": "PASS",
+    "exp1183_arxiv_bundle_v6_ready": "FAIL",
+    "exp1184_grpo_v5_result_honest": "PASS",
+    "exp1185_sc_energy_regularized": "PASS",
+    "exp1186_dot_diagnosis_complete": "PASS",
+    "exp1187_latent_grpo_delta_honest": "PASS",
+    "exp1188_hex_game_operational": "PASS",
+    "exp1189_phase4_stronger_baseline": "PASS",
+    "exp1190_retro_complete": "PASS"
+  },
+  "criteria_detail": {
+    "exp1178_watchdog_operational": {
+      "criterion": "exp1178_watchdog_operational",
+      "experiment": "exp1178",
+      "status": "PASS",
+      "met": true,
+      "detail": "Pytest memory watchdog must be active."
+    },
+    "exp1179_gpu_offload_verified": {
+      "criterion": "exp1179_gpu_offload_verified",
+      "experiment": "exp1179",
+      "status": "FAIL",
+      "met": false,
+      "detail": "llama.cpp GPU offload artifact must verify throughput."
+    },
+    "exp1180_critical_issues_fixed": {
+      "criterion": "exp1180_critical_issues_fixed",
+      "experiment": "exp1180",
+      "status": "FAIL",
+      "met": false,
+      "detail": "All five critical paper-integrity issues must be fixed."
+    },
+    "exp1181_high_severity_fixed": {
+      "criterion": "exp1181_high_severity_fixed",
+      "experiment": "exp1181",
+      "status": "PASS",
+      "met": true,
+      "detail": "All five high-severity paper-integrity issues must be fixed."
+    },
+    "exp1182_medium_low_fixed": {
+      "criterion": "exp1182_medium_low_fixed",
+      "experiment": "exp1182",
+      "status": "PASS",
+      "met": true,
+      "detail": "All eight medium/low paper-integrity issues must be fixed."
+    },
+    "exp1183_arxiv_bundle_v6_ready": {
+      "criterion": "exp1183_arxiv_bundle_v6_ready",
+      "experiment": "exp1183",
+      "status": "FAIL",
+      "met": false,
+      "detail": "Paper v6 bundle must be ready after the full audit."
+    },
+    "exp1184_grpo_v5_result_honest": {
+      "criterion": "exp1184_grpo_v5_result_honest",
+      "experiment": "exp1184",
+      "status": "PASS",
+      "met": true,
+      "detail": "GRPO v5 must report an honest outcome, including blocked prerequisites."
+    },
+    "exp1185_sc_energy_regularized": {
+      "criterion": "exp1185_sc_energy_regularized",
+      "experiment": "exp1185",
+      "status": "PASS",
+      "met": true,
+      "detail": "SC-Energy overfit must be diagnosed and regularized."
+    },
+    "exp1186_dot_diagnosis_complete": {
+      "criterion": "exp1186_dot_diagnosis_complete",
+      "experiment": "exp1186",
+      "status": "PASS",
+      "met": true,
+      "detail": "DoT root cause must be diagnosed and redesigned result reported."
+    },
+    "exp1187_latent_grpo_delta_honest": {
+      "criterion": "exp1187_latent_grpo_delta_honest",
+      "experiment": "exp1187",
+      "status": "PASS",
+      "met": true,
+      "detail": "Latent-GRPO must report the delta honestly, even if zero."
+    },
+    "exp1188_hex_game_operational": {
+      "criterion": "exp1188_hex_game_operational",
+      "experiment": "exp1188",
+      "status": "PASS",
+      "met": true,
+      "detail": "Hex cartridge must run and report win-rate evidence."
+    },
+    "exp1189_phase4_stronger_baseline": {
+      "criterion": "exp1189_phase4_stronger_baseline",
+      "experiment": "exp1189",
+      "status": "PASS",
+      "met": true,
+      "detail": "Phase 4 must be compared against the BFS baseline on 10x10 puzzles."
+    },
+    "exp1190_retro_complete": {
+      "criterion": "exp1190_retro_complete",
+      "experiment": null,
+      "status": "PASS",
+      "met": true,
+      "detail": "Exp1190 retrospective artifact was assembled."
+    }
+  },
+  "criteria_met": 10,
+  "criteria_total": 13,
+  "criteria_score_pct": 76.92,
+  "paper_integrity_issues_resolved": 13,
+  "publication_hold_lifted": false,
+  "publication_hold_status": "active",
+  "grpo_v5_result": "gpu_offload_prerequisite_not_met",
+  "k6_viable": false,
+  "k6_retired": true,
+  "dot_retired": true,
+  "latent_grpo_delta_pp": 0.0,
+  "hex_operational": true,
+  "phase4_stronger_baseline_result": "phase4_tied_with_bfs",
+  "slowest_task_id": "exp1179",
+  "slowest_tasks": [
+    {
+      "rank": 1,
+      "id": "exp1179",
+      "duration_min": 60.0,
+      "attempts_seen": 3
+    },
+    {
+      "rank": 2,
+      "id": "exp1180",
+      "duration_min": 48.0,
+      "attempts_seen": 3
+    },
+    {
+      "rank": 3,
+      "id": "exp1181",
+      "duration_min": 42.0,
+      "attempts_seen": 4
+    },
+    {
+      "rank": 4,
+      "id": "exp1188",
+      "duration_min": 40.0,
+      "attempts_seen": 5
+    },
+    {
+      "rank": 5,
+      "id": "exp1183",
+      "duration_min": 33.0,
+      "attempts_seen": 6
+    },
+    {
+      "rank": 6,
+      "id": "exp1187",
+      "duration_min": 28.0,
+      "attempts_seen": 3
+    },
+    {
+      "rank": 7,
+      "id": "exp1182",
+      "duration_min": 25.0,
+      "attempts_seen": 4
+    },
+    {
+      "rank": 8,
+      "id": "exp1184",
+      "duration_min": 11.0,
+      "attempts_seen": 3
+    },
+    {
+      "rank": 9,
+      "id": "exp1189",
+      "duration_min": 7.0,
+      "attempts_seen": 2
+    },
+    {
+      "rank": 10,
+      "id": "exp1178",
+      "duration_min": 0.0,
+      "attempts_seen": 1
+    },
+    {
+      "rank": 11,
+      "id": "exp1185",
+      "duration_min": 0.0,
+      "attempts_seen": 1
+    },
+    {
+      "rank": 12,
+      "id": "exp1186",
+      "duration_min": 0.0,
+      "attempts_seen": 1
+    }
+  ],
+  "primary_operational_issue": "Pre-test/self-heal retries and missing gate artifacts dominated .92; exp1179 had the longest visible conductor span.",
+  "significant_findings": [
+    "Paper remediation made partial progress: high plus medium/low fixes landed, but critical fixes are unresolved and arxiv_bundle_v6_ready=False.",
+    "SC-Energy regularization resolved overfit, but k=6 still regressed (k6=0.902707, k5=0.92403); k=6 should be retired.",
+    "Hex became operational with random_vs_gibbs_win_rate=0.9, while Phase 4 only reported phase4_tied_with_bfs against BFS."
+  ],
+  "experiment_honest_verdicts": {
+    "exp1178": "watchdog_operational",
+    "exp1179": "MISSING",
+    "exp1180": "MISSING",
+    "exp1181": "all_5_high_resolved",
+    "exp1182": "all_8_medium_low_resolved",
+    "exp1183": "audit_failures_remain",
+    "exp1184": "gpu_offload_prerequisite_not_met",
+    "exp1185": "overfit_resolved_but_k6_still_regresses",
+    "exp1186": "dot_retired",
+    "exp1187": "latent_grpo_no_delta",
+    "exp1188": "hex_operational_energy_player_wins",
+    "exp1189": "phase4_tied_with_bfs",
+    "exp1190": "milestone_partial"
+  },
+  "open_items_for_93": [
+    "Prioritize a preemptive pytest memory cap (prlimit or cgroup) because the Exp1178 watchdog did not prevent single-test 35GB+ loads.",
+    "Rerun exp1179 llama.cpp GPU offload fix and emit the missing GPU-throughput artifact before any GRPO v5 retry.",
+    "Rerun exp1180 critical paper-integrity fixes and activate figure_integrity_audit.py.",
+    "Keep publication hold active until 18/18 issues, both audit scripts, full 4-test pass, and operator approval are present.",
+    "Retire k=6 AND-compose from the production path unless a new verifier root cause is identified.",
+    "Retire DoT EBM-diffusion as a near-random verifier signal for .93 planning.",
+    "Deprioritize Latent-GRPO reward masking until invalid samples are present or a nonzero delta target is defined.",
+    "Treat Phase 4 vs BFS as a limitation, not an advantage claim, until it beats a non-trivial baseline."
+  ],
+  "retro_complete": true,
+  "honest_verdict": "milestone_partial"
+}

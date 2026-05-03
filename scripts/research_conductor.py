@@ -3413,7 +3413,18 @@ def research_step(
             f"research-roadmap.yaml."
         )
 
-        MAX_HEAL_ATTEMPTS = 2
+        # MAX_HEAL_ATTEMPTS = 2 → 0 (operator emergency 2026-05-03 ~11:45Z)
+        # Reason: self-heal was burning ~40 min agent runtime per retiring task
+        # (2 attempts × 600s × 2 cycles for heal+verify). Schema-drifted tests
+        # in the suite (test_experiment_337/355/368/692/1033 and likely more)
+        # cannot be repaired by codex/sonnet/opus within turn budget; the
+        # heal loop is a quota-burn pattern.
+        # When pre-tests fail, just SKIP the task and let MAX_FAILURES_PER_TASK
+        # retire it cleanly. Test-suite repair is properly a dedicated milestone
+        # task, not an in-loop auto-fix. See ops/known-issues.md "Schema-drifted
+        # tests" entry.
+        # To re-enable self-heal once tests are clean: change 0 back to 2.
+        MAX_HEAL_ATTEMPTS = 0
         healed = False
         for heal_attempt in range(MAX_HEAL_ATTEMPTS):
             logger.info("Self-heal attempt %d/%d", heal_attempt + 1, MAX_HEAL_ATTEMPTS)

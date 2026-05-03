@@ -1,0 +1,24 @@
+{
+  "experiment": 1186,
+  "run_date": "2026-05-03T04:22:27.686982+00:00",
+  "duration_s": 3.24,
+  "token_gradient_norms_near_zero": true,
+  "mean_token_gradient_norm": 0.0,
+  "redesign_implemented": true,
+  "redesigned_dot_auroc": 0.4699,
+  "auroc_above_random": false,
+  "retire_dot": true,
+  "honest_verdict": "dot_retired",
+  "n_diagnosis_examples": 10,
+  "n_eval_pairs": 200,
+  "auroc_threshold": 0.55,
+  "diffusion_alpha": 0.01,
+  "diffusion_n_steps": 10,
+  "diffusion_sigma": 0.1,
+  "prior_failure": {
+    "experiment_id": 1171,
+    "verdict": "non_monotone_diminishing_returns",
+    "root_cause": "sequence-level EBM flat gradient at token level",
+    "addressed_by": "embedding-space diffusion with EBM score function"
+  }
+}

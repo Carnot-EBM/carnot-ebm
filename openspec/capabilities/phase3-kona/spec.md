@@ -457,6 +457,63 @@ only whether the whole response is risky.
   `per_token_improves_auroc`, `per_token_tied_with_batch`, or
   `per_token_worse_than_batch`.
 
+### REQ-KONA-015: Phase 4 Stronger BFS Baseline at 5x5 and 10x10
+
+The Phase 4 active-inference pilot MUST be stress-tested against a
+non-trivial BFS-to-goal baseline at both 5x5 and 10x10 grid sizes.
+BFS is the gold standard for shortest-path finding on deterministic
+puzzles; if Phase 4 cannot match or beat BFS on harder grids, Phase 4
+adds no value over classical tree search and the project must report
+that honest finding. If BFS hits exponential branching on 10x10
+puzzles and becomes intractable while Phase 4 still solves, the
+result is publishable evidence that variational free-energy
+minimization beats brute-force search at scale.
+
+`ARC3PuzzleEnv` MUST accept a `grid_size` parameter (default 5, also
+support 10). At grid_size=10 the environment MUST expose ten 10x10
+puzzles with 5-8 legal actions per step and step counts in the
+4-10 range. Wrong actions on 10x10 MUST mutate the grid in a
+deterministic way so the BFS state space genuinely branches; on 5x5
+the existing wrong-action-stays-put behavior is preserved for
+backward compatibility.
+
+A `BFSBaseline` class MUST implement breadth-first search over the
+puzzle state space, tracking `(step_index, grid)` as the dedup key
+and exiting early with `BFS_intractable` when more than 100,000
+states have been popped without finding a solved state.
+
+The Exp 1189 artifact MUST include `bfs_baseline_implemented`,
+`grid_sizes_tested`, `n_5x5_puzzles`, `n_10x10_puzzles`,
+`phase4_5x5_action_ratio`, `phase4_10x10_action_ratio`,
+`phase4_better_than_bfs_5x5`, `phase4_better_than_bfs_10x10`,
+`bfs_intractable_10x10`, `free_energy_values_all_puzzles`,
+`stronger_baseline_implemented`, `paper_narrative`, and
+`honest_verdict`.
+
+**Rationale:** Paper ISSUE-9 (paper-v5-integrity-remediation.md)
+flagged that the random-legal-action baseline used by Exp 1165
+solved 98% of the puzzles, demonstrating they were too easy for the
+baseline to be a meaningful comparison. BFS-to-goal removes that
+ambiguity: BFS finds the optimum on tractable puzzles, and Phase 4
+must beat it on intractable ones to claim any advantage.
+
+**Acceptance criteria:**
+
+- `ARC3PuzzleEnv(grid_size=10)` exposes ten 10x10 puzzles whose
+  initial grids have shape `(10, 10)` and whose `legal_actions`
+  count is in `[5, 8]` at every step.
+- `BFSBaseline.bfs_solve(env, puzzle_id)` returns either
+  `(action_sequence, n_states_explored)` or `(None, n_explored)`
+  when the 100,000-state cap is exceeded.
+- `scripts/experiment_1189_phase4_stronger_baseline_10x10.py` runs
+  Phase 4 and BFS on the same ten 5x5 and ten 10x10 puzzles, captures
+  the full free-energy trace for every Phase 4 episode (closing
+  ISSUE-9), and writes
+  `results/experiment_1189_phase4_stronger_baseline_10x10.json` with
+  every required field and an honest verdict from
+  `phase4_beats_bfs_on_hard_puzzles`, `phase4_tied_with_bfs`,
+  `phase4_loses_to_bfs_all_sizes`, or `bfs_mostly_intractable`.
+
 ## Scenarios
 
 ### SCENARIO-KONA-001: Stage 1 Primitive — RDT Fixed-Point Convergence
@@ -611,6 +668,22 @@ writes the required REQ-KONA-014 artifact fields without converting a tied or
 negative result into a positive verdict.
 
 **Spec traces:** REQ-KONA-014
+
+### SCENARIO-KONA-015: Exp 1189 Compares Phase 4 to BFS at 5x5 and 10x10
+
+**Given** `ARC3PuzzleEnv` supports both 5x5 (default) and 10x10 grid sizes,
+`BFSBaseline` is implemented with a 100,000-state intractability cap, and
+the Phase 4 active-inference pilot is operational
+**When** `scripts/experiment_1189_phase4_stronger_baseline_10x10.py` runs
+the same ten 5x5 and ten 10x10 puzzles through both Phase 4 and BFS
+**Then** it writes `results/experiment_1189_phase4_stronger_baseline_10x10.json`
+with all REQ-KONA-015 fields, a full free-energy trace for every Phase 4
+episode, and an honest verdict drawn from `phase4_beats_bfs_on_hard_puzzles`,
+`phase4_tied_with_bfs`, `phase4_loses_to_bfs_all_sizes`, or
+`bfs_mostly_intractable` based strictly on the measured action-count ratios
+and BFS intractability counts.
+
+**Spec traces:** REQ-KONA-015
 
 ## Out of scope
 

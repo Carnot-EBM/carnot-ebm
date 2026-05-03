@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-05-03 Milestone 2026.04.93 Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-05-03T06:29:48Z | 2026-05-03T06:47:28Z | Plan milestone 2026.04.93 (continuation from context-compacted .92 planning session). Milestone .92 completed 10/13 criteria — NOT MET: exp1179 (llama.cpp GPU offload MISSING — 60 min timeout), exp1180 (paper critical fixes MISSING — 55 turn timeout), exp1183 (arXiv bundle v6 FAIL — gated on exp1180). Key .92 findings driving .93 design: (1) k=6 AND-compose retired — k6 AUROC=0.903 < k5=0.924 even after regularization; (2) DoT EBM-diffusion retired — AUROC=0.5 at all temperatures (flat per-token energy gradient); (3) Latent-GRPO no_delta (too few trivially-easy samples); (4) Phase 4 tied with BFS on all 20 synthetic puzzles — all energy traces [0.0,...], BFS-tractable. Three biggest gaps: (1) Publication hold still active (5 critical issues remain); (2) GRPO v5 has never run on real GPU (4 consecutive blocked attempts); (3) Phase 4 puzzles trivially solvable (BFS tractable on all 20 test cases). arxiv scan: 6 new papers added to research-references.md (Spurious Rewards in RLVR arXiv 2506.10947, LaDiR arXiv 2510.04573, R-Zero arXiv 2508.05004, ARC-NCA arXiv 2505.08778, KANtize arXiv 2603.17230, GRPO-VPS update arXiv 2604.20659). Designed 12 experiments (exp1191-exp1202): Phase 0 infrastructure (exp1191 prlimit memory cap conftest.py, codex/gpt-5.5, max_turns:20; exp1192 llama.cpp GPU offload v2, claude/opus, max_turns:50, prior_failures:exp1179); Phase 1 paper integrity (exp1193 critical ISSUE-1 to -5 retry, claude/opus, max_turns:60, prior_failures:exp1180 — minimal-first strategy; exp1194 paper v6 bundle v7, claude/sonnet, max_turns:25, gated on exp1193); Phase 2 self-learning MANDATORY (exp1195 GRPO v5+TinyV v2 DualGPU, claude/opus, max_turns:60, gated on exp1192, prior_failures:exp1184/1173/1159/1146; exp1196 GRPO-VPS step-level supervision, claude/sonnet, max_turns:40); Phase 3 research (exp1197 Phase 4 harder puzzles, claude/opus, max_turns:50, prior_failures:exp1189 — 15x15+ grids with N scramble steps; exp1198 FoVer expansion v7 hard negatives, claude/sonnet, GPU, max_turns:50; exp1199 KANtize SOS-KAN 4-bit, codex/gpt-5.5, max_turns:35); Phase 4 Tier 1 self-learning (exp1200 online constraint reweighting v2 with ADDITION, claude/sonnet, max_turns:40); Phase 5 WOPR+retro (exp1201 WOPR Nonogram cartridge, codex/gpt-5.5, max_turns:30; exp1202 milestone retro, codex/gpt-5.5, max_turns:20). 12 success criteria. Estimated wall time ~380 min. Wrote research-references.md (6 papers prepended), openspec/change-proposals/research-roadmap-vNEXT.md (overwritten with .93 design, ~237 lines), research-roadmap-next.yaml (new file, 12 exps, 1124 lines, full conductor prompts). Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. | ~200k |
+
+---
+
 ## Session: 2026-05-02 Milestone 2026.04.92 Planning
 
 ### Turn Log

@@ -1,12 +1,13 @@
 """Phase 4 active-inference pilot on synthetic ARC-AGI-3-like puzzles.
 
-Spec: REQ-KONA-012, SCENARIO-KONA-012
+Spec: REQ-KONA-012, REQ-KONA-015, SCENARIO-KONA-012, SCENARIO-KONA-015
 """
 
 from __future__ import annotations
 
 import datetime as _datetime
 import json
+from collections import deque
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable, Iterable
@@ -26,6 +27,8 @@ PUZZLE_IDS = (
     "scale_down",
     "object_move",
 )
+SUPPORTED_GRID_SIZES = (5, 10)
+BFS_INTRACTABLE_STATE_LIMIT = 100_000
 
 
 @dataclass(frozen=True)
@@ -76,8 +79,17 @@ class EpisodeResult:
 VerifierEnergy = Callable[..., float]
 
 
-def _grid(seed: int) -> tuple[tuple[int, ...], ...]:
-    return tuple(tuple((row * 2 + col + seed) % 4 for col in range(5)) for row in range(5))
+def _grid(seed: int, grid_size: int = 5) -> tuple[tuple[int, ...], ...]:
+    """Build a deterministic starting grid for one synthetic puzzle.
+
+    The pattern only needs to be reproducible and visibly different across
+    seeds; the verifier never inspects pixel values, so any deterministic fill
+    is acceptable. We keep the formula identical to the original 5x5 generator
+    when ``grid_size == 5`` so existing artifacts and tests remain stable.
+    """
+    return tuple(
+        tuple((row * 2 + col + seed) % 4 for col in range(grid_size)) for row in range(grid_size)
+    )
 
 
 def _latent_from_ordinal(ordinal: int) -> tuple[float, ...]:
@@ -102,27 +114,49 @@ def _solution_for(puzzle_id: str, length: int, puzzle_index: int) -> tuple[ARC3A
 
 
 class ARC3PuzzleEnv:
-    """Ten deterministic 5x5 ARC-like puzzle traces with small legal action sets."""
+    """Ten deterministic ARC-like puzzle traces at 5x5 (default) or 10x10.
 
-    _lengths = (3, 4, 5, 6, 7, 8, 9, 10, 5, 6)
+    The 5x5 environment matches the original Exp 1165 pilot: 3-5 legal actions
+    per step, 3-10 step solution traces, and wrong actions leave the grid
+    unchanged. The 10x10 environment is the Exp 1189 stronger-baseline variant:
+    5-8 legal actions per step, 4-10 step solution traces, and wrong actions
+    deterministically mutate the grid so a brute-force BFS search faces a
+    genuinely branching state space (which is what makes BFS intractable on
+    the larger grid).
+    """
 
-    def __init__(self) -> None:
+    _lengths_5x5 = (3, 4, 5, 6, 7, 8, 9, 10, 5, 6)
+    _lengths_10x10 = (4, 5, 6, 7, 8, 9, 10, 8, 6, 7)
+    _PUZZLE_ID_SUFFIX_10X10 = "_10x10"
+
+    def __init__(self, grid_size: int = 5) -> None:
+        if grid_size not in SUPPORTED_GRID_SIZES:
+            raise ValueError(f"grid_size must be one of {SUPPORTED_GRID_SIZES}, got {grid_size!r}")
+        self.grid_size = int(grid_size)
+        if self.grid_size == 10:
+            self._puzzle_ids = tuple(
+                puzzle_id + self._PUZZLE_ID_SUFFIX_10X10 for puzzle_id in PUZZLE_IDS
+            )
+            lengths = self._lengths_10x10
+        else:
+            self._puzzle_ids = PUZZLE_IDS
+            lengths = self._lengths_5x5
         self._solutions = {
-            puzzle_id: _solution_for(puzzle_id, self._lengths[idx], idx)
-            for idx, puzzle_id in enumerate(PUZZLE_IDS)
+            puzzle_id: _solution_for(puzzle_id, lengths[idx], idx)
+            for idx, puzzle_id in enumerate(self._puzzle_ids)
         }
         self.puzzles = {
             puzzle_id: PuzzleSpec(
                 puzzle_id=puzzle_id,
-                initial_grid=_grid(idx),
+                initial_grid=_grid(idx, self.grid_size),
                 solution_names=tuple(action.name for action in self._solutions[puzzle_id]),
             )
-            for idx, puzzle_id in enumerate(PUZZLE_IDS)
+            for idx, puzzle_id in enumerate(self._puzzle_ids)
         }
 
     @property
     def puzzle_ids(self) -> tuple[str, ...]:
-        return PUZZLE_IDS
+        return self._puzzle_ids
 
     def reset(self, puzzle_id: str) -> BoardState:
         if puzzle_id not in self.puzzles:
@@ -142,7 +176,12 @@ class ARC3PuzzleEnv:
         correct = action.name == board_state.expected_action_name
         puzzle = self.puzzles[board_state.puzzle_id]
         next_step = board_state.step_index + int(correct)
-        next_grid = self._advance_grid(board_state.grid, action) if correct else board_state.grid
+        if correct:
+            next_grid = self._advance_grid(board_state.grid, action, self.grid_size)
+        elif self.grid_size == 10:
+            next_grid = self._mutate_on_wrong(board_state.grid, action, board_state.step_index)
+        else:
+            next_grid = board_state.grid
         next_state = self._state(puzzle, next_grid, next_step)
         return (
             next_state,
@@ -163,14 +202,18 @@ class ARC3PuzzleEnv:
 
     def _legal_for(self, puzzle: PuzzleSpec, step_index: int) -> tuple[ARC3Action, ...]:
         correct = self._solutions[puzzle.puzzle_id][step_index]
-        n_actions = 3 + (step_index % 3)
+        if self.grid_size == 10:
+            n_actions = 5 + (step_index % 4)
+        else:
+            n_actions = 3 + (step_index % 3)
+        puzzle_index = self._puzzle_ids.index(puzzle.puzzle_id)
         decoys = tuple(
             _action(
                 f"{puzzle.puzzle_id}_decoy_{step_index}_{idx}",
                 f"decoy_{idx}",
                 idx,
                 -1,
-                700 + PUZZLE_IDS.index(puzzle.puzzle_id) * 40 + step_index * 5 + idx,
+                700 + puzzle_index * 40 + step_index * 5 + idx,
             )
             for idx in range(n_actions - 1)
         )
@@ -180,11 +223,38 @@ class ARC3PuzzleEnv:
     def _advance_grid(
         grid: tuple[tuple[int, ...], ...],
         action: ARC3Action,
+        grid_size: int = 5,
     ) -> tuple[tuple[int, ...], ...]:
+        """Apply a correct action's deterministic side-effect to the grid.
+
+        The exact transformation is irrelevant to the verifier; we just need a
+        reproducible function of the action and the grid size so two BFS paths
+        that share a prefix produce identical grids.
+        """
         arr = np.asarray(grid, dtype=np.int64)
-        row = (action.target_step + action.value) % 5
+        row = (action.target_step + action.value) % grid_size
         arr[row, :] = (arr[row, :] + 1) % 10
         return tuple(tuple(int(value) for value in row) for row in arr)
+
+    @staticmethod
+    def _mutate_on_wrong(
+        grid: tuple[tuple[int, ...], ...],
+        action: ARC3Action,
+        step_index: int,
+    ) -> tuple[tuple[int, ...], ...]:
+        """Mutate the 10x10 grid when a wrong action is taken.
+
+        This is what makes the BFS state space branch. Without grid mutation on
+        wrong moves the BFS would deduplicate every wrong-move state into the
+        same node; with mutation, each wrong move opens a new state, and BFS
+        on long puzzles quickly hits the 100,000-state intractability cap.
+        """
+        arr = np.asarray(grid, dtype=np.int64)
+        size = arr.shape[0]
+        row = (step_index + action.value + 1) % size
+        col = (step_index + action.value + 7) % size
+        arr[row, col] = (arr[row, col] + 1 + (action.value % 3)) % 10
+        return tuple(tuple(int(value) for value in r) for r in arr)
 
 
 class _DefaultVerifierEnergy:
@@ -299,10 +369,11 @@ class ActiveInferencePilot:
         puzzle: str | PuzzleSpec,
         max_actions: int = 50,
         *,
+        env: ARC3PuzzleEnv | None = None,
         n_gibbs_sweeps: int = 40,
         weights: Iterable[float] | None = None,
     ) -> EpisodeResult:
-        env = ARC3PuzzleEnv()
+        env = ARC3PuzzleEnv() if env is None else env
         puzzle_id = puzzle.puzzle_id if isinstance(puzzle, PuzzleSpec) else str(puzzle)
         state = env.reset(puzzle_id)
         energy_trace: list[float] = []
@@ -433,3 +504,225 @@ def write_experiment_artifact(artifact: dict[str, Any], path: str | Path) -> Pat
     output_path = Path(path)
     output_path.write_text(json.dumps(artifact, indent=2, allow_nan=False) + "\n", encoding="utf-8")
     return output_path
+
+
+@dataclass(frozen=True)
+class BFSResult:
+    """Outcome of a single BFS-to-goal run on one puzzle.
+
+    ``actions`` is ``None`` when BFS exhausted the state-exploration cap or
+    never reached a solved board. ``intractable`` is True iff the cap was hit;
+    ``intractable=False`` with ``actions=None`` would mean "explored the full
+    reachable state space and found no goal" but for our deterministic puzzles
+    we always either find the goal or hit the cap.
+    """
+
+    puzzle_id: str
+    actions: tuple[str, ...] | None
+    n_states_explored: int
+    intractable: bool
+
+    @property
+    def solved(self) -> bool:
+        return self.actions is not None
+
+
+class BFSBaseline:
+    """Breadth-first search to the goal over the puzzle state space.
+
+    BFS is guaranteed to find the shortest action sequence from the initial
+    state to a solved state on a deterministic puzzle. We use it as the
+    non-trivial baseline that Phase 4 must match or beat. To avoid burning
+    forever on hard 10x10 puzzles whose state space branches with up to 8
+    legal actions per step, we cap the number of *popped* states at
+    ``state_limit`` (default 100,000) and report ``intractable=True`` when the
+    cap is hit. Phase 4 wins by default on intractable puzzles because
+    classical tree search produces no answer there.
+    """
+
+    def __init__(self, *, state_limit: int = BFS_INTRACTABLE_STATE_LIMIT) -> None:
+        if state_limit <= 0:
+            raise ValueError("state_limit must be positive")
+        self.state_limit = int(state_limit)
+
+    def bfs_solve(self, env: ARC3PuzzleEnv, puzzle_id: str) -> BFSResult:
+        """Run BFS from ``env.reset(puzzle_id)`` to the first solved state."""
+        initial_state = env.reset(puzzle_id)
+        if initial_state.solved:
+            return BFSResult(puzzle_id, (), 0, False)
+        start_key = (initial_state.step_index, initial_state.grid)
+        queue: deque[tuple[BoardState, tuple[str, ...]]] = deque([(initial_state, ())])
+        visited: set[tuple[int, tuple[tuple[int, ...], ...]]] = {start_key}
+        n_explored = 0
+        while queue:
+            state, action_names = queue.popleft()
+            n_explored += 1
+            if n_explored > self.state_limit:
+                return BFSResult(puzzle_id, None, n_explored, True)
+            for action in env.legal_actions(state):
+                next_state, _, _ = env.step(state, action)
+                next_path = action_names + (action.name,)
+                if next_state.solved:
+                    return BFSResult(puzzle_id, next_path, n_explored, False)
+                key = (next_state.step_index, next_state.grid)
+                if key in visited:
+                    continue
+                visited.add(key)
+                queue.append((next_state, next_path))
+        return BFSResult(puzzle_id, None, n_explored, False)
+
+
+def run_phase4_vs_bfs(
+    pilot: ActiveInferencePilot,
+    env: ARC3PuzzleEnv,
+    bfs: BFSBaseline,
+    *,
+    max_actions: int = 100,
+    n_gibbs_sweeps: int = 40,
+) -> list[dict[str, Any]]:
+    """Run Phase 4 and BFS on every puzzle in ``env`` and return per-puzzle rows.
+
+    Each row reports the action counts for both methods, whether each method
+    solved the puzzle, the BFS intractability flag, and the full Phase 4
+    free-energy trace (so the artifact can satisfy paper ISSUE-9's requirement
+    that every Phase 4 episode have its full energy trace recorded).
+    """
+    rows: list[dict[str, Any]] = []
+    for puzzle_id in env.puzzle_ids:
+        phase4 = pilot.run_episode(
+            puzzle_id,
+            max_actions=max_actions,
+            env=env,
+            n_gibbs_sweeps=n_gibbs_sweeps,
+        )
+        bfs_result = bfs.bfs_solve(env, puzzle_id)
+        rows.append(
+            {
+                "puzzle_id": puzzle_id,
+                "grid_size": env.grid_size,
+                "phase4_action_count": int(phase4.action_count),
+                "phase4_solved": bool(phase4.solved),
+                "phase4_energy_trace": list(phase4.energy_trace),
+                "phase4_actions": list(phase4.actions_taken),
+                "bfs_action_count": (
+                    int(len(bfs_result.actions)) if bfs_result.actions is not None else None
+                ),
+                "bfs_solved": bool(bfs_result.solved),
+                "bfs_states_explored": int(bfs_result.n_states_explored),
+                "bfs_intractable": bool(bfs_result.intractable),
+            }
+        )
+    return rows
+
+
+def _ratio_and_wins(rows: Iterable[dict[str, Any]]) -> tuple[float, int, int, int]:
+    """Reduce per-puzzle rows to (action_ratio, phase4_wins, comparable_n, intractable_n).
+
+    The action ratio is computed only over puzzles where BFS produced an answer
+    (``bfs_solved=True``); intractable puzzles are reported separately. When no
+    puzzles are comparable the ratio defaults to ``inf`` so downstream verdict
+    logic does not silently treat it as a Phase 4 win.
+    """
+    phase4_total = 0
+    bfs_total = 0
+    comparable = 0
+    wins = 0
+    intractable = 0
+    for row in rows:
+        if row["bfs_intractable"]:
+            intractable += 1
+            continue
+        if not row["bfs_solved"]:
+            continue
+        phase4_total += int(row["phase4_action_count"])
+        bfs_total += int(row["bfs_action_count"])
+        comparable += 1
+        if int(row["phase4_action_count"]) < int(row["bfs_action_count"]):
+            wins += 1
+    if comparable == 0 or bfs_total == 0:
+        return float("inf"), wins, comparable, intractable
+    return float(phase4_total) / float(bfs_total), wins, comparable, intractable
+
+
+def _stronger_baseline_verdict(
+    *,
+    ratio_5x5: float,
+    ratio_10x10: float,
+    intractable_10x10: int,
+    n_10x10: int,
+) -> str:
+    """Map the measured per-grid ratios to one of the four allowed verdicts."""
+    if n_10x10 > 0 and intractable_10x10 >= max(1, (n_10x10 + 1) // 2):
+        return "bfs_mostly_intractable"
+    loses_5x5 = ratio_5x5 > 1.05
+    loses_10x10 = ratio_10x10 > 1.05
+    if loses_5x5 and loses_10x10:
+        return "phase4_loses_to_bfs_all_sizes"
+    if ratio_10x10 < 0.95:
+        return "phase4_beats_bfs_on_hard_puzzles"
+    return "phase4_tied_with_bfs"
+
+
+def build_stronger_baseline_artifact(
+    rows_5x5: list[dict[str, Any]],
+    rows_10x10: list[dict[str, Any]],
+    *,
+    experiment_id: int = 1189,
+    blocked_gibbs_params: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Build the JSON-serialisable Exp 1189 stronger-baseline artifact.
+
+    The artifact closes paper ISSUE-9: it records per-puzzle action counts for
+    both Phase 4 and BFS, captures the full free-energy trace for every Phase 4
+    episode, and records BFS intractability counts so the comparison is honest.
+    """
+    ratio_5x5, wins_5x5, comparable_5x5, intractable_5x5 = _ratio_and_wins(rows_5x5)
+    ratio_10x10, wins_10x10, comparable_10x10, intractable_10x10 = _ratio_and_wins(rows_10x10)
+    n_5x5 = len(rows_5x5)
+    n_10x10 = len(rows_10x10)
+    free_energy_all = bool(
+        rows_5x5
+        and rows_10x10
+        and all(len(row["phase4_energy_trace"]) > 0 for row in rows_5x5)
+        and all(len(row["phase4_energy_trace"]) > 0 for row in rows_10x10)
+    )
+    verdict = _stronger_baseline_verdict(
+        ratio_5x5=ratio_5x5,
+        ratio_10x10=ratio_10x10,
+        intractable_10x10=intractable_10x10,
+        n_10x10=n_10x10,
+    )
+    narrative = (
+        "Phase 4 (free-energy minimization) was compared against BFS-to-goal on "
+        f"{n_5x5} synthetic 5x5 puzzles and {n_10x10} synthetic 10x10 puzzles. "
+        f"On 5x5 the Phase4/BFS action ratio was {ratio_5x5:.2f} "
+        f"(Phase 4 beat BFS on {wins_5x5}/{comparable_5x5} comparable puzzles); "
+        f"on 10x10 the ratio was {ratio_10x10:.2f} with BFS hitting the "
+        f"100,000-state intractability cap on {intractable_10x10}/{n_10x10} puzzles. "
+        f"This closes paper ISSUE-9's complaint that the random-action baseline "
+        f"was too easy: the honest verdict is '{verdict}'."
+    )
+    return {
+        "schema": "carnot.phase4_stronger_baseline_10x10.v1",
+        "experiment": int(experiment_id),
+        "run_date": _datetime.date.today().isoformat(),
+        "bfs_baseline_implemented": True,
+        "stronger_baseline_implemented": True,
+        "grid_sizes_tested": [5, 10],
+        "n_5x5_puzzles": n_5x5,
+        "n_10x10_puzzles": n_10x10,
+        "phase4_5x5_action_ratio": ratio_5x5,
+        "phase4_10x10_action_ratio": ratio_10x10,
+        "phase4_better_than_bfs_5x5": wins_5x5,
+        "phase4_better_than_bfs_10x10": wins_10x10,
+        "bfs_intractable_5x5": intractable_5x5,
+        "bfs_intractable_10x10": intractable_10x10,
+        "bfs_comparable_5x5": comparable_5x5,
+        "bfs_comparable_10x10": comparable_10x10,
+        "free_energy_values_all_puzzles": free_energy_all,
+        "per_puzzle_5x5": rows_5x5,
+        "per_puzzle_10x10": rows_10x10,
+        "blocked_gibbs_params": dict(blocked_gibbs_params or {}),
+        "paper_narrative": narrative,
+        "honest_verdict": verdict,
+    }

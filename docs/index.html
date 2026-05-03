@@ -300,10 +300,10 @@
       <a href="technical-report.html" class="btn btn-secondary">How it works</a>
     </div>
     <div class="stats-bar" aria-label="Project headline numbers">
-      <div class="stat"><div class="stat-num">1,177</div><div class="stat-label">Through Exp 1177</div></div>
-      <div class="stat"><div class="stat-num">91</div><div class="stat-label">Milestones complete</div></div>
-      <div class="stat"><div class="stat-num">21,270</div><div class="stat-label">Python test items</div></div>
-      <div class="stat"><div class="stat-num">11/13</div><div class="stat-label">.91 criteria met</div></div>
+      <div class="stat"><div class="stat-num">1,190</div><div class="stat-label">Through Exp 1190</div></div>
+      <div class="stat"><div class="stat-num">92</div><div class="stat-label">Milestones complete</div></div>
+      <div class="stat"><div class="stat-num">21,207</div><div class="stat-label">Python test items</div></div>
+      <div class="stat"><div class="stat-num">10/13</div><div class="stat-label">.92 criteria met</div></div>
     </div>
   </div>
 </section>
@@ -449,9 +449,10 @@
           failure. The production default now uses a five-verifier
           AND-compose ensemble with SOS-KAN, SemEnergy, AST, semantic
           consistency, and Z3 checks, plus an information-asymmetric MARCH
-          claim-check loop for high-risk responses. A seventh SC-Energy
-          verifier is under evaluation; the latest k=6 test did not beat
-          the k=5 default, so k=5 remains the production ensemble.
+          claim-check loop for high-risk responses. The seventh SC-Energy
+          verifier was regularized after an overfit audit, but the latest
+          k=6 test still did not beat the k=5 default, so k=6 is retired for
+          the production path.
         </p>
       </div>
     </div>
@@ -736,21 +737,27 @@
       </div>
       <div class="r-card">
         <span class="r-tag">Phase 4 active inference &mdash; ARC-AGI-3-style pilot</span>
-        <h3 class="r-title">100% solved; 74.7% fewer actions</h3>
-        <div class="r-meter"><div class="r-bar" style="width: 100%; background: #22c55e;"></div></div>
-        <div class="r-stats"><span class="r-before">10 synthetic 5x5 puzzles, action_count_ratio=0.2534 vs greedy baseline</span> <span class="r-after">Small-scale pilot &mdash; Exp 1165</span></div>
+        <h3 class="r-title">100% solved; tied BFS later</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 50%; background: #f59e0b;"></div></div>
+        <div class="r-stats"><span class="r-before">Beat greedy in Exp 1165; Exp 1189 action ratio=1.0 vs BFS on 20 puzzles</span> <span class="r-after">Limitation found &mdash; Exps 1165/1189</span></div>
       </div>
       <div class="r-card">
         <span class="r-tag">Verifier expansion &mdash; SC-Energy seventh verifier</span>
-        <h3 class="r-title">AUROC=1.0; correlations below 0.5</h3>
-        <div class="r-meter"><div class="r-bar" style="width: 100%; background: #a855f7;"></div></div>
-        <div class="r-stats"><span class="r-before">Max listed correlation below threshold on Exp 1168 eval</span> <span class="r-after">k=6 still underperforms &mdash; Exps 1168/1176</span></div>
+        <h3 class="r-title">Initial AUROC=1.0 was overfit</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 32.22%; background: #f59e0b;"></div></div>
+        <div class="r-stats"><span class="r-before">Regularized v2 holdout AUROC=0.3222; k=6 remains below k=5</span> <span class="r-after">Overfit audit &mdash; Exp 1185</span></div>
       </div>
       <div class="r-card">
-        <span class="r-tag">Diffusion of Thought &mdash; inference-time correction</span>
-        <h3 class="r-title">+4pp accuracy; diminishing returns</h3>
-        <div class="r-meter"><div class="r-bar" style="width: 50%; background: #f59e0b;"></div></div>
-        <div class="r-stats"><span class="r-before">T=1 already captured the gain; AUROC stayed 0.5 through T=125</span> <span class="r-after">Non-monotone &mdash; Exp 1171</span></div>
+        <span class="r-tag">Honest negative &mdash; Diffusion of Thought</span>
+        <h3 class="r-title">Redesign AUROC=0.4699; retired</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 46.99%; background: #f59e0b;"></div></div>
+        <div class="r-stats"><span class="r-before">Token gradients were near zero; EBM-diffusion stayed below random</span> <span class="r-after">Retired &mdash; Exp 1186</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Self-learning &mdash; Latent-GRPO reward masking</span>
+        <h3 class="r-title">0.0pp delta on FoVer proxy</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 46%; background: #f59e0b;"></div></div>
+        <div class="r-stats"><span class="r-before">Invalid-sample masking + one-sided noise stayed 46% &rarr; 46%</span> <span class="r-after">No gain &mdash; Exp 1187</span></div>
       </div>
       <div class="r-card">
         <span class="r-tag">Phase 3 seed &mdash; NRGPT per-token energy</span>
@@ -765,16 +772,16 @@
         <div class="r-stats"><span class="r-before">Multiply-free BiKA estimate; NPU verdict feasible</span> <span class="r-after">No accuracy benchmark &mdash; Exp 1174</span></div>
       </div>
       <div class="r-card">
-        <span class="r-tag">WOPR gallery &mdash; Connect Four cartridge</span>
-        <h3 class="r-title">42-spin cartridge; 10 tests passing</h3>
+        <span class="r-tag">WOPR gallery &mdash; Connect Four + Hex cartridges</span>
+        <h3 class="r-title">42-spin Connect Four; 7x7 Hex operational</h3>
         <div class="r-meter"><div class="r-bar" style="width: 100%; background: #0ea5e9;"></div></div>
-        <div class="r-stats"><span class="r-before">Valid boards E=0; gravity violation repaired to E=0 sampled state</span> <span class="r-after">Milestone .91 &mdash; Exp 1175</span></div>
+        <div class="r-stats"><span class="r-before">Connect Four 10 tests; Hex Gibbs beat random 90% and tied greedy 50%</span> <span class="r-after">Milestones .91/.92 &mdash; Exps 1175/1188</span></div>
       </div>
       <div class="r-card">
         <span class="r-tag">Honest negative &mdash; k=6 AND-compose</span>
-        <h3 class="r-title">k=6 AUROC 0.8973 vs k=5 0.9240</h3>
-        <div class="r-meter"><div class="r-bar" style="width: 89.73%; background: #f59e0b;"></div></div>
-        <div class="r-stats"><span class="r-before">SC-Energy remained low-correlation but lowered ensemble AUROC</span> <span class="r-after">k=5 stays default &mdash; Exp 1176</span></div>
+        <h3 class="r-title">k=6 AUROC 0.9027 vs k=5 0.9240</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 90.27%; background: #f59e0b;"></div></div>
+        <div class="r-stats"><span class="r-before">Regularized SC-Energy still lowers ensemble AUROC</span> <span class="r-after">k=6 retired &mdash; Exp 1185</span></div>
       </div>
       <div class="r-card">
         <span class="r-tag">Hardware &mdash; Extropic Z1/XTR-0 packet</span>
@@ -783,10 +790,10 @@
         <div class="r-stats"><span class="r-before">Integration packet written; thrml_available=false on this host</span> <span class="r-after">Milestone .89 &mdash; Exp 1150</span></div>
       </div>
       <div class="r-card">
-        <span class="r-tag">Preprint package &mdash; arXiv v5</span>
-        <h3 class="r-title">Phase 4 section compiled; hold remains</h3>
+        <span class="r-tag">Preprint package &mdash; arXiv v5/v6</span>
+        <h3 class="r-title">13/18 issues fixed; hold remains</h3>
         <div class="r-meter"><div class="r-bar" style="width: 50%; background: #f59e0b;"></div></div>
-        <div class="r-stats"><span class="r-before">347.83 KB PDF + v5 bundle verified; paper_ready=false after integrity audit</span> <span class="r-after">Figure/claim remediation required &mdash; Exp 1167</span></div>
+        <div class="r-stats"><span class="r-before">High + medium/low fixed; v6 bundle blocked by missing Exp 1180 critical artifact</span> <span class="r-after">Hold active &mdash; Exps 1181/1182/1183</span></div>
       </div>
     </div>
 
@@ -820,10 +827,10 @@
     <p class="section-desc">
       An architectural framework for mapping the empirical bounds of
       LLM verification. The current draft includes the .91 Phase 4 pilot and
-      leaderboard-context section, and the v5 source bundle compiles with
-      tectonic. arXiv submission is intentionally on hold after the
-      2026-05-02 paper-integrity audit found figure and hardware-claim issues
-      that must be fixed before upload.
+      leaderboard-context section, plus .92 integrity remediation for the
+      high- and medium/low-severity audit items. arXiv submission is still on
+      hold because the critical-issue artifact is missing and the v6 bundle
+      did not pass its gates.
     </p>
     <div class="hero-actions" style="justify-content: flex-start;">
       <a href="position-paper-draft-v3.md" class="btn btn-primary">Read source draft</a>
@@ -831,8 +838,9 @@
       <a href="arxiv-metadata.yaml" class="btn btn-secondary">Submission metadata</a>
     </div>
     <p style="margin-top: 1.5rem; font-size: 0.9rem; color: var(--text-muted);">
-      <em>Paper PDF compiled 2026-05-02; arXiv hold remains active until all
-      18 paper-integrity audit issues and the figure/claim hooks are resolved.</em>
+      <em>Latest paper audit status 2026-05-03: 13/18 issues resolved; arXiv
+      hold remains active until all 18 issues, the figure/claim hooks, and
+      operator approval are complete.</em>
     </p>
   </div>
 </section>

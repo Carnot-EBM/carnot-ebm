@@ -1,6 +1,7 @@
 """Shared test fixtures for Carnot Python tests."""
 
 import os
+import resource
 import sys
 import warnings
 from pathlib import Path
@@ -22,6 +23,13 @@ sys.path.insert(0, str(repo_root))
 
 # Disable JAX GPU for testing (CPU only)
 jax.config.update("jax_platform_name", "cpu")
+try:
+    # Initialise the CPU backend before pytest_configure installs RLIMIT_AS.
+    # XLA can abort the interpreter if its first CPU-client allocation happens
+    # after the 8 GB virtual-memory cap is active.
+    jax.devices("cpu")
+except Exception as exc:  # pragma: no cover - surfaced by tests that use JAX.
+    warnings.warn(f"Could not pre-initialise JAX CPU backend: {exc}", stacklevel=2)
 
 # Pytest collection exclusions:
 # - quarantine/ — tests we've explicitly removed from default discovery.
@@ -73,7 +81,21 @@ def _get_memory_watchdog(config) -> PytestMemoryWatchdog:
     return watchdog
 
 
+def _set_process_address_space_limit(limit_bytes: int = 8 * 1024**3) -> bool:
+    """Set a hard address-space cap before tests can load oversized models."""
+    try:
+        _soft, hard = resource.getrlimit(resource.RLIMIT_AS)
+        new_soft = min(limit_bytes, hard) if hard != resource.RLIM_INFINITY else limit_bytes
+        resource.setrlimit(resource.RLIMIT_AS, (new_soft, hard))
+    except (OSError, ValueError) as exc:
+        warnings.warn(f"Could not set RLIMIT_AS: {exc}", RuntimeWarning, stacklevel=2)
+        return False
+    return True
+
+
 def pytest_configure(config) -> None:
+    """Set hard address-space limit and keep the RSS watchdog installed."""
+    config._carnot_rlimit_as_set = _set_process_address_space_limit()
     config._carnot_memory_watchdog = PytestMemoryWatchdog()
 
 

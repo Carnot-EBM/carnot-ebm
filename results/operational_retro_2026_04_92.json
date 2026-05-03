@@ -1,0 +1,118 @@
+{
+  "experiment": "operational-retro-2026-04-92",
+  "title": "Milestone 2026.04.92 - Operational Efficiency Retrospective",
+  "milestone": "2026.04.92",
+  "run_date": "2026-05-03",
+  "schema": "carnot.operational_retro.v66",
+  "retro_type": "operational_efficiency",
+  "total_wall_time_minutes": 339,
+  "experiments_completed": 66,
+  "reported_average_per_experiment_minutes": 5,
+  "computed_average_per_experiment_minutes": 5.14,
+  "source_notes": [
+    "Uses the user-provided full-milestone timing data as authoritative: 339 minutes, 66 completed experiments, average approximately 5 minutes per experiment.",
+    "results/experiment_1190_milestone_retro_92.json records research criteria and active-batch task spans; this artifact focuses on full-milestone operating efficiency, queue bottlenecks, GPU utilization, and next-milestone tooling.",
+    "GPU state comes from the provided gpu_monitor.py report at 2026-05-03T06:25:47.543074+00:00."
+  ],
+  "slowest_experiments": [
+    {
+      "rank": 1,
+      "id": "exp906",
+      "duration_min": 35,
+      "title": "Code Repair 50q Scale-Up - IterativeSelfRepair with Gemma4",
+      "why_slow": "Recurring serial execute-feedback-retry benchmark across 50 code-repair questions. The experiment is inherently slow, but the operational failure is that this carryover/retired slow path still reaches dispatch instead of being blocked by a final manifest check."
+    },
+    {
+      "rank": 2,
+      "id": "exp950_docs",
+      "duration_min": 28,
+      "title": "In-process docs for Exp 950: E-MVL Sparsified Ising - Sparse Connectivity for KV260 RTL Optimization",
+      "why_slow": "Documentation reconciliation ran inline in the main execution lane. This work does not need to occupy the experiment dispatcher and should be batched asynchronously at milestone close."
+    },
+    {
+      "rank": 3,
+      "id": "exp948",
+      "duration_min": 24,
+      "title": "Symbolic-KAN Real FoVer Data - AUC=0.9344 Architecture",
+      "why_slow": "CPU-bound full-corpus FoVer/Symbolic-KAN sweep. It is appropriate for certification, but too expensive as a repeated exploratory run; a bounded fast-eval sample would preserve operational signal."
+    },
+    {
+      "rank": 4,
+      "id": "exp930",
+      "duration_min": 19,
+      "title": "Math Iterative Self-Repair v1 - Execute-Feedback on GSM8K",
+      "why_slow": "Sequential math repair loop with repeated model/evaluator feedback. Stable baseline outputs should be cached and reruns should evaluate only changed repair or verifier logic."
+    },
+    {
+      "rank": 5,
+      "id": "exp935",
+      "duration_min": 15,
+      "title": "FR-11 Tier 2 Code Domain Memory - CaseMemory for Code",
+      "why_slow": "Memory/retrieval benchmark work repeated enough state construction and evaluation to enter the slowest five. It should use cached corpus features and delta evaluation unless memory logic changed."
+    }
+  ],
+  "bottlenecks_identified": [
+    "The slowest-five still contain recurring operational debt rather than only active milestone research. exp906 consumed 35 minutes again, showing dispatch-time retirement/carryover enforcement is still incomplete.",
+    "Inline documentation reconciliation remained a major bottleneck. The 28-minute exp950 docs pass was the second-longest full-milestone item and blocked the main execution lane.",
+    "Full-corpus exploratory sweeps are still too common. exp948 consumed 24 minutes where fast-eval sampling would have been adequate for non-certification feedback.",
+    "Repair and memory benchmarks are still mostly serial. exp930 and exp935 together consumed 34 minutes and are good candidates for cached baselines, delta evaluation, and batched model calls.",
+    "GPU utilization was inefficient. Both RTX 3090s were at 0% utilization at close, and only one Python inference process was present. The monitor explicitly recommended DualGPURunner and batching 8-16 questions per forward pass.",
+    "No formal GPU zombie was detected by scripts/gpu_monitor.py's threshold. PID 684224 held 516 MB on GPU 0 for 7899 seconds with 1748 seconds of CPU time; it was stale and idle on-GPU, but below the 1024 MB zombie threshold and not CPU-idle by the monitor's CPU/wall ratio rule.",
+    "Sequential queueing left parallel capacity unused. Documentation, CPU sweeps, stable repair fixtures, and GPU inference jobs could have occupied separate lanes instead of serializing behind each other.",
+    "Pre-flight/self-heal retries were a secondary active-batch issue. The full-milestone slowest-five were not pre-flight tests, but exp1190 reports that missing gate artifacts and pre-test/self-heal retries dominated the scheduled .92 batch, especially around exp1179 and exp1180.",
+    "The pytest memory watchdog was progress, but not sufficient as an operational control. The next milestone needs hard RSS enforcement via prlimit or cgroups, plus per-check duration reporting.",
+    "Doc reconciliation passes were not efficient because they were performed in-process and repeated as blocking work instead of being coalesced into one milestone-close reconciliation batch."
+  ],
+  "questions_answered": {
+    "which_experiments_took_longest_and_why": "The longest full-milestone items were exp906 at 35 minutes, exp950 docs at 28 minutes, exp948 at 24 minutes, exp930 at 19 minutes, and exp935 at 15 minutes. The root causes were recurring carryover dispatch, inline documentation, full-corpus sweeps, serial repair loops, and repeated memory benchmark setup.",
+    "was_gpu_utilization_efficient": "No. GPU 0 used 526/24576 MB and GPU 1 used 5/24576 MB, both at 0% utilization. The milestone effectively closed with two idle RTX 3090s and one small idle Python process instead of parallel DualGPURunner execution.",
+    "were_there_zombie_processes": "No formal zombie by gpu_monitor.py rules. The only process used 516 MB, which is below the 1024 MB zombie threshold, and its CPU/wall ratio was roughly 22%, not below the 1% zombie rule. It should still be cleaned up when stale because it held idle VRAM.",
+    "could_any_experiments_have_been_parallelized": "Yes. Inline docs, CPU-only corpus sweeps, stable repair fixtures, and GPU model inference should be split into CPU-doc, CPU-eval, GPU-model, and gated-publication lanes. GPU inference should also batch questions and default to two-GPU execution.",
+    "was_the_preflight_test_suite_a_bottleneck": "Not in the full-milestone slowest-five, but active-batch self-heal/pre-test retries were a secondary issue. The next control should be hard memory limits and timing telemetry rather than more advisory preflight checks.",
+    "were_doc_reconciliation_passes_efficient": "No. A 28-minute in-process docs pass was the second-slowest item. It should run asynchronously as one milestone-close reconciliation batch.",
+    "what_tooling_infrastructure_changes_would_speed_next_milestone": "Dispatch-time retirement guard, async docs, CARNOT_FAST_EVAL sampling, cached/delta benchmark fixtures, hard RSS limits for pytest, DualGPURunner defaults, batched inference, and stale GPU process cleanup would have the largest impact."
+  },
+  "gpu_state_at_close": {
+    "timestamp_utc": "2026-05-03T06:25:47.543074+00:00",
+    "gpu0_model": "NVIDIA GeForce RTX 3090",
+    "gpu0_vram_used_mb": 526,
+    "gpu0_vram_total_mb": 24576,
+    "gpu0_util_pct": 0,
+    "gpu0_temp_c": 53,
+    "gpu1_model": "NVIDIA GeForce RTX 3090",
+    "gpu1_vram_used_mb": 5,
+    "gpu1_vram_total_mb": 24576,
+    "gpu1_util_pct": 0,
+    "gpu1_temp_c": 52,
+    "processes_detected": 1,
+    "formal_zombies_detected": 0,
+    "stale_idle_processes_detected": 1,
+    "operational_verdict": "clean_enough_but_underutilized"
+  },
+  "improvements_suggested": [
+    "Add a dispatch-time retirement guard immediately before worker spawn. If an experiment is retired or excluded, emit a skipped artifact and do not launch the worker; use exp906 as the regression test.",
+    "Move documentation reconciliation out of the main executor. Batch ops, changelog, roadmap, spec, and paper reconciliation into one asynchronous milestone-close job.",
+    "Implement CARNOT_FAST_EVAL=1 for exploratory FoVer, Symbolic-KAN, and architecture-comparison sweeps. Use stratified samples by default and reserve full-corpus runs for certification artifacts.",
+    "Cache stable benchmark outputs for repair and memory fixtures. exp930/exp935-style work should recompute only changed verifier, repair, or memory logic.",
+    "Make DualGPURunner the default for GPU-eligible experiments. Run Qwen-class work on GPU 0 and Gemma-class work on GPU 1 unless a task opts out with a written reason.",
+    "Batch multiple questions per model forward pass, targeting 8-16 questions where memory allows. This directly addresses the gpu_monitor.py single-inference-process warning.",
+    "Add hard pytest memory enforcement with prlimit or cgroups. The watchdog should fail before a single test can consume tens of GB and should report per-check wall time.",
+    "Add a stale GPU process cleanup policy below the formal zombie threshold. Processes holding idle VRAM for long wall times should be reported and optionally terminated even if they use less than 1 GB.",
+    "Split the conductor into CPU-doc, CPU-eval, GPU-model, and gated-publication lanes so independent work does not serialize behind doc reconciliation or long CPU sweeps.",
+    "Persist per-experiment start/end, queue wait, preflight duration, retry count, GPU occupancy, and batching metrics into ops/metrics.md so future retros can separate full-queue and active-batch bottlenecks cleanly."
+  ],
+  "estimated_time_savings_pct": 30,
+  "estimated_savings_breakdown_min": {
+    "dispatch_time_retirement_guard_exp906": 35,
+    "async_doc_reconciliation_exp950": 28,
+    "fast_eval_for_exp948_class_sweeps": 15,
+    "cached_delta_repair_and_memory_fixtures": 17,
+    "dualgpu_default_and_batched_inference": 20,
+    "hard_preflight_memory_limits_and_retry_control": 10,
+    "gross_recoverable_minutes": 125,
+    "pct_of_339_min_wall_time": 36.9,
+    "conservative_estimated_savings_pct": 30,
+    "note": "The headline estimate is lower than gross recoverable minutes because some savings overlap when the same work is moved to parallel lanes."
+  },
+  "operational_verdict": "339min_66_experiments_avg_5pt14min_fastest_wall_time_but_not_yet_efficient_slowest5_still_operational_debt_gpus_idle_no_formal_zombies_docs_inline_preflight_secondary_30pct_recoverable_next_milestone"
+}
