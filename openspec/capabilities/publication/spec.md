@@ -233,6 +233,33 @@ unit normalization. The script MUST report:
 The script MUST exit nonzero when any mismatch exists or when
 `n_claims_with_artifact_citation / n_claims_total < 0.8`.
 
+### REQ-PUBLISH-010: Paper v5 Recompile And arXiv Bundle v6 Gate Record
+
+The paper-v5 recompile runner MUST refuse to compile or bundle the paper unless
+the Exp 1180 critical-fix gate and Exp 1181 high-severity gate are both present
+and true. When the prerequisite gates pass, the runner MUST execute the figure
+integrity audit and paper numerical-claim audit, attempt the `pdflatex` +
+`bibtex` compile pipeline, build the v6 arXiv source bundle, run the final
+banned-string grep checks, and emit
+`results/experiment_1183_paper_v5_recompile_arxiv_bundle_v6.json`.
+
+The artifact MUST record:
+
+- `pdf_compiles_without_error`
+- `arxiv_bundle_v6_ready`
+- `arxiv_bundle_path`
+- `figure_audit_untraced_constants`
+- `claim_audit_n_mismatches`
+- `known_remaining_issues`
+- `fabricated_constants_remaining`
+- `paper_word_count`
+- `4_test_full_pass`
+- `honest_verdict`, one of `"arxiv_bundle_v6_ready"`,
+  `"compilation_failed"`, or `"audit_failures_remain"`
+
+Audit failures MUST be documented in the artifact without preventing source
+bundle creation once the Exp 1180 and Exp 1181 prerequisite gates are true.
+
 ### SCENARIO-PUBLISH-008: All Medium/Low Fixes And Claim Audit Verified
 
 **Given** the position paper source, bibliography, and local experiment result
@@ -243,6 +270,22 @@ artifacts exist
   AND `paper_claim_audit_n_mismatches == 0`
   AND `medium_low_issues_fixed == 8`
   AND `honest_verdict == "all_8_medium_low_resolved"`
+
+### SCENARIO-PUBLISH-009: Exp 1183 Blocks Before Recompile When Prior Gates Are Missing
+
+**Given** Exp 1180 has not emitted a successful critical-fix artifact
+**When** the exp1183 recompile runner executes
+**Then** it writes the required gate-record schema with
+`prerequisites_met == False`
+AND `arxiv_bundle_v6_ready == False`
+AND it does not run the audit, compile, or bundle steps.
+
+### SCENARIO-PUBLISH-010: Exp 1183 Records Bundle And Audit Status
+
+**Given** Exp 1180 and Exp 1181 have both emitted successful gate artifacts
+**When** the exp1183 recompile runner executes
+**Then** it records the audit counts, banned-string count, paper word count,
+bundle path, compile status, and a closed-set `honest_verdict`.
 
 ## Implementation Status
 
@@ -257,3 +300,4 @@ artifacts exist
 | REQ-PUBLISH-007 | Implemented | Exp 1181 paper v5 high-severity fixes ISSUE-6..10 |
 | REQ-PUBLISH-008 | Proposed | Exp 1182 paper v5 medium/low fixes ISSUE-11..18 |
 | REQ-PUBLISH-009 | Proposed | Exp 1182 paper numerical-claim audit script |
+| REQ-PUBLISH-010 | Proposed | Exp 1183 paper v5 recompile and arXiv bundle v6 gate artifact |
