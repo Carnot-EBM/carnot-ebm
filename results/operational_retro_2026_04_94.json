@@ -1,0 +1,152 @@
+{
+  "schema": "carnot.operational_retro.v63",
+  "milestone": "2026.04.94",
+  "generated_at": "2026-05-03T19:48:33Z",
+  "status": "success",
+  "retro_type": "operational_final",
+  "summary": "Milestone 2026.04.94 completed in 78 minutes for the supplied operational timing scope, averaging 11 minutes across 7 completed experiments. Throughput improved sharply after the .93 gate failures, but efficiency was still limited by serialized documentation reconciliation, retry/escalation around artifact skeleton handling, and idle GPUs outside the live DualGPU slice.",
+  "total_wall_time_minutes": 78,
+  "experiments_completed": 7,
+  "average_minutes_per_experiment": 11.14,
+  "research_outcome_note": "The research milestone artifact reports 13/13 success criteria met in results/experiment_1215_milestone_retro_94.json; this operational retro preserves the user-supplied 78-minute / 7-experiment timing scope rather than substituting the criteria count.",
+  "timing_scope_note": "The provided slowest-five list contains inherited conductor/docs tasks from exp945-exp950 rather than only new exp1203-exp1215 research IDs. Those entries are treated as operational queue load because they consumed critical-path wall time during the milestone.",
+  "slowest_experiments": [
+    {
+      "rank": 1,
+      "experiment": "exp950",
+      "title": "In-process docs for E-MVL Sparsified Ising - Sparse Connectivity for KV260 RTL Optimization",
+      "wall_minutes": 28,
+      "why_slow": "Documentation reconciliation ran in-process on the conductor path instead of being batched or deferred.",
+      "parallelizable": true
+    },
+    {
+      "rank": 2,
+      "experiment": "exp948",
+      "title": "Symbolic-KAN Real FoVer Data - AUC=0.9344 Architecture on Real Violation Pairs",
+      "wall_minutes": 24,
+      "why_slow": "CPU/full-corpus style real FoVer sweep repeated an expensive evaluation path; no fast-eval or cached delta path is evident from the timing record.",
+      "parallelizable": true
+    },
+    {
+      "rank": 3,
+      "experiment": "exp946",
+      "title": "In-process docs for Tier 2.8 DraftConditioned Live GPU Validation",
+      "wall_minutes": 11,
+      "why_slow": "Another serialized documentation pass on the conductor path.",
+      "parallelizable": true
+    },
+    {
+      "rank": 4,
+      "experiment": "exp945",
+      "title": "In-process docs for ThinkPRM Tier 2.9 - Generative CoT Step Verification",
+      "wall_minutes": 6,
+      "why_slow": "Small but still synchronous docs work; acceptable alone, inefficient when accumulated with other doc passes.",
+      "parallelizable": true
+    },
+    {
+      "rank": 5,
+      "experiment": "exp947",
+      "title": "In-process docs for DRIFTProbe v3 Depth-Recurrent",
+      "wall_minutes": 6,
+      "why_slow": "Small synchronous reconciliation pass; should be folded into an async doc batch.",
+      "parallelizable": true
+    }
+  ],
+  "milestone_retry_hotspots_from_research_retro": [
+    {
+      "experiment": "exp1203_pre_test_diagnostics_fix",
+      "wall_minutes": 49,
+      "why_slow": "Two artifact_not_updated_past_bootstrap retries before a cache-hit OK pass; root cause was the 8 GiB RLIMIT_AS cap being too low for JAX/xdist collection."
+    },
+    {
+      "experiment": "exp1210_phase4_bfs_intractable_v2",
+      "wall_minutes": 29,
+      "why_slow": "Artifact bootstrap failure followed by a codex CLI 1201s wall/idle timeout before OK on cache hit."
+    },
+    {
+      "experiment": "exp1211_fover_expansion_v7_hard_negatives",
+      "wall_minutes": 26,
+      "why_slow": "Artifact bootstrap failure and escalation from Sonnet to Opus 100 turns before completion."
+    },
+    {
+      "experiment": "exp1212_tier1_constraint_addition_v2",
+      "wall_minutes": 20,
+      "why_slow": "Sonnet turn ceiling forced Opus escalation."
+    },
+    {
+      "experiment": "exp1208_grpo_v5_tinyv_v2_dualgpu",
+      "wall_minutes": 19,
+      "why_slow": "Turn ceiling/escalation overhead around a live DualGPU run; final measured model run itself was short and produced an honest negative result."
+    }
+  ],
+  "gpu_utilization": {
+    "closeout_timestamp": "2026-05-03T19:47:12.323733+00:00",
+    "gpu0": {
+      "name": "NVIDIA GeForce RTX 3090",
+      "memory_used_mb": 4,
+      "memory_total_mb": 24576,
+      "utilization_pct": 0,
+      "temperature_c": 51
+    },
+    "gpu1": {
+      "name": "NVIDIA GeForce RTX 3090",
+      "memory_used_mb": 4,
+      "memory_total_mb": 24576,
+      "utilization_pct": 0,
+      "temperature_c": 55
+    },
+    "assessment": "Inefficient at milestone close: both RTX 3090s were idle. exp1208 confirms DualGPU can be used when explicitly requested, but the broader queue did not keep both GPUs fed across eligible branches.",
+    "sequential_vs_parallel": "The milestone still behaved mostly sequentially outside the gated live-GPU slice. Independent CPU/docs work and one-GPU model jobs could have overlapped with DualGPURunner or separate workers."
+  },
+  "zombie_process_assessment": {
+    "formal_zombies_detected": false,
+    "evidence": "gpu_monitor.py marks zombies only for processes using at least 1024 MB VRAM, older than 10 minutes, and below 1% CPU/wall ratio. The closeout report showed only 4 MB allocated per GPU and 0% utilization, consistent with idle driver/context residue rather than resource-wasting zombie processes.",
+    "residual_risk": "Low-VRAM idle contexts should still be cleared before large live runs, but they were not a material throughput drain in this report."
+  },
+  "bottlenecks_identified": [
+    "Serialized documentation reconciliation dominated the supplied slowest-five list: exp950, exp946, exp945, and exp947 consumed 51 minutes combined on docs-like work.",
+    "Full-corpus or full-sweep evaluation remained too expensive for routine operational loops: exp948 consumed 24 minutes and should have used fast-eval or cached delta evaluation when the goal was operational throughput.",
+    "Artifact skeleton failures remained a major retry source despite the STEP 0 pattern being introduced; exp1203, exp1210, exp1211, and other .94 tasks in the research retro hit artifact_not_updated_past_bootstrap or turn-ceiling escalation.",
+    "The pre-flight suite was a start-of-milestone bottleneck: exp1203 spent 49 minutes across retries diagnosing the 8 GiB RLIMIT_AS cap before confirming the suite with 472 passes and 21,413 collected tests.",
+    "GPU scheduling was bursty rather than continuously parallel: both 3090s closed at 0% utilization even though exp1208 showed DualGPU execution was available.",
+    "Independent branches were not aggressively parallelized. After pre-test repair, paper integrity, GRPO/GPU-offload, FoVer expansion, Tier 1 addition, SDPO, WOPR, and docs reconciliation had enough independence to overlap more than they did.",
+    "Model/agent turn ceilings caused escalation overhead on several .94 tasks; the work finished, but multiple retries shifted time from execution into orchestration."
+  ],
+  "improvements_suggested": [
+    "Make STEP 0 skeleton creation a conductor-side prelaunch invariant for every experiment with a required artifact path; fail before spending model turns if the skeleton write is missing.",
+    "Move docs reconciliation to an async batch worker with an explicit queue, so conductor slots are not blocked by in-process docs passes.",
+    "Default eligible live inference tasks to DualGPURunner: pin Qwen-style jobs to GPU 0 and Gemma/secondary jobs to GPU 1, then reserve sequential execution only for dependency-bound tasks.",
+    "Add a fast-eval mode for FoVer/KAN/corpus sweeps: sample or cached-delta evaluation by default, full sweep only at acceptance gates.",
+    "Keep the 32 GiB RLIMIT_AS fix from exp1203 and add an early collection-only gate that reports memory headroom before full pre-flight self-heal.",
+    "Split next milestone into dependency branches and launch independent CPU/docs/WOPR tasks while GPU-offload or paper-gated tasks are waiting.",
+    "Add an escalation predictor: tasks with prior artifact bootstrap failures or historical turn-ceiling hits should start on the higher-turn model/backend rather than burning a failed lower-ceiling attempt.",
+    "Teach gpu_monitor.py or the conductor to emit an end-of-branch scheduling recommendation, not only an end-of-milestone idle report."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Enforce skeleton-first artifacts in the conductor before agent launch; this directly attacks the retry class that dominated exp1203/exp1210/exp1211.",
+    "Ship async documentation reconciliation and batch the exp945-exp950 style doc updates off the critical path.",
+    "Run a two-lane scheduler for .95: one DualGPU lane for live model experiments and one CPU/docs lane for independent analysis, WOPR, and reconciliation work."
+  ],
+  "estimated_time_savings_pct": 28,
+  "estimated_time_savings_rationale": "A conservative next-milestone savings estimate is 25-30%. The supplied timing has 51 minutes of doc-like slowest-five work, 24 minutes of corpus sweep work, and closeout GPU idle. Not all of that is recoverable because dependencies and acceptance gates remain real, but async docs, fast-eval, and branch-level parallelism should recover roughly 20-25 minutes from a 78-minute timing scope.",
+  "question_answers": {
+    "1_which_experiments_took_longest_and_why": "The supplied slowest entries were exp950 docs (28m), exp948 Symbolic-KAN real FoVer sweep (24m), exp946 docs (11m), exp945 docs (6m), and exp947 docs (6m). Four of five were reconciliation/docs passes; exp948 was an expensive corpus/evaluation sweep.",
+    "2_was_gpu_utilization_efficient": "No at closeout. Both RTX 3090s were 0% utilized with only 4 MB allocated. exp1208 proves DualGPU can work, but the queue did not keep GPUs continuously occupied.",
+    "3_were_there_zombie_processes": "No formal GPU zombies were indicated. The 4 MB allocations were far below gpu_monitor.py's 1024 MB zombie threshold.",
+    "4_could_experiments_have_been_parallelized": "Yes. Docs reconciliation, WOPR/non-GPU tasks, SDPO analysis, FoVer preparation, and some paper/GPU-offload branches could have overlapped once their direct gates were satisfied.",
+    "5_was_pre_flight_test_suite_a_bottleneck": "Yes for milestone startup if the research retro timings are included: exp1203 cost 49 minutes across retries due to the 8 GiB RLIMIT_AS cap. It should be less recurring after the 32 GiB fix.",
+    "6_were_doc_reconciliation_passes_efficient": "No. They occupied the majority of the supplied slowest-five wall time and ran in-process rather than asynchronously.",
+    "7_tooling_infrastructure_changes": "Conductor-enforced skeleton artifacts, async docs reconciliation, DualGPURunner-by-default scheduling, fast-eval/cached corpus sweeps, memory-headroom preflight, and escalation prediction would speed up the next milestone."
+  },
+  "data_sources": [
+    "ops/metrics.md",
+    "ops/changelog.md",
+    "scripts/gpu_monitor.py",
+    "results/experiment_1215_milestone_retro_94.json",
+    "results/experiment_1203_pre_test_diagnostics_fix.json",
+    "results/experiment_1208_grpo_v5_tinyv_v2_dualgpu.json",
+    "results/experiment_1211_fover_expansion_v7_hard_negatives.json",
+    "user-provided timing and GPU monitor report"
+  ],
+  "meta_reflection": "The milestone recovered from .93's gate failure pattern and achieved a clean research sweep, but the operational profile still shows orchestration work on the critical path. The next efficiency gain is less about faster models and more about moving bookkeeping off the conductor path, enforcing artifact skeletons mechanically, and treating both GPUs as continuously schedulable resources."
+}
