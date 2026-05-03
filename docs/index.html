@@ -300,10 +300,10 @@
       <a href="technical-report.html" class="btn btn-secondary">How it works</a>
     </div>
     <div class="stats-bar" aria-label="Project headline numbers">
-      <div class="stat"><div class="stat-num">1,190</div><div class="stat-label">Through Exp 1190</div></div>
-      <div class="stat"><div class="stat-num">102</div><div class="stat-label">Milestones complete</div></div>
-      <div class="stat"><div class="stat-num">21,174</div><div class="stat-label">Python test items</div></div>
-      <div class="stat"><div class="stat-num">10/13</div><div class="stat-label">.92 criteria met</div></div>
+      <div class="stat"><div class="stat-num">1,202</div><div class="stat-label">Through Exp 1202</div></div>
+      <div class="stat"><div class="stat-num">103</div><div class="stat-label">Milestones complete</div></div>
+      <div class="stat"><div class="stat-num">21,388</div><div class="stat-label">Python test items</div></div>
+      <div class="stat"><div class="stat-num">3/12</div><div class="stat-label">.93 criteria met</div></div>
     </div>
   </div>
 </section>
@@ -391,7 +391,8 @@
           a gradient we can descend on when repairing. The same maths maps onto
           specialised hardware (FPGA Ising machines, thermodynamic samplers) which
           is why Carnot can scale beyond CPUs. A working prototype runs on a KV260
-          FPGA board (April 2026).
+          FPGA board (April 2026), and the latest KANtize path preserves SOS-KAN
+          AUROC above 0.99 after 4-bit edge quantization.
         </p>
       </div>
     </div>
@@ -706,6 +707,12 @@
         <div class="r-stats"><span class="r-before">AUROC 0.9902 &rarr; 0.9718; energy correlation 0.9966</span> <span class="r-after">Milestone .89 &mdash; Exp 1148</span></div>
       </div>
       <div class="r-card">
+        <span class="r-tag">Edge deployment &mdash; KANtize SOS-KAN 4-bit quantization</span>
+        <h3 class="r-title">4-bit AUROC=0.990137</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 99.01%; background: #22c55e;"></div></div>
+        <div class="r-stats"><span class="r-before">Full precision AUROC=0.990228; latency 0.038 ms/example</span> <span class="r-after">Edge safetensors export &mdash; Exp 1199</span></div>
+      </div>
+      <div class="r-card">
         <span class="r-tag">Certificates &mdash; BEAVER-lite</span>
         <h3 class="r-title">Live llama.cpp logprobs; sound bound</h3>
         <div class="r-meter"><div class="r-bar" style="width: 100%; background: #22c55e;"></div></div>
@@ -795,6 +802,12 @@
         <div class="r-meter"><div class="r-bar" style="width: 50%; background: #f59e0b;"></div></div>
         <div class="r-stats"><span class="r-before">High + medium/low fixed; v6 bundle blocked by missing Exp 1180 critical artifact</span> <span class="r-after">Hold active &mdash; Exps 1181/1182/1183</span></div>
       </div>
+      <div class="r-card">
+        <span class="r-tag">Milestone .93 &mdash; infrastructure and gate audit result</span>
+        <h3 class="r-title">3/12 criteria met; carry-forward required</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 25%; background: #f59e0b;"></div></div>
+        <div class="r-stats"><span class="r-before">RLIMIT_AS=8GB active; KANtize passed; retro complete</span> <span class="r-after">5 missing artifacts + 4 blocked gate artifacts &mdash; Exp 1202</span></div>
+      </div>
     </div>
 
     <div style="max-width: 900px; margin: 2rem auto 0; padding: 1.25rem 1.5rem; border-left: 3px solid #f59e0b; background: rgba(245,158,11,0.06); font-size: 0.95rem; line-height: 1.6;">
@@ -829,8 +842,8 @@
       LLM verification. The current draft includes the .91 Phase 4 pilot and
       leaderboard-context section, plus .92 integrity remediation for the
       high- and medium/low-severity audit items. arXiv submission is still on
-      hold because the critical-issue artifact is missing and the v6 bundle
-      did not pass its gates.
+      hold because .93 did not produce the critical-issue fixes or the v7
+      bundle artifact.
     </p>
     <div class="hero-actions" style="justify-content: flex-start;">
       <a href="position-paper-draft-v3.md" class="btn btn-primary">Read source draft</a>
@@ -838,9 +851,10 @@
       <a href="arxiv-metadata.yaml" class="btn btn-secondary">Submission metadata</a>
     </div>
     <p style="margin-top: 1.5rem; font-size: 0.9rem; color: var(--text-muted);">
-      <em>Latest paper audit status 2026-05-03: 13/18 issues resolved; arXiv
-      hold remains active until all 18 issues, the figure/claim hooks, and
-      operator approval are complete.</em>
+      <em>Latest paper audit status 2026-05-03: 13/18 issues resolved; .93
+      critical-fix and bundle retries were missing, so arXiv hold remains active
+      until all 18 issues, the figure/claim hooks, and operator approval are
+      complete.</em>
     </p>
   </div>
 </section>

@@ -1,6 +1,6 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report — 1190 Experiments Across 102 Completed Research Milestones (Through Exp 1190)
+## A Technical Report — 1202 Experiments Across 103 Completed Research Milestones (Through Exp 1202)
 
 **Author:** Ian Blenke
 **Date:** 2026-05-03
@@ -28,8 +28,8 @@ lines of Python. Headline model-generation benchmark numbers are from
 Qwen3.6-35B-A3B), never from simulated runs; hardware, ensemble, and
 adversarial-audit results are labeled by artifact provenance.
 
-This report documents the research arc behind the framework — **~1,190
-experiments through Exp 1190 across 102 completed milestones**, run between
+This report documents the research arc behind the framework — **1,202
+experiments through Exp 1202 across 103 completed milestones**, run between
 February and May 2026.
 The story now spans activation-based negative results, constraint-based
 verification, live SOTA-model benchmarks, production verifier ensembles,
@@ -202,6 +202,18 @@ checked into `results/operational_retro_*.json`.
   active, Exp 1179 and Exp 1180 artifacts are missing, k=6 and DoT are retired,
   and Phase 4 must beat a non-trivial baseline before becoming a claim
   (Exp 1190).
+- **Prlimit memory cap active:** `RLIMIT_AS=8GB` is now deployed from
+  `conftest.py::pytest_configure`; targeted watchdog checks still pass, but .93
+  showed that the full pre-test/self-heal path needs repair before heavy tasks
+  should rely on it (Exp 1191).
+- **KANtize SOS-KAN 4-bit quantization:** 4-bit SOS-KAN preserved AUROC
+  **0.990137** versus full-precision **0.990228**, with **0.038 ms/example**
+  inference latency and an edge safetensors export (Exp 1199).
+- **Milestone 2026.04.93 closed at 3/12 criteria:** .93 produced one clear
+  research win (KANtize) and one infrastructure change (prlimit), but five
+  planned artifacts were missing and four were blocked by prior-failure gate
+  handling. Publication, GRPO v5, FoVer v7, harder Phase 4 puzzles, Tier 1
+  addition, and Nonogram all carry forward (Exp 1202).
 
 **Claims that did not survive audit** are kept in the research record as
 negative findings and documented alongside the audits that surfaced them
@@ -214,13 +226,16 @@ paper-integrity audit that blocked arXiv submission after finding that a
 highlighted FPGA speedup figure mixed an estimated CPU sweep with a per-sample
 FPGA number and gave the caveat less prominence than the claim. The .92 follow-up
 also turned the Phase 4 result from "beats greedy" into "ties BFS" and retired
-k=6 AND-compose plus DoT as current production directions.
+k=6 AND-compose plus DoT as current production directions. The .93 follow-up
+then exposed an operational artifact: pre-test/self-heal and prior-failure gate
+handling can make planned research disappear before measurement, so missing
+artifacts are reported as missing rather than inferred as negative results.
 
 ---
 
 ## Research Timeline
 
-A project this size doesn't land in one leap. Carnot evolved through seventeen
+A project this size doesn't land in one leap. Carnot evolved through eighteen
 phases, each one reacting to the negative findings of the phase before it.
 The experiment ranges below are approximate — they mark where each phase
 began, not hard boundaries.
@@ -820,6 +835,9 @@ but are not included as model-generation headline claims.
 | Latent-GRPO energy reward | standard proxy **46%** | latent proxy **46%** | Invalid-sample masking + one-sided noise produced **0.0pp** delta | Exp 1187 |
 | WOPR Hex cartridge | Random baseline | Gibbs wins **90%** vs random; **50%** vs greedy | 7x7 Hex cartridge operational; tests pass | Exp 1188 |
 | Phase 4 stronger-baseline audit | Greedy baseline looked favorable | BFS action ratio **1.0** | 10 synthetic 5x5 and 10 synthetic 10x10 puzzles; Phase 4 ties BFS, no advantage claim | Exp 1189 |
+| Prlimit memory cap | No process-level pytest address-space cap | `RLIMIT_AS=8GB` active in `pytest_configure` | Targeted watchdog checks still pass; .94 must repair full-suite pre-test reliability | Exp 1191 |
+| KANtize SOS-KAN 4-bit quantization | full precision AUROC **0.990228** | 4-bit AUROC **0.990137** | AUROC stays above 0.97 gate; **0.038 ms/example** inference latency; edge safetensors export | Exp 1199 |
+| Milestone .93 outcome | 12 planned criteria | **3/12** met | Positive: prlimit + KANtize. Negative: five missing artifacts and four prior-failure gate blocks; publication and GRPO remain blocked | Exp 1202 |
 
 ### Pending Validation (Not Yet Headline)
 
@@ -840,9 +858,10 @@ energy, NRGPT recurrence is not monotone yet, KANELE/BiKA remain blueprint or
 complexity estimates rather than synthesized timing results, k=6 underperforms
 k=5 even after regularization and is retired, DoT is retired after a below-random
 redesign, Latent-GRPO produced no delta, GRPO v5 is still blocked on llama.cpp
-GPU offload, Phase 4 ties BFS on the stronger baseline, and arXiv submission is
-on hold until all 18 integrity issues plus the figure and claim hooks are
-resolved.
+GPU offload, Phase 4 ties BFS on the stronger baseline, .93 had missing and
+gate-blocked artifacts rather than measurements for most carry-forward work, and
+arXiv submission is on hold until all 18 integrity issues plus the figure and
+claim hooks are resolved.
 
 ## 1. Introduction
 
@@ -1260,7 +1279,7 @@ The constraint pipeline dog-foods itself as a "fourth gate" in the autoresearch 
 
 ## 7. Principles Learned
 
-From the activation-based phase of a research program that now spans ~1,190 experiments across 102 milestones, we distilled 14 principles. Principles 1-3 describe what works. Principles 4-14 describe what doesn't work for activation-based hallucination detection — these systematic negative results are the project's primary contribution to the literature, saving other researchers months of dead ends.
+From the activation-based phase of a research program that now spans 1,202 experiments across 103 milestones, we distilled 14 principles. Principles 1-3 describe what works. Principles 4-14 describe what doesn't work for activation-based hallucination detection — these systematic negative results are the project's primary contribution to the literature, saving other researchers months of dead ends.
 
 ### What works
 
@@ -1302,7 +1321,7 @@ The failure of Principles 4-14 establishes a fundamental limit: **you cannot det
 
 ## 8. The Production Architecture
 
-The architecture that emerged from ~1,190 experiments:
+The architecture that emerged from 1,202 experiments:
 
 ```
 User Question
@@ -1378,7 +1397,7 @@ The architecture is model-agnostic (Experiment 69), scales to 5000+ variables (E
 | Research conductor | Autonomous Claude Code agent loop, YAML-driven | N/A | Experimental |
 | PyPI packaging | `pip install carnot`, extras for rust/mcp/cuda/llm | Integration tests | Beta |
 
-**Total:** **21,174** Python test items are currently collected in the repo (`.venv/bin/pytest --collect-only -q --no-cov -n 0 tests/python`, collected 2026-05-03). This is a collection count, not a claim that the full suite passes; full validation remains command-specific and is documented in the relevant experiment artifacts.
+**Total:** **21,388** Python test items are currently collected in the repo (`.venv/bin/python -m pytest tests/python --collect-only -q --no-header`, collected 2026-05-03). This is a collection count, not a claim that the full suite passes; full validation remains command-specific and is documented in the relevant experiment artifacts.
 
 ---
 
@@ -1436,7 +1455,7 @@ make research-loop
 
 ## 12. Conclusion
 
-Across **~1,190 experiments** on model families spanning 350M to 35B parameters, **102 research milestones**, and a complete arc from failed activation approaches through simulation artifact discovery to credible live results, we reached a clear three-part conclusion.
+Across **1,202 experiments** on model families spanning 350M to 35B parameters, **103 research milestones**, and a complete arc from failed activation approaches through simulation artifact discovery to credible live results, we reached a clear three-part conclusion.
 
 ### Part 1: Activation-based detection fails
 
@@ -1467,7 +1486,7 @@ The 14 systematic negative results documented across 38 experiments are the proj
 
 ### The story
 
-The trajectory of this project is: we tried the obvious approach (train an EBM on activations to detect hallucination), learned through 38 experiments that it fundamentally cannot work for factual verification, identified the root cause (internal signals capture confidence, not truth), pivoted to encoding external knowledge as formal constraints, discovered that early constraint results were simulation artifacts, rebuilt extraction for real instruction-tuned models, proved that code verification (+3.0pp HumanEval) and typed constraint verification (+4.9pp) work on live GPU inference, calibrated semantic verification on live artifacts without overstating what it fixes, documented the honest flat-delta Qwen PBT follow-up plus its **17/23** wrong-baseline detections and **2** weak-harness misses, showed that newer self-learning improves retrieval quality before it improves held-out task success, added provenance-labeled FPGA blocker and replay artifacts, distilled the strongest code traces into reusable spec-backed checks, packaged the PBT path as a standalone API, CLI, and 7-tool MCP surface, deployed DualGPURunner achieving 1.98x throughput in production, fixed LIVE-ENV propagation, synthesized open FPGA energy-oracle paths, expanded FoVer to 8,329 pairs, repaired the SOTA-output energy inversion, deployed and then fixed the k=5 verifier ensemble, obtained the first positive GRPO + ThinkPRM v2 self-learning result, then improved it with GRPO v4 structural warm-up, fixed cheap-tier FPR with SECL, restored KV260 sampler correctness with sequential Gibbs, seeded Phase 3 hardware/architecture paths with KANELE and NRGPT, ran the first Phase 4 active-inference pilot, proved BEAVER live-logprob certificates, retired k=6 after regularization still failed to beat k=5, retired DoT after the redesign stayed below random, added Hex to the WOPR cartridges, and downgraded Phase 4 to a BFS tie until a stronger advantage appears — all across **~1,190 experiments and 102 milestones**.
+The trajectory of this project is: we tried the obvious approach (train an EBM on activations to detect hallucination), learned through 38 experiments that it fundamentally cannot work for factual verification, identified the root cause (internal signals capture confidence, not truth), pivoted to encoding external knowledge as formal constraints, discovered that early constraint results were simulation artifacts, rebuilt extraction for real instruction-tuned models, proved that code verification (+3.0pp HumanEval) and typed constraint verification (+4.9pp) work on live GPU inference, calibrated semantic verification on live artifacts without overstating what it fixes, documented the honest flat-delta Qwen PBT follow-up plus its **17/23** wrong-baseline detections and **2** weak-harness misses, showed that newer self-learning improves retrieval quality before it improves held-out task success, added provenance-labeled FPGA blocker and replay artifacts, distilled the strongest code traces into reusable spec-backed checks, packaged the PBT path as a standalone API, CLI, and 7-tool MCP surface, deployed DualGPURunner achieving 1.98x throughput in production, fixed LIVE-ENV propagation, synthesized open FPGA energy-oracle paths, expanded FoVer to 8,329 pairs, repaired the SOTA-output energy inversion, deployed and then fixed the k=5 verifier ensemble, obtained the first positive GRPO + ThinkPRM v2 self-learning result, then improved it with GRPO v4 structural warm-up, fixed cheap-tier FPR with SECL, restored KV260 sampler correctness with sequential Gibbs, seeded Phase 3 hardware/architecture paths with KANELE and NRGPT, ran the first Phase 4 active-inference pilot, proved BEAVER live-logprob certificates, retired k=6 after regularization still failed to beat k=5, retired DoT after the redesign stayed below random, added Hex to the WOPR cartridges, downgraded Phase 4 to a BFS tie until a stronger advantage appears, preserved SOS-KAN AUROC above 0.99 after 4-bit quantization, and documented .93's missing-artifact/gate-block failure mode — all across **1,202 experiments and 103 milestones**.
 
 The LLM handles language. The Ising model handles logic. Each does what it's best at. And someday, the Ising model runs on thermodynamic hardware.
 
@@ -1500,7 +1519,7 @@ Beyond post-hoc verification, Carnot implements an automated research loop inspi
 5. **Plan.** When all tasks in a milestone complete, a planning agent reads `research-program.md` (human-written goals) and autonomously designs the next milestone — selecting experiments, ordering dependencies, and writing full conductor-ready prompts.
 6. **Repeat.** The loop runs until a circuit breaker halts it after N consecutive failures.
 
-In a 50-iteration run with Claude 3.5 Sonnet as the proposer, the loop achieved near-optimal energy on two benchmark functions (DoubleWell: 0.0001, Rosenbrock: 0.0092) before the circuit breaker engaged at iteration 18. The research conductor now drives a 102-milestone research record spanning ~1,190 experiments with automatic milestone archival and transition.
+In a 50-iteration run with Claude 3.5 Sonnet as the proposer, the loop achieved near-optimal energy on two benchmark functions (DoubleWell: 0.0001, Rosenbrock: 0.0092) before the circuit breaker engaged at iteration 18. The research conductor now drives a 103-milestone research record spanning 1,202 experiments with automatic milestone archival and transition.
 
 The energy function serves as the objective judge — no human evaluation or LLM-as-judge is needed. This is a key advantage of the EBM paradigm: the mathematics provides ground truth.
 
@@ -2648,3 +2667,40 @@ memory watchdog, 13/18 paper-integrity fixes, Hex operational, k=6 diagnosis,
 and a stronger Phase 4 limitation measurement. Top gaps: publication hold
 active, Exp 1179 and Exp 1180 artifacts missing, GRPO v5 still blocked on
 llama.cpp GPU offload, k=6 retired, DoT retired, and Latent-GRPO currently flat.
+
+### Phase 18 — KANtize Edge Quantization and .93 Gate Failure Diagnosis (Milestone .93, Exps 1191–1202)
+
+Milestone 2026.04.93 met **3 of 12 success criteria**. The completed criteria
+were `prlimit_memory_cap_active`, `kantize_auroc_maintained_above_0p97`, and
+`retro_complete`. The low score is not evidence that the planned research ideas
+failed experimentally; most of them did not reach measurement. Five artifacts
+were missing after repeated skips (exp1192, exp1193, exp1194, exp1195, exp1197),
+and four were blocked by prior-failure gate handling (exp1196, exp1198, exp1200,
+exp1201).
+
+**Prlimit memory cap (Exp 1191):** `resource.setrlimit(RLIMIT_AS)` is active at
+**8GB** from `conftest.py::pytest_configure`. The targeted new checks and the
+existing watchdog checks still pass. The .93 retro nevertheless treats this as
+a likely contributor to the conductor pre-test/self-heal failure pattern, so
+.94 starts with diagnostics before retrying heavy tasks.
+
+**KANtize SOS-KAN 4-bit quantization (Exp 1199):** SOS-KAN retained
+publication-grade discrimination after 4-bit quantization: full-precision AUROC
+**0.990228**, 8-bit AUROC **0.990228**, and 4-bit AUROC **0.990137**. The 4-bit
+artifact reports **0.038038 ms/example** inference latency and exports an edge
+safetensors checkpoint. This is the strongest positive .93 research result and
+keeps the KAN hardware/edge-deployment path alive.
+
+**Gate-failure finding (Exps 1192–1198, 1200–1201):** llama.cpp GPU offload,
+critical paper fixes, arXiv v7, GRPO v5, harder Phase 4 puzzles, GRPO-VPS,
+FoVer v7, Tier 1 online addition, and Nonogram were not measured in .93. The
+retro separates two causes: a SKIP pattern from the pytest pre-test/self-heal
+path, and false-positive `DOOMED_RERUN_BLOCK` handling where successful prior
+work was classified as a prior failure because `prior_failures` was absent from
+the roadmap YAML. These are operational blockers, not scientific negatives.
+
+**Milestone .93 summary (Exp 1202):** Publication hold remains active, GRPO v5
+still has no GPU-offload-backed result, and Phase 4 still has no harder-puzzle
+advantage. The .94 plan therefore begins with pre-test diagnostics, explicit
+`prior_failures` metadata for carry-forwards, and STEP 0 skeleton artifacts so
+long-running tasks leave auditable state before doing heavy work.

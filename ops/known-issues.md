@@ -594,8 +594,18 @@ ISSUE-15 fig2 ROC curves are binormal-fit synthesizations; caveat missing from p
 **Low-severity issues (3):**
 
 ```
-ISSUE-16 Bibliography stub audit needed (4 suspect entries: themesis2026seediq, hive2026,
-         llmsgamingverifiers2026, rewardunderattack2026)
+ISSUE-16 Bibliography stub audit — UPDATED 2026-05-03 21:50Z post Deep Research:
+         REAL papers now identified for the comparator set. Bibliography
+         must include: gladstone2025ebt (arXiv:2507.02092 ICLR 2026),
+         nie2025llada (arXiv:2502.09992 ICLR 2026), hao2024coconut
+         (arXiv:2412.06769), ma2026odar (arXiv:2602.23681),
+         logicalintelligence2026kona (commercial, no arXiv).
+         Suspect 2025-original entries (themesis2026seediq, hive2026,
+         llmsgamingverifiers2026, rewardunderattack2026) require explicit
+         removal from bibliography unless verified to exist. SeedIQ
+         specifically: refused to release code/weights, sacrificing
+         ARC-AGI-3 prize money — cite as documented_fallback only.
+         See: docs/research-notes/energy-based-llm-alternatives-deep-research-results.md
 ISSUE-17 Table 1 k=15 retracted-row framing OK; flag for caption note
 ISSUE-18 Hardware-portability theorem claim covers FPGA/Z1/photonic; only KV260 measured
 ```
