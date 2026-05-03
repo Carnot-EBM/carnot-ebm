@@ -199,6 +199,36 @@ Exp 1178 through Exp 1189 result JSON artifacts and write
 Missing gated experiment artifacts shall count as unmet criteria and shall be
 reported explicitly rather than inferred from downstream blocked artifacts.
 
+### REQ-REPORT-013: Milestone .93 Success-Criteria Retrospective
+
+The Exp 1202 milestone .93 retrospective workflow shall read the authoritative
+Exp 1191 through Exp 1201 result JSON artifacts, plus the conductor log and the
+current publication-hold notes, and write
+`results/experiment_1202_milestone_retro_93.json` with:
+
+- `milestone` set to `2026.04.93`
+- `criteria_total` set to `12`
+- `criteria_met` and `criteria_score_pct`, derived from all 12 roadmap success
+  criteria
+- `criteria_results`, mapping the 12 planned criteria to boolean pass/fail
+  values
+- `slowest_tasks`, derived from milestone conductor-log spans when available
+- `publication_hold_status` set to `active` while operator approval is still
+  required
+- `dualgpu_utilization`, derived from Exp 1195 when it ran and otherwise
+  reported as unavailable
+- `grpo_trajectory`, including v3 `+2.86pp`, v4 `+10pp`, and the Exp 1195 v5
+  result or missing/blocked status
+- exactly three `significant_findings`
+- exactly five `open_items_for_94`
+- `retro_complete == true`
+- `honest_verdict` set to `milestone_complete`, `milestone_partial`, or
+  `milestone_failed`
+
+Missing gated experiment artifacts shall count as unmet criteria. Blocked
+artifacts shall only satisfy criteria that explicitly require an honest verdict
+rather than a successful metric.
+
 ## Scenarios
 
 ### SCENARIO-REPORT-001: Nested Live Provenance Is Promoted
@@ -288,6 +318,18 @@ operator figure-integrity override
 paper-integrity tasks
 **And** `honest_verdict == "milestone_partial"`
 
+### SCENARIO-REPORT-010: Milestone .93 Missing Gates Remain Unmet
+
+**Given** Exp 1191 through Exp 1201 source artifacts are expected
+**And** Exp 1192, Exp 1193, Exp 1194, Exp 1195, and Exp 1197 are missing
+**And** Exp 1196, Exp 1198, Exp 1200, and Exp 1201 report blocked artifacts
+**When** the Exp 1202 retrospective workflow runs
+**Then** missing metric criteria count as false
+**And** honest-verdict criteria count as true only when the criterion asks for
+honest reporting
+**And** `publication_hold_status == "active"`
+**And** `honest_verdict == "milestone_failed"`
+
 
 ### REQ-PUBLISH-003: HuggingFace README Accuracy Audit
 
@@ -374,5 +416,6 @@ embed live-GPU benchmark results from Exp 328 when available.
 | REQ-REPORT-010 | `scripts/experiment_1164_milestone_retro_90.py`, `results/experiment_1164_milestone_retro_90.json` | `tests/python/test_experiment_1164_milestone_retro_90.py` | Implemented |
 | REQ-REPORT-011 | `scripts/experiment_1177_milestone_retro_91.py`, `results/experiment_1177_milestone_retro_91.json` | `tests/python/test_experiment_1177_milestone_retro_91.py` | Implemented |
 | REQ-REPORT-012 | `scripts/experiment_1190_milestone_retro_92.py`, `results/experiment_1190_milestone_retro_92.json` | `tests/python/test_experiment_1190_milestone_retro_92.py` | Implemented |
+| REQ-REPORT-013 | `scripts/experiment_1202_milestone_retro_93.py`, `results/experiment_1202_milestone_retro_93.json` | `tests/python/test_experiment_1202_milestone_retro_93.py` | Implemented |
 | REQ-PUBLISH-003 | `scripts/experiment_317_hf_publish.py` | `tests/python/test_experiment_317_hf_publish.py` | Implemented |
 | REQ-PUBLISH-004 | `scripts/experiment_330_hf_live_publish.py` | `tests/python/test_experiment_330_hf_live_publish.py` | Implemented |

@@ -2264,6 +2264,26 @@ def _run_operational_retrospective(push: bool = True) -> bool:
     retro_prompt = (
         f"You are working on the Carnot EBM framework in {PROJECT_ROOT}.\n\n"
         f"TASK: Write an operational retrospective for milestone {current}.\n\n"
+        f"STEP 0 (MANDATORY, FIRST): Immediately write a SKELETON artifact JSON to\n"
+        f"   results/operational_retro_{current.replace('.', '_')}.json with:\n"
+        f"     {{\n"
+        f"       \"schema\": \"carnot.operational_retro.v63\",\n"
+        f"       \"milestone\": \"{current}\",\n"
+        f"       \"generated_at\": \"<current ISO-8601 UTC>\",\n"
+        f"       \"retro_type\": \"operational_in_progress\",\n"
+        f"       \"summary\": \"in progress — being filled in this turn\",\n"
+        f"       \"slowest_experiments\": [],\n"
+        f"       \"bottlenecks_identified\": [],\n"
+        f"       \"improvements_suggested\": [],\n"
+        f"       \"top_3_highest_leverage_actions\": [],\n"
+        f"       \"meta_reflection\": \"\"\n"
+        f"     }}\n"
+        f"   This protects against turn-budget exhaustion: even if you run out\n"
+        f"   of turns mid-analysis, the artifact exists at status='success'\n"
+        f"   with whatever you completed. Then refine its contents in subsequent\n"
+        f"   turns. The conductor's _artifact_is_finished check will accept the\n"
+        f"   skeleton if you don't get to refine it; loss of detail is acceptable;\n"
+        f"   loss of the entire artifact (status=running stuck) is not.\n\n"
         f"This is NOT about research results — it's about how EFFICIENTLY\n"
         f"the milestone was executed. Analyze bottlenecks and suggest\n"
         f"improvements for the next milestone.\n\n"
@@ -2302,9 +2322,15 @@ def _run_operational_retrospective(push: bool = True) -> bool:
     # Retrospective benefits from Opus-class honest self-evaluation (anti-
     # sycophancy + anti-scheming training makes it less likely to paper over
     # failures). Set AGENT_MODEL_RETRO=opus to enable; defaults to Sonnet.
+    # max_turns 15 → 60 (operator fix 2026-05-03 13:55Z): heavy retros (12+
+    # experiments to read + cascade-pattern analysis + structured JSON write)
+    # don't fit in 15-turn budget; .92 retro retired 3× and .93 retro is on
+    # path to retire as artifact_not_updated_past_bootstrap. STEP 0 skeleton
+    # write (added to retro_prompt above) is belt-and-braces against budget
+    # exhaustion; longer max_turns is the suspenders.
     success, output = run_agent(
         retro_prompt,
-        max_turns=15,
+        max_turns=60,
         model_override=AGENT_MODEL_RETRO,
         agent_type_override=AGENT_TYPE_RETRO,
     )
