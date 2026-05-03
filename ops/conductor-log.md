@@ -453,3 +453,6 @@ If you finish the real work |
 | 2026-05-03 09:11 UTC | llama.cpp GPU Offload Fix v2 — Pre-built CUDA Whee | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-03 10:13 UTC | Paper v5 Critical ISSUE-1 to ISSUE-5 — Retry with  | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-03 11:15 UTC | Paper v5 Critical ISSUE-1 to ISSUE-5 — Retry with  | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-03 11:42 UTC | Paper v5 Critical ISSUE-1 to ISSUE-5 — Retry with  | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-03 11:47 UTC | Paper v6 Recompile + arXiv Bundle v7 — Post-Integr | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1193-paper-v5-critical-issues-retry) |
+| 2026-05-03 11:47 UTC | GRPO v5 + TinyV v2 — DualGPU MANDATORY, Gated on G | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1192-llama-cpp-gpu-offload-fix-v2) |
