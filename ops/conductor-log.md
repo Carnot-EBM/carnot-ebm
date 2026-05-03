@@ -544,3 +544,4 @@ If you finish the real work |
 | 2026-05-03 23:08 UTC | WOPR Futoshiki Puzzle Cartridge — Inequality Const | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1227_wopr_fu |
 | 2026-05-03 23:13 UTC | WOPR Futoshiki Puzzle Cartridge — Inequality Const | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1227_wopr_fu |
 | 2026-05-03 23:39 UTC | WOPR Futoshiki Puzzle Cartridge — Inequality Const | OK | 85 passed, 1 warning in 5.86s |
+| 2026-05-03 23:43 UTC | Milestone 2026.04.95 Retrospective — STEP 0 Patter | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1228_milesto |
