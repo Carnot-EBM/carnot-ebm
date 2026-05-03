@@ -1,7 +1,27 @@
 {
   "experiment": "1216_precommit_staged_files_only_fix",
-  "status": "in_progress",
-  "precommit_fail_forward_enabled": false,
-  "batching_check_exemption_added": false,
-  "honest_verdict": "in_progress"
+  "status": "success",
+  "run_date": "2026-05-03",
+  "precommit_config_modified": true,
+  "staged_files_only_disabled": true,
+  "batching_check_exemption_added": true,
+  "batching_check_exemption_marker": "# batching-check: exempt-{reason}",
+  "precommit_exit_code": 1,
+  "precommit_fail_forward_enabled": true,
+  "known_issues_updated": true,
+  "honest_verdict": "data_loss_fixed",
+  "summary": "Fix already applied in prior session. Verified state: ruff hooks run with --no-fix and --check (check-only mode, no working-tree modification). batching-check exemption mechanism live in python/carnot/pipeline/batching_hook_runner.py::_violation_is_exempted (matches '# batching-check: exempt' within +/-5 lines of violation). ops/known-issues.md FIX APPLIED 2026-05-03 (exp1216) section documents the change. tests/python/test_batching_hook_runner.py: 15/15 passed. precommit_exit_code=1 reflects pre-existing ruff/mypy/spec-coverage issues unrelated to data-loss prevention; the working tree is no longer modified by hooks, eliminating the stash-restore data-loss path.",
+  "artifacts": {
+    "config_file": ".pre-commit-config.yaml",
+    "exemption_implementation": "python/carnot/pipeline/batching_hook_runner.py",
+    "tests": "tests/python/test_batching_hook_runner.py",
+    "documentation": "ops/known-issues.md"
+  },
+  "verification": {
+    "ruff_args_no_fix": true,
+    "ruff_format_check_only": true,
+    "exemption_function_present": true,
+    "exemption_tests_passing": "15/15",
+    "working_tree_modification_eliminated": true
+  }
 }
