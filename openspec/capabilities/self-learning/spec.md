@@ -2273,3 +2273,73 @@ signal.  The experiment evaluates on 50 GSM8K-style math questions.
 **Given** per-step rewards `[1.0, 1.0, 1.0]` and decay `gamma=0.9`
 **When** `aggregate_step_rewards` is called
 **Then** the result equals `1.0 + 0.9 + 0.81` = `2.71`.
+
+---
+
+## REQ-LEARN-1219: GRPO v5 -35pp Regression Root-Cause Diagnosis
+
+Exp 1219 SHALL diagnose why Exp 1208's GRPO v5 TinyV-abstention training
+caused a -35pp regression vs the v4 floor (v4 was +10pp; v5 was -25pp
+absolute, delta -35pp), so that the GRPO-VPS Exp 1220 follow-up does not
+repeat the same failure mode. The diagnosis is a *post-hoc analysis* of
+the Exp 1208 artifact plus a static read of `latent_grpo.py` and
+`grpo_v5_2.py`; it does not run new training.
+
+### REQ-LEARN-1219 Sub-requirements
+
+- REQ-LEARN-1219-1: `diagnose_grpo_v5_regression(artifact)` SHALL return
+  a dataclass-like mapping containing at minimum
+  `tinyv_abstention_rate_observed`, `grpo_v5_improvement_pp`,
+  `root_cause`, `root_cause_evidence`, and `recommended_fix_for_exp1220`.
+- REQ-LEARN-1219-2: `root_cause` SHALL be exactly one of
+  `high_abstention_rate`, `dualgpu_instability`,
+  `threshold_misconfiguration`, `reward_signal_collapse`,
+  `implementation_bug`, or `unknown`.
+- REQ-LEARN-1219-3: When `tinyv_abstention_rate >= 0.6` AND
+  `dualgpu_gpu0_utilization_pct` and `dualgpu_gpu1_utilization_pct`
+  are both within `[0.5x, 2x]` of each other, the diagnosis SHALL
+  classify the root cause as `high_abstention_rate`. The Exp 1208
+  observed values (abstention_rate=0.625, gpu0=44%, gpu1=50%) MUST
+  trigger this branch.
+- REQ-LEARN-1219-4: When `max(gpu0_util, gpu1_util) /
+  max(min(gpu0_util, gpu1_util), 1.0) > 2.0`, the diagnosis SHALL
+  classify the root cause as `dualgpu_instability`.
+- REQ-LEARN-1219-5: When the post-training pass rate is *strictly less*
+  than the pre-training pass rate by more than 0.10 (10pp) AND the
+  abstention rate is below 0.6, the diagnosis SHALL classify the root
+  cause as `reward_signal_collapse`.
+- REQ-LEARN-1219-6: The artifact written to
+  `results/experiment_1219_grpo_v5_regression_diagnosis.json` SHALL
+  include `tinyv_abstention_rate_observed`, `grpo_v5_improvement_pp`,
+  `root_cause`, `root_cause_evidence`,
+  `recommended_fix_for_exp1220`, `diagnosis_complete`, and
+  `honest_verdict`.
+- REQ-LEARN-1219-7: `honest_verdict` SHALL be exactly one of
+  `root_cause_identified`, `root_cause_partial`, or
+  `root_cause_unknown`.
+
+### SCENARIO-LEARN-1219: Exp 1208 Inputs Map to High Abstention Rate
+
+**Given** an Exp 1208 artifact with `tinyv_abstention_rate=0.625`,
+`dualgpu_gpu0_utilization_pct=44.0`, `dualgpu_gpu1_utilization_pct=50.0`,
+`v5_fraction_correct_before=1.0`, `v5_fraction_correct_after=0.75`,
+and `improvement_over_baseline_pp=-35.0`
+**When** `diagnose_grpo_v5_regression(artifact)` is called
+**Then** the result's `root_cause` equals `"high_abstention_rate"`
+**And** `recommended_fix_for_exp1220` mentions widening the high-confidence
+band (lowering the abstention threshold) so more rollouts survive.
+
+### SCENARIO-LEARN-1220: Severely Unbalanced GPU Utilization Implies DualGPU Instability
+
+**Given** an artifact with `dualgpu_gpu0_utilization_pct=85.0`,
+`dualgpu_gpu1_utilization_pct=20.0`, abstention rate `0.2`
+**When** the diagnosis runs
+**Then** `root_cause` equals `"dualgpu_instability"`.
+
+### SCENARIO-LEARN-1221: Reward Sign Collapse When Abstention Is Low
+
+**Given** an artifact with `tinyv_abstention_rate=0.10`,
+`v5_fraction_correct_before=0.80`, `v5_fraction_correct_after=0.40`,
+balanced GPU utilization
+**When** the diagnosis runs
+**Then** `root_cause` equals `"reward_signal_collapse"`.
