@@ -514,6 +514,64 @@ must beat it on intractable ones to claim any advantage.
   `phase4_beats_bfs_on_hard_puzzles`, `phase4_tied_with_bfs`,
   `phase4_loses_to_bfs_all_sizes`, or `bfs_mostly_intractable`.
 
+### REQ-KONA-016: BFS-Intractable Scrambled-Grid Puzzles for Phase 4
+
+The Phase 4 active-inference pilot MUST be evaluated on a puzzle
+generator that produces initial states with strictly positive
+energy. Exp 1189 (REQ-KONA-015) showed that the existing
+`ARC3PuzzleEnv` always starts in a state where the legal-action set
+contains the correct action and the default verifier returns 0 for
+that action, so every Phase 4 free-energy trace was identically zero
+and BFS was trivially tractable on all 20 puzzles. That comparison
+told us nothing about whether Phase 4 has any advantage over BFS at
+scale.
+
+A new `ScrambledGridEnv` MUST therefore generate state-traversal
+puzzles by applying `n_scramble_steps >= 50` random valid actions in
+reverse from a known goal grid. The energy MUST be the Hamming
+distance between the current grid and the goal grid (count of
+differing cells), so the *initial* energy is strictly greater than
+zero for every generated puzzle whenever scrambling actually
+produced a state that differs from the goal. The action set MUST
+have branching at least large enough that BFS-to-goal exceeds the
+100,000-state cap on grid sizes >= 15x15 within roughly three depth
+levels; cell-flip actions on a 15x15 mod-2 grid (225 actions per
+state) are the canonical realisation.
+
+The Exp 1210 artifact MUST include the fields enumerated in the
+acceptance criteria so a reviewer can verify that:
+
+1. The puzzle generator actually produces nonzero initial energy
+   for ALL puzzles (not just on average).
+2. BFS hits the 100,000-state cap on a *majority* of the generated
+   puzzles (otherwise the benchmark is no harder than the Exp 1189
+   benchmark and tells us nothing new).
+3. Phase 4's free-energy traces start strictly above zero on every
+   episode, because that is the only configuration in which a
+   monotone-decreasing trace is empirical evidence that Blocked
+   Gibbs free-energy minimization is doing useful work.
+
+**Acceptance criteria:**
+
+- `results/experiment_1210_phase4_bfs_intractable_puzzles_v2.json`
+  exists with fields:
+  - `n_puzzles_total: int` (>= 15)
+  - `grid_size: int` (>= 15)
+  - `n_scramble_steps: int` (>= 50)
+  - `initial_energy_nonzero_fraction: float` (must be 1.0)
+  - `bfs_intractable_count: int`
+  - `bfs_intractable_fraction: float` (>= 0.5 for the experiment
+    to support the headline claim)
+  - `phase4_solved_on_intractable: int`
+  - `phase4_energy_traces_all_nonzero_initial: bool`
+  - `phase4_bfs_intractable_fraction_above_50pct: bool`
+  - `honest_verdict` in `{"phase4_advantage_on_intractable",
+    "phase4_tied_with_bfs_again",
+    "puzzle_generator_fixed_but_bfs_still_tractable",
+    "blocked"}`
+- For every per-puzzle row, `initial_energy > 0` and the BFS result
+  records both the explored-state count and the intractable flag.
+
 ## Scenarios
 
 ### SCENARIO-KONA-001: Stage 1 Primitive — RDT Fixed-Point Convergence
@@ -684,6 +742,29 @@ episode, and an honest verdict drawn from `phase4_beats_bfs_on_hard_puzzles`,
 and BFS intractability counts.
 
 **Spec traces:** REQ-KONA-015
+
+### SCENARIO-KONA-016: Exp 1210 Phase 4 vs BFS on Scrambled-Grid Puzzles With Nonzero Initial Energy
+
+**Given** `ScrambledGridEnv` generates a 15-puzzle batch on a 15x15 mod-2
+grid by applying 50 random cell-flip actions to a known goal grid,
+energy is the Hamming distance between the current grid and the goal,
+the BFS baseline shares the 100,000-state cap from REQ-KONA-015, and
+the Phase 4 Blocked Gibbs free-energy minimization is operational
+**When** `scripts/experiment_1210_phase4_bfs_intractable_puzzles_v2.py`
+runs both BFS and Phase 4 on each of the 15 generated puzzles
+**Then** it writes
+`results/experiment_1210_phase4_bfs_intractable_puzzles_v2.json` with
+`initial_energy_nonzero_fraction == 1.0`,
+`phase4_energy_traces_all_nonzero_initial == True`,
+`bfs_intractable_fraction >= 0.5`, every per-puzzle row's recorded
+initial energy strictly greater than zero, and an honest verdict
+drawn from `phase4_advantage_on_intractable`,
+`phase4_tied_with_bfs_again`,
+`puzzle_generator_fixed_but_bfs_still_tractable`, or `blocked` based
+strictly on the measured Phase-4-vs-BFS solve counts and the BFS
+intractability fraction.
+
+**Spec traces:** REQ-KONA-016
 
 ## Out of scope
 

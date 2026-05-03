@@ -198,7 +198,53 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### NEW 2026-05-03 (19:40Z): Phase-5 Intermediate-Scale Derisking (.96/.97)
+
+**Background:** Deep Think Q9 (in-situ training adversarial review, 2026-05-03 ~19:30Z) identified 8 failure modes for Carnot's externally-grounded verifier-ensemble defense. **3 of 8 modes are STRUCTURALLY UNDETECTABLE at toy scale** (50K params, d~16):
+
+1. **Mode collapse** — overparameterized degenerate attractors. Requires 1B+ params to manifest.
+2. **MCMC mixing paralysis** — PCD distillation degradation in high-d landscapes. Requires d≥256.
+3. **Substrate shift** — measure concentration in [-1,1]^d. Geometric phase transition requires large d.
+
+The original 4-experiment small-scale Phase-5 derisking plan catches 5/8 failure modes but is BLIND to these 3. Going from 50K params directly to 1B+ deployment skips the regime where modes 1-3 might cheaply manifest.
+
+**Mandatory .96 or .97 pickup — exp_NEXT_E intermediate-scale validation:**
+
+```
+Substrate:        ~100-300M params (between toy 50K and production 1B+)
+Domain:           real ARC-AGI-1 or ARC-AGI-2 (real distribution)
+Latent dim:       d=128-256 (between toy d=16 and production d=256-1024)
+Verifier ensemble: k=5+ (full production set)
+Duration:         10K queries
+Cost:             30-60 GPU-hours, 2-3 weeks
+
+Acceptance gates (8/8 failure modes detected absent):
+  + 5 toy-detectable modes (instrumented same as exp_NEXT_B)
+  + 3 production-scale-only modes:
+      - Mode collapse: conditional output entropy + latent variance
+      - MCMC mixing: Gibbs autocorrelation + L2(positive_z, negative_z)
+      - Substrate shift: L∞(z) saturation + dimensional histogram modality
+```
+
+**Why this is in MANDATORY-NEXT-MILESTONE PRIORITIES:**
+
+Without intermediate-scale validation, Phase-5 substrate training at 1B+ scale risks discovering one of the 3 production-scale failure modes after 100-500 GPU-hours. Catching cheaper at 100-300M scale (~30-60 GPU-hours) is the cost-asymmetric win.
+
+**Sequencing:**
+```
+.94 or .95:  exp_NEXT_A-C small-scale (~3 weeks)
+.96 or .97:  exp_NEXT_E intermediate-scale (~3 weeks)
+.98+:        1B+ substrate training (Phase-5 production)
+```
+
+**Cross-references:**
+- Q9 prompt+results: `docs/research-notes/in-situ-training-adversarial-robustness-deep-think-{prompt,results}.md`
+- Updated Phase-5 plan: `openspec/change-proposals/in-situ-training-phase5-derisking.md`
+
+---
+
 ### NEW 2026-05-03 (13:55Z): Retro Task Boundary Too Tight (artifact_not_updated_past_bootstrap)
+RESOLVED .94 (2026-05-03): exp1215 uses STEP 0 skeleton + opus/100 turns
 
 **Background:** .92 exp1190 retro retired with `artifact_not_updated_past_bootstrap` × 3. .93 exp1202 retro is repeating the pattern (FAIL #1 at 13:44Z). Heavy retro work (read 12 artifacts + analyze + write structured JSON) doesn't fit within the YAML-configured max_turns budget. Codex hits the boundary mid-analysis, exits without writing the final artifact, conductor logs FAIL.
 

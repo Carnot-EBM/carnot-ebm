@@ -47,11 +47,13 @@ correct $\sqrt{\det(\Sigma)}$ factor and apply the Welch/Rankin
 Simplex bound to derive the verifier-composition ceiling
 $k^* \leq 3.125$ from the empirical $\alpha^2 = 0.66$ of three
 deployed text probes ($D_{\mathrm{eff}} = 1.603$, exp1093);
-(ii) report a $15.6\times$ exact-sampling speedup of a
-$\chi \leq 4$ sparse-constraint FPGA Fast-Path against an optimized
-C++ baseline, after auditing and rejecting the synchronous parallel
+(ii) report a $\chi \leq 4$ sparse-constraint FPGA Fast-Path
+exact-sampling latency ratio against exp1094's measured CPU
+latency (details in supplemental), after auditing and rejecting
+the synchronous parallel
 Glauber sampler that produced the prior invalid large-speedup
-headline ($\mathrm{KL} = 3.07$ against single-site Gibbs, exp1094);
+headline (software-proxy $\mathrm{KL} = 3.07$ against single-site
+Gibbs, exp1094 simulation; bitstream on-board KL not yet measured);
 (iii) document the pre-retrain energy-ordering inversion on SOTA outputs
 ($\overline{E}_{\mathrm{correct}} = 0.689 > \overline{E}_{\mathrm{incorrect}} = 0.621$,
 exp1100) as an out-of-distribution Goodhart-class anomaly that
@@ -113,11 +115,12 @@ text features.
 The synchronous parallel Glauber sampler that produced the original
 invalid large-speedup FPGA headline does not preserve
 detailed balance on frustrated topologies:
+software-proxy
 $\mathrm{KL}(P_{\text{parallel}} \,\|\, P_{\text{Gibbs}}) = 3.07$
-on the canonical 12-spin antiferromagnetic ring (exp1094). The
-numerical speedup against an unoptimized Python CPU baseline was
-real; the sampling distribution it produced was not the target
-distribution.
+on the canonical 12-spin antiferromagnetic ring (exp1094 simulation;
+bitstream on-board KL not yet measured). The numerical speedup
+against an unoptimized Python CPU baseline was real; the sampling
+distribution the simulator produced was not the target distribution.
 
 \paragraph{Wall 3 --- Out-of-distribution energy-ordering inversion.}
 On 100 SOTA-model outputs, the cascade reports
@@ -143,9 +146,12 @@ system. Section~\ref{sec:bounds} develops the theory needed to
 bound them: the $\sqrt{\det(\Sigma)}$ joint-volume factor, the
 Welch/Rankin Simplex bound on $k^*$, the Participation Ratio as the
 empirical projection onto the bound. Section~\ref{sec:hardware}
-reports the hardware deployment story --- including the $15.6\times$
-recalibration and the $\chi \leq 4$ Fast-Path architecture --- as a
-direct response to the $\mathrm{KL} = 3.07$ finding.
+reports the hardware deployment story --- including the
+recalibration against exp1094's measured CPU latency
+(details in supplemental) and the $\chi \leq 4$ Fast-Path
+architecture --- as a
+direct response to the software-proxy $\mathrm{KL} = 3.07$ finding
+(exp1094 simulation; bitstream on-board KL not yet measured).
 Section~\ref{sec:empirical} foregrounds the four .85 honest
 negatives as the architectural telemetry's primary output.
 Section~\ref{sec:sovereignty} positions Carnot's Apache-2.0,
@@ -461,7 +467,8 @@ verifier accuracy.
 \label{sec:hardware}
 
 Section~\ref{sec:hardware} reports the FPGA hardware deployment
-with the $15.6\times$ recalibration in place, audits why the prior
+with the recalibration against exp1094's measured CPU latency
+(details in supplemental) in place, audits why the prior
 large-speedup headline was distributionally invalid,
 and derives the $\chi \leq 4$ Sparse-Constraint Accelerator
 architecture as the deployable response.
@@ -469,9 +476,10 @@ architecture as the deployable response.
 \begin{figure}[ht]
   \centering
   \includegraphics[width=0.75\textwidth]{figures/fig7.pdf}
-  \caption{$\chi \leq 4$ Fast-Path tradeoff --- speedup vs CPU
-  exact Gibbs as a function of chromatic number $\chi$, showing the
-  $15.6\times$ plateau at $\chi \leq 4$ and the collapse to
+  \caption{$\chi \leq 4$ Fast-Path tradeoff --- per-sweep latency
+  ratio against exp1094's measured CPU latency
+  (details in supplemental) as a function of chromatic number $\chi$,
+  showing the $\chi \leq 4$ plateau and the collapse to
   pseudo-sequential performance at $\chi > 8$, with the
   $\chi \geq 8$ regime annotated as the CPU fallback boundary.}
   \label{fig:chi4}
@@ -479,12 +487,15 @@ architecture as the deployable response.
 
 \subsection{The detailed-balance audit (exp1094)}
 
-The .85 sampler-correctness audit measured the KL divergence
-between Carnot's prior synchronous parallel Glauber FPGA sampler
-and the target Boltzmann distribution on the canonical 12-spin
-frustrated antiferromagnetic ring at $\beta = 2.0$:
+The .85 sampler-correctness audit measured the software-proxy KL
+divergence between Carnot's prior synchronous parallel Glauber
+sampler (simulated, exp1094) and the target Boltzmann distribution
+on the canonical 12-spin frustrated antiferromagnetic ring at
+$\beta = 2.0$:
 \begin{equation}
   \mathrm{KL}(P_{\text{parallel}} \,\|\, P_{\text{Gibbs}}) = 3.07
+  \quad
+  \text{(software proxy; bitstream on-board KL not yet measured)}
 \end{equation}
 against an acceptance threshold of $0.05$ and a theoretical bound
 of $0.058$ (within sample-size-driven Monte Carlo noise).
@@ -501,7 +512,7 @@ per-sample \emph{latency} number ($24.83\,\mu s$ at 64 spins) is
 accurate as a hardware benchmark. We \textbf{retract} the
 $13{,}061\times$ and $\sim 12{,}000\times$ speedup figures from v2.
 
-\subsection{The $15.6\times$ recalibration}
+\subsection{Recalibration against exp1094's measured CPU latency}
 
 A pipelined chromatic-Glauber sampler that respects detailed
 balance requires $k$ color-batch flushes per Monte Carlo sweep,
@@ -509,25 +520,20 @@ where $\chi$ is the chromatic number of the constraint graph. At
 $\chi = 4$ --- the empirical sweet spot for SAT-style constraint
 matrices with maximum clique size $\leq 4$ --- each sweep takes
 $4 \text{ cycles per color} \times 4 \text{ colors} = 16
-\text{ cycles} = 64 \text{ ns}$ at 250\,MHz. Against an optimized
-single-thread C++ Gibbs sampler at $\sim 1\,\mu s$ per sweep, the
-latency speedup is
-\begin{equation}
-  \frac{\sim 1\,\mu s}{64\,\mathrm{ns}} \approx 15.6\times.
-\end{equation}
-This is a rigorous exact-sampling speedup against a real baseline,
+\text{ cycles} = 64 \text{ ns}$ at 250\,MHz. The per-sweep latency
+ratio is computed against exp1094's measured CPU latency
+(details in supplemental); the resulting ratio is reported as the
+$\chi \leq 4$ exact-sampling speedup, against a real baseline,
 not against a Python-overhead-dominated CPU loop.
 
-\begin{figure}[ht]
-  \centering
-  \includegraphics[width=0.75\textwidth]{figures/fig3.pdf}
-  \caption{CPU vs KV260 FPGA Ising-sampler latency at 64 spins.
-  CPU reference $\sim 290$\,ms (exp1081); KV260 hardware-measured
-  $24.83\,\mu s$ (exp1068 smoke test). Single-point comparison; multi-N scaling
-  curve was not measured because the .84 scale benchmark could not
-  reach the board.}
-  \label{fig:fpga}
-\end{figure}
+\paragraph{FPGA latency, single-point measurement.}
+The KV260 achieves $24.83\,\mu s$ per sweep at $N{=}64$ spins
+(exp1068 hardware-measured smoke test); a rigorous
+CPU-vs-FPGA comparison requires matching $N$ and per-sample
+basis on both sides, and will be reported in follow-up work.
+The previous side-by-side latency figure has been retracted
+because its CPU reference (exp1081 $\sim 290$\,ms) was not
+measured on the same per-sample basis as the FPGA point.
 
 \subsection{The $\chi \leq 4$ Sparse-Constraint Accelerator}
 
@@ -546,8 +552,9 @@ Accelerator + CPU Fallback}:
         constraint graph to estimate $\chi$.
   \item \textbf{If $\chi \leq 4$}, dispatch to the FPGA $\chi \leq 4$
         Fast-Path bitstream, which implements pipelined chromatic
-        Glauber with provable detailed balance and $15.6\times$
-        speedup vs C++ Gibbs.
+        Glauber with provable detailed balance and a per-sweep latency
+        ratio against exp1094's measured CPU latency
+        (details in supplemental).
   \item \textbf{If $\chi > 4$}, fall back to single-site exact Gibbs
         on the CPU. This preserves correctness at the cost of
         speedup.
@@ -556,8 +563,9 @@ Accelerator + CPU Fallback}:
 The architecture is mathematically exact at every step. There is
 no regime in which the user gets an incorrect distribution; there
 is a regime ($\chi > 4$) in which they do not get the FPGA speedup.
-The asymmetric design directly answers the $\mathrm{KL} = 3.07$
-finding: sampling correctness is non-negotiable; speedup is a
+The asymmetric design directly answers the software-proxy
+$\mathrm{KL} = 3.07$ finding (exp1094 simulation; bitstream on-board
+KL not yet measured): sampling correctness is non-negotiable; speedup is a
 function of constraint topology.
 
 \subsection{The Z1 and photonic deferral}
@@ -591,7 +599,9 @@ $\overline{t} = 24.83\,\mu s$, $t_{\min} = 24.19\,\mu s$,
 $t_{\max} = 40.08\,\mu s$ at 64 spins over 100 samples with 70
 unique values and a non-uniform energy distribution. This is the
 load-bearing single-point hardware measurement v3 retains; the
-$15.6\times$ speedup of Section~\ref{sec:hardware} is the bound
+exact-sampling speedup of Section~\ref{sec:hardware} is reported as
+a per-sweep latency ratio against exp1094's measured CPU latency
+(details in supplemental) and is the bound
 under $\chi = 4$, not the universal claim. The multi-N FPGA scaling
 curve was not reached during the .84 milestone (exp1081 could not
 connect to the board) and is left as future work.
@@ -742,6 +752,19 @@ production path. The initial benchmark reports AUROC=0.5547 versus
 deployment milestone and diagnostic baseline, not as a new accuracy
 headline.
 
+\textbf{SOSKANEnergyV3 out-of-distribution collapse.}
+On the FoVer training corpus, SOSKANEnergyV3 achieves
+$\mathrm{AUROC}=0.9545$ (exp1072). On the production evaluation
+corpus (exp1121), the same verifier drops to
+$\mathrm{AUROC}=0.3333$ --- an out-of-distribution energy-inversion
+example that motivates multi-verifier AND-composition rather than
+relying on any single verifier's in-distribution headline number.
+The collapse is the same Goodhart-class shift documented in
+Section~\ref{sec:exp1100}: a verifier trained against one
+distribution loses its calibration when the evaluation distribution
+shifts toward outputs from a generator that has been optimized
+against a similarly-shaped reward.
+
 \textbf{Zenil $\alpha_t$ self-distillation grounding (Milestone .88).}
 With the retrained verifier, $\alpha_t$ measured at 0.52 versus the
 prior 0.38 on Qwen3.6-35B-A3B (exp1130), preserving the
@@ -749,7 +772,7 @@ $\inf_t \alpha_t > 0$ grounding condition while improving the SOTA
 local-model readout.
 
 
-In milestone .89, HardNet++-style arithmetic projection repair corrected 20/20 synthetic violations at 100\% accuracy and handled each violation in 117\,$\mu s$ versus 8.9\,s for prompt repair on the same 20 cases (exp1147). MetaCluster-style centroid compression made SOSKANEnergyV3 5.03$\times$ smaller with AUROC drop 0.018 (0.9902 to 0.9718 on the exp1128 production benchmark, n=500), keeping the compressed verifier within the 0.02 degradation target (exp1148).
+In milestone .89, HardNet++-style arithmetic projection repair corrected 20/20 synthetic violations at 100\% accuracy and handled each violation in 117\,$\mu s$ per case versus 8.9\,s for prompt repair on the same 20 cases (exp1147); the two approaches address different failure modes (closed-form arithmetic projection vs.\ general-purpose LLM repair) and are not directly comparable on a single speedup metric. MetaCluster-style centroid compression made SOSKANEnergyV3 5.03$\times$ smaller with AUROC drop 0.018 (0.9902 to 0.9718 on the exp1128 production benchmark, n=500), keeping the compressed verifier within the 0.02 degradation target (exp1148).
 
 \subsection{$D_{\mathrm{int}} = 1.6$ motivates the Welch bound (exp1093)}
 
@@ -776,7 +799,7 @@ diversity prescription: the only known route past the Welch ceiling
 is to compose verifiers from structurally distinct families, not
 to add more verifiers from the same family.
 
-\subsection{$\mathrm{KL} = 3.07$ justifies CPU fallback (exp1094)}
+\subsection{Software-proxy $\mathrm{KL} = 3.07$ justifies CPU fallback (exp1094)}
 
 Section~\ref{sec:hardware} already reported the detailed-balance
 violation. We restate the operational consequence here: the
@@ -1151,10 +1174,12 @@ limit, OOD energy-ordering inversion) and one methodological trap
         in v2 is retracted.
   \item \textbf{$\chi \leq 4$ Sparse-Constraint Accelerator + CPU
         Fallback} (Section~\ref{sec:hardware}): a mathematically
-        exact deployment shape that answers the
-        $\mathrm{KL} = 3.07$ detailed-balance violation; rigorous
-        $15.6\times$ speedup vs optimized C++ baseline at
-        $\chi \leq 4$.
+        exact deployment shape that answers the software-proxy
+        $\mathrm{KL} = 3.07$ detailed-balance violation (exp1094
+        simulation; bitstream on-board KL not yet measured); the
+        per-sweep latency ratio against exp1094's measured CPU
+        latency (details in supplemental) is reported as the
+        $\chi \leq 4$ exact-sampling speedup.
   \item \textbf{OOD anomaly framing of the energy-ordering inversion}
         (Section~\ref{sec:exp1100}): the inversion on SOTA outputs
         as evidence that non-linear Phase-4 EBM landscapes are
@@ -1211,8 +1236,9 @@ or recalibrated against the v2 draft:
     v2 claim & v3 disposition & Section \\
     \midrule
     $\sim 13{,}061\times$ FPGA speedup &
-      Retracted; replaced with rigorous $15.6\times$ vs optimized
-      C++ at $\chi \leq 4$ &
+      Retracted; replaced with a per-sweep latency ratio against
+      exp1094's measured CPU latency (details in supplemental)
+      at $\chi \leq 4$ &
       4.1, 4.2 \\
     $k = 15$ AND-composition &
       Retracted; replaced with Welch bound $k^* \leq 3.125$
@@ -1266,9 +1292,11 @@ preemptively.
 / violates detailed balance.''}
 While synchronous parallel Glauber yields massive apparent speedups,
 our distributional audits confirm severe detailed-balance violations
-($\mathrm{KL} = 3.07$); consequently, our architecture mandates a
-mathematically exact $\chi \leq 4$ FPGA Fast-Path, achieving a
-$15.6\times$ speedup over an optimized C++ baseline. The CPU
+(software-proxy $\mathrm{KL} = 3.07$, exp1094 simulation; bitstream
+on-board KL not yet measured); consequently, our architecture
+mandates a mathematically exact $\chi \leq 4$ FPGA Fast-Path,
+achieving the per-sweep latency ratio against exp1094's measured
+CPU latency (details in supplemental) at $\chi \leq 4$. The CPU
 fallback at $\chi > 4$ preserves correctness everywhere there is no
 hardware speedup to claim.
 

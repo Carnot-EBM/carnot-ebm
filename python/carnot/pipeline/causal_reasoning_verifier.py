@@ -116,9 +116,13 @@ class CausalReasoningVerifier:
 
     def __init__(
         self,
-        symcode: SymCodeVerifier,
+        symcode: SymCodeVerifier | None = None,
         llm_extractor: LLMAsExtractorV1 | None = None,
     ) -> None:
+        if symcode is None:
+            from carnot.pipeline.symcode_verifier import SymCodeVerifier as _SCV  # noqa: PLC0415
+
+            symcode = _SCV()
         self.symcode = symcode
         self.extractor = llm_extractor
 
@@ -256,3 +260,35 @@ class CausalReasoningVerifier:
         at call sites that only need a boolean signal.
         """
         return self.detection_score(response) > 0.0
+
+    def verify_step(self, step_text: str, prior_step: str | None = None) -> float:
+        """Return causal violation probability for step_text given prior_step.
+
+        Implements REQ-LEARN-1209-1: scalar signal for GRPO-VPS step-level
+        process supervision.  Return value is in [0.0, 1.0] where 0.0 means
+        no detectable causal error and 1.0 means clear violation.
+
+        When prior_step is None (the first step in a chain) there is no
+        prior numeric conclusion to compare against, so we run arithmetic
+        checking only on step_text itself via SymCodeVerifier.
+
+        Args:
+            step_text:  Text of the current reasoning step to verify.
+            prior_step: Text of the immediately preceding step, or None
+                        for the first step in the chain.
+
+        Returns:
+            Float in [0.0, 1.0].
+
+        Spec: REQ-LEARN-1209-1, SCENARIO-LEARN-1211
+        """
+        if prior_step is None:
+            # No prior step — only arithmetic checking on the current step.
+            cot = self.symcode.verify_step(step_text, step_index=0)
+            return 1.0 if cot.violation_detected else 0.0
+
+        result = self.check_entailment(prior_step, step_text, step_k_index=0)
+        if not result.causal_violation:
+            return 0.0
+        # entailment_score can exceed 1.0 for large breaks — clamp to [0, 1].
+        return min(1.0, result.entailment_score)
