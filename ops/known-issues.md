@@ -198,6 +198,35 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### NEW 2026-05-03 (13:05Z): Auto-Populate prior_failures from Failure-Ledger at Plan Time
+
+**Background:** 7 DOOMED_RERUN_BLOCK false-positives observed in tonight's session: exp1162 (KANELE, 2 priors), exp1169 (FoVer SOTA v6, 6 priors), exp1172 (NRGPT-per-token, 2 priors), exp1174 (BiKA, 1 prior), exp1175 (Connect Four, 6 priors), exp1188 (Hex, 7 priors), exp1198 (FoVer v7, 5 priors). Each one required ~5 min of operator outer-loop intervention to recover (read priors, write per-prior addressed_by paragraph, append OK to log).
+
+**Pattern:** the failure-ledger algorithm correctly detects scope overlap with prior experiments. The interpretation gap is whether the overlap represents (a) a true prior FAILURE that this task addresses or (b) a successful UPSTREAM that this task builds on. The planner Sonnet doesn't pre-populate the field; the conductor blocks; operator manually classifies and writes the prior_failures block.
+
+**Mandatory .94 fix:**
+
+Two valid approaches:
+
+1. **Auto-population at plan time.** Modify `_plan_next_milestone()` planner prompt to require pre-populated `prior_failures` for any task whose title/scope overlaps the failure-ledger's matching_priors output. The planner already reads research-complete.yaml; this just requires explicit instruction to enumerate matches and pre-classify.
+
+2. **Auto-population at activation time.** Add a script that runs after `_plan_next_milestone` returns, walks every task, queries the failure-ledger, generates a prior_failures stub when priors exist, marks ready for operator review. Less LLM dependency, more deterministic.
+
+3. **Hybrid (recommended).** Approach 2 generates the stubs; planner Sonnet reviews and refines the addressed_by text before YAML lock. Best of both: deterministic detection + LLM-quality narrative.
+
+**Estimated cost:** ~2-4h of conductor.py + planner-prompt work for option 3.
+
+**Why this is in MANDATORY-NEXT-MILESTONE PRIORITIES:**
+
+7 false-positives in one session is unsustainable. Each requires operator attention. Without a fix, .94 will produce another ~7 false-positives, .95 another ~7, etc. Compounds with the test-suite cleanup work as another operational-discipline drain on the planner.
+
+**Cross-references:**
+- 7 example recoveries this session in conductor-log.md (operator OK entries with "prior_failures field added")
+- failure-ledger logic: scripts/failure_ledger.py (matching_priors method)
+- Planner prompt location: scripts/research_conductor.py `_plan_next_milestone()`
+
+---
+
 ### NEW 2026-05-03 (06:33Z): artifact_not_updated_past_bootstrap Pattern (5 .92 Retirements)
 
 **Background:** during .92, five distinct tasks retired with the same `artifact_not_updated_past_bootstrap` failure mode despite passing the pre-test gate (no schema-drift, no spike): exp1183 (paper recompile), exp1184 (GRPO v5 v2), exp1187 (Latent-GRPO), exp1190 (.92 retro), and one earlier in the cascade. Pattern: agent runs (sonnet+opus retries via the existing escalation tier), task gets to its substantive work, but never writes the deliverable JSON to a finished state before exhausting turn budget.
