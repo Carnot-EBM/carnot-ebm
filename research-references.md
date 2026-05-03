@@ -4,6 +4,43 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-05-03 Scan (Milestone 2026.04.94 Planning)
+
+### SDPO: Self-Distilled Policy Optimization for Dense GRPO Rewards
+- **Paper:** arXiv 2604.03128 (April 2026).
+- **What:** On-policy self-distillation that uses the same model as teacher and student with privileged information, generating token-level dense supervision signals from sparse binary verifier outcomes. Addresses GRPO's sparse reward problem by providing per-step reward signals distilled from the model's own outputs.
+- **Relevance to Carnot:** Carnot's energy verifier produces a binary pass/fail outcome reward. SDPO could convert this into per-token dense supervision: the energy verifier scores the full response, SDPO distills that signal back to token-level. This is a principled complement to GRPO-VPS step-level supervision and TinyV false-negative correction. Together they form a complete dense-reward pipeline: TinyV reduces FN noise, GRPO-VPS attributes credit to steps, SDPO provides token-level density.
+- **Concrete experiment:** Apply SDPO-style dense distillation on top of GRPO v5: use Carnot's energy verifier as privileged information source; distill to token-level supervision; compare convergence rate vs GRPO v5 binary-reward baseline. Target: faster convergence to +10pp floor than current 300s structural warm-up.
+- **When to incorporate:** .94 Phase 2 — new SDPO experiment alongside GRPO v5.
+
+### ReProbe: Lightweight Step-Level Verification via Internal State Probing
+- **Paper:** arXiv 2511.06209 (November 2025).
+- **What:** Lightweight step-level verification by probing LLM internal states with a transformer probe, achieving PRM-equivalent performance at 1/810th the model size. The probe reads attention activations at intermediate layers and predicts step-level correctness without running the full verifier.
+- **Relevance to Carnot:** Carnot's SOS-KAN verifier (AUROC=0.9902, ~2.2MB at 4-bit after exp1199) achieves similar efficiency via energy computation rather than activation probing. ReProbe provides an independent comparison: does Carnot's energy-based approach achieve similar verification accuracy to internal-state probing at the same parameter count? The answer validates (or refutes) Carnot's approach relative to the simplest possible alternative.
+- **Concrete experiment:** Implement a ReProbe-style activation probe on a llama.cpp model using FoVer corpus. Compare AUROC of: (1) ReProbe activation probe, (2) SOS-KAN energy verifier (exp1199 4-bit checkpoint), (3) k=5 AND-composed ensemble. Measure accuracy, inference latency, and model size. This is the verifier comparison paper figures need.
+- **When to incorporate:** .94 or .95 — pairs naturally with KANtize edge deployment work (exp1199).
+
+### CANUF: Constraint-Aware Neurosymbolic Uncertainty Quantification
+- **Paper:** arXiv 2601.12442 (January 2026).
+- **What:** Differentiable constraint satisfaction layer that integrates symbolic constraints (logical, relational) into Bayesian neural networks via differentiable logic. Reports 99.2% constraint satisfaction and 34.7% calibration error reduction. Trains the constraint satisfaction jointly rather than as post-hoc checking.
+- **Relevance to Carnot:** Carnot currently verifies constraints post-hoc (generate then check). CANUF's differentiable constraint layer could enable constraint-aware training: during GRPO, the energy verifier's constraint check becomes part of the loss function rather than a binary gate. This is the Phase 3 bridge from "verify after" to "train with constraints." Maps directly to REQ-12 (Verifiable Reasoning) and FR-12's constrained generation goal.
+- **Concrete experiment:** Integrate CANUF-style differentiable constraint layer into GRPO training loop (replacing or complementing the binary reward signal). Use Z3MathVerifier constraints as the symbolic component; the energy function as the differentiable approximation. Compare constraint satisfaction rate vs standard GRPO energy reward.
+- **When to incorporate:** .95+ after GRPO v5 baseline is established in .94.
+
+### BRAIN: Boltzmann Reinforcement Learning for Analog Ising Machines
+- **Paper:** arXiv 2602.09162 (February 2026).
+- **What:** Variational RL framework for approximating Boltzmann distributions on analog Ising machines with hardware noise. Learns noise-resilient coupling matrices via policy gradient, treating hardware noise as stochastic policy exploration. Achieves robust sampling despite 10-15% weight perturbations.
+- **Relevance to Carnot:** Carnot's KV260 Ising sampler (exp1161: KL<0.05 sequential Gibbs) is a deterministic digital sampler. When Extropic Z1 ships (analog thermodynamic hardware), the coupling matrices will experience hardware noise. BRAIN's noise-resilient training approach is the pre-adaptation needed for Z1 deployment — train Ising couplings to be robust to analog perturbations before Z1 hardware arrives.
+- **Concrete experiment:** File for hardware roadmap. Apply BRAIN-style noise-robust training to KV260 coupling matrices; test resilience to artificial weight perturbations (±10%) on KL measurement. Validate before Extropic Z1 early-access.
+- **When to incorporate:** .96+ after Extropic Z1 or equivalent analog hardware is available.
+
+### Spurious Rewards in RLVR (ICLR 2026 version)
+- **Paper:** arXiv 2512.16912 (December 2025 / ICLR 2026).
+- **What:** Explores combining outcome rewards with spurious token-level rewards to preserve entropy and balance exploration during RLVR training. Shows that structured spurious signals (not random) can prevent reward collapse even when the true reward is sparse. Different emphasis from 2506.10947 (which found 73% structural gain from random rewards): this paper focuses on using auxiliary signals to stabilize the training distribution.
+- **Relevance to Carnot:** Complements the earlier Spurious Rewards finding (2506.10947): GRPO v5's energy reward is the real signal, but adding a structured token-level auxiliary from (e.g.) SDPO distillation could stabilize training. The two papers together define a design space: (1) structural warm-up avoids spending the first 73% of training on random walk, (2) auxiliary token-level signals prevent entropy collapse in the remaining 27%.
+- **Concrete experiment:** GRPO v6 design (after v5 is measured): combine energy reward (real) + SDPO-distilled token-level auxiliary (structured spurious). Compare: v4 structural only → v5 energy reward → v6 energy+auxiliary.
+- **When to incorporate:** .95 after GRPO v5 is measured in .94.
+
 ## 2026-05-03 Scan (Milestone 2026.04.93 Planning)
 
 ### Spurious Rewards in RLVR: Random Rewards Achieve 73% of GRPO Gains
