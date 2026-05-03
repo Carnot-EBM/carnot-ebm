@@ -2,6 +2,7 @@
 
 from carnot.games.connect_four import ConnectFourIsingCartridge
 from carnot.games.hex import GibbsEnergyPlayer, GreedyEnergyPlayer, HexBoard, HexGame, RandomPlayer
+from carnot.games.nonogram import NonogramIsingEBM, NonogramPuzzle, NonogramSolver
 
 __all__ = [
     "ConnectFourIsingCartridge",
@@ -9,5 +10,8 @@ __all__ = [
     "GreedyEnergyPlayer",
     "HexBoard",
     "HexGame",
+    "NonogramIsingEBM",
+    "NonogramPuzzle",
+    "NonogramSolver",
     "RandomPlayer",
 ]
