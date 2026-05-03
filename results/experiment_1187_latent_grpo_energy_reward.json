@@ -1,0 +1,151 @@
+{
+  "experiment": 1187,
+  "title": "Latent-GRPO invalid energy masking with one-sided reward noise",
+  "run_date": "20260503",
+  "started_at": "2026-05-03T04:42:14Z",
+  "finished_at": "2026-05-03T04:42:15Z",
+  "duration_s": 1.0,
+  "status": "success",
+  "random_seed": 1187,
+  "cost_usd": 0.0,
+  "decision_class": [
+    "training",
+    "verify"
+  ],
+  "metrics_used": "fover_100q_verifier_accuracy_proxy",
+  "schema_version": "latent_grpo_v1",
+  "fover_corpus_path": "data/fover_corpus.jsonl",
+  "subset_mode": "first_100_no_difficulty_field",
+  "requested_v4_baseline_found": false,
+  "requested_v4_baseline_path": "results/experiment_1164_grpo_v4_structural_warmup.json",
+  "published_v4_baseline_source": "results/experiment_1159_grpo_v4_structural_warmup.json",
+  "published_v4_trained_fraction_correct": 0.26,
+  "baseline_definition": "standard k=5 verifier classification accuracy on the same first 100 FoVer rows before Latent-GRPO masking/noise; requested exp1164 structural-warmup artifact is absent in this checkout",
+  "latent_definition": "same k=5 verifier records after LatentGRPOTrainer masks invalid energy ensembles and applies one-sided noise before the proxy update",
+  "n_masked": 0,
+  "n_positive_reward_rollouts": 54,
+  "standard_correct_count": 46,
+  "latent_correct_count": 46,
+  "gradient_update_meta": {
+    "n_update_rollouts": 100
+  },
+  "eval_records_head": [
+    {
+      "question_id": "156",
+      "label": "incorrect",
+      "predicted_label": "incorrect",
+      "standard_correct": true,
+      "energies": [
+        0.5,
+        1.0,
+        0.3333333333333333,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "question_id": "159",
+      "label": "correct",
+      "predicted_label": "incorrect",
+      "standard_correct": false,
+      "energies": [
+        0.5,
+        1.0,
+        0.0,
+        0.5,
+        0.0
+      ]
+    },
+    {
+      "question_id": "160",
+      "label": "incorrect",
+      "predicted_label": "incorrect",
+      "standard_correct": true,
+      "energies": [
+        0.5,
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "question_id": "161",
+      "label": "incorrect",
+      "predicted_label": "incorrect",
+      "standard_correct": true,
+      "energies": [
+        0.5,
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "question_id": "164",
+      "label": "correct",
+      "predicted_label": "incorrect",
+      "standard_correct": false,
+      "energies": [
+        0.5,
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    }
+  ],
+  "paper_refs": [
+    "arXiv 2604.27998 (Latent-GRPO invalid-sample masking + one-sided noise)",
+    "Exp 1159 GRPO v4 structural warm-up baseline artifact fallback"
+  ],
+  "latent_grpo_implemented": true,
+  "mask_rate": 0.0,
+  "grpo_v4_baseline_pass_rate": 0.46,
+  "latent_grpo_pass_rate": 0.46,
+  "latent_grpo_delta_pp": 0.0,
+  "one_sided_noise_applied": true,
+  "n_eval_questions": 100,
+  "honest_verdict": "latent_grpo_no_delta",
+  "reproducibility_checksum": "2bda70bd81859511",
+  "schema": [
+    "baseline_definition",
+    "cost_usd",
+    "decision_class",
+    "duration_s",
+    "eval_records_head",
+    "experiment",
+    "finished_at",
+    "fover_corpus_path",
+    "gradient_update_meta",
+    "grpo_v4_baseline_pass_rate",
+    "honest_verdict",
+    "latent_correct_count",
+    "latent_definition",
+    "latent_grpo_delta_pp",
+    "latent_grpo_implemented",
+    "latent_grpo_pass_rate",
+    "mask_rate",
+    "metrics_used",
+    "n_eval_questions",
+    "n_masked",
+    "n_positive_reward_rollouts",
+    "one_sided_noise_applied",
+    "paper_refs",
+    "published_v4_baseline_source",
+    "published_v4_trained_fraction_correct",
+    "random_seed",
+    "reproducibility_checksum",
+    "requested_v4_baseline_found",
+    "requested_v4_baseline_path",
+    "run_date",
+    "schema",
+    "schema_version",
+    "standard_correct_count",
+    "started_at",
+    "status",
+    "subset_mode",
+    "title"
+  ]
+}

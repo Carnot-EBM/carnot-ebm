@@ -381,7 +381,9 @@ def _build_artifact(
     if reason is not None:
         payload["reason"] = reason
 
-    return tmpl.build_result(payload, status=status)
+    artifact = tmpl.build_result(payload, status=status)
+    artifact["schema"] = "carnot.live_vr_coace_v4.v1"
+    return artifact
 
 
 # ---------------------------------------------------------------------------

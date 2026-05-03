@@ -79,6 +79,10 @@ def run_experiment(repo_root: Path) -> dict:
         Result artifact with all REQUIRED_RESULT_FIELDS and the
         RETRO-015 specific fields documented below.
     """
+    # Capture the caller's incoming environment before ExperimentTemplate
+    # propagates persisted conductor state into this process.
+    env_var_set = LiveGPUGate.check_env_var()
+
     tmpl = ExperimentTemplate(
         EXP_ID,
         TITLE,
@@ -87,9 +91,6 @@ def run_experiment(repo_root: Path) -> dict:
         repo_root=repo_root,
     )
     tmpl.setup()
-
-    # --- Check 1: Is CARNOT_FORCE_LIVE currently set in this process? ---
-    env_var_set = LiveGPUGate.check_env_var()
 
     # --- Check 2: Does subprocess inherit the env var? ---
     # This is the PROOF that the fix works end-to-end.

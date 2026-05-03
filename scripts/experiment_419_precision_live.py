@@ -61,14 +61,9 @@ import json
 import logging
 from typing import Any
 
+from scripts import experiment_368_precision_live as exp368  # noqa: E402
 from scripts.experiment_template import (  # noqa: E402
     ExperimentTemplate,
-)
-from scripts.experiment_368_precision_live import (  # noqa: E402
-    load_gsm8k_questions,
-    run_variant,
-    _load_model_pipeline,
-    _hf_pipeline_generate_fn,
 )
 from carnot.pipeline.precision_benchmark import (  # noqa: E402
     PipelineVariant,
@@ -80,6 +75,20 @@ from carnot.pipeline.crane_extractor import CRANEExtractionGate  # noqa: E402
 
 _log = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+
+load_gsm8k_questions = exp368.load_gsm8k_questions
+run_variant = exp368.run_variant
+_hf_pipeline_generate_fn = exp368._hf_pipeline_generate_fn
+
+
+def _load_model_pipeline(*args: Any, **kwargs: Any) -> object:
+    """Delegate model loading through Exp 368 at call time.
+
+    Keeping this as a wrapper preserves the local patch point used by Exp 419
+    tests while also honoring patches applied to the source Exp 368 helper.
+    """
+    return exp368._load_model_pipeline(*args, **kwargs)
+
 
 # ---------------------------------------------------------------------------
 # Constants

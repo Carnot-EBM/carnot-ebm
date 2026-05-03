@@ -1,0 +1,44 @@
+{
+  "duration_s": 1.903,
+  "experiment": 1185,
+  "finished_at": "2026-05-03T04:11:55.384017+00:00",
+  "honest_verdict": "overfit_resolved_but_k6_still_regresses",
+  "k5_auroc_on_eval": 0.92403,
+  "k5_baseline_auroc": 0.924,
+  "k6_above_k5": false,
+  "k6_regularized_auroc": 0.902707,
+  "k6_viable_for_production": false,
+  "overfit_resolved": true,
+  "overfit_resolved_criterion": "v2_holdout_auroc < 0.98",
+  "regularization_params": {
+    "dropout_rate": 0.3,
+    "early_stop_patience": 5,
+    "n_epochs_max": 30,
+    "weight_decay": 0.0001
+  },
+  "retire_k6": true,
+  "run_date": "2026-05-03",
+  "sc_energy_regularized": true,
+  "sc_energy_v1_holdout_auroc": 0.423526,
+  "sc_energy_v1_overfit_evidence": "exp1168 eval AUROC=1.0 on 12 training-adjacent pairs",
+  "sc_energy_v2_checkpoint": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/models/sc_energy_v2_regularized.pt",
+  "sc_energy_v2_holdout_auroc": 0.322239,
+  "schema": "sc_energy_overfit_regularized_k6",
+  "spec": [
+    "REQ-VERIFY-1185",
+    "SCENARIO-VERIFY-1185"
+  ],
+  "started_at": "2026-05-03T04:11:53.480938+00:00",
+  "status": "success",
+  "training_diagnostics": {
+    "best_epoch": 7,
+    "best_val_loss": 0.0,
+    "dropout_rate": 0.3,
+    "early_stopped": true,
+    "final_train_loss": 0.167929,
+    "n_epochs_run": 13,
+    "n_train_pairs": 48,
+    "n_val_pairs": 12,
+    "weight_decay": 0.0001
+  }
+}

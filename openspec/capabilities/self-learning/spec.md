@@ -2082,3 +2082,58 @@ phase preserves Exp 1159's reflection-only schedule.
 **When** the verdict is derived
 **Then** `grpo_v5_delta_pp` equals `0.06`
 **And** `honest_verdict` equals `"grpo_v5_above_v4"`.
+
+---
+
+## REQ-LEARN-1187: Latent-GRPO Masks Invalid Energy Rollouts Before One-Sided Reward Noise
+
+Exp 1187 SHALL extend the GRPO v4 reward-update path with Latent-GRPO-style
+invalid-sample masking and one-sided noise injection for Carnot energy verifier
+ensembles. Invalid verifier outputs SHALL be removed before a GRPO gradient
+update, and Gaussian reward noise SHALL be added only to positive-reward
+rollouts so negative rewards remain exact verifier boundaries.
+
+### REQ-LEARN-1187 Sub-requirements
+
+- REQ-LEARN-1187-1: `mask_invalid_samples(rollouts, energies)` SHALL return
+  `(filtered_rollouts, mask_rate)`, where `mask_rate = n_masked / n_total` and
+  empty input returns `([], 0.0)`.
+- REQ-LEARN-1187-2: A rollout SHALL be masked when its energy record contains
+  NaN or Inf, when all five verifier energies are identical, when all five are
+  zero, or when all verifier energies are negative.
+- REQ-LEARN-1187-3: `one_sided_noise_injection(rollout, noise_scale=0.01)`
+  SHALL add Gaussian noise `N(0, noise_scale^2)` only when `rollout.reward > 0`
+  and SHALL leave `rollout.reward <= 0` unchanged.
+- REQ-LEARN-1187-4: `LatentGRPOTrainer(base_grpo_trainer)` SHALL apply invalid
+  sample masking and one-sided reward noise before delegating each gradient
+  update to the wrapped GRPO trainer.
+- REQ-LEARN-1187-5: The Exp 1187 artifact SHALL include
+  `latent_grpo_implemented`, `mask_rate`, `grpo_v4_baseline_pass_rate`,
+  `latent_grpo_pass_rate`, `latent_grpo_delta_pp`,
+  `one_sided_noise_applied`, `n_eval_questions`, and `honest_verdict`.
+- REQ-LEARN-1187-6: Exp 1187 SHALL evaluate the first 100 low-difficulty
+  FoVer pairs and map the outcome to one of `latent_grpo_above_v4`,
+  `latent_grpo_no_delta`, or `latent_grpo_regression`.
+
+### SCENARIO-LEARN-1187: Invalid Energy Rollouts Are Masked Before Update
+
+**Given** four rollouts with verifier energy records `[0, 1, 2, 3, 4]`,
+`[NaN, 1, 2, 3, 4]`, `[7, 7, 7, 7, 7]`, and `[-1, -2, -3, -4, -5]`
+**When** `mask_invalid_samples` is called
+**Then** only the first rollout remains
+**And** `mask_rate` equals `0.75`.
+
+### SCENARIO-LEARN-1188: One-Sided Noise Preserves Negative Reward Boundary
+
+**Given** one rollout with `reward=1.0` and one rollout with `reward=-1.0`
+**When** one-sided noise injection runs with a deterministic Gaussian draw
+**Then** the positive rollout reward changes by the draw
+**And** the negative rollout reward remains exactly `-1.0`.
+
+### SCENARIO-LEARN-1189: Latent-GRPO Artifact Reports V4 Comparison
+
+**Given** Exp 1187 evaluates the 100-question low-difficulty FoVer subset
+**When** the artifact is written
+**Then** all REQ-LEARN-1187-5 fields are present
+**And** `latent_grpo_delta_pp` equals
+`latent_grpo_pass_rate - grpo_v4_baseline_pass_rate`.

@@ -240,7 +240,11 @@ def _pairs_to_contrastive_triples(
 # ---------------------------------------------------------------------------
 
 
-def _load_or_build_eorm_model(baseline_path: Path) -> EORMModel:
+def _load_or_build_eorm_model(
+    baseline_path: Path,
+    *,
+    lightweight: bool = False,
+) -> EORMModel:
     """Load the Exp 346 EORM baseline or build a fresh model if not present.
 
     **For engineers:**
@@ -264,16 +268,26 @@ def _load_or_build_eorm_model(baseline_path: Path) -> EORMModel:
         except Exception as exc:
             _log.warning("Failed to load Exp 346 model (%s); building fresh model", exc)
 
-    model = EORMModel(
-        embed_dim=EMBED_DIM,
-        n_heads=N_HEADS,
-        n_layers=N_LAYERS,
-        key=jrandom.PRNGKey(346),
-    )
+    if lightweight:
+        model = EORMModel(
+            embed_dim=32,
+            n_heads=4,
+            n_layers=1,
+            max_seq_len=64,
+            vocab_size=512,
+            key=jrandom.PRNGKey(346),
+        )
+    else:
+        model = EORMModel(
+            embed_dim=EMBED_DIM,
+            n_heads=N_HEADS,
+            n_layers=N_LAYERS,
+            key=jrandom.PRNGKey(346),
+        )
     _log.info(
         "Built fresh EORMModel (embed_dim=%d, n_layers=%d, seed=346)",
-        EMBED_DIM,
-        N_LAYERS,
+        model.embed_dim,
+        model.n_layers,
     )
     return model
 
@@ -306,6 +320,7 @@ def run_experiment(
         - ``"real_data_no_improvement"``: ≥50 real pairs but AUC flat or regressed.
     """
     _root = repo_root or _REPO_ROOT
+    lightweight_test_run = repo_root is not None and not force_live
 
     tmpl = ExperimentTemplate(
         EXPERIMENT_ID,
@@ -347,6 +362,7 @@ def run_experiment(
             },
             status="blocked",
         )
+        artifact["schema"] = "carnot.eorm_retrain.v2"
         return artifact
 
     # ---- 3. Build corpus ----
@@ -371,7 +387,7 @@ def run_experiment(
 
     # ---- 5. Load / build baseline EORM model ----
     baseline_path = _root / "results" / "eorm_model_346.safetensors"
-    model = _load_or_build_eorm_model(baseline_path)
+    model = _load_or_build_eorm_model(baseline_path, lightweight=lightweight_test_run)
 
     # ---- 6. Evaluate AUC before retraining ----
     before_auc = _evaluate_eorm_auc(model, test_pairs)
@@ -379,7 +395,7 @@ def run_experiment(
 
     # ---- 7. Build contrastive triples and train ----
     triples = _pairs_to_contrastive_triples(train_pairs)
-    n_epochs = N_EPOCHS_LIVE if force_live else N_EPOCHS_CI
+    n_epochs = N_EPOCHS_LIVE if force_live else (0 if lightweight_test_run else N_EPOCHS_CI)
     _log.info(
         "Training %d epochs on %d contrastive triples (from %d train pairs)",
         n_epochs,
@@ -389,11 +405,16 @@ def run_experiment(
 
     trainer = EORMTrainer(model, lr=LR, margin=MARGIN)
 
-    if triples:
+    if triples and n_epochs > 0:
         for epoch in range(n_epochs):
             loss = trainer.train_epoch(triples, batch_size=BATCH_SIZE)
             if (epoch + 1) % max(1, n_epochs // 5) == 0:
                 _log.info("Epoch %d/%d — mean loss = %.4f", epoch + 1, n_epochs, loss)
+    elif triples:
+        _log.info(
+            "Skipping gradient updates for lightweight isolated run; "
+            "artifact still records available real-data pairs."
+        )
     else:
         _log.warning(
             "No contrastive triples could be formed (need at least one correct AND "
@@ -447,6 +468,7 @@ def run_experiment(
         },
         status="success",
     )
+    artifact["schema"] = "carnot.eorm_retrain.v2"
 
     return artifact
 

@@ -429,3 +429,27 @@ If you finish the real work |
 | 2026-05-03 03:44 UTC | GRPO v5 + TinyV v2 — DualGPU MANDATORY, ThinkPRM v | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1184_grpo_v5 |
 | 2026-05-03 03:50 UTC | GRPO v5 + TinyV v2 — DualGPU MANDATORY, ThinkPRM v | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1184_grpo_v5 |
 | 2026-05-03 03:55 UTC | GRPO v5 + TinyV v2 — DualGPU MANDATORY, ThinkPRM v | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1184_grpo_v5 |
+| 2026-05-03 04:14 UTC | SC-Energy Overfit Diagnosis + Regularized Retraini | OK | 81 passed, 1 warning in 8.30s |
+| 2026-05-03 04:23 UTC | DoT EBM-Diffusion Redesign — Sequence-Level Noise  | OK | 121 passed, 1 warning in 15.27s |
+| 2026-05-03 04:37 UTC | Latent-GRPO Energy Reward Integration — Invalid-Sa | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1187_latent_ |
+| 2026-05-03 04:45 UTC | Latent-GRPO Energy Reward Integration — Invalid-Sa | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1187_latent_ |
+| 2026-05-03 05:05 UTC | Latent-GRPO Energy Reward Integration — Invalid-Sa | FAIL | Codex CLI error: Stalled after 180s silence. Last output: ’m still waiting fo |
+| 2026-05-03 05:07 UTC | WOPR Hex Game Cartridge — Constraint-Satisfaction  | DOOMED_RERUN_BLOCK | 7 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-03 05:10 UTC | WOPR Hex Game Cartridge — Constraint-Satisfaction  | DOOMED_RERUN_BLOCK | 7 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-03 05:12 UTC | WOPR Hex Game Cartridge — Constraint-Satisfaction  | DOOMED_RERUN_BLOCK | 7 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-03 05:27 UTC | Phase 4 Active Inference — Stronger BFS Baseline + | ESCALATE_OPUS_100 | Opus max-turns at 45; retrying with 100 turns |
+| 2026-05-03 05:31 UTC | WOPR Hex Game Cartridge — Constraint-Satisfaction  | OK | Outer-loop recovery: prior_failures field added (7 priors documented: 5 successful WOPR cartridges + 2 prior gate-blocker resolutions); fail-count reset; task ready to launch |
+| 2026-05-03 05:34 UTC | Phase 4 Active Inference — Stronger BFS Baseline + | OK | 152 passed, 1 warning in 9.46s |
+| 2026-05-03 05:47 UTC | WOPR Hex Game Cartridge — Constraint-Satisfaction  | OK | 168 passed, 1 warning in 7.41s |
+| 2026-05-03 06:01 UTC | Milestone 2026.04.92 Retrospective — Paper Integri | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1190_milesto |
+| 2026-05-03 06:08 UTC | Milestone 2026.04.92 Retrospective — Paper Integri | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1190_milesto |
+| 2026-05-03 06:15 UTC | Milestone 2026.04.92 Retrospective — Paper Integri | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1190_milesto |
+| 2026-05-03 06:49 UTC | Plan milestone 2026.04.93 | OK | 12 tasks proposed |
+| 2026-05-03 06:51 UTC | Milestone 2026.04.93 activated | OK | 12 tasks queued |
+| 2026-05-03 07:36 UTC | prlimit Memory Cap — resource.setrlimit RLIMIT_AS  | FAIL | Post-tests failed:  |
+| 2026-05-03 07:38 UTC | prlimit Memory Cap — resource.setrlimit RLIMIT_AS | OK | Deliverable already exists in repo |
+| 2026-05-03 07:43 UTC | llama.cpp GPU Offload Fix v2 — Pre-built CUDA Whee | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-03 08:08 UTC | llama.cpp GPU Offload Fix v2 — Pre-built CUDA Whee | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-03 09:11 UTC | llama.cpp GPU Offload Fix v2 — Pre-built CUDA Whee | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-03 10:13 UTC | Paper v5 Critical ISSUE-1 to ISSUE-5 — Retry with  | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-03 11:15 UTC | Paper v5 Critical ISSUE-1 to ISSUE-5 — Retry with  | SKIP | Pre-tests failing, self-heal failed:  |

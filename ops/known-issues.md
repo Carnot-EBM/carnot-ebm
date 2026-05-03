@@ -198,6 +198,35 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### NEW 2026-05-03 (06:33Z): artifact_not_updated_past_bootstrap Pattern (5 .92 Retirements)
+
+**Background:** during .92, five distinct tasks retired with the same `artifact_not_updated_past_bootstrap` failure mode despite passing the pre-test gate (no schema-drift, no spike): exp1183 (paper recompile), exp1184 (GRPO v5 v2), exp1187 (Latent-GRPO), exp1190 (.92 retro), and one earlier in the cascade. Pattern: agent runs (sonnet+opus retries via the existing escalation tier), task gets to its substantive work, but never writes the deliverable JSON to a finished state before exhausting turn budget.
+
+**Common factor among failed tasks:** all are heavyweight tasks (LaTeX recompile, GRPO training, complex reward integration, full-suite retro) where codex's pre-test self-heal pytest takes substantial wall-time, leaving insufficient turns for the task's actual artifact write.
+
+**Common counterfactual:** the OK tasks (1181, 1182, 1185, 1186, 1188, 1189) wrote their artifacts within turn budget OR via opus 100-turn retry where pytest didn't dominate.
+
+**Mandatory .93 fix (one or more of):**
+
+1. **Pre-test scope reduction** — codex's self-heal currently runs `pytest tests/python` (full 21k-test suite). Reduce to a relevant subset based on the experiment's deliverable path. ~30 min of conductor.py change.
+
+2. **Pre-test wall-time cap** — wrap codex's pytest invocation with `timeout 180 pytest ...` so heavy tests can't consume the full turn budget. ~5-line edit. Risk: false-negatives on legitimately slow tests.
+
+3. **Artifact-update enforcement in task prompts** — the task prompts may not sufficiently emphasize "MUST write artifact JSON to deliverable path before exiting." Add a STEP 0 to every task prompt template. ~15 min.
+
+4. **Turn budget rebalancing** — increase max_turns for heavyweight tasks (paper recompile, training runs) from 25-60 to 80-120. Complementary to other fixes.
+
+**Why this is in MANDATORY-NEXT-MILESTONE PRIORITIES:**
+
+5 retirements in one milestone is unsustainable. The pattern is structural (same failure mode across different task classes), so it will recur in .93 without a fix. Retiring exp1190 retro means .93 planner reads less context, compounding the issue.
+
+**Cross-references:**
+- Pattern observed at: exp1183 (03:35Z), exp1184 (03:55Z), exp1187 (05:05Z), exp1190 (06:15Z), 2026-05-03 .92 milestone
+- ops/changelog.md will document the pattern in the .93 retro
+- Conductor pre-test logic: scripts/research_conductor.py `_pytest_run` lines ~1000
+
+---
+
 ### NEW 2026-05-02 (22:50Z): Watchdog Insufficient for Single-Test Catastrophic Load — Need prlimit/cgroup Preemptive Cap
 
 **Background:** exp1178 shipped a `PytestMemoryWatchdog` post-test detection plugin (per-test threshold 500MB delta, session cumulative 8GB). Verdict was `watchdog_operational`. **However, the recurring 35GB+ RSS spike pattern persisted immediately after exp1178 OK'd** — exp1179 codex's pre-test self-heal triggered another worker hitting 39GB RSS within 6 minutes, requiring another manual operator SIGTERM intervention.

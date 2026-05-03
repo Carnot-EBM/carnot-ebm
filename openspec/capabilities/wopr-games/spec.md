@@ -47,6 +47,45 @@ with the same number of occupied cells.
 - The sampled board is valid under `is_valid`.
 - The sampled board has zero energy.
 
+### REQ-HEX-001: Hex Board and Move Rules
+
+The Hex cartridge MUST expose an `n x n` board where 0 means empty, 1 means
+Black, and 2 means White. `HexGame.reset()` MUST return an empty board,
+`legal_actions(board)` MUST return every empty `(row, col)` action in row-major
+order, and `step(board, action, player)` MUST return a copied board with the
+move applied plus terminal status.
+
+**Acceptance criteria:**
+- `HexBoard(n)` creates an `n x n` zero board and rejects non-positive sizes.
+- `legal_actions(board)` returns exactly the empty cells as `(row, col)` tuples.
+- `step(board, action, player)` rejects occupied cells and invalid players.
+
+### REQ-HEX-002: Hex Connectivity Winner Detection
+
+The Hex cartridge MUST detect Black wins as top-to-bottom connectivity and
+White wins as left-to-right connectivity. Winner detection MUST use union-find
+style connectivity over the six hex-neighbor directions and MUST return
+`None`, `1`, or `2`.
+
+**Acceptance criteria:**
+- A connected Black chain from the top edge to the bottom edge returns `1`.
+- A connected White chain from the left edge to the right edge returns `2`.
+- Complete legal Hex games terminate with a winner rather than a draw.
+
+### REQ-HEX-003: Hex Energy Players and Round Robin
+
+The Hex cartridge MUST expose a position energy for the current player based on
+the negative longest connected path strength toward that player's goal. It MUST
+provide random, greedy energy, and blocked-Gibbs energy players, and the Hex
+experiment MUST report 7x7 round-robin win rates for Random, Greedy, and Gibbs.
+
+**Acceptance criteria:**
+- `RandomPlayer` samples uniformly from legal actions.
+- `GreedyEnergyPlayer` selects a legal action with minimal post-move energy.
+- `GibbsEnergyPlayer` uses `Phase4Sampler` blocked Gibbs sampling to minimize a
+  k=5 AND-composed free energy over candidate moves.
+- The experiment artifact reports at least 30 total 7x7 games.
+
 ## Scenarios
 
 ### SCENARIO-CONNECT4-001: Empty Board Ground State
@@ -76,6 +115,30 @@ four-in-a-row patterns
 
 **Spec traces:** REQ-CONNECT4-002
 
+### SCENARIO-HEX-001: Legal Move Enumeration
+
+**Given** a partially occupied Hex board
+**When** legal move enumeration runs
+**Then** only empty cells are returned as row-major `(row, col)` actions.
+
+**Spec traces:** REQ-HEX-001
+
+### SCENARIO-HEX-002: Connectivity Winner Detection
+
+**Given** a Hex board with a connected edge-to-edge chain for one player
+**When** winner detection runs
+**Then** it returns that player's integer id.
+
+**Spec traces:** REQ-HEX-002
+
+### SCENARIO-HEX-003: Complete Games Have Winners
+
+**Given** repeated legal Hex games on finite boards
+**When** players continue until no terminal move remains
+**Then** every completed game reports Black or White as the winner.
+
+**Spec traces:** REQ-HEX-002, REQ-HEX-003
+
 ## Implementation Status
 
 | Requirement | Status | Experiment |
@@ -83,6 +146,12 @@ four-in-a-row patterns
 | REQ-CONNECT4-001 | Implemented | Exp 1175 |
 | REQ-CONNECT4-002 | Implemented | Exp 1175 |
 | REQ-CONNECT4-003 | Implemented | Exp 1175 |
+| REQ-HEX-001 | Implemented | Exp 1188 |
+| REQ-HEX-002 | Implemented | Exp 1188 |
+| REQ-HEX-003 | Implemented | Exp 1188 |
 | SCENARIO-CONNECT4-001 | Implemented | Exp 1175 |
 | SCENARIO-CONNECT4-002 | Implemented | Exp 1175 |
 | SCENARIO-CONNECT4-003 | Implemented | Exp 1175 |
+| SCENARIO-HEX-001 | Implemented | Exp 1188 |
+| SCENARIO-HEX-002 | Implemented | Exp 1188 |
+| SCENARIO-HEX-003 | Implemented | Exp 1188 |

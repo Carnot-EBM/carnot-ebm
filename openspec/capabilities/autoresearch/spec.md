@@ -3057,3 +3057,20 @@ recording the offender for the session summary.
 Given a pytest session whose cumulative positive RSS deltas exceed 8192 MB, the
 watchdog emits a warning naming the top five RSS-delta tests and writes a
 timestamped `results/pytest_memory_*.log` artifact for conductor diagnostics.
+
+## REQ-INFRA-077: Pytest Address-Space Memory Cap
+
+**REQ-INFRA-077**: The Python pytest suite MUST set a process address-space
+limit from `tests/python/conftest.py` during `pytest_configure` before any test
+item runs. The soft `RLIMIT_AS` limit MUST be capped at 8 GB while preserving the
+kernel hard limit, and unsupported-kernel failures MUST warn and continue.
+
+### SCENARIO-INFRA-090: Address-Space Cap Is Active During Tests
+
+Given a Python pytest run using the repository `tests/python/conftest.py`, test
+items observe a finite `RLIMIT_AS` soft limit no larger than 8 GB.
+
+### SCENARIO-INFRA-091: Address-Space Cap Preserves Existing Test Imports
+
+Given the address-space cap is active for pytest, normal imports of the packaged
+`carnot` module continue to work alongside the existing RSS watchdog plugin.
