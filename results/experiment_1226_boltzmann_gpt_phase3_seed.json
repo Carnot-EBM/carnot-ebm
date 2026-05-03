@@ -1,6 +1,15 @@
 {
   "experiment": "1226_boltzmann_gpt_phase3_seed",
-  "status": "in_progress",
-  "boltzmann_gpt_auroc_measured": false,
-  "honest_verdict": "in_progress"
+  "status": "success",
+  "schema": "carnot.boltzmann_gpt_phase3_seed.v1",
+  "run_date": "2026-05-03T22:57:04Z",
+  "boltzmann_gpt_layer_implemented": true,
+  "n_fover_examples": 20,
+  "boltzmann_gpt_auroc": 0.65,
+  "nrgpt_auroc_baseline": 0.920929,
+  "boltzmann_beats_nrgpt": false,
+  "n_tests_pass": 14,
+  "boltzmann_gpt_auroc_measured": true,
+  "honest_verdict": "boltzmann_gpt_below_nrgpt",
+  "notes": "Seed experiment: random (untrained) BoltzmannGPTLayer weights, visible_dim=16, hidden_dim=16. AUROC 0.65 > 0.5 baseline confirms the architecture has a non-degenerate structural signal but cannot match the trained NRGPT (0.921). Contrastive training is required before Boltzmann-GPT can compete with NRGPT on FoVer."
 }
