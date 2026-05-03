@@ -2343,3 +2343,95 @@ band (lowering the abstention threshold) so more rollouts survive.
 balanced GPU utilization
 **When** the diagnosis runs
 **Then** `root_cause` equals `"reward_signal_collapse"`.
+
+## REQ-LEARN-1220: GRPO-VPS Full Training Run vs v4 Floor
+
+Exp 1220 SHALL execute a full GRPO-VPS training cycle whose per-step
+rewards combine `CausalReasoningVerifier.verify_step` and
+`Z3MathVerifier.verify_step` (per arXiv 2604.20659 segment formulation),
+warm up against a structural reflection-only reward (Phase A) before
+mixing in the VPS step-level reward and a small correctness bonus
+(Phase B), and report whether the post-training pass rate beats the v4
+baseline floor of +10pp from Exp 1159. The experiment SHALL apply the
+three Exp 1219 fixes (`exp1219_fix_applied`): wider effective rollout
+pool, soft-confidence-weighted abstention rather than hard zeroing, and
+a holdout slice with measurable headroom in both directions.
+
+### REQ-LEARN-1220 Sub-requirements
+
+- REQ-LEARN-1220-1: `compute_vps_aggregate_reward(response, decay)`
+  SHALL split a response into reasoning steps via the existing
+  `compute_step_rewards_for_response` segmenter (REQ-LEARN-1209-3) and
+  return `sum(decay**k * step_reward[k] for k in range(n_steps))`.
+- REQ-LEARN-1220-2: `soft_confidence_weight(rewards, confidences)`
+  SHALL return the elementwise product `rewards[i] * confidences[i]`
+  (per the exp1219 fix that replaces hard zeroing inside the abstention
+  band with soft weighting); it SHALL raise `ValueError` on length
+  mismatch.
+- REQ-LEARN-1220-3: `mix_phase_b_reward(r_vps, r_reflect,
+  r_correctness, w_vps=0.5, w_reflect=0.3, w_correctness=0.2)` SHALL
+  return `w_vps * r_vps + w_reflect * r_reflect + w_correctness *
+  r_correctness`. Weights MUST sum to 1.0; `mix_phase_b_reward` SHALL
+  raise `ValueError` otherwise.
+- REQ-LEARN-1220-4: `derive_grpo_vps_honest_verdict(improvement_pp,
+  training_completed, prereq_ok)` SHALL return one of
+  `"vps_training_beats_v4"`, `"vps_training_matches_v4"`,
+  `"vps_training_below_v4"`, `"training_wall_hit"`, or
+  `"blocked_no_gpu"`. `vps_training_beats_v4` requires
+  `improvement_pp > 10.0`; `vps_training_matches_v4` requires
+  `improvement_pp` in `[0.0, 10.0]`; below 0.0 is
+  `vps_training_below_v4`. `training_completed=False` with
+  `prereq_ok=True` collapses to `training_wall_hit`; `prereq_ok=False`
+  collapses to `blocked_no_gpu`.
+- REQ-LEARN-1220-5: The artifact SHALL include
+  `llama_cpp_gpu_offload`, `cuda_device_count`, `model_used`,
+  `exp1219_fix_applied`, `training_completed`, `n_training_questions`,
+  `n_eval_questions`, `grpo_vps_fraction_correct_before`,
+  `grpo_vps_fraction_correct_after`, `grpo_vps_improvement_pp`,
+  `v4_baseline_improvement_pp`, `beats_v4_floor`,
+  `grpo_vps_training_completed`, and `honest_verdict`. Every required
+  field SHALL be checked at script exit; missing fields raise
+  `AssertionError`.
+- REQ-LEARN-1220-6: `beats_v4_floor` SHALL be exactly
+  `grpo_vps_improvement_pp > 10.0` (strict greater-than). The v4
+  baseline value SHALL be hard-coded as `10.0` so that future
+  improvements to v4 do not silently relax the gate.
+
+### SCENARIO-LEARN-1222: VPS Aggregate Reward Discounts Later Steps
+
+**Given** per-step rewards `[1.0, 0.5, 0.2]` and `decay=0.9`
+**When** `compute_vps_aggregate_reward` is invoked with these step
+rewards (via the segmenter)
+**Then** the aggregate equals `1.0 + 0.9*0.5 + 0.81*0.2 = 1.612`.
+
+### SCENARIO-LEARN-1223: Soft-Confidence Weighting Replaces Hard Zeroing
+
+**Given** rewards `[1.0, 0.0, 1.0]` and confidences `[0.9, 0.5, 0.2]`
+**When** `soft_confidence_weight(rewards, confidences)` runs
+**Then** the result equals `[0.9, 0.0, 0.2]` — high-confidence rewards
+pass through, mid-band confidences are *attenuated* (not zeroed).
+
+### SCENARIO-LEARN-1224: Phase-B Mixed Reward Sums to Convex Combination
+
+**Given** `r_vps=0.8`, `r_reflect=0.4`, `r_correctness=1.0` and the
+default weights `0.5/0.3/0.2`
+**When** `mix_phase_b_reward` runs
+**Then** the result equals `0.5*0.8 + 0.3*0.4 + 0.2*1.0 = 0.72`.
+
+### SCENARIO-LEARN-1225: Verdict Maps Improvement to v4 Floor
+
+**Given** `improvement_pp=12.0`, `training_completed=True`,
+`prereq_ok=True`
+**When** `derive_grpo_vps_honest_verdict` runs
+**Then** the verdict equals `"vps_training_beats_v4"`.
+
+**Given** `improvement_pp=5.0`, `training_completed=True`,
+`prereq_ok=True`
+**Then** the verdict equals `"vps_training_matches_v4"`.
+
+**Given** `improvement_pp=-3.0`, `training_completed=True`,
+`prereq_ok=True`
+**Then** the verdict equals `"vps_training_below_v4"`.
+
+**Given** `prereq_ok=False`
+**Then** the verdict equals `"blocked_no_gpu"`.
