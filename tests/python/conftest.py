@@ -81,8 +81,17 @@ def _get_memory_watchdog(config) -> PytestMemoryWatchdog:
     return watchdog
 
 
-def _set_process_address_space_limit(limit_bytes: int = 8 * 1024**3) -> bool:
-    """Set a hard address-space cap before tests can load oversized models."""
+def _set_process_address_space_limit(limit_bytes: int = 32 * 1024**3) -> bool:
+    """Set a hard address-space cap before tests can load oversized models.
+
+    Cap raised from 8GB to 32GB on 2026-05-03: 8GB was below JAX's post-init
+    virtual-memory baseline (~10-12GB on this dev rig), causing pytest
+    collection to hang indefinitely as allocations thrashed against the cap.
+    32GB gives JAX + ~16GB of test/model overhead while still preventing
+    the runaway 35GB-per-worker pattern we were targeting (a single worker
+    cannot grow to 35GB if it's capped at 32GB; multi-worker runs are
+    capped per-process so total stays bounded by N × 32GB).
+    """
     try:
         _soft, hard = resource.getrlimit(resource.RLIMIT_AS)
         new_soft = min(limit_bytes, hard) if hard != resource.RLIM_INFINITY else limit_bytes
