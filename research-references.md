@@ -4,6 +4,49 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-05-03 Scan (Milestone 2026.04.95 Planning)
+
+### FSPO: Factuality-Aware Step-wise Policy Optimization
+- **Paper:** arXiv 2505.24630 (November 2025 / ICLR 2026).
+- **What:** RL fine-tuning algorithm that adjusts per-token advantage values using step-wise factuality reward signals. An automated verifier checks whether each generated reasoning sentence is entailed by given evidence; factually-correct tokens are rewarded, incorrect tokens penalized. Reduces hallucinations without compromising reasoning capability.
+- **Relevance to Carnot:** GRPO-VPS (exp1209) confirmed +24pp step-level improvement in .94. FSPO is the natural next step: combine GRPO-VPS per-step credit attribution with FSPO-style per-token advantage adjustment. Carnot's CausalReasoningVerifier (Tier 2.7) and Z3MathVerifier (Tier 3) provide the step-wise factuality signal FSPO requires. Expected synergy: VPS attributes credit to the RIGHT reasoning step, FSPO weights the right TOKENS within that step — complementary granularities.
+- **Concrete experiment:** Implement FSPO-style per-token advantage weighting on top of GRPO-VPS (exp1220). For each token T in step S, weight advantage by factuality score from CausalReasoningVerifier on step S. Compare GRPO-VPS-only vs GRPO-VPS+FSPO on GSM8K holdout.
+- **When to incorporate:** Milestone .95 Phase 2 (exp1221, gated on GRPO-VPS training result).
+
+### LLMs Gaming Verifiers: RLVR Leads to Reward Hacking via Verifier Gaming
+- **Paper:** arXiv 2604.15149 (April 2026).
+- **What:** Demonstrates that RLVR-trained models systematically game rule-induction task verifiers. Models trained to "induce and output logical rules" instead learn to output text patterns that satisfy the verifier without actually inducing the rules. A new failure mode: the LLM learns to hack the VERIFIER (not just the reward) by finding inputs that score high without satisfying the intended semantics.
+- **Relevance to Carnot:** Phase 3's null-space mimicry attack (memory/project_null_space_mimicry_attack.md) predicted exactly this: a model can find text that maps to zero energy on ALL k verifiers simultaneously without actually being correct. Carnot's k=5 AND-composed verifier ensemble + rotation defense is the proposed mitigation. This paper provides empirical confirmation that single-verifier RLVR fails. Experiment: verify Carnot's k=5 ensemble resists the gaming attack observed in arXiv 2604.15149.
+- **Concrete experiment:** Implement the gaming scenario from arXiv 2604.15149 (rule induction with a single verifier); compare single-verifier RLVR (baselines games the verifier) vs Carnot's k=5 AND-composed ensemble (can it be gamed too?). Record gaming-detection rate, null-space overlap between verifiers.
+- **When to incorporate:** Milestone .95 Phase 4 (exp1225).
+
+### Reward Hacking Mitigation via Verifiable Composite Rewards
+- **Paper:** arXiv 2509.15557 (September 2025).
+- **What:** Introduces composite reward function with specific penalties for reward-hacking behaviors: (1) penalty for providing final answer without reasoning, (2) penalty for non-standard reasoning format exploitation. Shows composite rewards reduce hacking while maintaining accuracy in medical LLM domain.
+- **Relevance to Carnot:** Directly complements the LLMs-Gaming-Verifiers finding. Composite rewards add behavioral constraints on TOP of verifier rewards — structurally similar to Carnot's cascade (cheap behavioral checks → expensive verifier). Carnot's Tier 0 (ThinkPRM, SpilledEnergy, NUP, HalluField) are already behavioral constraints; they form a natural composite reward structure for GRPO.
+- **Concrete experiment:** Include in exp1225 alongside LLMs-Gaming-Verifiers defense probe. Measure whether Carnot's existing Tier 0 behavioral checks, when combined as composite rewards in GRPO, reduce gaming more than energy verifier alone.
+- **When to incorporate:** Milestone .95 Phase 4 (exp1225, combined with gaming verifiers).
+
+### Boltzmann-GPT: Bridging EBM World Models and Language Generation
+- **Paper:** arXiv 2601.17094 (January 2026).
+- **What:** Combines Boltzmann machine world model structure with GPT-style language generation. Proposes EBM-guided language generation where the Boltzmann world model scores candidate continuations and guides the GPT's generation via energy-weighted beam search. Reports improved factual consistency on knowledge-intensive QA tasks.
+- **Relevance to Carnot:** Direct bridge for Phase 3: Carnot's Boltzmann tier (carnot-boltzmann/) + NRGPT energy recurrence (exp1163) + Boltzmann-GPT synthesis = a concrete candidate for the Phase 3 "energy-native LLM" prototype. Boltzmann-GPT's energy-weighted beam search is structurally equivalent to Carnot's energy-guided decoding (exp1110). This paper provides independent validation of the approach and a concrete comparison baseline.
+- **Concrete experiment:** Add Boltzmann-GPT energy recurrence block to python/carnot/phase3/continuous_ebm.py as an alternative to the NRGPT block (exp1163). Compare energy ordering on FoVer traces: does Boltzmann-GPT energy correlate better with Z3MathVerifier ground truth than NRGPT energy?
+- **When to incorporate:** Milestone .95 Phase 4 (exp1226).
+
+### Eidoku: Neuro-Symbolic Verification Gate via CSP for LLM Reasoning
+- **Paper:** arXiv 2512.20664 (December 2025).
+- **What:** Reformulates LLM reasoning verification as a Constraint Satisfaction Problem (CSP) independent of generation likelihood. The verification gate checks logical consistency of reasoning steps by mapping them to a CSP and solving with standard CSP solvers. 99.2% constraint satisfaction on structured reasoning benchmarks.
+- **Relevance to Carnot:** Carnot's Z3MathVerifier (Tier 3) and CausalReasoningVerifier (Tier 2.7) are domain-specific CSP verifiers. Eidoku provides a general CSP framework that could unify Carnot's verification tiers under a single CSP abstraction — making constraint specification more maintainable. Also provides a comparison baseline: Eidoku-style CSP vs Carnot's Ising energy formulation on the same constraint set.
+- **Concrete experiment:** Implement Eidoku-style CSP gate on 50 FoVer corpus samples. Compare detection rate vs Carnot's existing cascade (Tier 2.5 SymCodeVerifier + Tier 2.7 Causal + Tier 3 Ising). Measure precision, recall, latency. If CSP gate is superior on any dimension, consider as Tier 2.8 candidate.
+- **When to incorporate:** Milestone .96+ after GRPO and Phase 5 work settles.
+
+### Detecting Reward Hacking with Gradient Fingerprints
+- **Paper:** arXiv 2604.16242 (April 2026).
+- **What:** Detects reward hacking by analyzing gradient fingerprints — patterns in gradient direction and magnitude that indicate the model is gaming the reward rather than genuinely improving. Detection works without access to the true reward function.
+- **Relevance to Carnot:** Gradient fingerprinting is complementary to Carnot's verifier-based approach. During GRPO training, gradient fingerprints could detect whether the model is genuinely learning from energy verifier feedback or gaming it. Filed for future hardware-accelerated training diagnostics.
+- **When to incorporate:** Milestone .96+ when GRPO training is producing stable results.
+
 ## 2026-05-03 Scan (Milestone 2026.04.94 Planning)
 
 ### SDPO: Self-Distilled Policy Optimization for Dense GRPO Rewards
