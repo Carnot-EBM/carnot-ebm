@@ -1,0 +1,66 @@
+{
+  "total_wall_time_minutes": 130,
+  "experiments_completed": 23,
+  "slowest_experiments": [
+    {
+      "rank": 1,
+      "duration_minutes": 28,
+      "experiment": "exp950_docs",
+      "title": "In-process docs for Exp 950: E-MVL Sparsified Ising - Sparse C",
+      "why_long": "Documentation reconciliation ran in the main conductor lane instead of being batched asynchronously, so non-research bookkeeping occupied critical-path wall time."
+    },
+    {
+      "rank": 2,
+      "duration_minutes": 24,
+      "experiment": "exp948",
+      "title": "Symbolic-KAN Real FoVer Data - AUC=0.9344 Architecture",
+      "why_long": "Full-corpus real FoVer/Symbolic-KAN evaluation is CPU-heavy and appears to have run as a certification-style sweep instead of a sampled fast-eval pass."
+    },
+    {
+      "rank": 3,
+      "duration_minutes": 15,
+      "experiment": "exp935",
+      "title": "FR-11 Tier 2 Code Domain Memory - CaseMemory for Code",
+      "why_long": "Code-domain memory evaluation rebuilt or replayed enough retrieval and benchmark state to remain serial; cached features and delta evaluation would reduce repeat cost."
+    },
+    {
+      "rank": 4,
+      "duration_minutes": 11,
+      "experiment": "exp946_docs",
+      "title": "In-process docs for Exp 946: Tier 2.8 DraftConditioned Live GP",
+      "why_long": "A second documentation reconciliation pass reached the slowest five, confirming docs were fragmented and inline rather than coalesced at milestone close."
+    },
+    {
+      "rank": 5,
+      "duration_minutes": 10,
+      "experiment": "exp931_pre_gate",
+      "title": "Pre-gate block: Exp 931 Combined Math+Estimation Pipeline",
+      "why_long": "Pre-gate/self-heal handling consumed wall time before useful experiment work could start; gate failures should fail fast with actionable artifacts."
+    }
+  ],
+  "bottlenecks_identified": [
+    "The top five slowest tasks consumed 88 of 130 minutes, or 67.7% of the milestone wall time, so latency was concentrated in a small number of operational lanes.",
+    "Inline documentation reconciliation was the largest avoidable class: exp950_docs and exp946_docs consumed 39 minutes, 30.0% of the full milestone wall time.",
+    "GPU utilization was inefficient. The close report showed both RTX 3090s at 4/24576MB, 0% utilization, with gpu_monitor.py recommending DualGPURunner parallel execution.",
+    "No formal GPU zombie process was visible in the supplied monitor report. The 4MB allocations look like idle driver/context residue, not resource-wasting model processes.",
+    "GPU-eligible and independent work was effectively serialized or blocked before execution. Qwen/Gemma inference should have occupied separate GPUs when gates allowed it.",
+    "Pre-flight and pre-gate checks were a bottleneck. The slowest five include a 10-minute pre-gate block, and .93 artifacts show repeated pre-test/self-heal skips for exp1192, exp1193, and exp1197.",
+    "Failure-ledger prior_failures handling created false pre-gate blocks for build-on-prior work. Existing .93 blocked artifacts show missing prior_failures stopped exp1196, exp1198, exp1200, and exp1201 before useful work.",
+    "Full-corpus exploratory sweeps were too expensive for the feedback loop. exp948 should default to sampled fast-eval unless the task is explicitly a certification run.",
+    "Memory and repair-style benchmarks remained serial. exp935-style state construction and evaluation should reuse cached corpus features and recompute only changed logic.",
+    "Doc reconciliation passes were not efficient: two separate in-process doc jobs landed in the slowest five instead of one async milestone-close reconciliation job."
+  ],
+  "improvements_suggested": [
+    "Move ops/changelog/roadmap/spec documentation reconciliation out of the main experiment lane and run it as one async milestone-close batch.",
+    "Make DualGPURunner the default for GPU-eligible tasks: reserve GPU 0 for Qwen-class work and GPU 1 for Gemma-class work unless a task explicitly opts out.",
+    "Add a stale-context cleanup mode to scripts/gpu_monitor.py for idle allocations below the formal zombie threshold, while keeping the existing >1GB zombie rule for kills.",
+    "Auto-populate prior_failures from the failure ledger at plan or activation time, then require the planner to classify true failures versus successful upstream dependencies.",
+    "Implement CARNOT_FAST_EVAL=1 for FoVer/Symbolic-KAN exploratory runs, using stratified samples by default and full-corpus sweeps only for certification artifacts.",
+    "Cache stable benchmark outputs for CaseMemory, repair, and verifier fixtures so repeat experiments perform delta evaluation instead of replaying unchanged baselines.",
+    "Fail pre-gate checks faster by writing a structured blocked artifact on the first deterministic gate miss, then stop retrying until the missing prior or upstream field changes.",
+    "Split conductor execution into CPU-doc, CPU-eval, GPU-model, and gated-publication lanes so independent work does not serialize behind docs or gate repair.",
+    "Batch model inference at 8-16 questions per forward pass where memory allows; gpu_monitor.py already identifies single-process inference as a throughput smell.",
+    "Increase retro task budgets and require skeleton-first artifact writes so operational retros do not fail with artifact_not_updated_past_bootstrap after analysis has already started."
+  ],
+  "estimated_time_savings_pct": 35
+}
