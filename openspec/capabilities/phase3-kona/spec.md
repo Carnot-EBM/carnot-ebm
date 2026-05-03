@@ -572,6 +572,49 @@ acceptance criteria so a reviewer can verify that:
 - For every per-puzzle row, `initial_energy > 0` and the BFS result
   records both the explored-state count and the intractable flag.
 
+### REQ-KONA-017: Phase 5-B In-Situ Training Loop With Verifier-Ensemble Grounding
+
+The Phase 5-B in-situ training loop builds on the Phase 5-A prototype
+(REQ-KONA-008 + REQ-KONA-012 reuse) by adding a Contrastive Divergence
+(CD-1) update step to the encoder + energy MLP whenever a k=3 verifier
+ensemble (Z3-math stub + causal-reasoning stub + ThinkPRM v2 stub)
+AND-passes on the proposed action sequence. The 1000-query trajectory
+MUST monitor the five Q9-detectable failure modes from
+`openspec/change-proposals/in-situ-training-phase5-derisking.md`
+(failure modes 4-8 in the Q9 catalog) so that any single mode firing
+during training is auditable from the artifact alone, without re-running
+the experiment.
+
+The acceptance test for Phase 5-B is FIVE simultaneous gates, all of
+which must pass for `phase5b_stability_confirmed = true`. A partial-pass
+result is documented honestly under the corresponding gate failure
+verdict — the experiment is not "blocked" simply because a stability
+gate fired.
+
+**Acceptance criteria:**
+
+- `results/experiment_1223_phase5b_insitu_training_loop.json` exists
+  with fields:
+  - `n_queries_run: int` (1000)
+  - `n_accepted_by_verifier: int`
+  - `acceptance_rate: float`
+  - `energy_decrease_pct: float`
+  - `spectral_norm_growth_rate: float`
+  - `acceptance_rate_sublinear: bool`
+  - `mean_anchor_distance: float`
+  - `oracle_accuracy_initial: float`
+  - `oracle_accuracy_final: float`
+  - `oracle_accuracy_drop_pp: float`
+  - `gate1_energy_decrease_30pct: bool`
+  - `gate2_no_representation_drift: bool`
+  - `gate3_no_autocatalytic_spiral: bool`
+  - `gate4_no_null_space_excavation: bool`
+  - `gate5_no_catastrophic_forgetting: bool`
+  - `gates_passed: int` in [0, 5]
+  - `phase5b_stability_confirmed: bool` (gates_passed == 5)
+  - `honest_verdict` in `{"all_5_gates_pass", "partial_gates",
+    "gate_failure_diagnosed", "blocked"}`
+
 ## Scenarios
 
 ### SCENARIO-KONA-001: Stage 1 Primitive — RDT Fixed-Point Convergence
@@ -765,6 +808,32 @@ strictly on the measured Phase-4-vs-BFS solve counts and the BFS
 intractability fraction.
 
 **Spec traces:** REQ-KONA-016
+
+### SCENARIO-KONA-017: Exp 1223 In-Situ Training Loop Trajectory Passes Five Q9 Stability Gates
+
+**Given** the Phase 5-A prototype is operational
+(`results/experiment_1222_phase5a_insitu_prototype.json` has
+`phase5a_prototype_ready == True`), the Phase 5-B module exposes
+`run_phase5b_training_loop`, and a 20-puzzle frozen oracle set is
+available
+**When** `scripts/experiment_1223_phase5b_insitu_training_loop.py`
+runs a 1000-query in-situ training trajectory with η=1e-5, k=3
+verifier ensemble (Z3-math stub + causal-reasoning stub + ThinkPRM v2
+soft-accept stub), and CD-1 PCD updates on the encoder + energy MLP
+on every accepted query
+**Then** it writes
+`results/experiment_1223_phase5b_insitu_training_loop.json` with
+all REQ-KONA-017 fields, every individual gate boolean derived
+strictly from the corresponding measurement
+(energy drop ≥ 30%, encoder spectral-norm growth rate < 0.01/query,
+acceptance-rate first derivative sub-linear,
+mean anchor distance > 0.5,
+oracle-accuracy drop ≤ 5pp), and an honest verdict drawn from
+`all_5_gates_pass`, `partial_gates`,
+`gate_failure_diagnosed`, or `blocked` based strictly on the gate
+boolean count.
+
+**Spec traces:** REQ-KONA-017
 
 ## Out of scope
 

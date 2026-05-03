@@ -24,6 +24,18 @@ from carnot.phase5.insitu_prototype import (
     snap_to_action,
     verify_action_sequence,
 )
+from carnot.phase5.insitu_training_loop import (
+    build_phase5b_artifact,
+    cd1_update,
+    confirm_phase5a_ready,
+    encoder_forward_with_h,
+    encoder_spectral_norm,
+    evaluate_oracle,
+    evaluate_phase5b_gates,
+    run_phase5b_training_loop,
+    verifier_ensemble_pass,
+    write_phase5b_artifact,
+)
 
 __all__ = [
     "ConditionalAcceptanceProbMatrix",
@@ -32,8 +44,18 @@ __all__ = [
     "VacuousAnchorTracker",
     "apply_action_sequence",
     "build_phase5a_artifact",
+    "build_phase5b_artifact",
+    "cd1_update",
+    "confirm_phase5a_ready",
+    "encoder_forward_with_h",
+    "encoder_spectral_norm",
+    "evaluate_oracle",
+    "evaluate_phase5b_gates",
     "generate_random_5x5_puzzle",
     "run_phase5a_prototype",
+    "run_phase5b_training_loop",
     "snap_to_action",
+    "verifier_ensemble_pass",
     "verify_action_sequence",
+    "write_phase5b_artifact",
 ]
