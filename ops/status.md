@@ -1,5 +1,69 @@
 # Carnot — Operational Status
 
+## Session 2026-05-03 — Milestone 2026.04.94 Planning Complete
+
+**Milestone 2026.04.93 COMPLETE (3/12 criteria met — infrastructure failure dominated). Milestone 2026.04.94 PLANNED.**
+
+### .93 Recap (final)
+- **MET (3/12):** prlimit_active (exp1191 — RLIMIT_AS=8GB deployed in conftest.py), kantize_4bit_auroc_above_threshold (exp1199 — SOS-KAN AUROC=0.990137 at 4-bit, 2.2MB), retro_complete (exp1202 — partial)
+- **MISSING (5 — SKIP pattern):** exp1192 (llama.cpp GPU offload), exp1193 (paper ISSUE-1-5), exp1194 (arXiv bundle, gated), exp1195 (GRPO v5, gated), exp1197 (Phase 4 harder puzzles) — 9 wasted task-slots
+- **DOOMED_RERUN_BLOCK false-positives (4):** exp1196, exp1198, exp1200, exp1201 — no prior_failures pre-populated, failure-ledger misclassified successful upstreams — 12 wasted task-slots
+- **Root cause SKIP:** RLIMIT_AS=8GB (exp1191) or PytestMemoryWatchdog (exp1178) causing pytest tests/python to fail during conductor pre-test self-heal
+- **Root cause DOOMED_RERUN_BLOCK:** Planner did not pre-populate prior_failures YAML fields at plan time
+- **Publication hold:** Active — 5 critical issues remain; arXiv blocked until Phase 4 validated + paper revised
+
+### .94 Design (Exps 1203–1215, estimated ~450 min)
+
+**Phase 0 — Infrastructure (MANDATORY, unconditional first):**
+- exp1203: Pre-test diagnostics + fix — identify and repair broken pytest suite, adjust RLIMIT_AS/watchdog, verify >=400 tests pass (claude/opus, max_turns:50)
+- exp1204: Retro template fix — document STEP 0 skeleton pattern in known-issues.md (codex/gpt-5.5, max_turns:20)
+
+**Phase 1 — Paper Integrity:**
+- exp1205: Paper ISSUE-1-5 v3 — STEP 0 + skip_pre_test:true + minimal-first (claude/opus, max_turns:60, prior_failures:[exp1180,exp1193])
+- exp1206: arXiv bundle v8 (claude/sonnet, max_turns:25, gated on exp1205.critical_issues_fixed>=5)
+
+**Phase 2 — GRPO / Self-Learning (MANDATORY):**
+- exp1207: llama.cpp GPU offload v3 — STEP 0 + skip_pre_test:true (claude/opus, max_turns:50, prior_failures:[exp1179,exp1192])
+- exp1208: GRPO v5 + TinyV v2 DualGPU — thresh_low=0.3/high=0.7, 300s warm-up, 900s full-mix (claude/opus, max_turns:60, gated on exp1207.llama_cpp_gpu_offload_verified==true)
+- exp1209: GRPO-VPS step-level supervision (claude/sonnet, max_turns:40, prior_failures:[exp1196])
+
+**Phase 3 — Research (all with prior_failures):**
+- exp1210: Phase 4 harder BFS-intractable puzzles v2 — scrambled init 50 reverse steps, STEP 0 + skip_pre_test:true (claude/opus, max_turns:50, prior_failures:[exp1189,exp1197])
+- exp1211: FoVer v7 hard negatives — Qwen3.6-35B+gemma-4-31B, >=500 pairs, confidence 0.35-0.65 (claude/sonnet, max_turns:50, GPU, prior_failures:[exp1198])
+- exp1212: Tier 1 constraint addition v2 (claude/sonnet, max_turns:40, prior_failures:[exp134,exp1200])
+
+**Phase 4 — New Research:**
+- exp1213: SDPO dense reward distillation — arXiv 2604.03128, token-level dense supervision from binary outcome (claude/sonnet, max_turns:40) — NEW
+
+**Phase 5 — WOPR + Retro:**
+- exp1214: WOPR Nonogram cartridge (codex/gpt-5.5, max_turns:30, prior_failures:[exp1201])
+- exp1215: Milestone 2026.04.94 retro — STEP 0 skeleton, claude/opus NOT codex (max_turns:100)
+
+### 13 Success Criteria for .94
+1. pre_test_suite_passing (exp1203) — >= 400 tests pass after fix
+2. retro_template_updated (exp1204) — STEP 0 pattern documented
+3. critical_issues_fixed_5_of_5 (exp1205) — gates exp1206
+4. arxiv_bundle_v8_ready (exp1206) — PDF compiled, bundle packaged
+5. llama_cpp_gpu_offload_v3_verified (exp1207) — >= 50 tok/s
+6. grpo_v5_honest_result (exp1208) — any honest result
+7. grpo_vps_step_delta_measured (exp1209) — delta measured (any sign)
+8. phase4_bfs_intractable_fraction_above_50pct (exp1210)
+9. fover_v7_pairs_above_500 (exp1211)
+10. tier1_online_addition_honest_verdict (exp1212)
+11. sdpo_dense_reward_delta_measured (exp1213)
+12. nonogram_cartridge_shipped (exp1214)
+13. retro_complete (exp1215)
+
+### Key Architectural Decisions for .94
+- skip_pre_test:true on all .93-MISSING retries until exp1203 confirms suite working
+- STEP 0 skeleton in every opus/heavy task — write status="in_progress" artifact FIRST
+- Retro: claude/opus max_turns:100 with STEP 0 (reverts AGENT_TYPE_RETRO=codex)
+- All carry-forwards pre-populate prior_failures at plan time — 0 DOOMED_RERUN_BLOCK recoveries expected
+- No gemini (429-rate-limited per known-issues.md)
+- GRPO v5 still gated on llama.cpp GPU offload — prevents 60+ min wasted DualGPU time
+
+---
+
 ## Session 2026-05-03 — Milestone 2026.04.93 Planning Complete
 
 **Milestone 2026.04.92 COMPLETE (10/13 criteria met). Milestone 2026.04.93 PLANNED.**
