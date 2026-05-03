@@ -4677,3 +4677,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-03: SDPO Dense Reward Distillation — Energy Verifier as Privileged Info for Token-Level Supervision (⚠️ Research Finding) — honest_verdict=insufficient_logprob_coverage; results/experiment_1213_sdpo_dense_reward_distillation.json
 - 2026-05-03: SDPO Dense Reward Distillation — Energy Verifier as Privileged Info for Token-Level Supervision (⚠️ Research Finding) — honest_verdict=insufficient_logprob_coverage; results/experiment_1213_sdpo_dense_reward_distillation.json
 - 2026-05-03: WOPR Nonogram (Picross) Game Cartridge — Row/Column Run-Length Ising Constraints (⚠️ Research Finding) — honest_verdict=in_progress; results/experiment_1214_wopr_nonogram_cartridge.json
+- 2026-05-03: WOPR Nonogram (Picross) Game Cartridge — Row/Column Run-Length Ising Constraints (⚠️ Research Finding) — honest_verdict=in_progress; results/experiment_1214_wopr_nonogram_cartridge.json
