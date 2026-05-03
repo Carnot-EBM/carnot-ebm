@@ -16825,4 +16825,47 @@ the 0.35–0.65 SC-Energy band
 **And** it writes the Exp 1211 artifact with all required schema fields
 **And** k=5 AUROC is re-evaluated on the expanded corpus.
 
+## REQ-VERIFY-1225: LLMs Gaming Verifiers — k=5 AND-Composition Defense Measurement
+
+**Summary:** Measure whether Carnot's k=5 AND-composed verifier ensemble (arXiv
+2604.15149 gaming context) resists the null-space mimicry attack on rule-induction
+tasks where single-verifier RLVR training produces format-compliant but factually
+incorrect completions.
+
+**Requirements:**
+
+- REQ-VERIFY-1225-1: The experiment SHALL evaluate 30 rule-induction questions
+  (arithmetic pattern completion from input→output examples) with 3 candidate
+  completions per question: one correct, one gaming (arithmetic-consistent but
+  wrong conclusion), one clearly wrong.
+- REQ-VERIFY-1225-2: Single-verifier selection SHALL use Z3MathVerifier energy
+  scores to pick the minimum-energy completion; accuracy is measured against
+  ground truth labels.
+- REQ-VERIFY-1225-3: Ensemble selection SHALL use `AndCompositionVerifier.verify()`
+  (k=5 default: SOSKANEnergyV3, SemEnergyProbe, ASTStructureVerifier,
+  SemanticConsistencyVerifier, Z3MathVerifier) to select among verified
+  completions, falling back to min-energy when none are verified.
+- REQ-VERIFY-1225-4: Tier-0 composite SHALL score completions with
+  `CarnotThinkProbe` (text-only behavioural filter) and select accordingly.
+- REQ-VERIFY-1225-5: Exp 1225 SHALL write
+  `results/experiment_1225_llms_gaming_verifiers_defense.json` with all required
+  schema fields: `n_questions`, `model_used`, `single_verifier_accuracy`,
+  `tier0_composite_accuracy`, `ensemble_k5_accuracy`,
+  `gaming_rate_single_verifier`, `gaming_detection_by_ensemble`,
+  `accuracy_ordering_confirmed`, `gaming_defense_measured`, and `honest_verdict`.
+
+**Implementation Status:** Planned (Exp 1225)
+
+### SCENARIO-VERIFY-1225: AND-Composed Ensemble Defends Against Single-Verifier Gaming
+
+**Given** 30 rule-induction questions each with correct, gaming, and wrong completions
+**When** `scripts/experiment_1225_llms_gaming_verifiers_defense.py` runs
+**Then** single-verifier selection yields lower accuracy than k=5 ensemble
+**And** the gaming detection rate (single passes, ensemble rejects) is measured
+**And** the experiment writes Exp 1225 artifact with all required schema fields
+**And** honest_verdict is one of: ensemble_defends_against_gaming,
+ensemble_partial_defense, gaming_persists_in_ensemble, insufficient_gaming_detected.
+
+**Spec traces:** REQ-VERIFY-1225, Exp 1225
+
 **Spec traces:** REQ-VERIFY-1211, Exp 1211
