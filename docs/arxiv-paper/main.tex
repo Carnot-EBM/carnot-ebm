@@ -165,6 +165,95 @@ the published numerical claims of LLM-verifier work survive
 adversarial scrutiny. Carnot is offered as a worked example of
 publishing the limits along with the headline.
 
+Carnot is the first open-source externally-grounded EBM that solves
+multimodal text collapse via a multi-verifier ensemble --- filling
+the gap between Kona~\cite{logicalintelligence2026kona} (closed
+enterprise) and EBTs~\cite{gladstone2025ebt} / NRGPT (open but
+lacking external grounding).
+
+\section{Related Work}
+\label{sec:related}
+
+The 2025--2026 landscape of non-autoregressive LLM alternatives has
+produced multiple converging lines of work that directly bound
+Carnot's novelty claims. We make those boundaries explicit here
+rather than leaving them implicit.
+
+\textbf{Energy-Based Transformers (EBT).} Gladstone et
+al.~\cite{gladstone2025ebt} (ICLR 2026) demonstrate System~2
+thinking emerging from unsupervised energy minimization, outscaling
+Transformer++ by up to 35\% on data, batch size, parameters, and
+FLOPs. \emph{Carnot does not claim novelty over ``energy minimization
+for System~2 thinking without reward models'' --- EBT comprehensively
+claimed this territory.} EBTs encounter severe mode collapse on
+highly multimodal discrete language distributions; Carnot's
+externally-grounded multi-verifier ensemble addresses precisely
+this collapse by replacing the unsupervised energy bound with a
+$k$-AND-composed verifier constraint.
+
+\textbf{Discrete Diffusion Language Models.} LLaDA~\cite{nie2025llada}
+(Nie et al., ICLR 2026) is the open-source gold standard: an 8B
+masked-diffusion LM matching LLaMA3 8B at identical $10^{23}$~FLOP
+compute on MMLU/GSM8K/BBH and natively resolving the reversal
+curse. \emph{Carnot does not claim novelty over ``bidirectional
+generation solving the reversal curse'' --- LLaDA owns this ground.}
+Carnot is not a diffusion model; its energy is a verifier signal, not
+a denoising score.
+
+\textbf{Continuous-Latent Reasoning.} Coconut~\cite{hao2024coconut}
+(Hao et al., 2024) feeds the last hidden state back as an embedding,
+enabling latent BFS and a $+$5\% MathQA gain at the cost of a
+multi-stage training curriculum. ODAR~\cite{ma2026odar} (Ma et
+al., 2026) applies a variational free-energy objective to route
+between Fast and Slow LLM agents. Kona
+1.0~\cite{logicalintelligence2026kona} (Logical Intelligence, 2026)
+deploys continuous-latent energy-based reasoning commercially,
+reporting 96.2\% Sudoku solve rate in 313\,ms without external Python
+execution, with Yann LeCun chairing the technical research board.
+\emph{Carnot does not claim novelty over ``reasoning in continuous
+latent space.''} Carnot's open-source, hardware-portable, Apache-2.0
+positioning differentiates from Kona (closed-source,
+mission-critical-only); Carnot's external multi-verifier grounding
+differentiates from Coconut and ODAR (lacking externally-grounded
+formal verification).
+
+\paragraph{Where Carnot sits in the non-autoregressive landscape.}
+The 2025--2026 literature on alternatives to autoregressive
+transformer LLMs has produced rapid progress along five architectural
+families, each with distinct strengths and well-documented weaknesses.
+Energy-Based Transformers~\cite{gladstone2025ebt} demonstrate System~2
+thinking emerging from unsupervised energy minimization, outscaling
+standard transformers by up to 35\% --- but with severe documented
+mode collapse on highly multimodal discrete language distributions.
+Score-based and discrete diffusion language models, exemplified by
+LLaDA~\cite{nie2025llada} (8B parameters), match LLaMA3 8B at
+identical compute and natively resolve the reversal curse, but face
+latency bottlenecks against KV-cached autoregressive generation and
+lack scaling evidence beyond 8B. Energy-Based GPT alternatives such
+as NRGPT~\cite{lee2024nrgpt} unify GPT mechanics with energy
+mechanics via per-token preconditioned gradient descent, demonstrating
+theoretical elegance but suffering catastrophic overfitting on long
+training runs. Continuous-latent reasoning architectures including
+Coconut~\cite{hao2024coconut} and the closed-source commercial
+Kona 1.0~\cite{logicalintelligence2026kona} operate inference in
+dense vector spaces, achieving large advantages on planning and
+formal verification --- but the strongest demonstrations remain either
+training-curriculum-heavy (Coconut) or closed-source (Kona). Active
+inference routing systems such as ODAR~\cite{ma2026odar} wrap
+existing LLMs with free-energy-minimizing control policies,
+complementing rather than replacing the base model.
+
+Across these families, the consensus position --- echoed by Yann
+LeCun and reflected in deployment patterns --- is that energy-based
+alternatives are \emph{complementary, not replacements}, for general
+language generation but \emph{strictly superior} for formal logic,
+verification, and execution governance. Carnot's contribution is
+the combination no prior work delivers: an \emph{open-source,
+externally-grounded EBM substrate} that defends against reward
+hacking via formally-distinct verifier ensembles, runs on
+local-first hardware without closed-API dependencies, and exposes
+calibrated rejection signals rather than generation decisions.
+
 \section{Carnot Architectural Framework}
 \label{sec:framework}
 
@@ -1212,6 +1301,10 @@ substrates.} The CPU fallback path covers correctness everywhere;
 getting independent exact-sampling benchmarks on Z1 silicon is the
 prerequisite for moving Z1 from ``future research direction'' to
 ``deployable substrate.''
+
+Carnot functions as an external System 2 verifier complementing
+autoregressive LLMs, not as a replacement --- the multi-modal
+ecosystem's path to AGI.
 
 We position v3 not as the end of a research program but as the
 honest map of where one ends and the next begins. The .85
