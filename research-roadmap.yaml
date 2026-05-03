@@ -188,7 +188,7 @@ tasks:
 
     STEP 0 — WRITE SKELETON ARTIFACT IMMEDIATELY (before any other work):
     Write this to results/experiment_1205_paper_v5_critical_issues_retry_v3.json:
-    {
+    {{
       "experiment": "1205_paper_v5_critical_issues_retry_v3",
       "status": "in_progress",
       "issue_1_fig3_handled": false,
@@ -198,7 +198,7 @@ tasks:
       "issue_5_ood_narrative_added": false,
       "critical_issues_fixed": 0,
       "honest_verdict": "in_progress"
-    }
+    }}
 
     Then proceed with the fixes. Update the artifact after each issue is resolved.
 
@@ -222,9 +222,9 @@ tasks:
 
     ISSUE-1 (fig3 11680x fabricated speedup) — DROP THE FIGURE:
     - grep -n "fig3\|11680\|11,680" docs/arxiv-paper/main.tex | head -10
-    - Remove the \begin{figure}...\end{figure} block containing fig3 from main.tex entirely.
+    - Remove the \begin{{figure}}...\end{{figure}} block containing fig3 from main.tex entirely.
     - Replace the in-text reference with:
-      "The FPGA achieves {fpga_latency_us:.2f} µs per sweep (exp1068); a rigorous
+      "The FPGA achieves {{fpga_latency_us:.2f}} µs per sweep (exp1068); a rigorous
       CPU comparison requires matching N and per-sample basis and will be reported
       in follow-up work."
     - Update artifact: issue_1_fig3_handled=true
@@ -324,13 +324,13 @@ tasks:
 
     STEP 0 — WRITE SKELETON ARTIFACT:
     Write this to results/experiment_1206_paper_v6_arxiv_bundle_v8.json:
-    {
+    {{
       "experiment": "1206_paper_v6_arxiv_bundle_v8",
       "status": "in_progress",
       "pdf_compiled": false,
       "arxiv_bundle_v8_ready": false,
       "honest_verdict": "in_progress"
-    }
+    }}
 
     EXISTING CODE TO READ FIRST:
     - docs/arxiv-paper/main.tex (the fully-corrected paper from exp1205)
@@ -418,12 +418,12 @@ tasks:
 
     STEP 0 — WRITE SKELETON ARTIFACT IMMEDIATELY:
     Write this to results/experiment_1207_llama_cpp_gpu_offload_fix_v3.json:
-    {
+    {{
       "experiment": "1207_llama_cpp_gpu_offload_fix_v3",
       "status": "in_progress",
       "llama_cpp_gpu_offload_verified": false,
       "honest_verdict": "in_progress"
-    }
+    }}
 
     EXISTING CODE TO READ FIRST:
     - results/experiment_1184_grpo_v5_tinyv_v2_dualGPU.json (confirms n_gpu_layers=-1,
@@ -466,7 +466,7 @@ tasks:
        out = m('Hello world, what is 2+2?', max_tokens=20)
        dt = time.time() - t0
        toks = out['usage']['completion_tokens']
-       print(f'throughput={toks/dt:.1f} tok/s  n_gpu_layers=10  model={ggufs[0]}')
+       print(f'throughput={{toks/dt:.1f}} tok/s  n_gpu_layers=10  model={{ggufs[0]}}')
        " 2>&1
 
     7. Update the artifact with final results.
@@ -539,7 +539,7 @@ tasks:
 
     STEP 0 — WRITE SKELETON ARTIFACT IMMEDIATELY:
     Write this to results/experiment_1208_grpo_v5_tinyv_v2_dualgpu.json:
-    {
+    {{
       "experiment": "1208_grpo_v5_tinyv_v2_dualgpu",
       "status": "in_progress",
       "llama_cpp_gpu_offload": false,
@@ -547,7 +547,7 @@ tasks:
       "training_completed": false,
       "improvement_over_baseline_pp": null,
       "honest_verdict": "in_progress"
-    }
+    }}
 
     EXISTING CODE TO READ FIRST:
     - results/experiment_1207_llama_cpp_gpu_offload_fix_v3.json (verify gpu_offload_verified=true)
@@ -641,12 +641,12 @@ tasks:
 
     STEP 0 — WRITE SKELETON ARTIFACT IMMEDIATELY:
     Write to results/experiment_1209_grpo_vps_step_level_supervision.json:
-    {
+    {{
       "experiment": "1209_grpo_vps_step_level_supervision",
       "status": "in_progress",
       "grpo_vps_step_delta_measured": false,
       "honest_verdict": "in_progress"
-    }
+    }}
 
     EXISTING CODE TO READ FIRST:
     - python/carnot/pipeline/extract.py (CausalReasoningVerifier Tier 2.7, Z3MathVerifier)
@@ -727,12 +727,12 @@ tasks:
 
     STEP 0 — WRITE SKELETON ARTIFACT IMMEDIATELY:
     Write to results/experiment_1210_phase4_bfs_intractable_puzzles_v2.json:
-    {
+    {{
       "experiment": "1210_phase4_bfs_intractable_puzzles_v2",
       "status": "in_progress",
       "phase4_bfs_intractable_fraction_above_50pct": false,
       "honest_verdict": "in_progress"
-    }
+    }}
 
     EXISTING CODE TO READ FIRST:
     - python/carnot/phase3/active_inference_pilot.py (Phase 4 Blocked Gibbs)
@@ -806,12 +806,12 @@ tasks:
 
     STEP 0 — WRITE SKELETON ARTIFACT IMMEDIATELY:
     Write to results/experiment_1211_fover_expansion_v7_hard_negatives.json:
-    {
+    {{
       "experiment": "1211_fover_expansion_v7_hard_negatives",
       "status": "in_progress",
       "fover_v7_pairs_above_500": false,
       "honest_verdict": "in_progress"
-    }
+    }}
 
     EXISTING CODE TO READ FIRST:
     - python/carnot/pipeline/verify_repair.py (VerifyRepairPipeline)
@@ -882,12 +882,12 @@ tasks:
 
     STEP 0 — WRITE SKELETON ARTIFACT IMMEDIATELY:
     Write to results/experiment_1212_tier1_constraint_addition_v2.json:
-    {
+    {{
       "experiment": "1212_tier1_constraint_addition_v2",
       "status": "in_progress",
       "tier1_online_addition_honest_verdict": false,
       "honest_verdict": "in_progress"
-    }
+    }}
 
     EXISTING CODE TO READ FIRST:
     - python/carnot/pipeline/extract.py (ConstraintExtractor, constraint types)
@@ -968,12 +968,12 @@ tasks:
 
     STEP 0 — WRITE SKELETON ARTIFACT IMMEDIATELY:
     Write to results/experiment_1213_sdpo_dense_reward_distillation.json:
-    {
+    {{
       "experiment": "1213_sdpo_dense_reward_distillation",
       "status": "in_progress",
       "sdpo_dense_reward_delta_measured": false,
       "honest_verdict": "in_progress"
-    }
+    }}
 
     EXISTING CODE TO READ FIRST:
     - python/carnot/pipeline/verify_repair.py (energy verifier output)
@@ -1055,12 +1055,12 @@ tasks:
 
     STEP 0 — WRITE SKELETON ARTIFACT IMMEDIATELY:
     Write to results/experiment_1214_wopr_nonogram_cartridge.json:
-    {
+    {{
       "experiment": "1214_wopr_nonogram_cartridge",
       "status": "in_progress",
       "nonogram_cartridge_shipped": false,
       "honest_verdict": "in_progress"
-    }
+    }}
 
     EXISTING CODE TO READ FIRST:
     - python/carnot/games/hex.py (follow this structure)
@@ -1185,7 +1185,7 @@ tasks:
     - python3 -c "
       import json, glob, os
       results = {}
-      for f in sorted(glob.glob('results/experiment_1203*.json') + glob.glob('results/experiment_1214*.json') + [f for i in range(1203,1215) for f in glob.glob(f'results/experiment_{i}*.json')]):
+      for f in sorted(glob.glob('results/experiment_1203*.json') + glob.glob('results/experiment_1214*.json') + [f for i in range(1203,1215) for f in glob.glob(f'results/experiment_{{i}}*.json')]):
           try:
               d = json.load(open(f))
               results[os.path.basename(f)] = d.get('honest_verdict', 'MISSING')
