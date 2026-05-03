@@ -428,3 +428,4 @@ If you finish the real work |
 | 2026-05-03 03:35 UTC | Paper v5 Recompile + arXiv Bundle v6 — Final Compi | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1183_paper_v |
 | 2026-05-03 03:44 UTC | GRPO v5 + TinyV v2 — DualGPU MANDATORY, ThinkPRM v | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1184_grpo_v5 |
 | 2026-05-03 03:50 UTC | GRPO v5 + TinyV v2 — DualGPU MANDATORY, ThinkPRM v | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1184_grpo_v5 |
+| 2026-05-03 03:55 UTC | GRPO v5 + TinyV v2 — DualGPU MANDATORY, ThinkPRM v | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1184_grpo_v5 |
