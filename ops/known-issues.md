@@ -198,6 +198,40 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### NEW 2026-05-03 (20:35Z): NRGPT Frozen-Prefix Evaluation (optional, .95 or .96)
+
+**Background:** Deep Think Q10 (2026-05-03 ~20:30Z) interpreted exp1163's `n_iters_monotone=False` as architectural-by-design (cascaded multi-agent inference, causal-mask sequential thermalization per NRGPT §2.3), not a failure. Verdict: NRGPT survives Phase-3 scale-up without architectural revision; paper-v6 framing fix is sufficient.
+
+Q10 flagged ONE honest unresolvable: from the boolean `n_iters_monotone` flag alone, Carnot cannot definitively distinguish between:
+- **(b)** Pure causal-context shifting (Markov blanket updates beneath each token)
+- **(c)** Non-conservative learned preconditioner (NRGPT authors trade monotonicity for AUROC explicitly)
+
+Resolving the (b)/(c) degeneracy requires a Frozen-Prefix Evaluation:
+
+```
+Method:    re-run exp1163 NRGPT energy recurrence on a target token T,
+           but artificially freeze the state updates of all prefix tokens (< T)
+           OR simply evaluate the energy trace of the very first token alone
+           (which has no prefix and per Lee et al. §2.3 IS guaranteed monotonic)
+Acceptance: if the isolated trace is strictly monotonic → (b) dominant
+            if still non-monotonic → (c) dominant; learned preconditioner has
+                                      abandoned the conservative gradient field
+Cost:      ~30 min - 1 GPU-hour (small modification to exp1163 driver script)
+Severity:  OPTIONAL — paper-v6 framing fix proceeds with joint (b)+(c)
+                      interpretation. This experiment refines the cataloguing.
+```
+
+**Why optional rather than mandatory:** the paper-v6 framing is correct under either (b) or (c) — both are valid forms of cascaded multi-agent inference; the regime classification holds. The Frozen-Prefix Evaluation refines our understanding but isn't required for any architectural decision currently on the roadmap.
+
+**When to ship:** .95 if scope allows; .96 if .95 is full of higher-priority work. Pure research deliverable, not blocker.
+
+**Cross-references:**
+- Deep Think Q10 results: `docs/research-notes/nrgpt-non-monotonicity-interpretation-deep-think-results.md`
+- ISSUE-13 reframing: see paper-v5 audit punch-list
+- Paper-v6 Phase-4 dual-regime paragraph: `docs/research-notes/paper-v5-decentralization-section-draft.md`
+
+---
+
 ### NEW 2026-05-03 (19:50Z): CRITICAL — Pre-Commit `staged_files_only` is Causing Silent Data Loss
 
 **Background:** operator observation 2026-05-03 ~19:48Z: "we are always committing and never reverting so that we fail forward and fix any problems rather than lose transient assets" — but the current setup VIOLATES this principle.
