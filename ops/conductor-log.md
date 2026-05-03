@@ -506,3 +506,4 @@ If you finish the real work |
 | 2026-05-03 18:04 UTC | Self-Learning Tier 1 v2 — Constraint ADDITION from | ESCALATE_OPUS | Sonnet max-turns at 40; retrying with Opus 100 turns |
 | 2026-05-03 18:10 UTC | Self-Learning Tier 1 v2 — Constraint ADDITION from | OK | 261 passed, 1 warning in 7.16s |
 | 2026-05-03 18:15 UTC | SDPO Dense Reward Distillation — Energy Verifier a | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1213_sdpo_de |
+| 2026-05-03 18:39 UTC | SDPO Dense Reward Distillation — Energy Verifier a | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1213_sdpo_de |
