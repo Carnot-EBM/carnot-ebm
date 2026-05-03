@@ -417,3 +417,4 @@ If you finish the real work |
 | 2026-05-03 02:15 UTC | Paper v5 Integrity — High-Severity ISSUE-6 to ISSU | ESCALATE_OPUS | Sonnet max-turns at 40; retrying with Opus 100 turns |
 | 2026-05-03 02:25 UTC | Paper v5 Integrity — High-Severity ISSUE-6 to ISSU | OK | 81 passed, 1 warning in 5.55s |
 | 2026-05-03 02:31 UTC | Paper v5 Integrity — Medium/Low ISSUE-11 to ISSUE- | ESCALATE_OPUS | Sonnet max-turns at 35; retrying with Opus 100 turns |
+| 2026-05-03 02:44 UTC | Paper v5 Integrity — Medium/Low ISSUE-11 to ISSUE- | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1182_paper_v |
