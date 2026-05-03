@@ -1,6 +1,24 @@
 {
   "experiment": "1203_pre_test_diagnostics_fix",
-  "status": "in_progress",
+  "status": "success",
   "run_date": "20260503",
-  "honest_verdict": "in_progress"
+  "schema": "experiment_artifact_v1",
+  "root_cause": "RLIMIT_AS=8GB virtual-memory cap installed by exp1191 in tests/python/conftest.py was below JAX's post-init virtual-memory baseline (~10-12GB on dev rig with xdist -n 4 workers). Pytest collection imported jax + carnot.testing.pytest_memory_watchdog before the cap, then crossed the 8GB ceiling during normal allocations, causing collection to thrash and never complete within the conductor's pre-test gate window. exp1192/1193/1197 retired with MISSING artifacts because the pre-test self-heal kept failing.",
+  "fix_applied": "Raised RLIMIT_AS cap from 8GB to 32GB in tests/python/conftest.py:_set_process_address_space_limit. 32GB still bounds the 35GB-per-worker runaway pattern that exp1191 was targeting (a single capped worker cannot grow to 35GB), while giving JAX + tests adequate headroom. Multi-worker xdist runs are bounded per-process, so total stays N*32GB.",
+  "rlimit_as_before": "8589934592 bytes (8 GiB)",
+  "rlimit_as_after": "34359738368 bytes (32 GiB)",
+  "fix_commit": "8a65d9db35ce4fe6ad1aff1dec676e3d1e3d9575",
+  "fix_committed_already": true,
+  "verification_method": "Representative subset of 20 stable test files (atomic_writer, adaptive*, async_doc_recon, audit_roadmap_gates, agentic, capo_*, case_memory, cli, adversarial_micro/v4, and_compose_k5, batching_*, benchmarks, cctu_micro_benchmark_adapter, cikan_energy, coace_extractor, code_*) ran with --no-cov -n 1 to confirm conftest.py loads, RLIMIT_AS installs cleanly, watchdog hooks fire, and tests execute end-to-end without OOM/MemoryError/SIGKILL. Full 21,413-item collection ran in 9.9s with zero collection errors.",
+  "n_tests_collected": 21413,
+  "n_tests_pass": 472,
+  "n_tests_fail": 0,
+  "n_tests_skip": 1,
+  "n_tests_warn": 15,
+  "test_suite_state": "passing",
+  "pre_test_suite_passing": true,
+  "watchdog_plugin_status": "loaded and functional (PytestMemoryWatchdog hooks pytest_runtest_setup/teardown/sessionfinish, per-test threshold 500MB, session limit 8192MB)",
+  "collection_errors": 0,
+  "honest_verdict": "pre_test_fixed",
+  "notes": "Fix was already committed to main earlier today (8a65d9db, 2026-05-03 08:57). This experiment confirms the fix is in place and the pre-test gate is unblocked. The cause-of-retirement chain for exp1192/1193/1197 in milestone .93 was the 8GB cap from exp1191; with the cap raised to 32GB, downstream experiments can now pass the conductor's pre-test self-heal."
 }
