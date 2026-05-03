@@ -104,6 +104,53 @@ shipped with measurements traceable to estimates rather than artifacts
 --- exactly Müller et al.'s ``deception'' selection pressure manifest at
 publication scale.
 
+\paragraph{Phase-4 evidence in two inference regimes.} The empirical
+support for Carnot's externally-grounded active-inference position
+spans two architecturally distinct inference regimes, and the section
+must distinguish them to avoid a category error in measurement that
+the prior draft of this paper made.
+
+\textbf{Regime 1 --- Monolithic Global Inference.} The Phase-4 sampler
+(\texttt{exp1156}) and ARC-AGI pilot (\texttt{exp1165}) wrap the Phase-3
+substrate in rigorous mathematical integrators (Blocked Gibbs / Langevin
+/ surrogate-gradient HMC, per the Q7 regime classification of
+\S\ref{sec:hmc-regime}). They operate over globally symmetric,
+non-causal states with strict physical transition kernels.  Lyapunov
+free-energy minimization is a native prediction of this regime, and
+\texttt{exp1165} confirms it empirically: \texttt{energy\_trace\_monotone\_fraction =
+1.0} across measured traces. This is what most readers will mean by
+``active inference''.
+
+\textbf{Regime 2 --- Cascaded Multi-Agent Inference.} The NRGPT
+prototype \cite{lee2024nrgpt} wired into Carnot's Phase-4 substrate
+(\texttt{exp1163} batch-level, \texttt{exp1172} per-token extension) is
+NOT monolithic. The causal attention mask makes each token an
+individual active-inference agent updating its beliefs conditioned on
+the dynamically changing beliefs of its Markov blanket (its prefix).
+Parallel updates of all tokens shift the energy landscape beneath each
+token between iterations, by design. The first token is mathematically
+guaranteed monotonic energy decrease; subsequent tokens experience
+``sequential thermalization'' (Lee et al.\ \S2.3): non-monotone energy
+traces are the architectural signature of the regime, not a failure
+of the architecture. \texttt{exp1163} confirms this:
+\texttt{n\_iters\_monotone = False} for non-first tokens, alongside
+positive-classification AUROC (0.92 at $N{=}1$, 0.92 at $N{=}3$).
+\texttt{exp1172} bypasses the apples-to-oranges measurement at batch
+level by evaluating each token at its own optimal stabilization depth,
+producing a strict AUROC improvement.
+
+Both regimes are valid forms of active inference. They differ in how
+inference is structured: Regime 1 builds rigorous global integrators;
+Regime 2 amortizes inference into a learned causal-mask surrogate that
+explicitly trades thermodynamic monotonicity for algorithmic speed
+(per Lee et al., the learned inference rate matrix CAN be constrained
+to monotonic descent, but ``doesn't necessarily lead to the best
+performing models''). The category error that Carnot must avoid ---
+and the prior draft of this paper made --- is expecting parallel
+updates in a causal sequence model to yield global monotonic descent.
+This is a measurement category error, not an architectural failure.
+Phase-3 substrate scale-up of NRGPT proceeds without revision.
+
 \paragraph{What Carnot does not yet have.} The breeder model requires
 ongoing operator attention. We log fourteen distinct outer-loop
 interventions during a single autoresearch session preparing this paper
@@ -154,6 +201,19 @@ governance are operationally combined.
   year={2025},
   url={https://sakana.ai/dgm/},
 }
+
+@article{lee2024nrgpt,
+  title={{NRGPT}: An Energy-Based {GPT} Alternative},
+  author={Lee, et al.},
+  journal={arXiv preprint arXiv:2512.16762},
+  year={2024},
+  note={\S2.3 proves first-token asymptotic stability; subsequent tokens experience sequential thermalization due to causal-mask shifting Markov blanket},
+}
+
+(Verify Lee et al. exact author list before integration. NRGPT paper
+ID arXiv:2512.16762 is correct; primary citation field for the §2.3
+sequential-thermalization proof. Bibliography validation per ISSUE-16
+in paper integrity audit.)
 
 @misc{brooks2026theconversation,
   title={Evolvable {AI}: are we on the brink of the next major evolutionary transition?},

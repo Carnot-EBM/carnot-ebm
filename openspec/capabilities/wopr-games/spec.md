@@ -86,6 +86,31 @@ experiment MUST report 7x7 round-robin win rates for Random, Greedy, and Gibbs.
   k=5 AND-composed free energy over candidate moves.
 - The experiment artifact reports at least 30 total 7x7 games.
 
+### REQ-NONOGRAM-001: Nonogram Run-Length Energy
+
+The Nonogram cartridge MUST expose an `n x n` binary grid where +1 means filled
+and -1 means empty. Its energy MUST be the sum of row and column run-length
+mismatch penalties against the target clues and MUST be zero if and only if all
+row and column clues are satisfied.
+
+**Acceptance criteria:**
+- `compute_runs(spin_row)` returns contiguous +1 run lengths.
+- `run_length_mismatch(actual, target)` is zero for equal clues and positive
+  for mismatched clue lists.
+- A known 5x5 solution for its row and column clues has energy 0.0.
+- A random mismatched grid has positive energy.
+
+### REQ-NONOGRAM-002: Nonogram Parallel Ising Solver
+
+The Nonogram cartridge solver MUST invoke `ParallelIsingSampler` while searching
+for a low-energy grid and MUST return a state whose energy is no worse than the
+provided initial state.
+
+**Acceptance criteria:**
+- `NonogramSolver.solve(init_spins=...)` invokes `ParallelIsingSampler`.
+- The returned energy is less than or equal to the initial energy.
+- For the bundled 5x5 puzzle, the solver reaches a zero-energy valid solution.
+
 ## Scenarios
 
 ### SCENARIO-CONNECT4-001: Empty Board Ground State
@@ -139,6 +164,30 @@ four-in-a-row patterns
 
 **Spec traces:** REQ-HEX-002, REQ-HEX-003
 
+### SCENARIO-NONOGRAM-001: Known 5x5 Ground State
+
+**Given** a 5x5 Nonogram puzzle with known row and column clues
+**When** the known solution is scored
+**Then** the run-length energy is 0.0.
+
+**Spec traces:** REQ-NONOGRAM-001
+
+### SCENARIO-NONOGRAM-002: Mismatched Grid Has Positive Energy
+
+**Given** the same 5x5 Nonogram puzzle
+**When** a mismatched random grid is scored
+**Then** the run-length energy is positive.
+
+**Spec traces:** REQ-NONOGRAM-001
+
+### SCENARIO-NONOGRAM-003: Solver Reduces Energy
+
+**Given** a 5x5 Nonogram puzzle and an initial mismatched grid
+**When** `NonogramSolver` runs
+**Then** it invokes `ParallelIsingSampler` and returns a lower-energy grid.
+
+**Spec traces:** REQ-NONOGRAM-002
+
 ## Implementation Status
 
 | Requirement | Status | Experiment |
@@ -149,9 +198,14 @@ four-in-a-row patterns
 | REQ-HEX-001 | Implemented | Exp 1188 |
 | REQ-HEX-002 | Implemented | Exp 1188 |
 | REQ-HEX-003 | Implemented | Exp 1188 |
+| REQ-NONOGRAM-001 | Planned | Exp 1214 |
+| REQ-NONOGRAM-002 | Planned | Exp 1214 |
 | SCENARIO-CONNECT4-001 | Implemented | Exp 1175 |
 | SCENARIO-CONNECT4-002 | Implemented | Exp 1175 |
 | SCENARIO-CONNECT4-003 | Implemented | Exp 1175 |
 | SCENARIO-HEX-001 | Implemented | Exp 1188 |
 | SCENARIO-HEX-002 | Implemented | Exp 1188 |
 | SCENARIO-HEX-003 | Implemented | Exp 1188 |
+| SCENARIO-NONOGRAM-001 | Planned | Exp 1214 |
+| SCENARIO-NONOGRAM-002 | Planned | Exp 1214 |
+| SCENARIO-NONOGRAM-003 | Planned | Exp 1214 |

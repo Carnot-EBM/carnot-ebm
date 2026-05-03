@@ -544,7 +544,15 @@ ISSUE-10 Seed IQ row in Table 5 marked documented_fallback / not_confirmed
 ```
 ISSUE-11 ThinkPRM AUROC=0.9885 cited as "predecessor of exp1033" — no traceable artifact
 ISSUE-12 Retrained verifier holdout n=50 not stated; exp1121 contradicts the "fix generalizes" claim
-ISSUE-13 NRGPT n_iters_monotone=False — energy recurrence does NOT actually decrease monotonically
+ISSUE-13 NRGPT n_iters_monotone=False — REFRAMED 2026-05-03 20:30Z post Deep Think Q10:
+         not a "disclosure issue" — it is the architectural signature of
+         cascaded multi-agent inference (causal-mask sequential thermalization,
+         per NRGPT paper §2.3). Paper-v6 must DISTINGUISH inference regimes:
+         Regime 1 (monolithic, exp1156+exp1165, monotonic) vs Regime 2
+         (cascaded multi-agent, exp1163+exp1172, non-monotone by design).
+         NRGPT survives Phase-3 scale-up without architectural revision.
+         Fix lives in paper-v6 framing, not in NRGPT itself.
+         See: docs/research-notes/nrgpt-non-monotonicity-interpretation-deep-think-results.md
 ISSUE-14 Two SOS-KAN AUROCs (0.9902 vs 0.9545) unreconciled across sections
 ISSUE-15 fig2 ROC curves are binormal-fit synthesizations; caveat missing from paper caption
 ```
