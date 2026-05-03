@@ -527,3 +527,4 @@ If you finish the real work |
 | 2026-05-03 21:07 UTC | GRPO v6 — FSPO Per-Token Factuality Weighting + VP | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1221_grpo_v6 |
 | 2026-05-03 21:17 UTC | GRPO v6 — FSPO Per-Token Factuality Weighting + VP | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1221_grpo_v6 |
 | 2026-05-03 21:24 UTC | GRPO v6 — FSPO Per-Token Factuality Weighting + VP | FAIL | No file changes produced |
+| 2026-05-03 21:29 UTC | Phase 5-A — Minimal In-Situ Training Substrate Pro | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1222_phase5a |
