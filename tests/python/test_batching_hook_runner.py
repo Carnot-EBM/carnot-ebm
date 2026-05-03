@@ -276,3 +276,105 @@ class TestFilterNewViolations:
         )
         violations = runner.run(raise_on_violation=False)
         assert violations == []
+
+
+# ---------------------------------------------------------------------------
+# Exemption marker — `# batching-check: exempt-{reason}`
+# ---------------------------------------------------------------------------
+
+
+class TestBatchingHookRunnerExemption:
+    """Test that the inline exemption marker suppresses high-severity violations.
+
+    Why the exemption exists: scripts where sequential loops are scientifically
+    correct (e.g. GRPO with per-question gradient updates) must commit without
+    --no-verify. The marker `# batching-check: exempt-{reason}` declares intent.
+
+    Spec: REQ-INFRA-052 (exemption mechanism for legitimate sequential loops)
+    """
+
+    def test_inline_exempt_marker_suppresses_violation(self) -> None:
+        """A staged script with the exempt marker on the loop line returns no violations."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            scripts_dir = Path(tmpdir)
+            script = _write_script(
+                scripts_dir,
+                "experiment_grpo.py",
+                "for q in questions:  # batching-check: exempt-grpo-per-question-gradient\n"
+                "    result = infer(q)\n",
+            )
+            runner = BatchingHookRunner(
+                scripts_dir=str(scripts_dir),
+                staged_files=[str(script)],
+            )
+            violations = runner.run(raise_on_violation=False)
+            assert violations == []
+
+    def test_exempt_marker_within_window_suppresses(self) -> None:
+        """Marker within ±5 lines of the loop suppresses the violation."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            scripts_dir = Path(tmpdir)
+            script = _write_script(
+                scripts_dir,
+                "experiment_grpo_block.py",
+                "# batching-check: exempt-grpo\n"
+                "# next line is the sequential loop\n"
+                "for q in questions:\n"
+                "    result = infer(q)\n",
+            )
+            runner = BatchingHookRunner(
+                scripts_dir=str(scripts_dir),
+                staged_files=[str(script)],
+            )
+            violations = runner.run(raise_on_violation=False)
+            assert violations == []
+
+    def test_no_exempt_marker_still_flags(self) -> None:
+        """A sequential loop without the marker is still flagged (control test)."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            scripts_dir = Path(tmpdir)
+            script = _write_script(
+                scripts_dir,
+                "experiment_no_marker.py",
+                "for q in questions:\n    result = infer(q)\n",
+            )
+            runner = BatchingHookRunner(
+                scripts_dir=str(scripts_dir),
+                staged_files=[str(script)],
+            )
+            violations = runner.run(raise_on_violation=False)
+            assert len(violations) == 1
+
+    def test_exempt_marker_far_away_does_not_suppress(self) -> None:
+        """Marker more than 5 lines away from the loop does not suppress the violation."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            scripts_dir = Path(tmpdir)
+            script = _write_script(
+                scripts_dir,
+                "experiment_far_marker.py",
+                "# batching-check: exempt-decoy\n"
+                + "# filler\n" * 10
+                + "for q in questions:\n    result = infer(q)\n",
+            )
+            runner = BatchingHookRunner(
+                scripts_dir=str(scripts_dir),
+                staged_files=[str(script)],
+            )
+            violations = runner.run(raise_on_violation=False)
+            assert len(violations) == 1
+
+    def test_exempt_marker_unreadable_file_does_not_crash(self) -> None:
+        """If the violation's script_path is unreadable the exemption check returns False.
+
+        We synthesise a violation pointing at a non-existent path to exercise the
+        OSError branch in `_violation_is_exempted`.
+        """
+        from carnot.pipeline.batching_hook_runner import _violation_is_exempted
+
+        v = BatchingViolation(
+            script_path="/nonexistent/path/to/script.py",
+            line_no=1,
+            pattern="for q in questions:",
+            severity="high",
+        )
+        assert _violation_is_exempted(v) is False

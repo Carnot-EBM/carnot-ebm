@@ -350,10 +350,37 @@ Continued operation of the autoresearch loop with the current pattern risks sile
 
 **Operator action 2026-05-03 19:48Z:** conductor STOPPED while this is fixed. Will not restart until the staged_files_only pattern is replaced with fail-forward semantics.
 
+**FIX APPLIED 2026-05-03 (exp1216):**
+
+1. **Ruff hooks moved to check-only mode** in `.pre-commit-config.yaml`:
+   - `ruff` now runs with `--no-fix` (was `--fix`)
+   - `ruff-format` now runs with `--check` (was modifying in-place)
+   - Result: hooks no longer modify the working tree, so the pre-commit
+     stash-restore cycle has no patch conflicts to fail on. Stashing
+     still happens for unstaged changes but the restore is a clean no-op.
+   - Operators run `.venv/bin/ruff check --fix` and `.venv/bin/ruff format`
+     manually before staging if they want auto-fixes.
+
+2. **Batching-check exemption mechanism** is live in
+   `python/carnot/pipeline/batching_hook_runner.py::_violation_is_exempted`.
+   Sequential loops where per-iteration semantics are scientifically correct
+   (e.g. GRPO per-question gradient updates) declare intent inline:
+   ```python
+   for q in questions:  # batching-check: exempt-grpo-per-question-gradient
+   ```
+   The marker may appear on the loop line or within ±5 lines. This removes
+   the `--no-verify` workaround pattern.
+
+3. **`--no-verify` policy:** only when (a) operator explicitly authorizes for
+   that commit, (b) hook is incorrectly flagging legitimate work AND fix
+   isn't ready, (c) commit message names which hook was bypassed and why,
+   (d) a known-issues entry is filed to fix the hook properly.
+
 **Cross-references:**
 - pre-commit logic: `~/.cache/pre-commit/` patch files (cleanup periodically)
 - Conductor's interaction: `scripts/research_conductor.py` checkpoint commit logic
 - Concrete losses tonight: 5+ files needed re-creation across this session
+- Fix artifact: `results/experiment_1216_precommit_staged_files_only_fix.json`
 
 ---
 

@@ -48,12 +48,22 @@ repos:
   # Pinned to match the .venv ruff (0.15.9) — the older pre-commit pin
   # (v0.8.6) didn't recognize newer rule codes like UP045 added in our
   # per-file ignores, causing TOML parse errors at hook time.
+  #
+  # CHECK-ONLY mode (2026-05-03 fail-forward fix): the hooks below run
+  # in non-modifying mode so pre-commit never needs to stash-and-restore
+  # the working tree. The stash-restore cycle silently lost 5+ files
+  # during the .94 milestone when the restore patch failed to apply
+  # cleanly. By making hooks check-only the working tree is never
+  # touched, eliminating the data-loss path entirely. Operators run
+  # `.venv/bin/ruff check --fix` and `.venv/bin/ruff format` manually
+  # before staging if they want auto-fixes.
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.15.9
     hooks:
       - id: ruff
-        args: ["--fix"]
+        args: ["--no-fix"]
       - id: ruff-format
+        args: ["--check"]
 
   # Python type checking
   - repo: local
