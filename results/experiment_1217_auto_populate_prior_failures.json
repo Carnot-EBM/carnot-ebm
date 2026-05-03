@@ -1,0 +1,24 @@
+{
+  "experiment": 1217,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-05-03",
+  "started_at": "2026-05-03T20:25:16.976384+00:00",
+  "finished_at": "2026-05-03T20:25:16.976384+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Auto-Populate prior_failures from Failure-Ledger at Plan Time \u2014 Eliminate DOOMED_RERUN_BLOCK False-Positives",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: no prior_failures field on task",
+  "gates_evaluated": [
+    {
+      "upstream": "exp1140-roadmap-gate-prior-failures-audit",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Research Finding: prior_failures_gaps_found"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}

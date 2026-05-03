@@ -515,3 +515,4 @@ If you finish the real work |
 | 2026-05-03 20:12 UTC | Plan milestone 2026.04.95 | OK | 13 tasks proposed |
 | 2026-05-03 20:14 UTC | Milestone 2026.04.95 activated | OK | 13 tasks queued |
 | 2026-05-03 20:19 UTC | Pre-Commit staged_files_only + batching-check Fix  | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1216_precomm |
+| 2026-05-03 20:23 UTC | Pre-Commit staged_files_only + batching-check Fix  | OK | cache hit: 96 passed, 1 warning in 5.43s |
