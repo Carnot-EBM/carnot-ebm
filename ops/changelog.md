@@ -4696,3 +4696,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-03: GRPO v6 — FSPO Per-Token Factuality Weighting + VPS Step Supervision Combined (⚠️ Research Finding) — honest_verdict=in_progress; results/experiment_1221_grpo_v6_fspo_vps_combined.json
 - 2026-05-03: Phase 5-A — Minimal In-Situ Training Substrate Prototype (exp_NEXT_A) (⚠️ Research Finding) — honest_verdict=in_progress; results/experiment_1222_phase5a_insitu_prototype.json
 - 2026-05-03: Phase 5-A — Minimal In-Situ Training Substrate Prototype (exp_NEXT_A) (⚠️ Research Finding) — honest_verdict=prototype_meets_acceptance_gate; results/experiment_1222_phase5a_insitu_prototype.json
+- 2026-05-03: Phase 5-B — In-Situ Training Loop with Verifier-Ensemble Grounding (exp_NEXT_B) (⚠️ Research Finding) — honest_verdict=in_progress; results/experiment_1223_phase5b_insitu_training_loop.json
