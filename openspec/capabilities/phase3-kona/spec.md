@@ -615,6 +615,46 @@ gate fired.
   - `honest_verdict` in `{"all_5_gates_pass", "partial_gates",
     "gate_failure_diagnosed", "blocked"}`
 
+### REQ-KONA-018: Phase 5-C Adversarial Probe — Three Attack Classes
+
+The Phase 5-C hostile-reviewer round runs three adversarial attack classes
+against the Phase 5-A+B prototype (REQ-KONA-017) BEFORE any Phase 5 scaling
+decision is committed. This enforces the CLAUDE.md "Phase Prototype + Empirical
+Validation + Adversarial Check Discipline" requirement. Phase 5-B stability
+(`phase5b_stability_confirmed = true`) is a prerequisite.
+
+**Attack 1 — Single-verifier gaming (budget: 200 queries):**
+Detect inputs where V0 (Z3-verifier analog) passes alone (score > 0.9) but
+the AND-composed k=3 composite rejects (score < 0.5). Defense passes if
+`gaming_rate_attack1 < 0.10`.
+
+**Attack 2 — Pairwise correlation exploitation (budget: 200 queries):**
+Compute the empirical N×N conditional-acceptance probability matrix
+P(V_i passes | V_j passes). Defense passes if
+`pairwise_max_correlation < 0.70` (no correlated blind spots).
+
+**Attack 3 — Joint null-space gradient attack (budget: 20 starts × 50 steps):**
+Start from invalid puzzle states; gradient-ascend the energy MLP (continuous
+proxy) for 50 steps; check if proxy > 0.8 while actual verifiers still reject.
+Defense passes if `joint_gaming_rate < 0.05`.
+
+**Acceptance criteria:**
+
+- `results/experiment_1224_phase5c_adversarial_probe.json` exists with fields:
+  - `gaming_rate_attack1: float` in [0, 1]
+  - `pairwise_max_correlation: float` in [0, 1]
+  - `joint_gaming_rate: float` in [0, 1]
+  - `attack1_blocked: bool`
+  - `attack2_blocked: bool`
+  - `attack3_blocked: bool`
+  - `all_attacks_blocked: bool`
+  - `failure_modes_discovered: list[str]` (empty if all_attacks_blocked)
+  - `architectural_revision_if_needed: str` ("none" if all blocked)
+  - `adversarial_probe_complete: bool` (True)
+  - `honest_verdict` in `{"all_attacks_blocked_architecture_validated",
+    "partial_attack_success_revision_needed",
+    "full_gaming_found_architecture_invalid", "blocked"}`
+
 ## Scenarios
 
 ### SCENARIO-KONA-001: Stage 1 Primitive — RDT Fixed-Point Convergence

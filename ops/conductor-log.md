@@ -533,3 +533,4 @@ If you finish the real work |
 | 2026-05-03 22:05 UTC | Phase 5-B — In-Situ Training Loop with Verifier-En | FAIL | Codex CLI error: Error: Reached max turns (60) |
 | 2026-05-03 22:07 UTC | Phase 5-B — In-Situ Training Loop with Verifier-En | OK | Deliverable already exists in repo |
 | 2026-05-03 22:09 UTC | Phase 5-C — Adversarial Probe: 3 Attack Classes vs | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1224_phase5c |
+| 2026-05-03 22:27 UTC | Phase 5-C — Adversarial Probe: 3 Attack Classes vs | FAIL | Codex CLI error: Error: Reached max turns (40) |
