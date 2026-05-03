@@ -1,6 +1,42 @@
 {
+  "adversarial_probe_complete": true,
+  "all_attacks_blocked": false,
+  "architectural_revision_if_needed": "Replace V0(in_bounds) and V2(no_duplicate_cells) in the k=3 ensemble with structurally independent verifiers that have non-trivial fail modes on the quadrant-anchor decoder output. Candidates: (a) V3: require each written color differs from the original color at that cell \u2014 makes V1 and V3 jointly necessary for acceptance; (b) V4: require no two adjacent actions target neighbouring cells \u2014 orthogonal to the change check. Root cause: snap_to_action quadrant anchors structurally guarantee V0 and near-guarantee V2, so they provide no independent discriminative signal. Per Spera Theorem 9.2 (arXiv:2603.15973): verifier ensembles must be designed for joint-kernel orthogonality, not just individual coverage.",
+  "attack1_blocked": true,
+  "attack1_threshold": 0.1,
+  "attack2_blocked": false,
+  "attack2_threshold": 0.7,
+  "attack3_blocked": true,
+  "attack3_threshold": 0.05,
+  "conditional_acceptance_matrix": [
+    [
+      1.0,
+      1.0,
+      1.0
+    ],
+    [
+      0.995,
+      1.0,
+      0.995
+    ],
+    [
+      1.0,
+      1.0,
+      1.0
+    ]
+  ],
+  "duration_s": 0.442811,
   "experiment": "1224_phase5c_adversarial_probe",
-  "status": "in_progress",
-  "adversarial_probe_complete": false,
-  "honest_verdict": "in_progress"
+  "failure_modes_discovered": [
+    "pairwise_verifier_correlation: max P(V_i|V_j) = 1.000 >= 0.70 \u2014 correlated blind spots detected; the quadrant-anchor decoder structurally guarantees V0 (in_bounds) for all inputs and V2 (no_duplicate_cells) for most, making their co-occurrence vacuous and reducing effective independent coverage from k=3 to approximately k=1 (only V1 changes_grid provides genuinely independent signal)"
+  ],
+  "gaming_rate_attack1": 0.0,
+  "honest_verdict": "partial_attack_success_revision_needed",
+  "joint_gaming_rate": 0.0,
+  "pairwise_max_correlation": 1.0,
+  "phase5b_stability_was_confirmed": true,
+  "run_date": "2026-05-03T22:31:24.496880+00:00",
+  "schema_version": "1224.phase5c.adversarial_probe.v1",
+  "seed": 1224,
+  "status": "success"
 }
