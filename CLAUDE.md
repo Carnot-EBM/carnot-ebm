@@ -219,6 +219,68 @@ honest discipline at the planner layer alone.
 - **The energy function is ground truth.** It cannot be gamed. This is the invariant across all three phases.
 - **No-doomed-rerun discipline:** see "Failed-Experiment Rerun Discipline" above.
 
+## Codex-Default for Experiments (MANDATORY — Quota Preservation)
+
+**Origin:** 2026-05-02 user directive ("default all new experiments to
+agent_type:codex + model:gpt-5.5") was filed only to user-memory and the
+.95 planner Sonnet emitted `agent_type: claude` on 11 of 13 .95 tasks
+because user-memory is unreachable from the planner sub-process.
+2026-05-03 ~23:30Z user re-issued the directive at 85% weekly quota
+with 2.5 days to reset: "If you don't ensure that codex is used by the
+conductor and research experiments in the loop, I can ensure you that
+you will run out of quota sometime tomorrow." This rule moves the
+directive into CLAUDE.md (planner-readable) and is mechanically
+enforced at the conductor layer.
+
+**The rule.** When planning a new milestone, **all experiment tasks
+default to `agent_type: codex` and `model: gpt-5.5`** unless the task
+genuinely cannot be performed by codex. The exceptions are narrow:
+
+1. **Planner tasks** — the planner itself stays `agent_type: claude`
+   via `AGENT_TYPE_PLANNER=claude` env. Planning is reasoning-heavy
+   and runs ~1× per milestone.
+2. **Cross-file refactors with deep tool use** — tasks that need
+   Claude's tool-use ergonomics (multi-file Edit + Read + Bash
+   choreography). When the planner picks Claude here, it MUST set
+   `requires_claude: true` on the task as a documented bypass.
+   Without that flag, the conductor's `CODEX_FORCE_EXPERIMENTS=1`
+   coercion will silently downgrade `claude` → `codex` at launch.
+3. **Operationally critical fixes during outer-loop self-healing** —
+   if Claude is the outer loop applying structural fixes mid-session,
+   that work continues (the user is in the room). This rule governs
+   *autonomous* loop work, not interactive operator turns.
+
+**Mechanical enforcement (lives in `scripts/research_conductor.py`).**
+The conductor coerces per-task `agent_type: claude` → `agent_type:
+codex` when env `CODEX_FORCE_EXPERIMENTS=1` is set AND the task has
+no `requires_claude: true` flag. Logs a WARNING per coercion. Planner
+and retro paths are NOT affected — those use `AGENT_TYPE_PLANNER` and
+`AGENT_TYPE_RETRO` env overrides directly and bypass the coercion.
+
+**How to apply (planner-side discipline).** When you generate
+`research-roadmap-next.yaml`:
+
+- **Default** every experiment task to `agent_type: codex`, `model:
+  gpt-5.5`.
+- **Justify** any task you mark `agent_type: claude` with a one-line
+  comment AND set `requires_claude: true`. If you can't articulate
+  why codex would fail for the task, codex is the correct choice.
+- **Never use claude** for routine retros, doc passes, schema
+  validation, simple analysis tasks, or experiments that primarily
+  read/run scripts. These all work fine on codex.
+- **Audit pass before emitting**: count the number of `agent_type:
+  claude` entries in the roadmap. If more than 2 of 13 tasks are
+  claude (the .95 ratio of 11/13 is the failure mode this rule
+  prevents), re-evaluate each one and flip to codex unless
+  `requires_claude` is genuinely warranted.
+
+**Why this is in CLAUDE.md, not just in user-memory.** User-memory is
+unreachable from the planner sub-process. Mechanical conductor
+enforcement catches the failure post-plan but wastes planner time
+emitting plans that get coerced. Putting the rule in CLAUDE.md (which
+the planner reads as required input) means the planner respects it at
+design time AND the conductor coerces if it slips. Defense in depth.
+
 ## Phase Prototype + Empirical Validation + Adversarial Check Discipline (MANDATORY)
 
 **Origin:** 2026-04-30 Phase-3 architecture blind-spot audit caught

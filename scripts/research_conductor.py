@@ -3690,6 +3690,29 @@ def research_step(
     # regardless of the conductor's startup AGENT_TYPE. Multi-agent routing
     # per openspec/change-proposals/multi-agent-routing.md.
     task_agent_type = task.get("agent_type")
+    # 2026-05-03 23:30Z operator directive: enforce codex on experiments when
+    # weekly Claude quota is constrained. Operator at 85% with 2.5 days to
+    # reset; the .95 planner Sonnet emitted agent_type:claude on 11/13 tasks
+    # despite the 2026-05-02 codex-default memory directive (planner cannot
+    # read user-memory). When CODEX_FORCE_EXPERIMENTS=1 is set, coerce
+    # per-task claude → codex unless the task carries an explicit
+    # `requires_claude: true` flag (reserved for tasks that genuinely need
+    # Claude's tool ergonomics — e.g., complex multi-file refactors). The
+    # planner and retro call sites at lines ~2361/2495/2873 are NOT affected
+    # — those paths use AGENT_TYPE_PLANNER / AGENT_TYPE_RETRO env overrides
+    # directly and bypass this per-task coercion.
+    if (
+        os.environ.get("CODEX_FORCE_EXPERIMENTS") == "1"
+        and task_agent_type == "claude"
+        and not task.get("requires_claude")
+    ):
+        logger.warning(
+            "CODEX_FORCE_EXPERIMENTS=1: coercing task %r agent_type "
+            "claude → codex (operator quota directive 2026-05-03 23:30Z; "
+            "set requires_claude:true to bypass)",
+            task.get("id", "?"),
+        )
+        task_agent_type = "codex"
     # Per-experiment max_turns hint via YAML "max_turns:" field. Default 50
     # mirrors the historical hard-coded value; simple experiments (CPU-only
     # retros, doc passes, configuration changes) can opt into a smaller budget
