@@ -509,3 +509,4 @@ If you finish the real work |
 | 2026-05-03 18:39 UTC | SDPO Dense Reward Distillation — Energy Verifier a | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1213_sdpo_de |
 | 2026-05-03 18:47 UTC | SDPO Dense Reward Distillation — Energy Verifier a | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1213_sdpo_de |
 | 2026-05-03 18:52 UTC | WOPR Nonogram (Picross) Game Cartridge — Row/Colum | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1214_wopr_no |
+| 2026-05-03 18:57 UTC | WOPR Nonogram (Picross) Game Cartridge — Row/Colum | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1214_wopr_no |
