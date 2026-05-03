@@ -4679,3 +4679,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-03: WOPR Nonogram (Picross) Game Cartridge — Row/Column Run-Length Ising Constraints (⚠️ Research Finding) — honest_verdict=in_progress; results/experiment_1214_wopr_nonogram_cartridge.json
 - 2026-05-03: WOPR Nonogram (Picross) Game Cartridge — Row/Column Run-Length Ising Constraints (⚠️ Research Finding) — honest_verdict=in_progress; results/experiment_1214_wopr_nonogram_cartridge.json
 - 2026-05-03: WOPR Nonogram (Picross) Game Cartridge — Row/Column Run-Length Ising Constraints (⚠️ Research Finding) — honest_verdict=nonogram_shipped_e0_at_solution; results/experiment_1214_wopr_nonogram_cartridge.json
+- 2026-05-03: Milestone 2026.04.94 Retrospective — STEP 0 Pattern, claude/opus, max_turns:100 (⚠️ Research Finding) — honest_verdict=milestone_94_clean_sweep_13_of_13; results/experiment_1215_milestone_retro_94.json
