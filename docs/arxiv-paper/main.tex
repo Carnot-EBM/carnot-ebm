@@ -64,12 +64,16 @@ self-distillation (exp1099) as evidence that the energy signal has
 to drive the filter, not be re-derived from accept/reject labels.
 Carnot's positive baseline results --- SOS-KAN $\mathrm{AUROC} = 0.9545$
 on the FoVer corpus, GRPO with ThinkPRM v2 as an explicit energy
-reward improving held-out GSM8K by $+4$ pp to $+8.51$ pp
+reward improving held-out GSM8K by $+4$ pp (n=25, 95\% CI:
+[0.1\%, 20.4\%]) to $+8.51$ pp (n=25, 95\% CI:
+[1.0\%, 26.0\%])
 (exp1118/1129), post-retrain $\alpha_t = 0.52$ on Qwen3.6-35B-A3B
-(up from $0.38$, exp1130), and $+36$ pp on HumanEval pass@1 with
-verify+repair --- demonstrate that the framework is operational
-in-distribution and can repair measured failure modes; the
-foregrounded negatives demonstrate that it is rigorous out of it.
+(up from $0.38$, exp1130), and the HumanEval extraction-fix anomaly
+($+36$ pp after the harness fix, Appendix~\ref{app:harness-anomalies})
+--- demonstrate that the framework is operational in-distribution
+and can repair measured failure modes when harness artifacts are
+separated from model behaviour; the foregrounded negatives
+demonstrate that it is rigorous out of it.
 We position Carnot's Apache-2.0, local-first,
 hardware-portable design as the engineering substrate that makes
 cross-mechanism verifier diversity (the only known route past the
@@ -704,8 +708,13 @@ correct outputs (exp1120).
 \textbf{GRPO with Energy Reward (Milestone .87-.88).}
 The first application of GRPO with ThinkPRM v2
 ($\mathrm{AUROC}=0.9946$) as an explicit process reward signal
-achieved +4 pp to +8.51 pp improvement on held-out GSM8K questions
-(exp1118/1129), breaking a 3-consecutive negative streak from
+achieved +4 pp (n=25, 95\% CI: [0.1\%, 20.4\%]) to +8.51 pp
+(n=25, 95\% CI: [1.0\%, 26.0\%]) improvement on held-out GSM8K
+questions (exp1118/1129),%
+\footnote{GRPO delta estimates are computed on small evaluation sets
+(n=25--47); binomial CIs are wide and these results should be treated
+as preliminary indicators, not definitive accuracy claims.}
+breaking a 3-consecutive negative streak from
 RLVR+SSD experiments. This is a small-sample held-out result rather
 than a final scaling law, but it changes the empirical status of the
 energy reward from ``plausible but repeatedly negative'' to
@@ -786,17 +795,21 @@ framework's operating range is honestly scoped:
         model measures $\alpha_t = 0.38$ over 100 generated
         questions with $k_{\text{verifiers}} = 5$. This satisfies
         the Zenil convergence threshold $\inf_t \alpha_t > 0$ on
-        the SOTA model. The small-model baseline on Qwen3.5-0.8B
-        (exp1074) was $\alpha_t = 0.78$, and the lower SOTA-model
-        number is consistent with a base model already closer to
-        $\mu_P$ (smaller per-step grounding contribution).
-  \item \textbf{HumanEval $+36$ pp} (exp1079): the same SOTA local
-        model with Carnot verify+repair improved HumanEval pass@1
-        by $+36$ pp absolute in single-shot evaluation. The harness
-        reported baseline pass@1 $= 0.0$ because it could not parse
-        the SOTA model's raw-text outputs into the HumanEval format;
-        the same extraction limit produced GSM8K TP $= 0$ in the
-        same experiment, so we report HumanEval only.
+        the SOTA model. Of 100 sampled responses, 24 that Carnot
+        rejected were actually ground-truth-correct (false rejection
+        rate 24\%). The positivity condition $\alpha_t > 0$ is
+        satisfied (38\% of samples accepted), but calibration to
+        ground truth requires further work. The small-model baseline
+        on Qwen3.5-0.8B (exp1074) was $\alpha_t = 0.78$, and the
+        lower SOTA-model number is consistent with a base model
+        already closer to $\mu_P$ (smaller per-step grounding
+        contribution).
+  \item \textbf{HumanEval harness anomaly} (exp1079): the same SOTA
+        local model with Carnot verify+repair improved HumanEval
+        pass@1 by $+36$ pp absolute after an extraction fix. This is
+        excluded from headline baseline claims and reported in
+        Appendix~\ref{app:harness-anomalies} because the unrepaired
+        baseline pass@1\,=\,0.0\% was a harness extraction failure.
   \item \textbf{KV260 latency $24.83\,\mu s$} (exp1068): per-sample
         latency at 64 spins.
 \end{itemize}
@@ -821,7 +834,8 @@ describe the framework.
   \caption{Carnot grounding signal $\alpha_t$ on small-model
   (Qwen3.5-0.8B, exp1074, $\alpha_t = 0.78$) and SOTA-model
   (Qwen3.6-35B-A3B, exp1077, $\alpha_t = 0.38$) deployments. Both
-  satisfy the Zenil bound $\inf_t \alpha_t > 0$.}
+  satisfy the Zenil bound $\inf_t \alpha_t > 0$; exp1077 also had a
+  24\% false rejection rate against ground truth.}
   \label{fig:alpha}
 \end{figure}
 
@@ -829,7 +843,8 @@ describe the framework.
   \centering
   \includegraphics[width=0.75\textwidth]{figures/fig5.pdf}
   \caption{HumanEval pass@1 with Carnot verify+repair, $+36$ pp
-  absolute improvement on Qwen3.6-35B-A3B-GGUF (exp1079, live GPU).}
+  absolute improvement after the extraction fix on
+  Qwen3.6-35B-A3B-GGUF (exp1079, live GPU; anomaly-only result).}
   \label{fig:humaneval}
 \end{figure}
 
@@ -892,7 +907,12 @@ setup used ten $5\times5$ ARC-AGI-3-like puzzles, a legal-action
 greedy baseline, and a Phase~4 sampler that chose actions by
 following the composite energy signal. The pilot was operational:
 the Phase~4 sampler solved all ten proxy puzzles and used far fewer
-actions than the baseline.
+actions than the baseline. On 10 synthetic $5\times5$ puzzles,
+Phase~4's Blocked Gibbs free-energy minimization reduced action count
+by $74.7\%$ vs the random-legal-greedy baseline (Phase~4: 6.30 mean
+steps vs greedy: 24.86 mean steps). Note: the random-legal-greedy
+baseline is intentionally weak; results against a stronger
+BFS-to-goal baseline are in exp1189.
 
 \begin{table}[ht]
   \centering
@@ -908,7 +928,9 @@ actions than the baseline.
     Mean action count & $6.30$ & $24.86$ &
       Phase~4 used roughly one quarter of the baseline actions. \\
     action\_count\_ratio & $0.253419$ & $1.000000$ &
-      $74.7\%$ fewer actions than the greedy legal-action baseline. \\
+      $74.7\%$ fewer actions than the random-legal-greedy baseline
+      (note: intentionally weak baseline; see exp1189 for results
+      against a stronger BFS-to-goal baseline). \\
     solved\_rate & $1.000$ & $0.980$ &
       The pilot did not trade efficiency for lower solve rate. \\
     Energy-trace monotone fraction & $1.000$ & -- &
@@ -962,7 +984,11 @@ class of control objective.
     System & Reported score & Action-efficiency context \\
     \midrule
     Seed IQ (Themesis active inference) &
-      $1.00$ reported; $0.95$ public demonstration &
+      $1.00$ reported; $0.95$ public demonstration%
+      \footnote{Seed IQ score cited from published announcement; not
+      independently re-fetched or verified in this work
+      (exp1166: seed\_iq\_score\_confirmed=false). Included as
+      documented external reference, not as a reproduced result.} &
       $115\%$ of human baseline, $2{,}674$ actions vs. human
       $7{,}534$--$8{,}073$ actions. \\
     Carnot Phase~4 pilot &
@@ -1195,6 +1221,19 @@ or recalibrated against the v2 draft:
 Every retraction is in service of the paper's thesis: an
 architectural framework whose value comes from publishing the walls
 it discovered, not from claims it cannot defend.
+
+\section{Harness and Measurement Anomalies}
+\label{app:harness-anomalies}
+
+\paragraph{HumanEval extraction failure (exp1079).}
+HumanEval pass@1\,=\,0.0\% is a harness extraction failure: the
+standard pass@1 harness expects code blocks that the base model does
+not produce. After applying the extraction fix, pass@1 improved by
+$+36$ pp. This is reported in this anomaly appendix rather than as a
+headline accuracy result. The same extraction limit produced
+GSM8K TP\,=\,0 in the same experiment, so the HumanEval result is
+treated as a harness anomaly and not as evidence that the unrepaired
+base model has zero coding ability.
 
 \section{Reviewer Adversarial Defense}
 

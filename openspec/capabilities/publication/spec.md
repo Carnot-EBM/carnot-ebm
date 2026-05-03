@@ -154,6 +154,38 @@ AND `results/carnot-arxiv-v5.tar.gz` is verified
 AND the deliverable JSON reports `paper_ready_for_arxiv_hold_lift = True`
 AND `honest_verdict == "paper_v4_phase4_complete_arxiv_ready"`
 
+### REQ-PUBLISH-007: High-Severity Integrity Fixes (ISSUE-6 through ISSUE-10)
+
+The paper-v5 high-severity remediation script MUST verify that
+`docs/arxiv-paper/main.tex` contains all five fixes before emitting
+`results/experiment_1181_paper_v5_high_issues_6_10.json`. The artifact MUST
+record:
+
+- `issue_6_grpo_cis_added`: GRPO delta claims include inline sample size and
+  Clopper-Pearson 95% CI annotations (n=25/n=47 small-sample binomial CIs).
+- `issue_6_small_sample_caveat_added`: a footnote warning that GRPO delta
+  estimates on n=25-47 are preliminary indicators, not definitive accuracy claims.
+- `issue_7_humaneval_reframed`: the HumanEval 0.0% baseline is explained as a
+  harness extraction failure, result moved to anomaly context.
+- `issue_8_alpha_t_rejection_rate_added`: the 24/100 false rejection rate is
+  disclosed alongside the alpha_t=0.38 claim.
+- `issue_9_phase4_baseline_caveat_added`: the Phase-4 74.7% action reduction is
+  annotated as compared against a random-legal-greedy baseline with a forward
+  reference to a stronger BFS-to-goal comparison.
+- `issue_10_seed_iq_footnote_added`: a footnote on the Seed IQ table row states
+  the value was not independently re-fetched (exp1166: seed_iq_score_confirmed=false).
+- `high_severity_fixed`: count of fixes applied (must equal 5).
+- `4_test_passes_high`: all fixes satisfy the paper-v5 4-test.
+- `honest_verdict`: one of "all_5_high_resolved" | "partial_fix" | "blocked".
+
+### SCENARIO-PUBLISH-007: All Five High-Severity Fixes Verified
+
+**Given** main.tex is accessible and the five high-severity issues exist
+**When** the exp1181 remediation script runs
+**Then** all five issue booleans are True
+  AND `high_severity_fixed == 5`
+  AND `honest_verdict == "all_5_high_resolved"`
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -164,3 +196,4 @@ AND `honest_verdict == "paper_v4_phase4_complete_arxiv_ready"`
 | REQ-PUBLISH-004 | Implemented | Exp 1135 position paper findings update |
 | REQ-PUBLISH-005 | Proposed | Exp 1153 final arXiv v4 bundle artifact |
 | REQ-PUBLISH-006 | Proposed | Exp 1167 Phase 4 Section 7 revision artifact |
+| REQ-PUBLISH-007 | Implemented | Exp 1181 paper v5 high-severity fixes ISSUE-6..10 |
