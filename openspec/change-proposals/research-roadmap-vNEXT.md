@@ -22,6 +22,7 @@ The next milestone therefore does not rerun the whole .99 plan. It makes the SOT
 
 The 2026-05-04 vNEXT literature/source scan added these entries to `research-references.md` before this plan was written:
 
+- Codex planning-agent verification scan: DCCD draft-conditioned constrained decoding, NSVIF CSP-style instruction verification, Residual Drift / MUS-Repair, PCC certainty+consistency routing, and the current EBT / Extropic / Kona status check. These refine `.100` by making the certificate rerun draft-conditioned rather than grammar-only, making semantic routing solver/CSP-backed, adding residual-drift bookkeeping, and keeping the architecture local-first rather than pivoting to a closed vendor.
 - ARS answer-agreement representation shaping (arXiv 2601.17467): use answer stability under trace-boundary perturbation as a hallucination/certificate trust diagnostic.
 - TruncProof (OpenReview ICLR 2026): grammar-constrained generation with a hard maximum token budget, directly relevant to bounded certificate tails.
 - SEM-CTRL (arXiv 2503.01804 / OpenReview TMLR 2026): Answer Set Grammars for semantic control, useful after syntactic certificate validity is reliable.
@@ -59,12 +60,12 @@ Phase 1: headline local certificate path
   ARS answer-stability audit
       |
       v
-  TruncProof/XGrammar bounded <CARNOT_CERT> tail
+  DCCD + TruncProof/XGrammar bounded <CARNOT_CERT> tail
       |
       +---------------------------+
       |                           |
       v                           v
-  VERGE semantic routing + MCS   Cactus constrained acceptance v2
+  NSVIF/VERGE routing + MCS/MUS  Cactus constrained acceptance v2
   claim -> verifier route        draft accept if cert/energy pass
 
 Phase 2: continuous self-learning
@@ -106,7 +107,7 @@ Goal: produce the missing headline local SOTA certificate result and only then r
 
 - `exp1284-ars-answer-stability-sota-audit`: use mandated SOTA GGUFs to measure answer stability under reasoning/certificate boundary perturbations.
 - `exp1285-triggered-certificate-extraction-v2`: rerun triggered certificate extraction with complete prior-failure metadata, bounded grammar, and SOTA cache gate.
-- `exp1286-verge-semantic-routing-mcs`: turn successful certificates into routed claims and Minimal Correction Subsets.
+- `exp1286-verge-semantic-routing-mcs`: turn successful certificates into routed claims, NSVIF-style CSP checks, Minimal Correction Subsets, and residual-drift/MUS diagnostics.
 - `exp1287-cactus-constrained-acceptance-v2`: rerun Cactus only when certificate parse rate reaches the structured gate.
 
 Success bar: `exp1285.certificate_parse_rate >= 0.8` and `headline_result_allowed=true`, or the milestone honestly records why the local SOTA path is blocked.
@@ -195,9 +196,9 @@ This milestone preserves local-first operation. Every LLM-bearing task is gated 
 
 1. `exp1282` records SOTA GGUF cache/provenance readiness or a named blocker.
 2. `exp1283` selects a local certificate grammar backend or reports no viable backend.
-3. `exp1284` measures answer-stability on SOTA GGUF outputs.
-4. `exp1285` produces a headline-eligible SOTA certificate parse-rate measurement or blocks honestly.
-5. `exp1286` writes semantic routing and MCS diagnostics when certificate parse succeeds.
+3. `exp1284` measures answer-stability plus certainty/consistency routing signals on SOTA GGUF outputs.
+4. `exp1285` produces a headline-eligible SOTA certificate parse-rate measurement or blocks honestly, comparing raw trigger, grammar-only, and DCCD-style draft-conditioned paths when possible.
+5. `exp1286` writes semantic routing, NSVIF-style CSP checks, MCS/MUS diagnostics, and residual-drift cases when certificate parse succeeds.
 6. `exp1287` measures Cactus constrained acceptance when certificate parse succeeds.
 7. `exp1288` measures DVI-style verifier-feedback replay delta.
 8. `exp1289` reports a headline-eligible GRPO/VPRM v9 delta when gates pass.
