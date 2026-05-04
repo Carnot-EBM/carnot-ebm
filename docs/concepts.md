@@ -146,4 +146,4 @@ This also maps cleanly onto the hardware roadmap. An Ising's `J` matrix is the n
 
 - [Getting Started](getting-started.md) -- install and run your first verification
 - [API Reference](api-reference.md) -- all public classes and methods
-- [Technical Report](technical-report.html) -- the full research report (300+ experiments)
+- [Technical Report](technical-report.html) -- the full research report through Exp 1281

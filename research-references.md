@@ -4,6 +4,73 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-05-04 Codex Live Web Scan Addendum (Milestone 2026.04.100)
+
+These items were checked in the interactive planning turn after reading the
+`.99` artifacts. They do not replace the already-filed `.100` plan; they
+mainly sharpen future benchmark and routing choices.
+
+### Hallucination Detection and Mitigation Operational Framework
+- **Paper:** arXiv 2601.09929, "Hallucination Detection and Mitigation in
+  Large Language Models."
+- **Source:** https://arxiv.org/abs/2601.09929
+- **What:** Presents a tiered operational framework that separates model,
+  context, and data causes of hallucination, then closes the loop with
+  uncertainty, reasoning-consistency, grounding, calibration, and progressive
+  reliability improvement.
+- **Relevance to Carnot:** This independently supports Carnot's cascade plus
+  continuous self-learning direction: verifier failures should be routed by
+  root cause, not treated as one undifferentiated "hallucination" class.
+- **Concrete experiment:** In `.100`, keep `exp1288` and `exp1290` focused on
+  typed memory/routing decisions; future milestones should add root-cause tags
+  (`model`, `context`, `data`, `constraint`) to certificate-memory entries.
+- **When to incorporate:** `.100` self-learning artifacts as optional fields;
+  fuller taxonomy in `.101` if certificate parsing succeeds.
+
+### HALT-RAG: Calibrated NLI Ensemble With Abstention
+- **Paper:** arXiv 2509.07475.
+- **Sources:** https://huggingface.co/papers/2509.07475 and
+  https://arxiv.org/abs/2509.07475
+- **What:** Uses frozen NLI models plus lexical features, calibrated
+  probabilities, and an abstention policy for hallucination detection in
+  RAG-style outputs.
+- **Relevance to Carnot:** Carnot's verifier routing needs a cheap abstention
+  lane: if deterministic certificate checks are under-covered, route to a
+  higher-cost energy/Z3/claim verifier rather than over-trusting a weak signal.
+- **Concrete experiment:** Future semantic-router follow-up: add an abstention
+  threshold to `exp1286`'s routed-claim outputs and compare false positives
+  against a no-abstention router.
+- **When to incorporate:** `.101` semantic routing, after `.100` establishes
+  certificate parse coverage.
+
+### Poly-FEVER: Multilingual Fact Verification Benchmark
+- **Paper:** arXiv 2503.16541.
+- **Sources:** https://huggingface.co/papers/2503.16541 and
+  https://arxiv.org/abs/2503.16541
+- **What:** A multilingual fact-verification benchmark spanning 11 languages,
+  designed to expose language-specific hallucination detection biases.
+- **Relevance to Carnot:** Carnot's current FoVer and certificate work is
+  English-heavy. A local-first verifier that claims sovereignty should not
+  silently degrade outside English.
+- **Concrete experiment:** Future benchmark milestone: run k=5 energy/certificate
+  routing on a tiny Poly-FEVER slice using local open models and report
+  per-language coverage/abstention.
+- **When to incorporate:** Future benchmark breadth milestone, not `.100`.
+
+### ACCORD: Autoregressive Constraint-Satisfying Generation
+- **Paper:** arXiv 2506.11052.
+- **Source:** https://huggingface.co/papers/2506.11052
+- **What:** Uses autoregressive generation with dynamic feasibility enforcement
+  and routing for combinatorial optimization tasks.
+- **Relevance to Carnot:** This is adjacent to WOPR and Cactus: it suggests that
+  constraint satisfaction can be maintained during generation rather than
+  recovered purely post hoc.
+- **Concrete experiment:** Future WOPR/constraint-decoding milestone: compare
+  Carnot's post-hoc puzzle energy checks with an ACCORD-style feasible-prefix
+  generator on one WOPR cartridge.
+- **When to incorporate:** After `.100` certificate grammar and Cactus gates are
+  measurable.
+
 ## 2026-05-04 Final Planning-Agent Scan (Milestone 2026.04.100)
 
 These items were checked after the .99 retrospective and before emitting the
