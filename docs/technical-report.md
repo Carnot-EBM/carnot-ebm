@@ -1,6 +1,6 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report — 1,281 Experiments Across 108 Archived Research Milestones, 21,703 Test Items (Tracked Through Exp 1281)
+## A Technical Report — 1,281 Experiments Across 108 Archived Research Milestones, 21,703 Python Test Items (Tracked Through Exp 1281)
 
 **Author:** Ian Blenke
 **Date:** 2026-05-04
@@ -40,9 +40,10 @@ deployment, PRIME verifier weighting, continuous repair, and WOPR game
 cartridge expansion. The latest archived milestone in `research-complete.yaml`
 is 2026.04.98; result artifacts now extend through Exp 1281. Milestone .99 met
 12 of 14 criteria: retro backfill, paper-v6 critical fixes, arXiv v10 bundle
-compilation, PRIME verifier selection, certificate-memory replay, FSNet/SnareNet
-continuous repair, gaming-defense proxy measurement, WOPR Kakuro/Masyu shipping,
-and retro completion. Triggered SOTA GGUF certificate extraction remained
+compilation, PRIME verifier selection, GRPO v8 smoke-only plumbing,
+certificate-memory replay, FSNet/SnareNet continuous repair, gaming-defense
+proxy measurement, WOPR Kakuro/Masyu shipping, and retro completion.
+Triggered SOTA GGUF certificate extraction remained
 gate-blocked, Cactus acceptance stayed gated, and .99 produced no
 headline-eligible SOTA model-generation result. The follow-on .99 operational
 retrospective measured a **10-minute** closeout slice across **2** items with no

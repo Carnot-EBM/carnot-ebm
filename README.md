@@ -23,12 +23,14 @@ milestones archived**, with terminal result artifacts through Exp 1281 on
 Exp 1281 records milestone .99 at **12/14 criteria met**. Latest .99 artifacts
 include paper-v6 critical fixes plus an arXiv v10 bundle compiled but upload
 pending (Exps 1269/1270), PRIME verifier weights led by SemEnergyProbe
-(Exp 1272), certificate-memory replay **0.642857 -> 1.0** (Exp 1274),
-FSNet/SnareNet continuous repair (Exps 1275/1276), gaming-defense proxy
-vulnerability **0.00** (Exp 1278), and WOPR Kakuro/Masyu cartridges shipped
-with valid-solution energy **E=0** (Exps 1279/1280). SOTA GGUF certificate
-extraction stayed gate-blocked and .99 produced no headline-eligible SOTA
-model-generation result. The .99 operational closeout then measured **10 min**
+(Exp 1272), GRPO v8 PRIME/VPRM smoke-only plumbing with
+`headline_result_allowed=false` (Exp 1273), certificate-memory replay
+**0.642857 -> 1.0** (Exp 1274), FSNet/SnareNet continuous repair
+(Exps 1275/1276), gaming-defense proxy vulnerability **0.00** (Exp 1278),
+and WOPR Kakuro/Masyu cartridges shipped with valid-solution energy **E=0**
+(Exps 1279/1280). SOTA GGUF certificate extraction stayed gate-blocked,
+Cactus stayed gated, and .99 produced no headline-eligible SOTA model-generation
+result. The .99 operational closeout then measured **10 min**
 for **2** items with no GPU zombies; the **30%** next-milestone savings target
 now centers on DualGPU-aware lanes, cached TeX/pre-flight state, immediate
 gate-block artifacts, and idempotent docs reconciliation. The current
@@ -176,6 +178,7 @@ experiment artifact under `results/`.
 | DiffuTruth vs Carnot FoVer baseline | DiffuTruth semantic energy AUROC **0.0816** on FoVer, while Carnot SemEnergy probe reports **0.948187**; Carnot exceeds DiffuTruth's cited FEVER paper AUROC 0.725 on this artifact | Exp 1265 |
 | QuantKAN 3-bit + LUT-KAN edge path | 3-bit PTQ keeps **AUROC=0.9801**; LUT-KAN simulation gives **2.5x** speedup with 12.5 KB lookup table | Exp 1266 |
 | PRIME verifier selection | Weight vector written from FoVer/process-alignment audit: SemEnergyProbe **0.4183**, k5 ensemble summary **0.2773**, CausalReasoningVerifier **0.1423**, SymCodeVerifier **0.1339**, Z3 **0.0149**, SOS-KAN **0.0131** | Exp 1272 |
+| GRPO v8 PRIME/VPRM smoke | Smoke-only self-learning delta **0.83798** with `MODEL_SPECS=[]` and `headline_result_allowed=false`; no SOTA GGUF model usage | Exp 1273 |
 | Certificate memory replay | Replay score **0.642857 -> 1.0** (+0.357143) with **5** memory entries and **5** skill-graph candidates | Exp 1274 |
 | FSNet + SnareNet continuous repair | Raw Langevin hard-constraint satisfaction **0.0** with 5 mean violations; FSNet reaches 0 violations in 1 feasibility step; SnareNet raises soft constraint satisfaction to **0.9896** with 16 adaptive repair iterations | Exps 1275/1276 |
 | Gaming-verifier defense proxy | EST score-surface audit on 50 FoVer examples reports meaning-preserving instability **0.0**, meaning-changing sensitivity **1.0**, precision proxy **1.0**, recall proxy **1.0**, and vulnerability score **0.0**; not a live adversarial LLM headline | Exp 1278 |
