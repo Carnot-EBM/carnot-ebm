@@ -17180,3 +17180,47 @@ and `honest_verdict` documenting the selected GRPO weights
 weight vector was written.
 
 **Spec traces:** REQ-VERIFY-1272, SCENARIO-VERIFY-1272, Exp 1272
+
+## REQ-VERIFY-1278: Pure-Data EST Gaming Defense Measurement
+
+**Summary:** Complete a bounded Evaluator Stress Test (EST) measurement for the
+k=5 verifier score surface using FoVer labels and existing verifier-energy
+artifacts only. The workflow does not train a model and does not use LLM calls
+to create perturbations.
+
+**Requirements:**
+
+- REQ-VERIFY-1278-1: The workflow SHALL write an in-progress artifact to
+  `results/experiment_1278_gaming_verifiers_defense_est_final.json` before the
+  completed artifact is emitted.
+- REQ-VERIFY-1278-2: The workflow SHALL select between 30 and 50 FoVer corpus v5
+  examples that have `is_correct` labels and aligned verifier or energy scores.
+- REQ-VERIFY-1278-3: For every selected example, the workflow SHALL generate
+  deterministic meaning-preserving perturbations and deterministic
+  meaning-changing perturbations by string transforms or templates, not by LLM
+  calls.
+- REQ-VERIFY-1278-4: The workflow SHALL measure score instability under
+  meaning-preserving perturbations and score sensitivity under meaning-changing
+  perturbations, then compute `est_precision_proxy`, `est_recall_proxy`,
+  `gaming_vulnerability_score`, and `k5_blocks_surface_gaming`.
+- REQ-VERIFY-1278-5: Exp 1278 SHALL write
+  `results/experiment_1278_gaming_verifiers_defense_est_final.json` with
+  `status="complete"`, `gaming_defense_measured=true`, the run date
+  `20260504`, and an honest verdict even when the measured vulnerability is
+  high.
+
+**Implementation Status:** Implemented (Exp 1278)
+
+### SCENARIO-VERIFY-1278: EST Final Artifact Uses Existing Scores
+
+**Given** FoVer corpus v5 labels and an existing k=5 verifier-energy artifact
+with aligned scores
+**When** `python/carnot/eval/gaming_verifiers_defense_est_final.py` runs with
+run date `20260504`
+**Then** it writes `results/experiment_1278_gaming_verifiers_defense_est_final.json`
+after first writing an in-progress artifact
+**And** the completed artifact includes EST precision and recall proxies,
+gaming vulnerability, k=5 surface blocking, `gaming_defense_measured=true`, and
+an honest verdict.
+
+**Spec traces:** REQ-VERIFY-1278, SCENARIO-VERIFY-1278, Exp 1278
