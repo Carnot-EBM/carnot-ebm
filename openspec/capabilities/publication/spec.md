@@ -374,6 +374,41 @@ AND the banned-string audit has no remaining old unsupported claim strings
 AND the deliverable JSON reports `status == "complete"` and
 `honest_verdict == "paper_v6_critical_fixes_v2_complete"`.
 
+### REQ-PUBLISH-014: Gated arXiv Bundle v10 Artifact
+
+The arXiv bundle-v10 runner MUST create an in-progress deliverable at
+`results/experiment_1270_arxiv_bundle_v10_gated.json` before attempting any
+compile or packaging command. It MUST refuse to produce a completed bundle
+unless `results/experiment_1269_paper_v6_critical_fixes_v2.json` records
+`critical_issues_fixed >= 5`.
+
+When the prerequisite gate passes, the runner MUST inspect the local paper
+directory for available narrow build paths in this order: `tectonic`,
+`latexmk`, and Makefile targets under `docs/arxiv-paper`. If a compile or
+package path is available, it MUST run only that narrow command, record whether
+`docs/arxiv-paper/main.pdf` exists after the attempt, create or verify a bundle
+path, and set `arxiv_submitted` to false unless a local submission receipt
+already exists.
+
+If no local compile or package command can run, the artifact MUST be honest:
+`status == "blocked"`, `pdf_compiled == false`, `missing_tool` names the exact
+missing command names, and `honest_verdict` reports the local TeX-tooling
+block. A completed artifact MUST record `status == "complete"`, a non-empty
+`bundle_path`, `pdf_compiled == true`, and `honest_verdict` from the bundle-v10
+closed set.
+
+### SCENARIO-PUBLISH-014: Bundle v10 Runs Only After Critical Fix Gate
+
+**Given** Exp 1269 records at least five critical issues fixed
+AND `docs/arxiv-paper/main.tex` exists
+**When** the exp1270 arXiv bundle-v10 runner executes
+**Then** it writes
+`results/experiment_1270_arxiv_bundle_v10_gated.json`
+AND records `run_date == "20260504"`
+AND records `arxiv_submitted == false` when no local submission receipt exists
+AND reports either a complete compiled/package artifact or a blocked artifact
+with exact missing tool names.
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -391,3 +426,4 @@ AND the deliverable JSON reports `status == "complete"` and
 | REQ-PUBLISH-011 | Proposed | Exp 1245 fig3 measured-only FPGA latency fix |
 | REQ-PUBLISH-012 | Proposed | Exp 1257 paper v6 five critical integrity fixes |
 | REQ-PUBLISH-013 | Proposed | Exp 1269 paper v6 critical fixes v2 terminal artifact |
+| REQ-PUBLISH-014 | Proposed | Exp 1270 gated arXiv bundle v10 artifact |
