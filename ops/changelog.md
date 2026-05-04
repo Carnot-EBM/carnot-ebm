@@ -4792,3 +4792,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-04: Milestone 2026.04.98 Retrospective — STEP 0 Pattern, Evaluate 13 Criteria (⚠️ Research Finding) — honest_verdict=milestone_98_5_of_13_criteria_met; results/experiment_1267_milestone_retro_98.json
 - 2026-05-04: Retro Backfill .95/.96/.97 v2 - Pure JSON Archaeology, Terminal Artifact (✅ Complete) — honest_verdict=retro_backfill_complete_terminal_counts_from_stale_exp1255_95_10_of_13_96_2_of_13_97_4_of_13; results/experiment_1268_retro_backfill_95_96_97_v2.json
 - 2026-05-04: Paper-v6 Critical Fixes v2 - Measured Claims Only (✅ Complete) — honest_verdict=paper_v6_critical_fixes_v2_complete; results/experiment_1269_paper_v6_critical_fixes_v2.json
+- 2026-05-04: arXiv Bundle v10 - Gated on Exp 1269 Critical Fixes (⚠️ Research Finding) — honest_verdict=arxiv_bundle_v10_compiled_upload_pending; results/experiment_1270_arxiv_bundle_v10_gated.json
