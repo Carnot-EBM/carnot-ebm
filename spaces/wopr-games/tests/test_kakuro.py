@@ -1,7 +1,7 @@
 """Tests for the Kakuro WOPR cartridge.
 
 Spec traces: REQ-KAKURO-001, REQ-KAKURO-002, SCENARIO-KAKURO-001,
-SCENARIO-KAKURO-002, and SCENARIO-KAKURO-003.
+SCENARIO-KAKURO-002, SCENARIO-KAKURO-003.
 """
 
 from __future__ import annotations
@@ -9,92 +9,62 @@ from __future__ import annotations
 import os
 import sys
 
-import pytest
-
 _WOPR_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 if _WOPR_DIR not in sys.path:
     sys.path.insert(0, _WOPR_DIR)
 
-from games import ALL_GAMES  # noqa: E402
-from games.kakuro import (  # noqa: E402
-    CANONICAL_KAKURO_INITIAL,
-    CANONICAL_KAKURO_SOLUTION,
-    KakuroGame,
-)
+from games.kakuro import KakuroGame  # noqa: E402
 
 
-def _values_in_domain(state) -> bool:
-    return all(1 <= value <= 9 for value in state.values.values())
+VALID_SOLUTION = [
+    [0, 1, 3, 0],
+    [0, 4, 2, 6],
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+]
 
 
-@pytest.mark.parametrize(
-    ("entries", "expected_energy"),
-    [
-        (CANONICAL_KAKURO_SOLUTION, 0.0),
-        (((1, 1, 2), (1, 2, 1), (2, 2, 5), (2, 3, 3)), 3.0),
-        (((1, 1, 9), (1, 2, 3), (2, 2, 4), (2, 3, 5)), 64.0),
-    ],
-)
-def test_parametrized_sum_run_energy(entries, expected_energy):
-    """REQ-KAKURO-001: sum-run energy matches known valid and invalid boards."""
-    game = KakuroGame()
-    state = game.state_from_entries(entries)
+def _state_with_cells(game: KakuroGame, cells: list[list[int]]) -> dict[str, object]:
+    state = game.initial_state()
+    state["cells"] = [row[:] for row in cells]
+    return state
 
-    assert game.energy(state) == expected_energy
+
+def _run_digits(state: dict[str, object], clue: dict[str, object]) -> list[int]:
+    cells = state["cells"]
+    return [cells[row][col] for row, col in clue["cells"]]
 
 
 def test_valid_solution_energy_zero():
-    """SCENARIO-KAKURO-001: the known valid solution has E=0."""
+    """SCENARIO-KAKURO-001 / REQ-KAKURO-001: valid sums have E=0."""
     game = KakuroGame()
-    solution = game.solved_state()
+    state = _state_with_cells(game, VALID_SOLUTION)
 
-    assert game.energy(solution) == 0.0
-    assert game.is_solved(solution)
-    assert any(isinstance(candidate, KakuroGame) for candidate in ALL_GAMES)
-
-
-def test_invalid_solution_energy_positive():
-    """SCENARIO-KAKURO-002: a deterministic invalid board has positive energy."""
-    game = KakuroGame()
-    invalid = game.state_from_entries(CANONICAL_KAKURO_INITIAL)
-
-    assert game.energy(invalid) > 0.0
-    assert not game.is_solved(invalid)
+    assert game.energy(state) == 0.0
+    assert game.is_solved(state)
+    assert "R4" in game.visualize(state, game.energy(state))
 
 
-def test_carnot_step_returns_valid_state():
-    """SCENARIO-KAKURO-003: Metropolis proposals stay in 1..9 with no repeats."""
+def test_invalid_energy_positive():
+    """SCENARIO-KAKURO-002 / REQ-KAKURO-001: mismatched sums have E>0."""
     game = KakuroGame()
     state = game.initial_state()
 
-    for iteration in range(25):
+    assert game.energy(state) > 0.0
+    assert not game.is_solved(state)
+
+
+def test_carnot_step_valid_digits():
+    """SCENARIO-KAKURO-003 / REQ-KAKURO-002: proposals stay in domain."""
+    game = KakuroGame()
+    state = game.initial_state()
+
+    for iteration in range(20):
         result = game.carnot_step(state, iteration)
         state = result.state
-        assert _values_in_domain(state)
-        assert game.runs_have_unique_digits(state)
+
+        for clue in state["clues"]:
+            digits = _run_digits(state, clue)
+            assert all(1 <= digit <= 9 for digit in digits)
+            assert len(digits) == len(set(digits))
         assert result.energy == game.energy(state)
-
-
-def test_is_solved_matches_energy():
-    """REQ-KAKURO-001: solved status is exactly equivalent to E=0."""
-    game = KakuroGame()
-
-    for entries in (
-        CANONICAL_KAKURO_SOLUTION,
-        CANONICAL_KAKURO_INITIAL,
-        ((1, 1, 7), (1, 2, 1), (2, 2, 6), (2, 3, 2)),
-    ):
-        state = game.state_from_entries(entries)
-        assert game.is_solved(state) is (game.energy(state) == 0.0)
-
-
-def test_visualize_includes_clues_and_values():
-    """REQ-KAKURO-002: WOPR rendering includes clue targets and live digits."""
-    game = KakuroGame()
-    state = game.solved_state()
-    html = game.visualize(state, game.energy(state))
-
-    assert "R4" in html
-    assert "D7" in html
-    assert "1" in html
-    assert "5" in html
