@@ -4751,3 +4751,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-04: Boltzmann-GPT CD Training v2 — Forward Pass Test First, 100 CD Steps, AUROC Target 0.70 (⚠️ Research Finding) — honest_verdict=boltzmann_gpt_cd_auroc_0.96; results/experiment_1248_boltzmann_gpt_cd_training_v2.json
 - 2026-05-04: LLMs Gaming Verifiers Defense v3 — 10-Sample Rule-Induction Attack, k=1 vs k=5 Block Rate (⚠️ Research Finding) — honest_verdict=in_progress; results/experiment_1249_llms_gaming_verifiers_defense_v3.json
 - 2026-05-04: LLMs Gaming Verifiers Defense v3 — 10-Sample Rule-Induction Attack, k=1 vs k=5 Block Rate (⚠️ Research Finding) — honest_verdict=in_progress; results/experiment_1249_llms_gaming_verifiers_defense_v3.json
+- 2026-05-04: Phase-5-D v2 — 1M Params CPU-Feasible, 4 of 8 Failure Mode Gates, PPSEBM Replay (⚠️ Research Finding) — honest_verdict=in_progress; results/experiment_1250_phase5d_intermediate_scale_v2.json
