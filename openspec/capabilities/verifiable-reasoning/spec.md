@@ -17046,3 +17046,50 @@ AND-composed verifier ensemble is importable
 **And** `and_occupancy` is no greater than any single verifier occupancy.
 
 **Spec traces:** REQ-VERIFY-1252, SCENARIO-VERIFY-1252, Exp 1252
+
+## REQ-VERIFY-1263: EST Gaming Vulnerability Measurement For k=5 Verifiers
+
+**Summary:** Measure whether Carnot's production k=5 AND-composed verifier
+ensemble is vulnerable to proxy gaming under the Evaluator Stress Test (EST)
+protocol by checking whether low-energy FoVer responses have unstable energy
+scores under meaning-preserving perturbations.
+
+**Requirements:**
+
+- REQ-VERIFY-1263-1: The workflow SHALL load passing FoVer corpus v5 pairs
+  where `is_correct` is true, up to a target of 50 pairs, and SHALL report the
+  actual number selected when fewer than 50 passing pairs are available.
+- REQ-VERIFY-1263-2: For every selected pair, the workflow SHALL generate
+  exactly three meaning-preserving perturbations covering synonym replacement,
+  paraphrase or formatting-preserving wording, and whitespace-only variation.
+- REQ-VERIFY-1263-3: For every selected pair, the workflow SHALL generate
+  exactly three meaning-changing perturbations covering negation, numeric
+  mutation, and step removal.
+- REQ-VERIFY-1263-4: The workflow SHALL compute a base energy, the maximum
+  absolute meaning-preserving energy delta, and the maximum absolute
+  meaning-changing energy delta for each selected pair.
+- REQ-VERIFY-1263-5: The workflow SHALL count gaming vulnerability when a
+  meaning-preserving perturbation changes energy by more than the configured
+  stability threshold, and SHALL count meaning-changing sensitivity when a
+  meaning-changing perturbation changes energy by more than that threshold.
+- REQ-VERIFY-1263-6: Exp 1263 SHALL write
+  `results/experiment_1263_gaming_verifiers_defense_v4.json` with
+  `gaming_vulnerability_rate`, `meaning_preserving_stability_rate`,
+  `meaning_changing_sensitivity_rate`, `gaming_defense_measured`, and
+  `honest_verdict` using the format
+  `gaming_vulnerability_X.XX_sensitivity_X.XX`.
+
+**Implementation Status:** Planned (Exp 1263)
+
+### SCENARIO-VERIFY-1263: EST Reports k=5 Perturbation Stability
+
+**Given** FoVer corpus v5 contains passing responses and a deterministic energy
+scorer is available for the k=5 verifier ensemble
+**When** `python/carnot/eval/gaming_verifiers_defense_v4.py` runs
+**Then** it evaluates up to 50 passing FoVer pairs with three
+meaning-preserving and three meaning-changing perturbations per pair
+**And** it writes the Exp 1263 artifact with the required schema fields
+**And** `gaming_defense_measured` is true with an honest verdict that reports
+the measured vulnerability and sensitivity rates.
+
+**Spec traces:** REQ-VERIFY-1263, SCENARIO-VERIFY-1263, Exp 1263
