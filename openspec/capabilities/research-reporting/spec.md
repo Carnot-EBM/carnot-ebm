@@ -303,6 +303,27 @@ resolution note was added during the workflow run. If the known-issues entry is
 already resolved, the workflow shall not duplicate the note and shall report
 `honest_verdict == "already_resolved"`.
 
+### REQ-REPORT-017: Milestone .95 Retrospective Retry Artifact
+
+The Exp 1229 milestone .95 retrospective retry workflow shall read the
+authoritative Exp 1216 through Exp 1227 result JSON artifacts and write
+`results/experiment_1229_milestone_retro_95.json` with:
+
+- `milestone` set to `2026.04.95`
+- `criteria_total` set to `13`
+- `criteria_results`, mapping the 13 planned criteria to boolean pass/fail
+  values with each source experiment recorded
+- `criteria_met`, derived from the boolean criteria result count
+- `findings_summary`, a brief account of what .95 proved and what failed
+- `key_carry_forwards`, listing the highest-priority .96 follow-ups from the
+  source artifacts and known-issues priorities
+- `retro_complete == true`
+- `honest_verdict` formatted as `milestone_N_of_13_criteria_met`
+
+Missing artifacts or false source fields shall count as unmet criteria.
+The retrospective self-criterion shall count as met only in the final artifact
+that sets `retro_complete == true`.
+
 ## Scenarios
 
 ### SCENARIO-REPORT-001: Nested Live Provenance Is Promoted
@@ -444,6 +465,18 @@ the original entry
 **And** `publication_hold_status == "active"`
 **And** `honest_verdict == "milestone_partial"`
 
+### SCENARIO-REPORT-014: Exp 1229 Retry Counts Source Criteria
+
+**Given** Exp 1216 through Exp 1227 source artifacts exist
+**And** Exp 1217 lacks `autofill_script_exists == true`
+**And** Exp 1221 has only a partial wall-budget-exhausted verdict
+**And** Exp 1225 lacks `gaming_defense_measured == true`
+**When** the Exp 1229 retry retrospective workflow runs
+**Then** those three source criteria count as false
+**And** the retrospective criterion counts as true in the final artifact
+**And** the artifact reports `criteria_met == 10`
+**And** `honest_verdict == "milestone_10_of_13_criteria_met"`
+
 
 ### REQ-PUBLISH-003: HuggingFace README Accuracy Audit
 
@@ -534,5 +567,6 @@ embed live-GPU benchmark results from Exp 328 when available.
 | REQ-REPORT-014 | `python/carnot/reporting/retro_template_step0_fix.py`, `results/experiment_1204_retro_template_step0_fix.json` | `tests/python/test_retro_template_step0_fix.py` | Implemented |
 | REQ-REPORT-015 | `python/carnot/reporting/llama_cpp_gpu_offload_fix.py`, `results/experiment_1207_llama_cpp_gpu_offload_fix_v3.json` | `tests/python/test_llama_cpp_gpu_offload_fix.py` | Implemented |
 | REQ-REPORT-016 | `scripts/experiment_1228_milestone_retro_95.py`, `results/experiment_1228_milestone_retro_95.json` | `tests/python/test_experiment_1228_milestone_retro_95.py` | Implemented |
+| REQ-REPORT-017 | `python/carnot/reporting/milestone_retro_95_retry.py`, `results/experiment_1229_milestone_retro_95.json` | `tests/python/test_milestone_retro_95_retry.py` | Implemented |
 | REQ-PUBLISH-003 | `scripts/experiment_317_hf_publish.py` | `tests/python/test_experiment_317_hf_publish.py` | Implemented |
 | REQ-PUBLISH-004 | `scripts/experiment_330_hf_live_publish.py` | `tests/python/test_experiment_330_hf_live_publish.py` | Implemented |
