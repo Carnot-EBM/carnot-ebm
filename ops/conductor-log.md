@@ -717,3 +717,6 @@ web search: GitHub trending energy based mod |
 | 2026-05-04 21:50 UTC | SOTA GGUF Cache + Provenance Preflight - Prevent E | DOOMED_RERUN_BLOCK | 3 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-04 21:52 UTC | SOTA GGUF Cache + Provenance Preflight - Prevent E | DOOMED_RERUN_BLOCK | 3 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-04 21:54 UTC | SOTA GGUF Cache + Provenance Preflight - Prevent E | DOOMED_RERUN_BLOCK | 3 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-04 22:05 UTC | Certificate Grammar Backend Bakeoff - llama.cpp vs | OK | 81 passed, 1 warning in 6.82s |
+| 2026-05-04 22:07 UTC | ARS/UQLM Answer-Stability Audit on SOTA GGUF - Gat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1282-sota-gguf-cache-provenance-preflight |
+| 2026-05-04 22:07 UTC | Triggered Certificate Extraction v2 - SOTA GGUF + | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1282-sota-gguf-cache-provenance-preflight |
