@@ -661,3 +661,4 @@ If you finish the real work |
 | 2026-05-04 11:35 UTC | WOPR Masyu Loop Puzzle Cartridge v2 — Black/White  | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1262_wopr_ma |
 | 2026-05-04 11:39 UTC | WOPR Masyu Loop Puzzle Cartridge v2 — Black/White  | FAIL | No file changes produced |
 | 2026-05-04 11:44 UTC | LLMs Gaming Verifiers Defense v4 — EST Invariance  | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1263_gaming_ |
+| 2026-05-04 11:49 UTC | LLMs Gaming Verifiers Defense v4 — EST Invariance  | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1263_gaming_ |
