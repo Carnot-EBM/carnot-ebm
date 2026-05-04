@@ -4726,3 +4726,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-04: GRPO v6 — FSPO Per-Token Factuality Weighting + VPS (Extended 1200s Budget, DualGPU MANDATORY) (⚠️ Research Finding) — honest_verdict=in_progress; results/experiment_1235_grpo_v6_fspo_vps_extended.json
 - 2026-05-04: GRPO v6 — FSPO Per-Token Factuality Weighting + VPS (Extended 1200s Budget, DualGPU MANDATORY) (⚠️ Research Finding) — honest_verdict=in_progress; results/experiment_1235_grpo_v6_fspo_vps_extended.json
 - 2026-05-04: GRPO v6 — FSPO Per-Token Factuality Weighting + VPS (Extended 1200s Budget, DualGPU MANDATORY) (⚠️ Research Finding) — honest_verdict=in_progress; results/experiment_1235_grpo_v6_fspo_vps_extended.json
+- 2026-05-04: Boltzmann-GPT Contrastive CD Training — FoVer Corpus, Target AUROC > 0.80 (⚠️ Research Finding) — honest_verdict=in_progress; results/experiment_1237_boltzmann_gpt_contrastive_training.json
