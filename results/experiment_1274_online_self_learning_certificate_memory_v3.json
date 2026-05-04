@@ -1,0 +1,59 @@
+{
+  "after_score": 1.0,
+  "artifact_metadata": {
+    "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "run_date": "20260504"
+  },
+  "before_score": 0.642857,
+  "experiment": "1274_online_self_learning_certificate_memory_v3",
+  "finished_at": "2026-05-04T15:13:02Z",
+  "honest_verdict": "certificate_memory_replay_improved",
+  "memory_entries": 5,
+  "n_examples": 350,
+  "n_memory_build_examples": 210,
+  "n_replay_eval_examples": 140,
+  "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+  "run_date": "20260504",
+  "schema": "certificate_memory_replay_v3",
+  "self_learning_delta_overall": 0.357143,
+  "skill_graph_candidate_count": 5,
+  "skill_graph_candidates": [
+    {
+      "contract": "if constraint_pattern=arithmetic:addition and verifier_result=failed then route=repair",
+      "demotion_condition": "demote if replay_success_rate < 0.50 over 20 future replays",
+      "evidence_count": 73,
+      "replay_success_rate": 1.0
+    },
+    {
+      "contract": "if constraint_pattern=arithmetic:addition and verifier_result=passed then route=accept",
+      "demotion_condition": "demote if replay_success_rate < 0.50 over 20 future replays",
+      "evidence_count": 2,
+      "replay_success_rate": 1.0
+    },
+    {
+      "contract": "if constraint_pattern=arithmetic:balance and verifier_result=failed then route=repair",
+      "demotion_condition": "demote if replay_success_rate < 0.50 over 20 future replays",
+      "evidence_count": 7,
+      "replay_success_rate": 1.0
+    },
+    {
+      "contract": "if constraint_pattern=arithmetic:general and verifier_result=failed then route=repair",
+      "demotion_condition": "demote if replay_success_rate < 0.50 over 20 future replays",
+      "evidence_count": 74,
+      "replay_success_rate": 1.0
+    },
+    {
+      "contract": "if constraint_pattern=arithmetic:ratio and verifier_result=failed then route=repair",
+      "demotion_condition": "demote if replay_success_rate < 0.50 over 20 future replays",
+      "evidence_count": 54,
+      "replay_success_rate": 1.0
+    }
+  ],
+  "source": "fover_fallback",
+  "source_artifacts": {
+    "exp1271": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1271_triggered_certificate_extraction_sota_gguf.json",
+    "fover_corpus": "/home/ianblenke/github.com/ianblenke/carnot/results/fover_corpus_v5.json"
+  },
+  "started_at": "2026-05-04T15:13:02Z",
+  "status": "complete"
+}

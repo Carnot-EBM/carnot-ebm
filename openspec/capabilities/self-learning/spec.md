@@ -2628,3 +2628,38 @@ eligible for headline claims.
 | Requirement | Python | Tests |
 |-------------|--------|-------|
 | REQ-LEARN-1273 | Implemented | Python (test_experiment_1273_grpo_v8_prime_vprm_smoke.py) |
+
+## REQ-LEARN-1274: Certificate Memory Replay Evaluation
+
+Exp 1274 SHALL turn verified certificate outputs, or verified FoVer labels when
+certificate outputs are unavailable, into a replayable case-memory table. The
+runner SHALL measure decision quality before and after memory lookup on a
+held-out replay slice and SHALL write an honest artifact even when the measured
+self-learning delta is zero or negative.
+
+### REQ-LEARN-1274 Sub-requirements
+
+- REQ-LEARN-1274-1: The runner SHALL write
+  `results/experiment_1274_online_self_learning_certificate_memory_v3.json`
+  first with `status="in_progress"` and `honest_verdict="in_progress"`.
+- REQ-LEARN-1274-2: The runner SHALL load certificate examples from Exp 1271
+  when present and usable; otherwise it SHALL load verified FoVer pairs and set
+  `source="fover_fallback"`.
+- REQ-LEARN-1274-3: The runner SHALL build a memory table keyed by
+  `constraint_pattern`, `verifier_result`, and `repair_hint`, split examples
+  into memory-build and replay-eval slices, and report `memory_entries`.
+- REQ-LEARN-1274-4: The final artifact SHALL include `status="complete"`,
+  `before_score`, `after_score`, `self_learning_delta_overall`,
+  `skill_graph_candidate_count`, and `honest_verdict`.
+- REQ-LEARN-1274-5: Optional `skill_graph_candidates` SHALL include
+  `contract`, `evidence_count`, `replay_success_rate`, and
+  `demotion_condition` for each emitted candidate.
+
+### SCENARIO-LEARN-1275: FoVer Fallback Produces Honest Replay Delta
+
+**Given** Exp 1271 has no usable certificate outputs
+**And** `results/fover_corpus_v5.json` contains labeled FoVer pairs
+**When** Exp 1274 runs
+**Then** the final artifact has `source="fover_fallback"`,
+`status="complete"`, a numeric `self_learning_delta_overall`, and a non-negative
+`memory_entries` count.
