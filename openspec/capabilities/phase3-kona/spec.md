@@ -708,6 +708,43 @@ oracle-accuracy delta with replay versus without replay.
     "production_failure_mode_found", "prototype_failed_initialization",
     "blocked"}`
 
+### REQ-KONA-023: Phase 5-D Intermediate-Scale v2 Four-Gate Measurement
+
+The Phase 5-D v2 run is a CPU-feasible intermediate derisking pass after the
+Phase 5-B 50K-parameter loop passed all five toy gates. It MUST build a
+d_model=32, four-layer in-situ substrate at approximately one-million
+parameters, verify the Phase 5-B prerequisite artifact, and measure at least
+four of the eight Phase 5-D failure-mode gates in one auditable artifact.
+Unmeasured gates MUST be represented explicitly as `null`/`None` rather than
+omitted or silently treated as failures.
+
+The measured v2 gates are:
+
+- Gate 1: accepted-sample energy decreases by at least 20% over the trajectory.
+- Gate 2: output diversity remains non-collapsed; the mean per-dimension output
+  standard deviation is greater than 0.01.
+- Gate 3: MCMC mixing avoids paralysis; absolute lag-1 autocorrelation is less
+  than 0.90.
+- Gate 4: catastrophic forgetting is absent; late held-out accuracy drops by
+  less than 20 percentage points relative to early held-out accuracy.
+
+**Acceptance criteria:**
+
+- `python/carnot/phase5/intermediate_scale_v2.py` exposes the Phase 5-D v2
+  substrate, gate helpers, and artifact builder.
+- `results/experiment_1250_phase5d_intermediate_scale_v2.json` exists with
+  fields:
+  - `phase5d_gates: dict` with exactly eight gate keys and `null` for
+    unmeasured gates.
+  - `phase5d_gates_passed: int` (>= 4 for success).
+  - `phase5d_gates_measured: int` (>= 4).
+  - `model_scale: str` containing `1M_params_d32_4layers`.
+  - `ppsebm_replay_buffer: str` describing the anti-forgetting replay approach.
+  - `honest_verdict: str` formatted as
+    `phase5d_N_gates_passed_M_measured`.
+- The artifact MUST also preserve the Phase 5-B prerequisite status and the
+  measured numerical values used to derive the four gate booleans.
+
 ### REQ-KONA-019: Boltzmann-GPT Contrastive Training on FoVer
 
 The Exp 1237 Boltzmann-GPT training run MUST train a visible-hidden
@@ -1036,6 +1073,20 @@ strictly from the measured gate booleans.
 
 **Spec traces:** REQ-KONA-020
 
+### SCENARIO-KONA-023: Exp 1250 Writes Phase 5-D v2 Four-Gate Artifact
+
+**Given** the Phase 5-B artifact reports `phase5b_stability_confirmed == True`
+and a CPU-feasible d_model=32, four-layer substrate is available
+**When** Exp 1250 measures the Phase 5-D v2 energy-decrease, mode-collapse,
+MCMC-mixing, and catastrophic-forgetting gates
+**Then** it writes
+`results/experiment_1250_phase5d_intermediate_scale_v2.json` with all
+REQ-KONA-023 fields, exactly four measured gate booleans, exactly four
+unmeasured `null` gates, and an honest verdict string derived strictly from
+the measured pass and measured gate counts.
+
+**Spec traces:** REQ-KONA-023
+
 ### SCENARIO-KONA-019: Exp 1237 Writes Boltzmann-GPT CD Artifact
 
 **Given** FoVer correct and incorrect traces are available from the checked-in
@@ -1125,6 +1176,8 @@ The following are deliberately **not** required by this capability:
   `scripts/experiment_1172_nrgpt_per_token_energy_inference.py`.
 - **Boltzmann-GPT contrastive training:** specified by REQ-KONA-019;
   implementation lives in `python/carnot/phase3/boltzmann_gpt.py`.
+- **Phase 5-D v2 intermediate-scale derisking:** specified by REQ-KONA-023;
+  implementation lives in `python/carnot/phase5/intermediate_scale_v2.py`.
 - **NRGPT frozen-prefix monotonicity diagnostic:** specified by REQ-KONA-021;
   implementation lives in `python/carnot/phase3/nrgpt_energy.py` and
   `scripts/experiment_1239_nrgpt_frozen_prefix_evaluation.py`.
