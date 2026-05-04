@@ -32,7 +32,8 @@
 Spec: REQ-KONA-001, REQ-KONA-002, REQ-KONA-003,
       SCENARIO-KONA-001, SCENARIO-KONA-002, SCENARIO-KONA-003,
       SCENARIO-KONA-004, SCENARIO-KONA-005,
-      REQ-KONA-026, SCENARIO-KONA-026
+      REQ-KONA-026, SCENARIO-KONA-026,
+      REQ-KONA-027, SCENARIO-KONA-027
 """
 
 from __future__ import annotations
@@ -134,6 +135,22 @@ class ContinuousEBM:
         }
 
 
+@dataclass
+class FeasibilityStepResult:
+    """Result of an FSNet-style latent feasibility repair.
+
+    Spec: REQ-KONA-027, SCENARIO-KONA-027
+    """
+
+    state: np.ndarray
+    initial_violation_energy: float
+    violation_energy: float
+    violation_count: int
+    convergence_steps: int
+    distortion_l2: float
+    converged: bool
+
+
 def _tss_text_vector(text: str, dim: int) -> np.ndarray:
     """Return a deterministic bag-of-words vector for Q11 TSS diagnostics."""
     vector = np.zeros(dim, dtype=np.float64)
@@ -142,6 +159,117 @@ def _tss_text_vector(text: str, dim: int) -> np.ndarray:
         bucket = sum((offset + 1) * ord(ch) for offset, ch in enumerate(token)) % dim
         vector[bucket] += 1.0
     return vector / (np.linalg.norm(vector) + 1e-12)
+
+
+def feasibility_step(
+    state: np.ndarray,
+    constraint_matrix: np.ndarray,
+    constraint_bias: np.ndarray | None = None,
+    *,
+    n_steps: int = 32,
+    lr: float = 0.25,
+    anchor_weight: float = 0.01,
+    tolerance: float = 1e-8,
+) -> FeasibilityStepResult:
+    """Repair a continuous latent state by minimizing violation energy only.
+
+    **Researcher summary:**
+        This is a minimal FSNet-style feasibility-seeking step for Phase 3
+        latents. It treats verifier constraints as linear inequalities
+        ``A @ z + b <= 0`` and descends the squared hinge violation energy
+        separately from the ContinuousEBM task energy. A small anchor term keeps
+        the repaired state near the input latent so the operator does not simply
+        collapse all states to one feasible point.
+
+    Args:
+        state: Latent vector ``z`` with shape ``(d,)``.
+        constraint_matrix: Linear verifier matrix ``A`` with shape ``(m, d)``.
+        constraint_bias: Optional verifier bias ``b`` with shape ``(m,)``.
+            When omitted, zero bias is used.
+        n_steps: Maximum number of feasibility-gradient steps.
+        lr: Feasibility-gradient learning rate.
+        anchor_weight: Strength of the quadratic anchor to the input state.
+        tolerance: Squared-hinge tolerance used for convergence and violation
+            counting.
+
+    Returns:
+        FeasibilityStepResult containing the repaired bounded state and the
+        measured violation/distortion diagnostics.
+
+    Raises:
+        ValueError: If shapes or optimization hyperparameters are invalid.
+
+    Spec: REQ-KONA-027, SCENARIO-KONA-027
+    """
+    z0 = np.asarray(state, dtype=np.float64)
+    A = np.asarray(constraint_matrix, dtype=np.float64)
+
+    if z0.ndim != 1:
+        raise ValueError("state must be one-dimensional")
+    if A.ndim != 2 or A.shape[1] != z0.shape[0]:
+        raise ValueError("constraint_matrix must have shape (n_constraints, state_dim)")
+
+    if constraint_bias is None:
+        b = np.zeros(A.shape[0], dtype=np.float64)
+    else:
+        b = np.asarray(constraint_bias, dtype=np.float64)
+    if b.shape != (A.shape[0],):
+        raise ValueError("constraint_bias must have shape (n_constraints,)")
+
+    if n_steps < 0:
+        raise ValueError("n_steps must be non-negative")
+    if lr < 0.0:
+        raise ValueError("lr must be non-negative")
+    if anchor_weight < 0.0:
+        raise ValueError("anchor_weight must be non-negative")
+    if tolerance < 0.0:
+        raise ValueError("tolerance must be non-negative")
+
+    def measure(z: np.ndarray) -> tuple[float, int]:
+        scores = A @ z + b
+        hinge = np.maximum(scores, 0.0)
+        energy = float(hinge @ hinge)
+        count = int(np.sum(scores > tolerance))
+        return energy, count
+
+    initial_energy, initial_count = measure(z0)
+    if initial_energy <= tolerance:
+        return FeasibilityStepResult(
+            state=z0.copy(),
+            initial_violation_energy=initial_energy,
+            violation_energy=initial_energy,
+            violation_count=initial_count,
+            convergence_steps=0,
+            distortion_l2=0.0,
+            converged=True,
+        )
+
+    z = z0.copy()
+    steps_taken = 0
+    converged = False
+    final_energy = initial_energy
+    final_count = initial_count
+
+    for step in range(1, n_steps + 1):
+        scores = A @ z + b
+        hinge = np.maximum(scores, 0.0)
+        grad = (2.0 * A.T @ hinge) + (2.0 * anchor_weight * (z - z0))
+        z = np.tanh(z - lr * grad)
+        steps_taken = step
+        final_energy, final_count = measure(z)
+        if final_energy <= tolerance:
+            converged = True
+            break
+
+    return FeasibilityStepResult(
+        state=z,
+        initial_violation_energy=initial_energy,
+        violation_energy=final_energy,
+        violation_count=final_count,
+        convergence_steps=steps_taken,
+        distortion_l2=float(np.linalg.norm(z - z0)),
+        converged=converged,
+    )
 
 
 def fit_continuous_ebm(ising_model: Any) -> ContinuousEBM:
