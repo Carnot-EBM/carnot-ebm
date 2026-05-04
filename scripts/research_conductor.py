@@ -273,7 +273,20 @@ def _build_agent_command(
                 str(PROJECT_ROOT),
                 "--ephemeral",  # Prevent session file accumulation (stall fix #3)
                 "-c",
-                "agents.job_max_runtime_seconds=1200",  # 20 min cap (stall fix #2)
+                # 2026-05-04: bumped 1200 → 7200 (120 min cap). The 1200s cap
+                # was killing legitimate long-running tasks (Phase-5-D 70 min,
+                # GRPO v6 90 min, Boltzmann CD training, etc.) before they
+                # could write the terminal artifact, causing universal
+                # artifact_not_updated_past_bootstrap failures across .96
+                # and .97. The comment above already acknowledged the cap
+                # was "redundant" given the conductor's own progress-aware
+                # wall-clock timeout (5-min idle grace + 4x HARD_CAP),
+                # which provides correct stall protection without
+                # premature kills. Setting to 7200s gives codex
+                # enough headroom for any reasonable experiment while
+                # still letting the orchestrator-layer timeout catch
+                # genuinely stuck processes via idle detection.
+                "agents.job_max_runtime_seconds=7200",
                 "-",
             ],
             prompt,
