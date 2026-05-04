@@ -4,6 +4,142 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-05-04 Supplemental Planning Scan (Milestone 2026.04.100)
+
+These sources were added after the .99 artifact review and before finalizing
+the `.100` roadmap/YAML. They are recent 2025-2026 items from arXiv,
+OpenReview, HuggingFace, and GitHub-adjacent scans that sharpen the next
+milestone without requiring an architecture pivot.
+
+### EBRM: Structured Latent Trajectory Energy Planning
+- **Paper:** arXiv 2603.28248, "Reasoning as Energy Minimization over
+  Structured Latent Trajectories."
+- **Sources:** https://arxiv.org/abs/2603.28248 and
+  https://huggingface.co/papers/2603.28248
+- **What:** Models multi-step reasoning as gradient or Langevin optimization
+  over latent trajectories with per-step compatibility, transition, and
+  smoothness energy terms. The paper is especially valuable because it reports
+  a negative CNF result: energy can decrease while decoded logical accuracy
+  collapses due to latent drift.
+- **Relevance to Carnot:** This directly validates the `.100` need for an
+  EBT/ARM/EBM-CoT bridge audit and for latent-drift diagnostics around
+  continuous repair. Carnot should not treat lower latent energy as proof of
+  better decoded reasoning without checking decoder-distribution anchoring.
+- **Concrete experiment:** In `exp1293`, include `latent_drift_detected`,
+  `energy_accuracy_correlation`, and `decoder_anchor_recommendation` when
+  comparing Boltzmann-GPT/NRGPT/Carnot traces to EBT/ARM/EBM-CoT semantics.
+- **When to incorporate:** `.100` Phase 3 energy-bridge audit.
+
+### LaSy: Latent-to-Symbolic Proof-Carrying Outputs
+- **Paper:** OpenReview ICLR 2026 Workshop LLM Reasoning, "Latent-Implicit
+  Thinking with Proof-Carrying Neuro-Symbolic Outputs for Biomedical
+  Discovery."
+- **Source:** https://openreview.net/forum?id=nNR27tIALX
+- **What:** Compiles latent reasoning into structured symbolic artifacts such
+  as causal graphs, typed constraints, and sparse warrants, then verifies them
+  against domain axioms.
+- **Relevance to Carnot:** This reinforces the certificate-tail direction:
+  Carnot certificates should be proof-carrying artifacts, not merely JSON
+  summaries. It also gives a compact-output pattern for reducing CoT token
+  exposure while keeping verification auditable.
+- **Concrete experiment:** In `exp1285`, report whether certificates contain
+  typed constraints and minimal warrants; in `exp1286`, route those warrants
+  through the semantic/CSP verifier.
+- **When to incorporate:** `.100` Phase 1 certificate extraction and routing.
+
+### RECAST: Multi-Constraint Instruction-Following Data
+- **Paper:** OpenReview ICLR 2026 Poster, "RECAST: Expanding the Boundaries of
+  LLMs' Complex Instruction Following with Multi-Constraint Data."
+- **Source:** https://openreview.net/forum?id=90tCp2KszA
+- **What:** Synthesizes 30k complex instruction-following examples spanning 19
+  constraint types and uses verifiers as reward functions for complex
+  instruction adherence.
+- **Relevance to Carnot:** Carnot's current FoVer/certificate tasks are narrow.
+  RECAST is a natural next corpus direction for stress-testing claim routing
+  when prompts carry many simultaneous constraints.
+- **Concrete experiment:** Add a future `.101` or `.102` RECAST-style
+  multi-constraint micro-corpus after `exp1285` produces parseable local SOTA
+  certificate data.
+- **When to incorporate:** Future complex-instruction benchmark milestone, not
+  as a new `.100` task.
+
+### PCN: Proof-Carrying Numbers
+- **Paper:** OpenReview ICLR 2026 submission, "Proof-Carrying Numbers (PCN):
+  A Protocol for Trustworthy Numeric Answers from LLMs via Claim
+  Verification."
+- **Source:** https://openreview.net/forum?id=455AaEhQbu
+- **What:** Binds numeric spans to structured claims and verifies them at the
+  renderer/presentation layer, failing closed when a number is unverified.
+- **Relevance to Carnot:** Numeric certificate fields are the easiest place for
+  a local SOTA model to appear valid while silently drifting. Carnot should
+  distinguish verified numbers from raw numbers in certificate tails and paper
+  outputs.
+- **Concrete experiment:** In `exp1286`, emit `proof_carrying_number_coverage`
+  and fail closed for numeric claims without an attached equation/evidence
+  binding.
+- **When to incorporate:** `.100` Phase 1 semantic routing.
+
+### VoG: Verify-on-Graph Stepwise Knowledge-Graph Verification
+- **Paper:** OpenReview ICLR 2026 Poster, "VoG: Enhancing LLM Reasoning through
+  Stepwise Verification on Knowledge Graphs."
+- **Source:** https://openreview.net/forum?id=0RdAmwfVku
+- **What:** Uses iterative retrieval, stepwise verification, and adaptive
+  revision over knowledge graphs, with uncertainty and semantic-consistency
+  reward signals.
+- **Relevance to Carnot:** This is a grounded analogue to GRAD/evidence-graph
+  routing. Carnot can keep the immediate `.100` router lightweight while
+  reserving a future KG-backed route for factual and multi-turn certificates.
+- **Concrete experiment:** In `exp1286`, keep `grad_evidence_graph_coverage`
+  lightweight; file a future VoG-backed KG step-verification task if factual
+  certificate coverage becomes the next bottleneck.
+- **When to incorporate:** Future factual/agentic verification milestone.
+
+### MemRouter: Verified Dynamic Memory Routing for LLM Agents
+- **Paper:** OpenReview MSLD 2026 Poster, "Learning Where to Remember:
+  Dynamic Memory Routing for Reliable LLM Agents."
+- **Source:** https://openreview.net/forum?id=rbfQVPO4QN
+- **What:** Separates semantic, episodic, and procedural memory stores and
+  learns where to write/query memories using process-level QA verification as
+  feedback.
+- **Relevance to Carnot:** This is directly aligned with continuous
+  self-learning Tier 2. Certificate memory should not be one flat table; it
+  should route learned constraints, episodes, and repair procedures into
+  different stores to prevent memory contamination.
+- **Concrete experiment:** In `exp1290`, classify skill-graph candidates by
+  memory type and include `memory_routing_decision` plus demotion conditions.
+- **When to incorporate:** `.100` Phase 2 skill-graph promotion/demotion.
+
+### lmKAN: Lookup Multivariate KANs
+- **Paper:** OpenReview ICLR 2026 Poster, "Lookup multivariate
+  Kolmogorov-Arnold Networks."
+- **Source:** https://openreview.net/forum?id=XRQVIeBnB0
+- **What:** Replaces high-cost dense mappings with low-dimensional
+  multivariate spline lookup functions and reports large FLOP/throughput gains,
+  including dedicated CUDA kernels.
+- **Relevance to Carnot:** Carnot already has QuantKAN/LUT-KAN edge work. lmKAN
+  is a higher-capacity lookup direction for verifier components that need more
+  expressiveness than univariate LUT-KAN but must remain hardware-friendly.
+- **Concrete experiment:** Future KAN verifier compression: compare SOS-KAN,
+  LUT-KAN, and lmKAN-style multivariate lookup layers on FoVer verifier AUROC
+  and NPU/FPGA resource estimates.
+- **When to incorporate:** Later hardware/edge-verifier milestone after `.100`.
+
+### NVIDIA Ising Calibration 1
+- **Model card:** `nvidia/Ising-Calibration-1-35B-A3B`, released 2026-04-14.
+- **Source:** https://huggingface.co/nvidia/Ising-Calibration-1-35B-A3B
+- **What:** A Qwen3.5-35B-A3B-derived vision-language model for quantum
+  calibration plots, reporting structured technical analysis benchmarks over
+  243 QCalEval entries.
+- **Relevance to Carnot:** Not a replacement for the mandated local GGUFs
+  because the license/hardware profile is different, but it is a useful signal
+  that "Ising/calibration" domain models are becoming public artifacts. Carnot
+  should keep model-card provenance and domain-specific validation standards
+  explicit when publishing verifier models.
+- **Concrete experiment:** No `.100` task. Use as a model-card/provenance
+  comparator when Carnot publishes any hardware/calibration or Ising-related
+  verifier artifact.
+- **When to incorporate:** Future publishing/provenance milestone.
+
 ## 2026-05-04 Supplemental Late Scan (Milestone 2026.04.100)
 
 These sources were added before writing the `.100` conductor YAML. They refine
