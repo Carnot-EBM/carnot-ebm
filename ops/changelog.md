@@ -4800,3 +4800,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-04: SnareNet Repair Layer - Gated on FSNet Feasibility Delta > 0 (⚠️ Research Finding) — honest_verdict=adaptive_repair_improves_fsnet; results/experiment_1276_snarenet_repair_layer_gated.json
 - 2026-05-04: Gaming Verifiers Defense EST Final - Pure Data Analysis (⚠️ Research Finding) — honest_verdict=est_vulnerability_0.00_precision_1.00_recall_1.00_k5_blocks_true; results/experiment_1278_gaming_verifiers_defense_est_final.json
 - 2026-05-04: WOPR Kakuro v4 Minimal - Ship or Honest Block (⚠️ Research Finding) — honest_verdict=minimal Kakuro WOPR cartridge shipped; valid solution E=0.0 and deterministic invalid state E=17.0; results/experiment_1279_wopr_kakuro_v4_minimal.json
+- 2026-05-04: WOPR Masyu v3 Minimal - Ship or Honest Block (⚠️ Research Finding) — honest_verdict=shipped_minimal_masyu_cartridge; results/experiment_1280_wopr_masyu_v3_minimal.json
