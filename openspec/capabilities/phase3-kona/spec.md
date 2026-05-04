@@ -655,6 +655,59 @@ Defense passes if `joint_gaming_rate < 0.05`.
     "partial_attack_success_revision_needed",
     "full_gaming_found_architecture_invalid", "blocked"}`
 
+### REQ-KONA-020: Phase 5-D Intermediate-Scale In-Situ Derisking
+
+The Phase 5-D intermediate-scale run bridges the validated toy-scale
+Phase 5-A/B/C substrates and later 1B+ substrate training. It MUST expose a
+100M+ parameter-count encoder/refiner architecture at latent dimension 128,
+run a four-arm in-situ training comparison, and measure all eight Q9/Q12
+failure-mode gates in one auditable artifact. The production-scale-only
+gates are measurement gates: the artifact MUST report the measurements and
+honestly classify whether a production failure mode was found.
+
+The four arms are:
+
+- Arm A: standard PCD control with no anti-gaming regularization.
+- Arm B: Q12 entropy regularization for substrate-gaming resistance.
+- Arm C: DR-3 upstream variance compensation before the sign bottleneck.
+- Arm D: combined Q12 entropy regularization and DR-3 compensation.
+
+The run MUST include PPSEBM-style early replay by keeping a 100-sample replay
+buffer and mixing 10% replay into the training stream. It MUST report the
+oracle-accuracy delta with replay versus without replay.
+
+**Acceptance criteria:**
+
+- `python/carnot/phase5/intermediate_scale.py` exposes the Phase 5-D
+  substrate/gate helpers and artifact builder.
+- `results/experiment_1238_phase5d_intermediate_scale.json` exists with fields:
+  - `encoder_param_count: int` (>= 100,000,000)
+  - `latent_dim: int` (128)
+  - `n_queries_run: int` (1000)
+  - `gate1_energy_decrease_30pct: bool`
+  - `gate2_no_representation_drift: bool`
+  - `gate3_no_autocatalytic_spiral: bool`
+  - `gate4_no_null_space_excavation: bool`
+  - `gate5_no_catastrophic_forgetting: bool`
+  - `gate6_mode_collapse_entropy: float`
+  - `gate6_mode_collapse_absent: bool`
+  - `gate7_mcmc_mixing_acf1: float`
+  - `gate7_mcmc_mixing_ok: bool`
+  - `gate8_substrate_shift_saturation_frac: float`
+  - `gate8_substrate_shift_absent: bool`
+  - `mcmc_chain_distance_trajectory: list[float]`
+  - `latent_centroid_cosine_drift: list[float]`
+  - `trace_cov_trajectory: list[float]`
+  - `per_pair_conditional_trajectory: dict[str, list[float]]`
+  - `energy_on_accepted_trajectory: list[float]`
+  - `replay_buffer_effectiveness: float`
+  - `gates_measured: int` (8)
+  - `phase5d_all_8_gates_measured: bool` (true)
+  - `honest_verdict` in `{"all_8_gates_pass",
+    "toy_gates_pass_production_modes_detected",
+    "production_failure_mode_found", "prototype_failed_initialization",
+    "blocked"}`
+
 ### REQ-KONA-019: Boltzmann-GPT Contrastive Training on FoVer
 
 The Exp 1237 Boltzmann-GPT training run MUST train a visible-hidden
@@ -906,6 +959,22 @@ oracle-accuracy drop ≤ 5pp), and an honest verdict drawn from
 boolean count.
 
 **Spec traces:** REQ-KONA-017
+
+### SCENARIO-KONA-020: Exp 1238 Measures All Eight Phase 5-D Gates
+
+**Given** the Phase 5-A/B/C artifacts exist, Q12 anti-gaming instrumentation
+is required, and an intermediate-scale Phase 5-D substrate exposes latent
+dimension 128 with an encoder parameter count of at least 100,000,000
+**When** Exp 1238 runs its four-arm in-situ trajectory with PPSEBM-style
+replay and evaluates the five toy-detectable gates plus the three
+production-scale-only gates
+**Then** it writes
+`results/experiment_1238_phase5d_intermediate_scale.json` with all
+REQ-KONA-020 fields, `gates_measured == 8`,
+`phase5d_all_8_gates_measured == True`, and an honest verdict drawn
+strictly from the measured gate booleans.
+
+**Spec traces:** REQ-KONA-020
 
 ### SCENARIO-KONA-019: Exp 1237 Writes Boltzmann-GPT CD Artifact
 
