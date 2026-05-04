@@ -34,6 +34,7 @@ The 2026-05-04 vNEXT literature/source scan added these entries to `research-ref
 - Supplemental scan entries added during final planning: HoVer safe-prefix holistic verification; FLy/TriSpec loose/proxy speculative verification; and the April 2026 fully parallel probabilistic Ising machine with inertia. These are not new .100 critical-path tasks, but they shape the follow-up path: safe-prefix repair after certificate parsing succeeds, proxy verifier triage after Cactus is measurable, and sampler-parity hardware work in a later hardware-focused milestone.
 - Final verification scan entries added before YAML emission: OnlineSpec / When Drafts Evolve, HalluHard, CaR Construct-and-Refine, and the Scientific Reports parallel-pbit performance/cost study. These refine existing `.100` tasks rather than adding more tasks: OnlineSpec adds an acceptance-delta metric to DVI replay, CaR adds a construct/refine iteration diagnostic to continuous repair, HalluHard becomes a `.101` multi-turn benchmark candidate, and the p-bit study is filed for the next hardware-focused sampler-parity pass.
 - Fresh planning scan addendum: Structure Snowballing, InterWhen, ConstraintBench, and EBM-CoT. These refine the `.100` task definitions: grammar backends must report a snowballing-risk diagnostic, verifier learning must include an interleaved-during-reasoning comparison, semantic routing gets a tiny ConstraintBench-style micro-eval, and the energy bridge audit includes CoT-sequence energy rather than final-answer energy only.
+- Active planning verification scan: ARC-Decode risk-bounded acceptance, SPEED-Bench replay/evaluation tagging, HiSpec / Speculative Speculative Decoding, and a Semantic Scholar citation check on EBT. These refine `.100` without changing the task count: Cactus v2 must report risk-bound proxy and evaluation-mode fields, HiSpec/SSD remain `.101` proxy-verifier acceleration candidates, and the EBT citation check reinforces the need for the energy bridge audit.
 
 ## Three Biggest Gaps
 
@@ -110,7 +111,7 @@ Goal: produce the missing headline local SOTA certificate result and only then r
 - `exp1284-ars-answer-stability-sota-audit`: use mandated SOTA GGUFs to measure answer stability under reasoning/certificate boundary perturbations.
 - `exp1285-triggered-certificate-extraction-v2`: rerun triggered certificate extraction with complete prior-failure metadata, bounded grammar, and SOTA cache gate.
 - `exp1286-beaver-nsvif-semantic-routing`: turn successful certificates into routed claims, BEAVER-lite prefix/risk bounds, NSVIF-style CSP checks, a tiny ConstraintBench micro-eval, Minimal Correction Subsets, and residual-drift/MUS diagnostics.
-- `exp1287-cactus-constrained-acceptance-v2`: rerun Cactus only when certificate parse rate reaches the structured gate.
+- `exp1287-cactus-constrained-acceptance-v2`: rerun Cactus only when certificate parse rate reaches the structured gate, and report ARC-Decode-style `risk_bound_proxy`, `low_risk_acceptance_rate`, plus `speedbench_eval_mode` so replay-only speed claims cannot become headline claims.
 
 Success bar: `exp1285.certificate_parse_rate >= 0.8` and `headline_result_allowed=true`, or the milestone honestly records why the local SOTA path is blocked.
 
@@ -201,7 +202,7 @@ This milestone preserves local-first operation. Every LLM-bearing task is gated 
 3. `exp1284` measures answer-stability plus certainty/consistency routing signals on SOTA GGUF outputs.
 4. `exp1285` produces a headline-eligible SOTA certificate parse-rate measurement or blocks honestly, comparing raw trigger, grammar-only, and DCCD-style draft-conditioned paths when possible.
 5. `exp1286` writes semantic routing, BEAVER-lite prefix/risk bounds, NSVIF-style CSP checks, a ConstraintBench micro-eval, MCS/MUS diagnostics, and residual-drift cases when certificate parse succeeds.
-6. `exp1287` measures Cactus constrained acceptance when certificate parse succeeds.
+6. `exp1287` measures Cactus constrained acceptance when certificate parse succeeds, including risk-bound proxy, low-risk acceptance rate, and SPEED-Bench-style evaluation-mode tagging.
 7. `exp1288` measures InterWhen-style interleaved verification and DVI-style verifier-feedback replay deltas.
 8. `exp1289` reports a headline-eligible GRPO/VPRM v9 delta when gates pass.
 9. `exp1290` emits skill-graph promotion/demotion entries with replay evidence.
