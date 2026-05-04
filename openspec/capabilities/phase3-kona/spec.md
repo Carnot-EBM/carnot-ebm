@@ -773,6 +773,33 @@ preconditioner that remains non-monotone even without a prefix.
   existing diagnostic imports can reach the energy recurrence trace without
   moving the underlying implementation out of `nrgpt_energy.py`.
 
+### REQ-KONA-022: Boltzmann-GPT CD Training v2 Artifact
+
+The Exp 1248 Boltzmann-GPT CD training v2 run MUST load
+`results/fover_corpus_v5.json`, build a deterministic balanced correct/incorrect
+training set from the available labeled rows, run a finite forward pass through
+the trainable Boltzmann-GPT energy layer, and apply 100 contrastive-divergence
+optimization steps that minimize `E_correct.mean() - E_incorrect.mean()`.
+
+The artifact MUST be written to
+`results/experiment_1248_boltzmann_gpt_cd_training_v2.json` and include
+`forward_pass_ok`, `pre_cd_auroc`, `post_cd_auroc`, `n_cd_steps`, and
+`honest_verdict`. `pre_cd_auroc` MUST preserve the Exp 1226 random-weight
+baseline of `0.65`. `post_cd_auroc` MUST be measured from trained
+Boltzmann-GPT energies, with lower energy treated as the correct-trace score.
+`honest_verdict` MUST be formatted as `boltzmann_gpt_cd_auroc_X.XX` using the
+measured post-CD AUROC rounded to two decimal places.
+
+**Acceptance criteria:**
+
+- `python/carnot/phase3/boltzmann_gpt.py` exposes a reusable Exp 1248 runner
+  that reports the required schema fields without hard-coded post-training
+  AUROC.
+- The runner records the actual balanced FoVer v5 class counts used for the
+  100-step CD pass.
+- The generated artifact is complete only when the forward pass succeeds and
+  the post-CD AUROC is finite.
+
 ## Scenarios
 
 ### SCENARIO-KONA-001: Stage 1 Primitive — RDT Fixed-Point Convergence
@@ -1035,6 +1062,20 @@ monotonicity counts, classifies the regime according to REQ-KONA-021, and
 includes a one- or two-sentence paper-v6 Section 4 framing recommendation.
 
 **Spec traces:** REQ-KONA-021
+
+### SCENARIO-KONA-022: Exp 1248 Writes Boltzmann-GPT CD v2 Artifact
+
+**Given** the checked-in FoVer v5 corpus has labeled correct and incorrect
+responses
+**When** Exp 1248 runs 100 deterministic Boltzmann-GPT CD optimization steps
+over a balanced class slice
+**Then** it writes
+`results/experiment_1248_boltzmann_gpt_cd_training_v2.json` with
+`forward_pass_ok == True`, `pre_cd_auroc == 0.65`, `n_cd_steps == 100`, finite
+`post_cd_auroc`, and an `honest_verdict` derived from the measured post-CD
+AUROC.
+
+**Spec traces:** REQ-KONA-022
 
 ## Out of scope
 
