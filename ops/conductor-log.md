@@ -552,3 +552,4 @@ If you finish the real work |
 | 2026-05-04 00:34 UTC | Milestone 2026.04.95 Retrospective — STEP 0 Patter | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1229_milesto |
 | 2026-05-04 00:39 UTC | Milestone 2026.04.95 Retrospective — STEP 0 Patter | FAIL | No file changes produced |
 | 2026-05-04 00:43 UTC | Milestone 2026.04.95 Retrospective — STEP 0 Patter | FAIL | No file changes produced |
+| 2026-05-04 00:50 UTC | Auto-Populate prior_failures v2 — Fix DOOMED_RERUN | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1230_auto_po |

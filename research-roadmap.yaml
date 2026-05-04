@@ -422,13 +422,12 @@ tasks:
   milestone: 2026.04.96
   deliverable: results/experiment_1233_verifier_redesign_orthogonality.json
   title: "Verifier Redesign for Joint Orthogonality — Replace Correlated Pairs, Re-measure k_eff"
-  agent_type: claude
-  model: sonnet
+  agent_type: codex
+  model: gpt-5.5
   max_turns: 50
   estimated_wall_time_min: 40
   priority: high
   requires_gpu: false
-  requires_claude: true
   gated_on:
     - upstream: exp1232-verifier-joint-orthogonality-audit
       artifact_field: pairwise_correlation_matrix_measured
@@ -520,13 +519,12 @@ tasks:
   milestone: 2026.04.96
   deliverable: results/experiment_1234_paper_v6_arxiv_submission.json
   title: "Paper v6 arXiv Submission — Integrate Orthogonality Heatmap, Recompile, Submit"
-  agent_type: claude
-  model: opus
+  agent_type: codex
+  model: gpt-5.5
   max_turns: 45
   estimated_wall_time_min: 35
   priority: critical
   requires_gpu: false
-  requires_claude: true
   skip_pre_test: true
   gated_on:
     - upstream: exp1232-verifier-joint-orthogonality-audit
@@ -642,14 +640,13 @@ tasks:
   milestone: 2026.04.96
   deliverable: results/experiment_1235_grpo_v6_fspo_vps_extended.json
   title: "GRPO v6 — FSPO Per-Token Factuality Weighting + VPS (Extended 1200s Budget, DualGPU MANDATORY)"
-  agent_type: claude
-  model: opus
+  agent_type: codex
+  model: gpt-5.5
   max_turns: 80
   estimated_wall_time_min: 90
   priority: high
   requires_gpu: true
   grace_period_s: 2400
-  requires_claude: true
   prior_failures:
     - experiment_id: exp1221-grpo-v6-fspo-vps-combined
       verdict: insufficient_logprob_coverage
@@ -943,13 +940,12 @@ tasks:
   milestone: 2026.04.96
   deliverable: results/experiment_1238_phase5d_intermediate_scale.json
   title: "Phase-5-D Intermediate-Scale Derisking — 100-300M Params, d=128, 8 Failure Modes"
-  agent_type: claude
-  model: opus
+  agent_type: codex
+  model: gpt-5.5
   max_turns: 70
   estimated_wall_time_min: 70
   priority: high
   requires_gpu: true
-  requires_claude: true
   grace_period_s: 3600
   prompt: |
     CONTEXT:
