@@ -394,6 +394,31 @@ threshold misses shall count as unmet criteria. The retrospective
 self-criterion shall count as met only in the final artifact that sets
 `retro_complete == true`.
 
+### REQ-REPORT-021: Combined .95/.96/.97 Retrospective Closure Artifact
+
+The Exp 1255 combined retrospective workflow shall read the stale Exp 1242
+combined .95/.96 artifact, the stale Exp 1254 .97 artifact, and the
+authoritative Exp 1216 through Exp 1254 result JSON artifacts, and write
+`results/experiment_1255_combined_retro_95_96_97.json` with:
+
+- `schema` set to `milestone_retro_combined_v2`
+- `criteria_97_total`, `criteria_96_total`, and `criteria_95_total` set to
+  `13`
+- `criteria_97_results`, `criteria_96_results`, and `criteria_95_results`,
+  each mapping all 13 planned criteria to boolean pass/fail values
+- `criteria_97_met`, `criteria_96_met`, and `criteria_95_met`, each derived
+  from the corresponding boolean result count
+- `findings_summary`, a 2-to-3 sentence account of what .97 proved and failed
+- `key_carry_forwards`, listing the highest-priority .98 follow-ups
+- `retro_complete == true`
+- `honest_verdict` formatted as
+  `milestone_97_N_of_13_criteria_met`
+
+Missing artifacts, stale bootstrap retrospectives, absent source fields, false
+source fields, and numeric threshold misses shall count as unmet criteria
+unless the criterion is the current Exp 1255 self-referential completion
+criterion.
+
 ## Scenarios
 
 ### SCENARIO-REPORT-001: Nested Live Provenance Is Promoted
@@ -585,6 +610,18 @@ artifact
 **And** the artifact reports `criteria_met == 3`
 **And** `honest_verdict == "milestone_3_of_13_criteria_met"`
 
+### SCENARIO-REPORT-018: Exp 1255 Closes .95, .96, and .97 Retrospectives
+
+**Given** Exp 1242 and Exp 1254 are stale bootstrap retrospective artifacts
+**And** Exp 1248 reports `post_cd_auroc >= 0.80`
+**And** Exp 1251 reports `nonmonotonicity_characterized == true`
+**When** the Exp 1255 combined retrospective workflow runs
+**Then** the stale prior retrospective criteria count as unmet where referenced
+as source evidence
+**And** the artifact reports `.97 == 4/13`, `.96 == 2/13`, and `.95 == 10/13`
+**And** `retro_complete == true`
+**And** `honest_verdict == "milestone_97_4_of_13_criteria_met"`
+
 
 ### REQ-PUBLISH-003: HuggingFace README Accuracy Audit
 
@@ -679,5 +716,6 @@ embed live-GPU benchmark results from Exp 328 when available.
 | REQ-REPORT-018 | `python/carnot/reporting/milestone_retro_96.py`, `results/experiment_1241_milestone_retro_96.json` | `tests/python/test_milestone_retro_96.py` | Implemented |
 | REQ-REPORT-019 | `python/carnot/reporting/combined_retro_95_96.py`, `results/experiment_1242_combined_retro_95_96.json` | `tests/python/test_combined_retro_95_96.py` | Implemented |
 | REQ-REPORT-020 | `python/carnot/reporting/milestone_retro_97.py`, `results/experiment_1254_milestone_retro_97.json` | `tests/python/test_milestone_retro_97.py` | Implemented |
+| REQ-REPORT-021 | `python/carnot/reporting/combined_retro_95_96_97.py`, `results/experiment_1255_combined_retro_95_96_97.json` | `tests/python/test_combined_retro_95_96_97.py` | Implemented |
 | REQ-PUBLISH-003 | `scripts/experiment_317_hf_publish.py` | `tests/python/test_experiment_317_hf_publish.py` | Implemented |
 | REQ-PUBLISH-004 | `scripts/experiment_330_hf_live_publish.py` | `tests/python/test_experiment_330_hf_live_publish.py` | Implemented |

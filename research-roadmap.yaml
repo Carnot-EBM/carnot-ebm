@@ -107,7 +107,7 @@ tasks:
     d=json.load(open(f))
     # Fill in criteria_97_results dict from the outputs above
     # Count and record
-    # Example: d['criteria_97_results'] = {'retro_96_complete': False, 'kakuro_cartridge_shipped': False, ...}
+    # Example: d['criteria_97_results'] = {{'retro_96_complete': False, 'kakuro_cartridge_shipped': False, ...}}
     # d['criteria_97_met'] = sum(d['criteria_97_results'].values())
     # Also fill .96 criteria from exp1242 if populated, and .95 criteria from exp1229
     # For .96: read experiment_1242_combined_retro_95_96.json criteria_96_results if present
@@ -132,9 +132,9 @@ tasks:
     f='results/experiment_1255_combined_retro_95_96_97.json'
     d=json.load(open(f))
     # FILL IN ALL FIELDS:
-    # d['criteria_97_results'] = {crit: bool, ...}  # from commands above
-    # d['criteria_96_results'] = {crit: bool, ...}
-    # d['criteria_95_results'] = {crit: bool, ...}
+    # d['criteria_97_results'] = {{crit: bool, ...}}  # from commands above
+    # d['criteria_96_results'] = {{crit: bool, ...}}
+    # d['criteria_95_results'] = {{crit: bool, ...}}
     # d['criteria_97_met'] = sum(d['criteria_97_results'].values())
     # d['criteria_96_met'] = sum(d['criteria_96_results'].values())
     # d['criteria_95_met'] = sum(d['criteria_95_results'].values())
@@ -222,12 +222,12 @@ tasks:
     for v1 in k5:
         for v2 in k5:
             if v1 == v2:
-                matrix[f'{v1}|{v2}'] = 1.0
+                matrix[f'{{v1}}|{{v2}}'] = 1.0
             else:
-                key1 = f'{v1} vs {v2}'
-                key2 = f'{v2} vs {v1}'
+                key1 = f'{{v1}} vs {{v2}}'
+                key2 = f'{{v2}} vs {{v1}}'
                 val = r.get(key1, r.get(key2, 0.0))
-                matrix[f'{v1}|{v2}'] = round(val, 4)
+                matrix[f'{{v1}}|{{v2}}'] = round(val, 4)
 
     # k_eff estimate: k / (1 + (k-1)*max_r) — conservative lower bound
     k = len(k5)
@@ -246,9 +246,9 @@ tasks:
         'max_pairwise_r_overall': max_r_overall,
         'and_composition_viable_k5': k5_max_r < 0.5,
         'k_eff_estimate': k_eff,
-        'paper_result': f'k=5 ensemble max_r={k5_max_r:.4f} < 0.5 threshold; AND-composition viable; k_eff~{k_eff}',
+        'paper_result': f'k=5 ensemble max_r={{k5_max_r:.4f}} < 0.5 threshold; AND-composition viable; k_eff~{{k_eff}}',
         'orthogonality_matrix_computed': True,
-        'honest_verdict': f'k5_orthogonality_confirmed_max_r_{k5_max_r:.3f}_k_eff_{k_eff}'
+        'honest_verdict': f'k5_orthogonality_confirmed_max_r_{{k5_max_r:.3f}}_k_eff_{{k_eff}}'
     }
     open('results/experiment_1256_verifier_orthogonality_audit_v3.json','w').write(json.dumps(artifact,indent=2))
     print('SUCCESS')
@@ -389,7 +389,7 @@ tasks:
     # d['issues_fixed_list'] = ['ISSUE-1','ISSUE-2','ISSUE-3','ISSUE-4','ISSUE-5']
     # d['critical_issues_fixed'] = len(d['issues_fixed_list'])
     d['status']='complete'
-    d['honest_verdict']=f'paper_v6_{d[\"critical_issues_fixed\"]}_of_5_critical_issues_fixed'
+    d['honest_verdict']=f'paper_v6_{{d[\"critical_issues_fixed\"]}}_of_5_critical_issues_fixed'
     open(f,'w').write(json.dumps(d,indent=2))
     print('Done:', d['honest_verdict'])
     " 2>&1
@@ -472,7 +472,7 @@ tasks:
     m = d['pairwise_r_matrix']
     names = d['verifier_names_k5']
     n = len(names)
-    mat = [[m.get(f'{names[i]}|{names[j]}', 0.0) for j in range(n)] for i in range(n)]
+    mat = [[m.get(f'{{names[i]}}|{{names[j]}}', 0.0) for j in range(n)] for i in range(n)]
     try:
         import matplotlib
         matplotlib.use('Agg')
@@ -483,10 +483,10 @@ tasks:
         short = ['SOSKAN','SemEnergy','AST','SemConsist','Z3Math']
         ax.set_xticks(range(n)); ax.set_xticklabels(short, rotation=45, ha='right')
         ax.set_yticks(range(n)); ax.set_yticklabels(short)
-        ax.set_title(f'k=5 Verifier Pairwise r-Correlations (max_r={d[\"max_pairwise_r_k5\"]:.3f})')
+        ax.set_title(f'k=5 Verifier Pairwise r-Correlations (max_r={{d[\"max_pairwise_r_k5\"]:.3f}})')
         for i in range(n):
             for j in range(n):
-                ax.text(j, i, f'{mat[i][j]:.2f}', ha='center', va='center', fontsize=8)
+                ax.text(j, i, f'{{mat[i][j]:.2f}}', ha='center', va='center', fontsize=8)
         plt.tight_layout()
         plt.savefig('docs/arxiv-paper/fig_orthogonality_heatmap.pdf', dpi=150, bbox_inches='tight')
         plt.savefig('docs/arxiv-paper/fig_orthogonality_heatmap.png', dpi=150, bbox_inches='tight')
@@ -615,8 +615,8 @@ tasks:
     print('GPUs:', r.stdout)
     assert r.returncode == 0, 'nvidia-smi failed'
     lines = [l for l in r.stdout.strip().split('\n') if l]
-    print(f'n_gpus={len(lines)}')
-    assert len(lines) >= 2, f'Need 2 GPUs, found {len(lines)}'
+    print(f'n_gpus={{len(lines)}}')
+    assert len(lines) >= 2, f'Need 2 GPUs, found {{len(lines)}}'
     print('GPU health check PASSED')
     " 2>&1
 
@@ -639,7 +639,7 @@ tasks:
 
     # Load existing GRPO trainer or implement inline
     # Configuration:
-    config = {
+    config = {{
         'n_questions': 300,
         'n_completions_per_question': 8,
         'wall_budget_s': 600,
@@ -650,7 +650,7 @@ tasks:
         'use_vps': True,
         'vps_weight': 0.5,
         'grpo_v7': True,
-    }
+    }}
 
     # Load and run — use existing grpo_trainer if available
     try:
@@ -661,7 +661,7 @@ tasks:
         baseline = results.get('baseline_accuracy', None)
         grpo_acc = results.get('grpo_accuracy', None)
     except Exception as e:
-        print(f'Trainer error: {e}')
+        print(f'Trainer error: {{e}}')
         improvement_pp = None
         baseline = None
         grpo_acc = None
@@ -677,7 +677,7 @@ tasks:
     d['status'] = 'complete'
     verdict = 'grpo_v7_improvement_measured'
     if improvement_pp is not None:
-        verdict = f'grpo_v7_improvement_{improvement_pp:.1f}pp' if improvement_pp >= 0 else f'grpo_v7_regression_{abs(improvement_pp):.1f}pp'
+        verdict = f'grpo_v7_improvement_{{improvement_pp:.1f}}pp' if improvement_pp >= 0 else f'grpo_v7_regression_{{abs(improvement_pp):.1f}}pp'
     d['honest_verdict'] = verdict
     open(f,'w').write(json.dumps(d,indent=2))
     print('Done:', verdict)
@@ -777,7 +777,7 @@ tasks:
     acceptance_probs = rng.beta(2, 2, size=(n_verifiers, 1000))  # 1000 samples per verifier
     entropy = float(-np.sum(acceptance_probs * np.log(acceptance_probs + 1e-9) + (1-acceptance_probs)*np.log(1-acceptance_probs+1e-9), axis=1).mean())
     gate1 = entropy > 0.5
-    print(f'Gate 1 mode_collapse_absent: entropy={entropy:.3f} > 0.5 = {gate1}')
+    print(f'Gate 1 mode_collapse_absent: entropy={{entropy:.3f}} > 0.5 = {{gate1}}')
 
     # Measure gate 2: MCMC mixing (autocorrelation proxy)
     # Simple Markov chain test with d=128 Ising spins
@@ -798,7 +798,7 @@ tasks:
         autocorr_sum += abs(state.mean())
     tau_int_proxy = autocorr_sum / n_steps
     gate2 = tau_int_proxy < 0.5  # proxy for tau_int < 10x baseline
-    print(f'Gate 2 mcmc_mixing_acceptable: tau_proxy={tau_int_proxy:.4f} < 0.5 = {gate2}')
+    print(f'Gate 2 mcmc_mixing_acceptable: tau_proxy={{tau_int_proxy:.4f}} < 0.5 = {{gate2}}')
 
     # Measure gate 3: k_eff maintained (simulate before/after)
     max_r_before = 0.461664  # from exp1108
@@ -808,40 +808,40 @@ tasks:
     k_eff_after = 5.0 / (1.0 + 4 * max_r_after)
     k_eff_drop_pct = abs(k_eff_before - k_eff_after) / k_eff_before * 100
     gate3 = k_eff_drop_pct < 10.0
-    print(f'Gate 3 k_eff_maintained: k_eff_drop={k_eff_drop_pct:.1f}% < 10% = {gate3}')
+    print(f'Gate 3 k_eff_maintained: k_eff_drop={{k_eff_drop_pct:.1f}}% < 10% = {{gate3}}')
 
     # Measure gate 4: forgetting rate (simulate AUROC drop)
     auroc_before = 0.9607  # Boltzmann-GPT CD AUROC from exp1248
     auroc_after = auroc_before * 0.97  # simulate 3% drop (< 5% threshold)
     auroc_drop_pct = (auroc_before - auroc_after) / auroc_before * 100
     gate4 = auroc_drop_pct < 5.0
-    print(f'Gate 4 forgetting_acceptable: auroc_drop={auroc_drop_pct:.1f}% < 5% = {gate4}')
+    print(f'Gate 4 forgetting_acceptable: auroc_drop={{auroc_drop_pct:.1f}}% < 5% = {{gate4}}')
 
     gates = [gate1, gate2, gate3, gate4]
     n_passed = sum(gates)
 
     f = 'results/experiment_1260_phase5d_intermediate_scale_v3.json'
     d = json.load(open(f))
-    d['gate_results'] = {
+    d['gate_results'] = {{
         'mode_collapse_absent': bool(gate1),
         'mcmc_mixing_acceptable': bool(gate2),
         'k_eff_maintained': bool(gate3),
         'forgetting_rate_acceptable': bool(gate4),
-    }
-    d['gate_values'] = {
+    }}
+    d['gate_values'] = {{
         'entropy': round(entropy, 4),
         'tau_int_proxy': round(tau_int_proxy, 4),
         'k_eff_drop_pct': round(k_eff_drop_pct, 2),
         'auroc_drop_pct': round(auroc_drop_pct, 2),
-    }
+    }}
     d['phase5d_gates_passed'] = n_passed
     d['d_hidden'] = d_hidden
     d['scale_class'] = '100-300M params at d=128'
     d['ppsebm_replay_buffer'] = True
     d['status'] = 'complete'
-    d['honest_verdict'] = f'phase5d_{n_passed}_of_4_gates_passed'
+    d['honest_verdict'] = f'phase5d_{{n_passed}}_of_4_gates_passed'
     open(f,'w').write(json.dumps(d,indent=2))
-    print(f'Done: {n_passed}/4 gates passed')
+    print(f'Done: {{n_passed}}/4 gates passed')
     " 2>&1
 
     3. Verify:
@@ -890,7 +890,7 @@ tasks:
     Digits 1-9, no repeats within a run. Energy E = sum over runs of (actual_sum - target_sum)^2. E=0 at valid solution.
 
     STEP 0 — WRITE SKELETON ARTIFACT IMMEDIATELY:
-    python3 -c "import json,os; os.makedirs('results',exist_ok=True); d={'experiment':'1261_wopr_kakuro_v3','status':'in_progress','cartridge_shipped':False,'honest_verdict':'in_progress'}; open('results/experiment_1261_wopr_kakuro_v3.json','w').write(json.dumps(d,indent=2))" 2>&1
+    python3 -c "import json,os; os.makedirs('results',exist_ok=True); d={{'experiment':'1261_wopr_kakuro_v3','status':'in_progress','cartridge_shipped':False,'honest_verdict':'in_progress'}}; open('results/experiment_1261_wopr_kakuro_v3.json','w').write(json.dumps(d,indent=2))" 2>&1
 
     EXISTING CODE TO READ FIRST:
     - spaces/wopr-games/games/_base.py (WOPRGame abstract base class)
@@ -925,7 +925,7 @@ tasks:
     import json, subprocess
     r=subprocess.run(['python3','-m','pytest','spaces/wopr-games/tests/test_kakuro.py','-v','--tb=no','-q'],cwd='{project_root}',capture_output=True,text=True)
     passed=r.stdout.count(' passed')
-    d={'experiment':'1261_wopr_kakuro_v3','status':'complete','cartridge_file':'spaces/wopr-games/games/kakuro.py','test_file':'spaces/wopr-games/tests/test_kakuro.py','n_tests_pass':passed,'cartridge_shipped':passed>=3,'energy_at_valid_solution':0.0,'honest_verdict':'kakuro_shipped_e0_at_solution' if passed>=3 else 'test_failures'}
+    d={{'experiment':'1261_wopr_kakuro_v3','status':'complete','cartridge_file':'spaces/wopr-games/games/kakuro.py','test_file':'spaces/wopr-games/tests/test_kakuro.py','n_tests_pass':passed,'cartridge_shipped':passed>=3,'energy_at_valid_solution':0.0,'honest_verdict':'kakuro_shipped_e0_at_solution' if passed>=3 else 'test_failures'}}
     open('results/experiment_1261_wopr_kakuro_v3.json','w').write(json.dumps(d,indent=2))
     print('Done:',d['honest_verdict'])
     " 2>&1
@@ -965,7 +965,7 @@ tasks:
     Energy: E = (black_violations) + (white_violations) + (connectivity_violations). E=0 at valid loop.
 
     STEP 0 — WRITE SKELETON ARTIFACT IMMEDIATELY:
-    python3 -c "import json,os; os.makedirs('results',exist_ok=True); d={'experiment':'1262_wopr_masyu_v2','status':'in_progress','cartridge_shipped':False,'honest_verdict':'in_progress'}; open('results/experiment_1262_wopr_masyu_v2.json','w').write(json.dumps(d,indent=2))" 2>&1
+    python3 -c "import json,os; os.makedirs('results',exist_ok=True); d={{'experiment':'1262_wopr_masyu_v2','status':'in_progress','cartridge_shipped':False,'honest_verdict':'in_progress'}}; open('results/experiment_1262_wopr_masyu_v2.json','w').write(json.dumps(d,indent=2))" 2>&1
 
     EXISTING CODE TO READ FIRST:
     - spaces/wopr-games/games/_base.py (WOPRGame abstract base class)
@@ -997,7 +997,7 @@ tasks:
     import json, subprocess
     r=subprocess.run(['python3','-m','pytest','spaces/wopr-games/tests/test_masyu.py','-v','--tb=no','-q'],cwd='{project_root}',capture_output=True,text=True)
     passed=r.stdout.count(' passed')
-    d={'experiment':'1262_wopr_masyu_v2','status':'complete','cartridge_file':'spaces/wopr-games/games/masyu.py','test_file':'spaces/wopr-games/tests/test_masyu.py','n_tests_pass':passed,'cartridge_shipped':passed>=3,'energy_at_valid_solution':0.0,'honest_verdict':'masyu_shipped_e0_at_solution' if passed>=3 else 'test_failures'}
+    d={{'experiment':'1262_wopr_masyu_v2','status':'complete','cartridge_file':'spaces/wopr-games/games/masyu.py','test_file':'spaces/wopr-games/tests/test_masyu.py','n_tests_pass':passed,'cartridge_shipped':passed>=3,'energy_at_valid_solution':0.0,'honest_verdict':'masyu_shipped_e0_at_solution' if passed>=3 else 'test_failures'}}
     open('results/experiment_1262_wopr_masyu_v2.json','w').write(json.dumps(d,indent=2))
     print('Done:',d['honest_verdict'])
     " 2>&1
@@ -1057,7 +1057,7 @@ tasks:
     Meaning-changing perturbations: negate a key claim, swap numbers, remove a step.
 
     STEP 0 — WRITE SKELETON ARTIFACT IMMEDIATELY:
-    python3 -c "import json,os; os.makedirs('results',exist_ok=True); d={'experiment':'1263_gaming_verifiers_defense_v4','status':'in_progress','gaming_defense_measured':False,'honest_verdict':'in_progress'}; open('results/experiment_1263_gaming_verifiers_defense_v4.json','w').write(json.dumps(d,indent=2))" 2>&1
+    python3 -c "import json,os; os.makedirs('results',exist_ok=True); d={{'experiment':'1263_gaming_verifiers_defense_v4','status':'in_progress','gaming_defense_measured':False,'honest_verdict':'in_progress'}}; open('results/experiment_1263_gaming_verifiers_defense_v4.json','w').write(json.dumps(d,indent=2))" 2>&1
 
     EXISTING CODE TO READ FIRST:
     - results/fover_corpus_v5.json (FoVer pairs to test on)
@@ -1072,7 +1072,7 @@ tasks:
     import json
     d = json.load(open('results/fover_corpus_v5.json'))
     pairs = [p for p in d['pairs'] if p.get('is_correct', False)][:50]
-    print(f'n_passing_pairs: {len(pairs)}')
+    print(f'n_passing_pairs: {{len(pairs)}}')
     print('sample:', pairs[0]['response'][:100])
     " 2>&1
 
@@ -1133,7 +1133,7 @@ tasks:
 
         stability_violations += int(mp_unstable)
         sensitivity_hits += int(mc_sensitive)
-        results.append({'mp_delta': round(mp_delta,4), 'mc_delta': round(mc_delta,4)})
+        results.append({{'mp_delta': round(mp_delta,4), 'mc_delta': round(mc_delta,4)}})
 
     gaming_vulnerability_rate = stability_violations / len(pairs)
     sensitivity_rate = sensitivity_hits / len(pairs)
@@ -1149,12 +1149,12 @@ tasks:
         'gaming_vulnerable': gaming_vulnerability_rate > 0.2,  # >20% unstable = vulnerable
         'results_sample': results[:5],
         'est_protocol': 'arXiv 2507.05619',
-        'honest_verdict': f'gaming_vulnerability_{gaming_vulnerability_rate:.2f}_sensitivity_{sensitivity_rate:.2f}'
+        'honest_verdict': f'gaming_vulnerability_{{gaming_vulnerability_rate:.2f}}_sensitivity_{{sensitivity_rate:.2f}}'
     }
     open('results/experiment_1263_gaming_verifiers_defense_v4.json','w').write(json.dumps(artifact,indent=2))
     print('Done:', artifact['honest_verdict'])
-    print(f'Gaming vulnerability: {gaming_vulnerability_rate:.1%}')
-    print(f'Sensitivity to meaning changes: {sensitivity_rate:.1%}')
+    print(f'Gaming vulnerability: {{gaming_vulnerability_rate:.1%}}')
+    print(f'Sensitivity to meaning changes: {{sensitivity_rate:.1%}}')
     " 2>&1
 
     3. Verify:
@@ -1194,7 +1194,7 @@ tasks:
     Defense: measure the SC-Energy vs Z3 correlation at the sign(z) layer; track as Phase 3 metric.
 
     STEP 0 — WRITE SKELETON ARTIFACT IMMEDIATELY:
-    python3 -c "import json,os; os.makedirs('results',exist_ok=True); d={'experiment':'1264_q11_tss_instrumentation_v2','status':'in_progress','tss_instrumented':False,'honest_verdict':'in_progress'}; open('results/experiment_1264_q11_tss_instrumentation_v2.json','w').write(json.dumps(d,indent=2))" 2>&1
+    python3 -c "import json,os; os.makedirs('results',exist_ok=True); d={{'experiment':'1264_q11_tss_instrumentation_v2','status':'in_progress','tss_instrumented':False,'honest_verdict':'in_progress'}}; open('results/experiment_1264_q11_tss_instrumentation_v2.json','w').write(json.dumps(d,indent=2))" 2>&1
 
     EXISTING CODE TO READ FIRST:
     - python/carnot/phase3/continuous_ebm.py (ContinuousEBM class — add TSS diagnostic here)
@@ -1256,7 +1256,7 @@ tasks:
         'tss_instrumented': True,
         'sign_z_bottleneck_diagnosed': True,
         'ste_pipeline_risk': vulnerability_score > 0.6,  # high risk if correlation low
-        'honest_verdict': f'tss_instrumented_corr_{corr:.3f}_vuln_{vulnerability_score:.3f}'
+        'honest_verdict': f'tss_instrumented_corr_{{corr:.3f}}_vuln_{{vulnerability_score:.3f}}'
     }
     open('results/experiment_1264_q11_tss_instrumentation_v2.json','w').write(json.dumps(artifact,indent=2))
     print('Done:', artifact['honest_verdict'])
@@ -1304,7 +1304,7 @@ tasks:
     High divergence = high energy = likely hallucination.
 
     STEP 0 — WRITE SKELETON ARTIFACT IMMEDIATELY:
-    python3 -c "import json,os; os.makedirs('results',exist_ok=True); d={'experiment':'1265_diffutruth_vs_carnot_baseline','status':'in_progress','diffutruth_comparison_measured':False,'honest_verdict':'in_progress'}; open('results/experiment_1265_diffutruth_vs_carnot_baseline.json','w').write(json.dumps(d,indent=2))" 2>&1
+    python3 -c "import json,os; os.makedirs('results',exist_ok=True); d={{'experiment':'1265_diffutruth_vs_carnot_baseline','status':'in_progress','diffutruth_comparison_measured':False,'honest_verdict':'in_progress'}}; open('results/experiment_1265_diffutruth_vs_carnot_baseline.json','w').write(json.dumps(d,indent=2))" 2>&1
 
     EXISTING CODE TO READ FIRST:
     - results/fover_corpus_v5.json (FoVer pairs with is_correct labels)
@@ -1316,8 +1316,8 @@ tasks:
     import json
     d = json.load(open('results/fover_corpus_v5.json'))
     pairs = d['pairs'][:100]
-    print(f'n_pairs: {len(pairs)}')
-    print(f'n_correct: {sum(1 for p in pairs if p.get(\"is_correct\",False))}')
+    print(f'n_pairs: {{len(pairs)}}')
+    print(f'n_correct: {{sum(1 for p in pairs if p.get(\"is_correct\",False))}}')
     carnot_ref = json.load(open('results/experiment_1096_semenergy_probe_v1.json'))
     print('Carnot SemEnergyProbe AUROC:', carnot_ref.get('auroc', carnot_ref.get('auc', 'not_found')))
     " 2>&1
@@ -1357,7 +1357,7 @@ tasks:
         diffutruth_auroc = float(roc_auc_score(labels, diffutruth_scores))
     except Exception as e:
         diffutruth_auroc = 0.5
-        print(f'AUROC error: {e}')
+        print(f'AUROC error: {{e}}')
 
     # Carnot reference
     carnot_ref = json.load(open('results/experiment_1096_semenergy_probe_v1.json'))
@@ -1375,15 +1375,15 @@ tasks:
         'diffutruth_fever_paper_auroc': diffutruth_fever_auroc,
         'carnot_beats_diffutruth_paper': carnot_auroc > diffutruth_fever_auroc,
         'carnot_beats_diffutruth_fover': carnot_auroc > diffutruth_auroc,
-        'comparison_note': f'DiffuTruth semantic energy AUROC on FoVer: {diffutruth_auroc:.4f}; Carnot SemEnergyProbe: {carnot_auroc:.4f}; DiffuTruth FEVER paper: {diffutruth_fever_auroc}',
+        'comparison_note': f'DiffuTruth semantic energy AUROC on FoVer: {{diffutruth_auroc:.4f}}; Carnot SemEnergyProbe: {{carnot_auroc:.4f}}; DiffuTruth FEVER paper: {{diffutruth_fever_auroc}}',
         'diffutruth_comparison_measured': True,
-        'honest_verdict': f'diffutruth_fover_{diffutruth_auroc:.3f}_carnot_{carnot_auroc:.3f}'
+        'honest_verdict': f'diffutruth_fover_{{diffutruth_auroc:.3f}}_carnot_{{carnot_auroc:.3f}}'
     }
     open('results/experiment_1265_diffutruth_vs_carnot_baseline.json','w').write(json.dumps(artifact,indent=2))
     print('Done:', artifact['honest_verdict'])
-    print(f'DiffuTruth FoVer AUROC: {diffutruth_auroc:.4f}')
-    print(f'Carnot SemEnergyProbe AUROC: {carnot_auroc:.4f}')
-    print(f'Carnot beats DiffuTruth paper (0.725): {carnot_auroc > 0.725}')
+    print(f'DiffuTruth FoVer AUROC: {{diffutruth_auroc:.4f}}')
+    print(f'Carnot SemEnergyProbe AUROC: {{carnot_auroc:.4f}}')
+    print(f'Carnot beats DiffuTruth paper (0.725): {{carnot_auroc > 0.725}}')
     " 2>&1
 
     3. Verify:
@@ -1419,7 +1419,7 @@ tasks:
     Goal: AUROC curve across 8-bit, 4-bit, 3-bit + LUT-KAN inference latency comparison.
 
     STEP 0 — WRITE SKELETON ARTIFACT IMMEDIATELY:
-    python3 -c "import json,os; os.makedirs('results',exist_ok=True); d={'experiment':'1266_quantkan_3bit_lut_kan','status':'in_progress','quantkan_3bit_auroc':None,'honest_verdict':'in_progress'}; open('results/experiment_1266_quantkan_3bit_lut_kan.json','w').write(json.dumps(d,indent=2))" 2>&1
+    python3 -c "import json,os; os.makedirs('results',exist_ok=True); d={{'experiment':'1266_quantkan_3bit_lut_kan','status':'in_progress','quantkan_3bit_auroc':None,'honest_verdict':'in_progress'}}; open('results/experiment_1266_quantkan_3bit_lut_kan.json','w').write(json.dumps(d,indent=2))" 2>&1
 
     EXISTING CODE TO READ FIRST:
     - python/carnot/models/sos_kan_energy_v3.py (SOS-KAN model to quantize)
@@ -1485,26 +1485,26 @@ tasks:
         'experiment': '1266_quantkan_3bit_lut_kan',
         'status': 'complete',
         'n_pairs_evaluated': len(pairs),
-        'auroc_curve': {
+        'auroc_curve': {{
             'full_precision': auroc_full,
             '8bit_ptq': auroc_8bit,
             '4bit_ptq': auroc_4bit,
             '3bit_ptq': auroc_3bit,
             '3bit_lut': auroc_3bit_lut,
-        },
-        'model_size_mb': {
+        }},
+        'model_size_mb': {{
             '8bit': model_size_8bit_mb,
             '4bit': model_size_4bit_mb,
             '3bit': model_size_3bit_mb,
             '3bit_lut_overhead': model_size_3bit_lut_mb,
-        },
+        }},
         'lut_kan_speedup': lut_speedup,
         'lut_table_size_kb': lut_table_size_kb,
         'quantkan_3bit_auroc': auroc_3bit,
         'auroc_drop_from_4bit': round(auroc_4bit - auroc_3bit, 4),
         'size_reduction_from_4bit_pct': round((1 - model_size_3bit_mb/model_size_4bit_mb)*100, 1),
         'deployment_recommendation': '3-bit QuantKAN + LUT-KAN for ultra-edge NPU; 4-bit for general NPU',
-        'honest_verdict': f'quantkan_3bit_auroc_{auroc_3bit:.4f}_lut_speedup_{lut_speedup:.1f}x'
+        'honest_verdict': f'quantkan_3bit_auroc_{{auroc_3bit:.4f}}_lut_speedup_{{lut_speedup:.1f}}x'
     }
     open('results/experiment_1266_quantkan_3bit_lut_kan.json','w').write(json.dumps(artifact,indent=2))
     print('Done:', artifact['honest_verdict'])
@@ -1618,7 +1618,7 @@ tasks:
     f = 'results/experiment_1267_milestone_retro_98.json'
     d = json.load(open(f))
     # Fill in criteria_results from commands above
-    # d['criteria_results'] = {'retro_97_complete': True/False, ...}
+    # d['criteria_results'] = {{'retro_97_complete': True/False, ...}}
     # d['criteria_met'] = sum(d['criteria_results'].values())
     # d['findings_summary'] = '2-3 sentences on .98 achievements'
     # d['key_carry_forwards'] = ['top 3-5 items for .99']
@@ -1626,7 +1626,7 @@ tasks:
     # d['top_gaps'] = ['list top 3 gaps']
     d['retro_complete'] = True
     d['status'] = 'complete'
-    # d['honest_verdict'] = f'milestone_98_{d[\"criteria_met\"]}_of_13_criteria_met'
+    # d['honest_verdict'] = f'milestone_98_{{d[\"criteria_met\"]}}_of_13_criteria_met'
     open(f,'w').write(json.dumps(d,indent=2))
     print('Final retro written')
     " 2>&1
