@@ -740,6 +740,39 @@ AUROC threshold.
   `python/carnot/phase3/boltzmann_gpt_cd_v1.pt`, with the honest verdict
   derived only from the measured held-out AUROC.
 
+### REQ-KONA-021: NRGPT Frozen-Prefix Monotonicity Diagnostic
+
+The Exp 1239 NRGPT frozen-prefix diagnostic MUST evaluate ten FoVer response
+sequences by comparing the existing NRGPT energy recurrence trace on each full
+sequence with the recurrence trace on only that sequence's first token. A trace
+is monotonic iff every subsequent recurrence energy is less than or equal to
+the previous energy. The first-token run MUST remove all prefix context by
+embedding only the first token under the same trained recurrence block and train
+normalization statistics used for the full sequence run.
+
+The artifact MUST include `n_sequences_tested`,
+`n_monotonic_full_sequence`, `n_monotonic_first_token_only`, `regime`,
+`paper_v6_framing_recommendation`, `frozen_prefix_regime_classified`, and
+`honest_verdict`. The regime MUST be `b_causal_context_shift` when at least
+eight first-token traces are monotonic, `c_non_conservative_preconditioner`
+when at most two first-token traces are monotonic, and `mixed_ambiguous`
+otherwise.
+
+**Rationale:** Exp 1163 showed that the NRGPT iteration comparison is not
+monotone. The next paper-v6 framing decision depends on whether that behavior
+comes from causal-context energy shifts or from a learned non-conservative
+preconditioner that remains non-monotone even without a prefix.
+
+**Acceptance criteria:**
+
+- `python/carnot/phase3/nrgpt_energy.py` exposes a frozen-prefix evaluator that
+  writes `results/experiment_1239_nrgpt_frozen_prefix_evaluation.json` with the
+  required fields and an honest verdict derived only from the first-token
+  monotonicity count.
+- `python/carnot/phase3/nrgpt.py` exposes an `NRGPT` compatibility wrapper so
+  existing diagnostic imports can reach the energy recurrence trace without
+  moving the underlying implementation out of `nrgpt_energy.py`.
+
 ## Scenarios
 
 ### SCENARIO-KONA-001: Stage 1 Primitive — RDT Fixed-Point Convergence
@@ -990,6 +1023,19 @@ checkpoint, and sets `honest_verdict` to
 
 **Spec traces:** REQ-KONA-019
 
+### SCENARIO-KONA-021: Exp 1239 Classifies Frozen-Prefix NRGPT Regime
+
+**Given** FoVer responses are available from the checked-in corpus or a
+synthetic fallback
+**When** Exp 1239 evaluates ten full-sequence and first-token-only NRGPT energy
+recurrence traces
+**Then** it writes
+`results/experiment_1239_nrgpt_frozen_prefix_evaluation.json`, reports both
+monotonicity counts, classifies the regime according to REQ-KONA-021, and
+includes a one- or two-sentence paper-v6 Section 4 framing recommendation.
+
+**Spec traces:** REQ-KONA-021
+
 ## Out of scope
 
 The following are deliberately **not** required by this capability:
@@ -1038,6 +1084,9 @@ The following are deliberately **not** required by this capability:
   `scripts/experiment_1172_nrgpt_per_token_energy_inference.py`.
 - **Boltzmann-GPT contrastive training:** specified by REQ-KONA-019;
   implementation lives in `python/carnot/phase3/boltzmann_gpt.py`.
+- **NRGPT frozen-prefix monotonicity diagnostic:** specified by REQ-KONA-021;
+  implementation lives in `python/carnot/phase3/nrgpt_energy.py` and
+  `scripts/experiment_1239_nrgpt_frozen_prefix_evaluation.py`.
 
 First concrete next experiment:
 `experiment_XXX_rdt_primitive_convergence.py` — implement the RDT scaffold and
