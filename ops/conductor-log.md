@@ -646,3 +646,5 @@ If you finish the real work |
 | 2026-05-04 10:35 UTC | Paper-v6 Critical Issues Fix — ISSUE-1 through ISS | FAIL | No file changes produced |
 | 2026-05-04 10:40 UTC | Paper-v6 Critical Issues Fix — ISSUE-1 through ISS | FAIL | No file changes produced |
 | 2026-05-04 10:42 UTC | arXiv Bundle v9 + Submission — Orthogonality Heatm | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1257-paper-v6-critical-issues-fix) |
+| 2026-05-04 10:45 UTC | GRPO v7 — PROGRS Outcome-Conditioned Centering + V | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1259_grpo_v7 |
+| 2026-05-04 10:47 UTC | arXiv Bundle v9 + Submission — Orthogonality Heatm | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1257-paper-v6-critical-issues-fix) |
