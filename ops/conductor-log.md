@@ -665,3 +665,4 @@ If you finish the real work |
 | 2026-05-04 11:53 UTC | LLMs Gaming Verifiers Defense v4 — EST Invariance  | FAIL | No file changes produced |
 | 2026-05-04 12:04 UTC | Q11 TSS Instrumentation v2 — sign(z) Bottleneck Di | OK | 81 passed, 1 warning in 7.04s |
 | 2026-05-04 12:14 UTC | DiffuTruth vs Carnot Energy Baseline — Unsupervise | OK | 81 passed, 1 warning in 4.69s |
+| 2026-05-04 12:27 UTC | QuantKAN 3-bit PTQ + LUT-KAN Precomputed Inference | OK | 81 passed, 1 warning in 7.21s |
