@@ -105,6 +105,18 @@ def test_build_artifact_rejects_non_vps_mode() -> None:
         )
 
 
+def test_build_artifact_rejects_non_vps_verifier_type() -> None:
+    """REQ-LEARN-1247-2: verifier_type must remain vps_only."""
+    with pytest.raises(ValueError, match="verifier_type"):
+        build_grpo_v7_simplified_artifact(
+            baseline_accuracy=0.5,
+            final_accuracy=0.5,
+            device_used="cpu",
+            fallback_used=False,
+            verifier_type="fspo_vps",
+        )
+
+
 def test_build_artifact_rejects_unknown_device() -> None:
     """REQ-LEARN-1247-4: device_used must be one of the allowed tokens."""
     with pytest.raises(ValueError, match="device_used"):
@@ -132,6 +144,45 @@ def test_validate_artifact_rejects_wrong_training_mode() -> None:
     )
     artifact["training_mode"] = "fspo_vps"
     with pytest.raises(AssertionError, match="training_mode"):
+        validate_grpo_v7_artifact(artifact)
+
+
+def test_validate_artifact_rejects_wrong_verifier_type() -> None:
+    """REQ-LEARN-1247-2: validator rejects non-VPS verifier types."""
+    artifact = build_grpo_v7_simplified_artifact(
+        baseline_accuracy=0.5,
+        final_accuracy=0.5,
+        device_used="cpu",
+        fallback_used=False,
+    )
+    artifact["verifier_type"] = "fspo_vps"
+    with pytest.raises(AssertionError, match="verifier_type"):
+        validate_grpo_v7_artifact(artifact)
+
+
+def test_validate_artifact_rejects_wrong_device() -> None:
+    """REQ-LEARN-1247-4: validator rejects devices outside the allowed set."""
+    artifact = build_grpo_v7_simplified_artifact(
+        baseline_accuracy=0.5,
+        final_accuracy=0.5,
+        device_used="cpu",
+        fallback_used=False,
+    )
+    artifact["device_used"] = "dualgpu"
+    with pytest.raises(AssertionError, match="device_used"):
+        validate_grpo_v7_artifact(artifact)
+
+
+def test_validate_artifact_rejects_inconsistent_verdict() -> None:
+    """REQ-LEARN-1247-6: validator enforces the derived honest verdict."""
+    artifact = build_grpo_v7_simplified_artifact(
+        baseline_accuracy=0.5,
+        final_accuracy=0.6,
+        device_used="cpu",
+        fallback_used=False,
+    )
+    artifact["honest_verdict"] = "grpo_v7_negative_delta"
+    with pytest.raises(AssertionError, match="honest_verdict"):
         validate_grpo_v7_artifact(artifact)
 
 
