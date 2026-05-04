@@ -483,16 +483,37 @@ tasks:
   prior_failures:
     - experiment_id: exp1108-r-corr-measurement
       verdict: r_corr_above_threshold
-      addressed_by: "exp1108 measured pairwise r_corr=0.507 on V4xV5 pair. This experiment uses exp1232's P(V_i|V_j) conditional acceptance matrix (a different and stronger correlation metric per Spera Theorem 9.2) and implements targeted redesign of specifically flagged pairs."
+      addressed_by: "exp1108 measured pairwise r_corr=0.507 on V4xV5 pair. This experiment uses exp1232's P(V_i|V_j) conditional acceptance matrix (a different and stronger correlation metric per Spera Theorem 9.2) PLUS Q11 Deep Think's TSS (Transversal Spectral Synthesis) procedure (docs/research-notes/verifier-orthogonality-design-deep-think-results.md) — a polynomial-time constructive algorithm that bypasses the Σ_2^P-hard general synthesis problem via Carnot's sign(z) bottleneck. Q11 predicts SC-Energy + Z3 as the optimal k=2 transversal pair (continuous V_mag + discrete V_disc, provably disjoint joint nulls for budget B<γ)."
       retire_if_same_verdict: false
   prompt: |
     CONTEXT:
     exp1232 measured the 6x6 P(V_i|V_j) conditional acceptance matrix on the k=6 production
-    verifier ensemble. This experiment implements the redesign: replaces flagged correlated pairs
-    with structurally independent alternatives, then re-measures the matrix to confirm improvement.
+    verifier ensemble. This experiment implements the redesign per Q11 Deep Think's TSS
+    (Transversal Spectral Synthesis) procedure — NOT pattern-match.
 
-    Target: k_eff >= 4 of 6 verifiers structurally independent (P(V_i|V_j) < 0.7 for all pairs).
-    Acceptable fallback: merge correlated pair explicitly in paper-v6 with honest k_eff accounting.
+    READ FIRST: docs/research-notes/verifier-orthogonality-design-deep-think-results.md
+
+    Q11 RESULTS APPLIED:
+    - Q11.2 SMT Triviality Pruning: eliminate verifiers V_i with Image(D) ⊆ Accept(V_i)
+      (predicted casualties from Q11.4 application table: AST + JSON Schema if snap_to_action
+      structurally guides syntax)
+    - Q11.4 Transversal Pair: SC-Energy (V_mag, continuous radial) + Z3 (V_disc, discrete angular)
+      provably has empty joint null space for attack budget B < margin γ. THIS IS THE LOAD-
+      BEARING DEFENSE per Q11.
+    - Q11.5 Complexity: synthesis is polynomial via TSS, not Σ_2^P combinatorial search.
+
+    Target: k_eff >= 4 of 6 verifiers structurally independent (P(V_i|V_j) < 0.7 for all pairs)
+    AND TSS-optimal pair (SC-Energy + Z3) confirmed empirically transversal.
+    Acceptable fallback: merge correlated pair explicitly in paper-v6 with honest k_eff accounting,
+    BUT keep TSS pair as the "k=2 provably-transversal core" claim regardless.
+
+    NEW THREAT VECTOR (Q11 Achilles Heel — instrument as future stretch goal):
+    The sign(z) firewall depends on non-differentiability. A self-modifying agent could
+    bypass via Straight-Through Estimator (STE) or Gumbel-Softmax relaxation, routing
+    gradient through the discrete bottleneck and restoring correlation. Defense:
+    sandbox + hash-linked forensic chain on the transpilation pipeline (per SentinelAgent
+    arXiv:2604.02767). NOT this experiment's scope but document in artifact's
+    `q11_residual_threats` field.
 
     STEP 0 — WRITE SKELETON ARTIFACT IMMEDIATELY:
     {{
