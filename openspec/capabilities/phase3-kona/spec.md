@@ -1046,6 +1046,42 @@ basin.
   HardNet++ versus SnareNet deltas without turning diversity collapse or
   verified-span destruction into a positive result.
 
+### REQ-KONA-030: DSP Feasibility-Channel Repair Diagnostics
+
+Continuous repair experiments MUST expose DSP-style local/global feasibility
+channels around each candidate repair step. The local channel `phi_local`
+measures residual violation pressure on the current state, while the global
+channel `Phi_global` measures cohort-level residual feasibility pressure for
+the same repair context. The combined channel predicts whether one more repair
+step is expected to reduce hard violation energy/count rather than only add
+state distortion.
+
+The Exp 1292 artifact MUST replay the Exp 1275 FSNet, Exp 1276 SnareNet, and,
+when present, Exp 1291 HardNet++ nonlinear repair cases. It MUST report
+`phi_local`, `Phi_global`, `feasibility_channel_auc`,
+`repair_help_prediction_accuracy`, `false_continue_rate`, `false_stop_rate`,
+`distortion_when_wrong`, `feasibility_channel_predictive`,
+`recommended_repair_stop_policy`, `status`, and `honest_verdict`.
+
+**Rationale:** Continuous repair should know when additional refinement is useful
+and when it is just moving a valid latent farther from the sampled state. A
+separate local/global feasibility channel makes that decision auditable and
+keeps nonlinear geometry failures from being hidden inside an average repair
+score.
+
+**Acceptance criteria:**
+
+- `python/carnot/phase3/continuous_ebm.py` exposes helper functions that compute
+  finite `phi_local`/`Phi_global` repair-step diagnostics and binary predictive
+  metrics from deterministic repair rows.
+- Focused tests verify that residual hard violations produce a continue signal,
+  zero residual hard violations produce a stop signal, and AUROC/accuracy/false
+  continue/false stop metrics are computed without requiring scikit-learn.
+- `results/experiment_1292_dsp_feasibility_channel_diagnostic.json` records all
+  required Exp 1292 fields, uses run date `20260504`, and sets
+  `honest_verdict` from measured predictive quality without converting nonlinear
+  false-continue cases into a fully positive result.
+
 ## Scenarios
 
 ### SCENARIO-KONA-001: Stage 1 Primitive — RDT Fixed-Point Convergence
@@ -1424,6 +1460,22 @@ diversity, and verified-span reuse measurements derived from the same
 deterministic nonlinear benchmark.
 
 **Spec traces:** REQ-KONA-029
+
+### SCENARIO-KONA-030: Exp 1292 Predicts Useful Additional Repair Steps
+
+**Given** completed Exp 1275 and Exp 1276 linear repair artifacts and an optional
+completed Exp 1291 nonlinear repair artifact
+**When** Exp 1292 constructs candidate before/after repair transitions from the
+same per-seed rows
+**Then** it writes
+`results/experiment_1292_dsp_feasibility_channel_diagnostic.json` with finite
+`phi_local`, `Phi_global`, `feasibility_channel_auc`,
+`repair_help_prediction_accuracy`, `false_continue_rate`, `false_stop_rate`,
+`distortion_when_wrong`, `feasibility_channel_predictive`,
+`recommended_repair_stop_policy`, `status`, and `honest_verdict` fields derived
+from those deterministic transitions.
+
+**Spec traces:** REQ-KONA-030
 
 ## Out of scope
 
