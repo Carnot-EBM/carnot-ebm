@@ -4748,3 +4748,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-04: GRPO v7 Simplified — VPS-Only, Single GPU or CPU Fallback, 20 Train / 30 Eval GSM8K (⚠️ Research Finding) — honest_verdict=in_progress; results/experiment_1247_grpo_v7_simplified.json
 - 2026-05-04: GRPO v7 Simplified — VPS-Only, Single GPU or CPU Fallback, 20 Train / 30 Eval GSM8K (⚠️ Research Finding) — honest_verdict=in_progress; results/experiment_1247_grpo_v7_simplified.json
 - 2026-05-04: Boltzmann-GPT CD Training v2 — Forward Pass Test First, 100 CD Steps, AUROC Target 0.70 (⚠️ Research Finding) — honest_verdict=in_progress; results/experiment_1248_boltzmann_gpt_cd_training_v2.json
+- 2026-05-04: Boltzmann-GPT CD Training v2 — Forward Pass Test First, 100 CD Steps, AUROC Target 0.70 (⚠️ Research Finding) — honest_verdict=boltzmann_gpt_cd_auroc_0.96; results/experiment_1248_boltzmann_gpt_cd_training_v2.json
