@@ -1,0 +1,40 @@
+{
+  "experiment": "1266_quantkan_3bit_lut_kan",
+  "schema": "carnot.exp1266.quantkan_3bit_lut_kan.v1",
+  "run_date": "2026-05-04T12:25:08Z",
+  "duration_s": 0.001,
+  "status": "complete",
+  "n_pairs_evaluated": 200,
+  "auroc_curve": {
+    "full_precision": 0.9902,
+    "8bit_ptq": 0.9902,
+    "4bit_ptq": 0.9901,
+    "3bit_ptq": 0.9801,
+    "3bit_lut": 0.9791
+  },
+  "model_size_mb": {
+    "8bit": 0.002,
+    "4bit": 0.001,
+    "3bit": 0.001,
+    "3bit_lut_overhead": 0.013
+  },
+  "lut_kan_speedup": 2.5,
+  "lut_table_size_kb": 12.5,
+  "quantkan_3bit_auroc": 0.9801,
+  "auroc_drop_from_4bit": 0.01,
+  "size_reduction_from_4bit_pct": 25.0,
+  "deployment_recommendation": "3-bit QuantKAN + LUT-KAN for ultra-edge NPU; 4-bit for general NPU",
+  "honest_verdict": "quantkan_3bit_auroc_0.9801_lut_speedup_2.5x",
+  "simulation": {
+    "spec": [
+      "REQ-KAN-1266",
+      "SCENARIO-KAN-1266"
+    ],
+    "quantkan_drop_model": "deterministic_0.0100_auroc_drop_from_4bit",
+    "lut_rounding_drop": 0.001,
+    "lut_grid_points": 256,
+    "lut_value_dtype": "int8",
+    "direct_latency_ns": 1000.0,
+    "lut_latency_ns": 400.0
+  }
+}

@@ -84,6 +84,7 @@ Then the result is 5016 (= 8 * 32 * 19 + 8 * 19).
 | REQ-KAN-1162 | Implemented | Exp 1162: KANELE-style Q8 LUT blueprint and hardware-complexity artifact generated for the compressed SOSKANEnergyV3 shape. |
 | REQ-KAN-1174 | Proposed | Exp 1174 target: BiKA multiply-free complexity analysis for SOSKANEnergyV3, MetaCluster, and AMD XDNA NPU feasibility. |
 | REQ-KAN-1199 | Proposed | Exp 1199 target: KANtize-style 8-bit/4-bit SOSKANEnergyV3 spline quantization with endpoint-sensitive precision and safetensors export. |
+| REQ-KAN-1266 | Proposed | Exp 1266 target: deterministic QuantKAN-style 3-bit PTQ simulation plus LUT-KAN latency comparison for SOSKANEnergyV3. |
 
 ## REQ-KAN-020: KAEMEnergy FPGA LUT Budget Analyzability
 
@@ -309,3 +310,44 @@ When `scripts/experiment_1199_kantize_soskan_4bit_quantization.py` runs,
 Then it evaluates 32-bit, 8-bit, and 4-bit AUROC, measures packed model sizes
 and 4-bit per-sample latency, exports the 4-bit quantized checkpoint as
 safetensors, and reports whether `soskan_4bit_auroc >= 0.97`.
+
+## REQ-KAN-1266: QuantKAN 3-bit PTQ and LUT-KAN simulation
+
+Experiment 1266 MUST extend the Exp 1199 SOSKANEnergyV3 quantization report with
+a deterministic QuantKAN-style 3-bit post-training-quantization simulation and
+a LUT-KAN inference-latency comparison. The artifact MUST be derived from the
+FoVer v5 evaluation corpus and the Exp 1199 4-bit baseline when available, while
+falling back to the documented SOS-KAN references when a legacy field is absent.
+
+**Rationale:**
+    Exp 1199 established the 4-bit KANtize reference for SOSKANEnergyV3 edge
+    deployment. Ultra-edge NPU planning needs a 3-bit estimate and a separate
+    lookup-table inference comparison before spending hardware effort. This is
+    explicitly a simulation: the 3-bit AUROC is a deterministic GPTQ-style drop
+    from the loaded 4-bit AUROC, and LUT-KAN latency is an analytical comparison
+    of direct spline evaluation against a 256-point INT8 lookup table.
+
+**Acceptance criteria:**
+    - The runner SHALL read `results/fover_corpus_v5.json` and evaluate the
+      first 200 pairs for artifact provenance.
+    - The runner SHALL read the Exp 1199 artifact, accepting both legacy
+      `quantized_auroc`/`model_size_mb` aliases and current
+      `soskan_4bit_auroc`/`soskan_4bit_size_mb` fields.
+    - The artifact SHALL include `auroc_curve` with
+      `full_precision`, `8bit_ptq`, `4bit_ptq`, `3bit_ptq`, and `3bit_lut`.
+    - The artifact SHALL include `quantkan_3bit_auroc`, `lut_kan_speedup`, and
+      an `honest_verdict` formatted as
+      `quantkan_3bit_auroc_X.XXXX_lut_speedup_X.Xx`.
+    - The 3-bit model size SHALL be 75% of the loaded 4-bit model size, and the
+      LUT overhead SHALL equal `n_vars * n_grid_points` INT8 bytes.
+    - `scripts/experiment_1266_quantkan_3bit_lut_kan.py` SHALL write
+      `results/experiment_1266_quantkan_3bit_lut_kan.json` with the required
+      schema fields.
+
+### SCENARIO-KAN-1266: write QuantKAN 3-bit plus LUT-KAN artifact
+
+Given the FoVer v5 corpus and the Exp 1199 SOSKANEnergyV3 4-bit result,
+When `scripts/experiment_1266_quantkan_3bit_lut_kan.py` runs,
+Then `results/experiment_1266_quantkan_3bit_lut_kan.json` is written with the
+AUROC curve, 3-bit AUROC, LUT-KAN speedup, model-size comparison, and honest
+verdict required by REQ-KAN-1266.
