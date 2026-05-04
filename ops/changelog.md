@@ -4772,3 +4772,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-04: Phase-5-D Intermediate Scale v3 — 4 Core Gates, EBM Replay Buffer, d=128, DualGPU (⚠️ Research Finding) — honest_verdict=in_progress; results/experiment_1260_phase5d_intermediate_scale_v3.json
 - 2026-05-04: WOPR Kakuro Puzzle Cartridge v3 — Integer Sum Constraints, E=0 at Valid Solution (⚠️ Research Finding) — honest_verdict=in_progress; results/experiment_1261_wopr_kakuro_v3.json
 - 2026-05-04: WOPR Kakuro Puzzle Cartridge v3 — Integer Sum Constraints, E=0 at Valid Solution (⚠️ Research Finding) — honest_verdict=in_progress; results/experiment_1261_wopr_kakuro_v3.json
+- 2026-05-04: WOPR Masyu Loop Puzzle Cartridge v2 — Black/White Circle Constraints, E=0 at Valid Loop (⚠️ Research Finding) — honest_verdict=in_progress; results/experiment_1262_wopr_masyu_v2.json
