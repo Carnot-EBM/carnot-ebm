@@ -84,6 +84,64 @@ Welch ceiling) physically deployable on consumer hardware.
 
 \section{Introduction}
 
+\paragraph{Notation and conventions.} For reviewer convenience, we
+collect the project-internal terminology used throughout this paper.
+
+\begin{itemize}
+  \item \textbf{Milestone numbers $\boldsymbol{.NN}$} (e.g.\ ``.85'',
+    ``.87'', ``.88''). Carnot is developed by an autonomous research
+    conductor that stamps each completed milestone with the
+    identifier $\mathrm{YYYY}.\mathrm{MM}.\mathrm{NN}$. Throughout
+    this paper, ``.NN'' is shorthand for the $N$th milestone of
+    2026-04. ``.85'' specifically refers to the milestone in which
+    the four wall-class measurements anchoring this paper were taken.
+  \item \textbf{Paper version $\boldsymbol{v2}$ vs $\boldsymbol{v3}$.}
+    This paper is draft v3, published 2026-05-01. Earlier internal
+    drafts (v1, v2) were never publicly distributed. References to
+    ``v2's claim X'' or ``preserved from v2'' are given so that
+    contributors who tracked the project across drafts can map
+    revisions; readers seeing the work for the first time can treat
+    every v2 reference as ``the prior internal draft'' without losing
+    technical content.
+  \item \textbf{$\boldsymbol{k}$.} Cardinality of the formally-distinct
+    verifier ensemble that AND-composes acceptance decisions. The
+    production ensemble has $k=6$; see Section~\ref{sec:k6} for
+    composition and provenance.
+  \item \textbf{$\boldsymbol{\alpha_t}$ (Zenil's self-distillation
+    grounding signal).} The fraction of training-time steps at which
+    the verifier-ensemble supervision diverges from the teacher
+    pseudo-label, measured per Zenil's self-distillation framework
+    (Section~\ref{sec:framework}). Higher $\alpha_t$ means the
+    verifier is providing genuinely new signal rather than echoing
+    the teacher.
+  \item \textbf{$\boldsymbol{D_{\mathrm{eff}}}$ and
+    $\boldsymbol{D_{\mathrm{int}}}$ (effective and intrinsic
+    dimensions of the joint verifier embedding).} Both are
+    Participation-Ratio-derived scalars over the verifier-output
+    covariance: $D_{\mathrm{eff}}$ is the deployed-text estimate
+    (\texttt{exp1093}); $D_{\mathrm{int}}$ is the architectural
+    upper bound. Lower $D_{\mathrm{eff}}$ implies higher pairwise
+    correlation among verifiers and a smaller effective ensemble.
+    Section~\ref{sec:bounds} derives the bound and projects the
+    measurement against the Welch/Rankin Simplex.
+  \item \textbf{Cascade tiers (Tier 0a, 0b, 0c, 1, 2, 2.5, 2.7, 3).}
+    Carnot routes outputs through tiers of progressively more
+    expensive verifiers, exiting at the first tier whose energy
+    threshold either accepts or rejects with confidence. Tier 0a
+    (ThinkPRM) is the cheapest; Tier 3 (Z3 SMT) is the most
+    expensive and most precise. Section~\ref{sec:framework}
+    defines each tier in detail.
+  \item \textbf{Phase 1 / 2 / 3 / 4} refer to Carnot's project
+    phases: Phase 1 (verify-repair pipeline, current production),
+    Phase 2 (hardware acceleration via FPGA / Extropic Z1), Phase 3
+    (open-source foundation model with continuous-latent reasoning,
+    DBAE-EBM substrate), Phase 4 (active-inference / free-energy-
+    principle reformulation, committed 2026-05-02). Phase 3-7 in
+    Section~\ref{sec:framework} refers to the multi-step Phase 3
+    decomposition derived in nine rounds of cross-validating
+    Deep Think analyses.
+\end{itemize}
+
 The problem we want to attack is decentralized verification of
 LLM outputs: given a hosted-locally open-weight base model whose
 generations may be incorrect, hallucinated, or adversarially
