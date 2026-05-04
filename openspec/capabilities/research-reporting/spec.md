@@ -475,6 +475,41 @@ gate makes the planned task `GATED`. Blocked terminal artifacts shall count as
 The retrospective self-criterion shall count as `MET` only in the final
 artifact that sets `retro_complete == true`.
 
+### REQ-REPORT-024: Local Agent Usage Snapshot
+
+The repository shall provide a local operator workflow that inspects the
+machine-readable session logs for Codex and Claude and emits a combined usage
+snapshot without requiring web scraping.
+
+The workflow shall:
+
+- read the latest Codex `token_count` event from `~/.codex/sessions/**/*.jsonl`
+  and surface:
+  - `plan_type`
+  - primary and secondary rate-limit windows, usage percentages, and reset
+    epochs when present
+  - total and last token-usage summaries when present
+- read Claude session logs from `~/.claude/projects/**/*.jsonl` and aggregate:
+  - `input_tokens`
+  - `output_tokens`
+  - `cache_creation_input_tokens`
+  - `cache_read_input_tokens`
+  - without double-counting repeated log entries for the same assistant message
+- read Claude subscription metadata from `~/.claude/.credentials.json` and
+  surface only non-secret plan fields such as `subscriptionType` and
+  `rateLimitTier`
+- when the Claude logs contain a structured, command-scoped quota percentage
+  tied to `/usage` or an equivalent local usage event, the workflow may surface
+  the latest reported value as `used_percent`
+- free-form Claude assistant prose shall not be interpreted as quota telemetry
+- report exact unavailability honestly: if a provider does not expose a local
+  percentage-used or reset field, the workflow shall emit `null` plus an
+  `unavailable` note instead of guessing
+- support both machine-readable JSON output and a human-readable table output
+
+The workflow shall never echo access tokens, refresh tokens, raw credential
+payloads, or other secret fields.
+
 ## Scenarios
 
 ### SCENARIO-REPORT-001: Nested Live Provenance Is Promoted
@@ -707,6 +742,54 @@ criteria do not increment `criteria_met`
 **And** the artifact reports `criteria_met == 12`
 **And** `honest_verdict == "milestone_99_12_of_14_criteria_met"`
 
+### SCENARIO-REPORT-021: Codex Latest Rate-Limit Event Is Surfaced
+
+**Given** a local Codex session tree contains multiple `token_count` events
+**And** a newer event includes `plan_type`, primary and secondary rate limits,
+and token totals
+**When** the local agent-usage workflow runs
+**Then** the Codex section reports the newest event only
+**And** it exposes the primary and secondary `used_percent`, `window_minutes`,
+and `resets_at` fields
+**And** it carries forward the latest token totals without fabricating missing
+fields
+
+### SCENARIO-REPORT-022: Claude Token Totals Are Aggregated Without Secret Leakage
+
+**Given** local Claude project logs contain multiple assistant messages with
+usage payloads
+**And** at least one assistant message is repeated in the logs with the same
+`sessionId` and `message.id`
+**And** `~/.claude/.credentials.json` contains access tokens plus
+`subscriptionType` and `rateLimitTier`
+**When** the local agent-usage workflow runs
+**Then** the Claude section aggregates the token totals across the logs
+**And** repeated entries for the same assistant message count once
+**And** it reports only `subscription_type` and `rate_limit_tier` from the
+credentials file
+**And** the output omits access tokens, refresh tokens, and raw credential
+objects
+
+### SCENARIO-REPORT-023: Missing Claude Percent Usage Stays Unavailable
+
+**Given** the local Claude logs contain token-usage payloads but no
+machine-readable percentage-used field
+**When** the local agent-usage workflow runs
+**Then** the Claude section reports `used_percent == null`
+**And** the human-readable table prints `unavailable` for the Claude plan-usage
+cell rather than guessing a percentage
+
+### SCENARIO-REPORT-024: Free-Form Claude Quota Prose Is Ignored
+
+**Given** the local Claude logs contain assistant text mentioning quota usage
+in ordinary prose
+**And** that text is not attached to a structured `/usage` or equivalent local
+usage event
+**When** the local agent-usage workflow runs
+**Then** the Claude section does not treat that prose as `used_percent`
+**And** it reports `used_percent == null` unless a structured usage field is
+available elsewhere
+
 
 ### REQ-PUBLISH-003: HuggingFace README Accuracy Audit
 
@@ -804,5 +887,6 @@ embed live-GPU benchmark results from Exp 328 when available.
 | REQ-REPORT-021 | `python/carnot/reporting/combined_retro_95_96_97.py`, `results/experiment_1255_combined_retro_95_96_97.json` | `tests/python/test_combined_retro_95_96_97.py` | Implemented |
 | REQ-REPORT-022 | `python/carnot/reporting/milestone_retro_98.py`, `results/experiment_1267_milestone_retro_98.json` | `tests/python/test_milestone_retro_98.py` | Implemented |
 | REQ-REPORT-023 | `python/carnot/reporting/milestone_retro_99.py`, `results/experiment_1281_milestone_retro_99.json` | `tests/python/test_milestone_retro_99.py` | Implemented |
+| REQ-REPORT-024 | `python/carnot/reporting/agent_usage.py`, `scripts/agent_plan_usage.py` | `tests/python/test_agent_plan_usage.py` | Implemented |
 | REQ-PUBLISH-003 | `scripts/experiment_317_hf_publish.py` | `tests/python/test_experiment_317_hf_publish.py` | Implemented |
 | REQ-PUBLISH-004 | `scripts/experiment_330_hf_live_publish.py` | `tests/python/test_experiment_330_hf_live_publish.py` | Implemented |

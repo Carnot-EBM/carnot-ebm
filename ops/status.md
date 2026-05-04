@@ -1,6 +1,27 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-04 (Milestone 2026.04.99 planned; execution YAML created)
+**Last Updated:** 2026-05-04 (Milestone 2026.04.99 operational retrospective complete)
+
+## Session 2026-05-04 - Milestone 2026.04.99 Operational Retrospective Complete
+
+**Milestone 2026.04.99 operational retro COMPLETE.**
+
+- Artifact written: `results/operational_retro_2026_04_99.json`
+- Timing scope analyzed: supplied 10 min operational closeout slice, 2 completed experiments, 5 min average
+- Slowest item: exp1270 arXiv Bundle v10 at 10 min, gated on exp1269 critical fixes
+- GPU closeout: both RTX 3090s idle at 4 MB / 0% utilization with no gpu_monitor.py zombie processes
+- Next-milestone leverage: parallel CPU/GPU lanes, cached TeX/pre-flight targets, structured gate/compile timing, and batched docs reconciliation
+
+## Session 2026-05-04 - Local Agent Usage Snapshot Added
+
+**Local Claude/Codex usage inspection COMPLETE.**
+
+- Added `python/carnot/reporting/agent_usage.py` plus `scripts/agent_plan_usage.py`.
+- Codex path: reads the newest `token_count` event under `~/.codex/sessions/**/*.jsonl` and surfaces `plan_type`, primary/secondary rate-limit windows, reset epochs, and token totals.
+- Claude path: aggregates token usage from `~/.claude/projects/**/*.jsonl`, reads only `subscriptionType` / `rateLimitTier` from `~/.claude/.credentials.json`, and intentionally omits access/refresh tokens from output.
+- Honest behavior: Claude `used_percent` stays `null`/`unavailable` when local logs do not expose a structured quota field; free-form assistant prose is ignored.
+- Operator outputs: compact table by default, JSON via `python scripts/agent_plan_usage.py --format json`.
+- Verification: `tests/python/test_agent_plan_usage.py` passes.
 
 ## Session 2026-05-04 - Milestone 2026.04.99 Planning Complete
 
