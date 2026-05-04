@@ -55,6 +55,25 @@ def test_fover_dataset_loads_binary_labels_from_rows() -> None:
         FoVerDataset(rows=[{"step_text": "only one class", "label": "correct"}])
 
 
+def test_fover_dataset_loads_jsonl_and_boolean_labels(tmp_path: Path) -> None:
+    """REQ-KONA-019: FoVerDataset accepts checked-in JSONL-style corpus rows."""
+    path = tmp_path / "fover.jsonl"
+    path.write_text(
+        "\n".join(
+            [
+                json.dumps({"step_text": "clean trace", "label": "correct"}),
+                json.dumps({"response": "broken trace", "is_correct": False}),
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    dataset = FoVerDataset(path=path)
+
+    assert dataset.texts == ["clean trace", "broken trace"]
+    assert dataset.labels == [1, 0]
+
+
 def test_layer_forward_returns_finite_energy_and_state_dict() -> None:
     """REQ-KONA-019: BoltzmannGPTLayer is trainable and checkpointable."""
     model = bgpt.BoltzmannGPTLayer(visible_dim=4, hidden_dim=3, seed=7)
@@ -65,6 +84,14 @@ def test_layer_forward_returns_finite_energy_and_state_dict() -> None:
     assert energies.shape == (3,)
     assert torch.isfinite(energies).all()
     assert set(model.state_dict()) == {"W", "b", "c"}
+
+
+def test_honest_verdict_maps_from_measured_auroc() -> None:
+    """SCENARIO-KONA-019: honest_verdict is derived from held-out AUROC only."""
+    assert bgpt.derive_honest_verdict(0.81) == "contrastive_auroc_above_0p80"
+    assert bgpt.derive_honest_verdict(0.66) == "contrastive_auroc_improved_below_threshold"
+    assert bgpt.derive_honest_verdict(0.65) == "training_diverged"
+    assert bgpt.derive_honest_verdict(float("nan")) == "training_diverged"
 
 
 def test_text_embedding_and_split_are_deterministic() -> None:

@@ -1,6 +1,6 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-04 (Milestone 2026.04.96 research planning complete)
+**Last Updated:** 2026-05-04 (Exp 1237 REQ-KONA-019 implementation verified; focused tests and changed-module coverage pass)
 
 ## Session 2026-05-04 — Milestone 2026.04.96 Planning Complete
 
@@ -32,6 +32,7 @@
 
 **Phase 4 — Boltzmann-GPT Contrastive Training:**
 - exp1237: Contrastive divergence training on FoVer, target AUROC>0.80 (codex/gpt-5.5, max_turns:40, GPU, prior_failures:[exp1226])
+- exp1237 status: implemented FoVerDataset and torch Boltzmann-GPT helpers for deterministic embeddings, stratified splitting, contrastive energy-gap training, AUROC-derived honest verdicts, and checkpoint/artifact writing. Focused Exp 1237 tests pass with 100% coverage for changed modules; broad `tests/python` verification remains blocked by unrelated experiment failures observed in exp383, exp832, exp848, exp864, and exp865.
 
 **Phase 5 — Phase-5-D Intermediate Scale:**
 - exp1238: 100-300M params, d=128, k=5, 8 failure mode gates, PPSEBM replay buffer (claude/opus, max_turns:70, DualGPU MANDATORY)
