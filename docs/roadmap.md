@@ -94,6 +94,7 @@
 | 2026.04.94 | Clean Sweep + Phase 4 Pivot | 1203-1215 | 13/13 criteria met; pre-test suite repaired, critical paper issues resolved, llama.cpp GPU offload verified, GRPO-VPS step supervision improved +24pp, Phase 4 cleared BFS-intractable puzzles, and Nonogram shipped; operational retro measured 78 min / 7 experiments with 28% savings recoverable |
 | 2026.04.95 | GRPO-VPS + In-Situ Derisking | 1216-1228 | GRPO-VPS beat v4, Phase 5 in-situ substrate/training gates passed, pre-commit data-loss path fixed, and Futoshiki shipped E=0; operational retro measured 78 min / 7 experiments with 30% savings recoverable |
 | 2026.04.96 | STEP 0 Skeletons + Autofill Churn | 1229-1241 | exp1230 shipped prior_failures autofill, but the operational retro found stale in_progress skeletons, exp1240 gate-blocked, idle GPUs at closeout, and 32% savings recoverable via finalization and active DualGPU scheduling |
+| 2026.04.97 | Skeleton Finalization Gap + Boltzmann-GPT Recovery | 1242-1254 | Boltzmann-GPT CD reached AUROC 0.9607 and NRGPT nonmonotonicity was classified, but the operational retro found 9 stale in_progress artifacts, idle GPUs, Masyu prior-failures blocking, and 42% savings recoverable via terminal artifact finalization plus parallel scheduling |
 
 ## Breakthrough Results
 
