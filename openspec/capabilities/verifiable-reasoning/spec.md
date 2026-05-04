@@ -16965,3 +16965,46 @@ and FoVer corpus v5 contains at least 50 pairs
 **And** `k_eff` is 5 when no production verifier pair exceeds r=0.5.
 
 **Spec traces:** REQ-VERIFY-1244, Exp 1244
+
+## REQ-VERIFY-1249: LLMs Gaming Verifiers Defense v3 Hand-Crafted Samples
+
+**Summary:** Measure whether Carnot's k=5 AND-composed verifier ensemble blocks
+hand-crafted arXiv 2604.15149-style verifier-gaming responses better than the
+single Z3MathVerifier baseline on shallowly plausible arithmetic responses.
+
+**Requirements:**
+
+- REQ-VERIFY-1249-1: The experiment SHALL define exactly 10 deterministic
+  gaming samples, each with `question`, `response`, `correct_answer`, and
+  `gaming_strategy` fields.
+- REQ-VERIFY-1249-2: The sample set SHALL include multiple gaming strategies
+  that appear structurally plausible while remaining wrong, including mixed
+  calculations, off-by-one confident formatting, wrong problem interpretation,
+  correct final answer with invalid reasoning, comparison inversion, percentage
+  confusion, unit mismatch, distractor anchoring, contradiction, and masked
+  arithmetic.
+- REQ-VERIFY-1249-3: The workflow SHALL score every sample with
+  `Z3MathVerifier.score(response)` as the k=1 baseline and count a sample as
+  blocked when the returned energy is greater than `0.5`.
+- REQ-VERIFY-1249-4: The workflow SHALL score the same samples with
+  `AndCompositionVerifier.verify(question, response)` and count a sample as
+  blocked when the AND-composed result is not verified.
+- REQ-VERIFY-1249-5: Exp 1249 SHALL write
+  `results/experiment_1249_llms_gaming_verifiers_defense_v3.json` with all
+  required fields: `n_gaming_samples`, `k1_block_rate`, `k5_block_rate`,
+  `k5_improvement_over_k1`, `gaming_defense_measured`, and `honest_verdict`.
+
+**Implementation Status:** Implemented (Exp 1249)
+
+### SCENARIO-VERIFY-1249: k=5 AND-Compose Blocks Hand-Crafted Gaming Samples
+
+**Given** 10 deterministic arithmetic responses that pass shallow structural
+formatting but contain wrong claims or invalid reasoning
+**When** `python/carnot/eval/llms_gaming_verifiers_defense_v3.py` runs
+**Then** it compares k=1 Z3MathVerifier blocking against k=5 AND-composed
+blocking
+**And** it writes the Exp 1249 artifact with the required schema fields
+**And** `honest_verdict` reports the measured k=5 and k=1 block rates using the
+format `gaming_defense_k5_block_rate_X.XX_vs_k1_Y.YY`.
+
+**Spec traces:** REQ-VERIFY-1249, Exp 1249
