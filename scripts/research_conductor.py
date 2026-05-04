@@ -534,7 +534,46 @@ def run_agent(
                         deliverable_stable_since = None
                         deliverable_last_sig = sig
                     elif sig == deliverable_last_sig:
-                        if deliverable_stable_since is None:
+                        # 2026-05-04 fix: the deliverable-watch was
+                        # firing on STEP-0 skeleton files that the agent
+                        # wrote at the start of its run and then did NOT
+                        # re-touch while doing other work (reading code,
+                        # running pytest, etc.). Conductor concluded
+                        # "stable → done" and killed the agent before
+                        # it could write the terminal artifact, causing
+                        # universal artifact_not_updated_past_bootstrap
+                        # failures across .96/.97/.98. Fix: parse the
+                        # deliverable's status field; if it's still in
+                        # _BOOTSTRAP_STATUSES (running/blocked/partial/
+                        # in_progress), the agent isn't done — don't
+                        # trigger early-kill, regardless of mtime
+                        # stability.
+                        bootstrap_only = False
+                        try:
+                            with deliverable_file.open(
+                                "r", encoding="utf-8"
+                            ) as _fh:
+                                _payload = json.load(_fh)
+                            if isinstance(_payload, dict):
+                                _st_field = _payload.get("status")
+                                if (
+                                    isinstance(_st_field, str)
+                                    and _st_field.lower()
+                                    in _BOOTSTRAP_STATUSES
+                                ):
+                                    bootstrap_only = True
+                        except (OSError, json.JSONDecodeError):
+                            # Mid-write race or non-JSON artifact —
+                            # treat as not-yet-finished to be safe.
+                            bootstrap_only = True
+                        if bootstrap_only:
+                            # Don't reset the stability tracker — keep
+                            # tracking so we eventually fall through to
+                            # WALL_CLOCK_TIMEOUT logic. But never trigger
+                            # the deliverable-watch early-kill on a
+                            # bootstrap-only artifact.
+                            pass
+                        elif deliverable_stable_since is None:
                             deliverable_stable_since = now
                         elif now - deliverable_stable_since >= DELIVERABLE_STABLE_SECS:
                             logger.info(
