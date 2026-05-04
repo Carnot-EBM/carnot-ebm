@@ -15,8 +15,8 @@ tasks:
   milestone: 2026.04.96
   deliverable: results/experiment_1229_milestone_retro_95.json
   title: "Milestone 2026.04.95 Retrospective — STEP 0 Pattern, Evaluate 13 Criteria"
-  agent_type: claude
-  model: opus
+  agent_type: codex
+  model: gpt-5.5
   max_turns: 100
   estimated_wall_time_min: 25
   priority: critical
@@ -208,8 +208,8 @@ tasks:
   milestone: 2026.04.96
   deliverable: results/experiment_1231_llms_gaming_verifiers_defense.json
   title: "LLMs Gaming Verifiers Defense — k=5 AND-Compose vs Single-Verifier RLVR Gaming"
-  agent_type: claude
-  model: opus
+  agent_type: codex
+  model: gpt-5.5
   max_turns: 80
   estimated_wall_time_min: 50
   priority: critical
@@ -313,13 +313,12 @@ tasks:
   milestone: 2026.04.96
   deliverable: results/experiment_1232_verifier_joint_orthogonality_audit.json
   title: "Verifier Joint Orthogonality Audit (v4 data archaeology) — 6x6 P(V_i|V_j) from prior artifacts"
-  agent_type: claude
-  model: opus
+  agent_type: codex
+  model: gpt-5.5
   max_turns: 50
   estimated_wall_time_min: 25
   priority: critical
   requires_gpu: false
-  requires_claude: true
   skip_pre_test: true
   prior_failures:
     - experiment_id: exp1093-phase1c-verifier-joint-null-space-measurement
@@ -429,13 +428,12 @@ tasks:
   milestone: 2026.04.96
   deliverable: results/experiment_1232b_q11_instrumentation.json
   title: "Q11 Instrumentation — SMT Triviality + Orthant Penetration + TSS Pair Correlation"
-  agent_type: claude
-  model: opus
+  agent_type: codex
+  model: gpt-5.5
   max_turns: 50
   estimated_wall_time_min: 30
   priority: high
   requires_gpu: false
-  requires_claude: true
   gated_on:
     - upstream: exp1232-verifier-joint-orthogonality-audit
       artifact_field: pairwise_correlation_matrix_measured
@@ -1424,8 +1422,8 @@ tasks:
   milestone: 2026.04.96
   deliverable: results/experiment_1241_milestone_retro_96.json
   title: "Milestone 2026.04.96 Retrospective — STEP 0 Pattern, Evaluate 13 Criteria"
-  agent_type: claude
-  model: opus
+  agent_type: codex
+  model: gpt-5.5
   max_turns: 100
   estimated_wall_time_min: 25
   priority: standard
