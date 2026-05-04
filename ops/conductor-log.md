@@ -653,3 +653,4 @@ If you finish the real work |
 | 2026-05-04 10:56 UTC | GRPO v7 — PROGRS Outcome-Conditioned Centering + V | FAIL | No file changes produced |
 | 2026-05-04 11:01 UTC | Phase-5-D Intermediate Scale v3 — 4 Core Gates, EB | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1260_phase5d |
 | 2026-05-04 11:06 UTC | Phase-5-D Intermediate Scale v3 — 4 Core Gates, EB | FAIL | No file changes produced |
+| 2026-05-04 11:11 UTC | Phase-5-D Intermediate Scale v3 — 4 Core Gates, EB | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1260_phase5d |
