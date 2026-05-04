@@ -4,6 +4,57 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-05-04 Scan (Milestone 2026.04.96 Planning)
+
+### EBM Theoretical Lens for RL-Tuned Language Models
+- **Paper:** arXiv 2512.18730 (December 2025).
+- **What:** Provides theoretical framework treating RL-tuned LLMs as EBMs; derives sequence-level energy compatibility between token sequences and conditioning context; shows RL alignment is implicitly minimizing an energy objective.
+- **Relevance to Carnot:** Establishes rigorous theoretical foundation for Carnot's EBM-based verification. The "energy gap" between correct and hallucinated traces is formalized here — directly applicable to contrastive Boltzmann-GPT training (exp1237). Also validates GRPO-VPS's energy reward signal as approximating the true EBM objective.
+- **Concrete experiment:** Use the energy gap formulation to design the contrastive CD loss for Boltzmann-GPT training (exp1237). Measure whether theoretical energy gap predicts AUROC improvement on FoVer corpus.
+- **When to incorporate:** Milestone .96 Phase 4 (exp1237 Boltzmann-GPT contrastive training basis).
+
+### Reward Model Ensembles Mitigate but Do Not Eliminate Reward Hacking
+- **Paper:** arXiv 2312.09244 (December 2023 / NeurIPS 2024).
+- **What:** Shows that even ensembles of reward models exhibit correlated error patterns; pretrain-seeded ensembles generalize better but all members still fail similarly on adversarial inputs. Reward hacking is not eliminated by ensemble averaging.
+- **Relevance to Carnot:** Directly validates exp1224 finding: k=1 effective in k=3 in-situ ensemble due to correlated acceptance regions. This paper provides the theoretical grounding: ensemble diversity requires active decorrelation, not just structural distinctness. Motivates HSIC penalty or explicit diversity regularization in k=6 verifier retraining.
+- **Concrete experiment:** Measure pairwise HSIC between k=6 verifier acceptance distributions; add HSIC penalty during verifier retraining; compare before/after k_eff. File as part of verifier redesign (exp1233).
+- **When to incorporate:** Milestone .96 Phase 1 (exp1233 verifier redesign).
+
+### Distortion Instead of Hallucination Under Strict Constraints
+- **Paper:** arXiv 2601.01490 (January 2026).
+- **What:** Shows that reasoning under constraints reduces direct violation rate (13–26% improvement) but systematically introduces factual distortion — models satisfy the constraint surface by bending known facts. The trade-off is between constraint satisfaction and factual fidelity.
+- **Relevance to Carnot:** GRPO-VPS rewards constraint satisfaction; this paper warns that increasing VPS reward may push the model toward distortion rather than genuine factual improvement. Carnot needs a factual fidelity term alongside constraint reward. Supports adding a Z3MathVerifier ground-truth accuracy check alongside the step-level GRPO reward.
+- **Concrete experiment:** In GRPO v6 retry (exp1235), add a factual consistency term (Z3MathVerifier pass rate on independent test set) measured separately from the GRPO reward. If GRPO-VPS improves constraint satisfaction but degrades Z3 pass rate, this paper's warning applies.
+- **When to incorporate:** Milestone .96 Phase 3 (exp1235 GRPO v6 metric design).
+
+### Execution-Grounded Credit Assignment for GRPO in Code Generation
+- **Paper:** arXiv 2603.16158 (March 2026).
+- **What:** Extends GRPO with fine-grained execution traces to localize reward signal to semantic errors. Instead of uniform credit across a program, uses runtime constraint violation traces to pinpoint which tokens contributed to the error.
+- **Relevance to Carnot:** GRPO-VPS (exp1220) assigns credit at the reasoning STEP level. This paper's execution trace approach could refine to the CONSTRAINT VIOLATION level — attributing credit to the specific tokens that caused a Z3 or AST violation. Complementary granularities: VPS → step, execution trace → constraint.
+- **Concrete experiment:** After GRPO v6 baseline is measured (exp1235), implement execution-grounded credit: extract which reasoning tokens triggered Z3MathVerifier violations; use as token-level weight in GRPO advantage computation. Compare vs VPS-only.
+- **When to incorporate:** Milestone .96 Phase 3 (exp1236, gated on exp1235 improvement).
+
+### Token-Regulated Group Relative Policy Optimization
+- **Paper:** arXiv 2511.00066 (November 2025).
+- **What:** Introduces probability-aware token weighting in GRPO: emphasizes high-probability (confident) tokens, downweights low-probability (uncertain) ones in the advantage computation. Improves performance on logic puzzles, math, and agentic QA without architecture changes.
+- **Relevance to Carnot:** GRPO v6 FSPO+VPS still struggles with logprob coverage (exp1221: insufficient_logprob_coverage). Token regulation would help focus the training signal on tokens where the model is most confident — reducing the low-logprob noise that caused FSPO's coverage gap.
+- **Concrete experiment:** Apply token regulation to GRPO v6 retry (exp1235). Weight FSPO advantage by token probability: high-prob tokens get full FSPO weight, low-prob tokens get reduced weight. Measure whether logprob coverage gap is reduced.
+- **When to incorporate:** Milestone .96 Phase 3 (incorporated into exp1235 prompt if feasible).
+
+### PPSEBM: Energy-Based Model with Progressive Parameter Selection for Continual Learning
+- **Paper:** arXiv 2512.15658 (December 2025).
+- **What:** EBM integrated with progressive parameter selection (PPS); EBM generates replay data from previous tasks; PPS focuses learning on task-relevant parameters; prevents catastrophic forgetting.
+- **Relevance to Carnot:** Phase-5-B in-situ training (exp1223) passed all 5 gates including no catastrophic forgetting at 50K params. Phase-5-D intermediate scale (100-300M params) may encounter mode collapse. PPSEBM's EBM replay mechanism provides a principled anti-forgetting defense at intermediate scale — the EBM generates synthetic old-distribution examples to prevent new data from washing out prior verifier calibration.
+- **Concrete experiment:** In Phase-5-D (exp1238), include an EBM replay buffer: sample 10% of each minibatch from the replay buffer (generated by the Ising/Boltzmann tier) instead of new queries alone. Measure whether catastrophic forgetting is suppressed at d=128 scale.
+- **When to incorporate:** Milestone .96 Phase 5 (incorporated into exp1238 Phase-5-D prompt).
+
+### QuantKAN: Unified Quantization Framework for KANs
+- **Paper:** arXiv 2511.18689 (November 2025).
+- **What:** Extends modern quantization methods (LSQ, PACT, DoReFa, GPTQ, AWQ) to spline-based KAN layers; unifies QAT and PTQ regimes; practical deployment framework.
+- **Relevance to Carnot:** KANtize (exp1199) achieved SOS-KAN AUROC=0.9901 at 4-bit, 2.2MB. QuantKAN provides a more comprehensive quantization framework, potentially enabling 2-bit or 3-bit deployment for ultra-edge NPU targets while preserving the AUROC threshold. Complements KANtize's LUT-precomputation approach.
+- **Concrete experiment:** Apply QuantKAN's GPTQ-style PTQ to the SOS-KAN checkpoint from exp1199. Compare 8-bit vs 4-bit vs 3-bit: AUROC degradation curve, inference latency, model size. File for .97+ edge deployment milestone.
+- **When to incorporate:** Milestone .97+ (edge deployment focus).
+
 ## 2026-05-03 Scan (Milestone 2026.04.95 Planning)
 
 ### FSPO: Factuality-Aware Step-wise Policy Optimization
