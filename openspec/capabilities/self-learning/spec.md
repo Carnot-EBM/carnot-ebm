@@ -2528,3 +2528,49 @@ its token log-probability is higher.
 
 **Given** `n_questions_evaluated=13` and `grpo_v6_improvement_pp=0.1`
 **Then** the verdict equals `"grpo_v6_beats_vps"`.
+
+## REQ-LEARN-1247: GRPO v7 Simplified VPS-Only Closed Training Loop
+
+Exp 1247 SHALL run or honestly replay a simplified GRPO v7 loop for the
+FR-11 self-learning milestone using only VPS step-level process supervision.
+The experiment deliberately removes FSPO per-token weighting, token regulation,
+and DualGPU requirements so a closed training-loop artifact can be produced
+inside the conductor turn budget.
+
+### REQ-LEARN-1247 Sub-requirements
+
+- REQ-LEARN-1247-1: The artifact SHALL include `grpo_v7_ran`,
+  `improvement_pp`, `baseline_accuracy`, `final_accuracy`, `training_mode`,
+  `device_used`, and `honest_verdict`.
+- REQ-LEARN-1247-2: `training_mode` SHALL be exactly `"vps_only"` and
+  `verifier_type` SHALL be exactly `"vps_only"`; FSPO and token-regulation
+  fields SHALL NOT be required for this artifact.
+- REQ-LEARN-1247-3: The configured dataset sizes SHALL be
+  `n_training_questions=20` and `n_eval_questions=30`.
+- REQ-LEARN-1247-4: `device_used` SHALL be exactly one of `"cuda:0"`,
+  `"cpu"`, `"llama_cpp"`, or `"fallback"`. Single-GPU and CPU execution are
+  acceptable; missing DualGPU support SHALL NOT block the artifact.
+- REQ-LEARN-1247-5: When live training cannot be invoked inside the turn
+  budget, the artifact MAY use the completed Exp 1220 VPS baseline as an
+  honest replay source, but it SHALL set `fallback_used=True` and
+  `device_used="fallback"`.
+- REQ-LEARN-1247-6: `honest_verdict` SHALL be `"grpo_v7_negative_delta"` when
+  `improvement_pp < 0.0`; otherwise it SHALL be formatted as
+  `"grpo_v7_improvement_pp_X"` with one decimal place. A missing executable
+  runtime with no replay source SHALL map to `"grpo_v7_gpu_missing"`.
+
+### SCENARIO-LEARN-1247: Exp 1220 VPS Replay Produces v7 Artifact Schema
+
+**Given** an Exp 1220 artifact with `grpo_vps_fraction_correct_before=0.8`
+and `grpo_vps_fraction_correct_after=0.95`
+**When** Exp 1247 writes a fallback artifact from that source
+**Then** `baseline_accuracy=0.8`, `final_accuracy=0.95`,
+`improvement_pp=15.0`, `training_mode="vps_only"`,
+`device_used="fallback"`, and `fallback_used=True`.
+
+### SCENARIO-LEARN-1248: Negative Delta Is Accepted Honestly
+
+**Given** `baseline_accuracy=0.6` and `final_accuracy=0.5`
+**When** the Exp 1247 artifact is built
+**Then** `improvement_pp=-10.0`
+**And** `honest_verdict="grpo_v7_negative_delta"`.
