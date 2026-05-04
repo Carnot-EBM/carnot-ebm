@@ -8,6 +8,7 @@ interface every cartridge must satisfy.
 from games._base import WOPRGame
 from games.hashi import HashiGame
 from games.lights_out import LightsOutGame
+from games.masyu import MasyuGame
 from games.nqueens import NQueensGame
 from games.slitherlink import SlitherlinkGame
 from games.sudoku import SudokuGame
@@ -22,6 +23,7 @@ ALL_GAMES: list[WOPRGame] = [
     NQueensGame(),
     HashiGame(),
     SlitherlinkGame(),
+    MasyuGame(),
 ]
 
 __all__ = [
@@ -33,5 +35,6 @@ __all__ = [
     "NQueensGame",
     "HashiGame",
     "SlitherlinkGame",
+    "MasyuGame",
     "ALL_GAMES",
 ]
