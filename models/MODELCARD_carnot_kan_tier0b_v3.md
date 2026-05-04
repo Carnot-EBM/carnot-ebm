@@ -150,7 +150,7 @@ This model is part of the Carnot EBM framework. If you use it in research:
 @software{carnot2026,
   title = {Carnot: Energy-Based Model Verification Framework},
   year = {2026},
-  url = {https://github.com/ianblenke/carnot}
+  url = {https://github.com/Carnot-EBM/carnot-ebm}
 }
 ```
 

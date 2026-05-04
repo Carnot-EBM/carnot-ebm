@@ -40,7 +40,7 @@ from typing import Any
 # actual project_root so the tool works correctly regardless of where the
 # repo is checked out.
 # ---------------------------------------------------------------------------
-_ROADMAP_PLACEHOLDER = "/home/ianblenke/github.com/ianblenke/carnot"
+_ROADMAP_PLACEHOLDER = "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm"
 _BRACED_PLACEHOLDER = "{project_root}"
 
 # The heading that marks the start of the dependency list in a prompt.

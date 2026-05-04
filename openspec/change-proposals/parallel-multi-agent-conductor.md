@@ -55,8 +55,8 @@ in its own git worktree, each driving its own AGENT_TYPE.
 **Worktree layout:**
 
 ```
-/home/ianblenke/github.com/ianblenke/carnot/                 # main worktree
-/home/ianblenke/github.com/ianblenke/carnot-codex/           # codex worktree (NEW)
+/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/                 # main worktree
+/home/ianblenke/github.com/Carnot-EBM/carnot-ebm-codex/           # codex worktree (NEW)
 ```
 
 Each worktree is a real `git worktree add` checkout sharing the same
@@ -82,7 +82,7 @@ agent runs. `git fetch` + `git rebase` synchronizes after each task.
 ```bash
 # Claude conductor (existing, unchanged):
 systemd-run --user --unit=carnot-conductor \
-  --working-directory=/home/ianblenke/github.com/ianblenke/carnot \
+  --working-directory=/home/ianblenke/github.com/Carnot-EBM/carnot-ebm \
   --setenv=AGENT_TYPE=claude \
   --setenv=PYTHONUNBUFFERED=1 \
   .venv/bin/python scripts/research_conductor.py \
@@ -91,7 +91,7 @@ systemd-run --user --unit=carnot-conductor \
 
 # Codex conductor (NEW):
 systemd-run --user --unit=carnot-conductor-codex \
-  --working-directory=/home/ianblenke/github.com/ianblenke/carnot-codex \
+  --working-directory=/home/ianblenke/github.com/Carnot-EBM/carnot-ebm-codex \
   --setenv=AGENT_TYPE=codex \
   --setenv=AGENT_MODEL=gpt-5.5 \
   --setenv=PYTHONUNBUFFERED=1 \
@@ -141,7 +141,7 @@ Once Tier A proves out (~1 week empirical), add a Gemini worktree
 for long-context audits:
 
 ```
-/home/ianblenke/github.com/ianblenke/carnot-gemini/   # gemini worktree
+/home/ianblenke/github.com/Carnot-EBM/carnot-ebm-gemini/   # gemini worktree
 ```
 
 Used for: failure-ledger pattern detection, architecture coherence

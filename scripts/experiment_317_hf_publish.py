@@ -219,7 +219,7 @@ See `results/experiment_316_fullscale_results.json` for full details.
 >
 > The production pipeline includes FormalClaimVerifier (solver-routed formal
 > claim verification), PBT code verification, and the Carnot MCP server.
-> See [Carnot on GitHub](https://github.com/ianblenke/carnot) for documentation.
+> See [Carnot on GitHub](https://github.com/Carnot-EBM/carnot-ebm) for documentation.
 {benchmark_section}"""
     return patch
 
@@ -274,7 +274,7 @@ license: apache-2.0
 ## Overview
 
 `{short_name}` is the Exp 66 joint EBM + Ising constraint model from the
-[Carnot](https://github.com/ianblenke/carnot) project.
+[Carnot](https://github.com/Carnot-EBM/carnot-ebm) project.
 
 Architecture:
 - Embedding layer: text input projected to 384-dimensional space (embed_dim=384)
@@ -307,7 +307,7 @@ Phase: Phase 1 research prototype.
   title={{Exp 66: Differentiable Constraint Verification via Joint EBM + Ising Architecture}},
   author={{Carnot Research}},
   year={{2026}},
-  url={{https://github.com/ianblenke/carnot}}
+  url={{https://github.com/Carnot-EBM/carnot-ebm}}
 }}
 ```
 """

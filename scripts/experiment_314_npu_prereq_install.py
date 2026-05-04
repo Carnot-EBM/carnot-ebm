@@ -44,7 +44,7 @@ SCENARIO-EXP303-C (inference benchmark — npu_latency_us vs cpu_latency_us when
 SCENARIO-EXP303-D (honest labeling — null inference_result on all blocked paths)
 
 Run:
-    cd /home/ianblenke/github.com/ianblenke/carnot
+    cd /home/ianblenke/github.com/Carnot-EBM/carnot-ebm
     JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_314_npu_prereq_install.py
 """
 

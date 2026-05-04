@@ -22,7 +22,7 @@ SCENARIO-EXP257-B (export-path branching)
 SCENARIO-EXP257-C (blocker handling)
 
 Run:
-    cd /home/ianblenke/github.com/ianblenke/carnot
+    cd /home/ianblenke/github.com/Carnot-EBM/carnot-ebm
     JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_257_predictive_verifier_hardware.py
 """
 

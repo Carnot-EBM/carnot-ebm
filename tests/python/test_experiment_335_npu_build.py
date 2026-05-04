@@ -24,7 +24,7 @@ Spec:
   SCENARIO-EXP303-F (Exp 335 build attempted — prereqs now met)
 
 Run:
-    cd /home/ianblenke/github.com/ianblenke/carnot
+    cd /home/ianblenke/github.com/Carnot-EBM/carnot-ebm
     JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_experiment_335_npu_build.py -v
 """
 

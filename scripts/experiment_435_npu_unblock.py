@@ -31,7 +31,7 @@ Spec: REQ-PRED-005
       SCENARIO-EXP303-G (IRON toolchain check as VitisAI alternative when prereqs missing)
 
 Run:
-    cd /home/ianblenke/github.com/ianblenke/carnot
+    cd /home/ianblenke/github.com/Carnot-EBM/carnot-ebm
     JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_435_npu_unblock.py
 """
 

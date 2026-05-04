@@ -20,7 +20,7 @@ Spec:
   SCENARIO-EXP303-D (honest labeling — null inference_result on all blocked paths)
 
 Run:
-    cd /home/ianblenke/github.com/ianblenke/carnot
+    cd /home/ianblenke/github.com/Carnot-EBM/carnot-ebm
     JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_experiment_314_npu_prereq_install.py -v
 """
 

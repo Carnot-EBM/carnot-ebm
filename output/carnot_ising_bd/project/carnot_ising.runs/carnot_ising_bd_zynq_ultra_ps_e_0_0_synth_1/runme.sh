@@ -21,7 +21,7 @@ else
 fi
 export LD_LIBRARY_PATH
 
-HD_PWD='/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.runs/carnot_ising_bd_zynq_ultra_ps_e_0_0_synth_1'
+HD_PWD='/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/output/carnot_ising_bd/project/carnot_ising.runs/carnot_ising_bd_zynq_ultra_ps_e_0_0_synth_1'
 cd "$HD_PWD"
 
 HD_LOG=runme.log

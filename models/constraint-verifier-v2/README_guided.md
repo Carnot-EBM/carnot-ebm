@@ -134,5 +134,5 @@ When carnot IS installed, the adapter uses `AutoExtractor` which supports:
 ## Source
 
 The canonical implementation lives in `python/carnot/inference/guided_decoding.py`
-in the [Carnot repository](https://github.com/ianblenke/carnot).
+in the [Carnot repository](https://github.com/Carnot-EBM/carnot-ebm).
 This file is a standalone copy with an added built-in fallback extractor.

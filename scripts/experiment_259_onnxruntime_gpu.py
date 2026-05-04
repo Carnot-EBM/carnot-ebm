@@ -29,7 +29,7 @@ SCENARIO-EXP259-B (artifact schema)
 SCENARIO-EXP259-C (blocker handling)
 
 Run:
-    cd /home/ianblenke/github.com/ianblenke/carnot
+    cd /home/ianblenke/github.com/Carnot-EBM/carnot-ebm
     JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_259_onnxruntime_gpu.py
 """
 

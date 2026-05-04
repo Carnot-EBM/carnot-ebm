@@ -424,7 +424,7 @@ retros_retiring_this_milestone: ["RETRO-HALLUSAE-AUC-BELOW-THRESHOLD"]
 ## Exclusion Manifest Gate
 
 *Written by ExclusionManifestEnforcer at 2026-04-25T21:53:10Z*
-*Source: /home/ianblenke/github.com/ianblenke/carnot/ops/exclusion_manifest.yaml*
+*Source: /home/ianblenke/github.com/Carnot-EBM/carnot-ebm/ops/exclusion_manifest.yaml*
 
 The conductor MUST NOT launch any experiment whose ID appears below.
 These experiments are permanently retired and have no research value.
@@ -454,7 +454,7 @@ retired_count: 14
 ## Exclusion Manifest Gate
 
 *Written by ExclusionManifestEnforcer at 2026-04-25T21:53:17Z*
-*Source: /home/ianblenke/github.com/ianblenke/carnot/ops/exclusion_manifest.yaml*
+*Source: /home/ianblenke/github.com/Carnot-EBM/carnot-ebm/ops/exclusion_manifest.yaml*
 
 The conductor MUST NOT launch any experiment whose ID appears below.
 These experiments are permanently retired and have no research value.
@@ -484,7 +484,7 @@ retired_count: 14
 ## Exclusion Manifest Gate
 
 *Written by ExclusionManifestEnforcer at 2026-04-25T21:54:04Z*
-*Source: /home/ianblenke/github.com/ianblenke/carnot/ops/exclusion_manifest.yaml*
+*Source: /home/ianblenke/github.com/Carnot-EBM/carnot-ebm/ops/exclusion_manifest.yaml*
 
 The conductor MUST NOT launch any experiment whose ID appears below.
 These experiments are permanently retired and have no research value.

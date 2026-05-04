@@ -166,7 +166,7 @@ These models are part of the Carnot EBM framework:
   title  = {Carnot Constraint Propagation Models: Learned Ising EBMs for Domain Verification},
   author = {Carnot-EBM},
   year   = {2026},
-  url    = {https://github.com/ianblenke/carnot}
+  url    = {https://github.com/Carnot-EBM/carnot-ebm}
 }
 ```
 

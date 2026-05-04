@@ -72,7 +72,7 @@
       "wall_time_seconds": 8679,
       "wall_time_minutes": 144.65,
       "cpu_efficiency_pct": 99.7,
-      "path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/"
+      "path": "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/"
     },
     "finding_gpu_0": "GPU 0 is ACTIVELY utilized — 88% compute utilization, 64% VRAM, 82C. This represents the first milestone retro captured with a live inference process in-flight. The high temperature (82C) is within safe operating range for RTX 3090 (TJmax 93C) but is the highest recorded across all milestone retros. Sustained 88% utilization over 144+ minutes confirms the process is doing real inference work. The slight utilization drop from the prior snapshot (91% → 88%) at identical VRAM may indicate GPU thermal headroom management as the chip approaches 82-83C.",
     "finding_gpu_1": "GPU 1 has 1786MB allocated by the SAME process (PID 3509070) but shows 0% utilization. This is the canonical zombie pattern: the process opened both GPUs (likely for DualGPURunner-style setup) but is only actively computing on GPU 0. GPU 1's 1786MB is held idle for the duration of the experiment. The GPU 1 temperature (47C) versus GPU 0 (82C) — a 35-degree delta — confirms GPU 1 is doing zero compute work while GPU 0 carries the full inference load.",
