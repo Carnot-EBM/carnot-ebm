@@ -4732,3 +4732,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-04: Boltzmann-GPT Contrastive CD Training — FoVer Corpus, Target AUROC > 0.80 (⚠️ Research Finding) — honest_verdict=in_progress; results/experiment_1237_boltzmann_gpt_contrastive_training.json
 - 2026-05-04: Phase-5-D Intermediate-Scale Derisking — 100-300M Params, d=128, 8 Failure Modes (⚠️ Research Finding) — honest_verdict=in_progress; results/experiment_1238_phase5d_intermediate_scale.json
 - 2026-05-04: NRGPT Frozen-Prefix Evaluation — Resolve Non-Monotonicity: Causal-Context vs Non-Conservative (⚠️ Research Finding) — honest_verdict=in_progress; results/experiment_1239_nrgpt_frozen_prefix_evaluation.json
+- 2026-05-04: NRGPT Frozen-Prefix Evaluation — Resolve Non-Monotonicity: Causal-Context vs Non-Conservative (⚠️ Research Finding) — honest_verdict=in_progress; results/experiment_1239_nrgpt_frozen_prefix_evaluation.json
