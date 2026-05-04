@@ -4,6 +4,80 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-05-04 vNEXT Final Verification Scan (Milestone 2026.04.100 Planning)
+
+### OnlineSpec / When Drafts Evolve: Speculative Decoding Meets Online Learning
+- **Paper:** arXiv 2603.12617 (March 2026); LLA 2026 / OpenReview listing.
+- **Source:** https://arxiv.org/abs/2603.12617 and
+  https://openreview.net/forum?id=gNsyXipCRq
+- **What:** Treats verifier accept/reject feedback from speculative decoding as an
+  online-learning signal for the drafter. The authors connect online regret to
+  acceleration rate and report up to 24% speedup across seven benchmarks and three
+  foundation models.
+- **Relevance to Carnot:** This independently reinforces the DVI finding already
+  queued for `.100`: Carnot's verifier decisions should not only reject bad certificate
+  drafts; they should update the next drafter/routing decision. It also gives a
+  metric target beyond accuracy: acceptance-length or accepted-span improvement after
+  verifier-feedback updates.
+- **Concrete experiment:** In `exp1288`, report both `dvi_acceptance_delta` and
+  `online_spec_acceptance_delta`, using Carnot verifier accept/reject decisions over
+  certificate-tail drafts. If no SOTA GGUF corpus is available, run replay on `.99`
+  FoVer/certificate-memory artifacts and mark `headline_result_allowed=false`.
+- **When to incorporate:** `.100` Phase 2, as an explicit metric in the DVI verifier
+  feedback replay task.
+
+### HalluHard: Hard Multi-Turn Hallucination Benchmark
+- **Paper:** arXiv 2602.01031 (February 2026); HuggingFace paper page.
+- **Source:** https://arxiv.org/abs/2602.01031 and
+  https://huggingface.co/papers/2602.01031
+- **What:** 950 multi-turn hallucination seeds across legal, research, medical, and
+  coding domains. It requires inline citations and uses an evidence-retrieval judging
+  pipeline; even strong models with web search remain materially vulnerable.
+- **Relevance to Carnot:** This is a better future benchmark for Carnot's
+  multi-turn/agentic verification than another GSM8K-only loop. It stresses grounded
+  claims, source support, turn position, and high-stakes domains where Carnot's energy
+  verifier needs precise evidence provenance.
+- **Concrete experiment:** Future HalluHard micro-adapter: select 40 coding/research
+  seeds, require local SOTA GGUF answers with inline evidence IDs, and score with
+  Carnot certificate verification plus a source-support checker. Do not add to `.100`
+  because SOTA certificate parsing must be fixed first.
+- **When to incorporate:** `.101` or the next agentic verification milestone after
+  `exp1285` produces a parseable local SOTA certificate corpus.
+
+### CaR: Construct-and-Refine Constraint Handling for Neural Solvers
+- **Paper:** ICLR 2026 poster, "Towards Efficient Constraint Handling in Neural
+  Solvers for Routing Problems."
+- **Source:** https://openreview.net/forum?id=raDFGuQxvD
+- **What:** Uses explicit learned feasibility refinement after construction, with
+  joint training so a lightweight improvement process can handle hard constraints
+  efficiently instead of relying on very long search.
+- **Relevance to Carnot:** This is the same pattern as `.99` FSNet/SnareNet positives:
+  construct an approximate response/latent state, then run a small feasibility repair
+  loop. It is domain-specific to routing, so it should inform diagnostics rather than
+  become a direct dependency.
+- **Concrete experiment:** In `exp1291`/`exp1292`, include a `construct_refine_steps`
+  diagnostic: measure whether a fixed small number of feasibility-refinement iterations
+  preserves diversity while reducing violations, instead of only reporting final energy.
+- **When to incorporate:** `.100` Phase 3 diagnostics; possible direct routing-solver
+  benchmark later.
+
+### Parallel p-bit Ising Machines: Performance-Cost Landscape
+- **Paper:** Scientific Reports 2026, "A unified performance-cost landscape of
+  parallel p-bit Ising machines based on update dynamics."
+- **Source:** https://www.nature.com/articles/s41598-026-47285-0 and
+  https://github.com/nonizawa/parallel_pbit
+- **What:** Studies update dynamics, time-multiplexed p-bit reuse, low-resolution
+  DACs, and structured synchronous control. The public code enables reproducible
+  tradeoff studies for solution quality, timing, precision, and hardware cost.
+- **Relevance to Carnot:** Complements the April 2026 inertia Ising-machine paper.
+  Carnot's KV260 track should keep validating sampler parity, precision sensitivity,
+  and update dynamics rather than reopening deep-EBM-on-FPGA claims.
+- **Concrete experiment:** Future hardware task: compare Carnot's current KV260
+  inertia/E-MVL specs against the parallel-pbit update-dynamics grid, then write a
+  sampler-parity checklist for Vivado/KV260 validation.
+- **When to incorporate:** `.101` or a hardware-focused milestone; not a `.100`
+  critical-path blocker.
+
 ## 2026-05-04 vNEXT Supplemental Scan (Final Milestone 2026.04.100 Planning)
 
 ### HoVer: Holistic Verification for Semantic-Aware Speculative Generation

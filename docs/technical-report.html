@@ -355,7 +355,9 @@ artifacts checked into <code>results/operational_retro_*.json</code>.</p>
 <li><strong>Local Claude/Codex usage snapshot:</strong> the reporting layer now reads the
   newest Codex <code>token_count</code> event, aggregates Claude local token totals, reads
   only subscription/tier metadata from Claude credentials, and refuses to infer
-  quota percentage from free-form prose (2026-05-04 changelog).</li>
+  quota percentage from free-form prose. Focused regression coverage for the
+  usage parser passes in <code>tests/python/test_agent_plan_usage.py</code>
+  (2026-05-04 changelog).</li>
 <li><strong>Milestone 2026.04.91 closed at 11/13 criteria:</strong> the missed criteria were
   paper hold-lift readiness and GRPO v5, which was gate-blocked because the
   llama.cpp runtime lacked GPU offload support. The retro records .91 as useful
@@ -3887,7 +3889,7 @@ Claude, it aggregates token usage from local project JSONL logs and reads only
 echo access or refresh tokens. The important honesty rule is that Claude
 <code>used_percent</code> remains <code>null</code>/<code>unavailable</code> unless a structured numeric quota
 field exists. Focused regression coverage for this path is
-<code>tests/python/test_agent_plan_usage.py</code>.</p>
+<code>tests/python/test_agent_plan_usage.py</code>, and the focused suite passes.</p>
 </article>
 
 <footer>

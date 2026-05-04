@@ -31,6 +31,7 @@ The 2026-05-04 vNEXT literature/source scan added these entries to `research-ref
 - Optimal KAN abstractions (arXiv 2602.06737): formal PWA/MILP verification path for KAN verifier components; queued as a future verifier-certification direction after SOTA certificates stabilize.
 - Current EBT / ARM-EBM / Extropic / Kona status: no broad architecture pivot; the near-term task remains measurable local certificates, verifier learning, and continuous repair while keeping the sampler abstraction portable.
 - Supplemental scan entries added during final planning: HoVer safe-prefix holistic verification; FLy/TriSpec loose/proxy speculative verification; and the April 2026 fully parallel probabilistic Ising machine with inertia. These are not new .100 critical-path tasks, but they shape the follow-up path: safe-prefix repair after certificate parsing succeeds, proxy verifier triage after Cactus is measurable, and sampler-parity hardware work in a later hardware-focused milestone.
+- Final verification scan entries added before YAML emission: OnlineSpec / When Drafts Evolve, HalluHard, CaR Construct-and-Refine, and the Scientific Reports parallel-pbit performance/cost study. These refine existing `.100` tasks rather than adding more tasks: OnlineSpec adds an acceptance-delta metric to DVI replay, CaR adds a construct/refine iteration diagnostic to continuous repair, HalluHard becomes a `.101` multi-turn benchmark candidate, and the p-bit study is filed for the next hardware-focused sampler-parity pass.
 
 ## Three Biggest Gaps
 
@@ -114,7 +115,7 @@ Success bar: `exp1285.certificate_parse_rate >= 0.8` and `headline_result_allowe
 
 Goal: satisfy the research program's continuous self-learning mandate with a loop that uses verifier decisions from real or replayed certificate data.
 
-- `exp1288-dvi-verifier-feedback-replay`: convert verifier accept/reject decisions into an online drafter/routing-policy update and measure acceptance/violation deltas. This task runs even if the SOTA certificate gate blocks by falling back to the `.99` certificate-memory/FoVer replay corpus, and it marks headline eligibility honestly.
+- `exp1288-dvi-verifier-feedback-replay`: convert verifier accept/reject decisions into an online drafter/routing-policy update and measure acceptance/violation deltas. It also records an OnlineSpec-style accepted-span/acceptance-rate delta. This task runs even if the SOTA certificate gate blocks by falling back to the `.99` certificate-memory/FoVer replay corpus, and it marks headline eligibility honestly.
 - `exp1289-grpo-v9-sota-headline-gated`: run a bounded PRIME/VPRM/GRPO v9 headline attempt only if SOTA certificates and DVI replay gates pass.
 - `exp1290-skill-graph-promotion-demotion`: promote reusable certificate-memory patterns into skill-graph entries with replay evidence and demotion conditions.
 
@@ -124,8 +125,8 @@ Success bar: at least one artifact reports `self_learning_delta_overall`, `dvi_a
 
 Goal: deepen the .99 continuous repair positive and close publication bookkeeping.
 
-- `exp1291-hardnetpp-nonlinear-repair-benchmark`: compare HardNet++-style damped local-linear projection against FSNet/SnareNet on nonlinear constraints.
-- `exp1292-dsp-feasibility-channel-diagnostic`: add a DSP-style local/global feasibility-channel diagnostic (`phi`/`Phi`) around the continuous repair loop.
+- `exp1291-hardnetpp-nonlinear-repair-benchmark`: compare HardNet++-style damped local-linear projection against FSNet/SnareNet on nonlinear constraints, recording fixed-budget construct/refine iteration behavior inspired by CaR.
+- `exp1292-dsp-feasibility-channel-diagnostic`: add a DSP-style local/global feasibility-channel diagnostic (`phi`/`Phi`) around the continuous repair loop and report whether feasibility-channel signals predict when additional refine steps help.
 - `exp1293-ebt-arm-energy-bridge-audit`: connect Boltzmann-GPT/NRGPT/Carnot energy traces to EBT and ARM-EBM lookahead-energy predictions using existing artifacts.
 - `exp1294-arxiv-v10-submission-receipt-or-blocker`: record an actual arXiv receipt if present or the exact external blocker if submission still needs a human.
 - `exp1295-milestone-retro-100`: evaluate all criteria mechanically and write carry-forwards.

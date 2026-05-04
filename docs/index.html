@@ -474,7 +474,8 @@
           snapshot for operators: Codex reads the newest token_count event,
           Claude aggregates local token usage without echoing credentials, and
           Claude quota percentage remains unavailable unless structured numeric
-          fields exist. Output is available as a compact table or JSON.
+          fields exist. Output is available as a compact table or JSON, with
+          focused regression coverage passing.
         </p>
       </div>
     </div>
@@ -978,6 +979,12 @@
         <h3 class="r-title">10 min for 2 items; no GPU zombies</h3>
         <div class="r-meter"><div class="r-bar" style="width: 30%; background: #0ea5e9;"></div></div>
         <div class="r-stats"><span class="r-before">5 min average; both RTX 3090s idle at 4 MB / 0%</span> <span class="r-after">30% savings target &mdash; operational_retro_2026_04_99</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Operations &mdash; local agent usage</span>
+        <h3 class="r-title">Secret-safe Claude/Codex usage snapshot</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 100%; background: #0ea5e9;"></div></div>
+        <div class="r-stats"><span class="r-before">Codex token_count; Claude token totals; no credential echo</span> <span class="r-after">focused tests pass &mdash; 2026-05-04</span></div>
       </div>
     </div>
 

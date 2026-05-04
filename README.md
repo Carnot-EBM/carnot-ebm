@@ -197,7 +197,7 @@ experiment artifact under `results/`.
 | Extropic Z1/XTR-0 integration packet | THRML backend stub and hardware integration packet shipped; live THRML benchmark blocked because `thrml_available=false` | Exp 1150 |
 | arXiv package v10 + publication hold | v10 bundle ready at `results/carnot-arxiv-v10-20260504.tar.gz`; `tectonic main.tex` compiled `docs/arxiv-paper/main.pdf` at **371 KiB**; arXiv upload remains pending | Exp 1270 |
 | Milestone .99 operational closeout | **10 min** for 2 closeout items, **5 min** average; both RTX 3090s idle at 4 MB / 0% with no zombie processes; pre-flight checks were seconds-scale; next-milestone savings target **30%** | operational_retro_2026_04_99 |
-| Local Claude/Codex usage snapshot | Codex reads the newest local `token_count` event; Claude aggregates local token usage and reads only subscription/tier metadata from credentials; free-form quota prose is ignored instead of guessed | 2026-05-04 changelog |
+| Local Claude/Codex usage snapshot | Codex reads the newest local `token_count` event; Claude aggregates local token usage and reads only subscription/tier metadata from credentials; free-form quota prose is ignored instead of guessed; focused regression tests pass | 2026-05-04 changelog |
 
 Deeper analysis of these — including everything that **didn't** work and
 why — is in the [technical report](docs/technical-report.md). Per-milestone
