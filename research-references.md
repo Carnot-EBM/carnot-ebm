@@ -4,6 +4,64 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-05-04 Fresh Planning Scan Addendum (Milestone 2026.04.100)
+
+These items were added before finalizing `research-roadmap-next.yaml`. They
+mostly refine the `.100` certificate and self-learning experiments rather than
+adding more tasks.
+
+### Structure Snowballing in Constrained Generation
+- **Paper:** arXiv 2604.06066.
+- **Source:** https://arxiv.org/abs/2604.06066
+- **What:** Studies a failure mode where structural constraints can create
+  self-reinforcing structural errors during constrained generation.
+- **Relevance to Carnot:** The `.100` certificate path should not treat grammar
+  validity as proof quality. Grammar backends need a diagnostic for repeated
+  schema-like but semantically empty certificate fields.
+- **Concrete experiment:** In `exp1283`, report
+  `structure_snowballing_risk_score`; in `exp1285`, compare raw trigger,
+  grammar-only, and draft-conditioned certificate tails so grammar-only failure
+  modes are visible.
+- **When to incorporate:** `.100` Phase 0/1.
+
+### InterWhen: Verifiers During Reasoning
+- **Paper:** arXiv 2602.11202.
+- **Source:** https://arxiv.org/abs/2602.11202
+- **What:** Argues for invoking verifiers during reasoning, not only after the
+  final answer, so unsafe intermediate states can be caught earlier.
+- **Relevance to Carnot:** Carnot's verifier stack should learn from prefix-time
+  decisions, not just final certificate accept/reject labels.
+- **Concrete experiment:** In `exp1288`, compare post-hoc verifier replay with an
+  InterWhen-style interleaved verifier-feedback replay and report
+  `interwhen_violation_reduction`.
+- **When to incorporate:** `.100` Phase 2 continuous self-learning.
+
+### ConstraintBench for Constrained Optimization Reasoning
+- **Paper:** arXiv 2602.09199; HuggingFace paper page.
+- **Sources:** https://arxiv.org/abs/2602.09199 and
+  https://huggingface.co/papers/2602.09199
+- **What:** Benchmarks LLM performance on constrained optimization problems,
+  with direct relevance to constraint parsing, solver routing, and verifier
+  feedback quality.
+- **Relevance to Carnot:** A small deterministic slice can stress certificate
+  semantic routing without waiting for a large new dataset.
+- **Concrete experiment:** In `exp1286`, run a tiny ConstraintBench-style
+  micro-eval through the NSVIF/BEAVER-lite router and record
+  `constraintbench_items`.
+- **When to incorporate:** `.100` Phase 1.
+
+### EBM-CoT: Energy-Based Chain-of-Thought Sequence Optimization
+- **Paper:** arXiv 2511.07124.
+- **Source:** https://arxiv.org/abs/2511.07124
+- **What:** Uses energy-based optimization over chain-of-thought sequences,
+  giving a direct bridge between reasoning traces and energy objectives.
+- **Relevance to Carnot:** It strengthens the case that Carnot should audit
+  trace/certificate energies alongside EBT and ARM-EBM rather than only final
+  answer energies.
+- **Concrete experiment:** In `exp1293`, include EBM-CoT as a bridge target and
+  list candidate consistency-energy metrics for later implementation.
+- **When to incorporate:** `.100` Phase 3 bridge audit.
+
 ## 2026-05-04 Codex Planning Agent Source Verification (Milestone 2026.04.100)
 
 These items were checked during the `.100` planning turn after reading the

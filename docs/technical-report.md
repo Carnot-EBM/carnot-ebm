@@ -1,6 +1,6 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report — 1,281 Experiments Across 108 Archived Research Milestones (Tracked Through Exp 1281)
+## A Technical Report — 1,281 Experiments, 108 Archived Research Milestones, 21,703 Test Items (Tracked Through Exp 1281)
 
 **Author:** Ian Blenke
 **Date:** 2026-05-04
@@ -47,7 +47,9 @@ gate-blocked, Cactus acceptance stayed gated, and .99 produced no
 headline-eligible SOTA model-generation result. The follow-on .99 operational
 retrospective measured a **10-minute** closeout slice across **2** items with no
 GPU zombie processes and a **30%** next-milestone savings target; the latest
-ops tooling also adds a secret-safe local Claude/Codex usage snapshot. A
+ops tooling also adds a secret-safe local Claude/Codex usage snapshot. The
+current Python test collection snapshot reports **21,703** items with three
+known import errors; this is a collection count, not a full-suite pass claim. A
 plain-English summary of that journey is in the next section; deeper analysis
 follows in the body of the report and in the per-milestone retrospective
 artifacts checked into `results/operational_retro_*.json`.
