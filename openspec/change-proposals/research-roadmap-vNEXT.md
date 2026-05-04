@@ -30,6 +30,7 @@ The 2026-05-04 vNEXT literature/source scan added these entries to `research-ref
 - BEAVER + CRANE (arXiv 2512.05439 / 2502.09061): deterministic constraint-bound and reasoning-preserving constrained generation references; use them as design constraints, not as a full .100 implementation.
 - Optimal KAN abstractions (arXiv 2602.06737): formal PWA/MILP verification path for KAN verifier components; queued as a future verifier-certification direction after SOTA certificates stabilize.
 - Current EBT / ARM-EBM / Extropic / Kona status: no broad architecture pivot; the near-term task remains measurable local certificates, verifier learning, and continuous repair while keeping the sampler abstraction portable.
+- Supplemental scan entries added during final planning: HoVer safe-prefix holistic verification; FLy/TriSpec loose/proxy speculative verification; and the April 2026 fully parallel probabilistic Ising machine with inertia. These are not new .100 critical-path tasks, but they shape the follow-up path: safe-prefix repair after certificate parsing succeeds, proxy verifier triage after Cactus is measurable, and sampler-parity hardware work in a later hardware-focused milestone.
 
 ## Three Biggest Gaps
 

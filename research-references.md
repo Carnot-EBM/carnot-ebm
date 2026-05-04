@@ -4,6 +4,65 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-05-04 vNEXT Supplemental Scan (Final Milestone 2026.04.100 Planning)
+
+### HoVer: Holistic Verification for Semantic-Aware Speculative Generation
+- **Paper:** OpenReview ICLR 2026 submission (September 2025; revised February 2026).
+- **Source:** https://openreview.net/forum?id=GQlF9F8HAs
+- **What:** Uses a complete draft response plus a prefill-only prefix-verification pass
+  to find the earliest semantic error, then continues from the last safe prefix instead
+  of regenerating from scratch. Reports about 1.2x-3.1x latency reduction with minimal
+  accuracy loss across general and math benchmarks.
+- **Relevance to Carnot:** This is a better shape for Carnot repair than token-by-token
+  speculation when the verifier is semantic or energy-based. Carnot can use k=5/PRIME
+  verifier decisions to identify the first unsafe certificate prefix and repair only the
+  suffix. It also fits the Cactus follow-up: Cactus accepts safe spans; HoVer localizes
+  the first bad span when acceptance fails.
+- **Concrete experiment:** If `.100` certificate extraction succeeds, add a future
+  "safe-prefix repair" task: replay 30 failed certificate/answer traces, find the first
+  energy-violating prefix with Carnot verifiers, and compare suffix-only repair vs full
+  regeneration on latency and violation rate.
+- **When to incorporate:** Stretch for `.100` if `exp1285` and `exp1287` both pass;
+  otherwise `.101` constrained-acceptance/repair milestone.
+
+### FLy and TriSpec: Looser or Proxy Verification for Speculative Decoding
+- **Papers:** FLy ICLR 2026 poster; TriSpec OpenReview ICLR 2026 submission.
+- **Sources:** https://openreview.net/forum?id=JjoTg34YiU and
+  https://openreview.net/forum?id=yhhgkkiQe5
+- **What:** FLy accepts semantically valid draft-target mismatches using entropy gating
+  and deferred token windows, preserving at least 99% target accuracy while reporting
+  large speedups on 70B/405B-scale models. TriSpec adds a lightweight proxy verifier
+  before the full target verifier and reports up to 30% extra speedup with fewer target
+  invocations.
+- **Relevance to Carnot:** These suggest a two-tier local verifier design for GGUF
+  certificates: cheap grammar/energy proxy first, full SOTA/k=5 verification only on
+  uncertain spans. That directly attacks the .99 blocker where no headline SOTA verifier
+  could run cheaply enough to produce certificate data.
+- **Concrete experiment:** Future Cactus v3: compare strict exact-match acceptance,
+  Carnot energy-semantic acceptance, and proxy-verifier triage on the same certificate
+  replay corpus. Metrics: accepted-token/span rate, false acceptance rate, full-verifier
+  call reduction, and headline eligibility.
+- **When to incorporate:** `.101`, after `.100` establishes a parseable certificate
+  corpus.
+
+### Fully Parallel Dense Probabilistic Ising Machine with Inertia
+- **Paper:** arXiv 2604.17109 (April 2026).
+- **Source:** https://arxiv.org/abs/2604.17109
+- **What:** Adds an inertia term to probabilistic Ising spin dynamics, enabling fully
+  parallel synchronous updates on dense Ising problems without destroying solve quality.
+  The authors validate in simulations, FPGA emulation, and FPGA experiments, reporting
+  about 35x average speedup and up to 150x best-instance speedup at N=200.
+- **Relevance to Carnot:** This is the strongest recent hardware signal for Carnot's
+  sampler roadmap. It matches the existing KV260 v3 inertia spec and supports keeping
+  the hardware track at the sampler-correctness/parity layer rather than reopening deep
+  FPGA model redesign.
+- **Concrete experiment:** Future hardware-readiness task: compare Carnot's current
+  CPU/JAX inertia simulation and KV260 v3 spec against the arXiv 2604.17109 update rule,
+  then write a parity checklist for eventual Vivado/KV260 validation. Do not block `.100`
+  certificate work on this.
+- **When to incorporate:** `.101` or the next hardware-focused milestone; cite as
+  strategic support in `.100` hardware requirements.
+
 ## 2026-05-04 vNEXT Scan Addendum (Milestone 2026.04.100 Planning)
 
 ### ARS: Answer-agreement Representation Shaping for Reasoning-Trajectory Hallucination Detection
