@@ -17224,3 +17224,48 @@ gaming vulnerability, k=5 surface blocking, `gaming_defense_measured=true`, and
 an honest verdict.
 
 **Spec traces:** REQ-VERIFY-1278, SCENARIO-VERIFY-1278, Exp 1278
+
+## REQ-VERIFY-1283: Certificate Grammar Backend Bakeoff
+
+**Summary:** Select the lowest-friction local structured-generation backend for
+bounded `<CARNOT_CERT>` tails before any expensive SOTA certificate extraction
+run, or write a complete blocker artifact when no constrained-generation
+backend is locally available.
+
+**Requirements:**
+
+- REQ-VERIFY-1283-1: The workflow SHALL write an in-progress artifact to
+  `results/experiment_1283_certificate_grammar_backend_bakeoff.json` before
+  the completed bakeoff artifact is emitted.
+- REQ-VERIFY-1283-2: The workflow SHALL define a minimal Carnot certificate
+  JSON schema with `claims`, `equations`, `final_answer`, `confidence`,
+  `verifier_routes`, and `proof_numbers` fields.
+- REQ-VERIFY-1283-3: The workflow SHALL probe local availability for llama.cpp
+  GBNF support, llguidance, XGrammar, Outlines, lm-format-enforcer, and a
+  pure-Python validation fallback without running LLM inference.
+- REQ-VERIFY-1283-4: For each backend, the artifact SHALL record import
+  availability, CLI availability, schema support, unsupported features,
+  estimated overhead when measurable, and a failure reason when absent.
+- REQ-VERIFY-1283-5: The artifact SHALL include `cdot_expressiveness_note`,
+  `static_trie_note`, `bounded_vocab_constraint_count`,
+  `automata_fallback_viable`, `dfa_checkable_fields`,
+  `structure_snowballing_risk`, `grammar_backend_available`,
+  `grammar_backend_selected`, `status`, and `honest_verdict`.
+- REQ-VERIFY-1283-6: `grammar_backend_available` SHALL be true only when the
+  selected backend can perform local constrained generation, not when only
+  post-hoc JSON validation is available.
+
+**Implementation Status:** Planned (Exp 1283)
+
+### SCENARIO-VERIFY-1283: Bakeoff Writes Backend Decision Artifact
+
+**Given** the run date is `20260504` and LLM inference is disabled
+**When** the certificate grammar backend bakeoff runs
+**Then** it writes `results/experiment_1283_certificate_grammar_backend_bakeoff.json`
+with the required certificate schema, backend probe records, fallback notes,
+and honest verdict
+**And** it selects a local constrained-generation backend when one is available
+**And** it otherwise emits a complete blocker artifact without unblocking SOTA
+certificate extraction.
+
+**Spec traces:** REQ-VERIFY-1283, SCENARIO-VERIFY-1283, Exp 1283

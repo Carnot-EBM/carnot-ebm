@@ -1,0 +1,322 @@
+{
+  "automata_fallback_viable": true,
+  "backend_probes": {
+    "llama_cpp_gbnf": {
+      "available": true,
+      "cli_available": false,
+      "cli_candidates": [
+        "llama-cli",
+        "llama",
+        "main"
+      ],
+      "cli_path": null,
+      "cli_supports_grammar": false,
+      "constrained_generation": true,
+      "estimated_overhead": "not_measured_no_model_inference",
+      "failure_reason": null,
+      "import_available": true,
+      "import_name": "llama_cpp",
+      "name": "llama_cpp_gbnf",
+      "priority": 10,
+      "schema_support": "GBNF grammar support; JSON schema needs translation to bounded grammar",
+      "unsupported_features": [
+        "claim id uniqueness across arrays",
+        "every verifier route target must reference an emitted claim",
+        "proof number ordering and equation-to-proof consistency",
+        "confidence calibration against verifier energy",
+        "truth of final_answer relative to the claims"
+      ]
+    },
+    "llguidance": {
+      "available": false,
+      "cli_available": false,
+      "cli_candidates": [
+        "llguidance"
+      ],
+      "cli_path": null,
+      "cli_supports_grammar": false,
+      "constrained_generation": true,
+      "estimated_overhead": "not_measured_no_model_inference",
+      "failure_reason": "import_and_cli_absent",
+      "import_available": false,
+      "import_name": "llguidance",
+      "name": "llguidance",
+      "priority": 20,
+      "schema_support": "JSON-schema/grammar guidance when package bindings are installed",
+      "unsupported_features": [
+        "claim id uniqueness across arrays",
+        "every verifier route target must reference an emitted claim",
+        "proof number ordering and equation-to-proof consistency",
+        "confidence calibration against verifier energy",
+        "truth of final_answer relative to the claims"
+      ]
+    },
+    "lm_format_enforcer": {
+      "available": false,
+      "cli_available": false,
+      "cli_candidates": [
+        "lm-format-enforcer"
+      ],
+      "cli_path": null,
+      "cli_supports_grammar": false,
+      "constrained_generation": true,
+      "estimated_overhead": "not_measured_no_model_inference",
+      "failure_reason": "import_and_cli_absent",
+      "import_available": false,
+      "import_name": "lmformatenforcer",
+      "name": "lm_format_enforcer",
+      "priority": 50,
+      "schema_support": "JSON-schema parser/logits processor through Python API",
+      "unsupported_features": [
+        "claim id uniqueness across arrays",
+        "every verifier route target must reference an emitted claim",
+        "proof number ordering and equation-to-proof consistency",
+        "confidence calibration against verifier energy",
+        "truth of final_answer relative to the claims"
+      ]
+    },
+    "outlines": {
+      "available": false,
+      "cli_available": false,
+      "cli_candidates": [
+        "outlines"
+      ],
+      "cli_path": null,
+      "cli_supports_grammar": false,
+      "constrained_generation": true,
+      "estimated_overhead": "not_measured_no_model_inference",
+      "failure_reason": "import_and_cli_absent",
+      "import_available": false,
+      "import_name": "outlines",
+      "name": "outlines",
+      "priority": 40,
+      "schema_support": "JSON-schema structured generation through Python API",
+      "unsupported_features": [
+        "claim id uniqueness across arrays",
+        "every verifier route target must reference an emitted claim",
+        "proof number ordering and equation-to-proof consistency",
+        "confidence calibration against verifier energy",
+        "truth of final_answer relative to the claims"
+      ]
+    },
+    "pure_python_validation": {
+      "available": true,
+      "cli_available": false,
+      "cli_candidates": [],
+      "cli_path": null,
+      "cli_supports_grammar": false,
+      "constrained_generation": false,
+      "estimated_overhead": {
+        "validation_1000_docs_ms": 13.785757
+      },
+      "failure_reason": null,
+      "import_available": true,
+      "import_name": null,
+      "name": "pure_python_validation",
+      "priority": 100,
+      "schema_support": "post-hoc validation of the bounded JSON schema subset",
+      "unsupported_features": [
+        "token-level constrained generation",
+        "claim id uniqueness across arrays",
+        "every verifier route target must reference an emitted claim",
+        "proof number ordering and equation-to-proof consistency",
+        "confidence calibration against verifier energy",
+        "truth of final_answer relative to the claims"
+      ]
+    },
+    "xgrammar": {
+      "available": false,
+      "cli_available": false,
+      "cli_candidates": [
+        "xgrammar"
+      ],
+      "cli_path": null,
+      "cli_supports_grammar": false,
+      "constrained_generation": true,
+      "estimated_overhead": "not_measured_no_model_inference",
+      "failure_reason": "import_and_cli_absent",
+      "import_available": false,
+      "import_name": "xgrammar",
+      "name": "xgrammar",
+      "priority": 30,
+      "schema_support": "JSON-schema grammar compilation when xgrammar is importable",
+      "unsupported_features": [
+        "claim id uniqueness across arrays",
+        "every verifier route target must reference an emitted claim",
+        "proof number ordering and equation-to-proof consistency",
+        "confidence calibration against verifier energy",
+        "truth of final_answer relative to the claims"
+      ]
+    }
+  },
+  "bounded_vocab_constraint_count": 9,
+  "bounded_vocab_constraints": {
+    "equation_relations": [
+      "=",
+      "!=",
+      "<=",
+      ">="
+    ],
+    "verifier_routes": [
+      "z3_math",
+      "symcode",
+      "causal",
+      "semenergy",
+      "soskan"
+    ]
+  },
+  "cdot_expressiveness_note": "CDoT-style context-sensitive obligations remain outside the selected syntax backend: route targets must match emitted claim ids, proof numbers must stay consistent with equations, and confidence must be calibrated against verifier evidence after decoding.",
+  "certificate_schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "additionalProperties": false,
+    "properties": {
+      "claims": {
+        "items": {
+          "additionalProperties": false,
+          "properties": {
+            "id": {
+              "maxLength": 16,
+              "minLength": 2,
+              "pattern": "^c[0-9]+$",
+              "type": "string"
+            },
+            "text": {
+              "maxLength": 320,
+              "minLength": 1,
+              "type": "string"
+            }
+          },
+          "required": [
+            "id",
+            "text"
+          ],
+          "type": "object"
+        },
+        "maxItems": 8,
+        "minItems": 1,
+        "type": "array"
+      },
+      "confidence": {
+        "maximum": 1.0,
+        "minimum": 0.0,
+        "type": "number"
+      },
+      "equations": {
+        "items": {
+          "additionalProperties": false,
+          "properties": {
+            "lhs": {
+              "maxLength": 120,
+              "minLength": 1,
+              "type": "string"
+            },
+            "relation": {
+              "enum": [
+                "=",
+                "!=",
+                "<=",
+                ">="
+              ],
+              "type": "string"
+            },
+            "rhs": {
+              "maxLength": 120,
+              "minLength": 1,
+              "type": "string"
+            }
+          },
+          "required": [
+            "lhs",
+            "relation",
+            "rhs"
+          ],
+          "type": "object"
+        },
+        "maxItems": 8,
+        "type": "array"
+      },
+      "final_answer": {
+        "maxLength": 160,
+        "minLength": 1,
+        "type": "string"
+      },
+      "proof_numbers": {
+        "items": {
+          "type": "number"
+        },
+        "maxItems": 8,
+        "minItems": 1,
+        "type": "array"
+      },
+      "verifier_routes": {
+        "items": {
+          "additionalProperties": false,
+          "properties": {
+            "claim_id": {
+              "maxLength": 16,
+              "minLength": 2,
+              "pattern": "^c[0-9]+$",
+              "type": "string"
+            },
+            "verifier": {
+              "enum": [
+                "z3_math",
+                "symcode",
+                "causal",
+                "semenergy",
+                "soskan"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "claim_id",
+            "verifier"
+          ],
+          "type": "object"
+        },
+        "maxItems": 8,
+        "minItems": 1,
+        "type": "array"
+      }
+    },
+    "required": [
+      "claims",
+      "equations",
+      "final_answer",
+      "confidence",
+      "verifier_routes",
+      "proof_numbers"
+    ],
+    "title": "Minimal Carnot Certificate",
+    "type": "object"
+  },
+  "certificate_schema_required_fields": [
+    "claims",
+    "equations",
+    "final_answer",
+    "confidence",
+    "verifier_routes",
+    "proof_numbers"
+  ],
+  "dfa_checkable_fields": [
+    "claims",
+    "equations",
+    "final_answer",
+    "confidence",
+    "verifier_routes",
+    "proof_numbers"
+  ],
+  "experiment": "1283_certificate_grammar_backend_bakeoff",
+  "grammar_backend_available": true,
+  "grammar_backend_selected": "llama_cpp_gbnf",
+  "honest_verdict": "selected_llama_cpp_gbnf",
+  "llm_inference_run": false,
+  "run_date": "20260504",
+  "schema": "certificate_grammar_backend_bakeoff_v1",
+  "selected_backend_is_fallback_only": false,
+  "static_trie_note": "The bounded enum vocabularies for verifier routes and equation relations are small enough for STATIC-style trie or vectorized token-mask handling; free-text claim and answer strings remain open vocabulary.",
+  "status": "complete",
+  "structure_snowballing_risk": "medium",
+  "structure_snowballing_risk_reason": "Nested claims, equations, and routes can inflate grammar states as maxItems rises; the v1 schema keeps every repeated field capped at eight items."
+}
