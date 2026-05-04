@@ -641,3 +641,4 @@ If you finish the real work |
 | 2026-05-04 10:05 UTC | Combined Milestone .95 + .96 + .97 Retrospective — | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1255_combine |
 | 2026-05-04 10:10 UTC | Combined Milestone .95 + .96 + .97 Retrospective — | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1255_combine |
 | 2026-05-04 10:22 UTC | Combined Milestone .95 + .96 + .97 Retrospective — | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1255_combine |
+| 2026-05-04 10:26 UTC | Verifier Joint Orthogonality Audit v3 — Pure Data  | OK | cache hit: 81 passed, 1 warning in 4.57s |
