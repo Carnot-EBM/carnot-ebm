@@ -837,6 +837,34 @@ measured post-CD AUROC rounded to two decimal places.
 - The generated artifact is complete only when the forward pass succeeds and
   the post-CD AUROC is finite.
 
+### REQ-KONA-024: NRGPT Frozen-Prefix Evaluation v2 Artifact
+
+The Exp 1251 NRGPT frozen-prefix evaluation v2 workflow MUST read the Exp 1163
+NRGPT energy-recurrence artifact, characterize the observed non-monotonicity for
+paper-v6 Section 4 framing, and write
+`results/experiment_1251_nrgpt_frozen_prefix_evaluation_v2.json`.
+
+The artifact MUST include `source_experiment`, `nrgpt_auroc`,
+`nonmonotonicity_classification`, `nonmonotonicity_rationale`,
+`paper_v6_framing`, `nonmonotonicity_characterized`, and `honest_verdict`.
+`nonmonotonicity_classification` MUST be either `b_causal_context_shift` or
+`c_non_conservative_preconditioner`. The honest verdict MUST be formatted as
+`nrgpt_nonmonotonicity_characterized_type_X`, where `X` is the selected
+classification.
+
+**Rationale:** Exp 1163 reported strong NRGPT AUROC while also showing that the
+energy recurrence was not monotone. Exp 1251 is a pure artifact-analysis step
+that records whether the paper should frame the observation as ordinary
+causal-context energy-landscape shift or as evidence for a learned
+path-dependent non-conservative preconditioner.
+
+**Acceptance criteria:**
+
+- `python/carnot/phase3/nrgpt_frozen_prefix_v2.py` exposes a deterministic
+  builder for the Exp 1251 artifact and a writer for the required results JSON.
+- Running the workflow writes the required artifact fields and marks
+  `nonmonotonicity_characterized == true` without retraining NRGPT.
+
 ## Scenarios
 
 ### SCENARIO-KONA-001: Stage 1 Primitive — RDT Fixed-Point Convergence
@@ -1128,6 +1156,19 @@ AUROC.
 
 **Spec traces:** REQ-KONA-022
 
+### SCENARIO-KONA-024: Exp 1251 Classifies NRGPT Non-Monotonicity For Paper v6
+
+**Given** the Exp 1163 NRGPT energy-recurrence source artifact exists
+**When** Exp 1251 builds the frozen-prefix evaluation v2 artifact
+**Then** it writes
+`results/experiment_1251_nrgpt_frozen_prefix_evaluation_v2.json`, records
+`nrgpt_auroc == 0.921`, classifies the non-monotonicity as either
+`b_causal_context_shift` or `c_non_conservative_preconditioner`, marks
+`nonmonotonicity_characterized == true`, and emits the corresponding honest
+verdict.
+
+**Spec traces:** REQ-KONA-024
+
 ## Out of scope
 
 The following are deliberately **not** required by this capability:
@@ -1181,6 +1222,8 @@ The following are deliberately **not** required by this capability:
 - **NRGPT frozen-prefix monotonicity diagnostic:** specified by REQ-KONA-021;
   implementation lives in `python/carnot/phase3/nrgpt_energy.py` and
   `scripts/experiment_1239_nrgpt_frozen_prefix_evaluation.py`.
+- **NRGPT frozen-prefix evaluation v2:** specified by REQ-KONA-024;
+  implementation lives in `python/carnot/phase3/nrgpt_frozen_prefix_v2.py`.
 
 First concrete next experiment:
 `experiment_XXX_rdt_primitive_convergence.py` — implement the RDT scaffold and
