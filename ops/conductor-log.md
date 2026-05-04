@@ -555,3 +555,4 @@ If you finish the real work |
 | 2026-05-04 00:50 UTC | Auto-Populate prior_failures v2 — Fix DOOMED_RERUN | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1230_auto_po |
 | 2026-05-04 01:16 UTC | Auto-Populate prior_failures v2 — Fix DOOMED_RERUN | OK | 88 passed, 1 warning in 4.61s |
 | 2026-05-04 01:20 UTC | LLMs Gaming Verifiers Defense — k=5 AND-Compose vs | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1231_llms_ga |
+| 2026-05-04 01:25 UTC | LLMs Gaming Verifiers Defense — k=5 AND-Compose vs | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1231_llms_ga |
