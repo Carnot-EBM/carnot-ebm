@@ -364,6 +364,15 @@ in paper integrity audit.)
   year={2026},
   note={Iterative Consensus Ensemble; semantic-similarity (not exact-string) consensus; clinical AI diagnostic domain; lacks deterministic formal bounds.},
 }
+
+@article{ramji2026abstractcot,
+  title={Thinking Without Words: Efficient Latent Reasoning with Abstract Chain-of-Thought},
+  author={Ramji, Keshav and Naseem, Tahira and Fernandez Astudillo, Ram{\'o}n},
+  journal={arXiv preprint arXiv:2604.22709},
+  year={2026},
+  month={April},
+  note={IBM Research. 11.6x token reduction via 64-symbol discrete abstract vocabulary; policy-iteration warm-up (verbal-CoT bottleneck + self-distillation) followed by RL optimization. Emergent Zipfian power-law over abstract vocabulary. Closest functional peer to Carnot on the discrete-latent-reasoning axis but uses internal-model self-distillation rather than external verifier grounding (Q12 Hypothesis B Dark Room vulnerability if pushed to self-improvement; Sakana DGM threat model unaddressed).},
+}
 ```
 
 (Verify that Brooks is indeed senior author of the PNAS paper before listing him as a co-author in `muller2026evolvable`. The UNSW article identifies him as Scientia Professor of Evolution and the public-facing voice; first author is Müller per EurekAlert. Bibliography validation per ISSUE-16 in audit punch-list.)
@@ -399,6 +408,47 @@ Carnot's contribution is the unprecedented scale of formal distinctness
 domain of Turing-complete self-referential codebase modification --- the
 Sakana DGM threat domain not addressed by SentinelAgent (federated API
 delegation) or Lean Atlas (static math proofs).
+```
+
+### Block A.1 — discrete-latent-reasoning comparator (Related Work)
+
+Insert after the verifier-defense comparator paragraph (Block A) and
+the EBT/NRGPT/LLaDA/Coconut energy-based discussion. Specifically
+positions Abstract-CoT as the closest functional peer on the
+compression-and-discrete-latent axis:
+
+```latex
+\paragraph{Discrete-latent reasoning compression.}
+Abstract Chain-of-Thought~\citep{ramji2026abstractcot} is the closest
+functional peer to Carnot on the discrete-latent-reasoning axis. It
+replaces verbose verbal Chain-of-Thought with a learned 64-symbol
+abstract vocabulary, achieving \textbf{11.6$\times$ fewer reasoning
+tokens with comparable performance} across mathematical reasoning,
+instruction-following, and multi-hop reasoning, generalizing across
+language model families. Their training pipeline alternates verbal-CoT
+bottlenecking via masking and supervised fine-tuning with
+self-distillation through constrained decoding, followed by RL
+optimization of the abstract sequences. They report an emergent
+Zipfian power-law distribution over the abstract vocabulary akin to
+natural language, evolving across training phases.
+
+Carnot's bounded-continuous $\to \text{sign}(z) \to$ Ising
+transpilation pipeline shares the discrete-latent compression goal but
+differs on the load-bearing question: \emph{what supervises the
+discrete latent representation?} Abstract-CoT uses internal model
+probability for self-distillation --- a self-improvement loop
+vulnerable to the Dark Room failure mode (Section~\ref{sec:phase5})
+when pushed to longer training trajectories without epistemic
+regularization. Carnot replaces internal-model self-distillation with
+the externally-grounded $k$-AND-composed verifier ensemble described
+in Section~\ref{sec:verifier-ensemble}: the Sakana DGM
+reward-hacking threat model that Abstract-CoT does not address.
+The Zipfian load-imbalance Ramji et al.\ observe over abstract tokens
+parallels what Q11's Transversal Spectral Synthesis predicts over
+Carnot's verifier ensemble (most security work carried by the
+SC-Energy + Z3 transversal pair, trivial verifiers carrying near-zero
+load): independent empirical evidence that discrete-latent reasoning
+systems exhibit characteristic load asymmetry.
 ```
 
 ### Block B — Joint Null Space limitation (Limitations)
