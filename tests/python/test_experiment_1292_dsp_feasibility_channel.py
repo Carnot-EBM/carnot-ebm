@@ -107,8 +107,22 @@ def test_feasibility_channel_metrics_cover_false_continue_cases() -> None:
 
 def test_feasibility_channel_rejects_malformed_cases() -> None:
     """REQ-KONA-030: impossible diagnostic inputs fail before metric reporting."""
+    valid_case = FeasibilityChannelCase(
+        case_id="valid",
+        cohort="valid",
+        before_violation_energy=1.0,
+        before_violation_count=1,
+        after_violation_energy=0.0,
+        after_violation_count=0,
+        distortion_delta=0.1,
+    )
+
     with pytest.raises(ValueError, match="at least one"):
         evaluate_feasibility_channels([])
+    with pytest.raises(ValueError, match="threshold"):
+        evaluate_feasibility_channels([valid_case], threshold=1.1)
+    with pytest.raises(ValueError, match="help_energy_tolerance"):
+        evaluate_feasibility_channels([valid_case], help_energy_tolerance=-0.1)
 
     with pytest.raises(ValueError, match="violation"):
         evaluate_feasibility_channels(
@@ -124,6 +138,25 @@ def test_feasibility_channel_rejects_malformed_cases() -> None:
                 )
             ]
         )
+
+
+def test_feasibility_channel_auc_falls_back_for_single_class() -> None:
+    """REQ-KONA-030: one-class repair labels use neutral AUROC without sklearn."""
+    report = evaluate_feasibility_channels(
+        [
+            FeasibilityChannelCase(
+                case_id="helpful",
+                cohort="helpful",
+                before_violation_energy=1.0,
+                before_violation_count=1,
+                after_violation_energy=0.0,
+                after_violation_count=0,
+                distortion_delta=0.1,
+            )
+        ]
+    )
+
+    assert report["feasibility_channel_auc"] == pytest.approx(0.5)
 
 
 def test_build_artifact_contains_required_exp1292_fields() -> None:
@@ -156,6 +189,49 @@ def test_build_artifact_contains_required_exp1292_fields() -> None:
     assert "phi_local" in first_case
     assert "Phi_global" in first_case
     json.dumps(artifact)
+
+
+def test_build_artifact_blocks_without_required_linear_inputs(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """SCENARIO-KONA-030: missing linear repair artifacts produce blocked output."""
+    missing_1275 = tmp_path / "missing_1275.json"
+    missing_1276 = tmp_path / "missing_1276.json"
+    monkeypatch.setattr(experiment, "EXP1275_PATH", missing_1275)
+    monkeypatch.setattr(experiment, "EXP1276_PATH", missing_1276)
+    monkeypatch.setattr(experiment, "EXP1291_PATH", tmp_path / "missing_1291.json")
+
+    artifact = experiment.build_artifact()
+
+    assert artifact["status"] == "blocked"
+    assert artifact["honest_verdict"] == "blocked_missing_required_repair_artifacts"
+    assert artifact["feasibility_channel_predictive"] is False
+    assert artifact["per_case"] == []
+
+
+def test_honest_verdict_thresholds_are_measured() -> None:
+    """REQ-KONA-030: verdicts follow measured AUC, accuracy, and false continues."""
+    assert (
+        experiment._honest_verdict(
+            {
+                "feasibility_channel_auc": 0.72,
+                "repair_help_prediction_accuracy": 0.71,
+                "false_continue_rate": 0.35,
+            }
+        )
+        == "feasibility_channel_predictive"
+    )
+    assert (
+        experiment._honest_verdict(
+            {
+                "feasibility_channel_auc": 0.59,
+                "repair_help_prediction_accuracy": 0.90,
+                "false_continue_rate": 0.0,
+            }
+        )
+        == "feasibility_channel_not_predictive"
+    )
 
 
 def test_script_main_writes_terminal_artifact(
