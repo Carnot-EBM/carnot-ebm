@@ -1,0 +1,24 @@
+{
+  "experiment": 1286,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-05-04",
+  "started_at": "2026-05-04T22:07:59.763888+00:00",
+  "finished_at": "2026-05-04T22:07:59.763888+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "GRAD + BEAVER + NSVIF Semantic Routing - Gated on Certificate Parse Rate",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp1285-triggered-certificate-extraction-v2.certificate_parse_rate (upstream artifact not found for task id 'exp1285-triggered-certificate-extraction-v2')",
+  "gates_evaluated": [
+    {
+      "upstream": "exp1285-triggered-certificate-extraction-v2",
+      "artifact_field": "certificate_parse_rate",
+      "op": ">=",
+      "expected": 0.8,
+      "actual": null,
+      "passed": false,
+      "reason": "upstream artifact not found for task id 'exp1285-triggered-certificate-extraction-v2'"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
