@@ -265,6 +265,113 @@ not as a deployable verification system whose numerical claims
 should be trusted at face value. Section~\ref{sec:empirical} makes
 the in-distribution vs out-of-distribution split explicit.
 
+\subsection{What \texorpdfstring{$k=6$}{k=6} means: the verifier ensemble}
+\label{sec:k6}
+
+The variable $k$ throughout this paper refers to the cardinality of
+the formally-distinct verifier ensemble that AND-composes a candidate
+output's acceptance decision. A candidate is accepted only if all
+$k$ verifiers independently grade it as valid; rejection by any one
+short-circuits the AND-composition. Each verifier operates on a
+fundamentally different formal discipline so that gaming the ensemble
+requires finding outputs that simultaneously satisfy logic, syntax,
+semantics, process-level reasoning, energy, and logit-space
+agreement --- a much smaller intersection than any single verifier's
+acceptance region.
+
+The production ensemble at the time of writing has $k=6$:
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{|l|l|l|l|}
+\hline
+\textbf{\#} & \textbf{Verifier} & \textbf{Mechanism} & \textbf{Tier} \\
+\hline
+$V_1$ & Z3 SMT solver        & Logic / arithmetic constraint validity & Tier 3 \\
+$V_2$ & AST structural       & Syntactic / structural validity of code & Tier 2.5 \\
+$V_3$ & Semantic consistency & Causal / semantic alignment to prompt    & Tier 2.7 \\
+$V_4$ & ThinkPRM v2          & Pre-trained process reward model         & Tier 0a \\
+$V_5$ & SOSKAN-Energy v3 (4-bit) & Energy-network output on full sequence & Tier 1 \\
+$V_6$ & SemEnergy probe      & Logit-space energy signal                 & Tier 0c \\
+\hline
+\end{tabular}
+\caption{The $k=6$ production verifier ensemble. Each verifier
+operates on a formally distinct discipline; AND-composition requires
+all six to accept.}
+\label{tab:k6}
+\end{table}
+
+\paragraph{Why $k=6$ specifically.} The choice is descriptive, not
+prescriptive --- the architecture grew to $k=6$ rather than starting
+there:
+
+\begin{itemize}
+  \item Carnot began at $k=3$ (Z3 + AST + Semantic) in early
+        Phase-1 verify-repair pipeline work.
+  \item Phase-3 Deep Think Round~1 proposed $k=5$ with relative
+        correlation $r=0.3$, framed as ``mathematically superior to
+        $k=15$ at $r=0.55$.''
+  \item Round~2 refuted that prescription via a Participation Ratio
+        derivation: actual optimal is $k \approx 10$ at $r=0.4$, and
+        Round~1's $\cos^k(\theta_F)$ approximation was shown to be
+        off by approximately $3.2 \times 10^9$.\footnote{The 9-round
+        Phase-3 Deep Think synthesis is committed to the project
+        repository at
+        \path{docs/research-notes/and-composition-k-ceiling-deep-think-results.md}
+        and \path{phase3-empirical-grounded-deep-think-round2-results.md};
+        the consolidated synthesis lives at
+        \path{reference_phase3_deep_think_synthesis.md}.}
+  \item The final 9-round synthesis settled on a theoretical ceiling
+        of $k_{\max}=8$ under strict mechanism orthogonality (derived
+        from the Welch/Rankin Simplex bound; see
+        Section~\ref{sec:bounds}).
+  \item Production landed at $k=6$ --- what Carnot has actually
+        implemented across independently-developed Tier-0 through
+        Tier-3 components, one short of the $k_{\max}=8$ ceiling and
+        leaving headroom for two more verifiers as orthogonal
+        mechanisms become available.
+\end{itemize}
+
+For comparison, the closest peer architecture in the recent
+literature, SentinelAgent~\citep{patil2026sentinelagent}, uses $k=7$
+checks --- the same regime. Carnot is not claiming $k=6$ is optimal;
+it is claiming $k=6$ is what the framework currently has implemented
+under explicit theoretical ceiling guidance.
+
+\paragraph{$k_{\text{nominal}}$ versus $k_{\text{eff}}$.}
+A central honest framing of this paper, sharpened by Spera's
+2026 non-compositionality theorem~\cite{spera2026noncomposability}
+and our own \texttt{exp1224} adversarial probe, is that nominal $k$
+is not effective $k$. Verifiers can be topologically distinct
+(operating on different formal disciplines) while still sharing
+\emph{joint null spaces} --- shared blind spots that the
+AND-composition fails to eliminate because of vacuous correctness
+patterns. \texttt{exp1224} measured this empirically on a $k=3$
+adversarial probe, finding pairwise conditional acceptance
+$P(V_i \mid V_j) = 1.000$ across all pairs --- effective ensemble
+size collapsed from $k=3$ to $k=1$ because the decoder geometry
+structurally guaranteed two of the three checks for all valid
+inputs.
+
+The same audit is currently in progress on the production $k=6$
+(\texttt{exp1232}). Independently of the empirical measurement, the
+$\Sigma_2^{P}$-complete general synthesis result and the
+$\mathrm{coNP}$-complete detection result establish that exact joint
+null space bounding is intractable in the worst case. We discuss the
+specific pairs predicted to share joint null space
+(AST $+$ ThinkPRM, Z3 $+$ ThinkPRM, Semantic $+$ SC-Energy) and
+report $k_{\text{eff}}$ alongside $k_{\text{nominal}}$ in the
+empirical sections that follow.
+
+The defensible claim of this paper is therefore not ``$k=6$ formally
+distinct verifiers eliminate reward hacking'' but rather: ``$k=6$
+formally distinct verifiers \emph{at unprecedented scale of
+mechanism heterogeneity for the Turing-complete codebase-modification
+threat domain} drastically reduce but do not eliminate adversarial
+attack surface, with explicit acknowledgement of joint null space
+risk per Spera Theorem~9.2.''
+
 \subsection{Cascade routing}
 
 Each LLM output enters the cascade and is routed through tiers of
