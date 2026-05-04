@@ -610,3 +610,5 @@ If you finish the real work |
 | 2026-05-04 05:53 UTC | Verifier Joint Orthogonality Audit v2 — Data Archa | FAIL | No file changes produced |
 | 2026-05-04 05:58 UTC | Figure Integrity Audit + fig3 Fix — Trace All Head | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1245_figure_ |
 | 2026-05-04 06:04 UTC | Figure Integrity Audit + fig3 Fix — Trace All Head | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1245_figure_ |
+| 2026-05-04 06:09 UTC | Figure Integrity Audit + fig3 Fix — Trace All Head | FAIL | No file changes produced |
+| 2026-05-04 06:11 UTC | Paper v6 Final + arXiv Submission — Integrate Orth | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1244-verifier-orthogonality-audit-v2, exp |
