@@ -29,9 +29,11 @@ vulnerability **0.00** (Exp 1278), and WOPR Kakuro/Masyu cartridges shipped
 with valid-solution energy **E=0** (Exps 1279/1280). SOTA GGUF certificate
 extraction stayed gate-blocked and .99 produced no headline-eligible SOTA
 model-generation result. The .99 operational closeout then measured **10 min**
-for **2** items with no GPU zombies and a **30%** next-milestone savings target.
-Current Python test collection reports **21,703** items; that is a collection
-count with three known import errors, not a full-suite pass claim.
+for **2** items with no GPU zombies; the **30%** next-milestone savings target
+now centers on DualGPU-aware lanes, cached TeX/pre-flight state, immediate
+gate-block artifacts, and idempotent docs reconciliation. Current Python test
+collection reports **21,703** items; that is a collection count with three
+known import errors, not a full-suite pass claim.
 
 ## Install and run
 
@@ -198,7 +200,7 @@ experiment artifact under `results/`.
 | Milestone .99 status | **12/14 criteria met**; publication closeout, PRIME weights, certificate memory, FSNet/SnareNet, gaming defense, and WOPR Kakuro/Masyu completed. Triggered SOTA GGUF certificates blocked; Cactus stayed gated; no headline SOTA GGUF model usage | Exps 1268-1281 |
 | Extropic Z1/XTR-0 integration packet | THRML backend stub and hardware integration packet shipped; live THRML benchmark blocked because `thrml_available=false` | Exp 1150 |
 | arXiv package v10 + publication hold | v10 bundle ready at `results/carnot-arxiv-v10-20260504.tar.gz`; `tectonic main.tex` compiled `docs/arxiv-paper/main.pdf` at **371 KiB**; arXiv upload remains pending | Exp 1270 |
-| Milestone .99 operational closeout | **10 min** for 2 closeout items, **5 min** average; both RTX 3090s idle at 4 MB / 0% with no zombie processes; pre-flight checks were seconds-scale; next-milestone savings target **30%** | operational_retro_2026_04_99 |
+| Milestone .99 operational closeout | **10 min** for 2 closeout items, **5 min** average; both RTX 3090s idle at 4 MB / 0% with no zombie processes; pre-flight checks were seconds-scale; **30%** savings target via DualGPU-aware lanes, cached TeX/pre-flight state, immediate gate-block artifacts, and idempotent docs reconciliation | operational_retro_2026_04_99 |
 | Current Python test collection | **21,703** Python test items collected on 2026-05-04; collection-only snapshot with three known import errors, not a full-suite pass claim | docs/test snapshot |
 | Local Claude/Codex usage snapshot | Codex reads the newest local `token_count` event; Claude aggregates local token usage and reads only subscription/tier metadata from credentials; free-form quota prose is ignored instead of guessed; focused regression tests pass | 2026-05-04 changelog |
 

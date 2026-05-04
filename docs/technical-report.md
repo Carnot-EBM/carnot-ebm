@@ -46,10 +46,12 @@ and retro completion. Triggered SOTA GGUF certificate extraction remained
 gate-blocked, Cactus acceptance stayed gated, and .99 produced no
 headline-eligible SOTA model-generation result. The follow-on .99 operational
 retrospective measured a **10-minute** closeout slice across **2** items with no
-GPU zombie processes and a **30%** next-milestone savings target; the latest
-ops tooling also adds a secret-safe local Claude/Codex usage snapshot. The
-current Python test collection snapshot reports **21,703** items with three
-known import errors; this is a collection count, not a full-suite pass claim. A
+GPU zombie processes and a **30%** next-milestone savings target focused on
+DualGPU-aware lanes, cached TeX/pre-flight state, immediate gate-block
+artifacts, and idempotent docs reconciliation; the latest ops tooling also adds
+a secret-safe local Claude/Codex usage snapshot. The current Python test
+collection snapshot reports **21,703** items with three known import errors;
+this is a collection count, not a full-suite pass claim. A
 plain-English summary of that journey is in the next section; deeper analysis
 follows in the body of the report and in the per-milestone retrospective
 artifacts checked into `results/operational_retro_*.json`.
@@ -3213,10 +3215,11 @@ run after Exp 1269 critical fixes. That is correct gating, not wasted GPU work.
 The waste was idle capacity: both RTX 3090s were at **4 MB / 0%** utilization
 with no GPU processes and no zombie warnings. Pre-flight checks were seconds
 scale: the relevant conductor rows reported **81** tests passing in **8.24s**
-and **7.89s**. The retro's next-milestone target is **30%** wall-time savings
-via explicit paper/docs, GPU SOTA, and CPU micro-task lanes; cached TeX and
-pre-flight dependencies; structured gate/compile timing; and batched docs
-reconciliation.
+and **7.89s**. Docs were not a measured bottleneck in this slice. The retro's
+next-milestone target is **30%** wall-time savings via explicit paper/docs, GPU
+SOTA, and CPU micro-task lanes; cached TeX and pre-flight dependencies;
+structured gate/compile timing; immediate gate-block artifacts; and idempotent
+docs reconciliation.
 
 **Local agent usage snapshot:** The latest reporting capability adds
 `python/carnot/reporting/agent_usage.py` and `scripts/agent_plan_usage.py`.

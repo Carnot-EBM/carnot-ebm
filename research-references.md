@@ -4,6 +4,116 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-05-04 Final Planning-Agent Scan (Milestone 2026.04.100)
+
+These items were checked after the .99 retrospective and before emitting the
+`.100` conductor YAML. They refine existing tasks rather than adding scope.
+
+### CDoT: Mildly Context-Sensitive Grammar for Constrained Decoding
+- **Paper:** OpenReview ACL ARR 2026 January submission, "Conditional
+  Deontics over Terminals: A Mildly Context-Sensitive Formal Grammar for
+  Constrained Decoding."
+- **Source:** https://openreview.net/forum?id=uDDdZKi6LL
+- **What:** Extends beyond context-free grammar constraints with a
+  GPU-accelerated parser that can express context-sensitive obligations for
+  tasks such as text-to-SQL and logic puzzles with unit propagation.
+- **Relevance to Carnot:** Carnot certificate tails need more than JSON
+  syntax. They need conditional obligations such as "if a claim has a numeric
+  final answer, it must include an equation/proof-carrying number binding" and
+  "if a verifier rejects a step, a repair hint must cite that step." CDoT is
+  the strongest recent signal for adding semantic expressiveness after the
+  first grammar backend is selected.
+- **Concrete experiment:** In `exp1283`, include a `cdot_expressiveness_note`
+  describing which certificate invariants cannot be expressed by llama.cpp
+  GBNF/llguidance/XGrammar alone and should be deferred to a CDoT-like layer.
+- **When to incorporate:** `.100` Phase 0 grammar bakeoff as a diagnostic, not
+  as a new dependency.
+
+### Once-More: Continuous Self-Correction With Verifier Feedback
+- **Paper:** OpenReview ICLR 2026 Poster, "Once-More: Continuous
+  Self-Correction for Large Language Models via Perplexity-Guided
+  Intervention."
+- **Source:** https://openreview.net/forum?id=3CKdjb5SuH
+- **What:** A training-free self-correction framework that uses token-level
+  perplexity plus verifier feedback to redistribute logits during generation,
+  reducing compounding errors before a full post-hoc rewrite is needed.
+- **Relevance to Carnot:** This fits between post-hoc verification and
+  full-guided decoding. Carnot can test whether energy/verifier feedback is
+  more useful when injected continuously at uncertain spans than when applied
+  only after a certificate or answer is complete.
+- **Concrete experiment:** In `exp1288`, add an `once_more_intervention_note`
+  and compare post-hoc DVI replay to an interleaved verifier pass. In
+  `exp1289`, record whether verifier-feedback token masking improves or hurts
+  GRPO/VPRM updates.
+- **When to incorporate:** `.100` Phase 2 verifier-feedback replay and gated
+  GRPO/VPRM.
+
+### Rethinking LLMs as Verifiers
+- **Paper:** ICLR 2026 Workshop on Logical Reasoning of LLMs, "Rethinking LLMs
+  as Verifiers: When Verification is Harder Than Solving."
+- **Source:** https://openreview.net/pdf?id=4jnJjSgQC1
+- **What:** Finds that LLM evaluators can be less accurate at verification
+  than at solving across reasoning, program synthesis, and multi-step tasks,
+  with failure modes including epistemic bias and perturbation insensitivity.
+- **Relevance to Carnot:** This is a direct warning against using a local SOTA
+  model as the verifier for its own certificate without external structure.
+  The certificate lane must report explicit rubrics, deterministic verifier
+  routes, and perturbation sensitivity rather than relying on LLM-as-judge.
+- **Concrete experiment:** In `exp1284`, include a perturbation/stability audit;
+  in `exp1286`, record which claims are checked by deterministic verifiers
+  rather than an LLM judge.
+- **When to incorporate:** `.100` Phase 1 SOTA stability audit and semantic
+  routing.
+
+### Copy-as-Decode: Grammar-Constrained Parallel Prefill
+- **Paper:** arXiv 2604.18170, "Copy-as-Decode: Grammar-Constrained Parallel
+  Prefill for LLM Editing."
+- **Source:** https://arxiv.org/abs/2604.18170
+- **What:** Recasts editing as a two-primitive grammar (`copy` plus `gen`) and
+  uses parallel prefill to update KV cache for copied spans, reporting large
+  kernel speedups and lossless oracle round trips.
+- **Relevance to Carnot:** Many repair tasks preserve most of the original
+  response and only edit violated spans. Copy-as-Decode suggests a future
+  repair path where Carnot certificates localize failing spans and the decoder
+  copies verified spans losslessly.
+- **Concrete experiment:** In `exp1291`, include a `copy_span_reuse_fraction`
+  diagnostic for nonlinear repair examples, even if no serving-layer primitive
+  is implemented yet.
+- **When to incorporate:** `.100` Phase 3 repair diagnostics; full
+  implementation later.
+
+### Parallel p-bit Performance-Cost Landscape
+- **Paper:** Scientific Reports 2026, "A unified performance-cost landscape of
+  parallel p-bit Ising machines based on update dynamics."
+- **Source:** https://www.nature.com/articles/s41598-026-47285-0
+- **What:** Compares synchronous and asynchronous p-bit update schemes under
+  finite delay, time-multiplexed p-bit reuse, and limited DAC precision; reports
+  that structured synchronous policies can preserve annealing quality while
+  cutting normalized hardware cost.
+- **Relevance to Carnot:** This refines the hardware path for Phase 2. It
+  supports tracking sampler correctness, update simultaneity, time-multiplexing
+  factor, and low-bit precision rather than only raw samples/sec.
+- **Concrete experiment:** No new `.100` hardware task. Mention in `exp1293`
+  as a future sampler-parity context and reserve a later hardware milestone for
+  p-bit update-dynamics parity.
+- **When to incorporate:** Later hardware-focused sampler milestone.
+
+### Status Check: Extropic Z1 and Kona 1.0
+- **Sources:** https://extropic.ai/hardware and
+  https://logicalintelligence.com/kona-ebms-energy-based-models
+- **What:** Extropic lists X0 in Q1 2025, XTR-0 in Q3 2025, and Z1 early
+  access in 2026 with hundreds of thousands of probabilistic circuits per chip.
+  Logical Intelligence describes Kona 1.0 as an EBM layer that evaluates valid,
+  safe, permissible system states rather than acting as a chatbot.
+- **Relevance to Carnot:** No architecture pivot is warranted, but both sources
+  reinforce the local-first EBM verifier/foundation-model direction. Carnot's
+  next step remains measurable local SOTA certificates and continuous repair,
+  while keeping sampler interfaces portable for future TSU/p-bit hardware.
+- **Concrete experiment:** In `exp1293`, include an `external_architecture_status`
+  field summarizing EBT, ARM-EBM, Extropic, and Kona implications without
+  depending on any closed vendor service.
+- **When to incorporate:** `.100` Phase 3 energy-bridge audit.
+
 ## 2026-05-04 Supplemental Planning Scan (Milestone 2026.04.100)
 
 These sources were added after the .99 artifact review and before finalizing
