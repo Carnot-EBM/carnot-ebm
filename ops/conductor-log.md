@@ -625,3 +625,4 @@ If you finish the real work |
 | 2026-05-04 07:03 UTC | Phase-5-D v2 — 1M Params CPU-Feasible, 4 of 8 Fail | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1250_phase5d |
 | 2026-05-04 07:08 UTC | Phase-5-D v2 — 1M Params CPU-Feasible, 4 of 8 Fail | FAIL | No file changes produced |
 | 2026-05-04 07:12 UTC | Phase-5-D v2 — 1M Params CPU-Feasible, 4 of 8 Fail | FAIL | No file changes produced |
+| 2026-05-04 07:20 UTC | NRGPT Frozen-Prefix Evaluation v2 — Pure Analysis  | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1251_nrgpt_f |
