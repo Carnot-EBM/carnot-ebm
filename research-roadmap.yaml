@@ -409,31 +409,13 @@ tasks:
        Write correlation_matrix_6x6 as a 2D list in the artifact
        Write verifier_labels_for_figure list
 
-    8. Q11.2 SMT TRIVIALITY SATURATION (NEW per Q11 Deep Think 2026-05-04):
-       Pass 10000 uniform random noise vectors z ~ Unif(-1,1)^d through decoder D.
-       For each verifier V_i, measure unconditional acceptance rate on noise output.
-       Flag any V_i with noise_acceptance_rate > 0.99 as decoder-induced trivial
-       (per Q11.2: Image(D) ⊆ Accept(V_i) means V_i contributes 0 bits of security).
-       Predicted casualties: AST + JSON Schema if snap_to_action structurally
-       guides syntax. Report noise_acceptance_rate per verifier in artifact.
+    8. Update artifact with final results.
 
-    9. Q11.4 ORTHANT PENETRATION DEPTH (NEW per Q11):
-       For all successful adversarial attacks logged in exp1224 (Phase-5-C),
-       measure the minimum continuous margin min_j |z_j*| at the attack point.
-       If successful attacks consistently ride coordinate planes (|z_j| → 0),
-       Q11.4 is empirically confirmed and an SC-Energy margin verifier with
-       γ > attack_budget B will permanently sever the trajectory.
-       Report orthant_penetration_min, orthant_penetration_mean, q11_4_confirmed.
-
-    10. Q11 TRANSVERSAL PAIR HYPOTHESIS (NEW per Q11):
-        Per Q11.4 application table, the predicted optimal k=2 transversal pair
-        is (SC-Energy as V_mag continuous-radial) + (Z3 as V_disc discrete-angular).
-        Compute P(V_SC-Energy | V_Z3) directly from step 4's matrix.
-        If P < 0.5, Q11's transversal-pair prediction is empirically validated
-        and exp1233 redesign should adopt this pair as the load-bearing core.
-        Report tss_optimal_pair_correlation and tss_pair_validates_q11.
-
-    11. Update artifact with final results.
+    NOTE: Q11 instrumentation (SMT triviality saturation, orthant penetration depth,
+    TSS optimal pair correlation) MOVED to exp1232b — see that task for details.
+    exp1232 is scoped to the basic 6x6 matrix + diagnosis + heatmap to keep
+    max_turns budget tight; exp1232b depends on this experiment and reads the
+    matrix output to compute the Q11 metrics.
 
     CONCRETE STEPS:
     - python3 -c "import json; d={{'experiment':'1232_verifier_joint_orthogonality_audit','status':'in_progress','pairwise_correlation_matrix_measured':False,'k_eff':None,'honest_verdict':'in_progress'}}; open('results/experiment_1232_verifier_joint_orthogonality_audit.json','w').write(json.dumps(d,indent=2))" 2>&1
