@@ -584,3 +584,4 @@ If you finish the real work |
 | 2026-05-04 03:02 UTC | GRPO Execution-Grounded Credit Assignment — Token- | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1235-grpo-v6-fspo-vps-extended) |
 | 2026-05-04 03:06 UTC | Boltzmann-GPT Contrastive CD Training — FoVer Corp | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1237_boltzma |
 | 2026-05-04 03:08 UTC | GRPO Execution-Grounded Credit Assignment — Token- | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1235-grpo-v6-fspo-vps-extended) |
+| 2026-05-04 03:39 UTC | Boltzmann-GPT Contrastive CD Training — FoVer Corp | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1237_boltzma |
