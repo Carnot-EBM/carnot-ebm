@@ -4,6 +4,63 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-05-04 Scan (Milestone 2026.04.99 Planning)
+
+### FSNet: Feasibility-Seeking Neural Network for Constrained Optimization with Guarantees
+- **Paper:** arXiv 2506.00362 (May 2025; NeurIPS 2025).
+- **Source:** https://arxiv.org/abs/2506.00362
+- **What:** Adds an explicit feasibility-seeking step inside the neural solution procedure. The step minimizes constraint violations as an unconstrained differentiable problem, giving feasibility and convergence guarantees while preserving end-to-end training.
+- **Relevance to Carnot:** This is directly aligned with Carnot's verify-repair loop and Phase-5 in-situ substrate. Carnot currently scores violations after a response or latent state exists; FSNet suggests making "seek feasibility" a first-class differentiable correction operator inside the energy descent loop. This could turn stale Phase-5-D simulated gates into an actual measurable repair operator.
+- **Concrete experiment:** Add an FSNet-style `FeasibilityStep` to `python/carnot/phase3/continuous_ebm.py` and compare raw Langevin descent vs feasibility-seeking descent on FoVer latent states. Measure violation energy reduction, convergence steps, and whether k_eff/orthogonality degrades.
+- **When to incorporate:** Milestone .99 Phase 2 or Phase 3, after .98 proved k=5 orthogonality and Q11 TSS instrumentation.
+
+### SnareNet: Flexible Repair Layers for Neural Networks with Hard Constraints
+- **Paper:** arXiv 2602.09317 (February 2026).
+- **Source:** https://arxiv.org/abs/2602.09317
+- **What:** Appends a differentiable repair layer that navigates in the constraint map's range space, steering model outputs toward feasibility. Adaptive relaxation starts with a looser feasible set and shrinks it during training for stability.
+- **Relevance to Carnot:** This is a clean candidate for Carnot's continuous-latent repair layer. Unlike post-hoc text repair, SnareNet-style repair can operate directly on latent traces or verifier logits, which matches the Phase-3/Kona bridge and the Phase-5 in-situ training stack.
+- **Concrete experiment:** Prototype a `ConstraintRepairLayer` with adaptive relaxation for the continuous EBM substrate. Compare against plain energy descent on a small FoVer/SAT latent task: final energy, constraint satisfaction, number of repair iterations, and distortion from the original latent state.
+- **When to incorporate:** Milestone .99 as the concrete repair-layer alternative to another Phase-5-D rerun.
+
+### Thinking Before Constraining: Triggered Structured Decoding
+- **Paper:** arXiv 2601.07525 (January 2026).
+- **Source:** https://arxiv.org/abs/2601.07525
+- **What:** Lets an LLM reason naturally until trigger tokens appear, then switches to constrained structured generation. Reported gains up to 27% over natural generation with only 10-20 extra tokens.
+- **Relevance to Carnot:** Carnot's extraction bottleneck remains the highest-priority product gap. This paper offers a local-first path: let the SOTA GGUF model reason freely, then force a parseable constraint-certificate tail. It avoids pure grammar-constrained decoding's coherence hit while giving Carnot deterministic fields to verify.
+- **Concrete experiment:** Run `unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF` on 50 FoVer/GSM8K prompts with a trigger token such as `<CARNOT_CERT>`, then constrained-generate JSON claims. Compare parse rate, Z3/SymCode verification coverage, and false-positive rate vs existing free-form extraction.
+- **When to incorporate:** Milestone .99 Phase 1, as the SOTA extraction-recovery task.
+
+### PRIME: Process-Outcome Alignment Benchmark for Verifiable Reasoning
+- **Paper:** arXiv 2602.11570 (February 2026).
+- **Source:** https://arxiv.org/abs/2602.11570
+- **What:** Evaluates verifiers on whether derivations are valid, not just whether final answers match. PRIME reports that verifier accuracy on process-outcome alignment strongly predicts RLVR effectiveness, with R^2 > 0.92.
+- **Relevance to Carnot:** GRPO-VPS and VPRM are Carnot's live self-learning path, but .98 left GRPO v7 as an in-progress placeholder. PRIME suggests the next step should not be another broad GRPO rerun; it should first select and weight Carnot verifiers by process-outcome alignment.
+- **Concrete experiment:** Build a PRIME-style FoVer/GSM8K verifier-selection audit: outcome-only Z3, CausalReasoningVerifier, SymCodeVerifier, and k=5 energy ensemble. Compute process-error detection, final-answer agreement, and select a verifier-weight vector for the next GRPO run.
+- **When to incorporate:** Milestone .99 Phase 2, before any expensive GRPO training.
+
+### CompassVerifier: Unified Lightweight Verifier + VerifierBench
+- **Paper:** arXiv 2508.03686 (August 2025); Hugging Face paper page.
+- **Sources:** https://arxiv.org/abs/2508.03686 and https://huggingface.co/papers/2508.03686
+- **What:** Lightweight verifier model for math, knowledge, and diverse reasoning tasks, with VerifierBench for multi-domain verifier evaluation. The work targets robust answer verification and outcome-reward use without custom regex/prompt rules per benchmark.
+- **Relevance to Carnot:** Useful as a comparison baseline for Carnot's k=5 ensemble and as a dataset-shaping reference. If CompassVerifier beats Carnot on some domains, Carnot needs a tier or corpus expansion there; if Carnot wins on FoVer/code constraints, it strengthens the paper's novelty boundary.
+- **Concrete experiment:** Run a CompassVerifier-compatible baseline audit on a small local dataset first. Required local-first constraint: headline rows must use `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, or `unsloth/gemma-4-26B-A4B-it-GGUF` outputs, not closed-weight generations.
+- **When to incorporate:** Milestone .99 Phase 1 or .100 once triggered structured extraction has a stable corpus.
+
+### Cactus: Constrained Acceptance Speculative Sampling
+- **Paper:** arXiv 2604.04987 (April 2026; ICLR 2026).
+- **Source:** https://arxiv.org/abs/2604.04987
+- **What:** Reframes speculative sampling as constrained optimization and allows controlled divergence from the verifier distribution to increase token acceptance rates without uncontrolled quality loss.
+- **Relevance to Carnot:** Energy-guided/constrained decoding will be too slow if every candidate token needs a full SOTA verifier pass. Cactus gives a principled acceptance rule: draft locally, accept when divergence from the Carnot energy/verifier distribution is bounded. This is the most practical near-term bridge between local GGUF decoding and verifier-constrained generation.
+- **Concrete experiment:** Implement a CPU smoke Cactus-style acceptance gate using a small draft model and a SOTA GGUF verifier model. Measure acceptance rate, energy violation rate, and latency vs unconstrained generation on 30 typed-constraint prompts.
+- **When to incorporate:** Milestone .99 Phase 3 if the triggered structured extraction task shows parse-rate improvement.
+
+### 2026 Source Status: Extropic Z1 / XTR-0 and Kona Architecture
+- **Sources:** https://extropic.ai/hardware and https://logicalintelligence.com/blog/energy-based-models-for-reasoning
+- **What:** Extropic lists XTR-0 as the Q3 2025 research platform and Z1 as early access 2026 with hundreds of thousands of probabilistic circuits per chip. Logical Intelligence continues to frame Kona as a non-autoregressive EBRM with globally scored, continuous, editable reasoning traces, paired with LLMs for interface/coordination.
+- **Relevance to Carnot:** Confirms Carnot's strategic split: local LLMs for interface/extraction, Carnot EBMs for global validity and repair, and hardware-portable samplers for sovereignty. It also argues against over-investing in KV260 deep-EBM redesign now; the useful near-term work is software compatibility, THRML parity, and well-instrumented energy traces that can later target TSU-class samplers.
+- **Concrete experiment:** Draft an Extropic/THRML readiness packet: map Carnot's k=5 energy terms to a TSU-style factor graph, define a parity benchmark against CPU Gibbs, and list open SDK/hardware questions for Z1 early access.
+- **When to incorporate:** Milestone .99 Phase 3 or as a lightweight hardware-readiness task.
+
 ## 2026-05-04 Scan (Milestone 2026.04.98 Planning)
 
 ### DiffuTruth: The Energy of Falsehood — Hallucinations as High-Energy Thermodynamic States

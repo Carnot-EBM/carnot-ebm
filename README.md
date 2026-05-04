@@ -20,9 +20,10 @@ Rust + Python/JAX, Apache 2.0, `pip install carnot`.
 Current public research record: **1,267 experiments tracked, 107 completed
 milestones archived**, through Exp 1267 on 2026-05-04. The latest terminal
 .98 artifacts are Exp 1256 (k=5 orthogonality confirmed: max r=0.462,
-k_eff=1.76), Exp 1264 (Q11 TSS instrumentation), Exp 1265 (DiffuTruth vs
-Carnot baseline), Exp 1266 (QuantKAN 3-bit + LUT-KAN), and Exp 1267
-(milestone .98 retro: 5/13 criteria met).
+k_eff=1.76), Exp 1264 (Q11 TSS instrumentation: corr=0.5466,
+vulnerability=0.4534), Exp 1265 (DiffuTruth AUROC 0.0816 vs Carnot
+0.948187), Exp 1266 (QuantKAN 3-bit AUROC 0.9801 with 2.5x LUT-KAN
+simulation speedup), and Exp 1267 (milestone .98 retro: 5/13 criteria met).
 
 ## Install and run
 
