@@ -4797,3 +4797,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-04: GRPO v8 PRIME+VPRM Smoke - Gated on Verifier Weight Vector (⚠️ Research Finding) — honest_verdict=smoke_only_not_headline; results/experiment_1273_grpo_v8_prime_vprm_smoke.json
 - 2026-05-04: Online Self-Learning Certificate Memory v3 - Replay Delta + Skill Graph Candidate (✅ Complete) — honest_verdict=certificate_memory_replay_improved; results/experiment_1274_online_self_learning_certificate_memory_v3.json
 - 2026-05-04: FSNet Feasibility Step for Continuous EBM - Raw Langevin vs Feasibility Seeking (✅ Complete) — honest_verdict=feasibility_step_viable; results/experiment_1275_fsnet_feasibility_step_continuous_ebm.json
+- 2026-05-04: SnareNet Repair Layer - Gated on FSNet Feasibility Delta > 0 (⚠️ Research Finding) — honest_verdict=adaptive_repair_improves_fsnet; results/experiment_1276_snarenet_repair_layer_gated.json
