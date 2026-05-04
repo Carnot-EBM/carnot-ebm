@@ -17008,3 +17008,41 @@ blocking
 format `gaming_defense_k5_block_rate_X.XX_vs_k1_Y.YY`.
 
 **Spec traces:** REQ-VERIFY-1249, Exp 1249
+
+## REQ-VERIFY-1252: Q11 Transversal Spectral Synthesis Instrumentation
+
+**Summary:** Instrument the production k=5 AND-composed verifier ensemble for
+Q11 Transversal Spectral Synthesis attack-surface diagnostics over the FoVer
+v5 corpus.
+
+**Requirements:**
+
+- REQ-VERIFY-1252-1: The diagnostic SHALL load the default k=5 verifier
+  ensemble from `python/carnot/verify/and_composition_verifier.py`.
+- REQ-VERIFY-1252-2: The diagnostic SHALL score 50 FoVer corpus v5
+  question/response pairs through each verifier and record per-verifier
+  energies.
+- REQ-VERIFY-1252-3: The diagnostic SHALL compute each verifier's
+  `smt_triviality_rate` as the fraction of scored rows whose energy is exactly
+  `0.0`.
+- REQ-VERIFY-1252-4: The diagnostic SHALL compute each verifier's
+  `orthant_occupancy` as the fraction of scored rows accepted with
+  `energy < 0.5`.
+- REQ-VERIFY-1252-5: The diagnostic SHALL compute `and_occupancy` as the
+  fraction of scored rows where all five verifiers accept with `energy < 0.5`.
+- REQ-VERIFY-1252-6: The diagnostic SHALL flag `tss_attack_viable` when any
+  verifier has `smt_triviality_rate > 0.5` and SHALL write a JSON report with
+  these fields.
+
+**Implementation Status:** Planned (Exp 1252)
+
+### SCENARIO-VERIFY-1252: Q11 Diagnostic Reports Triviality And Occupancy
+
+**Given** FoVer corpus v5 contains at least 50 pairs and the default k=5
+AND-composed verifier ensemble is importable
+**When** `scripts/q11_tss_diagnostic.py` runs over 50 rows
+**Then** it writes a JSON report with `smt_triviality_rates`,
+`orthant_occupancy`, `and_occupancy`, and `tss_attack_viable`
+**And** `and_occupancy` is no greater than any single verifier occupancy.
+
+**Spec traces:** REQ-VERIFY-1252, SCENARIO-VERIFY-1252, Exp 1252
