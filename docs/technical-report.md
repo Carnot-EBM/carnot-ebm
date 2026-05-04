@@ -44,7 +44,10 @@ compilation, PRIME verifier selection, certificate-memory replay, FSNet/SnareNet
 continuous repair, gaming-defense proxy measurement, WOPR Kakuro/Masyu shipping,
 and retro completion. Triggered SOTA GGUF certificate extraction remained
 gate-blocked, Cactus acceptance stayed gated, and .99 produced no
-headline-eligible SOTA model-generation result. A
+headline-eligible SOTA model-generation result. The follow-on .99 operational
+retrospective measured a **10-minute** closeout slice across **2** items with no
+GPU zombie processes and a **30%** next-milestone savings target; the latest
+ops tooling also adds a secret-safe local Claude/Codex usage snapshot. A
 plain-English summary of that journey is in the next section; deeper analysis
 follows in the body of the report and in the per-milestone retrospective
 artifacts checked into `results/operational_retro_*.json`.
@@ -190,6 +193,16 @@ artifacts checked into `results/operational_retro_*.json`.
   compiled with `tectonic main.tex`; `docs/arxiv-paper/main.pdf` is **371 KiB**
   and `results/carnot-arxiv-v10-20260504.tar.gz` is written, but upload is
   still pending (Exps 1205-1206, 1269-1270).
+- **Milestone .99 operational closeout:** the supplied closeout slice was
+  **10 minutes** for **2** items, averaging **5 minutes** each; both RTX 3090s
+  were idle at **4 MB / 0%** with no zombie processes; the retro estimates a
+  **30%** next-milestone savings target from parallel CPU/GPU lanes, cached
+  TeX/pre-flight work, structured timing, and batched docs reconciliation
+  (`operational_retro_2026_04_99.json`).
+- **Local Claude/Codex usage snapshot:** the reporting layer now reads the
+  newest Codex `token_count` event, aggregates Claude local token totals, reads
+  only subscription/tier metadata from Claude credentials, and refuses to infer
+  quota percentage from free-form prose (2026-05-04 changelog).
 - **Milestone 2026.04.91 closed at 11/13 criteria:** the missed criteria were
   paper hold-lift readiness and GRPO v5, which was gate-blocked because the
   llama.cpp runtime lacked GPU offload support. The retro records .91 as useful
@@ -3183,3 +3196,31 @@ prior-failure metadata and cached SOTA GGUF models, run Cactus only after the
 certificate parse-rate gate is met, convert smoke-only GRPO/VPRM evidence into
 headline-eligible SOTA-backed evidence or retire it, and use the compiled arXiv
 v10 bundle for the actual submission step or record the external blocker.
+
+### Post-.99 Operational Closeout and Usage Reporting (2026-05-04)
+
+The research artifacts above close Exp 1281, but the latest operational source
+of truth adds two post-closeout items that matter for planning.
+
+**Operational retro 2026.04.99:** The retro analyzes a supplied **10-minute**
+closeout slice with **2** completed items, averaging **5 minutes** each. The
+slow path was the serialized paper lane: Exp 1270 arXiv Bundle v10 could only
+run after Exp 1269 critical fixes. That is correct gating, not wasted GPU work.
+The waste was idle capacity: both RTX 3090s were at **4 MB / 0%** utilization
+with no GPU processes and no zombie warnings. Pre-flight checks were seconds
+scale: the relevant conductor rows reported **81** tests passing in **8.24s**
+and **7.89s**. The retro's next-milestone target is **30%** wall-time savings
+via explicit paper/docs, GPU SOTA, and CPU micro-task lanes; cached TeX and
+pre-flight dependencies; structured gate/compile timing; and batched docs
+reconciliation.
+
+**Local agent usage snapshot:** The latest reporting capability adds
+`python/carnot/reporting/agent_usage.py` and `scripts/agent_plan_usage.py`.
+For Codex, it reads the newest local `token_count` event and reports plan type,
+primary/secondary rate-limit windows, reset epochs, and token totals. For
+Claude, it aggregates token usage from local project JSONL logs and reads only
+`subscriptionType` and `rateLimitTier` from `.credentials.json`; it does not
+echo access or refresh tokens. The important honesty rule is that Claude
+`used_percent` remains `null`/`unavailable` unless a structured numeric quota
+field exists. Focused regression coverage for this path is
+`tests/python/test_agent_plan_usage.py`.

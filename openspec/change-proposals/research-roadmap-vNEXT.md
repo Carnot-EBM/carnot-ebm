@@ -27,6 +27,8 @@ The 2026-05-04 vNEXT literature/source scan added these entries to `research-ref
 - SEM-CTRL (arXiv 2503.01804 / OpenReview TMLR 2026): Answer Set Grammars for semantic control, useful after syntactic certificate validity is reliable.
 - DVI (arXiv 2510.05421 / OpenReview ICLR 2026): verifier accept/reject decisions as online self-speculation training signals.
 - XGrammar-2 and llguidance: practical local structured-generation engines with llama.cpp/vLLM/SGLang integration, the most direct implementation path for local GGUF certificates.
+- BEAVER + CRANE (arXiv 2512.05439 / 2502.09061): deterministic constraint-bound and reasoning-preserving constrained generation references; use them as design constraints, not as a full .100 implementation.
+- Optimal KAN abstractions (arXiv 2602.06737): formal PWA/MILP verification path for KAN verifier components; queued as a future verifier-certification direction after SOTA certificates stabilize.
 - Current EBT / ARM-EBM / Extropic / Kona status: no broad architecture pivot; the near-term task remains measurable local certificates, verifier learning, and continuous repair while keeping the sampler abstraction portable.
 
 ## Three Biggest Gaps
@@ -68,6 +70,7 @@ Phase 2: continuous self-learning
       |
       v
   DVI-style verifier feedback replay
+  uses SOTA certs when available, otherwise exp1274/FoVer replay
       |
       v
   Skill graph promotion/demotion
@@ -110,7 +113,7 @@ Success bar: `exp1285.certificate_parse_rate >= 0.8` and `headline_result_allowe
 
 Goal: satisfy the research program's continuous self-learning mandate with a loop that uses verifier decisions from real or replayed certificate data.
 
-- `exp1288-dvi-verifier-feedback-replay`: convert verifier accept/reject decisions into an online drafter/routing-policy update and measure acceptance/violation deltas.
+- `exp1288-dvi-verifier-feedback-replay`: convert verifier accept/reject decisions into an online drafter/routing-policy update and measure acceptance/violation deltas. This task runs even if the SOTA certificate gate blocks by falling back to the `.99` certificate-memory/FoVer replay corpus, and it marks headline eligibility honestly.
 - `exp1289-grpo-v9-sota-headline-gated`: run a bounded PRIME/VPRM/GRPO v9 headline attempt only if SOTA certificates and DVI replay gates pass.
 - `exp1290-skill-graph-promotion-demotion`: promote reusable certificate-memory patterns into skill-graph entries with replay evidence and demotion conditions.
 
@@ -140,10 +143,10 @@ exp1282 ---> exp1284 ---> exp1285 ---> exp1286
     |
 exp1283 --------------------^
 
-exp1285 ---> exp1288 ---> exp1289
-    |             |
-    v             v
- exp1290      exp1295
+exp1285 - - optional SOTA corpus - -> exp1288 ---> exp1289
+                                      |
+                                      v
+                                   exp1290
 
 exp1291 ----+
 exp1292 ----+--> exp1295
@@ -157,7 +160,7 @@ Structured conductor gates:
 - `exp1285` gates on `exp1282.cached_sota_ready == true`, `exp1283.grammar_backend_available == true`, and `exp1284.answer_stability_score >= 0.6`.
 - `exp1286` gates on `exp1285.certificate_parse_rate >= 0.8`.
 - `exp1287` gates on `exp1285.certificate_parse_rate >= 0.8`.
-- `exp1288` gates on `exp1285.verified_certificate_count >= 10`.
+- `exp1288` is deliberately ungated so the continuous self-learning requirement still runs; it must record whether it used SOTA certificates or `.99` replay/FoVer fallback data.
 - `exp1289` gates on `exp1285.headline_result_allowed == true` and `exp1288.dvi_acceptance_delta > 0.0`.
 - `exp1290` gates on `exp1288.memory_update_written == true`.
 
