@@ -589,3 +589,4 @@ If you finish the real work |
 | 2026-05-04 03:49 UTC | Phase-5-D Intermediate-Scale Derisking — 100-300M  | FAIL | No file changes produced |
 | 2026-05-04 03:53 UTC | Phase-5-D Intermediate-Scale Derisking — 100-300M  | FAIL | No file changes produced |
 | 2026-05-04 03:58 UTC | NRGPT Frozen-Prefix Evaluation — Resolve Non-Monot | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1239_nrgpt_f |
+| 2026-05-04 04:04 UTC | NRGPT Frozen-Prefix Evaluation — Resolve Non-Monot | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1239_nrgpt_f |
