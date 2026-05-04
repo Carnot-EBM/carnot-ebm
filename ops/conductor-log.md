@@ -616,3 +616,4 @@ If you finish the real work |
 | 2026-05-04 06:16 UTC | Paper v6 Final + arXiv Submission — Integrate Orth | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1244-verifier-orthogonality-audit-v2, exp |
 | 2026-05-04 06:19 UTC | GRPO v7 Simplified — VPS-Only, Single GPU or CPU F | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1247_grpo_v7 |
 | 2026-05-04 06:21 UTC | Paper v6 Final + arXiv Submission — Integrate Orth | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1244-verifier-orthogonality-audit-v2, exp |
+| 2026-05-04 06:24 UTC | GRPO v7 Simplified — VPS-Only, Single GPU or CPU F | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1247_grpo_v7 |
