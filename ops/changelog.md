@@ -8,6 +8,7 @@
 ## 2026-05-04 (Milestone 2026.04.99 Operational Retrospective)
 
 - 2026-05-04 16:45 UTC: Milestone 2026.04.99 operational process retrospective complete. Used the supplied 10 min closeout slice for 2 completed experiments, averaging 5 min each. Slowest item was exp1270 arXiv Bundle v10 at 10 min, gated on exp1269 critical fixes; inline docs reported 0 min. Current `scripts/gpu_monitor.py --json` confirmed both RTX 3090s idle at 4 MB / 0% utilization with no GPU processes or warnings, so there were no zombie processes wasting material resources. Pre-flight was not the bottleneck: relevant conductor rows showed 81 tests passing in 8.24s and 7.89s. Estimated 30% next-milestone savings via parallel CPU/GPU lanes, cached TeX/pre-flight targets, structured gate/compile timing, and batched docs reconciliation. Wrote `results/operational_retro_2026_04_99.json`.
+- 2026-05-04 17:12 UTC: Refined `results/operational_retro_2026_04_99.json` from the mandatory skeleton into terminal `status=success`, preserving the supplied 10 min / 2 item closeout scope while adding structured answers for GPU idleness, no zombie processes, seconds-scale pre-flight checks, doc reconciliation, parallelization, and 30% estimated savings.
 
 ## 2026-05-04 (Milestone 2026.04.99 Research Planning)
 
