@@ -16921,3 +16921,47 @@ honest verdict of `defense_effective`, `defense_partial`,
 `defense_insufficient`, or `blocked`.
 
 **Spec traces:** REQ-VERIFY-1231, Exp 1231
+
+## REQ-VERIFY-1244: Production Verifier Orthogonality Audit v2
+
+**Summary:** Rebuild the blocked verifier joint-orthogonality audit without
+running the full test suite inside the experiment. The audit shall reuse
+Exp1108's already-computed pairwise r-correlations and run a small direct
+FoVer corpus pass through the five production verifier adapters.
+
+**Requirements:**
+
+- REQ-VERIFY-1244-1: The audit SHALL read
+  `results/experiment_1108_ensemble_diversity_v2_and_composition.json` and use
+  its pairwise r-correlations, k=5 maximum r value, and production verifier
+  names as the source of correlation truth.
+- REQ-VERIFY-1244-2: The audit SHALL load exactly the first 50 pairs from
+  `results/fover_corpus_v5.json` and score them by directly instantiating the
+  five production adapters from `and_composition_verifier.py` without invoking
+  pytest or the repository test runner from the experiment path.
+- REQ-VERIFY-1244-3: The audit SHALL compute a 5x5 conditional acceptance
+  matrix `P(V_i accepts | V_j accepts)` from the direct verifier verdicts,
+  using 0.0 when the conditioning verifier accepts no rows.
+- REQ-VERIFY-1244-4: The audit SHALL write
+  `results/experiment_1244_verifier_orthogonality_audit_v2.json` with
+  `orthogonality_matrix_computed`, `max_pairwise_r_from_exp1108`,
+  `k5_subset_confirmed`, `k_eff`, `correlated_pairs_above_threshold`,
+  `heatmap_figure`, `verifier_names`, and `honest_verdict`.
+- REQ-VERIFY-1244-5: The audit SHALL save a matplotlib heatmap to
+  `docs/figures/fig_verifier_orthogonality_heatmap.png` and use the honest
+  verdict `orthogonality_audit_complete_k5_confirmed` only when the Exp1108
+  k=5 maximum r is below 0.5.
+
+**Implementation Status:** Planned (Exp 1244)
+
+### SCENARIO-VERIFY-1244: Data-Archaeology Audit Confirms k=5 Orthogonality
+
+**Given** Exp1108 contains pairwise r-correlations for the production k=5 subset
+and FoVer corpus v5 contains at least 50 pairs
+**When** `python/carnot/eval/verifier_orthogonality_audit_v2.py` runs
+**Then** it scores exactly 50 pairs with the production verifier adapters
+**And** it computes the 5x5 conditional acceptance probability matrix
+**And** it writes the Exp1244 artifact with all required schema fields
+**And** `k_eff` is 5 when no production verifier pair exceeds r=0.5.
+
+**Spec traces:** REQ-VERIFY-1244, Exp 1244
