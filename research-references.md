@@ -4,6 +4,104 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-05-04 Interactive Verification-Gated Scan (Milestone 2026.04.100)
+
+This scan checked the user-mandated sources after reading `.99` artifacts and
+before finalizing the next roadmap. The findings support the existing `.100`
+direction: certificate grammar first, then SOTA local extraction, token-level
+acceptance, semantic bounds, verifier-feedback replay, and energy-bridge audits.
+
+### EBT and ARM-EBM Theory Became Stronger Signals
+- **Papers:** arXiv 2507.02092, "Energy-Based Transformers are Scalable
+  Learners and Thinkers"; arXiv 2512.15605, "Autoregressive Language Models
+  are Secretly Energy-Based Models."
+- **Sources:** https://arxiv.org/abs/2507.02092,
+  https://openreview.net/forum?id=ZBj3Qp1bYg,
+  https://www.semanticscholar.org/paper/Energy-Based-Transformers-are-Scalable-Learners-and-Gladstone-Nanduru/2da9163730998a4368c609972ccff0582518b36b,
+  https://arxiv.org/abs/2512.15605
+- **What:** EBT is now an ICLR 2026 Oral and keeps the Carnot-relevant claim
+  that prediction can be reframed as energy minimization over candidate
+  outputs. ARM-EBM provides a formal bridge from next-token models to
+  sequence-level energy/value views.
+- **Relevance to Carnot:** Keep `exp1293` as an explicit energy-bridge audit:
+  measure where local AR model logits, verifier energies, and certificate
+  acceptance agree or diverge rather than treating SOTA LLM output as a black
+  box.
+- **Citation check:** Semantic Scholar showed the EBT page and citation count;
+  exact-title Semantic Scholar search for ARM-EBM did not surface a reliable
+  public page, so the arXiv page is the authoritative citation target for now.
+
+### Token-Level Hallucination Signals Are Ready for Local Tests
+- **Papers:** arXiv 2602.18671, "Spilled Energy in Large Language Models";
+  arXiv 2601.21969, "Token-Guard: Towards Token-Level Hallucination Control
+  via Self-Checking Decoding."
+- **Sources:** https://arxiv.org/abs/2602.18671,
+  https://huggingface.co/papers/2602.18671,
+  https://arxiv.org/abs/2601.21969
+- **What:** Spilled Energy derives training-free logit energy signals, while
+  Token-Guard treats self-checking as a token-level pruning and regeneration
+  loop.
+- **Relevance to Carnot:** `exp1287` should report token-level risk and
+  acceptance metrics, not only final answer correctness. If local llama.cpp
+  logits are unavailable for a mandated GGUF, the artifact must label this as
+  a blocked headline path rather than substituting a proxy claim.
+- **Concrete experiment:** Use these signals as the measurement vocabulary for
+  Cactus constrained acceptance and downstream self-learning replay.
+
+### Deterministic Semantic Bounds Are Emerging
+- **Paper:** BEAVER, "An Efficient Deterministic LLM Verifier."
+- **Sources:** https://openreview.net/forum?id=xO3efBXHM9 and
+  https://huggingface.co/papers/2512.05439
+- **What:** BEAVER explores generation space with token-trie/frontier data
+  structures and reports deterministic bounds for semantic constraint
+  satisfaction.
+- **Relevance to Carnot:** `exp1286` should include a BEAVER-lite bound field
+  for prefix-closed certificate constraints, even if the first implementation
+  is a small deterministic proxy instead of the full algorithm.
+- **When to incorporate:** `.100` Phase 1 semantic routing after certificate
+  parse rate is high enough to make the bound meaningful.
+
+### Structured Generation Backends Are Practical Enough to Gate On
+- **Tools/Papers:** llguidance, XGrammar, XGrammar-2, Copy-as-Decode.
+- **Sources:** https://github.com/guidance-ai/llguidance,
+  https://github.com/mlc-ai/xgrammar, https://arxiv.org/abs/2601.04426,
+  https://arxiv.org/abs/2604.18170
+- **What:** llguidance and XGrammar provide practical grammar-constrained
+  decoding; XGrammar-2 targets dynamic agent structures; Copy-as-Decode shows
+  grammar-constrained editing can exploit copy spans instead of regenerating
+  unchanged text.
+- **Relevance to Carnot:** `exp1283` should select the lowest-friction backend
+  available locally and record why omitted backends are not ready. Future code
+  repair can reuse Copy-as-Decode ideas once certificate extraction is stable.
+
+### KAN Verification and Hardware-Efficient KAN Variants Matured
+- **Papers:** arXiv 2602.06737, "Optimal Abstractions for Verifying Properties
+  of Kolmogorov-Arnold Networks"; OpenReview ICLR 2026 Poster "Lookup
+  multivariate Kolmogorov-Arnold Networks."
+- **Sources:** https://arxiv.org/abs/2602.06737 and
+  https://openreview.net/forum?id=XRQVIeBnB0
+- **What:** KAN property verification can be reduced to MILP through
+  piecewise-affine abstractions, while lmKAN uses lookup tables/CUDA kernels
+  to improve inference efficiency.
+- **Relevance to Carnot:** This is a `.101+` candidate for certifying KAN fast
+  paths. For `.100`, it only informs the `exp1293` architecture audit and the
+  decision not to add another KAN implementation until SOTA certificate gaps
+  close.
+
+### Hardware and Commercial EBM Signals
+- **Sources:** https://extropic.ai/hardware, https://extropic.ai/software,
+  https://logicalintelligence.com/kona-ebms-energy-based-models,
+  https://logicalintelligence.com/blog/energy-based-model-sudoku-demo,
+  https://arxiv.org/abs/2601.20784
+- **What:** Extropic lists X0, XTR-0, and Z1 with Z1 early access in 2026 and
+  THRML for TSU simulation; Logical Intelligence positions Kona as an
+  EBM-style constraint layer; REASON reports specialized acceleration for
+  probabilistic logical reasoning.
+- **Relevance to Carnot:** Do not add a hardware bring-up task to `.100`
+  because Vivado/KV260 and NPU prerequisites are still human-blocked, but
+  preserve the hardware section and keep the energy-bridge audit aware of
+  TSU/p-bit and probabilistic-logic accelerator paths.
+
 ## 2026-05-04 Codex Live Web Scan Addendum (Milestone 2026.04.100)
 
 These items were checked in the interactive planning turn after reading the
