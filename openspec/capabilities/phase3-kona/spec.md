@@ -904,6 +904,38 @@ path-dependent non-conservative preconditioner.
 - Running the workflow writes the required artifact fields and marks
   `nonmonotonicity_characterized == true` without retraining NRGPT.
 
+### REQ-KONA-026: Q11 TSS Sign-Bottleneck Diagnostic
+
+The Phase 3 `ContinuousEBM` MUST expose `tss_diagnose(examples)`, where
+`examples` is a list of `(question, response, is_correct)` triples. The
+diagnostic measures the correlation between a scalar SC-Energy proxy computed at
+the `sign(z)` bottleneck and a Z3/ground-truth correctness label, then reports
+the Q11 transversal attack summary.
+
+The returned artifact MUST include `sc_energy_z3_correlation`,
+`optimal_transversal_k`, `tss_vulnerability_score`, `tss_instrumented`,
+`sign_z_bottleneck_diagnosed`, `ste_pipeline_risk`, and `honest_verdict`.
+`optimal_transversal_k` MUST be `2`. `tss_vulnerability_score` MUST be
+`1.0 - abs(sc_energy_z3_correlation)`, clamped to `[0.0, 1.0]`.
+`honest_verdict` MUST be formatted as
+`tss_instrumented_corr_X.XXX_vuln_X.XXX` using the unrounded measured values.
+
+**Rationale:** Q11 identified a transversal spectral synthesis failure mode:
+an attacker can combine SC-Energy and Z3 with a straight-through or
+Gumbel-Softmax rewrite to bypass the sign firewall. Monitoring SC-Energy/Z3
+correlation directly at `sign(z)` is the Phase 3 metric that makes this failure
+mode visible.
+
+**Acceptance criteria:**
+
+- `ContinuousEBM.tss_diagnose(...)` accepts at least 20 FoVer triples and returns
+  finite JSON-serialisable scalar fields for the Q11 diagnostic.
+- Low absolute SC-Energy/Z3 correlation produces a high
+  `tss_vulnerability_score` and sets `ste_pipeline_risk` when the score exceeds
+  `0.6`.
+- `results/experiment_1264_q11_tss_instrumentation_v2.json` records the same
+  required fields for the first 20 rows from `results/fover_corpus_v5.json`.
+
 ## Scenarios
 
 ### SCENARIO-KONA-001: Stage 1 Primitive — RDT Fixed-Point Convergence
@@ -1223,6 +1255,18 @@ verdict.
 
 **Spec traces:** REQ-KONA-024
 
+### SCENARIO-KONA-026: Exp 1264 Measures Q11 TSS Correlation On FoVer
+
+**Given** `results/fover_corpus_v5.json` contains labeled FoVer question/response
+pairs
+**When** the first 20 pairs are passed to `ContinuousEBM.tss_diagnose(...)`
+**Then** the diagnostic returns `optimal_transversal_k == 2`, finite
+`sc_energy_z3_correlation` and `tss_vulnerability_score` values, marks
+`tss_instrumented == true`, and emits an honest verdict formatted as
+`tss_instrumented_corr_X.XXX_vuln_X.XXX`.
+
+**Spec traces:** REQ-KONA-026
+
 ## Out of scope
 
 The following are deliberately **not** required by this capability:
@@ -1278,6 +1322,8 @@ The following are deliberately **not** required by this capability:
   `scripts/experiment_1239_nrgpt_frozen_prefix_evaluation.py`.
 - **NRGPT frozen-prefix evaluation v2:** specified by REQ-KONA-024;
   implementation lives in `python/carnot/phase3/nrgpt_frozen_prefix_v2.py`.
+- **Q11 TSS sign-bottleneck diagnostic:** specified by REQ-KONA-026;
+  implementation lives in `python/carnot/phase3/continuous_ebm.py`.
 
 First concrete next experiment:
 `experiment_XXX_rdt_primitive_convergence.py` — implement the RDT scaffold and
