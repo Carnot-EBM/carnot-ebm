@@ -2574,3 +2574,57 @@ and `grpo_vps_fraction_correct_after=0.95`
 **When** the Exp 1247 artifact is built
 **Then** `improvement_pp=-10.0`
 **And** `honest_verdict="grpo_v7_negative_delta"`.
+
+## REQ-LEARN-1273: GRPO v8 PRIME/VPRM Self-Learning Smoke
+
+Exp 1273 SHALL run a bounded self-learning smoke test, not a full GRPO
+training run. It SHALL load the `verifier_weight_vector` selected by Exp 1272,
+try `cached_sota_pair()` before any legacy model path, and compare PRIME/VPRM
+weighted reward before and after a small self-learning update on a held-out
+slice. When the mandated SOTA GGUF cache or GPU runtime is unavailable, the
+experiment SHALL write an honest deterministic smoke artifact that is not
+eligible for headline claims.
+
+### REQ-LEARN-1273 Sub-requirements
+
+- REQ-LEARN-1273-1: The runner SHALL write
+  `results/experiment_1273_grpo_v8_prime_vprm_smoke.json` first with
+  `status="in_progress"` and `honest_verdict="in_progress"`.
+- REQ-LEARN-1273-2: The final artifact SHALL load and record
+  `verifier_weights_used` from
+  `results/experiment_1272_prime_verifier_selection_audit.json`.
+- REQ-LEARN-1273-3: The runner SHALL call `cached_sota_pair()` first and record
+  both `MODEL_SPECS` and `models_used`. `models_used` SHALL include at least one
+  mandated SOTA GGUF id from `unsloth/Qwen3.6-35B-A3B-GGUF`,
+  `unsloth/gemma-4-31B-it-GGUF`, or `unsloth/gemma-4-26B-A4B-it-GGUF`.
+- REQ-LEARN-1273-4: The bounded comparison SHALL use 10-20 training items and
+  20-30 held-out evaluation items and report `grpo_v8_delta_pp`,
+  `self_learning_delta_overall`, `wall_budget_s`, `terminal_status`, and
+  `honest_verdict` even when the delta is non-positive.
+- REQ-LEARN-1273-5: Missing SOTA GGUF cache or GPU runtime SHALL set
+  `headline_result_allowed=false` and `execution_mode` to either `"blocked"` or
+  `"smoke_only"`, never `"live_sota"`.
+
+### SCENARIO-LEARN-1273: Missing SOTA Cache Produces Non-Headline Smoke Artifact
+
+**Given** Exp 1272 has written a non-empty `verifier_weight_vector`
+**And** `cached_sota_pair()` returns `None`
+**When** Exp 1273 runs
+**Then** the final artifact has `execution_mode="smoke_only"`
+**And** `headline_result_allowed=false`
+**And** `honest_verdict="smoke_only_not_headline"`
+**And** `models_used` records the attempted mandated SOTA GGUF ids.
+
+### SCENARIO-LEARN-1274: Live SOTA Path May Claim Headline Only With Cached GGUF Specs
+
+**Given** `cached_sota_pair()` returns concrete GGUF-backed `MODEL_SPECS`
+**When** the bounded comparison uses those specs for generated reasoning samples
+**Then** `execution_mode="live_sota"`
+**And** `headline_result_allowed=true`
+**And** `grpo_v8_delta_pp` equals `100 * (after_reward - before_reward)`.
+
+## Implementation Status (REQ-LEARN-1273)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-1273 | Implemented | Python (test_experiment_1273_grpo_v8_prime_vprm_smoke.py) |
