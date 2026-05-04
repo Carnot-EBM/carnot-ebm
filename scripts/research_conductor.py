@@ -391,9 +391,20 @@ def run_agent(
         # planner ran on Sonnet but kept the codex 180s stall threshold. Sonnet
         # legitimately thinks longer than 180s for 50-turn YAML drafting, so
         # the planner kept getting killed. Resolve based on the effective agent
-        # type for this call (claude → 0/disabled, codex/gemini → 180s).
+        # type for this call (claude → 0/disabled, codex/gemini → 600s).
+        # 2026-05-04 fix: bumped codex from 180s → 600s. After flipping
+        # AGENT_TYPE_PLANNER from claude to codex/gpt-5.5 for quota conservation,
+        # the .100 planner stalled 11 successive times at 180s silence.
+        # gpt-5.5 thinks longer between output bursts than older codex models,
+        # especially during 50-turn YAML planning involving multi-step
+        # research roadmap construction. The conductor's own progress-aware
+        # WALL_CLOCK_TIMEOUT (5-min idle grace + 4x HARD_CAP) provides
+        # adequate stall protection at the orchestrator layer; the codex-side
+        # STALL_TIMEOUT only needs to catch the genuine infinite-hang bug.
+        # 600s gives codex enough thinking room while still bounding hang
+        # detection within ~10 min.
         _effective_for_stall = agent_type_override or AGENT_TYPE
-        STALL_TIMEOUT = 0 if _effective_for_stall == "claude" else 180
+        STALL_TIMEOUT = 0 if _effective_for_stall == "claude" else 600
 
         def _kill_subagent_group(reason: str) -> None:
             """Kill the subagent AND every descendant process in its process group.
