@@ -1,13 +1,14 @@
 {
   "schema": "carnot.operational_retro.v63",
   "milestone": "2026.04.99",
-  "generated_at": "2026-05-04T17:52:13.322506Z",
-  "finalized_at": "2026-05-04T17:52:13.322506Z",
+  "generated_at": "2026-05-04T18:12:46Z",
+  "finalized_at": "2026-05-04T18:14:11Z",
+  "completed_at": "2026-05-04T18:14:11Z",
   "status": "success",
   "retro_type": "operational_final",
-  "summary": "Milestone 2026.04.99 closed in a 10 minute operational slice with 2 completed items, averaging 5 minutes each. The only material slow item was the arXiv Bundle v10 closeout, which consumed the full 10 minutes because it was serialized behind Exp 1269 critical paper fixes and then had to compile/package the TeX bundle. GPUs were idle with no GPU processes, so there was no zombie-process waste, but the milestone still left parallel GPU capacity unused for any independent GPU-eligible work.",
+  "summary": "Milestone 2026.04.99 closed in a 10 minute operational slice with 2 completed items, averaging 5 minutes each. The only material slow item was the arXiv Bundle v10 closeout, which consumed the full 10 minutes because it was serialized behind Exp 1269 critical paper fixes and then had to compile/package the TeX bundle. GPUs were idle with no GPU processes, so there was no zombie-process waste, but the milestone still left parallel GPU capacity unused for independent GPU-eligible work.",
   "scope_note": "This artifact follows the user-supplied operational closeout timing block: 10 minutes total wall time, 2 completed experiments. It does not reinterpret the full 2026.04.99 conductor activation window.",
-  "analysis_scope": "Supplied operational timing block for the .99 closeout slice, cross-checked against ops/metrics.md, ops/changelog.md, scripts/gpu_monitor.py --json, and .99 result artifacts.",
+  "analysis_scope": "Supplied operational timing block for the .99 closeout slice, cross-checked against ops/metrics.md, ops/changelog.md, scripts/gpu_monitor.py --json, ops/conductor-log.md, and .99 result artifacts.",
   "total_wall_time_minutes": 10,
   "total_wall_time_hours": 0.2,
   "total_wall_time_minutes_confidence": "user_supplied",
@@ -34,23 +35,33 @@
       "rank": 1,
       "duration_minutes": 10,
       "experiment": "exp1270",
+      "experiment_id": 1270,
       "label": "arXiv Bundle v10 - Gated on Exp 1269 Critical Fixes",
-      "why_slow": "Serialized behind paper-critical fixes, then spent the closeout window on TeX compilation and bundle packaging. The artifact compiled successfully, but upload remained pending."
+      "name": "arXiv Bundle v10 - Gated on Exp 1269 Critical Fixes",
+      "source": "-0400 [conductor]",
+      "status": "complete",
+      "why_slow": "Serialized behind paper-critical fixes, then spent the closeout window on TeX compilation and bundle packaging. The artifact compiled docs/arxiv-paper/main.tex with tectonic and wrote results/carnot-arxiv-v10-20260504.tar.gz; upload remained pending."
     },
     {
       "rank": 2,
       "duration_minutes": 0,
       "experiment": "inline_docs",
+      "experiment_id": 1270,
       "label": "In-process docs for arXiv Bundle v10",
-      "why_slow": "No material runtime in the supplied timing data; docs reconciliation was effectively instantaneous for this closeout slice."
+      "name": "In-process docs for arXiv Bundle v10 - Gated on Exp 1269 Critical Fixes",
+      "source": "-0400 [conductor]",
+      "status": "in_process_docs",
+      "why_slow": "No material runtime in the supplied timing data; this appears to be inline documentation/reconciliation for the same arXiv bundle path rather than a separate compute workload."
     }
   ],
   "bottlenecks_identified": [
     "The publication path was serial: Exp 1270 could only run after Exp 1269 fixed all five critical paper issues.",
-    "TeX compilation and arXiv packaging were on the critical path instead of being pre-warmed or cached before the gated handoff.",
+    "TeX compilation and arXiv packaging were on the critical path instead of being fully pre-warmed or cached before the gated handoff.",
     "Both RTX 3090s were idle at closeout, so no DualGPURunner parallel lane was used for independent GPU-eligible work.",
     "The milestone had no zombie GPU processes, but the 4 MB residual allocations plus 0% utilization show idle driver state that should be cleaned before heavy runs when practical.",
-    "Structured timing remains too coarse: the supplied data distinguishes only the 10 minute gated bundle and 0 minute docs pass, not gate-check, compile, packaging, or upload sub-steps.",
+    "Pre-flight was not a meaningful bottleneck in this slice: conductor rows around Exp 1269 and Exp 1270 showed 81 tests passing in 8.24s and 7.89s.",
+    "Doc reconciliation was lightweight for the supplied timing row, but keeping docs on the conductor critical path remains a recurring efficiency risk.",
+    "Structured timing remains too coarse: the supplied data distinguishes only the 10 minute gated bundle and 0 minute docs pass, not gate-check, compile, packaging, upload, or artifact-write sub-steps.",
     "Manual/external arXiv upload remained pending after bundle creation, leaving publication completion outside the automated closeout path."
   ],
   "non_bottlenecks_observed": [
@@ -61,7 +72,8 @@
   "gpu_utilization": {
     "efficient": false,
     "gpu_count": 2,
-    "snapshot_timestamp": "2026-05-04T17:52:13.322506+00:00",
+    "provided_snapshot_timestamp": "2026-05-04T18:12:29.401812+00:00",
+    "local_check_timestamp": "2026-05-04T18:13:28.489450+00:00",
     "gpus": [
       {
         "index": 0,
@@ -77,12 +89,19 @@
         "used_mb": 4,
         "total_mb": 24576,
         "utilization_pct": 0,
-        "temperature_c": 49
+        "temperature_c": 53
       }
     ],
     "process_count": 0,
     "zombie_processes_detected": false,
     "assessment": "No resource leak was wasting material VRAM, but milestone scheduling did not exploit available parallel GPU capacity."
+  },
+  "gpu_state": {
+    "provided_report_timestamp": "2026-05-04T18:12:29.401812+00:00",
+    "local_check_timestamp": "2026-05-04T18:13:28.489450+00:00",
+    "processes": [],
+    "zombies_detected": false,
+    "efficiency_assessment": "Idle dual-GPU capacity remained unused during the closeout slice; no material zombie waste was present."
   },
   "parallelization_assessment": {
     "could_any_experiments_have_been_parallelized": true,
@@ -96,12 +115,22 @@
     "was_bottleneck": false,
     "assessment": "Not in this 10 minute closeout. The historical pre-flight suite has been a recurring project bottleneck, but the .99 closeout evidence points to gated publication sequencing and bundle packaging as the limiting path."
   },
-  "preflight_assessment": "Not a bottleneck for the requested closeout slice. Available .99 closeout evidence points to seconds-scale focused checks rather than pre-flight queue stalls.",
+  "preflight_assessment": {
+    "bottleneck": false,
+    "evidence": [
+      "Exp 1269 conductor row: 81 passed, 1 warning in 8.24s",
+      "Exp 1270 conductor row: 81 passed, 1 warning in 7.89s",
+      "Exp 1281 conductor row: 81 passed, 1 warning in 5.39s"
+    ]
+  },
   "doc_reconciliation": {
     "efficient": true,
     "assessment": "The supplied timing data assigns 0 minutes to in-process docs. The next improvement is not raw doc runtime, but batching roadmap/changelog/result reconciliation so it never serializes experiment execution."
   },
-  "doc_reconciliation_assessment": "Efficient in this specific slice because the supplied docs item reported 0 minutes. The process should still remain batched or asynchronous because prior milestones show serialized docs can dominate the slowest list.",
+  "doc_reconciliation_assessment": {
+    "bottleneck": false,
+    "evidence": "The supplied in-process docs row was measured at 0 minutes; keep docs async anyway because prior milestones repeatedly put docs on the critical path."
+  },
   "zombie_process_assessment": {
     "zombies_detected": false,
     "processes": [],
@@ -131,8 +160,10 @@
     "were_there_zombie_processes_wasting_resources": "No. gpu_monitor.py reported no GPU processes, no warnings, and only residual 4 MB allocations per GPU.",
     "could_any_experiments_have_been_parallelized": "Yes for independent lanes. The arXiv bundle itself was legitimately gated, but docs, pre-warming, artifact validation, and unrelated GPU tasks could run in parallel.",
     "was_preflight_a_bottleneck": "No. Available .99 closeout evidence points to seconds-scale focused checks, not pre-flight queue stalls.",
+    "was_pre_flight_test_suite_a_bottleneck": "No. Relevant conductor rows showed 81 tests passing in 8.24s for Exp 1269 and 7.89s for Exp 1270, which is negligible relative to the 10 minute measured item.",
     "were_doc_reconciliation_passes_efficient": "Yes in this slice: the supplied docs item was 0 minutes. The remaining opportunity is batching reconciliation so it never becomes a critical-path task again.",
-    "what_tooling_would_speed_next_milestone": "DualGPURunner-by-default scheduling, TeX/cache pre-warming, structured conductor timing, terminal gate-block artifacts, and batched ops-doc reconciliation."
+    "what_tooling_would_speed_next_milestone": "DualGPURunner-by-default scheduling, TeX/cache pre-warming, structured conductor timing, terminal gate-block artifacts, and batched ops-doc reconciliation.",
+    "what_tooling_infrastructure_changes_would_speed_up_the_next_milestone": "DualGPURunner-by-default scheduling, structured phase timing in conductor artifacts, TeX/pre-flight caching, gate-ready checklists, asynchronous docs reconciliation, and routine gpu_monitor.py JSON closeout checks."
   },
   "question_answers": {
     "which_experiments_took_longest_and_why": "Exp 1270, arXiv Bundle v10, took 10 minutes because it was gated on Exp 1269 critical fixes and then performed compile/package closeout. The in-process docs item was 0 minutes.",
@@ -148,7 +179,8 @@
     "User-supplied timing block for milestone 2026.04.99",
     "ops/metrics.md",
     "ops/changelog.md",
-    "scripts/gpu_monitor.py --json at 2026-05-04T17:52:13.322506+00:00",
+    "ops/conductor-log.md",
+    "scripts/gpu_monitor.py --json at 2026-05-04T18:13:28.489450+00:00",
     "results/experiment_1269_paper_v6_critical_fixes_v2.json",
     "results/experiment_1270_arxiv_bundle_v10_gated.json",
     "results/experiment_1281_milestone_retro_99.json"
