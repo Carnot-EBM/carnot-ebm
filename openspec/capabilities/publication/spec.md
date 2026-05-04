@@ -270,6 +270,34 @@ same per-sample basis and recorded in a result artifact. The figure-rendering
 module MUST expose the measured FPGA latency and render the PNG/PDF outputs
 from that measured value.
 
+### REQ-PUBLISH-012: Paper v6 Critical Integrity Fix Gate
+
+The paper-v6 critical integrity fixer MUST verify that
+`docs/arxiv-paper/main.tex` resolves all five arXiv-blocking integrity issues
+before emitting `results/experiment_1257_paper_v6_critical_issues_fix.json`.
+The artifact MUST record boolean fields `issue_1_fix_applied` through
+`issue_5_fix_applied`, `critical_issues_fixed == 5`,
+`issues_fixed_list == ["ISSUE-1", "ISSUE-2", "ISSUE-3", "ISSUE-4", "ISSUE-5"]`,
+`status == "complete"`, and
+`honest_verdict == "paper_v6_5_of_5_critical_issues_fixed"`.
+
+The five fixes are:
+
+- ISSUE-1: any Figure 3 or hardware-latency CPU baseline caveat MUST state
+  that the 290 ms CPU reference was an order-of-magnitude estimate and direct
+  readers to the exp1094 measured CPU baseline.
+- ISSUE-2: the KL=3.07 finding MUST be labeled as a software-simulated Glauber
+  dynamics proxy, with FPGA bitstream measurement explicitly deferred.
+- ISSUE-3: the `15.6x` speedup and `CPU_GIBBS_PER_SWEEP_NS = 1000.0` baseline
+  MUST be absent from `main.tex`; CPU latency prose MUST cite the measured
+  exp1094 value of approximately 15.964 us per sweep.
+- ISSUE-4: the 76,130x HumanEval/HardNet++ speedup headline MUST be absent;
+  any retained latency comparison MUST be framed as a different task class
+  rather than a single speedup metric.
+- ISSUE-5: SOSKANEnergyV3 AUROC claims MUST distinguish in-distribution,
+  production/OOD, and post-fix production measurements instead of presenting
+  multiple AUROCs as one comparable number.
+
 ### SCENARIO-PUBLISH-008: All Medium/Low Fixes And Claim Audit Verified
 
 **Given** the position paper source, bibliography, and local experiment result
@@ -305,6 +333,17 @@ bundle path, compile status, and a closed-set `honest_verdict`.
 AND no unmeasured CPU baseline or derived CPU-vs-FPGA speedup annotation is
 rendered.
 
+### SCENARIO-PUBLISH-012: All Five Paper v6 Critical Fixes Verified
+
+**Given** `docs/arxiv-paper/main.tex`, the exp1094 sampler-correctness artifact,
+and the exp1257 deliverable path exist
+**When** the exp1257 paper-v6 critical fixer runs
+**Then** all five issue booleans are True
+AND `critical_issues_fixed == 5`
+AND `issues_fixed_list` names ISSUE-1 through ISSUE-5
+AND `honest_verdict == "paper_v6_5_of_5_critical_issues_fixed"`
+AND `status == "complete"`.
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -320,3 +359,4 @@ rendered.
 | REQ-PUBLISH-009 | Proposed | Exp 1182 paper numerical-claim audit script |
 | REQ-PUBLISH-010 | Proposed | Exp 1183 paper v5 recompile and arXiv bundle v6 gate artifact |
 | REQ-PUBLISH-011 | Proposed | Exp 1245 fig3 measured-only FPGA latency fix |
+| REQ-PUBLISH-012 | Proposed | Exp 1257 paper v6 five critical integrity fixes |
