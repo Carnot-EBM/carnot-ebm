@@ -4746,3 +4746,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-04: Figure Integrity Audit + fig3 Fix — Trace All Headline Numbers to Measured Artifacts (⚠️ Research Finding) — honest_verdict=in_progress; results/experiment_1245_figure_integrity_audit_fig3_fix.json
 - 2026-05-04: GRPO v7 Simplified — VPS-Only, Single GPU or CPU Fallback, 20 Train / 30 Eval GSM8K (⚠️ Research Finding) — honest_verdict=in_progress; results/experiment_1247_grpo_v7_simplified.json
 - 2026-05-04: GRPO v7 Simplified — VPS-Only, Single GPU or CPU Fallback, 20 Train / 30 Eval GSM8K (⚠️ Research Finding) — honest_verdict=in_progress; results/experiment_1247_grpo_v7_simplified.json
+- 2026-05-04: GRPO v7 Simplified — VPS-Only, Single GPU or CPU Fallback, 20 Train / 30 Eval GSM8K (⚠️ Research Finding) — honest_verdict=in_progress; results/experiment_1247_grpo_v7_simplified.json
