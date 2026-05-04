@@ -434,17 +434,122 @@ tasks:
     - correlated_pairs: list[dict] (pairs with P>0.7: {{v_i, v_j, correlation, diagnosis, proposed_replacement}})
     - pairwise_correlation_matrix_measured: bool (true)
     - paper_v6_honest_k: str (what paper-v6 should claim: e.g. "k_eff=5 of k=6")
-    # Q11 Deep Think additions (2026-05-04):
-    - noise_acceptance_rates: dict (verifier_name -> P(accept | z ~ Unif(-1,1)^d))
-    - q11_2_trivial_verifiers: list[str] (verifiers with noise_acceptance > 0.99 — predicted vacuous)
-    - orthant_penetration_min: float | null (smallest min_j |z_j*| across exp1224 attack points)
-    - orthant_penetration_mean: float | null (mean min_j |z_j*| across attack points)
-    - q11_4_confirmed: bool (true if successful attacks ride coordinate planes)
-    - tss_optimal_pair_correlation: float (P(V_SC-Energy | V_Z3))
-    - tss_pair_validates_q11: bool (true if tss_optimal_pair_correlation < 0.5)
     - honest_verdict: "orthogonality_measured_k_eff_6" | "orthogonality_measured_k_eff_partial" | "orthogonality_measured_revision_needed" | "blocked"
 
+    Note: Q11 instrumentation (SMT triviality saturation, orthant penetration depth,
+    TSS optimal pair correlation) is split out to exp1232b — runs after this with
+    the matrix as input. exp1232 is scoped tight (matrix + k_eff + diagnosis +
+    heatmap data) to keep within max_turns=60 budget after the prior
+    artifact_not_updated_past_bootstrap incident on the larger scope.
+
     Run: python3 -c "import json; d=json.load(open('results/experiment_1232_verifier_joint_orthogonality_audit.json')); print('k_eff:', d.get('k_eff'), '| matrix_measured:', d.get('pairwise_correlation_matrix_measured'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp1232b-q11-instrumentation
+  milestone: 2026.04.96
+  deliverable: results/experiment_1232b_q11_instrumentation.json
+  title: "Q11 Instrumentation — SMT Triviality + Orthant Penetration + TSS Pair Correlation"
+  agent_type: claude
+  model: opus
+  max_turns: 50
+  estimated_wall_time_min: 30
+  priority: high
+  requires_gpu: false
+  requires_claude: true
+  gated_on:
+    - upstream: exp1232-verifier-joint-orthogonality-audit
+      artifact_field: pairwise_correlation_matrix_measured
+      op: '=='
+      value: true
+  prior_failures:
+    - experiment_id: exp1093-phase1c-verifier-joint-null-space-measurement
+      verdict: verifiers_correlated_diversity_needed
+      addressed_by: |
+        exp1232 measured the basic 6x6 correlation matrix; this experiment runs
+        the Q11 Deep Think 2026-05-04 instrumentation that didn't fit in exp1232's
+        max_turns budget. SMT triviality saturation predicts decoder-induced
+        trivial verifiers (Q11.2); orthant penetration depth confirms Q11.4
+        sign(z) firewall mechanism on exp1224 attack data; TSS optimal pair
+        correlation validates SC-Energy + Z3 as the predicted transversal core.
+      retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    Q11 Deep Think (2026-05-04) provided three concrete measurements that empirically
+    validate or refute Carnot's verifier-design predictions. exp1232 produced the basic
+    6x6 P(V_i|V_j) matrix. This experiment uses that matrix as input plus runs two
+    additional measurements that need only modest compute.
+
+    READ FIRST: docs/research-notes/verifier-orthogonality-design-deep-think-results.md
+
+    STEP 0 — WRITE SKELETON ARTIFACT IMMEDIATELY:
+    {{
+      "experiment": "1232b_q11_instrumentation",
+      "status": "in_progress",
+      "q11_instrumentation_complete": false,
+      "honest_verdict": "in_progress"
+    }}
+
+    EXISTING INPUTS:
+    - results/experiment_1232_verifier_joint_orthogonality_audit.json
+        (correlation_matrix_6x6, verifier_labels)
+    - results/experiment_1224_phase5c_adversarial_probe.json
+        (Phase-5-C attack trajectories — read attacked_z if logged, else mock with
+         known attack-pattern coords from the artifact)
+    - python/carnot/verify/pipeline.py (ensemble + verifier signatures)
+    - python/carnot/phase3/dbae_decoder.py (decoder D for noise sampling, if present;
+        else use sign(z) directly on noise vectors)
+
+    TASK:
+    1. Write skeleton artifact (STEP 0).
+
+    2. Q11.2 SMT TRIVIALITY SATURATION TEST:
+       - Sample 10000 uniform random vectors z ~ Unif(-1,1)^d (use d from production
+         decoder; default d=128 if not detected)
+       - Pass each through decoder D (or sign(z) directly if no decoder is loadable)
+       - For each verifier V_i in the production ensemble:
+           noise_acceptance_rate[V_i] = mean(V_i.verify(D(z)) for z in noise_batch)
+       - Flag any V_i with noise_acceptance_rate > 0.99 as decoder-induced trivial.
+       - Predicted casualties per Q11.4 application table: AST + JSON Schema if
+         snap_to_action structurally guides syntax.
+
+    3. Q11.4 ORTHANT PENETRATION DEPTH:
+       - Read exp1224 artifact's attack-trajectory data. If attacked_z latent values
+         are logged, compute min_j |z_j*| at each successful attack point.
+       - If exp1224 logged only attack outcome but not z*, run a small synthetic
+         probe: 100 PGD attacks on the k=3 ensemble used in exp1224, log z* at each
+         successful attack.
+       - Report: orthant_penetration_min, orthant_penetration_mean, distribution.
+       - q11_4_confirmed = (orthant_penetration_mean < 0.1) — successful attacks
+         ride coordinate planes.
+
+    4. Q11 TSS OPTIMAL PAIR CORRELATION:
+       - Read exp1232's correlation_matrix_6x6 + verifier_labels.
+       - Identify SC-Energy and Z3 indices in the labels list.
+       - Extract P(V_SC-Energy | V_Z3) directly from the matrix.
+       - tss_pair_validates_q11 = (P < 0.5).
+
+    5. PAPER-V6 HEATMAP ANNOTATION:
+       Generate a small dict mapping each verifier pair to a one-line note,
+       suitable for the paper-v6 heatmap caption. Pairs predicted by Q11.4
+       application table get explicit "Q11 prediction:" prefix.
+
+    6. Update artifact with final results.
+
+    REQUIRED ARTIFACT FIELDS:
+    - q11_instrumentation_complete: bool (true)
+    - noise_acceptance_rates: dict (verifier_name -> P(accept | z ~ Unif(-1,1)^d))
+    - q11_2_trivial_verifiers: list[str] (verifiers with noise_acceptance > 0.99)
+    - n_noise_samples: int (>= 10000)
+    - orthant_penetration_min: float | null
+    - orthant_penetration_mean: float | null
+    - orthant_penetration_distribution: list[float] | null
+    - q11_4_confirmed: bool
+    - tss_optimal_pair_correlation: float (P(V_SC-Energy | V_Z3))
+    - tss_pair_validates_q11: bool (true if tss_optimal_pair_correlation < 0.5)
+    - paper_v6_heatmap_annotations: dict (pair_label -> caption_note)
+    - honest_verdict: "q11_instrumentation_validated" | "q11_partial" | "q11_refuted" | "blocked"
+
+    Run: python3 -c "import json; d=json.load(open('results/experiment_1232b_q11_instrumentation.json')); print('q11_complete:', d.get('q11_instrumentation_complete'), '| tss_validated:', d.get('tss_pair_validates_q11'), '| q11_4_confirmed:', d.get('q11_4_confirmed'))"
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
 - id: exp1233-verifier-redesign-orthogonality
