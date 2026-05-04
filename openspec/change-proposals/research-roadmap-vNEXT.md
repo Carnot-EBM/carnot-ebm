@@ -33,6 +33,7 @@ The 2026-05-04 vNEXT literature/source scan added these entries to `research-ref
 - Current EBT / ARM-EBM / Extropic / Kona status: no broad architecture pivot; the near-term task remains measurable local certificates, verifier learning, and continuous repair while keeping the sampler abstraction portable.
 - Supplemental scan entries added during final planning: HoVer safe-prefix holistic verification; FLy/TriSpec loose/proxy speculative verification; and the April 2026 fully parallel probabilistic Ising machine with inertia. These are not new .100 critical-path tasks, but they shape the follow-up path: safe-prefix repair after certificate parsing succeeds, proxy verifier triage after Cactus is measurable, and sampler-parity hardware work in a later hardware-focused milestone.
 - Final verification scan entries added before YAML emission: OnlineSpec / When Drafts Evolve, HalluHard, CaR Construct-and-Refine, and the Scientific Reports parallel-pbit performance/cost study. These refine existing `.100` tasks rather than adding more tasks: OnlineSpec adds an acceptance-delta metric to DVI replay, CaR adds a construct/refine iteration diagnostic to continuous repair, HalluHard becomes a `.101` multi-turn benchmark candidate, and the p-bit study is filed for the next hardware-focused sampler-parity pass.
+- Fresh planning scan addendum: Structure Snowballing, InterWhen, ConstraintBench, and EBM-CoT. These refine the `.100` task definitions: grammar backends must report a snowballing-risk diagnostic, verifier learning must include an interleaved-during-reasoning comparison, semantic routing gets a tiny ConstraintBench-style micro-eval, and the energy bridge audit includes CoT-sequence energy rather than final-answer energy only.
 
 ## Three Biggest Gaps
 
@@ -61,18 +62,19 @@ Phase 1: headline local certificate path
       |
       v
   DCCD + TruncProof/XGrammar bounded <CARNOT_CERT> tail
+  with structure-snowballing diagnostic
       |
       +---------------------------+
       |                           |
       v                           v
-  NSVIF/VERGE routing + MCS/MUS  Cactus constrained acceptance v2
+  BEAVER-lite/NSVIF routing + MCS/MUS  Cactus constrained acceptance v2
   claim -> verifier route        draft accept if cert/energy pass
 
 Phase 2: continuous self-learning
   Certificate/energy decisions
       |
       v
-  DVI-style verifier feedback replay
+  InterWhen + DVI verifier feedback replay
   uses SOTA certs when available, otherwise exp1274/FoVer replay
       |
       v
@@ -97,7 +99,7 @@ Phase 3: Phase-3 repair and publication close
 Goal: prevent another `exp1271` DOOMED_RERUN_BLOCK by proving the SOTA cache, grammar backend, and artifact/provenance path before asking an agent to run expensive model inference.
 
 - `exp1282-sota-gguf-cache-provenance-preflight`: inspect the HF/llama.cpp cache for mandated SOTA GGUFs, verify the `cached_sota_pair()` path, and write a structured readiness artifact.
-- `exp1283-certificate-grammar-backend-bakeoff`: benchmark llama.cpp native grammar, llguidance, and XGrammar availability/overhead for the fixed Carnot certificate schema.
+- `exp1283-certificate-grammar-backend-bakeoff`: benchmark llama.cpp native grammar, llguidance, and XGrammar availability/overhead for the fixed Carnot certificate schema, including a structure-snowballing-risk diagnostic.
 
 Success bar: either `cached_sota_ready=true` and `grammar_backend_selected` is set, or the blocker is named before downstream tasks burn turns.
 
@@ -107,7 +109,7 @@ Goal: produce the missing headline local SOTA certificate result and only then r
 
 - `exp1284-ars-answer-stability-sota-audit`: use mandated SOTA GGUFs to measure answer stability under reasoning/certificate boundary perturbations.
 - `exp1285-triggered-certificate-extraction-v2`: rerun triggered certificate extraction with complete prior-failure metadata, bounded grammar, and SOTA cache gate.
-- `exp1286-verge-semantic-routing-mcs`: turn successful certificates into routed claims, NSVIF-style CSP checks, Minimal Correction Subsets, and residual-drift/MUS diagnostics.
+- `exp1286-beaver-nsvif-semantic-routing`: turn successful certificates into routed claims, BEAVER-lite prefix/risk bounds, NSVIF-style CSP checks, a tiny ConstraintBench micro-eval, Minimal Correction Subsets, and residual-drift/MUS diagnostics.
 - `exp1287-cactus-constrained-acceptance-v2`: rerun Cactus only when certificate parse rate reaches the structured gate.
 
 Success bar: `exp1285.certificate_parse_rate >= 0.8` and `headline_result_allowed=true`, or the milestone honestly records why the local SOTA path is blocked.
@@ -116,7 +118,7 @@ Success bar: `exp1285.certificate_parse_rate >= 0.8` and `headline_result_allowe
 
 Goal: satisfy the research program's continuous self-learning mandate with a loop that uses verifier decisions from real or replayed certificate data.
 
-- `exp1288-dvi-verifier-feedback-replay`: convert verifier accept/reject decisions into an online drafter/routing-policy update and measure acceptance/violation deltas. It also records an OnlineSpec-style accepted-span/acceptance-rate delta. This task runs even if the SOTA certificate gate blocks by falling back to the `.99` certificate-memory/FoVer replay corpus, and it marks headline eligibility honestly.
+- `exp1288-interwhen-dvi-verifier-feedback-replay`: convert verifier accept/reject decisions into an online drafter/routing-policy update and measure acceptance/violation deltas. It compares post-hoc verifier replay with an InterWhen-style interleaved verifier pass and records an OnlineSpec-style accepted-span/acceptance-rate delta. This task runs even if the SOTA certificate gate blocks by falling back to the `.99` certificate-memory/FoVer replay corpus, and it marks headline eligibility honestly.
 - `exp1289-grpo-v9-sota-headline-gated`: run a bounded PRIME/VPRM/GRPO v9 headline attempt only if SOTA certificates and DVI replay gates pass.
 - `exp1290-skill-graph-promotion-demotion`: promote reusable certificate-memory patterns into skill-graph entries with replay evidence and demotion conditions.
 
@@ -128,7 +130,7 @@ Goal: deepen the .99 continuous repair positive and close publication bookkeepin
 
 - `exp1291-hardnetpp-nonlinear-repair-benchmark`: compare HardNet++-style damped local-linear projection against FSNet/SnareNet on nonlinear constraints, recording fixed-budget construct/refine iteration behavior inspired by CaR.
 - `exp1292-dsp-feasibility-channel-diagnostic`: add a DSP-style local/global feasibility-channel diagnostic (`phi`/`Phi`) around the continuous repair loop and report whether feasibility-channel signals predict when additional refine steps help.
-- `exp1293-ebt-arm-energy-bridge-audit`: connect Boltzmann-GPT/NRGPT/Carnot energy traces to EBT and ARM-EBM lookahead-energy predictions using existing artifacts.
+- `exp1293-ebt-arm-ebm-cot-energy-bridge-audit`: connect Boltzmann-GPT/NRGPT/Carnot energy traces to EBT, ARM-EBM, and EBM-CoT sequence-energy predictions using existing artifacts.
 - `exp1294-arxiv-v10-submission-receipt-or-blocker`: record an actual arXiv receipt if present or the exact external blocker if submission still needs a human.
 - `exp1295-milestone-retro-100`: evaluate all criteria mechanically and write carry-forwards.
 
@@ -198,14 +200,14 @@ This milestone preserves local-first operation. Every LLM-bearing task is gated 
 2. `exp1283` selects a local certificate grammar backend or reports no viable backend.
 3. `exp1284` measures answer-stability plus certainty/consistency routing signals on SOTA GGUF outputs.
 4. `exp1285` produces a headline-eligible SOTA certificate parse-rate measurement or blocks honestly, comparing raw trigger, grammar-only, and DCCD-style draft-conditioned paths when possible.
-5. `exp1286` writes semantic routing, NSVIF-style CSP checks, MCS/MUS diagnostics, and residual-drift cases when certificate parse succeeds.
+5. `exp1286` writes semantic routing, BEAVER-lite prefix/risk bounds, NSVIF-style CSP checks, a ConstraintBench micro-eval, MCS/MUS diagnostics, and residual-drift cases when certificate parse succeeds.
 6. `exp1287` measures Cactus constrained acceptance when certificate parse succeeds.
-7. `exp1288` measures DVI-style verifier-feedback replay delta.
+7. `exp1288` measures InterWhen-style interleaved verification and DVI-style verifier-feedback replay deltas.
 8. `exp1289` reports a headline-eligible GRPO/VPRM v9 delta when gates pass.
 9. `exp1290` emits skill-graph promotion/demotion entries with replay evidence.
 10. `exp1291` compares HardNet++ nonlinear repair against FSNet/SnareNet.
 11. `exp1292` measures DSP feasibility-channel diagnostics.
-12. `exp1293` writes the EBT/ARM energy bridge audit.
+12. `exp1293` writes the EBT/ARM/EBM-CoT energy bridge audit.
 13. `exp1294` records arXiv v10 submitted receipt or exact external blocker.
 14. `exp1295` completes the .100 retrospective.
 
