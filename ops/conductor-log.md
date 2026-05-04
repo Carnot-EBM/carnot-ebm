@@ -680,3 +680,4 @@ web search: GitHub trending energy based mod |
 | 2026-05-04 14:29 UTC | Triggered Certificate Extraction on SOTA GGUF - Qw | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-04 14:31 UTC | Triggered Certificate Extraction on SOTA GGUF - Qw | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-04 14:46 UTC | PRIME Verifier Selection Audit - Process/Outcome A | OK | 81 passed, 1 warning in 6.16s |
+| 2026-05-04 15:02 UTC | GRPO v8 PRIME+VPRM Smoke - Gated on Verifier Weigh | OK | 81 passed, 1 warning in 5.82s |
