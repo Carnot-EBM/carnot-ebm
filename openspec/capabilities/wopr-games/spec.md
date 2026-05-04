@@ -138,6 +138,33 @@ worse than a provided deterministic mismatched grid for the bundled 5x5 puzzle.
 - The returned grid energy is less than or equal to the initial mismatched grid
   energy.
 
+### REQ-KAKURO-001: Kakuro Sum-Run Energy
+
+The Kakuro cartridge MUST expose a 4x4 crossword-style puzzle with clue cells,
+digit cells in `{1..9}`, and three explicit horizontal or vertical runs. Its
+energy MUST be the sum over all runs of `(actual_sum - target_sum)^2` and MUST
+be zero if and only if every run target is satisfied.
+
+**Acceptance criteria:**
+- `KakuroGame.initial_state()` returns a 4x4 puzzle state with digit values in
+  `{1..9}`.
+- A known valid solution has energy 0.0.
+- A deterministic invalid state has positive energy.
+- `KakuroGame.is_solved(state)` is true exactly when `energy(state) == 0.0`.
+
+### REQ-KAKURO-002: Kakuro Metropolis Step and Visualization
+
+The Kakuro cartridge MUST provide a WOPR `carnot_step` that proposes a
+Metropolis digit flip for one cell while keeping cell values in `{1..9}` and
+avoiding duplicate digits within the runs that contain that cell. The cartridge
+MUST render clue cells and current digit values for the WOPR shell.
+
+**Acceptance criteria:**
+- `carnot_step(state)` returns a `StepResult` whose state values are all in
+  `{1..9}`.
+- Accepted proposals do not introduce duplicate digits in any affected run.
+- `visualize(state)` includes the clue targets and the current digit values.
+
 ## Scenarios
 
 ### SCENARIO-CONNECT4-001: Empty Board Ground State
@@ -248,6 +275,30 @@ inequalities
 
 **Spec traces:** REQ-FUTOSHIKI-002
 
+### SCENARIO-KAKURO-001: Known 4x4 Ground State
+
+**Given** the bundled 4x4 Kakuro puzzle and its known valid digit assignment
+**When** the known solution is scored
+**Then** the sum-run energy is 0.0 and `is_solved` returns true.
+
+**Spec traces:** REQ-KAKURO-001
+
+### SCENARIO-KAKURO-002: Invalid Sum Has Positive Energy
+
+**Given** the same 4x4 Kakuro puzzle and a deterministic mismatched assignment
+**When** the assignment is scored
+**Then** the sum-run energy is positive and `is_solved` returns false.
+
+**Spec traces:** REQ-KAKURO-001
+
+### SCENARIO-KAKURO-003: Metropolis Step Stays In Domain
+
+**Given** any valid Kakuro cartridge state
+**When** `carnot_step` proposes a digit flip
+**Then** every digit remains in `{1..9}` and no run gains a repeated digit.
+
+**Spec traces:** REQ-KAKURO-002
+
 ## Implementation Status
 
 | Requirement | Status | Experiment |
@@ -262,6 +313,8 @@ inequalities
 | REQ-NONOGRAM-002 | Implemented | Exp 1214 |
 | REQ-FUTOSHIKI-001 | Implemented | Exp 1227 |
 | REQ-FUTOSHIKI-002 | Implemented | Exp 1227 |
+| REQ-KAKURO-001 | Implemented | Exp 1243 |
+| REQ-KAKURO-002 | Implemented | Exp 1243 |
 | SCENARIO-CONNECT4-001 | Implemented | Exp 1175 |
 | SCENARIO-CONNECT4-002 | Implemented | Exp 1175 |
 | SCENARIO-CONNECT4-003 | Implemented | Exp 1175 |
@@ -275,3 +328,6 @@ inequalities
 | SCENARIO-FUTOSHIKI-002 | Implemented | Exp 1227 |
 | SCENARIO-FUTOSHIKI-003 | Implemented | Exp 1227 |
 | SCENARIO-FUTOSHIKI-004 | Implemented | Exp 1227 |
+| SCENARIO-KAKURO-001 | Implemented | Exp 1243 |
+| SCENARIO-KAKURO-002 | Implemented | Exp 1243 |
+| SCENARIO-KAKURO-003 | Implemented | Exp 1243 |
