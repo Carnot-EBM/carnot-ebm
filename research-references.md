@@ -4,6 +4,71 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-05-04 Verified Planning Sweep (Milestone 2026.04.100)
+
+This sweep rechecked the user-mandated sources during the interactive `.100`
+planning turn. It adds only items that materially change the next experiment
+design or the acceptance gates.
+
+### Learning to Self-Verify Makes Language Models Better Reasoners
+- **Paper:** arXiv 2602.07594, submitted 2026-02-07.
+- **Source:** https://arxiv.org/abs/2602.07594
+- **What:** Shows a capability asymmetry: training generation alone does not
+  reliably improve self-verification, but training self-verification can improve
+  generation and shorten reasoning traces.
+- **Relevance to Carnot:** `exp1288` and `exp1289` should treat verifier
+  feedback as a first-class learning signal, not just a post-hoc scoring tool.
+  Record whether verifier-feedback updates improve future certificate/routing
+  decisions and whether they reduce unnecessary reasoning length.
+- **Concrete experiment:** Add `self_verify_signal_used`, `verification_gain`,
+  and `reasoning_trace_length_delta` fields to the verifier-feedback replay and
+  gated GRPO/VPRM tasks.
+
+### LLM-as-Formalizer Failure on Real CSPs
+- **Paper:** OpenReview ICLR 2026 submission, "Are LLMs Better Formalizers than
+  Solvers on Complex Problems?"
+- **Source:** https://openreview.net/forum?id=hyI8cIOU2f
+- **What:** Reports that LLM-as-formalizer can underperform direct solving on
+  real-life constraint satisfaction tasks because formal programs fail to scale,
+  hard-code solutions, or burn excessive reasoning tokens.
+- **Relevance to Carnot:** The SOTA certificate track should not assume that
+  asking the model to formalize its own reasoning is automatically better.
+  `exp1284` and `exp1285` must compare free-form solve, raw certificate tail,
+  and grammar/DCCD certificate variants with answer-stability and parse-rate
+  metrics.
+- **Concrete experiment:** Add `formalizer_failure_modes` and
+  `solver_vs_certificate_delta` to the triggered certificate rerun artifact.
+
+### Neural Network Ising Machines
+- **Paper:** OpenReview ICLR 2026 submission, "Neural Network Ising Machines:
+  Algorithm Unrolling for Combinatorial Optimization."
+- **Source:** https://openreview.net/forum?id=5H8kxW0Efk
+- **What:** Learns parameters of an iterative dynamical system for Ising/Max-Cut
+  optimization via zeroth-order training, suggesting that update dynamics can be
+  learned separately from the energy function.
+- **Relevance to Carnot:** Keep `.100` hardware work as an audit, not bring-up,
+  but add a future sampler-learning candidate: learn update schedules/damping
+  policies for Carnot's CPU/KV260/TSU samplers while preserving detailed-balance
+  checks.
+- **Concrete experiment:** Future `.101+` sampler milestone should compare
+  fixed Gibbs, inertia, and learned unrolled-update policies on the same Ising
+  constraints with KL and convergence diagnostics.
+
+### OnlineSpec and Cactus Reinforce Verifier-Feedback Learning
+- **Papers:** arXiv 2603.12617, "When Drafts Evolve"; arXiv 2604.04987,
+  "Cactus."
+- **Sources:** https://arxiv.org/abs/2603.12617 and
+  https://arxiv.org/abs/2604.04987
+- **What:** OnlineSpec treats speculative verification feedback as an online
+  learning signal for evolving drafts; Cactus formulates speculative acceptance
+  as constrained optimization with controlled verifier-distribution divergence.
+- **Relevance to Carnot:** `exp1287` should report risk/acceptance metrics, and
+  `exp1288` should replay accept/reject feedback as a learning update even when
+  the SOTA certificate path is unavailable.
+- **Concrete experiment:** Use `dvi_acceptance_delta`,
+  `online_acceptance_delta`, `risk_bound_proxy`, and
+  `low_risk_acceptance_rate` as required artifact fields.
+
 ## 2026-05-04 Interactive Verification-Gated Scan (Milestone 2026.04.100)
 
 This scan checked the user-mandated sources after reading `.99` artifacts and

@@ -1,6 +1,6 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report — 1,281 Experiments Across 108 Archived Research Milestones, 21,703 Python Test Items (Tracked Through Exp 1281)
+## A Technical Report — 1,281 Experiments Across 108 Archived Research Milestones, 21,703 Python Test Items Collected (Tracked Through Exp 1281)
 
 **Author:** Ian Blenke
 **Date:** 2026-05-04
@@ -51,7 +51,7 @@ GPU zombie processes and a **30%** next-milestone savings target focused on
 DualGPU-aware lanes, cached TeX/pre-flight state, immediate gate-block
 artifacts, and idempotent docs reconciliation; the latest ops tooling also adds
 a secret-safe local Claude/Codex usage snapshot. The current 2026-05-04 Python
-test collection snapshot reports **21,703** items with three known import
+test collection-only snapshot reports **21,703** items with three known import
 errors; this is a collection count, not a full-suite pass claim. A
 plain-English summary of that journey is in the next section; deeper analysis
 follows in the body of the report and in the per-milestone retrospective

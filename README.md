@@ -18,7 +18,7 @@ call. No fine-tuning. No access to model weights.
 Rust + Python/JAX, Apache 2.0, `pip install carnot`.
 
 Current public research record: **1,281 experiments tracked, 108 completed
-milestones archived**, with terminal result artifacts through Exp 1281 on
+milestones archived**, with checked-in result artifacts through Exp 1281 on
 2026-05-04. `research-complete.yaml` is archived through milestone 2026.04.98;
 Exp 1281 records milestone .99 at **12/14 criteria met**. Latest .99 artifacts
 include paper-v6 critical fixes plus an arXiv v10 bundle compiled but upload
@@ -34,7 +34,7 @@ result. The .99 operational closeout then measured **10 min**
 for **2** items with no GPU zombies; the **30%** next-milestone savings target
 now centers on DualGPU-aware lanes, cached TeX/pre-flight state, immediate
 gate-block artifacts, and idempotent docs reconciliation. The current
-2026-05-04 Python test collection reports **21,703** items; that is a
+2026-05-04 Python test collection-only snapshot reports **21,703** items; that is a
 collection count with three known import errors, not a full-suite pass claim.
 
 ## Install and run
