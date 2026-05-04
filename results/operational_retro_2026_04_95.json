@@ -1,0 +1,138 @@
+{
+  "schema": "carnot.operational_retro.v63",
+  "milestone": "2026.04.95",
+  "generated_at": "2026-05-04T00:06:07Z",
+  "status": "success",
+  "retro_type": "operational_final",
+  "summary": "Milestone 2026.04.95 completed the supplied operational timing scope in 78 minutes, with 7 completed experiments at an average of 11 minutes each. The milestone was fast by recent standards, but the slowest-five profile is still dominated by serialized documentation reconciliation and one full-sweep evaluation lane. Closeout GPU state showed both RTX 3090s idle, so the next efficiency gain should come from moving docs off the conductor path, scheduling independent branches in parallel, and keeping DualGPURunner fed whenever live model work exists.",
+  "total_wall_time_minutes": 78,
+  "experiments_completed": 7,
+  "average_minutes_per_experiment": 11.0,
+  "timing_scope_note": "The user-supplied slowest-five list includes inherited conductor/docs tasks from exp945-exp950 rather than only new exp1216-exp1228 result IDs. This retro treats them as operational critical-path load because they consumed wall time in the milestone timing report.",
+  "milestone_result_context": {
+    "planned_experiment_range": "1216-1228",
+    "available_result_metadata": "ops/changelog.md and result JSONs show completed/successful .95 work for exp1216, exp1218, exp1219, exp1220, exp1222, exp1223, exp1224, exp1226, and exp1227, with exp1217 blocked, exp1221 partial, exp1225 in_progress, and exp1228 in_progress at read time. The operational timing input remains the source of truth for the requested 78-minute / 7-completed scope."
+  },
+  "slowest_experiments": [
+    {
+      "rank": 1,
+      "duration_minutes": 28,
+      "experiment": "exp950_docs",
+      "title": "In-process docs for Exp 950: E-MVL Sparsified Ising - Sparse C",
+      "why_long": "Documentation reconciliation ran in the conductor's synchronous path. This is bookkeeping work rather than model or benchmark work, so it should not occupy the critical experiment lane.",
+      "parallelizable": true
+    },
+    {
+      "rank": 2,
+      "duration_minutes": 24,
+      "experiment": "exp948",
+      "title": "Symbolic-KAN Real FoVer Data - AUC=0.9344 Architecture",
+      "why_long": "This appears to be a full real-FoVer/Symbolic-KAN evaluation sweep. It is useful as a certification pass, but inefficient as routine feedback-loop work without cached deltas or fast-eval sampling.",
+      "parallelizable": true
+    },
+    {
+      "rank": 3,
+      "duration_minutes": 11,
+      "experiment": "exp946_docs",
+      "title": "In-process docs for Exp 946: Tier 2.8 DraftConditioned Live GP",
+      "why_long": "A second documentation reconciliation pass reached the slowest five, confirming doc work was fragmented and serialized.",
+      "parallelizable": true
+    },
+    {
+      "rank": 4,
+      "duration_minutes": 6,
+      "experiment": "exp945_docs",
+      "title": "In-process docs for Exp 945: ThinkPRM Tier 2.9 - Generative Co",
+      "why_long": "Small docs pass, but still synchronous. Combined with the other docs tasks, this class dominated the milestone timing.",
+      "parallelizable": true
+    },
+    {
+      "rank": 5,
+      "duration_minutes": 6,
+      "experiment": "exp947_docs",
+      "title": "In-process docs for Exp 947: DRIFTProbe v3 Depth-Recurrent",
+      "why_long": "Another small synchronous reconciliation pass that should be coalesced into one async milestone-close update.",
+      "parallelizable": true
+    }
+  ],
+  "gpu_utilization": {
+    "closeout_timestamp": "2026-05-04T00:04:48.233801+00:00",
+    "gpu0": {
+      "name": "NVIDIA GeForce RTX 3090",
+      "memory_used_mb": 4,
+      "memory_total_mb": 24576,
+      "utilization_pct": 0,
+      "temperature_c": 52
+    },
+    "gpu1": {
+      "name": "NVIDIA GeForce RTX 3090",
+      "memory_used_mb": 4,
+      "memory_total_mb": 24576,
+      "utilization_pct": 0,
+      "temperature_c": 54
+    },
+    "assessment": "GPU utilization was inefficient at closeout: both GPUs were idle with only 4 MB allocated. This does not prove every GPU-eligible experiment ran serially, but it does show the queue did not keep the available GPU capacity occupied through milestone close.",
+    "sequential_vs_parallel": "The milestone still has a sequential profile outside explicitly live-GPU tasks. Independent CPU/docs/WOPR work and one-GPU model jobs should have overlapped with a DualGPURunner lane."
+  },
+  "zombie_process_assessment": {
+    "formal_zombies_detected": false,
+    "evidence": "The supplied GPU monitor report showed no process list or zombie warnings, only 4 MB allocated on each GPU. scripts/gpu_monitor.py classifies zombies only when a process holds at least 1024 MB VRAM, has run for more than 10 minutes, and has CPU/wall ratio below 1%. The 4 MB allocations are below that threshold and are best treated as idle driver/context residue.",
+    "action": "Do not count the 4 MB contexts as material resource waste, but clear stale contexts before large live runs if a model loader reports unexpected VRAM pressure."
+  },
+  "bottlenecks_identified": [
+    "Serialized documentation reconciliation dominated the supplied slowest-five list: exp950_docs, exp946_docs, exp945_docs, and exp947_docs consumed 51 of 78 minutes combined.",
+    "The slowest-five profile appears frozen from earlier milestones, which means operational debt is still being carried into the conductor timing ledger instead of being retired or moved out of band.",
+    "Full-sweep evaluation was still used where a fast-eval or cached-delta path would likely have been enough for operational iteration; exp948 alone consumed 24 minutes.",
+    "Both RTX 3090s were idle at closeout, so GPU use was bursty rather than continuously scheduled.",
+    "Independent .95 branches were not fully parallelized. Pre-commit integrity, paper related work, GRPO regression diagnosis, Phase 5 derisking, Boltzmann-GPT analysis, WOPR Futoshiki, and docs reconciliation had enough independence to run in separate lanes after direct gates were satisfied.",
+    "Gate quality remains an orchestration risk: exp1217 was blocked by gate-check state instead of producing useful work, even though the blocked duration itself was fast.",
+    "Pre-flight was not the primary visible bottleneck in the supplied .95 timing data. The bigger .95 cost was synchronous docs plus the full-sweep evaluation lane; pre-flight should still fail fast and write structured blocked artifacts when it finds deterministic gate misses.",
+    "Doc reconciliation passes were inefficient because they were fragmented across multiple in-process tasks instead of one batched async update."
+  ],
+  "improvements_suggested": [
+    "Move docs reconciliation to an async milestone-close worker that batches ops/changelog.md, docs/roadmap.md, traceability, and OpenSpec updates instead of running several in-process docs passes.",
+    "Add a conductor guard that excludes inherited or retired slowest-five entries from the active timing ledger unless the task actually ran in the current milestone.",
+    "Make CARNOT_FAST_EVAL=1 the default for exploratory FoVer/KAN/corpus sweeps, with full-corpus evaluation reserved for explicit acceptance gates.",
+    "Run a two-lane scheduler by default: one GPU lane using DualGPURunner and one CPU/docs lane for independent analysis, documentation, WOPR cartridges, and gate remediation.",
+    "Auto-populate prior_failures at plan or activation time and fail deterministically before dispatch when the ledger cannot prove the dependency state.",
+    "Extend scripts/gpu_monitor.py from passive closeout reporting to active scheduling advice: emit which queued GPU-eligible tasks can occupy GPU 0 and GPU 1 now.",
+    "Keep the STEP 0 skeleton artifact pattern as a hard prelaunch invariant for retros and long-running experiments, with status success written before model analysis begins.",
+    "Cache stable benchmark features and result slices for recurrent repair, CaseMemory, FoVer, and Symbolic-KAN evaluation paths."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Ship async documentation reconciliation and remove docs passes from the main conductor lane.",
+    "Run independent .96 work in CPU/docs and DualGPU lanes, with Qwen-class and Gemma-class jobs pinned to separate RTX 3090s when possible.",
+    "Make plan-time prior_failures autofill plus skeleton-first artifact writes non-optional conductor behavior."
+  ],
+  "estimated_time_savings_pct": 30,
+  "estimated_time_savings_rationale": "A conservative 30% savings estimate is about 23 minutes on a 78-minute milestone. The supplied slowest-five contains 51 minutes of docs work and 24 minutes of full-sweep evaluation, but dependencies and acceptance gates mean only part of that is recoverable. Async docs, fast-eval defaults, and two-lane scheduling should recover the largest share without weakening verification.",
+  "question_answers": {
+    "1_which_experiments_took_longest_and_why": "The longest supplied entries were exp950_docs at 28 minutes, exp948 at 24 minutes, exp946_docs at 11 minutes, exp945_docs at 6 minutes, and exp947_docs at 6 minutes. Four were in-process docs passes; exp948 was an expensive real-FoVer/Symbolic-KAN sweep.",
+    "2_was_gpu_utilization_efficient": "No. At the closeout monitor timestamp, both RTX 3090s were at 0% utilization with only 4 MB allocated. The queue should use DualGPURunner whenever live model work is pending and overlap CPU/docs work with GPU work.",
+    "3_were_there_zombie_processes_wasting_resources": "No formal GPU zombies were indicated. The 4 MB allocations were far below gpu_monitor.py's 1024 MB zombie threshold and looked like idle contexts, not material waste.",
+    "4_could_any_experiments_have_been_parallelized": "Yes. Docs reconciliation, WOPR Futoshiki, paper related work, Boltzmann-GPT analysis, pre-commit verification, and parts of Phase 5 derisking could have run in parallel with GPU-bound GRPO work once their direct gates were clear.",
+    "5_was_the_pre_flight_test_suite_a_bottleneck": "Not visibly in the supplied .95 slowest-five. Gate/preflight handling remains a risk because exp1217 blocked, but the main measured bottlenecks were docs reconciliation and full-sweep evaluation.",
+    "6_were_doc_reconciliation_passes_efficient": "No. Docs-like tasks consumed 51 of the 78 supplied minutes and appeared as four separate slowest-five entries. They should be async and batched.",
+    "7_what_tooling_changes_would_speed_next_milestone": "Async docs reconciliation, plan-time prior_failures autofill, skeleton-first artifact writes, DualGPURunner-by-default scheduling, fast-eval/cached corpus sweeps, and active gpu_monitor scheduling advice."
+  },
+  "data_sources": [
+    "user-provided timing data and GPU monitor report",
+    "ops/metrics.md",
+    "ops/changelog.md",
+    "scripts/gpu_monitor.py",
+    "results/experiment_1216_precommit_staged_files_only_fix.json",
+    "results/experiment_1217_auto_populate_prior_failures.json",
+    "results/experiment_1218_paper_v6_related_work_overhaul.json",
+    "results/experiment_1219_grpo_v5_regression_diagnosis.json",
+    "results/experiment_1220_grpo_vps_full_training.json",
+    "results/experiment_1221_grpo_v6_fspo_vps_combined.json",
+    "results/experiment_1222_phase5a_insitu_prototype.json",
+    "results/experiment_1223_phase5b_insitu_training_loop.json",
+    "results/experiment_1224_phase5c_adversarial_probe.json",
+    "results/experiment_1225_llms_gaming_verifiers_defense.json",
+    "results/experiment_1226_boltzmann_gpt_phase3_seed.json",
+    "results/experiment_1227_wopr_futoshiki_cartridge.json",
+    "results/experiment_1228_milestone_retro_95.json"
+  ],
+  "meta_reflection": "The milestone's 78-minute wall time is strong, but its efficiency profile is fragile: the slowest work is mostly orchestration, not scientific execution. The next milestone should treat docs, gates, and GPU assignment as scheduler responsibilities rather than agent-local chores."
+}

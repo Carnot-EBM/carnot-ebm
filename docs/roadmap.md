@@ -92,6 +92,7 @@
 | 2026.04.92 | Paper Integrity Remediation + Verifier Retirement + WOPR Hex | 1178-1190 | 10/13 criteria met; paper high and medium/low issues resolved while critical fixes and arXiv bundle remain blocked; SC-Energy overfit resolved but k=6 retired, DoT retired, Hex operational, Phase 4 tied BFS; 339 min / 66 experiments with 30% operational savings still recoverable |
 | 2026.04.93 | Prlimit + KANtize amid Gate Bottlenecks | 1191-1202 | 3/12 criteria met; prlimit memory cap active and KANtize 4-bit SOS-KAN preserved AUROC=0.990137, while critical paper/GPU/Phase 4 work was blocked by pre-flight gates and prior_failures handling; operational retro measured 130 min / 23 experiments with 35% savings recoverable |
 | 2026.04.94 | Clean Sweep + Phase 4 Pivot | 1203-1215 | 13/13 criteria met; pre-test suite repaired, critical paper issues resolved, llama.cpp GPU offload verified, GRPO-VPS step supervision improved +24pp, Phase 4 cleared BFS-intractable puzzles, and Nonogram shipped; operational retro measured 78 min / 7 experiments with 28% savings recoverable |
+| 2026.04.95 | GRPO-VPS + In-Situ Derisking | 1216-1228 | GRPO-VPS beat v4, Phase 5 in-situ substrate/training gates passed, pre-commit data-loss path fixed, and Futoshiki shipped E=0; operational retro measured 78 min / 7 experiments with 30% savings recoverable |
 
 ## Breakthrough Results
 
