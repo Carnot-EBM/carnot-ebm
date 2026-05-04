@@ -619,3 +619,4 @@ If you finish the real work |
 | 2026-05-04 06:24 UTC | GRPO v7 Simplified — VPS-Only, Single GPU or CPU F | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1247_grpo_v7 |
 | 2026-05-04 06:31 UTC | Boltzmann-GPT CD Training v2 — Forward Pass Test F | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1248_boltzma |
 | 2026-05-04 06:42 UTC | Boltzmann-GPT CD Training v2 — Forward Pass Test F | OK | 81 passed, 1 warning in 9.68s |
+| 2026-05-04 06:48 UTC | LLMs Gaming Verifiers Defense v3 — 10-Sample Rule- | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1249_llms_ga |
