@@ -1063,9 +1063,17 @@ tasks:
           Output: 1024-dim repaired embedding
        d. Use DualGPU: model.to('cuda:0'), run encoder on GPU 0, energy on CPU (Ising is fast)
 
-    3. RUN 1000 QUERIES (use FoVer or ARC-AGI-class synthetic puzzles):
+    3. RUN 10000 QUERIES (per Q12 sample-complexity bound: 10K is comfortably > 3000 needed
+       for trace-covariance separability of Hypothesis B vs C at d=128).
+       Use FoVer or ARC-AGI-class synthetic puzzles.
        - For each query: encoder → latent z → Ising energy → Blocked Gibbs sampling → refiner
        - Update encoder/refiner parameters via verifier feedback (same as exp1223)
+       - RUN TWO ARMS per Q12 strategic recommendation:
+         Arm A (control): standard PCD, no entropy regularization. Expected to trip Q12 gates.
+         Arm B (Q12.4(a) entropy regularization): L_reg = λ * H(P(z|V_AND=1))
+                with λ calibrated to estimated initial energy gap
+                E_gap ≈ E[E_θ_0(known_correct)] - E[E_θ_0(known_null_anchor)]
+       - 5K queries per arm, comparative analysis at end
 
     4. MEASURE 5 TOY-DETECTABLE GATES (same as exp1222-1224):
        - Gate 1: energy decreases by >= 30% over training
@@ -1084,6 +1092,35 @@ tasks:
        - Gate 8 (substrate shift): L∞(z) saturation — fraction of latent dims at |z_i| > 0.95
          threshold: < 5% of dims should saturate (saturation → loss of numerical precision)
          Also: histogram modality — check if z distribution is unimodal vs multimodal
+
+    5b. Q12 ANTI-GAMING GATES (NEW per Q12 Deep Think 2026-05-04):
+        Read first: docs/research-notes/phase5-pcd-joint-null-space-deep-think-results.md
+
+        Q12 Gate 1 (Hypothesis B null-space excavation):
+          HALT if Tr(Cov(z_accepted)) drops > 40% from t=0 baseline
+          AND E[E_θ(z_accepted)] plateaus at low-variance
+          AND oracle acceptance < 15%.
+          Track Tr(Cov) at every 1000 queries with rolling window.
+
+        Q12 Gate 2 (Spera Gate — orthogonality collapse):
+          HALT if P_t(V_i=1 | V_j=1) > 0.85 for any pair.
+          Compute pairwise conditional acceptance every 1000 queries.
+
+        Q12 Gate 3 (Hypothesis A self-correction):
+          PROCEED only if monotonic energy decrease AND stable Tr(Cov)
+          AND oracle correlation > 85% with V_AND.
+
+    5c. Q12 INSTRUMENTATION (currently absent in Phase-5-A/B/C):
+        - mcmc_chain_distance_trajectory: list[float]
+            (E[||z_pos - z_neg||_2] every 1000 queries; detects mixing paralysis)
+        - latent_centroid_cosine_drift: list[float]
+            (cosine similarity of moving avg centroid vs trajectory; B = snap, A = drift, C = Brownian)
+        - trace_cov_trajectory: list[float]
+            (Tr(Cov(z_accepted)) per rolling window; Gate 1 metric)
+        - per_pair_conditional_trajectory: dict[str, list[float]]
+            (P_t(V_i|V_j) over time per pair; Gate 2 metric)
+        - energy_on_accepted_trajectory: list[float]
+            (E[E_θ(z_accepted)] per window; Gate 1+3 metric)
 
     6. Also include PPSEBM-style replay buffer (arXiv 2512.15658):
        Maintain a 100-sample replay buffer from early training. Mix 10% replay into each batch.
