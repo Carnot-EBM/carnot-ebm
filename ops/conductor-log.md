@@ -744,3 +744,4 @@ web search: GitHub trending energy based mod |
 | 2026-05-04 23:19 UTC | DSP Feasibility-Channel Diagnostic - Predict When  | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1292_dsp_fea |
 | 2026-05-04 23:27 UTC | DSP Feasibility-Channel Diagnostic - Predict When  | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1292_dsp_fea |
 | 2026-05-04 23:29 UTC | EBT/ARM/EBM-CoT Energy Bridge Audit - Existing Art | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-04 23:31 UTC | EBT/ARM/EBM-CoT Energy Bridge Audit - Existing Art | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
