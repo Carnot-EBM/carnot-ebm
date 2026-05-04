@@ -1155,12 +1155,25 @@ tasks:
        Use FoVer or ARC-AGI-class synthetic puzzles.
        - For each query: encoder → latent z → Ising energy → Blocked Gibbs sampling → refiner
        - Update encoder/refiner parameters via verifier feedback (same as exp1223)
-       - RUN TWO ARMS per Q12 strategic recommendation:
-         Arm A (control): standard PCD, no entropy regularization. Expected to trip Q12 gates.
-         Arm B (Q12.4(a) entropy regularization): L_reg = λ * H(P(z|V_AND=1))
-                with λ calibrated to estimated initial energy gap
-                E_gap ≈ E[E_θ_0(known_correct)] - E[E_θ_0(known_null_anchor)]
-       - 5K queries per arm, comparative analysis at end
+       - RUN FOUR ARMS per Q12 + DR-3 strategic recommendation:
+           Arm A (control): standard PCD, no regularization. Expected to trip Q12 + DR-3 gates.
+           Arm B (Q12.4(a) entropy regularization): L_reg = λ * H(P(z|V_AND=1))
+                  with λ calibrated to estimated initial energy gap
+                  E_gap ≈ E[E_θ_0(known_correct)] - E[E_θ_0(known_null_anchor)]
+                  Defends against Q12 Hypothesis B (Dark Room substrate gaming).
+           Arm C (DR-3 Dual-SVID upstream variance compensation): per LittleBit NeurIPS 2025,
+                  apply multi-scale residual compensation BEFORE the sign(z) bottleneck.
+                  Decouple sign from value during continuous update phase. Ensures z
+                  frequently crosses zero boundary during training.
+                  Defends against DR-3 parametric collapse (z → 0.999 → frozen Boolean).
+           Arm D (combined Q12 + DR-3): both regularizers stacked. Predicted empirical-best.
+       - 2500 queries per arm = 10K total
+       - Comparative analysis: each regularizer addresses a DISTINCT failure mode;
+         neither alone is sufficient; combined defense is necessary.
+       - This 4-arm design gives paper-v6 a much stronger empirical claim than 2-arm:
+         "We empirically demonstrate that two distinct training pathologies arise in
+         in-situ training (substrate gaming + parametric collapse) and that defending
+         against both requires composite regularization."
 
     4. MEASURE 5 TOY-DETECTABLE GATES (same as exp1222-1224):
        - Gate 1: energy decreases by >= 30% over training
