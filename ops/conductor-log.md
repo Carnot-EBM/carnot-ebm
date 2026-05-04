@@ -622,3 +622,4 @@ If you finish the real work |
 | 2026-05-04 06:48 UTC | LLMs Gaming Verifiers Defense v3 — 10-Sample Rule- | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1249_llms_ga |
 | 2026-05-04 06:54 UTC | LLMs Gaming Verifiers Defense v3 — 10-Sample Rule- | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1249_llms_ga |
 | 2026-05-04 06:58 UTC | LLMs Gaming Verifiers Defense v3 — 10-Sample Rule- | FAIL | No file changes produced |
+| 2026-05-04 07:03 UTC | Phase-5-D v2 — 1M Params CPU-Feasible, 4 of 8 Fail | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1250_phase5d |
