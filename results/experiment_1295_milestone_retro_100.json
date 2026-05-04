@@ -1,0 +1,265 @@
+{
+  "experiment": "1295_milestone_retro_100",
+  "schema": "milestone_retro_v5",
+  "run_date": "20260504",
+  "milestone": "2026.04.100",
+  "status": "complete",
+  "criteria_results": {
+    "sota_gguf_cache_provenance_preflight": "BLOCKED",
+    "certificate_grammar_backend_bakeoff": "MET",
+    "ars_uqlm_answer_stability_sota_audit": "GATED",
+    "triggered_certificate_extraction_v2": "GATED",
+    "grad_beaver_nsvif_semantic_routing": "GATED",
+    "token_guard_cactus_constrained_acceptance_v2": "GATED",
+    "interwhen_dvi_verifier_feedback_replay": "MET",
+    "leanabell_grpo_v9_sota_headline_gated": "GATED",
+    "skill_graph_promotion_demotion": "MISSING",
+    "hardnetpp_nonlinear_repair_benchmark": "MET",
+    "dsp_feasibility_channel_diagnostic": "MET",
+    "ebt_arm_ebm_cot_energy_bridge_audit": "BLOCKED",
+    "arxiv_v10_submission_receipt_or_blocker": "BLOCKED",
+    "retro_100_complete": "MET"
+  },
+  "criteria_met": 5,
+  "criteria_total": 14,
+  "source_artifacts_checked": [
+    {
+      "experiment_id": 1282,
+      "path": "results/experiment_1282_sota_gguf_cache_provenance_preflight.json",
+      "loaded": true,
+      "status": "blocked",
+      "honest_verdict": "blocked_gate_check_failed"
+    },
+    {
+      "experiment_id": 1283,
+      "path": "results/experiment_1283_certificate_grammar_backend_bakeoff.json",
+      "loaded": true,
+      "status": "complete",
+      "honest_verdict": "selected_llama_cpp_gbnf"
+    },
+    {
+      "experiment_id": 1284,
+      "path": "results/experiment_1284_ars_uqlm_answer_stability_sota_audit.json",
+      "loaded": false,
+      "status": null,
+      "honest_verdict": null
+    },
+    {
+      "experiment_id": 1285,
+      "path": "results/experiment_1285_triggered_certificate_extraction_v2.json",
+      "loaded": false,
+      "status": null,
+      "honest_verdict": null
+    },
+    {
+      "experiment_id": 1286,
+      "path": "results/experiment_1286_grad_beaver_nsvif_semantic_routing.json",
+      "loaded": true,
+      "status": "blocked",
+      "honest_verdict": "blocked_gate_check_failed"
+    },
+    {
+      "experiment_id": 1287,
+      "path": "results/experiment_1287_token_guard_cactus_constrained_acceptance_v2.json",
+      "loaded": false,
+      "status": null,
+      "honest_verdict": null
+    },
+    {
+      "experiment_id": 1288,
+      "path": "results/experiment_1288_interwhen_dvi_verifier_feedback_replay.json",
+      "loaded": true,
+      "status": "complete",
+      "honest_verdict": "online_verifier_feedback_neutral_non_headline"
+    },
+    {
+      "experiment_id": 1289,
+      "path": "results/experiment_1289_leanabell_grpo_v9_sota_headline_gated.json",
+      "loaded": false,
+      "status": null,
+      "honest_verdict": null
+    },
+    {
+      "experiment_id": 1290,
+      "path": "results/experiment_1290_skill_graph_promotion_demotion.json",
+      "loaded": false,
+      "status": null,
+      "honest_verdict": null
+    },
+    {
+      "experiment_id": 1291,
+      "path": "results/experiment_1291_hardnetpp_nonlinear_repair_benchmark.json",
+      "loaded": true,
+      "status": "complete",
+      "honest_verdict": "hardnetpp_nonlinear_repair_viable"
+    },
+    {
+      "experiment_id": 1292,
+      "path": "results/experiment_1292_dsp_feasibility_channel_diagnostic.json",
+      "loaded": true,
+      "status": "complete",
+      "honest_verdict": "feasibility_channel_predictive_marginal"
+    },
+    {
+      "experiment_id": 1293,
+      "path": "results/experiment_1293_ebt_arm_ebm_cot_energy_bridge_audit.json",
+      "loaded": true,
+      "status": "blocked",
+      "honest_verdict": "blocked_gate_check_failed"
+    },
+    {
+      "experiment_id": 1294,
+      "path": "results/experiment_1294_arxiv_v10_submission_receipt_or_blocker.json",
+      "loaded": true,
+      "status": "blocked",
+      "honest_verdict": "blocked_gate_check_failed"
+    }
+  ],
+  "findings_summary": "Milestone .100 met 5 of 14 planned criteria. Grammar backend selection, DVI replay, HardNet++ nonlinear repair, DSP feasibility diagnostics, and this retro reached terminal positive criteria; SOTA certificate work, skill promotion, energy bridge, and publication receipt remain blocked, gated, or missing.",
+  "top_successes": [
+    "Exp1283 selected llama.cpp GBNF as the local certificate grammar backend and recorded fallback limits.",
+    "Exp1288 produced a positive DVI acceptance delta with claim-level memory records, though not headline eligible.",
+    "Exp1291 found HardNet++ nonlinear repair viable against the FSNet/SnareNet comparison.",
+    "Exp1292 measured a marginal but predictive DSP feasibility channel for repair-step decisions."
+  ],
+  "top_gaps": [
+    "Exp1282 was blocked by conductor prior-failure gating before SOTA cache readiness fields were written.",
+    "Exp1284 and Exp1285 never produced SOTA answer-stability or certificate parse-rate artifacts.",
+    "Exp1286, Exp1287, and Exp1289 remained gated behind the missing SOTA certificate parse/headline gates.",
+    "Exp1290 is missing even though Exp1288 wrote memory_update_written=true.",
+    "Exp1293 and Exp1294 were blocked by prior-failure gate checks, leaving the energy bridge and arXiv receipt unresolved."
+  ],
+  "self_learning_result": {
+    "dvi_acceptance_delta": 0.357143,
+    "online_acceptance_delta": 0.357143,
+    "self_learning_delta_overall": 0.0,
+    "claim_level_memory_entries": 7,
+    "memory_update_written": true,
+    "headline_result_allowed": false,
+    "grpo_v9_status": "missing",
+    "skill_graph_status": "missing",
+    "summary": "DVI replay produced a positive non-headline acceptance delta, but GRPO v9 stayed gated and the skill graph artifact is missing."
+  },
+  "sota_model_usage_summary": {
+    "headline_model_ids_required": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-31B-it-GGUF",
+      "unsloth/gemma-4-26B-A4B-it-GGUF"
+    ],
+    "cached_sota_ready": null,
+    "headline_result_possible": false,
+    "headline_model_ids_used": [],
+    "headline_result_allowed": false,
+    "blocker": "3 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: no prior_failures field on task"
+  },
+  "continuous_repair_summary": {
+    "hardnetpp_nonlinear_repair_viable": true,
+    "hardnetpp_delta_over_snarenet": 1.2207222442957435,
+    "copy_as_decode_verified_span_reuse": 1.0,
+    "feasibility_channel_predictive": true,
+    "feasibility_channel_auc": 0.6604651162790698,
+    "false_continue_rate": 0.7714285714285715,
+    "false_stop_rate": 0.0,
+    "energy_bridge_status": "blocked",
+    "energy_bridge_blocker": "1 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: no prior_failures field on task"
+  },
+  "publication_state": {
+    "status": "blocked",
+    "arxiv_submitted": false,
+    "arxiv_receipt": null,
+    "external_blocker": "3 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: no prior_failures field on task",
+    "honest_verdict": "blocked_gate_check_failed"
+  },
+  "stale_artifacts": [
+    {
+      "path": "results/experiment_1282_sota_gguf_cache_provenance_preflight.json",
+      "criterion": "sota_gguf_cache_provenance_preflight",
+      "classification": "BLOCKED",
+      "loaded": true,
+      "status": "blocked",
+      "honest_verdict": "blocked_gate_check_failed",
+      "reason": "3 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: no prior_failures field on task"
+    },
+    {
+      "path": "results/experiment_1284_ars_uqlm_answer_stability_sota_audit.json",
+      "criterion": "ars_uqlm_answer_stability_sota_audit",
+      "classification": "GATED",
+      "loaded": false,
+      "status": null,
+      "honest_verdict": null,
+      "reason": null
+    },
+    {
+      "path": "results/experiment_1285_triggered_certificate_extraction_v2.json",
+      "criterion": "triggered_certificate_extraction_v2",
+      "classification": "GATED",
+      "loaded": false,
+      "status": null,
+      "honest_verdict": null,
+      "reason": null
+    },
+    {
+      "path": "results/experiment_1286_grad_beaver_nsvif_semantic_routing.json",
+      "criterion": "grad_beaver_nsvif_semantic_routing",
+      "classification": "GATED",
+      "loaded": true,
+      "status": "blocked",
+      "honest_verdict": "blocked_gate_check_failed",
+      "reason": "1 of 1 gate(s) failed; first failure: exp1285-triggered-certificate-extraction-v2.certificate_parse_rate (upstream artifact not found for task id 'exp1285-triggered-certificate-extraction-v2')"
+    },
+    {
+      "path": "results/experiment_1287_token_guard_cactus_constrained_acceptance_v2.json",
+      "criterion": "token_guard_cactus_constrained_acceptance_v2",
+      "classification": "GATED",
+      "loaded": false,
+      "status": null,
+      "honest_verdict": null,
+      "reason": null
+    },
+    {
+      "path": "results/experiment_1289_leanabell_grpo_v9_sota_headline_gated.json",
+      "criterion": "leanabell_grpo_v9_sota_headline_gated",
+      "classification": "GATED",
+      "loaded": false,
+      "status": null,
+      "honest_verdict": null,
+      "reason": null
+    },
+    {
+      "path": "results/experiment_1290_skill_graph_promotion_demotion.json",
+      "criterion": "skill_graph_promotion_demotion",
+      "classification": "MISSING",
+      "loaded": false,
+      "status": null,
+      "honest_verdict": null,
+      "reason": null
+    },
+    {
+      "path": "results/experiment_1293_ebt_arm_ebm_cot_energy_bridge_audit.json",
+      "criterion": "ebt_arm_ebm_cot_energy_bridge_audit",
+      "classification": "BLOCKED",
+      "loaded": true,
+      "status": "blocked",
+      "honest_verdict": "blocked_gate_check_failed",
+      "reason": "1 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: no prior_failures field on task"
+    },
+    {
+      "path": "results/experiment_1294_arxiv_v10_submission_receipt_or_blocker.json",
+      "criterion": "arxiv_v10_submission_receipt_or_blocker",
+      "classification": "BLOCKED",
+      "loaded": true,
+      "status": "blocked",
+      "honest_verdict": "blocked_gate_check_failed",
+      "reason": "3 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: no prior_failures field on task"
+    }
+  ],
+  "key_carry_forwards": [
+    "Repair the prior_failures metadata gate on Exp1282 so SOTA cache/provenance readiness can be measured.",
+    "Run answer-stability and triggered certificate extraction only after cached_sota_ready is actually true.",
+    "Use certificate_parse_rate >= 0.8 as the mechanical unlock for semantic routing and Cactus acceptance.",
+    "Emit the missing skill-graph promotion/demotion artifact from Exp1288 memory updates or record a terminal blocker.",
+    "Rerun the energy bridge and arXiv receipt tasks with prior-failure metadata so they produce real terminal artifacts."
+  ],
+  "retro_complete": true,
+  "honest_verdict": "milestone_100_5_of_14_criteria_met"
+}

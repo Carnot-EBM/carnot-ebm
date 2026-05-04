@@ -475,6 +475,45 @@ gate makes the planned task `GATED`. Blocked terminal artifacts shall count as
 The retrospective self-criterion shall count as `MET` only in the final
 artifact that sets `retro_complete == true`.
 
+### REQ-REPORT-025: Milestone .100 Success-Criteria Retrospective
+
+The Exp 1295 milestone .100 retrospective workflow shall read the authoritative
+Exp 1282 through Exp 1294 result JSON artifacts and write
+`results/experiment_1295_milestone_retro_100.json` with:
+
+- `schema` set to `milestone_retro_v5`
+- `milestone` set to `2026.04.100`
+- `criteria_total` set to `14`
+- `criteria_results`, mapping the 14 planned criteria to one of `MET`,
+  `NOT_MET`, `GATED`, `BLOCKED`, or `MISSING`
+- `criteria_met`, derived from the count of `MET` criteria
+- `top_successes`, listing the strongest completed outcomes
+- `top_gaps`, listing the highest-priority unmet, gated, blocked, or missing
+  outcomes
+- `self_learning_result`, summarising DVI/replay, GRPO, and skill-graph
+  outcomes from Exp 1288 through Exp 1290
+- `sota_model_usage_summary`, summarising SOTA GGUF cache readiness and
+  headline-eligible model usage from Exp 1282 and the SOTA-gated certificate
+  tasks
+- `continuous_repair_summary`, summarising HardNet++, DSP feasibility-channel,
+  and energy-bridge outcomes from Exp 1291 through Exp 1293
+- `publication_state`, reporting whether Exp 1294 produced an arXiv receipt or
+  the exact blocker
+- `stale_artifacts`, listing missing, in-progress, bootstrap, gated, or blocked
+  source artifacts that need carry-forward attention
+- `key_carry_forwards`, listing the highest-priority .101 follow-ups
+- `status == "complete"`
+- `retro_complete == true`
+- `honest_verdict` formatted as `milestone_100_N_of_14_criteria_met`
+
+Missing artifacts shall count as `MISSING` unless an explicit unmet upstream
+gate makes the planned task `GATED`. Blocked terminal artifacts shall count as
+`BLOCKED`, except conductor pre-gate artifacts whose failed gate is an unmet
+milestone dependency shall be classified as `GATED`. In-progress or
+bootstrap-only artifacts shall count as `NOT_MET`. The retrospective
+self-criterion shall count as `MET` only in the final artifact that sets
+`retro_complete == true`.
+
 ### REQ-REPORT-024: Local Agent Usage Snapshot
 
 The repository shall provide a local operator workflow that inspects the
@@ -742,6 +781,22 @@ criteria do not increment `criteria_met`
 **And** the artifact reports `criteria_met == 12`
 **And** `honest_verdict == "milestone_99_12_of_14_criteria_met"`
 
+### SCENARIO-REPORT-025: Exp 1295 Counts .100 Source Criteria
+
+**Given** Exp 1282 through Exp 1294 source artifacts contain the current .100
+criterion evidence
+**And** Exp 1282 is a blocked conductor pre-gate artifact without SOTA cache
+readiness fields
+**And** Exp 1284, Exp 1285, Exp 1287, and Exp 1289 are absent because upstream
+SOTA certificate gates were not met
+**And** Exp 1290 is absent even though Exp 1288 wrote `memory_update_written`
+**When** the Exp 1295 retrospective workflow runs
+**Then** blocked, gated, missing, false, stale, and threshold-miss source
+criteria do not increment `criteria_met`
+**And** the retrospective self-criterion counts as met in the final artifact
+**And** the artifact reports `criteria_met == 5`
+**And** `honest_verdict == "milestone_100_5_of_14_criteria_met"`
+
 ### SCENARIO-REPORT-021: Codex Latest Rate-Limit Event Is Surfaced
 
 **Given** a local Codex session tree contains multiple `token_count` events
@@ -887,6 +942,7 @@ embed live-GPU benchmark results from Exp 328 when available.
 | REQ-REPORT-021 | `python/carnot/reporting/combined_retro_95_96_97.py`, `results/experiment_1255_combined_retro_95_96_97.json` | `tests/python/test_combined_retro_95_96_97.py` | Implemented |
 | REQ-REPORT-022 | `python/carnot/reporting/milestone_retro_98.py`, `results/experiment_1267_milestone_retro_98.json` | `tests/python/test_milestone_retro_98.py` | Implemented |
 | REQ-REPORT-023 | `python/carnot/reporting/milestone_retro_99.py`, `results/experiment_1281_milestone_retro_99.json` | `tests/python/test_milestone_retro_99.py` | Implemented |
+| REQ-REPORT-025 | `python/carnot/reporting/milestone_retro_100.py`, `results/experiment_1295_milestone_retro_100.json` | `tests/python/test_milestone_retro_100.py` | Implemented |
 | REQ-REPORT-024 | `python/carnot/reporting/agent_usage.py`, `scripts/agent_plan_usage.py` | `tests/python/test_agent_plan_usage.py` | Implemented |
 | REQ-PUBLISH-003 | `scripts/experiment_317_hf_publish.py` | `tests/python/test_experiment_317_hf_publish.py` | Implemented |
 | REQ-PUBLISH-004 | `scripts/experiment_330_hf_live_publish.py` | `tests/python/test_experiment_330_hf_live_publish.py` | Implemented |
