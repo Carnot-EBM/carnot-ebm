@@ -4769,3 +4769,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-04: Paper-v6 Critical Issues Fix — ISSUE-1 through ISSUE-5 in main.tex (STEP 0 Skeleton) (⚠️ Research Finding) — honest_verdict=in_progress; results/experiment_1257_paper_v6_critical_issues_fix.json
 - 2026-05-04: GRPO v7 — PROGRS Outcome-Conditioned Centering + VPS Step Supervision, 600s Budget, DualGPU (⚠️ Research Finding) — honest_verdict=in_progress; results/experiment_1259_grpo_v7_progrs_vps.json
 - 2026-05-04: Phase-5-D Intermediate Scale v3 — 4 Core Gates, EBM Replay Buffer, d=128, DualGPU (⚠️ Research Finding) — honest_verdict=in_progress; results/experiment_1260_phase5d_intermediate_scale_v3.json
+- 2026-05-04: Phase-5-D Intermediate Scale v3 — 4 Core Gates, EBM Replay Buffer, d=128, DualGPU (⚠️ Research Finding) — honest_verdict=in_progress; results/experiment_1260_phase5d_intermediate_scale_v3.json
