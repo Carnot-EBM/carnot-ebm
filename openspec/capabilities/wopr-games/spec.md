@@ -165,6 +165,21 @@ MUST render clue cells and current digit values for the WOPR shell.
 - Accepted proposals do not introduce duplicate digits in any affected run.
 - `visualize(state)` includes the clue targets and the current digit values.
 
+### REQ-MASYU-001: Masyu Loop and Circle Energy
+
+The Masyu cartridge MUST expose a 4x4 cell grid whose state is a set of
+orthogonal adjacent-cell edges forming the current partial loop. Its energy
+MUST be the sum of black-circle violations, white-circle violations, and
+connectivity violations. Energy MUST be zero if and only if the state is one
+single closed loop satisfying every bundled circle clue.
+
+**Acceptance criteria:**
+- The bundled puzzle includes one black circle and at least one white circle.
+- A known valid 4x4 loop has energy 0.0 and `is_solved(state)` returns true.
+- A closed loop that violates a circle rule has positive energy.
+- `carnot_step(state, iteration)` proposes one edge add/remove transition and
+  returns a WOPR `StepResult`.
+
 ## Scenarios
 
 ### SCENARIO-CONNECT4-001: Empty Board Ground State
@@ -299,6 +314,22 @@ inequalities
 
 **Spec traces:** REQ-KAKURO-002
 
+### SCENARIO-MASYU-001: Known 4x4 Ground State
+
+**Given** the bundled 4x4 Masyu puzzle with black and white circle clues
+**When** the known perimeter loop is scored
+**Then** the circle and connectivity energy is 0.0 and `is_solved` returns true.
+
+**Spec traces:** REQ-MASYU-001
+
+### SCENARIO-MASYU-002: Circle Rule Violation Has Positive Energy
+
+**Given** the bundled 4x4 Masyu puzzle
+**When** a closed loop violates at least one circle clue
+**Then** the energy is positive and `is_solved` returns false.
+
+**Spec traces:** REQ-MASYU-001
+
 ## Implementation Status
 
 | Requirement | Status | Experiment |
@@ -315,6 +346,7 @@ inequalities
 | REQ-FUTOSHIKI-002 | Implemented | Exp 1227 |
 | REQ-KAKURO-001 | Implemented | Exp 1243 |
 | REQ-KAKURO-002 | Implemented | Exp 1243 |
+| REQ-MASYU-001 | Implemented | Exp 1262 |
 | SCENARIO-CONNECT4-001 | Implemented | Exp 1175 |
 | SCENARIO-CONNECT4-002 | Implemented | Exp 1175 |
 | SCENARIO-CONNECT4-003 | Implemented | Exp 1175 |
@@ -331,3 +363,5 @@ inequalities
 | SCENARIO-KAKURO-001 | Implemented | Exp 1243 |
 | SCENARIO-KAKURO-002 | Implemented | Exp 1243 |
 | SCENARIO-KAKURO-003 | Implemented | Exp 1243 |
+| SCENARIO-MASYU-001 | Implemented | Exp 1262 |
+| SCENARIO-MASYU-002 | Implemented | Exp 1262 |
