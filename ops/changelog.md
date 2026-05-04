@@ -4795,3 +4795,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-04: arXiv Bundle v10 - Gated on Exp 1269 Critical Fixes (⚠️ Research Finding) — honest_verdict=arxiv_bundle_v10_compiled_upload_pending; results/experiment_1270_arxiv_bundle_v10_gated.json
 - 2026-05-04: PRIME Verifier Selection Audit - Process/Outcome Alignment Before GRPO (⚠️ Research Finding) — honest_verdict=prime_verifier_weights_selected_top_SemEnergyProbe; results/experiment_1272_prime_verifier_selection_audit.json
 - 2026-05-04: GRPO v8 PRIME+VPRM Smoke - Gated on Verifier Weight Vector (⚠️ Research Finding) — honest_verdict=smoke_only_not_headline; results/experiment_1273_grpo_v8_prime_vprm_smoke.json
+- 2026-05-04: Online Self-Learning Certificate Memory v3 - Replay Delta + Skill Graph Candidate (✅ Complete) — honest_verdict=certificate_memory_replay_improved; results/experiment_1274_online_self_learning_certificate_memory_v3.json
