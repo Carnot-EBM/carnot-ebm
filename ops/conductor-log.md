@@ -601,3 +601,4 @@ If you finish the real work |
 | 2026-05-04 05:11 UTC | Milestone 2026.04.97 activated | OK | 13 tasks queued |
 | 2026-05-04 05:16 UTC | Combined Milestone .95 + .96 Retrospective — STEP  | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1242_combine |
 | 2026-05-04 05:20 UTC | Combined Milestone .95 + .96 Retrospective — STEP  | FAIL | No file changes produced |
+| 2026-05-04 05:25 UTC | Combined Milestone .95 + .96 Retrospective — STEP  | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1242_combine |
