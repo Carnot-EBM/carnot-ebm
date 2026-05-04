@@ -4741,3 +4741,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-04: WOPR Kakuro Puzzle Cartridge v2 — Integer Row/Column Sum Constraints, E=0 at Valid Solution (⚠️ Research Finding) — honest_verdict=in_progress; results/experiment_1243_wopr_kakuro_cartridge_v2.json
 - 2026-05-04: WOPR Kakuro Puzzle Cartridge v2 — Integer Row/Column Sum Constraints, E=0 at Valid Solution (⚠️ Research Finding) — honest_verdict=in_progress; results/experiment_1243_wopr_kakuro_cartridge_v2.json
 - 2026-05-04: WOPR Kakuro Puzzle Cartridge v2 — Integer Row/Column Sum Constraints, E=0 at Valid Solution (⚠️ Research Finding) — honest_verdict=in_progress; results/experiment_1243_wopr_kakuro_cartridge_v2.json
+- 2026-05-04: Verifier Joint Orthogonality Audit v2 — Data Archaeology from exp1108 + 50 Direct FoVer Runs (⚠️ Research Finding) — honest_verdict=in_progress; results/experiment_1244_verifier_orthogonality_audit_v2.json
