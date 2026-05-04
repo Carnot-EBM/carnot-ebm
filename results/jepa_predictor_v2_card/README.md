@@ -13,7 +13,7 @@ license: apache-2.0
 **JEPA Violation Predictor v2** — a multi-domain neural verifier trained to predict
 whether a language model answer violates domain constraints (arithmetic, code, logic).
 
-This is a research artifact from the [Carnot EBM framework](https://github.com/ianblenke/carnot).
+This is a research artifact from the [Carnot EBM framework](https://github.com/Carnot-EBM/carnot-ebm).
 It is a small MLP (input_dim=200, hidden_dim=128, output_dim=1) trained with class-weighted
 binary cross-entropy and early stopping on a balanced multi-domain dataset.
 
@@ -89,7 +89,7 @@ print(f"P(violation) = {prob_violation:.3f}")
 > pip install carnot
 > ```
 >
-> Source and documentation: <https://github.com/ianblenke/carnot>
+> Source and documentation: <https://github.com/Carnot-EBM/carnot-ebm>
 
 ## Spec
 
@@ -104,6 +104,6 @@ print(f"P(violation) = {prob_violation:.3f}")
   title  = {Carnot JEPA Violation Predictor v2},
   author = {Carnot-EBM},
   year   = {2026},
-  url    = {https://github.com/ianblenke/carnot}
+  url    = {https://github.com/Carnot-EBM/carnot-ebm}
 }
 ```

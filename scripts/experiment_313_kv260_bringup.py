@@ -38,7 +38,7 @@ Spec: REQ-SAMPLE-012,
       SCENARIO-SAMPLE-025, SCENARIO-SAMPLE-026
 
 Run:
-    cd /home/ianblenke/github.com/ianblenke/carnot
+    cd /home/ianblenke/github.com/Carnot-EBM/carnot-ebm
     JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_313_kv260_bringup.py
 """
 

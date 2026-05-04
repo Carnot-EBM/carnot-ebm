@@ -139,7 +139,7 @@ license: apache-2.0
 ## Overview
 
 `carnot-joint-constraint-v1` is the Exp 66 differentiable constraint model from
-the [Carnot](https://github.com/ianblenke/carnot) project.  It combines:
+the [Carnot](https://github.com/Carnot-EBM/carnot-ebm) project.  It combines:
 
 - **Embedding layer** — text input projected to 384-dimensional space (embed_dim=384)
 - **Ising coupling** — learned pairwise interactions among 8 latent constraint nodes
@@ -212,7 +212,7 @@ print(f"J shape: {J.shape}, biases shape: {biases.shape}")
   title={Exp 66: Differentiable Constraint Verification via Joint EBM + Ising Architecture},
   author={Carnot Research},
   year={2026},
-  url={https://github.com/ianblenke/carnot}
+  url={https://github.com/Carnot-EBM/carnot-ebm}
 }
 ```
 """.strip()
@@ -347,7 +347,7 @@ print(int(verdict[0]))  # 1 (supported)
   title={FormalClaimVerifier: Solver-Routed Deterministic Claim Verification},
   author={Carnot Research},
   year={2026},
-  url={https://github.com/ianblenke/carnot}
+  url={https://github.com/Carnot-EBM/carnot-ebm}
 }
 ```
 """.strip()

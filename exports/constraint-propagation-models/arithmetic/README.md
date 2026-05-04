@@ -152,7 +152,7 @@ print(f"Max |J_ij|: {abs(J).max():.4f}")
   title  = {Carnot Constraint Propagation Model: Arithmetic},
   author = {Carnot-EBM},
   year   = {2026},
-  url    = {https://github.com/ianblenke/carnot}
+  url    = {https://github.com/Carnot-EBM/carnot-ebm}
 }
 ```
 

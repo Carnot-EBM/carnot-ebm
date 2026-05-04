@@ -121,7 +121,7 @@ print(f"Energy: {energy:.2f}, Score: {score:.3f}")
   title  = {Carnot Constraint Propagation Model: Logic},
   author = {Carnot-EBM},
   year   = {2026},
-  url    = {https://github.com/ianblenke/carnot}
+  url    = {https://github.com/Carnot-EBM/carnot-ebm}
 }
 ```
 

@@ -40,7 +40,7 @@ SCENARIO-EXP292-C (benchmark schema — latency, speedup, baseline comparison)
 SCENARIO-EXP292-D (honest labeling — no fabricated numbers for non-hardware paths)
 
 Run:
-    cd /home/ianblenke/github.com/ianblenke/carnot
+    cd /home/ianblenke/github.com/Carnot-EBM/carnot-ebm
     JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_292_amd_xdna_npu.py
 """
 

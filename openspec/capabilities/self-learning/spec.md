@@ -2476,3 +2476,55 @@ whole steps.
 
 **Given** `fspo_delta_pp=-2.0`
 **Then** the verdict equals `"fspo_degrades_vps"`.
+
+## REQ-LEARN-1235: GRPO-v6 FSPO + VPS Uses Token Regulation Under Extended Wall Budget
+
+Exp 1235 SHALL rerun GRPO-v6 with the Exp 1220 VPS process reward,
+FSPO per-token factuality weighting, token-regulated advantages, and an
+extended `wall_budget_s=1200` so evaluation completes more than the 9
+questions reached by Exp 1221.
+
+### REQ-LEARN-1235 Sub-requirements
+
+- REQ-LEARN-1235-1: `compute_token_regulated_fspo_vps_advantage(
+  step_causal_scores, step_z3_scores, tokens_per_step, token_logprobs)`
+  SHALL compute `step_reward[S] = causal_score[S] + z3_score[S]`,
+  `factuality_weight[S] = max(0.0, causal_score[S])`, and for each token
+  in step S compute `advantage[T] = step_reward[S] *
+  factuality_weight[S]`.
+- REQ-LEARN-1235-2: The token-regulated advantage SHALL be
+  `advantage[T] * softmax(token_logprobs)[T]`, where the softmax is
+  computed across all generated tokens in the completion using a
+  numerically stable implementation.
+- REQ-LEARN-1235-3: `compute_grpo_v6_token_metrics` SHALL report
+  `mean_token_logprob` as the arithmetic mean of non-null token
+  log-probabilities and `fspo_coverage_fraction` as the fraction of
+  reasoning steps whose `factuality_weight` is strictly positive.
+- REQ-LEARN-1235-4: `derive_grpo_v6_token_reg_honest_verdict` SHALL return
+  exactly one of `"grpo_v6_beats_vps"`, `"grpo_v6_no_improvement"`,
+  `"grpo_v6_regression"`, `"wall_budget_still_insufficient"`, or
+  `"blocked"`. Fewer than 10 evaluated questions SHALL map to
+  `"wall_budget_still_insufficient"` when prerequisites are otherwise OK.
+- REQ-LEARN-1235-5: The Exp 1235 artifact SHALL include
+  `wall_budget_s`, `n_questions_evaluated`, `vps_baseline_accuracy`,
+  `fspo_vps_accuracy`, `grpo_v6_improvement_pp`, `beats_vps_floor`,
+  `mean_token_logprob`, `fspo_coverage_fraction`, `dualgpu_confirmed`,
+  `grpo_v6_improvement_measured`, and `honest_verdict`.
+
+### SCENARIO-LEARN-1235: Token Regulation Upweights High-Confidence Tokens
+
+**Given** one step with `causal_score=0.5`, `z3_score=0.25`, two tokens,
+and token log-probabilities `[-0.1, -4.0]`
+**When** `compute_token_regulated_fspo_vps_advantage` runs
+**Then** both tokens start from raw advantage `(0.5 + 0.25) * 0.5`
+**And** the first token receives the larger adjusted advantage because
+its token log-probability is higher.
+
+### SCENARIO-LEARN-1236: Extended Budget Must Beat Exp 1221 Coverage
+
+**Given** an Exp 1235 run with `n_questions_evaluated=9`
+**When** `derive_grpo_v6_token_reg_honest_verdict` runs
+**Then** the verdict equals `"wall_budget_still_insufficient"`.
+
+**Given** `n_questions_evaluated=13` and `grpo_v6_improvement_pp=0.1`
+**Then** the verdict equals `"grpo_v6_beats_vps"`.

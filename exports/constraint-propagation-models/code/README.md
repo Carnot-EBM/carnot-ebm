@@ -131,7 +131,7 @@ print(f"Buggy score:    {model.score(x_buggy):.3f}")     # should be lower
   title  = {Carnot Constraint Propagation Model: Code},
   author = {Carnot-EBM},
   year   = {2026},
-  url    = {https://github.com/ianblenke/carnot}
+  url    = {https://github.com/Carnot-EBM/carnot-ebm}
 }
 ```
 

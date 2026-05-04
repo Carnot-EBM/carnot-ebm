@@ -155,7 +155,7 @@ print(f"Verification score: {{score:.4f}}")
 
 ## License
 
-Apache 2.0.  See [LICENSE](https://github.com/ianblenke/carnot/blob/main/LICENSE).
+Apache 2.0.  See [LICENSE](https://github.com/Carnot-EBM/carnot-ebm/blob/main/LICENSE).
 """
 
 

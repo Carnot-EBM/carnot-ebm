@@ -137,7 +137,7 @@ rm results/experiment_1028_preflight_v30.json
 
 # 3. Restart the conductor:
 systemd-run --user --unit=carnot-conductor \
-  --working-directory=/home/ianblenke/github.com/ianblenke/carnot \
+  --working-directory=/home/ianblenke/github.com/Carnot-EBM/carnot-ebm \
   --setenv=PYTHONUNBUFFERED=1 \
   .venv/bin/python scripts/research_conductor.py \
   --loop --interval 10 --in-process-docs --async-doc-recon

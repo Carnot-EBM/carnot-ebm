@@ -155,8 +155,8 @@ class TestExtractRequiredFiles:
         assert files[0] == abs_path
 
     def test_project_root_placeholder_substitution(self, tmp_path: Path) -> None:
-        """Substitutes /home/ianblenke/github.com/ianblenke/carnot with actual project_root."""
-        placeholder = "/home/ianblenke/github.com/ianblenke/carnot"
+        """Substitutes /home/ianblenke/github.com/Carnot-EBM/carnot-ebm with actual project_root."""
+        placeholder = "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm"
         prompt = textwrap.dedent(f"""\
             EXISTING CODE TO READ FIRST:
             - {placeholder}/results/foo.json — some file

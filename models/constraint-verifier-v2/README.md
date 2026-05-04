@@ -154,4 +154,4 @@ complementary, not competing, artifacts.
 
 ## License
 
-Apache 2.0. See [Carnot repository](https://github.com/ianblenke/carnot) for details.
+Apache 2.0. See [Carnot repository](https://github.com/Carnot-EBM/carnot-ebm) for details.

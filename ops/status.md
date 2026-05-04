@@ -1434,7 +1434,7 @@ Slowest: Exp 359 (EORM retrain, 51 min — two conductor phases).
 
 - `scripts/experiment_dependency_audit.py` (new): parses "EXISTING CODE TO READ FIRST:" section from research prompts, resolves each listed path, reports missing files.
 - `DependencyAudit` dataclass: `experiment_id`, `required_files`, `missing_files`, `all_present`.
-- `extract_required_files(prompt, project_root)`: strips bullet prefix, strips em-dash/hash comments, substitutes `{project_root}` and `/home/ianblenke/github.com/ianblenke/carnot` placeholders, resolves relative paths to absolute.
+- `extract_required_files(prompt, project_root)`: strips bullet prefix, strips em-dash/hash comments, substitutes `{project_root}` and `/home/ianblenke/github.com/Carnot-EBM/carnot-ebm` placeholders, resolves relative paths to absolute.
 - `check_dependencies(prompt, project_root, experiment_id)`: calls extract, runs `os.path.exists()` per path, returns `DependencyAudit`.
 - `build_blocked_artifact(audit)`: returns dict with `status="blocked"`, `missing_files`, `required_files`, `next_action` (remediation text for conductor log).
 - `load_experiment_prompt(yaml_path, exp_id)`: finds task by `exp_id` substring in task `id` field; handles flat `tasks:` and nested `milestones[].tasks:` layouts.

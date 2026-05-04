@@ -20,7 +20,7 @@ license: apache-2.0
 > It is NOT a reliable hallucination detector for production use.
 >
 > For practical verification, use structural constraints (test execution, SAT solving)
-> rather than activation analysis. See the [Carnot technical report](https://github.com/ianblenke/carnot/blob/main/docs/technical-report.md)
+> rather than activation analysis. See the [Carnot technical report](https://github.com/Carnot-EBM/carnot-ebm/blob/main/docs/technical-report.md)
 > for 41 experiments and 14 principles learned.
 
 # per-token-ebm-qwen35-4b-nothink
