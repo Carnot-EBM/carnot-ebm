@@ -4,6 +4,43 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-05-04 Scan (Milestone 2026.04.98 Planning)
+
+### DiffuTruth: The Energy of Falsehood — Hallucinations as High-Energy Thermodynamic States
+- **Paper:** arXiv 2602.11364 (February 2026).
+- **What:** Unsupervised hallucination detection framed as non-equilibrium thermodynamics: true facts act as stable attractors (low-energy wells) on a generative manifold; hallucinations reside on high-energy slopes (repellers). Uses a discrete text diffusion model to corrupt and reconstruct claims, then measures "Semantic Energy" (NLI-based divergence between original and reconstruction) as the hallucination signal.
+- **Relevance to Carnot:** Independent theoretical validation of Carnot's core framing: EBM energy functions are literally detecting the energy of falsehood. FEVER AUROC=0.725 (SOTA unsupervised), HOVER zero-shot +4% over baselines. Carnot's cascade (HalluField + Ising + cascade) should exceed this on FoVer; comparison is a concrete publication benchmark. Also: DiffuTruth's "Semantic Energy" metric is structurally similar to Carnot's SemEnergyProbe (Tier 2) — measuring semantic divergence via NLI. If DiffuTruth underperforms Carnot on FoVer, that confirms the value of constraint-grounded energy over purely semantic energy.
+- **Concrete experiment:** Run DiffuTruth's unsupervised semantic-energy metric on the first 100 FoVer corpus v5 pairs (no GPU needed — NLI model is small). Compare AUROC vs Carnot's k=5 cascade. If Carnot's cascade > DiffuTruth's 0.725 baseline, that's a direct publishable comparison for paper-v6.
+- **When to incorporate:** Milestone .98 Phase 6 (exp1265, new research).
+
+### Evaluator Stress Test (EST): Detecting Proxy Gaming in RL via Invariance Tests
+- **Paper:** arXiv 2507.05619 (July 2025).
+- **What:** Invariance-based framework that detects proxy gaming (reward hacking) by separating exploitable sensitivity from genuine content-driven improvements using controlled perturbations with semantic validity audits. 74.2% precision / 78.6% recall for detecting LLM proxy gaming early, before quality decline manifests.
+- **Relevance to Carnot:** The LLMs Gaming Verifiers Defense (exp1225/1231/1249 — 3x failed in prior milestones) needs an empirical measurement protocol. EST provides exactly that: apply semantic perturbations to responses that score high on Carnot's k=5 ensemble, check if high energy scores track genuine semantic validity or exploitable surface patterns. If EST finds exploitable sensitivity in Carnot's verifiers, that motivates the HSIC diversity penalty and k=6 redesign.
+- **Concrete experiment:** Apply EST perturbation protocol to 50 FoVer corpus pairs that Carnot's k=5 ensemble scores as "low energy" (passing). For each passing response: generate 3 meaning-preserving perturbations and 3 meaning-changing perturbations. If the verifier scores change on meaning-preserving (they should not), that's gaming vulnerability. File as exp1263 (LLMs Gaming Verifiers Defense v4).
+- **When to incorporate:** Milestone .98 Phase 6 (exp1263, carry-forward with new protocol).
+
+### PROGRS: Process-Reward Outcome-Guided Steps for GRPO Reasoning
+- **Paper:** arXiv 2604.02341 (April 2026).
+- **What:** Improves GRPO by combining outcome-conditioned centering with a hierarchical coherence evaluator that captures local reasoning instability. The coherence evaluator detects when individual steps are locally fluent but globally incorrect. Reports improvements on MATH-500, AMC, AIME, MinervaMath without architecture changes.
+- **Relevance to Carnot:** GRPO-VPS (exp1220, +10pp) provides step-level credit attribution; PROGRS adds a hierarchical coherence check that would complement Carnot's CausalReasoningVerifier (Tier 2.7). The outcome-conditioned centering is directly applicable to GRPO v7: instead of centering advantages relative to group mean, center relative to the conditioned-on outcome distribution. This addresses the advantage collapse issue observed in prior GRPO runs.
+- **Concrete experiment:** Incorporate PROGRS outcome-conditioned centering into GRPO v7 (exp1259). Replace standard GRPO group-mean centering with outcome-conditioned centering using Carnot's Z3MathVerifier as the outcome oracle. Compare vs GRPO v7 without centering.
+- **When to incorporate:** Milestone .98 Phase 3 (incorporated into exp1259 GRPO v7 prompt).
+
+### VPRM: Beyond Outcome Verification — Verifiable Process Reward Models
+- **Paper:** arXiv 2601.17223 (January 2026).
+- **What:** Introduces Verifiable Process Reward Models (VPRMs) — PRMs whose step-level reward is grounded in a verifiable symbolic system rather than a learned neural judge. Key claim: outcome verification alone misses intermediate reasoning errors; verifiable step-level signals dramatically improve RL fine-tuning stability.
+- **Relevance to Carnot:** Validates Carnot's architecture: using CausalReasoningVerifier + Z3MathVerifier as step-level PRMs in GRPO-VPS is the VPRM approach applied to Carnot's energy domain. The VPRM framing provides rigorous theoretical grounding for the +10pp GRPO-VPS result (exp1220). Cite in paper-v6 §3 (GRPO training section).
+- **Concrete experiment:** Compute VPRM-defined metrics (step-verification rate, intermediate-error detection rate) on FoVer CoT corpus using CausalReasoningVerifier as the verifiable PRM judge. Compare: standalone outcome verification (Z3 on final answer) vs VPRM (Z3+Causal on each step). Cite difference as justification for GRPO-VPS approach.
+- **When to incorporate:** Milestone .98 (incorporate VPRM framing into GRPO v7 prompt and paper-v6 §3).
+
+### LUT-KAN: Segment-wise LUT Quantization for Fast KAN Inference
+- **Paper:** arXiv 2601.03332 (January 2026).
+- **What:** Segment-wise Look-Up Table (LUT) quantization for KAN layers: precomputes spline evaluations at grid points, stores in LUT, replaces runtime spline computation with indexed table lookup. Targets edge IoT devices; achieves 3-5x inference speedup over standard KAN with negligible accuracy drop (0.1% AUROC on typical tasks).
+- **Relevance to Carnot:** KANtize (exp1199) achieved SOS-KAN AUROC=0.9901 at 4-bit, 2.2MB. QuantKAN (arXiv 2511.18689) extends to GPTQ-style PTQ. LUT-KAN provides a third approach: precomputed LUT lookup rather than runtime spline evaluation. On NPU targets (AMD Ryzen AI, Apple Neural Engine), integer-indexed LUT operations may be faster than floating-point spline math. Combines with QuantKAN for ultra-edge deployment: QuantKAN quantizes the LUT entries, LUT-KAN eliminates the spline computation.
+- **Concrete experiment:** In QuantKAN 3-bit PTQ experiment (exp1266), also implement LUT-KAN-style precomputation: precompute the SOS-KAN spline at 256 grid points per variable, store as INT8 table. Measure inference latency comparison: standard float spline vs LUT-INT8 vs QuantKAN-3bit. File as part of exp1266.
+- **When to incorporate:** Milestone .98 Phase 6 (incorporated into exp1266 QuantKAN experiment).
+
 ## 2026-05-04 Scan (Milestone 2026.04.96 Planning)
 
 ### EBM Theoretical Lens for RL-Tuned Language Models
