@@ -1,6 +1,18 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-04 (Milestone 2026.04.98 operational retrospective refreshed; artifact status=success)
+**Last Updated:** 2026-05-04 (Milestone 2026.04.99 planned; execution YAML created)
+
+## Session 2026-05-04 - Milestone 2026.04.99 Planning Complete
+
+**Milestone 2026.04.99 PLANNED.**
+
+- Roadmap doc: `openspec/change-proposals/research-roadmap-vNEXT.md`
+- Execution queue: `research-roadmap-next.yaml` (14 tasks, exp1268-exp1281)
+- Research references updated before planning with REASON, audited skill-graph self-improvement, and RACE answer/reasoning consistency.
+- Design focus: close .98 publication/stale-retro carry-forwards; run SOTA GGUF triggered certificate extraction; select verifiers with PRIME/RACE-style process-outcome alignment; measure continuous self-learning through certificate memory; test FSNet/SnareNet continuous repair; finish gaming-defense and WOPR minimal cartridges.
+- Structured gates: exp1270 on exp1269 critical fixes, exp1273 on exp1272 verifier weights, exp1276 on exp1275 positive feasibility delta, exp1277 on exp1271 certificate parse rate >= 0.8.
+- Agent routing: all tasks default to `agent_type: codex`, `model: gpt-5.5` per CLAUDE.md quota-preservation policy; LLM-bearing tasks require mandated local SOTA GGUF `MODEL_SPECS`.
+- No changes made to `research-roadmap.yaml` or `scripts/research_conductor.py`.
 
 ## Session 2026-05-04 - Milestone 2026.04.98 Operational Retrospective Complete
 

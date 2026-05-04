@@ -28,8 +28,11 @@ The 2026-05-04 literature scan added these candidate ideas to `research-referenc
 - CompassVerifier: unified lightweight verifier baseline for verifiable reasoning.
 - Cactus: constrained acceptance speculative sampling.
 - Extropic Z1/XTR-0 and Kona architecture status updates.
+- REASON: dedicated acceleration for probabilistic logical reasoning workloads.
+- Audited skill-graph self-improvement: verifier-backed promotion of reusable skills from successful trajectories.
+- RACE: joint answer/reasoning consistency diagnostics for hallucination detection.
 
-Milestone .99 turns FSNet, SnareNet, triggered structured certificates, PRIME-style verifier selection, and Cactus-style acceptance into local experiments. CompassVerifier remains a monitored baseline for a later slot unless triggered certificate extraction produces enough comparable outputs during .99.
+Milestone .99 turns FSNet, SnareNet, triggered structured certificates, PRIME-style verifier selection, RACE-style consistency diagnostics, skill-memory replay, and Cactus-style acceptance into local experiments. CompassVerifier and REASON remain monitored baselines for later slots unless .99 produces enough certificate outputs or hardware-readiness data to justify immediate promotion.
 
 ## Three Biggest Gaps
 
@@ -51,6 +54,7 @@ Local SOTA GGUF models
           v
 Triggered certificate extraction
   constraint-aware tail only when uncertainty/energy trigger fires
+  RACE-style answer/reasoning consistency diagnostics
           |
           v
 Carnot verifier cascade
@@ -65,6 +69,7 @@ PRIME-style verifier selection      Cactus-style constrained acceptance
           v
 Continuous self-learning
   verifier-weight memory -> GRPO/VPRM reward -> replayed case memory
+  optional skill graph: verified pattern -> contract -> replay evidence
           |
           v
 Phase-3 continuous EBM repair
@@ -90,9 +95,9 @@ Success bar: paper bundle exists or is honestly blocked with a named missing fie
 Goal: produce verifiable SOTA local model traces and convert process/outcome signals into a learning signal.
 
 - `exp1271-triggered-certificate-extraction-sota-gguf`: run triggered structured certificate extraction on SOTA GGUF outputs, using the `cached_sota_pair()` pattern and recording exact model IDs.
-- `exp1272-prime-verifier-selection-audit`: rank verifiers by process/outcome alignment before attempting any GRPO update.
+- `exp1272-prime-verifier-selection-audit`: rank verifiers by process/outcome alignment before attempting any GRPO update, with RACE-style answer/reasoning consistency as a diagnostic.
 - `exp1273-grpo-v8-prime-vprm-smoke-gated`: run a bounded GRPO/VPRM smoke only if exp1272 writes a verifier-weight vector.
-- `exp1274-online-self-learning-certificate-memory-v3`: update case memory from verified certificates and measure whether replay improves future decisions.
+- `exp1274-online-self-learning-certificate-memory-v3`: update case memory from verified certificates and measure whether replay improves future decisions; emit a small skill-graph candidate if the data supports it.
 
 Success bar: at least one artifact reports a real self-learning delta (`self_learning_delta_overall` or `grpo_v8_delta_pp`) and records whether it is positive, zero, or negative.
 
@@ -171,6 +176,10 @@ Hardware deliberately not required in .99:
 - KV260/Vivado FPGA bring-up. The current hardware wishlist still marks deeper FPGA work as blocked by tooling.
 - AMD XDNA NPU unblocking. The missing dependency/wheel issue has already caused repeated blocked attempts.
 - Extropic TSU access. .99 only updates the readiness map through references; no TSU experiment is planned until hardware/API availability changes.
+
+## Decentralization Implications
+
+The milestone preserves local-first operation. Any LLM-bearing task must use the mandated open-weight GGUF models through `cached_sota_pair()` and record exact `MODEL_SPECS`; legacy tiny models are allowed only as marked smoke-test fallbacks. No task depends on closed-weight provider calls, no core vendor SDK dependency is introduced, and hardware work remains framed through portable sampler/reasoner abstractions rather than a single proprietary accelerator.
 
 ## Milestone Success Criteria
 
