@@ -1007,6 +1007,45 @@ distinction before treating adaptive relaxation as a Phase 3 repair primitive.
   `honest_verdict` without converting excessive distortion or diversity collapse
   into a positive result.
 
+### REQ-KONA-029: HardNet++-Style Damped Local-Linear Nonlinear Repair
+
+The Phase 3 `ContinuousEBM` substrate MUST expose a deterministic
+HardNet++-style damped local-linear projection helper for nonlinear inequality
+constraints `g(z) <= 0`. The helper MUST repeatedly linearise the nonlinear
+constraints at the current bounded latent state, solve a damped least-squares
+projection step for active violations, keep states in `(-1, 1)`, and report
+violation, convergence, distortion, and verified-span reuse diagnostics.
+
+The Exp 1291 artifact MUST compare raw Langevin states, FSNet fixed
+local-linear repair, SnareNet fixed local-linear repair, and HardNet++ damped
+relinearising repair on deterministic nonlinear synthetic constraints. The
+synthetic constraints MUST include at least two valid basins and one misleading
+local basin. The artifact MUST report final task energy, violation count,
+convergence steps, state distortion, diversity, verified-span reuse,
+`hardnetpp_delta_over_snarenet`, `nonlinear_repair_viable`,
+`construct_refine_iterations`, `copy_as_decode_verified_span_reuse`, `status`,
+and `honest_verdict`.
+
+**Rationale:** Exp 1275 and Exp 1276 only exercise linear verifier constraints.
+Nonlinear verifier geometry can make a one-shot projection look feasible under
+its local surrogate while remaining invalid under the true constraint. A damped
+relinearising projection is the cheap test for whether repair can preserve useful
+latent state while crossing from a misleading local basin into a true valid
+basin.
+
+**Acceptance criteria:**
+
+- `python/carnot/phase3/nonlinear_repair.py` exposes a helper for damped
+  local-linear projection against callable nonlinear constraints and Jacobians.
+- Focused tests verify that the helper reduces true nonlinear violation energy,
+  preserves bounded latent shape, reports convergence/distortion diagnostics,
+  and preserves verified-span coordinates better than an over-projecting
+  baseline on a deterministic two-basin constraint.
+- `results/experiment_1291_hardnetpp_nonlinear_repair_benchmark.json` records
+  all required Exp 1291 fields and sets `honest_verdict` from measured
+  HardNet++ versus SnareNet deltas without turning diversity collapse or
+  verified-span destruction into a positive result.
+
 ## Scenarios
 
 ### SCENARIO-KONA-001: Stage 1 Primitive — RDT Fixed-Point Convergence
@@ -1368,6 +1407,24 @@ diagnostics derived from the same deterministic states.
 
 **Spec traces:** REQ-KONA-028
 
+### SCENARIO-KONA-029: Exp 1291 Measures HardNet++ Nonlinear Repair
+
+**Given** a deterministic ContinuousEBM, nonlinear synthetic constraints with at
+least two valid basins and one misleading local basin, and raw Langevin states
+that can settle in the misleading basin
+**When** Exp 1291 applies raw Langevin sampling, FSNet fixed local-linear repair,
+SnareNet fixed local-linear repair, and HardNet++ damped relinearising repair to
+the same states
+**Then** it writes
+`results/experiment_1291_hardnetpp_nonlinear_repair_benchmark.json` with
+`hardnetpp_delta_over_snarenet`, `nonlinear_repair_viable`,
+`construct_refine_iterations`, `copy_as_decode_verified_span_reuse`, `status`,
+`honest_verdict`, and per-arm energy, violation, convergence, distortion,
+diversity, and verified-span reuse measurements derived from the same
+deterministic nonlinear benchmark.
+
+**Spec traces:** REQ-KONA-029
+
 ## Out of scope
 
 The following are deliberately **not** required by this capability:
@@ -1429,6 +1486,9 @@ The following are deliberately **not** required by this capability:
   lives in `python/carnot/phase3/continuous_ebm.py`.
 - **SnareNet-style adaptive repair:** specified by REQ-KONA-028; implementation
   lives in `python/carnot/phase3/continuous_ebm.py`.
+- **HardNet++ nonlinear repair benchmark:** specified by REQ-KONA-029;
+  implementation lives in `python/carnot/phase3/nonlinear_repair.py` and
+  `scripts/experiment_1291_hardnetpp_nonlinear_repair_benchmark.py`.
 
 First concrete next experiment:
 `experiment_XXX_rdt_primitive_convergence.py` — implement the RDT scaffold and
