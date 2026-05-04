@@ -3074,3 +3074,40 @@ items observe a finite `RLIMIT_AS` soft limit no larger than 8 GB.
 
 Given the address-space cap is active for pytest, normal imports of the packaged
 `carnot` module continue to work alongside the existing RSS watchdog plugin.
+
+## REQ-INFRA-078: Roadmap Prior-Failures Autofill
+
+**REQ-INFRA-078**: A standalone `scripts/conductor_priors_autofill.py` command
+MUST populate missing roadmap `prior_failures` blocks from the local
+`FailureLedger` without modifying `scripts/research_conductor.py`. The command
+MUST:
+
+1. Load `research-roadmap-next.yaml` by default, falling back to the active
+   `research-roadmap.yaml` when the next roadmap is not present.
+2. Scan every task and skip tasks that already have a non-empty
+   `prior_failures` list.
+3. Query `FailureLedger.matching_priors()` for each unpopulated task using the
+   task id and title.
+4. Classify matching priors whose verdict contains reconciler partial/failed
+   tokens as `true_failure`, and classify all other priors as
+   `successful_upstream`.
+5. Insert only the missing `prior_failures` block while preserving existing
+   roadmap content.
+6. Support `--dry-run`, which reports counts without writing file changes.
+
+### SCENARIO-INFRA-092: Autofill Skips Populated Tasks
+
+Given a roadmap task with a non-empty `prior_failures` list, the autofill
+command counts it as already populated and does not alter that task's block.
+
+### SCENARIO-INFRA-093: Autofill Classifies Successful Upstreams
+
+Given a matching ledger prior whose verdict does not contain any reconciler
+partial or failed token, the generated prior-failure stub classifies it as
+`successful_upstream` and uses an automatic explanatory `addressed_by` value.
+
+### SCENARIO-INFRA-094: Autofill Dry Run Does Not Write
+
+Given `--dry-run`, the autofill command reports tasks scanned, generated stubs,
+and already-populated tasks while leaving the roadmap file byte-for-byte
+unchanged.
