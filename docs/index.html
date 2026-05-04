@@ -300,10 +300,10 @@
       <a href="technical-report.html" class="btn btn-secondary">How it works</a>
     </div>
     <div class="stats-bar" aria-label="Project headline numbers">
-      <div class="stat"><div class="stat-num">1,237</div><div class="stat-label">Through Exp 1237</div></div>
-      <div class="stat"><div class="stat-num">105</div><div class="stat-label">Milestones complete</div></div>
-      <div class="stat"><div class="stat-num">21,572</div><div class="stat-label">Python test items</div></div>
-      <div class="stat"><div class="stat-num">9/13</div><div class="stat-label">.95 criteria met</div></div>
+      <div class="stat"><div class="stat-num">1,254</div><div class="stat-label">Through Exp 1254</div></div>
+      <div class="stat"><div class="stat-num">106</div><div class="stat-label">Milestones archived</div></div>
+      <div class="stat"><div class="stat-num">21,603</div><div class="stat-label">Python test items</div></div>
+      <div class="stat"><div class="stat-num">3</div><div class="stat-label">Terminal .97 artifacts</div></div>
     </div>
   </div>
 </section>
@@ -454,7 +454,10 @@
           training run improves 80% &rarr; 95% on its evaluation slice. Phase-5
           in-situ training now passes its first stability gates, but the Spera
           orthogonality audit found k_eff&asymp;1 in a k=3 verifier ensemble, so
-          joint verifier diversity is now a paper- and scale-up gate.
+          joint verifier diversity is now a paper- and scale-up gate. The latest
+          Phase-3 frontier artifacts add a trained Boltzmann-GPT contrastive
+          pass (AUROC 0.9607) and classify NRGPT recurrence non-monotonicity as
+          causal-context shift rather than an architecture failure.
         </p>
       </div>
     </div>
@@ -744,6 +747,12 @@
         <div class="r-stats"><span class="r-before">Energy recurrence helps, but 3 iterations dipped to 0.9158</span> <span class="r-after">Milestone .90 &mdash; Exp 1163</span></div>
       </div>
       <div class="r-card">
+        <span class="r-tag">Phase 3 analysis &mdash; NRGPT frozen-prefix evaluation</span>
+        <h3 class="r-title">Non-monotonicity classified as Type B</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 92.1%; background: #a855f7;"></div></div>
+        <div class="r-stats"><span class="r-before">AUROC 0.921; causal-context shift is expected for recurrent EBMs</span> <span class="r-after">Exp 1251</span></div>
+      </div>
+      <div class="r-card">
         <span class="r-tag">Phase 4 active inference &mdash; harder synthetic puzzles</span>
         <h3 class="r-title">15/15 BFS-intractable puzzles solved</h3>
         <div class="r-meter"><div class="r-bar" style="width: 100%; background: #22c55e;"></div></div>
@@ -865,15 +874,21 @@
       </div>
       <div class="r-card">
         <span class="r-tag">Phase 3 seed &mdash; Boltzmann-GPT</span>
-        <h3 class="r-title">Random-weight AUROC=0.65; contrastive training pending</h3>
-        <div class="r-meter"><div class="r-bar" style="width: 65%; background: #f59e0b;"></div></div>
-        <div class="r-stats"><span class="r-before">Non-degenerate but below NRGPT 0.920929; Exp 1237 artifact still in progress</span> <span class="r-after">Exps 1226/1237</span></div>
+        <h3 class="r-title">AUROC 0.65 &rarr; 0.9607 after CD training</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 96.07%; background: #22c55e;"></div></div>
+        <div class="r-stats"><span class="r-before">100 CD steps on a balanced FoVer slice; forward pass verified</span> <span class="r-after">Exps 1226/1237/1248</span></div>
       </div>
       <div class="r-card">
-        <span class="r-tag">Milestone .95 &mdash; latest completed milestone</span>
-        <h3 class="r-title">9/13 criteria met</h3>
-        <div class="r-meter"><div class="r-bar" style="width: 69.2%; background: #f59e0b;"></div></div>
-        <div class="r-stats"><span class="r-before">GRPO-VPS, Phase-5, Boltzmann-GPT seed, Futoshiki shipped</span> <span class="r-after">Exps 1216-1228</span></div>
+        <span class="r-tag">Milestone .96 &mdash; archived but artifact-incomplete</span>
+        <h3 class="r-title">10 artifacts observed; 8 still in progress</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 20%; background: #f59e0b;"></div></div>
+        <div class="r-stats"><span class="r-before">Only Exp 1230 complete and Exp 1240 blocked at retro read time</span> <span class="r-after">Exps 1229-1241</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Milestone .97 &mdash; active artifact status</span>
+        <h3 class="r-title">2 complete, 1 gate-blocked, rest in progress</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 23.1%; background: #f59e0b;"></div></div>
+        <div class="r-stats"><span class="r-before">Exp 1248 CD AUROC 0.9607; Exp 1251 Type-B NRGPT; Exp 1253 Masyu blocked</span> <span class="r-after">Exps 1242-1254</span></div>
       </div>
     </div>
 
