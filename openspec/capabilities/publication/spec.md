@@ -260,6 +260,16 @@ The artifact MUST record:
 Audit failures MUST be documented in the artifact without preventing source
 bundle creation once the Exp 1180 and Exp 1181 prerequisite gates are true.
 
+### REQ-PUBLISH-011: Figure 3 Measured-Only FPGA Latency
+
+Figure 3 MUST display only measured latency data sourced from
+`results/experiment_1068_kv260_smoke_test_v9.json`. It MUST NOT include the
+unmeasured 290 ms CPU baseline, per-200-sample CPU sweep comparisons, or any
+derived CPU-vs-FPGA speedup badge unless the CPU baseline is measured on the
+same per-sample basis and recorded in a result artifact. The figure-rendering
+module MUST expose the measured FPGA latency and render the PNG/PDF outputs
+from that measured value.
+
 ### SCENARIO-PUBLISH-008: All Medium/Low Fixes And Claim Audit Verified
 
 **Given** the position paper source, bibliography, and local experiment result
@@ -287,6 +297,14 @@ AND it does not run the audit, compile, or bundle steps.
 **Then** it records the audit counts, banned-string count, paper word count,
 bundle path, compile status, and a closed-set `honest_verdict`.
 
+### SCENARIO-PUBLISH-011: Figure 3 Removes Unmeasured Speedup Claim
+
+**Given** Exp 1068 records the measured KV260 FPGA latency
+**When** Figure 3 is rendered
+**Then** the plotted data contains exactly the measured FPGA latency bar
+AND no unmeasured CPU baseline or derived CPU-vs-FPGA speedup annotation is
+rendered.
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -301,3 +319,4 @@ bundle path, compile status, and a closed-set `honest_verdict`.
 | REQ-PUBLISH-008 | Proposed | Exp 1182 paper v5 medium/low fixes ISSUE-11..18 |
 | REQ-PUBLISH-009 | Proposed | Exp 1182 paper numerical-claim audit script |
 | REQ-PUBLISH-010 | Proposed | Exp 1183 paper v5 recompile and arXiv bundle v6 gate artifact |
+| REQ-PUBLISH-011 | Proposed | Exp 1245 fig3 measured-only FPGA latency fix |
