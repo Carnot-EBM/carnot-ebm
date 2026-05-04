@@ -4,6 +4,97 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-05-04 Codex Planning Agent Source Verification (Milestone 2026.04.100)
+
+These items were checked during the `.100` planning turn after reading the
+project context and before finalizing the conductor YAML. Some overlap with
+older entries below; they are repeated here because they directly affect the
+next milestone design.
+
+### DCCD: Draft-Conditioned Constrained Decoding
+- **Paper:** arXiv 2603.03305 (submitted 2026-02-08).
+- **Source:** https://arxiv.org/abs/2603.03305
+- **What:** Generates an unconstrained semantic draft first, then performs
+  constrained decoding conditioned on that draft. The paper frames ordinary
+  constrained decoding as paying a "projection tax" when valid continuations
+  have low model probability, and reports up to +24 percentage points strict
+  structured accuracy over standard constrained decoding.
+- **Relevance to Carnot:** This is the most direct fix for the `.99` certificate
+  blocker after cache/provenance is solved. Carnot should not jump from free-form
+  CoT directly to a grammar-only certificate tail; it should preserve the semantic
+  draft and then constrain the certificate rewrite.
+- **Concrete experiment:** In `exp1285`, compare raw triggered certificate
+  prompting, grammar-only certificate decoding, and DCCD-style draft-conditioned
+  certificate decoding when the selected grammar backend supports it.
+- **When to incorporate:** `.100` Phase 1 certificate rerun.
+
+### NSVIF: Neuro-Symbolic Verification on Instruction Following
+- **Paper:** arXiv 2601.17789 (submitted 2026-01-25); OpenReview ICLR 2026
+  submission page also available.
+- **Sources:** https://arxiv.org/abs/2601.17789 and
+  https://openreview.net/forum?id=RZGs4OAH6g
+- **What:** Models instruction-following verification as a CSP over logical and
+  semantic constraints, with a unified solver and interpretable feedback. The
+  authors also report that verifier feedback improves instruction following
+  without post-training.
+- **Relevance to Carnot:** Carnot's certificate verifier should treat the
+  certificate schema as more than JSON syntax: the answer, claims, equations,
+  evidence references, and original instruction constraints form a single CSP.
+- **Concrete experiment:** In `exp1286`, route parsed certificate claims through
+  an NSVIF-style typed-constraint adapter and emit minimal correction sets when
+  the certificate conflicts with the prompt or final answer.
+- **When to incorporate:** `.100` Phase 1 semantic routing and MCS task.
+
+### Residual Drift / MUS-Repair for Multi-Turn Constraint Reasoning
+- **Paper:** OpenReview ICLR 2026 Workshop LLM Reasoning, "Residual Drift
+  Dominates Contradiction in Multi-Turn Constraint Reasoning" (published
+  2026-03-08; modified 2026-04-25).
+- **Source:** https://openreview.net/forum?id=B9gtT1hhEm
+- **What:** DRIFT-Bench finds that after solver-guided repair, residual failures
+  are mostly satisfiable state drift rather than outright contradiction. Minimal
+  unsatisfiable subset repair is a central protocol.
+- **Relevance to Carnot:** Cactus/HoVer-style acceptance cannot stop at detecting
+  contradiction. Carnot needs a ledger of satisfiable-but-drifting constraints
+  and an MCS/MUS repair hint, especially for multi-turn certificate memory.
+- **Concrete experiment:** In `exp1286`, write both `minimal_correction_sets` and
+  `residual_drift_cases`; in `exp1290`, demote skill-graph entries that repeatedly
+  create residual drift even when local constraints remain satisfiable.
+- **When to incorporate:** `.100` Phase 1 and Phase 2.
+
+### PCC: Probabilistic Certainty and Consistency
+- **Paper:** arXiv 2601.02574 (submitted 2026-01-05).
+- **Source:** https://arxiv.org/abs/2601.02574
+- **What:** Combines probabilistic certainty with reasoning consistency to route
+  claims between direct answer, targeted retrieval, and deeper search. The core
+  result is adaptive verification rather than indiscriminate evidence retrieval.
+- **Relevance to Carnot:** `.100` should report confidence-routing metrics for
+  SOTA certificates: if a certificate is parseable but internally uncertain or
+  inconsistent, it should route to deeper Carnot verification rather than count
+  as a pass.
+- **Concrete experiment:** In `exp1284`, include a `certainty_consistency_score`
+  alongside ARS answer-stability; in `exp1286`, use that score in verifier-route
+  selection.
+- **When to incorporate:** `.100` Phase 1.
+
+### EBT / Extropic / Kona Status Check
+- **Sources:** EBT ICLR 2026 Oral OpenReview page
+  https://openreview.net/forum?id=ZBj3Qp1bYg, Extropic home/software pages
+  https://extropic.ai/, and Kona page
+  https://logicalintelligence.com/kona-ebms-energy-based-models
+- **What:** EBT is now listed as an ICLR 2026 Oral and explicitly frames
+  prediction as energy minimization over candidate predictions. Extropic's public
+  site continues to emphasize XTR-0/X0/Z1 plus THRML for probabilistic software on
+  TSU hardware. Kona continues to present the EBM layer as a non-chatbot verifier
+  that sits beneath AI stacks and enforces constraints.
+- **Relevance to Carnot:** No broad architecture pivot is needed. The external
+  signal supports Carnot's existing split: local open-weight LLMs generate
+  candidate/certificate material; Carnot EBMs score, repair, and learn from
+  verifier feedback; sampler abstractions stay hardware-portable.
+- **Concrete experiment:** Keep `exp1293` as an audit tying Carnot energy traces
+  to EBT/ARM lookahead-energy claims, with Extropic/Kona only as strategic
+  framing rather than implementation dependencies.
+- **When to incorporate:** `.100` Phase 3 bridge audit.
+
 ## 2026-05-04 vNEXT Final Verification Scan (Milestone 2026.04.100 Planning)
 
 ### OnlineSpec / When Drafts Evolve: Speculative Decoding Meets Online Learning
