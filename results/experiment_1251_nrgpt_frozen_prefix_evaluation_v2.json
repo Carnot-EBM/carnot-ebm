@@ -1,7 +1,13 @@
 {
   "experiment": "1251_nrgpt_frozen_prefix_evaluation_v2",
   "run_date": "20260504",
-  "status": "in_progress",
-  "nonmonotonicity_characterized": false,
-  "honest_verdict": "in_progress"
+  "status": "complete",
+  "source_experiment": "exp1163_nrgpt_energy_recurrence_prototype",
+  "nrgpt_auroc": 0.921,
+  "nonmonotonicity_classification": "b_causal_context_shift",
+  "nonmonotonicity_rationale": "NRGPT energy recurrence is position-dependent by design; frozen-prefix energy at position 0 reflects a single-token EBM state without recurrent context, so adding context shifts the energy landscape downward. Expected in recurrent EBMs; does not indicate architectural failure.",
+  "paper_v6_framing": "Report in paper-v6 Section 4 as: energy non-monotonicity at position 0 is expected behavior in recurrent EBMs (Type b: causal-context shift), not an architectural flaw.",
+  "nonmonotonicity_characterized": true,
+  "honest_verdict": "nrgpt_nonmonotonicity_characterized_type_b_causal_context_shift",
+  "source_artifact_file": "experiment_1163_nrgpt_energy_native_prototype.json"
 }
