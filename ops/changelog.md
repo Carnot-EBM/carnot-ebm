@@ -4776,3 +4776,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-04: WOPR Masyu Loop Puzzle Cartridge v2 — Black/White Circle Constraints, E=0 at Valid Loop (⚠️ Research Finding) — honest_verdict=in_progress; results/experiment_1262_wopr_masyu_v2.json
 - 2026-05-04: LLMs Gaming Verifiers Defense v4 — EST Invariance Protocol on k=5 Ensemble (⚠️ Research Finding) — honest_verdict=in_progress; results/experiment_1263_gaming_verifiers_defense_v4.json
 - 2026-05-04: LLMs Gaming Verifiers Defense v4 — EST Invariance Protocol on k=5 Ensemble (⚠️ Research Finding) — honest_verdict=in_progress; results/experiment_1263_gaming_verifiers_defense_v4.json
+- 2026-05-04: Q11 TSS Instrumentation v2 — sign(z) Bottleneck Diagnostics in continuous_ebm.py (⚠️ Research Finding) — honest_verdict=tss_instrumented_corr_0.547_vuln_0.453; results/experiment_1264_q11_tss_instrumentation_v2.json
