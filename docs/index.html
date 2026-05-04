@@ -300,10 +300,10 @@
       <a href="technical-report.html" class="btn btn-secondary">How it works</a>
     </div>
     <div class="stats-bar" aria-label="Project headline numbers">
-      <div class="stat"><div class="stat-num">1,215</div><div class="stat-label">Through Exp 1215</div></div>
-      <div class="stat"><div class="stat-num">104</div><div class="stat-label">Milestones complete</div></div>
-      <div class="stat"><div class="stat-num">21,413</div><div class="stat-label">Python test items</div></div>
-      <div class="stat"><div class="stat-num">13/13</div><div class="stat-label">.94 criteria met</div></div>
+      <div class="stat"><div class="stat-num">1,237</div><div class="stat-label">Through Exp 1237</div></div>
+      <div class="stat"><div class="stat-num">105</div><div class="stat-label">Milestones complete</div></div>
+      <div class="stat"><div class="stat-num">21,572</div><div class="stat-label">Python test items</div></div>
+      <div class="stat"><div class="stat-num">9/13</div><div class="stat-label">.95 criteria met</div></div>
     </div>
   </div>
 </section>
@@ -450,12 +450,11 @@
           failure. The production default now uses a five-verifier
           AND-compose ensemble with SOS-KAN, SemEnergy, AST, semantic
           consistency, and Z3 checks, plus an information-asymmetric MARCH
-          claim-check loop for high-risk responses. The latest GRPO-VPS result
-          shows step-level verifier rewards outperform outcome-only feedback on
-          the .94 evaluation slice. The seventh SC-Energy
-          verifier was regularized after an overfit audit, but the latest
-          k=6 test still did not beat the k=5 default, so k=6 is retired for
-          the production path.
+          claim-check loop for high-risk responses. The latest GRPO-VPS full
+          training run improves 80% &rarr; 95% on its evaluation slice. Phase-5
+          in-situ training now passes its first stability gates, but the Spera
+          orthogonality audit found k_eff&asymp;1 in a k=3 verifier ensemble, so
+          joint verifier diversity is now a paper- and scale-up gate.
         </p>
       </div>
     </div>
@@ -781,10 +780,10 @@
         <div class="r-stats"><span class="r-before">Multiply-free BiKA estimate; NPU verdict feasible</span> <span class="r-after">No accuracy benchmark &mdash; Exp 1174</span></div>
       </div>
       <div class="r-card">
-        <span class="r-tag">WOPR gallery &mdash; Connect Four + Hex + Nonogram</span>
-        <h3 class="r-title">Nonogram shipped with E=0 valid solution</h3>
+        <span class="r-tag">WOPR gallery &mdash; Connect Four + Hex + Nonogram + Futoshiki</span>
+        <h3 class="r-title">Futoshiki shipped with E=0 valid solution</h3>
         <div class="r-meter"><div class="r-bar" style="width: 100%; background: #0ea5e9;"></div></div>
-        <div class="r-stats"><span class="r-before">Connect Four 10 tests; Hex Gibbs beat random 90%; Nonogram random E=26 &rarr; solution E=0</span> <span class="r-after">Exps 1175/1188/1214</span></div>
+        <div class="r-stats"><span class="r-before">Nonogram E=26 &rarr; 0; Futoshiki random E=42, inequality violation E=4, solution E=0</span> <span class="r-after">Exps 1175/1188/1214/1227</span></div>
       </div>
       <div class="r-card">
         <span class="r-tag">Honest negative &mdash; k=6 AND-compose</span>
@@ -829,6 +828,12 @@
         <div class="r-stats"><span class="r-before">Step reward correctness correlation 0.8047 across 50 questions</span> <span class="r-after">Exp 1209</span></div>
       </div>
       <div class="r-card">
+        <span class="r-tag">Self-learning &mdash; GRPO-VPS full training</span>
+        <h3 class="r-title">80% &rarr; 95% accuracy (+15pp)</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 95%; background: #22c55e;"></div></div>
+        <div class="r-stats"><span class="r-before">DualGPU Qwen3.6-35B-A3B; beats v4 +10pp floor</span> <span class="r-after">Exp 1220</span></div>
+      </div>
+      <div class="r-card">
         <span class="r-tag">Self-learning &mdash; GRPO v5 + TinyV</span>
         <h3 class="r-title">Ran on DualGPU, regressed -35pp</h3>
         <div class="r-meter"><div class="r-bar" style="width: 35%; background: #f59e0b;"></div></div>
@@ -845,6 +850,30 @@
         <h3 class="r-title">-19.61pp delta; token coverage bottleneck</h3>
         <div class="r-meter"><div class="r-bar" style="width: 22.06%; background: #f59e0b;"></div></div>
         <div class="r-stats"><span class="r-before">Energy teacher selection accuracy 0.902, but token coverage only 22.06%</span> <span class="r-after">Exp 1213</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Phase 5 &mdash; in-situ training substrate</span>
+        <h3 class="r-title">5/5 gates passed; oracle accuracy held at 1.0</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 100%; background: #22c55e;"></div></div>
+        <div class="r-stats"><span class="r-before">Energy decreased 67.1%; valid action fraction 1.0 in prototype</span> <span class="r-after">Exps 1222/1223</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Verifier audit &mdash; Spera orthogonality warning</span>
+        <h3 class="r-title">k_eff&asymp;1 in k=3; redesign required</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 33%; background: #f59e0b;"></div></div>
+        <div class="r-stats"><span class="r-before">max P(V_i|V_j)=1.000; all attacks not blocked</span> <span class="r-after">Exp 1224</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Phase 3 seed &mdash; Boltzmann-GPT</span>
+        <h3 class="r-title">Random-weight AUROC=0.65; contrastive training pending</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 65%; background: #f59e0b;"></div></div>
+        <div class="r-stats"><span class="r-before">Non-degenerate but below NRGPT 0.920929; Exp 1237 artifact still in progress</span> <span class="r-after">Exps 1226/1237</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Milestone .95 &mdash; latest completed milestone</span>
+        <h3 class="r-title">9/13 criteria met</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 69.2%; background: #f59e0b;"></div></div>
+        <div class="r-stats"><span class="r-before">GRPO-VPS, Phase-5, Boltzmann-GPT seed, Futoshiki shipped</span> <span class="r-after">Exps 1216-1228</span></div>
       </div>
     </div>
 
@@ -887,9 +916,9 @@
       <a href="arxiv-metadata.yaml" class="btn btn-secondary">Submission metadata</a>
     </div>
     <p style="margin-top: 1.5rem; font-size: 0.9rem; color: var(--text-muted);">
-      <em>Latest paper audit status 2026-05-03: 18/18 issues resolved and
+      <em>Latest paper audit status 2026-05-04: 18/18 issues resolved and
       arXiv v8 bundle ready; publication hold remains active pending operator
-      approval.</em>
+      approval and the .96 verifier orthogonality audit.</em>
     </p>
   </div>
 </section>
