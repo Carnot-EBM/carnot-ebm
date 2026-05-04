@@ -4,6 +4,32 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-05-04 Scan Addendum (Milestone 2026.04.99 Planning)
+
+### REASON: Accelerating Probabilistic Logical Reasoning for Scalable Neuro-Symbolic Intelligence
+- **Paper:** arXiv 2601.20784 (January 2026).
+- **Source:** https://arxiv.org/abs/2601.20784
+- **What:** Hardware architecture for probabilistic logical reasoning workloads. The paper identifies symbolic/probabilistic inference as the bottleneck in neuro-symbolic systems and proposes a reconfigurable reasoning fabric, reporting 12-50x speedup and 310-681x energy-efficiency gains over CPU/GPU baselines.
+- **Relevance to Carnot:** This is a close architectural cousin to Carnot's Phase-2/Phase-3 sampler mandate: LLM/GPU handles neural proposal generation, while a dedicated reasoning substrate handles irregular symbolic/probabilistic verification. It strengthens the case that Carnot should keep the sampler/reasoner interface explicit rather than burying verification inside transformer calls.
+- **Concrete experiment:** Future hardware-readiness task: map Carnot verifier terms into REASON-style workload classes (FOL/SAT/probabilistic aggregation), then estimate whether KV260, NPU, TSU, or a REASON-like ASIC is the most natural target per tier.
+- **When to incorporate:** After .99 publication/certificate tasks, unless a hardware-focused milestone opens sooner.
+
+### Audited Skill-Graph Self-Improvement via Verifiable Rewards and Continual Memory
+- **Paper:** arXiv 2512.23760 (December 2025).
+- **Source:** https://arxiv.org/abs/2512.23760
+- **What:** Self-improving agent framework that extracts candidate skills from successful trajectories, normalizes them into explicit interfaces, and promotes them only after verifier-backed replay and contract checks. It emphasizes auditable artifacts instead of opaque parameter-only updates.
+- **Relevance to Carnot:** Directly matches FR-11's self-learning requirement and the project's "energy function is ground truth" rule. Carnot's certificate memory should not only reweight verifiers; it should promote reusable verified constraint skills with replay evidence and rollback criteria.
+- **Concrete experiment:** Extend online certificate memory to emit a small skill graph: each skill records triggering constraint pattern, verifier evidence, replay success rate, and demotion condition. Compare future-case repair or routing accuracy against flat memory.
+- **When to incorporate:** .99 self-learning task as an optional extension if the certificate-memory replay artifact is straightforward; otherwise .100.
+
+### RACE: Joint Evaluation of Answer and Reasoning Consistency for Hallucination Detection
+- **Paper:** arXiv 2506.04832 (June 2025).
+- **Sources:** https://arxiv.org/abs/2506.04832 and https://huggingface.co/papers/2506.04832
+- **What:** Hallucination detection framework for large reasoning models that jointly evaluates answer uncertainty, reasoning trace consistency, semantic alignment, and coherence instead of checking final answers alone.
+- **Relevance to Carnot:** Supports the same design direction as PRIME and GRPO-VPS: final-answer Z3 agreement is insufficient if the derivation is incoherent. RACE gives a lightweight diagnostic for triggered certificates: a certificate tail is useful only if it preserves answer-reasoning alignment.
+- **Concrete experiment:** Add a RACE-style consistency score to the triggered certificate extraction evaluation: parse rate is not enough; measure whether certificate claims align with the free-form reasoning and final answer.
+- **When to incorporate:** .99 triggered certificate extraction task, as a diagnostic field rather than a separate experiment.
+
 ## 2026-05-04 Scan (Milestone 2026.04.99 Planning)
 
 ### FSNet: Feasibility-Seeking Neural Network for Constrained Optimization with Guarantees
