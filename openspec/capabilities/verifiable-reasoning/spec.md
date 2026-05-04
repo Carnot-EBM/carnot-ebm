@@ -17135,3 +17135,48 @@ pairs
 reports both measured AUROC values.
 
 **Spec traces:** REQ-VERIFY-1265, SCENARIO-VERIFY-1265, Exp 1265
+
+## REQ-VERIFY-1272: PRIME Verifier Selection Audit For GRPO
+
+**Summary:** Select the next GRPO verifier weights from measured FoVer and
+certificate evidence before any broad training rerun. The audit follows the
+PRIME premise that useful RLVR verifiers align process error detection with
+final-answer outcomes while avoiding redundant correlated verifier signals.
+
+**Requirements:**
+
+- REQ-VERIFY-1272-1: The workflow SHALL write an in-progress artifact to
+  `results/experiment_1272_prime_verifier_selection_audit.json` before the
+  completed audit is emitted.
+- REQ-VERIFY-1272-2: The workflow SHALL load FoVer corpus v5 labels and SHALL
+  load Exp 1271 certificate output when it exists, recording missing certificate
+  evidence instead of fabricating it.
+- REQ-VERIFY-1272-3: The workflow SHALL evaluate or reconstruct verifier
+  signals for `Z3MathVerifier`, `CausalReasoningVerifier`, `SymCodeVerifier`,
+  available SemEnergy or SOS-KAN signals, and the Exp 1256 k=5 ensemble
+  summary.
+- REQ-VERIFY-1272-4: For each available verifier the workflow SHALL compute
+  `process_error_detection_rate`, `final_answer_agreement`,
+  `answer_reasoning_consistency`, and `pairwise_correlation_penalty`, then
+  normalize these into a non-negative `verifier_weight_vector` whose weights
+  sum to 1.0 when sufficient data exists.
+- REQ-VERIFY-1272-5: When required data is insufficient, the artifact SHALL set
+  `verifier_weight_vector_written=false` and include `missing_fields`.
+  Otherwise it SHALL set `verifier_weight_vector_written=true` and
+  `status="complete"`.
+
+**Implementation Status:** Planned (Exp 1272)
+
+### SCENARIO-VERIFY-1272: PRIME Audit Writes GRPO Weight Vector
+
+**Given** FoVer corpus v5, Exp 1256 verifier orthogonality data, and any Exp
+1271 certificate artifact available in `results/`
+**When** the PRIME verifier selection audit runs with run date `20260504`
+**Then** it writes `results/experiment_1272_prime_verifier_selection_audit.json`
+with the required schema fields
+**And** a sufficient-data run includes a normalized `verifier_weight_vector`
+and `honest_verdict` documenting the selected GRPO weights
+**And** an insufficient-data run records `missing_fields` and does not claim a
+weight vector was written.
+
+**Spec traces:** REQ-VERIFY-1272, SCENARIO-VERIFY-1272, Exp 1272
