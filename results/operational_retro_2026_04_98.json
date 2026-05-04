@@ -1,7 +1,7 @@
 {
   "schema": "carnot.operational_retro.v63",
   "milestone": "2026.04.98",
-  "generated_at": "2026-05-04T13:20:17Z",
+  "generated_at": "2026-05-04T13:35:09Z",
   "retro_type": "operational_complete",
   "status": "success",
   "summary": "Milestone 2026.04.98 improved over .97 in terminal output count, but it remained orchestration-bound rather than compute-bound. The conductor log shows 163 minutes from activation at 2026-05-04T09:55Z to the final retro success at 2026-05-04T12:38Z. Five of thirteen criteria reached completion: exp1256 orthogonality audit, exp1264 Q11 TSS instrumentation, exp1265 DiffuTruth comparison, exp1266 QuantKAN 3-bit measurement, and exp1267 milestone retro. Seven artifacts remained stale status=in_progress, exp1258 was gate-blocked without a result artifact, and both RTX 3090s were idle at closeout with no zombie GPU processes.",
@@ -115,7 +115,7 @@
     "Fail fast on repeated bootstrap/no-file-change failures and emit structured blocked/failed artifacts."
   ],
   "gpu_utilization": {
-    "closeout_timestamp_utc": "2026-05-04T13:21:39.064366+00:00",
+    "closeout_timestamp_utc": "2026-05-04T13:35:09.444893+00:00",
     "gpu_0": {
       "name": "NVIDIA GeForce RTX 3090",
       "used_mb": 4,
@@ -134,7 +134,7 @@
   },
   "zombie_process_assessment": {
     "zombies_detected": false,
-    "basis": "scripts/gpu_monitor.py --json at 2026-05-04T13:21:39.064366+00:00 reported an empty processes list and no warnings; each RTX 3090 held only 4 MB at 0% utilization.",
+    "basis": "scripts/gpu_monitor.py --json at 2026-05-04T13:35:09.444893+00:00 reported an empty processes list and no warnings; each RTX 3090 held only 4 MB at 0% utilization.",
     "note": "There was no evidence of material zombie VRAM waste."
   },
   "preflight_assessment": "Not the .98 bottleneck. The visible checks on successful tasks were focused cache-hit suites of 81 tests taking roughly 4.57s, 7.04s, 4.69s, 7.21s, and 10.03s. The wall time was lost to repeated agent failure loops and orchestration overhead.",
