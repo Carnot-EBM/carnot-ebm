@@ -4722,3 +4722,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-04: Verifier Joint Orthogonality Audit — 6x6 P(V_i|V_j) Matrix on k=6 Production Ensemble (⚠️ Research Finding) — honest_verdict=in_progress; results/experiment_1232_verifier_joint_orthogonality_audit.json
 - 2026-05-04: Verifier Joint Orthogonality Audit — 6x6 P(V_i|V_j) Matrix on k=6 Production Ensemble (⚠️ Research Finding) — honest_verdict=in_progress; results/experiment_1232_verifier_joint_orthogonality_audit.json
 - 2026-05-04: Verifier Joint Orthogonality Audit — 6x6 P(V_i|V_j) Matrix on k=6 Production Ensemble (⚠️ Research Finding) — honest_verdict=in_progress; results/experiment_1232_verifier_joint_orthogonality_audit.json
+- 2026-05-04: Verifier Joint Orthogonality Audit (v4 data archaeology) — 6x6 P(V_i|V_j) from prior artifacts (⚠️ Research Finding) — honest_verdict=in_progress; results/experiment_1232_verifier_joint_orthogonality_audit.json
