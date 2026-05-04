@@ -592,3 +592,4 @@ If you finish the real work |
 | 2026-05-04 04:04 UTC | NRGPT Frozen-Prefix Evaluation — Resolve Non-Monot | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1239_nrgpt_f |
 | 2026-05-04 04:08 UTC | NRGPT Frozen-Prefix Evaluation — Resolve Non-Monot | FAIL | No file changes produced |
 | 2026-05-04 04:11 UTC | WOPR Kakuro Puzzle Cartridge — Integer Row/Column  | DOOMED_RERUN_BLOCK | 10 prior failure(s) match this task's scope but prior_failures field is missing  |
+| 2026-05-04 04:13 UTC | WOPR Kakuro Puzzle Cartridge — Integer Row/Column  | DOOMED_RERUN_BLOCK | 10 prior failure(s) match this task's scope but prior_failures field is missing  |
