@@ -4834,3 +4834,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-04: HardNet++ Nonlinear Repair Benchmark - FSNet/SnareNet Follow-Up (✅ Complete) — honest_verdict=hardnetpp_nonlinear_repair_viable; results/experiment_1291_hardnetpp_nonlinear_repair_benchmark.json
 - 2026-05-04: DSP Feasibility-Channel Diagnostic - Predict When Repair Helps (⚠️ Research Finding) — honest_verdict=feasibility_channel_predictive_marginal; results/experiment_1292_dsp_feasibility_channel_diagnostic.json
 - 2026-05-04: DSP Feasibility-Channel Diagnostic - Predict When Repair Helps (⚠️ Research Finding) — honest_verdict=feasibility_channel_predictive_marginal; results/experiment_1292_dsp_feasibility_channel_diagnostic.json
+- 2026-05-04: DSP Feasibility-Channel Diagnostic - Predict When Repair Helps (⚠️ Research Finding) — honest_verdict=feasibility_channel_predictive_marginal; results/experiment_1292_dsp_feasibility_channel_diagnostic.json
