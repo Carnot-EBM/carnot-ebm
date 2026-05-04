@@ -1,17 +1,16 @@
 {
   "schema": "carnot.operational_retro.v63",
   "milestone": "2026.04.99",
-  "generated_at": "2026-05-04T17:32:26.600802Z",
-  "finalized_at": "2026-05-04T17:35:00Z",
-  "retro_type": "operational_complete",
+  "generated_at": "2026-05-04T17:52:13.322506Z",
+  "finalized_at": "2026-05-04T17:52:13.322506Z",
   "status": "success",
-  "summary": "Milestone 2026.04.99 closeout was short and mostly orchestration-bound: the supplied timing slice was 10 minutes for 2 completed items, averaging 5 minutes each. The slowest item was exp1270 arXiv Bundle v10 at 10 minutes, gated on exp1269 Paper-v6 Critical Fixes v2. The docs pass was effectively zero additional wall time. Both RTX 3090s were idle at closeout with 4 MB allocated and 0% utilization, and gpu_monitor.py reported no GPU processes or warnings. Pre-flight checks were seconds-scale, not the bottleneck. The highest-leverage improvements for the next milestone are parallel CPU/GPU lanes, cached TeX/pre-flight paths, structured gate/compile timing, and batched docs reconciliation.",
+  "retro_type": "operational_final",
+  "summary": "Milestone 2026.04.99 closed in a 10 minute operational slice with 2 completed items, averaging 5 minutes each. The only material slow item was the arXiv Bundle v10 closeout, which consumed the full 10 minutes because it was serialized behind Exp 1269 critical paper fixes and then had to compile/package the TeX bundle. GPUs were idle with no GPU processes, so there was no zombie-process waste, but the milestone still left parallel GPU capacity unused for any independent GPU-eligible work.",
   "scope_note": "This artifact follows the user-supplied operational closeout timing block: 10 minutes total wall time, 2 completed experiments. It does not reinterpret the full 2026.04.99 conductor activation window.",
-  "analysis_scope": "Supplied operational timing block for the .99 closeout slice, cross-checked against ops/metrics.md, ops/changelog.md, ops/conductor-log.md, scripts/gpu_monitor.py --json, and .99 result artifacts.",
+  "analysis_scope": "Supplied operational timing block for the .99 closeout slice, cross-checked against ops/metrics.md, ops/changelog.md, scripts/gpu_monitor.py --json, and .99 result artifacts.",
   "total_wall_time_minutes": 10,
   "total_wall_time_hours": 0.2,
   "total_wall_time_minutes_confidence": "user_supplied",
-  "wall_time_basis": "Prompt timing data: total milestone wall time 10 minutes, 2 experiments completed, 5 minutes average. Conductor rows confirm exp1269 and exp1270 reached OK with focused 81-test checks in 8.24s and 7.89s respectively.",
   "planned_experiment_range": "1268-1281",
   "experiments_completed": 2,
   "experiments_completed_list": [
@@ -19,110 +18,140 @@
     "exp1270"
   ],
   "average_minutes_per_experiment": 5,
-  "closeout_items_analyzed": [
-    "exp1270 arXiv Bundle v10 - Gated on Exp 1269 Critical Fixes",
-    "in-process docs for exp1270"
-  ],
   "milestone_retro_context": {
     "source_artifact": "results/experiment_1281_milestone_retro_99.json",
     "criteria_met": 12,
     "criteria_total": 14,
-    "note": "This is research-criteria context only. The operational metrics in this artifact use the supplied 10-minute timing slice."
+    "note": "This is research-criteria context only. The operational metrics in this artifact use the supplied 10 minute timing slice."
   },
   "roadmap_update": {
     "completed_milestone_row_present": true,
     "path": "docs/roadmap.md",
-    "line": 99,
     "note": "The 2026.04.99 Completed Milestones row was already present and was left unduplicated."
   },
   "slowest_experiments": [
     {
       "rank": 1,
-      "experiment": "exp1270",
-      "title": "arXiv Bundle v10 - Gated on Exp 1269 Critical Fixes",
       "duration_minutes": 10,
-      "status": "complete",
-      "duration_basis": "User-supplied timing block; conductor row at 2026-05-04 14:25 UTC reported OK with 81 tests passing in 7.89s.",
-      "why_long": "This was the critical-path bundle step after exp1269 fixed the paper-critical claims. The artifact shows tectonic compiled main.tex, wrote docs/arxiv-paper/main.pdf, and produced results/carnot-arxiv-v10-20260504.tar.gz; upload remained pending.",
-      "parallelizable": false
+      "experiment": "exp1270",
+      "label": "arXiv Bundle v10 - Gated on Exp 1269 Critical Fixes",
+      "why_slow": "Serialized behind paper-critical fixes, then spent the closeout window on TeX compilation and bundle packaging. The artifact compiled successfully, but upload remained pending."
     },
     {
       "rank": 2,
-      "experiment": "inline_docs_exp1270",
-      "title": "In-process docs for arXiv Bundle v10",
       "duration_minutes": 0,
-      "status": "complete",
-      "duration_basis": "User-supplied timing block.",
-      "why_long": "The prompt reports 0 minutes, so this was not a material slow item in the closeout slice. It is included because the supplied timing block listed only two completed items.",
-      "parallelizable": true
+      "experiment": "inline_docs",
+      "label": "In-process docs for arXiv Bundle v10",
+      "why_slow": "No material runtime in the supplied timing data; docs reconciliation was effectively instantaneous for this closeout slice."
     }
   ],
   "bottlenecks_identified": [
-    "The closeout lane was gated by sequencing: exp1270 could not run until exp1269 critical paper fixes were complete.",
-    "GPU utilization was inefficient for the overall milestone posture. Both RTX 3090s were idle at closeout, with 4 MB allocated and 0% utilization on each card.",
-    "No GPU zombie processes were detected. The process list was empty and the 4 MB allocations were negligible driver/context residue, not material leaked VRAM.",
-    "The scheduler remained passive with respect to idle GPU capacity. gpu_monitor.py produced useful suggestions, but those suggestions did not automatically launch or reprioritize DualGPU work.",
-    "Pre-flight was not the bottleneck in this slice: conductor rows for exp1269 and exp1270 showed 81 tests passing in 8.24s and 7.89s.",
-    "Doc reconciliation was efficient in this closeout slice because it reported 0 minutes, but recurring milestone history shows inline docs can become a critical-path bottleneck when not batched.",
-    "The arXiv bundle step mixed gate validation, TeX compilation, artifact packaging, and upload-status reporting in one operational slot, making the 10 minutes hard to attribute.",
-    "The operational telemetry did not split wall time into gate wait, pre-flight, compile, packaging, and docs components, limiting precision for the next retro."
+    "The publication path was serial: Exp 1270 could only run after Exp 1269 fixed all five critical paper issues.",
+    "TeX compilation and arXiv packaging were on the critical path instead of being pre-warmed or cached before the gated handoff.",
+    "Both RTX 3090s were idle at closeout, so no DualGPURunner parallel lane was used for independent GPU-eligible work.",
+    "The milestone had no zombie GPU processes, but the 4 MB residual allocations plus 0% utilization show idle driver state that should be cleaned before heavy runs when practical.",
+    "Structured timing remains too coarse: the supplied data distinguishes only the 10 minute gated bundle and 0 minute docs pass, not gate-check, compile, packaging, or upload sub-steps.",
+    "Manual/external arXiv upload remained pending after bundle creation, leaving publication completion outside the automated closeout path."
   ],
-  "improvements_suggested": [
-    "Adopt a default parallel milestone schedule with separate paper/docs, CPU micro-task, and GPU lanes.",
-    "Use DualGPURunner automatically when both GPUs are idle and any queued task can run Qwen on GPU 0 and Gemma on GPU 1.",
-    "Promote gpu_monitor.py from passive reporting to scheduler input: idle GPUs should either trigger eligible GPU work or write an explicit no-GPU-work reason.",
-    "Keep TeX dependencies warm and cache the arXiv bundle build path so exp1270-style compiles do not spend time downloading fonts or repeated tooling state.",
-    "Split arXiv bundle telemetry into gate_wait_seconds, preflight_seconds, compile_seconds, package_seconds, and upload_blocker fields.",
-    "Batch docs reconciliation after terminal artifacts exist, and keep roadmap/changelog updates out of the experiment critical path when possible.",
-    "Preserve the focused pre-flight target that runs 81 tests in under 10 seconds; do not fall back to broad suite execution for paper/docs-only changes.",
-    "Emit structured blocked artifacts for upload-pending states so publication lanes are terminal even when an external browser/manual upload remains.",
-    "Add a next-milestone startup check that kills only material zombies under gpu_monitor.py thresholds and ignores harmless 4 MB residual allocations.",
-    "Record per-experiment GPU telemetry for every GPU-eligible task: first allocation timestamp, peak VRAM, average utilization, closeout utilization, and process list."
-  ],
-  "estimated_time_savings_pct": 30,
-  "estimated_time_savings_rationale": "A 30% saving is realistic for the next similar closeout: roughly 10-12% from running independent CPU/docs work while paper gates resolve, 8-10% from cached TeX/pre-flight paths, 5-8% from active GPU-lane scheduling instead of idle DualGPU capacity, and 3-5% from batched docs reconciliation plus structured timing fields.",
-  "top_3_highest_leverage_actions": [
-    "Run a three-lane scheduler: paper/docs lane, CPU micro-task lane, and GPU/DualGPU lane.",
-    "Cache and instrument the arXiv bundle path so compile/package/upload blockers are measured separately.",
-    "Make gpu_monitor.py actionable by feeding idle/zombie state into dispatch decisions before the next task launches."
+  "non_bottlenecks_observed": [
+    "GPU zombies were not a bottleneck: gpu_monitor.py reported an empty process list and no warnings.",
+    "Pre-flight was not a material bottleneck for this closeout: available ops logs record focused pre-flight checks passing in seconds-scale runs, not minutes-scale queue stalls.",
+    "Doc reconciliation was efficient in the supplied timing data: the in-process docs item reported 0 minutes."
   ],
   "gpu_utilization": {
-    "provided_monitor_report_timestamp_utc": "2026-05-04T17:32:05.759641+00:00",
-    "verified_monitor_report_timestamp_utc": "2026-05-04T17:33:26.505850+00:00",
-    "gpu_0": {
-      "name": "NVIDIA GeForce RTX 3090",
-      "used_mb": 4,
-      "total_mb": 24576,
-      "utilization_pct": 0,
-      "temperature_c": 51
-    },
-    "gpu_1": {
-      "name": "NVIDIA GeForce RTX 3090",
-      "used_mb": 4,
-      "total_mb": 24576,
-      "utilization_pct": 0,
-      "temperature_c": 54
-    },
-    "assessment": "Inefficient from a throughput perspective. Both GPUs were idle at closeout, so the milestone was not compute-bound. If any GPU-eligible experiments were ready, they should have run concurrently via DualGPURunner."
+    "efficient": false,
+    "gpu_count": 2,
+    "snapshot_timestamp": "2026-05-04T17:52:13.322506+00:00",
+    "gpus": [
+      {
+        "index": 0,
+        "name": "NVIDIA GeForce RTX 3090",
+        "used_mb": 4,
+        "total_mb": 24576,
+        "utilization_pct": 0,
+        "temperature_c": 52
+      },
+      {
+        "index": 1,
+        "name": "NVIDIA GeForce RTX 3090",
+        "used_mb": 4,
+        "total_mb": 24576,
+        "utilization_pct": 0,
+        "temperature_c": 49
+      }
+    ],
+    "process_count": 0,
+    "zombie_processes_detected": false,
+    "assessment": "No resource leak was wasting material VRAM, but milestone scheduling did not exploit available parallel GPU capacity."
   },
+  "parallelization_assessment": {
+    "could_any_experiments_have_been_parallelized": true,
+    "details": [
+      "Paper/arXiv steps were correctly gated where Exp 1270 depended on Exp 1269, but independent CPU documentation and future GPU-eligible experiments should run in separate lanes.",
+      "For mixed milestones, run Qwen on GPU 0 and Gemma on GPU 1 via DualGPURunner while CPU-only documentation, packaging, and artifact reconciliation proceed asynchronously.",
+      "Gate validation and TeX dependency warming can start before the final paper patch lands, leaving only final compile/package after the gate opens."
+    ]
+  },
+  "preflight_test_suite": {
+    "was_bottleneck": false,
+    "assessment": "Not in this 10 minute closeout. The historical pre-flight suite has been a recurring project bottleneck, but the .99 closeout evidence points to gated publication sequencing and bundle packaging as the limiting path."
+  },
+  "preflight_assessment": "Not a bottleneck for the requested closeout slice. Available .99 closeout evidence points to seconds-scale focused checks rather than pre-flight queue stalls.",
+  "doc_reconciliation": {
+    "efficient": true,
+    "assessment": "The supplied timing data assigns 0 minutes to in-process docs. The next improvement is not raw doc runtime, but batching roadmap/changelog/result reconciliation so it never serializes experiment execution."
+  },
+  "doc_reconciliation_assessment": "Efficient in this specific slice because the supplied docs item reported 0 minutes. The process should still remain batched or asynchronous because prior milestones show serialized docs can dominate the slowest list.",
   "zombie_process_assessment": {
     "zombies_detected": false,
     "processes": [],
-    "basis": "scripts/gpu_monitor.py --json reported an empty processes list and no warnings; each RTX 3090 held only 4 MB at 0% utilization.",
+    "basis": "scripts/gpu_monitor.py --json reported an empty process list and no warnings; each RTX 3090 held only 4 MB at 0% utilization.",
     "note": "There were no material zombie processes wasting GPU resources under gpu_monitor.py's >=1024 MB and idle-time criteria."
   },
-  "preflight_assessment": "Not a bottleneck for the requested closeout slice. exp1269 passed 81 tests in 8.24s and exp1270 passed 81 tests in 7.89s, which is negligible relative to the 10-minute wall time.",
-  "doc_reconciliation_assessment": "Efficient in this specific slice because the supplied docs item reported 0 minutes. The process should still remain batched/asynchronous because earlier milestones show serialized docs can dominate the slowest list.",
-  "parallelization_assessment": "exp1270 itself was gated on exp1269 and therefore not parallelizable with its prerequisite. The docs pass, GPU monitoring, upload-blocker recording, and any independent CPU/GPU experiments could have run concurrently once terminal artifacts existed.",
-  "question_answers": {
-    "which_experiments_took_longest_and_why": "exp1270 took the longest at 10 minutes because it was the gated arXiv bundle step after exp1269 paper-critical fixes. It performed TeX compilation, PDF generation, tarball packaging, and upload-pending reporting. The only other supplied item, inline docs, reported 0 minutes.",
-    "was_gpu_utilization_efficient": "No. Both RTX 3090s were idle at closeout with only 4 MB allocated and 0% utilization, so GPU capacity was not used in parallel.",
-    "were_there_zombie_processes": "No. gpu_monitor.py reported no GPU processes and no warnings; the 4 MB allocations are below the zombie threshold and not material waste.",
-    "were_there_zombie_processes_wasting_resources": "No. gpu_monitor.py reported no GPU processes and no warnings; the 4 MB allocations are below the zombie threshold and not material waste.",
-    "could_any_experiments_have_been_parallelized": "Yes. The exp1269-to-exp1270 dependency was serial, but docs reconciliation, GPU health checks, upload-blocker recording, and independent CPU/GPU tasks could have run in parallel lanes.",
-    "was_the_pre_flight_test_suite_a_bottleneck": "No. The relevant focused pre-flight checks were seconds-scale: 81 tests in 8.24s and 7.89s.",
-    "were_doc_reconciliation_passes_efficient": "For this slice, yes: the supplied docs item took 0 minutes. The broader process still needs batching because prior milestones repeatedly showed inline docs as a slowest-list item.",
-    "what_tooling_would_speed_up_the_next_milestone": "GPU-aware parallel dispatch, DualGPURunner defaults, cached TeX/pre-flight state, structured timing fields, terminal blocked artifacts for upload-pending states, and batched changelog/roadmap reconciliation."
+  "improvements_suggested": [
+    "Pre-warm TeX dependencies and cache successful compile artifacts before the gated arXiv bundle step.",
+    "Split milestones into explicit CPU-doc, CPU-artifact, and GPU-inference lanes so idle GPUs are filled whenever independent GPU work exists.",
+    "Make DualGPURunner the default for paired SOTA GGUF experiments: Qwen on GPU 0 and Gemma on GPU 1.",
+    "Add structured per-stage timing fields to conductor artifacts: gate_check_s, preflight_s, implementation_s, compile_s, packaging_s, docs_s, and upload_s.",
+    "Emit terminal blocked or gated artifacts for manual/external actions such as arXiv upload pending, so closeout does not depend on prose-only status.",
+    "Batch changelog, roadmap, status, and result reconciliation at phase boundaries instead of after every small operational step.",
+    "Run gpu_monitor.py before launch and at closeout, and only kill processes above the existing zombie threshold to avoid treating 4 MB driver residuals as material leaks."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add conductor per-stage timing and gate-open timestamps so future retros can identify whether gating, compile, tests, or docs consumed the wall time.",
+    "Pre-warm and cache TeX/arXiv bundle dependencies before paper-fix gates open, leaving only final compile/package on the critical path.",
+    "Schedule independent GPU-eligible tasks through DualGPURunner by default while publication/docs tasks run on CPU lanes."
+  ],
+  "estimated_time_savings_pct": 30,
+  "estimated_next_milestone_time_savings_minutes_if_same_scope": 3,
+  "estimated_time_savings_rationale": "A 30% saving is realistic for the next similar closeout: pre-warming TeX and gate checks can remove part of the 10 minute publication critical path, parallel CPU/GPU lanes can use otherwise idle hardware, and batched reconciliation can keep docs out of the critical path.",
+  "answers": {
+    "which_experiments_took_longest_and_why": "Exp 1270, arXiv Bundle v10, took 10 minutes because it was gated on Exp 1269 critical fixes and then performed compile/package closeout. The in-process docs item was 0 minutes.",
+    "was_gpu_utilization_efficient": "No. Both GPUs were idle at 0% utilization with only 4 MB allocated each. That did not waste material resources, but it missed a parallel execution opportunity for independent GPU-eligible work.",
+    "were_there_zombie_processes_wasting_resources": "No. gpu_monitor.py reported no GPU processes, no warnings, and only residual 4 MB allocations per GPU.",
+    "could_any_experiments_have_been_parallelized": "Yes for independent lanes. The arXiv bundle itself was legitimately gated, but docs, pre-warming, artifact validation, and unrelated GPU tasks could run in parallel.",
+    "was_preflight_a_bottleneck": "No. Available .99 closeout evidence points to seconds-scale focused checks, not pre-flight queue stalls.",
+    "were_doc_reconciliation_passes_efficient": "Yes in this slice: the supplied docs item was 0 minutes. The remaining opportunity is batching reconciliation so it never becomes a critical-path task again.",
+    "what_tooling_would_speed_next_milestone": "DualGPURunner-by-default scheduling, TeX/cache pre-warming, structured conductor timing, terminal gate-block artifacts, and batched ops-doc reconciliation."
   },
-  "meta_reflection": "The closeout was fast once the paper-critical gate was satisfied, but it still left obvious parallel capacity unused. The next milestone should treat idle GPUs and docs reconciliation as scheduling signals, not passive after-the-fact observations."
+  "question_answers": {
+    "which_experiments_took_longest_and_why": "Exp 1270, arXiv Bundle v10, took 10 minutes because it was gated on Exp 1269 critical fixes and then performed compile/package closeout. The in-process docs item was 0 minutes.",
+    "was_gpu_utilization_efficient": "No. Both GPUs were idle at 0% utilization with only 4 MB allocated each. That did not waste material resources, but it missed a parallel execution opportunity for independent GPU-eligible work.",
+    "were_there_zombie_processes": "No. gpu_monitor.py reported no GPU processes, no warnings, and only residual 4 MB allocations per GPU.",
+    "were_there_zombie_processes_wasting_resources": "No. gpu_monitor.py reported no GPU processes, no warnings, and only residual 4 MB allocations per GPU.",
+    "could_any_experiments_have_been_parallelized": "Yes for independent lanes. The arXiv bundle itself was legitimately gated, but docs, pre-warming, artifact validation, and unrelated GPU tasks could run in parallel.",
+    "was_the_pre_flight_test_suite_a_bottleneck": "No. Available .99 closeout evidence points to seconds-scale focused checks, not pre-flight queue stalls.",
+    "were_doc_reconciliation_passes_efficient": "Yes in this slice: the supplied docs item was 0 minutes. The remaining opportunity is batching reconciliation so it never becomes a critical-path task again.",
+    "what_tooling_would_speed_up_the_next_milestone": "DualGPURunner-by-default scheduling, TeX/cache pre-warming, structured conductor timing, terminal gate-block artifacts, and batched ops-doc reconciliation."
+  },
+  "data_sources": [
+    "User-supplied timing block for milestone 2026.04.99",
+    "ops/metrics.md",
+    "ops/changelog.md",
+    "scripts/gpu_monitor.py --json at 2026-05-04T17:52:13.322506+00:00",
+    "results/experiment_1269_paper_v6_critical_fixes_v2.json",
+    "results/experiment_1270_arxiv_bundle_v10_gated.json",
+    "results/experiment_1281_milestone_retro_99.json"
+  ],
+  "meta_reflection": "This milestone was short and mostly publication-gated, so the retrospective signal is about critical-path hygiene rather than model throughput. The largest avoidable loss is not a failed experiment; it is leaving setup, timing instrumentation, and parallel lane scheduling implicit."
 }
