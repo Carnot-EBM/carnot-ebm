@@ -655,6 +655,38 @@ Defense passes if `joint_gaming_rate < 0.05`.
     "partial_attack_success_revision_needed",
     "full_gaming_found_architecture_invalid", "blocked"}`
 
+### REQ-KONA-019: Boltzmann-GPT Contrastive Training on FoVer
+
+The Exp 1237 Boltzmann-GPT training run MUST train a visible-hidden
+Boltzmann-GPT energy layer on FoVer correct/incorrect traces with contrastive
+divergence loss `E_correct.mean() - E_incorrect.mean()`. The run MUST use a
+deterministic 80/20 train/test split, train for 10 epochs with Adam
+(`lr=1e-3`, `batch_size=16`), save a PyTorch checkpoint, and evaluate held-out
+AUROC with `roc_auc_score(labels, -energies)` so lower energy means a trace is
+more likely correct.
+
+The artifact MUST include `n_training_epochs`, `n_train_samples`,
+`n_test_samples`, `boltzmann_gpt_contrastive_auroc`,
+`nrgpt_auroc_baseline`, `boltzmann_gpt_beats_seed`,
+`boltzmann_gpt_above_0p80`, `checkpoint_path`, and `honest_verdict`.
+
+**Rationale:** Exp 1226 showed that random Boltzmann-GPT weights have
+non-degenerate FoVer signal but remain below NRGPT. Exp 1237 checks whether the
+energy-gap training signal is enough to move the architecture above the 0.80
+AUROC threshold.
+
+**Acceptance criteria:**
+
+- `python/carnot/phase3/boltzmann_gpt.py` exposes a trainable
+  `BoltzmannGPTLayer` and contrastive training helpers that lower correct-trace
+  energy relative to incorrect-trace energy on separable FoVer rows.
+- `python/carnot/data/fover.py` exposes `FoVerDataset`, whose labels are binary
+  with `1` for correct and `0` for incorrect traces.
+- Running Exp 1237 writes
+  `results/experiment_1237_boltzmann_gpt_contrastive_training.json` and
+  `python/carnot/phase3/boltzmann_gpt_cd_v1.pt`, with the honest verdict
+  derived only from the measured held-out AUROC.
+
 ## Scenarios
 
 ### SCENARIO-KONA-001: Stage 1 Primitive — RDT Fixed-Point Convergence
@@ -875,6 +907,20 @@ boolean count.
 
 **Spec traces:** REQ-KONA-017
 
+### SCENARIO-KONA-019: Exp 1237 Writes Boltzmann-GPT CD Artifact
+
+**Given** FoVer correct and incorrect traces are available from the checked-in
+FoVer corpus or an explicit dataset path
+**When** Exp 1237 trains the Boltzmann-GPT layer with contrastive divergence for
+10 epochs and evaluates the held-out 20% split
+**Then** it writes the required REQ-KONA-019 artifact fields, saves the
+checkpoint, and sets `honest_verdict` to
+`contrastive_auroc_above_0p80`,
+`contrastive_auroc_improved_below_threshold`, `training_diverged`, or
+`blocked` according to the measured result.
+
+**Spec traces:** REQ-KONA-019
+
 ## Out of scope
 
 The following are deliberately **not** required by this capability:
@@ -921,6 +967,8 @@ The following are deliberately **not** required by this capability:
 - **NRGPT per-token energy inference:** specified by REQ-KONA-014; implementation
   lives in `python/carnot/phase3/nrgpt_energy.py` and
   `scripts/experiment_1172_nrgpt_per_token_energy_inference.py`.
+- **Boltzmann-GPT contrastive training:** specified by REQ-KONA-019;
+  implementation lives in `python/carnot/phase3/boltzmann_gpt.py`.
 
 First concrete next experiment:
 `experiment_XXX_rdt_primitive_convergence.py` — implement the RDT scaffold and
