@@ -1311,6 +1311,70 @@ honest map of where one ends and the next begins. The .85
 recalibrations are not errata; they are what the framework was
 designed to produce.
 
+\section*{Code, Data, and Experiment Reproducibility}
+\label{sec:availability}
+
+The Carnot framework is open source and developed in public.
+Throughout this paper we cite specific experiments by ID
+(\textit{e.g.}, \texttt{exp1093}, \texttt{exp1094}, \texttt{exp1099},
+\texttt{exp1100}, \texttt{exp1118}, \texttt{exp1120}, \texttt{exp1129},
+\texttt{exp1130}, \texttt{exp1224}, \texttt{exp1232}). Each
+experiment's full artifact --- script, configuration, raw outputs,
+honest verdict, and reconciliation log --- is committed to the
+project repository at the canonical path
+\path{results/experiment_NNNN_<slug>.json} alongside its corresponding
+runnable script in \path{scripts/experiment_NNNN_*.py}. Readers
+seeking to verify any numerical claim, regenerate a figure, or audit
+the disposition of an experimental run can resolve any \texttt{expNNNN}
+reference in this paper directly to the matching artifact in the
+repository.
+
+\paragraph{Primary repository.}
+\url{https://github.com/ianblenke/carnot} is the project's primary
+git remote, mirrored to a Carnot-controlled gitea instance for
+distribution sovereignty (per the decentralization design constraints
+discussed in Section~\ref{sec:decentralization}).
+
+\paragraph{Trained model weights and datasets.}
+Trained energy-based-model weights and curated FoVer-class corpora
+referenced in this paper are published to
+\url{https://huggingface.co/Carnot-EBM} with mirrored hashes in the
+project repository.
+
+\paragraph{Experiment provenance protocol.}
+Every \texttt{expNNNN} reference in this paper resolves to:
+\begin{enumerate}
+  \item \path{results/experiment_NNNN_<slug>.json} --- the deliverable
+    artifact (run timestamp, honest\_verdict, status, all reported
+    numbers, schema version)
+  \item \path{scripts/experiment_NNNN_<slug>.py} --- the runnable
+    script (exists for experiments produced by the autonomous
+    research conductor)
+  \item \path{ops/changelog.md} --- single-line entry per experiment
+    completion linking to the artifact and verdict
+  \item Git commit history under \path{results/} --- full provenance
+    of every artifact change (the conductor commits each experiment's
+    in-process docs and final reconciliation as separate atomic
+    commits with co-author attribution)
+\end{enumerate}
+
+\paragraph{Honest-verdict disclosure.}
+The \texttt{honest\_verdict} field on every artifact is the canonical
+record of what the experiment actually demonstrated, including
+research-finding, partial, blocked, and failed verdicts. Numerical
+claims in this paper are anchored to the corresponding artifact's
+verdict; readers should treat any discrepancy between the paper text
+and the on-disk artifact as authoritative for the artifact and a bug
+in the paper.
+
+\paragraph{Reproducibility status.}
+The headline empirical claims in Section~\ref{sec:empirical} are
+reproducible from the linked artifacts plus standard Carnot setup
+(see \path{CLAUDE.md} and \path{README.md} in the repository).
+GPU-bound results require the dual RTX 3090 rig configuration
+documented in \path{_bmad/architecture.md}; CPU-only fallback paths
+are documented per-experiment where applicable.
+
 \bibliographystyle{plain}
 \bibliography{carnot}
 
