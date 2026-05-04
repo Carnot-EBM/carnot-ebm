@@ -210,8 +210,9 @@ Phase 3 experiments MUST populate the `honest_verdict` schema field with one of:
 `sampler_kl_above_05_needs_tuning`, `regime_c_langevin_deployed`,
 `phase4_better_than_baseline`, `phase4_tied_with_baseline`,
 `phase4_worse_than_baseline`, `prototype_only_no_convergence`,
-`diagnostics_partial_pipeline_not_found`, `pipeline_not_found_blocked`, or
-`blocked_*` for dependency failures.
+`diagnostics_partial_pipeline_not_found`, `pipeline_not_found_blocked`,
+`feasibility_step_viable`, `feasibility_step_not_viable`, or `blocked_*` for
+dependency failures.
 
 **Rationale:** Phase 3 is where optimistic claims are most tempting. The
 `honest_verdict` discipline that caught the Phase 1 retractions (the "+64 pp VR",
@@ -936,6 +937,39 @@ mode visible.
 - `results/experiment_1264_q11_tss_instrumentation_v2.json` records the same
   required fields for the first 20 rows from `results/fover_corpus_v5.json`.
 
+### REQ-KONA-027: FSNet-Style Feasibility Step for Continuous EBM States
+
+The Phase 3 `ContinuousEBM` substrate MUST expose a deterministic
+FSNet-style feasibility step for bounded continuous latent states. The step
+minimizes a verifier-style violation energy separately from the EBM task
+energy by using linear inequality constraints `A @ z + b <= 0`, while a small
+anchor term limits state distortion from the input latent.
+
+The Exp 1275 artifact MUST compare raw Langevin states against Langevin states
+repaired by the feasibility step on deterministic synthetic/FoVer-like latent
+states. It MUST report final task energy, violation count, convergence steps,
+state distortion, and diversity for both arms where applicable. The artifact
+MUST include `feasibility_delta_overall`, `energy_delta`, `violation_delta`,
+`distortion_mean`, `feasibility_step_viable`, and `honest_verdict`.
+
+**Rationale:** FSNet makes feasibility seeking an explicit operator rather than
+an incidental side effect of task-energy descent. Carnot needs the same
+separation before Phase 3 can claim an internal repair primitive rather than a
+post-hoc energy measurement.
+
+**Acceptance criteria:**
+
+- `python/carnot/phase3/continuous_ebm.py` exposes `feasibility_step(...)`, which
+  accepts a latent state plus linear violation constraints and returns the
+  repaired state, final violation energy, violation count, convergence steps,
+  distortion from the input state, and convergence status.
+- Focused tests verify that the step reduces violation energy without requiring
+  task-energy gradients, preserves the latent shape and `(-1, 1)` bounds, and
+  reports zero distortion for already-feasible states.
+- `results/experiment_1275_fsnet_feasibility_step_continuous_ebm.json` records
+  the required fields and sets `honest_verdict` from measured deltas, without
+  converting a diversity-collapsing repair into a positive result.
+
 ## Scenarios
 
 ### SCENARIO-KONA-001: Stage 1 Primitive — RDT Fixed-Point Convergence
@@ -1267,6 +1301,21 @@ pairs
 
 **Spec traces:** REQ-KONA-026
 
+### SCENARIO-KONA-027: Exp 1275 Compares Raw Langevin With Feasibility Repair
+
+**Given** a deterministic ContinuousEBM and a deterministic set of FoVer-like
+linear verifier constraints over its latent state
+**When** Exp 1275 runs raw Langevin trajectories and applies
+`feasibility_step(...)` to the same final states
+**Then** it writes
+`results/experiment_1275_fsnet_feasibility_step_continuous_ebm.json` with
+`feasibility_delta_overall`, `energy_delta`, `violation_delta`,
+`distortion_mean`, `feasibility_step_viable`, `honest_verdict`, and per-arm
+energy, violation, convergence, distortion, and diversity measurements derived
+from the same deterministic states.
+
+**Spec traces:** REQ-KONA-027
+
 ## Out of scope
 
 The following are deliberately **not** required by this capability:
@@ -1324,6 +1373,8 @@ The following are deliberately **not** required by this capability:
   implementation lives in `python/carnot/phase3/nrgpt_frozen_prefix_v2.py`.
 - **Q11 TSS sign-bottleneck diagnostic:** specified by REQ-KONA-026;
   implementation lives in `python/carnot/phase3/continuous_ebm.py`.
+- **FSNet-style feasibility step:** specified by REQ-KONA-027; implementation
+  lives in `python/carnot/phase3/continuous_ebm.py`.
 
 First concrete next experiment:
 `experiment_XXX_rdt_primitive_convergence.py` — implement the RDT scaffold and

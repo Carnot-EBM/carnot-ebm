@@ -9,9 +9,11 @@ Spec: REQ-KONA-001, REQ-KONA-002, REQ-KONA-003
 
 from carnot.phase3.continuous_ebm import (
     ContinuousEBM,
+    FeasibilityStepResult,
     build_kona_artifact,
     compare_minima,
     compare_samplers,
+    feasibility_step,
     fit_continuous_ebm,
     sample_continuous,
     sample_energy_matching,
@@ -56,6 +58,7 @@ __all__ = [
     "BoardState",
     "ContinuousEBM",
     "EpisodeResult",
+    "FeasibilityStepResult",
     "NRGPTEnergyBlock",
     "PuzzleSpec",
     "build_active_inference_artifact",
@@ -67,6 +70,7 @@ __all__ = [
     "build_synthetic_action_space",
     "compare_minima",
     "compare_samplers",
+    "feasibility_step",
     "fit_continuous_ebm",
     "infer_latent_dim",
     "run_phase4_vs_baseline",
