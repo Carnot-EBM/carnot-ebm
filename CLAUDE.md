@@ -348,6 +348,68 @@ emitting plans that get coerced. Putting the rule in CLAUDE.md (which
 the planner reads as required input) means the planner respects it at
 design time AND the conductor coerces if it slips. Defense in depth.
 
+## Never Stash — Always Commit-First (MANDATORY)
+
+**Origin:** 2026-05-04 14:30Z incident. The user issued `pull`. The
+working tree had 11 modified + 3 untracked files from in-flight
+conductor work. The reflexive git-developer move (`git stash` →
+`git pull` → `git stash pop`) created a 1-2 second window where the
+working tree was reverted to HEAD. By luck no codex subprocess was
+mid-write during that window, but the operator had previously issued
+the durable directive *"always committing and never reverting so that
+we fail forward and fix any problems rather than lose transient
+assets"* (see `feedback_outer_loop_role.md` memory). The git-stash
+reflex is so ingrained from years of normal git use that it bypassed
+the abstract "never revert" memory directive.
+
+**The rule.** When the working tree is dirty and a pull is needed,
+**NEVER use `git stash`.** Commit-first instead:
+
+```bash
+git add -A && git commit --no-verify \
+  -m "[outer-loop] preserve transient state before pull"
+git pull --rebase
+```
+
+Or use the helper script:
+
+```bash
+scripts/safe-pull.sh
+```
+
+**Why this matters.** While the conductor is running, codex / claude
+subprocesses may hold open file handles to artifacts in `results/`,
+`docs/`, etc. A `git stash` reverts those files in the working tree
+between the stash and the pop. If a subprocess writes during that
+window, the write either:
+
+- Goes to a file that no longer exists in the working tree (silent
+  data loss when stash pop overwrites with the stashed version), OR
+- Creates a new file that conflicts with the stash pop.
+
+Commit-first never has this risk because the working tree is never
+reverted; the in-flight changes are simply preserved as a commit.
+
+**Operational equivalence.** A "[outer-loop] preserve transient
+state" commit costs nothing — the conductor already commits transient
+state on every iteration. An extra outer-loop commit is identical in
+content; it just lands a few seconds earlier than the conductor's
+auto-commit would have.
+
+**When this rule does NOT apply.**
+
+- Truly clean working tree (no modifications) — pull directly.
+- Genuinely separate operator work that should not be committed yet
+  (e.g., debugging an in-flight branch). In that case use a worktree
+  (`git worktree add`) instead of stash, since worktrees don't
+  revert the original working tree.
+
+**How to apply.** If `git pull` returns "cannot pull with rebase: You
+have unstaged changes" — DO NOT REACH FOR STASH. Commit-first. If
+unsure whether the dirty state is conductor work or operator work,
+default to commit-first since the cost is zero and the risk of
+data-loss is non-zero.
+
 ## Phase Prototype + Empirical Validation + Adversarial Check Discipline (MANDATORY)
 
 **Origin:** 2026-04-30 Phase-3 architecture blind-spot audit caught
