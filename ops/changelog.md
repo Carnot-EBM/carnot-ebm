@@ -4739,3 +4739,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-04: Combined Milestone .95 + .96 Retrospective — STEP 0, Ultra-Mechanical Criterion Evaluation (⚠️ Research Finding) — honest_verdict=in_progress; results/experiment_1242_combined_retro_95_96.json
 - 2026-05-04: Combined Milestone .95 + .96 Retrospective — STEP 0, Ultra-Mechanical Criterion Evaluation (⚠️ Research Finding) — honest_verdict=in_progress; results/experiment_1242_combined_retro_95_96.json
 - 2026-05-04: WOPR Kakuro Puzzle Cartridge v2 — Integer Row/Column Sum Constraints, E=0 at Valid Solution (⚠️ Research Finding) — honest_verdict=in_progress; results/experiment_1243_wopr_kakuro_cartridge_v2.json
+- 2026-05-04: WOPR Kakuro Puzzle Cartridge v2 — Integer Row/Column Sum Constraints, E=0 at Valid Solution (⚠️ Research Finding) — honest_verdict=in_progress; results/experiment_1243_wopr_kakuro_cartridge_v2.json
