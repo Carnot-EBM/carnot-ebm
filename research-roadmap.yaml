@@ -1,1646 +1,754 @@
-milestone: 2026.04.98
-milestone_title: "Combined Retro + Orthogonality Audit v3 + arXiv Submit + GRPO v7 + Phase-5-D v3 + WOPR Completion"
+milestone: 2026.04.99
+milestone_title: "Publication Closeout + SOTA Certificates + PRIME Self-Learning + Continuous Repair"
 milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
 tasks:
 
 # ============================================================
-# Phase 0 — Infrastructure (2 tasks, unconditional, skip_pre_test:true, run FIRST)
-# exp1255: Combined Retro .95+.96+.97 — all three retros stale-skeleton in .97.
-# exp1256: Verifier Orthogonality Audit v3 — 8+ failures; new approach: pure data archaeology.
+# Phase 0 - Publication and stale-retro closeout
 # ============================================================
 
-- id: exp1255-combined-retro-95-96-97
-  milestone: 2026.04.98
-  deliverable: results/experiment_1255_combined_retro_95_96_97.json
-  title: "Combined Milestone .95 + .96 + .97 Retrospective — STEP 0, Ultra-Mechanical Criterion Evaluation"
-  agent_type: claude
-  model: opus
-  max_turns: 100
-  estimated_wall_time_min: 25
-  priority: critical
-  requires_gpu: false
-  skip_pre_test: true
-  prior_failures:
-    - experiment_id: exp1242-combined-retro-95-96
-      verdict: in_progress
-      addressed_by: "exp1242 stale skeleton — agent wrote STEP 0 then stopped. This experiment extends scope to include .97 retro as well. Root cause addressed: CONCRETE STEPS provide exact Python one-liners for EVERY criterion check so no judgment is required."
-      retire_if_same_verdict: false
-    - experiment_id: exp1254-milestone-retro-97
-      verdict: in_progress
-      addressed_by: "exp1254 stale skeleton — same root cause as exp1242. Merged into this combined retro."
-      retire_if_same_verdict: false
-    - experiment_id: exp1228-milestone-retro-95
-      verdict: artifact_not_updated_past_bootstrap
-      addressed_by: "exp1228 failed 3x + exp1229 failed 2x in .95/.96. Root cause: agent wrote skeleton then stopped. Fix: ultra-mechanical one-liners provided in CONCRETE STEPS."
-      retire_if_same_verdict: false
-  prompt: |
-    CONTEXT:
-    Milestones .95, .96, and .97 all have stale retro artifacts (in_progress skeleton, never finalized).
-    This experiment closes ALL THREE retros in one ultra-mechanical pass.
-    The combined retro evaluates .97 criteria first (13), then .96 criteria (13), then .95 criteria (13).
-
-    STEP 0 — WRITE SKELETON ARTIFACT IMMEDIATELY (before ANY other action):
-    python3 -c "
-    import json, os; os.makedirs('results', exist_ok=True)
-    d = {'experiment':'1255_combined_retro_95_96_97','schema':'milestone_retro_combined_v2',
-         'run_date':'{date}','status':'in_progress',
-         'criteria_97_met':0,'criteria_97_total':13,
-         'criteria_96_met':0,'criteria_96_total':13,
-         'criteria_95_met':0,'criteria_95_total':13,
-         'retro_complete':False,'honest_verdict':'in_progress'}
-    open('results/experiment_1255_combined_retro_95_96_97.json','w').write(json.dumps(d,indent=2))
-    print('STEP 0 written')
-    " 2>&1
-
-    EXISTING CODE TO READ FIRST:
-    - results/experiment_1242_combined_retro_95_96.json (stale .95+.96 retro)
-    - results/experiment_1254_milestone_retro_97.json (stale .97 retro)
-
-    TASK: Evaluate all three milestones' criteria mechanically using Python one-liners.
-    After each criterion check, update the artifact immediately.
-
-    CONCRETE STEPS FOR .97 CRITERIA (run each command, record True/False):
-
-    Criterion 97.1 — retro_96_complete (exp1241/1242 — check if criteria_96_met is set):
-    python3 -c "import json,os; f='results/experiment_1242_combined_retro_95_96.json'; d=json.load(open(f)) if os.path.exists(f) else {}; print('97.1:', d.get('criteria_96_met',0)>0)" 2>&1
-
-    Criterion 97.2 — kakuro_cartridge_shipped (exp1243):
-    python3 -c "import json,os; f='results/experiment_1243_wopr_kakuro_cartridge_v2.json'; d=json.load(open(f)) if os.path.exists(f) else {}; print('97.2:', d.get('cartridge_shipped',False))" 2>&1
-
-    Criterion 97.3 — orthogonality_matrix_measured (exp1244):
-    python3 -c "import json,os; f='results/experiment_1244_verifier_orthogonality_audit_v2.json'; d=json.load(open(f)) if os.path.exists(f) else {}; print('97.3:', d.get('orthogonality_matrix_computed',False))" 2>&1
-
-    Criterion 97.4 — fig3_fixed (exp1245):
-    python3 -c "import json,os; f='results/experiment_1245_figure_integrity_audit_fig3_fix.json'; d=json.load(open(f)) if os.path.exists(f) else {}; print('97.4:', d.get('fig3_fixed',False))" 2>&1
-
-    Criterion 97.5 — grpo_v7_honest_result (exp1247):
-    python3 -c "import json,os; f='results/experiment_1247_grpo_v7_simplified.json'; d=json.load(open(f)) if os.path.exists(f) else {}; print('97.5:', d.get('honest_verdict','in_progress') not in ['in_progress',''])" 2>&1
-
-    Criterion 97.6 — boltzmann_gpt_cd_auroc_above_0p80 (exp1248):
-    python3 -c "import json,os; f='results/experiment_1248_boltzmann_gpt_cd_training_v2.json'; d=json.load(open(f)) if os.path.exists(f) else {}; v=d.get('post_cd_auroc',0); print('97.6:', float(v)>=0.80 if v else False)" 2>&1
-
-    Criterion 97.7 — gaming_defense_measured (exp1249):
-    python3 -c "import json,os; f='results/experiment_1249_llms_gaming_verifiers_defense_v3.json'; d=json.load(open(f)) if os.path.exists(f) else {}; print('97.7:', d.get('gaming_defense_measured',False))" 2>&1
-
-    Criterion 97.8 — phase5d_gates_passed (exp1250):
-    python3 -c "import json,os; f='results/experiment_1250_phase5d_intermediate_scale_v2.json'; d=json.load(open(f)) if os.path.exists(f) else {}; print('97.8:', d.get('phase5d_gates_passed',0)>=4)" 2>&1
-
-    Criterion 97.9 — nrgpt_nonmonotonicity_classified (exp1251):
-    python3 -c "import json,os; f='results/experiment_1251_nrgpt_frozen_prefix_evaluation_v2.json'; d=json.load(open(f)) if os.path.exists(f) else {}; print('97.9:', d.get('nonmonotonicity_characterized',False))" 2>&1
-
-    Criterion 97.10 — q11_tss_instrumented (exp1252):
-    python3 -c "import json,os; f='results/experiment_1252_q11_tss_instrumentation.json'; d=json.load(open(f)) if os.path.exists(f) else {}; print('97.10:', d.get('honest_verdict','in_progress') not in ['in_progress',''])" 2>&1
-
-    Criterion 97.11 — masyu_cartridge_shipped (exp1253):
-    python3 -c "import json,os; f='results/experiment_1253_wopr_masyu_cartridge.json'; d=json.load(open(f)) if os.path.exists(f) else {}; print('97.11:', d.get('cartridge_shipped',False))" 2>&1
-
-    Criterion 97.12 — retro_97_started (exp1254):
-    python3 -c "import json,os; f='results/experiment_1254_milestone_retro_97.json'; d=json.load(open(f)) if os.path.exists(f) else {}; print('97.12:', os.path.exists(f))" 2>&1
-
-    Criterion 97.13 — retro_97_complete: True once this experiment is finalized.
-    python3 -c "print('97.13: True (this experiment)')" 2>&1
-
-    After running all .97 criterion commands, count True values. Then update artifact:
-    python3 -c "
-    import json
-    f='results/experiment_1255_combined_retro_95_96_97.json'
-    d=json.load(open(f))
-    # Fill in criteria_97_results dict from the outputs above
-    # Count and record
-    # Example: d['criteria_97_results'] = {{'retro_96_complete': False, 'kakuro_cartridge_shipped': False, ...}}
-    # d['criteria_97_met'] = sum(d['criteria_97_results'].values())
-    # Also fill .96 criteria from exp1242 if populated, and .95 criteria from exp1229
-    # For .96: read experiment_1242_combined_retro_95_96.json criteria_96_results if present
-    # For .95: read experiment_1242_combined_retro_95_96.json criteria_95_results if present
-    print('Update artifact with criteria counts')
-    " 2>&1
-
-    FOR .96 CRITERIA: read from exp1242 if populated, otherwise evaluate:
-    python3 -c "
-    import json,os
-    f='results/experiment_1242_combined_retro_95_96.json'
-    d=json.load(open(f)) if os.path.exists(f) else {}
-    print('96 criteria_96_met:', d.get('criteria_96_met', 'NOT_EVALUATED'))
-    print('96 criteria_95_met:', d.get('criteria_95_met', 'NOT_EVALUATED'))
-    " 2>&1
-
-    If .96 criteria not evaluated, run similar one-liners for exp1229-exp1241 artifacts.
-
-    After collecting all results, write the FINAL artifact:
-    python3 -c "
-    import json
-    f='results/experiment_1255_combined_retro_95_96_97.json'
-    d=json.load(open(f))
-    # FILL IN ALL FIELDS:
-    # d['criteria_97_results'] = {{crit: bool, ...}}  # from commands above
-    # d['criteria_96_results'] = {{crit: bool, ...}}
-    # d['criteria_95_results'] = {{crit: bool, ...}}
-    # d['criteria_97_met'] = sum(d['criteria_97_results'].values())
-    # d['criteria_96_met'] = sum(d['criteria_96_results'].values())
-    # d['criteria_95_met'] = sum(d['criteria_95_results'].values())
-    # d['findings_summary'] = '2-3 sentences on what .97 proved and failed'
-    # d['key_carry_forwards'] = ['top 3-5 items for .98']
-    d['retro_complete'] = True
-    d['status'] = 'complete'
-    d['honest_verdict'] = 'milestone_97_N_of_13_criteria_met'  # replace N
-    open(f,'w').write(json.dumps(d,indent=2))
-    print('Final artifact written')
-    " 2>&1
-
-    REQUIRED ARTIFACT FIELDS:
-    - criteria_97_results: dict (13 criteria: true/false each)
-    - criteria_97_met: int
-    - criteria_96_results: dict (13 criteria: true/false each, or inherited from exp1242)
-    - criteria_96_met: int
-    - criteria_95_results: dict (13 criteria: true/false each, or inherited from exp1229)
-    - criteria_95_met: int
-    - findings_summary: str (2-3 sentences: .97 proved Boltzmann-GPT AUROC=0.96, NRGPT Type-B)
-    - key_carry_forwards: list[str] (top 3-5 for .98)
-    - retro_complete: true
-    - honest_verdict: "milestone_97_N_of_13_criteria_met"
-
-    Run: python3 -c "import json; d=json.load(open('results/experiment_1255_combined_retro_95_96_97.json')); print('retro_complete:', d.get('retro_complete')); print('criteria_97_met:', d.get('criteria_97_met'))"
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp1256-verifier-orthogonality-audit-v3
-  milestone: 2026.04.98
-  deliverable: results/experiment_1256_verifier_orthogonality_audit_v3.json
-  title: "Verifier Joint Orthogonality Audit v3 — Pure Data Archaeology from exp1108 (NO pytest, NO imports)"
-  agent_type: claude
-  model: opus
+- id: exp1268-retro-backfill-95-96-97-v2
+  milestone: 2026.04.99
+  deliverable: results/experiment_1268_retro_backfill_95_96_97_v2.json
+  title: "Retro Backfill .95/.96/.97 v2 - Pure JSON Archaeology, Terminal Artifact"
+  agent_type: codex
+  model: gpt-5.5
   max_turns: 20
   estimated_wall_time_min: 15
   priority: critical
   requires_gpu: false
   skip_pre_test: true
   prior_failures:
-    - experiment_id: exp1232-verifier-joint-orthogonality-audit
-      verdict: artifact_not_updated_past_bootstrap
-      addressed_by: "exp1232 failed 7 times. Root cause: tried to run pytest or import carnot modules, hit pre-test failure loop. This attempt uses ZERO imports and ZERO pytest — only json.load() on exp1108 artifact which already has all pairwise r-correlations computed on 500 samples."
-      retire_if_same_verdict: false
-    - experiment_id: exp1244-verifier-orthogonality-audit-v2
+    - experiment_id: exp1255-combined-retro-95-96-97
       verdict: in_progress
-      addressed_by: "exp1244 stale skeleton — same root cause as exp1232. This v3 uses max_turns:20 (not 80) to force the minimal path: STEP 0 + one-liner + done."
+      addressed_by: "exp1255 wrote a stale skeleton only. This retry is pure JSON archaeology with no broad test run, no imports from carnot, and a required terminal artifact write in step 1."
+      retire_if_same_verdict: true
+    - experiment_id: exp1242-combined-retro-95-96
+      verdict: in_progress
+      addressed_by: "exp1242 stale skeleton is included in the same backfill scope; this task reads available result JSONs directly."
+      retire_if_same_verdict: false
+    - experiment_id: exp1254-milestone-retro-97
+      verdict: in_progress
+      addressed_by: "exp1254 stale skeleton is included in the same backfill scope; this task writes a combined terminal artifact."
       retire_if_same_verdict: false
   prompt: |
     CONTEXT:
-    The paper-v6 arXiv submission requires a verifier joint orthogonality matrix to confirm
-    AND-composition is viable (max pairwise r-correlation < 0.5 threshold).
+    Milestone .98 left the combined .95/.96/.97 retro artifact at status=in_progress.
+    This task closes only the bookkeeping gap. It must not run pytest, import Carnot modules,
+    or broaden into paper or experiment implementation work.
 
-    CRITICAL: exp1108 ALREADY computed all pairwise r-correlations for 6 verifiers on 500 samples.
-    The k5_subset_max_r=0.461664 is ALREADY in the artifact. This task just reads that file and
-    formats it. NO pytest. NO carnot imports. NO test suite. JUST json.load() + format + write.
+    Use {project_root} as the project root and {date} as the run date in any artifact metadata.
 
-    STEP 0 — WRITE SKELETON ARTIFACT IMMEDIATELY (first action, before reading anything):
-    python3 -c "
-    import json, os; os.makedirs('results', exist_ok=True)
-    d = {'experiment':'1256_verifier_orthogonality_audit_v3','schema':'orthogonality_audit_v3',
-         'run_date':'{date}','status':'in_progress','orthogonality_matrix_computed':False,
-         'k_eff':None,'max_pairwise_r':None,'honest_verdict':'in_progress'}
-    open('results/experiment_1256_verifier_orthogonality_audit_v3.json','w').write(json.dumps(d,indent=2))
-    print('STEP 0 written')
-    " 2>&1
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_1255_combined_retro_95_96_97.json
+    - results/experiment_1267_milestone_retro_98.json
+    - research-roadmap.yaml
+    - ops/changelog.md
 
-    STEP 1 — Read exp1108 and compute the orthogonality matrix:
-    python3 -c "
-    import json, os
+    TASK:
+    Create a terminal artifact at results/experiment_1268_retro_backfill_95_96_97_v2.json
+    summarizing .95, .96, and .97 criteria from existing JSON artifacts. If a source artifact
+    is missing or stale, record that explicitly instead of trying to repair it.
 
-    # Read the source artifact (already computed on 500 samples)
-    src = json.load(open('results/experiment_1108_ensemble_diversity_v2_and_composition.json'))
+    CONCRETE STEPS:
+    1. Write the terminal artifact directly using only json/os/glob. Include:
+       milestone_ids, source_artifacts_checked, stale_artifacts, criteria_counts_by_milestone,
+       retro_backfill_complete=true, status="complete", honest_verdict.
+    2. For each milestone, count any available criteria result fields from retro artifacts.
+       If the field is absent, record "not_evaluated_from_available_artifacts".
+    3. Include top carry-forwards from exp1267.key_carry_forwards so the next retro has context.
+    4. Verify the artifact is terminal and not in_progress.
 
-    r = src['pairwise_r_correlations']
-    all_verifiers = src['verifier_names']
-    max_r_overall = src['max_pairwise_r_correlation']
-    k5_max_r = src['k5_subset_max_r']  # 0.461664
-    n_examples = src['n_examples_evaluated']
-
-    # k=5 production ensemble (ThinkPRMProbe is Tier 0a, not in AND-composed ensemble)
-    k5 = ['SOSKANEnergyV3','SemEnergyProbe','ASTStructureVerifier','SemanticConsistencyVerifier','Z3MathVerifier']
-
-    # Build pairwise r matrix for k=5 subset
-    matrix = {}
-    for v1 in k5:
-        for v2 in k5:
-            if v1 == v2:
-                matrix[f'{{v1}}|{{v2}}'] = 1.0
-            else:
-                key1 = f'{{v1}} vs {{v2}}'
-                key2 = f'{{v2}} vs {{v1}}'
-                val = r.get(key1, r.get(key2, 0.0))
-                matrix[f'{{v1}}|{{v2}}'] = round(val, 4)
-
-    # k_eff estimate: k / (1 + (k-1)*max_r) — conservative lower bound
-    k = len(k5)
-    k_eff = round(k / (1.0 + (k - 1) * k5_max_r), 2)
-
-    artifact = {
-        'experiment': '1256_verifier_orthogonality_audit_v3',
-        'schema': 'orthogonality_audit_v3',
-        'run_date': '{date}',
-        'status': 'complete',
-        'source_experiment': 'exp1108',
-        'n_examples_evaluated': n_examples,
-        'verifier_names_k5': k5,
-        'pairwise_r_matrix': matrix,
-        'max_pairwise_r_k5': k5_max_r,
-        'max_pairwise_r_overall': max_r_overall,
-        'and_composition_viable_k5': k5_max_r < 0.5,
-        'k_eff_estimate': k_eff,
-        'paper_result': f'k=5 ensemble max_r={{k5_max_r:.4f}} < 0.5 threshold; AND-composition viable; k_eff~{{k_eff}}',
-        'orthogonality_matrix_computed': True,
-        'honest_verdict': f'k5_orthogonality_confirmed_max_r_{{k5_max_r:.3f}}_k_eff_{{k_eff}}'
-    }
-    open('results/experiment_1256_verifier_orthogonality_audit_v3.json','w').write(json.dumps(artifact,indent=2))
-    print('SUCCESS')
-    print('max_r:', k5_max_r, '< 0.5:', k5_max_r < 0.5)
-    print('k_eff:', k_eff)
-    print('and_composition_viable:', k5_max_r < 0.5)
-    " 2>&1
-
-    STEP 2 — Verify the artifact was written correctly:
-    python3 -c "
-    import json
-    d = json.load(open('results/experiment_1256_verifier_orthogonality_audit_v3.json'))
-    print('orthogonality_matrix_computed:', d['orthogonality_matrix_computed'])
-    print('and_composition_viable_k5:', d['and_composition_viable_k5'])
-    print('k_eff_estimate:', d['k_eff_estimate'])
-    print('honest_verdict:', d['honest_verdict'])
-    " 2>&1
-
-    REQUIRED ARTIFACT FIELDS:
-    - orthogonality_matrix_computed: true
-    - and_composition_viable_k5: true (max_r < 0.5)
-    - max_pairwise_r_k5: 0.461664
-    - k_eff_estimate: float (expected ~1.75)
-    - pairwise_r_matrix: dict (5x5 matrix entries)
-    - honest_verdict: "k5_orthogonality_confirmed_max_r_0.462_k_eff_X.XX"
-    - status: "complete"
-
-    Run: python3 -c "import json; d=json.load(open('results/experiment_1256_verifier_orthogonality_audit_v3.json')); print('OK:', d['orthogonality_matrix_computed'], d['and_composition_viable_k5'])"
+    Run: python3 -c "import json; d=json.load(open('results/experiment_1268_retro_backfill_95_96_97_v2.json')); print(d.get('status'), d.get('retro_backfill_complete'), d.get('honest_verdict'))"
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-# ============================================================
-# Phase 1 — Paper Integrity (1 task, unconditional, skip_pre_test:true)
-# exp1257: Fix ISSUE-1 through ISSUE-5 in docs/arxiv-paper/main.tex.
-# ============================================================
-
-- id: exp1257-paper-v6-critical-issues-fix
-  milestone: 2026.04.98
-  deliverable: results/experiment_1257_paper_v6_critical_issues_fix.json
-  title: "Paper-v6 Critical Issues Fix — ISSUE-1 through ISSUE-5 in main.tex (STEP 0 Skeleton)"
-  agent_type: claude
-  model: opus
-  max_turns: 60
+- id: exp1269-paper-v6-critical-fixes-v2
+  milestone: 2026.04.99
+  deliverable: results/experiment_1269_paper_v6_critical_fixes_v2.json
+  title: "Paper-v6 Critical Fixes v2 - Measured Claims Only"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 50
   estimated_wall_time_min: 45
   priority: critical
   requires_gpu: false
   skip_pre_test: true
   prior_failures:
+    - experiment_id: exp1257-paper-v6-critical-issues-fix
+      verdict: in_progress
+      addressed_by: "exp1257 stale skeleton. This retry narrows to five named claims, requires artifact updates after each claim, and cites measured .98 artifacts."
+      retire_if_same_verdict: true
     - experiment_id: exp1245-figure-integrity-audit-fig3-fix
       verdict: in_progress
-      addressed_by: "exp1245 stale skeleton. Root cause: agent wrote STEP 0 then hit max_turns on pre-test loop. skip_pre_test:true added. CONCRETE STEPS now specify exact LaTeX line ranges and minimal replacements for each issue."
+      addressed_by: "exp1245 stale skeleton. This task does not rewrite the whole paper; it edits only unsupported measured-claim text."
       retire_if_same_verdict: false
-    - experiment_id: exp1205-paper-critical-issue-1-5-v3
+    - experiment_id: exp1205-paper-v5-critical-issues-retry-v3
       verdict: in_progress
-      addressed_by: "exp1205 was MISSING — conductor SKIP. skip_pre_test:true now added. This version uses minimal-first strategy: touch only the 5 critical lines, do not rewrite entire sections."
-      retire_if_same_verdict: false
-    - experiment_id: exp1180-paper-critical-issues-1-5
-      verdict: in_progress
-      addressed_by: "exp1180 hit 55-turn limit. max_turns increased to 60 and scope narrowed to surgical minimal fixes."
-      retire_if_same_verdict: false
-    - experiment_id: exp1193-paper-critical-issues-1-5-retry
-      verdict: in_progress
-      addressed_by: "exp1193 was MISSING — SKIP pattern due to pre-test failure. skip_pre_test:true added here."
+      addressed_by: "Earlier paper-fix attempts exceeded budget or skipped pre-tests. This task uses skip_pre_test and a surgical checklist."
       retire_if_same_verdict: false
   prompt: |
     CONTEXT:
-    The arXiv submission is blocked by 5 critical integrity issues in docs/arxiv-paper/main.tex.
-    These must be fixed with MINIMAL, SURGICAL edits — do not rewrite entire sections.
-    Use MINIMAL-FIRST STRATEGY: find the specific claim, replace with an honest version.
+    The .98 retro says paper critical fixes remain the publication blocker.
+    The verifier orthogonality, Q11 TSS, DiffuTruth, and QuantKAN measurements now exist.
+    The paper must cite measured artifacts and remove unsupported speedup/provenance claims.
 
-    STEP 0 — WRITE SKELETON ARTIFACT IMMEDIATELY:
-    python3 -c "
-    import json, os; os.makedirs('results', exist_ok=True)
-    d = {'experiment':'1257_paper_v6_critical_issues_fix','schema':'paper_integrity_v1',
-         'run_date':'{date}','status':'in_progress','critical_issues_fixed':0,
-         'issues_fixed_list':[],'honest_verdict':'in_progress'}
-    open('results/experiment_1257_paper_v6_critical_issues_fix.json','w').write(json.dumps(d,indent=2))
-    print('STEP 0 written')
-    " 2>&1
-
-    EXISTING CODE TO READ FIRST:
-    - docs/arxiv-paper/main.tex (the paper — search for the specific claims below)
-    - results/experiment_1094_kv260_performance_benchmark.json (for ISSUE-3: measured CPU latency)
-    - openspec/change-proposals/paper-v5-integrity-remediation.md (full issue descriptions)
-
-    TASK: Fix each of the 5 critical issues with the minimal possible edit.
-
-    ISSUE-1: fig3 — fabricated CPU baseline
-    The paper shows a 290ms/call CPU baseline for fig3's speedup comparison. This value is
-    NOT a measured result from exp1094 — it is an estimate. Fix: add a footnote or inline
-    caveat: "CPU baseline is order-of-magnitude estimate; measured value at equivalent problem
-    size: see exp1094 results."
-    Minimal fix: grep for "290ms" or "11680" in main.tex and add "(estimated)" or rephrase.
-
-    ISSUE-2: KL=3.07 label
-    The paper describes KL=3.07 as a "bitstream-measured" result. exp1094 uses
-    kl_measurement_mode="software_parallel_glauber_proxy". Fix: change "bitstream-measured"
-    to "software-simulated (Glauber dynamics proxy; bitstream measurement requires FPGA synthesis)".
-
-    ISSUE-3: 15.6x speedup baseline
-    The paper's 15.6x speedup uses CPU_GIBBS_PER_SWEEP_NS = 1000.0 (a hand-typed constant).
-    exp1094's actual measured CPU is ~15,960 ns per sweep. Fix: replace the hand-typed constant
-    reference with the exp1094 measured value, or add a footnote citing the measured value.
-
-    ISSUE-4: 76,130x HumanEval speedup
-    This compares 117μs CPU code vs 8.93s LLM API roundtrip — apples to oranges.
-    Fix: remove this figure from the headline speedup claim. If retained, relabel as
-    "latency reduction vs LLM-API roundtrip (different task class)".
-
-    ISSUE-5: SOSKANEnergyV3 AUROC reconciliation
-    Two AUROC values appear: 0.9902 (exp1120 retrained) and 0.9545 (exp1121 production OOD).
-    Fix: clarify which measurement is which. In-distribution AUROC=0.9902; OOD/production
-    deployment AUROC=0.9545. Add a footnote distinguishing training distribution vs OOD.
-
-    CONCRETE STEPS:
-    1. python3 -c "import json; d=json.load(open('results/experiment_1094_kv260_performance_benchmark.json')); print('exp1094 CPU latency ns:', d.get('cpu_latency_ns_per_sweep','NOT_FOUND'))" 2>&1
-
-    2. grep -n "290ms\|11680\|11,680\|CPU baseline" docs/arxiv-paper/main.tex | head -20 2>&1
-
-    3. grep -n "bitstream.measured\|bitstream-measured\|KL.*3\.07\|3\.07.*KL" docs/arxiv-paper/main.tex | head -10 2>&1
-
-    4. grep -n "1000\.0\|CPU_GIBBS\|15\.6x\|15.6x" docs/arxiv-paper/main.tex | head -10 2>&1
-
-    5. grep -n "76.130\|76,130\|HumanEval.*speedup\|speedup.*HumanEval" docs/arxiv-paper/main.tex | head -10 2>&1
-
-    6. grep -n "0\.9902\|0\.9545\|0.9902\|0.9545\|AUCR\|AUROC.*SOS\|SOS.*AUROC" docs/arxiv-paper/main.tex | head -10 2>&1
-
-    7. [Make minimal targeted edits to main.tex for each issue found. Use sed -i or direct edit.]
-
-    8. Verify fixes:
-    grep -c "estimated\|proxy\|order.of.magnitude\|different task class" docs/arxiv-paper/main.tex 2>&1
-
-    9. Update artifact:
-    python3 -c "
-    import json
-    f='results/experiment_1257_paper_v6_critical_issues_fix.json'
-    d=json.load(open(f))
-    # Fill in which issues were fixed
-    # d['issues_fixed_list'] = ['ISSUE-1','ISSUE-2','ISSUE-3','ISSUE-4','ISSUE-5']
-    # d['critical_issues_fixed'] = len(d['issues_fixed_list'])
-    d['status']='complete'
-    d['honest_verdict']=f'paper_v6_{{d[\"critical_issues_fixed\"]}}_of_5_critical_issues_fixed'
-    open(f,'w').write(json.dumps(d,indent=2))
-    print('Done:', d['honest_verdict'])
-    " 2>&1
-
-    REQUIRED ARTIFACT FIELDS:
-    - critical_issues_fixed: int (target: 5)
-    - issues_fixed_list: list[str] (["ISSUE-1", "ISSUE-2", "ISSUE-3", "ISSUE-4", "ISSUE-5"])
-    - issue_1_fix_applied: bool
-    - issue_2_fix_applied: bool
-    - issue_3_fix_applied: bool
-    - issue_4_fix_applied: bool
-    - issue_5_fix_applied: bool
-    - honest_verdict: "paper_v6_5_of_5_critical_issues_fixed"
-    - status: "complete"
-
-    Run: python3 -c "import json; d=json.load(open('results/experiment_1257_paper_v6_critical_issues_fix.json')); print('issues_fixed:', d.get('critical_issues_fixed'), '/', 5)"
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-# ============================================================
-# Phase 2 — arXiv Submission (1 task, gated on exp1256 AND exp1257)
-# exp1258: Compile paper-v6 PDF, integrate orthogonality heatmap, submit to arXiv.
-# ============================================================
-
-- id: exp1258-arxiv-bundle-v9-submission
-  milestone: 2026.04.98
-  deliverable: results/experiment_1258_arxiv_bundle_v9_submission.json
-  title: "arXiv Bundle v9 + Submission — Orthogonality Heatmap + NRGPT Section + tectonic Compile"
-  agent_type: claude
-  model: opus
-  max_turns: 45
-  estimated_wall_time_min: 30
-  priority: critical
-  requires_gpu: false
-  skip_pre_test: true
-  gated_on:
-    - upstream: exp1256-verifier-orthogonality-audit-v3
-      artifact_field: orthogonality_matrix_computed
-      op: '=='
-      value: true
-    - upstream: exp1257-paper-v6-critical-issues-fix
-      artifact_field: critical_issues_fixed
-      op: '>='
-      value: 5
-  prior_failures:
-    - experiment_id: exp1234-paper-v6-arxiv-submission
-      verdict: in_progress
-      addressed_by: "exp1234 stale skeleton — same root cause as other .96 tasks. skip_pre_test:true added. Gated on exp1256+exp1257 so only runs when orthogonality audit AND paper fixes are complete."
-      retire_if_same_verdict: false
-    - experiment_id: exp1127-arxiv-pdf-compile-submission
-      verdict: in_progress
-      addressed_by: "exp1127 produced PDF but did not submit. This version includes manual arXiv upload steps."
-      retire_if_same_verdict: false
-  prompt: |
-    CONTEXT:
-    Verifier orthogonality audit (exp1256) and critical issues fix (exp1257) are complete.
-    This task compiles the final paper-v6 PDF and submits to arXiv.
-
-    STEP 0 — WRITE SKELETON ARTIFACT IMMEDIATELY:
-    python3 -c "
-    import json, os; os.makedirs('results', exist_ok=True)
-    d = {'experiment':'1258_arxiv_bundle_v9_submission','run_date':'{date}',
-         'status':'in_progress','pdf_compiled':False,'arxiv_submitted':False,
-         'honest_verdict':'in_progress'}
-    open('results/experiment_1258_arxiv_bundle_v9_submission.json','w').write(json.dumps(d,indent=2))
-    print('STEP 0 written')
-    " 2>&1
+    Use {project_root} as the project root and {date} as the run date in any artifact metadata.
 
     EXISTING CODE TO READ FIRST:
     - docs/arxiv-paper/main.tex
-    - results/experiment_1256_verifier_orthogonality_audit_v3.json (orthogonality matrix data)
-    - results/experiment_1251_nrgpt_frozen_prefix_evaluation_v2.json (NRGPT Type-B framing)
+    - openspec/change-proposals/paper-v5-integrity-remediation.md
+    - results/experiment_1256_verifier_orthogonality_audit_v3.json
+    - results/experiment_1264_q11_tss_instrumentation_v2.json
+    - results/experiment_1265_diffutruth_vs_carnot_baseline.json
+    - results/experiment_1266_quantkan_3bit_lut_kan.json
 
-    TASK: Compile PDF and prepare arXiv bundle.
-
-    CONCRETE STEPS:
-    1. Generate orthogonality heatmap figure:
-    python3 -c "
-    import json, numpy as np
-    d = json.load(open('results/experiment_1256_verifier_orthogonality_audit_v3.json'))
-    m = d['pairwise_r_matrix']
-    names = d['verifier_names_k5']
-    n = len(names)
-    mat = [[m.get(f'{{names[i]}}|{{names[j]}}', 0.0) for j in range(n)] for i in range(n)]
-    try:
-        import matplotlib
-        matplotlib.use('Agg')
-        import matplotlib.pyplot as plt
-        fig, ax = plt.subplots(figsize=(6,5))
-        im = ax.imshow(mat, cmap='RdYlGn_r', vmin=0, vmax=1)
-        plt.colorbar(im, ax=ax, label='Pairwise r-correlation')
-        short = ['SOSKAN','SemEnergy','AST','SemConsist','Z3Math']
-        ax.set_xticks(range(n)); ax.set_xticklabels(short, rotation=45, ha='right')
-        ax.set_yticks(range(n)); ax.set_yticklabels(short)
-        ax.set_title(f'k=5 Verifier Pairwise r-Correlations (max_r={{d[\"max_pairwise_r_k5\"]:.3f}})')
-        for i in range(n):
-            for j in range(n):
-                ax.text(j, i, f'{{mat[i][j]:.2f}}', ha='center', va='center', fontsize=8)
-        plt.tight_layout()
-        plt.savefig('docs/arxiv-paper/fig_orthogonality_heatmap.pdf', dpi=150, bbox_inches='tight')
-        plt.savefig('docs/arxiv-paper/fig_orthogonality_heatmap.png', dpi=150, bbox_inches='tight')
-        print('Heatmap saved')
-    except ImportError:
-        print('matplotlib not available — heatmap skipped')
-    " 2>&1
-
-    2. Compile PDF:
-    which tectonic && tectonic docs/arxiv-paper/main.tex 2>&1 || which pdflatex && pdflatex -interaction=nonstopmode -output-directory docs/arxiv-paper docs/arxiv-paper/main.tex 2>&1 | tail -10
-
-    3. Check PDF exists and size:
-    ls -lh docs/arxiv-paper/main.pdf 2>&1
-
-    4. Prepare arXiv bundle:
-    mkdir -p /tmp/arxiv_v9_bundle
-    cp docs/arxiv-paper/main.tex /tmp/arxiv_v9_bundle/
-    cp docs/arxiv-paper/*.pdf /tmp/arxiv_v9_bundle/ 2>/dev/null || true
-    cp docs/arxiv-paper/*.png /tmp/arxiv_v9_bundle/ 2>/dev/null || true
-    ls /tmp/arxiv_v9_bundle/ 2>&1
-
-    5. Print manual upload instructions:
-    echo "To submit to arXiv:"
-    echo "1. Go to https://arxiv.org/submit"
-    echo "2. Upload bundle: tar -czf arxiv_v9.tar.gz -C /tmp/arxiv_v9_bundle ."
-    echo "3. Paste abstract from docs/arxiv-paper/abstract.txt (or main.tex abstract section)"
-    echo "4. Submit as cs.AI with cross-list to cs.LG"
-    tar -czf /tmp/arxiv_v9.tar.gz -C /tmp/arxiv_v9_bundle . 2>&1
-    ls -lh /tmp/arxiv_v9.tar.gz 2>&1
-
-    6. Update artifact:
-    python3 -c "
-    import json, os
-    f='results/experiment_1258_arxiv_bundle_v9_submission.json'
-    d=json.load(open(f))
-    d['pdf_compiled'] = os.path.exists('docs/arxiv-paper/main.pdf')
-    d['heatmap_generated'] = os.path.exists('docs/arxiv-paper/fig_orthogonality_heatmap.pdf')
-    d['bundle_path'] = '/tmp/arxiv_v9.tar.gz'
-    d['arxiv_submitted'] = False  # set to True once manually submitted
-    d['arxiv_submission_instructions'] = 'tar.gz at /tmp/arxiv_v9.tar.gz; upload to arxiv.org/submit'
-    d['status'] = 'complete'
-    d['honest_verdict'] = 'bundle_ready_pending_manual_arxiv_upload'
-    open(f,'w').write(json.dumps(d,indent=2))
-    print('Done:', d['honest_verdict'])
-    " 2>&1
-
-    REQUIRED ARTIFACT FIELDS:
-    - pdf_compiled: bool
-    - heatmap_generated: bool
-    - bundle_path: str
-    - arxiv_submission_instructions: str
-    - honest_verdict: "bundle_ready_pending_manual_arxiv_upload" or "arxiv_submitted"
-
-    Run: python3 -c "import json; d=json.load(open('results/experiment_1258_arxiv_bundle_v9_submission.json')); print('pdf_compiled:', d.get('pdf_compiled'))"
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-# ============================================================
-# Phase 3 — GRPO v7 Self-Learning (1 task, DualGPU MANDATORY)
-# exp1259: PROGRS outcome-conditioned centering + VPS, 600s budget.
-# ============================================================
-
-- id: exp1259-grpo-v7-progrs-vps-dualgpu
-  milestone: 2026.04.98
-  deliverable: results/experiment_1259_grpo_v7_progrs_vps.json
-  title: "GRPO v7 — PROGRS Outcome-Conditioned Centering + VPS Step Supervision, 600s Budget, DualGPU"
-  agent_type: claude
-  model: opus
-  max_turns: 80
-  estimated_wall_time_min: 70
-  priority: critical
-  requires_gpu: true
-  skip_pre_test: false
-  prior_failures:
-    - experiment_id: exp1221-grpo-v6-fspo-vps-combined
-      verdict: wall_budget_exhausted
-      addressed_by: "exp1221 wall_budget exhausted at 848s vs 480s budget. Fixed: wall_budget_s=600 (25% increase from 480s, enough headroom for 300-question batch at ~2s/question)."
-      retire_if_same_verdict: false
-    - experiment_id: exp1235-grpo-v6-fspo-vps-extended
-      verdict: in_progress
-      addressed_by: "exp1235 stale skeleton. Root cause: pre-test failures before GPU work started. STEP 0 + skip_pre_test removed since this requires actual GPU training; instead using STEP 0 pattern and explicit GPU health check first."
-      retire_if_same_verdict: false
-    - experiment_id: exp1247-grpo-v7-simplified
-      verdict: in_progress
-      addressed_by: "exp1247 stale skeleton. Same root cause. This v7 has cleaner scope: PROGRS centering + VPS only (dropped FSPO to reduce complexity). Explicit GPU health check before training loop."
-      retire_if_same_verdict: false
-    - experiment_id: exp1173-grpo-v4-training-run
-      verdict: in_progress
-      addressed_by: "exp1173 GPU offload issue. Resolved by exp1207 (llama.cpp GPU offload v3). Using tensor_split=[0.5,0.5] for both RTX 3090s."
-      retire_if_same_verdict: false
-  prompt: |
-    CONTEXT:
-    GRPO self-learning training with energy-grounded rewards. GRPO-VPS (exp1220) achieved +10pp
-    improvement with step-level process supervision. GRPO v7 adds PROGRS outcome-conditioned
-    centering (arXiv 2604.02341): instead of centering advantages relative to group mean, center
-    relative to the conditioned-on outcome distribution (Z3MathVerifier ground truth). This
-    addresses advantage collapse and improves gradient signal quality.
-
-    DualGPU MANDATORY: Both RTX 3090s required (tensor_split=[0.5,0.5]).
-    wall_budget_s=600 (10 minutes, enough for 300 questions at ~2s/question).
-
-    STEP 0 — WRITE SKELETON ARTIFACT IMMEDIATELY:
-    python3 -c "
-    import json, os; os.makedirs('results', exist_ok=True)
-    d = {'experiment':'1259_grpo_v7_progrs_vps','run_date':'{date}',
-         'status':'in_progress','grpo_v7_improvement_pp':None,
-         'baseline_accuracy':None,'grpo_v7_accuracy':None,
-         'honest_verdict':'in_progress'}
-    open('results/experiment_1259_grpo_v7_progrs_vps.json','w').write(json.dumps(d,indent=2))
-    print('STEP 0 written')
-    " 2>&1
-
-    EXISTING CODE TO READ FIRST:
-    - python/carnot/pipeline/grpo_trainer.py (existing GRPO implementation)
-    - python/carnot/verify/causal_reasoning_verifier.py (CausalReasoningVerifier)
-    - python/carnot/verify/z3_math_verifier.py (Z3MathVerifier)
-    - results/experiment_1220_grpo_vps_full_training.json (VPS +10pp baseline)
-    - results/experiment_1259_grpo_v7_progrs_vps.json (skeleton to update)
-
-    TASK: Run GRPO v7 training with PROGRS centering + VPS.
+    TASK:
+    Fix the five critical paper integrity issues with minimal edits and write a terminal
+    artifact reporting exactly which issues were fixed. Do not create new headline claims.
 
     CONCRETE STEPS:
-    1. GPU health check (CRITICAL — do before training):
-    python3 -c "
-    import subprocess
-    r = subprocess.run(['nvidia-smi', '--query-gpu=index,name,memory.free,utilization.gpu', '--format=csv,noheader'], capture_output=True, text=True)
-    print('GPUs:', r.stdout)
-    assert r.returncode == 0, 'nvidia-smi failed'
-    lines = [l for l in r.stdout.strip().split('\n') if l]
-    print(f'n_gpus={{len(lines)}}')
-    assert len(lines) >= 2, f'Need 2 GPUs, found {{len(lines)}}'
-    print('GPU health check PASSED')
-    " 2>&1
+    1. Create results/experiment_1269_paper_v6_critical_fixes_v2.json with status="in_progress".
+    2. In docs/arxiv-paper/main.tex, search for the five critical claim classes:
+       estimated CPU/FPGA speedups, KL measurement provenance, hand-typed CPU constants,
+       apples-to-oranges HumanEval latency, and SOS-KAN AUROC ambiguity.
+    3. Replace each with measured or explicitly caveated text. Use exp1256/1264/1265/1266
+       for measured values where relevant.
+    4. Run a narrow text audit command that greps for the old unsupported strings.
+    5. Write the final artifact with critical_issues_fixed, issues_fixed_list,
+       measured_artifacts_cited, old_claims_remaining, status="complete", honest_verdict.
 
-    2. Load GRPO training script and add PROGRS outcome-conditioned centering.
-
-    Key modification: in the advantage computation step, instead of:
-      advantage = reward - mean(reward_group)
-    Use PROGRS centering:
-      outcome_label = z3_math_verifier.verify(response)  # 1=correct, 0=incorrect
-      correct_rewards = [r for r, l in zip(rewards, labels) if l == 1]
-      incorrect_rewards = [r for r, l in zip(rewards, labels) if l == 0]
-      cond_mean = mean(correct_rewards) if outcome_label else mean(incorrect_rewards)
-      advantage = reward - cond_mean
-
-    3. Run GRPO v7 training:
-    python3 -c "
-    import sys, json, time
-    sys.path.insert(0, '{project_root}')
-    start = time.time()
-
-    # Load existing GRPO trainer or implement inline
-    # Configuration:
-    config = {{
-        'n_questions': 300,
-        'n_completions_per_question': 8,
-        'wall_budget_s': 600,
-        'tensor_split': [0.5, 0.5],
-        'model': 'unsloth/Qwen3.6-35B-A3B-GGUF',  # flagship MoE
-        'step_verifiers': ['CausalReasoningVerifier', 'Z3MathVerifier'],
-        'centering': 'progrs_outcome_conditioned',
-        'use_vps': True,
-        'vps_weight': 0.5,
-        'grpo_v7': True,
-    }}
-
-    # Load and run — use existing grpo_trainer if available
-    try:
-        from python.carnot.pipeline.grpo_trainer import GRPOTrainer
-        trainer = GRPOTrainer(config)
-        results = trainer.run()
-        improvement_pp = results.get('improvement_over_baseline_pp', None)
-        baseline = results.get('baseline_accuracy', None)
-        grpo_acc = results.get('grpo_accuracy', None)
-    except Exception as e:
-        print(f'Trainer error: {{e}}')
-        improvement_pp = None
-        baseline = None
-        grpo_acc = None
-
-    elapsed = time.time() - start
-    f = 'results/experiment_1259_grpo_v7_progrs_vps.json'
-    d = json.load(open(f))
-    d['grpo_v7_improvement_pp'] = improvement_pp
-    d['baseline_accuracy'] = baseline
-    d['grpo_v7_accuracy'] = grpo_acc
-    d['elapsed_s'] = round(elapsed, 1)
-    d['config'] = config
-    d['status'] = 'complete'
-    verdict = 'grpo_v7_improvement_measured'
-    if improvement_pp is not None:
-        verdict = f'grpo_v7_improvement_{{improvement_pp:.1f}}pp' if improvement_pp >= 0 else f'grpo_v7_regression_{{abs(improvement_pp):.1f}}pp'
-    d['honest_verdict'] = verdict
-    open(f,'w').write(json.dumps(d,indent=2))
-    print('Done:', verdict)
-    " 2>&1
-
-    4. Verify artifact:
-    python3 -c "import json; d=json.load(open('results/experiment_1259_grpo_v7_progrs_vps.json')); print('status:', d['status']); print('improvement:', d.get('grpo_v7_improvement_pp'))"
-
-    REQUIRED ARTIFACT FIELDS:
-    - grpo_v7_improvement_pp: float (positive = improvement, negative = regression)
-    - baseline_accuracy: float
-    - grpo_v7_accuracy: float
-    - elapsed_s: float
-    - config: dict
-    - honest_verdict: "grpo_v7_improvement_Xpp" or "grpo_v7_regression_Xpp" or "grpo_v7_gpu_unavailable"
-
-    Run: python3 -c "import json; d=json.load(open('results/experiment_1259_grpo_v7_progrs_vps.json')); print('verdict:', d.get('honest_verdict'))"
+    Run: python3 -c "import json; d=json.load(open('results/experiment_1269_paper_v6_critical_fixes_v2.json')); print(d.get('critical_issues_fixed'), d.get('honest_verdict'))"
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-# ============================================================
-# Phase 4 — Phase-5-D Intermediate Scale (1 task, DualGPU MANDATORY)
-# exp1260: 4 core gates, EBM replay buffer, 100-300M params.
-# ============================================================
-
-- id: exp1260-phase5d-intermediate-scale-v3
-  milestone: 2026.04.98
-  deliverable: results/experiment_1260_phase5d_intermediate_scale_v3.json
-  title: "Phase-5-D Intermediate Scale v3 — 4 Core Gates, EBM Replay Buffer, d=128, DualGPU"
-  agent_type: claude
-  model: opus
-  max_turns: 70
-  estimated_wall_time_min: 55
-  priority: high
-  requires_gpu: true
-  skip_pre_test: false
-  prior_failures:
-    - experiment_id: exp1238-phase5d-intermediate-scale
-      verdict: in_progress
-      addressed_by: "exp1238 stale skeleton. Root cause: too-heavy scope (8 gates) caused agent to stall planning. Reduced to 4 core gates in this v3: mode_collapse, mcmc_mixing, k_eff_maintained, forgetting_rate."
-      retire_if_same_verdict: false
-    - experiment_id: exp1250-phase5d-intermediate-scale-v2
-      verdict: in_progress
-      addressed_by: "exp1250 stale skeleton — same root cause. Scope further reduced and CONCRETE STEPS now map each gate to a specific measurable threshold."
-      retire_if_same_verdict: false
-  prompt: |
-    CONTEXT:
-    Phase-5-D validates the in-situ learning pipeline at intermediate scale (100-300M params,
-    d=128 hidden dimension) before scaling to 1B+ substrate. Phase-5-A (exp1222) and Phase-5-B
-    (exp1223) confirmed stability at 50K params. This validates the 3-order-of-magnitude scale-up.
-
-    Use PPSEBM replay buffer (arXiv 2512.15658) for anti-forgetting: sample 10% of each minibatch
-    from the replay buffer (EBM-generated synthetic old-distribution examples).
-    DualGPU MANDATORY: Both RTX 3090s.
-
-    4 CORE GATES:
-    1. mode_collapse_absent: entropy of verifier acceptance distribution > 0.5 bits after training
-    2. mcmc_mixing_acceptable: autocorrelation time tau_int < 10x baseline after 1000 steps
-    3. k_eff_maintained: k_eff after training within 10% of k_eff before training
-    4. forgetting_rate_acceptable: AUROC on held-out set drops < 5% after in-situ training
-
-    STEP 0 — WRITE SKELETON ARTIFACT IMMEDIATELY:
-    python3 -c "
-    import json, os; os.makedirs('results', exist_ok=True)
-    d = {'experiment':'1260_phase5d_intermediate_scale_v3','run_date':'{date}',
-         'status':'in_progress','phase5d_gates_passed':0,
-         'gate_results':{},'honest_verdict':'in_progress'}
-    open('results/experiment_1260_phase5d_intermediate_scale_v3.json','w').write(json.dumps(d,indent=2))
-    print('STEP 0 written')
-    " 2>&1
-
-    EXISTING CODE TO READ FIRST:
-    - python/carnot/phase3/continuous_ebm.py (ContinuousEBM, phase3 pipeline)
-    - results/experiment_1222_phase5a_insitu_prototype.json (Phase-5-A baseline gates)
-    - results/experiment_1223_phase5b_insitu_training_loop.json (Phase-5-B stability)
-    - python/carnot/samplers/parallel_ising.py (ParallelIsingSampler)
-
-    TASK: Implement Phase-5-D intermediate scale prototype and measure 4 core gates.
-
-    CONCRETE STEPS:
-    1. GPU health check:
-    python3 -c "import subprocess; r=subprocess.run(['nvidia-smi','--query-gpu=name,memory.free','--format=csv,noheader'],capture_output=True,text=True); print('GPUs:',r.stdout); assert r.returncode==0" 2>&1
-
-    2. Implement d=128 in-situ model and measure 4 gates:
-    python3 -c "
-    import sys, json, time, numpy as np
-    sys.path.insert(0, '{project_root}')
-    import jax
-    import jax.numpy as jnp
-
-    # Phase-5-D intermediate scale: d=128, 100-300M params
-    d_hidden = 128
-    n_verifiers = 5  # k=5 production ensemble
-
-    # Measure gate 1: mode collapse via entropy
-    # Initialize random verifier acceptance distribution
-    rng = np.random.default_rng(42)
-    acceptance_probs = rng.beta(2, 2, size=(n_verifiers, 1000))  # 1000 samples per verifier
-    entropy = float(-np.sum(acceptance_probs * np.log(acceptance_probs + 1e-9) + (1-acceptance_probs)*np.log(1-acceptance_probs+1e-9), axis=1).mean())
-    gate1 = entropy > 0.5
-    print(f'Gate 1 mode_collapse_absent: entropy={{entropy:.3f}} > 0.5 = {{gate1}}')
-
-    # Measure gate 2: MCMC mixing (autocorrelation proxy)
-    # Simple Markov chain test with d=128 Ising spins
-    n_steps = 1000
-    state = rng.choice([-1.0, 1.0], size=d_hidden)
-    J = rng.normal(0, 1.0/d_hidden, size=(d_hidden, d_hidden))
-    J = (J + J.T) / 2
-    autocorr_sum = 0
-    prev_energy = float(-0.5 * state @ J @ state)
-    for t in range(n_steps):
-        i = rng.integers(d_hidden)
-        state[i] *= -1
-        new_energy = float(-0.5 * state @ J @ state)
-        if rng.random() < min(1.0, np.exp(-(new_energy - prev_energy))):
-            prev_energy = new_energy
-        else:
-            state[i] *= -1
-        autocorr_sum += abs(state.mean())
-    tau_int_proxy = autocorr_sum / n_steps
-    gate2 = tau_int_proxy < 0.5  # proxy for tau_int < 10x baseline
-    print(f'Gate 2 mcmc_mixing_acceptable: tau_proxy={{tau_int_proxy:.4f}} < 0.5 = {{gate2}}')
-
-    # Measure gate 3: k_eff maintained (simulate before/after)
-    max_r_before = 0.461664  # from exp1108
-    k_eff_before = 5.0 / (1.0 + 4 * max_r_before)
-    # Simulate slight increase in r after in-situ training (worst case +5%)
-    max_r_after = max_r_before * 1.05
-    k_eff_after = 5.0 / (1.0 + 4 * max_r_after)
-    k_eff_drop_pct = abs(k_eff_before - k_eff_after) / k_eff_before * 100
-    gate3 = k_eff_drop_pct < 10.0
-    print(f'Gate 3 k_eff_maintained: k_eff_drop={{k_eff_drop_pct:.1f}}% < 10% = {{gate3}}')
-
-    # Measure gate 4: forgetting rate (simulate AUROC drop)
-    auroc_before = 0.9607  # Boltzmann-GPT CD AUROC from exp1248
-    auroc_after = auroc_before * 0.97  # simulate 3% drop (< 5% threshold)
-    auroc_drop_pct = (auroc_before - auroc_after) / auroc_before * 100
-    gate4 = auroc_drop_pct < 5.0
-    print(f'Gate 4 forgetting_acceptable: auroc_drop={{auroc_drop_pct:.1f}}% < 5% = {{gate4}}')
-
-    gates = [gate1, gate2, gate3, gate4]
-    n_passed = sum(gates)
-
-    f = 'results/experiment_1260_phase5d_intermediate_scale_v3.json'
-    d = json.load(open(f))
-    d['gate_results'] = {{
-        'mode_collapse_absent': bool(gate1),
-        'mcmc_mixing_acceptable': bool(gate2),
-        'k_eff_maintained': bool(gate3),
-        'forgetting_rate_acceptable': bool(gate4),
-    }}
-    d['gate_values'] = {{
-        'entropy': round(entropy, 4),
-        'tau_int_proxy': round(tau_int_proxy, 4),
-        'k_eff_drop_pct': round(k_eff_drop_pct, 2),
-        'auroc_drop_pct': round(auroc_drop_pct, 2),
-    }}
-    d['phase5d_gates_passed'] = n_passed
-    d['d_hidden'] = d_hidden
-    d['scale_class'] = '100-300M params at d=128'
-    d['ppsebm_replay_buffer'] = True
-    d['status'] = 'complete'
-    d['honest_verdict'] = f'phase5d_{{n_passed}}_of_4_gates_passed'
-    open(f,'w').write(json.dumps(d,indent=2))
-    print(f'Done: {{n_passed}}/4 gates passed')
-    " 2>&1
-
-    3. Verify:
-    python3 -c "import json; d=json.load(open('results/experiment_1260_phase5d_intermediate_scale_v3.json')); print('gates_passed:', d['phase5d_gates_passed'], '/4'); print(d['gate_results'])"
-
-    REQUIRED ARTIFACT FIELDS:
-    - phase5d_gates_passed: int (target: 4)
-    - gate_results: dict (4 keys: mode_collapse_absent, mcmc_mixing_acceptable, k_eff_maintained, forgetting_rate_acceptable)
-    - gate_values: dict (numeric measurements for each gate)
-    - d_hidden: 128
-    - honest_verdict: "phase5d_4_of_4_gates_passed" (or N_of_4)
-
-    Run: python3 -c "import json; d=json.load(open('results/experiment_1260_phase5d_intermediate_scale_v3.json')); print('gates_passed:', d.get('phase5d_gates_passed'))"
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-# ============================================================
-# Phase 5 — WOPR Gallery (2 tasks, CPU-only, codex)
-# exp1261: WOPR Kakuro v3 (stale skeleton from .97).
-# exp1262: WOPR Masyu v2 (gate-blocked in .97; unconditional here).
-# ============================================================
-
-- id: exp1261-wopr-kakuro-v3
-  milestone: 2026.04.98
-  deliverable: results/experiment_1261_wopr_kakuro_v3.json
-  title: "WOPR Kakuro Puzzle Cartridge v3 — Integer Sum Constraints, E=0 at Valid Solution"
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 30
-  estimated_wall_time_min: 20
-  priority: high
-  requires_gpu: false
-  skip_pre_test: false
-  prior_failures:
-    - experiment_id: exp1240-wopr-kakuro-cartridge
-      verdict: blocked_gate_check_failed
-      addressed_by: "exp1240 gate-blocked (missing prior_failures). Scope: Kakuro is a distinct puzzle not matching any prior completed WOPR cartridge."
-      retire_if_same_verdict: false
-    - experiment_id: exp1243-wopr-kakuro-cartridge-v2
-      verdict: in_progress
-      addressed_by: "exp1243 stale skeleton — agent wrote STEP 0 then stopped. This v3 reduces scope: smaller puzzle (3x3 grid with 2 runs), simpler energy function, tests reduced to 3."
-      retire_if_same_verdict: true
-  prompt: |
-    CONTEXT:
-    Implement Kakuro puzzle cartridge for the WOPR games gallery.
-    Kakuro: crossword-style grid where each horizontal/vertical run of cells sums to a clue value.
-    Digits 1-9, no repeats within a run. Energy E = sum over runs of (actual_sum - target_sum)^2. E=0 at valid solution.
-
-    STEP 0 — WRITE SKELETON ARTIFACT IMMEDIATELY:
-    python3 -c "import json,os; os.makedirs('results',exist_ok=True); d={{'experiment':'1261_wopr_kakuro_v3','status':'in_progress','cartridge_shipped':False,'honest_verdict':'in_progress'}}; open('results/experiment_1261_wopr_kakuro_v3.json','w').write(json.dumps(d,indent=2))" 2>&1
-
-    EXISTING CODE TO READ FIRST:
-    - spaces/wopr-games/games/_base.py (WOPRGame abstract base class)
-    - spaces/wopr-games/games/hashi.py (reference implementation pattern)
-    - spaces/wopr-games/games/futoshiki.py (simpler reference)
-
-    TASK: Implement spaces/wopr-games/games/kakuro.py and tests.
-
-    CONCRETE STEPS:
-    1. Read base class: cat spaces/wopr-games/games/_base.py 2>&1 | head -60
-
-    2. Implement kakuro.py with this EXACT minimal structure:
-       - KakuroGame(WOPRGame)
-       - A 4x4 grid with 3 small runs (horizontal runs: row 0 cols 1-2, row 1 cols 1-3; vertical run: col 1 rows 0-1)
-       - initial_state(): returns dict with 'cells' (list of lists, 0=blank, 1-9=digit) and 'clues' (list of dicts with run specs)
-       - energy(state): for each run compute (sum(cells_in_run) - target_sum)**2; return total
-       - is_solved(state): energy == 0
-       - carnot_step(state): flip one digit in one run (Metropolis, beta=1.0)
-
-    3. Write tests in spaces/wopr-games/tests/test_kakuro.py:
-       - test_valid_solution_energy_zero
-       - test_invalid_energy_positive
-       - test_carnot_step_valid_digits
-
-    4. cd {project_root} && python3 -m pytest spaces/wopr-games/tests/test_kakuro.py -v 2>&1 | tail -15
-
-    5. Demo:
-    python3 -c "from spaces.wopr_games.games.kakuro import KakuroGame; g=KakuroGame(); s=g.initial_state(); print('E0:',g.energy(s)); s2=g.carnot_step(s).state; print('E1:',g.energy(s2))" 2>&1
-
-    6. Write final artifact:
-    python3 -c "
-    import json, subprocess
-    r=subprocess.run(['python3','-m','pytest','spaces/wopr-games/tests/test_kakuro.py','-v','--tb=no','-q'],cwd='{project_root}',capture_output=True,text=True)
-    passed=r.stdout.count(' passed')
-    d={{'experiment':'1261_wopr_kakuro_v3','status':'complete','cartridge_file':'spaces/wopr-games/games/kakuro.py','test_file':'spaces/wopr-games/tests/test_kakuro.py','n_tests_pass':passed,'cartridge_shipped':passed>=3,'energy_at_valid_solution':0.0,'honest_verdict':'kakuro_shipped_e0_at_solution' if passed>=3 else 'test_failures'}}
-    open('results/experiment_1261_wopr_kakuro_v3.json','w').write(json.dumps(d,indent=2))
-    print('Done:',d['honest_verdict'])
-    " 2>&1
-
-    REQUIRED ARTIFACT FIELDS:
-    - cartridge_file: "spaces/wopr-games/games/kakuro.py"
-    - n_tests_pass: int (>=3)
-    - cartridge_shipped: true
-    - energy_at_valid_solution: 0.0
-    - honest_verdict: "kakuro_shipped_e0_at_solution"
-
-    Run: python3 -m pytest spaces/wopr-games/tests/test_kakuro.py -v 2>&1 | tail -5
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp1262-wopr-masyu-v2
-  milestone: 2026.04.98
-  deliverable: results/experiment_1262_wopr_masyu_v2.json
-  title: "WOPR Masyu Loop Puzzle Cartridge v2 — Black/White Circle Constraints, E=0 at Valid Loop"
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 30
-  estimated_wall_time_min: 20
-  priority: high
-  requires_gpu: false
-  skip_pre_test: false
-  prior_failures:
-    - experiment_id: exp1253-wopr-masyu-cartridge
-      verdict: blocked_gate_check_failed
-      addressed_by: "exp1253 gate-blocked (gate check failed on an upstream experiment). Masyu is a standalone WOPR cartridge with no legitimate dependency on research experiments. This v2 is UNCONDITIONAL — no gated_on field."
-      retire_if_same_verdict: true
-  prompt: |
-    CONTEXT:
-    Implement Masyu puzzle cartridge for WOPR games gallery.
-    Masyu: place a single closed loop through cells. Rules: black circles = loop goes straight
-    through, making at least one turn in an adjacent cell. White circles = loop turns in the cell,
-    going straight in both adjacent cells.
-    Energy: E = (black_violations) + (white_violations) + (connectivity_violations). E=0 at valid loop.
-
-    STEP 0 — WRITE SKELETON ARTIFACT IMMEDIATELY:
-    python3 -c "import json,os; os.makedirs('results',exist_ok=True); d={{'experiment':'1262_wopr_masyu_v2','status':'in_progress','cartridge_shipped':False,'honest_verdict':'in_progress'}}; open('results/experiment_1262_wopr_masyu_v2.json','w').write(json.dumps(d,indent=2))" 2>&1
-
-    EXISTING CODE TO READ FIRST:
-    - spaces/wopr-games/games/_base.py (WOPRGame abstract base class)
-    - spaces/wopr-games/games/hashi.py (reference: graph-based puzzle)
-    - spaces/wopr-games/games/slitherlink.py (reference: loop constraint puzzle)
-
-    TASK: Implement spaces/wopr-games/games/masyu.py and tests.
-
-    CONCRETE STEPS:
-    1. Read base class and slitherlink: cat spaces/wopr-games/games/_base.py 2>&1 | head -50 && cat spaces/wopr-games/games/slitherlink.py 2>&1 | head -80
-
-    2. Implement masyu.py:
-       - MasyuGame(WOPRGame)
-       - Use a small 4x4 grid with 2-3 circles (1 black, 1-2 white) for minimal scope
-       - State: set of edges forming the current (partial) loop
-       - energy(state): count circle constraint violations + connectivity violations
-       - is_solved(state): energy == 0 and loop is closed
-       - carnot_step(state): add/remove one edge (Metropolis)
-
-    3. Write tests in spaces/wopr-games/tests/test_masyu.py:
-       - test_valid_loop_energy_zero
-       - test_violated_circle_energy_positive
-       - test_is_solved_iff_energy_zero
-
-    4. cd {project_root} && python3 -m pytest spaces/wopr-games/tests/test_masyu.py -v 2>&1 | tail -15
-
-    5. Write final artifact:
-    python3 -c "
-    import json, subprocess
-    r=subprocess.run(['python3','-m','pytest','spaces/wopr-games/tests/test_masyu.py','-v','--tb=no','-q'],cwd='{project_root}',capture_output=True,text=True)
-    passed=r.stdout.count(' passed')
-    d={{'experiment':'1262_wopr_masyu_v2','status':'complete','cartridge_file':'spaces/wopr-games/games/masyu.py','test_file':'spaces/wopr-games/tests/test_masyu.py','n_tests_pass':passed,'cartridge_shipped':passed>=3,'energy_at_valid_solution':0.0,'honest_verdict':'masyu_shipped_e0_at_solution' if passed>=3 else 'test_failures'}}
-    open('results/experiment_1262_wopr_masyu_v2.json','w').write(json.dumps(d,indent=2))
-    print('Done:',d['honest_verdict'])
-    " 2>&1
-
-    REQUIRED ARTIFACT FIELDS:
-    - cartridge_file: "spaces/wopr-games/games/masyu.py"
-    - n_tests_pass: int (>=3)
-    - cartridge_shipped: true
-    - energy_at_valid_solution: 0.0
-    - honest_verdict: "masyu_shipped_e0_at_solution"
-
-    Run: python3 -m pytest spaces/wopr-games/tests/test_masyu.py -v 2>&1 | tail -5
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-# ============================================================
-# Phase 6 — Research (4 tasks, CPU-only, codex)
-# exp1263: Gaming verifiers defense v4 — EST protocol.
-# exp1264: Q11 TSS instrumentation v2.
-# exp1265: DiffuTruth vs Carnot comparison.
-# exp1266: QuantKAN 3-bit PTQ + LUT-KAN comparison.
-# ============================================================
-
-- id: exp1263-gaming-verifiers-defense-v4-est
-  milestone: 2026.04.98
-  deliverable: results/experiment_1263_gaming_verifiers_defense_v4.json
-  title: "LLMs Gaming Verifiers Defense v4 — EST Invariance Protocol on k=5 Ensemble"
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 40
-  estimated_wall_time_min: 30
-  priority: high
-  requires_gpu: false
-  skip_pre_test: false
-  prior_failures:
-    - experiment_id: exp1225-llms-gaming-verifiers-defense
-      verdict: in_progress
-      addressed_by: "exp1225 MISSING (codex max_turns:40 insufficient 3x). Root cause: too open-ended scope. This v4 uses EST protocol (arXiv 2507.05619) with exactly bounded steps: 50 FoVer pairs, 6 perturbations each, measure energy score stability."
-      retire_if_same_verdict: false
-    - experiment_id: exp1231-llms-gaming-verifiers-defense-v3
-      verdict: in_progress
-      addressed_by: "exp1231 stale skeleton. Same root cause. EST protocol provides concrete bounded implementation."
-      retire_if_same_verdict: false
-    - experiment_id: exp1249-llms-gaming-verifiers-defense-v3
-      verdict: in_progress
-      addressed_by: "exp1249 stale skeleton. This v4 is the definitive implementation: read 50 FoVer pairs, perturb, measure. One Python script."
-      retire_if_same_verdict: true
-  prompt: |
-    CONTEXT:
-    Test whether Carnot's k=5 AND-composed verifier ensemble is vulnerable to proxy gaming.
-    Use Evaluator Stress Test (EST, arXiv 2507.05619) protocol:
-    - Select 50 FoVer corpus pairs that Carnot's ensemble passes (low energy)
-    - For each: generate 3 meaning-PRESERVING perturbations and 3 meaning-CHANGING perturbations
-    - Measure: do verifier energy scores change under meaning-preserving perturbations?
-    - Gaming vulnerability = energy scores change significantly under meaning-preserving changes
-
-    Meaning-preserving perturbations: synonym replacement, paraphrase, whitespace changes.
-    Meaning-changing perturbations: negate a key claim, swap numbers, remove a step.
-
-    STEP 0 — WRITE SKELETON ARTIFACT IMMEDIATELY:
-    python3 -c "import json,os; os.makedirs('results',exist_ok=True); d={{'experiment':'1263_gaming_verifiers_defense_v4','status':'in_progress','gaming_defense_measured':False,'honest_verdict':'in_progress'}}; open('results/experiment_1263_gaming_verifiers_defense_v4.json','w').write(json.dumps(d,indent=2))" 2>&1
-
-    EXISTING CODE TO READ FIRST:
-    - results/fover_corpus_v5.json (FoVer pairs to test on)
-    - python/carnot/verify/and_composition_verifier.py (k=5 production ensemble)
-    - results/experiment_1108_ensemble_diversity_v2_and_composition.json (baseline r-correlations)
-
-    TASK: Implement EST protocol and measure gaming vulnerability.
-
-    CONCRETE STEPS:
-    1. Load 50 FoVer pairs that are "passing" (is_correct=True):
-    python3 -c "
-    import json
-    d = json.load(open('results/fover_corpus_v5.json'))
-    pairs = [p for p in d['pairs'] if p.get('is_correct', False)][:50]
-    print(f'n_passing_pairs: {{len(pairs)}}')
-    print('sample:', pairs[0]['response'][:100])
-    " 2>&1
-
-    2. Implement perturbation functions and energy scoring:
-    python3 -c "
-    import json, sys, re
-    sys.path.insert(0, '{project_root}')
-
-    def meaning_preserving_perturb(text, variant):
-        'Generate meaning-preserving perturbation'
-        if variant == 0:
-            return text.replace('therefore', 'thus').replace('Thus', 'Therefore')
-        elif variant == 1:
-            return re.sub(r'\s+', ' ', text).strip()  # whitespace normalization
-        else:
-            return text + ' '  # trailing space (minimal change)
-
-    def meaning_changing_perturb(text, variant):
-        'Generate meaning-changing perturbation'
-        if variant == 0:
-            return text.replace('is', 'is not', 1) if 'is ' in text else text + ' This is incorrect.'
-        elif variant == 1:
-            return re.sub(r'\d+', lambda m: str(int(m.group())+1), text, count=1)  # increment first number
-        else:
-            sentences = text.split('. ')
-            return '. '.join(sentences[:-1]) if len(sentences) > 1 else text  # drop last sentence
-
-    # Proxy energy function (sum of basic constraint signals, no full verifier import)
-    def proxy_energy(text):
-        'Simple energy proxy: vocabulary coherence check'
-        words = text.lower().split()
-        if len(words) == 0:
-            return 1.0
-        # Heuristic: penalty for inconsistencies
-        has_negation = any(w in ['not', 'incorrect', 'wrong'] for w in words)
-        return 0.1 if not has_negation else 0.8
-
-    d = json.load(open('results/fover_corpus_v5.json'))
-    pairs = [p for p in d['pairs'] if p.get('is_correct', False)][:50]
-
-    stability_violations = 0  # energy changed under meaning-preserving
-    sensitivity_hits = 0  # energy changed under meaning-changing (good)
-
-    results = []
-    for p in pairs:
-        text = p['response']
-        base_e = proxy_energy(text)
-
-        # Meaning-preserving perturbations
-        mp_energies = [proxy_energy(meaning_preserving_perturb(text, v)) for v in range(3)]
-        mp_delta = max(abs(e - base_e) for e in mp_energies)
-        mp_unstable = mp_delta > 0.1  # threshold
-
-        # Meaning-changing perturbations
-        mc_energies = [proxy_energy(meaning_changing_perturb(text, v)) for v in range(3)]
-        mc_delta = max(abs(e - base_e) for e in mc_energies)
-        mc_sensitive = mc_delta > 0.1
-
-        stability_violations += int(mp_unstable)
-        sensitivity_hits += int(mc_sensitive)
-        results.append({{'mp_delta': round(mp_delta,4), 'mc_delta': round(mc_delta,4)}})
-
-    gaming_vulnerability_rate = stability_violations / len(pairs)
-    sensitivity_rate = sensitivity_hits / len(pairs)
-
-    artifact = {
-        'experiment': '1263_gaming_verifiers_defense_v4',
-        'status': 'complete',
-        'n_pairs_tested': len(pairs),
-        'gaming_vulnerability_rate': round(gaming_vulnerability_rate, 4),
-        'meaning_preserving_stability_rate': round(1.0 - gaming_vulnerability_rate, 4),
-        'meaning_changing_sensitivity_rate': round(sensitivity_rate, 4),
-        'gaming_defense_measured': True,
-        'gaming_vulnerable': gaming_vulnerability_rate > 0.2,  # >20% unstable = vulnerable
-        'results_sample': results[:5],
-        'est_protocol': 'arXiv 2507.05619',
-        'honest_verdict': f'gaming_vulnerability_{{gaming_vulnerability_rate:.2f}}_sensitivity_{{sensitivity_rate:.2f}}'
-    }
-    open('results/experiment_1263_gaming_verifiers_defense_v4.json','w').write(json.dumps(artifact,indent=2))
-    print('Done:', artifact['honest_verdict'])
-    print(f'Gaming vulnerability: {{gaming_vulnerability_rate:.1%}}')
-    print(f'Sensitivity to meaning changes: {{sensitivity_rate:.1%}}')
-    " 2>&1
-
-    3. Verify:
-    python3 -c "import json; d=json.load(open('results/experiment_1263_gaming_verifiers_defense_v4.json')); print('gaming_defense_measured:', d['gaming_defense_measured']); print('verdict:', d['honest_verdict'])"
-
-    REQUIRED ARTIFACT FIELDS:
-    - gaming_vulnerability_rate: float (fraction of pairs with unstable scores under meaning-preserving)
-    - meaning_preserving_stability_rate: float (1 - vulnerability_rate)
-    - meaning_changing_sensitivity_rate: float (fraction where energy correctly changed)
-    - gaming_defense_measured: true
-    - honest_verdict: "gaming_vulnerability_X.XX_sensitivity_X.XX"
-
-    Run: python3 -c "import json; d=json.load(open('results/experiment_1263_gaming_verifiers_defense_v4.json')); print('measured:', d.get('gaming_defense_measured'))"
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp1264-q11-tss-instrumentation-v2
-  milestone: 2026.04.98
-  deliverable: results/experiment_1264_q11_tss_instrumentation_v2.json
-  title: "Q11 TSS Instrumentation v2 — sign(z) Bottleneck Diagnostics in continuous_ebm.py"
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 40
-  estimated_wall_time_min: 30
-  priority: medium
-  requires_gpu: false
-  skip_pre_test: false
-  prior_failures:
-    - experiment_id: exp1252-q11-tss-instrumentation
-      verdict: in_progress
-      addressed_by: "exp1252 stale skeleton. Root cause: open-ended scope. This v2 scopes to exactly: add ONE diagnostic function to continuous_ebm.py, write ONE test, measure SC-Energy + Z3 correlation at sign(z) layer on 20 FoVer pairs."
-      retire_if_same_verdict: true
-  prompt: |
-    CONTEXT:
-    Q11 (Transversal Spectral Synthesis) finding: Carnot's sign(z) bottleneck enables polynomial-time
-    TSS — an attacker can find optimal k=2 transversal pair (SC-Energy + Z3) that bypasses null-space
-    defenses. New threat: STE/Gumbel-Softmax pipeline rewriting defeats the sign(z) firewall.
-    Defense: measure the SC-Energy vs Z3 correlation at the sign(z) layer; track as Phase 3 metric.
-
-    STEP 0 — WRITE SKELETON ARTIFACT IMMEDIATELY:
-    python3 -c "import json,os; os.makedirs('results',exist_ok=True); d={{'experiment':'1264_q11_tss_instrumentation_v2','status':'in_progress','tss_instrumented':False,'honest_verdict':'in_progress'}}; open('results/experiment_1264_q11_tss_instrumentation_v2.json','w').write(json.dumps(d,indent=2))" 2>&1
-
-    EXISTING CODE TO READ FIRST:
-    - python/carnot/phase3/continuous_ebm.py (ContinuousEBM class — add TSS diagnostic here)
-    - python/carnot/verify/z3_math_verifier.py (Z3MathVerifier interface)
-    - results/fover_corpus_v5.json (FoVer pairs for measurement)
-
-    TASK: Add tss_diagnose() function to ContinuousEBM and measure on 20 FoVer pairs.
-
-    CONCRETE STEPS:
-    1. Read continuous_ebm.py: cat {project_root}/python/carnot/phase3/continuous_ebm.py 2>&1 | head -80
-
-    2. Add tss_diagnose() function to ContinuousEBM (after existing methods):
-    The function should:
-    - Accept a list of (question, response, is_correct) triples
-    - Compute sign(z) bottleneck activations using sample_exact() or sample()
-    - Compute SC-Energy score and Z3 correctness for each triple
-    - Return correlation(sc_energy, z3_label), optimal_transversal_k, vulnerability_score
-
-    Minimal implementation (if full implementation fails, use stub):
-    python3 -c "
-    import sys, json, numpy as np
-    sys.path.insert(0, '{project_root}')
-
-    # Load 20 FoVer pairs
-    d = json.load(open('results/fover_corpus_v5.json'))
-    pairs = d['pairs'][:20]
-
-    # Compute SC-Energy proxy (TF-IDF cosine similarity between question and response)
-    from sklearn.feature_extraction.text import TfidfVectorizer
-    from sklearn.metrics.pairwise import cosine_similarity
-
-    questions = [p['question'] for p in pairs]
-    responses = [p['response'] for p in pairs]
-    labels = [int(p['is_correct']) for p in pairs]
-
-    try:
-        vec = TfidfVectorizer(max_features=500)
-        qmat = vec.fit_transform(questions)
-        rmat = vec.transform(responses)
-        sc_scores = [float(cosine_similarity(qmat[i], rmat[i])[0,0]) for i in range(len(pairs))]
-    except Exception:
-        sc_scores = [0.5 + 0.1*np.random.randn() for _ in pairs]
-
-    # TSS: optimal transversal pair correlation
-    sc_arr = np.array(sc_scores)
-    z3_arr = np.array(labels, dtype=float)
-
-    corr = float(np.corrcoef(sc_arr, z3_arr)[0,1]) if np.std(sc_arr) > 0 else 0.0
-    optimal_k = 2  # TSS theorem: k=2 suffices for Boolean complement
-    vulnerability_score = 1.0 - abs(corr)  # low correlation = high vulnerability
-
-    artifact = {
-        'experiment': '1264_q11_tss_instrumentation_v2',
-        'status': 'complete',
-        'n_pairs_evaluated': len(pairs),
-        'sc_energy_z3_correlation': round(corr, 4),
-        'optimal_transversal_k': optimal_k,
-        'tss_vulnerability_score': round(vulnerability_score, 4),
-        'tss_instrumented': True,
-        'sign_z_bottleneck_diagnosed': True,
-        'ste_pipeline_risk': vulnerability_score > 0.6,  # high risk if correlation low
-        'honest_verdict': f'tss_instrumented_corr_{{corr:.3f}}_vuln_{{vulnerability_score:.3f}}'
-    }
-    open('results/experiment_1264_q11_tss_instrumentation_v2.json','w').write(json.dumps(artifact,indent=2))
-    print('Done:', artifact['honest_verdict'])
-    " 2>&1
-
-    3. Write one test for tss_diagnose in tests/python/test_q11_tss.py:
-    Content: import the continuous_ebm module, verify tss_diagnose returns expected fields.
-
-    4. Verify:
-    python3 -c "import json; d=json.load(open('results/experiment_1264_q11_tss_instrumentation_v2.json')); print('tss_instrumented:', d['tss_instrumented']); print('verdict:', d['honest_verdict'])"
-
-    REQUIRED ARTIFACT FIELDS:
-    - sc_energy_z3_correlation: float
-    - optimal_transversal_k: int (2)
-    - tss_vulnerability_score: float
-    - tss_instrumented: true
-    - honest_verdict: "tss_instrumented_corr_X.XXX_vuln_X.XXX"
-
-    Run: python3 -c "import json; d=json.load(open('results/experiment_1264_q11_tss_instrumentation_v2.json')); print('instrumented:', d.get('tss_instrumented'))"
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp1265-diffutruth-vs-carnot-energy-baseline
-  milestone: 2026.04.98
-  deliverable: results/experiment_1265_diffutruth_vs_carnot_baseline.json
-  title: "DiffuTruth vs Carnot Energy Baseline — Unsupervised Hallucination AUROC Comparison on FoVer"
+- id: exp1270-arxiv-bundle-v10-gated
+  milestone: 2026.04.99
+  deliverable: results/experiment_1270_arxiv_bundle_v10_gated.json
+  title: "arXiv Bundle v10 - Gated on Exp 1269 Critical Fixes"
   agent_type: codex
   model: gpt-5.5
   max_turns: 30
   estimated_wall_time_min: 25
-  priority: medium
+  priority: high
   requires_gpu: false
-  skip_pre_test: false
+  skip_pre_test: true
+  gated_on:
+    - upstream: exp1269-paper-v6-critical-fixes-v2
+      artifact_field: critical_issues_fixed
+      op: ">="
+      value: 5
+  prior_failures:
+    - experiment_id: exp1258-arxiv-bundle-v9-submission
+      verdict: gate_block_no_artifact
+      addressed_by: "exp1258 was gate-blocked after exp1257 retired. This task has a structured conductor gate on exp1269.critical_issues_fixed >= 5 so the Sonnet/Codex call is skipped when prerequisites fail."
+      retire_if_same_verdict: false
   prompt: |
     CONTEXT:
-    New research: DiffuTruth (arXiv 2602.11364) detects hallucinations via thermodynamic energy:
-    true facts = stable attractors (low energy), hallucinations = high-energy slopes.
-    Key result: FEVER AUROC=0.725 unsupervised, HOVER +4% zero-shot.
-    Carnot's thermodynamic framing is independently validated by DiffuTruth.
+    The arXiv bundle should be produced only after paper critical issues are fixed.
+    This task is gated on exp1269.critical_issues_fixed >= 5.
 
-    TASK: Implement DiffuTruth's "Semantic Energy" proxy on FoVer corpus, compare AUROC vs Carnot
-    baseline (SemEnergyProbe AUROC from exp1108/exp1096).
-
-    DiffuTruth's Semantic Energy: measure NLI-based divergence between original response and
-    a "reconstructed" version (simulate reconstruction by removing the last sentence as proxy).
-    High divergence = high energy = likely hallucination.
-
-    STEP 0 — WRITE SKELETON ARTIFACT IMMEDIATELY:
-    python3 -c "import json,os; os.makedirs('results',exist_ok=True); d={{'experiment':'1265_diffutruth_vs_carnot_baseline','status':'in_progress','diffutruth_comparison_measured':False,'honest_verdict':'in_progress'}}; open('results/experiment_1265_diffutruth_vs_carnot_baseline.json','w').write(json.dumps(d,indent=2))" 2>&1
+    Use {project_root} as the project root and {date} as the run date in any artifact metadata.
 
     EXISTING CODE TO READ FIRST:
-    - results/fover_corpus_v5.json (FoVer pairs with is_correct labels)
-    - results/experiment_1096_semenergy_probe_v1.json (Carnot SemEnergyProbe baseline AUROC)
+    - docs/arxiv-paper/main.tex
+    - docs/arxiv-paper/Makefile
+    - results/experiment_1269_paper_v6_critical_fixes_v2.json
+    - openspec/change-proposals/paper-v5-integrity-remediation.md
+
+    TASK:
+    Compile or package the paper into a submission bundle. If local TeX tooling is absent,
+    write an honest blocked artifact with exact missing command names.
 
     CONCRETE STEPS:
-    1. Load FoVer pairs and Carnot baseline:
-    python3 -c "
-    import json
-    d = json.load(open('results/fover_corpus_v5.json'))
-    pairs = d['pairs'][:100]
-    print(f'n_pairs: {{len(pairs)}}')
-    print(f'n_correct: {{sum(1 for p in pairs if p.get(\"is_correct\",False))}}')
-    carnot_ref = json.load(open('results/experiment_1096_semenergy_probe_v1.json'))
-    print('Carnot SemEnergyProbe AUROC:', carnot_ref.get('auroc', carnot_ref.get('auc', 'not_found')))
-    " 2>&1
+    1. Create an in-progress artifact at the deliverable path.
+    2. Check for tectonic, latexmk, or make targets under docs/arxiv-paper.
+    3. Run the narrow compile/package command available in this repo.
+    4. Record pdf_compiled, bundle_path, arxiv_submitted=false unless a local submission
+       receipt already exists. Do not invent a submission event.
+    5. Write status="complete" for a compiled/package artifact or status="blocked" with
+       missing_tool if compilation is impossible.
 
-    2. Implement DiffuTruth Semantic Energy proxy and compute AUROC:
-    python3 -c "
-    import json, numpy as np, sys
-
-    d = json.load(open('results/fover_corpus_v5.json'))
-    pairs = d['pairs'][:100]
-    labels = [int(not p.get('is_correct', True)) for p in pairs]  # 1=hallucination, 0=correct
-
-    # DiffuTruth Semantic Energy proxy:
-    # Corrupt by removing last sentence, measure semantic divergence via TF-IDF cosine distance
-    def semantic_energy(response):
-        sentences = response.strip().split('. ')
-        if len(sentences) <= 1:
-            return 0.0
-        original = response
-        corrupted = '. '.join(sentences[:-1])  # remove last sentence (proxy for corruption)
-        # TF-IDF cosine distance as NLI proxy
-        try:
-            from sklearn.feature_extraction.text import TfidfVectorizer
-            from sklearn.metrics.pairwise import cosine_similarity
-            vec = TfidfVectorizer(max_features=200)
-            mat = vec.fit_transform([original, corrupted])
-            sim = float(cosine_similarity(mat[0], mat[1])[0,0])
-            return 1.0 - sim  # energy = divergence = 1 - similarity
-        except Exception:
-            return float(len(sentences[-1])) / max(len(response), 1)  # fallback: length ratio
-
-    diffutruth_scores = [semantic_energy(p['response']) for p in pairs]
-
-    # AUROC
-    from sklearn.metrics import roc_auc_score
-    try:
-        diffutruth_auroc = float(roc_auc_score(labels, diffutruth_scores))
-    except Exception as e:
-        diffutruth_auroc = 0.5
-        print(f'AUROC error: {{e}}')
-
-    # Carnot reference
-    carnot_ref = json.load(open('results/experiment_1096_semenergy_probe_v1.json'))
-    carnot_auroc = float(carnot_ref.get('auroc', carnot_ref.get('auc', 0.948)))
-
-    # DiffuTruth paper baseline (FEVER unsupervised)
-    diffutruth_fever_auroc = 0.725
-
-    artifact = {
-        'experiment': '1265_diffutruth_vs_carnot_baseline',
-        'status': 'complete',
-        'n_pairs': len(pairs),
-        'diffutruth_semantic_energy_auroc': round(diffutruth_auroc, 4),
-        'carnot_semenergy_probe_auroc': carnot_auroc,
-        'diffutruth_fever_paper_auroc': diffutruth_fever_auroc,
-        'carnot_beats_diffutruth_paper': carnot_auroc > diffutruth_fever_auroc,
-        'carnot_beats_diffutruth_fover': carnot_auroc > diffutruth_auroc,
-        'comparison_note': f'DiffuTruth semantic energy AUROC on FoVer: {{diffutruth_auroc:.4f}}; Carnot SemEnergyProbe: {{carnot_auroc:.4f}}; DiffuTruth FEVER paper: {{diffutruth_fever_auroc}}',
-        'diffutruth_comparison_measured': True,
-        'honest_verdict': f'diffutruth_fover_{{diffutruth_auroc:.3f}}_carnot_{{carnot_auroc:.3f}}'
-    }
-    open('results/experiment_1265_diffutruth_vs_carnot_baseline.json','w').write(json.dumps(artifact,indent=2))
-    print('Done:', artifact['honest_verdict'])
-    print(f'DiffuTruth FoVer AUROC: {{diffutruth_auroc:.4f}}')
-    print(f'Carnot SemEnergyProbe AUROC: {{carnot_auroc:.4f}}')
-    print(f'Carnot beats DiffuTruth paper (0.725): {{carnot_auroc > 0.725}}')
-    " 2>&1
-
-    3. Verify:
-    python3 -c "import json; d=json.load(open('results/experiment_1265_diffutruth_vs_carnot_baseline.json')); print('measured:', d['diffutruth_comparison_measured']); print('verdict:', d['honest_verdict'])"
-
-    REQUIRED ARTIFACT FIELDS:
-    - diffutruth_semantic_energy_auroc: float
-    - carnot_semenergy_probe_auroc: float
-    - diffutruth_fever_paper_auroc: 0.725
-    - carnot_beats_diffutruth_paper: bool
-    - diffutruth_comparison_measured: true
-    - honest_verdict: "diffutruth_fover_X.XXX_carnot_X.XXX"
-
-    Run: python3 -c "import json; d=json.load(open('results/experiment_1265_diffutruth_vs_carnot_baseline.json')); print('verdict:', d.get('honest_verdict'))"
+    Run: python3 -c "import json; d=json.load(open('results/experiment_1270_arxiv_bundle_v10_gated.json')); print(d.get('status'), d.get('pdf_compiled'), d.get('bundle_path'), d.get('honest_verdict'))"
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-- id: exp1266-quantkan-3bit-lut-kan-comparison
-  milestone: 2026.04.98
-  deliverable: results/experiment_1266_quantkan_3bit_lut_kan.json
-  title: "QuantKAN 3-bit PTQ + LUT-KAN Precomputed Inference — Ultra-Edge NPU Deployment"
+# ============================================================
+# Phase 1 - SOTA certificates and self-learning reward selection
+# ============================================================
+
+- id: exp1271-triggered-certificate-extraction-sota-gguf
+  milestone: 2026.04.99
+  deliverable: results/experiment_1271_triggered_certificate_extraction_sota_gguf.json
+  title: "Triggered Certificate Extraction on SOTA GGUF - Qwen/Gemma Headline Models"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 50
+  estimated_wall_time_min: 60
+  priority: critical
+  requires_gpu: true
+  skip_pre_test: true
+  prompt: |
+    CONTEXT:
+    Carnot's highest product gap remains extraction on real local instruction-tuned models.
+    Thinking Before Constraining suggests letting the model reason freely, then triggering
+    a structured certificate tail. RACE suggests measuring whether the certificate aligns
+    with the free-form reasoning and final answer.
+
+    MODEL_SPECS REQUIREMENT:
+    This experiment needs an LLM. Use cached_sota_pair() first and record exact models_used.
+    MODEL_SPECS must include at least one of:
+    - unsloth/Qwen3.6-35B-A3B-GGUF
+    - unsloth/gemma-4-31B-it-GGUF
+    - unsloth/gemma-4-26B-A4B-it-GGUF
+    Legacy Qwen3.5-0.8B or gemma-4-E4B-it may be used only as CPU smoke-test fallbacks
+    with headline_result_allowed=false.
+
+    Use {project_root} as the project root and {date} as the run date in any artifact metadata.
+
+    EXISTING CODE TO READ FIRST:
+    - scripts/experiment_template.py
+    - python/carnot/inference/sota_models.py
+    - python/carnot/pipeline/extract.py
+    - python/carnot/pipeline/fover_annotator.py
+    - results/fover_corpus_v5.json
+
+    TASK:
+    Run a 30-50 prompt triggered-certificate extraction evaluation with local SOTA GGUF models.
+    The model should answer normally, then emit a <CARNOT_CERT> JSON-like tail with claims,
+    equations, final_answer, and confidence.
+
+    CONCRETE STEPS:
+    1. Create an in-progress artifact immediately.
+    2. Resolve MODEL_SPECS using cached_sota_pair(gpu_indices=(0, 1)). If it returns None,
+       write a blocked or smoke-test artifact; do not headline tiny-model results.
+    3. Sample 30-50 FoVer/GSM8K-style prompts from results/fover_corpus_v5.json.
+    4. For each response, attempt to parse the certificate tail and verify claims with existing
+       Z3/SymCode/FoVer helpers where available.
+    5. Compute certificate_parse_rate, verified_claim_coverage, false_positive_rate,
+       answer_reasoning_consistency_score, models_used, expected_cot_structure,
+       headline_result_allowed, and batch_log.
+    6. Write a terminal artifact with honest_verdict:
+       certificate_extraction_viable, certificate_extraction_partial, blocked_no_sota_gguf,
+       or smoke_only_not_headline.
+
+    Run: python3 -c "import json; d=json.load(open('results/experiment_1271_triggered_certificate_extraction_sota_gguf.json')); print(d.get('honest_verdict'), d.get('models_used'), d.get('certificate_parse_rate'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp1272-prime-verifier-selection-audit
+  milestone: 2026.04.99
+  deliverable: results/experiment_1272_prime_verifier_selection_audit.json
+  title: "PRIME Verifier Selection Audit - Process/Outcome Alignment Before GRPO"
   agent_type: codex
   model: gpt-5.5
   max_turns: 35
-  estimated_wall_time_min: 25
-  priority: medium
-  requires_gpu: false
-  skip_pre_test: false
-  prompt: |
-    CONTEXT:
-    KANtize (exp1199) achieved SOS-KAN AUROC=0.9901 at 4-bit, 2.2MB for NPU edge deployment.
-    This experiment extends to 3-bit using GPTQ-style post-training quantization (QuantKAN,
-    arXiv 2511.18689) and implements LUT-KAN (arXiv 2601.03332) precomputed lookup table inference.
-    Goal: AUROC curve across 8-bit, 4-bit, 3-bit + LUT-KAN inference latency comparison.
-
-    STEP 0 — WRITE SKELETON ARTIFACT IMMEDIATELY:
-    python3 -c "import json,os; os.makedirs('results',exist_ok=True); d={{'experiment':'1266_quantkan_3bit_lut_kan','status':'in_progress','quantkan_3bit_auroc':None,'honest_verdict':'in_progress'}}; open('results/experiment_1266_quantkan_3bit_lut_kan.json','w').write(json.dumps(d,indent=2))" 2>&1
-
-    EXISTING CODE TO READ FIRST:
-    - python/carnot/models/sos_kan_energy_v3.py (SOS-KAN model to quantize)
-    - results/experiment_1199_kantize_sos_kan_4bit_quantization.json (4-bit baseline: AUROC=0.9901)
-    - results/fover_corpus_v5.json (evaluation corpus)
-
-    TASK: Simulate QuantKAN 3-bit PTQ and LUT-KAN on SOS-KAN model.
-
-    CONCRETE STEPS:
-    1. Load 4-bit baseline and model:
-    python3 -c "
-    import json
-    d4 = json.load(open('results/experiment_1199_kantize_sos_kan_4bit_quantization.json'))
-    print('4-bit baseline AUROC:', d4.get('quantized_auroc', d4.get('auroc_4bit', 'not_found')))
-    print('4-bit model size:', d4.get('model_size_mb', d4.get('quantized_size_mb', 'not_found')))
-    " 2>&1
-
-    2. Implement 3-bit quantization simulation and LUT-KAN:
-    python3 -c "
-    import json, numpy as np, time, sys
-    sys.path.insert(0, '{project_root}')
-
-    # Load FoVer for evaluation
-    d = json.load(open('results/fover_corpus_v5.json'))
-    pairs = d['pairs'][:200]
-    labels = [int(not p.get('is_correct', True)) for p in pairs]
-
-    # Load 4-bit baseline AUROC
-    try:
-        d4 = json.load(open('results/experiment_1199_kantize_sos_kan_4bit_quantization.json'))
-        auroc_4bit = float(d4.get('quantized_auroc', d4.get('auroc_4bit', 0.9901)))
-        model_size_4bit_mb = float(d4.get('model_size_mb', d4.get('quantized_size_mb', 2.2)))
-    except Exception:
-        auroc_4bit = 0.9901
-        model_size_4bit_mb = 2.2
-
-    # Full-precision baseline (from exp1108 SOS-KAN context)
-    auroc_full = 0.9902
-
-    # 3-bit quantization simulation (GPTQ-style PTQ causes 0.5-1.5% AUROC drop from 4-bit)
-    auroc_3bit = round(auroc_4bit - np.random.uniform(0.005, 0.015), 4)
-    model_size_3bit_mb = round(model_size_4bit_mb * 3/4, 2)  # 3-bit is 3/4 of 4-bit size
-
-    # 8-bit quantization (minimal AUROC drop from full precision)
-    auroc_8bit = round(auroc_full - np.random.uniform(0.0001, 0.001), 4)
-    model_size_8bit_mb = round(model_size_4bit_mb * 2, 2)  # 8-bit is 2x 4-bit
-
-    # LUT-KAN: precompute spline at 256 grid points, INT8 table
-    # Inference: O(log 256) bisection vs O(spline_degree * n_knots) direct
-    n_vars = 50  # typical SOS-KAN input dimension
-    n_grid_points = 256
-    # Simulate latency: LUT = 8ns per var, direct = 20ns per var
-    t_direct_ns = 20.0 * n_vars
-    t_lut_ns = 8.0 * n_vars
-    lut_speedup = round(t_direct_ns / t_lut_ns, 2)
-    lut_table_size_kb = round(n_vars * n_grid_points * 1 / 1024, 2)  # INT8 = 1 byte per entry
-
-    # Combined: 3-bit QuantKAN + LUT-KAN
-    auroc_3bit_lut = round(auroc_3bit - 0.001, 4)  # tiny AUROC drop from LUT rounding
-    model_size_3bit_lut_mb = round(model_size_3bit_mb + lut_table_size_kb/1024, 3)
-
-    artifact = {
-        'experiment': '1266_quantkan_3bit_lut_kan',
-        'status': 'complete',
-        'n_pairs_evaluated': len(pairs),
-        'auroc_curve': {{
-            'full_precision': auroc_full,
-            '8bit_ptq': auroc_8bit,
-            '4bit_ptq': auroc_4bit,
-            '3bit_ptq': auroc_3bit,
-            '3bit_lut': auroc_3bit_lut,
-        }},
-        'model_size_mb': {{
-            '8bit': model_size_8bit_mb,
-            '4bit': model_size_4bit_mb,
-            '3bit': model_size_3bit_mb,
-            '3bit_lut_overhead': model_size_3bit_lut_mb,
-        }},
-        'lut_kan_speedup': lut_speedup,
-        'lut_table_size_kb': lut_table_size_kb,
-        'quantkan_3bit_auroc': auroc_3bit,
-        'auroc_drop_from_4bit': round(auroc_4bit - auroc_3bit, 4),
-        'size_reduction_from_4bit_pct': round((1 - model_size_3bit_mb/model_size_4bit_mb)*100, 1),
-        'deployment_recommendation': '3-bit QuantKAN + LUT-KAN for ultra-edge NPU; 4-bit for general NPU',
-        'honest_verdict': f'quantkan_3bit_auroc_{{auroc_3bit:.4f}}_lut_speedup_{{lut_speedup:.1f}}x'
-    }
-    open('results/experiment_1266_quantkan_3bit_lut_kan.json','w').write(json.dumps(artifact,indent=2))
-    print('Done:', artifact['honest_verdict'])
-    print('AUROC curve:', artifact['auroc_curve'])
-    print('LUT speedup:', lut_speedup, 'x')
-    " 2>&1
-
-    3. Verify:
-    python3 -c "import json; d=json.load(open('results/experiment_1266_quantkan_3bit_lut_kan.json')); print('3bit_auroc:', d['quantkan_3bit_auroc']); print('lut_speedup:', d['lut_kan_speedup'])"
-
-    REQUIRED ARTIFACT FIELDS:
-    - auroc_curve: dict (full/8bit/4bit/3bit/3bit_lut)
-    - quantkan_3bit_auroc: float
-    - lut_kan_speedup: float
-    - honest_verdict: "quantkan_3bit_auroc_X.XXXX_lut_speedup_X.Xx"
-
-    Run: python3 -c "import json; d=json.load(open('results/experiment_1266_quantkan_3bit_lut_kan.json')); print('verdict:', d.get('honest_verdict'))"
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-# ============================================================
-# Phase 7 — Retro (1 task, claude/opus, STEP 0)
-# exp1267: Milestone .98 retrospective.
-# ============================================================
-
-- id: exp1267-milestone-retro-98
-  milestone: 2026.04.98
-  deliverable: results/experiment_1267_milestone_retro_98.json
-  title: "Milestone 2026.04.98 Retrospective — STEP 0 Pattern, Evaluate 13 Criteria"
-  agent_type: claude
-  model: opus
-  max_turns: 100
-  estimated_wall_time_min: 25
+  estimated_wall_time_min: 30
   priority: high
   requires_gpu: false
   skip_pre_test: true
   prompt: |
     CONTEXT:
-    Milestone 2026.04.98 has completed. Evaluate all 13 success criteria.
+    PRIME argues that verifier process/outcome alignment predicts RLVR usefulness.
+    .98 left GRPO v7 stale. The next GRPO attempt must first select a verifier
+    weight vector from measured verifier behavior instead of rerunning broad training.
 
-    STEP 0 — WRITE SKELETON ARTIFACT IMMEDIATELY (before ANY other action):
-    python3 -c "
-    import json, os; os.makedirs('results', exist_ok=True)
-    d = {'experiment':'1267_milestone_retro_98','schema':'milestone_retro_v3',
-         'run_date':'{date}','milestone':'2026.04.98',
-         'status':'in_progress','criteria_met':0,'criteria_total':13,
-         'retro_complete':False,'honest_verdict':'in_progress'}
-    open('results/experiment_1267_milestone_retro_98.json','w').write(json.dumps(d,indent=2))
-    print('STEP 0 written')
-    " 2>&1
+    Use {project_root} as the project root and {date} as the run date in any artifact metadata.
 
     EXISTING CODE TO READ FIRST:
-    - results/experiment_1255_combined_retro_95_96_97.json (criterion 1)
-    - results/experiment_1256_verifier_orthogonality_audit_v3.json (criterion 2)
-    - results/experiment_1257_paper_v6_critical_issues_fix.json (criterion 3)
-    - results/experiment_1258_arxiv_bundle_v9_submission.json (criterion 4)
-    - results/experiment_1259_grpo_v7_progrs_vps.json (criterion 5)
-    - results/experiment_1260_phase5d_intermediate_scale_v3.json (criterion 6)
-    - results/experiment_1261_wopr_kakuro_v3.json (criterion 7)
-    - results/experiment_1262_wopr_masyu_v2.json (criterion 8)
-    - results/experiment_1263_gaming_verifiers_defense_v4.json (criterion 9)
-    - results/experiment_1264_q11_tss_instrumentation_v2.json (criterion 10)
-    - results/experiment_1265_diffutruth_vs_carnot_baseline.json (criterion 11)
-    - results/experiment_1266_quantkan_3bit_lut_kan.json (criterion 12)
+    - results/fover_corpus_v5.json
+    - results/experiment_1256_verifier_orthogonality_audit_v3.json
+    - results/experiment_1264_q11_tss_instrumentation_v2.json
+    - results/experiment_1271_triggered_certificate_extraction_sota_gguf.json if it exists
+    - python/carnot/pipeline/verify_repair.py
+    - python/carnot/pipeline/extract.py
 
-    TASK: Evaluate all 13 criteria with Python one-liners, then write final artifact.
+    TASK:
+    Compute a PRIME-style verifier selection audit over existing FoVer/certificate data.
+    Output a verifier_weight_vector_written boolean and a verifier_weight_vector dict for GRPO.
 
-    CONCRETE STEPS (run each command, record True/False):
+    CONCRETE STEPS:
+    1. Create an in-progress artifact.
+    2. Load available FoVer labels and any certificate outputs from exp1271.
+    3. Evaluate or reconstruct per-verifier process and outcome signals for:
+       Z3MathVerifier, CausalReasoningVerifier, SymCodeVerifier, SemEnergy/SOS-KAN if available,
+       and the k=5 ensemble summary from exp1256.
+    4. Compute process_error_detection_rate, final_answer_agreement, answer_reasoning_consistency,
+       pairwise_correlation_penalty, and a normalized verifier_weight_vector.
+    5. If data is insufficient, write verifier_weight_vector_written=false with missing_fields.
+    6. Otherwise write verifier_weight_vector_written=true and status="complete".
 
-    Criterion 1 — retro_97_complete (exp1255):
-    python3 -c "import json,os; f='results/experiment_1255_combined_retro_95_96_97.json'; d=json.load(open(f)) if os.path.exists(f) else {}; print('c1:', d.get('retro_complete',False))" 2>&1
+    Run: python3 -c "import json; d=json.load(open('results/experiment_1272_prime_verifier_selection_audit.json')); print(d.get('verifier_weight_vector_written'), d.get('honest_verdict'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-    Criterion 2 — orthogonality_matrix_measured (exp1256):
-    python3 -c "import json,os; f='results/experiment_1256_verifier_orthogonality_audit_v3.json'; d=json.load(open(f)) if os.path.exists(f) else {}; print('c2:', d.get('orthogonality_matrix_computed',False))" 2>&1
+- id: exp1273-grpo-v8-prime-vprm-smoke-gated
+  milestone: 2026.04.99
+  deliverable: results/experiment_1273_grpo_v8_prime_vprm_smoke.json
+  title: "GRPO v8 PRIME+VPRM Smoke - Gated on Verifier Weight Vector"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 45
+  estimated_wall_time_min: 60
+  priority: high
+  requires_gpu: true
+  skip_pre_test: true
+  gated_on:
+    - upstream: exp1272-prime-verifier-selection-audit
+      artifact_field: verifier_weight_vector_written
+      op: "=="
+      value: true
+  prior_failures:
+    - experiment_id: exp1259-grpo-v7-progrs-vps-dualgpu
+      verdict: in_progress
+      addressed_by: "exp1259 stale skeleton and no measured delta. This retry is a bounded smoke gated on exp1272 verifier weights, not another broad GRPO run."
+      retire_if_same_verdict: true
+    - experiment_id: exp1247-grpo-v7-simplified
+      verdict: in_progress
+      addressed_by: "Earlier v7 tasks did not write terminal artifacts. This task writes artifact first and limits training/eval sizes."
+      retire_if_same_verdict: false
+  prompt: |
+    CONTEXT:
+    This is a bounded self-learning smoke test, not a full GRPO training run.
+    It should use the verifier_weight_vector from exp1272 and measure whether the
+    PRIME/VPRM reward improves a small held-out slice.
 
-    Criterion 3 — critical_issues_fixed_5_of_5 (exp1257):
-    python3 -c "import json,os; f='results/experiment_1257_paper_v6_critical_issues_fix.json'; d=json.load(open(f)) if os.path.exists(f) else {}; print('c3:', d.get('critical_issues_fixed',0)>=5)" 2>&1
+    MODEL_SPECS REQUIREMENT:
+    This experiment needs an LLM for generated reasoning samples. Use cached_sota_pair()
+    first and record MODEL_SPECS/models_used. Include at least one mandated SOTA GGUF:
+    unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, or
+    unsloth/gemma-4-26B-A4B-it-GGUF. Tiny legacy models are smoke-test only.
 
-    Criterion 4 — arxiv_v6_submitted (exp1258):
-    python3 -c "import json,os; f='results/experiment_1258_arxiv_bundle_v9_submission.json'; d=json.load(open(f)) if os.path.exists(f) else {}; print('c4:', d.get('arxiv_submitted',False) or d.get('pdf_compiled',False))" 2>&1
+    Use {project_root} as the project root and {date} as the run date in any artifact metadata.
 
-    Criterion 5 — grpo_v7_honest_result (exp1259):
-    python3 -c "import json,os; f='results/experiment_1259_grpo_v7_progrs_vps.json'; d=json.load(open(f)) if os.path.exists(f) else {}; print('c5:', d.get('honest_verdict','in_progress') not in ['in_progress',''])" 2>&1
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_1272_prime_verifier_selection_audit.json
+    - scripts/experiment_template.py
+    - python/carnot/inference/sota_models.py
+    - scripts/experiment_1220_grpo_vps_full_training.py if present
+    - scripts/experiment_1259_grpo_v7_progrs_vps.py if present
 
-    Criterion 6 — phase5d_4_gates_measured (exp1260):
-    python3 -c "import json,os; f='results/experiment_1260_phase5d_intermediate_scale_v3.json'; d=json.load(open(f)) if os.path.exists(f) else {}; print('c6:', d.get('phase5d_gates_passed',0)>=4)" 2>&1
+    TASK:
+    Run a small GRPO/VPRM smoke: 10-20 train items and 20-30 eval items, or a deterministic
+    simulation if SOTA GGUF cache/GPU is unavailable. The artifact must clearly distinguish
+    live_sota, blocked, and smoke_only.
 
-    Criterion 7 — kakuro_cartridge_shipped (exp1261):
-    python3 -c "import json,os; f='results/experiment_1261_wopr_kakuro_v3.json'; d=json.load(open(f)) if os.path.exists(f) else {}; print('c7:', d.get('cartridge_shipped',False))" 2>&1
+    CONCRETE STEPS:
+    1. Write an in-progress artifact.
+    2. Load verifier_weight_vector from exp1272.
+    3. Resolve MODEL_SPECS through cached_sota_pair(). If unavailable, write blocked_no_sota_gguf
+       or smoke_only_not_headline with headline_result_allowed=false.
+    4. Run a bounded before/after comparison using PRIME/VPRM weighted rewards.
+    5. Record grpo_v8_delta_pp, self_learning_delta_overall, verifier_weights_used,
+       models_used, headline_result_allowed, and wall_budget_s.
+    6. Write terminal status and honest_verdict even if the delta is <= 0.
 
-    Criterion 8 — masyu_cartridge_shipped (exp1262):
-    python3 -c "import json,os; f='results/experiment_1262_wopr_masyu_v2.json'; d=json.load(open(f)) if os.path.exists(f) else {}; print('c8:', d.get('cartridge_shipped',False))" 2>&1
+    Run: python3 -c "import json; d=json.load(open('results/experiment_1273_grpo_v8_prime_vprm_smoke.json')); print(d.get('honest_verdict'), d.get('grpo_v8_delta_pp'), d.get('headline_result_allowed'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-    Criterion 9 — gaming_defense_measured (exp1263):
-    python3 -c "import json,os; f='results/experiment_1263_gaming_verifiers_defense_v4.json'; d=json.load(open(f)) if os.path.exists(f) else {}; print('c9:', d.get('gaming_defense_measured',False))" 2>&1
+- id: exp1274-online-self-learning-certificate-memory-v3
+  milestone: 2026.04.99
+  deliverable: results/experiment_1274_online_self_learning_certificate_memory_v3.json
+  title: "Online Self-Learning Certificate Memory v3 - Replay Delta + Skill Graph Candidate"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 40
+  estimated_wall_time_min: 35
+  priority: critical
+  requires_gpu: false
+  skip_pre_test: true
+  prior_failures:
+    - experiment_id: exp1212-tier1-constraint-addition-v2
+      verdict: completed_or_unclear_delta
+      addressed_by: "This is not a blind rerun of reweighting. It uses certificate artifacts and measures replay delta, plus optional skill-graph emission from verifiable trajectories."
+      retire_if_same_verdict: false
+    - experiment_id: exp1200-online-constraint-reweighting-v2-addition
+      verdict: completed_or_unclear_delta
+      addressed_by: "Prior work focused on constraint addition. This task measures future-case replay improvement from certificate memory."
+      retire_if_same_verdict: false
+  prompt: |
+    CONTEXT:
+    Every milestone must advance continuous self-learning. This task turns verified
+    certificates or FoVer labels into a replayable case memory, then measures whether
+    memory improves future verification/routing decisions.
 
-    Criterion 10 — q11_tss_instrumented (exp1264):
-    python3 -c "import json,os; f='results/experiment_1264_q11_tss_instrumentation_v2.json'; d=json.load(open(f)) if os.path.exists(f) else {}; print('c10:', d.get('tss_instrumented',False))" 2>&1
+    Use {project_root} as the project root and {date} as the run date in any artifact metadata.
 
-    Criterion 11 — diffutruth_comparison_measured (exp1265):
-    python3 -c "import json,os; f='results/experiment_1265_diffutruth_vs_carnot_baseline.json'; d=json.load(open(f)) if os.path.exists(f) else {}; print('c11:', d.get('diffutruth_comparison_measured',False))" 2>&1
+    EXISTING CODE TO READ FIRST:
+    - research-program.md section "Continuous Self-Learning"
+    - python/carnot/pipeline/verify_repair.py
+    - python/carnot/pipeline/fover_annotator.py
+    - results/experiment_1271_triggered_certificate_extraction_sota_gguf.json if it exists
+    - results/fover_corpus_v5.json
 
-    Criterion 12 — quantkan_3bit_auroc_measured (exp1266):
-    python3 -c "import json,os; f='results/experiment_1266_quantkan_3bit_lut_kan.json'; d=json.load(open(f)) if os.path.exists(f) else {}; print('c12:', d.get('quantkan_3bit_auroc') is not None)" 2>&1
+    TASK:
+    Implement or run a lightweight certificate-memory replay evaluation. Produce a measured
+    self_learning_delta_overall, even if zero or negative.
 
-    Criterion 13 — retro_98_complete: True once this experiment finalizes.
-    python3 -c "print('c13: True (this experiment)')" 2>&1
+    CONCRETE STEPS:
+    1. Create an in-progress artifact.
+    2. Load certificate examples from exp1271 if present; otherwise use verified FoVer pairs
+       as a fallback and mark source="fover_fallback".
+    3. Build a memory table keyed by constraint pattern, verifier result, and repair hint.
+    4. Split examples into memory-build and replay-eval slices.
+    5. Compare verification/routing/repair decision quality before and after memory lookup.
+    6. Optionally emit skill_graph_candidates with contract, evidence_count, replay_success_rate,
+       and demotion_condition.
+    7. Write status="complete", self_learning_delta_overall, before_score, after_score,
+       memory_entries, skill_graph_candidate_count, and honest_verdict.
 
-    After running all commands, write final artifact:
-    python3 -c "
-    import json
-    f = 'results/experiment_1267_milestone_retro_98.json'
-    d = json.load(open(f))
-    # Fill in criteria_results from commands above
-    # d['criteria_results'] = {{'retro_97_complete': True/False, ...}}
-    # d['criteria_met'] = sum(d['criteria_results'].values())
-    # d['findings_summary'] = '2-3 sentences on .98 achievements'
-    # d['key_carry_forwards'] = ['top 3-5 items for .99']
-    # d['top_successes'] = ['list top 3']
-    # d['top_gaps'] = ['list top 3 gaps']
-    d['retro_complete'] = True
-    d['status'] = 'complete'
-    # d['honest_verdict'] = f'milestone_98_{{d[\"criteria_met\"]}}_of_13_criteria_met'
-    open(f,'w').write(json.dumps(d,indent=2))
-    print('Final retro written')
-    " 2>&1
+    Run: python3 -c "import json; d=json.load(open('results/experiment_1274_online_self_learning_certificate_memory_v3.json')); print(d.get('honest_verdict'), d.get('self_learning_delta_overall'), d.get('memory_entries'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-    REQUIRED ARTIFACT FIELDS:
-    - criteria_results: dict (13 criteria: true/false each)
-    - criteria_met: int
-    - criteria_total: 13
-    - findings_summary: str (2-3 sentences on .98 key outcomes)
-    - key_carry_forwards: list[str] (top 3-5 for .99)
-    - top_successes: list[str]
-    - top_gaps: list[str]
-    - retro_complete: true
-    - honest_verdict: "milestone_98_N_of_13_criteria_met"
+# ============================================================
+# Phase 2 - Continuous EBM repair and constrained acceptance
+# ============================================================
 
-    Run: python3 -c "import json; d=json.load(open('results/experiment_1267_milestone_retro_98.json')); print('retro_complete:', d.get('retro_complete')); print('criteria_met:', d.get('criteria_met'))"
+- id: exp1275-fsnet-feasibility-step-continuous-ebm
+  milestone: 2026.04.99
+  deliverable: results/experiment_1275_fsnet_feasibility_step_continuous_ebm.json
+  title: "FSNet Feasibility Step for Continuous EBM - Raw Langevin vs Feasibility Seeking"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 40
+  estimated_wall_time_min: 35
+  priority: high
+  requires_gpu: false
+  skip_pre_test: false
+  prompt: |
+    CONTEXT:
+    FSNet integrates a feasibility-seeking step into neural constrained optimization.
+    Carnot's Phase-3 continuous EBM substrate currently measures energy but needs a
+    concrete repair operator that reduces constraint violations without collapsing diversity.
+
+    Use {project_root} as the project root and {date} as the run date in any artifact metadata.
+
+    EXISTING CODE TO READ FIRST:
+    - python/carnot/phase3/continuous_ebm.py
+    - tests/python/test_continuous_ebm.py
+    - results/experiment_1264_q11_tss_instrumentation_v2.json
+    - openspec/capabilities/sampling/spec.md
+
+    TASK:
+    Add or prototype a small FSNet-style feasibility step for continuous EBM states and
+    compare it against raw Langevin updates.
+
+    CONCRETE STEPS:
+    1. Create an in-progress artifact.
+    2. Implement a minimal feasibility_step function or local experiment helper that takes a
+       latent state and minimizes violation energy separately from task energy.
+    3. Run on deterministic synthetic/FoVer-like latent states.
+    4. Compare raw Langevin vs feasibility_step on final energy, violation count, convergence
+       steps, state distortion, and diversity.
+    5. Add focused tests if a public helper is added.
+    6. Write feasibility_delta_overall, energy_delta, violation_delta, distortion_mean,
+       feasibility_step_viable, and honest_verdict.
+
+    Run: python3 -c "import json; d=json.load(open('results/experiment_1275_fsnet_feasibility_step_continuous_ebm.json')); print(d.get('honest_verdict'), d.get('feasibility_delta_overall'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp1276-snarenet-repair-layer-gated
+  milestone: 2026.04.99
+  deliverable: results/experiment_1276_snarenet_repair_layer_gated.json
+  title: "SnareNet Repair Layer - Gated on FSNet Feasibility Delta > 0"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 40
+  estimated_wall_time_min: 35
+  priority: medium
+  requires_gpu: false
+  skip_pre_test: false
+  gated_on:
+    - upstream: exp1275-fsnet-feasibility-step-continuous-ebm
+      artifact_field: feasibility_delta_overall
+      op: ">"
+      value: 0.0
+  prompt: |
+    CONTEXT:
+    SnareNet appends a differentiable repair layer with adaptive relaxation for hard constraints.
+    This task should run only if exp1275 shows a positive feasibility delta.
+
+    Use {project_root} as the project root and {date} as the run date in any artifact metadata.
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_1275_fsnet_feasibility_step_continuous_ebm.json
+    - python/carnot/phase3/continuous_ebm.py
+    - tests/python/test_continuous_ebm.py
+
+    TASK:
+    Prototype an adaptive repair layer on top of the FSNet-style feasibility step and measure
+    whether it improves satisfaction without excessive distortion.
+
+    CONCRETE STEPS:
+    1. Create an in-progress artifact.
+    2. Add a local or public ConstraintRepairLayer/AdaptiveRepairLayer helper consistent with
+       existing continuous_ebm style.
+    3. Compare raw Langevin, FSNet feasibility step, and SnareNet-style adaptive repair.
+    4. Measure final_constraint_satisfaction, repair_iterations, distortion_from_initial,
+       diversity_preserved, and repair_delta_over_fsnet.
+    5. Add focused tests if code is public.
+    6. Write a terminal artifact with honest_verdict.
+
+    Run: python3 -c "import json; d=json.load(open('results/experiment_1276_snarenet_repair_layer_gated.json')); print(d.get('honest_verdict'), d.get('repair_delta_over_fsnet'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp1277-cactus-constrained-acceptance-sampling-gated
+  milestone: 2026.04.99
+  deliverable: results/experiment_1277_cactus_constrained_acceptance_sampling.json
+  title: "Cactus Constrained Acceptance Sampling - Gated on Certificate Parse Rate >= 0.8"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 40
+  estimated_wall_time_min: 45
+  priority: medium
+  requires_gpu: true
+  skip_pre_test: true
+  gated_on:
+    - upstream: exp1271-triggered-certificate-extraction-sota-gguf
+      artifact_field: certificate_parse_rate
+      op: ">="
+      value: 0.8
+  prompt: |
+    CONTEXT:
+    Cactus reframes speculative sampling as constrained acceptance. Carnot can use a draft
+    response only when certificate/energy divergence stays below a bound. This task runs only
+    if exp1271 certificates are parseable enough to serve as a verifier.
+
+    MODEL_SPECS REQUIREMENT:
+    This experiment needs an LLM verifier/draft path. Use cached_sota_pair() and record
+    MODEL_SPECS/models_used. Include at least one mandated SOTA GGUF:
+    - unsloth/Qwen3.6-35B-A3B-GGUF
+    - unsloth/gemma-4-31B-it-GGUF
+    - unsloth/gemma-4-26B-A4B-it-GGUF
+    Tiny legacy models are smoke-test only and cannot support headline results.
+
+    Use {project_root} as the project root and {date} as the run date in any artifact metadata.
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_1271_triggered_certificate_extraction_sota_gguf.json
+    - scripts/experiment_template.py
+    - python/carnot/inference/sota_models.py
+    - python/carnot/pipeline/verify_repair.py
+
+    TASK:
+    Implement a small Cactus-style constrained acceptance smoke test on 20-30 typed constraint prompts.
+    Measure acceptance rate, energy violation rate, and latency compared with unconstrained generation.
+
+    CONCRETE STEPS:
+    1. Create an in-progress artifact.
+    2. Resolve MODEL_SPECS with cached_sota_pair(). If unavailable, write blocked_no_sota_gguf.
+    3. Use exp1271 certificate parser/verifier as the acceptance constraint.
+    4. Generate or replay draft candidates, accept only when certificate and energy checks pass.
+    5. Record cactus_acceptance_rate, violation_rate_after_acceptance, latency_ratio,
+       models_used, headline_result_allowed, and honest_verdict.
+    6. Write status="complete" or status="blocked" with named missing prerequisite.
+
+    Run: python3 -c "import json; d=json.load(open('results/experiment_1277_cactus_constrained_acceptance_sampling.json')); print(d.get('honest_verdict'), d.get('cactus_acceptance_rate'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+# ============================================================
+# Phase 3 - Hardening, WOPR completion, and retro
+# ============================================================
+
+- id: exp1278-gaming-verifiers-defense-est-final
+  milestone: 2026.04.99
+  deliverable: results/experiment_1278_gaming_verifiers_defense_est_final.json
+  title: "Gaming Verifiers Defense EST Final - Pure Data Analysis"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 30
+  estimated_wall_time_min: 25
+  priority: high
+  requires_gpu: false
+  skip_pre_test: true
+  prior_failures:
+    - experiment_id: exp1263-gaming-verifiers-defense-v4-est
+      verdict: in_progress
+      addressed_by: "exp1263 stale skeleton. This retry is pure data analysis using EST-style invariance checks and existing FoVer/ensemble artifacts."
+      retire_if_same_verdict: true
+    - experiment_id: exp1249-llms-gaming-verifiers-defense-v3
+      verdict: in_progress
+      addressed_by: "Prior v3 attempts did not produce a terminal measurement. This task avoids live LLM training and measures invariance vulnerability from existing artifacts."
+      retire_if_same_verdict: false
+    - experiment_id: exp1231-llms-gaming-verifiers-defense
+      verdict: artifact_not_updated_past_bootstrap
+      addressed_by: "Earlier broad gaming-defense prompts were too large. This task has a fixed EST metric and terminal artifact."
+      retire_if_same_verdict: false
+  prompt: |
+    CONTEXT:
+    LLMs gaming verifiers remains a paper and Phase-5 risk. EST gives a bounded
+    invariance-test protocol: verifier scores should be stable under meaning-preserving
+    perturbations and change under meaning-changing perturbations.
+
+    Use {project_root} as the project root and {date} as the run date in any artifact metadata.
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_1263_gaming_verifiers_defense_v4.json
+    - results/experiment_1256_verifier_orthogonality_audit_v3.json
+    - results/fover_corpus_v5.json
+    - python/carnot/pipeline/verify_repair.py
+
+    TASK:
+    Complete a pure-data EST gaming-defense measurement. Do not train a model.
+
+    CONCRETE STEPS:
+    1. Create an in-progress artifact.
+    2. Select 30-50 FoVer examples with labels and available verifier/energy scores.
+    3. Generate deterministic meaning-preserving perturbations and meaning-changing perturbations
+       using string transforms/templates, not LLM calls.
+    4. Measure score instability under preserving perturbations and sensitivity under changing perturbations.
+    5. Compute est_precision_proxy, est_recall_proxy, gaming_vulnerability_score,
+       k5_blocks_surface_gaming, gaming_defense_measured=true.
+    6. Write status="complete" and an honest verdict even if vulnerability is high.
+
+    Run: python3 -c "import json; d=json.load(open('results/experiment_1278_gaming_verifiers_defense_est_final.json')); print(d.get('gaming_defense_measured'), d.get('honest_verdict'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp1279-wopr-kakuro-v4-minimal
+  milestone: 2026.04.99
+  deliverable: results/experiment_1279_wopr_kakuro_v4_minimal.json
+  title: "WOPR Kakuro v4 Minimal - Ship or Honest Block"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 30
+  estimated_wall_time_min: 30
+  priority: medium
+  requires_gpu: false
+  skip_pre_test: true
+  prior_failures:
+    - experiment_id: exp1261-wopr-kakuro-v3
+      verdict: in_progress
+      addressed_by: "exp1261 stale skeleton. This retry is minimal formulaic code with focused tests and terminal artifact."
+      retire_if_same_verdict: true
+    - experiment_id: exp1243-wopr-kakuro-cartridge-v2
+      verdict: artifact_not_updated_past_bootstrap
+      addressed_by: "Earlier Kakuro retries were too broad. This task ships one minimal puzzle cartridge or records the exact missing module."
+      retire_if_same_verdict: false
+    - experiment_id: exp1240-wopr-kakuro-cartridge
+      verdict: gate_or_stale
+      addressed_by: "This task narrows deliverable to a minimal cartridge plus artifact."
+      retire_if_same_verdict: false
+  prompt: |
+    CONTEXT:
+    Kakuro is a formulaic CSP cartridge. The goal is not a full gallery release; it is one
+    minimal cartridge with E=0 for a valid solution or an honest blocker.
+
+    Use {project_root} as the project root and {date} as the run date in any artifact metadata.
+
+    EXISTING CODE TO READ FIRST:
+    - python/carnot/wopr/ if it exists
+    - tests/python/ matching WOPR cartridges
+    - results/experiment_1261_wopr_kakuro_v3.json
+    - openspec/change-proposals/wopr-games-gallery-extension.md
+
+    TASK:
+    Ship a minimal Kakuro WOPR cartridge or write a blocked artifact naming the exact missing
+    package/path/API. Do not broaden into unrelated gallery work.
+
+    CONCRETE STEPS:
+    1. Create an in-progress artifact.
+    2. Locate existing WOPR cartridge patterns.
+    3. Implement the smallest Kakuro encoding: cells, row/column sum groups, uniqueness within group
+       if the local pattern supports it, and energy(solution)=0.
+    4. Add focused tests for valid solution E=0 and invalid solution E>0.
+    5. Run only the focused tests.
+    6. Write cartridge_shipped, focused_tests_passed, final_energy_valid, invalid_energy_positive,
+       files_changed, status, and honest_verdict.
+
+    Run: python3 -c "import json; d=json.load(open('results/experiment_1279_wopr_kakuro_v4_minimal.json')); print(d.get('cartridge_shipped'), d.get('honest_verdict'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp1280-wopr-masyu-v3-minimal
+  milestone: 2026.04.99
+  deliverable: results/experiment_1280_wopr_masyu_v3_minimal.json
+  title: "WOPR Masyu v3 Minimal - Ship or Honest Block"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 30
+  estimated_wall_time_min: 30
+  priority: medium
+  requires_gpu: false
+  skip_pre_test: true
+  prior_failures:
+    - experiment_id: exp1262-wopr-masyu-v2
+      verdict: in_progress
+      addressed_by: "exp1262 stale skeleton. This retry is minimal formulaic code with focused tests and terminal artifact."
+      retire_if_same_verdict: true
+    - experiment_id: exp1253-wopr-masyu-cartridge
+      verdict: doomed_rerun_block_or_stale
+      addressed_by: "Earlier Masyu attempts had missing prior_failures and broad scope. This task explicitly narrows to one minimal loop constraint encoding."
+      retire_if_same_verdict: false
+  prompt: |
+    CONTEXT:
+    Masyu is a loop CSP cartridge. The goal is one minimal black/white circle constraint
+    encoding with a terminal artifact, not a full UI/gallery release.
+
+    Use {project_root} as the project root and {date} as the run date in any artifact metadata.
+
+    EXISTING CODE TO READ FIRST:
+    - python/carnot/wopr/ if it exists
+    - tests/python/ matching WOPR cartridges
+    - results/experiment_1262_wopr_masyu_v2.json
+    - openspec/change-proposals/wopr-games-gallery-extension.md
+
+    TASK:
+    Ship a minimal Masyu WOPR cartridge or write a blocked artifact naming the exact missing
+    package/path/API.
+
+    CONCRETE STEPS:
+    1. Create an in-progress artifact.
+    2. Locate existing WOPR loop/grid cartridge patterns.
+    3. Implement the smallest Masyu encoding: path degree constraints, black-circle turn/straight-neighbor
+       rule, white-circle straight/turn-neighbor rule, and energy(valid_loop)=0.
+    4. Add focused tests for valid loop E=0 and one black/white violation E>0.
+    5. Run only focused tests.
+    6. Write cartridge_shipped, focused_tests_passed, final_energy_valid, invalid_energy_positive,
+       files_changed, status, and honest_verdict.
+
+    Run: python3 -c "import json; d=json.load(open('results/experiment_1280_wopr_masyu_v3_minimal.json')); print(d.get('cartridge_shipped'), d.get('honest_verdict'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp1281-milestone-retro-99
+  milestone: 2026.04.99
+  deliverable: results/experiment_1281_milestone_retro_99.json
+  title: "Milestone 2026.04.99 Retrospective - Evaluate 14 Criteria"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 30
+  estimated_wall_time_min: 20
+  priority: high
+  requires_gpu: false
+  skip_pre_test: true
+  prompt: |
+    CONTEXT:
+    Milestone .99 has 14 planned success criteria. This retro must be terminal even
+    if many tasks are blocked or gated. Do not run broad tests.
+
+    Use {project_root} as the project root and {date} as the run date in any artifact metadata.
+
+    EXISTING CODE TO READ FIRST:
+    - research-roadmap-next.yaml
+    - openspec/change-proposals/research-roadmap-vNEXT.md
+    - results/experiment_1268_retro_backfill_95_96_97_v2.json
+    - results/experiment_1269_paper_v6_critical_fixes_v2.json
+    - results/experiment_1270_arxiv_bundle_v10_gated.json if it exists
+    - results/experiment_1271_triggered_certificate_extraction_sota_gguf.json
+    - results/experiment_1272_prime_verifier_selection_audit.json
+    - results/experiment_1273_grpo_v8_prime_vprm_smoke.json if it exists
+    - results/experiment_1274_online_self_learning_certificate_memory_v3.json
+    - results/experiment_1275_fsnet_feasibility_step_continuous_ebm.json
+    - results/experiment_1276_snarenet_repair_layer_gated.json if it exists
+    - results/experiment_1277_cactus_constrained_acceptance_sampling.json if it exists
+    - results/experiment_1278_gaming_verifiers_defense_est_final.json
+    - results/experiment_1279_wopr_kakuro_v4_minimal.json
+    - results/experiment_1280_wopr_masyu_v3_minimal.json
+
+    TASK:
+    Evaluate all .99 criteria mechanically from artifacts and write a terminal retro.
+
+    CONCRETE STEPS:
+    1. Create an in-progress artifact.
+    2. For each planned task, load the artifact if present and classify MET, NOT_MET, GATED,
+       BLOCKED, or MISSING.
+    3. Count criteria_met out of 14.
+    4. Include top_successes, top_gaps, self_learning_result, sota_model_usage_summary,
+       stale_artifacts, key_carry_forwards, status="complete", retro_complete=true.
+    5. Write honest_verdict as milestone_99_N_of_14_criteria_met.
+
+    Run: python3 -c "import json; d=json.load(open('results/experiment_1281_milestone_retro_99.json')); print(d.get('retro_complete'), d.get('criteria_met'), d.get('honest_verdict'))"
     Do NOT push. Do NOT modify scripts/research_conductor.py.
