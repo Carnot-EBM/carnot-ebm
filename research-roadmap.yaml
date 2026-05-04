@@ -1,183 +1,108 @@
-milestone: 2026.04.99
-milestone_title: "Publication Closeout + SOTA Certificates + PRIME Self-Learning + Continuous Repair"
+milestone: 2026.04.100
+milestone_title: "SOTA Certificate Recovery + Verifier-Feedback Self-Learning + Continuous Repair Bridge"
 milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
 tasks:
 
 # ============================================================
-# Phase 0 - Publication and stale-retro closeout
+# Phase 0 - Certificate infrastructure preflight
 # ============================================================
 
-- id: exp1268-retro-backfill-95-96-97-v2
-  milestone: 2026.04.99
-  deliverable: results/experiment_1268_retro_backfill_95_96_97_v2.json
-  title: "Retro Backfill .95/.96/.97 v2 - Pure JSON Archaeology, Terminal Artifact"
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 20
-  estimated_wall_time_min: 15
-  priority: critical
-  requires_gpu: false
-  skip_pre_test: true
-  prior_failures:
-    - experiment_id: exp1255-combined-retro-95-96-97
-      verdict: in_progress
-      addressed_by: "exp1255 wrote a stale skeleton only. This retry is pure JSON archaeology with no broad test run, no imports from carnot, and a required terminal artifact write in step 1."
-      retire_if_same_verdict: true
-    - experiment_id: exp1242-combined-retro-95-96
-      verdict: in_progress
-      addressed_by: "exp1242 stale skeleton is included in the same backfill scope; this task reads available result JSONs directly."
-      retire_if_same_verdict: false
-    - experiment_id: exp1254-milestone-retro-97
-      verdict: in_progress
-      addressed_by: "exp1254 stale skeleton is included in the same backfill scope; this task writes a combined terminal artifact."
-      retire_if_same_verdict: false
-  prompt: |
-    CONTEXT:
-    Milestone .98 left the combined .95/.96/.97 retro artifact at status=in_progress.
-    This task closes only the bookkeeping gap. It must not run pytest, import Carnot modules,
-    or broaden into paper or experiment implementation work.
-
-    Use {project_root} as the project root and {date} as the run date in any artifact metadata.
-
-    EXISTING CODE TO READ FIRST:
-    - results/experiment_1255_combined_retro_95_96_97.json
-    - results/experiment_1267_milestone_retro_98.json
-    - research-roadmap.yaml
-    - ops/changelog.md
-
-    TASK:
-    Create a terminal artifact at results/experiment_1268_retro_backfill_95_96_97_v2.json
-    summarizing .95, .96, and .97 criteria from existing JSON artifacts. If a source artifact
-    is missing or stale, record that explicitly instead of trying to repair it.
-
-    CONCRETE STEPS:
-    1. Write the terminal artifact directly using only json/os/glob. Include:
-       milestone_ids, source_artifacts_checked, stale_artifacts, criteria_counts_by_milestone,
-       retro_backfill_complete=true, status="complete", honest_verdict.
-    2. For each milestone, count any available criteria result fields from retro artifacts.
-       If the field is absent, record "not_evaluated_from_available_artifacts".
-    3. Include top carry-forwards from exp1267.key_carry_forwards so the next retro has context.
-    4. Verify the artifact is terminal and not in_progress.
-
-    Run: python3 -c "import json; d=json.load(open('results/experiment_1268_retro_backfill_95_96_97_v2.json')); print(d.get('status'), d.get('retro_backfill_complete'), d.get('honest_verdict'))"
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp1269-paper-v6-critical-fixes-v2
-  milestone: 2026.04.99
-  deliverable: results/experiment_1269_paper_v6_critical_fixes_v2.json
-  title: "Paper-v6 Critical Fixes v2 - Measured Claims Only"
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 50
-  estimated_wall_time_min: 45
-  priority: critical
-  requires_gpu: false
-  skip_pre_test: true
-  prior_failures:
-    - experiment_id: exp1257-paper-v6-critical-issues-fix
-      verdict: in_progress
-      addressed_by: "exp1257 stale skeleton. This retry narrows to five named claims, requires artifact updates after each claim, and cites measured .98 artifacts."
-      retire_if_same_verdict: true
-    - experiment_id: exp1245-figure-integrity-audit-fig3-fix
-      verdict: in_progress
-      addressed_by: "exp1245 stale skeleton. This task does not rewrite the whole paper; it edits only unsupported measured-claim text."
-      retire_if_same_verdict: false
-    - experiment_id: exp1205-paper-v5-critical-issues-retry-v3
-      verdict: in_progress
-      addressed_by: "Earlier paper-fix attempts exceeded budget or skipped pre-tests. This task uses skip_pre_test and a surgical checklist."
-      retire_if_same_verdict: false
-  prompt: |
-    CONTEXT:
-    The .98 retro says paper critical fixes remain the publication blocker.
-    The verifier orthogonality, Q11 TSS, DiffuTruth, and QuantKAN measurements now exist.
-    The paper must cite measured artifacts and remove unsupported speedup/provenance claims.
-
-    Use {project_root} as the project root and {date} as the run date in any artifact metadata.
-
-    EXISTING CODE TO READ FIRST:
-    - docs/arxiv-paper/main.tex
-    - openspec/change-proposals/paper-v5-integrity-remediation.md
-    - results/experiment_1256_verifier_orthogonality_audit_v3.json
-    - results/experiment_1264_q11_tss_instrumentation_v2.json
-    - results/experiment_1265_diffutruth_vs_carnot_baseline.json
-    - results/experiment_1266_quantkan_3bit_lut_kan.json
-
-    TASK:
-    Fix the five critical paper integrity issues with minimal edits and write a terminal
-    artifact reporting exactly which issues were fixed. Do not create new headline claims.
-
-    CONCRETE STEPS:
-    1. Create results/experiment_1269_paper_v6_critical_fixes_v2.json with status="in_progress".
-    2. In docs/arxiv-paper/main.tex, search for the five critical claim classes:
-       estimated CPU/FPGA speedups, KL measurement provenance, hand-typed CPU constants,
-       apples-to-oranges HumanEval latency, and SOS-KAN AUROC ambiguity.
-    3. Replace each with measured or explicitly caveated text. Use exp1256/1264/1265/1266
-       for measured values where relevant.
-    4. Run a narrow text audit command that greps for the old unsupported strings.
-    5. Write the final artifact with critical_issues_fixed, issues_fixed_list,
-       measured_artifacts_cited, old_claims_remaining, status="complete", honest_verdict.
-
-    Run: python3 -c "import json; d=json.load(open('results/experiment_1269_paper_v6_critical_fixes_v2.json')); print(d.get('critical_issues_fixed'), d.get('honest_verdict'))"
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp1270-arxiv-bundle-v10-gated
-  milestone: 2026.04.99
-  deliverable: results/experiment_1270_arxiv_bundle_v10_gated.json
-  title: "arXiv Bundle v10 - Gated on Exp 1269 Critical Fixes"
+- id: exp1282-sota-gguf-cache-provenance-preflight
+  milestone: 2026.04.100
+  deliverable: results/experiment_1282_sota_gguf_cache_provenance_preflight.json
+  title: "SOTA GGUF Cache + Provenance Preflight - Prevent Exp 1271 Repeat"
   agent_type: codex
   model: gpt-5.5
   max_turns: 30
-  estimated_wall_time_min: 25
-  priority: high
+  estimated_wall_time_min: 20
+  priority: critical
   requires_gpu: false
   skip_pre_test: true
-  gated_on:
-    - upstream: exp1269-paper-v6-critical-fixes-v2
-      artifact_field: critical_issues_fixed
-      op: ">="
-      value: 5
-  prior_failures:
-    - experiment_id: exp1258-arxiv-bundle-v9-submission
-      verdict: gate_block_no_artifact
-      addressed_by: "exp1258 was gate-blocked after exp1257 retired. This task has a structured conductor gate on exp1269.critical_issues_fixed >= 5 so the Sonnet/Codex call is skipped when prerequisites fail."
-      retire_if_same_verdict: false
   prompt: |
     CONTEXT:
-    The arXiv bundle should be produced only after paper critical issues are fixed.
-    This task is gated on exp1269.critical_issues_fixed >= 5.
+    Milestone .99 failed its headline SOTA certificate task before inference:
+    exp1271 was blocked by missing prior-failure metadata and produced no parse rate.
+    This preflight must prove whether the mandated local SOTA GGUF cache path is ready
+    before downstream tasks spend GPU or agent time.
+
+    Required local headline models:
+    - unsloth/Qwen3.6-35B-A3B-GGUF
+    - unsloth/gemma-4-31B-it-GGUF
+    - unsloth/gemma-4-26B-A4B-it-GGUF
 
     Use {project_root} as the project root and {date} as the run date in any artifact metadata.
 
     EXISTING CODE TO READ FIRST:
-    - docs/arxiv-paper/main.tex
-    - docs/arxiv-paper/Makefile
-    - results/experiment_1269_paper_v6_critical_fixes_v2.json
-    - openspec/change-proposals/paper-v5-integrity-remediation.md
+    - scripts/experiment_template.py
+    - python/carnot/inference/sota_models.py
+    - results/experiment_1271_triggered_certificate_extraction_sota_gguf.json
+    - results/experiment_1281_milestone_retro_99.json
 
     TASK:
-    Compile or package the paper into a submission bundle. If local TeX tooling is absent,
-    write an honest blocked artifact with exact missing command names.
+    Write a cache/provenance readiness artifact for mandated SOTA GGUF inference.
+    Do not download models unless the existing resolver already performs a safe cache lookup.
 
     CONCRETE STEPS:
-    1. Create an in-progress artifact at the deliverable path.
-    2. Check for tectonic, latexmk, or make targets under docs/arxiv-paper.
-    3. Run the narrow compile/package command available in this repo.
-    4. Record pdf_compiled, bundle_path, arxiv_submitted=false unless a local submission
-       receipt already exists. Do not invent a submission event.
-    5. Write status="complete" for a compiled/package artifact or status="blocked" with
-       missing_tool if compilation is impossible.
+    1. Create the deliverable artifact immediately with status="in_progress".
+    2. Import or inspect python/carnot/inference/sota_models.py and call cached_sota_pair(gpu_indices=(0, 1)) if import is safe.
+    3. Record all three mandated model IDs, which ones are cached, model_path values, quantization suffixes, and whether cached_sota_pair() returns two loadable MODEL_SPECS.
+    4. Record the exact prior failure that this preflight addresses: exp1271 blocked_gate_check_failed / DOOMED_RERUN_BLOCK due to missing prior_failures.
+    5. Write cached_sota_ready=true only if at least one mandated SOTA GGUF is cached and cached_sota_pair() returns non-null specs. Otherwise write cached_sota_ready=false and missing_models.
+    6. Include provenance_ok, model_specs_preview, headline_result_possible, status="complete", and honest_verdict.
 
-    Run: python3 -c "import json; d=json.load(open('results/experiment_1270_arxiv_bundle_v10_gated.json')); print(d.get('status'), d.get('pdf_compiled'), d.get('bundle_path'), d.get('honest_verdict'))"
+    Run: python3 -c "import json; d=json.load(open('results/experiment_1282_sota_gguf_cache_provenance_preflight.json')); print(d.get('cached_sota_ready'), d.get('headline_result_possible'), d.get('honest_verdict'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp1283-certificate-grammar-backend-bakeoff
+  milestone: 2026.04.100
+  deliverable: results/experiment_1283_certificate_grammar_backend_bakeoff.json
+  title: "Certificate Grammar Backend Bakeoff - llama.cpp vs llguidance vs XGrammar"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 40
+  estimated_wall_time_min: 35
+  priority: critical
+  requires_gpu: false
+  skip_pre_test: true
+  prompt: |
+    CONTEXT:
+    .99 proved that the next expensive SOTA certificate run needs a bounded structured
+    certificate substrate first. Recent sources add constraints: XGrammar/llguidance are
+    practical local backends, Grammar-Aligned Decoding warns about grammar projection tax,
+    CDoT covers context-sensitive certificate obligations, STATIC covers trie/vectorized
+    bounded vocabularies, and ABS gives a DFA/automata fallback.
+
+    Use {project_root} as the project root and {date} as the run date in any artifact metadata.
+
+    EXISTING CODE TO READ FIRST:
+    - python/carnot/inference/sota_models.py
+    - scripts/experiment_template.py
+    - research-references.md
+    - openspec/change-proposals/research-roadmap-vNEXT.md
+
+    TASK:
+    Select the lowest-friction local grammar backend for <CARNOT_CERT> tails or write a
+    complete blocker artifact. Do not run LLM inference.
+
+    CONCRETE STEPS:
+    1. Create the deliverable artifact immediately with status="in_progress".
+    2. Define a minimal Carnot certificate JSON schema with claims, equations, final_answer, confidence, verifier_routes, and proof_numbers fields.
+    3. Probe availability of llama.cpp GBNF support, llguidance, xgrammar, outlines/lm-format-enforcer if present, and a pure-Python validation fallback.
+    4. For each backend, record import/CLI availability, schema support, unsupported features, estimated overhead if measurable, and failure reason if absent.
+    5. Add cdot_expressiveness_note for context-sensitive invariants that are not expressible in the selected backend.
+    6. Add static_trie_note, bounded_vocab_constraint_count, automata_fallback_viable, dfa_checkable_fields, structure_snowballing_risk, grammar_backend_available, grammar_backend_selected, status, and honest_verdict.
+
+    Run: python3 -c "import json; d=json.load(open('results/experiment_1283_certificate_grammar_backend_bakeoff.json')); print(d.get('grammar_backend_available'), d.get('grammar_backend_selected'), d.get('honest_verdict'))"
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
 # ============================================================
-# Phase 1 - SOTA certificates and self-learning reward selection
+# Phase 1 - SOTA certificates and constrained acceptance
 # ============================================================
 
-- id: exp1271-triggered-certificate-extraction-sota-gguf
-  milestone: 2026.04.99
-  deliverable: results/experiment_1271_triggered_certificate_extraction_sota_gguf.json
-  title: "Triggered Certificate Extraction on SOTA GGUF - Qwen/Gemma Headline Models"
+- id: exp1284-ars-uqlm-answer-stability-sota-audit
+  milestone: 2026.04.100
+  deliverable: results/experiment_1284_ars_uqlm_answer_stability_sota_audit.json
+  title: "ARS/UQLM Answer-Stability Audit on SOTA GGUF - Gated on Cache Ready"
   agent_type: codex
   model: gpt-5.5
   max_turns: 50
@@ -185,57 +110,365 @@ tasks:
   priority: critical
   requires_gpu: true
   skip_pre_test: true
+  gated_on:
+    - upstream: exp1282-sota-gguf-cache-provenance-preflight
+      artifact_field: cached_sota_ready
+      op: "=="
+      value: true
   prompt: |
     CONTEXT:
-    Carnot's highest product gap remains extraction on real local instruction-tuned models.
-    Thinking Before Constraining suggests letting the model reason freely, then triggering
-    a structured certificate tail. RACE suggests measuring whether the certificate aligns
-    with the free-form reasoning and final answer.
+    This is the first SOTA GGUF gate after .99. Before certificate extraction,
+    measure whether answers are stable under prompt/certificate-boundary perturbations.
+    ARS suggests answer stability is a trust signal; PCC/UQLM-style certainty and
+    Finch-Zk-style cross-model consistency sharpen that signal.
 
     MODEL_SPECS REQUIREMENT:
-    This experiment needs an LLM. Use cached_sota_pair() first and record exact models_used.
-    MODEL_SPECS must include at least one of:
+    This experiment needs an LLM. Use cached_sota_pair(gpu_indices=(0, 1)) first
+    and record exact MODEL_SPECS and models_used. MODEL_SPECS must include at least
+    one of:
     - unsloth/Qwen3.6-35B-A3B-GGUF
     - unsloth/gemma-4-31B-it-GGUF
     - unsloth/gemma-4-26B-A4B-it-GGUF
-    Legacy Qwen3.5-0.8B or gemma-4-E4B-it may be used only as CPU smoke-test fallbacks
+    Legacy Qwen3.5-0.8B or gemma-4-E4B-it may only be CPU smoke-test fallbacks
     with headline_result_allowed=false.
 
     Use {project_root} as the project root and {date} as the run date in any artifact metadata.
 
     EXISTING CODE TO READ FIRST:
+    - results/experiment_1282_sota_gguf_cache_provenance_preflight.json
+    - scripts/experiment_template.py
+    - python/carnot/inference/sota_models.py
+    - results/fover_corpus_v5.json
+    - python/carnot/pipeline/fover_annotator.py
+
+    TASK:
+    Run a small answer-stability audit on 20-30 FoVer/GSM8K-style prompts using cached
+    SOTA GGUF models. Do not attempt certificate tails yet.
+
+    CONCRETE STEPS:
+    1. Create the deliverable artifact immediately with status="in_progress".
+    2. Load cached_sota_pair() MODEL_SPECS and set up GPU via ExperimentTemplate.setup_gpu.
+    3. Sample 20-30 prompts and generate variants: normal answer, answer with certificate-boundary instruction, and semantically equivalent prompt.
+    4. Measure answer_stability_score, equivalent_prompt_disagreement_rate, cross_model_consistency_delta, certainty_consistency_score, optional uqlm_uncertainty_score, and verifier_rubric_sensitivity.
+    5. Record formalizer_failure_modes if structured/certificate-boundary instructions degrade answers.
+    6. Write status="complete" with headline_result_allowed=true only for mandated SOTA GGUF outputs; otherwise blocked/smoke-only honestly.
+
+    Run: python3 -c "import json; d=json.load(open('results/experiment_1284_ars_uqlm_answer_stability_sota_audit.json')); print(d.get('honest_verdict'), d.get('answer_stability_score'), d.get('headline_result_allowed'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp1285-triggered-certificate-extraction-v2
+  milestone: 2026.04.100
+  deliverable: results/experiment_1285_triggered_certificate_extraction_v2.json
+  title: "Triggered Certificate Extraction v2 - SOTA GGUF + Grammar Gate"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 50
+  estimated_wall_time_min: 70
+  priority: critical
+  requires_gpu: true
+  skip_pre_test: true
+  gated_on:
+    - upstream: exp1282-sota-gguf-cache-provenance-preflight
+      artifact_field: cached_sota_ready
+      op: "=="
+      value: true
+    - upstream: exp1283-certificate-grammar-backend-bakeoff
+      artifact_field: grammar_backend_available
+      op: "=="
+      value: true
+    - upstream: exp1284-ars-uqlm-answer-stability-sota-audit
+      artifact_field: answer_stability_score
+      op: ">="
+      value: 0.6
+  prior_failures:
+    - experiment_id: exp1271-triggered-certificate-extraction-sota-gguf
+      verdict: blocked_gate_check_failed
+      addressed_by: "Exp1271 was DOOMED_RERUN_BLOCKed because prior_failures metadata was missing. Exp1282 explicitly preflights cache/provenance and this task includes prior_failures plus structured gates."
+      retire_if_same_verdict: true
+    - experiment_id: exp850-sota-code-repair-v5
+      verdict: model_not_cached
+      addressed_by: "Earlier SOTA GGUF work failed at cache/model availability. Exp1282 checks cached_sota_pair() before this task can run."
+      retire_if_same_verdict: false
+    - experiment_id: exp857-sota-code-repair-v6
+      verdict: blocked
+      addressed_by: "Earlier SOTA live paths blocked before useful inference. This task writes artifact first and distinguishes headline, blocked, and smoke-only modes."
+      retire_if_same_verdict: false
+  prompt: |
+    CONTEXT:
+    .99 failed to measure SOTA certificate parse rate at all. This task reruns the
+    triggered certificate idea with complete failure metadata, grammar backend gate,
+    SOTA cache gate, and answer-stability gate. It must compare raw trigger, grammar-only,
+    and draft-conditioned constrained decoding when feasible.
+
+    MODEL_SPECS REQUIREMENT:
+    This experiment needs an LLM. Use cached_sota_pair(gpu_indices=(0, 1)) first
+    and record exact MODEL_SPECS and models_used. MODEL_SPECS must include at least
+    one of:
+    - unsloth/Qwen3.6-35B-A3B-GGUF
+    - unsloth/gemma-4-31B-it-GGUF
+    - unsloth/gemma-4-26B-A4B-it-GGUF
+    Legacy small models are allowed only as smoke-test fallbacks with
+    headline_result_allowed=false.
+
+    Use {project_root} as the project root and {date} as the run date in any artifact metadata.
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_1282_sota_gguf_cache_provenance_preflight.json
+    - results/experiment_1283_certificate_grammar_backend_bakeoff.json
+    - results/experiment_1284_ars_uqlm_answer_stability_sota_audit.json
     - scripts/experiment_template.py
     - python/carnot/inference/sota_models.py
     - python/carnot/pipeline/extract.py
-    - python/carnot/pipeline/fover_annotator.py
     - results/fover_corpus_v5.json
 
     TASK:
-    Run a 30-50 prompt triggered-certificate extraction evaluation with local SOTA GGUF models.
-    The model should answer normally, then emit a <CARNOT_CERT> JSON-like tail with claims,
-    equations, final_answer, and confidence.
+    Run 30-50 prompt triggered-certificate extraction with local SOTA GGUF models.
+    The response should answer normally, then emit a bounded <CARNOT_CERT> tail.
 
     CONCRETE STEPS:
-    1. Create an in-progress artifact immediately.
-    2. Resolve MODEL_SPECS using cached_sota_pair(gpu_indices=(0, 1)). If it returns None,
-       write a blocked or smoke-test artifact; do not headline tiny-model results.
-    3. Sample 30-50 FoVer/GSM8K-style prompts from results/fover_corpus_v5.json.
-    4. For each response, attempt to parse the certificate tail and verify claims with existing
-       Z3/SymCode/FoVer helpers where available.
-    5. Compute certificate_parse_rate, verified_claim_coverage, false_positive_rate,
-       answer_reasoning_consistency_score, models_used, expected_cot_structure,
-       headline_result_allowed, and batch_log.
-    6. Write a terminal artifact with honest_verdict:
-       certificate_extraction_viable, certificate_extraction_partial, blocked_no_sota_gguf,
-       or smoke_only_not_headline.
+    1. Create the deliverable artifact immediately with status="in_progress".
+    2. Resolve SOTA MODEL_SPECS via cached_sota_pair() and use the selected grammar backend from exp1283 where possible.
+    3. Generate or replay 30-50 FoVer/GSM8K prompts across three modes: raw trigger, grammar-only, and DCCD-style draft-conditioned certificate.
+    4. Parse certificate tails and verify claims/equations/final_answer with existing Z3/SymCode/FoVer helpers when available.
+    5. Compute certificate_parse_rate, verified_claim_coverage, false_positive_rate, answer_reasoning_consistency_score, grammar_projection_tax_proxy, solver_vs_certificate_delta, formalizer_failure_modes, models_used, headline_result_allowed, and batch_log.
+    6. Write terminal status and honest_verdict: certificate_extraction_viable, certificate_extraction_partial, blocked_no_sota_gguf, or smoke_only_not_headline.
 
-    Run: python3 -c "import json; d=json.load(open('results/experiment_1271_triggered_certificate_extraction_sota_gguf.json')); print(d.get('honest_verdict'), d.get('models_used'), d.get('certificate_parse_rate'))"
+    Run: python3 -c "import json; d=json.load(open('results/experiment_1285_triggered_certificate_extraction_v2.json')); print(d.get('honest_verdict'), d.get('certificate_parse_rate'), d.get('headline_result_allowed'))"
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-- id: exp1272-prime-verifier-selection-audit
-  milestone: 2026.04.99
-  deliverable: results/experiment_1272_prime_verifier_selection_audit.json
-  title: "PRIME Verifier Selection Audit - Process/Outcome Alignment Before GRPO"
+- id: exp1286-grad-beaver-nsvif-semantic-routing
+  milestone: 2026.04.100
+  deliverable: results/experiment_1286_grad_beaver_nsvif_semantic_routing.json
+  title: "GRAD + BEAVER + NSVIF Semantic Routing - Gated on Certificate Parse Rate"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 45
+  estimated_wall_time_min: 45
+  priority: high
+  requires_gpu: false
+  skip_pre_test: true
+  gated_on:
+    - upstream: exp1285-triggered-certificate-extraction-v2
+      artifact_field: certificate_parse_rate
+      op: ">="
+      value: 0.8
+  prompt: |
+    CONTEXT:
+    Successful certificates are only useful if claims route to deterministic verifiers.
+    Recent work suggests adding GRAD-style evidence graphs, BEAVER-lite semantic bounds,
+    NSVIF-style CSP checks, proof-carrying numbers, LaSy-style typed warrants, temporal
+    claim metadata, and MCS/MUS repair diagnostics.
+
+    Use {project_root} as the project root and {date} as the run date in any artifact metadata.
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_1285_triggered_certificate_extraction_v2.json
+    - python/carnot/pipeline/formal_claim_verifier.py
+    - python/carnot/pipeline/process_verifier.py
+    - python/carnot/pipeline/verify_repair.py
+    - python/carnot/pipeline/extract.py
+    - results/fover_corpus_v5.json
+
+    TASK:
+    Convert parsed certificates into routed verifier claims and measure coverage.
+
+    CONCRETE STEPS:
+    1. Create the deliverable artifact immediately with status="in_progress".
+    2. Load exp1285 certificate outputs and extract typed claims, equations, proof_numbers, verifier_routes, and final_answer.
+    3. Build a lightweight evidence graph over claim -> evidence -> verifier route.
+    4. Route claims through available deterministic verifiers: arithmetic, comparison, set/cardinality, boolean entailment, SymCode/Z3 where present.
+    5. Add BEAVER-lite prefix/risk bound proxies, NSVIF CSP pass/fail, proof_carrying_number_coverage, typed_warrant_coverage, temporal_claim_count, stateful_constraint_ready, ConstraintBench-style micro-eval results, MCS/MUS diagnostics, and residual_drift_cases.
+    6. Write semantic_routing_coverage, routed_claim_count, abstention_rate, false_positive_rate, status, and honest_verdict.
+
+    Run: python3 -c "import json; d=json.load(open('results/experiment_1286_grad_beaver_nsvif_semantic_routing.json')); print(d.get('honest_verdict'), d.get('semantic_routing_coverage'), d.get('routed_claim_count'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp1287-token-guard-cactus-constrained-acceptance-v2
+  milestone: 2026.04.100
+  deliverable: results/experiment_1287_token_guard_cactus_constrained_acceptance_v2.json
+  title: "Token-Guard Cactus Constrained Acceptance v2 - Gated on Certificate Parse Rate"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 45
+  estimated_wall_time_min: 55
+  priority: high
+  requires_gpu: true
+  skip_pre_test: true
+  gated_on:
+    - upstream: exp1285-triggered-certificate-extraction-v2
+      artifact_field: certificate_parse_rate
+      op: ">="
+      value: 0.8
+  prior_failures:
+    - experiment_id: exp1277-cactus-constrained-acceptance-sampling-gated
+      verdict: gate_blocked
+      addressed_by: "Exp1277 was preemptively skipped because exp1271 produced no certificate_parse_rate. Exp1287 has a structured gate on exp1285.certificate_parse_rate >= 0.8."
+      retire_if_same_verdict: false
+  prompt: |
+    CONTEXT:
+    Cactus stayed blocked in .99 because no certificate parse rate existed. This task
+    runs only if exp1285 makes certificates parseable enough to serve as a verifier.
+    It should report constrained-acceptance risk metrics rather than only speed.
+
+    MODEL_SPECS REQUIREMENT:
+    This experiment needs an LLM. Use cached_sota_pair(gpu_indices=(0, 1)) first
+    and record exact MODEL_SPECS and models_used. MODEL_SPECS must include at least
+    one of:
+    - unsloth/Qwen3.6-35B-A3B-GGUF
+    - unsloth/gemma-4-31B-it-GGUF
+    - unsloth/gemma-4-26B-A4B-it-GGUF
+    Legacy small models are smoke-test only and cannot support headline claims.
+
+    Use {project_root} as the project root and {date} as the run date in any artifact metadata.
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_1285_triggered_certificate_extraction_v2.json
+    - results/experiment_1286_grad_beaver_nsvif_semantic_routing.json if it exists
+    - scripts/experiment_template.py
+    - python/carnot/inference/sota_models.py
+    - python/carnot/pipeline/verify_repair.py
+
+    TASK:
+    Run a small Cactus-style constrained acceptance smoke on 20-30 typed prompts,
+    using certificate/energy checks as the acceptance constraint.
+
+    CONCRETE STEPS:
+    1. Create the deliverable artifact immediately with status="in_progress".
+    2. Resolve SOTA MODEL_SPECS through cached_sota_pair(); if unavailable despite gate, write blocked_no_sota_gguf.
+    3. Use exp1285 parser and exp1286 routing if present as the acceptance verifier.
+    4. Generate or replay draft candidates and accept only when certificate and energy checks pass.
+    5. Record cactus_acceptance_rate, violation_rate_after_acceptance, latency_ratio, risk_bound_proxy, token_guard_risk_score, low_risk_acceptance_rate, speedbench_eval_mode, models_used, headline_result_allowed, and honest_verdict.
+    6. Write status="complete" or status="blocked" with named missing prerequisite.
+
+    Run: python3 -c "import json; d=json.load(open('results/experiment_1287_token_guard_cactus_constrained_acceptance_v2.json')); print(d.get('honest_verdict'), d.get('cactus_acceptance_rate'), d.get('risk_bound_proxy'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+# ============================================================
+# Phase 2 - Continuous self-learning with verifier feedback
+# ============================================================
+
+- id: exp1288-interwhen-dvi-verifier-feedback-replay
+  milestone: 2026.04.100
+  deliverable: results/experiment_1288_interwhen_dvi_verifier_feedback_replay.json
+  title: "InterWhen + DVI Verifier-Feedback Replay - Ungated Self-Learning Requirement"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 45
+  estimated_wall_time_min: 45
+  priority: critical
+  requires_gpu: false
+  skip_pre_test: true
+  prompt: |
+    CONTEXT:
+    Every milestone must advance continuous self-learning. This task is deliberately
+    ungated: if SOTA certificates exist, use them; otherwise fall back to exp1274/FoVer
+    replay and mark headline eligibility honestly. DVI, OnlineSpec, InterWhen, Once-More,
+    self-verification training, and clause-prediction work all point to verifier feedback
+    as an online learning signal.
+
+    Use {project_root} as the project root and {date} as the run date in any artifact metadata.
+
+    EXISTING CODE TO READ FIRST:
+    - research-program.md
+    - results/experiment_1274_online_self_learning_certificate_memory_v3.json
+    - results/experiment_1285_triggered_certificate_extraction_v2.json if it exists
+    - results/experiment_1286_grad_beaver_nsvif_semantic_routing.json if it exists
+    - python/carnot/pipeline/self_learning_replay.py
+    - python/carnot/pipeline/self_learning_policy.py
+    - results/fover_corpus_v5.json
+
+    TASK:
+    Convert verifier accept/reject decisions into an online routing/drafter policy update
+    and measure whether replay improves future acceptance and violation outcomes.
+
+    CONCRETE STEPS:
+    1. Create the deliverable artifact immediately with status="in_progress".
+    2. Load SOTA certificate/routing outputs if available; otherwise load exp1274/FoVer replay data and set source="fover_fallback".
+    3. Build chronological replay slices with before/after policy states.
+    4. Compare post-hoc replay to an interleaved verifier-feedback pass where decisions update the policy before the next item.
+    5. Record dvi_acceptance_delta, online_acceptance_delta, violation_delta, self_learning_delta_overall, self_verify_signal_used, verification_gain, reasoning_trace_length_delta when measurable, clause_prediction_records or claim_level_memory_entries, memory_update_written, headline_result_allowed, and honest_verdict.
+    6. Write status="complete" even if deltas are zero or negative.
+
+    Run: python3 -c "import json; d=json.load(open('results/experiment_1288_interwhen_dvi_verifier_feedback_replay.json')); print(d.get('honest_verdict'), d.get('dvi_acceptance_delta'), d.get('memory_update_written'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp1289-leanabell-grpo-v9-sota-headline-gated
+  milestone: 2026.04.100
+  deliverable: results/experiment_1289_leanabell_grpo_v9_sota_headline_gated.json
+  title: "GRPO/VPRM v9 SOTA Headline Attempt - Gated on Certificate + DVI Deltas"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 50
+  estimated_wall_time_min: 75
+  priority: high
+  requires_gpu: true
+  skip_pre_test: true
+  gated_on:
+    - upstream: exp1285-triggered-certificate-extraction-v2
+      artifact_field: headline_result_allowed
+      op: "=="
+      value: true
+    - upstream: exp1288-interwhen-dvi-verifier-feedback-replay
+      artifact_field: dvi_acceptance_delta
+      op: ">"
+      value: 0.0
+  prior_failures:
+    - experiment_id: exp1273-grpo-v8-prime-vprm-smoke
+      verdict: smoke_only_not_headline
+      addressed_by: "Exp1273 reported a positive delta but headline_result_allowed=false. This task is gated on exp1285 headline_result_allowed=true and exp1288 positive DVI delta."
+      retire_if_same_verdict: true
+    - experiment_id: exp1259-grpo-v7-progrs-vps-dualgpu
+      verdict: in_progress
+      addressed_by: "Earlier GRPO v7 produced stale skeletons. This task writes artifact first, uses bounded train/eval sizes, and only runs after explicit gates."
+      retire_if_same_verdict: false
+    - experiment_id: exp1247-grpo-v7-simplified
+      verdict: in_progress
+      addressed_by: "Earlier v7 simplified runs did not produce terminal measured deltas. This is a bounded SOTA-headline attempt with hard prerequisites."
+      retire_if_same_verdict: false
+  prompt: |
+    CONTEXT:
+    This task converts .99's smoke-only GRPO/VPRM signal into a headline-eligible
+    SOTA-backed result only if the certificate and DVI gates justify it. It must remain
+    bounded: this is not a broad RL training run.
+
+    MODEL_SPECS REQUIREMENT:
+    This experiment needs an LLM. Use cached_sota_pair(gpu_indices=(0, 1)) first
+    and record exact MODEL_SPECS and models_used. MODEL_SPECS must include at least
+    one of:
+    - unsloth/Qwen3.6-35B-A3B-GGUF
+    - unsloth/gemma-4-31B-it-GGUF
+    - unsloth/gemma-4-26B-A4B-it-GGUF
+    Legacy small models are smoke-test only and cannot support headline claims.
+
+    Use {project_root} as the project root and {date} as the run date in any artifact metadata.
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_1285_triggered_certificate_extraction_v2.json
+    - results/experiment_1288_interwhen_dvi_verifier_feedback_replay.json
+    - results/experiment_1272_prime_verifier_selection_audit.json
+    - results/experiment_1273_grpo_v8_prime_vprm_smoke.json
+    - scripts/experiment_template.py
+    - python/carnot/inference/sota_models.py
+
+    TASK:
+    Run a bounded GRPO/VPRM v9 headline attempt using SOTA GGUF-generated reasoning
+    samples and verifier-feedback rewards.
+
+    CONCRETE STEPS:
+    1. Create the deliverable artifact immediately with status="in_progress".
+    2. Load verifier weights from exp1272 and verifier-feedback deltas from exp1288.
+    3. Resolve SOTA MODEL_SPECS via cached_sota_pair() and run 10-20 train items plus 20-30 eval items.
+    4. Compare baseline vs verifier-feedback reward policy using the same prompts and record self_learning_delta_overall, grpo_v9_delta_pp, verifier_feedback_token_masking_delta, self_verification_gain, reasoning_trace_length_delta, models_used, and headline_result_allowed.
+    5. Respect a hard wall_budget_s and write blocked/smoke-only honestly if live SOTA inference cannot run.
+    6. Write terminal status and honest_verdict even if the delta is <= 0.
+
+    Run: python3 -c "import json; d=json.load(open('results/experiment_1289_leanabell_grpo_v9_sota_headline_gated.json')); print(d.get('honest_verdict'), d.get('grpo_v9_delta_pp'), d.get('headline_result_allowed'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp1290-skill-graph-promotion-demotion
+  milestone: 2026.04.100
+  deliverable: results/experiment_1290_skill_graph_promotion_demotion.json
+  title: "Skill Graph Promotion/Demotion - Gated on Verifier Memory Update"
   agent_type: codex
   model: gpt-5.5
   max_turns: 35
@@ -243,470 +476,216 @@ tasks:
   priority: high
   requires_gpu: false
   skip_pre_test: true
+  gated_on:
+    - upstream: exp1288-interwhen-dvi-verifier-feedback-replay
+      artifact_field: memory_update_written
+      op: "=="
+      value: true
   prompt: |
     CONTEXT:
-    PRIME argues that verifier process/outcome alignment predicts RLVR usefulness.
-    .98 left GRPO v7 stale. The next GRPO attempt must first select a verifier
-    weight vector from measured verifier behavior instead of rerunning broad training.
+    .99 certificate memory produced skill graph candidates, but they need promotion and
+    demotion conditions before becoming durable self-learning assets. MemRouter-style
+    memory typing suggests separating semantic, episodic, and procedural memory.
 
     Use {project_root} as the project root and {date} as the run date in any artifact metadata.
 
     EXISTING CODE TO READ FIRST:
-    - results/fover_corpus_v5.json
-    - results/experiment_1256_verifier_orthogonality_audit_v3.json
-    - results/experiment_1264_q11_tss_instrumentation_v2.json
-    - results/experiment_1271_triggered_certificate_extraction_sota_gguf.json if it exists
-    - python/carnot/pipeline/verify_repair.py
-    - python/carnot/pipeline/extract.py
+    - results/experiment_1274_online_self_learning_certificate_memory_v3.json
+    - results/experiment_1288_interwhen_dvi_verifier_feedback_replay.json
+    - python/carnot/pipeline/self_learning_policy.py
+    - python/carnot/pipeline/constraint_addition.py
+    - research-program.md
 
     TASK:
-    Compute a PRIME-style verifier selection audit over existing FoVer/certificate data.
-    Output a verifier_weight_vector_written boolean and a verifier_weight_vector dict for GRPO.
+    Promote reusable certificate-memory patterns into a durable skill-graph candidate
+    artifact with replay evidence and demotion rules.
 
     CONCRETE STEPS:
-    1. Create an in-progress artifact.
-    2. Load available FoVer labels and any certificate outputs from exp1271.
-    3. Evaluate or reconstruct per-verifier process and outcome signals for:
-       Z3MathVerifier, CausalReasoningVerifier, SymCodeVerifier, SemEnergy/SOS-KAN if available,
-       and the k=5 ensemble summary from exp1256.
-    4. Compute process_error_detection_rate, final_answer_agreement, answer_reasoning_consistency,
-       pairwise_correlation_penalty, and a normalized verifier_weight_vector.
-    5. If data is insufficient, write verifier_weight_vector_written=false with missing_fields.
-    6. Otherwise write verifier_weight_vector_written=true and status="complete".
+    1. Create the deliverable artifact immediately with status="in_progress".
+    2. Load skill candidates and memory update records from exp1274/exp1288.
+    3. Classify each candidate as semantic, episodic, procedural, or mixed.
+    4. For each candidate, record contract, evidence_count, claim_level_memory_entries, replay_success_rate, false_positive_risk, promotion_condition, demotion_condition, and owner capability.
+    5. Emit skill_graph_entries, skill_graph_candidate_count, skill_replay_delta, memory_type_counts, memory_router_policy_written, status, and honest_verdict.
+    6. Do not install new Codex skills or modify user-level skill directories; this is a planning artifact only.
 
-    Run: python3 -c "import json; d=json.load(open('results/experiment_1272_prime_verifier_selection_audit.json')); print(d.get('verifier_weight_vector_written'), d.get('honest_verdict'))"
+    Run: python3 -c "import json; d=json.load(open('results/experiment_1290_skill_graph_promotion_demotion.json')); print(d.get('honest_verdict'), d.get('skill_graph_candidate_count'), d.get('memory_router_policy_written'))"
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-- id: exp1273-grpo-v8-prime-vprm-smoke-gated
-  milestone: 2026.04.99
-  deliverable: results/experiment_1273_grpo_v8_prime_vprm_smoke.json
-  title: "GRPO v8 PRIME+VPRM Smoke - Gated on Verifier Weight Vector"
+# ============================================================
+# Phase 3 - Continuous repair, Phase-3 bridge, publication, retro
+# ============================================================
+
+- id: exp1291-hardnetpp-nonlinear-repair-benchmark
+  milestone: 2026.04.100
+  deliverable: results/experiment_1291_hardnetpp_nonlinear_repair_benchmark.json
+  title: "HardNet++ Nonlinear Repair Benchmark - FSNet/SnareNet Follow-Up"
   agent_type: codex
   model: gpt-5.5
   max_turns: 45
-  estimated_wall_time_min: 60
-  priority: high
-  requires_gpu: true
-  skip_pre_test: true
-  gated_on:
-    - upstream: exp1272-prime-verifier-selection-audit
-      artifact_field: verifier_weight_vector_written
-      op: "=="
-      value: true
-  prior_failures:
-    - experiment_id: exp1259-grpo-v7-progrs-vps-dualgpu
-      verdict: in_progress
-      addressed_by: "exp1259 stale skeleton and no measured delta. This retry is a bounded smoke gated on exp1272 verifier weights, not another broad GRPO run."
-      retire_if_same_verdict: true
-    - experiment_id: exp1247-grpo-v7-simplified
-      verdict: in_progress
-      addressed_by: "Earlier v7 tasks did not write terminal artifacts. This task writes artifact first and limits training/eval sizes."
-      retire_if_same_verdict: false
-  prompt: |
-    CONTEXT:
-    This is a bounded self-learning smoke test, not a full GRPO training run.
-    It should use the verifier_weight_vector from exp1272 and measure whether the
-    PRIME/VPRM reward improves a small held-out slice.
-
-    MODEL_SPECS REQUIREMENT:
-    This experiment needs an LLM for generated reasoning samples. Use cached_sota_pair()
-    first and record MODEL_SPECS/models_used. Include at least one mandated SOTA GGUF:
-    unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, or
-    unsloth/gemma-4-26B-A4B-it-GGUF. Tiny legacy models are smoke-test only.
-
-    Use {project_root} as the project root and {date} as the run date in any artifact metadata.
-
-    EXISTING CODE TO READ FIRST:
-    - results/experiment_1272_prime_verifier_selection_audit.json
-    - scripts/experiment_template.py
-    - python/carnot/inference/sota_models.py
-    - scripts/experiment_1220_grpo_vps_full_training.py if present
-    - scripts/experiment_1259_grpo_v7_progrs_vps.py if present
-
-    TASK:
-    Run a small GRPO/VPRM smoke: 10-20 train items and 20-30 eval items, or a deterministic
-    simulation if SOTA GGUF cache/GPU is unavailable. The artifact must clearly distinguish
-    live_sota, blocked, and smoke_only.
-
-    CONCRETE STEPS:
-    1. Write an in-progress artifact.
-    2. Load verifier_weight_vector from exp1272.
-    3. Resolve MODEL_SPECS through cached_sota_pair(). If unavailable, write blocked_no_sota_gguf
-       or smoke_only_not_headline with headline_result_allowed=false.
-    4. Run a bounded before/after comparison using PRIME/VPRM weighted rewards.
-    5. Record grpo_v8_delta_pp, self_learning_delta_overall, verifier_weights_used,
-       models_used, headline_result_allowed, and wall_budget_s.
-    6. Write terminal status and honest_verdict even if the delta is <= 0.
-
-    Run: python3 -c "import json; d=json.load(open('results/experiment_1273_grpo_v8_prime_vprm_smoke.json')); print(d.get('honest_verdict'), d.get('grpo_v8_delta_pp'), d.get('headline_result_allowed'))"
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp1274-online-self-learning-certificate-memory-v3
-  milestone: 2026.04.99
-  deliverable: results/experiment_1274_online_self_learning_certificate_memory_v3.json
-  title: "Online Self-Learning Certificate Memory v3 - Replay Delta + Skill Graph Candidate"
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 40
-  estimated_wall_time_min: 35
-  priority: critical
-  requires_gpu: false
-  skip_pre_test: true
-  prior_failures:
-    - experiment_id: exp1212-tier1-constraint-addition-v2
-      verdict: completed_or_unclear_delta
-      addressed_by: "This is not a blind rerun of reweighting. It uses certificate artifacts and measures replay delta, plus optional skill-graph emission from verifiable trajectories."
-      retire_if_same_verdict: false
-    - experiment_id: exp1200-online-constraint-reweighting-v2-addition
-      verdict: completed_or_unclear_delta
-      addressed_by: "Prior work focused on constraint addition. This task measures future-case replay improvement from certificate memory."
-      retire_if_same_verdict: false
-  prompt: |
-    CONTEXT:
-    Every milestone must advance continuous self-learning. This task turns verified
-    certificates or FoVer labels into a replayable case memory, then measures whether
-    memory improves future verification/routing decisions.
-
-    Use {project_root} as the project root and {date} as the run date in any artifact metadata.
-
-    EXISTING CODE TO READ FIRST:
-    - research-program.md section "Continuous Self-Learning"
-    - python/carnot/pipeline/verify_repair.py
-    - python/carnot/pipeline/fover_annotator.py
-    - results/experiment_1271_triggered_certificate_extraction_sota_gguf.json if it exists
-    - results/fover_corpus_v5.json
-
-    TASK:
-    Implement or run a lightweight certificate-memory replay evaluation. Produce a measured
-    self_learning_delta_overall, even if zero or negative.
-
-    CONCRETE STEPS:
-    1. Create an in-progress artifact.
-    2. Load certificate examples from exp1271 if present; otherwise use verified FoVer pairs
-       as a fallback and mark source="fover_fallback".
-    3. Build a memory table keyed by constraint pattern, verifier result, and repair hint.
-    4. Split examples into memory-build and replay-eval slices.
-    5. Compare verification/routing/repair decision quality before and after memory lookup.
-    6. Optionally emit skill_graph_candidates with contract, evidence_count, replay_success_rate,
-       and demotion_condition.
-    7. Write status="complete", self_learning_delta_overall, before_score, after_score,
-       memory_entries, skill_graph_candidate_count, and honest_verdict.
-
-    Run: python3 -c "import json; d=json.load(open('results/experiment_1274_online_self_learning_certificate_memory_v3.json')); print(d.get('honest_verdict'), d.get('self_learning_delta_overall'), d.get('memory_entries'))"
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-# ============================================================
-# Phase 2 - Continuous EBM repair and constrained acceptance
-# ============================================================
-
-- id: exp1275-fsnet-feasibility-step-continuous-ebm
-  milestone: 2026.04.99
-  deliverable: results/experiment_1275_fsnet_feasibility_step_continuous_ebm.json
-  title: "FSNet Feasibility Step for Continuous EBM - Raw Langevin vs Feasibility Seeking"
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 40
-  estimated_wall_time_min: 35
+  estimated_wall_time_min: 45
   priority: high
   requires_gpu: false
   skip_pre_test: false
   prompt: |
     CONTEXT:
-    FSNet integrates a feasibility-seeking step into neural constrained optimization.
-    Carnot's Phase-3 continuous EBM substrate currently measures energy but needs a
-    concrete repair operator that reduces constraint violations without collapsing diversity.
+    .99 found positive continuous repair deltas: FSNet feasibility_delta_overall=4.5832
+    and SnareNet repair_delta_over_fsnet=0.21996. The gap is nonlinear constraints and
+    whether repair preserves useful state rather than over-projecting.
 
     Use {project_root} as the project root and {date} as the run date in any artifact metadata.
 
     EXISTING CODE TO READ FIRST:
     - python/carnot/phase3/continuous_ebm.py
     - tests/python/test_continuous_ebm.py
-    - results/experiment_1264_q11_tss_instrumentation_v2.json
+    - results/experiment_1275_fsnet_feasibility_step_continuous_ebm.json
+    - results/experiment_1276_snarenet_repair_layer_gated.json
     - openspec/capabilities/sampling/spec.md
 
     TASK:
-    Add or prototype a small FSNet-style feasibility step for continuous EBM states and
-    compare it against raw Langevin updates.
+    Compare HardNet++-style damped local-linear projection against FSNet and SnareNet
+    on nonlinear synthetic constraints.
 
     CONCRETE STEPS:
-    1. Create an in-progress artifact.
-    2. Implement a minimal feasibility_step function or local experiment helper that takes a
-       latent state and minimizes violation energy separately from task energy.
-    3. Run on deterministic synthetic/FoVer-like latent states.
-    4. Compare raw Langevin vs feasibility_step on final energy, violation count, convergence
-       steps, state distortion, and diversity.
-    5. Add focused tests if a public helper is added.
-    6. Write feasibility_delta_overall, energy_delta, violation_delta, distortion_mean,
-       feasibility_step_viable, and honest_verdict.
+    1. Create the deliverable artifact immediately with status="in_progress".
+    2. Implement a local experiment helper or small public helper consistent with continuous_ebm.py style.
+    3. Build deterministic nonlinear constraint cases with at least two valid basins and one misleading local basin.
+    4. Compare raw Langevin, FSNet, SnareNet, and HardNet++-style damped projection on final energy, violation count, convergence steps, state distortion, diversity, and verified-span reuse.
+    5. Add focused tests if any public helper is added.
+    6. Write hardnetpp_delta_over_snarenet, nonlinear_repair_viable, construct_refine_iterations, copy_as_decode_verified_span_reuse, status, and honest_verdict.
 
-    Run: python3 -c "import json; d=json.load(open('results/experiment_1275_fsnet_feasibility_step_continuous_ebm.json')); print(d.get('honest_verdict'), d.get('feasibility_delta_overall'))"
+    Run: python3 -c "import json; d=json.load(open('results/experiment_1291_hardnetpp_nonlinear_repair_benchmark.json')); print(d.get('honest_verdict'), d.get('hardnetpp_delta_over_snarenet'), d.get('nonlinear_repair_viable'))"
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-- id: exp1276-snarenet-repair-layer-gated
-  milestone: 2026.04.99
-  deliverable: results/experiment_1276_snarenet_repair_layer_gated.json
-  title: "SnareNet Repair Layer - Gated on FSNet Feasibility Delta > 0"
+- id: exp1292-dsp-feasibility-channel-diagnostic
+  milestone: 2026.04.100
+  deliverable: results/experiment_1292_dsp_feasibility_channel_diagnostic.json
+  title: "DSP Feasibility-Channel Diagnostic - Predict When Repair Helps"
   agent_type: codex
   model: gpt-5.5
   max_turns: 40
   estimated_wall_time_min: 35
-  priority: medium
+  priority: high
   requires_gpu: false
   skip_pre_test: false
-  gated_on:
-    - upstream: exp1275-fsnet-feasibility-step-continuous-ebm
-      artifact_field: feasibility_delta_overall
-      op: ">"
-      value: 0.0
   prompt: |
     CONTEXT:
-    SnareNet appends a differentiable repair layer with adaptive relaxation for hard constraints.
-    This task should run only if exp1275 shows a positive feasibility delta.
+    Continuous repair should know when additional repair iterations help. DSP-style
+    local/global feasibility channels provide a diagnostic around phi/Phi signals that
+    may predict whether refine steps reduce violations or only distort the state.
 
     Use {project_root} as the project root and {date} as the run date in any artifact metadata.
 
     EXISTING CODE TO READ FIRST:
-    - results/experiment_1275_fsnet_feasibility_step_continuous_ebm.json
     - python/carnot/phase3/continuous_ebm.py
     - tests/python/test_continuous_ebm.py
+    - results/experiment_1275_fsnet_feasibility_step_continuous_ebm.json
+    - results/experiment_1276_snarenet_repair_layer_gated.json
+    - results/experiment_1291_hardnetpp_nonlinear_repair_benchmark.json if it exists
 
     TASK:
-    Prototype an adaptive repair layer on top of the FSNet-style feasibility step and measure
-    whether it improves satisfaction without excessive distortion.
+    Add or prototype feasibility-channel diagnostics around continuous repair and measure
+    whether they predict useful additional repair steps.
 
     CONCRETE STEPS:
-    1. Create an in-progress artifact.
-    2. Add a local or public ConstraintRepairLayer/AdaptiveRepairLayer helper consistent with
-       existing continuous_ebm style.
-    3. Compare raw Langevin, FSNet feasibility step, and SnareNet-style adaptive repair.
-    4. Measure final_constraint_satisfaction, repair_iterations, distortion_from_initial,
-       diversity_preserved, and repair_delta_over_fsnet.
-    5. Add focused tests if code is public.
-    6. Write a terminal artifact with honest_verdict.
+    1. Create the deliverable artifact immediately with status="in_progress".
+    2. Implement local phi/Phi diagnostic helpers or public helpers consistent with existing code style.
+    3. Replay the .99 FSNet/SnareNet cases and the nonlinear cases from exp1291 if available.
+    4. Measure phi_local, Phi_global, feasibility_channel_auc, repair_help_prediction_accuracy, false_continue_rate, false_stop_rate, and distortion_when_wrong.
+    5. Add focused tests if public helpers are added.
+    6. Write feasibility_channel_predictive, feasibility_channel_auc, recommended_repair_stop_policy, status, and honest_verdict.
 
-    Run: python3 -c "import json; d=json.load(open('results/experiment_1276_snarenet_repair_layer_gated.json')); print(d.get('honest_verdict'), d.get('repair_delta_over_fsnet'))"
+    Run: python3 -c "import json; d=json.load(open('results/experiment_1292_dsp_feasibility_channel_diagnostic.json')); print(d.get('honest_verdict'), d.get('feasibility_channel_auc'), d.get('feasibility_channel_predictive'))"
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-- id: exp1277-cactus-constrained-acceptance-sampling-gated
-  milestone: 2026.04.99
-  deliverable: results/experiment_1277_cactus_constrained_acceptance_sampling.json
-  title: "Cactus Constrained Acceptance Sampling - Gated on Certificate Parse Rate >= 0.8"
+- id: exp1293-ebt-arm-ebm-cot-energy-bridge-audit
+  milestone: 2026.04.100
+  deliverable: results/experiment_1293_ebt_arm_ebm_cot_energy_bridge_audit.json
+  title: "EBT/ARM/EBM-CoT Energy Bridge Audit - Existing Artifact Analysis"
   agent_type: codex
   model: gpt-5.5
   max_turns: 40
-  estimated_wall_time_min: 45
-  priority: medium
-  requires_gpu: true
-  skip_pre_test: true
-  gated_on:
-    - upstream: exp1271-triggered-certificate-extraction-sota-gguf
-      artifact_field: certificate_parse_rate
-      op: ">="
-      value: 0.8
-  prompt: |
-    CONTEXT:
-    Cactus reframes speculative sampling as constrained acceptance. Carnot can use a draft
-    response only when certificate/energy divergence stays below a bound. This task runs only
-    if exp1271 certificates are parseable enough to serve as a verifier.
-
-    MODEL_SPECS REQUIREMENT:
-    This experiment needs an LLM verifier/draft path. Use cached_sota_pair() and record
-    MODEL_SPECS/models_used. Include at least one mandated SOTA GGUF:
-    - unsloth/Qwen3.6-35B-A3B-GGUF
-    - unsloth/gemma-4-31B-it-GGUF
-    - unsloth/gemma-4-26B-A4B-it-GGUF
-    Tiny legacy models are smoke-test only and cannot support headline results.
-
-    Use {project_root} as the project root and {date} as the run date in any artifact metadata.
-
-    EXISTING CODE TO READ FIRST:
-    - results/experiment_1271_triggered_certificate_extraction_sota_gguf.json
-    - scripts/experiment_template.py
-    - python/carnot/inference/sota_models.py
-    - python/carnot/pipeline/verify_repair.py
-
-    TASK:
-    Implement a small Cactus-style constrained acceptance smoke test on 20-30 typed constraint prompts.
-    Measure acceptance rate, energy violation rate, and latency compared with unconstrained generation.
-
-    CONCRETE STEPS:
-    1. Create an in-progress artifact.
-    2. Resolve MODEL_SPECS with cached_sota_pair(). If unavailable, write blocked_no_sota_gguf.
-    3. Use exp1271 certificate parser/verifier as the acceptance constraint.
-    4. Generate or replay draft candidates, accept only when certificate and energy checks pass.
-    5. Record cactus_acceptance_rate, violation_rate_after_acceptance, latency_ratio,
-       models_used, headline_result_allowed, and honest_verdict.
-    6. Write status="complete" or status="blocked" with named missing prerequisite.
-
-    Run: python3 -c "import json; d=json.load(open('results/experiment_1277_cactus_constrained_acceptance_sampling.json')); print(d.get('honest_verdict'), d.get('cactus_acceptance_rate'))"
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-# ============================================================
-# Phase 3 - Hardening, WOPR completion, and retro
-# ============================================================
-
-- id: exp1278-gaming-verifiers-defense-est-final
-  milestone: 2026.04.99
-  deliverable: results/experiment_1278_gaming_verifiers_defense_est_final.json
-  title: "Gaming Verifiers Defense EST Final - Pure Data Analysis"
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 30
-  estimated_wall_time_min: 25
+  estimated_wall_time_min: 35
   priority: high
   requires_gpu: false
   skip_pre_test: true
-  prior_failures:
-    - experiment_id: exp1263-gaming-verifiers-defense-v4-est
-      verdict: in_progress
-      addressed_by: "exp1263 stale skeleton. This retry is pure data analysis using EST-style invariance checks and existing FoVer/ensemble artifacts."
-      retire_if_same_verdict: true
-    - experiment_id: exp1249-llms-gaming-verifiers-defense-v3
-      verdict: in_progress
-      addressed_by: "Prior v3 attempts did not produce a terminal measurement. This task avoids live LLM training and measures invariance vulnerability from existing artifacts."
-      retire_if_same_verdict: false
-    - experiment_id: exp1231-llms-gaming-verifiers-defense
-      verdict: artifact_not_updated_past_bootstrap
-      addressed_by: "Earlier broad gaming-defense prompts were too large. This task has a fixed EST metric and terminal artifact."
-      retire_if_same_verdict: false
   prompt: |
     CONTEXT:
-    LLMs gaming verifiers remains a paper and Phase-5 risk. EST gives a bounded
-    invariance-test protocol: verifier scores should be stable under meaning-preserving
-    perturbations and change under meaning-changing perturbations.
+    EBT is now an ICLR 2026 Oral and ARM-EBM gives a formal ARM-to-EBM bridge.
+    Carnot needs an audit that maps existing Boltzmann-GPT, NRGPT, certificate, and
+    continuous-repair energy traces to the Phase-3/Kona story without making unsupported
+    claims. Hardware context should include p-bit inertia and time-multiplexed update
+    work, but no new hardware bring-up.
 
     Use {project_root} as the project root and {date} as the run date in any artifact metadata.
 
     EXISTING CODE TO READ FIRST:
-    - results/experiment_1263_gaming_verifiers_defense_v4.json
-    - results/experiment_1256_verifier_orthogonality_audit_v3.json
-    - results/fover_corpus_v5.json
-    - python/carnot/pipeline/verify_repair.py
+    - _bmad/architecture.md
+    - research-references.md
+    - results/experiment_1248_boltzmann_gpt_cd_training_v2.json if it exists
+    - results/experiment_1251_nrgpt_frozen_prefix_evaluation_v2.json if it exists
+    - results/experiment_1275_fsnet_feasibility_step_continuous_ebm.json
+    - results/experiment_1276_snarenet_repair_layer_gated.json
+    - results/experiment_1285_triggered_certificate_extraction_v2.json if it exists
 
     TASK:
-    Complete a pure-data EST gaming-defense measurement. Do not train a model.
+    Produce a pure-analysis bridge audit connecting Carnot energy traces to EBT,
+    ARM-EBM, EBM-CoT, EBRM, Extropic, Kona, and p-bit hardware context.
 
     CONCRETE STEPS:
-    1. Create an in-progress artifact.
-    2. Select 30-50 FoVer examples with labels and available verifier/energy scores.
-    3. Generate deterministic meaning-preserving perturbations and meaning-changing perturbations
-       using string transforms/templates, not LLM calls.
-    4. Measure score instability under preserving perturbations and sensitivity under changing perturbations.
-    5. Compute est_precision_proxy, est_recall_proxy, gaming_vulnerability_score,
-       k5_blocks_surface_gaming, gaming_defense_measured=true.
-    6. Write status="complete" and an honest verdict even if vulnerability is high.
+    1. Create the deliverable artifact immediately with status="in_progress".
+    2. Load available energy/probe artifacts and record missing artifacts explicitly.
+    3. For each available trace family, classify whether it supports final-answer energy, CoT-sequence energy, latent trajectory energy, verifier-energy, or sampler-energy claims.
+    4. Record latent_drift_diagnostic, decoder_anchor_diagnostic, energy_bridge_consistency, unsupported_claims_to_avoid, pbit_inertia_context, time_multiplexed_pbit_context, extropic_status, kona_status, and future_sampler_parity_tasks.
+    5. Do not edit the paper; this is an audit artifact for the next paper/doc pass.
+    6. Write status="complete" and honest_verdict.
 
-    Run: python3 -c "import json; d=json.load(open('results/experiment_1278_gaming_verifiers_defense_est_final.json')); print(d.get('gaming_defense_measured'), d.get('honest_verdict'))"
+    Run: python3 -c "import json; d=json.load(open('results/experiment_1293_ebt_arm_ebm_cot_energy_bridge_audit.json')); print(d.get('honest_verdict'), d.get('energy_bridge_consistency'), d.get('unsupported_claims_to_avoid') is not None)"
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-- id: exp1279-wopr-kakuro-v4-minimal
-  milestone: 2026.04.99
-  deliverable: results/experiment_1279_wopr_kakuro_v4_minimal.json
-  title: "WOPR Kakuro v4 Minimal - Ship or Honest Block"
+- id: exp1294-arxiv-v10-submission-receipt-or-blocker
+  milestone: 2026.04.100
+  deliverable: results/experiment_1294_arxiv_v10_submission_receipt_or_blocker.json
+  title: "arXiv v10 Submission Receipt or External Blocker - Publication Bookkeeping"
   agent_type: codex
   model: gpt-5.5
-  max_turns: 30
-  estimated_wall_time_min: 30
+  max_turns: 20
+  estimated_wall_time_min: 15
   priority: medium
   requires_gpu: false
   skip_pre_test: true
-  prior_failures:
-    - experiment_id: exp1261-wopr-kakuro-v3
-      verdict: in_progress
-      addressed_by: "exp1261 stale skeleton. This retry is minimal formulaic code with focused tests and terminal artifact."
-      retire_if_same_verdict: true
-    - experiment_id: exp1243-wopr-kakuro-cartridge-v2
-      verdict: artifact_not_updated_past_bootstrap
-      addressed_by: "Earlier Kakuro retries were too broad. This task ships one minimal puzzle cartridge or records the exact missing module."
-      retire_if_same_verdict: false
-    - experiment_id: exp1240-wopr-kakuro-cartridge
-      verdict: gate_or_stale
-      addressed_by: "This task narrows deliverable to a minimal cartridge plus artifact."
-      retire_if_same_verdict: false
   prompt: |
     CONTEXT:
-    Kakuro is a formulaic CSP cartridge. The goal is not a full gallery release; it is one
-    minimal cartridge with E=0 for a valid solution or an honest blocker.
+    .99 compiled the arXiv v10 bundle after critical paper fixes. The remaining
+    publication gap is not local compilation; it is whether an actual arXiv receipt exists
+    or a human/external submission blocker remains.
 
     Use {project_root} as the project root and {date} as the run date in any artifact metadata.
 
     EXISTING CODE TO READ FIRST:
-    - python/carnot/wopr/ if it exists
-    - tests/python/ matching WOPR cartridges
-    - results/experiment_1261_wopr_kakuro_v3.json
-    - openspec/change-proposals/wopr-games-gallery-extension.md
+    - results/experiment_1269_paper_v6_critical_fixes_v2.json
+    - results/experiment_1270_arxiv_bundle_v10_gated.json
+    - docs/arxiv-paper/
+    - ops/changelog.md
 
     TASK:
-    Ship a minimal Kakuro WOPR cartridge or write a blocked artifact naming the exact missing
-    package/path/API. Do not broaden into unrelated gallery work.
+    Record a terminal publication-state artifact. Do not attempt closed-browser or
+    credentialed submission actions.
 
     CONCRETE STEPS:
-    1. Create an in-progress artifact.
-    2. Locate existing WOPR cartridge patterns.
-    3. Implement the smallest Kakuro encoding: cells, row/column sum groups, uniqueness within group
-       if the local pattern supports it, and energy(solution)=0.
-    4. Add focused tests for valid solution E=0 and invalid solution E>0.
-    5. Run only the focused tests.
-    6. Write cartridge_shipped, focused_tests_passed, final_energy_valid, invalid_energy_positive,
-       files_changed, status, and honest_verdict.
+    1. Create the deliverable artifact immediately with status="in_progress".
+    2. Locate the v10 bundle path and PDF compile status from exp1270.
+    3. Search repo-local docs/results for any arXiv submission receipt, arXiv ID, confirmation email text, or upload log.
+    4. If a receipt exists, record arxiv_submitted=true, receipt_path, arxiv_identifier if present.
+    5. If no receipt exists, record arxiv_submitted=false, exact_external_blocker, operator_action_required, bundle_ready=true/false, and no invented submission event.
+    6. Write status="complete" and honest_verdict.
 
-    Run: python3 -c "import json; d=json.load(open('results/experiment_1279_wopr_kakuro_v4_minimal.json')); print(d.get('cartridge_shipped'), d.get('honest_verdict'))"
+    Run: python3 -c "import json; d=json.load(open('results/experiment_1294_arxiv_v10_submission_receipt_or_blocker.json')); print(d.get('arxiv_submitted'), d.get('bundle_ready'), d.get('honest_verdict'))"
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-- id: exp1280-wopr-masyu-v3-minimal
-  milestone: 2026.04.99
-  deliverable: results/experiment_1280_wopr_masyu_v3_minimal.json
-  title: "WOPR Masyu v3 Minimal - Ship or Honest Block"
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 30
-  estimated_wall_time_min: 30
-  priority: medium
-  requires_gpu: false
-  skip_pre_test: true
-  prior_failures:
-    - experiment_id: exp1262-wopr-masyu-v2
-      verdict: in_progress
-      addressed_by: "exp1262 stale skeleton. This retry is minimal formulaic code with focused tests and terminal artifact."
-      retire_if_same_verdict: true
-    - experiment_id: exp1253-wopr-masyu-cartridge
-      verdict: doomed_rerun_block_or_stale
-      addressed_by: "Earlier Masyu attempts had missing prior_failures and broad scope. This task explicitly narrows to one minimal loop constraint encoding."
-      retire_if_same_verdict: false
-  prompt: |
-    CONTEXT:
-    Masyu is a loop CSP cartridge. The goal is one minimal black/white circle constraint
-    encoding with a terminal artifact, not a full UI/gallery release.
-
-    Use {project_root} as the project root and {date} as the run date in any artifact metadata.
-
-    EXISTING CODE TO READ FIRST:
-    - python/carnot/wopr/ if it exists
-    - tests/python/ matching WOPR cartridges
-    - results/experiment_1262_wopr_masyu_v2.json
-    - openspec/change-proposals/wopr-games-gallery-extension.md
-
-    TASK:
-    Ship a minimal Masyu WOPR cartridge or write a blocked artifact naming the exact missing
-    package/path/API.
-
-    CONCRETE STEPS:
-    1. Create an in-progress artifact.
-    2. Locate existing WOPR loop/grid cartridge patterns.
-    3. Implement the smallest Masyu encoding: path degree constraints, black-circle turn/straight-neighbor
-       rule, white-circle straight/turn-neighbor rule, and energy(valid_loop)=0.
-    4. Add focused tests for valid loop E=0 and one black/white violation E>0.
-    5. Run only focused tests.
-    6. Write cartridge_shipped, focused_tests_passed, final_energy_valid, invalid_energy_positive,
-       files_changed, status, and honest_verdict.
-
-    Run: python3 -c "import json; d=json.load(open('results/experiment_1280_wopr_masyu_v3_minimal.json')); print(d.get('cartridge_shipped'), d.get('honest_verdict'))"
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp1281-milestone-retro-99
-  milestone: 2026.04.99
-  deliverable: results/experiment_1281_milestone_retro_99.json
-  title: "Milestone 2026.04.99 Retrospective - Evaluate 14 Criteria"
+- id: exp1295-milestone-retro-100
+  milestone: 2026.04.100
+  deliverable: results/experiment_1295_milestone_retro_100.json
+  title: "Milestone 2026.04.100 Retrospective - Evaluate 14 Criteria"
   agent_type: codex
   model: gpt-5.5
   max_turns: 30
@@ -716,39 +695,37 @@ tasks:
   skip_pre_test: true
   prompt: |
     CONTEXT:
-    Milestone .99 has 14 planned success criteria. This retro must be terminal even
-    if many tasks are blocked or gated. Do not run broad tests.
+    Milestone .100 has 14 planned success criteria. This retro must be terminal even
+    if several tasks are gated or blocked. Do not run broad tests.
 
     Use {project_root} as the project root and {date} as the run date in any artifact metadata.
 
     EXISTING CODE TO READ FIRST:
     - research-roadmap-next.yaml
     - openspec/change-proposals/research-roadmap-vNEXT.md
-    - results/experiment_1268_retro_backfill_95_96_97_v2.json
-    - results/experiment_1269_paper_v6_critical_fixes_v2.json
-    - results/experiment_1270_arxiv_bundle_v10_gated.json if it exists
-    - results/experiment_1271_triggered_certificate_extraction_sota_gguf.json
-    - results/experiment_1272_prime_verifier_selection_audit.json
-    - results/experiment_1273_grpo_v8_prime_vprm_smoke.json if it exists
-    - results/experiment_1274_online_self_learning_certificate_memory_v3.json
-    - results/experiment_1275_fsnet_feasibility_step_continuous_ebm.json
-    - results/experiment_1276_snarenet_repair_layer_gated.json if it exists
-    - results/experiment_1277_cactus_constrained_acceptance_sampling.json if it exists
-    - results/experiment_1278_gaming_verifiers_defense_est_final.json
-    - results/experiment_1279_wopr_kakuro_v4_minimal.json
-    - results/experiment_1280_wopr_masyu_v3_minimal.json
+    - results/experiment_1282_sota_gguf_cache_provenance_preflight.json
+    - results/experiment_1283_certificate_grammar_backend_bakeoff.json
+    - results/experiment_1284_ars_uqlm_answer_stability_sota_audit.json if it exists
+    - results/experiment_1285_triggered_certificate_extraction_v2.json if it exists
+    - results/experiment_1286_grad_beaver_nsvif_semantic_routing.json if it exists
+    - results/experiment_1287_token_guard_cactus_constrained_acceptance_v2.json if it exists
+    - results/experiment_1288_interwhen_dvi_verifier_feedback_replay.json
+    - results/experiment_1289_leanabell_grpo_v9_sota_headline_gated.json if it exists
+    - results/experiment_1290_skill_graph_promotion_demotion.json if it exists
+    - results/experiment_1291_hardnetpp_nonlinear_repair_benchmark.json
+    - results/experiment_1292_dsp_feasibility_channel_diagnostic.json
+    - results/experiment_1293_ebt_arm_ebm_cot_energy_bridge_audit.json
+    - results/experiment_1294_arxiv_v10_submission_receipt_or_blocker.json
 
     TASK:
-    Evaluate all .99 criteria mechanically from artifacts and write a terminal retro.
+    Evaluate all .100 criteria mechanically from artifacts and write a terminal retro.
 
     CONCRETE STEPS:
-    1. Create an in-progress artifact.
-    2. For each planned task, load the artifact if present and classify MET, NOT_MET, GATED,
-       BLOCKED, or MISSING.
+    1. Create the deliverable artifact immediately with status="in_progress".
+    2. For each planned task, load the artifact if present and classify MET, NOT_MET, GATED, BLOCKED, or MISSING.
     3. Count criteria_met out of 14.
-    4. Include top_successes, top_gaps, self_learning_result, sota_model_usage_summary,
-       stale_artifacts, key_carry_forwards, status="complete", retro_complete=true.
-    5. Write honest_verdict as milestone_99_N_of_14_criteria_met.
+    4. Include top_successes, top_gaps, self_learning_result, sota_model_usage_summary, continuous_repair_summary, publication_state, stale_artifacts, key_carry_forwards, status="complete", retro_complete=true.
+    5. Write honest_verdict as milestone_100_N_of_14_criteria_met.
 
-    Run: python3 -c "import json; d=json.load(open('results/experiment_1281_milestone_retro_99.json')); print(d.get('retro_complete'), d.get('criteria_met'), d.get('honest_verdict'))"
+    Run: python3 -c "import json; d=json.load(open('results/experiment_1295_milestone_retro_100.json')); print(d.get('retro_complete'), d.get('criteria_met'), d.get('honest_verdict'))"
     Do NOT push. Do NOT modify scripts/research_conductor.py.
