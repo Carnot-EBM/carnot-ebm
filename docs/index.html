@@ -300,10 +300,10 @@
       <a href="technical-report.html" class="btn btn-secondary">How it works</a>
     </div>
     <div class="stats-bar" aria-label="Project headline numbers">
-      <div class="stat"><div class="stat-num">1,202</div><div class="stat-label">Through Exp 1202</div></div>
-      <div class="stat"><div class="stat-num">103</div><div class="stat-label">Milestones complete</div></div>
-      <div class="stat"><div class="stat-num">21,388</div><div class="stat-label">Python test items</div></div>
-      <div class="stat"><div class="stat-num">3/12</div><div class="stat-label">.93 criteria met</div></div>
+      <div class="stat"><div class="stat-num">1,215</div><div class="stat-label">Through Exp 1215</div></div>
+      <div class="stat"><div class="stat-num">104</div><div class="stat-label">Milestones complete</div></div>
+      <div class="stat"><div class="stat-num">21,413</div><div class="stat-label">Python test items</div></div>
+      <div class="stat"><div class="stat-num">13/13</div><div class="stat-label">.94 criteria met</div></div>
     </div>
   </div>
 </section>
@@ -450,7 +450,9 @@
           failure. The production default now uses a five-verifier
           AND-compose ensemble with SOS-KAN, SemEnergy, AST, semantic
           consistency, and Z3 checks, plus an information-asymmetric MARCH
-          claim-check loop for high-risk responses. The seventh SC-Energy
+          claim-check loop for high-risk responses. The latest GRPO-VPS result
+          shows step-level verifier rewards outperform outcome-only feedback on
+          the .94 evaluation slice. The seventh SC-Energy
           verifier was regularized after an overfit audit, but the latest
           k=6 test still did not beat the k=5 default, so k=6 is retired for
           the production path.
@@ -593,10 +595,10 @@
         <div class="r-stats"><span class="r-before">SCEnergyEnergyAdapter replaces VJEPA v2 as production OOD gate; VJEPA retained as fallback</span> <span class="r-after">Milestone .78 &mdash; Exp 1001</span></div>
       </div>
       <div class="r-card">
-        <span class="r-tag">FoVer corpus expansion &mdash; Z3 + GSM8K + SOTA labeling (38.6x growth)</span>
-        <h3 class="r-title">AUROC 0.57 &rarr; 0.99; corpus now 8,329 pairs</h3>
-        <div class="r-meter"><div class="r-bar" style="width: 99%; background: #22c55e;"></div></div>
-        <div class="r-stats"><span class="r-before">7,329 pairs in v5 plus 1,000 SC-Energy-labeled SOTA pairs in v6</span> <span class="r-after">74-percentile-point lift &mdash; Exps 1055/1057/1119/1169</span></div>
+        <span class="r-tag">FoVer corpus expansion &mdash; Z3 + GSM8K + hard negatives</span>
+        <h3 class="r-title">Corpus now 8,829 pairs; k=5 AUROC 0.964 after v7</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 96.4%; background: #22c55e;"></div></div>
+        <div class="r-stats"><span class="r-before">v7 added 500 balanced hard-negative pairs; k=5 AUROC +0.0336</span> <span class="r-after">Exps 1055/1057/1119/1169/1211</span></div>
       </div>
       <div class="r-card">
         <span class="r-tag">Production ensemble &mdash; SOS-KAN normalization fix</span>
@@ -743,10 +745,10 @@
         <div class="r-stats"><span class="r-before">Energy recurrence helps, but 3 iterations dipped to 0.9158</span> <span class="r-after">Milestone .90 &mdash; Exp 1163</span></div>
       </div>
       <div class="r-card">
-        <span class="r-tag">Phase 4 active inference &mdash; ARC-AGI-3-style pilot</span>
-        <h3 class="r-title">100% solved; tied BFS later</h3>
-        <div class="r-meter"><div class="r-bar" style="width: 50%; background: #f59e0b;"></div></div>
-        <div class="r-stats"><span class="r-before">Beat greedy in Exp 1165; Exp 1189 action ratio=1.0 vs BFS on 20 puzzles</span> <span class="r-after">Limitation found &mdash; Exps 1165/1189</span></div>
+        <span class="r-tag">Phase 4 active inference &mdash; harder synthetic puzzles</span>
+        <h3 class="r-title">15/15 BFS-intractable puzzles solved</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 100%; background: #22c55e;"></div></div>
+        <div class="r-stats"><span class="r-before">BFS hit 100k state cap on all 15; initial energies nonzero</span> <span class="r-after">Synthetic 15x15 audit &mdash; Exp 1210</span></div>
       </div>
       <div class="r-card">
         <span class="r-tag">Verifier expansion &mdash; SC-Energy seventh verifier</span>
@@ -779,10 +781,10 @@
         <div class="r-stats"><span class="r-before">Multiply-free BiKA estimate; NPU verdict feasible</span> <span class="r-after">No accuracy benchmark &mdash; Exp 1174</span></div>
       </div>
       <div class="r-card">
-        <span class="r-tag">WOPR gallery &mdash; Connect Four + Hex cartridges</span>
-        <h3 class="r-title">42-spin Connect Four; 7x7 Hex operational</h3>
+        <span class="r-tag">WOPR gallery &mdash; Connect Four + Hex + Nonogram</span>
+        <h3 class="r-title">Nonogram shipped with E=0 valid solution</h3>
         <div class="r-meter"><div class="r-bar" style="width: 100%; background: #0ea5e9;"></div></div>
-        <div class="r-stats"><span class="r-before">Connect Four 10 tests; Hex Gibbs beat random 90% and tied greedy 50%</span> <span class="r-after">Milestones .91/.92 &mdash; Exps 1175/1188</span></div>
+        <div class="r-stats"><span class="r-before">Connect Four 10 tests; Hex Gibbs beat random 90%; Nonogram random E=26 &rarr; solution E=0</span> <span class="r-after">Exps 1175/1188/1214</span></div>
       </div>
       <div class="r-card">
         <span class="r-tag">Honest negative &mdash; k=6 AND-compose</span>
@@ -797,16 +799,52 @@
         <div class="r-stats"><span class="r-before">Integration packet written; thrml_available=false on this host</span> <span class="r-after">Milestone .89 &mdash; Exp 1150</span></div>
       </div>
       <div class="r-card">
-        <span class="r-tag">Preprint package &mdash; arXiv v5/v6</span>
-        <h3 class="r-title">13/18 issues fixed; hold remains</h3>
-        <div class="r-meter"><div class="r-bar" style="width: 50%; background: #f59e0b;"></div></div>
-        <div class="r-stats"><span class="r-before">High + medium/low fixed; v6 bundle blocked by missing Exp 1180 critical artifact</span> <span class="r-after">Hold active &mdash; Exps 1181/1182/1183</span></div>
+        <span class="r-tag">Preprint package &mdash; arXiv v8</span>
+        <h3 class="r-title">18/18 integrity issues fixed; hold remains</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 100%; background: #f59e0b;"></div></div>
+        <div class="r-stats"><span class="r-before">v8 PDF: 19 pages / 332 KB; claim audit 0 mismatches, figure audit 0 untraced constants</span> <span class="r-after">Operator approval still required &mdash; Exps 1205/1206</span></div>
       </div>
       <div class="r-card">
-        <span class="r-tag">Milestone .93 &mdash; infrastructure and gate audit result</span>
-        <h3 class="r-title">3/12 criteria met; carry-forward required</h3>
-        <div class="r-meter"><div class="r-bar" style="width: 25%; background: #f59e0b;"></div></div>
-        <div class="r-stats"><span class="r-before">RLIMIT_AS=8GB active; KANtize passed; retro complete</span> <span class="r-after">5 missing artifacts + 4 blocked gate artifacts &mdash; Exp 1202</span></div>
+        <span class="r-tag">Milestone .94 &mdash; clean-sweep closeout</span>
+        <h3 class="r-title">13/13 criteria met</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 100%; background: #22c55e;"></div></div>
+        <div class="r-stats"><span class="r-before">Pre-test fix, GPU offload, GRPO-VPS, Phase 4, FoVer v7, Tier 1, SDPO, Nonogram</span> <span class="r-after">Exp 1215</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Infrastructure &mdash; pre-test suite rescue</span>
+        <h3 class="r-title">RLIMIT_AS 8 GiB &rarr; 32 GiB; gate unblocked</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 100%; background: #22c55e;"></div></div>
+        <div class="r-stats"><span class="r-before">21,413 collected; verification slice 472 passed, 0 failed, 1 skipped</span> <span class="r-after">Exp 1203</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Runtime &mdash; llama.cpp GPU offload</span>
+        <h3 class="r-title">302 tok/s, above 50 tok/s floor</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 100%; background: #22c55e;"></div></div>
+        <div class="r-stats"><span class="r-before">CUDA support compiled; llama.cpp 0.3.22 supports GPU offload</span> <span class="r-after">Exp 1207</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Self-learning &mdash; GRPO-VPS step supervision</span>
+        <h3 class="r-title">70% &rarr; 94% accuracy (+24pp)</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 94%; background: #22c55e;"></div></div>
+        <div class="r-stats"><span class="r-before">Step reward correctness correlation 0.8047 across 50 questions</span> <span class="r-after">Exp 1209</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Self-learning &mdash; GRPO v5 + TinyV</span>
+        <h3 class="r-title">Ran on DualGPU, regressed -35pp</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 35%; background: #f59e0b;"></div></div>
+        <div class="r-stats"><span class="r-before">TinyV abstention rate 62.5%; v5 did not beat v4 or the spurious-reward threshold</span> <span class="r-after">Honest negative &mdash; Exp 1208</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Tier 1 self-learning &mdash; constraint addition v2</span>
+        <h3 class="r-title">Precision 0.478 &rarr; 0.917</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 91.7%; background: #22c55e;"></div></div>
+        <div class="r-stats"><span class="r-before">FPR 0.857 &rarr; 0.071 on 50 held-out cases</span> <span class="r-after">Exp 1212</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Honest negative &mdash; SDPO dense reward distillation</span>
+        <h3 class="r-title">-19.61pp delta; token coverage bottleneck</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 22.06%; background: #f59e0b;"></div></div>
+        <div class="r-stats"><span class="r-before">Energy teacher selection accuracy 0.902, but token coverage only 22.06%</span> <span class="r-after">Exp 1213</span></div>
       </div>
     </div>
 
@@ -822,8 +860,8 @@
         <li>A JEPA discriminator that hit 1.0 AUC on validation collapsed to
           0.47 on a genuinely held-out test.</li>
         <li>A highlighted FPGA speedup figure in the draft paper mixed an
-          estimated CPU sweep with a per-sample FPGA number; the paper is now
-          held until the full figure and hardware-claim audit is remediated.</li>
+          estimated CPU sweep with a per-sample FPGA number; the remediation is
+          complete in the v8 bundle, but submission still needs operator approval.</li>
       </ul>
       <p style="margin: 0.6rem 0 0 0;">Each was retracted, the audit that
         surfaced it is in the public research record, and the headlines above
@@ -839,11 +877,9 @@
     <h2 class="section-title">Carnot position paper, arXiv draft</h2>
     <p class="section-desc">
       An architectural framework for mapping the empirical bounds of
-      LLM verification. The current draft includes the .91 Phase 4 pilot and
-      leaderboard-context section, plus .92 integrity remediation for the
-      high- and medium/low-severity audit items. arXiv submission is still on
-      hold because .93 did not produce the critical-issue fixes or the v7
-      bundle artifact.
+      LLM verification. The current draft has the .94 critical-integrity fixes,
+      claim/figure audit hooks, and a compiled v8 arXiv bundle. Submission is
+      still on hold until the operator explicitly approves release.
     </p>
     <div class="hero-actions" style="justify-content: flex-start;">
       <a href="position-paper-draft-v3.md" class="btn btn-primary">Read source draft</a>
@@ -851,10 +887,9 @@
       <a href="arxiv-metadata.yaml" class="btn btn-secondary">Submission metadata</a>
     </div>
     <p style="margin-top: 1.5rem; font-size: 0.9rem; color: var(--text-muted);">
-      <em>Latest paper audit status 2026-05-03: 13/18 issues resolved; .93
-      critical-fix and bundle retries were missing, so arXiv hold remains active
-      until all 18 issues, the figure/claim hooks, and operator approval are
-      complete.</em>
+      <em>Latest paper audit status 2026-05-03: 18/18 issues resolved and
+      arXiv v8 bundle ready; publication hold remains active pending operator
+      approval.</em>
     </p>
   </div>
 </section>

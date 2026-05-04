@@ -17,8 +17,8 @@ call. No fine-tuning. No access to model weights.
 
 Rust + Python/JAX, Apache 2.0, `pip install carnot`.
 
-Current public research record: **1,202 experiments across 103 completed
-milestones**, through Exp 1202 on 2026-05-03.
+Current public research record: **1,215 experiments across 104 completed
+milestones**, through Exp 1215 on 2026-05-03.
 
 ## Install and run
 
@@ -115,7 +115,7 @@ experiment artifact under `results/`.
 | KAN-MILP formal property verification (monotonicity, output range, boundary) | **3 properties verified** via MILP; 11 violations found in untrained model | Exp 972 |
 | KAN-MILP monotonicity enforcement (isotonic projection fix) | **11 violations eliminated**; 1.89x inference speedup post-fix; zero violations in production model | Exp 992 |
 | SC-Energy Tier 2 production wiring as OOD detector | **143 tests, 0 failures**; `SCEnergyEnergyAdapter` replaces VJEPA v2 as default Tier 2 (VJEPA retained as fallback) | Exp 1001 |
-| FoVer corpus expansion (Z3 + GSM8K + SOTA labeling) | **8,329 pairs** (from 216); probe AUROC 0.5694 → **0.9899** (SOS-KAN), 0.9885 (ThinkPRM) — 74-percentile-point lift; 781 SOTA-model pairs in v5 plus 1,000 SC-Energy-labeled SOTA pairs in v6 | Exps 1055/1057/1119/1169 |
+| FoVer corpus expansion (Z3 + GSM8K + SOTA labeling) | **8,829 pairs** (from 216); probe AUROC 0.5694 → **0.9899** (SOS-KAN), 0.9885 (ThinkPRM); v7 added 500 hard-negative pairs and moved k=5 AUROC **0.93035 → 0.963925** | Exps 1055/1057/1119/1169/1211 |
 | SOS-KAN v3 Neural-Gram energy verifier on full corpus | **AUROC=0.9545** on 6,548-pair FoVer corpus; 0 monotonicity violations across 16,000 samples; gram matrix PSD confirmed | Exp 1072 |
 | Triple Integration E2E cascade (all 4 tiers active) | **50/50 questions** ran full cascade: Tier 0a → 0b → 2 → 3; incorrect_energy > correct_energy confirmed | Exp 1073 |
 | KV260 FPGA Ising sampler live hardware sampling | **24.83μs mean latency**; 70 unique spin values across 100 samples, 0 failures; energy distribution non-uniform confirmed | Exp 1068 |
@@ -130,7 +130,7 @@ experiment artifact under `results/`.
 | RLVR + SSD integration — honest negative | **No improvement** over baseline; energy filter degenerate (all scores 0.0 from k=5 AND-composition); SSD requires non-degenerate energy gradient as input | Exp 1099 |
 | Energy inversion fix — AUROC=0.9774 post-retrain | Ordering restored: correct-energy 0.689 → 1.648, incorrect-energy 0.621 → 2.096; EBRM noise-filter + SOTA corpus retrain resolved OOD distribution shift | Exp 1120 |
 | SOS-KAN/k=5 production fix | k=5 ensemble AUROC **0.5547 → 0.9402** after fitting corpus normalization stats; SOS-KAN individual AUROC **0.9902** | Exp 1128 |
-| GRPO + ThinkPRM v2 as explicit PRM reward | v1: **24% → 28%** (+4pp); v2: **19.15% → 27.66%** (+8.51pp); reflection-reward v3 stayed positive but weaker at **17.14% → 20.0%** (+2.86pp); v4 structural warm-up reached **16% → 26%** (+10pp) | Exps 1118/1129/1146/1159 |
+| GRPO + verifier rewards | v1: **24% → 28%** (+4pp); v2: **19.15% → 27.66%** (+8.51pp); v4 structural warm-up reached **16% → 26%** (+10pp); v5+TinyV regressed **-35pp**, while GRPO-VPS step-level supervision reached **70% → 94%** (+24pp) | Exps 1118/1129/1159/1208/1209 |
 | Zenil alpha_t after energy retrain | **0.38 → 0.52** on 50 live-GPU Qwen3.6-35B-A3B examples; self-learning signal improved after inversion fix | Exp 1130 |
 | Lagrangian cascade v2 | Accuracy preserved (**0.0pp delta**) with **3.2%** cost savings after adding verifier-score features; v1 had -22.86pp accuracy degradation | Exp 1131 |
 | HalluGuard cascade router v3 | Accuracy preserved (**0.0pp delta**) with **4.4%** cost savings; entropy and embedding-distance features flagged 90.32% of Goodfire misses | Exp 1143 |
@@ -151,20 +151,23 @@ experiment artifact under `results/`.
 | Diffusion of Thought inference | T=1 produced **+4pp** accuracy, but longer diffusion gave no additional accuracy and AUROC stayed **0.5** through T=125; honest verdict: diminishing returns | Exp 1171 |
 | NRGPT per-token energy | Per-token AUROC **0.998199** vs batch baseline **0.887409**, with error-token localization rate **1.0** | Exp 1172 |
 | BiKA SOS-KAN hardware analysis | Multiply-free BiKA estimate shows **39.6%** resource reduction and `npu_feasible`; complexity estimate only, no accuracy benchmark | Exp 1174 |
-| WOPR Connect Four cartridge | 42-spin cartridge shipped; valid board energy **E=0**, gravity violation repaired to sampled **E=0**, **10 tests passing** | Exp 1175 |
+| WOPR game cartridges — Connect Four, Hex, Nonogram | Connect Four: valid board **E=0**, 10 tests; Hex: Gibbs beat random **90%**; Nonogram: valid solution **E=0**, random **E=26**, gallery registered | Exps 1175/1188/1214 |
 | Pytest memory watchdog | Per-test RSS tracking shipped with **8,192 MB** session cumulative limit and **500 MB** per-test leak threshold; sample run passed | Exp 1178 |
-| Paper v5 integrity remediation | **13/18** integrity issues resolved (all 5 high-severity plus all 8 medium/low); critical issues remain unresolved, so v6 bundle is blocked | Exps 1181/1182/1183 |
-| GRPO v5 + TinyV v2 status | Honest blocked result: llama.cpp GPU offload prerequisite not met, `training_completed=false`, no evaluation questions run | Exp 1184 |
+| Paper v5/v6 integrity remediation | **18/18** integrity issues resolved after the 5 critical fixes; figure-integrity audit reports **0** untraced constants; arXiv v8 bundle compiles, but operator publication hold remains active | Exps 1181/1182/1183/1205/1206 |
+| llama.cpp GPU offload for GRPO | GPU offload verified at **302 tok/s** against a 50 tok/s floor; GRPO v5 then ran on DualGPU but regressed because TinyV abstained on **62.5%** of rewards | Exps 1207/1208 |
 | SC-Energy regularized k=6 audit | Overfit diagnosed and regularized, but k=6 still regressed (**0.9027** vs k=5 **0.9240**); k=6 retired from the production path | Exp 1185 |
 | Diffusion of Thought redesign | EBM-diffusion redesign scored **AUROC=0.4699** on 200 eval pairs; DoT retired as a near-random verifier signal | Exp 1186 |
 | Latent-GRPO energy reward | Invalid-sample masking + one-sided noise produced **0.0pp** delta (**46% → 46%**) on the 100-row FoVer proxy | Exp 1187 |
 | WOPR Hex game cartridge | 7x7 Hex cartridge operational; Gibbs energy player beat random **90%** of games and tied greedy at **50%** | Exp 1188 |
-| Phase 4 stronger-baseline audit | On 10 synthetic 5x5 and 10 synthetic 10x10 puzzles, Phase 4 tied BFS with action ratio **1.0**; no advantage claim survives yet | Exp 1189 |
-| Prlimit memory cap | `RLIMIT_AS=8GB` deployed through `conftest.py::pytest_configure`; new watchdog checks still pass, but .93 later showed the pre-test/self-heal path needs repair | Exp 1191 |
+| Phase 4 active-inference harder-puzzle audit | After the .92 BFS tie, .94 generated 15 synthetic 15x15 scrambled puzzles where BFS hit the **100,000-state cap on 15/15**; blocked Gibbs solved **15/15** | Exps 1189/1210 |
+| Prlimit memory cap | `RLIMIT_AS=8GB` from Exp 1191 caused conductor pre-test failures on JAX-heavy collection; Exp 1203 raised the cap to **32 GiB** and unblocked the gate | Exps 1191/1203 |
 | KANtize SOS-KAN 4-bit quantization | 4-bit SOS-KAN preserved **AUROC=0.990137** vs full-precision **0.990228**, with **0.038 ms/example** inference latency and edge safetensors export | Exp 1199 |
-| Milestone .93 status | **3/12 criteria met**; five planned artifacts went missing and four were blocked by prior-failure gate handling, so paper, GRPO v5, FoVer v7, Phase 4, Tier 1, and Nonogram work carry forward | Exp 1202 |
+| Pre-test suite rescue | RLIMIT_AS raised **8 GiB → 32 GiB**; pre-test gate collected **21,413** tests with **472 passed**, **0 failed**, **1 skipped** in the verification slice | Exp 1203 |
+| Tier 1 constraint addition v2 | Added 1 high-signal constraint; precision improved **0.478 → 0.917** and FPR dropped **0.857 → 0.071** on 50 held-out cases | Exp 1212 |
+| SDPO dense-reward distillation — honest negative | Energy teacher selection was strong (**0.902**), but token coverage was only **22.06%** and the measured delta was **-19.61pp** | Exp 1213 |
+| Milestone .94 status | **13/13 criteria met**; publication hold still active, but critical paper fixes, arXiv v8 bundle, GPU offload, GRPO-VPS, Phase 4 harder puzzles, FoVer v7, Tier 1, SDPO measurement, and Nonogram all produced artifacts | Exp 1215 |
 | Extropic Z1/XTR-0 integration packet | THRML backend stub and hardware integration packet shipped; live THRML benchmark blocked because `thrml_available=false` | Exp 1150 |
-| arXiv package v5/v6 + publication hold | v5 compiled at **347.83 KB**; v6 bundle attempt is blocked by missing critical-issue artifact Exp 1180. Hold remains active until all **18/18** issues and audit hooks pass | Exps 1167/1183 |
+| arXiv package v8 + publication hold | v8 bundle ready at `docs/arxiv-paper/carnot-arxiv-v8.tar.gz`; PDF compiled to **19 pages / 332 KB**, claim audit found **0 mismatches** across 55 claims, hold remains active pending operator approval | Exp 1206 |
 
 Deeper analysis of these — including everything that **didn't** work and
 why — is in the [technical report](docs/technical-report.md). Per-milestone
@@ -191,8 +194,9 @@ because without the negatives the positives become uninterpretable.
   on a genuinely held-out GSM8K range (Exp 682). Cascade eligibility pulled.
 - **"FPGA speedup figure ready for arXiv"** (Exp 1167 audit) — held. The
   draft figure mixed an estimated CPU sweep with a per-sample FPGA number and
-  made the caveat less prominent than the claim. Submission stays blocked until
-  the full figure and hardware-claim audit is remediated.
+  made the caveat less prominent than the claim. The v8 bundle has remediated
+  the figure/claim issues, but submission remains blocked until operator
+  approval.
 
 The audits that caught these (Exps 679, 682, 687, 691, and the 2026-05-02
 paper-integrity audit attached to Exp 1167) are the
@@ -204,7 +208,7 @@ claim we publish.
 ## Where to go next
 
 - **[Technical report](docs/technical-report.md)** — the full research arc
-  through Exp 1202 across 103 completed milestones, with a
+  through Exp 1215 across 104 completed milestones, with a
   plain-English timeline of what we tried, what failed, what stuck.
 - **[Roadmap](docs/roadmap.md)** — current milestone, upcoming milestones,
   hardware track, and Phase 3 (Kona-parity foundation-model) direction.
@@ -408,7 +412,7 @@ See the [technical report](docs/technical-report.md) for the full research recor
 
 ## 14 Principles Learned
 
-Hard-won lessons from the activation-based phase of a research program that now spans Exp 1-1202 across 103 milestones and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
+Hard-won lessons from the activation-based phase of a research program that now spans Exp 1-1215 across 104 milestones and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
 
 ### What works
 1. **The model's own logprobs are the best energy.** No external EBM needed for rejection sampling — the LLM's own confidence is already an energy function. Simple, practical, +10%.
