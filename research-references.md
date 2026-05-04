@@ -4,6 +4,55 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-05-04 vNEXT Scan Addendum (Milestone 2026.04.100 Planning)
+
+### ARS: Answer-agreement Representation Shaping for Reasoning-Trajectory Hallucination Detection
+- **Paper:** arXiv 2601.17467 (January 2026).
+- **Source:** https://arxiv.org/abs/2601.17467
+- **What:** Uses trace-boundary perturbations to produce counterfactual answers, then trains shaped representations that separate answer-stable from answer-unstable reasoning trajectories. The paper targets long reasoning traces whose surface form looks coherent but whose answer is wrong.
+- **Relevance to Carnot:** .99 failed to obtain headline SOTA certificate extraction, but it did produce PRIME verifier weights and positive self-learning smoke. ARS gives a local diagnostic to decide whether a SOTA GGUF trace is stable enough to trust before Carnot tries to parse or reward it.
+- **Concrete experiment:** Run a SOTA GGUF answer-stability audit: generate 20-30 reasoning traces with `cached_sota_pair()`, perturb certificate/reasoning boundaries with deterministic and sampling-temperature variants, and measure answer stability vs Carnot energy. Gate downstream certificate extraction on stability instead of raw parse rate alone.
+- **When to incorporate:** .100 Phase 1, before rerunning triggered certificate extraction.
+
+### TruncProof: LL(1)-Constrained Generation with Maximum Token Limits
+- **Paper:** OpenReview ICLR 2026 submission (September 2025; revised February 2026).
+- **Source:** https://openreview.net/forum?id=lrc2xSoh9b
+- **What:** Grammar-constrained generation that uses LL(1) parser properties to guarantee syntactically valid outputs under a strict maximum token budget.
+- **Relevance to Carnot:** .99's certificate extraction failed before producing a parse rate. TruncProof addresses a concrete failure class for local GGUF certificates: structured JSON tails can be cut off or malformed when the budget is tight. Carnot needs bounded certificates, not open-ended CoT tails.
+- **Concrete experiment:** Add a fixed-budget certificate grammar with required fields (`claims`, `equations`, `final_answer`, `confidence`, `evidence_refs`) and compare raw prompted JSON vs LL(1)-bounded local grammar generation on the same SOTA GGUF prompts.
+- **When to incorporate:** .100 certificate rerun or a preceding grammar-smoke task.
+
+### SEM-CTRL: Semantically Controlled Decoding with Answer Set Grammars
+- **Paper:** arXiv 2503.01804 / OpenReview TMLR 2026.
+- **Sources:** https://arxiv.org/abs/2503.01804 and https://openreview.net/forum?id=ICUHKhOISN
+- **What:** Uses Answer Set Grammars plus token-level MCTS to enforce context-sensitive syntactic and semantic constraints during decoding. The authors explicitly distinguish syntactic validity from semantic correctness.
+- **Relevance to Carnot:** JSON validity alone is insufficient for a Carnot certificate. SEM-CTRL suggests encoding small semantic constraints in the grammar itself, such as "each equation must cite operands present in the problem" or "final_answer must match one verified equation result."
+- **Concrete experiment:** Prototype a tiny Answer-Set-Grammar-style certificate validator offline: after SOTA output, run semantic grammar checks over extracted claims and compare precision/recall against the existing free-form parser. Do not depend on closed-weight APIs.
+- **When to incorporate:** .100 if TruncProof/XGrammar grammar smoke succeeds; otherwise keep as .101 semantic-control track.
+
+### DVI: Draft, Verify, and Improve for Continual Online Self-Speculation
+- **Paper:** arXiv 2510.05421 (October 2025); OpenReview ICLR 2026 submission.
+- **Sources:** https://arxiv.org/abs/2510.05421 and https://openreview.net/forum?id=CwvY6TXLxr
+- **What:** Converts verifier accept/reject decisions during speculative decoding into online supervision for the drafter head, reporting 2.16x wall-time speedup on Spec-Bench with far less training data than prior methods.
+- **Relevance to Carnot:** This is a clean continuous self-learning pattern: every verifier decision becomes a training signal. It connects .99's positive certificate-memory delta to inference-time speedups instead of only retrospective memory replay.
+- **Concrete experiment:** Simulate a Carnot DVI loop with existing verifier decisions: draft multiple certificate tails, accept/reject via the k=5/PRIME verifier vector, update a lightweight drafter/routing policy, and measure acceptance-rate and violation-rate deltas over replay rounds.
+- **When to incorporate:** .100 Phase 2 self-learning after SOTA certificate/routing data exists; can run as a no-GPU replay smoke if no SOTA cache is available.
+
+### XGrammar-2 and llguidance: Practical Local Structured Generation Engines
+- **Papers/repos:** XGrammar-2 arXiv 2601.04426; `mlc-ai/xgrammar`; `guidance-ai/llguidance`.
+- **Sources:** https://arxiv.org/abs/2601.04426, https://github.com/mlc-ai/xgrammar, https://github.com/guidance-ai/llguidance
+- **What:** XGrammar-2 supports tag-triggered structure switching and cross-grammar cache reuse for dynamic agentic protocols. The GitHub project reports broad integration across vLLM, SGLang, TensorRT-LLM, MLC-LLM, OpenVINO GenAI, and others. `llguidance` supports CFG/JSON-schema/regex constraints with roughly tens-of-microseconds mask computation in common JSON-schema cases and is integrated with llama.cpp, vLLM, SGLang, mistral.rs, and onnxruntime-genai.
+- **Relevance to Carnot:** The SOTA GGUF path is llama.cpp-backed. These engines are the practical implementation route for a local-first, grammar-bounded `<CARNOT_CERT>` tail without adding closed-provider structured-output dependencies.
+- **Concrete experiment:** Run a local structured-output engine bakeoff for Carnot certificates: llama.cpp native grammar, `llguidance`, and XGrammar if installed. Measure parse rate, schema coverage, tokens/s overhead, and failure modes. Promote the fastest viable backend to the triggered certificate rerun.
+- **When to incorporate:** .100 Phase 0 or Phase 1 before the expensive SOTA GGUF rerun.
+
+### Current EBT / ARM-EBM / Extropic / Kona Status Check
+- **Sources:** EBT paper page https://arxiv.org/abs/2507.02092 and project page https://energy-based-transformers.github.io/; ARM-EBM v3 https://arxiv.org/abs/2512.15605; Extropic https://extropic.ai/ and https://extropic.ai/software; Kona pages https://logicalintelligence.com/kona-ebms-energy-based-models and https://logicalintelligence.com/blog/energy-based-models-for-reasoning
+- **What:** EBT remains the closest open research reference for prediction-as-energy-minimization across modalities. ARM-EBM was revised in April 2026 and keeps the ARM/EBM soft-Bellman bridge current. Extropic now publicly frames XTR-0/X0/Z1 plus THRML as the path from probabilistic software to TSU hardware. Logical Intelligence continues to frame Kona as globally scored, continuous, editable reasoning traces underneath LLM coordination.
+- **Relevance to Carnot:** This check reinforces the existing strategy rather than adding a standalone task: local LLMs generate interface/certificate material; Carnot energy models score and repair globally; sampler abstractions stay hardware-portable for TSU/FPGA/NPU.
+- **Concrete experiment:** Do not rerun a broad architecture exercise. Instead, keep .100 focused on measurable local SOTA certificates, online verifier learning, and continuous repair; file a TSU parity packet only if certificate/repair data becomes stable enough to map to THRML factors.
+- **When to incorporate:** Use as strategic context for .100, not as a separate experiment unless hardware access changes.
+
 ## 2026-05-04 Scan Addendum (Milestone 2026.04.99 Planning)
 
 ### REASON: Accelerating Probabilistic Logical Reasoning for Scalable Neuro-Symbolic Intelligence
