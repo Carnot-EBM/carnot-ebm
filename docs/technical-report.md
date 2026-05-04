@@ -1,6 +1,6 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report — 1,281 Experiments Tracked and 108 Archived Research Milestones (Terminal Results Through Exp 1281)
+## A Technical Report — 1,281 Experiments Across 108 Archived Research Milestones (Tracked Through Exp 1281)
 
 **Author:** Ian Blenke
 **Date:** 2026-05-04
@@ -363,7 +363,7 @@ Phase-5 verifier diversity is not yet sound enough for scale-up claims.
 
 ## Research Timeline
 
-A project this size doesn't land in one leap. Carnot evolved through twenty-two
+A project this size doesn't land in one leap. Carnot evolved through twenty-three
 phases, each one reacting to the negative findings of the phase before it.
 The experiment ranges below are approximate — they mark where each phase
 began, not hard boundaries.
@@ -509,7 +509,7 @@ this phase.
 
 ### Phase 6 — Retro closure and hardware on real silicon (Experiments 701-818, April 22-24 2026)
 
-The final phase of the research-record-to-date was about closing things:
+This phase of the research record was about closing things:
 
 - **RETRO-033** (live verify-repair producing a signed positive number)
   closed definitively with two independent 200-question trials on the same
@@ -1555,7 +1555,7 @@ The architecture is model-agnostic (Experiment 69), scales to 5000+ variables (E
 | Research conductor | Autonomous Claude Code agent loop, YAML-driven | N/A | Experimental |
 | PyPI packaging | `pip install carnot`, extras for rust/mcp/cuda/llm | Integration tests | Beta |
 
-**Total:** **21,702** Python test items are currently collected in the repo (`.venv/bin/python -m pytest tests/python --collect-only -q --no-cov`, collected 2026-05-04). This is a collection count, not a claim that the full suite passes; the current full collection reports three unrelated import errors: `tests/python/phase5/test_intermediate_scale_v3.py` for missing `carnot.phase5.intermediate_scale_v3`, `tests/python/test_combined_retro_95_96_97.py` for missing `carnot.reporting.combined_retro_95_96_97`, and `tests/python/test_milestone_retro_96.py` for missing `carnot.reporting.milestone_retro_96`. Full validation remains command-specific in the relevant experiment artifacts.
+**Total:** **21,703** Python test items are currently collected in the repo (`.venv/bin/python -m pytest tests/python --collect-only -q --no-cov`, collected 2026-05-04). This is a collection count, not a claim that the full suite passes; the current full collection reports three unrelated import errors: `tests/python/phase5/test_intermediate_scale_v3.py` for missing `carnot.phase5.intermediate_scale_v3`, `tests/python/test_combined_retro_95_96_97.py` for missing `carnot.reporting.combined_retro_95_96_97`, and `tests/python/test_milestone_retro_96.py` for missing `carnot.reporting.milestone_retro_96`. Full validation remains command-specific in the relevant experiment artifacts.
 
 ---
 
