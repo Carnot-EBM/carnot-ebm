@@ -644,3 +644,5 @@ If you finish the real work |
 | 2026-05-04 10:26 UTC | Verifier Joint Orthogonality Audit v3 — Pure Data  | OK | cache hit: 81 passed, 1 warning in 4.57s |
 | 2026-05-04 10:30 UTC | Paper-v6 Critical Issues Fix — ISSUE-1 through ISS | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1257_paper_v |
 | 2026-05-04 10:35 UTC | Paper-v6 Critical Issues Fix — ISSUE-1 through ISS | FAIL | No file changes produced |
+| 2026-05-04 10:40 UTC | Paper-v6 Critical Issues Fix — ISSUE-1 through ISS | FAIL | No file changes produced |
+| 2026-05-04 10:42 UTC | arXiv Bundle v9 + Submission — Orthogonality Heatm | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1257-paper-v6-critical-issues-fix) |
