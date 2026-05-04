@@ -17093,3 +17093,45 @@ meaning-preserving and three meaning-changing perturbations per pair
 the measured vulnerability and sensitivity rates.
 
 **Spec traces:** REQ-VERIFY-1263, SCENARIO-VERIFY-1263, Exp 1263
+
+## REQ-VERIFY-1265: DiffuTruth Semantic Energy Proxy Baseline Comparison
+
+**Summary:** Measure a DiffuTruth-style semantic energy proxy on FoVer corpus
+responses and compare its hallucination AUROC against Carnot's SemEnergyProbe
+baseline.
+
+**Requirements:**
+
+- REQ-VERIFY-1265-1: The workflow SHALL load the first 100 pairs from
+  `results/fover_corpus_v5.json` and map `is_correct == false` to the positive
+  hallucination label.
+- REQ-VERIFY-1265-2: The semantic energy proxy SHALL reconstruct each response
+  by removing its last sentence and SHALL score energy as TF-IDF cosine
+  divergence between the original response and the reconstruction, with higher
+  scores indicating higher hallucination energy.
+- REQ-VERIFY-1265-3: The workflow SHALL read Carnot's SemEnergyProbe baseline
+  from `results/experiment_1096_semenergy_probe_v1.json`, preferring
+  `auroc`, `auc`, and `semenergy_auroc` in that order.
+- REQ-VERIFY-1265-4: The workflow SHALL compute AUROC for the DiffuTruth proxy
+  over the selected FoVer labels and SHALL use `0.5` only for single-class or
+  otherwise undefined AUROC inputs.
+- REQ-VERIFY-1265-5: Exp 1265 SHALL write
+  `results/experiment_1265_diffutruth_vs_carnot_baseline.json` with
+  `diffutruth_semantic_energy_auroc`, `carnot_semenergy_probe_auroc`,
+  `diffutruth_fever_paper_auroc`, `carnot_beats_diffutruth_paper`,
+  `diffutruth_comparison_measured`, and `honest_verdict` using the format
+  `diffutruth_fover_X.XXX_carnot_X.XXX`.
+
+**Implementation Status:** Planned (Exp 1265)
+
+### SCENARIO-VERIFY-1265: DiffuTruth Proxy Is Compared On FoVer
+
+**Given** FoVer corpus v5 and the Exp 1096 SemEnergyProbe artifact exist
+**When** `python/carnot/eval/diffutruth_semantic_energy.py` runs
+**Then** it measures DiffuTruth semantic energy AUROC over the first 100 FoVer
+pairs
+**And** it writes the Exp 1265 artifact with the required schema fields
+**And** `diffutruth_comparison_measured` is true with an honest verdict that
+reports both measured AUROC values.
+
+**Spec traces:** REQ-VERIFY-1265, SCENARIO-VERIFY-1265, Exp 1265
