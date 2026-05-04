@@ -31,9 +31,9 @@ extraction stayed gate-blocked and .99 produced no headline-eligible SOTA
 model-generation result. The .99 operational closeout then measured **10 min**
 for **2** items with no GPU zombies; the **30%** next-milestone savings target
 now centers on DualGPU-aware lanes, cached TeX/pre-flight state, immediate
-gate-block artifacts, and idempotent docs reconciliation. Current Python test
-collection reports **21,703** items; that is a collection count with three
-known import errors, not a full-suite pass claim.
+gate-block artifacts, and idempotent docs reconciliation. The current
+2026-05-04 Python test collection reports **21,703** items; that is a
+collection count with three known import errors, not a full-suite pass claim.
 
 ## Install and run
 
