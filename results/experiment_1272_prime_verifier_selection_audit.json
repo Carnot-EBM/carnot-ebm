@@ -2,8 +2,80 @@
   "experiment": "1272_prime_verifier_selection_audit",
   "schema": "prime_verifier_selection_audit_v1",
   "run_date": "20260504",
-  "status": "in_progress",
-  "verifier_weight_vector_written": false,
-  "verifier_weight_vector": {},
-  "honest_verdict": "in_progress"
+  "status": "complete",
+  "n_fover_pairs": 350,
+  "n_process_error_rows": 3,
+  "n_outcome_correct": 22,
+  "n_outcome_incorrect": 328,
+  "source_artifacts": {
+    "fover_corpus": "results/fover_corpus_v5.json",
+    "exp1256": "results/experiment_1256_verifier_orthogonality_audit_v3.json",
+    "exp1271": "results/experiment_1271_triggered_certificate_extraction_sota_gguf.json"
+  },
+  "exp1256_k_eff": 1.76,
+  "exp1256_max_pairwise_r_k5": 0.461664,
+  "per_verifier_metrics": {
+    "Z3MathVerifier": {
+      "process_error_detection_rate": 0.0,
+      "final_answer_agreement": 0.065714,
+      "answer_reasoning_consistency": 0.062857,
+      "pairwise_correlation_penalty": 0.2148,
+      "raw_weight_score": 0.027930685714
+    },
+    "SymCodeVerifier": {
+      "process_error_detection_rate": 1.0,
+      "final_answer_agreement": 0.091429,
+      "answer_reasoning_consistency": 0.094286,
+      "pairwise_correlation_penalty": 0.500165,
+      "raw_weight_score": 0.250346044298
+    },
+    "CausalReasoningVerifier": {
+      "process_error_detection_rate": 1.0,
+      "final_answer_agreement": 0.148571,
+      "answer_reasoning_consistency": 0.151429,
+      "pairwise_correlation_penalty": 0.500165,
+      "raw_weight_score": 0.26605515147
+    },
+    "SemEnergyProbe": {
+      "process_error_detection_rate": 1.0,
+      "final_answer_agreement": 0.931429,
+      "answer_reasoning_consistency": 0.934286,
+      "pairwise_correlation_penalty": 0.188,
+      "raw_weight_score": 0.78184
+    },
+    "SOSKANEnergyV3": {
+      "process_error_detection_rate": 0.0,
+      "final_answer_agreement": 0.062857,
+      "answer_reasoning_consistency": 0.06,
+      "pairwise_correlation_penalty": 0.278,
+      "raw_weight_score": 0.024548
+    },
+    "k5_ensemble_summary": {
+      "process_error_detection_rate": 1.0,
+      "final_answer_agreement": 0.931429,
+      "answer_reasoning_consistency": 0.934286,
+      "pairwise_correlation_penalty": 0.461664,
+      "raw_weight_score": 0.518340662857
+    }
+  },
+  "metric_definitions": {
+    "process_error_detection_rate": "fraction of FoVer process-error rows detected",
+    "final_answer_agreement": "fraction where verifier error signal matches final answer label",
+    "answer_reasoning_consistency": "fraction where verifier signal matches process-or-outcome error",
+    "pairwise_correlation_penalty": "max absolute verifier correlation penalty in [0,1]"
+  },
+  "verifier_weight_vector_written": true,
+  "verifier_weight_vector": {
+    "Z3MathVerifier": 0.014943703026954533,
+    "SymCodeVerifier": 0.1339421802339398,
+    "CausalReasoningVerifier": 0.1423469947379855,
+    "SemEnergyProbe": 0.4183064065891458,
+    "SOSKANEnergyV3": 0.013133870956909793,
+    "k5_ensemble_summary": 0.27732684445506445
+  },
+  "missing_fields": [],
+  "missing_optional_fields": [
+    "exp1271_certificate_outputs"
+  ],
+  "honest_verdict": "prime_verifier_weights_selected_top_SemEnergyProbe"
 }
