@@ -1,0 +1,222 @@
+{
+  "experiment": "1281_milestone_retro_99",
+  "schema": "milestone_retro_v4",
+  "run_date": "20260504",
+  "milestone": "2026.04.99",
+  "status": "complete",
+  "criteria_results": {
+    "retro_backfill_95_96_97_closed": "MET",
+    "paper_v6_critical_fixes_complete": "MET",
+    "arxiv_bundle_v10_written_after_gate": "MET",
+    "triggered_certificate_sota_gguf_measured": "BLOCKED",
+    "prime_verifier_weight_vector_written": "MET",
+    "grpo_v8_prime_vprm_delta_reported": "MET",
+    "online_self_learning_certificate_memory_measured": "MET",
+    "fsnet_feasibility_improvement_measured": "MET",
+    "snarenet_repair_layer_gated_tested": "MET",
+    "cactus_constrained_acceptance_gated_measured": "GATED",
+    "gaming_verifier_defense_final_measured": "MET",
+    "wopr_kakuro_shipped_or_blocked": "MET",
+    "wopr_masyu_shipped_or_blocked": "MET",
+    "retro_99_complete": "MET"
+  },
+  "criteria_met": 12,
+  "criteria_total": 14,
+  "source_artifacts_checked": [
+    {
+      "experiment_id": 1268,
+      "path": "results/experiment_1268_retro_backfill_95_96_97_v2.json",
+      "loaded": true,
+      "status": "complete",
+      "honest_verdict": "retro_backfill_complete_terminal_counts_from_stale_exp1255_95_10_of_13_96_2_of_13_97_4_of_13"
+    },
+    {
+      "experiment_id": 1269,
+      "path": "results/experiment_1269_paper_v6_critical_fixes_v2.json",
+      "loaded": true,
+      "status": "complete",
+      "honest_verdict": "paper_v6_critical_fixes_v2_complete"
+    },
+    {
+      "experiment_id": 1270,
+      "path": "results/experiment_1270_arxiv_bundle_v10_gated.json",
+      "loaded": true,
+      "status": "complete",
+      "honest_verdict": "arxiv_bundle_v10_compiled_upload_pending"
+    },
+    {
+      "experiment_id": 1271,
+      "path": "results/experiment_1271_triggered_certificate_extraction_sota_gguf.json",
+      "loaded": true,
+      "status": "blocked",
+      "honest_verdict": "blocked_gate_check_failed"
+    },
+    {
+      "experiment_id": 1272,
+      "path": "results/experiment_1272_prime_verifier_selection_audit.json",
+      "loaded": true,
+      "status": "complete",
+      "honest_verdict": "prime_verifier_weights_selected_top_SemEnergyProbe"
+    },
+    {
+      "experiment_id": 1273,
+      "path": "results/experiment_1273_grpo_v8_prime_vprm_smoke.json",
+      "loaded": true,
+      "status": "complete",
+      "honest_verdict": "smoke_only_not_headline"
+    },
+    {
+      "experiment_id": 1274,
+      "path": "results/experiment_1274_online_self_learning_certificate_memory_v3.json",
+      "loaded": true,
+      "status": "complete",
+      "honest_verdict": "certificate_memory_replay_improved"
+    },
+    {
+      "experiment_id": 1275,
+      "path": "results/experiment_1275_fsnet_feasibility_step_continuous_ebm.json",
+      "loaded": true,
+      "status": "complete",
+      "honest_verdict": "feasibility_step_viable"
+    },
+    {
+      "experiment_id": 1276,
+      "path": "results/experiment_1276_snarenet_repair_layer_gated.json",
+      "loaded": true,
+      "status": "complete",
+      "honest_verdict": "adaptive_repair_improves_fsnet"
+    },
+    {
+      "experiment_id": 1277,
+      "path": "results/experiment_1277_cactus_constrained_acceptance_sampling.json",
+      "loaded": false,
+      "status": null,
+      "honest_verdict": null
+    },
+    {
+      "experiment_id": 1278,
+      "path": "results/experiment_1278_gaming_verifiers_defense_est_final.json",
+      "loaded": true,
+      "status": "complete",
+      "honest_verdict": "est_vulnerability_0.00_precision_1.00_recall_1.00_k5_blocks_true"
+    },
+    {
+      "experiment_id": 1279,
+      "path": "results/experiment_1279_wopr_kakuro_v4_minimal.json",
+      "loaded": true,
+      "status": "shipped",
+      "honest_verdict": "minimal Kakuro WOPR cartridge shipped; valid solution E=0.0 and deterministic invalid state E=17.0"
+    },
+    {
+      "experiment_id": 1280,
+      "path": "results/experiment_1280_wopr_masyu_v3_minimal.json",
+      "loaded": true,
+      "status": "completed",
+      "honest_verdict": "shipped_minimal_masyu_cartridge"
+    }
+  ],
+  "findings_summary": "Milestone .99 met 12 of 14 planned criteria. Publication closeout, PRIME verifier selection, self-learning replay, continuous repair, gaming defense, and WOPR Kakuro/Masyu reached terminal artifacts, while SOTA certificate extraction remained blocked and Cactus acceptance stayed gated.",
+  "top_successes": [
+    "Publication closeout reached a compiled arXiv bundle after paper-critical fixes.",
+    "PRIME verifier selection wrote a verifier-weight vector for downstream reward work.",
+    "Self-learning reported positive deltas from GRPO/VPRM smoke and certificate memory replay.",
+    "FSNet and SnareNet continuous-repair experiments both wrote measured positive outcomes.",
+    "Gaming-defense measurement and both WOPR minimal cartridges reached terminal shipped results."
+  ],
+  "top_gaps": [
+    "Exp1271 did not produce headline SOTA GGUF certificate extraction or a parse rate.",
+    "Exp1277 remained gated because the certificate parse-rate prerequisite was unavailable.",
+    "No .99 LLM-bearing artifact produced headline-eligible SOTA GGUF model usage."
+  ],
+  "self_learning_result": {
+    "deltas": [
+      {
+        "experiment": "1273_grpo_v8_prime_vprm_smoke",
+        "field": "self_learning_delta_overall",
+        "value": 0.83798,
+        "direction": "positive",
+        "headline_result_allowed": false
+      },
+      {
+        "experiment": "1274_online_self_learning_certificate_memory_v3",
+        "field": "self_learning_delta_overall",
+        "value": 0.357143,
+        "direction": "positive",
+        "memory_entries": 5,
+        "skill_graph_candidate_count": 5
+      }
+    ],
+    "best_delta": 0.83798,
+    "overall_direction": "positive",
+    "summary": "Self-learning improved in the available smoke/replay artifacts."
+  },
+  "sota_model_usage_summary": {
+    "headline_model_ids_required": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-31B-it-GGUF",
+      "unsloth/gemma-4-26B-A4B-it-GGUF"
+    ],
+    "headline_model_ids_used": [],
+    "headline_result_allowed": false,
+    "blocked_or_smoke_experiments": [
+      "exp1271",
+      "exp1273",
+      "exp1277"
+    ],
+    "summary": "No headline-eligible SOTA GGUF model usage was available in .99."
+  },
+  "stale_artifacts": [
+    {
+      "path": "results/experiment_1228_milestone_retro_95.json",
+      "classification": "NOT_MET",
+      "reason": "inherited_from_exp1268_retro_backfill"
+    },
+    {
+      "path": "results/experiment_1229_milestone_retro_95.json",
+      "classification": "NOT_MET",
+      "reason": "inherited_from_exp1268_retro_backfill"
+    },
+    {
+      "path": "results/experiment_1241_milestone_retro_96.json",
+      "classification": "NOT_MET",
+      "reason": "inherited_from_exp1268_retro_backfill"
+    },
+    {
+      "path": "results/experiment_1242_combined_retro_95_96.json",
+      "classification": "NOT_MET",
+      "reason": "inherited_from_exp1268_retro_backfill"
+    },
+    {
+      "path": "results/experiment_1254_milestone_retro_97.json",
+      "classification": "NOT_MET",
+      "reason": "inherited_from_exp1268_retro_backfill"
+    },
+    {
+      "path": "results/experiment_1255_combined_retro_95_96_97.json",
+      "classification": "NOT_MET",
+      "reason": "inherited_from_exp1268_retro_backfill"
+    },
+    {
+      "path": "results/experiment_1271_triggered_certificate_extraction_sota_gguf.json",
+      "criterion": "triggered_certificate_sota_gguf_measured",
+      "classification": "BLOCKED",
+      "status": "blocked",
+      "honest_verdict": "blocked_gate_check_failed"
+    },
+    {
+      "path": "results/experiment_1277_cactus_constrained_acceptance_sampling.json",
+      "criterion": "cactus_constrained_acceptance_gated_measured",
+      "classification": "GATED",
+      "status": null,
+      "honest_verdict": null
+    }
+  ],
+  "key_carry_forwards": [
+    "Rerun triggered certificate extraction with complete prior-failure metadata and cached SOTA GGUF models.",
+    "Run Cactus constrained acceptance only after certificate_parse_rate reaches the 0.8 gate.",
+    "Convert smoke-only GRPO/VPRM evidence into headline-eligible SOTA-backed learning evidence or retire the claim.",
+    "Use the compiled arXiv v10 bundle for an actual submission step or record the external submission blocker."
+  ],
+  "retro_complete": true,
+  "honest_verdict": "milestone_99_12_of_14_criteria_met"
+}

@@ -444,6 +444,37 @@ misses, and in-progress source verdicts shall count as unmet criteria. The
 retrospective self-criterion shall count as met only in the final artifact that
 sets `retro_complete == true`.
 
+### REQ-REPORT-023: Milestone .99 Success-Criteria Retrospective
+
+The Exp 1281 milestone .99 retrospective workflow shall read the authoritative
+Exp 1268 through Exp 1280 result JSON artifacts and write
+`results/experiment_1281_milestone_retro_99.json` with:
+
+- `schema` set to `milestone_retro_v4`
+- `milestone` set to `2026.04.99`
+- `criteria_total` set to `14`
+- `criteria_results`, mapping the 14 planned criteria to one of `MET`,
+  `NOT_MET`, `GATED`, `BLOCKED`, or `MISSING`
+- `criteria_met`, derived from the count of `MET` criteria
+- `top_successes`, listing the strongest completed outcomes
+- `top_gaps`, listing the highest-priority unmet, gated, blocked, or missing
+  outcomes
+- `self_learning_result`, summarising available self-learning deltas from Exp
+  1273 and Exp 1274
+- `sota_model_usage_summary`, summarising whether SOTA GGUF models were used
+  for headline-eligible LLM work
+- `stale_artifacts`, listing missing, in-progress, bootstrap, gated, or blocked
+  source artifacts that need carry-forward attention
+- `key_carry_forwards`, listing the highest-priority .100 follow-ups
+- `retro_complete == true`
+- `honest_verdict` formatted as `milestone_99_N_of_14_criteria_met`
+
+Missing artifacts shall count as `MISSING` unless an explicit unmet upstream
+gate makes the planned task `GATED`. Blocked terminal artifacts shall count as
+`BLOCKED`. In-progress or bootstrap-only artifacts shall count as `NOT_MET`.
+The retrospective self-criterion shall count as `MET` only in the final
+artifact that sets `retro_complete == true`.
+
 ## Scenarios
 
 ### SCENARIO-REPORT-001: Nested Live Provenance Is Promoted
@@ -662,6 +693,20 @@ misses count as unmet
 **And** the artifact reports `criteria_met == 5`
 **And** `honest_verdict == "milestone_98_5_of_13_criteria_met"`
 
+### SCENARIO-REPORT-020: Exp 1281 Counts .99 Source Criteria
+
+**Given** Exp 1268 through Exp 1280 source artifacts contain the current .99
+criterion evidence
+**And** Exp 1271 is a blocked terminal artifact without SOTA model IDs or a
+certificate parse rate
+**And** Exp 1277 is absent because its Exp 1271 parse-rate gate was unmet
+**When** the Exp 1281 retrospective workflow runs
+**Then** blocked, gated, missing, false, stale, and threshold-miss source
+criteria do not increment `criteria_met`
+**And** the retrospective self-criterion counts as met in the final artifact
+**And** the artifact reports `criteria_met == 12`
+**And** `honest_verdict == "milestone_99_12_of_14_criteria_met"`
+
 
 ### REQ-PUBLISH-003: HuggingFace README Accuracy Audit
 
@@ -758,5 +803,6 @@ embed live-GPU benchmark results from Exp 328 when available.
 | REQ-REPORT-020 | `python/carnot/reporting/milestone_retro_97.py`, `results/experiment_1254_milestone_retro_97.json` | `tests/python/test_milestone_retro_97.py` | Implemented |
 | REQ-REPORT-021 | `python/carnot/reporting/combined_retro_95_96_97.py`, `results/experiment_1255_combined_retro_95_96_97.json` | `tests/python/test_combined_retro_95_96_97.py` | Implemented |
 | REQ-REPORT-022 | `python/carnot/reporting/milestone_retro_98.py`, `results/experiment_1267_milestone_retro_98.json` | `tests/python/test_milestone_retro_98.py` | Implemented |
+| REQ-REPORT-023 | `python/carnot/reporting/milestone_retro_99.py`, `results/experiment_1281_milestone_retro_99.json` | `tests/python/test_milestone_retro_99.py` | Implemented |
 | REQ-PUBLISH-003 | `scripts/experiment_317_hf_publish.py` | `tests/python/test_experiment_317_hf_publish.py` | Implemented |
 | REQ-PUBLISH-004 | `scripts/experiment_330_hf_live_publish.py` | `tests/python/test_experiment_330_hf_live_publish.py` | Implemented |
