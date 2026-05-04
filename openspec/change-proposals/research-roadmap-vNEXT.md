@@ -1,300 +1,198 @@
-# Research Roadmap — Milestone 2026.04.98
+# Research Roadmap vNEXT: Milestone 2026.04.99
 
-**Planned:** 2026-05-04  
-**Status:** PLANNED  
-**Predecessor:** 2026.04.97 (2 of 13 tasks completed with terminal artifacts)
+Planned: 2026-05-04
+Status: Draft for conductor execution
+Predecessor: 2026.04.98 Combined Retro + Orthogonality Audit v3 + arXiv Submit + GRPO v7 + Phase-5-D v3 + WOPR Completion
+Roadmap YAML: `research-roadmap-next.yaml`
 
----
+## What Milestone .98 Proved
 
-## What Milestone .97 Proved
+Milestone 2026.04.98 completed the measurement-heavy parts that determine what can be claimed honestly:
 
-Milestone .97 ran 13 planned experiments and produced only 2 terminal artifacts:
+- Verifier orthogonality is now measured from production-style data: max pairwise r = 0.462 for the k=5 ensemble, with k_eff = 1.76. This supports AND-composition, but also shows the ensemble is not close to five fully independent verifiers.
+- Q11 Time-Series Skeptic instrumentation exists, but is only moderately useful: correlation 0.547 and vulnerability 0.453.
+- DiffuTruth is a weak baseline on FoVer compared with Carnot semantic-energy scoring: DiffuTruth 0.082 vs Carnot 0.948.
+- QuantKAN 3-bit LUT deployment preserved high AUROC: 0.9801 with 2.5x LUT speedup.
+- The .98 retrospective found only 5 of 13 criteria met. The unfinished items are not ignorable: combined retro backfill, paper critical fixes, arXiv bundle, GRPO v7, Phase-5-D gates, WOPR Kakuro/Masyu, and gaming-defense measurement.
 
-- **exp1248 (Boltzmann-GPT CD Training v2):** COMPLETE — contrastive divergence training
-  improved AUROC from 0.65 (random weights) to **0.9607**, establishing a viable EBM-grounded
-  language model for the Phase 3 pipeline.
+The next milestone treats those as carry-forward work, but does not simply rerun the failed prompts. Each carry-forward task has a narrowed deliverable and explicit prior-failure handling.
 
-- **exp1251 (NRGPT Frozen-Prefix Evaluation v2):** COMPLETE — NRGPT nonmonotonicity classified
-  as **Type B (causal-context shift)**, an expected behavior in recurrent EBMs, not an
-  architectural flaw. Paper-v6 framing found: report in Section 4.
+## Current Research Signals Added Before Planning
 
-The remaining 11 tasks (9 stale skeleton artifacts + 1 gate-block + 1 in_progress retro) were
-not completed. The dominant failure mode was **stale STEP 0 skeletons**: agents wrote the initial
-in_progress JSON then stopped, either from max_turns exhaustion or from hitting the pre-test
-failure loop.
+The 2026-05-04 literature scan added these candidate ideas to `research-references.md`:
 
-Operational retro (ops/changelog.md 2026-05-04): 42% recoverable via conductor-side finalization,
-activation-time prior_failures autofill, structured gate-block artifacts, active GPU scheduling,
-and parallel CPU/GPU lanes.
+- FSNet: feasibility-seeking neural updates for constrained optimization with guarantees.
+- SnareNet: flexible repair layers for neural networks with hard constraints.
+- Thinking Before Constraining: trigger structured decoding only when constraints are needed.
+- PRIME: process-outcome alignment as a verifier-selection signal.
+- CompassVerifier: unified lightweight verifier baseline for verifiable reasoning.
+- Cactus: constrained acceptance speculative sampling.
+- Extropic Z1/XTR-0 and Kona architecture status updates.
 
-**Critical carry-forwards from .97:**
-1. Verifier orthogonality audit — failed 8+ times total (exp1232: 7x, exp1244: 1x)
-2. Paper-v6 critical issues fix — failed 5+ times total (exp1245, exp1205, exp1180, exp1193)
-3. arXiv submission — pending 6+ consecutive milestones
-4. GRPO v7 — stale skeleton (exp1247)
-5. Phase-5-D — stale skeleton (exp1250)
-6. WOPR Kakuro — stale skeleton (exp1243)
-7. WOPR Masyu — gate-blocked (exp1253)
-8. LLMs Gaming Verifiers Defense — stale skeleton (exp1249)
-9. Q11 TSS Instrumentation — stale skeleton (exp1252)
-10. Combined Retro .95+.96 — stale skeleton (exp1242)
+Milestone .99 turns FSNet, SnareNet, triggered structured certificates, PRIME-style verifier selection, and Cactus-style acceptance into local experiments. CompassVerifier remains a monitored baseline for a later slot unless triggered certificate extraction produces enough comparable outputs during .99.
 
----
+## Three Biggest Gaps
 
-## Milestone .98 Design
+1. **Publication credibility gap.** The strongest measurements now exist, but the paper/arXiv path remains blocked by unresolved critical fixes and stale release packaging. Carnot needs one clean publication bundle that cites measured artifacts and deletes unsupported claims.
 
-### The Three Biggest Gaps
+2. **SOTA local extraction gap.** Many earlier extraction and verifier experiments used tiny smoke-test models or canned traces. The PRD requires local-first verification on current instruction-tuned models. Any new LLM experiment in .99 must use at least one mandated SOTA GGUF headline model:
+   - `unsloth/Qwen3.6-35B-A3B-GGUF`
+   - `unsloth/gemma-4-31B-it-GGUF`
+   - `unsloth/gemma-4-26B-A4B-it-GGUF`
 
-**Gap 1: arXiv submission still blocked (6+ milestones)**  
-The position paper cannot be submitted because (a) the verifier orthogonality audit has failed 8+
-times, and (b) 5 critical integrity issues remain unfixed (ISSUE-1 through ISSUE-5). Both must
-be resolved in .98 before exp1258 (arXiv Bundle v9) can run.
+3. **Self-learning gap.** The architecture contains case memory, GRPO, VPRM, and continuous EBM components, but no recent milestone has closed the loop from verifier feedback to improved future decisions. .99 must produce at least one honest continuous self-learning artifact, even if the result is negative.
 
-Root cause analysis of orthogonality audit failures: every prior attempt tried to run pytest or
-import Carnot modules, which hit the pre-test failure loop. The fix is PURE DATA ARCHAEOLOGY:
-exp1108 already computed pairwise_r_correlations for all 6 verifiers on 500 samples. The k5
-subset max_r=0.461664 < 0.5 confirms AND-composition is viable. The task requires ONLY:
-(1) read exp1108 JSON, (2) format into 5x5 matrix, (3) write artifact. No pytest. No imports.
-Total turns required: ~5. This is why max_turns:20 is sufficient.
+## Architecture Target
 
-**Gap 2: Self-learning loop (GRPO v7) still producing no results**  
-GRPO v7 wrote a skeleton artifact but produced no training results. The root cause is the same
-stale-skeleton pattern. For .98, the GRPO v7 prompt is redesigned with STEP 0 FIRST, a strict
-600s wall budget, PROGRS outcome-conditioned centering (arXiv 2604.02341) as an improvement over
-v6, and explicit DualGPU scheduling with both RTX 3090s.
-
-**Gap 3: Multiple stale .97 carry-forwards consuming planner attention**  
-9 experiments are in_progress with no useful results. .98 carries them all forward with:
-(a) pre-populated prior_failures to prevent DOOMED_RERUN_BLOCK false-positives,
-(b) max_turns reduced to match actual work needed,
-(c) skip_pre_test:true on all carry-forwards,
-(d) CONCRETE STEPS that cannot fail (codex tasks have mechanically bounded scope).
-
----
-
-## Architecture: Verification Pipeline (Current State)
-
-```
-Query → [Tier 0a: CarnotThinkProbe] → [Tier 0b: SpilledEnergy]
-      → [Tier 0c: NUP Probe v4]    → [Tier 0d: HallucinationBasin]
-      → [Tier 0e: HalluField]       → [Tier 1: SinkProbe]
-      → [Tier 2: SC-Energy]         → [Tier 2.5: SymCodeVerifier]
-      → [Tier 2.6: HERMES]          → [Tier 2.7: CausalReasoning]
-      → [Tier 3: k=5 AND-Composed Ising verifiers]
-                                     ↓
-                              [Certificate / Repair]
-
-k=5 Production Ensemble (AND-composed, max_r=0.462 < 0.5 confirmed exp1108):
-  SOSKANEnergyV3 | SemEnergyProbe | ASTStructureVerifier |
-  SemanticConsistencyVerifier | Z3MathVerifier
-
-Self-Learning Loop (Phase 5):
-  GRPO v7 (target: >10pp on GSM8K) → FoVer expansion → verifier retraining
-
-Phase 3 Pipeline (seeds planted .97):
-  Boltzmann-GPT CD (AUROC=0.9607) → NRGPT recurrence (Type-B characterised)
-
-WOPR Gallery:
-  Hashi ✓ | Hex ✓ | Slitherlink ✓ | N-Queens ✓ | Futoshiki ✓ |
-  Kakuro ✗ | Masyu ✗  (target .98)
+```text
+Local SOTA GGUF models
+  Qwen3.6-35B-A3B, Gemma-4-31B-it, Gemma-4-26B-A4B-it
+          |
+          v
+Triggered certificate extraction
+  constraint-aware tail only when uncertainty/energy trigger fires
+          |
+          v
+Carnot verifier cascade
+  Tier 0 probes -> formal claims -> k=5 AND ensemble -> Ising/energy terms
+          |
+          +----------------------------+
+          |                            |
+          v                            v
+PRIME-style verifier selection      Cactus-style constrained acceptance
+  process/outcome alignment          draft accepted only if energy/cert passes
+          |
+          v
+Continuous self-learning
+  verifier-weight memory -> GRPO/VPRM reward -> replayed case memory
+          |
+          v
+Phase-3 continuous EBM repair
+  FSNet feasibility step -> SnareNet adaptive repair layer
+          |
+          v
+Publication + ops reconciliation
+  arXiv bundle, WOPR hardening, gaming-defense measurement, milestone retro
 ```
 
----
+## Phase 0: Publication and Stale-Retro Closeout
 
-## Phase Descriptions
+Goal: convert measured .98 results into a clean publication posture and close stale bookkeeping before new claims accumulate.
 
-### Phase 0 — Infrastructure (2 tasks, unconditional, run FIRST)
+- `exp1268-retro-backfill-95-96-97-v2`: finalize the stale combined retro artifacts using pure JSON archaeology.
+- `exp1269-paper-v6-critical-fixes-v2`: resolve the paper critical issues with measured citations to exp1256/1264/1265/1266.
+- `exp1270-arxiv-bundle-v10-gated`: package the arXiv bundle only if exp1269 reports all critical issues fixed.
 
-**exp1255: Combined Retro .97** (claude/opus, max_turns:100, STEP 0, skip_pre_test:true)
-Close the combined retro for milestones .95+.96+.97 in one ultra-mechanical evaluation pass.
-exp1242 (combined .95+.96 retro) is stale. exp1254 (.97 retro) is stale. exp1229 (.95 retro)
-is stale. This experiment closes ALL outstanding retros by running Python one-liners against
-existing artifact files — no model inference, no test imports.
-Prior failures: exp1242 (in_progress stale), exp1254 (in_progress stale).
+Success bar: paper bundle exists or is honestly blocked with a named missing field. No “in_progress” paper artifact is acceptable.
 
-**exp1256: Verifier Orthogonality Audit v3 — Pure Data Archaeology** (claude/opus, max_turns:20, skip_pre_test:true)
-THE paper-blocking audit that has failed 8+ times. New approach: ZERO imports, ZERO pytest.
-Just read exp1108 JSON, extract pairwise_r_correlations, format into 5x5 matrix for k=5
-production subset, compute k_eff, write artifact. The full computation is 2-3 Python one-liner
-commands. max_turns:20 is ample.
-Prior failures: exp1232 (7x artifact_not_updated_past_bootstrap), exp1244 (stale skeleton).
+## Phase 1: SOTA Certificates and Self-Learning Reward Selection
 
-### Phase 1 — Paper Integrity (1 task, unconditional)
+Goal: produce verifiable SOTA local model traces and convert process/outcome signals into a learning signal.
 
-**exp1257: Paper-v6 Critical Issues Fix** (claude/opus, max_turns:60, skip_pre_test:true)
-Fix the 5 critical issues (ISSUE-1 through ISSUE-5) blocking arXiv submission. Targeted edits
-to docs/arxiv-paper/main.tex:
-- ISSUE-1: fig3 — replace fabricated CPU baseline with honest measurement caveat
-- ISSUE-2: KL=3.07 — relabel as software_parallel_glauber_proxy, not bitstream-measured
-- ISSUE-3: 15.6x speedup — replace hand-typed CPU_GIBBS_NS constant with exp1094 measured value
-- ISSUE-4: 76,130x HumanEval speedup — remove from headline (apples-to-oranges comparison)
-- ISSUE-5: k5 AUROC footnote — reconcile two SOSKANEnergyV3 AUROC values (0.9902 vs 0.9545)
-Prior failures: exp1245 (stale skeleton), exp1205 (MISSING x3), exp1180 (MISSING), exp1193 (MISSING).
+- `exp1271-triggered-certificate-extraction-sota-gguf`: run triggered structured certificate extraction on SOTA GGUF outputs, using the `cached_sota_pair()` pattern and recording exact model IDs.
+- `exp1272-prime-verifier-selection-audit`: rank verifiers by process/outcome alignment before attempting any GRPO update.
+- `exp1273-grpo-v8-prime-vprm-smoke-gated`: run a bounded GRPO/VPRM smoke only if exp1272 writes a verifier-weight vector.
+- `exp1274-online-self-learning-certificate-memory-v3`: update case memory from verified certificates and measure whether replay improves future decisions.
 
-### Phase 2 — arXiv Submission (1 task, gated)
+Success bar: at least one artifact reports a real self-learning delta (`self_learning_delta_overall` or `grpo_v8_delta_pp`) and records whether it is positive, zero, or negative.
 
-**exp1258: arXiv Bundle v9 + Submission** (claude/opus, max_turns:45, gated on exp1256+exp1257)
-Compile paper-v6 PDF using tectonic, integrate orthogonality heatmap figure from exp1256,
-and submit bundle to arXiv. Gate: exp1256.orthogonality_matrix_computed==true AND
-exp1257.critical_issues_fixed>=5. This is the PUBLICATION MILESTONE.
+## Phase 2: Continuous EBM Repair and Constrained Acceptance
 
-### Phase 3 — GRPO v7 Self-Learning (1 task, DualGPU MANDATORY)
+Goal: test whether recent constrained-neural work maps to Carnot’s Phase-3/Kona substrate.
 
-**exp1259: GRPO v7 — PROGRS Centering + VPS, 600s Budget** (claude/opus, max_turns:80, DualGPU)
-Three improvements over v6: (1) PROGRS outcome-conditioned centering (arXiv 2604.02341) replaces
-group-mean advantage normalization, (2) GRPO-VPS step-level supervision from CausalReasoningVerifier
-+ Z3MathVerifier, (3) wall_budget_s=600. DualGPU: tensor_split=[0.5,0.5] across both RTX 3090s.
-Target: grpo_v7_improvement_pp > 10.0.
-Prior failures: exp1221 (wall_budget_exhausted), exp1235 (stale skeleton), exp1247 (stale skeleton).
+- `exp1275-fsnet-feasibility-step-continuous-ebm`: compare raw Langevin updates with an FSNet-style feasibility-seeking step on continuous EBM states.
+- `exp1276-snarenet-repair-layer-gated`: add an adaptive repair-layer prototype only if the FSNet step improves feasibility.
+- `exp1277-cactus-constrained-acceptance-sampling-gated`: try Cactus-style constrained acceptance only if triggered certificates are parseable enough to serve as a verifier.
 
-### Phase 4 — Phase-5-D Intermediate Scale (1 task, DualGPU MANDATORY)
+Success bar: measure feasibility, energy, and violation deltas. Negative results are acceptable if they explain whether continuous repair should be retired, narrowed, or escalated to hardware.
 
-**exp1260: Phase-5-D Intermediate Scale v3 — 4 Core Gates** (claude/opus, max_turns:70, DualGPU)
-Reduced scope: 4 core gates (mode collapse, MCMC mixing, k_eff maintenance, forgetting). Uses
-PPSEBM replay buffer (arXiv 2512.15658) for anti-forgetting. d=128, 100-300M params. DualGPU.
-Prior failures: exp1238 (stale skeleton), exp1250 (stale skeleton).
+## Phase 3: Hardening, WOPR Completion, and Retro
 
-### Phase 5 — WOPR Gallery (2 tasks, CPU-only)
+Goal: close the highest-value .98 carry-forwards without broadening the milestone.
 
-**exp1261: WOPR Kakuro v3** (codex/gpt-5.5, max_turns:30)
-Kakuro: integer row/column sums, digits 1-9 no-repeat per run, E=sum_runs(actual-target)^2.
-Prior failures: exp1240 (gate-block), exp1243 (stale skeleton).
+- `exp1278-gaming-verifiers-defense-est-final`: finish the gaming-defense measurement using EST-style pure data analysis.
+- `exp1279-wopr-kakuro-v4-minimal`: ship or honestly block the Kakuro cartridge with tests and spec alignment.
+- `exp1280-wopr-masyu-v3-minimal`: ship or honestly block the Masyu cartridge with tests and spec alignment.
+- `exp1281-milestone-retro-99`: evaluate .99 criteria and write carry-forwards for the next planner.
 
-**exp1262: WOPR Masyu v2** (codex/gpt-5.5, max_turns:30)
-Masyu: loop puzzle, black/white circle constraints. E=violated circles + connectivity violations.
-exp1253 was gate-blocked — redesigned as UNCONDITIONAL in .98.
-Prior failures: exp1253 (blocked_gate_check_failed).
-
-### Phase 6 — Research (4 tasks, CPU-only)
-
-**exp1263: LLMs Gaming Verifiers Defense v4 — EST Protocol** (codex/gpt-5.5, max_turns:40)
-Apply Evaluator Stress Test (EST, arXiv 2507.05619): 50 FoVer pairs, 6 perturbations each,
-measure whether energy scores track semantic validity (meaning-preserving should be stable).
-Prior failures: exp1225 (MISSING), exp1231 (stale), exp1249 (stale).
-
-**exp1264: Q11 TSS Instrumentation v2** (codex/gpt-5.5, max_turns:40)
-Add TSS diagnostic instrumentation to python/carnot/phase3/continuous_ebm.py: measure SC-Energy
-+ Z3 per-layer energy at sign(z) bottleneck, log optimal transversal pair (k=2).
-Prior failures: exp1252 (stale skeleton).
-
-**exp1265: DiffuTruth vs Carnot Energy Baseline** (codex/gpt-5.5, max_turns:30)
-New: DiffuTruth (arXiv 2602.11364) FEVER AUROC=0.725 (unsupervised thermodynamic baseline).
-Compare against Carnot's cascade on first 100 FoVer pairs. If Carnot > 0.725, publishable.
-
-**exp1266: QuantKAN 3-bit PTQ + LUT-KAN Comparison** (codex/gpt-5.5, max_turns:35)
-Apply GPTQ-style PTQ (arXiv 2511.18689) to SOS-KAN checkpoint from exp1199 (4-bit AUROC=0.9901).
-Compare 8-bit vs 4-bit vs 3-bit AUROC curve. Also implement LUT-KAN (arXiv 2601.03332) precomputed
-LUT inference. Ultra-edge NPU deployment target.
-
-### Phase 7 — Retro (1 task)
-
-**exp1267: Milestone .98 Retrospective** (claude/opus, max_turns:100, STEP 0)
-Evaluate all 13 success criteria. Ultra-mechanical Python one-liners per criterion.
-
----
+Success bar: no stale skeleton artifacts. A cartridge can be blocked, but the block must name the exact missing verifier, dataset, or API.
 
 ## Dependency Graph
 
-```
-Phase 0 (unconditional, first):
-  exp1255 ─────── retro (no deps)
-  exp1256 ─────── orthog audit (no deps) ──────────────────┐
-                                                            │ gates exp1258
-Phase 1 (unconditional):                                    │
-  exp1257 ─────── paper fixes (no deps) ───────────────────┤
-                                                            │
-Phase 2 (gated):                                            │
-  exp1258 ◄───────────────────────────────────────────────-┘
+```text
+exp1268  exp1269
+            |
+            v
+         exp1270
 
-Phase 3 (independent, DualGPU):
-  exp1259 ─────── GRPO v7 (no deps)
+exp1271 ------------------------+
+   |                            |
+   v                            v
+exp1277                      exp1274
 
-Phase 4 (independent, DualGPU):
-  exp1260 ─────── Phase-5-D v3 (no deps)
+exp1272
+   |
+   v
+exp1273
 
-Phase 5 (independent, CPU):
-  exp1261 ─────── Kakuro (no deps)
-  exp1262 ─────── Masyu (no deps, unconditional)
+exp1275
+   |
+   v
+exp1276
 
-Phase 6 (independent, CPU):
-  exp1263 ─────── gaming defense (no deps)
-  exp1264 ─────── Q11 TSS (no deps)
-  exp1265 ─────── DiffuTruth (no deps)
-  exp1266 ─────── QuantKAN (no deps)
-
-Phase 7:
-  exp1267 ─────── retro (depends on all above)
+exp1278   exp1279   exp1280
+     \       |        /
+      \      |       /
+       v     v      v
+          exp1281
 ```
 
----
+Structured conductor gates:
 
-## 13 Success Criteria
+- `exp1270` gates on `exp1269.critical_issues_fixed >= 5`.
+- `exp1273` gates on `exp1272.verifier_weight_vector_written == true`.
+- `exp1276` gates on `exp1275.feasibility_delta_overall > 0.0`.
+- `exp1277` gates on `exp1271.certificate_parse_rate >= 0.8`.
 
-| # | Criterion | Experiment | Notes |
-|---|-----------|-----------|-------|
-| 1 | retro_97_complete | exp1255 | Closes .95+.96+.97 retros |
-| 2 | orthogonality_matrix_measured | exp1256 | Gates exp1258; max_r<0.5 expected |
-| 3 | critical_issues_fixed_5_of_5 | exp1257 | Gates exp1258 |
-| 4 | arxiv_v6_submitted | exp1258 | PUBLICATION MILESTONE |
-| 5 | grpo_v7_honest_result | exp1259 | DualGPU MANDATORY |
-| 6 | phase5d_4_gates_measured | exp1260 | DualGPU MANDATORY |
-| 7 | kakuro_cartridge_shipped | exp1261 | E=0 at valid solution |
-| 8 | masyu_cartridge_shipped | exp1262 | E=0 at valid solution |
-| 9 | gaming_defense_measured | exp1263 | EST protocol |
-| 10 | q11_tss_instrumented | exp1264 | sign(z) diagnostics live |
-| 11 | diffutruth_comparison_measured | exp1265 | AUROC vs DiffuTruth |
-| 12 | quantkan_3bit_auroc_measured | exp1266 | 3-bit + LUT comparison |
-| 13 | retro_98_complete | exp1267 | |
+## Hardware Requirements
 
----
+Minimum:
 
-## Key Architectural Decisions for .98
+- CPU-only path for publication closeout, retros, WOPR static tests, PRIME audit, FSNet/SnareNet smoke tests.
+- Python environment with repo dependencies already used by prior Carnot experiments.
 
-1. **Orthogonality audit max_turns:20** — 3 Python one-liners after reading exp1108.
-   Failed 8+ times at max_turns:60-80 due to pre-test failures. Max_turns:20 forces the
-   agent to stay on the minimal path: STEP 0 + one-liner + write.
+Preferred:
 
-2. **ALL carry-forwards have skip_pre_test:true** — pre-test failures block every carry-forward.
+- Dual RTX 3090 or equivalent CUDA devices for SOTA GGUF LLM inference.
+- Local Hugging Face cache containing at least one mandated SOTA GGUF, preferably the cached SOTA pair used by `scripts/experiment_template.py`.
 
-3. **DualGPU MANDATORY for exp1259 and exp1260** — both RTX 3090s idle at .97 closeout;
-   the operational retro identified this as the main recoverable waste (42%).
+Hardware deliberately not required in .99:
 
-4. **WOPR Masyu is UNCONDITIONAL** — gate-blocked in .97 incorrectly; WOPR cartridges
-   are standalone CPU tasks with no dependency on research experiments.
+- KV260/Vivado FPGA bring-up. The current hardware wishlist still marks deeper FPGA work as blocked by tooling.
+- AMD XDNA NPU unblocking. The missing dependency/wheel issue has already caused repeated blocked attempts.
+- Extropic TSU access. .99 only updates the readiness map through references; no TSU experiment is planned until hardware/API availability changes.
 
-5. **PROGRS centering in GRPO v7** — outcome-conditioned centering (arXiv 2604.02341)
-   addresses advantage collapse in prior GRPO runs.
+## Milestone Success Criteria
 
-6. **DiffuTruth comparison is paper-valuable** — independent FEVER AUROC=0.725 baseline that
-   Carnot's cascade should exceed on FoVer; suitable for paper-v6 §5 Related Work.
+1. `exp1268` closes the stale .95/.96/.97 retro gap or names the exact missing artifacts.
+2. `exp1269` fixes all five critical paper issues or reports a non-ambiguous blocker.
+3. `exp1270` writes a submission bundle only when gated prerequisites pass.
+4. `exp1271` records exact SOTA GGUF model IDs and a certificate parse rate.
+5. `exp1272` writes a verifier-weight vector for self-learning or rejects the premise with measured evidence.
+6. `exp1273` reports an honest GRPO/VPRM delta if the gate passes.
+7. `exp1274` measures continuous self-learning via case-memory replay.
+8. `exp1275` measures FSNet-style feasibility improvement against raw Langevin.
+9. `exp1276` tests adaptive repair only when the feasibility prerequisite is positive.
+10. `exp1277` measures constrained acceptance only when certificates are parseable.
+11. `exp1278` writes a final gaming-defense measurement.
+12. `exp1279` ships or honestly blocks Kakuro.
+13. `exp1280` ships or honestly blocks Masyu.
+14. `exp1281` completes the .99 retrospective and proposes carry-forwards.
 
-7. **No gemini agent_type** — 429-rate-limited per ops/known-issues.md.
+## Key Planning Decisions
 
-8. **Retro is claude/opus max_turns:100 with STEP 0** — codex retro failures in .93-.97.
-
----
-
-## Estimated Wall Time
-
-| Phase | Tasks | Est. Time |
-|-------|-------|-----------|
-| Phase 0 Infrastructure | exp1255, exp1256 | 35 min |
-| Phase 1 Paper | exp1257 | 45 min |
-| Phase 2 arXiv | exp1258 (gated) | 30 min |
-| Phase 3 GRPO | exp1259 (DualGPU) | 70 min |
-| Phase 4 Phase-5-D | exp1260 (DualGPU) | 55 min |
-| Phase 5 WOPR | exp1261, exp1262 | 40 min |
-| Phase 6 Research | exp1263-exp1266 | 120 min |
-| Phase 7 Retro | exp1267 | 25 min |
-| **Total** | **13 tasks** | **~420 min** |
-
----
-
-## arxiv Papers Discovered During .98 Planning
-
-See research-references.md section "2026-05-04 Scan (Milestone 2026.04.98 Planning)":
-- arXiv 2602.11364 (DiffuTruth): hallucinations as high-energy thermodynamic states
-- arXiv 2507.05619 (EST): detecting proxy gaming via evaluator stress tests
-- arXiv 2604.02341 (PROGRS): outcome-conditioned centering for GRPO
-- arXiv 2601.17223 (VPRM): verifiable process reward models for structured reasoning
-- arXiv 2601.03332 (LUT-KAN): segment-wise LUT quantization for fast KAN inference
+- The milestone sequence increments from 2026.04.98 to 2026.04.99.
+- All planned tasks use `agent_type: codex` and `model: gpt-5.5` unless a future conductor operator overrides them. This follows the current CLAUDE.md Codex-by-default policy for formulaic code and bounded research tasks.
+- No task modifies `scripts/research_conductor.py`.
+- No task modifies `research-roadmap.yaml`; the execution queue is written to `research-roadmap-next.yaml`.
+- Legacy tiny LLMs are allowed only as loud CPU smoke-test fallbacks. They are not acceptable headline models for any .99 LLM result.
