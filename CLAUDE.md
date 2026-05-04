@@ -274,6 +274,73 @@ and retro paths are NOT affected — those use `AGENT_TYPE_PLANNER` and
   prevents), re-evaluate each one and flip to codex unless
   `requires_claude` is genuinely warranted.
 
+**Positive criterion for `requires_claude: true` (must meet ALL three).**
+Origin: the .96 planner over-applied `requires_claude: true` to 5 of
+13 tasks (1232/1233/1234/1235/1238); on inspection only 1 was genuinely
+Claude-justified. The remaining 4 were downgraded to codex with no
+quality loss. Root cause: planner conflated "task importance" with
+"reasoning depth required." Fix: a positive criterion that the planner
+must satisfy before flagging `requires_claude: true`:
+
+```
+requires_claude: true is justified only when the task meets ALL of:
+
+  1. CODEX HAS DEMONSTRABLY FAILED at this specific task category in
+     a prior milestone (cite the experiment ID + verdict in the YAML
+     comment), OR codex's known capability profile makes failure
+     plausible for THIS specific task structure (not just "important
+     work" in general).
+
+  2. THE WORK REQUIRES MULTI-FILE TOOL CHOREOGRAPHY: 5+ files touched
+     across Edit + Read + Bash in a single session, where the agent
+     must hold cross-file context to make decisions. Single-file edits,
+     mechanical LaTeX integration of pre-drafted prose, GPU training
+     supervision, numerical analysis with matplotlib output, and
+     deliverable-shaped retros do NOT meet this bar.
+
+  3. THE REASONING IS MULTI-STEP IN A WAY NUMERICAL/MECHANICAL
+     CHECKING CANNOT SUBSTITUTE FOR. If the task's success can be
+     evaluated by a deterministic gate (spectral norm bounded, AUROC
+     above threshold, schema validation passing, test suite green),
+     then a weaker agent that produces the same gate-passing artifact
+     is equivalent — codex is the correct choice. Claude's edge is
+     handling open-ended judgment under ambiguity, not running scripts
+     that have known correctness criteria.
+```
+
+**What `requires_claude: true` is NOT for.** None of these alone, nor
+in combination, justify the flag:
+
+- `priority: critical` — task importance is orthogonal to agent choice
+- `priority: high` — same
+- `publication-blocking` — say so in the comment, not via agent choice
+- "high-stakes" — the artifact's review is what protects against stakes,
+  not the agent that produced it
+- "should be careful" / "needs accuracy" — codex is also careful and
+  accurate within its capability envelope; the question is whether the
+  work exceeds that envelope
+- GPU training duration — long training runs are GPU-cost-bound, not
+  agent-cost-bound; codex monitors training fine
+- Multi-step instructions — codex handles 50+ turn tasks competently;
+  Claude is only needed when the steps require cross-context reasoning
+  beyond what the prompt + tool outputs can encode
+
+**Calibration table** (populate as evidence accumulates; current
+entries from .95 retro + .96 downgrade analysis):
+
+| Task category | Default agent | Why |
+|--------------|---------------|-----|
+| Numerical audits + matplotlib output | codex | Mechanical with deterministic correctness criteria |
+| LaTeX integration of pre-drafted prose | codex | Mechanical splice, no original judgment |
+| GPU training supervision | codex | Compute-bound; agent role is monitoring |
+| Mechanical gate evaluation | codex | Numerical thresholds substitute for reasoning |
+| Constrained design work (candidates pre-proposed) | codex | Pattern-matching from existing candidate set |
+| Routine retrospectives | codex | Templated structure |
+| Schema validation / doc reconciliation | codex | Mechanical |
+| Open-ended paper PROSE writing (first draft, novel framing) | claude | High-judgment under ambiguity |
+| Cross-file refactors with 5+ file Edit/Read/Bash | claude | Multi-file tool choreography (the original spec exception) |
+| Deep theoretical framing (e.g., new Spera/CAF-class formalism) | claude | Multi-step reasoning + cross-context synthesis |
+
 **Why this is in CLAUDE.md, not just in user-memory.** User-memory is
 unreachable from the planner sub-process. Mechanical conductor
 enforcement catches the failure post-plan but wastes planner time
