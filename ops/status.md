@@ -1,6 +1,16 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-04 (Exp 1237 REQ-KONA-019 implementation verified; focused tests and changed-module coverage pass)
+**Last Updated:** 2026-05-04 (Milestone 2026.04.98 operational retrospective refreshed; artifact status=success)
+
+## Session 2026-05-04 - Milestone 2026.04.98 Operational Retrospective Complete
+
+**Milestone 2026.04.98 operational retro COMPLETE.**
+
+- Artifact written: `results/operational_retro_2026_04_98.json`
+- Timing scope analyzed: 163 min wall time from 09:55 UTC activation to exp1267 success at 12:38 UTC
+- Completion: 5/13 criteria met; seven artifacts remained stale `status=in_progress`, and exp1258 gate-blocked without an artifact
+- GPU closeout: both RTX 3090s idle at 4 MB / 0% utilization; no gpu_monitor.py-class zombie processes
+- Next-milestone leverage: terminal artifact finalization, fail-fast retry policy, structured gate-block artifacts, parallel GPU/CPU lanes, and batched doc reconciliation
 
 ## Session 2026-05-04 — Milestone 2026.04.96 Planning Complete
 
