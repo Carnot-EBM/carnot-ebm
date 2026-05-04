@@ -628,3 +628,4 @@ If you finish the real work |
 | 2026-05-04 07:20 UTC | NRGPT Frozen-Prefix Evaluation v2 — Pure Analysis  | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1251_nrgpt_f |
 | 2026-05-04 07:26 UTC | NRGPT Frozen-Prefix Evaluation v2 — Pure Analysis  | OK | cache hit: 81 passed, 1 warning in 4.64s |
 | 2026-05-04 07:32 UTC | Q11 TSS Instrumentation — SMT Triviality + Orthant | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1252_q11_tss |
+| 2026-05-04 07:37 UTC | Q11 TSS Instrumentation — SMT Triviality + Orthant | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1252_q11_tss |
