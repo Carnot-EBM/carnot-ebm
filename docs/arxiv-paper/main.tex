@@ -47,13 +47,12 @@ correct $\sqrt{\det(\Sigma)}$ factor and apply the Welch/Rankin
 Simplex bound to derive the verifier-composition ceiling
 $k^* \leq 3.125$ from the empirical $\alpha^2 = 0.66$ of three
 deployed text probes ($D_{\mathrm{eff}} = 1.603$, exp1093);
-(ii) report a $\chi \leq 4$ sparse-constraint FPGA Fast-Path
-exact-sampling latency ratio against exp1094's measured CPU
-latency (details in supplemental), after auditing and rejecting
-the synchronous parallel
-Glauber sampler that produced the prior invalid large-speedup
-headline (software-proxy $\mathrm{KL} = 3.07$ against single-site
-Gibbs, exp1094 simulation; bitstream on-board KL not yet measured);
+(ii) replace the prior synchronous parallel Glauber hardware story
+with a $\chi \leq 4$ sparse-constraint FPGA Fast-Path plus CPU
+fallback design after auditing the sampler's software-proxy
+$\mathrm{KL} = 3.07$ against single-site Gibbs (exp1094 simulation;
+bitstream on-board KL not yet measured), while deferring same-basis
+CPU-vs-FPGA speedup claims until matching measurements exist;
 (iii) document the pre-retrain energy-ordering inversion on SOTA outputs
 ($\overline{E}_{\mathrm{correct}} = 0.689 > \overline{E}_{\mathrm{incorrect}} = 0.621$,
 exp1100) as an out-of-distribution Goodhart-class anomaly that
@@ -105,8 +104,8 @@ collect the project-internal terminology used throughout this paper.
     technical content.
   \item \textbf{$\boldsymbol{k}$.} Cardinality of the formally-distinct
     verifier ensemble that AND-composes acceptance decisions. The
-    production ensemble has $k=6$; see Section~\ref{sec:k6} for
-    composition and provenance.
+    measured production orthogonality audit is $k=5$; see
+    Section~\ref{sec:k5} for composition and provenance.
   \item \textbf{$\boldsymbol{\alpha_t}$ (Zenil's self-distillation
     grounding signal).} The fraction of training-time steps at which
     the verifier-ensemble supervision diverges from the teacher
@@ -171,13 +170,13 @@ text features.
 
 \paragraph{Wall 2 --- Exact-sampling detailed-balance limit.}
 The synchronous parallel Glauber sampler that produced the original
-invalid large-speedup FPGA headline does not preserve
+invalid FPGA headline does not preserve
 detailed balance on frustrated topologies:
 software-proxy
 $\mathrm{KL}(P_{\text{parallel}} \,\|\, P_{\text{Gibbs}}) = 3.07$
 on the canonical 12-spin antiferromagnetic ring (exp1094 simulation;
-bitstream on-board KL not yet measured). The numerical speedup
-against an unoptimized Python CPU baseline was real; the sampling
+bitstream on-board KL not yet measured). The paper no longer uses
+the Python CPU comparison as a speedup claim; the sampling
 distribution the simulator produced was not the target distribution.
 
 \paragraph{Wall 3 --- Out-of-distribution energy-ordering inversion.}
@@ -205,9 +204,8 @@ bound them: the $\sqrt{\det(\Sigma)}$ joint-volume factor, the
 Welch/Rankin Simplex bound on $k^*$, the Participation Ratio as the
 empirical projection onto the bound. Section~\ref{sec:hardware}
 reports the hardware deployment story --- including the
-recalibration against exp1094's measured CPU latency
-(details in supplemental) and the $\chi \leq 4$ Fast-Path
-architecture --- as a
+$\chi \leq 4$ Fast-Path architecture and the explicit deferral of
+same-basis CPU-vs-FPGA timing claims --- as a
 direct response to the software-proxy $\mathrm{KL} = 3.07$ finding
 (exp1094 simulation; bitstream on-board KL not yet measured).
 Section~\ref{sec:empirical} foregrounds the four .85 honest
@@ -323,8 +321,8 @@ not as a deployable verification system whose numerical claims
 should be trusted at face value. Section~\ref{sec:empirical} makes
 the in-distribution vs out-of-distribution split explicit.
 
-\subsection{What \texorpdfstring{$k=6$}{k=6} means: the verifier ensemble}
-\label{sec:k6}
+\subsection{What \texorpdfstring{$k=5$}{k=5} means: the verifier ensemble}
+\label{sec:k5}
 
 The variable $k$ throughout this paper refers to the cardinality of
 the formally-distinct verifier ensemble that AND-composes a candidate
@@ -337,7 +335,8 @@ semantics, process-level reasoning, energy, and logit-space
 agreement --- a much smaller intersection than any single verifier's
 acceptance region.
 
-The production ensemble at the time of writing has $k=6$:
+The measured production orthogonality audit at the time of writing
+uses $k=5$ (exp1256):
 
 \begin{table}[h]
 \centering
@@ -349,19 +348,18 @@ The production ensemble at the time of writing has $k=6$:
 $V_1$ & Z3 SMT solver        & Logic / arithmetic constraint validity & Tier 3 \\
 $V_2$ & AST structural       & Syntactic / structural validity of code & Tier 2.5 \\
 $V_3$ & Semantic consistency & Causal / semantic alignment to prompt    & Tier 2.7 \\
-$V_4$ & ThinkPRM v2          & Pre-trained process reward model         & Tier 0a \\
-$V_5$ & SOSKAN-Energy v3 (4-bit) & Energy-network output on full sequence & Tier 1 \\
-$V_6$ & SemEnergy probe      & Logit-space energy signal                 & Tier 0c \\
+$V_4$ & SOSKAN-Energy v3 (4-bit) & Energy-network output on full sequence & Tier 1 \\
+$V_5$ & SemEnergy probe      & Logit-space energy signal                 & Tier 0c \\
 \hline
 \end{tabular}
-\caption{The $k=6$ production verifier ensemble. Each verifier
+\caption{The measured $k=5$ production verifier ensemble. Each verifier
 operates on a formally distinct discipline; AND-composition requires
-all six to accept.}
-\label{tab:k6}
+all five to accept.}
+\label{tab:k5}
 \end{table}
 
-\paragraph{Why $k=6$ specifically.} The choice is descriptive, not
-prescriptive --- the architecture grew to $k=6$ rather than starting
+\paragraph{Why $k=5$ specifically.} The choice is descriptive, not
+prescriptive --- the measured stack grew to $k=5$ rather than starting
 there:
 
 \begin{itemize}
@@ -384,18 +382,19 @@ there:
         of $k_{\max}=8$ under strict mechanism orthogonality (derived
         from the Welch/Rankin Simplex bound; see
         Section~\ref{sec:bounds}).
-  \item Production landed at $k=6$ --- what Carnot has actually
-        implemented across independently-developed Tier-0 through
-        Tier-3 components, one short of the $k_{\max}=8$ ceiling and
-        leaving headroom for two more verifiers as orthogonal
-        mechanisms become available.
+  \item The measured production audit landed at $k=5$ across
+        independently-developed Tier-0 through Tier-3 components.
+        exp1256 reports max pairwise $r=0.4617$ and
+        $k_{\text{eff}} \approx 1.76$ over 500 examples, so the
+        paper treats larger $k$ values as theoretical or future
+        work rather than measured deployment claims.
 \end{itemize}
 
 For comparison, the closest peer architecture in the recent
 literature, SentinelAgent~\citep{patil2026sentinelagent}, uses $k=7$
-checks --- the same regime. Carnot is not claiming $k=6$ is optimal;
-it is claiming $k=6$ is what the framework currently has implemented
-under explicit theoretical ceiling guidance.
+checks --- the same nominal regime. Carnot is not claiming $k=5$ is
+optimal; it is claiming $k=5$ is the ensemble with a checked-in
+orthogonality measurement under explicit theoretical ceiling guidance.
 
 \paragraph{$k_{\text{nominal}}$ versus $k_{\text{eff}}$.}
 A central honest framing of this paper, sharpened by Spera's
@@ -412,8 +411,8 @@ size collapsed from $k=3$ to $k=1$ because the decoder geometry
 structurally guaranteed two of the three checks for all valid
 inputs.
 
-The same audit is currently in progress on the production $k=6$
-(\texttt{exp1232}). Independently of the empirical measurement, the
+The production $k=5$ audit is now recorded in exp1256. Independently
+of the empirical measurement, the
 $\Sigma_2^{P}$-complete general synthesis result and the
 $\mathrm{coNP}$-complete detection result establish that exact joint
 null space bounding is intractable in the worst case. We discuss the
@@ -422,13 +421,11 @@ specific pairs predicted to share joint null space
 report $k_{\text{eff}}$ alongside $k_{\text{nominal}}$ in the
 empirical sections that follow.
 
-The defensible claim of this paper is therefore not ``$k=6$ formally
-distinct verifiers eliminate reward hacking'' but rather: ``$k=6$
-formally distinct verifiers \emph{at unprecedented scale of
-mechanism heterogeneity for the Turing-complete codebase-modification
-threat domain} drastically reduce but do not eliminate adversarial
-attack surface, with explicit acknowledgement of joint null space
-risk per Spera Theorem~9.2.''
+The defensible claim of this paper is therefore not ``$k=5$ formally
+distinct verifiers eliminate reward hacking'' but rather: ``a measured
+$k=5$ stack reduces but does not eliminate adversarial attack surface,
+with explicit acknowledgement of joint null space risk per Spera
+Theorem~9.2 and exp1256's $k_{\text{eff}} \approx 1.76$ result.''
 
 \subsection{Cascade routing}
 
@@ -721,21 +718,20 @@ verifier accuracy.
 \label{sec:hardware}
 
 Section~\ref{sec:hardware} reports the FPGA hardware deployment
-with the recalibration against exp1094's measured CPU latency
-(details in supplemental) in place, audits why the prior
-large-speedup headline was distributionally invalid,
+with same-basis CPU-vs-FPGA timing claims explicitly deferred,
+audits why the prior hardware headline was distributionally invalid,
 and derives the $\chi \leq 4$ Sparse-Constraint Accelerator
 architecture as the deployable response.
 
 \begin{figure}[ht]
   \centering
   \includegraphics[width=0.75\textwidth]{figures/fig7.pdf}
-  \caption{$\chi \leq 4$ Fast-Path tradeoff --- per-sweep latency
-  ratio against exp1094's measured CPU latency
-  (details in supplemental) as a function of chromatic number $\chi$,
-  showing the $\chi \leq 4$ plateau and the collapse to
-  pseudo-sequential performance at $\chi > 8$, with the
-  $\chi \geq 8$ regime annotated as the CPU fallback boundary.}
+  \caption{$\chi \leq 4$ Fast-Path tradeoff --- architectural timing
+  budget as a function of chromatic number $\chi$, showing the
+  $\chi \leq 4$ design plateau and the collapse to pseudo-sequential
+  performance at $\chi > 8$, with the $\chi \geq 8$ regime annotated
+  as the CPU fallback boundary. No same-basis CPU-vs-FPGA speedup is
+  claimed from this figure.}
   \label{fig:chi4}
 \end{figure}
 
@@ -761,12 +757,12 @@ $P(x) \propto \exp(-E/T)$; it converged to a distribution that
 disagrees with it by $\sim 3$ nats per sample.
 
 Consequently every speedup number reported against this sampler in
-v2 is invalid as a \emph{sampling} speedup, even though the
+v2 is invalid as a \emph{sampling} claim, even though the
 per-sample \emph{latency} number ($24.83\,\mu s$ at 64 spins) is
-accurate as a hardware benchmark. We \textbf{retract} the
-$13{,}061\times$ and $\sim 12{,}000\times$ speedup figures from v2.
+accurate as a hardware benchmark. We \textbf{retract} the prior
+large CPU-vs-FPGA speedup figures from v2.
 
-\subsection{Recalibration against exp1094's measured CPU latency}
+\subsection{Same-basis CPU-vs-FPGA timing remains open}
 
 A pipelined chromatic-Glauber sampler that respects detailed
 balance requires $k$ color-batch flushes per Monte Carlo sweep,
@@ -774,11 +770,10 @@ where $\chi$ is the chromatic number of the constraint graph. At
 $\chi = 4$ --- the empirical sweet spot for SAT-style constraint
 matrices with maximum clique size $\leq 4$ --- each sweep takes
 $4 \text{ cycles per color} \times 4 \text{ colors} = 16
-\text{ cycles} = 64 \text{ ns}$ at 250\,MHz. The per-sweep latency
-ratio is computed against exp1094's measured CPU latency
-(details in supplemental); the resulting ratio is reported as the
-$\chi \leq 4$ exact-sampling speedup, against a real baseline,
-not against a Python-overhead-dominated CPU loop.
+\text{ cycles} = 64 \text{ ns}$ at 250\,MHz. That is a bitstream
+timing budget, not a measured end-to-end CPU-vs-FPGA speedup.
+The paper therefore reports it as an architectural bound and defers
+same-$N$, same-basis CPU-vs-FPGA timing to follow-up measurement.
 
 \paragraph{FPGA latency, single-point measurement.}
 The KV260 achieves $24.83\,\mu s$ per sweep at $N{=}64$ spins
@@ -806,21 +801,19 @@ Accelerator + CPU Fallback}:
         constraint graph to estimate $\chi$.
   \item \textbf{If $\chi \leq 4$}, dispatch to the FPGA $\chi \leq 4$
         Fast-Path bitstream, which implements pipelined chromatic
-        Glauber with provable detailed balance and a per-sweep latency
-        ratio against exp1094's measured CPU latency
-        (details in supplemental).
+        Glauber with provable detailed balance.
   \item \textbf{If $\chi > 4$}, fall back to single-site exact Gibbs
-        on the CPU. This preserves correctness at the cost of
-        speedup.
+        on the CPU. This preserves correctness while giving up the
+        hardware acceleration path.
 \end{enumerate}
 
 The architecture is mathematically exact at every step. There is
 no regime in which the user gets an incorrect distribution; there
-is a regime ($\chi > 4$) in which they do not get the FPGA speedup.
+is a regime ($\chi > 4$) in which hardware acceleration does not apply.
 The asymmetric design directly answers the software-proxy
 $\mathrm{KL} = 3.07$ finding (exp1094 simulation; bitstream on-board
-KL not yet measured): sampling correctness is non-negotiable; speedup is a
-function of constraint topology.
+KL not yet measured): sampling correctness is non-negotiable, and
+hardware acceleration is a function of constraint topology.
 
 \subsection{The Z1 and photonic deferral}
 
@@ -853,12 +846,11 @@ $\overline{t} = 24.83\,\mu s$, $t_{\min} = 24.19\,\mu s$,
 $t_{\max} = 40.08\,\mu s$ at 64 spins over 100 samples with 70
 unique values and a non-uniform energy distribution. This is the
 load-bearing single-point hardware measurement v3 retains; the
-exact-sampling speedup of Section~\ref{sec:hardware} is reported as
-a per-sweep latency ratio against exp1094's measured CPU latency
-(details in supplemental) and is the bound
-under $\chi = 4$, not the universal claim. The multi-N FPGA scaling
-curve was not reached during the .84 milestone (exp1081 could not
-connect to the board) and is left as future work.
+same-basis CPU-vs-FPGA comparison is not claimed. Section~\ref{sec:hardware}
+therefore treats the $\chi = 4$ path as an architectural timing
+budget, not as a universal measured acceleration result. The multi-N
+FPGA scaling curve was not reached during the .84 milestone (exp1081
+could not connect to the board) and is left as future work.
 
 \section{Empirical Realities \& Anomalies}
 \label{sec:empirical}
@@ -1018,6 +1010,24 @@ Section~\ref{sec:exp1100}: a verifier trained against one
 distribution loses its calibration when the evaluation distribution
 shifts toward outputs from a generator that has been optimized
 against a similarly-shaped reward.
+
+\textbf{Milestone .98 measured publication gates.}
+The production $k=5$ orthogonality audit measured the ensemble over
+500 examples with max pairwise $r=0.4617$ and
+$k_{\text{eff}} \approx 1.76$; AND-composition is viable under the
+configured $r < 0.5$ gate, but the result does not support larger
+$k=6$ or $k=15$ diversity claims (exp1256). The Q11 transversal
+spectral-synthesis diagnostic evaluated 20 pairs and measured
+SC-Energy/Z3 correlation $0.5466$, optimal transversal $k=2$, and
+TSS vulnerability score $0.4534$, so the TSS path is instrumented
+rather than solved (exp1264). The DiffuTruth comparison on 100
+FoVer pairs measured DiffuTruth semantic-energy AUROC $0.0816$
+versus Carnot SemEnergyProbe AUROC $0.948187$; the paper-level
+DiffuTruth FEVER AUROC remains $0.725$, so this is a corpus-specific
+baseline comparison rather than a universal dominance claim
+(exp1265). QuantKAN reached 3-bit AUROC $0.9801$ with a $0.0100$
+drop from 4-bit, while the $2.5\times$ LUT-KAN timing value is a
+simulation-only estimate until hardware timing exists (exp1266).
 
 \textbf{Zenil $\alpha_t$ self-distillation grounding (Milestone .88).}
 With the retrained verifier, $\alpha_t$ measured at 0.52 versus the
@@ -1430,10 +1440,9 @@ limit, OOD energy-ordering inversion) and one methodological trap
         Fallback} (Section~\ref{sec:hardware}): a mathematically
         exact deployment shape that answers the software-proxy
         $\mathrm{KL} = 3.07$ detailed-balance violation (exp1094
-        simulation; bitstream on-board KL not yet measured); the
-        per-sweep latency ratio against exp1094's measured CPU
-        latency (details in supplemental) is reported as the
-        $\chi \leq 4$ exact-sampling speedup.
+        simulation; bitstream on-board KL not yet measured). Same-basis
+        CPU-vs-FPGA speedup is deferred until matching measurements
+        exist.
   \item \textbf{OOD anomaly framing of the energy-ordering inversion}
         (Section~\ref{sec:exp1100}): the inversion on SOTA outputs
         as evidence that non-linear Phase-4 EBM landscapes are
@@ -1448,20 +1457,18 @@ limit, OOD energy-ordering inversion) and one methodological trap
 
 The Mock Cascade engineering roadmap --- a parallel-track deployment
 that trades the Phase-3 prototype's joint-kernel guarantees for a
-heterogeneous $k=8$ ensemble routed by the same cascade logic ---
-is scoped for the .86 milestone (exp1104 and its successors). The
-roadmap is the practical answer to ``what do you do once you have
-the bounds?''
+heterogeneous ensemble routed by the same cascade logic --- is scoped
+for the .86 milestone (exp1104 and its successors). The roadmap is
+the practical answer to ``what do you do once you have the bounds?''
 
 Three open methodological questions remain. \textbf{(a)
 Energy-inversion generalization.} The retrained verifier fixes the
 observed energy ordering on the SOTA-inclusive corpus, but the
 generalization question remains open for future SOTA model families
 and future verifier-shaped reward regimes. \textbf{(b) Cross-mechanism
-verifier composition.} exp1104 will measure the actual maximum
-clique of an 8-probe heterogeneous ensemble; the conjecture is
-$k_{\max} \approx 7\text{--}8$ but the measurement has not been
-run. \textbf{(c) Hardware sampling correctness on Z1 / photonic
+verifier composition.} exp1256 measured the current production
+$k=5$ stack at $k_{\text{eff}} \approx 1.76$; larger heterogeneous
+ensembles remain future work. \textbf{(c) Hardware sampling correctness on Z1 / photonic
 substrates.} The CPU fallback path covers correctness everywhere;
 getting independent exact-sampling benchmarks on Z1 silicon is the
 prerequisite for moving Z1 from ``future research direction'' to
@@ -1557,10 +1564,9 @@ or recalibrated against the v2 draft:
     \toprule
     v2 claim & v3 disposition & Section \\
     \midrule
-    $\sim 13{,}061\times$ FPGA speedup &
-      Retracted; replaced with a per-sweep latency ratio against
-      exp1094's measured CPU latency (details in supplemental)
-      at $\chi \leq 4$ &
+    Prior CPU-vs-FPGA speedup headline &
+      Retracted; replaced with $\chi \leq 4$ architecture plus
+      same-basis timing deferral &
       4.1, 4.2 \\
     $k = 15$ AND-composition &
       Retracted; replaced with Welch bound $k^* \leq 3.125$
@@ -1610,17 +1616,17 @@ base model has zero coding ability.
 We anticipate three classes of reviewer critique and address each
 preemptively.
 
-\paragraph{Critique 1: ``Your FPGA speedup is a toy baseline trick
+\paragraph{Critique 1: ``Your FPGA hardware claim is a toy baseline trick
 / violates detailed balance.''}
-While synchronous parallel Glauber yields massive apparent speedups,
+While synchronous parallel Glauber yields attractive apparent hardware
+acceleration,
 our distributional audits confirm severe detailed-balance violations
 (software-proxy $\mathrm{KL} = 3.07$, exp1094 simulation; bitstream
 on-board KL not yet measured); consequently, our architecture
 mandates a mathematically exact $\chi \leq 4$ FPGA Fast-Path,
-achieving the per-sweep latency ratio against exp1094's measured
-CPU latency (details in supplemental) at $\chi \leq 4$. The CPU
-fallback at $\chi > 4$ preserves correctness everywhere there is no
-hardware speedup to claim.
+with same-basis CPU-vs-FPGA timing deferred until matching
+measurements exist. The CPU fallback at $\chi > 4$ preserves
+correctness everywhere hardware acceleration does not apply.
 
 \paragraph{Critique 2: ``Your verifiers are highly correlated; your
 $k$-composition claims are mathematically invalid.''}
