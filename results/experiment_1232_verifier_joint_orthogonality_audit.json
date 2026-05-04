@@ -1,0 +1,24 @@
+{
+  "experiment": 1232,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-05-04",
+  "started_at": "2026-05-04T01:32:27.742705+00:00",
+  "finished_at": "2026-05-04T01:32:27.742705+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Verifier Joint Orthogonality Audit \u2014 6x6 P(V_i|V_j) Matrix on k=6 Production Ensemble",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: no prior_failures field on task",
+  "gates_evaluated": [
+    {
+      "upstream": "exp1093-phase1c-verifier-joint-null-space-measurement",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Research Finding: verifiers_correlated_diversity_needed"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
