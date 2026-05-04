@@ -745,6 +745,45 @@ The measured v2 gates are:
 - The artifact MUST also preserve the Phase 5-B prerequisite status and the
   measured numerical values used to derive the four gate booleans.
 
+### REQ-KONA-025: Phase 5-D Intermediate-Scale v3 Core Gates at d=128
+
+The Phase 5-D v3 run is the dual-GPU, d=128 intermediate-scale prototype
+for exp1260. It MUST represent the 100-300M-parameter scale class without
+materialising a full checkpoint in unit tests, require two visible RTX 3090
+devices for the experiment run, apply PPSEBM-style anti-forgetting replay
+by mixing 10% replay samples into each minibatch, and measure the four core
+Phase 5-D gates needed before 1B+ substrate scale-up.
+
+The measured v3 gates are:
+
+- `mode_collapse_absent`: mean verifier acceptance entropy after training is
+  greater than 0.5 bits.
+- `mcmc_mixing_acceptable`: the integrated autocorrelation time proxy after
+  1000 d=128 Gibbs steps is less than 10x its baseline.
+- `k_eff_maintained`: post-training effective verifier count stays within
+  10% of its pre-training value.
+- `forgetting_rate_acceptable`: held-out AUROC drops by less than 5% after
+  in-situ training with replay.
+
+**Acceptance criteria:**
+
+- `python/carnot/phase5/intermediate_scale_v3.py` exposes the Phase 5-D v3
+  configuration, gate measurement helpers, artifact builder, and JSON writer.
+- `results/experiment_1260_phase5d_intermediate_scale_v3.json` exists with
+  fields:
+  - `phase5d_gates_passed: int` in [0, 4].
+  - `gate_results: dict` with exactly `mode_collapse_absent`,
+    `mcmc_mixing_acceptable`, `k_eff_maintained`, and
+    `forgetting_rate_acceptable`.
+  - `gate_values: dict` with the numeric measurements used to derive every
+    gate boolean.
+  - `d_hidden: int` equal to 128.
+  - `scale_class: str` containing `100-300M params at d=128`.
+  - `ppsebm_replay_buffer: bool` equal to `true`.
+  - `ppsebm_replay_fraction: float` equal to 0.10.
+  - `dual_gpu_required: bool` equal to `true`.
+  - `honest_verdict: str` formatted as `phase5d_N_of_4_gates_passed`.
+
 ### REQ-KONA-019: Boltzmann-GPT Contrastive Training on FoVer
 
 The Exp 1237 Boltzmann-GPT training run MUST train a visible-hidden
@@ -1114,6 +1153,21 @@ unmeasured `null` gates, and an honest verdict string derived strictly from
 the measured pass and measured gate counts.
 
 **Spec traces:** REQ-KONA-023
+
+### SCENARIO-KONA-025: Exp 1260 Writes Phase 5-D v3 d=128 Four-Core-Gate Artifact
+
+**Given** two RTX 3090 GPUs are visible, the Phase 5-A/B artifacts exist, and
+the exp1260 d=128 intermediate-scale prototype is configured for 10% PPSEBM
+replay mixing
+**When** Exp 1260 measures mode-collapse entropy, MCMC integrated
+autocorrelation, k_eff retention, and held-out AUROC forgetting
+**Then** it writes
+`results/experiment_1260_phase5d_intermediate_scale_v3.json` with all
+REQ-KONA-025 fields, exactly four measured gate booleans, the numeric values
+that derive those booleans, and an honest verdict string derived strictly from
+the number of passing gates.
+
+**Spec traces:** REQ-KONA-025
 
 ### SCENARIO-KONA-019: Exp 1237 Writes Boltzmann-GPT CD Artifact
 
