@@ -1,6 +1,72 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-03 (Milestone 2026.04.94 operational retrospective complete)
+**Last Updated:** 2026-05-04 (Milestone 2026.04.96 research planning complete)
+
+## Session 2026-05-04 — Milestone 2026.04.96 Planning Complete
+
+**Milestone 2026.04.95 COMPLETE (retro exp1228 failed 3x — carried to .96). Milestone 2026.04.96 PLANNED.**
+
+### .95 Recap (final from artifacts)
+- **MET:** exp1216 (pre-commit data-loss fix), exp1218 (related work overhaul, 5 citations), exp1219 (root cause identified: high abstention rate), exp1220 (GRPO-VPS beats v4 +10pp), exp1222 (Phase-5-A prototype), exp1223 (Phase-5-B training loop, 5/5 gates), exp1224 (Spera Theorem 9.2 confirmed empirically — k_eff=1 in k=3), exp1226 (Boltzmann-GPT AUROC=0.65 seed), exp1227 (Futoshiki WOPR cartridge)
+- **FAILED/BLOCKED:** exp1221 (GRPO v6 wall_budget exhausted at 848s vs 480s budget), exp1225 (LLMs gaming verifiers — codex max_turns:40 insufficient 3x), exp1228 (milestone retro — artifact_not_updated_past_bootstrap 3x)
+- **DOOMED_RERUN_BLOCK:** exp1217 (auto-populate prior_failures — task itself missing prior_failures field, circular failure)
+- **Critical finding:** exp1224 confirmed Spera Theorem 9.2 empirically — k_eff=1 in k=3 in-situ ensemble; snap_to_action decoder structurally guaranteed V0 and V2 for all inputs. Production k=6 ensemble orthogonality audit MANDATORY before paper-v6 submission.
+
+### .96 Design (Exps 1229–1241, estimated ~435 min)
+
+**Phase 0 — Infrastructure (unconditional, FIRST):**
+- exp1229: Retro-95 (claude/opus, max_turns:100, STEP 0) — closes .95 retro
+- exp1230: Auto-populate prior_failures v2 (codex/gpt-5.5, max_turns:35, prior_failures:[exp1217])
+- exp1231: LLMs gaming verifiers (claude/opus, max_turns:80, prior_failures:[exp1225])
+
+**Phase 1 — Verifier Joint Orthogonality Audit (MANDATORY, paper-blocking):**
+- exp1232: 6x6 P(V_i|V_j) matrix on k=6 production ensemble + k_eff + heatmap figure (claude/opus, max_turns:60, requires_claude:true)
+- exp1233: Verifier redesign — replace correlated pairs, rerun 6x6 (claude/sonnet, max_turns:50, gated on exp1232)
+
+**Phase 2 — arXiv Submission (CRITICAL):**
+- exp1234: Paper-v6 + heatmap integration + arXiv submit (claude/opus, max_turns:45, gated on exp1232)
+
+**Phase 3 — GRPO Training Extension:**
+- exp1235: GRPO v6 FSPO+VPS wall_budget_s=1200 + token regulation (claude/opus, max_turns:80, DualGPU, prior_failures:[exp1221])
+- exp1236: Execution-grounded credit assignment (codex/gpt-5.5, max_turns:35, gated on exp1235.grpo_v6_improvement_pp>0)
+
+**Phase 4 — Boltzmann-GPT Contrastive Training:**
+- exp1237: Contrastive divergence training on FoVer, target AUROC>0.80 (codex/gpt-5.5, max_turns:40, GPU, prior_failures:[exp1226])
+
+**Phase 5 — Phase-5-D Intermediate Scale:**
+- exp1238: 100-300M params, d=128, k=5, 8 failure mode gates, PPSEBM replay buffer (claude/opus, max_turns:70, DualGPU MANDATORY)
+
+**Phase 6 — New Research:**
+- exp1239: NRGPT Frozen-Prefix evaluation (codex/gpt-5.5, max_turns:20)
+- exp1240: WOPR Kakuro cartridge (codex/gpt-5.5, max_turns:30)
+
+**Phase 7 — Retro:**
+- exp1241: Milestone retro (claude/opus, max_turns:100, STEP 0)
+
+### 13 Success Criteria for .96
+1. retro_95_complete (exp1229)
+2. autofill_script_v2_shipped (exp1230)
+3. gaming_defense_measured (exp1231)
+4. verifier_orthogonality_matrix_measured_6x6 (exp1232) — gates exp1233+exp1234
+5. k_eff_documented_and_honest (exp1232)
+6. verifier_redesign_k_eff_above_3 (exp1233)
+7. arxiv_v6_submitted (exp1234)
+8. grpo_v6_improvement_measured (exp1235)
+9. boltzmann_gpt_contrastive_auroc_above_0p80 (exp1237)
+10. phase5d_all_8_gates_measured (exp1238)
+11. nrgpt_frozen_prefix_resolved (exp1239)
+12. kakuro_cartridge_shipped (exp1240)
+13. retro_96_complete (exp1241)
+
+### Key Architectural Decisions for .96
+- All retries pre-populate prior_failures at plan time (exp1229/1230/1231/1235/1237)
+- STEP 0 skeleton in all opus/heavy tasks (exp1229/1231/1232/1234/1235/1238/1241)
+- arXiv gated on orthogonality audit, not k_eff threshold (submit with honest k_eff per CLAUDE.md provenance rule)
+- GRPO wall_budget_s increased from 480s → 1200s (2.5x, addresses exp1221 exhaustion)
+- Phase-5-D measures ALL 8 failure modes including 3 production-scale-only (mode collapse, MCMC mixing, substrate shift)
+- Retro: claude/opus max_turns:100 with STEP 0 (codex retro failures in .93/.95 established this)
+
+---
 
 ## Session 2026-05-03 — Milestone 2026.04.94 Operational Retrospective Complete
 

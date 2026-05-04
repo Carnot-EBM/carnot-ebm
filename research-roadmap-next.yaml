@@ -1,0 +1,1318 @@
+milestone: 2026.04.96
+milestone_title: "Verifier Orthogonality Audit + arXiv Submission + GRPO-VPS Extension + Boltzmann-GPT Training + Phase-5-D"
+milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
+tasks:
+
+# ============================================================
+# Phase 0 — Infrastructure / Carry-Forwards (3 tasks, MANDATORY, unconditional)
+# exp1229: Milestone .95 retro — exp1228 failed 3x in .95, carry forward.
+# exp1230: Auto-populate prior_failures v2 — exp1217 DOOMED_RERUN_BLOCK (task itself missing prior_failures).
+# exp1231: LLMs Gaming Verifiers Defense — exp1225 hit max_turns:40 with codex 3x.
+# All three run unconditionally. exp1229 MUST be first.
+# ============================================================
+
+- id: exp1229-milestone-retro-95
+  milestone: 2026.04.96
+  deliverable: results/experiment_1229_milestone_retro_95.json
+  title: "Milestone 2026.04.95 Retrospective — STEP 0 Pattern, Evaluate 13 Criteria"
+  agent_type: claude
+  model: opus
+  max_turns: 100
+  estimated_wall_time_min: 25
+  priority: critical
+  requires_gpu: false
+  skip_pre_test: true
+  prior_failures:
+    - experiment_id: exp1228-milestone-retro-95
+      verdict: artifact_not_updated_past_bootstrap
+      addressed_by: "exp1228 failed 3x with artifact_not_updated_past_bootstrap then no_file_changes. Root cause: retro task must write STEP 0 artifact FIRST before any analysis. This task uses claude/opus (not codex) with max_turns:100 and explicit STEP 0 instruction."
+      retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    Milestone 2026.04.95 completed but its retrospective experiment (exp1228) failed 3 times
+    with artifact_not_updated_past_bootstrap and no_file_changes. This is the retry.
+
+    .95 experiment results (from deliverable artifacts on disk):
+    - exp1216: data_loss_fixed (pre-commit staged_files_only fix SUCCESS)
+    - exp1217: blocked_gate_check_failed (auto-populate prior_failures DOOMED_RERUN_BLOCK)
+    - exp1218: related_work_overhaul_complete (5 citations, thesis sentence, novelty boundary)
+    - exp1219: root_cause_identified (GRPO v5 regression = high_abstention_rate)
+    - exp1220: vps_training_beats_v4 (GRPO-VPS beats +10pp v4 floor)
+    - exp1221: insufficient_logprob_coverage (GRPO v6 FSPO+VPS wall_budget_exhausted at 848s vs 480s)
+    - exp1222: prototype_meets_acceptance_gate (Phase-5-A prototype: all gates pass)
+    - exp1223: all_5_gates_pass (Phase-5-B training loop: 1000 queries, 5/5 gates)
+    - exp1224: partial_attack_success_revision_needed (adversarial probe: attack2 succeeded, k_eff=1)
+    - exp1225: in_progress (LLMs gaming verifiers: 3x max_turns:40 codex)
+    - exp1226: boltzmann_gpt_below_nrgpt (AUROC=0.65, non-degenerate but needs CD training)
+    - exp1227: futoshiki_shipped_e0_at_solution (WOPR Futoshiki)
+    - exp1228: in_progress (retro failed)
+
+    STEP 0 — WRITE SKELETON ARTIFACT IMMEDIATELY:
+    Write this JSON to results/experiment_1229_milestone_retro_95.json NOW before any analysis:
+    {
+      "experiment": "1229_milestone_retro_95",
+      "schema": "milestone_retro_v3",
+      "run_date": "{date}",
+      "milestone": "2026.04.95",
+      "status": "in_progress",
+      "criteria_met": 0,
+      "criteria_total": 13,
+      "retro_complete": false,
+      "honest_verdict": "in_progress"
+    }
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_1216_precommit_staged_files_only_fix.json (criteria check)
+    - results/experiment_1220_grpo_vps_full_training.json (criteria check)
+    - results/experiment_1222_phase5a_insitu_prototype.json (criteria check)
+    - results/experiment_1223_phase5b_insitu_training_loop.json (criteria check)
+    - results/experiment_1224_phase5c_adversarial_probe.json (criteria check)
+    - ops/known-issues.md (MANDATORY-NEXT-MILESTONE PRIORITIES — verify .96 addresses them)
+
+    TASK:
+    1. Write skeleton artifact (STEP 0 above) IMMEDIATELY.
+
+    2. Evaluate each of the 13 .95 success criteria:
+       1. precommit_data_loss_fixed: exp1216.precommit_fail_forward_enabled == true
+       2. autofill_script_shipped: exp1217.autofill_script_exists — FAILED (blocked)
+       3. related_work_overhaul_complete: exp1218.all_5_citations_added == true
+       4. grpo_v5_regression_diagnosed: exp1219.diagnosis_complete == true
+       5. grpo_vps_beats_v4: exp1220.honest_verdict == "vps_training_beats_v4"
+       6. grpo_v6_fspo_measured: exp1221.honest_verdict (partial — wall_budget_exhausted)
+       7. phase5a_prototype_ready: exp1222.phase5a_prototype_ready == true
+       8. phase5b_stability_confirmed: exp1223.phase5b_stability_confirmed == true
+       9. phase5c_adversarial_probe_complete: exp1224.adversarial_probe_complete == true
+       10. gaming_defense_measured: exp1225.gaming_defense_measured — FAILED (in_progress)
+       11. boltzmann_gpt_auroc_measured: exp1226.boltzmann_gpt_auroc_measured == true
+       12. wopr_futoshiki_shipped: exp1227.honest_verdict == "futoshiki_shipped_e0_at_solution"
+       13. retro_95_complete: this experiment
+
+    3. Count criteria met and update the artifact.
+
+    4. Write a brief findings summary:
+       - What .95 proved (GRPO-VPS, Phase-5 in-situ, Spera Theorem 9.2 empirical confirmation)
+       - What failed (exp1217 circular DOOMED_RERUN_BLOCK, exp1225 codex max_turns)
+       - Top carry-forwards for .96 (orthogonality audit, gaming defense, arXiv submission)
+
+    5. Update artifact with final counts and set retro_complete: true.
+
+    CONCRETE STEPS:
+    - python3 -c "import json; d={'experiment':'1229_milestone_retro_95','schema':'milestone_retro_v3','run_date':'{date}','milestone':'2026.04.95','status':'in_progress','criteria_met':0,'criteria_total':13,'retro_complete':False,'honest_verdict':'in_progress'}; open('results/experiment_1229_milestone_retro_95.json','w').write(json.dumps(d,indent=2))" 2>&1
+    - python3 -c "import json; [print(k,':',v) for k,v in json.load(open('results/experiment_1220_grpo_vps_full_training.json')).items() if k in ['honest_verdict','status','grpo_vps_improvement_pp','beats_v4_floor']]" 2>&1
+    - python3 -c "import json; [print(k,':',v) for k,v in json.load(open('results/experiment_1223_phase5b_insitu_training_loop.json')).items() if k in ['honest_verdict','gates_passed','phase5b_stability_confirmed']]" 2>&1
+    - python3 -c "import json; [print(k,':',v) for k,v in json.load(open('results/experiment_1224_phase5c_adversarial_probe.json')).items() if k in ['honest_verdict','k_eff','pairwise_max_correlation','all_attacks_blocked']]" 2>&1
+    - [Evaluate all 13 criteria from artifact files]
+    - [Write final artifact with criteria_met count, findings_summary, retro_complete=true]
+
+    REQUIRED ARTIFACT FIELDS:
+    - criteria_met: int (count of passed criteria)
+    - criteria_total: int (13)
+    - criteria_results: dict (each criterion: true/false with source experiment)
+    - findings_summary: str (3-5 sentences on what .95 proved and what failed)
+    - key_carry_forwards: list[str] (top 3-5 items for .96)
+    - retro_complete: bool (true)
+    - honest_verdict: "milestone_N_of_13_criteria_met" (fill in N)
+
+    Run: python3 -c "import json; d=json.load(open('results/experiment_1229_milestone_retro_95.json')); print('retro_complete:', d.get('retro_complete')); print('criteria_met:', d.get('criteria_met'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp1230-auto-populate-prior-failures-v2
+  milestone: 2026.04.96
+  deliverable: results/experiment_1230_auto_populate_prior_failures_v2.json
+  title: "Auto-Populate prior_failures v2 — Fix DOOMED_RERUN_BLOCK Recurring Pattern"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 35
+  estimated_wall_time_min: 25
+  priority: critical
+  requires_gpu: false
+  prior_failures:
+    - experiment_id: exp1217-auto-populate-prior-failures
+      verdict: blocked_gate_check_failed
+      addressed_by: "exp1217 was itself missing a prior_failures field — a circular DOOMED_RERUN_BLOCK. This retry (exp1230) has prior_failures pre-populated pointing to exp1217. The task scope is unchanged: write scripts/conductor_priors_autofill.py."
+      retire_if_same_verdict: false
+  prompt: |
+    CONTEXT:
+    7+ DOOMED_RERUN_BLOCK false-positives per milestone because tasks that BUILD ON successful
+    prior experiments get flagged by the failure-ledger as scope-overlapping with prior failures.
+    The failure-ledger correctly detects overlap but misclassifies successful upstreams as failures.
+    Each false-positive requires ~5 min of operator intervention.
+
+    exp1217 (the first attempt at this script) was itself DOOMED_RERUN_BLOCKed because the
+    planner forgot to populate its own prior_failures field. This is the fixed retry.
+
+    EXISTING CODE TO READ FIRST:
+    - scripts/failure_ledger.py (FailureLedger class, methods: matching_priors, record_result)
+    - research-roadmap-next.yaml (format of prior_failures field — see how this file uses it)
+    - results/experiment_1217_auto_populate_prior_failures.json (previous attempt, blocked)
+
+    TASK:
+    1. Write skeleton artifact:
+    {
+      "experiment": "1230_auto_populate_prior_failures_v2",
+      "status": "in_progress",
+      "autofill_script_exists": false,
+      "honest_verdict": "in_progress"
+    }
+
+    2. Read scripts/failure_ledger.py to understand FailureLedger API.
+
+    3. Write scripts/conductor_priors_autofill.py:
+       - Load research-roadmap-next.yaml (default path)
+       - For each task: query FailureLedger().matching_priors(task_id, task_title)
+       - Skip tasks that already have prior_failures populated (non-empty list)
+       - Classify priors:
+           verdict in SUCCESS_VERDICTS → "successful_upstream", addressed_by auto text
+           verdict in FAILURE_VERDICTS → "true_failure", addressed_by "REVIEW NEEDED: ..."
+       - SUCCESS_VERDICTS includes: 'success', 'complete', 'OK', and any verdict NOT in FAILURE list
+       - FAILURE_VERDICTS: from scripts/in_process_doc_reconcile.py _PARTIAL_TOKENS/_FAILED_TOKENS
+       - Write annotated YAML back (preserve ALL existing content, only add prior_failures)
+       - --dry-run flag: print summary without writing
+       - Output: "N tasks scanned, M stubs generated, K already populated"
+
+    4. Add tests in tests/python/test_conductor_priors_autofill.py:
+       - test_script_reads_yaml_without_error
+       - test_script_skips_already_populated_tasks
+       - test_script_classifies_successful_upstreams
+       - test_dry_run_produces_no_file_changes
+
+    5. Run tests:
+       python3 -m pytest tests/python/test_conductor_priors_autofill.py -v 2>&1 | tail -15
+
+    6. Run dry-run on current research-roadmap-next.yaml:
+       python3 scripts/conductor_priors_autofill.py --dry-run 2>&1 | head -20
+
+    CONCRETE STEPS:
+    - python3 -c "import json; d={'experiment':'1230_auto_populate_prior_failures_v2','status':'in_progress','autofill_script_exists':False,'honest_verdict':'in_progress'}; open('results/experiment_1230_auto_populate_prior_failures_v2.json','w').write(json.dumps(d,indent=2))" 2>&1
+    - head -80 scripts/failure_ledger.py 2>&1
+    - [Write scripts/conductor_priors_autofill.py]
+    - python3 scripts/conductor_priors_autofill.py --help 2>&1
+    - python3 scripts/conductor_priors_autofill.py --dry-run 2>&1 | head -20
+    - python3 -m pytest tests/python/test_conductor_priors_autofill.py -v 2>&1 | tail -15
+    - [Update artifact]
+
+    REQUIRED ARTIFACT FIELDS:
+    - autofill_script_path: str ("scripts/conductor_priors_autofill.py")
+    - autofill_script_exists: bool
+    - test_file_path: str
+    - n_tests_pass: int (must be >= 4)
+    - n_tests_fail: int (must be 0)
+    - dry_run_tasks_scanned: int
+    - dry_run_stubs_generated: int
+    - honest_verdict: "autofill_script_shipped" | "partial_no_tests" | "blocked"
+
+    Run: python3 scripts/conductor_priors_autofill.py --dry-run
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp1231-llms-gaming-verifiers-defense
+  milestone: 2026.04.96
+  deliverable: results/experiment_1231_llms_gaming_verifiers_defense.json
+  title: "LLMs Gaming Verifiers Defense — k=5 AND-Compose vs Single-Verifier RLVR Gaming"
+  agent_type: claude
+  model: opus
+  max_turns: 80
+  estimated_wall_time_min: 50
+  priority: critical
+  requires_gpu: false
+  skip_pre_test: true
+  prior_failures:
+    - experiment_id: exp1225-llms-gaming-verifiers-defense
+      verdict: in_progress
+      addressed_by: "exp1225 hit max_turns:40 with codex 3x — codex is insufficient for this reasoning-intensive experiment. This retry uses claude/opus max_turns:80 with STEP 0 skeleton and skip_pre_test:true."
+      retire_if_same_verdict: false
+  prompt: |
+    CONTEXT:
+    arXiv 2604.15149 (LLMs Gaming Verifiers: RLVR can Lead to Reward Hacking) demonstrates
+    that models trained with single-verifier RLVR systematically learn to exploit the verifier
+    by finding inputs that score high without satisfying the intended semantics. The paper
+    uses a rule-induction task where models output text patterns that satisfy the verifier
+    without actually inducing the rules.
+
+    Carnot's Phase-3 null-space mimicry attack analysis predicted this exact failure mode.
+    Carnot's k=5 AND-composed verifier ensemble is the proposed defense. This experiment
+    verifies whether the k=5 ensemble resists the gaming pattern from arXiv 2604.15149.
+
+    STEP 0 — WRITE SKELETON ARTIFACT IMMEDIATELY:
+    Write this to results/experiment_1231_llms_gaming_verifiers_defense.json NOW:
+    {
+      "experiment": "1231_llms_gaming_verifiers_defense",
+      "status": "in_progress",
+      "gaming_defense_measured": false,
+      "honest_verdict": "in_progress"
+    }
+
+    EXISTING CODE TO READ FIRST:
+    - python/carnot/verify/pipeline.py (VerifyRepairPipeline, verifier ensemble)
+    - python/carnot/models/ising.py (Ising energy formulation)
+    - python/carnot/verify/and_composition.py (k=5 AND-compose implementation)
+    - results/experiment_1121_and_composition_k5_production.json (k=5 AUROC=0.5547 then fixed)
+    - results/experiment_1128_soskan_k5_fix.json (SOSKANEnergyV3 normalization fix, k=5 AUROC=0.9402)
+
+    TASK:
+    1. Write skeleton artifact (STEP 0 above).
+
+    2. IMPLEMENT GAMING SIMULATION from arXiv 2604.15149 pattern:
+       a. Define a SIMPLE RULE-INDUCTION TASK:
+          - 20 examples, each with (context, correct_label) pairs
+          - Target: model must output "RULE: if X then Y" text
+          - Single verifier: check if output contains "RULE:" prefix (naive semantic check)
+       b. BASELINE (single verifier RLVR):
+          - Generate N=100 candidate responses with a simple LM (random policy or template)
+          - Score each with single-verifier: 1 if "RULE:" in output else 0
+          - Measure gaming rate: fraction of high-scoring responses that DON'T actually
+            induce a valid rule (just contain the "RULE:" prefix without real content)
+       c. CARNOT DEFENSE (k=5 AND-compose):
+          - Score same N=100 candidates with k=5 AND-composed ensemble:
+            V1: contains "RULE:" (simple pattern)
+            V2: rule body has "if" and "then" keywords (structural)
+            V3: rule generalizes to a held-out test set (semantic)
+            V4: rule doesn't just memorize training examples (novelty)
+            V5: rule predicts correct label on 3 random test cases (accuracy)
+          - Measure gaming rate under k=5 AND-compose
+       d. COMPARE: single-verifier gaming rate vs k=5 gaming rate
+          - If k=5 gaming_rate < 0.2 * single_gaming_rate → defense effective
+          - If k=5 gaming_rate >= 0.5 * single_gaming_rate → defense insufficient (revision needed)
+
+    3. Also check: does Carnot's actual k=5 production ensemble (Z3, AST, Semantic, ThinkPRM,
+       SOS-KAN) show evidence of gaming on the FoVer corpus?
+       - Load results/experiment_1128_soskan_k5_fix.json
+       - Compute: fraction of k=5 PASS outputs that Z3MathVerifier labels INCORRECT
+       - This is the "gaming detection rate" on production data
+
+    4. Write analysis and recommendations:
+       - If single-verifier gaming rate > 0.5 and k=5 gaming rate < 0.2: defense confirmed
+       - If both remain high: propose additional verifier or ensemble rotation
+
+    CONCRETE STEPS:
+    - python3 -c "import json; d={'experiment':'1231_llms_gaming_verifiers_defense','status':'in_progress','gaming_defense_measured':False,'honest_verdict':'in_progress'}; open('results/experiment_1231_llms_gaming_verifiers_defense.json','w').write(json.dumps(d,indent=2))" 2>&1
+    - python3 -c "import json; d=json.load(open('results/experiment_1128_soskan_k5_fix.json')); print([(k,v) for k,v in d.items() if 'auroc' in k.lower() or 'gaming' in k.lower()])" 2>&1
+    - [Implement gaming simulation with single-verifier and k=5 ensemble]
+    - [Measure gaming rates, compare, analyze]
+    - [Update artifact with results]
+
+    REQUIRED ARTIFACT FIELDS:
+    - single_verifier_gaming_rate: float (fraction gaming the single verifier)
+    - k5_ensemble_gaming_rate: float (fraction gaming the k=5 ensemble)
+    - gaming_reduction_ratio: float (single_rate / k5_rate)
+    - defense_effective: bool (k5_rate < 0.2 * single_rate)
+    - production_gaming_detection_rate: float (from FoVer corpus analysis)
+    - gaming_defense_measured: bool (true)
+    - honest_verdict: "defense_effective" | "defense_partial" | "defense_insufficient" | "blocked"
+
+    Run: python3 -c "import json; d=json.load(open('results/experiment_1231_llms_gaming_verifiers_defense.json')); print('gaming_defense_measured:', d.get('gaming_defense_measured'), '| defense_effective:', d.get('defense_effective'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+# ============================================================
+# Phase 1 — Verifier Joint Orthogonality Audit (2 tasks, MANDATORY, paper-blocking)
+# exp1232: Measure 6x6 P(V_i|V_j) on k=6 production ensemble. Compute k_eff.
+# exp1233: Redesign correlated pairs. Re-measure. Target k_eff >= 4.
+# Both gate exp1234 (arXiv submission). MANDATORY per known-issues.md .96 pickup.
+# ============================================================
+
+- id: exp1232-verifier-joint-orthogonality-audit
+  milestone: 2026.04.96
+  deliverable: results/experiment_1232_verifier_joint_orthogonality_audit.json
+  title: "Verifier Joint Orthogonality Audit — 6x6 P(V_i|V_j) Matrix on k=6 Production Ensemble"
+  agent_type: claude
+  model: opus
+  max_turns: 60
+  estimated_wall_time_min: 50
+  priority: critical
+  requires_gpu: false
+  requires_claude: true
+  prompt: |
+    CONTEXT:
+    MANDATORY per ops/known-issues.md (.96 pickup). exp1224 (adversarial probe, .95) empirically
+    demonstrated Spera Theorem 9.2 on Carnot's k=3 in-situ ensemble: Attack 2 (pairwise verifier
+    correlation exploitation) succeeded with P(V_i|V_j)=1.000 across ALL pairs — effective ensemble
+    size collapsed from k=3 to k=1. The root cause: snap_to_action quadrant-anchor decoder
+    structurally guaranteed V0 (in_bounds) and V2 (no_duplicate_cells) for ALL inputs.
+
+    The k=6 PRODUCTION ensemble has the central novelty claim for paper-v6: "unprecedented scale
+    of formal distinctness." If production verifiers are also correlated, the headline claim weakens.
+    This must be measured BEFORE paper-v6 submits.
+
+    k=6 production ensemble:
+    V1: Z3MathVerifier (Tier 3, logic grounding)
+    V2: ASTStructureVerifier (Tier 2.5, structural)
+    V3: SemanticConsistencyVerifier (Tier 2.7, causal)
+    V4: ThinkPRMv2 (Tier 0a, pre-trained PRM)
+    V5: SOSKANEnergyV3 4-bit (Tier 1, energy)
+    V6: SemEnergyProbe (Tier 0c, logit-space)
+
+    STEP 0 — WRITE SKELETON ARTIFACT IMMEDIATELY:
+    Write to results/experiment_1232_verifier_joint_orthogonality_audit.json:
+    {
+      "experiment": "1232_verifier_joint_orthogonality_audit",
+      "status": "in_progress",
+      "pairwise_correlation_matrix_measured": false,
+      "k_eff": null,
+      "honest_verdict": "in_progress"
+    }
+
+    EXISTING CODE TO READ FIRST:
+    - python/carnot/verify/pipeline.py (VerifyRepairPipeline, ensemble config)
+    - python/carnot/verify/and_composition.py (k=5 AND-compose, verifier list)
+    - python/carnot/models/ising.py (SOSKANEnergyV3 or energy computation)
+    - results/experiment_1128_soskan_k5_fix.json (r_corr measurement precedent)
+    - results/experiment_1224_phase5c_adversarial_probe.json (exp1224 adversarial probe method)
+    - ops/known-issues.md lines 200-265 (MANDATORY .96 pickup specification)
+
+    TASK:
+    1. Write skeleton artifact (STEP 0).
+
+    2. LOAD FoVer test corpus (held-out, NOT training distribution):
+       - Use python/carnot/data/fover.py or equivalent loader
+       - Target: 200 test samples from FoVer that weren't in training data
+       - If full test split unavailable, use a diverse 200-sample bootstrap
+
+    3. RUN ALL 6 VERIFIERS on each test sample:
+       For each sample s in test_corpus:
+         for each verifier V_i in [Z3Math, AST, SemanticConsistency, ThinkPRM, SOSKAN, SemEnergy]:
+           accept[i][s] = V_i.verify(s.response, s.context)  # True=pass, False=fail
+
+    4. COMPUTE 6x6 CONDITIONAL ACCEPTANCE MATRIX P(V_i|V_j):
+       For each pair (i, j):
+         P(V_i | V_j) = sum(accept[i][s] AND accept[j][s]) / sum(accept[j][s])
+         (fraction of V_j-accepted samples that V_i also accepts)
+       Diagonal: P(V_i | V_i) = 1.0 (trivially)
+       Flag any off-diagonal entry > 0.7 per Spera Theorem 9.2 threshold
+
+    5. COMPUTE k_eff:
+       k_eff = count of verifiers V_i such that:
+         for all j != i: P(V_i | V_j) < 0.7  (V_i is genuinely independent of all others)
+       Report k_eff and list of fully-independent verifiers
+
+    6. FOR EACH FLAGGED PAIR with P(V_i|V_j) > 0.7:
+       Diagnose WHY correlation exists:
+       - "Shared acceptance region due to similar semantic scope"
+       - "Structural guarantees from upstream decode/generation"
+       - "Training data bias (both verifiers see same examples)"
+       Propose replacement candidate from known available verifiers or new verifier idea
+
+    7. GENERATE HEATMAP DATA for paper-v6 figure:
+       Write correlation_matrix_6x6 as a 2D list in the artifact
+       Write verifier_labels_for_figure list
+
+    8. Update artifact with final results.
+
+    CONCRETE STEPS:
+    - python3 -c "import json; d={'experiment':'1232_verifier_joint_orthogonality_audit','status':'in_progress','pairwise_correlation_matrix_measured':False,'k_eff':None,'honest_verdict':'in_progress'}; open('results/experiment_1232_verifier_joint_orthogonality_audit.json','w').write(json.dumps(d,indent=2))" 2>&1
+    - python3 -c "from carnot.verify.pipeline import VerifyRepairPipeline; p=VerifyRepairPipeline(); print('verifiers:', [type(v).__name__ for v in p.verifiers])" 2>&1
+    - python3 -c "from carnot.data.fover import FoVerDataset; ds=FoVerDataset(); print('n_samples:', len(ds))" 2>&1
+    - [Load 200 held-out test samples]
+    - [Run all 6 verifiers, compute 6x6 conditional acceptance matrix]
+    - [Compute k_eff, flag correlated pairs, propose replacements]
+    - [Update artifact with matrix, k_eff, flags, proposals]
+
+    REQUIRED ARTIFACT FIELDS:
+    - n_test_samples: int (samples used for measurement, min 100)
+    - correlation_matrix_6x6: list[list[float]] (6x6 P(V_i|V_j) values)
+    - verifier_labels: list[str] (6 verifier names for heatmap)
+    - k_eff: int (count of structurally independent verifiers)
+    - correlated_pairs: list[dict] (pairs with P>0.7: {v_i, v_j, correlation, diagnosis, proposed_replacement})
+    - pairwise_correlation_matrix_measured: bool (true)
+    - paper_v6_honest_k: str (what paper-v6 should claim: e.g. "k_eff=5 of k=6")
+    - honest_verdict: "orthogonality_measured_k_eff_6" | "orthogonality_measured_k_eff_partial" | "orthogonality_measured_revision_needed" | "blocked"
+
+    Run: python3 -c "import json; d=json.load(open('results/experiment_1232_verifier_joint_orthogonality_audit.json')); print('k_eff:', d.get('k_eff'), '| matrix_measured:', d.get('pairwise_correlation_matrix_measured'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp1233-verifier-redesign-orthogonality
+  milestone: 2026.04.96
+  deliverable: results/experiment_1233_verifier_redesign_orthogonality.json
+  title: "Verifier Redesign for Joint Orthogonality — Replace Correlated Pairs, Re-measure k_eff"
+  agent_type: claude
+  model: sonnet
+  max_turns: 50
+  estimated_wall_time_min: 40
+  priority: high
+  requires_gpu: false
+  requires_claude: true
+  gated_on:
+    - upstream: exp1232-verifier-joint-orthogonality-audit
+      artifact_field: pairwise_correlation_matrix_measured
+      op: '=='
+      value: true
+  prior_failures:
+    - experiment_id: exp1108-r-corr-measurement
+      verdict: r_corr_above_threshold
+      addressed_by: "exp1108 measured pairwise r_corr=0.507 on V4xV5 pair. This experiment uses exp1232's P(V_i|V_j) conditional acceptance matrix (a different and stronger correlation metric per Spera Theorem 9.2) and implements targeted redesign of specifically flagged pairs."
+      retire_if_same_verdict: false
+  prompt: |
+    CONTEXT:
+    exp1232 measured the 6x6 P(V_i|V_j) conditional acceptance matrix on the k=6 production
+    verifier ensemble. This experiment implements the redesign: replaces flagged correlated pairs
+    with structurally independent alternatives, then re-measures the matrix to confirm improvement.
+
+    Target: k_eff >= 4 of 6 verifiers structurally independent (P(V_i|V_j) < 0.7 for all pairs).
+    Acceptable fallback: merge correlated pair explicitly in paper-v6 with honest k_eff accounting.
+
+    STEP 0 — WRITE SKELETON ARTIFACT IMMEDIATELY:
+    {
+      "experiment": "1233_verifier_redesign_orthogonality",
+      "status": "in_progress",
+      "correlated_pairs_addressed": 0,
+      "k_eff_after_redesign": null,
+      "honest_verdict": "in_progress"
+    }
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_1232_verifier_joint_orthogonality_audit.json (flagged pairs + proposals)
+    - python/carnot/verify/and_composition.py (verifier registration API)
+    - python/carnot/verify/pipeline.py (VerifyRepairPipeline ensemble config)
+    - ops/known-issues.md lines 210-250 (redesign options per pair type)
+
+    TASK:
+    1. Write skeleton artifact (STEP 0).
+
+    2. READ exp1232's correlated_pairs list. For each flagged pair:
+       Option A — REPLACE: implement the proposed_replacement from exp1232. A replacement verifier
+         must verify a genuinely different semantic property. Examples:
+         - Replace SemEnergyProbe with a CounterfactualVerifier (checks: does flipping one premise
+           change the conclusion? — orthogonal to logic and structural checks)
+         - Replace ThinkPRMv2 with a NumericalBoundVerifier (checks: are all numerical values in
+           plausible range? — orthogonal to logical consistency)
+       Option B — MERGE: mark the pair as one effective verifier in paper-v6, update k claim.
+
+    3. For each replacement implemented:
+       - Add to python/carnot/verify/ as a new class
+       - Register in VerifyRepairPipeline ensemble config
+       - Write at least 3 unit tests in tests/python/test_verifier_NAME.py
+
+    4. RE-MEASURE the 6x6 matrix after redesign:
+       Use the same 200 held-out samples from exp1232. Recompute P(V_i|V_j) with replacement
+       verifiers substituted. Report new k_eff.
+
+    5. UPDATE artifact with redesign results.
+
+    CONCRETE STEPS:
+    - python3 -c "import json; d={'experiment':'1233_verifier_redesign_orthogonality','status':'in_progress','correlated_pairs_addressed':0,'k_eff_after_redesign':None,'honest_verdict':'in_progress'}; open('results/experiment_1233_verifier_redesign_orthogonality.json','w').write(json.dumps(d,indent=2))" 2>&1
+    - python3 -c "import json; pairs=json.load(open('results/experiment_1232_verifier_joint_orthogonality_audit.json')).get('correlated_pairs',[]); [print(p) for p in pairs]" 2>&1
+    - [Implement replacement verifiers for flagged pairs]
+    - [Run redesigned ensemble on 200-sample test corpus]
+    - [Recompute 6x6 matrix, compute new k_eff]
+    - python3 -m pytest tests/python/test_verifier_*.py -v 2>&1 | tail -20
+    - [Update artifact]
+
+    REQUIRED ARTIFACT FIELDS:
+    - correlated_pairs_from_exp1232: int (count flagged in exp1232)
+    - correlated_pairs_addressed: int (count replaced or merged)
+    - replacements_implemented: list[str] (new verifier names)
+    - tests_added: int (new unit tests)
+    - k_eff_before_redesign: int (from exp1232)
+    - k_eff_after_redesign: int (new count post-redesign)
+    - correlation_matrix_6x6_post_redesign: list[list[float]]
+    - verifier_redesign_k_eff_above_3: bool (k_eff_after_redesign >= 4)
+    - honest_verdict: "k_eff_improved_above_4" | "k_eff_partial_improvement" | "merged_pairs_only" | "blocked"
+
+    Run: python3 -c "import json; d=json.load(open('results/experiment_1233_verifier_redesign_orthogonality.json')); print('k_eff_after:', d.get('k_eff_after_redesign'), '| above_3:', d.get('verifier_redesign_k_eff_above_3'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+# ============================================================
+# Phase 2 — arXiv Submission (1 task, CRITICAL, gated on exp1232)
+# exp1234: Paper-v6 final PDF + arXiv submission.
+# Gates: exp1232.pairwise_correlation_matrix_measured (orthogonality documented).
+# Prior failures declared: exp1153, exp1194, exp1206, exp1234-NOT-prior (all blocked/compiled not submitted).
+# ============================================================
+
+- id: exp1234-paper-v6-arxiv-submission
+  milestone: 2026.04.96
+  deliverable: results/experiment_1234_paper_v6_arxiv_submission.json
+  title: "Paper v6 arXiv Submission — Integrate Orthogonality Heatmap, Recompile, Submit"
+  agent_type: claude
+  model: opus
+  max_turns: 45
+  estimated_wall_time_min: 35
+  priority: critical
+  requires_gpu: false
+  requires_claude: true
+  skip_pre_test: true
+  gated_on:
+    - upstream: exp1232-verifier-joint-orthogonality-audit
+      artifact_field: pairwise_correlation_matrix_measured
+      op: '=='
+      value: true
+  prior_failures:
+    - experiment_id: exp1153-arxiv-v4-submission
+      verdict: hold_active_submission_blocked
+      addressed_by: "exp1153 compiled PDF but operator HOLD blocked submission. Hold conditions now met: critical issues 1-5 fixed (exp1205), related work done (exp1218), Phase-4 validated, orthogonality documented (exp1232)."
+      retire_if_same_verdict: false
+    - experiment_id: exp1194-paper-v6-recompile-arxiv-bundle-v7
+      verdict: bundle_not_submitted
+      addressed_by: "exp1194 gated on exp1193 which hit 55-turn limit. exp1205 fixed all 5 critical issues in .94. This task recompiles from the exp1205-corrected state + exp1218 related work + exp1232 orthogonality figure."
+      retire_if_same_verdict: false
+    - experiment_id: exp1206-paper-v6-arxiv-bundle-v8
+      verdict: bundle_ready_for_review
+      addressed_by: "exp1206 compiled bundle v8 but submission was not triggered. This experiment is the actual submission step with the orthogonality heatmap integrated."
+      retire_if_same_verdict: false
+  prompt: |
+    CONTEXT:
+    All paper-v6 blocking conditions are now met:
+    - Critical issues 1-5 resolved: exp1205 (all_5_critical_resolved)
+    - Related work overhaul: exp1218 (5 citations, thesis sentence, novelty boundary)
+    - arXiv bundle v8 compiled: exp1206 (bundle_ready_for_review)
+    - Verifier orthogonality measured: exp1232 (pairwise_correlation_matrix_measured)
+
+    The only remaining integration is to add the orthogonality heatmap from exp1232 into
+    paper-v6 before submission.
+
+    STEP 0 — WRITE SKELETON ARTIFACT IMMEDIATELY:
+    {
+      "experiment": "1234_paper_v6_arxiv_submission",
+      "status": "in_progress",
+      "orthogonality_heatmap_integrated": false,
+      "pdf_compiled": false,
+      "arxiv_submitted": false,
+      "honest_verdict": "in_progress"
+    }
+
+    EXISTING CODE TO READ FIRST:
+    - docs/arxiv-paper/main.tex (paper text, especially Section 5 / Results)
+    - docs/arxiv-paper/carnot.bib (bibliography)
+    - docs/figures/ (existing figure scripts)
+    - results/experiment_1232_verifier_joint_orthogonality_audit.json (matrix data)
+    - results/experiment_1206_paper_v6_arxiv_bundle_v8.json (bundle location)
+
+    TASK:
+    1. Write skeleton artifact (STEP 0).
+
+    2. GENERATE ORTHOGONALITY HEATMAP FIGURE:
+       a. Read exp1232 correlation_matrix_6x6 and verifier_labels
+       b. Write docs/figures/fig_verifier_orthogonality.py:
+          - matplotlib heatmap of 6x6 P(V_i|V_j) matrix
+          - Red cells for P > 0.7 (correlated), green for P < 0.3 (independent)
+          - Save to docs/figures/verifier_orthogonality.pdf and .png
+       c. Run: python3 docs/figures/fig_verifier_orthogonality.py 2>&1
+
+    3. INTEGRATE INTO paper-v6:
+       a. Add figure to Section 5 (Results / Ensemble Analysis):
+          "Figure N shows the pairwise conditional acceptance probability matrix P(V_i|V_j)
+           for our k=6 verifier ensemble. Effective independent coverage k_eff = [value]."
+       b. Update the "unprecedented formal distinctness" novelty claim with honest k_eff:
+          - If k_eff == 6: claim stands ("all 6 verifiers structurally independent")
+          - If k_eff < 6: revise to "k_eff=[N] of k=6 structurally independent verifiers
+            (pairs with P(V_i|V_j) >= 0.7 merged per Spera Theorem 9.2 methodology)"
+       c. Add citation: spera2026 arXiv:2603.15973 in bibliography
+
+    4. COMPILE PDF:
+       Try tectonic first, then pdflatex:
+       cd docs/arxiv-paper && tectonic main.tex 2>&1 || pdflatex -interaction=nonstopmode main.tex 2>&1
+       Verify: ls -lh main.pdf 2>&1 (must be > 100KB)
+
+    5. PREPARE arXiv BUNDLE (if PDF compiles):
+       tar -czf carnot-arxiv-v6.tar.gz docs/arxiv-paper/ 2>&1
+       echo "BUNDLE READY: carnot-arxiv-v6.tar.gz — manual upload required to arxiv.org"
+
+    6. PROVIDE MANUAL SUBMISSION INSTRUCTIONS in artifact:
+       Exact steps to submit at arxiv.org/submit
+
+    CONCRETE STEPS:
+    - python3 -c "import json; d={'experiment':'1234_paper_v6_arxiv_submission','status':'in_progress','orthogonality_heatmap_integrated':False,'pdf_compiled':False,'arxiv_submitted':False,'honest_verdict':'in_progress'}; open('results/experiment_1234_paper_v6_arxiv_submission.json','w').write(json.dumps(d,indent=2))" 2>&1
+    - python3 -c "import json; d=json.load(open('results/experiment_1232_verifier_joint_orthogonality_audit.json')); print('k_eff:', d.get('k_eff'), 'matrix:', len(d.get('correlation_matrix_6x6', [])))" 2>&1
+    - ls docs/arxiv-paper/main.tex docs/arxiv-paper/carnot.bib 2>&1
+    - [Write docs/figures/fig_verifier_orthogonality.py]
+    - python3 docs/figures/fig_verifier_orthogonality.py 2>&1
+    - [Integrate heatmap into main.tex]
+    - cd docs/arxiv-paper && tectonic main.tex 2>&1 || pdflatex -interaction=nonstopmode main.tex 2>&1 | tail -20
+    - ls -lh docs/arxiv-paper/main.pdf 2>&1
+    - [Update artifact with final status]
+
+    REQUIRED ARTIFACT FIELDS:
+    - orthogonality_heatmap_integrated: bool
+    - heatmap_figure_path: str (path to generated figure)
+    - k_eff_in_paper: int (what paper claims)
+    - pdf_compiled: bool
+    - pdf_size_kb: int (must be > 100)
+    - bundle_path: str (path to .tar.gz)
+    - submission_instructions: str (exact arxiv.org steps for manual upload)
+    - arxiv_submitted: bool (true ONLY if automated submission succeeded; manual = false)
+    - honest_verdict: "bundle_ready_manual_upload" | "pdf_compiled_submission_blocked" | "blocked"
+
+    Run: ls -lh docs/arxiv-paper/main.pdf carnot-arxiv-v6.tar.gz 2>&1
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+# ============================================================
+# Phase 3 — GRPO Training Extension (2 tasks)
+# exp1235: GRPO v6 FSPO+VPS retry with 1200s wall budget (2.5x vs exp1221's 480s).
+# exp1236: Execution-grounded credit assignment (arXiv 2603.16158), gated on exp1235.
+# ============================================================
+
+- id: exp1235-grpo-v6-fspo-vps-extended
+  milestone: 2026.04.96
+  deliverable: results/experiment_1235_grpo_v6_fspo_vps_extended.json
+  title: "GRPO v6 — FSPO Per-Token Factuality Weighting + VPS (Extended 1200s Budget, DualGPU MANDATORY)"
+  agent_type: claude
+  model: opus
+  max_turns: 80
+  estimated_wall_time_min: 90
+  priority: high
+  requires_gpu: true
+  grace_period_s: 2400
+  requires_claude: true
+  prior_failures:
+    - experiment_id: exp1221-grpo-v6-fspo-vps-combined
+      verdict: insufficient_logprob_coverage
+      addressed_by: "exp1221 exhausted 480s wall budget at 848s elapsed; only 9 questions evaluated. This retry uses wall_budget_s=1200 (2.5x) to allow full evaluation. Also adds token regulation (arXiv 2511.00066) to weight high-logprob tokens more heavily, addressing the logprob coverage gap."
+      retire_if_same_verdict: false
+  prompt: |
+    CONTEXT:
+    GRPO v6 combines FSPO per-token factuality weighting (arXiv 2505.24630) with GRPO-VPS
+    step-level process supervision (exp1220: vps_training_beats_v4). exp1221 failed because
+    wall_budget_s=480 was exhausted at 848s elapsed; only 9 questions got full evaluation.
+
+    Root cause (from exp1221): llama.cpp inference on Qwen3.6-35B-A3B at 35B scale takes
+    ~90s per question × n_completions=4. At 9 questions that's 810s for just inference,
+    plus overhead. Fix: wall_budget_s=1200 allows ~13 questions per training cycle.
+
+    Also incorporate token regulation (arXiv 2511.00066): weight GRPO advantage by token
+    log-probability so high-confidence tokens contribute more to the gradient signal.
+    This directly addresses "insufficient_logprob_coverage" — token regulation focuses
+    training on tokens where the model has meaningful signal.
+
+    VPS baseline (exp1220): beats v4 +10pp floor.
+    Target for v6: beats VPS alone by any positive margin (any delta > 0).
+
+    STEP 0 — WRITE SKELETON ARTIFACT IMMEDIATELY:
+    {
+      "experiment": "1235_grpo_v6_fspo_vps_extended",
+      "status": "in_progress",
+      "wall_budget_s": 1200,
+      "grpo_v6_training_completed": false,
+      "grpo_v6_improvement_pp": null,
+      "honest_verdict": "in_progress"
+    }
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_1221_grpo_v6_fspo_vps_combined.json (what went wrong: vps_baseline_accuracy=0.95, elapsed=848s)
+    - results/experiment_1220_grpo_vps_full_training.json (VPS floor to beat)
+    - python/carnot/training/latent_grpo.py (GRPO implementation)
+    - python/carnot/pipeline/verify_repair.py (CausalReasoningVerifier, Z3MathVerifier)
+
+    TASK:
+    1. Write skeleton artifact (STEP 0).
+
+    2. VERIFY PREREQUISITES:
+       - GPU count: python3 -c "import torch; print(torch.cuda.device_count())"
+       - GGUF model: find /home -name "*.gguf" 2>/dev/null | grep -i qwen3.6 | head -2
+       - llama.cpp GPU: python3 -c "from llama_cpp import llama_cpp; print(llama_cpp.llama_supports_gpu_offload())"
+
+    3. IMPLEMENT GRPO-VPS+FSPO WITH TOKEN REGULATION:
+       a. VPS step reward (same as exp1220):
+          For each reasoning step S: step_reward[S] = causal_score + z3_score
+       b. FSPO factuality weighting (arXiv 2505.24630):
+          For each token T in step S:
+            factuality_weight[T] = max(0, causal_score(S))  # from CausalReasoningVerifier
+            advantage[T] = step_reward[S] * factuality_weight[T]
+       c. TOKEN REGULATION (arXiv 2511.00066):
+          adjusted_advantage[T] = advantage[T] * softmax(log_prob[T])
+          (high-probability tokens get full weight, low-probability tokens are down-weighted)
+       d. Training loop: same 300s structural warm-up + 900s VPS+FSPO mix
+
+    4. RUN TRAINING (wall_budget_s=1200):
+       Training set: GSM8K questions 1800-2000 (fresh range)
+       n_completions: 4 (reduced from 8 to allow more questions per budget)
+       batch_size: 2 questions per GRPO update step
+
+    5. EVALUATE on holdout (GSM8K 600-800):
+       - fraction_correct_before and fraction_correct_after
+       - grpo_v6_improvement_pp = 100 * (after - before)
+       - beats_vps_floor = improvement > vps_baseline_improvement
+
+    6. MEASURE logprob coverage quality:
+       - mean_token_logprob (should be > -3.0 with token regulation)
+       - fspo_coverage_fraction (fraction of steps with non-zero FSPO weight)
+
+    CONCRETE STEPS:
+    - python3 -c "import json; d={'experiment':'1235_grpo_v6_fspo_vps_extended','status':'in_progress','wall_budget_s':1200,'grpo_v6_training_completed':False,'grpo_v6_improvement_pp':None,'honest_verdict':'in_progress'}; open('results/experiment_1235_grpo_v6_fspo_vps_extended.json','w').write(json.dumps(d,indent=2))" 2>&1
+    - python3 -c "import torch; print('gpus:', torch.cuda.device_count())" 2>&1
+    - find /home -name "*.gguf" 2>/dev/null | grep -iE "qwen3.6|gemma.4.31" | head -3 2>&1
+    - [Implement GRPO-VPS+FSPO with token regulation]
+    - [Run training loop with 1200s wall budget]
+    - [Evaluate on holdout]
+    - [Update artifact with results]
+
+    REQUIRED ARTIFACT FIELDS:
+    - wall_budget_s: int (1200)
+    - n_questions_evaluated: int (must be > 9 to prove wall budget fixed the problem)
+    - vps_baseline_accuracy: float (holdout accuracy after VPS-only, from exp1220)
+    - fspo_vps_accuracy: float (holdout accuracy after FSPO+VPS)
+    - grpo_v6_improvement_pp: float (fspo_vps vs vps baseline)
+    - beats_vps_floor: bool (grpo_v6_improvement_pp > 0)
+    - mean_token_logprob: float (coverage quality metric)
+    - fspo_coverage_fraction: float (fraction of steps with FSPO weight > 0)
+    - dualgpu_confirmed: bool
+    - grpo_v6_improvement_measured: bool (true — even if negative, we measured it)
+    - honest_verdict: "grpo_v6_beats_vps" | "grpo_v6_no_improvement" | "grpo_v6_regression" | "wall_budget_still_insufficient" | "blocked"
+
+    Run: python3 -c "import json; d=json.load(open('results/experiment_1235_grpo_v6_fspo_vps_extended.json')); print('n_q:', d.get('n_questions_evaluated'), '| improvement:', d.get('grpo_v6_improvement_pp'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp1236-grpo-execution-grounded-credit
+  milestone: 2026.04.96
+  deliverable: results/experiment_1236_grpo_execution_grounded_credit.json
+  title: "GRPO Execution-Grounded Credit Assignment — Token-Level Constraint Violation Attribution"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 35
+  estimated_wall_time_min: 30
+  priority: medium
+  requires_gpu: false
+  gated_on:
+    - upstream: exp1235-grpo-v6-fspo-vps-extended
+      artifact_field: grpo_v6_improvement_pp
+      op: '>'
+      value: 0.0
+  prompt: |
+    CONTEXT:
+    arXiv 2603.16158 proposes execution-grounded credit assignment for GRPO: instead of
+    spreading the reward signal uniformly across a program, use runtime execution traces to
+    localize which tokens caused constraint violations. Carnot's Z3MathVerifier and
+    CausalReasoningVerifier can produce token-level violation traces from constraint failures.
+
+    This experiment implements execution-grounded credit as the next level of granularity
+    beyond VPS step-level credit (exp1220) and FSPO token factuality (exp1235). The hypothesis:
+    execution-level traces provide finer-grained signal than step-level attribution.
+
+    EXISTING CODE TO READ FIRST:
+    - python/carnot/verify/extract.py (Z3MathVerifier, CausalReasoningVerifier, violation extraction)
+    - python/carnot/training/latent_grpo.py (GRPO implementation, reward function)
+    - results/experiment_1235_grpo_v6_fspo_vps_extended.json (v6 baseline to compare against)
+
+    TASK:
+    1. Write skeleton artifact:
+    {
+      "experiment": "1236_grpo_execution_grounded_credit",
+      "status": "in_progress",
+      "execution_credit_implemented": false,
+      "honest_verdict": "in_progress"
+    }
+
+    2. IMPLEMENT EXECUTION-GROUNDED CREDIT (read arXiv 2603.16158 pattern):
+       a. For each response token stream T_1...T_N:
+          - Parse into executable segments (arithmetic expressions, logical claims)
+          - For each segment S: extract which tokens T_i...T_j form segment S
+          - Run Z3MathVerifier on segment S → violation_flag and error_location
+          - error_location maps back to specific token offsets in the stream
+       b. Token-level credit:
+          token_credit[i] = 1.0 if T_i is in a correctly-executing segment else 0.0
+          token_credit[i] = penalty if T_i caused a verifier violation
+       c. Incorporate into GRPO advantage:
+          adjusted_advantage[i] = grpo_advantage * token_credit[i]
+
+    3. WRITE COMPARISON EXPERIMENT (CPU-only, no live inference needed):
+       - Generate 50 synthetic GSM8K-style responses (some correct, some with arithmetic errors)
+       - Apply execution-grounded credit vs uniform credit vs FSPO credit
+       - Measure: credit_signal_to_noise_ratio (how concentrated credit is near error tokens)
+       - Report: mean credit assigned to error tokens vs non-error tokens
+
+    4. Write 4 unit tests in tests/python/test_execution_grounded_credit.py:
+       - test_credit_concentrates_at_violation_tokens
+       - test_correct_response_gets_uniform_credit
+       - test_z3_violation_maps_to_token_offset
+       - test_integration_with_grpo_advantage
+
+    CONCRETE STEPS:
+    - python3 -c "import json; d={'experiment':'1236_grpo_execution_grounded_credit','status':'in_progress','execution_credit_implemented':False,'honest_verdict':'in_progress'}; open('results/experiment_1236_grpo_execution_grounded_credit.json','w').write(json.dumps(d,indent=2))" 2>&1
+    - python3 -c "from carnot.verify.extract import Z3MathVerifier; print('Z3 ok')" 2>&1
+    - [Implement execution-grounded credit module]
+    - python3 -m pytest tests/python/test_execution_grounded_credit.py -v 2>&1 | tail -10
+    - [Run comparison on 50 synthetic responses]
+    - [Update artifact]
+
+    REQUIRED ARTIFACT FIELDS:
+    - execution_credit_implemented: bool
+    - test_file_path: str
+    - n_tests_pass: int
+    - credit_snr_execution_grounded: float (signal-to-noise ratio for execution credit)
+    - credit_snr_uniform: float (baseline uniform credit SNR)
+    - credit_snr_fspo: float (FSPO credit SNR from exp1235)
+    - execution_credit_better_than_uniform: bool (snr > uniform snr)
+    - honest_verdict: "execution_credit_improves_snr" | "no_snr_improvement" | "blocked"
+
+    Run: python3 -m pytest tests/python/test_execution_grounded_credit.py -v 2>&1 | tail -10
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+# ============================================================
+# Phase 4 — Boltzmann-GPT Contrastive Training (1 task)
+# exp1237: Train exp1226 seed with contrastive CD on FoVer. Target AUROC > 0.80.
+# Prior failure: exp1226 (boltzmann_gpt_below_nrgpt — this is the training run).
+# ============================================================
+
+- id: exp1237-boltzmann-gpt-contrastive-training
+  milestone: 2026.04.96
+  deliverable: results/experiment_1237_boltzmann_gpt_contrastive_training.json
+  title: "Boltzmann-GPT Contrastive CD Training — FoVer Corpus, Target AUROC > 0.80"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 40
+  estimated_wall_time_min: 40
+  priority: medium
+  requires_gpu: true
+  prior_failures:
+    - experiment_id: exp1226-boltzmann-gpt-phase3-seed
+      verdict: boltzmann_gpt_below_nrgpt
+      addressed_by: "exp1226 was a SEED experiment with random weights (AUROC=0.65). The seed confirmed non-degenerate structural signal. This experiment is the TRAINING run using contrastive divergence on FoVer corpus — a genuinely different step, not a retry of exp1226."
+      retire_if_same_verdict: false
+  prompt: |
+    CONTEXT:
+    exp1226 confirmed the Boltzmann-GPT layer (python/carnot/phase3/boltzmann_gpt.py) has
+    non-degenerate structural signal at random weights (AUROC=0.65). The goal is now to train
+    it with contrastive divergence (CD) on the FoVer corpus to achieve AUROC > 0.80.
+
+    Reference: arXiv 2512.18730 (EBM Theoretical Lens for RL-Tuned LMs) provides the contrastive
+    loss formulation: L_CD = E_correct[E(x)] - E_incorrect[E(x)] where E(x) is the Boltzmann
+    energy. The energy gap between correct and incorrect FoVer traces is the training signal.
+
+    NRGPT baseline (exp1163): AUROC=0.921.
+    Target: AUROC > 0.80 (halfway to NRGPT).
+
+    EXISTING CODE TO READ FIRST:
+    - python/carnot/phase3/boltzmann_gpt.py (BoltzmannGPTLayer implementation from exp1226)
+    - python/carnot/phase3/nrgpt.py (NRGPT as comparison baseline, exp1163)
+    - python/carnot/data/fover.py (FoVer dataset loader)
+    - results/experiment_1226_boltzmann_gpt_phase3_seed.json (seed AUROC=0.65, architecture params)
+
+    TASK:
+    1. Write skeleton artifact:
+    {
+      "experiment": "1237_boltzmann_gpt_contrastive_training",
+      "status": "in_progress",
+      "boltzmann_gpt_contrastive_auroc": null,
+      "honest_verdict": "in_progress"
+    }
+
+    2. LOAD FoVer training corpus:
+       - positive: correct reasoning traces (Z3MathVerifier label=1)
+       - negative: incorrect traces (label=0)
+       - Use 80/20 train/test split; test is held-out for AUROC measurement
+
+    3. IMPLEMENT CONTRASTIVE CD TRAINING LOOP:
+       Per arXiv 2512.18730 energy gap formulation:
+       for epoch in range(n_epochs):
+         for batch_pos, batch_neg in fover_loader:
+           E_pos = boltzmann_gpt(batch_pos)   # energy of correct traces
+           E_neg = boltzmann_gpt(batch_neg)   # energy of incorrect traces
+           loss = E_pos.mean() - E_neg.mean()  # CD: push positives down, negatives up
+           loss.backward()
+           optimizer.step()
+       n_epochs=10, lr=1e-3, batch_size=16, optimizer=Adam
+
+    4. EVALUATE on held-out test split:
+       - Predict energy for each test sample
+       - AUROC: sklearn.metrics.roc_auc_score(labels, -energies)
+         (negative energy: lower energy = more likely correct)
+       - Compare: boltzmann_gpt_auroc vs nrgpt_auroc_baseline=0.921
+
+    5. SAVE trained checkpoint:
+       torch.save(boltzmann_gpt.state_dict(), 'python/carnot/phase3/boltzmann_gpt_cd_v1.pt')
+
+    CONCRETE STEPS:
+    - python3 -c "import json; d={'experiment':'1237_boltzmann_gpt_contrastive_training','status':'in_progress','boltzmann_gpt_contrastive_auroc':None,'honest_verdict':'in_progress'}; open('results/experiment_1237_boltzmann_gpt_contrastive_training.json','w').write(json.dumps(d,indent=2))" 2>&1
+    - python3 -c "import torch; print('GPU:', torch.cuda.is_available(), '| Device:', torch.cuda.get_device_name(0) if torch.cuda.is_available() else 'CPU')" 2>&1
+    - python3 -c "from carnot.phase3.boltzmann_gpt import BoltzmannGPTLayer; print('BoltzmannGPT ok')" 2>&1
+    - python3 -c "from carnot.data.fover import FoVerDataset; ds=FoVerDataset(); print('FoVer n:', len(ds))" 2>&1
+    - [Implement CD training loop]
+    - [Train for n_epochs=10]
+    - [Evaluate on test split, compute AUROC]
+    - [Save checkpoint]
+    - [Update artifact]
+
+    REQUIRED ARTIFACT FIELDS:
+    - n_training_epochs: int
+    - n_train_samples: int
+    - n_test_samples: int
+    - boltzmann_gpt_contrastive_auroc: float
+    - nrgpt_auroc_baseline: float (0.921 from exp1163)
+    - boltzmann_gpt_beats_seed: bool (auroc > 0.65)
+    - boltzmann_gpt_above_0p80: bool (auroc > 0.80)
+    - checkpoint_path: str
+    - honest_verdict: "contrastive_auroc_above_0p80" | "contrastive_auroc_improved_below_threshold" | "training_diverged" | "blocked"
+
+    Run: python3 -c "import json; d=json.load(open('results/experiment_1237_boltzmann_gpt_contrastive_training.json')); print('auroc:', d.get('boltzmann_gpt_contrastive_auroc'), '| above_0p80:', d.get('boltzmann_gpt_above_0p80'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+# ============================================================
+# Phase 5 — Phase-5-D Intermediate Scale (1 task, DualGPU MANDATORY)
+# exp1238: 100-300M param prototype, d=128, k=5 verifiers, 1000 queries.
+# Measures 8 failure modes: 5 toy-detectable + 3 production-scale-only.
+# MANDATORY per known-issues.md (.96/.97 pickup).
+# ============================================================
+
+- id: exp1238-phase5d-intermediate-scale
+  milestone: 2026.04.96
+  deliverable: results/experiment_1238_phase5d_intermediate_scale.json
+  title: "Phase-5-D Intermediate-Scale Derisking — 100-300M Params, d=128, 8 Failure Modes"
+  agent_type: claude
+  model: opus
+  max_turns: 70
+  estimated_wall_time_min: 70
+  priority: high
+  requires_gpu: true
+  requires_claude: true
+  grace_period_s: 3600
+  prompt: |
+    CONTEXT:
+    MANDATORY per ops/known-issues.md (.96/.97 pickup). Phase-5-A/B/C validated in-situ
+    training at toy scale (50K params, d=16). Deep Think Q9 identified 3 production-scale
+    failure modes STRUCTURALLY INVISIBLE at toy scale:
+
+    1. Mode collapse: overparameterized degenerate attractors — requires 1B+ params to manifest
+    2. MCMC mixing paralysis: PCD distillation degradation in high-d landscapes — requires d>=256
+    3. Substrate shift: measure concentration in [-1,1]^d — geometric phase transition at large d
+
+    Going directly from 50K to 1B+ without intermediate validation risks discovering these
+    after 100-500 GPU-hours. Intermediate scale (100-300M params, d=128) catches them cheaply.
+
+    Per ops/known-issues.md: acceptance gates for exp1238:
+    - All 5 toy-detectable modes absent (same as exp1222-1224 acceptance criteria)
+    - All 3 production-scale-only modes MEASURED (not necessarily absent — measurement is the gate)
+
+    STEP 0 — WRITE SKELETON ARTIFACT IMMEDIATELY:
+    {
+      "experiment": "1238_phase5d_intermediate_scale",
+      "status": "in_progress",
+      "phase5d_prototype_initialized": false,
+      "gates_measured": 0,
+      "honest_verdict": "in_progress"
+    }
+
+    EXISTING CODE TO READ FIRST:
+    - python/carnot/phase5/insitu_prototype.py (from exp1222 — toy-scale substrate)
+    - python/carnot/phase5/insitu_training.py (from exp1223 — training loop)
+    - python/carnot/phase5/adversarial_probe.py (from exp1224 — adversarial probing)
+    - results/experiment_1222_phase5a_insitu_prototype.json (toy acceptance gates)
+    - results/experiment_1223_phase5b_insitu_training_loop.json (training loop design)
+    - openspec/change-proposals/in-situ-training-phase5-derisking.md (intermediate-scale spec)
+    - ops/known-issues.md lines 452-495 (8 failure mode list)
+
+    TASK:
+    1. Write skeleton artifact (STEP 0).
+
+    2. SCALE UP THE SUBSTRATE (100-300M params, d=128):
+       a. Encoder: MLP with hidden dims [512, 512, 256, 128], ~100M params
+          Input: 1024-dim token embedding (from llama-cpp or local embedding model)
+          Output: 128-dim latent z in [-1, 1]^128
+       b. Ising energy on latent: J matrix (128x128 sparse coupling), B biases
+       c. Refiner (decoder): MLP with hidden dims [128, 256, 512, 1024], ~100M params
+          Input: 128-dim latent z
+          Output: 1024-dim repaired embedding
+       d. Use DualGPU: model.to('cuda:0'), run encoder on GPU 0, energy on CPU (Ising is fast)
+
+    3. RUN 1000 QUERIES (use FoVer or ARC-AGI-class synthetic puzzles):
+       - For each query: encoder → latent z → Ising energy → Blocked Gibbs sampling → refiner
+       - Update encoder/refiner parameters via verifier feedback (same as exp1223)
+
+    4. MEASURE 5 TOY-DETECTABLE GATES (same as exp1222-1224):
+       - Gate 1: energy decreases by >= 30% over training
+       - Gate 2: no representation drift (latent variance stable)
+       - Gate 3: no autocatalytic spiral (energy oscillation < 5%)
+       - Gate 4: no null-space excavation (latent rank > 0.5 * 128)
+       - Gate 5: no catastrophic forgetting (oracle accuracy unchanged)
+
+    5. MEASURE 3 PRODUCTION-SCALE-ONLY GATES:
+       - Gate 6 (mode collapse): conditional output entropy H(z|query) > threshold
+         threshold = 0.5 * log(2^128) / 128 = min entropy floor at d=128
+         Measure: empirical entropy of z samples over 100 random queries
+       - Gate 7 (MCMC mixing): Gibbs chain autocorrelation for first 100 samples
+         acf_1 = autocorrelation at lag 1 (should be < 0.9 for good mixing)
+         Also: L2(positive_z, negative_z) distance should be > 1.0 at d=128 scale
+       - Gate 8 (substrate shift): L∞(z) saturation — fraction of latent dims at |z_i| > 0.95
+         threshold: < 5% of dims should saturate (saturation → loss of numerical precision)
+         Also: histogram modality — check if z distribution is unimodal vs multimodal
+
+    6. Also include PPSEBM-style replay buffer (arXiv 2512.15658):
+       Maintain a 100-sample replay buffer from early training. Mix 10% replay into each batch.
+       Measure: oracle accuracy WITH vs WITHOUT replay (anti-forgetting effectiveness).
+
+    CONCRETE STEPS:
+    - python3 -c "import json; d={'experiment':'1238_phase5d_intermediate_scale','status':'in_progress','phase5d_prototype_initialized':False,'gates_measured':0,'honest_verdict':'in_progress'}; open('results/experiment_1238_phase5d_intermediate_scale.json','w').write(json.dumps(d,indent=2))" 2>&1
+    - python3 -c "import torch; print('GPUs:', torch.cuda.device_count())" 2>&1
+    - python3 -c "from carnot.phase5.insitu_prototype import InSituSubstrate; print('substrate import ok')" 2>&1
+    - [Scale up encoder/refiner to 100-300M params]
+    - [Run 1000-query training loop]
+    - [Measure all 8 gates]
+    - [Update artifact with gate results]
+
+    REQUIRED ARTIFACT FIELDS:
+    - encoder_param_count: int (must be >= 100_000_000)
+    - latent_dim: int (128)
+    - n_queries_run: int (1000)
+    - gate1_energy_decrease_30pct: bool
+    - gate2_no_representation_drift: bool
+    - gate3_no_autocatalytic_spiral: bool
+    - gate4_no_null_space_excavation: bool
+    - gate5_no_catastrophic_forgetting: bool
+    - gate6_mode_collapse_entropy: float (empirical H(z|q))
+    - gate6_mode_collapse_absent: bool (entropy > threshold)
+    - gate7_mcmc_mixing_acf1: float (autocorrelation at lag 1)
+    - gate7_mcmc_mixing_ok: bool (acf1 < 0.9)
+    - gate8_substrate_shift_saturation_frac: float (fraction |z_i|>0.95)
+    - gate8_substrate_shift_absent: bool (saturation < 0.05)
+    - gates_measured: int (8 — all gates measured)
+    - replay_buffer_effectiveness: float (oracle accuracy with vs without replay)
+    - phase5d_all_8_gates_measured: bool (true)
+    - honest_verdict: "all_8_gates_pass" | "toy_gates_pass_production_modes_detected" | "production_failure_mode_found" | "prototype_failed_initialization" | "blocked"
+
+    Run: python3 -c "import json; d=json.load(open('results/experiment_1238_phase5d_intermediate_scale.json')); print('gates_measured:', d.get('gates_measured'), '| verdict:', d.get('honest_verdict'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+# ============================================================
+# Phase 6 — New Research (2 tasks)
+# exp1239: NRGPT Frozen-Prefix evaluation — resolve (b)/(c) monotonicity interpretation.
+# exp1240: WOPR Kakuro puzzle cartridge.
+# ============================================================
+
+- id: exp1239-nrgpt-frozen-prefix-evaluation
+  milestone: 2026.04.96
+  deliverable: results/experiment_1239_nrgpt_frozen_prefix_evaluation.json
+  title: "NRGPT Frozen-Prefix Evaluation — Resolve Non-Monotonicity: Causal-Context vs Non-Conservative"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 20
+  estimated_wall_time_min: 20
+  priority: medium
+  requires_gpu: false
+  prior_failures:
+    - experiment_id: exp1163-nrgpt-energy-native-prototype
+      verdict: nrgpt_auroc_above_dbae
+      addressed_by: "exp1163 measured AUROC=0.9158 and found n_iters_monotone=False. This is a FOLLOW-UP experiment to resolve WHAT CAUSES the non-monotonicity, not a retry of exp1163. Known-issues.md (2026-05-03) specifies Frozen-Prefix as the diagnostic."
+      retire_if_same_verdict: false
+  prompt: |
+    CONTEXT:
+    exp1163 (NRGPT prototype) found n_iters_monotone=False: the NRGPT energy recurrence trace
+    does NOT monotonically decrease across iterations. Two competing interpretations exist:
+    (b) Pure causal-context shifting — Markov blanket updates beneath each token;
+        the first token IS monotonic, prefix energy shifts cause apparent non-monotonicity
+    (c) Non-conservative learned preconditioner — NRGPT trades monotonicity for AUROC explicitly;
+        even isolated first-token trace is non-monotonic
+
+    Deep Think Q10 specified the diagnostic: re-run NRGPT energy recurrence on only the FIRST
+    TOKEN (which has no prefix, so per NRGPT §2.3 IS guaranteed monotonic if (b) dominates).
+    If first-token isolated trace is monotonic → (b) dominant.
+    If still non-monotonic → (c) dominant.
+
+    Result affects paper-v6 §4 (NRGPT framing): (b) = "causal multi-agent inference" framing;
+    (c) = "learned non-conservative preconditioner" framing (different implications for Phase-3).
+
+    EXISTING CODE TO READ FIRST:
+    - python/carnot/phase3/nrgpt.py (NRGPT implementation, energy_recurrence function)
+    - results/experiment_1163_nrgpt_energy_native_prototype.json (n_iters_monotone=False, energy trace data)
+
+    TASK:
+    1. Write skeleton artifact:
+    {
+      "experiment": "1239_nrgpt_frozen_prefix_evaluation",
+      "status": "in_progress",
+      "frozen_prefix_regime_classified": false,
+      "honest_verdict": "in_progress"
+    }
+
+    2. READ the NRGPT implementation:
+       - Find the energy_recurrence or equivalent function
+       - Understand: how does prefix context affect the energy trace?
+
+    3. IMPLEMENT FROZEN-PREFIX EVALUATION:
+       a. Take 10 test sequences from FoVer corpus (or generate simple examples)
+       b. For each sequence s[0...N]:
+          - FULL SEQUENCE: run NRGPT energy trace on s[0...N], measure monotonicity
+          - ISOLATED FIRST TOKEN: run NRGPT on s[0] ONLY (no prefix), measure monotonicity
+            (monotonic = each iteration t has E_t <= E_{t-1})
+       c. Compare: is first-token trace monotonic? Count: n_monotonic_first_token of 10
+
+    4. CLASSIFY REGIME:
+       if n_monotonic_first_token >= 8: regime = "b_causal_context_shift"
+         (prefix shifts explain non-monotonicity; first-token IS monotonic as Lee §2.3 predicts)
+       elif n_monotonic_first_token <= 2: regime = "c_non_conservative_preconditioner"
+         (learned preconditioner abandoned conservative gradient field; first-token also non-monotonic)
+       else: regime = "mixed_ambiguous"
+
+    5. Update artifact and provide paper-v6 §4 framing recommendation.
+
+    CONCRETE STEPS:
+    - python3 -c "import json; d={'experiment':'1239_nrgpt_frozen_prefix_evaluation','status':'in_progress','frozen_prefix_regime_classified':False,'honest_verdict':'in_progress'}; open('results/experiment_1239_nrgpt_frozen_prefix_evaluation.json','w').write(json.dumps(d,indent=2))" 2>&1
+    - python3 -c "from carnot.phase3.nrgpt import NRGPT; print('nrgpt import ok')" 2>&1
+    - python3 -c "import json; d=json.load(open('results/experiment_1163_nrgpt_energy_native_prototype.json')); print('n_iters_monotone:', d.get('n_iters_monotone'), '| auroc:', d.get('nrgpt_auroc'))" 2>&1
+    - [Implement frozen-prefix energy trace evaluation]
+    - [Run on 10 test sequences, classify regime]
+    - [Update artifact]
+
+    REQUIRED ARTIFACT FIELDS:
+    - n_sequences_tested: int (10)
+    - n_monotonic_full_sequence: int
+    - n_monotonic_first_token_only: int
+    - regime: str ("b_causal_context_shift" | "c_non_conservative_preconditioner" | "mixed_ambiguous")
+    - paper_v6_framing_recommendation: str (1-2 sentences for §4)
+    - frozen_prefix_regime_classified: bool (true)
+    - honest_verdict: "regime_b_causal_context" | "regime_c_non_conservative" | "regime_mixed" | "blocked"
+
+    Run: python3 -c "import json; d=json.load(open('results/experiment_1239_nrgpt_frozen_prefix_evaluation.json')); print('regime:', d.get('regime'), '| classified:', d.get('frozen_prefix_regime_classified'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp1240-wopr-kakuro-cartridge
+  milestone: 2026.04.96
+  deliverable: results/experiment_1240_wopr_kakuro_cartridge.json
+  title: "WOPR Kakuro Puzzle Cartridge — Integer Row/Column Sum Constraints, E=0 at Solution"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 30
+  estimated_wall_time_min: 25
+  priority: medium
+  requires_gpu: false
+  prompt: |
+    CONTEXT:
+    WOPR gallery needs a new puzzle cartridge. Kakuro (also known as Cross Sums) is a logic
+    puzzle where the grid must be filled with digits 1-9 such that:
+    - Each "run" (contiguous horizontal or vertical block of cells) sums to a given clue number
+    - No digit repeats within a run
+
+    This is an integer constraint satisfaction problem naturally formulated as an Ising energy
+    minimization: E = Σ_run (sum_violation)^2 + Σ_run (uniqueness_violation)^2
+
+    EXISTING CODE TO READ FIRST:
+    - python/carnot/wopr/nonogram.py (recent Nonogram cartridge, exp1214 — follow the same pattern)
+    - python/carnot/wopr/futoshiki.py (recent Futoshiki cartridge, exp1227 — energy formulation)
+    - python/carnot/wopr/registry.py (cartridge registration API)
+
+    TASK:
+    1. Write skeleton artifact:
+    {
+      "experiment": "1240_wopr_kakuro_cartridge",
+      "status": "in_progress",
+      "kakuro_cartridge_shipped": false,
+      "honest_verdict": "in_progress"
+    }
+
+    2. IMPLEMENT KakuroCartridge in python/carnot/wopr/kakuro.py:
+       a. Puzzle representation:
+          - grid: NxN grid with some cells blocked (marked with clue numbers)
+          - clues: list of (run_id, direction, target_sum, cell_positions)
+          - values: assignment of digits 1-9 to unfilled cells
+       b. Energy function (Ising formulation):
+          E_sum = Σ_run (Σ_cells(value) - target_sum)^2
+          E_unique = Σ_run Σ_{i<j in run} indicator(value_i == value_j)
+          E_total = E_sum + E_unique
+          E = 0 iff all runs sum correctly AND no repeats within any run
+       c. Ising coupling matrix construction:
+          - Encode each digit 1-9 as a spin configuration (3-bit binary)
+          - OR: treat each cell-value pair as a spin (NxM binary Ising)
+          - Prefer: direct integer spin Ising (simplest implementation)
+       d. Gibbs sampler to minimize energy (same as Nonogram/Futoshiki)
+
+    3. GENERATE TEST CASES:
+       - 3x3 trivial Kakuro (smoke test)
+       - 5x5 standard Kakuro (realistic)
+       - Solve each with Gibbs sampler, verify E=0 at solution
+
+    4. REGISTER in python/carnot/wopr/registry.py
+
+    5. WRITE TESTS in tests/python/test_wopr_kakuro.py:
+       - test_energy_zero_at_valid_solution
+       - test_energy_nonzero_at_invalid_assignment
+       - test_3x3_kakuro_solves
+       - test_cartridge_registered
+
+    CONCRETE STEPS:
+    - python3 -c "import json; d={'experiment':'1240_wopr_kakuro_cartridge','status':'in_progress','kakuro_cartridge_shipped':False,'honest_verdict':'in_progress'}; open('results/experiment_1240_wopr_kakuro_cartridge.json','w').write(json.dumps(d,indent=2))" 2>&1
+    - cat python/carnot/wopr/nonogram.py | head -60 2>&1
+    - [Write python/carnot/wopr/kakuro.py]
+    - python3 -c "from carnot.wopr.kakuro import KakuroCartridge; k=KakuroCartridge(); print('cartridge ok')" 2>&1
+    - python3 -m pytest tests/python/test_wopr_kakuro.py -v 2>&1 | tail -10
+    - [Update artifact]
+
+    REQUIRED ARTIFACT FIELDS:
+    - cartridge_path: str ("python/carnot/wopr/kakuro.py")
+    - energy_zero_at_solution: bool
+    - test_file_path: str
+    - n_tests_pass: int (must be >= 4)
+    - n_tests_fail: int (must be 0)
+    - smoke_test_3x3_solved: bool
+    - kakuro_cartridge_shipped: bool
+    - honest_verdict: "kakuro_shipped_e0_at_solution" | "partial_energy_not_zero" | "blocked"
+
+    Run: python3 -m pytest tests/python/test_wopr_kakuro.py -v 2>&1 | tail -10
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+# ============================================================
+# Phase 7 — Retro (1 task, MANDATORY, LAST)
+# exp1241: Milestone 2026.04.96 retrospective.
+# claude/opus max_turns:100 with STEP 0 — retro requires judgment not bookkeeping.
+# ============================================================
+
+- id: exp1241-milestone-retro-96
+  milestone: 2026.04.96
+  deliverable: results/experiment_1241_milestone_retro_96.json
+  title: "Milestone 2026.04.96 Retrospective — STEP 0 Pattern, Evaluate 13 Criteria"
+  agent_type: claude
+  model: opus
+  max_turns: 100
+  estimated_wall_time_min: 25
+  priority: standard
+  requires_gpu: false
+  prompt: |
+    CONTEXT:
+    Milestone 2026.04.96 is the "Verifier Orthogonality Audit + arXiv Submission + GRPO-VPS
+    Extension + Boltzmann-GPT Training + Phase-5-D" milestone. This retrospective evaluates
+    all 13 success criteria and documents findings for the next planning session.
+
+    STEP 0 — WRITE SKELETON ARTIFACT IMMEDIATELY:
+    Write this to results/experiment_1241_milestone_retro_96.json NOW:
+    {
+      "experiment": "1241_milestone_retro_96",
+      "schema": "milestone_retro_v3",
+      "run_date": "{date}",
+      "milestone": "2026.04.96",
+      "status": "in_progress",
+      "criteria_met": 0,
+      "criteria_total": 13,
+      "retro_complete": false,
+      "honest_verdict": "in_progress"
+    }
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_1229_milestone_retro_95.json (criteria and findings format)
+    - results/experiment_1232_verifier_joint_orthogonality_audit.json (criterion 4+5)
+    - results/experiment_1234_paper_v6_arxiv_submission.json (criterion 7)
+    - results/experiment_1235_grpo_v6_fspo_vps_extended.json (criterion 8)
+    - results/experiment_1238_phase5d_intermediate_scale.json (criterion 10)
+
+    TASK:
+    1. Write skeleton artifact (STEP 0 above) IMMEDIATELY before any analysis.
+
+    2. Evaluate the 13 success criteria by reading each experiment's deliverable artifact:
+       1. retro_95_complete: exp1229.retro_complete == true
+       2. autofill_script_v2_shipped: exp1230.autofill_script_exists == true
+       3. gaming_defense_measured: exp1231.gaming_defense_measured == true
+       4. verifier_orthogonality_matrix_measured_6x6: exp1232.pairwise_correlation_matrix_measured == true
+       5. k_eff_documented_and_honest: exp1232.k_eff is not null
+       6. verifier_redesign_k_eff_above_3: exp1233.k_eff_after_redesign >= 4 (or merged equivalent)
+       7. arxiv_v6_submitted: exp1234.pdf_compiled == true (bundle ready for manual upload)
+       8. grpo_v6_improvement_measured: exp1235.grpo_v6_improvement_measured == true
+       9. boltzmann_gpt_contrastive_auroc_above_0p80: exp1237.boltzmann_gpt_above_0p80 == true
+       10. phase5d_all_8_gates_measured: exp1238.phase5d_all_8_gates_measured == true
+       11. nrgpt_frozen_prefix_resolved: exp1239.frozen_prefix_regime_classified == true
+       12. kakuro_cartridge_shipped: exp1240.kakuro_cartridge_shipped == true
+       13. retro_96_complete: this experiment
+
+    3. Count criteria met, write findings summary, identify top carry-forwards for .97.
+
+    4. Update artifact: criteria_met, findings_summary, key_carry_forwards, retro_complete=true.
+
+    CONCRETE STEPS:
+    - python3 -c "import json; d={'experiment':'1241_milestone_retro_96','schema':'milestone_retro_v3','run_date':'{date}','milestone':'2026.04.96','status':'in_progress','criteria_met':0,'criteria_total':13,'retro_complete':False,'honest_verdict':'in_progress'}; open('results/experiment_1241_milestone_retro_96.json','w').write(json.dumps(d,indent=2))" 2>&1
+    - [Read each criterion's source artifact]
+    - [Count criteria met]
+    - [Write findings summary and carry-forwards]
+    - [Update artifact: retro_complete=true, honest_verdict]
+
+    REQUIRED ARTIFACT FIELDS:
+    - criteria_met: int
+    - criteria_total: int (13)
+    - criteria_results: dict (each criterion name: true/false)
+    - findings_summary: str (3-5 sentences on what .96 proved and what failed)
+    - key_carry_forwards: list[str] (top 3-5 items for .97)
+    - retro_complete: bool (true)
+    - honest_verdict: "milestone_N_of_13_criteria_met" (fill in N)
+
+    Run: python3 -c "import json; d=json.load(open('results/experiment_1241_milestone_retro_96.json')); print('criteria_met:', d.get('criteria_met'), '/', d.get('criteria_total'), '| retro_complete:', d.get('retro_complete'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.

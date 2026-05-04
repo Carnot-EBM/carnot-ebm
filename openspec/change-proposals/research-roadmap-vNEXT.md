@@ -1,285 +1,215 @@
-# Milestone 2026.04.95 — Design Document
+# Research Roadmap vNEXT — Milestone 2026.04.96
 
-**Milestone:** 2026.04.95
-**Title:** Pre-Commit Safety + Paper Related Work + GRPO-VPS Training + Phase-5 Derisking A-C + Reward Gaming Defense
-**Estimated wall time:** ~480 min
-**Experiments:** exp1216–exp1228 (13 total)
-**Planned:** 2026-05-03
+**Planned:** 2026-05-04
+**Follows:** 2026.04.95 (Pre-Commit Safety + Paper Related Work + GRPO-VPS Training + Phase-5 Derisking A-C + Reward Gaming Defense)
 
----
+## What Milestone .95 Proved
 
-## What Milestone 2026.04.94 Proved
+- **GRPO-VPS beats v4 (+10pp baseline)** — exp1220 confirmed step-level process supervision
+  improves over the v4 structural warm-up baseline. VPS is now the established training floor.
+- **Phase-5 in-situ prototype fully stable** — exp1222/1223 passed all 5 gates: energy decrease
+  67%, no representation drift, no autocatalytic spiral, no null-space excavation, no
+  catastrophic forgetting. Oracle accuracy held 1.0 across 1000 queries.
+- **Spera Theorem 9.2 confirmed empirically** — exp1224 adversarial probe found pairwise
+  conditional acceptance probability P(V_i|V_j)=1.000 across all k=3 pairs. Effective k
+  collapsed from 3 to 1 (only V1/changes_grid provided independent signal). Root cause:
+  snap_to_action quadrant-anchor decoder structurally guaranteed V0 and V2 for all inputs.
+  Mandatory redesign before any scale-up.
+- **Paper v6 related work complete** — exp1218 added 5 citations (EBT, LLaDA, Coconut, ODAR,
+  Kona), updated thesis sentence, applied novelty-boundary discipline.
+- **Boltzmann-GPT structural signal confirmed** — exp1226 AUROC=0.65 at random weights.
+  Architecture is non-degenerate; contrastive CD training is the next step.
+- **GRPO v6 FSPO+VPS wall-budget exhausted** — exp1221 ran 848s vs 480s budget;
+  insufficient_logprob_coverage. Retry with wall_budget_s=1200 resolves this.
+- **exp1225 (LLMs gaming verifiers) 3x max_turns:40 with codex** — codex insufficient.
+  Retry with claude/opus max_turns:80 and STEP 0.
+- **exp1217 (auto-populate prior_failures) DOOMED_RERUN_BLOCK** — the script task itself was
+  missing prior_failures. Fixed in .96 with prior_failures populated pointing to exp1217.
+- **exp1228 (milestone retro) 3x FAIL** — artifact_not_updated_past_bootstrap. Carry to .96.
 
-**13/13 criteria met — clean sweep.** Key results:
+## Three Biggest Gaps
 
-| Experiment | Verdict | Finding |
-|---|---|---|
-| exp1203 | pre_test_fixed | Pre-test suite broken since .92 — RLIMIT_AS/watchdog issue fixed |
-| exp1204 | template_updated | STEP 0 skeleton pattern documented; RESOLVED in known-issues |
-| exp1205 | all_5_critical_resolved | All 5 paper integrity critical issues fixed; arXiv bundle unblocked |
-| exp1206 | bundle_ready_for_review | carnot-arxiv-v8.tar.gz built; publication hold still active (operator gate) |
-| exp1207 | gpu_offload_verified | llama.cpp CUDA GPU offload verified; ≥50 tok/s throughput |
-| exp1208 | improvement_below_v4 | **REGRESSION: GRPO v5 DualGPU = -35pp vs v4 baseline (+10pp)** |
-| exp1209 | step_supervision_improves_over_outcome | **BREAKTHROUGH: GRPO-VPS +24pp delta with step-level verification** |
-| exp1210 | phase4_advantage_on_intractable | Phase 4 Blocked Gibbs beats BFS on ≥50% intractable 15x15 puzzles |
-| exp1211 | fover_expanded_k5_improved | FoVer corpus expanded, k=5 AUROC improved with hard negatives |
-| exp1212 | constraint_addition_improves_precision | Tier 1 constraint ADDITION beats reweighting baseline |
-| exp1213 | insufficient_logprob_coverage | SDPO failed: llama.cpp lacks per-token logprob access for KL |
-| exp1214 | nonogram_shipped_e0_at_solution | Nonogram (Picross) WOPR cartridge shipped, E=0 at solution |
-| exp1215 | milestone_94_clean_sweep_13_of_13 | 13/13 criteria met |
+1. **Verifier joint orthogonality audit is paper-blocking AND scale-up-blocking** (HIGHEST).
+   exp1224 proved empirically that k_eff=1 in k=3 in-situ ensemble due to structural
+   correlations. The k=6 production ensemble's novelty claim requires measuring the 6x6
+   P(V_i|V_j) conditional acceptance matrix before paper-v6 submits. Mandatory per
+   known-issues.md .96 pickup. Without this, paper-v6 fails reviewer scrutiny on the
+   "unprecedented formal distinctness" claim.
 
-**Three dominant findings from .94:**
+2. **arXiv submission still pending** (CRITICAL). All 5 critical paper issues resolved (exp1205),
+   related work done (exp1218), bundle v8 compiled (exp1206). Only blocker: orthogonality audit
+   (exp1232). Gate exp1234 on matrix measured, then submit immediately.
 
-1. **GRPO v5 TinyV v2 regressed badly (-35pp).** DualGPU training with TinyV abstention produced
-   significantly worse results than the v4 structural warm-up (+10pp). Root cause unknown —
-   TinyV abstention may suppress too much signal, or DualGPU tensor split introduces instability.
-   Must diagnose before proposing GRPO v6.
-
-2. **GRPO-VPS step supervision gives +24pp delta — the biggest GRPO result yet.** Step-level
-   supervision via CausalReasoningVerifier + Z3MathVerifier produces dramatically better credit
-   attribution than outcome-only rewards. Must validate in a full training run.
-
-3. **SDPO needs a fundamentally different implementation.** llama.cpp does not expose per-token
-   logprobs cleanly enough for the teacher-student KL formulation. FSPO (arXiv 2505.24630)
-   provides an alternative using per-step factuality scores — compatible with existing verifiers.
-
-**Outstanding MANDATORY infrastructure items from known-issues.md:**
-
-1. **Pre-commit `staged_files_only` data loss (HIGHEST PRIORITY)** — 5+ files lost during .94
-   session. Stash-and-restore failure causes permanent loss of working-tree changes.
-
-2. **Auto-populate `prior_failures` from failure-ledger (MANDATORY operations)** — 7+
-   DOOMED_RERUN_BLOCK false-positives per milestone. Each requires 5 min operator intervention.
-
-3. **Paper v6 Related Work Overhaul (MANDATORY for publication)** — Deep Research dive found
-   5 papers reviewers will flag as missing. Novelty boundary discipline required.
-
----
-
-## Three Biggest Gaps Entering .95
-
-### Gap 1: GRPO regression (-35pp) must be diagnosed before v6 design
-
-The v4→v5 regression is anomalous: TinyV abstention should improve signal quality, not hurt it.
--35pp regression means either high abstention rate suppresses training signal, DualGPU tensor
-split introduces training instability, or threshold misconfiguration causes near-zero gradient.
-Without diagnosing the root cause, GRPO v6 design is guesswork.
-
-### Gap 2: GRPO-VPS +24pp needs full training validation
-
-exp1209 measured the step supervision delta on 50 GSM8K questions (evaluation mode, not training).
-The +24pp might not transfer to an actual training run — step rewards need compatibility with
-GRPO's advantage normalization, and variance may differ from the evaluation measurement.
-A full GRPO training run using step-level supervision is required to confirm stability.
-
-### Gap 3: Phase-5 derisking track is committed and overdue (.94 was supposed to start it)
-
-The in-situ training phase-5 derisking (exp_NEXT_A, B, C) was committed to start in .94 per
-the Phase-5 commitment (feedback_phase5_derisking_committed.md). Deferred due to infrastructure
-rescue in .94. Must ship in .95 — experiments take ~3 weeks total.
-
----
+3. **Phase-5-D intermediate scale not derisked** (production blocking). exp1222/1223 validated
+   50K params / d=16. Three production-scale failure modes invisible at toy scale: mode collapse
+   (1B+), MCMC mixing paralysis (d>=256), substrate shift (geometric phase transition). Mandatory
+   .96/.97 pickup per known-issues.md. Intermediate validation at 100-300M params / d=128
+   catches these cheaply (30-60 GPU-hours) before 1B+ scale-up.
 
 ## Architecture Diagram
 
 ```
-2026.04.95 Execution Flow
-═══════════════════════════════════════════════════════════════════
+Paper-v6 arXiv Target (exp1234, gated on exp1232)
+    ↑
+exp1232: 6x6 P(V_i|V_j) on k=6 production ensemble
+    ↑
+k=6 Production Verifier Ensemble:
+  V1: Z3MathVerifier          (Tier 3, logic grounding)
+  V2: ASTStructureVerifier     (Tier 2.5, structural)
+  V3: SemanticConsistencyVerifier (Tier 2.7, causal)
+  V4: ThinkPRMv2               (Tier 0a, pre-trained PRM)
+  V5: SOSKANEnergyV3 4-bit     (Tier 1, energy AUROC=0.990)
+  V6: SemEnergyProbe           (Tier 0c, fast logit-space)
+  → AND-compose (k_eff=? after audit → exp1233 redesign)
 
-Phase 0 — Infrastructure (unconditional, MANDATORY)
-┌─────────────────────────────────────────────────────────────────┐
-│ exp1216: Pre-commit staged_files_only fix + batching-check      │
-│   agent: claude/opus  |  ~40 turns  |  CPU only                 │
-│                                                                  │
-│ exp1217: Auto-populate prior_failures from failure-ledger       │
-│   agent: codex/gpt-5.5  |  ~30 turns  |  CPU only             │
-└─────────────────────────────────────────────────────────────────┘
-         ↓ (both unconditional)
+GRPO Training Stack:
+  v4 structural (+10pp) → VPS beats v4 (exp1220)
+  → exp1235: GRPO v6 FSPO+VPS (1200s, DualGPU)
+  → exp1236: execution-grounded credit (gated on v6 improvement)
 
-Phase 1 — Paper (MANDATORY)
-┌─────────────────────────────────────────────────────────────────┐
-│ exp1218: Paper v6 Related Work Overhaul                         │
-│   5 citations + novelty boundaries + thesis sentence            │
-│   agent: claude/sonnet  |  ~40 turns  |  CPU only             │
-└─────────────────────────────────────────────────────────────────┘
-         ↓
+Phase-5 In-Situ:
+  5-A prototype (exp1222 done)
+  5-B training loop (exp1223 done, 5/5 gates)
+  5-C adversarial probe (exp1224 done, revision needed)
+  5-D intermediate (exp1238: 100-300M, d=128, DualGPU)
+  5-E production 1B+ (future .97/.98)
 
-Phase 2 — GRPO Diagnosis + Training (sequential dependency chain)
-┌─────────────────────────────────────────────────────────────────┐
-│ exp1219: GRPO v5 Regression Diagnosis                          │
-│   Read exp1208 artifact + run diagnostics; diagnose -35pp      │
-│   agent: claude/opus  |  ~50 turns  |  CPU + optional GPU     │
-│                                                                  │
-│ exp1220: GRPO-VPS Full Training Run [gated on 1219]            │
-│   Full GRPO training with CausalReasoning + Z3Math step rewards │
-│   agent: claude/opus  |  ~60 turns  |  GPU MANDATORY          │
-│                                                                  │
-│ exp1221: GRPO v6 FSPO+VPS Combined [gated on 1220 >0pp]       │
-│   FSPO-style per-token factuality weighting + VPS step rewards │
-│   agent: claude/sonnet  |  ~50 turns  |  GPU optional         │
-└─────────────────────────────────────────────────────────────────┘
-         ↓
-
-Phase 3 — Phase-5 Derisking (sequential, committed track)
-┌─────────────────────────────────────────────────────────────────┐
-│ exp1222: Phase 5-A — Minimal in-situ substrate prototype       │
-│   50K param encoder + energy MLP + decoder; 100 5x5 puzzles   │
-│   agent: claude/opus  |  ~60 turns  |  GPU 4-6h               │
-│                                                                  │
-│ exp1223: Phase 5-B — In-situ training loop [gated on 1222]    │
-│   PCD with k=3 verifiers, 1000 queries, 5-failure-mode check  │
-│   agent: claude/opus  |  ~60 turns  |  GPU 8-12h              │
-│                                                                  │
-│ exp1224: Phase 5-C — Adversarial probe [gated on 1223]        │
-│   Single-verifier gaming + pairwise correlation + joint null   │
-│   agent: claude/sonnet  |  ~40 turns  |  CPU                  │
-└─────────────────────────────────────────────────────────────────┘
-         ↓
-
-Phase 4 — New Research (unconditional)
-┌─────────────────────────────────────────────────────────────────┐
-│ exp1225: LLMs Gaming Verifiers + Composite Rewards Defense     │
-│   Single-verifier RLVR gaming vs k=5 AND-compose defense      │
-│   agent: claude/sonnet  |  ~40 turns  |  CPU                  │
-│                                                                  │
-│ exp1226: Boltzmann-GPT Phase-3 Seed Integration                │
-│   BoltzmannGPTLayer in continuous_ebm.py; AUROC vs NRGPT      │
-│   agent: claude/sonnet  |  ~40 turns  |  CPU                  │
-└─────────────────────────────────────────────────────────────────┘
-         ↓
-
-Phase 5 — WOPR + Retro
-┌─────────────────────────────────────────────────────────────────┐
-│ exp1227: WOPR Futoshiki Cartridge                              │
-│   Inequality grid puzzle Ising EBM; E=0 at valid solution     │
-│   agent: codex/gpt-5.5  |  ~30 turns  |  CPU                 │
-│                                                                  │
-│ exp1228: Milestone Retro [STEP 0 + claude/opus + 100 turns]   │
-└─────────────────────────────────────────────────────────────────┘
+Phase-3 Substrate:
+  NRGPT AUROC=0.921 baseline
+  Boltzmann-GPT seed AUROC=0.65 (exp1226)
+  → exp1237: contrastive CD training (target AUROC>0.80)
 ```
-
----
 
 ## Phase Descriptions
 
-### Phase 0 — Infrastructure (exp1216–1217)
+### Phase 0 — Infrastructure / Carry-Forwards (3 tasks, unconditional, MANDATORY)
 
-Two MANDATORY unconditional infrastructure fixes from known-issues.md (2026-05-03 entries).
+Close out the .95 retro (exp1229 — exp1228 failed 3x), fix auto-populate prior_failures script
+(exp1230 — exp1217 was itself missing prior_failures, a circular failure), and retry LLMs gaming
+verifiers defense with claude/opus at full budget (exp1231 — codex hit max_turns:40 three times).
 
-**exp1216: Pre-commit staged_files_only + batching-check fix** (CRITICAL data-loss)
+exp1229 runs first (closes .95). exp1230 and exp1231 run unconditionally afterward.
 
-The `staged_files_only` plugin stashes unstaged changes, runs hooks, then restores the stash.
-When the stash patch fails to apply (base files shifted), unstaged changes are permanently lost.
-Fix: (a) disable `staged_files_only` or configure hooks to run on dirty tree; (b) add
-`# batching-check: exempt-{reason}` marker to GRPO scripts so they pass the hook.
+### Phase 1 — Verifier Joint Orthogonality Audit (MANDATORY, paper-blocking, 2 tasks)
 
-**exp1217: Auto-populate prior_failures from failure-ledger at plan time**
+exp1232 measures the 6x6 P(V_i|V_j) conditional acceptance matrix on the k=6 production
+ensemble using the FoVer test corpus (held-out). Computes k_eff as count of structurally
+independent verifiers (pairs with P<0.7). Generates a heatmap figure for paper-v6. For pairs
+with P>0.7, proposes replacement candidates per the Spera Theorem 9.2 framework.
 
-Write `scripts/conductor_priors_autofill.py`: reads `research-roadmap-next.yaml`, queries the
-failure-ledger's matching_priors for each task, generates `prior_failures` stubs, writes back.
-Prevents 7+ DOOMED_RERUN_BLOCK false-positives per milestone from tasks building on successful
-upstreams that the ledger misclassifies as failures.
+exp1233 implements the redesign: replaces identified correlated pairs with structurally
+independent alternatives per exp1232's proposals. Reruns the 6x6 matrix to confirm improvement.
+Target: k_eff >= 4, max pairwise P < 0.7.
 
-### Phase 1 — Paper (exp1218)
+### Phase 2 — arXiv Submission (CRITICAL, 1 task, gated on exp1232)
 
-**exp1218: Paper v6 Related Work Overhaul** (MANDATORY for publication hold lift)
+exp1234 integrates the orthogonality heatmap into paper-v6, recompiles the PDF, and submits
+to arXiv. Gated on exp1232.pairwise_correlation_matrix_measured (not on k_eff threshold —
+we submit with honest k_eff even if <6, per CLAUDE.md provenance rule).
 
-Add 5 bibliography entries, adopt new thesis sentence ("Open-source EXTERNALLY-GROUNDED EBM that
-solves multimodal text collapse"), apply novelty-boundary discipline, insert positioning paragraph,
-align with EBM-as-System-2 industry consensus. Source material at:
-- `docs/research-notes/energy-based-llm-alternatives-deep-research-results.md`
-- `docs/research-notes/paper-v5-decentralization-section-draft.md`
+### Phase 3 — GRPO Training Extension (2 tasks)
 
-### Phase 2 — GRPO Diagnosis + Training (exp1219–1221)
+exp1235 retries GRPO v6 FSPO+VPS with wall_budget_s=1200 (2.5x vs exp1221's 480s). Adds
+token regulation (arXiv 2511.00066) to address logprob coverage gap. DualGPU MANDATORY.
 
-**exp1219: GRPO v5 Regression Diagnosis** — Read exp1208 artifact, identify root cause of -35pp.
-**exp1220: GRPO-VPS Full Training Run** — Validate +24pp from exp1209 in actual parameter updates.
-**exp1221: GRPO v6 FSPO+VPS Combined** — Add FSPO per-token factuality weighting to VPS.
+exp1236 applies execution-grounded credit assignment (arXiv 2603.16158) gated on exp1235
+showing positive improvement over the VPS floor.
 
-### Phase 3 — Phase-5 Derisking (exp1222–1224)
+### Phase 4 — Boltzmann-GPT Contrastive Training (1 task)
 
-Per `openspec/change-proposals/in-situ-training-phase5-derisking.md`:
-**exp1222: Phase 5-A** — 50K param prototype end-to-end on 100 5×5 puzzles.
-**exp1223: Phase 5-B** — 1000-query in-situ training with k=3 verifier, 5 failure-mode checks.
-**exp1224: Phase 5-C** — Adversarial probe: 3 attack classes per Q9 spec.
+exp1237 trains the Boltzmann-GPT layer with contrastive divergence on FoVer corpus. Seed
+(exp1226) confirmed AUROC=0.65 at random weights — non-degenerate. Target AUROC > 0.80.
+Uses theoretical energy gap formulation from arXiv 2512.18730 for the contrastive loss design.
 
-### Phase 4 — New Research (exp1225–1226)
+### Phase 5 — Phase-5-D Intermediate Scale (1 task, DualGPU MANDATORY)
 
-**exp1225: LLMs Gaming Verifiers Defense** — Verify k=5 AND-composition resists verifier gaming
-(arXiv 2604.15149 + arXiv 2509.15557). Compare single-verifier vs ensemble gaming resistance.
+exp1238 implements and runs the intermediate-scale Phase-5-D prototype: 100-300M params,
+d=128 latent, k=5 verifiers, 1000 queries on ARC-AGI-class distribution. Measures all 8
+failure modes (5 toy-detectable + 3 production-scale-only: mode collapse entropy, MCMC mixing
+autocorrelation, substrate shift L∞ saturation). Includes PPSEBM-style EBM replay buffer
+(arXiv 2512.15658) as anti-forgetting defense. Acceptance: all 8 gates measured.
 
-**exp1226: Boltzmann-GPT Phase-3 Seed** — Add BoltzmannGPTLayer to continuous_ebm.py,
-compare energy ordering on FoVer traces vs NRGPT baseline (arXiv 2601.17094).
+### Phase 6 — New Research (2 tasks)
 
-### Phase 5 — WOPR + Retro (exp1227–1228)
+exp1239 runs the NRGPT Frozen-Prefix evaluation (optional per known-issues.md): re-runs
+the energy recurrence trace on the first token in isolation to classify the non-monotonicity
+as (b) causal-context shift vs (c) learned non-conservative preconditioner. Needed for
+paper-v6 §4 honest framing.
 
-**exp1227: WOPR Futoshiki Cartridge** — Inequality constraint Ising EBM; E=0 at valid solution.
-**exp1228: Milestone Retro** — STEP 0 + claude/opus + 100 turns; evaluates 13 criteria.
+exp1240 ships the WOPR Kakuro puzzle cartridge: integer row/column sum constraints with
+Ising energy E=Σ_row(sum_violation)^2 + Σ_col(sum_violation)^2, E=0 at valid solution.
 
----
+### Phase 7 — Retro (1 task)
+
+exp1241 evaluates all 13 success criteria. claude/opus, STEP 0, max_turns:100. Uses
+AGENT_TYPE_RETRO=claude (not codex — codex retro failures in .93, .95 established this).
 
 ## Dependency Graph
 
 ```
-exp1216 ──────────────────────────────────────────────────────►
-exp1217 ──────────────────────────────────────────────────────►
-exp1218 ──────────────────────────────────────────────────────►
-exp1219 ──────────────────────────────────────────────────────► exp1220 ──► exp1221
-exp1222 ──────────────────────────────────────────────────────► exp1223 ──► exp1224
-exp1225 ──────────────────────────────────────────────────────►
-exp1226 ──────────────────────────────────────────────────────►
-exp1227 ──────────────────────────────────────────────────────►
-exp1228 (runs last — retro)
-```
+exp1229 (retro-95)     unconditional, FIRST
+exp1230 (autofill-v2)  unconditional, after exp1229
+exp1231 (gaming-def)   unconditional, after exp1229
 
----
+exp1232 (orth-audit)   unconditional
+exp1233 (orth-redesign) gated: exp1232.pairwise_correlation_matrix_measured
+exp1234 (arxiv-v6)     gated: exp1232.pairwise_correlation_matrix_measured
+
+exp1235 (GRPO-v6)      unconditional (prior_failures:[exp1221])
+exp1236 (exec-credit)  gated: exp1235.grpo_v6_improvement_pp > 0
+
+exp1237 (bolt-gpt-cd)  unconditional (prior_failures:[exp1226])
+exp1238 (phase5d)      unconditional
+exp1239 (nrgpt-prefix) unconditional
+exp1240 (kakuro)       unconditional
+
+exp1241 (retro-96)     unconditional, LAST
+```
 
 ## Hardware Requirements
 
-| Experiment | GPU Required | Estimated GPU-hours |
-|---|---|---|
-| exp1216–1219 | No / Optional | 0–1 |
-| exp1220 | Yes (MANDATORY DualGPU) | 4–6 |
-| exp1221 | Optional (eval only) | 0–1 |
-| exp1222 | Yes (4–6 GPU-hours) | 4–6 |
-| exp1223 | Yes (8–12 GPU-hours) | 8–12 |
-| exp1224–1228 | No | 0 |
+- **exp1235**: DualGPU MANDATORY — both RTX 3090s, tensor_split=[0.5,0.5], wall_budget_s=1200
+- **exp1237**: Single GPU (RTX 3090 CUDA), ~30 min CD training on FoVer corpus
+- **exp1238**: DualGPU MANDATORY — 100-300M param encoder, distributed training
+- **exp1231, exp1232, exp1233, exp1234**: CPU-only (analysis, paper edits, LaTeX)
+- **exp1239, exp1240**: CPU-only
 
-Total GPU: ~16–26 GPU-hours on 2× RTX 3090.
+## arxiv Papers Added to research-references.md for .96
 
----
-
-## New arxiv Findings (2026-05-03 Scan)
-
-Added to research-references.md:
-
-1. **FSPO** (arXiv:2505.24630) — Factuality-Aware Step-wise Policy Optimization; per-token
-   advantage weighting via step-wise factuality. Complements GRPO-VPS for exp1221.
-2. **LLMs Gaming Verifiers** (arXiv:2604.15149) — RLVR models game rule-induction verifiers.
-   Carnot k=5 AND-composition is proposed defense. Tested in exp1225.
-3. **Verifiable Composite Rewards** (arXiv:2509.15557) — Composite reward with hacking penalties.
-   Carnot Tier-0 cascade is natural composite structure. Combined with exp1225.
-4. **Boltzmann-GPT** (arXiv:2601.17094) — EBM world model + GPT language generation bridge.
-   Phase-3 seed candidate. Implemented in exp1226.
-5. **Eidoku** (arXiv:2512.20664) — Neuro-symbolic CSP verification gate. Filed for .96+.
-6. **Gradient Fingerprints** (arXiv:2604.16242) — Reward hacking detection. Filed for .96+.
-
----
+1. arXiv 2512.18730 — EBM theoretical lens for RL-tuned LMs (Boltzmann-GPT CD loss basis)
+2. arXiv 2312.09244 — Reward model ensembles still correlate (HSIC decorrelation target)
+3. arXiv 2601.01490 — Constraint distortion vs hallucination (GRPO v6 metric design)
+4. arXiv 2603.16158 — Execution-grounded GRPO credit assignment (exp1236 basis)
+5. arXiv 2511.00066 — Token-regulated GRPO stability (incorporated into exp1235)
+6. arXiv 2512.15658 — PPSEBM continual learning (Phase-5-D replay buffer)
+7. arXiv 2511.18689 — QuantKAN quantization framework (.97 edge deployment)
 
 ## Success Criteria (13)
 
-| # | Criterion | Measured by |
-|---|---|---|
-| 1 | pre_commit_data_loss_fixed | exp1216.precommit_fail_forward_enabled |
-| 2 | prior_failures_autofill_script_shipped | exp1217.autofill_script_exists |
-| 3 | paper_v6_related_work_complete | exp1218.all_5_citations_added |
-| 4 | grpo_v5_regression_diagnosed | exp1219.diagnosis_complete |
-| 5 | grpo_vps_training_result | exp1220 artifact exists (any honest verdict) |
-| 6 | grpo_v6_fspo_delta_measured | exp1221.grpo_v6_fspo_delta_measured |
-| 7 | phase5a_prototype_ready | exp1222.phase5a_prototype_ready |
-| 8 | phase5b_stability_confirmed | exp1223.phase5b_stability_confirmed |
-| 9 | phase5c_adversarial_probe_complete | exp1224.adversarial_probe_complete |
-| 10 | gaming_verifiers_defense_measured | exp1225.gaming_defense_measured |
-| 11 | boltzmann_gpt_auroc_measured | exp1226.boltzmann_gpt_auroc_measured |
-| 12 | futoshiki_cartridge_shipped | exp1227.futoshiki_cartridge_shipped |
-| 13 | retro_complete | exp1228.retro_complete |
+1.  retro_95_complete (exp1229)
+2.  autofill_script_v2_shipped (exp1230)
+3.  gaming_defense_measured (exp1231)
+4.  verifier_orthogonality_matrix_measured_6x6 (exp1232)
+5.  k_eff_documented_and_honest (exp1232)
+6.  verifier_redesign_k_eff_above_3 (exp1233)
+7.  arxiv_v6_submitted (exp1234)
+8.  grpo_v6_improvement_measured (exp1235)
+9.  boltzmann_gpt_contrastive_auroc_above_0p80 (exp1237)
+10. phase5d_all_8_gates_measured (exp1238)
+11. nrgpt_frozen_prefix_resolved (exp1239)
+12. kakuro_cartridge_shipped (exp1240)
+13. retro_96_complete (exp1241)
+
+## Estimated Wall Time
+
+| Phase | Tasks | Est. Time |
+|-------|-------|-----------|
+| 0 Infrastructure | 3 | 60 min |
+| 1 Orthogonality Audit | 2 | 80 min |
+| 2 arXiv Submission | 1 | 35 min |
+| 3 GRPO Training | 2 | 90 min |
+| 4 Boltzmann-GPT | 1 | 40 min |
+| 5 Phase-5-D | 1 | 70 min |
+| 6 New Research | 2 | 35 min |
+| 7 Retro | 1 | 25 min |
+| **Total** | **13** | **~435 min** |
