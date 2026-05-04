@@ -11,6 +11,7 @@ import sys
 from pathlib import Path
 from types import SimpleNamespace
 
+import pytest
 import yaml
 
 
@@ -157,3 +158,108 @@ def test_dry_run_produces_no_file_changes(tmp_path: Path) -> None:
 
     assert summary.stubs_generated == 1
     assert roadmap.read_text(encoding="utf-8") == original
+
+
+def test_script_classifies_true_failures_and_preserves_insert_shape(tmp_path: Path) -> None:
+    """REQ-INFRA-078: partial/failed tokens become review-needed true failures."""
+    mod = _load_module()
+    roadmap = tmp_path / "research-roadmap-next.yaml"
+    roadmap.write_text(
+        _roadmap_text(
+            "- id: exp3-failed-retry\n"
+            "  title: Failed Retry\n"
+            "  prior_failures: []\n"
+            "  prompt: |\n"
+            "    - id: nested-prompt-text\n"
+            "- id: exp4-no-prompt\n"
+            "  title: No Prompt\n"
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    ledger = FakeLedger(
+        {
+            "exp3-failed-retry": [
+                {"experiment_id": "exp0-no-improvement", "verdict": "no_improvement"}
+            ],
+            "exp4-no-prompt": [_prior("exp0-failed", "failed")],
+        }
+    )
+
+    summary = mod.autofill_roadmap(roadmap, dry_run=False, ledger=ledger)
+    written = roadmap.read_text(encoding="utf-8")
+    data = yaml.safe_load(written)
+    prior_failures = data["tasks"][0]["prior_failures"]
+
+    assert summary.stubs_generated == 2
+    assert written.endswith("\n")
+    assert written.count("prior_failures:") == 2
+    assert prior_failures[0]["classification"] == "true_failure"
+    assert prior_failures[0]["addressed_by"].startswith("REVIEW NEEDED:")
+    assert prior_failures[0]["retire_if_same_verdict"] is True
+
+
+def test_default_path_and_cli_use_loaded_ledger(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """REQ-INFRA-078: CLI defaults to next-roadmap, then active roadmap fallback."""
+    mod = _load_module()
+    next_path = tmp_path / "research-roadmap-next.yaml"
+    active_path = tmp_path / "research-roadmap.yaml"
+    next_path.write_text("tasks: []\n", encoding="utf-8")
+    active_path.write_text("tasks:\n- just-a-string\n", encoding="utf-8")
+    load_calls: list[Path] = []
+
+    class LoadingLedger:
+        @classmethod
+        def load_from_artifacts(cls, repo_root: Path) -> FakeLedger:
+            load_calls.append(repo_root)
+            return FakeLedger()
+
+    monkeypatch.setattr(mod, "PROJECT_ROOT", tmp_path)
+    monkeypatch.setattr(mod, "FailureLedger", LoadingLedger)
+
+    assert mod.default_roadmap_path(tmp_path) == next_path
+    next_path.unlink()
+    assert mod.default_roadmap_path(tmp_path) == active_path
+    assert mod.main(["--dry-run"]) == 0
+    dry_run_output = capsys.readouterr().out
+    assert "1 tasks scanned, 0 stubs generated, 0 already populated" in dry_run_output
+    assert "dry-run: no file changes" in dry_run_output
+    assert mod.main([]) == 0
+    write_output = capsys.readouterr().out
+    assert "1 tasks scanned, 0 stubs generated, 0 already populated" in write_output
+    assert load_calls == [tmp_path, tmp_path]
+
+
+def test_invalid_roadmap_shapes_raise(tmp_path: Path) -> None:
+    """REQ-INFRA-078: malformed task lists fail clearly instead of rewriting."""
+    mod = _load_module()
+    roadmap = tmp_path / "research-roadmap-next.yaml"
+    roadmap.write_text("tasks: not-a-list\n", encoding="utf-8")
+
+    with pytest.raises(ValueError, match="list-valued tasks"):
+        mod.autofill_roadmap(roadmap, dry_run=True, ledger=FakeLedger())
+
+    with pytest.raises(ValueError, match="could not locate roadmap text"):
+        mod._apply_insertions("tasks: []\n", [(0, [])])
+
+    assert mod._yaml_scalar(None) == "null"
+    no_newline = mod._apply_insertions(
+        "tasks:\n- id: exp5-no-newline\n  title: No Newline",
+        [
+            (
+                0,
+                [
+                    {
+                        "experiment_id": "exp0",
+                        "verdict": "success",
+                        "classification": "successful_upstream",
+                        "addressed_by": "covered",
+                        "retire_if_same_verdict": False,
+                    }
+                ],
+            )
+        ],
+    )
+    assert not no_newline.endswith("\n")
