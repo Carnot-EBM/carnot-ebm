@@ -1,0 +1,42 @@
+{
+  "experiment": 1294,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-05-04",
+  "started_at": "2026-05-04T23:35:11.581971+00:00",
+  "finished_at": "2026-05-04T23:35:11.581971+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "arXiv v10 Submission Receipt or External Blocker - Publication Bookkeeping",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "3 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: no prior_failures field on task",
+  "gates_evaluated": [
+    {
+      "upstream": "exp1127-arxiv-final-submission",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Research Finding: pdf_compiled_upload_pending"
+    },
+    {
+      "upstream": "exp1139-arxiv-final-submission-v3",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Blocked: blocked_gate_check_failed"
+    },
+    {
+      "upstream": "exp1153-arxiv-final-submission-v4",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Research Finding: paper_updated_recompiled"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
