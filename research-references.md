@@ -4,6 +4,77 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-05-04 Active Planning Verification Scan (Milestone 2026.04.100)
+
+These items were checked while preparing the `.100` execution YAML. They refine
+the Cactus / constrained-acceptance lane and the EBT bridge audit rather than
+adding new critical-path tasks.
+
+### ARC-Decode: Risk-Bounded Acceptance for Sampling-Based Speculative Decoding
+- **Paper:** OpenReview ICLR 2026 submission, "ARC-Decode: Risk-Bounded
+  Acceptance for Sampling-Based Speculative Decoding."
+- **Source:** https://openreview.net/forum?id=jhJjW2DFKD
+- **What:** Adds entropy-aware pre-verification filtering and an analytic
+  Jensen-Shannon risk bound so speculative decoding can accept low-risk draft
+  tokens under sampling without extra forward passes.
+- **Relevance to Carnot:** Cactus v2 should not only report raw acceptance and
+  violation rates; it should report a bounded-risk proxy so accepted certificate
+  spans remain auditable under non-greedy local GGUF decoding.
+- **Concrete experiment:** In `exp1287`, add `risk_bound_proxy` and
+  `low_risk_acceptance_rate` when replay/certificate data is available.
+- **When to incorporate:** `.100` Cactus constrained-acceptance rerun.
+
+### SPEED-Bench for Speculative Decoding Evaluation
+- **Paper:** arXiv 2604.09557 / HuggingFace papers, "SPEED-Bench: A Unified and
+  Diverse Benchmark for Speculative Decoding."
+- **Sources:** https://arxiv.org/abs/2604.09557 and
+  https://huggingface.co/papers/2604.09557
+- **What:** Separates qualitative semantic-diversity evaluation from throughput
+  evaluation and integrates with production engines such as vLLM and
+  TensorRT-LLM.
+- **Relevance to Carnot:** If Carnot compares constrained acceptance against
+  unconstrained generation, a single small FoVer slice can overstate speed or
+  acceptance. The Cactus task should record whether the test is qualitative,
+  throughput-style, or replay-only.
+- **Concrete experiment:** In `exp1287`, emit `speedbench_eval_mode` and keep
+  latency/acceptance numbers out of headline claims when the corpus is replay-only
+  or too narrow.
+- **When to incorporate:** `.100` Cactus task; broader benchmark in `.101`.
+
+### HiSpec and Speculative Speculative Decoding
+- **Papers:** HiSpec OpenReview ICLR 2026 submission; Speculative Speculative
+  Decoding arXiv 2603.03251 / ICLR 2026.
+- **Sources:** https://openreview.net/forum?id=CYGI23WQjI and
+  https://arxiv.org/abs/2603.03251
+- **What:** Both attack verification latency: HiSpec uses intermediate-layer
+  early-exit verification, while SSD predicts verification outcomes while a
+  verification is still running.
+- **Relevance to Carnot:** These are future accelerators for Carnot's verifier
+  cascade after certificate parsing works. They support proxy/intermediate
+  verifier triage, but they do not replace the immediate need for a parseable
+  local SOTA certificate corpus.
+- **Concrete experiment:** Future `.101` proxy-verifier task: compare cheap
+  SemEnergy/k=5 proxy checks against full certificate verification on accepted
+  spans, tracking false-accept rate and full-verifier call reduction.
+- **When to incorporate:** After `exp1285` and `exp1287` produce non-empty
+  certificate/acceptance data.
+
+### Semantic Scholar EBT Citation Check
+- **Paper:** Energy-Based Transformers are Scalable Learners and Thinkers,
+  arXiv 2507.02092.
+- **Source:** https://www.semanticscholar.org/paper/Energy-Based-Transformers-are-Scalable-Learners-and-Gladstone-Nanduru/2da9163730998a4368c609972ccff0582518b36b
+- **What:** Semantic Scholar currently lists 14 citations, including
+  energy-principle transformer work, NRGPT, EBT metacognitive code reasoning,
+  EBT-Policy, and continuous-latent reasoning references.
+- **Relevance to Carnot:** The citation graph reinforces the `.100` bridge-audit
+  direction: Carnot should map measured energy traces and verifier feedback to
+  EBT/ARM/EBM-CoT semantics instead of treating EBT as only a related-work
+  citation.
+- **Concrete experiment:** Keep `exp1293` focused on trace-energy semantics,
+  dynamic compute/stop criteria, and whether Carnot's current energy signals
+  behave like sequence-level or final-answer-only energies.
+- **When to incorporate:** `.100` Phase 3 bridge audit.
+
 ## 2026-05-04 Fresh Planning Scan Addendum (Milestone 2026.04.100)
 
 These items were added before finalizing `research-roadmap-next.yaml`. They
