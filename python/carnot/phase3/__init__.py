@@ -8,6 +8,8 @@ Spec: REQ-KONA-001, REQ-KONA-002, REQ-KONA-003
 """
 
 from carnot.phase3.continuous_ebm import (
+    AdaptiveRepairLayer,
+    AdaptiveRepairResult,
     ContinuousEBM,
     FeasibilityStepResult,
     build_kona_artifact,
@@ -55,6 +57,8 @@ __all__ = [
     "ARC3Action",
     "ARC3PuzzleEnv",
     "ActiveInferencePilot",
+    "AdaptiveRepairLayer",
+    "AdaptiveRepairResult",
     "BoardState",
     "ContinuousEBM",
     "EpisodeResult",

@@ -970,6 +970,43 @@ post-hoc energy measurement.
   the required fields and sets `honest_verdict` from measured deltas, without
   converting a diversity-collapsing repair into a positive result.
 
+### REQ-KONA-028: SnareNet-Style Adaptive Repair Layer for Continuous EBM States
+
+When Exp 1275 reports a positive feasibility delta, the Phase 3 `ContinuousEBM`
+substrate MUST expose a deterministic SnareNet-style adaptive repair layer that
+can be appended after the FSNet feasibility step. The layer MUST operate on
+linear inequality constraints `A @ z + b <= 0`, adapt its relaxation pressure
+from the measured hard-constraint slack during repair, keep states bounded in
+`(-1, 1)`, and report repair diagnostics separately from task-energy sampling.
+
+The Exp 1276 artifact MUST compare raw Langevin states, FSNet feasibility-step
+states, and SnareNet-style adaptive-repair states on the same deterministic
+synthetic/FoVer-like constraints. It MUST report
+`final_constraint_satisfaction`, `repair_iterations`, `distortion_from_initial`,
+`diversity_preserved`, `repair_delta_over_fsnet`, and an `honest_verdict` derived
+strictly from measured satisfaction, distortion, and diversity deltas.
+
+**Rationale:** SnareNet's repair layer is only useful if it improves or matches
+hard-constraint satisfaction without collapsing latent diversity or moving states
+farther than the FSNet baseline. Carnot needs the prototype to preserve that
+distinction before treating adaptive relaxation as a Phase 3 repair primitive.
+
+**Acceptance criteria:**
+
+- `python/carnot/phase3/continuous_ebm.py` exposes an adaptive repair helper that
+  accepts a latent state plus linear violation constraints and returns the
+  repaired state, final constraint satisfaction, repair iterations, distortion
+  from the input state, diversity-safe diagnostics, convergence status, and the
+  final relaxation value.
+- Focused tests verify that adaptive repair continues from the FSNet repair,
+  improves or matches final constraint satisfaction under a stricter tolerance,
+  preserves state shape and `(-1, 1)` bounds, and rejects malformed inputs and
+  invalid hyperparameters.
+- `results/experiment_1276_snarenet_repair_layer_gated.json` records the required
+  fields, gates execution on a positive Exp 1275 feasibility delta, and sets
+  `honest_verdict` without converting excessive distortion or diversity collapse
+  into a positive result.
+
 ## Scenarios
 
 ### SCENARIO-KONA-001: Stage 1 Primitive — RDT Fixed-Point Convergence
@@ -1316,6 +1353,21 @@ from the same deterministic states.
 
 **Spec traces:** REQ-KONA-027
 
+### SCENARIO-KONA-028: Exp 1276 Measures SnareNet Adaptive Repair After FSNet
+
+**Given** `results/experiment_1275_fsnet_feasibility_step_continuous_ebm.json`
+has a positive `feasibility_delta_overall` and marks the FSNet feasibility step
+viable
+**When** Exp 1276 applies raw Langevin sampling, FSNet feasibility repair, and
+the SnareNet-style adaptive repair layer to the same deterministic states
+**Then** it writes
+`results/experiment_1276_snarenet_repair_layer_gated.json` with
+`final_constraint_satisfaction`, `repair_iterations`, `distortion_from_initial`,
+`diversity_preserved`, `repair_delta_over_fsnet`, `honest_verdict`, and per-arm
+diagnostics derived from the same deterministic states.
+
+**Spec traces:** REQ-KONA-028
+
 ## Out of scope
 
 The following are deliberately **not** required by this capability:
@@ -1374,6 +1426,8 @@ The following are deliberately **not** required by this capability:
 - **Q11 TSS sign-bottleneck diagnostic:** specified by REQ-KONA-026;
   implementation lives in `python/carnot/phase3/continuous_ebm.py`.
 - **FSNet-style feasibility step:** specified by REQ-KONA-027; implementation
+  lives in `python/carnot/phase3/continuous_ebm.py`.
+- **SnareNet-style adaptive repair:** specified by REQ-KONA-028; implementation
   lives in `python/carnot/phase3/continuous_ebm.py`.
 
 First concrete next experiment:

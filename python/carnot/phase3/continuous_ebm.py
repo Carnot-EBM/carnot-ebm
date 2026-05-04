@@ -33,7 +33,8 @@ Spec: REQ-KONA-001, REQ-KONA-002, REQ-KONA-003,
       SCENARIO-KONA-001, SCENARIO-KONA-002, SCENARIO-KONA-003,
       SCENARIO-KONA-004, SCENARIO-KONA-005,
       REQ-KONA-026, SCENARIO-KONA-026,
-      REQ-KONA-027, SCENARIO-KONA-027
+      REQ-KONA-027, SCENARIO-KONA-027,
+      REQ-KONA-028, SCENARIO-KONA-028
 """
 
 from __future__ import annotations
@@ -149,6 +150,201 @@ class FeasibilityStepResult:
     convergence_steps: int
     distortion_l2: float
     converged: bool
+
+
+@dataclass
+class AdaptiveRepairResult:
+    """Result of a SnareNet-style adaptive repair layer.
+
+    Spec: REQ-KONA-028, SCENARIO-KONA-028
+    """
+
+    state: np.ndarray
+    fsnet_state: np.ndarray
+    initial_constraint_satisfaction: float
+    fsnet_constraint_satisfaction: float
+    final_constraint_satisfaction: float
+    initial_violation_energy: float
+    fsnet_violation_energy: float
+    violation_energy: float
+    violation_count: int
+    repair_iterations: int
+    fsnet_distortion_from_initial: float
+    distortion_from_initial: float
+    distortion_from_fsnet: float
+    converged: bool
+    final_relaxation: float
+
+
+@dataclass
+class AdaptiveRepairLayer:
+    """SnareNet-style differentiable repair layer for linear hard constraints.
+
+    **Researcher summary:**
+        The layer first runs the existing FSNet-style feasibility step, then
+        appends a smooth repair pass. The smooth pass descends a differentiable
+        soft-hinge pressure term whose relaxation value tightens after progress
+        and relaxes when a proposed step fails to reduce hard violation energy.
+
+    Spec: REQ-KONA-028, SCENARIO-KONA-028
+    """
+
+    fsnet_steps: int = 48
+    fsnet_lr: float = 0.55
+    fsnet_anchor_weight: float = 0.02
+    n_steps: int = 16
+    lr: float = 0.18
+    anchor_weight: float = 0.02
+    initial_relaxation: float = 0.12
+    min_relaxation: float = 0.03
+    max_relaxation: float = 0.50
+    relaxation_growth: float = 1.40
+    relaxation_decay: float = 0.75
+    tolerance: float = 1e-10
+
+    def __post_init__(self) -> None:
+        if self.fsnet_steps < 0:
+            raise ValueError("fsnet_steps must be non-negative")
+        if self.fsnet_lr < 0.0:
+            raise ValueError("fsnet_lr must be non-negative")
+        if self.fsnet_anchor_weight < 0.0:
+            raise ValueError("fsnet_anchor_weight must be non-negative")
+        if self.n_steps < 0:
+            raise ValueError("n_steps must be non-negative")
+        if self.lr < 0.0:
+            raise ValueError("lr must be non-negative")
+        if self.anchor_weight < 0.0:
+            raise ValueError("anchor_weight must be non-negative")
+        if self.initial_relaxation <= 0.0:
+            raise ValueError("initial_relaxation must be positive")
+        if self.min_relaxation <= 0.0:
+            raise ValueError("min_relaxation must be positive")
+        if self.max_relaxation <= 0.0:
+            raise ValueError("max_relaxation must be positive")
+        if self.min_relaxation > self.max_relaxation:
+            raise ValueError("min_relaxation must not exceed max_relaxation")
+        if self.relaxation_growth <= 1.0:
+            raise ValueError("relaxation_growth must be greater than 1")
+        if not 0.0 < self.relaxation_decay < 1.0:
+            raise ValueError("relaxation_decay must be in (0, 1)")
+        if self.tolerance < 0.0:
+            raise ValueError("tolerance must be non-negative")
+
+    def repair(
+        self,
+        state: np.ndarray,
+        constraint_matrix: np.ndarray,
+        constraint_bias: np.ndarray | None = None,
+    ) -> AdaptiveRepairResult:
+        """Apply FSNet feasibility repair followed by adaptive smooth repair.
+
+        Args:
+            state: Latent vector ``z`` with shape ``(d,)``.
+            constraint_matrix: Linear verifier matrix ``A`` with shape ``(m, d)``.
+            constraint_bias: Optional verifier bias ``b`` with shape ``(m,)``.
+
+        Returns:
+            AdaptiveRepairResult with the final bounded state and diagnostics.
+
+        Raises:
+            ValueError: If latent/constraint shapes are malformed.
+        """
+        z0 = np.asarray(state, dtype=np.float64)
+        A = np.asarray(constraint_matrix, dtype=np.float64)
+
+        if z0.ndim != 1:
+            raise ValueError("state must be one-dimensional")
+        if A.ndim != 2 or A.shape[1] != z0.shape[0]:
+            raise ValueError("constraint_matrix must have shape (n_constraints, state_dim)")
+
+        if constraint_bias is None:
+            b = np.zeros(A.shape[0], dtype=np.float64)
+        else:
+            b = np.asarray(constraint_bias, dtype=np.float64)
+        if b.shape != (A.shape[0],):
+            raise ValueError("constraint_bias must have shape (n_constraints,)")
+
+        relaxation = float(
+            np.clip(self.initial_relaxation, self.min_relaxation, self.max_relaxation)
+        )
+        initial_energy, _, initial_satisfaction = self._measure(z0, A, b, relaxation)
+        fsnet_result = feasibility_step(
+            z0,
+            A,
+            b,
+            n_steps=self.fsnet_steps,
+            lr=self.fsnet_lr,
+            anchor_weight=self.fsnet_anchor_weight,
+            tolerance=self.tolerance,
+        )
+        fsnet_state = fsnet_result.state.copy()
+        fsnet_energy, fsnet_count, fsnet_satisfaction = self._measure(
+            fsnet_state, A, b, relaxation
+        )
+
+        z = fsnet_state.copy()
+        final_energy = fsnet_energy
+        final_count = fsnet_count
+        final_satisfaction = fsnet_satisfaction
+        steps_taken = 0
+
+        for step in range(1, self.n_steps + 1):
+            scores = A @ z + b
+            hinge = np.maximum(scores, 0.0)
+            scaled_scores = np.clip(scores / relaxation, -60.0, 60.0)
+            soft_pressure = 1.0 / (1.0 + np.exp(-scaled_scores))
+            grad = (
+                (2.0 * A.T @ hinge)
+                + (A.T @ soft_pressure)
+                + (2.0 * self.anchor_weight * (z - z0))
+            )
+            candidate = np.tanh(z - self.lr * relaxation * grad)
+            candidate_energy, candidate_count, candidate_satisfaction = self._measure(
+                candidate, A, b, relaxation
+            )
+            steps_taken = step
+
+            if candidate_energy <= final_energy + self.tolerance:
+                z = candidate
+                final_energy = candidate_energy
+                final_count = candidate_count
+                final_satisfaction = candidate_satisfaction
+                relaxation = max(self.min_relaxation, relaxation * self.relaxation_decay)
+            else:
+                relaxation = min(self.max_relaxation, relaxation * self.relaxation_growth)
+
+        return AdaptiveRepairResult(
+            state=z,
+            fsnet_state=fsnet_state,
+            initial_constraint_satisfaction=initial_satisfaction,
+            fsnet_constraint_satisfaction=fsnet_satisfaction,
+            final_constraint_satisfaction=final_satisfaction,
+            initial_violation_energy=initial_energy,
+            fsnet_violation_energy=fsnet_energy,
+            violation_energy=final_energy,
+            violation_count=final_count,
+            repair_iterations=steps_taken,
+            fsnet_distortion_from_initial=fsnet_result.distortion_l2,
+            distortion_from_initial=float(np.linalg.norm(z - z0)),
+            distortion_from_fsnet=float(np.linalg.norm(z - fsnet_state)),
+            converged=final_energy <= self.tolerance,
+            final_relaxation=relaxation,
+        )
+
+    @staticmethod
+    def _measure(
+        state: np.ndarray,
+        constraint_matrix: np.ndarray,
+        constraint_bias: np.ndarray,
+        relaxation: float,
+    ) -> tuple[float, int, float]:
+        scores = constraint_matrix @ state + constraint_bias
+        hinge = np.maximum(scores, 0.0)
+        energy = float(hinge @ hinge)
+        count = int(np.sum(scores > 0.0))
+        scaled_scores = np.clip(scores / relaxation, -60.0, 60.0)
+        satisfaction = float(np.mean(1.0 / (1.0 + np.exp(scaled_scores))))
+        return energy, count, satisfaction
 
 
 def _tss_text_vector(text: str, dim: int) -> np.ndarray:
