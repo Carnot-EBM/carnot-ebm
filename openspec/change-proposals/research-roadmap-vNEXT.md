@@ -41,6 +41,7 @@ The 2026-05-04 vNEXT literature/source scan added these entries to `research-ref
 - Interactive verification-gated scan: EBT is now an ICLR 2026 Oral and ARM-EBM was revised in April 2026; Spilled Energy, Token-Guard, BEAVER, llguidance, XGrammar-2, Copy-as-Decode, optimal KAN abstractions, lmKAN, Extropic THRML/Z1, Kona, and REASON were rechecked from primary or official sources. These reinforce the exact `.100` critical path: grammar-gated certificates before expensive SOTA runs, token-level risk metrics for Cactus, BEAVER-lite semantic bounds, EBT/ARM energy bridge audit, and no new hardware bring-up until human-blocked FPGA/NPU prerequisites change.
 - Interactive Codex live-web addendum: arXiv 2601.09929 reinforces root-cause-tagged hallucination management, HALT-RAG suggests abstention-aware semantic routing, Poly-FEVER is filed as a future multilingual fact-verification benchmark, and ACCORD is filed as a future feasible-prefix generation comparison for WOPR/Cactus. These do not add `.100` tasks; they refine optional fields and future `.101+` scope in `research-references.md`.
 - Verified planning sweep immediately before YAML emission: self-verification training (arXiv 2602.07594), LLM-as-formalizer failure modes on real CSPs (OpenReview hyI8cIOU2f), Neural Network Ising Machines (OpenReview 5H8kxW0Efk), and the OnlineSpec/Cactus feedback-learning pairing were added to `research-references.md`. These sharpen `.100` by requiring verifier-feedback fields in `exp1288`/`exp1289`, solver-vs-certificate comparisons in `exp1284`/`exp1285`, future sampler-learning notes in `exp1293`, and explicit risk/acceptance metrics in `exp1287`.
+- Codex planning refresh after the `.99` retro: Finch-Zk cross-model consistency, STATIC vectorized trie decoding, ABS automata-guided beam search, Agent-C temporal monitoring, learning-augmented clause predictions, Grammar-Aligned Decoding, and fully parallel p-bit Ising with inertia were added to `research-references.md`. These do not change the 14-task scope. They refine `.100` by adding cross-model disagreement to `exp1284`, bounded-vocabulary/trie and automata-fallback diagnostics to `exp1283`, grammar projection-tax checks to `exp1285`, temporal-claim readiness to `exp1286`, claim-level memory entries to `exp1288`/`exp1290`, and hardware context to `exp1293`.
 
 ## Three Biggest Gaps
 
@@ -106,7 +107,7 @@ Phase 3: Phase-3 repair and publication close
 Goal: prevent another `exp1271` DOOMED_RERUN_BLOCK by proving the SOTA cache, grammar backend, and artifact/provenance path before asking an agent to run expensive model inference.
 
 - `exp1282-sota-gguf-cache-provenance-preflight`: inspect the HF/llama.cpp cache for mandated SOTA GGUFs, verify the `cached_sota_pair()` path, and write a structured readiness artifact.
-- `exp1283-certificate-grammar-backend-bakeoff`: benchmark llama.cpp native grammar, llguidance, and XGrammar availability/overhead for the fixed Carnot certificate schema, including a structure-snowballing-risk diagnostic and a CDoT expressiveness note for certificate invariants that require context sensitivity.
+- `exp1283-certificate-grammar-backend-bakeoff`: benchmark llama.cpp native grammar, llguidance, and XGrammar availability/overhead for the fixed Carnot certificate schema, including a structure-snowballing-risk diagnostic, STATIC-style bounded-vocabulary/trie notes, an ABS-style automata fallback field, and a CDoT expressiveness note for certificate invariants that require context sensitivity.
 
 Success bar: either `cached_sota_ready=true` and `grammar_backend_selected` is set, or the blocker is named before downstream tasks burn turns.
 
@@ -114,9 +115,9 @@ Success bar: either `cached_sota_ready=true` and `grammar_backend_selected` is s
 
 Goal: produce the missing headline local SOTA certificate result and only then run downstream acceptance/repair experiments.
 
-- `exp1284-ars-uqlm-answer-stability-sota-audit`: use mandated SOTA GGUFs to measure answer stability, PCC certainty/consistency, optional UQLM-style uncertainty, and the "LLMs as verifiers" perturbation/rubric failure modes under reasoning/certificate boundary perturbations.
-- `exp1285-triggered-certificate-extraction-v2`: rerun triggered certificate extraction with complete prior-failure metadata, bounded grammar, and SOTA cache gate.
-- `exp1286-grad-beaver-nsvif-semantic-routing`: turn successful certificates into routed claims, a GRAD-style evidence graph, BEAVER-lite prefix/risk bounds, NSVIF-style CSP checks, proof-carrying number coverage, LaSy-style typed-warrant coverage, a tiny ConstraintBench micro-eval, Minimal Correction Subsets, and residual-drift/MUS diagnostics.
+- `exp1284-ars-uqlm-answer-stability-sota-audit`: use mandated SOTA GGUFs to measure answer stability, cross-model consistency, PCC certainty/consistency, optional UQLM-style uncertainty, and the "LLMs as verifiers" perturbation/rubric failure modes under reasoning/certificate boundary perturbations.
+- `exp1285-triggered-certificate-extraction-v2`: rerun triggered certificate extraction with complete prior-failure metadata, bounded grammar, SOTA cache gate, and Grammar-Aligned/DCCD checks that separate parse validity from certificate truthfulness.
+- `exp1286-grad-beaver-nsvif-semantic-routing`: turn successful certificates into routed claims, a GRAD-style evidence graph, BEAVER-lite prefix/risk bounds, NSVIF-style CSP checks, proof-carrying number coverage, LaSy-style typed-warrant coverage, a tiny ConstraintBench micro-eval, temporal-claim readiness fields, Minimal Correction Subsets, and residual-drift/MUS diagnostics.
 - `exp1287-token-guard-cactus-constrained-acceptance-v2`: rerun Cactus only when certificate parse rate reaches the structured gate, and report ARC-Decode-style `risk_bound_proxy`, Token-Guard-style `token_guard_risk_score`, `low_risk_acceptance_rate`, plus `speedbench_eval_mode` so replay-only speed claims cannot become headline claims.
 
 Success bar: `exp1285.certificate_parse_rate >= 0.8` and `headline_result_allowed=true`, or the milestone honestly records why the local SOTA path is blocked.
@@ -125,9 +126,9 @@ Success bar: `exp1285.certificate_parse_rate >= 0.8` and `headline_result_allowe
 
 Goal: satisfy the research program's continuous self-learning mandate with a loop that uses verifier decisions from real or replayed certificate data.
 
-- `exp1288-interwhen-dvi-verifier-feedback-replay`: convert verifier accept/reject decisions into an online drafter/routing-policy update and measure acceptance/violation deltas. It compares post-hoc verifier replay with an InterWhen/Once-More-style interleaved verifier-feedback pass and records an OnlineSpec-style accepted-span/acceptance-rate delta. This task runs even if the SOTA certificate gate blocks by falling back to the `.99` certificate-memory/FoVer replay corpus, and it marks headline eligibility honestly.
+- `exp1288-interwhen-dvi-verifier-feedback-replay`: convert verifier accept/reject decisions into an online drafter/routing-policy update and measure acceptance/violation deltas. It compares post-hoc verifier replay with an InterWhen/Once-More-style interleaved verifier-feedback pass and records an OnlineSpec-style accepted-span/acceptance-rate delta plus clause/claim-level prediction records where available. This task runs even if the SOTA certificate gate blocks by falling back to the `.99` certificate-memory/FoVer replay corpus, and it marks headline eligibility honestly.
 - `exp1289-leanabell-grpo-v9-sota-headline-gated`: run a bounded PRIME/VPRM/GRPO v9 headline attempt only if SOTA certificates and DVI replay gates pass, and record Leanabell-style verifier-feedback token-masking effects plus self-verification gain and reasoning-trace length changes.
-- `exp1290-skill-graph-promotion-demotion`: promote reusable certificate-memory patterns into skill-graph entries with replay evidence, MemRouter-style memory-type routing (`semantic`, `episodic`, `procedural`), and demotion conditions.
+- `exp1290-skill-graph-promotion-demotion`: promote reusable certificate-memory patterns into skill-graph entries with replay evidence, claim-level memory entries, MemRouter-style memory-type routing (`semantic`, `episodic`, `procedural`), and demotion conditions.
 
 Success bar: at least one artifact reports `self_learning_delta_overall`, `dvi_acceptance_delta`, or `skill_replay_delta`, and marks whether the result is headline-eligible.
 
@@ -137,7 +138,7 @@ Goal: deepen the .99 continuous repair positive and close publication bookkeepin
 
 - `exp1291-hardnetpp-nonlinear-repair-benchmark`: compare HardNet++-style damped local-linear projection against FSNet/SnareNet on nonlinear constraints, recording fixed-budget construct/refine iteration behavior inspired by CaR and a Copy-as-Decode-style verified-span reuse diagnostic.
 - `exp1292-dsp-feasibility-channel-diagnostic`: add a DSP-style local/global feasibility-channel diagnostic (`phi`/`Phi`) around the continuous repair loop and report whether feasibility-channel signals predict when additional refine steps help.
-- `exp1293-ebt-arm-ebm-cot-energy-bridge-audit`: connect Boltzmann-GPT/NRGPT/Carnot energy traces to EBT, ARM-EBM, EBM-CoT, and EBRM structured-latent-planning predictions using existing artifacts, including latent drift, decoder-anchoring diagnostics, p-bit update-dynamics hardware context, and Extropic/Kona status.
+- `exp1293-ebt-arm-ebm-cot-energy-bridge-audit`: connect Boltzmann-GPT/NRGPT/Carnot energy traces to EBT, ARM-EBM, EBM-CoT, and EBRM structured-latent-planning predictions using existing artifacts, including latent drift, decoder-anchoring diagnostics, p-bit update-dynamics and inertia hardware context, and Extropic/Kona status.
 - `exp1294-arxiv-v10-submission-receipt-or-blocker`: record an actual arXiv receipt if present or the exact external blocker if submission still needs a human.
 - `exp1295-milestone-retro-100`: evaluate all criteria mechanically and write carry-forwards.
 
@@ -204,12 +205,12 @@ This milestone preserves local-first operation. Every LLM-bearing task is gated 
 ## Milestone Success Criteria
 
 1. `exp1282` records SOTA GGUF cache/provenance readiness or a named blocker.
-2. `exp1283` selects a local certificate grammar backend or reports no viable backend, with CDoT expressiveness gaps recorded.
-3. `exp1284` measures answer-stability, certainty/consistency routing signals, verifier perturbation/rubric sensitivity, and optional UQLM-style uncertainty on SOTA GGUF outputs.
-4. `exp1285` produces a headline-eligible SOTA certificate parse-rate measurement or blocks honestly, comparing raw trigger, grammar-only, and DCCD-style draft-conditioned paths when possible.
-5. `exp1286` writes semantic routing, GRAD-style evidence graph coverage, BEAVER-lite prefix/risk bounds, NSVIF-style CSP checks, proof-carrying number coverage, LaSy-style typed-warrant coverage, a ConstraintBench micro-eval, MCS/MUS diagnostics, and residual-drift cases when certificate parse succeeds.
+2. `exp1283` selects a local certificate grammar backend or reports no viable backend, with CDoT expressiveness gaps, bounded-vocabulary/trie notes, and automata fallback viability recorded.
+3. `exp1284` measures answer-stability, cross-model consistency, certainty/consistency routing signals, verifier perturbation/rubric sensitivity, and optional UQLM-style uncertainty on SOTA GGUF outputs.
+4. `exp1285` produces a headline-eligible SOTA certificate parse-rate measurement or blocks honestly, comparing raw trigger, grammar-only, and DCCD-style draft-conditioned paths when possible while reporting grammar projection-tax and solver-vs-certificate deltas.
+5. `exp1286` writes semantic routing, GRAD-style evidence graph coverage, BEAVER-lite prefix/risk bounds, NSVIF-style CSP checks, proof-carrying number coverage, LaSy-style typed-warrant coverage, temporal-claim readiness, a ConstraintBench micro-eval, MCS/MUS diagnostics, and residual-drift cases when certificate parse succeeds.
 6. `exp1287` measures Cactus constrained acceptance when certificate parse succeeds, including risk-bound proxy, Token-Guard risk score, low-risk acceptance rate, and SPEED-Bench-style evaluation-mode tagging.
-7. `exp1288` measures InterWhen/Once-More-style interleaved verification and DVI-style verifier-feedback replay deltas.
+7. `exp1288` measures InterWhen/Once-More-style interleaved verification, DVI-style verifier-feedback replay deltas, and claim-level memory records.
 8. `exp1289` reports a headline-eligible GRPO/VPRM v9 delta and verifier-feedback token-masking delta when gates pass.
 9. `exp1290` emits skill-graph promotion/demotion entries with replay evidence and memory-type routing.
 10. `exp1291` compares HardNet++ nonlinear repair against FSNet/SnareNet and records verified-span reuse diagnostics.

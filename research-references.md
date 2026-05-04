@@ -10,6 +10,108 @@ This sweep rechecked the user-mandated sources during the interactive `.100`
 planning turn. It adds only items that materially change the next experiment
 design or the acceptance gates.
 
+## 2026-05-04 Codex Planning Refresh (Milestone 2026.04.100)
+
+This refresh was run after the `.99` retrospective confirmed the SOTA
+certificate gate failure. It adds only source-backed refinements that affect
+the next conductor plan or a near-term follow-up.
+
+### Finch-Zk Cross-Model Consistency for Zero-Knowledge Hallucination Checks
+- **Paper:** arXiv 2508.14314, "Zero-knowledge LLM hallucination detection and
+  mitigation through fine-grained cross-model consistency."
+- **Source:** https://arxiv.org/abs/2508.14314
+- **What:** Uses semantically equivalent prompts across multiple models to find
+  fine-grained inconsistencies, then applies targeted corrections while trying
+  to preserve correct spans.
+- **Relevance to Carnot:** This supports a local, open-model version of
+  answer-stability auditing. `exp1284` should not just measure one model's
+  response stability; it should record cross-model disagreement between the
+  mandated SOTA GGUF pair when both are cached.
+- **Concrete experiment:** Add `cross_model_consistency_delta`,
+  `equivalent_prompt_disagreement_rate`, and `targeted_correction_candidate_count`
+  to the SOTA answer-stability/certificate pre-audit artifact.
+
+### STATIC: Vectorized Trie Constrained Decoding on Accelerators
+- **Paper:** arXiv 2602.22647 / HuggingFace Papers, "Vectorizing the Trie:
+  Efficient Constrained Decoding for LLM-based Generative Retrieval on
+  Accelerators."
+- **Source:** https://huggingface.co/papers/2602.22647
+- **What:** Flattens trie constraints into sparse matrix operations, reporting
+  very low per-step overhead for hardware-accelerated constrained decoding.
+- **Relevance to Carnot:** `exp1283` should distinguish simple JSON/GBNF
+  certificate grammars from trie-like bounded vocabularies. If the certificate
+  schema later grows enumerated verifier routes or proof-token dictionaries,
+  STATIC-style vectorization is the right performance model.
+- **Concrete experiment:** In `exp1283`, report `bounded_vocab_constraint_count`
+  and whether any selected backend can exploit precomputed trie/token masks.
+
+### ABS Automata-Guided Beam Search
+- **Paper:** OpenReview ICLR 2026 submission, "ABS: Enforcing Constraint
+  Satisfaction on Generated Sequences via Automata-Guided Beam Search."
+- **Source:** https://openreview.net/forum?id=3OUGEUVL6U
+- **What:** Uses DFA-constrained beam search to guarantee compliance with
+  automata-expressible constraints without retraining.
+- **Relevance to Carnot:** This is a fallback path when grammar backends are
+  unavailable or too permissive: certificate tails whose invariants compile to
+  DFAs can still be generated under hard acceptance constraints.
+- **Concrete experiment:** `exp1283` should include an `automata_fallback_viable`
+  field and list which certificate fields are DFA-checkable.
+
+### Agent-C Temporal Constraint Monitoring
+- **Paper:** OpenReview VerifAI-2 2026, "Enforcing Temporal Constraints for LLM
+  Agents."
+- **Source:** https://openreview.net/forum?id=VeRehDnGJJ
+- **What:** Interleaves temporal-logic monitoring, SMT solving, constrained
+  generation, and backtracking for tool-calling agents.
+- **Relevance to Carnot:** This is directly relevant to future multi-turn
+  verification, but in `.100` it only sharpens the semantic router: routed
+  certificate claims should preserve state and time-step identifiers so later
+  temporal constraints can be attached.
+- **Concrete experiment:** In `exp1286`, include optional `temporal_claim_count`
+  and `stateful_constraint_ready` fields; defer full Agent-C-style backtracking
+  to a future agentic-verification milestone.
+
+### Clause Prediction for Learning-Augmented CSP
+- **Paper:** OpenReview ICLR 2026 submission, "Using Clause Predictions for
+  Learning-Augmented Constraint Satisfaction."
+- **Source:** https://openreview.net/forum?id=xvcqXxw4Le
+- **What:** Studies CSP algorithms aided by noisy clause-level predictions,
+  showing when weak predictions can beat worst-case bounds.
+- **Relevance to Carnot:** Certificate memory and verifier feedback should be
+  stored at the clause/claim level, not only as whole-response labels. This
+  gives a principled way for self-learning to provide noisy advice to the
+  solver while keeping deterministic verification as the final gate.
+- **Concrete experiment:** `exp1288` and `exp1290` should emit
+  `clause_prediction_records` or `claim_level_memory_entries` when available.
+
+### Grammar-Aligned Decoding as a Warning Against Naive Grammar Masking
+- **Paper:** arXiv 2405.21047, revised 2025-12-12, "Grammar-Aligned Decoding."
+- **Source:** https://arxiv.org/abs/2405.21047
+- **What:** Shows grammar-constrained decoding can distort the model
+  distribution and produce lower-quality outputs unless sampling is aligned
+  with the conditional distribution under the grammar.
+- **Relevance to Carnot:** This is a direct warning for `exp1285`: a valid
+  certificate tail is not automatically a truthful certificate. The experiment
+  must compare raw-trigger, grammar-only, and draft-conditioned variants with
+  answer correctness and certificate truthfulness, not parse rate alone.
+- **Concrete experiment:** Add `grammar_projection_tax_proxy` and
+  `solver_vs_certificate_delta` to the triggered certificate artifact.
+
+### Fully Parallel p-bit Ising With Inertia
+- **Paper:** arXiv 2604.17109, "A fully parallel densely connected
+  probabilistic Ising machine with inertia for real-time applications."
+- **Source:** https://arxiv.org/abs/2604.17109
+- **What:** Reports that an inertia term can make fully parallel p-bit updates
+  viable for dense Ising instances, with FPGA validation and large
+  time-to-solution gains on several benchmarks.
+- **Relevance to Carnot:** This reinforces the existing KV260 v3/v4 inertia
+  path, but `.100` should not add hardware bring-up because Vivado/bitfile
+  prerequisites remain human-blocked. Use it in `exp1293` as hardware context
+  for future sampler-parity work.
+- **Concrete experiment:** Future hardware milestone: compare Carnot CPU Gibbs,
+  synchronous p-bit with inertia, and time-multiplexed p-bit reuse on the same
+  k=5 verifier energy graphs with KL and wall-clock diagnostics.
+
 ### Learning to Self-Verify Makes Language Models Better Reasoners
 - **Paper:** arXiv 2602.07594, submitted 2026-02-07.
 - **Source:** https://arxiv.org/abs/2602.07594
