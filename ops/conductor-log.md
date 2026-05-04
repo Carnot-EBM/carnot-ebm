@@ -566,3 +566,7 @@ If you finish the real work |
 | 2026-05-04 01:57 UTC | Verifier Joint Orthogonality Audit — 6x6 P(V_i|V_j | FAIL | No file changes produced |
 | 2026-05-04 02:01 UTC | Verifier Joint Orthogonality Audit (v4 data archae | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1232_verifie |
 | 2026-05-04 02:06 UTC | Verifier Joint Orthogonality Audit (v4 data archae | FAIL | No file changes produced |
+| 2026-05-04 02:11 UTC | Verifier Joint Orthogonality Audit (v4 data archae | FAIL | No file changes produced |
+| 2026-05-04 02:13 UTC | Q11 Instrumentation — SMT Triviality + Orthant Pen | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1232-verifier-joint-orthogonality-audit) |
+| 2026-05-04 02:13 UTC | Verifier Redesign for Joint Orthogonality — Replac | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1232-verifier-joint-orthogonality-audit) |
+| 2026-05-04 02:13 UTC | Paper v6 arXiv Submission — Integrate Orthogonalit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1232-verifier-joint-orthogonality-audit) |
