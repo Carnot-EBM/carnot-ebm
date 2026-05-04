@@ -735,3 +735,6 @@ web search: GitHub trending energy based mod |
 | 2026-05-04 22:37 UTC | InterWhen + DVI Verifier-Feedback Replay - Ungated | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1288_interwh |
 | 2026-05-04 22:39 UTC | GRPO/VPRM v9 SOTA Headline Attempt - Gated on Cert | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1285-triggered-certificate-extraction-v2, |
 | 2026-05-04 22:39 UTC | Skill Graph Promotion/Demotion - Gated on Verifier | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1288-interwhen-dvi-verifier-feedback-repl |
+| 2026-05-04 22:54 UTC | HardNet++ Nonlinear Repair Benchmark - FSNet/Snare | OK | 81 passed, 1 warning in 6.96s |
+| 2026-05-04 22:56 UTC | GRPO/VPRM v9 SOTA Headline Attempt - Gated on Cert | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1285-triggered-certificate-extraction-v2, |
+| 2026-05-04 22:56 UTC | Skill Graph Promotion/Demotion - Gated on Verifier | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1288-interwhen-dvi-verifier-feedback-repl |
