@@ -656,3 +656,4 @@ If you finish the real work |
 | 2026-05-04 11:11 UTC | Phase-5-D Intermediate Scale v3 — 4 Core Gates, EB | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1260_phase5d |
 | 2026-05-04 11:16 UTC | WOPR Kakuro Puzzle Cartridge v3 — Integer Sum Cons | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1261_wopr_ka |
 | 2026-05-04 11:20 UTC | WOPR Kakuro Puzzle Cartridge v3 — Integer Sum Cons | FAIL | No file changes produced |
+| 2026-05-04 11:25 UTC | WOPR Kakuro Puzzle Cartridge v3 — Integer Sum Cons | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1261_wopr_ka |
