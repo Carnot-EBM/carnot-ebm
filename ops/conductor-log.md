@@ -685,3 +685,5 @@ web search: GitHub trending energy based mod |
 | 2026-05-04 15:28 UTC | FSNet Feasibility Step for Continuous EBM - Raw La | OK | 81 passed, 1 warning in 7.96s |
 | 2026-05-04 15:39 UTC | SnareNet Repair Layer - Gated on FSNet Feasibility | OK | 81 passed, 1 warning in 7.08s |
 | 2026-05-04 15:41 UTC | Cactus Constrained Acceptance Sampling - Gated on | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1271-triggered-certificate-extraction-sot |
+| 2026-05-04 15:56 UTC | Gaming Verifiers Defense EST Final - Pure Data Ana | OK | 81 passed, 1 warning in 9.09s |
+| 2026-05-04 15:58 UTC | Cactus Constrained Acceptance Sampling - Gated on | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1271-triggered-certificate-extraction-sot |
