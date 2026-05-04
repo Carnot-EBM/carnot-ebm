@@ -570,3 +570,7 @@ If you finish the real work |
 | 2026-05-04 02:13 UTC | Q11 Instrumentation — SMT Triviality + Orthant Pen | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1232-verifier-joint-orthogonality-audit) |
 | 2026-05-04 02:13 UTC | Verifier Redesign for Joint Orthogonality — Replac | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1232-verifier-joint-orthogonality-audit) |
 | 2026-05-04 02:13 UTC | Paper v6 arXiv Submission — Integrate Orthogonalit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1232-verifier-joint-orthogonality-audit) |
+| 2026-05-04 02:15 UTC | GRPO v6 — FSPO Per-Token Factuality Weighting + VP | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1235_grpo_v6 |
+| 2026-05-04 02:17 UTC | Q11 Instrumentation — SMT Triviality + Orthant Pen | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1232-verifier-joint-orthogonality-audit) |
+| 2026-05-04 02:17 UTC | Verifier Redesign for Joint Orthogonality — Replac | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1232-verifier-joint-orthogonality-audit) |
+| 2026-05-04 02:17 UTC | Paper v6 arXiv Submission — Integrate Orthogonalit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1232-verifier-joint-orthogonality-audit) |
