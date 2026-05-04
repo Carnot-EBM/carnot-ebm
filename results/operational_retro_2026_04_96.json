@@ -1,0 +1,164 @@
+{
+  "schema": "carnot.operational_retro.v63",
+  "milestone": "2026.04.96",
+  "generated_at": "2026-05-04T04:44:52Z",
+  "status": "success",
+  "retro_type": "operational_partial",
+  "summary": "Milestone 2026.04.96 shows a materially less efficient operational profile than .95: the observed artifact-to-GPU-closeout window was about 241 minutes, but only two terminal artifacts were visible at read time (exp1230 complete, exp1240 blocked) while eight .96 artifacts remained in_progress skeletons. The slow path was not zombie VRAM; it was orchestration churn: repeated STEP 0-only attempts, a still-dirty broad test suite, a prior_failures autofill fix that was not enforced before exp1240, and GPU-capable work that left both RTX 3090s idle at closeout.",
+  "total_wall_time_minutes": 241,
+  "wall_time_basis": "Computed from first observed .96 result artifact mtime (results/experiment_1229_milestone_retro_95.json, 2026-05-04T00:41:18Z) to the supplied GPU monitor timestamp (2026-05-04T04:42:17Z). If measured from planning completion at 2026-05-04T00:25:48Z, the window is 256 minutes. The request's TIMING DATA section was empty, so this retro uses artifact timestamps, roadmap estimates, result statuses, changelog retry signals, and the supplied/current gpu_monitor report.",
+  "total_wall_time_minutes_confidence": "medium_low",
+  "experiments_completed": 2,
+  "experiment_artifacts_observed": 10,
+  "experiments_successful": 1,
+  "experiments_blocked": 1,
+  "experiments_in_progress": 8,
+  "planned_experiment_range": "1229-1241",
+  "active_roadmap_note": "research-roadmap.yaml currently also contains exp1232b-q11-instrumentation, making 14 scheduled .96 tasks by active roadmap estimate rather than the 13 tasks described in the original planning note.",
+  "average_minutes_per_observed_artifact": 24.1,
+  "average_minutes_per_terminal_artifact": 120.5,
+  "slowest_experiments": [
+    {
+      "rank": 1,
+      "experiment": "exp1235",
+      "title": "GRPO v6 FSPO+VPS extended run",
+      "duration_minutes": 90,
+      "duration_basis": "roadmap estimated_wall_time_min; result artifact lacks actual duration",
+      "status_at_read": "in_progress",
+      "why_long": "This was the largest planned compute lane, with wall_budget_s=1200 after exp1221 exhausted 848s against a 480s budget. It carried explicit DualGPU requirements but still ended with only a skeleton/in_progress artifact.",
+      "parallelizable": true
+    },
+    {
+      "rank": 2,
+      "experiment": "exp1238",
+      "title": "Phase-5-D intermediate-scale derisking",
+      "duration_minutes": 70,
+      "duration_basis": "roadmap estimated_wall_time_min; result artifact lacks actual duration",
+      "status_at_read": "in_progress",
+      "why_long": "This is a large 100-300M parameter / d=128 derisking lane with DualGPU expectations. It is expensive enough to deserve a dedicated GPU slot and should not serialize unrelated CPU/doc work.",
+      "parallelizable": true
+    },
+    {
+      "rank": 3,
+      "experiment": "exp1231",
+      "title": "LLMs gaming verifiers defense retry",
+      "duration_minutes": 50,
+      "duration_basis": "roadmap estimated_wall_time_min plus repeated changelog in_progress entries",
+      "status_at_read": "in_progress",
+      "why_long": "This was a carry-forward from exp1225's three max_turns failures. Multiple in_progress changelog entries indicate retry/turn-budget churn without a reconciled terminal artifact.",
+      "parallelizable": true
+    },
+    {
+      "rank": 4,
+      "experiment": "exp1237",
+      "title": "Boltzmann-GPT contrastive CD training",
+      "duration_minutes": 40,
+      "duration_basis": "roadmap estimated_wall_time_min; changelog shows implementation complete but result artifact still in_progress",
+      "status_at_read": "in_progress",
+      "why_long": "Code and focused tests were completed, but broad tests remained blocked by unrelated failures and the experiment JSON was not reconciled past in_progress. This is an artifact-finalization bottleneck, not just model training time.",
+      "parallelizable": true
+    },
+    {
+      "rank": 5,
+      "experiment": "exp1232",
+      "title": "Verifier joint orthogonality audit",
+      "duration_minutes": 25,
+      "duration_basis": "roadmap estimated_wall_time_min; effective cost likely higher due repeated STEP 0/data-archaeology attempts",
+      "status_at_read": "in_progress",
+      "why_long": "The artifact records approach=data_archaeology_v4_post_3_step0_failures, and changelog contains five in_progress entries. Because exp1232 gates exp1233 and exp1234, its retry churn became a milestone-wide critical-path blocker.",
+      "parallelizable": false
+    }
+  ],
+  "gpu_utilization": {
+    "closeout_timestamp": "2026-05-04T04:42:17.722259+00:00",
+    "gpu0": {
+      "name": "NVIDIA GeForce RTX 3090",
+      "memory_used_mb": 4,
+      "memory_total_mb": 24576,
+      "utilization_pct": 0,
+      "temperature_c": 48
+    },
+    "gpu1": {
+      "name": "NVIDIA GeForce RTX 3090",
+      "memory_used_mb": 4,
+      "memory_total_mb": 24576,
+      "utilization_pct": 0,
+      "temperature_c": 53
+    },
+    "process_count": 0,
+    "assessment": "GPU utilization was inefficient at closeout. Both RTX 3090s were idle at 0% utilization with only 4 MB allocated, while the milestone contained multiple GPU/DualGPU-eligible tasks (exp1235, exp1237, exp1238). This does not prove every GPU task ran serially, but it does prove the scheduler did not keep available GPU capacity occupied through closeout.",
+    "sequential_vs_parallel": "The run profile appears sequential and retry-heavy. CPU/docs work, NRGPT/WOPR work, and artifact reconciliation should have overlapped with GPU lanes; Qwen/Gemma-style dual-model tasks should default to GPU0/GPU1 placement when memory permits."
+  },
+  "zombie_process_assessment": {
+    "formal_zombies_detected": false,
+    "evidence": "The supplied and current gpu_monitor.py JSON reports showed an empty process list and no warnings. The 4 MB per GPU allocations are below gpu_monitor.py's 1024 MB zombie threshold and look like idle driver/context residue rather than material zombie waste.",
+    "action": "No kill action is indicated from this closeout state. Keep the zombie check before large GRPO/Phase-5-D runs, but focus next on scheduler occupancy rather than cleanup."
+  },
+  "preflight_assessment": {
+    "was_bottleneck": true,
+    "assessment": "Pre-flight/broad verification was not measured as a single dominant duration because the timing block was empty, but it clearly remained an operational bottleneck. exp1230 reports the full Python suite was not clean due unrelated failures and xdist worker replacement; the exp1237 changelog says broad tests remain blocked by exp383, exp832, exp848, exp864, and exp865 failures. exp1240 then blocked at conductor_pre_gate because prior_failures was missing or incomplete, despite exp1230 shipping an autofill script."
+  },
+  "doc_reconciliation_assessment": {
+    "was_efficient": false,
+    "assessment": "Docs/artifact reconciliation was not efficient. ops/changelog.md contains repeated in_progress lines for exp1231, exp1232, exp1235, exp1237, exp1239, and exp1241, while exp1237 has a top-level implementation-complete changelog entry but an in_progress result JSON. That mismatch forces retro work to reconstruct truth from multiple files."
+  },
+  "bottlenecks_identified": [
+    "Most observed .96 artifacts remained in_progress skeletons, so agents protected deliverable existence but did not reliably reconcile terminal status.",
+    "exp1232 became a critical-path gate blocker for exp1233 and exp1234; repeated STEP 0/data-archaeology attempts delayed paper/arXiv work without producing a measured matrix.",
+    "exp1235 and exp1238 were both GPU/DualGPU-heavy planned lanes, yet both GPUs were idle at closeout.",
+    "The prior_failures autofill fix was shipped in exp1230 but was not enforced before exp1240, which still blocked on missing/incomplete prior_failures.",
+    "Broad verification remained dirty from unrelated failures, blocking clean completion language for exp1230 and exp1237.",
+    "Changelog reconciliation produced duplicate in_progress entries and stale status relative to implementation progress.",
+    "The milestone had too much critical-path coupling: exp1232 gates paper submission, exp1235 gates exp1236, and blocked/retry-heavy artifacts leave downstream work idle.",
+    "GPU monitor is passive: it correctly reports idle cards, but the conductor did not convert that signal into queued work placement.",
+    "The active roadmap drifted from the planning note by adding exp1232b, raising estimated work without a visible operational reschedule.",
+    "exp1240 gate failure shows WOPR cartridge tasks are still being treated as reruns requiring prior_failures declarations even when the intended task is a new cartridge variant."
+  ],
+  "improvements_suggested": [
+    "Make scripts/conductor_priors_autofill.py part of activation, not an optional experiment output: run it before dispatch and fail the milestone plan if any task still lacks required prior_failures.",
+    "Require every STEP 0 skeleton task to perform a final artifact reconciliation step that flips status from in_progress to complete/blocked/failed with the actual reason.",
+    "Add a stale-skeleton watchdog: if an artifact remains in_progress after the agent exits or after N minutes without mtime movement, mark it blocked/failed with a structured reason.",
+    "Promote gpu_monitor.py from closeout reporting to active scheduling input: when both GPUs are idle and queued GPU tasks exist, dispatch or resume the next GPU lane immediately.",
+    "Use a two-lane default scheduler: one GPU lane for GRPO/Phase-5-D/Boltzmann work and one CPU/docs lane for NRGPT, WOPR, artifact reconciliation, and changelog/status updates.",
+    "For DualGPU tasks, record per-GPU utilization samples in the experiment artifact so retros can distinguish true parallel execution from a declared DualGPU requirement.",
+    "Quarantine known unrelated broad-test failures into a documented failing-test ledger so focused experiment completion is not blocked by exp383/exp832/exp848/exp864/exp865 until they are the task under test.",
+    "Batch changelog/status/roadmap reconciliation once per terminal artifact and deduplicate repeated in_progress append lines.",
+    "Split gate-producing tasks from expensive analysis: exp1232 should first emit the matrix/k_eff artifact, then run Q11 instrumentation/redesign in downstream tasks only after the gate field exists.",
+    "Treat gate-blocked artifacts as terminal completions for operational accounting, with duration and exact gate summary, instead of leaving surrounding milestone retros in_progress."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Enforce prior_failures autofill at milestone activation and block dispatch until the plan is internally consistent.",
+    "Add stale-skeleton/final-reconciliation enforcement so in_progress artifacts cannot survive as the final state of an agent run.",
+    "Run active DualGPU scheduling from gpu_monitor.py signals, with CPU/docs work overlapped by default."
+  ],
+  "estimated_time_savings_pct": 32,
+  "estimated_time_savings_rationale": "A conservative 32% savings estimate is about 77 minutes on the 241-minute observed window. The largest recoverable classes are repeated STEP 0/stale-skeleton churn, blocked prior_failures dispatch, serialized GPU-heavy lanes that left both cards idle at closeout, and duplicated doc/artifact reconciliation. The estimate is below the apparent wasted window because some GRPO/Phase-5-D time is inherently expensive and exp1232 is a real dependency gate.",
+  "question_answers": {
+    "1_which_experiments_took_longest_and_why": "By active roadmap estimate and observed artifact/changelog signals, the longest lanes were exp1235 (90m planned GRPO v6 with wall_budget_s=1200), exp1238 (70m Phase-5-D scale derisking), exp1231 (50m retry after prior max_turn failures), exp1237 (40m Boltzmann-GPT implementation plus blocked broad verification), and exp1232 (25m planned but repeated STEP 0/data-archaeology attempts and a gate-critical role). Actual per-experiment durations were not written into most artifacts.",
+    "2_was_gpu_utilization_efficient": "No. The closeout state showed both RTX 3090s at 0% utilization and 4 MB used. The milestone had GPU/DualGPU-eligible work, so the queue either ran GPU work in bursts or failed to keep pending GPU lanes active.",
+    "3_were_there_zombie_processes_wasting_resources": "No formal GPU zombies were detected. gpu_monitor.py reported no processes and no warnings; 4 MB per card is below the zombie threshold.",
+    "4_could_any_experiments_have_been_parallelized": "Yes. exp1235, exp1237, and exp1238 needed GPU scheduling discipline; exp1239, exp1240, docs/changelog reconciliation, and artifact finalization could overlap with those GPU lanes. exp1232 itself is a gate for paper work, but its downstream tasks should not block independent GRPO/Boltzmann/WOPR work.",
+    "5_was_the_pre_flight_test_suite_a_bottleneck": "Yes, operationally. It was not quantifiable from the empty timing block, but exp1230 and exp1237 both report dirty broad verification caused by unrelated failures, and exp1240 blocked at pre-gate despite the autofill fix being available.",
+    "6_were_doc_reconciliation_passes_efficient": "No. Repeated in_progress changelog lines and mismatch between exp1237's implementation-complete changelog entry and its in_progress result JSON created reconciliation debt.",
+    "7_what_tooling_infrastructure_changes_would_speed_next_milestone": "Activation-time prior_failures autofill, stale-skeleton finalization enforcement, active gpu_monitor-driven DualGPU dispatch, per-experiment GPU utilization sampling, focused-test quarantine for unrelated broad failures, and batched deduplicated docs reconciliation."
+  },
+  "data_sources": [
+    "ops/metrics.md",
+    "ops/changelog.md",
+    "scripts/gpu_monitor.py",
+    "docs/roadmap.md",
+    "research-roadmap.yaml",
+    "results/experiment_1229_milestone_retro_95.json",
+    "results/experiment_1230_auto_populate_prior_failures_v2.json",
+    "results/experiment_1231_llms_gaming_verifiers_defense.json",
+    "results/experiment_1232_verifier_joint_orthogonality_audit.json",
+    "results/experiment_1235_grpo_v6_fspo_vps_extended.json",
+    "results/experiment_1237_boltzmann_gpt_contrastive_training.json",
+    "results/experiment_1238_phase5d_intermediate_scale.json",
+    "results/experiment_1239_nrgpt_frozen_prefix_evaluation.json",
+    "results/experiment_1240_wopr_kakuro_cartridge.json",
+    "results/experiment_1241_milestone_retro_96.json",
+    "supplied GPU Monitor Report timestamped 2026-05-04T04:42:17.722259+00:00"
+  ],
+  "meta_reflection": "The STEP 0 pattern worked as a loss-prevention mechanism, but .96 exposes the next failure mode: skeletons become a substitute for terminal artifacts unless the conductor enforces final reconciliation. The operational priority for .97 is not another retro reminder; it is dispatch-time enforcement of priors, stale-artifact cleanup, and GPU occupancy."
+}
