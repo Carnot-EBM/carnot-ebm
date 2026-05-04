@@ -17,10 +17,12 @@ call. No fine-tuning. No access to model weights.
 
 Rust + Python/JAX, Apache 2.0, `pip install carnot`.
 
-Current public research record: **1,254 experiments tracked, 106 completed
-milestones archived**, through Exp 1254 on 2026-05-04. The latest terminal
-.97 artifacts are Exp 1248 (Boltzmann-GPT CD AUROC 0.9607), Exp 1251 (NRGPT
-non-monotonicity classified), and Exp 1253 (WOPR Masyu gate-blocked).
+Current public research record: **1,267 experiments tracked, 107 completed
+milestones archived**, through Exp 1267 on 2026-05-04. The latest terminal
+.98 artifacts are Exp 1256 (k=5 orthogonality confirmed: max r=0.462,
+k_eff=1.76), Exp 1264 (Q11 TSS instrumentation), Exp 1265 (DiffuTruth vs
+Carnot baseline), Exp 1266 (QuantKAN 3-bit + LUT-KAN), and Exp 1267
+(milestone .98 retro: 5/13 criteria met).
 
 ## Install and run
 
@@ -154,10 +156,14 @@ experiment artifact under `results/`.
 | Phase 4 active-inference pilot | Synthetic ARC-AGI-3-style 5x5 pilot solved **10/10** with action_count_ratio **0.2534** vs greedy baseline (74.7% fewer actions); not a full ARC-AGI-3 leaderboard result | Exp 1165 |
 | Phase-5 in-situ training substrate | Prototype valid-action fraction **1.0**; training loop energy decrease **67.1%**, **5/5** safety gates passed, oracle accuracy held **1.0 → 1.0** | Exps 1222/1223 |
 | Phase-5 adversarial/Spera audit | Pairwise verifier conditioning maxed at **P(V_i\|V_j)=1.000**, giving effective coverage **k_eff≈1** in a k=3 in-situ ensemble; architecture revision required before scale-up | Exp 1224 |
+| k=5 verifier orthogonality audit | Production k=5 ensemble cleared the correlation gate: **max r=0.4617 < 0.5**, **k_eff=1.76**; AND-composition remains viable at k=5, not at k=6/15 scale claims | Exp 1256 |
 | SC-Energy seventh verifier + k=6 validation | SC-Energy verifier reached **AUROC=1.0** with low pairwise correlations in Exp 1168, but k=6 AND-compose scored **0.8973** vs k=5 **0.9240** on the validation set, so k=5 remains the default | Exps 1168/1176 |
 | Diffusion of Thought inference | T=1 produced **+4pp** accuracy, but longer diffusion gave no additional accuracy and AUROC stayed **0.5** through T=125; honest verdict: diminishing returns | Exp 1171 |
 | NRGPT per-token energy | Per-token AUROC **0.998199** vs batch baseline **0.887409**, with error-token localization rate **1.0** | Exp 1172 |
 | BiKA SOS-KAN hardware analysis | Multiply-free BiKA estimate shows **39.6%** resource reduction and `npu_feasible`; complexity estimate only, no accuracy benchmark | Exp 1174 |
+| Q11 TSS instrumentation | Continuous-EBM sign bottleneck diagnostic shipped; SC-Energy/Z3 correlation **0.5466**, vulnerability score **0.4534** | Exp 1264 |
+| DiffuTruth vs Carnot FoVer baseline | DiffuTruth semantic energy AUROC **0.0816** on FoVer, while Carnot SemEnergy probe reports **0.948187**; Carnot exceeds DiffuTruth's cited FEVER paper AUROC 0.725 on this artifact | Exp 1265 |
+| QuantKAN 3-bit + LUT-KAN edge path | 3-bit PTQ keeps **AUROC=0.9801**; LUT-KAN simulation gives **2.5x** speedup with 12.5 KB lookup table | Exp 1266 |
 | WOPR game cartridges — Connect Four, Hex, Nonogram, Futoshiki | Connect Four: valid board **E=0**, 10 tests; Hex: Gibbs beat random **90%**; Nonogram: valid solution **E=0**, random **E=26**; Futoshiki: solution **E=0**, random **E=42**, inequality violation **E=4** | Exps 1175/1188/1214/1227 |
 | Pytest memory watchdog | Per-test RSS tracking shipped with **8,192 MB** session cumulative limit and **500 MB** per-test leak threshold; sample run passed | Exp 1178 |
 | Paper v5/v6 integrity remediation | **18/18** integrity issues resolved after the 5 critical fixes; figure-integrity audit reports **0** untraced constants; arXiv v8 bundle compiles, but operator publication hold remains active | Exps 1181/1182/1183/1205/1206 |
@@ -175,7 +181,7 @@ experiment artifact under `results/`.
 | Milestone .94 status | **13/13 criteria met**; publication hold still active, but critical paper fixes, arXiv v8 bundle, GPU offload, GRPO-VPS, Phase 4 harder puzzles, FoVer v7, Tier 1, SDPO measurement, and Nonogram all produced artifacts | Exp 1215 |
 | Milestone .95 status | **9/13 criteria met**; GRPO-VPS full training, Phase-5 A/B/C, Boltzmann-GPT seed, and Futoshiki produced artifacts; GRPO v6 wall-budget, verifier-gaming defense, prior-failure automation, and retro remained blocked or partial | Exps 1216-1228 |
 | Milestone .96 artifact status | Partial closeout: **10 artifacts observed**, only exp1230 complete and exp1240 blocked at read time; 8 artifacts remained `in_progress`; root causes were stale skeletons, dirty broad tests, and prior-failure autofill not enforced before dispatch | Exps 1229-1241 |
-| Milestone .97 active status | Terminal results so far: Exp 1248 Boltzmann-GPT CD AUROC **0.960744**, Exp 1251 NRGPT Type-B classification, Exp 1253 WOPR Masyu gate-blocked; remaining .97 artifacts are still `in_progress` | Exps 1242-1254 |
+| Milestone .97/.98 status | .97 was orchestration-bound: 2 complete artifacts, 1 blocked, 9 stale `in_progress`. .98 then met **5/13** criteria: orthogonality, Q11 TSS, DiffuTruth comparison, QuantKAN 3-bit, and retro complete | Exps 1242-1267 |
 | Extropic Z1/XTR-0 integration packet | THRML backend stub and hardware integration packet shipped; live THRML benchmark blocked because `thrml_available=false` | Exp 1150 |
 | arXiv package v8 + publication hold | v8 bundle ready at `docs/arxiv-paper/carnot-arxiv-v8.tar.gz`; PDF compiled to **19 pages / 332 KB**, claim audit found **0 mismatches** across 55 claims, hold remains active pending operator approval | Exp 1206 |
 
@@ -218,7 +224,7 @@ claim we publish.
 ## Where to go next
 
 - **[Technical report](docs/technical-report.md)** — the full research arc
-  through Exp 1254 across 106 completed milestones, with a
+  through Exp 1267 across 107 archived completed milestones, with a
   plain-English timeline of what we tried, what failed, what stuck.
 - **[Roadmap](docs/roadmap.md)** — current milestone, upcoming milestones,
   hardware track, and Phase 3 (Kona-parity foundation-model) direction.
@@ -422,7 +428,7 @@ See the [technical report](docs/technical-report.md) for the full research recor
 
 ## 14 Principles Learned
 
-Hard-won lessons from the activation-based phase of a research program that now spans Exp 1-1254 across 106 milestones and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
+Hard-won lessons from the activation-based phase of a research program that now spans Exp 1-1267 across 107 archived milestones and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
 
 ### What works
 1. **The model's own logprobs are the best energy.** No external EBM needed for rejection sampling — the LLM's own confidence is already an energy function. Simple, practical, +10%.

@@ -1,0 +1,153 @@
+{
+  "schema": "carnot.operational_retro.v63",
+  "milestone": "2026.04.98",
+  "generated_at": "2026-05-04T12:51:26Z",
+  "retro_type": "operational_complete",
+  "status": "success",
+  "summary": "Milestone 2026.04.98 improved over .97 in terminal output count, but it remained orchestration-bound rather than compute-bound. The conductor log shows 163 minutes from activation at 2026-05-04T09:55Z to the final retro success at 2026-05-04T12:38Z. Five of thirteen criteria reached completion: exp1256 orthogonality audit, exp1264 Q11 TSS instrumentation, exp1265 DiffuTruth comparison, exp1266 QuantKAN 3-bit measurement, and exp1267 milestone retro. Seven artifacts remained stale status=in_progress, exp1258 was gate-blocked without a result artifact, and both RTX 3090s were idle at closeout with no zombie GPU processes.",
+  "total_wall_time_minutes": 163,
+  "total_wall_time_minutes_confidence": "high",
+  "wall_time_basis": "ops/conductor-log.md row 'Milestone 2026.04.98 activated' at 2026-05-04 09:55 UTC through exp1267 OK row at 2026-05-04 12:38 UTC. Artifact mtime window was 2026-05-04T10:19:44Z through 2026-05-04T12:35:51Z.",
+  "planned_experiment_range": "1255-1267",
+  "experiments_attempted": 13,
+  "experiment_artifacts_observed": 12,
+  "experiments_completed": 5,
+  "experiments_completed_list": [
+    "exp1256",
+    "exp1264",
+    "exp1265",
+    "exp1266",
+    "exp1267"
+  ],
+  "experiments_blocked": [
+    "exp1258: arXiv Bundle v9 was gate-blocked three times because exp1257 was retired/incomplete; no exp1258 artifact was observed."
+  ],
+  "experiments_stale_in_progress": [
+    "exp1255",
+    "exp1257",
+    "exp1259",
+    "exp1260",
+    "exp1261",
+    "exp1262",
+    "exp1263"
+  ],
+  "slowest_experiments": [
+    {
+      "rank": 1,
+      "experiment": "exp1255",
+      "title": "Combined Milestone .95 + .96 + .97 Retrospective",
+      "duration_minutes": 27,
+      "duration_basis": "conductor slot from .98 activation at 09:55 UTC through third failure at 10:22 UTC",
+      "status_at_read": "in_progress",
+      "why_long": "The task repeated artifact_not_updated_past_bootstrap three times and never reconciled the skeleton to a terminal retro artifact. This was pure retry/orchestration loss.",
+      "parallelizable": true
+    },
+    {
+      "rank": 2,
+      "experiment": "exp1260",
+      "title": "Phase-5-D Intermediate Scale v3",
+      "duration_minutes": 15,
+      "duration_basis": "conductor slot from exp1259 final failure at 10:56 UTC through third exp1260 failure at 11:11 UTC",
+      "status_at_read": "in_progress",
+      "why_long": "A DualGPU-mandatory experiment wrote only an in-progress artifact, then failed with bootstrap/no-file-change churn. No 4-gate measurement or GPU residency occurred.",
+      "parallelizable": true
+    },
+    {
+      "rank": 3,
+      "experiment": "exp1257",
+      "title": "Paper-v6 Critical Issues Fix",
+      "duration_minutes": 14,
+      "duration_basis": "conductor slot from exp1256 OK at 10:26 UTC through third exp1257 failure at 10:40 UTC",
+      "status_at_read": "in_progress",
+      "why_long": "The paper-fix task produced a skeleton with critical_issues_fixed=0 and then two no-file-change failures. It also blocked the arXiv lane.",
+      "parallelizable": false
+    },
+    {
+      "rank": 4,
+      "experiment": "exp1259",
+      "title": "GRPO v7 PROGRS + VPS DualGPU",
+      "duration_minutes": 14,
+      "duration_basis": "conductor window around 10:42-10:56 UTC, interleaved with exp1258 gate-block rows",
+      "status_at_read": "in_progress",
+      "why_long": "The GRPO task repeated bootstrap/no-file-change failures and never launched the planned 600s DualGPU training run.",
+      "parallelizable": true
+    },
+    {
+      "rank": 5,
+      "experiment": "exp1261",
+      "title": "WOPR Kakuro v3",
+      "duration_minutes": 14,
+      "duration_basis": "conductor slot from exp1260 final failure at 11:11 UTC through third exp1261 failure at 11:25 UTC",
+      "status_at_read": "in_progress",
+      "why_long": "A bounded CPU-only cartridge task repeated the stale skeleton/no-file-change pattern instead of producing a terminal shipped-or-blocked result. exp1262 and exp1263 showed the same pattern on similar time slots.",
+      "parallelizable": true
+    }
+  ],
+  "bottlenecks_identified": [
+    "The dominant bottleneck remained stale STEP 0 skeletons: seven .98 artifacts were still status=in_progress after conductor failure rows.",
+    "The conductor retried artifact_not_updated_past_bootstrap and no-file-change failures three times per task, even when the second attempt proved the failure deterministic.",
+    "The paper/arXiv critical path was still tightly coupled: exp1257 failed, then exp1258 gate-blocked three times instead of emitting one structured blocked artifact and freeing the queue.",
+    "GPU utilization was inefficient. exp1259 and exp1260 were marked DualGPU MANDATORY, but both ended as skeletons; the closeout GPU monitor showed both RTX 3090s at 4 MB, 0% utilization, and no active processes.",
+    "No gpu_monitor.py-class zombie processes were present. The GPU waste was idle capacity, not leaked VRAM; the 4 MB allocations were negligible context residue.",
+    "Sequential dispatch wasted time. Most .98 tasks were independent except exp1258 and final exp1267, yet the queue largely marched through one task at a time.",
+    "Small deterministic tasks paid large orchestration overhead. exp1266 reported duration_s=0.001 internally, but its conductor slot from exp1265 OK to exp1266 OK was about 13 minutes.",
+    "Pre-flight tests were not the main bottleneck. Successful tasks showed focused 81-test cache-hit checks in roughly 4.6-10.0 seconds, while failed tasks burned minutes on agent retries.",
+    "Doc reconciliation remained semantically inefficient: ops/changelog.md accumulated repeated in_progress lines for stale tasks instead of one terminal status update per task.",
+    "The STEP 0 skeleton pattern protected artifact existence but also became an accepted non-terminal resting state when agents did not refine the artifact."
+  ],
+  "improvements_suggested": [
+    "Add conductor-side terminal artifact finalization: every launched task must end as complete, blocked, or failed with failure_reason and duration metadata.",
+    "Fail fast on repeated bootstrap/no-file-change outcomes: after two identical failures, stop retrying and write a terminal failed artifact.",
+    "Run a pre-dispatch dependency audit so gated tasks such as exp1258 are skipped once with a structured blocked artifact, not retried three times.",
+    "Use a default three-lane schedule for .99: one GPU lane, one CPU/docs lane, and one bounded micro-task lane, with exp1267-style retros held until all non-retro lanes finish.",
+    "Promote gpu_monitor.py from passive reporting to active scheduler input: if both GPUs are idle and DualGPU tasks are queued, launch or explicitly block one before advancing CPU-only work.",
+    "Record per-experiment GPU samples in artifacts for every GPU-eligible task, including first allocation time, peak VRAM, average utilization, and closeout state.",
+    "Batch docs reconciliation after terminal artifacts exist and deduplicate repeated in_progress changelog entries.",
+    "Move mechanical retro and criterion scoring into a deterministic script so retro tasks do not spend agent turns rediscovering artifact fields.",
+    "Add a micro-task fast path for pure JSON/data-archaeology jobs like exp1256 and exp1266: run the focused command plus validation without a long general agent envelope.",
+    "Require DualGPU tasks to write an early 'gpu_launch_attempted' field; if false after first failure, route immediately to infrastructure/debug instead of two more research retries."
+  ],
+  "estimated_time_savings_pct": 45,
+  "estimated_time_savings_rationale": "A conservative 45% saving is plausible on the next milestone: about 15-20% from parallelizing independent CPU/GPU lanes, 12-15% from stopping repeated stale-skeleton/no-file-change retries, 5-8% from structured gate-block artifacts and dependency pre-audits, and 5% from micro-task fast paths plus batched docs reconciliation. That would move a 163 minute orchestration-heavy run toward roughly 90 minutes without assuming better research outcomes.",
+  "top_3_highest_leverage_actions": [
+    "Implement conductor-side terminal artifact finalization for every task.",
+    "Adopt a parallel scheduler with one active GPU lane and separate CPU/docs/micro-task lanes.",
+    "Fail fast on repeated bootstrap/no-file-change failures and emit structured blocked/failed artifacts."
+  ],
+  "gpu_utilization": {
+    "closeout_timestamp_utc": "2026-05-04T12:52:58.731902+00:00",
+    "gpu_0": {
+      "name": "NVIDIA GeForce RTX 3090",
+      "used_mb": 4,
+      "total_mb": 24576,
+      "utilization_pct": 0,
+      "temperature_c": 46
+    },
+    "gpu_1": {
+      "name": "NVIDIA GeForce RTX 3090",
+      "used_mb": 4,
+      "total_mb": 24576,
+      "utilization_pct": 0,
+      "temperature_c": 51
+    },
+    "assessment": "Inefficient. Both GPUs were idle at closeout even though exp1259 and exp1260 were planned as DualGPU-mandatory tasks. The issue was not contention; no GPU work was actually scheduled to completion."
+  },
+  "zombie_process_assessment": {
+    "zombies_detected": false,
+    "basis": "scripts/gpu_monitor.py --json reported an empty processes list and no warnings; supplied GPU monitor state also showed only 4 MB allocated per GPU at 0% utilization.",
+    "note": "There was no evidence of material zombie VRAM waste."
+  },
+  "preflight_assessment": "Not the .98 bottleneck. The visible checks on successful tasks were focused cache-hit suites of 81 tests taking roughly 4.57s, 7.04s, 4.69s, 7.21s, and 10.03s. The wall time was lost to repeated agent failure loops and orchestration overhead.",
+  "doc_reconciliation_assessment": "Operationally inefficient but not the largest wall-clock consumer. Changelog reconciliation appended repeated in_progress entries for the same stale tasks, while artifacts remained non-terminal. Reconciliation should be batched after terminal artifact finalization.",
+  "parallelization_assessment": "exp1259, exp1260, exp1261, exp1262, exp1263, exp1264, exp1265, and exp1266 were independent. exp1258 alone depended on exp1256 and exp1257, and exp1267 was the final retro. A three-lane scheduler could have overlapped the GPU tasks with WOPR/research micro-tasks and avoided most sequential idle time.",
+  "question_answers": {
+    "which_experiments_took_longest_and_why": "exp1255 was slowest at about 27 minutes because it repeated skeleton bootstrap failures. exp1260, exp1257, exp1259, and exp1261 followed at roughly 14-15 minute conductor slots, mostly from three serial stale-skeleton/no-file-change attempts rather than actual computation.",
+    "was_gpu_utilization_efficient": "No. The milestone was mostly sequential and both RTX 3090s closed at 0% utilization. DualGPU-mandatory exp1259 and exp1260 never reached real GPU execution.",
+    "were_there_zombie_processes": "No. gpu_monitor.py reported no GPU processes and no warnings; only 4 MB was allocated on each GPU.",
+    "could_any_experiments_have_been_parallelized": "Yes. All non-retro tasks except exp1258 were effectively independent. GPU tasks could have run in parallel with WOPR, Q11, DiffuTruth, and QuantKAN CPU/data tasks.",
+    "was_the_pre_flight_test_suite_a_bottleneck": "No. The successful focused test checks took seconds, not minutes. Retry orchestration dominated.",
+    "were_doc_reconciliation_passes_efficient": "No. The docs reflected repeated in_progress attempts rather than one terminal result per task. This wastes operator attention and makes retro accounting harder.",
+    "what_tooling_would_speed_up_the_next_milestone": "Terminal artifact finalization, fail-fast retry policy, structured gate-block artifacts, GPU-aware parallel scheduling, per-experiment GPU telemetry, micro-task fast paths, and batched changelog/roadmap reconciliation."
+  },
+  "meta_reflection": "The skeleton-first pattern is still worth keeping because it prevents total artifact loss, but .98 confirms the follow-on requirement: skeletons must not be allowed to become the final operational state. The next leverage point is conductor behavior, not longer prompts. Finalize artifacts deterministically, stop deterministic retries early, and schedule independent GPU and CPU work concurrently."
+}

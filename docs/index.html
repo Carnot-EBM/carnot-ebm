@@ -300,10 +300,10 @@
       <a href="technical-report.html" class="btn btn-secondary">How it works</a>
     </div>
     <div class="stats-bar" aria-label="Project headline numbers">
-      <div class="stat"><div class="stat-num">1,254</div><div class="stat-label">Through Exp 1254</div></div>
-      <div class="stat"><div class="stat-num">106</div><div class="stat-label">Milestones archived</div></div>
-      <div class="stat"><div class="stat-num">21,603</div><div class="stat-label">Python test items</div></div>
-      <div class="stat"><div class="stat-num">3</div><div class="stat-label">Terminal .97 artifacts</div></div>
+      <div class="stat"><div class="stat-num">1,267</div><div class="stat-label">Through Exp 1267</div></div>
+      <div class="stat"><div class="stat-num">107</div><div class="stat-label">Milestones archived</div></div>
+      <div class="stat"><div class="stat-num">21,619</div><div class="stat-label">Python test items</div></div>
+      <div class="stat"><div class="stat-num">5/13</div><div class="stat-label">.98 criteria met</div></div>
     </div>
   </div>
 </section>
@@ -455,6 +455,9 @@
           in-situ training now passes its first stability gates, but the Spera
           orthogonality audit found k_eff&asymp;1 in a k=3 verifier ensemble, so
           joint verifier diversity is now a paper- and scale-up gate. The latest
+          k=5 audit clears the production correlation gate with max r=0.462 and
+          k_eff=1.76, while the Q11 TSS diagnostic exposes a remaining
+          sign-bottleneck vulnerability score of 0.453. The latest
           Phase-3 frontier artifacts add a trained Boltzmann-GPT contrastive
           pass (AUROC 0.9607) and classify NRGPT recurrence non-monotonicity as
           causal-context shift rather than an architecture failure.
@@ -873,6 +876,12 @@
         <div class="r-stats"><span class="r-before">max P(V_i|V_j)=1.000; all attacks not blocked</span> <span class="r-after">Exp 1224</span></div>
       </div>
       <div class="r-card">
+        <span class="r-tag">Verifier audit &mdash; production k=5 orthogonality</span>
+        <h3 class="r-title">max r=0.4617; k_eff=1.76</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 92.3%; background: #22c55e;"></div></div>
+        <div class="r-stats"><span class="r-before">Correlation stays below 0.5 gate; k=5 AND-composition viable</span> <span class="r-after">Exp 1256</span></div>
+      </div>
+      <div class="r-card">
         <span class="r-tag">Phase 3 seed &mdash; Boltzmann-GPT</span>
         <h3 class="r-title">AUROC 0.65 &rarr; 0.9607 after CD training</h3>
         <div class="r-meter"><div class="r-bar" style="width: 96.07%; background: #22c55e;"></div></div>
@@ -885,10 +894,34 @@
         <div class="r-stats"><span class="r-before">Only Exp 1230 complete and Exp 1240 blocked at retro read time</span> <span class="r-after">Exps 1229-1241</span></div>
       </div>
       <div class="r-card">
-        <span class="r-tag">Milestone .97 &mdash; active artifact status</span>
+        <span class="r-tag">Milestone .97 &mdash; operational closeout</span>
         <h3 class="r-title">2 complete, 1 gate-blocked, rest in progress</h3>
         <div class="r-meter"><div class="r-bar" style="width: 23.1%; background: #f59e0b;"></div></div>
         <div class="r-stats"><span class="r-before">Exp 1248 CD AUROC 0.9607; Exp 1251 Type-B NRGPT; Exp 1253 Masyu blocked</span> <span class="r-after">Exps 1242-1254</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Diagnostics &mdash; Q11 TSS instrumentation</span>
+        <h3 class="r-title">corr=0.5466; vulnerability=0.4534</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 54.66%; background: #f59e0b;"></div></div>
+        <div class="r-stats"><span class="r-before">SC-Energy/Z3 sign bottleneck measured in continuous EBM path</span> <span class="r-after">Exp 1264</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Baseline comparison &mdash; DiffuTruth vs Carnot</span>
+        <h3 class="r-title">Carnot AUROC 0.948 vs DiffuTruth 0.082</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 94.8%; background: #22c55e;"></div></div>
+        <div class="r-stats"><span class="r-before">FoVer comparison; DiffuTruth FEVER paper AUROC listed as 0.725</span> <span class="r-after">Exp 1265</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Edge deployment &mdash; QuantKAN 3-bit + LUT-KAN</span>
+        <h3 class="r-title">3-bit AUROC=0.9801; LUT speedup 2.5&times;</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 98.01%; background: #22c55e;"></div></div>
+        <div class="r-stats"><span class="r-before">4-bit AUROC drop only 0.010; LUT table 12.5 KB</span> <span class="r-after">Exp 1266</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Milestone .98 &mdash; latest retro</span>
+        <h3 class="r-title">5/13 criteria met</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 38.46%; background: #f59e0b;"></div></div>
+        <div class="r-stats"><span class="r-before">Orthogonality, Q11 TSS, DiffuTruth, QuantKAN, retro complete</span> <span class="r-after">Exp 1267</span></div>
       </div>
     </div>
 
@@ -931,9 +964,10 @@
       <a href="arxiv-metadata.yaml" class="btn btn-secondary">Submission metadata</a>
     </div>
     <p style="margin-top: 1.5rem; font-size: 0.9rem; color: var(--text-muted);">
-      <em>Latest paper audit status 2026-05-04: 18/18 issues resolved and
-      arXiv v8 bundle ready; publication hold remains active pending operator
-      approval and the .96 verifier orthogonality audit.</em>
+      <em>Latest paper audit status 2026-05-04: 18/18 issues resolved,
+      arXiv v8 bundle ready, and the production k=5 orthogonality audit now
+      reports max r=0.4617 with k_eff=1.76. Publication hold remains active
+      pending operator approval and honest paper-v6 reconciliation.</em>
     </p>
   </div>
 </section>
