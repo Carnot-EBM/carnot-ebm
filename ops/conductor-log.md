@@ -663,3 +663,4 @@ If you finish the real work |
 | 2026-05-04 11:44 UTC | LLMs Gaming Verifiers Defense v4 — EST Invariance  | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1263_gaming_ |
 | 2026-05-04 11:49 UTC | LLMs Gaming Verifiers Defense v4 — EST Invariance  | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1263_gaming_ |
 | 2026-05-04 11:53 UTC | LLMs Gaming Verifiers Defense v4 — EST Invariance  | FAIL | No file changes produced |
+| 2026-05-04 12:04 UTC | Q11 TSS Instrumentation v2 — sign(z) Bottleneck Di | OK | 81 passed, 1 warning in 7.04s |
