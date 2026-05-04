@@ -46,6 +46,22 @@ should read this file when designing new milestones.
 - **Concrete experiment:** Run a local structured-output engine bakeoff for Carnot certificates: llama.cpp native grammar, `llguidance`, and XGrammar if installed. Measure parse rate, schema coverage, tokens/s overhead, and failure modes. Promote the fastest viable backend to the triggered certificate rerun.
 - **When to incorporate:** .100 Phase 0 or Phase 1 before the expensive SOTA GGUF rerun.
 
+### BEAVER and CRANE: Deterministic Bounds + Reasoning-Augmented Constraints
+- **Papers:** BEAVER arXiv 2512.05439; CRANE arXiv 2502.09061 / ICML 2025.
+- **Sources:** https://arxiv.org/abs/2512.05439 and https://arxiv.org/abs/2502.09061
+- **What:** BEAVER explores generation space with token tries/frontiers to compute deterministic, sound bounds for prefix-closed semantic constraints. CRANE shows that overly restrictive grammars can suppress reasoning, while grammar augmentation can preserve reasoning capability and enforce syntactic/semantic correctness.
+- **Relevance to Carnot:** These reinforce a two-stage certificate plan: let SOTA GGUF models reason freely enough to preserve reasoning quality, then force a bounded certificate tail and measure semantic-risk bounds over the accepted prefix space. They also argue against treating parse rate as the only success metric.
+- **Concrete experiment:** Keep the .100 grammar task focused on CRANE-style relaxed certificate fields and record a BEAVER-lite feasibility note for future prefix-closed certificate-bound work.
+- **When to incorporate:** .100 Phase 0/1 as design constraints; full BEAVER-lite bounder after certificate parse rate is stable.
+
+### Optimal KAN Abstractions for Property Verification
+- **Paper:** arXiv 2602.06737 (February 2026).
+- **Source:** https://arxiv.org/abs/2602.06737
+- **What:** Replaces KAN units with piecewise-affine abstractions, provides local/global error estimates, and encodes property verification as MILP while optimizing approximation budget via dynamic programming plus knapsack allocation.
+- **Relevance to Carnot:** Carnot already relies on KAN/SOS-KAN fast paths and QuantKAN/LUT-KAN compression. This paper gives a formal verification path for KAN verifier components rather than only measuring AUROC/latency.
+- **Concrete experiment:** Not a .100 headline task unless SOTA certificate work succeeds early. Queue a future KAN verifier-certification task: derive PWA bounds for the active SOS-KAN/QuantKAN verifier and compare MILP proof coverage vs empirical verifier accuracy.
+- **When to incorporate:** .101 hardware/verifier-certification milestone or a .100 stretch only after certificate and self-learning gates complete.
+
 ### Current EBT / ARM-EBM / Extropic / Kona Status Check
 - **Sources:** EBT paper page https://arxiv.org/abs/2507.02092 and project page https://energy-based-transformers.github.io/; ARM-EBM v3 https://arxiv.org/abs/2512.15605; Extropic https://extropic.ai/ and https://extropic.ai/software; Kona pages https://logicalintelligence.com/kona-ebms-energy-based-models and https://logicalintelligence.com/blog/energy-based-models-for-reasoning
 - **What:** EBT remains the closest open research reference for prediction-as-energy-minimization across modalities. ARM-EBM was revised in April 2026 and keeps the ARM/EBM soft-Bellman bridge current. Extropic now publicly frames XTR-0/X0/Z1 plus THRML as the path from probabilistic software to TSU hardware. Logical Intelligence continues to frame Kona as globally scored, continuous, editable reasoning traces underneath LLM coordination.

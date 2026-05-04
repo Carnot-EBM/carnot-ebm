@@ -198,7 +198,10 @@ compilation, PRIME verifier selection, certificate-memory replay, FSNet/SnareNet
 continuous repair, gaming-defense proxy measurement, WOPR Kakuro/Masyu shipping,
 and retro completion. Triggered SOTA GGUF certificate extraction remained
 gate-blocked, Cactus acceptance stayed gated, and .99 produced no
-headline-eligible SOTA model-generation result. A
+headline-eligible SOTA model-generation result. The follow-on .99 operational
+retrospective measured a <strong>10-minute</strong> closeout slice across <strong>2</strong> items with no
+GPU zombie processes and a <strong>30%</strong> next-milestone savings target; the latest
+ops tooling also adds a secret-safe local Claude/Codex usage snapshot. A
 plain-English summary of that journey is in the next section; deeper analysis
 follows in the body of the report and in the per-milestone retrospective
 artifacts checked into <code>results/operational_retro_*.json</code>.</p>
@@ -343,6 +346,16 @@ artifacts checked into <code>results/operational_retro_*.json</code>.</p>
   compiled with <code>tectonic main.tex</code>; <code>docs/arxiv-paper/main.pdf</code> is <strong>371 KiB</strong>
   and <code>results/carnot-arxiv-v10-20260504.tar.gz</code> is written, but upload is
   still pending (Exps 1205-1206, 1269-1270).</li>
+<li><strong>Milestone .99 operational closeout:</strong> the supplied closeout slice was
+  <strong>10 minutes</strong> for <strong>2</strong> items, averaging <strong>5 minutes</strong> each; both RTX 3090s
+  were idle at <strong>4 MB / 0%</strong> with no zombie processes; the retro estimates a
+  <strong>30%</strong> next-milestone savings target from parallel CPU/GPU lanes, cached
+  TeX/pre-flight work, structured timing, and batched docs reconciliation
+  (<code>operational_retro_2026_04_99.json</code>).</li>
+<li><strong>Local Claude/Codex usage snapshot:</strong> the reporting layer now reads the
+  newest Codex <code>token_count</code> event, aggregates Claude local token totals, reads
+  only subscription/tier metadata from Claude credentials, and refuses to infer
+  quota percentage from free-form prose (2026-05-04 changelog).</li>
 <li><strong>Milestone 2026.04.91 closed at 11/13 criteria:</strong> the missed criteria were
   paper hold-lift readiness and GRPO v5, which was gate-blocked because the
   llama.cpp runtime lacked GPU offload support. The retro records .91 as useful
@@ -3851,6 +3864,30 @@ prior-failure metadata and cached SOTA GGUF models, run Cactus only after the
 certificate parse-rate gate is met, convert smoke-only GRPO/VPRM evidence into
 headline-eligible SOTA-backed evidence or retire it, and use the compiled arXiv
 v10 bundle for the actual submission step or record the external blocker.</p>
+<h3 id="post-99-operational-closeout-and-usage-reporting-2026-05-04">Post-.99 Operational Closeout and Usage Reporting (2026-05-04)</h3>
+<p>The research artifacts above close Exp 1281, but the latest operational source
+of truth adds two post-closeout items that matter for planning.</p>
+<p><strong>Operational retro 2026.04.99:</strong> The retro analyzes a supplied <strong>10-minute</strong>
+closeout slice with <strong>2</strong> completed items, averaging <strong>5 minutes</strong> each. The
+slow path was the serialized paper lane: Exp 1270 arXiv Bundle v10 could only
+run after Exp 1269 critical fixes. That is correct gating, not wasted GPU work.
+The waste was idle capacity: both RTX 3090s were at <strong>4 MB / 0%</strong> utilization
+with no GPU processes and no zombie warnings. Pre-flight checks were seconds
+scale: the relevant conductor rows reported <strong>81</strong> tests passing in <strong>8.24s</strong>
+and <strong>7.89s</strong>. The retro's next-milestone target is <strong>30%</strong> wall-time savings
+via explicit paper/docs, GPU SOTA, and CPU micro-task lanes; cached TeX and
+pre-flight dependencies; structured gate/compile timing; and batched docs
+reconciliation.</p>
+<p><strong>Local agent usage snapshot:</strong> The latest reporting capability adds
+<code>python/carnot/reporting/agent_usage.py</code> and <code>scripts/agent_plan_usage.py</code>.
+For Codex, it reads the newest local <code>token_count</code> event and reports plan type,
+primary/secondary rate-limit windows, reset epochs, and token totals. For
+Claude, it aggregates token usage from local project JSONL logs and reads only
+<code>subscriptionType</code> and <code>rateLimitTier</code> from <code>.credentials.json</code>; it does not
+echo access or refresh tokens. The important honesty rule is that Claude
+<code>used_percent</code> remains <code>null</code>/<code>unavailable</code> unless a structured numeric quota
+field exists. Focused regression coverage for this path is
+<code>tests/python/test_agent_plan_usage.py</code>.</p>
 </article>
 
 <footer>

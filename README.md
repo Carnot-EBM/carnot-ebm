@@ -28,7 +28,8 @@ FSNet/SnareNet continuous repair (Exps 1275/1276), gaming-defense proxy
 vulnerability **0.00** (Exp 1278), and WOPR Kakuro/Masyu cartridges shipped
 with valid-solution energy **E=0** (Exps 1279/1280). SOTA GGUF certificate
 extraction stayed gate-blocked and .99 produced no headline-eligible SOTA
-model-generation result.
+model-generation result. The .99 operational closeout then measured **10 min**
+for **2** items with no GPU zombies and a **30%** next-milestone savings target.
 
 ## Install and run
 
@@ -195,6 +196,8 @@ experiment artifact under `results/`.
 | Milestone .99 status | **12/14 criteria met**; publication closeout, PRIME weights, certificate memory, FSNet/SnareNet, gaming defense, and WOPR Kakuro/Masyu completed. Triggered SOTA GGUF certificates blocked; Cactus stayed gated; no headline SOTA GGUF model usage | Exps 1268-1281 |
 | Extropic Z1/XTR-0 integration packet | THRML backend stub and hardware integration packet shipped; live THRML benchmark blocked because `thrml_available=false` | Exp 1150 |
 | arXiv package v10 + publication hold | v10 bundle ready at `results/carnot-arxiv-v10-20260504.tar.gz`; `tectonic main.tex` compiled `docs/arxiv-paper/main.pdf` at **371 KiB**; arXiv upload remains pending | Exp 1270 |
+| Milestone .99 operational closeout | **10 min** for 2 closeout items, **5 min** average; both RTX 3090s idle at 4 MB / 0% with no zombie processes; pre-flight checks were seconds-scale; next-milestone savings target **30%** | operational_retro_2026_04_99 |
+| Local Claude/Codex usage snapshot | Codex reads the newest local `token_count` event; Claude aggregates local token usage and reads only subscription/tier metadata from credentials; free-form quota prose is ignored instead of guessed | 2026-05-04 changelog |
 
 Deeper analysis of these — including everything that **didn't** work and
 why — is in the [technical report](docs/technical-report.md). Per-milestone
