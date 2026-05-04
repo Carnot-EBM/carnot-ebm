@@ -31,6 +31,17 @@ REQUIRED_ARTIFACT_FIELDS = {
     "checkpoint_path",
     "honest_verdict",
 }
+EXP1248_ARTIFACT_PATH = Path("results/experiment_1248_boltzmann_gpt_cd_training_v2.json")
+EXP1248_CORPUS_PATH = Path("results/fover_corpus_v5.json")
+EXP1248_REQUIRED_ARTIFACT_FIELDS = {
+    "experiment",
+    "status",
+    "forward_pass_ok",
+    "pre_cd_auroc",
+    "post_cd_auroc",
+    "n_cd_steps",
+    "honest_verdict",
+}
 
 
 class BoltzmannGPTLayer(torch.nn.Module):
@@ -200,6 +211,112 @@ def run_experiment(
     artifact_file.parent.mkdir(parents=True, exist_ok=True)
     artifact_file.write_text(
         json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
+    return artifact
+
+
+def load_balanced_fover_v5_items(
+    path: str | Path = EXP1248_CORPUS_PATH,
+    *,
+    seed: int = 1248,
+    max_per_class: int | None = None,
+) -> tuple[list[FoVerItem], dict[str, int]]:
+    """Load a deterministic balanced correct/incorrect slice from FoVer v5."""
+
+    payload = json.loads(Path(path).read_text(encoding="utf-8"))
+    dataset = FoVerDataset(rows=payload["pairs"])
+    positives = [item for item in dataset if item.label == 1]
+    negatives = [item for item in dataset if item.label == 0]
+    n_per_class = min(len(positives), len(negatives))
+    if max_per_class is not None:
+        n_per_class = min(n_per_class, max_per_class)
+
+    rng = random.Random(seed)
+    rng.shuffle(positives)
+    rng.shuffle(negatives)
+    items = positives[:n_per_class] + negatives[:n_per_class]
+    rng.shuffle(items)
+    counts = {
+        "n_fover_v5_rows": len(dataset),
+        "balanced_correct_count": n_per_class,
+        "balanced_incorrect_count": n_per_class,
+    }
+    return items, counts
+
+
+def _score_correctness_auroc(
+    model: BoltzmannGPTLayer,
+    items: list[FoVerItem],
+    *,
+    visible_dim: int,
+    device: str,
+) -> float:
+    visible = embed_texts([item.text for item in items], visible_dim=visible_dim).to(device)
+    with torch.no_grad():
+        scores = (-model(visible)).detach().cpu().tolist()
+    return _binary_auroc([item.label for item in items], scores)
+
+
+def run_cd_training_v2(
+    *,
+    corpus_path: str | Path = EXP1248_CORPUS_PATH,
+    artifact_path: str | Path = EXP1248_ARTIFACT_PATH,
+    n_cd_steps: int = 100,
+    lr: float = 1e-3,
+    batch_size: int = 16,
+    visible_dim: int = 16,
+    hidden_dim: int = 16,
+    seed: int = 1248,
+    device: str = "cpu",
+) -> dict[str, object]:
+    """Run Exp 1248 Boltzmann-GPT CD training v2 and write its artifact."""
+
+    items, counts = load_balanced_fover_v5_items(corpus_path, seed=seed)
+    model = BoltzmannGPTLayer(visible_dim=visible_dim, hidden_dim=hidden_dim, seed=seed).to(device)
+
+    probe_visible = embed_texts(
+        [items[0].text, items[-1].text],
+        visible_dim=visible_dim,
+    ).to(device)
+    with torch.no_grad():
+        probe_energy = model(probe_visible)
+    forward_pass_ok = bool(probe_energy.shape == (2,) and torch.isfinite(probe_energy).all())
+
+    history = train_contrastive(
+        model,
+        items,
+        n_epochs=n_cd_steps,
+        lr=lr,
+        batch_size=batch_size,
+        visible_dim=visible_dim,
+        seed=seed,
+    )
+    post_auroc = _score_correctness_auroc(
+        model,
+        items,
+        visible_dim=visible_dim,
+        device=device,
+    )
+    artifact = {
+        "experiment": "1248_boltzmann_gpt_cd_training_v2",
+        "schema": "carnot.boltzmann_gpt_cd_training_v2.v1",
+        "run_date": "20260504",
+        "status": "complete" if forward_pass_ok and math.isfinite(post_auroc) else "failed",
+        "forward_pass_ok": forward_pass_ok,
+        "pre_cd_auroc": SEED_AUROC_BASELINE,
+        "post_cd_auroc": post_auroc,
+        "n_cd_steps": n_cd_steps,
+        "honest_verdict": f"boltzmann_gpt_cd_auroc_{post_auroc:.2f}",
+        "model_config": {"visible_dim": visible_dim, "hidden_dim": hidden_dim},
+        "training_loss_initial": history[0] if history else None,
+        "training_loss_final": history[-1] if history else None,
+        **counts,
+    }
+    artifact_file = Path(artifact_path)
+    artifact_file.parent.mkdir(parents=True, exist_ok=True)
+    artifact_file.write_text(
+        json.dumps(artifact, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
     )
     return artifact
 
