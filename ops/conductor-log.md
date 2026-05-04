@@ -723,3 +723,6 @@ web search: GitHub trending energy based mod |
 | 2026-05-04 22:08 UTC | GRAD + BEAVER + NSVIF Semantic Routing - Gated on  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1285-triggered-certificate-extraction-v |
 | 2026-05-04 22:10 UTC | ARS/UQLM Answer-Stability Audit on SOTA GGUF - Gat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1282-sota-gguf-cache-provenance-preflight |
 | 2026-05-04 22:10 UTC | Triggered Certificate Extraction v2 - SOTA GGUF + | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1282-sota-gguf-cache-provenance-preflight |
+| 2026-05-04 22:10 UTC | GRAD + BEAVER + NSVIF Semantic Routing - Gated on  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1285-triggered-certificate-extraction-v |
+| 2026-05-04 22:12 UTC | ARS/UQLM Answer-Stability Audit on SOTA GGUF - Gat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1282-sota-gguf-cache-provenance-preflight |
+| 2026-05-04 22:12 UTC | Triggered Certificate Extraction v2 - SOTA GGUF + | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1282-sota-gguf-cache-provenance-preflight |
