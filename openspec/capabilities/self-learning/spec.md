@@ -2663,3 +2663,41 @@ self-learning delta is zero or negative.
 **Then** the final artifact has `source="fover_fallback"`,
 `status="complete"`, a numeric `self_learning_delta_overall`, and a non-negative
 `memory_entries` count.
+
+## REQ-LEARN-1288: InterWhen DVI Verifier-Feedback Replay
+
+Exp 1288 SHALL convert chronological verifier accept/reject decisions into an
+online routing/drafter policy update. The runner SHALL compare a frozen
+post-hoc replay policy with an interleaved verifier-feedback policy that updates
+before the next replay item, and SHALL write an honest artifact even when the
+measured deltas are zero or negative.
+
+### REQ-LEARN-1288 Sub-requirements
+
+- REQ-LEARN-1288-1: The runner SHALL write
+  `results/experiment_1288_interwhen_dvi_verifier_feedback_replay.json` first
+  with `status="in_progress"` and `honest_verdict="in_progress"`.
+- REQ-LEARN-1288-2: The runner SHALL load usable SOTA certificate/routing
+  outputs when available; otherwise it SHALL load Exp 1274/FoVer replay data
+  and set `source="fover_fallback"`.
+- REQ-LEARN-1288-3: The runner SHALL build chronological replay slices with
+  before/after policy-state summaries for each evaluated item.
+- REQ-LEARN-1288-4: The runner SHALL report `dvi_acceptance_delta`,
+  `online_acceptance_delta`, `violation_delta`, `self_learning_delta_overall`,
+  `self_verify_signal_used`, `verification_gain`,
+  `reasoning_trace_length_delta`, `clause_prediction_records` or
+  `claim_level_memory_entries`, `memory_update_written`,
+  `headline_result_allowed`, and `honest_verdict`.
+- REQ-LEARN-1288-5: The final artifact SHALL have `status="complete"` even
+  when any measured delta is zero or negative, and SHALL set
+  `headline_result_allowed=false` for FoVer fallback replay.
+
+### SCENARIO-LEARN-1288: FoVer Fallback Produces Honest Online Delta
+
+**Given** SOTA certificate/routing outputs are unavailable or blocked
+**And** Exp 1274 plus `results/fover_corpus_v5.json` are available
+**When** Exp 1288 runs
+**Then** the final artifact has `source="fover_fallback"`,
+`status="complete"`, `self_verify_signal_used=true`, a boolean
+`memory_update_written`, and an honest non-headline verdict derived from the
+measured online replay delta.
