@@ -348,6 +348,31 @@ merged artifact field proving the same threshold. The retrospective
 self-criterion shall count as met only in the final artifact that sets
 `retro_complete == true`.
 
+### REQ-REPORT-019: Combined .95/.96 Retrospective Closure Artifact
+
+The Exp 1242 combined retrospective workflow shall read the authoritative
+Exp 1216 through Exp 1240 result JSON artifacts, plus the bootstrap Exp 1229
+and Exp 1241 retrospective artifacts, and write
+`results/experiment_1242_combined_retro_95_96.json` with:
+
+- `milestone_95` set to `2026.04.95`
+- `milestone_96` set to `2026.04.96`
+- `criteria_95_total` and `criteria_96_total` set to `13`
+- `criteria_95_results` and `criteria_96_results`, each mapping all 13 planned
+  criteria to boolean pass/fail values
+- `criteria_95_met` and `criteria_96_met`, derived from the boolean result
+  counts
+- `findings_summary`, briefly explaining what .96 proved, what failed, and the
+  top lesson
+- `key_carry_forwards`, listing the highest-priority .97 follow-ups
+- `retro_complete == true`
+- `honest_verdict` formatted as
+  `milestone_96_N_of_13_criteria_met`
+
+Missing artifacts, absent source fields, false source fields, and bootstrap-only
+retrospectives shall count as unmet criteria unless a criterion explicitly
+requires an honest partial verdict.
+
 ## Scenarios
 
 ### SCENARIO-REPORT-001: Nested Live Provenance Is Promoted
@@ -514,6 +539,20 @@ as met
 **And** the artifact reports `criteria_met == 2`
 **And** `honest_verdict == "milestone_2_of_13_criteria_met"`
 
+### SCENARIO-REPORT-016: Exp 1242 Closes Bootstrap .95/.96 Retrospectives
+
+**Given** the Exp 1229 and Exp 1241 retrospective artifacts are still
+bootstrap-only
+**And** Exp 1216 through Exp 1240 source artifacts contain mixed completed,
+partial, blocked, and missing criterion evidence
+**When** the Exp 1242 combined retrospective workflow runs
+**Then** the bootstrap retrospectives count as unmet source criteria
+**And** the self-referential .96 criterion counts as met in the final Exp 1242
+artifact
+**And** the artifact reports separate .95 and .96 criteria maps and counts
+**And** `honest_verdict` is formatted as
+`milestone_96_N_of_13_criteria_met`
+
 
 ### REQ-PUBLISH-003: HuggingFace README Accuracy Audit
 
@@ -606,5 +645,6 @@ embed live-GPU benchmark results from Exp 328 when available.
 | REQ-REPORT-016 | `scripts/experiment_1228_milestone_retro_95.py`, `results/experiment_1228_milestone_retro_95.json` | `tests/python/test_experiment_1228_milestone_retro_95.py` | Implemented |
 | REQ-REPORT-017 | `python/carnot/reporting/milestone_retro_95_retry.py`, `results/experiment_1229_milestone_retro_95.json` | `tests/python/test_milestone_retro_95_retry.py` | Implemented |
 | REQ-REPORT-018 | `python/carnot/reporting/milestone_retro_96.py`, `results/experiment_1241_milestone_retro_96.json` | `tests/python/test_milestone_retro_96.py` | Implemented |
+| REQ-REPORT-019 | `python/carnot/reporting/combined_retro_95_96.py`, `results/experiment_1242_combined_retro_95_96.json` | `tests/python/test_combined_retro_95_96.py` | Implemented |
 | REQ-PUBLISH-003 | `scripts/experiment_317_hf_publish.py` | `tests/python/test_experiment_317_hf_publish.py` | Implemented |
 | REQ-PUBLISH-004 | `scripts/experiment_330_hf_live_publish.py` | `tests/python/test_experiment_330_hf_live_publish.py` | Implemented |
