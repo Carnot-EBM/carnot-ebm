@@ -344,6 +344,36 @@ AND `issues_fixed_list` names ISSUE-1 through ISSUE-5
 AND `honest_verdict == "paper_v6_5_of_5_critical_issues_fixed"`
 AND `status == "complete"`.
 
+### REQ-PUBLISH-013: Paper v6 Critical Fixes v2 Terminal Artifact
+
+The paper-v6 critical-fixes v2 auditor MUST verify that
+`docs/arxiv-paper/main.tex` removes or explicitly caveats the five
+publication-blocking claim classes before emitting
+`results/experiment_1269_paper_v6_critical_fixes_v2.json`.
+The five claim classes are estimated CPU/FPGA speedups, KL measurement
+provenance, hand-typed CPU constants, apples-to-oranges HumanEval latency,
+and SOS-KAN AUROC ambiguity.
+
+The artifact MUST record:
+
+- `critical_issues_fixed == 5`
+- `issues_fixed_list` naming the five fixed claim classes
+- `measured_artifacts_cited` including exp1256, exp1264, exp1265, and exp1266
+- `old_claims_remaining == []`
+- `status == "complete"`
+- `honest_verdict == "paper_v6_critical_fixes_v2_complete"`
+
+### SCENARIO-PUBLISH-013: Critical Fixes v2 Audit Is Clean
+
+**Given** `docs/arxiv-paper/main.tex` and the exp1256/1264/1265/1266
+measured artifacts exist
+**When** the exp1269 critical-fixes v2 auditor runs
+**Then** all five claim classes are fixed
+AND the paper cites all four measured artifacts
+AND the banned-string audit has no remaining old unsupported claim strings
+AND the deliverable JSON reports `status == "complete"` and
+`honest_verdict == "paper_v6_critical_fixes_v2_complete"`.
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -360,3 +390,4 @@ AND `status == "complete"`.
 | REQ-PUBLISH-010 | Proposed | Exp 1183 paper v5 recompile and arXiv bundle v6 gate artifact |
 | REQ-PUBLISH-011 | Proposed | Exp 1245 fig3 measured-only FPGA latency fix |
 | REQ-PUBLISH-012 | Proposed | Exp 1257 paper v6 five critical integrity fixes |
+| REQ-PUBLISH-013 | Proposed | Exp 1269 paper v6 critical fixes v2 terminal artifact |
