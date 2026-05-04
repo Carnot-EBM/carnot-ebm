@@ -4,6 +4,80 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-05-04 Supplemental Late Scan (Milestone 2026.04.100)
+
+These sources were added before writing the `.100` conductor YAML. They refine
+existing experiments instead of increasing milestone scope.
+
+### Token-Guard: Token-Level Hallucination Control via Self-Checking Decoding
+- **Paper:** arXiv 2601.21969; OpenReview ICLR 2026 submission.
+- **Sources:** https://arxiv.org/abs/2601.21969 and
+  https://openreview.net/forum?id=5fCDEz43ya
+- **What:** Runs token-level self-checking during generation so likely
+  hallucinated tokens are detected before they propagate into later reasoning.
+- **Relevance to Carnot:** Cactus constrained acceptance should not only ask
+  whether a draft span matches a target verifier. It should score whether
+  accepted spans carry local hallucination risk, especially in certificate tails
+  where one bad token can corrupt a claim/equation binding.
+- **Concrete experiment:** In `exp1287`, emit `token_guard_risk_score` beside
+  `cactus_acceptance_rate`, `risk_bound_proxy`, and
+  `violation_rate_after_acceptance`.
+- **When to incorporate:** `.100` Phase 1 Cactus constrained-acceptance rerun.
+
+### GRAD: Graph-Retrieved Adaptive Decoding for Hallucination Mitigation
+- **Paper:** arXiv 2511.03900.
+- **Source:** https://arxiv.org/abs/2511.03900
+- **What:** Builds a sparse token-transition evidence graph from a retrieved
+  corpus and fuses graph-retrieved logits with model logits during decoding.
+- **Relevance to Carnot:** The semantic router can keep a lightweight evidence
+  transition graph for parsed certificate claims instead of treating each claim
+  independently. This gives the router a non-parametric grounding signal without
+  retraining or closed APIs.
+- **Concrete experiment:** In `exp1286`, add `grad_evidence_graph_coverage` and
+  use the graph as an advisory route signal for claims that need deeper Carnot
+  verification.
+- **When to incorporate:** `.100` Phase 1 semantic routing.
+
+### Leanabell-Prover-V2: Verifier-Integrated RL
+- **Paper:** arXiv 2507.08649.
+- **Source:** https://arxiv.org/abs/2507.08649
+- **What:** Integrates verifier feedback into long-CoT RL for Lean theorem
+  proving and uses feedback-token masking to stabilize training.
+- **Relevance to Carnot:** The theorem-proving domain is not the `.100` target,
+  but the feedback-token masking pattern is directly useful for GRPO/VPRM:
+  verifier explanations should improve the policy without overfitting to the
+  textual verifier wrapper.
+- **Concrete experiment:** In `exp1289`, report
+  `verifier_feedback_token_masking_delta` alongside `grpo_v9_delta`.
+- **When to incorporate:** `.100` gated GRPO/VPRM headline attempt.
+
+### Extended-Variable Probabilistic Computing With p-dits
+- **Paper:** arXiv 2506.00269.
+- **Source:** https://arxiv.org/abs/2506.00269
+- **What:** Extends p-bit probabilistic Ising machines to multi-valued p-dits
+  and p-ints, reducing variable counts for numeric optimization problems.
+- **Relevance to Carnot:** This is a future hardware/sampler parity signal for
+  integer and continuous constraints. It supports keeping Carnot's sampler
+  abstraction portable across GPU, FPGA, and probabilistic hardware, but it is
+  not a `.100` critical-path implementation item.
+- **Concrete experiment:** No new `.100` task; cite it in `exp1293` as future
+  hardware parity context when auditing EBT/ARM/TSU-style energy semantics.
+- **When to incorporate:** Later hardware-focused sampler milestone.
+
+### UQLM: Uncertainty Quantification for Language Models
+- **Paper/toolkit:** arXiv 2507.06196; GitHub `cvs-health/uqlm`.
+- **Sources:** https://arxiv.org/abs/2507.06196 and
+  https://github.com/cvs-health/uqlm
+- **What:** Provides response-level uncertainty scorers for hallucination
+  detection, including black-box consistency and white-box token-probability
+  paths.
+- **Relevance to Carnot:** Carnot should not depend on a closed-provider judge,
+  but UQLM-style response confidence gives a useful local baseline for ARS/PCC
+  answer-stability routing.
+- **Concrete experiment:** In `exp1284`, add an optional local
+  `uqlm_uncertainty_score` or document why the toolkit is unavailable.
+- **When to incorporate:** `.100` Phase 1 SOTA answer-stability audit.
+
 ## 2026-05-04 Active Planning Verification Scan (Milestone 2026.04.100)
 
 These items were checked while preparing the `.100` execution YAML. They refine
