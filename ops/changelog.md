@@ -4715,3 +4715,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-04: Milestone 2026.04.95 Retrospective — STEP 0 Pattern, Evaluate 13 Criteria (⚠️ Research Finding) — honest_verdict=in_progress; results/experiment_1229_milestone_retro_95.json
 - 2026-05-04: Auto-Populate prior_failures v2 — Fix DOOMED_RERUN_BLOCK Recurring Pattern (⚠️ Research Finding) — honest_verdict=in_progress; results/experiment_1230_auto_populate_prior_failures_v2.json
 - 2026-05-04: Auto-Populate prior_failures v2 — Fix DOOMED_RERUN_BLOCK Recurring Pattern (⚠️ Research Finding) — honest_verdict=autofill_script_shipped; results/experiment_1230_auto_populate_prior_failures_v2.json
+- 2026-05-04: LLMs Gaming Verifiers Defense — k=5 AND-Compose vs Single-Verifier RLVR Gaming (⚠️ Research Finding) — honest_verdict=in_progress; results/experiment_1231_llms_gaming_verifiers_defense.json
