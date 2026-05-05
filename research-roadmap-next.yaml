@@ -1,0 +1,1039 @@
+milestone: 2026.04.104
+milestone_title: "Environment Gate Recovery + Triggered Semantic Certificates + Verifier-Cost Self-Learning"
+milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
+tasks:
+
+# ============================================================
+# Phase 0 - Environment gate and .103 state closure
+# ============================================================
+
+- id: exp1337-environment-gate-disk-pretest-stale-skeleton-audit
+  milestone: 2026.04.104
+  deliverable: results/experiment_1337_environment_gate_disk_pretest_stale_skeleton_audit.json
+  title: "Environment Gate Audit - Disk Quota, Pretest Signature, and Stale .103 Skeletons"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 30
+  estimated_wall_time_min: 25
+  priority: critical
+  requires_gpu: false
+  prior_failures:
+    - experiment_id: exp1325-triggered-certificate-extraction-v5-runtime-fixed-dccd-gbnf
+      verdict: disk_quota_exceeded_then_stale_in_progress_skeleton
+      addressed_by: "Measure disk/inode/pretest state before any expensive SOTA rerun and classify stale .103 artifacts without rewriting them."
+      retire_if_same_verdict: true
+    - experiment_id: exp1328-graphcontrol-drafter-probe-sanity-spectrum-v2
+      verdict: skipped_repeated_pretest_failure_signature_1_failed_86_passed
+      addressed_by: "Record the repeated pre-test signature as an explicit environment gate instead of allowing repeated conductor retries."
+      retire_if_same_verdict: true
+    - experiment_id: exp1336-milestone-103-retrospective-and-carryforward
+      verdict: skipped_repeated_pretest_failure_signature_1_failed_86_passed
+      addressed_by: "Prevent the milestone retro class from being blocked by an unclassified pre-test signature."
+      retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    Milestone .103 reached operator closeout, but the local artifacts show that
+    exp1325 stalled after disk-quota failures and later tasks were skipped by a
+    repeated pre-test failure signature. This task makes the environment state
+    explicit before .104 launches scientific work. Use {project_root} as the
+    project root and {date} as the run date in artifact metadata.
+
+    EXISTING CODE TO READ FIRST:
+    - CODEX.md
+    - CLAUDE.md
+    - ops/conductor-log.md
+    - results/operational_retro_2026_04_103.json
+    - results/experiment_1323_sota_gguf_token_health_prompt_runtime_diagnostic.json
+    - results/experiment_1324_certificate_failure_taxonomy_formalizer_reality_check.json
+    - results/experiment_1325_triggered_certificate_extraction_v5_runtime_fixed_dccd_gbnf.json
+    - scripts/validate_prior_failures.py
+    - scripts/audit_roadmap_gates.py
+    - research-references.md
+
+    TASK:
+    Create an environment gate artifact that measures disk, inode, focused
+    pre-test, stale .103 skeleton, and roadmap-gate health. Do not modify
+    existing .103 artifacts, research-roadmap.yaml, or scripts/research_conductor.py.
+
+    REQUIRED ARTIFACT FIELDS:
+    - status
+    - disk_free_gb
+    - inode_free_pct
+    - disk_quota_ok
+    - repeated_pretest_signature
+    - focused_pretest_status
+    - stale_artifact_paths
+    - stale_skeleton_count
+    - environment_ready
+    - recommended_task_pruning
+    - honest_verdict
+
+    CONCRETE STEPS:
+    1. Create results/experiment_1337_environment_gate_disk_pretest_stale_skeleton_audit.json immediately with status="in_progress".
+    2. Measure filesystem free space and inode availability for {project_root}; do not delete files or caches.
+    3. Read ops/conductor-log.md and results/operational_retro_2026_04_103.json to extract the exact disk-quota and repeated pre-test signatures from .103.
+    4. Inspect .103 result artifacts and list any status="in_progress" or bootstrap-only skeleton artifacts as stale_artifact_paths.
+    5. Run a lightweight focused pre-test command only if the relevant script exists; otherwise record focused_pretest_status="not_available" with the missing path.
+    6. Run python3 scripts/validate_prior_failures.py research-roadmap-next.yaml and python3 scripts/audit_roadmap_gates.py research-roadmap-next.yaml if those scripts are available, and summarize any actionable failures.
+    7. Set environment_ready=true only when disk_quota_ok is true, no repeated focused pre-test signature is active, and stale artifacts are classified rather than silently reused.
+    8. Write recommended_task_pruning for any .104 tasks that should remain blocked until the gate is fixed, then write all required fields, status="complete", and honest_verdict.
+
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1337_environment_gate_disk_pretest_stale_skeleton_audit.json')); print(d.get('disk_quota_ok'), d.get('environment_ready'), d.get('stale_skeleton_count'), d.get('honest_verdict'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp1338-exp1325-skeleton-and-gate-state-finalizer
+  milestone: 2026.04.104
+  deliverable: results/experiment_1338_exp1325_skeleton_and_gate_state_finalizer.json
+  title: "Exp1325 Skeleton + Gate-State Finalizer - Clean Carry-Forward for Certificate Recovery"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 30
+  estimated_wall_time_min: 25
+  priority: critical
+  requires_gpu: false
+  prior_failures:
+    - experiment_id: exp1325-triggered-certificate-extraction-v5-runtime-fixed-dccd-gbnf
+      verdict: stale_in_progress_after_disk_quota_failures
+      addressed_by: "Classify the stale artifact as a scheduler/environment fact before designing the replacement certificate experiment."
+      retire_if_same_verdict: true
+    - experiment_id: exp1327-beaver-lite-cactus-safe-prefix-gated-on-validator-pass
+      verdict: blocked_gate_check_failed_missing_exp1326_artifact
+      addressed_by: "Keep downstream tasks closed until a new parse and semantic validator branch produces real evidence."
+      retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    exp1325 is the stale artifact at the center of .103. It should not be
+    treated as a failed certificate method, but downstream .103 gates also
+    should not be reopened from an in_progress skeleton. Use {project_root} as
+    the project root and {date} as the run date in artifact metadata.
+
+    EXISTING CODE TO READ FIRST:
+    - CODEX.md
+    - CLAUDE.md
+    - ops/conductor-log.md
+    - results/operational_retro_2026_04_103.json
+    - results/experiment_1324_certificate_failure_taxonomy_formalizer_reality_check.json
+    - results/experiment_1325_triggered_certificate_extraction_v5_runtime_fixed_dccd_gbnf.json
+    - results/experiment_1327_beaver_lite_cactus_safe_prefix_gated_on_validator_pass.json
+    - research-complete.yaml
+    - research-references.md
+
+    TASK:
+    Produce a terminal carry-forward artifact for exp1325 and the downstream
+    gate state. This task must not rerun SOTA models; it classifies what is safe
+    to carry into .104 and what must stay closed.
+
+    REQUIRED ARTIFACT FIELDS:
+    - status
+    - exp1325_terminal_classification
+    - minimum_parseable_attempts_to_recover
+    - parse_gate_threshold
+    - downstream_tasks_to_keep_closed
+    - certificate_recovery_ready
+    - rerun_is_materially_different
+    - required_method_changes
+    - stale_artifacts_not_modified
+    - honest_verdict
+
+    CONCRETE STEPS:
+    1. Create results/experiment_1338_exp1325_skeleton_and_gate_state_finalizer.json immediately with status="in_progress".
+    2. Read exp1324, exp1325, exp1327, the .103 retro, and the conductor log snippets that mention disk quota and gate-blocks.
+    3. Classify exp1325_terminal_classification as stale_skeleton_environment_failure if the artifact lacks substantive certificate metrics.
+    4. Carry forward minimum_parseable_attempts_to_recover and parse_gate_threshold from exp1324 when available.
+    5. List downstream_tasks_to_keep_closed until a new .104 parse gate and semantic validator branch complete.
+    6. Set rerun_is_materially_different=true only if the proposed .104 branch changes the method beyond a blind rerun, such as trigger-before-constrain plus dynamic grammar and semantic validation.
+    7. Confirm stale_artifacts_not_modified=true by reading without editing .103 result files.
+    8. Write certificate_recovery_ready=true only when the replacement experiment has a clear prerequisite set, then write all required fields, status="complete", and honest_verdict.
+
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1338_exp1325_skeleton_and_gate_state_finalizer.json')); print(d.get('certificate_recovery_ready'), d.get('minimum_parseable_attempts_to_recover'), d.get('honest_verdict'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+# ============================================================
+# Phase 1 - Trigger-switched certificates and semantic validation
+# ============================================================
+
+- id: exp1339-xgrammar2-tagdispatch-certificate-grammar-dryrun
+  milestone: 2026.04.104
+  deliverable: results/experiment_1339_xgrammar2_tagdispatch_certificate_grammar_dryrun.json
+  title: "XGrammar2/TagDispatch Certificate Grammar Dry-Run - Dynamic UNKNOWN/SAT/UNSAT Branches"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 35
+  estimated_wall_time_min: 35
+  priority: high
+  requires_gpu: false
+  gated_on:
+    - upstream: exp1337-environment-gate-disk-pretest-stale-skeleton-audit
+      artifact_field: environment_ready
+      op: '=='
+      value: true
+  prior_failures:
+    - experiment_id: exp1325-triggered-certificate-extraction-v5-runtime-fixed-dccd-gbnf
+      verdict: stale_in_progress_without_grammar_evidence
+      addressed_by: "Dry-run the dynamic grammar branch without SOTA generation before spending GPU time."
+      retire_if_same_verdict: true
+    - experiment_id: exp1312-triggered-certificate-extraction-dccd-gbnf
+      verdict: certificate_parse_rate_0_71223_below_0_75_gate
+      addressed_by: "Test whether branch-specific certificate grammars can cover UNKNOWN, SAT, UNSAT, and repair states better than static GBNF."
+      retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    The .104 literature sweep found XGrammar 2 and trigger-switched structured
+    generation as the most relevant recovery path for .103's stalled certificate
+    branch. This task is a dry-run over local parser/grammar code and should not
+    call a SOTA model. Use {project_root} as the project root and {date} as the
+    run date in artifact metadata.
+
+    EXISTING CODE TO READ FIRST:
+    - CODEX.md
+    - CLAUDE.md
+    - research-references.md
+    - results/experiment_1324_certificate_failure_taxonomy_formalizer_reality_check.json
+    - results/experiment_1337_environment_gate_disk_pretest_stale_skeleton_audit.json
+    - python/carnot/
+    - scripts/experiment_template.py
+    - openspec/capabilities/pipeline/spec.md
+
+    TASK:
+    Prototype or dry-run dynamic certificate grammar dispatch for UNKNOWN,
+    SAT, UNSAT, and repair branches. Prefer existing parser abstractions and
+    record backend availability honestly if XGrammar itself is not installed.
+
+    REQUIRED ARTIFACT FIELDS:
+    - status
+    - grammar_backend_candidates
+    - dynamic_grammar_compile_ms
+    - mask_generation_ms_per_token_proxy
+    - certificate_states_supported
+    - unknown_state_supported
+    - state_transition_error_count
+    - parse_rate_delta_over_static_gbnf_proxy
+    - dynamic_grammar_ready
+    - honest_verdict
+
+    CONCRETE STEPS:
+    1. Create results/experiment_1339_xgrammar2_tagdispatch_certificate_grammar_dryrun.json immediately with status="in_progress".
+    2. Read current parser, certificate, and grammar-related code under python/carnot and identify the smallest local extension point for dynamic branch dispatch.
+    3. Define a tiny set of synthetic certificate strings for UNKNOWN, SAT, UNSAT, and repair-hint states.
+    4. Test those strings through the existing parser and a branch-specific grammar or parser shim; do not add a heavy new dependency unless it is already present.
+    5. Estimate dynamic_grammar_compile_ms and mask_generation_ms_per_token_proxy from actual timing if possible, otherwise record a proxy method and limitations.
+    6. Set state_transition_error_count to the number of synthetic cases that dispatch to the wrong branch or lose UNKNOWN semantics.
+    7. Set dynamic_grammar_ready=true only if the dry-run supports all required states without transition errors.
+    8. Write all required fields, status="complete", and honest_verdict.
+
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1339_xgrammar2_tagdispatch_certificate_grammar_dryrun.json')); print(d.get('dynamic_grammar_ready'), d.get('state_transition_error_count'), d.get('honest_verdict'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp1340-trigger-before-constrain-certificate-v6-sota
+  milestone: 2026.04.104
+  deliverable: results/experiment_1340_trigger_before_constrain_certificate_v6_sota.json
+  title: "Triggered Certificate Extraction v6 - Thinking-Before-Constraining + Dynamic Grammar"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 50
+  estimated_wall_time_min: 90
+  priority: critical
+  requires_gpu: true
+  gated_on:
+    - upstream: exp1337-environment-gate-disk-pretest-stale-skeleton-audit
+      artifact_field: environment_ready
+      op: '=='
+      value: true
+    - upstream: exp1339-xgrammar2-tagdispatch-certificate-grammar-dryrun
+      artifact_field: dynamic_grammar_ready
+      op: '=='
+      value: true
+  prior_failures:
+    - experiment_id: exp1325-triggered-certificate-extraction-v5-runtime-fixed-dccd-gbnf
+      verdict: disk_quota_stale_skeleton_no_substantive_sota_rerun
+      addressed_by: "Replace the blind rerun with trigger-before-constrain decoding and dynamic grammar dispatch."
+      retire_if_same_verdict: true
+    - experiment_id: exp1312-triggered-certificate-extraction-dccd-gbnf
+      verdict: certificate_parse_rate_0_71223_below_0_75_gate
+      addressed_by: "Target the missing 0.03777 parse-rate delta while preserving truthfulness and UNKNOWN states."
+      retire_if_same_verdict: true
+    - experiment_id: exp1299-triggered-certificate-extraction-sota-v3
+      verdict: blocked_or_missing_headline_artifact
+      addressed_by: "Use mandated SOTA GGUF cached model specs and explicit runtime settings."
+      retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    exp1323 recovered multi-token SOTA outputs, exp1324 showed the parse gate
+    only missed by 0.03777, and exp1325 never produced scientific evidence
+    because of environment failure. This task is the substantive certificate
+    replacement: let the model think before the certificate trigger, then
+    switch into dynamic constrained output. Use {project_root} as the project
+    root and {date} as the run date in artifact metadata.
+
+    MODEL_SPECS:
+    Use cached_sota_pair(gpu_indices=(0, 1)) from python/carnot/inference/sota_models.py.
+    Headline generations must include at least one of:
+    - unsloth/Qwen3.6-35B-A3B-GGUF
+    - unsloth/gemma-4-31B-it-GGUF
+    - unsloth/gemma-4-26B-A4B-it-GGUF
+    Legacy small models may only be CPU smoke tests with headline_result_allowed=false.
+
+    EXISTING CODE TO READ FIRST:
+    - CODEX.md
+    - CLAUDE.md
+    - scripts/experiment_template.py
+    - python/carnot/inference/sota_models.py
+    - results/experiment_1323_sota_gguf_token_health_prompt_runtime_diagnostic.json
+    - results/experiment_1324_certificate_failure_taxonomy_formalizer_reality_check.json
+    - results/experiment_1337_environment_gate_disk_pretest_stale_skeleton_audit.json
+    - results/experiment_1339_xgrammar2_tagdispatch_certificate_grammar_dryrun.json
+    - research-references.md
+    - openspec/capabilities/pipeline/spec.md
+
+    TASK:
+    Run a small verifier-backed SOTA certificate extraction slice using a
+    trigger-before-constrain prompt and dynamic certificate grammar branch. This
+    is not a blind rerun of exp1325; record method differences explicitly.
+
+    REQUIRED ARTIFACT FIELDS:
+    - status
+    - models_used
+    - runtime_settings_used
+    - trigger_token_hit_rate
+    - certificate_parse_rate
+    - certificate_truthfulness_rate
+    - parse_rate_delta_over_exp1312
+    - truthfulness_delta_over_exp1312
+    - extra_token_overhead
+    - projection_tax_delta
+    - unknown_preservation_rate
+    - hardcoded_solution_leakage_proxy
+    - headline_result_allowed
+    - honest_verdict
+
+    CONCRETE STEPS:
+    1. Create results/experiment_1340_trigger_before_constrain_certificate_v6_sota.json immediately with status="in_progress".
+    2. Load exp1323 runtime settings, exp1324 failure taxonomy, exp1337 environment gate, and exp1339 grammar dry-run.
+    3. Abort to a terminal blocked artifact if environment_ready or dynamic_grammar_ready is not true.
+    4. Resolve MODEL_SPECS through cached_sota_pair(gpu_indices=(0, 1)) and record the exact model IDs, GPU indices, llama.cpp settings, stop strings, and max-token budget.
+    5. Run a small deterministic case set that covers SAT, UNSAT, UNKNOWN, and repair-hint outputs. Compare static GBNF or previous-parser behavior against the triggered dynamic branch when feasible.
+    6. Verify each parsed certificate with the local solver or validator and compute parse rate, truthfulness rate, trigger hit rate, UNKNOWN preservation, projection tax, and leakage proxy.
+    7. Set headline_result_allowed=true only if a mandated SOTA GGUF model produced the headline generations and verifier-backed cases are present.
+    8. Write all required fields, status="complete", and honest_verdict. If certificate_parse_rate remains below 0.75, name the remaining blocker and keep semantic downstream gates closed.
+
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1340_trigger_before_constrain_certificate_v6_sota.json')); print(d.get('certificate_parse_rate'), d.get('certificate_truthfulness_rate'), d.get('parse_rate_delta_over_exp1312'), d.get('honest_verdict'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp1341-halluguard-certificate-failure-split
+  milestone: 2026.04.104
+  deliverable: results/experiment_1341_halluguard_certificate_failure_split.json
+  title: "HalluGuard-Style Certificate Failure Split - Data vs Reasoning vs Parser Risk"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 35
+  estimated_wall_time_min: 35
+  priority: high
+  requires_gpu: false
+  prior_failures:
+    - experiment_id: exp1324-certificate-failure-taxonomy-formalizer-reality-check
+      verdict: diagnostic_complete_parse_gate_shortfall_parser_recovery_needed
+      addressed_by: "Refine the failure taxonomy into repair policies inspired by HalluGuard's data-driven versus reasoning-driven split."
+      retire_if_same_verdict: false
+  prompt: |
+    CONTEXT:
+    exp1324 identified parser/schema mismatch, undergeneration, semantic
+    invalidity, solver disagreement, UNKNOWN mishandling, and leakage risk.
+    HalluGuard suggests separating data-driven failures from reasoning-driven
+    instability instead of treating hallucination as one class. Use
+    {project_root} as the project root and {date} as the run date in artifact
+    metadata.
+
+    EXISTING CODE TO READ FIRST:
+    - CODEX.md
+    - CLAUDE.md
+    - research-references.md
+    - results/experiment_1323_sota_gguf_token_health_prompt_runtime_diagnostic.json
+    - results/experiment_1324_certificate_failure_taxonomy_formalizer_reality_check.json
+    - results/experiment_1340_trigger_before_constrain_certificate_v6_sota.json
+    - docs/research-notes/literature-priority-audit.md
+    - openspec/capabilities/pipeline/spec.md
+
+    TASK:
+    Produce a refined certificate failure split and repair policy. This is a
+    replay/audit task over available artifacts; do not run fresh SOTA models.
+
+    REQUIRED ARTIFACT FIELDS:
+    - status
+    - source_cases_available
+    - data_driven_risk_proxy
+    - reasoning_driven_risk_proxy
+    - parser_schema_risk_count
+    - undergeneration_risk_count
+    - semantic_invalidity_count
+    - unknown_mishandling_count
+    - repair_policy_by_failure_type
+    - universal_detector_claim_allowed
+    - honest_verdict
+
+    CONCRETE STEPS:
+    1. Create results/experiment_1341_halluguard_certificate_failure_split.json immediately with status="in_progress".
+    2. Read exp1323, exp1324, and exp1340 if present. If exp1340 is absent or blocked, proceed from exp1324 only and record the limitation.
+    3. Map each observed failure class into data-driven risk, reasoning-driven risk, parser/schema risk, undergeneration risk, semantic invalidity, or UNKNOWN mishandling.
+    4. Avoid claiming a universal hallucination detector; set universal_detector_claim_allowed=false unless there is direct evidence beyond the local certificate slice.
+    5. Write repair_policy_by_failure_type with concrete next actions such as prompt retrieval, reasoning budget, grammar branch, semantic validator, or UNKNOWN-preserving fallback.
+    6. Write all required fields, status="complete", and honest_verdict.
+
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1341_halluguard_certificate_failure_split.json')); print(d.get('source_cases_available'), d.get('universal_detector_claim_allowed'), d.get('honest_verdict'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp1342-chopchop-nsvif-semantic-validator-gated
+  milestone: 2026.04.104
+  deliverable: results/experiment_1342_chopchop_nsvif_semantic_validator_gated.json
+  title: "ChopChop/NSVIF Semantic Validator - Gated on Certificate Parse>=0.75"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 45
+  estimated_wall_time_min: 60
+  priority: critical
+  requires_gpu: false
+  gated_on:
+    - upstream: exp1340-trigger-before-constrain-certificate-v6-sota
+      artifact_field: certificate_parse_rate
+      op: '>='
+      value: 0.75
+  prior_failures:
+    - experiment_id: exp1326-satir-nsvif-semantic-validator-gated-on-parse-ge-075
+      verdict: blocked_or_missing_due_to_exp1325_stale_artifact
+      addressed_by: "Run semantic validation only after the new .104 parse gate is met."
+      retire_if_same_verdict: true
+    - experiment_id: exp1313-constrainprompt-nsvif-semantic-validator-mus-repair
+      verdict: blocked_gate_certificate_parse_rate_actual_0_71223_lt_0_75
+      addressed_by: "Replace syntax-only gating with parse-gated semantic validation and UNKNOWN-preserving checks."
+      retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    Carnot needs more than parseable JSON. ChopChop and NSVIF point toward
+    semantic constraints that execute or prove output properties, while .102
+    showed syntax-only certificates were insufficient. Use {project_root} as
+    the project root and {date} as the run date in artifact metadata.
+
+    EXISTING CODE TO READ FIRST:
+    - CODEX.md
+    - CLAUDE.md
+    - research-references.md
+    - results/experiment_1340_trigger_before_constrain_certificate_v6_sota.json
+    - results/experiment_1341_halluguard_certificate_failure_split.json
+    - results/experiment_1313_constrainprompt_nsvif_semantic_validator_mus_repair.json
+    - python/carnot/
+    - tests/
+    - openspec/capabilities/pipeline/spec.md
+
+    TASK:
+    Build or reuse a local semantic validator for parsed certificates. It
+    should check realizable prefixes, solver equivalence where possible,
+    UNKNOWN preservation, and MUS-style repair hints without depending on a
+    fresh SOTA model call.
+
+    REQUIRED ARTIFACT FIELDS:
+    - status
+    - parsed_certificate_cases
+    - semantic_constraint_count
+    - realizable_prefix_rate
+    - validator_execution_pass_rate
+    - validator_equivalence_pass_rate
+    - unknown_preservation_rate
+    - mus_repair_hint_count
+    - syntax_only_delta
+    - semantic_validator_claim_allowed
+    - honest_verdict
+
+    CONCRETE STEPS:
+    1. Create results/experiment_1342_chopchop_nsvif_semantic_validator_gated.json immediately with status="in_progress".
+    2. Abort to a terminal blocked artifact if exp1340.certificate_parse_rate is below 0.75 or unavailable.
+    3. Read available parsed certificates from exp1340 and define semantic constraints for answer equivalence, satisfiability state, realizable prefix, UNKNOWN preservation, and repair hints.
+    4. Reuse existing solvers, verifiers, and parser structures in python/carnot before adding any new code.
+    5. Run the validator on the parsed certificate slice and compute execution pass rate, equivalence pass rate, UNKNOWN preservation, and syntax_only_delta.
+    6. Set semantic_validator_claim_allowed=true only if the validator checks real semantics rather than schema shape alone.
+    7. Write all required fields, status="complete", and honest_verdict.
+
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1342_chopchop_nsvif_semantic_validator_gated.json')); print(d.get('validator_execution_pass_rate'), d.get('unknown_preservation_rate'), d.get('semantic_validator_claim_allowed'), d.get('honest_verdict'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp1343-margin-aware-beaver-cactus-scheduler
+  milestone: 2026.04.104
+  deliverable: results/experiment_1343_margin_aware_beaver_cactus_scheduler.json
+  title: "Margin-Aware BEAVER/Cactus Scheduler - Gated on Semantic Validator Pass"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 40
+  estimated_wall_time_min: 50
+  priority: high
+  requires_gpu: false
+  gated_on:
+    - upstream: exp1342-chopchop-nsvif-semantic-validator-gated
+      artifact_field: validator_execution_pass_rate
+      op: '>='
+      value: 0.5
+  prior_failures:
+    - experiment_id: exp1327-beaver-lite-cactus-safe-prefix-gated-on-validator-pass
+      verdict: blocked_gate_check_failed_missing_exp1326_artifact
+      addressed_by: "Run only after .104 semantic validator evidence exists."
+      retire_if_same_verdict: true
+    - experiment_id: exp1314-beaver-lite-cactus-safe-prefix-scheduler
+      verdict: blocked_by_semantic_validator_gate
+      addressed_by: "Use margin-aware proxy scheduling rather than binary full-verifier dispatch."
+      retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    MARS and TriSpec suggest verification cost should be margin-aware and
+    proxy-assisted. Carnot needs a scheduler that saves full-verifier calls
+    without accepting invalid certificates. Use {project_root} as the project
+    root and {date} as the run date in artifact metadata.
+
+    EXISTING CODE TO READ FIRST:
+    - CODEX.md
+    - CLAUDE.md
+    - research-references.md
+    - results/experiment_1342_chopchop_nsvif_semantic_validator_gated.json
+    - results/experiment_1314_beaver_lite_cactus_safe_prefix_scheduler.json
+    - python/carnot/
+    - tests/
+    - openspec/capabilities/pipeline/spec.md
+
+    TASK:
+    Prototype a margin-aware verifier scheduler over the semantic validator
+    outputs. It should estimate when a proxy is sufficient, when to escalate to
+    full verification, and what false-acceptance risk remains.
+
+    REQUIRED ARTIFACT FIELDS:
+    - status
+    - proxy_accept_rate
+    - low_margin_escalation_rate
+    - full_verifier_call_reduction
+    - false_acceptance_rate
+    - verifier_cost_reduction_proxy
+    - cactus_branch_used
+    - beaver_bound_proxy_available
+    - triage_claim_allowed
+    - honest_verdict
+
+    CONCRETE STEPS:
+    1. Create results/experiment_1343_margin_aware_beaver_cactus_scheduler.json immediately with status="in_progress".
+    2. Abort to a terminal blocked artifact if exp1342.validator_execution_pass_rate is below 0.5 or unavailable.
+    3. Read existing scheduler, verifier, and energy modules and identify the smallest margin proxy already available.
+    4. Run a replay over semantic validator cases, partitioning high-margin proxy accepts, low-margin escalations, and full-verifier rejects.
+    5. Compute full_verifier_call_reduction and false_acceptance_rate against the full verifier when labels are available.
+    6. Set triage_claim_allowed=true only if no invalid certificates are accepted in the audited slice or the residual risk is explicitly bounded.
+    7. Write all required fields, status="complete", and honest_verdict.
+
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1343_margin_aware_beaver_cactus_scheduler.json')); print(d.get('full_verifier_call_reduction'), d.get('false_acceptance_rate'), d.get('triage_claim_allowed'), d.get('honest_verdict'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+# ============================================================
+# Phase 2 - Continuous self-learning and verifier-governed updates
+# ============================================================
+
+- id: exp1344-continuous-self-learning-failure-type-memory-policy
+  milestone: 2026.04.104
+  deliverable: results/experiment_1344_continuous_self_learning_failure_type_memory_policy.json
+  title: "Continuous Self-Learning: Failure-Type Memory Policy + Non-Forgetting"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 45
+  estimated_wall_time_min: 55
+  priority: critical
+  requires_gpu: false
+  prior_failures:
+    - experiment_id: exp1328-graphcontrol-drafter-probe-sanity-spectrum-v2
+      verdict: skipped_repeated_pretest_failure_signature
+      addressed_by: "Keep the mandatory self-learning branch runnable from replay artifacts even if fresh certificate gates are blocked."
+      retire_if_same_verdict: true
+    - experiment_id: exp1315-online-memory-policy-nonforgetting-audit
+      verdict: nonforgetting_evidence_positive_but_not_headline_certificate_update
+      addressed_by: "Tie memory policy to certificate failure types and accepted-violation control."
+      retire_if_same_verdict: false
+    - experiment_id: exp1303-online-memory-policy-v2
+      verdict: online_memory_policy_improved_non_headline
+      addressed_by: "Advance from replay memory to DVI-ready certificate-tail update criteria."
+      retire_if_same_verdict: false
+  prompt: |
+    CONTEXT:
+    The research program explicitly requires continuous self-learning. Previous
+    milestones showed useful replay/non-forgetting signals, but the system still
+    lacks a verifier-governed policy for which failures become memory, which are
+    demoted, and when certificate-tail updates are allowed. Use {project_root}
+    as the project root and {date} as the run date in artifact metadata.
+
+    EXISTING CODE TO READ FIRST:
+    - CODEX.md
+    - CLAUDE.md
+    - research-program.md
+    - research-complete.yaml
+    - results/experiment_1303_online_memory_policy_v2.json
+    - results/experiment_1315_online_memory_policy_nonforgetting_audit.json
+    - results/experiment_1324_certificate_failure_taxonomy_formalizer_reality_check.json
+    - results/experiment_1341_halluguard_certificate_failure_split.json
+    - python/carnot/
+    - openspec/capabilities/online-learning/spec.md
+
+    TASK:
+    Design and run a replay-based continuous self-learning policy audit that
+    maps certificate failure types to memory promotion, demotion, non-forgetting
+    checks, and DVI readiness. This task must run even if Phase 1 gates fail,
+    using available replay artifacts and honest non-headline labeling.
+
+    REQUIRED ARTIFACT FIELDS:
+    - status
+    - self_learning_delta_overall
+    - nonforgetting_certificate_rate
+    - memory_regression_count
+    - accepted_violation_delta
+    - failure_type_policy
+    - promoted_memory_count
+    - demoted_memory_count
+    - replay_cases_used
+    - headline_certificate_cases
+    - dvi_ready
+    - headline_result_allowed
+    - honest_verdict
+
+    CONCRETE STEPS:
+    1. Create results/experiment_1344_continuous_self_learning_failure_type_memory_policy.json immediately with status="in_progress".
+    2. Read the online-learning spec and prior online memory artifacts; if files are absent, record which inputs were unavailable.
+    3. Read the latest certificate taxonomy and HalluGuard-style split if present, and map each failure type to promote, demote, quarantine, or request-fresh-verifier policy.
+    4. Run a replay audit over available memory/certificate cases and compute nonforgetting_certificate_rate, memory_regression_count, and accepted_violation_delta.
+    5. Set dvi_ready=true only if self_learning_delta_overall is positive or neutral, accepted_violation_delta is not positive, and non-forgetting does not regress.
+    6. Set headline_result_allowed=true only when the evidence includes current .104 certificate cases; replay-only results must be marked non-headline.
+    7. Write all required fields, status="complete", and honest_verdict.
+
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1344_continuous_self_learning_failure_type_memory_policy.json')); print(d.get('self_learning_delta_overall'), d.get('accepted_violation_delta'), d.get('dvi_ready'), d.get('honest_verdict'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp1345-dvi-certificate-tail-v3-gated
+  milestone: 2026.04.104
+  deliverable: results/experiment_1345_dvi_certificate_tail_v3_gated.json
+  title: "DVI Certificate-Tail Online Update v3 - Gated on Parse, Semantic Pass, and Non-Forgetting"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 45
+  estimated_wall_time_min: 65
+  priority: high
+  requires_gpu: false
+  gated_on:
+    - upstream: exp1340-trigger-before-constrain-certificate-v6-sota
+      artifact_field: certificate_parse_rate
+      op: '>='
+      value: 0.75
+    - upstream: exp1342-chopchop-nsvif-semantic-validator-gated
+      artifact_field: validator_execution_pass_rate
+      op: '>='
+      value: 0.5
+    - upstream: exp1344-continuous-self-learning-failure-type-memory-policy
+      artifact_field: dvi_ready
+      op: '=='
+      value: true
+  prior_failures:
+    - experiment_id: exp1329-certificate-tail-dvi-online-update-v2-gated
+      verdict: gate_blocked_or_skipped_due_to_exp1325_branch
+      addressed_by: "Run only after parse, semantic validation, and non-forgetting gates are all satisfied."
+      retire_if_same_verdict: true
+    - experiment_id: exp1316-certificate-tail-dvi-online-update
+      verdict: blocked_by_certificate_parse_gate
+      addressed_by: "Require .104 certificate and semantic evidence before online update."
+      retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    The DVI branch should only update certificate-tail behavior when the parse
+    gate, semantic validator, and non-forgetting policy all pass. This task is
+    the smallest online-update test that can support or reject that path. Use
+    {project_root} as the project root and {date} as the run date in artifact
+    metadata.
+
+    EXISTING CODE TO READ FIRST:
+    - CODEX.md
+    - CLAUDE.md
+    - results/experiment_1340_trigger_before_constrain_certificate_v6_sota.json
+    - results/experiment_1342_chopchop_nsvif_semantic_validator_gated.json
+    - results/experiment_1344_continuous_self_learning_failure_type_memory_policy.json
+    - results/experiment_1316_certificate_tail_dvi_online_update.json
+    - python/carnot/
+    - openspec/capabilities/online-learning/spec.md
+    - openspec/capabilities/pipeline/spec.md
+
+    TASK:
+    Run a gated DVI certificate-tail online update over validated certificate
+    cases. Keep the update minimal and reject any path that increases accepted
+    violations or breaks semantic validation.
+
+    REQUIRED ARTIFACT FIELDS:
+    - status
+    - certificate_tail_cases_used
+    - online_update_count
+    - drafter_acceptance_delta
+    - accepted_violation_delta
+    - nonforgetting_preserved
+    - semantic_validator_preserved
+    - verifier_rejection_count
+    - lossless_acceptance_claim_allowed
+    - headline_result_allowed
+    - honest_verdict
+
+    CONCRETE STEPS:
+    1. Create results/experiment_1345_dvi_certificate_tail_v3_gated.json immediately with status="in_progress".
+    2. Abort to a terminal blocked artifact if any structured gate is not satisfied.
+    3. Read prior DVI code/artifacts and identify the smallest replay or micro-update path for certificate-tail cases.
+    4. Run the update on validated certificate cases and rerun non-forgetting and semantic validator checks.
+    5. Compute drafter_acceptance_delta, accepted_violation_delta, verifier_rejection_count, and whether semantic validation is preserved.
+    6. Set lossless_acceptance_claim_allowed=true only if drafter acceptance improves without positive accepted_violation_delta and without non-forgetting or semantic regression.
+    7. Set headline_result_allowed=true only if the update uses current .104 validated certificate cases.
+    8. Write all required fields, status="complete", and honest_verdict.
+
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1345_dvi_certificate_tail_v3_gated.json')); print(d.get('drafter_acceptance_delta'), d.get('accepted_violation_delta'), d.get('lossless_acceptance_claim_allowed'), d.get('honest_verdict'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp1346-grpo-vprm-v13-gated-micro-audit
+  milestone: 2026.04.104
+  deliverable: results/experiment_1346_grpo_vprm_v13_gated_micro_audit.json
+  title: "GRPO/VPRM v13 Micro-Audit - Gated on DVI Lossless Acceptance"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 35
+  estimated_wall_time_min: 45
+  priority: medium
+  requires_gpu: false
+  gated_on:
+    - upstream: exp1345-dvi-certificate-tail-v3-gated
+      artifact_field: lossless_acceptance_claim_allowed
+      op: '=='
+      value: true
+    - upstream: exp1344-continuous-self-learning-failure-type-memory-policy
+      artifact_field: self_learning_delta_overall
+      op: '>'
+      value: 0.0
+  prior_failures:
+    - experiment_id: exp1330-grpo-vprm-v12-gated-on-dvi-lossless
+      verdict: gate_blocked_or_skipped_due_to_dvi_gate
+      addressed_by: "Run only when DVI lossless acceptance and self-learning delta are both positive."
+      retire_if_same_verdict: true
+    - experiment_id: exp1317-grpo-vprm-v11-gated-on-dvi-lossless
+      verdict: positive_replay_but_no_new_train_claim
+      addressed_by: "Separate replay-only audit from any policy-update claim."
+      retire_if_same_verdict: false
+  prompt: |
+    CONTEXT:
+    GRPO/VPRM should not be used as a reward-policy update unless DVI improves
+    acceptance without adding violations and the self-learning branch shows a
+    positive verifier-governed signal. Use {project_root} as the project root
+    and {date} as the run date in artifact metadata.
+
+    EXISTING CODE TO READ FIRST:
+    - CODEX.md
+    - CLAUDE.md
+    - results/experiment_1344_continuous_self_learning_failure_type_memory_policy.json
+    - results/experiment_1345_dvi_certificate_tail_v3_gated.json
+    - results/experiment_1317_grpo_vprm_v11_gated_on_dvi_lossless.json
+    - python/carnot/
+    - openspec/capabilities/online-learning/spec.md
+    - openspec/capabilities/verifier-policy/spec.md
+
+    TASK:
+    Run a small GRPO/VPRM micro-audit over the DVI cases. This task may be
+    replay-only; it must clearly distinguish replay evidence from a fresh
+    training-policy update.
+
+    REQUIRED ARTIFACT FIELDS:
+    - status
+    - dvi_cases_used
+    - grpo_vprm_delta
+    - accepted_violation_delta
+    - new_train_steps_run
+    - replay_only
+    - policy_update_claim_allowed
+    - headline_result_allowed
+    - honest_verdict
+
+    CONCRETE STEPS:
+    1. Create results/experiment_1346_grpo_vprm_v13_gated_micro_audit.json immediately with status="in_progress".
+    2. Abort to a terminal blocked artifact if lossless_acceptance_claim_allowed is not true or self_learning_delta_overall is not positive.
+    3. Read existing GRPO/VPRM code and prior artifacts, then choose the smallest micro-audit that can run without destabilizing the milestone.
+    4. Run replay scoring by default. Only run new train steps if the local code already has a safe, bounded path and record new_train_steps_run.
+    5. Compute grpo_vprm_delta and accepted_violation_delta against DVI cases.
+    6. Set policy_update_claim_allowed=true only if new training steps ran and accepted_violation_delta is not positive.
+    7. Write all required fields, status="complete", and honest_verdict.
+
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1346_grpo_vprm_v13_gated_micro_audit.json')); print(d.get('grpo_vprm_delta'), d.get('new_train_steps_run'), d.get('policy_update_claim_allowed'), d.get('honest_verdict'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+# ============================================================
+# Phase 3 - Hardware portability, external parity, and retro
+# ============================================================
+
+- id: exp1347-thrml-compatibility-parity-audit
+  milestone: 2026.04.104
+  deliverable: results/experiment_1347_thrml_compatibility_parity_audit.json
+  title: "THRML Compatibility Parity Audit - Carnot Tiny Ising/KAN Cases"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 35
+  estimated_wall_time_min: 45
+  priority: medium
+  requires_gpu: false
+  prior_failures:
+    - experiment_id: exp1320-hardware-portability-packet-tiny-ising-kan
+      verdict: cpu_portability_packet_ready_hardware_not_run
+      addressed_by: "Audit public THRML compatibility without claiming TSU hardware results."
+      retire_if_same_verdict: false
+  prompt: |
+    CONTEXT:
+    Extropic's public XTR-0/Z1/THRML stack is a relevant hardware target, but
+    Carnot must not claim hardware acceleration without local evidence. This
+    task checks whether tiny Carnot energy cases can be represented against
+    currently available local THRML APIs, if any. Use {project_root} as the
+    project root and {date} as the run date in artifact metadata.
+
+    EXISTING CODE TO READ FIRST:
+    - CODEX.md
+    - CLAUDE.md
+    - research-references.md
+    - research-hardware-wishlist.md
+    - results/experiment_1320_hardware_portability_packet_tiny_ising_kan.json
+    - python/carnot/
+    - openspec/capabilities/hardware/spec.md
+
+    TASK:
+    Audit THRML compatibility for tiny Ising/KAN energy cases. Do not install
+    new packages, do not require internet during execution, and do not claim
+    TSU hardware execution unless it actually ran.
+
+    REQUIRED ARTIFACT FIELDS:
+    - status
+    - thrml_import_available
+    - cases_attempted
+    - energy_parity_max_abs_error
+    - sample_quality_proxy
+    - missing_api_or_dependency
+    - tsu_mapping_notes
+    - hardware_claim_allowed
+    - honest_verdict
+
+    CONCRETE STEPS:
+    1. Create results/experiment_1347_thrml_compatibility_parity_audit.json immediately with status="in_progress".
+    2. Read the hardware wishlist, exp1320 portability packet, and current tiny Ising/KAN energy code.
+    3. Check whether a THRML Python import or local package is available without installing anything.
+    4. If THRML is available, attempt a tiny parity mapping and compute energy_parity_max_abs_error. If not, record missing_api_or_dependency and write mapping notes only.
+    5. Set hardware_claim_allowed=true only if a local THRML-backed run executes and parity is measured.
+    6. Write all required fields, status="complete", and honest_verdict.
+
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1347_thrml_compatibility_parity_audit.json')); print(d.get('thrml_import_available'), d.get('hardware_claim_allowed'), d.get('honest_verdict'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp1348-pbit-update-dynamics-dual-bram-packet-v2
+  milestone: 2026.04.104
+  deliverable: results/experiment_1348_pbit_update_dynamics_dual_bram_packet_v2.json
+  title: "p-bit Update-Dynamics + Dual-BRAM Portability Packet v2"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 35
+  estimated_wall_time_min: 40
+  priority: medium
+  requires_gpu: false
+  prior_failures:
+    - experiment_id: exp1320-hardware-portability-packet-tiny-ising-kan
+      verdict: hardware_not_run
+      addressed_by: "Produce the next CPU-only hardware-portability packet with explicit no-hardware boundaries."
+      retire_if_same_verdict: false
+    - experiment_id: exp584-kv260-vivado-first-light
+      verdict: vivado_not_installed
+      addressed_by: "Avoid Vivado dependency and specify what the RTL packet must contain for future KV260 work."
+      retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    Recent p-bit and dual-BRAM annealer work suggests update dynamics, memory
+    reuse, finite delay, and DAC precision assumptions matter for hardware
+    portability. Carnot has CPU energy cases and a KV260 wishlist, but no local
+    FPGA run should be claimed in .104. Use {project_root} as the project root
+    and {date} as the run date in artifact metadata.
+
+    EXISTING CODE TO READ FIRST:
+    - CODEX.md
+    - CLAUDE.md
+    - research-references.md
+    - research-hardware-wishlist.md
+    - results/experiment_1320_hardware_portability_packet_tiny_ising_kan.json
+    - python/carnot/
+    - openspec/capabilities/hardware/spec.md
+
+    TASK:
+    Produce a p-bit/dual-BRAM portability packet that translates tiny Carnot
+    Ising/KAN cases into hardware assumptions and next RTL requirements. Do not
+    run Vivado or claim KV260 execution.
+
+    REQUIRED ARTIFACT FIELDS:
+    - status
+    - sync_async_regime
+    - reuse_factor_grid
+    - bram_layout
+    - dac_precision_assumption
+    - finite_delay_assumption
+    - kv260_claim_allowed
+    - hardware_claim_allowed
+    - next_rtl_requirements
+    - honest_verdict
+
+    CONCRETE STEPS:
+    1. Create results/experiment_1348_pbit_update_dynamics_dual_bram_packet_v2.json immediately with status="in_progress".
+    2. Read the hardware wishlist, exp1320 packet, and relevant tiny energy case code.
+    3. Define a sync_async_regime grid and reuse_factor_grid from the 2026 p-bit/dual-BRAM references in research-references.md.
+    4. Draft a bram_layout and DAC/finite-delay assumption set suitable for future KV260 or ASIC-style mapping.
+    5. Set kv260_claim_allowed=false and hardware_claim_allowed=false unless an actual local hardware synthesis or board run occurs.
+    6. Write next_rtl_requirements as concrete file/interface requirements for a future hardware milestone.
+    7. Write all required fields, status="complete", and honest_verdict.
+
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1348_pbit_update_dynamics_dual_bram_packet_v2.json')); print(d.get('kv260_claim_allowed'), d.get('hardware_claim_allowed'), d.get('honest_verdict'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp1349-ebt-citation-kona-parity-gap-audit
+  milestone: 2026.04.104
+  deliverable: results/experiment_1349_ebt_citation_kona_parity_gap_audit.json
+  title: "EBT Citation Neighborhood + Kona 1.0 Parity Gap Audit"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 25
+  estimated_wall_time_min: 25
+  priority: medium
+  requires_gpu: false
+  prior_failures:
+    - experiment_id: exp1293-ebt-arm-ebm-cot-energy-bridge-audit
+      verdict: early_bridge_audit_needed_stronger_local_evidence_boundary
+      addressed_by: "Update the EBT-adjacent claim boundary using the 2026 citation neighborhood and explicit Kona/Extropic parity gaps."
+      retire_if_same_verdict: false
+    - experiment_id: exp1306-ebt-arm-ebm-cot-energy-bridge-audit-v2
+      verdict: bridge_audit_replay_evidence_not_publication_ready
+      addressed_by: "Separate local Carnot evidence from external dependency claims before Phase-3 publication language advances."
+      retire_if_same_verdict: false
+  prompt: |
+    CONTEXT:
+    The .104 research sweep added the EBT citation neighborhood, Extropic
+    THRML/XTR-0/Z1, and Logical Intelligence Kona 1.0 positioning. Carnot needs
+    a clear claim boundary: what local evidence exists, what parity gaps remain,
+    and what should not be promised in PRD-facing language. Use {project_root}
+    as the project root and {date} as the run date in artifact metadata.
+
+    EXISTING CODE TO READ FIRST:
+    - CODEX.md
+    - CLAUDE.md
+    - research-references.md
+    - _bmad/prd.md
+    - _bmad/architecture.md
+    - ops/status.md
+    - results/experiment_1347_thrml_compatibility_parity_audit.json
+    - results/experiment_1348_pbit_update_dynamics_dual_bram_packet_v2.json
+    - openspec/change-proposals/research-roadmap-vNEXT.md
+
+    TASK:
+    Produce an external parity gap audit for EBT-adjacent research, Kona-style
+    EBM claims, and Carnot's current local evidence. This is a document/artifact
+    task only; do not run models or hardware.
+
+    REQUIRED ARTIFACT FIELDS:
+    - status
+    - ebt_citation_themes
+    - kona_public_claims_mapped
+    - carnot_local_evidence
+    - parity_gaps
+    - phase3_obligations
+    - publication_claim_changes_needed
+    - external_dependency_claim_allowed
+    - honest_verdict
+
+    CONCRETE STEPS:
+    1. Create results/experiment_1349_ebt_citation_kona_parity_gap_audit.json immediately with status="in_progress".
+    2. Read the .104 research-references section, PRD, architecture, status, and hardware artifacts if present.
+    3. Summarize EBT citation themes that materially affect Carnot's Phase-3 plan, including EBT reasoning, NRGPT, policy/optimizer variants, and metacognitive code-generation claims.
+    4. Map public Kona-style claims to Carnot local evidence and identify parity gaps without overstating capabilities.
+    5. Write phase3_obligations and publication_claim_changes_needed as concrete roadmap or docs changes.
+    6. Set external_dependency_claim_allowed=false unless the local repo contains reproducible evidence for the external claim.
+    7. Write all required fields, status="complete", and honest_verdict.
+
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1349_ebt_citation_kona_parity_gap_audit.json')); print(d.get('external_dependency_claim_allowed'), d.get('honest_verdict'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp1350-milestone-104-retro-carryforward
+  milestone: 2026.04.104
+  deliverable: results/experiment_1350_milestone_104_retro_carryforward.json
+  title: "Milestone 2026.04.104 Retrospective + Carry-Forward Plan"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 35
+  estimated_wall_time_min: 35
+  priority: high
+  requires_gpu: false
+  prior_failures:
+    - experiment_id: exp1308-milestone-retro-101
+      verdict: retrospective_scope_repeated_across_milestones
+      addressed_by: "Make .104 retro explicitly measure criteria, carry-forward state, and prior-failure hygiene instead of producing a generic closeout."
+      retire_if_same_verdict: false
+    - experiment_id: exp1322-milestone-retro-102
+      verdict: retrospective_required_clear_gate_and_publication_holds
+      addressed_by: "Require branch-specific verdicts for certificate, self-learning, hardware, publication hold, and stale-artifact closure."
+      retire_if_same_verdict: false
+    - experiment_id: exp350-operational-retro
+      verdict: operational_retro_pattern_requires_actionable_hygiene_notes
+      addressed_by: "Record whether .103 disk quota, repeated pre-test, and stale skeleton issues were closed cleanly in .104."
+      retire_if_same_verdict: false
+  prompt: |
+    CONTEXT:
+    This is the terminal .104 retrospective. It must reconcile the environment
+    gate, triggered certificate branch, semantic validator, self-learning
+    branch, hardware portability audits, and external parity audit into a clear
+    carry-forward plan. Use {project_root} as the project root and {date} as the
+    run date in artifact metadata.
+
+    EXISTING CODE TO READ FIRST:
+    - CODEX.md
+    - CLAUDE.md
+    - research-roadmap-next.yaml
+    - openspec/change-proposals/research-roadmap-vNEXT.md
+    - results/experiment_1337_environment_gate_disk_pretest_stale_skeleton_audit.json
+    - results/experiment_1338_exp1325_skeleton_and_gate_state_finalizer.json
+    - results/experiment_1339_xgrammar2_tagdispatch_certificate_grammar_dryrun.json
+    - results/experiment_1340_trigger_before_constrain_certificate_v6_sota.json
+    - results/experiment_1341_halluguard_certificate_failure_split.json
+    - results/experiment_1342_chopchop_nsvif_semantic_validator_gated.json
+    - results/experiment_1343_margin_aware_beaver_cactus_scheduler.json
+    - results/experiment_1344_continuous_self_learning_failure_type_memory_policy.json
+    - results/experiment_1345_dvi_certificate_tail_v3_gated.json
+    - results/experiment_1346_grpo_vprm_v13_gated_micro_audit.json
+    - results/experiment_1347_thrml_compatibility_parity_audit.json
+    - results/experiment_1348_pbit_update_dynamics_dual_bram_packet_v2.json
+    - results/experiment_1349_ebt_citation_kona_parity_gap_audit.json
+    - ops/status.md
+    - ops/changelog.md
+    - research-complete.yaml
+
+    TASK:
+    Produce a milestone retrospective artifact that states what .104 proved,
+    which claims remain blocked, and exactly what should carry forward. Do not
+    modify ops/status.md, ops/changelog.md, or research-complete.yaml unless the
+    conductor prompt explicitly asks for ops reconciliation in a later task.
+
+    REQUIRED ARTIFACT FIELDS:
+    - status
+    - criteria_total
+    - criteria_met
+    - experiment_statuses
+    - certificate_branch_verdict
+    - self_learning_verdict
+    - hardware_verdict
+    - publication_hold_state
+    - carry_forward_tasks
+    - prior_failure_hygiene_notes
+    - honest_verdict
+
+    CONCRETE STEPS:
+    1. Create results/experiment_1350_milestone_104_retro_carryforward.json immediately with status="in_progress".
+    2. Read the .104 roadmap and all available .104 artifacts; missing or blocked artifacts must be recorded explicitly rather than ignored.
+    3. Count criteria_total and criteria_met from the roadmap success criteria and observed artifacts.
+    4. Summarize experiment_statuses for exp1337 through exp1349.
+    5. Write certificate_branch_verdict, self_learning_verdict, hardware_verdict, and publication_hold_state with conservative claim boundaries.
+    6. Write carry_forward_tasks that are specific enough to seed the next roadmap, including any blocked gates, missing evidence, or docs/spec reconciliation needs.
+    7. Write prior_failure_hygiene_notes explaining whether .103 stale skeleton and pre-test issues were closed cleanly.
+    8. Write all required fields, status="complete", and honest_verdict.
+
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1350_milestone_104_retro_carryforward.json')); print(d.get('criteria_met'), '/', d.get('criteria_total'), d.get('honest_verdict'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
