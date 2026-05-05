@@ -2109,3 +2109,49 @@ reuse where available
 **And** `triage_claim_allowed=true` only when `false_acceptance_rate=0.0`.
 
 **Spec traces:** REQ-VERIFY-1371
+
+### REQ-VERIFY-1382: Full-Scale Certificate Semantic Repair Pipeline
+
+The repository shall provide a full-scale Exp 1382 runner that executes the
+certificate extraction, semantic validation, MCS repair-localization, and
+margin-aware scheduler chain over at least 50 local FoVer corpus cases, targeting
+100 cases when available.
+
+The runner MUST write
+`results/experiment_1382_fullscale_certificate_semantic_repair_100cases.json`
+with `status="in_progress"` before loading model specs, corpus rows, or the DVI
+checkpoint. It MUST load the Exp 1381 artifact, require `dvi_deployed=true`, and
+use that checkpoint path as the DVI verifier for semantic validation. It MUST
+resolve headline model specs through `cached_sota_pair(gpu_indices=(0, 1))` and
+headline LLM generation rows MUST use those specs.
+
+The runner MUST save `results/exp1382_ckpt.json` every 25 processed cases. The
+terminal artifact SHALL include at least `status`, `total_fover_cases`,
+`certificate_extract_count`, `certificate_parse_rate`,
+`semantic_validation_pass_rate`, `mcs_repair_localization_rate`,
+`repair_hint_precision`, `scheduler_accept_rate`,
+`scheduler_false_acceptance_rate`, `full_pipeline_pass_rate`,
+`dvi_checkpoint_used`, `headline_result_allowed`, and `honest_verdict`.
+`headline_result_allowed` SHALL be true only when at least 50 FoVer cases ran
+and a mandated cached SOTA GGUF generation source produced
+`certificate_parse_rate >= 0.75`.
+
+**Acceptance criteria:**
+- The runner writes an in-progress artifact first and a terminal artifact last.
+- A checkpoint artifact is written at 25-case intervals.
+- If the DVI checkpoint is absent or not deployed, the terminal artifact is
+  blocked and the headline gate is false.
+- Full-pipeline pass rate counts only cases that parse, pass semantic
+  validation, and are scheduler-accepted without requiring repair.
+
+### SCENARIO-VERIFY-1382: Full Pipeline Produces Auditable Paper Statistics
+
+**Given** Exp 1381 deployed a DVI checkpoint
+**And** the local FoVer corpus contains at least 50 labeled rows
+**And** `cached_sota_pair(gpu_indices=(0, 1))` resolves a mandated GGUF pair
+**When** Exp 1382 runs the full pipeline
+**Then** the terminal artifact reports certificate, semantic validation, MCS
+repair, scheduler, full-pipeline, DVI-checkpoint, and headline-gate statistics
+for the processed FoVer cases.
+
+**Spec traces:** REQ-VERIFY-1382, SCENARIO-VERIFY-1382
