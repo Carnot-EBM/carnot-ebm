@@ -1,0 +1,1 @@
+CAPABILITIES = ('bootstrap_detection', 'stale_detection', 'structured_gate', 'blocked_prerequisite', 'blocked_missing_tool', 'json_schema_validation', 'missing_deliverable_detection')

@@ -137,6 +137,42 @@ Every verifier module shall declare its acceptance object and known mismatch
 risks. A local verifier success shall not mark the task complete when the final
 artifact schema or benchmark gate disagrees.
 
+### REQ-HARNESS-010: Meta-Harness Conductor Search
+
+The repository shall provide a deterministic meta-harness search workflow that
+evaluates at least five conductor-policy candidates over at least eight cheap
+conductor-harness eval cases.
+
+The workflow shall write:
+
+- `scripts/meta_harness_conductor_search.py`
+- `ops/meta-harness-conductor-skill.md`
+- `ops/conductor-harness-eval-suite.md`
+- `results/experiment_1281_meta_harness_conductor_search.json`
+- `meta_harness_runs/`
+
+The terminal result artifact shall include `candidate_harnesses_evaluated`,
+`eval_cases_defined`, `baseline_score`, `best_score`,
+`improvement_over_baseline`, `best_candidate_id`,
+`pareto_frontier_written`, `trace_store_written`, `trace_store_path`,
+`recommended_policy_changes`, `hardcoded_leakage_audit_passed`, and
+`honest_verdict`.
+
+### REQ-HARNESS-011: Full Trace Store
+
+The meta-harness workflow shall preserve candidate policy source, scores,
+execution traces, verifier outputs, gate evaluation, artifact timeline, and
+final candidate artifacts in a filesystem trace store. The proposer-facing
+history shall be navigable with normal filesystem tools rather than compressed
+into scalar scores only.
+
+### REQ-HARNESS-012: Candidate Leakage Audit
+
+The meta-harness workflow shall audit candidate policies for hard-coded
+experiment-id leakage or task-specific string leakage. A terminal `complete`
+artifact shall set `hardcoded_leakage_audit_passed=true` only when all candidate
+policies pass the leakage audit.
+
 ## Scenarios
 
 ### SCENARIO-HARNESS-001: Bootstrap Skeleton Is Not Complete
@@ -173,6 +209,32 @@ actual value, and `failure_type="gate_blocked"`.
 artifact evidence, and previous verification outputs without relying on a
 compressed summary only.
 
+### SCENARIO-HARNESS-005: Meta-Harness Writes Candidate Trace Store
+
+**Given** the deterministic conductor eval suite defines at least eight cases
+**When** the meta-harness search workflow evaluates candidate policies
+**Then** it writes at least five `meta_harness_runs/candidate_*` directories
+**And** each candidate directory includes `policy.md`, `score.json`,
+`traces/verifier_outputs.jsonl`, and `results/final_artifact.json`.
+
+### SCENARIO-HARNESS-006: Meta-Harness Reports Honest Frontier
+
+**Given** a baseline conductor policy and at least four candidate improvements
+**When** the meta-harness search workflow completes
+**Then** the result artifact reports `baseline_score`, `best_score`,
+`improvement_over_baseline`, `best_candidate_id`, and
+`pareto_frontier_written=true`
+**And** if no candidate improves the baseline, `honest_verdict` records the
+negative result rather than fabricating improvement.
+
+### SCENARIO-HARNESS-007: Hard-Coded Leakage Blocks Clean Audit
+
+**Given** a candidate policy text contains a hard-coded experiment id such as
+`exp1281`
+**When** the leakage audit runs
+**Then** the candidate is marked as leaking
+**And** the terminal artifact cannot set `hardcoded_leakage_audit_passed=true`.
+
 ## Implementation Status
 
 | Requirement | Documentation | Artifact |
@@ -186,3 +248,6 @@ compressed summary only.
 | REQ-HARNESS-007 | Implemented (`ops/conductor-runtime-charter.md`) | Implemented |
 | REQ-HARNESS-008 | Implemented (`ops/conductor-runtime-charter.md`) | Implemented |
 | REQ-HARNESS-009 | Implemented (`ops/conductor-runtime-charter.md`) | Implemented |
+| REQ-HARNESS-010 | Implemented (`ops/meta-harness-conductor-skill.md`, `ops/conductor-harness-eval-suite.md`) | Implemented (`results/experiment_1281_meta_harness_conductor_search.json`) |
+| REQ-HARNESS-011 | Implemented (`scripts/meta_harness_conductor_search.py`) | Implemented (`meta_harness_runs/`) |
+| REQ-HARNESS-012 | Implemented (`scripts/meta_harness_conductor_search.py`) | Implemented |

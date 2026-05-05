@@ -1,0 +1,133 @@
+{
+  "average_runtime_s": 2.1,
+  "candidate_id": "candidate_004",
+  "case_results": [
+    {
+      "case_id": "bootstrap_only_artifact",
+      "desired_behavior": "Classify skeleton artifacts as non-terminal.",
+      "held_out": false,
+      "passed": true,
+      "penalty_type": null,
+      "required_capability": "bootstrap_detection",
+      "title": "Bootstrap-only artifact is not complete"
+    },
+    {
+      "case_id": "stale_skeleton",
+      "desired_behavior": "Classify stale artifacts as stale rather than complete.",
+      "held_out": false,
+      "passed": true,
+      "penalty_type": null,
+      "required_capability": "stale_detection",
+      "title": "Stale skeleton is rejected"
+    },
+    {
+      "case_id": "missing_sota_model",
+      "desired_behavior": "Record exact missing model or hardware prerequisite.",
+      "held_out": false,
+      "passed": true,
+      "penalty_type": null,
+      "required_capability": "blocked_prerequisite",
+      "title": "Missing GPU or SOTA model writes blocked artifact"
+    },
+    {
+      "case_id": "gated_downstream_task",
+      "desired_behavior": "Write terminal blocked artifact when gate is closed.",
+      "held_out": false,
+      "passed": true,
+      "penalty_type": null,
+      "required_capability": "structured_gate",
+      "title": "Gated task evaluates upstream path field operator value"
+    },
+    {
+      "case_id": "local_verifier_mismatch",
+      "desired_behavior": "Use final artifact or benchmark acceptance object.",
+      "held_out": true,
+      "passed": true,
+      "penalty_type": null,
+      "required_capability": "acceptance_alignment",
+      "title": "Local verifier success cannot override final artifact gate"
+    },
+    {
+      "case_id": "paper_unsupported_claim",
+      "desired_behavior": "Cite missing evidence instead of adding unsupported claims.",
+      "held_out": false,
+      "passed": true,
+      "penalty_type": null,
+      "required_capability": "paper_claim_audit",
+      "title": "Unsupported paper claim is flagged"
+    },
+    {
+      "case_id": "timeout_with_progress",
+      "desired_behavior": "Classify partial evidence as timeout_with_progress.",
+      "held_out": false,
+      "passed": true,
+      "penalty_type": null,
+      "required_capability": "timeout_progress",
+      "title": "Timeout with progress checkpoints honestly"
+    },
+    {
+      "case_id": "timeout_without_progress",
+      "desired_behavior": "Avoid pretending success when no evidence was produced.",
+      "held_out": false,
+      "passed": true,
+      "penalty_type": null,
+      "required_capability": "timeout_no_progress",
+      "title": "Timeout without progress is separate"
+    },
+    {
+      "case_id": "no_file_changes_produced",
+      "desired_behavior": "Retry, block, or retire with evidence.",
+      "held_out": false,
+      "passed": true,
+      "penalty_type": null,
+      "required_capability": "no_file_change_policy",
+      "title": "No file changes are classified"
+    },
+    {
+      "case_id": "malformed_json_artifact",
+      "desired_behavior": "Reject malformed JSON and request repair.",
+      "held_out": false,
+      "passed": true,
+      "penalty_type": null,
+      "required_capability": "json_schema_validation",
+      "title": "Malformed JSON fails schema validation"
+    },
+    {
+      "case_id": "missing_deliverable",
+      "desired_behavior": "Do not count absent result paths as complete.",
+      "held_out": true,
+      "passed": true,
+      "penalty_type": null,
+      "required_capability": "missing_deliverable_detection",
+      "title": "Missing deliverable is detected"
+    },
+    {
+      "case_id": "blocked_missing_tool",
+      "desired_behavior": "Record exact missing command or package.",
+      "held_out": false,
+      "passed": true,
+      "penalty_type": null,
+      "required_capability": "blocked_missing_tool",
+      "title": "Missing local tool writes blocked artifact"
+    }
+  ],
+  "eval_cases_passed": 12,
+  "eval_cases_total": 12,
+  "false_block_count": 0,
+  "false_block_rate": 0.0,
+  "false_complete_count": 0,
+  "false_complete_rate": 0.0,
+  "gate_correctness_rate": 1.0,
+  "gate_error_count": 0,
+  "hardcoded_leakage_detected": false,
+  "missing_artifact_detection_rate": 1.0,
+  "missing_trace_count": 0,
+  "recommended_policy_changes": [
+    "Adopt file-backed run packets for conductor tasks.",
+    "Require acceptance-object declarations for local verifiers.",
+    "Run paper-claim audits before public claim upgrades."
+  ],
+  "score": 12.0,
+  "title": "Acceptance-aligned full charter policy",
+  "trace_completeness_score": 1.0
+}
