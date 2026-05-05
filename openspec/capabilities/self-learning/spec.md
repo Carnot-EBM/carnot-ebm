@@ -2745,3 +2745,50 @@ separately
 | Requirement | Python | Tests |
 |-------------|--------|-------|
 | REQ-LEARN-1302 | Implemented (`python/carnot/reporting/skill_graph_promotion_demotion.py`) | Implemented (`tests/python/test_skill_graph_promotion_demotion.py`) |
+
+## REQ-LEARN-1303: QueryBandits + NGC Online Memory Policy
+
+Exp 1303 SHALL evaluate an online verifier-feedback memory policy over the
+actions replay-memory, rewrite/repair-prompt, abstain/escalate, and
+demote/expire-memory. The policy SHALL use Exp 1302 skill-graph candidates and
+Exp 1288 verifier-feedback replay examples, then compare a deterministic
+memory-aware contextual-bandit simulation against a no-memory baseline.
+
+### REQ-LEARN-1303 Sub-requirements
+
+- REQ-LEARN-1303-1: The workflow SHALL write
+  `results/experiment_1303_querybandits_ngc_online_memory_policy.json` first
+  with `status="in_progress"` and run-date artifact metadata before policy
+  simulation.
+- REQ-LEARN-1303-2: The workflow SHALL load Exp 1302 `skill_graph_candidates`
+  and Exp 1288 `replay_slices`/`clause_prediction_records` as the candidate
+  memory and verifier-feedback examples.
+- REQ-LEARN-1303-3: The policy action space SHALL include replay-memory,
+  rewrite/repair-prompt, abstain/escalate, and demote/expire-memory actions.
+- REQ-LEARN-1303-4: The deterministic fixed-seed bandit simulation SHALL score
+  actions with verifier pass/fail reward, accepted-violation penalty,
+  abstention cost, and memory-demotion cost.
+- REQ-LEARN-1303-5: The final artifact SHALL include `status`,
+  `self_learning_delta_overall`, `accepted_violation_delta`, `bandit_regret`,
+  `selected_policy_distribution`, `memory_demotion_count`,
+  `headline_result_allowed`, and `honest_verdict`.
+- REQ-LEARN-1303-6: `headline_result_allowed` SHALL be false unless the
+  measured self-learning delta is positive and accepted violations do not
+  increase; `honest_verdict` SHALL distinguish improved, neutral, and regressed
+  non-headline outcomes.
+
+### SCENARIO-LEARN-1303: Verifier Memory Policy Reports Honest Bandit Metrics
+
+**Given** Exp 1302 has sandboxed skill-graph candidates
+**And** Exp 1288 has verifier-feedback replay slices
+**When** Exp 1303 runs with run date `20260505`
+**Then** the final artifact has `status="complete"`
+**And** it reports the required policy distribution, demotion count, accepted
+violation delta, self-learning delta, bandit regret, headline flag, and honest
+verdict from the measured simulation.
+
+## Implementation Status (REQ-LEARN-1303)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-1303 | Implemented (`python/carnot/reporting/querybandits_ngc_online_memory_policy.py`) | Implemented (`tests/python/test_querybandits_ngc_online_memory_policy.py`) |
