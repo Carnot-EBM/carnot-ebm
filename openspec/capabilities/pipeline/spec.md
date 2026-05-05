@@ -2070,3 +2070,42 @@ dispatch preservation, and the completion-token budget decision
 writes a terminal blocker explaining why the SOTA run remains closed.
 
 **Spec traces:** REQ-VERIFY-1352
+
+### REQ-VERIFY-1371: Margin-Aware Cactus/BEAVER Scheduler Replay
+
+The Cactus/BEAVER scheduler evaluation MUST run as a CPU-only replay over Exp
+1369 semantic-validator rows and Exp 1370 MCS repair-localization rows.  It
+MUST assign conservative semantic margins, directly accept only high-margin SAT
+rows that the full verifier also accepts, and escalate every low-margin,
+UNSAT, UNKNOWN, or REPAIR_HINT row to the full verifier.  UNKNOWN rows MUST
+never be silently accepted.
+
+The artifact SHALL be written to
+`results/experiment_1371_margin_aware_cactus_beaver_scheduler_v3.json` and
+include at least `status`, `proxy_accept_rate`, `low_margin_escalation_rate`,
+`full_verifier_call_reduction`, `false_acceptance_rate`,
+`repair_hint_reuse_rate`, `verifier_cost_reduction_proxy`,
+`triage_claim_allowed`, and `honest_verdict`.
+`triage_claim_allowed` SHALL be true only when false acceptance is exactly zero
+and UNKNOWN rows are never silently accepted.
+
+**Acceptance criteria:**
+- The runner writes an `in_progress` artifact before replaying policy rows, then
+  overwrites it with a terminal artifact.
+- If Exp 1370 reports `repair_hint_precision < 0.5`, the scheduler artifact is
+  blocked and no call-reduction claim is allowed.
+- `full_verifier_call_reduction` is positive only when the scheduler avoids at
+  least one full verifier call, and the claim is allowed only at zero false
+  acceptance.
+
+### SCENARIO-VERIFY-1371: Conservative Scheduler Escalates Unknowns
+
+**Given** Exp 1369 contains SAT, UNSAT, UNKNOWN, and REPAIR_HINT semantic rows
+**And** Exp 1370 supplies precise MCS repair hints for the non-SAT rows
+**When** Exp 1371 replays the margin-aware scheduler
+**Then** only the high-margin SAT row is accepted by the proxy
+**And** UNSAT, UNKNOWN, and REPAIR_HINT rows are escalated with repair-hint
+reuse where available
+**And** `triage_claim_allowed=true` only when `false_acceptance_rate=0.0`.
+
+**Spec traces:** REQ-VERIFY-1371
