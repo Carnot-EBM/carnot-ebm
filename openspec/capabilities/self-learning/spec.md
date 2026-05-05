@@ -2713,6 +2713,59 @@ with `tensor_split=[0.5, 0.5]` for dual RTX 3090 execution.
 **Then** `headline_result_allowed=true`
 **And** `honest_verdict` reports a positive GRPO v7 improvement.
 
+## REQ-LEARN-1393: GRPO v8 Applies NGRPO Advantage Calibration to Zero-Reward UNKNOWN Groups
+
+Exp 1393 SHALL run a bounded GRPO v8 reward loop that keeps Exp 1383's
+JURY-RL formal-verifier setup but replaces ResZero's zero-mean UNKNOWN reward
+fallback with NGRPO Advantage Calibration.  The runner SHALL resolve headline
+model specs through `cached_sota_pair(gpu_indices=(0, 1))`, SHALL attach
+`tensor_split=[0.5, 0.5]`, and SHALL use dual RTX 3090 execution for live GGUF
+generation.
+
+### REQ-LEARN-1393 Sub-requirements
+
+- REQ-LEARN-1393-1: The runner SHALL write
+  `results/experiment_1393_grpo_v8_ngrpo_zero_reward_fix.json` first with
+  `status="in_progress"`.
+- REQ-LEARN-1393-2: Each training case SHALL generate `N=4` candidate rollouts,
+  select a candidate by JURY-RL majority vote, and run Carnot's semantic
+  verifier before computing policy advantages.
+- REQ-LEARN-1393-3: When the semantic verifier returns UNKNOWN and all real
+  rollout rewards are zero, the runner SHALL inject one virtual max-reward
+  sample into the group before advantage centering.  The virtual sample SHALL
+  affect the mean used for advantages but SHALL NOT be treated as a real rollout
+  or model output.
+- REQ-LEARN-1393-4: The final artifact SHALL include `status`, `grpo_version`,
+  `reward_mechanism`, `ngrpo_advantage_calibration_applied`,
+  `virtual_max_reward_sample_injected`, `models_used`, `wall_budget_s`,
+  `wall_time_used_s`, `training_steps_completed`, `jury_acceptance_rate`,
+  `formal_reward_pass_rate`, `unknown_rollout_rate`, `grpo_v8_improvement_pp`,
+  `wall_budget_exhausted`, `terminal_blocker`, `headline_result_allowed`, and
+  `honest_verdict`.
+- REQ-LEARN-1393-5: `headline_result_allowed` SHALL be true only when
+  `grpo_v8_improvement_pp > 0.0`, at least one mandated SOTA GGUF model was
+  used for generation, and the run did not exhaust the wall budget.
+- REQ-LEARN-1393-6: If `grpo_v8_improvement_pp == 0.0` and
+  `unknown_rollout_rate >= 0.95`, the artifact SHALL set
+  `terminal_blocker="ngrpo_still_zero_reward_fover_incompatible_with_jury_rl"`
+  and `retire_if_same_verdict=true`.
+
+### SCENARIO-LEARN-1393: NGRPO Breaks All-UNKNOWN Zero-Reward Symmetry
+
+**Given** four JURY-RL rollouts whose semantic-verifier reward is zero
+**When** Exp 1393 computes NGRPO advantages
+**Then** it injects one virtual max-reward sample
+**And** each real zero-reward rollout receives a negative advantage.
+
+### SCENARIO-LEARN-1394: Repeated All-UNKNOWN Outcome Retires GRPO v8
+
+**Given** NGRPO Advantage Calibration was applied
+**And** held-out evaluation still reports `grpo_v8_improvement_pp=0.0`
+**And** `unknown_rollout_rate >= 0.95`
+**When** Exp 1393 writes its final artifact
+**Then** `headline_result_allowed=false`
+**And** `retire_if_same_verdict=true`.
+
 ## REQ-LEARN-1288: InterWhen DVI Verifier-Feedback Replay
 
 Exp 1288 SHALL convert chronological verifier accept/reject decisions into an
