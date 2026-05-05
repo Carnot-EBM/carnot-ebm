@@ -17846,6 +17846,59 @@ than generic semantic invalidity.
 
 **Spec traces:** REQ-VERIFY-1354, SCENARIO-VERIFY-1354, Exp 1354
 
+## REQ-VERIFY-1368: FOVER-Aligned LogicSkills Certificate Audit
+
+**Summary:** Carnot SHALL audit terminal Exp 1366 tag-first certificate cases
+against the LogicSkills skill split and align observed failures with the FoVer
+formal-verification taxonomy without running fresh LLM inference.
+
+**Requirements:**
+
+- REQ-VERIFY-1368-1: The workflow SHALL write
+  `results/experiment_1368_fover_aligned_logicskills_skill_audit.json` with
+  `status="in_progress"` before loading Exp 1366 certificate cases.
+- REQ-VERIFY-1368-2: The workflow SHALL load Exp 1366 certificate rows only
+  when the terminal `certificate_parse_rate >= 0.75` gate is satisfied.
+- REQ-VERIFY-1368-3: Each loaded certificate row SHALL be classified as a
+  passing row or as one of `symbolization_failure`,
+  `countermodel_failure`, `validity_failure`, or `unknown`.
+- REQ-VERIFY-1368-4: The workflow SHALL run local Z3 checks for bounded
+  certificate fixtures whose CNF formula can be extracted without model
+  inference and SHALL record `z3_verified_case_count`.
+- REQ-VERIFY-1368-5: The artifact SHALL compute
+  `symbolization_pass_rate`, `countermodel_pass_rate`, and
+  `validity_pass_rate`, and SHALL set `dominant_skill_gap` from observed
+  failure categories.
+- REQ-VERIFY-1368-6: The artifact SHALL align Carnot symbolization failures
+  to FoVer formalization failures and Carnot validity failures to FoVer
+  entailment failures, recording `fover_symbolization_alignment` and
+  `fover_validity_alignment` as fractions of observed Carnot skill failures.
+- REQ-VERIFY-1368-7: The artifact SHALL set
+  `fover_training_data_applicable=true` only when the dominant skill gap has a
+  FoVer analog that could provide training labels.
+- REQ-VERIFY-1368-8: The artifact SHALL include `status`,
+  `certificate_cases_used`, `symbolization_pass_rate`,
+  `countermodel_pass_rate`, `validity_pass_rate`,
+  `z3_verified_case_count`, `fover_symbolization_alignment`,
+  `fover_validity_alignment`, `dominant_skill_gap`,
+  `fover_training_data_applicable`, and `honest_verdict`.
+
+**Implementation Status:** Planned (Exp 1368)
+
+### SCENARIO-VERIFY-1368: Exp 1366 Parse-Cleared Certificates Have No Dominant Gap
+
+**Given** the run date is `20260505`
+**And** Exp 1366 has terminal tag-first certificate rows with
+`certificate_parse_rate >= 0.75`
+**When** the FOVER-aligned LogicSkills audit runs without fresh LLM inference
+**Then** it writes an in-progress artifact first
+**And** it writes a complete artifact with per-case LogicSkills
+classifications, local Z3 checks where fixture formulas are extractable,
+FoVer taxonomy alignment fractions, dominant skill gap, applicability gate,
+and honest verdict.
+
+**Spec traces:** REQ-VERIFY-1368, SCENARIO-VERIFY-1368, Exp 1368
+
 ## REQ-VERIFY-1365: Eidoku CSP Neuro-Symbolic Verification Probe
 
 **Summary:** Carnot SHALL run an Eidoku-style, grammar-free CSP verification

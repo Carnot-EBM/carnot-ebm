@@ -1,0 +1,123 @@
+{
+  "artifact": "experiment_1368_fover_aligned_logicskills_skill_audit",
+  "artifact_metadata": {
+    "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "run_date": "20260505",
+    "source_experiments": [
+      "exp1366"
+    ],
+    "spec": "REQ-VERIFY-1368"
+  },
+  "certificate_cases_used": 4,
+  "classification_counts": {
+    "pass": 4
+  },
+  "classification_rows": [
+    {
+      "case_id": "sat_unit_clause",
+      "evidence": "certificate row is parseable and truth-preserving",
+      "expected_state": "SAT",
+      "fover_error_taxonomy": null,
+      "logicskills_category": "pass",
+      "parseable": true,
+      "skill_gap": null,
+      "truthful": true,
+      "unknown_preserved": false
+    },
+    {
+      "case_id": "unsat_unit_conflict",
+      "evidence": "certificate row is parseable and truth-preserving",
+      "expected_state": "UNSAT",
+      "fover_error_taxonomy": null,
+      "logicskills_category": "pass",
+      "parseable": true,
+      "skill_gap": null,
+      "truthful": true,
+      "unknown_preserved": false
+    },
+    {
+      "case_id": "unknown_missing_bound",
+      "evidence": "certificate row is parseable and truth-preserving",
+      "expected_state": "UNKNOWN",
+      "fover_error_taxonomy": null,
+      "logicskills_category": "pass",
+      "parseable": true,
+      "skill_gap": null,
+      "truthful": true,
+      "unknown_preserved": true
+    },
+    {
+      "case_id": "repair_missing_upper_bound",
+      "evidence": "certificate row is parseable and truth-preserving",
+      "expected_state": "REPAIR_HINT",
+      "fover_error_taxonomy": null,
+      "logicskills_category": "pass",
+      "parseable": true,
+      "skill_gap": null,
+      "truthful": true,
+      "unknown_preserved": false
+    }
+  ],
+  "countermodel_pass_rate": 1.0,
+  "dominant_skill_gap": "none",
+  "fover_alignment_denominator": 0,
+  "fover_published_distribution_reference": {
+    "formal_logic_raw_step_error_rates": [
+      0.437,
+      0.413
+    ],
+    "formal_proof_raw_step_error_rates": [
+      0.132,
+      0.141
+    ],
+    "source": "arXiv:2505.15960 Table 2(b)"
+  },
+  "fover_symbolization_alignment": 0.0,
+  "fover_taxonomy_mapping": {
+    "countermodel": "no_direct_published_fover_skill_bucket",
+    "symbolization": "formalization_failure",
+    "unknown": "no_direct_published_fover_skill_bucket",
+    "validity": "entailment_failure"
+  },
+  "fover_training_data_applicable": false,
+  "fover_validity_alignment": 0.0,
+  "honest_verdict": "fover_aligned_logicskills_audit_no_skill_gap",
+  "measurement_note": "Replay-only audit over Exp 1366 certificate rows. FoVer alignment fractions use observed Carnot skill failures as the denominator; no fresh LLM inference is run.",
+  "run_date": "20260505",
+  "schema_version": 1,
+  "skill_failure_counts": {
+    "countermodel": 0,
+    "symbolization": 0,
+    "unknown": 0,
+    "validity": 0
+  },
+  "source_context": {
+    "exp1366_certificate_parse_rate": 1.0,
+    "exp1366_honest_verdict": "tag_first_prefix_injection_crane_positive_parse_rate_1_0",
+    "exp1366_status": "complete",
+    "parse_gate_passed": true,
+    "required_parse_gate": 0.75,
+    "source_experiment": "exp1366"
+  },
+  "status": "complete",
+  "symbolization_pass_rate": 1.0,
+  "terminal_blocker": null,
+  "validity_pass_rate": 1.0,
+  "z3_checks": [
+    {
+      "case_id": "sat_unit_clause",
+      "expected_state": "SAT",
+      "formula_source": "certificate_fixture_prompt",
+      "solver_state": "SAT",
+      "verified": true
+    },
+    {
+      "case_id": "unsat_unit_conflict",
+      "expected_state": "UNSAT",
+      "formula_source": "certificate_fixture_prompt",
+      "solver_state": "UNSAT",
+      "verified": true
+    }
+  ],
+  "z3_verified_case_count": 2
+}
