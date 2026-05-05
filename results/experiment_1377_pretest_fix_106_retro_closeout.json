@@ -1,0 +1,176 @@
+{
+  "status": "complete",
+  "pre_test_fix_applied": true,
+  "pre_test_fix_description": "Created python/carnot/phase5/intermediate_scale_v3.py with the DEFAULT_CONFIG, REQUIRED_GATE_KEYS, Phase5DV3Config, gate measurement/evaluation helpers, artifact builder, RTX 3090 parser, and JSON writer imported by tests/python/phase5/test_intermediate_scale_v3.py. The original ModuleNotFoundError for carnot.phase5.intermediate_scale_v3 is resolved.",
+  "tests_passing_after_fix": 5,
+  "full_pretest_command_result": {
+    "command": ".venv/bin/pytest tests/python -x --no-header -q 2>&1 | tail -20",
+    "tail_summary": "12 warnings, 1 error in 10.54s",
+    "original_intermediate_scale_import_error_present": false,
+    "remaining_blocker": "tests/python/test_combined_retro_95_96_97.py collection fails with ModuleNotFoundError: No module named 'carnot.reporting.combined_retro_95_96_97'",
+    "targeted_command": ".venv/bin/pytest tests/python/phase5/test_intermediate_scale_v3.py --no-header -q --no-cov",
+    "targeted_result": "5 passed in 2.07s"
+  },
+  "criteria_total": 14,
+  "criteria_met": 12,
+  "criteria": {
+    "carryforward_blocker_audit_complete": {
+      "status": "MET",
+      "evidence": "exp1364 status=complete, thinking_mode_blocker_confirmed=true, terminal_certificate_required=true, prior_certificate_parse_rate=0.0"
+    },
+    "certificate_parse_rate_above_0": {
+      "status": "MET",
+      "evidence": "exp1366 certificate_parse_rate=1.0"
+    },
+    "eidoku_csp_viable": {
+      "status": "MET",
+      "evidence": "exp1365 eidoku_csp_viable=true, csp_feasibility_rate=0.740, eidoku_auroc_proxy=0.614"
+    },
+    "diffutruth_complement_viable": {
+      "status": "MET",
+      "evidence": "exp1367 detection_auroc_proxy=0.866841, viable_as_complement=true, kan_correlation=0.961317"
+    },
+    "fover_skill_audit_complete": {
+      "status": "MET",
+      "evidence": "exp1368 status=complete, honest_verdict=fover_aligned_logicskills_audit_no_skill_gap"
+    },
+    "semantic_validator_complete": {
+      "status": "MET",
+      "evidence": "exp1369 validator_execution_pass_rate=1.0, z3_constraint_pass_rate=1.0, semantic_validator_claim_allowed=true"
+    },
+    "mcs_repair_complete": {
+      "status": "MET",
+      "evidence": "exp1370 repair_hint_precision=1.0, accepted_violation_delta=-2, repair_claim_allowed=true"
+    },
+    "margin_scheduler_complete": {
+      "status": "MET",
+      "evidence": "exp1371 false_acceptance_rate=0.0, full_verifier_call_reduction=0.25, triage_claim_allowed=true"
+    },
+    "semantic_repair_chain_complete": {
+      "status": "MET",
+      "evidence": "exp1368-1371 complete: no skill gap, validator pass, MCS repair precision=1.0, scheduler zero false acceptance"
+    },
+    "kan_formal_verified": {
+      "status": "MET",
+      "evidence": "exp1372 formal_property_verified=true, milp_verification_result=verified, kan_formal_claim_allowed=true"
+    },
+    "ising_inertia_measured": {
+      "status": "MET",
+      "evidence": "exp1373 inertia_convergence_speedup=0.7954545454545454, best_inertia_alpha=0.0, no CPU speedup claim"
+    },
+    "self_learning_headline": {
+      "status": "MET",
+      "evidence": "exp1374 headline_result_allowed=true, path_used=primary_semantic_verified, fresh_verified_sample_count=4, dvi_ready=true"
+    },
+    "publication_hold_reviewed": {
+      "status": "NOT_MET",
+      "evidence": "exp1375 artifact missing; conductor SKIPped 3 times due to pre-test cascade"
+    },
+    "retro_complete": {
+      "status": "NOT_MET",
+      "evidence": "exp1376 artifact missing; conductor SKIPped 3 times due to pre-test cascade"
+    }
+  },
+  "experiment_statuses": {
+    "exp1364": {
+      "status": "complete",
+      "artifact": "results/experiment_1364_105_carryforward_thinking_mode_blocker_audit.json",
+      "honest_verdict": "milestone_105_carryforward_confirms_thinking_mode_missing_structural_tag_blocker_terminal_certificate_required_semantic_chain_gated_self_learning_replay_only_publication_hold_active"
+    },
+    "exp1365": {
+      "status": "complete",
+      "artifact": "results/experiment_1365_eidoku_csp_neuro_symbolic_verification_probe.json",
+      "honest_verdict": "eidoku_csp_viable_local_fover_probe_no_sota_generation_feasibility_0.740_auroc_0.614"
+    },
+    "exp1366": {
+      "status": "complete",
+      "artifact": "results/experiment_1366_certificate_v8_tag_first_prefix_injection_crane.json",
+      "honest_verdict": "tag_first_prefix_injection_crane_positive_parse_rate_1_0"
+    },
+    "exp1367": {
+      "status": "complete",
+      "artifact": "results/experiment_1367_diffutruth_energy_of_falsehood_probe.json",
+      "honest_verdict": "diffutruth_proxy_viable_complement_auroc_0.867_ising_r_0.699_kan_r_0.961_cpu_proxy_not_full_diffusion"
+    },
+    "exp1368": {
+      "status": "complete",
+      "artifact": "results/experiment_1368_fover_aligned_logicskills_skill_audit.json",
+      "honest_verdict": "fover_aligned_logicskills_audit_no_skill_gap"
+    },
+    "exp1369": {
+      "status": "complete",
+      "artifact": "results/experiment_1369_semantic_validator_v2_nsvif_z3_constraints.json",
+      "honest_verdict": "semantic_validator_v2_complete_unknown_preserved"
+    },
+    "exp1370": {
+      "status": "complete",
+      "artifact": "results/experiment_1370_verge_mcs_repair_localization_v2.json",
+      "honest_verdict": "verge_mcs_repair_localization_complete_claim_allowed"
+    },
+    "exp1371": {
+      "status": "complete",
+      "artifact": "results/experiment_1371_margin_aware_cactus_beaver_scheduler_v3.json",
+      "honest_verdict": "margin_aware_scheduler_claim_allowed_zero_false_acceptance"
+    },
+    "exp1372": {
+      "status": "complete",
+      "artifact": "results/experiment_1372_optimal_kan_pwa_formal_verification.json",
+      "honest_verdict": "cpu_only_gskan_energy_bound_verified_no_hardware_claim"
+    },
+    "exp1373": {
+      "status": "complete",
+      "artifact": "results/experiment_1373_fully_parallel_ising_inertia_cpu_validation.json",
+      "honest_verdict": "cpu_only_inertia_no_checkerboard_speedup_no_hardware_claim"
+    },
+    "exp1374": {
+      "status": "complete",
+      "artifact": "results/experiment_1374_continuous_self_learning_v3_verifier_selected_or_csp_fallback.json",
+      "honest_verdict": "continuous_self_learning_v3_primary_semantic_verified_dvi_ready_headline_allowed"
+    },
+    "exp1375": {
+      "status": "missing",
+      "artifact": "results/experiment_1375_publication_hold_claim_boundary_v15.json",
+      "honest_verdict": "missing_skipped_3x_pre_test_cascade",
+      "note": "No artifact exists in results/ despite research-complete.yaml archive metadata marking the conductor result OK."
+    },
+    "exp1376": {
+      "status": "missing",
+      "artifact": "results/experiment_1376_milestone_106_retro_carryforward.json",
+      "honest_verdict": "missing_skipped_3x_pre_test_cascade",
+      "note": "No artifact exists in results/ despite research-complete.yaml archive metadata marking the conductor result OK."
+    }
+  },
+  "certificate_branch_verdict": "tag_first_crane_parse_rate_1.0_terminal_positive",
+  "eidoku_csp_verdict": "eidoku_csp_viable_true_feasibility_0.740_auroc_0.614_local_fover_probe_no_sota_generation",
+  "semantic_repair_verdict": "semantic_repair_chain_complete_fover_no_skill_gap_validator_pass_1.0_z3_pass_1.0_repair_precision_1.0_scheduler_false_acceptance_0.0_call_reduction_0.25",
+  "hardware_formal_verdict": "kan_formal_property_verified_true_milp_verified_and_ising_inertia_measured_no_cpu_speedup_best_alpha_0.0_no_hardware_claim",
+  "self_learning_verdict": "headline_true_path_primary_semantic_verified_fresh_verified_4_delta_1.596429_dvi_ready_true",
+  "publication_hold_state": "unknown_exp1375_skipped",
+  "carry_forward_tasks": [
+    {
+      "task": "exp1378-publication-hold-v16-claim-boundary",
+      "reason": "exp1375 missing; assess whether .106 evidence lifts publication hold"
+    },
+    {
+      "task": "remaining_pretest_collection_blocker_combined_retro_95_96_97",
+      "reason": "After the Phase 5-D import fix, full tests/python collection now stops on missing carnot.reporting.combined_retro_95_96_97"
+    },
+    {
+      "task": "exp1379-paper-integrity-audit-v2",
+      "reason": "Integrate certificate v8, semantic repair, KAN formal, and headline self-learning evidence into paper claims after publication hold review"
+    },
+    {
+      "task": "exp1381-dvi-discriminative-verifier-training-v1",
+      "reason": "exp1374 produced primary semantic verified samples and dvi_ready=true"
+    },
+    {
+      "task": "exp1382-full-scale-certificate-semantic-repair-100-cases",
+      "reason": "Scale the proven .106 certificate to semantic repair chain beyond the small .106 evidence set"
+    },
+    {
+      "task": "exp1389-milestone-107-retro",
+      "reason": "Keep future retros skip_pre_test=true so a broken pre-test suite cannot suppress closeout feedback"
+    }
+  ],
+  "honest_verdict": "milestone_106_12_of_14_criteria_met_pretest_import_fixed_publication_hold_and_retro_missing_full_suite_now_blocked_by_unrelated_combined_retro_module"
+}
