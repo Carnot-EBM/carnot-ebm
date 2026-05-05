@@ -1,0 +1,216 @@
+{
+  "schema": "carnot.operational_retro.v63",
+  "milestone": "2026.04.104",
+  "generated_at": "2026-05-05T11:00:41.201872Z",
+  "finalized_at": "2026-05-05T11:01:57Z",
+  "retro_type": "operational_closeout",
+  "status": "success",
+  "summary": "Milestone 2026.04.104 operational closeout used the supplied 16 minute / 5 completed timing slice, averaging about 3.2 minutes per completed item. The slowest item was the 10 minute arXiv Bundle v10 path gated on Exp 1269 critical fixes. The next largest avoidable cost was three repeated 2 minute SOTA GGUF cache/provenance DOOMED_RERUN_BLOCK slots. GPU utilization was not efficient: GPU 0 held 1423 MB and GPU 1 held 528 MB while both reported 0% utilization, with duplicated long-lived Python processes resident on the cards. The main operational losses were serial gate retry churn, pre-flight/disk-quota scheduler friction, stale GPU-resident processes, and unused parallel CPU/GPU capacity rather than useful compute saturation.",
+  "total_wall_time_minutes": 16,
+  "total_wall_time_hours": 0.3,
+  "experiments_completed": 5,
+  "average_per_experiment_minutes": 3.2,
+  "average_per_experiment_minutes_reported": 3,
+  "timing_data_source": "user_supplied",
+  "milestone_result_context": {
+    "research_retro_artifact": "results/experiment_1350_milestone_104_retro_carryforward.json",
+    "criteria_met": 9,
+    "criteria_total": 12,
+    "research_retro_honest_verdict": "milestone_104_9_of_12_criteria_met_carryforward_required",
+    "operational_scope_note": "This artifact analyzes execution efficiency. Research outcomes are included only when they explain operational bottlenecks and carry-forward scheduling risk.",
+    "main_missing_or_gated_research_branches": [
+      "exp1340 triggered SOTA certificate artifact missing",
+      "exp1342 semantic validator artifact missing",
+      "exp1343 margin scheduler blocked on exp1342",
+      "exp1345 and exp1346 did not run after certificate/non-forgetting gates"
+    ]
+  },
+  "slowest_experiments": [
+    {
+      "rank": 1,
+      "experiment": "arxiv_bundle_v10_gate",
+      "name": "arXiv Bundle v10 - Gated on Exp 1269 Critical Fixes",
+      "duration_minutes": 10,
+      "classification": "serial_gate_docs_compile_path",
+      "why_slow": "This single item consumed 62.5% of the supplied 16 minute slice. It was serially dependent on Exp 1269 critical fixes, then paid bundle/docs/reconciliation overhead."
+    },
+    {
+      "rank": 2,
+      "experiment": "sota_gguf_preflight_attempt_1",
+      "name": "DOOMED_RERUN_BLOCK: SOTA GGUF Cache + Provenance Preflight",
+      "duration_minutes": 2,
+      "classification": "avoidable_gate_retry",
+      "why_slow": "The same known SOTA cache/provenance blocked state was charged as scheduled work instead of producing one terminal blocked artifact."
+    },
+    {
+      "rank": 3,
+      "experiment": "sota_gguf_preflight_attempt_2",
+      "name": "DOOMED_RERUN_BLOCK: SOTA GGUF Cache + Provenance Preflight",
+      "duration_minutes": 2,
+      "classification": "avoidable_gate_retry",
+      "why_slow": "Second duplicate retry of the same cache/provenance block. No new experimental evidence was produced."
+    },
+    {
+      "rank": 4,
+      "experiment": "sota_gguf_preflight_attempt_3",
+      "name": "DOOMED_RERUN_BLOCK: SOTA GGUF Cache + Provenance Preflight",
+      "duration_minutes": 2,
+      "classification": "avoidable_gate_retry",
+      "why_slow": "Third duplicate retry of the same blocked state. This is the clearest avoidable wall-time loss in the slice."
+    },
+    {
+      "rank": 5,
+      "experiment": "in_process_docs",
+      "name": "In-process docs for arXiv Bundle v10 - Gated on Exp 1269 Critical Fixes",
+      "duration_minutes": 0,
+      "classification": "docs_reconciliation",
+      "why_slow": "Not slow in the supplied timing. The risk is foreground coupling and duplicate append churn when docs reconciliation is retried."
+    }
+  ],
+  "bottlenecks_identified": [
+    "The 10 minute arXiv bundle path dominated the closeout because it sat on a serial critical path after Exp 1269.",
+    "Three duplicate SOTA GGUF cache/provenance DOOMED_RERUN_BLOCK slots consumed about 6 of 16 minutes without producing new evidence.",
+    "Known blocked states were treated as repeated scheduled work instead of durable terminal scheduler facts.",
+    "The .104 research retro shows the certificate branch was still missing or gated: exp1340 and exp1342 were missing, exp1343 was blocked, and exp1345/exp1346 did not run.",
+    "GPU utilization was scheduler-inefficient: both RTX 3090s reported 0% utilization while holding 1423 MB on GPU 0 and 528 MB on GPU 1.",
+    "The GPU process table showed duplicated long-lived Python processes from the repo virtualenv on both cards; these were not gpu_monitor.py-class zombies by threshold, but they were stale idle residents that should be cleared before the next run.",
+    "Only GPU 0 crossed the monitor's 1024 MB used threshold while GPU 1 remained effectively idle, so two-model or two-lane work was not exploiting available hardware.",
+    "The raw focused pre-flight test runtime was seconds-scale, but the pre-flight/gate layer was still a bottleneck because failures, self-heal retries, and disk-quota errors repeatedly consumed scheduler slots.",
+    "Docs reconciliation registered 0 minutes in the supplied timing, but the process remains fragile unless append operations are idempotent and decoupled from the foreground critical path.",
+    "Coarse task timing hides where time was lost: gate wait, pre-flight, execution, artifact write, docs, and reconciliation are not separately measured."
+  ],
+  "improvements_suggested": [
+    "Emit a terminal DOOMED_RERUN_BLOCK or GATE_BLOCK artifact on the first known blocked state, then suppress duplicate retries until an upstream artifact changes.",
+    "Run activation-time checks for SOTA GGUF cache readiness, prior_failures completeness, disk quota, and stale skeleton terminalization before scheduling certificate tasks.",
+    "Add dependency pruning so missing exp1340-style certificate artifacts immediately mark semantic validator, margin scheduler, DVI, and GRPO follow-ons terminal for the milestone.",
+    "Make pre-flight failures cheap and explicit: record the failing test signature once, skip duplicate self-heal attempts, and route the queue to independent work.",
+    "Free idle GPU-resident Python processes before milestone activation when both utilization and forward progress are zero.",
+    "Run independent CPU/docs tasks in parallel with gate checks, and run two-model SOTA lanes across GPU 0 and GPU 1 through DualGPURunner once cache readiness is true.",
+    "Batch multiple questions per forward pass, targeting 8-16 prompts per batch where model memory allows.",
+    "Cache TeX/arXiv bundle preflight state so reruns pay only changed-file and changed-figure costs.",
+    "Use an idempotent docs append helper keyed by milestone and artifact path for ops/changelog.md and docs/roadmap.md.",
+    "Export per-phase timings for gate_wait_s, prior_failure_check_s, preflight_tests_s, execution_s, artifact_write_s, docs_s, and reconcile_s into result artifacts and ops/metrics.md.",
+    "Attach scripts/gpu_monitor.py JSON snapshots at task start and closeout for every GPU-capable task."
+  ],
+  "estimated_time_savings_pct": 35,
+  "estimated_next_milestone_wall_time_minutes_if_applied": 10,
+  "savings_basis": "Collapsing the three duplicate 2 minute doomed-rerun slots into one terminal blocked artifact should recover about 4 minutes. Disk-quota/pre-flight activation checks, stale GPU-process cleanup, cached bundle state, and asynchronous docs reconciliation plausibly recover another 1-2 minutes in a similar 16 minute closeout, so 35% is a conservative next-milestone estimate.",
+  "gpu_utilization": {
+    "efficient": false,
+    "assessment": "The milestone was not productively GPU-bound. Both GPUs were at 0% utilization while holding memory, and the queue did not convert available DualGPU capacity into useful parallel work.",
+    "snapshot_timestamp": "2026-05-05T11:00:13.670472+00:00",
+    "gpus": [
+      {
+        "index": 0,
+        "name": "NVIDIA GeForce RTX 3090",
+        "used_mb": 1423,
+        "total_mb": 24576,
+        "utilization_pct": 0,
+        "temperature_c": 50
+      },
+      {
+        "index": 1,
+        "name": "NVIDIA GeForce RTX 3090",
+        "used_mb": 528,
+        "total_mb": 24576,
+        "utilization_pct": 0,
+        "temperature_c": 50
+      }
+    ],
+    "sequential_vs_parallel": "Execution was effectively serial around gate/docs/pre-flight paths. GPU 1 was effectively idle, so future SOTA or certificate work should split model lanes across both cards and overlap CPU/docs tasks with GPU work."
+  },
+  "zombie_processes": {
+    "zombies_detected_by_monitor_threshold": false,
+    "idle_gpu_resident_processes_present": true,
+    "assessment": "The processes did not meet scripts/gpu_monitor.py's zombie definition because each process used less than 1024 MB on an individual GPU record and CPU/wall ratios were above the 1% zombie cutoff. Operationally, they still looked stale at the snapshot: long-lived .venv Python processes held GPU memory while both cards reported 0% utilization.",
+    "processes": [
+      {
+        "pid": 2034004,
+        "gpu_index": 0,
+        "used_mb": 256,
+        "cpu_time_seconds": 966.2,
+        "wall_time_seconds": 5919,
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/"
+      },
+      {
+        "pid": 2060696,
+        "gpu_index": 0,
+        "used_mb": 256,
+        "cpu_time_seconds": 1475.6,
+        "wall_time_seconds": 4951,
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/"
+      },
+      {
+        "pid": 2101167,
+        "gpu_index": 0,
+        "used_mb": 890,
+        "cpu_time_seconds": 1308.6,
+        "wall_time_seconds": 3395,
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/"
+      },
+      {
+        "pid": 2034004,
+        "gpu_index": 1,
+        "used_mb": 256,
+        "cpu_time_seconds": 966.2,
+        "wall_time_seconds": 5919,
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/"
+      },
+      {
+        "pid": 2060696,
+        "gpu_index": 1,
+        "used_mb": 256,
+        "cpu_time_seconds": 1475.6,
+        "wall_time_seconds": 4951,
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/"
+      }
+    ],
+    "recommendation": "Before the next milestone, terminate or recycle idle GPU-resident Python processes after confirming they are not active conductor workers."
+  },
+  "parallelization_opportunities": [
+    "Collapse the three duplicate doomed-rerun attempts into one terminal artifact and immediately schedule independent tasks.",
+    "Run docs reconciliation asynchronously after terminal artifacts are written, guarded by idempotent append keys.",
+    "Run independent .104 work such as hardware portability notes, failure-type memory policy, and external parity audit outside the missing certificate branch.",
+    "Once SOTA cache readiness is true, run Qwen/Gemma or equivalent two-model certificate lanes under DualGPURunner with one model per GPU.",
+    "Batch certificate prompts 8-16 per forward pass rather than paying one forward pass per question."
+  ],
+  "preflight_suite": {
+    "raw_test_runtime_bottleneck": false,
+    "scheduler_bottleneck": true,
+    "assessment": "The focused test suite itself was mostly seconds-scale, but pre-flight and self-heal became a scheduler bottleneck because failures repeated and disk-quota errors interrupted task startup.",
+    "evidence": "The .104 conductor log includes repeated disk-quota failures plus focused pre-test rows such as 4 failed, 92 passed, 1 warning in 7.96s and 3 failed, 86 passed, 1 warning in 14.99s. The final .104 retro row ran 129 passed, 1 warning in 61.47s.",
+    "recommendation": "Keep focused pre-flight tests, but add activation-time disk quota checks and single-shot failure signatures so the queue does not spend multiple attempts on the same pre-flight state."
+  },
+  "doc_reconciliation": {
+    "bottleneck": false,
+    "assessment": "The supplied docs pass registered 0 minutes, so it was not the measured slow path. The risk is retry fragility and foreground coupling, not raw runtime.",
+    "recommendation": "Make changelog and roadmap reconciliation append-only, idempotent, and non-gating."
+  },
+  "tooling_infrastructure_changes": [
+    "Activation-time disk quota, pre-test signature, stale skeleton, prior_failures, and SOTA cache readiness audit.",
+    "Single-shot terminal artifact writer for DOOMED_RERUN_BLOCK, GATE_BLOCK, SKIP, and disk-quota startup failures.",
+    "Dependency-pruning scheduler for downstream certificate, semantic validator, DVI, and GRPO branches.",
+    "GPU idle-process cleanup or reservation check before launching GPU-capable tasks.",
+    "DualGPU-aware scheduler for two-model SOTA lanes plus parallel CPU/docs lanes.",
+    "Batching defaults for certificate extraction prompts.",
+    "Cached TeX/arXiv bundle preflight metadata.",
+    "Per-phase conductor timing export to result JSONs and ops/metrics.md.",
+    "Idempotent changelog and roadmap append helper keyed by milestone and artifact path.",
+    "Mandatory gpu_monitor.py start/finish snapshots for GPU-capable experiments."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Make known blocked states terminal on first detection and prune downstream dependencies.",
+    "Run activation-time disk quota, pre-flight signature, prior_failures, stale skeleton, and SOTA cache checks before scheduling the milestone.",
+    "Clean idle GPU-resident processes and run independent CPU/docs/GPU lanes in parallel, with DualGPURunner as the default for two-model audits."
+  ],
+  "questions_answered": {
+    "which_experiments_took_longest_and_why": "The 10 minute arXiv Bundle v10 path took longest because it was serially gated on Exp 1269 critical fixes and then paid bundle/docs overhead. The next three slowest slots were duplicate 2 minute SOTA GGUF cache/provenance doomed-rerun blocks.",
+    "was_gpu_utilization_efficient": "No. GPU 0 held 1423 MB and GPU 1 held 528 MB while both cards reported 0% utilization. GPU 1 was effectively idle and the scheduler did not exploit two-lane model parallelism.",
+    "were_there_zombie_processes_wasting_resources": "No gpu_monitor.py-class zombie was present by threshold, but long-lived idle Python processes were holding GPU memory and should be cleared or recycled before the next milestone.",
+    "could_any_experiments_have_been_parallelized": "Yes. Duplicate blocked retries should have collapsed to one terminal artifact, docs reconciliation could run asynchronously, independent non-certificate work could run outside the missing exp1340 branch, and future model lanes should split across both RTX 3090s.",
+    "was_preflight_a_bottleneck": "The raw focused test runtime was not the bottleneck, but pre-flight policy was: repeated failing signatures, self-heal attempts, and disk-quota startup failures consumed scheduler slots.",
+    "were_doc_reconciliation_passes_efficient": "They were efficient in measured runtime because docs registered 0 minutes, but the pass should be idempotent and non-gating to avoid duplicate rows and foreground coupling.",
+    "what_tooling_would_speed_next_milestone": "Activation-time disk/pre-flight/cache/prior-failure checks, terminal blocked artifacts, dependency pruning, idle GPU cleanup, DualGPU scheduling, prompt batching, per-phase timing, cached bundle state, and idempotent docs helpers."
+  },
+  "meta_reflection": "The closeout was short enough that orchestration defects dominated the cost. The project already has the right skeleton-first loss-prevention habit; the next step is to make blocked states durable scheduler facts, not retryable work. GPU utilization also needs to be treated as a queue invariant: idle memory at 0% utilization should trigger cleanup or immediate parallel scheduling, not sit unnoticed while gate/doc work runs serially."
+}

@@ -1,6 +1,6 @@
 # Carnot — Architecture
 
-**Last Reconciled:** 2026-04-26
+**Last Reconciled:** 2026-05-05
 
 ## Overview
 
@@ -47,7 +47,7 @@ carnot/
 ├── examples/                  # 5 integration examples (Exp 79)
 ├── tests/
 │   ├── rust/                  # Rust integration tests
-│   ├── python/                # Python/pytest tests (1353 tests, 100% coverage)
+│   ├── python/                # Python/pytest tests (21,955 items collected; 3 import errors pending)
 │   └── integration/           # Full pipeline integration tests (Exp 81)
 ├── openspec/                  # Capability specs
 ├── _bmad/                     # Strategic docs
@@ -56,7 +56,7 @@ carnot/
 ├── research-program.md        # Declarative research goals and priorities
 ├── research-references.md     # Technologies and ideas for future milestones
 ├── research-roadmap.yaml      # Active research roadmap
-└── research-complete.yaml     # Completed experiments (85+ across 4 milestones)
+└── research-complete.yaml     # Completed research milestones (113 archived through 2026.04.103)
 ```
 
 ## Key Design Decisions
