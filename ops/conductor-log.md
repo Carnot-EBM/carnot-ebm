@@ -965,3 +965,4 @@ web search: GitHub trending energy based mod |
 | 2026-05-05 23:07 UTC | arXiv Submission via SWORD API or Manual Upload In | OK | 81 passed, 1 warning in 5.56s |
 | 2026-05-05 23:20 UTC | Full-Scale Pipeline Failure Diagnosis — Classify 4 | OK | 81 passed, 1 warning in 5.07s |
 | 2026-05-05 23:36 UTC | Test Suite Hygiene v2 — Fix Unrelated Collection D | OK | 81 passed, 1 warning in 4.24s |
+| 2026-05-05 23:48 UTC | GRPO v8 NGRPO — Advantage Calibration via Virtual  | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1393_grpo_v8 |
