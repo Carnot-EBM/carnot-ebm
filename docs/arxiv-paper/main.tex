@@ -75,6 +75,19 @@ reward improving held-out GSM8K by $+4$ pp (n=25, 95\% CI:
 and can repair measured failure modes when harness artifacts are
 separated from model behaviour; the foregrounded negatives
 demonstrate that it is rigorous out of it.
+The .106 closeout adds the first positive evidence chain for the
+prior publication-hold blockers: live local Qwen3.6-35B certificate
+generation with tag-first CRANE prefix injection reaches
+certificate parse rate $1.0$ (exp1366); semantic validation, VERGE
+MCS repair, and conservative scheduler triage run end-to-end with
+repair hint precision $1.0$ and false acceptance $0.0$
+(exp1369--1371); self-learning uses the primary semantic-verified
+path with four fresh verified samples and
+self-learning delta $=1.596429$ (exp1374); and a
+CPU-only GS-KAN PWA/MILP check verifies the stated energy bound
+(exp1372). Complementary CPU probes add DiffuTruth-style falsehood
+energy AUROC $0.867$ with KAN correlation $0.961$ (exp1367) and
+Eidoku CSP feasibility rate $0.740$ (exp1365).
 We position Carnot's Apache-2.0, local-first,
 hardware-portable design as the engineering substrate that makes
 cross-mechanism verifier diversity (the only known route past the
@@ -963,7 +976,7 @@ to distribution coverage for the deployed verifier; the remaining
 question is whether the same calibration generalizes across future
 SOTA model families.
 
-\subsection{Milestone .87-.88 positive updates}
+\subsection{Milestone .87-.106 positive updates}
 \label{sec:positive-updates}
 
 \textbf{Energy Verifier Calibration (Milestone .87).}
@@ -1028,6 +1041,67 @@ baseline comparison rather than a universal dominance claim
 (exp1265). QuantKAN reached 3-bit AUROC $0.9801$ with a $0.0100$
 drop from 4-bit, while the $2.5\times$ LUT-KAN timing value is a
 simulation-only estimate until hardware timing exists (exp1266).
+
+\textbf{Milestone .106 publication-hold closeout evidence.}
+The .106 artifacts resolve the local certificate, semantic-repair,
+and headline self-learning blockers that were still active in the
+prior hold review. The claim boundary is narrow: the certificate
+result is live local SOTA generation; the downstream semantic,
+repair, scheduler, self-learning, DiffuTruth, Eidoku, and GS-KAN
+formal checks are local replay or CPU-only analyses over checked-in
+artifacts, not new hardware or external-parity evidence.
+The exp1367 DiffuTruth-style number uses a different CPU proxy and
+corpus construction from exp1265, so it is reported as a
+complementary falsehood-energy signal rather than as a replacement
+dominance claim.
+
+\begin{table}[ht]
+  \centering
+  \small
+  \caption{Milestone .106 evidence integrated into the paper.
+  Live-GPU provenance applies to exp1366 certificate generation;
+  the other rows are local CPU/replay evidence over repository
+  artifacts and are scoped accordingly.}
+  \label{tab:m106-closeout}
+  \begin{tabular}{p{2.7cm} p{4.8cm} p{5.9cm}}
+    \toprule
+    Artifact & Result & Claim boundary \\
+    \midrule
+    exp1366 certificate v8 &
+      certificate\_parse\_rate $=1.0$; truthfulness $=1.0$;
+      unknown preservation $=1.0$ over four certificate cases &
+      Live local Qwen3.6-35B-A3B GGUF generation using tag-first
+      CRANE prefix injection. \\
+    exp1369--1371 semantic chain &
+      validator execution $=1.0$; Z3 and text-constraint pass
+      rates $=1.0$; repair hint precision $=1.0$;
+      accepted\_violation\_delta $=-2$; scheduler false acceptance
+      $=0.0$ &
+      Local replay over the exp1366 parsed rows; conservative
+      triage escalates UNKNOWN, UNSAT, REPAIR\_HINT, and low-margin
+      cases. \\
+    exp1374 self-learning &
+      primary\_semantic\_verified path; fresh verified samples
+      $=4$; promoted memories $=4$; memory regressions $=0$;
+      self-learning delta $=1.596429$ &
+      Headline self-learning is allowed for semantic-verified fresh
+      samples; this is DVI-ready evidence, not a completed DVI
+      training run. \\
+    exp1372 GS-KAN formal bound &
+      PWA/MILP status verified; LP upper bound $5.5571795257855365$
+      below threshold $5.562736705311322$; abstraction error
+      $\leq 5.2216\times10^{-8}$ &
+      CPU-only formal verifier evidence for a small GS-KAN energy
+      layer; no FPGA, TSU, THRML, or hardware execution claim. \\
+    exp1367 / exp1365 complements &
+      DiffuTruth-style AUROC $0.866841$, KAN correlation $0.961317$;
+      Eidoku CSP feasibility rate $0.740$ and AUROC $0.614$ &
+      CPU proxy probes. DiffuTruth uses deterministic perturbation
+      and reconstruction, not a full discrete diffusion or NLI
+      model; Eidoku uses local CSP costs and no SOTA GGUF call. \\
+    \bottomrule
+  \end{tabular}
+\end{table}
 
 \textbf{Zenil $\alpha_t$ self-distillation grounding (Milestone .88).}
 With the retrained verifier, $\alpha_t$ measured at 0.52 versus the
@@ -1448,6 +1522,13 @@ limit, OOD energy-ordering inversion) and one methodological trap
         as evidence that non-linear Phase-4 EBM landscapes are
         required to verify outputs from linearly-optimizable SOTA
         generators.
+  \item \textbf{Publication-hold closeout evidence}
+        (Section~\ref{sec:positive-updates}): exp1366 resolves the
+        certificate parse blocker with live local SOTA generation;
+        exp1369--1371 run the semantic validation, MCS repair, and
+        scheduler chain with zero false acceptance; exp1374 gives
+        headline self-learning through the primary semantic-verified
+        path; exp1372 verifies a CPU-only GS-KAN energy bound.
   \item \textbf{Decentralization as engineering prerequisite}
         (Section~\ref{sec:sovereignty}): cross-mechanism verifier
         diversity is physically deployable only on local-first
@@ -1490,7 +1571,10 @@ The Carnot framework is open source and developed in public.
 Throughout this paper we cite specific experiments by ID
 (\textit{e.g.}, \texttt{exp1093}, \texttt{exp1094}, \texttt{exp1099},
 \texttt{exp1100}, \texttt{exp1118}, \texttt{exp1120}, \texttt{exp1129},
-\texttt{exp1130}, \texttt{exp1224}, \texttt{exp1232}). Each
+\texttt{exp1130}, \texttt{exp1224}, \texttt{exp1232}, \texttt{exp1365},
+\texttt{exp1366}, \texttt{exp1367}, \texttt{exp1369}, \texttt{exp1370},
+\texttt{exp1371}, \texttt{exp1372}, \texttt{exp1374}, \texttt{exp1378}).
+Each
 experiment's full artifact --- script, configuration, raw outputs,
 honest verdict, and reconciliation log --- is committed to the
 project repository at the canonical path
@@ -1505,7 +1589,7 @@ repository.
 \url{https://github.com/Carnot-EBM/carnot-ebm} is the project's primary
 git remote, mirrored to a Carnot-controlled gitea instance for
 distribution sovereignty (per the decentralization design constraints
-discussed in Section~\ref{sec:decentralization}).
+discussed in Section~\ref{sec:sovereignty}).
 
 \paragraph{Trained model weights and datasets.}
 Trained energy-based-model weights and curated FoVer-class corpora

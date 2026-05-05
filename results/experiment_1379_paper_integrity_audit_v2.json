@@ -1,0 +1,226 @@
+{
+  "experiment": "1379_paper_integrity_audit_v2",
+  "schema": "paper_integrity_audit_v2",
+  "run_date": "20260505",
+  "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+  "status": "complete",
+  "paper_file_found": true,
+  "paper_file_path": "docs/arxiv-paper/main.tex",
+  "critical_issues_before_audit": 5,
+  "critical_issues_after_audit": 0,
+  "critical_issue_audit": [
+    {
+      "issue": "fig3 / untraced figure constants from exp1205",
+      "status": "resolved",
+      "evidence": "main.tex does not include figures/fig3.pdf; exp1205 recorded issue_1_strategy=dropped and figure_integrity_untraced_constants=0."
+    },
+    {
+      "issue": "KL measurement provenance and sampler-correctness wording",
+      "status": "resolved",
+      "evidence": "All KL=3.07 paper occurrences are scoped to exp1094 software-proxy simulation with bitstream on-board KL explicitly not measured."
+    },
+    {
+      "issue": "estimated CPU/FPGA speedup headlines, including 15.6x-class claims",
+      "status": "resolved",
+      "evidence": "Paper defers same-basis CPU-vs-FPGA timing, states no same-basis speedup is claimed, and the search found no 15.6x claim."
+    },
+    {
+      "issue": "apples-to-oranges HumanEval or 76130x latency/speedup framing",
+      "status": "resolved",
+      "evidence": "HumanEval is limited to a harness-anomaly appendix, the 76130x claim is absent, and hardware timing is scoped to latency or future same-basis measurement."
+    },
+    {
+      "issue": "OOD narrative and SOS-KAN AUROC ambiguity",
+      "status": "resolved",
+      "evidence": "The paper distinguishes FoVer AUROC=0.9545, production OOD AUROC=0.3333, SOTA-inclusive retrain AUROC=0.9774, DiffuTruth proxy evidence, and the .106 CPU-only GS-KAN formal bound."
+    }
+  ],
+  "sections_updated": [
+    {
+      "section": "Abstract",
+      "change": "Added .106 closeout evidence for exp1366 certificate parse_rate=1.0, exp1369-1371 semantic/MCS/scheduler chain, exp1374 fresh semantic-verified self-learning, exp1372 GS-KAN formal bound, exp1367 DiffuTruth, and exp1365 Eidoku."
+    },
+    {
+      "section": "Empirical Realities & Anomalies / Milestone .87-.106 positive updates",
+      "change": "Renamed the subsection and added a .106 publication-hold closeout table with live-GPU vs CPU/replay claim boundaries."
+    },
+    {
+      "section": "Conclusion & Roadmap",
+      "change": "Added publication-hold closeout evidence as a contribution bullet."
+    },
+    {
+      "section": "Code, Data, and Experiment Reproducibility",
+      "change": "Added exp1365, exp1366, exp1367, exp1369, exp1370, exp1371, exp1372, exp1374, and exp1378 to the cited artifact list; fixed the sovereignty section reference."
+    }
+  ],
+  "certificate_result_integrated": true,
+  "certificate_result_detail": {
+    "source": "results/experiment_1366_certificate_v8_tag_first_prefix_injection_crane.json",
+    "certificate_parse_rate": 1.0,
+    "certificate_truthfulness_rate": 1.0,
+    "unknown_preservation_rate": 1.0,
+    "certificate_case_count": 4,
+    "provenance": "live_sota_llamacpp on Qwen3.6-35B-A3B GGUF with gpu_health_used"
+  },
+  "semantic_repair_result_integrated": true,
+  "semantic_repair_result_detail": {
+    "sources": [
+      "results/experiment_1369_semantic_validator_v2_nsvif_z3_constraints.json",
+      "results/experiment_1370_verge_mcs_repair_localization_v2.json",
+      "results/experiment_1371_margin_aware_cactus_beaver_scheduler_v3.json"
+    ],
+    "validator_execution_pass_rate": 1.0,
+    "z3_constraint_pass_rate": 1.0,
+    "smt_text_constraint_pass_rate": 1.0,
+    "repair_hint_precision": 1.0,
+    "accepted_violation_delta": -2,
+    "false_acceptance_rate": 0.0,
+    "claim_boundary": "local replay over exp1366 parsed rows"
+  },
+  "self_learning_result_integrated": true,
+  "self_learning_result_detail": {
+    "source": "results/experiment_1374_continuous_self_learning_v3_verifier_selected_or_csp_fallback.json",
+    "path_used": "primary_semantic_verified",
+    "self_learning_delta_overall": 1.596429,
+    "fresh_verified_sample_count": 4,
+    "promoted_memory_count": 4,
+    "memory_regression_count": 0,
+    "dvi_ready": true,
+    "headline_result_allowed": true
+  },
+  "kan_formal_result_integrated": true,
+  "kan_formal_result_detail": {
+    "source": "results/experiment_1372_optimal_kan_pwa_formal_verification.json",
+    "formal_property_verified": true,
+    "milp_solver_status": "optimal",
+    "milp_verification_result": "verified",
+    "lp_certified_upper_bound": 5.5571795257855365,
+    "property_energy_threshold": 5.562736705311322,
+    "pwa_abstraction_error_max": 5.221581345082882e-08,
+    "hardware_execution_claimed": false,
+    "claim_boundary": "CPU-only formal verifier evidence; no hardware execution claim"
+  },
+  "diffutruth_result_integrated": true,
+  "diffutruth_result_detail": {
+    "source": "results/experiment_1367_diffutruth_energy_of_falsehood_probe.json",
+    "detection_auroc_proxy": 0.866841,
+    "kan_correlation": 0.961317,
+    "ising_correlation": 0.699427,
+    "corpus_cases_used": 100,
+    "viable_as_complement": true,
+    "claim_boundary": "CPU deterministic perturbation/reconstruction proxy; no full discrete diffusion model and no NLI model"
+  },
+  "eidoku_result_detail": {
+    "source": "results/experiment_1365_eidoku_csp_neuro_symbolic_verification_probe.json",
+    "csp_feasibility_rate": 0.74,
+    "eidoku_auroc_proxy": 0.614,
+    "claim_extractable_case_rate": 0.88,
+    "eidoku_csp_viable": true,
+    "claim_boundary": "CPU local FoVer CSP probe; no SOTA GGUF generation"
+  },
+  "figures_with_live_provenance": [
+    {
+      "figure": "fig4.pdf / fig:alpha",
+      "paper_claim": "alpha_t=0.78 for Qwen3.5-0.8B and alpha_t=0.38 for Qwen3.6-35B-A3B",
+      "provenance": "exp1074 and exp1077 explicitly record inference_mode=live_gpu"
+    },
+    {
+      "figure": "fig5.pdf / fig:humaneval",
+      "paper_claim": "HumanEval pass@1 +36 pp after extraction fix",
+      "provenance": "exp1079 records inference_mode=live_gpu and Qwen3.6-35B-A3B GGUF; paper scopes it as anomaly-only"
+    }
+  ],
+  "figures_needing_verification": [
+    {
+      "figure": "fig1.pdf / fig:cascade",
+      "reason": "Caption uses exp1073 n=50 holdout and exp1121/exp1072 comparison; no live-GPU provenance field found for exp1073, and the caption is scoped to in-distribution FoVer conditions."
+    },
+    {
+      "figure": "fig2.pdf / fig:auroc",
+      "reason": "Caption says binormal fit from published AUROC, not a re-evaluation; exp1072/exp1111 are checked-in results but not live-GPU figure provenance."
+    },
+    {
+      "figure": "fig6.pdf / fig:welch",
+      "reason": "The Welch ceiling contour is a theoretical/CPU-derived plot from exp1093-style correlation measurements, not live-GPU evidence."
+    },
+    {
+      "figure": "fig7.pdf / fig:chi4",
+      "reason": "The chi<=4 Fast-Path plot is an architectural timing-budget figure; it explicitly does not claim same-basis CPU-vs-FPGA speedup and has no live-GPU provenance."
+    },
+    {
+      "figure": "fig3.pdf",
+      "reason": "File exists in docs/arxiv-paper/figures but is not included by main.tex; no active paper claim depends on it."
+    }
+  ],
+  "numbers_without_live_gpu_provenance": [
+    {
+      "claim_group": "theoretical bounds and contours",
+      "examples": [
+        "k* <= 3.125",
+        "D_eff=1.603",
+        "joint evasion probabilities 4.12e-6, 1.20e-6, 8.36e-6"
+      ],
+      "status": "scoped as theory or CPU/correlation measurement, not GPU claim"
+    },
+    {
+      "claim_group": "hardware and sampler figures",
+      "examples": [
+        "software-proxy KL=3.07",
+        "KV260 latency 24.83 us",
+        "chi<=4 timing budget"
+      ],
+      "status": "scoped as software proxy, hardware smoke test, or architecture; no live-GPU claim"
+    },
+    {
+      "claim_group": "FoVer and CPU/replay verifier metrics",
+      "examples": [
+        "SOS-KAN AUROC=0.9545",
+        "production AUROC=0.3333",
+        "DiffuTruth AUROC=0.866841",
+        "Eidoku CSP feasibility=0.740",
+        "GS-KAN LP bound 5.5571795257855365 < 5.562736705311322"
+      ],
+      "status": "scoped as checked-in artifact, CPU proxy, or CPU formal evidence"
+    },
+    {
+      "claim_group": "SOTA cascade exp1100",
+      "examples": [
+        "n=100 outputs",
+        "mean cascade depth=2.20",
+        "correct energy=0.689",
+        "incorrect energy=0.621"
+      ],
+      "status": "artifact names a local Qwen3.6 model path but does not explicitly record inference_mode=live_gpu; paper keeps the result as OOD anomaly evidence"
+    }
+  ],
+  "numerical_claims_audit": {
+    "method": "Read main.tex and searched numerical/figure claims with rg; checked cited result artifacts for provenance and claim boundaries.",
+    "all_major_claim_groups_reviewed": true,
+    "live_gpu_claims_preserved": [
+      "exp1074 alpha_t=0.78",
+      "exp1077 alpha_t=0.38",
+      "exp1079 HumanEval +36 pp anomaly",
+      "exp1118/1129 GRPO live_gpu improvements",
+      "exp1130 post-retrain alpha_t=0.52",
+      "exp1366 certificate parse/truth/unknown rates"
+    ],
+    "non_live_claims_scoped": [
+      "CPU/replay semantic repair chain exp1369-1371",
+      "CPU formal GS-KAN bound exp1372",
+      "CPU DiffuTruth proxy exp1367",
+      "CPU Eidoku CSP probe exp1365",
+      "software-proxy sampler KL exp1094",
+      "theoretical Welch and chi<=4 figures"
+    ]
+  },
+  "paper_compile": {
+    "command": "tectonic main.tex",
+    "workdir": "docs/arxiv-paper",
+    "returncode": 0,
+    "warnings_only": true,
+    "pdf_updated": "docs/arxiv-paper/main.pdf"
+  },
+  "arxiv_submission_ready": true,
+  "remaining_blockers": [],
+  "honest_verdict": "paper_integrity_audit_complete_5_of_5_resolved_arxiv_ready_with_scoped_non_live_figures"
+}
