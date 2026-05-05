@@ -1,250 +1,289 @@
-# Research Roadmap vNEXT: Milestone 2026.04.102
+# Research Roadmap vNEXT: Milestone 2026.04.103
 
 Planned: 2026-05-05
 Status: Draft for conductor execution
-Predecessor: 2026.04.101 Activation Hygiene + SOTA Certificate v3 + Online Self-Learning Control
+Predecessor: 2026.04.102 SOTA Runtime Recovery + Certifiable Constraint Learning + Hardware-Portability Audits
 Roadmap YAML: `research-roadmap-next.yaml`
 
-## What Milestone .101 Proved
+## What Milestone .102 Proved
 
-Milestone 2026.04.101 completed all scheduled tasks, but its retrospective
-artifact scored 8 of 13 criteria as met. The missing criteria were concentrated
-in the SOTA certificate branch, which remained blocked by runtime/cache
-readiness rather than by negative certificate evidence.
+Milestone 2026.04.102 reached terminal conductor state for every scheduled
+task. Its retrospective scored 11 of 14 criteria as met. The milestone did not
+finish the certificate branch, but it did establish the first credible local
+SOTA runtime baseline and clarified the next blockers.
 
-- `exp1296` proved the prior-failure and structured-gate activation audits can
-  pass before a milestone activates. This fixed the `.100` DOOMED_RERUN_BLOCK
-  waste pattern.
-- `exp1297` showed the SOTA path is close but still not usable:
-  `unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF` were visible
-  in cache metadata, but `cached_sota_pair()` returned no loadable specs and the
-  missing `unsloth/gemma-4-26B-A4B-it-GGUF` kept `cached_sota_ready=false`.
-- `exp1298`, `exp1299`, `exp1300`, `exp1301`, and `exp1304` therefore did not
-  produce headline certificate, routing, Cactus, or GRPO evidence. They are
-  carry-forwards with explicit gate repair, not simple reruns.
-- `exp1302` and `exp1303` produced the strongest new science signal:
-  sandboxed skill-graph candidates plus positive online memory-policy replay
-  (`self_learning_delta_overall=1.596429`) with fewer accepted violations.
-  The result is still non-headline because it did not use fresh SOTA
-  certificate data and did not prove non-forgetting.
-- `exp1305` confirmed HardNet++ remains better than SnareNet on replay
-  (`hardnetpp_delta_over_snarenet=1.2207`) and that DSP feasibility is a useful
-  operator gate (`feasibility_channel_auc=0.6605`), but it did not learn a
-  general stop policy.
-- `exp1306` completed a local energy-bridge alignment artifact, but not a
-  strategic implementation path. `exp1307` kept publication in operator hold
-  with no credentialed arXiv submission.
+- `exp1309` repaired the SOTA GGUF resolver: two cached mandated headline
+  models now produce loadable specs. The optional middle MoE,
+  `unsloth/gemma-4-26B-A4B-it-GGUF`, remained absent.
+- `exp1310` smoke-loaded the resolved SOTA pair through the local llama.cpp
+  path. Two models loaded and produced tokens, with aggregate throughput around
+  20.2 tokens/second on the tiny smoke prompts.
+- `exp1311` showed answer stability can look good while the runtime still
+  returns unusably short generations. `answer_stability_score=0.9`, but
+  many raw outputs were empty or one token and `pysat_verified_rate=0.525`.
+- `exp1312` compared triggered certificates, DCCD, GBNF, and repair. DCCD beat
+  grammar-only by `0.2`, repair success was `1.0`, and grammar/projection tax
+  favored compact prompts. However `certificate_parse_rate=0.71223`, below the
+  `0.75` gate, and `certificate_truthfulness_rate=0.69697`.
+- `exp1313`, `exp1314`, and `exp1316` were correctly gate-blocked by the parse
+  shortfall, so semantic validator, safe-prefix acceptance, and DVI
+  certificate-tail updates remain unproven.
+- `exp1315` advanced continuous self-learning: non-forgetting replay passed
+  with `nonforgetting_certificate_rate=1.0`, `memory_regression_count=0`, and
+  `self_learning_delta_overall=1.596429`, but it stayed non-headline because it
+  was not connected to fresh SOTA certificate tails.
+- `exp1317` produced a positive GRPO/VPRM replay headline gate
+  (`grpo_vprm_delta=0.45`), but it was still replay-only.
+- `exp1318` learned a stop-policy artifact on held-out replay. Precision and
+  recall were perfect on that split, but the delta over the conservative replay
+  policy was `0.0`.
+- `exp1319` and `exp1320` produced honest hardware-portability artifacts for
+  KAN and p-bit sampling. They did not make hardware-execution claims.
+- `exp1321` kept publication in operator hold and added related-work deltas.
+  `exp1322` named the main carry-forward: recover certificate parse quality,
+  then rerun the semantic, safe-prefix, and DVI branches.
 
-The natural next milestone is therefore a recovery-and-certification milestone:
-repair the local SOTA resolver, run the smallest defensible headline certificate
-path, bind parsed certificates to semantic validators, and convert the `.101`
-self-learning signal into a non-forgetting controlled loop.
+The natural next milestone is therefore not another broad expansion. It is a
+parse-and-semantics recovery milestone: diagnose short SOTA generations, raise
+certificate parse quality above the existing gate, bind parsed certificates to
+semantic validators, and then connect continuous self-learning to certificate
+tails.
 
 ## Research Signals Added Before Planning
 
-The 2026-05-05 planning sweep added recent 2025-2026 references to
+The 2026-05-05 post-.102 planning sweep added recent 2025-2026 references to
 `research-references.md` before this roadmap was designed. The items most
-directly shaping `.102` are:
+directly shaping `.103` are:
 
-- ConstraintBench (`arXiv:2602.22465`), SATQuest (`arXiv:2509.00930`), and
-  Compact Constraint Encoding (`arXiv:2604.07192`) give small but grounded
-  benchmark slices for certificate truthfulness and constraint translation.
-- ConstrainPrompt (ICLR 2026 submission) and NSVIF (`arXiv:2601.17789`) suggest
-  schema-first validators, verifier-in-the-loop correction, and uncertainty
-  handling instead of syntax-only certificate acceptance.
-- Residual Drift and MUS-Repair (ICLR 2026 submission) provide a concrete
-  repair channel for unsatisfied constraints and residual error localization.
-- CerCE (ICLR 2026 submission) motivates explicit non-forgetting certificates
-  for continuous self-learning.
-- Dynamic Verifier Integration (DVI, `arXiv:2510.05421`) provides the right
-  online-update target once parseable certificate tails exist.
-- p-bit dual-BRAM annealer work, p-bit update-dynamics results, KAN hardware
-  complexity work, lmKAN, and physical analog KANs inform hardware-portability
-  audits without pretending that local FPGA or TSU bring-up is unblocked.
+- Reality Check of LLMs as Formalizers on CSPs (`arXiv:2505.13252`): LLM
+  formalization can fail on real CSPs even when surface answers look stable.
+  `.103` therefore separates answer agreement, certificate parseability,
+  semantic validity, and solver-backed truth.
+- SatIR (`arXiv:2604.08849`): scalable high-recall constraint indexing suggests
+  a practical path for routing parsed certificates into semantic validator
+  components instead of monolithic string checks.
+- Orthographic Constraint Satisfaction (`arXiv:2511.21086`): hard symbolic
+  constraints expose model-family and generation-control failures that ordinary
+  QA benchmarks can hide.
+- H-Neurons (`arXiv:2512.01797`) and follow-on cross-domain transfer work
+  (`arXiv:2604.19765`): hallucination probes must be domain calibrated. `.103`
+  avoids universal-detector claims.
+- Real-time hallucinated-entity detection (`arXiv:2509.03531`) and token-level
+  entropy production rate (`arXiv:2509.04492`): token-health, entropy, and
+  top-k/logprob diagnostics are now first-class runtime checks.
+- p-DNN sampling (`arXiv:2507.07763`): sampling-versus-bits accounting is a
+  better near-term hardware bridge than pretending local FPGA or TSU execution
+  is already available.
+- Current code artifacts worth tracking: EBT, Cactus, constrained diffusion,
+  and LUT-KAN provide implementation examples for future experiments, but are
+  not treated as validated Carnot dependencies.
 
 ## Three Biggest Gaps
 
-1. **Local SOTA runtime gap.** The PRD requires credible local SOTA verifier
-   experiments. `.101` found two mandated headline models in cache metadata, but
-   the helper path still returned no usable model specs. Until the resolver can
-   produce a two-model SOTA pair and a smoke load can run, every downstream
-   headline certificate task will continue to gate out.
+1. **SOTA generation and certificate completeness gap.** `.102` proved the
+   local SOTA pair can load, but certificate tasks still saw empty or one-token
+   outputs and parse rate below gate. Carnot needs a token-health diagnostic and
+   runtime/prompt repair before any semantic validator result can be trusted.
 
-2. **Certificate semantics gap.** Carnot still lacks a measured chain from LLM
-   output to parseable certificate to semantic validator to safe acceptance.
-   The prior milestones selected grammar tooling and sketched routing, but did
-   not prove certificate truthfulness, MUS repair, verifier-backed unknown
-   states, or false-acceptance bounds on fresh SOTA outputs.
+2. **Semantic acceptance gap.** The PRD vision requires verifiable reasoning,
+   not parseable JSON alone. The semantic validator, MUS repair, safe-prefix,
+   and low-risk acceptance branches have not yet run on fresh parseable SOTA
+   certificates.
 
-3. **Controlled self-learning gap.** `.101` showed online memory policy can
-   improve replay metrics, but FR-11 needs continuous self-learning that is
-   verifier controlled, non-forgetting, and connected to certificate tails.
-   The next step is not more promotion-only memory. It is CerCE-style
-   non-forgetting checks plus DVI-style verifier integration.
+3. **Continuous self-learning evidence gap.** Non-forgetting replay is strong,
+   but FR-11 needs verifier-governed self-learning connected to new certificate
+   tails. `.103` must bridge CerCE-style memory control into DVI-style online
+   updates without accepting new violations.
 
-A fourth gap is hardware portability. The current repair and KAN/p-bit evidence
-is promising but local hardware claims must remain design-packet/audit claims
-until Vivado/KV260/TSU or equivalent real hardware is available.
+Hardware remains a fourth, explicit non-goal for headline claims. `.103` should
+improve hardware energy accounting and portability packets while continuing to
+forbid FPGA, KV260, TSU, ROCm, or Kona execution claims unless real local
+execution occurs during the experiment.
 
 ## Architecture Target
 
 ```text
-Phase 0: SOTA runtime recovery
-  exp1309 resolver repair
+Phase 0: runtime and certificate diagnostics
+  exp1323 SOTA token-health and prompt/runtime diagnostic
+      |
+      +--> exp1324 certificate failure taxonomy / CSP formalizer audit
       |
       v
-  exp1310 llama.cpp smoke load and throughput probe
+Phase 1: certificate parse recovery and semantic acceptance
+  exp1325 runtime-fixed DCCD/GBNF certificate extraction v5
       |
       v
-Phase 1: certifiable SOTA constraint reasoning
-  exp1311 ConstraintBench/SATQuest answer stability
+  exp1326 SatIR/NSVIF semantic validator + MUS repair
       |
       v
-  exp1312 DCCD + GBNF triggered certificate extraction
-      |
-      +-----------------------------+
-      |                             |
-      v                             v
-  exp1313 semantic validators       exp1314 BEAVER-lite/Cactus acceptance
-  ConstrainPrompt/NSVIF/MUS         safe-prefix and low-risk filters
+  exp1327 BEAVER-lite/Cactus safe-prefix acceptance
 
-Phase 2: continuous self-learning
-  exp1302/exp1303 .101 memory evidence
+Phase 2: verifier-governed continuous self-learning
+  exp1328 memory promotion and non-forgetting v2
       |
-      v
-  exp1315 CerCE non-forgetting audit
-      |
-      +-----------------------------+
-      |                             |
-      v                             v
-  exp1316 DVI certificate-tail       exp1317 GRPO/VPRM v11
-  online update                     only if cert + learning gates open
+      +--> exp1329 DVI certificate-tail online update
+              |
+              v
+          exp1330 GRPO/VPRM v12 micro-audit
 
-Phase 3: repair, hardware portability, publication state
-  exp1318 learned repair stop policy
-  exp1319 KAN hardware complexity audit
-  exp1320 p-bit sampler portability packet
-  exp1321 publication hold + related-work delta
-  exp1322 milestone retro
+Phase 3: constraint coverage, calibrated probes, hardware accounting, closeout
+  exp1331 orthographic hard-constraint smoke benchmark
+  exp1332 domain-calibrated token/EPR probe
+  exp1333 p-DNN samples-vs-bits energy accounting
+  exp1334 LUT-KAN reproducibility baseline
+  exp1335 publication hold + related-work delta v12
+  exp1336 milestone retro and carry-forward plan
 ```
 
-## Phase 0: SOTA Runtime Recovery
+## Phase 0: Runtime and Certificate Diagnostics
 
-Goal: turn the `.101` cache finding into a usable local SOTA pair. The missing
-middle MoE model should be recorded, but two cached mandated headline models
-should be enough to run a two-model certificate study if both load.
+Goal: identify whether `.102` certificate failure was mainly generation
+configuration, prompt shape, parser coverage, semantic invalidity, or model
+behavior.
 
-- `exp1309-sota-gguf-pair-resolver-repair`: inspect and, if necessary, patch
-  `cached_sota_pair()` so two cached mandated GGUF models produce two loadable
-  specs. If this changes intended behavior, update the relevant OpenSpec
-  requirement before implementation. Add focused tests around the resolver.
-- `exp1310-sota-gguf-llamacpp-smoke-load`: gated on `exp1309`, run the smallest
-  llama.cpp smoke load and throughput probe for the resolved pair. This is a
-  headline gate, not a benchmark race.
+- `exp1323-sota-gguf-token-health-prompt-runtime-diagnostic`: run tiny local
+  SOTA probes with the mandated GGUF pair and record empty/one-token rate,
+  generation settings, entropy/logprob availability, and prompt variants.
+- `exp1324-certificate-failure-taxonomy-formalizer-reality-check`: audit `.102`
+  certificates against solver-backed labels and the new CSP formalizer reality
+  literature. Produce a concrete taxonomy of parse failures, semantic failures,
+  undergeneration, and hardcoded-solution leakage.
 
-Success bar: `sota_pair_ready=true`, two mandated model specs are returned, and
-`headline_result_possible=true` after smoke loading. If the cache is still
-unusable, later tasks skip before spending model time.
+Success bar: `exp1323` must either recover multi-token generation or emit a
+terminal blocker that prevents downstream SOTA calls from wasting time.
+`exp1324` must name which failure modes can plausibly be repaired in `.103`.
 
-## Phase 1: Certifiable SOTA Constraint Reasoning
+## Phase 1: Certificate Parse Recovery and Semantic Acceptance
 
-Goal: measure the complete certificate path on fresh local SOTA outputs and only
-then accept or reject constrained claims.
+Goal: rerun only the blocked certificate branch with explicit prior-failure
+handling and structured gates.
 
-- `exp1311-sota-constraintbench-satquest-answer-stability`: use a tiny
-  verifier-backed micro-slice from ConstraintBench/SATQuest-style tasks to
-  measure cross-model stability, disagreement, PySAT/Z3 verification rate, and
-  feasibility/unknown handling.
-- `exp1312-triggered-certificate-extraction-dccd-gbnf`: compare raw triggered
-  certificates, grammar-constrained GBNF certificates, DCCD-style compact
-  encoding, and repair. Measure parse rate, truthfulness, repair success, and
-  grammar/projection cost.
-- `exp1313-constrainprompt-nsvif-semantic-validator-mus-repair`: compile parsed
-  certificates into executable validators, track semantic violations, use
-  MUS-style repair hints for failures, and record residual-drift cases.
-- `exp1314-beaver-lite-cactus-safe-prefix-acceptance`: run low-risk acceptance
-  only if parse and validator gates pass. Measure false acceptance, verifier
-  call reduction, safe-prefix repair delta, and risk-bound proxy.
+- `exp1325-triggered-certificate-extraction-v5-runtime-fixed-dccd-gbnf`: gated
+  on token recovery. Rerun DCCD/GBNF extraction with the fixed runtime/prompt
+  settings and require `certificate_parse_rate >= 0.75` before semantic work.
+- `exp1326-satir-nsvif-semantic-validator-gated-on-parse-ge-075`: gated on
+  `exp1325`. Compile parsed certificates into indexed semantic validator
+  components, preserve unknown states, and add MUS repair hints.
+- `exp1327-beaver-lite-cactus-safe-prefix-gated-on-validator-pass`: gated on
+  validator execution. Measure false acceptance, verifier-call reduction, and
+  safe-prefix repair delta.
 
-Success bar: a parsed, truthful, semantically checked certificate path either
-reaches headline eligibility or emits a precise blocker with false-acceptance
-and unknown-state evidence.
+Success bar: the branch either reaches a semantically checked certificate path
+with bounded false acceptance, or it produces a narrower blocker than `.102`:
+token health, parseability, semantic validity, or acceptance risk.
 
-## Phase 2: Continuous Self-Learning
+## Phase 2: Verifier-Governed Continuous Self-Learning
 
-Goal: promote the `.101` self-learning signal into a verifier-controlled loop
-with explicit non-forgetting and certificate-tail online updates.
+Goal: convert replay-only self-learning evidence into verifier-controlled
+certificate-tail updates while preserving non-forgetting.
 
-- `exp1315-continuous-self-learning-cerce-nonforgetting-audit`: run the
-  mandatory continuous self-learning experiment. Use `.101` memory evidence,
-  replay cases, and CerCE-style checks to measure non-forgetting, memory
-  regressions, accepted-violation deltas, and Lagrangian penalties.
-- `exp1316-dvi-certificate-tail-online-update`: gated on parseable certificates
-  and non-forgetting, apply DVI-style updates to certificate tails and report
-  acceptance deltas without claiming lossless improvement unless the evidence
-  warrants it.
-- `exp1317-grpo-vprm-v11-headline-gate`: run only if certificate and
-  self-learning gates open. This keeps expensive policy optimization from
-  repeating `.101` gate-blocked work.
+- `exp1328-continuous-self-learning-memory-promotion-v2`: mandatory
+  self-learning task. Rerun memory promotion/demotion with CerCE-style
+  non-forgetting checks and headline certificate replay bookkeeping.
+- `exp1329-dvi-certificate-tail-online-update-v2-gated-on-parse-and-nonforgetting`:
+  gated on parse recovery and non-forgetting. Apply DVI-style updates to
+  certificate tails and report acceptance deltas without claiming lossless
+  improvement unless the evidence warrants it.
+- `exp1330-grpo-vprm-v12-micro-audit-gated-on-dvi-lossless`: gated on DVI and
+  positive self-learning evidence. Keep this as a micro-audit unless the gates
+  justify fresh policy work.
 
-Success bar: at least one self-learning artifact reports non-forgetting evidence
-and a positive verifier-controlled delta. If SOTA certificates remain blocked,
-the self-learning branch can still produce replay-only non-headline evidence.
+Success bar: at least one self-learning artifact reports non-forgetting,
+positive verifier-controlled delta, and no increase in accepted violations. If
+the parse gate blocks DVI again, `.103` must retire or narrow the DVI path
+rather than blindly rerun it.
 
-## Phase 3: Repair, Hardware Portability, Publication State, Retro
+## Phase 3: Coverage, Hardware Accounting, Publication State, Retro
 
-Goal: convert promising but local signals into honest engineering artifacts.
+Goal: add coverage for hard constraints and hallucination probes, then close the
+milestone with honest hardware and publication state.
 
-- `exp1318-hardnetpp-dsp-learned-stop-policy`: move from a replay operator gate
-  to a learned stop/continue policy with a held-out split and explicit precision
-  and recall.
-- `exp1319-kan-hardware-complexity-audit`: audit KAN verifier/repair candidates
-  using recent KAN hardware-complexity findings and local RM/BOP/NABS-style
-  accounting. This is a portability audit, not a hardware result.
-- `exp1320-pbit-sampler-portability-packet`: write a p-bit dual-BRAM/reuse
-  factor design packet and CPU equivalence check for future FPGA work, avoiding
-  blocked Vivado/KV260 claims.
-- `exp1321-publication-hold-related-work-delta-v11`: update publication state
-  and related-work delta without credentialed arXiv submission while the
-  operator hold remains active.
-- `exp1322-milestone-retro-102`: score `.102`, identify carry-forwards, and
-  reconcile status/changelog/traceability notes.
+- `exp1331-orthographic-hard-constraint-smoke-gated-on-token-recovery`: use the
+  orthographic constraint literature to test whether SOTA GGUF generation
+  control obeys exact hard constraints.
+- `exp1332-domain-calibrated-token-epr-probe-gated-on-topk`: use token-health,
+  token-level EPR, and hallucination-probe findings to build a calibrated probe
+  audit. No universal hallucination-detector claim is allowed.
+- `exp1333-pdnn-samples-vs-bits-energy-accounting`: build a CPU accounting
+  artifact that compares sampling effort to weight-bit precision for a tiny
+  verifier.
+- `exp1334-lut-kan-reproducibility-baseline`: reproduce a small LUT-KAN-style
+  accounting baseline connected to `.102` KAN hardware-complexity audit.
+- `exp1335-publication-hold-related-work-delta-v12`: keep publication state
+  honest and fold in `.103` literature deltas.
+- `exp1336-milestone-103-retro-carryforward`: score `.103`, reconcile docs,
+  and name the next carry-forward tasks.
 
-Success bar: repair generalization is measured, hardware remains honestly
-scoped, publication state is terminal, and the retro names only evidence-backed
-carry-forwards.
+Success bar: constraint coverage broadens without overclaiming, hardware work
+stays at accounting/portability scope unless real hardware runs, publication
+remains in the correct operator state, and the retro has enough detail to plan
+the next milestone.
 
 ## Dependency Graph
 
 ```text
-exp1309 ---> exp1310 ---> exp1311 ---> exp1312 ---> exp1313 ---> exp1314
-                                      |              |
-                                      |              +--> exp1318
-                                      |
-exp1302/exp1303 context ---> exp1315 +--> exp1316 ---> exp1317
+exp1323 ---> exp1325 ---> exp1326 ---> exp1327
+   |            |             |
+   v            |             +----------------+
+exp1324         |                              |
+                v                              v
+exp1328 ----> exp1329 --------------------> exp1330
 
-exp1305 context ------------------------------> exp1318
-KAN/p-bit prior hardware context -------------> exp1319
-KV260/Vivado blocked context -----------------> exp1320
-exp1307 publication hold ---------------------> exp1321
+exp1323 -------------------------------> exp1331
+exp1323 -------------------------------> exp1332
 
-exp1309..exp1321 -----------------------------> exp1322
+exp1320 context -----------------------> exp1333
+exp1319 context -----------------------> exp1334
+exp1321 + new refs --------------------> exp1335
+
+exp1323..exp1335 ----------------------> exp1336
 ```
 
 ## Hardware Requirements
 
-- Phase 0 and Phase 1 SOTA tasks require the local mandated GGUF cache plus a
-  llama.cpp-compatible runtime. The planned headline pair is whichever two
-  loadable specs `cached_sota_pair(gpu_indices=(0, 1))` returns from:
+- SOTA LLM tasks must use local mandated GGUF models through
+  `cached_sota_pair(gpu_indices=(0, 1))` or an equivalent
+  `scripts/experiment_template.py` helper. Every fresh LLM experiment must
+  include at least one of:
   `unsloth/Qwen3.6-35B-A3B-GGUF`,
-  `unsloth/gemma-4-31B-it-GGUF`, and
+  `unsloth/gemma-4-31B-it-GGUF`,
   `unsloth/gemma-4-26B-A4B-it-GGUF`.
-- GPU tasks assume the existing dual-GPU local workstation profile. Smoke tests
-  should record GPU memory and throughput, but not turn this milestone into a
-  performance benchmark.
-- CPU-only fallback is allowed only for smoke tests or replay artifacts and must
-  set `headline_result_allowed=false` when legacy small models are used.
-- No experiment may claim FPGA, KV260, ROCm, Extropic TSU, or Kona hardware
-  execution unless that hardware/runtime is actually available during the run.
-  Hardware work in `.102` is limited to portability packets and complexity
-  audits.
+- Legacy small models such as Qwen3.5-0.8B or gemma-4-E4B-it may only be CPU
+  smoke tests and must set `headline_result_allowed=false`.
+- Phase 0, Phase 1, and hard-constraint coverage tasks expect the local
+  dual-GPU workstation and llama.cpp-compatible runtime already proven in
+  `.102`. They must record model IDs, quantization, generation settings,
+  token counts, and any GPU memory/throughput data available.
+- Phase 3 hardware tasks are CPU accounting or portability artifacts. They may
+  read KAN and p-bit design packets, but may not claim FPGA, KV260, ROCm, TSU,
+  or Kona execution unless the corresponding hardware and runtime are actually
+  exercised during the task.
+
+## Success Criteria
+
+- `exp1323` recovers multi-token SOTA generations or cleanly blocks downstream
+  SOTA work with a precise runtime cause.
+- `exp1325` reaches `certificate_parse_rate >= 0.75` or retires the current
+  DCCD/GBNF recovery path with evidence.
+- `exp1326` executes semantic validators on parsed certificates and preserves
+  unknown states.
+- `exp1327` reports false-acceptance risk before claiming safe-prefix savings.
+- `exp1328` preserves non-forgetting and keeps accepted violations from rising.
+- `exp1329` runs only if parse and non-forgetting gates pass.
+- `exp1330` runs only if DVI produces evidence strong enough to justify the
+  GRPO/VPRM micro-audit.
+- `exp1331` and `exp1332` broaden hard-constraint and calibrated-probe evidence
+  without universal claims.
+- `exp1333` and `exp1334` improve hardware accounting while keeping
+  `hardware_claim_allowed=false` unless real hardware executes.
+- `exp1335` keeps publication in the correct operator state.
+- `exp1336` reconciles `ops/status.md`, `ops/changelog.md`, and
+  `_bmad/traceability.md` with the evidence actually produced.
+
+## Decentralization Implication
+
+The `.103` plan keeps Carnot aligned with the long-term decentralization goal:
+verification should move toward compact, locally executable certificates and
+energy-accounted samplers, not opaque remote model calls or unverifiable
+central services. The milestone is still an evidence-building step, not a
+deployment claim.
