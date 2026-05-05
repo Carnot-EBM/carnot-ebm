@@ -283,6 +283,145 @@ class ParallelIsingSampler:
         return samples_f > 0.5
 
 
+@dataclass
+class InertiaIsingSampler:
+    """Fully synchronous parallel Ising sampler with per-spin EMA inertia.
+
+    **Researcher summary:**
+        Adds the arXiv:2604.17109-style inertia idea to Carnot's vectorized
+        Ising sampler in the form used by the existing FPGA v4 CPU reference:
+        every spin is updated from the same pre-update snapshot, and the local
+        field used for the Bernoulli draw is an exponential moving average.
+
+    **Detailed explanation for engineers:**
+        ``ParallelIsingSampler`` has two modes today: checkerboard Gibbs, where
+        even spins update before odd spins, and raw fully parallel Gibbs, where
+        all spins update from the same stale state. Dense constraint graphs can
+        make the raw fully parallel update bounce between coupled states because
+        every spin reacts to the same instantaneous field at the same time.
+
+        This sampler keeps the fully parallel hardware shape but dampens the
+        field:
+
+            h_inst(t) = b + J @ s(t)
+            h_ema(t) = alpha * h_ema(t-1) + (1 - alpha) * h_inst(t)
+            P(s_i(t+1)=1) = sigmoid(2 * beta(t) * h_ema_i(t))
+
+        ``alpha=0`` exactly reduces to the existing ``_parallel_update`` rule.
+        Larger alpha values keep more field history, which suppresses abrupt
+        period-2 oscillations in dense synchronous updates at the cost of slower
+        response to a real field change.
+
+        The arXiv paper writes PIMI in +/-1 notation as a sign update with a
+        self-alignment term and injected noise. Carnot's existing sampler API
+        is boolean and probability-based, so this class implements the same
+        stabilizing idea as an EMA term inside the flip probability path rather
+        than changing public spin conventions.
+
+    Attributes:
+        n_warmup: Number of annealing sweeps before collecting samples.
+        n_samples: Number of samples to collect after warmup.
+        steps_per_sample: Fully synchronous sweeps between collected samples.
+        schedule: Optional beta schedule used during warmup.
+        inertia_alpha: EMA coefficient in ``[0, 1)``. ``0`` means no inertia.
+
+    Spec: REQ-SAMPLE-023
+    """
+
+    n_warmup: int = 1000
+    n_samples: int = 50
+    steps_per_sample: int = 20
+    schedule: AnnealingSchedule | None = None
+    inertia_alpha: float = 0.5
+
+    def __post_init__(self) -> None:
+        """Validate the EMA coefficient before JAX traces any sampling loops.
+
+        Why this is checked at construction: ``alpha=1`` would freeze the EMA at
+        its initial value forever, so the sampler would ignore the current Ising
+        state. Negative alpha over-corrects the field and turns the damping term
+        into a feedback amplifier. Both cases invalidate the convergence
+        interpretation of the benchmark.
+        """
+        if not 0.0 <= self.inertia_alpha < 1.0:
+            raise ValueError(f"inertia_alpha must be in [0, 1), got {self.inertia_alpha}")
+
+    def sample(
+        self,
+        key: jax.Array,
+        biases: jax.Array,
+        coupling_matrix: jax.Array,
+        beta: float | jax.Array = 10.0,
+        init_spins: jax.Array | None = None,
+    ) -> jax.Array:
+        """Run fully synchronous EMA-inertia sampling on an Ising model.
+
+        Args:
+            key: JAX PRNG key.
+            biases: Bias vector, shape ``(n_spins,)``.
+            coupling_matrix: Symmetric coupling matrix, shape
+                ``(n_spins, n_spins)`` with zero diagonal.
+            beta: Inverse temperature. Used as ``beta_final`` when no explicit
+                annealing schedule is supplied.
+            init_spins: Optional boolean initial spin state. Random if omitted.
+
+        Returns:
+            Boolean samples of shape ``(n_samples, n_spins)``.
+
+        Spec: REQ-SAMPLE-023
+        """
+        n_spins = biases.shape[0]
+        beta = jnp.asarray(beta, dtype=jnp.float32)
+
+        key, init_key = jrandom.split(key)
+        if init_spins is None:
+            spins = jrandom.bernoulli(init_key, 0.5, (n_spins,))
+        else:
+            spins = jnp.asarray(init_spins, dtype=jnp.bool_)
+
+        spins_f = spins.astype(jnp.float32)
+        field_ema = jnp.zeros_like(spins_f, dtype=jnp.float32)
+        J = jnp.asarray(coupling_matrix, dtype=jnp.float32)
+        b = jnp.asarray(biases, dtype=jnp.float32)
+        alpha = jnp.asarray(self.inertia_alpha, dtype=jnp.float32)
+        schedule = self.schedule or AnnealingSchedule(beta_init=float(beta), beta_final=float(beta))
+
+        def warmup_sweep_fn(carry, step_key):
+            s, h_ema, step = carry
+            beta_t = schedule.beta_at_step(step, self.n_warmup)
+            s, h_ema = _inertia_parallel_update(s, b, J, beta_t, step_key, h_ema, alpha)
+            return (s, h_ema, step + 1), None
+
+        key, warmup_key = jrandom.split(key)
+        warmup_keys = jrandom.split(warmup_key, self.n_warmup)
+        (spins_f, field_ema, _), _ = jax.lax.scan(
+            warmup_sweep_fn,
+            (spins_f, field_ema, jnp.int32(0)),
+            warmup_keys,
+        )
+
+        beta_final = jnp.asarray(schedule.beta_final, dtype=jnp.float32)
+
+        def collect_fn(carry, sample_key):
+            s, h_ema = carry
+            sweep_keys = jrandom.split(sample_key, self.steps_per_sample)
+
+            def decorrelate(inner_carry, k):
+                s_inner, h_inner = inner_carry
+                s_inner, h_inner = _inertia_parallel_update(
+                    s_inner, b, J, beta_final, k, h_inner, alpha
+                )
+                return (s_inner, h_inner), None
+
+            (s, h_ema), _ = jax.lax.scan(decorrelate, (s, h_ema), sweep_keys)
+            return (s, h_ema), s
+
+        key, collect_key = jrandom.split(key)
+        collect_keys = jrandom.split(collect_key, self.n_samples)
+        _, samples_f = jax.lax.scan(collect_fn, (spins_f, field_ema), collect_keys)
+        return samples_f > 0.5
+
+
 def _parallel_update(
     spins: jax.Array,
     biases: jax.Array,
@@ -315,6 +454,42 @@ def _parallel_update(
     probs = jax.nn.sigmoid(2.0 * beta * h)
     # Sample all spins in parallel.
     return jrandom.bernoulli(key, probs).astype(jnp.float32)
+
+
+def _inertia_parallel_update(
+    spins: jax.Array,
+    biases: jax.Array,
+    J: jax.Array,
+    beta: jax.Array,
+    key: jax.Array,
+    field_ema: jax.Array,
+    inertia_alpha: jax.Array,
+) -> tuple[jax.Array, jax.Array]:
+    """Update all spins synchronously using an EMA-smoothed local field.
+
+    **Detailed explanation for engineers:**
+        This is the load-bearing update for ``InertiaIsingSampler``. It is
+        intentionally close to ``_parallel_update`` so the new behavior has one
+        obvious difference: before computing ``sigmoid(2 * beta * h)``, the
+        instantaneous field is blended with a per-spin register from the prior
+        sweep. That register is the CPU analogue of the ``h_ema`` register in
+        the KV260 v4 RTL plan.
+
+        ``inertia_alpha=0`` gives ``h_ema = h_inst`` and therefore the same
+        Bernoulli draw as ``_parallel_update`` for the same key. Values near
+        one keep more history and damp fully synchronous oscillation.
+
+    Returns:
+        ``(new_spins, new_field_ema)`` where ``new_spins`` is float32 in
+        ``{0.0, 1.0}`` and ``new_field_ema`` is the updated field register.
+
+    Spec: REQ-SAMPLE-023
+    """
+    h_inst = biases + J @ spins
+    new_field_ema = inertia_alpha * field_ema + (1.0 - inertia_alpha) * h_inst
+    probs = jax.nn.sigmoid(2.0 * beta * new_field_ema)
+    new_spins = jrandom.bernoulli(key, probs).astype(jnp.float32)
+    return new_spins, new_field_ema
 
 
 def _checkerboard_update(

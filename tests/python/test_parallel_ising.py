@@ -13,9 +13,11 @@ import jax.random as jrandom
 
 from carnot.samplers.parallel_ising import (
     AnnealingSchedule,
+    InertiaIsingSampler,
     ParallelIsingSampler,
-    _parallel_update,
     _checkerboard_update,
+    _inertia_parallel_update,
+    _parallel_update,
     sat_to_coupling_matrix,
     extract_ising_params,
     parallel_sample_states,
@@ -94,6 +96,63 @@ class TestParallelUpdate:
         spins = _parallel_update(jnp.zeros(n), biases, J, jnp.float32(1.0), key)
         unique = jnp.unique(spins)
         assert all(float(v) in (0.0, 1.0) for v in unique)
+
+
+class TestInertiaParallelUpdate:
+    """REQ-SAMPLE-023: EMA inertia for fully synchronous Ising updates."""
+
+    def test_alpha_zero_matches_fully_parallel_update(self):
+        """REQ-SAMPLE-023: alpha=0 reduces to the existing synchronous Gibbs rule."""
+        spins = jnp.array([0.0, 1.0, 0.0, 1.0], dtype=jnp.float32)
+        biases = jnp.array([0.3, -0.1, 0.2, -0.4], dtype=jnp.float32)
+        J = jnp.array(
+            [
+                [0.0, 0.2, -0.1, 0.0],
+                [0.2, 0.0, 0.4, -0.2],
+                [-0.1, 0.4, 0.0, 0.1],
+                [0.0, -0.2, 0.1, 0.0],
+            ],
+            dtype=jnp.float32,
+        )
+        beta = jnp.float32(1.5)
+        key = jrandom.PRNGKey(17)
+        stale_ema = jnp.ones_like(spins) * 99.0
+
+        expected = _parallel_update(spins, biases, J, beta, key)
+        actual, field_ema = _inertia_parallel_update(
+            spins, biases, J, beta, key, stale_ema, jnp.float32(0.0)
+        )
+
+        assert jnp.array_equal(actual, expected)
+        assert jnp.allclose(field_ema, biases + J @ spins)
+
+    def test_ema_field_blends_instantaneous_field(self):
+        """REQ-SAMPLE-023: inertia keeps per-spin EMA state before sampling."""
+        spins = jnp.array([1.0, 0.0, 1.0], dtype=jnp.float32)
+        biases = jnp.array([0.1, -0.2, 0.3], dtype=jnp.float32)
+        J = jnp.array(
+            [
+                [0.0, 0.5, -0.25],
+                [0.5, 0.0, 0.75],
+                [-0.25, 0.75, 0.0],
+            ],
+            dtype=jnp.float32,
+        )
+        prior_ema = jnp.array([2.0, -2.0, 1.0], dtype=jnp.float32)
+        alpha = jnp.float32(0.25)
+
+        _, field_ema = _inertia_parallel_update(
+            spins,
+            biases,
+            J,
+            jnp.float32(1.0),
+            jrandom.PRNGKey(3),
+            prior_ema,
+            alpha,
+        )
+
+        expected = alpha * prior_ema + (1.0 - alpha) * (biases + J @ spins)
+        assert jnp.allclose(field_ema, expected)
 
 
 class TestCheckerboardUpdate:
@@ -211,6 +270,35 @@ class TestParallelIsingSampler:
             jrandom.PRNGKey(0), jnp.zeros(n), jnp.zeros((n, n)), init_spins=init
         )
         assert samples.shape == (1, n)
+
+
+class TestInertiaIsingSampler:
+    """REQ-SAMPLE-023: Fully synchronous sampler with EMA inertia."""
+
+    def test_rejects_invalid_alpha(self):
+        """REQ-SAMPLE-023: alpha is constrained to the EMA range [0, 1)."""
+        with np.testing.assert_raises(ValueError):
+            InertiaIsingSampler(inertia_alpha=1.0)
+        with np.testing.assert_raises(ValueError):
+            InertiaIsingSampler(inertia_alpha=-0.1)
+
+    def test_sample_shape_and_dtype(self):
+        """REQ-SAMPLE-023: inertia sampler preserves sampler output contract."""
+        n = 6
+        sampler = InertiaIsingSampler(
+            n_warmup=4,
+            n_samples=3,
+            steps_per_sample=2,
+            inertia_alpha=0.5,
+        )
+        samples = sampler.sample(
+            jrandom.PRNGKey(0),
+            jnp.zeros(n, dtype=jnp.float32),
+            jnp.zeros((n, n), dtype=jnp.float32),
+            beta=1.0,
+        )
+        assert samples.shape == (3, n)
+        assert samples.dtype == jnp.bool_
 
 
 # --- sat_to_coupling_matrix ---

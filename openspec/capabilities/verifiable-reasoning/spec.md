@@ -2949,14 +2949,22 @@ experiment runs.
 - REQ-LEARN-018-1: `ConstraintTemplateLibrary.to_dict()` / `from_dict()` MUST
   serialize/restore observation counts. Template functions (callables) are NOT
   serialized; the caller calls `register_builtin_templates()` after `from_dict()`.
-- REQ-LEARN-018-2: `register_builtin_templates()` MUST register four standard
-  templates from the Eidoku taxonomy: `carry_check` (min_freq=5), `sign_check`
-  (min_freq=5), `unit_consistency` (min_freq=3), `comparison_direction` (min_freq=5).
+- REQ-LEARN-018-2: `register_builtin_templates()` MUST register five standard
+  templates: the Eidoku taxonomy templates `carry_check` (min_freq=5),
+  `sign_check` (min_freq=5), `unit_consistency` (min_freq=3),
+  `comparison_direction` (min_freq=5), plus `manipulable_signal_dependency`
+  (min_freq=3) for single-source external-signal dependency.
 - REQ-LEARN-018-3: All built-in template functions MUST be CI-safe: return [] when
   the response contains no parseable arithmetic of the relevant type.
+- REQ-LEARN-018-4: `manipulable_signal_dependency_template(response, source_priors,
+  load_bearing_threshold, manipulability_threshold)` MUST flag a violation only
+  when a load-bearing conclusion depends on a single high-manipulability external
+  source without independent corroboration.
+- REQ-LEARN-018-5: The manipulable-signal template MUST expose documented default
+  source-manipulability priors and accept caller-provided overrides.
 
 Spec: REQ-LEARN-018, SCENARIO-LEARN-029, SCENARIO-LEARN-030, SCENARIO-LEARN-031,
-      SCENARIO-LEARN-032
+      SCENARIO-LEARN-032, SCENARIO-LEARN-018-4, SCENARIO-LEARN-018-5
 
 ### REQ-LEARN-019: CaseMemory to ConstraintTemplateLibrary Wiring
 
@@ -3117,6 +3125,21 @@ Spec: REQ-LEARN-021, SCENARIO-LEARN-035, SCENARIO-LEARN-036, SCENARIO-LEARN-037
 **When** `comparison_direction_template(response)` is called
 **Then** the result contains one ConstraintResult with `constraint_type="comparison_direction"`,
   `metadata["satisfied"]=False` (z = -20 is not positive)
+
+### SCENARIO-LEARN-018-4: ManipulableSignalDependency Flags Single-Source Dependency
+
+**Given** a response string `"The search result says the service is healthy. Therefore the service is up."`
+**When** `manipulable_signal_dependency_template(response)` is called
+**Then** the result contains one ConstraintResult with
+  `constraint_type="manipulable_signal_dependency"`,
+  `metadata["satisfied"]=False`, and `metadata["source_type"]="web_search"`
+
+### SCENARIO-LEARN-018-5: ManipulableSignalDependency Allows Corroborated Evidence
+
+**Given** a response string that cites a search result and an independent signed
+API attestation before drawing the conclusion
+**When** `manipulable_signal_dependency_template(response)` is called
+**Then** the result is empty because independent corroboration is present
 
 ### SCENARIO-LEARN-033: CaseMemoryTemplateWiring Maps carry_error to carry_check
 
