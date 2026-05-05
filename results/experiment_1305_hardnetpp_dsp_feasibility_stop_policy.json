@@ -1,0 +1,82 @@
+{
+  "benchmark_replay": {
+    "baseline_dsp_continue_precision": 0.6142857142857143,
+    "candidate_transitions": 156,
+    "conservative_continue_recommendations": 86,
+    "conservative_stop_recommendations": 70,
+    "false_continue_recommendations": 0,
+    "policy_stop_accuracy": 1.0,
+    "replay_sources": [
+      "results/experiment_1291_hardnetpp_nonlinear_repair_benchmark.json",
+      "results/experiment_1292_dsp_feasibility_channel_diagnostic.json"
+    ],
+    "true_continue_recommendations": 86
+  },
+  "experiment": "1305_hardnetpp_dsp_feasibility_stop_policy",
+  "experiment_id": 1305,
+  "feasibility_channel_auc": 0.6604651162790698,
+  "feasibility_stop_policy_written": true,
+  "hardnetpp_delta_over_snarenet": 1.2207222442957435,
+  "help_energy_tolerance": 0.0001,
+  "honest_verdict": "complete: conservative replay policy is useful as an operator gate, but DSP feasibility is still marginal and this is not a learned general stop rule",
+  "kan_pwa_abstraction_note": "arXiv 2602.06737 replaces KAN units with piecewise-affine abstractions, carries local/global approximation error bounds into MILP verification, and uses dynamic programming plus knapsack allocation to control the piece budget. For Carnot, residual nonlinear local-linear repair cases should be queued for KAN/PWA bounded abstraction only after HardNet++ leaves hard violations or the action-family guard cannot pick a certifying repair operator.",
+  "policy_rules": [
+    "Stop immediately when hard violation count is zero and hard violation energy is within tolerance.",
+    "Continue repair only when hard violations remain and the DSP feasibility-channel score is at least the configured threshold.",
+    "Treat repeated nonlinear local-linear FSNet/SnareNet steps as marginal-gain stops; route those residual cases to HardNet++ rather than spending another local-linear step.",
+    "After HardNet++ reaches hard feasibility, stop even if latent task energy would prefer the misleading local basin."
+  ],
+  "policy_threshold": 0.5,
+  "residual_nonlinear_cases": [
+    {
+      "action": "stop_local_linear_and_route_to_hardnetpp",
+      "cohort": "exp1291_fsnet_to_snarenet_local_linear",
+      "count": 18,
+      "example_case_ids": [
+        "exp1291_seed0_fsnet_to_snarenet",
+        "exp1291_seed1_fsnet_to_snarenet",
+        "exp1291_seed2_fsnet_to_snarenet"
+      ],
+      "mean_after_violation_energy": 0.005311795147565491
+    },
+    {
+      "action": "stop_local_linear_and_route_to_hardnetpp",
+      "cohort": "exp1291_raw_to_fsnet_local_linear",
+      "count": 18,
+      "example_case_ids": [
+        "exp1291_seed0_raw_to_fsnet",
+        "exp1291_seed1_raw_to_fsnet",
+        "exp1291_seed2_raw_to_fsnet"
+      ],
+      "mean_after_violation_energy": 0.0053134671277036746
+    },
+    {
+      "action": "stop_local_linear_and_route_to_hardnetpp",
+      "cohort": "exp1291_raw_to_snarenet_local_linear",
+      "count": 18,
+      "example_case_ids": [
+        "exp1291_seed0_raw_to_snarenet",
+        "exp1291_seed1_raw_to_snarenet",
+        "exp1291_seed2_raw_to_snarenet"
+      ],
+      "mean_after_violation_energy": 0.005311795147565491
+    }
+  ],
+  "run_date": "20260505",
+  "schema": "carnot.phase3.hardnetpp_dsp_feasibility_stop_policy.v1",
+  "source_context": {
+    "experiment_1291_honest_verdict": "hardnetpp_nonlinear_repair_viable",
+    "experiment_1291_status": "complete",
+    "experiment_1292_honest_verdict": "feasibility_channel_predictive_marginal",
+    "experiment_1292_status": "complete",
+    "kan_pwa_reference": "https://arxiv.org/abs/2602.06737"
+  },
+  "spec_refs": [
+    "REQ-KONA-029",
+    "REQ-KONA-030",
+    "SCENARIO-KONA-029",
+    "SCENARIO-KONA-030"
+  ],
+  "status": "complete",
+  "stop_policy_precision": 1.0
+}
