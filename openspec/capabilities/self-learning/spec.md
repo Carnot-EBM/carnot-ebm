@@ -2792,3 +2792,57 @@ verdict from the measured simulation.
 | Requirement | Python | Tests |
 |-------------|--------|-------|
 | REQ-LEARN-1303 | Implemented (`python/carnot/reporting/querybandits_ngc_online_memory_policy.py`) | Implemented (`tests/python/test_querybandits_ngc_online_memory_policy.py`) |
+
+## REQ-LEARN-1315: CerCE Non-Forgetting Audit For Continuous Self-Learning
+
+Exp 1315 SHALL audit whether the `.101` continuous self-learning memory policy
+preserves previously verified behavior while improving new verifier-feedback
+cases. The audit SHALL use Exp 1302 skill-graph promotion/demotion candidates,
+Exp 1303 QueryBandits/NGC online-memory metrics, and Exp 1288 DVI verifier
+feedback replay. It SHALL treat promotion/demotion/rewrite/abstain/expiry as
+candidate policy perturbations and report a CerCE-style non-forgetting
+certificate before allowing any self-learning claim to be repeated.
+
+### REQ-LEARN-1315 Sub-requirements
+
+- REQ-LEARN-1315-1: The workflow SHALL write
+  `results/experiment_1315_continuous_self_learning_cerce_nonforgetting_audit.json`
+  first with `status="in_progress"` and run-date artifact metadata before
+  loading source artifacts.
+- REQ-LEARN-1315-2: The workflow SHALL load Exp 1302, Exp 1303, and Exp 1288
+  artifacts. If any required input is absent, it SHALL write a terminal
+  artifact with `status="blocked"`, `honest_verdict="blocked_missing_inputs"`,
+  and `missing_inputs` listing the absent paths.
+- REQ-LEARN-1315-3: The workflow SHALL build a replay set containing old
+  verified cases, `.101` improved verifier-feedback cases, and adversarial or
+  unknown cases that must abstain rather than promote memory.
+- REQ-LEARN-1315-4: The policy audit SHALL evaluate promote, demote, rewrite,
+  abstain, and expire decisions and SHALL count accepted violations,
+  adversarial promotions, and memory regressions as Lagrangian violations.
+- REQ-LEARN-1315-5: `nonforgetting_certificate_rate` SHALL equal the fraction
+  of old verified replay cases whose target verified behavior is preserved
+  after applying the candidate memory policy.
+- REQ-LEARN-1315-6: The final artifact SHALL include `status`,
+  `nonforgetting_certificate_rate`, `memory_regression_count`,
+  `self_learning_delta_overall`, `lagrangian_violation_penalty`,
+  `accepted_violation_delta`, `promoted_memory_count`,
+  `demoted_memory_count`, `headline_result_allowed`, and `honest_verdict`.
+- REQ-LEARN-1315-7: `headline_result_allowed` SHALL remain false unless the run
+  uses fresh headline-eligible SOTA certificate evidence.
+
+### SCENARIO-LEARN-1315: CerCE Audit Preserves Verified Memory
+
+**Given** Exp 1302 has sandboxed promote/demote/expire memory candidates
+**And** Exp 1303 reports a positive non-headline online-memory delta
+**And** Exp 1288 provides old verifier-feedback replay slices
+**When** Exp 1315 runs with run date `20260505`
+**Then** the final artifact has `status="complete"`
+**And** it reports non-forgetting, memory-regression, accepted-violation,
+Lagrangian-penalty, promotion, demotion, headline, and honest-verdict fields
+**And** adversarial or unknown cases are abstained rather than promoted.
+
+## Implementation Status (REQ-LEARN-1315)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-1315 | Implemented (`python/carnot/reporting/continuous_self_learning_cerce_nonforgetting_audit.py`) | Implemented (`tests/python/test_continuous_self_learning_cerce_nonforgetting_audit.py`) |
