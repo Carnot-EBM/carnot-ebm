@@ -20,8 +20,8 @@ Rust + Python/JAX, Apache 2.0, `pip install carnot`.
 Current public research record: **1,322 experiments tracked, 112
 artifact-backed completed milestones**, with checked-in result artifacts
 through Exp 1322 on 2026-05-05. `research-complete.yaml` currently archives
-**111** completed milestones through 2026.04.101; Exp 1322 records milestone
-.102 at **11/14 criteria met**. Latest .102 artifacts show the local SOTA GGUF
+**112** completed milestones through 2026.04.102, with milestone .102 recorded
+at **11/14 criteria met**. Latest .102 artifacts show the local SOTA GGUF
 runtime recovered: two headline GGUF models are cached and loaded through
 llama.cpp (Qwen3.6-35B-A3B and Gemma4-31B-it; Exps 1309/1310), the
 ConstraintBench/SATQuest stability audit reached **0.90** answer stability over

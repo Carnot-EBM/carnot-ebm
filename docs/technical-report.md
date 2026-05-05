@@ -30,7 +30,7 @@ adversarial-audit results are labeled by artifact provenance.
 
 This report documents the research arc behind the framework — **1,322
 experiments tracked through Exp 1322, with 112 artifact-backed completed
-milestones and 111 of them currently archived in `research-complete.yaml`**,
+milestones all currently archived in `research-complete.yaml`**,
 run between February and May 2026.
 The story now spans activation-based negative results, constraint-based
 verification, live SOTA-model benchmarks, production verifier ensembles,
@@ -44,7 +44,7 @@ online memory policy, EBT/ARM/EBM-CoT bridge audits, WOPR game cartridge
 expansion, local SOTA GGUF runtime recovery, certificate DCCD/GBNF comparisons,
 CerCE non-forgetting, learned stop-policy audits, KAN hardware-complexity
 packets, and p-bit portability packets. The latest archived milestone in
-`research-complete.yaml` is 2026.04.101; result artifacts now extend through
+`research-complete.yaml` is 2026.04.102, with result artifacts through
 Exp 1322. Milestone .102 met **11 of 14** criteria: the SOTA GGUF pair resolver
 repaired the cache path, llama.cpp smoke-loaded Qwen3.6-35B-A3B and
 Gemma4-31B-it, ConstraintBench/SATQuest answer stability reached **0.90** over
@@ -432,10 +432,10 @@ artifacts checked into `results/operational_retro_*.json`.
   LLM-verifier gaming defense exceeded the codex max-turn budget, the
   prior-failure auto-population task hit a circular metadata failure, and Exp
   1268 later counted retro-95 complete from available result fields.
-- **Latest .96-.102 artifact status:** research-complete now archives **111**
-  completed milestones through .101, while Exp 1322 adds a terminal .102 retro
-  artifact that is not yet archived there. The checked-in .96/.97 artifacts
-  should still be read conservatively. Exp 1268 backfilled .96 at **2/13** and
+- **Latest .96-.102 artifact status:** research-complete now archives **112**
+  completed milestones through .102, including the terminal Exp 1322 retro
+  artifact. The checked-in .96/.97 artifacts should still be read
+  conservatively. Exp 1268 backfilled .96 at **2/13** and
   .97 at **4/13**. .98 then closed **5/13** criteria with terminal results
   through Exp 1267, .99 closed **12/14** criteria through Exp 1281, .100 closed
   **5/14** criteria through Exp 1295, .101 closed **8/13** criteria through Exp
@@ -3141,8 +3141,8 @@ orthogonality audit before paper-v6 or Phase-5 scale-up work.
 
 ### Phase 21 — .96/.97 Artifact Reality, Boltzmann-GPT CD, and NRGPT Type-B Classification (Exps 1229–1254)
 
-The archive now contains **111 completed milestones** through 2026.04.101, and
-result artifacts now extend through Exp 1322. The artifact layer is more
+The archive now contains **112 completed milestones** through 2026.04.102, and
+result artifacts extend through Exp 1322. The artifact layer is more
 conservative than the milestone list. Several .96 and .97 deliverables listed
 in `research-complete.yaml` do not have terminal result artifacts in this
 checkout. The public docs should therefore report Exp 1-1322 as tracked, while

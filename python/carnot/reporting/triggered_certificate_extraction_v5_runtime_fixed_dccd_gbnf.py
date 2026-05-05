@@ -209,24 +209,24 @@ def run_experiment(
     _write_json(output, _base_artifact(project_root=root, run_date=run_date))
 
     exp1323_artifact = _load_json(exp1323_path)
-    if cached_pair_fn is None:
-        from carnot.inference.sota_models import cached_sota_pair  # noqa: PLC0415
-
-        cached_pair_fn = cached_sota_pair
-    model_specs = cached_pair_fn(gpu_indices=(0, 1), preferred_quant="Q4_K_M") or []
-
     if exp1323_artifact.get("min_tokens_recovered") is not True:
         artifact = build_runtime_fixed_artifact(
             exp1311_artifact={},
             exp1312_artifact={},
             exp1323_artifact=exp1323_artifact,
             exp1324_artifact={},
-            model_specs=model_specs,
+            model_specs=[],
             run_date=run_date,
             project_root=root,
         )
         _write_json(output, artifact)
         return artifact
+
+    if cached_pair_fn is None:
+        from carnot.inference.sota_models import cached_sota_pair  # noqa: PLC0415
+
+        cached_pair_fn = cached_sota_pair
+    model_specs = cached_pair_fn(gpu_indices=(0, 1), preferred_quant="Q4_K_M") or []
 
     artifact = build_runtime_fixed_artifact(
         exp1311_artifact=_load_json(exp1311_path),

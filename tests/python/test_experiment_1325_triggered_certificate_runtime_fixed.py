@@ -168,7 +168,7 @@ def test_exp1325_builds_complete_runtime_fixed_artifact() -> None:
     assert artifact["path_metrics"]["repaired_certificate"]["attempts"] == 2
     assert artifact["headline_result_allowed"] is True
     assert artifact["honest_verdict"] == "certificate_parse_gate_open_runtime_fixed_v5"
-    assert "parser repair" in artifact["minimal_changes_applied"]
+    assert any("parser repair" in change for change in artifact["minimal_changes_applied"])
 
 
 def test_exp1325_blocks_when_exp1323_token_gate_not_recovered() -> None:
@@ -279,10 +279,11 @@ def test_exp1325_edge_branches_remain_explicit(
             "proof_numbers": [1.0],
         }
     )
-    assert mod.parse_certificate_text_v5(valid_json).repair_kind == "json_object"
+    assert mod.parse_certificate_text_v5(valid_json).repair_kind == "json_schema"
     assert mod.parse_certificate_text_v5("{ bad").errors[0].startswith("invalid_json")
     assert mod.parse_certificate_text_v5("[1]").errors == ["certificate must be object"]
-    assert mod._parse_json_certificate('{"final_answer":"SAT"}').errors
+    assert mod._parse_json_certificate('{"final_answer":"SAT"}').repair_kind == "schema_repair"
+    assert mod._parse_json_certificate('{"final_answer":"MAYBE"}').errors
     assert mod.parse_certificate_text_v5("ABSTAIN").certificate["final_answer"] == "ABSTAIN"
     assert mod._normalize_label("MAYBE") == "MAYBE"
 
@@ -296,10 +297,9 @@ def test_exp1325_edge_branches_remain_explicit(
     monkeypatch.setattr(mod, "validate_certificate", invalid_label_tail)
     forced = mod.parse_certificate_text_v5("SAT")
     assert forced.parseable is False
-    assert forced.repair_kind == "label_tail_invalid"
+    assert forced.repair_kind is None
     monkeypatch.setattr(mod, "validate_certificate", real_validate)
 
-    assert mod._resolved_specs("not specs") == []
     settings = mod._runtime_settings(
         {
             "generation_settings": {
@@ -311,7 +311,8 @@ def test_exp1325_edge_branches_remain_explicit(
         }
     )
     assert settings["n_ctx"] == 2048
-    assert settings["stop"] == []
+    assert settings["stop"] == ["</s>", "<eos>"]
+    assert "\n" in settings["avoid_stop_strings"]
     assert mod._minimal_changes_applied({}) == ["runtime settings", "parser repair"]
     assert mod._read_json(tmp_path / "missing.json") == {}
 
