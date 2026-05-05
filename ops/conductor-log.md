@@ -758,3 +758,5 @@ web search: GitHub trending energy based mod |
 | 2026-05-05 00:55 UTC | SOTA Answer Stability + FALCON Feasibility Audit | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1297-sota-gguf-cache-provenance-preflig |
 | 2026-05-05 00:57 UTC | SOTA Answer Stability + FALCON Feasibility Audit | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1297-sota-gguf-cache-provenance-preflig |
 | 2026-05-05 00:59 UTC | Triggered Certificate Extraction v3 - GBNF + FALCO | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1298-sota-answer-stability-falcon-audit) |
+| 2026-05-05 00:59 UTC | Semantic Routing v2 - Verifier Features + Infeasib | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1299-triggered-certificate-extraction-v |
+| 2026-05-05 01:01 UTC | Triggered Certificate Extraction v3 - GBNF + FALCO | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1298-sota-answer-stability-falcon-audit) |
