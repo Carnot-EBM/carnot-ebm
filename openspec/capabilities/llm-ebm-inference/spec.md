@@ -223,6 +223,55 @@ violation token
 **And** the returned energy trace is non-increasing
 **And** the refined response has no higher composite energy than the baseline
 
+### REQ-INFER-SOTA-004: SOTA GGUF Cache Provenance Preflight
+
+The system SHALL provide a local-only cache/provenance preflight artifact before
+mandated SOTA GGUF headline inference.  The preflight SHALL inspect the three
+mandated model IDs `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`, record each model's cached status,
+`model_path`, expected quantization, and observed quantization suffix, and call
+`cached_sota_pair(gpu_indices=(0, 1))` only through the existing safe local
+cache resolver.
+
+The artifact SHALL expose `status`, `cached_sota_ready`,
+`headline_result_possible`, `models_used`, `missing_models`,
+`model_specs_preview`, `provenance_ok`, and `honest_verdict`.  It SHALL set
+`cached_sota_ready=true` only when at least one mandated SOTA GGUF is cached and
+`cached_sota_pair()` returns two loadable `MODEL_SPECS` entries with
+`model_path` values.  Otherwise it SHALL set `cached_sota_ready=false`, record
+`missing_models`, carry Exp 1296 prior-failure coverage into the artifact, and
+emit an honest blocked/not-ready verdict without downloading models.
+
+### SCENARIO-INFER-SOTA-004-001: Cached Pair Allows Headline Work
+
+**Given** local cache hits for the mandated Qwen and Gemma 26B GGUF models
+**And** Exp 1296 prior-failure coverage passed
+**When** the SOTA GGUF preflight runs
+**Then** `cached_sota_ready` is true
+**And** `headline_result_possible` is true
+**And** `models_used` names the two `cached_sota_pair()` entries
+**And** every model preview row records cache and quantization provenance.
+
+### SCENARIO-INFER-SOTA-004-002: Missing Cache Blocks Headline Work
+
+**Given** no mandated SOTA GGUF file can be resolved from local cache
+**When** the SOTA GGUF preflight runs
+**Then** `cached_sota_ready` is false
+**And** `headline_result_possible` is false
+**And** `missing_models` names the uncached mandated model IDs
+**And** `honest_verdict` does not claim a headline result is possible.
+
+### SCENARIO-INFER-SOTA-004-003: Prior-Failure Coverage Gates Provenance
+
+**Given** Exp 1296 prior-failure coverage is missing or failed
+**And** the local cache resolver can still inspect GGUF files
+**When** the SOTA GGUF preflight runs
+**Then** `provenance_ok` is false
+**And** `headline_result_possible` is false
+**And** the artifact preserves the Exp 1296 coverage fields that caused the
+provenance block.
+
 ## Implementation Status
 
 | Requirement | Python | Tests |
@@ -238,3 +287,4 @@ violation token
 | REQ-INFER-015 | Implemented | 14 Python |
 | REQ-INFER-016 | Implemented | 10 Python |
 | REQ-INFER-017 | Implemented | 7 Python |
+| REQ-INFER-SOTA-004 | Implemented | 4 Python |
