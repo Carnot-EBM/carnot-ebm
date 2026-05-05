@@ -453,6 +453,46 @@ AND `publication_state == "operator_hold"`.
 AND `publication_state == "submitted"`
 AND `credentialed_submission_attempted == false`.
 
+### REQ-PUBLISH-016: Publication-Hold Related-Work Delta Artifact
+
+The Exp 1321 publication-hold related-work runner MUST create
+`results/experiment_1321_publication_hold_related_work_delta_v11.json` with
+`status == "in_progress"` before reading the hold evidence or literature
+references. It MUST inspect only local repository files and MUST NOT attempt
+arXiv login, upload, submission, or any other credentialed operation.
+
+The terminal artifact MUST read
+`results/experiment_1307_arxiv_v10_hold_receipt_v2.json`,
+`ops/known-issues.md`, and `research-references.md`, identify the 2026-05-05
+2025--2026 references that materially affect related work, and write a compact
+related-work delta either into a local paper/related-work notes file or, when
+no suitable file exists, directly into the artifact. The artifact MUST include:
+
+- `status`
+- `publication_state`
+- `operator_hold_active`
+- `credentialed_submission_attempted`
+- `related_work_delta_written`
+- `new_references_count`
+- `honest_verdict`
+
+The runner MUST set `credentialed_submission_attempted == false` and preserve
+`publication_state == "operator_hold"` when the local Exp 1307 artifact and
+known-issues evidence show the operator publication hold is still active.
+
+### SCENARIO-PUBLISH-017: Related-Work Delta Does Not Lift Operator Hold
+
+**Given** Exp 1307 records `publication_state == "operator_hold"`
+AND `ops/known-issues.md` contains an active publication-hold section
+AND `research-references.md` contains 2026-05-05 2025--2026 reference entries
+**When** the Exp 1321 related-work-delta runner executes
+**Then** it writes a complete artifact with
+`publication_state == "operator_hold"`
+AND `operator_hold_active == true`
+AND `credentialed_submission_attempted == false`
+AND `new_references_count > 0`
+AND `related_work_delta_written == true`.
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -472,3 +512,4 @@ AND `credentialed_submission_attempted == false`.
 | REQ-PUBLISH-013 | Proposed | Exp 1269 paper v6 critical fixes v2 terminal artifact |
 | REQ-PUBLISH-014 | Proposed | Exp 1270 gated arXiv bundle v10 artifact |
 | REQ-PUBLISH-015 | Proposed | Exp 1307 arXiv v10 hold/receipt terminal artifact |
+| REQ-PUBLISH-016 | Proposed | Exp 1321 publication-hold related-work delta artifact |
