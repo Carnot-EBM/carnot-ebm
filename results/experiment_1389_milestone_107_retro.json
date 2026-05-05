@@ -11,6 +11,7 @@
     "read": [
       "CODEX.md",
       "CLAUDE.md",
+      "research-roadmap.yaml",
       "openspec/change-proposals/research-roadmap-vNEXT.md",
       "ops/conductor-log.md",
       "ops/status.md",
@@ -22,296 +23,434 @@
       "research-roadmap-next.yaml"
     ]
   },
-  "missing_result_artifacts": [],
+  "experiment_statuses": {
+    "exp1377": {
+      "artifact": "results/experiment_1377_pretest_fix_106_retro_closeout.json",
+      "artifact_exists": true,
+      "status": "complete",
+      "criterion": "pre_test_suite_fixed and retro_106_complete",
+      "criterion_met": true,
+      "honest_verdict": "milestone_106_6_of_8_explicit_closeout_criteria_met_phase5_pretest_import_fixed_publication_hold_and_original_retro_missing",
+      "key_evidence": {
+        "pre_test_fix_applied": true,
+        "phase5_target_result": "5 passed in 1.88s",
+        "full_tests_python_green": false,
+        "remaining_unrelated_blocker": "tests/python/test_combined_retro_95_96_97.py import/collection debt"
+      }
+    },
+    "exp1378": {
+      "artifact": "results/experiment_1378_publication_hold_v16_claim_boundary.json",
+      "artifact_exists": true,
+      "status": "complete",
+      "criterion": "publication_hold_reviewed",
+      "criterion_met": true,
+      "honest_verdict": "lift_recommended_primary_blockers_resolved_no_external_parity_claim",
+      "key_evidence": {
+        "publication_hold_state": "lift_recommended",
+        "all_primary_blockers_resolved": true,
+        "remaining_primary_blockers": [],
+        "external_dependency_claim_allowed": false
+      }
+    },
+    "exp1379": {
+      "artifact": "results/experiment_1379_paper_integrity_audit_v2.json",
+      "artifact_exists": true,
+      "status": "complete",
+      "criterion": "paper_v7_audit_complete",
+      "criterion_met": true,
+      "honest_verdict": "paper_integrity_audit_complete_5_of_5_resolved_arxiv_ready_with_scoped_non_live_figures",
+      "key_evidence": {
+        "arxiv_submission_ready": true,
+        "critical_issues_before_audit": 5,
+        "critical_issues_after_audit": 0,
+        "latex_compile_success": true
+      }
+    },
+    "exp1380": {
+      "artifact": "results/experiment_1380_arxiv_bundle_v11_submission.json",
+      "artifact_exists": true,
+      "status": "complete",
+      "criterion": "arxiv_submitted",
+      "criterion_met": false,
+      "honest_verdict": "submission_ready_archive_created_manual_upload_required",
+      "key_evidence": {
+        "latex_compile_success": true,
+        "bundle_file_path": "results/arxiv_bundle_v11.tar.gz",
+        "bundle_size_bytes": 111932,
+        "submission_attempted": false,
+        "submission_result": "not_attempted_arxiv_upload_cli_missing; manual submission required",
+        "arxiv_id_if_submitted": null
+      }
+    },
+    "exp1381": {
+      "artifact": "results/experiment_1381_dvi_discriminative_verifier_training_v1.json",
+      "artifact_exists": true,
+      "status": "complete",
+      "criterion": "dvi_training_complete",
+      "criterion_met": true,
+      "honest_verdict": "dvi_discriminative_improvement_measured_positive_delta",
+      "key_evidence": {
+        "dvi_deployed": true,
+        "dvi_auroc_delta": 0.003486,
+        "dvi_baseline_auroc": 0.39104,
+        "dvi_trained_auroc": 0.394526,
+        "positive_cases_used": 4,
+        "negative_cases_used": 12
+      }
+    },
+    "exp1382": {
+      "artifact": "results/experiment_1382_fullscale_certificate_semantic_repair_100cases.json",
+      "artifact_exists": true,
+      "status": "complete",
+      "criterion": "full_scale_repair_100_cases",
+      "criterion_met": true,
+      "honest_verdict": "fullscale_pipeline_headline_allowed_parse_rate_1_0",
+      "key_evidence": {
+        "total_fover_cases": 100,
+        "certificate_parse_rate": 1.0,
+        "semantic_validation_pass_rate": 0.59,
+        "mcs_repair_localization_rate": 1.0,
+        "full_pipeline_pass_rate": 0.29,
+        "scheduler_false_acceptance_rate": 0.0,
+        "headline_result_allowed": true
+      }
+    },
+    "exp1383": {
+      "artifact": "results/experiment_1383_grpo_v7_jury_rl_formal_verifier_rewards.json",
+      "artifact_exists": true,
+      "status": "complete",
+      "criterion": "grpo_v7_formal_reward_measured",
+      "criterion_met": true,
+      "honest_verdict": "grpo_v7_jury_rl_no_improvement",
+      "key_evidence": {
+        "grpo_v7_improvement_pp": 0.0,
+        "wall_budget_exhausted": false,
+        "formal_reward_pass_rate": 0.0,
+        "jury_acceptance_rate": 0.0,
+        "headline_result_allowed": false
+      }
+    },
+    "exp1384": {
+      "artifact": "results/experiment_1384_ebm_cot_energy_calibration_probe.json",
+      "artifact_exists": true,
+      "status": "complete",
+      "criterion": "ebm_cot_probe_complete",
+      "criterion_met": true,
+      "honest_verdict": "implicit_cot_energy_viable_consistency_variance_worsened",
+      "key_evidence": {
+        "baseline_auroc": 0.7998711714327188,
+        "ebm_cot_auroc": 0.985121207722456,
+        "calibration_auroc_delta": 0.18525003628973724,
+        "implicit_cot_energy_viable": true,
+        "consistency_regularization_effect": -0.06111522257690327
+      }
+    },
+    "exp1385": {
+      "artifact": "results/experiment_1385_self_adaptive_ising_machine_probe.json",
+      "artifact_exists": true,
+      "status": "complete",
+      "criterion": "self_adaptive_ising_probe_complete",
+      "criterion_met": true,
+      "honest_verdict": "adaptive_lagrange_viable_on_fover_arithmetic_probe",
+      "key_evidence": {
+        "fover_problem_count": 8,
+        "adaptive_ising_viable": true,
+        "convergence_speedup": 1.3783783783783783,
+        "constraint_violation_reduction": 1.0,
+        "penalty_tuning_iterations_saved": 6.0,
+        "invariant_violations": []
+      }
+    },
+    "exp1386": {
+      "artifact": "results/experiment_1386_secl_discriminative_self_calibration.json",
+      "artifact_exists": true,
+      "status": "complete",
+      "criterion": "secl_discriminative_calibration_complete",
+      "criterion_met": true,
+      "honest_verdict": "secl_ece_reduced_but_signal_correlation_nonpositive_dvi_unproven",
+      "key_evidence": {
+        "ece_before": 0.472572,
+        "ece_after": 0.307345,
+        "ece_reduction_pct": 34.96342,
+        "secl_viable_for_dvi": true,
+        "discriminative_signal_correlation": -0.096968,
+        "cpu_only": true
+      }
+    },
+    "exp1387": {
+      "artifact": "results/experiment_1387_2d_parallel_tempering_kv260_fpga_estimate.json",
+      "artifact_exists": true,
+      "status": "complete",
+      "criterion": "parallel_tempering_kv260_estimate_complete",
+      "criterion_met": true,
+      "honest_verdict": "cpu_2d_pt_convergence_speedup_observed_15_replica_kv260_lut_over_budget_no_hardware_claim",
+      "key_evidence": {
+        "replica_count": 15,
+        "convergence_speedup_2d_pt": 1.0769230769230769,
+        "estimated_kv260_total_lut_count_15_replicas": 540000,
+        "kv260_lut_budget": 117000,
+        "fits_15_replicas_kv260_budget": false,
+        "max_replicas_that_fit_kv260_budget": 3,
+        "hardware_claim_allowed": false,
+        "kv260_claim_allowed": false
+      }
+    },
+    "exp1388": {
+      "artifact": "results/experiment_1388_fr11_self_learning_v4_dvi_grpo_integration.json",
+      "artifact_exists": true,
+      "status": "complete",
+      "criterion": "fr11_self_learning_v4_complete",
+      "criterion_met": true,
+      "honest_verdict": "fr11_self_learning_v4_dvi_only_exp1382_headline_allowed_fresh_59",
+      "key_evidence": {
+        "fresh_verified_sample_count": 59,
+        "exp1374_fresh_verified_baseline": 4,
+        "fresh_verified_delta_vs_exp1374": 55,
+        "headline_result_allowed": true,
+        "path_used": "dvi_only_replay_exp1382",
+        "dvi_checkpoint_active": true,
+        "grpo_v7_improvement_pp": 0.0,
+        "grpo_cases_integrated": 0
+      }
+    },
+    "exp1389": {
+      "artifact": "results/experiment_1389_milestone_107_retro.json",
+      "artifact_exists": true,
+      "status": "complete",
+      "criterion": "retro_107_complete",
+      "criterion_met": true,
+      "key_evidence": {
+        "step0_skeleton_written_first": true,
+        "skip_pre_test": true,
+        "criteria_total": 14,
+        "criteria_met": 13
+      }
+    }
+  },
+  "missing_artifacts": {
+    "research-roadmap-next.yaml": "missing after milestone activation; active queue read from research-roadmap.yaml",
+    "results/experiment_1375_publication_hold_claim_boundary_v15.json": "missing .106 artifact; exp1377 marks it skipped by pre-test cascade",
+    "results/experiment_1376_milestone_106_retro_carryforward.json": "missing .106 artifact; exp1377 marks it skipped by pre-test cascade"
+  },
   "success_criteria": {
     "pre_test_suite_fixed": {
       "status": "MET",
       "source": "exp1377",
-      "evidence": "tests/python/phase5/test_intermediate_scale_v3.py imports and executes; targeted phase5 command recorded 5 passed. Full tests/python moved past the original ModuleNotFoundError and then stopped on an unrelated tests/python/test_combined_retro_95_96_97.py ImportError."
+      "evidence": "Phase-5 intermediate_scale_v3 import blocker fixed; targeted phase5 test file passed 5 tests."
     },
     "retro_106_complete": {
       "status": "MET",
       "source": "exp1377",
-      "evidence": ".106 closeout artifact contains statuses for exp1364-exp1376, including explicit missing_skipped statuses for exp1375 and exp1376."
+      "evidence": "Exp1377 wrote a .106 closeout with statuses for exp1364-exp1376 and explicit missing-artifact notes."
     },
     "publication_hold_reviewed": {
       "status": "MET",
       "source": "exp1378",
-      "evidence": "publication_hold_state=lift_recommended, all_primary_blockers_resolved=true, remaining_primary_blockers=[]."
+      "evidence": "publication_hold_state=lift_recommended; all primary blockers resolved."
     },
     "paper_v7_audit_complete": {
       "status": "MET",
       "source": "exp1379",
-      "evidence": "critical_issues_after_audit=0, certificate/semantic/self-learning/KAN evidence integrated, arxiv_submission_ready=true."
+      "evidence": "critical_issues_after_audit=0, arxiv_submission_ready=true, paper compile succeeded."
     },
     "arxiv_submitted": {
       "status": "NOT_MET",
       "source": "exp1380",
-      "evidence": "Bundle and PDF are ready, but submission_attempted=false, arxiv_id_if_submitted=null, and submission_result says manual arXiv upload is required because an upload CLI was unavailable."
+      "evidence": "Bundle ready, but submission_attempted=false and arxiv_id_if_submitted=null; manual upload required."
     },
     "dvi_training_complete": {
       "status": "MET",
       "source": "exp1381",
-      "evidence": "dvi_deployed=true, discriminative_improvement_measured=true, dvi_auroc_delta=0.003486."
+      "evidence": "dvi_deployed=true with dvi_auroc_delta=0.003486."
     },
     "full_scale_repair_100_cases": {
       "status": "MET",
       "source": "exp1382",
-      "evidence": "certificate_extract_count=100, certificate_parse_rate=1.0, full_pipeline_pass_rate=0.29, headline_result_allowed=true."
+      "evidence": "100 FoVer cases, certificate_parse_rate=1.0, full_pipeline_pass_rate=0.29."
     },
     "grpo_v7_formal_reward_measured": {
       "status": "MET",
       "source": "exp1383",
-      "evidence": "JURY-RL formal verifier rewards were measured without wall-budget exhaustion, but grpo_v7_improvement_pp=0.0, formal_reward_pass_rate=0.0, and headline_result_allowed=false."
+      "evidence": "GRPO v7 formal reward run completed and measured grpo_v7_improvement_pp=0.0 without wall-budget exhaustion."
     },
     "ebm_cot_probe_complete": {
       "status": "MET",
       "source": "exp1384",
-      "evidence": "EBM-CoT hinge calibration improved AUROC from 0.799871 to 0.985121; consistency variance worsened."
+      "evidence": "EBM-CoT AUROC delta=0.185250; consistency variance worsened."
     },
     "self_adaptive_ising_probe_complete": {
       "status": "MET",
       "source": "exp1385",
-      "evidence": "adaptive_ising_viable=true, convergence_speedup=1.378378, constraint_violation_reduction=1.0."
+      "evidence": "adaptive_ising_viable=true with 1.378x convergence speedup."
     },
     "secl_discriminative_calibration_complete": {
       "status": "MET",
       "source": "exp1386",
-      "evidence": "ECE reduced from 0.472572 to 0.307345 (34.96342%), but discriminative_signal_correlation=-0.096968 so DVI usefulness remains unproven."
+      "evidence": "ECE reduction=34.96342%, but discriminative signal correlation was nonpositive."
     },
     "parallel_tempering_kv260_estimate_complete": {
       "status": "MET",
       "source": "exp1387",
-      "evidence": "2D PT CPU speedup=1.076923; 15 replicas estimate=540000 LUTs versus KV260 budget=117000, so hardware claim is disallowed."
+      "evidence": "15-replica CPU 2D PT measured; 15 replicas exceed KV260 LUT budget, so no hardware claim."
     },
     "fr11_self_learning_v4_complete": {
-      "status": "MET_WITH_CAVEAT",
+      "status": "MET",
       "source": "exp1388",
-      "evidence": "fresh_verified_sample_count=59 and headline_result_allowed=true. This met the v4 self-learning gate, but path_used=dvi_only_replay_exp1382 because exp1383 had grpo_v7_improvement_pp=0.0 and grpo_cases_integrated=0."
+      "evidence": "fresh_verified_sample_count=59 (>4) and headline_result_allowed=true; integration path was DVI-only."
     },
     "retro_107_complete": {
       "status": "MET",
       "source": "exp1389",
-      "evidence": "This artifact was created skeleton-first with skip_pre_test=true and finalized after evaluating exp1377-exp1388."
-    }
-  },
-  "experiment_statuses": {
-    "exp1377": {
-      "status": "complete",
-      "artifact": "results/experiment_1377_pretest_fix_106_retro_closeout.json",
-      "honest_verdict": "milestone_106_6_of_8_explicit_closeout_criteria_met_phase5_pretest_import_fixed_publication_hold_and_original_retro_missing",
-      "criterion_result": "MET",
-      "notes": "Original phase5 import blocker fixed; full tests still have unrelated collection debt."
-    },
-    "exp1378": {
-      "status": "complete",
-      "artifact": "results/experiment_1378_publication_hold_v16_claim_boundary.json",
-      "honest_verdict": "lift_recommended_primary_blockers_resolved_no_external_parity_claim",
-      "criterion_result": "MET",
-      "notes": "Publication hold reviewed and lift recommended, not operator-lifted."
-    },
-    "exp1379": {
-      "status": "complete",
-      "artifact": "results/experiment_1379_paper_integrity_audit_v2.json",
-      "honest_verdict": "paper_integrity_audit_complete_5_of_5_resolved_arxiv_ready_with_scoped_non_live_figures",
-      "criterion_result": "MET"
-    },
-    "exp1380": {
-      "status": "complete",
-      "artifact": "results/experiment_1380_arxiv_bundle_v11_submission.json",
-      "honest_verdict": "submission_ready_archive_created_manual_upload_required",
-      "criterion_result": "NOT_MET",
-      "notes": "Bundle ready, actual arXiv submission not attempted."
-    },
-    "exp1381": {
-      "status": "complete",
-      "artifact": "results/experiment_1381_dvi_discriminative_verifier_training_v1.json",
-      "honest_verdict": "dvi_discriminative_improvement_measured_positive_delta",
-      "criterion_result": "MET"
-    },
-    "exp1382": {
-      "status": "complete",
-      "artifact": "results/experiment_1382_fullscale_certificate_semantic_repair_100cases.json",
-      "honest_verdict": "fullscale_pipeline_headline_allowed_parse_rate_1_0",
-      "criterion_result": "MET",
-      "notes": "Scale and parse gate met; full_pipeline_pass_rate is only 0.29."
-    },
-    "exp1383": {
-      "status": "complete",
-      "artifact": "results/experiment_1383_grpo_v7_jury_rl_formal_verifier_rewards.json",
-      "honest_verdict": "grpo_v7_jury_rl_no_improvement",
-      "criterion_result": "MET",
-      "notes": "Formal rewards measured; no GRPO improvement and no headline claim."
-    },
-    "exp1384": {
-      "status": "complete",
-      "artifact": "results/experiment_1384_ebm_cot_energy_calibration_probe.json",
-      "honest_verdict": "implicit_cot_energy_viable_consistency_variance_worsened",
-      "criterion_result": "MET"
-    },
-    "exp1385": {
-      "status": "complete",
-      "artifact": "results/experiment_1385_self_adaptive_ising_machine_probe.json",
-      "honest_verdict": "adaptive_lagrange_viable_on_fover_arithmetic_probe",
-      "criterion_result": "MET"
-    },
-    "exp1386": {
-      "status": "complete",
-      "artifact": "results/experiment_1386_secl_discriminative_self_calibration.json",
-      "honest_verdict": "secl_ece_reduced_but_signal_correlation_nonpositive_dvi_unproven",
-      "criterion_result": "MET"
-    },
-    "exp1387": {
-      "status": "complete",
-      "artifact": "results/experiment_1387_2d_parallel_tempering_kv260_fpga_estimate.json",
-      "honest_verdict": "cpu_2d_pt_convergence_speedup_observed_15_replica_kv260_lut_over_budget_no_hardware_claim",
-      "criterion_result": "MET"
-    },
-    "exp1388": {
-      "status": "complete",
-      "artifact": "results/experiment_1388_fr11_self_learning_v4_dvi_grpo_integration.json",
-      "honest_verdict": "fr11_self_learning_v4_dvi_only_exp1382_headline_allowed_fresh_59",
-      "criterion_result": "MET_WITH_CAVEAT",
-      "notes": "DVI integrated and headline allowed; GRPO cases were not integrated because exp1383 had no positive improvement."
-    },
-    "exp1389": {
-      "status": "complete",
-      "artifact": "results/experiment_1389_milestone_107_retro.json",
-      "honest_verdict": "milestone_107_13_of_14_criteria_met_arxiv_not_submitted_hold_lift_recommended_not_confirmed_grpo_no_improvement_fr11_dvi_only",
-      "criterion_result": "MET"
+      "evidence": "This artifact is complete and records all required verdict fields."
     }
   },
   "pre_test_fix_verdict": {
+    "criterion_met": true,
     "source": "exp1377",
-    "status": "fixed_for_original_blocker",
     "pre_test_fix_applied": true,
-    "phase5_target_passed": 5,
-    "remaining_suite_blocker": "unrelated ImportError in tests/python/test_combined_retro_95_96_97.py"
+    "module_not_found_resolved_for_phase5": true,
+    "phase5_target_result": "5 passed in 1.88s",
+    "full_suite_green": false,
+    "remaining_blocker": "unrelated combined retro test import/collection blocker remains outside the phase5 pre-test fix"
   },
   "publication_verdict": {
+    "criterion_met": true,
     "source": "exp1378",
     "publication_hold_state": "lift_recommended",
+    "hold_reviewed": true,
+    "hold_lift_confirmed_by_operator": false,
     "all_primary_blockers_resolved": true,
     "remaining_primary_blockers": [],
-    "operator_lift_confirmed": false,
-    "claim_boundary": "Local certificate, semantic repair, formal KAN, and self-learning blockers are resolved; external parity and hardware claims remain disallowed."
+    "claim_boundary": "Local certificate, semantic repair, self-learning, and CPU GS-KAN formal evidence may be claimed; external EBT/ARM/Kona/Extropic parity remains disallowed."
   },
   "arxiv_submission_verdict": {
+    "criterion_met": false,
     "source": "exp1380",
-    "submission_attempted": false,
-    "submission_result": "not_attempted_arxiv_upload_cli_missing; manual submission required",
-    "arxiv_id_if_submitted": null,
+    "bundle_ready": true,
     "bundle_file_path": "results/arxiv_bundle_v11.tar.gz",
     "latex_compile_success": true,
-    "verdict": "not_submitted_bundle_ready"
+    "submission_attempted": false,
+    "submitted": false,
+    "arxiv_id_if_submitted": null,
+    "submission_result": "not_attempted_arxiv_upload_cli_missing; manual submission required"
   },
   "dvi_training_verdict": {
+    "criterion_met": true,
     "source": "exp1381",
     "dvi_deployed": true,
     "dvi_auroc_delta": 0.003486,
     "dvi_baseline_auroc": 0.39104,
     "dvi_trained_auroc": 0.394526,
-    "verdict": "trained_deployed_positive_but_small_delta"
+    "positive_case_count": 4,
+    "negative_case_count": 12,
+    "verdict": "First DVI training executed and produced a small positive AUROC delta."
   },
   "full_scale_pipeline_verdict": {
+    "criterion_met": true,
     "source": "exp1382",
-    "certificate_extract_count": 100,
+    "total_fover_cases": 100,
     "certificate_parse_rate": 1.0,
+    "semantic_validation_pass_rate": 0.59,
     "full_pipeline_pass_rate": 0.29,
+    "scheduler_false_acceptance_rate": 0.0,
     "headline_result_allowed": true,
-    "verdict": "scale_run_complete_parse_strong_pipeline_pass_rate_low"
+    "verdict": "Scale criterion met, but end-to-end pass rate remains a .108 improvement target."
   },
   "grpo_v7_verdict": {
+    "criterion_met": true,
     "source": "exp1383",
+    "formal_reward_measured": true,
     "grpo_v7_improvement_pp": 0.0,
     "wall_budget_exhausted": false,
     "formal_reward_pass_rate": 0.0,
     "jury_acceptance_rate": 0.0,
     "headline_result_allowed": false,
-    "verdict": "formal_reward_measured_no_improvement"
+    "verdict": "Measured but negative for training value: no improvement and no accepted formal rewards."
   },
   "new_research_verdicts": {
     "exp1384_ebm_cot": {
-      "status": "complete",
+      "criterion_met": true,
+      "baseline_auroc": 0.7998711714327188,
+      "ebm_cot_auroc": 0.985121207722456,
       "calibration_auroc_delta": 0.18525003628973724,
-      "implicit_cot_energy_viable": true,
       "caveat": "Consistency regularization worsened paraphrase energy variance."
     },
     "exp1385_self_adaptive_ising": {
-      "status": "complete",
+      "criterion_met": true,
       "adaptive_ising_viable": true,
       "convergence_speedup": 1.3783783783783783,
-      "constraint_violation_reduction": 1.0
+      "constraint_violation_reduction": 1.0,
+      "caveat": "FoVer arithmetic probe only; no hardware execution claim."
     },
     "exp1386_secl": {
-      "status": "complete",
+      "criterion_met": true,
       "ece_reduction_pct": 34.96342,
       "secl_viable_for_dvi": true,
-      "caveat": "Discriminative signal correlation is nonpositive, so DVI benefit is not proven."
+      "discriminative_signal_correlation": -0.096968,
+      "caveat": "Calibration improved, but nonpositive signal correlation means DVI transfer is not proven."
     },
     "exp1387_parallel_tempering_kv260": {
-      "status": "complete",
+      "criterion_met": true,
+      "replica_count": 15,
       "convergence_speedup_2d_pt": 1.0769230769230769,
-      "fits_15_replicas_kv260_budget": false,
-      "max_replicas_that_fit_kv260_budget": 3,
-      "hardware_claim_allowed": false
+      "estimated_kv260_total_lut_count_15_replicas": 540000,
+      "kv260_lut_budget": 117000,
+      "hardware_claim_allowed": false,
+      "caveat": "15 replicas are over KV260 budget; estimate suggests at most 3 replicas fit."
     }
   },
   "self_learning_v4_verdict": {
+    "criterion_met": true,
     "source": "exp1388",
     "fresh_verified_sample_count": 59,
     "fresh_verified_sample_count_gt_4": true,
     "headline_result_allowed": true,
-    "dvi_checkpoint_active": true,
-    "grpo_v7_improvement_pp": 0.0,
-    "grpo_cases_integrated": 0,
     "path_used": "dvi_only_replay_exp1382",
-    "verdict": "headline_allowed_dvi_only_grpo_not_integrated"
+    "dvi_checkpoint_active": true,
+    "grpo_cases_integrated": 0,
+    "verdict": "FR-11 v4 produced a headline-allowed DVI-only self-learning result; GRPO integration stayed inactive because exp1383 had zero improvement."
   },
   "carry_forward_tasks": [
     {
       "target": ".108",
-      "task": "Perform actual arXiv manual submission for results/arxiv_bundle_v11.tar.gz and record the arXiv id or an external blocker receipt.",
-      "reason": "Exp1380 produced a ready bundle but submission_attempted=false."
+      "task": "Complete manual arXiv upload from results/arxiv_bundle_v11.tar.gz and record an arXiv ID or exact external blocker."
     },
     {
       "target": ".108",
-      "task": "Turn publication_hold_state=lift_recommended into an operator-confirmed lifted state, or document the remaining operator-only reason.",
-      "reason": "Exp1378 supports lifting but does not prove the hold was lifted."
+      "task": "Convert publication_hold_state from lift_recommended to lifted only after operator submission/approval confirms the hold is actually lifted."
     },
     {
       "target": ".108",
-      "task": "Fix the unrelated tests/python/test_combined_retro_95_96_97.py collection blocker before making any full tests/python green claim.",
-      "reason": "Exp1377 only resolved the original phase5 import blocker."
+      "task": "Root-cause GRPO v7 zero formal_reward_pass_rate and jury_acceptance_rate before proposing another GRPO run; require a changed reward/case-generation mechanism and retire on same verdict."
     },
     {
       "target": ".108",
-      "task": "Treat GRPO v7 JURY-RL as measured negative evidence and redesign before rerun: stop UNKNOWN-only rollouts, require nonzero formal_reward_pass_rate before self-learning integration, and set retire_if_same_verdict=true.",
-      "reason": "Exp1383 measured grpo_v7_improvement_pp=0.0 with formal_reward_pass_rate=0.0."
+      "task": "Improve full-scale pipeline quality beyond parse success: raise semantic_validation_pass_rate and full_pipeline_pass_rate while preserving scheduler_false_acceptance_rate=0.0."
     },
     {
       "target": ".108",
-      "task": "Improve full-scale semantic pass beyond the current 0.29 full_pipeline_pass_rate while preserving certificate_parse_rate=1.0.",
-      "reason": "Exp1382 scaled successfully but the full certificate-to-semantic pipeline remains weak."
+      "task": "Turn DVI/SECL into stronger calibration evidence by increasing verified positives beyond 4 and resolving SECL nonpositive discriminative signal correlation."
     },
     {
       "target": ".108",
-      "task": "If FR-11 v5 claims DVI+GRPO integration, require positive GRPO cases; otherwise label the path DVI-only.",
-      "reason": "Exp1388 headline result was DVI-only replay with grpo_cases_integrated=0."
+      "task": "Integrate GRPO into FR-11 only after GRPO produces positive improvement; until then keep FR-11 claims scoped to DVI-only replay."
     },
     {
       "target": ".108",
-      "task": "Rework 2D PT KV260 plan around <=3 replicas or a lower-LUT sparse design before any hardware claim.",
-      "reason": "Exp1387 estimates 15 replicas at 540000 LUTs against a 117000 LUT budget."
+      "task": "For KV260 2D PT, either redesign for <=3 replicas or move 15-replica PT to larger hardware; do not make KV260 15-replica hardware claims."
+    },
+    {
+      "target": ".108",
+      "task": "Repair remaining unrelated tests/python collection debt from test_combined_retro_95_96_97.py before claiming full pre-test suite health."
     }
   ],
   "prior_failure_hygiene_notes": [
-    "STEP 0 skeleton-first was followed for exp1389 before reading files; skip_pre_test=true is recorded explicitly.",
-    "research-roadmap-next.yaml was missing at closeout, so the success criteria source is openspec/change-proposals/research-roadmap-vNEXT.md.",
-    "All exp1377-exp1388 result artifacts exist; no .107 result artifact is missing.",
-    "Do not count artifact existence as success: exp1380 exists but actual arXiv submission was not attempted; exp1383 exists but measured zero improvement.",
-    "The .106 pre-test SKIP cascade is only partially closed: the specific phase5 ModuleNotFoundError is fixed, while unrelated collection debt remains.",
-    "Publication language should say lift recommended, not lifted, until there is explicit operator confirmation."
+    "STEP 0 skeleton was written as the first action before reading any files.",
+    "skip_pre_test=true was honored for exp1389; no pre-test suite was run for this retro.",
+    "research-roadmap-next.yaml is absent in the activated checkout; research-roadmap.yaml contains exp1389 with skip_pre_test=true.",
+    "Exp1375 and exp1376 .106 artifacts remain missing and are explicitly recorded from exp1377 rather than inferred from research-complete.yaml.",
+    "research-complete.yaml already contains a .107 milestone record matching this closeout, while ops/status.md has planning state only; ops docs were not edited in this pass to avoid conflicting with the conductor reconciliation rule in the prompt.",
+    "GRPO v7 has prior failure history; the next GRPO task must include a materially different mechanism and a retire-if-same-verdict gate."
   ],
   "honest_verdict": "milestone_107_13_of_14_criteria_met_arxiv_not_submitted_hold_lift_recommended_not_confirmed_grpo_no_improvement_fr11_dvi_only"
 }
