@@ -1,0 +1,188 @@
+# Research Harnesses Capability Specification
+
+**Capability:** research-harnesses
+**Version:** 0.1.0
+**Status:** Draft
+**Traces to:** FR-11, GitHub issue #9
+
+## Overview
+
+Defines the shared runtime semantics for Carnot research tasks as executable
+natural-language harnesses. Experiment-specific logic remains in roadmap task
+prompts, while this capability defines the common contracts, state model,
+failure taxonomy, gate semantics, and acceptance-object alignment rules that
+the conductor and downstream auditors must enforce.
+
+## Requirements
+
+### REQ-HARNESS-001: NLAH Charter Artifacts
+
+The repository shall maintain a Natural-Language Agent Harness charter for the
+Carnot conductor with these deliverables:
+
+- `ops/conductor-runtime-charter.md`
+- `openspec/capabilities/research-harnesses/spec.md`
+- `results/experiment_1280_nlah_conductor_charter.json`
+
+The terminal result artifact shall include `status`, `charter_written`,
+`openspec_written`, `failure_taxonomy_count`,
+`terminal_artifact_rules_defined`, `gate_semantics_defined`,
+`file_backed_state_packet_defined`,
+`acceptance_object_alignment_rule_defined`, and `honest_verdict`.
+
+### REQ-HARNESS-002: Terminal Artifact Contract
+
+Each conductor task shall declare a required deliverable path and a required
+terminal schema before execution begins. Terminal statuses are `complete`,
+`blocked`, `failed`, and `retired`.
+
+The conductor shall not count `in_progress`, bootstrap-only skeletons, missing
+deliverables, malformed JSON artifacts, or stale artifacts as complete.
+
+### REQ-HARNESS-003: Role Boundaries
+
+The conductor harness shall define non-overlapping responsibilities for these
+roles:
+
+- conductor/runtime parent
+- planner
+- implementer
+- verifier/auditor
+- retro/backfill auditor
+- paper-claim auditor
+
+Each role shall declare what it may mutate, what it must verify, and what it is
+not allowed to infer from commit presence alone.
+
+### REQ-HARNESS-004: Stage Templates
+
+The conductor harness shall define reusable stage templates for at least:
+
+- `PLAN -> IMPLEMENT -> VERIFY -> WRITE_ARTIFACT -> AUDIT_TERMINAL`
+- `LOAD_PRIOR_ARTIFACTS -> ANALYZE -> WRITE_BACKFILL -> VERIFY_TERMINAL`
+- `GATE_CHECK -> RUN_OR_BLOCK -> WRITE_TERMINAL_ARTIFACT`
+
+Each stage template shall name the acceptance object that determines whether the
+stage is complete.
+
+### REQ-HARNESS-005: Deterministic Adapter Hooks
+
+The conductor harness shall document deterministic adapter hooks for targeted
+tests, lint or formatting checks, JSON validation, result artifact validation,
+gate evaluation, paper-claim audits, and repository file checks.
+
+Adapter hooks shall be invoked by explicit command names or by documented
+equivalent checks. A task may skip a hook only when the terminal artifact records
+why the hook is not applicable.
+
+### REQ-HARNESS-006: File-Backed State Packet
+
+Each conductor task shall support a file-backed state packet shape that can
+preserve task prompts, harness instructions, gate state, artifact evidence, and
+restart history.
+
+The canonical packet shape is:
+
+```text
+runs/<exp-id>/
+  TASK.md
+  HARNESS.md
+  state/task_history.jsonl
+  state/gates.json
+  artifacts/result.json
+  artifacts/evidence.md
+  RESPONSE.md
+```
+
+The benchmark-facing result may still be mirrored to `results/*.json`, but the
+state packet is the restartable evidence record.
+
+### REQ-HARNESS-007: Failure Taxonomy
+
+The conductor harness shall define a shared failure taxonomy that includes at
+least:
+
+- `missing_deliverable`
+- `bootstrap_only_artifact`
+- `stale_skeleton`
+- `gate_blocked`
+- `blocked_no_sota_gguf`
+- `blocked_missing_tool`
+- `artifact_schema_invalid`
+- `local_verifier_mismatch`
+- `timeout_with_progress`
+- `timeout_without_progress`
+- `no_file_changes_produced`
+- `malformed_json_artifact`
+
+Terminal artifacts shall use the taxonomy when recording blocked, failed, or
+retired outcomes.
+
+### REQ-HARNESS-008: Gate Semantics
+
+Every gated task shall name the upstream artifact path, field, operator, and
+value. If a gated task is invoked while the gate is closed, it shall write a
+terminal blocked artifact with the exact gate that failed.
+
+Downstream tasks shall not infer completion from commit presence, log presence,
+or roadmap presence alone.
+
+### REQ-HARNESS-009: Acceptance-Object Alignment
+
+Extra verifier, search, or orchestration layers are allowed only when their
+local success criteria are aligned with the final artifact or benchmark
+acceptance object.
+
+Every verifier module shall declare its acceptance object and known mismatch
+risks. A local verifier success shall not mark the task complete when the final
+artifact schema or benchmark gate disagrees.
+
+## Scenarios
+
+### SCENARIO-HARNESS-001: Bootstrap Skeleton Is Not Complete
+
+**Given** a task wrote a result artifact with `status="in_progress"`
+**When** the conductor audits terminal completion
+**Then** the task is not counted as complete
+**And** the failure is classified as `bootstrap_only_artifact` or
+`stale_skeleton`.
+
+### SCENARIO-HARNESS-002: Closed Gate Writes Blocked Artifact
+
+**Given** a task is gated on `results/upstream.json.field >= 0.8`
+**And** the upstream field is missing or below threshold
+**When** the task is invoked
+**Then** the task writes a terminal blocked artifact
+**And** the artifact records the upstream path, field, operator, expected value,
+actual value, and `failure_type="gate_blocked"`.
+
+### SCENARIO-HARNESS-003: Local Verifier Cannot Override Artifact Gate
+
+**Given** a local verifier reports success
+**And** the required result artifact is missing or schema-invalid
+**When** the conductor audits terminal completion
+**Then** the task is not counted as complete
+**And** the failure is classified as `local_verifier_mismatch` or
+`artifact_schema_invalid`.
+
+### SCENARIO-HARNESS-004: File-Backed State Supports Restart
+
+**Given** a task is interrupted after implementation but before terminal audit
+**When** the conductor restarts from the file-backed state packet
+**Then** it can recover the task prompt, harness instructions, gate state,
+artifact evidence, and previous verification outputs without relying on a
+compressed summary only.
+
+## Implementation Status
+
+| Requirement | Documentation | Artifact |
+|-------------|---------------|----------|
+| REQ-HARNESS-001 | Implemented (`ops/conductor-runtime-charter.md`) | Implemented (`results/experiment_1280_nlah_conductor_charter.json`) |
+| REQ-HARNESS-002 | Implemented (`ops/conductor-runtime-charter.md`) | Implemented |
+| REQ-HARNESS-003 | Implemented (`ops/conductor-runtime-charter.md`) | Implemented |
+| REQ-HARNESS-004 | Implemented (`ops/conductor-runtime-charter.md`) | Implemented |
+| REQ-HARNESS-005 | Implemented (`ops/conductor-runtime-charter.md`) | Implemented |
+| REQ-HARNESS-006 | Implemented (`ops/conductor-runtime-charter.md`) | Implemented |
+| REQ-HARNESS-007 | Implemented (`ops/conductor-runtime-charter.md`) | Implemented |
+| REQ-HARNESS-008 | Implemented (`ops/conductor-runtime-charter.md`) | Implemented |
+| REQ-HARNESS-009 | Implemented (`ops/conductor-runtime-charter.md`) | Implemented |

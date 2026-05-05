@@ -1,0 +1,92 @@
+{
+  "experiment": "1280_nlah_conductor_charter",
+  "schema": "carnot.natural_language_research_harness_charter.v1",
+  "run_date": "20260505",
+  "status": "complete",
+  "github_issue": "https://github.com/Carnot-EBM/carnot-ebm/issues/9",
+  "charter_path": "ops/conductor-runtime-charter.md",
+  "openspec_path": "openspec/capabilities/research-harnesses/spec.md",
+  "charter_written": true,
+  "openspec_written": true,
+  "failure_taxonomy_count": 12,
+  "failure_taxonomy": [
+    "missing_deliverable",
+    "bootstrap_only_artifact",
+    "stale_skeleton",
+    "gate_blocked",
+    "blocked_no_sota_gguf",
+    "blocked_missing_tool",
+    "artifact_schema_invalid",
+    "local_verifier_mismatch",
+    "timeout_with_progress",
+    "timeout_without_progress",
+    "no_file_changes_produced",
+    "malformed_json_artifact"
+  ],
+  "terminal_statuses": [
+    "complete",
+    "blocked",
+    "failed",
+    "retired"
+  ],
+  "invalid_terminal_states": [
+    "in_progress",
+    "bootstrap_only_skeleton",
+    "missing_deliverable",
+    "stale_skeleton",
+    "malformed_json_artifact",
+    "missing_honest_verdict",
+    "local_verifier_mismatch"
+  ],
+  "terminal_artifact_rules_defined": true,
+  "gate_semantics_defined": true,
+  "file_backed_state_packet_defined": true,
+  "acceptance_object_alignment_rule_defined": true,
+  "role_count": 6,
+  "roles_defined": [
+    "conductor_runtime_parent",
+    "planner",
+    "implementer",
+    "verifier_auditor",
+    "retro_backfill_auditor",
+    "paper_claim_auditor"
+  ],
+  "stage_template_count": 3,
+  "stage_templates_defined": [
+    "PLAN -> IMPLEMENT -> VERIFY -> WRITE_ARTIFACT -> AUDIT_TERMINAL",
+    "LOAD_PRIOR_ARTIFACTS -> ANALYZE -> WRITE_BACKFILL -> VERIFY_TERMINAL",
+    "GATE_CHECK -> RUN_OR_BLOCK -> WRITE_TERMINAL_ARTIFACT"
+  ],
+  "adapter_hook_count": 10,
+  "adapter_hooks_defined": [
+    "targeted_pytest",
+    "ruff_check",
+    "ruff_format_check",
+    "mypy",
+    "spec_coverage",
+    "json_validation",
+    "reconciliation",
+    "diff_hygiene",
+    "roadmap_gate_audit",
+    "prior_failure_validation"
+  ],
+  "state_packet_template": "runs/<exp-id>/{TASK.md,HARNESS.md,state/task_history.jsonl,state/gates.json,artifacts/result.json,artifacts/evidence.md,RESPONSE.md}",
+  "follow_on_implications": [
+    "exp1271_certificate_extraction_harness",
+    "exp1272_verifier_selection_acceptance_alignment",
+    "exp1274_certificate_memory_file_backed_state",
+    "exp1275_exp1276_repair_gate_diversity_distortion_controls",
+    "exp1278_est_gaming_verifier_defense_measurement",
+    "future_paper_evidence_ladder_governance"
+  ],
+  "acceptance_criteria": {
+    "charter_written": true,
+    "openspec_written": true,
+    "failure_taxonomy_count_at_least_10": true,
+    "terminal_artifact_rules_defined": true,
+    "gate_semantics_defined": true,
+    "file_backed_state_packet_defined": true,
+    "acceptance_object_alignment_rule_defined": true
+  },
+  "honest_verdict": "nlah_conductor_charter_complete"
+}
