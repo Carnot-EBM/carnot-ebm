@@ -4,6 +4,189 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-05-05 Post-.103 Planning Sweep (Milestone 2026.04.104)
+
+This sweep was run after milestone `.103` reached operator closeout. The local
+evidence is mixed: `exp1323` recovered multi-token local SOTA GGUF output with
+`min_tokens_recovered=true`, `topk_logprob_available=true`, and
+`entropy_production_rate_available=true`; `exp1324` completed the certificate
+failure taxonomy and found the parse gate was short by at least 6 additional
+parseable attempts; but `exp1325` remained a skeleton after disk-quota failures,
+downstream semantic/DVI work gate-blocked, and the operational retro identified
+disk-quota preflight, repeated pre-test failure signatures, and dependency
+pruning as the immediate scheduler blockers. The next milestone should therefore
+make environmental blockers terminal and deterministic before spending more SOTA
+GGUF time, then recover certificate extraction with a technique that differs
+from the failed `.103` rerun.
+
+### Thinking Before Constraining: Trigger-Switched Structured Generation
+- **Paper:** arXiv 2601.07525, "Thinking Before Constraining: A Unified
+  Decoding Framework for Large Language Models."
+- **Source:** https://arxiv.org/abs/2601.07525
+- **What:** Lets the model reason freely until trigger tokens appear, then
+  switches to structured generation. The paper reports up to 27% accuracy gain
+  over natural generation with only 10-20 extra tokens.
+- **Relevance to Carnot:** This directly addresses the `.102/.103` pattern
+  where strict certificate structure hurts reasoning or produces unusable
+  outputs. Instead of rerunning DCCD unchanged, Carnot can test a trigger token
+  that starts the certificate tail only after a short free-form reasoning budget.
+- **Concrete experiment:** Add a trigger-switched certificate-tail extraction
+  task. Compare raw, DCCD, grammar-only, and trigger-switched variants. Report
+  `trigger_token_hit_rate`, `certificate_parse_rate`, `truthfulness_rate`,
+  `extra_token_overhead`, and `projection_tax_delta`.
+
+### XGrammar 2 / TagDispatch for Dynamic Certificate Grammars
+- **Paper:** arXiv 2601.04426, "XGrammar 2: Dynamic and Efficient Structured
+  Generation Engine for Agentic LLMs."
+- **Source:** https://arxiv.org/abs/2601.04426
+- **What:** Adds dynamic dispatch between grammar fragments, JIT compilation,
+  cross-grammar caching, and an Earley-parser-based mask generator. The reported
+  speedup is over 6x versus existing structured generation engines, with
+  near-zero overhead when integrated into an inference engine.
+- **Relevance to Carnot:** `.103` taxonomy separated UNKNOWN, SAT/UNSAT,
+  solver-disagreement, and hardcoded-solution leakage states. A static JSON
+  grammar is a poor fit for this branchy certificate schema; dynamic
+  sub-grammar switching is the right next constrained-generation control.
+- **Concrete experiment:** Add a certificate grammar backend bakeoff that tests
+  dynamic sub-grammars for UNKNOWN/SAT/UNSAT/proof/repair sections. Report
+  `dynamic_grammar_compile_ms`, `mask_generation_ms_per_token`,
+  `state_transition_error_count`, and `parse_rate_delta_over_static_gbnf`.
+
+### ChopChop: Semantic Constrained Decoding, Not Just Syntax
+- **Paper:** arXiv 2509.00360 / POPL 2026, "ChopChop: a Programmable
+  Framework for Semantically Constraining the Output of Language Models."
+- **Sources:** https://arxiv.org/abs/2509.00360 and
+  https://popl26.sigplan.org/details/POPL-2026-popl-research-papers/68/ChopChop-A-Programmable-Framework-for-Semantically-Constraining-the-Output-of-Langua
+- **What:** Enforces semantic properties during generation by connecting
+  token-level decoding to realizability reasoning over abstract program
+  structures. Demonstrations include type safety and equivalence to a reference
+  program.
+- **Relevance to Carnot:** This is a stronger semantic validator target than
+  parseable certificate JSON. Carnot can first apply it to code/verifier snippets
+  or certificate-to-validator programs, where semantic properties are executable.
+- **Concrete experiment:** Add a semantic-constrained code/certificate validator
+  pilot. Report `semantic_constraint_count`, `realizable_prefix_rate`,
+  `validator_equivalence_pass_rate`, `decode_latency_ms_per_token`, and
+  `syntax_only_delta`.
+
+### HalluGuard: Separate Data-Driven and Reasoning-Driven Hallucinations
+- **Paper:** arXiv 2601.18753, "HalluGuard: Demystifying Data-Driven and
+  Reasoning-Driven Hallucinations in LLMs."
+- **Source:** https://arxiv.org/abs/2601.18753
+- **What:** Decomposes hallucination risk into data-driven and reasoning-driven
+  components and builds an NTK-based score evaluated across 10 benchmarks, 11
+  baselines, and 9 LLM backbones.
+- **Relevance to Carnot:** Carnot already has token/logprob and entropy
+  availability from `exp1323`. `.104` can use the decomposition as a diagnostic
+  label: certificate failures due to missing knowledge should not be repaired by
+  the same mechanism as reasoning instability or schema undergeneration.
+- **Concrete experiment:** Add a HalluGuard-inspired failure split over SOTA
+  certificate cases. Report `data_driven_risk_proxy`,
+  `reasoning_driven_risk_proxy`, `repair_policy_by_failure_type`, and
+  `universal_detector_claim_allowed=false`.
+
+### MARS and TriSpec: Verification Cost Should Be Margin-Aware
+- **Papers:** arXiv 2601.15498, "MARS: Unleashing the Power of Speculative
+  Decoding via Margin-Aware Verification"; arXiv 2601.23180, "TriSpec:
+  Ternary Speculative Decoding via Lightweight Proxy Verification."
+- **Sources:** https://arxiv.org/abs/2601.15498 and
+  https://arxiv.org/abs/2601.23180
+- **What:** MARS relaxes speculative verification only when target logits show
+  low decisiveness; TriSpec uses a lightweight proxy to approve easy draft
+  spans and call the target model only on uncertain tokens.
+- **Relevance to Carnot:** The BEAVER/Cactus branch should not be framed merely
+  as "skip verifier calls." It should route by margin/uncertainty: full Carnot
+  verifier on uncertain or high-risk spans, lightweight proxy acceptance on
+  stable spans, and abstain on ambiguous certificate states.
+- **Concrete experiment:** Add a margin-aware verifier-call scheduler over
+  parsed certificate or replay cases. Report `proxy_accept_rate`,
+  `full_verifier_call_reduction`, `false_acceptance_rate`,
+  `low_margin_escalation_rate`, and `triage_claim_allowed`.
+
+### Diffusion-LLM Constraint Work: DINGO and CFG-Constrained dLLMs
+- **Papers:** arXiv 2505.23061, "DINGO: Constrained Inference for Diffusion
+  LLMs"; arXiv 2508.10111 / ICLR 2026, "Constrained Decoding of Diffusion LLMs
+  with Context-Free Grammars."
+- **Sources:** https://arxiv.org/abs/2505.23061 and
+  https://arxiv.org/abs/2508.10111
+- **What:** DINGO constrains diffusion LLM outputs to regular expressions; the
+  ICLR 2026 work extends constrained decoding to CFGs and multi-region
+  infilling.
+- **Relevance to Carnot:** If autoregressive certificate tails keep failing,
+  the non-autoregressive/infilling path is no longer speculative. Carnot should
+  prepare a fallback analysis that maps certificate-tail completion to
+  constrained infilling, without claiming implementation until a local dLLM is
+  available.
+- **Concrete experiment:** Add a doc/replay-only diffusion-certificate fallback
+  design that identifies required local dLLM runtime, grammar classes, and
+  certificate-tail infilling API. Report `fallback_ready=false` unless a local
+  dLLM is actually run.
+
+### Semantic Scholar EBT Citation Watch
+- **Sources:** Semantic Scholar page for EBT lists 14 citations:
+  https://www.semanticscholar.org/paper/Energy-Based-Transformers-are-Scalable-Learners-and-Gladstone-Nanduru/2da9163730998a4368c609972ccff0582518b36b
+  Related primary pages include EBT (`arXiv:2507.02092`),
+  NRGPT (`arXiv:2512.16762`), EBT-Policy (`arXiv:2510.27545`), and
+  Transformers as Intrinsic Optimizers (`arXiv:2511.00907`).
+- **What:** The citation neighborhood is no longer only "EBT as future
+  architecture." It now includes NRGPT-style GPT reinterpretation,
+  EBT-Policy in embodied control, metacognitive code-generation assessments, and
+  energy-principle attention variants.
+- **Relevance to Carnot:** This supports a Phase-3 prototype path centered on
+  energy-as-verifier and dynamic compute allocation, but it also raises the bar:
+  Carnot must empirically show metacognitive/code or verifier-tail value rather
+  than relying on high-level EBT analogy.
+- **Concrete experiment:** Add an EBT citation-neighborhood audit that maps each
+  citing theme to a Carnot prototype obligation: code metacognition, continuous
+  latent policy/recovery, dynamic compute allocation, or ARM-to-EBM distillation.
+
+### Extropic 2026 Hardware Status: XTR-0, Z1, THRML
+- **Sources:** https://extropic.ai/hardware and https://extropic.ai/software
+- **What:** Extropic now describes XTR-0 as the Q3 2025 testing platform, Z1 as
+  early-access 2026 production-scale hardware with hundreds of thousands of
+  probabilistic circuits per chip, and THRML as the open JAX library for
+  simulating thermodynamic hypergraphical models and training EBMs.
+- **Relevance to Carnot:** The near-term experiment should be THRML parity and
+  portability accounting, not claims about hardware execution. The Z1 status
+  makes the p-bit/TSU abstraction strategically important, but local proof still
+  requires either THRML simulation or actual hardware access.
+- **Concrete experiment:** Add a THRML compatibility adapter audit for Carnot's
+  tiny Ising/KAN verifier cases. Report `thrml_import_available`,
+  `energy_parity_max_abs_error`, `sample_quality_proxy`, and
+  `hardware_claim_allowed=false`.
+
+### Kona 1.0 Public Positioning
+- **Source:** https://logicalintelligence.com/kona-ebms-energy-based-models
+- **What:** Logical Intelligence positions Kona as a non-chatbot reasoning layer
+  that sits beneath AI stacks, evaluates valid/safe/permissible states, and
+  enforces constraints rather than predicting likely outcomes.
+- **Relevance to Carnot:** The external comparator now sounds extremely close to
+  Carnot's own Phase-1/Phase-3 framing. Carnot's differentiator must be local,
+  open, reproducible certificates and hardware-portable energy evaluation, not
+  generic "EBM reasoning" language.
+- **Concrete experiment:** Add a Kona-parity gap audit after the technical
+  certificate work: list which claims Carnot can demonstrate locally today,
+  which require semantic certificates, and which require Phase-2 hardware.
+
+### Parallel p-bit Landscape and Dual-BRAM FPGA Annealers
+- **Papers:** Scientific Reports 2026, "A unified performance-cost landscape of
+  parallel p-bit Ising machines based on update dynamics"; arXiv 2602.16143,
+  "Energy-Efficient p-Bit-Based Fully-Connected Quantum-Inspired Simulated
+  Annealer with Dual BRAM Architecture."
+- **Sources:** https://www.nature.com/articles/s41598-026-47285-0 and
+  https://arxiv.org/abs/2602.16143
+- **What:** The p-bit literature is converging on update-dynamics and memory
+  architecture as the core scalability levers. The dual-BRAM FPGA design reports
+  an 800-node MAX-CUT implementation with large logic-resource reductions versus
+  prior p-bit annealers.
+- **Relevance to Carnot:** `.102` produced a p-bit portability packet. `.104`
+  should add update-dynamics and memory-topology constraints to the packet
+  before any KV260 RTL follow-up, especially because prior KV260 work is blocked
+  by bitfile/toolchain reality.
+- **Concrete experiment:** Add an update-dynamics/memory-topology audit for
+  Carnot's p-bit sampler packet. Report `sync_async_regime`, `reuse_factor`,
+  `bram_layout`, `dac_precision_assumption`, and `kv260_claim_allowed=false`.
+
 ## 2026-05-05 Post-.102 Planning Sweep (Milestone 2026.04.103)
 
 This sweep was run after milestone `.102` completed with 11/14 criteria met.
