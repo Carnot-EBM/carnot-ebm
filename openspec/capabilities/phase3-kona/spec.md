@@ -258,6 +258,44 @@ legal actions, Phase 4 should pivot before investing in the HMC sampler.
 - If the Phase 3 `ContinuousEBM` cannot be loaded, the artifact emits
   `honest_verdict='phase3_continuous_ebm_not_found'`.
 
+### REQ-KONA-009: External EBT/Kona Parity Claim Boundary Audit
+
+Before Carnot uses EBT citation-neighborhood language, Kona-style EBM reasoning
+language, Extropic/THRML positioning, or external dependency language in PRD- or
+publication-facing material, it MUST emit a local audit artifact mapping those
+external claims to reproducible repository evidence and explicit parity gaps.
+
+The audit artifact MUST include `status`, `ebt_citation_themes`,
+`kona_public_claims_mapped`, `carnot_local_evidence`, `parity_gaps`,
+`phase3_obligations`, `publication_claim_changes_needed`,
+`external_dependency_claim_allowed`, and `honest_verdict`.
+`external_dependency_claim_allowed` MUST be `false` unless the repository
+contains reproducible local evidence for the external claim being considered.
+
+**Rationale:** Phase 3 and Kona-adjacent language is high-risk because external
+public positioning can sound similar to Carnot's long-term vision. Carnot must
+distinguish local verifier/certificate evidence from unproven native
+Kona-style EBM reasoning, TSU execution, or EBT metacognition claims.
+
+**Acceptance criteria:**
+
+- The artifact maps EBT reasoning, NRGPT, EBT-Policy or optimizer variants, and
+  metacognitive code-generation claims to concrete Carnot obligations.
+- The artifact maps public Kona-style claims to current Carnot local evidence
+  and names every missing parity gate without promising the gap is solved.
+- The artifact disallows external dependency claims when THRML/Kona/Extropic
+  evidence is unavailable, simulated only, or not locally reproducible.
+
+### SCENARIO-KONA-009: External Claims Stay Outside Headline Language
+
+**Given** Carnot has local verifier and hardware-accounting artifacts but lacks
+reproducible native Kona-style EBM reasoning or external hardware execution
+evidence
+**When** the external parity gap audit is built
+**Then** `external_dependency_claim_allowed == false`
+AND `publication_claim_changes_needed` instructs PRD/publication language to
+claim local verifier evidence only, not EBT/Kona/Extropic parity.
+
 ### REQ-KONA-009: HMC Compatibility Diagnostics
 
 Before Phase 4 commits to Hamiltonian Monte Carlo over the continuous latent
