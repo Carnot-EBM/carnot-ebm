@@ -925,3 +925,4 @@ web search: GitHub trending energy based mod |
 | 2026-05-05 16:21 UTC | Eidoku CSP Neuro-Symbolic Verification Probe — Gra | OK | 81 passed, 1 warning in 4.95s |
 | 2026-05-05 16:35 UTC | Certificate v8 — Tag-First Prefix Injection + CRAN | OK | 81 passed, 1 warning in 4.65s |
 | 2026-05-05 16:53 UTC | DiffuTruth Energy-of-Falsehood Probe — Non-Equilib | OK | 81 passed, 1 warning in 4.74s |
+| 2026-05-05 17:03 UTC | FOVER-Aligned LogicSkills Skill Audit — Certificat | OK | 81 passed, 1 warning in 3.98s |
