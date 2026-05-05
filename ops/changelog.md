@@ -4847,3 +4847,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-05: Prior-Failures Activation Audit - Prevent Milestone .100 DOOMED_RERUN_BLOCK Waste (⚠️ Research Finding) — honest_verdict=activation_audit_passed; results/experiment_1296_prior_failures_activation_audit.json
 - 2026-05-05: SOTA GGUF Cache + Provenance Preflight v2 - Prior-Failure Metadata Complete (✅ Complete) — honest_verdict=sota_gguf_cache_not_ready; results/experiment_1297_sota_gguf_cache_provenance_preflight_v2.json
 - 2026-05-05: Skill Graph Promotion/Demotion v2 - Recover Missing Exp1290 (⚠️ Research Finding) — honest_verdict=skill_graph_candidates_written_sandboxed; results/experiment_1302_skill_graph_promotion_demotion_v2.json
+- 2026-05-05: Continuous Self-Learning: QueryBandits + NGC Online Memory Policy (✅ Complete) — honest_verdict=online_memory_policy_improved_non_headline; results/experiment_1303_querybandits_ngc_online_memory_policy.json
