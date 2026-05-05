@@ -1082,6 +1082,43 @@ score.
   `honest_verdict` from measured predictive quality without converting nonlinear
   false-continue cases into a fully positive result.
 
+### REQ-KONA-031: HardNet++/DSP Feasibility Stop Policy
+
+Continuous repair experiments MUST expose a conservative stop/continue policy
+that combines Exp 1291 HardNet++ nonlinear repair viability with Exp 1292
+DSP feasibility-channel diagnostics. The policy MUST continue repair only when
+hard violations remain, the feasibility-channel score exceeds the configured
+threshold, and the candidate action family is not a known nonlinear local-linear
+residual case. It MUST stop after hard feasibility is reached or when marginal
+local-linear nonlinear repair gains should be routed to HardNet++/bounded
+abstraction instead of spending another local-linear step.
+
+The Exp 1305 artifact MUST replay the deterministic Exp 1292 candidate
+transitions, inherit `hardnetpp_delta_over_snarenet` from Exp 1291 and
+`feasibility_channel_auc` from Exp 1292, report `stop_policy_precision`, list
+`residual_nonlinear_cases`, include a KAN/PWA abstraction note grounded in
+arXiv 2602.06737, use run date `20260505`, and set `honest_verdict` without
+claiming that a conservative replay policy is a learned general stop rule.
+
+**Rationale:** Exp 1292 showed a useful but marginal feasibility channel with
+many nonlinear false-continue cases. A stop policy must preserve the useful
+linear and HardNet++ continue decisions while blocking residual nonlinear
+local-linear loops that only add distortion.
+
+**Acceptance criteria:**
+
+- `python/carnot/phase3/feasibility_stop_policy.py` exposes a deterministic
+  helper that classifies DSP replay rows into conservative stop/continue
+  recommendations and reports precision from measured labels.
+- Focused tests verify that hard feasibility stops, high-channel helpful repair
+  continues, nonlinear local-linear residual cases stop, and malformed replay
+  inputs are rejected.
+- `results/experiment_1305_hardnetpp_dsp_feasibility_stop_policy.json` records
+  `status`, `feasibility_stop_policy_written`,
+  `hardnetpp_delta_over_snarenet`, `feasibility_channel_auc`,
+  `stop_policy_precision`, `residual_nonlinear_cases`,
+  `kan_pwa_abstraction_note`, and `honest_verdict`.
+
 ## Scenarios
 
 ### SCENARIO-KONA-001: Stage 1 Primitive — RDT Fixed-Point Convergence
@@ -1476,6 +1513,22 @@ same per-seed rows
 from those deterministic transitions.
 
 **Spec traces:** REQ-KONA-030
+
+### SCENARIO-KONA-031: Exp 1305 Stops Marginal Continuous Repair
+
+**Given** completed Exp 1291 HardNet++ nonlinear repair metrics, completed
+Exp 1292 DSP feasibility-channel rows, and the local continuous repair helpers
+**When** Exp 1305 replays each candidate repair transition with the conservative
+stop/continue policy
+**Then** it writes
+`results/experiment_1305_hardnetpp_dsp_feasibility_stop_policy.json` with
+`feasibility_stop_policy_written`, `hardnetpp_delta_over_snarenet`,
+`feasibility_channel_auc`, `stop_policy_precision`,
+`residual_nonlinear_cases`, `kan_pwa_abstraction_note`, `status`, and
+`honest_verdict` fields derived from the deterministic replay and KAN/PWA
+abstraction reference.
+
+**Spec traces:** REQ-KONA-031
 
 ## Out of scope
 
