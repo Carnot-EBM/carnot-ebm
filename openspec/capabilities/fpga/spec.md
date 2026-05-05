@@ -525,6 +525,56 @@ requirements, and an honest verdict that disallows KV260 and hardware claims.
 
 ---
 
+### REQ-HW-048
+
+**Title:** p-dit certificate-state mapping study MUST be CPU-only and hardware-claim gated
+
+**Description:**
+Experiment 1361 MUST produce a CPU-only mapping study for Carnot certificate
+states using the p-dit/p-int literature as a conceptual mapping target.  The
+study MUST define the SAT, UNSAT, UNKNOWN, and repair certificate-state
+alphabet, compare binary one-hot p-bit expansion against one q=4 p-dit/p-int
+variable, and run a tiny mapping-consistency or energy-equivalence proxy without
+running Vivado, FPGA, KV260, TSU, analog, or external hardware.
+
+**Acceptance criteria:**
+- `results/experiment_1361_pdit_certificate_state_hardware_mapping.json`
+  includes `status`, `certificate_states_mapped`, `binary_spin_count`,
+  `pdit_variable_count`, `state_expansion_ratio`,
+  `energy_equivalence_error`, `pbit_packet_delta`,
+  `hardware_claim_allowed`, `kv260_claim_allowed`,
+  `next_hardware_requirements`, and `honest_verdict`.
+- `certificate_states_mapped` covers SAT, UNSAT, UNKNOWN, and repair states.
+- The binary mapping uses one-hot p-bit spins while the p-dit/p-int mapping
+  uses one multi-valued q=4 variable, so the artifact records both variable
+  counts and their expansion ratio.
+- The energy-equivalence proxy reports zero error for valid one-hot states when
+  compared with the p-dit/p-int energy table.
+- `pbit_packet_delta` explicitly records the delta from Exp 1348's CPU-only
+  p-bit update-dynamics packet.
+- `hardware_claim_allowed=false` and `kv260_claim_allowed=false` unless the
+  artifact records actual local synthesis or board execution in metadata.
+
+**Implementation status:** Implemented (Exp 1361)
+
+---
+
+### SCENARIO-HW-048
+
+**Scenario:** CPU-only p-dit mapping artifact writes honest certificate-state packet.
+
+**Given:** no Vivado synthesis, bitfile generation, KV260 board execution, TSU,
+analog, or external hardware execution is performed in the current run.
+**When:** the Exp 1361 p-dit certificate-state mapping builder runs.
+**Then:** the artifact maps SAT, UNSAT, UNKNOWN, and repair states to binary
+p-bit one-hot and q=4 p-dit/p-int representations, records the state-expansion
+ratio and zero valid-state energy-equivalence error, lists next hardware
+requirements, and disallows KV260 and hardware claims.
+
+**Implementation status:** Implemented (Exp 1361)
+
+---
+
 ## Implementation Status
 
 | REQ | Status | Experiment |
@@ -539,4 +589,5 @@ requirements, and an honest verdict that disallows KV260 and hardware claims.
 | REQ-HW-045 | Implemented | Exp 1161 |
 | REQ-HW-046 | Implemented | Exp 1320 |
 | REQ-HW-047 | Implemented | Exp 1348 |
+| REQ-HW-048 | Implemented | Exp 1361 |
 | REQ-FPGA-030 | Implemented | Exp 859 |
