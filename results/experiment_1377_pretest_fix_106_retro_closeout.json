@@ -1,15 +1,16 @@
 {
   "status": "complete",
+  "run_date": "20260505",
   "pre_test_fix_applied": true,
-  "pre_test_fix_description": "Created python/carnot/phase5/intermediate_scale_v3.py with the DEFAULT_CONFIG, REQUIRED_GATE_KEYS, Phase5DV3Config, gate measurement/evaluation helpers, artifact builder, RTX 3090 parser, and JSON writer imported by tests/python/phase5/test_intermediate_scale_v3.py. The original ModuleNotFoundError for carnot.phase5.intermediate_scale_v3 is resolved.",
+  "pre_test_fix_description": "Verified the pre-test import fix is present in python/carnot/phase5/intermediate_scale_v3.py: it exports DEFAULT_CONFIG, REQUIRED_GATE_KEYS, Phase5DV3Config, gate measurement/evaluation helpers, artifact builder, RTX 3090 parser, and JSON writer imported by tests/python/phase5/test_intermediate_scale_v3.py. The original ModuleNotFoundError for carnot.phase5.intermediate_scale_v3 is resolved.",
   "tests_passing_after_fix": 5,
   "full_pretest_command_result": {
     "command": ".venv/bin/pytest tests/python -x --no-header -q 2>&1 | tail -20",
-    "tail_summary": "12 warnings, 1 error in 10.54s",
+    "tail_summary": "12 warnings, 1 error in 10.27s",
     "original_intermediate_scale_import_error_present": false,
     "remaining_blocker": "tests/python/test_combined_retro_95_96_97.py collection fails with ModuleNotFoundError: No module named 'carnot.reporting.combined_retro_95_96_97'",
     "targeted_command": ".venv/bin/pytest tests/python/phase5/test_intermediate_scale_v3.py --no-header -q --no-cov",
-    "targeted_result": "5 passed in 2.07s"
+    "targeted_result": "5 passed in 2.10s"
   },
   "criteria_total": 14,
   "criteria_met": 12,
