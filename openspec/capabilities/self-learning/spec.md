@@ -3158,3 +3158,62 @@ available
 | Requirement | Python | Tests |
 |-------------|--------|-------|
 | REQ-LEARN-1374 | Implemented (`python/carnot/reporting/continuous_self_learning_v3_verifier_selected_or_csp_fallback.py`) | Implemented (`tests/python/test_continuous_self_learning_v3_verifier_selected_or_csp_fallback.py`) |
+
+## REQ-LEARN-1388: FR-11 Self-Learning V4 DVI/GRPO Memory Integration
+
+Exp 1388 SHALL run the mandatory FR-11 self-learning v4 round on run date
+`20260505` using the Exp 1381 DVI checkpoint as the active verifier. The
+workflow SHALL integrate GRPO-generated verified cases only when Exp 1383
+reports `grpo_v7_improvement_pp > 0.0`; otherwise it SHALL unconditionally use
+the DVI-only replay path and may promote DVI-verified fresh cases from Exp 1382.
+
+### REQ-LEARN-1388 Sub-requirements
+
+- REQ-LEARN-1388-1: The workflow SHALL write
+  `results/experiment_1388_fr11_self_learning_v4_dvi_grpo_integration.json`
+  first with `status="in_progress"` before loading source artifacts.
+- REQ-LEARN-1388-2: The workflow SHALL require Exp 1381 to have
+  `dvi_deployed=true`, SHALL load `dvi_checkpoint_path`, and SHALL set
+  `dvi_checkpoint_active=true` only after the checkpoint file is readable.
+- REQ-LEARN-1388-3: When Exp 1383 has `grpo_v7_improvement_pp <= 0.0`, the
+  final artifact SHALL set `path_used="dvi_only_replay_exp1382"` and
+  `grpo_cases_integrated=0`.
+- REQ-LEARN-1388-4: Memory promotion SHALL retain Exp 1374 promoted memory and
+  SHALL promote fresh Exp 1382 rows only when the active DVI verifier evidence
+  has `constraint_passed=true`; failed fresh rows SHALL be counted as demoted.
+- REQ-LEARN-1388-5: The final artifact SHALL include `status`, `path_used`,
+  `dvi_checkpoint_active`, `replay_cases_used`,
+  `fresh_verified_sample_count`, `grpo_cases_integrated`,
+  `self_learning_delta_overall`, `nonforgetting_certificate_rate`,
+  `memory_regression_count`, `accepted_violation_delta`,
+  `promoted_memory_count`, `demoted_memory_count`,
+  `dvi_auroc_delta_effect`, `headline_result_allowed`, and `honest_verdict`.
+- REQ-LEARN-1388-6: `headline_result_allowed` SHALL be true only when
+  `fresh_verified_sample_count > 4`, the DVI checkpoint is active,
+  non-forgetting controls pass, and `accepted_violation_delta <= 0.0`.
+
+### SCENARIO-LEARN-1388: DVI-Only Replay Promotes Exp 1382 Fresh Verified Cases
+
+**Given** Exp 1381 deployed a readable DVI checkpoint
+**And** Exp 1383 reports no positive GRPO v7 improvement
+**And** Exp 1382 contains more than four DVI-verified semantic rows
+**When** Exp 1388 runs
+**Then** the final artifact has `path_used="dvi_only_replay_exp1382"`
+**And** `grpo_cases_integrated=0`
+**And** `fresh_verified_sample_count > 4`
+**And** `headline_result_allowed=true` only when replay non-forgetting controls
+remain clean.
+
+### SCENARIO-LEARN-1388: Positive GRPO Gate Integrates Verified Cases
+
+**Given** Exp 1383 reports `grpo_v7_improvement_pp > 0.0`
+**When** Exp 1388 runs
+**Then** the final artifact has `path_used="dvi_grpo_exp1382_integration"`
+**And** verified GRPO cases are included in `grpo_cases_integrated`
+**And** the headline gate still requires `fresh_verified_sample_count > 4`.
+
+## Implementation Status (REQ-LEARN-1388)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-1388 | Implemented (`python/carnot/reporting/fr11_self_learning_v4_dvi_grpo_integration.py`) | Implemented (`tests/python/test_fr11_self_learning_v4_dvi_grpo_integration.py`) |
