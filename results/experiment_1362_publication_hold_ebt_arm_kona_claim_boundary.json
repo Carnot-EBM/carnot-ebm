@@ -1,0 +1,244 @@
+{
+  "artifact_metadata": {
+    "actual_project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "requested_exp1349_path": "results/experiment_1349_external_parity_gap_audit_kona_extropic_ebt_arm.json",
+    "run_date": "20260505",
+    "source_artifacts": [
+      "results/experiment_1324_certificate_failure_taxonomy_formalizer_reality_check.json",
+      "results/experiment_1344_continuous_self_learning_failure_type_memory_policy.json",
+      "results/experiment_1349_ebt_citation_kona_parity_gap_audit.json",
+      "results/experiment_1353_triggered_certificate_v7_truncproof_sota.json",
+      "results/experiment_1354_logicskills_certificate_skill_split.json",
+      "results/experiment_1355_logitext_nsvif_partial_smt_validator.json",
+      "results/experiment_1313_constrainprompt_nsvif_semantic_validator_mus_repair.json",
+      "results/experiment_1316_dvi_certificate_tail_online_update.json",
+      "results/experiment_1358_continuous_self_learning_verifier_selected_memory.json",
+      "results/experiment_1361_pdit_certificate_state_hardware_mapping.json"
+    ],
+    "source_documents": [
+      "CODEX.md",
+      "CLAUDE.md",
+      "_bmad/prd.md",
+      "_bmad/architecture.md",
+      "research-references.md",
+      "research-hardware-wishlist.md"
+    ],
+    "spec_refs": [
+      "REQ-KONA-009",
+      "SCENARIO-KONA-009"
+    ]
+  },
+  "certificate_evidence_summary": {
+    "certificate_case_count": 4,
+    "certificate_claim_allowed": false,
+    "certificate_parse_rate": 0.0,
+    "certificate_success_gate_satisfied": false,
+    "certificate_truthfulness_rate": 0.0,
+    "claim_boundary": "Local SOTA generation ran, but every Exp 1353 certificate row missed the structural tag; parse, truthfulness, trigger-token, and UNKNOWN-preservation rates are 0.0. Exp 1354 supports a symbolization failure diagnosis, not a successful certificate claim. Semantic validator work remains gate-blocked.",
+    "dominant_skill_gap": "symbolization",
+    "exp1353_honest_verdict": "sota_triggered_certificate_v7_measured",
+    "exp1353_status": "complete",
+    "prior_exp1324_parse_rate": 0.71223,
+    "prior_exp1324_truthfulness_rate": 0.69697,
+    "semantic_validator_state": {
+      "exp1313_gate_check_summary": "1 of 1 gate(s) failed; first failure: exp1312-triggered-certificate-extraction-dccd-gbnf.certificate_parse_rate (actual=0.71223 >= expected=0.75)",
+      "exp1313_status": "blocked",
+      "exp1355_gate_check_summary": "1 of 1 gate(s) failed; first failure: exp1353-triggered-certificate-v7-truncproof-sota.certificate_parse_rate (actual=0.0 >= expected=0.75)",
+      "exp1355_status": "blocked"
+    },
+    "skill_split_claim_allowed": true,
+    "sota_generation_provenance_available": true,
+    "symbolization_pass_rate": 0.0,
+    "trigger_token_hit_rate": 0.0,
+    "unknown_preservation_rate": 0.0
+  },
+  "claim_changes_needed": [
+    "Do not state or imply external parity with EBT, ARM-EBM, Kona, Extropic, THRML, or hardware roadmaps.",
+    "Describe EBT and ARM-EBM as architectural inspiration and related-work pressure, not as local proof of Carnot capability.",
+    "Replace any Kona-parity wording with a local-evidence boundary: verifier-side diagnostics only, no native continuous-latent full-answer reasoning.",
+    "State that Exp 1353 ran local SOTA generation but produced 0.0 certificate parse, truthfulness, trigger-token, and UNKNOWN-preservation rates.",
+    "State that semantic validation and DVI remain gated or replay-only until certificate gates and fresh verifier-selected samples pass.",
+    "State that self-learning evidence is non-headline replay evidence, not fresh autonomous improvement.",
+    "State that Exp 1361 is CPU-only p-dit/p-int mapping evidence and does not prove KV260, FPGA, THRML, TSU, analog, or hardware energy execution.",
+    "Keep publication hold active until the local blockers are satisfied by reproducible repository artifacts.",
+    "Keep external_dependency_claim_allowed=false in publication-facing language."
+  ],
+  "ebt_arm_claim_boundary": {
+    "allowed_language": [
+      "EBT and ARM-EBM are related-work and roadmap pressure for verifier-trained energy reasoning.",
+      "Carnot currently has local verifier-side diagnostics, replay-only memory evidence, and CPU-only hardware-mapping evidence.",
+      "Phase 3 can be described as an aspiration toward continuous-latent, energy-minimized reasoning when the statement is explicitly gated on future local proof."
+    ],
+    "architectural_inspiration_allowed": true,
+    "disallowed_language": [
+      "Carnot has achieved EBT or ARM-EBM equivalence.",
+      "Carnot has Kona parity or native non-autoregressive full-answer EBM reasoning.",
+      "Carnot has demonstrated Extropic, THRML, TSU, KV260, or other hardware execution for these certificate-state claims.",
+      "External EBT, ARM-EBM, Kona, or Extropic progress lifts Carnot's publication hold."
+    ],
+    "external_dependency_claim_allowed": false,
+    "local_ebt_arm_equivalence_proven": false,
+    "local_proof_still_required": [
+      "recover parseable and truthful certificate generation under the current local SOTA path",
+      "run semantic validation after the parse gate is satisfied",
+      "execute DVI or self-learning updates on fresh verifier-selected samples",
+      "measure local continuous-latent energy descent before using EBT/ARM equivalence wording",
+      "run synthesis or board/TSU hardware before claiming hardware execution"
+    ],
+    "source_exp1349_honest_verdict": "external_parity_gap_audit_complete_local_evidence_only_no_kona_or_external_dependency_claim"
+  },
+  "experiment": "1362_publication_hold_ebt_arm_kona_claim_boundary",
+  "external_dependency_claim_allowed": false,
+  "hardware_evidence_summary": {
+    "board_executed": false,
+    "claim_boundary": "Exp 1361 is a CPU-only p-dit/p-int certificate-state mapping with an exact proxy energy-table check. It does not include Vivado synthesis, KV260 board execution, TSU execution, analog measurements, or hardware energy data.",
+    "energy_equivalence_error": 0.0,
+    "energy_equivalence_proxy": {
+      "hardware_energy_measurement": false,
+      "invalid_binary_state_penalty": 10.0,
+      "method": "max_abs_valid_one_hot_energy_minus_pdit_energy"
+    },
+    "external_hardware_executed": false,
+    "hardware_claim_allowed": false,
+    "hardware_executed": false,
+    "hardware_execution_claim_allowed": false,
+    "honest_verdict": "cpu_only_pdit_certificate_state_mapping_ready_hardware_not_run",
+    "kv260_claim_allowed": false,
+    "next_hardware_requirements": [
+      {
+        "claim_gate": "required_before_hardware_claim",
+        "path": "hardware/kv260/pdit_certificate_state_pkg.sv",
+        "requirement": "define q=4 p-dit/p-int update semantics for certificate states"
+      },
+      {
+        "claim_gate": "required_before_hardware_claim",
+        "path": "hardware/kv260/ising_sampler_v8_pdit_certificate.v",
+        "requirement": "extend the sampler packet format for q-state energy tables and categorical draws"
+      },
+      {
+        "claim_gate": "required_before_hardware_claim",
+        "path": "tests/python/test_pdit_certificate_state_rtl_contract.py",
+        "requirement": "write a CPU golden-model to RTL equivalence test over all four certificate states"
+      },
+      {
+        "claim_gate": "required_before_hardware_claim",
+        "path": "hardware/kv260/synth_pdit_certificate_state.tcl",
+        "requirement": "synthesize the q=4 design with Vivado and record LUT, FF, BRAM, timing, and seed metadata"
+      },
+      {
+        "claim_gate": "required_before_kv260_claim",
+        "path": "python/carnot/hardware/pdit_certificate_state_driver.py",
+        "requirement": "run the generated bitfile on a real KV260 with AXI/PYNQ readback logs"
+      }
+    ],
+    "state_expansion_ratio": 4.0,
+    "synthesis_performed": false
+  },
+  "honest_verdict": "publication_hold_active_local_evidence_does_not_support_ebt_arm_kona_or_hardware_claims",
+  "input_resolution": {
+    "exp1349": {
+      "requested": "results/experiment_1349_external_parity_gap_audit_kona_extropic_ebt_arm.json",
+      "requested_available": false,
+      "used": "results/experiment_1349_ebt_citation_kona_parity_gap_audit.json",
+      "used_available": true
+    },
+    "missing_source_artifacts": []
+  },
+  "kona_parity_gaps": [
+    {
+      "claim_allowed": false,
+      "gap": "native_kona_style_reasoning",
+      "local_status": "No local continuous-latent, full-answer, non-autoregressive refinement artifact is present."
+    },
+    {
+      "claim_allowed": false,
+      "gap": "certificate_success_gate",
+      "local_status": "Exp 1353 certificate_parse_rate=0.0 and certificate_truthfulness_rate=0.0."
+    },
+    {
+      "claim_allowed": false,
+      "gap": "semantic_validator_execution",
+      "local_status": "1 of 1 gate(s) failed; first failure: exp1353-triggered-certificate-v7-truncproof-sota.certificate_parse_rate (actual=0.0 >= expected=0.75)"
+    },
+    {
+      "claim_allowed": false,
+      "gap": "fresh_self_learning_and_dvi_execution",
+      "local_status": "Exp 1358 fresh_verified_sample_count=0 and update_is_replay_only=True."
+    },
+    {
+      "claim_allowed": false,
+      "gap": "hardware_execution",
+      "local_status": "Exp 1361 hardware_claim_allowed=False; kv260_claim_allowed=False; honest_verdict=cpu_only_pdit_certificate_state_mapping_ready_hardware_not_run."
+    },
+    {
+      "claim_allowed": false,
+      "gap": "inherited_exp1349_parity_gaps",
+      "local_status": [
+        {
+          "gap": "native_kona_style_reasoning",
+          "local_status": "Phase-3 spec exists; no local artifact proves native full-answer refinement.",
+          "why_it_matters": "Kona parity requires continuous latent, non-autoregressive refinement."
+        },
+        {
+          "gap": "semantic certificate gate",
+          "local_status": "Exp 1324 reports parse rate 0.71223 with semantic invalidity still present.",
+          "why_it_matters": "State-scoring claims need parsed and truthful certificates, not parseable JSON alone."
+        },
+        {
+          "gap": "metacognitive_code_generation",
+          "local_status": "No native EBT code-generation metacognition artifact is present.",
+          "why_it_matters": "The EBT citation neighborhood includes code metacognition claims."
+        },
+        {
+          "gap": "THRML_or_TSU_execution",
+          "local_status": "THRML import available=False; hardware claim allowed=False.",
+          "why_it_matters": "Extropic-adjacent language requires THRML parity or real TSU evidence."
+        },
+        {
+          "gap": "KV260_or_pbit_hardware_execution",
+          "local_status": "Exp 1348 hardware claim allowed=False; board execution=False.",
+          "why_it_matters": "Hardware-portable energy execution cannot rest on CPU-only packets."
+        }
+      ]
+    }
+  ],
+  "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+  "publication_hold_rationale": {
+    "active_blockers": [
+      "certificate_parse_truthfulness_and_unknown_preservation_gates_not_satisfied",
+      "semantic_validator_and_dvi_paths_gate_blocked_or_replay_only",
+      "fresh_verifier_selected_self_learning_samples_absent",
+      "hardware_synthesis_board_tsu_or_thrml_execution_absent",
+      "external_ebt_arm_kona_extropic_parity_not_locally_demonstrated"
+    ],
+    "blockers_satisfied": false,
+    "certificate_gate_satisfied": false,
+    "external_parity_demonstrated": false,
+    "fresh_self_learning_available": false,
+    "hardware_execution_available": false
+  },
+  "publication_hold_state": "active",
+  "run_date": "20260505",
+  "schema": "publication_hold_ebt_arm_kona_claim_boundary_v1",
+  "self_learning_evidence_summary": {
+    "accepted_violation_delta": -0.846154,
+    "claim_boundary": "The local memory policy has replay-positive, nonforgetting evidence and demotes or quarantines unsafe memories, but Exp 1358 has zero fresh verifier-selected samples and explicitly marks the update replay-only and non-headline. DVI readiness is not an executed DVI update.",
+    "dvi_status": {
+      "exp1316_gate_check_summary": "1 of 2 gate(s) failed; first failure: exp1312-triggered-certificate-extraction-dccd-gbnf.certificate_parse_rate (actual=0.71223 >= expected=0.75)",
+      "exp1316_status": "blocked",
+      "exp1358_dvi_ready": true
+    },
+    "exp1344_dvi_ready": true,
+    "exp1344_headline_result_allowed": false,
+    "exp1344_honest_verdict": "failure_type_memory_policy_dvi_ready_replay_non_headline",
+    "exp1344_self_learning_delta_overall": 1.596429,
+    "exp1358_honest_verdict": "verifier_selected_memory_replay_only_dvi_ready_non_headline",
+    "fresh_verified_sample_count": 0,
+    "headline_self_learning_claim_allowed": false,
+    "memory_regression_count": 0,
+    "nonforgetting_certificate_rate": 1.0,
+    "update_is_replay_only": true
+  },
+  "status": "complete"
+}
