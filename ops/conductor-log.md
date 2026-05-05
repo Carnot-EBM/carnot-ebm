@@ -769,3 +769,5 @@ web search: GitHub trending energy based mod |
 | 2026-05-05 01:26 UTC | Continuous Self-Learning: QueryBandits + NGC Onlin | OK | 81 passed, 1 warning in 9.09s |
 | 2026-05-05 01:28 UTC | Safe-Prefix Cactus Acceptance v3 - HoVer/Token-Gua | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1299-triggered-certificate-extraction-v3, |
 | 2026-05-05 01:28 UTC | GRPO/VPRM v10 - Gated on SOTA Certificates and Onl | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1299-triggered-certificate-extraction-v3) |
+| 2026-05-05 01:33 UTC | HardNet++ + DSP Feasibility Stop Policy | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1305_hardnet |
+| 2026-05-05 01:35 UTC | GRPO/VPRM v10 - Gated on SOTA Certificates and Onl | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1299-triggered-certificate-extraction-v3) |
