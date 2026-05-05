@@ -1,0 +1,239 @@
+{
+  "artifact": "experiment_1366_certificate_v8_tag_first_prefix_injection_crane",
+  "artifact_metadata": {
+    "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "run_date": "20260505",
+    "source_experiments": [
+      "exp1352",
+      "exp1353",
+      "exp1364"
+    ],
+    "spec": "REQ-VERIFY-1366"
+  },
+  "certificate_case_count": 4,
+  "certificate_parse_rate": 1.0,
+  "certificate_rows": [
+    {
+      "case_id": "sat_unit_clause",
+      "dispatched_state": "SAT",
+      "errors": [],
+      "expected_state": "SAT",
+      "generation_source": "live_sota_llamacpp",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "parseable": true,
+      "prefix_injection_applied": true,
+      "reasoning_token_count": 256,
+      "tag_state": "SAT",
+      "trigger_token_hit": true,
+      "truthful": true,
+      "unknown_preserved": false
+    },
+    {
+      "case_id": "unsat_unit_conflict",
+      "dispatched_state": "UNSAT",
+      "errors": [],
+      "expected_state": "UNSAT",
+      "generation_source": "live_sota_llamacpp",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "parseable": true,
+      "prefix_injection_applied": true,
+      "reasoning_token_count": 256,
+      "tag_state": "UNSAT",
+      "trigger_token_hit": true,
+      "truthful": true,
+      "unknown_preserved": false
+    },
+    {
+      "case_id": "unknown_missing_bound",
+      "dispatched_state": "UNKNOWN",
+      "errors": [],
+      "expected_state": "UNKNOWN",
+      "generation_source": "live_sota_llamacpp",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "parseable": true,
+      "prefix_injection_applied": true,
+      "reasoning_token_count": 256,
+      "tag_state": "UNKNOWN",
+      "trigger_token_hit": true,
+      "truthful": true,
+      "unknown_preserved": true
+    },
+    {
+      "case_id": "repair_missing_upper_bound",
+      "dispatched_state": "REPAIR_HINT",
+      "errors": [],
+      "expected_state": "REPAIR_HINT",
+      "generation_source": "live_sota_llamacpp",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "parseable": true,
+      "prefix_injection_applied": true,
+      "reasoning_token_count": 256,
+      "tag_state": "REPAIR_HINT",
+      "trigger_token_hit": true,
+      "truthful": true,
+      "unknown_preserved": false
+    }
+  ],
+  "certificate_truthfulness_rate": 1.0,
+  "completion_preflight_used": {
+    "applies_to": "minimal_branch_body_after_prefix_injection",
+    "blocker_if_not_allowed": null,
+    "dynamic_dispatch_preserved": true,
+    "max_tokens": 96,
+    "min_completion_budget_respected": true,
+    "min_completion_tokens_by_state": {
+      "REPAIR_HINT": 10,
+      "SAT": 6,
+      "UNKNOWN": 6,
+      "UNSAT": 6
+    },
+    "required_min_completion_tokens": 10,
+    "sota_run_allowed": true,
+    "source": "exp1352",
+    "structural_tag_supported": true
+  },
+  "crane_reasoning_budget_tokens_max": 256,
+  "crane_reasoning_budget_tokens_used": [
+    256,
+    256,
+    256,
+    256
+  ],
+  "generation_rows": [
+    {
+      "case_id": "sat_unit_clause",
+      "certificate_body": "SAT",
+      "certificate_prefix": "<CARNOT_CERT_STATE:SAT>\n",
+      "certificate_token_count": 1,
+      "elapsed_certificate_seconds": 0.149219,
+      "elapsed_reasoning_seconds": 2.430925,
+      "error": null,
+      "full_certificate_text": "<CARNOT_CERT_STATE:SAT>\nSAT",
+      "generation_source": "live_sota_llamacpp",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "reasoning_text": "\n\n<think>\nHere's a thinking process:\n\n1.  **Analyze User Input:**\n   - **Task:** Prepare a Carnot verification certificate.\n   - **Constraint:** Reason privately and briefly about the verifier branch, but do NOT emit any certificate tag or certificate body in this stage.\n   - **Case ID:** sat_unit_clause\n   - **Problem:** CNF: (x1). Emit a bounded Carnot certificate for SAT or UNSAT.\n   - **Budget:** 256 tokens.\n\n2.  **Understand Carnot Verification Certificates:**\n   - Carnot is a formal verification framework for SAT/UNSAT proofs.\n   - A certificate typically includes a proof trace, verifier branch, and bounds.\n   - The user explicitly says: \"Reason privately and briefly about the verifier branch, but do not emit any certificate tag or certificate body in this stage.\"\n   - This means I should just output my internal reasoning about how the verifier would handle this case, without formatting it as a certificate.\n\n3.  **Analyze the Problem:**\n   - CNF: `(x1)`\n   - This is a single clause with one positive literal `x1`.\n   - It's",
+      "reasoning_token_count": 256
+    },
+    {
+      "case_id": "unsat_unit_conflict",
+      "certificate_body": "UNSAT",
+      "certificate_prefix": "<CARNOT_CERT_STATE:UNSAT>\n",
+      "certificate_token_count": 2,
+      "elapsed_certificate_seconds": 0.160641,
+      "elapsed_reasoning_seconds": 1.870115,
+      "error": null,
+      "full_certificate_text": "<CARNOT_CERT_STATE:UNSAT>\nUNSAT",
+      "generation_source": "live_sota_llamacpp",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "reasoning_text": "\n\n<think>\nHere's a thinking process:\n\n1.  **Analyze User Input:**\n   - **Task:** Prepare a Carnot verification certificate.\n   - **Constraint 1:** Reason privately and briefly about the verifier branch.\n   - **Constraint 2:** Do NOT emit any certificate tag or certificate body in this stage.\n   - **Case ID:** `unsat_unit_conflict`\n   - **Problem:** CNF: `(x1) and (not x1)`\n   - **Output Requirement:** Emit a bounded Carnot certificate. (Wait, the prompt says \"Emit a bounded Carnot certificate.\" but also says \"do not emit any certificate tag or certificate body in this stage.\" This is slightly contradictory. I need to follow the explicit instruction: \"Reason privately and briefly about the verifier branch, but do not emit any certificate tag or certificate body in this stage.\" So I will just output the private reasoning, and maybe a brief acknowledgment that I'm ready for the next step, or just strictly follow the negative constraint.)\n   - **Reasoning budget:** 256 tokens.\n\n2.  **Understand \"Carnot Verification Certificate\":**\n   - Carnot is likely a reference to",
+      "reasoning_token_count": 256
+    },
+    {
+      "case_id": "unknown_missing_bound",
+      "certificate_body": "UNKNOWN",
+      "certificate_prefix": "<CARNOT_CERT_STATE:UNKNOWN>\n",
+      "certificate_token_count": 1,
+      "elapsed_certificate_seconds": 0.137948,
+      "elapsed_reasoning_seconds": 1.924746,
+      "error": null,
+      "full_certificate_text": "<CARNOT_CERT_STATE:UNKNOWN>\nUNKNOWN",
+      "generation_source": "live_sota_llamacpp",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "reasoning_text": "\n\n<think>\nHere's a thinking process:\n\n1.  **Analyze User Input:**\n   - **Task:** Prepare a Carnot verification certificate.\n   - **Instruction:** Reason privately and briefly about the verifier branch, but do not emit any certificate tag or certificate body in this stage.\n   - **Case id:** unknown_missing_bound\n   - **Problem:** A feasibility query omits the capacity bound B. Preserve UNKNOWN.\n   - **Reasoning budget:** 256 tokens.\n\n2.  **Identify Key Constraints:**\n   - Must reason privately/briefly about the verifier branch.\n   - Must NOT output any certificate tag or certificate body.\n   - Case ID: unknown_missing_bound\n   - Problem: Feasibility query missing capacity bound B.\n   - Action: Preserve UNKNOWN status.\n   - Budget: 256 tokens.\n\n3.  **Determine Verifier Branch Logic:**\n   - The problem states a feasibility query is missing a critical parameter (capacity bound B).\n   - Without B, the system cannot determine feasibility (satisfiable/unsatisfiable).\n   - The correct action is to preserve the UNKNOWN status.\n   - Verifier branch reasoning:",
+      "reasoning_token_count": 256
+    },
+    {
+      "case_id": "repair_missing_upper_bound",
+      "certificate_body": "REPAIR_HINT: add bound.",
+      "certificate_prefix": "<CARNOT_CERT_STATE:REPAIR_HINT>\n",
+      "certificate_token_count": 7,
+      "elapsed_certificate_seconds": 0.332845,
+      "elapsed_reasoning_seconds": 1.877372,
+      "error": null,
+      "full_certificate_text": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: add bound.",
+      "generation_source": "live_sota_llamacpp",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "reasoning_text": "\n\n<think>\nHere's a thinking process:\n\n1.  **Analyze User Input:**\n   - **Task:** Prepare a Carnot verification certificate.\n   - **Instruction:** Reason privately and briefly about the verifier branch, but do NOT emit any certificate tag or certificate body in this stage.\n   - **Case ID:** `repair_missing_upper_bound`\n   - **Problem:** The certificate lacks an upper-bound premise. Emit a repair hint.\n   - **Reasoning Budget:** 256 tokens.\n\n2.  **Identify Key Constraints:**\n   - Private reasoning only (no certificate output yet).\n   - Brief reasoning about the verifier branch.\n   - Address the specific problem: missing upper-bound premise.\n   - Emit a repair hint.\n   - Stay within 256 tokens.\n\n3.  **Understand \"Carnot Verification Certificate\" Context:**\n   - This seems to be a fictional or specialized framework (possibly related to formal verification, theorem proving, or a specific system like \"Carnot\" for code/math verification).\n   - The problem states the certificate lacks an \"upper-bound premise\". This implies the verification relies on bounds (likely for loops, recursion, or mathematical inequalities",
+      "reasoning_token_count": 256
+    }
+  ],
+  "gpu_health_used": {
+    "gpu_count": 2,
+    "healthy": true,
+    "issues": []
+  },
+  "headline_result_allowed": true,
+  "honest_verdict": "tag_first_prefix_injection_crane_positive_parse_rate_1_0",
+  "mandated_sota_parse_rate": 1.0,
+  "models_used": [
+    {
+      "fallback_reason": null,
+      "generation_source": "live_sota_llamacpp",
+      "gpu": 0,
+      "headline_result_allowed": true,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "name": "Qwen3.6-35B-A3B",
+      "quantization": "UD-Q4_K_M",
+      "selected_for_generation": true
+    },
+    {
+      "fallback_reason": null,
+      "generation_source": null,
+      "gpu": 1,
+      "headline_result_allowed": false,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/43e80d41a220ac7c83023daacd6a0d1fd8559251/gemma-4-31B-it-Q4_K_M.gguf",
+      "name": "Gemma4-31B-it",
+      "quantization": "Q4_K_M",
+      "selected_for_generation": false
+    }
+  ],
+  "parse_rate_delta_over_exp1353": 1.0,
+  "prefix_injection_method": "llama_cpp_raw_prompt_partial_assistant_prefix_plus_body_gbnf_position_0",
+  "prefix_injection_supported": true,
+  "retire_if_same_verdict": false,
+  "retire_trigger_before_constrain": false,
+  "run_date": "20260505",
+  "runtime_settings_used": {
+    "avoid_stop_strings": [
+      "\n"
+    ],
+    "chat_template": false,
+    "crane_alternating_pattern": true,
+    "crane_reasoning_budget_tokens": 256,
+    "gpu_indices": [
+      0,
+      1
+    ],
+    "grammar": "none_for_initial_health_gate_then_reenable_bounded_certificate_schema",
+    "max_tokens": 96,
+    "n_ctx": 1024,
+    "n_gpu_layers": -1,
+    "preferred_quant": "Q4_K_M",
+    "prefix_injection_method": "llama_cpp_raw_prompt_partial_assistant_prefix_plus_body_gbnf_position_0",
+    "prompt_variant": "certificate_shaped_prompt",
+    "seed": 1366,
+    "stop": [
+      "</s>",
+      "<eos>"
+    ],
+    "temperature": 0.0,
+    "top_p": 1.0,
+    "trigger_before_constrain": false
+  },
+  "schema_version": 1,
+  "source_context": {
+    "exp1352_honest_verdict": "preflight_allows_exp1353_pure_python_fallback_xgrammar_absent",
+    "exp1352_structural_tag_supported": true,
+    "exp1353_certificate_parse_rate": 0.0,
+    "exp1353_honest_verdict": "sota_triggered_certificate_v7_measured",
+    "exp1353_trigger_token_hit_rate": 0.0,
+    "exp1364_honest_verdict": "milestone_105_carryforward_confirms_thinking_mode_missing_structural_tag_blocker_terminal_certificate_required_semantic_chain_gated_self_learning_replay_only_publication_hold_active",
+    "exp1364_thinking_mode_blocker_confirmed": true
+  },
+  "status": "complete",
+  "terminal_blocker": null,
+  "trigger_token_hit_rate": 1.0,
+  "unknown_preservation_rate": 1.0
+}
