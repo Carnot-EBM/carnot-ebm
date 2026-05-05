@@ -1,0 +1,145 @@
+{
+  "binary_one_hot_mapping": {
+    "REPAIR": [
+      -1,
+      -1,
+      -1,
+      1
+    ],
+    "SAT": [
+      1,
+      -1,
+      -1,
+      -1
+    ],
+    "UNKNOWN": [
+      -1,
+      -1,
+      1,
+      -1
+    ],
+    "UNSAT": [
+      -1,
+      1,
+      -1,
+      -1
+    ]
+  },
+  "binary_spin_count": 4,
+  "certificate_state_descriptions": {
+    "REPAIR": "certificate records that a repair action is needed before trust",
+    "SAT": "certificate proves the constraint set is satisfiable",
+    "UNKNOWN": "certificate does not prove SAT or UNSAT",
+    "UNSAT": "certificate proves the constraint set is unsatisfiable"
+  },
+  "certificate_states_mapped": [
+    "SAT",
+    "UNSAT",
+    "UNKNOWN",
+    "REPAIR"
+  ],
+  "energy_equivalence_error": 0.0,
+  "energy_equivalence_proxy": {
+    "hardware_energy_measurement": false,
+    "invalid_binary_state_penalty": 10.0,
+    "method": "max_abs_valid_one_hot_energy_minus_pdit_energy"
+  },
+  "energy_table": {
+    "REPAIR": 3.0,
+    "SAT": 0.0,
+    "UNKNOWN": 2.0,
+    "UNSAT": 1.0
+  },
+  "hardware_claim_allowed": false,
+  "honest_verdict": "cpu_only_pdit_certificate_state_mapping_ready_hardware_not_run",
+  "kv260_claim_allowed": false,
+  "metadata": {
+    "board_executed": false,
+    "experiment_id": 1361,
+    "external_hardware_executed": false,
+    "hardware_executed": false,
+    "local_hardware_synthesis_or_board_run": false,
+    "prior_pbit_packet": "results/experiment_1348_pbit_update_dynamics_dual_bram_packet_v2.json",
+    "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "run_date": "20260505",
+    "schema": "pdit_certificate_state_hardware_mapping_v1",
+    "synthesis_performed": false
+  },
+  "next_hardware_requirements": [
+    {
+      "claim_gate": "required_before_hardware_claim",
+      "path": "hardware/kv260/pdit_certificate_state_pkg.sv",
+      "requirement": "define q=4 p-dit/p-int update semantics for certificate states"
+    },
+    {
+      "claim_gate": "required_before_hardware_claim",
+      "path": "hardware/kv260/ising_sampler_v8_pdit_certificate.v",
+      "requirement": "extend the sampler packet format for q-state energy tables and categorical draws"
+    },
+    {
+      "claim_gate": "required_before_hardware_claim",
+      "path": "tests/python/test_pdit_certificate_state_rtl_contract.py",
+      "requirement": "write a CPU golden-model to RTL equivalence test over all four certificate states"
+    },
+    {
+      "claim_gate": "required_before_hardware_claim",
+      "path": "hardware/kv260/synth_pdit_certificate_state.tcl",
+      "requirement": "synthesize the q=4 design with Vivado and record LUT, FF, BRAM, timing, and seed metadata"
+    },
+    {
+      "claim_gate": "required_before_kv260_claim",
+      "path": "python/carnot/hardware/pdit_certificate_state_driver.py",
+      "requirement": "run the generated bitfile on a real KV260 with AXI/PYNQ readback logs"
+    }
+  ],
+  "pbit_packet_delta": {
+    "energy_proxy_delta": "adds exact valid-state energy-table equivalence check; no RTL timing, DAC, analog, or board energy measurement",
+    "hardware_scope_delta": "still_cpu_only_no_vivado_fpga_kv260_tsu_analog_run",
+    "new_mapping": "q4_pdit_or_pint_certificate_state",
+    "prior_artifact_used": "results/experiment_1348_pbit_update_dynamics_dual_bram_packet_v2.json",
+    "prior_experiment_id": 1348,
+    "prior_hardware_claim_allowed": false,
+    "prior_honest_verdict": "cpu_only_update_dynamics_dual_bram_packet_ready_hardware_not_run",
+    "prior_kv260_claim_allowed": false,
+    "prior_reuse_factor_rows": 3,
+    "prior_schema": "pbit_update_dynamics_dual_bram_packet_v2",
+    "prompt_artifact_path": "results/experiment_1348_pbit_dual_bram_certificate_packet_update.json",
+    "prompt_artifact_path_found": false,
+    "variable_delta": "4 binary p-bit spins in one-hot form collapse to 1 q=4 p-dit/p-int variable"
+  },
+  "pdit_pint_mapping": {
+    "REPAIR": {
+      "alphabet_size": 4,
+      "pdit_code": 3,
+      "pint_value": 3
+    },
+    "SAT": {
+      "alphabet_size": 4,
+      "pdit_code": 0,
+      "pint_value": 0
+    },
+    "UNKNOWN": {
+      "alphabet_size": 4,
+      "pdit_code": 2,
+      "pint_value": 2
+    },
+    "UNSAT": {
+      "alphabet_size": 4,
+      "pdit_code": 1,
+      "pint_value": 1
+    }
+  },
+  "pdit_variable_count": 1,
+  "reference_basis": [
+    "arXiv 2506.00269 \"Extended-variable probabilistic computing with p-dits\"",
+    "results/experiment_1348_pbit_update_dynamics_dual_bram_packet_v2.json"
+  ],
+  "state_expansion_ratio": 4.0,
+  "state_space_proxy": {
+    "binary_raw_configurations": 16,
+    "invalid_binary_configurations": 12,
+    "raw_binary_to_valid_state_ratio": 4.0,
+    "valid_certificate_states": 4
+  },
+  "status": "complete"
+}
