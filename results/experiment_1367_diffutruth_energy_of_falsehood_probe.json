@@ -1,0 +1,86 @@
+{
+  "corpus_cases_used": 100,
+  "corpus_negative_factual": 22,
+  "corpus_path": "/home/ianblenke/github.com/ianblenke/carnot/results/fover_corpus_v5.json",
+  "corpus_positive_hallucinated": 78,
+  "detection_auroc_proxy": 0.866841,
+  "diffutruth_energy_delta_mean": 0.652068,
+  "diffutruth_energy_mean_factual": 0.004957,
+  "diffutruth_energy_mean_hallucinated": 0.657026,
+  "diffutruth_similarity_delta_mean": 0.309356,
+  "duration_s": 0.187,
+  "experiment": 1367,
+  "finished_at": "2026-05-05T16:52:53Z",
+  "hallucination_energy_rate": 0.807692,
+  "honest_verdict": "diffutruth_proxy_viable_complement_auroc_0.867_ising_r_0.699_kan_r_0.961_cpu_proxy_not_full_diffusion",
+  "ising_correlation": 0.699427,
+  "kan_correlation": 0.961317,
+  "models_used": [],
+  "no_full_discrete_diffusion": true,
+  "no_nli_model": true,
+  "perturbation_method": "deterministic key-token synonym/random replacement over numbers and content words",
+  "reconstruction_method": "CPU local back-paraphrase proxy with restoration budget from lexical/arithmetic stability; no full discrete diffusion model or NLI model",
+  "run_date": "20260505",
+  "sample_cases": [
+    {
+      "case_id": "350",
+      "energy": 0.95,
+      "label": 1,
+      "perturbations": 1,
+      "response_preview": "The answer is 42.",
+      "similarity": 0.5,
+      "stability": 0.05
+    },
+    {
+      "case_id": "350",
+      "energy": 0.0,
+      "label": 1,
+      "perturbations": 6,
+      "response_preview": "Peyton scheduled after-work activities of a one hour yoga class on Monday, a cooking class that lasts three times as long as Monday\u2019s yoga o",
+      "similarity": 1.0,
+      "stability": 1.0
+    },
+    {
+      "case_id": "351",
+      "energy": 0.95,
+      "label": 1,
+      "perturbations": 1,
+      "response_preview": "The answer is 42.",
+      "similarity": 0.5,
+      "stability": 0.05
+    },
+    {
+      "case_id": "351",
+      "energy": 0.0,
+      "label": 1,
+      "perturbations": 6,
+      "response_preview": "April is donating plant pots to a local school for their new garden. They ask for 30 plant pots for the daisies, and twice as many for the r",
+      "similarity": 1.0,
+      "stability": 1.0
+    },
+    {
+      "case_id": "352",
+      "energy": 0.95,
+      "label": 1,
+      "perturbations": 1,
+      "response_preview": "The answer is 42.",
+      "similarity": 0.5,
+      "stability": 0.05
+    }
+  ],
+  "schema": "diffutruth_energy_of_falsehood_probe_v1",
+  "score_sources": {
+    "ising": "carnot.verify.z3_math_verifier.Z3MathVerifier.score as local Ising/formal-constraint energy proxy; anchored by results/experiment_1121_k5_and_compose_production.json",
+    "kan": "SOSKANEnergyV3Adapter trained on existing local FoVer artifact /home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus_v4.json"
+  },
+  "semantic_similarity_mean_factual": 0.995043,
+  "semantic_similarity_mean_hallucinated": 0.685687,
+  "spec": [
+    "REQ-VERIFY-1367",
+    "SCENARIO-VERIFY-1367"
+  ],
+  "started_at": "2026-05-05T16:52:53Z",
+  "status": "complete",
+  "title": "DiffuTruth Energy Of Falsehood FoVer Probe",
+  "viable_as_complement": true
+}

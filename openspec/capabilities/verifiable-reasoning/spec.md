@@ -17889,3 +17889,54 @@ and honest-verdict fields
 **And** viability is gated only by the measured feasibility and AUROC proxy.
 
 **Spec traces:** REQ-VERIFY-1365, SCENARIO-VERIFY-1365, Exp 1365
+
+## REQ-VERIFY-1367: DiffuTruth Energy Of Falsehood FoVer Probe
+
+**Summary:** Carnot SHALL run a CPU-only DiffuTruth-style Generative Stress
+Test feasibility probe over local FoVer cases and compare the resulting
+non-equilibrium reconstruction energy with Carnot's existing Ising/KAN
+equilibrium energy signals.
+
+**Requirements:**
+
+- REQ-VERIFY-1367-1: The workflow SHALL write
+  `results/experiment_1367_diffutruth_energy_of_falsehood_probe.json` with
+  `status="in_progress"` before loading FoVer rows or scoring cases.
+- REQ-VERIFY-1367-2: The probe SHALL load local FoVer corpus cases with both
+  factual and hallucinated labels and SHALL map hallucinated/incorrect cases
+  to the positive AUROC class.
+- REQ-VERIFY-1367-3: The perturbation proxy SHALL corrupt key claim tokens by
+  deterministic synonym or random-token replacement and SHALL reconstruct the
+  corrupted text with a local back-paraphrase proxy rather than a full discrete
+  diffusion model.
+- REQ-VERIFY-1367-4: The DiffuTruth proxy energy SHALL be derived from semantic
+  similarity between each original claim and its corrupted-then-reconstructed
+  claim, with higher energy indicating lower reconstruction stability.
+- REQ-VERIFY-1367-5: The workflow SHALL compute Pearson correlations between
+  DiffuTruth proxy energy and local Ising-style and KAN-style energy scores
+  loaded or recomputed from existing Carnot verifier artifacts.
+- REQ-VERIFY-1367-6: The artifact SHALL include `status`,
+  `corpus_cases_used`, `perturbation_method`, `reconstruction_method`,
+  `diffutruth_energy_delta_mean`, `ising_correlation`, `kan_correlation`,
+  `detection_auroc_proxy`, `hallucination_energy_rate`,
+  `viable_as_complement`, and `honest_verdict`.
+- REQ-VERIFY-1367-7: `viable_as_complement` SHALL be true only when
+  `detection_auroc_proxy > 0.55` and at least one of `ising_correlation` or
+  `kan_correlation` has a non-zero interpretable alignment.
+
+**Implementation Status:** Implemented (Exp 1367)
+
+### SCENARIO-VERIFY-1367: DiffuTruth Stress Proxy Writes FoVer Complement Artifact
+
+**Given** the run date is `20260505`
+**And** local FoVer corpus and Carnot verifier score sources are available
+**When** the DiffuTruth falsehood-energy probe runs without a full diffusion
+model
+**Then** it writes an in-progress artifact first
+**And** it writes a complete artifact with corpus count, perturbation method,
+reconstruction method, DiffuTruth energy delta, Ising/KAN correlations,
+AUROC proxy, hallucination energy rate, complement viability, and honest
+verdict fields
+**And** viability is gated only by measured AUROC and interpretable alignment.
+
+**Spec traces:** REQ-VERIFY-1367, SCENARIO-VERIFY-1367, Exp 1367
