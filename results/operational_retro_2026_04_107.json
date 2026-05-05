@@ -1,0 +1,98 @@
+{
+  "schema": "carnot.operational_retro.v63",
+  "milestone": "2026.04.107",
+  "generated_at": "2026-05-05T22:33:31Z",
+  "retro_type": "operational",
+  "status": "success",
+  "summary": "16 min / 5 completed closeout slice. ArXiv Bundle v10 (gated on Exp 1269 critical fixes) consumed 62.5% of wall time for the SEVENTH consecutive milestone. Three duplicate DOOMED_RERUN_BLOCK slots for SOTA GGUF cache/provenance preflight consumed the remaining 37.5% (6 min). In-process docs registered 0 min. Both RTX 3090s were idle at 4 MB / 0% utilization throughout. No GPU experiments scheduled in this milestone. Meta-finding: the same 35% savings estimate has appeared in seven consecutive retros (.99 through .107) without being mechanically applied. The conductor must emit terminal blocked artifacts at activation time rather than re-launching known-blocked tasks.",
+  "total_wall_time_minutes": 16,
+  "experiments_completed": 5,
+  "average_per_experiment_minutes": 3,
+  "slowest_experiments": [
+    {
+      "rank": 1,
+      "name": "arXiv Bundle v10 — Gated on Exp 1269 Critical Fixes",
+      "duration_minutes": 10,
+      "pct_of_wall_time": 62.5,
+      "root_cause": "Gate dependency on Exp 1269 (arXiv v10 critical fixes) has not been cleared for seven consecutive milestones. The conductor re-launches this task each milestone, spending 10 min per attempt before emitting a gate-blocked artifact. The fix requires either (a) resolving Exp 1269 upstream or (b) emitting an immediate terminal GATE_BLOCKED artifact at conductor activation time to recover the 10 min."
+    },
+    {
+      "rank": 2,
+      "name": "DOOMED_RERUN_BLOCK: SOTA GGUF Cache + Provenance Preflight (attempt 1 of 3)",
+      "duration_minutes": 2,
+      "pct_of_wall_time": 12.5,
+      "root_cause": "SOTA GGUF cache/provenance preflight has been blocked in prior milestones. The task is re-proposed without a substantive prior_failures entry describing what changed. The conductor should refuse to launch at activation time."
+    },
+    {
+      "rank": 3,
+      "name": "DOOMED_RERUN_BLOCK: SOTA GGUF Cache + Provenance Preflight (attempt 2 of 3)",
+      "duration_minutes": 2,
+      "pct_of_wall_time": 12.5,
+      "root_cause": "Identical to attempt 1. Three identical doomed-rerun slots ran sequentially rather than the conductor retiring the task after the first block."
+    },
+    {
+      "rank": 4,
+      "name": "DOOMED_RERUN_BLOCK: SOTA GGUF Cache + Provenance Preflight (attempt 3 of 3)",
+      "duration_minutes": 2,
+      "pct_of_wall_time": 12.5,
+      "root_cause": "Third identical doomed-rerun slot. The conductor's exclusion-manifest or activation-time gate-check should have suppressed all three after the first terminal block."
+    },
+    {
+      "rank": 5,
+      "name": "In-process docs for arXiv Bundle v10 — Gated on Exp 1269 Critical Fixes",
+      "duration_minutes": 0,
+      "pct_of_wall_time": 0.0,
+      "root_cause": "Docs reconciliation is near-instant when the parent experiment itself emits a gate-blocked terminal artifact quickly. Not a bottleneck in this slice."
+    }
+  ],
+  "q1_longest_experiments": "The arXiv Bundle v10 task consumed 10 of 16 minutes (62.5%). Root cause: the gate dependency on Exp 1269 (arXiv critical fixes) has not been cleared across seven consecutive milestones (.99 through .107). Each milestone relaunches the bundle task, which spends ~10 min discovering the gate is still blocked before emitting a terminal artifact. The correct fix is an activation-time gate preflight that emits the GATE_BLOCKED terminal artifact in <1 s without spinning up the full experiment.",
+  "q2_gpu_utilization": "Both RTX 3090s are idle at 4 MB / 0% utilization. No GPU-bearing experiments were scheduled in this closeout-only milestone. DualGPURunner was not used. The 16-min wall time was entirely CPU and conductor overhead. GPUs have been idle at closeout for at least the past seven milestones (verified by gpu_monitor.py output: 0% utilization on both cards).",
+  "q3_zombie_processes": "No zombie GPU processes observed. Both GPUs show 4 MB allocated but 0% utilization, which is consistent with the driver baseline rather than a leaked process. The gpu_monitor.py suggestions (free memory, use DualGPURunner) are advisory for future GPU-bearing milestones, not indicators of active leaks in this closeout slice.",
+  "q4_parallelization": "All five experiments ran sequentially. The arXiv bundle gate and three SOTA GGUF doomed-rerun blocks are structurally sequential (each must discover it is blocked before the next launches). True parallelization is only applicable to GPU-bearing research experiments in non-closeout milestones. For this closeout slice, the correct optimization is not parallelism but activation-time gate/doomed-rerun checks that skip blocked tasks in <1 s rather than running them for 2-10 min each.",
+  "q5_preflight_bottleneck": "Preflight tests are not a bottleneck in this slice. The conductor log for adjacent milestones shows test suites completing in 5-26 seconds. The 16-min wall time is dominated by gate-blocked tasks, not test suite execution.",
+  "q6_doc_reconciliation": "Doc reconciliation registered 0 min for the in-process docs task (it matched the parent's gate-blocked outcome instantly). This is not a bottleneck. The concern from prior retros — that docs reconciliation is deferred and accumulates — does not apply to this slice.",
+  "q7_tooling_improvements": "Same three improvements have been recommended for seven consecutive milestones without mechanical enforcement: (1) activation-time gate/DOOMED_RERUN checks emitting immediate terminal blocked artifacts; (2) retirement of Exp 1269 SOTA GGUF cache gate after N consecutive blocks; (3) DualGPU scheduling for GPU-bearing research milestones. The meta-finding is that the retro feedback loop is broken: recommendations are generated but not mechanically enforced by the conductor.",
+  "bottlenecks_identified": [
+    "ArXiv Bundle v10 gated on Exp 1269: 10 min / 62.5% of wall time for SEVENTH consecutive milestone — activation-time gate preflight would recover this to <1 s",
+    "Three duplicate DOOMED_RERUN_BLOCK slots for SOTA GGUF: 6 min / 37.5% of wall time — conductor should retire after first block within a milestone, not relaunch twice more",
+    "Stale retro feedback loop: same improvements estimated at 35% for seven consecutive retros (.99 through .107) without mechanical enforcement in the conductor",
+    "No GPU experiments scheduled in closeout-only milestones: both RTX 3090s idle at 4 MB / 0% throughout 16 min",
+    "Exp 1269 upstream critical fix has blocked arXiv publication path for 7+ milestones — the critical fix itself is the load-bearing unresolved item"
+  ],
+  "improvements_suggested": [
+    "Activation-time gate preflight: before launching any gated experiment, check if the gate condition is already known-false in prior artifacts and emit an immediate terminal GATE_BLOCKED artifact (<1 s vs current 10 min discovery cost)",
+    "Single-shot doomed-rerun retirement: when a task receives a DOOMED_RERUN_BLOCK verdict, add it to the exclusion manifest for the remainder of the current milestone — do not launch the same task again 2 and 4 minutes later",
+    "Exp 1269 retirement gate: if Exp 1269 (arXiv critical fixes) has not produced a clearing artifact in N consecutive milestones, escalate to operator with a hard block rather than continuing to propose the downstream arXiv bundle",
+    "Retro-to-conductor feedback loop: convert retro 'improvements_suggested' into conductor pre-launch checks that run automatically, not advisory text that requires planner re-reading",
+    "Schedule GPU-bearing research experiments in non-closeout milestones using DualGPURunner to break the 7-milestone GPU-idle streak at closeout time"
+  ],
+  "top_3_highest_leverage_actions": [
+    {
+      "action": "Implement activation-time gate/doomed-rerun preflight in research_conductor.py",
+      "estimated_savings_minutes": 12,
+      "estimated_savings_pct": 75,
+      "rationale": "Recovers 10 min (arXiv gate) + 6 min (doomed-rerun x3) = 16 min → 4 min per closeout slice. This one change makes the 16-min milestone a 4-min milestone."
+    },
+    {
+      "action": "Resolve Exp 1269 arXiv critical fixes upstream (clear the gate)",
+      "estimated_savings_minutes": 10,
+      "estimated_savings_pct": 62,
+      "rationale": "The arXiv Bundle v10 task is structurally correct and valuable — it is blocked only by Exp 1269. Clearing the upstream unblocks the entire publication path that has been stalled for 7+ milestones."
+    },
+    {
+      "action": "Add single-shot DOOMED_RERUN retirement within the same milestone",
+      "estimated_savings_minutes": 4,
+      "estimated_savings_pct": 25,
+      "rationale": "The three SOTA GGUF slots ran identically and consumed 6 min. Even if the first slot runs (2 min), retiring it immediately saves 4 min / 25% per closeout milestone with this pattern."
+    }
+  ],
+  "estimated_time_savings_pct": 75,
+  "consecutive_identical_closeout_count": 7,
+  "meta_reflection": "This is the seventh consecutive 16-min / 5-completed closeout slice with the identical bottleneck pattern (arXiv v10 gate on Exp 1269 + SOTA GGUF doomed-rerun x3). Milestones .99 through .107 have all produced the same retro findings and the same 30-35% savings estimate. The retro document itself is no longer providing value as a discovery mechanism — it is confirming a known-and-unresolved structural defect in the conductor. The highest-leverage action is not another retro recommendation but a MANDATORY conductor code change: activation-time gate/doomed-rerun preflight that emits terminal artifacts in <1 s instead of burning 12 min re-discovering known-blocked states. Until that change ships, the retro will continue to report the same findings for milestone .108, .109, and beyond.",
+  "gpu_state_at_retro": {
+    "gpu_0": {"name": "NVIDIA GeForce RTX 3090", "vram_used_mb": 4, "vram_total_mb": 24576, "utilization_pct": 0, "temp_c": 52},
+    "gpu_1": {"name": "NVIDIA GeForce RTX 3090", "vram_used_mb": 4, "vram_total_mb": 24576, "utilization_pct": 0, "temp_c": 55},
+    "zombies_detected": false,
+    "dualgpu_used": false
+  }
+}

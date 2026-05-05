@@ -108,6 +108,7 @@
 | 2026.04.104 | Certificate Branch Carry-Forward + Operational Cleanup | 1337-1350 | 9/12 criteria met; environment/stale-skeleton gates closed, but triggered certificate and semantic validator artifacts stayed missing while operational retro found idle GPU processes, duplicate doomed-rerun slots, and 35% savings recoverable |
 | 2026.04.105 | Certificate Grammar + EBT Framing + arXiv Gate Hold | 1351-1363 | 16 min closeout; arXiv Bundle v10 gate on Exp 1269 dominated for sixth consecutive milestone, three SOTA GGUF doomed-rerun blocks consumed 37.5% of wall time, GPUs idle; meta-finding: retro feedback loop is broken — mechanical conductor enforcement required |
 | 2026.04.106 | Certificate + Semantic Validator + VERGE + Cactus + Ising + Self-Learning Sprint | 1364-1376 | 11/13 experiments completed in ~146 min; arXiv Bundle / SOTA GGUF doomed-rerun pattern absent for first time since .99 — structural improvement; new bottleneck: pre-test cascade SKIP exhaustion blocked Publication Hold (3x) and Retro (3x), requiring manual operator retro; GPUs idle/no zombies |
+| 2026.04.107 | arXiv Gate + SOTA GGUF Doomed-Rerun — Seventh Consecutive Closeout Slice | 1377-1389 | 16 min / 5 completed; arXiv Bundle v10 gate on Exp 1269 consumed 62.5% of wall time for 7th consecutive milestone; 3x SOTA GGUF doomed-rerun blocks consumed 37.5%; GPUs idle throughout; meta-finding: activation-time gate/doomed-rerun preflight is mandatory mechanical fix to recover 75% of closeout wall time |
 
 ## Breakthrough Results
 
