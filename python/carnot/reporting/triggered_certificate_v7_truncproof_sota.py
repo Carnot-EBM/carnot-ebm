@@ -19,9 +19,7 @@ from carnot.reporting import xgrammar2_tagdispatch_certificate_grammar_dryrun as
 
 
 DEFAULT_RUN_DATE = "20260505"
-DEFAULT_OUTPUT_PATH = Path(
-    "results/experiment_1353_triggered_certificate_v7_truncproof_sota.json"
-)
+DEFAULT_OUTPUT_PATH = Path("results/experiment_1353_triggered_certificate_v7_truncproof_sota.json")
 DEFAULT_EXP1324_PATH = Path(
     "results/experiment_1324_certificate_failure_taxonomy_formalizer_reality_check.json"
 )
@@ -220,11 +218,15 @@ def build_experiment_artifact(
 
     grammar_blocker = _grammar_blocker(source_artifacts.get("exp1339", {}))
     if grammar_blocker is not None:
-        return _blocked_without_smoke(base, cases, grammar_blocker, "blocked_dynamic_grammar_not_ready")
+        return _blocked_without_smoke(
+            base, cases, grammar_blocker, "blocked_dynamic_grammar_not_ready"
+        )
 
     if not completion["sota_run_allowed"]:
         blocker = f"completion_preflight_blocked:{completion['blocker_if_not_allowed']}"
-        return _blocked_without_smoke(base, cases, blocker, "blocked_completion_preflight_cpu_smoke_not_run")
+        return _blocked_without_smoke(
+            base, cases, blocker, "blocked_completion_preflight_cpu_smoke_not_run"
+        )
 
     model_blocker = _model_blocker(model_specs)
     if model_blocker is not None:
@@ -247,7 +249,9 @@ def build_experiment_artifact(
             rows,
             terminal_blocker="gpu_health_failed",
             headline_result_allowed=False,
-            models_used=_model_records(model_specs or [], generated=False, fallback_reason="gpu_health_failed")
+            models_used=_model_records(
+                model_specs or [], generated=False, fallback_reason="gpu_health_failed"
+            )
             + list(LEGACY_CPU_SMOKE_MODELS),
             honest_verdict="blocked_gpu_health_failed_cpu_smoke_complete",
         )
@@ -274,7 +278,9 @@ def build_experiment_artifact(
             honest_verdict="blocked_sota_generation_failed_cpu_smoke_complete",
         )
 
-    generated_model_ids = {row.model_hf_id for row in rows if row.generation_source == "live_sota_llamacpp"}
+    generated_model_ids = {
+        row.model_hf_id for row in rows if row.generation_source == "live_sota_llamacpp"
+    }
     headline_allowed = bool(generated_model_ids.intersection(MANDATED_HEADLINE_MODEL_IDS))
     terminal_blocker = None if headline_allowed else "no_mandated_sota_generation_rows"
     return _complete_from_rows(
@@ -611,7 +617,9 @@ def _legacy_cpu_smoke_rows(
             case_id=case.case_id,
             text=f"{structural_tag(case.expected_state)}\n{json_certificate_text(case.expected_state)}",
             generation_source="legacy_cpu_smoke",
-            token_count=preflight.estimate_completion_tokens(json_certificate_text(case.expected_state)),
+            token_count=preflight.estimate_completion_tokens(
+                json_certificate_text(case.expected_state)
+            ),
             error=terminal_blocker,
         )
         for case in cases
@@ -644,9 +652,13 @@ def _base_artifact(
         "trigger_token_hit_rate": 0.0,
         "certificate_parse_rate": 0.0,
         "certificate_truthfulness_rate": 0.0,
-        "parse_rate_delta_over_exp1312": round(0.0 - _baseline_parse_rate_from_sources(source_artifacts), 6),
+        "parse_rate_delta_over_exp1312": round(
+            0.0 - _baseline_parse_rate_from_sources(source_artifacts), 6
+        ),
         "unknown_preservation_rate": 0.0,
-        "min_completion_budget_respected": bool(completion_preflight["min_completion_budget_respected"]),
+        "min_completion_budget_respected": bool(
+            completion_preflight["min_completion_budget_respected"]
+        ),
         "terminal_blocker": None,
         "headline_result_allowed": False,
         "honest_verdict": "not_run",
