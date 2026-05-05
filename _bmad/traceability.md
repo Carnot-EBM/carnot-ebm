@@ -1629,3 +1629,4 @@
 | REQ-INFRA-072 | Exp 868: Pre-flight v16 — Manifest Enforcement Module + 7-RETRO Audit (CPU) | Implemented | results/experiment_868_preflight_v16.json |
 | REQ-INFRA-074 | Exp 890: GGUF Download v3 — HuggingFace CLI Approach (RETRO-SOTA-MODEL-DOWNLOAD) (CPU) | Implemented-Partial | results/experiment_890_gguf_download_v3_cli.json |
 | REQ-INFRA-078 | Auto-Populate prior_failures v2 — Fix DOOMED_RERUN_BLOCK Recurring Pattern | Implemented-Partial | results/experiment_1230_auto_populate_prior_failures_v2.json |
+| REQ-INFRA-1296 | Prior-Failures Activation Audit - Prevent Milestone .100 DOOMED_RERUN_BLOCK Waste | Implemented-Partial | results/experiment_1296_prior_failures_activation_audit.json |
