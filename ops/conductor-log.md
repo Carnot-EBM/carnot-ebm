@@ -950,3 +950,4 @@ web search: GitHub trending energy based mod |
 | 2026-05-05 20:10 UTC | DVI Discriminative Verifier Training v1 — First Ac | OK | 81 passed, 1 warning in 4.50s |
 | 2026-05-05 20:30 UTC | Full-Scale Certificate + Semantic Repair Pipeline  | OK | 81 passed, 1 warning in 4.85s |
 | 2026-05-05 20:46 UTC | GRPO v7 JURY-RL — Carnot Formal Verifiers as Rewar | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1383_grpo_v7 |
+| 2026-05-05 20:53 UTC | GRPO v7 JURY-RL — Carnot Formal Verifiers as Rewar | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1383_grpo_v7 |
