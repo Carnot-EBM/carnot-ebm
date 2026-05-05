@@ -17631,3 +17631,50 @@ validation alone as a native XGrammar backend
 `UNSAT`, and repair-hint dispatch all succeed without transition errors.
 
 **Spec traces:** REQ-VERIFY-1339, SCENARIO-VERIFY-1339, Exp 1339
+
+## REQ-VERIFY-1341: HalluGuard Certificate Failure Split Replay
+
+**Summary:** Carnot SHALL produce a replay-only certificate failure split that
+uses the Exp 1323 token/runtime context and Exp 1324 failure taxonomy to
+separate data-driven risk proxies from reasoning-driven instability proxies
+without running fresh SOTA models or claiming a universal hallucination
+detector.
+
+**Requirements:**
+
+- REQ-VERIFY-1341-1: The workflow SHALL write
+  `results/experiment_1341_halluguard_certificate_failure_split.json` with
+  `status="in_progress"` before loading source artifacts.
+- REQ-VERIFY-1341-2: The workflow SHALL load Exp 1323, Exp 1324, and Exp 1340
+  when present. If Exp 1340 is absent or unreadable, it SHALL proceed from Exp
+  1324 and record the limitation.
+- REQ-VERIFY-1341-3: The split SHALL map observed classes into data-driven risk
+  proxy, reasoning-driven risk proxy, parser/schema risk, undergeneration risk,
+  semantic invalidity, and UNKNOWN mishandling counts.
+- REQ-VERIFY-1341-4: The artifact SHALL keep
+  `universal_detector_claim_allowed=false` unless evidence extends beyond the
+  local certificate slice.
+- REQ-VERIFY-1341-5: `repair_policy_by_failure_type` SHALL include concrete
+  next actions covering prompt retrieval, reasoning budget, grammar branch,
+  semantic validator, and UNKNOWN-preserving fallback.
+- REQ-VERIFY-1341-6: The artifact SHALL include `status`,
+  `source_cases_available`, `data_driven_risk_proxy`,
+  `reasoning_driven_risk_proxy`, `parser_schema_risk_count`,
+  `undergeneration_risk_count`, `semantic_invalidity_count`,
+  `unknown_mishandling_count`, `repair_policy_by_failure_type`,
+  `universal_detector_claim_allowed`, and `honest_verdict`.
+
+**Implementation Status:** Implemented (Exp 1341)
+
+### SCENARIO-VERIFY-1341: HalluGuard Split Falls Back When Exp 1340 Is Missing
+
+**Given** the run date is `20260505`
+**And** Exp 1323 and Exp 1324 artifacts exist
+**And** Exp 1340 is absent or unreadable
+**When** the HalluGuard certificate failure split replay runs
+**Then** it writes an in-progress artifact first
+**And** it writes a complete artifact with all required fields, the Exp 1340
+limitation, no fresh SOTA generation, `universal_detector_claim_allowed=false`,
+and an honest verdict scoped to the local certificate slice.
+
+**Spec traces:** REQ-VERIFY-1341, SCENARIO-VERIFY-1341, Exp 1341
