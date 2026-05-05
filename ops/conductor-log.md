@@ -902,3 +902,5 @@ web search: GitHub trending energy based mod |
 | 2026-05-05 14:31 UTC | LogicSkills Certificate Skill Split - Gated on Ter | OK | Deliverable already exists in repo |
 | 2026-05-05 14:31 UTC | Logitext/NSVIF Partial SMT Validator - Gated on Pa | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1353-triggered-certificate-v7-truncproo |
 | 2026-05-05 14:33 UTC | Logitext/NSVIF Partial SMT Validator - Gated on Pa | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1353-triggered-certificate-v7-truncproo |
+| 2026-05-05 14:35 UTC | Logitext/NSVIF Partial SMT Validator - Gated on Pa | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1353-triggered-certificate-v7-truncproo |
+| 2026-05-05 14:37 UTC | VERGE MCS Repair Localization - Gated on Semantic | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1355-logitext-nsvif-partial-smt-validator |

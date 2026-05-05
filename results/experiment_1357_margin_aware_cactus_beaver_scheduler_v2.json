@@ -1,0 +1,24 @@
+{
+  "experiment": 1357,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-05-05",
+  "started_at": "2026-05-05T14:37:30.063996+00:00",
+  "finished_at": "2026-05-05T14:37:30.063996+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Margin-Aware Cactus/BEAVER Scheduler v2 - Gated on MCS Repair Precision",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp1356-verge-mcs-repair-localization.repair_hint_precision (upstream artifact not found for task id 'exp1356-verge-mcs-repair-localization')",
+  "gates_evaluated": [
+    {
+      "upstream": "exp1356-verge-mcs-repair-localization",
+      "artifact_field": "repair_hint_precision",
+      "op": ">=",
+      "expected": 0.5,
+      "actual": null,
+      "passed": false,
+      "reason": "upstream artifact not found for task id 'exp1356-verge-mcs-repair-localization'"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
