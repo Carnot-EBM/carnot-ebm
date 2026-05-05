@@ -17269,3 +17269,53 @@ and honest verdict
 certificate extraction.
 
 **Spec traces:** REQ-VERIFY-1283, SCENARIO-VERIFY-1283, Exp 1283
+
+## REQ-VERIFY-1311: SOTA ConstraintBench/SATQuest Answer Stability Audit
+
+**Summary:** Before any SOTA certificate extraction attempt, Carnot SHALL run a
+small verifier-backed stability audit over deterministic ConstraintBench-style
+and SATQuest-style items so headline extraction is gated on stable local SOTA
+answers rather than on smoke-load success alone.
+
+**Requirements:**
+
+- REQ-VERIFY-1311-1: The workflow SHALL write an in-progress artifact to
+  `results/experiment_1311_sota_constraintbench_satquest_answer_stability.json`
+  before resolving models or collecting generations.
+- REQ-VERIFY-1311-2: The workflow SHALL resolve `MODEL_SPECS` only through
+  `cached_sota_pair(gpu_indices=(0, 1))` and SHALL abort to a terminal
+  non-headline blocker when fewer than two mandated local SOTA GGUF specs are
+  available.
+- REQ-VERIFY-1311-3: The audit SHALL build 8-16 deterministic local fixture
+  items spanning satisfiable, unsatisfiable, ambiguous/unknown, and compact
+  encoding cases inspired by ConstraintBench and SATQuest.
+- REQ-VERIFY-1311-4: For each resolved model and each item, the audit SHALL
+  collect two deterministic perturbations or seed variants with a tiny token
+  budget and parse only bounded final labels (`SAT`, `UNSAT`, `UNKNOWN`, or
+  abstain).
+- REQ-VERIFY-1311-5: The audit SHALL verify parsed final labels with local
+  PySAT/Z3-style deterministic checks when dependencies are available, with a
+  pure-Python CNF fallback for the tiny generated fixtures.
+- REQ-VERIFY-1311-6: The artifact SHALL include `status`,
+  `answer_stability_score`, `cross_model_disagreement_rate`,
+  `constraintbench_items`, `satquest_items`, `pysat_verified_rate`,
+  `feasibility_rate`, `unknown_or_abstain_rate`, `headline_result_allowed`,
+  `models_used`, and `honest_verdict`.
+- REQ-VERIFY-1311-7: `headline_result_allowed` SHALL be true only when the
+  mandated SOTA GGUF models produced the headline data and verification was not
+  smoke-test-only.
+
+**Implementation Status:** Implemented (Exp 1311)
+
+### SCENARIO-VERIFY-1311: Verifier-Backed SOTA Stability Micro-Slice
+
+**Given** the run date is `20260505`
+**And** `cached_sota_pair(gpu_indices=(0, 1))` returns mandated local GGUF specs
+**When** the answer-stability audit runs on the deterministic micro-slice
+**Then** it writes the Exp 1311 artifact with the required metrics and model IDs
+**And** it reports cross-seed stability, cross-model disagreement, verifier
+rates, feasibility, and unknown/abstain rates
+**And** it permits headline follow-on work only when live SOTA generations and
+verifier-backed labels were collected.
+
+**Spec traces:** REQ-VERIFY-1311, SCENARIO-VERIFY-1311, Exp 1311
