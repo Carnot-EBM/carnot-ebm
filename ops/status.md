@@ -1,6 +1,20 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-05 (Milestone 2026.04.105 research planning complete)
+**Last Updated:** 2026-05-05 (Milestone 2026.04.106 research planning complete)
+
+## Session 2026-05-05 - Milestone 2026.04.106 Research Planning Complete
+
+**Milestone 2026.04.106 PLANNED.**
+
+- Roadmap doc: `openspec/change-proposals/research-roadmap-vNEXT.md`
+- Execution queue: `research-roadmap-next.yaml` (13 tasks, exp1364-exp1376)
+- Research references updated before planning with 7 new 2025-2026 papers: Eidoku CSP (arXiv:2512.20664), DiffuTruth non-equilibrium hallucination detection (arXiv:2602.11364), CRANE alternating constrained generation (arXiv:2502.09061), FOVER 80K formally-verified PRM training data (arXiv:2505.15960), Optimal KAN PWA Verification (arXiv:2602.06737), Fully Parallel Ising with Inertia (arXiv:2604.17109), and Ising-NN Correspondence for hardware mapping (arXiv:2511.00746).
+- Root cause confirmed from exp1363 retro artifact: `<think>...</think>` tokens from Qwen3/Gemma4-it models consume the generation budget before the structural branch-selector tag is emitted, causing `certificate_parse_rate=0.0`. This is terminal negative evidence, not a missing-artifact failure.
+- Design focus: tag-first prefix injection (exp1366, CRANE pattern) as primary fix; Eidoku CSP as grammar-free fallback verification path mapping to Carnot's Ising/KAN/Z3 tiers (exp1365); DiffuTruth non-equilibrium complement (exp1367); KAN PWA formal verification (exp1372); Ising inertia dynamics (exp1373); FR-11 continuous self-learning with CSP fallback path (exp1374).
+- Structured gates: exp1366 on exp1364 terminal_certificate_required; exp1368/1369 on exp1366 certificate_parse_rate >= 0.75; exp1370 on exp1369 validator_execution_pass_rate >= 0.5; exp1371 on exp1370 repair_hint_precision >= 0.5. All Phase 1 (CSP/DiffuTruth), Phase 3 (hardware/formal), and Phase 4 (self-learning/publication/retro) experiments are unconditional.
+- Agent routing: all 13 tasks use `agent_type: codex`, `model: gpt-5.5`. No `requires_claude: true` tasks needed.
+- Validation passed: `python3 scripts/validate_prior_failures.py research-roadmap-next.yaml` (clean), `python3 scripts/audit_roadmap_gates.py research-roadmap-next.yaml` (13/13 tasks, all_checks_pass). Prior_failures added for exp1372 (scope clarification vs exp972) and exp1367 (audit-script false positive vs exp103).
+- Did NOT modify `research-roadmap.yaml` or `scripts/research_conductor.py`.
 
 ## Session 2026-05-05 - Milestone 2026.04.105 Research Planning Complete
 

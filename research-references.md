@@ -4,6 +4,169 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-05-05 Post-.105 Planning Sweep (Milestone 2026.04.106)
+
+This sweep was run after milestone `.105` completed with 9 of 12 criteria
+met. The key scientific finding: `exp1353` produced terminal SOTA certificate
+evidence but with `certificate_parse_rate=0.0`. The dominant blocker was
+`missing_structural_tag` — thinking-mode generation (Qwen3/Gemma4
+`<think>...</think>` tokens) consumed the generation budget before the
+structural branch-selector tag was emitted. The trigger-before-constrain
+approach fails for thinking models because the model front-loads its
+reasoning in an unstructured thinking region, and the structural tag is
+never reached. The fix is **prefix injection**: force the structural tag as
+the first emitted token by supplying it in the assistant-turn prefix before
+generation starts. Mandatory self-learning (`exp1358`) was positive but
+replay-only (`self_learning_delta_overall=1.596429`, `dvi_ready=true`,
+`fresh_verified_sample_count=0`). Semantic repair, DVI, and GRPO all
+blocked correctly behind the certificate gate. The `.106` milestone should
+first fix tag-first emission, introduce Eidoku CSP as a parallel
+grammar-free verification path, add formal KAN verification and parallel
+Ising inertia as new research tracks, and close self-learning with
+verifier-selected samples only after the certificate gate clears.
+
+### Eidoku: CSP Neuro-Symbolic Verification Gate (Independent of Grammar)
+- **Paper:** arXiv 2512.20664, "Eidoku: A Neuro-Symbolic Verification Gate
+  for LLM Reasoning via Structural Constraint Satisfaction."
+- **Source:** https://arxiv.org/abs/2512.20664
+- **What:** Reformulates LLM reasoning verification as a Constraint
+  Satisfaction Problem (CSP) operating independently of generation
+  likelihood. Defines a total cost function from three proxies: graph
+  connectivity (structural), feature-space consistency (geometric), and
+  logical entailment (symbolic). Successfully rejects smooth falsehoods
+  without depending on any grammar-certificate pipeline.
+- **Relevance to Carnot:** The `.105` certificate grammar approach failed
+  because thinking-mode tokens prevent the structural tag from being emitted.
+  Eidoku provides a completely independent verification path that takes free-
+  text model output and checks structural/geometric/symbolic CSP properties.
+  It maps naturally to Carnot's three tiers: Ising (structural), KAN
+  (geometric energy), and Z3/NSVIF (symbolic entailment). This is the
+  most strategically important new paper: it validates Carnot's architecture
+  without requiring grammar certificate emission.
+- **Concrete experiment:** Run Eidoku CSP probe on existing FoVer corpus and
+  any available SOTA GGUF outputs. Report `csp_feasibility_rate`,
+  `structural_violation_cost`, `geometric_consistency_rate`,
+  `symbolic_entailment_rate`, `eidoku_auroc`, `eidoku_csp_viable`.
+
+### DiffuTruth: Hallucination Detection via Diffusion Model Likelihoods
+- **Paper:** arXiv 2602.11364, "The Energy of Falsehood: Detecting
+  Hallucinations via Diffusion Model Likelihoods."
+- **Source:** https://arxiv.org/abs/2602.11364
+- **What:** Proposes DiffuTruth — an unsupervised framework that posits
+  factual truths act as stable attractors on a generative manifold while
+  hallucinations are unstable. Uses a Generative Stress Test (corrupt claim
+  with noise → reconstruct with text diffusion) and measures Semantic Energy
+  (NLI critic between original and reconstructed). Achieves AUROC 0.725 on
+  FEVER (SOTA unsupervised), 4%+ gain on HOVER multi-hop.
+- **Relevance to Carnot:** Provides a non-equilibrium energy signal as a
+  complement to Carnot's Ising/KAN energy tiers. Where Ising/KAN measure
+  constraint-satisfaction energy, DiffuTruth measures reconstruction-energy.
+  The two can be combined: high DiffuTruth energy AND high Ising energy →
+  strong hallucination signal. Also validates Carnot's core premise that
+  energy measures correctness, not just confidence.
+- **Concrete experiment:** Probe DiffuTruth reconstruction energy on
+  FoVer corpus using local discrete text diffusion (or a proxy). Report
+  `diffutruth_energy_delta`, `detection_auroc_proxy`, `ising_correlation`,
+  `hallucination_energy_rate`, `viable_as_complement`.
+
+### CRANE: Alternating Reasoning and Constrained Generation
+- **Paper:** arXiv 2502.09061, "CRANE: Reasoning with Constrained LLM
+  Generation."
+- **Source:** https://arxiv.org/abs/2502.09061
+- **What:** Proposes alternating between unconstrained generation (for
+  reasoning steps) and grammar-constrained generation (for structured
+  outputs), reporting up to 30%+ accuracy gain on symbolic reasoning tasks.
+  Unlike trigger-before-constrain, CRANE enforces constrained tokens only
+  at specific positions, leaving reasoning tokens completely unconstrained.
+- **Relevance to Carnot:** The `.105` trigger-before-constrain approach
+  failed because thinking-mode tokens precede the trigger. CRANE's alternating
+  design means the constrained region is only active at known token positions
+  (e.g., after a fixed-length reasoning section), not triggered by a model-
+  emitted token. Combined with prefix injection of the structural tag, CRANE's
+  pattern should prevent the thinking-mode pre-emption.
+- **Concrete experiment:** Apply CRANE alternating pattern to Carnot's
+  certificate extraction. The reasoning section is unconstrained, the
+  certificate section is grammar-constrained from position 0 of the
+  constrained block (prefix-injected structural tag). Report
+  `crane_certificate_parse_rate`, `reasoning_token_budget_used`,
+  `constraint_token_budget_used`, `parse_rate_delta_over_exp1353`.
+
+### Optimal Abstractions for Verifying KAN Properties
+- **Paper:** arXiv 2602.06737, "Optimal Abstractions for Verifying
+  Properties of Kolmogorov-Arnold Networks (KANs)."
+- **Source:** https://arxiv.org/abs/2602.06737
+- **What:** Replaces each KAN spline unit with a piecewise affine (PWA)
+  function abstraction with error bounds, then encodes property verification
+  as a Mixed Integer Linear Program (MILP). Supports both local and global
+  property verification with tighter bounds than prior interval arithmetic.
+- **Relevance to Carnot:** Carnot's KAN energy tier (GS-KAN, SOS-KAN) is a
+  key component of the verification pipeline. Formal verification of KAN
+  properties would let Carnot claim certified bounds on energy outputs:
+  "for all inputs satisfying property P, the KAN energy is bounded above
+  by E_max." This is a step toward the formal correctness story needed for
+  the Phase-3 paper.
+- **Concrete experiment:** Run PWA abstraction on Carnot's GS-KAN splines
+  and encode a simple energy-bound property as a MILP. Report
+  `pwa_abstraction_error_max`, `milp_verification_result`,
+  `formal_property_verified`, `bound_tightness_vs_interval_arithmetic`,
+  `kan_formal_claim_allowed`.
+
+### Fully Parallel Densely Connected Ising Machine with Inertia
+- **Paper:** arXiv 2604.17109, "A fully parallel densely connected
+  probabilistic Ising machine with inertia for real-time applications."
+- **Source:** https://arxiv.org/abs/2604.17109
+- **What:** Introduces an inertia term to p-bit Ising dynamics enabling
+  fully synchronous parallel updates in FPGA hardware. Reports significantly
+  reduced sweeps-to-convergence compared to standard asynchronous p-bit
+  updates for dense graphs, with implementation results on real FPGA hardware.
+- **Relevance to Carnot:** Carnot's existing `parallel_ising.py` uses
+  checkerboard updates (semi-synchronous). The inertia dynamics from
+  arXiv:2604.17109 could improve convergence for Carnot's dense constraint
+  graphs. This also closes the gap to a KV260 v4 RTL implementation, since
+  fully parallel synchronous updates with inertia are more FPGA-efficient
+  than checkerboard.
+- **Concrete experiment:** Add inertia dynamics to `parallel_ising.py`,
+  CPU-validate against existing checkerboard results on FoVer constraint
+  problems. Report `inertia_convergence_speedup`, `parallel_update_stability`,
+  `steps_to_convergence_comparison`, `fpga_mapping_estimate`.
+
+### FOVER: Formally Verified PRM Training Data
+- **Paper:** arXiv 2505.15960, "Generalizable Process Reward Models via
+  Formally Verified Training Data."
+- **Source:** https://arxiv.org/abs/2505.15960
+- **What:** FOVER-80K is a dataset of 80K reasoning steps with error labels
+  annotated by Z3 and Isabelle formal verifiers. PRMs trained on FOVER data
+  show strong cross-task generalization, consistently outperforming baseline
+  PRMs on formal logic and theorem proving tasks.
+- **Relevance to Carnot:** FOVER's Z3/Isabelle-annotated step labels are a
+  natural alignment target for Carnot's certificate skill split (LogicSkills
+  from .105 exp1354). If Carnot's certificate failures map to FOVER's
+  symbolization/validity/countermodel taxonomy, we can use FOVER labels to
+  train a Carnot-specific ThinkPRM that predicts constraint violations from
+  reasoning steps.
+- **Concrete experiment:** Align Carnot's certificate skill failures from
+  exp1354 with FOVER's error taxonomy. Report `symbolization_fover_alignment`,
+  `validity_fover_alignment`, `z3_label_coverage`, `fover_skill_delta_over_exp1354`.
+
+### Ising Machine–Neural Network Correspondence
+- **Paper:** arXiv 2511.00746, "Correspondence Between Ising Machines and
+  Neural Networks."
+- **Source:** https://arxiv.org/abs/2511.00746
+- **What:** Derives a systematic mapping from trained feed-forward neural
+  networks to Ising-type hardware, generalizing to computation with spin
+  averages at high temperature rather than only ground states. Enables
+  running trained networks on Ising hardware without retraining.
+- **Relevance to Carnot:** This is the theoretical foundation for mapping
+  Carnot's trained KAN/Boltzmann energy models to FPGA Ising hardware.
+  Combined with arXiv:2602.06737 (KAN PWA verification), it provides both
+  the formal correctness bounds and the hardware mapping recipe. Could unblock
+  the KV260 bring-up by providing a proven NN-to-Ising compilation path
+  independent of Vivado synthesis.
+- **Concrete experiment:** Map a small trained GS-KAN layer to equivalent
+  Ising couplings using the arXiv:2511.00746 correspondence. Report
+  `coupling_approximation_error`, `output_equivalence_max_error`,
+  `spin_count_required`, `temperature_operating_point`.
+
 ## 2026-05-05 Post-.104 Planning Sweep (Milestone 2026.04.105)
 
 This sweep was run after milestone `.104` completed with the retro verdict
