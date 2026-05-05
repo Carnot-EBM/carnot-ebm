@@ -1,0 +1,391 @@
+{
+  "best_inertia_alpha": 0.0,
+  "constraint_problems_tested": [
+    "fover_156_row0",
+    "fover_159_row1",
+    "fover_160_row2",
+    "fover_161_row3",
+    "fover_164_row4"
+  ],
+  "fpga_mapping_estimate": {
+    "board_executed": false,
+    "dense_pimi_n128_lut_estimate": 290000,
+    "estimate_basis": [
+      "hardware/kv260/ising_sampler_v4_spec.md LUT breakdown",
+      "research-hardware-wishlist.md KV260 v4 sparse-inertia plan",
+      "arXiv:2604.17109 PIMI fully synchronous update architecture; no local synthesis"
+    ],
+    "fit_assessment": "dense fully unrolled PIMI does not fit KV260; sparse K=16 v4 estimate fits",
+    "kv260_sparse_neighbors": 16,
+    "kv260_v4_sparse_lut_estimate": 35872,
+    "n_spins": 128,
+    "synthesis_performed": false,
+    "target": "KV260 v4 RTL estimate for N=128 fully synchronous inertia path",
+    "xck26_lut_budget": 117120
+  },
+  "hardware_claim_allowed": false,
+  "honest_verdict": "cpu_only_inertia_no_checkerboard_speedup_no_hardware_claim",
+  "inertia_alpha_sweep": [
+    {
+      "alpha": 0.0,
+      "mean_sweeps": 2.2,
+      "parallel_update_stability": 1.0,
+      "per_problem": [
+        {
+          "mean_sweeps": 4.0,
+          "problem": "fover_156_row0",
+          "stability": 1.0
+        },
+        {
+          "mean_sweeps": 2.5,
+          "problem": "fover_159_row1",
+          "stability": 1.0
+        },
+        {
+          "mean_sweeps": 1.25,
+          "problem": "fover_160_row2",
+          "stability": 1.0
+        },
+        {
+          "mean_sweeps": 2.0,
+          "problem": "fover_161_row3",
+          "stability": 1.0
+        },
+        {
+          "mean_sweeps": 1.25,
+          "problem": "fover_164_row4",
+          "stability": 1.0
+        }
+      ],
+      "speedup_vs_checkerboard": 0.7954545454545454
+    },
+    {
+      "alpha": 0.25,
+      "mean_sweeps": 2.75,
+      "parallel_update_stability": 1.0,
+      "per_problem": [
+        {
+          "mean_sweeps": 4.0,
+          "problem": "fover_156_row0",
+          "stability": 1.0
+        },
+        {
+          "mean_sweeps": 3.5,
+          "problem": "fover_159_row1",
+          "stability": 1.0
+        },
+        {
+          "mean_sweeps": 2.0,
+          "problem": "fover_160_row2",
+          "stability": 1.0
+        },
+        {
+          "mean_sweeps": 2.75,
+          "problem": "fover_161_row3",
+          "stability": 1.0
+        },
+        {
+          "mean_sweeps": 1.5,
+          "problem": "fover_164_row4",
+          "stability": 1.0
+        }
+      ],
+      "speedup_vs_checkerboard": 0.6363636363636364
+    },
+    {
+      "alpha": 0.5,
+      "mean_sweeps": 3.45,
+      "parallel_update_stability": 1.0,
+      "per_problem": [
+        {
+          "mean_sweeps": 5.5,
+          "problem": "fover_156_row0",
+          "stability": 1.0
+        },
+        {
+          "mean_sweeps": 4.5,
+          "problem": "fover_159_row1",
+          "stability": 1.0
+        },
+        {
+          "mean_sweeps": 2.25,
+          "problem": "fover_160_row2",
+          "stability": 1.0
+        },
+        {
+          "mean_sweeps": 3.0,
+          "problem": "fover_161_row3",
+          "stability": 1.0
+        },
+        {
+          "mean_sweeps": 2.0,
+          "problem": "fover_164_row4",
+          "stability": 1.0
+        }
+      ],
+      "speedup_vs_checkerboard": 0.5072463768115941
+    },
+    {
+      "alpha": 0.75,
+      "mean_sweeps": 5.7,
+      "parallel_update_stability": 1.0,
+      "per_problem": [
+        {
+          "mean_sweeps": 9.0,
+          "problem": "fover_156_row0",
+          "stability": 1.0
+        },
+        {
+          "mean_sweeps": 8.25,
+          "problem": "fover_159_row1",
+          "stability": 1.0
+        },
+        {
+          "mean_sweeps": 3.25,
+          "problem": "fover_160_row2",
+          "stability": 1.0
+        },
+        {
+          "mean_sweeps": 5.5,
+          "problem": "fover_161_row3",
+          "stability": 1.0
+        },
+        {
+          "mean_sweeps": 2.5,
+          "problem": "fover_164_row4",
+          "stability": 1.0
+        }
+      ],
+      "speedup_vs_checkerboard": 0.30701754385964913
+    }
+  ],
+  "inertia_convergence_speedup": 0.7954545454545454,
+  "kv260_claim_allowed": false,
+  "metadata": {
+    "arxiv_reference": "https://arxiv.org/abs/2604.17109",
+    "arxiv_update_rule_identified": "s_i(t+1)=sign(tanh(beta(t) I_i(t)) + xi s_i(t) + eta(t) N(0,1)); Carnot CPU validation uses EMA-smoothed local field in the Bernoulli probability path.",
+    "beta": 2.0,
+    "cpu_only": true,
+    "experiment_id": 1373,
+    "fover_source": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus.jsonl",
+    "max_sweeps": 64,
+    "n_spins_per_problem": 12,
+    "problem_summaries": [
+      {
+        "ground_energy": -1.369321467996141,
+        "label": "incorrect",
+        "n_spins": 12,
+        "name": "fover_156_row0",
+        "question_id": "156"
+      },
+      {
+        "ground_energy": -2.1629998277051814,
+        "label": "correct",
+        "n_spins": 12,
+        "name": "fover_159_row1",
+        "question_id": "159"
+      },
+      {
+        "ground_energy": -9.457188713408168,
+        "label": "incorrect",
+        "n_spins": 12,
+        "name": "fover_160_row2",
+        "question_id": "160"
+      },
+      {
+        "ground_energy": -4.005111639734825,
+        "label": "incorrect",
+        "n_spins": 12,
+        "name": "fover_161_row3",
+        "question_id": "161"
+      },
+      {
+        "ground_energy": -9.733742302806561,
+        "label": "correct",
+        "n_spins": 12,
+        "name": "fover_164_row4",
+        "question_id": "164"
+      }
+    ],
+    "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "run_date": "20260505",
+    "seeds": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  "parallel_update_stability": 1.0,
+  "status": "complete",
+  "steps_to_convergence_baseline": {
+    "mean_sweeps": 1.75,
+    "per_problem": [
+      {
+        "ground_energy": -1.369321467996141,
+        "mean_sweeps": 2.75,
+        "problem": "fover_156_row0"
+      },
+      {
+        "ground_energy": -2.1629998277051814,
+        "mean_sweeps": 2.25,
+        "problem": "fover_159_row1"
+      },
+      {
+        "ground_energy": -9.457188713408168,
+        "mean_sweeps": 1.0,
+        "problem": "fover_160_row2"
+      },
+      {
+        "ground_energy": -4.005111639734825,
+        "mean_sweeps": 1.5,
+        "problem": "fover_161_row3"
+      },
+      {
+        "ground_energy": -9.733742302806561,
+        "mean_sweeps": 1.25,
+        "problem": "fover_164_row4"
+      }
+    ],
+    "sampler": "ParallelIsingSampler checkerboard update loop"
+  },
+  "steps_to_convergence_inertia": {
+    "best_alpha": 0.0,
+    "mean_sweeps": 2.2,
+    "per_alpha": [
+      {
+        "alpha": 0.0,
+        "mean_sweeps": 2.2,
+        "parallel_update_stability": 1.0,
+        "per_problem": [
+          {
+            "mean_sweeps": 4.0,
+            "problem": "fover_156_row0",
+            "stability": 1.0
+          },
+          {
+            "mean_sweeps": 2.5,
+            "problem": "fover_159_row1",
+            "stability": 1.0
+          },
+          {
+            "mean_sweeps": 1.25,
+            "problem": "fover_160_row2",
+            "stability": 1.0
+          },
+          {
+            "mean_sweeps": 2.0,
+            "problem": "fover_161_row3",
+            "stability": 1.0
+          },
+          {
+            "mean_sweeps": 1.25,
+            "problem": "fover_164_row4",
+            "stability": 1.0
+          }
+        ],
+        "speedup_vs_checkerboard": 0.7954545454545454
+      },
+      {
+        "alpha": 0.25,
+        "mean_sweeps": 2.75,
+        "parallel_update_stability": 1.0,
+        "per_problem": [
+          {
+            "mean_sweeps": 4.0,
+            "problem": "fover_156_row0",
+            "stability": 1.0
+          },
+          {
+            "mean_sweeps": 3.5,
+            "problem": "fover_159_row1",
+            "stability": 1.0
+          },
+          {
+            "mean_sweeps": 2.0,
+            "problem": "fover_160_row2",
+            "stability": 1.0
+          },
+          {
+            "mean_sweeps": 2.75,
+            "problem": "fover_161_row3",
+            "stability": 1.0
+          },
+          {
+            "mean_sweeps": 1.5,
+            "problem": "fover_164_row4",
+            "stability": 1.0
+          }
+        ],
+        "speedup_vs_checkerboard": 0.6363636363636364
+      },
+      {
+        "alpha": 0.5,
+        "mean_sweeps": 3.45,
+        "parallel_update_stability": 1.0,
+        "per_problem": [
+          {
+            "mean_sweeps": 5.5,
+            "problem": "fover_156_row0",
+            "stability": 1.0
+          },
+          {
+            "mean_sweeps": 4.5,
+            "problem": "fover_159_row1",
+            "stability": 1.0
+          },
+          {
+            "mean_sweeps": 2.25,
+            "problem": "fover_160_row2",
+            "stability": 1.0
+          },
+          {
+            "mean_sweeps": 3.0,
+            "problem": "fover_161_row3",
+            "stability": 1.0
+          },
+          {
+            "mean_sweeps": 2.0,
+            "problem": "fover_164_row4",
+            "stability": 1.0
+          }
+        ],
+        "speedup_vs_checkerboard": 0.5072463768115941
+      },
+      {
+        "alpha": 0.75,
+        "mean_sweeps": 5.7,
+        "parallel_update_stability": 1.0,
+        "per_problem": [
+          {
+            "mean_sweeps": 9.0,
+            "problem": "fover_156_row0",
+            "stability": 1.0
+          },
+          {
+            "mean_sweeps": 8.25,
+            "problem": "fover_159_row1",
+            "stability": 1.0
+          },
+          {
+            "mean_sweeps": 3.25,
+            "problem": "fover_160_row2",
+            "stability": 1.0
+          },
+          {
+            "mean_sweeps": 5.5,
+            "problem": "fover_161_row3",
+            "stability": 1.0
+          },
+          {
+            "mean_sweeps": 2.5,
+            "problem": "fover_164_row4",
+            "stability": 1.0
+          }
+        ],
+        "speedup_vs_checkerboard": 0.30701754385964913
+      }
+    ],
+    "sampler": "InertiaIsingSampler fully synchronous EMA update loop"
+  }
+}
