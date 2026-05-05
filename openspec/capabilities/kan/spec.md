@@ -72,6 +72,36 @@ Given `PromptInjectionEnergyCheckerV3()`,
 When we call `checker.n_params()`,
 Then the result is 5016 (= 8 * 32 * 19 + 8 * 19).
 
+## REQ-KAN-1384: EBM-CoT Hinge Calibration Probe on FoVer Pairs
+
+The KAN energy tier SHALL support a CPU-only FoVer calibration probe that
+warm-starts from a compatible local KAN checkpoint, trains for a fixed 20-epoch
+budget with EBM-CoT's contrastive hinge objective, and reports held-out AUROC
+before and after calibration.
+
+The training objective MUST use low-energy-correct / high-energy-incorrect
+semantics:
+
+```
+L = max(0, margin - (E_negative - E_positive))
+    + lambda_consistency * |E_positive - E_positive_paraphrase|
+```
+
+**Acceptance criteria:**
+    - The probe uses existing FoVer labeled step pairs and does not run fresh LLM inference.
+    - The artifact includes `baseline_auroc`, `ebm_cot_auroc`,
+      `calibration_auroc_delta`, `consistency_regularization_effect`, and
+      `implicit_cot_energy_viable`.
+    - `implicit_cot_energy_viable` is true iff `calibration_auroc_delta > 0`.
+    - The probe records an honest verdict when no compatible checkpoint is available.
+
+### SCENARIO-KAN-1384: FoVer hinge calibration artifact
+
+Given a balanced FoVer split with correct and incorrect step labels,
+When the EBM-CoT KAN calibration probe trains for 20 CPU epochs,
+Then the output artifact contains the required calibration fields and computes
+`calibration_auroc_delta = ebm_cot_auroc - baseline_auroc`.
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -86,6 +116,7 @@ Then the result is 5016 (= 8 * 32 * 19 + 8 * 19).
 | REQ-KAN-1199 | Proposed | Exp 1199 target: KANtize-style 8-bit/4-bit SOSKANEnergyV3 spline quantization with endpoint-sensitive precision and safetensors export. |
 | REQ-KAN-1266 | Proposed | Exp 1266 target: deterministic QuantKAN-style 3-bit PTQ simulation plus LUT-KAN latency comparison for SOSKANEnergyV3. |
 | REQ-KAN-1319 | Proposed | Exp 1319 target: hardware-portability audit only for local KAN verifier/repair candidates with no FPGA or analog execution claim. |
+| REQ-KAN-1384 | Proposed | Exp 1384 target: EBM-CoT contrastive hinge calibration on FoVer verified pairs. |
 
 ## REQ-KAN-020: KAEMEnergy FPGA LUT Budget Analyzability
 
