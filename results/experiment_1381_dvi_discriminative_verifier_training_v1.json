@@ -1,0 +1,53 @@
+{
+  "artifact_metadata": {
+    "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "run_date": "20260505"
+  },
+  "discriminative_improvement_measured": true,
+  "duration_s": 0.346,
+  "dvi_auroc_delta": 0.003486,
+  "dvi_baseline_auroc": 0.39104,
+  "dvi_checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/models/dvi_checkpoint_v1.pt",
+  "dvi_deployed": true,
+  "dvi_source_checkpoint_kind": "sc_energy_npz",
+  "dvi_source_checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/models/sc_energy_v2_regularized.pt",
+  "dvi_trained_auroc": 0.394526,
+  "epochs_run": 10,
+  "experiment": "1381_dvi_discriminative_verifier_training_v1",
+  "finished_at": "2026-05-05T20:08:02.675597+00:00",
+  "fover_heldout_cases_used": 1770,
+  "fover_split_seed": 1381,
+  "fover_train_rows_used": 7059,
+  "fresh_llm_inference_used": false,
+  "honest_verdict": "dvi_discriminative_improvement_measured_positive_delta",
+  "l2_weight_decay": 0.0001,
+  "learning_rate": 0.5,
+  "measurement_note": "No fresh LLM inference was used. DVI trained Carnot's SC-Energy verifier boundary on Exp 1374 semantic positives versus FoVer incorrect contrastive negatives, then measured AUROC on the same fixed held-out FoVer split before and after training.",
+  "model_specs_required": false,
+  "negative_case_source": "fover_incorrect_reasoning_steps",
+  "negative_cases_used": 12,
+  "negative_ratio_target": 3,
+  "positive_case_source": "exp1374_primary_semantic_verified",
+  "positive_cases_used": 4,
+  "run_date": "20260505",
+  "schema": "dvi_discriminative_verifier_training_v1",
+  "spec": [
+    "REQ-VERIFY-1381",
+    "SCENARIO-VERIFY-1381"
+  ],
+  "started_at": "2026-05-05T20:08:02.330041+00:00",
+  "status": "complete",
+  "training_loss_history": [
+    0.621289,
+    0.617527,
+    0.614519,
+    0.6121,
+    0.610142,
+    0.608548,
+    0.607242,
+    0.606164,
+    0.605268,
+    0.604516
+  ],
+  "training_method": "secl_style_bce_sc_energy_linear_adapter_v1"
+}
