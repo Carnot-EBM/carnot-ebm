@@ -785,3 +785,4 @@ web search: GitHub trending energy based mod |
 | 2026-05-05 04:23 UTC | SOTA Answer Stability on ConstraintBench/SATQuest  | OK | 81 passed, 1 warning in 7.67s |
 | 2026-05-05 04:36 UTC | Triggered Certificate Extraction v4 - DCCD + GBNF  | OK | 81 passed, 1 warning in 10.10s |
 | 2026-05-05 04:38 UTC | ConstrainPrompt/NSVIF Semantic Validator + MUS Rep | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1312-triggered-certificate-extraction-d |
+| 2026-05-05 04:40 UTC | ConstrainPrompt/NSVIF Semantic Validator + MUS Rep | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1312-triggered-certificate-extraction-d |
