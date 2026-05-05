@@ -1174,10 +1174,12 @@ __all__ = [
     "CaseMemoryTemplateWiring",
     "ConstraintTemplate",
     "ConstraintTemplateLibrary",
+    "DEFAULT_MANIPULABILITY_PRIORS",
     "ViolationPatternEntry",
     "ViolationPatternLibrary",
     "carry_check_template",
     "comparison_direction_template",
+    "manipulable_signal_dependency_template",
     "sign_check_template",
     "unit_consistency_template",
 ]

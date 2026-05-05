@@ -67,3 +67,31 @@ Then the final artifact contains the required DVI fields, the checkpoint path
 exists when `dvi_deployed` is true, and
 `discriminative_improvement_measured` is true whenever the AUROC delta was
 computed on the fixed held-out split.
+
+### REQ-VERIFY-1386: SECL Discriminative Self-Calibration
+
+The repository shall provide a deterministic, CPU-only SECL calibration path
+for the SC-Energy verifier that:
+
+- writes `results/experiment_1386_secl_discriminative_self_calibration.json`
+  with `status="in_progress"` before loading data or calibrating;
+- identifies the current SC-Energy checkpoint or deterministic SC-Energy
+  fallback used for scoring;
+- loads only Exp 1374 promoted primary-semantic verified positive cases as the
+  positive discriminative signal;
+- loads FoVer contrastive negative cases for the calibration slice;
+- trains a confidence head on the selected SECL slice by minimizing empirical
+  Expected Calibration Error for fixed confidence bins;
+- measures `ece_before` and `ece_after` on one fixed held-out FoVer split;
+- computes `ece_reduction_pct`, `discriminative_signal_correlation`, and
+  `calibration_cases_used`; and
+- sets `secl_viable_for_dvi` to true exactly when `ece_reduction_pct > 10.0`.
+
+### SCENARIO-VERIFY-1386: SECL Artifact Reports Held-Out ECE
+
+Given Exp 1374 contains promoted semantic positives and the FoVer corpus
+contains correct and incorrect held-out rows,
+When the SECL self-calibration runner executes,
+Then the final artifact is complete, records the SC-Energy verifier target,
+uses the promoted positives and FoVer negatives for calibration, and reports a
+held-out ECE reduction percentage with an honest verdict.
