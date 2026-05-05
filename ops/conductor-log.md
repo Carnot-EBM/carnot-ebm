@@ -803,3 +803,9 @@ web search: GitHub trending energy based mod |
 | 2026-05-05 06:51 UTC | Plan milestone 2026.04.103 | OK | 14 tasks proposed |
 | 2026-05-05 06:53 UTC | Milestone 2026.04.103 activated | OK | 14 tasks queued |
 | 2026-05-05 07:10 UTC | SOTA GGUF Token-Health + Prompt/Runtime Diagnostic | OK | 81 passed, 1 warning in 6.68s |
+| 2026-05-05 07:22 UTC | Certificate Failure Taxonomy + Formalizer Reality  | FAIL | Codex CLI error: [Errno 122] Disk quota exceeded |
+| 2026-05-05 07:24 UTC | Certificate Failure Taxonomy + Formalizer Reality | OK | Deliverable already exists in repo |
+| 2026-05-05 07:25 UTC | Triggered Certificate Extraction v5 - Runtime-Fixe | FAIL | Codex CLI error: [Errno 122] Disk quota exceeded |
+| 2026-05-05 07:27 UTC | Triggered Certificate Extraction v5 - Runtime-Fixe | FAIL | Codex CLI error: [Errno 122] Disk quota exceeded |
+| 2026-05-05 07:29 UTC | Triggered Certificate Extraction v5 - Runtime-Fixe | FAIL | Codex CLI error: [Errno 122] Disk quota exceeded |
+| 2026-05-05 07:31 UTC | SatIR/NSVIF Constraint Index + Semantic Validator | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1325-triggered-certificate-extraction-v5- |

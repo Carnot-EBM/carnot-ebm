@@ -17422,3 +17422,108 @@ gate, and honest verdict
 multi-token certificate-shaped output from at least one mandated SOTA model.
 
 **Spec traces:** REQ-VERIFY-1323, SCENARIO-VERIFY-1323, Exp 1323
+
+## REQ-VERIFY-1324: Certificate Failure Taxonomy Formalizer Reality Check
+
+**Summary:** Before rerunning certificate extraction, Carnot SHALL diagnose the
+Exp 1312 certificate failures against the post-.102 formalizer literature
+warning that answer stability and parseability do not prove CSP formalization
+quality.
+
+**Requirements:**
+
+- REQ-VERIFY-1324-1: The workflow SHALL write an in-progress artifact to
+  `results/experiment_1324_certificate_failure_taxonomy_formalizer_reality_check.json`
+  before loading prior experiment records.
+- REQ-VERIFY-1324-2: The workflow SHALL load Exp 1311 and Exp 1312 artifacts
+  and, when Exp 1312 includes per-attempt records, audit those records
+  directly rather than relying only on aggregate rates.
+- REQ-VERIFY-1324-3: The taxonomy SHALL separate at least undergeneration,
+  parser/schema mismatch, semantic invalidity, solver disagreement,
+  unknown-state mishandling, and possible hardcoded-solution leakage.
+- REQ-VERIFY-1324-4: The artifact SHALL explain why CSP formalizer evaluation
+  must use solver-backed certificates rather than answer agreement alone,
+  grounded in the post-.102 Reality Check, SatIR, and orthographic constraint
+  references.
+- REQ-VERIFY-1324-5: The artifact SHALL include `status`,
+  `formalizer_failure_modes`, `parser_failure_count`,
+  `semantic_failure_count`, `undergeneration_failure_count`,
+  `hardcoded_solution_leakage_rate`, `solver_vs_certificate_delta`,
+  `reasoning_token_overhead`, `parse_recovery_recommendation`,
+  `minimum_gate_delta_needed`, and `honest_verdict`.
+- REQ-VERIFY-1324-6: `minimum_gate_delta_needed` SHALL equal
+  `max(0, 0.75 - exp1312.certificate_parse_rate)`.
+
+**Implementation Status:** Implemented (Exp 1324)
+
+### SCENARIO-VERIFY-1324: Exp 1312 Failures Are Classified Before Rerun
+
+**Given** the run date is `20260505`
+**And** Exp 1311 and Exp 1312 artifacts exist
+**When** the failure-taxonomy diagnostic runs
+**Then** it writes the Exp 1324 artifact with direct-audit limitations,
+failure-mode counts, parse-gate delta, recommended smallest repair for Exp
+1325, and an honest verdict
+**And** it does not perform a fresh SOTA generation run.
+
+**Spec traces:** REQ-VERIFY-1324, SCENARIO-VERIFY-1324, Exp 1324
+
+## REQ-VERIFY-1325: Runtime-Fixed Triggered Certificate Extraction Rerun
+
+**Summary:** After Exp 1323 recovers multi-token local SOTA certificate output
+and Exp 1324 identifies the dominant certificate failure classes, Carnot SHALL
+rerun the triggered-certificate comparison with only the minimal runtime,
+prompt/schema, and parser repairs needed to reopen the certificate parse gate.
+
+**Requirements:**
+
+- REQ-VERIFY-1325-1: The workflow SHALL write an in-progress artifact to
+  `results/experiment_1325_triggered_certificate_extraction_v5_runtime_fixed_dccd_gbnf.json`
+  before loading Exp 1323, Exp 1324, or source certificate rows.
+- REQ-VERIFY-1325-2: The workflow SHALL load Exp 1323 and abort to a terminal
+  blocked artifact when `min_tokens_recovered` is not true.
+- REQ-VERIFY-1325-3: The workflow SHALL load Exp 1324 and apply only the
+  minimal recommended repairs: remove premature newline stops, use the
+  certificate-shaped prompt/runtime settings, preserve `UNKNOWN` and
+  `ABSTAIN`, and repair parser/schema mismatches without counting
+  verifier-label-only repair paths as independent formalizer success.
+- REQ-VERIFY-1325-4: The workflow SHALL resolve model specs only through
+  `cached_sota_pair(gpu_indices=(0, 1))` and record the exact mandated local
+  SOTA GGUF model IDs and runtime settings used.
+- REQ-VERIFY-1325-5: The workflow SHALL compare raw-trigger,
+  GBNF-constrained, compact-encoding/DCCD-style, and repaired certificate
+  paths on a verifier-backed slice and compute parse rate, truthfulness rate,
+  empty-or-one-token rate, repair success rate, DCCD delta over grammar-only,
+  and grammar projection tax proxy.
+- REQ-VERIFY-1325-6: The artifact SHALL include `status`, `models_used`,
+  `runtime_settings_used`, `certificate_parse_rate`,
+  `certificate_truthfulness_rate`, `parse_rate_delta_over_exp1312`,
+  `empty_or_one_token_rate`, `dccd_delta_over_grammar_only`,
+  `repair_success_rate`, `grammar_projection_tax_proxy`,
+  `headline_result_allowed`, and `honest_verdict`.
+- REQ-VERIFY-1325-7: `headline_result_allowed` SHALL be true only when at
+  least one mandated SOTA model contributed verifier-backed cases and the
+  artifact includes enough cases to support the parse-rate claim; otherwise
+  the artifact SHALL name the blocker honestly.
+- REQ-VERIFY-1325-8: If `certificate_parse_rate` remains below 0.75, the
+  narrative SHALL name the next blocker and include retire-if-same-verdict
+  logic for future reruns.
+
+**Implementation Status:** Planned (Exp 1325)
+
+### SCENARIO-VERIFY-1325: Runtime-Fixed Certificate Rerun Opens Or Retires Gate
+
+**Given** the run date is `20260505`
+**And** Exp 1323 reports `min_tokens_recovered=true`
+**And** Exp 1324 recommends parser/schema recovery before the rerun
+**When** the runtime-fixed triggered-certificate comparison runs
+**Then** it writes the Exp 1325 artifact with the required runtime,
+model-provenance, parse/truthfulness, DCCD, repair, projection-tax, headline
+gate, and honest-verdict fields
+**And** it records a terminal blocker rather than headline metrics when the
+Exp 1323 token-recovery gate or mandated-model provenance gate is not
+satisfied
+**And** it names the next blocker with retire-if-same-verdict logic if the
+0.75 parse gate remains closed.
+
+**Spec traces:** REQ-VERIFY-1325, SCENARIO-VERIFY-1325, Exp 1325

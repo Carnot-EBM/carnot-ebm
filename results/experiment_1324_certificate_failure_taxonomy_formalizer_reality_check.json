@@ -1,0 +1,114 @@
+{
+  "artifact": "experiment_1324_certificate_failure_taxonomy_formalizer_reality_check",
+  "artifact_metadata": {
+    "direct_exp1312_attempt_audit": true,
+    "parse_gate": 0.75,
+    "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "run_date": "20260505",
+    "source_experiments": [
+      "1311",
+      "1312"
+    ]
+  },
+  "exp1325_fix_priorities": [
+    "runtime settings",
+    "prompt schema",
+    "parser repair",
+    "grammar coverage",
+    "DCCD compact encoding with hardcoded-solution leakage guard"
+  ],
+  "formalizer_failure_modes": [
+    {
+      "class": "undergeneration",
+      "count": 25,
+      "evidence": "Exp 1311 source rows with empty raw_output or token_count <= 1.",
+      "smallest_repair_needed": "runtime settings: remove premature stop strings and require enough tokens for a certificate tail before rerunning exp1325."
+    },
+    {
+      "class": "parser_schema_mismatch",
+      "count": 40,
+      "evidence": "Exp 1312 unparseable attempts, dominated by raw_trigger no_json_object.",
+      "smallest_repair_needed": "parser repair plus prompt schema: recover at least 6 additional parseable attempt(s) to clear the 0.75 gate."
+    },
+    {
+      "class": "semantic_invalidity",
+      "count": 30,
+      "evidence": "Parseable Exp 1312 certificates whose final answer was not truthful.",
+      "smallest_repair_needed": "semantic validator/MUS repair after parsing; parseability alone is not accepted as a certificate."
+    },
+    {
+      "class": "solver_disagreement",
+      "count": 19,
+      "evidence": "Exp 1311 answer rows rejected by the local verifier/solver.",
+      "smallest_repair_needed": "compare solver answer, certificate label, and verifier label as separate columns in exp1325."
+    },
+    {
+      "class": "unknown_state_mishandling",
+      "count": 4,
+      "evidence": "UNKNOWN cases forced into SAT/UNSAT or untruthful certificates.",
+      "smallest_repair_needed": "preserve UNKNOWN/ABSTAIN as first-class certificate states in the schema and grammar."
+    },
+    {
+      "class": "possible_hardcoded_solution_leakage",
+      "count": 35,
+      "evidence": "Repaired certificates and compact DCCD projections can be solver-label aligned, so they are leakage-risk evidence rather than independent formalizer success.",
+      "rate": 0.251799,
+      "smallest_repair_needed": "keep DCCD compact encoding, but exclude verifier-label repair paths from headline formalizer metrics unless the certificate payload proves the solution was derived."
+    }
+  ],
+  "hardcoded_solution_leakage_rate": 0.251799,
+  "honest_verdict": "diagnostic_complete_parse_gate_shortfall_parser_recovery_needed",
+  "literature_reality_check_summary": "The post-.102 Reality Check section reports that LLM formalizers can fail on real CSPs even when solver-style answers agree, including excessive reasoning tokens and hard-coded solutions. SatIR reinforces that incomplete inputs need explicit UNKNOWN-preserving formal constraints, not forced labels. The orthographic constraint work shows deterministic hard constraints can expose architecture-specific failures hidden by aggregate answer agreement. Therefore Carnot must evaluate CSP formalization with solver-backed certificates, not answer agreement or parseability alone.",
+  "measurement_note": "Diagnostic-only artifact built from Exp 1311 and Exp 1312 records; no fresh SOTA generation run was performed.",
+  "minimum_gate_delta_needed": 0.03777,
+  "minimum_parseable_attempts_to_recover": 6,
+  "parse_recovery_recommendation": "Apply parser repair plus runtime settings and prompt schema cleanup before exp1325; recover at least 6 of 40 parser/schema failures while preserving DCCD compact encoding behind a hardcoded-solution leakage guard.",
+  "parser_failure_count": 40,
+  "per_path_failure_summary": {
+    "dccd_compact": {
+      "attempts": 40,
+      "parser_failures": 0,
+      "semantic_failures": 11
+    },
+    "gbnf_constrained": {
+      "attempts": 40,
+      "parser_failures": 0,
+      "semantic_failures": 19
+    },
+    "raw_trigger": {
+      "attempts": 40,
+      "parser_failures": 40,
+      "semantic_failures": 0
+    },
+    "repaired_certificate": {
+      "attempts": 19,
+      "parser_failures": 0,
+      "semantic_failures": 0
+    }
+  },
+  "possible_hardcoded_solution_leakage_count": 35,
+  "reasoning_token_overhead": {
+    "available": false,
+    "dccd_extra_token_proxy": -23.025,
+    "gbnf_extra_token_proxy": 10.0,
+    "limitation": "Exp 1312 did not save model reasoning-token traces, so this reports prompt overhead proxies only.",
+    "proxy": "prompt_chars_divided_by_4_not_model_reasoning_tokens",
+    "repair_extra_token_proxy": 9.4
+  },
+  "run_date": "20260505",
+  "schema_version": 1,
+  "semantic_failure_count": 30,
+  "solver_vs_certificate_delta": 0.17197,
+  "source_data_limitations": "Exp 1312 saved per-attempt records with path, item_id, parseable, truthful, errors, compact_encoding, and prompt_chars, so parser and semantic counts are direct. It did not save full certificate payloads, proof text, or perturbation indices, so hardcoded-solution leakage is a path-based proxy.",
+  "source_metrics": {
+    "exp1311_answer_stability_score": 0.9,
+    "exp1311_pysat_verified_rate": 0.525,
+    "exp1311_source_solver_disagreement_count": 19,
+    "exp1312_certificate_attempt_count": 139,
+    "exp1312_certificate_parse_rate": 0.71223,
+    "exp1312_certificate_truthfulness_rate": 0.69697
+  },
+  "status": "complete",
+  "undergeneration_failure_count": 25,
+  "unknown_state_mishandling_count": 4
+}
