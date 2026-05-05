@@ -4,6 +4,132 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-05-05 Planning Sweep (Milestone 2026.04.101)
+
+This sweep rechecked arXiv, OpenReview, HuggingFace Papers, Semantic Scholar,
+GitHub/project pages, Extropic, and Logical Intelligence before designing the
+next roadmap. It adds only items that materially change `.101` experiment
+selection, gates, or acceptance fields.
+
+### FALCON: Hard Constraints + Feasibility Repair for LLM CO
+- **Paper:** arXiv 2602.01090, "Hard Constraints Meet Soft Generation:
+  Guaranteed Feasibility for LLM-based Combinatorial Optimization."
+- **Source:** https://arxiv.org/abs/2602.01090
+- **What:** Combines grammar-constrained decoding, a semantic feasibility
+  repair layer, and adaptive Best-of-N sampling; the authors report perfect
+  feasibility across seven NP-hard combinatorial optimization problems.
+- **Relevance to Carnot:** This is the closest recent template for the SOTA
+  certificate path: syntax alone is not enough; generated certificates need a
+  verifier-backed repair layer and adaptive retry budget.
+- **Concrete experiment:** In `.101`, `exp1299` should report raw-trigger,
+  GBNF, repaired, and adaptive-sampling certificate parse/validity rates, with
+  `repair_success_rate` and `adaptive_best_of_n_used`.
+
+### Attention Meets Reachability: Grammar Cost Is a First-Class Metric
+- **Paper:** arXiv 2603.05540, "Attention Meets Reachability: Structural
+  Equivalence and Efficiency in Grammar-Constrained LLM Decoding."
+- **Source:** https://arxiv.org/abs/2603.05540
+- **What:** Shows language-equivalent grammars can induce the same token masks
+  while producing different compiled state spaces, ambiguity costs, and latency
+  envelopes.
+- **Relevance to Carnot:** `exp1283` selected `llama.cpp` GBNF, but `.101`
+  certificate extraction should measure grammar runtime cost instead of assuming
+  any valid grammar is operationally equivalent.
+- **Concrete experiment:** Add `grammar_state_count`,
+  `structural_ambiguity_cost_proxy`, and `tokens_per_second_delta` to
+  certificate extraction artifacts.
+
+### Semantic Probabilistic Control of Language Models
+- **Paper:** arXiv 2505.01954 / OpenReview NeurIPS 2025 SPIGM,
+  "Semantic Probabilistic Control of Language Models."
+- **Sources:** https://arxiv.org/abs/2505.01954 and
+  https://openreview.net/forum?id=WFx8Qzc939
+- **What:** Treats semantic control as conditioning generation on a
+  sequence-level verifier and uses verifier-gradient information to reweight
+  next-token probabilities.
+- **Relevance to Carnot:** Carnot already has hard verifiers; this motivates a
+  semantic-router experiment that records verifier-probability features before
+  choosing repair, rejection, or certificate routing.
+- **Concrete experiment:** `exp1300` should compare syntax-only routing with a
+  verifier-feature route and report `semantic_routing_coverage` plus
+  `semantic_violation_reduction`.
+
+### QueryBandits for Online Hallucination Mitigation
+- **Paper:** HuggingFace Papers / arXiv 2602.20332, "No One Size Fits All:
+  QueryBandits for Hallucination Mitigation."
+- **Source:** https://huggingface.co/papers/2602.20332
+- **What:** Uses contextual bandits to choose query-rewrite strategies online,
+  showing static rewrite policies can be worse than no rewrite.
+- **Relevance to Carnot:** The self-learning tier should not promote a single
+  static memory or rewrite policy. It needs reward-calibrated online selection
+  among verifier-feedback actions.
+- **Concrete experiment:** `exp1303` should implement a lightweight contextual
+  bandit over replay/rewrite/abstain policies and report regret, accepted
+  violation delta, and self-learning delta.
+
+### Neural Garbage Collection: Learning to Forget While Reasoning
+- **Paper:** arXiv 2604.18002, "Neural Garbage Collection: Learning to Forget
+  while Learning to Reason."
+- **Source:** https://arxiv.org/abs/2604.18002
+- **What:** Frames memory eviction as a learned decision tied to task reward,
+  compressing KV cache while preserving reasoning accuracy.
+- **Relevance to Carnot:** Skill graph promotion needs symmetric demotion. This
+  paper supports treating stale verifier memories as eviction candidates, not
+  permanent knowledge.
+- **Concrete experiment:** `exp1302` and `exp1303` should record promoted,
+  demoted, and expired memory entries and never count promotion-only memory as
+  continuous self-learning success.
+
+### KAN Verification via Optimal Piecewise-Affine Abstractions
+- **Paper:** arXiv 2602.06737, "Optimal Abstractions for Verifying Properties
+  of Kolmogorov-Arnold Networks (KANs)."
+- **Source:** https://arxiv.org/abs/2602.06737
+- **What:** Replaces KAN units with PWA abstractions and encodes property
+  verification as MILP while optimizing the approximation/error tradeoff.
+- **Relevance to Carnot:** `HardNet++` made nonlinear repair viable in `.100`.
+  KAN/PWA verification is a candidate bridge from nonlinear repair to
+  certifiable bounded abstractions.
+- **Concrete experiment:** `exp1305` should include a PWA/KAN-abstraction note
+  when reporting feasibility-stop policy limits and residual nonlinear cases.
+
+### Infeasibility-Aware LLMs for Combinatorial Optimization
+- **Paper:** arXiv 2604.01455, "Infeasibility Aware Large Language Models for
+  Combinatorial Optimization."
+- **Source:** https://arxiv.org/abs/2604.01455
+- **What:** Uses exact optimization to build feasible and certifiably
+  infeasible labels, then trains LLMs to generate solutions and detect
+  infeasibility.
+- **Relevance to Carnot:** Certificates need explicit infeasible/unknown states;
+  forcing all samples into feasible-looking certificates hides important failure
+  modes.
+- **Concrete experiment:** `exp1299` and `exp1300` should include
+  `infeasible_certificate_detected` and `unknown_or_abstain_rate` fields.
+
+### Parallel p-bit Ising Performance-Cost Landscape
+- **Paper:** Scientific Reports 2026, "A unified performance-cost landscape of
+  parallel p-bit Ising machines based on update dynamics."
+- **Source:** https://www.nature.com/articles/s41598-026-47285-0
+- **What:** Analyzes synchronous/asynchronous p-bit update regimes under finite
+  hardware delay, DAC precision, and time-multiplexed reuse.
+- **Relevance to Carnot:** This sharpens the FPGA/TSU hardware bridge: the next
+  software milestone should keep the hardware path alive via sampler metrics,
+  but not spend a conductor task on KV260 bring-up while Vivado remains absent.
+- **Concrete experiment:** Defer hardware bring-up; record p-bit/TSU context in
+  `exp1306` and keep future sampler parity tied to KL, delay, and reuse-factor
+  diagnostics.
+
+### Extropic TSU and Logical Kona Status Check
+- **Sources:** https://extropic.ai/hardware and
+  https://logicalintelligence.com/kona-ebms-energy-based-models
+- **What:** Extropic lists XTR-0 as a 2025 research platform and Z1 as early
+  access in 2026; Logical describes Kona as an EBM layer for constraint
+  enforcement beneath AI stacks.
+- **Relevance to Carnot:** Both reinforce the PRD direction: verifier/energy
+  layers should be explicit, auditable, and hardware-aware. Neither source
+  provides an immediately usable local SDK/hardware dependency for `.101`.
+- **Concrete experiment:** `exp1306` should update the EBT/ARM/EBM-CoT bridge
+  with this external architecture context without blocking on external access.
+
 ## 2026-05-04 Verified Planning Sweep (Milestone 2026.04.100)
 
 This sweep rechecked the user-mandated sources during the interactive `.100`

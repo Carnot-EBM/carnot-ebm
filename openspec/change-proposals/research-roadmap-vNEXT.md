@@ -1,230 +1,304 @@
-# Research Roadmap vNEXT: Milestone 2026.04.100
+# Research Roadmap vNEXT: Milestone 2026.04.101
 
-Planned: 2026-05-04
+Planned: 2026-05-05
 Status: Draft for conductor execution
-Predecessor: 2026.04.99 Publication Closeout + SOTA Certificates + PRIME Self-Learning + Continuous Repair
+Predecessor: 2026.04.100 SOTA Certificate Recovery + Verifier-Feedback Self-Learning + Continuous Repair Bridge
 Roadmap YAML: `research-roadmap-next.yaml`
 
-## What Milestone .99 Proved
+## What Milestone .100 Proved
 
-Milestone 2026.04.99 closed most of the work that had been stuck behind stale skeletons:
+Milestone 2026.04.100 met 5 of 14 planned criteria. That score is important
+because the failures were mostly activation and dependency failures, not negative
+research evidence:
 
-- Publication closeout is no longer blocked by critical text fixes. `exp1269` fixed all five critical paper issues, and `exp1270` compiled the arXiv v10 bundle. The remaining publication gap is external submission/receipt, not local compilation.
-- PRIME-style verifier selection works as a measured reward-selection step. `exp1272` wrote a verifier weight vector with SemEnergyProbe as the strongest selected signal.
-- Self-learning moved from theory to measured smoke/replay artifacts. `exp1273` reported `self_learning_delta_overall=0.83798`, but only as smoke-only because no SOTA GGUF model was available. `exp1274` reported certificate-memory replay improvement with `self_learning_delta_overall=0.357143`.
-- Continuous repair is the strongest new positive. `exp1275` found an FSNet-style feasibility delta of `4.5832`, and `exp1276` found a SnareNet-style adaptive-repair delta of `0.21996` over FSNet.
-- The EST gaming-defense measurement and both minimal WOPR cartridges shipped. `exp1278` reported vulnerability 0.00 with k=5 blocking true, `exp1279` shipped Kakuro, and `exp1280` shipped Masyu.
-- The milestone retro scored 12/14 criteria met. The two misses are decisive: `exp1271` did not produce headline SOTA GGUF certificate extraction, and `exp1277` stayed gate-blocked because no certificate parse rate existed.
+- `exp1283` selected `llama.cpp` GBNF as the local certificate grammar backend.
+  Grammar generation is therefore no longer speculative.
+- `exp1288` proved verifier-feedback replay can improve acceptance rate
+  (`dvi_acceptance_delta=0.357143` and `memory_update_written=true`), but the
+  result stayed non-headline because SOTA certificate data never materialized.
+- `exp1291` showed HardNet++ nonlinear repair is viable over SnareNet
+  (`hardnetpp_delta_over_snarenet=1.2207`).
+- `exp1292` showed the DSP feasibility channel is predictive but marginal
+  (`feasibility_channel_auc=0.6605`) and should be used as a stop/continue
+  signal, not as the only repair operator.
+- `exp1295` wrote the honest retro and identified the avoidable waste pattern:
+  missing `prior_failures` metadata caused repeated DOOMED_RERUN_BLOCKs in
+  `exp1282`, `exp1293`, and `exp1294`, cascading into SOTA certificate, semantic
+  routing, Cactus, GRPO, and publication gates.
 
-The next milestone therefore does not rerun the whole .99 plan. It makes the SOTA GGUF certificate path executable, converts smoke-only self-learning into headline-eligible evidence if the SOTA gate opens, and strengthens continuous repair with nonlinear/feasibility diagnostics.
+The next milestone therefore starts with activation hygiene. It should not spend
+GPU or model time until the roadmap itself proves that prior-failure coverage,
+structured gates, and cache/provenance readiness are dispatchable.
 
 ## Current Research Signals Added Before Planning
 
-The 2026-05-04 vNEXT literature/source scan added these entries to `research-references.md` before this plan was written:
+The 2026-05-05 planning sweep added source-backed items to
+`research-references.md` before this roadmap was designed:
 
-- Final planning-agent scan: CDoT mildly context-sensitive constrained decoding, Once-More continuous verifier-feedback self-correction, "Rethinking LLMs as Verifiers", Copy-as-Decode, the Scientific Reports p-bit performance-cost landscape, and current Extropic/Kona status. These refine `.100` by adding CDoT expressiveness notes to the grammar bakeoff, interleaved verifier-feedback diagnostics to the DVI replay lane, perturbation/rubric checks to SOTA certificate audit, copy-span reuse diagnostics to continuous repair, and hardware-status context to the energy bridge audit.
-- Supplemental planning scan after the .99 artifact review: EBRM structured latent trajectory planning, LaSy proof-carrying latent-to-symbolic outputs, RECAST multi-constraint data, PCN proof-carrying numbers, VoG KG stepwise verification, MemRouter verified memory routing, lmKAN lookup layers, and NVIDIA's Ising Calibration model card. These refine `.100` by adding latent-drift/decoder-anchor checks to the energy bridge audit, proof-carrying numeric coverage to semantic routing, memory-type routing to skill promotion, and a future multi-constraint benchmark path without increasing the `.100` task count.
-- Codex planning-agent verification scan: DCCD draft-conditioned constrained decoding, NSVIF CSP-style instruction verification, Residual Drift / MUS-Repair, PCC certainty+consistency routing, and the current EBT / Extropic / Kona status check. These refine `.100` by making the certificate rerun draft-conditioned rather than grammar-only, making semantic routing solver/CSP-backed, adding residual-drift bookkeeping, and keeping the architecture local-first rather than pivoting to a closed vendor.
-- ARS answer-agreement representation shaping (arXiv 2601.17467): use answer stability under trace-boundary perturbation as a hallucination/certificate trust diagnostic.
-- TruncProof (OpenReview ICLR 2026): grammar-constrained generation with a hard maximum token budget, directly relevant to bounded certificate tails.
-- SEM-CTRL (arXiv 2503.01804 / OpenReview TMLR 2026): Answer Set Grammars for semantic control, useful after syntactic certificate validity is reliable.
-- DVI (arXiv 2510.05421 / OpenReview ICLR 2026): verifier accept/reject decisions as online self-speculation training signals.
-- XGrammar-2 and llguidance: practical local structured-generation engines with llama.cpp/vLLM/SGLang integration, the most direct implementation path for local GGUF certificates.
-- BEAVER + CRANE (arXiv 2512.05439 / 2502.09061): deterministic constraint-bound and reasoning-preserving constrained generation references; use them as design constraints, not as a full .100 implementation.
-- Optimal KAN abstractions (arXiv 2602.06737): formal PWA/MILP verification path for KAN verifier components; queued as a future verifier-certification direction after SOTA certificates stabilize.
-- Current EBT / ARM-EBM / Extropic / Kona status: no broad architecture pivot; the near-term task remains measurable local certificates, verifier learning, and continuous repair while keeping the sampler abstraction portable.
-- Supplemental scan entries added during final planning: HoVer safe-prefix holistic verification; FLy/TriSpec loose/proxy speculative verification; and the April 2026 fully parallel probabilistic Ising machine with inertia. These are not new .100 critical-path tasks, but they shape the follow-up path: safe-prefix repair after certificate parsing succeeds, proxy verifier triage after Cactus is measurable, and sampler-parity hardware work in a later hardware-focused milestone.
-- Final verification scan entries added before YAML emission: OnlineSpec / When Drafts Evolve, HalluHard, CaR Construct-and-Refine, and the Scientific Reports parallel-pbit performance/cost study. These refine existing `.100` tasks rather than adding more tasks: OnlineSpec adds an acceptance-delta metric to DVI replay, CaR adds a construct/refine iteration diagnostic to continuous repair, HalluHard becomes a `.101` multi-turn benchmark candidate, and the p-bit study is filed for the next hardware-focused sampler-parity pass.
-- Fresh planning scan addendum: Structure Snowballing, InterWhen, ConstraintBench, and EBM-CoT. These refine the `.100` task definitions: grammar backends must report a snowballing-risk diagnostic, verifier learning must include an interleaved-during-reasoning comparison, semantic routing gets a tiny ConstraintBench-style micro-eval, and the energy bridge audit includes CoT-sequence energy rather than final-answer energy only.
-- Active planning verification scan: ARC-Decode risk-bounded acceptance, SPEED-Bench replay/evaluation tagging, HiSpec / Speculative Speculative Decoding, and a Semantic Scholar citation check on EBT. These refine `.100` without changing the task count: Cactus v2 must report risk-bound proxy and evaluation-mode fields, HiSpec/SSD remain `.101` proxy-verifier acceleration candidates, and the EBT citation check reinforces the need for the energy bridge audit.
-- Supplemental late scan: Token-Guard, GRAD, Leanabell-Prover-V2, extended-variable p-dits, and UQLM. These refine `.100` as follows: Cactus v2 reports token-level self-check risk, semantic routing builds a lightweight GRAD-style evidence graph, GRPO/VPRM v9 records verifier-feedback token-masking effects, p-dits are filed as future sampler/hardware parity context, and the ARS/PCC audit includes an optional local UQLM-style uncertainty score.
-- Interactive verification-gated scan: EBT is now an ICLR 2026 Oral and ARM-EBM was revised in April 2026; Spilled Energy, Token-Guard, BEAVER, llguidance, XGrammar-2, Copy-as-Decode, optimal KAN abstractions, lmKAN, Extropic THRML/Z1, Kona, and REASON were rechecked from primary or official sources. These reinforce the exact `.100` critical path: grammar-gated certificates before expensive SOTA runs, token-level risk metrics for Cactus, BEAVER-lite semantic bounds, EBT/ARM energy bridge audit, and no new hardware bring-up until human-blocked FPGA/NPU prerequisites change.
-- Interactive Codex live-web addendum: arXiv 2601.09929 reinforces root-cause-tagged hallucination management, HALT-RAG suggests abstention-aware semantic routing, Poly-FEVER is filed as a future multilingual fact-verification benchmark, and ACCORD is filed as a future feasible-prefix generation comparison for WOPR/Cactus. These do not add `.100` tasks; they refine optional fields and future `.101+` scope in `research-references.md`.
-- Verified planning sweep immediately before YAML emission: self-verification training (arXiv 2602.07594), LLM-as-formalizer failure modes on real CSPs (OpenReview hyI8cIOU2f), Neural Network Ising Machines (OpenReview 5H8kxW0Efk), and the OnlineSpec/Cactus feedback-learning pairing were added to `research-references.md`. These sharpen `.100` by requiring verifier-feedback fields in `exp1288`/`exp1289`, solver-vs-certificate comparisons in `exp1284`/`exp1285`, future sampler-learning notes in `exp1293`, and explicit risk/acceptance metrics in `exp1287`.
-- Codex planning refresh after the `.99` retro: Finch-Zk cross-model consistency, STATIC vectorized trie decoding, ABS automata-guided beam search, Agent-C temporal monitoring, learning-augmented clause predictions, Grammar-Aligned Decoding, and fully parallel p-bit Ising with inertia were added to `research-references.md`. These do not change the 14-task scope. They refine `.100` by adding cross-model disagreement to `exp1284`, bounded-vocabulary/trie and automata-fallback diagnostics to `exp1283`, grammar projection-tax checks to `exp1285`, temporal-claim readiness to `exp1286`, claim-level memory entries to `exp1288`/`exp1290`, and hardware context to `exp1293`.
+- FALCON (`arXiv:2602.01090`) motivates a certificate path that combines
+  grammar-constrained decoding, semantic feasibility repair, and adaptive
+  Best-of-N sampling.
+- Attention Meets Reachability (`arXiv:2603.05540`) makes grammar state count,
+  ambiguity cost, and grammar-induced latency first-class certificate metrics.
+- Semantic Probabilistic Control of Language Models (`arXiv:2505.01954`,
+  OpenReview SPIGM 2025) motivates verifier-feature routing rather than
+  syntax-only routing.
+- QueryBandits (`arXiv:2602.20332`) and Neural Garbage Collection
+  (`arXiv:2604.18002`) sharpen continuous self-learning: memory policy must
+  include online selection, demotion, and expiry, not promotion-only ledgers.
+- Optimal KAN abstractions (`arXiv:2602.06737`) provide a future path from
+  nonlinear repair to PWA/MILP-verifiable bounded abstractions.
+- Infeasibility-aware LLMs for combinatorial optimization (`arXiv:2604.01455`)
+  require certificate schemas to preserve infeasible and unknown states.
+- Recent p-bit, Extropic TSU, and Logical Kona updates reinforce the energy and
+  hardware direction, but do not unblock FPGA/TSU work locally in this milestone.
 
 ## Three Biggest Gaps
 
-1. **Headline SOTA local extraction gap.** .99 failed at the first SOTA GGUF certificate task because the failure ledger blocked the rerun before any parse-rate measurement. This is now the main PRD gap: Carnot still lacks a headline-eligible verifier result on the mandated local SOTA GGUF models.
+1. **Activation and prior-failure discipline gap.** `.100` wasted multiple
+   conductor attempts because carry-forward tasks lacked explicit
+   `prior_failures`. The PRD cannot be advanced by experiments that never
+   activate. `.101` must prove `research-roadmap-next.yaml` is lintable and
+   gate-auditable before SOTA work begins.
 
-2. **Smoke-only self-learning gap.** .99 produced positive self-learning deltas, but the GRPO/VPRM result was marked `headline_result_allowed=false` because no SOTA model ran. FR-11 needs a loop where verifier feedback improves future decisions on real local model outputs, not only replay/simulation.
+2. **Headline local SOTA certificate gap.** The mandated local GGUF models still
+   have not produced a headline-eligible certificate parse-rate, answer-stability
+   result, or semantic routing corpus. This remains the largest gap between
+   current state and FR-12 verifiable reasoning.
 
-3. **Continuous repair scale/semantics gap.** FSNet and SnareNet were positive on continuous EBM smoke tests, but the repair operator is not yet stress-tested against nonlinear constraints, feasibility-channel diagnostics, or EBT/ARM lookahead-energy interpretation. Without that, the Phase-3/Kona bridge is still empirical but shallow.
+3. **Continuous self-learning control gap.** `.100` proved a positive DVI
+   acceptance delta and wrote memory, but did not emit the skill graph and did
+   not improve `self_learning_delta_overall`. FR-11 needs closed-loop online
+   learning with promotion, demotion, routing, and measured regret/violation
+   deltas.
 
-Publication receipt is a fourth operational gap, but it is narrow and should not dominate another research milestone.
+Continuous repair is the fourth gap. `.100` made it promising; `.101` should
+turn HardNet++ and DSP diagnostics into an explicit stop/continue policy and
+connect that policy back to Phase-3 energy semantics.
 
 ## Architecture Target
 
 ```text
-Phase 0: local structured certificate substrate
-  SOTA GGUF cache/provenance preflight
+Phase 0: activation and local cache readiness
+  roadmap prior-failure + gate audit
       |
       v
-  Grammar backend bakeoff
-  llama.cpp native grammar vs llguidance vs XGrammar
+  SOTA GGUF cache/provenance preflight v2
+      |
+      +--------------------------------------+
+      |                                      |
+      v                                      v
+Phase 1: SOTA certificate path          Phase 3 bridge carry-forward
+  answer-stability on mandated GGUFs       EBT/ARM/EBM-CoT/Kona audit
       |
       v
-Phase 1: headline local certificate path
-  SOTA GGUF reasoning traces
-  ARS answer-stability audit
-      |
-      v
-  DCCD + TruncProof/XGrammar bounded <CARNOT_CERT> tail
-  with structure-snowballing diagnostic
+  triggered <CARNOT_CERT> extraction v3
+  llama.cpp GBNF + FALCON repair + adaptive Best-of-N
       |
       +---------------------------+
       |                           |
       v                           v
-  BEAVER-lite/NSVIF routing + MCS/MUS  Cactus constrained acceptance v2
-  claim -> verifier route        draft accept if cert/energy pass
+  semantic verifier routing       safe-prefix/Cactus acceptance
+  SConE/FALCON/infeasible states  Token-Guard/HoVer risk filters
 
 Phase 2: continuous self-learning
-  Certificate/energy decisions
+  exp1288 verifier-feedback memory
       |
       v
-  InterWhen + DVI verifier feedback replay
-  uses SOTA certs when available, otherwise exp1274/FoVer replay
+  skill graph promotion/demotion v2
       |
       v
-  Skill graph promotion/demotion
+  QueryBandits/NGC online memory policy
       |
       v
-  GRPO/VPRM v9 only if SOTA + replay gates pass
+  GRPO/VPRM v10 only if SOTA cert + online-learning gates pass
 
-Phase 3: Phase-3 repair and publication close
-  FSNet/SnareNet positives
+Phase 3: repair, bridge, publication state, retro
+  HardNet++ + DSP feasibility stop policy
       |
-      +--> HardNet++ nonlinear projection comparison
-      +--> DSP feasibility-channel diagnostic
-      +--> EBT/ARM lookahead-energy bridge audit
-      |
-      v
-  arXiv receipt/blocker artifact + milestone retro
+      +--> EBT/ARM/EBM-CoT + Extropic/Kona bridge audit v2
+      +--> arXiv v10 hold/receipt terminal artifact
+      +--> milestone .101 retro
 ```
 
-## Phase 0: Certificate Infrastructure Preflight
+## Phase 0: Activation Hygiene and SOTA Readiness
 
-Goal: prevent another `exp1271` DOOMED_RERUN_BLOCK by proving the SOTA cache, grammar backend, and artifact/provenance path before asking an agent to run expensive model inference.
+Goal: eliminate the avoidable `.100` waste before any expensive work runs.
 
-- `exp1282-sota-gguf-cache-provenance-preflight`: inspect the HF/llama.cpp cache for mandated SOTA GGUFs, verify the `cached_sota_pair()` path, and write a structured readiness artifact.
-- `exp1283-certificate-grammar-backend-bakeoff`: benchmark llama.cpp native grammar, llguidance, and XGrammar availability/overhead for the fixed Carnot certificate schema, including a structure-snowballing-risk diagnostic, STATIC-style bounded-vocabulary/trie notes, an ABS-style automata fallback field, and a CDoT expressiveness note for certificate invariants that require context sensitivity.
+- `exp1296-prior-failures-activation-audit`: validate
+  `research-roadmap-next.yaml` with the existing prior-failure and gate audit
+  scripts, verify that every carry-forward task has explicit `prior_failures`,
+  and write a terminal artifact with `prior_failures_coverage_ok`.
+- `exp1297-sota-gguf-cache-provenance-preflight-v2`: rerun the cache/provenance
+  preflight with explicit priors for `exp1282`, `exp1271`, `exp785`, and
+  `exp811`, using `cached_sota_pair()` and recording all mandated SOTA GGUF
+  model specs.
 
-Success bar: either `cached_sota_ready=true` and `grammar_backend_selected` is set, or the blocker is named before downstream tasks burn turns.
+Success bar: downstream SOTA tasks are gated on a passing prior-failure audit
+and `cached_sota_ready=true`. If either fails, the milestone still writes a
+usable blocker instead of repeating `.100`.
 
-## Phase 1: SOTA Certificates and Constrained Acceptance
+## Phase 1: SOTA Certificates and Semantic Acceptance
 
-Goal: produce the missing headline local SOTA certificate result and only then run downstream acceptance/repair experiments.
+Goal: finally measure the local SOTA certificate path and only then run routing
+and constrained acceptance.
 
-- `exp1284-ars-uqlm-answer-stability-sota-audit`: use mandated SOTA GGUFs to measure answer stability, cross-model consistency, PCC certainty/consistency, optional UQLM-style uncertainty, and the "LLMs as verifiers" perturbation/rubric failure modes under reasoning/certificate boundary perturbations.
-- `exp1285-triggered-certificate-extraction-v2`: rerun triggered certificate extraction with complete prior-failure metadata, bounded grammar, SOTA cache gate, and Grammar-Aligned/DCCD checks that separate parse validity from certificate truthfulness.
-- `exp1286-grad-beaver-nsvif-semantic-routing`: turn successful certificates into routed claims, a GRAD-style evidence graph, BEAVER-lite prefix/risk bounds, NSVIF-style CSP checks, proof-carrying number coverage, LaSy-style typed-warrant coverage, a tiny ConstraintBench micro-eval, temporal-claim readiness fields, Minimal Correction Subsets, and residual-drift/MUS diagnostics.
-- `exp1287-token-guard-cactus-constrained-acceptance-v2`: rerun Cactus only when certificate parse rate reaches the structured gate, and report ARC-Decode-style `risk_bound_proxy`, Token-Guard-style `token_guard_risk_score`, `low_risk_acceptance_rate`, plus `speedbench_eval_mode` so replay-only speed claims cannot become headline claims.
+- `exp1298-sota-answer-stability-falcon-audit`: use the mandated SOTA GGUF
+  pair to measure answer stability, cross-model disagreement, infeasible/unknown
+  detection, and FALCON-style repair opportunity on a small verifier benchmark.
+- `exp1299-triggered-certificate-extraction-v3`: use the `.100` grammar backend
+  plus FALCON repair and adaptive Best-of-N sampling to compare raw-trigger,
+  GBNF, repaired, and adaptive certificate paths. It must measure parse rate,
+  truthfulness, grammar cost, and repair success.
+- `exp1300-semantic-routing-v2`: route parsed certificate claims to verifiers
+  using syntax, semantic verifier features, infeasible/unknown states, and
+  minimal correction diagnostics.
+- `exp1301-safe-prefix-cactus-acceptance-v3`: run HoVer/Token-Guard/Cactus-style
+  low-risk acceptance only if certificate parse rate and semantic routing gates
+  open.
 
-Success bar: `exp1285.certificate_parse_rate >= 0.8` and `headline_result_allowed=true`, or the milestone honestly records why the local SOTA path is blocked.
+Success bar: `exp1299.certificate_parse_rate >= 0.8` and
+`headline_result_allowed=true`, or a precise blocker explains why the local SOTA
+path remains closed.
 
-## Phase 2: Continuous Self-Learning With Verifier Feedback
+## Phase 2: Continuous Self-Learning
 
-Goal: satisfy the research program's continuous self-learning mandate with a loop that uses verifier decisions from real or replayed certificate data.
+Goal: make FR-11 measurable with a closed loop that can promote and demote
+memory.
 
-- `exp1288-interwhen-dvi-verifier-feedback-replay`: convert verifier accept/reject decisions into an online drafter/routing-policy update and measure acceptance/violation deltas. It compares post-hoc verifier replay with an InterWhen/Once-More-style interleaved verifier-feedback pass and records an OnlineSpec-style accepted-span/acceptance-rate delta plus clause/claim-level prediction records where available. This task runs even if the SOTA certificate gate blocks by falling back to the `.99` certificate-memory/FoVer replay corpus, and it marks headline eligibility honestly.
-- `exp1289-leanabell-grpo-v9-sota-headline-gated`: run a bounded PRIME/VPRM/GRPO v9 headline attempt only if SOTA certificates and DVI replay gates pass, and record Leanabell-style verifier-feedback token-masking effects plus self-verification gain and reasoning-trace length changes.
-- `exp1290-skill-graph-promotion-demotion`: promote reusable certificate-memory patterns into skill-graph entries with replay evidence, claim-level memory entries, MemRouter-style memory-type routing (`semantic`, `episodic`, `procedural`), and demotion conditions.
+- `exp1302-skill-graph-promotion-demotion-v2`: recover the `.100` missing skill
+  graph task, gated on `exp1288.memory_update_written`, with explicit promoted,
+  demoted, expired, and replay-backed memory entries.
+- `exp1303-querybandits-ngc-online-memory-policy`: run the mandatory continuous
+  self-learning experiment. It should treat replay/rewrite/abstain/demote
+  choices as arms, measure regret and accepted-violation deltas, and report
+  `self_learning_delta_overall`.
+- `exp1304-grpo-vprm-v10-sota-gated`: run only if SOTA certificates are
+  headline-eligible and the online memory policy improves self-learning. This
+  keeps expensive learning off the critical path unless the evidence is present.
 
-Success bar: at least one artifact reports `self_learning_delta_overall`, `dvi_acceptance_delta`, or `skill_replay_delta`, and marks whether the result is headline-eligible.
+Success bar: at least one artifact reports a positive online-learning or
+memory-routing delta and writes terminal promotion/demotion evidence. If the
+SOTA gate stays closed, self-learning still runs on replay data and marks
+headline eligibility honestly.
 
-## Phase 3: Continuous Repair, Phase-3 Bridge, Publication, Retro
+## Phase 3: Repair, Energy Bridge, Publication State, Retro
 
-Goal: deepen the .99 continuous repair positive and close publication bookkeeping.
+Goal: turn `.100` repair positives into policy and close blocked carry-forwards.
 
-- `exp1291-hardnetpp-nonlinear-repair-benchmark`: compare HardNet++-style damped local-linear projection against FSNet/SnareNet on nonlinear constraints, recording fixed-budget construct/refine iteration behavior inspired by CaR and a Copy-as-Decode-style verified-span reuse diagnostic.
-- `exp1292-dsp-feasibility-channel-diagnostic`: add a DSP-style local/global feasibility-channel diagnostic (`phi`/`Phi`) around the continuous repair loop and report whether feasibility-channel signals predict when additional refine steps help.
-- `exp1293-ebt-arm-ebm-cot-energy-bridge-audit`: connect Boltzmann-GPT/NRGPT/Carnot energy traces to EBT, ARM-EBM, EBM-CoT, and EBRM structured-latent-planning predictions using existing artifacts, including latent drift, decoder-anchoring diagnostics, p-bit update-dynamics and inertia hardware context, and Extropic/Kona status.
-- `exp1294-arxiv-v10-submission-receipt-or-blocker`: record an actual arXiv receipt if present or the exact external blocker if submission still needs a human.
-- `exp1295-milestone-retro-100`: evaluate all criteria mechanically and write carry-forwards.
+- `exp1305-hardnetpp-dsp-feasibility-stop-policy`: combine HardNet++ and DSP
+  findings into a stop/continue benchmark policy with residual nonlinear and
+  KAN/PWA abstraction notes.
+- `exp1306-ebt-arm-ebm-cot-energy-bridge-audit-v2`: rerun the blocked energy
+  bridge with explicit priors for `exp1293` and `exp458`, incorporating EBT
+  citation signals, ARM-EBM, EBM-CoT, Extropic TSU, p-bit, and Kona context.
+- `exp1307-arxiv-v10-hold-receipt-v2`: write a terminal publication artifact
+  with explicit priors for `exp1294`, `exp1127`, `exp1139`, and `exp1153`.
+  It must not attempt credentialed arXiv submission while the known operator
+  hold remains in force.
+- `exp1308-milestone-retro-101`: mechanically score the milestone, name
+  carry-forwards, and reconcile planning/ops docs.
 
-Success bar: continuous repair produces measured nonlinear/feasibility diagnostics, and publication state is no longer ambiguous.
+Success bar: repair policy fields are measurable, the energy bridge no longer
+blocks on missing priors, publication state is explicit, and the retro is honest
+about gates that skipped work.
 
 ## Dependency Graph
 
 ```text
-exp1282 ---> exp1284 ---> exp1285 ---> exp1286
-    |            |            |           |
-    |            |            v           |
-    |            |         exp1287        |
-    |            |                        |
-    |            +------------------------+
-    |
-exp1283 --------------------^
+exp1296 ---> exp1297 ---> exp1298 ---> exp1299 ---> exp1300 ---> exp1301
+                         |              |
+                         |              +--------------------+
+                         |                                   |
+exp1288 ----------------> exp1302 ---> exp1303 ------------> exp1304
 
-exp1285 - - optional SOTA corpus - -> exp1288 ---> exp1289
-                                      |
-                                      v
-                                   exp1290
+exp1291/exp1292 context ----------------> exp1305
+exp1293/exp458 priors ------------------> exp1306
+exp1294/1127/1139/1153 priors ----------> exp1307
 
-exp1291 ----+
-exp1292 ----+--> exp1295
-exp1293 ----+
-exp1294 ----+
+exp1296..exp1307 -----------------------> exp1308
 ```
 
 Structured conductor gates:
 
-- `exp1284` gates on `exp1282.cached_sota_ready == true`.
-- `exp1285` gates on `exp1282.cached_sota_ready == true`, `exp1283.grammar_backend_available == true`, and `exp1284.answer_stability_score >= 0.6`.
-- `exp1286` gates on `exp1285.certificate_parse_rate >= 0.8`.
-- `exp1287` gates on `exp1285.certificate_parse_rate >= 0.8`.
-- `exp1288` is deliberately ungated so the continuous self-learning requirement still runs; it must record whether it used SOTA certificates or `.99` replay/FoVer fallback data.
-- `exp1289` gates on `exp1285.headline_result_allowed == true` and `exp1288.dvi_acceptance_delta > 0.0`.
-- `exp1290` gates on `exp1288.memory_update_written == true`.
+- `exp1297` gates on `exp1296.prior_failures_coverage_ok == true`.
+- `exp1298` gates on `exp1297.cached_sota_ready == true`.
+- `exp1299` gates on `exp1297.cached_sota_ready == true`,
+  `exp1296.exp1283_grammar_backend_available == true`, and
+  `exp1298.answer_stability_score >= 0.6`.
+- `exp1300` gates on `exp1299.certificate_parse_rate >= 0.8`.
+- `exp1301` gates on `exp1299.certificate_parse_rate >= 0.8` and
+  `exp1300.semantic_routing_coverage >= 0.5`.
+- `exp1302` gates on `exp1296.exp1288_memory_update_written == true`.
+- `exp1303` gates on `exp1302.skill_graph_candidate_count > 0`.
+- `exp1304` gates on `exp1299.headline_result_allowed == true` and
+  `exp1303.self_learning_delta_overall > 0.0`.
 
 ## Hardware Requirements
 
-Minimum:
+Minimum CPU-only path:
 
-- CPU-only path for grammar backend discovery, semantic routing, DVI replay fallback, skill-graph work, continuous repair diagnostics, publication receipt/blocker, and retro.
-- Existing Python/JAX environment and repo dependencies.
+- `exp1296`, `exp1302`, `exp1303`, `exp1305`, `exp1306`, `exp1307`, and
+  `exp1308` can run without GPUs.
+- `exp1297` is a cache/provenance preflight and should not download models
+  unless the existing resolver already performs a safe cache lookup.
 
 Required for headline LLM results:
 
-- At least one cached mandated SOTA GGUF:
+- Mandated local SOTA GGUFs through `cached_sota_pair()`:
   - `unsloth/Qwen3.6-35B-A3B-GGUF`
   - `unsloth/gemma-4-31B-it-GGUF`
   - `unsloth/gemma-4-26B-A4B-it-GGUF`
-- Prefer dual RTX 3090 CUDA path for SOTA GGUF inference through llama.cpp-backed loaders.
+- Prefer the dual RTX 3090 CUDA path for `exp1298`, `exp1299`, `exp1301`, and
+  any `exp1304` run. Legacy small models may only be smoke tests with
+  `headline_result_allowed=false`.
 
-Not required in .100:
+Not required in `.101`:
 
-- KV260/Vivado FPGA synthesis. The continuous repair tasks are software diagnostics only.
-- AMD XDNA NPU unblocking. NPU remains useful for future edge deployment but has repeated human-install blockers.
-- Extropic TSU access. The Extropic/THRML path remains strategic context until public hardware/API access changes.
+- KV260/Vivado FPGA synthesis remains human-blocked.
+- AMD XDNA/NPU work remains human-install blocked.
+- Extropic TSU/Z1 access remains strategic context, not a local dependency.
 
 ## Decentralization Implications
 
-This milestone preserves local-first operation. Every LLM-bearing task is gated on local open-weight GGUF availability and must record exact `MODEL_SPECS`. Tiny legacy models may only produce smoke artifacts with `headline_result_allowed=false`. No task depends on closed-weight provider calls, no vendor SDK enters the core verifier stack, and all hardware-facing claims stay behind sampler/reasoner abstractions.
+The milestone remains local-first. LLM-bearing experiments must use local
+open-weight GGUF `MODEL_SPECS` and record exact model IDs/paths. Closed vendor
+LLMs are not part of the scientific result path. Hardware claims stay behind
+sampler and energy abstractions until local FPGA/TSU prerequisites change.
 
 ## Milestone Success Criteria
 
-1. `exp1282` records SOTA GGUF cache/provenance readiness or a named blocker.
-2. `exp1283` selects a local certificate grammar backend or reports no viable backend, with CDoT expressiveness gaps, bounded-vocabulary/trie notes, and automata fallback viability recorded.
-3. `exp1284` measures answer-stability, cross-model consistency, certainty/consistency routing signals, verifier perturbation/rubric sensitivity, and optional UQLM-style uncertainty on SOTA GGUF outputs.
-4. `exp1285` produces a headline-eligible SOTA certificate parse-rate measurement or blocks honestly, comparing raw trigger, grammar-only, and DCCD-style draft-conditioned paths when possible while reporting grammar projection-tax and solver-vs-certificate deltas.
-5. `exp1286` writes semantic routing, GRAD-style evidence graph coverage, BEAVER-lite prefix/risk bounds, NSVIF-style CSP checks, proof-carrying number coverage, LaSy-style typed-warrant coverage, temporal-claim readiness, a ConstraintBench micro-eval, MCS/MUS diagnostics, and residual-drift cases when certificate parse succeeds.
-6. `exp1287` measures Cactus constrained acceptance when certificate parse succeeds, including risk-bound proxy, Token-Guard risk score, low-risk acceptance rate, and SPEED-Bench-style evaluation-mode tagging.
-7. `exp1288` measures InterWhen/Once-More-style interleaved verification, DVI-style verifier-feedback replay deltas, and claim-level memory records.
-8. `exp1289` reports a headline-eligible GRPO/VPRM v9 delta and verifier-feedback token-masking delta when gates pass.
-9. `exp1290` emits skill-graph promotion/demotion entries with replay evidence and memory-type routing.
-10. `exp1291` compares HardNet++ nonlinear repair against FSNet/SnareNet and records verified-span reuse diagnostics.
-11. `exp1292` measures DSP feasibility-channel diagnostics.
-12. `exp1293` writes the EBT/ARM/EBM-CoT/EBRM energy bridge audit with latent-drift, decoder-anchor, hardware-context, and external-architecture-status diagnostics.
-13. `exp1294` records arXiv v10 submitted receipt or exact external blocker.
-14. `exp1295` completes the .100 retrospective.
+1. `exp1296` reports `prior_failures_coverage_ok=true` and gate audit pass, or
+   names every remaining activation blocker.
+2. `exp1297` records SOTA GGUF cache/provenance readiness or exact missing
+   model blockers.
+3. `exp1298` measures SOTA answer stability, cross-model disagreement,
+   infeasible/unknown handling, and FALCON-style repair opportunity.
+4. `exp1299` produces headline-eligible SOTA certificate parse/truthfulness
+   metrics or a precise blocker, with grammar cost and repair metrics.
+5. `exp1300` writes semantic routing coverage and verifier-feature deltas.
+6. `exp1301` measures safe-prefix/Cactus acceptance when parse/routing gates
+   open.
+7. `exp1302` emits skill graph promotion, demotion, expiry, and replay evidence.
+8. `exp1303` satisfies the continuous self-learning mandate with online policy
+   regret and self-learning/violation deltas.
+9. `exp1304` runs GRPO/VPRM v10 only when the SOTA and self-learning gates pass.
+10. `exp1305` writes a HardNet++/DSP feasibility stop-policy artifact.
+11. `exp1306` completes the EBT/ARM/EBM-CoT bridge audit without prior-failure
+    blockage.
+12. `exp1307` records publication receipt or explicit hold/blocker without
+    attempting credentialed submission.
+13. `exp1308` completes the `.101` retrospective and carry-forward list.
 
 ## Key Planning Decisions
 
-- The milestone sequence increments from 2026.04.99 to 2026.04.100.
-- All planned tasks use `agent_type: codex` and `model: gpt-5.5` per CLAUDE.md. No task justifies `requires_claude: true`.
-- LLM-bearing tasks include explicit mandated SOTA GGUF `MODEL_SPECS` requirements and use `cached_sota_pair()` first.
-- Carry-forwards from .99 include explicit `prior_failures` entries: `exp1271`, `exp1273`, and `exp1277`.
-- Structured gates are populated wherever a title or task dependency depends on an artifact field.
+- The milestone sequence increments from `2026.04.100` to `2026.04.101`.
+- The task count is 13 across four phases.
+- All tasks use `agent_type: codex` and `model: gpt-5.5` per current
+  `CLAUDE.md` guidance unless a future operator overrides routing.
+- LLM-bearing tasks include explicit mandated SOTA GGUF requirements and the
+  `cached_sota_pair()` pattern.
+- Carry-forward tasks include explicit `prior_failures`; the first experiment
+  validates this before downstream work.
 - No task modifies `research-roadmap.yaml`.
 - No task modifies `scripts/research_conductor.py`.
