@@ -1,0 +1,382 @@
+{
+  "artifact_metadata": {
+    "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "run_date": "20260505",
+    "source_experiments": [
+      "exp1337",
+      "exp1338",
+      "exp1339",
+      "exp1340",
+      "exp1341",
+      "exp1342",
+      "exp1343",
+      "exp1344",
+      "exp1345",
+      "exp1346",
+      "exp1347",
+      "exp1348",
+      "exp1349",
+      "exp1350"
+    ]
+  },
+  "artifact_paths_checked": [
+    {
+      "exists": true,
+      "experiment_id": "exp1337",
+      "path": "results/experiment_1337_environment_gate_disk_pretest_stale_skeleton_audit.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1338",
+      "path": "results/experiment_1338_exp1325_skeleton_and_gate_state_finalizer.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1339",
+      "path": "results/experiment_1339_xgrammar2_tagdispatch_certificate_grammar_dryrun.json"
+    },
+    {
+      "exists": false,
+      "experiment_id": "exp1340",
+      "path": "results/experiment_1340_trigger_before_constrain_certificate_v6_sota.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1341",
+      "path": "results/experiment_1341_halluguard_certificate_failure_split.json"
+    },
+    {
+      "exists": false,
+      "experiment_id": "exp1342",
+      "path": "results/experiment_1342_chopchop_nsvif_semantic_validator_gated.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1343",
+      "path": "results/experiment_1343_margin_aware_beaver_cactus_scheduler.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1344",
+      "path": "results/experiment_1344_continuous_self_learning_failure_type_memory_policy.json"
+    },
+    {
+      "exists": false,
+      "experiment_id": "exp1345",
+      "path": "results/experiment_1345_dvi_certificate_tail_v3_gated.json"
+    },
+    {
+      "exists": false,
+      "experiment_id": "exp1346",
+      "path": "results/experiment_1346_grpo_vprm_v13_gated_micro_audit.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1347",
+      "path": "results/experiment_1347_thrml_compatibility_parity_audit.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1348",
+      "path": "results/experiment_1348_pbit_update_dynamics_dual_bram_packet_v2.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1349",
+      "path": "results/experiment_1349_ebt_citation_kona_parity_gap_audit.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1350",
+      "path": "results/experiment_1350_milestone_104_retro_carryforward.json"
+    },
+    {
+      "exists": true,
+      "path": "research-roadmap.yaml"
+    },
+    {
+      "exists": true,
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md"
+    },
+    {
+      "exists": true,
+      "path": "ops/conductor-log.md"
+    },
+    {
+      "exists": true,
+      "path": "ops/changelog.md"
+    },
+    {
+      "exists": true,
+      "path": "ops/status.md"
+    },
+    {
+      "exists": true,
+      "path": "research-complete.yaml"
+    },
+    {
+      "exists": true,
+      "path": "research-references.md"
+    },
+    {
+      "exists": true,
+      "path": "_bmad/traceability.md"
+    }
+  ],
+  "docs_reconciliation_needed": true,
+  "docs_reconciliation_reasons": [
+    "ops/changelog.md has no exp1351 entry",
+    "ops/status.md has no exp1351 handoff entry",
+    "_bmad/traceability.md has no REQ-REPORT-030 trace"
+  ],
+  "experiment": "1351_104_carryforward_artifact_integrity_audit",
+  "gates_closed": [
+    {
+      "evidence": "missing valid terminal exp1340 artifact",
+      "gate": "terminal_certificate_parse_gate"
+    },
+    {
+      "evidence": "closed until terminal exp1340 and exp1342 evidence",
+      "gate": "semantic_validator"
+    },
+    {
+      "evidence": "closed because semantic/scheduler evidence is absent or blocked",
+      "gate": "scheduler"
+    },
+    {
+      "evidence": "closed until parse and semantic gates pass",
+      "gate": "dvi_certificate_tail"
+    },
+    {
+      "evidence": "closed until DVI lossless evidence exists",
+      "gate": "grpo_vprm"
+    }
+  ],
+  "gates_open": [
+    {
+      "evidence": "exp1337 environment_ready=true",
+      "gate": "environment_gate"
+    },
+    {
+      "evidence": "exp1338 terminal finalizer",
+      "gate": "exp1325_gate_state_finalized"
+    },
+    {
+      "evidence": "exp1339 dynamic_grammar_ready=true",
+      "gate": "dynamic_grammar"
+    },
+    {
+      "evidence": "exp1341 terminal diagnostic split",
+      "gate": "failure_taxonomy"
+    },
+    {
+      "evidence": "exp1344 terminal replay evidence",
+      "gate": "self_learning_replay"
+    },
+    {
+      "evidence": "exp1347-exp1349 terminal audits",
+      "gate": "hardware_and_external_mapping"
+    }
+  ],
+  "honest_verdict": "handoff_state_missing_exp1340_terminal_certificate_semantic_scheduler_dvi_grpo_closed",
+  "milestone": "2026.04.104",
+  "missing_artifacts": [
+    {
+      "experiment_id": "exp1340",
+      "path": "results/experiment_1340_trigger_before_constrain_certificate_v6_sota.json",
+      "reason": "expected .104/.104-retro source artifact not found"
+    },
+    {
+      "experiment_id": "exp1342",
+      "path": "results/experiment_1342_chopchop_nsvif_semantic_validator_gated.json",
+      "reason": "expected .104/.104-retro source artifact not found"
+    },
+    {
+      "experiment_id": "exp1345",
+      "path": "results/experiment_1345_dvi_certificate_tail_v3_gated.json",
+      "reason": "expected .104/.104-retro source artifact not found"
+    },
+    {
+      "experiment_id": "exp1346",
+      "path": "results/experiment_1346_grpo_vprm_v13_gated_micro_audit.json",
+      "reason": "expected .104/.104-retro source artifact not found"
+    }
+  ],
+  "prior_failure_requirements": [
+    {
+      "addressed_by": "Start .105 with a terminal handoff audit that lists missing artifacts, closed gates, and the exact carry-forward requirements before new experiment work begins.",
+      "experiment_id": "exp1350-milestone-104-retrospective-and-carryforward",
+      "retire_if_same_verdict": true,
+      "verdict": "milestone_104_9_of_12_criteria_met_carryforward_required"
+    },
+    {
+      "addressed_by": "Classify exp1340 as missing artifact evidence and keep semantic/DVI descendants closed until a replacement certificate artifact exists.",
+      "experiment_id": "exp1340-triggered-certificate-extraction-v6-sota-gguf-semantic-guard",
+      "retire_if_same_verdict": true,
+      "verdict": "missing_terminal_artifact_after_gate_order_failure"
+    },
+    {
+      "addressed_by": "Run a local completion-budget and dynamic-branch preflight before spending GPU time on the replacement SOTA certificate experiment.",
+      "experiment_id": "exp1340-triggered-certificate-extraction-v6-sota-gguf-semantic-guard",
+      "retire_if_same_verdict": true,
+      "verdict": "missing_terminal_artifact_after_gate_order_failure"
+    },
+    {
+      "addressed_by": "Extend the dry-run with TruncProof-style max-token completion checks and an explicit SOTA run allowance field.",
+      "experiment_id": "exp1339-xgrammar2-tagdispatch-certificate-grammar-dryrun",
+      "retire_if_same_verdict": true,
+      "verdict": "dynamic_grammar_ready_but_xgrammar_absent_and_no_completion_budget_measure"
+    },
+    {
+      "addressed_by": "Use an explicit preflight gate, terminal artifact discipline, and completion-budget evidence before running the replacement SOTA branch.",
+      "experiment_id": "exp1340-triggered-certificate-extraction-v6-sota-gguf-semantic-guard",
+      "retire_if_same_verdict": true,
+      "verdict": "missing_terminal_artifact_after_gate_order_failure"
+    },
+    {
+      "addressed_by": "Treat exp1325 as an environment/stale-artifact failure and rerun only with trigger-switched dynamic grammar and terminal blocker fields.",
+      "experiment_id": "exp1325-triggered-certificate-extraction-v5-runtime-fixed-dccd-gbnf",
+      "retire_if_same_verdict": true,
+      "verdict": "stale_in_progress_after_disk_quota_failures"
+    },
+    {
+      "addressed_by": "Add trigger-before-constrain, dynamic grammar dispatch, UNKNOWN preservation, and TruncProof-style completion-budget checks to target the parse gate.",
+      "experiment_id": "exp1312-triggered-certificate-extraction-dccd-gbnf",
+      "retire_if_same_verdict": true,
+      "verdict": "certificate_parse_rate_0_71223_below_0_75_gate"
+    },
+    {
+      "addressed_by": "Use LogicSkills-style skill decomposition on terminal certificate cases instead of claiming a universal detector from local diagnostics.",
+      "experiment_id": "exp1341-certificate-failure-type-memory-policy-split",
+      "retire_if_same_verdict": true,
+      "verdict": "diagnostic_no_universal_detector_claim_allowed"
+    },
+    {
+      "addressed_by": "Attach the taxonomy to fresh or terminal .105 certificate cases and measure symbolization, countermodel, and validity-specific rates.",
+      "experiment_id": "exp1324-certificate-failure-taxonomy-formalizer-reality-check",
+      "retire_if_same_verdict": true,
+      "verdict": "taxonomy_ready_but_no_sota_terminal_branch"
+    },
+    {
+      "addressed_by": "Use a structured parse-rate gate and a partial SMT/NLTC validator that writes a terminal blocked artifact when parse evidence is insufficient.",
+      "experiment_id": "exp1342-triggered-certificate-semantic-validator-gated-on-exp1340-parse",
+      "retire_if_same_verdict": true,
+      "verdict": "missing_or_gate_blocked_after_exp1340_absent"
+    },
+    {
+      "addressed_by": "Run only after terminal exp1353 parse evidence and preserve UNKNOWN instead of reopening from stale certificate artifacts.",
+      "experiment_id": "exp1326-semantic-certificate-validator-gated-on-exp1325-parse",
+      "retire_if_same_verdict": true,
+      "verdict": "blocked_gate_check_failed_missing_or_stale_certificate_artifact"
+    },
+    {
+      "addressed_by": "Run repair localization only after the semantic validator produces terminal execution evidence.",
+      "experiment_id": "exp1342-triggered-certificate-semantic-validator-gated-on-exp1340-parse",
+      "retire_if_same_verdict": true,
+      "verdict": "semantic_branch_did_not_run_because_certificate_gate_missing"
+    },
+    {
+      "addressed_by": "Turn semantic rejects into Minimal Correction Subset style repair hints with precision and equivalence checks.",
+      "experiment_id": "exp1341-certificate-failure-type-memory-policy-split",
+      "retire_if_same_verdict": true,
+      "verdict": "diagnostic_split_without_repair_localization"
+    },
+    {
+      "addressed_by": "Use structured gates on exp1356 repair precision rather than invoking scheduler work before semantic repair exists.",
+      "experiment_id": "exp1343-margin-aware-beaver-lite-cactus-rerun-gated-on-exp1342",
+      "retire_if_same_verdict": true,
+      "verdict": "blocked_gate_check_failed_missing_semantic_validator_artifact"
+    },
+    {
+      "addressed_by": "Require parser, semantic validator, and repair-localization evidence before measuring verifier-call savings.",
+      "experiment_id": "exp1327-beaver-lite-cactus-safe-prefix-gated-on-validator-pass",
+      "retire_if_same_verdict": true,
+      "verdict": "blocked_gate_check_failed_missing_exp1326_artifact"
+    },
+    {
+      "addressed_by": "Always run the self-learning branch, keep replay fallback, and upgrade to headline evidence only when fresh verified .105 cases exist.",
+      "experiment_id": "exp1344-failure-type-memory-policy-self-learning",
+      "retire_if_same_verdict": true,
+      "verdict": "failure_type_memory_policy_dvi_ready_replay_non_headline"
+    },
+    {
+      "addressed_by": "Separate replay-only evidence from fresh verifier-selected memory promotion and require non-forgetting metrics.",
+      "experiment_id": "exp1315-continuous-self-learning-verifier-memory-policy",
+      "retire_if_same_verdict": true,
+      "verdict": "replay_or_gate_limited_without_fresh_verified_samples"
+    },
+    {
+      "addressed_by": "Require structured parse, semantic, and self-learning gates before any DVI certificate-tail claim.",
+      "experiment_id": "exp1345-dvi-certificate-tail-v3-gated-on-self-learning-and-semantic",
+      "retire_if_same_verdict": true,
+      "verdict": "missing_or_gate_blocked_after_semantic_validator_absent"
+    },
+    {
+      "addressed_by": "Use terminal .105 certificate and semantic artifacts plus non-forgetting evidence before measuring DVI acceptance.",
+      "experiment_id": "exp1329-dvi-certificate-tail-gated-on-self-learning",
+      "retire_if_same_verdict": true,
+      "verdict": "blocked_or_non_headline_without_verified_certificate_cases"
+    },
+    {
+      "addressed_by": "Run GRPO/VPRM only after DVI lossless acceptance and positive self-learning evidence are structurally present.",
+      "experiment_id": "exp1346-grpo-vprm-v13-gated-on-dvi-v3",
+      "retire_if_same_verdict": true,
+      "verdict": "missing_or_gate_blocked_after_dvi_absent"
+    },
+    {
+      "addressed_by": "Keep the task as a bounded micro-audit and prevent policy-update claims when upstream DVI evidence is absent.",
+      "experiment_id": "exp1330-grpo-vprm-v12-gated-on-dvi-certificate-tail",
+      "retire_if_same_verdict": true,
+      "verdict": "blocked_without_dvi_certificate_tail_evidence"
+    },
+    {
+      "addressed_by": "Extend the packet with p-dit/p-int multi-valued certificate-state mapping while preserving the no-hardware-claim boundary.",
+      "experiment_id": "exp1348-pbit-dual-bram-certificate-packet-update",
+      "retire_if_same_verdict": true,
+      "verdict": "cpu_only_packet_updated_no_hardware_claim_allowed"
+    },
+    {
+      "addressed_by": "Avoid Vivado or KV260 execution in this task and produce mapping-only evidence with explicit next hardware requirements.",
+      "experiment_id": "exp584-kv260-first-light-bitfile-v1",
+      "retire_if_same_verdict": true,
+      "verdict": "vivado_not_installed_kv260_execution_blocked"
+    },
+    {
+      "addressed_by": "Refresh the claim boundary with .105 evidence and the updated EBT/ARM/Kona references without lifting publication hold prematurely.",
+      "experiment_id": "exp1349-external-parity-gap-audit-kona-extropic-ebt-arm",
+      "retire_if_same_verdict": true,
+      "verdict": "external_parity_gap_audit_complete_no_external_dependency_claim_allowed"
+    },
+    {
+      "addressed_by": "Tie any publication-hold change to terminal certificate, semantic, self-learning, and hardware evidence from the current milestone.",
+      "experiment_id": "exp1335-publication-gap-audit-v12",
+      "retire_if_same_verdict": true,
+      "verdict": "publication_hold_active_no_lift_evidence"
+    },
+    {
+      "addressed_by": "Close .105 by counting criteria, naming terminal blockers, and carrying only evidence-backed work into .106.",
+      "experiment_id": "exp1350-milestone-104-retrospective-and-carryforward",
+      "retire_if_same_verdict": true,
+      "verdict": "milestone_104_9_of_12_criteria_met_carryforward_required"
+    },
+    {
+      "addressed_by": "Keep the retrospective independent of transient test signatures and require terminal artifact accounting for every branch.",
+      "experiment_id": "exp1336-milestone-103-retrospective-and-carryforward",
+      "retire_if_same_verdict": true,
+      "verdict": "skipped_repeated_pretest_failure_signature_1_failed_86_passed"
+    }
+  ],
+  "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+  "run_date": "20260505",
+  "schema": "carnot.carryforward_integrity_audit_104.v1",
+  "stale_or_blocked_artifacts": [
+    {
+      "experiment_id": "exp1343",
+      "path": "results/experiment_1343_margin_aware_beaver_cactus_scheduler.json",
+      "reason": "1 of 1 gate(s) failed; first failure: exp1342-chopchop-nsvif-semantic-validator-gated.validator_execution_pass_rate (upstream artifact not found for task id 'exp1342-chopchop-nsvif-semantic-validator-gated')",
+      "status": "blocked"
+    }
+  ],
+  "status": "complete",
+  "terminal_certificate_required": true
+}
