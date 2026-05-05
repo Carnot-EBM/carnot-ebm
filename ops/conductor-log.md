@@ -931,3 +931,11 @@ web search: GitHub trending energy based mod |
 | 2026-05-05 17:34 UTC | Margin-Aware Cactus/BEAVER Scheduler v3 — Gated on | OK | 81 passed, 1 warning in 4.56s |
 | 2026-05-05 17:46 UTC | Optimal KAN PWA Formal Verification — MILP Energy- | OK | 81 passed, 1 warning in 4.73s |
 | 2026-05-05 17:57 UTC | Fully Parallel Ising with Inertia — CPU Validation | OK | 123 passed, 1 warning in 15.91s |
+| 2026-05-05 18:14 UTC | FR-11 Continuous Self-Learning v3 — Verifier-Selec | FAIL | Post-tests failed:  |
+| 2026-05-05 18:16 UTC | FR-11 Continuous Self-Learning v3 — Verifier-Selec | OK | Deliverable already exists in repo |
+| 2026-05-05 18:17 UTC | Publication Hold + EBT/ARM/Kona Claim Boundary v15 | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-05 18:19 UTC | Publication Hold + EBT/ARM/Kona Claim Boundary v15 | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-05 18:21 UTC | Publication Hold + EBT/ARM/Kona Claim Boundary v15 | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-05 18:23 UTC | Milestone 2026.04.106 Retrospective + Carry-Forwar | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-05 18:26 UTC | Milestone 2026.04.106 Retrospective + Carry-Forwar | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-05 18:28 UTC | Milestone 2026.04.106 Retrospective + Carry-Forwar | SKIP | Pre-tests failing, self-heal failed:  |

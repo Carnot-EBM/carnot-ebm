@@ -3033,3 +3033,79 @@ accepted and not semantic-rejected
 | Requirement | Python | Tests |
 |-------------|--------|-------|
 | REQ-LEARN-1358 | Implemented (`python/carnot/reporting/continuous_self_learning_verifier_selected_memory.py`) | Implemented (`tests/python/test_continuous_self_learning_verifier_selected_memory.py`) |
+
+## REQ-LEARN-1374: Continuous Self-Learning V3 With Semantic Primary And CSP Fallback
+
+Exp 1374 SHALL run the mandatory FR-11 continuous self-learning task
+unconditionally on run date `20260505`. The workflow SHALL prefer fresh
+semantic-validator evidence from Exp 1369, fall back to Eidoku CSP feasibility
+from Exp 1365 only when the semantic gate is closed, and fall back to Exp 1358
+replay evidence when neither verifier path is available.
+
+### REQ-LEARN-1374 Sub-requirements
+
+- REQ-LEARN-1374-1: The workflow SHALL write
+  `results/experiment_1374_continuous_self_learning_v3_verifier_selected_or_csp_fallback.json`
+  first with `status="in_progress"` before loading source artifacts.
+- REQ-LEARN-1374-2: When Exp 1369 exists with
+  `semantic_validator_claim_allowed=true`, `path_used` SHALL be
+  `primary_semantic_verified`, memory SHALL promote only constraint-passed
+  semantic rows, and semantic rejects SHALL be demoted or quarantined.
+- REQ-LEARN-1374-3: When the semantic gate is closed and Exp 1365 exists with
+  `eidoku_csp_viable=true`, `path_used` SHALL be `fallback_csp_selected`,
+  memory SHALL promote CSP-selected samples above the configured feasibility
+  threshold, `csp_selected_sample_count` SHALL be positive, and
+  `headline_result_allowed` SHALL remain false because CSP-selected updates are
+  not headline evidence until independently validated.
+- REQ-LEARN-1374-4: When both verifier paths are unavailable, `path_used` SHALL
+  be `fallback_replay` and the artifact SHALL preserve Exp 1358 replay evidence
+  without allowing headline claims.
+- REQ-LEARN-1374-5: The final artifact SHALL include `status`, `path_used`,
+  `replay_cases_used`, `fresh_verified_sample_count`,
+  `csp_selected_sample_count`, `variant_question_count`,
+  `self_learning_delta_overall`, `nonforgetting_certificate_rate`,
+  `memory_regression_count`, `accepted_violation_delta`,
+  `promoted_memory_count`, `demoted_memory_count`, `dvi_ready`,
+  `headline_result_allowed`, and `honest_verdict`.
+- REQ-LEARN-1374-6: `dvi_ready` SHALL be true only when
+  `self_learning_delta_overall` is positive, `nonforgetting_certificate_rate`
+  is 1.0, `memory_regression_count` is 0, and
+  `accepted_violation_delta <= 0.0`.
+- REQ-LEARN-1374-7: `headline_result_allowed` SHALL be true only when
+  `path_used="primary_semantic_verified"`, `fresh_verified_sample_count > 0`,
+  and all DVI controls pass.
+
+### SCENARIO-LEARN-1374: Semantic Primary Promotes Verified Certificate Cases
+
+**Given** Exp 1369 reports `semantic_validator_claim_allowed=true`
+**And** Exp 1358 replay controls are positive and non-forgetting
+**When** Exp 1374 runs
+**Then** the final artifact has `path_used="primary_semantic_verified"`
+**And** it promotes only constraint-passed semantic-validator rows
+**And** `fresh_verified_sample_count > 0`
+**And** `headline_result_allowed=true` only when DVI controls pass.
+
+### SCENARIO-LEARN-1374: CSP Fallback Is DVI-Eligible But Non-Headline
+
+**Given** Exp 1369 is missing or has `semantic_validator_claim_allowed=false`
+**And** Exp 1365 reports `eidoku_csp_viable=true`
+**When** Exp 1374 runs
+**Then** the final artifact has `path_used="fallback_csp_selected"`
+**And** `csp_selected_sample_count > 0`
+**And** `headline_result_allowed=false`
+**And** the honest verdict names the CSP fallback as non-headline.
+
+### SCENARIO-LEARN-1374: Replay Fallback Preserves Controls Without Headline Claims
+
+**Given** neither Exp 1369 semantic evidence nor Exp 1365 CSP evidence is
+available
+**When** Exp 1374 runs
+**Then** the final artifact has `path_used="fallback_replay"`
+**And** it reports Exp 1358 replay controls
+**And** `headline_result_allowed=false`.
+
+## Implementation Status (REQ-LEARN-1374)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-1374 | Implemented (`python/carnot/reporting/continuous_self_learning_v3_verifier_selected_or_csp_fallback.py`) | Implemented (`tests/python/test_continuous_self_learning_v3_verifier_selected_or_csp_fallback.py`) |
