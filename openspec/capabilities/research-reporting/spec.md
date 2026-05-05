@@ -535,6 +535,39 @@ prior-failure context, and explicitly distinguish verifier-energy work already
 implemented locally from EBT, ARM-EBM, EBM-CoT, Extropic TSU, p-bit, and Kona
 items that remain strategic or future sampler context.
 
+### REQ-REPORT-027: Milestone .101 Success-Criteria Retrospective
+
+The Exp 1308 milestone .101 retrospective workflow shall read the authoritative
+Exp 1296 through Exp 1307 result JSON artifacts, plus the current .101 roadmap
+criteria, and write `results/experiment_1308_milestone_retro_101.json` with:
+
+- `schema` set to `milestone_retro_v6`
+- `milestone` set to `2026.04.101`
+- `criteria_total` set to `13`
+- `criteria_results`, mapping all 13 planned criteria to one of `MET`,
+  `BLOCKED`, `GATED`, `MISSING`, or `FAILED`
+- `criteria_met`, derived from the count of `MET` criteria
+- `carry_forward_tasks`, with exact `prior_failures` entries suitable for the
+  next milestone planner
+- `activation_failures`, separate from gated/skipped tasks and scientific
+  negative results
+- `gated_or_skipped_tasks`, listing criteria skipped because prerequisite gates
+  did not open
+- `scientific_negative_results`, listing terminal experiments whose science was
+  honestly negative or limited rather than merely activation-blocked
+- `docs_reconciled`
+- `status == "complete"`
+- `retro_complete == true`
+- `honest_verdict` formatted as `milestone_101_N_of_13_criteria_met`
+
+Missing artifacts shall count as `MISSING` unless an unmet upstream gate makes
+the planned work `GATED`. Conductor pre-gate artifacts whose failed gate is an
+unmet milestone dependency shall be classified as `GATED`, not `BLOCKED`.
+Terminal artifacts that satisfy a criterion by writing an exact blocker shall
+count as `MET` only when that criterion explicitly allows an exact blocker or
+hold state. The retrospective self-criterion shall count as `MET` only in the
+final artifact that sets `retro_complete == true`.
+
 ### REQ-REPORT-024: Local Agent Usage Snapshot
 
 The repository shall provide a local operator workflow that inspects the
@@ -831,6 +864,24 @@ context rather than local implementation dependencies
 **And** `honest_verdict` distinguishes local verifier-energy alignment from
 strategic architecture context.
 
+### SCENARIO-REPORT-027: Exp 1308 Counts .101 Gates Separately
+
+**Given** Exp 1296 through Exp 1307 source artifacts contain the current .101
+criterion evidence
+**And** Exp 1297 records `cached_sota_ready == false` with exact missing model
+blockers
+**And** Exp 1298 and Exp 1300 are conductor pre-gate artifacts blocked by unmet
+milestone dependencies
+**And** Exp 1299, Exp 1301, and Exp 1304 are absent because the SOTA certificate
+gates did not open
+**When** the Exp 1308 retrospective workflow runs
+**Then** cache/provenance blocker reporting counts as `MET`
+**And** closed downstream SOTA tasks count as `GATED`, not failed science
+**And** continuous self-learning, repair policy, bridge audit, publication hold,
+and the retrospective self-criterion count from their terminal source fields
+**And** the artifact reports `criteria_met == 8`
+**And** `honest_verdict == "milestone_101_8_of_13_criteria_met"`
+
 ### SCENARIO-REPORT-021: Codex Latest Rate-Limit Event Is Surfaced
 
 **Given** a local Codex session tree contains multiple `token_count` events
@@ -978,6 +1029,7 @@ embed live-GPU benchmark results from Exp 328 when available.
 | REQ-REPORT-023 | `python/carnot/reporting/milestone_retro_99.py`, `results/experiment_1281_milestone_retro_99.json` | `tests/python/test_milestone_retro_99.py` | Implemented |
 | REQ-REPORT-025 | `python/carnot/reporting/milestone_retro_100.py`, `results/experiment_1295_milestone_retro_100.json` | `tests/python/test_milestone_retro_100.py` | Implemented |
 | REQ-REPORT-026 | `python/carnot/reporting/energy_bridge_audit_v2.py`, `results/experiment_1306_ebt_arm_ebm_cot_energy_bridge_audit_v2.json` | `tests/python/test_energy_bridge_audit_v2.py` | Planned |
+| REQ-REPORT-027 | `python/carnot/reporting/milestone_retro_101.py`, `results/experiment_1308_milestone_retro_101.json` | `tests/python/test_milestone_retro_101.py` | Implemented |
 | REQ-REPORT-024 | `python/carnot/reporting/agent_usage.py`, `scripts/agent_plan_usage.py` | `tests/python/test_agent_plan_usage.py` | Implemented |
 | REQ-PUBLISH-003 | `scripts/experiment_317_hf_publish.py` | `tests/python/test_experiment_317_hf_publish.py` | Implemented |
 | REQ-PUBLISH-004 | `scripts/experiment_330_hf_live_publish.py` | `tests/python/test_experiment_330_hf_live_publish.py` | Implemented |
