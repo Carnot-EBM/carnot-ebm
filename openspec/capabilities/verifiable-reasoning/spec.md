@@ -18129,3 +18129,48 @@ verdict fields
 **And** viability is gated only by measured AUROC and interpretable alignment.
 
 **Spec traces:** REQ-VERIFY-1367, SCENARIO-VERIFY-1367, Exp 1367
+
+## REQ-VERIFY-1385: Self-Adaptive Ising Machine FoVer Probe
+
+**Summary:** Carnot SHALL run a CPU-only self-adaptive Ising probe over local
+FoVer arithmetic equations using augmented Lagrangian relaxation, comparing
+adaptive multiplier updates against a weak static-penalty baseline.
+
+**Requirements:**
+
+- REQ-VERIFY-1385-1: The workflow SHALL write
+  `results/experiment_1385_self_adaptive_ising_machine_probe.json` with
+  `status="in_progress"` before loading FoVer rows or scoring cases.
+- REQ-VERIFY-1385-2: The adaptive update SHALL implement the arXiv:2501.04971
+  subgradient rule `lambda_{k+1} = lambda_k + eta * g(x_k)` for arithmetic
+  equality violations.
+- REQ-VERIFY-1385-3: The augmented energy SHALL be
+  `L(s, lambda) = E_ising(s) + lambda^T g(s) + (rho / 2) * |g(s)|^2`.
+- REQ-VERIFY-1385-4: The probe SHALL load between 5 and 10 local FoVer
+  arithmetic equations and encode each equation as a binary Ising answer-state
+  constraint problem.
+- REQ-VERIFY-1385-5: The probe SHALL run a static-penalty baseline and the
+  adaptive-Lagrange solver side-by-side with the same base penalty.
+- REQ-VERIFY-1385-6: The artifact SHALL include `status`,
+  `constraint_problems_tested`, `static_penalty_convergence_steps`,
+  `adaptive_lagrange_convergence_steps`, `convergence_speedup`,
+  `constraint_violation_reduction`, `lagrange_multiplier_iterations`,
+  `penalty_tuning_iterations_saved`, `adaptive_ising_viable`, and
+  `honest_verdict`.
+- REQ-VERIFY-1385-7: `adaptive_ising_viable` SHALL be true only when adaptive
+  convergence is faster than static convergence on at least half of the tested
+  problems.
+
+**Implementation Status:** Implemented (Exp 1385)
+
+### SCENARIO-VERIFY-1385: FoVer Self-Adaptive Ising Probe Writes Complete Artifact
+
+**Given** the run date is `20260505`
+**And** local FoVer arithmetic rows are available
+**When** the self-adaptive Ising machine probe runs without GPU inference
+**Then** it writes an in-progress artifact first
+**And** it writes a complete artifact with convergence, violation reduction,
+Lagrange-iteration, penalty-tuning, viability, and honest-verdict fields
+**And** viability is gated only by measured per-problem convergence speedups.
+
+**Spec traces:** REQ-VERIFY-1385, SCENARIO-VERIFY-1385, Exp 1385
