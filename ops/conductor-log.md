@@ -941,3 +941,4 @@ web search: GitHub trending energy based mod |
 | 2026-05-05 18:28 UTC | Milestone 2026.04.106 Retrospective + Carry-Forwar | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-05 19:00 UTC | Plan milestone 2026.04.107 | OK | 13 tasks proposed |
 | 2026-05-05 19:02 UTC | Milestone 2026.04.107 activated | OK | 13 tasks queued |
+| 2026-05-05 19:10 UTC | Pre-test Suite Fix + Milestone .106 Retro Closeout | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1377_pretest |
