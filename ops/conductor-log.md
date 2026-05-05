@@ -945,3 +945,4 @@ web search: GitHub trending energy based mod |
 | 2026-05-05 19:16 UTC | Pre-test Suite Fix + Milestone .106 Retro Closeout | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1377_pretest |
 | 2026-05-05 19:23 UTC | Pre-test Suite Fix + Milestone .106 Retro Closeout | OK | cache hit: 81 passed, 1 warning in 4.96s |
 | 2026-05-05 19:33 UTC | Publication Hold v16 + Claim Boundary — Full .106  | OK | 81 passed, 1 warning in 4.90s |
+| 2026-05-05 19:45 UTC | Paper Integrity Audit v2 — .106 Results Integratio | OK | cache hit: 81 passed, 1 warning in 4.90s |
