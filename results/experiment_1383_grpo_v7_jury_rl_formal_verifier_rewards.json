@@ -1,0 +1,263 @@
+{
+  "MODEL_SPECS": [
+    {
+      "gpu": 0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "name": "Qwen3.6-35B-A3B",
+      "tensor_split": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "gpu": 1,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/43e80d41a220ac7c83023daacd6a0d1fd8559251/gemma-4-31B-it-Q4_K_M.gguf",
+      "name": "Gemma4-31B-it",
+      "tensor_split": [
+        0.5,
+        0.5
+      ]
+    }
+  ],
+  "artifact_metadata": {
+    "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "run_date": "20260505",
+    "source_experiments": [
+      "exp1366",
+      "exp1369"
+    ],
+    "spec": [
+      "REQ-LEARN-1383",
+      "SCENARIO-LEARN-1383",
+      "SCENARIO-LEARN-1384"
+    ]
+  },
+  "base_model_weight_update_performed": false,
+  "baseline_heldout_pass_rate": 0.0,
+  "experiment": "1383_grpo_v7_jury_rl_formal_verifier_rewards",
+  "finished_at": "2026-05-05T20:43:39Z",
+  "formal_reward_pass_rate": 0.0,
+  "grpo_v7_improvement_pp": 0.0,
+  "grpo_version": "v7",
+  "headline_result_allowed": false,
+  "heldout_evaluation_rows": [
+    {
+      "baseline_answer": "UNKNOWN",
+      "baseline_verifier_result": "UNKNOWN",
+      "case_id": "164",
+      "expected_answer": "SAT",
+      "improved": false,
+      "post_grpo_answer": "UNKNOWN",
+      "post_grpo_verifier_result": "UNKNOWN",
+      "rollout_answers": [
+        "UNKNOWN",
+        "UNKNOWN",
+        "UNKNOWN",
+        "UNKNOWN"
+      ]
+    },
+    {
+      "baseline_answer": "UNKNOWN",
+      "baseline_verifier_result": "UNKNOWN",
+      "case_id": "164_1",
+      "expected_answer": "REPAIR_HINT",
+      "improved": false,
+      "post_grpo_answer": "UNKNOWN",
+      "post_grpo_verifier_result": "UNKNOWN",
+      "rollout_answers": [
+        "UNKNOWN",
+        "UNKNOWN",
+        "UNKNOWN",
+        "UNKNOWN"
+      ]
+    },
+    {
+      "baseline_answer": "UNKNOWN",
+      "baseline_verifier_result": "UNKNOWN",
+      "case_id": "165",
+      "expected_answer": "SAT",
+      "improved": false,
+      "post_grpo_answer": "UNKNOWN",
+      "post_grpo_verifier_result": "UNKNOWN",
+      "rollout_answers": [
+        "UNKNOWN",
+        "UNKNOWN",
+        "UNKNOWN",
+        "UNKNOWN"
+      ]
+    },
+    {
+      "baseline_answer": "UNKNOWN",
+      "baseline_verifier_result": "UNKNOWN",
+      "case_id": "165_1",
+      "expected_answer": "SAT",
+      "improved": false,
+      "post_grpo_answer": "UNKNOWN",
+      "post_grpo_verifier_result": "UNKNOWN",
+      "rollout_answers": [
+        "UNKNOWN",
+        "UNKNOWN",
+        "UNKNOWN",
+        "UNKNOWN"
+      ]
+    }
+  ],
+  "honest_verdict": "grpo_v7_jury_rl_no_improvement",
+  "jury_acceptance_rate": 0.0,
+  "models_used": [
+    {
+      "available": true,
+      "fallback_reason": null,
+      "generation_source": "live_sota_llamacpp",
+      "gpu": 0,
+      "headline_eligible": true,
+      "headline_result_allowed": false,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "name": "Qwen3.6-35B-A3B",
+      "selected_for_generation": true,
+      "tensor_split": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "available": true,
+      "fallback_reason": null,
+      "generation_source": null,
+      "gpu": 1,
+      "headline_eligible": true,
+      "headline_result_allowed": false,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/43e80d41a220ac7c83023daacd6a0d1fd8559251/gemma-4-31B-it-Q4_K_M.gguf",
+      "name": "Gemma4-31B-it",
+      "selected_for_generation": false,
+      "tensor_split": [
+        0.5,
+        0.5
+      ]
+    }
+  ],
+  "n_heldout_cases": 4,
+  "n_training_cases": 4,
+  "policy_weights": {
+    "REPAIR_HINT": 0.0,
+    "SAT": 0.0,
+    "UNKNOWN": 0.0
+  },
+  "post_grpo_heldout_pass_rate": 0.0,
+  "resZero_applied_count": 4,
+  "retire_if_same_verdict": false,
+  "reward_mechanism": "JURY-RL majority-vote proposal plus Carnot formal verifier rewards",
+  "run_date": "20260505",
+  "runtime_settings_used": {
+    "gpu_indices": [
+      0,
+      1
+    ],
+    "max_tokens": 16,
+    "n_ctx": 2048,
+    "n_gpu_layers": -1,
+    "rollouts_per_case": 4,
+    "temperature": 0.7,
+    "tensor_split": [
+      0.5,
+      0.5
+    ],
+    "top_p": 0.95,
+    "wall_budget_s": 2400
+  },
+  "schema": "grpo_v7_jury_rl_formal_verifier_rewards_v1",
+  "started_at": "2026-05-05T20:43:22Z",
+  "status": "complete",
+  "terminal_blocker": null,
+  "training_mode": "jury_rl_policy_reranker_no_base_weight_write",
+  "training_reward_rows": [
+    {
+      "candidate_answer": "UNKNOWN",
+      "case_id": "156",
+      "expected_answer": "REPAIR_HINT",
+      "reszero_applied": true,
+      "reward_mean": 0.0,
+      "rewards": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rollout_answers": [
+        "UNKNOWN",
+        "UNKNOWN",
+        "UNKNOWN",
+        "UNKNOWN"
+      ],
+      "verifier_result": "UNKNOWN"
+    },
+    {
+      "candidate_answer": "UNKNOWN",
+      "case_id": "159",
+      "expected_answer": "SAT",
+      "reszero_applied": true,
+      "reward_mean": 0.0,
+      "rewards": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rollout_answers": [
+        "UNKNOWN",
+        "UNKNOWN",
+        "UNKNOWN",
+        "UNKNOWN"
+      ],
+      "verifier_result": "UNKNOWN"
+    },
+    {
+      "candidate_answer": "UNKNOWN",
+      "case_id": "160",
+      "expected_answer": "REPAIR_HINT",
+      "reszero_applied": true,
+      "reward_mean": 0.0,
+      "rewards": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rollout_answers": [
+        "UNKNOWN",
+        "UNKNOWN",
+        "UNKNOWN",
+        "UNKNOWN"
+      ],
+      "verifier_result": "UNKNOWN"
+    },
+    {
+      "candidate_answer": "UNKNOWN",
+      "case_id": "161",
+      "expected_answer": "REPAIR_HINT",
+      "reszero_applied": true,
+      "reward_mean": 0.0,
+      "rewards": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rollout_answers": [
+        "UNKNOWN",
+        "UNKNOWN",
+        "UNKNOWN",
+        "UNKNOWN"
+      ],
+      "verifier_result": "UNKNOWN"
+    }
+  ],
+  "training_steps_completed": 4,
+  "wall_budget_exhausted": false,
+  "wall_budget_s": 2400,
+  "wall_time_used_s": 16.974718
+}

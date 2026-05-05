@@ -35,17 +35,21 @@
        - Calls active template functions and merges their constraints into the pipeline.
        - Serializes/deserializes observation state for persistence across runs.
 
-    The four built-in templates cover the Eidoku taxonomy of arithmetic error types:
+    The built-in templates cover the Eidoku taxonomy of arithmetic error types plus
+    one structural trust template:
     - ``carry_check``: Multi-digit multiplication carry propagation errors.
     - ``sign_check``: Sign errors in products of two negatives.
     - ``unit_consistency``: Incompatible unit mixing (kg/g, km/m, L/ml).
     - ``comparison_direction``: X > Y claim inconsistent with X − Y < 0.
+    - ``manipulable_signal_dependency``: Load-bearing conclusions that rely on a
+      single high-manipulability external source without independent corroboration.
 
     All templates are CI-safe: they return [] when no parseable arithmetic is found,
     so they never generate spurious violations on responses with no relevant content.
 
 Spec: REQ-LEARN-017, REQ-LEARN-018,
-      SCENARIO-LEARN-029, SCENARIO-LEARN-030, SCENARIO-LEARN-031, SCENARIO-LEARN-032
+      SCENARIO-LEARN-029, SCENARIO-LEARN-030, SCENARIO-LEARN-031, SCENARIO-LEARN-032,
+      SCENARIO-LEARN-018-4, SCENARIO-LEARN-018-5
 """
 
 from __future__ import annotations
@@ -61,6 +65,89 @@ from carnot.pipeline.extract import ConstraintResult
 
 if TYPE_CHECKING:
     from collections.abc import Callable
+
+
+DEFAULT_MANIPULABILITY_PRIORS: dict[str, float] = {
+    "authenticated_api": 0.35,
+    "first_party_telemetry": 0.25,
+    "third_party_api": 0.80,
+    "single_sensor": 0.75,
+    "web_search": 0.90,
+    "rag_open_corpus": 0.90,
+    "user_supplied_document": 0.85,
+    "unauthenticated_tool": 0.80,
+    "llm_generated": 0.95,
+}
+
+_CORROBORATION_PATTERN = re.compile(
+    r"\b("
+    r"independent|corroborat\w*|cross[- ]check\w*|second source|"
+    r"confirmed by|validated by|signed|attested|attestation|quorum|multiple sources"
+    r")\b",
+    re.IGNORECASE,
+)
+
+_LOAD_BEARING_PATTERN = re.compile(
+    r"\b(therefore|thus|so|hence|conclude\w*|proves?|means|shows?|establishes?)\b",
+    re.IGNORECASE,
+)
+
+_SOURCE_PATTERNS: list[tuple[str, tuple[str, ...]]] = [
+    ("authenticated_api", (r"\bauthenticated api\b", r"\bsigned api\b", r"\battested api\b")),
+    (
+        "first_party_telemetry",
+        (r"\bfirst[- ]party telemetry\b", r"\binternal telemetry\b", r"\btrusted telemetry\b"),
+    ),
+    (
+        "web_search",
+        (r"\bsearch result\b", r"\bweb search\b", r"\bsearch engine\b", r"\bindexed page\b"),
+    ),
+    (
+        "rag_open_corpus",
+        (
+            r"\brag\b",
+            r"\bretrieved document\b",
+            r"\bretrieved passage\b",
+            r"\bretrieval result\b",
+            r"\bopen corpus\b",
+            r"\bvector store\b",
+        ),
+    ),
+    (
+        "user_supplied_document",
+        (r"\buploaded document\b", r"\buser[- ]supplied document\b", r"\buntrusted document\b"),
+    ),
+    (
+        "llm_generated",
+        (
+            r"\bllm\b",
+            r"\blanguage model\b",
+            r"\bmodel[- ]generated\b",
+            r"\bai[- ]generated\b",
+            r"\bassistant said\b",
+        ),
+    ),
+    (
+        "third_party_api",
+        (
+            r"(?<!authenticated )\bapi returned\b",
+            r"\bthird[- ]party api\b",
+            r"\bexternal api\b",
+            r"\bendpoint returned\b",
+            r"\bservice returned\b",
+        ),
+    ),
+    (
+        "unauthenticated_tool",
+        (
+            r"\btool output\b",
+            r"\btool returned\b",
+            r"\bscraper returned\b",
+            r"\bbrowser returned\b",
+        ),
+    ),
+    ("single_sensor", (r"\bsensor reports?\b", r"\bsingle sensor\b", r"\bsensor reading\b")),
+]
 
 # ---------------------------------------------------------------------------
 # ConstraintTemplate dataclass
@@ -352,7 +439,7 @@ class ConstraintTemplateLibrary:
     # ------------------------------------------------------------------
 
     def register_builtin_templates(self) -> None:
-        """Register the four standard arithmetic error constraint templates.
+        """Register standard arithmetic and structural trust constraint templates.
 
         **Detailed explanation for engineers:**
             Registers the templates from the Eidoku (arXiv 2512.20664) taxonomy:
@@ -360,6 +447,8 @@ class ConstraintTemplateLibrary:
             - sign_check (min_freq=5): Negative × negative = positive sign rule.
             - unit_consistency (min_freq=3): Incompatible unit mixing detection.
             - comparison_direction (min_freq=5): X > Y consistency with X − Y > 0.
+            - manipulable_signal_dependency (min_freq=3): High-manipulability
+              single-source support for a load-bearing conclusion.
 
             The lower min_frequency for unit_consistency (3 vs 5) reflects that
             unit errors are rarer in arithmetic benchmarks — fewer observations
@@ -397,6 +486,17 @@ class ConstraintTemplateLibrary:
                 description="Check that X > Y is consistent with X minus Y being positive",
                 min_frequency=5,
                 template_fn=comparison_direction_template,
+            )
+        )
+        self.add_template(
+            ConstraintTemplate(
+                pattern_key="manipulable_signal_dependency",
+                description=(
+                    "Check whether a load-bearing conclusion relies on one "
+                    "manipulable external signal without corroboration"
+                ),
+                min_frequency=3,
+                template_fn=manipulable_signal_dependency_template,
             )
         )
 

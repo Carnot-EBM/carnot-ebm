@@ -2664,6 +2664,55 @@ self-learning delta is zero or negative.
 `status="complete"`, a numeric `self_learning_delta_overall`, and a non-negative
 `memory_entries` count.
 
+## REQ-LEARN-1383: GRPO v7 JURY-RL Formal Verifier Rewards
+
+Exp 1383 SHALL run a bounded GRPO v7 reward loop that uses JURY-RL-style
+majority voting plus Carnot formal verifier rewards on FoVer reasoning rows,
+without a learned reward model.  The runner SHALL resolve headline model specs
+through `cached_sota_pair(gpu_indices=(0, 1))` and SHALL configure llama.cpp
+with `tensor_split=[0.5, 0.5]` for dual RTX 3090 execution.
+
+### REQ-LEARN-1383 Sub-requirements
+
+- REQ-LEARN-1383-1: The runner SHALL write
+  `results/experiment_1383_grpo_v7_jury_rl_formal_verifier_rewards.json`
+  first with `status="in_progress"`.
+- REQ-LEARN-1383-2: Each training case SHALL generate `N=4` candidate rollouts,
+  select a candidate answer by majority vote, and run the local Carnot semantic
+  verifier on that candidate.
+- REQ-LEARN-1383-3: Verified candidates SHALL assign `+1` to matching rollouts
+  and `-1` to non-matching rollouts; rejected candidates SHALL assign `-1` to
+  every rollout; UNKNOWN candidates SHALL apply ResZero so the emitted reward
+  signal has zero mean.
+- REQ-LEARN-1383-4: The final artifact SHALL include `status`, `grpo_version`,
+  `reward_mechanism`, `models_used`, `wall_budget_s`, `wall_time_used_s`,
+  `training_steps_completed`, `jury_acceptance_rate`,
+  `formal_reward_pass_rate`, `resZero_applied_count`,
+  `grpo_v7_improvement_pp`, `wall_budget_exhausted`, `terminal_blocker`,
+  `headline_result_allowed`, and `honest_verdict`.
+- REQ-LEARN-1383-5: `headline_result_allowed` SHALL be true only when
+  `grpo_v7_improvement_pp > 0.0`, at least one mandated SOTA GGUF model was
+  used for generation, and the run did not exhaust the wall budget.
+- REQ-LEARN-1383-6: If `wall_budget_s=2400` is exhausted, the artifact SHALL set
+  `wall_budget_exhausted=true`, record `terminal_blocker`, and set
+  `retire_if_same_verdict=true`.
+
+### SCENARIO-LEARN-1383: ResZero Preserves Zero-Mean UNKNOWN Rewards
+
+**Given** four JURY-RL rollouts whose majority candidate is UNKNOWN
+**When** Exp 1383 computes rewards
+**Then** `resZero_applied_count` increases
+**And** the four emitted rewards sum to zero.
+
+### SCENARIO-LEARN-1384: Positive Held-Out Delta Gates Headline Claims
+
+**Given** a run using a mandated SOTA GGUF resolved through
+`cached_sota_pair(gpu_indices=(0, 1))`
+**And** held-out evaluation improves after the GRPO v7 reward update
+**When** Exp 1383 writes its final artifact
+**Then** `headline_result_allowed=true`
+**And** `honest_verdict` reports a positive GRPO v7 improvement.
+
 ## REQ-LEARN-1288: InterWhen DVI Verifier-Feedback Replay
 
 Exp 1288 SHALL convert chronological verifier accept/reject decisions into an
