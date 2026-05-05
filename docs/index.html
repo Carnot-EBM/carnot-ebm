@@ -300,10 +300,10 @@
       <a href="technical-report.html" class="btn btn-secondary">How it works</a>
     </div>
     <div class="stats-bar" aria-label="Project headline numbers">
-      <div class="stat"><div class="stat-num">1,322</div><div class="stat-label">Experiments tracked through Exp 1322</div></div>
-      <div class="stat"><div class="stat-num">112</div><div class="stat-label">research-complete milestones through .102</div></div>
-      <div class="stat"><div class="stat-num">21,867</div><div class="stat-label">Python items collected, not full pass</div></div>
-      <div class="stat"><div class="stat-num">11/14</div><div class="stat-label">.102 research criteria met</div></div>
+      <div class="stat"><div class="stat-num">1,350</div><div class="stat-label">Experiments tracked through Exp 1350</div></div>
+      <div class="stat"><div class="stat-num">113</div><div class="stat-label">research-complete milestones through .103</div></div>
+      <div class="stat"><div class="stat-num">21,955</div><div class="stat-label">Python items collected, not full pass</div></div>
+      <div class="stat"><div class="stat-num">9/12</div><div class="stat-label">latest .104 criteria met</div></div>
     </div>
   </div>
 </section>
@@ -464,16 +464,19 @@
           causal-context shift rather than an architecture failure, and add
           PRIME verifier weights plus certificate-memory replay, FSNet/SnareNet
           continuous repair, and an EST gaming-defense proxy measurement. The
-          newest .102 artifacts recover the local SOTA GGUF runtime with
+          .102 artifacts recover the local SOTA GGUF runtime with
           Qwen3.6-35B-A3B and Gemma4-31B-it loaded through llama.cpp, measure
           ConstraintBench/SATQuest answer stability at 0.90, and compare raw,
           GBNF, DCCD, and repaired certificates. The certificate parse rate is
           0.712, below the 0.75 downstream gate, so semantic validators,
           safe-prefix Cactus, and DVI certificate-tail updates remain gated.
-          CerCE non-forgetting, GRPO/VPRM replay scoring, HardNet++/DSP stop
-          policy, KAN hardware complexity, and p-bit portability all advanced
-          as provenance-labeled artifacts while arXiv remains under operator
-          hold.
+          Newer .103/.104 artifacts recover multi-token certificate prompts,
+          classify parser and semantic failure modes, dry-run dynamic grammar
+          dispatch at parse rate 1.0 without SOTA inference, and preserve
+          failure-type memory non-forgetting at 1.0. They still do not lift the
+          certificate branch: triggered SOTA certificate reruns and semantic
+          validator execution remain missing or gated, and arXiv remains under
+          operator hold.
         </p>
       </div>
       <div class="bento-card span-2">
@@ -848,9 +851,9 @@
       </div>
       <div class="r-card">
         <span class="r-tag">Infrastructure &mdash; pre-test suite rescue</span>
-        <h3 class="r-title">21,867 Python test items collected, not passed</h3>
+        <h3 class="r-title">21,955 Python test items collected, not passed</h3>
         <div class="r-meter"><div class="r-bar" style="width: 100%; background: #22c55e;"></div></div>
-        <div class="r-stats"><span class="r-before">Exp 1203 gate: 21,413 collected; current collection has 3 known import errors</span> <span class="r-after">2026-05-05 snapshot</span></div>
+        <div class="r-stats"><span class="r-before">Current collection has 3 known import errors and 3 skipped items</span> <span class="r-after">2026-05-05 collection-only run</span></div>
       </div>
       <div class="r-card">
         <span class="r-tag">Runtime &mdash; llama.cpp GPU offload</span>
@@ -1033,7 +1036,7 @@
         <div class="r-stats"><span class="r-before">Missing unsloth/gemma-4-26B-A4B-it-GGUF; cached_sota_ready=false</span> <span class="r-after">Exp 1297</span></div>
       </div>
       <div class="r-card">
-        <span class="r-tag">Milestone .102 &mdash; latest archived retro</span>
+        <span class="r-tag">Milestone .102 &mdash; runtime recovery retro</span>
         <h3 class="r-title">11/14 criteria met</h3>
         <div class="r-meter"><div class="r-bar" style="width: 78.57%; background: #22c55e;"></div></div>
         <div class="r-stats"><span class="r-before">SOTA runtime recovered; certificate parse gate missed at 0.712 &lt; 0.75</span> <span class="r-after">Exp 1322</span></div>
@@ -1073,6 +1076,30 @@
         <h3 class="r-title">p-bit KL=0.000412 to CPU Gibbs</h3>
         <div class="r-meter"><div class="r-bar" style="width: 99%; background: #0ea5e9;"></div></div>
         <div class="r-stats"><span class="r-before">KAN table 6,144 bytes; dual-BRAM mapping ready; no hardware execution claimed</span> <span class="r-after">Exps 1319/1320</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">SOTA certificates &mdash; token-health recovery</span>
+        <h3 class="r-title">Multi-token prompts recovered; empty/one-token rate 0.40</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 60%; background: #f59e0b;"></div></div>
+        <div class="r-stats"><span class="r-before">Top-k/EPR available; full DCCD/GBNF parser not rerun</span> <span class="r-after">Exp 1323</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Certificates &mdash; dynamic grammar dry run</span>
+        <h3 class="r-title">Dynamic parse 1.0 vs static proxy 0.75</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 100%; background: #0ea5e9;"></div></div>
+        <div class="r-stats"><span class="r-before">0.417 ms compile; 0.009 ms/token mask proxy; no SOTA inference</span> <span class="r-after">Exp 1339</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Self-learning &mdash; failure-type memory</span>
+        <h3 class="r-title">Non-forgetting 1.0; accepted violations down 0.846</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 100%; background: #22c55e;"></div></div>
+        <div class="r-stats"><span class="r-before">35 promoted, 37 demoted; replay-only, not headline DVI/GRPO</span> <span class="r-after">Exp 1344</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Milestone .104 &mdash; latest terminal artifact</span>
+        <h3 class="r-title">9/12 criteria met; carry-forward required</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 75%; background: #f59e0b;"></div></div>
+        <div class="r-stats"><span class="r-before">SOTA certificate branch and semantic validator still missing/gated</span> <span class="r-after">Exp 1350</span></div>
       </div>
       <div class="r-card">
         <span class="r-tag">Self-learning &mdash; skill graph v2</span>

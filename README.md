@@ -17,25 +17,28 @@ call. No fine-tuning. No access to model weights.
 
 Rust + Python/JAX, Apache 2.0, `pip install carnot`.
 
-Current public research record: **1,322 experiments tracked, 112
+Current public research record: **1,350 experiments tracked, 113
 artifact-backed completed milestones**, with checked-in result artifacts
-through Exp 1322 on 2026-05-05. `research-complete.yaml` currently archives
-**112** completed milestones through 2026.04.102, with milestone .102 recorded
-at **11/14 criteria met**. Latest .102 artifacts show the local SOTA GGUF
-runtime recovered: two headline GGUF models are cached and loaded through
-llama.cpp (Qwen3.6-35B-A3B and Gemma4-31B-it; Exps 1309/1310), the
-ConstraintBench/SATQuest stability audit reached **0.90** answer stability over
-**40** responses with PySAT verification **0.525** and meaningful disagreement
-**0.0** (Exp 1311), triggered certificates reached parse rate **0.71223** and
-truthfulness **0.69697** (Exp 1312), and the parse-rate miss below the **0.75**
-gate kept semantic validators, safe-prefix Cactus, and DVI certificate-tail
-updates gated. Continuous self-learning still advanced: CerCE preserved
-non-forgetting at **1.0** with delta **+1.596429** (Exp 1315), and the
-GRPO/VPRM v11 replay audit moved policy score **0.525 -> 0.725** and token-mask
-score to **0.975** without claiming a large GRPO training run (Exp 1317). The
-current 2026-05-05 Python test collection-only snapshot reports **21,867**
-items; that is a collection count with three known import errors, not a
-full-suite pass claim.
+through Exp 1350 on 2026-05-05. `research-complete.yaml` currently archives
+**113** completed milestones through 2026.04.103. The latest terminal artifact
+is Exp 1350, where milestone .104 records **9/12 criteria met** with
+carry-forward required.
+
+Recent artifacts recover the local SOTA GGUF runtime but keep the certificate
+branch behind honest gates. Exps 1309/1310 load Qwen3.6-35B-A3B and
+Gemma4-31B-it through llama.cpp; Exp 1311 measures **0.90** answer stability
+over **40** ConstraintBench/SATQuest responses; Exp 1312 reaches certificate
+parse rate **0.71223** and truthfulness **0.69697**, below the **0.75**
+downstream gate. Exp 1323 fixes the empty/one-token runtime failure enough to
+recover multi-token certificate prompts, but still reports empty/one-token rate
+**0.40** and no full DCCD/GBNF rerun. Exp 1339 shows a dry-run dynamic grammar
+parse rate **1.0** versus static GBNF proxy **0.75** without SOTA inference.
+Exp 1344 preserves non-forgetting at **1.0** and reduces accepted violations by
+**0.846154** on replay, while Exp 1350 keeps DVI/GRPO headline updates closed
+until parse, semantic, and non-forgetting gates all pass. The current
+2026-05-05 Python test collection-only snapshot reports **21,955** items with
+three known import errors and three skipped items; it is not a full-suite pass
+claim.
 
 ## Install and run
 
@@ -223,7 +226,12 @@ experiment artifact under `results/`.
 | HardNet++/DSP learned stop policy | Held-out replay split reached stop precision **1.0** and recall **1.0** over **36** cases; DSP feasibility AUROC **0.640625**; learned policy matched the conservative replay policy, so this is not yet a broad general stop rule | Exp 1318 |
 | KAN + p-bit portability audits | KAN audit records **192** BOP, **75** NABS, **24** RM, and a **6,144-byte** LUT table with FPGA as the near-term target; p-bit packet reaches KL **0.000412** to CPU Gibbs at 6-bit DAC/reuse=4 with dual-BRAM mapping ready; no FPGA/NPU/analog hardware execution claimed | Exps 1319/1320 |
 | Milestone .102 status | **11/14 criteria met**; SOTA runtime recovered and certificate extraction measured, but certificate parse rate **0.71223 < 0.75** gated semantic validators, safe-prefix Cactus, and DVI certificate-tail updates; publication remains under operator hold | Exps 1309-1322 |
-| Current Python test collection | **21,867** Python test items collected on 2026-05-05; collection-only snapshot with three known import errors, not a full-suite pass claim | docs/test snapshot |
+| SOTA token-health recovery | Empty/one-token failure diagnosed; multi-token certificate prompt recovered with top-k/EPR available, but empty/one-token rate remains **0.40** and the full parser was not rerun | Exp 1323 |
+| Dynamic certificate grammar dry run | Dynamic parse rate **1.0** vs static GBNF proxy **0.75**; compile **0.417 ms**, mask proxy **0.009 ms/token**; no SOTA inference run | Exp 1339 |
+| Failure-type memory policy | Non-forgetting **1.0**, self-learning delta **+1.596429**, accepted-violation delta **-0.846154**, **35** promoted and **37** demoted replay memories; non-headline replay only | Exp 1344 |
+| .104 hardware/parity audits | THRML import blocked by missing `equinox`; p-bit dual-BRAM packet v2 keeps reuse=4 KL **0.000412** to CPU Gibbs; external dependency/Kona parity claims remain disallowed | Exps 1347-1349 |
+| Milestone .104 status | **9/12 criteria met**; dynamic grammar, environment gate, replay self-learning, and hardware accounting advanced, while triggered SOTA certificates and semantic validator execution remained missing/gated | Exp 1350 |
+| Current Python test collection | **21,955** Python test items collected on 2026-05-05; collection-only snapshot with three known import errors and three skipped items, not a full-suite pass claim | local collection run |
 | Local Claude/Codex usage snapshot | Codex reads the newest local `token_count` event; Claude aggregates local token usage and reads only subscription/tier metadata from credentials; free-form quota prose is ignored instead of guessed; focused regression tests pass | 2026-05-04 changelog |
 
 Deeper analysis of these — including everything that **didn't** work and
@@ -264,7 +272,7 @@ claim we publish.
 ## Where to go next
 
 - **[Technical report](docs/technical-report.md)** — the full research arc
-  through Exp 1322 across 112 artifact-backed completed milestones, with a
+  through Exp 1350 across 113 artifact-backed completed milestones, with a
   plain-English timeline of what we tried, what failed, what stuck.
 - **[Roadmap](docs/roadmap.md)** — current milestone, upcoming milestones,
   hardware track, and Phase 3 (Kona-parity foundation-model) direction.
@@ -468,7 +476,7 @@ See the [technical report](docs/technical-report.md) for the full research recor
 
 ## 14 Principles Learned
 
-Hard-won lessons from the activation-based phase of a research program that now spans Exp 1-1322 across 112 artifact-backed milestones and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
+Hard-won lessons from the activation-based phase of a research program that now spans Exp 1-1350 across 113 artifact-backed milestones and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
 
 ### What works
 1. **The model's own logprobs are the best energy.** No external EBM needed for rejection sampling — the LLM's own confidence is already an energy function. Simple, practical, +10%.
