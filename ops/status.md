@@ -1,6 +1,18 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-05 (Milestone 2026.04.102 research planning complete)
+**Last Updated:** 2026-05-05 (Milestone 2026.04.103 research planning complete)
+
+## Session 2026-05-05 - Milestone 2026.04.103 Research Planning Complete
+
+**Milestone 2026.04.103 PLANNED.**
+
+- Roadmap doc: `openspec/change-proposals/research-roadmap-vNEXT.md`
+- Execution queue: `research-roadmap-next.yaml` (14 tasks, exp1323-exp1336)
+- Research references updated before planning with Reality Check CSP formalizers, SatIR, Orthographic Constraint Satisfaction, H-Neuron cross-domain transfer, real-time hallucinated-entity probes, token-level entropy production rate, p-DNN sampling, and current EBT/Cactus/constrained-diffusion/LUT-KAN code artifacts.
+- Design focus: diagnose SOTA GGUF empty/one-token generations, recover DCCD/GBNF certificate parse rate above the 0.75 gate, unblock SatIR/NSVIF semantic validators and BEAVER-lite/Cactus safe-prefix acceptance, connect continuous self-learning to DVI certificate tails, and keep hardware work scoped to p-DNN/LUT-KAN accounting without hardware-execution claims.
+- Structured gates: exp1325 on exp1323 token recovery; exp1326 on exp1325 parse rate; exp1327 on exp1326 validator pass rate; exp1329 on exp1325 parse rate plus exp1328 DVI readiness; exp1330 on exp1329 lossless-acceptance evidence plus exp1328 positive self-learning delta; exp1331 on exp1323 token recovery; exp1332 on exp1323 top-k/logprob availability.
+- Validation passed: YAML parse/schema validation, `python3 scripts/validate_prior_failures.py research-roadmap-next.yaml`, and `python3 scripts/audit_roadmap_gates.py research-roadmap-next.yaml`.
+- No changes made to `research-roadmap.yaml` or `scripts/research_conductor.py`.
 
 ## Session 2026-05-05 - Milestone 2026.04.102 Research Planning Complete
 

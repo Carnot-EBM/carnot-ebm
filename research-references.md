@@ -4,6 +4,145 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-05-05 Post-.102 Planning Sweep (Milestone 2026.04.103)
+
+This sweep was run after milestone `.102` completed with 11/14 criteria met.
+The main scientific blocker is now narrower than `.101`: local mandated SOTA
+GGUF runtime is recovered (`exp1309`/`exp1310`), answer stability is high
+(`exp1311 answer_stability_score=0.9`), but certificate parsing stopped at
+`0.71223`, below the `0.75` semantic-validator gate. The next milestone should
+therefore fix certificate completeness/validity first, then rerun semantic
+validators, safe-prefix acceptance, DVI updates, and a larger headline audit.
+
+### Reality Check: LLM Formalizers Still Fail on Real CSPs
+- **Paper:** arXiv 2505.13252 v4, "A Reality Check of Language Models as
+  Formalizers on Constraint Satisfaction Problems."
+- **Source:** https://arxiv.org/abs/2505.13252
+- **What:** Across 4 real-life CSP benchmarks, 6 LLMs, and 2 formal languages,
+  LLM-as-formalizer underperforms LLM-as-solver in 15/24 model-dataset
+  combinations. The authors also identify excessive solver-like reasoning
+  tokens and hard-coded solutions as recurring failure modes.
+- **Relevance to Carnot:** `.102` showed grammar/DCCD can improve certificate
+  extraction, but parse rate still missed the validator gate. This paper says
+  the next fix should not merely ask the model to formalize harder. Carnot
+  should separate solver answer, certificate skeleton, formalizer program, and
+  verifier-rejected hard-coded solution modes.
+- **Concrete experiment:** In `.103`, add a certificate failure taxonomy over
+  `exp1312` attempts. Required fields: `formalizer_failure_modes`,
+  `hardcoded_solution_rate`, `solver_vs_certificate_delta`,
+  `reasoning_token_overhead`, and `parse_recovery_recommendation`.
+
+### SatIR: Constraint Satisfaction as Scalable High-Recall Retrieval
+- **Paper:** arXiv 2604.08849, "Scalable High-Recall
+  Constraint-Satisfaction-Based Information Retrieval for Clinical Trials
+  Matching."
+- **Source:** https://arxiv.org/abs/2604.08849
+- **What:** Represents clinical-trial eligibility with SMT and relational
+  algebra, while using LLMs to convert ambiguity and incomplete records into
+  explicit formal constraints. The reported system retrieves 32%-72% more
+  relevant-and-eligible trials per patient than TrialGPT and runs in 2.95s per
+  patient over 3,621 trials.
+- **Relevance to Carnot:** This is a stronger architecture for the semantic
+  validator branch than certificate-only parsing: first normalize extracted
+  constraints into a relational/SMT index, then use the verifier to check
+  eligibility/feasibility. It also preserves `UNKNOWN` for incomplete inputs,
+  which Carnot needs for safe acceptance.
+- **Concrete experiment:** Add a SatIR-style constraint index micro-prototype
+  over the `.102` ConstraintBench/SATQuest fixtures. Report
+  `constraint_index_rows`, `smt_relational_equivalence_rate`,
+  `unknown_preservation_rate`, and `validator_execution_pass_rate`.
+
+### Orthographic Constraint Satisfaction: Architecture Beats Scale
+- **Paper:** arXiv 2511.21086, "Orthographic Constraint Satisfaction and Human
+  Difficulty Alignment in Large Language Models."
+- **Source:** https://arxiv.org/abs/2511.21086
+- **What:** Evaluates 28 model configurations on 58 character-level constraint
+  puzzles. Model-family effects are larger than scaling within a family, and
+  some common but orthographically unusual words have very high human success
+  yet very high model miss rates.
+- **Relevance to Carnot:** `.102` SOTA generation produced many one-token or
+  empty outputs in the micro-slice. Orthographic constraints provide a cheap,
+  deterministic stress test for whether Qwen3.6-35B/Gemma4-31B are actually
+  respecting hard constraints after prompt/runtime changes, without waiting on
+  expensive OR tasks.
+- **Concrete experiment:** Add a 20-item character/orthographic hard-constraint
+  smoke benchmark before larger certificate runs. Report
+  `orthographic_constraint_f1`, `empty_or_one_token_rate`,
+  `family_gap_qwen_vs_gemma`, and `thinking_budget_sensitivity_proxy`.
+
+### H-Neurons and Cross-Domain Transfer Warn Against Universal Probes
+- **Papers:** arXiv 2512.01797, "H-Neurons: On the Existence, Impact, and
+  Origin of Hallucination-Associated Neurons in LLMs"; arXiv 2604.19765, "Do
+  Hallucination Neurons Generalize? Evidence from Cross-Domain Transfer in
+  LLMs."
+- **Sources:** https://arxiv.org/abs/2512.01797 and
+  https://arxiv.org/abs/2604.19765
+- **What:** H-Neurons reports that fewer than 0.1% of neurons can predict
+  hallucination and are causally linked to over-compliance. The follow-up finds
+  poor cross-domain transfer: within-domain AUROC 0.783 drops to 0.563 across
+  domains.
+- **Relevance to Carnot:** The lesson matches Carnot's live history: probes
+  that work on one domain or one model are not enough. If `.103` adds any
+  extraction-free hallucination probe, it must record per-domain calibration
+  and not claim a universal detector.
+- **Concrete experiment:** Use logits/top-k proxy signals available through the
+  local GGUF path as a domain-calibrated adjunct, not a headline detector.
+  Required fields: `domain_calibration_split`, `within_domain_auc`,
+  `cross_domain_auc`, `universal_probe_claim_allowed=false`.
+
+### Real-Time Hallucinated-Entity Probes and Token-Level EPR
+- **Papers:** arXiv 2509.03531, "Real-Time Detection of Hallucinated Entities
+  in Long-Form Generation"; arXiv 2509.04492, "Learned Hallucination Detection
+  in Black-Box LLMs using Token-level Entropy Production Rate."
+- **Sources:** https://arxiv.org/abs/2509.03531 and
+  https://arxiv.org/abs/2509.04492
+- **What:** The entity-probe work trains cheap streaming classifiers with
+  token-level labels and reports AUC 0.90 vs 0.71 semantic entropy on
+  Llama-3.3-70B. The EPR paper derives one-shot uncertainty indicators from
+  top-k log-probabilities, avoiding multi-sample reruns.
+- **Relevance to Carnot:** These are practical local-runtime diagnostics for
+  the `.102` one-token/empty-output issue and for future long-form certificate
+  tails. They are also compatible with local-first operation if the GGUF runner
+  exposes token probabilities.
+- **Concrete experiment:** Add a token-health and EPR probe around the SOTA
+  GGUF runner. Report `topk_logprob_available`, `entropy_production_rate`,
+  `entity_probe_proxy_auc`, `empty_output_risk_score`, and
+  `certificate_parse_delta_with_probe_gate`.
+
+### p-DNN Sampling: Hardware Sampling Can Improve Ordinary DNNs
+- **Paper:** arXiv 2507.07763 / npj Unconventional Computing 3, 18 (2026),
+  "Improving deep neural network performance through sampling."
+- **Sources:** https://arxiv.org/abs/2507.07763 and
+  https://www.nature.com/articles/s44335-026-00063-7
+- **What:** Extends p-bit sampling beyond Boltzmann/Ising machines into
+  feed-forward DNNs. The paper provides an energy model for sampling vs
+  deterministic precision and reports that a small number of samples can
+  recover or improve accuracy with low marginal energy when memory access
+  dominates.
+- **Relevance to Carnot:** `.102` produced a p-bit sampler portability packet.
+  The next hardware step can be a local energy-accounting experiment: is it
+  better to spend samples or bits for a tiny verifier/repair model? This
+  directly serves the NPU/FPGA/TSU portability story without claiming blocked
+  hardware execution.
+- **Concrete experiment:** Add a p-DNN verifier energy-accounting audit over a
+  tiny KAN/MLP verifier. Report `samples_vs_bits_accuracy_curve`,
+  `epsilon_weight_memory_proxy`, `epsilon_sampling_proxy`,
+  `best_energy_accuracy_point`, and `hardware_claim_allowed=false`.
+
+### Current Code Artifacts Worth Tracking
+- **EBT official code:** https://github.com/alexiglad/EBT
+  - Useful for future Phase-3 prototype scaffolding; Apache-2.0 and includes
+    model/inference code for autoregressive and bidirectional EBT variants.
+- **Cactus code:** https://github.com/MANGA-UOFA/Cactus
+  - Useful when `.103` reruns safe-prefix/constrained acceptance after parse
+    rate clears the gate; keep the current Carnot task as replay/audit first.
+- **Constrained diffusion decoding code:** https://github.com/eth-sri/constrained-diffusion
+  - Useful later for non-autoregressive or infill-style repair, not a `.103`
+    dependency unless the AR certificate path stalls again.
+- **LUT-KAN toolkit:** https://github.com/KuznetsovKarazin/lut-kan
+  - Useful for turning `.102` KAN RM/BOP/NABS audit into a reproducible local
+    LUT baseline before any NPU/FPGA claim.
+
 ## 2026-05-05 Post-.101 Planning Sweep (Milestone 2026.04.102)
 
 This sweep was run after milestone `.101` completed with 8/13 criteria met.
