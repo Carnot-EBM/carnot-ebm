@@ -1,0 +1,33 @@
+{
+  "experiment": 1316,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-05-05",
+  "started_at": "2026-05-05T04:58:09.685924+00:00",
+  "finished_at": "2026-05-05T04:58:09.685924+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "DVI Certificate-Tail Online Update - Gated on Parse Rate and Non-Forgetting",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 2 gate(s) failed; first failure: exp1312-triggered-certificate-extraction-dccd-gbnf.certificate_parse_rate (actual=0.71223 >= expected=0.75)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp1312-triggered-certificate-extraction-dccd-gbnf",
+      "artifact_field": "certificate_parse_rate",
+      "op": ">=",
+      "expected": 0.75,
+      "actual": 0.71223,
+      "passed": false,
+      "reason": "actual=0.71223 >= expected=0.75"
+    },
+    {
+      "upstream": "exp1315-continuous-self-learning-cerce-nonforgetting-audit",
+      "artifact_field": "nonforgetting_certificate_rate",
+      "op": ">=",
+      "expected": 0.9,
+      "actual": 1.0,
+      "passed": true,
+      "reason": "actual=1.0 >= expected=0.9"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
