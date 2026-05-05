@@ -1,251 +1,246 @@
-# Research Roadmap vNEXT: Milestone 2026.04.104
+# Research Roadmap vNEXT: Milestone 2026.04.105
 
 Planned: 2026-05-05
 Status: Draft for conductor execution
-Predecessor: 2026.04.103 SOTA Certificate Parse Recovery + Semantic Acceptance + Verifier-Governed Self-Learning
+Predecessor: 2026.04.104 Environment Gate Recovery + Triggered Semantic Certificates + Verifier-Cost Self-Learning
 Roadmap YAML: `research-roadmap-next.yaml`
 
-## What Milestone .103 Proved
+## What Milestone .104 Proved
 
-Milestone 2026.04.103 reached operator closeout, but the available local
-artifacts show that the scientific branch only partially advanced. This is a
-useful result: it separates the next blocker into an environment/scheduler
-failure class and a certificate-method class.
+Milestone 2026.04.104 was a useful recovery milestone, but it did not produce
+the missing SOTA certificate evidence. The next milestone must not treat the
+absence of `exp1340` as a negative result about trigger-switched certificates;
+it is a gate-order / artifact-missing result that needs a terminal replacement
+artifact.
 
 | Track | Evidence | Finding |
 |---|---|---|
-| SOTA token health | `exp1323` | The local mandated SOTA GGUF pair can produce multi-token outputs when prompt/runtime settings are corrected. `min_tokens_recovered=true`; Qwen3.6-35B-A3B and Gemma4-31B both ran through llama.cpp; top-k/logprob and entropy proxy data were available. |
-| Certificate failure taxonomy | `exp1324` | The `.102` parse gate missed by `0.03777`; at least 6 additional parseable attempts were needed. Dominant classes were parser/schema mismatch, undergeneration, semantic invalidity, solver disagreement, UNKNOWN mishandling, and possible hardcoded-solution leakage. |
-| Certificate rerun | `exp1325` | The intended runtime-fixed DCCD/GBNF rerun did not reach substantive execution; local artifact stayed `status=in_progress` after conductor disk-quota failures. This is an environmental/scheduler failure, not negative evidence about trigger-switched certificates. |
-| Semantic/DVI branches | `exp1326`, `exp1327`, `exp1329`, `exp1330` | Downstream tasks gate-blocked or were skipped because `exp1325` never produced the parse gate evidence. These are not valid scientific failures and must not be blindly rerun without a new prerequisite structure. |
-| Operations | `results/operational_retro_2026_04_103.json` | The next loop needs disk-quota/inode preflight, repeated pre-test signature quarantine, terminal blocked artifacts, and dependency pruning before expensive SOTA tasks launch. |
+| Environment gate | `exp1337` | `environment_ready=true`; stale `.103` artifacts were classified and disk/pretest state was made explicit. |
+| .103 carry-forward | `exp1338` | `exp1325` was correctly classified as a stale environment failure, not scientific evidence against certificate recovery. |
+| Dynamic grammar | `exp1339` | `dynamic_grammar_ready=true` via local pure-Python TagDispatch dry-run; XGrammar itself was absent, but the branch model is ready for a guarded SOTA attempt. |
+| SOTA certificate run | `exp1340` | Missing. The parse gate was never measured in `.104`, so downstream semantic/DVI gates must remain closed until a terminal certificate artifact exists. |
+| Failure taxonomy | `exp1341` | Diagnostic split completed from local cases, with `universal_detector_claim_allowed=false`. |
+| Semantic validator / scheduler | `exp1342`, `exp1343` | Semantic validator did not run because the certificate artifact was missing; scheduler blocked correctly. |
+| Continuous self-learning | `exp1344` | Replay-only policy was positive: `self_learning_delta_overall=1.596429`, `dvi_ready=true`, but `headline_result_allowed=false` without fresh certificate cases. |
+| Hardware / external parity | `exp1347`, `exp1348`, `exp1349` | THRML unavailable locally, p-bit dual-BRAM packet updated, no hardware claims, and no external Kona/Extropic dependency claims. |
+| Retro | `exp1350` | `.104` met 9 of 12 criteria and named six carry-forward tasks, led by terminal `exp1340` replacement and gated semantic/DVI work. |
 
-The natural next milestone is therefore a recovery-and-replacement milestone:
-make the environment state explicit, close stale `.103` skeletons as scheduler
-facts, and rerun certificate extraction with a materially different method:
-trigger-before-constrain plus dynamic certificate grammars. Only after that
-should semantic constrained validation, verifier-cost scheduling, DVI, and GRPO
-run.
+The natural `.105` shape is therefore: close the `.104` handoff, preflight the
+certificate grammar so it cannot truncate silently, run one terminal SOTA
+certificate experiment, decompose failures by formal skill, and only then
+advance semantic repair, DVI, and GRPO.
 
 ## Research Signals Added Before Planning
 
-The post-.103 sweep added the following 2025-2026 sources to
+The post-.104 sweep added the following 2025-2026 sources to
 `research-references.md` before this roadmap was designed:
 
-- `arXiv:2601.07525`, "Thinking Before Constraining": trigger-switched
-  generation preserves reasoning before entering structured output mode.
-- `arXiv:2601.04426`, "XGrammar 2": dynamic grammar dispatch, JIT, and grammar
-  caching for branchy structured generation.
-- `arXiv:2509.00360` / POPL 2026, "ChopChop": semantic constrained decoding
-  over program structures rather than syntax-only token masks.
-- `arXiv:2601.18753`, "HalluGuard": separates data-driven hallucinations from
-  reasoning-driven instability, which maps cleanly onto Carnot's certificate
-  failure taxonomy.
-- `arXiv:2601.15498` and `arXiv:2601.23180`, MARS and TriSpec: verification
-  cost should be margin-aware and proxy-assisted, not a binary "always call
-  full verifier" decision.
-- `arXiv:2505.23061` and `arXiv:2508.10111`: diffusion-LLM constrained
-  inference provides a fallback if autoregressive certificate tails remain
-  brittle.
-- Semantic Scholar's EBT citation neighborhood: EBT, NRGPT, EBT-Policy,
-  metacognitive EBT code generation, and intrinsic-optimizer Transformer work
-  raise the bar for Carnot's Phase-3 claims.
-- Extropic's current public XTR-0/Z1/THRML status and Logical Intelligence's
-  Kona 1.0 positioning: Carnot's differentiator must be local, open,
-  reproducible certificates and hardware-portable energy evaluation.
+- `arXiv:2602.06533`, LogicSkills: splits formal reasoning into
+  symbolization, countermodel construction, and validity assessment, all
+  solver-verified with Z3.
+- `arXiv:2602.18095`, Logitext: treats natural-language text constraints as an
+  SMT theory, preserving partial formalization and coverage.
+- `arXiv:2601.20055`, VERGE: uses semantic routing, formal equivalence, and
+  Minimal Correction Subsets for repair-localized verifier feedback.
+- OpenReview `lrc2xSoh9b`, TruncProof, plus the 2026-05-04 MLC XGrammar-2
+  runtime post: certificate grammars need max-token completion checks before
+  expensive local SOTA generation.
+- `arXiv:2603.03297` and `arXiv:2505.19475`: test-time self-reflection and
+  verifier-driven sample selection provide a safer path from replay-positive
+  self-learning to fresh verifier-selected updates.
+- `arXiv:2506.00269`, p-dits: multi-valued probabilistic variables map Carnot's
+  SAT/UNSAT/UNKNOWN/repair certificate states more naturally than binary
+  one-hot p-bits.
+- `arXiv:2512.15605` v3 and EBT's ICLR 2026 oral status: Carnot should keep
+  Phase-3 claims grounded in local verifier evidence rather than broad EBT
+  analogy.
 
 ## Three Biggest Gaps
 
-1. **Environmental reliability gap.** `.103` did not fail because the models
-   could not run; it failed because disk quota and repeated pre-test signatures
-   turned into scheduler churn. The next milestone must first make these
-   states terminal and measurable without modifying `scripts/research_conductor.py`.
+1. **Terminal certificate evidence gap.** `.104` proved the environment and
+   grammar dry-run were ready, but `exp1340` did not leave a terminal artifact.
+   Until a SOTA certificate run records parse/truthfulness/UNKNOWN metrics or a
+   terminal blocker, semantic validator and DVI work remain legitimately closed.
 
-2. **Certificate semantics gap.** `.102` and `.103` show parseable JSON is not
-   enough. Carnot needs trigger-switched certificate tails, dynamic grammars
-   that preserve UNKNOWN/proof/repair branches, and semantic validators that
-   execute or prove properties.
+2. **Skill-localized semantic repair gap.** Carnot still has a single parse
+   gate standing in for multiple failure modes. LogicSkills, Logitext, and
+   VERGE point to the missing decomposition: symbolization versus validity
+   versus countermodel, fully formal versus partial natural-language
+   constraints, and MCS-localized repair hints.
 
-3. **Verifier-governed self-learning gap.** Non-forgetting replay is strong,
-   but FR-11 still lacks fresh certificate-tail updates. `.104` must connect
-   self-learning to verifier failure types while keeping accepted violations
-   from increasing.
+3. **Headline self-learning gap.** `exp1344` is positive replay evidence, but
+   FR-11 still needs fresh verifier-selected samples with non-forgetting and
+   accepted-violation controls. DVI and GRPO must stay gated until fresh
+   certificate and semantic evidence exists.
 
 ## Architecture Target
 
 ```text
-Phase 0: environment and .103 state closure
-  exp1337 environment gate audit
-      |
-      +--> exp1338 .103 skeleton/gate-state finalizer
+Phase 0: handoff closure and certificate completion preflight
+  exp1351 .104 carry-forward and artifact integrity audit
       |
       v
-Phase 1: trigger-switched semantic certificates
-  exp1339 dynamic grammar / TagDispatch dry-run
+  exp1352 TruncProof/XGrammar completion-budget preflight
       |
       v
-  exp1340 trigger-before-constrain certificate extraction v6
+Phase 1: terminal SOTA certificate and semantic repair
+  exp1353 trigger-switched certificate v7 on mandated local GGUF
       |
-      +--> exp1341 HalluGuard-style failure split
-      |
-      v
-  exp1342 semantic constrained validator pilot
+      +--> exp1354 LogicSkills skill split
       |
       v
-  exp1343 margin-aware BEAVER/Cactus verifier scheduler
+  exp1355 Logitext/NSVIF partial SMT validator
+      |
+      v
+  exp1356 VERGE MCS repair localization
+      |
+      v
+  exp1357 margin-aware Cactus/BEAVER scheduler v2
 
 Phase 2: verifier-governed self-learning
-  exp1344 failure-type memory policy and non-forgetting
+  exp1358 verifier-selected memory update with replay fallback
       |
-      +--> exp1345 DVI certificate-tail update v3
+      +--> exp1359 DVI certificate-tail v4
               |
               v
-          exp1346 GRPO/VPRM v13 micro-audit
+          exp1360 GRPO/VPRM v14 micro-audit
 
-Phase 3: hardware/architecture accounting and closeout
-  exp1347 THRML compatibility audit
-  exp1348 p-bit update-dynamics / dual-BRAM packet v2
-  exp1349 EBT citation + Kona parity gap audit
-  exp1350 milestone retro and carry-forward plan
+Phase 3: hardware/claim boundary and closeout
+  exp1361 p-dit/p-int certificate-state hardware mapping
+  exp1362 publication hold + EBT/ARM/Kona claim boundary
+  exp1363 milestone retro and .106 carry-forward
 ```
 
-## Phase 0: Environment and .103 State Closure
+## Phase 0: Handoff Closure and Certificate Completion Preflight
 
-Goal: stop spending SOTA or semantic-validator slots while the environment is
-not capable of writing terminal artifacts or passing focused preflight.
+Goal: prevent another missing `exp1340`-class artifact before any GPU-heavy SOTA
+work runs.
 
-- `exp1337-environment-gate-disk-pretest-stale-skeleton-audit`: produce a
-  single artifact describing disk quota, inode state, free-space thresholds,
-  repeated pre-test signature, and stale `.103` skeleton artifacts. This is an
-  audit/preflight task only; it must not modify `scripts/research_conductor.py`.
-- `exp1338-exp1325-skeleton-and-gate-state-finalizer`: turn the `.103`
-  in-progress/gate-block evidence into a clean carry-forward plan for `.104`,
-  including the minimum parse recovery needed and which downstream gates should
-  stay closed until new evidence exists.
+- `exp1351-104-carryforward-artifact-integrity-audit`: read `.104` artifacts,
+  conductor log, and retro; produce a terminal integrity artifact that states
+  which gates are open, which are closed, and which prior failures must be
+  attached to `.105` tasks.
+- `exp1352-truncproof-xgrammar-certificate-completion-preflight`: perform a
+  local grammar/token-budget preflight for SAT/UNSAT/UNKNOWN/repair
+  certificate states. The SOTA run is allowed only if the grammar can complete
+  inside the configured max-token budget and dynamic branch dispatch remains
+  valid.
 
-Success bar: `environment_ready=true` and `certificate_recovery_ready=true`, or
-the milestone terminates the expensive certificate branch with a precise
-environment blocker.
+Success bar: `sota_run_allowed=true`, or a terminal blocker that prevents
+`exp1353` from running.
 
-## Phase 1: Trigger-Switched Semantic Certificates
+## Phase 1: Terminal SOTA Certificate and Semantic Repair
 
-Goal: recover the certificate branch using techniques that are materially
-different from the failed `.103` DCCD/GBNF rerun.
+Goal: replace the missing `.104` SOTA certificate branch with one terminal
+artifact, then decompose and validate what it produced.
 
-- `exp1339-xgrammar2-tagdispatch-certificate-grammar-dryrun`: build a local
-  dynamic grammar plan for UNKNOWN/SAT/UNSAT/proof/repair certificate sections
-  and measure grammar state transitions without fresh SOTA generation.
-- `exp1340-trigger-before-constrain-certificate-v6-sota`: run the SOTA GGUF
-  certificate extraction with free-form reasoning until a trigger token, then
-  structured certificate-tail generation. Compare against `.102` DCCD/GBNF.
-- `exp1341-halluguard-certificate-failure-split`: separate data-driven,
-  reasoning-driven, undergeneration, parser, and semantic failures using
-  `exp1323`, `exp1324`, and any `exp1340` cases.
-- `exp1342-chopchop-nsvif-semantic-validator-gated`: when parse rate clears
-  the gate, compile parsed certificates into executable semantic validators
-  inspired by NSVIF/SatIR/ChopChop.
-- `exp1343-margin-aware-beaver-cactus-scheduler`: when semantic validation
-  works, evaluate verifier-call reduction with low-margin escalation and false
-  acceptance accounting.
+- `exp1353-triggered-certificate-v7-truncproof-sota`: run the mandated local
+  SOTA GGUF pair through trigger-before-constrain plus dynamic grammar and
+  completion-budget checks. This task must write a terminal artifact even if it
+  blocks.
+- `exp1354-logicskills-certificate-skill-split`: split certificate results into
+  symbolization, countermodel, and validity-assessment rates instead of hiding
+  all failure behind parse rate.
+- `exp1355-logitext-nsvif-partial-smt-validator`: when parse evidence clears
+  the gate, route fully formal claims to local SMT and partial claims to
+  natural-language text constraints while preserving UNKNOWN.
+- `exp1356-verge-mcs-repair-localization`: use MCS-style localization to turn
+  semantic rejects into minimal repair hints.
+- `exp1357-margin-aware-cactus-beaver-scheduler-v2`: rerun scheduler work only
+  after semantic and repair-localization evidence exists.
 
-Success bar: either `certificate_parse_rate >= 0.75` with semantic validator
-execution, or a narrowed blocker that is not "rerun DCCD again."
+Success bar: either `certificate_parse_rate >= 0.75` plus semantic validation,
+or a terminal retirement of the current trigger-switched certificate branch with
+evidence about the remaining blocker.
 
 ## Phase 2: Verifier-Governed Continuous Self-Learning
 
-Goal: satisfy the research program's continuous self-learning requirement while
-guarding against memory corruption and accepted-violation growth.
+Goal: satisfy the continuous self-learning requirement without letting replay
+success become an unsupported headline claim.
 
-- `exp1344-continuous-self-learning-failure-type-memory-policy`: mandatory
-  self-learning task. Use failure-type labels from `.103/.104` to decide memory
-  promotion/demotion, preserve non-forgetting, and avoid increasing accepted
-  violations.
-- `exp1345-dvi-certificate-tail-v3-gated`: apply DVI-style online updates only
-  after parse, semantic validation, and non-forgetting gates pass.
-- `exp1346-grpo-vprm-v13-gated-micro-audit`: run a bounded GRPO/VPRM replay or
-  micro-audit only if DVI produces lossless-acceptance evidence.
+- `exp1358-continuous-self-learning-verifier-selected-memory`: mandatory
+  FR-11 task. It always runs with replay fallback from `exp1344`, and upgrades
+  to headline evidence only when fresh `.105` validated certificate cases exist.
+- `exp1359-dvi-certificate-tail-v4-gated`: apply DVI only after parse,
+  semantic, and non-forgetting gates pass.
+- `exp1360-grpo-vprm-v14-gated`: run a bounded replay or micro-audit only if
+  DVI claims lossless acceptance and the self-learning delta is positive.
 
-Success bar: the self-learning artifact runs unconditionally and reports
-non-forgetting plus accepted-violation deltas. DVI/GRPO remain gated.
+Success bar: self-learning reports non-forgetting, memory regression, and
+accepted-violation deltas. DVI/GRPO remain closed unless gates pass.
 
-## Phase 3: Hardware/Architecture Accounting and Closeout
+## Phase 3: Hardware/Claim Boundary and Closeout
 
-Goal: keep Phase-2/Phase-3 strategy current without overclaiming.
+Goal: keep Phase-2/Phase-3 architecture current without overclaiming.
 
-- `exp1347-thrml-compatibility-parity-audit`: test whether Carnot's tiny
-  Ising/KAN verifier cases can be represented in Extropic's THRML simulation
-  interface, or document the exact missing dependency.
-- `exp1348-pbit-update-dynamics-dual-bram-packet-v2`: update the p-bit
-  portability packet with sync/async update dynamics, reuse factor, BRAM layout,
-  and DAC precision assumptions.
-- `exp1349-ebt-citation-kona-parity-gap-audit`: map the EBT citation
-  neighborhood and Kona 1.0 public positioning to Carnot's local evidence and
-  Phase-3 obligations.
-- `exp1350-milestone-104-retro-carryforward`: evaluate the milestone, keep
-  publication hold honest, and name carry-forwards with prior-failure hygiene.
+- `exp1361-pdit-certificate-state-hardware-mapping`: map certificate states and
+  memory variables to p-dits/p-ints, comparing against binary p-bit expansion.
+  This is CPU-only mapping; no hardware claim is allowed.
+- `exp1362-publication-hold-ebt-arm-kona-claim-boundary`: update the local
+  claim boundary using `.105` results, EBT/ARM-EBM theory, and `exp1349`.
+- `exp1363-milestone-105-retro-carryforward`: evaluate `.105` criteria, name
+  `.106` carry-forwards with prior-failure hygiene, and keep the publication
+  hold honest.
 
-Success bar: hardware work stays at simulation/accounting scope unless local
-hardware actually executes, and the retro creates a clean `.105` handoff.
+Success bar: hardware mapping improves future FPGA/TSU packet quality without
+claiming execution, and the retro leaves no missing-artifact ambiguity.
 
 ## Dependency Graph
 
 ```text
-exp1337 ---> exp1339 ---> exp1340 ---> exp1342 ---> exp1343
-    |           |            |            |
-    v           |            v            |
-exp1338 --------+        exp1341          |
-                             |            |
-exp1344 ---------------------+----------> exp1345 ---> exp1346
+exp1351 ---> exp1352 ---> exp1353 ---> exp1354
+                            |
+                            v
+                         exp1355 ---> exp1356 ---> exp1357
+                            |
+exp1344 + exp1353/1355 ---> exp1358 ---> exp1359 ---> exp1360
 
-exp1320 + new p-bit refs ----------------> exp1348
-Extropic THRML status -------------------> exp1347
-EBT/Kona references ---------------------> exp1349
-exp1337..exp1349 ------------------------> exp1350
+exp1348 + p-dit refs -----> exp1361
+exp1349 + EBT/ARM refs ---> exp1362
+exp1351..exp1362 --------> exp1363
 ```
 
 ## Hardware Requirements
 
 - Fresh LLM-bearing tasks must use local mandated GGUF models through
-  `cached_sota_pair(gpu_indices=(0, 1))` or an equivalent helper. Each fresh
+  `cached_sota_pair(gpu_indices=(0, 1))` or an equivalent helper. Every fresh
   LLM task must include at least one of:
   `unsloth/Qwen3.6-35B-A3B-GGUF`,
   `unsloth/gemma-4-31B-it-GGUF`,
   `unsloth/gemma-4-26B-A4B-it-GGUF`.
 - Legacy small models such as Qwen3.5-0.8B and gemma-4-E4B-it may only be
   CPU smoke tests with `headline_result_allowed=false`.
-- `exp1340` is the only planned fresh SOTA generation task. It should use both
-  RTX 3090s when possible and record model IDs, quantization, GPU assignment,
-  token counts, logprob availability, and throughput.
-- Hardware tasks are THRML simulation or portability/accounting tasks. They may
-  not claim FPGA, KV260, TSU, ROCm, analog, or Kona execution unless that
-  runtime is actually exercised.
+- `exp1353` is the only planned fresh SOTA generation task. It should use the
+  two RTX 3090s when possible and record model IDs, quantization, GPU
+  assignment, token budgets, completion-budget preflight status, parse metrics,
+  and throughput.
+- `exp1361` is hardware mapping only. It may not claim FPGA, KV260, p-dit ASIC,
+  TSU, ROCm, analog, or Kona execution unless that runtime actually executes.
 
 ## Success Criteria
 
-- `exp1337` writes a terminal environment audit with `environment_ready`.
-- `exp1338` closes `.103` stale skeleton/gate state into a precise carry-forward.
-- `exp1339` produces `dynamic_grammar_ready=true` or a terminal grammar blocker.
-- `exp1340` reaches `certificate_parse_rate >= 0.75` or retires the current
-  AR certificate-tail recovery branch with evidence.
-- `exp1341` separates certificate failures by failure mechanism and forbids a
-  universal hallucination-detector claim.
-- `exp1342` executes semantic validators on parsed certificates and preserves
-  UNKNOWN states.
-- `exp1343` reports false-acceptance risk before claiming verifier-call savings.
-- `exp1344` satisfies the continuous self-learning requirement with
-  non-forgetting and accepted-violation accounting.
-- `exp1345` and `exp1346` run only if structured gates pass.
-- `exp1347` and `exp1348` improve hardware portability evidence without
-  unverified hardware claims.
-- `exp1349` maps external EBT/Kona positioning to Carnot's actual local
-  obligations.
-- `exp1350` reconciles the milestone state and names `.105` carry-forwards with
+- `exp1351` writes a terminal `.104` carry-forward integrity audit.
+- `exp1352` either allows the SOTA certificate run with completion-budget
+  evidence or blocks it terminally.
+- `exp1353` writes terminal certificate evidence; missing artifact is failure.
+- `exp1354` reports skill-specific certificate failure rates.
+- `exp1355` runs only when parse evidence clears the structured gate and
+  reports UNKNOWN-preserving semantic validation.
+- `exp1356` reports MCS-localized repair hints or a terminal repair blocker.
+- `exp1357` reports false-acceptance risk before claiming verifier-call savings.
+- `exp1358` satisfies the mandatory continuous self-learning requirement and
+  separates replay-only from headline evidence.
+- `exp1359` and `exp1360` run only if structured gates pass.
+- `exp1361` produces p-dit/p-int mapping evidence without hardware claims.
+- `exp1362` keeps publication claims aligned with local evidence.
+- `exp1363` reconciles the milestone and names `.106` carry-forwards with
   prior-failure hygiene.
 
 ## Decentralization Implication
 
-The `.104` plan preserves Carnot's local-first posture. The headline path uses
-local open GGUF models and deterministic local validators; hardware work is
-simulation/accounting unless real hardware executes; external systems such as
-Kona, Extropic, XGrammar, and ChopChop are used as design references, not
-closed dependencies in the Carnot core.
+The `.105` plan preserves Carnot's local-first posture. The only fresh LLM
+headline path uses local open GGUF models; semantic validators and self-learning
+gates are local deterministic/replay code; hardware work is mapping-only unless
+real hardware executes; and external systems such as EBT, ARM-EBM, Kona,
+Extropic, XGrammar, TruncProof, and VERGE are design references, not closed
+dependencies in Carnot core.

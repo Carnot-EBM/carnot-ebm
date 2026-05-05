@@ -1,6 +1,20 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-05 (Milestone 2026.04.103 research planning complete)
+**Last Updated:** 2026-05-05 (Milestone 2026.04.105 research planning complete)
+
+## Session 2026-05-05 - Milestone 2026.04.105 Research Planning Complete
+
+**Milestone 2026.04.105 PLANNED.**
+
+- Roadmap doc: `openspec/change-proposals/research-roadmap-vNEXT.md`
+- Execution queue: `research-roadmap-next.yaml` (13 tasks, exp1351-exp1363)
+- Research references updated before planning with LogicSkills, Logitext, VERGE, TruncProof/XGrammar-2, TTSR/VDS-TTT, p-dits, ARM-EBM v3, and EBT ICLR 2026 context.
+- Design focus: close the `.104` missing-artifact handoff, run a terminal TruncProof-budgeted SOTA certificate branch, decompose certificate failures by formal skill, validate partial SMT/text constraints, localize semantic repair with MCS-style hints, and advance continuous self-learning only under verifier-selected/non-forgetting gates.
+- Structured gates: exp1352 on exp1351 terminal certificate requirement; exp1353 on exp1352 SOTA run allowance; exp1354 on exp1353 terminal cases; exp1355 on exp1353 parse rate >= 0.75; exp1356 on exp1355 validator execution pass rate; exp1357 on exp1356 repair precision; exp1359 on exp1353/1355/1358; exp1360 on exp1359 lossless acceptance and positive self-learning delta.
+- Agent routing: all tasks use `agent_type: codex`, `model: gpt-5.5` per CLAUDE.md. The fresh LLM-bearing task requires mandated local SOTA GGUF `MODEL_SPECS`; legacy small models are smoke tests only.
+- Validation passed: YAML parse/schema validation, prompt section/end checks, `python3 scripts/validate_prior_failures.py research-roadmap-next.yaml`, `python3 scripts/audit_roadmap_gates.py research-roadmap-next.yaml`, and `git diff --check`.
+- E2E tests from `ops/e2e-test-plan.md` are not applicable to this docs/planning-only change.
+- No changes made to `research-roadmap.yaml` or `scripts/research_conductor.py`.
 
 ## Session 2026-05-05 - Milestone 2026.04.103 Research Planning Complete
 

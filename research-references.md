@@ -4,6 +4,131 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-05-05 Post-.104 Planning Sweep (Milestone 2026.04.105)
+
+This sweep was run after milestone `.104` completed with the retro verdict
+`milestone_104_9_of_12_criteria_met_carryforward_required`. The local evidence
+is now precise: `exp1337` made the environment ready, `exp1339` proved a local
+dynamic grammar dry-run with `dynamic_grammar_ready=true`, `exp1344` produced a
+positive replay-only self-learning signal with `self_learning_delta_overall=1.596429`
+and `dvi_ready=true`, and the hardware/parity tasks stayed honest about no
+hardware or external-dependency claims. The major missing evidence is the
+scientific certificate branch: `exp1340` did not produce a terminal artifact,
+so `exp1342`, `exp1345`, and `exp1346` remained closed or absent. The next
+milestone should therefore produce a terminal certificate artifact first, add
+token-budget/completion checks before SOTA generation, and only reopen semantic
+validation, DVI, and GRPO when the structured gates are satisfied.
+
+### LogicSkills: Split Formal Reasoning Into Measurable Skills
+- **Paper:** arXiv 2602.06533, "LogicSkills: A Structured Benchmark for Formal
+  Reasoning in Large Language Models."
+- **Source:** https://arxiv.org/abs/2602.06533
+- **What:** Separates formal reasoning into symbolization, countermodel
+  construction, and validity assessment, with all examples checked by Z3 for
+  correctness and non-triviality.
+- **Relevance to Carnot:** `.104` showed that a parseable certificate branch can
+  stall without telling us which logical skill failed. The next certificate
+  task should report skill-specific rates instead of a single parse-rate number.
+- **Concrete experiment:** Add a LogicSkills-style certificate audit over
+  SOTA-produced certificates. Report `symbolization_pass_rate`,
+  `countermodel_pass_rate`, `validity_pass_rate`, `z3_verified_case_count`,
+  and `dominant_skill_gap`.
+
+### Logitext: Natural-Language Constraints as an SMT Theory
+- **Paper:** arXiv 2602.18095, "Neurosymbolic Language Reasoning as
+  Satisfiability Modulo Theory."
+- **Source:** https://arxiv.org/abs/2602.18095
+- **What:** Represents partially formal natural-language documents as text
+  constraints and integrates LLM-based constraint evaluation with SMT solving.
+- **Relevance to Carnot:** This is the right bridge for certificates that cannot
+  be fully formalized. Carnot should preserve `UNKNOWN` and partially formal
+  constraints rather than forcing every claim into brittle first-order logic.
+- **Concrete experiment:** Extend the semantic validator with a partial-logic
+  route. Report `fully_formal_claim_count`, `nltc_claim_count`,
+  `unknown_preservation_rate`, `smt_text_constraint_pass_rate`, and
+  `coverage_delta_over_fol_only`.
+
+### VERGE: MCS-Localized Formal Repair
+- **Paper:** arXiv 2601.20055, "VERGE: Formal Refinement and Guidance Engine
+  for Verifiable LLM Reasoning."
+- **Source:** https://arxiv.org/abs/2601.20055
+- **What:** Combines claim decomposition, SMT checking, formal semantic
+  equivalence, semantic routing, and Minimal Correction Subsets to turn solver
+  failures into actionable feedback.
+- **Relevance to Carnot:** This directly addresses the `.104` missing semantic
+  repair path. A binary certificate reject is insufficient; the verifier should
+  identify the minimal claim subset to revise before DVI or GRPO sees the case.
+- **Concrete experiment:** Add an MCS repair-localization replay over parsed
+  certificates. Report `mcs_localization_rate`, `repair_hint_precision`,
+  `semantic_equivalence_pass_rate`, `iteration_count_to_accept`, and
+  `accepted_violation_delta`.
+
+### TruncProof + XGrammar-2 Runtime Notes: Certificate Completion Must Be Guaranteed
+- **Sources:** OpenReview `lrc2xSoh9b`, "TruncProof: LL(1)-Constrained
+  Generation in Large Language Models with Maximum Token Limitations"
+  (https://openreview.net/forum?id=lrc2xSoh9b), and the MLC XGrammar-2 runtime
+  post (https://blog.mlc.ai/2026/05/04/xgrammar-2-fast-customizable-structured-generation).
+- **What:** TruncProof estimates the minimum tokens needed to complete a valid
+  LL(1) output under a token cap. The XGrammar-2 implementation update adds
+  Structural Tag and cross-language APIs for Python, C++, Rust, and JS.
+- **Relevance to Carnot:** `exp1340` missing evidence should not be allowed to
+  recur. Before spending SOTA GGUF time, Carnot needs a local completion-budget
+  check that refuses prompts whose certificate grammar cannot finish inside the
+  max-token budget.
+- **Concrete experiment:** Add a certificate grammar completion preflight before
+  SOTA generation. Report `min_completion_tokens_by_state`,
+  `max_token_budget_sufficient`, `structural_tag_supported`,
+  `rust_api_available`, and `sota_run_allowed`.
+
+### Test-Time Self-Learning With Verifier-Governed Sample Selection
+- **Papers:** arXiv 2603.03297, "TTSR: Test-Time Self-Reflection for Continual
+  Reasoning Improvement"; arXiv 2505.19475, "Continuous Self-Improvement of
+  Large Language Models by Test-time Training with Verifier-Driven Sample
+  Selection."
+- **Sources:** https://arxiv.org/abs/2603.03297 and
+  https://arxiv.org/abs/2505.19475
+- **What:** TTSR alternates student/teacher roles to synthesize targeted variant
+  questions from failed reasoning trajectories. VDS-TTT uses verifier scores to
+  select pseudo-labeled samples for low-rank test-time adaptation.
+- **Relevance to Carnot:** `exp1344` is replay-positive but non-headline. The
+  next self-learning task should add fresh verifier-selected samples only after
+  the semantic certificate gate passes, while replay-only updates remain
+  non-headline.
+- **Concrete experiment:** Add a verifier-selected test-time memory update gated
+  on semantic validation. Report `fresh_verified_sample_count`,
+  `variant_question_count`, `nonforgetting_certificate_rate`,
+  `accepted_violation_delta`, and `headline_result_allowed`.
+
+### p-dits and p-ints: Multi-Valued Probabilistic Variables for Hardware Mapping
+- **Paper:** arXiv 2506.00269, "Extended-variable probabilistic computing with
+  p-dits."
+- **Source:** https://arxiv.org/abs/2506.00269
+- **What:** Generalizes p-bit Ising machines to multi-valued and integer
+  probabilistic variables; reports speedups for categorical and integer
+  optimization mappings, including FPGA p-int IQP results.
+- **Relevance to Carnot:** Carnot's certificate states are not binary. SAT,
+  UNSAT, UNKNOWN, repair-needed, and leakage-risk states map more naturally to
+  p-dits than binary one-hot p-bits, reducing hardware state expansion.
+- **Concrete experiment:** Add a CPU-only p-dit/p-int mapping audit for
+  certificate-state and constraint-memory variables. Report
+  `binary_spin_count`, `pdit_variable_count`, `state_expansion_ratio`,
+  `energy_equivalence_error`, and `hardware_claim_allowed=false`.
+
+### ARM-EBM and EBT Status Check
+- **Sources:** ARM-EBM v3, arXiv 2512.15605
+  (https://arxiv.org/abs/2512.15605), and EBT ICLR 2026 Oral OpenReview page
+  (https://openreview.net/forum?id=ZBj3Qp1bYg).
+- **What:** ARM-EBM's April 2026 revision keeps the soft-Bellman ARM/EBM bridge
+  current, while EBT's ICLR oral status confirms that scalable energy-minimized
+  "thinking" is now a primary reference point rather than a fringe analogy.
+- **Relevance to Carnot:** Carnot should frame Phase 3 as externally grounded,
+  verifier-trained energy reasoning, not as generic EBT novelty. Near-term
+  experiments should produce local evidence for certificate energy, repair
+  localization, and self-learning gates.
+- **Concrete experiment:** Keep a standing claim-boundary audit that maps each
+  new certificate/self-learning result to EBT/ARM-EBM obligations before any
+  publication-hold language changes.
+
 ## 2026-05-05 Post-.103 Planning Sweep (Milestone 2026.04.104)
 
 This sweep was run after milestone `.103` reached operator closeout. The local
