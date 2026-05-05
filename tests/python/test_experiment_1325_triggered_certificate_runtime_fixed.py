@@ -262,3 +262,100 @@ def test_exp1325_run_experiment_writes_in_progress_then_final(
     assert writes[0]["status"] == "in_progress"
     assert writes[-1]["status"] == "complete"
     assert json.loads(output_path.read_text(encoding="utf-8")) == artifact
+
+
+def test_exp1325_edge_branches_remain_explicit(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """REQ-VERIFY-1325-2/3/7/8: defensive branches stay honest and bounded."""
+    valid_json = json.dumps(
+        {
+            "claims": [{"id": "c1", "text": "label"}],
+            "equations": [{"lhs": "final_label", "relation": "=", "rhs": "SAT"}],
+            "final_answer": "SAT",
+            "confidence": 0.7,
+            "verifier_routes": [{"claim_id": "c1", "verifier": "z3_math"}],
+            "proof_numbers": [1.0],
+        }
+    )
+    assert mod.parse_certificate_text_v5(valid_json).repair_kind == "json_object"
+    assert mod.parse_certificate_text_v5("{ bad").errors[0].startswith("invalid_json")
+    assert mod.parse_certificate_text_v5("[1]").errors == ["certificate must be object"]
+    assert mod._parse_json_certificate('{"final_answer":"SAT"}').errors
+    assert mod.parse_certificate_text_v5("ABSTAIN").certificate["final_answer"] == "ABSTAIN"
+    assert mod._normalize_label("MAYBE") == "MAYBE"
+
+    real_validate = mod.validate_certificate
+
+    def invalid_label_tail(payload: dict[str, Any], schema: dict[str, Any]) -> tuple[bool, list[str]]:
+        if payload.get("claims", [{}])[0].get("text", "").startswith("raw_label_tail"):
+            return False, ["forced invalid"]
+        return real_validate(payload, schema)
+
+    monkeypatch.setattr(mod, "validate_certificate", invalid_label_tail)
+    forced = mod.parse_certificate_text_v5("SAT")
+    assert forced.parseable is False
+    assert forced.repair_kind == "label_tail_invalid"
+    monkeypatch.setattr(mod, "validate_certificate", real_validate)
+
+    assert mod._resolved_specs("not specs") == []
+    settings = mod._runtime_settings(
+        {
+            "generation_settings": {
+                "n_ctx": 2048,
+                "n_gpu_layers": -1,
+                "seed": 1325,
+                "logprobs_requested": 0,
+            }
+        }
+    )
+    assert settings["n_ctx"] == 2048
+    assert settings["stop"] == []
+    assert mod._minimal_changes_applied({}) == ["runtime settings", "parser repair"]
+    assert mod._read_json(tmp_path / "missing.json") == {}
+
+    bad_rows = _exp1311() | {
+        "responses": [
+            "not a row",
+            _row("cb_sat_schedule", "SAT", "SAT", "SAT") | {"generation_source": "cpu_smoke"},
+            _row("cb_sat_schedule", "SAT", "SAT", "SAT") | {"hf_id": "legacy/small"},
+            _row("cb_sat_schedule", "SAT", "SAT", "SAT") | {"verifier_label": None, "expected_label": None},
+        ]
+    }
+    no_rows = mod.build_runtime_fixed_artifact(
+        exp1311_artifact=bad_rows,
+        exp1312_artifact=_exp1312(),
+        exp1323_artifact=_exp1323(),
+        exp1324_artifact=_exp1324(),
+        model_specs=[QWEN_SPEC, GEMMA_SPEC],
+        run_date="20260505",
+        project_root="/repo",
+    )
+    assert no_rows["blocked_reason"] == "no_verifier_backed_sota_rows"
+
+    below_gate = mod.build_runtime_fixed_artifact(
+        exp1311_artifact=_exp1311()
+        | {"responses": [_row("cb_sat_schedule", "", "SAT", "SAT", token_count=1)]},
+        exp1312_artifact={"certificate_parse_rate": 0.70},
+        exp1323_artifact=_exp1323(),
+        exp1324_artifact={},
+        model_specs=[QWEN_SPEC, GEMMA_SPEC],
+        run_date="20260505",
+        project_root="/repo",
+        min_headline_cases=1,
+    )
+    assert below_gate["honest_verdict"] == "certificate_parse_gate_still_closed_runtime_fixed_v5"
+    assert below_gate["next_blocker"] == "parser_schema_recovery_still_below_0.75_parse_gate"
+    assert below_gate["retire_if_same_verdict"]["enabled"] is True
+
+    exp1323_path = tmp_path / "exp1323.json"
+    output_path = tmp_path / "exp1325.json"
+    exp1323_path.write_text(json.dumps(_exp1323(recovered=False)), encoding="utf-8")
+    blocked = mod.run_experiment(
+        project_root=tmp_path,
+        exp1323_path=exp1323_path,
+        output_path=output_path,
+        cached_pair_fn=lambda **_kwargs: pytest.fail("cached pair must not be resolved"),
+    )
+    assert blocked["status"] == "blocked"

@@ -811,3 +811,5 @@ web search: GitHub trending energy based mod |
 | 2026-05-05 07:31 UTC | SatIR/NSVIF Constraint Index + Semantic Validator | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1325-triggered-certificate-extraction-v5- |
 | 2026-05-05 07:31 UTC | BEAVER-lite/Cactus Safe-Prefix Acceptance v5 - Gat | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1326-satir-nsvif-semantic-validator-gat |
 | 2026-05-05 07:33 UTC | SatIR/NSVIF Constraint Index + Semantic Validator | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1325-triggered-certificate-extraction-v5- |
+| 2026-05-05 07:33 UTC | BEAVER-lite/Cactus Safe-Prefix Acceptance v5 - Gat | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1326-satir-nsvif-semantic-validator-gat |
+| 2026-05-05 07:35 UTC | SatIR/NSVIF Constraint Index + Semantic Validator | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1325-triggered-certificate-extraction-v5- |
