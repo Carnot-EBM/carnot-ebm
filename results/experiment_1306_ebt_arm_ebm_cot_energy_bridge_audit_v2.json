@@ -1,0 +1,73 @@
+{
+  "arm_ebm_alignment_note": "Implemented locally: local LLM outputs can be scored after generation by Carnot verifier energies and candidate-ranker style selection. Alignment: ARM-EBM supports interpreting autoregressive sequence likelihoods through an energy/value lens. Strategic gap: no ARM-to-EBM soft-Bellman trainer or lookahead decoding architecture is implemented here.",
+  "ebm_cot_sequence_energy_note": "Implemented locally: trace, claim, and certificate energies are available in the verifier stack and DVI replay artifacts. Alignment: EBM-CoT argues for sequence-level chain-of-thought consistency energy instead of final-answer-only scoring. Strategic gap: no EBM-CoT calibration model or sequence optimizer is added by this audit.",
+  "ebt_alignment_note": "Implemented locally: Carnot already scores generated answers, claims, and candidate repairs with verifier/certificate energies. Alignment: EBT frames inference as minimizing energy over candidate predictions. Strategic gap: this audit does not add a native Energy-Based Transformer or Langevin generation loop.",
+  "ebt_citation_count_checked": {
+    "citation_count": 14,
+    "network_required": false,
+    "paper": "Energy-Based Transformers are Scalable Learners and Thinkers",
+    "semantic_scholar_source": "research-references.md",
+    "status_note": "Local references record a Semantic Scholar EBT citation-count signal; Exp 1306 did not require live network access."
+  },
+  "energy_bridge_completed": true,
+  "experiment": "1306_ebt_arm_ebm_cot_energy_bridge_audit_v2",
+  "extropic_kona_status_checked": "Local notes check Extropic XTR-0/Z1/THRML and Logical Kona status; they are recorded as future sampler context and strategic architecture context, not as dependencies for Exp 1306 or evidence of local TSU/Kona implementation.",
+  "hardware_sampler_context_recorded": "Recorded p-bit update dynamics, synchronous/asynchronous and inertia variants, time-multiplexed p-bit reuse, KV260 limits, and Extropic TSU context as future sampler-parity inputs tied to KL, delay, and reuse-factor diagnostics.",
+  "honest_verdict": "energy_bridge_completed_local_alignment_only_strategic_context_not_implemented",
+  "implemented_locally": [
+    "Verifier-energy scoring and repair artifacts exist in the local Carnot pipeline.",
+    "The bridge synthesis itself is implemented as a local reporting artifact only.",
+    "Milestone .100 records HardNet++ and DSP feasibility context for repair policy alignment."
+  ],
+  "local_evidence_terms_found": [
+    "ebt",
+    "arm-ebm",
+    "ebm-cot",
+    "falcon",
+    "extropic",
+    "kona",
+    "p-bit"
+  ],
+  "metadata": {
+    "artifact": "ebt_arm_ebm_cot_energy_bridge_audit_v2",
+    "experiment_id": 1306,
+    "network_required": false,
+    "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "run_date": "20260505",
+    "schema": "energy_bridge_audit_v2"
+  },
+  "milestone_100_continuous_repair_context": {
+    "copy_as_decode_verified_span_reuse": 1.0,
+    "energy_bridge_blocker": "1 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: no prior_failures field on task",
+    "energy_bridge_status": "blocked",
+    "false_continue_rate": 0.7714285714285715,
+    "false_stop_rate": 0.0,
+    "feasibility_channel_auc": 0.6604651162790698,
+    "feasibility_channel_predictive": true,
+    "hardnetpp_delta_over_snarenet": 1.2207222442957435,
+    "hardnetpp_nonlinear_repair_viable": true
+  },
+  "prior_blocker": {
+    "blocked_at_layer": "conductor_pre_gate",
+    "gate_check_summary": "1 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: no prior_failures field on task",
+    "honest_verdict": "blocked_gate_check_failed",
+    "status": "blocked"
+  },
+  "run_date": "20260505",
+  "schema": "energy_bridge_audit_v2",
+  "source_artifacts": [
+    "results/experiment_1293_ebt_arm_ebm_cot_energy_bridge_audit.json",
+    "results/experiment_1295_milestone_retro_100.json"
+  ],
+  "source_documents": [
+    "research-references.md",
+    "_bmad/architecture.md",
+    "research-program.md"
+  ],
+  "status": "complete",
+  "strategic_context_only": [
+    "FALCON informs hard-constraint repair and adaptive sampling, but is not implemented here.",
+    "EBT, ARM-EBM, and EBM-CoT are alignment targets for future sequence-energy work.",
+    "Extropic TSU, p-bit hardware dynamics, and Kona remain future sampler/architecture context."
+  ]
+}
