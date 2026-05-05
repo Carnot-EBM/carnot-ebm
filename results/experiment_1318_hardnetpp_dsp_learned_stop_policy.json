@@ -1,0 +1,128 @@
+{
+  "dsp_feasibility_auc": 0.640625,
+  "experiment": "1318_hardnetpp_dsp_learned_stop_policy",
+  "experiment_id": 1318,
+  "generalization_split": {
+    "held_out_case_ids": [
+      "exp1275_seed0_raw_to_fsnet",
+      "exp1275_seed5_raw_to_fsnet",
+      "exp1275_seed10_raw_to_fsnet",
+      "exp1275_seed15_raw_to_fsnet",
+      "exp1276_seed0_raw_to_fsnet",
+      "exp1276_seed0_fsnet_to_adaptive",
+      "exp1276_seed5_raw_to_fsnet",
+      "exp1276_seed5_fsnet_to_adaptive",
+      "exp1276_seed10_raw_to_fsnet",
+      "exp1276_seed10_fsnet_to_adaptive",
+      "exp1276_seed15_raw_to_fsnet",
+      "exp1276_seed15_fsnet_to_adaptive",
+      "exp1291_seed0_raw_to_fsnet",
+      "exp1291_seed0_raw_to_snarenet",
+      "exp1291_seed0_raw_to_hardnetpp",
+      "exp1291_seed0_fsnet_to_snarenet",
+      "exp1291_seed0_fsnet_to_hardnetpp",
+      "exp1291_seed0_snarenet_to_hardnetpp",
+      "exp1291_seed5_raw_to_fsnet",
+      "exp1291_seed5_raw_to_snarenet",
+      "exp1291_seed5_raw_to_hardnetpp",
+      "exp1291_seed5_fsnet_to_snarenet",
+      "exp1291_seed5_fsnet_to_hardnetpp",
+      "exp1291_seed5_snarenet_to_hardnetpp",
+      "exp1291_seed10_raw_to_fsnet",
+      "exp1291_seed10_raw_to_snarenet",
+      "exp1291_seed10_raw_to_hardnetpp",
+      "exp1291_seed10_fsnet_to_snarenet",
+      "exp1291_seed10_fsnet_to_hardnetpp",
+      "exp1291_seed10_snarenet_to_hardnetpp",
+      "exp1291_seed15_raw_to_fsnet",
+      "exp1291_seed15_raw_to_snarenet",
+      "exp1291_seed15_raw_to_hardnetpp",
+      "exp1291_seed15_fsnet_to_snarenet",
+      "exp1291_seed15_fsnet_to_hardnetpp",
+      "exp1291_seed15_snarenet_to_hardnetpp"
+    ],
+    "held_out_count": 36,
+    "holdout_modulus": 5,
+    "holdout_remainder": 0,
+    "label_source": "repair_helped",
+    "split_rule": "case_id seed modulo holdout_modulus",
+    "train_count": 120
+  },
+  "hardnetpp_delta_over_replay_policy": 0.0,
+  "held_out_report": {
+    "dsp_feasibility_auc": 0.640625,
+    "false_stop_predictions": 0,
+    "hardnetpp_delta_over_replay_policy": 0.0,
+    "learned_continue_predictions": 20,
+    "learned_stop_predictions": 16,
+    "n_held_out": 36,
+    "replay_policy": {
+      "continue_predictions": 20,
+      "stop_precision": 1.0,
+      "stop_predictions": 16,
+      "stop_recall": 1.0
+    },
+    "stop_policy_precision": 1.0,
+    "stop_policy_recall": 1.0,
+    "true_stop_predictions": 16
+  },
+  "honest_verdict": "complete: learned policy matched the conservative replay policy on a deterministic held-out seed split, but this is still replay-distribution generalization and not a broad general stop rule",
+  "learned_stop_policy_written": true,
+  "metric_definitions": {
+    "dsp_feasibility_auc": "held-out AUROC of DSP channel_score for verifier-backed repair_helped labels",
+    "hardnetpp_delta_over_replay_policy": "learned minus conservative replay continue-recall on held-out HardNet++ rows",
+    "stop_policy_precision": "precision for held-out stop predictions, with stop as the positive class",
+    "stop_policy_recall": "recall for held-out stop predictions, with stop as the positive class"
+  },
+  "policy": {
+    "channel_threshold": 0.8635947900987188,
+    "family_continue_rates": {
+      "adaptive": 0.0,
+      "fsnet": 1.0,
+      "hardnetpp": 1.0,
+      "local_linear": 0.0
+    },
+    "family_continue_threshold": 0.5,
+    "features": [
+      "before_violation_energy",
+      "before_violation_count",
+      "channel_score",
+      "repair_family"
+    ],
+    "help_energy_tolerance": 0.0001,
+    "label_source": "repair_helped",
+    "policy_type": "transparent_family_rate_with_dsp_threshold_fallback"
+  },
+  "replay_policy_comparison": {
+    "continue_predictions": 20,
+    "stop_precision": 1.0,
+    "stop_predictions": 16,
+    "stop_recall": 1.0
+  },
+  "run_date": "20260505",
+  "schema": "carnot.phase3.hardnetpp_dsp_learned_stop_policy.v1",
+  "source_context": {
+    "experiment_1291_honest_verdict": "hardnetpp_nonlinear_repair_viable",
+    "experiment_1291_status": "complete",
+    "experiment_1292_honest_verdict": "feasibility_channel_predictive_marginal",
+    "experiment_1292_status": "complete",
+    "experiment_1305_honest_verdict": "complete: conservative replay policy is useful as an operator gate, but DSP feasibility is still marginal and this is not a learned general stop rule",
+    "experiment_1305_status": "complete",
+    "prompt_named_paths_missing": [
+      "results/experiment_1291_hardnetpp_nonlinear_repair.json",
+      "results/experiment_1292_dsp_feasibility_channel.json"
+    ],
+    "replay_sources": [
+      "results/experiment_1305_hardnetpp_dsp_feasibility_stop_policy.json",
+      "results/experiment_1291_hardnetpp_nonlinear_repair_benchmark.json",
+      "results/experiment_1292_dsp_feasibility_channel_diagnostic.json"
+    ]
+  },
+  "spec_refs": [
+    "REQ-KONA-032",
+    "SCENARIO-KONA-032"
+  ],
+  "status": "complete",
+  "stop_policy_precision": 1.0,
+  "stop_policy_recall": 1.0
+}
