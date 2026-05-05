@@ -17899,6 +17899,64 @@ and honest verdict.
 
 **Spec traces:** REQ-VERIFY-1368, SCENARIO-VERIFY-1368, Exp 1368
 
+## REQ-VERIFY-1369: Semantic Validator V2 NSVIF Z3 Constraints
+
+**Summary:** Carnot SHALL run the semantic validator on parse-cleared Exp 1366
+certificate cases by encoding extractable structured claims as NSVIF-style Z3
+constraints and routing non-formalizable certificate text through a conservative
+Logitext-style partial-SMT text-constraint layer that preserves UNKNOWN rather
+than forcing a SAT/UNSAT decision.
+
+**Requirements:**
+
+- REQ-VERIFY-1369-1: The workflow SHALL write
+  `results/experiment_1369_semantic_validator_v2_nsvif_z3_constraints.json`
+  with `status="in_progress"` before loading Exp 1366 certificate rows.
+- REQ-VERIFY-1369-2: The workflow SHALL load Exp 1366 certificate rows only
+  when `certificate_parse_rate >= 0.75`; otherwise it SHALL write a terminal
+  blocked artifact with all required fields and an honest verdict.
+- REQ-VERIFY-1369-3: Parseable Exp 1366 rows SHALL be split into fully formal
+  claims when a bounded fixture formula can be encoded as Z3 and natural
+  language text constraints when only conservative partial-SMT text predicates
+  are available.
+- REQ-VERIFY-1369-4: Fully formal claims SHALL be checked with local Z3 and
+  SHALL contribute to `fully_formal_claim_count` and
+  `z3_constraint_pass_rate`.
+- REQ-VERIFY-1369-5: Natural-language text constraints SHALL be evaluated
+  conservatively with local deterministic text predicates and SHALL contribute
+  to `nltc_claim_count` and `smt_text_constraint_pass_rate`; non-formalizable
+  text SHALL remain UNKNOWN instead of being coerced into a formal pass.
+- REQ-VERIFY-1369-6: UNKNOWN certificate outcomes SHALL remain UNKNOWN in the
+  semantic validator and SHALL contribute to `unknown_preservation_rate`.
+- REQ-VERIFY-1369-7: The artifact SHALL compute
+  `validator_execution_pass_rate` across parsed cases and
+  `coverage_delta_over_fol_only` as the coverage gained by the text-constraint
+  route over fully-formal-only validation.
+- REQ-VERIFY-1369-8: The artifact SHALL set
+  `semantic_validator_claim_allowed=true` only when the validator ran on at
+  least one parsed case and UNKNOWN semantics did not collapse.
+- REQ-VERIFY-1369-9: The artifact SHALL include `status`,
+  `parsed_certificate_cases`, `fully_formal_claim_count`, `nltc_claim_count`,
+  `z3_constraint_pass_rate`, `unknown_preservation_rate`,
+  `smt_text_constraint_pass_rate`, `validator_execution_pass_rate`,
+  `coverage_delta_over_fol_only`, `semantic_validator_claim_allowed`, and
+  `honest_verdict`.
+
+**Implementation Status:** Implemented (Exp 1369)
+
+### SCENARIO-VERIFY-1369: Parse-Cleared Certificates Run Without UNKNOWN Collapse
+
+**Given** the run date is `20260505`
+**And** Exp 1366 has terminal tag-first certificate rows with
+`certificate_parse_rate >= 0.75`
+**When** the semantic validator v2 run executes without fresh LLM inference
+**Then** it writes an in-progress artifact first
+**And** it writes a complete artifact with formal Z3 checks, partial-SMT text
+constraint checks, UNKNOWN-preservation metrics, coverage delta over a
+fully-formal-only validator, claim gate status, and honest verdict.
+
+**Spec traces:** REQ-VERIFY-1369, SCENARIO-VERIFY-1369, Exp 1369
+
 ## REQ-VERIFY-1365: Eidoku CSP Neuro-Symbolic Verification Probe
 
 **Summary:** Carnot SHALL run an Eidoku-style, grammar-free CSP verification
