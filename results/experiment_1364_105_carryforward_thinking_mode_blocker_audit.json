@@ -1,0 +1,66 @@
+{
+  "status": "complete",
+  "thinking_mode_blocker_confirmed": true,
+  "terminal_certificate_required": true,
+  "prior_certificate_parse_rate": 0.0,
+  "semantic_work_completed": false,
+  "semantic_carry_forward_tasks": [
+    {
+      "experiment_id": "exp1355-logitext-nsvif-partial-smt-validator",
+      "prior_state": "blocked",
+      "required_action": "rerun under the .106 parse gate after tag-first certificate evidence clears certificate_parse_rate >= 0.75"
+    },
+    {
+      "experiment_id": "exp1356-verge-mcs-repair-localization",
+      "prior_state": "missing_after_semantic_gate_block",
+      "required_action": "rerun under the .106 parse gate after semantic validator evidence exists, or write a terminal blocked artifact if the gate remains closed"
+    },
+    {
+      "experiment_id": "exp1357-margin-aware-cactus-beaver-scheduler-v2",
+      "prior_state": "blocked",
+      "required_action": "rerun under the .106 parse gate after repair localization produces repair_hint_precision evidence"
+    }
+  ],
+  "self_learning_state": {
+    "state": "positive_replay_only_non_headline",
+    "positive": true,
+    "replay_only": true,
+    "headline_result_allowed": false,
+    "dvi_ready": true,
+    "fresh_verified_sample_count": 0,
+    "self_learning_delta_overall": 1.596429,
+    "nonforgetting_certificate_rate": 1.0,
+    "memory_regression_count": 0,
+    "honest_verdict": "verifier_selected_memory_replay_only_dvi_ready_non_headline"
+  },
+  "hardware_carry_forward_tasks": [
+    {
+      "claim_gate": "required_before_hardware_claim",
+      "path": "hardware/kv260/pdit_certificate_state_pkg.sv",
+      "requirement": "define q=4 p-dit/p-int update semantics for certificate states"
+    },
+    {
+      "claim_gate": "required_before_hardware_claim",
+      "path": "hardware/kv260/ising_sampler_v8_pdit_certificate.v",
+      "requirement": "extend the sampler packet format for q-state energy tables and categorical draws"
+    },
+    {
+      "claim_gate": "required_before_hardware_claim",
+      "path": "tests/python/test_pdit_certificate_state_rtl_contract.py",
+      "requirement": "write a CPU golden-model to RTL equivalence test over all four certificate states"
+    },
+    {
+      "claim_gate": "required_before_hardware_claim",
+      "path": "hardware/kv260/synth_pdit_certificate_state.tcl",
+      "requirement": "synthesize the q=4 design with Vivado and record LUT, FF, BRAM, timing, and seed metadata"
+    },
+    {
+      "claim_gate": "required_before_kv260_claim",
+      "path": "python/carnot/hardware/pdit_certificate_state_driver.py",
+      "requirement": "run the generated bitfile on a real KV260 with AXI/PYNQ readback logs"
+    }
+  ],
+  "publication_hold_state": "active",
+  "docs_reconciliation_needed": true,
+  "honest_verdict": "milestone_105_carryforward_confirms_thinking_mode_missing_structural_tag_blocker_terminal_certificate_required_semantic_chain_gated_self_learning_replay_only_publication_hold_active"
+}
