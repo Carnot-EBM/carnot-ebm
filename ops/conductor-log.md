@@ -843,3 +843,19 @@ web search: GitHub trending energy based mod |
 | 2026-05-05 08:23 UTC | Milestone 2026.04.103 Retrospective + Carry-Forwar | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed, 1 warning in 5.02s |
 | 2026-05-05 08:53 UTC | Plan milestone 2026.04.104 | OK | 14 tasks proposed |
 | 2026-05-05 08:55 UTC | Milestone 2026.04.104 activated | OK | 14 tasks queued |
+| 2026-05-05 09:09 UTC | Environment Gate Audit - Disk Quota, Pretest Signa | FAIL | Codex CLI error: [Errno 122] Disk quota exceeded |
+| 2026-05-05 09:11 UTC | Environment Gate Audit - Disk Quota, Pretest Signa | OK | Deliverable already exists in repo |
+| 2026-05-05 09:12 UTC | Exp1325 Skeleton + Gate-State Finalizer - Clean Ca | FAIL | Codex CLI error: [Errno 122] Disk quota exceeded |
+| 2026-05-05 09:14 UTC | Exp1325 Skeleton + Gate-State Finalizer - Clean Ca | FAIL | Codex CLI error: [Errno 122] Disk quota exceeded |
+| 2026-05-05 09:16 UTC | Exp1325 Skeleton + Gate-State Finalizer - Clean Ca | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-05 09:19 UTC | XGrammar2/TagDispatch Certificate Grammar Dry-Run  | SKIP | Pre-tests failing, self-heal failed: 4 failed, 92 passed, 1 warning in 7.96s |
+| 2026-05-05 09:21 UTC | Exp1325 Skeleton + Gate-State Finalizer - Clean Ca | OK | Deliverable already exists in repo |
+| 2026-05-05 09:21 UTC | XGrammar2/TagDispatch Certificate Grammar Dry-Run  | SKIP | Pre-tests failing, self-heal failed: 4 failed, 92 passed, 1 warning in 7.39s |
+| 2026-05-05 09:23 UTC | XGrammar2/TagDispatch Certificate Grammar Dry-Run  | FAIL | Codex CLI error: [Errno 122] Disk quota exceeded |
+| 2026-05-05 09:25 UTC | Triggered Certificate Extraction v6 - Thinking-Bef | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1339-xgrammar2-tagdispatch-certificate-gr |
+| 2026-05-05 09:26 UTC | HalluGuard-Style Certificate Failure Split - Data  | FAIL | Codex CLI error: [Errno 122] Disk quota exceeded |
+| 2026-05-05 09:28 UTC | Triggered Certificate Extraction v6 - Thinking-Bef | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1339-xgrammar2-tagdispatch-certificate-gr |
+| 2026-05-05 09:28 UTC | HalluGuard-Style Certificate Failure Split - Data  | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-05 09:30 UTC | Triggered Certificate Extraction v6 - Thinking-Bef | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1339-xgrammar2-tagdispatch-certificate-gr |
+| 2026-05-05 09:31 UTC | HalluGuard-Style Certificate Failure Split - Data  | FAIL | Codex CLI error: [Errno 122] Disk quota exceeded |
+| 2026-05-05 09:33 UTC | ChopChop/NSVIF Semantic Validator - Gated on Certi | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1340-trigger-before-constrain-certificate |

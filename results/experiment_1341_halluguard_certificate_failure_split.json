@@ -1,0 +1,121 @@
+{
+  "artifact": "experiment_1341_halluguard_certificate_failure_split",
+  "artifact_metadata": {
+    "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "run_date": "20260505",
+    "source_experiments": [
+      "1323",
+      "1324",
+      "1340"
+    ]
+  },
+  "data_driven_risk_proxy": {
+    "count": 35,
+    "failure_types": {
+      "possible_hardcoded_solution_leakage": 35
+    },
+    "interpretation": "Counts verifier-label repair or compact-encoding paths as a data-driven shortcut/leakage proxy, not as proof of an independent formalizer success.",
+    "proxy_name": "hardcoded_solution_leakage_path_proxy",
+    "rate": 0.251799
+  },
+  "honest_verdict": "local_certificate_slice_diagnostic_exp1340_missing_no_universal_detector_claim",
+  "measurement_note": "Replay/audit artifact only. No fresh SOTA model generation was run.",
+  "parser_schema_risk_count": 40,
+  "reasoning_driven_risk_proxy": {
+    "count": 53,
+    "failure_types": {
+      "semantic_invalidity": 30,
+      "solver_disagreement": 19,
+      "unknown_state_mishandling": 4
+    },
+    "interpretation": "Counts parseable-but-untruthful certificates, solver disagreement, and UNKNOWN collapse as reasoning/decision instability proxies.",
+    "proxy_name": "semantic_solver_unknown_instability_proxy",
+    "solver_vs_certificate_delta": 0.17197
+  },
+  "repair_policy_by_failure_type": {
+    "parser_schema_mismatch": {
+      "next_actions": [
+        "grammar branch: recover at least 6 additional parseable attempts before reopening the parse gate",
+        "prompt retrieval: retrieve the exact JSON field contract before constrained decoding"
+      ],
+      "risk_axis": "parser_schema"
+    },
+    "possible_hardcoded_solution_leakage": {
+      "next_actions": [
+        "prompt retrieval: separate source facts from verifier labels before formalizer evaluation",
+        "semantic validator: exclude verifier-label repair paths from headline formalizer metrics unless derivation evidence is present"
+      ],
+      "risk_axis": "data_driven_proxy"
+    },
+    "semantic_invalidity": {
+      "next_actions": [
+        "semantic validator: run solver-backed validation after parsing",
+        "reasoning budget: allow trigger-before-constrain reasoning before the certificate tail"
+      ],
+      "risk_axis": "reasoning_driven"
+    },
+    "solver_disagreement": {
+      "next_actions": [
+        "semantic validator: compare solver answer, certificate label, and verifier label as separate columns",
+        "reasoning budget: escalate cases with solver disagreement before accepting repaired certificates"
+      ],
+      "risk_axis": "reasoning_driven"
+    },
+    "undergeneration": {
+      "next_actions": [
+        "prompt retrieval: inject the certificate schema before generation",
+        "reasoning budget: remove premature newline stop strings and allocate enough max_tokens for a certificate tail"
+      ],
+      "risk_axis": "runtime_and_prompt_underproduction"
+    },
+    "unknown_state_mishandling": {
+      "next_actions": [
+        "UNKNOWN-preserving fallback: keep UNKNOWN and ABSTAIN as first-class labels",
+        "grammar branch: dispatch UNKNOWN cases to a schema branch that forbids forced SAT/UNSAT collapse"
+      ],
+      "risk_axis": "unknown_preservation"
+    }
+  },
+  "run_date": "20260505",
+  "schema_version": 1,
+  "semantic_invalidity_count": 30,
+  "source_cases_available": {
+    "exp1323": true,
+    "exp1323_token_health_context": {
+      "empty_or_one_token_rate": 0.4,
+      "entropy_production_rate_available": true,
+      "min_tokens_recovered": true,
+      "topk_logprob_available": true
+    },
+    "exp1324": true,
+    "exp1324_source_metrics": {
+      "exp1311_answer_stability_score": 0.9,
+      "exp1311_pysat_verified_rate": 0.525,
+      "exp1311_source_solver_disagreement_count": 19,
+      "exp1312_certificate_attempt_count": 139,
+      "exp1312_certificate_parse_rate": 0.71223,
+      "exp1312_certificate_truthfulness_rate": 0.69697
+    },
+    "exp1340": false,
+    "limitations": [
+      "exp1340_absent_or_unreadable_fallback_to_exp1324"
+    ],
+    "source_failure_classes": [
+      "parser_schema_mismatch",
+      "possible_hardcoded_solution_leakage",
+      "semantic_invalidity",
+      "solver_disagreement",
+      "undergeneration",
+      "unknown_state_mishandling"
+    ]
+  },
+  "source_honest_verdicts": {
+    "exp1323": "token_health_recovered_certificate_prompt_multitoken",
+    "exp1324": "diagnostic_complete_parse_gate_shortfall_parser_recovery_needed",
+    "exp1340": null
+  },
+  "status": "in_progress",
+  "undergeneration_risk_count": 25,
+  "universal_detector_claim_allowed": false,
+  "unknown_mishandling_count": 4
+}

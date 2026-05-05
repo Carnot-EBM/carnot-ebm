@@ -17527,3 +17527,107 @@ satisfied
 0.75 parse gate remains closed.
 
 **Spec traces:** REQ-VERIFY-1325, SCENARIO-VERIFY-1325, Exp 1325
+
+## REQ-VERIFY-1338: Exp 1325 Skeleton And Gate-State Finalizer
+
+**Summary:** After milestone `.103` closes with Exp 1325 left as a stale
+in-progress skeleton, Carnot SHALL write a terminal carry-forward artifact that
+classifies the stale artifact as environmental rather than scientific, carries
+forward the Exp 1324 parse-recovery floor, and keeps downstream `.103`
+certificate gates closed until a materially different `.104` replacement branch
+passes its own parse and semantic-validator gates.
+
+**Requirements:**
+
+- REQ-VERIFY-1338-1: The workflow SHALL write an in-progress artifact to
+  `results/experiment_1338_exp1325_skeleton_and_gate_state_finalizer.json`
+  before loading source records.
+- REQ-VERIFY-1338-2: The workflow SHALL read Exp 1324, Exp 1325, Exp 1327, the
+  `.103` operational retro, and conductor-log evidence for disk quota and gate
+  blocks without modifying those `.103` result artifacts.
+- REQ-VERIFY-1338-3: If the Exp 1325 artifact lacks substantive certificate
+  metrics, the finalizer SHALL set
+  `exp1325_terminal_classification="stale_skeleton_environment_failure"` and
+  SHALL NOT treat Exp 1325 as a failed certificate method.
+- REQ-VERIFY-1338-4: The finalizer SHALL carry forward
+  `minimum_parseable_attempts_to_recover` and `parse_gate_threshold` from Exp
+  1324 when available.
+- REQ-VERIFY-1338-5: The artifact SHALL list downstream tasks to keep closed
+  until a new `.104` parse gate and semantic validator branch complete,
+  including semantic-validator, safe-prefix, DVI certificate-tail, and GRPO/VPRM
+  work gated on those branches.
+- REQ-VERIFY-1338-6: `rerun_is_materially_different` SHALL be true only when
+  the proposed `.104` replacement changes the method beyond a blind rerun, such
+  as trigger-before-constrain generation, dynamic grammar dispatch, and semantic
+  validation.
+- REQ-VERIFY-1338-7: The artifact SHALL include `status`,
+  `exp1325_terminal_classification`,
+  `minimum_parseable_attempts_to_recover`, `parse_gate_threshold`,
+  `downstream_tasks_to_keep_closed`, `certificate_recovery_ready`,
+  `rerun_is_materially_different`, `required_method_changes`,
+  `stale_artifacts_not_modified`, and `honest_verdict`.
+
+**Implementation Status:** Planned (Exp 1338)
+
+### SCENARIO-VERIFY-1338: Stale Exp 1325 Is Closed Without Reopening Gates
+
+**Given** the run date is `20260505`
+**And** Exp 1325 is an in-progress artifact with no substantive certificate
+parse or truthfulness metrics
+**And** the conductor log records disk-quota failures for Exp 1325 plus
+gate-blocked Exp 1326/1327-class downstream work
+**When** the skeleton and gate-state finalizer runs
+**Then** it writes the Exp 1338 artifact with the required carry-forward fields
+**And** it carries forward Exp 1324's parse-recovery floor
+**And** it keeps downstream `.103` semantic-validator, safe-prefix,
+DVI certificate-tail, and GRPO/VPRM tasks closed until a materially different
+`.104` replacement branch completes parse and semantic validation.
+
+**Spec traces:** REQ-VERIFY-1338, SCENARIO-VERIFY-1338, Exp 1338
+
+## REQ-VERIFY-1339: XGrammar2 TagDispatch Certificate Grammar Dry-Run
+
+**Summary:** Carnot SHALL dry-run dynamic certificate grammar dispatch for
+`UNKNOWN`, `SAT`, `UNSAT`, and repair-hint branches without calling a SOTA
+model.  The dry-run MUST prefer the existing certificate parser and grammar
+backend probes, and MUST report honestly when XGrammar is unavailable and only a
+pure-Python branch shim was exercised.
+
+**Requirements:**
+
+- REQ-VERIFY-1339-1: The workflow SHALL write an in-progress artifact to
+  `results/experiment_1339_xgrammar2_tagdispatch_certificate_grammar_dryrun.json`
+  before probing local parser, certificate, or grammar code.
+- REQ-VERIFY-1339-2: The dry-run SHALL define synthetic certificate strings for
+  `UNKNOWN`, `SAT`, `UNSAT`, and repair-hint states and run each through the
+  existing certificate parser plus a branch-specific dispatch shim.
+- REQ-VERIFY-1339-3: The dispatch shim SHALL preserve `UNKNOWN` as a first-class
+  state rather than forcing it into `SAT` or `UNSAT`, and SHALL count every wrong
+  branch or lost `UNKNOWN` semantic as a state-transition error.
+- REQ-VERIFY-1339-4: The artifact SHALL include `status`,
+  `grammar_backend_candidates`, `dynamic_grammar_compile_ms`,
+  `mask_generation_ms_per_token_proxy`, `certificate_states_supported`,
+  `unknown_state_supported`, `state_transition_error_count`,
+  `parse_rate_delta_over_static_gbnf_proxy`, `dynamic_grammar_ready`, and
+  `honest_verdict`.
+- REQ-VERIFY-1339-5: `dynamic_grammar_ready` SHALL be true only when all four
+  required states are supported by the dry-run and
+  `state_transition_error_count == 0`; otherwise the artifact SHALL name the
+  blocker in `honest_verdict`.
+
+**Implementation Status:** Planned (Exp 1339)
+
+### SCENARIO-VERIFY-1339: Dynamic Certificate Branch Dispatch Dry-Run
+
+**Given** the run date is `20260505`
+**And** no SOTA model inference is allowed
+**When** the XGrammar2 tag-dispatch dry-run runs over the local synthetic
+certificate strings
+**Then** it writes the Exp 1339 artifact with required backend, timing, state,
+transition-error, parse-delta, readiness, and honest-verdict fields
+**And** it records whether XGrammar is importable without treating post-hoc
+validation alone as a native XGrammar backend
+**And** it sets `dynamic_grammar_ready=true` only when `UNKNOWN`, `SAT`,
+`UNSAT`, and repair-hint dispatch all succeed without transition errors.
+
+**Spec traces:** REQ-VERIFY-1339, SCENARIO-VERIFY-1339, Exp 1339
