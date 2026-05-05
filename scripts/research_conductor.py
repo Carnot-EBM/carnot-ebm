@@ -1639,6 +1639,30 @@ def _verdict_is_untrustworthy(payload: dict) -> tuple[bool, str | None]:
     HONEST_FINDING_TOKENS = ("honest_negative", "honest_null", "honest_neutral")
     if any(tok in vlow for tok in HONEST_FINDING_TOKENS):
         return False, verdict
+    # 2026-05-05 fix: agents commonly prefix terminal verdicts with explicit
+    # status markers ("complete: ...", "success: ...", "passed: ..."). The
+    # text after the prefix often contains nuance words that match
+    # _PARTIAL_TOKENS as substrings (e.g., "complete: ... DSP feasibility
+    # is still marginal" matches "marginal" → false positive partial).
+    # exp1305 incident: agent shipped status=complete with honest_verdict
+    # "complete: conservative replay policy is useful as an operator gate,
+    # but DSP feasibility is still marginal and this is not a learned
+    # general stop rule" — three retries logged FAIL bootstrap-only because
+    # "marginal" matched _PARTIAL_TOKENS even though the verdict explicitly
+    # opens with a terminal-success marker. Prefix-trust agent's explicit
+    # terminal markers when present.
+    _TERMINAL_VERDICT_PREFIXES = (
+        "complete:",
+        "complete ",
+        "success:",
+        "success ",
+        "passed:",
+        "passed ",
+        "shipped:",
+        "shipped ",
+    )
+    if any(vlow.startswith(p) for p in _TERMINAL_VERDICT_PREFIXES):
+        return False, verdict
     # Issue 7 extension 2026-05-01 18:50Z: verdicts that carry both a
     # *progress* token (improved/gained/above_baseline) AND a
     # *threshold-miss* token (below/under/missed) describe an honest
