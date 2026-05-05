@@ -1,576 +1,273 @@
-milestone: 2026.04.107
-milestone_title: "Pre-test Fix + arXiv Submission Sprint + DVI Training + GRPO v7 JURY-RL"
+milestone: 2026.04.108
+milestone_title: "arXiv Submission + Pipeline Quality Fix + GRPO v8 NGRPO + DVI v2 + Discrete SB KV260"
 milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
 tasks:
 
 # ============================================================
-# Phase 0 - Close .106 missing artifacts (MANDATORY, unconditional)
+# Phase 0 - Close .107 missing artifact + failure diagnosis
 # ============================================================
 
-- id: exp1377-pretest-fix-106-retro-closeout
-  milestone: 2026.04.107
-  deliverable: results/experiment_1377_pretest_fix_106_retro_closeout.json
-  title: "Pre-test Suite Fix + Milestone .106 Retro Closeout"
+- id: exp1390-arxiv-submission-sword-api
+  milestone: 2026.04.108
+  deliverable: results/experiment_1390_arxiv_submission_sword_api.json
+  title: "arXiv Submission via SWORD API or Manual Upload Instructions"
   agent_type: codex
   model: gpt-5.5
-  max_turns: 40
-  estimated_wall_time_min: 35
-  priority: critical
-  requires_gpu: false
-  skip_pre_test: true
-  prior_failures:
-    - experiment_id: exp1376-milestone-106-retro-carryforward
-      verdict: milestone_106_retro_skipped_3x_pre_test_cascade_failure
-      addressed_by: "Root cause identified: tests/python/phase5/test_intermediate_scale_v3.py has ModuleNotFoundError for carnot.phase5.intermediate_scale_v3 (module was never implemented in exp1238). This task fixes the import error first, then writes the .106 retro artifact."
-      retire_if_same_verdict: false
-  prompt: |
-    CONTEXT:
-    Milestone 2026.04.106 ran 11/13 tasks. Two final tasks (exp1375 publication
-    hold, exp1376 retro) each SKIPped 3 times due to pre-test cascade failures.
-    The root cause: `tests/python/phase5/test_intermediate_scale_v3.py` has a
-    ModuleNotFoundError for `carnot.phase5.intermediate_scale_v3` — the module
-    was never implemented (exp1238 phase-5-D intermediate scale was incomplete).
-    The .107 milestone begins by fixing this pre-test failure and writing the
-    .106 retrospective artifact. Use {project_root} as the project root and
-    {date} as the run date.
-
-    EXISTING CODE TO READ FIRST:
-    - CODEX.md
-    - CLAUDE.md
-    - research-roadmap.yaml
-    - openspec/change-proposals/research-roadmap-vNEXT.md
-    - ops/conductor-log.md
-    - ops/changelog.md
-    - ops/status.md
-    - research-complete.yaml
-    - tests/python/phase5/test_intermediate_scale_v3.py
-    - results/experiment_1364_105_carryforward_thinking_mode_blocker_audit.json
-    - results/experiment_1365_eidoku_csp_neuro_symbolic_verification_probe.json
-    - results/experiment_1366_certificate_v8_tag_first_prefix_injection_crane.json
-    - results/experiment_1367_diffutruth_energy_of_falsehood_probe.json
-    - results/experiment_1368_fover_aligned_logicskills_skill_audit.json
-    - results/experiment_1369_semantic_validator_v2_nsvif_z3_constraints.json
-    - results/experiment_1370_verge_mcs_repair_localization_v2.json
-    - results/experiment_1371_margin_aware_cactus_beaver_scheduler_v3.json
-    - results/experiment_1372_optimal_kan_pwa_formal_verification.json
-    - results/experiment_1373_fully_parallel_ising_inertia_cpu_validation.json
-    - results/experiment_1374_continuous_self_learning_v3_verifier_selected_or_csp_fallback.json
-    - results/operational_retro_2026_04_106.json
-
-    TASK:
-    Step 1: Fix the pre-test suite import error. Then write the .106 retro
-    artifact evaluating all 14 success criteria.
-
-    REQUIRED ARTIFACT FIELDS:
-    - status
-    - pre_test_fix_applied
-    - pre_test_fix_description
-    - tests_passing_after_fix
-    - criteria_total
-    - criteria_met
-    - experiment_statuses
-    - certificate_branch_verdict
-    - eidoku_csp_verdict
-    - semantic_repair_verdict
-    - hardware_formal_verdict
-    - self_learning_verdict
-    - publication_hold_state
-    - carry_forward_tasks
-    - honest_verdict
-
-    CONCRETE STEPS:
-    1. Create results/experiment_1377_pretest_fix_106_retro_closeout.json immediately with status="in_progress".
-    2. Read tests/python/phase5/test_intermediate_scale_v3.py to understand what it imports from carnot.phase5.intermediate_scale_v3.
-    3. Fix the import error by one of these approaches (choose the least invasive):
-       a. Create python/carnot/phase5/intermediate_scale_v3.py as a minimal stub that exports all symbols imported by the test. This preserves the test intent.
-       b. If the test was added by mistake and the module is clearly unimplemented, add @pytest.mark.skip to the test class with a note referencing exp1238 incomplete state.
-       NEVER delete the test file. NEVER import non-existent symbols without a stub.
-    4. Run `.venv/bin/pytest tests/python -x --no-header -q 2>&1 | tail -20` to verify the fix. Record pass/fail counts.
-    5. Write pre_test_fix_applied=true, pre_test_fix_description, tests_passing_after_fix with the count.
-    6. Read all .106 experiment result artifacts. For missing artifacts (exp1375, exp1376), mark explicitly.
-    7. Evaluate each success criterion from openspec/change-proposals/research-roadmap-vNEXT.md (the .106 version):
-       - certificate_parse_rate_above_0 (exp1366: parse_rate=1.0 → MET)
-       - eidoku_csp_viable (exp1365 → MET)
-       - semantic_repair_chain_complete (exp1368-1371 → MET)
-       - kan_formal_verified (exp1372 → MET)
-       - ising_inertia_measured (exp1373 → MET)
-       - self_learning_headline (exp1374 headline_result_allowed=true → MET)
-       - publication_hold_reviewed (exp1375 MISSING → NOT MET)
-       - retro_complete (exp1376 MISSING → NOT MET)
-    8. Set certificate_branch_verdict: "tag_first_crane_parse_rate_1.0_terminal_positive"
-    9. Set eidoku_csp_verdict from exp1365 values.
-    10. Set semantic_repair_verdict from exp1368-1371 chain.
-    11. Set hardware_formal_verdict from exp1372 (formal_property_verified=True) and exp1373 (no inertia speedup on CPU).
-    12. Set self_learning_verdict from exp1374 (headline=True, path=primary_semantic_verified, dvi_ready=True).
-    13. Set publication_hold_state="unknown_exp1375_skipped".
-    14. List carry_forward_tasks for .107.
-    15. Write all required fields, status="complete", honest_verdict.
-
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1377_pretest_fix_106_retro_closeout.json')); print(d.get('pre_test_fix_applied'), d.get('tests_passing_after_fix'), d.get('criteria_met'), '/', d.get('criteria_total'), d.get('honest_verdict'))"
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp1378-publication-hold-v16-claim-boundary
-  milestone: 2026.04.107
-  deliverable: results/experiment_1378_publication_hold_v16_claim_boundary.json
-  title: "Publication Hold v16 + Claim Boundary — Full .106 Evidence Review"
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 30
+  max_turns: 35
   estimated_wall_time_min: 30
   priority: critical
   requires_gpu: false
   skip_pre_test: true
   prior_failures:
-    - experiment_id: exp1375-publication-hold-claim-boundary-v15
-      verdict: publication_hold_v15_skipped_3x_pre_test_cascade
-      addressed_by: "Pre-test cascade fixed in exp1377. This task runs skip_pre_test=true and assesses the publication hold against the full .106 evidence: certificate_parse_rate=1.0, semantic chain complete, headline self-learning (dvi_ready=True, fresh_verified_sample_count=4), KAN formal property verified."
-      retire_if_same_verdict: false
-    - experiment_id: exp1362-publication-hold-ebt-arm-kona-claim-boundary
-      verdict: publication_hold_active_no_external_dependency_claim_allowed
-      addressed_by: ".106 added: certificate_parse_rate=1.0, semantic_validator_claim_allowed=True, repair_claim_allowed=True, triage_claim_allowed=True, headline_result_allowed=True (self-learning), kan_formal_claim_allowed=True. All major blockers resolved locally."
+    - experiment_id: exp1380-arxiv-bundle-v11-submission
+      verdict: submission_attempted_false_arxiv_upload_cli_missing
+      addressed_by: "exp1380 created the bundle (results/arxiv_bundle_v11.tar.gz) and confirmed arxiv_submission_ready=true from exp1379 audit (critical_issues_after_audit=0). The blocker was the arxiv_upload CLI not being installed. This task uses the arXiv SWORD/APP Deposit API (requests-based, no CLI dependency) or produces a complete step-by-step manual submission checklist with the ready bundle."
       retire_if_same_verdict: false
   prompt: |
     CONTEXT:
-    Carnot's publication hold was set pending three things: (1) certificate
-    parse_rate >= 0.75, (2) semantic repair chain complete, (3) headline
-    self-learning evidence. Milestone .106 delivered all three:
-    - exp1366: certificate_parse_rate=1.0 (CRANE tag-first)
-    - exp1369-1371: semantic validation + MCS repair + scheduler, all claim_allowed=True
-    - exp1374: self_learning headline_result_allowed=True, path=primary_semantic_verified
-    - exp1372: kan_formal_claim_allowed=True
-    This task reviews whether the publication hold can be lifted given the full
-    .106 evidence. Use {project_root} as the project root and {date} as the run date.
+    The Carnot arXiv paper is ready to submit. The paper integrity audit
+    (exp1379) found critical_issues_after_audit=0 and arxiv_submission_ready=true.
+    The arXiv bundle v11 was created at results/arxiv_bundle_v11.tar.gz
+    (exp1380). The only blocker was the arxiv_upload CLI being absent. This
+    task submits the paper using the arXiv SWORD/APP Deposit API (HTTP requests
+    via Python's requests library — no CLI needed) or, if API credentials are
+    unavailable, produces a complete step-by-step manual upload checklist with
+    the ready bundle so the operator can complete submission in < 5 minutes.
+    Use {project_root} as the project root and {date} as the run date.
 
     EXISTING CODE TO READ FIRST:
     - CODEX.md
     - CLAUDE.md
-    - _bmad/prd.md
-    - _bmad/architecture.md
-    - research-references.md
-    - results/experiment_1362_publication_hold_ebt_arm_kona_claim_boundary.json
-    - results/experiment_1366_certificate_v8_tag_first_prefix_injection_crane.json
-    - results/experiment_1369_semantic_validator_v2_nsvif_z3_constraints.json
-    - results/experiment_1370_verge_mcs_repair_localization_v2.json
-    - results/experiment_1371_margin_aware_cactus_beaver_scheduler_v3.json
-    - results/experiment_1372_optimal_kan_pwa_formal_verification.json
-    - results/experiment_1374_continuous_self_learning_v3_verifier_selected_or_csp_fallback.json
+    - openspec/change-proposals/research-roadmap-vNEXT.md
+    - results/experiment_1380_arxiv_bundle_v11_submission.json
+    - results/experiment_1379_paper_integrity_audit_v2.json
+    - ops/server.md
 
     TASK:
-    Assess whether the publication hold can be lifted given .106 evidence.
-    Do not modify the paper. Do not claim external parity without local evidence.
+    Attempt programmatic arXiv submission via the SWORD/APP Deposit API.
+    If API credentials are not available, produce a complete manual submission
+    checklist with the ready bundle path and all required metadata.
 
     REQUIRED ARTIFACT FIELDS:
     - status
-    - certificate_evidence_summary
-    - semantic_repair_evidence_summary
-    - kan_formal_evidence_summary
-    - self_learning_evidence_summary
-    - hold_blocker_resolved_certificate
-    - hold_blocker_resolved_semantic_repair
-    - hold_blocker_resolved_self_learning
-    - all_primary_blockers_resolved
-    - publication_hold_state
-    - paper_changes_needed_for_lift
-    - ebt_arm_claim_boundary
-    - dvi_ready
-    - external_dependency_claim_allowed
+    - bundle_path
+    - submission_attempted
+    - submission_method
+    - arxiv_id_if_submitted
+    - submission_result
+    - manual_checklist_generated
+    - manual_checklist_path
     - honest_verdict
 
     CONCRETE STEPS:
-    1. Create results/experiment_1378_publication_hold_v16_claim_boundary.json immediately with status="in_progress".
-    2. Read exp1362 to inherit the list of prior blockers.
-    3. Summarize certificate evidence: exp1366 parse_rate=1.0, prefix_injection_supported=True, headline_result_allowed=True.
-    4. Summarize semantic repair evidence: exp1369 validator_execution_pass_rate=1.0, exp1370 repair_claim_allowed=True, exp1371 triage_claim_allowed=True, false_acceptance_rate=0.0.
-    5. Summarize KAN formal evidence: exp1372 formal_property_verified=True, kan_formal_claim_allowed=True.
-    6. Summarize self-learning evidence: exp1374 headline_result_allowed=True, path=primary_semantic_verified, dvi_ready=True.
-    7. Set hold_blocker_resolved_certificate=true (parse_rate=1.0 >= 0.75).
-    8. Set hold_blocker_resolved_semantic_repair=true (semantic + repair + scheduler all claim_allowed=True).
-    9. Set hold_blocker_resolved_self_learning=true (headline_result_allowed=True).
-    10. If all three primary blockers resolved, set all_primary_blockers_resolved=true.
-    11. Set publication_hold_state="lift_recommended" if all_primary_blockers_resolved=true, else "active" with specific remaining blocker.
-    12. List paper_changes_needed_for_lift: sections to update with .106 results.
-    13. Set dvi_ready=True (from exp1374).
-    14. Set external_dependency_claim_allowed=false unless external parity was locally demonstrated.
-    15. Write all required fields, status="complete", honest_verdict.
+    1. Create results/experiment_1390_arxiv_submission_sword_api.json immediately with status="in_progress".
+    2. Verify results/arxiv_bundle_v11.tar.gz exists and is non-empty.
+    3. Check ops/server.md for any arXiv API credentials or submission configuration.
+    4. Attempt SWORD/APP Deposit submission:
+       a. POST to https://arxiv.org/sword/deposit with bundle and metadata.
+       b. Required metadata: title, abstract, authors (ian@blenke.com), category cs.LG, license CC-BY-4.0.
+       c. If credential missing, generate docs/arxiv-manual-submission-checklist.md with:
+          - Exact URL to upload: https://arxiv.org/submit
+          - Bundle path: results/arxiv_bundle_v11.tar.gz
+          - All required metadata fields pre-filled
+          - Step-by-step screenshot-style instructions
+    5. Record submission_attempted=true if API call was made (regardless of result).
+    6. Record arxiv_id_if_submitted if returned by API.
+    7. Record submission_result with API response or "manual_checklist_generated" if no credentials.
+    8. Set manual_checklist_generated=true if checklist was written.
+    9. Write all required fields, status="complete", honest_verdict.
 
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1378_publication_hold_v16_claim_boundary.json')); print(d.get('publication_hold_state'), d.get('all_primary_blockers_resolved'), d.get('dvi_ready'), d.get('honest_verdict'))"
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1390_arxiv_submission_sword_api.json')); print(d.get('submission_attempted'), d.get('submission_result'), d.get('arxiv_id_if_submitted'), d.get('honest_verdict'))"
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-# ============================================================
-# Phase 1 - Publication sprint
-# ============================================================
-
-- id: exp1379-paper-integrity-audit-v2
-  milestone: 2026.04.107
-  deliverable: results/experiment_1379_paper_integrity_audit_v2.json
-  title: "Paper Integrity Audit v2 — .106 Results Integration + Claim Verification"
+- id: exp1391-fullscale-pipeline-failure-diagnosis
+  milestone: 2026.04.108
+  deliverable: results/experiment_1391_fullscale_pipeline_failure_diagnosis.json
+  title: "Full-Scale Pipeline Failure Diagnosis — Classify 41% Semantic Validation Failures"
   agent_type: codex
   model: gpt-5.5
-  max_turns: 55
-  estimated_wall_time_min: 60
+  max_turns: 45
+  estimated_wall_time_min: 40
   priority: critical
   requires_gpu: false
+  skip_pre_test: true
   prior_failures:
-    - experiment_id: exp1378-publication-hold-v16-claim-boundary
-      verdict: not_yet_run
-      addressed_by: "This task runs after exp1378 completes. If exp1378 sets publication_hold_state=lift_recommended, the audit updates the paper for submission. If hold remains active, audit documents what specific paper changes are needed to lift it."
+    - experiment_id: exp1382-fullscale-certificate-semantic-repair-100cases
+      verdict: semantic_validation_pass_rate_0.59_full_pipeline_pass_rate_0.29
+      addressed_by: "exp1382 ran 100 cases with certificate_parse_rate=1.0 but semantic_validation_pass_rate=0.59. 41 of 100 certificates passed parsing but failed semantic validation. Root cause is unknown — could be Z3 constraint mismatches, certificate field errors, validator logic bugs, or corpus-specific patterns. This diagnostic task classifies the 41 failures into categories without re-running inference."
       retire_if_same_verdict: false
   prompt: |
     CONTEXT:
-    Milestone .106 produced terminal positive evidence for all three primary
-    publication hold blockers. This task updates the paper (docs/paper/main.tex
-    or equivalent) to incorporate .106 results: (1) certificate v8 parse_rate=1.0
-    via tag-first CRANE prefix injection, (2) full semantic validation + MCS
-    repair + scheduler chain operational, (3) headline self-learning via primary
-    semantic verified path (fresh_verified_sample_count=4), (4) GS-KAN formal
-    energy bound verified via MILP. Also adds the DiffuTruth complementary
-    energy signal (AUROC=0.867, KAN correlation=0.961) and Eidoku CSP viability
-    (feasibility_rate=0.740). Prior paper integrity audit from earlier milestones
-    (exp1205 and relatives) identified 5 critical issues. This audit verifies
-    whether those 5 issues are resolved with .106 evidence. Use {project_root} as
-    the project root and {date} as the run date.
+    Exp1382 (full-scale certificate + semantic repair, 100 cases) achieved
+    certificate_parse_rate=1.0 but only semantic_validation_pass_rate=0.59
+    and full_pipeline_pass_rate=0.29. Forty-one of 100 parsed certificates
+    failed semantic validation. The full validation chain (NSVIF Z3 validator
+    + semantic consistency checks) rejected 41% of certificates. Before we
+    can fix the pass rate, we need to understand WHY they fail. This task
+    reads the exp1382 artifact and any intermediate outputs, samples and
+    classifies the failure modes, and produces a structured failure taxonomy
+    that gates the fix in exp1396. Use {project_root} as the project root
+    and {date} as the run date.
 
     EXISTING CODE TO READ FIRST:
     - CODEX.md
     - CLAUDE.md
-    - results/experiment_1378_publication_hold_v16_claim_boundary.json
-    - docs/paper/main.tex (or docs/main.tex — find the correct path)
-    - docs/position-paper-outline.md (if exists)
-    - results/experiment_1366_certificate_v8_tag_first_prefix_injection_crane.json
-    - results/experiment_1367_diffutruth_energy_of_falsehood_probe.json
-    - results/experiment_1369_semantic_validator_v2_nsvif_z3_constraints.json
-    - results/experiment_1372_optimal_kan_pwa_formal_verification.json
-    - results/experiment_1374_continuous_self_learning_v3_verifier_selected_or_csp_fallback.json
-    - research-references.md
+    - results/experiment_1382_fullscale_certificate_semantic_repair_100cases.json
+    - python/carnot/verify/
+    - python/carnot/pipeline/
+    - openspec/capabilities/verification/spec.md
+    - openspec/capabilities/pipeline/spec.md
 
     TASK:
-    Audit the paper for claim accuracy and incorporate .106 evidence. Identify
-    any figures or numbers that do not have live GPU provenance. Do not
-    fabricate numbers; do not weaken provenance claims for results that have them.
+    Diagnose the 41% semantic validation failure rate from exp1382. Classify
+    failures into named categories. Produce a ranked list of failure modes with
+    estimated fix complexity for each.
 
     REQUIRED ARTIFACT FIELDS:
     - status
-    - paper_file_found
-    - critical_issues_before_audit
-    - critical_issues_after_audit
-    - sections_updated
-    - certificate_result_integrated
-    - semantic_repair_result_integrated
-    - self_learning_result_integrated
-    - kan_formal_result_integrated
-    - diffutruth_result_integrated
-    - figures_with_live_provenance
-    - figures_needing_verification
-    - arxiv_submission_ready
-    - remaining_blockers
+    - total_cases_analyzed
+    - parse_rate_confirmed
+    - semantic_validation_failures_classified
+    - failure_categories
+    - failure_category_counts
+    - top_failure_category
+    - fixable_failure_pct
+    - estimated_semantic_validation_pass_rate_after_fixes
+    - failure_analysis_complete
+    - recommended_fixes
     - honest_verdict
 
     CONCRETE STEPS:
-    1. Create results/experiment_1379_paper_integrity_audit_v2.json immediately with status="in_progress".
-    2. Find the paper file: search for docs/paper/main.tex, docs/main.tex, paper/main.tex. Record paper_file_found.
-    3. Read the paper and list all numerical claims. For each, check if it has live GPU provenance in results/ files.
-    4. Audit for the 5 previously-identified critical issues. For each: resolved / unresolved / not_applicable.
-    5. Update the paper to incorporate .106 results where provenance exists:
-       - Certificate v8: parse_rate=1.0 (exp1366)
-       - Semantic repair: repair_hint_precision=1.0, accepted_violation_delta=-2, triage with false_acceptance=0.0 (exp1369-1371)
-       - Self-learning headline: self_learning_delta_overall=1.596429, fresh_verified_sample_count=4, headline (exp1374)
-       - KAN formal: energy bound verified via MILP (exp1372)
-       - DiffuTruth: AUROC=0.867, KAN r=0.961 (exp1367, as complementary signal)
-    6. Record sections_updated with section names and what was changed.
-    7. Record figures_with_live_provenance (list) and figures_needing_verification (list).
-    8. Set critical_issues_after_audit to the count of unresolved critical issues.
-    9. Set arxiv_submission_ready=true ONLY IF critical_issues_after_audit=0 AND paper_file_found=true.
-    10. List remaining_blockers if arxiv_submission_ready=false.
+    1. Create results/experiment_1391_fullscale_pipeline_failure_diagnosis.json immediately with status="in_progress".
+    2. Read results/experiment_1382_fullscale_certificate_semantic_repair_100cases.json.
+    3. Identify where the intermediate failure data is stored (per-case results, failed case IDs, error messages).
+    4. For each failed case (semantic_validation failed), categorize into one of:
+       a. Z3_CONSTRAINT_MISMATCH: Z3 solver returned UNSAT for a certificate constraint that should be satisfiable.
+       b. MISSING_CERTIFICATE_FIELD: Required field absent or malformed in extracted certificate.
+       c. SEMANTIC_CONTRADICTION: Certificate claim contradicts another claim in the same certificate.
+       d. CORPUS_SPECIFIC: Failure tied to specific FoVer question types (arithmetic vs. logical vs. code).
+       e. VALIDATOR_BUG: Validator rejects a certificate that is logically valid (false negative).
+       f. OTHER: Cannot classify.
+    5. Count failure_category_counts for each category.
+    6. Set top_failure_category to the highest-count category.
+    7. Estimate fixable_failure_pct: fraction of failures in categories that have a tractable code fix (MISSING_FIELD, VALIDATOR_BUG, CORPUS_SPECIFIC) vs. fundamentally hard (Z3_CONSTRAINT_MISMATCH, SEMANTIC_CONTRADICTION).
+    8. Estimate estimated_semantic_validation_pass_rate_after_fixes if fixable categories are resolved.
+    9. Set failure_analysis_complete=true.
+    10. List recommended_fixes for exp1396.
     11. Write all required fields, status="complete", honest_verdict.
 
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1379_paper_integrity_audit_v2.json')); print(d.get('critical_issues_after_audit'), d.get('arxiv_submission_ready'), d.get('honest_verdict'))"
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1391_fullscale_pipeline_failure_diagnosis.json')); print(d.get('failure_analysis_complete'), d.get('top_failure_category'), d.get('estimated_semantic_validation_pass_rate_after_fixes'), d.get('honest_verdict'))"
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-- id: exp1380-arxiv-bundle-v11-submission
-  milestone: 2026.04.107
-  deliverable: results/experiment_1380_arxiv_bundle_v11_submission.json
-  title: "arXiv Bundle v11 + Submission (Gated on Audit Ready)"
+# ============================================================
+# Phase 1 - Infrastructure
+# ============================================================
+
+- id: exp1392-test-suite-hygiene-v2
+  milestone: 2026.04.108
+  deliverable: results/experiment_1392_test_suite_hygiene_v2.json
+  title: "Test Suite Hygiene v2 — Fix Unrelated Collection Debt from exp1377"
   agent_type: codex
   model: gpt-5.5
   max_turns: 35
-  estimated_wall_time_min: 35
-  priority: critical
+  estimated_wall_time_min: 30
+  priority: medium
   requires_gpu: false
-  gated_on:
-    - upstream: exp1379-paper-integrity-audit-v2
-      artifact_field: arxiv_submission_ready
-      op: '=='
-      value: true
+  skip_pre_test: true
   prior_failures:
-    - experiment_id: exp1194-paper-v6-recompile-arxiv-bundle-v7
-      verdict: gated_on_missing_critical_issues_fix
-      addressed_by: ".106 resolved all primary paper blockers (certificate chain, semantic repair, headline self-learning, KAN formal). Paper audit (exp1379) will confirm arxiv_submission_ready=true if critical_issues_after_audit=0."
-      retire_if_same_verdict: true
+    - experiment_id: exp1377-pretest-fix-106-retro-closeout
+      verdict: phase5_import_fixed_but_unrelated_collection_debt_remains
+      addressed_by: "exp1377 fixed the phase5 intermediate_scale_v3 import blocker (5/5 targeted tests pass). However, exp1377's notes indicate 'full tests/python still had unrelated collection debt'. This task identifies and fixes all remaining collection errors so the full test suite runs cleanly."
+      retire_if_same_verdict: false
   prompt: |
     CONTEXT:
-    If exp1379 sets arxiv_submission_ready=true, this task produces the arXiv
-    bundle and submits the paper. The bundle should include the LaTeX source,
-    all figures with live GPU provenance from .106, and the bibliography. The
-    bundle must NOT include placeholder or simulated figures. Use {project_root}
-    as the project root and {date} as the run date.
+    Exp1377 fixed the critical phase5 intermediate_scale_v3 import error
+    (5/5 targeted tests pass). However, exp1377 noted that "full tests/python
+    still had unrelated collection debt" — other test files have collection
+    errors unrelated to the phase5 fix. This task identifies all remaining
+    collection errors and resolves them. The goal is to reach zero collection
+    errors in the full test suite so pre-test checks pass cleanly for all
+    subsequent milestones. Use {project_root} as the project root and
+    {date} as the run date.
 
     EXISTING CODE TO READ FIRST:
     - CODEX.md
     - CLAUDE.md
-    - results/experiment_1379_paper_integrity_audit_v2.json
-    - docs/paper/main.tex (or the path found in exp1379)
-    - research-references.md
+    - results/experiment_1377_pretest_fix_106_retro_closeout.json
+    - tests/python/
 
     TASK:
-    Build the arXiv submission bundle from the audited paper. Verify LaTeX
-    compiles without errors. Attempt submission or produce submission-ready
-    archive. If gate condition not met (arxiv_submission_ready=false in exp1379),
-    write a blocked artifact with the specific remaining blocker.
+    Run the full test suite, identify all collection errors, and fix each one.
+    Verify zero collection errors after fixes. CPU-only.
 
     REQUIRED ARTIFACT FIELDS:
     - status
-    - paper_file_found
-    - latex_compile_success
-    - bundle_file_path
-    - bundle_size_bytes
-    - figures_included
-    - submission_attempted
-    - submission_result
-    - arxiv_id_if_submitted
-    - remaining_blocker
+    - collection_errors_before
+    - collection_errors_after
+    - errors_fixed
+    - fixes_applied
+    - test_suite_collection_clean
     - honest_verdict
 
     CONCRETE STEPS:
-    1. Create results/experiment_1380_arxiv_bundle_v11_submission.json immediately with status="in_progress".
-    2. Confirm exp1379.arxiv_submission_ready=true (gate should enforce this, but double-check).
-    3. Find the paper directory. Run `pdflatex` or `xelatex` to compile. Record latex_compile_success.
-    4. If compilation fails, record the error in remaining_blocker and set status="blocked".
-    5. If compilation succeeds, collect the arXiv submission archive: LaTeX source + figures + bibliography. Bundle as .tar.gz at results/arxiv_bundle_v11.tar.gz.
-    6. Record bundle_file_path, bundle_size_bytes, figures_included (list of figure file names).
-    7. Attempt arXiv submission via `arxiv-upload` CLI or equivalent if available; otherwise record `submission_attempted=false` and note the manual submission steps.
-    8. Record submission_result and arxiv_id_if_submitted if submission succeeded.
+    1. Create results/experiment_1392_test_suite_hygiene_v2.json immediately with status="in_progress".
+    2. Run `.venv/bin/pytest tests/python --collect-only -q 2>&1 | grep ERROR | head -40` to identify collection errors.
+    3. Record collection_errors_before count and list.
+    4. For each collection error:
+       a. Read the failing test file to understand the import.
+       b. Fix by creating a minimal stub module, marking the test as skip with a rationale, or fixing the import path.
+       c. NEVER delete test files. NEVER introduce new dependencies.
+    5. Re-run `--collect-only` after each fix to confirm resolution.
+    6. Record collection_errors_after = 0 if all are fixed.
+    7. Run `.venv/bin/pytest tests/python -x --no-header -q 2>&1 | tail -10` to get the overall pass count.
+    8. Set test_suite_collection_clean=true if collection_errors_after == 0.
     9. Write all required fields, status="complete", honest_verdict.
 
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1380_arxiv_bundle_v11_submission.json')); print(d.get('latex_compile_success'), d.get('submission_result'), d.get('arxiv_id_if_submitted'), d.get('honest_verdict'))"
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1392_test_suite_hygiene_v2.json')); print(d.get('collection_errors_before'), d.get('collection_errors_after'), d.get('test_suite_collection_clean'), d.get('honest_verdict'))"
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
 # ============================================================
-# Phase 2 - DVI training + full-scale evaluation
+# Phase 2 - GRPO Fix + DVI Improvement (parallel, GPU-gated)
 # ============================================================
 
-- id: exp1381-dvi-discriminative-verifier-training-v1
-  milestone: 2026.04.107
-  deliverable: results/experiment_1381_dvi_discriminative_verifier_training_v1.json
-  title: "DVI Discriminative Verifier Training v1 — First Actual DVI Run"
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 55
-  estimated_wall_time_min: 60
-  priority: critical
-  requires_gpu: true
-  prior_failures:
-    - experiment_id: exp1374-continuous-self-learning-v3-verifier-selected-or-csp-fallback
-      verdict: continuous_self_learning_v3_primary_semantic_verified_dvi_ready_headline_allowed
-      addressed_by: "exp1374 set dvi_ready=True and fresh_verified_sample_count=4, but DVI training itself did not run. This task executes the actual discriminative verifier update using those 4 fresh verified cases plus replay data."
-      retire_if_same_verdict: false
-    - experiment_id: exp1358-continuous-self-learning-verifier-selected-memory
-      verdict: verifier_selected_memory_replay_only_dvi_ready_non_headline
-      addressed_by: "exp1358 and exp1374 both flagged dvi_ready=True across 3+ milestones but DVI training was deferred. Fresh verified samples now exist (exp1374). This experiment executes the deferred DVI training step."
-      retire_if_same_verdict: false
-  prompt: |
-    CONTEXT:
-    dvi_ready=True has appeared in exp1374 (.106), exp1358 (.105), and exp1344
-    (.104) — three consecutive milestones. exp1374 delivered fresh_verified_sample_count=4
-    via the primary semantic verified path. DVI (Discriminative Verifier
-    Improvement) requires: (1) a current verifier checkpoint, (2) fresh
-    semantically-verified positive examples, (3) a discriminative training step
-    that improves the verifier's discrimination boundary. This is the FIRST actual
-    DVI training run — previous milestones set dvi_ready but never executed the
-    training. Use {project_root} as the project root and {date} as the run date.
-
-    EXISTING CODE TO READ FIRST:
-    - CODEX.md
-    - CLAUDE.md
-    - research-program.md
-    - scripts/experiment_template.py
-    - python/carnot/
-    - results/experiment_1374_continuous_self_learning_v3_verifier_selected_or_csp_fallback.json
-    - results/experiment_1369_semantic_validator_v2_nsvif_z3_constraints.json
-    - results/experiment_1370_verge_mcs_repair_localization_v2.json
-    - openspec/capabilities/verification/spec.md
-    - research-references.md
-
-    TASK:
-    Run the DVI training loop using semantically-verified positive cases from
-    exp1374 and contrastive negative cases from the FoVer corpus. Produce a
-    checkpoint and measure AUROC delta vs the pre-DVI baseline. Report results
-    as a discriminative improvement signal for the self-learning pipeline.
-
-    Every headline LLM generation MUST use MODEL_SPECS from
-    cached_sota_pair(gpu_indices=(0, 1)) if generating new inference. For
-    DVI training itself, the model being trained is Carnot's verifier (not
-    the LLM), but any fresh inference needed to augment the training set
-    must use mandated SOTA GGUFs:
-    - unsloth/Qwen3.6-35B-A3B-GGUF
-    - unsloth/gemma-4-31B-it-GGUF
-    - unsloth/gemma-4-26B-A4B-it-GGUF
-
-    REQUIRED ARTIFACT FIELDS:
-    - status
-    - positive_cases_used
-    - negative_cases_used
-    - training_method
-    - dvi_baseline_auroc
-    - dvi_trained_auroc
-    - dvi_auroc_delta
-    - dvi_checkpoint_path
-    - dvi_deployed
-    - discriminative_improvement_measured
-    - honest_verdict
-
-    CONCRETE STEPS:
-    1. Create results/experiment_1381_dvi_discriminative_verifier_training_v1.json immediately with status="in_progress".
-    2. Load the 4 fresh semantically-verified positive cases from exp1374 (path_used=primary_semantic_verified, promoted_memory_count=4).
-    3. Load contrastive negative cases from the FoVer corpus (labeled incorrect reasoning steps). Target ratio: at least 1:3 positive:negative.
-    4. Identify the current verifier checkpoint to fine-tune. Prefer GS-KAN or SC-Energy tier checkpoint in python/carnot/models/.
-    5. Apply SECL-style discriminative training (arXiv:2604.09624): train the verifier to classify positive (semantically verified) vs negative (FoVer incorrect) cases using a binary cross-entropy or contrastive hinge loss.
-    6. Measure dvi_baseline_auroc on a held-out FoVer split before training.
-    7. Run the discriminative training loop for at least 10 epochs or until convergence.
-    8. Measure dvi_trained_auroc on the same held-out split after training.
-    9. Compute dvi_auroc_delta = dvi_trained_auroc - dvi_baseline_auroc.
-    10. Save the checkpoint to python/carnot/models/dvi_checkpoint_v1.pt. Record dvi_checkpoint_path.
-    11. Set dvi_deployed=true if checkpoint was saved successfully.
-    12. Set discriminative_improvement_measured=true if dvi_auroc_delta is not None (positive or negative, just measured).
-    13. Write all required fields, status="complete", honest_verdict.
-
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1381_dvi_discriminative_verifier_training_v1.json')); print(d.get('dvi_auroc_delta'), d.get('dvi_deployed'), d.get('discriminative_improvement_measured'), d.get('honest_verdict'))"
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp1382-fullscale-certificate-semantic-repair-100cases
-  milestone: 2026.04.107
-  deliverable: results/experiment_1382_fullscale_certificate_semantic_repair_100cases.json
-  title: "Full-Scale Certificate + Semantic Repair Pipeline — 100+ FoVer Cases"
+- id: exp1393-grpo-v8-ngrpo-zero-reward-fix
+  milestone: 2026.04.108
+  deliverable: results/experiment_1393_grpo_v8_ngrpo_zero_reward_fix.json
+  title: "GRPO v8 NGRPO — Advantage Calibration via Virtual Max-Reward Sample"
   agent_type: codex
   model: gpt-5.5
   max_turns: 60
-  estimated_wall_time_min: 80
-  priority: high
+  estimated_wall_time_min: 90
+  priority: critical
   requires_gpu: true
-  gated_on:
-    - upstream: exp1381-dvi-discriminative-verifier-training-v1
-      artifact_field: dvi_deployed
-      op: '=='
-      value: true
+  skip_pre_test: true
   prior_failures:
-    - experiment_id: exp1366-certificate-v8-tag-first-prefix-injection-crane
-      verdict: tag_first_prefix_injection_crane_positive_parse_rate_1_0
-      addressed_by: "exp1366 proved parse_rate=1.0 on a small bounded certificate suite. This experiment scales to 100+ FoVer corpus cases and runs the complete pipeline: certificate extraction → semantic validation → MCS repair → scheduler. Uses the DVI-updated verifier from exp1381."
-      retire_if_same_verdict: false
-  prompt: |
-    CONTEXT:
-    exp1366 proved certificate extraction works (parse_rate=1.0) on a small
-    bounded suite. The full semantic repair chain (exp1369-1371) also ran on
-    small case sets. For publication credibility, the complete pipeline needs
-    to run at scale: 100+ FoVer corpus cases through certificate extraction
-    (tag-first CRANE), semantic validation (NSVIF Z3), MCS repair localization
-    (VERGE), and scheduler (margin-aware). The DVI checkpoint from exp1381 is
-    used as the verifier for semantic validation. Use {project_root} as the
-    project root and {date} as the run date.
-
-    EXISTING CODE TO READ FIRST:
-    - CODEX.md
-    - CLAUDE.md
-    - scripts/experiment_template.py
-    - python/carnot/inference/sota_models.py
-    - python/carnot/
-    - results/experiment_1366_certificate_v8_tag_first_prefix_injection_crane.json
-    - results/experiment_1369_semantic_validator_v2_nsvif_z3_constraints.json
-    - results/experiment_1370_verge_mcs_repair_localization_v2.json
-    - results/experiment_1371_margin_aware_cactus_beaver_scheduler_v3.json
-    - results/experiment_1381_dvi_discriminative_verifier_training_v1.json
-
-    TASK:
-    Run the complete certificate → semantic validation → MCS repair → scheduler
-    pipeline on 100+ FoVer corpus cases using mandated SOTA GGUF models. Use
-    tag-first CRANE prefix injection for certificate generation. Report pipeline
-    statistics suitable for the paper.
-
-    Every headline LLM generation MUST use MODEL_SPECS from
-    cached_sota_pair(gpu_indices=(0, 1)). MODEL_SPECS must include at least one of:
-    - unsloth/Qwen3.6-35B-A3B-GGUF
-    - unsloth/gemma-4-31B-it-GGUF
-    - unsloth/gemma-4-26B-A4B-it-GGUF
-
-    REQUIRED ARTIFACT FIELDS:
-    - status
-    - total_fover_cases
-    - certificate_extract_count
-    - certificate_parse_rate
-    - semantic_validation_pass_rate
-    - mcs_repair_localization_rate
-    - repair_hint_precision
-    - scheduler_accept_rate
-    - scheduler_false_acceptance_rate
-    - full_pipeline_pass_rate
-    - dvi_checkpoint_used
-    - headline_result_allowed
-    - honest_verdict
-
-    CONCRETE STEPS:
-    1. Create results/experiment_1382_fullscale_certificate_semantic_repair_100cases.json immediately with status="in_progress".
-    2. Load the DVI checkpoint from exp1381 (dvi_checkpoint_path). Confirm dvi_deployed=true.
-    3. Resolve MODEL_SPECS via cached_sota_pair(gpu_indices=(0, 1)).
-    4. Load 100+ FoVer corpus cases (or as many as available, minimum 50).
-    5. For each case: (a) run tag-first CRANE certificate extraction (exp1366 pattern), (b) run semantic validation with DVI-updated verifier, (c) run MCS repair localization on failures, (d) apply margin-aware scheduler.
-    6. Use a progress checkpoint every 25 cases (save to results/exp1382_ckpt.json).
-    7. Report certificate_parse_rate, semantic_validation_pass_rate, mcs_repair_localization_rate, repair_hint_precision, scheduler_accept_rate, scheduler_false_acceptance_rate.
-    8. Compute full_pipeline_pass_rate: fraction of cases that pass certificate + validation + scheduler without requiring repair.
-    9. Set headline_result_allowed=true only if certificate_parse_rate >= 0.75 on a mandated SOTA GGUF with total_fover_cases >= 50.
-    10. Write all required fields, status="complete", honest_verdict.
-
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1382_fullscale_certificate_semantic_repair_100cases.json')); print(d.get('total_fover_cases'), d.get('certificate_parse_rate'), d.get('full_pipeline_pass_rate'), d.get('headline_result_allowed'), d.get('honest_verdict'))"
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-# ============================================================
-# Phase 3 - GRPO + New Research (unconditional, parallel)
-# ============================================================
-
-- id: exp1383-grpo-v7-jury-rl-formal-verifier-rewards
-  milestone: 2026.04.107
-  deliverable: results/experiment_1383_grpo_v7_jury_rl_formal_verifier_rewards.json
-  title: "GRPO v7 JURY-RL — Carnot Formal Verifiers as Reward Signals (DualGPU)"
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 80
-  estimated_wall_time_min: 120
-  priority: high
-  requires_gpu: true
-  prior_failures:
-    - experiment_id: exp1235-grpo-v6-fspo-vps-walbudget-extended
+    - experiment_id: exp1383-grpo-v7-jury-rl-formal-verifier-rewards
+      verdict: grpo_v7_improvement_pp_0.0_all_rollouts_unknown_zero_gradient
+      addressed_by: "exp1383's root cause: all rollouts returned UNKNOWN from Carnot's semantic verifier. ResZero produced zero-mean advantage redistribution, resulting in zero gradient. NGRPO (arXiv:2509.18851) solves this via Advantage Calibration: inject a virtual max-reward sample into the group before computing advantages. The virtual sample breaks the zero-mean symmetry even when all real rollouts are UNKNOWN. retire_if_same_verdict=true: if NGRPO also produces 0.0pp improvement with UNKNOWN-group rollouts, the FoVer corpus is fundamentally incompatible with JURY-RL and must be replaced with a more structured reward corpus."
+      retire_if_same_verdict: true
+    - experiment_id: exp1235-grpo-v6-fspo-vps
       verdict: grpo_v6_wall_budget_exhausted_848s_vs_480s_budget
-      addressed_by: "Increased wall_budget_s to 2400s (2.5x over exp1235's 1200s). JURY-RL reward: Carnot's Z3/semantic verifiers as formal proof rewards instead of learned reward model, following arXiv:2604.25419. ResZero handles UNKNOWN cases. GPU path confirmed working in exp1366 (parse_rate=1.0 with SOTA GGUF)."
+      addressed_by: "wall_budget_s=3600 (4x over exp1235's exhausted budget of 848s). NGRPO is more sample-efficient than FSPO+VPS because it doesn't require the second model pass for VPS."
       retire_if_same_verdict: true
     - experiment_id: exp1208-grpo-v5-tinyv2-dualgpu
       verdict: blocked_gate_check_failed_llama_cpp_gpu_offload_not_verified
-      addressed_by: "llama.cpp GPU offload confirmed working in exp1366 (tag-first CRANE certificate with parse_rate=1.0 on GPU). The GPU gate that blocked exp1208 is resolved."
-      retire_if_same_verdict: true
-    - experiment_id: exp1184-grpo-v4-tinyv2
-      verdict: grpo_v4_no_delta
-      addressed_by: "JURY-RL formal reward replaces the neural TinyV reward model that showed no delta. Z3/semantic verifiers provide deterministic step-level signal instead of a learned reward with calibration issues."
+      addressed_by: "llama.cpp GPU offload confirmed working in exp1366 (parse_rate=1.0) and exp1388 (fresh_verified_sample_count=59 via GPU path). The GPU gate that blocked exp1208 is resolved."
       retire_if_same_verdict: false
   prompt: |
     CONTEXT:
-    GRPO training has been attempted 6+ times but always failed due to either
-    GPU gate blocks or wall budget exhaustion. Two blockers are now resolved:
-    (1) llama.cpp GPU offload confirmed working in exp1366 (parse_rate=1.0);
-    (2) JURY-RL (arXiv:2604.25419) provides a label-free reward recipe using
-    formal verifiers — no learned reward model needed. The JURY-RL pattern:
-    (a) generate N candidate rollouts from the local GGUF model, (b) majority-vote
-    to propose a candidate answer, (c) use Carnot's Z3/semantic verifiers as
-    the formal "proof" for determining the reward — if the verifier confirms
-    the answer, rollouts matching it receive +1; UNKNOWN cases receive ResZero
-    (zero-mean redistribution). wall_budget_s=2400 (2× exp1235's exhausted budget).
+    GRPO training has been attempted 7+ times across 6 experiments with 0.0pp
+    improvement in all cases. The root cause of exp1383 (the most recent attempt):
+    all rollouts returned UNKNOWN from Carnot's semantic verifier, causing ResZero
+    to produce zero-mean advantage redistribution — no gradient signal, no learning.
+    NGRPO (arXiv:2509.18851, Negative-enhanced GRPO) solves this via Advantage
+    Calibration: inject a virtual max-reward sample (reward=max_reward_in_group)
+    into the group BEFORE computing advantages. The virtual sample breaks the
+    zero-mean ResZero symmetry: real rollouts with reward=0 now have negative
+    advantage relative to the virtual max-reward sample, providing a learning
+    signal even when no real rollout is formally confirmed by the verifier.
     DualGPU MANDATORY: tensor_split=[0.5, 0.5] across both RTX 3090s.
+    wall_budget_s=3600.
     Use {project_root} as the project root and {date} as the run date.
 
     EXISTING CODE TO READ FIRST:
@@ -580,13 +277,14 @@ tasks:
     - python/carnot/inference/sota_models.py
     - python/carnot/
     - research-references.md
-    - results/experiment_1366_certificate_v8_tag_first_prefix_injection_crane.json
-    - results/experiment_1369_semantic_validator_v2_nsvif_z3_constraints.json
+    - results/experiment_1383_grpo_v7_jury_rl_formal_verifier_rewards.json
+    - results/experiment_1388_fr11_self_learning_v4_dvi_grpo_integration.json
 
     TASK:
-    Run GRPO v7 with JURY-RL formal verifier rewards using the two RTX 3090s.
-    If wall budget is hit, write a terminal artifact with the honest result and
-    retire_if_same_verdict=true per the prior_failures above.
+    Run GRPO v8 with NGRPO Advantage Calibration using both RTX 3090s.
+    Apply the virtual max-reward sample technique from arXiv:2509.18851.
+    If all rollouts are still UNKNOWN after NGRPO, emit retire_if_same_verdict=true
+    and retire this experiment from future milestones.
 
     Every headline LLM generation MUST use MODEL_SPECS from
     cached_sota_pair(gpu_indices=(0, 1)). MODEL_SPECS must include at least one of:
@@ -598,63 +296,591 @@ tasks:
     - status
     - grpo_version
     - reward_mechanism
+    - ngrpo_advantage_calibration_applied
+    - virtual_max_reward_sample_injected
     - models_used
     - wall_budget_s
     - wall_time_used_s
     - training_steps_completed
     - jury_acceptance_rate
     - formal_reward_pass_rate
-    - resZero_applied_count
-    - grpo_v7_improvement_pp
+    - unknown_rollout_rate
+    - grpo_v8_improvement_pp
     - wall_budget_exhausted
     - terminal_blocker
     - headline_result_allowed
     - honest_verdict
 
     CONCRETE STEPS:
-    1. Create results/experiment_1383_grpo_v7_jury_rl_formal_verifier_rewards.json immediately with status="in_progress".
-    2. Read exp1366 to confirm llama.cpp GPU path and SOTA GGUF loading pattern.
+    1. Create results/experiment_1393_grpo_v8_ngrpo_zero_reward_fix.json immediately with status="in_progress".
+    2. Read exp1383 artifact to understand the exact failure: formal_reward_pass_rate=0.0, unknown_rollout_rate=1.0.
     3. Resolve MODEL_SPECS via cached_sota_pair(gpu_indices=(0, 1)) with tensor_split=[0.5, 0.5].
-    4. Implement JURY-RL reward: for each batch of FoVer questions:
-       (a) generate N=4 rollouts from the GGUF model.
-       (b) majority-vote to select candidate answer.
-       (c) run Carnot's semantic verifier on the candidate. If verified: reward=+1 for matching rollouts. If UNKNOWN: apply ResZero (zero-mean signal over remaining rollouts). If rejected: reward=-1.
-    5. Run GRPO training with the JURY-RL reward signal. wall_budget_s=2400.
-    6. Record wall_time_used_s, training_steps_completed, jury_acceptance_rate, formal_reward_pass_rate, resZero_applied_count.
-    7. Measure grpo_v7_improvement_pp vs pre-GRPO baseline on a held-out FoVer split.
-    8. If wall_budget is hit, record wall_budget_exhausted=true, write terminal_blocker, set retire_if_same_verdict=true in the artifact.
-    9. Set headline_result_allowed=true only if grpo_v7_improvement_pp > 0 on a mandated SOTA GGUF.
+    4. Implement NGRPO Advantage Calibration:
+       a. For each group of N=4 rollouts from JURY-RL, compute rewards using Carnot's semantic verifier.
+       b. If all rollouts are UNKNOWN (reward=0): inject a virtual sample with reward=max_possible_reward (e.g., 1.0).
+       c. Compute advantages using the augmented group (real rollouts + virtual sample).
+       d. Real rollouts with reward=0 now have negative advantage relative to the virtual sample — gradient flows.
+    5. Run GRPO training with NGRPO advantages. wall_budget_s=3600.
+    6. Record training_steps_completed, jury_acceptance_rate, formal_reward_pass_rate, unknown_rollout_rate.
+    7. Measure grpo_v8_improvement_pp vs pre-GRPO baseline on held-out FoVer split.
+    8. If grpo_v8_improvement_pp == 0.0 AND unknown_rollout_rate >= 0.95: set terminal_blocker="ngrpo_still_zero_reward_fover_incompatible_with_jury_rl"; write retire_if_same_verdict=true in artifact.
+    9. Set headline_result_allowed=true only if grpo_v8_improvement_pp > 0.
     10. Write all required fields, status="complete", honest_verdict.
 
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1383_grpo_v7_jury_rl_formal_verifier_rewards.json')); print(d.get('grpo_v7_improvement_pp'), d.get('wall_budget_exhausted'), d.get('headline_result_allowed'), d.get('honest_verdict'))"
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1393_grpo_v8_ngrpo_zero_reward_fix.json')); print(d.get('ngrpo_advantage_calibration_applied'), d.get('grpo_v8_improvement_pp'), d.get('unknown_rollout_rate'), d.get('headline_result_allowed'), d.get('honest_verdict'))"
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-- id: exp1384-ebm-cot-energy-calibration-probe
-  milestone: 2026.04.107
-  deliverable: results/experiment_1384_ebm_cot_energy_calibration_probe.json
-  title: "EBM-CoT Energy Calibration Probe — Contrastive Hinge Loss for KAN Tier"
+- id: exp1394-dvi-v2-secl-combined
+  milestone: 2026.04.108
+  deliverable: results/experiment_1394_dvi_v2_secl_combined.json
+  title: "DVI v2 + SECL Combined — 59 Fresh Cases, Discriminative Self-Calibration"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 45
+  estimated_wall_time_min: 50
+  priority: high
+  requires_gpu: false
+  skip_pre_test: true
+  prior_failures:
+    - experiment_id: exp1381-dvi-discriminative-verifier-training-v1
+      verdict: dvi_auroc_delta_0.003486_only_4_fresh_cases
+      addressed_by: "exp1381 trained DVI on only 4 fresh verified cases (dvi_auroc_delta=0.003486). 59 fresh cases are now available from exp1388 (fresh_verified_sample_count=59). Using 59 cases instead of 4 should produce a substantially larger delta. Additionally, exp1386 confirmed SECL is viable for DVI (secl_viable_for_dvi=true, ece_reduction_pct=34.96%). This task combines DVI training with SECL discriminative self-calibration."
+      retire_if_same_verdict: false
+    - experiment_id: exp1386-secl-discriminative-self-calibration
+      verdict: secl_viable_for_dvi_true_ece_reduction_34pct
+      addressed_by: "exp1386 confirmed SECL reduces ECE by 34.96% and secl_viable_for_dvi=true. This task integrates SECL directly into the DVI training loop as the calibration step after discriminative fine-tuning."
+      retire_if_same_verdict: false
+  prompt: |
+    CONTEXT:
+    DVI (Discriminative Verifier Improvement) fine-tunes the verifier checkpoint
+    on fresh verified positive cases. Exp1381 used only 4 fresh cases and produced
+    dvi_auroc_delta=0.003486 — barely above noise. Exp1388 produced
+    fresh_verified_sample_count=59 via the DVI-only replay path. Using 59 cases
+    should produce a substantially larger AUROC delta. Additionally, exp1386
+    confirmed SECL (arXiv:2604.09624) reduces ECE by 34.96% and is viable for
+    DVI (secl_viable_for_dvi=true). This task runs DVI v2 with 59 fresh cases
+    and combines it with SECL discriminative self-calibration for maximum
+    verifier improvement. CPU-only. Use {project_root} as the project root
+    and {date} as the run date.
+
+    EXISTING CODE TO READ FIRST:
+    - CODEX.md
+    - CLAUDE.md
+    - python/carnot/verify/
+    - python/carnot/models/
+    - scripts/experiment_template.py
+    - results/experiment_1381_dvi_discriminative_verifier_training_v1.json
+    - results/experiment_1386_secl_discriminative_self_calibration.json
+    - results/experiment_1388_fr11_self_learning_v4_dvi_grpo_integration.json
+
+    TASK:
+    Run DVI v2 using the 59 fresh cases from exp1388. Apply SECL discriminative
+    self-calibration after DVI fine-tuning. Deploy the combined checkpoint.
+
+    REQUIRED ARTIFACT FIELDS:
+    - status
+    - fresh_cases_used
+    - dvi_v2_baseline_auroc
+    - dvi_v2_trained_auroc
+    - dvi_v2_auroc_delta
+    - secl_ece_before
+    - secl_ece_after
+    - secl_ece_reduction_pct
+    - dvi_v2_deployed
+    - checkpoint_path
+    - honest_verdict
+
+    CONCRETE STEPS:
+    1. Create results/experiment_1394_dvi_v2_secl_combined.json immediately with status="in_progress".
+    2. Read exp1388 to locate the 59 fresh verified cases (fresh_verified_sample_count=59).
+    3. Load the current verifier checkpoint from python/carnot/verify/ (the checkpoint deployed by exp1381).
+    4. Run DVI fine-tuning on the 59 fresh cases. Use the same discriminative loss as exp1381 (fresh positive examples).
+    5. Measure dvi_v2_baseline_auroc before fine-tuning and dvi_v2_trained_auroc after.
+    6. Apply SECL discriminative self-calibration (from exp1386 recipe) to the DVI v2 checkpoint.
+    7. Measure secl_ece_before and secl_ece_after to confirm ECE reduction.
+    8. Deploy the combined DVI v2 + SECL checkpoint to python/carnot/verify/.
+    9. Set dvi_v2_deployed=true and record checkpoint_path.
+    10. Write all required fields, status="complete", honest_verdict.
+
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1394_dvi_v2_secl_combined.json')); print(d.get('fresh_cases_used'), d.get('dvi_v2_auroc_delta'), d.get('dvi_v2_deployed'), d.get('honest_verdict'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp1395-fr11-self-learning-v5
+  milestone: 2026.04.108
+  deliverable: results/experiment_1395_fr11_self_learning_v5.json
+  title: "FR-11 Self-Learning v5 — DVI v2 + NGRPO Integration"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 45
+  estimated_wall_time_min: 50
+  priority: high
+  requires_gpu: false
+  skip_pre_test: true
+  gated_on:
+    - upstream: exp1394-dvi-v2-secl-combined
+      artifact_field: dvi_v2_deployed
+      op: '=='
+      value: true
+  prior_failures:
+    - experiment_id: exp1388-fr11-self-learning-v4-dvi-grpo-integration
+      verdict: fresh_verified_sample_count_59_grpo_cases_integrated_0
+      addressed_by: "exp1388 achieved fresh_verified_sample_count=59 via DVI-only replay (grpo_cases_integrated=0 because exp1383 had grpo_v7_improvement_pp=0.0). This task uses the improved DVI v2 checkpoint from exp1394 (trained on all 59 fresh cases) and, if exp1393 (NGRPO) produced a positive result, integrates GRPO v8 cases into the memory pool."
+      retire_if_same_verdict: false
+  prompt: |
+    CONTEXT:
+    FR-11 (autonomous self-learning) is a mandatory PRD requirement. Exp1388
+    achieved fresh_verified_sample_count=59 using the DVI-only replay path.
+    GRPO contributed zero cases because exp1383 had grpo_v7_improvement_pp=0.0.
+    This task runs FR-11 v5 using the improved DVI v2 + SECL checkpoint from
+    exp1394 as the active verifier. If exp1393 (GRPO v8 NGRPO) produced
+    improvement, incorporate the GRPO-verified cases into the memory pool.
+    Use {project_root} as the project root and {date} as the run date.
+
+    EXISTING CODE TO READ FIRST:
+    - CODEX.md
+    - CLAUDE.md
+    - research-program.md
+    - _bmad/prd.md
+    - results/experiment_1388_fr11_self_learning_v4_dvi_grpo_integration.json
+    - results/experiment_1394_dvi_v2_secl_combined.json
+    - results/experiment_1393_grpo_v8_ngrpo_zero_reward_fix.json
+    - python/carnot/
+    - openspec/capabilities/pipeline/spec.md
+    - openspec/capabilities/verification/spec.md
+
+    TASK:
+    Run FR-11 self-learning v5 using the DVI v2 + SECL checkpoint as the
+    active verifier. Attempt to increase fresh_verified_sample_count beyond
+    59. Integrate GRPO v8 cases if exp1393 produced improvement.
+
+    REQUIRED ARTIFACT FIELDS:
+    - status
+    - path_used
+    - dvi_v2_checkpoint_active
+    - replay_cases_used
+    - fresh_verified_sample_count
+    - grpo_v8_cases_integrated
+    - self_learning_delta_overall
+    - headline_result_allowed
+    - honest_verdict
+
+    CONCRETE STEPS:
+    1. Create results/experiment_1395_fr11_self_learning_v5.json immediately with status="in_progress".
+    2. Load exp1394 DVI v2 + SECL checkpoint as the active verifier.
+    3. Check exp1393 artifact: if grpo_v8_improvement_pp > 0, load GRPO v8 cases.
+    4. Run FR-11 self-learning cycle using the DVI v2 verifier:
+       a. Sample FoVer questions.
+       b. Generate certificate answers.
+       c. Pass through semantic verifier (DVI v2 checkpoint).
+       d. Promote verified cases to memory pool.
+    5. Record fresh_verified_sample_count.
+    6. Record grpo_v8_cases_integrated (0 if exp1393 had 0.0pp improvement).
+    7. Compute self_learning_delta_overall as improvement vs exp1388 baseline (59 cases).
+    8. Set headline_result_allowed=true if fresh_verified_sample_count > 59.
+    9. Write all required fields, status="complete", honest_verdict.
+
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1395_fr11_self_learning_v5.json')); print(d.get('fresh_verified_sample_count'), d.get('grpo_v8_cases_integrated'), d.get('headline_result_allowed'), d.get('honest_verdict'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+# ============================================================
+# Phase 3 - Pipeline Quality + New Research (parallel)
+# ============================================================
+
+- id: exp1396-semantic-validation-pass-rate-fix-v1
+  milestone: 2026.04.108
+  deliverable: results/experiment_1396_semantic_validation_pass_rate_fix_v1.json
+  title: "Semantic Validation Pass Rate Fix v1 — Target Top Failure Categories from exp1391"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 50
+  estimated_wall_time_min: 50
+  priority: high
+  requires_gpu: false
+  skip_pre_test: true
+  gated_on:
+    - upstream: exp1391-fullscale-pipeline-failure-diagnosis
+      artifact_field: failure_analysis_complete
+      op: '=='
+      value: true
+  prior_failures:
+    - experiment_id: exp1382-fullscale-certificate-semantic-repair-100cases
+      verdict: semantic_validation_pass_rate_0.59
+      addressed_by: "exp1382 had semantic_validation_pass_rate=0.59 with an unknown root cause. exp1391 diagnoses and classifies the 41% failure rate. This fix task implements targeted code changes for the top failure categories identified by exp1391."
+      retire_if_same_verdict: false
+  prompt: |
+    CONTEXT:
+    Exp1382 achieved certificate_parse_rate=1.0 but semantic_validation_pass_rate
+    =0.59 (41% of parsed certificates failed semantic validation). Exp1391
+    diagnosed and classified these failures into named categories with a ranked
+    fix list. This task implements the fixes recommended by exp1391, targeting
+    the top failure categories. Goal: improve semantic_validation_pass_rate from
+    0.59 toward 0.80+ on a sample of the failing cases. The full-scale
+    re-validation at 200 cases runs in exp1397. Use {project_root} as the
+    project root and {date} as the run date.
+
+    EXISTING CODE TO READ FIRST:
+    - CODEX.md
+    - CLAUDE.md
+    - results/experiment_1391_fullscale_pipeline_failure_diagnosis.json
+    - results/experiment_1382_fullscale_certificate_semantic_repair_100cases.json
+    - python/carnot/verify/
+    - python/carnot/pipeline/
+    - openspec/capabilities/verification/spec.md
+
+    TASK:
+    Implement fixes for the top failure categories from exp1391. Validate the
+    fixes on a sample of the exp1382 failing cases. Confirm improvement in
+    semantic_validation_pass_rate before full-scale re-run in exp1397.
+
+    REQUIRED ARTIFACT FIELDS:
+    - status
+    - failure_categories_targeted
+    - fixes_applied
+    - sample_cases_tested
+    - semantic_validation_pass_rate_before_fix
+    - semantic_validation_pass_rate_after_fix
+    - semantic_validation_improvement_measured
+    - fix_description
+    - honest_verdict
+
+    CONCRETE STEPS:
+    1. Create results/experiment_1396_semantic_validation_pass_rate_fix_v1.json immediately with status="in_progress".
+    2. Read exp1391 to get the top failure categories and recommended fixes.
+    3. Implement the fixes for the top 2-3 failure categories in priority order.
+    4. Test on a sample of 20-30 cases from the exp1382 failing set.
+    5. Measure semantic_validation_pass_rate_before_fix (should be ~0.59) and semantic_validation_pass_rate_after_fix.
+    6. Set semantic_validation_improvement_measured=true if after_fix > before_fix.
+    7. Run the existing test suite on the modified verify/pipeline code (`pytest tests/python/verify/ -q`).
+    8. Write all required fields, status="complete", honest_verdict.
+
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1396_semantic_validation_pass_rate_fix_v1.json')); print(d.get('semantic_validation_pass_rate_after_fix'), d.get('semantic_validation_improvement_measured'), d.get('honest_verdict'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp1397-fullscale-pipeline-v2-200cases
+  milestone: 2026.04.108
+  deliverable: results/experiment_1397_fullscale_pipeline_v2_200cases.json
+  title: "Full-Scale Pipeline v2 — 200 Cases with Semantic Validation Fixes"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 60
+  estimated_wall_time_min: 90
+  priority: high
+  requires_gpu: true
+  skip_pre_test: true
+  gated_on:
+    - upstream: exp1396-semantic-validation-pass-rate-fix-v1
+      artifact_field: semantic_validation_improvement_measured
+      op: '=='
+      value: true
+  prior_failures:
+    - experiment_id: exp1382-fullscale-certificate-semantic-repair-100cases
+      verdict: full_pipeline_pass_rate_0.29_semantic_validation_0.59
+      addressed_by: "exp1382 ran 100 cases with 0.59 semantic validation pass rate and 0.29 full pipeline pass rate. exp1391 diagnosed the failure modes and exp1396 implemented fixes. This re-run applies the fixes at 200 cases to measure actual improvement. If semantic_validation_pass_rate < 0.70 after fixes, retire_if_same_verdict=true."
+      retire_if_same_verdict: false
+  prompt: |
+    CONTEXT:
+    Exp1382 established the certificate extraction pipeline at 100 cases with
+    certificate_parse_rate=1.0 but semantic_validation_pass_rate=0.59 and
+    full_pipeline_pass_rate=0.29. Exp1391 diagnosed the failure modes. Exp1396
+    implemented targeted fixes. This task re-runs the full pipeline at 200 cases
+    with the fixes from exp1396 applied. This is the headline publication-quality
+    result for the full pipeline. Requires GPU for SOTA GGUF inference.
+    Use {project_root} as the project root and {date} as the run date.
+
+    EXISTING CODE TO READ FIRST:
+    - CODEX.md
+    - CLAUDE.md
+    - scripts/experiment_template.py
+    - python/carnot/inference/sota_models.py
+    - python/carnot/
+    - results/experiment_1382_fullscale_certificate_semantic_repair_100cases.json
+    - results/experiment_1391_fullscale_pipeline_failure_diagnosis.json
+    - results/experiment_1396_semantic_validation_pass_rate_fix_v1.json
+
+    TASK:
+    Run the full certificate + semantic repair pipeline at 200 FoVer cases with
+    the semantic validation fixes from exp1396. Measure improvement vs exp1382
+    baseline. GPU required for SOTA GGUF inference.
+
+    Every headline LLM generation MUST use MODEL_SPECS from cached_sota_pair().
+    MODEL_SPECS must include at least one of:
+    - unsloth/Qwen3.6-35B-A3B-GGUF
+    - unsloth/gemma-4-31B-it-GGUF
+    - unsloth/gemma-4-26B-A4B-it-GGUF
+
+    REQUIRED ARTIFACT FIELDS:
+    - status
+    - cases_evaluated
+    - models_used
+    - certificate_extract_count
+    - certificate_parse_rate
+    - semantic_validation_pass_rate
+    - full_pipeline_pass_rate
+    - semantic_validation_improvement_vs_exp1382
+    - full_pipeline_improvement_vs_exp1382
+    - headline_result_allowed
+    - honest_verdict
+
+    CONCRETE STEPS:
+    1. Create results/experiment_1397_fullscale_pipeline_v2_200cases.json immediately with status="in_progress".
+    2. Confirm exp1396 fixes are applied (read artifact to verify semantic_validation_improvement_measured=true).
+    3. Resolve MODEL_SPECS via cached_sota_pair().
+    4. Run the full pipeline on 200 FoVer cases:
+       a. Certificate extraction (tag-first CRANE prefix, parse certificates)
+       b. Semantic validation (NSVIF Z3 + semantic consistency)
+       c. VERGE MCS repair on failed certificates
+    5. Measure certificate_parse_rate, semantic_validation_pass_rate, full_pipeline_pass_rate.
+    6. Compute semantic_validation_improvement_vs_exp1382 = pass_rate - 0.59.
+    7. Compute full_pipeline_improvement_vs_exp1382 = full_pipeline_pass_rate - 0.29.
+    8. Set headline_result_allowed=true if semantic_validation_pass_rate >= 0.70 AND full_pipeline_pass_rate >= 0.40.
+    9. Write all required fields, status="complete", honest_verdict.
+
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1397_fullscale_pipeline_v2_200cases.json')); print(d.get('certificate_parse_rate'), d.get('semantic_validation_pass_rate'), d.get('full_pipeline_pass_rate'), d.get('headline_result_allowed'), d.get('honest_verdict'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp1398-ngrpo-theory-probe
+  milestone: 2026.04.108
+  deliverable: results/experiment_1398_ngrpo_theory_probe.json
+  title: "NGRPO Theory Probe — Advantage Calibration Simulation on exp1383 Rollout Data"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 35
+  estimated_wall_time_min: 30
+  priority: medium
+  requires_gpu: false
+  skip_pre_test: true
+  prior_failures:
+    - experiment_id: exp1398-ngrpo-theory-probe
+      verdict: not_yet_run
+      addressed_by: "New experiment based on arXiv:2509.18851 NGRPO. No prior failure."
+      retire_if_same_verdict: false
+  prompt: |
+    CONTEXT:
+    NGRPO (arXiv:2509.18851, Negative-enhanced GRPO) introduces Advantage
+    Calibration via a virtual max-reward sample. When all rollouts in a group
+    receive the same reward (e.g., all UNKNOWN → reward=0), ResZero produces
+    zero-mean advantage and no gradient signal. NGRPO injects a virtual sample
+    with reward=max_reward to break the symmetry. This CPU-only theory probe
+    simulates NGRPO on the actual rollout data from exp1383 (all rollouts UNKNOWN,
+    all rewards=0) to verify that Advantage Calibration would have produced
+    non-zero advantage gradients — providing theoretical validation before the
+    DualGPU run in exp1393. Use {project_root} as the project root and
+    {date} as the run date.
+
+    EXISTING CODE TO READ FIRST:
+    - CODEX.md
+    - CLAUDE.md
+    - research-references.md
+    - results/experiment_1383_grpo_v7_jury_rl_formal_verifier_rewards.json
+
+    TASK:
+    Simulate NGRPO Advantage Calibration on the exp1383 rollout data (all UNKNOWN).
+    Verify that virtual max-reward sample injection produces non-zero advantages.
+    CPU-only mathematical simulation — no model inference.
+
+    REQUIRED ARTIFACT FIELDS:
+    - status
+    - exp1383_rollout_data_used
+    - original_resZero_advantage_variance
+    - ngrpo_virtual_sample_reward
+    - ngrpo_augmented_advantage_variance
+    - ngrpo_advantage_calibration_verified
+    - ngrpo_expected_gradient_magnitude
+    - theory_supports_exp1393
+    - honest_verdict
+
+    CONCRETE STEPS:
+    1. Create results/experiment_1398_ngrpo_theory_probe.json immediately with status="in_progress".
+    2. Read exp1383 artifact to get rollout reward distribution (all_rollouts_unknown=true, formal_reward_pass_rate=0.0).
+    3. Simulate the ResZero procedure on a group of N=4 rollouts all with reward=0:
+       a. Compute group mean reward: 0.0. b. Compute advantages: all 0.0. c. Verify zero gradient.
+    4. Simulate NGRPO Advantage Calibration:
+       a. Inject virtual max-reward sample with reward=1.0 into the group (N=5 total).
+       b. Recompute group mean: (0+0+0+0+1)/5 = 0.2.
+       c. Recompute advantages for original 4 rollouts: -0.2 each (non-zero).
+       d. Advantage for virtual sample: +0.8.
+    5. Record original_resZero_advantage_variance=0.0 and ngrpo_augmented_advantage_variance.
+    6. Set ngrpo_advantage_calibration_verified=true if augmented_advantage_variance > 0.
+    7. Estimate ngrpo_expected_gradient_magnitude proportional to augmented_advantage_variance.
+    8. Set theory_supports_exp1393=true if ngrpo_advantage_calibration_verified.
+    9. Write all required fields, status="complete", honest_verdict.
+
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1398_ngrpo_theory_probe.json')); print(d.get('ngrpo_advantage_calibration_verified'), d.get('theory_supports_exp1393'), d.get('honest_verdict'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp1399-discrete-sb-kv260-cpu-simulation
+  milestone: 2026.04.108
+  deliverable: results/experiment_1399_discrete_sb_kv260_cpu_simulation.json
+  title: "Discrete SB KV260 CPU Simulation — BRAM-Limited Algorithm Estimate"
   agent_type: codex
   model: gpt-5.5
   max_turns: 40
   estimated_wall_time_min: 40
   priority: medium
   requires_gpu: false
+  skip_pre_test: true
   prior_failures:
-    - experiment_id: exp1384-ebm-cot-energy-calibration-probe
-      verdict: not_yet_run
-      addressed_by: "New experiment based on arXiv:2511.07124 EBM-CoT. No prior failure."
+    - experiment_id: exp1387-2d-parallel-tempering-kv260-fpga-estimate
+      verdict: 15_replicas_540k_lut_over_kv260_117k_budget_hardware_claim_false
+      addressed_by: "exp1387 found 2D PT requires 540K LUTs for 15 replicas vs 117K KV260 budget. The alternative: Discrete Simulated Bifurcation (arXiv:2510.12407) is BRAM-limited rather than LUT-limited. BRAM-limited implementations can target 256-variable problems on the KV260 BRAM budget. This CPU simulation estimates the BRAM requirements and convergence properties."
       retire_if_same_verdict: false
   prompt: |
     CONTEXT:
-    arXiv:2511.07124 (EBM-CoT) proposes a contrastive hinge loss combined with
-    consistency regularization to calibrate energy-based chain-of-thought
-    reasoning: correct CoT steps → low energy, incorrect steps → high energy.
-    The energy function calibrates latent thoughts toward logically consistent
-    regions. Carnot's KAN energy tier already implements low=correct/high=incorrect
-    semantics. Applying EBM-CoT's loss function to Carnot's KAN training on
-    FoVer verified pairs could improve the calibration of energy predictions
-    for CoT step verification. This is a CPU-only probe using existing FoVer
-    data. Use {project_root} as the project root and {date} as the run date.
+    Exp1387 found that 2D Parallel Tempering requires 540K LUTs for 15 replicas
+    vs the KV260's 117K budget — exceeding by 4.6x. The alternative, Discrete
+    Simulated Bifurcation (arXiv:2510.12407), is fundamentally BRAM-limited
+    rather than LUT-limited. BRAM stores the coupling matrix J; the LUT count is
+    proportional to the number of bifurcation update units (which can be small).
+    KV260 has 144 BRAM_36 blocks = 5.2 MB. For a 256-variable Ising problem
+    with int8 coupling: 256*256 = 65536 bytes = 64 KB — fits comfortably. This
+    CPU simulation implements Discrete SB (dSB), measures convergence on FoVer
+    constraint problems, and estimates the BRAM budget for a KV260 implementation.
+    Use {project_root} as the project root and {date} as the run date.
+
+    EXISTING CODE TO READ FIRST:
+    - CODEX.md
+    - CLAUDE.md
+    - research-references.md
+    - python/carnot/samplers/
+    - results/experiment_1387_2d_parallel_tempering_kv260_fpga_estimate.json
+    - hardware/kv260/
+
+    TASK:
+    CPU-simulate Discrete SB on FoVer constraint problems. Estimate KV260 BRAM
+    budget. Determine if hardware_claim_allowed differs from exp1387's LUT-limited
+    finding.
+
+    REQUIRED ARTIFACT FIELDS:
+    - status
+    - algorithm
+    - constraint_problems_tested
+    - n_variables
+    - steps_to_convergence_ising_baseline
+    - steps_to_convergence_discrete_sb
+    - convergence_speedup_discrete_sb
+    - bram_estimate_kb_for_256var
+    - kv260_bram_budget_kb
+    - bram_budget_feasible
+    - lut_estimate_per_update_unit
+    - kv260_lut_budget_fits
+    - hardware_claim_allowed
+    - kv260_claim_allowed
+    - honest_verdict
+
+    CONCRETE STEPS:
+    1. Create results/experiment_1399_discrete_sb_kv260_cpu_simulation.json immediately with status="in_progress".
+    2. Read arXiv:2510.12407 reference from research-references.md. Understand dSB update rule.
+    3. Load 3-5 FoVer constraint problems as Ising QUBO formulations (N=64 to N=256 variables).
+    4. Implement Discrete SB: x_i(t+1) = sign(x_i(t) + η * sum_j J_ij * x_j(t) - pressure_term(t)).
+    5. Implement the pressure schedule (linearly increasing from 0 to 1 over T steps).
+    6. Run dSB and standard Ising (Gibbs sampling baseline) on the same problems.
+    7. Measure steps_to_convergence for each. Compute convergence_speedup.
+    8. BRAM estimate: J matrix for N=256 variables, int8 → 256*256 = 65536 bytes = 64 KB.
+    9. KV260 BRAM budget: 144 BRAM_36 = 144*36Kb = 5184 Kb = 648 KB. Set kv260_bram_budget_kb=648.
+    10. Set bram_budget_feasible=true if bram_estimate_kb_for_256var < kv260_bram_budget_kb.
+    11. Estimate LUT count for one dSB update unit (~2K LUTs for N=256 add-tree). Set kv260_lut_budget_fits based on whether this fits in 117K budget.
+    12. Set hardware_claim_allowed=true only if BOTH bram_budget_feasible AND kv260_lut_budget_fits.
+    13. Set kv260_claim_allowed consistent with hardware_claim_allowed.
+    14. Write all required fields, status="complete", honest_verdict.
+
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1399_discrete_sb_kv260_cpu_simulation.json')); print(d.get('bram_budget_feasible'), d.get('hardware_claim_allowed'), d.get('convergence_speedup_discrete_sb'), d.get('honest_verdict'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp1400-biprm-retrospective-verification-probe
+  milestone: 2026.04.108
+  deliverable: results/experiment_1400_biprm_retrospective_verification_probe.json
+  title: "BiPRM Retrospective Verification Probe — R2L Stream on FoVer Verified Pairs"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 40
+  estimated_wall_time_min: 40
+  priority: medium
+  requires_gpu: false
+  skip_pre_test: true
+  prior_failures:
+    - experiment_id: exp1400-biprm-retrospective-verification-probe
+      verdict: not_yet_run
+      addressed_by: "New experiment based on arXiv:2508.01682 BiPRM. No prior failure."
+      retire_if_same_verdict: false
+  prompt: |
+    CONTEXT:
+    BiPRM (arXiv:2508.01682) introduces a Bidirectional Process Reward Model
+    with both a forward (L2R) stream that scores reasoning steps left-to-right
+    and a retrospective (R2L) stream that scores from the final answer backward,
+    identifying pivotal reasoning steps. The retrospective stream achieves
+    better pivot-step identification than L2R alone. Carnot's current step
+    verification (Tier 2.5 SymCodeVerifier, Tier 2.6 HermesVerifier, Tier 2.7
+    CausalReasoningVerifier) operates forward-only. Applying BiPRM's R2L
+    retrospective stream to Carnot's verified FoVer pairs could identify which
+    reasoning steps were pivotal for correctness — improving the precision of
+    certificate verification. This is a CPU-only probe using existing FoVer
+    verified pairs. Use {project_root} as the project root and
+    {date} as the run date.
+
+    EXISTING CODE TO READ FIRST:
+    - CODEX.md
+    - CLAUDE.md
+    - research-references.md
+    - python/carnot/verify/
+    - scripts/experiment_template.py
+
+    TASK:
+    Implement a BiPRM R2L retrospective stream on FoVer verified pairs.
+    Measure pivot-step identification precision vs the forward-only baseline.
+
+    REQUIRED ARTIFACT FIELDS:
+    - status
+    - corpus_cases_used
+    - forward_only_pivot_precision
+    - biprm_r2l_pivot_precision
+    - pivot_precision_delta
+    - retrospective_verification_viable
+    - pivotal_step_categories
+    - honest_verdict
+
+    CONCRETE STEPS:
+    1. Create results/experiment_1400_biprm_retrospective_verification_probe.json immediately with status="in_progress".
+    2. Read arXiv:2508.01682 from research-references.md. Identify the R2L update rule.
+    3. Load FoVer verified pairs (positive: verified correct reasoning, negative: rejected reasoning).
+    4. Implement forward-only pivot scoring: score each step s_i as the verifier energy change when s_i is removed.
+    5. Implement R2L retrospective scoring: score each step s_i as the energy change when s_i is the "pivot" from the answer backward.
+    6. Measure pivot-step identification precision: fraction of pivots identified that match human-annotated important steps (use FoVer metadata if available; otherwise use ground-truth incorrect steps from negatives as pivot proxies).
+    7. Compute pivot_precision_delta = biprm_r2l_pivot_precision - forward_only_pivot_precision.
+    8. Set retrospective_verification_viable=true if delta > 0.
+    9. Categorize pivotal steps: arithmetic error, logical fallacy, missing premise, hallucination.
+    10. Write all required fields, status="complete", honest_verdict.
+
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1400_biprm_retrospective_verification_probe.json')); print(d.get('pivot_precision_delta'), d.get('retrospective_verification_viable'), d.get('honest_verdict'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp1401-ebm-cot-v2-hinge-only
+  milestone: 2026.04.108
+  deliverable: results/experiment_1401_ebm_cot_v2_hinge_only.json
+  title: "EBM-CoT v2 Hinge-Only — No Consistency Regularization"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 35
+  estimated_wall_time_min: 35
+  priority: medium
+  requires_gpu: false
+  skip_pre_test: true
+  prior_failures:
+    - experiment_id: exp1384-ebm-cot-energy-calibration-probe
+      verdict: calibration_auroc_delta_0.185_consistency_regularization_worsened_paraphrase_variance
+      addressed_by: "exp1384 found hinge loss gave calibration_auroc_delta=+0.185 (strong positive) but consistency regularization WORSENED paraphrase energy variance. The two terms are in conflict: consistency regularization penalizes energy variance on paraphrases, but hinge loss drives variance toward the margin. This task uses hinge loss only (consistency_regularization_weight=0.0) to isolate the positive hinge signal and confirm calibration improvement without the counterproductive regularizer."
+      retire_if_same_verdict: false
+  prompt: |
+    CONTEXT:
+    Exp1384 (EBM-CoT energy calibration probe) found two conflicting results:
+    (1) contrastive hinge loss gave calibration_auroc_delta=+0.185 (strong positive),
+    (2) consistency regularization WORSENED paraphrase energy variance.
+    The root cause: consistency regularization penalizes energy variance across
+    paraphrased positives, while hinge loss drives energy variance toward the
+    margin — they work against each other. This task runs EBM-CoT v2 with
+    hinge loss ONLY (consistency_regularization_weight=0.0) to confirm the
+    +0.185 AUROC delta is real and not an artifact of the two-term interaction.
+    CPU-only, same corpus as exp1384. Use {project_root} as the project root
+    and {date} as the run date.
 
     EXISTING CODE TO READ FIRST:
     - CODEX.md
@@ -663,11 +889,12 @@ tasks:
     - python/carnot/models/
     - python/carnot/verify/
     - scripts/experiment_template.py
+    - results/experiment_1384_ebm_cot_energy_calibration_probe.json
 
     TASK:
-    Apply EBM-CoT contrastive hinge loss to Carnot's KAN energy tier using
-    FoVer verified pairs. Measure calibration improvement (AUROC delta).
-    CPU-only: no fresh LLM inference required.
+    Apply EBM-CoT contrastive hinge loss to Carnot's KAN energy tier with
+    consistency_regularization_weight=0.0. Confirm calibration improvement
+    (AUROC delta > 0) without consistency regularization.
 
     REQUIRED ARTIFACT FIELDS:
     - status
@@ -676,353 +903,63 @@ tasks:
     - hinge_margin
     - consistency_regularization_weight
     - baseline_auroc
-    - ebm_cot_auroc
+    - ebm_cot_v2_auroc
     - calibration_auroc_delta
-    - consistency_regularization_effect
+    - paraphrase_energy_variance_before
+    - paraphrase_energy_variance_after
+    - variance_worsened
     - implicit_cot_energy_viable
     - honest_verdict
 
     CONCRETE STEPS:
-    1. Create results/experiment_1384_ebm_cot_energy_calibration_probe.json immediately with status="in_progress".
-    2. Read arXiv:2511.07124 reference from research-references.md. Identify the hinge-style contrastive loss and consistency regularization term.
-    3. Load FoVer corpus verified pairs: positive (correct CoT steps) and negative (incorrect CoT steps).
-    4. Load the current KAN energy tier checkpoint from python/carnot/models/.
-    5. Implement EBM-CoT loss: L_contrastive = max(0, hinge_margin - (E_negative - E_positive)) + consistency_regularization * |E_positive - E_positive_paraphrase|.
-    6. Run training for 20 epochs on the FoVer split.
-    7. Measure baseline_auroc (before training) and ebm_cot_auroc (after training) on held-out FoVer cases.
-    8. Compute calibration_auroc_delta = ebm_cot_auroc - baseline_auroc.
-    9. Measure consistency_regularization_effect: delta in energy variance on paraphrased positive cases.
-    10. Set implicit_cot_energy_viable=true if calibration_auroc_delta > 0.
-    11. Write all required fields, status="complete", honest_verdict.
+    1. Create results/experiment_1401_ebm_cot_v2_hinge_only.json immediately with status="in_progress".
+    2. Read exp1384 artifact to get baseline_auroc and consistency_regularization_effect details.
+    3. Load the KAN energy tier from the same checkpoint as exp1384 (pre-training checkpoint).
+    4. Implement EBM-CoT hinge-only loss: L = max(0, hinge_margin - (E_negative - E_positive)).
+    5. Set consistency_regularization_weight=0.0 explicitly (no regularization term).
+    6. Run training for 20 epochs on the same FoVer split as exp1384.
+    7. Measure baseline_auroc (same as exp1384: ~0.994 KAN AUROC before fine-tuning).
+    8. Measure ebm_cot_v2_auroc after hinge-only training.
+    9. Compute calibration_auroc_delta = ebm_cot_v2_auroc - baseline_auroc.
+    10. Measure paraphrase_energy_variance_before and paraphrase_energy_variance_after.
+    11. Set variance_worsened=false if paraphrase variance did NOT worsen (hypothesis: hinge-only avoids this).
+    12. Set implicit_cot_energy_viable=true if calibration_auroc_delta > 0.
+    13. Write all required fields, status="complete", honest_verdict.
 
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1384_ebm_cot_energy_calibration_probe.json')); print(d.get('calibration_auroc_delta'), d.get('implicit_cot_energy_viable'), d.get('honest_verdict'))"
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp1385-self-adaptive-ising-machine-probe
-  milestone: 2026.04.107
-  deliverable: results/experiment_1385_self_adaptive_ising_machine_probe.json
-  title: "Self-Adaptive Ising Machine — Lagrange Relaxation Without Prior Penalty Tuning"
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 40
-  estimated_wall_time_min: 40
-  priority: medium
-  requires_gpu: false
-  prior_failures:
-    - experiment_id: exp1385-self-adaptive-ising-machine-probe
-      verdict: not_yet_run
-      addressed_by: "New experiment based on arXiv:2501.04971. No prior failure."
-      retire_if_same_verdict: false
-  prompt: |
-    CONTEXT:
-    arXiv:2501.04971 (Self-Adaptive Ising Machines) iteratively shapes the
-    Ising energy landscape using Lagrange relaxation of constraints, avoiding
-    the need to pre-tune penalty terms. Achieves 7,500x fewer samples vs
-    Fujitsu Digital Annealer on 300-variable constraint problems. Carnot's
-    Ising constraint verifier currently requires prior penalty tuning for each
-    constraint type. Self-adaptive Lagrange relaxation would let the energy
-    landscape evolve automatically — implementing Tier 4 "adaptive energy
-    landscapes" from research-program.md at software level.
-    This is a CPU-only probe using FoVer constraint problems.
-    Use {project_root} as the project root and {date} as the run date.
-
-    EXISTING CODE TO READ FIRST:
-    - CODEX.md
-    - CLAUDE.md
-    - research-references.md
-    - python/carnot/samplers/parallel_ising.py
-    - scripts/experiment_template.py
-
-    TASK:
-    Implement a self-adaptive Ising machine using Lagrange relaxation on FoVer
-    arithmetic constraint problems. Measure convergence improvement vs static
-    penalty baseline.
-
-    REQUIRED ARTIFACT FIELDS:
-    - status
-    - constraint_problems_tested
-    - static_penalty_convergence_steps
-    - adaptive_lagrange_convergence_steps
-    - convergence_speedup
-    - constraint_violation_reduction
-    - lagrange_multiplier_iterations
-    - penalty_tuning_iterations_saved
-    - adaptive_ising_viable
-    - honest_verdict
-
-    CONCRETE STEPS:
-    1. Create results/experiment_1385_self_adaptive_ising_machine_probe.json immediately with status="in_progress".
-    2. Read arXiv:2501.04971 reference from research-references.md. Identify the Lagrange relaxation update rule.
-    3. Load 5-10 FoVer arithmetic constraint problems from available corpus files.
-    4. Implement a self-adaptive Ising machine: augmented Lagrangian L(s, λ) = E_ising(s) + λ^T * g(s) + (ρ/2) * |g(s)|^2, where g(s) are constraint violations. Update λ after each sampling sweep.
-    5. For each problem: run static-penalty Ising (current baseline) and adaptive-Lagrange Ising side-by-side.
-    6. Measure convergence steps until constraint_violation <= threshold for both methods.
-    7. Compute convergence_speedup = static_steps / adaptive_steps.
-    8. Record lagrange_multiplier_iterations (number of λ updates needed) and penalty_tuning_iterations_saved.
-    9. Set adaptive_ising_viable=true if convergence_speedup > 1.0 on at least half the tested problems.
-    10. Write all required fields, status="complete", honest_verdict.
-
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1385_self_adaptive_ising_machine_probe.json')); print(d.get('convergence_speedup'), d.get('adaptive_ising_viable'), d.get('honest_verdict'))"
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp1386-secl-discriminative-self-calibration
-  milestone: 2026.04.107
-  deliverable: results/experiment_1386_secl_discriminative_self_calibration.json
-  title: "SECL Discriminative Self-Calibration — Verifier ECE Reduction"
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 40
-  estimated_wall_time_min: 40
-  priority: medium
-  requires_gpu: false
-  prior_failures:
-    - experiment_id: exp1386-secl-discriminative-self-calibration
-      verdict: not_yet_run
-      addressed_by: "New experiment based on arXiv:2604.09624 SECL. No prior failure. SECL is complementary to DVI (exp1381): DVI improves AUROC discrimination, SECL improves calibration (ECE). Both use the same 4 fresh verified samples from exp1374."
-      retire_if_same_verdict: false
-  prompt: |
-    CONTEXT:
-    arXiv:2604.09624 (SECL) reduces Expected Calibration Error by 56-78% by
-    using the discriminative signal ("Is this answer correct?") as self-supervision
-    for test-time calibration. The key insight: asking the model to verify its
-    answer produces better-calibrated probabilities than the model's stated
-    confidence. Carnot's verifiers already ask the discriminative question
-    ("Is this reasoning step correct?"); SECL provides the training recipe for
-    using those verifier outputs to calibrate verifier confidence. This task
-    applies SECL to Carnot's SC-Energy or KAN verifier using the 4 fresh verified
-    samples from exp1374 as the discriminative self-supervision signal.
-    CPU-only. Use {project_root} as the project root and {date} as the run date.
-
-    EXISTING CODE TO READ FIRST:
-    - CODEX.md
-    - CLAUDE.md
-    - research-references.md
-    - python/carnot/models/
-    - python/carnot/verify/
-    - results/experiment_1374_continuous_self_learning_v3_verifier_selected_or_csp_fallback.json
-    - scripts/experiment_template.py
-
-    TASK:
-    Apply SECL discriminative self-calibration to Carnot's SC-Energy verifier.
-    Measure ECE before and after calibration on a held-out FoVer split.
-
-    REQUIRED ARTIFACT FIELDS:
-    - status
-    - verifier_targeted
-    - positive_cases_used
-    - ece_before
-    - ece_after
-    - ece_reduction_pct
-    - discriminative_signal_correlation
-    - calibration_cases_used
-    - secl_viable_for_dvi
-    - honest_verdict
-
-    CONCRETE STEPS:
-    1. Create results/experiment_1386_secl_discriminative_self_calibration.json immediately with status="in_progress".
-    2. Read arXiv:2604.09624 reference from research-references.md. Identify the SECL training procedure.
-    3. Load the 4 fresh verified positive cases from exp1374 (promoted_memory_count=4).
-    4. Load contrastive negative cases from FoVer for calibration contrast.
-    5. Identify the SC-Energy tier verifier or GS-KAN verifier in python/carnot/models/.
-    6. Apply SECL calibration: use the verifier's discriminative output ("correct/incorrect") as self-supervision. Train the confidence head to minimize ECE on the 6-26% of calibration cases (the promoted + some negatives).
-    7. Measure ece_before (pre-calibration) and ece_after (post-calibration) on the held-out FoVer split.
-    8. Compute ece_reduction_pct = (ece_before - ece_after) / ece_before * 100.
-    9. Compute discriminative_signal_correlation: Pearson correlation between SECL training signal and FoVer ground-truth labels.
-    10. Set secl_viable_for_dvi=true if ece_reduction_pct > 10.
-    11. Write all required fields, status="complete", honest_verdict.
-
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1386_secl_discriminative_self_calibration.json')); print(d.get('ece_reduction_pct'), d.get('secl_viable_for_dvi'), d.get('honest_verdict'))"
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp1387-2d-parallel-tempering-kv260-fpga-estimate
-  milestone: 2026.04.107
-  deliverable: results/experiment_1387_2d_parallel_tempering_kv260_fpga_estimate.json
-  title: "2D Parallel Tempering KV260 FPGA Estimate — CPU Simulation + LUT Budget"
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 40
-  estimated_wall_time_min: 40
-  priority: medium
-  requires_gpu: false
-  prior_failures:
-    - experiment_id: exp1373-fully-parallel-ising-inertia-cpu-validation
-      verdict: cpu_only_inertia_no_checkerboard_speedup_no_hardware_claim
-      addressed_by: "exp1373 showed inertia dynamics provide no CPU speedup (best_alpha=0.0). 2D Parallel Tempering (arXiv:2601.09037) is a different technique: temperature replicas exploring the energy landscape in parallel, with >10x convergence speedup. The sparsification technique from arXiv:2503.01177 (copy nodes, K=16 neighbors) keeps KV260 LUT count within 117K budget."
-      retire_if_same_verdict: false
-  prompt: |
-    CONTEXT:
-    arXiv:2601.09037 demonstrates 2D parallel tempering on FPGA: 15 temperature
-    replicas of a 128-node sparsified system (1,920 p-bits), fully on-chip,
-    4.7ms end-to-end, >10x convergence speedup vs standard Ising. The sparsification
-    technique from arXiv:2503.01177 (copy nodes, K=16 neighbors, ~36K LUTs for
-    N=128) keeps the design within the KV260's 117K LUT budget. Carnot's existing
-    parallel_ising.py uses checkerboard (semi-synchronous) without temperature
-    replicas. Adding 2D parallel tempering in software validates the convergence
-    speedup before investing in RTL synthesis. Use {project_root} as the project
-    root and {date} as the run date.
-
-    EXISTING CODE TO READ FIRST:
-    - CODEX.md
-    - CLAUDE.md
-    - research-references.md
-    - research-hardware-wishlist.md
-    - python/carnot/samplers/parallel_ising.py
-    - results/experiment_1373_fully_parallel_ising_inertia_cpu_validation.json
-    - scripts/experiment_template.py
-
-    TASK:
-    CPU-simulate 2D parallel tempering on FoVer constraint problems. Estimate
-    KV260 LUT budget for 15-replica implementation. No hardware execution claimed.
-
-    REQUIRED ARTIFACT FIELDS:
-    - status
-    - constraint_problems_tested
-    - replica_count
-    - temperature_schedule
-    - steps_to_convergence_standard_pt
-    - steps_to_convergence_2d_pt
-    - convergence_speedup_2d_pt
-    - sparsification_k_value
-    - estimated_kv260_lut_count_per_replica
-    - estimated_kv260_total_lut_count_15_replicas
-    - lut_budget_feasible
-    - hardware_claim_allowed
-    - kv260_claim_allowed
-    - honest_verdict
-
-    CONCRETE STEPS:
-    1. Create results/experiment_1387_2d_parallel_tempering_kv260_fpga_estimate.json immediately with status="in_progress".
-    2. Read arXiv:2601.09037 and arXiv:2503.01177 references from research-references.md.
-    3. Load 3-5 FoVer constraint problems.
-    4. Implement 2D parallel tempering: T replicas at different temperatures; swap replicas with Metropolis criterion between adjacent temperatures; T=15, temperatures in [0.5, 5.0].
-    5. Also run standard single-temperature Ising on same problems.
-    6. Measure steps_to_convergence_standard_pt and steps_to_convergence_2d_pt for each problem.
-    7. Compute convergence_speedup_2d_pt = standard_steps / 2d_steps.
-    8. Compute FPGA LUT estimate: single replica at N=128 with K=16 sparse connectivity = ~36K LUTs (from arXiv:2503.01177/Exp 950 baseline). 15 replicas = 15 * 36K = 540K LUTs — this EXCEEDS KV260's 117K budget. Report this honestly.
-    9. If 15 replicas exceed budget, compute the maximum replicas that fit: floor(117K / 36K) = 3 replicas. Report this as the feasible design.
-    10. Set lut_budget_feasible=true only if at least 2 replicas fit within budget.
-    11. Set hardware_claim_allowed=false and kv260_claim_allowed=false.
-    12. Write all required fields, status="complete", honest_verdict.
-
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1387_2d_parallel_tempering_kv260_fpga_estimate.json')); print(d.get('convergence_speedup_2d_pt'), d.get('lut_budget_feasible'), d.get('hardware_claim_allowed'), d.get('honest_verdict'))"
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1401_ebm_cot_v2_hinge_only.json')); print(d.get('calibration_auroc_delta'), d.get('variance_worsened'), d.get('implicit_cot_energy_viable'), d.get('honest_verdict'))"
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
 # ============================================================
-# Phase 4 - FR-11 self-learning integration + retro
+# Phase 4 - Retro (MANDATORY, closes milestone)
 # ============================================================
 
-- id: exp1388-fr11-self-learning-v4-dvi-grpo-integration
-  milestone: 2026.04.107
-  deliverable: results/experiment_1388_fr11_self_learning_v4_dvi_grpo_integration.json
-  title: "FR-11 Self-Learning v4 — DVI Checkpoint + GRPO Feedback Integration"
+- id: exp1402-milestone-108-retro
+  milestone: 2026.04.108
+  deliverable: results/experiment_1402_milestone_108_retro.json
+  title: "Milestone 2026.04.108 Retrospective"
   agent_type: codex
   model: gpt-5.5
-  max_turns: 45
-  estimated_wall_time_min: 50
-  priority: critical
-  requires_gpu: false
-  gated_on:
-    - upstream: exp1381-dvi-discriminative-verifier-training-v1
-      artifact_field: dvi_deployed
-      op: '=='
-      value: true
-  prior_failures:
-    - experiment_id: exp1374-continuous-self-learning-v3-verifier-selected-or-csp-fallback
-      verdict: continuous_self_learning_v3_primary_semantic_verified_dvi_ready_headline_allowed
-      addressed_by: "exp1374 achieved headline self-learning (fresh_verified_sample_count=4, headline=True). This task integrates the DVI checkpoint from exp1381 as the active verifier and the GRPO v7 delta from exp1383 (if positive) as a preference signal. Goal: advance from 4 fresh cases to a larger promoted memory using the improved DVI verifier."
-      retire_if_same_verdict: false
-  prompt: |
-    CONTEXT:
-    FR-11 (autonomous self-learning) is a mandatory research program priority.
-    exp1374 achieved headline self-learning with fresh_verified_sample_count=4.
-    exp1381 deployed a DVI-trained verifier checkpoint. exp1383 attempted GRPO
-    v7 with JURY-RL formal rewards. This task integrates the DVI checkpoint as
-    the active verifier and (if exp1383 succeeded) incorporates GRPO-generated
-    verified cases into the memory pool. Goal: advance from exp1374's 4 fresh
-    cases to a larger promoted memory using the DVI-improved verifier.
-    Mandatory unconditional fallback: if exp1383 gate-blocked or failed, use
-    DVI-only path with replay. Use {project_root} as the project root and
-    {date} as the run date.
-
-    EXISTING CODE TO READ FIRST:
-    - CODEX.md
-    - CLAUDE.md
-    - research-program.md
-    - _bmad/prd.md
-    - results/experiment_1374_continuous_self_learning_v3_verifier_selected_or_csp_fallback.json
-    - results/experiment_1381_dvi_discriminative_verifier_training_v1.json
-    - results/experiment_1383_grpo_v7_jury_rl_formal_verifier_rewards.json
-    - python/carnot/
-    - openspec/capabilities/pipeline/spec.md
-    - openspec/capabilities/verification/spec.md
-
-    TASK:
-    Run FR-11 self-learning v4 using the DVI checkpoint as the active verifier.
-    Attempt to increase fresh_verified_sample_count beyond the exp1374 baseline
-    of 4. Report non-forgetting controls and headline status.
-
-    REQUIRED ARTIFACT FIELDS:
-    - status
-    - path_used
-    - dvi_checkpoint_active
-    - replay_cases_used
-    - fresh_verified_sample_count
-    - grpo_cases_integrated
-    - self_learning_delta_overall
-    - nonforgetting_certificate_rate
-    - memory_regression_count
-    - accepted_violation_delta
-    - promoted_memory_count
-    - demoted_memory_count
-    - dvi_auroc_delta_effect
-    - headline_result_allowed
-    - honest_verdict
-
-    CONCRETE STEPS:
-    1. Create results/experiment_1388_fr11_self_learning_v4_dvi_grpo_integration.json immediately with status="in_progress".
-    2. Load exp1381 DVI checkpoint (dvi_checkpoint_path, verify dvi_deployed=true).
-    3. Check exp1383 status: if grpo_v7_improvement_pp > 0, load GRPO-generated verified cases for memory integration.
-    4. Activate the DVI checkpoint as the verifier for this self-learning round.
-    5. Run memory promotion: use DVI-updated verifier to score all replay cases + any new cases from exp1382 or exp1383. Promote cases verified by DVI verifier.
-    6. Measure self_learning_delta_overall, nonforgetting_certificate_rate, memory_regression_count, accepted_violation_delta.
-    7. Record promoted_memory_count and demoted_memory_count.
-    8. Record dvi_auroc_delta_effect: whether the DVI-updated verifier improved the quality of promoted memories vs exp1374 baseline.
-    9. Set headline_result_allowed=true only if fresh_verified_sample_count > 4 (strictly greater than the exp1374 baseline).
-    10. Write all required fields, status="complete", honest_verdict.
-
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1388_fr11_self_learning_v4_dvi_grpo_integration.json')); print(d.get('fresh_verified_sample_count'), d.get('self_learning_delta_overall'), d.get('headline_result_allowed'), d.get('honest_verdict'))"
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp1389-milestone-107-retro
-  milestone: 2026.04.107
-  deliverable: results/experiment_1389_milestone_107_retro.json
-  title: "Milestone 2026.04.107 Retrospective + Carry-Forward Plan"
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 35
-  estimated_wall_time_min: 35
+  max_turns: 40
+  estimated_wall_time_min: 30
   priority: critical
   requires_gpu: false
   skip_pre_test: true
   prior_failures:
-    - experiment_id: exp1376-milestone-106-retro-carryforward
-      verdict: milestone_106_retro_skipped_3x_pre_test_cascade
-      addressed_by: "skip_pre_test=true is MANDATORY for all retro tasks. This rule was established in .106 when the retro SKIPped 3x due to pre-test cascade. Pre-test fix is exp1377; if pre-tests fail again, the retro must still run with skip_pre_test=true."
-      retire_if_same_verdict: false
-    - experiment_id: exp1363-milestone-105-retro-carryforward
-      verdict: milestone_105_9_of_12_criteria_met_terminal_certificate_measured_semantic_repair_gated_self_learning_replay_only_publication_hold_active
-      addressed_by: "Two consecutive retro SKIPs. The fix is skip_pre_test=true plus writing the initial skeleton artifact IMMEDIATELY (STEP 0 pattern)."
+    - experiment_id: exp1389-milestone-107-retro
+      verdict: retro_107_complete_13_of_14_criteria_met
+      addressed_by: "exp1389 ran successfully with skip_pre_test=true and STEP 0 discipline (criteria_met=13/14, only arxiv_submitted=NOT_MET). This retro follows the same discipline. The single outstanding criterion from .107 (arxiv_submitted) is addressed by exp1390 in this milestone."
       retire_if_same_verdict: false
   prompt: |
     CONTEXT:
-    This is the .107 closeout artifact. It must evaluate whether the milestone
-    produced: (1) pre-test suite fix, (2) publication hold reviewed and lifted,
-    (3) arXiv submitted, (4) DVI training executed, (5) full-scale pipeline
-    run at scale, (6) GRPO v7 formal reward measured, (7) new research probes
-    completed, (8) FR-11 v4 integrated. skip_pre_test=true is MANDATORY for
-    this task — learned from .106 retro SKIPs. Write the initial skeleton artifact
-    IMMEDIATELY as the first action (STEP 0 pattern). Use {project_root} as
-    the project root and {date} as the run date.
+    Milestone 2026.04.108 runs 13 experiments (exp1390-exp1402) targeting:
+    (1) arXiv submission (bundle ready at results/arxiv_bundle_v11.tar.gz),
+    (2) full-scale pipeline quality fix (0.59 → 0.70+ semantic validation),
+    (3) GRPO v8 NGRPO zero-reward fix, (4) DVI v2 + SECL with 59 fresh cases,
+    (5) FR-11 v5 integration, (6) test suite hygiene v2,
+    (7) new research probes (NGRPO theory, discrete SB KV260, BiPRM, EBM-CoT v2).
+    skip_pre_test=true is MANDATORY. Write the initial skeleton artifact
+    IMMEDIATELY as STEP 0 before reading any files.
+    Use {project_root} as the project root and {date} as the run date.
 
     EXISTING CODE TO READ FIRST:
     - CODEX.md
@@ -1034,55 +971,63 @@ tasks:
     - ops/changelog.md
     - research-complete.yaml
     - research-references.md
-    - results/experiment_1377_pretest_fix_106_retro_closeout.json
-    - results/experiment_1378_publication_hold_v16_claim_boundary.json
-    - results/experiment_1379_paper_integrity_audit_v2.json
-    - results/experiment_1380_arxiv_bundle_v11_submission.json
-    - results/experiment_1381_dvi_discriminative_verifier_training_v1.json
-    - results/experiment_1382_fullscale_certificate_semantic_repair_100cases.json
-    - results/experiment_1383_grpo_v7_jury_rl_formal_verifier_rewards.json
-    - results/experiment_1384_ebm_cot_energy_calibration_probe.json
-    - results/experiment_1385_self_adaptive_ising_machine_probe.json
-    - results/experiment_1386_secl_discriminative_self_calibration.json
-    - results/experiment_1387_2d_parallel_tempering_kv260_fpga_estimate.json
-    - results/experiment_1388_fr11_self_learning_v4_dvi_grpo_integration.json
+    - results/experiment_1390_arxiv_submission_sword_api.json
+    - results/experiment_1391_fullscale_pipeline_failure_diagnosis.json
+    - results/experiment_1392_test_suite_hygiene_v2.json
+    - results/experiment_1393_grpo_v8_ngrpo_zero_reward_fix.json
+    - results/experiment_1394_dvi_v2_secl_combined.json
+    - results/experiment_1395_fr11_self_learning_v5.json
+    - results/experiment_1396_semantic_validation_pass_rate_fix_v1.json
+    - results/experiment_1397_fullscale_pipeline_v2_200cases.json
+    - results/experiment_1398_ngrpo_theory_probe.json
+    - results/experiment_1399_discrete_sb_kv260_cpu_simulation.json
+    - results/experiment_1400_biprm_retrospective_verification_probe.json
+    - results/experiment_1401_ebm_cot_v2_hinge_only.json
 
     TASK:
     STEP 0: Create the skeleton artifact IMMEDIATELY before reading any files.
-    Then evaluate all 14 success criteria against the available artifacts.
+    Then evaluate all 13 success criteria against the available artifacts.
 
     REQUIRED ARTIFACT FIELDS:
     - status
     - criteria_total
     - criteria_met
     - experiment_statuses
-    - pre_test_fix_verdict
-    - publication_verdict
     - arxiv_submission_verdict
-    - dvi_training_verdict
-    - full_scale_pipeline_verdict
-    - grpo_v7_verdict
-    - new_research_verdicts
-    - self_learning_v4_verdict
+    - pipeline_failure_diagnosis_verdict
+    - test_suite_hygiene_verdict
+    - grpo_ngrpo_verdict
+    - dvi_v2_secl_verdict
+    - fr11_v5_verdict
+    - semantic_validation_fix_verdict
+    - full_pipeline_v2_verdict
+    - ngrpo_theory_verdict
+    - discrete_sb_kv260_verdict
+    - biprm_verdict
+    - ebm_cot_v2_verdict
     - carry_forward_tasks
     - prior_failure_hygiene_notes
     - honest_verdict
 
     CONCRETE STEPS:
-    1. STEP 0: Create results/experiment_1389_milestone_107_retro.json IMMEDIATELY with status="in_progress" and all required fields set to null. Do this BEFORE reading any other files.
-    2. Read all .107 artifacts that exist. Mark missing artifacts explicitly.
-    3. Evaluate each of the 14 success criteria from openspec/change-proposals/research-roadmap-vNEXT.md (.107 version).
-    4. Set pre_test_fix_verdict from exp1377.
-    5. Set publication_verdict from exp1378 (publication_hold_state).
-    6. Set arxiv_submission_verdict from exp1380 (submission_result).
-    7. Set dvi_training_verdict from exp1381 (dvi_deployed, dvi_auroc_delta).
-    8. Set full_scale_pipeline_verdict from exp1382 (certificate_parse_rate, full_pipeline_pass_rate).
-    9. Set grpo_v7_verdict from exp1383 (grpo_v7_improvement_pp, wall_budget_exhausted).
-    10. Set new_research_verdicts: summarize exp1384-1387.
-    11. Set self_learning_v4_verdict from exp1388 (fresh_verified_sample_count > 4?, headline_result_allowed).
-    12. Write carry_forward_tasks for .108 with prior_failure_hygiene_notes.
-    13. Update status="complete", honest_verdict.
-    14. Update ops/status.md and ops/changelog.md with .107 results. Update research-complete.yaml with .107 milestone record.
+    1. STEP 0: Create results/experiment_1402_milestone_108_retro.json IMMEDIATELY with status="in_progress" and all required fields set to null. Do this BEFORE reading any other files.
+    2. Read all .108 artifacts that exist. Mark missing artifacts explicitly.
+    3. Evaluate each of the 13 success criteria from openspec/change-proposals/research-roadmap-vNEXT.md (.108 version).
+    4. Set arxiv_submission_verdict from exp1390 (submission_attempted, submission_result).
+    5. Set pipeline_failure_diagnosis_verdict from exp1391 (failure_analysis_complete, top_failure_category).
+    6. Set test_suite_hygiene_verdict from exp1392 (test_suite_collection_clean, collection_errors_after).
+    7. Set grpo_ngrpo_verdict from exp1393 (grpo_v8_improvement_pp, unknown_rollout_rate).
+    8. Set dvi_v2_secl_verdict from exp1394 (dvi_v2_auroc_delta, dvi_v2_deployed).
+    9. Set fr11_v5_verdict from exp1395 (fresh_verified_sample_count, grpo_v8_cases_integrated).
+    10. Set semantic_validation_fix_verdict from exp1396 (semantic_validation_pass_rate_after_fix).
+    11. Set full_pipeline_v2_verdict from exp1397 (certificate_parse_rate, semantic_validation_pass_rate, full_pipeline_pass_rate).
+    12. Set ngrpo_theory_verdict from exp1398 (ngrpo_advantage_calibration_verified, theory_supports_exp1393).
+    13. Set discrete_sb_kv260_verdict from exp1399 (bram_budget_feasible, hardware_claim_allowed).
+    14. Set biprm_verdict from exp1400 (pivot_precision_delta, retrospective_verification_viable).
+    15. Set ebm_cot_v2_verdict from exp1401 (calibration_auroc_delta, variance_worsened).
+    16. List carry_forward_tasks for .109.
+    17. Write prior_failure_hygiene_notes on any experiments with retire_if_same_verdict=true that triggered.
+    18. Write all required fields, status="complete", honest_verdict.
 
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1389_milestone_107_retro.json')); print(d.get('criteria_met'), '/', d.get('criteria_total'), d.get('arxiv_submission_verdict'), d.get('honest_verdict'))"
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1402_milestone_108_retro.json')); print(d.get('criteria_met'), '/', d.get('criteria_total'), d.get('arxiv_submission_verdict'), d.get('honest_verdict'))"
     Do NOT push. Do NOT modify scripts/research_conductor.py.
