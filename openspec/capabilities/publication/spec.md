@@ -493,6 +493,61 @@ AND `credentialed_submission_attempted == false`
 AND `new_references_count > 0`
 AND `related_work_delta_written == true`.
 
+### REQ-PUBLISH-017: Publication Hold v16 Claim-Boundary Review
+
+The Exp 1378 publication-hold v16 runner MUST create
+`results/experiment_1378_publication_hold_v16_claim_boundary.json` with
+`status == "in_progress"` before loading prior hold or milestone `.106`
+evidence. The terminal artifact MUST read Exp 1362, Exp 1366, Exp 1369,
+Exp 1370, Exp 1371, Exp 1372, and Exp 1374 source artifacts from the local
+repository only. It MUST summarize whether the three primary hold blockers
+have local evidence:
+
+- certificate parsing recovered with `certificate_parse_rate >= 0.75`
+- semantic validation, MCS repair, and scheduler triage all allow their local
+  claims without false acceptance
+- headline self-learning is allowed by fresh primary semantic-verifier evidence
+
+The artifact MUST include:
+
+- `status`
+- `certificate_evidence_summary`
+- `semantic_repair_evidence_summary`
+- `kan_formal_evidence_summary`
+- `self_learning_evidence_summary`
+- `hold_blocker_resolved_certificate`
+- `hold_blocker_resolved_semantic_repair`
+- `hold_blocker_resolved_self_learning`
+- `all_primary_blockers_resolved`
+- `publication_hold_state`
+- `paper_changes_needed_for_lift`
+- `ebt_arm_claim_boundary`
+- `dvi_ready`
+- `external_dependency_claim_allowed`
+- `honest_verdict`
+
+The runner MUST set `publication_hold_state == "lift_recommended"` only when
+all three primary blocker booleans are true. It MUST keep
+`external_dependency_claim_allowed == false` unless external parity was locally
+demonstrated by source artifacts.
+
+### SCENARIO-PUBLISH-018: Full .106 Evidence Recommends Hold Lift Without External Parity
+
+**Given** Exp 1366 reports `certificate_parse_rate == 1.0`,
+`prefix_injection_supported == true`, and `headline_result_allowed == true`
+AND Exp 1369 reports `validator_execution_pass_rate == 1.0` and
+`semantic_validator_claim_allowed == true`
+AND Exp 1370 reports `repair_claim_allowed == true`
+AND Exp 1371 reports `triage_claim_allowed == true` and
+`false_acceptance_rate == 0.0`
+AND Exp 1374 reports `headline_result_allowed == true`,
+`path_used == "primary_semantic_verified"`, and `dvi_ready == true`
+**When** the Exp 1378 publication-hold v16 runner executes
+**Then** it writes a complete artifact with
+`all_primary_blockers_resolved == true`
+AND `publication_hold_state == "lift_recommended"`
+AND `external_dependency_claim_allowed == false`.
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -513,3 +568,4 @@ AND `related_work_delta_written == true`.
 | REQ-PUBLISH-014 | Proposed | Exp 1270 gated arXiv bundle v10 artifact |
 | REQ-PUBLISH-015 | Proposed | Exp 1307 arXiv v10 hold/receipt terminal artifact |
 | REQ-PUBLISH-016 | Proposed | Exp 1321 publication-hold related-work delta artifact |
+| REQ-PUBLISH-017 | Implemented | Exp 1378 publication-hold v16 claim-boundary review |

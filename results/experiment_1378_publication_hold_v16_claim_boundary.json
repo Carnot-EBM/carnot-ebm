@@ -1,0 +1,175 @@
+{
+  "all_primary_blockers_resolved": true,
+  "artifact_metadata": {
+    "actual_project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "run_date": "20260505",
+    "source_artifacts": [
+      "results/experiment_1362_publication_hold_ebt_arm_kona_claim_boundary.json",
+      "results/experiment_1366_certificate_v8_tag_first_prefix_injection_crane.json",
+      "results/experiment_1369_semantic_validator_v2_nsvif_z3_constraints.json",
+      "results/experiment_1370_verge_mcs_repair_localization_v2.json",
+      "results/experiment_1371_margin_aware_cactus_beaver_scheduler_v3.json",
+      "results/experiment_1372_optimal_kan_pwa_formal_verification.json",
+      "results/experiment_1374_continuous_self_learning_v3_verifier_selected_or_csp_fallback.json"
+    ],
+    "source_documents": [
+      "CODEX.md",
+      "CLAUDE.md",
+      "_bmad/prd.md",
+      "_bmad/architecture.md",
+      "research-references.md"
+    ],
+    "spec_refs": [
+      "REQ-PUBLISH-017",
+      "SCENARIO-PUBLISH-018"
+    ]
+  },
+  "certificate_evidence_summary": {
+    "certificate_case_count": 4,
+    "certificate_parse_rate": 1.0,
+    "certificate_truthfulness_rate": 1.0,
+    "claim_boundary": "Exp 1366 resolves the prior certificate blocker for this hold review: local CRANE tag-first prefix injection produced parse_rate=1.0 on the four certificate cases, with prefix injection and headline result allowed.",
+    "headline_result_allowed": true,
+    "honest_verdict": "tag_first_prefix_injection_crane_positive_parse_rate_1_0",
+    "mandated_sota_parse_rate": 1.0,
+    "parse_gate_satisfied": true,
+    "parse_gate_threshold": 0.75,
+    "prefix_injection_supported": true,
+    "source_experiment": "exp1366",
+    "status": "complete",
+    "trigger_token_hit_rate": 1.0,
+    "unknown_preservation_rate": 1.0
+  },
+  "dvi_ready": true,
+  "ebt_arm_claim_boundary": {
+    "allowed_language": [
+      "The .106 local evidence resolves the certificate, semantic-repair, and headline self-learning blockers that kept the publication hold active.",
+      "Exp 1372 adds a CPU-only formal GS-KAN energy-bound result that may be described as local formal verifier evidence.",
+      "EBT and ARM-EBM may remain related work or architectural motivation when clearly separated from local Carnot proof."
+    ],
+    "disallowed_language": [
+      "Carnot has achieved EBT, ARM-EBM, Kona, Extropic, THRML, TSU, or hardware parity.",
+      "External EBT, ARM-EBM, Kona, or Extropic results are evidence for Carnot's local claims.",
+      "The .106 hold review proves native continuous-latent full-answer reasoning or external dependency equivalence."
+    ],
+    "external_dependency_claim_allowed": false,
+    "inherited_exp1362_external_dependency_claim_allowed": false,
+    "kan_formal_claim_allowed": true,
+    "local_ebt_arm_equivalence_proven": false,
+    "local_primary_blocker_evidence_sufficient_for_hold_review": true
+  },
+  "experiment": "1378_publication_hold_v16_claim_boundary",
+  "external_dependency_claim_allowed": false,
+  "hold_blocker_resolved_certificate": true,
+  "hold_blocker_resolved_self_learning": true,
+  "hold_blocker_resolved_semantic_repair": true,
+  "honest_verdict": "lift_recommended_primary_blockers_resolved_no_external_parity_claim",
+  "input_resolution": {
+    "missing_source_artifacts": []
+  },
+  "kan_formal_evidence_summary": {
+    "claim_boundary": "Exp 1372 allows a local CPU-only GS-KAN formal energy-bound claim. It supports the publication evidence chain but does not imply hardware execution or external dependency parity.",
+    "formal_property_verified": true,
+    "hardware_correctness_claimed": false,
+    "hardware_execution_claimed": false,
+    "honest_verdict": "cpu_only_gskan_energy_bound_verified_no_hardware_claim",
+    "kan_formal_claim_allowed": true,
+    "lp_certified_upper_bound": 5.5571795257855365,
+    "milp_solver_status": "optimal",
+    "milp_verification_result": "verified",
+    "property_energy_threshold": 5.562736705311322,
+    "property_tested": "For all x in the axis-aligned feature box covering correct FoVer train rows, GSKANEnergy.energy(x) < 5.562736705.",
+    "pwa_abstraction_error_max": 5.221581345082882e-08,
+    "source_experiment": "exp1372",
+    "status": "complete"
+  },
+  "paper_changes_needed_for_lift": [
+    {
+      "change": "Replace publication-hold language with .106 local evidence and keep the state as lift_recommended until operator action.",
+      "section": "Abstract / contribution summary"
+    },
+    {
+      "change": "Report Exp 1366 certificate_parse_rate=1.0, prefix_injection_supported=true, and headline_result_allowed=true.",
+      "section": "Certificate generation results"
+    },
+    {
+      "change": "Add Exp 1369 validator_execution_pass_rate=1.0, Exp 1370 repair_claim_allowed=true, and Exp 1371 triage_claim_allowed=true with false_acceptance_rate=0.0.",
+      "section": "Semantic validation and repair"
+    },
+    {
+      "change": "Add Exp 1372 formal_property_verified=true and kan_formal_claim_allowed=true while labeling it CPU-only and non-hardware.",
+      "section": "Formal KAN evidence"
+    },
+    {
+      "change": "Report Exp 1374 headline_result_allowed=true, path_used=primary_semantic_verified, fresh_verified_sample_count=4, and dvi_ready=true.",
+      "section": "Self-learning / DVI readiness"
+    },
+    {
+      "change": "State that external parity and external dependency claims remain disallowed without local evidence.",
+      "section": "Limitations and claim boundaries"
+    }
+  ],
+  "prior_blockers_inherited": [
+    "certificate_parse_truthfulness_and_unknown_preservation_gates_not_satisfied",
+    "semantic_validator_and_dvi_paths_gate_blocked_or_replay_only",
+    "fresh_verifier_selected_self_learning_samples_absent",
+    "hardware_synthesis_board_tsu_or_thrml_execution_absent",
+    "external_ebt_arm_kona_extropic_parity_not_locally_demonstrated"
+  ],
+  "prior_publication_hold_state": "active",
+  "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+  "publication_hold_state": "lift_recommended",
+  "remaining_primary_blockers": [],
+  "run_date": "20260505",
+  "schema": "publication_hold_v16_claim_boundary_v1",
+  "self_learning_evidence_summary": {
+    "accepted_violation_delta": -0.846154,
+    "claim_boundary": "Exp 1374 resolves the self-learning blocker for this hold review by using the primary_semantic_verified path with four fresh verified samples, clean non-forgetting controls, dvi_ready=true, and headline_result_allowed=true.",
+    "dvi_ready": true,
+    "fresh_verified_sample_count": 4,
+    "headline_result_allowed": true,
+    "honest_verdict": "continuous_self_learning_v3_primary_semantic_verified_dvi_ready_headline_allowed",
+    "memory_regression_count": 0,
+    "nonforgetting_certificate_rate": 1.0,
+    "path_used": "primary_semantic_verified",
+    "promoted_memory_count": 4,
+    "quarantined_memory_count": 0,
+    "self_learning_delta_overall": 1.596429,
+    "source_experiment": "exp1374",
+    "status": "complete"
+  },
+  "semantic_repair_evidence_summary": {
+    "accepted_repair_count": 2,
+    "claim_boundary": "The semantic chain is local replay evidence over Exp 1366 rows: Exp 1369 executes validator checks, Exp 1370 localizes MCS repairs, and Exp 1371 adds conservative scheduler triage with zero false acceptance.",
+    "exp1369_status": "complete",
+    "exp1370_status": "complete",
+    "exp1371_status": "complete",
+    "false_acceptance_rate": 0.0,
+    "honest_verdicts": {
+      "exp1369": "semantic_validator_v2_complete_unknown_preserved",
+      "exp1370": "verge_mcs_repair_localization_complete_claim_allowed",
+      "exp1371": "margin_aware_scheduler_claim_allowed_zero_false_acceptance"
+    },
+    "mcs_localization_rate": 1.0,
+    "observed_full_verifier_call_reduction": 0.25,
+    "parsed_certificate_cases": 4,
+    "rejected_repair_count": 1,
+    "repair_claim_allowed": true,
+    "repair_hint_precision": 1.0,
+    "semantic_equivalence_pass_rate": 1.0,
+    "semantic_validator_claim_allowed": true,
+    "smt_text_constraint_pass_rate": 1.0,
+    "source_experiments": [
+      "exp1369",
+      "exp1370",
+      "exp1371"
+    ],
+    "triage_claim_allowed": true,
+    "unknown_preservation_rate": 1.0,
+    "unknown_silently_accepted_count": 0,
+    "validator_execution_pass_rate": 1.0,
+    "z3_constraint_pass_rate": 1.0
+  },
+  "status": "complete"
+}
