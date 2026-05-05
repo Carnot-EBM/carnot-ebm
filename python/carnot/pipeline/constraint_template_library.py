@@ -751,6 +751,119 @@ def comparison_direction_template(response: str) -> list[ConstraintResult]:
     return results
 
 
+def _detect_external_signal_sources(response: str) -> list[dict[str, Any]]:
+    """Return external source classes detected in response text."""
+    hits: list[dict[str, Any]] = []
+    seen: set[str] = set()
+    for source_type, patterns in _SOURCE_PATTERNS:
+        for pattern in patterns:
+            match = re.search(pattern, response, flags=re.IGNORECASE)
+            if match and source_type not in seen:
+                hits.append(
+                    {
+                        "source_type": source_type,
+                        "evidence": match.group(0),
+                    }
+                )
+                seen.add(source_type)
+                break
+    return hits
+
+
+def manipulable_signal_dependency_template(
+    response: str,
+    source_priors: dict[str, float] | None = None,
+    load_bearing_threshold: int = 1,
+    manipulability_threshold: float = 0.7,
+) -> list[ConstraintResult]:
+    """Detect load-bearing dependency on one manipulable external signal.
+
+    **Detailed explanation for engineers:**
+        This template catches a structural weakness in reasoning chains, not a
+        truth-value error: a conclusion is treated as established because one
+        external source said so, and the source class is plausibly manipulable
+        (web search, open-corpus RAG, unauthenticated tool output, LLM-generated
+        intermediate text, single sensor/API output). It returns a violation only
+        when all of these hold:
+
+        1. exactly one high-manipulability source class is detected;
+        2. at least ``load_bearing_threshold`` conclusion cue is present;
+        3. no independent corroboration / attestation cue is present.
+
+        Callers can override ``source_priors`` to tune trust assumptions for a
+        deployment. For example, a signed internal API can be assigned a low prior
+        while open-web search remains high risk.
+
+    Args:
+        response: Response text to scan for source-dependency language.
+        source_priors: Optional source-type to prior override.
+        load_bearing_threshold: Minimum number of conclusion cues needed to fire.
+        manipulability_threshold: Minimum prior that makes a source high risk.
+
+    Returns:
+        A one-element list with ``satisfied=False`` when the violation is detected;
+        otherwise ``[]``.
+
+    Spec: REQ-LEARN-018-4, REQ-LEARN-018-5,
+          SCENARIO-LEARN-018-4, SCENARIO-LEARN-018-5
+    """
+    if not response.strip():
+        return []
+
+    priors = dict(DEFAULT_MANIPULABILITY_PRIORS)
+    if source_priors:
+        priors.update(source_priors)
+
+    detected_sources = _detect_external_signal_sources(response)
+    if not detected_sources:
+        return []
+
+    high_risk_sources = [
+        source
+        for source in detected_sources
+        if priors.get(str(source["source_type"]), 0.0) >= manipulability_threshold
+    ]
+    if len(high_risk_sources) != 1:
+        return []
+
+    load_bearing_conclusion_count = len(_LOAD_BEARING_PATTERN.findall(response))
+    if load_bearing_conclusion_count < load_bearing_threshold:
+        return []
+
+    corroboration_present = bool(_CORROBORATION_PATTERN.search(response))
+    if corroboration_present:
+        return []
+
+    source = high_risk_sources[0]
+    source_type = str(source["source_type"])
+    source_prior = float(priors[source_type])
+    repair_suggestion = (
+        "add independent-source corroboration or mark the conclusion as conditional "
+        "on the single external signal"
+    )
+    return [
+        ConstraintResult(
+            constraint_type="manipulable_signal_dependency",
+            description=(
+                f"manipulable signal dependency: conclusion rests on one "
+                f"{source_type} source without corroboration"
+            ),
+            metadata={
+                "satisfied": False,
+                "source_type": source_type,
+                "source_prior": source_prior,
+                "source_evidence": source["evidence"],
+                "sources_detected": [s["source_type"] for s in detected_sources],
+                "load_bearing_conclusion_count": load_bearing_conclusion_count,
+                "load_bearing_threshold": load_bearing_threshold,
+                "manipulability_threshold": manipulability_threshold,
+                "corroboration_present": False,
+                "repair_suggestion": repair_suggestion,
+            },
+        )
+    ]
+
+
 # ---------------------------------------------------------------------------
 # CaseMemoryTemplateWiring
 # ---------------------------------------------------------------------------
@@ -790,6 +903,9 @@ class CaseMemoryTemplateWiring:
     # Ordered from most-specific to least-specific so that multi-keyword types
     # like "carry_sign_error" match "carry" before "sign".
     _KEYWORD_MAP: list[tuple[str, str]] = [
+        ("manipulable", "manipulable_signal_dependency"),
+        ("single_source", "manipulable_signal_dependency"),
+        ("rag", "manipulable_signal_dependency"),
         ("carry", "carry_check"),
         ("sign", "sign_check"),
         ("unit", "unit_consistency"),
