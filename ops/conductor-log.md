@@ -813,3 +813,31 @@ web search: GitHub trending energy based mod |
 | 2026-05-05 07:33 UTC | SatIR/NSVIF Constraint Index + Semantic Validator | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1325-triggered-certificate-extraction-v5- |
 | 2026-05-05 07:33 UTC | BEAVER-lite/Cactus Safe-Prefix Acceptance v5 - Gat | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1326-satir-nsvif-semantic-validator-gat |
 | 2026-05-05 07:35 UTC | SatIR/NSVIF Constraint Index + Semantic Validator | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1325-triggered-certificate-extraction-v5- |
+| 2026-05-05 07:35 UTC | BEAVER-lite/Cactus Safe-Prefix Acceptance v5 - Gat | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1326-satir-nsvif-semantic-validator-gat |
+| 2026-05-05 07:38 UTC | Continuous Self-Learning: Verifier-Governed Memory | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed, 1 warning in 7.65s |
+| 2026-05-05 07:40 UTC | Continuous Self-Learning: Verifier-Governed Memory | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed, 1 warning in 7.31s |
+| 2026-05-05 07:42 UTC | Continuous Self-Learning: Verifier-Governed Memory | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed, 1 warning in 8.27s |
+| 2026-05-05 07:44 UTC | DVI Certificate-Tail Online Update v2 - Gated on P | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1325-triggered-certificate-extraction-v5- |
+| 2026-05-05 07:44 UTC | GRPO/VPRM v12 Micro-Audit - Gated on DVI Lossless | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1328-continuous-self-learning-memory-prom |
+| 2026-05-05 07:45 UTC | Orthographic Hard-Constraint Smoke Benchmark on SO | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed, 1 warning in 7.03s |
+| 2026-05-05 07:47 UTC | DVI Certificate-Tail Online Update v2 - Gated on P | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1325-triggered-certificate-extraction-v5- |
+| 2026-05-05 07:47 UTC | GRPO/VPRM v12 Micro-Audit - Gated on DVI Lossless | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1328-continuous-self-learning-memory-prom |
+| 2026-05-05 07:47 UTC | Orthographic Hard-Constraint Smoke Benchmark on SO | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed, 1 warning in 6.92s |
+| 2026-05-05 07:49 UTC | DVI Certificate-Tail Online Update v2 - Gated on P | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1325-triggered-certificate-extraction-v5- |
+| 2026-05-05 07:49 UTC | GRPO/VPRM v12 Micro-Audit - Gated on DVI Lossless | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1328-continuous-self-learning-memory-prom |
+| 2026-05-05 07:49 UTC | Orthographic Hard-Constraint Smoke Benchmark on SO | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed, 1 warning in 5.68s |
+| 2026-05-05 07:52 UTC | Domain-Calibrated Token/EPR Probe - Gated on Top-K | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed, 1 warning in 6.14s |
+| 2026-05-05 07:54 UTC | Domain-Calibrated Token/EPR Probe - Gated on Top-K | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed, 1 warning in 5.73s |
+| 2026-05-05 07:56 UTC | Domain-Calibrated Token/EPR Probe - Gated on Top-K | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed, 1 warning in 4.79s |
+| 2026-05-05 07:58 UTC | p-DNN Samples-vs-Bits Energy Accounting for Tiny V | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed, 1 warning in 5.32s |
+| 2026-05-05 08:01 UTC | p-DNN Samples-vs-Bits Energy Accounting for Tiny V | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed, 1 warning in 4.98s |
+| 2026-05-05 08:03 UTC | p-DNN Samples-vs-Bits Energy Accounting for Tiny V | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed, 1 warning in 4.78s |
+| 2026-05-05 08:05 UTC | LUT-KAN Reproducibility Baseline from .102 Hardwar | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed, 1 warning in 5.04s |
+| 2026-05-05 08:07 UTC | LUT-KAN Reproducibility Baseline from .102 Hardwar | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed, 1 warning in 4.97s |
+| 2026-05-05 08:10 UTC | LUT-KAN Reproducibility Baseline from .102 Hardwar | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed, 1 warning in 4.99s |
+| 2026-05-05 08:12 UTC | Publication Hold + Related-Work Delta v12 | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed, 1 warning in 4.96s |
+| 2026-05-05 08:14 UTC | Publication Hold + Related-Work Delta v12 | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed, 1 warning in 5.33s |
+| 2026-05-05 08:16 UTC | Publication Hold + Related-Work Delta v12 | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed, 1 warning in 5.01s |
+| 2026-05-05 08:19 UTC | Milestone 2026.04.103 Retrospective + Carry-Forwar | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed, 1 warning in 5.03s |
+| 2026-05-05 08:21 UTC | Milestone 2026.04.103 Retrospective + Carry-Forwar | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed, 1 warning in 4.37s |
+| 2026-05-05 08:23 UTC | Milestone 2026.04.103 Retrospective + Carry-Forwar | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed, 1 warning in 5.02s |
