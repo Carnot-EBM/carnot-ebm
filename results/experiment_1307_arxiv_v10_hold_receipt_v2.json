@@ -1,10 +1,28 @@
 {
-  "status": "in_progress",
-  "run_date": "20260505",
-  "publication_state": "unknown",
   "arxiv_receipt_present": false,
-  "operator_hold_active": false,
+  "blocker": "operator_publication_hold_active_no_local_receipt",
   "credentialed_submission_attempted": false,
-  "blocker": "Local receipt check not yet complete.",
-  "honest_verdict": "In progress: local-only receipt and blocker evaluation has not yet completed."
+  "experiment": 1307,
+  "honest_verdict": "operator_hold_active_no_local_arxiv_receipt",
+  "local_receipt_path": null,
+  "operator_hold_active": true,
+  "prior_publication_blockers": [
+    {
+      "blocker": "3 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: no prior_failures field on task",
+      "honest_verdict": "blocked_gate_check_failed",
+      "path": "results/experiment_1294_arxiv_v10_submission_receipt_or_blocker.json",
+      "status": "blocked"
+    },
+    {
+      "blocker": "3 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: no prior_failures field on task",
+      "honest_verdict": "milestone_100_5_of_14_criteria_met",
+      "path": "results/experiment_1295_milestone_retro_100.json",
+      "status": "complete"
+    }
+  ],
+  "publication_state": "operator_hold",
+  "receipt_check_scope": "local_repository_files_only",
+  "run_date": "20260505",
+  "schema": "arxiv_v10_hold_receipt_v2",
+  "status": "complete"
 }
