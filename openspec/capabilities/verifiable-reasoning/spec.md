@@ -17734,3 +17734,55 @@ verdict
 actually produced the measured certificate rows.
 
 **Spec traces:** REQ-VERIFY-1353, SCENARIO-VERIFY-1353, Exp 1353
+
+## REQ-VERIFY-1354: LogicSkills Certificate Skill Split Replay
+
+**Summary:** Carnot SHALL split terminal Exp 1353 certificate outcomes into
+LogicSkills-style formal skills so missing structure, solver semantics,
+countermodel evidence, validity assessment, and UNKNOWN preservation are not
+collapsed into one undifferentiated certificate failure.
+
+**Requirements:**
+
+- REQ-VERIFY-1354-1: The workflow SHALL write
+  `results/experiment_1354_logicskills_certificate_skill_split.json` with
+  `status="in_progress"` before loading Exp 1353 certificate cases.
+- REQ-VERIFY-1354-2: The workflow SHALL load terminal Exp 1353 certificate rows
+  and classify each row as `parsed`, `semantically truth-preserving`,
+  `UNKNOWN-preserving`, or `rejected`.
+- REQ-VERIFY-1354-3: Each rejected or non-truth-preserving row SHALL be mapped
+  to `symbolization`, `countermodel`, `validity_assessment`, or
+  `unknown_preservation` only when the local row evidence supports that skill
+  label.
+- REQ-VERIFY-1354-4: The workflow SHALL run local parser/verifier or Z3-style
+  checks for Exp 1353 cases that can be formalized without fresh LLM inference
+  and SHALL record `z3_verified_case_count`.
+- REQ-VERIFY-1354-5: The artifact SHALL compute
+  `symbolization_pass_rate`, `countermodel_pass_rate`, and
+  `validity_pass_rate` from measurable certificate-case denominators and SHALL
+  set `dominant_skill_gap` to the largest measured blocker.
+- REQ-VERIFY-1354-6: The artifact SHALL set `skill_split_claim_allowed=true`
+  only when at least one certificate case has enough local evidence to support
+  the split.
+- REQ-VERIFY-1354-7: The artifact SHALL include `status`,
+  `certificate_cases_used`, `symbolization_pass_rate`,
+  `countermodel_pass_rate`, `validity_pass_rate`,
+  `z3_verified_case_count`, `dominant_skill_gap`,
+  `skill_split_claim_allowed`, and `honest_verdict`.
+
+**Implementation Status:** Implemented (Exp 1354)
+
+### SCENARIO-VERIFY-1354: Exp 1353 Missing Tags Are Separated From Semantic Failures
+
+**Given** the run date is `20260505`
+**And** Exp 1353 has terminal certificate rows
+**When** the LogicSkills certificate skill split replay runs without fresh LLM
+inference
+**Then** it writes an in-progress artifact first
+**And** it writes a complete artifact with per-case classifications, skill-gap
+mapping, local formal checks where available, pass rates, dominant skill gap,
+claim gate, and honest verdict
+**And** missing structural tags are reported as symbolization failures rather
+than generic semantic invalidity.
+
+**Spec traces:** REQ-VERIFY-1354, SCENARIO-VERIFY-1354, Exp 1354
