@@ -1,0 +1,45 @@
+{
+  "status": "complete",
+  "collection_errors_before": 2,
+  "collection_errors_before_list": [
+    "tests/python/test_combined_retro_95_96_97.py: ModuleNotFoundError: No module named 'carnot.reporting.combined_retro_95_96_97'",
+    "tests/python/test_milestone_retro_96.py: ModuleNotFoundError: No module named 'carnot.reporting.milestone_retro_96'"
+  ],
+  "collection_errors_after": 0,
+  "collection_errors_after_list": [],
+  "errors_fixed": [
+    {
+      "test_file": "tests/python/test_milestone_retro_96.py",
+      "error": "ModuleNotFoundError: No module named 'carnot.reporting.milestone_retro_96'",
+      "resolution": "Restored python/carnot/reporting/milestone_retro_96.py with the REQ-REPORT-018 source-field evaluator, artifact builder, and run() writer."
+    },
+    {
+      "test_file": "tests/python/test_combined_retro_95_96_97.py",
+      "error": "ModuleNotFoundError: No module named 'carnot.reporting.combined_retro_95_96_97'",
+      "resolution": "Restored python/carnot/reporting/combined_retro_95_96_97.py with the REQ-REPORT-021 combined .95/.96/.97 evaluator, artifact builder, and run() writer."
+    }
+  ],
+  "fixes_applied": [
+    "Created python/carnot/reporting/milestone_retro_96.py using the existing research-reporting spec and tests as the contract.",
+    "Created python/carnot/reporting/combined_retro_95_96_97.py and reused the .96 evaluator for the combined retrospective criterion map.",
+    "Formatted and linted both restored reporting modules without adding dependencies or deleting tests."
+  ],
+  "validation": {
+    "initial_collection_probe": ".venv/bin/pytest tests/python --collect-only -q 2>&1 | grep ERROR | head -40",
+    "initial_collection_probe_result": "2 unique collection errors",
+    "final_collection_probe": ".venv/bin/pytest tests/python --collect-only -q 2>&1 | grep ERROR | head -40",
+    "final_collection_probe_result": "no ERROR lines emitted",
+    "targeted_tests": ".venv/bin/pytest tests/python/test_milestone_retro_96.py tests/python/test_combined_retro_95_96_97.py -q --no-header --no-cov",
+    "targeted_tests_result": "5 passed in 1.79s",
+    "lint": "ruff check python/carnot/reporting/milestone_retro_96.py python/carnot/reporting/combined_retro_95_96_97.py",
+    "lint_result": "All checks passed",
+    "format": "ruff format --check python/carnot/reporting/milestone_retro_96.py python/carnot/reporting/combined_retro_95_96_97.py",
+    "format_result": "2 files already formatted",
+    "full_suite_tail": ".venv/bin/pytest tests/python -x --no-header -q 2>&1 | tail -10",
+    "full_suite_tail_result": "3 failed, 5393 passed, 29 skipped, 44 warnings in 121.43s; failures are execution-time test failures after collection, not collection errors.",
+    "spec_coverage": ".venv/bin/python scripts/check_spec_coverage.py",
+    "spec_coverage_result": "failed on 71 pre-existing tests lacking spec references outside this collection-hygiene fix scope"
+  },
+  "test_suite_collection_clean": true,
+  "honest_verdict": "collection_hygiene_target_met_zero_collection_errors_restored_two_missing_reporting_modules_full_tests_reach_execution_and_stop_on_unrelated_existing_failures"
+}
