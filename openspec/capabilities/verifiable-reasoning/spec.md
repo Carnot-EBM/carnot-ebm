@@ -17678,3 +17678,59 @@ limitation, no fresh SOTA generation, `universal_detector_claim_allowed=false`,
 and an honest verdict scoped to the local certificate slice.
 
 **Spec traces:** REQ-VERIFY-1341, SCENARIO-VERIFY-1341, Exp 1341
+
+## REQ-VERIFY-1353: Triggered Certificate v7 TruncProof SOTA Terminal Run
+
+**Summary:** Carnot SHALL replace the missing Exp 1340 certificate evidence
+with a terminal Exp 1353 artifact that either measures a small SOTA GGUF
+trigger-before-constrain certificate suite or records a complete blocker with
+CPU smoke evidence when the local SOTA path cannot execute.
+
+**Requirements:**
+
+- REQ-VERIFY-1353-1: The workflow SHALL write
+  `results/experiment_1353_triggered_certificate_v7_truncproof_sota.json` with
+  `status="in_progress"` before loading model specs, prior artifacts, or
+  certificate fixtures.
+- REQ-VERIFY-1353-2: The workflow SHALL load Exp 1324, Exp 1339, Exp 1351, and
+  Exp 1352 to inherit the failure taxonomy, dynamic grammar readiness,
+  carry-forward blocker context, and completion-budget allowance.
+- REQ-VERIFY-1353-3: The workflow SHALL resolve `MODEL_SPECS` only through
+  `cached_sota_pair(gpu_indices=(0, 1))` for headline generation and SHALL
+  record exact `hf_id`, quantization or path, GPU assignment, and fallback
+  reason when the SOTA path is unavailable.
+- REQ-VERIFY-1353-4: The suite SHALL contain bounded SAT, UNSAT, UNKNOWN, and
+  repair-hint cases and SHALL evaluate trigger-before-constrain parsing by
+  splitting the structural tag before routing the body through the dynamic
+  branch grammar.
+- REQ-VERIFY-1353-5: Before any headline result is allowed, the workflow SHALL
+  verify the completion preflight gate and SHALL record whether the active
+  max-token setting respects the largest required branch completion budget.
+- REQ-VERIFY-1353-6: The artifact SHALL include `status`, `models_used`,
+  `runtime_settings_used`, `completion_preflight_used`,
+  `certificate_case_count`, `trigger_token_hit_rate`,
+  `certificate_parse_rate`, `certificate_truthfulness_rate`,
+  `parse_rate_delta_over_exp1312`, `unknown_preservation_rate`,
+  `min_completion_budget_respected`, `terminal_blocker`,
+  `headline_result_allowed`, and `honest_verdict`.
+- REQ-VERIFY-1353-7: `headline_result_allowed` SHALL be true only when at least
+  one mandated SOTA GGUF from `cached_sota_pair(gpu_indices=(0, 1))` produced
+  measured certificate rows. Legacy or synthetic CPU smoke rows SHALL set
+  `headline_result_allowed=false` and name the terminal blocker.
+
+**Implementation Status:** Implemented (Exp 1353)
+
+### SCENARIO-VERIFY-1353: SOTA Certificate Run Completes Or Blocks Terminally
+
+**Given** the run date is `20260505`
+**And** Exp 1324, Exp 1339, Exp 1351, and Exp 1352 artifacts exist
+**When** the triggered-certificate v7 run executes
+**Then** it writes an in-progress artifact first
+**And** it writes a complete terminal artifact with model provenance,
+runtime/preflight settings, certificate-suite metrics, baseline parse-rate
+delta, UNKNOWN preservation, terminal-blocker status, headline gate, and honest
+verdict
+**And** it permits headline evidence only when a mandated cached SOTA GGUF
+actually produced the measured certificate rows.
+
+**Spec traces:** REQ-VERIFY-1353, SCENARIO-VERIFY-1353, Exp 1353

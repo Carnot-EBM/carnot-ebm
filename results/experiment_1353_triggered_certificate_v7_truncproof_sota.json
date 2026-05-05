@@ -1,0 +1,250 @@
+{
+  "artifact": "experiment_1353_triggered_certificate_v7_truncproof_sota",
+  "artifact_metadata": {
+    "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "run_date": "20260505",
+    "source_experiments": [
+      "exp1324",
+      "exp1339",
+      "exp1351",
+      "exp1352"
+    ],
+    "spec": "REQ-VERIFY-1353"
+  },
+  "certificate_case_count": 4,
+  "certificate_parse_rate": 1.0,
+  "certificate_rows": [
+    {
+      "case_id": "sat_unit_clause",
+      "dispatched_state": "SAT",
+      "errors": [],
+      "expected_state": "SAT",
+      "generation_source": "legacy_cpu_smoke",
+      "model_hf_id": "Qwen/Qwen3.5-0.8B",
+      "parseable": true,
+      "tag_state": "SAT",
+      "trigger_token_hit": true,
+      "truthful": true,
+      "unknown_preserved": false
+    },
+    {
+      "case_id": "unsat_unit_conflict",
+      "dispatched_state": "UNSAT",
+      "errors": [],
+      "expected_state": "UNSAT",
+      "generation_source": "legacy_cpu_smoke",
+      "model_hf_id": "Qwen/Qwen3.5-0.8B",
+      "parseable": true,
+      "tag_state": "UNSAT",
+      "trigger_token_hit": true,
+      "truthful": true,
+      "unknown_preserved": false
+    },
+    {
+      "case_id": "unknown_missing_bound",
+      "dispatched_state": "UNKNOWN",
+      "errors": [],
+      "expected_state": "UNKNOWN",
+      "generation_source": "legacy_cpu_smoke",
+      "model_hf_id": "Qwen/Qwen3.5-0.8B",
+      "parseable": true,
+      "tag_state": "UNKNOWN",
+      "trigger_token_hit": true,
+      "truthful": true,
+      "unknown_preserved": true
+    },
+    {
+      "case_id": "repair_missing_upper_bound",
+      "dispatched_state": "REPAIR_HINT",
+      "errors": [],
+      "expected_state": "REPAIR_HINT",
+      "generation_source": "legacy_cpu_smoke",
+      "model_hf_id": "Qwen/Qwen3.5-0.8B",
+      "parseable": true,
+      "tag_state": "REPAIR_HINT",
+      "trigger_token_hit": true,
+      "truthful": true,
+      "unknown_preserved": false
+    }
+  ],
+  "certificate_truthfulness_rate": 1.0,
+  "completion_preflight_used": {
+    "blocker_if_not_allowed": null,
+    "dynamic_dispatch_preserved": true,
+    "max_tokens": 96,
+    "min_completion_budget_respected": true,
+    "min_completion_tokens_by_state": {
+      "REPAIR_HINT": 10,
+      "SAT": 6,
+      "UNKNOWN": 6,
+      "UNSAT": 6
+    },
+    "required_min_completion_tokens": 10,
+    "sota_run_allowed": true,
+    "source": "exp1352",
+    "structural_tag_supported": true
+  },
+  "generation_rows": [
+    {
+      "case_id": "sat_unit_clause",
+      "elapsed_seconds": 0.0,
+      "error": "gpu_health_failed",
+      "generation_source": "legacy_cpu_smoke",
+      "model_hf_id": "Qwen/Qwen3.5-0.8B",
+      "text": "<CARNOT_CERT_STATE:SAT>\n{\"claims\": [{\"id\": \"c1\", \"text\": \"triggered certificate branch SAT is selected.\"}], \"confidence\": 0.82, \"equations\": [{\"lhs\": \"branch\", \"relation\": \"=\", \"rhs\": \"SAT\"}], \"final_answer\": \"SAT\", \"proof_numbers\": [3.0], \"verifier_routes\": [{\"claim_id\": \"c1\", \"verifier\": \"z3_math\"}]}",
+      "token_count": 113
+    },
+    {
+      "case_id": "unsat_unit_conflict",
+      "elapsed_seconds": 0.0,
+      "error": "gpu_health_failed",
+      "generation_source": "legacy_cpu_smoke",
+      "model_hf_id": "Qwen/Qwen3.5-0.8B",
+      "text": "<CARNOT_CERT_STATE:UNSAT>\n{\"claims\": [{\"id\": \"c1\", \"text\": \"triggered certificate branch UNSAT is selected.\"}], \"confidence\": 0.82, \"equations\": [{\"lhs\": \"branch\", \"relation\": \"=\", \"rhs\": \"UNSAT\"}], \"final_answer\": \"UNSAT\", \"proof_numbers\": [5.0], \"verifier_routes\": [{\"claim_id\": \"c1\", \"verifier\": \"z3_math\"}]}",
+      "token_count": 113
+    },
+    {
+      "case_id": "unknown_missing_bound",
+      "elapsed_seconds": 0.0,
+      "error": "gpu_health_failed",
+      "generation_source": "legacy_cpu_smoke",
+      "model_hf_id": "Qwen/Qwen3.5-0.8B",
+      "text": "<CARNOT_CERT_STATE:UNKNOWN>\n{\"claims\": [{\"id\": \"c1\", \"text\": \"triggered certificate branch UNKNOWN is selected.\"}], \"confidence\": 0.82, \"equations\": [{\"lhs\": \"branch\", \"relation\": \"=\", \"rhs\": \"UNKNOWN\"}], \"final_answer\": \"UNKNOWN\", \"proof_numbers\": [7.0], \"verifier_routes\": [{\"claim_id\": \"c1\", \"verifier\": \"z3_math\"}]}",
+      "token_count": 113
+    },
+    {
+      "case_id": "repair_missing_upper_bound",
+      "elapsed_seconds": 0.0,
+      "error": "gpu_health_failed",
+      "generation_source": "legacy_cpu_smoke",
+      "model_hf_id": "Qwen/Qwen3.5-0.8B",
+      "text": "<CARNOT_CERT_STATE:REPAIR_HINT>\n{\"claims\": [{\"id\": \"c1\", \"text\": \"triggered certificate branch REPAIR_HINT is selected.\"}], \"confidence\": 0.31, \"equations\": [{\"lhs\": \"branch\", \"relation\": \"=\", \"rhs\": \"REPAIR_HINT\"}], \"final_answer\": \"ABSTAIN\", \"proof_numbers\": [11.0], \"verifier_routes\": [{\"claim_id\": \"c1\", \"verifier\": \"z3_math\"}]}",
+      "token_count": 113
+    }
+  ],
+  "gpu_health_used": {
+    "gpu_count": 2,
+    "healthy": false,
+    "issues": [
+      "gpu0_vram_used_1238mb",
+      "gpu1_vram_used_789mb"
+    ]
+  },
+  "headline_result_allowed": false,
+  "honest_verdict": "blocked_gpu_health_failed_cpu_smoke_complete",
+  "min_completion_budget_respected": true,
+  "models_used": [
+    {
+      "fallback_reason": "gpu_health_failed",
+      "generation_source": null,
+      "gpu": 0,
+      "headline_result_allowed": false,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "name": "Qwen3.6-35B-A3B",
+      "quantization": "UD-Q4_K_M"
+    },
+    {
+      "fallback_reason": "gpu_health_failed",
+      "generation_source": null,
+      "gpu": 1,
+      "headline_result_allowed": false,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/43e80d41a220ac7c83023daacd6a0d1fd8559251/gemma-4-31B-it-Q4_K_M.gguf",
+      "name": "Gemma4-31B-it",
+      "quantization": "Q4_K_M"
+    },
+    {
+      "fallback_reason": "sota_path_unavailable",
+      "generation_source": "legacy_cpu_smoke",
+      "gpu": "cpu",
+      "headline_result_allowed": false,
+      "hf_id": "Qwen/Qwen3.5-0.8B",
+      "name": "Qwen3.5-0.8B"
+    }
+  ],
+  "parse_rate_delta_over_exp1312": 0.28777,
+  "run_date": "20260505",
+  "runtime_settings_used": {
+    "avoid_stop_strings": [
+      "\n"
+    ],
+    "chat_template": false,
+    "dynamic_grammar": "tagdispatch_branch_after_structural_tag",
+    "gpu_indices": [
+      0,
+      1
+    ],
+    "grammar": "none_for_initial_health_gate_then_reenable_bounded_certificate_schema",
+    "max_tokens": 96,
+    "n_ctx": 1024,
+    "n_gpu_layers": -1,
+    "preferred_quant": "Q4_K_M",
+    "prompt_variant": "certificate_shaped_prompt",
+    "seed": 1353,
+    "stop": [
+      "</s>",
+      "<eos>"
+    ],
+    "temperature": 0.0,
+    "top_p": 1.0,
+    "trigger_before_constrain": true
+  },
+  "schema_version": 1,
+  "source_context": {
+    "exp1312_certificate_parse_rate": 0.71223,
+    "exp1324_failure_modes": [
+      {
+        "class": "undergeneration",
+        "count": 25,
+        "evidence": "Exp 1311 source rows with empty raw_output or token_count <= 1.",
+        "smallest_repair_needed": "runtime settings: remove premature stop strings and require enough tokens for a certificate tail before rerunning exp1325."
+      },
+      {
+        "class": "parser_schema_mismatch",
+        "count": 40,
+        "evidence": "Exp 1312 unparseable attempts, dominated by raw_trigger no_json_object.",
+        "smallest_repair_needed": "parser repair plus prompt schema: recover at least 6 additional parseable attempt(s) to clear the 0.75 gate."
+      },
+      {
+        "class": "semantic_invalidity",
+        "count": 30,
+        "evidence": "Parseable Exp 1312 certificates whose final answer was not truthful.",
+        "smallest_repair_needed": "semantic validator/MUS repair after parsing; parseability alone is not accepted as a certificate."
+      },
+      {
+        "class": "solver_disagreement",
+        "count": 19,
+        "evidence": "Exp 1311 answer rows rejected by the local verifier/solver.",
+        "smallest_repair_needed": "compare solver answer, certificate label, and verifier label as separate columns in exp1325."
+      },
+      {
+        "class": "unknown_state_mishandling",
+        "count": 4,
+        "evidence": "UNKNOWN cases forced into SAT/UNSAT or untruthful certificates.",
+        "smallest_repair_needed": "preserve UNKNOWN/ABSTAIN as first-class certificate states in the schema and grammar."
+      },
+      {
+        "class": "possible_hardcoded_solution_leakage",
+        "count": 35,
+        "evidence": "Repaired certificates and compact DCCD projections can be solver-label aligned, so they are leakage-risk evidence rather than independent formalizer success.",
+        "rate": 0.251799,
+        "smallest_repair_needed": "keep DCCD compact encoding, but exclude verifier-label repair paths from headline formalizer metrics unless the certificate payload proves the solution was derived."
+      }
+    ],
+    "exp1324_minimum_parseable_attempts_to_recover": 6,
+    "exp1339_certificate_states_supported": [
+      "REPAIR_HINT",
+      "SAT",
+      "UNKNOWN",
+      "UNSAT"
+    ],
+    "exp1339_dynamic_grammar_ready": true,
+    "exp1351_honest_verdict": "handoff_state_missing_exp1340_terminal_certificate_semantic_scheduler_dvi_grpo_closed",
+    "exp1352_honest_verdict": "preflight_allows_exp1353_pure_python_fallback_xgrammar_absent"
+  },
+  "status": "complete",
+  "terminal_blocker": "gpu_health_failed",
+  "trigger_token_hit_rate": 1.0,
+  "unknown_preservation_rate": 1.0
+}
