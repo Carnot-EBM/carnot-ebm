@@ -953,3 +953,4 @@ web search: GitHub trending energy based mod |
 | 2026-05-05 20:53 UTC | GRPO v7 JURY-RL — Carnot Formal Verifiers as Rewar | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1383_grpo_v7 |
 | 2026-05-05 20:57 UTC | GRPO v7 JURY-RL — Carnot Formal Verifiers as Rewar | FAIL | No file changes produced |
 | 2026-05-05 21:11 UTC | EBM-CoT Energy Calibration Probe — Contrastive Hin | OK | 81 passed, 1 warning in 4.10s |
+| 2026-05-05 21:24 UTC | Self-Adaptive Ising Machine — Lagrange Relaxation  | OK | 81 passed, 1 warning in 5.44s |
