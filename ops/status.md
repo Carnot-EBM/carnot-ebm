@@ -1,6 +1,15 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-05 (GitHub issue #6 manipulable-signal template implemented)
+**Last Updated:** 2026-05-05 (GitHub issue #9 NLAH conductor charter implemented)
+
+## Session 2026-05-05 - GitHub Issue #9 NLAH Conductor Charter Implemented
+
+**Issue #9 IMPLEMENTED.**
+
+- Added `ops/conductor-runtime-charter.md` to define conductor task contracts, roles, stage templates, deterministic hooks, file-backed state packets, failure taxonomy, gate semantics, and acceptance-object alignment.
+- Added `openspec/capabilities/research-harnesses/spec.md` with REQ-HARNESS-001 through REQ-HARNESS-009 and SCENARIO-HARNESS-001 through SCENARIO-HARNESS-004.
+- Added terminal artifact `results/experiment_1280_nlah_conductor_charter.json` with `status="complete"`, `charter_written=true`, `openspec_written=true`, `failure_taxonomy_count=12`, terminal artifact rules, gate semantics, file-backed state packet, acceptance-object alignment, and `honest_verdict="nlah_conductor_charter_complete"`.
+- E2E checks from `ops/e2e-test-plan.md` are not applicable: this is a docs/spec/artifact-only conductor harness charter.
 
 ## Session 2026-05-05 - GitHub Issue #6 Manipulable-Signal Template Implemented
 

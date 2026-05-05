@@ -1,5 +1,9 @@
 # Carnot — Changelog
 
+## 2026-05-05 (GitHub Issue #9 NLAH Conductor Charter)
+
+- 2026-05-05: Implemented issue #9 by adding the Natural-Language Research Harness charter at `ops/conductor-runtime-charter.md`, the new `openspec/capabilities/research-harnesses/spec.md` capability with REQ-HARNESS-001 through REQ-HARNESS-009 and SCENARIO-HARNESS-001 through SCENARIO-HARNESS-004, and terminal artifact `results/experiment_1280_nlah_conductor_charter.json`. The charter defines terminal artifact contracts, role boundaries, stage templates, deterministic adapter hooks, file-backed state packets, a 12-item failure taxonomy, gate semantics, and acceptance-object alignment. E2E checks from `ops/e2e-test-plan.md` are not applicable to this docs/spec/artifact-only harness charter.
+
 ## 2026-05-05 (GitHub Issue #6 Manipulable-Signal Template)
 
 - 2026-05-05: Implemented issue #6 by adding `manipulable_signal_dependency` to `python/carnot/pipeline/constraint_template_library.py` and exporting it from `carnot.pipeline`. Added `DEFAULT_MANIPULABILITY_PRIORS`, configurable prior overrides, load-bearing conclusion and corroboration detection, built-in template registration, and `CaseMemoryTemplateWiring` mappings for `manipulable_*`, `single_source_*`, and `rag*` violation types. Updated `openspec/capabilities/verifiable-reasoning/spec.md` with REQ-LEARN-018-4/018-5 and SCENARIO-LEARN-018-4/018-5, updated `_bmad/traceability.md`, added `docs/manipulable-signal-dependency.md`, and expanded `tests/python/test_constraint_template_library.py`. Verification: `.venv/bin/pytest tests/python/test_constraint_template_library.py -q --no-cov` passed 114 tests; `ruff check`, `ruff format --check`, `mypy`, and `git diff --check` passed for touched files using writable `/tmp` caches where required. E2E checks from `ops/e2e-test-plan.md` are not applicable to this text-template addition.
