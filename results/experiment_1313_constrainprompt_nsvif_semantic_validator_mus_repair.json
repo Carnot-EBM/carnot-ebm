@@ -1,0 +1,24 @@
+{
+  "experiment": 1313,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-05-05",
+  "started_at": "2026-05-05T04:38:48.448144+00:00",
+  "finished_at": "2026-05-05T04:38:48.448144+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "ConstrainPrompt/NSVIF Semantic Validator + MUS Repair",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp1312-triggered-certificate-extraction-dccd-gbnf.certificate_parse_rate (actual=0.71223 >= expected=0.75)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp1312-triggered-certificate-extraction-dccd-gbnf",
+      "artifact_field": "certificate_parse_rate",
+      "op": ">=",
+      "expected": 0.75,
+      "actual": 0.71223,
+      "passed": false,
+      "reason": "actual=0.71223 >= expected=0.75"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
