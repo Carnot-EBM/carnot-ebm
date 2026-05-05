@@ -17,10 +17,10 @@ call. No fine-tuning. No access to model weights.
 
 Rust + Python/JAX, Apache 2.0, `pip install carnot`.
 
-Current public research record: **1,350 experiments tracked, 113
+Current public research record: **1,350 experiments tracked, 114
 artifact-backed completed milestones**, with checked-in result artifacts
 through Exp 1350 on 2026-05-05. `research-complete.yaml` currently archives
-**113** completed milestones through 2026.04.103. The latest terminal artifact
+**114** completed milestones through 2026.04.104. The latest terminal artifact
 is Exp 1350, where milestone .104 records **9/12 criteria met** with
 carry-forward required.
 
