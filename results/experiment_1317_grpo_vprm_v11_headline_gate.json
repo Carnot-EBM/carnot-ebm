@@ -1,0 +1,551 @@
+{
+  "MODEL_SPECS": [
+    {
+      "gpu": 0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "name": "Qwen3.6-35B-A3B"
+    },
+    {
+      "gpu": 1,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/43e80d41a220ac7c83023daacd6a0d1fd8559251/gemma-4-31B-it-Q4_K_M.gguf",
+      "name": "Gemma4-31B-it"
+    }
+  ],
+  "artifact_metadata": {
+    "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "run_date": "20260505"
+  },
+  "baseline_policy_score": 0.525,
+  "dccd_policy_score": 0.725,
+  "experiment": "1317_grpo_vprm_v11_headline_gate",
+  "grpo_vprm_delta": 0.45,
+  "headline_result_allowed": true,
+  "honest_verdict": "grpo_vprm_v11_positive_headline_gate",
+  "measurement_note": "Small deterministic replay audit over Exp 1312 certificate attempts; no large GRPO training job or new model generation was run.",
+  "models_used": [
+    {
+      "available": true,
+      "gpu": 0,
+      "headline_eligible": true,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "name": "Qwen3.6-35B-A3B"
+    },
+    {
+      "available": true,
+      "gpu": 1,
+      "headline_eligible": true,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/43e80d41a220ac7c83023daacd6a0d1fd8559251/gemma-4-31B-it-Q4_K_M.gguf",
+      "name": "Gemma4-31B-it"
+    }
+  ],
+  "n_certificate_cases": 40,
+  "nonforgetting_preserved": true,
+  "policy_audit_records": [
+    {
+      "baseline_path": "gbnf_constrained",
+      "baseline_reward": 0.0,
+      "case_id": "unsloth/Qwen3.6-35B-A3B-GGUF:cb_sat_schedule:0:0",
+      "dccd_reward": 0.0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "improved_over_baseline": true,
+      "item_id": "cb_sat_schedule",
+      "token_mask_reward": 1.0,
+      "token_mask_selected_path": "repaired_certificate"
+    },
+    {
+      "baseline_path": "gbnf_constrained",
+      "baseline_reward": 0.0,
+      "case_id": "unsloth/Qwen3.6-35B-A3B-GGUF:cb_sat_schedule:0:1",
+      "dccd_reward": 0.0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "improved_over_baseline": true,
+      "item_id": "cb_sat_schedule",
+      "token_mask_reward": 1.0,
+      "token_mask_selected_path": "repaired_certificate"
+    },
+    {
+      "baseline_path": "gbnf_constrained",
+      "baseline_reward": 0.0,
+      "case_id": "unsloth/Qwen3.6-35B-A3B-GGUF:cb_unsat_capacity:0:0",
+      "dccd_reward": 0.0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "improved_over_baseline": true,
+      "item_id": "cb_unsat_capacity",
+      "token_mask_reward": 1.0,
+      "token_mask_selected_path": "repaired_certificate"
+    },
+    {
+      "baseline_path": "gbnf_constrained",
+      "baseline_reward": 0.0,
+      "case_id": "unsloth/Qwen3.6-35B-A3B-GGUF:cb_unsat_capacity:0:1",
+      "dccd_reward": 0.0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "improved_over_baseline": true,
+      "item_id": "cb_unsat_capacity",
+      "token_mask_reward": 1.0,
+      "token_mask_selected_path": "repaired_certificate"
+    },
+    {
+      "baseline_path": "gbnf_constrained",
+      "baseline_reward": 1.0,
+      "case_id": "unsloth/Qwen3.6-35B-A3B-GGUF:cb_unknown_missing_bound:0:0",
+      "dccd_reward": 1.0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "improved_over_baseline": false,
+      "item_id": "cb_unknown_missing_bound",
+      "token_mask_reward": 1.0,
+      "token_mask_selected_path": "dccd_compact"
+    },
+    {
+      "baseline_path": "gbnf_constrained",
+      "baseline_reward": 1.0,
+      "case_id": "unsloth/Qwen3.6-35B-A3B-GGUF:cb_unknown_missing_bound:0:1",
+      "dccd_reward": 1.0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "improved_over_baseline": false,
+      "item_id": "cb_unknown_missing_bound",
+      "token_mask_reward": 1.0,
+      "token_mask_selected_path": "dccd_compact"
+    },
+    {
+      "baseline_path": "gbnf_constrained",
+      "baseline_reward": 0.0,
+      "case_id": "unsloth/Qwen3.6-35B-A3B-GGUF:cb_compact_sat:1:0",
+      "dccd_reward": 1.0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "improved_over_baseline": true,
+      "item_id": "cb_compact_sat",
+      "token_mask_reward": 1.0,
+      "token_mask_selected_path": "repaired_certificate"
+    },
+    {
+      "baseline_path": "gbnf_constrained",
+      "baseline_reward": 0.0,
+      "case_id": "unsloth/Qwen3.6-35B-A3B-GGUF:cb_compact_sat:1:1",
+      "dccd_reward": 1.0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "improved_over_baseline": true,
+      "item_id": "cb_compact_sat",
+      "token_mask_reward": 1.0,
+      "token_mask_selected_path": "repaired_certificate"
+    },
+    {
+      "baseline_path": "gbnf_constrained",
+      "baseline_reward": 0.0,
+      "case_id": "unsloth/Qwen3.6-35B-A3B-GGUF:cb_compact_unsat:1:0",
+      "dccd_reward": 1.0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "improved_over_baseline": true,
+      "item_id": "cb_compact_unsat",
+      "token_mask_reward": 1.0,
+      "token_mask_selected_path": "repaired_certificate"
+    },
+    {
+      "baseline_path": "gbnf_constrained",
+      "baseline_reward": 0.0,
+      "case_id": "unsloth/Qwen3.6-35B-A3B-GGUF:cb_compact_unsat:1:1",
+      "dccd_reward": 1.0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "improved_over_baseline": true,
+      "item_id": "cb_compact_unsat",
+      "token_mask_reward": 1.0,
+      "token_mask_selected_path": "repaired_certificate"
+    },
+    {
+      "baseline_path": "gbnf_constrained",
+      "baseline_reward": 0.0,
+      "case_id": "unsloth/Qwen3.6-35B-A3B-GGUF:sq_sat_xor:0:0",
+      "dccd_reward": 0.0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "improved_over_baseline": true,
+      "item_id": "sq_sat_xor",
+      "token_mask_reward": 1.0,
+      "token_mask_selected_path": "repaired_certificate"
+    },
+    {
+      "baseline_path": "gbnf_constrained",
+      "baseline_reward": 0.0,
+      "case_id": "unsloth/Qwen3.6-35B-A3B-GGUF:sq_sat_xor:0:1",
+      "dccd_reward": 0.0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "improved_over_baseline": true,
+      "item_id": "sq_sat_xor",
+      "token_mask_reward": 1.0,
+      "token_mask_selected_path": "repaired_certificate"
+    },
+    {
+      "baseline_path": "gbnf_constrained",
+      "baseline_reward": 0.0,
+      "case_id": "unsloth/Qwen3.6-35B-A3B-GGUF:sq_unsat_unit_conflict:0:0",
+      "dccd_reward": 0.0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "improved_over_baseline": true,
+      "item_id": "sq_unsat_unit_conflict",
+      "token_mask_reward": 1.0,
+      "token_mask_selected_path": "repaired_certificate"
+    },
+    {
+      "baseline_path": "gbnf_constrained",
+      "baseline_reward": 0.0,
+      "case_id": "unsloth/Qwen3.6-35B-A3B-GGUF:sq_unsat_unit_conflict:0:1",
+      "dccd_reward": 0.0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "improved_over_baseline": true,
+      "item_id": "sq_unsat_unit_conflict",
+      "token_mask_reward": 1.0,
+      "token_mask_selected_path": "repaired_certificate"
+    },
+    {
+      "baseline_path": "gbnf_constrained",
+      "baseline_reward": 1.0,
+      "case_id": "unsloth/Qwen3.6-35B-A3B-GGUF:sq_unknown_hidden_clause:0:0",
+      "dccd_reward": 1.0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "improved_over_baseline": false,
+      "item_id": "sq_unknown_hidden_clause",
+      "token_mask_reward": 1.0,
+      "token_mask_selected_path": "dccd_compact"
+    },
+    {
+      "baseline_path": "gbnf_constrained",
+      "baseline_reward": 1.0,
+      "case_id": "unsloth/Qwen3.6-35B-A3B-GGUF:sq_unknown_hidden_clause:0:1",
+      "dccd_reward": 1.0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "improved_over_baseline": false,
+      "item_id": "sq_unknown_hidden_clause",
+      "token_mask_reward": 1.0,
+      "token_mask_selected_path": "dccd_compact"
+    },
+    {
+      "baseline_path": "gbnf_constrained",
+      "baseline_reward": 0.0,
+      "case_id": "unsloth/Qwen3.6-35B-A3B-GGUF:sq_compact_sat_dimacs:1:0",
+      "dccd_reward": 1.0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "improved_over_baseline": true,
+      "item_id": "sq_compact_sat_dimacs",
+      "token_mask_reward": 1.0,
+      "token_mask_selected_path": "repaired_certificate"
+    },
+    {
+      "baseline_path": "gbnf_constrained",
+      "baseline_reward": 0.0,
+      "case_id": "unsloth/Qwen3.6-35B-A3B-GGUF:sq_compact_sat_dimacs:1:1",
+      "dccd_reward": 1.0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "improved_over_baseline": true,
+      "item_id": "sq_compact_sat_dimacs",
+      "token_mask_reward": 1.0,
+      "token_mask_selected_path": "repaired_certificate"
+    },
+    {
+      "baseline_path": "gbnf_constrained",
+      "baseline_reward": 0.0,
+      "case_id": "unsloth/Qwen3.6-35B-A3B-GGUF:sq_compact_unsat_dimacs:1:0",
+      "dccd_reward": 1.0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "improved_over_baseline": true,
+      "item_id": "sq_compact_unsat_dimacs",
+      "token_mask_reward": 1.0,
+      "token_mask_selected_path": "repaired_certificate"
+    },
+    {
+      "baseline_path": "gbnf_constrained",
+      "baseline_reward": 0.0,
+      "case_id": "unsloth/Qwen3.6-35B-A3B-GGUF:sq_compact_unsat_dimacs:1:1",
+      "dccd_reward": 1.0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "improved_over_baseline": true,
+      "item_id": "sq_compact_unsat_dimacs",
+      "token_mask_reward": 1.0,
+      "token_mask_selected_path": "repaired_certificate"
+    },
+    {
+      "baseline_path": "gbnf_constrained",
+      "baseline_reward": 1.0,
+      "case_id": "unsloth/gemma-4-31B-it-GGUF:cb_sat_schedule:0:0",
+      "dccd_reward": 1.0,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "improved_over_baseline": false,
+      "item_id": "cb_sat_schedule",
+      "token_mask_reward": 1.0,
+      "token_mask_selected_path": "dccd_compact"
+    },
+    {
+      "baseline_path": "gbnf_constrained",
+      "baseline_reward": 1.0,
+      "case_id": "unsloth/gemma-4-31B-it-GGUF:cb_sat_schedule:0:1",
+      "dccd_reward": 1.0,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "improved_over_baseline": false,
+      "item_id": "cb_sat_schedule",
+      "token_mask_reward": 1.0,
+      "token_mask_selected_path": "dccd_compact"
+    },
+    {
+      "baseline_path": "gbnf_constrained",
+      "baseline_reward": 1.0,
+      "case_id": "unsloth/gemma-4-31B-it-GGUF:cb_unsat_capacity:0:0",
+      "dccd_reward": 1.0,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "improved_over_baseline": false,
+      "item_id": "cb_unsat_capacity",
+      "token_mask_reward": 1.0,
+      "token_mask_selected_path": "dccd_compact"
+    },
+    {
+      "baseline_path": "gbnf_constrained",
+      "baseline_reward": 1.0,
+      "case_id": "unsloth/gemma-4-31B-it-GGUF:cb_unsat_capacity:0:1",
+      "dccd_reward": 1.0,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "improved_over_baseline": false,
+      "item_id": "cb_unsat_capacity",
+      "token_mask_reward": 1.0,
+      "token_mask_selected_path": "dccd_compact"
+    },
+    {
+      "baseline_path": "gbnf_constrained",
+      "baseline_reward": 0.0,
+      "case_id": "unsloth/gemma-4-31B-it-GGUF:cb_unknown_missing_bound:0:0",
+      "dccd_reward": 0.0,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "improved_over_baseline": true,
+      "item_id": "cb_unknown_missing_bound",
+      "token_mask_reward": 1.0,
+      "token_mask_selected_path": "repaired_certificate"
+    },
+    {
+      "baseline_path": "gbnf_constrained",
+      "baseline_reward": 0.0,
+      "case_id": "unsloth/gemma-4-31B-it-GGUF:cb_unknown_missing_bound:0:1",
+      "dccd_reward": 0.0,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "improved_over_baseline": true,
+      "item_id": "cb_unknown_missing_bound",
+      "token_mask_reward": 1.0,
+      "token_mask_selected_path": "repaired_certificate"
+    },
+    {
+      "baseline_path": "gbnf_constrained",
+      "baseline_reward": 1.0,
+      "case_id": "unsloth/gemma-4-31B-it-GGUF:cb_compact_sat:1:0",
+      "dccd_reward": 1.0,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "improved_over_baseline": false,
+      "item_id": "cb_compact_sat",
+      "token_mask_reward": 1.0,
+      "token_mask_selected_path": "dccd_compact"
+    },
+    {
+      "baseline_path": "gbnf_constrained",
+      "baseline_reward": 1.0,
+      "case_id": "unsloth/gemma-4-31B-it-GGUF:cb_compact_sat:1:1",
+      "dccd_reward": 1.0,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "improved_over_baseline": false,
+      "item_id": "cb_compact_sat",
+      "token_mask_reward": 1.0,
+      "token_mask_selected_path": "dccd_compact"
+    },
+    {
+      "baseline_path": "gbnf_constrained",
+      "baseline_reward": 1.0,
+      "case_id": "unsloth/gemma-4-31B-it-GGUF:cb_compact_unsat:1:0",
+      "dccd_reward": 1.0,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "improved_over_baseline": false,
+      "item_id": "cb_compact_unsat",
+      "token_mask_reward": 1.0,
+      "token_mask_selected_path": "dccd_compact"
+    },
+    {
+      "baseline_path": "gbnf_constrained",
+      "baseline_reward": 1.0,
+      "case_id": "unsloth/gemma-4-31B-it-GGUF:cb_compact_unsat:1:1",
+      "dccd_reward": 1.0,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "improved_over_baseline": false,
+      "item_id": "cb_compact_unsat",
+      "token_mask_reward": 1.0,
+      "token_mask_selected_path": "dccd_compact"
+    },
+    {
+      "baseline_path": "gbnf_constrained",
+      "baseline_reward": 1.0,
+      "case_id": "unsloth/gemma-4-31B-it-GGUF:sq_sat_xor:0:0",
+      "dccd_reward": 1.0,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "improved_over_baseline": false,
+      "item_id": "sq_sat_xor",
+      "token_mask_reward": 1.0,
+      "token_mask_selected_path": "dccd_compact"
+    },
+    {
+      "baseline_path": "gbnf_constrained",
+      "baseline_reward": 1.0,
+      "case_id": "unsloth/gemma-4-31B-it-GGUF:sq_sat_xor:0:1",
+      "dccd_reward": 1.0,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "improved_over_baseline": false,
+      "item_id": "sq_sat_xor",
+      "token_mask_reward": 1.0,
+      "token_mask_selected_path": "dccd_compact"
+    },
+    {
+      "baseline_path": "gbnf_constrained",
+      "baseline_reward": 1.0,
+      "case_id": "unsloth/gemma-4-31B-it-GGUF:sq_unsat_unit_conflict:0:0",
+      "dccd_reward": 1.0,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "improved_over_baseline": false,
+      "item_id": "sq_unsat_unit_conflict",
+      "token_mask_reward": 1.0,
+      "token_mask_selected_path": "repaired_certificate"
+    },
+    {
+      "baseline_path": "gbnf_constrained",
+      "baseline_reward": 0.0,
+      "case_id": "unsloth/gemma-4-31B-it-GGUF:sq_unsat_unit_conflict:0:1",
+      "dccd_reward": 0.0,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "improved_over_baseline": false,
+      "item_id": "sq_unsat_unit_conflict",
+      "token_mask_reward": 0.0,
+      "token_mask_selected_path": "dccd_compact"
+    },
+    {
+      "baseline_path": "gbnf_constrained",
+      "baseline_reward": 1.0,
+      "case_id": "unsloth/gemma-4-31B-it-GGUF:sq_unknown_hidden_clause:0:0",
+      "dccd_reward": 1.0,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "improved_over_baseline": false,
+      "item_id": "sq_unknown_hidden_clause",
+      "token_mask_reward": 1.0,
+      "token_mask_selected_path": "dccd_compact"
+    },
+    {
+      "baseline_path": "gbnf_constrained",
+      "baseline_reward": 1.0,
+      "case_id": "unsloth/gemma-4-31B-it-GGUF:sq_unknown_hidden_clause:0:1",
+      "dccd_reward": 1.0,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "improved_over_baseline": false,
+      "item_id": "sq_unknown_hidden_clause",
+      "token_mask_reward": 1.0,
+      "token_mask_selected_path": "dccd_compact"
+    },
+    {
+      "baseline_path": "gbnf_constrained",
+      "baseline_reward": 1.0,
+      "case_id": "unsloth/gemma-4-31B-it-GGUF:sq_compact_sat_dimacs:1:0",
+      "dccd_reward": 1.0,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "improved_over_baseline": false,
+      "item_id": "sq_compact_sat_dimacs",
+      "token_mask_reward": 1.0,
+      "token_mask_selected_path": "dccd_compact"
+    },
+    {
+      "baseline_path": "gbnf_constrained",
+      "baseline_reward": 1.0,
+      "case_id": "unsloth/gemma-4-31B-it-GGUF:sq_compact_sat_dimacs:1:1",
+      "dccd_reward": 1.0,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "improved_over_baseline": false,
+      "item_id": "sq_compact_sat_dimacs",
+      "token_mask_reward": 1.0,
+      "token_mask_selected_path": "dccd_compact"
+    },
+    {
+      "baseline_path": "gbnf_constrained",
+      "baseline_reward": 1.0,
+      "case_id": "unsloth/gemma-4-31B-it-GGUF:sq_compact_unsat_dimacs:1:0",
+      "dccd_reward": 1.0,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "improved_over_baseline": false,
+      "item_id": "sq_compact_unsat_dimacs",
+      "token_mask_reward": 1.0,
+      "token_mask_selected_path": "dccd_compact"
+    },
+    {
+      "baseline_path": "gbnf_constrained",
+      "baseline_reward": 1.0,
+      "case_id": "unsloth/gemma-4-31B-it-GGUF:sq_compact_unsat_dimacs:1:1",
+      "dccd_reward": 1.0,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "improved_over_baseline": false,
+      "item_id": "sq_compact_unsat_dimacs",
+      "token_mask_reward": 1.0,
+      "token_mask_selected_path": "dccd_compact"
+    }
+  ],
+  "run_date": "20260505",
+  "schema": "grpo_vprm_v11_headline_gate_v1",
+  "self_verification_gain": 0.45,
+  "source_artifacts": {
+    "exp1312": "results/experiment_1312_triggered_certificate_extraction_dccd_gbnf.json",
+    "exp1315": "results/experiment_1315_continuous_self_learning_cerce_nonforgetting_audit.json"
+  },
+  "source_metrics": {
+    "exp1312_certificate_truthfulness_rate": 0.69697,
+    "exp1315_nonforgetting_certificate_rate": 1.0,
+    "exp1315_self_learning_delta_overall": 1.596429
+  },
+  "status": "complete",
+  "structured_gates": [
+    {
+      "gate": "exp1312_status_complete",
+      "passed": true,
+      "reason": "status='complete'"
+    },
+    {
+      "gate": "exp1312_headline_result_allowed",
+      "passed": true,
+      "reason": "headline_result_allowed=True"
+    },
+    {
+      "gate": "exp1312_certificate_attempts_present",
+      "passed": true,
+      "reason": "attempts present"
+    },
+    {
+      "gate": "exp1315_status_complete",
+      "passed": true,
+      "reason": "status='complete'"
+    },
+    {
+      "gate": "exp1315_positive_self_learning_delta",
+      "passed": true,
+      "reason": "self_learning_delta_overall=1.596429"
+    },
+    {
+      "gate": "exp1315_nonforgetting_preserved",
+      "passed": true,
+      "reason": "nonforgetting_certificate_rate=1.0, memory_regression_count=0, lagrangian_violation_penalty=0.0"
+    },
+    {
+      "gate": "cached_sota_pair_available",
+      "passed": true,
+      "reason": "resolved_model_ids=['unsloth/Qwen3.6-35B-A3B-GGUF', 'unsloth/gemma-4-31B-it-GGUF']"
+    },
+    {
+      "gate": "exp1312_models_match_cached_headline_specs",
+      "passed": true,
+      "reason": "missing_exp1312_models=[], legacy_exp1312_models=[]"
+    }
+  ],
+  "update_budget": {
+    "deterministic": true,
+    "replay_cases": 40,
+    "train_steps": 0
+  },
+  "verifier_feedback_token_mask_delta": 0.25,
+  "verifier_feedback_token_mask_score": 0.975
+}

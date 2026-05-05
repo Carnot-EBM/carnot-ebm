@@ -2846,3 +2846,57 @@ Lagrangian-penalty, promotion, demotion, headline, and honest-verdict fields
 | Requirement | Python | Tests |
 |-------------|--------|-------|
 | REQ-LEARN-1315 | Implemented (`python/carnot/reporting/continuous_self_learning_cerce_nonforgetting_audit.py`) | Implemented (`tests/python/test_continuous_self_learning_cerce_nonforgetting_audit.py`) |
+
+## REQ-LEARN-1317: GRPO/VPRM v11 Headline Gate Audit
+
+Exp 1317 SHALL run the smallest deterministic GRPO/VPRM v11 policy audit that
+can test whether verifier feedback and certificate-tail token-mask signals
+improve certificate-policy behavior without breaking non-forgetting. The audit
+SHALL be late-gated on Exp 1312 headline-eligible certificate evidence and Exp
+1315 positive non-forgetting self-learning signal, and SHALL avoid any large
+training job.
+
+### REQ-LEARN-1317 Sub-requirements
+
+- REQ-LEARN-1317-1: The workflow SHALL write
+  `results/experiment_1317_grpo_vprm_v11_headline_gate.json` first with
+  `status="in_progress"` and run-date artifact metadata before loading source
+  artifacts.
+- REQ-LEARN-1317-2: The workflow SHALL load Exp 1312 and Exp 1315 artifacts
+  and abort to a terminal blocker if Exp 1312 is not complete and
+  headline-eligible, if Exp 1315 does not report positive
+  `self_learning_delta_overall`, or if Exp 1315 does not preserve
+  non-forgetting.
+- REQ-LEARN-1317-3: The workflow SHALL resolve SOTA model readiness through
+  `cached_sota_pair(gpu_indices=(0, 1))` and SHALL treat legacy or missing
+  model specs as non-headline blockers rather than as headline evidence.
+- REQ-LEARN-1317-4: The workflow SHALL compare a grammar-only baseline policy
+  against a deterministic verifier-feedback/token-mask policy over the Exp
+  1312 certificate corpus using a tiny replay budget and no large GRPO
+  training job.
+- REQ-LEARN-1317-5: The final artifact SHALL include `status`,
+  `grpo_vprm_delta`, `verifier_feedback_token_mask_delta`,
+  `nonforgetting_preserved`, `self_verification_gain`, `models_used`,
+  `headline_result_allowed`, and `honest_verdict`.
+- REQ-LEARN-1317-6: `headline_result_allowed` SHALL be true only when all
+  structured gates pass and the certificate/model evidence comes from
+  mandated headline SOTA GGUF models.
+
+### SCENARIO-LEARN-1317: Late-Gated Certificate Replay Improves Policy Behavior
+
+**Given** Exp 1312 has complete headline-eligible certificate attempts from
+mandated SOTA GGUF models
+**And** Exp 1315 reports positive self-learning delta with non-forgetting
+preserved
+**When** Exp 1317 runs with run date `20260505`
+**Then** it writes the Exp 1317 artifact with the required GRPO/VPRM delta,
+token-mask delta, non-forgetting, self-verification, model, headline, and
+honest-verdict fields
+**And** it reports a terminal blocker rather than activating GRPO/VPRM when any
+structured late gate is not satisfied.
+
+## Implementation Status (REQ-LEARN-1317)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-1317 | Implemented (`python/carnot/reporting/grpo_vprm_v11_headline_gate.py`) | Implemented (`tests/python/test_grpo_vprm_v11_headline_gate.py`) |
