@@ -1,0 +1,131 @@
+{
+  "accepted_violation_delta": -0.846154,
+  "artifact_metadata": {
+    "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "run_date": "20260505"
+  },
+  "csp_feasibility_threshold": 0.7,
+  "csp_selected_sample_count": 0,
+  "demoted_memory_count": 0,
+  "dvi_ready": true,
+  "experiment": "1374_continuous_self_learning_v3_verifier_selected_or_csp_fallback",
+  "fresh_verified_sample_count": 4,
+  "headline_claim_rule": "Headline self-learning is allowed only for primary semantic verified fresh samples with passing non-forgetting controls.",
+  "headline_result_allowed": true,
+  "honest_verdict": "continuous_self_learning_v3_primary_semantic_verified_dvi_ready_headline_allowed",
+  "inputs_unavailable": [],
+  "measurement_note": "Exp 1358 supplies the replay control metrics. Exp 1369 supplies fresh semantic-validator memory promotion when its claim gate is open. Exp 1365 CSP-selected updates remain non-headline until independently validated.",
+  "memory_regression_count": 0,
+  "memory_updates": {
+    "demoted": [],
+    "demoted_memory_count": 0,
+    "held": [],
+    "promoted": [
+      "semantic:exp1369:sat_unit_clause",
+      "semantic:exp1369:unsat_unit_conflict",
+      "semantic:exp1369:unknown_missing_bound",
+      "semantic:exp1369:repair_missing_upper_bound"
+    ],
+    "promoted_memory_count": 4,
+    "quarantined": [],
+    "quarantined_memory_count": 0
+  },
+  "nonforgetting_certificate_rate": 1.0,
+  "path_used": "primary_semantic_verified",
+  "promoted_memory_count": 4,
+  "quarantined_memory_count": 0,
+  "replay_cases_used": 282,
+  "run_date": "20260505",
+  "schema": "continuous_self_learning_v3_verifier_selected_or_csp_fallback_v1",
+  "self_learning_delta_overall": 1.596429,
+  "source_artifacts": [
+    "results/experiment_1358_continuous_self_learning_verifier_selected_memory.json",
+    "results/experiment_1365_eidoku_csp_neuro_symbolic_verification_probe.json",
+    "results/experiment_1369_semantic_validator_v2_nsvif_z3_constraints.json"
+  ],
+  "source_honest_verdicts": {
+    "exp1358": "verifier_selected_memory_replay_only_dvi_ready_non_headline",
+    "exp1365": "eidoku_csp_viable_local_fover_probe_no_sota_generation_feasibility_0.740_auroc_0.614",
+    "exp1369": "semantic_validator_v2_complete_unknown_preserved"
+  },
+  "status": "complete",
+  "variant_question_count": 4,
+  "variant_questions": [
+    {
+      "case_id": "sat_unit_clause",
+      "evidence_summary": {
+        "case_id": "sat_unit_clause",
+        "certificate_state": "SAT",
+        "claim_route": "z3_fully_formal",
+        "constraint_evaluated": true,
+        "constraint_passed": true,
+        "expected_state": "SAT",
+        "semantic_result": "SAT"
+      },
+      "memory_action": "promote",
+      "question": "Semantic validator memory update for sat_unit_clause",
+      "semantic_rejected": false,
+      "source": "exp1369_semantic_validator",
+      "support": 1,
+      "variant_id": "semantic:exp1369:sat_unit_clause",
+      "verifier_accepted": true
+    },
+    {
+      "case_id": "unsat_unit_conflict",
+      "evidence_summary": {
+        "case_id": "unsat_unit_conflict",
+        "certificate_state": "UNSAT",
+        "claim_route": "z3_fully_formal",
+        "constraint_evaluated": true,
+        "constraint_passed": true,
+        "expected_state": "UNSAT",
+        "semantic_result": "UNSAT"
+      },
+      "memory_action": "promote",
+      "question": "Semantic validator memory update for unsat_unit_conflict",
+      "semantic_rejected": false,
+      "source": "exp1369_semantic_validator",
+      "support": 1,
+      "variant_id": "semantic:exp1369:unsat_unit_conflict",
+      "verifier_accepted": true
+    },
+    {
+      "case_id": "unknown_missing_bound",
+      "evidence_summary": {
+        "case_id": "unknown_missing_bound",
+        "certificate_state": "UNKNOWN",
+        "claim_route": "nltc_partial_smt",
+        "constraint_evaluated": true,
+        "constraint_passed": true,
+        "expected_state": "UNKNOWN",
+        "semantic_result": "UNKNOWN"
+      },
+      "memory_action": "promote",
+      "question": "Semantic validator memory update for unknown_missing_bound",
+      "semantic_rejected": false,
+      "source": "exp1369_semantic_validator",
+      "support": 1,
+      "variant_id": "semantic:exp1369:unknown_missing_bound",
+      "verifier_accepted": true
+    },
+    {
+      "case_id": "repair_missing_upper_bound",
+      "evidence_summary": {
+        "case_id": "repair_missing_upper_bound",
+        "certificate_state": "REPAIR_HINT",
+        "claim_route": "nltc_partial_smt",
+        "constraint_evaluated": true,
+        "constraint_passed": true,
+        "expected_state": "REPAIR_HINT",
+        "semantic_result": "REPAIR_HINT"
+      },
+      "memory_action": "promote",
+      "question": "Semantic validator memory update for repair_missing_upper_bound",
+      "semantic_rejected": false,
+      "source": "exp1369_semantic_validator",
+      "support": 1,
+      "variant_id": "semantic:exp1369:repair_missing_upper_bound",
+      "verifier_accepted": true
+    }
+  ]
+}

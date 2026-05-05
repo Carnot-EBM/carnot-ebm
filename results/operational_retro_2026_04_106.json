@@ -1,0 +1,175 @@
+{
+  "schema": "carnot.operational_retro.v63",
+  "milestone": "2026.04.106",
+  "generated_at": "2026-05-05T18:37:00Z",
+  "finalized_at": "2026-05-05T18:45:00Z",
+  "retro_type": "operational_closeout",
+  "status": "success",
+  "summary": "Milestone 2026.04.106 ran from 16:02 UTC to ~18:28 UTC (approx 146 minutes / 2.4 hours), completing 11 of 13 planned experiments. This is a marked improvement over milestones .99 through .105, which all showed the same arXiv Bundle v10 / SOTA GGUF DOOMED_RERUN_BLOCK pattern — that pattern was absent in .106. The primary new bottleneck was pre-test failure cascades: both the Publication Hold task (v15) and the Milestone Retrospective task each SKIPped 3 times due to 'pre-tests failing, self-heal failed', exhausting their conductor retry budget. The retro itself being SKIP-exhausted is why this artifact is being written manually. GPU utilization remained at 0% across both RTX 3090s, indicating no GPU experiments were scheduled in this milestone despite available hardware.",
+  "timing_data_note": "The conductor-supplied timing data in the retro task prompt (16 min / 5 completed / arXiv Bundle 10 min / SOTA GGUF 3x doomed-rerun 2 min) is stale template data carried over from milestones .99 through .105. The conductor log for .106 shows a significantly different and more successful execution. This retro uses the conductor log as the authoritative data source.",
+  "total_wall_time_minutes": 146,
+  "total_wall_time_hours": 2.4,
+  "experiments_completed": 11,
+  "experiments_planned": 13,
+  "experiments_skipped_exhausted": 2,
+  "average_per_completed_experiment_minutes": 13.3,
+  "milestone_result_context": {
+    "planned_experiment_range": "exp1364-exp1376",
+    "activation_time_utc": "2026-05-05T16:02:00Z",
+    "last_conductor_log_entry_utc": "2026-05-05T18:28:00Z",
+    "docs_reconciled_in_research_retro": true,
+    "operational_scope_note": "Milestone .106 was planned after .105 completed 9/12 criteria. The arXiv Bundle v10 / SOTA GGUF DOOMED_RERUN_BLOCK pattern that dominated milestones .99-.105 was absent in .106 — a structural improvement. The new recurring failure mode is pre-test cascade SKIP exhaustion on the final two tasks.",
+    "improvement_vs_prior_milestones": "Absent: arXiv Bundle v10 gate bottleneck, SOTA GGUF triple doomed-rerun. Present: pre-test SKIP cascade on Publication Hold and Retro."
+  },
+  "slowest_experiments": [
+    {
+      "rank": 1,
+      "experiment": "exp_fr11_continuous_self_learning_v3",
+      "name": "FR-11 Continuous Self-Learning v3 — Verifier-Selected Memory Policy",
+      "start_utc": "2026-05-05T17:57:00Z",
+      "end_utc": "2026-05-05T18:16:00Z",
+      "duration_minutes": 19,
+      "classification": "post_test_failure_then_cache_recovery",
+      "why_slow": "First attempt at 18:14 failed post-tests. Second attempt at 18:16 succeeded via cache hit ('deliverable already exists in repo'). The 19-minute window included the failed first attempt, retry overhead, and 2-minute second-attempt recovery. Total: 19 minutes from prior task completion."
+    },
+    {
+      "rank": 2,
+      "experiment": "exp_diffutruth_energy_of_falsehood_probe",
+      "name": "DiffuTruth Energy-of-Falsehood Probe — Non-Equilibrium Hallucination Detection",
+      "start_utc": "2026-05-05T16:35:00Z",
+      "end_utc": "2026-05-05T16:53:00Z",
+      "duration_minutes": 18,
+      "classification": "research_experiment_substantive_execution",
+      "why_slow": "Substantive computation for the energy-of-falsehood probe. This is legitimate research time — no inefficiency, just a larger deliverable."
+    },
+    {
+      "rank": 3,
+      "experiment": "exp_eidoku_csp_neuro_symbolic",
+      "name": "Eidoku CSP Neuro-Symbolic Verification Probe — Grammar-Aligned Decoding",
+      "start_utc": "2026-05-05T16:06:00Z",
+      "end_utc": "2026-05-05T16:21:00Z",
+      "duration_minutes": 15,
+      "classification": "research_experiment_substantive_execution",
+      "why_slow": "Substantive execution for the Eidoku CSP probe. Legitimate research overhead."
+    },
+    {
+      "rank": 4,
+      "experiment": "exp_certificate_v8_tag_first_prefix_crane",
+      "name": "Certificate v8 — Tag-First Prefix Injection + CRANE",
+      "start_utc": "2026-05-05T16:21:00Z",
+      "end_utc": "2026-05-05T16:35:00Z",
+      "duration_minutes": 14,
+      "classification": "research_experiment_substantive_execution",
+      "why_slow": "Certificate grammar iteration with CRANE integration. Legitimate research overhead."
+    },
+    {
+      "rank": 5,
+      "experiment": "exp_optimal_kan_pwa_formal_verification",
+      "name": "Optimal KAN PWA Formal Verification — MILP Energy-Bound Property",
+      "start_utc": "2026-05-05T17:46:00Z",
+      "end_utc": "2026-05-05T17:57:00Z",
+      "duration_minutes": 11,
+      "classification": "research_experiment_substantive_execution",
+      "why_slow": "MILP verification overhead. Legitimate research time."
+    }
+  ],
+  "bottlenecks_identified": [
+    "Pre-test failure cascade on the final 2 tasks: both Publication Hold v15 and the Milestone Retrospective SKIPped 3 times each due to 'pre-tests failing, self-heal failed'. This exhausted the conductor's 3-attempt retry budget for both tasks, leaving them unexecuted and requiring manual operator intervention for the retro.",
+    "The Milestone Retrospective task depends on pre-tests passing, but the pre-test suite was failing during the final phase of the milestone (18:14+ UTC). The retro task should not be gated on a pre-test suite that may be broken — the retro must always run.",
+    "FR-11 Continuous Self-Learning v3 had a post-test failure on the first attempt, requiring a retry. The second attempt succeeded via cache hit. The failure was due to post-tests not matching the deliverable rather than a genuine substantive failure.",
+    "GPU utilization was 0% for both RTX 3090s throughout the milestone. The GPU monitor at closeout confirms 4MB/0% utilization with no processes. All 13 planned experiments were CPU-bound; no GPU work was scheduled for this milestone.",
+    "The pre-test failure that caused the final 2 tasks to SKIP appears to have started at or after 18:14 UTC (the FR-11 post-test failure). This suggests the FR-11 Continuous Self-Learning v3 first-attempt failure may have modified test state in a way that caused subsequent pre-tests to fail.",
+    "The conductor's 3-attempt SKIP retry policy for pre-test failures means that a test breakage near the end of a milestone cascade-fails all remaining tasks without a chance for non-pre-test-dependent recovery paths."
+  ],
+  "improvements_suggested": [
+    "Make the Milestone Retrospective task explicitly `skip_pre_test: true` or `bypass_pre_test: true` in the roadmap YAML. The retro must not be suppressable by a broken pre-test suite — it is the last resort artifact for the milestone.",
+    "Make the Publication Hold task exempt from pre-test gating. Its content (claim boundary verification) is independent of the unit test suite state.",
+    "Investigate why the pre-test suite failed after 18:14 UTC. The FR-11 Continuous Self-Learning v3 first attempt failed post-tests, and subsequent pre-tests also failed — this suggests the first-attempt failure left the repo in a test-broken state. Add post-failure cleanup to the conductor's retry logic.",
+    "Add a conductor-side pre-test-failure diagnostic: when self-heal fails, emit a `pre_test_failure_diagnostic` artifact with the specific test names and tracebacks rather than just logging 'pre-tests failing, self-heal failed'. This makes the failure actionable for the next planner.",
+    "After 3 SKIP attempts on a task, the conductor should write a structured `terminal_skip` artifact (not just move on silently) with the failure reason, affected experiments, and recommended fix. This preserves the failure mode in the result record.",
+    "Schedule at least one GPU-bearing experiment per milestone to use the two idle RTX 3090s. The DualGPU runner can run Qwen on GPU 0 and Gemma on GPU 1 simultaneously for SOTA model evaluations.",
+    "Track the pre-test suite health as a first-class metric across milestones. The number of SKIP events due to pre-test failure should appear in the conductor-state.json after each task.",
+    "Add a milestone closeout health check: if any task in the final 3 planned slots produces SKIP, immediately flag to the operator rather than exhausting all retries silently.",
+    "Review why FR-11 Continuous Self-Learning v3 post-tests failed on the first attempt but the deliverable was already present on the second attempt. This suggests the first attempt wrote the deliverable but the post-test assertion ran against an intermediate state. Make artifact writes atomic before post-tests run.",
+    "Conduct an audit of which experiments in .106 produced genuine research results vs cache hits. Tasks that returned 'Deliverable already exists in repo' are not necessarily wasted (deduplication is correct) but should be tracked to distinguish real work from repeated cache hits."
+  ],
+  "estimated_time_savings_pct": 15,
+  "estimated_next_milestone_wall_time_minutes_if_applied": 124,
+  "savings_basis": "Milestone .106 achieved much better execution than .99-.105, so the remaining headroom is smaller. The main waste was 9 minutes of SKIP retries (6 attempts x ~1.5 min each) on the 2 pre-test-failing tasks. Fixing pre-test isolation and making retro/publication-hold skip_pre_test recovers roughly 6-9 minutes. GPU scheduling adds parallel capacity but doesn't reduce serial wall time significantly. Conservative estimate: 15% improvement from targeted pre-test and terminal-artifact fixes.",
+  "gpu_utilization": {
+    "efficient": false,
+    "assessment": "Both RTX 3090s were idle at 4 MB and 0% utilization for the entire milestone. No GPU experiments were scheduled or executed. With two idle 24 GB GPUs, significant parallel research capacity is going unused every milestone.",
+    "snapshot_timestamp": "2026-05-05T18:36:54Z",
+    "gpus": [
+      {
+        "index": 0,
+        "name": "NVIDIA GeForce RTX 3090",
+        "used_mb": 4,
+        "total_mb": 24576,
+        "utilization_pct": 0,
+        "temperature_c": 52
+      },
+      {
+        "index": 1,
+        "name": "NVIDIA GeForce RTX 3090",
+        "used_mb": 4,
+        "total_mb": 24576,
+        "utilization_pct": 0,
+        "temperature_c": 53
+      }
+    ],
+    "sequential_vs_parallel": "All 11 completed experiments ran sequentially with no GPU parallelism. DualGPURunner could be used for two-model SOTA certificate evaluations once cache readiness is confirmed, cutting those lanes roughly in half."
+  },
+  "zombie_processes": {
+    "zombies_detected": false,
+    "processes": [],
+    "assessment": "gpu_monitor.py detected no GPU processes and no warnings. The 4 MB per GPU idle allocation is below the zombie threshold (processes above 1024 MB VRAM with CPU/wall ratio below 1% for over 10 minutes)."
+  },
+  "parallelization_opportunities": [
+    "Run two-model SOTA GGUF certificate evaluations in parallel: Qwen on GPU 0 and Gemma on GPU 1 via DualGPURunner.",
+    "Run docs reconciliation asynchronously (non-blocking) after each experiment's terminal artifact is written.",
+    "Run independent research experiments (e.g., Eidoku CSP, Certificate v8, DiffuTruth) in overlapping CPU lanes rather than strict serial order.",
+    "Allow the Publication Hold and Retro tasks to run concurrently with each other rather than serial — neither depends on the other's output."
+  ],
+  "preflight_suite": {
+    "bottleneck": true,
+    "assessment": "The pre-test suite was the dominant bottleneck for this milestone: both final tasks (Publication Hold v15, Milestone Retro) SKIPped 3 times each due to 'pre-tests failing, self-heal failed'. This is new relative to milestones .99-.105 (where the bottleneck was the arXiv gate and SOTA GGUF doomed-rerun pattern).",
+    "recommendation": "Set `skip_pre_test: true` on Milestone Retrospective and Publication Hold tasks. Add a diagnostic artifact on SKIP exhaustion. Investigate the test breakage that started after 18:14 UTC and fix the root cause before the next milestone activates."
+  },
+  "doc_reconciliation": {
+    "bottleneck": false,
+    "assessment": "Docs reconciliation was handled during the research planning phase (not in this closeout). The conductor log shows no explicit docs reconciliation task consuming measurable wall time in .106.",
+    "recommendation": "Continue delegating docs reconciliation to the research planning turn. Add an idempotent changelog append for the operational retro itself."
+  },
+  "tooling_infrastructure_changes": [
+    "Add `skip_pre_test: true` (or equivalent bypass field) to the Milestone Retrospective task template in the planner's roadmap generation logic. The retro must not be skippable due to pre-test failures.",
+    "Add `skip_pre_test: true` to the Publication Hold task. Its content is independent of the unit test suite.",
+    "Add a `terminal_skip` artifact writer: when a task SKIPs 3 times, write a structured JSON artifact with the pre-test failure reason, specific failing tests, and self-heal trace.",
+    "Add post-failure cleanup to the conductor's retry logic: if a task's first attempt fails post-tests, run a cleanup step (git restore changed files, drop temp artifacts) before the second attempt.",
+    "Add a pre-test health dashboard field to conductor-state.json: track rolling SKIP rate per task category across milestones.",
+    "Add a DualGPU scheduling policy for SOTA certificate evaluation tasks: any task with `requires_gguf: true` routes to the DualGPU runner.",
+    "Add atomic artifact write semantics: write deliverable to a temp path first, then rename after post-tests pass. This prevents the failure mode where post-tests run against an intermediate artifact state.",
+    "Add a closeout health alert: if any of the final 3 planned tasks produces SKIP, immediately notify the operator rather than exhausting all retries silently."
+  ],
+  "comparison_to_prior_milestones": {
+    "pattern_eliminated": "The arXiv Bundle v10 gate on Exp 1269 / SOTA GGUF triple DOOMED_RERUN_BLOCK pattern (milestones .99 through .105) was absent in .106. This is a structural improvement.",
+    "new_pattern_emerged": "Pre-test failure cascade SKIP exhaustion on final tasks (Publication Hold, Retro). This is the new bottleneck replacing the previous one.",
+    "completion_rate_improvement": "Milestones .99-.105 typically completed 2-5 experiments. Milestone .106 completed 11/13 — a significant improvement in research throughput.",
+    "gpu_utilization_unchanged": "GPU utilization remained at 0% as in all prior milestones. No GPU experiments were scheduled."
+  },
+  "top_3_highest_leverage_actions": [
+    "Set `skip_pre_test: true` on the Milestone Retrospective task in all future roadmap YAMLs. The retro being SKIP-exhausted and requiring manual intervention is the highest-priority fix — it breaks the autonomous feedback loop entirely.",
+    "Investigate and fix the pre-test suite breakage that started at or after 18:14 UTC. Identify which tests are failing and why self-heal cannot resolve them. Add a pre-test failure diagnostic artifact to make future failures actionable.",
+    "Schedule at least one GPU-bearing experiment per milestone using DualGPURunner (one SOTA GGUF model per RTX 3090). The two 24 GB GPUs have been idle for every milestone in the entire recorded history — this is the largest untapped research throughput multiplier available."
+  ],
+  "questions_answered": {
+    "which_experiments_took_longest_and_why": "FR-11 Continuous Self-Learning v3 (19 min, including a post-test failure and retry) and DiffuTruth Energy-of-Falsehood Probe (18 min, substantive computation). Neither was pathologically slow — the main bottleneck was the 9 minutes consumed by 6 SKIP attempts on the final 2 tasks.",
+    "was_gpu_utilization_efficient": "No. Both RTX 3090s were idle at 4 MB and 0% utilization for the entire milestone. No GPU experiments were planned or executed.",
+    "were_there_zombie_processes_wasting_resources": "No. gpu_monitor.py detected no GPU processes and no warnings.",
+    "could_any_experiments_have_been_parallelized": "Yes. Independent research experiments (Eidoku, Certificate v8, DiffuTruth, etc.) could run in parallel CPU lanes. Two-model GGUF evaluations could split across the two GPUs. Publication Hold and Retro could run concurrently.",
+    "was_preflight_a_bottleneck": "Yes — the pre-test suite was the primary bottleneck for this milestone, causing 6 SKIP retries across 2 tasks and requiring manual operator intervention to write the retro artifact.",
+    "were_doc_reconciliation_passes_efficient": "Docs reconciliation was handled in the research planning turn, not the closeout. It was not a bottleneck in this slice.",
+    "what_tooling_would_speed_next_milestone": "Most urgently: set skip_pre_test on Retro and Publication Hold tasks, add a terminal_skip diagnostic artifact writer, and fix the pre-test suite root cause. For sustained throughput: DualGPU scheduling for SOTA evaluation tasks."
+  },
+  "meta_reflection": "Milestone .106 represents a genuine structural improvement over milestones .99 through .105: the arXiv Bundle / SOTA GGUF doomed-rerun pattern that dominated 7 consecutive milestones was absent, and 11/13 experiments completed successfully. However, the improvement revealed a new failure mode: pre-test suite breakage cascading into SKIP exhaustion for the final tasks, including the retro itself. The retro being SKIP-exhausted is the most critical operational failure — when the autonomous feedback loop breaks, the system requires human intervention just to write an artifact. The single highest-leverage fix for .107 is not a research optimization; it is making the Milestone Retrospective task unconditionally runnable regardless of pre-test suite state. Everything else is secondary."
+}

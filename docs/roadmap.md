@@ -107,6 +107,7 @@
 | 2026.04.103 | Token Health + Certificate Gate Triage | 1323-1336 | SOTA token health recovered and certificate taxonomy isolated 6 parse recoveries needed; disk-quota/pre-test/gate churn dominated closeout with 35% savings recoverable |
 | 2026.04.104 | Certificate Branch Carry-Forward + Operational Cleanup | 1337-1350 | 9/12 criteria met; environment/stale-skeleton gates closed, but triggered certificate and semantic validator artifacts stayed missing while operational retro found idle GPU processes, duplicate doomed-rerun slots, and 35% savings recoverable |
 | 2026.04.105 | Certificate Grammar + EBT Framing + arXiv Gate Hold | 1351-1363 | 16 min closeout; arXiv Bundle v10 gate on Exp 1269 dominated for sixth consecutive milestone, three SOTA GGUF doomed-rerun blocks consumed 37.5% of wall time, GPUs idle; meta-finding: retro feedback loop is broken — mechanical conductor enforcement required |
+| 2026.04.106 | Certificate + Semantic Validator + VERGE + Cactus + Ising + Self-Learning Sprint | 1364-1376 | 11/13 experiments completed in ~146 min; arXiv Bundle / SOTA GGUF doomed-rerun pattern absent for first time since .99 — structural improvement; new bottleneck: pre-test cascade SKIP exhaustion blocked Publication Hold (3x) and Retro (3x), requiring manual operator retro; GPUs idle/no zombies |
 
 ## Breakthrough Results
 

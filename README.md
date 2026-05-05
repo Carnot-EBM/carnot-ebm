@@ -17,28 +17,28 @@ call. No fine-tuning. No access to model weights.
 
 Rust + Python/JAX, Apache 2.0, `pip install carnot`.
 
-Current public research record: **1,350 experiments tracked, 114
+Current public research record: **1,374 experiments tracked, 115
 artifact-backed completed milestones**, with checked-in result artifacts
-through Exp 1350 on 2026-05-05. `research-complete.yaml` currently archives
-**114** completed milestones through 2026.04.104. The latest terminal artifact
-is Exp 1350, where milestone .104 records **9/12 criteria met** with
-carry-forward required.
+through Exp 1374 on 2026-05-05. `research-complete.yaml` currently archives
+**115** completed milestones through 2026.04.105. Milestone .106 is in
+progress (exp1364–1374 complete, exp1375–1376 pending).
 
-Recent artifacts recover the local SOTA GGUF runtime but keep the certificate
-branch behind honest gates. Exps 1309/1310 load Qwen3.6-35B-A3B and
-Gemma4-31B-it through llama.cpp; Exp 1311 measures **0.90** answer stability
-over **40** ConstraintBench/SATQuest responses; Exp 1312 reaches certificate
-parse rate **0.71223** and truthfulness **0.69697**, below the **0.75**
-downstream gate. Exp 1323 fixes the empty/one-token runtime failure enough to
-recover multi-token certificate prompts, but still reports empty/one-token rate
-**0.40** and no full DCCD/GBNF rerun. Exp 1339 shows a dry-run dynamic grammar
-parse rate **1.0** versus static GBNF proxy **0.75** without SOTA inference.
-Exp 1344 preserves non-forgetting at **1.0** and reduces accepted violations by
-**0.846154** on replay, while Exp 1350 keeps DVI/GRPO headline updates closed
-until parse, semantic, and non-forgetting gates all pass. The current
-2026-05-05 Python test collection-only snapshot reports **21,955** items with
-three known import errors and three skipped items; it is not a full-suite pass
-claim.
+Milestone .105 confirmed thinking-mode models consume their generation budget
+on `<think>...</think>` tokens before structural branch-selector tags are
+emitted (`certificate_parse_rate=0.0`, dominant_blocker=`missing_structural_tag`).
+Exp 1366 resolves this with tag-first prefix injection using the CRANE
+alternating-generation pattern, reaching **certificate_parse_rate=1.0**. Exp
+1365 adds an Eidoku CSP neuro-symbolic verification path as a grammar-free
+fallback (feasibility **0.740**, AUROC **0.614**). Exp 1367 measures the
+DiffuTruth energy-of-falsehood proxy as a complementary non-equilibrium
+hallucination signal (AUROC **0.867**; Ising r=0.699, KAN r=0.961). Exp 1369
+delivers the semantic validator v2 with NSVIF Z3 constraints preserving
+SAT/UNSAT/UNKNOWN states correctly. Exp 1374 reports continuous self-learning
+v3 with self-learning delta **+1.596429**, non-forgetting rate **1.0**, 4
+semantic memory updates promoted, and `headline_result_allowed=true` — the
+first milestone in which headline self-learning is permitted. The current
+2026-05-05 Python test collection-only snapshot reports **21,938** items with
+four collection errors; it is not a full-suite pass claim.
 
 ## Install and run
 

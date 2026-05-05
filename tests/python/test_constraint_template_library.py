@@ -9,11 +9,13 @@ Coverage targets:
 - ConstraintTemplate dataclass fields and defaults
 - ConstraintTemplateLibrary: add_template, observe_pattern, get_active_templates,
   apply_active_templates, to_dict, from_dict, register_builtin_templates
-- Four built-in template functions: carry_check, sign_check, unit_consistency,
-  comparison_direction — each with both "found arithmetic" and "no match" paths
+- Five built-in template functions: carry_check, sign_check, unit_consistency,
+  comparison_direction, manipulable_signal_dependency — each with both "found"
+  and "no match" paths
 
 Spec: REQ-LEARN-017, REQ-LEARN-018,
-      SCENARIO-LEARN-029, SCENARIO-LEARN-030, SCENARIO-LEARN-031, SCENARIO-LEARN-032
+      SCENARIO-LEARN-029, SCENARIO-LEARN-030, SCENARIO-LEARN-031,
+      SCENARIO-LEARN-032, SCENARIO-LEARN-018-4, SCENARIO-LEARN-018-5
 """
 
 from __future__ import annotations
@@ -24,8 +26,10 @@ from carnot.pipeline.constraint_template_library import (
     CaseMemoryTemplateWiring,
     ConstraintTemplate,
     ConstraintTemplateLibrary,
+    DEFAULT_MANIPULABILITY_PRIORS,
     carry_check_template,
     comparison_direction_template,
+    manipulable_signal_dependency_template,
     sign_check_template,
     unit_consistency_template,
 )
@@ -331,15 +335,15 @@ class TestConstraintTemplateLibrary:
 
     # --- register_builtin_templates ---
 
-    def test_register_builtin_templates_registers_all_four(self):
-        """register_builtin_templates registers carry_check, sign_check, unit_consistency,
-        and comparison_direction."""
+    def test_register_builtin_templates_registers_all_five(self):
+        """register_builtin_templates registers arithmetic and manipulable-signal templates."""
         lib = ConstraintTemplateLibrary()
         lib.register_builtin_templates()
         assert "carry_check" in lib._templates
         assert "sign_check" in lib._templates
         assert "unit_consistency" in lib._templates
         assert "comparison_direction" in lib._templates
+        assert "manipulable_signal_dependency" in lib._templates
 
     def test_register_builtin_carry_check_min_frequency(self):
         """carry_check builtin has min_frequency=5."""
@@ -364,6 +368,12 @@ class TestConstraintTemplateLibrary:
         lib = ConstraintTemplateLibrary()
         lib.register_builtin_templates()
         assert lib._templates["comparison_direction"].min_frequency == 5
+
+    def test_register_builtin_manipulable_signal_min_frequency(self):
+        """manipulable_signal_dependency builtin has min_frequency=3."""
+        lib = ConstraintTemplateLibrary()
+        lib.register_builtin_templates()
+        assert lib._templates["manipulable_signal_dependency"].min_frequency == 3
 
     def test_register_builtin_templates_callable(self):
         """All registered builtin templates have callable template_fn."""
@@ -612,6 +622,84 @@ class TestComparisonDirectionTemplate:
 
 
 # ---------------------------------------------------------------------------
+# manipulable_signal_dependency_template
+# ---------------------------------------------------------------------------
+
+
+class TestManipulableSignalDependencyTemplate:
+    """Tests for the ManipulableSignalDependency template.
+
+    Spec: REQ-LEARN-018-4, REQ-LEARN-018-5,
+          SCENARIO-LEARN-018-4, SCENARIO-LEARN-018-5
+    """
+
+    def test_no_external_signal_returns_empty(self):
+        """Returns [] when no external source dependency is present."""
+        assert manipulable_signal_dependency_template("The answer follows from 2 + 2 = 4.") == []
+
+    def test_single_search_result_load_bearing_conclusion_flagged(self):
+        """A single web-search source carrying a conclusion is a violation."""
+        response = "The search result says the service is healthy. Therefore the service is up."
+        results = manipulable_signal_dependency_template(response)
+        assert len(results) == 1
+        r = results[0]
+        assert r.constraint_type == "manipulable_signal_dependency"
+        assert r.metadata["satisfied"] is False
+        assert r.metadata["source_type"] == "web_search"
+        assert r.metadata["source_prior"] >= 0.7
+        assert r.metadata["corroboration_present"] is False
+        assert "independent-source corroboration" in r.metadata["repair_suggestion"]
+
+    def test_corroborated_search_result_not_flagged(self):
+        """Independent corroboration suppresses the single-source violation."""
+        response = (
+            "The search result says the service is healthy. "
+            "An independent signed API attestation confirmed the same status. "
+            "Therefore the service is up."
+        )
+        assert manipulable_signal_dependency_template(response) == []
+
+    def test_authenticated_api_below_default_threshold_not_flagged(self):
+        """Authenticated/attested APIs use a lower default manipulability prior."""
+        response = "The authenticated API returned healthy, so the service is up."
+        assert manipulable_signal_dependency_template(response) == []
+
+    def test_configurable_source_prior_override(self):
+        """Caller-provided priors can tune whether a source class fires."""
+        response = "The API returned status=healthy. Therefore the service is up."
+        default_results = manipulable_signal_dependency_template(response)
+        tuned_results = manipulable_signal_dependency_template(
+            response,
+            source_priors={"third_party_api": 0.2},
+        )
+        assert len(default_results) == 1
+        assert tuned_results == []
+
+    def test_load_bearing_threshold_can_require_multiple_conclusions(self):
+        """Raising K suppresses single-conclusion cases."""
+        response = "The retrieved document says X. Therefore X is correct."
+        results = manipulable_signal_dependency_template(response, load_bearing_threshold=2)
+        assert results == []
+
+    def test_default_priors_document_high_risk_sources(self):
+        """Default priors include the high-risk source classes from issue #6."""
+        assert DEFAULT_MANIPULABILITY_PRIORS["web_search"] >= 0.7
+        assert DEFAULT_MANIPULABILITY_PRIORS["rag_open_corpus"] >= 0.7
+        assert DEFAULT_MANIPULABILITY_PRIORS["llm_generated"] >= 0.7
+
+    def test_builtin_activation_applies_manipulable_signal_template(self):
+        """Active builtin template emits a violation through apply_active_templates."""
+        lib = ConstraintTemplateLibrary()
+        lib.register_builtin_templates()
+        lib.observe_pattern("manipulable_signal_dependency", "test-model", count=3)
+        results = lib.apply_active_templates(
+            "The RAG document says the package is safe. Therefore it is safe.",
+            "test-model",
+        )
+        assert any(r.constraint_type == "manipulable_signal_dependency" for r in results)
+
+
+# ---------------------------------------------------------------------------
 # VerifyRepairPipeline integration
 # ---------------------------------------------------------------------------
 
@@ -681,6 +769,15 @@ class TestCaseMemoryTemplateWiring:
         assert (
             wiring.violation_type_to_pattern_key("numeric_comparison_error")
             == "comparison_direction"
+        )
+
+    def test_manipulable_signal_type_maps_to_manipulable_signal_dependency(self):
+        """'manipulable_signal_error' maps to 'manipulable_signal_dependency'."""
+        lib = ConstraintTemplateLibrary()
+        wiring = CaseMemoryTemplateWiring(lib)
+        assert (
+            wiring.violation_type_to_pattern_key("manipulable_signal_error")
+            == "manipulable_signal_dependency"
         )
 
     def test_unknown_type_passes_through(self):
@@ -757,6 +854,13 @@ class TestCaseMemoryTemplateWiring:
         wiring = CaseMemoryTemplateWiring(lib)
         wiring.on_violation_recorded("comparison_error", "model_a")
         assert lib._observations[("comparison_direction", "model_a")] == 1
+
+    def test_on_violation_recorded_increments_manipulable_signal_dependency(self):
+        """on_violation_recorded('single_source_signal', model) increments new template count."""
+        lib = ConstraintTemplateLibrary()
+        wiring = CaseMemoryTemplateWiring(lib)
+        wiring.on_violation_recorded("single_source_signal", "model_a")
+        assert lib._observations[("manipulable_signal_dependency", "model_a")] == 1
 
     def test_on_violation_recorded_unknown_passes_through(self):
         """on_violation_recorded with unknown type increments that type's count directly.
