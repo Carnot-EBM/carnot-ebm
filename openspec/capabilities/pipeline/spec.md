@@ -2155,3 +2155,34 @@ repair, scheduler, full-pipeline, DVI-checkpoint, and headline-gate statistics
 for the processed FoVer cases.
 
 **Spec traces:** REQ-VERIFY-1382, SCENARIO-VERIFY-1382
+
+### REQ-VERIFY-1391: Exp 1382 Semantic-Failure Diagnosis
+
+The repository shall provide a deterministic diagnostic that reads
+`results/experiment_1382_fullscale_certificate_semantic_repair_100cases.json`
+and writes
+`results/experiment_1391_fullscale_pipeline_failure_diagnosis.json` with
+`status="in_progress"` before loading the source artifact. The terminal artifact
+MUST classify every Exp 1382 semantic-validation failure into one of
+`Z3_CONSTRAINT_MISMATCH`, `MISSING_CERTIFICATE_FIELD`,
+`SEMANTIC_CONTRADICTION`, `CORPUS_SPECIFIC`, `VALIDATOR_BUG`, or `OTHER`, and it
+MUST report category counts, top category, fixable-failure fraction, estimated
+semantic-validation pass rate after tractable fixes, recommended fixes, and an
+honest verdict.
+
+**Acceptance criteria:**
+- The diagnostic confirms the Exp 1382 parse rate and semantic failure count.
+- Every failed semantic row receives exactly one taxonomy category.
+- Category counts include zero-count categories so downstream Exp 1396 gates can
+  distinguish absent parser/Z3 failures from missing analysis.
+- The artifact records whether the diagnosis is complete.
+
+### SCENARIO-VERIFY-1391: DVI Disagreements Are Ranked For Exp 1396
+
+**Given** Exp 1382 contains parseable certificates but failed semantic rows
+whose DVI state disagrees with the FoVer label
+**When** Exp 1391 diagnoses the artifact
+**Then** corpus-specific false-SAT failures and validator false-repair failures
+are counted separately, ranked, and mapped to concrete Exp 1396 fixes.
+
+**Spec traces:** REQ-VERIFY-1391, SCENARIO-VERIFY-1391
