@@ -4846,3 +4846,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-04: Milestone 2026.04.100 Retrospective - Evaluate 14 Criteria (⚠️ Research Finding) — honest_verdict=milestone_100_5_of_14_criteria_met; results/experiment_1295_milestone_retro_100.json
 - 2026-05-05: Prior-Failures Activation Audit - Prevent Milestone .100 DOOMED_RERUN_BLOCK Waste (⚠️ Research Finding) — honest_verdict=activation_audit_passed; results/experiment_1296_prior_failures_activation_audit.json
 - 2026-05-05: SOTA GGUF Cache + Provenance Preflight v2 - Prior-Failure Metadata Complete (✅ Complete) — honest_verdict=sota_gguf_cache_not_ready; results/experiment_1297_sota_gguf_cache_provenance_preflight_v2.json
+- 2026-05-05: Skill Graph Promotion/Demotion v2 - Recover Missing Exp1290 (⚠️ Research Finding) — honest_verdict=skill_graph_candidates_written_sandboxed; results/experiment_1302_skill_graph_promotion_demotion_v2.json
