@@ -1,6 +1,17 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-05 (Milestone 2026.04.107 research planning complete)
+**Last Updated:** 2026-05-05 (GitHub issue #6 manipulable-signal template implemented)
+
+## Session 2026-05-05 - GitHub Issue #6 Manipulable-Signal Template Implemented
+
+**Issue #6 IMPLEMENTED LOCALLY.**
+
+- Added `manipulable_signal_dependency` as the fifth built-in `ConstraintTemplateLibrary` template.
+- The template flags load-bearing conclusions that rely on a single high-manipulability external source, such as web search, open-corpus RAG, unauthenticated tool output, LLM-generated intermediates, third-party APIs, or single sensors, without independent corroboration.
+- Source-manipulability priors are exposed via `DEFAULT_MANIPULABILITY_PRIORS` and can be overridden by callers.
+- `CaseMemoryTemplateWiring` now maps `manipulable_*`, `single_source_*`, and `rag*` violation types to `manipulable_signal_dependency`.
+- Verification: `.venv/bin/pytest tests/python/test_constraint_template_library.py -q --no-cov` passed 114 tests; `ruff check`, `ruff format --check`, `mypy`, and `git diff --check` passed for touched files using writable `/tmp` caches where required.
+- E2E checks from `ops/e2e-test-plan.md` are not applicable: this is a text constraint-template addition, not training/sampling, PyO3, serialization, or packaged code-repair flow.
 
 ## Session 2026-05-05 - Milestone 2026.04.107 Research Planning Complete
 
