@@ -1,0 +1,94 @@
+{
+  "analog_kan_candidate": true,
+  "analog_scope": "speculative only: aKAN-style physical nonlinear units are relevant to KAN edge functions, but this run executed no analog hardware",
+  "best_near_term_target": "FPGA",
+  "bop_definition": "Q8 bit operations for LUTized spline basis reads",
+  "bop_per_inference": 192,
+  "candidate_audited": "compressed_soskan_v3_q8_lut_bika",
+  "duration_s": 0.000124,
+  "experiment": 1319,
+  "hardware_claim_allowed": false,
+  "hardware_execution": {
+    "analog_execution": false,
+    "cpu_artifact_generation_only": true,
+    "fpga_execution": false,
+    "npu_execution": false
+  },
+  "honest_verdict": "hardware_portability_audit_only_no_fpga_npu_or_analog_execution",
+  "lookup_table_bytes": 6144,
+  "lookup_table_shape": [
+    3,
+    8,
+    256
+  ],
+  "nabs_definition": "index arithmetic, interpolation, and accumulation add/shift budget",
+  "nabs_per_inference": 75,
+  "nonlinear_activation_budget": {
+    "gram_feature_blocks": 3,
+    "q8_hat_basis_lookups": 24,
+    "q8_interpolations": 24,
+    "relu_hidden_units": 16
+  },
+  "npu_or_fpga_best_target": "FPGA",
+  "platform_classification": {
+    "analog": "future_speculative_only",
+    "cpu": "actual_artifact_generation_and_reference_execution_only",
+    "fpga": "best_near_term_portability_target_for_q8_lut_datapath",
+    "gpu": "not_preferred_for_this_tiny_table_bound_shape",
+    "npu": "plausible_for_bika_int8_shift_path_but_not_executed"
+  },
+  "relevant_local_modules": [
+    "python/carnot/models/sos_kan.py",
+    "python/carnot/verify/and_composition_verifier.py",
+    "python/carnot/analysis/kanele_sos_kan_fpga.py",
+    "python/carnot/hardware/bika_analysis.py",
+    "python/carnot/models/sos_kan_quantization.py",
+    "python/carnot/cascade/tier0b_kan.py",
+    "python/carnot/repair/projection_repair.py"
+  ],
+  "representative_configuration": {
+    "hidden_dim": 16,
+    "k_splines": 8,
+    "n_centroids": 32,
+    "n_inputs": 3,
+    "n_knots": 8,
+    "rank": 4,
+    "source": "Exp 1148 compressed SOSKANEnergyV3 plus Exp 1162 Q8 LUT datapath"
+  },
+  "research_context": [
+    "research-references.md: lmKAN lookup tables, RM/BOP/NABS accounting, and aKAN analog path",
+    "research-hardware-wishlist.md: KV260 FPGA and AMD XDNA NPU readiness notes",
+    "results/experiment_1305_hardnetpp_dsp_feasibility_stop_policy.json: residual KAN/PWA repair-routing context"
+  ],
+  "rm_definition": "Q8 LUT read-memory operations: n_inputs * k_splines",
+  "rm_per_inference": 24,
+  "run_date": "20260505",
+  "schema": "kan_hardware_complexity_audit_v1",
+  "source_artifacts": {
+    "experiment_1148": {
+      "auroc_compressed": 0.971753,
+      "n_centroids": 32,
+      "size_compressed_bytes": 2704
+    },
+    "experiment_1162": {
+      "bop_per_inference": 192,
+      "lut_storage_bytes": 6144,
+      "nabs_per_inference": 75,
+      "rm_per_inference": 24
+    },
+    "experiment_1174": {
+      "bika_kan_bop": 40752,
+      "bika_kan_nabs": 4899,
+      "bika_kan_rm": 0,
+      "compressed_kan_rm": 1523,
+      "npu_feasibility_verdict": "npu_feasible",
+      "standard_kan_rm": 2547
+    }
+  },
+  "spec": [
+    "REQ-KAN-1319",
+    "SCENARIO-KAN-1319"
+  ],
+  "status": "complete",
+  "title": "KAN Hardware Complexity Audit"
+}

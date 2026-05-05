@@ -85,6 +85,7 @@ Then the result is 5016 (= 8 * 32 * 19 + 8 * 19).
 | REQ-KAN-1174 | Proposed | Exp 1174 target: BiKA multiply-free complexity analysis for SOSKANEnergyV3, MetaCluster, and AMD XDNA NPU feasibility. |
 | REQ-KAN-1199 | Proposed | Exp 1199 target: KANtize-style 8-bit/4-bit SOSKANEnergyV3 spline quantization with endpoint-sensitive precision and safetensors export. |
 | REQ-KAN-1266 | Proposed | Exp 1266 target: deterministic QuantKAN-style 3-bit PTQ simulation plus LUT-KAN latency comparison for SOSKANEnergyV3. |
+| REQ-KAN-1319 | Proposed | Exp 1319 target: hardware-portability audit only for local KAN verifier/repair candidates with no FPGA or analog execution claim. |
 
 ## REQ-KAN-020: KAEMEnergy FPGA LUT Budget Analyzability
 
@@ -351,3 +352,40 @@ When `scripts/experiment_1266_quantkan_3bit_lut_kan.py` runs,
 Then `results/experiment_1266_quantkan_3bit_lut_kan.json` is written with the
 AUROC curve, 3-bit AUROC, LUT-KAN speedup, model-size comparison, and honest
 verdict required by REQ-KAN-1266.
+
+## REQ-KAN-1319: KAN hardware portability audit artifact
+
+Experiment 1319 MUST audit at least one local KAN verifier or repair-adjacent
+candidate for hardware portability without claiming real FPGA, NPU, or analog
+execution unless local hardware execution actually occurred during the task.
+
+**Rationale:**
+    The KAN hardware and analog literature motivates more portable KAN
+    representations, but Carnot needs a conservative local accounting step
+    before any deployment claim. The audit should connect the active local
+    SOS-KAN/QuantKAN/KANELE/BiKA evidence to transparent estimates for read
+    memory, bit operations, nonlinear activation budget, lookup-table memory,
+    and near-term target platform.
+
+**Acceptance criteria:**
+    - `results/experiment_1319_kan_hardware_complexity_audit.json` is written
+      with `run_date="20260505"`.
+    - The artifact includes the fields `status`, `rm_per_inference`,
+      `bop_per_inference`, `nabs_per_inference`, `lookup_table_bytes`,
+      `analog_kan_candidate`, `npu_or_fpga_best_target`,
+      `hardware_claim_allowed`, and `honest_verdict`.
+    - The audit names the local KAN or repair-adjacent modules it considered.
+    - `hardware_claim_allowed` is false unless real local hardware execution
+      occurred during the experiment.
+    - The honest verdict MUST state that the result is a hardware-portability
+      audit, not FPGA, NPU, or analog execution, when no hardware execution
+      occurred.
+
+### SCENARIO-KAN-1319: write conservative KAN hardware complexity audit
+
+Given the local Exp 1148/1162/1174 SOSKANEnergyV3 compression and complexity
+artifacts,
+When `scripts/experiment_1319_kan_hardware_complexity_audit.py` runs,
+Then `results/experiment_1319_kan_hardware_complexity_audit.json` is written
+with deterministic RM/BOP/NABS/LUT-memory estimates, platform classification,
+`hardware_claim_allowed=false`, and an honest non-execution verdict.
