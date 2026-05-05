@@ -1,6 +1,6 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report — 1,308 Experiments Across 110 Archived Research Milestones, 21,773 Python Test Items Collected (Tracked Through Exp 1308)
+## A Technical Report — 1,322 Experiments Across 112 Artifact-Backed Research Milestones, 21,867 Python Test Items Collected (Tracked Through Exp 1322)
 
 **Author:** Ian Blenke
 **Date:** 2026-05-05
@@ -28,9 +28,10 @@ lines of Python. Headline model-generation benchmark numbers are from
 Qwen3.6-35B-A3B), never from simulated runs; hardware, ensemble, and
 adversarial-audit results are labeled by artifact provenance.
 
-This report documents the research arc behind the framework — **1,308
-experiments tracked through Exp 1308, with 110 archived completed
-milestones in `research-complete.yaml`**, run between February and May 2026.
+This report documents the research arc behind the framework — **1,322
+experiments tracked through Exp 1322, with 112 artifact-backed completed
+milestones and 111 of them currently archived in `research-complete.yaml`**,
+run between February and May 2026.
 The story now spans activation-based negative results, constraint-based
 verification, live SOTA-model benchmarks, production verifier ensembles,
 hardware sampler audits, continuous self-learning, Phase-5 in-situ training
@@ -39,27 +40,27 @@ production orthogonality recovery, TSS diagnostics, 3-bit QuantKAN edge
 deployment, PRIME verifier weighting, continuous repair, certificate grammar
 selection, DVI verifier-feedback replay, HardNet++ nonlinear repair, DSP
 feasibility diagnostics, skill-graph promotion/demotion, QueryBandits/NGC
-online memory policy, EBT/ARM/EBM-CoT bridge audits, and WOPR game cartridge
-expansion. The latest archived milestone in `research-complete.yaml` is
-2026.04.100; result artifacts now extend through Exp 1308. Milestone .101 met
-8 of 13 criteria: activation hygiene passed, SOTA cache/provenance preflight
-ran, skill candidates were written from verifier memory, QueryBandits/NGC
-improved the online memory replay policy, a conservative HardNet++/DSP stop
-policy was recorded, the EBT/ARM/EBM-CoT bridge audit completed as local
-alignment context, the arXiv hold state was recorded, and the retro completed.
-Its blocked/gated carry-forwards are material: SOTA answer-stability, triggered
-certificate extraction, semantic routing, safe-prefix Cactus, and GRPO/VPRM
-headline learning did not run because the mandated SOTA GGUF cache is still
-incomplete and no certificate parse-rate artifact exists. The prior .100/.99
-closeouts still matter: .100 selected `llama_cpp` GBNF, measured DVI replay,
-proved HardNet++ nonlinear repair on the product-of-disks benchmark, and
-measured a marginal DSP feasibility channel; .99 completed paper-v6 critical
-fixes, compiled arXiv v10, wrote PRIME weights, shipped certificate-memory
-replay, FSNet/SnareNet repair, gaming-defense proxy measurement, and WOPR
-Kakuro/Masyu artifacts. The latest ops tooling also adds a secret-safe local
-Claude/Codex usage snapshot. The current 2026-05-05 Python test collection-only
-snapshot reports **21,773** items with three known import errors; this is a
-collection count, not a full-suite pass claim. A
+online memory policy, EBT/ARM/EBM-CoT bridge audits, WOPR game cartridge
+expansion, local SOTA GGUF runtime recovery, certificate DCCD/GBNF comparisons,
+CerCE non-forgetting, learned stop-policy audits, KAN hardware-complexity
+packets, and p-bit portability packets. The latest archived milestone in
+`research-complete.yaml` is 2026.04.101; result artifacts now extend through
+Exp 1322. Milestone .102 met **11 of 14** criteria: the SOTA GGUF pair resolver
+repaired the cache path, llama.cpp smoke-loaded Qwen3.6-35B-A3B and
+Gemma4-31B-it, ConstraintBench/SATQuest answer stability reached **0.90** over
+**40** live llama.cpp responses, and triggered certificate extraction measured
+parse rate **0.71223** with truthfulness **0.69697**. The gate miss is material:
+0.71223 stays below the **0.75** parse-rate threshold, so semantic validators,
+safe-prefix Cactus, and DVI certificate-tail updates remained gated. Continuous
+self-learning still advanced: CerCE preserved old verified certificates at
+**1.0**, the replay delta remained **+1.596429**, GRPO/VPRM v11 improved the
+policy score **0.525 -> 0.725** and verifier-feedback token-mask score to
+**0.975**, and HardNet++/DSP stop-policy replay reached stop precision and
+recall **1.0** on the held-out replay split while explicitly not claiming broad
+generalization. KAN and p-bit hardware rows remain honest portability artifacts:
+no FPGA/NPU/analog execution is claimed. The current 2026-05-05 Python test
+collection-only snapshot reports **21,867** items with three known import
+errors; this is a collection count, not a full-suite pass claim. A
 plain-English summary of that journey is in the next section; deeper analysis
 follows in the body of the report and in the per-milestone retrospective
 artifacts checked into `results/operational_retro_*.json`.
@@ -384,6 +385,43 @@ artifacts checked into `results/operational_retro_*.json`.
   answer-stability, triggered certificates, semantic routing, safe-prefix
   Cactus, and GRPO/VPRM headline learning remain gated by the incomplete SOTA
   GGUF cache and missing certificate parse-rate artifact.
+- **SOTA GGUF runtime recovered:** Exp 1309 resolves two cached headline pair
+  specs and Exp 1310 smoke-loads both through llama.cpp:
+  `unsloth/Qwen3.6-35B-A3B-GGUF` on GPU0 and
+  `unsloth/gemma-4-31B-it-GGUF` on GPU1. The optional Gemma4-26B-A4B GGUF
+  remains absent, but the .102 headline pair is ready.
+- **ConstraintBench/SATQuest stability:** Exp 1311 runs **40** live llama.cpp
+  responses over **10** local micro-slice items and reports answer stability
+  **0.90**, PySAT verification **0.525**, cross-model disagreement **0.80**,
+  and meaningful disagreement **0.0**.
+- **Triggered certificates DCCD/GBNF comparison:** Exp 1312 measures overall
+  certificate parse rate **0.71223** and truthfulness **0.69697** over
+  **139** attempts. Raw triggering parsed **0/40** certificates, GBNF parsed
+  **40/40** with **21/40** truthful, DCCD compact parsed **40/40** with
+  **29/40** truthful, and repaired certificates were **19/19** truthful. The
+  parse rate missed the **0.75** downstream gate.
+- **CerCE + GRPO/VPRM v11 self-learning:** Exp 1315 preserves old verified
+  certificates at non-forgetting rate **1.0** and keeps the replay
+  self-learning delta at **+1.596429**. Exp 1317 then improves replay policy
+  score **0.525 -> 0.725** and verifier-feedback token-mask score to **0.975**
+  over **40** certificate cases. The artifact explicitly says no large GRPO
+  training job or new model generation ran.
+- **HardNet++/DSP learned stop policy:** Exp 1318 reaches held-out replay stop
+  precision **1.0**, recall **1.0**, and DSP feasibility AUROC **0.640625**
+  across **36** held-out cases. The learned policy matched the conservative
+  replay policy, so this is a replay-distribution operator gate, not a broad
+  general stop rule.
+- **KAN and p-bit hardware portability:** Exp 1319 reports a compressed KAN
+  representative configuration at **192** BOP, **75** NABS, **24** RM, and a
+  **6,144-byte** lookup table, with FPGA as the best near-term target but no
+  hardware execution. Exp 1320 records p-bit CPU equivalence at KL
+  **0.000412** to CPU Gibbs using 6-bit DAC and reuse factor 4, with
+  dual-BRAM mapping ready and no hardware execution claimed.
+- **Milestone .102 status:** Exp 1322 records **11/14** criteria met.
+  SOTA runtime, stability, certificate measurement, CerCE, GRPO/VPRM replay,
+  learned stop policy, KAN/p-bit portability, publication bookkeeping, and the
+  retro completed; semantic validator/MUS repair, safe-prefix Cactus, and DVI
+  certificate-tail updates stayed gated by `certificate_parse_rate=0.71223`.
 - **WOPR Futoshiki cartridge:** the puzzle gallery now includes Futoshiki:
   valid solution **E=0**, random board **E=42**, inequality violation **E=4**,
   solver convergence **E=0**, and four targeted tests passed (Exp 1227).
@@ -394,16 +432,15 @@ artifacts checked into `results/operational_retro_*.json`.
   LLM-verifier gaming defense exceeded the codex max-turn budget, the
   prior-failure auto-population task hit a circular metadata failure, and Exp
   1268 later counted retro-95 complete from available result fields.
-- **Latest .96-.101 artifact status:** research-complete now archives 110
-  completed milestones through .100, but the checked-in .96/.97 artifacts should
-  still be read conservatively. Exp 1268 backfilled .96 at **2/13** and .97 at
-  **4/13**. .98 then closed **5/13** criteria with terminal results through Exp
-  1267, .99 closed **12/14** criteria through Exp 1281, .100 closed
-  **5/14** criteria through Exp 1295 while leaving SOTA certificate extraction,
-  skill graph promotion, EBT/ARM energy bridge, and arXiv upload blocked,
-  gated, or missing, and .101 closed **8/13** criteria through Exp 1308 while
-  keeping SOTA certificates and downstream headline learning gated by the
-  incomplete GGUF cache.
+- **Latest .96-.102 artifact status:** research-complete now archives **111**
+  completed milestones through .101, while Exp 1322 adds a terminal .102 retro
+  artifact that is not yet archived there. The checked-in .96/.97 artifacts
+  should still be read conservatively. Exp 1268 backfilled .96 at **2/13** and
+  .97 at **4/13**. .98 then closed **5/13** criteria with terminal results
+  through Exp 1267, .99 closed **12/14** criteria through Exp 1281, .100 closed
+  **5/14** criteria through Exp 1295, .101 closed **8/13** criteria through Exp
+  1308, and .102 closed **11/14** criteria through Exp 1322 while moving the
+  SOTA blocker from runtime/cache readiness to certificate parse-rate quality.
 
 **Claims that did not survive audit** are kept in the research record as
 negative findings and documented alongside the audits that surfaced them
@@ -1066,6 +1103,13 @@ but are not included as model-generation headline claims.
 | Milestone .99 outcome | 14 criteria | **12/14** met | Publication closeout, PRIME weights, certificate memory, FSNet/SnareNet, gaming defense, and WOPR Kakuro/Masyu completed; SOTA certificates blocked and Cactus gated | Exps 1268-1281 |
 | Milestone .100 outcome | 14 criteria | **5/14** met | Grammar backend selection, DVI replay, HardNet++ nonlinear repair, DSP diagnostics, and retro completed; SOTA certificate work, skill promotion, energy bridge, and arXiv receipt remained blocked, gated, or missing | Exps 1282-1295 |
 | Milestone .101 outcome | 13 criteria | **8/13** met | Activation audit, cache preflight, skill graph, online memory policy, stop policy, bridge audit, arXiv hold receipt, and retro completed; SOTA certificates and downstream headline learning remain gated | Exps 1296-1308 |
+| SOTA GGUF runtime recovery | No loadable headline pair specs | **2** headline GGUF models loaded | Qwen3.6-35B-A3B and Gemma4-31B-it loaded through llama.cpp; optional Gemma4-26B-A4B still absent | Exps 1309/1310 |
+| ConstraintBench/SATQuest stability | SOTA certificate path gated | answer stability **0.90** | **40** live llama.cpp responses; PySAT verification **0.525**; meaningful disagreement **0.0** | Exp 1311 |
+| Triggered certificate DCCD/GBNF comparison | raw trigger parse **0/40** | parse **0.71223**, truthfulness **0.69697** | GBNF parsed **40/40** with **21/40** truthful; DCCD parsed **40/40** with **29/40** truthful; repaired certificates **19/19** truthful; below 0.75 gate | Exp 1312 |
+| CerCE + GRPO/VPRM v11 replay self-learning | baseline policy score **0.525** | DCCD policy **0.725**, token-mask **0.975** | CerCE non-forgetting **1.0** and replay delta **+1.596429**; no large GRPO training job or new generation run | Exps 1315/1317 |
+| HardNet++/DSP learned stop policy | conservative replay policy | precision **1.0**, recall **1.0** | Held-out replay split, **36** cases; DSP AUC **0.640625**; not broad generalization | Exp 1318 |
+| KAN + p-bit portability audits | hardware path speculative | p-bit KL **0.000412** to CPU Gibbs | KAN table **6,144 bytes** with FPGA as near-term target; p-bit dual-BRAM mapping ready; no hardware execution claimed | Exps 1319/1320 |
+| Milestone .102 outcome | 14 criteria | **11/14** met | SOTA runtime recovered and certificates measured, but parse rate **0.71223 < 0.75** gated semantic validators, safe-prefix Cactus, and DVI certificate-tail updates; publication remains operator-held | Exps 1309-1322 |
 
 ### Pending Validation (Not Yet Headline)
 
@@ -1517,7 +1561,7 @@ The constraint pipeline dog-foods itself as a "fourth gate" in the autoresearch 
 
 ## 7. Principles Learned
 
-From the activation-based phase of a research program that now spans 1,308 experiments tracked across 110 archived milestones, we distilled 14 principles. Principles 1-3 describe what works. Principles 4-14 describe what doesn't work for activation-based hallucination detection — these systematic negative results are the project's primary contribution to the literature, saving other researchers months of dead ends.
+From the activation-based phase of a research program that now spans 1,322 experiments tracked across 112 artifact-backed milestones, we distilled 14 principles. Principles 1-3 describe what works. Principles 4-14 describe what doesn't work for activation-based hallucination detection — these systematic negative results are the project's primary contribution to the literature, saving other researchers months of dead ends.
 
 ### What works
 
@@ -1559,7 +1603,7 @@ The failure of Principles 4-14 establishes a fundamental limit: **you cannot det
 
 ## 8. The Production Architecture
 
-The architecture that emerged from 1,308 tracked experiments:
+The architecture that emerged from 1,322 tracked experiments:
 
 ```
 User Question
@@ -1635,7 +1679,7 @@ The architecture is model-agnostic (Experiment 69), scales to 5000+ variables (E
 | Research conductor | Autonomous Claude Code agent loop, YAML-driven | N/A | Experimental |
 | PyPI packaging | `pip install carnot`, extras for rust/mcp/cuda/llm | Integration tests | Beta |
 
-**Total:** **21,773** Python test items are currently collected in the repo (`.venv/bin/python -m pytest tests/python --collect-only -q --no-cov`, collected 2026-05-05). This is a collection count, not a claim that the full suite passes; the current full collection reports three unrelated import errors: `tests/python/phase5/test_intermediate_scale_v3.py` for missing `carnot.phase5.intermediate_scale_v3`, `tests/python/test_combined_retro_95_96_97.py` for missing `carnot.reporting.combined_retro_95_96_97`, and `tests/python/test_milestone_retro_96.py` for missing `carnot.reporting.milestone_retro_96`. Full validation remains command-specific in the relevant experiment artifacts.
+**Total:** **21,867** Python test items are currently collected in the repo (`.venv/bin/python -m pytest tests/python --collect-only -q --no-cov`, collected 2026-05-05). This is a collection count, not a claim that the full suite passes; the current full collection reports three unrelated import errors: `tests/python/phase5/test_intermediate_scale_v3.py` for missing `carnot.phase5.intermediate_scale_v3`, `tests/python/test_combined_retro_95_96_97.py` for missing `carnot.reporting.combined_retro_95_96_97`, and `tests/python/test_milestone_retro_96.py` for missing `carnot.reporting.milestone_retro_96`. Full validation remains command-specific in the relevant experiment artifacts.
 
 ---
 
@@ -1693,7 +1737,7 @@ make research-loop
 
 ## 12. Conclusion
 
-Across **1,308 tracked experiments** on model families spanning 350M to 35B parameters, **110 archived research milestones**, and a complete arc from failed activation approaches through simulation artifact discovery to credible live results, we reached a clear three-part conclusion.
+Across **1,322 tracked experiments** on model families spanning 350M to 35B parameters, **112 artifact-backed research milestones**, and a complete arc from failed activation approaches through simulation artifact discovery to credible live results, we reached a clear three-part conclusion.
 
 ### Part 1: Activation-based detection fails
 
@@ -1724,7 +1768,7 @@ The 14 systematic negative results documented across 38 experiments are the proj
 
 ### The story
 
-The trajectory of this project is: we tried the obvious approach (train an EBM on activations to detect hallucination), learned through 38 experiments that it fundamentally cannot work for factual verification, identified the root cause (internal signals capture confidence, not truth), pivoted to encoding external knowledge as formal constraints, discovered that early constraint results were simulation artifacts, rebuilt extraction for real instruction-tuned models, proved that code verification (+3.0pp HumanEval) and typed constraint verification (+4.9pp) work on live GPU inference, calibrated semantic verification on live artifacts without overstating what it fixes, documented the honest flat-delta Qwen PBT follow-up plus its **17/23** wrong-baseline detections and **2** weak-harness misses, showed that newer self-learning improves retrieval quality before it improves held-out task success, added provenance-labeled FPGA blocker and replay artifacts, distilled the strongest code traces into reusable spec-backed checks, packaged the PBT path as a standalone API, CLI, and 7-tool MCP surface, deployed DualGPURunner achieving 1.98x throughput in production, fixed LIVE-ENV propagation, synthesized open FPGA energy-oracle paths, expanded FoVer to 8,829 pairs, repaired the SOTA-output energy inversion, deployed and then fixed the k=5 verifier ensemble, obtained the first positive GRPO + ThinkPRM v2 self-learning result, then improved it with GRPO v4 structural warm-up, fixed cheap-tier FPR with SECL, restored KV260 sampler correctness with sequential Gibbs, seeded Phase 3 hardware/architecture paths with KANELE and NRGPT, ran the first Phase 4 active-inference pilot, proved BEAVER live-logprob certificates, retired k=6 after regularization still failed to beat k=5, retired DoT after the redesign stayed below random, added Hex, Nonogram, Futoshiki, Kakuro, and Masyu to the WOPR cartridges, downgraded the first Phase 4 result to a BFS tie, then got a stronger synthetic Phase 4 advantage on BFS-intractable puzzles, preserved SOS-KAN AUROC above 0.99 after 4-bit quantization and QuantKAN AUROC 0.9801 at 3-bit, documented .93's missing-artifact/gate-block failure mode, recovered in .94 with a 13/13 milestone, used .95 to confirm GRPO-VPS full training while uncovering a Phase-5 verifier-orthogonality blocker, measured Boltzmann-GPT CD AUROC 0.960744 while classifying NRGPT non-monotonicity as expected causal-context shift, recovered production k=5 orthogonality at max r=0.4617/k_eff=1.76, added TSS, DiffuTruth, and 3-bit QuantKAN edge measurements, closed .99 with paper-v10 packaging, PRIME verifier weights, certificate-memory replay, FSNet/SnareNet continuous repair, EST gaming-defense proxy evidence, and WOPR Kakuro/Masyu, closed .100 at 5/14 with grammar backend selection, DVI replay, HardNet++ nonlinear repair, and DSP feasibility diagnostics while leaving SOTA certificates and arXiv upload blocked, then closed .101 at 8/13 with prior-failure hygiene, skill-graph candidates, QueryBandits/NGC memory policy, a conservative HardNet++/DSP stop gate, an EBT/ARM/EBM-CoT bridge audit, and terminal arXiv-hold bookkeeping while SOTA certificates stayed gated by an incomplete GGUF cache — all across **1,308 tracked experiments and 110 archived milestones**.
+The trajectory of this project is: we tried the obvious approach (train an EBM on activations to detect hallucination), learned through 38 experiments that it fundamentally cannot work for factual verification, identified the root cause (internal signals capture confidence, not truth), pivoted to encoding external knowledge as formal constraints, discovered that early constraint results were simulation artifacts, rebuilt extraction for real instruction-tuned models, proved that code verification (+3.0pp HumanEval) and typed constraint verification (+4.9pp) work on live GPU inference, calibrated semantic verification on live artifacts without overstating what it fixes, documented the honest flat-delta Qwen PBT follow-up plus its **17/23** wrong-baseline detections and **2** weak-harness misses, showed that newer self-learning improves retrieval quality before it improves held-out task success, added provenance-labeled FPGA blocker and replay artifacts, distilled the strongest code traces into reusable spec-backed checks, packaged the PBT path as a standalone API, CLI, and 7-tool MCP surface, deployed DualGPURunner achieving 1.98x throughput in production, fixed LIVE-ENV propagation, synthesized open FPGA energy-oracle paths, expanded FoVer to 8,829 pairs, repaired the SOTA-output energy inversion, deployed and then fixed the k=5 verifier ensemble, obtained the first positive GRPO + ThinkPRM v2 self-learning result, then improved it with GRPO v4 structural warm-up, fixed cheap-tier FPR with SECL, restored KV260 sampler correctness with sequential Gibbs, seeded Phase 3 hardware/architecture paths with KANELE and NRGPT, ran the first Phase 4 active-inference pilot, proved BEAVER live-logprob certificates, retired k=6 after regularization still failed to beat k=5, retired DoT after the redesign stayed below random, added Hex, Nonogram, Futoshiki, Kakuro, and Masyu to the WOPR cartridges, downgraded the first Phase 4 result to a BFS tie, then got a stronger synthetic Phase 4 advantage on BFS-intractable puzzles, preserved SOS-KAN AUROC above 0.99 after 4-bit quantization and QuantKAN AUROC 0.9801 at 3-bit, documented .93's missing-artifact/gate-block failure mode, recovered in .94 with a 13/13 milestone, used .95 to confirm GRPO-VPS full training while uncovering a Phase-5 verifier-orthogonality blocker, measured Boltzmann-GPT CD AUROC 0.960744 while classifying NRGPT non-monotonicity as expected causal-context shift, recovered production k=5 orthogonality at max r=0.4617/k_eff=1.76, added TSS, DiffuTruth, and 3-bit QuantKAN edge measurements, closed .99 with paper-v10 packaging, PRIME verifier weights, certificate-memory replay, FSNet/SnareNet continuous repair, EST gaming-defense proxy evidence, and WOPR Kakuro/Masyu, closed .100 at 5/14 with grammar backend selection, DVI replay, HardNet++ nonlinear repair, and DSP feasibility diagnostics while leaving SOTA certificates and arXiv upload blocked, closed .101 at 8/13 with prior-failure hygiene, skill-graph candidates, QueryBandits/NGC memory policy, a conservative HardNet++/DSP stop gate, an EBT/ARM/EBM-CoT bridge audit, and terminal arXiv-hold bookkeeping, then closed .102 at 11/14 after recovering the local SOTA GGUF runtime, measuring ConstraintBench/SATQuest stability, quantifying DCCD/GBNF certificate parse limits, advancing CerCE/GRPO replay self-learning, and adding honest KAN/p-bit portability packets while certificate validators stayed gated by parse rate — all across **1,322 tracked experiments and 112 artifact-backed milestones**.
 
 The LLM handles language. The Ising model handles logic. Each does what it's best at. And someday, the Ising model runs on thermodynamic hardware.
 
@@ -1757,7 +1801,7 @@ Beyond post-hoc verification, Carnot implements an automated research loop inspi
 5. **Plan.** When all tasks in a milestone complete, a planning agent reads `research-program.md` (human-written goals) and autonomously designs the next milestone — selecting experiments, ordering dependencies, and writing full conductor-ready prompts.
 6. **Repeat.** The loop runs until a circuit breaker halts it after N consecutive failures.
 
-In a 50-iteration run with Claude 3.5 Sonnet as the proposer, the loop achieved near-optimal energy on two benchmark functions (DoubleWell: 0.0001, Rosenbrock: 0.0092) before the circuit breaker engaged at iteration 18. The research conductor now drives a 110-milestone archived research record spanning 1,308 tracked experiments with automatic milestone archival and transition.
+In a 50-iteration run with Claude 3.5 Sonnet as the proposer, the loop achieved near-optimal energy on two benchmark functions (DoubleWell: 0.0001, Rosenbrock: 0.0092) before the circuit breaker engaged at iteration 18. The research conductor now drives a 112-milestone artifact-backed research record spanning 1,322 tracked experiments with automatic milestone archival and transition.
 
 The energy function serves as the objective judge — no human evaluation or LLM-as-judge is needed. This is a key advantage of the EBM paradigm: the mathematics provides ground truth.
 
@@ -2630,7 +2674,7 @@ Milestone 2026.04.85 achieved 13 of 14 success criteria — the strongest multi-
 
 **Milestone .85 summary (Exp 1103):** 13/14 criteria met. The one NOT-MET criterion was phase1a_false_pass_below_5pct (exp1092 blocked by gate-check failure on the gating experiment). 13/14 represents the strongest multi-criteria recovery after .84's 4/13.
 
-**Post-.99 active status:** Phase 1a is unblocked and k=5, not k=15 or k=6, is the current production AND-composition target. Energy ordering on SOTA outputs was repaired by Exp 1120, k=5 ensemble AUROC was repaired by Exp 1128, and Slitherlink, Connect Four, Hex, Nonogram, Futoshiki, Kakuro, and Masyu shipped as WOPR cartridges in Exps 1141, 1175, 1188, 1214, 1227, 1279, and 1280. The .90 cycle fixed cheap-tier false positives with SECL calibration, restored sampler correctness with KV260 v6 sequential Gibbs, and moved the Phase 3/4 sampler chain from aspiration to measured artifacts. The .91-.92 cycles added a working Phase 4 pilot, live BEAVER logprobs, a stronger NRGPT per-token signal, BiKA hardware estimates, and negative k=6/DoT/Latent-GRPO findings. The .93 cycle exposed a pre-test/gate artifact; .94 repaired it, resolved the remaining 5/5 critical paper issues, compiled arXiv v8, verified llama.cpp GPU offload, produced the first positive GRPO-VPS step-level result, and measured a real synthetic Phase 4 advantage on BFS-intractable puzzles. The .95 cycle confirmed GRPO-VPS full training at +15pp and shipped Phase-5 A/B prototypes, but the Phase-5-C Spera audit found correlated verifier blind spots with k_eff≈1. The .96/.97 artifacts then showed the operational reality: prior-failure autofill exists but was not enforced before WOPR dispatch, stale skeletons can dominate a milestone, Boltzmann-GPT CD training reached AUROC 0.960744, and NRGPT non-monotonicity is now Type-B causal-context shift. The .98 artifacts recovered a terminal production k=5 orthogonality audit (max r=0.4617, k_eff=1.76), instrumented Q11 TSS (corr=0.5466, vulnerability=0.4534), measured DiffuTruth vs Carnot on FoVer (0.0816 vs 0.948187 AUROC), and preserved QuantKAN AUROC 0.9801 at 3-bit with a 2.5x LUT-KAN simulation. The .99 artifacts compiled arXiv v10, selected PRIME verifier weights, measured certificate-memory replay, showed FSNet/SnareNet continuous-repair feasibility, completed an EST gaming-defense proxy audit, and shipped Kakuro/Masyu. Remaining open items are narrower but still material: arXiv upload remains pending, triggered SOTA GGUF certificate extraction is still gate-blocked, Cactus remains gated, GRPO v8 must move beyond smoke-only evidence before any headline claim, SDPO needs token-coverage repair, KANELE/BiKA/QuantKAN LUT timing are estimate or simulation paths until synthesis or silicon benchmarks, and Extropic/THRML remains packet-only until real backend access is available.
+**Post-.102 active status:** Phase 1a is unblocked and k=5, not k=15 or k=6, is the current production AND-composition target. Energy ordering on SOTA outputs was repaired by Exp 1120, k=5 ensemble AUROC was repaired by Exp 1128, and Slitherlink, Connect Four, Hex, Nonogram, Futoshiki, Kakuro, and Masyu shipped as WOPR cartridges in Exps 1141, 1175, 1188, 1214, 1227, 1279, and 1280. The .90 cycle fixed cheap-tier false positives with SECL calibration, restored sampler correctness with KV260 v6 sequential Gibbs, and moved the Phase 3/4 sampler chain from aspiration to measured artifacts. The .91-.92 cycles added a working Phase 4 pilot, live BEAVER logprobs, a stronger NRGPT per-token signal, BiKA hardware estimates, and negative k=6/DoT/Latent-GRPO findings. The .93 cycle exposed a pre-test/gate artifact; .94 repaired it, resolved the remaining 5/5 critical paper issues, compiled arXiv v8, verified llama.cpp GPU offload, produced the first positive GRPO-VPS step-level result, and measured a real synthetic Phase 4 advantage on BFS-intractable puzzles. The .95 cycle confirmed GRPO-VPS full training at +15pp and shipped Phase-5 A/B prototypes, but the Phase-5-C Spera audit found correlated verifier blind spots with k_eff≈1. The .96/.97 artifacts then showed the operational reality: prior-failure autofill exists but was not enforced before WOPR dispatch, stale skeletons can dominate a milestone, Boltzmann-GPT CD training reached AUROC 0.960744, and NRGPT non-monotonicity is now Type-B causal-context shift. The .98 artifacts recovered a terminal production k=5 orthogonality audit (max r=0.4617, k_eff=1.76), instrumented Q11 TSS (corr=0.5466, vulnerability=0.4534), measured DiffuTruth vs Carnot on FoVer (0.0816 vs 0.948187 AUROC), and preserved QuantKAN AUROC 0.9801 at 3-bit with a 2.5x LUT-KAN simulation. The .99-.102 artifacts compiled arXiv v10, selected PRIME verifier weights, measured certificate-memory replay, showed FSNet/SnareNet and HardNet++ continuous-repair feasibility, completed an EST gaming-defense proxy audit, shipped Kakuro/Masyu, recovered the local SOTA GGUF runtime, and measured DCCD/GBNF certificate parse quality. Remaining open items are narrower but still material: arXiv upload remains pending, SOTA GGUF certificate extraction now runs but remains below the parse gate, Cactus and DVI certificate-tail updates remain gated, GRPO/VPRM replay evidence must move beyond small deterministic audits before any broad headline claim, SDPO needs token-coverage repair, KANELE/BiKA/QuantKAN LUT timing are estimate or simulation paths until synthesis or silicon benchmarks, and Extropic/THRML remains packet-only until real backend access is available.
 
 ---
 
@@ -3097,11 +3141,11 @@ orthogonality audit before paper-v6 or Phase-5 scale-up work.
 
 ### Phase 21 — .96/.97 Artifact Reality, Boltzmann-GPT CD, and NRGPT Type-B Classification (Exps 1229–1254)
 
-The archive now contains **110 completed milestones** through 2026.04.100, and
-result artifacts now extend through Exp 1308. The artifact layer is more
+The archive now contains **111 completed milestones** through 2026.04.101, and
+result artifacts now extend through Exp 1322. The artifact layer is more
 conservative than the milestone list. Several .96 and .97 deliverables listed
 in `research-complete.yaml` do not have terminal result artifacts in this
-checkout. The public docs should therefore report Exp 1-1308 as tracked, while
+checkout. The public docs should therefore report Exp 1-1322 as tracked, while
 treating only terminal artifacts as measured findings.
 
 **Prior-failure autofill v2 (Exp 1230):** The conductor autofill utility shipped
@@ -3438,3 +3482,88 @@ cache readiness is true; unlock semantic routing and Cactus only after
 certificate parse-rate reaches 0.8; treat the repair stop policy as an operator
 gate until non-replay evidence supports generalization; and keep publication
 tasks terminal by recording either an operator hold or a real receipt.
+
+### Phase 26 — .102 SOTA Runtime Recovery, Certificates, and Portability Audits (Exps 1309-1322)
+
+Milestone 2026.04.102 closed **11 of 14 criteria** with terminal artifacts.
+The main change from .101 is that the SOTA runtime blocker moved from "no
+loadable headline pair" to "certificates parse below the downstream gate." That
+is meaningful progress: local SOTA GGUF execution is working again, but the
+certificate path is still not ready for semantic validators, Cactus acceptance,
+or DVI certificate-tail updates.
+
+**SOTA GGUF pair resolver repair (Exp 1309):** The resolver now returns two
+headline-eligible cached model specs:
+`unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF`. Focused
+resolver tests report **11 passed**, import smoke returns the two expected
+model ids, and changed resolver-line coverage is **100%**. The full Python
+suite did not go green; the artifact labels failures as unrelated collection,
+xdist, and sentence-transformers/torch issues.
+
+**llama.cpp smoke-load (Exp 1310):** Both headline models smoke-loaded through
+llama.cpp, with Qwen3.6-35B-A3B assigned to GPU0 and Gemma4-31B-it assigned to
+GPU1. This opens SOTA answer-stability and certificate measurements without
+depending on a closed-weight upstream model.
+
+**ConstraintBench/SATQuest stability (Exp 1311):** The audit ran **10** local
+micro-slice items with two perturbations per model/item and **40** observed
+responses. It reports answer stability **0.90**, PySAT verified rate
+**0.525**, feasibility rate **0.5**, cross-model disagreement **0.80**, and
+meaningful disagreement **0.0**. The artifact sets
+`headline_result_allowed=true`, but the scope is deliberately small.
+
+**Triggered certificates (Exp 1312):** The certificate bakeoff compared raw
+triggering, GBNF-constrained JSON, compact DCCD prompts, and a repaired
+certificate path. Raw triggering parsed **0/40** certificates. GBNF and DCCD
+both parsed **40/40**, with truthfulness **21/40** and **29/40** respectively.
+The repaired path produced **19/19** truthful certificates. Overall parse rate
+was **0.71223** and truthfulness was **0.69697**, below the **0.75** parse gate.
+That gate miss blocked Exp 1313 semantic validator/MUS repair, Exp 1314
+safe-prefix Cactus, and Exp 1316 DVI certificate-tail updates.
+
+**CerCE non-forgetting (Exp 1315):** The self-learning audit preserved
+**20/20** old verified cases, giving non-forgetting certificate rate **1.0**.
+It promoted **122** memory decisions, demoted **6**, expired **12**, rewrote
+**1**, and abstained **2** over the replay audit. Accepted violations fell from
+**121** under the baseline policy to **0** under the audited policy. The result
+is useful but explicitly non-headline.
+
+**GRPO/VPRM v11 replay gate (Exp 1317):** Over **40** certificate cases, the
+baseline policy score is **0.525**, the DCCD policy score is **0.725**, and the
+verifier-feedback token-mask score is **0.975**. The artifact marks the gate
+positive, but also states that this is a small deterministic replay audit:
+there was no large GRPO training job and no fresh model generation.
+
+**HardNet++/DSP learned stop policy (Exp 1318):** The learned policy writes a
+transparent family-rate plus DSP-threshold gate. On the deterministic held-out
+replay split it reaches stop precision **1.0**, stop recall **1.0**, and DSP
+feasibility AUROC **0.640625** across **36** held-out cases, exactly matching
+the conservative replay policy. The honest verdict is therefore progress on a
+replay-distribution operator gate, not a broad stop-rule claim.
+
+**KAN hardware complexity audit (Exp 1319):** The representative compressed
+KAN configuration reports **192** BOP, **75** NABS, **24** RM, and a
+**6,144-byte** lookup table. FPGA is the best near-term target for the q8 LUT
+datapath, analog KAN remains future-speculative, and the artifact sets
+`hardware_claim_allowed=false` because only CPU artifact generation/reference
+execution ran.
+
+**p-bit portability packet (Exp 1320):** The packet selects 6-bit DAC with
+reuse factor 4 as the CPU-equivalent path, reaching KL **0.000412** and L1
+**0.0270** to the CPU Gibbs baseline on the tiny Ising case. Dual-BRAM mapping
+is ready. Hardware execution is not confirmed; Vivado is available, but the
+next step still requires a configured bitfile path and a real synthesis/run.
+
+**Publication hold (Exp 1321):** The publication task writes the related-work
+delta and records `publication_state=operator_hold`. No credentialed
+submission is attempted and no receipt is claimed.
+
+**Milestone .102 status (Exp 1322):** The retro records
+`milestone_102_11_of_14_criteria_met`, `sota_runtime_recovered=true`,
+`certificate_path_headline_ready=false`, `continuous_self_learning_advanced=true`,
+`repair_generalization_advanced=true`, and `hardware_claims_honest=true`.
+Carry-forwards are now specific: raise certificate parse rate above the gate,
+run semantic validators/MUS repair and safe-prefix Cactus only after that gate
+opens, preserve CerCE non-forgetting while testing DVI certificate-tail updates,
+add non-replay repair cases before claiming broad stop-policy generalization,
+and keep publication tasks explicit about operator hold versus receipt.
