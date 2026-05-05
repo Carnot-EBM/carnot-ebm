@@ -3111,3 +3111,38 @@ partial or failed token, the generated prior-failure stub classifies it as
 Given `--dry-run`, the autofill command reports tasks scanned, generated stubs,
 and already-populated tasks while leaving the roadmap file byte-for-byte
 unchanged.
+
+## REQ-INFRA-1296: Prior-Failures Activation Audit Artifact
+
+**REQ-INFRA-1296**: The Exp 1296 activation audit runner MUST write
+`results/experiment_1296_prior_failures_activation_audit.json` without modifying
+`scripts/research_conductor.py` or `research-roadmap.yaml`. The runner MUST:
+
+1. Write an in-progress artifact before running the terminal audit.
+2. Request `research-roadmap-next.yaml` and fall back to the active
+   `research-roadmap.yaml` when the next-roadmap handoff file is absent.
+3. Import the prior-failures validator and roadmap gate auditor, capturing
+   schema errors, prior-failure findings, gate upstream failures, and gate
+   artifact-field cross-reference failures.
+4. Read Exp 1283 and Exp 1288 artifacts and expose
+   `exp1283_grammar_backend_available` and
+   `exp1288_memory_update_written` only when the source artifact says the
+   corresponding boolean is true.
+5. Emit `activation_blockers` entries with exact task ids, fields, and raw
+   details for any audit failure.
+6. Finish with `status="complete"` and `honest_verdict` equal to
+   `activation_audit_passed` only when both imported audits pass.
+
+### SCENARIO-INFRA-1296: Activation Audit Passes On Clean Active Roadmap Fallback
+
+Given `research-roadmap-next.yaml` is absent and the active `.101` roadmap
+passes prior-failure and gate audits, the Exp 1296 artifact records the active
+roadmap as the audited path, sets both audit booleans true, preserves the Exp
+1283/1288 proxy booleans, and reports `activation_audit_passed`.
+
+### SCENARIO-INFRA-1296-BLOCKED: Activation Audit Reports Exact Blockers
+
+Given a planned roadmap with missing prior-failure metadata or a gate that
+references an artifact field absent from its upstream prompt, the Exp 1296
+artifact sets the relevant audit booleans false, reports the failure counts, and
+adds `activation_blockers` entries naming the affected task id and field.
