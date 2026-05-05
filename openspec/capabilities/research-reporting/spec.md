@@ -591,6 +591,12 @@ The workflow shall:
 - read Claude subscription metadata from `~/.claude/.credentials.json` and
   surface only non-secret plan fields such as `subscriptionType` and
   `rateLimitTier`
+- when the operator explicitly requests live Claude usage, issue an
+  authenticated `GET https://api.anthropic.com/api/oauth/usage` call using the
+  local Claude OAuth access token and surface structured windows such as
+  `five_hour`, `seven_day`, `seven_day_sonnet`, and `extra_usage`
+- when live Claude usage is available, set the top-level Claude
+  `used_percent` and `reset_at` fields from the exact `seven_day` window
 - when the Claude logs contain a structured, command-scoped quota percentage
   tied to `/usage` or an equivalent local usage event, the workflow may surface
   the latest reported value as `used_percent`
@@ -929,6 +935,20 @@ usage event
 **Then** the Claude section does not treat that prose as `used_percent`
 **And** it reports `used_percent == null` unless a structured usage field is
 available elsewhere
+
+### SCENARIO-REPORT-025: Live Claude OAuth Usage Overrides Local Guesswork
+
+**Given** the operator enables the live Claude usage mode
+**And** the local Claude OAuth credentials can authenticate
+`GET https://api.anthropic.com/api/oauth/usage`
+**And** the endpoint returns structured `five_hour` and `seven_day` usage
+windows
+**When** the local agent-usage workflow runs
+**Then** the Claude section reports `used_percent` from the exact
+`seven_day.utilization` field
+**And** it reports `reset_at` from `seven_day.resets_at`
+**And** it surfaces the live usage windows without echoing the OAuth access
+token or refresh token
 
 
 ### REQ-PUBLISH-003: HuggingFace README Accuracy Audit

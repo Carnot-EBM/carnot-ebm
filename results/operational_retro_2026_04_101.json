@@ -1,0 +1,162 @@
+{
+  "schema": "carnot.operational_retro.v63",
+  "milestone": "2026.04.101",
+  "generated_at": "2026-05-05T02:42:01Z",
+  "finalized_at": "2026-05-05T02:43:44Z",
+  "retro_type": "operational_closeout",
+  "status": "success",
+  "summary": "Milestone 2026.04.101 operational closeout used the supplied 16 minute / 5 completed timing slice, averaging about 3.2 minutes per completed item. The slowest item was the 10 minute arXiv Bundle v10 gate on Exp 1269 critical fixes. The next largest avoidable cost was three repeated 2 minute SOTA GGUF cache/provenance DOOMED_RERUN_BLOCK slots. GPU utilization was not efficient at the scheduler level: both RTX 3090s were idle at 4 MB and 0% utilization with no GPU processes. The main operational losses were serial gate retry churn, deferred/docs reconciliation work, and unused parallel CPU/GPU capacity rather than compute saturation.",
+  "total_wall_time_minutes": 16,
+  "total_wall_time_hours": 0.3,
+  "experiments_completed": 5,
+  "average_per_experiment_minutes": 3.2,
+  "average_per_experiment_minutes_reported": 3,
+  "milestone_result_context": {
+    "research_retro_artifact": "results/experiment_1308_milestone_retro_101.json",
+    "criteria_met": 8,
+    "criteria_total": 13,
+    "research_retro_honest_verdict": "milestone_101_8_of_13_criteria_met",
+    "docs_reconciled_in_research_retro": false,
+    "operational_scope_note": "This artifact analyzes execution efficiency using the timing data supplied for this closeout. Research outcomes are included only when they explain operational bottlenecks."
+  },
+  "slowest_experiments": [
+    {
+      "rank": 1,
+      "experiment": "exp1270",
+      "name": "arXiv Bundle v10 - Gated on Exp 1269 Critical Fixes",
+      "duration_minutes": 10,
+      "classification": "serial_gate_docs_compile_path",
+      "why_slow": "This single item consumed 62.5% of the supplied 16 minute slice. It was serially dependent on Exp 1269 critical paper fixes, then paid bundle/compile/reconciliation overhead."
+    },
+    {
+      "rank": 2,
+      "experiment": "sota_gguf_preflight_attempt_1",
+      "name": "DOOMED_RERUN_BLOCK: SOTA GGUF Cache + Provenance Preflight",
+      "duration_minutes": 2,
+      "classification": "avoidable_gate_retry",
+      "why_slow": "The same known gate/prior-failure state was charged as scheduled work instead of producing a single terminal blocked artifact."
+    },
+    {
+      "rank": 3,
+      "experiment": "sota_gguf_preflight_attempt_2",
+      "name": "DOOMED_RERUN_BLOCK: SOTA GGUF Cache + Provenance Preflight",
+      "duration_minutes": 2,
+      "classification": "avoidable_gate_retry",
+      "why_slow": "Second duplicate retry of the same SOTA cache/provenance block. No new experiment evidence was produced."
+    },
+    {
+      "rank": 4,
+      "experiment": "sota_gguf_preflight_attempt_3",
+      "name": "DOOMED_RERUN_BLOCK: SOTA GGUF Cache + Provenance Preflight",
+      "duration_minutes": 2,
+      "classification": "avoidable_gate_retry",
+      "why_slow": "Third duplicate retry of the same blocked state. This is the highest-confidence avoidable wall-time loss in the slice."
+    },
+    {
+      "rank": 5,
+      "experiment": "in_process_docs",
+      "name": "In-process docs for arXiv Bundle v10 - Gated on Exp 1269 Critical Fixes",
+      "duration_minutes": 0,
+      "classification": "docs_reconciliation",
+      "why_slow": "Not slow in the supplied timing, but it exposed process fragility: the .101 research retro explicitly delegated ops/docs reconciliation to a follow-up step."
+    }
+  ],
+  "bottlenecks_identified": [
+    "The 10 minute arXiv bundle gate dominated the closeout because it sat on the critical path after Exp 1269 and ran serially.",
+    "Three repeated SOTA GGUF cache/provenance DOOMED_RERUN_BLOCK slots wasted about 6 of 16 minutes as duplicate gate work.",
+    "The conductor should have emitted one terminal blocked artifact for the known SOTA cache state, then pruned downstream certificate tasks until cache readiness changed.",
+    "Milestone .101's terminal research retro shows 5 criteria remained blocked or missing downstream of the SOTA cache/certificate path.",
+    "GPU utilization was scheduler-inefficient: both RTX 3090s were idle at 4 MB allocated and 0% utilization, so no available GPU capacity was converted into useful parallel work.",
+    "No material GPU zombie processes were wasting resources. gpu_monitor.py reported an empty process list and no warnings; the 4 MB per GPU allocation is below the monitor zombie threshold.",
+    "The focused pre-flight test suite was not a wall-time bottleneck. Nearby conductor rows showed 81 tests completing in about 7-8 seconds.",
+    "Docs reconciliation was not slow in the timing slice, but it was deferred by the research retro and remains fragile unless changelog/roadmap appends are idempotent.",
+    "The repeated artifact_not_updated_past_bootstrap pattern seen in .101 conductor rows for Exp 1305 indicates skeleton-first writes need a finalizer that validates terminal status before retrying."
+  ],
+  "improvements_suggested": [
+    "At activation, run prior_failures and cache-readiness validation before launching any SOTA certificate tasks.",
+    "Write terminal DOOMED_RERUN_BLOCK and GATE_BLOCK artifacts on the first known block, then suppress duplicate retries until a dependency artifact changes.",
+    "Add dependency pruning so blocked SOTA cache readiness immediately marks downstream certificate, routing, cactus, and GRPO/VPRM headline tasks terminal for the milestone.",
+    "Make the artifact finalizer check that a skeleton moved from in_progress to a terminal status before allowing another scheduled attempt.",
+    "Run CPU/docs tasks and independent non-SOTA experiments in parallel with any gate checks; reserve serial execution only for true data dependencies.",
+    "Once the mandated local GGUF cache is complete, run Qwen/Gemma or similar two-model audit lanes with DualGPURunner across GPU 0 and GPU 1.",
+    "Record per-phase timing fields for each task: gate_wait_s, prior_failure_check_s, preflight_tests_s, execution_s, artifact_write_s, docs_s, and reconcile_s.",
+    "Cache TeX/arXiv bundle preflight state and rerun only changed figures/files.",
+    "Use an idempotent docs append helper keyed by milestone and artifact path for ops/changelog.md and docs/roadmap.md.",
+    "Attach gpu_monitor.py JSON snapshots at task start and closeout for every GPU-capable task."
+  ],
+  "estimated_time_savings_pct": 35,
+  "estimated_next_milestone_wall_time_minutes_if_applied": 10,
+  "savings_basis": "Collapsing the three duplicate SOTA GGUF doomed-rerun blocks to one terminal artifact should recover about 4 minutes. Dependency pruning, cached bundle state, idempotent docs reconciliation, and parallel CPU/GPU scheduling plausibly recover another 1-2 minutes in a similar 16 minute closeout, so 35% is a conservative estimate.",
+  "gpu_utilization": {
+    "efficient": false,
+    "assessment": "The milestone slice was not GPU-bound because no GPU work was running. It was still operationally inefficient because two RTX 3090s were available and idle while the queue spent time on serial gate and docs work.",
+    "snapshot_timestamp": "2026-05-05T02:43:48.288095+00:00",
+    "gpus": [
+      {
+        "index": 0,
+        "name": "NVIDIA GeForce RTX 3090",
+        "used_mb": 4,
+        "total_mb": 24576,
+        "utilization_pct": 0,
+        "temperature_c": 51
+      },
+      {
+        "index": 1,
+        "name": "NVIDIA GeForce RTX 3090",
+        "used_mb": 4,
+        "total_mb": 24576,
+        "utilization_pct": 0,
+        "temperature_c": 55
+      }
+    ],
+    "sequential_vs_parallel": "Execution was effectively serial around gate/doc paths. Any independent CPU/docs work could have overlapped with gate checks, and future two-model SOTA audits should run one model per GPU through DualGPURunner."
+  },
+  "zombie_processes": {
+    "zombies_detected": false,
+    "processes": [],
+    "assessment": "scripts/gpu_monitor.py detected no GPU processes and no warnings. Its zombie detector only flags processes above 1024 MB VRAM, older than 10 minutes, with CPU/wall ratio below 1%; the observed 4 MB idle allocations do not qualify."
+  },
+  "parallelization_opportunities": [
+    "Collapse repeated doomed-rerun attempts into one terminal artifact and immediately move to independent queued work.",
+    "Run docs reconciliation asynchronously after terminal artifacts are written, guarded by idempotent append keys.",
+    "Run independent .101 work such as skill graph, self-learning memory, repair policy, energy bridge, and publication hold recording outside the SOTA certificate gate lane.",
+    "After cache readiness is true, use DualGPURunner to split Qwen/Gemma SOTA GGUF lanes across GPU 0 and GPU 1 instead of serial model evaluation."
+  ],
+  "preflight_suite": {
+    "bottleneck": false,
+    "assessment": "The unit pre-flight suite was seconds-scale, not minutes-scale. The bottleneck was policy/gate preflight repeating known blocked states.",
+    "evidence": "ops/conductor-log.md includes 81 passed, 1 warning in 7.89s for the arXiv bundle row and 81 passed, 1 warning in 7.07s for the .101 retrospective row.",
+    "recommendation": "Keep focused pre-flight checks; spend tooling effort on terminal gate artifacts, prior_failures validation, and dependency pruning."
+  },
+  "doc_reconciliation": {
+    "bottleneck": false,
+    "assessment": "The supplied docs item registered 0 minutes, so docs were not the measured slow path. However, the .101 research retro left docs_reconciled=false and delegated ops reconciliation, so reconciliation was incomplete rather than expensive.",
+    "recommendation": "Make reconciliation automatic, idempotent, and non-gating: append exactly one changelog summary and one roadmap row per milestone."
+  },
+  "tooling_infrastructure_changes": [
+    "Activation-time prior_failures and local SOTA GGUF cache readiness gate.",
+    "Single-shot terminal artifact writer for DOOMED_RERUN_BLOCK, GATE_BLOCK, and artifact_not_updated_past_bootstrap outcomes.",
+    "Dependency-pruning scheduler for downstream blocked tasks.",
+    "Artifact finalizer that converts skeletons to terminal success/failure/block states before the conductor retries.",
+    "Per-phase timing export to result JSONs and ops/metrics.md.",
+    "DualGPU-aware scheduler for two-model SOTA lanes plus parallel CPU/docs lanes.",
+    "Cached TeX/arXiv bundle preflight metadata.",
+    "Idempotent changelog and roadmap append helper keyed by milestone and artifact path.",
+    "Mandatory gpu_monitor.py start/finish snapshots for GPU-capable experiments."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Make known blocked states terminal on first detection and prune downstream dependencies.",
+    "Validate prior_failures plus SOTA cache readiness at activation before scheduling SOTA certificate work.",
+    "Instrument phase timing and run independent CPU/docs/GPU lanes in parallel, with DualGPURunner as the default for two-model audits."
+  ],
+  "questions_answered": {
+    "which_experiments_took_longest_and_why": "The 10 minute arXiv Bundle v10 path took longest because it was serially gated on Exp 1269 critical fixes and then paid bundle/docs overhead. The next three slowest slots were duplicate 2 minute SOTA GGUF cache/provenance doomed-rerun blocks.",
+    "was_gpu_utilization_efficient": "No. Both RTX 3090s were idle at 4 MB and 0% utilization. The milestone was not GPU-bound, but available GPU parallelism was unused.",
+    "were_there_zombie_processes_wasting_resources": "No. gpu_monitor.py reported no GPU processes and no warnings; the observed 4 MB allocations are not material zombie waste.",
+    "could_any_experiments_have_been_parallelized": "Yes. Duplicate blocked retries should have collapsed to one terminal artifact, docs reconciliation could run asynchronously, and independent CPU/GPU tasks could run outside the SOTA certificate gate.",
+    "was_preflight_a_bottleneck": "The focused test suite was not a bottleneck; it ran in seconds. The policy preflight/gate loop was the bottleneck because it repeated known blocks.",
+    "were_doc_reconciliation_passes_efficient": "They were not a measured time bottleneck in this slice, but reconciliation was incomplete/deferred and needs idempotent automation.",
+    "what_tooling_would_speed_next_milestone": "Activation-time prior_failures/cache gates, terminal blocked artifacts, dependency pruning, skeleton finalization, per-phase timing, DualGPU scheduling, cached bundle state, and idempotent docs helpers."
+  },
+  "meta_reflection": "The milestone was short enough that small orchestration mistakes dominated the percentage cost. Skeleton-first artifacts prevent total loss, but they are only half the fix: blocked states must be cheap, terminal, and non-repeating. The next efficiency gain comes from treating gate outcomes as durable scheduler facts and moving independent work into parallel lanes immediately."
+}

@@ -1,7 +1,7 @@
 """Tests for the local Claude/Codex plan-usage snapshot workflow.
 
 Spec: REQ-REPORT-024, SCENARIO-REPORT-021, SCENARIO-REPORT-022,
-SCENARIO-REPORT-023, SCENARIO-REPORT-024.
+SCENARIO-REPORT-023, SCENARIO-REPORT-024, SCENARIO-REPORT-025.
 """
 
 from __future__ import annotations
@@ -12,7 +12,9 @@ import json
 import sys
 from contextlib import redirect_stdout
 from pathlib import Path
+from urllib.error import URLError
 
+from carnot.reporting import agent_usage
 from carnot.reporting.agent_usage import build_usage_snapshot, format_usage_table
 
 _REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -128,6 +130,20 @@ def _write_claude_credentials(home: Path) -> None:
         ),
         encoding="utf-8",
     )
+
+
+class _FakeHTTPResponse:
+    def __init__(self, payload: dict[str, object]) -> None:
+        self._payload = json.dumps(payload).encode("utf-8")
+
+    def read(self) -> bytes:
+        return self._payload
+
+    def __enter__(self) -> _FakeHTTPResponse:
+        return self
+
+    def __exit__(self, exc_type: object, exc: object, tb: object) -> bool:
+        return False
 
 
 def test_scenario_report_021_codex_latest_rate_limit_event_is_surfaced(tmp_path: Path) -> None:
@@ -403,6 +419,145 @@ def test_req_report_024_prefers_structured_claude_quota_fields(tmp_path: Path) -
 
     assert snapshot["claude"]["used_percent"] == 90.0
     assert not any("unavailable" in note for note in snapshot["claude"]["notes"])
+
+
+def test_scenario_report_025_live_claude_usage_is_surfaced(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    """SCENARIO-REPORT-025: live Claude OAuth usage overrides local guesswork."""
+
+    home = tmp_path
+    _write_claude_credentials(home)
+
+    def _fake_urlopen(request, timeout: float = 0.0):
+        assert request.full_url == "https://api.anthropic.com/api/oauth/usage"
+        assert request.get_header("Authorization") == "Bearer sk-ant-access-secret"
+        assert timeout == 10.0
+        return _FakeHTTPResponse(
+            {
+                "five_hour": {
+                    "utilization": 1.0,
+                    "resets_at": "2026-05-05T04:50:00.566764+00:00",
+                },
+                "seven_day": {
+                    "utilization": 91.0,
+                    "resets_at": "2026-05-06T16:00:00.566792+00:00",
+                },
+                "seven_day_sonnet": {
+                    "utilization": 28.0,
+                    "resets_at": "2026-05-06T16:00:00.566804+00:00",
+                },
+                "extra_usage": {
+                    "is_enabled": False,
+                    "monthly_limit": None,
+                    "used_credits": None,
+                    "utilization": None,
+                    "currency": None,
+                },
+            }
+        )
+
+    monkeypatch.setattr(agent_usage, "urlopen", _fake_urlopen)
+
+    snapshot = build_usage_snapshot(home=home, claude_live=True)
+    encoded = json.dumps(snapshot, sort_keys=True)
+    table = format_usage_table(snapshot)
+
+    assert snapshot["claude"]["used_percent"] == 91.0
+    assert snapshot["claude"]["reset_at"] == "2026-05-06T16:00:00.566792+00:00"
+    assert snapshot["claude"]["five_hour"] == {
+        "used_percent": 1.0,
+        "reset_at": "2026-05-05T04:50:00.566764+00:00",
+    }
+    assert snapshot["claude"]["seven_day"] == {
+        "used_percent": 91.0,
+        "reset_at": "2026-05-06T16:00:00.566792+00:00",
+    }
+    assert snapshot["claude"]["seven_day_sonnet"] == {
+        "used_percent": 28.0,
+        "reset_at": "2026-05-06T16:00:00.566804+00:00",
+    }
+    assert snapshot["claude"]["extra_usage"] == {
+        "is_enabled": False,
+        "monthly_limit": None,
+        "used_credits": None,
+        "used_percent": None,
+        "currency": None,
+    }
+    assert snapshot["claude"]["usage_source"] == "live_oauth"
+    assert "91.0%" in table
+    assert "2026-05-06" in table
+    assert "sk-ant-access-secret" not in encoded
+    assert "sk-ant-refresh-secret" not in encoded
+    assert "accessToken" not in encoded
+    assert "refreshToken" not in encoded
+
+
+def test_scenario_report_025_live_claude_failure_falls_back_safely(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    """SCENARIO-REPORT-025: live Claude usage failures degrade to unavailable safely."""
+
+    home = tmp_path
+    _write_claude_credentials(home)
+
+    def _fake_urlopen(_request, timeout: float = 0.0):
+        assert timeout == 10.0
+        raise URLError("offline")
+
+    monkeypatch.setattr(agent_usage, "urlopen", _fake_urlopen)
+
+    snapshot = build_usage_snapshot(home=home, claude_live=True)
+
+    assert snapshot["claude"]["used_percent"] is None
+    assert snapshot["claude"]["reset_at"] is None
+    assert snapshot["claude"]["usage_source"] == "local_logs"
+    assert any("live Claude usage unavailable" in note for note in snapshot["claude"]["notes"])
+
+
+def test_req_report_024_script_accepts_claude_live_flag(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    """REQ-REPORT-024: the script forwards the opt-in live Claude flag."""
+
+    mod = _load_script_module()
+    captured: dict[str, object] = {}
+
+    def _fake_build_usage_snapshot(*, home: Path, claude_live: bool = False):
+        captured["home"] = home
+        captured["claude_live"] = claude_live
+        return {
+            "generated_at": "2026-05-04T17:00:00Z",
+            "codex": {
+                "plan_type": "pro",
+                "used_percent": 8.0,
+                "reset_at": 1777000000,
+                "last_updated": "2026-05-04T12:05:00Z",
+                "token_usage": {"total": {"input_tokens": 1}, "last": {}},
+            },
+            "claude": {
+                "subscription_type": "max",
+                "used_percent": 91.0,
+                "reset_at": "2026-05-06T16:00:00.566792+00:00",
+                "last_updated": "2026-05-04T17:00:00Z",
+                "token_usage": {"input_tokens": 1, "output_tokens": 2},
+            },
+        }
+
+    monkeypatch.setattr(mod, "build_usage_snapshot", _fake_build_usage_snapshot)
+
+    stdout = io.StringIO()
+    with redirect_stdout(stdout):
+        exit_code = mod.main(["--home", str(tmp_path), "--format", "json", "--claude-live"])
+
+    payload = json.loads(stdout.getvalue())
+    assert exit_code == 0
+    assert captured["home"] == tmp_path
+    assert captured["claude_live"] is True
+    assert payload["claude"]["used_percent"] == 91.0
 
 
 def test_scenario_report_023_missing_paths_and_bad_credentials_stay_safe(tmp_path: Path) -> None:

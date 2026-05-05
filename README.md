@@ -17,20 +17,22 @@ call. No fine-tuning. No access to model weights.
 
 Rust + Python/JAX, Apache 2.0, `pip install carnot`.
 
-Current public research record: **1,295 experiments tracked, 109 completed
-milestones archived**, with checked-in result artifacts through Exp 1295 on
-2026-05-04. `research-complete.yaml` is archived through milestone 2026.04.99;
-Exp 1295 records milestone .100 at **5/14 criteria met**. Latest .100 artifacts
-select `llama_cpp` GBNF as the local certificate grammar backend (Exp 1283),
-measure DVI verifier-feedback replay at **0.642857 -> 1.0** with **7**
-claim-level memory entries (Exp 1288, non-headline), find HardNet++ nonlinear
-repair viable with mean violations **1.0 -> 0.0** and delta over SnareNet
-**1.2207** (Exp 1291), and measure a marginal predictive DSP feasibility
-channel with **AUC=0.6605** and **0.0** false-stop rate (Exp 1292). SOTA GGUF
-certificate extraction stayed gate-blocked, GRPO v9 and skill-graph promotion
-did not produce headline artifacts, the EBT/ARM energy bridge blocked, and
-arXiv upload remains pending. The current 2026-05-04 Python test
-collection-only snapshot reports **21,734** items; that is a collection count
+Current public research record: **1,308 experiments tracked, 110 completed
+milestones archived**, with checked-in result artifacts through Exp 1308 on
+2026-05-05. `research-complete.yaml` is archived through milestone 2026.04.100;
+Exp 1308 records milestone .101 at **8/13 criteria met**. Latest .101 artifacts
+show activation hygiene passed with **13/13** prior-failure checks and **0**
+missing entries (Exp 1296), SOTA GGUF cache readiness is still false because
+`unsloth/gemma-4-26B-A4B-it-GGUF` is missing (Exp 1297), skill-graph promotion
+wrote **7** sandboxed candidates with **5** promotions, **1** demotion, and
+**1** expiry (Exp 1302), QueryBandits/NGC memory policy improved reward from
+**-0.714286 -> 0.882143** with self-learning delta **+1.596429** (Exp 1303),
+and the HardNet++/DSP stop policy reached **1.0** replay precision while
+remaining an operator gate, not a learned general stop rule (Exp 1305). SOTA
+answer-stability, triggered certificates, semantic routing, safe-prefix Cactus,
+and GRPO/VPRM headline learning stayed gated by the missing SOTA cache and
+certificate parse-rate path. The current 2026-05-05 Python test
+collection-only snapshot reports **21,773** items; that is a collection count
 with three known import errors, not a full-suite pass claim.
 
 ## Install and run
@@ -183,6 +185,12 @@ experiment artifact under `results/`.
 | DVI verifier-feedback replay | Replay acceptance score **0.642857 -> 1.0** (+0.357143) over 140 eval examples with **7** claim-level memory entries; non-headline FoVer fallback provenance | Exp 1288 |
 | HardNet++ nonlinear repair | Product-of-disks nonlinear constraint benchmark reached mean violations **1.0 -> 0.0**; copy-as-decode span reuse **1.0**; delta over SnareNet **1.2207** | Exp 1291 |
 | DSP feasibility channel diagnostic | Repair-help channel **AUC=0.6605**, accuracy **0.6538**, false-stop rate **0.0**, false-continue rate **0.7714**; predictive but marginal | Exp 1292 |
+| Prior-failure activation audit | **13/13** prior-failure checks passed, **12** gate upstream checks passed, **0** missing prior-failure entries | Exp 1296 |
+| SOTA GGUF cache preflight v2 | **2/3** mandated GGUF models cached; `cached_sota_ready=false` because `unsloth/gemma-4-26B-A4B-it-GGUF` is missing; headline SOTA certificate work remains gated | Exp 1297 |
+| Skill graph promotion/demotion v2 | **7** sandboxed skill candidates written from 140 replay slices: **5** promoted, **1** demoted, **1** expired; production skills were not modified | Exp 1302 |
+| QueryBandits/NGC online memory policy | Reward **-0.714286 -> 0.882143**, self-learning delta **+1.596429**, accepted violations **120 -> 7**; non-headline replay provenance | Exp 1303 |
+| HardNet++/DSP conservative stop policy | Replay stop policy precision **1.0** with **70** stop and **86** continue recommendations; useful operator gate, not a learned general stop rule | Exp 1305 |
+| EBT/ARM/EBM-CoT energy bridge audit v2 | Local verifier-energy alignment completed; no native EBT, ARM soft-Bellman trainer, EBM-CoT optimizer, TSU, or Kona implementation added | Exp 1306 |
 | Pytest memory watchdog | Per-test RSS tracking shipped with **8,192 MB** session cumulative limit and **500 MB** per-test leak threshold; sample run passed | Exp 1178 |
 | Paper v5/v6 integrity remediation + arXiv v10 bundle | **18/18** integrity issues resolved after the critical fixes; .99 v2 fixes cite the latest orthogonality/TSS/DiffuTruth/QuantKAN artifacts; arXiv v10 compiled to PDF and `results/carnot-arxiv-v10-20260504.tar.gz`, but upload remains pending | Exps 1181/1182/1183/1205/1206/1269/1270 |
 | llama.cpp GPU offload for GRPO | GPU offload verified at **302 tok/s** against a 50 tok/s floor; GRPO v5 then ran on DualGPU but regressed because TinyV abstained on **62.5%** of rewards | Exps 1207/1208 |
@@ -204,8 +212,9 @@ experiment artifact under `results/`.
 | Extropic Z1/XTR-0 integration packet | THRML backend stub and hardware integration packet shipped; live THRML benchmark blocked because `thrml_available=false` | Exp 1150 |
 | arXiv package v10 + publication hold | v10 bundle ready at `results/carnot-arxiv-v10-20260504.tar.gz`; `tectonic main.tex` compiled `docs/arxiv-paper/main.pdf` at **371 KiB**; arXiv upload remains pending | Exp 1270 |
 | Milestone .99 operational closeout | **10 min** for 2 closeout items, **5 min** average; both RTX 3090s idle at 4 MB / 0% with no zombie processes; pre-flight checks were seconds-scale; **30%** savings target via DualGPU-aware lanes, cached TeX/pre-flight state, immediate gate-block artifacts, and idempotent docs reconciliation | operational_retro_2026_04_99 |
-| Milestone .100 status | **5/14 criteria met**; grammar backend selection, DVI replay, HardNet++ nonlinear repair, DSP diagnostics, and retro completed. SOTA certificate work, skill promotion, energy bridge, and arXiv receipt remain blocked, gated, or missing | Exps 1282-1295 |
-| Current Python test collection | **21,734** Python test items collected on 2026-05-04; collection-only snapshot with three known import errors, not a full-suite pass claim | docs/test snapshot |
+| Milestone .100 status | **5/14 criteria met**; grammar backend selection, DVI replay, HardNet++ nonlinear repair, DSP diagnostics, and retro completed. SOTA certificate work, skill promotion, energy bridge, and arXiv receipt remained blocked, gated, or missing | Exps 1282-1295 |
+| Milestone .101 status | **8/13 criteria met**; activation audit, cache preflight, skill graph, online memory policy, stop policy, bridge audit, arXiv hold receipt, and retro completed. SOTA certificates and downstream headline learning remain gated | Exps 1296-1308 |
+| Current Python test collection | **21,773** Python test items collected on 2026-05-05; collection-only snapshot with three known import errors, not a full-suite pass claim | docs/test snapshot |
 | Local Claude/Codex usage snapshot | Codex reads the newest local `token_count` event; Claude aggregates local token usage and reads only subscription/tier metadata from credentials; free-form quota prose is ignored instead of guessed; focused regression tests pass | 2026-05-04 changelog |
 
 Deeper analysis of these — including everything that **didn't** work and
@@ -246,7 +255,7 @@ claim we publish.
 ## Where to go next
 
 - **[Technical report](docs/technical-report.md)** — the full research arc
-  through Exp 1295 across 109 archived completed milestones, with a
+  through Exp 1308 across 110 archived completed milestones, with a
   plain-English timeline of what we tried, what failed, what stuck.
 - **[Roadmap](docs/roadmap.md)** — current milestone, upcoming milestones,
   hardware track, and Phase 3 (Kona-parity foundation-model) direction.
@@ -450,7 +459,7 @@ See the [technical report](docs/technical-report.md) for the full research recor
 
 ## 14 Principles Learned
 
-Hard-won lessons from the activation-based phase of a research program that now spans Exp 1-1295 across 109 archived milestones and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
+Hard-won lessons from the activation-based phase of a research program that now spans Exp 1-1308 across 110 archived milestones and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
 
 ### What works
 1. **The model's own logprobs are the best energy.** No external EBM needed for rejection sampling — the LLM's own confidence is already an energy function. Simple, practical, +10%.
