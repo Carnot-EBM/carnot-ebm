@@ -17363,3 +17363,62 @@ fields
 1311 gate is not satisfied.
 
 **Spec traces:** REQ-VERIFY-1312, SCENARIO-VERIFY-1312, Exp 1312
+
+## REQ-VERIFY-1323: SOTA GGUF Token Health Prompt/Runtime Diagnostic
+
+**Summary:** Before spending more mandated local SOTA GGUF model time on
+certificate extraction, Carnot SHALL diagnose whether empty or one-token
+outputs are caused by token budget, stop strings, prompt shape, chat-template
+usage, grammar settings, llama.cpp runtime configuration, or model-family
+behavior.
+
+**Requirements:**
+
+- REQ-VERIFY-1323-1: The workflow SHALL write an in-progress artifact to
+  `results/experiment_1323_sota_gguf_token_health_prompt_runtime_diagnostic.json`
+  before loading prior artifacts or collecting generations.
+- REQ-VERIFY-1323-2: The workflow SHALL load Exp 1310, Exp 1311, and Exp 1312
+  artifacts and summarize model IDs, prompt shapes, token budgets, stop
+  settings, and observed raw-output lengths.
+- REQ-VERIFY-1323-3: The workflow SHALL resolve the live model specs only
+  through `cached_sota_pair(gpu_indices=(0, 1))` and record the exact mandated
+  SOTA GGUF model IDs used.
+- REQ-VERIFY-1323-4: The diagnostic SHALL run a tiny deterministic grid that
+  includes baseline prompt, chat-template prompt, no-stop-string prompt, larger
+  max-token budget, and certificate-shaped prompt variants.
+- REQ-VERIFY-1323-5: For each prompt variant, the artifact SHALL record raw
+  output length, generated token count, certificate skeleton availability when
+  applicable, empty-or-one-token flag, stop strings, max-token budget, grammar
+  mode, and runtime errors.
+- REQ-VERIFY-1323-6: When llama.cpp exposes completion logprobs or top-k
+  probabilities, the workflow SHALL compute a minimal token-health summary and
+  entropy-production proxy; otherwise it SHALL set
+  `topk_logprob_available=false` and
+  `entropy_production_rate_available=false` with the missing API reason.
+- REQ-VERIFY-1323-7: The artifact SHALL include `status`, `models_used`,
+  `prompt_variants_tested`, `generation_settings`,
+  `empty_or_one_token_rate`, `min_tokens_recovered`,
+  `topk_logprob_available`, `entropy_production_rate_available`,
+  `certificate_parse_delta_with_probe_gate`,
+  `recommended_certificate_runtime_settings`, `headline_result_allowed`, and
+  `honest_verdict`.
+- REQ-VERIFY-1323-8: `min_tokens_recovered` SHALL be true only when at least
+  one mandated SOTA model reliably produces multi-token output for the
+  certificate-shaped prompt without relying on a legacy small-model headline.
+
+**Implementation Status:** Planned (Exp 1323)
+
+### SCENARIO-VERIFY-1323: Token Health Diagnostic Gates Certificate Runtime
+
+**Given** the run date is `20260505`
+**And** Exp 1310, Exp 1311, and Exp 1312 artifacts exist
+**And** `cached_sota_pair(gpu_indices=(0, 1))` returns mandated local GGUF specs
+**When** the token-health diagnostic runs
+**Then** it writes the Exp 1323 artifact with prior-artifact context,
+per-variant generation records, logprob/entropy availability, certificate
+prompt recovery status, recommended certificate runtime settings, headline
+gate, and honest verdict
+**And** it marks headline results disallowed when the diagnostic cannot recover
+multi-token certificate-shaped output from at least one mandated SOTA model.
+
+**Spec traces:** REQ-VERIFY-1323, SCENARIO-VERIFY-1323, Exp 1323
