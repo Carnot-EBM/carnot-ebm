@@ -909,3 +909,5 @@ web search: GitHub trending energy based mod |
 | 2026-05-05 14:39 UTC | Margin-Aware Cactus/BEAVER Scheduler v2 - Gated on | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1356-verge-mcs-repair-localization.repa |
 | 2026-05-05 14:41 UTC | VERGE MCS Repair Localization - Gated on Semantic | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1355-logitext-nsvif-partial-smt-validator |
 | 2026-05-05 14:41 UTC | Margin-Aware Cactus/BEAVER Scheduler v2 - Gated on | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1356-verge-mcs-repair-localization.repa |
+| 2026-05-05 14:52 UTC | Continuous Self-Learning: Verifier-Selected Memory | OK | 81 passed, 1 warning in 4.84s |
+| 2026-05-05 14:54 UTC | DVI Certificate-Tail v4 - Gated on Parse, Semantic | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1355-logitext-nsvif-partial-smt-validator |
