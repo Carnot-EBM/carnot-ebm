@@ -424,6 +424,52 @@ K=16 topology result, positive KL improvements over v4 and v5, and
 
 ---
 
+### REQ-HW-046
+
+**Title:** p-bit sampler portability packet MUST be CPU-only and hardware-claim gated
+
+**Description:**
+Experiment 1320 MUST produce a portability packet for future FPGA or accelerator
+p-bit sampler work without claiming hardware execution.  The packet MUST define a
+tiny Ising case, compute a CPU sequential-Gibbs baseline, simulate a p-bit update
+loop with configurable p-bit reuse factor and DAC-bit quantization, and compare
+the p-bit empirical distribution against the CPU Gibbs distribution using KL
+divergence.  It MUST also include a dual-BRAM mapping sketch suitable for later
+RTL work and record whether Vivado, KV260 bitfiles, or equivalent FPGA synthesis
+tools were unavailable on the local host.
+
+**Acceptance criteria:**
+- `results/experiment_1320_pbit_sampler_portability_packet.json` includes
+  `status`, `dual_bram_mapping_ready`, `reuse_factor_sweep`, `dac_bits_sweep`,
+  `kl_to_cpu_gibbs`, `vivado_required_for_next_step`, `hardware_claim_allowed`,
+  and `honest_verdict`.
+- The reuse-factor sweep covers at least three reuse factors and records KL to
+  the CPU Gibbs baseline for each factor.
+- The DAC-bit sweep covers at least three bit widths and records KL to the CPU
+  Gibbs baseline for each width.
+- `dual_bram_mapping_ready=true` only when the mapping sketch identifies two
+  BRAM banks, a spin-serial/read snapshot path, and a write/update path.
+- `hardware_claim_allowed=false` and `vivado_required_for_next_step=true` unless
+  real synthesis or board execution is performed in the current run.
+
+**Implementation status:** Implemented (Exp 1320)
+
+---
+
+### SCENARIO-HW-046
+
+**Scenario:** CPU p-bit portability packet writes honest sweep artifact.
+
+**Given:** Vivado/KV260 synthesis is unavailable or not executed locally.
+**When:** the Exp 1320 packet builder runs on the tiny Ising case.
+**Then:** the artifact records the dual-BRAM mapping sketch, reuse-factor sweep,
+DAC-bit sweep, KL divergence to the CPU Gibbs baseline, and an honest verdict
+that disallows hardware claims until a Vivado or board run is performed.
+
+**Implementation status:** Implemented (Exp 1320)
+
+---
+
 ## Implementation Status
 
 | REQ | Status | Experiment |
@@ -436,4 +482,5 @@ K=16 topology result, positive KL improvements over v4 and v5, and
 | REQ-HW-041 | Implemented (retired) | Exp 901 |
 | REQ-HW-042 | Implemented | Exp 1149 |
 | REQ-HW-045 | Implemented | Exp 1161 |
+| REQ-HW-046 | Implemented | Exp 1320 |
 | REQ-FPGA-030 | Implemented | Exp 859 |

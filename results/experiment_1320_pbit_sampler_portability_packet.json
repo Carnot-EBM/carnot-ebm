@@ -1,0 +1,315 @@
+{
+  "cpu_gibbs_baseline": {
+    "algorithm": "exact_distribution_propagation_round_robin_gibbs",
+    "distribution": [
+      0.146954169273,
+      0.051424811218,
+      0.02893699165,
+      0.158399569966,
+      0.012062732783,
+      0.001209395641,
+      0.022536151757,
+      0.035343721414,
+      0.042103074415,
+      0.040049683246,
+      0.001440687982,
+      0.021437050666,
+      0.146954169273,
+      0.040049683246,
+      0.047709033643,
+      0.203389073829
+    ],
+    "kl_to_exact_boltzmann": -0.0,
+    "state_order": [
+      [
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      [
+        -1,
+        -1,
+        -1,
+        1
+      ],
+      [
+        -1,
+        -1,
+        1,
+        -1
+      ],
+      [
+        -1,
+        -1,
+        1,
+        1
+      ],
+      [
+        -1,
+        1,
+        -1,
+        -1
+      ],
+      [
+        -1,
+        1,
+        -1,
+        1
+      ],
+      [
+        -1,
+        1,
+        1,
+        -1
+      ],
+      [
+        -1,
+        1,
+        1,
+        1
+      ],
+      [
+        1,
+        -1,
+        -1,
+        -1
+      ],
+      [
+        1,
+        -1,
+        -1,
+        1
+      ],
+      [
+        1,
+        -1,
+        1,
+        -1
+      ],
+      [
+        1,
+        -1,
+        1,
+        1
+      ],
+      [
+        1,
+        1,
+        -1,
+        -1
+      ],
+      [
+        1,
+        1,
+        -1,
+        1
+      ],
+      [
+        1,
+        1,
+        1,
+        -1
+      ],
+      [
+        1,
+        1,
+        1,
+        1
+      ]
+    ],
+    "sweeps": 180
+  },
+  "dac_bits_sweep": [
+    {
+      "dac_bits": 2,
+      "dac_levels": 4,
+      "field_clip": 2.0,
+      "kl_to_cpu_gibbs": 0.048859558533,
+      "l1_to_cpu_gibbs": 0.221411951554,
+      "reuse_factor": 4,
+      "update_policy": "single_site_gibbs_like"
+    },
+    {
+      "dac_bits": 3,
+      "dac_levels": 8,
+      "field_clip": 2.0,
+      "kl_to_cpu_gibbs": 0.053635091642,
+      "l1_to_cpu_gibbs": 0.263146633042,
+      "reuse_factor": 4,
+      "update_policy": "single_site_gibbs_like"
+    },
+    {
+      "dac_bits": 4,
+      "dac_levels": 16,
+      "field_clip": 2.0,
+      "kl_to_cpu_gibbs": 0.00482215375,
+      "l1_to_cpu_gibbs": 0.080322011492,
+      "reuse_factor": 4,
+      "update_policy": "single_site_gibbs_like"
+    },
+    {
+      "dac_bits": 6,
+      "dac_levels": 64,
+      "field_clip": 2.0,
+      "kl_to_cpu_gibbs": 0.000412165565,
+      "l1_to_cpu_gibbs": 0.027003536186,
+      "reuse_factor": 4,
+      "update_policy": "single_site_gibbs_like"
+    }
+  ],
+  "dual_bram_mapping_ready": true,
+  "dual_bram_mapping_sketch": {
+    "bank_a": {
+      "contents": [
+        "spin_state_snapshot",
+        "coupling_rows",
+        "bias_terms"
+      ],
+      "name": "BRAM_A",
+      "role": "read_snapshot"
+    },
+    "bank_b": {
+      "contents": [
+        "next_spin_state",
+        "quantized_local_fields",
+        "rng_thresholds"
+      ],
+      "name": "BRAM_B",
+      "role": "delayed_write_update"
+    },
+    "bank_count": 2,
+    "portability_notes": [
+      "Bank A is read-only within an update phase so all selected p-bits see the same snapshot.",
+      "Bank B receives delayed writes and becomes the next snapshot after the phase boundary.",
+      "The sketch is CPU-derived only; it is not a synthesized BRAM utilization report."
+    ],
+    "read_snapshot_path": true,
+    "spin_serial_schedule": {
+      "logical_spins": 4,
+      "phase_rule": "phase = tick mod reuse_factor; update spins where i mod reuse_factor == phase",
+      "reuse_factors": [
+        1,
+        2,
+        4
+      ]
+    },
+    "write_update_path": true
+  },
+  "fpga_environment": {
+    "equivalent_fpga_tool_available": true,
+    "hardware_execution_confirmed": false,
+    "icepack_available": true,
+    "icepack_path": "/opt/oss-cad-suite/bin/icepack",
+    "kv260_bitfile_configured": false,
+    "kv260_bitfile_env": "",
+    "nextpnr_ice40_available": true,
+    "nextpnr_ice40_path": "/opt/oss-cad-suite/bin/nextpnr-ice40",
+    "nextpnr_xilinx_available": false,
+    "nextpnr_xilinx_path": null,
+    "vitis_available": true,
+    "vitis_path": "/tools/Xilinx/2025.2.1/Vitis/bin/vitis",
+    "vivado_available": true,
+    "vivado_path": "/tools/Xilinx/2025.2.1/Vivado/bin/vivado",
+    "yosys_available": true,
+    "yosys_path": "/opt/oss-cad-suite/bin/yosys"
+  },
+  "hardware_claim_allowed": false,
+  "honest_verdict": "cpu_portability_packet_ready_hardware_not_run",
+  "kl_to_cpu_gibbs": 0.000412165565,
+  "metadata": {
+    "board_executed": false,
+    "experiment_id": 1320,
+    "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "run_date": "20260505",
+    "schema": "pbit_sampler_portability_packet_v1",
+    "synthesis_performed": false
+  },
+  "pbit_update_model": {
+    "dac_quantization": "signed clipped uniform field ladder",
+    "probability_rule": "P(s_i=+1)=sigmoid(2*beta*quantized_h_i)",
+    "reuse_factor_semantics": "reuse_factor phases serialize logical spins onto fewer physical p-bits"
+  },
+  "reuse_factor_sweep": [
+    {
+      "dac_bits": 6,
+      "kl_to_cpu_gibbs": 3.141314861474,
+      "l1_to_cpu_gibbs": 1.317392695389,
+      "logical_spins": 4,
+      "logical_spins_per_pbit": 1,
+      "max_parallel_updates": 4,
+      "physical_pbits": 4,
+      "reuse_factor": 1,
+      "update_policy": "fully_parallel_snapshot"
+    },
+    {
+      "dac_bits": 6,
+      "kl_to_cpu_gibbs": 0.04325904435,
+      "l1_to_cpu_gibbs": 0.247220292817,
+      "logical_spins": 4,
+      "logical_spins_per_pbit": 2,
+      "max_parallel_updates": 2,
+      "physical_pbits": 2,
+      "reuse_factor": 2,
+      "update_policy": "time_multiplexed_snapshot"
+    },
+    {
+      "dac_bits": 6,
+      "kl_to_cpu_gibbs": 0.000412165565,
+      "l1_to_cpu_gibbs": 0.027003536186,
+      "logical_spins": 4,
+      "logical_spins_per_pbit": 4,
+      "max_parallel_updates": 1,
+      "physical_pbits": 1,
+      "reuse_factor": 4,
+      "update_policy": "single_site_gibbs_like"
+    }
+  ],
+  "selected_cpu_equivalence": {
+    "baseline": "cpu_sequential_gibbs",
+    "dac_bits": 6,
+    "kl_to_cpu_gibbs": 0.000412165565,
+    "l1_to_cpu_gibbs": 0.027003536186,
+    "reuse_factor": 4
+  },
+  "status": "complete",
+  "tiny_ising_case": {
+    "beta": 1.25,
+    "bias": [
+      0.1,
+      -0.05,
+      0.0,
+      0.08
+    ],
+    "field_clip": 2.0,
+    "j_matrix": [
+      [
+        0.0,
+        0.75,
+        -0.35,
+        0.2
+      ],
+      [
+        0.75,
+        0.0,
+        0.45,
+        -0.25
+      ],
+      [
+        -0.35,
+        0.45,
+        0.0,
+        0.55
+      ],
+      [
+        0.2,
+        -0.25,
+        0.55,
+        0.0
+      ]
+    ],
+    "n_spins": 4,
+    "name": "n4_signed_ring_chord"
+  },
+  "vivado_required_for_next_step": true
+}
