@@ -1,0 +1,24 @@
+{
+  "experiment": 1343,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-05-05",
+  "started_at": "2026-05-05T09:33:19.035544+00:00",
+  "finished_at": "2026-05-05T09:33:19.035544+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Margin-Aware BEAVER/Cactus Scheduler - Gated on Semantic Validator Pass",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp1342-chopchop-nsvif-semantic-validator-gated.validator_execution_pass_rate (upstream artifact not found for task id 'exp1342-chopchop-nsvif-semantic-validator-gated')",
+  "gates_evaluated": [
+    {
+      "upstream": "exp1342-chopchop-nsvif-semantic-validator-gated",
+      "artifact_field": "validator_execution_pass_rate",
+      "op": ">=",
+      "expected": 0.5,
+      "actual": null,
+      "passed": false,
+      "reason": "upstream artifact not found for task id 'exp1342-chopchop-nsvif-semantic-validator-gated'"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}

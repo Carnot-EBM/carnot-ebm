@@ -1,0 +1,74 @@
+{
+  "artifact_metadata": {
+    "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "run_date": "20260505",
+    "spec": "REQ-INFRA-1337"
+  },
+  "disk_free_gb": 797.278,
+  "disk_quota_gate": {
+    "min_disk_free_gb": 5.0,
+    "min_inode_free_pct": 5.0
+  },
+  "disk_quota_ok": true,
+  "environment_ready": true,
+  "focused_pretest": {
+    "command": [
+      ".venv/bin/pytest",
+      "tests/python/test_conductor_pretest_cache.py",
+      "-q",
+      "--no-cov"
+    ],
+    "missing_path": null,
+    "output_excerpt": "============================= test session starts ==============================\nplatform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0\nrootdir: /home/ianblenke/github.com/ianblenke/carnot\nconfigfile: pyproject.toml\nplugins: xdist-3.8.0, cov-7.1.0, anyio-4.13.0, hypothesis-6.152.3\ncreated: 4/4 workers\n4 workers [11 items]\n\n...........                                                              [100%]\n============================== 11 passed in 2.15s ==============================",
+    "repeated_signature_active": false,
+    "returncode": 0,
+    "status": "passed"
+  },
+  "focused_pretest_status": "passed",
+  "honest_verdict": "environment_ready_stale_103_artifacts_classified",
+  "inode_free_pct": 97.425,
+  "recommended_task_pruning": [],
+  "repeated_pretest_signature": {
+    "disk_quota_occurrences": 5,
+    "disk_quota_signature": "Codex CLI error: [Errno 122] Disk quota exceeded",
+    "focused_pretest_signature_active": false,
+    "pretest_signature": "Pre-tests failing, self-heal failed: 1 failed, 86 passed, 1 warning",
+    "pretest_signature_occurrences": 21
+  },
+  "roadmap_health": {
+    "prior_failures": {
+      "actionable_failures": [
+        "[SCHEMA ERRORS] research-roadmap-next.yaml",
+        "ERROR: File not found: research-roadmap-next.yaml",
+        "Total violations: 1"
+      ],
+      "command": [
+        "python3",
+        "scripts/validate_prior_failures.py",
+        "research-roadmap-next.yaml"
+      ],
+      "missing_path": null,
+      "output_excerpt": "[SCHEMA ERRORS] research-roadmap-next.yaml\n  ERROR: File not found: research-roadmap-next.yaml\n\nTotal violations: 1",
+      "returncode": 1,
+      "status": "failed"
+    },
+    "roadmap_gates": {
+      "actionable_failures": [],
+      "command": [
+        "python3",
+        "scripts/audit_roadmap_gates.py",
+        "research-roadmap-next.yaml"
+      ],
+      "missing_path": null,
+      "output_excerpt": "{\n  \"audit_script_written\": true,\n  \"failure_details\": [],\n  \"honest_verdict\": \"all_checks_pass\",\n  \"n_gate_field_cross_ref_failures\": 0,\n  \"n_gate_upstream_checks\": 10,\n  \"n_gate_upstream_failures\": 0,\n  \"n_model_agent_coherence_failures\": 0,\n  \"n_prior_failures_checks\": 14,\n  \"n_prior_failures_missing\": 0,\n  \"n_tasks_audited\": 14,\n  \"roadmap_gate_audit_passed\": true,\n  \"roadmap_path_note\": \"requested next roadmap missing; audited active research-roadmap.yaml\",\n  \"roadmap_path_used\": \"/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml\"\n}",
+      "returncode": 0,
+      "status": "passed"
+    }
+  },
+  "stale_artifact_paths": [
+    "results/experiment_1325_triggered_certificate_extraction_v5_runtime_fixed_dccd_gbnf.json"
+  ],
+  "stale_artifacts_classified": true,
+  "stale_skeleton_count": 1,
+  "status": "complete"
+}

@@ -1,0 +1,73 @@
+{
+  "artifact": "experiment_1338_exp1325_skeleton_and_gate_state_finalizer",
+  "artifact_metadata": {
+    "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "run_date": "20260505",
+    "source_experiments": [
+      "1324",
+      "1325",
+      "1327",
+      "operational_retro_2026_04_103"
+    ]
+  },
+  "certificate_recovery_ready": true,
+  "downstream_tasks_to_keep_closed": [
+    {
+      "category": "semantic_validator",
+      "reason": "requires a fresh .104 certificate parse gate at or above threshold",
+      "task_id": "exp1326-satir-nsvif-semantic-validator-gated-on-parse-ge-075"
+    },
+    {
+      "category": "safe_prefix",
+      "reason": "requires semantic validator completion before safe-prefix acceptance",
+      "task_id": "exp1327-beaver-lite-cactus-safe-prefix-gated-on-validator-pass"
+    },
+    {
+      "category": "dvi_certificate_tail",
+      "reason": "requires parse gate and semantic validation before online certificate-tail learning",
+      "task_id": "exp1329-dvi-certificate-tail-online-update-v2-gated-on-parse-and-nonforgetting"
+    },
+    {
+      "category": "grpo_vprm",
+      "reason": "requires DVI certificate-tail evidence before GRPO/VPRM audit",
+      "task_id": "exp1330-grpo-vprm-v12-micro-audit-gated-on-dvi-lossless"
+    }
+  ],
+  "evidence_summary": {
+    "disk_quota_failures": 9,
+    "exp1327_gate_blocked": true,
+    "gate_block_rows": 113,
+    "retro_mentions_disk_quota": true
+  },
+  "exp1325_terminal_classification": "stale_skeleton_environment_failure",
+  "honest_verdict": "exp1325_stale_environment_failure_gates_closed_recovery_ready",
+  "minimum_parseable_attempts_to_recover": 6,
+  "parse_gate_threshold": 0.75,
+  "required_method_changes": [
+    "trigger-before-constrain generation",
+    "dynamic grammar dispatch",
+    "semantic validation branch"
+  ],
+  "rerun_is_materially_different": true,
+  "run_date": "20260505",
+  "schema_version": 1,
+  "source_artifact_hashes": {
+    "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1324_certificate_failure_taxonomy_formalizer_reality_check.json": "9c2f06fc2f0a7b8cb03c569b6d676f52ba8fd9e6e3042fcdf92436513df5a1a0",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1325_triggered_certificate_extraction_v5_runtime_fixed_dccd_gbnf.json": "4c1cf8a65134ecbc5e7c6d7982b2000b6921d8ba3c64da1fd7d1b8654e498fae",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1327_beaver_lite_cactus_safe_prefix_gated_on_validator_pass.json": "0ab868120d0050137f51a74766e195cec127f9ca422dc56f6b0868510fd841e9",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/operational_retro_2026_04_103.json": "0c6a6dc47f83c1c4c21d4628339a4ba13ad3bb91c3d62ea3404d3c130c235ada"
+  },
+  "source_constraints": {
+    "exp1324_parse_recovery_recommendation": "Apply parser repair plus runtime settings and prompt schema cleanup before exp1325; recover at least 6 of 40 parser/schema failures while preserving DCCD compact encoding behind a hardcoded-solution leakage guard.",
+    "exp1325_has_substantive_certificate_metrics": false,
+    "exp1327_gate_check_summary": "1 of 1 gate(s) failed; first failure: exp1326-satir-nsvif-semantic-validator-gated-on-parse-ge-075.validator_execution_pass_rate (upstream artifact not found for task id 'exp1326-satir-nsvif-semantic-validator-gated-on-parse-ge-075')"
+  },
+  "source_statuses": {
+    "exp1324": "complete",
+    "exp1325": "in_progress",
+    "exp1327": "blocked",
+    "retro_2026_04_103": "success"
+  },
+  "stale_artifacts_not_modified": true,
+  "status": "complete"
+}

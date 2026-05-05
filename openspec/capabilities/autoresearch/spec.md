@@ -2420,6 +2420,7 @@ Spec: SCENARIO-LEARN-144
 | REQ-LEARN-095 | N/A | Implemented | Python (test_experiment_799_jepa_v21_retrain.py) |
 | REQ-LEARN-096 | N/A | Implemented | Python (test_experiment_799_jepa_v21_retrain.py) |
 | REQ-LEARN-097 | N/A | Implemented | Python (test_experiment_799_jepa_v21_retrain.py) |
+| REQ-INFRA-1337 | N/A | Implemented | Python (test_environment_gate.py) |
 
 ## REQ-LEARN-052
 
@@ -3146,3 +3147,39 @@ Given a planned roadmap with missing prior-failure metadata or a gate that
 references an artifact field absent from its upstream prompt, the Exp 1296
 artifact sets the relevant audit booleans false, reports the failure counts, and
 adds `activation_blockers` entries naming the affected task id and field.
+
+## REQ-INFRA-1337: Environment Gate Disk, Pre-Test, Stale Skeleton, and Roadmap Audit Artifact
+
+**REQ-INFRA-1337**: The Exp 1337 environment gate runner MUST write
+`results/experiment_1337_environment_gate_disk_pretest_stale_skeleton_audit.json`
+without deleting local files, modifying `.103` result artifacts, changing
+`research-roadmap.yaml`, or editing `scripts/research_conductor.py`. The runner
+MUST:
+
+1. Write an in-progress artifact before collecting measurements.
+2. Record filesystem free gigabytes and inode-free percentage for the project
+   root, and set `disk_quota_ok` from a deterministic minimum-free-space gate.
+3. Extract the .103 disk-quota and repeated pre-test signatures from the
+   conductor log and operational retrospective instead of inventing a new
+   failure description.
+4. Classify .103 result artifacts whose JSON status is `in_progress` or whose
+   contents are bootstrap-only skeletons as `stale_artifact_paths`, with
+   `stale_skeleton_count` matching that list length.
+5. Run the focused pre-test only when its command target exists; otherwise write
+   `focused_pretest_status="not_available"` with the missing path.
+6. Run the prior-failures validator and roadmap-gate auditor when available and
+   summarize actionable failures without modifying the roadmap.
+7. Set `environment_ready` true only when the disk gate passes, no repeated
+   focused pre-test signature is active, and stale artifacts have been
+   explicitly classified rather than silently reused.
+8. Finish with all required Exp 1337 fields, `status="complete"`, and an
+   `honest_verdict` that states whether .104 scientific work may proceed.
+
+### SCENARIO-INFRA-1337: Environment Gate Blocks Reuse of Stale .103 Skeletons
+
+Given .103 artifacts include an `in_progress` or bootstrap-only JSON artifact and
+the focused pre-test is unavailable, the Exp 1337 gate artifact lists the stale
+path, records `focused_pretest_status="not_available"`, sets
+`environment_ready=false` when the disk gate or pre-test signature remains
+unsafe, and recommends pruning blocked .104 work until the environment gate is
+fixed.
