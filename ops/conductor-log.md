@@ -928,3 +928,4 @@ web search: GitHub trending energy based mod |
 | 2026-05-05 17:03 UTC | FOVER-Aligned LogicSkills Skill Audit — Certificat | OK | 81 passed, 1 warning in 3.98s |
 | 2026-05-05 17:13 UTC | Semantic Validator v2 — NSVIF Z3 Constraints + Par | OK | 81 passed, 1 warning in 5.06s |
 | 2026-05-05 17:24 UTC | VERGE MCS Repair Localization v2 — Gated on Semant | OK | 81 passed, 1 warning in 4.35s |
+| 2026-05-05 17:34 UTC | Margin-Aware Cactus/BEAVER Scheduler v3 — Gated on | OK | 81 passed, 1 warning in 4.56s |
