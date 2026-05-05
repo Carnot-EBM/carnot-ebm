@@ -788,3 +788,5 @@ web search: GitHub trending energy based mod |
 | 2026-05-05 04:40 UTC | ConstrainPrompt/NSVIF Semantic Validator + MUS Rep | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1312-triggered-certificate-extraction-d |
 | 2026-05-05 04:42 UTC | ConstrainPrompt/NSVIF Semantic Validator + MUS Rep | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1312-triggered-certificate-extraction-d |
 | 2026-05-05 04:44 UTC | BEAVER-lite + Cactus/HoVer Safe-Prefix Acceptance | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1313-constrainprompt-nsvif-semantic-valid |
+| 2026-05-05 04:56 UTC | Continuous Self-Learning: CerCE Non-Forgetting Aud | OK | 81 passed, 1 warning in 5.74s |
+| 2026-05-05 04:58 UTC | BEAVER-lite + Cactus/HoVer Safe-Prefix Acceptance | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1313-constrainprompt-nsvif-semantic-valid |
