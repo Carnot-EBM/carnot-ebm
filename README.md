@@ -17,23 +17,25 @@ call. No fine-tuning. No access to model weights.
 
 Rust + Python/JAX, Apache 2.0, `pip install carnot`.
 
-Current public research record: **1,308 experiments tracked, 110 completed
-milestones archived**, with checked-in result artifacts through Exp 1308 on
-2026-05-05. `research-complete.yaml` is archived through milestone 2026.04.100;
-Exp 1308 records milestone .101 at **8/13 criteria met**. Latest .101 artifacts
-show activation hygiene passed with **13/13** prior-failure checks and **0**
-missing entries (Exp 1296), SOTA GGUF cache readiness is still false because
-`unsloth/gemma-4-26B-A4B-it-GGUF` is missing (Exp 1297), skill-graph promotion
-wrote **7** sandboxed candidates with **5** promotions, **1** demotion, and
-**1** expiry (Exp 1302), QueryBandits/NGC memory policy improved reward from
-**-0.714286 -> 0.882143** with self-learning delta **+1.596429** (Exp 1303),
-and the HardNet++/DSP stop policy reached **1.0** replay precision while
-remaining an operator gate, not a learned general stop rule (Exp 1305). SOTA
-answer-stability, triggered certificates, semantic routing, safe-prefix Cactus,
-and GRPO/VPRM headline learning stayed gated by the missing SOTA cache and
-certificate parse-rate path. The current 2026-05-05 Python test
-collection-only snapshot reports **21,773** items; that is a collection count
-with three known import errors, not a full-suite pass claim.
+Current public research record: **1,322 experiments tracked, 112
+artifact-backed completed milestones**, with checked-in result artifacts
+through Exp 1322 on 2026-05-05. `research-complete.yaml` currently archives
+**111** completed milestones through 2026.04.101; Exp 1322 records milestone
+.102 at **11/14 criteria met**. Latest .102 artifacts show the local SOTA GGUF
+runtime recovered: two headline GGUF models are cached and loaded through
+llama.cpp (Qwen3.6-35B-A3B and Gemma4-31B-it; Exps 1309/1310), the
+ConstraintBench/SATQuest stability audit reached **0.90** answer stability over
+**40** responses with PySAT verification **0.525** and meaningful disagreement
+**0.0** (Exp 1311), triggered certificates reached parse rate **0.71223** and
+truthfulness **0.69697** (Exp 1312), and the parse-rate miss below the **0.75**
+gate kept semantic validators, safe-prefix Cactus, and DVI certificate-tail
+updates gated. Continuous self-learning still advanced: CerCE preserved
+non-forgetting at **1.0** with delta **+1.596429** (Exp 1315), and the
+GRPO/VPRM v11 replay audit moved policy score **0.525 -> 0.725** and token-mask
+score to **0.975** without claiming a large GRPO training run (Exp 1317). The
+current 2026-05-05 Python test collection-only snapshot reports **21,867**
+items; that is a collection count with three known import errors, not a
+full-suite pass claim.
 
 ## Install and run
 
@@ -214,7 +216,14 @@ experiment artifact under `results/`.
 | Milestone .99 operational closeout | **10 min** for 2 closeout items, **5 min** average; both RTX 3090s idle at 4 MB / 0% with no zombie processes; pre-flight checks were seconds-scale; **30%** savings target via DualGPU-aware lanes, cached TeX/pre-flight state, immediate gate-block artifacts, and idempotent docs reconciliation | operational_retro_2026_04_99 |
 | Milestone .100 status | **5/14 criteria met**; grammar backend selection, DVI replay, HardNet++ nonlinear repair, DSP diagnostics, and retro completed. SOTA certificate work, skill promotion, energy bridge, and arXiv receipt remained blocked, gated, or missing | Exps 1282-1295 |
 | Milestone .101 status | **8/13 criteria met**; activation audit, cache preflight, skill graph, online memory policy, stop policy, bridge audit, arXiv hold receipt, and retro completed. SOTA certificates and downstream headline learning remain gated | Exps 1296-1308 |
-| Current Python test collection | **21,773** Python test items collected on 2026-05-05; collection-only snapshot with three known import errors, not a full-suite pass claim | docs/test snapshot |
+| SOTA GGUF runtime recovery | Two headline local GGUF models resolved and loaded through llama.cpp: Qwen3.6-35B-A3B on GPU0 and Gemma4-31B-it on GPU1; optional Gemma4-26B-A4B remains absent, but the headline pair is ready | Exps 1309/1310 |
+| ConstraintBench/SATQuest SOTA stability | **0.90** answer stability across **40** live llama.cpp responses, PySAT verification **0.525**, cross-model disagreement **0.80**, meaningful disagreement **0.0** | Exp 1311 |
+| Triggered certificates with DCCD/GBNF | Overall parse rate **0.71223** and truthfulness **0.69697** over **139** attempts; raw trigger parsed **0/40**, GBNF parsed **40/40** with **21/40** truthful, DCCD parsed **40/40** with **29/40** truthful, repaired certificates were **19/19** truthful; below the 0.75 downstream gate | Exp 1312 |
+| CerCE + GRPO/VPRM v11 replay self-learning | CerCE non-forgetting **1.0** and self-learning delta **+1.596429**; GRPO/VPRM replay score **0.525 -> 0.725** and verifier-feedback token-mask score **0.975**; no large GRPO training job or new model generation was run | Exps 1315/1317 |
+| HardNet++/DSP learned stop policy | Held-out replay split reached stop precision **1.0** and recall **1.0** over **36** cases; DSP feasibility AUROC **0.640625**; learned policy matched the conservative replay policy, so this is not yet a broad general stop rule | Exp 1318 |
+| KAN + p-bit portability audits | KAN audit records **192** BOP, **75** NABS, **24** RM, and a **6,144-byte** LUT table with FPGA as the near-term target; p-bit packet reaches KL **0.000412** to CPU Gibbs at 6-bit DAC/reuse=4 with dual-BRAM mapping ready; no FPGA/NPU/analog hardware execution claimed | Exps 1319/1320 |
+| Milestone .102 status | **11/14 criteria met**; SOTA runtime recovered and certificate extraction measured, but certificate parse rate **0.71223 < 0.75** gated semantic validators, safe-prefix Cactus, and DVI certificate-tail updates; publication remains under operator hold | Exps 1309-1322 |
+| Current Python test collection | **21,867** Python test items collected on 2026-05-05; collection-only snapshot with three known import errors, not a full-suite pass claim | docs/test snapshot |
 | Local Claude/Codex usage snapshot | Codex reads the newest local `token_count` event; Claude aggregates local token usage and reads only subscription/tier metadata from credentials; free-form quota prose is ignored instead of guessed; focused regression tests pass | 2026-05-04 changelog |
 
 Deeper analysis of these — including everything that **didn't** work and
@@ -255,7 +264,7 @@ claim we publish.
 ## Where to go next
 
 - **[Technical report](docs/technical-report.md)** — the full research arc
-  through Exp 1308 across 110 archived completed milestones, with a
+  through Exp 1322 across 112 artifact-backed completed milestones, with a
   plain-English timeline of what we tried, what failed, what stuck.
 - **[Roadmap](docs/roadmap.md)** — current milestone, upcoming milestones,
   hardware track, and Phase 3 (Kona-parity foundation-model) direction.
@@ -459,7 +468,7 @@ See the [technical report](docs/technical-report.md) for the full research recor
 
 ## 14 Principles Learned
 
-Hard-won lessons from the activation-based phase of a research program that now spans Exp 1-1308 across 110 archived milestones and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
+Hard-won lessons from the activation-based phase of a research program that now spans Exp 1-1322 across 112 artifact-backed milestones and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
 
 ### What works
 1. **The model's own logprobs are the best energy.** No external EBM needed for rejection sampling — the LLM's own confidence is already an energy function. Simple, practical, +10%.
