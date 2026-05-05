@@ -548,6 +548,49 @@ AND Exp 1374 reports `headline_result_allowed == true`,
 AND `publication_hold_state == "lift_recommended"`
 AND `external_dependency_claim_allowed == false`.
 
+### REQ-PUBLISH-018: Audited arXiv Bundle v11 Submission Artifact
+
+The Exp 1380 arXiv bundle-v11 runner MUST create
+`results/experiment_1380_arxiv_bundle_v11_submission.json` with
+`status == "in_progress"` before loading Exp 1379 or attempting any compile,
+packaging, or submission command. It MUST read
+`results/experiment_1379_paper_integrity_audit_v2.json` and refuse to compile
+or bundle when `arxiv_submission_ready != true`.
+
+When the Exp 1379 gate passes, the runner MUST find the audited paper file,
+compile the LaTeX source with available local TeX tooling, package only the
+active arXiv source files into `results/arxiv_bundle_v11.tar.gz`, and omit
+unused or placeholder figures from the source archive. It MUST attempt
+submission only when a local non-interactive arXiv upload command is available;
+otherwise it MUST record manual submission steps and leave
+`submission_attempted == false`.
+
+The artifact MUST include:
+
+- `status`
+- `paper_file_found`
+- `latex_compile_success`
+- `bundle_file_path`
+- `bundle_size_bytes`
+- `figures_included`
+- `submission_attempted`
+- `submission_result`
+- `arxiv_id_if_submitted`
+- `remaining_blocker`
+- `honest_verdict`
+
+### SCENARIO-PUBLISH-019: Exp 1380 Produces a Submission-Ready Archive After Exp 1379
+
+**Given** Exp 1379 records `arxiv_submission_ready == true`
+AND `paper_file_path` points to an existing `main.tex`
+AND local TeX tooling compiles the paper without errors
+**When** the Exp 1380 bundle-v11 runner executes
+**Then** it writes `results/arxiv_bundle_v11.tar.gz`
+AND the bundle contains `main.tex`, `carnot.bib`, and every active figure
+referenced by the paper except unused placeholder figures
+AND the deliverable records `latex_compile_success == true`,
+`bundle_size_bytes > 0`, submission status, and a complete honest verdict.
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -569,3 +612,4 @@ AND `external_dependency_claim_allowed == false`.
 | REQ-PUBLISH-015 | Proposed | Exp 1307 arXiv v10 hold/receipt terminal artifact |
 | REQ-PUBLISH-016 | Proposed | Exp 1321 publication-hold related-work delta artifact |
 | REQ-PUBLISH-017 | Implemented | Exp 1378 publication-hold v16 claim-boundary review |
+| REQ-PUBLISH-018 | Implemented | Exp 1380 audited arXiv bundle v11 submission artifact |
