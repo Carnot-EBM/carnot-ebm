@@ -947,3 +947,4 @@ web search: GitHub trending energy based mod |
 | 2026-05-05 19:33 UTC | Publication Hold v16 + Claim Boundary — Full .106  | OK | 81 passed, 1 warning in 4.90s |
 | 2026-05-05 19:45 UTC | Paper Integrity Audit v2 — .106 Results Integratio | OK | cache hit: 81 passed, 1 warning in 4.90s |
 | 2026-05-05 19:57 UTC | arXiv Bundle v11 + Submission (Gated on Audit Read | OK | 81 passed, 1 warning in 4.39s |
+| 2026-05-05 20:10 UTC | DVI Discriminative Verifier Training v1 — First Ac | OK | 81 passed, 1 warning in 4.50s |
