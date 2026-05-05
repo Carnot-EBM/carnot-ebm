@@ -1,0 +1,135 @@
+{
+  "accepted_violation_delta": -0.846154,
+  "artifact_metadata": {
+    "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "run_date": "20260505"
+  },
+  "demoted_memory_count": 39,
+  "dvi_ready": true,
+  "experiment": "1358_continuous_self_learning_verifier_selected_memory",
+  "fresh_verified_sample_count": 0,
+  "fresh_verified_samples": [],
+  "headline_result_allowed": false,
+  "honest_verdict": "verifier_selected_memory_replay_only_dvi_ready_non_headline",
+  "input_resolution": {
+    "exp1344": {
+      "requested": "results/experiment_1344_failure_type_memory_policy_self_learning.json",
+      "used": "results/experiment_1344_continuous_self_learning_failure_type_memory_policy.json"
+    },
+    "exp1353": {
+      "requested": "results/experiment_1353_triggered_certificate_v7_truncproof_sota.json",
+      "used": "results/experiment_1353_triggered_certificate_v7_truncproof_sota.json"
+    },
+    "exp1355": {
+      "requested": "results/experiment_1355_logitext_nsvif_partial_smt_validator.json",
+      "used": "results/experiment_1355_logitext_nsvif_partial_smt_validator.json"
+    }
+  },
+  "inputs_unavailable": [
+    "results/experiment_1344_failure_type_memory_policy_self_learning.json"
+  ],
+  "measurement_note": "Fresh verifier-selected samples are required for headline claims. When none pass verifier acceptance, Exp 1344 replay evidence is used only as a non-headline fallback baseline.",
+  "memory_regression_count": 0,
+  "memory_updates": {
+    "demoted": [
+      "replay:possible_hardcoded_solution_leakage",
+      "replay:unknown_state_mishandling"
+    ],
+    "demoted_memory_count": 39,
+    "held_for_fresh_verifier": [
+      "replay:parser_schema_mismatch",
+      "replay:solver_disagreement",
+      "replay:undergeneration"
+    ],
+    "promoted": [
+      "replay:semantic_invalidity"
+    ],
+    "promoted_memory_count": 30,
+    "quarantined": [
+      "replay:unknown_state_mishandling"
+    ],
+    "quarantined_memory_count": 4
+  },
+  "nonforgetting_certificate_rate": 1.0,
+  "promoted_memory_count": 30,
+  "quarantined_memory_count": 4,
+  "replay_cases_used": 282,
+  "run_date": "20260505",
+  "schema": "continuous_self_learning_verifier_selected_memory_v1",
+  "self_learning_delta_overall": 1.596429,
+  "source_artifacts": [
+    "results/experiment_1344_continuous_self_learning_failure_type_memory_policy.json",
+    "results/experiment_1353_triggered_certificate_v7_truncproof_sota.json",
+    "results/experiment_1355_logitext_nsvif_partial_smt_validator.json"
+  ],
+  "source_honest_verdicts": {
+    "exp1344": "failure_type_memory_policy_dvi_ready_replay_non_headline",
+    "exp1353": "sota_triggered_certificate_v7_measured",
+    "exp1355": "blocked_gate_check_failed"
+  },
+  "status": "complete",
+  "update_is_replay_only": true,
+  "variant_question_count": 6,
+  "variant_questions": [
+    {
+      "case_id": "parser_schema_mismatch",
+      "memory_action": "request_fresh_verifier",
+      "question": "Replay parser_schema_mismatch: grammar branch: recover at least 6 additional parseable attempts before reopening the parse gate",
+      "semantic_rejected": false,
+      "source": "exp1344_replay",
+      "support": 40,
+      "variant_id": "replay:parser_schema_mismatch",
+      "verifier_accepted": false
+    },
+    {
+      "case_id": "possible_hardcoded_solution_leakage",
+      "memory_action": "demote",
+      "question": "Replay possible_hardcoded_solution_leakage: prompt retrieval: separate source facts from verifier labels before formalizer evaluation",
+      "semantic_rejected": true,
+      "source": "exp1344_replay",
+      "support": 35,
+      "variant_id": "replay:possible_hardcoded_solution_leakage",
+      "verifier_accepted": false
+    },
+    {
+      "case_id": "semantic_invalidity",
+      "memory_action": "promote",
+      "question": "Replay semantic_invalidity: semantic validator: run solver-backed validation after parsing",
+      "semantic_rejected": false,
+      "source": "exp1344_replay",
+      "support": 30,
+      "variant_id": "replay:semantic_invalidity",
+      "verifier_accepted": true
+    },
+    {
+      "case_id": "solver_disagreement",
+      "memory_action": "request_fresh_verifier",
+      "question": "Replay solver_disagreement: semantic validator: compare solver answer, certificate label, and verifier label as separate columns",
+      "semantic_rejected": false,
+      "source": "exp1344_replay",
+      "support": 19,
+      "variant_id": "replay:solver_disagreement",
+      "verifier_accepted": false
+    },
+    {
+      "case_id": "undergeneration",
+      "memory_action": "request_fresh_verifier",
+      "question": "Replay undergeneration: prompt retrieval: inject the certificate schema before generation",
+      "semantic_rejected": false,
+      "source": "exp1344_replay",
+      "support": 25,
+      "variant_id": "replay:undergeneration",
+      "verifier_accepted": false
+    },
+    {
+      "case_id": "unknown_state_mishandling",
+      "memory_action": "quarantine",
+      "question": "Replay unknown_state_mishandling: UNKNOWN-preserving fallback: keep UNKNOWN and ABSTAIN as first-class labels",
+      "semantic_rejected": true,
+      "source": "exp1344_replay",
+      "support": 4,
+      "variant_id": "replay:unknown_state_mishandling",
+      "verifier_accepted": false
+    }
+  ]
+}

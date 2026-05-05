@@ -2963,3 +2963,73 @@ certificate cases are present.
 | Requirement | Python | Tests |
 |-------------|--------|-------|
 | REQ-LEARN-1344 | Implemented (`python/carnot/reporting/continuous_self_learning_failure_type_memory_policy.py`) | Implemented (`tests/python/test_continuous_self_learning_failure_type_memory_policy.py`) |
+
+## REQ-LEARN-1358: Verifier-Selected Continuous Self-Learning Memory Update
+
+Exp 1358 SHALL run the mandatory continuous self-learning memory update with
+fresh verifier-selected evidence when available and Exp 1344 replay evidence as
+the fallback baseline when fresh accepted cases are absent. Replay-only evidence
+MAY preserve DVI readiness, but it MUST remain non-headline until at least one
+fresh verified Exp 1353 certificate case or Exp 1355 semantic-validator case is
+accepted by the verifier.
+
+### REQ-LEARN-1358 Sub-requirements
+
+- REQ-LEARN-1358-1: The workflow SHALL write
+  `results/experiment_1358_continuous_self_learning_verifier_selected_memory.json`
+  first with `status="in_progress"` and run-date artifact metadata before
+  loading source artifacts.
+- REQ-LEARN-1358-2: The workflow SHALL load Exp 1344 as the replay fallback
+  baseline and SHALL record the exact replay artifact path used, including the
+  documented filename fallback when the requested alias is absent.
+- REQ-LEARN-1358-3: The workflow SHALL inspect terminal Exp 1353 certificate
+  rows and Exp 1355 semantic-validator rows for verifier-accepted fresh samples;
+  blocked, unparseable, untruthful, or semantic-rejected rows SHALL NOT count as
+  fresh verified samples.
+- REQ-LEARN-1358-4: The workflow SHALL build a small deterministic variant
+  question set from fresh verified samples when present, otherwise from replay
+  failure-type policy rows, and SHALL apply the local memory update path to
+  those variants.
+- REQ-LEARN-1358-5: Memory SHALL be promoted only for verifier-accepted variants.
+  Variants marked semantic-rejected SHALL be demoted or quarantined and SHALL
+  not contribute to promoted memory counts.
+- REQ-LEARN-1358-6: The final artifact SHALL compute and report `status`,
+  `replay_cases_used`, `fresh_verified_sample_count`, `variant_question_count`,
+  `self_learning_delta_overall`, `nonforgetting_certificate_rate`,
+  `memory_regression_count`, `accepted_violation_delta`,
+  `promoted_memory_count`, `demoted_memory_count`, `dvi_ready`,
+  `headline_result_allowed`, and `honest_verdict`.
+- REQ-LEARN-1358-7: `dvi_ready` SHALL be true only when
+  `self_learning_delta_overall` is positive and both non-forgetting and
+  accepted-violation controls do not regress. `headline_result_allowed` SHALL
+  be true only when `fresh_verified_sample_count > 0` and the update is not
+  replay-only.
+
+### SCENARIO-LEARN-1358: Replay Fallback Remains Non-Headline Without Fresh Verified Samples
+
+**Given** Exp 1344 replay evidence is available
+**And** Exp 1353 has no parseable truthful certificate rows
+**And** Exp 1355 is blocked before semantic validation
+**When** Exp 1358 runs with run date `20260505`
+**Then** the final artifact has `status="complete"`
+**And** it reports `fresh_verified_sample_count=0`
+**And** it uses replay variants to exercise the local memory update path
+**And** positive replay DVI evidence may set `dvi_ready=true`
+**But** `headline_result_allowed=false` and `honest_verdict` names the result
+as replay-only/non-headline.
+
+### SCENARIO-LEARN-1358: Fresh Verifier-Accepted Samples Permit Headline Eligibility
+
+**Given** at least one terminal fresh Exp 1353 or Exp 1355 row is verifier
+accepted and not semantic-rejected
+**When** Exp 1358 builds variants and applies the memory update path
+**Then** accepted variants are promoted
+**And** semantic-rejected variants are demoted or quarantined
+**And** `headline_result_allowed=true` only when DVI controls pass and
+`fresh_verified_sample_count > 0`.
+
+## Implementation Status (REQ-LEARN-1358)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-1358 | Implemented (`python/carnot/reporting/continuous_self_learning_verifier_selected_memory.py`) | Implemented (`tests/python/test_continuous_self_learning_verifier_selected_memory.py`) |
