@@ -4,6 +4,178 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-05-05 Post-.107 Planning Sweep (Milestone 2026.04.108)
+
+This sweep was run after milestone `.107` completed with 13 of 14 criteria met.
+Key breakthroughs: `exp1379` cleared all 5 critical paper integrity issues
+(`critical_issues_after_audit=0`, `arxiv_submission_ready=true`); `exp1382`
+ran the full certificate + semantic repair pipeline at 100 FoVer cases
+(`certificate_parse_rate=1.0`, but `semantic_validation_pass_rate=0.59` and
+`full_pipeline_pass_rate=0.29` — too low for publication); `exp1383` GRPO v7
+measured `grpo_v7_improvement_pp=0.0` with `formal_reward_pass_rate=0.0`
+(all rollouts UNKNOWN, ResZero → zero gradient); `exp1384` EBM-CoT showed
+`calibration_auroc_delta=0.185` (strong positive signal, consistency
+regularization worsened paraphrase variance — hinge-only may be better);
+`exp1388` FR-11 v4 achieved `fresh_verified_sample_count=59`, headline DVI
+only. The `.108` milestone addresses: (1) arXiv submission (bundle ready at
+results/arxiv_bundle_v11.tar.gz, SWORD API path); (2) GRPO v8 with NGRPO
+advantage calibration to fix zero-reward collapse; (3) full-scale pipeline
+quality (semantic pass rate 0.59 → 0.75+ target); (4) DVI v2 with 59 fresh
+cases vs 4 in exp1381; (5) EBM-CoT v2 hinge-only (drop consistency term).
+
+### NGRPO: Negative-Enhanced Group Relative Policy Optimization
+- **Paper:** arXiv 2509.18851, "NGRPO: Negative-Enhanced Group Relative
+  Policy Optimization." September 2025.
+- **Source:** https://arxiv.org/abs/2509.18851
+- **What:** Addresses GRPO's critical failure mode: when all n rollouts
+  receive identical rewards (all correct or all incorrect), advantages
+  collapse to zero and the gradient vanishes. NGRPO introduces Advantage
+  Calibration — a virtual maximum-reward sample is hypothesized in the
+  group, altering the mean and variance so that homogeneous-failure groups
+  produce non-zero exploration gradients. Does not require access to labeled
+  data or special model behavior; the virtual sample is a mathematical device
+  in the advantage calculation.
+- **Relevance to Carnot:** `exp1383` GRPO v7 failed with
+  `formal_reward_pass_rate=0.0` because all rollouts were UNKNOWN (semantic
+  verifier could not confirm any candidate). This is precisely NGRPO's target
+  failure mode: homogeneous-zero reward. NGRPO's advantage calibration
+  converts the zero-gradient episode into an exploration signal rather than a
+  no-op. GRPO v8 should implement NGRPO Advantage Calibration and pre-check
+  that `formal_reward_pass_rate > 0` before running, falling back to NGRPO
+  when all rewards are zero.
+- **Concrete experiment:** GRPO v8 with NGRPO Advantage Calibration. Report
+  `ngrpo_advantage_calibration_active`, `virtual_sample_mean_shift`,
+  `formal_reward_pass_rate_after_ngrpo`, `grpo_v8_improvement_pp`.
+
+### BiPRM: Bidirectional Process Reward Model
+- **Paper:** arXiv 2508.01682, "The Bidirectional Process Reward Model."
+  August 2025.
+- **Source:** https://arxiv.org/abs/2508.01682
+- **What:** BiPRM integrates a parallel right-to-left (R2L) verification
+  stream alongside the standard left-to-right (L2R) reasoning stream. The
+  R2L stream treats subsequent steps as retrospective evidence for earlier
+  steps — if step i+1 follows naturally from step i, the R2L stream confirms
+  step i was correct. This enables the PRM to verify intermediate steps
+  using both forward context (what came before) and retrospective context
+  (what came after).
+- **Relevance to Carnot:** Carnot's current Tier 2.7 (CausalReasoningVerifier)
+  checks causal entailment across step boundaries in one direction. BiPRM's
+  retrospective stream is orthogonal and complementary: it would let Carnot
+  verify earlier steps by checking whether later steps are consistent with
+  them. On the FoVer corpus, this maps to: verify step i by asking "given
+  the subsequent reasoning, is step i plausibly correct?" This is a
+  lightweight probe that does not require re-running the LLM.
+- **Concrete experiment:** Apply BiPRM retrospective verification to FoVer
+  verified pairs. Report `retrospective_verification_recall`,
+  `biprm_auroc_delta_vs_unidir`, `biprm_step_error_localization_f1`.
+
+### Discrete Simulated Bifurcation on KV260 FPGA (256-variable)
+- **Paper:** arXiv 2510.12407, "High-Parallel FPGA-Based Discrete Simulated
+  Bifurcation for Large-Scale Optimization." October 2025.
+- **Source:** https://arxiv.org/abs/2510.12407
+- **What:** Proof-of-concept hardware implementation on AMD Kria KV260 SoM
+  solving 256-variable max-cut and knapsack problems. Logic resource
+  utilization is below 20% of available LUTs, but BRAM utilization exceeds
+  90% — meaning the bottleneck is on-chip memory, not compute logic. The
+  algorithm (discrete simulated bifurcation) maintains position and momentum
+  variables, clamped to {-1, +1} per step, converging in fewer steps than
+  Gibbs sampling.
+- **Relevance to Carnot:** Carnot's KV260 experiments (exp1387) showed that
+  15-replica 2D parallel tempering exceeds the LUT budget (540K vs 117K LUT).
+  Discrete SB uses <20% of LUTs but saturates BRAM — a different resource
+  profile that may fit within KV260 budget for 128-spin Carnot constraint
+  problems. The BRAM bottleneck at N=256 suggests N=128 should be feasible
+  without BRAM overflow. A CPU simulation of discrete SB on FoVer constraint
+  problems + KV260 BRAM estimate validates whether this is the right FPGA
+  algorithm for Carnot.
+- **Concrete experiment:** CPU simulation of discrete SB on FoVer N=128.
+  Estimate KV260 BRAM requirements. Report `discrete_sb_convergence_speedup`,
+  `estimated_kv260_bram_pct`, `lut_budget_feasible`, `hardware_claim_allowed=false`.
+
+### Restoring Sparsity in Potts Machines via Mean-Field Constraints
+- **Paper:** arXiv 2602.04200, "Restoring Sparsity in Potts Machines via
+  Mean-Field Constraints." February 2026.
+- **Source:** https://arxiv.org/abs/2602.04200
+- **What:** Demonstrates that dense Potts machine coupling matrices (typical
+  for constraint satisfaction problems) can be sparsified by solving a
+  mean-field equation: replace dense couplings with mean-field effective
+  fields where the effective field captures most of the information. The
+  FPGA implementation validates that constrained optimization problems recover
+  the parallelism and performance of sparse Ising machines when constraint-
+  induced density is removed.
+- **Relevance to Carnot:** Carnot's FoVer arithmetic constraints produce dense
+  coupling matrices. The Potts machine extension (exp 534, research-hardware-
+  wishlist.md) uses q=3 states for partial-credit scoring. Mean-field
+  sparsification from this paper enables the q=3 RTL to stay within KV260
+  budget. Combined with the discrete SB algorithm above, this provides a
+  complete FPGA implementation path: (1) mean-field sparse the Potts coupling
+  matrix, (2) run discrete SB on the sparse Potts machine.
+- **No separate experiment needed:** informs exp1399 (discrete SB KV260) and
+  the future Potts Machine RTL extension.
+
+### ERPO: Token-Level Entropy-Regulated Policy Optimization
+- **Paper:** arXiv 2603.28204, "ERPO: Token-Level Entropy-Regulated Policy
+  Optimization for Large Reasoning Models." March 2026.
+- **Source:** https://arxiv.org/abs/2603.28204
+- **What:** Adds a per-token entropy regularization term to GRPO's advantage
+  calculation. Tokens that are over-confident (near-deterministic distribution)
+  receive reduced gradients; tokens that are uncertain receive amplified
+  gradients. This prevents policy collapse (entropy→0) while maintaining
+  learning signal on uncertain tokens. Achieves 4-8% improvement over GRPO
+  on math reasoning benchmarks.
+- **Relevance to Carnot:** GRPO v7 produced `formal_reward_pass_rate=0.0`
+  (all-UNKNOWN rollouts). ERPO's entropy term would not directly fix the
+  all-UNKNOWN problem (it requires some non-zero rewards to work), but it
+  complements NGRPO: once NGRPO provides non-zero advantages for the
+  homogeneous-failure case, ERPO's per-token entropy regulation prevents
+  the subsequent training from collapsing to a narrow mode. GRPO v8 could
+  combine NGRPO + ERPO for maximum stability.
+- **Concrete experiment:** If GRPO v8 produces non-zero rewards with NGRPO,
+  add ERPO entropy term in v8.1. Report `entropy_regularization_effect`,
+  `policy_entropy_before_after`, `erpo_improvement_over_ngrpo_pp`.
+
+### RL-ZVP: Exploiting Zero-Variance Prompts in RLVR
+- **Paper:** arXiv 2509.21880, "No Prompt Left Behind: Exploiting
+  Zero-Variance Prompts in LLM Reinforcement Learning via Entropy-Guided
+  Advantage Shaping." September 2025.
+- **Source:** https://arxiv.org/abs/2509.21880
+- **What:** Standard GRPO discards zero-variance prompts (where all rollouts
+  receive the same reward). RL-ZVP argues these prompts contain gradient
+  signal via entropy: even if all rollouts are correct (zero variance from
+  ceiling), the entropy of the distribution over tokens still carries
+  information about policy confidence. Introduces entropy-guided advantage
+  shaping that reweights prompts by inverse entropy instead of discarding
+  them.
+- **Relevance to Carnot:** The `exp1383` failure (all UNKNOWN → all zero
+  reward) is a zero-variance prompt case. RL-ZVP provides an alternative
+  to NGRPO: use entropy shaping rather than virtual samples. The two
+  approaches are complementary — RL-ZVP handles ceiling/floor zero-variance,
+  NGRPO handles homogeneous-failure. GRPO v8 could implement both.
+- **Concrete experiment:** Compare NGRPO advantage calibration vs RL-ZVP
+  entropy shaping on exp1383's rollout data. Report
+  `rlzvp_entropy_shaping_advantage_signal`,
+  `ngrpo_vs_rlzvp_gradient_magnitude_ratio`.
+
+### Typed Chain-of-Thought: Curry-Howard Framework for LLM Verification
+- **Paper:** arXiv 2510.01069, "Typed Chain-of-Thought: A Curry-Howard
+  Framework for Verifying LLM Reasoning." ICLR 2026.
+- **Source:** https://arxiv.org/abs/2510.01069
+- **What:** Proposes a type theory for CoT reasoning steps using the
+  Curry-Howard correspondence: propositions as types, proofs as programs.
+  Each reasoning step is typed; type mismatches indicate reasoning errors.
+  Provides a formal grammar for chain-of-thought that can be mechanically
+  verified. Does not require a learned reward model.
+- **Relevance to Carnot:** Carnot's semantic certificate extraction
+  (exp1366-1371) relies on tagging and NSVIF for structural extraction.
+  Typed CoT provides a stronger foundation: if the model's reasoning steps
+  can be parsed as typed propositions (using the Curry-Howard types), then
+  type-checking replaces NSVIF as the semantic validator. The types encode
+  semantic constraints directly. This would dramatically reduce false
+  acceptance rate (0.0 in exp1382, but semantic_validation_pass_rate=0.59).
+- **Concrete experiment:** Probe whether FoVer SOTA GGUF outputs can be parsed
+  as Curry-Howard typed CoT. Report `type_parse_rate`, `type_mismatch_rate`,
+  `typed_cot_semantic_validation_recall_vs_nsvif`.
+
 ## 2026-05-05 Post-.106 Planning Sweep (Milestone 2026.04.107)
 
 This sweep was run after milestone `.106` completed with 11 of 13 criteria met.

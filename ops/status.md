@@ -1,6 +1,35 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-05 (GitHub issue #9 NLAH conductor charter implemented)
+**Last Updated:** 2026-05-05 (GitHub issue #10 meta-harness conductor search implemented)
+
+## Session 2026-05-05 - Milestone 2026.04.108 Research Planning Complete
+
+**Milestone 2026.04.108 PLANNED.**
+
+- Roadmap doc: `openspec/change-proposals/research-roadmap-vNEXT.md`
+- Execution queue: `research-roadmap-next.yaml` (13 tasks, exp1390-exp1402)
+- Research references updated before planning with 7 new 2025-2026 papers: NGRPO Advantage Calibration (arXiv:2509.18851, fixes exp1383 zero-gradient), BiPRM R2L retrospective stream (arXiv:2508.01682), Discrete SB on KV260 BRAM-limited (arXiv:2510.12407, fixes exp1387 LUT-over-budget), Restoring Sparsity in Potts Machines (arXiv:2602.04200), ERPO entropy-regulated policy optimization (arXiv:2603.28204), RL-ZVP zero-variance prompt exploitation (arXiv:2509.21880), Typed CoT Curry-Howard (arXiv:2510.01069).
+- Root cause confirmed for .107 GRPO failure: `grpo_v7_improvement_pp=0.0` because all rollouts returned UNKNOWN from semantic verifier; ResZero produced zero-mean advantage — no gradient. NGRPO virtual max-reward injection is the fix (exp1393).
+- Root cause confirmed for .107 pipeline quality gap: `semantic_validation_pass_rate=0.59` with unknown failure mode breakdown. exp1391 diagnoses → exp1396 fixes → exp1397 validates at 200 cases.
+- Single .107 outstanding artifact: arXiv submission not attempted (`arxiv_upload` CLI missing). exp1390 uses SWORD API or produces manual upload checklist with ready bundle at `results/arxiv_bundle_v11.tar.gz`.
+- Design focus: Phase 0 closes arXiv submission + pipeline failure diagnosis (unconditional), Phase 1 test suite hygiene (unconditional), Phase 2 GRPO v8 NGRPO + DVI v2 + FR-11 v5 (exp1395 gated on exp1394), Phase 3 pipeline quality fix chain (gated) + 4 CPU research probes (unconditional), Phase 4 milestone retro (skip_pre_test=true, STEP 0).
+- Structured gates: exp1395 on exp1394.dvi_v2_deployed==true; exp1396 on exp1391.failure_analysis_complete==true; exp1397 on exp1396.semantic_validation_improvement_measured==true. All others unconditional.
+- Agent routing: all 13 tasks use `agent_type: codex`, `model: gpt-5.5`. No `requires_claude: true` tasks.
+- Validation passed: `python3 scripts/validate_prior_failures.py research-roadmap-next.yaml` (OK, no violations), `python3 scripts/audit_roadmap_gates.py research-roadmap-next.yaml` (13/13 tasks, all_checks_pass).
+- Did NOT modify `research-roadmap.yaml` or `scripts/research_conductor.py`.
+
+**What's next**: Run `python3 scripts/research_conductor.py` to execute milestone 2026.04.108.
+
+## Session 2026-05-05 - GitHub Issue #10 Meta-Harness Conductor Search Implemented
+
+**Issue #10 IMPLEMENTED.**
+
+- Added deterministic search script `scripts/meta_harness_conductor_search.py`.
+- Added operator/eval docs `ops/meta-harness-conductor-skill.md` and `ops/conductor-harness-eval-suite.md`.
+- Generated full trace store `meta_harness_runs/` with 5 candidate policy directories, each containing policy source, score, traces, verifier outputs, gate evaluation, artifact timeline, and final candidate artifact.
+- Added terminal artifact `results/experiment_1281_meta_harness_conductor_search.json` with `candidate_harnesses_evaluated=5`, `eval_cases_defined=12`, `baseline_score=-18.0`, `best_score=12.0`, `improvement_over_baseline=30.0`, `best_candidate_id="candidate_004"`, `pareto_frontier_written=true`, `trace_store_written=true`, `hardcoded_leakage_audit_passed=true`, and `honest_verdict="meta_harness_conductor_search_complete"`.
+- Verification: `.venv/bin/pytest tests/python/test_meta_harness_conductor_search.py -q --no-cov`, `ruff check`, `ruff format --check`, `.venv/bin/mypy --cache-dir /tmp/carnot-mypy-cache scripts/meta_harness_conductor_search.py`, targeted spec coverage, and `jq` validation passed.
+- E2E checks from `ops/e2e-test-plan.md` are not applicable: this is a deterministic conductor-harness policy search, not model training/sampling, PyO3 binding, serialization, or packaged code verification.
 
 ## Session 2026-05-05 - GitHub Issue #9 NLAH Conductor Charter Implemented
 
