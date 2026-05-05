@@ -1,0 +1,112 @@
+{
+  "accepted_repair_count": 2,
+  "accepted_violation_delta": -2,
+  "artifact": "experiment_1370_verge_mcs_repair_localization_v2",
+  "artifact_metadata": {
+    "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "run_date": "20260505",
+    "source_experiments": [
+      "exp1369"
+    ],
+    "spec": "REQ-VERIFY-1370"
+  },
+  "honest_verdict": "verge_mcs_repair_localization_complete_claim_allowed",
+  "iteration_count_to_accept": 1.0,
+  "mcs_localization_rate": 1.0,
+  "measurement_note": "Replay-only VERGE MCS localization over Exp 1369 semantic outcomes. Rows with SAT semantic results are already accepted and are not repair cases.  UNSAT/UNKNOWN/REPAIR_HINT rows are localized without fresh LLM calls; formal edits that change formula semantics are reported as hints but not counted as accepted repairs.",
+  "rejected_repair_count": 1,
+  "repair_claim_allowed": true,
+  "repair_hint_count": 3,
+  "repair_hint_precision": 1.0,
+  "repair_localization_rows": [
+    {
+      "acceptance_reason": "rejected_formal_repair_changes_formula_semantics",
+      "accepted": false,
+      "case_id": "unsat_unit_conflict",
+      "certificate_state": "UNSAT",
+      "claim_route": "z3_fully_formal",
+      "expected_state": "UNSAT",
+      "iteration_count": 0,
+      "localized": true,
+      "localized_constraint": "cnf_unit_conflict",
+      "mcs_candidates": [
+        [
+          "cnf_clause_x1"
+        ],
+        [
+          "cnf_clause_not_x1"
+        ]
+      ],
+      "minimal_local_change": "relax_one_minimal_conflicting_cnf_clause",
+      "precision_match": true,
+      "repair_hint": "Relax exactly one contradictory unit clause (cnf_clause_x1 or cnf_clause_not_x1) after checking source-premise provenance; either edit is minimal, but changing the formula is not semantically accepted by this replay.",
+      "semantic_equivalence_method": "z3_status_preservation",
+      "semantic_equivalence_passed": false,
+      "semantic_result": "UNSAT",
+      "verifier_after": "SAT",
+      "verifier_before": "UNSAT"
+    },
+    {
+      "acceptance_reason": "accepted_text_repair_adds_missing_premise_without_rewriting_claims",
+      "accepted": true,
+      "case_id": "unknown_missing_bound",
+      "certificate_state": "UNKNOWN",
+      "claim_route": "nltc_partial_smt",
+      "expected_state": "UNKNOWN",
+      "iteration_count": 1,
+      "localized": true,
+      "localized_constraint": "capacity_bound_B",
+      "mcs_candidates": [
+        [
+          "capacity_bound_B"
+        ]
+      ],
+      "minimal_local_change": "add_missing_capacity_bound_B_or_preserve_unknown",
+      "precision_match": true,
+      "repair_hint": "Add the missing capacity bound B before asking the verifier to decide SAT/UNSAT; until B is present, keep the certificate state UNKNOWN.",
+      "semantic_equivalence_method": "partial_smt_additive_premise_preservation",
+      "semantic_equivalence_passed": true,
+      "semantic_result": "UNKNOWN",
+      "verifier_after": "UNKNOWN",
+      "verifier_before": "UNKNOWN"
+    },
+    {
+      "acceptance_reason": "accepted_text_repair_adds_missing_premise_without_rewriting_claims",
+      "accepted": true,
+      "case_id": "repair_missing_upper_bound",
+      "certificate_state": "REPAIR_HINT",
+      "claim_route": "nltc_partial_smt",
+      "expected_state": "REPAIR_HINT",
+      "iteration_count": 1,
+      "localized": true,
+      "localized_constraint": "upper_bound_premise",
+      "mcs_candidates": [
+        [
+          "upper_bound_premise"
+        ]
+      ],
+      "minimal_local_change": "add_missing_upper_bound_premise",
+      "precision_match": true,
+      "repair_hint": "Add the missing upper-bound premise to the certificate input and keep the localized REPAIR_HINT tied to that premise.",
+      "semantic_equivalence_method": "partial_smt_additive_premise_preservation",
+      "semantic_equivalence_passed": true,
+      "semantic_result": "REPAIR_HINT",
+      "verifier_after": "REPAIR_HINT",
+      "verifier_before": "REPAIR_HINT"
+    }
+  ],
+  "run_date": "20260505",
+  "schema_version": 1,
+  "semantic_cases_used": 3,
+  "semantic_equivalence_pass_rate": 1.0,
+  "source_context": {
+    "execution_gate_passed": true,
+    "exp1369_honest_verdict": "semantic_validator_v2_complete_unknown_preserved",
+    "exp1369_status": "complete",
+    "exp1369_validator_execution_pass_rate": 1.0,
+    "required_execution_gate": 0.5,
+    "source_experiment": "exp1369"
+  },
+  "status": "complete",
+  "terminal_blocker": null
+}

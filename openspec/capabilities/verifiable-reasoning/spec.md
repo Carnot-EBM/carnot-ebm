@@ -17957,6 +17957,61 @@ fully-formal-only validator, claim gate status, and honest verdict.
 
 **Spec traces:** REQ-VERIFY-1369, SCENARIO-VERIFY-1369, Exp 1369
 
+## REQ-VERIFY-1370: VERGE MCS Repair Localization Replay
+
+**Summary:** Carnot SHALL replay VERGE-style Minimal Correction Subset repair
+localization over Exp 1369 semantic validator outcomes without running fresh
+LLM inference, producing local repair hints and only allowing a repair claim
+when localized hints do not increase accepted verifier violations.
+
+**Requirements:**
+
+- REQ-VERIFY-1370-1: The workflow SHALL write
+  `results/experiment_1370_verge_mcs_repair_localization_v2.json` with
+  `status="in_progress"` before loading Exp 1369 semantic validator rows.
+- REQ-VERIFY-1370-2: The workflow SHALL load Exp 1369 only when
+  `validator_execution_pass_rate >= 0.5`; otherwise it SHALL write a terminal
+  blocked artifact with all required fields and an honest verdict.
+- REQ-VERIFY-1370-3: Semantic cases used for repair localization SHALL be Exp
+  1369 rows whose validator constraint failed or whose semantic result is a
+  non-accepted verifier state such as `UNSAT`, `UNKNOWN`, or `REPAIR_HINT`.
+- REQ-VERIFY-1370-4: Fully formal Z3 cases SHALL compute deterministic
+  MCS-style correction candidates by finding the minimal set of local
+  constraints whose relaxation makes the remaining verifier formula
+  satisfiable.
+- REQ-VERIFY-1370-5: Partial-SMT text cases SHALL localize missing-bound or
+  missing-premise failures to the named text constraint emitted by Exp 1369
+  and SHALL produce an actionable repair hint without calling a model.
+- REQ-VERIFY-1370-6: Accepted repairs SHALL pass a local semantic-equivalence
+  check; repairs that would change the original formal formula's verifier
+  semantics SHALL remain localized hints but SHALL NOT count as accepted.
+- REQ-VERIFY-1370-7: The artifact SHALL compute
+  `mcs_localization_rate`, `repair_hint_count`, `repair_hint_precision`,
+  `semantic_equivalence_pass_rate`, `iteration_count_to_accept`, and
+  `accepted_violation_delta` from the localized replay rows.
+- REQ-VERIFY-1370-8: The artifact SHALL set `repair_claim_allowed=true` only
+  when repair hints are localized and `accepted_violation_delta <= 0`.
+- REQ-VERIFY-1370-9: The artifact SHALL include `status`,
+  `semantic_cases_used`, `mcs_localization_rate`, `repair_hint_count`,
+  `repair_hint_precision`, `semantic_equivalence_pass_rate`,
+  `iteration_count_to_accept`, `accepted_violation_delta`,
+  `repair_claim_allowed`, and `honest_verdict`.
+
+**Implementation Status:** Implemented (Exp 1370)
+
+### SCENARIO-VERIFY-1370: Exp 1369 Semantic Outcomes Produce Local Repair Hints
+
+**Given** the run date is `20260505`
+**And** Exp 1369 completed with `validator_execution_pass_rate >= 0.5`
+**When** the VERGE MCS repair-localization replay runs without fresh LLM
+inference
+**Then** it writes an in-progress artifact first
+**And** it writes a complete artifact with localized MCS candidates, repair
+hints, semantic-equivalence acceptance checks, violation delta, repair claim
+gate, and honest verdict.
+
+**Spec traces:** REQ-VERIFY-1370, SCENARIO-VERIFY-1370, Exp 1370
+
 ## REQ-VERIFY-1365: Eidoku CSP Neuro-Symbolic Verification Probe
 
 **Summary:** Carnot SHALL run an Eidoku-style, grammar-free CSP verification
