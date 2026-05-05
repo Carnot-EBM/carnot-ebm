@@ -4,6 +4,188 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-05-05 Post-.106 Planning Sweep (Milestone 2026.04.107)
+
+This sweep was run after milestone `.106` completed with 11 of 13 criteria met.
+The key breakthroughs: `exp1366` achieved `certificate_parse_rate=1.0` (from 0.0)
+via tag-first prefix injection + CRANE alternating pattern; the full semantic
+validation and MCS repair chain ran to completion; `exp1374` achieved
+`headline_result_allowed=True` with `path_used=primary_semantic_verified` and
+`fresh_verified_sample_count=4`; `exp1372` formally verified a GS-KAN energy
+bound via MILP (`formal_property_verified=True`). The two missing experiments
+(`exp1375` publication hold, `exp1376` retro) SKIPped 3× each due to pre-test
+cascade failures from a `ModuleNotFoundError: No module named 'carnot.phase5.intermediate_scale_v3'`
+in `tests/python/phase5/test_intermediate_scale_v3.py`. The `.107` milestone
+prioritizes: (1) fix pre-test suite and close `.106` missing artifacts, (2)
+paper audit + arXiv submission given the full evidence chain, (3) DVI
+discriminative verifier training (first actual DVI run — `dvi_ready=True` for
+3 consecutive milestones without executing), (4) GRPO v7 with JURY-RL-style
+formal verifier rewards (GPU confirmed working in exp1366), (5) new research:
+EBM-CoT calibration, SECL self-distillation, self-adaptive Ising, 2D parallel
+tempering KV260 estimate.
+
+### SECL: Self-Calibrating Language Models via Test-Time Discriminative Distillation
+- **Paper:** arXiv 2604.09624, "Self-Calibrating Language Models via Test-Time
+  Discriminative Distillation."
+- **Source:** https://arxiv.org/abs/2604.09624
+- **What:** SECL exploits the gap that asking the model "Is this answer
+  correct?" produces better-calibrated probabilities than the model's stated
+  confidence. Uses test-time training on 6–26% of incoming questions with no
+  labeled data, reducing Expected Calibration Error (ECE) by 56–78% across
+  multiple models and domains. The theoretical motivation: "generative error
+  is lower-bounded by roughly twice the corresponding discriminative error."
+- **Relevance to Carnot:** SECL is functionally DVI (Discriminative Verifier
+  Improvement) applied to calibration. Carnot's verifier asks "Is this
+  reasoning step correct?" (the discriminative question). The same SECL
+  framework can be applied to improve the calibration of Carnot's
+  constraint-energy verifier predictions, using semantically-verified cases
+  from `exp1374` as the self-supervision signal. Bridges the gap between
+  headline self-learning and genuine verifier quality improvement.
+- **Concrete experiment:** Apply SECL discriminative distillation to Carnot's
+  verifier calibration using the 4 fresh verified samples from `exp1374`.
+  Report `ece_before`, `ece_after`, `calibration_improvement_pct`,
+  `discriminative_signal_correlation`, `secl_viable_for_dvi`.
+
+### Verifiable Process Reward Models (VPRMs) for Structured Reasoning
+- **Paper:** arXiv 2601.17223, "Beyond Outcome Verification: Verifiable
+  Process Reward Models for Structured Reasoning."
+- **Source:** https://arxiv.org/abs/2601.17223
+- **What:** VPRMs check each intermediate reasoning step with deterministic
+  rule-based verifiers instead of neural judges, achieving up to 20% higher
+  F1 scores vs outcome-only verification and 6.5% improvement over standard
+  process supervision. Applied to medical evidence reasoning with
+  guideline-defined criteria.
+- **Relevance to Carnot:** Directly validates Carnot's GRPO-VPS architecture:
+  use Z3/semantic verifiers as rule-based step-level reward signals instead of
+  a separate trainable RM. The "rule-based process verifier" at each step is
+  exactly what Carnot's `CausalReasoningVerifier` + `Z3MathVerifier` provide.
+  VPRMs confirm the 20% improvement path is achievable with formal step-level
+  rewards.
+- **Concrete experiment:** Use Carnot's existing formal verifiers as VPRM
+  reward signals in GRPO v7. Report `step_reward_correlation`,
+  `process_reward_improvement_pp`, `outcome_reward_improvement_pp`,
+  `formal_step_reward_signal_quality`.
+
+### JURY-RL: Votes Propose, Proofs Dispose for Label-Free RLVR
+- **Paper:** arXiv 2604.25419, "JURY-RL: Votes Propose, Proofs Dispose for
+  Label-Free RLVR."
+- **Source:** https://arxiv.org/abs/2604.25419
+- **What:** Combines majority-vote candidate proposal with formal Lean
+  verification for final reward determination. When verification is
+  inconclusive, uses ResZero (zero-mean signal over residual answers) to
+  maintain training stability. Achieves pass@1 comparable to supervised
+  ground-truth training across math and code benchmarks.
+- **Relevance to Carnot:** Maps cleanly onto Carnot's architecture: the
+  "jury voting" phase is Carnot's candidate ranking (score_candidates), and
+  the "proof" phase is Carnot's Z3/semantic certificate chain. The ResZero
+  fallback for inconclusive verification matches Carnot's UNKNOWN preservation
+  discipline. JURY-RL provides a concrete recipe for GRPO training without
+  requiring labeled data.
+- **Concrete experiment:** Implement JURY-RL reward: Carnot verifiers as the
+  "proof" phase for GRPO step-level rewards. Report
+  `jury_pass_at_1_vs_grpo_baseline`, `formal_reward_acceptance_rate`,
+  `resZero_stability_metric`, `label_free_improvement_pp`.
+
+### EBM-CoT: Energy-Based Calibration for Implicit Chain-of-Thought
+- **Paper:** arXiv 2511.07124, "Think Consistently, Reason Efficiently:
+  Energy-Based Calibration for Implicit Chain-of-Thought."
+- **Source:** https://arxiv.org/abs/2511.07124
+- **What:** Proposes EBM-CoT, which uses a hinge-style contrastive loss +
+  consistency regularization to calibrate latent thought tokens in implicit
+  CoT. The energy function explicitly calibrates latent thoughts toward
+  lower-energy regions corresponding to logically consistent reasoning.
+  Achieves 72.49% accuracy (single chain) vs 76.60% multi-chain with
+  self-consistency at 82.73%.
+- **Relevance to Carnot:** EBM-CoT's contrastive hinge loss for calibrating
+  chain-of-thought steps is directly applicable to Carnot's KAN/Ising
+  verification pipeline. Instead of calibrating latent tokens, Carnot
+  calibrates constraint-energy predictions for CoT steps. The contrastive
+  loss (correct CoT step = low energy, incorrect = high energy) is already
+  the shape of Carnot's training objective. EBM-CoT provides a concrete
+  loss function design and training recipe.
+- **Concrete experiment:** Apply EBM-CoT's contrastive hinge loss to
+  Carnot's KAN energy tier using FoVer verified pairs. Report
+  `hinge_loss_convergence`, `calibration_auroc_change`,
+  `consistency_regularization_effect`, `implicit_cot_energy_viable`.
+
+### Energy-Based Reward Models (EBRM) for Language Model Alignment
+- **Paper:** arXiv 2504.13134, "Energy-Based Reward Models for Robust
+  Language Model Alignment." COLM 2025.
+- **Source:** https://arxiv.org/abs/2504.13134
+- **What:** EBRM is a lightweight post-hoc refinement framework for reward
+  models using conflict-aware data filtering, label-noise-aware contrastive
+  training, and hybrid initialization. Improves safety-critical alignment by
+  5.97% without retraining the base RM. Delays reward hacking in RL.
+- **Relevance to Carnot:** Carnot's KAN energy tier IS a form of reward model
+  (low energy = correct, high energy = incorrect). EBRM's conflict-aware
+  contrastive training and label-noise filtering are directly applicable to
+  improving Carnot's energy-based reward signal quality. The "no retraining"
+  property makes it attractive for post-hoc refinement of existing Carnot
+  verifier checkpoints.
+- **Concrete experiment:** Apply EBRM conflict-aware contrastive training to
+  Carnot's SC-Energy tier using FoVer pairs. Report
+  `conflict_sample_fraction`, `contrastive_auroc_improvement`,
+  `label_noise_rejection_rate`, `reward_hacking_delay_estimate`.
+
+### Self-Adaptive Ising Machines for Constrained Optimization
+- **Paper:** arXiv 2501.04971, "Self-Adaptive Ising Machines for Constrained
+  Optimization."
+- **Source:** https://arxiv.org/abs/2501.04971
+- **What:** Iteratively shapes the Ising energy landscape using Lagrange
+  relaxation of constraints without prior penalty tuning. Achieves 7,500×
+  fewer samples than Fujitsu Digital Annealer on quadratic knapsack problems
+  with 300 variables. Uses p-bit emulation (software), not specialized hardware.
+- **Relevance to Carnot:** Carnot's Ising constraint verifier currently uses
+  static penalty terms that require prior tuning. Self-adaptive Lagrange
+  relaxation would let the energy landscape evolve to better reflect the
+  current constraint violation pattern — implementing Tier 4 "adaptive
+  energy landscape" from research-program.md at a feasible software level.
+  Also: 7,500× sample reduction vs annealer is a strong argument for using
+  in GRPO training's exploration phase.
+- **Concrete experiment:** Implement self-adaptive Ising machine in Python
+  with Lagrange relaxation on FoVer constraint problems. Report
+  `lagrange_convergence_rate`, `penalty_tuning_iterations_saved`,
+  `sample_count_vs_static_baseline`, `constraint_violation_reduction`.
+
+### 2D Parallel Tempering on FPGA for Constraint Problems
+- **Paper:** arXiv 2601.09037, "Probabilistic Computers for MIMO Detection:
+  From Sparsification to 2D Parallel Tempering."
+- **Source:** https://arxiv.org/abs/2601.09037
+- **What:** Demonstrates a fully on-chip parallel tempering solver on FPGA
+  fitting 15 temperature replicas of a 128-node sparsified system (1,920
+  p-bits). Uses graph sparsification with auxiliary copy variables to handle
+  dense connectivity. Achieves 4.7ms end-to-end, >10× faster convergence
+  with 2D PT vs manual parameter tuning.
+- **Relevance to Carnot:** The KV260 has 117K LUT budget. The paper's 15-replica
+  128-node system (1,920 p-bits) at 4.7ms is directly comparable to Carnot's
+  target: 128-spin constraint problems on KV260. The sparsification technique
+  (copy nodes for dense graphs) from arXiv:2503.01177 combined with 2D parallel
+  tempering could fit the full Carnot constraint set on KV260 and converge in
+  <10ms — making the hardware path viable again. CPU simulation first, then
+  FPGA LUT estimate.
+- **Concrete experiment:** CPU-simulate 2D parallel tempering on FoVer
+  constraint problems at N=128. Report `replica_count`, `convergence_vs_standard_pt`,
+  `estimated_kv260_lut_count`, `estimated_on_chip_latency_ms`,
+  `hardware_claim_allowed=false`.
+
+### Scalable Connectivity for Ising Machines: Dense to Sparse
+- **Paper:** arXiv 2503.01177, "Scalable Connectivity for Ising Machines:
+  Dense to Sparse."
+- **Source:** https://arxiv.org/abs/2503.01177
+- **What:** Systematic sparsification via copy-node injection to limit
+  neighbors per graph node. Enables constant frequency scaling (O(1) update
+  time vs O(N²) dense). Demonstrated in ASAP7 PDK and FPGA implementations.
+  Sparse Ising machine avoids frequency scaling wall, key bottleneck for
+  dense constraint graphs.
+- **Relevance to Carnot:** Carnot's FoVer arithmetic constraints produce
+  dense Ising coupling matrices (every number-variable pair may couple to
+  every other). The v3 RTL at N=128 had ~290K LUTs (117K budget exceeded).
+  Copy-node sparsification with K=16 neighbors reduces to ~36K LUTs (Exp 950),
+  well within budget. This paper provides the theoretical justification +
+  hardware-neutral algorithm for the v4 RTL sparsification plan.
+- **No separate experiment needed:** incorporated into exp1387 KV260 FPGA
+  estimate as the sparsification technique for the 2D parallel tempering design.
+
 ## 2026-05-05 Post-.105 Planning Sweep (Milestone 2026.04.106)
 
 This sweep was run after milestone `.105` completed with 9 of 12 criteria
