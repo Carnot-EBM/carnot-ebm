@@ -84,8 +84,10 @@ from carnot.pipeline.constraint_addition import (  # noqa: E402
 from carnot.pipeline.constraint_template_library import (
     ConstraintTemplate,
     ConstraintTemplateLibrary,
+    DEFAULT_MANIPULABILITY_PRIORS,
     carry_check_template,
     comparison_direction_template,
+    manipulable_signal_dependency_template,
     sign_check_template,
     unit_consistency_template,
 )
@@ -724,8 +726,10 @@ __all__ = [
     "SelectiveConsolidation",
     "ConstraintTemplate",
     "ConstraintTemplateLibrary",
+    "DEFAULT_MANIPULABILITY_PRIORS",
     "carry_check_template",
     "comparison_direction_template",
+    "manipulable_signal_dependency_template",
     "sign_check_template",
     "unit_consistency_template",
     "VergeIteration",

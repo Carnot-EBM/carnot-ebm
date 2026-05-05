@@ -1,0 +1,59 @@
+{
+  "artifact_metadata": {
+    "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "run_date": "20260505"
+  },
+  "calibration_cases_used": 8,
+  "calibration_fraction_used": 0.25,
+  "calibration_stream_cases_seen": 32,
+  "confidence_head": {
+    "bin_values": [
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5
+    ],
+    "global_value": 0.5,
+    "n_bins": 10,
+    "type": "histogram_ece_confidence_head"
+  },
+  "cpu_only": true,
+  "discriminative_signal_correlation": -0.096968,
+  "discriminative_signal_correlation_scope": "heldout_fover_sc_energy_binary_correct_output_vs_ground_truth",
+  "duration_s": 0.334,
+  "ece_after": 0.307345,
+  "ece_before": 0.472572,
+  "ece_reduction_pct": 34.96342,
+  "experiment": "1386_secl_discriminative_self_calibration",
+  "finished_at": "2026-05-05T21:38:11.507250+00:00",
+  "fover_heldout_cases_used": 1770,
+  "fover_split_seed": 1386,
+  "fover_train_rows_used": 7059,
+  "fresh_llm_inference_used": false,
+  "honest_verdict": "secl_ece_reduced_but_signal_correlation_nonpositive_dvi_unproven",
+  "n_bins": 10,
+  "negative_case_source": "fover_contrastive_negative",
+  "negative_cases_used": 4,
+  "positive_case_source": "exp1374_primary_semantic_verified",
+  "positive_cases_used": 4,
+  "run_date": "20260505",
+  "schema": "secl_discriminative_self_calibration_v1",
+  "secl_training_procedure": "SECL distills the discriminative 'is this correct?' signal into a confidence head. This run uses Exp 1374 promoted verifier-accepted positives plus FoVer contrastive negatives, then evaluates ECE on a question-disjoint held-out FoVer split.",
+  "secl_viable_for_dvi": true,
+  "spec": [
+    "REQ-VERIFY-1386",
+    "SCENARIO-VERIFY-1386"
+  ],
+  "started_at": "2026-05-05T21:38:11.173364+00:00",
+  "status": "complete",
+  "training_method": "secl_histogram_ece_confidence_head_v1",
+  "verifier_checkpoint_kind": "sc_energy_npz",
+  "verifier_checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/models/sc_energy_v2_regularized.pt",
+  "verifier_targeted": "SC-Energy verifier (sc_energy_npz: /home/ianblenke/github.com/ianblenke/carnot/python/carnot/models/sc_energy_v2_regularized.pt)"
+}

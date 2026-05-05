@@ -6225,8 +6225,8 @@ increasingly large errors (energy_A <= energy_B <= energy_C).
 | REQ-LEARN-014 | Not Started | In Progress | Four-tier relay live GPU validation — wrapper artifact with simulation_comparison + jepa_skip_rate_live (SCENARIO-LEARN-023/024, Exp 329) |
 | REQ-LEARN-015 | Not Started | Implemented | Model-adaptive constraint thresholds — PerModelFPTracker + ModelAdaptiveThresholds + 43 tests (SCENARIO-LEARN-025/026, Exp 333) |
 | REQ-LEARN-016 | Not Started | Implemented | Selective CaseMemory consolidation — SelectiveConsolidation + add_trace_selective + 43 tests (SCENARIO-LEARN-027/028, Exp 333) |
-| REQ-LEARN-017 | Not Started | Implemented | Constraint template addition from memory patterns — ConstraintTemplateLibrary + 4 builtin templates (SCENARIO-LEARN-029/030/031/032, Exp 343) |
-| REQ-LEARN-018 | Not Started | Implemented | Constraint template persistence + builtin registry — to_dict/from_dict + register_builtin_templates (SCENARIO-LEARN-029/030/031/032, Exp 343) |
+| REQ-LEARN-017 | Not Started | Implemented | Constraint template addition from memory patterns — ConstraintTemplateLibrary + 5 builtin templates including manipulable_signal_dependency (SCENARIO-LEARN-029/030/031/032/018-4/018-5, Exp 343 + issue #6) |
+| REQ-LEARN-018 | Not Started | Implemented | Constraint template persistence + builtin registry — to_dict/from_dict + register_builtin_templates including configurable manipulable-source priors (SCENARIO-LEARN-029/030/031/032/018-4/018-5, Exp 343 + issue #6) |
 | REQ-LEARN-019 | Not Started | Implemented | CaseMemory to ConstraintTemplateLibrary wiring — CaseMemoryTemplateWiring [violation_type_to_pattern_key + on_violation_recorded]; constraint addition benchmark shows improvement_delta>0 (SCENARIO-LEARN-033/034, Exp 344) |
 | REQ-LEARN-020 | Not Started | Implemented | Session state persistence — SessionMemory save/load/exists/clear/list_sessions + JSON schema v1 (SCENARIO-LEARN-035/036/037, Exp 345) |
 | REQ-LEARN-021 | Not Started | Implemented | Per-model session isolation — scoped subdirs + VerifyRepairPipeline session_memory param + close() (SCENARIO-LEARN-035/036/037, Exp 345) |
