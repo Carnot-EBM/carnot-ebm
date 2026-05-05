@@ -38,3 +38,32 @@ LP bound,
 Then the artifact reports `milp_verification_result="verified"` only when the
 certified upper bound is strictly below the tested energy threshold, and
 `kan_formal_claim_allowed` is true only in that verified case.
+
+### REQ-VERIFY-1381: DVI Discriminative Verifier Training
+
+The repository shall provide a deterministic DVI training path that:
+
+- writes `results/experiment_1381_dvi_discriminative_verifier_training_v1.json`
+  with `status="in_progress"` before source loading or training;
+- loads only fresh semantically verified positive cases from Exp 1374's
+  primary semantic path;
+- samples contrastive incorrect reasoning steps from the FoVer corpus at a
+  positive:negative ratio of at least 1:3;
+- initializes from the current SC-Energy or GS-KAN verifier checkpoint when
+  one is available;
+- runs at least ten discriminative training epochs with a binary
+  cross-entropy or contrastive hinge objective;
+- measures AUROC on one fixed held-out FoVer split before and after training;
+- writes `python/carnot/models/dvi_checkpoint_v1.pt`; and
+- records `dvi_auroc_delta`, deployment status, and an honest verdict without
+  requiring any fresh LLM inference.
+
+### SCENARIO-VERIFY-1381: DVI Checkpoint And AUROC Delta Are Auditable
+
+Given Exp 1374 contains four primary semantic verified positive cases and the
+FoVer corpus contains correct and incorrect held-out rows,
+When the DVI training runner executes,
+Then the final artifact contains the required DVI fields, the checkpoint path
+exists when `dvi_deployed` is true, and
+`discriminative_improvement_measured` is true whenever the AUROC delta was
+computed on the fixed held-out split.
