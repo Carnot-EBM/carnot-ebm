@@ -470,6 +470,61 @@ that disallows hardware claims until a Vivado or board run is performed.
 
 ---
 
+### REQ-HW-047
+
+**Title:** p-bit update-dynamics and dual-BRAM packet MUST gate KV260/hardware claims
+
+**Description:**
+Experiment 1348 MUST extend the CPU-only p-bit portability packet with explicit
+update-dynamics, memory-reuse, DAC precision, and finite-delay assumptions before
+any KV260 or ASIC-style RTL milestone can claim hardware portability.  The packet
+MUST translate the tiny Carnot Ising case and a tiny KAN spline/LUT case into
+hardware-facing assumptions, using local CPU evidence only unless an actual
+synthesis or board run is performed in the current run.
+
+**Acceptance criteria:**
+- `results/experiment_1348_pbit_update_dynamics_dual_bram_packet_v2.json`
+  includes `status`, `sync_async_regime`, `reuse_factor_grid`, `bram_layout`,
+  `dac_precision_assumption`, `finite_delay_assumption`,
+  `kv260_claim_allowed`, `hardware_claim_allowed`, `next_rtl_requirements`, and
+  `honest_verdict`.
+- `sync_async_regime` covers synchronous snapshot updates, asynchronous
+  single-site Gibbs-like updates, and at least one delayed or phase-serialized
+  regime.
+- `reuse_factor_grid` covers at least three reuse factors and records logical
+  spins, physical p-bits, parallel update width, BRAM phase semantics, and CPU
+  KL evidence inherited or recomputed from the tiny Ising case.
+- `bram_layout` identifies two BRAM banks, snapshot-read and delayed-write
+  roles, Ising coupling storage, KAN spline/LUT storage, field-cache storage,
+  RNG threshold storage, and bank-swap semantics.
+- DAC and finite-delay assumptions are explicit enough for RTL design review:
+  bit widths, clipping, quantization rule, latency model, and acceptance gates
+  must be recorded without claiming analog or board validation.
+- `kv260_claim_allowed=false` and `hardware_claim_allowed=false` unless the
+  packet records actual local synthesis or board execution in metadata.
+- `next_rtl_requirements` names concrete future files and interfaces needed for
+  a later hardware milestone.
+
+**Implementation status:** Implemented (Exp 1348)
+
+---
+
+### SCENARIO-HW-047
+
+**Scenario:** CPU-only p-bit update-dynamics packet writes honest RTL handoff.
+
+**Given:** no Vivado synthesis, bitfile generation, or KV260 board execution is
+performed in the current run.
+**When:** the Exp 1348 packet builder consumes the tiny Ising/KAN CPU cases and
+the Exp 1320 p-bit portability evidence.
+**Then:** the artifact records sync/async regimes, reuse-factor grid,
+dual-BRAM layout, DAC and finite-delay assumptions, concrete future RTL
+requirements, and an honest verdict that disallows KV260 and hardware claims.
+
+**Implementation status:** Implemented (Exp 1348)
+
+---
+
 ## Implementation Status
 
 | REQ | Status | Experiment |
@@ -483,4 +538,5 @@ that disallows hardware claims until a Vivado or board run is performed.
 | REQ-HW-042 | Implemented | Exp 1149 |
 | REQ-HW-045 | Implemented | Exp 1161 |
 | REQ-HW-046 | Implemented | Exp 1320 |
+| REQ-HW-047 | Implemented | Exp 1348 |
 | REQ-FPGA-030 | Implemented | Exp 859 |

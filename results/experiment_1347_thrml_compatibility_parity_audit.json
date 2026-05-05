@@ -1,0 +1,36 @@
+{
+  "cases_attempted": [
+    {
+      "case_type": "ising",
+      "local_reference": "python/carnot/analysis/pbit_sampler_portability.py::tiny_ising_case",
+      "name": "n4_signed_ring_chord",
+      "reason": "local THRML package found at /home/ianblenke/github.com/ianblenke/thrml, but import failed: missing Python module while importing THRML: equinox",
+      "status": "not_attempted_missing_thrml"
+    },
+    {
+      "case_type": "kan",
+      "local_reference": "python/carnot/models/kan.py::KANEnergyFunction.energy",
+      "name": "tiny_local_kan_spline_energy",
+      "notes": "Current local KAN energy uses spline edge and bias functions; the checked THRML Ising API represents linear spin biases and pairwise spin products, so this audit records KAN mapping notes only.",
+      "status": "mapping_notes_only"
+    }
+  ],
+  "energy_parity_max_abs_error": null,
+  "hardware_claim_allowed": false,
+  "honest_verdict": "thrml_unavailable_mapping_notes_only_no_hardware_claim",
+  "metadata": {
+    "experiment_id": 1347,
+    "local_thrml_package_path": "/home/ianblenke/github.com/ianblenke/thrml",
+    "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "run_date": "20260505",
+    "schema": "thrml_compatibility_parity_audit_v1",
+    "thrml_import_source": "local_source_checkout_import_failed",
+    "thrml_version": null,
+    "tsu_hardware_execution": false
+  },
+  "missing_api_or_dependency": "local THRML package found at /home/ianblenke/github.com/ianblenke/thrml, but import failed: missing Python module while importing THRML: equinox",
+  "sample_quality_proxy": null,
+  "status": "complete",
+  "thrml_import_available": false,
+  "tsu_mapping_notes": "A local THRML checkout was found, but it was not importable with the current Python environment. The audit therefore records Ising/KAN mapping notes only and disallows hardware claims."
+}

@@ -1,0 +1,210 @@
+{
+  "artifact_metadata": {
+    "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "run_date": "20260505",
+    "source_experiments": [
+      "exp1337",
+      "exp1338",
+      "exp1339",
+      "exp1340",
+      "exp1341",
+      "exp1342",
+      "exp1343",
+      "exp1344",
+      "exp1345",
+      "exp1346",
+      "exp1347",
+      "exp1348",
+      "exp1349"
+    ]
+  },
+  "carry_forward_tasks": [
+    {
+      "prior_failures": [
+        "exp1325_stale_skeleton_environment_failure",
+        "exp1340_missing"
+      ],
+      "task": "produce_terminal_exp1340_or_retire_triggered_certificate_branch",
+      "why": "Exp 1340 artifact is missing, so the parse gate and branch-retirement evidence are absent."
+    },
+    {
+      "prior_failures": [
+        "exp1342_missing_after_exp1340_missing"
+      ],
+      "task": "run_semantic_validator_only_after_parse_gate",
+      "why": "Exp 1342 is missing because the SOTA certificate parse evidence did not exist."
+    },
+    {
+      "prior_failures": [
+        "exp1343_blocked_gate_check_failed"
+      ],
+      "task": "rerun_margin_scheduler_after_semantic_validator_execution",
+      "why": "Exp 1343 blocked on missing Exp 1342 validator_execution_pass_rate evidence."
+    },
+    {
+      "prior_failures": [
+        "exp1345_missing_gated",
+        "exp1346_missing_gated"
+      ],
+      "task": "keep_dvi_and_grpo_closed_until_parse_semantic_and_nonforgetting_gates_pass",
+      "why": "Exp 1344 is replay-positive but non-headline; Exp 1345 and Exp 1346 did not run."
+    },
+    {
+      "prior_failures": [
+        "docs_reconciliation_deferred_by_conductor_prompt"
+      ],
+      "task": "reconcile_specs_ops_and_docs_after_conductor_handoff",
+      "why": "This run intentionally avoids ops/status, ops/changelog, research-complete, and traceability edits."
+    },
+    {
+      "prior_failures": [
+        "publication_hold_active_no_lift_evidence"
+      ],
+      "task": "keep_publication_hold_active_until_live_certificate_and_external_parity_claims_are_supported",
+      "why": "No .104 artifact provides hold-lift evidence or valid submission readiness."
+    }
+  ],
+  "certificate_branch_verdict": {
+    "claim_boundary": "Dynamic grammar and failure taxonomy advanced, but the SOTA triggered certificate artifact is missing; semantic validation and scheduler claims remain gated.",
+    "dynamic_grammar_ready": true,
+    "environment_gate_ready": true,
+    "headline_ready": false,
+    "scheduler_artifact": "blocked",
+    "semantic_validator_artifact": "missing",
+    "triggered_sota_artifact": "missing"
+  },
+  "criteria_met": 9,
+  "criteria_results": {
+    "continuous_self_learning_accounted": "MET",
+    "dvi_grpo_gate_discipline_preserved": "MET",
+    "dynamic_grammar_ready_or_terminal_blocker": "MET",
+    "environment_gate_ready": "MET",
+    "exp1325_stale_gate_state_closed": "MET",
+    "external_ebt_kona_parity_mapped": "MET",
+    "halluguard_failure_split_no_universal_detector": "MET",
+    "hardware_portability_evidence_without_unverified_claims": "MET",
+    "margin_aware_scheduler_false_acceptance_risk_reported": "GATED",
+    "retro_104_complete": "MET",
+    "semantic_validator_executed_unknown_preserved": "MISSING",
+    "triggered_certificate_branch_recovered_or_retired": "MISSING"
+  },
+  "criteria_total": 12,
+  "experiment": "1350_milestone_104_retro_carryforward",
+  "experiment_statuses": {
+    "exp1337": {
+      "artifact": "experiment_1337_environment_gate_disk_pretest_stale_skeleton_audit.json",
+      "honest_verdict": "environment_ready_stale_103_artifacts_classified",
+      "status": "complete"
+    },
+    "exp1338": {
+      "artifact": "experiment_1338_exp1325_skeleton_and_gate_state_finalizer.json",
+      "honest_verdict": "exp1325_stale_environment_failure_gates_closed_recovery_ready",
+      "status": "complete"
+    },
+    "exp1339": {
+      "artifact": "experiment_1339_xgrammar2_tagdispatch_certificate_grammar_dryrun.json",
+      "honest_verdict": "dryrun_ready_pure_python_tagdispatch_xgrammar_absent",
+      "status": "complete"
+    },
+    "exp1340": {
+      "artifact": "experiment_1340_trigger_before_constrain_certificate_v6_sota.json",
+      "honest_verdict": "",
+      "status": "missing"
+    },
+    "exp1341": {
+      "artifact": "experiment_1341_halluguard_certificate_failure_split.json",
+      "honest_verdict": "local_certificate_slice_diagnostic_exp1340_missing_no_universal_detector_claim",
+      "status": "complete"
+    },
+    "exp1342": {
+      "artifact": "experiment_1342_chopchop_nsvif_semantic_validator_gated.json",
+      "honest_verdict": "",
+      "status": "missing"
+    },
+    "exp1343": {
+      "artifact": "experiment_1343_margin_aware_beaver_cactus_scheduler.json",
+      "blocked_at_layer": "conductor_pre_gate",
+      "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp1342-chopchop-nsvif-semantic-validator-gated.validator_execution_pass_rate (upstream artifact not found for task id 'exp1342-chopchop-nsvif-semantic-validator-gated')",
+      "honest_verdict": "blocked_gate_check_failed",
+      "status": "blocked"
+    },
+    "exp1344": {
+      "artifact": "experiment_1344_continuous_self_learning_failure_type_memory_policy.json",
+      "honest_verdict": "failure_type_memory_policy_dvi_ready_replay_non_headline",
+      "status": "complete"
+    },
+    "exp1345": {
+      "artifact": "experiment_1345_dvi_certificate_tail_v3_gated.json",
+      "honest_verdict": "",
+      "status": "missing"
+    },
+    "exp1346": {
+      "artifact": "experiment_1346_grpo_vprm_v13_gated_micro_audit.json",
+      "honest_verdict": "",
+      "status": "missing"
+    },
+    "exp1347": {
+      "artifact": "experiment_1347_thrml_compatibility_parity_audit.json",
+      "honest_verdict": "thrml_unavailable_mapping_notes_only_no_hardware_claim",
+      "status": "complete"
+    },
+    "exp1348": {
+      "artifact": "experiment_1348_pbit_update_dynamics_dual_bram_packet_v2.json",
+      "honest_verdict": "cpu_only_update_dynamics_dual_bram_packet_ready_hardware_not_run",
+      "status": "complete"
+    },
+    "exp1349": {
+      "artifact": "experiment_1349_ebt_citation_kona_parity_gap_audit.json",
+      "honest_verdict": "external_parity_gap_audit_complete_local_evidence_only_no_kona_or_external_dependency_claim",
+      "status": "complete"
+    }
+  },
+  "hardware_verdict": {
+    "claim_boundary": "Hardware work improved THRML mapping notes, p-bit packet accounting, and Kona/EBT parity obligations, but no FPGA, TSU, analog, or Kona execution was proven.",
+    "external_parity_status": "external_parity_gap_audit_complete_local_evidence_only_no_kona_or_external_dependency_claim",
+    "hardware_execution_claim_allowed": false,
+    "pbit_status": "cpu_only_update_dynamics_dual_bram_packet_ready_hardware_not_run",
+    "thrml_status": "thrml_unavailable_mapping_notes_only_no_hardware_claim"
+  },
+  "honest_verdict": "milestone_104_9_of_12_criteria_met_carryforward_required",
+  "milestone": "2026.04.104",
+  "prior_failure_hygiene_notes": {
+    "disk_quota_closed_cleanly": true,
+    "focused_pretest_closed_cleanly": true,
+    "note": ".103 stale skeleton and pre-test issues were classified as environment/scheduler facts; the scientific certificate branch still needs fresh Exp 1340 evidence.",
+    "stale_skeleton_closed_cleanly": true
+  },
+  "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+  "publication_hold_state": {
+    "hold_active": true,
+    "hold_lift_evidence": "absent",
+    "notes": [
+      "Replace broad 'Kona parity' wording with 'Phase-3 target; current evidence is verifier-side only.'",
+      "Describe EBT, NRGPT, EBT-Policy, and optimizer variants as related-work pressure, not proof of Carnot capability.",
+      "For Extropic/THRML/Z1/XTR-0, say Carnot has simulation/accounting work only unless a local run proves parity.",
+      "Limit PRD-facing claims to open, local verifier evidence and diagnostic certificate artifacts.",
+      "State that external_dependency_claim_allowed=false for current publication language."
+    ],
+    "source": "exp1349_publication_claim_changes_needed",
+    "submission_ready": false
+  },
+  "roadmap_inputs": {
+    "change_proposal_present": true,
+    "missing_requested_inputs": [
+      "research-roadmap-next.yaml"
+    ],
+    "research_roadmap_next_yaml_present": false,
+    "research_roadmap_yaml_present": true
+  },
+  "run_date": "20260505",
+  "schema": "milestone_retro_104_carryforward_v1",
+  "self_learning_verdict": {
+    "claim_boundary": "Failure-type memory policy preserved non-forgetting and reduced accepted violations in replay, but DVI and GRPO headline updates did not run.",
+    "dvi_artifact": "missing",
+    "dvi_ready_replay_only": true,
+    "grpo_artifact": "missing",
+    "headline_ready": false,
+    "replay_non_headline": true
+  },
+  "status": "complete"
+}

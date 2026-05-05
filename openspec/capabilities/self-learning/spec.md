@@ -2900,3 +2900,66 @@ structured late gate is not satisfied.
 | Requirement | Python | Tests |
 |-------------|--------|-------|
 | REQ-LEARN-1317 | Implemented (`python/carnot/reporting/grpo_vprm_v11_headline_gate.py`) | Implemented (`tests/python/test_grpo_vprm_v11_headline_gate.py`) |
+
+## REQ-LEARN-1344: Failure-Type Governed Continuous Self-Learning Memory Policy
+
+Exp 1344 SHALL audit continuous self-learning with a replay-only policy that
+maps certificate failure types to memory promotion, demotion, quarantine, or a
+fresh-verifier request. The audit SHALL run even when Phase 1 headline gates or
+fresh certificate-tail updates are blocked, using available online-memory,
+non-forgetting, certificate-taxonomy, and HalluGuard-style split artifacts while
+labeling replay-only evidence as non-headline.
+
+### REQ-LEARN-1344 Sub-requirements
+
+- REQ-LEARN-1344-1: The workflow SHALL write
+  `results/experiment_1344_continuous_self_learning_failure_type_memory_policy.json`
+  first with `status="in_progress"` and run-date artifact metadata before
+  loading source artifacts.
+- REQ-LEARN-1344-2: The workflow SHALL load available Exp 1303 online-memory,
+  Exp 1315 non-forgetting, Exp 1324 certificate-taxonomy, and Exp 1341
+  HalluGuard-style split artifacts, and SHALL record unavailable requested
+  inputs without blocking the replay audit when fallback artifacts are
+  available.
+- REQ-LEARN-1344-3: Each certificate failure type SHALL map to exactly one of
+  `promote`, `demote`, `quarantine`, or `request_fresh_verifier`, and each
+  mapping SHALL state whether non-forgetting checks and certificate-tail
+  updates are allowed.
+- REQ-LEARN-1344-4: The replay audit SHALL report
+  `nonforgetting_certificate_rate`, `memory_regression_count`,
+  `accepted_violation_delta`, `self_learning_delta_overall`,
+  `promoted_memory_count`, `demoted_memory_count`, and `replay_cases_used`
+  from available replay evidence rather than synthetic headline claims.
+- REQ-LEARN-1344-5: `dvi_ready` SHALL be true only when
+  `self_learning_delta_overall >= 0.0`, `accepted_violation_delta <= 0.0`,
+  and non-forgetting does not regress (`nonforgetting_certificate_rate == 1.0`
+  and `memory_regression_count == 0`).
+- REQ-LEARN-1344-6: `headline_result_allowed` SHALL be true only when the
+  evidence includes current `.104` headline certificate cases; replay-only
+  evidence SHALL set `headline_result_allowed=false` and use an honest
+  non-headline verdict.
+- REQ-LEARN-1344-7: The final artifact SHALL include `status`,
+  `self_learning_delta_overall`, `nonforgetting_certificate_rate`,
+  `memory_regression_count`, `accepted_violation_delta`,
+  `failure_type_policy`, `promoted_memory_count`, `demoted_memory_count`,
+  `replay_cases_used`, `headline_certificate_cases`, `dvi_ready`,
+  `headline_result_allowed`, and `honest_verdict`.
+
+### SCENARIO-LEARN-1344: Replay-Only Failure-Type Policy Allows Non-Headline DVI Readiness
+
+**Given** prior online-memory and non-forgetting replay artifacts are available
+**And** certificate failure taxonomy and HalluGuard-style split artifacts name
+parser, undergeneration, semantic, solver, unknown, and leakage-style failures
+**When** Exp 1344 runs with run date `20260505`
+**Then** the final artifact has `status="complete"`
+**And** it maps every failure type to a governed memory policy
+**And** it reports non-forgetting, memory-regression, accepted-violation,
+promotion, demotion, DVI-readiness, headline, and honest-verdict fields
+**And** replay-only results remain non-headline unless current `.104`
+certificate cases are present.
+
+## Implementation Status (REQ-LEARN-1344)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-1344 | Implemented (`python/carnot/reporting/continuous_self_learning_failure_type_memory_policy.py`) | Implemented (`tests/python/test_continuous_self_learning_failure_type_memory_policy.py`) |

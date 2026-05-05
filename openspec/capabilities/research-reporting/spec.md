@@ -609,6 +609,39 @@ adding carry-forward work when their measured values leave a downstream gate or
 headline path closed. The retrospective self-criterion shall count as `MET` only
 in the final artifact that sets `retro_complete == true`.
 
+### REQ-REPORT-029: Milestone .104 Carry-Forward Retrospective
+
+The Exp 1350 milestone .104 retrospective workflow shall read the authoritative
+Exp 1337 through Exp 1349 result JSON artifacts, plus the available .104
+roadmap planning documents, and write
+`results/experiment_1350_milestone_104_retro_carryforward.json` with:
+
+- `status` set to `complete`
+- `criteria_total`, derived from the .104 roadmap success criteria
+- `criteria_met`, derived only from observed source artifacts and terminal
+  blockers that satisfy the planned success criterion
+- `experiment_statuses`, summarizing Exp 1337 through Exp 1349 and explicitly
+  recording missing artifacts
+- `certificate_branch_verdict`, keeping certificate-tail, semantic-validator,
+  and scheduler claims inside observed gates
+- `self_learning_verdict`, separating replay-only progress from gated DVI/GRPO
+  headline readiness
+- `hardware_verdict`, distinguishing simulation/accounting evidence from
+  unverified hardware execution
+- `publication_hold_state`, preserving the active publication hold unless the
+  source artifacts show a valid hold lift
+- `carry_forward_tasks`, specific enough to seed the next roadmap
+- `prior_failure_hygiene_notes`, explaining whether .103 stale skeleton and
+  pre-test issues were closed cleanly
+- `honest_verdict`, formatted as a conservative milestone carry-forward verdict
+
+Missing roadmap files or experiment artifacts shall count as unmet evidence and
+shall be reported explicitly rather than inferred away. Gated DVI/GRPO tasks
+shall count as met only when they run or when their planned criterion is exactly
+that they remain closed behind structured gates. The retrospective artifact
+shall include run metadata using run date `20260505` and project root
+`/home/ianblenke/github.com/ianblenke/carnot`.
+
 ### REQ-REPORT-024: Local Agent Usage Snapshot
 
 The repository shall provide a local operator workflow that inspects the
@@ -949,6 +982,21 @@ increment `criteria_met`
 **And** the artifact reports `criteria_met == 11`
 **And** `honest_verdict == "milestone_102_11_of_14_criteria_met"`
 
+### SCENARIO-REPORT-029: Exp 1350 Reconciles .104 Carry-Forward State
+
+**Given** the .104 roadmap criteria and Exp 1337 through Exp 1349 source
+artifacts are available, with gated or missing artifacts recorded honestly
+**When** the Exp 1350 retrospective workflow runs for run date `20260505`
+**Then** it writes the .104 carry-forward artifact with all required
+REQ-REPORT-029 fields
+**And** `criteria_total` matches the roadmap success-criteria count
+**And** `criteria_met` counts only observed terminal evidence or criteria that
+explicitly required a gate to stay closed
+**And** the certificate, self-learning, hardware, publication-hold, and prior
+failure hygiene verdicts stay inside the source evidence
+**And** missing roadmap files or experiment artifacts are reported explicitly
+instead of being inferred as successes
+
 ### SCENARIO-REPORT-021: Codex Latest Rate-Limit Event Is Surfaced
 
 **Given** a local Codex session tree contains multiple `token_count` events
@@ -1112,6 +1160,7 @@ embed live-GPU benchmark results from Exp 328 when available.
 | REQ-REPORT-026 | `python/carnot/reporting/energy_bridge_audit_v2.py`, `results/experiment_1306_ebt_arm_ebm_cot_energy_bridge_audit_v2.json` | `tests/python/test_energy_bridge_audit_v2.py` | Planned |
 | REQ-REPORT-027 | `python/carnot/reporting/milestone_retro_101.py`, `results/experiment_1308_milestone_retro_101.json` | `tests/python/test_milestone_retro_101.py` | Implemented |
 | REQ-REPORT-028 | `python/carnot/reporting/milestone_retro_102.py`, `results/experiment_1322_milestone_retro_102.json` | `tests/python/test_milestone_retro_102.py` | Implemented |
+| REQ-REPORT-029 | `python/carnot/reporting/milestone_retro_104.py`, `results/experiment_1350_milestone_104_retro_carryforward.json` | `tests/python/test_milestone_retro_104.py` | Implemented |
 | REQ-REPORT-024 | `python/carnot/reporting/agent_usage.py`, `scripts/agent_plan_usage.py` | `tests/python/test_agent_plan_usage.py` | Implemented |
 | REQ-PUBLISH-003 | `scripts/experiment_317_hf_publish.py` | `tests/python/test_experiment_317_hf_publish.py` | Implemented |
 | REQ-PUBLISH-004 | `scripts/experiment_330_hf_live_publish.py` | `tests/python/test_experiment_330_hf_live_publish.py` | Implemented |

@@ -1554,6 +1554,46 @@ verdict from the approved vocabulary.
 
 **Implementation Status:** Implemented (Exp 1150)
 
+## REQ-SAMPLE-041: THRML compatibility parity audit for tiny Ising/KAN cases
+
+Carnot SHALL provide a local, no-install THRML compatibility audit for the tiny
+Ising and KAN energy cases used by the hardware portability track. The audit
+MUST probe whether a local THRML Python import is available without network
+access or package installation, attempt parity mapping only when the import and
+the needed local THRML APIs are present, and refuse TSU hardware claims unless a
+local THRML-backed parity run actually executes and measures energy parity.
+
+Acceptance criteria:
+- `results/experiment_1347_thrml_compatibility_parity_audit.json` includes
+  `status`, `thrml_import_available`, `cases_attempted`,
+  `energy_parity_max_abs_error`, `sample_quality_proxy`,
+  `missing_api_or_dependency`, `tsu_mapping_notes`, `hardware_claim_allowed`,
+  and `honest_verdict`.
+- The audit records `run_date="20260505"` and the project root used for the
+  task in artifact metadata.
+- When THRML is not importable, the artifact records the missing dependency,
+  leaves parity metrics unset, records mapping notes only, sets
+  `hardware_claim_allowed=false`, and completes with an honest blocked verdict.
+- When THRML is importable and exposes the required Ising mapping APIs, the
+  audit compares the local tiny Ising energy against the THRML-represented
+  energy and records `energy_parity_max_abs_error`.
+- `hardware_claim_allowed=true` is valid only when a local THRML-backed run
+  executes and parity is measured; THRML CPU/JAX simulation alone is not a TSU
+  hardware execution claim.
+
+**Implementation Status:** Implemented (Exp 1347)
+
+### SCENARIO-SAMPLE-069: Exp 1347 writes honest THRML compatibility audit
+
+Given: THRML may or may not be importable on the local host.
+When: the Exp 1347 compatibility audit runs without installing packages.
+Then: the artifact records import availability, tiny Ising/KAN case attempts,
+parity metrics only when measured, missing APIs or dependencies otherwise, and
+an honest verdict that disallows hardware claims unless local THRML-backed
+parity execution occurred.
+
+**Implementation Status:** Implemented (Exp 1347)
+
 ## REQ-MODEL-031: SCEnergyModel — Set-Level Energy Function for Statement Consistency (Exp 944)
 
 SCEnergyModel SHALL implement a permutation-invariant set-level energy function that assigns

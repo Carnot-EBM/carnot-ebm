@@ -1,0 +1,202 @@
+{
+  "artifact": "experiment_1349_ebt_citation_kona_parity_gap_audit",
+  "artifact_metadata": {
+    "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "run_date": "20260505",
+    "source_artifacts": [
+      "results/experiment_1323_sota_gguf_token_health_prompt_runtime_diagnostic.json",
+      "results/experiment_1324_certificate_failure_taxonomy_formalizer_reality_check.json",
+      "results/experiment_1347_thrml_compatibility_parity_audit.json",
+      "results/experiment_1348_pbit_update_dynamics_dual_bram_packet_v2.json"
+    ],
+    "source_documents": [
+      "research-references.md",
+      "_bmad/prd.md",
+      "_bmad/architecture.md",
+      "openspec/change-proposals/research-roadmap-vNEXT.md"
+    ]
+  },
+  "carnot_local_evidence": {
+    "exp1323_local_sota_token_health": {
+      "empty_or_one_token_rate": 0.4,
+      "honest_verdict": "token_health_recovered_certificate_prompt_multitoken",
+      "min_tokens_recovered": true,
+      "models_used": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF"
+      ]
+    },
+    "exp1324_certificate_failure_taxonomy": {
+      "certificate_parse_rate": 0.71223,
+      "certificate_truthfulness_rate": 0.69697,
+      "honest_verdict": "diagnostic_complete_parse_gate_shortfall_parser_recovery_needed",
+      "minimum_parseable_attempts_to_recover": 6
+    },
+    "exp1347_thrml_compatibility": {
+      "energy_parity_max_abs_error": null,
+      "hardware_claim_allowed": false,
+      "honest_verdict": "thrml_unavailable_mapping_notes_only_no_hardware_claim",
+      "thrml_import_available": false
+    },
+    "exp1348_pbit_dual_bram_packet": {
+      "best_cpu_kl_to_gibbs": 0.000412165565,
+      "board_executed": false,
+      "hardware_claim_allowed": false,
+      "honest_verdict": "cpu_only_update_dynamics_dual_bram_packet_ready_hardware_not_run",
+      "kv260_claim_allowed": false
+    },
+    "phase3_kona_spec": {
+      "implementation_status": "spec and primitives only for parity; external audit implemented here",
+      "spec_requirements_present": [
+        "REQ-KONA-001",
+        "REQ-KONA-006",
+        "REQ-KONA-009"
+      ]
+    },
+    "prd_and_architecture": {
+      "claim_boundary": "PRD vision is not evidence of shipped Kona-style parity",
+      "current_role": "open EBM verifier framework with Phase-3 foundation-model aspiration"
+    }
+  },
+  "ebt_citation_themes": [
+    {
+      "claim_boundary": "related-work support only; not local EBT parity",
+      "material_effect_on_carnot": "Treat prediction as energy minimization over candidate answers, but require local verifier-tail or continuous-latent evidence before claiming EBT reasoning.",
+      "phase3_obligation": "implement REQ-KONA-001/002 continuous refinement evidence",
+      "source_refs": [
+        "arXiv:2507.02092",
+        "Semantic Scholar EBT citation watch"
+      ],
+      "theme": "ebt_reasoning"
+    },
+    {
+      "claim_boundary": "architecture reference; no local NRGPT parity claim",
+      "material_effect_on_carnot": "NRGPT supports an energy-recurrence bridge from GPT-like behavior to EBM scoring, but Carnot must compare local energy traces before using it as evidence.",
+      "phase3_obligation": "compare NRGPT/Boltzmann-GPT energy ordering against verifier truth",
+      "source_refs": [
+        "arXiv:2512.16762"
+      ],
+      "theme": "nrgpt_energy_recurrence"
+    },
+    {
+      "claim_boundary": "policy inspiration; no embodied-control or EBT-Policy performance claim",
+      "material_effect_on_carnot": "EBT-Policy and adaptive Langevin-style methods raise the bar for dynamic compute allocation and stop policies in Carnot's verifier-tail roadmap.",
+      "phase3_obligation": "measure dynamic compute allocation and failure-type recovery policies",
+      "source_refs": [
+        "arXiv:2510.27545"
+      ],
+      "theme": "ebt_policy_dynamic_compute"
+    },
+    {
+      "claim_boundary": "theory support only; no optimizer-parity result",
+      "material_effect_on_carnot": "Optimizer-view transformer work keeps the ARM-to-EBM bridge plausible, but Carnot still needs local optimizer or energy-descent evidence.",
+      "phase3_obligation": "test optimizer-like energy descent against local certificate traces",
+      "source_refs": [
+        "arXiv:2511.00907",
+        "ARM-to-EBM bridge"
+      ],
+      "theme": "intrinsic_optimizer_variants"
+    },
+    {
+      "claim_boundary": "must not claim metacognitive code-generation ability yet",
+      "material_effect_on_carnot": "Code-generation-specific EBT metacognition means Carnot must show code metacognition or verifier-tail value locally before PRD language implies it.",
+      "phase3_obligation": "run a native or sidecar code metacognition audit with local evidence",
+      "source_refs": [
+        "MetaGenAI 2025 OpenReview EBT code assessment"
+      ],
+      "theme": "metacognitive_code_generation"
+    }
+  ],
+  "external_dependency_claim_allowed": false,
+  "honest_verdict": "external_parity_gap_audit_complete_local_evidence_only_no_kona_or_external_dependency_claim",
+  "kona_public_claims_mapped": [
+    {
+      "claim_allowed_for_carnot": false,
+      "local_evidence": "REQ-KONA-001..008 specify the target, but no native model proves it.",
+      "parity_gap": "No local continuous-latent, full-answer, non-autoregressive refinement artifact.",
+      "public_claim": "non_autoregressive_ebm_reasoning_layer"
+    },
+    {
+      "claim_allowed_for_carnot": true,
+      "local_evidence": "Phase-1 verifier/certificate diagnostics exist; current parse rate is 0.71223 and token health recovered multi-token local GGUF output.",
+      "parity_gap": "Semantic certificate gate and false-acceptance accounting remain unsolved.",
+      "public_claim": "valid_safe_permissible_state_scoring"
+    },
+    {
+      "claim_allowed_for_carnot": true,
+      "local_evidence": "Architecture documents Carnot as verifier-side energy layer around LLM outputs.",
+      "parity_gap": "Still a sidecar verify-repair pipeline, not an internalized foundation model.",
+      "public_claim": "under_llm_stack_not_chatbot"
+    },
+    {
+      "claim_allowed_for_carnot": false,
+      "local_evidence": "Exp 1347 THRML import available=False; Exp 1348 board_executed=False.",
+      "parity_gap": "THRML parity or real accelerator execution is not locally reproduced.",
+      "public_claim": "hardware_portable_energy_execution"
+    },
+    {
+      "claim_allowed_for_carnot": true,
+      "local_evidence": "Local JSON artifacts exist for token health, certificate failure taxonomy, THRML accounting, and p-bit accounting.",
+      "parity_gap": "Certificates are diagnostic and incomplete; parse/truthfulness gates remain below target.",
+      "public_claim": "open_reproducible_local_certificates"
+    }
+  ],
+  "parity_gaps": [
+    {
+      "gap": "native_kona_style_reasoning",
+      "local_status": "Phase-3 spec exists; no local artifact proves native full-answer refinement.",
+      "why_it_matters": "Kona parity requires continuous latent, non-autoregressive refinement."
+    },
+    {
+      "gap": "semantic certificate gate",
+      "local_status": "Exp 1324 reports parse rate 0.71223 with semantic invalidity still present.",
+      "why_it_matters": "State-scoring claims need parsed and truthful certificates, not parseable JSON alone."
+    },
+    {
+      "gap": "metacognitive_code_generation",
+      "local_status": "No native EBT code-generation metacognition artifact is present.",
+      "why_it_matters": "The EBT citation neighborhood includes code metacognition claims."
+    },
+    {
+      "gap": "THRML_or_TSU_execution",
+      "local_status": "THRML import available=False; hardware claim allowed=False.",
+      "why_it_matters": "Extropic-adjacent language requires THRML parity or real TSU evidence."
+    },
+    {
+      "gap": "KV260_or_pbit_hardware_execution",
+      "local_status": "Exp 1348 hardware claim allowed=False; board execution=False.",
+      "why_it_matters": "Hardware-portable energy execution cannot rest on CPU-only packets."
+    }
+  ],
+  "phase3_obligations": [
+    {
+      "obligation": "Implement Stage-1/2 continuous latent refinement before using Kona parity language.",
+      "spec_refs": "REQ-KONA-001, REQ-KONA-002, REQ-KONA-004"
+    },
+    {
+      "obligation": "Recover certificate parse/truthfulness and semantic validator gates before claiming reliable state scoring.",
+      "spec_refs": "REQ-KONA-005, SCENARIO-KONA-009"
+    },
+    {
+      "obligation": "Compare NRGPT/Boltzmann-GPT or ARM-to-EBM energy traces against local verifier truth.",
+      "spec_refs": "REQ-KONA-009"
+    },
+    {
+      "obligation": "Run code-metacognition evidence locally before borrowing EBT code-generation language.",
+      "spec_refs": "REQ-KONA-009"
+    },
+    {
+      "obligation": "Rerun THRML parity or actual accelerator execution before hardware dependency claims.",
+      "spec_refs": "REQ-KONA-006, REQ-KONA-009"
+    }
+  ],
+  "publication_claim_changes_needed": [
+    "Replace broad 'Kona parity' wording with 'Phase-3 target; current evidence is verifier-side only.'",
+    "Describe EBT, NRGPT, EBT-Policy, and optimizer variants as related-work pressure, not proof of Carnot capability.",
+    "For Extropic/THRML/Z1/XTR-0, say Carnot has simulation/accounting work only unless a local run proves parity.",
+    "Limit PRD-facing claims to open, local verifier evidence and diagnostic certificate artifacts.",
+    "State that external_dependency_claim_allowed=false for current publication language."
+  ],
+  "schema": "ebt_citation_kona_parity_gap_audit_v1",
+  "status": "complete"
+}

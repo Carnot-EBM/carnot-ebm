@@ -865,3 +865,28 @@ web search: GitHub trending energy based mod |
 | 2026-05-05 09:35 UTC | Margin-Aware BEAVER/Cactus Scheduler - Gated on Se | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1342-chopchop-nsvif-semantic-validator- |
 | 2026-05-05 09:37 UTC | XGrammar2/TagDispatch Certificate Grammar Dry-Run | OK | Deliverable already exists in repo |
 | 2026-05-05 09:37 UTC | ChopChop/NSVIF Semantic Validator - Gated on Certi | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1340-trigger-before-constrain-certificate |
+| 2026-05-05 09:37 UTC | Margin-Aware BEAVER/Cactus Scheduler - Gated on Se | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1342-chopchop-nsvif-semantic-validator- |
+| 2026-05-05 09:40 UTC | Continuous Self-Learning: Failure-Type Memory Poli | FAIL | Codex CLI error: [Errno 122] Disk quota exceeded |
+| 2026-05-05 09:42 UTC | Continuous Self-Learning: Failure-Type Memory Poli | FAIL | Codex CLI error: [Errno 122] Disk quota exceeded |
+| 2026-05-05 09:45 UTC | Continuous Self-Learning: Failure-Type Memory Poli | FAIL | Codex CLI error: [Errno 122] Disk quota exceeded |
+| 2026-05-05 09:47 UTC | DVI Certificate-Tail Online Update v3 - Gated on P | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1340-trigger-before-constrain-certificate |
+| 2026-05-05 09:47 UTC | GRPO/VPRM v13 Micro-Audit - Gated on DVI Lossless | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1344-continuous-self-learning-failure-typ |
+| 2026-05-05 09:47 UTC | THRML Compatibility Parity Audit - Carnot Tiny Isi | SKIP | Pre-tests failing, self-heal failed: 3 failed, 86 passed, 1 warning in 14.99s |
+| 2026-05-05 09:49 UTC | DVI Certificate-Tail Online Update v3 - Gated on P | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1340-trigger-before-constrain-certificate |
+| 2026-05-05 09:49 UTC | GRPO/VPRM v13 Micro-Audit - Gated on DVI Lossless | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1344-continuous-self-learning-failure-typ |
+| 2026-05-05 09:50 UTC | THRML Compatibility Parity Audit - Carnot Tiny Isi | FAIL | Codex CLI error: [Errno 122] Disk quota exceeded |
+| 2026-05-05 09:52 UTC | DVI Certificate-Tail Online Update v3 - Gated on P | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1340-trigger-before-constrain-certificate |
+| 2026-05-05 09:52 UTC | GRPO/VPRM v13 Micro-Audit - Gated on DVI Lossless | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1344-continuous-self-learning-failure-typ |
+| 2026-05-05 09:53 UTC | THRML Compatibility Parity Audit - Carnot Tiny Isi | FAIL | Codex CLI error: [Errno 122] Disk quota exceeded |
+| 2026-05-05 09:55 UTC | Continuous Self-Learning: Failure-Type Memory Poli | OK | Deliverable already exists in repo |
+| 2026-05-05 09:56 UTC | p-bit Update-Dynamics + Dual-BRAM Portability Pack | FAIL | Codex CLI error: [Errno 122] Disk quota exceeded |
+| 2026-05-05 09:58 UTC | p-bit Update-Dynamics + Dual-BRAM Portability Pack | FAIL | Codex CLI error: [Errno 122] Disk quota exceeded |
+| 2026-05-05 10:00 UTC | THRML Compatibility Parity Audit - Carnot Tiny Isi | OK | Deliverable already exists in repo |
+| 2026-05-05 10:01 UTC | p-bit Update-Dynamics + Dual-BRAM Portability Pack | FAIL | Codex CLI error: [Errno 122] Disk quota exceeded |
+| 2026-05-05 10:04 UTC | THRML Compatibility Parity Audit - Carnot Tiny Isi | FAIL | Codex CLI error: [Errno 122] Disk quota exceeded |
+| 2026-05-05 10:07 UTC | THRML Compatibility Parity Audit - Carnot Tiny Isi | FAIL | Codex CLI error: [Errno 122] Disk quota exceeded |
+| 2026-05-05 10:10 UTC | THRML Compatibility Parity Audit - Carnot Tiny Isi | FAIL | Codex CLI error: [Errno 122] Disk quota exceeded |
+| 2026-05-05 10:12 UTC | p-bit Update-Dynamics + Dual-BRAM Portability Pack | OK | Deliverable already exists in repo |
+| 2026-05-05 10:12 UTC | EBT Citation Neighborhood + Kona 1.0 Parity Gap Au | FAIL | Codex CLI error: [Errno 122] Disk quota exceeded |
+| 2026-05-05 10:15 UTC | EBT Citation Neighborhood + Kona 1.0 Parity Gap Au | FAIL | Codex CLI error: [Errno 122] Disk quota exceeded |
+| 2026-05-05 10:19 UTC | EBT Citation Neighborhood + Kona 1.0 Parity Gap Au | SKIP | Pre-tests failing, self-heal failed:  |

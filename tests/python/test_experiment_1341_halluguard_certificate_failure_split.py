@@ -112,6 +112,15 @@ def test_exp1341_repair_policy_names_concrete_actions() -> None:
         "local_certificate_slice_diagnostic_complete_no_universal_detector_claim"
     )
     assert mod._failure_mode_counts({"formalizer_failure_modes": "aggregate-only"}) == {}
+    assert mod._failure_mode_counts(
+        {
+            "formalizer_failure_modes": [
+                "malformed-row",
+                {"class": "", "count": 99},
+                {"class": "parser_schema_mismatch", "count": "not-an-int"},
+            ]
+        }
+    ) == {"parser_schema_mismatch": 0}
 
 
 def test_exp1341_run_experiment_writes_in_progress_then_final_with_missing_exp1340(
@@ -146,3 +155,12 @@ def test_exp1341_run_experiment_writes_in_progress_then_final_with_missing_exp13
         "exp1340_absent_or_unreadable_fallback_to_exp1324"
     ]
     assert artifact["universal_detector_claim_allowed"] is False
+
+
+def test_exp1341_write_json_observer_is_optional(tmp_path: Path) -> None:
+    """REQ-VERIFY-1341: artifact writes do not require a test observer hook."""
+    output_path = tmp_path / "artifact.json"
+
+    mod._write_json(output_path, {"status": "complete"})
+
+    assert json.loads(output_path.read_text(encoding="utf-8")) == {"status": "complete"}

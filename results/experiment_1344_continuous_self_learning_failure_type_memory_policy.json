@@ -1,0 +1,130 @@
+{
+  "accepted_violation_delta": -0.846154,
+  "artifact_metadata": {
+    "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "run_date": "20260505"
+  },
+  "demoted_memory_count": 37,
+  "dvi_ready": true,
+  "experiment": "1344_continuous_self_learning_failure_type_memory_policy",
+  "failure_type_policy": {
+    "parser_schema_mismatch": {
+      "action": "request_fresh_verifier",
+      "certificate_tail_update_allowed": false,
+      "failure_count": 40,
+      "nonforgetting_check_required": false,
+      "policy": "request_fresh_verifier",
+      "source_next_actions": [
+        "grammar branch: recover at least 6 additional parseable attempts before reopening the parse gate",
+        "prompt retrieval: retrieve the exact JSON field contract before constrained decoding"
+      ]
+    },
+    "possible_hardcoded_solution_leakage": {
+      "action": "demote",
+      "certificate_tail_update_allowed": false,
+      "failure_count": 35,
+      "nonforgetting_check_required": true,
+      "policy": "demote",
+      "source_next_actions": [
+        "prompt retrieval: separate source facts from verifier labels before formalizer evaluation",
+        "semantic validator: exclude verifier-label repair paths from headline formalizer metrics unless derivation evidence is present"
+      ]
+    },
+    "semantic_invalidity": {
+      "action": "promote",
+      "certificate_tail_update_allowed": true,
+      "failure_count": 30,
+      "nonforgetting_check_required": true,
+      "policy": "promote",
+      "source_next_actions": [
+        "semantic validator: run solver-backed validation after parsing",
+        "reasoning budget: allow trigger-before-constrain reasoning before the certificate tail"
+      ]
+    },
+    "solver_disagreement": {
+      "action": "request_fresh_verifier",
+      "certificate_tail_update_allowed": false,
+      "failure_count": 19,
+      "nonforgetting_check_required": false,
+      "policy": "request_fresh_verifier",
+      "source_next_actions": [
+        "semantic validator: compare solver answer, certificate label, and verifier label as separate columns",
+        "reasoning budget: escalate cases with solver disagreement before accepting repaired certificates"
+      ]
+    },
+    "undergeneration": {
+      "action": "request_fresh_verifier",
+      "certificate_tail_update_allowed": false,
+      "failure_count": 25,
+      "nonforgetting_check_required": false,
+      "policy": "request_fresh_verifier",
+      "source_next_actions": [
+        "prompt retrieval: inject the certificate schema before generation",
+        "reasoning budget: remove premature newline stop strings and allocate enough max_tokens for a certificate tail"
+      ]
+    },
+    "unknown_state_mishandling": {
+      "action": "quarantine",
+      "certificate_tail_update_allowed": false,
+      "failure_count": 4,
+      "nonforgetting_check_required": true,
+      "policy": "quarantine",
+      "source_next_actions": [
+        "UNKNOWN-preserving fallback: keep UNKNOWN and ABSTAIN as first-class labels",
+        "grammar branch: dispatch UNKNOWN cases to a schema branch that forbids forced SAT/UNSAT collapse"
+      ]
+    }
+  },
+  "headline_certificate_cases": [],
+  "headline_result_allowed": false,
+  "honest_verdict": "failure_type_memory_policy_dvi_ready_replay_non_headline",
+  "input_resolution": {
+    "exp1303": {
+      "requested": "results/experiment_1303_online_memory_policy_v2.json",
+      "used": "results/experiment_1303_querybandits_ngc_online_memory_policy.json"
+    },
+    "exp1315": {
+      "requested": "results/experiment_1315_online_memory_policy_nonforgetting_audit.json",
+      "used": "results/experiment_1315_continuous_self_learning_cerce_nonforgetting_audit.json"
+    },
+    "exp1324": {
+      "requested": "results/experiment_1324_certificate_failure_taxonomy_formalizer_reality_check.json",
+      "used": "results/experiment_1324_certificate_failure_taxonomy_formalizer_reality_check.json"
+    },
+    "exp1341": {
+      "requested": "results/experiment_1341_halluguard_certificate_failure_split.json",
+      "used": "results/experiment_1341_halluguard_certificate_failure_split.json"
+    }
+  },
+  "inputs_unavailable": [
+    "results/experiment_1303_online_memory_policy_v2.json",
+    "results/experiment_1315_online_memory_policy_nonforgetting_audit.json"
+  ],
+  "measurement_note": "Replay-only policy audit from already-written artifacts; no fresh certificate generation or headline Phase 1 gate rerun was performed.",
+  "memory_regression_count": 0,
+  "nonforgetting_certificate_rate": 1.0,
+  "promoted_memory_count": 35,
+  "replay_cases_used": 282,
+  "run_date": "20260505",
+  "schema": "continuous_self_learning_failure_type_memory_policy_v1",
+  "self_learning_delta_overall": 1.596429,
+  "source_artifacts": [
+    "results/experiment_1303_querybandits_ngc_online_memory_policy.json",
+    "results/experiment_1315_continuous_self_learning_cerce_nonforgetting_audit.json",
+    "results/experiment_1324_certificate_failure_taxonomy_formalizer_reality_check.json",
+    "results/experiment_1341_halluguard_certificate_failure_split.json"
+  ],
+  "source_honest_verdicts": {
+    "exp1303": "online_memory_policy_improved_non_headline",
+    "exp1315": "cerce_nonforgetting_preserved_improved_non_headline",
+    "exp1324": "diagnostic_complete_parse_gate_shortfall_parser_recovery_needed",
+    "exp1341": "local_certificate_slice_diagnostic_exp1340_missing_no_universal_detector_claim"
+  },
+  "spec_resolution": {
+    "requested_online_learning_spec": "/home/ianblenke/github.com/ianblenke/carnot/openspec/capabilities/online-learning/spec.md",
+    "requested_online_learning_spec_available": false,
+    "used_self_learning_spec": "/home/ianblenke/github.com/ianblenke/carnot/openspec/capabilities/self-learning/spec.md",
+    "used_self_learning_spec_available": true
+  },
+  "status": "complete"
+}
