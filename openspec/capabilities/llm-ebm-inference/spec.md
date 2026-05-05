@@ -307,6 +307,61 @@ attempting a partial headline pair.
 **When** `cached_sota_pair()` is called
 **Then** it returns `None`.
 
+### REQ-INFER-SOTA-006: Cached SOTA GGUF llama.cpp Smoke-Load Probe
+
+The system SHALL provide a minimal local smoke-load artifact for the cached SOTA
+GGUF pair before downstream certificate runs use those models.  The probe SHALL
+write `results/experiment_1310_sota_gguf_llamacpp_smoke_load.json` with
+`status="in_progress"` before live checks, SHALL read Exp 1309, and SHALL abort
+to an honest terminal blocker when `sota_pair_ready` is not true.
+
+When Exp 1309 is ready, the probe SHALL resolve the pair via
+`cached_sota_pair(gpu_indices=(0, 1))` and record each resolved model's exact
+`hf_id`, `name`, `model_path`, observed quantization suffix, and GPU assignment.
+The model IDs SHALL be drawn only from the mandated headline set
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`.
+
+The probe SHALL import the project-local llama.cpp runtime (`from llama_cpp
+import Llama`) before generation.  If the import fails, it SHALL record
+`llama_cpp_import_ok=false` with the exact exception string and SHALL NOT fake
+generation.  If the import succeeds, the probe SHALL attempt one deterministic,
+tiny-token generation per resolved model and record per-model load success,
+token count, elapsed seconds, tokens per second, and GPU memory when available.
+
+The final artifact SHALL expose `status`, `models_loaded`,
+`llama_cpp_import_ok`, `tokens_per_second`, `gpu_memory_gb`,
+`model_specs_count`, `models_used`, `headline_result_possible`, and
+`honest_verdict`.  `headline_result_possible` SHALL be true only when two
+mandated headline GGUFs were resolved and both smoke generations completed with
+at least one emitted token.
+
+### SCENARIO-INFER-SOTA-006-001: Ready Pair Smoke-Loads
+
+**Given** Exp 1309 reports `sota_pair_ready=true`
+**And** `cached_sota_pair(gpu_indices=(0, 1))` returns two mandated GGUF specs
+**And** the llama.cpp import succeeds
+**When** the smoke-load probe runs with a tiny deterministic prompt
+**Then** the artifact records both model identities, paths, quantization suffixes,
+GPU assignments, per-model throughput, aggregate throughput, and
+`headline_result_possible=true`.
+
+### SCENARIO-INFER-SOTA-006-002: Missing llama.cpp Blocks Without Fake Generation
+
+**Given** Exp 1309 reports `sota_pair_ready=true`
+**And** the cached pair resolves
+**When** importing `llama_cpp.Llama` raises an exception
+**Then** the artifact records `llama_cpp_import_ok=false`
+**And** every resolved model remains ungenerated
+**And** `headline_result_possible=false`.
+
+### SCENARIO-INFER-SOTA-006-003: Exp 1309 Not Ready Blocks Probe
+
+**Given** Exp 1309 does not report `sota_pair_ready=true`
+**When** the smoke-load probe runs
+**Then** it writes a complete terminal blocker artifact
+**And** it does not import llama.cpp or attempt generation.
+
 ## Implementation Status
 
 | Requirement | Python | Tests |
@@ -324,3 +379,4 @@ attempting a partial headline pair.
 | REQ-INFER-017 | Implemented | 7 Python |
 | REQ-INFER-SOTA-004 | Implemented | 4 Python |
 | REQ-INFER-SOTA-005 | Implemented | 4 Python |
+| REQ-INFER-SOTA-006 | Implemented | 12 Python |
