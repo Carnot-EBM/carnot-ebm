@@ -904,3 +904,5 @@ web search: GitHub trending energy based mod |
 | 2026-05-05 14:33 UTC | Logitext/NSVIF Partial SMT Validator - Gated on Pa | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1353-triggered-certificate-v7-truncproo |
 | 2026-05-05 14:35 UTC | Logitext/NSVIF Partial SMT Validator - Gated on Pa | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1353-triggered-certificate-v7-truncproo |
 | 2026-05-05 14:37 UTC | VERGE MCS Repair Localization - Gated on Semantic | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1355-logitext-nsvif-partial-smt-validator |
+| 2026-05-05 14:37 UTC | Margin-Aware Cactus/BEAVER Scheduler v2 - Gated on | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1356-verge-mcs-repair-localization.repa |
+| 2026-05-05 14:39 UTC | VERGE MCS Repair Localization - Gated on Semantic | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1355-logitext-nsvif-partial-smt-validator |
