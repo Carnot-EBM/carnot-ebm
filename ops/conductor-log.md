@@ -771,3 +771,5 @@ web search: GitHub trending energy based mod |
 | 2026-05-05 01:28 UTC | GRPO/VPRM v10 - Gated on SOTA Certificates and Onl | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1299-triggered-certificate-extraction-v3) |
 | 2026-05-05 01:33 UTC | HardNet++ + DSP Feasibility Stop Policy | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1305_hardnet |
 | 2026-05-05 01:35 UTC | GRPO/VPRM v10 - Gated on SOTA Certificates and Onl | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1299-triggered-certificate-extraction-v3) |
+| 2026-05-05 01:40 UTC | HardNet++ + DSP Feasibility Stop Policy | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1305_hardnet |
+| 2026-05-05 01:42 UTC | GRPO/VPRM v10 - Gated on SOTA Certificates and Onl | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1299-triggered-certificate-extraction-v3) |
