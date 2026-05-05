@@ -339,3 +339,21 @@ all attribution clean, target a top-tier venue *after* we have the
 hardware measurement and at least one of the four contributions
 empirically validated against existing baselines (e.g., SOS-Integrated
 KAN vs MonoKAN on the same monotonic-regression benchmarks).
+
+## 2026-05-05 Related-Work Delta (Exp 1321)
+
+Publication remains under operator hold; this notes delta does not record,
+authorize, or imply an arXiv submission.
+
+New material 2025-2026 references counted: 19.
+
+Compact related-work impact:
+- constraint and certificate generation: ConstraintBench, ConstrainPrompt, Compact Constraint Encoding, Residual Drift and MUS-Repair for Multi-Turn Constraint State, FALCON, Attention Meets Reachability, Infeasibility-Aware LLMs for Combinatorial Optimization.
+- verifier-backed reasoning and semantic control: SATQuest, Semantic Probabilistic Control of Language Models.
+- online self-learning and non-forgetting: CerCE, DVI, QueryBandits for Online Hallucination Mitigation, Neural Garbage Collection.
+- hardware-portable energy and KAN context: p-Bit Dual-BRAM Annealer and Time-Multiplexed Update Dynamics, KAN Hardware and Analog Paths, Current Extropic and Kona Status Remains Strategic, Not a Local Dependency, KAN Verification via Optimal Piecewise-Affine Abstractions, Parallel p-bit Ising Performance-Cost Landscape, Extropic TSU and Logical Kona Status Check.
+
+Honest impact: the sweep strengthens the paper's related-work framing around
+constraint-backed generation, verifier-grounded reasoning, continual-learning
+safety, and hardware-portable energy models, but it does not lift the
+operator hold or justify credentialed submission.
