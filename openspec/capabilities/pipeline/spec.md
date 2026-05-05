@@ -2027,3 +2027,46 @@ to the checker,
   - fn_rate in [0.0, 1.0]
 
 **Spec traces:** REQ-PROBE-022
+
+### REQ-VERIFY-1352: Certificate Completion-Budget Preflight Before SOTA Spend
+
+The certificate pipeline MUST perform a CPU-only completion-budget and dynamic
+dispatch preflight before any Exp 1353-class SOTA certificate run spends GPU
+time.  The preflight SHALL reuse the Exp 1339 SAT, UNSAT, UNKNOWN, and repair
+dispatch surface, build tiny structurally valid synthetic certificates for each
+state, estimate the minimum completion tokens required after an emitted
+structural tag, and compare those estimates against the active certificate
+`max_tokens` setting.
+
+The artifact SHALL be written to
+`results/experiment_1352_truncproof_xgrammar_certificate_completion_preflight.json`
+and include at least `status`, `grammar_states`,
+`min_completion_tokens_by_state`, `max_token_budget_sufficient`,
+`structural_tag_supported`, `xgrammar_backend_available`,
+`dynamic_dispatch_preserved`, `sota_run_allowed`, `blocker_if_not_allowed`, and
+`honest_verdict`.  `sota_run_allowed` SHALL be true only when
+`max_token_budget_sufficient` and `dynamic_dispatch_preserved` are both true.
+If XGrammar is unavailable locally, the artifact SHALL record that honestly and
+test the pure-Python TagDispatch fallback instead of calling a SOTA model.
+
+**Acceptance criteria:**
+- The preflight writes an `in_progress` artifact before the local probes run,
+  then overwrites it with a terminal `complete` artifact.
+- SAT, UNSAT, UNKNOWN, and repair states all dispatch dynamically from
+  structural-tagged synthetic completions.
+- `max_token_budget_sufficient` is computed from the active `max_tokens`
+  setting and the largest minimum completion-token estimate.
+- When either budget sufficiency or dynamic dispatch fails,
+  `sota_run_allowed=false` and `blocker_if_not_allowed` names the exact blocker.
+
+### SCENARIO-VERIFY-1352: CPU Preflight Gates Exp 1353 GPU Spend
+
+**Given** Exp 1339 proved local dynamic TagDispatch for SAT, UNSAT, UNKNOWN, and
+repair states
+**When** Exp 1352 runs with the active certificate runtime settings
+**Then** it records structural-tag support, XGrammar availability, dynamic
+dispatch preservation, and the completion-token budget decision
+**And** it either allows Exp 1353 GPU spend with `sota_run_allowed=true` or
+writes a terminal blocker explaining why the SOTA run remains closed.
+
+**Spec traces:** REQ-VERIFY-1352

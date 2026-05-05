@@ -1,0 +1,160 @@
+{
+  "artifact": "experiment_1352_truncproof_xgrammar_certificate_completion_preflight",
+  "artifact_metadata": {
+    "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "run_date": "20260505",
+    "source_experiments": [
+      "exp1339",
+      "exp1351"
+    ],
+    "spec": "REQ-VERIFY-1352"
+  },
+  "blocker_if_not_allowed": null,
+  "completion_token_estimator": "regex proxy: contiguous alnum/underscore spans and individual punctuation characters count as tokens",
+  "dynamic_dispatch_preserved": true,
+  "grammar_backend_candidates": [
+    {
+      "available": false,
+      "cli_available": false,
+      "constrained_generation": true,
+      "dynamic_dispatch": true,
+      "failure_reason": "xgrammar_import_absent",
+      "fallback_only": false,
+      "import_available": false,
+      "import_name": "xgrammar",
+      "name": "xgrammar2_tagdispatch_native"
+    },
+    {
+      "available": true,
+      "cli_available": false,
+      "constrained_generation": true,
+      "dynamic_dispatch": false,
+      "failure_reason": null,
+      "fallback_only": false,
+      "import_available": true,
+      "import_name": "llama_cpp",
+      "name": "llama_cpp_gbnf_static"
+    },
+    {
+      "available": true,
+      "cli_available": false,
+      "constrained_generation": false,
+      "dynamic_dispatch": true,
+      "failure_reason": null,
+      "fallback_only": true,
+      "import_available": true,
+      "import_name": null,
+      "name": "pure_python_tagdispatch_shim"
+    }
+  ],
+  "grammar_states": [
+    "SAT",
+    "UNSAT",
+    "UNKNOWN",
+    "REPAIR_HINT"
+  ],
+  "honest_verdict": "preflight_allows_exp1353_pure_python_fallback_xgrammar_absent",
+  "llm_inference_run": false,
+  "max_min_completion_tokens": 10,
+  "max_token_budget_sufficient": true,
+  "min_completion_tokens_by_state": {
+    "REPAIR_HINT": 10,
+    "SAT": 6,
+    "UNKNOWN": 6,
+    "UNSAT": 6
+  },
+  "run_date": "20260505",
+  "runtime_settings_used": {
+    "avoid_stop_strings": [
+      "\n"
+    ],
+    "chat_template": false,
+    "grammar": "none_for_initial_health_gate_then_reenable_bounded_certificate_schema",
+    "max_tokens": 96,
+    "prompt_variant": "certificate_shaped_prompt",
+    "stop": [
+      "</s>",
+      "<eos>"
+    ],
+    "temperature": 0.0,
+    "top_p": 1.0
+  },
+  "schema_version": 1,
+  "sota_model_called": false,
+  "sota_run_allowed": true,
+  "sota_run_policy": "allow only when max_token_budget_sufficient and dynamic_dispatch_preserved are true",
+  "status": "complete",
+  "structural_tag_supported": true,
+  "synthetic_cases": [
+    {
+      "body": "SAT",
+      "state": "SAT",
+      "tagged_text": "<CARNOT_CERT_STATE:SAT>\nSAT"
+    },
+    {
+      "body": "UNSAT",
+      "state": "UNSAT",
+      "tagged_text": "<CARNOT_CERT_STATE:UNSAT>\nUNSAT"
+    },
+    {
+      "body": "UNKNOWN",
+      "state": "UNKNOWN",
+      "tagged_text": "<CARNOT_CERT_STATE:UNKNOWN>\nUNKNOWN"
+    },
+    {
+      "body": "REPAIR_HINT: add bound.",
+      "state": "REPAIR_HINT",
+      "tagged_text": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: add bound."
+    }
+  ],
+  "tagged_dispatch_results": [
+    {
+      "completion_tokens": 6,
+      "dispatched_state": "SAT",
+      "dynamic_parseable": true,
+      "errors": [],
+      "existing_parser_errors": [],
+      "existing_parser_parseable": true,
+      "expected_state": "SAT",
+      "parser_kind": "existing_parser",
+      "tag_state": "SAT"
+    },
+    {
+      "completion_tokens": 6,
+      "dispatched_state": "UNSAT",
+      "dynamic_parseable": true,
+      "errors": [],
+      "existing_parser_errors": [],
+      "existing_parser_parseable": true,
+      "expected_state": "UNSAT",
+      "parser_kind": "existing_parser",
+      "tag_state": "UNSAT"
+    },
+    {
+      "completion_tokens": 6,
+      "dispatched_state": "UNKNOWN",
+      "dynamic_parseable": true,
+      "errors": [],
+      "existing_parser_errors": [],
+      "existing_parser_parseable": true,
+      "expected_state": "UNKNOWN",
+      "parser_kind": "existing_parser",
+      "tag_state": "UNKNOWN"
+    },
+    {
+      "completion_tokens": 10,
+      "dispatched_state": "REPAIR_HINT",
+      "dynamic_parseable": true,
+      "errors": [],
+      "existing_parser_errors": [
+        "no_json_object"
+      ],
+      "existing_parser_parseable": false,
+      "expected_state": "REPAIR_HINT",
+      "parser_kind": "repair_hint_shim",
+      "tag_state": "REPAIR_HINT"
+    }
+  ],
+  "tested_dispatch_backend": "pure_python_tagdispatch_shim",
+  "xgrammar_backend_available": false
+}
