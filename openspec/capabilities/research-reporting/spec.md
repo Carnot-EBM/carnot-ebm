@@ -667,6 +667,37 @@ Exp 1340 replacement artifact and the relevant semantic-validator upstream
 evidence are present. It shall include run metadata using run date `20260505`
 and project root `/home/ianblenke/github.com/ianblenke/carnot`.
 
+### REQ-REPORT-031: Milestone .105 Retrospective and .106 Carry-Forward Plan
+
+The Exp 1363 `.105` milestone retrospective workflow shall read the `.105`
+roadmap/planning context and Exp 1351 through Exp 1362 result artifacts without
+rerunning experiments or rewriting source artifacts. It shall write
+`results/experiment_1363_milestone_105_retro_carryforward.json` with:
+
+- `status`
+- `criteria_total`
+- `criteria_met`
+- `experiment_statuses`
+- `certificate_branch_verdict`
+- `semantic_repair_verdict`
+- `self_learning_verdict`
+- `hardware_verdict`
+- `publication_hold_state`
+- `carry_forward_tasks`
+- `prior_failure_hygiene_notes`
+- `honest_verdict`
+
+The workflow shall distinguish terminal SOTA certificate evidence from a
+successful certificate branch: Exp 1353 may count as terminal evidence while
+still recording that parse, truthfulness, trigger-token, and UNKNOWN-preserving
+rates failed the semantic gate. Gated tasks that only write blocked artifacts
+shall not be reported as semantic, DVI, GRPO, or policy-update successes.
+Missing gated artifacts shall be reported explicitly. Self-learning verdicts
+shall separate replay-only evidence from headline evidence, and hardware and
+publication verdicts shall preserve no-hardware-claim and publication-hold
+boundaries. The artifact shall include run metadata using run date `20260505`
+and project root `/home/ianblenke/github.com/ianblenke/carnot`.
+
 ### REQ-REPORT-024: Local Agent Usage Snapshot
 
 The repository shall provide a local operator workflow that inspects the
@@ -1034,6 +1065,23 @@ instead of being inferred as successes
 **And** `prior_failure_requirements` names the prior failure context that `.105`
 tasks must cite before retrying gated work.
 
+### SCENARIO-REPORT-031: Exp 1363 Closes .105 Without Overclaiming
+
+**Given** Exp 1351 through Exp 1362 source artifacts are checked
+**And** Exp 1353 produced terminal local SOTA certificate rows with
+`certificate_parse_rate == 0.0`
+**And** semantic repair, DVI, and GRPO work is blocked or missing behind gates
+**When** the Exp 1363 retrospective workflow runs for run date `20260505`
+**Then** it writes all required REQ-REPORT-031 fields
+**And** `criteria_total` matches the `.105` success-criteria count
+**And** `criteria_met` counts only observed terminal evidence, mandatory
+self-learning evidence, no-hardware mapping evidence, publication-boundary
+evidence, and gate-discipline criteria
+**And** blocked semantic, DVI, and GRPO artifacts are not reported as successful
+semantic repair or policy-update evidence
+**And** missing Exp 1356 and Exp 1359 artifacts are listed explicitly
+**And** `carry_forward_tasks` names `.106` work with prior-failure hygiene.
+
 ### SCENARIO-REPORT-021: Codex Latest Rate-Limit Event Is Surfaced
 
 **Given** a local Codex session tree contains multiple `token_count` events
@@ -1199,6 +1247,7 @@ embed live-GPU benchmark results from Exp 328 when available.
 | REQ-REPORT-028 | `python/carnot/reporting/milestone_retro_102.py`, `results/experiment_1322_milestone_retro_102.json` | `tests/python/test_milestone_retro_102.py` | Implemented |
 | REQ-REPORT-029 | `python/carnot/reporting/milestone_retro_104.py`, `results/experiment_1350_milestone_104_retro_carryforward.json` | `tests/python/test_milestone_retro_104.py` | Implemented |
 | REQ-REPORT-030 | `python/carnot/reporting/carryforward_integrity_audit_104.py`, `results/experiment_1351_104_carryforward_artifact_integrity_audit.json` | `tests/python/test_carryforward_integrity_audit_104.py` | Implemented |
+| REQ-REPORT-031 | `python/carnot/reporting/milestone_retro_105.py`, `results/experiment_1363_milestone_105_retro_carryforward.json` | `tests/python/test_milestone_retro_105.py` | Implemented |
 | REQ-REPORT-024 | `python/carnot/reporting/agent_usage.py`, `scripts/agent_plan_usage.py` | `tests/python/test_agent_plan_usage.py` | Implemented |
 | REQ-PUBLISH-003 | `scripts/experiment_317_hf_publish.py` | `tests/python/test_experiment_317_hf_publish.py` | Implemented |
 | REQ-PUBLISH-004 | `scripts/experiment_330_hf_live_publish.py` | `tests/python/test_experiment_330_hf_live_publish.py` | Implemented |

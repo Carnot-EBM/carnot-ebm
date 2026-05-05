@@ -1,0 +1,424 @@
+{
+  "artifact_metadata": {
+    "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "run_date": "20260505",
+    "source_experiments": [
+      "exp1351",
+      "exp1352",
+      "exp1353",
+      "exp1354",
+      "exp1355",
+      "exp1356",
+      "exp1357",
+      "exp1358",
+      "exp1359",
+      "exp1360",
+      "exp1361",
+      "exp1362"
+    ]
+  },
+  "carry_forward_tasks": [
+    {
+      "prior_failures": [
+        {
+          "addressed_by": "Force tag-first emission or retire the trigger-before-constrain branch; acceptance must require parse_rate >= 0.75 plus truthfulness and UNKNOWN preservation.",
+          "experiment_id": "exp1353-triggered-certificate-v7-truncproof-sota",
+          "retire_if_same_verdict": true,
+          "verdict": "sota_triggered_certificate_v7_measured_parse_0_missing_structural_tag"
+        }
+      ],
+      "task_id": "terminal_certificate_tag_first_repair_or_branch_retirement",
+      "why": "Exp 1353 is no longer missing, but it is negative terminal evidence: local SOTA generation hit 0.0 parse/truthfulness/trigger/UNKNOWN rates because the model generated thinking text before the structural tag."
+    },
+    {
+      "prior_failures": [
+        {
+          "addressed_by": "Do not rerun semantic validators until a terminal certificate artifact clears the parse gate; if the gate fails, write terminal blocked artifacts for repair and scheduler descendants.",
+          "experiment_id": "exp1355-logitext-nsvif-partial-smt-validator",
+          "retire_if_same_verdict": true,
+          "verdict": "blocked_gate_check_failed_parse_rate_0_below_0_75"
+        },
+        {
+          "addressed_by": "Add a terminal gate-block artifact or explicit preemptive-skip artifact before carrying repair localization forward.",
+          "experiment_id": "exp1356-verge-mcs-repair-localization",
+          "retire_if_same_verdict": true,
+          "verdict": "missing_artifact_after_semantic_gate_block"
+        }
+      ],
+      "task_id": "semantic_repair_only_after_parse_gate",
+      "why": "Exp 1355 blocked on parse_rate=0.0, Exp 1356 is missing, and Exp 1357 blocked on missing repair precision."
+    },
+    {
+      "prior_failures": [
+        {
+          "addressed_by": "Require fresh verifier-selected samples and non-forgetting controls before headline self-learning, DVI, or GRPO claims.",
+          "experiment_id": "exp1358-continuous-self-learning-verifier-selected-memory",
+          "retire_if_same_verdict": false,
+          "verdict": "verifier_selected_memory_replay_only_dvi_ready_non_headline"
+        }
+      ],
+      "task_id": "fresh_self_learning_before_headline_dvi_or_grpo",
+      "why": "Exp 1358 is mandatory and positive, but it is replay-only with fresh_verified_sample_count=0."
+    },
+    {
+      "prior_failures": [
+        {
+          "addressed_by": "Carry DVI only with explicit parse, semantic, and fresh self-learning gates; otherwise write a terminal blocked artifact.",
+          "experiment_id": "exp1359-dvi-certificate-tail-v4-gated",
+          "retire_if_same_verdict": true,
+          "verdict": "missing_artifact_after_structured_gates_failed"
+        },
+        {
+          "addressed_by": "Run GRPO/VPRM only after DVI lossless_acceptance_claim_allowed=true and positive non-replay self-learning evidence.",
+          "experiment_id": "exp1360-grpo-vprm-v14-gated-micro-audit",
+          "retire_if_same_verdict": true,
+          "verdict": "blocked_gate_check_failed_missing_dvi_lossless_acceptance"
+        }
+      ],
+      "task_id": "dvi_grpo_terminal_gate_artifacts",
+      "why": "Exp 1359 is missing and Exp 1360 is blocked; neither produced DVI lossless acceptance or policy-update evidence."
+    },
+    {
+      "prior_failures": [
+        {
+          "addressed_by": "Next hardware work must add RTL/golden-contract evidence and only claim hardware after synthesis or board execution logs exist.",
+          "experiment_id": "exp1361-pdit-certificate-state-hardware-mapping",
+          "retire_if_same_verdict": false,
+          "verdict": "cpu_only_pdit_certificate_state_mapping_ready_hardware_not_run"
+        }
+      ],
+      "task_id": "pdit_mapping_to_real_hardware_contract",
+      "why": "Exp 1361 improves p-dit/p-int mapping but remains CPU-only with no hardware claim."
+    },
+    {
+      "prior_failures": [
+        {
+          "addressed_by": "Keep publication text evidence-bound until certificate, semantic, fresh self-learning, and real hardware gates are locally satisfied.",
+          "experiment_id": "exp1362-publication-hold-ebt-arm-kona-claim-boundary",
+          "retire_if_same_verdict": false,
+          "verdict": "publication_hold_active_local_evidence_does_not_support_ebt_arm_kona_or_hardware_claims"
+        }
+      ],
+      "task_id": "publication_hold_boundary_remains_active",
+      "why": "Exp 1362 keeps the hold active because local evidence does not support EBT/ARM/Kona, external parity, or hardware execution claims."
+    }
+  ],
+  "certificate_branch_verdict": {
+    "branch_success": false,
+    "certificate_case_count": 4,
+    "certificate_parse_rate": 0.0,
+    "certificate_truthfulness_rate": 0.0,
+    "claim_boundary": "Exp 1353 produced terminal local SOTA certificate evidence, but every measured row missed the structural tag; parse, truthfulness, trigger-token, and UNKNOWN-preserving rates are 0.0, so semantic/DVI gates remain closed.",
+    "dominant_blocker": "missing_structural_tag",
+    "terminal_blocker": null,
+    "terminal_sota_evidence": true,
+    "trigger_token_hit_rate": 0.0,
+    "unknown_preservation_rate": 0.0
+  },
+  "criteria_met": 9,
+  "criteria_results": {
+    "exp1351_terminal_104_carryforward_audit": "MET",
+    "exp1352_completion_preflight_allows_or_blocks_terminally": "MET",
+    "exp1353_terminal_certificate_evidence": "MET",
+    "exp1354_skill_specific_certificate_failure_rates": "MET",
+    "exp1355_unknown_preserving_semantic_validation": "GATED",
+    "exp1356_mcs_repair_hints_or_terminal_blocker": "MISSING",
+    "exp1357_false_acceptance_risk_before_savings": "GATED",
+    "exp1358_mandatory_self_learning_replay_vs_headline": "MET",
+    "exp1359_1360_structured_gate_discipline": "MET",
+    "exp1361_pdit_mapping_without_hardware_claims": "MET",
+    "exp1362_publication_claim_boundary": "MET",
+    "exp1363_retro_carryforward_complete": "MET"
+  },
+  "criteria_total": 12,
+  "experiment": "1363_milestone_105_retro_carryforward",
+  "experiment_statuses": {
+    "exp1351": {
+      "artifact": "results/experiment_1351_104_carryforward_artifact_integrity_audit.json",
+      "exists": true,
+      "honest_verdict": "handoff_state_missing_exp1340_terminal_certificate_semantic_scheduler_dvi_grpo_closed",
+      "status": "complete"
+    },
+    "exp1352": {
+      "artifact": "results/experiment_1352_truncproof_xgrammar_certificate_completion_preflight.json",
+      "exists": true,
+      "honest_verdict": "preflight_allows_exp1353_pure_python_fallback_xgrammar_absent",
+      "status": "complete"
+    },
+    "exp1353": {
+      "artifact": "results/experiment_1353_triggered_certificate_v7_truncproof_sota.json",
+      "exists": true,
+      "honest_verdict": "sota_triggered_certificate_v7_measured",
+      "status": "complete"
+    },
+    "exp1354": {
+      "artifact": "results/experiment_1354_logicskills_certificate_skill_split.json",
+      "exists": true,
+      "honest_verdict": "logic_skill_split_supported_symbolization_dominates_exp1353",
+      "status": "complete"
+    },
+    "exp1355": {
+      "artifact": "results/experiment_1355_logitext_nsvif_partial_smt_validator.json",
+      "blocked_at_layer": "conductor_pre_gate",
+      "exists": true,
+      "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp1353-triggered-certificate-v7-truncproof-sota.certificate_parse_rate (actual=0.0 >= expected=0.75)",
+      "gates_evaluated": [
+        {
+          "actual": 0.0,
+          "artifact_field": "certificate_parse_rate",
+          "expected": 0.75,
+          "op": ">=",
+          "passed": false,
+          "reason": "actual=0.0 >= expected=0.75",
+          "upstream": "exp1353-triggered-certificate-v7-truncproof-sota"
+        }
+      ],
+      "honest_verdict": "blocked_gate_check_failed",
+      "status": "blocked"
+    },
+    "exp1356": {
+      "artifact": "results/experiment_1356_verge_mcs_repair_localization.json",
+      "exists": false,
+      "honest_verdict": "",
+      "status": "missing"
+    },
+    "exp1357": {
+      "artifact": "results/experiment_1357_margin_aware_cactus_beaver_scheduler_v2.json",
+      "blocked_at_layer": "conductor_pre_gate",
+      "exists": true,
+      "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp1356-verge-mcs-repair-localization.repair_hint_precision (upstream artifact not found for task id 'exp1356-verge-mcs-repair-localization')",
+      "gates_evaluated": [
+        {
+          "actual": null,
+          "artifact_field": "repair_hint_precision",
+          "expected": 0.5,
+          "op": ">=",
+          "passed": false,
+          "reason": "upstream artifact not found for task id 'exp1356-verge-mcs-repair-localization'",
+          "upstream": "exp1356-verge-mcs-repair-localization"
+        }
+      ],
+      "honest_verdict": "blocked_gate_check_failed",
+      "status": "blocked"
+    },
+    "exp1358": {
+      "artifact": "results/experiment_1358_continuous_self_learning_verifier_selected_memory.json",
+      "exists": true,
+      "honest_verdict": "verifier_selected_memory_replay_only_dvi_ready_non_headline",
+      "status": "complete"
+    },
+    "exp1359": {
+      "artifact": "results/experiment_1359_dvi_certificate_tail_v4_gated.json",
+      "exists": false,
+      "honest_verdict": "",
+      "status": "missing"
+    },
+    "exp1360": {
+      "artifact": "results/experiment_1360_grpo_vprm_v14_gated_micro_audit.json",
+      "blocked_at_layer": "conductor_pre_gate",
+      "exists": true,
+      "gate_check_summary": "1 of 2 gate(s) failed; first failure: exp1359-dvi-certificate-tail-v4-gated.lossless_acceptance_claim_allowed (upstream artifact not found for task id 'exp1359-dvi-certificate-tail-v4-gated')",
+      "gates_evaluated": [
+        {
+          "actual": null,
+          "artifact_field": "lossless_acceptance_claim_allowed",
+          "expected": true,
+          "op": "==",
+          "passed": false,
+          "reason": "upstream artifact not found for task id 'exp1359-dvi-certificate-tail-v4-gated'",
+          "upstream": "exp1359-dvi-certificate-tail-v4-gated"
+        },
+        {
+          "actual": 1.596429,
+          "artifact_field": "self_learning_delta_overall",
+          "expected": 0.0,
+          "op": ">",
+          "passed": true,
+          "reason": "actual=1.596429 > expected=0.0",
+          "upstream": "exp1358-continuous-self-learning-verifier-selected-memory"
+        }
+      ],
+      "honest_verdict": "blocked_gate_check_failed",
+      "status": "blocked"
+    },
+    "exp1361": {
+      "artifact": "results/experiment_1361_pdit_certificate_state_hardware_mapping.json",
+      "exists": true,
+      "honest_verdict": "cpu_only_pdit_certificate_state_mapping_ready_hardware_not_run",
+      "status": "complete"
+    },
+    "exp1362": {
+      "artifact": "results/experiment_1362_publication_hold_ebt_arm_kona_claim_boundary.json",
+      "exists": true,
+      "honest_verdict": "publication_hold_active_local_evidence_does_not_support_ebt_arm_kona_or_hardware_claims",
+      "status": "complete"
+    }
+  },
+  "hardware_verdict": {
+    "binary_spin_count": 4,
+    "certificate_states_mapped": [
+      "SAT",
+      "UNSAT",
+      "UNKNOWN",
+      "REPAIR"
+    ],
+    "claim_boundary": "Exp 1361 is CPU-only p-dit/p-int mapping evidence. It does not prove FPGA, KV260, TSU, analog, THRML, or hardware energy execution.",
+    "energy_equivalence_error": 0.0,
+    "hardware_execution_claim_allowed": false,
+    "kv260_claim_allowed": false,
+    "mapping_evidence_produced": true,
+    "next_hardware_requirements": [
+      {
+        "claim_gate": "required_before_hardware_claim",
+        "path": "hardware/kv260/pdit_certificate_state_pkg.sv",
+        "requirement": "define q=4 p-dit/p-int update semantics for certificate states"
+      },
+      {
+        "claim_gate": "required_before_hardware_claim",
+        "path": "hardware/kv260/ising_sampler_v8_pdit_certificate.v",
+        "requirement": "extend the sampler packet format for q-state energy tables and categorical draws"
+      },
+      {
+        "claim_gate": "required_before_hardware_claim",
+        "path": "tests/python/test_pdit_certificate_state_rtl_contract.py",
+        "requirement": "write a CPU golden-model to RTL equivalence test over all four certificate states"
+      },
+      {
+        "claim_gate": "required_before_hardware_claim",
+        "path": "hardware/kv260/synth_pdit_certificate_state.tcl",
+        "requirement": "synthesize the q=4 design with Vivado and record LUT, FF, BRAM, timing, and seed metadata"
+      },
+      {
+        "claim_gate": "required_before_kv260_claim",
+        "path": "python/carnot/hardware/pdit_certificate_state_driver.py",
+        "requirement": "run the generated bitfile on a real KV260 with AXI/PYNQ readback logs"
+      }
+    ],
+    "pdit_variable_count": 1,
+    "state_expansion_ratio": 4.0
+  },
+  "honest_verdict": "milestone_105_9_of_12_criteria_met_terminal_certificate_measured_semantic_repair_gated_self_learning_replay_only_publication_hold_active",
+  "milestone": "2026.04.105",
+  "prior_failure_hygiene_notes": {
+    "artifact_hygiene_required_for_106": "Every gated .106 task needs either a terminal evidence artifact or a terminal blocked artifact; missing preemptive-skip artifacts should not recur.",
+    "blocked_artifacts_not_counted_as_successes": [
+      "exp1355",
+      "exp1357",
+      "exp1360"
+    ],
+    "certificate_prior_root_cause": "Exp 1353 recovered the missing-artifact problem but exposed a new branch blocker: certificate_parse_rate=0.0 with missing structural tags.",
+    "missing_artifacts": [
+      "exp1356",
+      "exp1359"
+    ],
+    "self_learning_prior_root_cause": "Self-learning evidence is replay-only; fresh_verified_sample_count=0.",
+    "semantic_prior_root_cause": "Semantic repair is still blocked by the certificate parse gate, not by a semantic-validator negative result."
+  },
+  "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+  "publication_hold_detail": {
+    "external_dependency_claim_allowed": false,
+    "honest_verdict": "publication_hold_active_local_evidence_does_not_support_ebt_arm_kona_or_hardware_claims"
+  },
+  "publication_hold_state": "active",
+  "roadmap_inputs": {
+    "change_proposal_present": true,
+    "missing_requested_inputs": [
+      "research-roadmap-next.yaml"
+    ],
+    "research_roadmap_next_yaml_present": false,
+    "research_roadmap_yaml_present": true
+  },
+  "run_date": "20260505",
+  "schema": "milestone_retro_105_carryforward_v1",
+  "self_learning_verdict": {
+    "accepted_violation_delta": -0.846154,
+    "claim_boundary": "Exp 1358 satisfies the mandatory self-learning accounting requirement with positive replay-only, nonforgetting evidence. It has zero fresh verifier-selected samples, so it is not headline evidence; DVI/GRPO did not run.",
+    "dvi_ready": true,
+    "dvi_status": "missing",
+    "fresh_verified_sample_count": 0,
+    "grpo_gate_summary": "1 of 2 gate(s) failed; first failure: exp1359-dvi-certificate-tail-v4-gated.lossless_acceptance_claim_allowed (upstream artifact not found for task id 'exp1359-dvi-certificate-tail-v4-gated')",
+    "grpo_status": "blocked",
+    "headline_evidence_produced": false,
+    "mandatory_self_learning_satisfied": true,
+    "memory_regression_count": 0,
+    "nonforgetting_certificate_rate": 1.0,
+    "replay_cases_used": 282,
+    "replay_only": true,
+    "self_learning_delta_overall": 1.596429
+  },
+  "semantic_repair_verdict": {
+    "claim_boundary": "No semantic repair evidence was produced in .105: Exp 1355 was gate-blocked by Exp 1353 parse_rate=0.0, Exp 1356 is missing, and Exp 1357 is only a blocked conductor artifact.",
+    "repair_claim_allowed": false,
+    "repair_gate_summary": "1 of 1 gate(s) failed; first failure: exp1356-verge-mcs-repair-localization.repair_hint_precision (upstream artifact not found for task id 'exp1356-verge-mcs-repair-localization')",
+    "repair_localization_status": "missing",
+    "scheduler_status": "blocked",
+    "semantic_gate_summary": "1 of 1 gate(s) failed; first failure: exp1353-triggered-certificate-v7-truncproof-sota.certificate_parse_rate (actual=0.0 >= expected=0.75)",
+    "semantic_repair_evidence_produced": false,
+    "semantic_validator_claim_allowed": false,
+    "semantic_validator_status": "blocked",
+    "triage_claim_allowed": false
+  },
+  "source_artifacts_checked": [
+    {
+      "exists": true,
+      "experiment_id": "exp1351",
+      "path": "results/experiment_1351_104_carryforward_artifact_integrity_audit.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1352",
+      "path": "results/experiment_1352_truncproof_xgrammar_certificate_completion_preflight.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1353",
+      "path": "results/experiment_1353_triggered_certificate_v7_truncproof_sota.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1354",
+      "path": "results/experiment_1354_logicskills_certificate_skill_split.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1355",
+      "path": "results/experiment_1355_logitext_nsvif_partial_smt_validator.json"
+    },
+    {
+      "exists": false,
+      "experiment_id": "exp1356",
+      "path": "results/experiment_1356_verge_mcs_repair_localization.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1357",
+      "path": "results/experiment_1357_margin_aware_cactus_beaver_scheduler_v2.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1358",
+      "path": "results/experiment_1358_continuous_self_learning_verifier_selected_memory.json"
+    },
+    {
+      "exists": false,
+      "experiment_id": "exp1359",
+      "path": "results/experiment_1359_dvi_certificate_tail_v4_gated.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1360",
+      "path": "results/experiment_1360_grpo_vprm_v14_gated_micro_audit.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1361",
+      "path": "results/experiment_1361_pdit_certificate_state_hardware_mapping.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1362",
+      "path": "results/experiment_1362_publication_hold_ebt_arm_kona_claim_boundary.json"
+    }
+  ],
+  "status": "complete"
+}
