@@ -1,5 +1,9 @@
 # Carnot — Changelog
 
+## 2026-05-05 (Milestone 2026.04.107 Operational Retrospective)
+
+- 2026-05-05 22:33 UTC: Milestone 2026.04.107 operational retrospective complete. Wrote `results/operational_retro_2026_04_107.json` for the supplied 16 min / 5 completed closeout slice. ArXiv Bundle v10 (gated on Exp 1269) consumed 62.5% of wall time for the SEVENTH consecutive milestone; three SOTA GGUF doomed-rerun blocks consumed the remaining 37.5%; both RTX 3090s idle at 4 MB / 0% utilization throughout. Meta-finding: the same retro improvements have been estimated at 30-35% savings for seven consecutive milestones without mechanical enforcement. Top action: implement activation-time gate/doomed-rerun preflight in the conductor to emit terminal blocked artifacts in <1 s rather than burning 10-12 min re-discovering known-blocked states each milestone. Added completed-milestone row to `docs/roadmap.md`.
+
 ## 2026-05-05 (GitHub Issue #9 NLAH Conductor Charter)
 
 - 2026-05-05: Implemented issue #9 by adding the Natural-Language Research Harness charter at `ops/conductor-runtime-charter.md`, the new `openspec/capabilities/research-harnesses/spec.md` capability with REQ-HARNESS-001 through REQ-HARNESS-009 and SCENARIO-HARNESS-001 through SCENARIO-HARNESS-004, and terminal artifact `results/experiment_1280_nlah_conductor_charter.json`. The charter defines terminal artifact contracts, role boundaries, stage templates, deterministic adapter hooks, file-backed state packets, a 12-item failure taxonomy, gate semantics, and acceptance-object alignment. E2E checks from `ops/e2e-test-plan.md` are not applicable to this docs/spec/artifact-only harness charter.

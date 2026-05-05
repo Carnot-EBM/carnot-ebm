@@ -1,6 +1,6 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report — 1,374 Experiments Across 115 Artifact-Backed Research Milestones, 21,938 Python Test Items Collected (Tracked Through Exp 1374)
+## A Technical Report — 1,495 Experiments Across 117 Artifact-Backed Research Milestones, 22,163 Python Tests Collected (Tracked Through Exp 1389)
 
 **Author:** Ian Blenke
 **Date:** 2026-05-05

@@ -17,28 +17,28 @@ call. No fine-tuning. No access to model weights.
 
 Rust + Python/JAX, Apache 2.0, `pip install carnot`.
 
-Current public research record: **1,374 experiments tracked, 115
+Current public research record: **1,495 experiments tracked, 117
 artifact-backed completed milestones**, with checked-in result artifacts
-through Exp 1374 on 2026-05-05. `research-complete.yaml` currently archives
-**115** completed milestones through 2026.04.105. Milestone .106 is in
-progress (exp1364–1374 complete, exp1375–1376 pending).
+through Exp 1389 on 2026-05-05. `research-complete.yaml` currently archives
+**117** completed milestones through 2026.04.107.
 
-Milestone .105 confirmed thinking-mode models consume their generation budget
-on `<think>...</think>` tokens before structural branch-selector tags are
-emitted (`certificate_parse_rate=0.0`, dominant_blocker=`missing_structural_tag`).
-Exp 1366 resolves this with tag-first prefix injection using the CRANE
-alternating-generation pattern, reaching **certificate_parse_rate=1.0**. Exp
-1365 adds an Eidoku CSP neuro-symbolic verification path as a grammar-free
-fallback (feasibility **0.740**, AUROC **0.614**). Exp 1367 measures the
-DiffuTruth energy-of-falsehood proxy as a complementary non-equilibrium
-hallucination signal (AUROC **0.867**; Ising r=0.699, KAN r=0.961). Exp 1369
-delivers the semantic validator v2 with NSVIF Z3 constraints preserving
-SAT/UNSAT/UNKNOWN states correctly. Exp 1374 reports continuous self-learning
-v3 with self-learning delta **+1.596429**, non-forgetting rate **1.0**, 4
-semantic memory updates promoted, and `headline_result_allowed=true` — the
-first milestone in which headline self-learning is permitted. The current
-2026-05-05 Python test collection-only snapshot reports **21,938** items with
-four collection errors; it is not a full-suite pass claim.
+Milestone .106 delivered the critical fix to thinking-mode certificate
+generation: Exp 1366 (CRANE tag-first prefix injection) reached
+**certificate_parse_rate=1.0** after .105 diagnosed the `<think>` token budget
+exhaustion. Exp 1367 measures DiffuTruth as a complementary non-equilibrium
+hallucination signal (AUROC **0.867**; KAN r=0.961). Exp 1374 reports FR-11
+continuous self-learning v3 with delta **+1.596429**, non-forgetting rate
+**1.0**, and `headline_result_allowed=true`. Milestone .107 completed **13 of
+14** criteria: Exp 1382 ran the full-scale 100-case FoVer certificate + semantic
+repair pipeline with `certificate_parse_rate=1.0`, `repair_hint_precision=1.0`,
+and `semantic_validation_pass_rate=0.59`; Exp 1388 extended FR-11 self-learning
+v4 to **59 fresh-verified cases** (up from 4 in .106) with self-learning delta
+**+1.791464** and `headline_result_allowed=true`; Exp 1380 produced the arXiv
+v11 bundle (submission-ready archive, manual upload required); Exp 1379
+completed the paper integrity audit (5/5 issues resolved). The only missed
+criterion was GRPO v7 JURY-RL (Exp 1383, no improvement). The current test
+collection reports **22,163** items (2 errors); this is a collection count, not
+a full-suite pass claim.
 
 ## Install and run
 
@@ -231,7 +231,15 @@ experiment artifact under `results/`.
 | Failure-type memory policy | Non-forgetting **1.0**, self-learning delta **+1.596429**, accepted-violation delta **-0.846154**, **35** promoted and **37** demoted replay memories; non-headline replay only | Exp 1344 |
 | .104 hardware/parity audits | THRML import blocked by missing `equinox`; p-bit dual-BRAM packet v2 keeps reuse=4 KL **0.000412** to CPU Gibbs; external dependency/Kona parity claims remain disallowed | Exps 1347-1349 |
 | Milestone .104 status | **9/12 criteria met**; dynamic grammar, environment gate, replay self-learning, and hardware accounting advanced, while triggered SOTA certificates and semantic validator execution remained missing/gated | Exp 1350 |
-| Current Python test collection | **21,955** Python test items collected on 2026-05-05; collection-only snapshot with three known import errors and three skipped items, not a full-suite pass claim | local collection run |
+| CRANE tag-first prefix injection, full-scale 100-case pipeline | **certificate_parse_rate=1.0** on 100 FoVer cases; repair_hint_precision=1.0; semantic_validation_pass_rate=0.59; full_pipeline_pass_rate=0.29; mcs_repair_localization_rate=1.0; headline_result_allowed=true | Exp 1382 |
+| FR-11 continuous self-learning v4 (DVI + replay) | **59 fresh-verified cases** (up from 4 in .106); self-learning delta **+1.791464**; non-forgetting rate **1.0**; 63 promoted, 41 demoted memory entries; headline_result_allowed=true | Exp 1388 |
+| DVI discriminative verifier training v1 | AUROC delta **+0.003486** (0.3910 → 0.3945) on 7,059 FoVer training rows; checkpoint deployed; `dvi_deployed=true` | Exp 1381 |
+| arXiv v11 bundle + paper integrity audit | Paper integrity audit: **5/5** issues resolved; v11 bundle compiled; submission-ready archive at `carnot-arxiv-v11-20260505.tar.gz`; manual upload required | Exps 1379/1380 |
+| manipulable-signal-dependency constraint template (Issue #6) | `manipulable_signal_dependency` added to ConstraintTemplateLibrary; **114 tests** pass; `CaseMemoryTemplateWiring` wired for `manipulable_*`, `single_source_*`, `rag*` violation types | 2026-05-05 |
+| Milestone .105 status | **9/12 criteria met**; thinking-mode budget exhaustion diagnosed as terminal negative evidence; hardware/parity work honest; publication hold active | Exp 1363 |
+| Milestone .106 status | **11/13 criteria met**; tag-first CRANE injection resolved certificate_parse_rate=0.0 blocker; pre-test cascade SKIPs on exp1375/1376 required manual closeout | Exp 1376 retro |
+| Milestone .107 status | **13/14 criteria met**; full-scale pipeline headline allowed; arXiv v11 ready; GRPO v7 JURY-RL no improvement (sole miss); publication hold lift recommended | Exp 1389 |
+| Current Python test collection | **22,163** Python tests collected (2 errors); collection-only snapshot, not a full-suite pass claim | 2026-05-05 collection run |
 | Local Claude/Codex usage snapshot | Codex reads the newest local `token_count` event; Claude aggregates local token usage and reads only subscription/tier metadata from credentials; free-form quota prose is ignored instead of guessed; focused regression tests pass | 2026-05-04 changelog |
 
 Deeper analysis of these — including everything that **didn't** work and
