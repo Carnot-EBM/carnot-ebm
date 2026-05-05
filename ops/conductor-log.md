@@ -924,3 +924,4 @@ web search: GitHub trending energy based mod |
 | 2026-05-05 16:06 UTC | Milestone .105 Carry-Forward Audit — Thinking-Mode | OK | cache hit: 81 passed, 1 warning in 5.30s |
 | 2026-05-05 16:21 UTC | Eidoku CSP Neuro-Symbolic Verification Probe — Gra | OK | 81 passed, 1 warning in 4.95s |
 | 2026-05-05 16:35 UTC | Certificate v8 — Tag-First Prefix Injection + CRAN | OK | 81 passed, 1 warning in 4.65s |
+| 2026-05-05 16:53 UTC | DiffuTruth Energy-of-Falsehood Probe — Non-Equilib | OK | 81 passed, 1 warning in 4.74s |
