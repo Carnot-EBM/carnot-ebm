@@ -2701,3 +2701,47 @@ measured deltas are zero or negative.
 `status="complete"`, `self_verify_signal_used=true`, a boolean
 `memory_update_written`, and an honest non-headline verdict derived from the
 measured online replay delta.
+
+## REQ-LEARN-1302: Skill-Graph Promotion And Demotion From Verifier Memory
+
+Exp 1302 SHALL convert existing Exp 1288 verifier-feedback memory into a
+sandboxed skill-graph candidate artifact without modifying production user
+skills. Promotion SHALL require verifier-backed replay evidence; Neural
+Garbage Collection-style demotion and expiry SHALL be counted separately from
+promoted memories so continuous self-learning is not reported as promotion-only
+memory growth.
+
+### REQ-LEARN-1302 Sub-requirements
+
+- REQ-LEARN-1302-1: The workflow SHALL write
+  `results/experiment_1302_skill_graph_promotion_demotion_v2.json` first with
+  `status="in_progress"` before analyzing Exp 1288 memory.
+- REQ-LEARN-1302-2: The workflow SHALL load Exp 1288
+  `clause_prediction_records`, `replay_slices`, and `memory_update_written`
+  fields and identify reusable claim/verifier patterns.
+- REQ-LEARN-1302-3: Each candidate entry SHALL include replay evidence,
+  promotion criteria, demotion criteria, expiry criteria, memory type tags, and
+  a sandboxed routing decision.
+- REQ-LEARN-1302-4: The final artifact SHALL include `status`,
+  `skill_graph_candidate_count`, `promoted_memory_count`,
+  `demoted_memory_count`, `expired_memory_count`, `replay_evidence_count`,
+  `memory_update_written`, and `honest_verdict`.
+- REQ-LEARN-1302-5: The workflow SHALL write only under `results/` or another
+  research output path and SHALL NOT alter production skill directories.
+
+### SCENARIO-LEARN-1302: Exp 1288 Memory Produces A Sandboxed Skill Graph
+
+**Given** Exp 1288 wrote `memory_update_written=true` and has verifier-feedback
+claim-level memory
+**When** the Exp 1302 skill-graph workflow runs with run date `20260505`
+**Then** the final artifact has `status="complete"`
+**And** it reports promoted, demoted, expired, and replay-evidence counts
+separately
+**And** `memory_update_written` is true for the sandboxed candidate artifact
+**And** no production user skill path is modified.
+
+## Implementation Status (REQ-LEARN-1302)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-1302 | Implemented (`python/carnot/reporting/skill_graph_promotion_demotion.py`) | Implemented (`tests/python/test_skill_graph_promotion_demotion.py`) |
