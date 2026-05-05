@@ -1,0 +1,33 @@
+{
+  "experiment": 1360,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-05-05",
+  "started_at": "2026-05-05T14:54:42.427473+00:00",
+  "finished_at": "2026-05-05T14:54:42.427473+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "GRPO/VPRM v14 Micro-Audit - Gated on DVI Lossless Acceptance",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 2 gate(s) failed; first failure: exp1359-dvi-certificate-tail-v4-gated.lossless_acceptance_claim_allowed (upstream artifact not found for task id 'exp1359-dvi-certificate-tail-v4-gated')",
+  "gates_evaluated": [
+    {
+      "upstream": "exp1359-dvi-certificate-tail-v4-gated",
+      "artifact_field": "lossless_acceptance_claim_allowed",
+      "op": "==",
+      "expected": true,
+      "actual": null,
+      "passed": false,
+      "reason": "upstream artifact not found for task id 'exp1359-dvi-certificate-tail-v4-gated'"
+    },
+    {
+      "upstream": "exp1358-continuous-self-learning-verifier-selected-memory",
+      "artifact_field": "self_learning_delta_overall",
+      "op": ">",
+      "expected": 0.0,
+      "actual": 1.596429,
+      "passed": true,
+      "reason": "actual=1.596429 > expected=0.0"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
