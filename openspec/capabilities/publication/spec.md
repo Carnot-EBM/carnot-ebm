@@ -409,6 +409,50 @@ AND records `arxiv_submitted == false` when no local submission receipt exists
 AND reports either a complete compiled/package artifact or a blocked artifact
 with exact missing tool names.
 
+### REQ-PUBLISH-015: Terminal arXiv v10 Hold/Receipt Artifact
+
+The arXiv v10 hold/receipt runner MUST create
+`results/experiment_1307_arxiv_v10_hold_receipt_v2.json` with
+`status == "in_progress"` before doing any receipt evaluation. It MUST perform
+only local repository file checks and MUST NOT attempt arXiv login, upload,
+submission, or any other credentialed operation.
+
+The terminal artifact MUST include:
+
+- `status`
+- `publication_state`
+- `arxiv_receipt_present`
+- `operator_hold_active`
+- `credentialed_submission_attempted`
+- `blocker`
+- `honest_verdict`
+
+The runner MUST set `credentialed_submission_attempted == false`. If a local
+receipt is already recorded, it MUST set `arxiv_receipt_present == true` and
+`publication_state == "submitted"`. If no local receipt is recorded, it MUST
+set `operator_hold_active == true` when the operator publication hold is active,
+otherwise it MUST record the exact local blocker.
+
+### SCENARIO-PUBLISH-015: No Receipt Leaves Publication On Operator Hold
+
+**Given** the operator publication hold is active in `ops/known-issues.md`
+AND no checked-in local arXiv receipt exists
+**When** the exp1307 hold/receipt runner executes
+**Then** it writes a complete artifact with
+`arxiv_receipt_present == false`
+AND `operator_hold_active == true`
+AND `credentialed_submission_attempted == false`
+AND `publication_state == "operator_hold"`.
+
+### SCENARIO-PUBLISH-016: Local Receipt Makes State Submitted
+
+**Given** a checked-in local arXiv submission receipt exists
+**When** the exp1307 hold/receipt runner executes
+**Then** it writes a complete artifact with
+`arxiv_receipt_present == true`
+AND `publication_state == "submitted"`
+AND `credentialed_submission_attempted == false`.
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -427,3 +471,4 @@ with exact missing tool names.
 | REQ-PUBLISH-012 | Proposed | Exp 1257 paper v6 five critical integrity fixes |
 | REQ-PUBLISH-013 | Proposed | Exp 1269 paper v6 critical fixes v2 terminal artifact |
 | REQ-PUBLISH-014 | Proposed | Exp 1270 gated arXiv bundle v10 artifact |
+| REQ-PUBLISH-015 | Proposed | Exp 1307 arXiv v10 hold/receipt terminal artifact |
