@@ -862,3 +862,6 @@ web search: GitHub trending energy based mod |
 | 2026-05-05 09:33 UTC | Margin-Aware BEAVER/Cactus Scheduler - Gated on Se | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1342-chopchop-nsvif-semantic-validator- |
 | 2026-05-05 09:35 UTC | HalluGuard-Style Certificate Failure Split - Data | OK | Deliverable already exists in repo |
 | 2026-05-05 09:35 UTC | ChopChop/NSVIF Semantic Validator - Gated on Certi | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1340-trigger-before-constrain-certificate |
+| 2026-05-05 09:35 UTC | Margin-Aware BEAVER/Cactus Scheduler - Gated on Se | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1342-chopchop-nsvif-semantic-validator- |
+| 2026-05-05 09:37 UTC | XGrammar2/TagDispatch Certificate Grammar Dry-Run | OK | Deliverable already exists in repo |
+| 2026-05-05 09:37 UTC | ChopChop/NSVIF Semantic Validator - Gated on Certi | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1340-trigger-before-constrain-certificate |

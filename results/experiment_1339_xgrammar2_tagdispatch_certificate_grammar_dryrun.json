@@ -1,4 +1,142 @@
 {
-  "status": "in_progress",
-  "run_date": "20260505"
+  "artifact": "experiment_1339_xgrammar2_tagdispatch_certificate_grammar_dryrun",
+  "artifact_metadata": {
+    "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "run_date": "20260505",
+    "source_experiments": [
+      "1324",
+      "1337"
+    ],
+    "spec": "REQ-VERIFY-1339"
+  },
+  "certificate_states_supported": [
+    "REPAIR_HINT",
+    "SAT",
+    "UNKNOWN",
+    "UNSAT"
+  ],
+  "dispatch_results": [
+    {
+      "dispatched_state": "SAT",
+      "dynamic_parseable": true,
+      "errors": [],
+      "existing_parser_errors": [],
+      "existing_parser_parseable": true,
+      "expected_state": "SAT",
+      "name": "sat_json",
+      "parser_kind": "existing_parser",
+      "unknown_semantics_preserved": false
+    },
+    {
+      "dispatched_state": "UNSAT",
+      "dynamic_parseable": true,
+      "errors": [],
+      "existing_parser_errors": [],
+      "existing_parser_parseable": true,
+      "expected_state": "UNSAT",
+      "name": "unsat_json",
+      "parser_kind": "existing_parser",
+      "unknown_semantics_preserved": false
+    },
+    {
+      "dispatched_state": "UNKNOWN",
+      "dynamic_parseable": true,
+      "errors": [],
+      "existing_parser_errors": [],
+      "existing_parser_parseable": true,
+      "expected_state": "UNKNOWN",
+      "name": "unknown_tail",
+      "parser_kind": "existing_parser",
+      "unknown_semantics_preserved": true
+    },
+    {
+      "dispatched_state": "REPAIR_HINT",
+      "dynamic_parseable": true,
+      "errors": [],
+      "existing_parser_errors": [
+        "ambiguous_label_tail"
+      ],
+      "existing_parser_parseable": false,
+      "expected_state": "REPAIR_HINT",
+      "name": "repair_hint",
+      "parser_kind": "repair_hint_shim",
+      "unknown_semantics_preserved": false
+    }
+  ],
+  "dynamic_grammar_compile_ms": 0.417032,
+  "dynamic_grammar_ready": true,
+  "dynamic_parse_rate": 1.0,
+  "grammar_backend_candidates": [
+    {
+      "available": false,
+      "cli_available": false,
+      "constrained_generation": true,
+      "dynamic_dispatch": true,
+      "failure_reason": "xgrammar_import_absent",
+      "fallback_only": false,
+      "import_available": false,
+      "import_name": "xgrammar",
+      "name": "xgrammar2_tagdispatch_native"
+    },
+    {
+      "available": true,
+      "cli_available": false,
+      "constrained_generation": true,
+      "dynamic_dispatch": false,
+      "failure_reason": null,
+      "fallback_only": false,
+      "import_available": true,
+      "import_name": "llama_cpp",
+      "name": "llama_cpp_gbnf_static"
+    },
+    {
+      "available": true,
+      "cli_available": false,
+      "constrained_generation": false,
+      "dynamic_dispatch": true,
+      "failure_reason": null,
+      "fallback_only": true,
+      "import_available": true,
+      "import_name": null,
+      "name": "pure_python_tagdispatch_shim"
+    }
+  ],
+  "honest_verdict": "dryrun_ready_pure_python_tagdispatch_xgrammar_absent",
+  "llm_inference_run": false,
+  "mask_generation_ms_per_token_proxy": 0.009183,
+  "parse_rate_delta_over_static_gbnf_proxy": 0.25,
+  "run_date": "20260505",
+  "schema_version": 1,
+  "sota_model_called": false,
+  "state_transition_error_count": 0,
+  "static_gbnf_proxy_parse_rate": 0.75,
+  "status": "complete",
+  "synthetic_cases": [
+    {
+      "expected_state": "SAT",
+      "name": "sat_json",
+      "text": "{\"claims\": [{\"id\": \"c1\", \"text\": \"synthetic branch predicts SAT\"}], \"confidence\": 0.72, \"equations\": [{\"lhs\": \"final_label\", \"relation\": \"=\", \"rhs\": \"SAT\"}], \"final_answer\": \"SAT\", \"proof_numbers\": [1.0], \"verifier_routes\": [{\"claim_id\": \"c1\", \"verifier\": \"z3_math\"}]}"
+    },
+    {
+      "expected_state": "UNSAT",
+      "name": "unsat_json",
+      "text": "{\"claims\": [{\"id\": \"c1\", \"text\": \"synthetic branch predicts UNSAT\"}], \"confidence\": 0.72, \"equations\": [{\"lhs\": \"final_label\", \"relation\": \"=\", \"rhs\": \"UNSAT\"}], \"final_answer\": \"UNSAT\", \"proof_numbers\": [1.0], \"verifier_routes\": [{\"claim_id\": \"c1\", \"verifier\": \"z3_math\"}]}"
+    },
+    {
+      "expected_state": "UNKNOWN",
+      "name": "unknown_tail",
+      "text": "Final label: UNKNOWN. Solver timeout preserves the undecided branch."
+    },
+    {
+      "expected_state": "REPAIR_HINT",
+      "name": "repair_hint",
+      "text": "REPAIR_HINT: add the missing upper bound before issuing SAT or UNSAT."
+    }
+  ],
+  "timing_proxy_method": {
+    "compile": "time to compile local regex grammar fragments",
+    "limitation": "no token-level XGrammar mask was generated because this dry-run does not load an LLM",
+    "mask": "time to check every whitespace-token prefix against branch patterns"
+  },
+  "unknown_state_supported": true
 }
