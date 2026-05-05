@@ -568,6 +568,47 @@ count as `MET` only when that criterion explicitly allows an exact blocker or
 hold state. The retrospective self-criterion shall count as `MET` only in the
 final artifact that sets `retro_complete == true`.
 
+### REQ-REPORT-028: Milestone .102 Success-Criteria Retrospective
+
+The Exp 1322 milestone .102 retrospective workflow shall read the authoritative
+Exp 1309 through Exp 1321 result JSON artifacts, plus the available .102 roadmap
+planning documents, and write `results/experiment_1322_milestone_retro_102.json`
+with:
+
+- `schema` set to `milestone_retro_v7`
+- `milestone` set to `2026.04.102`
+- `criteria_total` set to `14`
+- `criteria_results`, mapping all 14 planned criteria to one of `MET`,
+  `GATED`, `MISSING`, `BLOCKED`, or `FAILED`
+- `criteria_met`, derived from the count of `MET` criteria
+- `sota_runtime_recovered`, true only when Exp 1309 and Exp 1310 prove a
+  headline-capable two-model local SOTA pair
+- `certificate_path_headline_ready`, true only when the certificate parse,
+  semantic-validator, and safe-prefix gates all meet their planned thresholds
+- `continuous_self_learning_advanced`, true only when Exp 1315 reports
+  non-forgetting evidence, no memory regressions, and a positive controlled
+  self-learning delta
+- `repair_generalization_advanced`, derived from Exp 1318 held-out learned
+  stop-policy evidence without upgrading replay-distribution generalization
+  into a broad repair-generalization claim
+- `hardware_claims_honest`, true only when Exp 1319 and Exp 1320 stay scoped to
+  audit/design-packet evidence and do not claim unsupported hardware execution
+- `publication_state`, derived from Exp 1321
+- `carry_forward_tasks`, explaining every unmet gated, missing, blocked, or
+  failed criterion and any met-but-partial finding that blocks headline use
+- `status == "complete"`
+- `retro_complete == true`
+- `honest_verdict` formatted as `milestone_102_N_of_14_criteria_met`
+
+Missing artifacts shall count as unmet criteria. A missing artifact may be
+classified as `GATED` when an upstream .102 gate demonstrably did not open, but
+it still shall not increment `criteria_met`. Blocked conductor pre-gate
+artifacts shall classify as `GATED` when the failed gate is an unmet milestone
+dependency. Completed measurement artifacts may count as `MET` while still
+adding carry-forward work when their measured values leave a downstream gate or
+headline path closed. The retrospective self-criterion shall count as `MET` only
+in the final artifact that sets `retro_complete == true`.
+
 ### REQ-REPORT-024: Local Agent Usage Snapshot
 
 The repository shall provide a local operator workflow that inspects the
@@ -888,6 +929,26 @@ and the retrospective self-criterion count from their terminal source fields
 **And** the artifact reports `criteria_met == 8`
 **And** `honest_verdict == "milestone_101_8_of_13_criteria_met"`
 
+### SCENARIO-REPORT-028: Exp 1322 Counts .102 Gates And Partials Separately
+
+**Given** Exp 1309 through Exp 1321 source artifacts contain the current .102
+criterion evidence
+**And** Exp 1312 reports `certificate_parse_rate == 0.71223`, below the
+semantic-validator and DVI gate threshold of `0.75`
+**And** Exp 1313 and Exp 1316 are conductor pre-gate blocked by that parse-rate
+miss
+**And** Exp 1314 is absent because the certificate-validator gates did not open
+**When** the Exp 1322 retrospective workflow runs
+**Then** the runtime, answer-stability, continuous self-learning, repair,
+hardware, publication, and self-retro criteria that have source evidence count
+as `MET`
+**And** the gated semantic-validator, safe-prefix, and DVI criteria do not
+increment `criteria_met`
+**And** `certificate_path_headline_ready == false`
+**And** `hardware_claims_honest == true`
+**And** the artifact reports `criteria_met == 11`
+**And** `honest_verdict == "milestone_102_11_of_14_criteria_met"`
+
 ### SCENARIO-REPORT-021: Codex Latest Rate-Limit Event Is Surfaced
 
 **Given** a local Codex session tree contains multiple `token_count` events
@@ -1050,6 +1111,7 @@ embed live-GPU benchmark results from Exp 328 when available.
 | REQ-REPORT-025 | `python/carnot/reporting/milestone_retro_100.py`, `results/experiment_1295_milestone_retro_100.json` | `tests/python/test_milestone_retro_100.py` | Implemented |
 | REQ-REPORT-026 | `python/carnot/reporting/energy_bridge_audit_v2.py`, `results/experiment_1306_ebt_arm_ebm_cot_energy_bridge_audit_v2.json` | `tests/python/test_energy_bridge_audit_v2.py` | Planned |
 | REQ-REPORT-027 | `python/carnot/reporting/milestone_retro_101.py`, `results/experiment_1308_milestone_retro_101.json` | `tests/python/test_milestone_retro_101.py` | Implemented |
+| REQ-REPORT-028 | `python/carnot/reporting/milestone_retro_102.py`, `results/experiment_1322_milestone_retro_102.json` | `tests/python/test_milestone_retro_102.py` | Implemented |
 | REQ-REPORT-024 | `python/carnot/reporting/agent_usage.py`, `scripts/agent_plan_usage.py` | `tests/python/test_agent_plan_usage.py` | Implemented |
 | REQ-PUBLISH-003 | `scripts/experiment_317_hf_publish.py` | `tests/python/test_experiment_317_hf_publish.py` | Implemented |
 | REQ-PUBLISH-004 | `scripts/experiment_330_hf_live_publish.py` | `tests/python/test_experiment_330_hf_live_publish.py` | Implemented |
