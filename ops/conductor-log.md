@@ -899,3 +899,4 @@ web search: GitHub trending energy based mod |
 | 2026-05-05 12:55 UTC | Triggered Certificate Extraction v7 - TruncProof-B | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1353_trigger |
 | 2026-05-05 14:06 UTC | Triggered Certificate Extraction v7 - TruncProof-B | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1353_trigger |
 | 2026-05-05 14:20 UTC | Triggered Certificate Extraction v7 - TruncProof-B | OK | cache hit: 88 passed, 1 warning in 23.40s |
+| 2026-05-05 14:31 UTC | LogicSkills Certificate Skill Split - Gated on Ter | OK | Deliverable already exists in repo |

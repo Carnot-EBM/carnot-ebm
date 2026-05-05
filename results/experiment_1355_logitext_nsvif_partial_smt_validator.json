@@ -1,0 +1,24 @@
+{
+  "experiment": 1355,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-05-05",
+  "started_at": "2026-05-05T14:31:17.260902+00:00",
+  "finished_at": "2026-05-05T14:31:17.260902+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Logitext/NSVIF Partial SMT Validator - Gated on Parse>=0.75",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp1353-triggered-certificate-v7-truncproof-sota.certificate_parse_rate (actual=0.0 >= expected=0.75)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp1353-triggered-certificate-v7-truncproof-sota",
+      "artifact_field": "certificate_parse_rate",
+      "op": ">=",
+      "expected": 0.75,
+      "actual": 0.0,
+      "passed": false,
+      "reason": "actual=0.0 >= expected=0.75"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
