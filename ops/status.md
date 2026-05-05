@@ -1,6 +1,18 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-05 (Milestone 2026.04.100 operational retrospective complete)
+**Last Updated:** 2026-05-05 (Milestone 2026.04.101 research planning complete)
+
+## Session 2026-05-05 - Milestone 2026.04.101 Research Planning Complete
+
+**Milestone 2026.04.101 PLANNED.**
+
+- Roadmap doc: `openspec/change-proposals/research-roadmap-vNEXT.md`
+- Execution queue: `research-roadmap-next.yaml` (13 tasks, exp1296-exp1308)
+- Research references updated before planning with FALCON hard-constraint/repair sampling, grammar reachability cost metrics, semantic probabilistic control, QueryBandits/Neural Garbage Collection online memory policy, KAN PWA verification, infeasibility-aware LLM CO, p-bit update-dynamics landscape, and current Extropic/Kona status.
+- Design focus: prevent `.100` DOOMED_RERUN_BLOCK waste through a first-task activation audit, rerun SOTA GGUF cache/provenance with complete priors, measure local SOTA answer-stability and certificate extraction, recover skill-graph promotion/demotion, run mandatory online self-learning policy, and close repair/energy/publication carry-forwards.
+- Structured gates: exp1297 on exp1296 prior coverage; exp1298 on exp1297 cache readiness; exp1299 on exp1297 cache, exp1296 grammar proxy, and exp1298 stability; exp1300/1301 on exp1299 parse rate; exp1302 on exp1296 exp1288-memory proxy; exp1303 on exp1302 skill candidates; exp1304 on exp1299 headline eligibility and exp1303 positive self-learning delta.
+- Validation passed: `python3 scripts/validate_prior_failures.py research-roadmap-next.yaml` and `python3 scripts/audit_roadmap_gates.py research-roadmap-next.yaml`.
+- No changes made to `research-roadmap.yaml` or `scripts/research_conductor.py`.
 
 ## Session 2026-05-05 - Milestone 2026.04.100 Operational Retrospective Complete
 
