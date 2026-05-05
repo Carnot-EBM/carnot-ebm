@@ -642,6 +642,31 @@ that they remain closed behind structured gates. The retrospective artifact
 shall include run metadata using run date `20260505` and project root
 `/home/ianblenke/github.com/ianblenke/carnot`.
 
+### REQ-REPORT-030: Milestone .104 Carry-Forward Artifact Integrity Audit
+
+The Exp 1351 `.104` carry-forward artifact integrity audit workflow shall read
+the `.104` roadmap/planning context, conductor log, ops changelog/status, and
+Exp 1337 through Exp 1350 result artifacts without rerunning experiments or
+rewriting `.104` source artifacts. It shall write
+`results/experiment_1351_104_carryforward_artifact_integrity_audit.json` with:
+
+- `status`
+- `artifact_paths_checked`
+- `missing_artifacts`
+- `stale_or_blocked_artifacts`
+- `gates_open`
+- `gates_closed`
+- `prior_failure_requirements`
+- `docs_reconciliation_needed`
+- `terminal_certificate_required`
+- `honest_verdict`
+
+The workflow shall mark `terminal_certificate_required == true` and keep
+semantic-validator, scheduler, DVI, and GRPO gates closed unless a terminal
+Exp 1340 replacement artifact and the relevant semantic-validator upstream
+evidence are present. It shall include run metadata using run date `20260505`
+and project root `/home/ianblenke/github.com/ianblenke/carnot`.
+
 ### REQ-REPORT-024: Local Agent Usage Snapshot
 
 The repository shall provide a local operator workflow that inspects the
@@ -997,6 +1022,18 @@ failure hygiene verdicts stay inside the source evidence
 **And** missing roadmap files or experiment artifacts are reported explicitly
 instead of being inferred as successes
 
+### SCENARIO-REPORT-030: Exp 1351 Carries Missing Exp 1340 Forward
+
+**Given** Exp 1337 through Exp 1350 source artifacts are checked
+**And** no terminal Exp 1340 certificate artifact exists
+**When** the Exp 1351 carry-forward integrity audit runs for run date `20260505`
+**Then** it writes all required REQ-REPORT-030 fields
+**And** `missing_artifacts` explicitly includes Exp 1340
+**And** `terminal_certificate_required == true`
+**And** semantic-validator, scheduler, DVI, and GRPO gates remain closed
+**And** `prior_failure_requirements` names the prior failure context that `.105`
+tasks must cite before retrying gated work.
+
 ### SCENARIO-REPORT-021: Codex Latest Rate-Limit Event Is Surfaced
 
 **Given** a local Codex session tree contains multiple `token_count` events
@@ -1161,6 +1198,7 @@ embed live-GPU benchmark results from Exp 328 when available.
 | REQ-REPORT-027 | `python/carnot/reporting/milestone_retro_101.py`, `results/experiment_1308_milestone_retro_101.json` | `tests/python/test_milestone_retro_101.py` | Implemented |
 | REQ-REPORT-028 | `python/carnot/reporting/milestone_retro_102.py`, `results/experiment_1322_milestone_retro_102.json` | `tests/python/test_milestone_retro_102.py` | Implemented |
 | REQ-REPORT-029 | `python/carnot/reporting/milestone_retro_104.py`, `results/experiment_1350_milestone_104_retro_carryforward.json` | `tests/python/test_milestone_retro_104.py` | Implemented |
+| REQ-REPORT-030 | `python/carnot/reporting/carryforward_integrity_audit_104.py`, `results/experiment_1351_104_carryforward_artifact_integrity_audit.json` | `tests/python/test_carryforward_integrity_audit_104.py` | Implemented |
 | REQ-REPORT-024 | `python/carnot/reporting/agent_usage.py`, `scripts/agent_plan_usage.py` | `tests/python/test_agent_plan_usage.py` | Implemented |
 | REQ-PUBLISH-003 | `scripts/experiment_317_hf_publish.py` | `tests/python/test_experiment_317_hf_publish.py` | Implemented |
 | REQ-PUBLISH-004 | `scripts/experiment_330_hf_live_publish.py` | `tests/python/test_experiment_330_hf_live_publish.py` | Implemented |
