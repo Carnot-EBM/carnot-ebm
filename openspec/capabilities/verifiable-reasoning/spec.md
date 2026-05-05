@@ -17786,3 +17786,47 @@ claim gate, and honest verdict
 than generic semantic invalidity.
 
 **Spec traces:** REQ-VERIFY-1354, SCENARIO-VERIFY-1354, Exp 1354
+
+## REQ-VERIFY-1365: Eidoku CSP Neuro-Symbolic Verification Probe
+
+**Summary:** Carnot SHALL run an Eidoku-style, grammar-free CSP verification
+probe over existing FoVer corpus cases without calling SOTA GGUF models.
+
+**Requirements:**
+
+- REQ-VERIFY-1365-1: The workflow SHALL write
+  `results/experiment_1365_eidoku_csp_neuro_symbolic_verification_probe.json`
+  with `status="in_progress"` before loading corpus rows or scoring cases.
+- REQ-VERIFY-1365-2: The probe SHALL load existing FoVer cases from local
+  repository corpus artifacts and SHALL use available FoVer labels for AUROC
+  when both correct and incorrect labels are present.
+- REQ-VERIFY-1365-3: The structural proxy SHALL build a reasoning-step graph
+  from free-text steps and compute a graph-connectivity violation cost.
+- REQ-VERIFY-1365-4: The geometric proxy SHALL score consecutive reasoning
+  steps with a local lightweight embedding path and report a geometric
+  consistency rate.
+- REQ-VERIFY-1365-5: The symbolic proxy SHALL verify extractable arithmetic
+  claims with the local Z3 math verifier when possible and use a conservative
+  deterministic fallback when claims are not extractable.
+- REQ-VERIFY-1365-6: The artifact SHALL include `status`,
+  `corpus_cases_used`, `structural_violation_cost_mean`,
+  `geometric_consistency_rate`, `symbolic_entailment_rate`,
+  `csp_feasibility_rate`, `eidoku_auroc_proxy`, `ising_correlation`,
+  `kan_correlation`, `eidoku_csp_viable`, and `honest_verdict`.
+- REQ-VERIFY-1365-7: `eidoku_csp_viable` SHALL be true only when
+  `csp_feasibility_rate > 0.5` and `eidoku_auroc_proxy > 0.55`.
+
+**Implementation Status:** Implemented (Exp 1365)
+
+### SCENARIO-VERIFY-1365: FoVer CSP Probe Writes Complete Grammar-Free Artifact
+
+**Given** the run date is `20260505`
+**And** local FoVer corpus rows are available
+**When** the Eidoku CSP probe runs without fresh model inference
+**Then** it writes an in-progress artifact first
+**And** it writes a complete artifact with structural, geometric, symbolic,
+CSP-feasibility, AUROC-proxy, Ising-correlation, KAN-correlation, viability,
+and honest-verdict fields
+**And** viability is gated only by the measured feasibility and AUROC proxy.
+
+**Spec traces:** REQ-VERIFY-1365, SCENARIO-VERIFY-1365, Exp 1365
