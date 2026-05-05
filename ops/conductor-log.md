@@ -796,3 +796,4 @@ web search: GitHub trending energy based mod |
 | 2026-05-05 05:02 UTC | DVI Certificate-Tail Online Update - Gated on Pars | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp1312-triggered-certificate-extraction-d |
 | 2026-05-05 05:16 UTC | GRPO/VPRM v11 - Gated on Headline Certificates + N | OK | 81 passed, 1 warning in 4.60s |
 | 2026-05-05 05:29 UTC | HardNet++/DSP Learned Stop Policy Generalization | OK | 81 passed, 1 warning in 6.73s |
+| 2026-05-05 05:40 UTC | KAN Verifier Hardware Complexity Audit - RM/BOP/NA | OK | 81 passed, 1 warning in 8.86s |
