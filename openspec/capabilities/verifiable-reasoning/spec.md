@@ -17319,3 +17319,47 @@ rates, feasibility, and unknown/abstain rates
 verifier-backed labels were collected.
 
 **Spec traces:** REQ-VERIFY-1311, SCENARIO-VERIFY-1311, Exp 1311
+
+## REQ-VERIFY-1312: Triggered Certificate Extraction DCCD/GBNF Comparison
+
+**Summary:** After the Exp 1311 answer-stability gate passes, Carnot SHALL run
+a small triggered-certificate comparison over the same local SOTA item set,
+measuring raw-trigger parsing, llama.cpp GBNF-style schema projection,
+compact-encoding/DCCD-style projection, and verifier-backed repair.
+
+**Requirements:**
+
+- REQ-VERIFY-1312-1: The workflow SHALL write an in-progress artifact to
+  `results/experiment_1312_triggered_certificate_extraction_dccd_gbnf.json`
+  before loading Exp 1311 or collecting certificate attempts.
+- REQ-VERIFY-1312-2: The workflow SHALL load Exp 1311 and abort to a terminal
+  blocker when `answer_stability_score` is below the configured gate, when
+  `headline_result_allowed` is false, or when no live mandated SOTA response
+  rows exist.
+- REQ-VERIFY-1312-3: The workflow SHALL compare raw-trigger,
+  GBNF-constrained, compact-encoding/DCCD-style, and repaired certificate
+  paths over the Exp 1311 item set or equivalent deterministic local fixtures.
+- REQ-VERIFY-1312-4: The workflow SHALL parse every certificate attempt with
+  the bounded certificate schema selected by Exp 1283 and verify
+  truthfulness against available labels or deterministic verifiers.
+- REQ-VERIFY-1312-5: The artifact SHALL include `status`,
+  `certificate_parse_rate`, `certificate_truthfulness_rate`,
+  `dccd_delta_over_grammar_only`, `grammar_projection_tax_proxy`,
+  `repair_success_rate`, `models_used`, `headline_result_allowed`, and
+  `honest_verdict`.
+
+**Implementation Status:** Planned (Exp 1312)
+
+### SCENARIO-VERIFY-1312: Triggered Certificate Paths Are Compared
+
+**Given** the run date is `20260505`
+**And** Exp 1311 has a passing answer-stability score with live mandated SOTA
+response rows
+**When** the triggered certificate comparison runs
+**Then** it writes the Exp 1312 artifact with parse, truthfulness, DCCD delta,
+grammar tax, repair success, model usage, headline gate, and honest verdict
+fields
+**And** it reports a terminal blocker rather than fake metrics when the Exp
+1311 gate is not satisfied.
+
+**Spec traces:** REQ-VERIFY-1312, SCENARIO-VERIFY-1312, Exp 1312
