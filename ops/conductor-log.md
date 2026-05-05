@@ -792,3 +792,4 @@ web search: GitHub trending energy based mod |
 | 2026-05-05 04:58 UTC | BEAVER-lite + Cactus/HoVer Safe-Prefix Acceptance | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1313-constrainprompt-nsvif-semantic-valid |
 | 2026-05-05 04:58 UTC | DVI Certificate-Tail Online Update - Gated on Pars | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp1312-triggered-certificate-extraction-d |
 | 2026-05-05 05:00 UTC | BEAVER-lite + Cactus/HoVer Safe-Prefix Acceptance | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1313-constrainprompt-nsvif-semantic-valid |
+| 2026-05-05 05:00 UTC | DVI Certificate-Tail Online Update - Gated on Pars | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp1312-triggered-certificate-extraction-d |
