@@ -1,0 +1,8 @@
+[Unit]
+Description=Carnot orphan pytest/python cleanup janitor
+
+[Service]
+Type=oneshot
+ExecStart=/home/ianblenke/.carnot/orphan-cleanup.sh
+StandardOutput=journal
+StandardError=journal

@@ -1,0 +1,11 @@
+[Unit]
+Description=Carnot orphan pytest/python cleanup janitor — every 30 min
+Requires=carnot-orphan-cleanup.service
+
+[Timer]
+OnBootSec=5min
+OnUnitActiveSec=30min
+Persistent=true
+
+[Install]
+WantedBy=timers.target
