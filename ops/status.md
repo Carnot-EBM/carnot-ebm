@@ -1,6 +1,17 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-04 (Milestone 2026.04.100 research planning complete)
+**Last Updated:** 2026-05-05 (Milestone 2026.04.100 operational retrospective complete)
+
+## Session 2026-05-05 - Milestone 2026.04.100 Operational Retrospective Complete
+
+**Milestone 2026.04.100 operational retro COMPLETE.**
+
+- Artifact written: `results/operational_retro_2026_04_100.json`
+- Timing scope analyzed: supplied 16 min operational closeout slice, 5 completed items, 3.2 min average
+- Slowest item: arXiv Bundle v10 at 10 min, gated on Exp 1269 critical fixes
+- Main avoidable waste: three duplicate 2 min SOTA GGUF cache/provenance DOOMED_RERUN_BLOCK attempts from missing `prior_failures`
+- GPU closeout: both RTX 3090s idle at 4 MB / 0% utilization with no gpu_monitor.py zombie processes
+- Next-milestone leverage: activation-time `prior_failures` lint/autofill, terminal gate-block artifacts, dependency pruning, per-phase timing, and DualGPU-aware parallel scheduling
 
 ## Session 2026-05-04 - Milestone 2026.04.100 Research Planning Complete
 
