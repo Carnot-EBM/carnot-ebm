@@ -955,3 +955,4 @@ web search: GitHub trending energy based mod |
 | 2026-05-05 21:11 UTC | EBM-CoT Energy Calibration Probe — Contrastive Hin | OK | 81 passed, 1 warning in 4.10s |
 | 2026-05-05 21:24 UTC | Self-Adaptive Ising Machine — Lagrange Relaxation  | OK | 81 passed, 1 warning in 5.44s |
 | 2026-05-05 21:39 UTC | SECL Discriminative Self-Calibration — Verifier EC | OK | 81 passed, 1 warning in 4.51s |
+| 2026-05-05 21:52 UTC | 2D Parallel Tempering KV260 FPGA Estimate — CPU Si | OK | 81 passed, 1 warning in 4.06s |
