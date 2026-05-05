@@ -1,0 +1,1065 @@
+milestone: 2026.04.102
+milestone_title: "SOTA Runtime Recovery + Certifiable Constraint Learning + Hardware-Portability Audits"
+milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
+tasks:
+
+# ============================================================
+# Phase 0 - SOTA runtime recovery
+# ============================================================
+
+- id: exp1309-sota-gguf-pair-resolver-repair
+  milestone: 2026.04.102
+  deliverable: results/experiment_1309_sota_gguf_pair_resolver_repair.json
+  title: "SOTA GGUF Pair Resolver Repair - Two Cached Headline Models Are Enough"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 40
+  estimated_wall_time_min: 35
+  priority: critical
+  requires_gpu: false
+  prior_failures:
+    - experiment_id: exp1297-sota-gguf-cache-provenance-preflight-v2
+      verdict: sota_gguf_cache_not_ready
+      addressed_by: "Repair the resolver behavior observed in .101: two mandated models were cached but cached_sota_pair() returned no loadable specs and missing optional cache state blocked headline work."
+      retire_if_same_verdict: true
+    - experiment_id: exp1282-sota-gguf-cache-provenance-preflight
+      verdict: blocked_gate_check_failed
+      addressed_by: "This task works after .101 activation hygiene and directly patches/tests the resolver instead of only rerunning preflight."
+      retire_if_same_verdict: true
+    - experiment_id: exp1271-triggered-certificate-extraction-sota-gguf
+      verdict: blocked_gate_check_failed
+      addressed_by: "Certificate extraction remains gated until the SOTA resolver emits usable local MODEL_SPECS."
+      retire_if_same_verdict: true
+    - experiment_id: exp785-sota-model-load
+      verdict: blocked_model_load_failed
+      addressed_by: "Use the current GGUF registry, cached_sota_pair() helper, and focused tests rather than retrying the old model-load path."
+      retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    Milestone .101 found that two mandated headline GGUF models appeared cached
+    but cached_sota_pair() returned no loadable specs and the missing middle MoE
+    kept cached_sota_ready=false. This is now the main blocker for SOTA
+    certificate work. Use {project_root} as the project root and {date} as the
+    run date in artifact metadata.
+
+    Required local headline model IDs:
+    - unsloth/Qwen3.6-35B-A3B-GGUF
+    - unsloth/gemma-4-31B-it-GGUF
+    - unsloth/gemma-4-26B-A4B-it-GGUF
+
+    EXISTING CODE TO READ FIRST:
+    - CODEX.md
+    - CLAUDE.md
+    - scripts/experiment_template.py
+    - python/carnot/inference/sota_models.py
+    - tests/
+    - openspec/capabilities/pipeline/spec.md
+    - openspec/capabilities/self-learning/spec.md
+    - results/experiment_1297_sota_gguf_cache_provenance_preflight_v2.json
+    - results/experiment_1308_milestone_retro_101.json
+
+    TASK:
+    Repair or confirm the SOTA GGUF pair resolver so that two cached mandated
+    headline models are sufficient to produce two loadable MODEL_SPECS. If the
+    current OpenSpec requires all three mandated models for every headline run,
+    update the relevant spec requirement first; otherwise keep the change scoped
+    to resolver/cache policy and tests. Do not modify research-roadmap.yaml.
+
+    REQUIRED ARTIFACT FIELDS:
+    - status
+    - sota_pair_ready
+    - cached_pair_specs_count
+    - cached_mandated_models
+    - missing_optional_models
+    - resolver_code_changed
+    - spec_updated
+    - focused_tests_passed
+    - headline_result_possible
+    - honest_verdict
+
+    CONCRETE STEPS:
+    1. Create results/experiment_1309_sota_gguf_pair_resolver_repair.json immediately with status="in_progress".
+    2. Inspect cached_sota_pair(), the SOTA model registry, cache discovery paths, and the exp1297 artifact fields that showed two cached models but zero returned specs.
+    3. If the helper incorrectly treats the third model as mandatory for a pair, patch it so a deterministic two-model pair can be returned from cached mandated models while recording missing_optional_models.
+    4. Add or update focused tests that cover: two cached mandated models, one cached mandated model, no cached mandated models, and missing optional third model.
+    5. Run the focused resolver tests and any relevant import smoke test. Do not download models and do not run full GPU inference in this task.
+    6. Write cached_mandated_models, missing_optional_models, cached_pair_specs_count, sota_pair_ready, headline_result_possible, resolver_code_changed, spec_updated, focused_tests_passed, status="complete", and honest_verdict.
+
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1309_sota_gguf_pair_resolver_repair.json')); print(d.get('sota_pair_ready'), d.get('cached_pair_specs_count'), d.get('headline_result_possible'), d.get('honest_verdict'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp1310-sota-gguf-llamacpp-smoke-load
+  milestone: 2026.04.102
+  deliverable: results/experiment_1310_sota_gguf_llamacpp_smoke_load.json
+  title: "SOTA GGUF llama.cpp Smoke Load + Throughput Probe - Gated on Resolver Ready"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 40
+  estimated_wall_time_min: 45
+  priority: critical
+  requires_gpu: true
+  gated_on:
+    - upstream: exp1309-sota-gguf-pair-resolver-repair
+      artifact_field: sota_pair_ready
+      op: '=='
+      value: true
+  prior_failures:
+    - experiment_id: exp1297-sota-gguf-cache-provenance-preflight-v2
+      verdict: cached_sota_pair_returned_two_loadable_specs_false
+      addressed_by: "Run only after exp1309 proves the resolver returns two loadable local specs."
+      retire_if_same_verdict: true
+    - experiment_id: exp785-sota-model-load
+      verdict: blocked_model_load_failed
+      addressed_by: "Use current cached GGUF specs and record import/runtime blockers instead of old loading paths."
+      retire_if_same_verdict: true
+    - experiment_id: exp811-sota-model-load
+      verdict: blocked_model_load_failed
+      addressed_by: "Perform a minimal smoke load and terminal blocker artifact, not a silent full benchmark attempt."
+      retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    exp1309 should repair the resolver. This task proves whether the resolved
+    local SOTA pair can actually smoke-load through the available llama.cpp
+    runtime and produce a small number of tokens. Use {project_root} as the
+    project root and {date} as the run date in artifact metadata.
+
+    MODEL_SPECS:
+    Use python/carnot/inference/sota_models.py cached_sota_pair(gpu_indices=(0, 1)).
+    Headline models must be drawn from:
+    - unsloth/Qwen3.6-35B-A3B-GGUF
+    - unsloth/gemma-4-31B-it-GGUF
+    - unsloth/gemma-4-26B-A4B-it-GGUF
+    Legacy small models may only be used for CPU smoke tests with headline_result_possible=false.
+
+    EXISTING CODE TO READ FIRST:
+    - scripts/experiment_template.py
+    - python/carnot/inference/sota_models.py
+    - results/experiment_1309_sota_gguf_pair_resolver_repair.json
+    - ops/known-issues.md
+    - research-hardware-wishlist.md
+
+    TASK:
+    Run a minimal smoke load and throughput probe for the resolved local SOTA
+    pair. Keep the workload tiny: this task only establishes readiness for
+    downstream certificate runs.
+
+    REQUIRED ARTIFACT FIELDS:
+    - status
+    - models_loaded
+    - llama_cpp_import_ok
+    - tokens_per_second
+    - gpu_memory_gb
+    - model_specs_count
+    - models_used
+    - headline_result_possible
+    - honest_verdict
+
+    CONCRETE STEPS:
+    1. Create results/experiment_1310_sota_gguf_llamacpp_smoke_load.json immediately with status="in_progress".
+    2. Load exp1309 and abort to a terminal blocker if sota_pair_ready is not true.
+    3. Resolve MODEL_SPECS via cached_sota_pair(gpu_indices=(0, 1)) and record the exact model IDs, paths, quantization suffixes, and GPU assignment.
+    4. Import the local llama.cpp binding or runner used by the project. If unavailable, record llama_cpp_import_ok=false with the exact exception and do not fake generation.
+    5. For each resolved model, run one deterministic prompt with a very small max token budget and record load success, token count, elapsed seconds, tokens_per_second, and GPU memory if available.
+    6. Write models_loaded, llama_cpp_import_ok, tokens_per_second, gpu_memory_gb, model_specs_count, models_used, headline_result_possible, status="complete", and honest_verdict.
+
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1310_sota_gguf_llamacpp_smoke_load.json')); print(d.get('models_loaded'), d.get('headline_result_possible'), d.get('honest_verdict'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+# ============================================================
+# Phase 1 - Certifiable SOTA constraint reasoning
+# ============================================================
+
+- id: exp1311-sota-constraintbench-satquest-answer-stability
+  milestone: 2026.04.102
+  deliverable: results/experiment_1311_sota_constraintbench_satquest_answer_stability.json
+  title: "SOTA Answer Stability on ConstraintBench/SATQuest Micro-Slice"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 50
+  estimated_wall_time_min: 70
+  priority: critical
+  requires_gpu: true
+  gated_on:
+    - upstream: exp1310-sota-gguf-llamacpp-smoke-load
+      artifact_field: headline_result_possible
+      op: '=='
+      value: true
+  prior_failures:
+    - experiment_id: exp1298-sota-answer-stability-falcon-audit
+      verdict: blocked_gate_check_failed
+      addressed_by: "Run only after exp1310 proves local SOTA smoke-load readiness."
+      retire_if_same_verdict: true
+    - experiment_id: exp1284-ars-uqlm-answer-stability-sota-audit
+      verdict: gated_missing_sota_cache
+      addressed_by: "Replace missing-cache gating with the repaired resolver and actual smoke-load readiness."
+      retire_if_same_verdict: true
+    - experiment_id: exp1271-triggered-certificate-extraction-sota-gguf
+      verdict: blocked_gate_check_failed
+      addressed_by: "Measure answer stability before attempting certificate extraction."
+      retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    The first SOTA science task should be a small, verifier-backed stability
+    audit before attempting certificate extraction. The planning sweep added
+    ConstraintBench and SATQuest as relevant 2025-2026 sources for constraint
+    reasoning and satisfiability tasks. Use {project_root} as the project root
+    and {date} as the run date in artifact metadata.
+
+    MODEL_SPECS:
+    Use cached_sota_pair(gpu_indices=(0, 1)) from python/carnot/inference/sota_models.py.
+    At least one headline model must be from:
+    - unsloth/Qwen3.6-35B-A3B-GGUF
+    - unsloth/gemma-4-31B-it-GGUF
+    - unsloth/gemma-4-26B-A4B-it-GGUF
+    Legacy small models may only be CPU smoke tests with headline_result_allowed=false.
+
+    EXISTING CODE TO READ FIRST:
+    - scripts/experiment_template.py
+    - python/carnot/inference/sota_models.py
+    - research-references.md
+    - results/experiment_1310_sota_gguf_llamacpp_smoke_load.json
+    - results/experiment_1283_certificate_grammar_backend_bakeoff.json
+    - tests/
+
+    TASK:
+    Build and run a tiny deterministic micro-slice inspired by ConstraintBench
+    and SATQuest. The task should measure whether local SOTA answers are stable,
+    whether disagreements are meaningful, and whether PySAT/Z3-style labels can
+    verify the outputs.
+
+    REQUIRED ARTIFACT FIELDS:
+    - status
+    - answer_stability_score
+    - cross_model_disagreement_rate
+    - constraintbench_items
+    - satquest_items
+    - pysat_verified_rate
+    - feasibility_rate
+    - unknown_or_abstain_rate
+    - headline_result_allowed
+    - models_used
+    - honest_verdict
+
+    CONCRETE STEPS:
+    1. Create results/experiment_1311_sota_constraintbench_satquest_answer_stability.json immediately with status="in_progress".
+    2. Resolve MODEL_SPECS and abort to a terminal non-headline blocker if no mandated local SOTA model can run.
+    3. Build 8-16 deterministic items: include satisfiable, unsatisfiable, ambiguous/unknown, and compact-encoding cases. Use local generated fixtures if external datasets are not cached.
+    4. For each model and item, collect two deterministic perturbations or seeds with a tiny token budget.
+    5. Verify final answers with existing constraint tooling where available. Add a small PySAT/Z3 verifier helper only if the repo already depends on it or the dependency is available.
+    6. Compute answer_stability_score, cross_model_disagreement_rate, pysat_verified_rate, feasibility_rate, unknown_or_abstain_rate, and item counts.
+    7. Write headline_result_allowed=true only when mandated SOTA models produced the headline data and verification is not smoke-test-only.
+
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1311_sota_constraintbench_satquest_answer_stability.json')); print(d.get('answer_stability_score'), d.get('pysat_verified_rate'), d.get('headline_result_allowed'), d.get('honest_verdict'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp1312-triggered-certificate-extraction-dccd-gbnf
+  milestone: 2026.04.102
+  deliverable: results/experiment_1312_triggered_certificate_extraction_dccd_gbnf.json
+  title: "Triggered Certificate Extraction v4 - DCCD + GBNF + Truthfulness"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 50
+  estimated_wall_time_min: 75
+  priority: critical
+  requires_gpu: true
+  gated_on:
+    - upstream: exp1311-sota-constraintbench-satquest-answer-stability
+      artifact_field: answer_stability_score
+      op: '>='
+      value: 0.6
+  prior_failures:
+    - experiment_id: exp1299-triggered-certificate-extraction-v3
+      verdict: missing_gated_artifact
+      addressed_by: "Run only after exp1311 proves a minimum SOTA answer-stability score."
+      retire_if_same_verdict: true
+    - experiment_id: exp1285-triggered-certificate-extraction-gbnf-falcon
+      verdict: gated_missing_sota_cache
+      addressed_by: "Use exp1309/exp1310 resolver and smoke-load gates instead of assuming cache readiness."
+      retire_if_same_verdict: true
+    - experiment_id: exp1271-triggered-certificate-extraction-sota-gguf
+      verdict: blocked_gate_check_failed
+      addressed_by: "Compare triggered, GBNF, DCCD-style compact encoding, and repair paths after answer stability is measured."
+      retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    Carnot has selected llama.cpp GBNF as a certificate grammar backend, but it
+    has not measured certificate parse rate and truthfulness on fresh local SOTA
+    outputs. Compact Constraint Encoding and DCCD-style ideas should be tested
+    against raw triggered and grammar-only paths. Use {project_root} as the
+    project root and {date} as the run date in artifact metadata.
+
+    MODEL_SPECS:
+    Use cached_sota_pair(gpu_indices=(0, 1)) from python/carnot/inference/sota_models.py.
+    Headline models must be drawn from:
+    - unsloth/Qwen3.6-35B-A3B-GGUF
+    - unsloth/gemma-4-31B-it-GGUF
+    - unsloth/gemma-4-26B-A4B-it-GGUF
+    Legacy small models may only be CPU smoke tests with headline_result_allowed=false.
+
+    EXISTING CODE TO READ FIRST:
+    - scripts/experiment_template.py
+    - python/carnot/inference/sota_models.py
+    - results/experiment_1283_certificate_grammar_backend_bakeoff.json
+    - results/experiment_1311_sota_constraintbench_satquest_answer_stability.json
+    - research-references.md
+    - openspec/capabilities/pipeline/spec.md
+    - tests/
+
+    TASK:
+    Implement and run a small triggered certificate extraction comparison over
+    the exp1311 item set or equivalent local fixtures. Compare raw-trigger,
+    GBNF-constrained, compact-encoding/DCCD-style, and repaired certificate
+    paths.
+
+    REQUIRED ARTIFACT FIELDS:
+    - status
+    - certificate_parse_rate
+    - certificate_truthfulness_rate
+    - dccd_delta_over_grammar_only
+    - grammar_projection_tax_proxy
+    - repair_success_rate
+    - models_used
+    - headline_result_allowed
+    - honest_verdict
+
+    CONCRETE STEPS:
+    1. Create results/experiment_1312_triggered_certificate_extraction_dccd_gbnf.json immediately with status="in_progress".
+    2. Load exp1311 and abort to a terminal blocker if answer_stability_score is below the gate or no headline SOTA outputs exist.
+    3. Reuse the existing grammar backend. Add only small, local code needed for compact certificate encoding or schema projection.
+    4. For each test item, run raw-trigger, GBNF, compact-encoding/DCCD-style, and repair variants where feasible.
+    5. Parse certificates, verify their truthfulness against available labels/verifiers, and measure grammar/projection overhead with a simple proxy such as retries, rejected tokens, or extra prompt length.
+    6. Report certificate_parse_rate, certificate_truthfulness_rate, dccd_delta_over_grammar_only, grammar_projection_tax_proxy, repair_success_rate, models_used, headline_result_allowed, status, and honest_verdict.
+
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1312_triggered_certificate_extraction_dccd_gbnf.json')); print(d.get('certificate_parse_rate'), d.get('certificate_truthfulness_rate'), d.get('headline_result_allowed'), d.get('honest_verdict'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp1313-constrainprompt-nsvif-semantic-validator-mus-repair
+  milestone: 2026.04.102
+  deliverable: results/experiment_1313_constrainprompt_nsvif_semantic_validator_mus_repair.json
+  title: "ConstrainPrompt/NSVIF Semantic Validator + MUS Repair"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 45
+  estimated_wall_time_min: 50
+  priority: high
+  requires_gpu: false
+  gated_on:
+    - upstream: exp1312-triggered-certificate-extraction-dccd-gbnf
+      artifact_field: certificate_parse_rate
+      op: '>='
+      value: 0.75
+  prior_failures:
+    - experiment_id: exp1300-semantic-routing-v2
+      verdict: blocked_gate_check_failed
+      addressed_by: "Activate only after exp1312 proves parseable certificates, then compile validators instead of routing syntax-only claims."
+      retire_if_same_verdict: true
+    - experiment_id: exp1276-scone-semantic-routing
+      verdict: routing_not_backed_by_fresh_sota_certificates
+      addressed_by: "Use fresh exp1312 certificate artifacts and add executable semantic validators."
+      retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    Parseable certificates are not enough. The new literature sweep highlights
+    ConstrainPrompt, NSVIF, and MUS-repair/residual-drift work as better
+    patterns: compile constraints, execute validators, repair minimal
+    unsatisfied subsets, and preserve unknown states. Use {project_root} as the
+    project root and {date} as the run date in artifact metadata.
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_1312_triggered_certificate_extraction_dccd_gbnf.json
+    - research-references.md
+    - openspec/capabilities/pipeline/spec.md
+    - tests/
+    - python/carnot/
+
+    TASK:
+    Compile parsed certificates from exp1312 into executable semantic validators
+    for the tiny constraint corpus. Add MUS-style repair hints for failed
+    constraints and record residual-drift cases. This task should not run fresh
+    SOTA LLM inference unless absolutely necessary.
+
+    REQUIRED ARTIFACT FIELDS:
+    - status
+    - compiled_validator_count
+    - validator_execution_pass_rate
+    - semantic_violation_reduction
+    - mus_repair_hint_count
+    - residual_drift_cases
+    - unknown_or_abstain_rate
+    - honest_verdict
+
+    CONCRETE STEPS:
+    1. Create results/experiment_1313_constrainprompt_nsvif_semantic_validator_mus_repair.json immediately with status="in_progress".
+    2. Load exp1312 and abort to a terminal blocker if certificate_parse_rate is below 0.75 or parsed certificates are unavailable.
+    3. Identify existing verifier/constraint modules that can execute SAT, graph, arithmetic, or schema constraints.
+    4. Build a small compiler from certificate claims into validator calls or structured validator inputs.
+    5. For failures, compute minimal unsatisfied constraint hints when feasible; otherwise record the smallest available failed constraint set.
+    6. Measure validator_execution_pass_rate, semantic_violation_reduction against raw certificate acceptance, residual_drift_cases, unknown_or_abstain_rate, and mus_repair_hint_count.
+    7. Add focused tests for at least one validator compiler path if new code is introduced.
+
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1313_constrainprompt_nsvif_semantic_validator_mus_repair.json')); print(d.get('compiled_validator_count'), d.get('validator_execution_pass_rate'), d.get('honest_verdict'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp1314-beaver-lite-cactus-safe-prefix-acceptance
+  milestone: 2026.04.102
+  deliverable: results/experiment_1314_beaver_lite_cactus_safe_prefix_acceptance.json
+  title: "BEAVER-lite + Cactus/HoVer Safe-Prefix Acceptance v4"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 50
+  estimated_wall_time_min: 70
+  priority: high
+  requires_gpu: true
+  gated_on:
+    - upstream: exp1312-triggered-certificate-extraction-dccd-gbnf
+      artifact_field: certificate_parse_rate
+      op: '>='
+      value: 0.75
+    - upstream: exp1313-constrainprompt-nsvif-semantic-validator-mus-repair
+      artifact_field: validator_execution_pass_rate
+      op: '>='
+      value: 0.5
+  prior_failures:
+    - experiment_id: exp1301-safe-prefix-cactus-acceptance-v3
+      verdict: missing_gated_artifact
+      addressed_by: "Run only after parseable certificates and executable semantic validators exist."
+      retire_if_same_verdict: true
+    - experiment_id: exp1287-safe-prefix-cactus-acceptance-v2
+      verdict: gated_missing_sota_certificates
+      addressed_by: "Use exp1312 and exp1313 outputs as the required SOTA certificate/validator inputs."
+      retire_if_same_verdict: true
+    - experiment_id: exp1277-token-guard-hover-risk-filter
+      verdict: risk_filter_not_connected_to_fresh_sota_certificates
+      addressed_by: "Connect risk filters to fresh parsed certificates and validators before measuring acceptance."
+      retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    Low-risk acceptance should run only after Carnot has parsed certificates and
+    executable validators. This task tests whether BEAVER-lite/Cactus/HoVer-style
+    safe-prefix acceptance can reduce verifier calls without increasing false
+    acceptance. Use {project_root} as the project root and {date} as the run date
+    in artifact metadata.
+
+    MODEL_SPECS:
+    Prefer replaying exp1312/exp1313 outputs. If fresh generation is required,
+    use cached_sota_pair(gpu_indices=(0, 1)) and headline models from:
+    - unsloth/Qwen3.6-35B-A3B-GGUF
+    - unsloth/gemma-4-31B-it-GGUF
+    - unsloth/gemma-4-26B-A4B-it-GGUF
+    Legacy small models may only be CPU smoke tests with headline_result_allowed=false.
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_1312_triggered_certificate_extraction_dccd_gbnf.json
+    - results/experiment_1313_constrainprompt_nsvif_semantic_validator_mus_repair.json
+    - research-references.md
+    - python/carnot/
+    - tests/
+
+    TASK:
+    Implement or replay a small safe-prefix acceptance audit. It should decide
+    when a certificate prefix can be accepted, when it needs full verification,
+    and when repair/abstain is required.
+
+    REQUIRED ARTIFACT FIELDS:
+    - status
+    - low_risk_acceptance_rate
+    - false_acceptance_rate
+    - safe_prefix_repair_delta
+    - full_verifier_call_reduction
+    - risk_bound_proxy
+    - models_used
+    - headline_result_allowed
+    - honest_verdict
+
+    CONCRETE STEPS:
+    1. Create results/experiment_1314_beaver_lite_cactus_safe_prefix_acceptance.json immediately with status="in_progress".
+    2. Load exp1312 and exp1313 and abort to a terminal blocker if their gates are not satisfied.
+    3. Define a small acceptance policy over certificate prefixes, validator confidence, unknown states, and MUS repair availability.
+    4. Replay the policy over the parsed certificate corpus. Only run fresh local SOTA generation if replay is insufficient and MODEL_SPECS are available.
+    5. Measure low_risk_acceptance_rate, false_acceptance_rate, full_verifier_call_reduction, safe_prefix_repair_delta, and risk_bound_proxy.
+    6. Write headline_result_allowed=true only if the inputs are fresh mandated SOTA outputs or the artifact clearly inherits headline eligibility from exp1312.
+
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1314_beaver_lite_cactus_safe_prefix_acceptance.json')); print(d.get('low_risk_acceptance_rate'), d.get('false_acceptance_rate'), d.get('headline_result_allowed'), d.get('honest_verdict'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+# ============================================================
+# Phase 2 - Continuous self-learning
+# ============================================================
+
+- id: exp1315-continuous-self-learning-cerce-nonforgetting-audit
+  milestone: 2026.04.102
+  deliverable: results/experiment_1315_continuous_self_learning_cerce_nonforgetting_audit.json
+  title: "Continuous Self-Learning: CerCE Non-Forgetting Audit"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 45
+  estimated_wall_time_min: 55
+  priority: critical
+  requires_gpu: false
+  prior_failures:
+    - experiment_id: exp1303-querybandits-ngc-online-memory-policy
+      verdict: online_memory_policy_improved_non_headline
+      addressed_by: "Extend the positive .101 replay signal with explicit non-forgetting certificates and regression accounting."
+      retire_if_same_verdict: false
+    - experiment_id: exp1302-skill-graph-promotion-demotion-v2
+      verdict: skill_graph_candidates_written_sandboxed
+      addressed_by: "Use the sandboxed skill graph as input and measure promotion/demotion safety instead of only writing candidates."
+      retire_if_same_verdict: false
+    - experiment_id: exp1288-interwhen-dvi-verifier-feedback-replay
+      verdict: memory_update_written_non_headline
+      addressed_by: "Add CerCE-style non-forgetting and accepted-violation checks before any DVI online update rerun."
+      retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    Milestone .101 satisfied the mandatory continuous self-learning requirement
+    with a positive replay signal, but it remained non-headline and did not prove
+    non-forgetting. The planning sweep added CerCE as a concrete pattern for
+    continual constraint learning with forgetting control. Use {project_root} as
+    the project root and {date} as the run date in artifact metadata.
+
+    EXISTING CODE TO READ FIRST:
+    - research-program.md
+    - results/experiment_1302_skill_graph_promotion_demotion_v2.json
+    - results/experiment_1303_querybandits_ngc_online_memory_policy.json
+    - results/experiment_1288_interwhen_dvi_verifier_feedback_replay.json
+    - research-references.md
+    - python/carnot/
+    - tests/
+
+    TASK:
+    Run the mandatory continuous self-learning experiment for `.102`. Use the
+    .101 skill-graph and online-memory artifacts to audit whether promotion,
+    demotion, rewrite, and abstain policies preserve previously verified
+    behavior while improving new cases.
+
+    REQUIRED ARTIFACT FIELDS:
+    - status
+    - nonforgetting_certificate_rate
+    - memory_regression_count
+    - self_learning_delta_overall
+    - lagrangian_violation_penalty
+    - accepted_violation_delta
+    - promoted_memory_count
+    - demoted_memory_count
+    - headline_result_allowed
+    - honest_verdict
+
+    CONCRETE STEPS:
+    1. Create results/experiment_1315_continuous_self_learning_cerce_nonforgetting_audit.json immediately with status="in_progress".
+    2. Load exp1302, exp1303, and exp1288 artifacts. If any artifact is absent, write a terminal blocker with the missing inputs.
+    3. Build a replay set with old verified cases, .101 improved cases, and adversarial/unknown cases that should not be promoted.
+    4. Implement or reuse a small policy audit over promote, demote, rewrite, abstain, and expire decisions.
+    5. Measure nonforgetting_certificate_rate as the fraction of old verified cases preserved after applying the candidate policy.
+    6. Compute self_learning_delta_overall, accepted_violation_delta, lagrangian_violation_penalty, memory_regression_count, promoted_memory_count, and demoted_memory_count.
+    7. Keep headline_result_allowed=false unless the run uses fresh headline-eligible SOTA certificate evidence.
+
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1315_continuous_self_learning_cerce_nonforgetting_audit.json')); print(d.get('nonforgetting_certificate_rate'), d.get('self_learning_delta_overall'), d.get('honest_verdict'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp1316-dvi-certificate-tail-online-update
+  milestone: 2026.04.102
+  deliverable: results/experiment_1316_dvi_certificate_tail_online_update.json
+  title: "DVI Certificate-Tail Online Update - Gated on Parse Rate and Non-Forgetting"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 50
+  estimated_wall_time_min: 65
+  priority: high
+  requires_gpu: true
+  gated_on:
+    - upstream: exp1312-triggered-certificate-extraction-dccd-gbnf
+      artifact_field: certificate_parse_rate
+      op: '>='
+      value: 0.75
+    - upstream: exp1315-continuous-self-learning-cerce-nonforgetting-audit
+      artifact_field: nonforgetting_certificate_rate
+      op: '>='
+      value: 0.9
+  prior_failures:
+    - experiment_id: exp1288-interwhen-dvi-verifier-feedback-replay
+      verdict: memory_update_written_non_headline
+      addressed_by: "Move from replay-only memory update to certificate-tail updates gated on parseable SOTA certificates and non-forgetting."
+      retire_if_same_verdict: true
+    - experiment_id: exp1303-querybandits-ngc-online-memory-policy
+      verdict: online_memory_policy_improved_non_headline
+      addressed_by: "Use the improved online memory policy as a safety gate before DVI updates."
+      retire_if_same_verdict: false
+    - experiment_id: exp1304-grpo-vprm-v10-sota-gated
+      verdict: missing_gated_artifact
+      addressed_by: "Produce the DVI certificate-tail evidence needed before any GRPO/VPRM rerun."
+      retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    DVI is the right online-update target only after Carnot has parseable
+    certificates and a non-forgetting memory policy. This task applies dynamic
+    verifier integration to certificate tails, not to unstructured answers. Use
+    {project_root} as the project root and {date} as the run date in artifact
+    metadata.
+
+    MODEL_SPECS:
+    Prefer replaying exp1312 certificate tails. If fresh generation is required,
+    use cached_sota_pair(gpu_indices=(0, 1)) with headline models from:
+    - unsloth/Qwen3.6-35B-A3B-GGUF
+    - unsloth/gemma-4-31B-it-GGUF
+    - unsloth/gemma-4-26B-A4B-it-GGUF
+    Legacy small models may only be CPU smoke tests with headline_result_allowed=false.
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_1312_triggered_certificate_extraction_dccd_gbnf.json
+    - results/experiment_1315_continuous_self_learning_cerce_nonforgetting_audit.json
+    - results/experiment_1288_interwhen_dvi_verifier_feedback_replay.json
+    - research-references.md
+    - python/carnot/
+    - tests/
+
+    TASK:
+    Apply a small DVI-style online update to certificate tails. The update should
+    use verifier feedback to improve acceptance while preserving non-forgetting
+    and reducing accepted violations.
+
+    REQUIRED ARTIFACT FIELDS:
+    - status
+    - drafter_acceptance_delta
+    - accepted_violation_delta
+    - online_update_count
+    - nonforgetting_preserved
+    - lossless_acceptance_claim_allowed
+    - models_used
+    - headline_result_allowed
+    - honest_verdict
+
+    CONCRETE STEPS:
+    1. Create results/experiment_1316_dvi_certificate_tail_online_update.json immediately with status="in_progress".
+    2. Load exp1312 and exp1315 and abort to a terminal blocker if parse-rate or non-forgetting gates are not satisfied.
+    3. Identify certificate-tail fields that can be updated from verifier feedback without changing validated prefix claims.
+    4. Run a small online-update simulation or implementation over the parsed certificate corpus.
+    5. Measure drafter_acceptance_delta, accepted_violation_delta, online_update_count, and nonforgetting_preserved.
+    6. Set lossless_acceptance_claim_allowed=true only if no accepted violations increase and non-forgetting is preserved on the audit set.
+    7. Record models_used and headline_result_allowed according to whether the input certificates inherit headline eligibility from exp1312.
+
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1316_dvi_certificate_tail_online_update.json')); print(d.get('drafter_acceptance_delta'), d.get('accepted_violation_delta'), d.get('lossless_acceptance_claim_allowed'), d.get('honest_verdict'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp1317-grpo-vprm-v11-headline-gate
+  milestone: 2026.04.102
+  deliverable: results/experiment_1317_grpo_vprm_v11_headline_gate.json
+  title: "GRPO/VPRM v11 - Gated on Headline Certificates + Non-Forgetting"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 50
+  estimated_wall_time_min: 75
+  priority: high
+  requires_gpu: true
+  gated_on:
+    - upstream: exp1312-triggered-certificate-extraction-dccd-gbnf
+      artifact_field: headline_result_allowed
+      op: '=='
+      value: true
+    - upstream: exp1315-continuous-self-learning-cerce-nonforgetting-audit
+      artifact_field: self_learning_delta_overall
+      op: '>'
+      value: 0.0
+    - upstream: exp1315-continuous-self-learning-cerce-nonforgetting-audit
+      artifact_field: nonforgetting_certificate_rate
+      op: '>='
+      value: 0.9
+  prior_failures:
+    - experiment_id: exp1304-grpo-vprm-v10-sota-gated
+      verdict: missing_gated_artifact
+      addressed_by: "Run only after exp1312 produces headline-eligible certificates and exp1315 proves positive non-forgetting self-learning."
+      retire_if_same_verdict: true
+    - experiment_id: exp1289-grpo-vprm-v9
+      verdict: gated_missing_sota_certificates
+      addressed_by: "Require headline SOTA certificate evidence before policy optimization."
+      retire_if_same_verdict: true
+    - experiment_id: exp1273-vprm-sota-certificate-policy
+      verdict: policy_training_not_supported_without_certificates
+      addressed_by: "Use certificate and non-forgetting gates rather than training on unsupported samples."
+      retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    GRPO/VPRM should not activate unless Carnot has both headline-eligible
+    certificates and a positive non-forgetting self-learning signal. This task is
+    intentionally late-gated to avoid repeating the .101 skipped branch. Use
+    {project_root} as the project root and {date} as the run date in artifact
+    metadata.
+
+    MODEL_SPECS:
+    Use cached_sota_pair(gpu_indices=(0, 1)) with headline models from:
+    - unsloth/Qwen3.6-35B-A3B-GGUF
+    - unsloth/gemma-4-31B-it-GGUF
+    - unsloth/gemma-4-26B-A4B-it-GGUF
+    Legacy small models may only be CPU smoke tests with headline_result_allowed=false.
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_1312_triggered_certificate_extraction_dccd_gbnf.json
+    - results/experiment_1315_continuous_self_learning_cerce_nonforgetting_audit.json
+    - results/experiment_1316_dvi_certificate_tail_online_update.json
+    - scripts/experiment_template.py
+    - python/carnot/
+    - tests/
+
+    TASK:
+    Run the smallest GRPO/VPRM v11 audit that can test whether verifier feedback
+    and certificate-tail signals improve policy behavior without breaking
+    non-forgetting. Do not run a large training job.
+
+    REQUIRED ARTIFACT FIELDS:
+    - status
+    - grpo_vprm_delta
+    - verifier_feedback_token_mask_delta
+    - nonforgetting_preserved
+    - self_verification_gain
+    - models_used
+    - headline_result_allowed
+    - honest_verdict
+
+    CONCRETE STEPS:
+    1. Create results/experiment_1317_grpo_vprm_v11_headline_gate.json immediately with status="in_progress".
+    2. Load exp1312 and exp1315 and abort to a terminal blocker if any structured gate is not satisfied.
+    3. Reuse existing GRPO/VPRM or policy-audit scaffolding. Keep the update budget tiny and deterministic.
+    4. Compare baseline policy behavior against a verifier-feedback/token-mask variant on the certificate corpus.
+    5. Measure grpo_vprm_delta, verifier_feedback_token_mask_delta, nonforgetting_preserved, and self_verification_gain.
+    6. Write headline_result_allowed=true only if all inputs and model runs are headline eligible.
+
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1317_grpo_vprm_v11_headline_gate.json')); print(d.get('grpo_vprm_delta'), d.get('nonforgetting_preserved'), d.get('headline_result_allowed'), d.get('honest_verdict'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+# ============================================================
+# Phase 3 - Repair, hardware portability, publication state, retro
+# ============================================================
+
+- id: exp1318-hardnetpp-dsp-learned-stop-policy
+  milestone: 2026.04.102
+  deliverable: results/experiment_1318_hardnetpp_dsp_learned_stop_policy.json
+  title: "HardNet++/DSP Learned Stop Policy Generalization"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 45
+  estimated_wall_time_min: 55
+  priority: high
+  requires_gpu: false
+  prior_failures:
+    - experiment_id: exp1305-hardnetpp-dsp-feasibility-stop-policy
+      verdict: dsp_feasibility_marginal_not_learned_general_stop_rule
+      addressed_by: "Train or audit a held-out learned stop/continue policy instead of only replaying an operator gate."
+      retire_if_same_verdict: true
+    - experiment_id: exp1292-dsp-feasibility-channel
+      verdict: feasibility_channel_predictive_but_marginal
+      addressed_by: "Use DSP feasibility as one feature in a generalization split, not as the whole stop rule."
+      retire_if_same_verdict: false
+    - experiment_id: exp1291-hardnetpp-nonlinear-repair
+      verdict: hardnetpp_better_than_snarenet_on_replay
+      addressed_by: "Carry forward the positive HardNet++ delta into a learned stop-policy benchmark."
+      retire_if_same_verdict: false
+  prompt: |
+    CONTEXT:
+    .101 showed HardNet++ is useful and DSP feasibility is predictive, but the
+    artifact honestly described the result as an operator gate rather than a
+    learned general stop rule. This task measures held-out generalization. Use
+    {project_root} as the project root and {date} as the run date in artifact
+    metadata.
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_1305_hardnetpp_dsp_feasibility_stop_policy.json
+    - results/experiment_1291_hardnetpp_nonlinear_repair.json
+    - results/experiment_1292_dsp_feasibility_channel.json
+    - python/carnot/
+    - tests/
+
+    TASK:
+    Build a small learned stop/continue policy for repair attempts using
+    HardNet++ replay features, DSP feasibility, and validator outcomes. Evaluate
+    it on a held-out split and compare against the conservative .101 replay
+    policy.
+
+    REQUIRED ARTIFACT FIELDS:
+    - status
+    - learned_stop_policy_written
+    - generalization_split
+    - stop_policy_precision
+    - stop_policy_recall
+    - hardnetpp_delta_over_replay_policy
+    - dsp_feasibility_auc
+    - honest_verdict
+
+    CONCRETE STEPS:
+    1. Create results/experiment_1318_hardnetpp_dsp_learned_stop_policy.json immediately with status="in_progress".
+    2. Load exp1305 and earlier HardNet++/DSP artifacts; if unavailable, create a terminal blocker with exact missing paths.
+    3. Assemble a small train/held-out split from existing replay data. Do not invent labels that are not backed by verifier or artifact outcomes.
+    4. Fit or implement a simple transparent stop/continue policy using available features.
+    5. Compare against the .101 conservative replay policy and report precision, recall, DSP AUC, and HardNet++ delta over the replay policy.
+    6. Add focused tests or a deterministic script check if new code is introduced.
+
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1318_hardnetpp_dsp_learned_stop_policy.json')); print(d.get('learned_stop_policy_written'), d.get('stop_policy_precision'), d.get('stop_policy_recall'), d.get('honest_verdict'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp1319-kan-hardware-complexity-audit
+  milestone: 2026.04.102
+  deliverable: results/experiment_1319_kan_hardware_complexity_audit.json
+  title: "KAN Verifier Hardware Complexity Audit - RM/BOP/NABS + LUT/Analog"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 35
+  estimated_wall_time_min: 40
+  priority: medium
+  requires_gpu: false
+  prior_failures:
+    - experiment_id: exp1266-quantkan-repair-audit
+      verdict: quantkan_promising_but_not_hardware_mapped
+      addressed_by: "Run a hardware-complexity audit with RM/BOP/NABS-style accounting and no unsupported hardware-execution claim."
+      retire_if_same_verdict: false
+    - experiment_id: exp1199-kan-verifier-repair
+      verdict: verifier_repair_local_only
+      addressed_by: "Separate verifier/repair usefulness from hardware portability and quantify lookup/operation costs."
+      retire_if_same_verdict: false
+    - experiment_id: exp1148-kan-pwa-abstraction
+      verdict: pwa_abstraction_promising_but_not_mapped_to_hardware
+      addressed_by: "Assess LUT, analog KAN, and compact abstraction paths using the current references."
+      retire_if_same_verdict: false
+  prompt: |
+    CONTEXT:
+    Recent KAN work points in two directions that matter for Carnot: efficient
+    hardware representations and analog/physical KAN implementations. This task
+    is a hardware-portability audit only; it must not claim FPGA or analog
+    execution. Use {project_root} as the project root and {date} as the run date
+    in artifact metadata.
+
+    EXISTING CODE TO READ FIRST:
+    - research-references.md
+    - research-hardware-wishlist.md
+    - results/experiment_1305_hardnetpp_dsp_feasibility_stop_policy.json
+    - python/carnot/
+    - tests/
+
+    TASK:
+    Audit one or more KAN verifier/repair candidates for hardware complexity.
+    Estimate read-memory operations, bit operations, nonlinear activation
+    budget, lookup-table memory, and whether the candidate is better suited for
+    CPU, GPU, NPU, FPGA, or future analog hardware.
+
+    REQUIRED ARTIFACT FIELDS:
+    - status
+    - rm_per_inference
+    - bop_per_inference
+    - nabs_per_inference
+    - lookup_table_bytes
+    - analog_kan_candidate
+    - npu_or_fpga_best_target
+    - hardware_claim_allowed
+    - honest_verdict
+
+    CONCRETE STEPS:
+    1. Create results/experiment_1319_kan_hardware_complexity_audit.json immediately with status="in_progress".
+    2. Read the new KAN references in research-references.md and identify which local Carnot KAN or repair modules are relevant.
+    3. Compute simple, transparent estimates for RM, BOP, NABS, lookup-table bytes, and activation complexity on one representative local model/configuration.
+    4. Classify the best near-term target as CPU/GPU/NPU/FPGA and the speculative target as analog only if justified by the references.
+    5. Set hardware_claim_allowed=false unless real local hardware execution occurs during this task.
+    6. Write the artifact and any small deterministic helper/test if new code is introduced.
+
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1319_kan_hardware_complexity_audit.json')); print(d.get('rm_per_inference'), d.get('lookup_table_bytes'), d.get('hardware_claim_allowed'), d.get('honest_verdict'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp1320-pbit-sampler-portability-packet
+  milestone: 2026.04.102
+  deliverable: results/experiment_1320_pbit_sampler_portability_packet.json
+  title: "p-bit Sampler Portability Packet - Dual-BRAM + Reuse-Factor Grid"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 35
+  estimated_wall_time_min: 45
+  priority: medium
+  requires_gpu: false
+  prior_failures:
+    - experiment_id: exp827-kv260-fpga-pbit-sampler
+      verdict: xilinx_available_false_synthesis_blocked
+      addressed_by: "Produce a CPU-validated portability packet and mark Vivado/KV260 synthesis as a future hardware step."
+      retire_if_same_verdict: true
+    - experiment_id: exp624-fpga-sampler-simulation
+      verdict: simulation_only_vivado_blocked
+      addressed_by: "Avoid synthesis claims; provide dual-BRAM mapping and equivalence checks only."
+      retire_if_same_verdict: true
+    - experiment_id: exp568-pbit-hardware-synthesis
+      verdict: synthesis_required
+      addressed_by: "Keep this milestone at design-packet level with explicit vivado_required_for_next_step."
+      retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    Recent p-bit work supports dual-BRAM and time-multiplexed update patterns,
+    but local FPGA synthesis remains blocked. This task should create a useful
+    portability packet for future hardware work without claiming hardware
+    execution. Use {project_root} as the project root and {date} as the run date
+    in artifact metadata.
+
+    EXISTING CODE TO READ FIRST:
+    - research-references.md
+    - research-hardware-wishlist.md
+    - ops/known-issues.md
+    - python/carnot/
+    - tests/
+
+    TASK:
+    Create a p-bit sampler portability packet for future FPGA/accelerator work.
+    Include a dual-BRAM mapping sketch, reuse-factor sweep, DAC-bit sweep, and a
+    CPU equivalence check against a Gibbs or baseline sampler.
+
+    REQUIRED ARTIFACT FIELDS:
+    - status
+    - dual_bram_mapping_ready
+    - reuse_factor_sweep
+    - dac_bits_sweep
+    - kl_to_cpu_gibbs
+    - vivado_required_for_next_step
+    - hardware_claim_allowed
+    - honest_verdict
+
+    CONCRETE STEPS:
+    1. Create results/experiment_1320_pbit_sampler_portability_packet.json immediately with status="in_progress".
+    2. Read the p-bit references and hardware wishlist. Confirm whether Vivado/KV260 or equivalent FPGA tools are unavailable before setting hardware_claim_allowed.
+    3. Define a tiny Ising/p-bit sampling case and a CPU Gibbs baseline.
+    4. Build or reuse a simple p-bit update simulation that can vary reuse factor and DAC-bit assumptions.
+    5. Report a dual-BRAM mapping sketch, reuse_factor_sweep, dac_bits_sweep, and KL divergence to the CPU Gibbs baseline.
+    6. Set vivado_required_for_next_step=true unless actual synthesis is performed, and set hardware_claim_allowed=false without real hardware execution.
+
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1320_pbit_sampler_portability_packet.json')); print(d.get('dual_bram_mapping_ready'), d.get('vivado_required_for_next_step'), d.get('hardware_claim_allowed'), d.get('honest_verdict'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp1321-publication-hold-related-work-delta-v11
+  milestone: 2026.04.102
+  deliverable: results/experiment_1321_publication_hold_related_work_delta_v11.json
+  title: "Publication Hold + Related-Work Delta v11 - No Credentialed Submission"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 30
+  estimated_wall_time_min: 30
+  priority: medium
+  requires_gpu: false
+  skip_pre_test: true
+  prior_failures:
+    - experiment_id: exp1307-arxiv-v10-hold-receipt-v2
+      verdict: operator_hold_active_no_local_arxiv_receipt
+      addressed_by: "Keep the operator hold explicit and update related-work delta without attempting credentialed submission."
+      retire_if_same_verdict: false
+    - experiment_id: exp1294-arxiv-v10-hold-receipt
+      verdict: blocked_gate_check_failed
+      addressed_by: "Use .101 publication hold artifact and avoid credentialed upload attempts."
+      retire_if_same_verdict: true
+    - experiment_id: exp1127-arxiv-submit
+      verdict: no_local_receipt
+      addressed_by: "Do not attempt arXiv submission; write terminal state and related-work update only."
+      retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    Publication remains in operator hold. The useful work for this milestone is
+    to incorporate the new literature sweep into related-work notes or paper
+    draft metadata and write an honest terminal artifact. Do not log in to
+    arXiv, do not upload, and do not attempt credentialed submission. Use
+    {project_root} as the project root and {date} as the run date in artifact
+    metadata.
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_1307_arxiv_v10_hold_receipt_v2.json
+    - research-references.md
+    - ops/known-issues.md
+    - paper/
+    - docs/
+
+    TASK:
+    Write a publication-state artifact and, if a local paper or related-work
+    notes file exists, update it with a compact delta from the 2026-05-05
+    references. If no suitable paper file exists, write the delta into the
+    artifact only.
+
+    REQUIRED ARTIFACT FIELDS:
+    - status
+    - publication_state
+    - operator_hold_active
+    - credentialed_submission_attempted
+    - related_work_delta_written
+    - new_references_count
+    - honest_verdict
+
+    CONCRETE STEPS:
+    1. Create results/experiment_1321_publication_hold_related_work_delta_v11.json immediately with status="in_progress".
+    2. Read exp1307 and ops/known-issues.md to confirm the current publication hold.
+    3. Read research-references.md and identify the new 2025-2026 references that materially affect related work.
+    4. If a local paper or related-work notes file is present, add a concise related-work delta. If not, include the delta directly in the artifact.
+    5. Set credentialed_submission_attempted=false, operator_hold_active according to the local evidence, publication_state, new_references_count, related_work_delta_written, status, and honest_verdict.
+
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1321_publication_hold_related_work_delta_v11.json')); print(d.get('publication_state'), d.get('credentialed_submission_attempted'), d.get('new_references_count'), d.get('honest_verdict'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp1322-milestone-retro-102
+  milestone: 2026.04.102
+  deliverable: results/experiment_1322_milestone_retro_102.json
+  title: "Milestone 2026.04.102 Retrospective + Carry-Forward Plan"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 30
+  estimated_wall_time_min: 35
+  priority: critical
+  requires_gpu: false
+  skip_pre_test: true
+  prior_failures:
+    - experiment_id: exp1308-milestone-retro-101
+      verdict: milestone_101_8_of_13_criteria_met
+      addressed_by: "Score .102 after all .102 artifacts and name only evidence-backed carry-forwards."
+      retire_if_same_verdict: false
+    - experiment_id: exp1295-milestone-retro-100
+      verdict: milestone_100_5_of_14_criteria_met
+      addressed_by: "Continue the honest-retro pattern with explicit gates, blockers, and carry-forward metadata."
+      retire_if_same_verdict: false
+  prompt: |
+    CONTEXT:
+    This is the terminal retrospective for milestone 2026.04.102. It should
+    score what actually happened, reconcile docs, and produce carry-forward
+    tasks without inventing success for gated or skipped work. Use {project_root}
+    as the project root and {date} as the run date in artifact metadata.
+
+    EXISTING CODE TO READ FIRST:
+    - research-roadmap-next.yaml
+    - openspec/change-proposals/research-roadmap-vNEXT.md
+    - results/experiment_1309_sota_gguf_pair_resolver_repair.json
+    - results/experiment_1310_sota_gguf_llamacpp_smoke_load.json
+    - results/experiment_1311_sota_constraintbench_satquest_answer_stability.json
+    - results/experiment_1312_triggered_certificate_extraction_dccd_gbnf.json
+    - results/experiment_1313_constrainprompt_nsvif_semantic_validator_mus_repair.json
+    - results/experiment_1314_beaver_lite_cactus_safe_prefix_acceptance.json
+    - results/experiment_1315_continuous_self_learning_cerce_nonforgetting_audit.json
+    - results/experiment_1316_dvi_certificate_tail_online_update.json
+    - results/experiment_1317_grpo_vprm_v11_headline_gate.json
+    - results/experiment_1318_hardnetpp_dsp_learned_stop_policy.json
+    - results/experiment_1319_kan_hardware_complexity_audit.json
+    - results/experiment_1320_pbit_sampler_portability_packet.json
+    - results/experiment_1321_publication_hold_related_work_delta_v11.json
+    - ops/status.md
+    - ops/changelog.md
+    - _bmad/traceability.md
+
+    TASK:
+    Write the terminal retrospective artifact for .102 and reconcile planning
+    and ops notes. Do not modify research-roadmap.yaml.
+
+    REQUIRED ARTIFACT FIELDS:
+    - status
+    - criteria_met
+    - criteria_total
+    - sota_runtime_recovered
+    - certificate_path_headline_ready
+    - continuous_self_learning_advanced
+    - repair_generalization_advanced
+    - hardware_claims_honest
+    - publication_state
+    - carry_forward_tasks
+    - honest_verdict
+
+    CONCRETE STEPS:
+    1. Create results/experiment_1322_milestone_retro_102.json immediately with status="in_progress".
+    2. Read every available .102 artifact. If a gated task was skipped and has no artifact, count it honestly as not met unless the conductor wrote an explicit skip artifact elsewhere.
+    3. Score 14 criteria, one for each .102 task, and explain any unmet criteria in carry_forward_tasks.
+    4. Summarize whether SOTA runtime was recovered, whether the certificate path is headline-ready, whether continuous self-learning advanced, whether repair generalization advanced, whether hardware claims stayed honest, and publication_state.
+    5. Update ops/status.md, ops/changelog.md, and _bmad/traceability.md only if there are concrete .102 results to reconcile.
+    6. Finish with status="complete" and an honest_verdict such as milestone_102_9_of_14_criteria_met.
+
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1322_milestone_retro_102.json')); print(d.get('criteria_met'), d.get('criteria_total'), d.get('honest_verdict'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.

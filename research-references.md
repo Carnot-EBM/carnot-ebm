@@ -4,6 +4,189 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-05-05 Post-.101 Planning Sweep (Milestone 2026.04.102)
+
+This sweep was run after milestone `.101` completed with 8/13 criteria met.
+The decisive local blocker was not science: `exp1297` found Qwen3.6-35B and
+Gemma4-31B cached, but `cached_sota_pair()` still returned no loadable specs
+and the missing Gemma4-26B-A4B cache entry kept the SOTA certificate branch
+closed. The items below shape `.102`: first repair local SOTA runtime
+readiness, then run certificate extraction, semantic validation, self-learning
+non-forgetting checks, and hardware-portability audits.
+
+### ConstraintBench: Direct Constrained Optimization Feasibility
+- **Paper:** arXiv 2602.22465, "ConstraintBench: Benchmarking LLM Constraint
+  Reasoning on Direct Optimization."
+- **Source:** https://arxiv.org/abs/2602.22465
+- **What:** Evaluates LLMs on direct constrained optimization across 10
+  operations-research domains with deterministic Gurobi-backed feasibility and
+  optimality checks. The paper reports feasibility, not objective quality, as
+  the dominant bottleneck: the best model reaches only 65.0% feasibility.
+- **Relevance to Carnot:** This is a better near-term certificate stress test
+  than another free-form math benchmark. It provides structured feasible,
+  infeasible, and near-feasible cases where Carnot can separate solver quality
+  from certificate validity.
+- **Concrete experiment:** In `.102`, use a tiny ConstraintBench-style fixture
+  for SOTA answer stability, DCCD certificate extraction, and HardNet++/DSP
+  stop-policy generalization. Required fields: `constraintbench_items`,
+  `feasibility_rate`, `optimality_gap_proxy`, and `infeasible_detected`.
+
+### ConstrainPrompt: Prompt Constraints Compiled to Code Validators
+- **Paper:** OpenReview ICLR 2026 submission, "ConstrainPrompt: Code-Based
+  Assurance of Prompt-Defined Constraints."
+- **Source:** https://openreview.net/forum?id=O3Kg4dLdpg
+- **What:** Extracts code-verifiable constraints from natural-language prompts,
+  builds a logical evaluation tree with guard ordering, and emits executable
+  validators. The reported gain over LLM-as-judge is 24.3% in constraint
+  compliance accuracy and 40.8% in violation-rationale quality.
+- **Relevance to Carnot:** This directly targets the extraction bottleneck
+  called out in `research-program.md`: regex extraction failed on real
+  instruction-tuned models, but executable validators can give deterministic
+  local checks for prompt-defined constraints.
+- **Concrete experiment:** In `.102`, add a ConstrainPrompt-style validator
+  compiler around parsed certificates: prompt -> typed constraint tree ->
+  executable verifier -> minimal repair hint. Report
+  `compiled_validator_count`, `validator_execution_pass_rate`, and
+  `violation_rationale_quality_proxy`.
+
+### Compact Constraint Encoding: Constraint Design Beats Prompt Formatting
+- **Paper:** arXiv 2604.07192, "Compact Constraint Encoding for LLM Code
+  Generation."
+- **Source:** https://arxiv.org/abs/2604.07192
+- **What:** Across 830+ LLM invocations, compact headers reduce prompt tokens
+  substantially but do not materially improve constraint satisfaction. The
+  paper also finds model self-assessments overestimate compliance relative to
+  rule-based checks.
+- **Relevance to Carnot:** `.102` should not spend a task on prompt-format
+  polishing. It should invest in validator quality, hard constraints, and
+  externally scored certificates.
+- **Concrete experiment:** In the SOTA certificate tasks, compare prompt-only
+  constraint headers against validator-compiled constraints as a baseline, but
+  do not count self-reported model compliance as evidence.
+
+### SATQuest: PySAT-Backed Logical Reasoning Verifier
+- **Paper:** arXiv 2509.00930 / OpenReview ICLR 2026 Workshop LLM Reasoning,
+  "SATQuest: A Verifier for Logical Reasoning Evaluation and Reinforcement
+  Fine-Tuning of LLMs."
+- **Sources:** https://arxiv.org/abs/2509.00930,
+  https://openreview.net/forum?id=Qc2lUJsgOt, and
+  https://huggingface.co/datasets/sdpkjc/SATQuest
+- **What:** Generates SAT-derived reasoning tasks with objective PySAT
+  verification across instance scale, problem type, and question format. The
+  workshop version emphasizes verifier-backed infrastructure for evaluation and
+  reinforcement fine-tuning.
+- **Relevance to Carnot:** SATQuest is a local, open verifier benchmark for
+  FR-12 that can run without closed APIs. It also provides a safer substrate for
+  self-learning experiments than broad free-form GSM8K.
+- **Concrete experiment:** Use a 20-item SATQuest micro-slice in `.102`
+  self-learning and certificate validation. Report `satquest_items`,
+  `pysat_verified_rate`, `cross_format_failure_rate`, and
+  `verifier_feedback_gain`.
+
+### Residual Drift and MUS-Repair for Multi-Turn Constraint State
+- **Paper:** OpenReview ICLR 2026 Workshop LLM Reasoning, "Residual Drift
+  Dominates Contradiction in Multi-Turn Constraint Reasoning."
+- **Source:** https://openreview.net/forum?id=B9gtT1hhEm
+- **What:** Finds that after solver-guided repair, remaining failures are mostly
+  satisfiable drift rather than direct contradiction; the authors report
+  98-100% residual errors as drift and emphasize minimal unsatisfiable subset
+  repair.
+- **Relevance to Carnot:** `.101` produced skill-graph promotion/demotion and
+  a positive QueryBandits/NGC online policy, but future memory must detect
+  whether accepted answers still respect maintained state. Local constraint
+  satisfaction is not enough if the answer drifts from earlier commitments.
+- **Concrete experiment:** Add residual-drift and MUS/MCS repair fields to the
+  semantic validator and self-learning tasks:
+  `residual_drift_cases`, `mus_repair_hint_count`, and
+  `state_respecting_answer_rate`.
+
+### CerCE: Certifiable Continual Learning and Non-Forgetting
+- **Paper:** OpenReview ICLR 2026 submission, "CerCE: Towards Certifiable
+  Continual Learning."
+- **Source:** https://openreview.net/forum?id=Anh6VfNM22
+- **What:** Treats continual learning updates as structured perturbations and
+  uses LiRPA, gradient projection, and Lagrangian relaxation to certify
+  non-forgetting during training.
+- **Relevance to Carnot:** `exp1303` showed positive online-memory delta, but
+  it was non-headline and did not prove older verifier memories remained safe.
+  FR-11 needs improvement without corrupting the validated constraint memory.
+- **Concrete experiment:** `.102` should add a CerCE-style non-forgetting audit:
+  replay old promoted memories, apply the new policy/update, and report
+  `nonforgetting_certificate_rate`, `memory_regression_count`, and
+  `lagrangian_violation_penalty`.
+
+### DVI: Verifier Decisions as Online Supervision
+- **Paper:** arXiv 2510.05421, "Draft, Verify, and Improve: Toward
+  Training-Aware Speculative Decoding."
+- **Source:** https://arxiv.org/abs/2510.05421
+- **What:** Converts speculative verifier accept/reject decisions into online
+  supervision for the drafter head, with a KL-to-RL schedule and a reported
+  2.16x wall-time speedup on Spec-Bench.
+- **Relevance to Carnot:** This remains the cleanest way to turn every Carnot
+  verifier decision into a self-learning signal. It should be rerun only after
+  `.102` has either a real SOTA certificate corpus or a clearly marked replay
+  corpus.
+- **Concrete experiment:** Gate a Carnot DVI certificate-tail update on parse
+  rate. Report `drafter_acceptance_delta`, `accepted_violation_delta`,
+  `online_update_count`, and `lossless_acceptance_claim_allowed`.
+
+### p-Bit Dual-BRAM Annealer and Time-Multiplexed Update Dynamics
+- **Papers:** arXiv 2602.16143, "Energy-Efficient p-Bit-Based Fully-Connected
+  Quantum-Inspired Simulated Annealer with Dual BRAM Architecture"; Scientific
+  Reports 2026, "A unified performance-cost landscape of parallel p-bit Ising
+  machines based on update dynamics."
+- **Sources:** https://arxiv.org/abs/2602.16143 and
+  https://www.nature.com/articles/s41598-026-47285-0
+- **What:** The FPGA paper uses a spin-serial / replica-parallel schedule and a
+  dual-BRAM delay-line architecture to reduce fan-out and memory pressure for
+  fully connected Ising models. The Scientific Reports paper gives a
+  timing/cost landscape for synchronous/asynchronous p-bit update policies,
+  time-multiplexed p-bit reuse, and low-resolution DAC precision.
+- **Relevance to Carnot:** KV260/Vivado remains blocked, but `.102` can still
+  produce a hardware-portability artifact: compare current Carnot sampler
+  assumptions against dual-BRAM, time-multiplexing, reuse-factor, and DAC-bit
+  requirements before any future bitfile effort.
+- **Concrete experiment:** Add a CPU-only sampler-parity packet:
+  `dual_bram_mapping_ready`, `reuse_factor_sweep`, `dac_bits_sweep`,
+  `kl_to_cpu_gibbs`, and `vivado_required_for_next_step`.
+
+### KAN Hardware and Analog Paths: lmKAN, RM/BOP/NABS, and aKAN
+- **Papers:** OpenReview ICLR 2026 "Lookup multivariate Kolmogorov-Arnold
+  Networks"; arXiv 2604.03345 "Hardware-Oriented Inference Complexity of
+  Kolmogorov-Arnold Networks"; arXiv 2602.07518 "Physical Analog
+  Kolmogorov-Arnold Networks based on Reconfigurable Nonlinear-Processing
+  Units."
+- **Sources:** https://openreview.net/forum?id=XRQVIeBnB0,
+  https://arxiv.org/abs/2604.03345, and https://arxiv.org/abs/2602.07518
+- **What:** lmKAN uses spline lookup tables for efficient multivariate layers;
+  the hardware-complexity paper provides platform-independent RM/BOP/NABS
+  metrics; aKAN maps KAN edge functions to reconfigurable nonlinear physical
+  devices with estimated sub-microsecond, picojoule-scale inference.
+- **Relevance to Carnot:** QuantKAN/LUT-KAN has strong local evidence, but the
+  next step is not another AUROC-only result. Carnot needs hardware-complexity
+  accounting and a path from KAN verifier energy to deployable edge/analog
+  approximations.
+- **Concrete experiment:** In `.102`, write a KAN verifier hardware audit for
+  active SOS-KAN/QuantKAN checkpoints with `rm_per_inference`,
+  `bop_per_inference`, `nabs_per_inference`, `lookup_table_bytes`, and
+  `analog_kan_candidate`.
+
+### Current Extropic and Kona Status Remains Strategic, Not a Local Dependency
+- **Sources:** https://extropic.ai/hardware and
+  https://logicalintelligence.com/blog/energy-based-models-for-reasoning
+- **What:** Extropic lists XTR-0 as a Q3 2025 research platform and Z1 as early
+  access in 2026 with hundreds of thousands of probabilistic circuits per chip.
+  Logical Intelligence continues to describe Kona as non-autoregressive,
+  globally scored, continuous-space reasoning with editable traces and an
+  Aleph orchestration layer.
+- **Relevance to Carnot:** The direction is confirmed, but no `.102` experiment
+  should block on external Extropic/Kona access. The local path remains:
+  open-weight GGUF generation, deterministic/EBM verification, online
+  self-learning, and hardware-portable sampler abstractions.
+- **Concrete experiment:** Keep Extropic/Kona as context in the hardware and
+  energy-bridge sections; do not propose a credentialed vendor-access task
+  unless the operator explicitly authorizes it.
+
 ## 2026-05-05 Planning Sweep (Milestone 2026.04.101)
 
 This sweep rechecked arXiv, OpenReview, HuggingFace Papers, Semantic Scholar,

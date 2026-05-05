@@ -1,6 +1,18 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-05 (Milestone 2026.04.101 research planning complete)
+**Last Updated:** 2026-05-05 (Milestone 2026.04.102 research planning complete)
+
+## Session 2026-05-05 - Milestone 2026.04.102 Research Planning Complete
+
+**Milestone 2026.04.102 PLANNED.**
+
+- Roadmap doc: `openspec/change-proposals/research-roadmap-vNEXT.md`
+- Execution queue: `research-roadmap-next.yaml` (14 tasks, exp1309-exp1322)
+- Research references updated before planning with ConstraintBench, ConstrainPrompt, Compact Constraint Encoding, SATQuest, Residual Drift/MUS repair, CerCE non-forgetting, DVI certificate-tail updates, p-bit dual-BRAM/update dynamics, KAN hardware/analog paths, and current Extropic/Kona status.
+- Design focus: recover the local SOTA GGUF runtime after `.101` found two cached mandated models but no loadable pair specs, run a small certifiable ConstraintBench/SATQuest certificate path, connect parsed certificates to semantic validators and Cactus acceptance, advance continuous self-learning with CerCE non-forgetting and DVI, and keep hardware work scoped to KAN/p-bit portability audits.
+- Structured gates: exp1310 on exp1309 resolver readiness; exp1311 on exp1310 headline runtime readiness; exp1312 on exp1311 answer stability; exp1313 on exp1312 parse rate; exp1314 on exp1312 parse rate plus exp1313 validator pass rate; exp1316 on exp1312 parse rate plus exp1315 non-forgetting; exp1317 on exp1312 headline eligibility plus exp1315 positive self-learning/non-forgetting.
+- Validation passed: `python3 scripts/validate_prior_failures.py research-roadmap-next.yaml` and `python3 scripts/audit_roadmap_gates.py research-roadmap-next.yaml`.
+- No changes made to `research-roadmap.yaml` or `scripts/research_conductor.py`.
 
 ## Session 2026-05-05 - Milestone 2026.04.101 Research Planning Complete
 
