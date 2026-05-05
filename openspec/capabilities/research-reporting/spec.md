@@ -514,6 +514,27 @@ bootstrap-only artifacts shall count as `NOT_MET`. The retrospective
 self-criterion shall count as `MET` only in the final artifact that sets
 `retro_complete == true`.
 
+### REQ-REPORT-026: EBT/ARM/EBM-CoT Energy Bridge Audit v2
+
+The Exp 1306 energy bridge audit workflow shall read the local research notes
+and prior milestone artifacts without requiring network access, then write
+`results/experiment_1306_ebt_arm_ebm_cot_energy_bridge_audit_v2.json` with:
+
+- `status`
+- `energy_bridge_completed`
+- `ebt_citation_count_checked`
+- `arm_ebm_alignment_note`
+- `ebm_cot_sequence_energy_note`
+- `extropic_kona_status_checked`
+- `hardware_sampler_context_recorded`
+- `honest_verdict`
+
+The artifact shall use run date `20260505`, record project root
+`/home/ianblenke/github.com/ianblenke/carnot`, carry the Exp 1293 blocked
+prior-failure context, and explicitly distinguish verifier-energy work already
+implemented locally from EBT, ARM-EBM, EBM-CoT, Extropic TSU, p-bit, and Kona
+items that remain strategic or future sampler context.
+
 ### REQ-REPORT-024: Local Agent Usage Snapshot
 
 The repository shall provide a local operator workflow that inspects the
@@ -797,6 +818,19 @@ criteria do not increment `criteria_met`
 **And** the artifact reports `criteria_met == 5`
 **And** `honest_verdict == "milestone_100_5_of_14_criteria_met"`
 
+### SCENARIO-REPORT-026: Exp 1306 Completes Energy Bridge Audit v2
+
+**Given** Exp 1293 is blocked by missing prior-failure metadata
+**And** the local research references include EBT citation signals, ARM-EBM,
+EBM-CoT, FALCON, Extropic TSU, p-bit update-dynamics, and Kona context
+**When** the Exp 1306 bridge-audit workflow runs for run date `20260505`
+**Then** it writes the required REQ-REPORT-026 fields
+**And** `energy_bridge_completed == true`
+**And** Extropic, p-bit, and Kona are recorded as future sampler or strategy
+context rather than local implementation dependencies
+**And** `honest_verdict` distinguishes local verifier-energy alignment from
+strategic architecture context.
+
 ### SCENARIO-REPORT-021: Codex Latest Rate-Limit Event Is Surfaced
 
 **Given** a local Codex session tree contains multiple `token_count` events
@@ -943,6 +977,7 @@ embed live-GPU benchmark results from Exp 328 when available.
 | REQ-REPORT-022 | `python/carnot/reporting/milestone_retro_98.py`, `results/experiment_1267_milestone_retro_98.json` | `tests/python/test_milestone_retro_98.py` | Implemented |
 | REQ-REPORT-023 | `python/carnot/reporting/milestone_retro_99.py`, `results/experiment_1281_milestone_retro_99.json` | `tests/python/test_milestone_retro_99.py` | Implemented |
 | REQ-REPORT-025 | `python/carnot/reporting/milestone_retro_100.py`, `results/experiment_1295_milestone_retro_100.json` | `tests/python/test_milestone_retro_100.py` | Implemented |
+| REQ-REPORT-026 | `python/carnot/reporting/energy_bridge_audit_v2.py`, `results/experiment_1306_ebt_arm_ebm_cot_energy_bridge_audit_v2.json` | `tests/python/test_energy_bridge_audit_v2.py` | Planned |
 | REQ-REPORT-024 | `python/carnot/reporting/agent_usage.py`, `scripts/agent_plan_usage.py` | `tests/python/test_agent_plan_usage.py` | Implemented |
 | REQ-PUBLISH-003 | `scripts/experiment_317_hf_publish.py` | `tests/python/test_experiment_317_hf_publish.py` | Implemented |
 | REQ-PUBLISH-004 | `scripts/experiment_330_hf_live_publish.py` | `tests/python/test_experiment_330_hf_live_publish.py` | Implemented |
