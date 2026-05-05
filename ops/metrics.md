@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-05-05 Milestone 2026.04.106 Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-05-05T15:41:13Z | 2026-05-05T15:58:00Z | Plan milestone 2026.04.106 after 2026.04.105 completion: read required project context and .105 retro artifact, run 2025-2026 research sweep (7 new papers), update research references, write vNEXT design doc, create research-roadmap-next.yaml (13 tasks exp1364-1376), validate schema/prior/gate checks, align ops docs. | TBD |
+
+---
+
 ## Session: 2026-05-05 Milestone 2026.04.105 Planning
 
 ### Turn Log

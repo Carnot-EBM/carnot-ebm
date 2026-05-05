@@ -1,246 +1,281 @@
-# Research Roadmap vNEXT: Milestone 2026.04.105
+# Research Roadmap vNEXT: Milestone 2026.04.106
 
 Planned: 2026-05-05
 Status: Draft for conductor execution
-Predecessor: 2026.04.104 Environment Gate Recovery + Triggered Semantic Certificates + Verifier-Cost Self-Learning
+Predecessor: 2026.04.105 Terminal Certificate Evidence + Skill-Localized Semantic Repair + Verifier-Selected Self-Learning
 Roadmap YAML: `research-roadmap-next.yaml`
 
-## What Milestone .104 Proved
-
-Milestone 2026.04.104 was a useful recovery milestone, but it did not produce
-the missing SOTA certificate evidence. The next milestone must not treat the
-absence of `exp1340` as a negative result about trigger-switched certificates;
-it is a gate-order / artifact-missing result that needs a terminal replacement
-artifact.
+## What Milestone .105 Proved
 
 | Track | Evidence | Finding |
 |---|---|---|
-| Environment gate | `exp1337` | `environment_ready=true`; stale `.103` artifacts were classified and disk/pretest state was made explicit. |
-| .103 carry-forward | `exp1338` | `exp1325` was correctly classified as a stale environment failure, not scientific evidence against certificate recovery. |
-| Dynamic grammar | `exp1339` | `dynamic_grammar_ready=true` via local pure-Python TagDispatch dry-run; XGrammar itself was absent, but the branch model is ready for a guarded SOTA attempt. |
-| SOTA certificate run | `exp1340` | Missing. The parse gate was never measured in `.104`, so downstream semantic/DVI gates must remain closed until a terminal certificate artifact exists. |
-| Failure taxonomy | `exp1341` | Diagnostic split completed from local cases, with `universal_detector_claim_allowed=false`. |
-| Semantic validator / scheduler | `exp1342`, `exp1343` | Semantic validator did not run because the certificate artifact was missing; scheduler blocked correctly. |
-| Continuous self-learning | `exp1344` | Replay-only policy was positive: `self_learning_delta_overall=1.596429`, `dvi_ready=true`, but `headline_result_allowed=false` without fresh certificate cases. |
-| Hardware / external parity | `exp1347`, `exp1348`, `exp1349` | THRML unavailable locally, p-bit dual-BRAM packet updated, no hardware claims, and no external Kona/Extropic dependency claims. |
-| Retro | `exp1350` | `.104` met 9 of 12 criteria and named six carry-forward tasks, led by terminal `exp1340` replacement and gated semantic/DVI work. |
+| .104 handoff | `exp1351` | Carry-forward audit complete; `exp1340` correctly classified as missing. |
+| Certificate preflight | `exp1352` | `max_token_budget_sufficient=true`, `dynamic_dispatch_preserved=true`, `sota_run_allowed=true` — preflight passed. |
+| SOTA certificate run | `exp1353` | Ran; produced 4 cases; `certificate_parse_rate=0.0`, `trigger_token_hit_rate=0.0`. Dominant blocker: `missing_structural_tag`. Thinking-mode tokens (`<think>...</think>`) consumed the generation budget before the structural branch-selector tag was emitted. Terminal negative evidence, not an artifact-missing failure. |
+| LogicSkills skill split | `exp1354` | Ran on exp1353 cases; `skill_split_claim_allowed` tied to 4 parse-zero cases. Minimal evidence. |
+| Semantic validator | `exp1355` | Gate-blocked: `certificate_parse_rate=0.0 < 0.75`. |
+| MCS repair / scheduler | `exp1356`, `exp1357` | Missing or blocked; no semantic repair evidence. |
+| Continuous self-learning | `exp1358` | Positive replay-only: `self_learning_delta_overall=1.596429`, `dvi_ready=true`, `fresh_verified_sample_count=0`, `nonforgetting_certificate_rate=1.0`, `memory_regression_count=0`. Mandatory requirement satisfied; not headline. |
+| DVI / GRPO | `exp1359`, `exp1360` | Missing or blocked behind semantic/DVI gates. |
+| Hardware mapping | `exp1361` | CPU-only p-dit certificate-state mapping: `state_expansion_ratio=4.0`, `energy_equivalence_error=0.0`. No hardware claim. |
+| Publication boundary | `exp1362` | Hold active; no external-dependency claim. |
+| Retro | `exp1363` | 9 of 12 criteria met; named carry-forward tasks. |
 
-The natural `.105` shape is therefore: close the `.104` handoff, preflight the
-certificate grammar so it cannot truncate silently, run one terminal SOTA
-certificate experiment, decompose failures by formal skill, and only then
-advance semantic repair, DVI, and GRPO.
+**Key root cause diagnosis.** The `.105` retro verdict explicitly names the blocker for `.106`:
+> "Force tag-first emission or retire the trigger-before-constrain branch; acceptance must require `parse_rate >= 0.75` plus truthfulness and UNKNOWN preservation."
+
+The structural tag that selects the grammar branch (SAT / UNSAT / UNKNOWN / repair) is never emitted because Qwen3 and Gemma4-it models generate `<think>...</think>` thinking tokens as the first output, consuming the token budget before the constrained certificate section is reached. The trigger-before-constrain approach assumes the model will emit a trigger token early; thinking-mode models do not.
 
 ## Research Signals Added Before Planning
 
-The post-.104 sweep added the following 2025-2026 sources to
+The post-.105 sweep added the following 2025–2026 sources to
 `research-references.md` before this roadmap was designed:
 
-- `arXiv:2602.06533`, LogicSkills: splits formal reasoning into
-  symbolization, countermodel construction, and validity assessment, all
-  solver-verified with Z3.
-- `arXiv:2602.18095`, Logitext: treats natural-language text constraints as an
-  SMT theory, preserving partial formalization and coverage.
-- `arXiv:2601.20055`, VERGE: uses semantic routing, formal equivalence, and
-  Minimal Correction Subsets for repair-localized verifier feedback.
-- OpenReview `lrc2xSoh9b`, TruncProof, plus the 2026-05-04 MLC XGrammar-2
-  runtime post: certificate grammars need max-token completion checks before
-  expensive local SOTA generation.
-- `arXiv:2603.03297` and `arXiv:2505.19475`: test-time self-reflection and
-  verifier-driven sample selection provide a safer path from replay-positive
-  self-learning to fresh verifier-selected updates.
-- `arXiv:2506.00269`, p-dits: multi-valued probabilistic variables map Carnot's
-  SAT/UNSAT/UNKNOWN/repair certificate states more naturally than binary
-  one-hot p-bits.
-- `arXiv:2512.15605` v3 and EBT's ICLR 2026 oral status: Carnot should keep
-  Phase-3 claims grounded in local verifier evidence rather than broad EBT
-  analogy.
+- `arXiv:2512.20664`, Eidoku: CSP neuro-symbolic verification gate that
+  checks structural connectivity, feature-space consistency, and logical
+  entailment independently of any certificate grammar. Directly maps to
+  Carnot's Ising (structural), KAN (geometric), and Z3/NSVIF (symbolic)
+  tiers.
+- `arXiv:2602.11364`, DiffuTruth: non-equilibrium hallucination detection
+  via diffusion model reconstruction energy. Unsupervised SOTA on FEVER
+  (AUROC 0.725). Complementary non-equilibrium energy signal for Carnot's
+  Ising/KAN pipeline.
+- `arXiv:2502.09061`, CRANE: alternating unconstrained reasoning and grammar-
+  constrained generation. Reports 30%+ gains on symbolic tasks. Combined with
+  prefix injection of the structural tag, CRANE's alternating design prevents
+  thinking-mode pre-emption of the constrained region.
+- `arXiv:2505.15960`, FOVER: 80K formally verified PRM training data with
+  Z3/Isabelle step labels. Alignment target for Carnot's LogicSkills
+  certificate skill split.
+- `arXiv:2602.06737`, Optimal KAN Verification: PWA abstraction for KAN
+  spline units + MILP encoding for property verification. Formal correctness
+  bounds for Carnot's GS-KAN energy tier.
+- `arXiv:2604.17109`, Fully Parallel Ising with Inertia: synchronous p-bit
+  updates with inertia term on FPGA. Reduced sweeps-to-convergence for dense
+  graphs. Directly relevant to Carnot's `parallel_ising.py` and KV260 v4 RTL.
+- `arXiv:2511.00746`, Ising-NN Correspondence: systematic mapping from
+  trained feed-forward neural networks to Ising hardware. Theoretic foundation
+  for mapping Carnot's KAN/Boltzmann tiers to FPGA without separate Vivado
+  bitfile synthesis.
 
 ## Three Biggest Gaps
 
-1. **Terminal certificate evidence gap.** `.104` proved the environment and
-   grammar dry-run were ready, but `exp1340` did not leave a terminal artifact.
-   Until a SOTA certificate run records parse/truthfulness/UNKNOWN metrics or a
-   terminal blocker, semantic validator and DVI work remain legitimately closed.
+1. **Structural tag never emitted by thinking models.** `exp1353` confirmed
+   that the trigger-before-constrain approach fails for Qwen3/Gemma4-it
+   because thinking tokens appear before any user-requested structural tag.
+   The fix is **prefix injection**: supply the structural tag as the first
+   token(s) of the assistant turn before generation begins. Llama.cpp's
+   `--grammar` flag combined with a forced assistant prefix achieves this.
+   If prefix injection also fails, the trigger-before-constrain branch must
+   be retired (per the `.105` retro's `retire_if_same_verdict: true` entry)
+   and Eidoku CSP becomes the primary verification path.
 
-2. **Skill-localized semantic repair gap.** Carnot still has a single parse
-   gate standing in for multiple failure modes. LogicSkills, Logitext, and
-   VERGE point to the missing decomposition: symbolization versus validity
-   versus countermodel, fully formal versus partial natural-language
-   constraints, and MCS-localized repair hints.
+2. **No headline self-learning evidence yet.** `exp1358` is mandatory and
+   positive but replay-only. FR-11 requires fresh verifier-selected samples.
+   This is blocked by the certificate gate: without parsed certificates, the
+   semantic validator cannot produce verified cases for memory promotion.
+   Closing this gap requires either (a) tag-first prefix injection succeeding
+   and the semantic chain opening, or (b) Eidoku CSP feasibility scores
+   substituting as the verifier signal for memory promotion.
 
-3. **Headline self-learning gap.** `exp1344` is positive replay evidence, but
-   FR-11 still needs fresh verifier-selected samples with non-forgetting and
-   accepted-violation controls. DVI and GRPO must stay gated until fresh
-   certificate and semantic evidence exists.
+3. **Publication hold active; paper integrity not closed.** The arXiv
+   submission is blocked by the claim boundary audit and open paper-integrity
+   issues. `.106` must close or explicitly defer each pending publication
+   blocker based on honest local evidence, not analogy.
 
 ## Architecture Target
 
 ```text
-Phase 0: handoff closure and certificate completion preflight
-  exp1351 .104 carry-forward and artifact integrity audit
+Phase 0: .105 handoff closure
+  exp1364 .105 artifact integrity audit
       |
       v
-  exp1352 TruncProof/XGrammar completion-budget preflight
+Phase 1: Tag-first prefix injection + independent CSP verification
+  exp1365 Eidoku CSP neuro-symbolic probe (CPU, unconditional)
       |
-      v
-Phase 1: terminal SOTA certificate and semantic repair
-  exp1353 trigger-switched certificate v7 on mandated local GGUF
+  exp1366 Certificate v8 — tag-first prefix injection CRANE pattern (GPU)
+      |    gated: exp1364.terminal_certificate_required == true
       |
-      +--> exp1354 LogicSkills skill split
+  exp1367 DiffuTruth energy-of-falsehood probe (CPU, unconditional)
       |
-      v
-  exp1355 Logitext/NSVIF partial SMT validator
+Phase 2: Semantic repair chain (all gated on exp1366.certificate_parse_rate >= 0.75)
+  exp1368 FOVER-aligned LogicSkills skill audit
       |
-      v
-  exp1356 VERGE MCS repair localization
+  exp1369 Semantic validator v2 — NSVIF + partial SMT
       |
-      v
-  exp1357 margin-aware Cactus/BEAVER scheduler v2
-
-Phase 2: verifier-governed self-learning
-  exp1358 verifier-selected memory update with replay fallback
+  exp1370 VERGE MCS repair localization v2
       |
-      +--> exp1359 DVI certificate-tail v4
-              |
-              v
-          exp1360 GRPO/VPRM v14 micro-audit
-
-Phase 3: hardware/claim boundary and closeout
-  exp1361 p-dit/p-int certificate-state hardware mapping
-  exp1362 publication hold + EBT/ARM/Kona claim boundary
-  exp1363 milestone retro and .106 carry-forward
+  exp1371 Margin-aware Cactus/BEAVER scheduler v3
+      |
+Phase 3: Hardware and formal verification (unconditional)
+  exp1372 Optimal KAN PWA formal verification (CPU)
+  exp1373 Fully parallel Ising with inertia (CPU)
+      |
+Phase 4: Self-learning + publication + retro
+  exp1374 FR-11 continuous self-learning v3 (unconditional, fallback to replay)
+  exp1375 Publication hold + claim boundary v15
+  exp1376 Milestone 2026.04.106 retrospective
 ```
-
-## Phase 0: Handoff Closure and Certificate Completion Preflight
-
-Goal: prevent another missing `exp1340`-class artifact before any GPU-heavy SOTA
-work runs.
-
-- `exp1351-104-carryforward-artifact-integrity-audit`: read `.104` artifacts,
-  conductor log, and retro; produce a terminal integrity artifact that states
-  which gates are open, which are closed, and which prior failures must be
-  attached to `.105` tasks.
-- `exp1352-truncproof-xgrammar-certificate-completion-preflight`: perform a
-  local grammar/token-budget preflight for SAT/UNSAT/UNKNOWN/repair
-  certificate states. The SOTA run is allowed only if the grammar can complete
-  inside the configured max-token budget and dynamic branch dispatch remains
-  valid.
-
-Success bar: `sota_run_allowed=true`, or a terminal blocker that prevents
-`exp1353` from running.
-
-## Phase 1: Terminal SOTA Certificate and Semantic Repair
-
-Goal: replace the missing `.104` SOTA certificate branch with one terminal
-artifact, then decompose and validate what it produced.
-
-- `exp1353-triggered-certificate-v7-truncproof-sota`: run the mandated local
-  SOTA GGUF pair through trigger-before-constrain plus dynamic grammar and
-  completion-budget checks. This task must write a terminal artifact even if it
-  blocks.
-- `exp1354-logicskills-certificate-skill-split`: split certificate results into
-  symbolization, countermodel, and validity-assessment rates instead of hiding
-  all failure behind parse rate.
-- `exp1355-logitext-nsvif-partial-smt-validator`: when parse evidence clears
-  the gate, route fully formal claims to local SMT and partial claims to
-  natural-language text constraints while preserving UNKNOWN.
-- `exp1356-verge-mcs-repair-localization`: use MCS-style localization to turn
-  semantic rejects into minimal repair hints.
-- `exp1357-margin-aware-cactus-beaver-scheduler-v2`: rerun scheduler work only
-  after semantic and repair-localization evidence exists.
-
-Success bar: either `certificate_parse_rate >= 0.75` plus semantic validation,
-or a terminal retirement of the current trigger-switched certificate branch with
-evidence about the remaining blocker.
-
-## Phase 2: Verifier-Governed Continuous Self-Learning
-
-Goal: satisfy the continuous self-learning requirement without letting replay
-success become an unsupported headline claim.
-
-- `exp1358-continuous-self-learning-verifier-selected-memory`: mandatory
-  FR-11 task. It always runs with replay fallback from `exp1344`, and upgrades
-  to headline evidence only when fresh `.105` validated certificate cases exist.
-- `exp1359-dvi-certificate-tail-v4-gated`: apply DVI only after parse,
-  semantic, and non-forgetting gates pass.
-- `exp1360-grpo-vprm-v14-gated`: run a bounded replay or micro-audit only if
-  DVI claims lossless acceptance and the self-learning delta is positive.
-
-Success bar: self-learning reports non-forgetting, memory regression, and
-accepted-violation deltas. DVI/GRPO remain closed unless gates pass.
-
-## Phase 3: Hardware/Claim Boundary and Closeout
-
-Goal: keep Phase-2/Phase-3 architecture current without overclaiming.
-
-- `exp1361-pdit-certificate-state-hardware-mapping`: map certificate states and
-  memory variables to p-dits/p-ints, comparing against binary p-bit expansion.
-  This is CPU-only mapping; no hardware claim is allowed.
-- `exp1362-publication-hold-ebt-arm-kona-claim-boundary`: update the local
-  claim boundary using `.105` results, EBT/ARM-EBM theory, and `exp1349`.
-- `exp1363-milestone-105-retro-carryforward`: evaluate `.105` criteria, name
-  `.106` carry-forwards with prior-failure hygiene, and keep the publication
-  hold honest.
-
-Success bar: hardware mapping improves future FPGA/TSU packet quality without
-claiming execution, and the retro leaves no missing-artifact ambiguity.
 
 ## Dependency Graph
 
-```text
-exp1351 ---> exp1352 ---> exp1353 ---> exp1354
-                            |
-                            v
-                         exp1355 ---> exp1356 ---> exp1357
-                            |
-exp1344 + exp1353/1355 ---> exp1358 ---> exp1359 ---> exp1360
-
-exp1348 + p-dit refs -----> exp1361
-exp1349 + EBT/ARM refs ---> exp1362
-exp1351..exp1362 --------> exp1363
+```
+exp1364 ──→ exp1366 (gate: terminal_certificate_required)
+exp1366 ──→ exp1368, exp1369 (gate: certificate_parse_rate >= 0.75)
+exp1369 ──→ exp1370 (gate: validator_execution_pass_rate >= 0.5)
+exp1370 ──→ exp1371 (gate: repair_hint_precision >= 0.5)
+exp1369 ──→ exp1374 (gate: semantic_validator_claim_allowed)
+exp1365 [unconditional — parallel CSP path]
+exp1367 [unconditional — non-equilibrium complement]
+exp1372 [unconditional — formal KAN verification]
+exp1373 [unconditional — parallel Ising inertia]
+exp1374 [unconditional with fallback to replay if gate misses]
+exp1375 [unconditional — reads all available .106 evidence]
+exp1376 [unconditional — milestone closeout]
 ```
 
 ## Hardware Requirements
 
-- Fresh LLM-bearing tasks must use local mandated GGUF models through
-  `cached_sota_pair(gpu_indices=(0, 1))` or an equivalent helper. Every fresh
-  LLM task must include at least one of:
-  `unsloth/Qwen3.6-35B-A3B-GGUF`,
-  `unsloth/gemma-4-31B-it-GGUF`,
-  `unsloth/gemma-4-26B-A4B-it-GGUF`.
-- Legacy small models such as Qwen3.5-0.8B and gemma-4-E4B-it may only be
-  CPU smoke tests with `headline_result_allowed=false`.
-- `exp1353` is the only planned fresh SOTA generation task. It should use the
-  two RTX 3090s when possible and record model IDs, quantization, GPU
-  assignment, token budgets, completion-budget preflight status, parse metrics,
-  and throughput.
-- `exp1361` is hardware mapping only. It may not claim FPGA, KV260, p-dit ASIC,
-  TSU, ROCm, analog, or Kona execution unless that runtime actually executes.
+| Experiment | GPU | CPU only |
+|---|---|---|
+| exp1364, 1365, 1367, 1372, 1373, 1374, 1375, 1376 | No | Yes |
+| exp1366 | Yes (RTX 3090 x2 preferred) | Fallback smoke test |
+| exp1368–1371 | No | Yes |
 
-## Success Criteria
+## Phase Descriptions
 
-- `exp1351` writes a terminal `.104` carry-forward integrity audit.
-- `exp1352` either allows the SOTA certificate run with completion-budget
-  evidence or blocks it terminally.
-- `exp1353` writes terminal certificate evidence; missing artifact is failure.
-- `exp1354` reports skill-specific certificate failure rates.
-- `exp1355` runs only when parse evidence clears the structured gate and
-  reports UNKNOWN-preserving semantic validation.
-- `exp1356` reports MCS-localized repair hints or a terminal repair blocker.
-- `exp1357` reports false-acceptance risk before claiming verifier-call savings.
-- `exp1358` satisfies the mandatory continuous self-learning requirement and
-  separates replay-only from headline evidence.
-- `exp1359` and `exp1360` run only if structured gates pass.
-- `exp1361` produces p-dit/p-int mapping evidence without hardware claims.
-- `exp1362` keeps publication claims aligned with local evidence.
-- `exp1363` reconciles the milestone and names `.106` carry-forwards with
-  prior-failure hygiene.
+### Phase 0 — Handoff Closure (unconditional)
 
-## Decentralization Implication
+`exp1364` reads all `.105` artifacts and classifies:
+- `terminal_certificate_required`: true (thinking-mode blocker is terminal negative evidence, not missing artifact)
+- `thinking_mode_blocker_confirmed`: true (structural tag consumed by `<think>` tokens)
+- `prior_certificate_parse_rate`: 0.0 (from exp1353)
+- `semantic_work_completed`: false (exp1355–1357 blocked)
+- `self_learning_state`: replay-only, positive (`self_learning_delta_overall=1.596429`)
 
-The `.105` plan preserves Carnot's local-first posture. The only fresh LLM
-headline path uses local open GGUF models; semantic validators and self-learning
-gates are local deterministic/replay code; hardware work is mapping-only unless
-real hardware executes; and external systems such as EBT, ARM-EBM, Kona,
-Extropic, XGrammar, TruncProof, and VERGE are design references, not closed
-dependencies in Carnot core.
+### Phase 1 — Tag-First + Parallel CSP (partially unconditional)
+
+**exp1365 — Eidoku CSP probe (unconditional, CPU-only)**
+
+Implements Eidoku's three CSP proxy costs on existing FoVer corpus cases
+and any available SOTA GGUF free-text outputs:
+- Structural cost: graph connectivity of reasoning steps
+- Geometric cost: feature-space consistency via embedding similarity
+- Symbolic cost: Z3 entailment check for extractable claims
+
+Eidoku is the fallback verification path: if `exp1366` fails (tag-first
+also produces parse_rate=0.0), Eidoku CSP scores serve as the verifier
+signal for self-learning memory promotion and publication evidence.
+
+**exp1366 — Certificate v8 Tag-First Prefix Injection (GPU)**
+
+Gated on `exp1364.terminal_certificate_required == true`.
+Root cause from `.105`: thinking-mode tokens precede structural tag.
+Fix: prefix-inject the structural tag into the assistant turn using
+llama.cpp's partial assistant response or `--grammar` with a forced
+prefix. The grammar constraint is active from generation token 0.
+Combined with CRANE's alternating pattern: unconstrained reasoning phase
+(capped token budget) followed by forced-prefix constrained certificate.
+
+This experiment must either produce `certificate_parse_rate >= 0.75` or
+write a `terminal_blocker` artifact with `retire_if_same_verdict: true`
+evidence. A missing or bootstrap-only artifact is not acceptable.
+
+**exp1367 — DiffuTruth energy-of-falsehood probe (unconditional, CPU-only)**
+
+Implements the Generative Stress Test from `arXiv:2602.11364` using local
+text embedding perturbation as a diffusion proxy (full discrete diffusion
+is not required for a feasibility probe). Measures whether reconstruction
+energy correlates with Ising energy on FoVer corpus cases.
+
+### Phase 2 — Semantic Repair Chain (gated on parse_rate >= 0.75)
+
+**exp1368 — FOVER-aligned LogicSkills skill audit (gated on exp1366)**
+
+Builds on `.105` `exp1354` (LogicSkills skill split). Aligns Carnot's
+certificate skill failures with FOVER-80K's Z3/Isabelle error taxonomy.
+Measures whether Carnot's symbolization/countermodel/validity gaps match
+the FOVER error distribution; this determines whether FOVER training data
+could reduce the dominant skill gap.
+
+**exp1369 — Semantic validator v2 (gated on exp1366)**
+
+Extended `.105` `exp1355`. Adds NSVIF-style Z3 constraint models
+(`arXiv:2601.17789`) for structured text claims alongside partial-SMT
+validation. Tracks `unknown_preservation_rate`, `z3_constraint_pass_rate`,
+and `semantic_validator_claim_allowed`.
+
+**exp1370 — VERGE MCS repair v2 (gated on exp1369)**
+
+Extended `.105` `exp1356`. More cases, tighter precision measurement.
+Locates Minimal Correction Subsets for semantic validator failures.
+
+**exp1371 — Margin-aware Cactus/BEAVER scheduler v3 (gated on exp1370)**
+
+Extended `.105` `exp1357`. Margin-aware verifier routing with MCS repair
+hint integration. Only claims verifier-call reduction if false acceptance
+is zero.
+
+### Phase 3 — Hardware and Formal Verification (unconditional)
+
+**exp1372 — Optimal KAN PWA formal verification (CPU-only)**
+
+Implements PWA abstraction for Carnot's GS-KAN splines per
+`arXiv:2602.06737`. Encodes a simple energy-bound property as a MILP.
+No hardware claim; this is a formal software correctness proof for the
+KAN energy tier.
+
+**exp1373 — Fully parallel Ising with inertia (CPU-only)**
+
+Adds inertia dynamics to `parallel_ising.py` per `arXiv:2604.17109`.
+CPU simulation benchmark against existing checkerboard results on FoVer
+constraint problems. Records FPGA mapping estimate for KV260 v4 RTL.
+
+### Phase 4 — Self-Learning, Publication, Retro (unconditional)
+
+**exp1374 — FR-11 continuous self-learning v3 (unconditional)**
+
+Always runs. Primary path: if `exp1369` semantic validator passed, use
+verifier-selected cases for memory promotion and measure
+`fresh_verified_sample_count`. Fallback path: if semantic gate is closed,
+use Eidoku CSP feasibility scores from `exp1365` as the verifier signal
+for promotion, with `headline_result_allowed=false` unless CSP scores
+are independently validated. Reports `self_learning_delta_overall`,
+`nonforgetting_certificate_rate`, `headline_result_allowed`.
+
+**exp1375 — Publication hold + claim boundary v15 (unconditional)**
+
+Reads all `.106` evidence. Updates claim boundary based on tag-first
+certificate result, Eidoku CSP viability, formal KAN properties, and
+self-learning state. Publication hold stays active until certificate
+evidence clears the semantic repair chain.
+
+**exp1376 — Milestone 2026.04.106 retrospective (unconditional)**
+
+Evaluates all 12 success criteria. Produces `.107` carry-forward plan.
+
+## Success Criteria (12 total)
+
+| # | Criterion | Source |
+|---|---|---|
+| 1 | `audit_105_complete` — thinking-mode blocker confirmed, carry-forward classified | exp1364 |
+| 2 | `eidoku_csp_probe_complete` — CSP feasibility measured on FoVer corpus | exp1365 |
+| 3 | `cert_v8_tag_first_ran` — tag-first attempt produced terminal evidence (positive or retire) | exp1366 |
+| 4 | `diffu_truth_probe_complete` — reconstruction energy measured | exp1367 |
+| 5 | `fover_skill_audit_ran` — FOVER alignment measured (may be gate-blocked) | exp1368 |
+| 6 | `semantic_validator_v2_ran` — validator ran (may be gate-blocked) | exp1369 |
+| 7 | `mcs_repair_v2_ran` — MCS repair ran (may be gate-blocked) | exp1370 |
+| 8 | `kan_pwa_formal_verified` — KAN formal property verified or bounded | exp1372 |
+| 9 | `parallel_ising_inertia_measured` — convergence speedup measured | exp1373 |
+| 10 | `self_learning_v3_complete` — mandatory self-learning with non-forgetting | exp1374 |
+| 11 | `publication_boundary_refreshed` — hold state documented with .106 evidence | exp1375 |
+| 12 | `retro_complete` | exp1376 |
+
+## Decentralization Implications
+
+All experiments use local SOTA GGUFs (Qwen3.6-35B-A3B-GGUF, Gemma4-31B-it-GGUF,
+Gemma4-26B-A4B-it-GGUF) for any LLM-bearing work. Eidoku CSP, DiffuTruth, KAN
+formal verification, and Ising inertia are CPU-only — no closed-weight dependency.
+Tag-first prefix injection uses llama.cpp grammar constraints, which are
+fully open-source and reproducible. No vendor-specific API is required for any
+experiment in this milestone.
