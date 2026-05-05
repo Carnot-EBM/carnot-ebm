@@ -1119,6 +1119,44 @@ local-linear loops that only add distortion.
   `stop_policy_precision`, `residual_nonlinear_cases`,
   `kan_pwa_abstraction_note`, and `honest_verdict`.
 
+### REQ-KONA-032: Held-Out Learned HardNet++/DSP Stop Policy
+
+Continuous repair experiments that claim a learned stop/continue policy MUST
+train on one deterministic split of existing HardNet++/DSP replay rows and
+evaluate on a held-out split. The policy MUST use only pre-decision replay
+features, including DSP feasibility-channel scores, hard violation pressure, and
+transparent repair-family features derived from HardNet++ replay cohorts. Labels
+MUST come from verifier-backed replay outcomes such as `repair_helped`; the
+experiment MUST NOT invent stop/continue labels from the artifact narrative.
+
+The Exp 1318 artifact MUST load Exp 1305 plus the Exp 1291/1292 replay sources,
+write `results/experiment_1318_hardnetpp_dsp_learned_stop_policy.json` with run
+date `20260505`, report the deterministic `generalization_split`,
+`stop_policy_precision`, `stop_policy_recall`, `dsp_feasibility_auc`,
+`hardnetpp_delta_over_replay_policy`, `learned_stop_policy_written`, `status`,
+and `honest_verdict`, and compare the learned held-out policy against the Exp
+1305 conservative replay policy on the same held-out rows.
+
+**Rationale:** Exp 1305 was useful as an operator gate but explicitly was not a
+learned general stop rule. A held-out replay evaluation is the smallest honest
+next test: it can show whether a transparent learned policy reproduces the useful
+HardNet++/DSP decisions on unseen seeds while still refusing to overclaim broad
+generalisation beyond the replay distribution.
+
+**Acceptance criteria:**
+
+- `python/carnot/phase3/learned_stop_policy.py` exposes deterministic helpers to
+  split replay rows, fit a transparent stop/continue policy from verifier-backed
+  labels, and evaluate held-out precision/recall against a baseline policy.
+- Focused tests verify that the split is deterministic, labels are drawn from
+  replay validator outcomes, the learned policy handles held-out rows, and the
+  artifact contains all required Exp 1318 fields.
+- `results/experiment_1318_hardnetpp_dsp_learned_stop_policy.json` records
+  `status`, `learned_stop_policy_written`, `generalization_split`,
+  `stop_policy_precision`, `stop_policy_recall`,
+  `hardnetpp_delta_over_replay_policy`, `dsp_feasibility_auc`, and an
+  appropriately bounded `honest_verdict`.
+
 ## Scenarios
 
 ### SCENARIO-KONA-001: Stage 1 Primitive — RDT Fixed-Point Convergence
@@ -1529,6 +1567,22 @@ stop/continue policy
 abstraction reference.
 
 **Spec traces:** REQ-KONA-031
+
+### SCENARIO-KONA-032: Exp 1318 Evaluates Learned Stop Policy On Held-Out Replay
+
+**Given** completed Exp 1305 stop-policy replay metadata and completed Exp
+1291/1292 HardNet++/DSP replay artifacts
+**When** Exp 1318 fits a transparent learned policy on the deterministic training
+split and evaluates the policy on held-out replay rows
+**Then** it writes
+`results/experiment_1318_hardnetpp_dsp_learned_stop_policy.json` with
+`learned_stop_policy_written`, `generalization_split`,
+`stop_policy_precision`, `stop_policy_recall`,
+`hardnetpp_delta_over_replay_policy`, `dsp_feasibility_auc`, `status`, and
+`honest_verdict` fields derived from verifier-backed replay labels and a
+same-held-out comparison to the conservative Exp 1305 policy.
+
+**Spec traces:** REQ-KONA-032
 
 ## Out of scope
 
