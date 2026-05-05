@@ -56,6 +56,16 @@ def test_req1339_unsupported_text_counts_as_transition_error() -> None:
     assert "no_dynamic_branch_match" in result.errors
     assert summary["state_transition_error_count"] == 1
     assert summary["unknown_state_supported"] is False
+    assert mod._normalised_state("UNSATISFIABLE") == "UNSAT"
+    assert mod._normalised_state("SATISFIABLE") == "SAT"
+    assert mod._normalised_state("MAYBE") == "MAYBE"
+    assert (
+        mod._honest_verdict(
+            ready=False,
+            candidates=[{"name": "xgrammar2_tagdispatch_native", "available": False}],
+        )
+        == "dryrun_not_ready_state_transition_errors"
+    )
 
 
 def test_req1339_backend_candidates_report_xgrammar_absence_honestly() -> None:
@@ -131,3 +141,4 @@ def test_scenario1339_run_experiment_writes_in_progress_then_complete(
     assert persisted == artifact
     assert artifact["honest_verdict"] == "dryrun_ready_native_xgrammar_importable"
     assert mod._module_available("json") is True
+    assert mod.default_timer_factory()() > 0.0
