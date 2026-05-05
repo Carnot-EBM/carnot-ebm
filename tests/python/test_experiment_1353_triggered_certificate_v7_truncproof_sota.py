@@ -76,7 +76,9 @@ def _source_artifacts(*, allowed: bool = True) -> dict[str, dict[str, Any]]:
     }
 
 
-def _perfect_generation(spec: dict[str, Any], case: mod.CertificateCase, prompt: str) -> mod.GenerationResult:
+def _perfect_generation(
+    spec: dict[str, Any], case: mod.CertificateCase, prompt: str
+) -> mod.GenerationResult:
     del prompt
     return mod.GenerationResult(
         model_hf_id=spec["hf_id"],
@@ -171,7 +173,9 @@ def test_req1353_completion_preflight_blocks_before_generation() -> None:
     )
 
     assert artifact["status"] == "complete"
-    assert artifact["terminal_blocker"] == "completion_preflight_blocked:max_token_budget_insufficient"
+    assert (
+        artifact["terminal_blocker"] == "completion_preflight_blocked:max_token_budget_insufficient"
+    )
     assert artifact["headline_result_allowed"] is False
     assert artifact["certificate_case_count"] == 4
     assert artifact["trigger_token_hit_rate"] == pytest.approx(0.0)
@@ -209,7 +213,9 @@ def test_req1353_terminal_blocker_branches_stay_explicit() -> None:
         project_root="/repo",
     )
 
-    def raises(_spec: dict[str, Any], _case: mod.CertificateCase, _prompt: str) -> mod.GenerationResult:
+    def raises(
+        _spec: dict[str, Any], _case: mod.CertificateCase, _prompt: str
+    ) -> mod.GenerationResult:
         raise RuntimeError("llama load failed")
 
     failed_generation = mod.build_experiment_artifact(
@@ -242,7 +248,9 @@ def test_req1353_terminal_blocker_branches_stay_explicit() -> None:
     assert gpu["models_used"][-1]["generation_source"] == "legacy_cpu_smoke"
     assert gpu["honest_verdict"] == "blocked_gpu_health_failed_cpu_smoke_complete"
     assert failed_generation["terminal_blocker"].startswith("sota_generation_failed:RuntimeError")
-    assert failed_generation["honest_verdict"] == "blocked_sota_generation_failed_cpu_smoke_complete"
+    assert (
+        failed_generation["honest_verdict"] == "blocked_sota_generation_failed_cpu_smoke_complete"
+    )
     assert non_headline_rows["terminal_blocker"] == "no_mandated_sota_generation_rows"
     assert non_headline_rows["trigger_token_hit_rate"] == pytest.approx(0.0)
 
@@ -262,7 +270,9 @@ def test_req1353_live_generator_adapter_and_helpers_are_testable(
         def __call__(self, prompt: str, **kwargs: Any) -> dict[str, Any]:
             self.calls.append({"prompt": prompt, "kwargs": kwargs, "init": self.kwargs})
             return {
-                "choices": [{"text": f"{mod.structural_tag('SAT')}\n{mod.json_certificate_text('SAT')}"}],
+                "choices": [
+                    {"text": f"{mod.structural_tag('SAT')}\n{mod.json_certificate_text('SAT')}"}
+                ],
                 "usage": {"completion_tokens": 7},
             }
 
@@ -343,14 +353,18 @@ def test_req1353_gpu_health_probe_and_cached_pair_errors(
     monkeypatch.setattr(
         mod.subprocess,
         "run",
-        lambda *_args, **_kwargs: Result(0, "0, RTX 3090, 24576, 101, 0\n1, RTX 3090, 24576, bad, 0\n"),
+        lambda *_args, **_kwargs: Result(
+            0, "0, RTX 3090, 24576, 101, 0\n1, RTX 3090, 24576, bad, 0\n"
+        ),
     )
     unhealthy = mod.check_gpu_health()
     assert "gpu0_vram_used_101mb" in unhealthy.issues
     assert any(issue.startswith("gpu_vram_used_unparseable") for issue in unhealthy.issues)
     monkeypatch.setattr(mod.subprocess, "run", lambda *_args, **_kwargs: Result(0, "0, RTX 3090\n"))
     assert mod.check_gpu_health().issues == ["fewer_than_two_gpus_visible"]
-    monkeypatch.setattr(mod.subprocess, "run", lambda *_args, **_kwargs: Result(9, "", "bad driver"))
+    monkeypatch.setattr(
+        mod.subprocess, "run", lambda *_args, **_kwargs: Result(9, "", "bad driver")
+    )
     assert mod.check_gpu_health().issues[0].startswith("nvidia_smi_exit_9")
 
     def raise_oserror(*_args: Any, **_kwargs: Any) -> Result:
