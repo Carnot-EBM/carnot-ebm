@@ -1,0 +1,31 @@
+[Unit]
+Description=Carnot Research Conductor (codex-default, cgroup-killed)
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/ianblenke/github.com/ianblenke/carnot
+EnvironmentFile=/home/ianblenke/.carnot/conductor_state.sh
+ExecStart=/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/bin/python scripts/research_conductor.py --loop --interval 2 --in-process-docs --async-doc-recon
+
+# Cgroup-based descendant termination: every pytest worker, codex
+# subprocess, xdist pool, etc. inherits this service's cgroup.
+# Stopping the service propagates SIGTERM/SIGKILL to the entire
+# tree, structurally preventing the orphan-pytest accumulation that
+# pushed load average to 90 on 2026-05-05 10:12 UTC.
+KillMode=control-group
+KillSignal=SIGTERM
+TimeoutStopSec=30
+SendSIGKILL=yes
+
+# Restart policy: respect operator-driven stops (kill -TERM PID
+# during outer-loop interventions); only auto-restart on crashes.
+Restart=on-failure
+RestartSec=30
+
+# Logging: route to journal for unified status query via journalctl.
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=default.target
