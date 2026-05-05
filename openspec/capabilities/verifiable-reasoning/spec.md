@@ -17735,6 +17735,65 @@ actually produced the measured certificate rows.
 
 **Spec traces:** REQ-VERIFY-1353, SCENARIO-VERIFY-1353, Exp 1353
 
+## REQ-VERIFY-1366: Tag-First Prefix Injection CRANE Certificate Extraction
+
+**Summary:** Carnot SHALL replace trigger-before-constrain certificate
+generation for thinking-mode SOTA GGUFs with a CRANE-style two-stage run:
+unconstrained reasoning first, then a grammar-constrained certificate block
+whose assistant text begins with an injected structural branch-selector tag.
+
+**Requirements:**
+
+- REQ-VERIFY-1366-1: The workflow SHALL write
+  `results/experiment_1366_certificate_v8_tag_first_prefix_injection_crane.json`
+  with `status="in_progress"` before loading model specs or prior experiment
+  artifacts.
+- REQ-VERIFY-1366-2: The workflow SHALL load Exp 1352, Exp 1353, and Exp 1364
+  so the completion preflight, prior `certificate_parse_rate=0.0` baseline,
+  and thinking-mode blocker evidence are preserved in the terminal artifact.
+- REQ-VERIFY-1366-3: Headline generation SHALL resolve `MODEL_SPECS` through
+  `cached_sota_pair(gpu_indices=(0, 1))` and SHALL record `hf_id`,
+  quantization, GPU assignment, model path, and fallback or blocker reason.
+- REQ-VERIFY-1366-4: Each certificate case SHALL run an unconstrained
+  reasoning section capped at 256 tokens before starting the constrained
+  certificate section.
+- REQ-VERIFY-1366-5: The constrained certificate section SHALL inject the
+  structural branch-selector tag as the first assistant-prefix token(s) before
+  generation begins and SHALL pass a llama.cpp grammar for the generated body
+  from position 0 of that constrained block.
+- REQ-VERIFY-1366-6: The bounded suite SHALL include SAT, UNSAT, UNKNOWN, and
+  repair-hint cases and SHALL report trigger-token hit, parse, truthfulness,
+  UNKNOWN-preservation, and parse-rate delta over Exp 1353's 0.0 baseline.
+- REQ-VERIFY-1366-7: The artifact SHALL include `status`, `models_used`,
+  `prefix_injection_method`, `prefix_injection_supported`,
+  `certificate_case_count`, `trigger_token_hit_rate`,
+  `certificate_parse_rate`, `certificate_truthfulness_rate`,
+  `unknown_preservation_rate`, `parse_rate_delta_over_exp1353`,
+  `crane_reasoning_budget_tokens_used`, `terminal_blocker`,
+  `retire_trigger_before_constrain`, `headline_result_allowed`, and
+  `honest_verdict`.
+- REQ-VERIFY-1366-8: `headline_result_allowed` SHALL be true only when at
+  least one mandated cached SOTA GGUF produces `certificate_parse_rate >= 0.75`.
+  If prefix injection cannot run or parse rate remains 0.0, the artifact SHALL
+  set `retire_trigger_before_constrain=true`, include blocker evidence, and
+  keep `headline_result_allowed=false`.
+
+**Implementation Status:** Planned (Exp 1366)
+
+### SCENARIO-VERIFY-1366: Prefix Injection Either Clears Or Retires The Branch
+
+**Given** the run date is `20260505`
+**And** Exp 1352, Exp 1353, and Exp 1364 artifacts exist
+**When** the CRANE tag-first certificate run executes
+**Then** it writes an in-progress artifact first
+**And** it writes a terminal artifact with prefix-injection provenance, model
+records, bounded-suite metrics, reasoning-token budget use, retirement status,
+headline gate, and honest verdict
+**And** headline evidence is allowed only when a mandated cached SOTA GGUF
+clears the parse-rate gate.
+
+**Spec traces:** REQ-VERIFY-1366, SCENARIO-VERIFY-1366, Exp 1366
+
 ## REQ-VERIFY-1354: LogicSkills Certificate Skill Split Replay
 
 **Summary:** Carnot SHALL split terminal Exp 1353 certificate outcomes into
