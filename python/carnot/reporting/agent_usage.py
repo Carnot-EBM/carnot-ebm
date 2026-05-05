@@ -1,7 +1,7 @@
 """Local Claude/Codex usage snapshot helpers.
 
 Spec: REQ-REPORT-024, SCENARIO-REPORT-021, SCENARIO-REPORT-022,
-SCENARIO-REPORT-023.
+SCENARIO-REPORT-023, SCENARIO-REPORT-024, SCENARIO-REPORT-025.
 """
 
 from __future__ import annotations
@@ -11,6 +11,11 @@ from collections.abc import Iterator, Mapping
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
+from urllib.error import HTTPError, URLError
+from urllib.request import Request, urlopen
+
+_CLAUDE_LIVE_USAGE_URL = "https://api.anthropic.com/api/oauth/usage"
+_CLAUDE_LIVE_USAGE_TIMEOUT_SECONDS = 10.0
 
 
 def _iter_jsonl(root: Path) -> Iterator[dict[str, Any]]:
@@ -114,6 +119,39 @@ def _coerce_percent(value: object) -> float | None:
     return None
 
 
+def _clean_claude_window(window: object) -> dict[str, Any]:
+    if not isinstance(window, Mapping):
+        return {"used_percent": None, "reset_at": None}
+    reset_at = window.get("resets_at")
+    return {
+        "used_percent": _coerce_percent(window.get("utilization")),
+        "reset_at": reset_at if isinstance(reset_at, str) and reset_at else None,
+    }
+
+
+def _clean_claude_extra_usage(extra_usage: object) -> dict[str, Any]:
+    if not isinstance(extra_usage, Mapping):
+        return {
+            "is_enabled": None,
+            "monthly_limit": None,
+            "used_credits": None,
+            "used_percent": None,
+            "currency": None,
+        }
+
+    monthly_limit = extra_usage.get("monthly_limit")
+    used_credits = extra_usage.get("used_credits")
+    is_enabled = extra_usage.get("is_enabled")
+    currency = extra_usage.get("currency")
+    return {
+        "is_enabled": is_enabled if isinstance(is_enabled, bool) else None,
+        "monthly_limit": float(monthly_limit) if isinstance(monthly_limit, int | float) else None,
+        "used_credits": float(used_credits) if isinstance(used_credits, int | float) else None,
+        "used_percent": _coerce_percent(extra_usage.get("utilization")),
+        "currency": currency if isinstance(currency, str) and currency else None,
+    }
+
+
 def _extract_structured_claude_usage_percent(event: Mapping[str, Any]) -> float | None:
     """Return a Claude quota percentage only from explicit numeric log fields."""
 
@@ -145,16 +183,21 @@ def _extract_structured_claude_usage_percent(event: Mapping[str, Any]) -> float 
     return None
 
 
-def _claude_meta(home: Path) -> dict[str, Any]:
+def _claude_oauth(home: Path) -> Mapping[str, Any] | None:
     credentials_path = home / ".claude" / ".credentials.json"
     if not credentials_path.exists():
-        return {"subscription_type": None, "rate_limit_tier": None}
+        return None
     try:
         payload = json.loads(credentials_path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError):
-        return {"subscription_type": None, "rate_limit_tier": None}
+        return None
     oauth = payload.get("claudeAiOauth")
-    if not isinstance(oauth, Mapping):
+    return oauth if isinstance(oauth, Mapping) else None
+
+
+def _claude_meta(home: Path) -> dict[str, Any]:
+    oauth = _claude_oauth(home)
+    if oauth is None:
         return {"subscription_type": None, "rate_limit_tier": None}
     return {
         "subscription_type": oauth.get("subscriptionType"),
@@ -162,7 +205,33 @@ def _claude_meta(home: Path) -> dict[str, Any]:
     }
 
 
-def _claude_snapshot(home: Path) -> dict[str, Any]:
+def _fetch_claude_live_usage(home: Path) -> dict[str, Any] | None:
+    oauth = _claude_oauth(home)
+    if oauth is None:
+        return None
+
+    access_token = oauth.get("accessToken")
+    if not isinstance(access_token, str) or not access_token:
+        return None
+
+    request = Request(
+        _CLAUDE_LIVE_USAGE_URL,
+        headers={
+            "Accept": "application/json",
+            "Authorization": f"Bearer {access_token}",
+        },
+        method="GET",
+    )
+    try:
+        with urlopen(request, timeout=_CLAUDE_LIVE_USAGE_TIMEOUT_SECONDS) as response:
+            payload = json.loads(response.read().decode("utf-8"))
+    except (HTTPError, URLError, OSError, TimeoutError, UnicodeDecodeError, json.JSONDecodeError):
+        return None
+
+    return payload if isinstance(payload, dict) else None
+
+
+def _claude_snapshot(home: Path, *, claude_live: bool = False) -> dict[str, Any]:
     projects_root = home / ".claude" / "projects"
     totals = {
         "input_tokens": 0,
@@ -172,8 +241,14 @@ def _claude_snapshot(home: Path) -> dict[str, Any]:
     }
     last_updated = ""
     used_percent: float | None = None
+    reset_at: str | None = None
     percent_timestamp = ""
     seen_usage_keys: set[tuple[str, str]] = set()
+    five_hour = _clean_claude_window(None)
+    seven_day = _clean_claude_window(None)
+    seven_day_sonnet = _clean_claude_window(None)
+    extra_usage = _clean_claude_extra_usage(None)
+    usage_source = "local_logs"
 
     for event in _iter_jsonl(projects_root):
         message = event.get("message")
@@ -205,7 +280,29 @@ def _claude_snapshot(home: Path) -> dict[str, Any]:
     if used_percent is None:
         notes.append("used_percent unavailable from local Claude logs")
 
-    available = any(value != 0 for value in totals.values()) or any(meta.values())
+    if claude_live:
+        live_payload = _fetch_claude_live_usage(home)
+        if live_payload is None:
+            notes.append("live Claude usage unavailable from api/oauth/usage")
+        else:
+            five_hour = _clean_claude_window(live_payload.get("five_hour"))
+            seven_day = _clean_claude_window(live_payload.get("seven_day"))
+            seven_day_sonnet = _clean_claude_window(live_payload.get("seven_day_sonnet"))
+            extra_usage = _clean_claude_extra_usage(live_payload.get("extra_usage"))
+            live_checked_at = _iso_now()
+            usage_source = "live_oauth"
+            last_updated = live_checked_at
+            if seven_day["used_percent"] is not None:
+                used_percent = seven_day["used_percent"]
+                reset_at = seven_day["reset_at"]
+                notes = [note for note in notes if "used_percent unavailable" not in note]
+
+    available = (
+        any(value != 0 for value in totals.values())
+        or any(meta.values())
+        or any(window["used_percent"] is not None or window["reset_at"] is not None for window in (five_hour, seven_day, seven_day_sonnet))
+        or any(value is not None for value in extra_usage.values())
+    )
     if not available:
         notes.append("No Claude usage entries found in local project logs.")
 
@@ -215,21 +312,30 @@ def _claude_snapshot(home: Path) -> dict[str, Any]:
         "subscription_type": meta["subscription_type"],
         "rate_limit_tier": meta["rate_limit_tier"],
         "used_percent": used_percent,
-        "reset_at": None,
+        "reset_at": reset_at,
         "last_updated": last_updated or None,
+        "five_hour": five_hour,
+        "seven_day": seven_day,
+        "seven_day_sonnet": seven_day_sonnet,
+        "extra_usage": extra_usage,
+        "usage_source": usage_source,
         "token_usage": totals,
         "notes": notes,
     }
 
 
-def build_usage_snapshot(home: Path | str | None = None) -> dict[str, Any]:
-    """Return a combined Codex/Claude usage snapshot from local logs."""
+def build_usage_snapshot(
+    home: Path | str | None = None,
+    *,
+    claude_live: bool = False,
+) -> dict[str, Any]:
+    """Return a combined Codex/Claude usage snapshot from local logs and optional live Claude usage."""
 
     home_path = Path(home).expanduser() if home is not None else Path.home()
     return {
         "generated_at": _iso_now(),
         "codex": _codex_snapshot(home_path),
-        "claude": _claude_snapshot(home_path),
+        "claude": _claude_snapshot(home_path, claude_live=claude_live),
     }
 
 
@@ -252,6 +358,8 @@ def _display_reset(provider_snapshot: Mapping[str, Any]) -> str:
     reset_at = provider_snapshot.get("reset_at")
     if isinstance(reset_at, int | float):
         return str(int(reset_at))
+    if isinstance(reset_at, str) and reset_at:
+        return reset_at.split("T", maxsplit=1)[0]
     return "unavailable"
 
 

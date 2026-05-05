@@ -2,7 +2,7 @@
 """Print local Claude/Codex plan-usage snapshots.
 
 Spec: REQ-REPORT-024, SCENARIO-REPORT-021, SCENARIO-REPORT-022,
-SCENARIO-REPORT-023.
+SCENARIO-REPORT-023, SCENARIO-REPORT-025.
 """
 
 from __future__ import annotations
@@ -35,12 +35,17 @@ def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         default="table",
         help="Output format (default: table).",
     )
+    parser.add_argument(
+        "--claude-live",
+        action="store_true",
+        help="Fetch exact live Claude usage from the authenticated OAuth usage endpoint.",
+    )
     return parser.parse_args(argv)
 
 
 def main(argv: list[str] | None = None) -> int:
     args = _parse_args(argv)
-    snapshot = build_usage_snapshot(home=Path(args.home))
+    snapshot = build_usage_snapshot(home=Path(args.home), claude_live=args.claude_live)
     if args.format == "json":
         print(json.dumps(snapshot, indent=2, sort_keys=True))
     else:

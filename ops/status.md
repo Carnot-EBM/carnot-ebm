@@ -54,6 +54,7 @@
 - Added `python/carnot/reporting/agent_usage.py` plus `scripts/agent_plan_usage.py`.
 - Codex path: reads the newest `token_count` event under `~/.codex/sessions/**/*.jsonl` and surfaces `plan_type`, primary/secondary rate-limit windows, reset epochs, and token totals.
 - Claude path: aggregates token usage from `~/.claude/projects/**/*.jsonl`, reads only `subscriptionType` / `rateLimitTier` from `~/.claude/.credentials.json`, and intentionally omits access/refresh tokens from output.
+- Claude live path: `python scripts/agent_plan_usage.py --claude-live` now calls Claude's authenticated `GET /api/oauth/usage` endpoint to surface exact `five_hour`, `seven_day`, `seven_day_sonnet`, and `extra_usage` windows, with the top-level Claude `used_percent` / `reset_at` set from the live `seven_day` window.
 - Honest behavior: Claude `used_percent` stays `null`/`unavailable` when local logs do not expose a structured quota field; free-form assistant prose is ignored.
 - Operator outputs: compact table by default, JSON via `python scripts/agent_plan_usage.py --format json`.
 - Verification: `tests/python/test_agent_plan_usage.py` passes.
