@@ -1,281 +1,218 @@
-# Research Roadmap vNEXT: Milestone 2026.04.106
+# Research Roadmap vNEXT: Milestone 2026.04.107
 
 Planned: 2026-05-05
 Status: Draft for conductor execution
-Predecessor: 2026.04.105 Terminal Certificate Evidence + Skill-Localized Semantic Repair + Verifier-Selected Self-Learning
+Predecessor: 2026.04.106 Tag-First Certificate Prefix Injection + Eidoku CSP + KAN Formal Verification
 Roadmap YAML: `research-roadmap-next.yaml`
 
-## What Milestone .105 Proved
+## What Milestone .106 Proved
 
 | Track | Evidence | Finding |
 |---|---|---|
-| .104 handoff | `exp1351` | Carry-forward audit complete; `exp1340` correctly classified as missing. |
-| Certificate preflight | `exp1352` | `max_token_budget_sufficient=true`, `dynamic_dispatch_preserved=true`, `sota_run_allowed=true` — preflight passed. |
-| SOTA certificate run | `exp1353` | Ran; produced 4 cases; `certificate_parse_rate=0.0`, `trigger_token_hit_rate=0.0`. Dominant blocker: `missing_structural_tag`. Thinking-mode tokens (`<think>...</think>`) consumed the generation budget before the structural branch-selector tag was emitted. Terminal negative evidence, not an artifact-missing failure. |
-| LogicSkills skill split | `exp1354` | Ran on exp1353 cases; `skill_split_claim_allowed` tied to 4 parse-zero cases. Minimal evidence. |
-| Semantic validator | `exp1355` | Gate-blocked: `certificate_parse_rate=0.0 < 0.75`. |
-| MCS repair / scheduler | `exp1356`, `exp1357` | Missing or blocked; no semantic repair evidence. |
-| Continuous self-learning | `exp1358` | Positive replay-only: `self_learning_delta_overall=1.596429`, `dvi_ready=true`, `fresh_verified_sample_count=0`, `nonforgetting_certificate_rate=1.0`, `memory_regression_count=0`. Mandatory requirement satisfied; not headline. |
-| DVI / GRPO | `exp1359`, `exp1360` | Missing or blocked behind semantic/DVI gates. |
-| Hardware mapping | `exp1361` | CPU-only p-dit certificate-state mapping: `state_expansion_ratio=4.0`, `energy_equivalence_error=0.0`. No hardware claim. |
-| Publication boundary | `exp1362` | Hold active; no external-dependency claim. |
-| Retro | `exp1363` | 9 of 12 criteria met; named carry-forward tasks. |
+| .105 handoff audit | `exp1364` | `thinking_mode_blocker_confirmed=true`, `terminal_certificate_required=true`, `prior_certificate_parse_rate=0.0` — confirmed the structural tag emission failure as terminal negative evidence. |
+| Eidoku CSP probe | `exp1365` | `eidoku_csp_viable=true`, `csp_feasibility_rate=0.740`, `eidoku_auroc_proxy=0.614` — grammar-free verification alternative established as a viable fallback path. |
+| Certificate v8 tag-first | `exp1366` | `certificate_parse_rate=1.0`, `parse_rate_delta_over_exp1353=1.0`, `prefix_injection_supported=true`, `headline_result_allowed=true` — **TERMINAL POSITIVE EVIDENCE**. Tag-first prefix injection + CRANE alternating pattern fully resolved the thinking-mode blocker. |
+| DiffuTruth probe | `exp1367` | `detection_auroc_proxy=0.867`, `ising_correlation=0.699`, `kan_correlation=0.961`, `viable_as_complement=true` — non-equilibrium energy signal strongly correlates with KAN energy. |
+| FOVER-aligned skill audit | `exp1368` | `fover_aligned_logicskills_audit_no_skill_gap` — no dominant skill gap in certificate failures; all three LogicSkills categories passing with tag-first generation. |
+| Semantic validator v2 | `exp1369` | `validator_execution_pass_rate=1.0`, `z3_constraint_pass_rate=1.0`, `semantic_validator_claim_allowed=true` — full semantic validation chain operational. |
+| VERGE MCS repair | `exp1370` | `repair_hint_precision=1.0`, `accepted_violation_delta=-2`, `repair_claim_allowed=true` — MCS repair localization working with zero false hints. |
+| Margin-aware scheduler | `exp1371` | `false_acceptance_rate=0.0`, `full_verifier_call_reduction=0.25`, `triage_claim_allowed=true` — 25% verifier call reduction with zero false acceptance. |
+| KAN PWA formal | `exp1372` | `formal_property_verified=true`, `milp_verification_result=verified`, `kan_formal_claim_allowed=true` — first formal certified energy bound for GS-KAN tier. |
+| Ising inertia | `exp1373` | `inertia_convergence_speedup=0.795`, `best_inertia_alpha=0.0` — inertia term provides no CPU speedup; checkerboard baseline is optimal for dense float computation. FPGA claim not made. |
+| Continuous self-learning v3 | `exp1374` | `path_used=primary_semantic_verified`, `fresh_verified_sample_count=4`, `self_learning_delta_overall=1.596429`, `dvi_ready=true`, `headline_result_allowed=true` — **FIRST HEADLINE SELF-LEARNING RESULT**. Primary semantic verified path used; DVI declared ready. |
+| Publication hold v15 | `exp1375` | **MISSING** — SKIPped 3× due to pre-test cascade failure starting at 18:14 UTC. |
+| Milestone retro | `exp1376` | **MISSING** — SKIPped 3× due to same pre-test cascade failure. |
 
-**Key root cause diagnosis.** The `.105` retro verdict explicitly names the blocker for `.106`:
-> "Force tag-first emission or retire the trigger-before-constrain branch; acceptance must require `parse_rate >= 0.75` plus truthfulness and UNKNOWN preservation."
-
-The structural tag that selects the grammar branch (SAT / UNSAT / UNKNOWN / repair) is never emitted because Qwen3 and Gemma4-it models generate `<think>...</think>` thinking tokens as the first output, consuming the token budget before the constrained certificate section is reached. The trigger-before-constrain approach assumes the model will emit a trigger token early; thinking-mode models do not.
+**Key operational finding.** Two final tasks were exhausted by the pre-test cascade.
+Root cause: `tests/python/phase5/test_intermediate_scale_v3.py` has an unresolvable
+`ModuleNotFoundError: No module named 'carnot.phase5.intermediate_scale_v3'` because
+the module was never implemented (exp1238 was incomplete). The pre-test suite fails
+at collection time for this file, and the conductor's self-heal loop cannot fix it.
+The `.107` milestone must address this as its first task.
 
 ## Research Signals Added Before Planning
 
-The post-.105 sweep added the following 2025–2026 sources to
+The post-.106 sweep added the following 2025–2026 sources to
 `research-references.md` before this roadmap was designed:
 
-- `arXiv:2512.20664`, Eidoku: CSP neuro-symbolic verification gate that
-  checks structural connectivity, feature-space consistency, and logical
-  entailment independently of any certificate grammar. Directly maps to
-  Carnot's Ising (structural), KAN (geometric), and Z3/NSVIF (symbolic)
-  tiers.
-- `arXiv:2602.11364`, DiffuTruth: non-equilibrium hallucination detection
-  via diffusion model reconstruction energy. Unsupervised SOTA on FEVER
-  (AUROC 0.725). Complementary non-equilibrium energy signal for Carnot's
-  Ising/KAN pipeline.
-- `arXiv:2502.09061`, CRANE: alternating unconstrained reasoning and grammar-
-  constrained generation. Reports 30%+ gains on symbolic tasks. Combined with
-  prefix injection of the structural tag, CRANE's alternating design prevents
-  thinking-mode pre-emption of the constrained region.
-- `arXiv:2505.15960`, FOVER: 80K formally verified PRM training data with
-  Z3/Isabelle step labels. Alignment target for Carnot's LogicSkills
-  certificate skill split.
-- `arXiv:2602.06737`, Optimal KAN Verification: PWA abstraction for KAN
-  spline units + MILP encoding for property verification. Formal correctness
-  bounds for Carnot's GS-KAN energy tier.
-- `arXiv:2604.17109`, Fully Parallel Ising with Inertia: synchronous p-bit
-  updates with inertia term on FPGA. Reduced sweeps-to-convergence for dense
-  graphs. Directly relevant to Carnot's `parallel_ising.py` and KV260 v4 RTL.
-- `arXiv:2511.00746`, Ising-NN Correspondence: systematic mapping from
-  trained feed-forward neural networks to Ising hardware. Theoretic foundation
-  for mapping Carnot's KAN/Boltzmann tiers to FPGA without separate Vivado
-  bitfile synthesis.
+- `arXiv:2604.09624`, SECL: test-time discriminative distillation for
+  self-calibrating LLMs. Reduces ECE by 56–78%. Maps directly to DVI:
+  Carnot's verifier asks the discriminative question ("Is this step correct?"),
+  and SECL provides the training recipe for using those discriminative signals
+  to improve calibration.
+- `arXiv:2601.17223`, VPRMs: Verifiable Process Reward Models with rule-based
+  formal verifiers at each step, 20% F1 improvement vs outcome-only. Validates
+  Carnot's GRPO-VPS architecture using Z3/semantic verifiers as step rewards.
+- `arXiv:2604.25419`, JURY-RL: majority-vote proposal + formal Lean-proof
+  reward for label-free RLVR. ResZero fallback for inconclusive verification.
+  Pass@1 parity with supervised training. Maps to Carnot: score_candidates
+  (jury) + Z3/semantic certificate (proof) + UNKNOWN preservation (ResZero).
+- `arXiv:2511.07124`, EBM-CoT: contrastive hinge loss + consistency
+  regularization for implicit CoT calibration. 82.73% accuracy with
+  self-consistency. Directly applicable to Carnot's KAN energy tier training.
+- `arXiv:2504.13134`, EBRM: post-hoc conflict-aware contrastive refinement
+  for reward models. 5.97% safety alignment improvement, no retraining.
+  Applicable to Carnot's SC-Energy and KAN energy tiers.
+- `arXiv:2501.04971`, Self-Adaptive Ising Machines: Lagrange-relaxation-based
+  dynamic energy landscape shaping without prior penalty tuning. 7,500× fewer
+  samples than Digital Annealer on 300-variable knapsack. Implements Tier 4
+  adaptive energy landscape from research-program.md.
+- `arXiv:2601.09037`, 2D Parallel Tempering FPGA: 15 replicas, 128-node
+  system, 1,920 p-bits on-chip, 4.7ms end-to-end, >10× convergence speedup.
+  Directly applicable to KV260 constraint verification planning.
+- `arXiv:2503.01177`, Scalable Connectivity: copy-node sparsification for
+  dense Ising machines, constant frequency scaling. Theoretical foundation
+  for KV260 v4 RTL sparse design (arXiv:2604.17109 inertia + this sparsification
+  = v4 RTL target).
 
 ## Three Biggest Gaps
 
-1. **Structural tag never emitted by thinking models.** `exp1353` confirmed
-   that the trigger-before-constrain approach fails for Qwen3/Gemma4-it
-   because thinking tokens appear before any user-requested structural tag.
-   The fix is **prefix injection**: supply the structural tag as the first
-   token(s) of the assistant turn before generation begins. Llama.cpp's
-   `--grammar` flag combined with a forced assistant prefix achieves this.
-   If prefix injection also fails, the trigger-before-constrain branch must
-   be retired (per the `.105` retro's `retire_if_same_verdict: true` entry)
-   and Eidoku CSP becomes the primary verification path.
+1. **Pre-test suite broken; publication hold and retro missing.** The
+   `tests/python/phase5/test_intermediate_scale_v3.py` import error blocks
+   all pre-test-gated tasks. The publication hold (exp1375) and retro
+   (exp1376) were both exhausted without producing artifacts. With the full
+   certificate chain now proven (parse_rate=1.0, semantic repair complete,
+   headline self-learning achieved), the publication hold likely can be
+   lifted — but we cannot assess it until the pre-test suite is fixed and
+   exp1375 runs.
 
-2. **No headline self-learning evidence yet.** `exp1358` is mandatory and
-   positive but replay-only. FR-11 requires fresh verifier-selected samples.
-   This is blocked by the certificate gate: without parsed certificates, the
-   semantic validator cannot produce verified cases for memory promotion.
-   Closing this gap requires either (a) tag-first prefix injection succeeding
-   and the semantic chain opening, or (b) Eidoku CSP feasibility scores
-   substituting as the verifier signal for memory promotion.
+2. **DVI training loop never executed.** `dvi_ready=True` has appeared in
+   exp1374 (`.106`), exp1358 (`.105`), and exp1344 (`.104`) — three consecutive
+   milestones. The `fresh_verified_sample_count=4` from exp1374 provides the
+   first actual DVI training signal. Yet the discriminative verifier update
+   itself has never run. This is the core gap in FR-11: the infrastructure
+   is complete, verified samples exist, but the learning step is missing.
 
-3. **Publication hold active; paper integrity not closed.** The arXiv
-   submission is blocked by the claim boundary audit and open paper-integrity
-   issues. `.106` must close or explicitly defer each pending publication
-   blocker based on honest local evidence, not analogy.
+3. **arXiv submission still pending; GRPO v7 never trained.** The paper has
+   been "ready to submit pending orthogonality audit + semantic chain" since
+   milestone .96. Both blockers are now resolved (`.97` orthogonality audit
+   complete; `.106` semantic chain complete). With DiffuTruth, EBM-CoT, KAN
+   formal verification, and JURY-RL all available as new results to include,
+   the paper needs a targeted audit pass and submission. In parallel, GRPO v7
+   has a confirmed working GPU path (exp1366 ran SOTA GGUF on GPU successfully)
+   and the JURY-RL recipe provides formal verifier rewards without labeled data.
 
-## Architecture Target
+## Architecture (4 Phases)
 
-```text
-Phase 0: .105 handoff closure
-  exp1364 .105 artifact integrity audit
-      |
-      v
-Phase 1: Tag-first prefix injection + independent CSP verification
-  exp1365 Eidoku CSP neuro-symbolic probe (CPU, unconditional)
-      |
-  exp1366 Certificate v8 — tag-first prefix injection CRANE pattern (GPU)
-      |    gated: exp1364.terminal_certificate_required == true
-      |
-  exp1367 DiffuTruth energy-of-falsehood probe (CPU, unconditional)
-      |
-Phase 2: Semantic repair chain (all gated on exp1366.certificate_parse_rate >= 0.75)
-  exp1368 FOVER-aligned LogicSkills skill audit
-      |
-  exp1369 Semantic validator v2 — NSVIF + partial SMT
-      |
-  exp1370 VERGE MCS repair localization v2
-      |
-  exp1371 Margin-aware Cactus/BEAVER scheduler v3
-      |
-Phase 3: Hardware and formal verification (unconditional)
-  exp1372 Optimal KAN PWA formal verification (CPU)
-  exp1373 Fully parallel Ising with inertia (CPU)
-      |
-Phase 4: Self-learning + publication + retro
-  exp1374 FR-11 continuous self-learning v3 (unconditional, fallback to replay)
-  exp1375 Publication hold + claim boundary v15
-  exp1376 Milestone 2026.04.106 retrospective
+```
+.107 Milestone Architecture
+════════════════════════════════════════════════════════════════
+
+Phase 0 — Close .106 Missing Artifacts (MANDATORY, both unconditional)
+  exp1377: Pre-test fix + .106 retro closeout ─────────────────┐
+  exp1378: Publication hold v16 + claim boundary ──────────────┤
+                                                               ↓
+Phase 1 — Publication Sprint                                  (after Phase 0)
+  exp1379: Paper integrity audit v2 + main.tex update ─────────┐
+  exp1380: arXiv bundle v11 + submission ──────────────────────┤
+            gated on exp1379.arxiv_submission_ready=true       ↓
+                                                               ↓
+Phase 2 — DVI Training + Full-Scale Evaluation               (parallel)
+  exp1381: DVI discriminative verifier training v1 ────────────┐
+  exp1382: Full-scale certificate + semantic repair (100+ cases)┤
+            exp1382 gated on exp1381.dvi_deployed=true         ↓
+                                                               ↓
+Phase 3 — GRPO + New Research                                (parallel)
+  exp1383: GRPO v7 JURY-RL formal verifier rewards ────────────┐ (DualGPU)
+  exp1384: EBM-CoT energy calibration probe ───────────────────┤
+  exp1385: Self-adaptive Ising machine probe ──────────────────┤
+  exp1386: SECL discriminative self-calibration ───────────────┤
+  exp1387: 2D parallel tempering KV260 FPGA estimate ──────────┤
+                                                               ↓
+Phase 4 — FR-11 Self-Learning + Retro                        (closes milestone)
+  exp1388: FR-11 self-learning v4 (DVI + GRPO integration) ────┐
+            gated on exp1381.dvi_deployed=true                 ↓
+  exp1389: Milestone .107 retro ───────────────────────────────┘
+            (skip_pre_test: true, mandatory)
 ```
 
 ## Dependency Graph
 
 ```
-exp1364 ──→ exp1366 (gate: terminal_certificate_required)
-exp1366 ──→ exp1368, exp1369 (gate: certificate_parse_rate >= 0.75)
-exp1369 ──→ exp1370 (gate: validator_execution_pass_rate >= 0.5)
-exp1370 ──→ exp1371 (gate: repair_hint_precision >= 0.5)
-exp1369 ──→ exp1374 (gate: semantic_validator_claim_allowed)
-exp1365 [unconditional — parallel CSP path]
-exp1367 [unconditional — non-equilibrium complement]
-exp1372 [unconditional — formal KAN verification]
-exp1373 [unconditional — parallel Ising inertia]
-exp1374 [unconditional with fallback to replay if gate misses]
-exp1375 [unconditional — reads all available .106 evidence]
-exp1376 [unconditional — milestone closeout]
+exp1377 ──────────────────────────────────── (required reading for all Phase 1+)
+exp1378 ──────────────────────────────────── (required reading for exp1379)
+exp1379 ←─────── reads exp1377, exp1378 ─── gates exp1380
+exp1380 ←─────── gated_on exp1379.arxiv_submission_ready
+exp1381 ←─────── reads exp1378, exp1374 ─── gates exp1382, exp1388
+exp1382 ←─────── gated_on exp1381.dvi_deployed
+exp1383 ─────────────────────────────────── unconditional (DualGPU)
+exp1384, 1385, 1386, 1387 ──────────────── unconditional (CPU-only)
+exp1388 ←─────── gated_on exp1381.dvi_deployed
+exp1389 ─────────────────────────────────── unconditional (skip_pre_test: true)
 ```
 
 ## Hardware Requirements
 
-| Experiment | GPU | CPU only |
-|---|---|---|
-| exp1364, 1365, 1367, 1372, 1373, 1374, 1375, 1376 | No | Yes |
-| exp1366 | Yes (RTX 3090 x2 preferred) | Fallback smoke test |
-| exp1368–1371 | No | Yes |
+| Experiment | GPU Required | Notes |
+|-----------|-------------|-------|
+| exp1377–1378 | No | Documentation + diagnosis |
+| exp1379–1380 | No | Paper editing |
+| exp1381 | Yes (1× RTX 3090) | DVI inference for verifier signals |
+| exp1382 | Yes (1× RTX 3090) | SOTA GGUF certificate generation at scale |
+| exp1383 | Yes (2× RTX 3090, DualGPU) | GRPO training |
+| exp1384–1387 | No | CPU-only research probes |
+| exp1388 | No | Replay + DVI-updated memory |
+| exp1389 | No | Documentation |
 
-## Phase Descriptions
+Both RTX 3090s were idle at 0% utilization at .106 closeout. GPU path confirmed
+working via exp1366 (parse_rate=1.0 on SOTA GGUF with GPU). `.107` should
+actively schedule GPU work via DualGPURunner.
 
-### Phase 0 — Handoff Closure (unconditional)
+## Success Criteria (14)
 
-`exp1364` reads all `.105` artifacts and classifies:
-- `terminal_certificate_required`: true (thinking-mode blocker is terminal negative evidence, not missing artifact)
-- `thinking_mode_blocker_confirmed`: true (structural tag consumed by `<think>` tokens)
-- `prior_certificate_parse_rate`: 0.0 (from exp1353)
-- `semantic_work_completed`: false (exp1355–1357 blocked)
-- `self_learning_state`: replay-only, positive (`self_learning_delta_overall=1.596429`)
-
-### Phase 1 — Tag-First + Parallel CSP (partially unconditional)
-
-**exp1365 — Eidoku CSP probe (unconditional, CPU-only)**
-
-Implements Eidoku's three CSP proxy costs on existing FoVer corpus cases
-and any available SOTA GGUF free-text outputs:
-- Structural cost: graph connectivity of reasoning steps
-- Geometric cost: feature-space consistency via embedding similarity
-- Symbolic cost: Z3 entailment check for extractable claims
-
-Eidoku is the fallback verification path: if `exp1366` fails (tag-first
-also produces parse_rate=0.0), Eidoku CSP scores serve as the verifier
-signal for self-learning memory promotion and publication evidence.
-
-**exp1366 — Certificate v8 Tag-First Prefix Injection (GPU)**
-
-Gated on `exp1364.terminal_certificate_required == true`.
-Root cause from `.105`: thinking-mode tokens precede structural tag.
-Fix: prefix-inject the structural tag into the assistant turn using
-llama.cpp's partial assistant response or `--grammar` with a forced
-prefix. The grammar constraint is active from generation token 0.
-Combined with CRANE's alternating pattern: unconstrained reasoning phase
-(capped token budget) followed by forced-prefix constrained certificate.
-
-This experiment must either produce `certificate_parse_rate >= 0.75` or
-write a `terminal_blocker` artifact with `retire_if_same_verdict: true`
-evidence. A missing or bootstrap-only artifact is not acceptable.
-
-**exp1367 — DiffuTruth energy-of-falsehood probe (unconditional, CPU-only)**
-
-Implements the Generative Stress Test from `arXiv:2602.11364` using local
-text embedding perturbation as a diffusion proxy (full discrete diffusion
-is not required for a feasibility probe). Measures whether reconstruction
-energy correlates with Ising energy on FoVer corpus cases.
-
-### Phase 2 — Semantic Repair Chain (gated on parse_rate >= 0.75)
-
-**exp1368 — FOVER-aligned LogicSkills skill audit (gated on exp1366)**
-
-Builds on `.105` `exp1354` (LogicSkills skill split). Aligns Carnot's
-certificate skill failures with FOVER-80K's Z3/Isabelle error taxonomy.
-Measures whether Carnot's symbolization/countermodel/validity gaps match
-the FOVER error distribution; this determines whether FOVER training data
-could reduce the dominant skill gap.
-
-**exp1369 — Semantic validator v2 (gated on exp1366)**
-
-Extended `.105` `exp1355`. Adds NSVIF-style Z3 constraint models
-(`arXiv:2601.17789`) for structured text claims alongside partial-SMT
-validation. Tracks `unknown_preservation_rate`, `z3_constraint_pass_rate`,
-and `semantic_validator_claim_allowed`.
-
-**exp1370 — VERGE MCS repair v2 (gated on exp1369)**
-
-Extended `.105` `exp1356`. More cases, tighter precision measurement.
-Locates Minimal Correction Subsets for semantic validator failures.
-
-**exp1371 — Margin-aware Cactus/BEAVER scheduler v3 (gated on exp1370)**
-
-Extended `.105` `exp1357`. Margin-aware verifier routing with MCS repair
-hint integration. Only claims verifier-call reduction if false acceptance
-is zero.
-
-### Phase 3 — Hardware and Formal Verification (unconditional)
-
-**exp1372 — Optimal KAN PWA formal verification (CPU-only)**
-
-Implements PWA abstraction for Carnot's GS-KAN splines per
-`arXiv:2602.06737`. Encodes a simple energy-bound property as a MILP.
-No hardware claim; this is a formal software correctness proof for the
-KAN energy tier.
-
-**exp1373 — Fully parallel Ising with inertia (CPU-only)**
-
-Adds inertia dynamics to `parallel_ising.py` per `arXiv:2604.17109`.
-CPU simulation benchmark against existing checkerboard results on FoVer
-constraint problems. Records FPGA mapping estimate for KV260 v4 RTL.
-
-### Phase 4 — Self-Learning, Publication, Retro (unconditional)
-
-**exp1374 — FR-11 continuous self-learning v3 (unconditional)**
-
-Always runs. Primary path: if `exp1369` semantic validator passed, use
-verifier-selected cases for memory promotion and measure
-`fresh_verified_sample_count`. Fallback path: if semantic gate is closed,
-use Eidoku CSP feasibility scores from `exp1365` as the verifier signal
-for promotion, with `headline_result_allowed=false` unless CSP scores
-are independently validated. Reports `self_learning_delta_overall`,
-`nonforgetting_certificate_rate`, `headline_result_allowed`.
-
-**exp1375 — Publication hold + claim boundary v15 (unconditional)**
-
-Reads all `.106` evidence. Updates claim boundary based on tag-first
-certificate result, Eidoku CSP viability, formal KAN properties, and
-self-learning state. Publication hold stays active until certificate
-evidence clears the semantic repair chain.
-
-**exp1376 — Milestone 2026.04.106 retrospective (unconditional)**
-
-Evaluates all 12 success criteria. Produces `.107` carry-forward plan.
-
-## Success Criteria (12 total)
-
-| # | Criterion | Source |
-|---|---|---|
-| 1 | `audit_105_complete` — thinking-mode blocker confirmed, carry-forward classified | exp1364 |
-| 2 | `eidoku_csp_probe_complete` — CSP feasibility measured on FoVer corpus | exp1365 |
-| 3 | `cert_v8_tag_first_ran` — tag-first attempt produced terminal evidence (positive or retire) | exp1366 |
-| 4 | `diffu_truth_probe_complete` — reconstruction energy measured | exp1367 |
-| 5 | `fover_skill_audit_ran` — FOVER alignment measured (may be gate-blocked) | exp1368 |
-| 6 | `semantic_validator_v2_ran` — validator ran (may be gate-blocked) | exp1369 |
-| 7 | `mcs_repair_v2_ran` — MCS repair ran (may be gate-blocked) | exp1370 |
-| 8 | `kan_pwa_formal_verified` — KAN formal property verified or bounded | exp1372 |
-| 9 | `parallel_ising_inertia_measured` — convergence speedup measured | exp1373 |
-| 10 | `self_learning_v3_complete` — mandatory self-learning with non-forgetting | exp1374 |
-| 11 | `publication_boundary_refreshed` — hold state documented with .106 evidence | exp1375 |
-| 12 | `retro_complete` | exp1376 |
+1. `pre_test_suite_fixed` — exp1377: `ModuleNotFoundError` in `test_intermediate_scale_v3.py` resolved
+2. `retro_106_complete` — exp1377: `.106` retro artifact written with all 13 experiment statuses
+3. `publication_hold_reviewed` — exp1378: publication hold state assessed with `.106` full evidence
+4. `paper_v7_audit_complete` — exp1379: paper updated with certificate v8, semantic repair, headline self-learning
+5. `arxiv_submitted` — exp1380: arXiv bundle v11 submitted (or blocked with specific reason)
+6. `dvi_training_complete` — exp1381: first discriminative verifier training run completed
+7. `full_scale_repair_100_cases` — exp1382: certificate→validate→repair pipeline run at 100+ cases
+8. `grpo_v7_formal_reward_measured` — exp1383: GRPO v7 with JURY-RL formal rewards measured
+9. `ebm_cot_probe_complete` — exp1384: EBM-CoT contrastive hinge loss applied to KAN tier
+10. `self_adaptive_ising_probe_complete` — exp1385: Lagrange-relaxation self-adaptive Ising measured
+11. `secl_discriminative_calibration_complete` — exp1386: SECL calibration improvement measured
+12. `parallel_tempering_kv260_estimate_complete` — exp1387: 2D PT CPU sim + KV260 LUT estimate
+13. `fr11_self_learning_v4_complete` — exp1388: DVI + GRPO integrated into self-learning
+14. `retro_107_complete` — exp1389: milestone retrospective written
 
 ## Decentralization Implications
 
-All experiments use local SOTA GGUFs (Qwen3.6-35B-A3B-GGUF, Gemma4-31B-it-GGUF,
-Gemma4-26B-A4B-it-GGUF) for any LLM-bearing work. Eidoku CSP, DiffuTruth, KAN
-formal verification, and Ising inertia are CPU-only — no closed-weight dependency.
-Tag-first prefix injection uses llama.cpp grammar constraints, which are
-fully open-source and reproducible. No vendor-specific API is required for any
-experiment in this milestone.
+All experiments in this milestone satisfy the CLAUDE.md decentralization rules:
+
+- **Rule 1 (local-first):** GRPO v7 uses local GGUF models (SOTA unsloth models);
+  DVI uses Carnot's own verifiers; no closed-weight API required for core experiments.
+- **Rule 2 (closed-weight optional):** Paper audit may reference closed-weight
+  comparison models for context only; no critical code path depends on them.
+- **Rule 3 (distribution mirroring):** arXiv submission uses the existing
+  Carnot-EBM HuggingFace + gitea mirror infrastructure.
+- **Rule 4 (integration surfaces):** No new integration surface is proposed;
+  existing Python API, CLI, MCP, and REST paths maintained.
+- **Rule 5 (hardware portability):** KV260 FPGA estimate, self-adaptive Ising,
+  and 2D parallel tempering all contribute to the FPGA/hardware sovereignty path.
+- **Rule 6 (data minimization):** No closed-weight calls proposed in core verifier.
+- **Rule 7 (no vendor abstractions in core):** DVI and SECL work in
+  `python/carnot/verify/` using abstract protocols; no vendor-specific imports.
+
+## Notes on Key Design Decisions
+
+**Why pre-test fix is FIRST:** The conductor's 3-attempt retry loop was
+exhausted on exp1375 and exp1376 because pre-tests failed at collection time.
+Without fixing `test_intermediate_scale_v3.py`, every subsequent task with
+pre-test validation enabled will also fail. This is load-bearing infrastructure.
+
+**Why DVI training is now viable:** `dvi_ready=True` since `.104`, four fresh
+semantically-verified samples from exp1374, and the SECL paper provides a
+concrete training recipe. The only reason DVI hasn't run is that the certificate
+chain was not producing verified samples until .106. Now it is.
+
+**Why GRPO v7 uses JURY-RL rewards:** Previous GRPO attempts used GRPO-VPS
+with step-level supervision but no formal verifier as reward signal. JURY-RL's
+"votes propose, proofs dispose" architecture maps cleanly: Carnot's
+score_candidates provides the jury voting, and Carnot's Z3/semantic verifiers
+provide the formal proof reward. ResZero handles UNKNOWN cases, preserving
+the UNKNOWN discipline from the certificate chain.
+
+**Why inertia Ising is NOT retried on CPU:** exp1373 showed `best_inertia_alpha=0.0`
+(no inertia is optimal) for dense float computation on CPU. The inertia benefit
+is specific to FPGA digital fixed-point arithmetic (paper's 20-35× gain). The
+2D parallel tempering route (exp1387) is the more promising FPGA path.

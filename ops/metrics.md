@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-05-05 Milestone 2026.04.107 Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-05-05T18:59:10Z | 2026-05-05T18:59:59Z | Plan milestone 2026.04.107 after 2026.04.106 completion: context resumed from prior session; run validate_prior_failures + audit_roadmap_gates on pre-written research-roadmap-next.yaml (both pass 13/13), update ops/status.md, ops/changelog.md, ops/metrics.md. | TBD |
+
+---
+
 ## Session: 2026-05-05 Milestone 2026.04.106 Planning
 
 ### Turn Log

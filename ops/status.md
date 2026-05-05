@@ -1,6 +1,20 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-05 (Milestone 2026.04.106 research planning complete)
+**Last Updated:** 2026-05-05 (Milestone 2026.04.107 research planning complete)
+
+## Session 2026-05-05 - Milestone 2026.04.107 Research Planning Complete
+
+**Milestone 2026.04.107 PLANNED.**
+
+- Roadmap doc: `openspec/change-proposals/research-roadmap-vNEXT.md`
+- Execution queue: `research-roadmap-next.yaml` (13 tasks, exp1377-exp1389)
+- Research references updated before planning with 8 new 2025-2026 papers: SECL discriminative self-calibration (arXiv:2604.09624), VPRMs verifiable process reward models (arXiv:2601.17223), JURY-RL label-free formal verifier rewards (arXiv:2604.25419), EBM-CoT contrastive hinge loss (arXiv:2511.07124), EBRM post-hoc conflict-aware contrastive refinement (arXiv:2504.13134), Self-Adaptive Ising Machines (arXiv:2501.04971), 2D Parallel Tempering FPGA (arXiv:2601.09037), Scalable Connectivity copy-node sparsification (arXiv:2503.01177).
+- Root cause confirmed for .106 SKIP cascade: `ModuleNotFoundError: No module named 'carnot.phase5.intermediate_scale_v3'` in `tests/python/phase5/test_intermediate_scale_v3.py` — exp1238 (Phase-5-D) never implemented the module. This is the mandatory first fix for .107 (exp1377).
+- Design focus: Phase 0 closes .106 missing artifacts (pre-test fix + retro + pub hold review), Phase 1 executes the publication sprint, Phase 2 runs DVI training v1 + full-scale 100+ case pipeline, Phase 3 executes GRPO v7 JURY-RL + 4 CPU research probes, Phase 4 integrates FR-11 self-learning v4 + final retro.
+- Structured gates: exp1380 on exp1379.arxiv_submission_ready==true; exp1382 on exp1381.dvi_deployed==true; exp1388 on exp1381.dvi_deployed==true. exp1377/1378/1383-1387/1389 are unconditional.
+- Agent routing: all 13 tasks use `agent_type: codex`, `model: gpt-5.5`. No `requires_claude: true` tasks.
+- Validation passed: `python3 scripts/validate_prior_failures.py research-roadmap-next.yaml` (clean), `python3 scripts/audit_roadmap_gates.py research-roadmap-next.yaml` (13/13 tasks, all_checks_pass). Prior_failures added for exp1377 (vs exp1376 SKIP), exp1378 (vs exp1375 SKIP), exp1383 (vs exp1235/exp1208/exp1184 wall_budget/GPU failures), exp1389 (vs exp1376 SKIP).
+- Did NOT modify `research-roadmap.yaml` or `scripts/research_conductor.py`.
 
 ## Session 2026-05-05 - Milestone 2026.04.106 Research Planning Complete
 
