@@ -1,0 +1,267 @@
+{
+  "activation_failures": [],
+  "carry_forward_tasks": [
+    {
+      "prior_failures": [
+        {
+          "addressed_by": "Provision or deliberately replace the missing unsloth/gemma-4-26B-A4B-it-GGUF cache entry before rerunning SOTA certificate work.",
+          "experiment_id": "exp1297-sota-gguf-cache-provenance-preflight-v2",
+          "retire_if_same_verdict": false,
+          "verdict": "sota_gguf_cache_not_ready"
+        }
+      ],
+      "reason": "The SOTA certificate path stayed closed because the local mandated GGUF cache was incomplete.",
+      "task_id": "sota_gguf_cache_readiness"
+    },
+    {
+      "prior_failures": [
+        {
+          "addressed_by": "Rerun only after exp1297.cached_sota_ready == true and record answer_stability_score.",
+          "experiment_id": "exp1298-sota-answer-stability-falcon-audit",
+          "retire_if_same_verdict": false,
+          "verdict": "blocked_gate_check_failed"
+        },
+        {
+          "addressed_by": "Produce certificate_parse_rate, headline_result_allowed, grammar cost, truthfulness, and FALCON repair metrics after SOTA readiness gates open.",
+          "experiment_id": "exp1299-triggered-certificate-extraction-v3",
+          "retire_if_same_verdict": false,
+          "verdict": "missing_gated_by_sota_cache_and_answer_stability"
+        }
+      ],
+      "reason": "Answer-stability and certificate extraction did not run because cached_sota_ready was false.",
+      "task_id": "triggered_certificate_path"
+    },
+    {
+      "prior_failures": [
+        {
+          "addressed_by": "Run after exp1299.certificate_parse_rate >= 0.8 and write semantic_routing_coverage.",
+          "experiment_id": "exp1300-semantic-routing-v2",
+          "retire_if_same_verdict": false,
+          "verdict": "blocked_gate_check_failed"
+        },
+        {
+          "addressed_by": "Run after exp1299.certificate_parse_rate >= 0.8 and exp1300.semantic_routing_coverage >= 0.5.",
+          "experiment_id": "exp1301-safe-prefix-cactus-acceptance-v3",
+          "retire_if_same_verdict": false,
+          "verdict": "missing_gated_by_certificate_parse_and_semantic_routing"
+        }
+      ],
+      "reason": "Routing and safe-prefix acceptance remained downstream of the missing certificate parse-rate gate.",
+      "task_id": "semantic_routing_and_cactus_acceptance"
+    },
+    {
+      "prior_failures": [
+        {
+          "addressed_by": "Run only after exp1299.headline_result_allowed == true and exp1303.self_learning_delta_overall > 0.0.",
+          "experiment_id": "exp1304-grpo-vprm-v10-sota-gated",
+          "retire_if_same_verdict": false,
+          "verdict": "missing_gated_by_sota_certificate_headline_result"
+        }
+      ],
+      "reason": "Online self-learning improved, but GRPO/VPRM headline learning stayed gated by the absent SOTA certificate path.",
+      "task_id": "grpo_vprm_headline_gate"
+    },
+    {
+      "prior_failures": [
+        {
+          "addressed_by": "Convert the replay stop policy into a learned/generalized policy only after new non-replay evidence is available.",
+          "experiment_id": "exp1305-hardnetpp-dsp-feasibility-stop-policy",
+          "retire_if_same_verdict": false,
+          "verdict": "dsp_feasibility_marginal_not_learned_general_stop_rule"
+        }
+      ],
+      "reason": "The repair stop policy is useful as an operator gate, but it is not yet a learned general stop rule.",
+      "task_id": "repair_policy_generalization"
+    },
+    {
+      "prior_failures": [
+        {
+          "addressed_by": "Keep publication tasks terminal by recording the operator hold or a local receipt; do not attempt credentialed submission without operator approval.",
+          "experiment_id": "exp1307-arxiv-v10-hold-receipt-v2",
+          "retire_if_same_verdict": false,
+          "verdict": "operator_hold_active_no_local_arxiv_receipt"
+        }
+      ],
+      "reason": "Publication remains terminally recorded but held by operator state rather than a local arXiv receipt.",
+      "task_id": "publication_hold"
+    }
+  ],
+  "criteria_met": 8,
+  "criteria_results": {
+    "arxiv_v10_hold_receipt_v2": "MET",
+    "ebt_arm_ebm_cot_energy_bridge_audit_v2": "MET",
+    "grpo_vprm_v10_sota_gated": "GATED",
+    "hardnetpp_dsp_feasibility_stop_policy": "MET",
+    "prior_failures_activation_audit": "MET",
+    "querybandits_ngc_online_memory_policy": "MET",
+    "retro_101_complete": "MET",
+    "safe_prefix_cactus_acceptance_v3": "GATED",
+    "semantic_routing_v2": "GATED",
+    "skill_graph_promotion_demotion_v2": "MET",
+    "sota_answer_stability_falcon_audit": "GATED",
+    "sota_gguf_cache_provenance_preflight_v2": "MET",
+    "triggered_certificate_extraction_v3": "GATED"
+  },
+  "criteria_total": 13,
+  "docs_reconciled": false,
+  "docs_reconciliation_note": "ops/status.md, ops/changelog.md, and _bmad/traceability.md were left untouched because the conductor stop rule delegates ops reconciliation to the following Haiku step.",
+  "experiment": "1308_milestone_retro_101",
+  "findings_summary": "Milestone .101 met 8 of 13 criteria. Activation hygiene passed and self-learning, repair, bridge, publication-state, and retrospective artifacts reached terminal states; SOTA certificate work stayed gated by the missing mandated GGUF cache entry.",
+  "gated_or_skipped_tasks": [
+    {
+      "criterion": "sota_answer_stability_falcon_audit",
+      "experiment_id": 1298,
+      "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp1297-sota-gguf-cache-provenance-preflight-v2.cached_sota_ready (actual=False == expected=True)",
+      "honest_verdict": "blocked_gate_check_failed",
+      "status": "blocked"
+    },
+    {
+      "criterion": "triggered_certificate_extraction_v3",
+      "experiment_id": 1299,
+      "gate_check_summary": "upstream milestone gate did not open",
+      "honest_verdict": "missing",
+      "status": "missing"
+    },
+    {
+      "criterion": "semantic_routing_v2",
+      "experiment_id": 1300,
+      "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp1299-triggered-certificate-extraction-v3.certificate_parse_rate (upstream artifact not found for task id 'exp1299-triggered-certificate-extraction-v3')",
+      "honest_verdict": "blocked_gate_check_failed",
+      "status": "blocked"
+    },
+    {
+      "criterion": "safe_prefix_cactus_acceptance_v3",
+      "experiment_id": 1301,
+      "gate_check_summary": "upstream milestone gate did not open",
+      "honest_verdict": "missing",
+      "status": "missing"
+    },
+    {
+      "criterion": "grpo_vprm_v10_sota_gated",
+      "experiment_id": 1304,
+      "gate_check_summary": "upstream milestone gate did not open",
+      "honest_verdict": "missing",
+      "status": "missing"
+    }
+  ],
+  "honest_verdict": "milestone_101_8_of_13_criteria_met",
+  "metadata": {
+    "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "requested_next_roadmap": "research-roadmap-next.yaml",
+    "run_date": "20260505",
+    "source_roadmap": "research-roadmap.yaml"
+  },
+  "milestone": "2026.04.101",
+  "milestone_summary": {
+    "accepted_violation_delta": -0.807143,
+    "activation_audit_passed": true,
+    "cached_sota_ready": false,
+    "energy_bridge_completed": true,
+    "missing_sota_models": [
+      "unsloth/gemma-4-26B-A4B-it-GGUF"
+    ],
+    "publication_state": "operator_hold",
+    "self_learning_delta_overall": 1.596429,
+    "skill_graph_candidate_count": 7,
+    "stop_policy_precision": 1.0
+  },
+  "retro_complete": true,
+  "run_date": "20260505",
+  "schema": "milestone_retro_v6",
+  "scientific_negative_results": [
+    {
+      "criterion": "hardnetpp_dsp_feasibility_stop_policy",
+      "experiment_id": 1305,
+      "honest_verdict": "complete: conservative replay policy is useful as an operator gate, but DSP feasibility is still marginal and this is not a learned general stop rule",
+      "interpretation": "terminal repair-policy artifact; DSP remains marginal and the rule is not a learned general stop policy",
+      "status": "MET"
+    }
+  ],
+  "source_artifacts_checked": [
+    {
+      "experiment_id": 1296,
+      "honest_verdict": "activation_audit_passed",
+      "loaded": true,
+      "path": "results/experiment_1296_prior_failures_activation_audit.json",
+      "status": "complete"
+    },
+    {
+      "experiment_id": 1297,
+      "honest_verdict": "sota_gguf_cache_not_ready",
+      "loaded": true,
+      "path": "results/experiment_1297_sota_gguf_cache_provenance_preflight_v2.json",
+      "status": "complete"
+    },
+    {
+      "experiment_id": 1298,
+      "honest_verdict": "blocked_gate_check_failed",
+      "loaded": true,
+      "path": "results/experiment_1298_sota_answer_stability_falcon_audit.json",
+      "status": "blocked"
+    },
+    {
+      "experiment_id": 1299,
+      "honest_verdict": null,
+      "loaded": false,
+      "path": "results/experiment_1299_triggered_certificate_extraction_v3.json",
+      "status": null
+    },
+    {
+      "experiment_id": 1300,
+      "honest_verdict": "blocked_gate_check_failed",
+      "loaded": true,
+      "path": "results/experiment_1300_semantic_routing_v2.json",
+      "status": "blocked"
+    },
+    {
+      "experiment_id": 1301,
+      "honest_verdict": null,
+      "loaded": false,
+      "path": "results/experiment_1301_safe_prefix_cactus_acceptance_v3.json",
+      "status": null
+    },
+    {
+      "experiment_id": 1302,
+      "honest_verdict": "skill_graph_candidates_written_sandboxed",
+      "loaded": true,
+      "path": "results/experiment_1302_skill_graph_promotion_demotion_v2.json",
+      "status": "complete"
+    },
+    {
+      "experiment_id": 1303,
+      "honest_verdict": "online_memory_policy_improved_non_headline",
+      "loaded": true,
+      "path": "results/experiment_1303_querybandits_ngc_online_memory_policy.json",
+      "status": "complete"
+    },
+    {
+      "experiment_id": 1304,
+      "honest_verdict": null,
+      "loaded": false,
+      "path": "results/experiment_1304_grpo_vprm_v10_sota_gated.json",
+      "status": null
+    },
+    {
+      "experiment_id": 1305,
+      "honest_verdict": "complete: conservative replay policy is useful as an operator gate, but DSP feasibility is still marginal and this is not a learned general stop rule",
+      "loaded": true,
+      "path": "results/experiment_1305_hardnetpp_dsp_feasibility_stop_policy.json",
+      "status": "complete"
+    },
+    {
+      "experiment_id": 1306,
+      "honest_verdict": "energy_bridge_completed_local_alignment_only_strategic_context_not_implemented",
+      "loaded": true,
+      "path": "results/experiment_1306_ebt_arm_ebm_cot_energy_bridge_audit_v2.json",
+      "status": "complete"
+    },
+    {
+      "experiment_id": 1307,
+      "honest_verdict": "operator_hold_active_no_local_arxiv_receipt",
+      "loaded": true,
+      "path": "results/experiment_1307_arxiv_v10_hold_receipt_v2.json",
+      "status": "complete"
+    }
+  ],
+  "status": "complete"
+}
