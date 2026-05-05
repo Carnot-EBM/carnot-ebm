@@ -591,6 +591,62 @@ referenced by the paper except unused placeholder figures
 AND the deliverable records `latex_compile_success == true`,
 `bundle_size_bytes > 0`, submission status, and a complete honest verdict.
 
+### REQ-PUBLISH-019: arXiv SWORD API Submission Or Manual Checklist
+
+The Exp 1390 arXiv submission runner MUST create
+`results/experiment_1390_arxiv_submission_sword_api.json` with
+`status == "in_progress"` before checking credentials or attempting any network
+submission. It MUST verify that `results/arxiv_bundle_v11.tar.gz` exists and is
+non-empty, and it MUST use the audited paper metadata from
+`docs/arxiv-paper/main.tex` plus the required submission metadata:
+
+- title
+- abstract
+- author `Ian Blenke <ian@blenke.com>`
+- primary category `cs.LG`
+- license `CC-BY-4.0`
+
+When non-interactive arXiv SWORD credentials are available, the runner MUST use
+Python's `requests` library to POST the bundle and metadata to
+`https://arxiv.org/sword/deposit`, record `submission_attempted == true`, and
+extract any returned arXiv identifier into `arxiv_id_if_submitted`.
+
+When credentials are unavailable, the runner MUST NOT fabricate a submission.
+It MUST write `docs/arxiv-manual-submission-checklist.md` with the exact upload
+URL, ready bundle path, pre-filled metadata, and step-by-step manual upload
+instructions that let an operator complete submission quickly in the browser.
+
+The artifact MUST include:
+
+- `status`
+- `bundle_path`
+- `submission_attempted`
+- `submission_method`
+- `arxiv_id_if_submitted`
+- `submission_result`
+- `manual_checklist_generated`
+- `manual_checklist_path`
+- `honest_verdict`
+
+### SCENARIO-PUBLISH-020: Missing SWORD Credentials Produce Manual Checklist
+
+**Given** `results/arxiv_bundle_v11.tar.gz` exists and is non-empty
+AND no arXiv SWORD credentials are configured
+**When** the Exp 1390 runner executes
+**Then** it writes `docs/arxiv-manual-submission-checklist.md`
+AND the deliverable records `submission_attempted == false`,
+`submission_result == "manual_checklist_generated"`,
+`manual_checklist_generated == true`, and a complete honest verdict.
+
+### SCENARIO-PUBLISH-021: SWORD Credentials Trigger API Submission Attempt
+
+**Given** `results/arxiv_bundle_v11.tar.gz` exists and is non-empty
+AND non-interactive arXiv SWORD credentials are configured
+**When** the Exp 1390 runner executes
+**Then** it POSTs the bundle and metadata to
+`https://arxiv.org/sword/deposit`, records `submission_attempted == true`, and
+stores any returned arXiv identifier in `arxiv_id_if_submitted`.
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -613,3 +669,4 @@ AND the deliverable records `latex_compile_success == true`,
 | REQ-PUBLISH-016 | Proposed | Exp 1321 publication-hold related-work delta artifact |
 | REQ-PUBLISH-017 | Implemented | Exp 1378 publication-hold v16 claim-boundary review |
 | REQ-PUBLISH-018 | Implemented | Exp 1380 audited arXiv bundle v11 submission artifact |
+| REQ-PUBLISH-019 | Implemented | Exp 1390 arXiv SWORD API submission or manual checklist |
