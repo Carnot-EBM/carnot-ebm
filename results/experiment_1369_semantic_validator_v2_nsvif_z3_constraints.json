@@ -1,0 +1,140 @@
+{
+  "artifact": "experiment_1369_semantic_validator_v2_nsvif_z3_constraints",
+  "artifact_metadata": {
+    "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "run_date": "20260505",
+    "source_experiments": [
+      "exp1366"
+    ],
+    "spec": "REQ-VERIFY-1369"
+  },
+  "coverage_delta_over_fol_only": 0.5,
+  "formal_claim_rows": [
+    {
+      "case_id": "sat_unit_clause",
+      "certificate_state": "SAT",
+      "claim_route": "z3_fully_formal",
+      "constraint_evaluated": true,
+      "constraint_passed": true,
+      "expected_state": "SAT",
+      "formula_kind": "cnf_unit_fixture",
+      "formula_source": "certificate_fixture_prompt",
+      "nsvif_encoding": "x1",
+      "semantic_result": "SAT"
+    },
+    {
+      "case_id": "unsat_unit_conflict",
+      "certificate_state": "UNSAT",
+      "claim_route": "z3_fully_formal",
+      "constraint_evaluated": true,
+      "constraint_passed": true,
+      "expected_state": "UNSAT",
+      "formula_kind": "cnf_unit_fixture",
+      "formula_source": "certificate_fixture_prompt",
+      "nsvif_encoding": "And(x1, Not(x1))",
+      "semantic_result": "UNSAT"
+    }
+  ],
+  "fully_formal_claim_count": 2,
+  "honest_verdict": "semantic_validator_v2_complete_unknown_preserved",
+  "measurement_note": "Replay-only semantic validation over Exp 1366 parsed rows. Fully formal CNF fixtures use local Z3; natural-language missing-bound and repair-hint cases use conservative text constraints and preserve UNKNOWN when formalization is unsafe.",
+  "nltc_claim_count": 2,
+  "nltc_claim_rows": [
+    {
+      "case_id": "unknown_missing_bound",
+      "certificate_state": "UNKNOWN",
+      "claim_route": "nltc_partial_smt",
+      "constraint_evaluated": true,
+      "constraint_passed": true,
+      "expected_state": "UNKNOWN",
+      "logitext_reason": "The prompt omits capacity bound B, so the conservative text constraint allows only an UNKNOWN-preserving certificate.",
+      "semantic_result": "UNKNOWN",
+      "text_constraints": [
+        "missing_capacity_bound_requires_unknown"
+      ]
+    },
+    {
+      "case_id": "repair_missing_upper_bound",
+      "certificate_state": "REPAIR_HINT",
+      "claim_route": "nltc_partial_smt",
+      "constraint_evaluated": true,
+      "constraint_passed": true,
+      "expected_state": "REPAIR_HINT",
+      "logitext_reason": "The prompt says an upper-bound premise is missing, so the text constraint accepts only a repair hint that still refers to the missing bound.",
+      "semantic_result": "REPAIR_HINT",
+      "text_constraints": [
+        "missing_upper_bound_requires_repair_hint"
+      ]
+    }
+  ],
+  "parsed_certificate_cases": 4,
+  "run_date": "20260505",
+  "schema_version": 1,
+  "semantic_validator_claim_allowed": true,
+  "semantic_validator_rows": [
+    {
+      "case_id": "sat_unit_clause",
+      "certificate_state": "SAT",
+      "claim_route": "z3_fully_formal",
+      "constraint_evaluated": true,
+      "constraint_passed": true,
+      "expected_state": "SAT",
+      "formula_kind": "cnf_unit_fixture",
+      "formula_source": "certificate_fixture_prompt",
+      "nsvif_encoding": "x1",
+      "semantic_result": "SAT"
+    },
+    {
+      "case_id": "unsat_unit_conflict",
+      "certificate_state": "UNSAT",
+      "claim_route": "z3_fully_formal",
+      "constraint_evaluated": true,
+      "constraint_passed": true,
+      "expected_state": "UNSAT",
+      "formula_kind": "cnf_unit_fixture",
+      "formula_source": "certificate_fixture_prompt",
+      "nsvif_encoding": "And(x1, Not(x1))",
+      "semantic_result": "UNSAT"
+    },
+    {
+      "case_id": "unknown_missing_bound",
+      "certificate_state": "UNKNOWN",
+      "claim_route": "nltc_partial_smt",
+      "constraint_evaluated": true,
+      "constraint_passed": true,
+      "expected_state": "UNKNOWN",
+      "logitext_reason": "The prompt omits capacity bound B, so the conservative text constraint allows only an UNKNOWN-preserving certificate.",
+      "semantic_result": "UNKNOWN",
+      "text_constraints": [
+        "missing_capacity_bound_requires_unknown"
+      ]
+    },
+    {
+      "case_id": "repair_missing_upper_bound",
+      "certificate_state": "REPAIR_HINT",
+      "claim_route": "nltc_partial_smt",
+      "constraint_evaluated": true,
+      "constraint_passed": true,
+      "expected_state": "REPAIR_HINT",
+      "logitext_reason": "The prompt says an upper-bound premise is missing, so the text constraint accepts only a repair hint that still refers to the missing bound.",
+      "semantic_result": "REPAIR_HINT",
+      "text_constraints": [
+        "missing_upper_bound_requires_repair_hint"
+      ]
+    }
+  ],
+  "smt_text_constraint_pass_rate": 1.0,
+  "source_context": {
+    "exp1366_certificate_parse_rate": 1.0,
+    "exp1366_honest_verdict": "tag_first_prefix_injection_crane_positive_parse_rate_1_0",
+    "exp1366_status": "complete",
+    "parse_gate_passed": true,
+    "required_parse_gate": 0.75,
+    "source_experiment": "exp1366"
+  },
+  "status": "complete",
+  "terminal_blocker": null,
+  "unknown_preservation_rate": 1.0,
+  "validator_execution_pass_rate": 1.0,
+  "z3_constraint_pass_rate": 1.0
+}
