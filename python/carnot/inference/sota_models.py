@@ -237,10 +237,11 @@ def cached_sota_pair(
     real SOTA inference rather than hub-IDs.  Each entry has:
       ``{name, hf_id, gpu, model_path}``  — note the extra ``model_path`` key.
 
-    Returns ``None`` if either required model is NOT cached; callers should
-    fall back to the legacy ``(google/gemma-4-E4B-it, Qwen/Qwen3.5-0.8B)``
+    Returns ``None`` if fewer than two mandated SOTA models are cached; callers
+    should fall back to the legacy ``(google/gemma-4-E4B-it, Qwen/Qwen3.5-0.8B)``
     transformers pair in that case.  This keeps CI / cold-machine runs from
-    silently hanging on missing weights.
+    silently hanging on missing weights.  A missing third mandated model is not
+    fatal for pair readiness because headline pair runs only load two models.
 
     Use:
         from carnot.inference.sota_models import cached_sota_pair
@@ -250,25 +251,23 @@ def cached_sota_pair(
         else:
             pipe = transformers.pipeline("text-generation", specs[0]["hf_id"])
     """
-    flagship = SOTA_GGUF_MODELS[0]  # Qwen3.6-35B-A3B
-    middle = SOTA_GGUF_MODELS[1]  # Gemma4-26B-A4B-it
-    p_flagship = resolve_cached_gguf(flagship["hf_id"], preferred_quant)
-    p_middle = resolve_cached_gguf(middle["hf_id"], preferred_quant)
-    if p_flagship is None or p_middle is None:
+    cached_models: list[tuple[SotaModelSpec, str]] = []
+    for model in SOTA_GGUF_MODELS:
+        model_path = resolve_cached_gguf(model["hf_id"], preferred_quant)
+        if model_path is not None:
+            cached_models.append((model, model_path))
+
+    if len(cached_models) < 2:
         return None
+
     return [
         {
-            "name": flagship["name"],
-            "hf_id": flagship["hf_id"],
-            "gpu": gpu_indices[0],
-            "model_path": p_flagship,
-        },
-        {
-            "name": middle["name"],
-            "hf_id": middle["hf_id"],
-            "gpu": gpu_indices[1],
-            "model_path": p_middle,
-        },
+            "name": model["name"],
+            "hf_id": model["hf_id"],
+            "gpu": gpu,
+            "model_path": model_path,
+        }
+        for gpu, (model, model_path) in zip(gpu_indices, cached_models[:2], strict=True)
     ]
 
 

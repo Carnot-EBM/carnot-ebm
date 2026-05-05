@@ -1,0 +1,83 @@
+{
+  "experiment_id": 1309,
+  "title": "SOTA GGUF pair resolver repair",
+  "run_date": "20260505",
+  "artifact_metadata": {
+    "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "preferred_quant": "Q4_K_M",
+    "gpu_indices": [
+      0,
+      1
+    ],
+    "source_artifacts": [
+      "results/experiment_1297_sota_gguf_cache_provenance_preflight_v2.json",
+      "results/experiment_1308_milestone_retro_101.json"
+    ]
+  },
+  "status": "complete",
+  "sota_pair_ready": true,
+  "cached_pair_specs_count": 2,
+  "cached_mandated_models": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "unsloth/gemma-4-31B-it-GGUF"
+  ],
+  "missing_optional_models": [
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "cached_pair_specs": [
+    {
+      "name": "Qwen3.6-35B-A3B",
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "gpu": 0,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf"
+    },
+    {
+      "name": "Gemma4-31B-it",
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "gpu": 1,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/43e80d41a220ac7c83023daacd6a0d1fd8559251/gemma-4-31B-it-Q4_K_M.gguf"
+    }
+  ],
+  "resolver_code_changed": true,
+  "spec_updated": true,
+  "focused_tests_passed": true,
+  "headline_result_possible": true,
+  "verification": {
+    "focused_resolver_tests": {
+      "command": ".venv/bin/pytest tests/python/test_inference_sota_models.py -q --no-cov",
+      "status": "passed",
+      "summary": "11 passed, 4 warnings"
+    },
+    "new_code_coverage": {
+      "command": "COVERAGE_FILE=/tmp/carnot_exp1309_cov .venv/bin/coverage run -m pytest tests/python/test_inference_sota_models.py -q --no-cov -n 0; coverage JSON checked changed resolver lines 254-270",
+      "status": "passed",
+      "new_code_line_coverage_pct": 100.0,
+      "missing_changed_lines": []
+    },
+    "import_smoke": {
+      "command": ".venv/bin/python -c \"from carnot.inference.sota_models import cached_sota_pair; specs = cached_sota_pair(); print(len(specs) if specs else 0, [s['hf_id'] for s in specs] if specs else [])\"",
+      "status": "passed",
+      "summary": "2 ['unsloth/Qwen3.6-35B-A3B-GGUF', 'unsloth/gemma-4-31B-it-GGUF']"
+    },
+    "py_compile": {
+      "command": ".venv/bin/python -m py_compile python/carnot/inference/sota_models.py tests/python/test_inference_sota_models.py python/carnot/reporting/sota_gguf_preflight.py",
+      "status": "passed"
+    },
+    "spec_coverage": {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py",
+      "status": "failed_pre_existing",
+      "summary": "59 existing tests lack spec traceability; the new test_inference_sota_models resolver tests were not listed."
+    },
+    "lint": {
+      "command": ".venv/bin/ruff check python/carnot/inference/sota_models.py tests/python/test_inference_sota_models.py",
+      "status": "not_run",
+      "summary": "ruff is not installed in .venv; python -m ruff also reports No module named ruff."
+    },
+    "full_python_suite": {
+      "command": ".venv/bin/pytest tests/python -q",
+      "status": "failed_interrupted_after_unrelated_failures",
+      "summary": "Attempted once. The run collected 21780 tests, showed skips, unrelated failures, xdist worker crashes, and a segmentation fault in an unrelated sentence-transformers/torch path; it was killed after it had already failed and reached roughly 53%."
+    }
+  },
+  "honest_verdict": "resolver_repaired_two_cached_headline_models_ready_full_suite_not_green_unrelated_failures"
+}
