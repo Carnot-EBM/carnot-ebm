@@ -1,0 +1,24 @@
+{
+  "experiment": 1300,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-05-05",
+  "started_at": "2026-05-05T00:59:31.334340+00:00",
+  "finished_at": "2026-05-05T00:59:31.334340+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Semantic Routing v2 - Verifier Features + Infeasible/Unknown States",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp1299-triggered-certificate-extraction-v3.certificate_parse_rate (upstream artifact not found for task id 'exp1299-triggered-certificate-extraction-v3')",
+  "gates_evaluated": [
+    {
+      "upstream": "exp1299-triggered-certificate-extraction-v3",
+      "artifact_field": "certificate_parse_rate",
+      "op": ">=",
+      "expected": 0.8,
+      "actual": null,
+      "passed": false,
+      "reason": "upstream artifact not found for task id 'exp1299-triggered-certificate-extraction-v3'"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
