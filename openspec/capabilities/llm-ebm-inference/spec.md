@@ -272,6 +272,41 @@ emit an honest blocked/not-ready verdict without downloading models.
 **And** the artifact preserves the Exp 1296 coverage fields that caused the
 provenance block.
 
+### REQ-INFER-SOTA-005: Cached Pair Resolver Uses Any Two Mandated Local GGUFs
+
+`cached_sota_pair()` SHALL inspect the three mandated SOTA GGUF model IDs through
+the safe local resolver and SHALL return exactly two loadable `MODEL_SPECS`
+entries when at least two mandated models are cached locally.  The pair SHALL be
+deterministic: cached models are selected in registry order and assigned to the
+provided `gpu_indices` order.  Missing third mandated models are optional for
+pair readiness and SHALL be recorded by resolver-repair artifacts as
+`missing_optional_models`; the helper SHALL NOT download models while resolving
+the pair.
+
+If fewer than two mandated SOTA GGUFs are cached locally, `cached_sota_pair()`
+SHALL return `None` so callers can block or fall back honestly instead of
+attempting a partial headline pair.
+
+### SCENARIO-INFER-SOTA-005-001: Two Cached Mandated Models Return Pair
+
+**Given** local cache hits for two mandated SOTA GGUF models
+**And** a cache miss for the remaining mandated model
+**When** `cached_sota_pair(gpu_indices=(0, 1))` is called
+**Then** it returns two `MODEL_SPECS` entries with `model_path` values
+**And** the missing third model is treated as optional for pair readiness.
+
+### SCENARIO-INFER-SOTA-005-002: One Cached Mandated Model Blocks Pair
+
+**Given** exactly one mandated SOTA GGUF model resolves from local cache
+**When** `cached_sota_pair()` is called
+**Then** it returns `None`.
+
+### SCENARIO-INFER-SOTA-005-003: No Cached Mandated Models Block Pair
+
+**Given** no mandated SOTA GGUF model resolves from local cache
+**When** `cached_sota_pair()` is called
+**Then** it returns `None`.
+
 ## Implementation Status
 
 | Requirement | Python | Tests |
@@ -288,3 +323,4 @@ provenance block.
 | REQ-INFER-016 | Implemented | 10 Python |
 | REQ-INFER-017 | Implemented | 7 Python |
 | REQ-INFER-SOTA-004 | Implemented | 4 Python |
+| REQ-INFER-SOTA-005 | Implemented | 4 Python |

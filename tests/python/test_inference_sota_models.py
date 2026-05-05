@@ -11,6 +11,7 @@ Spec: REQ-INFRA-073
 from __future__ import annotations
 
 import pytest
+import carnot.inference.sota_models as sota_models
 from carnot.inference.sota_models import (
     SOTA_GGUF_MODELS,
     SotaModelSpec,
@@ -18,6 +19,27 @@ from carnot.inference.sota_models import (
     flagship_dense,
     flagship_moe,
 )
+
+
+QWEN_ID = "unsloth/Qwen3.6-35B-A3B-GGUF"
+GEMMA26_ID = "unsloth/gemma-4-26B-A4B-it-GGUF"
+GEMMA31_ID = "unsloth/gemma-4-31B-it-GGUF"
+
+
+def _patch_cached_ids(
+    monkeypatch: pytest.MonkeyPatch, cached_ids: set[str]
+) -> list[tuple[str, str]]:
+    calls: list[tuple[str, str]] = []
+
+    def fake_resolver(hf_id: str, preferred_quant: str = "Q4_K_M") -> str | None:
+        calls.append((hf_id, preferred_quant))
+        if hf_id not in cached_ids:
+            return None
+        filename = hf_id.split("/", 1)[-1].removesuffix("-GGUF")
+        return f"/cache/{filename}-{preferred_quant}.gguf"
+
+    monkeypatch.setattr(sota_models, "resolve_cached_gguf", fake_resolver)
+    return calls
 
 
 # SCENARIO-INFER-SOTA-001: registry contains the three mandated entries.
@@ -80,6 +102,68 @@ def test_default_pair_respects_custom_gpu_indices() -> None:
     pair = default_pair(gpu_indices=(2, 3))
     assert pair[0]["gpu"] == 2
     assert pair[1]["gpu"] == 3
+
+
+# REQ-INFER-SOTA-005 / SCENARIO-INFER-SOTA-005-001:
+# any two cached mandated GGUFs are sufficient for a loadable pair.
+def test_cached_sota_pair_returns_two_cached_mandated_models(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    calls = _patch_cached_ids(monkeypatch, {QWEN_ID, GEMMA26_ID})
+
+    pair = sota_models.cached_sota_pair(gpu_indices=(4, 5), preferred_quant="Q4_K_M")
+
+    assert pair is not None
+    assert [entry["hf_id"] for entry in pair] == [QWEN_ID, GEMMA26_ID]
+    assert [entry["gpu"] for entry in pair] == [4, 5]
+    assert all(entry["model_path"].endswith("Q4_K_M.gguf") for entry in pair)
+    assert calls == [
+        (QWEN_ID, "Q4_K_M"),
+        (GEMMA26_ID, "Q4_K_M"),
+        (GEMMA31_ID, "Q4_K_M"),
+    ]
+
+
+# REQ-INFER-SOTA-005 / SCENARIO-INFER-SOTA-005-002:
+# one cached mandated GGUF is not enough for a headline pair.
+def test_cached_sota_pair_returns_none_for_one_cached_model(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _patch_cached_ids(monkeypatch, {QWEN_ID})
+
+    pair = sota_models.cached_sota_pair()
+
+    assert pair is None
+
+
+# REQ-INFER-SOTA-005 / SCENARIO-INFER-SOTA-005-003:
+# no cached mandated GGUFs blocks the cached pair path.
+def test_cached_sota_pair_returns_none_for_no_cached_models(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _patch_cached_ids(monkeypatch, set())
+
+    pair = sota_models.cached_sota_pair()
+
+    assert pair is None
+
+
+# REQ-INFER-SOTA-005 / SCENARIO-INFER-SOTA-005-001:
+# the missing third mandated GGUF is optional once two loadable specs exist.
+def test_cached_sota_pair_treats_missing_third_model_as_optional(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _patch_cached_ids(monkeypatch, {QWEN_ID, GEMMA31_ID})
+
+    pair = sota_models.cached_sota_pair(gpu_indices=(6, 7), preferred_quant="Q4_K_M")
+    missing_optional_models = sorted(
+        {model["hf_id"] for model in SOTA_GGUF_MODELS} - {entry["hf_id"] for entry in pair or []}
+    )
+
+    assert pair is not None
+    assert [entry["hf_id"] for entry in pair] == [QWEN_ID, GEMMA31_ID]
+    assert [entry["gpu"] for entry in pair] == [6, 7]
+    assert missing_optional_models == [GEMMA26_ID]
 
 
 # SCENARIO-INFER-SOTA-007: TypedDict is importable and usable.
