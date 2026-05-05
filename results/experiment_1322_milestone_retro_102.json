@@ -1,0 +1,229 @@
+{
+  "carry_forward_tasks": [
+    {
+      "prior_failures": [
+        {
+          "addressed_by": "Raise certificate_parse_rate from 0.71223 to at least 0.75, then rerun semantic validators and safe-prefix acceptance from the parsed certificate corpus.",
+          "experiment_id": "exp1312-triggered-certificate-extraction-dccd-gbnf",
+          "retire_if_same_verdict": false,
+          "verdict": "triggered_certificate_dccd_gbnf_comparison_complete"
+        },
+        {
+          "addressed_by": "Run the validator/MUS repair audit after the certificate parse gate opens.",
+          "experiment_id": "exp1313-constrainprompt-nsvif-semantic-validator-mus-repair",
+          "retire_if_same_verdict": false,
+          "verdict": "blocked_gate_check_failed"
+        },
+        {
+          "addressed_by": "Run safe-prefix acceptance only after parseable certificates and executable validators are both available.",
+          "experiment_id": "exp1314-beaver-lite-cactus-safe-prefix-acceptance",
+          "retire_if_same_verdict": false,
+          "verdict": "GATED"
+        }
+      ],
+      "reason": "The SOTA certificate measurement completed, but the parse-rate gate stayed below 0.75 and semantic validator/safe-prefix work did not finish.",
+      "task_id": "certificate_path_headline_readiness"
+    },
+    {
+      "prior_failures": [
+        {
+          "addressed_by": "Rerun after exp1312.certificate_parse_rate >= 0.75 while preserving exp1315.nonforgetting_certificate_rate >= 0.9.",
+          "experiment_id": "exp1316-dvi-certificate-tail-online-update",
+          "retire_if_same_verdict": false,
+          "verdict": "blocked_gate_check_failed"
+        }
+      ],
+      "reason": "Non-forgetting passed, but DVI certificate-tail updates stayed gated by the same certificate parse-rate miss.",
+      "task_id": "dvi_certificate_tail_update"
+    },
+    {
+      "prior_failures": [
+        {
+          "addressed_by": "Add non-replay or fresh validator-backed repair cases before claiming a broad general stop rule.",
+          "experiment_id": "exp1318-hardnetpp-dsp-learned-stop-policy",
+          "retire_if_same_verdict": false,
+          "verdict": "complete: learned policy matched the conservative replay policy on a deterministic held-out seed split, but this is still replay-distribution generalization and not a broad general stop rule"
+        }
+      ],
+      "reason": "The learned stop policy advanced to a held-out replay split but did not prove broad repair-policy generalization.",
+      "task_id": "repair_generalization_breadth"
+    },
+    {
+      "prior_failures": [
+        {
+          "addressed_by": "Keep future publication tasks explicit about operator hold state and avoid credentialed upload attempts without approval.",
+          "experiment_id": "exp1321-publication-hold-related-work-delta-v11",
+          "retire_if_same_verdict": false,
+          "verdict": "operator_hold_active_related_work_delta_written_no_submission"
+        }
+      ],
+      "reason": "Publication state is terminally recorded, but no credentialed submission occurred.",
+      "task_id": "publication_operator_hold"
+    }
+  ],
+  "certificate_path_headline_ready": false,
+  "continuous_self_learning_advanced": true,
+  "criteria_met": 11,
+  "criteria_results": {
+    "beaver_lite_cactus_safe_prefix_acceptance": "GATED",
+    "constrainprompt_nsvif_semantic_validator_mus_repair": "GATED",
+    "continuous_self_learning_cerce_nonforgetting_audit": "MET",
+    "dvi_certificate_tail_online_update": "GATED",
+    "grpo_vprm_v11_headline_gate": "MET",
+    "hardnetpp_dsp_learned_stop_policy": "MET",
+    "kan_hardware_complexity_audit": "MET",
+    "pbit_sampler_portability_packet": "MET",
+    "publication_hold_related_work_delta_v11": "MET",
+    "retro_102_complete": "MET",
+    "sota_constraintbench_satquest_answer_stability": "MET",
+    "sota_gguf_llamacpp_smoke_load": "MET",
+    "sota_gguf_pair_resolver_repair": "MET",
+    "triggered_certificate_extraction_dccd_gbnf": "MET"
+  },
+  "criteria_total": 14,
+  "docs_reconciled": false,
+  "docs_reconciliation_note": "ops/status.md, ops/changelog.md, and _bmad/traceability.md were left untouched because the conductor stop rule delegates ops reconciliation to the following Haiku step.",
+  "experiment": "1322_milestone_retro_102",
+  "gated_missing_blocked_or_failed_tasks": [
+    {
+      "criterion": "constrainprompt_nsvif_semantic_validator_mus_repair",
+      "experiment_id": 1313,
+      "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp1312-triggered-certificate-extraction-dccd-gbnf.certificate_parse_rate (actual=0.71223 >= expected=0.75)",
+      "honest_verdict": "blocked_gate_check_failed",
+      "source_status": "blocked",
+      "status": "GATED"
+    },
+    {
+      "criterion": "beaver_lite_cactus_safe_prefix_acceptance",
+      "experiment_id": 1314,
+      "gate_check_summary": "source artifact missing or planned metric not satisfied",
+      "honest_verdict": "missing",
+      "source_status": "missing",
+      "status": "GATED"
+    },
+    {
+      "criterion": "dvi_certificate_tail_online_update",
+      "experiment_id": 1316,
+      "gate_check_summary": "1 of 2 gate(s) failed; first failure: exp1312-triggered-certificate-extraction-dccd-gbnf.certificate_parse_rate (actual=0.71223 >= expected=0.75)",
+      "honest_verdict": "blocked_gate_check_failed",
+      "source_status": "blocked",
+      "status": "GATED"
+    }
+  ],
+  "hardware_claims_honest": true,
+  "honest_verdict": "milestone_102_11_of_14_criteria_met",
+  "metadata": {
+    "change_proposal": "openspec/change-proposals/research-roadmap-vNEXT.md",
+    "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "run_date": "20260505",
+    "source_roadmap": "research-roadmap.yaml; research-roadmap-next.yaml unavailable at runtime"
+  },
+  "milestone": "2026.04.102",
+  "milestone_summary": {
+    "certificate_parse_rate": 0.71223,
+    "certificate_truthfulness_rate": 0.69697,
+    "nonforgetting_certificate_rate": 1.0,
+    "repair_generalization_scope": "replay_distribution_held_out",
+    "self_learning_delta_overall": 1.596429
+  },
+  "publication_state": "operator_hold",
+  "repair_generalization_advanced": true,
+  "retro_complete": true,
+  "run_date": "20260505",
+  "schema": "milestone_retro_v7",
+  "sota_runtime_recovered": true,
+  "source_artifacts_checked": [
+    {
+      "experiment_id": 1309,
+      "honest_verdict": "resolver_repaired_two_cached_headline_models_ready_full_suite_not_green_unrelated_failures",
+      "loaded": true,
+      "path": "results/experiment_1309_sota_gguf_pair_resolver_repair.json",
+      "status": "complete"
+    },
+    {
+      "experiment_id": 1310,
+      "honest_verdict": "sota_pair_llamacpp_smoke_loaded",
+      "loaded": true,
+      "path": "results/experiment_1310_sota_gguf_llamacpp_smoke_load.json",
+      "status": "complete"
+    },
+    {
+      "experiment_id": 1311,
+      "honest_verdict": "sota_constraint_satquest_stability_audit_complete",
+      "loaded": true,
+      "path": "results/experiment_1311_sota_constraintbench_satquest_answer_stability.json",
+      "status": "complete"
+    },
+    {
+      "experiment_id": 1312,
+      "honest_verdict": "triggered_certificate_dccd_gbnf_comparison_complete",
+      "loaded": true,
+      "path": "results/experiment_1312_triggered_certificate_extraction_dccd_gbnf.json",
+      "status": "complete"
+    },
+    {
+      "experiment_id": 1313,
+      "honest_verdict": "blocked_gate_check_failed",
+      "loaded": true,
+      "path": "results/experiment_1313_constrainprompt_nsvif_semantic_validator_mus_repair.json",
+      "status": "blocked"
+    },
+    {
+      "experiment_id": 1314,
+      "honest_verdict": null,
+      "loaded": false,
+      "path": "results/experiment_1314_beaver_lite_cactus_safe_prefix_acceptance.json",
+      "status": null
+    },
+    {
+      "experiment_id": 1315,
+      "honest_verdict": "cerce_nonforgetting_preserved_improved_non_headline",
+      "loaded": true,
+      "path": "results/experiment_1315_continuous_self_learning_cerce_nonforgetting_audit.json",
+      "status": "complete"
+    },
+    {
+      "experiment_id": 1316,
+      "honest_verdict": "blocked_gate_check_failed",
+      "loaded": true,
+      "path": "results/experiment_1316_dvi_certificate_tail_online_update.json",
+      "status": "blocked"
+    },
+    {
+      "experiment_id": 1317,
+      "honest_verdict": "grpo_vprm_v11_positive_headline_gate",
+      "loaded": true,
+      "path": "results/experiment_1317_grpo_vprm_v11_headline_gate.json",
+      "status": "complete"
+    },
+    {
+      "experiment_id": 1318,
+      "honest_verdict": "complete: learned policy matched the conservative replay policy on a deterministic held-out seed split, but this is still replay-distribution generalization and not a broad general stop rule",
+      "loaded": true,
+      "path": "results/experiment_1318_hardnetpp_dsp_learned_stop_policy.json",
+      "status": "complete"
+    },
+    {
+      "experiment_id": 1319,
+      "honest_verdict": "hardware_portability_audit_only_no_fpga_npu_or_analog_execution",
+      "loaded": true,
+      "path": "results/experiment_1319_kan_hardware_complexity_audit.json",
+      "status": "complete"
+    },
+    {
+      "experiment_id": 1320,
+      "honest_verdict": "cpu_portability_packet_ready_hardware_not_run",
+      "loaded": true,
+      "path": "results/experiment_1320_pbit_sampler_portability_packet.json",
+      "status": "complete"
+    },
+    {
+      "experiment_id": 1321,
+      "honest_verdict": "operator_hold_active_related_work_delta_written_no_submission",
+      "loaded": true,
+      "path": "results/experiment_1321_publication_hold_related_work_delta_v11.json",
+      "status": "complete"
+    }
+  ],
+  "status": "complete"
+}
