@@ -5036,3 +5036,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-06: DPO Headline Provenance Audit — Direct GGUF Adapter or Reranker-Only Track (✅ Complete) — honest_verdict=dpo_headline_not_ready_reranker_only_until_adapter_or_conversion_tooling; results/experiment_1435_dpo_headline_provenance_audit.json
 - 2026-05-06: Anchored Dual-Path Latent Repair v1 — Fix Energy-Down Accuracy-Down Drift (✅ Complete) — honest_verdict=anchored_dual_path_repair_viable; results/experiment_1436_anchored_dual_path_latent_repair_v1.json
 - 2026-05-06: Discrete SB KV260 RTL Lint/Simulation — Honest Hardware Evidence (⚠️ Blocked) — honest_verdict=blocked_missing_discrete_sb_rtl_source; results/experiment_1437_discrete_sb_kv260_rtl_lint_sim.json
+- 2026-05-06: Discrete SB KV260 RTL Lint/Simulation — Honest Hardware Evidence (⚠️ Blocked) — honest_verdict=blocked_missing_discrete_sb_rtl_source; results/experiment_1437_discrete_sb_kv260_rtl_lint_sim.json
