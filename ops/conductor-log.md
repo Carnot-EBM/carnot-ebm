@@ -1019,3 +1019,4 @@ web search: GitHub trending energy based mod |
 | 2026-05-06 15:36 UTC | Full Pipeline v4 Micro Validation — Gated on Nonze | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1430-prm-guided-repair-selector) |
 | 2026-05-06 16:05 UTC | PRM-Guided Repair Selector — Gated on Exp1429 Cand | OK | Deliverable already exists in repo |
 | 2026-05-06 16:05 UTC | Full Pipeline v4 Micro Validation — Gated on Nonze | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1430-prm-guided-repair-selector) |
+| 2026-05-06 17:06 UTC | DVI v3 Nonforgetting Repair — Replay-Balanced 1508 | OK | 92 passed, 1 warning in 4.86s |
