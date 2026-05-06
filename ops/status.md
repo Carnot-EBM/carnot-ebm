@@ -1,16 +1,18 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-06 (GitHub issue #3 structured verdict records in progress)
+**Last Updated:** 2026-05-06 (GitHub issue #3 structured verdict records implemented)
 
-## Session 2026-05-06 - GitHub Issue #3 Structured Verdict Records In Progress
+## Session 2026-05-06 - GitHub Issue #3 Structured Verdict Records Implemented
 
-**Issue #3 IN PROGRESS.**
+**Issue #3 IMPLEMENTED.**
 
 - Added spec requirements `REQ-VERIFY-1408` through `REQ-VERIFY-1410` and `SCENARIO-VERIFY-1408` for structured verdict records, deterministic fallback calibration, and legacy compatibility.
 - Added `python/carnot/pipeline/verdict_record.py` with `VerdictRecord` and `calibrated_confidence_from_energy`.
 - Added non-breaking structured APIs: `VerifyRepairPipeline.verify_record()`, `ThreeTierPipeline.verify_record()`, and `verify_legacy()` aliases for both classes.
 - Added public docs at `docs/verdict-records.md`.
-- Added terminal-artifact skeleton `results/experiment_1408_structured_verdict_record.json`; verification is currently in progress.
+- Added terminal artifact `results/experiment_1408_structured_verdict_record.json` with `honest_verdict="structured_verdict_record_complete"`.
+- Verification: `.venv/bin/pytest tests/python/test_verdict_record.py tests/python/test_pipeline_verify_repair.py tests/python/test_three_tier_pipeline.py -q --no-cov -p no:cacheprovider` passed 134 tests; `ruff check`, `ruff format --check`, `mypy`, targeted spec coverage, `jq`, and `git diff --check` passed.
+- E2E checks from `ops/e2e-test-plan.md` are not applicable: this change does not alter model training/sampling, PyO3 binding, cross-language model serialization, or packaged code-repair E2E paths. The relevant API behavior is covered by structured verdict and legacy-compatibility regression tests.
 
 ## Session 2026-05-06 - GitHub Issue #5 SessionMemory Portable Packs Implemented
 
