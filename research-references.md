@@ -4,6 +4,111 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-05-06 Post-.108 Planning Sweep (Milestone 2026.04.109)
+
+This sweep was run after milestone `.108` completed with 12 of 13 criteria met.
+Key breakthroughs: `exp1395` FR-11 v5 achieved `fresh_verified_sample_count=1508`
+(+1449 delta, headline allowed); `exp1394` DVI v2 + SECL deployed with
+`dvi_v2_auroc_delta=0.011`, `secl_ece_reduction_pct=45.35`; `exp1396+1397`
+fixed semantic validation from 0.59 → 1.0 (100% perfect) but
+`full_pipeline_pass_rate=0.305` (bottleneck is repair EXECUTION, not localization —
+MCS produces `REPAIR_HINT` but does not invoke LLM to execute the repair);
+`exp1401` EBM-CoT v2 hinge-only confirmed `calibration_auroc_delta=+0.186` but
+`variance_worsened=True`; GRPO permanently retired (exp1393, all-UNKNOWN verdict,
+`retire_if_same_verdict=true` triggered). Primary `.109` focus:
+(1) implement certificate LLM repair executor (GPU); (2) DVI v3 on 1508 cases;
+(3) EBM-CoT temperature calibration; (4) DPO on 1508 verified pairs as GRPO alternative.
+
+### Temperature Scaling for Semantic Uncertainty Quantification
+- **Paper:** arXiv 2604.07172, "Temperature Scaling Improves Semantic Uncertainty
+  Quantification." April 2026.
+- **Source:** https://arxiv.org/abs/2604.07172
+- **What:** Demonstrates that optimizing temperature parameter T* for calibration
+  reduces output variance while preserving discriminative power (AUROC). Temperature
+  scaling after contrastive/discriminative training is shown to improve calibration
+  on semantic similarity tasks without sacrificing ranking precision.
+- **Relevance to Carnot:** Exp1401 confirmed `calibration_auroc_delta=+0.186` with
+  hinge-only EBM-CoT training but `variance_worsened=True` (paraphrase energy
+  variance increased). Temperature scaling applied after hinge training could reduce
+  the variance while preserving the +0.186 AUROC gain. EBM-CoT v3 should apply T*
+  optimization as a post-hoc calibration step.
+- **Concrete experiment:** exp1407 EBM-CoT v3 — apply temperature scaling T* after
+  hinge-only training. Report `paraphrase_energy_variance_before_temp_scaling`,
+  `paraphrase_energy_variance_after_temp_scaling`, `calibration_auroc_delta_preserved`.
+
+### Process Reward Models in Mathematical Reasoning (PRM Survey)
+- **Paper:** arXiv 2501.07301, "The Lessons of Developing Process Reward Models in
+  Mathematical Reasoning." January 2026.
+- **Source:** https://arxiv.org/abs/2501.07301
+- **What:** Comprehensive study of step-level process reward modeling. Key findings:
+  error-aware labeling (marking incorrect steps rather than just correct/incorrect
+  final answers) dramatically improves PRM quality. Hierarchical error detection
+  identifies the first incorrect reasoning step with high accuracy. 1,000-5,000
+  labeled reasoning traces is sufficient for strong step-level discrimination.
+- **Relevance to Carnot:** Carnot now has 1508 verified (correct, labeled) reasoning
+  traces from exp1395 FR-11 v5. This is directly in the sweet spot for training a
+  step-level discriminative PRM. The error-aware labeling maps to Carnot's certificate
+  verification: incorrect steps are identified by the NSVIF Z3 validator + MCS
+  localizer. Training a lightweight PRM on these 1508 traces gives Carnot step-level
+  verdict precision without full certificate parsing.
+- **Concrete experiment:** exp1413 Process Reward Model v1 on FoVer 1508 pairs.
+  Use 1508 verified pairs as step-level process labels (correct step = PASS,
+  localized error step = FAIL). Train lightweight discriminative PRM. Report
+  `prmv1_step_precision`, `prmv1_step_recall`, `prmv1_auroc`.
+
+### Process Reward Models That Think (Generative PRM)
+- **Paper:** arXiv 2504.16828, "Process Reward Models That Think." April 2026.
+- **Source:** https://arxiv.org/abs/2504.16828
+- **What:** Generative PRM approach where the model generates a critique of the
+  reasoning step before assigning a reward, rather than discriminating directly.
+  Requires only 1% of process labels relative to discriminative baselines while
+  achieving comparable step-level accuracy. The "think first, then score" pattern
+  closely mirrors Carnot's certificate extraction step (explicit reasoning about
+  correctness before verdict).
+- **Relevance to Carnot:** Carnot's certificate extraction is essentially a
+  generative PRM: the model generates a reasoning trace (certificate), which is
+  then scored by the NSVIF validator. "Process Reward Models That Think" validates
+  that this generative approach is competitive with discriminative PRM at fraction
+  of the labeled data. This is empirical support for Carnot's certificate-based
+  approach over discriminative step scoring.
+- **No separate experiment needed:** Validates existing architecture. Note in paper
+  as prior art support for the certificate-extraction pipeline.
+
+### GRPO is Secretly DPO: Equivalence Analysis
+- **Paper:** arXiv 2510.00977, "It Takes Two: Your GRPO Is Secretly DPO." 2025.
+- **Source:** https://arxiv.org/abs/2510.00977
+- **What:** Shows GRPO with a specific group size and advantage normalization
+  induces the same contrastive loss as DPO with paired preferences. Key insight:
+  every GRPO gradient update is equivalent to a DPO update on an implicit pair
+  constructed from the group. This means DPO is a direct and simpler substitute
+  for GRPO when paired preference data is available.
+- **Relevance to Carnot:** GRPO is permanently retired (exp1393, `retire_if_same_verdict=true`
+  triggered). The 1508 verified samples from exp1395 provide explicit preference
+  pairs: preferred=verified-correct reasoning, rejected=unverified-similar reasoning.
+  DPO on these 1508 pairs is the direct GRPO alternative. arXiv:2510.00977 provides
+  theoretical grounding that DPO and GRPO converge to the same optimum when paired
+  data is available.
+- **Concrete experiment:** exp1410 DPO training on 1508 verified pairs. Report
+  `dpo_improvement_pp`, `dpo_vs_baseline_auroc`, `dpo_headline_allowed`.
+
+### Minimalist RL Reasoning: Rejection Sampling vs GRPO vs RLOO
+- **Paper:** arXiv 2504.11343, "A Minimalist Approach to LLM Reasoning: from
+  Rejection Sampling to Reinforce." April 2026.
+- **Source:** https://arxiv.org/abs/2504.11343
+- **What:** Systematic comparison of GRPO, RLOO, rejection sampling fine-tuning,
+  and DPO on reasoning tasks. Key finding: rejection sampling fine-tuning (RAFT)
+  on a high-quality verified subset often matches or exceeds GRPO, at lower
+  compute cost. DPO on verified pairs is competitive when the positive set is
+  well-labeled. The "sparse reward" failure mode of GRPO (all-UNKNOWN case) maps
+  to the paper's "zero-positive-sample collapse" scenario — RAFT sidesteps this by
+  training only on confirmed positives.
+- **Relevance to Carnot:** With 1508 verified correct cases, RAFT (rejection
+  sampling fine-tuning) is directly applicable: fine-tune the model on only the
+  1508 verified cases. This is complementary to DPO (exp1410) and simpler to
+  implement. If DPO shows improvement, RAFT could be added in a follow-on experiment.
+- **Filed for exp1410 and future milestones:** consider RAFT as an alternative to
+  DPO if DPO training doesn't converge or shows instability.
+
 ## 2026-05-05 Post-.107 Planning Sweep (Milestone 2026.04.108)
 
 This sweep was run after milestone `.107` completed with 13 of 14 criteria met.

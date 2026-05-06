@@ -3,6 +3,7 @@
 ## 2026-05-06 (Milestone 2026.04.108 Operational Retrospective)
 
 - 2026-05-06 02:48 UTC: Milestone 2026.04.108 operational retrospective complete. Wrote `results/operational_retro_2026_04_108.json` for the supplied 16 min / 5 completed closeout slice. ArXiv Bundle v10 (gated on Exp 1269) consumed 62.5% of wall time for the EIGHTH consecutive milestone; three SOTA GGUF doomed-rerun blocks consumed the remaining 37.5%; both RTX 3090s idle at 4 MB / 0% utilization (50C/54C) throughout. Meta-finding: the retro is no longer functioning as a discovery mechanism — it is confirming the same known-and-unresolved conductor design defect for the eighth consecutive time. The highest-leverage action (activation-time gate/doomed-rerun preflight emitting terminal artifacts in <1 s rather than burning 12 min re-discovering known-blocked states) has been recommended in every retro from .99 through .108 without shipping. Added completed-milestone row to `docs/roadmap.md`.
+- 2026-05-06 03:26 UTC: Refined `results/operational_retro_2026_04_108.json` to terminal `status=success` with the live `gpu_monitor.py` snapshot (both RTX 3090s at 4 MB / 0% utilization, no processes, 49C/53C). Estimated 75% closeout savings if activation-time gate/doomed-rerun preflight emits immediate terminal artifacts.
 
 ## 2026-05-06 (GitHub Issue #3 Structured Verdict Records)
 
