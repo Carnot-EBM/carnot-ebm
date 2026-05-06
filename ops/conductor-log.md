@@ -1004,3 +1004,4 @@ web search: GitHub trending energy based mod |
 | 2026-05-06 09:00 UTC | Test Suite Execution Debt v1 — Fix Runtime Failure | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1421_test_su |
 | 2026-05-06 09:55 UTC | Test Suite Execution Debt v1 — Fix Runtime Failure | OK | 134 passed, 1 warning in 5.62s |
 | 2026-05-06 10:06 UTC | Discrete SB KV260 RTL Specification — From CPU Est | OK | 81 passed, 1 warning in 5.11s |
+| 2026-05-06 10:21 UTC | Process Reward Model v1 — Step-Level PRM on 1508 F | OK | 81 passed, 1 warning in 5.15s |
