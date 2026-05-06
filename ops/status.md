@@ -1,6 +1,50 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-06 (Milestone 2026.04.110 research planning complete)
+**Last Updated:** 2026-05-06 (outer-loop session — 6 conductor structural fixes + systemd migration + .111-.116 series queued)
+
+## Session 2026-05-03 → 2026-05-06 — Outer-Loop Interventions Summary
+
+The longest outer-loop session of the project to date. The autonomous research conductor was run without operator interruption from milestone .94 through .110+, surfacing four classes of structural failures that had been masked by milestone-level retries. The session output is six structural conductor fixes, a defense-in-depth pattern for git operations, systemd cgroup wrapping for orphan-process prevention, and four Deep Think / Deep Research integrations (Q11 TSS, Q12 Hypothesis B, DR-3 substrate consensus, plus Abstract-CoT / Meta-Harness / Autodata comparator integrations).
+
+**Six conductor structural fixes shipped** (commits 075ed3f9, c07ade0e, c2d1367a, 95adf3c3, 6d9363ae, ops/systemd/* + d969acf8):
+
+1. **Codex 1200s timeout → 7200s** (commit 075ed3f9). Necessary but not sufficient for the universal `artifact_not_updated_past_bootstrap` failure mode that wedged `.96 / `.97.
+2. **Deliverable-watch bootstrap-only check** (commit c07ade0e). The load-bearing fix. Conductor was killing agents at 120s of "stable file" idle even when the file was still STEP-0 skeleton; agents that did real work (>120s) without re-touching the deliverable until the very end were universally killed before finalization. Fixed by parsing `status` field before allowing early-kill.
+3. **STALL_TIMEOUT 180s → 600s for codex** (commit c2d1367a). Codex/gpt-5.5 thinks longer between output bursts than older codex models, especially during 50-turn YAML planning. The 180s cap killed `.100 planner 11 successive times.
+4. **Terminal-prefix verdict recognition** (commit 95adf3c3). Agents prefixing verdicts with `complete:` / `success:` / `passed:` / `shipped:` no longer mis-classified as bootstrap-only just because descriptive text contains nuance words like "marginal."
+5. **`_retired` suffix as terminal honest-finding** (commit 6d9363ae). Per CLAUDE.md "Failed-Experiment Rerun Discipline," self-retiring experiments are a deliberate scientific outcome, not a partial run.
+6. **Systemd cgroup wrapping + orphan janitor** (commits ops/systemd/* shipped 2026-05-05). Conductor now runs as `carnot-conductor.service` with `KillMode=control-group` + `SendSIGKILL=yes`. Pytest worker accumulation that pushed load to 90 on 2026-05-05 10:12 UTC is structurally prevented going forward. Layer 2 systemd timer `carnot-orphan-cleanup.timer` runs every 30 min as cheap janitor.
+
+**Empirical proof of fixes:** post-fix milestones .98-.110 averaged 5-12 OK landings each; pre-fix .96-.97 averaged 0-1.
+
+**Defense-in-depth patterns shipped this session:**
+
+- **Codex-default for experiments (CLAUDE.md MANDATORY).** `CODEX_FORCE_EXPERIMENTS=1` env coerces per-task `agent_type: claude` → `agent_type: codex` unless the task carries an explicit `requires_claude: true` flag. Layer 1 (CLAUDE.md rule for planner) + Layer 2 (conductor coercion) + Layer 3 (env persistent in `~/.carnot/conductor_state.sh`). Quota burn from autonomous loop driven to zero.
+- **Never-stash always-commit-first (CLAUDE.md MANDATORY).** Layer 1 (CLAUDE.md rule) + Layer 2 (`scripts/safe-pull.sh`) + Layer 3 (memory entry). Prevents the 1-2s git-stash window from corrupting in-flight conductor subprocess writes.
+- **Positive criterion for `requires_claude: true` (CLAUDE.md MANDATORY).** After the .96 planner over-applied the flag to 5 of 13 tasks where only 1 was justified, codified a 3-criterion test + calibration table.
+
+**Strategic discoveries integrated:**
+
+- **Q11 Transversal Spectral Synthesis.** General joint-null-space-bounded synthesis is Σ_2^P-complete (harder than Spera 2026's coNP-complete detection); Carnot's `sign(z)` bottleneck makes it polynomial via TSS. Optimal k=2 transversal pair: SC-Energy (V_mag) + Z3 (V_disc). NEW threat vector: STE/Gumbel-Softmax pipeline rewriting (defense via sandbox + hash-linked forensic chain).
+- **Q12 Hypothesis B (Dark Room Problem).** PCD without epistemic regularization mode-collapses substrate onto null-space. Q11's geometric bound is destroyed by training dynamics. Phase-4 (active inference) and Phase-5 (in-situ training) are the same problem. Q12.4(a) entropy regularizer formal correctness condition: λ > sup [E_θ_0(C_t) - E_θ_0(N_t)].
+- **DR-3 substrate consensus.** Carnot's bounded-continuous → sign(z) → Ising substrate is the 2025-2026 frontier consensus (LittleBit, FSQ, Extropic DTM, DQOF). LittleBit Dual-SVID (NeurIPS 2025) is the load-bearing missing technique for sign(z) gradient preservation. Carnot's defensible novelty narrows to: "transpilation pipeline as load-bearing path between continuous reasoning and discrete neuro-symbolic verifier ensembles."
+- **Comparator integrations:** Abstract-CoT (Ramji 2026 IBM) — closest discrete-latent-reasoning peer at 11.6× compression. Meta-Harness (Lee 2026 Stanford/DSPy) — outer-loop harness search; +7.7 / 4× context tokens on text classification. Autodata (Kulikov/Weston Meta AI) — Boltzmann-sampling agent harness evolution.
+
+**Paper-v6 reviewer-readiness fixes:**
+
+- New `\section*{Code, Data, and Experiment Reproducibility}` section with GitHub URL (`github.com/Carnot-EBM/carnot-ebm`), HuggingFace URL (`huggingface.co/Carnot-EBM`), and explicit experiment-ID resolution protocol (commit c65e5bcd).
+- New `\subsection{What k=6 means}` section explaining the production verifier ensemble + provenance (k=3 → k=5 → k=6 history) + k_nominal vs k_eff distinction (commit e1c69dc6).
+- New "Notation and Conventions" glossary at intro top defining `.NN` milestone numbers, v2/v3 paper versions, k, α_t, D_eff/D_int, cascade tiers, Phase 1/2/3/4 (commit 1a89a6a8).
+- Canonical GitHub URL sweep across 164 files (commit b5740abb): `github.com/ianblenke/carnot` → `github.com/Carnot-EBM/carnot-ebm`.
+
+**Queued for .111-.116:**
+
+- **.111-.115 LARQL Decoupled-Attention Substrate Prototype.** 6 experiments validating LARQL FFN-offload + RotorQuant KV compression on dual-RTX-3090 + Strix APU. Sovereignty deployment story for paper-v7. Per `ops/known-issues.md`.
+- **.112-.116 trace2skill + Skillify Testing Rigor.** 5 experiments extending Carnot's existing trace2skill with daily-eval cadence, check-resolvable audit, DRY audit on k=6, resolver routing eval, latent-vs-deterministic discipline gate.
+
+**What's next:** `.111` planner will fire when current `.110` work completes. With codex-only enforcement + systemd cgroup wrapping + STALL_TIMEOUT 600s + the verdict-prefix and _retired terminal recognitions, the conductor should now reliably drive milestones to terminal verdicts without operator intervention through the structural-failure modes catalogued in this session.
+
+---
 
 ## Session 2026-05-06 - Milestone 2026.04.110 Research Planning Complete
 
