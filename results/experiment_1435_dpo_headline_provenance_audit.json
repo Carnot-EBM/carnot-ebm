@@ -1,0 +1,114 @@
+{
+  "artifact_metadata": {
+    "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "run_date": "20260506"
+  },
+  "direct_gguf_finetune_supported": false,
+  "evidence_paths_checked": [
+    "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1420_dpo_verified_pairs_1508.json",
+    "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/dpo_verified_pairs_probe.py",
+    "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/sota_models.py",
+    "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/training/grpo_v5.py",
+    "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/training/grpo_v5_2.py",
+    "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/training/grpo_vps_training.py",
+    "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/training/sdpo_dense_reward.py",
+    "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_template.py",
+    "/home/ianblenke/github.com/ianblenke/carnot/pyproject.toml",
+    "/home/ianblenke/github.com/ianblenke/carnot/CLAUDE.md",
+    "/home/ianblenke/github.com/ianblenke/carnot/research-references.md",
+    "/home/ianblenke/github.com/ianblenke/carnot/ops/status.md"
+  ],
+  "exp1420_blocker_summary": {
+    "direct_dpo_supported": false,
+    "feasibility_note": "Direct DPO fine-tuning was not performed because local GGUF files are llama.cpp inference artifacts, not trainable TRL/PEFT model directories.",
+    "full_finetune_performed": false,
+    "gguf_model_checks": [
+      {
+        "baseline_scoring_mode": "feature_baseline_preference_scores",
+        "baseline_scoring_performed": true,
+        "cached": true,
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "llama_cpp_inference_blocker": "full_model_load_disabled_for_probe",
+        "llama_cpp_inference_performed": false,
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "preferred_quant": "Q4_K_M",
+        "role": "primary_policy_baseline"
+      },
+      {
+        "baseline_scoring_mode": "feature_baseline_preference_scores",
+        "baseline_scoring_performed": true,
+        "cached": true,
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "llama_cpp_inference_blocker": "full_model_load_disabled_for_probe",
+        "llama_cpp_inference_performed": false,
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/43e80d41a220ac7c83023daacd6a0d1fd8559251/gemma-4-31B-it-Q4_K_M.gguf",
+        "preferred_quant": "Q4_K_M",
+        "role": "dense_baseline"
+      },
+      {
+        "baseline_scoring_mode": "feature_baseline_preference_scores",
+        "baseline_scoring_performed": true,
+        "cached": false,
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "llama_cpp_inference_blocker": "model_not_cached",
+        "llama_cpp_inference_performed": false,
+        "model_path": null,
+        "preferred_quant": "Q4_K_M",
+        "role": "moe_baseline"
+      }
+    ],
+    "headline_result_allowed": false,
+    "honest_verdict": "gguf_dpo_unsupported_reranker_fallback_measured",
+    "packages_checked": {
+      "trl": false
+    },
+    "reranker_fallback_used": true,
+    "unsupported_reason": "trl_not_available_for_dpo"
+  },
+  "finished_at": "2026-05-06T17:55:42Z",
+  "headline_provenance_ready": false,
+  "honest_verdict": "dpo_headline_not_ready_reranker_only_until_adapter_or_conversion_tooling",
+  "legacy_small_model_headline_disallowed": true,
+  "local_adapter_path_supported": false,
+  "local_support_scan": {
+    "blockers": [
+      "gguf_inference_only_blocker",
+      "direct_gguf_weight_update_not_supported",
+      "missing_declared_trl_peft_dependencies",
+      "missing_dpo_trainer_implementation",
+      "missing_adapter_merge_or_gguf_conversion_step"
+    ],
+    "direct_gguf_finetune_supported": false,
+    "local_adapter_path_supported": false,
+    "signals_found": [
+      "reranker_fallback",
+      "mandated_sota_gguf_ids",
+      "gguf_cache_resolution",
+      "peft_lora_adapter",
+      "hf_trainable_model_loader"
+    ]
+  },
+  "model_specs": [
+    {
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "role": "primary_training_target_if_supported"
+    },
+    {
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "role": "dense_training_target_if_supported"
+    },
+    {
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "role": "moe_training_target_if_supported"
+    }
+  ],
+  "recommended_next_training_path": "Keep Exp 1420 as a reranker-only benchmark. Add a supported HF-format base-model plus TRL/PEFT LoRA DPO path, and add adapter merge/export or GGUF conversion tooling, before making any headline DPO training claim.",
+  "reranker_track_relabelled": true,
+  "run_date": "20260506",
+  "schema": "dpo_headline_provenance_audit_v1",
+  "spec": [
+    "REQ-LEARN-1435",
+    "SCENARIO-LEARN-1435"
+  ],
+  "status": "complete"
+}
