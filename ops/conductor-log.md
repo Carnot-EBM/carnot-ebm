@@ -1040,3 +1040,5 @@ web search: GitHub trending energy based mod |
 | 2026-05-06 22:56 UTC | Live-SOTA DCCD + SEM-CTRL Repair v3 — Nonzero Acce | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1442-live-sota-repair-runtime-preflight) |
 | 2026-05-06 22:56 UTC | ARM-as-EBM + Carnot Energy Repair Reranker — Gated | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1443-live-sota-dccd-semctrl-repair-v3.l |
 | 2026-05-06 22:58 UTC | Live-SOTA DCCD + SEM-CTRL Repair v3 — Nonzero Acce | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1442-live-sota-repair-runtime-preflight) |
+| 2026-05-06 22:58 UTC | ARM-as-EBM + Carnot Energy Repair Reranker — Gated | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1443-live-sota-dccd-semctrl-repair-v3.l |
+| 2026-05-06 23:00 UTC | Live-SOTA DCCD + SEM-CTRL Repair v3 — Nonzero Acce | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1442-live-sota-repair-runtime-preflight) |
