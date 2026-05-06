@@ -9942,3 +9942,53 @@ Paper-v6 citation candidate.
 - Carnot repair-executor lineage: exp1414, exp1427, exp1428, exp1430
 - CLAUDE.md SOTA mandate (Qwen 3.6-35B-A3B + Gemma 4)
 - CLAUDE.md decentralization rule 4 (multi-surface integration: MCP)
+
+---
+
+## SCIP (Source Code Intelligence Protocol)
+
+**URL:** https://scip-code.org/
+**GitHub:** https://github.com/scip-code/scip
+**License:** Apache-2.0
+**Pronunciation:** "skip"
+
+**What it is.** Standardized protobuf-based index format for source code, enabling
+"go to definition" / "find references" across language ecosystems via a single
+schema (scip.proto). Used by Sourcegraph, Mozilla Searchfox, rust-analyzer,
+Meta Glean. Indexers exist for C#, C++, Dart, Go, Java, Kotlin, PHP, Python,
+Ruby, Rust, TypeScript, JavaScript.
+
+**Carnot relevance — inspiration tier:**
+
+1. **AST verifier extension.** Carnot's k=6 ensemble includes V2 (AST Structural
+   Verifier) currently Python-only. SCIP provides a language-agnostic substrate
+   that extends AST-class verification to 12+ languages without re-implementing
+   per-language parsers. Specifically: emit candidate code → SCIP indexer
+   produces symbol graph → verifier operates on graph (structurally distinct
+   from text-level checks).
+
+2. **Repair-loop context enrichment.** SCIP symbol graph could provide stronger
+   error-context for the repair-loop validation-error-as-context fix queued in
+   ops/known-issues.md (2026-05-06 20:00Z). "The failed assertion references
+   symbol `foo` at file:line; here are its callers and definitions" is richer
+   context than line-only.
+
+3. **Phase-3 substrate intermediate-representation candidate.** SCIP's protobuf
+   schema is the kind of standardized IR Carnot's Phase-3 substrate could
+   target — verifiers operate on deterministic symbol graph rather than raw
+   text. Aligns with Q11 TSS + Skillify deterministic-substrate philosophy.
+
+4. **Decentralization fit (CLAUDE.md rules).** Apache-2.0 / multi-language /
+   open-source / multiple integration surfaces. No closed-vendor dependency.
+   Sovereignty-aligned.
+
+**Carnot integration tier:** inspiration only. Becomes interesting AFTER the
+repair-executor lineage decision (.111 scope reduction) and IF Carnot extends
+code verification beyond Python. NOT a paper-v6 citation candidate (tooling
+standard, not primary research).
+
+**Cross-references:**
+- Carnot AST verifier (V2 in k=6 ensemble): `docs/arxiv-paper/main.tex` k=6 section
+- Repair-loop validation-error-as-context (just queued): `ops/known-issues.md`
+- 2026 SOTA structured outputs survey: `research-references.md` above
+- Q11 TSS deterministic-substrate philosophy: `memory/project_q11_tss_and_ste_attack.md`
