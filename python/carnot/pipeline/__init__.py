@@ -599,7 +599,12 @@ from carnot.pipeline.verge_refiner import (
     build_step_repair_prompt,
     extract_failed_assertion,
 )
-from carnot.pipeline.verdict_record import VerdictRecord, calibrated_confidence_from_energy
+from carnot.pipeline.verdict_record import (
+    VerdictCalibration,
+    VerdictRecord,
+    calibrated_confidence_from_energy,
+    fit_verdict_calibration,
+)
 from carnot.pipeline.verify_repair import (
     RepairResult,
     VerificationResult,
@@ -702,6 +707,7 @@ __all__ = [
     "VerificationError",
     "VerificationResult",
     "VerificationTraceStep",
+    "VerdictCalibration",
     "VerdictRecord",
     "VerifyRepairPipeline",
     "SelfLearningPolicy",
@@ -773,6 +779,7 @@ __all__ = [
     "SAVeRVerifier",
     "compute_learning_improvement",
     "calibrated_confidence_from_energy",
+    "fit_verdict_calibration",
     "compute_sink_concentration",
     "compute_conjugate_bound",
     "compute_input_uncertainty",

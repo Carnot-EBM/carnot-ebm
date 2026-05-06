@@ -13,6 +13,7 @@ from carnot.pipeline.three_tier_pipeline import ThreeTierPipeline
 from carnot.pipeline.verdict_record import (
     VerdictRecord,
     calibrated_confidence_from_energy,
+    fit_verdict_calibration,
 )
 from carnot.pipeline.verify_repair import VerifyRepairPipeline
 
@@ -82,6 +83,30 @@ def test_calibrated_confidence_is_monotonic_in_negative_energy() -> None:
     assert calibrated_confidence_from_energy(float("inf")) == 0.0
     with pytest.raises(ValueError, match="temperature"):
         calibrated_confidence_from_energy(1.0, temperature=0.0)
+
+
+def test_fit_verdict_calibration_uses_heldout_pairs() -> None:
+    """REQ-VERIFY-1409: Held-out calibration fits pass-confidence parameters."""
+
+    calibration = fit_verdict_calibration(
+        [
+            (0.0, True),
+            (0.2, True),
+            (0.4, True),
+            (2.0, False),
+            (3.0, False),
+            (4.0, False),
+        ]
+    )
+
+    assert calibration.n_heldout == 6
+    assert calibration.temperature > 0.0
+    assert 0.0 <= calibration.brier_score <= 1.0
+    assert calibration.confidence(0.1) > calibration.confidence(3.0)
+    assert calibration.to_dict()["n_heldout"] == 6
+
+    with pytest.raises(ValueError, match="heldout_pairs"):
+        fit_verdict_calibration([])
 
 
 def test_verify_repair_pipeline_verify_record_preserves_pass_fail() -> None:

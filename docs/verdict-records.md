@@ -34,6 +34,28 @@ energy yields higher pass confidence. It is a deterministic fallback surface;
 production deployments may replace the threshold and temperature with held-out
 Platt or isotonic calibration parameters.
 
+For a small held-out calibration set, use `fit_verdict_calibration()`:
+
+```python
+from carnot.pipeline import fit_verdict_calibration
+
+calibration = fit_verdict_calibration(
+    [
+        (0.0, True),
+        (0.2, True),
+        (2.0, False),
+        (3.0, False),
+    ]
+)
+confidence = calibration.confidence(0.1)
+```
+
+The helper performs a deterministic grid search over observed energy thresholds
+and candidate temperatures, minimizing Brier score on `(energy, passed)` pairs.
+It is intentionally lightweight and auditable; deployments with larger held-out
+sets can replace it with isotonic or Platt parameters while preserving the
+`VerdictRecord` field contract.
+
 Compatibility APIs:
 
 ```python
