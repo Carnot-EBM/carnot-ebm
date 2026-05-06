@@ -1578,6 +1578,91 @@ Each maps to a deterministic (var1, var2, J_value) coupling spec.
 
 ---
 
+## REQ-LEARN-060: SessionMemory Portable Pack Schema
+
+**Given** a saved SessionMemory state containing CaseMemory, ConstraintTemplateLibrary,
+         and PerModelFPTracker data
+**When** the state is exported as a portable memory pack
+**Then** the pack MUST validate against `carnot.session_memory_pack.v1`
+**And**  it MUST include pack metadata, schema_version, source, license, carnot_version,
+         model_id, case_memory entries, constraint template observations,
+         false-positive tracker statistics, and session_state summaries
+**And**  schema-breaking changes MUST require a major schema_version increment.
+
+### REQ-LEARN-060 Sub-requirements
+
+- REQ-LEARN-060-1: `python/carnot/schemas/session_memory_v1.json` SHALL describe the
+  portable pack using JSON Schema draft-2020-12.
+- REQ-LEARN-060-2: `export_session_memory()` SHALL produce deterministic JSON-compatible
+  payloads with schema `carnot.session_memory_pack.v1`.
+- REQ-LEARN-060-3: `validate_session_memory_pack()` SHALL reject payloads missing required
+  pack metadata or per-model learning-state sections.
+
+---
+
+## REQ-LEARN-061: SessionMemory Portable Import and Merge
+
+**Given** an existing local SessionMemory state and an imported portable pack for the same model
+**When** `import_session_memory(..., merge=True)` is called
+**Then** existing case entries MUST NOT be clobbered
+**And** duplicate case entries MUST be merged by adding support counts and recomputing
+        confidence as a support-weighted average
+**And** template observation counts and FP tracker counts MUST be merged additively
+**And** `replace=True` MUST perform a full reset using the imported pack contents.
+
+### REQ-LEARN-061 Sub-requirements
+
+- REQ-LEARN-061-1: `diff_session_memory_packs()` SHALL report an empty diff after
+  export -> import -> export round-trips with no semantic state change.
+- REQ-LEARN-061-2: `import_session_memory(..., dry_run=True)` SHALL validate and report
+  planned changes without writing SessionMemory files.
+- REQ-LEARN-061-3: merge and replace modes SHALL be mutually exclusive.
+
+---
+
+## REQ-LEARN-062: SessionMemory CLI Import/Export
+
+**Given** the installed `carnot` CLI
+**When** a user runs `carnot memory export --storage-dir DIR --model-id MODEL -o pack.json`
+**Then** the output pack MUST validate against the portable SessionMemory schema
+**And** `carnot memory import pack.json --storage-dir DIR --model-id MODEL --merge`
+        MUST merge without clobbering existing entries
+**And** `carnot memory import ... --replace` MUST print an explicit reset warning before
+        replacing local state.
+
+### SCENARIO-LEARN-104: Portable Pack Round Trip Has Empty Diff
+
+**Given** a SessionMemory state with one CaseMemory entry, one template observation,
+         and one FP tracker statistic
+**When** it is exported, imported into a fresh storage directory, and exported again
+**Then** `diff_session_memory_packs()` returns `is_empty=True`.
+
+### SCENARIO-LEARN-105: Merge Recomputes Duplicate Case Confidence
+
+**Given** a local case entry with support=1 and confidence=0.25
+**And**  an imported duplicate case entry with support=1 and confidence=0.75
+**When** the pack is imported with merge=True
+**Then** the merged case entry has support=2 and confidence=0.50.
+
+### SCENARIO-LEARN-106: CLI Memory Commands Route to Portable Pack APIs
+
+**Given** a saved SessionMemory state
+**When** `carnot memory export`, `carnot memory import --merge`, and
+         `carnot memory diff` are invoked
+**Then** each command returns exit code 0 and reports schema-valid pack handling.
+
+---
+
+## Implementation Status (REQ-LEARN-060, REQ-LEARN-061, REQ-LEARN-062)
+
+| Requirement  | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-060 | Implemented (python/carnot/pipeline/session_memory_pack.py, python/carnot/schemas/session_memory_v1.json) | Implemented (tests/python/test_session_memory_pack.py) |
+| REQ-LEARN-061 | Implemented (python/carnot/pipeline/session_memory_pack.py) | Implemented (tests/python/test_session_memory_pack.py) |
+| REQ-LEARN-062 | Implemented (python/carnot/cli.py memory subcommands) | Implemented (tests/python/test_session_memory_pack.py) |
+
+---
+
 ## REQ-FR11-007: Forgetting Curve for Constraint Memory Lifecycle
 
 **Statement:** LagrangeAdaptiveUpdater MUST apply an exponential forgetting curve to

@@ -95,3 +95,39 @@ When the SECL self-calibration runner executes,
 Then the final artifact is complete, records the SC-Energy verifier target,
 uses the promoted positives and FoVer negatives for calibration, and reports a
 held-out ECE reduction percentage with an honest verdict.
+
+### REQ-VERIFY-1394: DVI V2 With SECL Combined Deployment
+
+The repository shall provide a deterministic, CPU-only DVI v2 combined
+deployment path that:
+
+- writes `results/experiment_1394_dvi_v2_secl_combined.json` with
+  `status="in_progress"` before loading source artifacts or training;
+- loads exactly the 59 DVI-only fresh verified Exp 1382 case IDs promoted by
+  Exp 1388, matching `fresh_verified_sample_count=59`;
+- initializes DVI v2 from the deployed Exp 1381 verifier checkpoint;
+- fine-tunes the verifier with the same SECL-style binary cross-entropy
+  discriminative objective used by Exp 1381, using FoVer incorrect rows as
+  contrastive negatives;
+- measures `dvi_v2_baseline_auroc`, `dvi_v2_trained_auroc`, and
+  `dvi_v2_auroc_delta` on a fixed held-out FoVer split;
+- applies the Exp 1386 histogram SECL discriminative self-calibration recipe to
+  the DVI v2 checkpoint and reports `secl_ece_before`,
+  `secl_ece_after`, and `secl_ece_reduction_pct`;
+- deploys the combined DVI v2 metric, bias, loss history, and SECL confidence
+  head under `python/carnot/verify/`; and
+- writes a complete artifact containing `status`, `fresh_cases_used`,
+  `dvi_v2_baseline_auroc`, `dvi_v2_trained_auroc`,
+  `dvi_v2_auroc_delta`, `secl_ece_before`, `secl_ece_after`,
+  `secl_ece_reduction_pct`, `dvi_v2_deployed`, `checkpoint_path`, and
+  `honest_verdict`.
+
+### SCENARIO-VERIFY-1394: Fresh DVI V2 Checkpoint Is Calibrated And Deployed
+
+Given Exp 1388 identifies 59 DVI-only promoted Exp 1382 cases and the Exp 1381
+DVI checkpoint is deployed,
+When the DVI v2 + SECL combined runner executes,
+Then the final artifact is complete, `fresh_cases_used` is 59, the AUROC delta
+is measured before and after DVI v2 fine-tuning, the SECL ECE values are
+measured before and after calibration, and the combined checkpoint exists when
+`dvi_v2_deployed` is true.
