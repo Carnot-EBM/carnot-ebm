@@ -1,6 +1,23 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-06 (outer-loop session — 6 conductor structural fixes + systemd migration + .111-.116 series queued)
+**Last Updated:** 2026-05-06 (milestone 2026.04.111 research planning complete)
+
+## Session 2026-05-06 - Milestone 2026.04.111 Research Planning Complete
+
+**Milestone 2026.04.111 PLANNED after .110 completion.**
+
+- Roadmap doc: `openspec/change-proposals/research-roadmap-vNEXT.md`
+- Execution queue: `research-roadmap-next.yaml` (14 tasks, `exp1439`-`exp1452`)
+- ID allocation: milestone `.110` ended at `exp1438`, so `.111` starts at `exp1439`.
+- Research references updated before final roadmap design with the post-.110 sweep: EBT/NRGPT, ARM-as-EBM, ETS, SEM-CTRL/type-constrained repair, BEAVER false-acceptance bounds, LTLZinc temporal constraints, ALMA/Panini/BEHEMOTH memory work, Extropic hardware/software status, and Kona architecture notes.
+- Design focus: Phase 0 activates `.110` carry-forwards and fixes hard blockers; Phase 1 proves live mandated-SOTA repair provenance and gated 100-case pre-scale; Phase 2 runs mandatory continuous self-learning with changed memory policy plus PRM/LTLZinc work; Phase 3 adds an EBT/NRGPT micro-baseline, reruns Discrete SB lint/sim only after RTL source exists, and closes with retro.
+- LLM-bearing tasks (`exp1442`, `exp1443`, `exp1444`, `exp1445`, `exp1447`) include mandated local SOTA GGUF `MODEL_SPECS`: `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and `unsloth/gemma-4-26B-A4B-it-GGUF`.
+- Structured gates: `exp1443` on `exp1442.local_sota_runtime_ready == true`; `exp1444` on `exp1443.live_repair_candidate_pool_ready == true`; `exp1445` on `exp1443.live_repair_success_rate > 0.0` and `exp1444.energy_reranker_ready == true`; `exp1447` on `exp1446.fr11_zero_growth_root_cause_identified == true`; `exp1451` on `exp1441.rtl_source_created == true`.
+- Agent routing: all 14 tasks use `agent_type: codex`, `model: gpt-5.5`; no `requires_claude: true` tasks.
+- Validation passed: YAML parse and prompt-section/end checks, `python3 scripts/validate_prior_failures.py research-roadmap-next.yaml`, `python3 scripts/audit_roadmap_gates.py research-roadmap-next.yaml`, and `git diff --check`.
+- Did NOT modify `research-roadmap.yaml` or `scripts/research_conductor.py`.
+
+**What's next**: activate `research-roadmap-next.yaml` for milestone 2026.04.111 when ready.
 
 ## Session 2026-05-03 → 2026-05-06 — Outer-Loop Interventions Summary
 
