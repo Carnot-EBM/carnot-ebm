@@ -3669,3 +3669,64 @@ v7 rerun.
 | Requirement | Python | Tests |
 |-------------|--------|-------|
 | REQ-LEARN-1446 | Implemented (`python/carnot/reporting/fr11_zero_growth_root_cause_diagnosis.py`) | Implemented (`tests/python/test_fr11_zero_growth_root_cause_diagnosis.py`) |
+
+## REQ-LEARN-1447: FR-11 V7 MUST Apply Changed Policy and Persist Verified Growth
+
+Exp 1447 SHALL run the mandatory FR-11 v7 self-learning round on run date
+`20260506` as a bounded non-exact rerun of Exp 1433. The workflow SHALL load
+Exp 1446's `recommended_v7_policy`, use the deployed Exp 1432 DVI v3
+checkpoint, score local FoVer samples not already promoted by Exp 1395, apply
+the v7 fresh promotion threshold separately from the replay nonforgetting
+threshold, and count positive self-learning growth only for verified new
+promotions that are persisted to session memory.
+
+### REQ-LEARN-1447 Sub-requirements
+
+- REQ-LEARN-1447-1: The workflow SHALL write
+  `results/experiment_1447_fr11_v7_memory_policy_growth.json` first with
+  `status="in_progress"` before loading source artifacts.
+- REQ-LEARN-1447-2: The workflow SHALL require Exp 1446's
+  `recommended_v7_policy.changes_exp1433_policy=true` and SHALL report the
+  applied policy changes to promotion thresholds, candidate source, and memory
+  update behavior.
+- REQ-LEARN-1447-3: Fresh promotion candidates SHALL come from local verified
+  FoVer rows not already promoted by Exp 1395, SHALL be de-duplicated by case
+  ID before persistence, and SHALL be scored with DVI v3 plus the v7 fresh SECL
+  threshold.
+- REQ-LEARN-1447-4: Replay nonforgetting SHALL use the replay threshold from
+  Exp 1446's recommended policy and SHALL require nonforgetting preservation
+  before headline-positive growth is allowed.
+- REQ-LEARN-1447-5: `self_learning_delta_overall` SHALL be greater than zero
+  only when verified new promotions are successfully persisted to session
+  memory, and SHALL equal `memory_entries_added`.
+- REQ-LEARN-1447-6: The final artifact SHALL include `status`, `model_specs`,
+  `policy_changes_applied`, `live_sota_inference_used`,
+  `fresh_verified_sample_count`, `new_promoted_count`,
+  `self_learning_delta_overall`, `nonforgetting_rate`,
+  `session_memory_updated`, `memory_entries_added`,
+  `retire_if_zero_growth_repeats`, `commands_run`, and `honest_verdict`.
+
+### SCENARIO-LEARN-1447: V7 Asymmetric Threshold Produces Persisted Growth
+
+**Given** Exp 1432 deployed DVI v3 with nonforgetting preserved
+**And** Exp 1446 recommended the asymmetric fresh/replay threshold policy
+**When** v7 scores fresh local FoVer candidates with the fresh threshold and
+persists verified promotions to session memory
+**Then** `new_promoted_count` equals `memory_entries_added`
+**And** `self_learning_delta_overall` equals `memory_entries_added`
+**And** `session_memory_updated=true` only when at least one entry persisted.
+
+### SCENARIO-LEARN-1448: Zero V7 Growth Triggers Retirement Gate
+
+**Given** the v7 policy changed from Exp 1433 but still produces no persisted
+new promotions
+**When** the terminal artifact is written
+**Then** `retire_if_zero_growth_repeats=true`
+**And** `honest_verdict` identifies the next root cause instead of reporting
+positive self-learning growth.
+
+## Implementation Status (REQ-LEARN-1447)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-1447 | Implemented (`python/carnot/reporting/fr11_v7_memory_policy_growth.py`) | Implemented (`tests/python/test_fr11_v7_memory_policy_growth.py`) |
