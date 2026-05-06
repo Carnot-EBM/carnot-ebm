@@ -130,6 +130,44 @@ upgrading an estimate into a hardware execution claim.
 
 **Implementation status:** Implemented (Exp 1422)
 
+### REQ-ISING-024
+
+**Discrete Simulated Bifurcation KV260 RTL lint/simulation attempt MUST record
+actual source/tool availability and preserve hardware claim gating.**
+
+**Rationale:**
+Exp 1422 produced a reviewable RTL specification and synthesis plan for the
+Discrete SB KV260 path, but it did not produce a Verilog source, synthesis
+report, bitfile, simulation transcript, or KV260 board execution evidence.  Exp
+1437 must take the next bounded local step by inspecting the expected RTL
+source locations, probing local RTL tools without installing anything, and
+running the cheapest available lint/syntax/simulation command only when source
+and tools are actually present.
+
+**Acceptance criteria:**
+- The experiment SHALL create
+  `results/experiment_1437_discrete_sb_kv260_rtl_lint_sim.json` with
+  `status="in_progress"` before the source/tool inspection is completed.
+- The experiment SHALL inspect Exp 1422 and the local `hardware/kv260/` RTL
+  tree for the expected Discrete SB RTL source, including the planned
+  `hardware/kv260/discrete_sb_256.v` source named by the Exp 1422 spec.
+- The experiment SHALL probe local `yosys`, `verilator`, `iverilog`, and
+  `vivado` availability without installing new toolchains.
+- If Discrete SB RTL sources and an available lint or simulation tool exist,
+  the experiment SHALL run the cheapest bounded syntax/lint/simulation command
+  available and record the exact command plus a short stdout/stderr summary.
+- If sources or tools are missing, the artifact SHALL record a precise blocker
+  and `next_bitfile_step` instead of fabricating a pass.
+- `results/experiment_1437_discrete_sb_kv260_rtl_lint_sim.json` SHALL include
+  `status`, `rtl_sources_checked`, `rtl_lint_complete`, `simulation_complete`,
+  `synthesis_attempted`, `yosys_available`, `verilator_available`,
+  `vivado_available`, `hardware_execution_performed`,
+  `hardware_claim_allowed`, `next_bitfile_step`, and `honest_verdict`.
+- `hardware_execution_performed=false` and `hardware_claim_allowed=false`
+  unless the same run records actual KV260 board evidence.
+
+**Implementation status:** Pending (Exp 1437)
+
 ## Scenarios
 
 ### SCENARIO-ISING-030
@@ -172,3 +210,13 @@ artifact that reports the BRAM/LUT estimates, documents the synthesis command,
 sets `hardware_execution_performed=false`, and disallows hardware claims.
 
 **Implementation status:** Implemented (Exp 1422)
+
+### SCENARIO-ISING-034
+
+**Discrete SB RTL lint/sim artifact:** Given Exp 1422's RTL specification and
+the local hardware tree, Exp 1437 SHALL probe local RTL tools, inspect the
+expected Discrete SB source paths, run bounded lint/simulation only when source
+and tools exist, and otherwise write a blocked artifact that disallows hardware
+claims.
+
+**Implementation status:** Pending (Exp 1437)
