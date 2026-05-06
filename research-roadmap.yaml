@@ -1,16 +1,16 @@
-milestone: 2026.04.109
-milestone_title: "Repair Executor + DVI v3 + EBM-CoT Calibration + DPO/PRM on 1508 Verified Cases"
+milestone: 2026.04.110
+milestone_title: "Repair v2 + DVI Nonforgetting + FR-11 v6 + PRM Label Completion + KV260 RTL Simulation"
 milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
 tasks:
 
 # ============================================================
-# Phase 0 - Close .108 outstanding
+# Phase 0 - Carry-forward activation and diagnostics
 # ============================================================
 
-- id: exp1412-arxiv-operator-action-sheet-v3
-  milestone: 2026.04.109
-  deliverable: results/experiment_1412_arxiv_operator_action_sheet_v3.json
-  title: "arXiv Operator Action Sheet v3 — Bundle Verified, No Credentialed API Attempt"
+- id: exp1425-109-carryforward-activation-audit
+  milestone: 2026.04.110
+  deliverable: results/experiment_1425_109_carryforward_activation_audit.json
+  title: ".109 Carry-Forward Activation Audit — Manifest Prioritized .110 Scope"
   agent_type: codex
   model: gpt-5.5
   max_turns: 20
@@ -19,143 +19,209 @@ tasks:
   requires_gpu: false
   skip_pre_test: true
   prior_failures:
-    - experiment_id: exp1390-arxiv-submission-sword-api
-      verdict: credentials_missing_manual_submission_checklist_generated_ready_bundle_verified
-      addressed_by: "exp1390 proved the bundle exists and wrote the long manual checklist. The remaining blocker is operator action, not code. This task produces a terse submit-now action sheet and verifies the bundle path only; it does not retry credentialed API submission."
+    - experiment_id: exp1424-milestone-109-retrospective
+      verdict: milestone_109_10_of_13_criteria_met_threshold_met_but_repair_dvi_fr11_and_pipeline_carry_forward
+      addressed_by: "Exp1424 identified six carry-forward tracks. This task converts that retro into a concrete .110 activation manifest with same-verdict retirement rules before any implementation work starts."
       retire_if_same_verdict: false
   prompt: |
     CONTEXT:
-    Milestone .108 ended with arXiv still not submitted. Exp1390 verified
-    results/arxiv_bundle_v11.tar.gz and generated docs/arxiv-manual-submission-checklist.md,
-    but SWORD API credentials were absent. The next useful deliverable is a
-    terse operator action sheet that can be followed in under 5 minutes, not
-    another credentialed submission attempt. Use {project_root} as the project
-    root and {date} as the run date.
+    Milestone .109 completed with 10 of 13 criteria met. The terminal retro
+    identified carry-forward work for repair executor v2, DVI v3 nonforgetting,
+    FR-11 v6, DPO provenance, test debt, and PRM label completion. Use
+    {project_root} as the project root and {date} as the run date.
 
     EXISTING CODE TO READ FIRST:
     - CODEX.md
     - CLAUDE.md
-    - results/experiment_1390_arxiv_submission_sword_api.json
-    - docs/arxiv-manual-submission-checklist.md
+    - results/experiment_1424_milestone_109_retro.json
+    - results/experiment_1414_certificate_llm_repair_executor_v1.json
+    - results/experiment_1415_dvi_v3_1508_fresh_cases.json
+    - results/experiment_1419_fullscale_pipeline_v3_repair_executor.json
+    - results/experiment_1420_dpo_training_1508_verified_pairs.json
+    - results/experiment_1421_test_suite_execution_debt_v1.json
+    - results/experiment_1423_prm_v1_fover_1508_pairs.json
     - openspec/change-proposals/research-roadmap-vNEXT.md
 
     TASK:
-    Verify the arXiv bundle is present and write a concise operator-facing
-    action sheet at docs/arxiv-submit-now.md. Write the terminal JSON artifact.
+    Write a carry-forward activation manifest for .110 and a terminal artifact
+    that proves each .109 unresolved track is mapped to a new experiment or
+    explicitly retired.
 
     REQUIRED ARTIFACT FIELDS:
     - status
-    - bundle_path
-    - bundle_exists
-    - bundle_size_bytes
-    - manual_checklist_path
-    - operator_action_sheet_path
-    - submission_ready_for_operator
-    - credentialed_submission_attempted
+    - prior_milestone
+    - carryforward_manifest_path
+    - carryforward_manifest_complete
+    - carryforward_task_count
+    - same_verdict_retirement_rules
+    - forbidden_exact_reruns
     - honest_verdict
 
     CONCRETE STEPS:
-    1. Create results/experiment_1412_arxiv_operator_action_sheet_v3.json immediately with status="in_progress".
-    2. Verify results/arxiv_bundle_v11.tar.gz exists and has size > 0.
-    3. Read docs/arxiv-manual-submission-checklist.md and condense it into docs/arxiv-submit-now.md.
-    4. The action sheet must include exact upload URL, bundle path, category, license, title, author, and one-line abstract pointer.
-    5. Do not attempt SWORD/API submission and set credentialed_submission_attempted=false.
-    6. Set submission_ready_for_operator=true if the bundle and action sheet are valid.
-    7. Write all required artifact fields with status="complete".
+    1. Create results/experiment_1425_109_carryforward_activation_audit.json immediately with status="in_progress".
+    2. Read exp1424 plus the listed upstream artifacts and extract unresolved tracks and exact prior verdicts.
+    3. Write ops/milestone_110_carryforward_manifest.md with a table: track, prior evidence, .110 task, gate rule, and retire-if-same-verdict rule.
+    4. Explicitly mark the exact exp1419 200-case rerun without nonzero repair evidence as forbidden.
+    5. Confirm no changes are needed to scripts/research_conductor.py or research-roadmap.yaml.
+    6. Write all required artifact fields with status="complete".
 
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1412_arxiv_operator_action_sheet_v3.json')); print(d.get('submission_ready_for_operator'), d.get('credentialed_submission_attempted'), d.get('honest_verdict'))"
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1425_109_carryforward_activation_audit.json')); print(d.get('carryforward_manifest_complete'), d.get('carryforward_task_count'), d.get('honest_verdict'))"
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-- id: exp1413-certificate-repair-execution-diagnosis
-  milestone: 2026.04.109
-  deliverable: results/experiment_1413_certificate_repair_execution_diagnosis.json
-  title: "Certificate Repair Execution Diagnosis — Classify exp1397 REPAIR_HINT Cases"
+- id: exp1426-test-suite-remaining-debt-cluster-map
+  milestone: 2026.04.110
+  deliverable: results/experiment_1426_test_suite_remaining_debt_cluster_map.json
+  title: "Test Suite Remaining Debt Cluster Map — Post-exp1421 Failure Triage"
   agent_type: codex
   model: gpt-5.5
   max_turns: 25
-  estimated_wall_time_min: 20
+  estimated_wall_time_min: 25
+  priority: high
+  requires_gpu: false
+  skip_pre_test: true
+  prior_failures:
+    - experiment_id: exp1421-test-suite-execution-debt-v1
+      verdict: focused_embedding_store_runtime_failures_fixed_collection_clean_targeted_tests_green_100pct_store_coverage_full_suite_and_preexisting_spec_coverage_debt_remain
+      addressed_by: "Exp1421 fixed the embedding-store cluster but left full-suite failures and spec-coverage misses. This task maps remaining clusters only; it does not rerun the same embedding-store fix."
+      retire_if_same_verdict: false
+  prompt: |
+    CONTEXT:
+    Exp1421 fixed one execution-time test cluster, but the full Python suite and
+    spec coverage still have debt. The next useful step is a cluster map that
+    identifies the next bounded fix, not an unbounded full-suite rescue. Use
+    {project_root} as the project root and {date} as the run date.
+
+    EXISTING CODE TO READ FIRST:
+    - CODEX.md
+    - CLAUDE.md
+    - results/experiment_1421_test_suite_execution_debt_v1.json
+    - scripts/check_spec_coverage.py
+    - ops/e2e-test-plan.md
+    - openspec/capabilities/
+    - tests/python/
+
+    TASK:
+    Map the remaining test/spec-coverage failures after exp1421 and write a
+    terminal artifact with prioritized clusters. Keep scope diagnostic unless a
+    one-line metadata fix is obvious and directly supported by the evidence.
+
+    REQUIRED ARTIFACT FIELDS:
+    - status
+    - failure_cluster_map_complete
+    - collection_clean_confirmed
+    - failure_clusters_identified
+    - next_cluster_recommended
+    - spec_coverage_debt_count
+    - commands_run
+    - honest_verdict
+
+    CONCRETE STEPS:
+    1. Create results/experiment_1426_test_suite_remaining_debt_cluster_map.json immediately with status="in_progress".
+    2. Read exp1421 and identify the exact remaining failure categories it reported.
+    3. Run the narrowest commands needed to confirm current collection and spec-coverage state; avoid a 30+ minute full-suite rerun unless there is no cheaper signal.
+    4. Group failures into actionable clusters with representative test paths and likely owners.
+    5. Recommend exactly one next cluster for a future implementation task.
+    6. Record all commands and outcomes; do not claim full-suite health unless the relevant command actually passes.
+    7. Write all required artifact fields with status="complete".
+
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1426_test_suite_remaining_debt_cluster_map.json')); print(d.get('failure_cluster_map_complete'), d.get('next_cluster_recommended'), d.get('honest_verdict'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp1427-repair-executor-rejection-ledger
+  milestone: 2026.04.110
+  deliverable: results/experiment_1427_repair_executor_rejection_ledger.json
+  title: "Repair Executor Rejection Ledger — Root Cause 0 Accepted Repairs"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 30
+  estimated_wall_time_min: 30
   priority: critical
   requires_gpu: false
   skip_pre_test: true
   prior_failures:
-    - experiment_id: exp1397-fullscale-pipeline-v2-200cases
-      verdict: not_headline_full_pipeline_below_0_40
-      addressed_by: "exp1397 proved semantic validation and MCS localization are fixed, but full_pipeline_pass_rate=0.305 because REPAIR_HINT actions are not executed. This task reads exp1397 and classifies repair-hint cases before implementation."
+    - experiment_id: exp1414-certificate-llm-repair-executor-v1
+      verdict: complete_repair_executor_no_successful_repairs
+      addressed_by: "Exp1414 deployed the repair executor but accepted 0/20 repairs. This task classifies rejection causes before designing repair v2."
       retire_if_same_verdict: false
+    - experiment_id: exp1419-fullscale-pipeline-v3-repair-executor
+      verdict: not_headline_full_pipeline_below_0_40
+      addressed_by: "Exp1419 ran 200 cases and accepted 0/100 repair-hint candidates. This task avoids another scale run until a nonzero-repair gate is proven."
+      retire_if_same_verdict: true
   prompt: |
     CONTEXT:
-    Exp1397 achieved certificate_parse_rate=1.0 and semantic_validation_pass_rate=1.0,
-    but full_pipeline_pass_rate=0.305. The root cause was missing repair
-    execution: VERGE MCS emits REPAIR_HINT labels but no LLM call produces
-    corrected certificates. Before implementing the executor, classify the
-    repair-hint cases and define the executor contract. Use {project_root} as
-    the project root and {date} as the run date.
+    Exp1414 and exp1419 both reached the local repair execution path, but every
+    repair candidate was rejected. Before implementing repair v2, Carnot needs
+    a rejection ledger that distinguishes schema failures, semantic failures,
+    validator mismatches, prompt noncompliance, missing outputs, and timeout
+    classes. Use {project_root} as the project root and {date} as the run date.
 
     EXISTING CODE TO READ FIRST:
     - CODEX.md
     - CLAUDE.md
-    - results/experiment_1397_fullscale_pipeline_v2_200cases.json
-    - results/experiment_1396_semantic_validation_pass_rate_fix_v1.json
-    - python/carnot/verify/
+    - results/experiment_1414_certificate_llm_repair_executor_v1.json
+    - results/experiment_1419_fullscale_pipeline_v3_repair_executor.json
+    - results/experiment_1424_milestone_109_retro.json
     - python/carnot/pipeline/
-    - openspec/capabilities/verification/spec.md
+    - python/carnot/verify/
     - openspec/capabilities/pipeline/spec.md
+    - openspec/capabilities/verification/spec.md
 
     TASK:
-    Diagnose the repair-hint rows from exp1397 and write a contract for the
-    LLM repair executor that exp1414 can implement.
+    Build a rejection ledger for the zero-repair failures and define the repair
+    v2 acceptance contract.
 
     REQUIRED ARTIFACT FIELDS:
     - status
-    - total_cases_analyzed
-    - repair_hint_cases_total
-    - no_repair_cases_total
-    - repair_execution_diagnosis_complete
-    - hint_category_counts
-    - executable_hint_pct
-    - recommended_executor_contract
-    - expected_full_pipeline_pass_rate_if_50pct_repaired
+    - rejection_ledger_path
+    - rejection_ledger_complete
+    - cases_analyzed
+    - top_rejection_reason
+    - rejection_reason_counts
+    - repair_v2_contract_ready
+    - nonzero_repair_gate_required
     - honest_verdict
 
     CONCRETE STEPS:
-    1. Create results/experiment_1413_certificate_repair_execution_diagnosis.json immediately with status="in_progress".
-    2. Read exp1397 and locate per-case rows or enough aggregate evidence to classify repair-hint cases.
-    3. Categorize repair hints into FIELD_REWRITE, STEP_REWRITE, CONSTRAINT_REWRITE, CERTIFICATE_REGENERATE, and UNKNOWN.
-    4. Estimate executable_hint_pct as the fraction that can be handled by a bounded local LLM rewrite prompt.
-    5. Define recommended_executor_contract with inputs, outputs, validation call, timeout, and fallback behavior.
-    6. Compute expected_full_pipeline_pass_rate_if_50pct_repaired as 0.305 + 0.5 * (1 - 0.305), unless exp1397 contains a better denominator.
-    7. Write all required fields with status="complete".
+    1. Create results/experiment_1427_repair_executor_rejection_ledger.json immediately with status="in_progress".
+    2. Locate any per-case outputs, logs, or aggregate counts from exp1414 and exp1419.
+    3. If per-case details are missing, reconstruct the highest-confidence ledger from available artifacts and record missing_evidence explicitly.
+    4. Write docs/research/repair_executor_rejection_ledger_v1.md with categories, examples, and required repair v2 checks.
+    5. Define a repair_v2_contract that requires schema validity before semantic validation and records rejection reasons for every candidate.
+    6. Set nonzero_repair_gate_required=true so downstream scale runs cannot repeat exp1419 blindly.
+    7. Write all required artifact fields with status="complete".
 
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1413_certificate_repair_execution_diagnosis.json')); print(d.get('repair_execution_diagnosis_complete'), d.get('executable_hint_pct'), d.get('honest_verdict'))"
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1427_repair_executor_rejection_ledger.json')); print(d.get('rejection_ledger_complete'), d.get('top_rejection_reason'), d.get('repair_v2_contract_ready'), d.get('honest_verdict'))"
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
 # ============================================================
-# Phase 1 - Major capability improvements
+# Phase 1 - Repair execution breakthrough
 # ============================================================
 
-- id: exp1414-certificate-llm-repair-executor-v1
-  milestone: 2026.04.109
-  deliverable: results/experiment_1414_certificate_llm_repair_executor_v1.json
-  title: "Certificate LLM Repair Executor v1 — Execute REPAIR_HINT with Local SOTA GGUF"
+- id: exp1428-dccd-schema-constrained-repair-v2
+  milestone: 2026.04.110
+  deliverable: results/experiment_1428_dccd_schema_constrained_repair_v2.json
+  title: "DCCD Schema-Constrained Repair v2 — Nonzero Accepted Repairs with SOTA GGUF"
   agent_type: codex
   model: gpt-5.5
   max_turns: 50
-  estimated_wall_time_min: 70
+  estimated_wall_time_min: 75
   priority: critical
   requires_gpu: true
   skip_pre_test: true
   prior_failures:
-    - experiment_id: exp1397-fullscale-pipeline-v2-200cases
+    - experiment_id: exp1414-certificate-llm-repair-executor-v1
+      verdict: complete_repair_executor_no_successful_repairs
+      addressed_by: "Exp1414 used free-form local repair and accepted 0/20 candidates. This task changes the method to draft-conditioned, schema-constrained repair with explicit rejection accounting."
+      retire_if_same_verdict: true
+    - experiment_id: exp1419-fullscale-pipeline-v3-repair-executor
       verdict: not_headline_full_pipeline_below_0_40
-      addressed_by: "exp1397 localized repair hints with precision=1.0 but did not execute them. This task implements the missing local LLM repair executor and validates corrected certificates with the existing semantic validator."
-      retire_if_same_verdict: false
+      addressed_by: "Exp1419 accepted 0/100 repair-hint candidates. This task validates repair v2 on a micro sample before any new 200-case run."
+      retire_if_same_verdict: true
   prompt: |
     CONTEXT:
-    Exp1397 showed that semantic validation is perfect but repair execution is
-    missing. The executor must take a certificate, a REPAIR_HINT, and validator
-    feedback, then ask a local SOTA GGUF model for a bounded corrected
-    certificate. This is a local-first task. New LLM-bearing experiments must
-    include mandated SOTA GGUF models in MODEL_SPECS. Use {project_root} as
+    The .109 repair executor reached local SOTA GGUF models but accepted zero
+    repairs. The post-.109 research sweep promoted draft-conditioned constrained
+    decoding and schema-first repair as the next method. Use {project_root} as
     the project root and {date} as the run date.
 
     MODEL_SPECS:
@@ -173,338 +239,227 @@ tasks:
     - CODEX.md
     - CLAUDE.md
     - scripts/experiment_template.py
-    - results/experiment_1413_certificate_repair_execution_diagnosis.json
-    - results/experiment_1397_fullscale_pipeline_v2_200cases.json
+    - results/experiment_1427_repair_executor_rejection_ledger.json
+    - results/experiment_1414_certificate_llm_repair_executor_v1.json
+    - results/experiment_1419_fullscale_pipeline_v3_repair_executor.json
     - python/carnot/pipeline/
     - python/carnot/verify/
     - openspec/capabilities/pipeline/spec.md
     - openspec/capabilities/verification/spec.md
 
     TASK:
-    Implement a bounded local LLM repair executor for certificate repair hints,
-    wire it into the pipeline behind an opt-in path, and validate on a small
-    sample of exp1397 repair-hint cases.
+    Implement or prototype repair executor v2 using draft-conditioned,
+    schema-constrained repair. Validate on a bounded repair-hint micro sample
+    and write a terminal artifact with nonzero-repair evidence or an honest
+    blocked verdict.
 
     REQUIRED ARTIFACT FIELDS:
     - status
     - model_specs
-    - repair_executor_deployed
+    - local_sota_model_used
+    - repair_executor_v2_deployed
     - repair_hint_cases_tested
     - repaired_cases_successful
     - repaired_case_success_rate
-    - semantic_equivalence_pass_rate_after_repair
-    - local_sota_model_used
+    - schema_valid_rate
+    - semantic_acceptance_rate
+    - rejection_reason_counts
     - tests_run
     - honest_verdict
 
     CONCRETE STEPS:
-    1. Create results/experiment_1414_certificate_llm_repair_executor_v1.json immediately with status="in_progress".
-    2. If implementation changes public behavior, update relevant OpenSpec REQ-* / SCENARIO-* before code changes.
-    3. Add a small, bounded repair-executor module or pipeline hook using existing local LLM utilities; do not import vendor SDKs into core pipeline code.
-    4. The executor input contract: original prompt/question, current certificate, REPAIR_HINT, validator error, and allowed output schema.
-    5. The executor output contract: corrected certificate plus metadata; validate with existing semantic validator before accepting.
-    6. Use cached_sota_pair() or equivalent cache resolver with MODEL_SPECS above; record the actual model used.
-    7. Run on at least 20 repair-hint cases if available; if model cache is unavailable, write a blocked artifact with cache details rather than simulating headline results.
-    8. Add focused tests for prompt construction, schema validation, fallback behavior, and no closed-weight dependency in core code.
-    9. Write all required artifact fields with status="complete" or status="blocked" and an honest verdict.
+    1. Create results/experiment_1428_dccd_schema_constrained_repair_v2.json immediately with status="in_progress".
+    2. If public behavior changes, add or update OpenSpec REQ-* and SCENARIO-* before implementation code changes.
+    3. Define a bounded repair schema that separates draft certificate, repair action, final certificate, and validator metadata.
+    4. Add schema validation before semantic validation; every rejected candidate must record a rejection reason.
+    5. Use the mandated SOTA GGUF models through the existing local cache path; record missing cache blockers instead of fabricating model results.
+    6. Run at least 20 repair-hint cases if available; accept only candidates that pass schema and semantic validation.
+    7. Add focused tests for schema parsing, rejection classification, and validator handoff.
+    8. Write all required artifact fields with status="complete" or status="blocked".
 
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1414_certificate_llm_repair_executor_v1.json')); print(d.get('repair_executor_deployed'), d.get('repaired_case_success_rate'), d.get('local_sota_model_used'), d.get('honest_verdict'))"
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1428_dccd_schema_constrained_repair_v2.json')); print(d.get('repair_executor_v2_deployed'), d.get('repaired_case_success_rate'), d.get('schema_valid_rate'), d.get('honest_verdict'))"
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-- id: exp1415-dvi-v3-1508-fresh-cases
-  milestone: 2026.04.109
-  deliverable: results/experiment_1415_dvi_v3_1508_fresh_cases.json
-  title: "DVI v3 — Train on 1508 Fresh Verified Cases from FR-11 v5"
+- id: exp1429-mcmc-constrained-repair-candidate-search
+  milestone: 2026.04.110
+  deliverable: results/experiment_1429_mcmc_constrained_repair_candidate_search.json
+  title: "MCMC Constrained Repair Candidate Search — Gated on Exp1428 Repair v2"
   agent_type: codex
   model: gpt-5.5
   max_turns: 45
-  estimated_wall_time_min: 45
+  estimated_wall_time_min: 60
   priority: high
-  requires_gpu: false
+  requires_gpu: true
   skip_pre_test: true
+  gated_on:
+    - upstream: exp1428-dccd-schema-constrained-repair-v2
+      artifact_field: repair_executor_v2_deployed
+      op: '=='
+      value: true
   prior_failures:
-    - experiment_id: exp1394-dvi-v2-secl-combined
-      verdict: dvi_v2_secl_combined_deployed_positive_auroc_delta_ece_reduced
-      addressed_by: "exp1394 was positive but trained on only 59 fresh cases. exp1395 produced 1508 fresh verified cases, so DVI v3 has enough data to test whether the delta scales."
-      retire_if_same_verdict: false
+    - experiment_id: exp1419-fullscale-pipeline-v3-repair-executor
+      verdict: not_headline_full_pipeline_below_0_40
+      addressed_by: "Exp1419 tested one repair path and accepted 0/100 repair-hint candidates. This task tests constrained best-of-N candidate search after repair v2 deploys."
+      retire_if_same_verdict: true
   prompt: |
     CONTEXT:
-    Exp1394 deployed DVI v2 with AUROC delta 0.011458 using 59 fresh cases.
-    Exp1395 then produced 1508 fresh verified cases and headline self-learning
-    evidence. DVI v3 should train or update on the full 1508-case corpus and
-    measure whether the delta improves. Use {project_root} as the project root
-    and {date} as the run date.
+    The post-.109 literature sweep identified constrained sampling as a better
+    fit for hard repair constraints than one-shot free-form decoding. This task
+    is gated on repair v2 deployment from exp1428. Use {project_root} as the
+    project root and {date} as the run date.
+
+    MODEL_SPECS:
+    - hf_id: unsloth/Qwen3.6-35B-A3B-GGUF
+      role: primary_candidate_generator
+    - hf_id: unsloth/gemma-4-31B-it-GGUF
+      role: dense_fallback
+    - hf_id: unsloth/gemma-4-26B-A4B-it-GGUF
+      role: moe_fallback
+    Legacy small models may be used only for CPU smoke tests, not headline
+    candidate-search results. Prefer cached_sota_pair() from
+    scripts/experiment_template.py.
 
     EXISTING CODE TO READ FIRST:
     - CODEX.md
     - CLAUDE.md
-    - results/experiment_1394_dvi_v2_secl_combined.json
-    - results/experiment_1395_fr11_self_learning_v5.json
+    - scripts/experiment_template.py
+    - research-references.md
+    - results/experiment_1428_dccd_schema_constrained_repair_v2.json
+    - results/experiment_1427_repair_executor_rejection_ledger.json
     - python/carnot/pipeline/
     - python/carnot/verify/
-    - openspec/capabilities/self-learning/spec.md
-    - openspec/capabilities/verification/spec.md
 
     TASK:
-    Train or update DVI v3 using the 1508 fresh verified cases, compare against
-    DVI v2, and write a deployable checkpoint or honest blocked artifact.
+    Add a bounded constrained candidate-search layer around repair v2 and test
+    whether best-of-N/MCMC-style exploration improves accepted repair rate over
+    the one-candidate path.
 
     REQUIRED ARTIFACT FIELDS:
     - status
-    - fresh_verified_cases_used
-    - dvi_v2_auroc_delta_baseline
-    - dvi_v3_auroc_delta
-    - dvi_v3_deployed
-    - dvi_v3_checkpoint_path
-    - nonforgetting_rate
-    - secl_ece_reduction_pct_preserved
-    - tests_run
+    - model_specs
+    - candidate_search_complete
+    - cases_evaluated
+    - candidates_per_case
+    - mcmc_acceptance_rate
+    - repair_success_rate_one_candidate
+    - repair_success_rate_best_of_n
+    - energy_rerank_improved
+    - local_sota_model_used
     - honest_verdict
 
     CONCRETE STEPS:
-    1. Create results/experiment_1415_dvi_v3_1508_fresh_cases.json immediately with status="in_progress".
-    2. Locate the 1508 fresh verified examples referenced by exp1395.
-    3. Train or update DVI with a deterministic split and fixed seed.
-    4. Compare dvi_v3_auroc_delta against exp1394 dvi_v2_auroc_delta=0.011458.
-    5. Measure nonforgetting on replay examples from exp1395.
-    6. Preserve SECL calibration if the combined verifier is touched.
-    7. Write a checkpoint if deployed; otherwise write why it is blocked.
-    8. Run focused tests or deterministic validation and record commands in tests_run.
-    9. Write all required fields with status="complete" or status="blocked".
+    1. Create results/experiment_1429_mcmc_constrained_repair_candidate_search.json immediately with status="in_progress".
+    2. Confirm exp1428 deployed repair v2; if not, write status="blocked" with candidate_search_complete=false.
+    3. Implement a bounded candidate generator that proposes multiple schema-valid repair candidates per case.
+    4. Score candidates with existing energy/verifier signals; accept only schema-valid and semantic-valid candidates.
+    5. Evaluate on a small repair-hint sample and compare one-candidate success to best-of-N success.
+    6. Record runtime and model cache blockers honestly; do not report legacy smoke-test results as headline.
+    7. Write all required artifact fields with status="complete" or status="blocked".
 
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1415_dvi_v3_1508_fresh_cases.json')); print(d.get('dvi_v3_deployed'), d.get('dvi_v3_auroc_delta'), d.get('nonforgetting_rate'), d.get('honest_verdict'))"
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1429_mcmc_constrained_repair_candidate_search.json')); print(d.get('candidate_search_complete'), d.get('repair_success_rate_best_of_n'), d.get('mcmc_acceptance_rate'), d.get('honest_verdict'))"
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-- id: exp1416-ebm-cot-v3-temperature-calibration
-  milestone: 2026.04.109
-  deliverable: results/experiment_1416_ebm_cot_v3_temperature_calibration.json
-  title: "EBM-CoT v3 — Temperature Scaling to Fix Hinge-Only Variance"
+- id: exp1430-prm-guided-repair-selector
+  milestone: 2026.04.110
+  deliverable: results/experiment_1430_prm_guided_repair_selector.json
+  title: "PRM-Guided Repair Selector — Gated on Exp1429 Candidate Pool"
   agent_type: codex
   model: gpt-5.5
   max_turns: 35
   estimated_wall_time_min: 35
-  priority: high
-  requires_gpu: false
-  skip_pre_test: true
-  prior_failures:
-    - experiment_id: exp1401-ebm-cot-v2-hinge-only
-      verdict: hinge_only_confirmed_positive_calibration_but_variance_worsened
-      addressed_by: "exp1401 produced calibration_auroc_delta=+0.1857 but variance_worsened=true. arXiv:2604.07172 suggests scalar temperature scaling as a post-hoc calibration fix."
-      retire_if_same_verdict: false
-  prompt: |
-    CONTEXT:
-    Exp1401 showed EBM-CoT hinge-only training improves calibration AUROC by
-    about +0.186 but worsens paraphrase energy variance. arXiv:2604.07172
-    reports that scalar temperature scaling can improve semantic uncertainty
-    calibration and discrimination. Apply a post-hoc T* calibration to EBM-CoT
-    scores and preserve AUROC. Use {project_root} as the project root and {date}
-    as the run date.
-
-    EXISTING CODE TO READ FIRST:
-    - CODEX.md
-    - CLAUDE.md
-    - results/experiment_1401_ebm_cot_v2_hinge_only.json
-    - research-references.md
-    - python/carnot/models/
-    - python/carnot/verify/
-    - openspec/capabilities/verification/spec.md
-
-    TASK:
-    Add or run a post-hoc temperature calibration pass for EBM-CoT scores,
-    measuring variance before and after and verifying AUROC is preserved.
-
-    REQUIRED ARTIFACT FIELDS:
-    - status
-    - temperature_scaling_applied
-    - best_temperature
-    - calibration_auroc_delta_before
-    - calibration_auroc_delta_after
-    - paraphrase_energy_variance_before_temp_scaling
-    - paraphrase_energy_variance_after_temp_scaling
-    - variance_worsened
-    - auroc_preserved
-    - honest_verdict
-
-    CONCRETE STEPS:
-    1. Create results/experiment_1416_ebm_cot_v3_temperature_calibration.json immediately with status="in_progress".
-    2. Reuse exp1401 scores or regenerate only the minimal deterministic dataset needed.
-    3. Fit scalar T* on a validation split, not the test split.
-    4. Report AUROC before and after temperature scaling.
-    5. Report paraphrase energy variance before and after.
-    6. Set variance_worsened=false only if after <= before within measured tolerance.
-    7. Preserve exp1401's positive AUROC delta; set auroc_preserved accordingly.
-    8. Write all required fields with status="complete".
-
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1416_ebm_cot_v3_temperature_calibration.json')); print(d.get('temperature_scaling_applied'), d.get('variance_worsened'), d.get('auroc_preserved'), d.get('honest_verdict'))"
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp1417-ebrm-latent-trajectory-drift-smoke
-  milestone: 2026.04.109
-  deliverable: results/experiment_1417_ebrm_latent_trajectory_drift_smoke.json
-  title: "EBRM Latent Trajectory Drift Smoke — Energy Down Does Not Imply Decode Correct"
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 35
-  estimated_wall_time_min: 35
-  priority: medium
-  requires_gpu: false
-  skip_pre_test: true
-  prior_failures:
-    - experiment_id: exp771-ebrm-comparison
-      verdict: prior_ebrm_validation_archived
-      addressed_by: "exp771 compared an EBRM-style reward model against EORM. This task is different: it tests the 2026 structured-latent-trajectory drift failure mode from arXiv:2603.28248 and explicitly measures whether energy descent hurts decoded accuracy."
-      retire_if_same_verdict: false
-    - experiment_id: exp1187-latent-grpo-energy-reward
-      verdict: latent_grpo_scope_previously_explored
-      addressed_by: "This task does not rerun Latent-GRPO or policy optimization. It is a CPU-only diagnostic of latent drift, decoder support, and anchoring requirements before Phase-3 scale-up."
-      retire_if_same_verdict: false
-  prompt: |
-    CONTEXT:
-    arXiv:2603.28248 models reasoning as energy minimization over latent
-    trajectories but reports a critical failure: on CNF logic, planning lowers
-    energy while decoded accuracy drops because the planner drifts off decoder
-    support. Carnot's Phase-3/Kona bridge must measure this failure before
-    scaling continuous latent repair. Use {project_root} as the project root
-    and {date} as the run date.
-
-    EXISTING CODE TO READ FIRST:
-    - CODEX.md
-    - CLAUDE.md
-    - research-references.md
-    - python/carnot/phase3/
-    - docs/research-notes/phase3-architecture-blindspot-audit-results.md
-    - openspec/capabilities/self-learning/spec.md
-
-    TASK:
-    Build or run a tiny CPU-only EBRM-style latent planning smoke test that
-    measures whether energy decreases, decoded accuracy changes, and latent
-    drift grows beyond decoder support.
-
-    REQUIRED ARTIFACT FIELDS:
-    - status
-    - latent_drift_smoke_complete
-    - task_family
-    - energy_monotone
-    - accuracy_before_planning
-    - accuracy_after_planning
-    - accuracy_delta_after_planning
-    - latent_drift_norm
-    - dual_path_decoder_required
-    - anchoring_required
-    - honest_verdict
-
-    CONCRETE STEPS:
-    1. Create results/experiment_1417_ebrm_latent_trajectory_drift_smoke.json immediately with status="in_progress".
-    2. Prefer a minimal synthetic CNF or graph task already present in the repo; otherwise create a tiny self-contained script under scripts/ or results/ as appropriate.
-    3. Implement encoder output h_x, latent z, simple energy terms, and a decoder.
-    4. Run direct decode and planned decode on the same small dataset.
-    5. Measure energy monotonicity during planning.
-    6. Measure latent_drift_norm from encoder output to planned z_T.
-    7. Set dual_path_decoder_required=true if planning lowers energy but hurts or fails to improve accuracy.
-    8. Write all required fields with status="complete".
-
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1417_ebrm_latent_trajectory_drift_smoke.json')); print(d.get('latent_drift_smoke_complete'), d.get('energy_monotone'), d.get('accuracy_delta_after_planning'), d.get('honest_verdict'))"
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-# ============================================================
-# Phase 2 - Pipeline scale + self-learning
-# ============================================================
-
-- id: exp1418-fr11-self-learning-v6-dvi-v3
-  milestone: 2026.04.109
-  deliverable: results/experiment_1418_fr11_self_learning_v6_dvi_v3.json
-  title: "FR-11 Self-Learning v6 — Gated on Exp 1415 DVI v3 Deployed"
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 40
-  estimated_wall_time_min: 40
   priority: high
   requires_gpu: false
   skip_pre_test: true
   gated_on:
-    - upstream: exp1415-dvi-v3-1508-fresh-cases
-      artifact_field: dvi_v3_deployed
-      op: "=="
+    - upstream: exp1429-mcmc-constrained-repair-candidate-search
+      artifact_field: candidate_search_complete
+      op: '=='
       value: true
   prior_failures:
-    - experiment_id: exp1395-fr11-self-learning-v5
-      verdict: fr11_self_learning_v5_dvi_v2_secl_headline_allowed_fresh_1508_delta_1449_grpo_0
-      addressed_by: "exp1395 succeeded via DVI v2/SECL but integrated zero GRPO cases. GRPO is now retired, so this task explicitly uses DVI v3 only and measures improvement over the 1508-case baseline."
+    - experiment_id: exp1423-prm-v1-fover-1508-pairs
+      verdict: prmv1_trained_on_available_step_labels_with_478_promoted_traces_missing_local_labels
+      addressed_by: "Exp1423 trained a useful PRM v1 but did not use it to guide repair. This task applies available PRM scores as a selector while label completion proceeds separately in exp1434."
       retire_if_same_verdict: false
+    - experiment_id: exp1419-fullscale-pipeline-v3-repair-executor
+      verdict: not_headline_full_pipeline_below_0_40
+      addressed_by: "Exp1419 accepted no repair candidates. This task ranks the candidate pool before expensive semantic validation to improve accepted repair rate."
+      retire_if_same_verdict: true
   prompt: |
     CONTEXT:
-    Exp1395 was a major FR-11 self-learning breakthrough: 1508 fresh verified
-    cases and headline allowed. It did not integrate GRPO, and GRPO has now
-    been retired. This task runs FR-11 v6 only after DVI v3 exists, measuring
-    whether DVI v3 improves beyond the exp1395 baseline. Use {project_root} as
-    the project root and {date} as the run date.
+    PRM v1 reached useful AUROC on available labels, and constrained repair
+    search can generate multiple candidates per case. This task tests whether
+    a PRM/PRA-style selector improves repair acceptance before expensive
+    validation. Use {project_root} as the project root and {date} as the run
+    date.
 
     EXISTING CODE TO READ FIRST:
     - CODEX.md
     - CLAUDE.md
-    - results/experiment_1395_fr11_self_learning_v5.json
-    - results/experiment_1415_dvi_v3_1508_fresh_cases.json
+    - results/experiment_1423_prm_v1_fover_1508_pairs.json
+    - results/experiment_1429_mcmc_constrained_repair_candidate_search.json
+    - research-references.md
     - python/carnot/pipeline/
     - python/carnot/verify/
-    - openspec/capabilities/self-learning/spec.md
+    - openspec/capabilities/pipeline/spec.md
 
     TASK:
-    Run FR-11 continuous self-learning v6 with the DVI v3 checkpoint and no
-    GRPO dependency. Measure fresh-case count, nonforgetting, and headline
-    eligibility.
+    Implement or prototype a PRM-guided selector over repair candidates and
+    measure whether PRM ranking improves accepted repair rate over raw
+    best-of-N ordering.
 
     REQUIRED ARTIFACT FIELDS:
     - status
-    - dvi_v3_checkpoint_used
-    - fresh_verified_sample_count
-    - baseline_fresh_verified_sample_count
-    - self_learning_delta_overall
-    - nonforgetting_rate
-    - grpo_cases_integrated
-    - headline_result_allowed
+    - prm_guided_selection_ready
+    - cases_evaluated
+    - selector_auroc
+    - raw_best_of_n_repair_success_rate
+    - selected_repair_success_rate
+    - selection_improvement_pp
+    - prmv1_artifact_used
     - honest_verdict
 
     CONCRETE STEPS:
-    1. Create results/experiment_1418_fr11_self_learning_v6_dvi_v3.json immediately with status="in_progress".
-    2. Confirm DVI v3 checkpoint exists from exp1415.
-    3. Run the existing FR-11/self-learning pipeline with DVI v3 and SECL calibration.
-    4. Do not integrate GRPO; set grpo_cases_integrated=0 and document that this is intentional.
-    5. Compare fresh_verified_sample_count against exp1395 baseline 1508.
-    6. Measure nonforgetting on replay cases.
-    7. Set headline_result_allowed only if fresh cases exceed the baseline and nonforgetting is acceptable.
-    8. Write all required fields with status="complete".
+    1. Create results/experiment_1430_prm_guided_repair_selector.json immediately with status="in_progress".
+    2. Confirm exp1429 produced a candidate pool; if not, write status="blocked" and prm_guided_selection_ready=false.
+    3. Load PRM v1 artifacts or available PRM scores from exp1423; if unavailable, implement a deterministic proxy only as a non-headline fallback and record it.
+    4. Rank repair candidates before semantic validation and compare selected candidate success to raw best-of-N success.
+    5. Keep the evaluation bounded and deterministic; do not require filling the 478 missing labels in this task.
+    6. Write all required artifact fields with status="complete" or status="blocked".
 
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1418_fr11_self_learning_v6_dvi_v3.json')); print(d.get('fresh_verified_sample_count'), d.get('headline_result_allowed'), d.get('grpo_cases_integrated'), d.get('honest_verdict'))"
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1430_prm_guided_repair_selector.json')); print(d.get('prm_guided_selection_ready'), d.get('selection_improvement_pp'), d.get('selected_repair_success_rate'), d.get('honest_verdict'))"
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-- id: exp1419-fullscale-pipeline-v3-repair-executor
-  milestone: 2026.04.109
-  deliverable: results/experiment_1419_fullscale_pipeline_v3_repair_executor.json
-  title: "Full-Scale Pipeline v3 — Gated on Exp 1414 Repair Executor"
+- id: exp1431-fullscale-pipeline-v4-micro-gated
+  milestone: 2026.04.110
+  deliverable: results/experiment_1431_fullscale_pipeline_v4_micro_gated.json
+  title: "Full Pipeline v4 Micro Validation — Gated on Nonzero Repair Evidence"
   agent_type: codex
   model: gpt-5.5
   max_turns: 50
-  estimated_wall_time_min: 80
+  estimated_wall_time_min: 60
   priority: critical
   requires_gpu: true
   skip_pre_test: true
   gated_on:
-    - upstream: exp1414-certificate-llm-repair-executor-v1
-      artifact_field: repair_executor_deployed
-      op: "=="
+    - upstream: exp1428-dccd-schema-constrained-repair-v2
+      artifact_field: repaired_case_success_rate
+      op: '>'
+      value: 0.0
+    - upstream: exp1430-prm-guided-repair-selector
+      artifact_field: prm_guided_selection_ready
+      op: '=='
       value: true
   prior_failures:
-    - experiment_id: exp1397-fullscale-pipeline-v2-200cases
+    - experiment_id: exp1419-fullscale-pipeline-v3-repair-executor
       verdict: not_headline_full_pipeline_below_0_40
-      addressed_by: "exp1397 failed the headline gate because repair execution was missing. exp1414 implements the executor; this task reruns the 200-case pipeline with that executor enabled."
+      addressed_by: "Exp1419 ran 200 cases before any nonzero repair acceptance and stayed at 0.305. This task is only a 50-case micro validation and is structurally gated on nonzero repair evidence."
       retire_if_same_verdict: true
   prompt: |
     CONTEXT:
-    Exp1397 established that parse and semantic validation are perfect but full
-    pipeline pass rate is only 0.305 because repair hints are not executed.
-    This task reruns the 200-case pipeline with the local SOTA GGUF repair
-    executor from exp1414. Use {project_root} as the project root and {date} as
-    the run date.
+    Exp1419's exact 200-case rerun is retired unless repair acceptance is
+    nonzero. This task performs a smaller 50-case pipeline v4 validation only
+    after repair v2 and PRM-guided selection are ready. Use {project_root} as
+    the project root and {date} as the run date.
 
     MODEL_SPECS:
     - hf_id: unsloth/Qwen3.6-35B-A3B-GGUF
@@ -513,257 +468,186 @@ tasks:
       role: dense_fallback
     - hf_id: unsloth/gemma-4-26B-A4B-it-GGUF
       role: moe_fallback
-    Legacy small models are smoke-test only and cannot support headline claims.
+    Legacy small models may be used only for CPU smoke tests, not headline
+    pipeline results. Prefer cached_sota_pair() from scripts/experiment_template.py.
 
     EXISTING CODE TO READ FIRST:
     - CODEX.md
     - CLAUDE.md
     - scripts/experiment_template.py
-    - results/experiment_1397_fullscale_pipeline_v2_200cases.json
-    - results/experiment_1414_certificate_llm_repair_executor_v1.json
+    - results/experiment_1419_fullscale_pipeline_v3_repair_executor.json
+    - results/experiment_1428_dccd_schema_constrained_repair_v2.json
+    - results/experiment_1430_prm_guided_repair_selector.json
     - python/carnot/pipeline/
     - python/carnot/verify/
-    - openspec/capabilities/pipeline/spec.md
-    - openspec/capabilities/verification/spec.md
+    - ops/e2e-test-plan.md
 
     TASK:
-    Run full-scale certificate + semantic validation + LLM repair pipeline v3
-    on at least 200 cases. Compare to exp1397 and determine whether the
-    full-pipeline headline gate is now met.
+    Run a bounded 50-case full-pipeline v4 validation with repair v2 and PRM
+    selection enabled, and compare against the exp1419 baseline of 0.305.
 
     REQUIRED ARTIFACT FIELDS:
     - status
     - model_specs
+    - local_sota_model_used
     - cases_evaluated
     - certificate_parse_rate
     - semantic_validation_pass_rate
     - repair_hint_cases_total
-    - repaired_cases_successful
     - repair_success_rate
     - full_pipeline_pass_rate
-    - full_pipeline_headline_gate_met
+    - beats_exp1419_baseline
+    - eligible_for_200_case_scaleup
     - honest_verdict
 
     CONCRETE STEPS:
-    1. Create results/experiment_1419_fullscale_pipeline_v3_repair_executor.json immediately with status="in_progress".
-    2. Confirm exp1414 repair_executor_deployed=true.
-    3. Use cached SOTA GGUF model resolution and record actual model used.
-    4. Run at least 200 FoVer/certificate cases with repair executor enabled.
-    5. Record parse, semantic validation, repair, and final pass rates separately.
-    6. Compare full_pipeline_pass_rate against exp1397 baseline 0.305 and headline target 0.40.
-    7. If model cache/GPU blocks execution, write a blocked artifact with exact blocker.
-    8. Write all required fields with status="complete" or status="blocked".
+    1. Create results/experiment_1431_fullscale_pipeline_v4_micro_gated.json immediately with status="in_progress".
+    2. Confirm the structured gates are satisfied; otherwise write status="blocked" with eligible_for_200_case_scaleup=false.
+    3. Run a 50-case sample that is not merely the same exp1419 case order unless no alternative dataset exists; record the sample source.
+    4. Enable repair v2 and PRM-guided selection through explicit flags or a documented local invocation.
+    5. Compare full_pipeline_pass_rate against 0.305 and set beats_exp1419_baseline honestly.
+    6. Set eligible_for_200_case_scaleup=true only if repair_success_rate > 0 and full_pipeline_pass_rate > 0.305.
+    7. Write all required artifact fields with status="complete" or status="blocked".
 
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1419_fullscale_pipeline_v3_repair_executor.json')); print(d.get('cases_evaluated'), d.get('full_pipeline_pass_rate'), d.get('full_pipeline_headline_gate_met'), d.get('honest_verdict'))"
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1431_fullscale_pipeline_v4_micro_gated.json')); print(d.get('cases_evaluated'), d.get('full_pipeline_pass_rate'), d.get('beats_exp1419_baseline'), d.get('honest_verdict'))"
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
 # ============================================================
-# Phase 3 - Research and infrastructure probes
+# Phase 2 - Self-learning, DVI, PRM, and provenance
 # ============================================================
 
-- id: exp1420-dpo-verified-pairs-1508
-  milestone: 2026.04.109
-  deliverable: results/experiment_1420_dpo_verified_pairs_1508.json
-  title: "DPO-Style Preference Probe — Replace Retired GRPO with 1508 Verified Pairs"
+- id: exp1432-dvi-v3-nonforgetting-replay-balanced
+  milestone: 2026.04.110
+  deliverable: results/experiment_1432_dvi_v3_nonforgetting_replay_balanced.json
+  title: "DVI v3 Nonforgetting Repair — Replay-Balanced 1508-Case Update"
   agent_type: codex
   model: gpt-5.5
-  max_turns: 50
-  estimated_wall_time_min: 75
-  priority: high
-  requires_gpu: true
-  skip_pre_test: true
-  prior_failures:
-    - experiment_id: exp1393-grpo-v8-ngrpo-zero-reward-fix
-      verdict: grpo_v8_ngrpo_no_improvement_all_unknown_retired
-      addressed_by: "GRPO is retired because FoVer/JURY-RL produced all-UNKNOWN rewards. DPO uses explicit verified/rejected pairs from exp1395 and does not require homogeneous rollout advantage estimates."
-      retire_if_same_verdict: false
-  prompt: |
-    CONTEXT:
-    GRPO is permanently retired after exp1393. Recent DPO/GRPO equivalence
-    work and HuggingFace TRL guidance suggest using explicit preference pairs
-    when they exist. Exp1395 produced 1508 verified cases. This task runs a
-    DPO-style preference probe or, if direct GGUF fine-tuning is impossible,
-    writes an honest feasibility artifact and trains a lightweight preference
-    reranker over verifier features. Use {project_root} as the project root and
-    {date} as the run date.
-
-    MODEL_SPECS:
-    - hf_id: unsloth/Qwen3.6-35B-A3B-GGUF
-      role: primary_policy_baseline
-    - hf_id: unsloth/gemma-4-31B-it-GGUF
-      role: dense_baseline
-    - hf_id: unsloth/gemma-4-26B-A4B-it-GGUF
-      role: moe_baseline
-    The mandated GGUF models must be used for baseline/provenance. If direct
-    DPO fine-tuning of GGUF weights is not supported, record that explicitly
-    and implement the DPO-style reranker fallback.
-
-    EXISTING CODE TO READ FIRST:
-    - CODEX.md
-    - CLAUDE.md
-    - scripts/experiment_template.py
-    - results/experiment_1393_grpo_v8_ngrpo_zero_reward_fix.json
-    - results/experiment_1395_fr11_self_learning_v5.json
-    - research-references.md
-    - python/carnot/pipeline/
-    - openspec/capabilities/self-learning/spec.md
-
-    TASK:
-    Build verified/rejected preference pairs from exp1395 data and run a
-    DPO-style local probe. Measure improvement or produce an honest feasibility
-    result if GGUF fine-tuning is unsupported.
-
-    REQUIRED ARTIFACT FIELDS:
-    - status
-    - model_specs
-    - verified_pairs_available
-    - dpo_full_finetune_performed
-    - dpo_reranker_fallback_used
-    - dpo_improvement_pp
-    - dpo_vs_baseline_auroc
-    - local_sota_model_used
-    - headline_result_allowed
-    - honest_verdict
-
-    CONCRETE STEPS:
-    1. Create results/experiment_1420_dpo_verified_pairs_1508.json immediately with status="in_progress".
-    2. Build preference pairs from exp1395: preferred=verified correct, rejected=nearest unverified/failed candidate where available.
-    3. Resolve mandated GGUF models and run a baseline scoring/inference check.
-    4. Determine whether direct DPO fine-tuning is supported in this environment for the selected local model.
-    5. If direct DPO is supported, run a small adapter/micro-training pass and evaluate.
-    6. If direct DPO is not supported, train a DPO-style preference reranker over verifier/model features and mark dpo_reranker_fallback_used=true.
-    7. Report dpo_improvement_pp or null only if blocked; do not simulate improvement.
-    8. Write all required fields with status="complete" or status="blocked".
-
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1420_dpo_verified_pairs_1508.json')); print(d.get('dpo_full_finetune_performed'), d.get('dpo_reranker_fallback_used'), d.get('dpo_improvement_pp'), d.get('honest_verdict'))"
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp1421-test-suite-execution-debt-v1
-  milestone: 2026.04.109
-  deliverable: results/experiment_1421_test_suite_execution_debt_v1.json
-  title: "Test Suite Execution Debt v1 — Fix Runtime Failures After Collection Clean"
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 35
+  max_turns: 45
   estimated_wall_time_min: 45
-  priority: medium
+  priority: critical
   requires_gpu: false
   skip_pre_test: true
   prior_failures:
-    - experiment_id: exp1392-test-suite-hygiene-v2
-      verdict: collection_errors_after_0_execution_failures_remain
-      addressed_by: "exp1392 fixed collection errors but left execution-time failures and spec-coverage debt as separate carry-forward. This task targets runtime failures only."
-      retire_if_same_verdict: false
+    - experiment_id: exp1415-dvi-v3-1508-fresh-cases
+      verdict: dvi_v3_blocked_nonforgetting_below_gate
+      addressed_by: "Exp1415 improved AUROC but failed the nonforgetting gate at 0.968604. This task changes the method to replay-balanced/threshold-calibrated training and keeps FR-11 v6 gated on deployment."
+      retire_if_same_verdict: true
   prompt: |
     CONTEXT:
-    Exp1392 fixed test collection errors. Execution-time failures and possible
-    spec-coverage debt remain. This task should repair the smallest actionable
-    runtime failure set without broad refactoring. Use {project_root} as the
+    DVI v3 improved AUROC in exp1415 but did not deploy because nonforgetting
+    dropped below the gate. The post-.109 sweep suggests replay-balanced and
+    abstraction-balanced updates before FR-11 v6. Use {project_root} as the
     project root and {date} as the run date.
 
     EXISTING CODE TO READ FIRST:
     - CODEX.md
     - CLAUDE.md
-    - results/experiment_1392_test_suite_hygiene_v2.json
-    - ops/e2e-test-plan.md
-    - openspec/capabilities/
-    - tests/python/
+    - results/experiment_1415_dvi_v3_1508_fresh_cases.json
+    - results/experiment_1394_dvi_v2_secl_59_cases.json
+    - results/experiment_1395_fr11_self_learning_v5_1508_cases.json
+    - research-references.md
+    - python/carnot/
+    - openspec/capabilities/self-learning/spec.md
+    - openspec/capabilities/verification/spec.md
 
     TASK:
-    Run focused test discovery, identify runtime failures after collection,
-    fix the narrowest root cause, and write a terminal artifact with commands
-    and remaining debt.
+    Repair DVI v3 with replay-balanced/nonforgetting-preserving training or
+    calibration. Deploy DVI v3 only if it beats DVI v2 without violating the
+    nonforgetting gate.
 
     REQUIRED ARTIFACT FIELDS:
     - status
-    - collection_clean_confirmed
-    - execution_failures_before
-    - execution_failures_after
-    - execution_failures_fixed
-    - spec_coverage_checked
-    - commands_run
-    - remaining_debt
+    - dvi_v3_deployed
+    - dvi_v3_auroc_delta
+    - dvi_v2_auroc_delta_baseline
+    - nonforgetting_rate
+    - replay_balance_applied
+    - threshold_calibration_applied
+    - fresh_cases_used
+    - tests_run
     - honest_verdict
 
     CONCRETE STEPS:
-    1. Create results/experiment_1421_test_suite_execution_debt_v1.json immediately with status="in_progress".
-    2. Run a fast focused collection/execution command to reproduce current runtime failures.
-    3. Identify the narrowest root cause; do not touch unrelated files.
-    4. If code behavior changes, update specs/tests first per CODEX.md.
-    5. Fix the runtime failure and rerun the focused test command.
-    6. Run targeted spec coverage if relevant.
-    7. Record commands_run and remaining_debt.
-    8. Write all required fields with status="complete" or status="blocked".
+    1. Create results/experiment_1432_dvi_v3_nonforgetting_replay_balanced.json immediately with status="in_progress".
+    2. Read exp1415 and identify whether the nonforgetting failure was thresholding, sampling imbalance, or model update drift.
+    3. Apply a bounded replay-balanced or threshold-calibrated update using the 1508 fresh verified cases and a held-out replay set.
+    4. Use DVI v2 AUROC delta 0.011458 as the minimum positive baseline unless the artifact records a more precise value.
+    5. Set dvi_v3_deployed=true only if nonforgetting_rate >= 0.99 and AUROC does not regress below DVI v2.
+    6. Add focused tests if implementation changes behavior.
+    7. Write all required artifact fields with status="complete" or status="blocked".
 
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1421_test_suite_execution_debt_v1.json')); print(d.get('execution_failures_fixed'), d.get('execution_failures_before'), d.get('execution_failures_after'), d.get('honest_verdict'))"
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1432_dvi_v3_nonforgetting_replay_balanced.json')); print(d.get('dvi_v3_deployed'), d.get('dvi_v3_auroc_delta'), d.get('nonforgetting_rate'), d.get('honest_verdict'))"
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-- id: exp1422-discrete-sb-kv260-rtl-spec
-  milestone: 2026.04.109
-  deliverable: results/experiment_1422_discrete_sb_kv260_rtl_spec.json
-  title: "Discrete SB KV260 RTL Specification — From CPU Estimate to Synthesis Plan"
+- id: exp1433-fr11-self-learning-v6-dvi-v3-gated
+  milestone: 2026.04.110
+  deliverable: results/experiment_1433_fr11_self_learning_v6_dvi_v3_gated.json
+  title: "FR-11 Self-Learning v6 — Gated on DVI v3 Deployment"
   agent_type: codex
   model: gpt-5.5
   max_turns: 40
   estimated_wall_time_min: 45
-  priority: medium
+  priority: critical
   requires_gpu: false
   skip_pre_test: true
+  gated_on:
+    - upstream: exp1432-dvi-v3-nonforgetting-replay-balanced
+      artifact_field: dvi_v3_deployed
+      op: '=='
+      value: true
   prior_failures:
-    - experiment_id: exp1399-discrete-sb-kv260-cpu-simulation
-      verdict: cpu_discrete_sb_convergence_speedup_observed_kv260_bram_lut_budget_fits_estimate_only
-      addressed_by: "exp1399 was CPU simulation and budget estimate only. This task produces an RTL-level specification and synthesis plan while explicitly avoiding a hardware execution claim."
+    - experiment_id: exp1418-fr11-self-learning-v6-dvi-v3-gated
+      verdict: gate_blocked_upstream_dvi_v3_not_deployed
+      addressed_by: "Exp1418 did not run because exp1415 did not deploy DVI v3. This task keeps the gate but points it at exp1432's repaired nonforgetting deployment."
       retire_if_same_verdict: false
   prompt: |
     CONTEXT:
-    Exp1399 found Discrete SB feasible for KV260 by BRAM/LUT estimate and
-    observed 1.38x CPU convergence speedup, but no RTL or hardware execution
-    claim exists. This task moves one step closer by writing a concrete RTL
-    specification and synthesis plan. Use {project_root} as the project root
-    and {date} as the run date.
+    This is the mandatory continuous self-learning experiment for .110. FR-11
+    v5 produced 1508 fresh verified samples, but FR-11 v6 gate-blocked because
+    DVI v3 did not deploy. This task runs only after exp1432 deploys DVI v3.
+    Use {project_root} as the project root and {date} as the run date.
 
     EXISTING CODE TO READ FIRST:
     - CODEX.md
     - CLAUDE.md
-    - results/experiment_1399_discrete_sb_kv260_cpu_simulation.json
-    - hardware/
-    - rtl/
-    - research-hardware-wishlist.md
-    - openspec/change-proposals/continuous-to-ising-transpiler.md
+    - research-program.md
+    - results/experiment_1395_fr11_self_learning_v5_1508_cases.json
+    - results/experiment_1418_fr11_self_learning_v6_dvi_v3_gated.json
+    - results/experiment_1432_dvi_v3_nonforgetting_replay_balanced.json
+    - python/carnot/
+    - openspec/capabilities/self-learning/spec.md
 
     TASK:
-    Write a Discrete SB KV260 RTL specification and resource estimate. Do not
-    claim hardware execution unless synthesis/board validation actually runs.
+    Run FR-11 continuous self-learning v6 using deployed DVI v3 and report
+    fresh verified sample growth, nonforgetting, and headline eligibility.
 
     REQUIRED ARTIFACT FIELDS:
     - status
-    - rtl_spec_complete
-    - rtl_spec_path
-    - estimated_lut
-    - estimated_bram
-    - kv260_budget_fits
-    - synthesis_command_documented
-    - hardware_execution_performed
-    - hardware_claim_allowed
+    - dvi_v3_artifact_used
+    - fresh_verified_sample_count
+    - baseline_fresh_verified_sample_count
+    - self_learning_delta_overall
+    - nonforgetting_rate
+    - session_memory_updated
+    - headline_result_allowed
     - honest_verdict
 
     CONCRETE STEPS:
-    1. Create results/experiment_1422_discrete_sb_kv260_rtl_spec.json immediately with status="in_progress".
-    2. Read exp1399 and existing hardware/rtl docs.
-    3. Write hardware/kv260/discrete_sb_rtl_spec.md or an equivalent spec path.
-    4. Include datapath, memory layout, random/noise source assumptions, update schedule, and host interface.
-    5. Estimate LUT/BRAM from exp1399 parameters and KV260 constraints.
-    6. Document synthesis command(s) but do not run destructive or board-dependent steps unless already configured.
-    7. Set hardware_execution_performed=false unless actual hardware validation occurred.
-    8. Write all required fields with status="complete".
+    1. Create results/experiment_1433_fr11_self_learning_v6_dvi_v3_gated.json immediately with status="in_progress".
+    2. Confirm exp1432 deployed DVI v3; if not, write status="blocked" with headline_result_allowed=false.
+    3. Run the existing FR-11 self-learning workflow on fresh or held-out cases, using DVI v3 as the verifier/improvement component.
+    4. Compare against the exp1395 baseline fresh_verified_sample_count=1508.
+    5. Preserve nonforgetting and record whether SessionMemory or equivalent local memory was updated.
+    6. Set headline_result_allowed=true only if fresh verified sample growth is positive and nonforgetting is preserved.
+    7. Write all required artifact fields with status="complete" or status="blocked".
 
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1422_discrete_sb_kv260_rtl_spec.json')); print(d.get('rtl_spec_complete'), d.get('kv260_budget_fits'), d.get('hardware_execution_performed'), d.get('honest_verdict'))"
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1433_fr11_self_learning_v6_dvi_v3_gated.json')); print(d.get('fresh_verified_sample_count'), d.get('self_learning_delta_overall'), d.get('headline_result_allowed'), d.get('honest_verdict'))"
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-- id: exp1423-process-reward-model-v1-fover-1508
-  milestone: 2026.04.109
-  deliverable: results/experiment_1423_process_reward_model_v1_fover_1508.json
-  title: "Process Reward Model v1 — Step-Level PRM on 1508 FoVer Verified Traces"
+- id: exp1434-fover-prm-label-completion-v2
+  milestone: 2026.04.110
+  deliverable: results/experiment_1434_fover_prm_label_completion_v2.json
+  title: "FoVer PRM Label Completion v2 — Fill 478 Missing Local Step Labels"
   agent_type: codex
   model: gpt-5.5
   max_turns: 40
@@ -772,122 +656,318 @@ tasks:
   requires_gpu: false
   skip_pre_test: true
   prior_failures:
-    - experiment_id: exp422-vprm-fover-step-labels
-      verdict: archived_step_label_generation_scope
-      addressed_by: "exp422 produced or used FoVer step labels. This task uses the new exp1395 1508 verified traces and trains/measures a lightweight PRM instead of only generating labels."
-      retire_if_same_verdict: false
-    - experiment_id: exp1084-step-level-prm-data-generation
-      verdict: prm_data_generated_not_trained_model
-      addressed_by: "exp1084 generated PRM data. This task consumes the larger 1508-case verified corpus, trains PRM v1, and reports AUROC/precision/recall."
+    - experiment_id: exp1423-prm-v1-fover-1508-pairs
+      verdict: prmv1_trained_on_available_step_labels_with_478_promoted_traces_missing_local_labels
+      addressed_by: "Exp1423 trained PRM v1 on 1030 available labels and left 478 promoted traces missing local labels. This task reconstructs or ledgers those labels and retrains PRM v2."
       retire_if_same_verdict: false
   prompt: |
     CONTEXT:
-    Process reward model literature shows that 1,000-5,000 labeled traces can
-    train useful step-level verifiers. Carnot now has 1508 verified cases from
-    exp1395 plus validator/MCS labels. Train a lightweight PRM that predicts
-    step correctness without full certificate execution. Use {project_root} as
+    PRM v1 reached AUROC 0.832874 but only used 1030 of 1508 promoted traces.
+    The next step is to recover or formally ledger the 478 missing local step
+    labels, then retrain PRM v2 on all available labels. Use {project_root} as
     the project root and {date} as the run date.
 
     EXISTING CODE TO READ FIRST:
     - CODEX.md
     - CLAUDE.md
-    - results/experiment_1395_fr11_self_learning_v5.json
-    - results/experiment_1397_fullscale_pipeline_v2_200cases.json
+    - results/experiment_1423_prm_v1_fover_1508_pairs.json
+    - results/experiment_1395_fr11_self_learning_v5_1508_cases.json
     - research-references.md
-    - python/carnot/verify/
-    - python/carnot/models/
+    - python/carnot/
     - openspec/capabilities/verification/spec.md
+    - openspec/capabilities/self-learning/spec.md
 
     TASK:
-    Train a lightweight CPU PRM on FoVer step/certificate labels and measure
-    step-level AUROC, precision, and recall.
+    Complete local step-label coverage for the FoVer/FR-11 PRM dataset as far
+    as evidence allows, retrain PRM v2, and write an artifact with exact label
+    coverage and metrics.
 
     REQUIRED ARTIFACT FIELDS:
     - status
+    - missing_labels_before
+    - missing_labels_filled
+    - missing_labels_remaining
+    - label_blocker_ledger_path
     - training_traces_used
-    - step_labels_available
-    - prmv1_trained
-    - prmv1_auroc
-    - prmv1_step_precision
-    - prmv1_step_recall
-    - checkpoint_path
+    - prmv2_trained
+    - prmv2_auroc
+    - prmv2_precision
+    - prmv2_recall
+    - headline_label_coverage_ready
     - honest_verdict
 
     CONCRETE STEPS:
-    1. Create results/experiment_1423_process_reward_model_v1_fover_1508.json immediately with status="in_progress".
-    2. Locate verified traces and step labels from exp1395/exp1397 or construct labels from validator outputs.
-    3. Train a small deterministic model or feature-based classifier; keep it CPU-scoped.
-    4. Evaluate on a held-out split and report AUROC, precision, and recall.
-    5. Save a checkpoint if trained.
-    6. If labels are insufficient, write an honest blocked artifact with missing label counts.
-    7. Write all required fields with status="complete" or status="blocked".
+    1. Create results/experiment_1434_fover_prm_label_completion_v2.json immediately with status="in_progress".
+    2. Identify the 478 missing labels from exp1423 and trace each to its source case if possible.
+    3. Recover labels using existing validators, trace reconstruction, or deterministic replay; do not invent labels.
+    4. Write docs/research/prm_missing_label_ledger_v2.md with every unrecovered label and blocker.
+    5. Retrain or re-evaluate PRM v2 on all available labels and report AUROC, precision, and recall.
+    6. Set headline_label_coverage_ready=true only if all 1508 traces have valid local labels or the residual blockers are explicitly outside local recovery scope.
+    7. Write all required artifact fields with status="complete" or status="blocked".
 
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1423_process_reward_model_v1_fover_1508.json')); print(d.get('prmv1_trained'), d.get('prmv1_auroc'), d.get('prmv1_step_precision'), d.get('honest_verdict'))"
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1434_fover_prm_label_completion_v2.json')); print(d.get('missing_labels_filled'), d.get('training_traces_used'), d.get('prmv2_auroc'), d.get('honest_verdict'))"
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-# ============================================================
-# Phase 4 - Retro
-# ============================================================
-
-- id: exp1424-milestone-109-retro
-  milestone: 2026.04.109
-  deliverable: results/experiment_1424_milestone_109_retro.json
-  title: "Milestone 2026.04.109 Retrospective + Carry-Forward Plan"
+- id: exp1435-dpo-headline-provenance-audit
+  milestone: 2026.04.110
+  deliverable: results/experiment_1435_dpo_headline_provenance_audit.json
+  title: "DPO Headline Provenance Audit — Direct GGUF Adapter or Reranker-Only Track"
   agent_type: codex
   model: gpt-5.5
-  max_turns: 20
-  estimated_wall_time_min: 20
+  max_turns: 30
+  estimated_wall_time_min: 30
   priority: medium
   requires_gpu: false
   skip_pre_test: true
   prior_failures:
-    - experiment_id: exp1308-milestone-retro-101
-      verdict: routine_retro_scope_match
-      addressed_by: "Milestone retros are intentionally recurring. This task evaluates milestone .109 only, uses skip_pre_test=true to avoid the historical retro bootstrap wedge, and requires explicit carry-forward prior_failures."
-      retire_if_same_verdict: false
-    - experiment_id: exp1322-milestone-retro-102
-      verdict: routine_retro_scope_match
-      addressed_by: "Same recurring-retro scope, new milestone evidence. The task is not a rerun of .102 criteria."
-      retire_if_same_verdict: false
+    - experiment_id: exp1420-dpo-training-1508-verified-pairs
+      verdict: gguf_dpo_unsupported_reranker_fallback_measured
+      addressed_by: "Exp1420 measured a strong reranker fallback but could not support a direct GGUF fine-tune headline. This task audits provenance and either identifies a local adapter path or relabels DPO as reranker-only."
+      retire_if_same_verdict: true
   prompt: |
     CONTEXT:
-    This is the closing retrospective for milestone .109. Evaluate whether the
-    milestone met its success criteria, identify carry-forward tasks with
-    prior_failures fields, and write a terminal artifact. Use {project_root} as
-    the project root and {date} as the run date.
+    Exp1420 produced a useful preference/reranking signal but did not perform
+    direct local GGUF fine-tuning. Carnot needs a provenance decision before
+    the DPO line can be used as a headline training claim. Use {project_root}
+    as the project root and {date} as the run date.
+
+    MODEL_SPECS:
+    - hf_id: unsloth/Qwen3.6-35B-A3B-GGUF
+      role: primary_training_target_if_supported
+    - hf_id: unsloth/gemma-4-31B-it-GGUF
+      role: dense_training_target_if_supported
+    - hf_id: unsloth/gemma-4-26B-A4B-it-GGUF
+      role: moe_training_target_if_supported
+    This is a provenance audit, not a required training run. Do not report any
+    legacy small-model result as a headline DPO result.
 
     EXISTING CODE TO READ FIRST:
     - CODEX.md
     - CLAUDE.md
-    - research-roadmap.yaml
-    - research-roadmap-next.yaml
-    - openspec/change-proposals/research-roadmap-vNEXT.md
-    - ops/conductor-log.md
-    - results/
+    - results/experiment_1420_dpo_training_1508_verified_pairs.json
+    - scripts/experiment_template.py
+    - python/carnot/
+    - research-references.md
+    - ops/status.md
 
     TASK:
-    Evaluate all .109 tasks against the roadmap success criteria and write a
-    concise carry-forward plan.
+    Decide whether Carnot has a supported local adapter/fine-tune path for a
+    headline DPO claim on the mandated SOTA GGUF targets, or whether the DPO
+    track must remain reranker-only until conversion/tooling changes.
 
     REQUIRED ARTIFACT FIELDS:
     - status
-    - criteria_total
-    - criteria_met
-    - success_criteria_results
-    - retired_experiments
-    - carry_forward_tasks
-    - prior_failures_required_next
-    - gpu_utilization_summary
+    - model_specs
+    - direct_gguf_finetune_supported
+    - local_adapter_path_supported
+    - headline_provenance_ready
+    - reranker_track_relabelled
+    - recommended_next_training_path
+    - evidence_paths_checked
     - honest_verdict
 
     CONCRETE STEPS:
-    1. Create results/experiment_1424_milestone_109_retro.json immediately with status="in_progress".
-    2. Read this roadmap doc and all available .109 result artifacts.
-    3. Score each of the 13 success criteria as MET, NOT_MET, GATE_BLOCKED, or BLOCKED.
-    4. Identify tasks that must be retired or can be carried forward with a root-cause plan.
-    5. Include prior_failures_required_next for every carry-forward.
-    6. Summarize GPU usage if artifacts/logs expose it; otherwise state unavailable.
-    7. Write all required fields with status="complete".
+    1. Create results/experiment_1435_dpo_headline_provenance_audit.json immediately with status="in_progress".
+    2. Read exp1420 and identify exactly why direct GGUF DPO was unsupported.
+    3. Inspect local training utilities and documentation for LoRA/adapter, GGUF conversion, or reranker-only support.
+    4. Do not launch a long training run; this is a provenance and support audit.
+    5. If a direct local adapter path exists, document the minimal next experiment needed to run it.
+    6. If no supported path exists, set reranker_track_relabelled=true and headline_provenance_ready=false.
+    7. Write all required artifact fields with status="complete".
 
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1424_milestone_109_retro.json')); print(d.get('criteria_met'), '/', d.get('criteria_total'), d.get('honest_verdict'))"
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1435_dpo_headline_provenance_audit.json')); print(d.get('direct_gguf_finetune_supported'), d.get('local_adapter_path_supported'), d.get('reranker_track_relabelled'), d.get('honest_verdict'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+# ============================================================
+# Phase 3 - Phase-3 safeguards, hardware honesty, and retro
+# ============================================================
+
+- id: exp1436-anchored-dual-path-latent-repair-v1
+  milestone: 2026.04.110
+  deliverable: results/experiment_1436_anchored_dual_path_latent_repair_v1.json
+  title: "Anchored Dual-Path Latent Repair v1 — Fix Energy-Down Accuracy-Down Drift"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 40
+  estimated_wall_time_min: 45
+  priority: high
+  requires_gpu: false
+  skip_pre_test: true
+  prior_failures:
+    - experiment_id: exp1417-ebrm-latent-trajectory-drift-smoke
+      verdict: energy_down_accuracy_down_off_decoder_support
+      addressed_by: "Exp1417 proved raw latent energy minimization lowers energy while hurting decoded accuracy. This task adds anchoring and dual-path safeguards before any scale-up."
+      retire_if_same_verdict: false
+  prompt: |
+    CONTEXT:
+    Exp1417 reproduced the Phase-3 risk that latent energy can decrease while
+    decoded accuracy decreases. This task tests whether anchoring and a
+    dual-path decoder safeguard reduce off-support drift on a small benchmark.
+    Use {project_root} as the project root and {date} as the run date.
+
+    EXISTING CODE TO READ FIRST:
+    - CODEX.md
+    - CLAUDE.md
+    - results/experiment_1417_ebrm_latent_trajectory_drift_smoke.json
+    - research-program.md
+    - _bmad/architecture.md
+    - python/carnot/
+    - openspec/capabilities/verification/spec.md
+
+    TASK:
+    Implement or prototype an anchored/dual-path latent planning smoke test and
+    compare it with raw latent energy descent.
+
+    REQUIRED ARTIFACT FIELDS:
+    - status
+    - anchoring_applied
+    - dual_path_decoder_stub
+    - energy_monotone
+    - accuracy_before_planning
+    - accuracy_after_planning
+    - accuracy_delta_after_planning
+    - latent_drift_norm
+    - off_support_rate
+    - anchored_repair_viable
+    - honest_verdict
+
+    CONCRETE STEPS:
+    1. Create results/experiment_1436_anchored_dual_path_latent_repair_v1.json immediately with status="in_progress".
+    2. Reuse the smallest exp1417-compatible latent drift benchmark or create a deterministic micro benchmark if no code exists.
+    3. Add anchoring to the initial latent state and a dual-path check that compares decoded candidate quality before accepting a lower-energy latent state.
+    4. Measure energy monotonicity, accuracy delta, latent drift norm, and off-support rate for raw descent versus anchored descent.
+    5. Set anchored_repair_viable=true only if accuracy_delta_after_planning is nonnegative and off-support drift is reduced.
+    6. Write all required artifact fields with status="complete" or status="blocked".
+
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1436_anchored_dual_path_latent_repair_v1.json')); print(d.get('anchoring_applied'), d.get('accuracy_delta_after_planning'), d.get('anchored_repair_viable'), d.get('honest_verdict'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp1437-discrete-sb-kv260-rtl-lint-sim
+  milestone: 2026.04.110
+  deliverable: results/experiment_1437_discrete_sb_kv260_rtl_lint_sim.json
+  title: "Discrete SB KV260 RTL Lint/Simulation — Honest Hardware Evidence"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 40
+  estimated_wall_time_min: 45
+  priority: high
+  requires_gpu: false
+  skip_pre_test: true
+  prior_failures:
+    - experiment_id: exp1422-discrete-sb-kv260-rtl-spec
+      verdict: rtl_spec_complete_kv260_budget_fits_no_hardware_execution_claim
+      addressed_by: "Exp1422 wrote an RTL specification and kept the hardware claim honest. This task attempts lint/simulation evidence while preserving no-hardware-claim unless actual board execution occurs."
+      retire_if_same_verdict: false
+  prompt: |
+    CONTEXT:
+    Exp1422 moved Discrete SB toward KV260 RTL, but it remained a specification
+    with no bitstream, lint, simulation, or board execution evidence. This task
+    attempts the next honest local hardware step. Use {project_root} as the
+    project root and {date} as the run date.
+
+    EXISTING CODE TO READ FIRST:
+    - CODEX.md
+    - CLAUDE.md
+    - results/experiment_1422_discrete_sb_kv260_rtl_spec.json
+    - research-hardware-wishlist.md
+    - _bmad/architecture.md
+    - hardware/
+    - openspec/capabilities/
+
+    TASK:
+    Add or run a bounded RTL lint/simulation path for the Discrete SB KV260
+    design. Record missing-tool blockers honestly and do not claim hardware
+    execution unless actual board commands run.
+
+    REQUIRED ARTIFACT FIELDS:
+    - status
+    - rtl_sources_checked
+    - rtl_lint_complete
+    - simulation_complete
+    - synthesis_attempted
+    - yosys_available
+    - verilator_available
+    - vivado_available
+    - hardware_execution_performed
+    - hardware_claim_allowed
+    - next_bitfile_step
+    - honest_verdict
+
+    CONCRETE STEPS:
+    1. Create results/experiment_1437_discrete_sb_kv260_rtl_lint_sim.json immediately with status="in_progress".
+    2. Inspect exp1422 and local hardware/RTL directories for the Discrete SB design artifacts.
+    3. Check for local tools such as yosys, verilator, iverilog, or vivado without installing new toolchains.
+    4. If RTL sources exist, run the cheapest lint/syntax/simulation command available and record exact command output summaries.
+    5. If sources or tools are missing, write a precise blocker and next_bitfile_step rather than fabricating a pass.
+    6. Set hardware_execution_performed=false unless a real KV260 board flow runs; set hardware_claim_allowed=false unless hardware evidence exists.
+    7. Write all required artifact fields with status="complete" or status="blocked".
+
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1437_discrete_sb_kv260_rtl_lint_sim.json')); print(d.get('rtl_lint_complete'), d.get('simulation_complete'), d.get('hardware_claim_allowed'), d.get('honest_verdict'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp1438-milestone-110-retrospective
+  milestone: 2026.04.110
+  deliverable: results/experiment_1438_milestone_110_retro.json
+  title: "Milestone .110 Retrospective — Success Criteria and Carry-Forward Rules"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 20
+  estimated_wall_time_min: 20
+  priority: high
+  requires_gpu: false
+  skip_pre_test: true
+  prior_failures:
+    - experiment_id: exp1424-milestone-109-retrospective
+      verdict: milestone_109_10_of_13_criteria_met_threshold_met_but_repair_dvi_fr11_and_pipeline_carry_forward
+      addressed_by: "Every milestone needs a terminal retro, but .110 must specifically evaluate whether the .109 repair/DVI/PRM carry-forward was resolved and write precise carry-forward rules."
+      retire_if_same_verdict: false
+  prompt: |
+    CONTEXT:
+    This is the terminal retrospective for milestone .110. It should evaluate
+    all 14 success criteria from openspec/change-proposals/research-roadmap-vNEXT.md,
+    summarize honest positive and negative evidence, and define carry-forward
+    rules. Use {project_root} as the project root and {date} as the run date.
+
+    EXISTING CODE TO READ FIRST:
+    - CODEX.md
+    - CLAUDE.md
+    - openspec/change-proposals/research-roadmap-vNEXT.md
+    - research-roadmap-next.yaml
+    - results/experiment_1425_109_carryforward_activation_audit.json
+    - results/experiment_1428_dccd_schema_constrained_repair_v2.json
+    - results/experiment_1431_fullscale_pipeline_v4_micro_gated.json
+    - results/experiment_1432_dvi_v3_nonforgetting_replay_balanced.json
+    - results/experiment_1433_fr11_self_learning_v6_dvi_v3_gated.json
+    - results/experiment_1434_fover_prm_label_completion_v2.json
+    - results/experiment_1437_discrete_sb_kv260_rtl_lint_sim.json
+    - ops/conductor-log.md
+
+    TASK:
+    Write the .110 milestone retrospective artifact with criteria accounting,
+    carry-forward tasks, same-verdict retirement rules, and operational notes.
+
+    REQUIRED ARTIFACT FIELDS:
+    - status
+    - milestone
+    - criteria_total
+    - criteria_met
+    - success_criteria_results
+    - repair_v2_verdict
+    - dvi_fr11_verdict
+    - prm_verdict
+    - hardware_verdict
+    - carry_forward_tasks
+    - retired_exact_scopes
+    - honest_verdict
+
+    CONCRETE STEPS:
+    1. Create results/experiment_1438_milestone_110_retro.json immediately with status="in_progress".
+    2. Read the roadmap doc and every available .110 artifact from exp1425 through exp1437.
+    3. Score each of the 14 success criteria as met, not met, blocked, or not run with evidence paths.
+    4. Summarize repair, DVI/FR-11, PRM, DPO, latent, test-debt, and hardware outcomes separately.
+    5. List carry-forward tasks with prior failure verdicts and retire-if-same-verdict rules.
+    6. Update ops/status.md and ops/changelog.md only if this task actually closes the milestone locally; otherwise leave docs unchanged and record why.
+    7. Write all required artifact fields with status="complete".
+
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1438_milestone_110_retro.json')); print(d.get('criteria_met'), '/', d.get('criteria_total'), d.get('honest_verdict'))"
     Do NOT push. Do NOT modify scripts/research_conductor.py.
