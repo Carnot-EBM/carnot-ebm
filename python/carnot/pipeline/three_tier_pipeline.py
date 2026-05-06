@@ -93,6 +93,7 @@ from carnot.models.vjepa_predictor import (
 from carnot.pipeline.spilled_energy import (  # noqa: F401
     SpilledEnergyDetectorResult,
 )
+from carnot.pipeline.verdict_record import VerdictRecord, calibrated_confidence_from_energy
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -109,6 +110,16 @@ if TYPE_CHECKING:
     from carnot.probes.hallusae_geometric_probe import HalluSAEGeometricProbe
     from carnot.probes.streaming_cot_detector import StreamingCoTHalluDetector
     from carnot.samplers.lagrange_adaptive import LagrangeAdaptiveIsingConstraints
+
+_TIER_NAME_TO_INDEX: dict[str, int] = {
+    "spilled_energy": 0,
+    "nup_probe_v4": 0,
+    "basin_detector": 0,
+    "sink_probe": 1,
+    "eorm": 2,
+    "vg_skip": 2,
+    "ising": 3,
+}
 
 # ---------------------------------------------------------------------------
 # ThreeTierPipelineResult
@@ -550,6 +561,39 @@ class ThreeTierPipeline:
     # ------------------------------------------------------------------
     # verify()
     # ------------------------------------------------------------------
+
+    def verify_legacy(self, *args: Any, **kwargs: Any) -> tuple[bool, str, float]:
+        """Compatibility alias for the existing tuple-returning ``verify()``.
+
+        Spec: REQ-VERIFY-1410
+        """
+        return self.verify(*args, **kwargs)
+
+    def verify_record(self, *args: Any, **kwargs: Any) -> VerdictRecord:
+        """Verify a response and return a structured verdict record.
+
+        Spec: REQ-VERIFY-1408, REQ-VERIFY-1409, REQ-VERIFY-1410
+        """
+        started_at = time.monotonic()
+        verified, tier_used, energy = self.verify(*args, **kwargs)
+        budget_ms = (time.monotonic() - started_at) * 1000.0
+        tier_index = _TIER_NAME_TO_INDEX.get(tier_used, 3)
+        if tier_used == "sink_probe":
+            calibrated_confidence = max(0.0, min(1.0, float(energy)))
+        else:
+            calibrated_confidence = calibrated_confidence_from_energy(float(energy))
+        verdict = "pass" if verified else "fail"
+
+        return VerdictRecord(
+            verdict=verdict,  # type: ignore[arg-type]
+            energy=float(energy),
+            calibrated_confidence=calibrated_confidence,
+            producing_tier=tier_index,
+            tier_reached=tier_index,
+            rationale=f"{tier_used}_{verdict}",
+            budget_ms_consumed=budget_ms,
+            extras={"tier_used": tier_used, "legacy_verified": bool(verified)},
+        )
 
     def verify(
         self,
