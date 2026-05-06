@@ -18,10 +18,11 @@ call. No fine-tuning. No access to model weights.
 Rust + Python/JAX, Apache 2.0, `pip install carnot`.
 
 Current public research record: **1,498 experiments tracked, 118
-artifact-backed completed milestones**, with checked-in result artifacts
+artifact-backed completed milestone records**, with checked-in result artifacts
 through Exp 1411 on 2026-05-06. `research-complete.yaml` currently archives
-**117** completed milestones through 2026.04.107 (milestone .108 retro is
-complete but not yet added to that archive).
+**118** completed milestone records through 2026.04.107; milestone .108 has
+terminal artifacts through Exp 1402 but is not yet appended as a new archive
+record.
 
 Milestone .106 delivered the critical fix to thinking-mode certificate
 generation: Exp 1366 (CRANE tag-first prefix injection) reached
@@ -251,9 +252,14 @@ experiment artifact under `results/`.
 | Milestone .105 status | **9/12 criteria met**; thinking-mode budget exhaustion diagnosed as terminal negative evidence; hardware/parity work honest; publication hold active | Exp 1363 |
 | Milestone .106 status | **11/13 criteria met**; tag-first CRANE injection resolved certificate_parse_rate=0.0 blocker; pre-test cascade SKIPs on exp1375/1376 required manual closeout | Exp 1376 retro |
 | Milestone .107 status | **13/14 criteria met**; full-scale pipeline headline allowed; arXiv v11 ready; GRPO v7 JURY-RL no improvement (sole miss); publication hold lift recommended | Exp 1389 |
+| DVI v2 + SECL combined calibration | DVI AUROC **0.394526 → 0.405984** (+0.011458); SECL ECE **0.561624 → 0.306922** (45.35096% reduction); deployed from 59 fresh cases and 1,770 held-out FoVer cases | Exp 1394 |
+| FR-11 continuous self-learning v5 | **1,508 fresh-verified cases** via DVI v2/SECL path; self-learning delta **+1,449** vs Exp 1388; GRPO v8 cases integrated **0** | Exp 1395 |
+| Full-scale pipeline v2, 200 cases | `certificate_parse_rate=1.0`, `semantic_validation_pass_rate=1.0`, `repair_hint_precision=1.0`, but `full_pipeline_pass_rate=0.305 < 0.40`, so not a headline result | Exp 1397 |
+| Milestone .108 status | **12/13 criteria met**; arXiv submission not attempted, semantic validation fixed, full pipeline below headline gate, GRPO retired, BiPRM negative | Exp 1402 |
 | Current Python test collection | **22,201** Python tests collected; collection-only snapshot, not a full-suite pass claim | 2026-05-06 collection run |
 | Structured verdict records (Issue #3) | `VerdictRecord` + `calibrated_confidence_from_energy`; `verify_record()` API on both pipeline classes; **135 tests** pass | 2026-05-06 |
 | SessionMemory portable packs (Issue #5) | `export_session_memory`, `import_session_memory`, `diff_session_memory_packs` CLI; JSON Schema v1; **89 tests** pass (1 skipped) | 2026-05-06 |
+| Streaming verification API (Issue #7) | Async `verify_stream` iterator emits `VerdictRecord` objects in completion order; MCP event payload includes verdict events and `stream_end`; focused stream/MCP tests pass **10/10** | Exp 1411 |
 | Local Claude/Codex usage snapshot | Codex reads the newest local `token_count` event; Claude aggregates local token usage and reads only subscription/tier metadata from credentials; free-form quota prose is ignored instead of guessed; focused regression tests pass | 2026-05-04 changelog |
 
 Deeper analysis of these — including everything that **didn't** work and
@@ -281,8 +287,9 @@ because without the negatives the positives become uninterpretable.
   on a genuinely held-out GSM8K range (Exp 682). Cascade eligibility pulled.
 - **"FPGA speedup figure ready for arXiv"** (Exp 1167 audit) — held. The
   draft figure mixed an estimated CPU sweep with a per-sample FPGA number and
-  made the caveat less prominent than the claim. The v10 bundle has remediated
-  the figure/claim issues and compiles, but upload/submission remains pending.
+  made the caveat less prominent than the claim. The v10/v11 bundles have
+  remediated the figure/claim issues and compile, but upload/submission remains
+  pending.
 
 The audits that caught these (Exps 679, 682, 687, 691, and the 2026-05-02
 paper-integrity audit attached to Exp 1167) are the
@@ -294,7 +301,7 @@ claim we publish.
 ## Where to go next
 
 - **[Technical report](docs/technical-report.md)** — the full research arc
-  through Exp 1350 across 113 artifact-backed completed milestones, with a
+  through Exp 1411 across 118 artifact-backed milestone records, with a
   plain-English timeline of what we tried, what failed, what stuck.
 - **[Roadmap](docs/roadmap.md)** — current milestone, upcoming milestones,
   hardware track, and Phase 3 (Kona-parity foundation-model) direction.
@@ -498,7 +505,7 @@ See the [technical report](docs/technical-report.md) for the full research recor
 
 ## 14 Principles Learned
 
-Hard-won lessons from the activation-based phase of a research program that now spans Exp 1-1350 across 113 artifact-backed milestones and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
+Hard-won lessons from the activation-based phase of a research program that now spans Exp 1-1411 across 118 artifact-backed milestone records and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
 
 ### What works
 1. **The model's own logprobs are the best energy.** No external EBM needed for rejection sampling — the LLM's own confidence is already an energy function. Simple, practical, +10%.

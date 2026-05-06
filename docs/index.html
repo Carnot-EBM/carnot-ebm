@@ -300,8 +300,8 @@
       <a href="technical-report.html" class="btn btn-secondary">How it works</a>
     </div>
     <div class="stats-bar" aria-label="Project headline numbers">
-      <div class="stat"><div class="stat-num">1,498+</div><div class="stat-label">Experiments tracked through Exp 1411</div></div>
-      <div class="stat"><div class="stat-num">118</div><div class="stat-label">completed milestones (incl. .108)</div></div>
+      <div class="stat"><div class="stat-num">1,498</div><div class="stat-label">Experiments tracked through Exp 1411</div></div>
+      <div class="stat"><div class="stat-num">118</div><div class="stat-label">archived milestone records through .107</div></div>
       <div class="stat"><div class="stat-num">22,201</div><div class="stat-label">Python items collected, not full pass</div></div>
       <div class="stat"><div class="stat-num">12/13</div><div class="stat-label">latest .108 criteria met</div></div>
     </div>
@@ -403,7 +403,7 @@
 <section id="features" style="background: rgba(255,255,255,0.01);">
   <div class="container">
     <span class="section-label">What you can check</span>
-    <h2 class="section-title">Five capabilities, one framework</h2>
+    <h2 class="section-title">Six capabilities, one framework</h2>
     <p class="section-desc">
       Carnot ships with a routed verifier stack tuned for different kinds of
       LLM output. Pick one, or let the pipeline route automatically.
@@ -506,6 +506,18 @@
           Claude quota percentage remains unavailable unless structured numeric
           fields exist. Output is available as a compact table or JSON, with
           focused regression coverage passing.
+        </p>
+      </div>
+      <div class="bento-card span-2">
+        <div class="bento-icon">A</div>
+        <h3 class="bento-title">APIs &amp; portable memory</h3>
+        <p class="bento-text">
+          The public integration surface now includes structured
+          <code>VerdictRecord</code> outputs, async <code>verify_stream</code>
+          candidate verification, MCP verdict-event payloads, and portable
+          <code>SessionMemory</code> JSON packs for export, import, diff, merge,
+          and replace workflows. These additions shipped with focused regression
+          coverage in Exps 1403, 1408, and 1411.
         </p>
       </div>
     </div>
@@ -855,10 +867,10 @@
         <div class="r-stats"><span class="r-before">Integration packet written; thrml_available=false on this host</span> <span class="r-after">Milestone .89 &mdash; Exp 1150</span></div>
       </div>
       <div class="r-card">
-        <span class="r-tag">Preprint package &mdash; arXiv v10</span>
-        <h3 class="r-title">Critical fixes complete; upload pending</h3>
+        <span class="r-tag">Preprint package &mdash; arXiv v11</span>
+        <h3 class="r-title">Paper audit clean; manual upload pending</h3>
         <div class="r-meter"><div class="r-bar" style="width: 100%; background: #f59e0b;"></div></div>
-        <div class="r-stats"><span class="r-before">v10 PDF compiled at 371 KiB; bundle written to results</span> <span class="r-after">Upload pending &mdash; Exps 1269/1270</span></div>
+        <div class="r-stats"><span class="r-before">5/5 paper issues resolved; v11 submission-ready archive written</span> <span class="r-after">Manual upload required &mdash; Exps 1379/1380</span></div>
       </div>
       <div class="r-card">
         <span class="r-tag">Milestone .94 &mdash; clean-sweep closeout</span>
@@ -1113,10 +1125,34 @@
         <div class="r-stats"><span class="r-before">35 promoted, 37 demoted; replay-only, not headline DVI/GRPO</span> <span class="r-after">Exp 1344</span></div>
       </div>
       <div class="r-card">
-        <span class="r-tag">Milestone .104 &mdash; latest terminal artifact</span>
-        <h3 class="r-title">9/12 criteria met; carry-forward required</h3>
-        <div class="r-meter"><div class="r-bar" style="width: 75%; background: #f59e0b;"></div></div>
-        <div class="r-stats"><span class="r-before">SOTA certificate branch and semantic validator still missing/gated</span> <span class="r-after">Exp 1350</span></div>
+        <span class="r-tag">Milestone .108 &mdash; latest terminal retro</span>
+        <h3 class="r-title">12/13 criteria met</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 92.31%; background: #22c55e;"></div></div>
+        <div class="r-stats"><span class="r-before">Semantic validation fixed; full pipeline remains below headline gate</span> <span class="r-after">Exp 1402</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">DVI + calibration &mdash; v2 + SECL</span>
+        <h3 class="r-title">AUROC +0.0115; ECE down 45.35%</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 45.35%; background: #22c55e;"></div></div>
+        <div class="r-stats"><span class="r-before">0.394526 &rarr; 0.405984 AUROC; 0.561624 &rarr; 0.306922 ECE</span> <span class="r-after">Exp 1394</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Self-learning &mdash; FR-11 v5</span>
+        <h3 class="r-title">1,508 fresh-verified cases</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 100%; background: #22c55e;"></div></div>
+        <div class="r-stats"><span class="r-before">Delta +1,449 vs Exp 1388; GRPO cases integrated 0</span> <span class="r-after">Exp 1395</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Full-scale pipeline &mdash; 200 FoVer cases</span>
+        <h3 class="r-title">Semantic pass 1.0; full pass 0.305</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 30.5%; background: #f59e0b;"></div></div>
+        <div class="r-stats"><span class="r-before">Parse 1.0 and repair hints 1.0; below 0.40 headline gate</span> <span class="r-after">Exp 1397</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Public APIs &mdash; verdict, memory, stream</span>
+        <h3 class="r-title">135 + 89 + 10 focused tests passed</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 100%; background: #0ea5e9;"></div></div>
+        <div class="r-stats"><span class="r-before">Structured verdicts, SessionMemory packs, async verify_stream + MCP events</span> <span class="r-after">Exps 1408/1403/1411</span></div>
       </div>
       <div class="r-card">
         <span class="r-tag">Self-learning &mdash; skill graph v2</span>
@@ -1169,7 +1205,7 @@
           0.47 on a genuinely held-out test.</li>
         <li>A highlighted FPGA speedup figure in the draft paper mixed an
           estimated CPU sweep with a per-sample FPGA number; the remediation is
-          complete in the v10 bundle, but upload/submission still needs operator action.</li>
+          complete in the v10/v11 bundles, but upload/submission still needs operator action.</li>
       </ul>
       <p style="margin: 0.6rem 0 0 0;">Each was retracted, the audit that
         surfaced it is in the public research record, and the headlines above
@@ -1186,7 +1222,7 @@
     <p class="section-desc">
       An architectural framework for mapping the empirical bounds of
       LLM verification. The current draft has the .99 paper-v6 critical fixes,
-      claim/figure audit hooks, and a compiled v10 arXiv bundle. Upload is
+      claim/figure audit hooks, and a compiled v11 arXiv bundle. Upload is
       still pending operator action.
     </p>
     <div class="hero-actions" style="justify-content: flex-start;">
@@ -1196,11 +1232,11 @@
     </div>
     <p style="margin-top: 1.5rem; font-size: 0.9rem; color: var(--text-muted);">
       <em>Latest paper audit status 2026-05-05: critical paper-v6 fixes complete,
-      arXiv v10 PDF compiled at 371 KiB, bundle written to
-      results/carnot-arxiv-v10-20260504.tar.gz, and production k=5
-      orthogonality reports max r=0.4617 with k_eff=1.76. Exp 1321 records
-      operator hold active with related-work delta written and no credentialed
-      submission; upload remains pending.</em>
+      paper integrity audit resolved 5/5 issues, arXiv v11 compiled and wrote
+      results/carnot-arxiv-v11-20260505.tar.gz, and production k=5
+      orthogonality reports max r=0.4617 with k_eff=1.76. Exp 1390 records
+      missing SWORD credentials and generated a manual upload checklist; upload
+      remains pending.</em>
     </p>
   </div>
 </section>
