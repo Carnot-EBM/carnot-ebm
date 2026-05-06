@@ -2336,6 +2336,54 @@ cache unavailability.
 
 **Spec traces:** REQ-VERIFY-1414, SCENARIO-VERIFY-1414
 
+### REQ-VERIFY-1419: Full-Scale Pipeline V3 Repair Executor Rerun
+
+The repository shall provide an Exp 1419 runner that reads the 200-case Exp
+1397 full-scale pipeline artifact, confirms
+`results/experiment_1414_certificate_llm_repair_executor_v1.json` has
+`repair_executor_deployed=true`, resolves the mandated SOTA GGUF repair model
+through the local cache, and reruns the final pipeline accounting with the Exp
+1414 opt-in repair executor enabled for every Exp 1397 repair-hint case.
+
+The runner MUST write
+`results/experiment_1419_fullscale_pipeline_v3_repair_executor.json` with
+`status="in_progress"` before loading source artifacts or models. If Exp 1414
+is not deployed, fewer than 200 Exp 1397 cases are available, no mandated SOTA
+GGUF resolves, or the local model/GPU runtime cannot load, the terminal artifact
+MUST use `status="blocked"` and include an exact blocker. Otherwise the
+terminal artifact SHALL include at least `status`, `model_specs`,
+`cases_evaluated`, `certificate_parse_rate`,
+`semantic_validation_pass_rate`, `repair_hint_cases_total`,
+`repaired_cases_successful`, `repair_success_rate`,
+`full_pipeline_pass_rate`, `full_pipeline_headline_gate_met`, and
+`honest_verdict`.
+
+`full_pipeline_pass_rate` SHALL count original Exp 1397 scheduler passes plus
+repair-hint cases accepted by the Exp 1414 executor after semantic validation,
+without double-counting any case. The artifact SHALL compare the final rate
+against the Exp 1397 baseline of `0.305` and the headline target of `0.40`.
+
+**Acceptance criteria:**
+- The runner writes an in-progress artifact first and a terminal artifact last.
+- The Exp 1414 deployment gate blocks the run when
+  `repair_executor_deployed` is not true.
+- At least 200 source cases are required for a non-blocked terminal artifact.
+- The final pass rate, repair success rate, Exp 1397 delta, and headline gate
+  are computed from audited per-case scheduler and repair-executor rows.
+
+### SCENARIO-VERIFY-1419: 200-Case Repair Executor Rerun Applies Headline Gate
+
+**Given** Exp 1397 contains 200 evaluated cases and repair-hint rows
+**And** Exp 1414 deployed the bounded local LLM repair executor
+**And** a mandated local SOTA GGUF resolves from the cache
+**When** Exp 1419 runs with the repair executor enabled
+**Then** the terminal artifact records parse, semantic validation, repair, and
+final full-pipeline pass rates separately, records the actual model used, and
+sets `full_pipeline_headline_gate_met=true` exactly when
+`full_pipeline_pass_rate >= 0.40`.
+
+**Spec traces:** REQ-VERIFY-1419, SCENARIO-VERIFY-1419
+
 ### REQ-VERIFY-1408: Structured Verdict Record Schema
 
 The pipeline MUST expose a documented `VerdictRecord` dataclass for downstream
