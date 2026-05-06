@@ -3516,6 +3516,58 @@ was actually resolved and used for evaluation.
 |-------------|--------|-------|
 | REQ-LEARN-1420 | Implemented (`python/carnot/reporting/dpo_verified_pairs_probe.py`) | Implemented (`tests/python/test_dpo_verified_pairs_probe.py`) |
 
+## REQ-LEARN-1435: DPO Headline Provenance Audit
+
+Exp 1435 SHALL run on `20260506` as a provenance audit, not as a training run.
+The workflow SHALL inspect Exp 1420's DPO-style reranker artifact, local
+training utilities, dependency declarations, and repository documentation to
+decide whether Carnot has a supported direct GGUF fine-tune or local
+adapter/fine-tune path for the mandated SOTA GGUF model specs. Legacy
+small-model smoke results SHALL NOT be reported as headline DPO evidence.
+
+### REQ-LEARN-1435 Sub-requirements
+
+- REQ-LEARN-1435-1: The workflow SHALL write
+  `results/experiment_1435_dpo_headline_provenance_audit.json` first with
+  `status="in_progress"` before source evidence is evaluated.
+- REQ-LEARN-1435-2: The audit SHALL preserve the mandated model specs for
+  `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+  `unsloth/gemma-4-26B-A4B-it-GGUF` with their requested roles.
+- REQ-LEARN-1435-3: The audit SHALL inspect Exp 1420 evidence and report why
+  direct GGUF DPO was unsupported, including whether the prior result was a
+  reranker fallback rather than a base-model or adapter update.
+- REQ-LEARN-1435-4: The audit SHALL inspect local code and documentation for
+  LoRA/adapter, GGUF conversion, TRL/PEFT DPO, and reranker-only support and
+  SHALL list the evidence paths checked.
+- REQ-LEARN-1435-5: The final artifact SHALL include `status`, `model_specs`,
+  `direct_gguf_finetune_supported`, `local_adapter_path_supported`,
+  `headline_provenance_ready`, `reranker_track_relabelled`,
+  `recommended_next_training_path`, `evidence_paths_checked`, and
+  `honest_verdict`.
+- REQ-LEARN-1435-6: If no supported direct local adapter path exists for the
+  mandated SOTA GGUF targets, the final artifact SHALL set
+  `reranker_track_relabelled=true`, `headline_provenance_ready=false`, and an
+  honest verdict that the DPO line remains reranker-only until conversion or
+  tooling changes.
+
+### SCENARIO-LEARN-1435: Unsupported GGUF DPO Relabels Reranker Track
+
+**Given** Exp 1420 reports direct GGUF DPO unsupported and a reranker fallback
+**And** local repository evidence contains no supported TRL/PEFT adapter path
+for the mandated SOTA GGUF targets
+**When** Exp 1435 runs
+**Then** the final artifact has `direct_gguf_finetune_supported=false`
+**And** `local_adapter_path_supported=false`
+**And** `headline_provenance_ready=false`
+**And** `reranker_track_relabelled=true`
+**And** `honest_verdict` keeps the DPO line out of headline training claims.
+
+## Implementation Status (REQ-LEARN-1435)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-1435 | Implemented (`python/carnot/reporting/dpo_headline_provenance_audit.py`) | Implemented (`tests/python/test_dpo_headline_provenance_audit.py`) |
+
 ## REQ-LEARN-1433: FR-11 Self-Learning V6 MUST Gate on Deployed DVI V3
 
 Exp 1433 SHALL run the mandatory FR-11 self-learning v6 round on run date
