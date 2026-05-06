@@ -551,3 +551,42 @@ approach addresses the complementary inner-loop problem of defending
 LLM generations against unverified outputs while Meta-Harness
 optimizes outer-loop infrastructure.
 ```
+
+---
+
+## Autodata Related Work add (paper-v6 integration)
+
+```bibtex
+@misc{kulikov2026autodata,
+  author       = {Kulikov, Ilia and Whitehouse and Wu and Saha and
+                  Helenowski and Yuan and Golovneva and Lanchantin and
+                  Bachrach and Foerster and Li and Fang and
+                  Sukhbaatar and Weston, Jason},
+  title        = {{Autodata}: An Automatic Data Scientist to Create
+                  High-Quality Data},
+  howpublished = {Meta AI / FAIR Research blog},
+  year         = {2026},
+  url          = {https://facebookresearch.github.io/RAM/blogs/autodata/},
+  note         = {Agentic Self-Instruct via 4-subagent loop (Challenger /
+                  Weak Solver / Strong Solver / Judge); Meta-Optimization
+                  outer loop with Boltzmann sampling T=0.1 evolves agent
+                  harness as code-diffs. Validation pass rate 12.8\%
+                  $\to$ 42.4\%; 126/233 accepted iterations. Author lineup
+                  verification needed before final integration.}
+}
+```
+
+Add as additional sentence to the Sakana-defense comparator paragraph
+(Block A in prior section), inserting after Meta-Harness:
+
+```latex
+Autodata~\citep{kulikov2026autodata} extends the outer-loop pattern
+to dataset generation, using Boltzmann sampling ($T=0.1$) over
+harness code-diffs to evolve a Challenger/Solver/Judge agent quartet
+that produces high-quality training examples (12.8\% $\to$ 42.4\%
+validation pass rate). Their single-LLM Judge lacks the formal-
+distinctness guarantee that Carnot's $k=6$ verifier ensemble
+provides; this is precisely the gap Q11's Transversal Spectral
+Synthesis closes by structurally bounding joint null space via the
+$\text{sign}(z)$ bottleneck.
+```
