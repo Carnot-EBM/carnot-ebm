@@ -1636,7 +1636,19 @@ def _verdict_is_untrustworthy(payload: dict) -> tuple[bool, str | None]:
     # (also no marker — needed operator rename), exp1110 produced
     # `honest_negative_non_degenerate` (marker present but in middle,
     # not suffix). The original endsWith check missed the middle case.
-    HONEST_FINDING_TOKENS = ("honest_negative", "honest_null", "honest_neutral")
+    # 2026-05-06 fix: `_retired` is a deliberate scientific verdict per
+    # CLAUDE.md "Failed-Experiment Rerun Discipline" — the experiment ran
+    # fully and concluded retirement is appropriate after 3 same-verdict
+    # attempts. exp1393 GRPO v8 NGRPO shipped "no_improvement_all_unknown_retired"
+    # but was flagged untrustworthy because "no_improvement" matched
+    # _PARTIAL_TOKENS even though the verdict explicitly closed via
+    # retire-discipline. Treat as terminal honest-finding.
+    HONEST_FINDING_TOKENS = (
+        "honest_negative",
+        "honest_null",
+        "honest_neutral",
+        "_retired",
+    )
     if any(tok in vlow for tok in HONEST_FINDING_TOKENS):
         return False, verdict
     # 2026-05-05 fix: agents commonly prefix terminal verdicts with explicit
