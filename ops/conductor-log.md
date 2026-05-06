@@ -1034,3 +1034,4 @@ web search: GitHub trending energy based mod |
 | 2026-05-06 21:24 UTC | .110 Carry-Forward Activation Manifest — Live-SOTA | OK | 81 passed, 1 warning in 4.29s |
 | 2026-05-06 22:13 UTC | Spec Coverage Traceability Metadata Fix — Close ex | OK | 89 passed, 1 warning in 5.79s |
 | 2026-05-06 22:25 UTC | Discrete SB RTL Source Implementation — Create har | OK | 81 passed, 1 warning in 5.32s |
+| 2026-05-06 22:38 UTC | Live SOTA GGUF Repair Runtime Preflight — Cache, G | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1442_live_so |
