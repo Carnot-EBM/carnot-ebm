@@ -1014,3 +1014,4 @@ web search: GitHub trending energy based mod |
 | 2026-05-06 12:59 UTC | DCCD Schema-Constrained Repair v2 — Nonzero Accept | OK | 81 passed, 1 warning in 4.37s |
 | 2026-05-06 13:56 UTC | MCMC Constrained Repair Candidate Search — Gated o | OK | 81 passed, 1 warning in 4.18s |
 | 2026-05-06 14:13 UTC | PRM-Guided Repair Selector — Gated on Exp1429 Cand | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1430_prm_gui |
+| 2026-05-06 15:28 UTC | PRM-Guided Repair Selector — Gated on Exp1429 Cand | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1430_prm_gui |
