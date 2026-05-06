@@ -1,10 +1,11 @@
-"""Tests for Exp 800: EmbeddingConstraintStore SPO + Orthogonality Regularization.
+"""Tests for Exp 800: EmbeddingConstraintStore SPO + L2-normalized retrieval.
 
 Verifies that EmbeddingConstraintStore encodes constraints as SPO tuples,
-applies orthogonality regularization, retrieves by cosine similarity, and
+preserves semantic embedding direction, retrieves by cosine similarity, and
 correctly bootstraps from legacy CaseMemory pattern dicts.
 
-Spec: REQ-LEARN-057, REQ-LEARN-058, REQ-LEARN-059, SCENARIO-LEARN-098
+Spec: REQ-LEARN-057, REQ-LEARN-058, REQ-LEARN-059, REQ-VERIFY-150,
+SCENARIO-LEARN-098
 """
 
 from __future__ import annotations
@@ -12,6 +13,7 @@ from __future__ import annotations
 import math
 import os
 import sys
+import types
 from pathlib import Path
 
 import pytest
@@ -95,23 +97,21 @@ class TestConstraintSPOTuple:
 
 
 # ---------------------------------------------------------------------------
-# REQ-LEARN-058: Orthogonality regularization
+# REQ-LEARN-058 / REQ-VERIFY-150: L2 normalization without orthogonalizing store writes
 # ---------------------------------------------------------------------------
 
 
-class TestOrthogonalize:
-    """Spec: REQ-LEARN-058"""
+class TestStoreNormalization:
+    """Spec: REQ-LEARN-058, REQ-VERIFY-150"""
 
-    def test_orthogonalize_reduces_dot_product(self) -> None:
-        """After storing one embedding, the next should be near-orthogonal to it.
+    def test_store_preserves_semantic_direction_after_l2_normalization(self) -> None:
+        """Stored embeddings stay aligned with their original SPO encoding.
 
-        Why this matters: if two stored embeddings are NOT orthogonal, queries
-        that sit between them will return ambiguous top-1 results, lowering AUC.
-        Orthogonalization forces them into distinct subspaces.
+        Exp 847 superseded the old Exp 800 orthogonalization path because
+        Gram-Schmidt projection made later queries nearly orthogonal to matching
+        stored constraints.  The write path should normalize, not deflect.
         """
         store = _make_store()
-
-        # Store first constraint — gets L2-normalized but not projected (store is empty).
         spo1 = ConstraintSPOTuple(
             subject="arithmetic_carry",
             predicate="violates",
@@ -121,26 +121,14 @@ class TestOrthogonalize:
         )
         store.store(spo1)
         assert spo1.embedding is not None
-        e1 = spo1.embedding
-
-        # Store second constraint — should be projected out of e1's direction.
-        spo2 = ConstraintSPOTuple(
-            subject="numeric_sign",
-            predicate="violates",
-            object="sign_preservation",
-            embedding=None,
-            source_violation_type="sign",
+        expected = _normalize(
+            _ci_hash_embedding("(arithmetic_carry) (violates) (carry_propagation)")
         )
-        store.store(spo2)
-        assert spo2.embedding is not None
-        e2 = spo2.embedding
 
-        # Dot product between stored embeddings should be < 0.05 (near-orthogonal).
-        dot = _dot(e1, e2)
-        assert abs(dot) < 0.05, f"Stored embeddings not near-orthogonal: dot={dot:.4f}"
+        assert _cosine_similarity(spo1.embedding, expected) > 0.999999
 
-    def test_orthogonalize_result_is_unit_norm(self) -> None:
-        """The orthogonalized embedding must be L2-normalized (norm ≈ 1.0)."""
+    def test_store_result_is_unit_norm(self) -> None:
+        """The stored embedding must be L2-normalized (norm approximately 1.0)."""
         store = _make_store()
         spo = ConstraintSPOTuple(
             subject="unit_label",
@@ -154,8 +142,8 @@ class TestOrthogonalize:
         norm = _l2norm(spo.embedding)
         assert abs(norm - 1.0) < 1e-6, f"Stored embedding norm = {norm:.6f}, expected 1.0"
 
-    def test_empty_store_orthogonalize_is_identity(self) -> None:
-        """With no prior entries, _orthogonalize returns a normalized version of the input."""
+    def test_empty_store_orthogonalize_helper_is_identity(self) -> None:
+        """The historical diagnostic helper still normalizes an empty-store input."""
         store = _make_store()
         v = [1.0, 2.0, 3.0]
         result = store._orthogonalize(v)
@@ -334,6 +322,12 @@ class TestCIHashMode:
         v = _ci_hash_embedding("comparison error test")
         assert all(-0.5 <= x <= 0.5 for x in v)
 
+    def test_constructor_ci_hash_mode_does_not_load_encoder(self) -> None:
+        """REQ-LEARN-057-5: explicit ci_hash mode avoids MiniLM weight loading."""
+        store = EmbeddingConstraintStore(embedding_mode="ci_hash")
+        assert store.embedding_mode == "ci_hash"
+        assert store._encoder is None
+
     def test_store_uses_ci_hash_when_encoder_none(self) -> None:
         """When _encoder is None, embedding_mode must be 'ci_hash'."""
         store = _make_store()
@@ -346,3 +340,72 @@ class TestCIHashMode:
         v1 = store._encode("test carry error")
         v2 = store._encode("test carry error")
         assert v1 == v2
+
+    def test_invalid_embedding_mode_raises(self) -> None:
+        """REQ-LEARN-057-5: unsupported embedding modes fail clearly."""
+        with pytest.raises(ValueError, match="embedding_mode"):
+            EmbeddingConstraintStore(embedding_mode="invalid")
+
+    def test_sentence_transformer_mode_uses_mocked_encoder(self, monkeypatch) -> None:
+        """REQ-LEARN-057-2: sentence_transformer mode calls the configured encoder."""
+
+        class FakeEncoder:
+            def encode(self, text: str) -> list[float]:
+                return [1.0, 2.0, 3.0]
+
+        fake_module = types.ModuleType("sentence_transformers")
+        fake_module.SentenceTransformer = lambda model_name: FakeEncoder()
+        monkeypatch.setitem(sys.modules, "sentence_transformers", fake_module)
+
+        store = EmbeddingConstraintStore(embedding_mode="sentence_transformer")
+        assert store.embedding_mode == "sentence_transformer"
+        assert store._encode("anything") == [1.0, 2.0, 3.0]
+
+    def test_auto_mode_falls_back_to_ci_hash_when_encoder_missing(self, monkeypatch) -> None:
+        """REQ-LEARN-057-3: missing sentence_transformers falls back to ci_hash."""
+        original_import = __import__
+
+        def guarded_import(name, globals=None, locals=None, fromlist=(), level=0):
+            if name == "sentence_transformers":
+                raise ImportError("missing optional dependency")
+            return original_import(name, globals, locals, fromlist, level)
+
+        monkeypatch.setattr("builtins.__import__", guarded_import)
+        store = EmbeddingConstraintStore(embedding_mode="auto")
+        assert store.embedding_mode == "ci_hash"
+
+    def test_zero_vector_helpers_are_safe(self) -> None:
+        """REQ-VERIFY-150: zero vectors do not produce NaN normalization or cosine."""
+        assert _normalize([0.0, 0.0]) == [0.0, 0.0]
+        assert _cosine_similarity([0.0, 0.0], [1.0, 0.0]) == 0.0
+
+    def test_orthogonalize_helper_branches_remain_diagnostic_only(self) -> None:
+        """REQ-LEARN-058-3: historical helper handles empty and degenerate entries."""
+        store = _make_store()
+        store._store = [
+            ConstraintSPOTuple(
+                subject="empty",
+                predicate="violates",
+                object="none",
+                embedding=None,
+                source_violation_type="empty",
+            ),
+            ConstraintSPOTuple(
+                subject="zero",
+                predicate="violates",
+                object="zero",
+                embedding=[0.0, 0.0],
+                source_violation_type="zero",
+            ),
+            ConstraintSPOTuple(
+                subject="axis",
+                predicate="violates",
+                object="x",
+                embedding=[1.0, 0.0],
+                source_violation_type="axis",
+            ),
+        ]
+
+        result = store._orthogonalize([1.0, 1.0])
+        assert abs(_l2norm(result) - 1.0) < 1e-6
+        assert abs(_dot(result, [1.0, 0.0])) < 1e-6

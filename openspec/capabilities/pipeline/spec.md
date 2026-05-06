@@ -1298,6 +1298,9 @@ and `delta_overall` remained 0.0 despite 15 constraints being written to the sto
 - An assertion in `store()` and `retrieve()` verifies the invariant at runtime.
 - Default `cosine_threshold` in `retrieve()` MUST be <= 0.5 (prior default 0.7 was too high
   for constraint-type variations that typically score 0.5-0.7 in sentence-transformer space).
+- The constructor MUST support an explicit deterministic `ci_hash` embedding mode that does
+  not load MiniLM weights, so CI and memory-constrained test runs can exercise the store
+  without tripping the pytest RSS watchdog.
 
 **Spec traces:** Exp 847, RETRO-RETRIEVAL-NEAR-ZERO-COSINE
 

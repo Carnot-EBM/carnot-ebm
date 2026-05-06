@@ -67,7 +67,7 @@ def _perturbed_vec(key: str, eps: float) -> list[float]:
 def store_with_mock_encoder():
     """Return an EmbeddingConstraintStore whose encoder is replaced with a
     controlled function that returns known vectors from _BASE_VECS."""
-    from python.carnot.pipeline.embedding_constraint_store import (
+    from carnot.pipeline.embedding_constraint_store import (
         EmbeddingConstraintStore,
         ConstraintSPOTuple,
     )
@@ -140,7 +140,7 @@ class TestL2NormAppliedOnWrite:
 
     def test_retrieval_l2_normalized_flag_is_true(self, populated_store):
         """Class invariant: retrieval_l2_normalized must be True."""
-        from python.carnot.pipeline.embedding_constraint_store import EmbeddingConstraintStore
+        from carnot.pipeline.embedding_constraint_store import EmbeddingConstraintStore
 
         assert EmbeddingConstraintStore.retrieval_l2_normalized is True
         assert populated_store.retrieval_l2_normalized is True
@@ -226,7 +226,7 @@ class TestL2NormAppliedOnRetrieve:
 
     def test_retrieve_empty_store_returns_empty(self):
         """retrieve() on empty store must return []."""
-        from python.carnot.pipeline.embedding_constraint_store import EmbeddingConstraintStore
+        from carnot.pipeline.embedding_constraint_store import EmbeddingConstraintStore
 
         store = EmbeddingConstraintStore.__new__(EmbeddingConstraintStore)
         store._store = []
@@ -247,7 +247,7 @@ class TestCosineThresholdLowered:
     def test_default_threshold_is_0_5(self):
         """retrieve() signature must have cosine_threshold default == 0.5."""
         import inspect
-        from python.carnot.pipeline.embedding_constraint_store import EmbeddingConstraintStore
+        from carnot.pipeline.embedding_constraint_store import EmbeddingConstraintStore
 
         sig = inspect.signature(EmbeddingConstraintStore.retrieve)
         default = sig.parameters["cosine_threshold"].default
@@ -315,7 +315,7 @@ class TestRetrievalAurocAboveThreshold:
 
     def test_retrieval_auc_empty_store(self):
         """retrieval_auc on empty store must return 0.0."""
-        from python.carnot.pipeline.embedding_constraint_store import EmbeddingConstraintStore
+        from carnot.pipeline.embedding_constraint_store import EmbeddingConstraintStore
 
         store = EmbeddingConstraintStore.__new__(EmbeddingConstraintStore)
         store._store = []
