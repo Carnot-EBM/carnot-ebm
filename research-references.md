@@ -9588,3 +9588,56 @@ thermodynamic computing Ising FPGA
 - **Concrete experiment:** Milestone .82+ — implement PRISM-style resampling guided by Carnot's
   energy function. Run on GSM8K with Qwen3.6-35B-A3B. Compare to temperature-only baseline.
 - **When to incorporate:** .82 (after Triple Integration validates the cascade in .81).
+
+---
+
+## disler / the-verifier-agent (Pi-based two-agent observer)
+
+**URL:** https://github.com/disler/the-verifier-agent
+
+**Architectural pattern.** Two-agent system on the Pi Coding Agent
+(pi.dev): Builder runs interactive in terminal, Verifier sibling
+process runs in tmux window with input locked. After each Builder
+turn, Verifier independently re-runs verification by reading
+Builder's session.jsonl. On failure, Verifier calls `verifier_prompt`
+which injects a corrective follow-up message back to Builder. Up to
+3 loops, then escalate to human. "Top-down observer" — Builder does
+not know Verifier exists.
+
+**Why this matters for Carnot.** Architectural validation: the
+"second-pair-of-eyes via independent verifier" pattern now appears at
+multiple abstraction layers — Carnot's k=6 ensemble at LLM-output
+level, disler at agent-task-completion level, SentinelAgent at
+API-delegation level. Convergent evidence that externally-grounded
+verifier is the right Sakana DGM defense pattern across layers.
+
+**Sakana DGM isolation parallel.** Builder/Verifier in separate
+processes, Verifier input-locked, communicates via unix domain
+socket. Same structural isolation principle Carnot's verifier
+ensemble depends on (verifiers not co-trained with substrate).
+Different mechanism (OS-level for disler, training-procedure for
+Carnot), same principle.
+
+**The "spend tokens to save time" thesis** — disler's commercial
+framing is exactly Carnot's scientific framing: operator review of
+agent / LLM output is the binding constraint on throughput; verifier
+amortizes it.
+
+**Carnot integration tier:** inspiration only. NOT a paper-v6
+citation (operates at agent-task level, not LLM-output level —
+different scope). Worth keeping on the radar as a comparator at the
+architectural-pattern level.
+
+**Potential prototype:** disler-style observer reading Carnot
+conductor session JSONL could catch reconciler mismatches as a
+secondary check on `_artifact_is_finished` / `_verdict_is_untrustworthy`
+classification. Phase-3 hostile-reviewer round candidate, but the
+systemd cgroup + orphan janitor work already addresses most
+conductor reliability pressure (lower priority than originally
+estimated).
+
+**What is NOT transferable.** Disler operates on agent task
+completion ("did the builder actually create the table?"). Carnot
+operates on model output verification ("does this generated text
+satisfy the verifier ensemble?"). Different scopes — they stack
+rather than replace.
