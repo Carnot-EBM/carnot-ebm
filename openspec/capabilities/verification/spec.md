@@ -158,3 +158,39 @@ Then an incorrect row that DVI would classify as SAT is escalated to the repair
 path, a correct SAT row inside the DVI abstention band is accepted through the
 certificate/full-verifier path, and the calibrated row records diagnostic
 fallback fields for later failure analysis.
+
+### REQ-VERIFY-1400: BiPRM R2L Retrospective FoVer Pivot Probe
+
+The repository shall provide a deterministic, CPU-only BiPRM retrospective
+verification probe that:
+
+- writes `results/experiment_1400_biprm_retrospective_verification_probe.json`
+  with `status="in_progress"` before loading the FoVer corpus;
+- loads FoVer verified pairs with one verified-correct positive reasoning row
+  and one rejected negative reasoning row;
+- records the BiPRM right-to-left update rule used by the probe as
+  `r_t^R2L = f_theta(s_t | q, s_>t)`;
+- computes a forward-only pivot score for each step as the verifier-energy
+  decrease caused by removing that step;
+- computes a retrospective R2L pivot score for each step from the final answer
+  backward, using later steps as context for the current candidate pivot;
+- measures pivot-step identification precision against human important-step
+  metadata when present, and otherwise against FoVer rejected-step proxy labels;
+- categorizes pivotal steps into arithmetic error, logical fallacy, missing
+  premise, and hallucination; and
+- writes a complete artifact containing `status`, `corpus_cases_used`,
+  `forward_only_pivot_precision`, `biprm_r2l_pivot_precision`,
+  `pivot_precision_delta`, `retrospective_verification_viable`,
+  `pivotal_step_categories`, and `honest_verdict`.
+
+The probe MUST NOT call any LLM or require GPU hardware.
+
+### SCENARIO-VERIFY-1400: R2L Retrospective Scores Improve Proxy Pivot Localization
+
+Given local FoVer positive/negative pairs with rejected-step proxy pivots,
+When the BiPRM retrospective probe scores each negative reasoning trace,
+Then the artifact reports forward-only and R2L pivot precision, computes
+`pivot_precision_delta` as R2L precision minus forward-only precision, sets
+`retrospective_verification_viable` exactly when that delta is positive, and
+preserves an honest verdict describing whether the result rests on proxy rather
+than human pivot annotations.

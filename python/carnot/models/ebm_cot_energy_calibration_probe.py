@@ -37,15 +37,22 @@ from carnot.models.prompt_injection_kan import _injection_energy
 REPO_ROOT = Path(__file__).resolve().parents[3]
 DEFAULT_FOVER_PATH = REPO_ROOT / "data" / "fover_corpus.jsonl"
 DEFAULT_MODELS_DIR = REPO_ROOT / "python" / "carnot" / "models"
-DEFAULT_ARTIFACT_PATH = REPO_ROOT / "results" / "experiment_1384_ebm_cot_energy_calibration_probe.json"
+DEFAULT_ARTIFACT_PATH = (
+    REPO_ROOT / "results" / "experiment_1384_ebm_cot_energy_calibration_probe.json"
+)
+DEFAULT_EXP1384_ARTIFACT_PATH = DEFAULT_ARTIFACT_PATH
+DEFAULT_EXP1401_ARTIFACT_PATH = REPO_ROOT / "results" / "experiment_1401_ebm_cot_v2_hinge_only.json"
 
 DEFAULT_HINGE_MARGIN = 1.0
 DEFAULT_CONSISTENCY_WEIGHT = 0.10
+HINGE_ONLY_CONSISTENCY_WEIGHT = 0.0
 DEFAULT_N_EPOCHS = 20
 DEFAULT_N_FEATURES = 32
 DEFAULT_N_HIDDEN = 8
 DEFAULT_N_KNOTS = 10
 DEFAULT_DEGREE = 3
+EXP1384_SPLIT_SEED = 20260505
+EXP1401_RUN_DATE = "20260506"
 
 _TOKEN_RE = re.compile(r"[A-Za-z]+|\d+(?:\.\d+)?|[+\-*/=<>%$]")
 _NUMBER_RE = re.compile(r"-?\d+(?:\.\d+)?")
@@ -172,7 +179,7 @@ def make_balanced_split(
     cases: list[FoVerStepCase],
     *,
     test_fraction: float = 0.20,
-    seed: int = 20260505,
+    seed: int = EXP1384_SPLIT_SEED,
     max_pairs_per_class: int | None = None,
 ) -> FoVerSplit:
     """Create a deterministic balanced train/test split for contrastive pairs."""
@@ -275,10 +282,14 @@ def encode_fover_features(case: FoVerStepCase, n_features: int = DEFAULT_N_FEATU
     word_count = max(len(words), 1)
     operator_count = sum(1 for tok in tokens if tok in {"+", "-", "*", "/", "=", "<", ">"})
     unique_ratio = len(set(words)) / word_count
-    answer_only = 1.0 if re.fullmatch(r"\s*the answer is\s+-?\d+(?:\.\d+)?\.?\s*", text.lower()) else 0.0
+    answer_only = (
+        1.0 if re.fullmatch(r"\s*the answer is\s+-?\d+(?:\.\d+)?\.?\s*", text.lower()) else 0.0
+    )
     arithmetic_error = _arithmetic_error_rate(text)
     number_overlap_error = 1.0 - _question_number_overlap(question, text)
-    latex_density = min((text.count("\\") + text.count("{") + text.count("}")) / max(len(text), 1), 1.0)
+    latex_density = min(
+        (text.count("\\") + text.count("{") + text.count("}")) / max(len(text), 1), 1.0
+    )
     magnitude = max((abs(num) for num in numbers), default=0.0)
 
     base = np.zeros(n_features, dtype=np.float32)
@@ -489,7 +500,9 @@ class EBMCoTKANEnergyCalibrator:
 
         params = (jnp.asarray(self.edge_ctrl), jnp.asarray(self.output_ctrl))
 
-        def single_energy(edge_ctrl: jax.Array, output_ctrl: jax.Array, feats: jax.Array) -> jax.Array:
+        def single_energy(
+            edge_ctrl: jax.Array, output_ctrl: jax.Array, feats: jax.Array
+        ) -> jax.Array:
             return _injection_energy(
                 feats,
                 edge_ctrl,
@@ -610,6 +623,33 @@ def paraphrase_energy_delta_variance(
     return float(np.var(np.asarray(deltas, dtype=np.float64))) if deltas else 0.0
 
 
+def load_exp1384_reference(path: Path | str = DEFAULT_EXP1384_ARTIFACT_PATH) -> dict[str, Any]:
+    """Load the prior Exp1384 baseline and consistency-regularization details.
+
+    Exp1401 is a controlled rerun, not a new baseline search.  Anchoring its
+    delta to the completed Exp1384 artifact makes the question precise: does
+    removing the paraphrase-consistency term preserve the positive AUROC signal
+    that Exp1384 reported?
+
+    Spec: REQ-KAN-1401
+    """
+
+    source = Path(path)
+    payload = json.loads(source.read_text(encoding="utf-8"))
+    if "baseline_auroc" not in payload:
+        raise ValueError(f"Exp1384 reference missing baseline_auroc: {source}")
+    return {
+        "baseline_auroc": float(payload["baseline_auroc"]),
+        "consistency_regularization_effect": payload.get("consistency_regularization_effect"),
+        "consistency_regularization_weight": payload.get("consistency_regularization_weight"),
+        "checkpoint_path": payload.get("checkpoint_path"),
+        "checkpoint_schema": payload.get("checkpoint_schema"),
+        "ebm_cot_auroc": payload.get("ebm_cot_auroc"),
+        "calibration_auroc_delta": payload.get("calibration_auroc_delta"),
+        "honest_verdict": payload.get("honest_verdict"),
+    }
+
+
 def build_artifact(
     *,
     split: FoVerSplit,
@@ -672,6 +712,98 @@ def build_artifact(
     }
 
 
+def build_hinge_only_v2_artifact(
+    *,
+    split: FoVerSplit,
+    checkpoint_info: KANCheckpointInfo,
+    exp1384_reference: dict[str, Any],
+    ebm_cot_v2_auroc: float,
+    variance_before: float,
+    variance_after: float,
+    loss_history: list[dict[str, float]],
+    started_at: float,
+    duration_s: float | None = None,
+    measured_baseline_auroc: float | None = None,
+    hinge_margin: float = DEFAULT_HINGE_MARGIN,
+    n_epochs: int = DEFAULT_N_EPOCHS,
+    run_date: str = EXP1401_RUN_DATE,
+) -> dict[str, Any]:
+    """Build the Exp1401 hinge-only artifact with the required v2 schema.
+
+    The artifact intentionally uses `ebm_cot_v2_auroc` rather than the Exp1384
+    `ebm_cot_auroc` field so downstream readers can distinguish the controlled
+    no-regularizer rerun from the original two-term objective.
+
+    Spec: REQ-KAN-1401
+    """
+
+    baseline_auroc = float(exp1384_reference["baseline_auroc"])
+    calibration_delta = float(ebm_cot_v2_auroc - baseline_auroc)
+    variance_worsened = float(variance_after) > float(variance_before)
+    viable = calibration_delta > 0.0
+    if viable and not variance_worsened:
+        verdict = "hinge_only_confirmed_positive_calibration_without_variance_worsening"
+    elif viable:
+        verdict = "hinge_only_confirmed_positive_calibration_but_variance_worsened"
+    elif variance_worsened:
+        verdict = "hinge_only_did_not_confirm_positive_calibration_variance_worsened"
+    else:
+        verdict = "hinge_only_did_not_confirm_positive_calibration"
+
+    duration = round(time.time() - started_at, 3) if duration_s is None else float(duration_s)
+    artifact: dict[str, Any] = {
+        "status": "complete",
+        "run_date": run_date,
+        "experiment": 1401,
+        "title": "EBM-CoT v2 hinge-only KAN energy calibration probe on FoVer pairs",
+        "corpus_cases_used": split.corpus_cases_used,
+        "training_method": (
+            "EBM-CoT v2 contrastive hinge loss only on balanced FoVer "
+            f"correct/incorrect step pairs for {n_epochs} CPU epochs; "
+            "positive paraphrase consistency regularization disabled"
+        ),
+        "hinge_margin": float(hinge_margin),
+        "consistency_regularization_weight": HINGE_ONLY_CONSISTENCY_WEIGHT,
+        "baseline_auroc": baseline_auroc,
+        "ebm_cot_v2_auroc": float(ebm_cot_v2_auroc),
+        "calibration_auroc_delta": calibration_delta,
+        "paraphrase_energy_variance_before": float(variance_before),
+        "paraphrase_energy_variance_after": float(variance_after),
+        "variance_worsened": variance_worsened,
+        "implicit_cot_energy_viable": viable,
+        "honest_verdict": verdict,
+        "checkpoint_loaded": checkpoint_info.loaded,
+        "checkpoint_path": checkpoint_info.path,
+        "checkpoint_schema": checkpoint_info.schema,
+        "checkpoint_note": checkpoint_info.reason,
+        "n_train_pairs": len(split.train_positive),
+        "n_test_cases": len(split.test_cases),
+        "n_epochs": int(n_epochs),
+        "final_loss": loss_history[-1] if loss_history else {},
+        "duration_s": duration,
+        "exp1384_reference": {
+            "baseline_auroc": baseline_auroc,
+            "consistency_regularization_effect": exp1384_reference.get(
+                "consistency_regularization_effect"
+            ),
+            "consistency_regularization_weight": exp1384_reference.get(
+                "consistency_regularization_weight"
+            ),
+            "ebm_cot_auroc": exp1384_reference.get("ebm_cot_auroc"),
+            "calibration_auroc_delta": exp1384_reference.get("calibration_auroc_delta"),
+            "honest_verdict": exp1384_reference.get("honest_verdict"),
+        },
+        "paper_reference": "arXiv:2511.07124",
+        "source_reference": "research-references.md EBM-CoT entry and https://arxiv.org/abs/2511.07124",
+    }
+    if measured_baseline_auroc is not None:
+        artifact["measured_baseline_auroc"] = float(measured_baseline_auroc)
+        artifact["baseline_auroc_source"] = (
+            "results/experiment_1384_ebm_cot_energy_calibration_probe.json"
+        )
+    return artifact
+
+
 def run_probe(
     *,
     fover_path: Path | str = DEFAULT_FOVER_PATH,
@@ -724,31 +856,120 @@ def run_probe(
     return artifact
 
 
+def run_hinge_only_v2_probe(
+    *,
+    fover_path: Path | str = DEFAULT_FOVER_PATH,
+    models_dir: Path | str = DEFAULT_MODELS_DIR,
+    artifact_path: Path | str = DEFAULT_EXP1401_ARTIFACT_PATH,
+    exp1384_artifact_path: Path | str = DEFAULT_EXP1384_ARTIFACT_PATH,
+    n_epochs: int = DEFAULT_N_EPOCHS,
+    hinge_margin: float = DEFAULT_HINGE_MARGIN,
+    max_pairs_per_class: int | None = None,
+) -> dict[str, Any]:
+    """Run Exp1401 with the EBM-CoT hinge objective and no consistency term.
+
+    This uses the same deterministic FoVer split seed as Exp1384 and explicitly
+    passes `consistency_weight=0.0` into the existing trainer.  The trainer still
+    reports the positive/paraphrase consistency component for diagnostics, but
+    that component is multiplied by zero and therefore contributes no gradient
+    pressure to the KAN control points.
+
+    Spec: REQ-KAN-1401
+    """
+
+    started_at = time.time()
+    exp1384_reference = load_exp1384_reference(exp1384_artifact_path)
+    cases = load_fover_verified_cases(fover_path)
+    split = make_balanced_split(
+        cases,
+        seed=EXP1384_SPLIT_SEED,
+        max_pairs_per_class=max_pairs_per_class,
+    )
+    calibrator = EBMCoTKANEnergyCalibrator.load_current_checkpoint(models_dir)
+
+    measured_baseline_auroc = calibrator.evaluate_auroc(split.test_cases)
+    test_positive = [case for case in split.test_cases if case.label == 1]
+    variance_before = paraphrase_energy_delta_variance(calibrator, test_positive)
+    loss_history = calibrator.train_ebm_cot(
+        split.train_positive,
+        split.train_negative,
+        n_epochs=n_epochs,
+        hinge_margin=hinge_margin,
+        consistency_weight=HINGE_ONLY_CONSISTENCY_WEIGHT,
+    )
+    ebm_cot_v2_auroc = calibrator.evaluate_auroc(split.test_cases)
+    variance_after = paraphrase_energy_delta_variance(calibrator, test_positive)
+
+    artifact = build_hinge_only_v2_artifact(
+        split=split,
+        checkpoint_info=calibrator.checkpoint_info,
+        exp1384_reference=exp1384_reference,
+        ebm_cot_v2_auroc=ebm_cot_v2_auroc,
+        variance_before=variance_before,
+        variance_after=variance_after,
+        loss_history=loss_history,
+        started_at=started_at,
+        measured_baseline_auroc=measured_baseline_auroc,
+        hinge_margin=hinge_margin,
+        n_epochs=n_epochs,
+    )
+
+    target = Path(artifact_path)
+    target.parent.mkdir(parents=True, exist_ok=True)
+    tmp = target.with_suffix(target.suffix + ".tmp")
+    tmp.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    tmp.replace(target)
+    return artifact
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--fover-path", type=Path, default=DEFAULT_FOVER_PATH)
     parser.add_argument("--models-dir", type=Path, default=DEFAULT_MODELS_DIR)
     parser.add_argument("--artifact-path", type=Path, default=DEFAULT_ARTIFACT_PATH)
+    parser.add_argument("--exp1384-artifact-path", type=Path, default=DEFAULT_EXP1384_ARTIFACT_PATH)
     parser.add_argument("--epochs", type=int, default=DEFAULT_N_EPOCHS)
     parser.add_argument("--hinge-margin", type=float, default=DEFAULT_HINGE_MARGIN)
     parser.add_argument("--consistency-weight", type=float, default=DEFAULT_CONSISTENCY_WEIGHT)
     parser.add_argument("--max-pairs-per-class", type=int, default=None)
+    parser.add_argument(
+        "--hinge-only-v2",
+        action="store_true",
+        help="Run Exp1401 with consistency_regularization_weight=0.0.",
+    )
     args = parser.parse_args()
 
-    artifact = run_probe(
-        fover_path=args.fover_path,
-        models_dir=args.models_dir,
-        artifact_path=args.artifact_path,
-        n_epochs=args.epochs,
-        hinge_margin=args.hinge_margin,
-        consistency_weight=args.consistency_weight,
-        max_pairs_per_class=args.max_pairs_per_class,
-    )
-    print(
-        artifact["calibration_auroc_delta"],
-        artifact["implicit_cot_energy_viable"],
-        artifact["honest_verdict"],
-    )
+    if args.hinge_only_v2:
+        artifact = run_hinge_only_v2_probe(
+            fover_path=args.fover_path,
+            models_dir=args.models_dir,
+            artifact_path=args.artifact_path,
+            exp1384_artifact_path=args.exp1384_artifact_path,
+            n_epochs=args.epochs,
+            hinge_margin=args.hinge_margin,
+            max_pairs_per_class=args.max_pairs_per_class,
+        )
+        print(
+            artifact["calibration_auroc_delta"],
+            artifact["variance_worsened"],
+            artifact["implicit_cot_energy_viable"],
+            artifact["honest_verdict"],
+        )
+    else:
+        artifact = run_probe(
+            fover_path=args.fover_path,
+            models_dir=args.models_dir,
+            artifact_path=args.artifact_path,
+            n_epochs=args.epochs,
+            hinge_margin=args.hinge_margin,
+            consistency_weight=args.consistency_weight,
+            max_pairs_per_class=args.max_pairs_per_class,
+        )
+        print(
+            artifact["calibration_auroc_delta"],
+            artifact["implicit_cot_energy_viable"],
+            artifact["honest_verdict"],
+        )
 
 
 if __name__ == "__main__":
