@@ -2280,6 +2280,62 @@ scheduler validation before accepting a repaired certificate.
 
 **Spec traces:** REQ-VERIFY-1413, SCENARIO-VERIFY-1413
 
+### REQ-VERIFY-1414: Bounded Local LLM Certificate Repair Executor
+
+The repository shall provide an opt-in certificate repair executor for Exp
+1414 that accepts the original prompt or question, current certificate,
+`REPAIR_HINT`, validator feedback, and an allowed output schema. The executor
+MUST build a bounded JSON-only prompt for a local open-weight GGUF model, parse
+only the allowed schema from the model output, and return a corrected
+certificate plus metadata.
+
+The core pipeline MUST depend on a generator protocol or callable rather than a
+vendor SDK. Closed-weight dependencies are prohibited in `python/carnot/pipeline/`.
+The executor MUST accept a repair candidate only after replaying the existing
+semantic validation contract: the validation result must show
+`constraint_passed=true`, `semantic_result="SAT"`, `repair_required=false`,
+and `false_acceptance=false`. Invalid JSON, schema violations, timeout, local
+model unavailability, or validation failure MUST preserve the original repair
+hint and return a structured fallback result instead of silently accepting.
+
+New LLM-bearing Exp 1414 artifacts MUST include the mandated SOTA GGUF
+`model_specs` for `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`; model resolution MUST use
+`cached_sota_pair()` or an equivalent local cache resolver. If no mandated
+local SOTA GGUF is available, the experiment MUST write a blocked artifact
+with cache details rather than simulating headline repair results.
+
+**Acceptance criteria:**
+- The executor prompt contains the input contract and the allowed output schema
+  while bounding field lengths before model invocation.
+- Model output is rejected unless it is JSON with a string
+  `corrected_certificate` and JSON-compatible metadata.
+- The pipeline exposes a disabled-by-default hook that invokes the executor
+  only when explicitly enabled.
+- The terminal Exp 1414 artifact includes `status`, `model_specs`,
+  `repair_executor_deployed`, `repair_hint_cases_tested`,
+  `repaired_cases_successful`, `repaired_case_success_rate`,
+  `semantic_equivalence_pass_rate_after_repair`, `local_sota_model_used`,
+  `tests_run`, and `honest_verdict`.
+
+### SCENARIO-VERIFY-1414: Exp 1397 Repair Hints Are Executed Or Honestly Blocked
+
+**Given** Exp 1397 contains at least twenty repair-hint cases
+**And** a mandated local SOTA GGUF resolves from the cache
+**When** Exp 1414 runs with the opt-in certificate repair executor
+**Then** at least twenty repair-hint cases are sent through the bounded local
+LLM prompt, accepted repairs are counted only after semantic validation, and
+the artifact records the actual model used and post-repair pass rates.
+
+**Given** no mandated local SOTA GGUF resolves from the cache
+**When** Exp 1414 runs
+**Then** the artifact is written with `status="blocked"`, zero headline repair
+successes, cache diagnostic details, and an honest verdict naming local model
+cache unavailability.
+
+**Spec traces:** REQ-VERIFY-1414, SCENARIO-VERIFY-1414
+
 ### REQ-VERIFY-1408: Structured Verdict Record Schema
 
 The pipeline MUST expose a documented `VerdictRecord` dataclass for downstream
