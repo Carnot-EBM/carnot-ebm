@@ -269,9 +269,40 @@ tolerance, marks `variance_worsened=false` only when post-temperature variance
 is no greater than pre-temperature variance within tolerance, and records an
 honest verdict describing both gates.
 
-## Implementation Status (REQ-VERIFY-1415/1416)
+### REQ-VERIFY-1423: FoVer Process Reward Model V1
+
+The repository shall provide a deterministic, CPU-only process reward model
+training path that:
+
+- writes `results/experiment_1423_process_reward_model_v1_fover_1508.json`
+  with `status="in_progress"` before loading traces or training;
+- loads the 1508 Exp 1395 promoted FoVer trace IDs and reconstructs
+  step-level labels from available Exp 1397 certificate, scheduler, validator,
+  or repair-localization outputs without fresh LLM inference;
+- trains a lightweight feature-based classifier that predicts step correctness
+  without executing the full certificate path at inference time;
+- uses a fixed held-out split for step-level evaluation and reports AUROC,
+  precision, and recall;
+- saves a checkpoint only when both positive and negative step labels are
+  available and training completes; and
+- writes a complete or blocked artifact containing `status`,
+  `training_traces_used`, `step_labels_available`, `prmv1_trained`,
+  `prmv1_auroc`, `prmv1_step_precision`, `prmv1_step_recall`,
+  `checkpoint_path`, and `honest_verdict`.
+
+### SCENARIO-VERIFY-1423: Lightweight PRM Reports Step-Level Metrics
+
+Given Exp 1395 provides 1508 promoted FoVer trace IDs and Exp 1397 contains
+local certificate, scheduler, validator, or repair-localization labels,
+When the Exp 1423 PRM training runner executes,
+Then the final artifact either reports held-out step-level AUROC, precision,
+recall, and an existing checkpoint for a trained CPU classifier, or reports a
+blocked verdict with the missing positive/negative step-label counts.
+
+## Implementation Status (REQ-VERIFY-1415/1416/1423)
 
 | Requirement | Python | Tests |
 |-------------|--------|-------|
 | REQ-VERIFY-1415 | Implemented (`python/carnot/reporting/dvi_v3_1508_fresh_cases.py`) | Implemented (`tests/python/test_experiment_1415_dvi_v3_1508_fresh_cases.py`) |
 | REQ-VERIFY-1416 | Implemented (`python/carnot/models/ebm_cot_temperature_calibration.py`) | Implemented (`tests/python/test_experiment_1416_ebm_cot_temperature_calibration.py`) |
+| REQ-VERIFY-1423 | Implemented (`python/carnot/reporting/process_reward_model_v1_fover_1508.py`) | Implemented (`tests/python/test_experiment_1423_process_reward_model_v1.py`) |
