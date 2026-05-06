@@ -9641,3 +9641,45 @@ completion ("did the builder actually create the table?"). Carnot
 operates on model output verification ("does this generated text
 satisfy the verifier ensemble?"). Different scopes — they stack
 rather than replace.
+
+---
+
+## Meta-Harness (Lee et al., arXiv:2603.28052v1, March 2026)
+
+**Authors:** Yoonho Lee, Roshen Nair, Qizheng Zhang, Kangwook Lee, Omar Khattab, Chelsea Finn (Stanford lineage; DSPy/meta-learning team)
+
+**Architecture.** Outer-loop agentic system that searches over LLM
+harness code via filesystem-accessible source + scores + execution
+traces of prior candidates. Agentic proposer iteratively proposes
+and evaluates harness improvements.
+
+**Empirical results.**
+- Text classification: +7.7 points improvement, 4x fewer context tokens
+- Math reasoning: +4.7 points on 200 IMO-level problems across 5
+  held-out models
+- Agentic coding: surpasses hand-engineered baselines on TerminalBench-2
+
+**Carnot relevance — paper-v6 Related Work candidate.**
+
+1. **Sakana DGM defense lineage, constructive comparator.** Meta-Harness
+   IS an outer-loop modifying code around an LLM — structurally identical
+   threat surface to Sakana DGM but constrained to harness code (not
+   reward functions). A worked example of "controlled" outer-loop
+   self-improvement that avoids Sakana's marker-removal failure mode.
+2. **Direct application to Carnot conductor.** The conductor's prompt
+   templates + verifier-ensemble routing + STEP-0 skeleton patterns
+   are exactly the kind of harness code Meta-Harness optimizes.
+   Could prototype Meta-Harness-style search over Carnot's conductor
+   prompts for measurable conductor-reliability improvements.
+3. **Citation framing for paper-v6:** "Meta-Harness (Lee et al., 2026)
+   demonstrates that outer-loop search over harness code yields
+   measurable gains; Carnot's verifier-grounded approach addresses
+   the complementary problem — defending the inner-loop generation
+   against unverified outputs while Meta-Harness optimizes the
+   outer-loop infrastructure."
+
+**Carnot integration tier:** evaluation. Strong author lineup +
+real empirical numbers + peer-team-readiness make this a credible
+paper-v6 citation. Adds to the converging Sakana-defense literature
+alongside SentinelAgent (arXiv:2604.02767), CAF (AAAI 2026), and
+Spera Theorem 9.2 (arXiv:2603.15973).

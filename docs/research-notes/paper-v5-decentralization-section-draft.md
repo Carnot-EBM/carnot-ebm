@@ -514,3 +514,40 @@ The paper-v6 section MUST preserve this discipline. Carnot's verifier ensemble d
 4. Threat-model scope: should we explicitly address the Sakana failure-mode catalog (hallucinated tests, removed safety markers) and document Carnot's defenses against each, or keep it abstract?
 5. Audience framing: Brooks's UNSW piece treats the paper as evolutionary biology applied to AI. Our paper v6 section should be legible to BOTH evolutionary biologists and ML researchers — re-read the draft with that dual audience in mind before integration.
 6. First-author/senior-author verification: confirm Brooks is senior author of `muller2026evolvable` before citing him in that bibliography entry. ISSUE-16 in the audit punch-list requires this.
+
+---
+
+## Meta-Harness Related Work add (paper-v6 integration)
+
+Add to bibtex:
+
+```bibtex
+@article{lee2026metaharness,
+  author       = {Lee, Yoonho and Nair, Roshen and Zhang, Qizheng and
+                  Lee, Kangwook and Khattab, Omar and Finn, Chelsea},
+  title        = {{Meta-Harness}: End-to-End Optimization of Model Harnesses},
+  journal      = {arXiv preprint arXiv:2603.28052},
+  year         = {2026},
+  month        = {March},
+  note         = {Outer-loop agentic search over LLM harness code via
+                  filesystem-accessible scores/traces. +7.7 points / 4x
+                  fewer tokens on text classification; +4.7 points on 200
+                  IMO problems across 5 held-out models; surpasses hand-
+                  engineered baselines on TerminalBench-2.}
+}
+```
+
+Add as one sentence in the Sakana-defense / multi-verifier comparator
+paragraph (Block A in the prior section), inserting between the
+SentinelAgent + CAF entries:
+
+```latex
+Meta-Harness~\citep{lee2026metaharness} demonstrates that outer-loop
+search over harness code yields measurable inner-loop gains
+(+7.7 points / 4x fewer context tokens on text classification),
+constructively bounding the Sakana DGM threat surface to harness
+code rather than reward functions. Carnot's verifier-grounded
+approach addresses the complementary inner-loop problem of defending
+LLM generations against unverified outputs while Meta-Harness
+optimizes outer-loop infrastructure.
+```
