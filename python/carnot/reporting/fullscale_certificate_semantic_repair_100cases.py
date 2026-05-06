@@ -28,6 +28,9 @@ from carnot.reporting.dvi_discriminative_verifier_training_v1 import (
     predict_incorrect_probability,
 )
 from carnot.verify.sc_energy_verifier import SCEnergyVerifier
+from carnot.verify.fover_semantic_calibration import (
+    calibrated_fover_semantic_validation_row,
+)
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -448,35 +451,15 @@ def _semantic_validation_row(
     parsed_row: Mapping[str, Any],
     dvi_incorrect_probability: float,
 ) -> dict[str, Any]:
-    dvi_predicts_incorrect = dvi_incorrect_probability >= DVI_INCORRECT_THRESHOLD
-    dvi_state = "REPAIR_HINT" if dvi_predicts_incorrect else "SAT"
-    expected_state = fover_case.expected_state
-    certificate_state = _certificate_state(parsed_row)
-    certificate_matches = certificate_state == expected_state
-    dvi_matches_label = dvi_predicts_incorrect == (int(fover_case.label) == 1)
-    constraint_passed = (
-        bool(parsed_row.get("parseable")) and certificate_matches and dvi_matches_label
+    return calibrated_fover_semantic_validation_row(
+        case_id=fover_case.case_id,
+        response=fover_case.response,
+        label=fover_case.label,
+        source=fover_case.source,
+        parsed_row=parsed_row,
+        dvi_incorrect_probability=dvi_incorrect_probability,
+        incorrect_threshold=DVI_INCORRECT_THRESHOLD,
     )
-    return {
-        "case_id": fover_case.case_id,
-        "claim_route": "dvi_updated_fover_semantic_validator",
-        "expected_state": expected_state,
-        "certificate_state": certificate_state,
-        "semantic_result": dvi_state,
-        "constraint_passed": constraint_passed,
-        "constraint_evaluated": bool(parsed_row.get("parseable")),
-        "dvi_incorrect_probability": round(float(dvi_incorrect_probability), 6),
-        "dvi_incorrect_threshold": DVI_INCORRECT_THRESHOLD,
-        "semantic_margin": round(
-            abs(float(dvi_incorrect_probability) - DVI_INCORRECT_THRESHOLD), 6
-        ),
-        "fover_label": "incorrect" if int(fover_case.label) == 1 else "correct",
-        "failure_reason": _semantic_failure_reason(
-            parsed_row=parsed_row,
-            certificate_matches=certificate_matches,
-            dvi_matches_label=dvi_matches_label,
-        ),
-    }
 
 
 def _repair_localization_row(

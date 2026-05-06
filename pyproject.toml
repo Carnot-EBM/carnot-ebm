@@ -77,6 +77,9 @@ all = [
 [tool.setuptools.packages.find]
 where = ["python"]
 
+[tool.setuptools.package-data]
+"carnot.schemas" = ["*.json"]
+
 [tool.setuptools.dynamic]
 version = {attr = "carnot._version.__version__"}
 

@@ -13,8 +13,9 @@
 Usage:
     carnot verify examples/math_funcs.py --func gcd --test "(12,8):4"
     carnot verify-code examples/math_funcs.py --func gcd --pbt
+    carnot memory export --storage-dir .carnot_sessions --model-id qwen -o pack.json
 
-Spec: REQ-CODE-001, REQ-CODE-006, REQ-CODE-020
+Spec: REQ-CODE-001, REQ-CODE-006, REQ-CODE-020, REQ-LEARN-062
 """
 
 from __future__ import annotations
@@ -381,10 +382,80 @@ def cmd_score(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_memory_export(args: argparse.Namespace) -> int:
+    """Export SessionMemory as a portable JSON pack.
+
+    Spec: REQ-LEARN-062, SCENARIO-LEARN-106
+    """
+    from carnot.pipeline.session_memory_pack import export_session_memory
+
+    pack = export_session_memory(
+        args.storage_dir,
+        args.model_id,
+        output_path=args.output,
+        metadata={"source": args.source} if args.source else None,
+        redact_provenance=args.redact_provenance,
+    )
+    n_models = len(pack["models"])
+    n_cases = sum(len(model["case_memory"]["entries"]) for model in pack["models"])
+    print(
+        "Exported SessionMemory pack "
+        f"schema={pack['schema']} models={n_models} case_entries={n_cases} output={args.output}"
+    )
+    return 0
+
+
+def cmd_memory_import(args: argparse.Namespace) -> int:
+    """Import a portable SessionMemory JSON pack.
+
+    Spec: REQ-LEARN-062, SCENARIO-LEARN-106
+    """
+    from carnot.pipeline.session_memory_pack import import_session_memory
+
+    merge = args.merge or not args.replace
+    if args.replace:
+        print(
+            "WARNING: --replace resets existing SessionMemory state for "
+            f"model_id={args.model_id or '<pack model>'} before writing imported contents."
+        )
+    report = import_session_memory(
+        args.pack,
+        args.storage_dir,
+        model_id=args.model_id,
+        merge=merge,
+        replace=args.replace,
+        dry_run=args.dry_run,
+    )
+    print(
+        "Imported SessionMemory pack "
+        f"mode={report['mode']} model_id={report['model_id']} written={report['written']} "
+        f"case_entries={report['after']['case_entries']}"
+    )
+    return 0
+
+
+def cmd_memory_diff(args: argparse.Namespace) -> int:
+    """Diff two portable SessionMemory JSON packs.
+
+    Spec: REQ-LEARN-062, SCENARIO-LEARN-106
+    """
+    from carnot.pipeline.session_memory_pack import diff_session_memory_packs
+
+    diff = diff_session_memory_packs(args.left, args.right)
+    print(
+        "SessionMemory diff "
+        f"is_empty={diff['is_empty']} "
+        f"models_added={len(diff['models_added'])} "
+        f"models_removed={len(diff['models_removed'])} "
+        f"models_changed={len(diff['models_changed'])}"
+    )
+    return 0
+
+
 def main() -> int:
     """CLI entry point.
 
-    Spec: REQ-CODE-006, REQ-CODE-020, REQ-INFER-015
+    Spec: REQ-CODE-006, REQ-CODE-020, REQ-INFER-015, REQ-LEARN-062
     """
     parser = argparse.ArgumentParser(
         prog="carnot",
@@ -472,6 +543,65 @@ def main() -> int:
         help="List available pre-trained EBM models",
     )
 
+    # --- memory subcommands ---
+    memory_parser = subparsers.add_parser(
+        "memory",
+        help="Import, export, and diff portable SessionMemory packs",
+    )
+    memory_subparsers = memory_parser.add_subparsers(
+        dest="memory_command",
+        help="SessionMemory pack commands",
+    )
+    memory_export_parser = memory_subparsers.add_parser(
+        "export",
+        help="Export local SessionMemory state to a portable JSON pack",
+    )
+    memory_export_parser.add_argument("--storage-dir", required=True, help="Session storage dir")
+    memory_export_parser.add_argument("--model-id", required=True, help="Model ID to export")
+    memory_export_parser.add_argument(
+        "-o",
+        "--output",
+        required=True,
+        help="Output pack path",
+    )
+    memory_export_parser.add_argument(
+        "--source",
+        default=None,
+        help="Optional metadata.source override",
+    )
+    memory_export_parser.add_argument(
+        "--redact-provenance",
+        action="store_true",
+        help="Redact case provenance identifiers before export",
+    )
+
+    memory_import_parser = memory_subparsers.add_parser(
+        "import",
+        help="Import a portable SessionMemory JSON pack",
+    )
+    memory_import_parser.add_argument("pack", help="Input pack path")
+    memory_import_parser.add_argument("--storage-dir", required=True, help="Session storage dir")
+    memory_import_parser.add_argument(
+        "--model-id",
+        default=None,
+        help="Target model ID; defaults to the pack model when omitted",
+    )
+    mode_group = memory_import_parser.add_mutually_exclusive_group()
+    mode_group.add_argument("--merge", action="store_true", help="Merge into existing state")
+    mode_group.add_argument("--replace", action="store_true", help="Replace existing state")
+    memory_import_parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Validate and report planned changes without writing state",
+    )
+
+    memory_diff_parser = memory_subparsers.add_parser(
+        "diff",
+        help="Compare two portable SessionMemory JSON packs",
+    )
+    memory_diff_parser.add_argument("left", help="Left pack path")
+    memory_diff_parser.add_argument("right", help="Right pack path")
+
     parsed = parser.parse_args()
     if parsed.command is None:
         parser.print_help()
@@ -482,6 +612,15 @@ def main() -> int:
         return cmd_verify_code(parsed)
     if parsed.command == "score":
         return cmd_score(parsed)
+    if parsed.command == "memory":
+        if parsed.memory_command == "export":
+            return cmd_memory_export(parsed)
+        if parsed.memory_command == "import":
+            return cmd_memory_import(parsed)
+        if parsed.memory_command == "diff":
+            return cmd_memory_diff(parsed)
+        memory_parser.print_help()
+        return 1
     parser.print_help()  # pragma: no cover
     return 1  # pragma: no cover
 
