@@ -647,6 +647,44 @@ AND non-interactive arXiv SWORD credentials are configured
 `https://arxiv.org/sword/deposit`, records `submission_attempted == true`, and
 stores any returned arXiv identifier in `arxiv_id_if_submitted`.
 
+### REQ-PUBLISH-020: arXiv Operator Action Sheet
+
+The Exp 1412 arXiv operator-action-sheet runner MUST create
+`results/experiment_1412_arxiv_operator_action_sheet_v3.json` with
+`status == "in_progress"` before validating the ready bundle or writing the
+operator sheet. It MUST verify that `results/arxiv_bundle_v11.tar.gz` exists
+and is non-empty, read `docs/arxiv-manual-submission-checklist.md`, and write a
+terse browser-only action sheet at `docs/arxiv-submit-now.md`.
+
+The action sheet MUST include the exact upload URL `https://arxiv.org/submit`,
+the source bundle path, primary category `cs.LG`, license `CC-BY-4.0`, title,
+author, and a one-line pointer to the checklist abstract. The runner MUST NOT
+attempt a SWORD/API submission and MUST record
+`credentialed_submission_attempted == false`.
+
+The artifact MUST include:
+
+- `status`
+- `bundle_path`
+- `bundle_exists`
+- `bundle_size_bytes`
+- `manual_checklist_path`
+- `operator_action_sheet_path`
+- `submission_ready_for_operator`
+- `credentialed_submission_attempted`
+- `honest_verdict`
+
+### SCENARIO-PUBLISH-022: Ready Bundle Produces Browser Action Sheet
+
+**Given** `results/arxiv_bundle_v11.tar.gz` exists and is non-empty
+AND `docs/arxiv-manual-submission-checklist.md` contains the upload URL and
+pre-filled metadata
+**When** the Exp 1412 runner executes
+**Then** it writes `docs/arxiv-submit-now.md`
+AND the deliverable records `submission_ready_for_operator == true`,
+`credentialed_submission_attempted == false`, the bundle size, and a complete
+honest verdict.
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -670,3 +708,4 @@ stores any returned arXiv identifier in `arxiv_id_if_submitted`.
 | REQ-PUBLISH-017 | Implemented | Exp 1378 publication-hold v16 claim-boundary review |
 | REQ-PUBLISH-018 | Implemented | Exp 1380 audited arXiv bundle v11 submission artifact |
 | REQ-PUBLISH-019 | Implemented | Exp 1390 arXiv SWORD API submission or manual checklist |
+| REQ-PUBLISH-020 | Implemented | Exp 1412 arXiv operator action sheet |
