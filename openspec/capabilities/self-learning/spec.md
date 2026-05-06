@@ -3515,3 +3515,59 @@ was actually resolved and used for evaluation.
 | Requirement | Python | Tests |
 |-------------|--------|-------|
 | REQ-LEARN-1420 | Implemented (`python/carnot/reporting/dpo_verified_pairs_probe.py`) | Implemented (`tests/python/test_dpo_verified_pairs_probe.py`) |
+
+## REQ-LEARN-1433: FR-11 Self-Learning V6 MUST Gate on Deployed DVI V3
+
+Exp 1433 SHALL run the mandatory FR-11 self-learning v6 round on run date
+`20260506` only after Exp 1432 deploys DVI v3. The workflow SHALL keep the
+Exp 1395 `fresh_verified_sample_count=1508` as the baseline, scan fresh or
+held-out FoVer rows that were not already promoted by Exp 1395, verify them
+with the deployed DVI v3 checkpoint and its calibrated thresholds, and report
+whether v6 produced positive fresh verified sample growth without violating
+the nonforgetting gate.
+
+### REQ-LEARN-1433 Sub-requirements
+
+- REQ-LEARN-1433-1: The workflow SHALL write
+  `results/experiment_1433_fr11_self_learning_v6_dvi_v3_gated.json` first with
+  `status="in_progress"` before loading source artifacts.
+- REQ-LEARN-1433-2: The workflow SHALL require Exp 1432 to report
+  `dvi_v3_deployed=true`, an existing `dvi_v3_checkpoint_path`, and
+  `nonforgetting_rate >= 0.99` before running the v6 memory update.
+- REQ-LEARN-1433-3: The v6 verifier SHALL use the DVI v3 checkpoint metric,
+  bias, SECL confidence head, and calibrated thresholds saved by Exp 1432.
+- REQ-LEARN-1433-4: Rows already promoted by Exp 1395 SHALL be excluded from
+  the v6 candidate set so positive growth reflects new SessionMemory-equivalent
+  updates rather than recounting the v5 baseline.
+- REQ-LEARN-1433-5: The final artifact SHALL include `status`,
+  `dvi_v3_artifact_used`, `fresh_verified_sample_count`,
+  `baseline_fresh_verified_sample_count`, `self_learning_delta_overall`,
+  `nonforgetting_rate`, `session_memory_updated`, `headline_result_allowed`,
+  and `honest_verdict`.
+- REQ-LEARN-1433-6: `self_learning_delta_overall` SHALL equal
+  `fresh_verified_sample_count - baseline_fresh_verified_sample_count`, and
+  `headline_result_allowed` SHALL be true only when that delta is positive and
+  nonforgetting is preserved.
+
+### SCENARIO-LEARN-1433: Deployed DVI V3 Permits Headline Only With Growth
+
+**Given** Exp 1432 deployed DVI v3 with nonforgetting preserved
+**And** Exp 1395 has 1508 baseline fresh verified samples
+**When** v6 verifies held-out FoVer rows not already promoted by Exp 1395
+**Then** the artifact reports the total v6 fresh verified sample count
+**And** `self_learning_delta_overall` is computed versus 1508
+**And** `headline_result_allowed=true` only when the delta is positive.
+
+### SCENARIO-LEARN-1434: Missing DVI V3 Deployment Blocks V6
+
+**Given** Exp 1432 did not deploy DVI v3 or its checkpoint is unavailable
+**When** Exp 1433 starts
+**Then** the artifact has `status="blocked"`
+**And** `headline_result_allowed=false`
+**And** `honest_verdict` names the DVI v3 deployment blocker.
+
+## Implementation Status (REQ-LEARN-1433)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-1433 | Implemented (`python/carnot/reporting/fr11_self_learning_v6_dvi_v3_gated.py`) | Implemented (`tests/python/test_fr11_self_learning_v6_dvi_v3_gated.py`) |
