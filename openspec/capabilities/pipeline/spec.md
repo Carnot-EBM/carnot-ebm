@@ -2186,3 +2186,52 @@ whose DVI state disagrees with the FoVer label
 are counted separately, ranked, and mapped to concrete Exp 1396 fixes.
 
 **Spec traces:** REQ-VERIFY-1391, SCENARIO-VERIFY-1391
+
+### REQ-VERIFY-1397: Full-Scale Pipeline V2 200-Case Headline Run
+
+The repository shall provide an Exp 1397 runner that replays the full
+certificate extraction, calibrated semantic validation, VERGE/MCS
+repair-localization, and scheduler chain over 200 local FoVer corpus cases after
+the Exp 1396 semantic validation fixes are confirmed.
+
+The runner MUST write
+`results/experiment_1397_fullscale_pipeline_v2_200cases.json` with
+`status="in_progress"` before loading model specs, source artifacts, corpus
+rows, or the DVI checkpoint. It MUST read
+`results/experiment_1396_semantic_validation_pass_rate_fix_v1.json` and proceed
+only when `semantic_validation_improvement_measured=true`. It MUST resolve
+`MODEL_SPECS` through `cached_sota_pair(gpu_indices=(0, 1),
+preferred_quant="Q4_K_M")`, and headline LLM generation rows MUST come from
+those cached SOTA GGUF specs.
+
+The terminal artifact SHALL include at least `status`, `cases_evaluated`,
+`models_used`, `certificate_extract_count`, `certificate_parse_rate`,
+`semantic_validation_pass_rate`, `full_pipeline_pass_rate`,
+`semantic_validation_improvement_vs_exp1382`,
+`full_pipeline_improvement_vs_exp1382`, `headline_result_allowed`, and
+`honest_verdict`. Improvements SHALL be measured against the Exp 1382 baselines
+`semantic_validation_pass_rate=0.59` and `full_pipeline_pass_rate=0.29`.
+`headline_result_allowed` SHALL be true only when the semantic validation pass
+rate is at least 0.70, the full pipeline pass rate is at least 0.40, and the
+certificate generation rows have mandated cached SOTA GGUF provenance.
+
+**Acceptance criteria:**
+- The runner writes an in-progress artifact first and a terminal artifact last.
+- The Exp 1396 prerequisite gate blocks the run when semantic improvement was
+  not measured.
+- Exactly 200 FoVer cases are evaluated when enough labeled rows exist.
+- The terminal artifact records improvement deltas versus Exp 1382 and applies
+  the metric and SOTA-provenance headline gate.
+
+### SCENARIO-VERIFY-1397: Publication-Quality 200-Case Pipeline Result
+
+**Given** Exp 1396 measured semantic validation improvement
+**And** the local FoVer corpus contains at least 200 labeled rows
+**And** `cached_sota_pair(gpu_indices=(0, 1), preferred_quant="Q4_K_M")`
+resolves a mandated SOTA GGUF pair
+**When** Exp 1397 runs the full pipeline
+**Then** the terminal artifact reports 200-case certificate parse, semantic
+validation, repair, full-pipeline, baseline-improvement, model-provenance, and
+headline-gate statistics for the processed FoVer cases.
+
+**Spec traces:** REQ-VERIFY-1397, SCENARIO-VERIFY-1397
