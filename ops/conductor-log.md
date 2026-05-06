@@ -1000,3 +1000,4 @@ web search: GitHub trending energy based mod |
 | 2026-05-06 08:06 UTC | Full-Scale Pipeline v3 — Gated on Exp 1414 Repair  | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1419_fullsca |
 | 2026-05-06 08:08 UTC | FR-11 Self-Learning v6 — Gated on Exp 1415 DVI v3 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1415-dvi-v3-1508-fresh-cases) |
 | 2026-05-06 08:15 UTC | Full-Scale Pipeline v3 — Gated on Exp 1414 Repair  | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1419_fullsca |
+| 2026-05-06 08:29 UTC | DPO-Style Preference Probe — Replace Retired GRPO  | OK | 81 passed, 1 warning in 5.15s |
