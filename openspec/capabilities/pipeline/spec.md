@@ -2395,3 +2395,61 @@ energies,
 `stopped_early=true`.
 
 **Spec traces:** REQ-VERIFY-1411, REQ-VERIFY-1412, REQ-VERIFY-1413
+
+### REQ-VERIFY-1414: Probability Calibration Verifier
+
+The pipeline MUST provide a `ProbabilityCalibrationVerifier` side-car for
+responses that make explicit probability claims.  The verifier SHALL expose
+`score(chain, probability_claim) -> VerdictRecord`, where `probability_claim`
+may be a parsed claim object or a string such as `P(event)=0.62`.
+
+The verifier MUST extract simple reference-class evidence atoms from the
+reasoning chain, including `n out of N`, `n/N`, percentages, and explicit base
+rates.  It SHALL derive an implied posterior point estimate and tolerance range,
+then score energy as the distance between the claimed probability and the
+nearest edge of that implied range.  Claims inside the range SHALL pass with
+zero energy.  Claims outside the range SHALL fail with positive energy.  Claims
+without parseable probability or evidence SHALL abstain rather than guess.
+
+**Acceptance criteria:**
+- `score(...)` returns a `VerdictRecord` with claim probability, implied
+  probability, implied range, and evidence count in `extras`.
+- Synthetic in-range probability claims pass with zero energy.
+- Synthetic overconfident or underconfident claims fail with positive energy.
+- Underdetermined chains abstain without raising.
+
+### REQ-VERIFY-1415: Opt-In Pipeline Probability Calibration Wire-Up
+
+`VerifyRepairPipeline` MUST accept an optional probability-calibration verifier
+without changing default verification behavior.  When supplied, the verifier
+SHALL scan the response for explicit probability claims and add metadata-backed
+constraints for each scored claim.  Failing probability-calibration records MUST
+make `verify(...)` return `verified=false`; abstentions SHALL be recorded as
+informational and MUST NOT create a violation.
+
+Probability-calibration constraints SHALL include the underlying
+`VerdictRecord.to_dict()` payload in metadata and contribute their positive
+energy to the returned `VerificationResult.energy` certificate.
+
+**Acceptance criteria:**
+- Default `VerifyRepairPipeline(...)` behavior is unchanged when no probability
+  verifier is supplied.
+- Supplying `ProbabilityCalibrationVerifier(...)` makes miscalibrated
+  probability claims appear as `probability_calibration` violations.
+- Pipeline result energy includes the probability-calibration gap energy.
+
+### SCENARIO-VERIFY-1414: Probability Claim Calibration Detects Reference-Class Gap
+
+**Given** a reasoning chain that says 30 out of 100 comparable cases had an
+event,
+**When** the response claims `P(event)=0.30`,
+**Then** `ProbabilityCalibrationVerifier.score(...)` returns
+`verdict="pass"` and `energy=0.0`.
+
+**Given** the same evidence but a response claims `P(event)=0.80`,
+**When** `VerifyRepairPipeline` is constructed with the probability-calibration
+verifier enabled,
+**Then** verification fails with a `probability_calibration` violation and a
+positive energy gap.
+
+**Spec traces:** REQ-VERIFY-1414, REQ-VERIFY-1415
