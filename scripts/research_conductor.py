@@ -1663,15 +1663,26 @@ def _verdict_is_untrustworthy(payload: dict) -> tuple[bool, str | None]:
     # "marginal" matched _PARTIAL_TOKENS even though the verdict explicitly
     # opens with a terminal-success marker. Prefix-trust agent's explicit
     # terminal markers when present.
+    # 2026-05-06 extension: agents also use underscore-separator format
+    # like "complete_prm_guided_no_improvement_prototype_no_headline_claim"
+    # (exp1430 retired) and "complete_mcmc_constrained_repair_..." and
+    # "complete_repair_executor_no_successful_repairs". The underscore
+    # variant is just as valid a terminal marker as the colon/space
+    # variant — agents pick separator by template convention, not
+    # by terminality intent.
     _TERMINAL_VERDICT_PREFIXES = (
         "complete:",
         "complete ",
+        "complete_",
         "success:",
         "success ",
+        "success_",
         "passed:",
         "passed ",
+        "passed_",
         "shipped:",
         "shipped ",
+        "shipped_",
     )
     if any(vlow.startswith(p) for p in _TERMINAL_VERDICT_PREFIXES):
         return False, verdict
