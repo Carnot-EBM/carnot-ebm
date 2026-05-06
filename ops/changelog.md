@@ -1,5 +1,9 @@
 # Carnot — Changelog
 
+## 2026-05-06 (GitHub Issue #3 Structured Verdict Records)
+
+- 2026-05-06: Started issue #3 by adding structured verdict specs (`REQ-VERIFY-1408` through `REQ-VERIFY-1410`, `SCENARIO-VERIFY-1408`), `python/carnot/pipeline/verdict_record.py`, non-breaking `verify_record()` and `verify_legacy()` APIs for `VerifyRepairPipeline` and `ThreeTierPipeline`, public exports, `docs/verdict-records.md`, `tests/python/test_verdict_record.py`, and `results/experiment_1408_structured_verdict_record.json`. Verification is in progress.
+
 ## 2026-05-06 (GitHub Issue #5 SessionMemory Portable Packs)
 
 - 2026-05-06: Implemented issue #5 by adding portable SessionMemory JSON packs. Added `python/carnot/pipeline/session_memory_pack.py` with export/import/diff/load/validate APIs, merge semantics for duplicate `CaseMemory` entries, additive `ConstraintTemplateLibrary` and `PerModelFPTracker` merging, dry-run import, replace mode, and public `carnot.pipeline` exports. Added `python/carnot/schemas/session_memory_v1.json` (JSON Schema draft-2020-12) plus package data, `examples/constraint_packs/{empty_v1,arithmetic_v1,python_code_v1}.json`, `docs/session-memory-packs.md`, `results/experiment_1403_session_memory_portable_packs.json`, and `carnot memory export/import/diff` CLI commands. Added REQ-LEARN-1405 through REQ-LEARN-1407 and SCENARIO-LEARN-1405 through SCENARIO-LEARN-1407 in `openspec/capabilities/self-learning/spec.md`. Verification: `.venv/bin/pytest tests/python/test_session_memory_pack.py tests/python/test_session_memory.py tests/python/test_cli.py -q --no-cov -p no:cacheprovider` passed 89 tests with 1 skipped; `ruff check`, `ruff format --check`, `mypy`, targeted spec coverage, `jq`, and `git diff --check` passed. E2E checks from `ops/e2e-test-plan.md` are not applicable to this portable-memory serialization/CLI change beyond the covered export/import/diff round-trip tests.
