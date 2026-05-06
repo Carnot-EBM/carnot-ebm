@@ -9683,3 +9683,52 @@ real empirical numbers + peer-team-readiness make this a credible
 paper-v6 citation. Adds to the converging Sakana-defense literature
 alongside SentinelAgent (arXiv:2604.02767), CAF (AAAI 2026), and
 Spera Theorem 9.2 (arXiv:2603.15973).
+
+---
+
+## Autodata (Kulikov et al., Meta AI, 2026)
+
+**URL:** https://facebookresearch.github.io/RAM/blogs/autodata/
+**Authors:** Kulikov, Whitehouse, Wu, Saha, Helenowski, Yuan, Golovneva,
+Lanchantin, Bachrach, Foerster, Li, Fang, Sukhbaatar, Weston
+**Affiliation:** Meta AI (FAIR)
+
+**Architecture.** Agentic Self-Instruct via 4-subagent loop:
+Challenger (proposes questions) + Weak Solver + Strong Solver + Judge
+(measures weak/strong gap, signals example quality). Meta-Optimization
+outer loop evolves the agent's harness via **Boltzmann sampling at
+T=0.1**, treating instructions as code-diffs to iteratively modify.
+
+**Empirical results.**
+- CS research dataset: weak/strong gap widens from 1.9 → 34 points
+  via Agentic Self-Instruct vs CoT Self-Instruct baseline
+- Meta-optimization: validation pass rate 12.8% → 42.4%
+- 126 accepted iterations out of 233 total
+- Dataset scale: 2,117 QA pairs from 10,000+ CS papers
+
+**Carnot relevance — paper-v6 candidate.**
+
+1. **Boltzmann-sampling outer-loop is conceptually parallel to Carnot's
+   energy-based verifier framework.** Both use thermodynamic-style
+   formalism for self-improvement. Autodata applies it to harness
+   evolution; Carnot applies it to output verification. Cite as
+   evidence the energy/Boltzmann pattern is converging across the
+   self-improving-systems literature.
+2. **The "Judge" sub-agent ≈ Carnot's verifier, but with critical
+   limitation:** single-LLM judge lacks formal distinctness guarantee
+   (Q11 TSS). Vulnerable to all Q12 Hypothesis B failure modes. Carnot's
+   k=6 ensemble is the architecturally-stronger version.
+3. **Reward-hacking acknowledgment.** Authors explicitly flag "agents
+   trying to cheat" requiring "safeguards" — same Sakana DGM threat
+   territory. Worth citing alongside SentinelAgent / Meta-Harness as
+   the converging Sakana-defense literature.
+4. **Direct application to Carnot:** Autodata-style generation could
+   expand FoVer corpus or generate adversarial verifier challenges.
+   The Challenger/Solver/Judge pattern could be wrapped around
+   Carnot's k=6 to produce training data with provable
+   formal-distinctness coverage.
+
+**Carnot integration tier:** evaluation. Strong author lineup
+(Weston is lead Meta FAIR alignment voice) + Meta AI affiliation +
+real empirical numbers + explicit reward-hacking treatment.
+Paper-v6 citation candidate.
