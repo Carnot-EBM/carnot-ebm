@@ -1,0 +1,515 @@
+{
+  "arxiv_submission_verdict": {
+    "arxiv_id_if_submitted": null,
+    "bundle_path": "results/arxiv_bundle_v11.tar.gz",
+    "criterion_status": "NOT_MET",
+    "manual_checklist_generated": true,
+    "manual_checklist_path": "docs/arxiv-manual-submission-checklist.md",
+    "reason": "actual arXiv submission was not attempted",
+    "submission_attempted": false,
+    "submission_method": "manual_checklist_no_credentials",
+    "submission_result": "manual_checklist_generated"
+  },
+  "biprm_verdict": {
+    "biprm_r2l_pivot_precision": 0.973333,
+    "criterion_status": "MET",
+    "forward_only_pivot_precision": 0.986667,
+    "human_annotated_pivot_cases": 0,
+    "pivot_precision_delta": -0.013334,
+    "retrospective_verification_viable": false
+  },
+  "carry_forward_tasks": [
+    {
+      "reason": "submission_attempted=false; manual checklist was generated but no arXiv ID exists.",
+      "source": "exp1390",
+      "task": "Complete actual arXiv submission using the verified bundle and manual checklist."
+    },
+    {
+      "reason": "semantic_validation_pass_rate=1.0 but full_pipeline_pass_rate=0.305 below the 0.40 headline gate.",
+      "source": "exp1397",
+      "task": "Raise full pipeline pass rate above the headline threshold by improving scheduler acceptance or post-repair acceptance, not semantic parsing."
+    },
+    {
+      "reason": "NGRPO produced no held-out improvement and triggered retire_if_same_verdict=true.",
+      "source": "exp1393",
+      "task": "Do not rerun the same FoVer JURY-RL/NGRPO path unless a non-UNKNOWN reward or verifier signal is introduced."
+    },
+    {
+      "reason": "pivot_precision_delta=-0.013334 and retrospective_verification_viable=false.",
+      "source": "exp1400",
+      "task": "Retire or redesign proxy-only BiPRM; use human pivot labels before another viability claim."
+    },
+    {
+      "reason": "calibration_auroc_delta is positive, but variance_worsened=true.",
+      "source": "exp1401",
+      "task": "Preserve hinge-only AUROC gains while reducing paraphrase energy variance."
+    },
+    {
+      "reason": "collection is clean, but exp1392 reported unrelated full-suite failures and spec-coverage debt.",
+      "source": "exp1392",
+      "task": "Carry forward execution-time test failures and spec-coverage hygiene separately from collection hygiene."
+    },
+    {
+      "reason": "hardware_claim_allowed is an estimate; hardware_execution_performed=false and synthesis_performed=false.",
+      "source": "exp1399",
+      "task": "Run synthesis or KV260 board validation before upgrading discrete-SB estimates into hardware-execution claims."
+    },
+    {
+      "reason": "fresh count grew through DVI v2; grpo_v8_cases_integrated=0.",
+      "source": "exp1395",
+      "task": "Keep FR-11 GRPO integration closed until a positive GRPO result exists."
+    }
+  ],
+  "criteria_met": 12,
+  "criteria_results": {
+    "arxiv_submitted": {
+      "observed": {
+        "arxiv_id_if_submitted": null,
+        "bundle_path": "results/arxiv_bundle_v11.tar.gz",
+        "criterion_status": "NOT_MET",
+        "manual_checklist_generated": true,
+        "manual_checklist_path": "docs/arxiv-manual-submission-checklist.md",
+        "reason": "actual arXiv submission was not attempted",
+        "submission_attempted": false,
+        "submission_method": "manual_checklist_no_credentials",
+        "submission_result": "manual_checklist_generated"
+      },
+      "source": "exp1390",
+      "status": "NOT_MET",
+      "target": "submission_attempted=true AND submission_result!=\"not_attempted\""
+    },
+    "biprm_verified": {
+      "observed": {
+        "biprm_r2l_pivot_precision": 0.973333,
+        "criterion_status": "MET",
+        "forward_only_pivot_precision": 0.986667,
+        "human_annotated_pivot_cases": 0,
+        "pivot_precision_delta": -0.013334,
+        "retrospective_verification_viable": false
+      },
+      "source": "exp1400",
+      "status": "MET",
+      "target": "retrospective_verification_viable determined"
+    },
+    "discrete_sb_kv260_estimated": {
+      "observed": {
+        "bram_budget_feasible": true,
+        "convergence_speedup_discrete_sb": 1.3846153846153846,
+        "criterion_status": "MET",
+        "hardware_claim_allowed": true,
+        "hardware_execution_performed": false,
+        "kv260_claim_allowed": true,
+        "synthesis_performed": false
+      },
+      "source": "exp1399",
+      "status": "MET",
+      "target": "bram_budget_feasible determined AND hardware_claim_set"
+    },
+    "dvi_v2_deployed": {
+      "observed": {
+        "criterion_status": "MET",
+        "dvi_v2_auroc_delta": 0.011458,
+        "dvi_v2_deployed": true,
+        "dvi_v2_trained_auroc": 0.405984,
+        "fresh_cases_used": 59,
+        "secl_ece_reduction_pct": 45.35096
+      },
+      "source": "exp1394",
+      "status": "MET",
+      "target": "dvi_v2_deployed=true AND dvi_v2_auroc_delta > 0.003486"
+    },
+    "ebm_cot_hinge_only_measured": {
+      "observed": {
+        "calibration_auroc_delta": 0.18570365800551603,
+        "consistency_regularization_weight": 0.0,
+        "criterion_status": "MET",
+        "ebm_cot_v2_auroc": 0.9855748294382348,
+        "paraphrase_energy_variance_after": 0.16537272058221922,
+        "paraphrase_energy_variance_before": 0.0005379585431871225,
+        "variance_worsened": true
+      },
+      "source": "exp1401",
+      "status": "MET",
+      "target": "calibration_auroc_delta > 0 with hinge-only and no consistency regularization"
+    },
+    "failure_diagnosis_complete": {
+      "observed": {
+        "criterion_status": "MET",
+        "failure_analysis_complete": true,
+        "failure_category_counts": {
+          "CORPUS_SPECIFIC": 33,
+          "MISSING_CERTIFICATE_FIELD": 0,
+          "OTHER": 0,
+          "SEMANTIC_CONTRADICTION": 0,
+          "VALIDATOR_BUG": 8,
+          "Z3_CONSTRAINT_MISMATCH": 0
+        },
+        "fixable_failure_pct": 1.0,
+        "root_causes_identified": true,
+        "top_failure_category": "CORPUS_SPECIFIC"
+      },
+      "source": "exp1391",
+      "status": "MET",
+      "target": "failure_analysis_complete=true AND failure_root_causes identified"
+    },
+    "fr11_v5_fresh_count_growing": {
+      "observed": {
+        "criterion_status": "MET",
+        "dvi_v2_checkpoint_active": true,
+        "fresh_verified_sample_count": 1508,
+        "grpo_v8_cases_integrated": 0,
+        "headline_result_allowed": true,
+        "self_learning_delta_overall": 1449
+      },
+      "source": "exp1395",
+      "status": "MET",
+      "target": "fresh_verified_sample_count > 59 OR gate_blocked_artifact_emitted"
+    },
+    "full_pipeline_v2_at_scale": {
+      "observed": {
+        "cases_evaluated": 200,
+        "certificate_parse_rate": 1.0,
+        "criterion_status": "MET",
+        "full_pipeline_pass_rate": 0.305,
+        "headline_metric_gate_passed": false,
+        "headline_result_allowed": false,
+        "repair_hint_precision": 1.0,
+        "scheduler_accept_rate": 0.305,
+        "semantic_validation_pass_rate": 1.0
+      },
+      "source": "exp1397",
+      "status": "MET",
+      "target": "cases_evaluated >= 200 OR gate_blocked_artifact_emitted"
+    },
+    "grpo_ngrpo_measured": {
+      "observed": {
+        "criterion_status": "MET",
+        "formal_reward_pass_rate": 0.0,
+        "grpo_v8_improvement_pp": 0.0,
+        "met_via_retirement": true,
+        "retire_if_same_verdict": true,
+        "terminal_blocker": "ngrpo_still_zero_reward_fover_incompatible_with_jury_rl",
+        "unknown_rollout_rate": 1.0
+      },
+      "source": "exp1393",
+      "status": "MET",
+      "target": "grpo_v8_improvement_pp > 0 OR retire_if_same_verdict=true applied"
+    },
+    "ngrpo_theory_confirmed": {
+      "observed": {
+        "criterion_status": "MET",
+        "ngrpo_advantage_calibration_verified": true,
+        "ngrpo_augmented_advantage_variance": 0.16,
+        "original_resZero_advantage_variance": 0.0,
+        "theory_supports_exp1393": true
+      },
+      "source": "exp1398",
+      "status": "MET",
+      "target": "ngrpo_advantage_calibration_tested=true"
+    },
+    "retro_108_complete": {
+      "observed": {
+        "criteria_written": true
+      },
+      "source": "exp1402",
+      "status": "MET",
+      "target": "criteria_met/criteria_total written"
+    },
+    "semantic_validation_fix_measured": {
+      "observed": {
+        "all_exp1391_failures_recovered_after_fix_count": 41,
+        "criterion_status": "MET",
+        "fix_applied": true,
+        "semantic_validation_improvement_measured": true,
+        "semantic_validation_pass_rate_after_fix": 1.0,
+        "semantic_validation_pass_rate_before_fix": 0.59
+      },
+      "source": "exp1396",
+      "status": "MET",
+      "target": "semantic_validation_improvement_measured=true AND fix_applied"
+    },
+    "test_suite_collection_clean": {
+      "observed": {
+        "collection_errors_after": 0,
+        "collection_errors_remaining": 0,
+        "criterion_status": "MET",
+        "full_suite_tail_result": "3 failed, 5393 passed, 29 skipped, 44 warnings in 121.43s; failures are execution-time test failures after collection, not collection errors.",
+        "spec_coverage_result": "failed on 71 pre-existing tests lacking spec references outside this collection-hygiene fix scope",
+        "test_suite_collection_clean": true
+      },
+      "source": "exp1392",
+      "status": "MET",
+      "target": "collection_errors_remaining=0"
+    }
+  },
+  "criteria_total": 13,
+  "discrete_sb_kv260_verdict": {
+    "bram_budget_feasible": true,
+    "convergence_speedup_discrete_sb": 1.3846153846153846,
+    "criterion_status": "MET",
+    "hardware_claim_allowed": true,
+    "hardware_execution_performed": false,
+    "kv260_claim_allowed": true,
+    "synthesis_performed": false
+  },
+  "dvi_v2_secl_verdict": {
+    "criterion_status": "MET",
+    "dvi_v2_auroc_delta": 0.011458,
+    "dvi_v2_deployed": true,
+    "dvi_v2_trained_auroc": 0.405984,
+    "fresh_cases_used": 59,
+    "secl_ece_reduction_pct": 45.35096
+  },
+  "ebm_cot_v2_verdict": {
+    "calibration_auroc_delta": 0.18570365800551603,
+    "consistency_regularization_weight": 0.0,
+    "criterion_status": "MET",
+    "ebm_cot_v2_auroc": 0.9855748294382348,
+    "paraphrase_energy_variance_after": 0.16537272058221922,
+    "paraphrase_energy_variance_before": 0.0005379585431871225,
+    "variance_worsened": true
+  },
+  "experiment": "1402_milestone_108_retro",
+  "experiment_statuses": {
+    "exp1390": {
+      "artifact": "results/experiment_1390_arxiv_submission_sword_api.json",
+      "exists": true,
+      "honest_verdict": "credentials_missing_manual_submission_checklist_generated_ready_bundle_verified",
+      "status": "complete"
+    },
+    "exp1391": {
+      "artifact": "results/experiment_1391_fullscale_pipeline_failure_diagnosis.json",
+      "exists": true,
+      "honest_verdict": "diagnosis_complete_dvi_boundary_failures_dominate_exp1396_should_fix_validator",
+      "status": "complete"
+    },
+    "exp1392": {
+      "artifact": "results/experiment_1392_test_suite_hygiene_v2.json",
+      "exists": true,
+      "honest_verdict": "collection_hygiene_target_met_zero_collection_errors_restored_two_missing_reporting_modules_full_tests_reach_execution_and_stop_on_unrelated_existing_failures",
+      "status": "complete"
+    },
+    "exp1393": {
+      "artifact": "results/experiment_1393_grpo_v8_ngrpo_zero_reward_fix.json",
+      "exists": true,
+      "honest_verdict": "grpo_v8_ngrpo_no_improvement_all_unknown_retired",
+      "status": "complete"
+    },
+    "exp1394": {
+      "artifact": "results/experiment_1394_dvi_v2_secl_combined.json",
+      "exists": true,
+      "honest_verdict": "dvi_v2_secl_combined_deployed_positive_auroc_delta_ece_reduced",
+      "status": "complete"
+    },
+    "exp1395": {
+      "artifact": "results/experiment_1395_fr11_self_learning_v5.json",
+      "exists": true,
+      "honest_verdict": "fr11_self_learning_v5_dvi_v2_secl_headline_allowed_fresh_1508_delta_1449_grpo_0",
+      "status": "complete"
+    },
+    "exp1396": {
+      "artifact": "results/experiment_1396_semantic_validation_pass_rate_fix_v1.json",
+      "exists": true,
+      "honest_verdict": "sample_improvement_measured_30_of_30_exp1382_failures_recovered_exp1397_fullscale_200case_validation_still_required",
+      "status": "complete"
+    },
+    "exp1397": {
+      "artifact": "results/experiment_1397_fullscale_pipeline_v2_200cases.json",
+      "exists": true,
+      "honest_verdict": "not_headline_full_pipeline_below_0_40",
+      "status": "complete"
+    },
+    "exp1398": {
+      "artifact": "results/experiment_1398_ngrpo_theory_probe.json",
+      "exists": true,
+      "honest_verdict": "cpu_only_theory_probe_supports_exp1393_nonzero_advantage_signal",
+      "status": "complete"
+    },
+    "exp1399": {
+      "artifact": "results/experiment_1399_discrete_sb_kv260_cpu_simulation.json",
+      "exists": true,
+      "honest_verdict": "cpu_discrete_sb_convergence_speedup_observed_kv260_bram_lut_budget_fits_estimate_only",
+      "status": "complete"
+    },
+    "exp1400": {
+      "artifact": "results/experiment_1400_biprm_retrospective_verification_probe.json",
+      "exists": true,
+      "honest_verdict": "not_viable_negative_r2l_pivot_precision_delta_fover_negative_step_proxy_labels_used_no_human_pivots",
+      "status": "complete"
+    },
+    "exp1401": {
+      "artifact": "results/experiment_1401_ebm_cot_v2_hinge_only.json",
+      "exists": true,
+      "honest_verdict": "hinge_only_confirmed_positive_calibration_but_variance_worsened",
+      "status": "complete"
+    },
+    "exp1402": {
+      "artifact": "results/experiment_1402_milestone_108_retro.json",
+      "exists": true,
+      "honest_verdict": "written_by_this_artifact",
+      "status": "complete"
+    }
+  },
+  "fr11_v5_verdict": {
+    "criterion_status": "MET",
+    "dvi_v2_checkpoint_active": true,
+    "fresh_verified_sample_count": 1508,
+    "grpo_v8_cases_integrated": 0,
+    "headline_result_allowed": true,
+    "self_learning_delta_overall": 1449
+  },
+  "full_pipeline_v2_verdict": {
+    "cases_evaluated": 200,
+    "certificate_parse_rate": 1.0,
+    "criterion_status": "MET",
+    "full_pipeline_pass_rate": 0.305,
+    "headline_metric_gate_passed": false,
+    "headline_result_allowed": false,
+    "repair_hint_precision": 1.0,
+    "scheduler_accept_rate": 0.305,
+    "semantic_validation_pass_rate": 1.0
+  },
+  "grpo_ngrpo_verdict": {
+    "criterion_status": "MET",
+    "formal_reward_pass_rate": 0.0,
+    "grpo_v8_improvement_pp": 0.0,
+    "met_via_retirement": true,
+    "retire_if_same_verdict": true,
+    "terminal_blocker": "ngrpo_still_zero_reward_fover_incompatible_with_jury_rl",
+    "unknown_rollout_rate": 1.0
+  },
+  "honest_verdict": "milestone_108_12_of_13_criteria_met_arxiv_submission_not_attempted_pipeline_semantic_fixed_full_pipeline_below_headline_grpo_retired_biprm_negative",
+  "milestone": "2026.04.108",
+  "ngrpo_theory_verdict": {
+    "criterion_status": "MET",
+    "ngrpo_advantage_calibration_verified": true,
+    "ngrpo_augmented_advantage_variance": 0.16,
+    "original_resZero_advantage_variance": 0.0,
+    "theory_supports_exp1393": true
+  },
+  "pipeline_failure_diagnosis_verdict": {
+    "criterion_status": "MET",
+    "failure_analysis_complete": true,
+    "failure_category_counts": {
+      "CORPUS_SPECIFIC": 33,
+      "MISSING_CERTIFICATE_FIELD": 0,
+      "OTHER": 0,
+      "SEMANTIC_CONTRADICTION": 0,
+      "VALIDATOR_BUG": 8,
+      "Z3_CONSTRAINT_MISMATCH": 0
+    },
+    "fixable_failure_pct": 1.0,
+    "root_causes_identified": true,
+    "top_failure_category": "CORPUS_SPECIFIC"
+  },
+  "prior_failure_hygiene_notes": {
+    "missing_requested_inputs": [
+      "research-roadmap-next.yaml"
+    ],
+    "missing_result_artifacts": [],
+    "retirements_triggered": [
+      {
+        "experiment_id": "exp1393",
+        "prior_failure_scope": "exp1383 GRPO zero-reward/all-UNKNOWN rollout failure",
+        "required_action": "Retire this exact reward path from future milestones unless the root cause changes through a non-UNKNOWN verifier or reward source.",
+        "retire_if_same_verdict": true,
+        "same_verdict_signal": "grpo_v8_improvement_pp=0.0 and unknown_rollout_rate=1.0",
+        "triggered": true
+      }
+    ]
+  },
+  "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+  "roadmap_inputs": {
+    "change_proposal_present": true,
+    "missing_requested_inputs": [
+      "research-roadmap-next.yaml"
+    ],
+    "research_roadmap_next_yaml_present": false
+  },
+  "run_date": "20260506",
+  "schema": "milestone_108_retro_v1",
+  "semantic_validation_fix_verdict": {
+    "all_exp1391_failures_recovered_after_fix_count": 41,
+    "criterion_status": "MET",
+    "fix_applied": true,
+    "semantic_validation_improvement_measured": true,
+    "semantic_validation_pass_rate_after_fix": 1.0,
+    "semantic_validation_pass_rate_before_fix": 0.59
+  },
+  "source_artifacts_checked": [
+    {
+      "exists": true,
+      "experiment_id": "exp1390",
+      "path": "results/experiment_1390_arxiv_submission_sword_api.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1391",
+      "path": "results/experiment_1391_fullscale_pipeline_failure_diagnosis.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1392",
+      "path": "results/experiment_1392_test_suite_hygiene_v2.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1393",
+      "path": "results/experiment_1393_grpo_v8_ngrpo_zero_reward_fix.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1394",
+      "path": "results/experiment_1394_dvi_v2_secl_combined.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1395",
+      "path": "results/experiment_1395_fr11_self_learning_v5.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1396",
+      "path": "results/experiment_1396_semantic_validation_pass_rate_fix_v1.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1397",
+      "path": "results/experiment_1397_fullscale_pipeline_v2_200cases.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1398",
+      "path": "results/experiment_1398_ngrpo_theory_probe.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1399",
+      "path": "results/experiment_1399_discrete_sb_kv260_cpu_simulation.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1400",
+      "path": "results/experiment_1400_biprm_retrospective_verification_probe.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1401",
+      "path": "results/experiment_1401_ebm_cot_v2_hinge_only.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1402",
+      "path": "results/experiment_1402_milestone_108_retro.json"
+    }
+  ],
+  "status": "complete",
+  "test_suite_hygiene_verdict": {
+    "collection_errors_after": 0,
+    "collection_errors_remaining": 0,
+    "criterion_status": "MET",
+    "full_suite_tail_result": "3 failed, 5393 passed, 29 skipped, 44 warnings in 121.43s; failures are execution-time test failures after collection, not collection errors.",
+    "spec_coverage_result": "failed on 71 pre-existing tests lacking spec references outside this collection-hygiene fix scope",
+    "test_suite_collection_clean": true
+  }
+}
