@@ -1,0 +1,232 @@
+"""Tests for portable SessionMemory JSON packs.
+
+Spec: REQ-LEARN-060, REQ-LEARN-061, REQ-LEARN-062,
+      SCENARIO-LEARN-104, SCENARIO-LEARN-105, SCENARIO-LEARN-106
+"""
+
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+import pytest
+
+from carnot.pipeline.adaptive_thresholds import PerModelFPTracker
+from carnot.pipeline.case_memory import CaseMemory, CaseRecord
+from carnot.pipeline.constraint_template_library import ConstraintTemplateLibrary
+from carnot.pipeline.session_memory import SessionMemory
+from carnot.pipeline.session_memory_pack import (
+    diff_session_memory_packs,
+    export_session_memory,
+    import_session_memory,
+    load_session_memory_pack,
+    validate_session_memory_pack,
+)
+
+
+def _case_memory(*, confidence: float = 0.5, case_id: str = "case-1") -> CaseMemory:
+    memory = CaseMemory()
+    memory.record(
+        CaseRecord.normalize(
+            benchmark="synthetic",
+            benchmark_slice="arithmetic",
+            model_name="test-model",
+            case_id=case_id,
+            violation_types=("carry_error",),
+            description_texts=("two digit carry error",),
+            prompt_text="What is 27 + 15?",
+            confidence=confidence,
+        )
+    )
+    return memory
+
+
+def _template_library() -> ConstraintTemplateLibrary:
+    library = ConstraintTemplateLibrary()
+    library.register_builtin_templates()
+    library.observe_pattern("carry_check", "test-model", 5)
+    return library
+
+
+def _fp_tracker() -> PerModelFPTracker:
+    tracker = PerModelFPTracker(min_observations=10)
+    tracker.update("test-model", "carry_check", was_fp=False, was_tp=True)
+    return tracker
+
+
+def _save_state(storage_dir: Path, *, confidence: float = 0.5) -> SessionMemory:
+    session = SessionMemory(str(storage_dir), "test-model")
+    session.save(_case_memory(confidence=confidence), _template_library(), _fp_tracker())
+    return session
+
+
+def test_export_pack_has_required_schema_metadata(tmp_path: Path) -> None:
+    """REQ-LEARN-060: export produces a schema-valid portable pack."""
+    _save_state(tmp_path)
+
+    pack = export_session_memory(tmp_path, "test-model")
+
+    validate_session_memory_pack(pack)
+    assert pack["schema"] == "carnot.session_memory_pack.v1"
+    assert pack["schema_version"] == "1.0.0"
+    assert pack["metadata"]["source"] == "local-session"
+    assert pack["models"][0]["model_id"] == "test-model"
+    assert pack["models"][0]["case_memory"]["portable_entries"][0]["n_observations"] == 1
+
+
+def test_validate_rejects_missing_model_sections() -> None:
+    """REQ-LEARN-060-3: malformed packs are rejected before import."""
+    with pytest.raises(ValueError, match="models"):
+        validate_session_memory_pack({"schema": "carnot.session_memory_pack.v1"})
+
+    with pytest.raises(ValueError, match="case_memory"):
+        validate_session_memory_pack(
+            {
+                "schema": "carnot.session_memory_pack.v1",
+                "schema_version": "1.0.0",
+                "metadata": {"source": "test", "license": "Apache-2.0"},
+                "models": [{"model_id": "test-model"}],
+            }
+        )
+
+
+def test_export_import_round_trip_diff_is_empty(tmp_path: Path) -> None:
+    """SCENARIO-LEARN-104: export -> import -> export has no semantic diff."""
+    source_dir = tmp_path / "source"
+    target_dir = tmp_path / "target"
+    _save_state(source_dir)
+    source_pack = export_session_memory(source_dir, "test-model")
+
+    report = import_session_memory(source_pack, target_dir, model_id="test-model", merge=True)
+    target_pack = export_session_memory(target_dir, "test-model")
+
+    assert report["written"] is True
+    diff = diff_session_memory_packs(source_pack, target_pack)
+    assert diff["is_empty"] is True
+
+
+def test_merge_recomputes_duplicate_case_confidence(tmp_path: Path) -> None:
+    """SCENARIO-LEARN-105: duplicate case entries merge with weighted confidence."""
+    local_dir = tmp_path / "local"
+    incoming_dir = tmp_path / "incoming"
+    _save_state(local_dir, confidence=0.25)
+    _save_state(incoming_dir, confidence=0.75)
+    pack = export_session_memory(incoming_dir, "test-model")
+
+    report = import_session_memory(pack, local_dir, model_id="test-model", merge=True)
+    loaded = SessionMemory(str(local_dir), "test-model").load()
+
+    assert report["case_entries_merged"] == 1
+    assert loaded is not None
+    case_memory, _, _ = loaded
+    entry = case_memory.entries()[0]
+    assert entry.support == 2
+    assert entry.confidence == pytest.approx(0.5)
+
+
+def test_import_dry_run_does_not_write_state(tmp_path: Path) -> None:
+    """REQ-LEARN-061-2: dry-run import reports work without creating state files."""
+    source_dir = tmp_path / "source"
+    target_dir = tmp_path / "target"
+    _save_state(source_dir)
+    pack = export_session_memory(source_dir, "test-model")
+
+    report = import_session_memory(pack, target_dir, model_id="test-model", merge=True, dry_run=True)
+
+    assert report["written"] is False
+    assert not SessionMemory(str(target_dir), "test-model").exists()
+
+
+def test_replace_and_merge_are_mutually_exclusive(tmp_path: Path) -> None:
+    """REQ-LEARN-061-3: callers cannot request merge and replace together."""
+    source_dir = tmp_path / "source"
+    _save_state(source_dir)
+    pack = export_session_memory(source_dir, "test-model")
+
+    with pytest.raises(ValueError, match="mutually exclusive"):
+        import_session_memory(pack, tmp_path / "target", model_id="test-model", merge=True, replace=True)
+
+
+def test_cli_memory_export_import_and_diff(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """SCENARIO-LEARN-106: CLI memory commands route to portable pack APIs."""
+    from carnot.cli import main
+
+    source_dir = tmp_path / "source"
+    target_dir = tmp_path / "target"
+    pack_path = tmp_path / "pack.json"
+    exported_again = tmp_path / "pack2.json"
+    _save_state(source_dir)
+
+    monkeypatch.setattr(
+        "sys.argv",
+        [
+            "carnot",
+            "memory",
+            "export",
+            "--storage-dir",
+            str(source_dir),
+            "--model-id",
+            "test-model",
+            "-o",
+            str(pack_path),
+        ],
+    )
+    assert main() == 0
+    assert pack_path.exists()
+
+    monkeypatch.setattr(
+        "sys.argv",
+        [
+            "carnot",
+            "memory",
+            "import",
+            str(pack_path),
+            "--storage-dir",
+            str(target_dir),
+            "--model-id",
+            "test-model",
+            "--merge",
+        ],
+    )
+    assert main() == 0
+
+    export_session_memory(target_dir, "test-model", output_path=exported_again)
+    monkeypatch.setattr(
+        "sys.argv",
+        [
+            "carnot",
+            "memory",
+            "diff",
+            str(pack_path),
+            str(exported_again),
+        ],
+    )
+    assert main() == 0
+    captured = capsys.readouterr()
+    assert "is_empty=True" in captured.out
+
+
+def test_example_constraint_packs_validate() -> None:
+    """REQ-LEARN-060-1: checked-in starter packs conform to the schema contract."""
+    root = Path(__file__).resolve().parents[2]
+    for relative in (
+        "examples/constraint_packs/empty_v1.json",
+        "examples/constraint_packs/arithmetic_v1.json",
+        "examples/constraint_packs/python_code_v1.json",
+    ):
+        pack = load_session_memory_pack(root / relative)
+        validate_session_memory_pack(pack)
+
+
+def test_schema_file_is_draft_2020_12_json(tmp_path: Path) -> None:
+    """REQ-LEARN-060-1: the schema artifact is valid JSON and declares draft-2020-12."""
+    root = Path(__file__).resolve().parents[2]
+    schema_path = root / "python/carnot/schemas/session_memory_v1.json"
+    schema = json.loads(schema_path.read_text(encoding="utf-8"))
+
+    assert schema["$schema"] == "https://json-schema.org/draft/2020-12/schema"
+    assert schema["properties"]["schema"]["const"] == "carnot.session_memory_pack.v1"
