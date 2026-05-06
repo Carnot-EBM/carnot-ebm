@@ -3461,3 +3461,57 @@ exceed the Exp 1388 baseline.
 | Requirement | Python | Tests |
 |-------------|--------|-------|
 | REQ-LEARN-1395 | Implemented (`python/carnot/reporting/fr11_self_learning_v5.py`) | Implemented (`tests/python/test_fr11_self_learning_v5.py`) |
+
+## REQ-LEARN-1420: DPO-Style Preference Probe From Exp 1395 Verified Pairs
+
+Exp 1420 SHALL run on `20260506` after GRPO retirement and SHALL build explicit
+preference pairs from Exp 1395's 1508 verified FoVer promotions. The workflow
+SHALL use the mandated SOTA GGUF model IDs for baseline/provenance checks and
+SHALL report honestly when direct DPO fine-tuning of GGUF weights is unsupported.
+When full GGUF DPO is unsupported, Exp 1420 SHALL train only a lightweight
+DPO-style reranker over verifier/model-derived features and SHALL keep headline
+claims disabled unless a real local SOTA model path was resolved and evaluated.
+
+### REQ-LEARN-1420 Sub-requirements
+
+- REQ-LEARN-1420-1: The workflow SHALL write
+  `results/experiment_1420_dpo_verified_pairs_1508.json` first with
+  `status="in_progress"` and all required artifact fields before source loading.
+- REQ-LEARN-1420-2: Preference-pair construction SHALL treat Exp 1395 promoted
+  IDs as preferred verified cases and SHALL pair each preferred case with the
+  nearest available demoted/unverified FoVer candidate from the source corpus.
+- REQ-LEARN-1420-3: The artifact SHALL preserve the mandated model specs for
+  `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+  `unsloth/gemma-4-26B-A4B-it-GGUF`, plus a cache/inference feasibility check
+  for each attempted GGUF baseline.
+- REQ-LEARN-1420-4: Direct DPO SHALL be marked performed only when the runtime
+  has a supported trainer capable of updating an adapter or trainable weights
+  from GGUF-backed local model provenance. Unsupported GGUF fine-tuning SHALL be
+  recorded explicitly rather than simulated.
+- REQ-LEARN-1420-5: When direct DPO is unsupported, the fallback SHALL fit a
+  deterministic lightweight preference reranker over verifier/model features,
+  compute held-out AUROC, and compute `dpo_improvement_pp` only from measured
+  preferred-over-rejected accuracy delta versus a fixed baseline score.
+- REQ-LEARN-1420-6: The final artifact SHALL include `status`, `model_specs`,
+  `verified_pairs_available`, `dpo_full_finetune_performed`,
+  `dpo_reranker_fallback_used`, `dpo_improvement_pp`,
+  `dpo_vs_baseline_auroc`, `local_sota_model_used`,
+  `headline_result_allowed`, and `honest_verdict`.
+
+### SCENARIO-LEARN-1420: GGUF DPO Unsupported Uses Honest Reranker Fallback
+
+**Given** Exp 1395 has 1508 promoted verified cases and demoted candidates
+**And** no supported GGUF DPO trainer is available in the local runtime
+**When** Exp 1420 runs
+**Then** the final artifact has `dpo_full_finetune_performed=false`
+**And** `dpo_reranker_fallback_used=true`
+**And** `dpo_vs_baseline_auroc` and `dpo_improvement_pp` are measured from the
+reranker evaluation rather than fabricated
+**And** `headline_result_allowed=false` unless a mandated local SOTA GGUF path
+was actually resolved and used for evaluation.
+
+## Implementation Status (REQ-LEARN-1420)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-1420 | Implemented (`python/carnot/reporting/dpo_verified_pairs_probe.py`) | Implemented (`tests/python/test_dpo_verified_pairs_probe.py`) |

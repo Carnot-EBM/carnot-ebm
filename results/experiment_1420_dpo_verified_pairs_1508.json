@@ -1,0 +1,144 @@
+{
+  "artifact_metadata": {
+    "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "run_date": "20260506"
+  },
+  "direct_dpo_feasibility": {
+    "packages_checked": {
+      "trl": false
+    },
+    "reason": "trl_not_available_for_dpo",
+    "supported": false
+  },
+  "dpo_full_finetune_performed": false,
+  "dpo_improvement_pp": 99.834437,
+  "dpo_reranker_fallback_used": true,
+  "dpo_vs_baseline_auroc": 1.0,
+  "experiment": "1420_dpo_verified_pairs_1508",
+  "feasibility_note": "Direct DPO fine-tuning was not performed because local GGUF files are llama.cpp inference artifacts, not trainable TRL/PEFT model directories.",
+  "finished_at": "2026-05-06T08:27:19Z",
+  "gguf_model_checks": [
+    {
+      "baseline_scoring_mode": "feature_baseline_preference_scores",
+      "baseline_scoring_performed": true,
+      "cached": true,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "llama_cpp_inference_blocker": "full_model_load_disabled_for_probe",
+      "llama_cpp_inference_performed": false,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "preferred_quant": "Q4_K_M",
+      "role": "primary_policy_baseline"
+    },
+    {
+      "baseline_scoring_mode": "feature_baseline_preference_scores",
+      "baseline_scoring_performed": true,
+      "cached": true,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "llama_cpp_inference_blocker": "full_model_load_disabled_for_probe",
+      "llama_cpp_inference_performed": false,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/43e80d41a220ac7c83023daacd6a0d1fd8559251/gemma-4-31B-it-Q4_K_M.gguf",
+      "preferred_quant": "Q4_K_M",
+      "role": "dense_baseline"
+    },
+    {
+      "baseline_scoring_mode": "feature_baseline_preference_scores",
+      "baseline_scoring_performed": true,
+      "cached": false,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "llama_cpp_inference_blocker": "model_not_cached",
+      "llama_cpp_inference_performed": false,
+      "model_path": null,
+      "preferred_quant": "Q4_K_M",
+      "role": "moe_baseline"
+    }
+  ],
+  "headline_result_allowed": false,
+  "honest_verdict": "gguf_dpo_unsupported_reranker_fallback_measured",
+  "local_sota_model_used": false,
+  "model_specs": [
+    {
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "role": "primary_policy_baseline"
+    },
+    {
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "role": "dense_baseline"
+    },
+    {
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "role": "moe_baseline"
+    }
+  ],
+  "preference_pair_sample": [
+    {
+      "pair_id": "160__vs__164",
+      "preferred_corpus_index": 2,
+      "preferred_id": "160",
+      "rejected_corpus_index": 4,
+      "rejected_id": "164"
+    },
+    {
+      "pair_id": "172__vs__165_1",
+      "preferred_corpus_index": 11,
+      "preferred_id": "172",
+      "rejected_corpus_index": 7,
+      "rejected_id": "165_1"
+    },
+    {
+      "pair_id": "178__vs__math_0",
+      "preferred_corpus_index": 13,
+      "preferred_id": "178",
+      "rejected_corpus_index": 19,
+      "rejected_id": "math_0"
+    },
+    {
+      "pair_id": "math_35__vs__math_41",
+      "preferred_corpus_index": 23,
+      "preferred_id": "math_35",
+      "rejected_corpus_index": 24,
+      "rejected_id": "math_41"
+    },
+    {
+      "pair_id": "math_64__vs__math_63",
+      "preferred_corpus_index": 27,
+      "preferred_id": "math_64",
+      "rejected_corpus_index": 26,
+      "rejected_id": "math_63"
+    }
+  ],
+  "reranker_fallback_metrics": {
+    "baseline_pair_accuracy": 0.001656,
+    "n_eval_pairs": 302,
+    "n_train_pairs": 1206,
+    "reranker_pair_accuracy": 1.0,
+    "weights": [
+      0.0,
+      -1.12519759,
+      1.52227066,
+      0.44356965,
+      0.38897516,
+      -0.15656303,
+      0.00068026,
+      -0.19021092,
+      0.00338197
+    ]
+  },
+  "run_date": "20260506",
+  "schema": "dpo_verified_pairs_probe_v1",
+  "source_artifacts": [
+    "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1395_fr11_self_learning_v5.json",
+    "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus.jsonl"
+  ],
+  "source_counts": {
+    "demoted_memory_count": 7262,
+    "exp1395_fresh_verified_sample_count": 1508,
+    "fover_rows_loaded": 8829,
+    "promoted_memory_count": 1508
+  },
+  "spec": [
+    "REQ-LEARN-1420",
+    "SCENARIO-LEARN-1420"
+  ],
+  "status": "complete",
+  "verified_pairs_available": 1508
+}
