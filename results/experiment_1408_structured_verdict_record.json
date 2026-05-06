@@ -1,0 +1,33 @@
+{
+  "artifact": "experiment_1408_structured_verdict_record",
+  "github_issue": 3,
+  "status": "in_progress",
+  "requirements": [
+    "REQ-VERIFY-1408",
+    "REQ-VERIFY-1409",
+    "REQ-VERIFY-1410"
+  ],
+  "scenarios": [
+    "SCENARIO-VERIFY-1408"
+  ],
+  "deliverables": {
+    "verdict_record_module": "python/carnot/pipeline/verdict_record.py",
+    "verify_repair_structured_api": "VerifyRepairPipeline.verify_record",
+    "three_tier_structured_api": "ThreeTierPipeline.verify_record",
+    "legacy_compatibility": [
+      "VerifyRepairPipeline.verify_legacy",
+      "ThreeTierPipeline.verify_legacy"
+    ],
+    "documentation": "docs/verdict-records.md",
+    "tests": "tests/python/test_verdict_record.py"
+  },
+  "verification": {
+    "focused_tests": "pending",
+    "lint": "pending",
+    "type_check": "pending",
+    "spec_coverage": "pending",
+    "json_validation": "pending",
+    "diff_check": "pending"
+  },
+  "honest_verdict": "in_progress"
+}

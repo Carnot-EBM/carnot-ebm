@@ -2851,6 +2851,44 @@ generation.
 **Then** `headline_result_allowed=false`
 **And** `retire_if_same_verdict=true`.
 
+## REQ-LEARN-1398: NGRPO Theory Probe Uses Exp 1383 Zero-Reward Rollouts
+
+Exp 1398 SHALL run a CPU-only mathematical probe over Exp 1383's recorded
+all-UNKNOWN rollout rewards to validate whether NGRPO Advantage Calibration
+would have produced a non-zero advantage signal before any live DualGPU
+training run.  The probe SHALL perform no model inference and SHALL treat the
+virtual max-reward sample as a mathematical centering device only.
+
+### REQ-LEARN-1398 Sub-requirements
+
+- REQ-LEARN-1398-1: The runner SHALL write
+  `results/experiment_1398_ngrpo_theory_probe.json` first with
+  `status="in_progress"`.
+- REQ-LEARN-1398-2: The runner SHALL load Exp 1383's artifact and record that
+  `all_rollouts_unknown=true` and `formal_reward_pass_rate=0.0` when the source
+  artifact contains only UNKNOWN rollout answers and all training rewards are
+  zero.
+- REQ-LEARN-1398-3: The runner SHALL simulate ResZero on `N=4` real rewards
+  `[0.0, 0.0, 0.0, 0.0]`, producing zero advantages and
+  `original_resZero_advantage_variance=0.0`.
+- REQ-LEARN-1398-4: The runner SHALL inject one virtual reward `1.0`, recompute
+  the augmented mean as `0.2`, and report real rollout advantages
+  `[-0.2, -0.2, -0.2, -0.2]` plus virtual advantage `0.8`.
+- REQ-LEARN-1398-5: The final artifact SHALL include `status`,
+  `exp1383_rollout_data_used`, `original_resZero_advantage_variance`,
+  `ngrpo_virtual_sample_reward`, `ngrpo_augmented_advantage_variance`,
+  `ngrpo_advantage_calibration_verified`, `ngrpo_expected_gradient_magnitude`,
+  `theory_supports_exp1393`, and `honest_verdict`.
+
+### SCENARIO-LEARN-1398: Virtual Sample Breaks Zero-Reward Symmetry
+
+**Given** Exp 1383 recorded four UNKNOWN training rollouts with all rewards
+`0.0`
+**When** Exp 1398 injects a virtual max-reward sample before centering
+**Then** the augmented advantage variance is greater than zero
+**And** `ngrpo_advantage_calibration_verified=true`
+**And** `theory_supports_exp1393=true`.
+
 ## REQ-LEARN-1288: InterWhen DVI Verifier-Feedback Replay
 
 Exp 1288 SHALL convert chronological verifier accept/reject decisions into an

@@ -1,0 +1,110 @@
+{
+  "experiment": "1398_ngrpo_theory_probe",
+  "schema": "ngrpo_theory_probe_v1",
+  "run_date": "20260506",
+  "artifact_metadata": {
+    "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "run_date": "20260506",
+    "spec": [
+      "REQ-LEARN-1398",
+      "SCENARIO-LEARN-1398"
+    ],
+    "source_experiments": [
+      "exp1383"
+    ],
+    "cpu_only": true,
+    "model_inference_performed": false
+  },
+  "started_at": "2026-05-06T01:38:47Z",
+  "finished_at": "2026-05-06T01:38:47Z",
+  "status": "complete",
+  "exp1383_rollout_data_used": {
+    "source_experiment": "1383_grpo_v7_jury_rl_formal_verifier_rewards",
+    "source_run_date": "20260505",
+    "source_honest_verdict": "grpo_v7_jury_rl_no_improvement",
+    "formal_reward_pass_rate": 0.0,
+    "grpo_v7_improvement_pp": 0.0,
+    "training_group_count": 4,
+    "rollouts_per_training_group": 4,
+    "training_reward_distribution": {
+      "0.0": 16
+    },
+    "training_rollout_answer_distribution": {
+      "UNKNOWN": 16
+    },
+    "heldout_rollout_answer_distribution": {
+      "UNKNOWN": 16
+    },
+    "all_training_rewards_zero": true,
+    "all_rollouts_unknown": true
+  },
+  "simulation_settings": {
+    "real_rollout_count": 4,
+    "real_rewards": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "virtual_sample_count": 1,
+    "advantage_variance_definition": "population_variance"
+  },
+  "resZero_simulation": {
+    "real_rewards": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "mean_reward": 0.0,
+    "advantages": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "advantage_variance": 0.0,
+    "zero_gradient_signal": true
+  },
+  "ngrpo_simulation": {
+    "real_rewards": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "virtual_reward": 1.0,
+    "augmented_rewards": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ],
+    "augmented_mean_reward": 0.2,
+    "real_advantages": [
+      -0.2,
+      -0.2,
+      -0.2,
+      -0.2
+    ],
+    "virtual_advantage": 0.8,
+    "augmented_advantages": [
+      -0.2,
+      -0.2,
+      -0.2,
+      -0.2,
+      0.8
+    ],
+    "augmented_advantage_variance": 0.16
+  },
+  "original_resZero_advantage_variance": 0.0,
+  "ngrpo_virtual_sample_reward": 1.0,
+  "ngrpo_augmented_advantage_variance": 0.16,
+  "ngrpo_advantage_calibration_verified": true,
+  "ngrpo_expected_gradient_magnitude": 0.16,
+  "gradient_magnitude_estimator": "proportional_to_augmented_advantage_variance",
+  "theory_supports_exp1393": true,
+  "headline_result_allowed": false,
+  "honest_verdict": "cpu_only_theory_probe_supports_exp1393_nonzero_advantage_signal"
+}
