@@ -194,3 +194,46 @@ Then the artifact reports forward-only and R2L pivot precision, computes
 `retrospective_verification_viable` exactly when that delta is positive, and
 preserves an honest verdict describing whether the result rests on proxy rather
 than human pivot annotations.
+
+### REQ-VERIFY-1415: DVI V3 Fresh 1508-Case Update
+
+The repository shall provide a deterministic, CPU-only DVI v3 update path that:
+
+- writes `results/experiment_1415_dvi_v3_1508_fresh_cases.json` with
+  `status="in_progress"` before loading Exp 1395 fresh IDs or training;
+- loads the 1508 fresh verified FoVer case IDs promoted by Exp 1395 from
+  `memory_updates.promoted` and reconstructs their labeled FoVer rows without
+  fresh LLM inference;
+- initializes from the deployed Exp 1394 DVI v2 + SECL checkpoint;
+- trains on all 1508 fresh verified labeled cases using a fixed seed and a
+  deterministic train/replay split;
+- measures `dvi_v3_auroc_delta` on the fixed held-out FoVer split and compares
+  it with the Exp 1394 `dvi_v2_auroc_delta` baseline;
+- measures `nonforgetting_rate` on replay examples from Exp 1395 demotions;
+- preserves or re-measures the Exp 1394 SECL ECE reduction when the combined
+  verifier checkpoint is touched;
+- deploys a DVI v3 checkpoint only when the v3 AUROC delta improves on the DVI
+  v2 baseline, nonforgetting is preserved, and SECL calibration is preserved;
+  and
+- writes a complete or blocked artifact containing `status`,
+  `fresh_verified_cases_used`, `dvi_v2_auroc_delta_baseline`,
+  `dvi_v3_auroc_delta`, `dvi_v3_deployed`, `dvi_v3_checkpoint_path`,
+  `nonforgetting_rate`, `secl_ece_reduction_pct_preserved`, `tests_run`, and
+  `honest_verdict`.
+
+### SCENARIO-VERIFY-1415: DVI V3 Checkpoint Is Deployed Or Honestly Blocked
+
+Given Exp 1395 reports 1508 promoted fresh FoVer IDs and Exp 1394 deployed a
+DVI v2 + SECL checkpoint,
+When the DVI v3 update runner executes,
+Then the final artifact records all required DVI v3 fields, uses all 1508 fresh
+verified cases, compares the measured v3 AUROC delta against the DVI v2
+baseline delta of 0.011458, records replay nonforgetting, and either writes an
+existing checkpoint path when `dvi_v3_deployed=true` or reports the blocking
+reason in `honest_verdict`.
+
+## Implementation Status (REQ-VERIFY-1415)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-VERIFY-1415 | Implemented (`python/carnot/reporting/dvi_v3_1508_fresh_cases.py`) | Implemented (`tests/python/test_experiment_1415_dvi_v3_1508_fresh_cases.py`) |

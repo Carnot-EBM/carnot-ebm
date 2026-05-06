@@ -1,0 +1,83 @@
+{
+  "artifact_metadata": {
+    "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "run_date": "20260506"
+  },
+  "block_reasons": [
+    "nonforgetting_below_gate"
+  ],
+  "cpu_only": true,
+  "duration_s": 1.609,
+  "dvi_v2_auroc_delta_baseline": 0.011458,
+  "dvi_v3_auroc_delta": 0.011842,
+  "dvi_v3_baseline_auroc": 0.405984,
+  "dvi_v3_checkpoint_path": null,
+  "dvi_v3_delta_improved_over_v2": true,
+  "dvi_v3_deployed": false,
+  "dvi_v3_trained_auroc": 0.417826,
+  "epochs_run": 20,
+  "expected_fresh_verified_cases": 1508,
+  "experiment": "1415_dvi_v3_1508_fresh_cases",
+  "finished_at": "2026-05-06T06:30:19.949690+00:00",
+  "fover_heldout_cases_used": 1770,
+  "fover_split_seed": 1381,
+  "fresh_case_source": "exp1395_memory_updates_promoted_dvi_v2_fover",
+  "fresh_llm_inference_used": false,
+  "fresh_verified_cases_used": 1508,
+  "honest_verdict": "dvi_v3_blocked_nonforgetting_below_gate",
+  "l2_weight_decay": 0.0001,
+  "learning_rate": 0.5,
+  "min_nonforgetting_rate": 0.99,
+  "nonforgetting_rate": 0.968604,
+  "replay_case_source": "exp1395_memory_updates_demoted_dvi_v2_fover",
+  "replay_cases_used": 7262,
+  "run_date": "20260506",
+  "schema": "dvi_v3_1508_fresh_cases_v1",
+  "secl_ece_after": 0.311264,
+  "secl_ece_before": 0.69974,
+  "secl_ece_reduction_pct_preserved": true,
+  "secl_ece_reduction_pct_v3": 55.517229,
+  "source_artifacts": [
+    "results/experiment_1394_dvi_v2_secl_combined.json",
+    "results/experiment_1395_fr11_self_learning_v5.json",
+    "data/fover_corpus.jsonl"
+  ],
+  "source_checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/dvi_v2_secl_combined_checkpoint.pt",
+  "spec": [
+    "REQ-VERIFY-1415",
+    "SCENARIO-VERIFY-1415"
+  ],
+  "started_at": "2026-05-06T06:30:18.340576+00:00",
+  "status": "blocked",
+  "tests_run": [
+    ".venv/bin/coverage run --include='*/dvi_v3_1508_fresh_cases.py' -m pytest tests/python/test_experiment_1415_dvi_v3_1508_fresh_cases.py -q -o addopts='' && .venv/bin/coverage report --fail-under=100 --show-missing",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_1415_dvi_v3_1508_fresh_cases.py",
+    ".venv/bin/python scripts/check_spec_coverage.py",
+    ".venv/bin/ruff check python/carnot/reporting/dvi_v3_1508_fresh_cases.py tests/python/test_experiment_1415_dvi_v3_1508_fresh_cases.py"
+  ],
+  "train_cases_used": 1508,
+  "training_loss_history": [
+    0.336721,
+    0.319418,
+    0.305125,
+    0.293208,
+    0.283187,
+    0.274695,
+    0.267446,
+    0.261218,
+    0.255836,
+    0.251159,
+    0.247074,
+    0.24349,
+    0.240332,
+    0.237539,
+    0.235059,
+    0.232849,
+    0.230874,
+    0.229103,
+    0.227512,
+    0.226077
+  ],
+  "training_method": "secl_style_bce_sc_energy_linear_adapter_v3_exp1395_labeled_fover"
+}
