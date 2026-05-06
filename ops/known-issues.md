@@ -198,6 +198,68 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### NEW 2026-05-06 (12:00Z): LARQL Decoupled-Attention Substrate Prototype (.111-.115 series)
+
+**Background:** Chris Hay's LARQL (https://github.com/chrishayuk/larql) decompiles transformer models into a queryable "vindex" format with SQL-like edit/query operations on knowledge edges. **Critical architectural insight from author:** attention is decoupled from weights — attention runs locally on GPU (small footprint, latency-sensitive), weights run on CPU (large, latency-tolerant within LAN). This enables consumer-GPU inference on foundation-model-class weights via a same-LAN weight server.
+
+**Why this matters for Carnot:** Direct enabler of the Phase-3 sovereignty deployment story. Carnot's foundation model could ship as:
+- Attention-only checkpoint (tiny, local GPU/NPU)
+- Weight server (large, CPU-only, LAN-attached, e.g., the dual-RTX-3090 rig running CPU-side weight serving)
+- Verifier ensemble (Q11 TSS optimal k=2 = SC-Energy + Z3, both CPU-local)
+
+LAN-only constraint is a sovereignty FEATURE, not a bug — keeps weights inside the user's network perimeter, no closed-vendor dependency. Aligns with all 7 CLAUDE.md decentralization rules.
+
+**Prototype experiments (.111-.115 series):**
+
+```
+exp_NEXT_LARQL_A: LARQL build + vindex pull on dual-RTX-3090 rig
+  - Build LARQL from source, pull gemma-3-4b-it-vindex
+  - Verify INFER + DESCRIBE + INSERT INTO EDGES work end-to-end
+  - Acceptance: 5 reference INFER calls match expected outputs
+
+exp_NEXT_LARQL_B: Decoupled-attention LAN inference benchmark
+  - Run attention on Strix APU (gfx1150), weights on dual-3090 rig CPU
+  - Measure latency vs all-local baseline
+  - Acceptance: <2x slowdown vs all-local on same-LAN, <10x on cross-network
+
+exp_NEXT_LARQL_C: Carnot verifier ensemble + LARQL repair loop
+  - When Carnot's k=6 detects hallucination, query LARQL for the
+    underlying belief edge, propose repair via INSERT INTO EDGES,
+    re-verify
+  - Acceptance: 50% of detected hallucinations actionable via LARQL edit
+
+exp_NEXT_LARQL_D: Adversarial probe — INSERT INTO EDGES attack
+  - Hostile-reviewer round: can a self-modifying agent inject
+    adversarial beliefs into the vindex? Q11 STE-attack analog at
+    the knowledge-graph layer
+  - Acceptance: identify attack vectors + propose hash-linked
+    forensic chain defense (per SentinelAgent pattern)
+
+exp_NEXT_LARQL_E: Phase-3 substrate distribution model paper section
+  - Write paper-v7 sovereignty deployment section with empirical
+    results from A-D
+  - Acceptance: paper-v7 has measurable sovereignty claim, not just
+    architectural assertion
+```
+
+**Strategic alignment:**
+- Phase-3 foundation model substrate progression
+- Hardware portfolio fit (dual-RTX-3090 → CPU weight server; Strix APU → attention client; future NPU → verifier-only edge)
+- Q11 TSS k=2 transversal pair runs CPU-local alongside weight server
+- Sakana DGM threat model expansion: remote weight cache as new attack surface, hash-linked forensic chain (SentinelAgent pattern) becomes load-bearing
+
+**How this is mandatory:** This is `priority: high` (not critical) since LARQL is third-party infrastructure not in Carnot's direct control. But the sovereignty story for paper-v7 is materially strengthened by empirical validation of the LARQL-decoupled architecture. Recommend `.111-.115` as a prototype series.
+
+**Cross-references:**
+- LARQL repo: `https://github.com/chrishayuk/larql`
+- Q11 TSS optimal k=2 pair: `memory/project_q11_tss_and_ste_attack.md`
+- SentinelAgent hash-linked forensic chain: `memory/reference_sentinelagent_peer.md`
+- Goodfire Silico (white-box neuron inspection comparator): `memory/reference_goodfire_silico.md`
+- DR-3 substrate consensus + Dual-SVID: `memory/reference_dr3_consensus_and_dual_svid.md`
+- CLAUDE.md decentralization rules 1+5 (sovereignty)
+
+---
+
 ### NEW 2026-05-03 (22:55Z): Verifier Joint-Orthogonality Audit (.96 mandatory)
 
 **Background:** Phase-5-C adversarial probe (exp1224, .95 milestone) empirically demonstrated Spera Theorem 9.2 (arXiv:2603.15973) on Carnot's k=3 in-situ ensemble. Attack 2 (pairwise verifier correlation exploitation) succeeded with P(V_i | V_j) = 1.000 across all pairs — the conditional acceptance matrix was fully saturated. Effective ensemble size collapsed from k=3 to k=1; only V1 (changes_grid) provided genuinely independent signal. The decoder's `snap_to_action` quadrant-anchor mechanism structurally guaranteed V0 (in_bounds) for ALL inputs and V2 (no_duplicate_cells) for MOST, making them vacuous.
