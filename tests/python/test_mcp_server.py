@@ -8,7 +8,7 @@ Spec coverage: REQ-CODE-001, REQ-CODE-006, REQ-VERIFY-001, REQ-VERIFY-003,
     (without going through the MCP protocol layer) to verify:
 
     1. Core tools work: verify_code, verify_with_properties, verify_llm_output,
-       verify_and_repair, list_domains, health_check.
+       verify_stream, verify_and_repair, list_domains, health_check.
     2. Production safeguards: input validation rejects oversized inputs,
        execution timeout catches runaway code, structured errors are returned.
     3. The server instance is properly configured with all expected tools.
@@ -51,8 +51,9 @@ class TestHealthCheck:
         assert result["status"] == "ok"
         assert "version" in result
         assert "tools" in result
-        assert len(result["tools"]) == 8
+        assert len(result["tools"]) == 9
         assert "verify_code_with_pbt" in result["tools"]
+        assert "verify_stream" in result["tools"]
         assert "score_agent_outputs" in result["tools"]
 
     def test_reports_limits(self, server_module: Any) -> None:
@@ -271,6 +272,113 @@ class TestVerifyLlmOutput:
             question="test",
             response="x" * 11_000,
         )
+        assert result.get("error") is True
+        assert result["error_code"] == "INPUT_TOO_LARGE"
+
+
+# ---------------------------------------------------------------------------
+# Tests: verify_stream
+# ---------------------------------------------------------------------------
+
+
+class TestVerifyStream:
+    """Tests for the MCP verify_stream tool."""
+
+    def test_returns_verdict_events_and_stream_end(
+        self,
+        server_module: Any,
+        monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
+        """REQ-VERIFY-1413: verify_stream exposes ordered verdict events."""
+
+        def fake_run_verify_stream(
+            candidates: list[dict[str, Any]],
+            domain: str | None,
+            budget_ms_total: float | None,
+            budget_ms_per_candidate: float | None,
+            max_concurrency: int,
+            top_k: int | None,
+            early_stop_margin: float | None,
+        ) -> dict[str, Any]:
+            assert domain == "arithmetic"
+            assert budget_ms_total is None
+            assert budget_ms_per_candidate is None
+            assert max_concurrency == 1
+            assert top_k == 1
+            assert early_stop_margin == 0.1
+            assert len(candidates) == 3
+            return {
+                "events": [
+                    {
+                        "event": "verdict",
+                        "record": {"extras": {"candidate_id": "correct"}},
+                    },
+                    {
+                        "event": "verdict",
+                        "record": {
+                            "extras": {
+                                "candidate_id": "incorrect",
+                                "stream_end": {
+                                    "event": "stream_end",
+                                    "stopped_early": True,
+                                    "residual_candidates_unscored": 1,
+                                },
+                            }
+                        },
+                    },
+                ],
+                "stream_end": {
+                    "event": "stream_end",
+                    "stopped_early": True,
+                    "residual_candidates_unscored": 1,
+                },
+            }
+
+        monkeypatch.setattr(server_module, "_run_verify_stream", fake_run_verify_stream)
+
+        result = server_module.verify_stream(
+            candidates=[
+                {
+                    "id": "correct",
+                    "question": "What is 2 + 2?",
+                    "answer": "2 + 2 = 4.",
+                },
+                {
+                    "id": "incorrect",
+                    "question": "What is 2 + 2?",
+                    "answer": "2 + 2 = 5.",
+                },
+                {
+                    "id": "residual",
+                    "question": "What is 2 + 2?",
+                    "answer": "2 + 2 = 6.",
+                },
+            ],
+            domain="arithmetic",
+            max_concurrency=1,
+            top_k=1,
+            early_stop_margin=0.1,
+        )
+
+        assert result.get("error") is not True
+        assert [event["event"] for event in result["events"]] == ["verdict", "verdict"]
+        assert result["events"][0]["record"]["extras"]["candidate_id"] == "correct"
+        assert result["stream_end"]["event"] == "stream_end"
+        assert result["stream_end"]["stopped_early"] is True
+        assert result["stream_end"]["residual_candidates_unscored"] == 1
+
+    def test_rejects_oversized_candidate_answer(self, server_module: Any) -> None:
+        """REQ-VERIFY-1413: verify_stream preserves MCP input-size guards."""
+        result = server_module.verify_stream(
+            candidates=[
+                {
+                    "id": "oversized",
+                    "question": "q",
+                    "answer": "x" * 11_000,
+                }
+            ]
+        )
+
         assert result.get("error") is True
         assert result["error_code"] == "INPUT_TOO_LARGE"
 
