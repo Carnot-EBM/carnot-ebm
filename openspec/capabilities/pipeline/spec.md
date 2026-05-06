@@ -2433,6 +2433,63 @@ validation and nonzero-repair scale gating.
 
 **Spec traces:** REQ-VERIFY-1427, SCENARIO-VERIFY-1427
 
+### REQ-VERIFY-1428: DCCD Schema-Constrained Repair Executor V2
+
+The repository shall provide a draft-conditioned, schema-constrained repair
+executor v2 for Exp 1428. The executor MUST build a bounded local-model prompt
+from the original repair request and the current draft certificate, and its
+allowed output schema MUST separate `draft_certificate`, `repair_action`,
+`final_certificate`, and `validator_metadata`.
+
+The executor MUST validate the bounded repair schema before semantic
+validation. Candidates that are not valid JSON, omit required schema sections,
+include disallowed fields, exceed configured field limits, time out, or fail
+the semantic validator MUST be rejected with exactly one recorded rejection
+reason. The semantic validator MUST NOT be called for schema-invalid
+candidates. Accepted repairs MUST pass both schema validation and the existing
+semantic repair acceptance contract: `constraint_passed=true`,
+`semantic_result="SAT"`, `repair_required=false`, and
+`false_acceptance=false`.
+
+The Exp 1428 terminal artifact at
+`results/experiment_1428_dccd_schema_constrained_repair_v2.json` MUST include
+`status`, `model_specs`, `local_sota_model_used`,
+`repair_executor_v2_deployed`, `repair_hint_cases_tested`,
+`repaired_cases_successful`, `repaired_case_success_rate`,
+`schema_valid_rate`, `semantic_acceptance_rate`, `rejection_reason_counts`,
+`tests_run`, and `honest_verdict`. The runner MUST resolve the mandated local
+SOTA GGUF model specs through `cached_sota_pair()` or an equivalent local cache
+resolver and record cache/runtime blockers instead of simulating headline local
+model results. When repair-hint cases are available, the bounded validation
+sample SHOULD test at least twenty cases before any non-blocked terminal
+artifact is written.
+
+**Decentralization implications:** The core executor depends on generator and
+validator callables only; it does not import a closed-weight vendor SDK and
+keeps local open-weight GGUF resolution in the reporting layer.
+
+**Acceptance criteria:**
+- The v2 parser accepts only the bounded DCCD repair schema and rejects
+  malformed or nonconforming candidates before validator handoff.
+- Rejection classification records one reason for every rejected candidate,
+  including schema and semantic rejection classes.
+- The validator handoff receives the schema-valid final certificate and is
+  skipped for schema-invalid candidates.
+- The terminal Exp 1428 artifact records model-cache diagnostics and all
+  required artifact fields with `status="complete"` or `status="blocked"`.
+
+### SCENARIO-VERIFY-1428: Schema-First DCCD Repair Validates A Bounded Micro Sample
+
+**Given** Exp 1397 exposes repair-hint cases and a mandated SOTA GGUF cache
+resolver returns the local model metadata
+**When** Exp 1428 runs a bounded DCCD schema-constrained repair sample
+**Then** every candidate is schema-validated before semantic validation, every
+rejected candidate contributes exactly one rejection reason, accepted repairs
+are counted only after semantic validation passes, and the terminal artifact
+records schema-valid and semantic-acceptance rates for the repair-hint sample.
+
+**Spec traces:** REQ-VERIFY-1428, SCENARIO-VERIFY-1428
+
 ### REQ-VERIFY-1408: Structured Verdict Record Schema
 
 The pipeline MUST expose a documented `VerdictRecord` dataclass for downstream
