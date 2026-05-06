@@ -19,6 +19,25 @@ MCS produces `REPAIR_HINT` but does not invoke LLM to execute the repair);
 (1) implement certificate LLM repair executor (GPU); (2) DVI v3 on 1508 cases;
 (3) EBM-CoT temperature calibration; (4) DPO on 1508 verified pairs as GRPO alternative.
 
+### EBRM Structured Latent Trajectory Planning
+- **Paper:** arXiv 2603.28248, "Reasoning as Energy Minimization over
+  Structured Latent Trajectories." March 2026.
+- **Source:** https://arxiv.org/abs/2603.28248
+- **What:** Models multi-step reasoning as gradient/Langevin optimization of a
+  latent trajectory under a decomposed energy with per-step compatibility,
+  transition consistency, and smoothness terms. The paper is especially useful
+  because it reports a negative failure mode: on CNF logic, latent planning
+  lowered energy while hurting accuracy due to decoder distribution shift.
+- **Relevance to Carnot:** This is directly aligned with Carnot's Phase-3/Kona
+  bridge and offers an adversarial diagnostic before we scale continuous
+  repair. Carnot should not assume lower latent energy means better decoded
+  reasoning unless latent drift and decoder support are measured.
+- **Concrete experiment:** exp1417 EBRM latent-trajectory drift smoke test.
+  Reproduce a tiny CNF/graph-style latent planning loop or read the upstream
+  code if available. Report `energy_monotone`, `accuracy_delta_after_planning`,
+  `latent_drift_norm`, and whether dual-path decoder training or anchoring is
+  required before any Phase-3 scale-up.
+
 ### Temperature Scaling for Semantic Uncertainty Quantification
 - **Paper:** arXiv 2604.07172, "Temperature Scaling Improves Semantic Uncertainty
   Quantification." April 2026.
@@ -32,7 +51,7 @@ MCS produces `REPAIR_HINT` but does not invoke LLM to execute the repair);
   variance increased). Temperature scaling applied after hinge training could reduce
   the variance while preserving the +0.186 AUROC gain. EBM-CoT v3 should apply T*
   optimization as a post-hoc calibration step.
-- **Concrete experiment:** exp1407 EBM-CoT v3 — apply temperature scaling T* after
+- **Concrete experiment:** exp1416 EBM-CoT v3 — apply temperature scaling T* after
   hinge-only training. Report `paraphrase_energy_variance_before_temp_scaling`,
   `paraphrase_energy_variance_after_temp_scaling`, `calibration_auroc_delta_preserved`.
 
@@ -51,7 +70,7 @@ MCS produces `REPAIR_HINT` but does not invoke LLM to execute the repair);
   verification: incorrect steps are identified by the NSVIF Z3 validator + MCS
   localizer. Training a lightweight PRM on these 1508 traces gives Carnot step-level
   verdict precision without full certificate parsing.
-- **Concrete experiment:** exp1413 Process Reward Model v1 on FoVer 1508 pairs.
+- **Concrete experiment:** exp1423 Process Reward Model v1 on FoVer 1508 pairs.
   Use 1508 verified pairs as step-level process labels (correct step = PASS,
   localized error step = FAIL). Train lightweight discriminative PRM. Report
   `prmv1_step_precision`, `prmv1_step_recall`, `prmv1_auroc`.
@@ -88,7 +107,7 @@ MCS produces `REPAIR_HINT` but does not invoke LLM to execute the repair);
   DPO on these 1508 pairs is the direct GRPO alternative. arXiv:2510.00977 provides
   theoretical grounding that DPO and GRPO converge to the same optimum when paired
   data is available.
-- **Concrete experiment:** exp1410 DPO training on 1508 verified pairs. Report
+- **Concrete experiment:** exp1420 DPO training on 1508 verified pairs. Report
   `dpo_improvement_pp`, `dpo_vs_baseline_auroc`, `dpo_headline_allowed`.
 
 ### Minimalist RL Reasoning: Rejection Sampling vs GRPO vs RLOO
@@ -104,9 +123,9 @@ MCS produces `REPAIR_HINT` but does not invoke LLM to execute the repair);
   training only on confirmed positives.
 - **Relevance to Carnot:** With 1508 verified correct cases, RAFT (rejection
   sampling fine-tuning) is directly applicable: fine-tune the model on only the
-  1508 verified cases. This is complementary to DPO (exp1410) and simpler to
+  1508 verified cases. This is complementary to DPO (exp1420) and simpler to
   implement. If DPO shows improvement, RAFT could be added in a follow-on experiment.
-- **Filed for exp1410 and future milestones:** consider RAFT as an alternative to
+- **Filed for exp1420 and future milestones:** consider RAFT as an alternative to
   DPO if DPO training doesn't converge or shows instability.
 
 ## 2026-05-05 Post-.107 Planning Sweep (Milestone 2026.04.108)
