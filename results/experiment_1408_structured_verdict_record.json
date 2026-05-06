@@ -1,7 +1,7 @@
 {
   "artifact": "experiment_1408_structured_verdict_record",
   "github_issue": 3,
-  "status": "in_progress",
+  "status": "complete",
   "requirements": [
     "REQ-VERIFY-1408",
     "REQ-VERIFY-1409",
@@ -22,12 +22,14 @@
     "tests": "tests/python/test_verdict_record.py"
   },
   "verification": {
-    "focused_tests": "pending",
-    "lint": "pending",
-    "type_check": "pending",
-    "spec_coverage": "pending",
-    "json_validation": "pending",
-    "diff_check": "pending"
+    "focused_tests": ".venv/bin/pytest tests/python/test_verdict_record.py tests/python/test_pipeline_verify_repair.py tests/python/test_three_tier_pipeline.py -q --no-cov -p no:cacheprovider passed: 134 passed, 4 warnings",
+    "lint": "RUFF_CACHE_DIR=/tmp/carnot-ruff-cache-issue3 ruff check python/carnot/pipeline/verdict_record.py python/carnot/pipeline/verify_repair.py python/carnot/pipeline/three_tier_pipeline.py python/carnot/pipeline/__init__.py tests/python/test_verdict_record.py passed",
+    "format": "RUFF_CACHE_DIR=/tmp/carnot-ruff-cache-issue3 ruff format --check python/carnot/pipeline/verdict_record.py python/carnot/pipeline/verify_repair.py python/carnot/pipeline/three_tier_pipeline.py python/carnot/pipeline/__init__.py tests/python/test_verdict_record.py passed",
+    "type_check": ".venv/bin/mypy --cache-dir /tmp/carnot-mypy-cache-issue3 python/carnot/pipeline/verdict_record.py python/carnot/pipeline/verify_repair.py python/carnot/pipeline/three_tier_pipeline.py passed",
+    "spec_coverage": "python scripts/check_spec_coverage.py tests/python/test_verdict_record.py passed",
+    "json_validation": "jq empty results/experiment_1408_structured_verdict_record.json passed",
+    "diff_check": "git diff --check for touched issue #3 paths passed",
+    "e2e_plan": "Not applicable: this structured API/schema change does not alter training/sampling, PyO3 bindings, cross-language model serialization, or packaged code-repair flows"
   },
-  "honest_verdict": "in_progress"
+  "honest_verdict": "structured_verdict_record_complete"
 }
