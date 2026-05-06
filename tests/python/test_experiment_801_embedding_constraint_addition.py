@@ -27,7 +27,7 @@ def _make_store_with_patterns():
     """Return an EmbeddingConstraintStore bootstrapped with all 5 pattern types."""
     from carnot.pipeline.embedding_constraint_store import EmbeddingConstraintStore
 
-    store = EmbeddingConstraintStore()
+    store = EmbeddingConstraintStore(embedding_mode="ci_hash")
     store.from_casememory_patterns({"carry": 4, "sign": 4, "unit": 4, "comparison": 4, "causal": 4})
     return store
 

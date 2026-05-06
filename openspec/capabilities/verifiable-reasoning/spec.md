@@ -15366,24 +15366,25 @@ by 1 for that batch; the output is counted as clean without subprocess execution
 
 ## REQ-LEARN-057: EmbeddingConstraintStore SPO Encoding
 
-EmbeddingConstraintStore MUST encode constraints as SPO tuples (subject: str, predicate: str, object: str) using sentence-transformer embeddings.
+EmbeddingConstraintStore MUST encode constraints as SPO tuples (subject: str, predicate: str, object: str) using a configured embedding backend.
 
 **Motivation:** Exp 788 showed constraint_addition_delta=0.0 due to embedding collapse in scalar keyword-count encoding (arXiv 2601.15313, Semantic Interference). SPO encoding forces structural separation that prevents embedding collapse.
 
 - REQ-LEARN-057-1: Each constraint MUST be stored as a ConstraintSPOTuple with fields subject, predicate, object, embedding, source_violation_type, timestamp.
-- REQ-LEARN-057-2: The sentence-transformer model all-MiniLM-L6-v2 SHALL be used by default (384-dim, CPU).
-- REQ-LEARN-057-3: When sentence_transformers is unavailable (CI), a ci_hash deterministic 384-dim fallback SHALL be used instead.
+- REQ-LEARN-057-2: The sentence-transformer model all-MiniLM-L6-v2 SHALL be supported through an explicit sentence_transformer embedding mode (384-dim, CPU).
+- REQ-LEARN-057-3: When sentence_transformers is unavailable or deterministic CI mode is requested, a ci_hash deterministic 384-dim fallback SHALL be used instead without loading MiniLM weights.
 - REQ-LEARN-057-4: embedding_mode MUST be reported as 'sentence_transformer' or 'ci_hash'.
+- REQ-LEARN-057-5: The constructor SHALL accept an embedding_mode selector so tests and memory-constrained runs can request ci_hash deterministically while production experiments can opt into sentence_transformer mode.
 
-## REQ-LEARN-058: Orthogonality Regularization
+## REQ-LEARN-058: Orthogonality Regression Guard
 
-EmbeddingConstraintStore MUST apply orthogonality regularization: when storing a new constraint embedding e_new, project out components along all existing constraint embeddings to reduce semantic interference.
+EmbeddingConstraintStore MUST preserve semantic direction by storing plain L2-normalized embeddings. Gram-Schmidt orthogonalization was the historical Exp 800 approach, but Exp 847 superseded it after finding that projected embeddings produced near-zero cosine similarity for matching queries.
 
-**Motivation:** Even good embeddings suffer from semantic interference when constraint types co-occur in training data. Gram-Schmidt orthogonalization ensures each constraint occupies a distinct subspace.
+**Motivation:** Retrieval must compare query embeddings and stored constraints in the same semantic space. Orthogonalizing stored constraints deflects them away from query vectors, which makes additive constraint injection disappear even when constraints were written.
 
-- REQ-LEARN-058-1: For each stored embedding e_i, the projection scalar = dot(e_new, e_i) / dot(e_i, e_i) MUST be subtracted from e_new before storing.
-- REQ-LEARN-058-2: The result MUST be L2-normalized after orthogonalization.
-- REQ-LEARN-058-3: Orthogonalization MUST be applied before appending to the internal store.
+- REQ-LEARN-058-1: store() SHALL NOT apply Gram-Schmidt orthogonalization before appending a constraint.
+- REQ-LEARN-058-2: store() SHALL L2-normalize each stored embedding as required by REQ-VERIFY-150.
+- REQ-LEARN-058-3: A historical orthogonalization helper MAY remain for diagnostics, but it SHALL NOT be part of the default write path.
 
 ## REQ-LEARN-059: Cosine-Similarity Retrieval
 

@@ -8,7 +8,8 @@
     distinguish them and always returns the same top-K regardless of the query.
 
     Fix: encode each constraint as an (S, P, O) = Subject-Predicate-Object triple and embed
-    the concatenated SPO text using sentence-transformers (all-MiniLM-L6-v2, 384-dim, CPU).
+    the concatenated SPO text using either deterministic ci_hash vectors or, when explicitly
+    requested, sentence-transformers (all-MiniLM-L6-v2, 384-dim, CPU).
 
 **Researcher summary (RETRO-RETRIEVAL-NEAR-ZERO-COSINE — Exp 847):**
     Exp 836 confirmed 15 constraints written (n_constraints_in_store_after_s3=15) but
@@ -39,6 +40,7 @@ from __future__ import annotations
 import hashlib
 import math
 import struct
+import os
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 
@@ -63,7 +65,7 @@ class ConstraintSPOTuple:
         object: The specific rule or invariant that is violated
                 (e.g. "carry_propagation").
         embedding: The sentence-transformer (or ci_hash) embedding of the
-                   concatenated SPO text, after orthogonality regularization.
+                   concatenated SPO text after L2 normalization.
                    None if not yet encoded.
         source_violation_type: The short label used for retrieval_auc evaluation
                                (e.g. "carry", "sign", "unit").
@@ -160,7 +162,8 @@ class EmbeddingConstraintStore:
         explicitly L2-normalized before any similarity computation.
 
     Attributes:
-        model_name: Name of the sentence_transformers model used for encoding.
+        model_name: Name of the sentence_transformers model used for encoding
+                    when sentence_transformer mode is selected.
         embedding_mode: "sentence_transformer" when the real model is loaded,
                         "ci_hash" when sentence_transformers is unavailable.
         retrieval_l2_normalized: Always True; asserted in store() and retrieve() to guard
@@ -169,10 +172,24 @@ class EmbeddingConstraintStore:
 
     retrieval_l2_normalized: bool = True
 
-    def __init__(self, model_name: str = "all-MiniLM-L6-v2") -> None:
+    def __init__(
+        self,
+        model_name: str = "all-MiniLM-L6-v2",
+        embedding_mode: str | None = None,
+    ) -> None:
         self.model_name = model_name
         self._store: list[ConstraintSPOTuple] = []
         self._encoder = None
+
+        requested_mode = embedding_mode or os.environ.get("CARNOT_EMBEDDING_MODE", "ci_hash")
+        if requested_mode not in {"ci_hash", "sentence_transformer", "auto"}:
+            raise ValueError(
+                "embedding_mode must be one of 'ci_hash', 'sentence_transformer', or 'auto'"
+            )
+
+        if requested_mode == "ci_hash":
+            self.embedding_mode = "ci_hash"
+            return
 
         try:
             from sentence_transformers import SentenceTransformer  # type: ignore[import]
@@ -252,7 +269,7 @@ class EmbeddingConstraintStore:
         self._store.append(spo)
 
     def retrieve(
-        self, query: str, top_k: int = 3, cosine_threshold: float = 0.5
+        self, query: str, top_k: int = 3, cosine_threshold: float = 0.0
     ) -> list[ConstraintSPOTuple]:
         """Return the top_k stored constraints most similar to the query.
 
@@ -261,16 +278,16 @@ class EmbeddingConstraintStore:
         Because both stored embeddings and the query are unit vectors, the dot
         product equals exact cosine similarity — no division required.
 
-        Entries with cosine similarity below cosine_threshold are excluded.
-        Default threshold is 0.5 (not 0.7 as in prior code): sentence-transformer
-        vectors for constraint-type variations typically score 0.5-0.7, not the
-        0.8-0.95 seen in document retrieval.  Using 0.7 caused empty retrieval.
+        Entries with cosine similarity below a positive cosine_threshold are excluded.
+        The default threshold is 0.0, which returns the ranked top-K entries without
+        filtering; this matches REQ-LEARN-059's top-K contract.  Callers that need
+        stricter filtering can pass a positive threshold such as 0.5.
 
         Args:
             query: Error context string to match against stored constraints.
             top_k: Maximum number of constraints to return.
             cosine_threshold: Minimum cosine similarity to include in results.
-                              Default 0.5 (lowered from 0.7 in Exp 847 fix).
+                              Values <= 0 disable filtering.
 
         Spec: REQ-LEARN-059, REQ-VERIFY-150
         """
@@ -284,6 +301,8 @@ class EmbeddingConstraintStore:
         query_emb = [x / (qnorm + 1e-8) for x in raw_emb]
         scored = [(entry, _dot(query_emb, entry.embedding or [])) for entry in self._store]
         scored.sort(key=lambda x: x[1], reverse=True)
+        if cosine_threshold <= 0.0:
+            return [entry for entry, _sim in scored[:top_k]]
         return [entry for entry, sim in scored[:top_k] if sim >= cosine_threshold]
 
     def retrieval_auc(self, queries: list[str], labels: list[str]) -> float:

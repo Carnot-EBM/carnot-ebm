@@ -1,114 +1,96 @@
 {
   "status": "complete",
+  "run_date": "20260506",
+  "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
   "collection_clean_confirmed": true,
   "execution_failures_before": [
     {
-      "test": "tests/python/test_experiment_1325_triggered_certificate_runtime_fixed.py::test_exp1325_edge_branches_remain_explicit",
-      "failure": "AttributeError: module 'carnot.reporting.triggered_certificate_extraction_v5_runtime_fixed_dccd_gbnf' has no attribute '_minimal_changes_applied'"
+      "command": ".venv/bin/pytest tests/python -q --tb=short --no-header --disable-warnings --no-cov",
+      "result": "interrupted by xdist internal error after 255.61s: 32 failed, 13269 passed, 67 skipped, 3 errors",
+      "notable_crash": "tests/python/test_experiment_801_embedding_constraint_addition.py::test_verify_accepts_embedding_constraint_store_param"
     },
     {
-      "test": "tests/python/test_experiment_1182_paper_v5_medium_low_issues_11_18.py::TestIssue11ThroughIssue15::test_issue_13_nrgpt_disclosure_or_no_citation",
-      "failure": "assert False is True"
+      "command": ".venv/bin/pytest tests/python/test_experiment_800_embedding_constraint_store.py tests/python/test_experiment_801_embedding_constraint_addition.py -q --tb=short --no-header --disable-warnings --no-cov -n0",
+      "result": "6 failed, 27 passed, 1 error",
+      "failures": [
+        "tests/python/test_experiment_800_embedding_constraint_store.py::TestOrthogonalize::test_orthogonalize_reduces_dot_product",
+        "tests/python/test_experiment_800_embedding_constraint_store.py::TestRetrieve::test_retrieve_returns_top_k",
+        "tests/python/test_experiment_800_embedding_constraint_store.py::TestRetrieve::test_retrieve_returns_constraintspo_instances",
+        "tests/python/test_experiment_800_embedding_constraint_store.py::TestRetrieve::test_retrieval_auc_perfect_on_identical_query",
+        "tests/python/test_experiment_801_embedding_constraint_addition.py::test_static_constraints_unchanged_with_store",
+        "tests/python/test_experiment_801_embedding_constraint_addition.py::test_injected_constraint_metadata_fields"
+      ],
+      "errors": [
+        "tests/python/test_experiment_801_embedding_constraint_addition.py::test_verify_accepts_embedding_constraint_store_param memory watchdog +555MB from MiniLM weight loading"
+      ]
     },
     {
-      "test": "tests/python/test_experiment_294_gpu_baseline_apple.py::TestBaselineAccuracyBounds::test_accuracy_in_unit_interval_when_all_correct",
-      "failure": "xdist worker crashed while running the test"
+      "command": ".venv/bin/pytest tests/python/test_experiment_847_constraint_retrieval_l2.py -q --tb=short --no-header --disable-warnings --no-cov -n0",
+      "result": "14 passed, 1 error",
+      "errors": [
+        "tests/python/test_experiment_847_constraint_retrieval_l2.py::TestL2NormAppliedOnWrite::test_stored_embedding_is_unit_vector memory watchdog +745MB from python.carnot duplicate package import"
+      ]
+    },
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_800_embedding_constraint_store.py tests/python/test_experiment_801_embedding_constraint_addition.py tests/python/test_experiment_847_constraint_retrieval_l2.py -q --tb=short --no-header --disable-warnings --no-cov -n0",
+      "result": "after spec/test-first edits and before implementation: 10 failed, 38 passed",
+      "root_cause_signal": "EmbeddingConstraintStore lacked explicit embedding_mode support and retrieve() still filtered default top-k results to empty"
     }
   ],
   "execution_failures_after": [
     {
-      "test": "tests/python/test_experiment_1182_paper_v5_medium_low_issues_11_18.py::TestIssue11ThroughIssue15::test_issue_13_nrgpt_disclosure_or_no_citation",
-      "failure": "assert False is True"
+      "command": ".venv/bin/pytest tests/python/test_experiment_800_embedding_constraint_store.py tests/python/test_experiment_801_embedding_constraint_addition.py tests/python/test_experiment_847_constraint_retrieval_l2.py -q --tb=short --no-header --disable-warnings --no-cov -n0",
+      "result": "53 passed, 1 warning in 5.96s"
     },
     {
-      "test": "tests/python/test_experiment_294_gpu_baseline_apple.py::TestBaselineAccuracyBounds::test_accuracy_in_unit_interval_when_all_correct",
-      "failure": "xdist worker crashed while running the test"
-    },
-    {
-      "test": "tests/python/test_experiment_563_live_data_a_v2.py::TestBuildLiveDataArtifact::test_models_field",
-      "failure": "expected google/gemma-4-E4B-it, got local GGUF SOTA model IDs"
-    },
-    {
-      "test": "tests/python/test_experiment_383_models_retrain.py::TestRunExperimentRealData::test_eorm_retrain_runs_when_enough_pairs",
-      "failure": "pytest memory watchdog reported Memory leak: +1002MB"
+      "command": ".venv/bin/pytest tests/python -q",
+      "result": "interrupted after 2045.45s with 69 failed, 15454 passed, 66 skipped, 74 warnings, 4 errors; failures did not include the fixed embedding-store cluster"
     }
   ],
   "execution_failures_fixed": [
-    {
-      "test": "tests/python/test_experiment_1325_triggered_certificate_runtime_fixed.py::test_exp1325_edge_branches_remain_explicit",
-      "root_cause": "Exp 1325 reporting module lacked the helper/API shape that the existing REQ-VERIFY-1325 test already specified, and related blocked/retirement field values had drifted.",
-      "fix": "Restored _minimal_changes_applied and _read_json, aligned no-row blocked_reason, and emitted structured retire-if-same-verdict and next-blocker fields."
-    }
+    "EmbeddingConstraintStore now accepts embedding_mode='ci_hash' for deterministic memory-safe tests and memory-constrained runs.",
+    "EmbeddingConstraintStore keeps sentence_transformer support behind explicit sentence_transformer or auto mode, with ci_hash fallback when the optional dependency is unavailable.",
+    "EmbeddingConstraintStore.retrieve() now defaults cosine_threshold to 0.0 and returns ranked top-k entries unless a positive threshold is explicitly supplied.",
+    "Exp800 tests were reconciled with the later Exp847 REQ-VERIFY-150 L2-normalization contract instead of the superseded orthogonalizing write-path expectation.",
+    "Exp801 embedding injection tests now use explicit ci_hash mode and pass without loading MiniLM weights.",
+    "Exp847 tests import the installed carnot package path instead of python.carnot, avoiding duplicate package import memory growth."
   ],
-  "spec_coverage_checked": {
-    "checked": true,
-    "command": ".venv/bin/python scripts/check_spec_coverage.py",
-    "result": "failed: 71 pre-existing tests lack REQ-* or SCENARIO-* references; the touched exp1325 test module already references REQ-VERIFY-1325 and SCENARIO-VERIFY-1325."
-  },
+  "spec_coverage_checked": true,
   "commands_run": [
-    {
-      "cmd": "sed -n '1,220p' AGENTS.md; sed -n '1,260p' CODEX.md; sed -n '1,260p' CLAUDE.md; sed -n '1,220p' results/experiment_1392_test_suite_hygiene_v2.json",
-      "result": "read required workflow and prior collection-hygiene artifact"
-    },
-    {
-      "cmd": ".venv/bin/pytest tests/python --collect-only -q",
-      "result": "exit 0; collected 22277 tests / 3 skipped; no collection errors observed"
-    },
-    {
-      "cmd": ".venv/bin/pytest tests/python -q --no-header --tb=short --disable-warnings -x",
-      "result": "failed before fix: 3 failed, 5475 passed, 29 skipped, 44 warnings in 119.74s; included the exp1325 AttributeError"
-    },
-    {
-      "cmd": "sed -n '17494,17555p' openspec/capabilities/verifiable-reasoning/spec.md",
-      "result": "confirmed REQ-VERIFY-1325 and SCENARIO-VERIFY-1325 exist before implementation edit"
-    },
-    {
-      "cmd": ".venv/bin/pytest tests/python/test_experiment_1325_triggered_certificate_runtime_fixed.py::test_exp1325_edge_branches_remain_explicit -q --no-header --tb=short --disable-warnings",
-      "result": "failed before fix with AttributeError for missing _minimal_changes_applied; global coverage addopts also failed on broad pre-existing coverage"
-    },
-    {
-      "cmd": ".venv/bin/pytest tests/python/test_experiment_1325_triggered_certificate_runtime_fixed.py::test_exp1325_edge_branches_remain_explicit -q --no-header --tb=short --disable-warnings --no-cov",
-      "result": "passed after fix: 1 passed, 4 warnings in 7.17s"
-    },
-    {
-      "cmd": ".venv/bin/pytest tests/python/test_experiment_1325_triggered_certificate_runtime_fixed.py -q --no-header --tb=short --disable-warnings --no-cov",
-      "result": "passed after fix and formatting: 6 passed, 4 warnings in 6.71s"
-    },
-    {
-      "cmd": ".venv/bin/coverage erase && .venv/bin/coverage run --include='python/carnot/reporting/triggered_certificate_extraction_v5_runtime_fixed_dccd_gbnf.py' -m pytest tests/python/test_experiment_1325_triggered_certificate_runtime_fixed.py -q --no-header --tb=short --disable-warnings --no-cov -n 0 && .venv/bin/coverage report --include='python/carnot/reporting/triggered_certificate_extraction_v5_runtime_fixed_dccd_gbnf.py' --fail-under=100 -m",
-      "result": "tests passed; coverage command failed at 97% for the whole pre-existing module, with missing lines 223-225, 286, 403-404, 484, 489, 497; none are the new helper lines"
-    },
-    {
-      "cmd": ".venv/bin/pytest tests/python -q",
-      "result": "required exact full-suite command was started; it reached about 52% with many unrelated failures and worker crashes, then was killed after a long CPU-bound stall without a final summary"
-    },
-    {
-      "cmd": ".venv/bin/pytest tests/python -q --no-header --tb=short --disable-warnings -x --no-cov",
-      "result": "post-fix focused probe failed on remaining unrelated debt: 3 failed, 6804 passed, 52 skipped, 44 warnings, 1 error in 124.85s; exp1325 failure absent"
-    },
-    {
-      "cmd": "sed -n '1,260p' ops/e2e-test-plan.md",
-      "result": "read E2E plan; no full training/sampling E2E was run because this scoped runtime-debt repair touched reporting artifact logic only"
-    },
-    {
-      "cmd": ".venv/bin/python scripts/check_spec_coverage.py",
-      "result": "failed with 71 pre-existing tests missing spec traceability"
-    },
-    {
-      "cmd": "ruff check python/carnot/reporting/triggered_certificate_extraction_v5_runtime_fixed_dccd_gbnf.py",
-      "result": "All checks passed"
-    },
-    {
-      "cmd": "ruff format python/carnot/reporting/triggered_certificate_extraction_v5_runtime_fixed_dccd_gbnf.py && ruff format --check python/carnot/reporting/triggered_certificate_extraction_v5_runtime_fixed_dccd_gbnf.py",
-      "result": "1 file reformatted, then 1 file already formatted"
-    }
+    "sed -n '1,220p' AGENTS.md; sed -n '1,260p' CODEX.md; sed -n '1,520p' CLAUDE.md",
+    "sed -n '1,260p' results/experiment_1392_test_suite_hygiene_v2.json; sed -n '1,240p' ops/e2e-test-plan.md",
+    "find openspec/capabilities -maxdepth 3 -type f | sort; find tests/python -maxdepth 3 -type f | sort",
+    ".venv/bin/pytest tests/python --collect-only -q --no-header",
+    ".venv/bin/pytest tests/python -q --tb=short --no-header --disable-warnings --no-cov",
+    ".venv/bin/pytest tests/python/test_experiment_800_embedding_constraint_store.py tests/python/test_experiment_801_embedding_constraint_addition.py -q --tb=short --no-header --disable-warnings --no-cov -n0",
+    ".venv/bin/pytest tests/python/test_experiment_847_constraint_retrieval_l2.py -q --tb=short --no-header --disable-warnings --no-cov -n0",
+    ".venv/bin/pytest tests/python/test_experiment_800_embedding_constraint_store.py tests/python/test_experiment_801_embedding_constraint_addition.py tests/python/test_experiment_847_constraint_retrieval_l2.py -q --tb=short --no-header --disable-warnings --no-cov -n0",
+    "COVERAGE_FILE=.coverage.exp1421 .venv/bin/coverage run -m pytest tests/python/test_experiment_800_embedding_constraint_store.py tests/python/test_experiment_801_embedding_constraint_addition.py tests/python/test_experiment_847_constraint_retrieval_l2.py -q --tb=short --no-header --disable-warnings --no-cov -n0 && COVERAGE_FILE=.coverage.exp1421 .venv/bin/coverage report --include='python/carnot/pipeline/embedding_constraint_store.py' --fail-under=100 --show-missing",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python scripts/check_spec_coverage.py",
+    "/usr/bin/ruff check python/carnot/pipeline/embedding_constraint_store.py tests/python/test_experiment_800_embedding_constraint_store.py tests/python/test_experiment_801_embedding_constraint_addition.py tests/python/test_experiment_847_constraint_retrieval_l2.py",
+    "/usr/bin/ruff format --check python/carnot/pipeline/embedding_constraint_store.py tests/python/test_experiment_800_embedding_constraint_store.py tests/python/test_experiment_801_embedding_constraint_addition.py tests/python/test_experiment_847_constraint_retrieval_l2.py",
+    "/usr/bin/ruff format python/carnot/pipeline/embedding_constraint_store.py tests/python/test_experiment_800_embedding_constraint_store.py tests/python/test_experiment_801_embedding_constraint_addition.py tests/python/test_experiment_847_constraint_retrieval_l2.py",
+    "tmp=$(mktemp); .venv/bin/pytest tests/python --collect-only -q --no-header --disable-warnings --no-cov > \"$tmp\" 2>&1; status=$?; tail -20 \"$tmp\"; rm -f \"$tmp\"; exit $status",
+    "python3 -m json.tool results/experiment_1421_test_suite_execution_debt_v1.json >/tmp/exp1421.validated.json",
+    "python3 -c \"import json; d=json.load(open('results/experiment_1421_test_suite_execution_debt_v1.json')); print(d.get('execution_failures_fixed'), d.get('execution_failures_before'), d.get('execution_failures_after'), d.get('honest_verdict'))\""
+  ],
+  "coverage": {
+    "new_code_scope": "python/carnot/pipeline/embedding_constraint_store.py",
+    "command": "COVERAGE_FILE=.coverage.exp1421 .venv/bin/coverage report --include='python/carnot/pipeline/embedding_constraint_store.py' --fail-under=100 --show-missing",
+    "result": "100% line coverage: 113 statements, 0 missed"
+  },
+  "spec_updates": [
+    "openspec/capabilities/verifiable-reasoning/spec.md now marks Exp800 orthogonalizing writes as superseded by the Exp847 L2-normalized retrieval contract.",
+    "openspec/capabilities/verifiable-reasoning/spec.md adds REQ-LEARN-057-5 for an explicit embedding_mode selector.",
+    "openspec/capabilities/pipeline/spec.md adds the memory-safe ci_hash constructor acceptance criterion under REQ-VERIFY-150."
   ],
   "remaining_debt": [
-    "The exact required full suite command .venv/bin/pytest tests/python -q did not pass; it exposed broad pre-existing runtime failures and stalled after more than 20 minutes around the middle of the suite.",
-    "Post-fix focused execution still fails on test_experiment_1182_paper_v5_medium_low_issues_11_18.py issue 13, test_experiment_294_gpu_baseline_apple.py worker crash, test_experiment_563_live_data_a_v2.py model-ID drift, and test_experiment_383_models_retrain.py memory-watchdog leak.",
-    "Spec coverage remains blocked by 71 pre-existing tests without REQ-* or SCENARIO-* references outside the exp1325 fix scope.",
-    "Whole-module coverage for the touched exp1325 reporting module is 97% because older branches remain uncovered; the added helper/default/read-json paths are exercised by the existing REQ-VERIFY-1325 test module.",
-    "ops/changelog.md, ops/status.md, and _bmad/traceability.md were intentionally not updated because the task's STOP-WHEN-DONE rule says the conductor reconciliation step owns those files."
+    "The exact required full-suite command .venv/bin/pytest tests/python -q is still red outside this focused fix: interrupted after 34m05s with 69 failures and 4 memory-watchdog errors already reported.",
+    "Representative remaining full-suite failures include paper v5 issue checks, stale live-data model-name assertions, older operational retro schema assertions, arbiter warmstart expectations, Vitis/HLS verdict checks, GPU/live-model memory-watchdog errors, and conductor/infrastructure assertions.",
+    "Spec coverage remains red on pre-existing debt: scripts/check_spec_coverage.py reports 71 tests lacking REQ-* or SCENARIO-* references, none from the edited Exp800/801/847 tests.",
+    "No ops/changelog.md, ops/status.md, or _bmad/traceability.md edits were made because the task's STOP-WHEN-DONE rule explicitly reserved those updates for the conductor reconciliation step.",
+    "No e2e plan item from ops/e2e-test-plan.md directly applies to this embedding-store unit fix; full E2E was not attempted while the required Python test suite remains red."
   ],
-  "honest_verdict": "exp1325_runtime_failure_fixed_collection_clean_confirmed_full_suite_still_blocked_by_unrelated_execution_and_spec_coverage_debt"
+  "honest_verdict": "focused_embedding_store_runtime_failures_fixed_collection_clean_targeted_tests_green_100pct_store_coverage_full_suite_and_preexisting_spec_coverage_debt_remain"
 }
