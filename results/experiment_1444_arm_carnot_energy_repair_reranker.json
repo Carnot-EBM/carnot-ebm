@@ -1,0 +1,24 @@
+{
+  "experiment": 1444,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-05-06",
+  "started_at": "2026-05-06T22:56:40.260391+00:00",
+  "finished_at": "2026-05-06T22:56:40.260391+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "ARM-as-EBM + Carnot Energy Repair Reranker \u2014 Gated on Live Candidate Pool",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp1443-live-sota-dccd-semctrl-repair-v3.live_repair_candidate_pool_ready (upstream artifact not found for task id 'exp1443-live-sota-dccd-semctrl-repair-v3')",
+  "gates_evaluated": [
+    {
+      "upstream": "exp1443-live-sota-dccd-semctrl-repair-v3",
+      "artifact_field": "live_repair_candidate_pool_ready",
+      "op": "==",
+      "expected": true,
+      "actual": null,
+      "passed": false,
+      "reason": "upstream artifact not found for task id 'exp1443-live-sota-dccd-semctrl-repair-v3'"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
