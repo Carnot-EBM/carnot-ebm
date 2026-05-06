@@ -1,0 +1,92 @@
+{
+  "artifact_metadata": {
+    "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "run_date": "20260506",
+    "source_experiments": [
+      "exp1397"
+    ],
+    "spec": [
+      "REQ-VERIFY-1413",
+      "SCENARIO-VERIFY-1413"
+    ]
+  },
+  "diagnostic_evidence": {
+    "repair_hint_categories_observed": [
+      "STEP_REWRITE"
+    ],
+    "repair_rows_with_accepted_false": 100,
+    "repair_rows_with_semantic_equivalence_false": 100,
+    "scheduler_nonrepair_failures": 39
+  },
+  "executable_hint_pct": 1.0,
+  "expected_full_pipeline_pass_rate_if_50pct_repaired": 0.555,
+  "expected_rate_basis": {
+    "current_full_pipeline_pass_rate": 0.305,
+    "formula": "current_full_pipeline_pass_rate + 0.5 * repair_hint_cases_total / total_cases_analyzed",
+    "repair_hint_cases_total": 100,
+    "total_cases_analyzed": 200,
+    "used_repair_specific_denominator": true
+  },
+  "experiment": "1413_certificate_repair_execution_diagnosis",
+  "hint_category_counts": {
+    "CERTIFICATE_REGENERATE": 0,
+    "CONSTRAINT_REWRITE": 0,
+    "FIELD_REWRITE": 0,
+    "STEP_REWRITE": 100,
+    "UNKNOWN": 0
+  },
+  "honest_verdict": "repair_execution_diagnosis_complete_missing_repair_execution_step_rewrite_dominant_full_pipeline_0_305",
+  "no_repair_cases_total": 100,
+  "recommended_executor_contract": {
+    "data_handling_class": "minimize",
+    "executor_model_policy": "local_open_model_first_optional_closed_adapter_only",
+    "fallback_behavior": {
+      "accepted_without_validation": false,
+      "on_invalid_json_or_certificate": "preserve_original_repair_hint_and_escalate_full_verifier",
+      "on_timeout": "preserve_original_repair_hint_and_escalate_full_verifier",
+      "on_validation_failure": "preserve_original_repair_hint_and_escalate_full_verifier",
+      "preserve_original_repair_hint": true
+    },
+    "inputs": [
+      "case_id",
+      "original_question",
+      "original_reasoning_step",
+      "original_certificate_text",
+      "semantic_validation_row",
+      "repair_localization_row",
+      "repair_hint",
+      "hint_category",
+      "bounded_prompt_budget_tokens"
+    ],
+    "outputs": [
+      "case_id",
+      "repair_attempted",
+      "hint_category",
+      "repaired_reasoning_step",
+      "repaired_certificate_text",
+      "executor_model_id",
+      "executor_runtime_s",
+      "validation_result",
+      "fallback_reason"
+    ],
+    "timeout": {
+      "batch_budget_source": "caller_provided",
+      "max_attempts_per_case": 1,
+      "per_case_seconds": 30
+    },
+    "validation_call": "Parse the repaired tag-first certificate, call calibrated_fover_semantic_validation_row(...), then replay the repair-localization and scheduler checks; accept only when constraint_passed is true, semantic_result is SAT, repair_required is false, full_pipeline_pass is true, and false_acceptance is false."
+  },
+  "repair_execution_diagnosis_complete": true,
+  "repair_hint_cases_total": 100,
+  "run_date": "20260506",
+  "schema": "certificate_repair_execution_diagnosis_v1",
+  "source_experiment": "experiment_1397_fullscale_pipeline_v2_200cases",
+  "source_metrics": {
+    "certificate_parse_rate": 1.0,
+    "full_pipeline_pass_rate": 0.305,
+    "scheduler_accept_rate": 0.305,
+    "semantic_validation_pass_rate": 1.0
+  },
+  "status": "complete",
+  "total_cases_analyzed": 200
+}
