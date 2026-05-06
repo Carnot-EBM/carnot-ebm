@@ -3355,3 +3355,71 @@ remain clean.
 | Requirement | Python | Tests |
 |-------------|--------|-------|
 | REQ-LEARN-1388 | Implemented (`python/carnot/reporting/fr11_self_learning_v4_dvi_grpo_integration.py`) | Implemented (`tests/python/test_fr11_self_learning_v4_dvi_grpo_integration.py`) |
+
+## REQ-LEARN-1395: FR-11 Self-Learning V5 DVI V2 + SECL Verifier Promotion
+
+Exp 1395 SHALL run the mandatory FR-11 self-learning v5 round on run date
+`20260506` using Exp 1394's deployed DVI v2 + SECL checkpoint as the active
+semantic verifier. The workflow SHALL attempt to exceed Exp 1388's
+`fresh_verified_sample_count=59` by sampling FoVer rows, generating certificate
+states, verifying those states through the DVI v2 + SECL checkpoint, and
+promoting only fresh rows whose generated certificate state agrees with the
+active verifier. GRPO v8 cases SHALL enter memory only when Exp 1393 reports
+`grpo_v8_improvement_pp > 0.0`.
+
+### REQ-LEARN-1395 Sub-requirements
+
+- REQ-LEARN-1395-1: The workflow SHALL write
+  `results/experiment_1395_fr11_self_learning_v5.json` first with
+  `status="in_progress"` before loading source artifacts.
+- REQ-LEARN-1395-2: The workflow SHALL require Exp 1394 to have
+  `dvi_v2_deployed=true`, SHALL load `checkpoint_path`, and SHALL set
+  `dvi_v2_checkpoint_active=true` only after the combined DVI v2 + SECL
+  checkpoint exposes readable DVI metric, bias, and SECL confidence-head arrays.
+- REQ-LEARN-1395-3: FoVer rows already promoted by Exp 1388 SHALL be excluded
+  from the v5 fresh promotion count so `fresh_verified_sample_count` measures
+  new v5 verified memory rather than replaying the prior 59 cases.
+- REQ-LEARN-1395-4: A sampled FoVer row SHALL be promoted only when the
+  generated certificate state (`SAT` for FoVer-correct rows and `REPAIR_HINT`
+  for FoVer-incorrect rows) agrees with the DVI v2 prediction and the SECL
+  calibrated confidence for that predicted state is at least the configured
+  confidence threshold.
+- REQ-LEARN-1395-5: When Exp 1393 has `grpo_v8_improvement_pp <= 0.0`, the
+  final artifact SHALL set `grpo_v8_cases_integrated=0`. When the improvement
+  is positive, only GRPO v8 rows whose verifier result matches their expected
+  answer SHALL be integrated.
+- REQ-LEARN-1395-6: The final artifact SHALL include `status`, `path_used`,
+  `dvi_v2_checkpoint_active`, `replay_cases_used`,
+  `fresh_verified_sample_count`, `grpo_v8_cases_integrated`,
+  `self_learning_delta_overall`, `headline_result_allowed`, and
+  `honest_verdict`.
+- REQ-LEARN-1395-7: `self_learning_delta_overall` SHALL be computed as the
+  case-count delta versus Exp 1388's baseline of 59 fresh verified cases, and
+  `headline_result_allowed` SHALL be true only when
+  `fresh_verified_sample_count > 59` with the DVI v2 checkpoint active.
+
+### SCENARIO-LEARN-1395: DVI V2 + SECL Promotes Fresh FoVer Cases
+
+**Given** Exp 1394 deployed a readable DVI v2 + SECL checkpoint
+**And** Exp 1393 reports no positive GRPO v8 improvement
+**When** Exp 1395 runs over FoVer rows not already promoted by Exp 1388
+**Then** the final artifact has `dvi_v2_checkpoint_active=true`
+**And** `grpo_v8_cases_integrated=0`
+**And** `self_learning_delta_overall` equals
+`fresh_verified_sample_count - 59`
+**And** `headline_result_allowed=true` only when the fresh count exceeds 59.
+
+### SCENARIO-LEARN-1395: Positive GRPO V8 Gate Integrates Verified Cases
+
+**Given** Exp 1393 reports `grpo_v8_improvement_pp > 0.0`
+**When** Exp 1395 runs
+**Then** GRPO v8 rows whose verifier result matches their expected answer are
+included in `grpo_v8_cases_integrated`
+**And** the headline gate still requires the DVI v2 fresh verified count to
+exceed the Exp 1388 baseline.
+
+## Implementation Status (REQ-LEARN-1395)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-1395 | Implemented (`python/carnot/reporting/fr11_self_learning_v5.py`) | Implemented (`tests/python/test_fr11_self_learning_v5.py`) |

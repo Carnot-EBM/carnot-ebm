@@ -1,0 +1,324 @@
+{
+  "$id": "https://carnot-ebm.org/schemas/session_memory_v1.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Portable Carnot SessionMemory pack schema.",
+  "properties": {
+    "$schema": {
+      "const": "https://carnot-ebm.org/schemas/session_memory_v1.json",
+      "type": "string"
+    },
+    "metadata": {
+      "additionalProperties": true,
+      "properties": {
+        "backwards_compatibility": {
+          "type": "string"
+        },
+        "carnot_version": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "license": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "source": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "source",
+        "license"
+      ],
+      "type": "object"
+    },
+    "models": {
+      "items": {
+        "$ref": "#/$defs/model_state"
+      },
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "schema": {
+      "const": "carnot.session_memory_pack.v1",
+      "type": "string"
+    },
+    "schema_version": {
+      "pattern": "^1\\.[0-9]+\\.[0-9]+$",
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema",
+    "schema_version",
+    "metadata",
+    "models"
+  ],
+  "title": "Carnot SessionMemory Portable Pack v1",
+  "type": "object",
+  "$defs": {
+    "case_memory": {
+      "additionalProperties": true,
+      "properties": {
+        "entries": {
+          "items": {
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "portable_entries": {
+          "items": {
+            "$ref": "#/$defs/portable_case_entry"
+          },
+          "type": "array"
+        },
+        "version": {
+          "const": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "version",
+        "entries",
+        "portable_entries"
+      ],
+      "type": "object"
+    },
+    "constraint_template": {
+      "additionalProperties": false,
+      "properties": {
+        "activation_count": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "description": {
+          "type": "string"
+        },
+        "energy_weight": {
+          "type": "number"
+        },
+        "id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "is_active": {
+          "type": "boolean"
+        },
+        "min_frequency": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "patterns": {
+          "additionalProperties": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "type": "object"
+        },
+        "target_claim_type": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "target_claim_type",
+        "description",
+        "patterns",
+        "energy_weight",
+        "min_frequency"
+      ],
+      "type": "object"
+    },
+    "fp_tracker": {
+      "additionalProperties": true,
+      "properties": {
+        "min_observations": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "stats": {
+          "items": {
+            "additionalProperties": true,
+            "properties": {
+              "constraint_type": {
+                "type": "string"
+              },
+              "fp_count": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "model_id": {
+                "type": "string"
+              },
+              "n_observations": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "tp_count": {
+                "minimum": 0,
+                "type": "integer"
+              }
+            },
+            "required": [
+              "model_id",
+              "constraint_type",
+              "fp_count",
+              "tp_count",
+              "n_observations"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "min_observations",
+        "stats"
+      ],
+      "type": "object"
+    },
+    "model_state": {
+      "additionalProperties": true,
+      "properties": {
+        "case_memory": {
+          "$ref": "#/$defs/case_memory"
+        },
+        "constraint_templates": {
+          "items": {
+            "$ref": "#/$defs/constraint_template"
+          },
+          "type": "array"
+        },
+        "exported_at": {
+          "type": "string"
+        },
+        "fp_tracker": {
+          "$ref": "#/$defs/fp_tracker"
+        },
+        "model_id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "safe_model_id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "saved_at": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "session_state": {
+          "$ref": "#/$defs/session_state"
+        },
+        "template_library": {
+          "$ref": "#/$defs/template_library"
+        }
+      },
+      "required": [
+        "model_id",
+        "safe_model_id",
+        "case_memory",
+        "constraint_templates",
+        "template_library",
+        "fp_tracker",
+        "session_state"
+      ],
+      "type": "object"
+    },
+    "portable_case_entry": {
+      "additionalProperties": true,
+      "properties": {
+        "canonical_form": {
+          "type": "string"
+        },
+        "last_seen": {
+          "type": "string"
+        },
+        "n_observations": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "observed_precision": {
+          "maximum": 1,
+          "minimum": 0,
+          "type": "number"
+        },
+        "question_hash": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "question_hash",
+        "canonical_form",
+        "observed_precision",
+        "n_observations",
+        "last_seen"
+      ],
+      "type": "object"
+    },
+    "session_state": {
+      "additionalProperties": true,
+      "properties": {
+        "violations_by_domain": {
+          "items": {
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "violations_by_type": {
+          "items": {
+            "type": "object"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "violations_by_type",
+        "violations_by_domain"
+      ],
+      "type": "object"
+    },
+    "template_library": {
+      "additionalProperties": true,
+      "properties": {
+        "observations": {
+          "items": {
+            "additionalProperties": true,
+            "properties": {
+              "count": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "model_id": {
+                "type": "string"
+              },
+              "pattern_key": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "pattern_key",
+              "model_id",
+              "count"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "observations"
+      ],
+      "type": "object"
+    }
+  }
+}
