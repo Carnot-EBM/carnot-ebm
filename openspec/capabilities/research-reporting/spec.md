@@ -771,6 +771,45 @@ shall preserve the exact prior verdicts from the source artifacts. A complete
 artifact shall not claim activation success if any carry-forward task lacks a
 `.110` mapping or retirement rule.
 
+### REQ-REPORT-034: Exp1426 Test Suite Remaining Debt Cluster Map
+
+The Exp 1426 test-suite debt mapping workflow shall read Exp 1421's terminal
+artifact, confirm current Python collection and spec-coverage state with narrow
+commands, and write
+`results/experiment_1426_test_suite_remaining_debt_cluster_map.json` without
+rerunning the 30+ minute full Python suite unless cheaper signals are
+unavailable.
+
+The final JSON artifact shall include:
+
+- `status`
+- `failure_cluster_map_complete`
+- `collection_clean_confirmed`
+- `failure_clusters_identified`
+- `next_cluster_recommended`
+- `spec_coverage_debt_count`
+- `commands_run`
+- `honest_verdict`
+
+The workflow shall group the remaining debt into actionable clusters with
+representative test paths, likely ownership, evidence source, and a bounded fix
+hint. It shall exclude the Exp 1421 embedding-store cluster from future
+recommendations unless fresh evidence shows regression. The workflow shall
+recommend exactly one next cluster and shall not claim full-suite health unless
+the full-suite command actually passes.
+
+### SCENARIO-REPORT-034: Collection Clean, Spec Coverage Red, Full Suite Not Rerun
+
+Given Exp 1421 reports a clean collection, a fixed embedding-store cluster, a
+red full-suite execution with remaining categories, and pre-existing
+spec-coverage debt, when Exp 1426 confirms current collection with
+`pytest --collect-only` and current spec coverage with
+`scripts/check_spec_coverage.py`, then the artifact records
+`collection_clean_confirmed == true`, `spec_coverage_debt_count` equal to the
+checker count, multiple named failure clusters, exactly one
+`next_cluster_recommended`, and an honest verdict that the full suite was not
+rerun and remains unproven.
+
 ### REQ-REPORT-024: Local Agent Usage Snapshot
 
 The repository shall provide a local operator workflow that inspects the
@@ -1339,6 +1378,7 @@ embed live-GPU benchmark results from Exp 328 when available.
 | REQ-REPORT-031 | `python/carnot/reporting/milestone_retro_105.py`, `results/experiment_1363_milestone_105_retro_carryforward.json` | `tests/python/test_milestone_retro_105.py` | Implemented |
 | REQ-REPORT-032 | `python/carnot/reporting/milestone_retro_109.py`, `results/experiment_1424_milestone_109_retro.json` | `tests/python/test_milestone_retro_109.py` | Implemented |
 | REQ-REPORT-033 | `python/carnot/reporting/milestone_110_carryforward_activation_audit.py`, `results/experiment_1425_109_carryforward_activation_audit.json`, `ops/milestone_110_carryforward_manifest.md` | `tests/python/test_milestone_110_carryforward_activation_audit.py` | Implemented |
+| REQ-REPORT-034 | `python/carnot/reporting/test_suite_remaining_debt_cluster_map.py`, `results/experiment_1426_test_suite_remaining_debt_cluster_map.json` | `tests/python/test_test_suite_remaining_debt_cluster_map.py` | Implemented |
 | REQ-REPORT-024 | `python/carnot/reporting/agent_usage.py`, `scripts/agent_plan_usage.py` | `tests/python/test_agent_plan_usage.py` | Implemented |
 | REQ-PUBLISH-003 | `scripts/experiment_317_hf_publish.py` | `tests/python/test_experiment_317_hf_publish.py` | Implemented |
 | REQ-PUBLISH-004 | `scripts/experiment_330_hf_live_publish.py` | `tests/python/test_experiment_330_hf_live_publish.py` | Implemented |
