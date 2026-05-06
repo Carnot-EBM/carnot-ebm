@@ -1,0 +1,292 @@
+{
+  "carryforward_manifest_complete": true,
+  "carryforward_manifest_path": "ops/milestone_110_carryforward_manifest.md",
+  "carryforward_task_count": 6,
+  "experiment": "1425_109_carryforward_activation_audit",
+  "forbidden_exact_reruns": [
+    {
+      "experiment_id": "exp1419-fullscale-pipeline-v3-repair-executor",
+      "forbidden_scope": "exact exp1419 200-case full-scale pipeline rerun without nonzero accepted repair evidence",
+      "prior_verdict": "not_headline_full_pipeline_below_0_40",
+      "required_unlock_evidence": "exp1428.repaired_case_success_rate > 0.0 and downstream validation uses the exp1431 micro-gated path before any larger scale run",
+      "result_artifact": "results/experiment_1419_fullscale_pipeline_v3_repair_executor.json",
+      "retire_if_same_verdict": true
+    }
+  ],
+  "honest_verdict": "milestone_110_carryforward_manifest_complete_6_tracks_exp1419_exact_rerun_forbidden",
+  "manifest_rows": [
+    {
+      "gate_rule": "exp1431 stays gated until exp1428 proves repaired_case_success_rate > 0.0 and exp1430 is ready; no 200-case rerun before micro evidence.",
+      "mapped": true,
+      "mapped_110_tasks": [
+        "exp1427-repair-executor-rejection-ledger",
+        "exp1428-dccd-schema-constrained-repair-v2",
+        "exp1429-mcmc-constrained-repair-candidate-search",
+        "exp1430-prm-guided-repair-selector",
+        "exp1431-fullscale-pipeline-v4-micro-gated"
+      ],
+      "prior_evidence": [
+        {
+          "experiment_id": "exp1414-certificate-llm-repair-executor-v1",
+          "metrics": "repaired_cases_successful=0, repaired_case_success_rate=0.0",
+          "prior_verdict": "complete_repair_executor_no_successful_repairs",
+          "retro_retire_if_same_verdict": false,
+          "retro_verdict": "complete_repair_executor_no_successful_repairs",
+          "source_artifact": "results/experiment_1414_certificate_llm_repair_executor_v1.json"
+        },
+        {
+          "experiment_id": "exp1419-fullscale-pipeline-v3-repair-executor",
+          "metrics": "cases_evaluated=200, repaired_cases_successful=0, full_pipeline_pass_rate=0.305",
+          "prior_verdict": "not_headline_full_pipeline_below_0_40",
+          "retro_retire_if_same_verdict": true,
+          "retro_verdict": "not_headline_full_pipeline_below_0_40",
+          "source_artifact": "results/experiment_1419_fullscale_pipeline_v3_repair_executor.json"
+        }
+      ],
+      "retire_if_same_verdict_rule": "Retire the exact zero-accepted-repair path if repair v2 again produces complete_repair_executor_no_successful_repairs or the exp1419 verdict.",
+      "track": "Repair executor v2 / full pipeline scale-up",
+      "track_id": "repair-executor-v2-root-cause"
+    },
+    {
+      "gate_rule": "Deploy only when dvi_v3_deployed=true, nonforgetting_rate >= 0.99, and AUROC does not regress below DVI v2.",
+      "mapped": true,
+      "mapped_110_tasks": [
+        "exp1432-dvi-v3-nonforgetting-replay-balanced"
+      ],
+      "prior_evidence": [
+        {
+          "experiment_id": "exp1415-dvi-v3-1508-fresh-cases",
+          "metrics": "nonforgetting_rate=0.968604, dvi_v3_deployed=False",
+          "prior_verdict": "dvi_v3_blocked_nonforgetting_below_gate",
+          "retro_retire_if_same_verdict": true,
+          "retro_verdict": "dvi_v3_blocked_nonforgetting_below_gate",
+          "source_artifact": "results/experiment_1415_dvi_v3_1508_fresh_cases.json"
+        }
+      ],
+      "retire_if_same_verdict_rule": "Retire this DVI v3 repair variant if the same dvi_v3_blocked_nonforgetting_below_gate verdict recurs.",
+      "track": "DVI v3 nonforgetting",
+      "track_id": "dvi-v3-nonforgetting-gate-fix"
+    },
+    {
+      "gate_rule": "Launch only after exp1432 records dvi_v3_deployed=true.",
+      "mapped": true,
+      "mapped_110_tasks": [
+        "exp1433-fr11-self-learning-v6-dvi-v3-gated"
+      ],
+      "prior_evidence": [
+        {
+          "experiment_id": "exp1418-fr11-self-learning-v6-dvi-v3",
+          "metrics": "source metrics unavailable",
+          "prior_verdict": "gate_blocked_upstream_dvi_v3_not_deployed",
+          "retro_retire_if_same_verdict": false,
+          "retro_verdict": "gate_blocked_upstream_dvi_v3_not_deployed",
+          "source_artifact": null
+        }
+      ],
+      "retire_if_same_verdict_rule": "Do not retire FR-11 on an upstream DVI gate block; keep it gated until deployable DVI evidence exists.",
+      "track": "FR-11 v6 continuous self-learning",
+      "track_id": "fr11-v6-after-dvi-v3"
+    },
+    {
+      "gate_rule": "Headline provenance requires direct local adapter/fine-tune support; otherwise the track is relabeled reranker-only.",
+      "mapped": true,
+      "mapped_110_tasks": [
+        "exp1435-dpo-headline-provenance-audit"
+      ],
+      "prior_evidence": [
+        {
+          "experiment_id": "exp1420-dpo-verified-pairs-1508",
+          "metrics": "dpo_full_finetune_performed=False, headline_result_allowed=False",
+          "prior_verdict": "gguf_dpo_unsupported_reranker_fallback_measured",
+          "retro_retire_if_same_verdict": false,
+          "retro_verdict": "gguf_dpo_unsupported_reranker_fallback_measured",
+          "source_artifact": "results/experiment_1420_dpo_verified_pairs_1508.json"
+        }
+      ],
+      "retire_if_same_verdict_rule": "If direct local DPO remains unsupported, retire headline DPO wording and carry only the reranker benchmark.",
+      "track": "DPO provenance",
+      "track_id": "dpo-headline-validation-or-finetune-support"
+    },
+    {
+      "gate_rule": "Diagnostic scope only: map remaining clusters and recommend one next bounded fix without reopening the fixed embedding-store cluster.",
+      "mapped": true,
+      "mapped_110_tasks": [
+        "exp1426-test-suite-remaining-debt-cluster-map"
+      ],
+      "prior_evidence": [
+        {
+          "experiment_id": "exp1421-test-suite-execution-debt-v1",
+          "metrics": "remaining_debt=True",
+          "prior_verdict": "focused_embedding_store_runtime_failures_fixed_collection_clean_targeted_tests_green_100pct_store_coverage_full_suite_and_preexisting_spec_coverage_debt_remain",
+          "retro_retire_if_same_verdict": false,
+          "retro_verdict": "focused_embedding_store_runtime_failures_fixed_collection_clean_targeted_tests_green_100pct_store_coverage_full_suite_and_preexisting_spec_coverage_debt_remain",
+          "source_artifact": "results/experiment_1421_test_suite_execution_debt_v1.json"
+        }
+      ],
+      "retire_if_same_verdict_rule": "Do not retire the whole test-debt track on another red full-suite result; split by named failure cluster.",
+      "track": "Full Python suite and spec-coverage debt",
+      "track_id": "test-suite-remaining-debt"
+    },
+    {
+      "gate_rule": "Fill at least 478 missing labels or write an exact residual blocker ledger before any 1508-trace PRM claim.",
+      "mapped": true,
+      "mapped_110_tasks": [
+        "exp1434-fover-prm-label-completion-v2"
+      ],
+      "prior_evidence": [
+        {
+          "experiment_id": "exp1423-process-reward-model-v1-fover-1508",
+          "metrics": "training_traces_used=1030, missing_trace_labels=478",
+          "prior_verdict": "prmv1_trained_on_available_step_labels_with_478_promoted_traces_missing_local_labels",
+          "retro_retire_if_same_verdict": false,
+          "retro_verdict": "prmv1_trained_on_available_step_labels_with_478_promoted_traces_missing_local_labels",
+          "source_artifact": "results/experiment_1423_process_reward_model_v1_fover_1508.json"
+        }
+      ],
+      "retire_if_same_verdict_rule": "Retire the 1508-trace PRM claim if labels remain missing without a blocker ledger; keep measured PRM v1 as partial evidence only.",
+      "track": "PRM label completion",
+      "track_id": "prm-label-completion"
+    }
+  ],
+  "no_change_confirmations": {
+    "research-roadmap.yaml": "no activation-audit changes needed",
+    "scripts/research_conductor.py": "no activation-audit changes needed"
+  },
+  "prior_milestone": "2026.04.109",
+  "prior_milestone_honest_verdict": "milestone_109_10_of_13_criteria_met_threshold_met_but_repair_dvi_fr11_and_pipeline_carry_forward",
+  "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+  "roadmap_mapping_check": {
+    "missing_mapped_task_ids_in_proposal": [],
+    "roadmap_proposal_present": true
+  },
+  "run_date": "20260506",
+  "same_verdict_retirement_rules": [
+    {
+      "experiment_id": "exp1414-certificate-llm-repair-executor-v1",
+      "mapped_110_tasks": [
+        "exp1427-repair-executor-rejection-ledger",
+        "exp1428-dccd-schema-constrained-repair-v2",
+        "exp1429-mcmc-constrained-repair-candidate-search",
+        "exp1430-prm-guided-repair-selector",
+        "exp1431-fullscale-pipeline-v4-micro-gated"
+      ],
+      "prior_verdict": "complete_repair_executor_no_successful_repairs",
+      "retire_if_same_verdict_rule": "Retire the exact zero-accepted-repair path if repair v2 again produces complete_repair_executor_no_successful_repairs or the exp1419 verdict.",
+      "retro_retire_if_same_verdict": false,
+      "source_artifact": "results/experiment_1414_certificate_llm_repair_executor_v1.json",
+      "track_id": "repair-executor-v2-root-cause"
+    },
+    {
+      "experiment_id": "exp1419-fullscale-pipeline-v3-repair-executor",
+      "mapped_110_tasks": [
+        "exp1427-repair-executor-rejection-ledger",
+        "exp1428-dccd-schema-constrained-repair-v2",
+        "exp1429-mcmc-constrained-repair-candidate-search",
+        "exp1430-prm-guided-repair-selector",
+        "exp1431-fullscale-pipeline-v4-micro-gated"
+      ],
+      "prior_verdict": "not_headline_full_pipeline_below_0_40",
+      "retire_if_same_verdict_rule": "Retire the exact zero-accepted-repair path if repair v2 again produces complete_repair_executor_no_successful_repairs or the exp1419 verdict.",
+      "retro_retire_if_same_verdict": true,
+      "source_artifact": "results/experiment_1419_fullscale_pipeline_v3_repair_executor.json",
+      "track_id": "repair-executor-v2-root-cause"
+    },
+    {
+      "experiment_id": "exp1415-dvi-v3-1508-fresh-cases",
+      "mapped_110_tasks": [
+        "exp1432-dvi-v3-nonforgetting-replay-balanced"
+      ],
+      "prior_verdict": "dvi_v3_blocked_nonforgetting_below_gate",
+      "retire_if_same_verdict_rule": "Retire this DVI v3 repair variant if the same dvi_v3_blocked_nonforgetting_below_gate verdict recurs.",
+      "retro_retire_if_same_verdict": true,
+      "source_artifact": "results/experiment_1415_dvi_v3_1508_fresh_cases.json",
+      "track_id": "dvi-v3-nonforgetting-gate-fix"
+    },
+    {
+      "experiment_id": "exp1418-fr11-self-learning-v6-dvi-v3",
+      "mapped_110_tasks": [
+        "exp1433-fr11-self-learning-v6-dvi-v3-gated"
+      ],
+      "prior_verdict": "gate_blocked_upstream_dvi_v3_not_deployed",
+      "retire_if_same_verdict_rule": "Do not retire FR-11 on an upstream DVI gate block; keep it gated until deployable DVI evidence exists.",
+      "retro_retire_if_same_verdict": false,
+      "source_artifact": null,
+      "track_id": "fr11-v6-after-dvi-v3"
+    },
+    {
+      "experiment_id": "exp1420-dpo-verified-pairs-1508",
+      "mapped_110_tasks": [
+        "exp1435-dpo-headline-provenance-audit"
+      ],
+      "prior_verdict": "gguf_dpo_unsupported_reranker_fallback_measured",
+      "retire_if_same_verdict_rule": "If direct local DPO remains unsupported, retire headline DPO wording and carry only the reranker benchmark.",
+      "retro_retire_if_same_verdict": false,
+      "source_artifact": "results/experiment_1420_dpo_verified_pairs_1508.json",
+      "track_id": "dpo-headline-validation-or-finetune-support"
+    },
+    {
+      "experiment_id": "exp1421-test-suite-execution-debt-v1",
+      "mapped_110_tasks": [
+        "exp1426-test-suite-remaining-debt-cluster-map"
+      ],
+      "prior_verdict": "focused_embedding_store_runtime_failures_fixed_collection_clean_targeted_tests_green_100pct_store_coverage_full_suite_and_preexisting_spec_coverage_debt_remain",
+      "retire_if_same_verdict_rule": "Do not retire the whole test-debt track on another red full-suite result; split by named failure cluster.",
+      "retro_retire_if_same_verdict": false,
+      "source_artifact": "results/experiment_1421_test_suite_execution_debt_v1.json",
+      "track_id": "test-suite-remaining-debt"
+    },
+    {
+      "experiment_id": "exp1423-process-reward-model-v1-fover-1508",
+      "mapped_110_tasks": [
+        "exp1434-fover-prm-label-completion-v2"
+      ],
+      "prior_verdict": "prmv1_trained_on_available_step_labels_with_478_promoted_traces_missing_local_labels",
+      "retire_if_same_verdict_rule": "Retire the 1508-trace PRM claim if labels remain missing without a blocker ledger; keep measured PRM v1 as partial evidence only.",
+      "retro_retire_if_same_verdict": false,
+      "source_artifact": "results/experiment_1423_process_reward_model_v1_fover_1508.json",
+      "track_id": "prm-label-completion"
+    }
+  ],
+  "schema": "milestone_110_carryforward_activation_audit_v1",
+  "source_artifacts_checked": [
+    {
+      "exists": true,
+      "experiment_id": "exp1414",
+      "honest_verdict": "complete_repair_executor_no_successful_repairs",
+      "path": "results/experiment_1414_certificate_llm_repair_executor_v1.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1415",
+      "honest_verdict": "dvi_v3_blocked_nonforgetting_below_gate",
+      "path": "results/experiment_1415_dvi_v3_1508_fresh_cases.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1419",
+      "honest_verdict": "not_headline_full_pipeline_below_0_40",
+      "path": "results/experiment_1419_fullscale_pipeline_v3_repair_executor.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1420",
+      "honest_verdict": "gguf_dpo_unsupported_reranker_fallback_measured",
+      "path": "results/experiment_1420_dpo_verified_pairs_1508.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1421",
+      "honest_verdict": "focused_embedding_store_runtime_failures_fixed_collection_clean_targeted_tests_green_100pct_store_coverage_full_suite_and_preexisting_spec_coverage_debt_remain",
+      "path": "results/experiment_1421_test_suite_execution_debt_v1.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1423",
+      "honest_verdict": "prmv1_trained_on_available_step_labels_with_478_promoted_traces_missing_local_labels",
+      "path": "results/experiment_1423_process_reward_model_v1_fover_1508.json"
+    }
+  ],
+  "status": "complete",
+  "target_milestone": "2026.04.110",
+  "unmapped_tracks": []
+}
