@@ -729,6 +729,48 @@ artifact when writing the retro brings the milestone to the planned
 `prior_failures` entries that name the failed experiment, verdict, root-cause
 response, and whether the next attempt should be retired on the same verdict.
 
+### REQ-REPORT-033: Milestone .110 Carry-Forward Activation Manifest
+
+The Exp 1425 `.110` carry-forward activation audit workflow shall read the
+terminal Exp 1424 `.109` retrospective, the unresolved upstream source
+artifacts named by the retro, and
+`openspec/change-proposals/research-roadmap-vNEXT.md` without rerunning or
+editing prior experiments. It shall write
+`ops/milestone_110_carryforward_manifest.md` and
+`results/experiment_1425_109_carryforward_activation_audit.json`.
+
+The markdown manifest shall include a table with columns for:
+
+- track
+- prior evidence
+- `.110` task
+- gate rule
+- retire-if-same-verdict rule
+
+Every Exp 1424 carry-forward task shall be mapped to one or more concrete
+`.110` experiments or explicitly retired. The exact Exp 1419 200-case
+full-scale pipeline rerun shall be forbidden unless a prior micro-gate proves
+nonzero accepted repair evidence. The workflow shall confirm that
+`scripts/research_conductor.py` and `research-roadmap.yaml` need no changes for
+this activation audit.
+
+The final JSON artifact shall include:
+
+- `status`
+- `prior_milestone`
+- `carryforward_manifest_path`
+- `carryforward_manifest_complete`
+- `carryforward_task_count`
+- `same_verdict_retirement_rules`
+- `forbidden_exact_reruns`
+- `honest_verdict`
+
+`carryforward_task_count` shall equal the number of Exp 1424 unresolved
+carry-forward tracks mapped in the manifest. `same_verdict_retirement_rules`
+shall preserve the exact prior verdicts from the source artifacts. A complete
+artifact shall not claim activation success if any carry-forward task lacks a
+`.110` mapping or retirement rule.
+
 ### REQ-REPORT-024: Local Agent Usage Snapshot
 
 The repository shall provide a local operator workflow that inspects the
@@ -1113,6 +1155,22 @@ semantic repair or policy-update evidence
 **And** missing Exp 1356 and Exp 1359 artifacts are listed explicitly
 **And** `carry_forward_tasks` names `.106` work with prior-failure hygiene.
 
+### SCENARIO-REPORT-033: Exp 1425 Activates .109 Carry-Forward Work
+
+**Given** Exp 1424 reports `.109` as `10/13` with carry-forward tasks for
+repair executor v2, DVI v3 nonforgetting, FR-11 v6, DPO provenance, test debt,
+and PRM label completion
+**And** the source artifacts preserve exact prior verdicts for Exp 1414, Exp
+1415, Exp 1419, Exp 1420, Exp 1421, and Exp 1423
+**When** the Exp 1425 activation audit runs for run date `20260506`
+**Then** it writes all required REQ-REPORT-033 fields
+**And** `ops/milestone_110_carryforward_manifest.md` maps every unresolved
+track to a `.110` experiment or an explicit retirement condition
+**And** the exact Exp 1419 200-case rerun without nonzero repair evidence is
+listed in `forbidden_exact_reruns`
+**And** `scripts/research_conductor.py` and `research-roadmap.yaml` are
+reported as requiring no activation-audit changes.
+
 ### SCENARIO-REPORT-021: Codex Latest Rate-Limit Event Is Surfaced
 
 **Given** a local Codex session tree contains multiple `token_count` events
@@ -1279,6 +1337,8 @@ embed live-GPU benchmark results from Exp 328 when available.
 | REQ-REPORT-029 | `python/carnot/reporting/milestone_retro_104.py`, `results/experiment_1350_milestone_104_retro_carryforward.json` | `tests/python/test_milestone_retro_104.py` | Implemented |
 | REQ-REPORT-030 | `python/carnot/reporting/carryforward_integrity_audit_104.py`, `results/experiment_1351_104_carryforward_artifact_integrity_audit.json` | `tests/python/test_carryforward_integrity_audit_104.py` | Implemented |
 | REQ-REPORT-031 | `python/carnot/reporting/milestone_retro_105.py`, `results/experiment_1363_milestone_105_retro_carryforward.json` | `tests/python/test_milestone_retro_105.py` | Implemented |
+| REQ-REPORT-032 | `python/carnot/reporting/milestone_retro_109.py`, `results/experiment_1424_milestone_109_retro.json` | `tests/python/test_milestone_retro_109.py` | Implemented |
+| REQ-REPORT-033 | `python/carnot/reporting/milestone_110_carryforward_activation_audit.py`, `results/experiment_1425_109_carryforward_activation_audit.json`, `ops/milestone_110_carryforward_manifest.md` | `tests/python/test_milestone_110_carryforward_activation_audit.py` | Implemented |
 | REQ-REPORT-024 | `python/carnot/reporting/agent_usage.py`, `scripts/agent_plan_usage.py` | `tests/python/test_agent_plan_usage.py` | Implemented |
 | REQ-PUBLISH-003 | `scripts/experiment_317_hf_publish.py` | `tests/python/test_experiment_317_hf_publish.py` | Implemented |
 | REQ-PUBLISH-004 | `scripts/experiment_330_hf_live_publish.py` | `tests/python/test_experiment_330_hf_live_publish.py` | Implemented |
