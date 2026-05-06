@@ -80,6 +80,7 @@ if TYPE_CHECKING:
     from carnot.pipeline.embedding_constraint_store import EmbeddingConstraintStore
     from carnot.pipeline.ising_constraint_injector import IsingConstraintInjector
     from carnot.pipeline.memory import ConstraintMemory
+    from carnot.pipeline.probability_calibration_verifier import ProbabilityCalibrationVerifier
     from carnot.pipeline.semantic_energy_extractor import DualEnergyResult
     from carnot.pipeline.semantic_grounding import SemanticGroundingResult
     from carnot.pipeline.semantic_verifier_v2 import SemanticVerifierV2Result
@@ -442,6 +443,7 @@ class VerifyRepairPipeline:
         enable_constraint_accumulation: bool = False,
         second_model_spec: dict[str, str] | None = None,
         and_compose_verifier: Any | None = None,
+        probability_calibration_verifier: ProbabilityCalibrationVerifier | None = None,
     ) -> None:
         """Initialize the verify-repair pipeline.
 
@@ -514,6 +516,7 @@ class VerifyRepairPipeline:
         # subsequent sessions can retrieve it.  Default False preserves existing
         # behaviour for callers that do not pass a store.
         self._enable_constraint_accumulation = enable_constraint_accumulation
+        self._probability_calibration_verifier = probability_calibration_verifier
         # k=5 AND-composition ensemble (Phase 1d, Exp 1121).
         # When and_compose_verifier is None, the default k=5 ensemble is built.
         # Callers may pass a custom AndCompositionVerifier or None to keep default.
@@ -1497,6 +1500,24 @@ class VerifyRepairPipeline:
                 if semantic_grounding is not None:
                     constraints.extend(semantic_grounding.to_constraint_results())
                 constraints.extend(semantic_verifier_v2.to_constraint_results())
+
+            if self._probability_calibration_verifier is not None:
+                for probability_record in self._probability_calibration_verifier.score_text(
+                    response
+                ):
+                    if probability_record.verdict == "abstain":
+                        continue
+                    constraints.append(
+                        ConstraintResult(
+                            constraint_type="probability_calibration",
+                            description=probability_record.rationale,
+                            metadata={
+                                "satisfied": probability_record.verdict == "pass",
+                                "energy": probability_record.energy,
+                                "verdict_record": probability_record.to_dict(),
+                            },
+                        )
+                    )
 
             # Tier 2: prepend learned constraint suggestions from memory.
             if self._memory is not None:
@@ -2690,6 +2711,19 @@ class VerifyRepairPipeline:
         # Check all constraints for violations (metadata-based check).
         for cr in constraints:
             satisfied = cr.metadata.get("satisfied")
+            metadata_energy = cr.metadata.get("energy")
+            if isinstance(metadata_energy, int | float):
+                positive_energy = max(0.0, float(metadata_energy))
+                if positive_energy > 0.0:
+                    total_energy += positive_energy
+                    certificate_entries.append(
+                        {
+                            "name": cr.constraint_type,
+                            "energy": positive_energy,
+                            "weighted_energy": positive_energy,
+                            "satisfied": satisfied is not False,
+                        }
+                    )
             if satisfied is False:
                 violations.append(cr)
             elif cr.energy_term is not None:

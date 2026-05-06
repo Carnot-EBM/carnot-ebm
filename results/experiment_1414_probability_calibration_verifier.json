@@ -1,0 +1,42 @@
+{
+  "experiment_id": 1414,
+  "title": "Probability Calibration Verifier",
+  "date": "2026-05-06",
+  "status": "success",
+  "honest_verdict": "probability_calibration_verifier_complete",
+  "github_issue": 1,
+  "implemented": {
+    "verifier_plugin_class": true,
+    "score_returns_verdict_record": true,
+    "opt_in_verify_repair_pipeline_wiring": true,
+    "synthetic_calibration_gap_tests": true,
+    "documentation": true
+  },
+  "artifacts": {
+    "python_api": "python/carnot/pipeline/probability_calibration_verifier.py",
+    "pipeline_wiring": "python/carnot/pipeline/verify_repair.py",
+    "docs": "docs/probability-calibration-verifier.md",
+    "tests": "tests/python/test_probability_calibration_verifier.py"
+  },
+  "requirements": [
+    "REQ-VERIFY-1414",
+    "REQ-VERIFY-1415",
+    "SCENARIO-VERIFY-1414"
+  ],
+  "verification": {
+    "focused_pytest": {
+      "command": "pytest tests/python/test_probability_calibration_verifier.py -q --no-cov -p no:cacheprovider -n 0",
+      "passed": 6,
+      "failed": 0
+    },
+    "expected_behavior": {
+      "in_range_claim_energy": 0.0,
+      "out_of_range_claim_energy": 0.45,
+      "underdetermined_claim_verdict": "abstain"
+    }
+  },
+  "notes": [
+    "This is a deterministic reference-class verifier, not a trained calibration model.",
+    "The verifier is opt-in; default VerifyRepairPipeline behavior is unchanged."
+  ]
+}
