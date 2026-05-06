@@ -1,0 +1,1191 @@
+{
+  "actual_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+  "artifact_metadata": {
+    "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "run_date": "20260506",
+    "source_experiments": [
+      "exp1397",
+      "exp1414"
+    ],
+    "spec": [
+      "REQ-VERIFY-1419",
+      "SCENARIO-VERIFY-1419"
+    ]
+  },
+  "blocker": null,
+  "blocker_detail": null,
+  "cache_diagnostics": {
+    "cached_pair_available": true,
+    "cached_pair_hf_ids": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-31B-it-GGUF"
+    ],
+    "missing_hf_ids": [
+      "unsloth/gemma-4-26B-A4B-it-GGUF"
+    ],
+    "resolver_error": null
+  },
+  "cases_evaluated": 200,
+  "certificate_parse_rate": 1.0,
+  "exp1397_baseline_full_pipeline_pass_rate": 0.305,
+  "exp1414_repair_executor_deployed": true,
+  "experiment": "1419_fullscale_pipeline_v3_repair_executor",
+  "final_full_pipeline_pass_cases": 61,
+  "full_pipeline_delta_vs_exp1397": 0.0,
+  "full_pipeline_headline_gate_met": false,
+  "full_pipeline_pass_rate": 0.305,
+  "headline_full_pipeline_target": 0.4,
+  "honest_verdict": "not_headline_full_pipeline_below_0_40",
+  "local_sota_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+  "model_specs": [
+    {
+      "cache_status": "available",
+      "gpu": 0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "name": "Qwen3.6-35B-A3B",
+      "role": "primary_pipeline_repair_model"
+    },
+    {
+      "cache_status": "available",
+      "gpu": 1,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/43e80d41a220ac7c83023daacd6a0d1fd8559251/gemma-4-31B-it-Q4_K_M.gguf",
+      "name": "Gemma4-31B-it",
+      "role": "dense_fallback"
+    },
+    {
+      "cache_status": "missing",
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "role": "moe_fallback"
+    }
+  ],
+  "original_full_pipeline_pass_cases": 61,
+  "repair_executor_enabled": true,
+  "repair_hint_cases_total": 100,
+  "repair_results": [
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "156",
+      "fallback_reason": "validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 3.648789,
+      "validation_result": {
+        "constraint_passed": false,
+        "fallback_reason": "no_validator_injected",
+        "false_acceptance": false,
+        "repair_required": true,
+        "semantic_result": "REPAIR_HINT"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "160",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.198023,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "161",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.195428,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "164_1",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.198528,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "169",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.196074,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "172",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.196702,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "176",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.195072,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "178",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.197814,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "199",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.200043,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_0",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.199285,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_35",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.19286,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_63",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.204326,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_64",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.198236,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_76",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.198695,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_85",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.196723,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_91",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.200315,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_98",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.198529,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_99",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 2.445634,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting ',' delimiter: line 7 column 1 (char 259)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_109",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.193434,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_117",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.198817,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_148",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.201156,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_160",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.196077,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_173",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.198009,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_176",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.197323,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_192",
+      "fallback_reason": "validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 2.406997,
+      "validation_result": {
+        "constraint_passed": false,
+        "fallback_reason": "no_validator_injected",
+        "false_acceptance": false,
+        "repair_required": true,
+        "semantic_result": "REPAIR_HINT"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_203",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.198245,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_233",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.194829,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_264",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.197656,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_285",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.196015,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_293",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.199225,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_328",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.197322,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_339",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.201446,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_388",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.199353,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_402",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 2.980807,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_406",
+      "fallback_reason": "validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 1.929673,
+      "validation_result": {
+        "constraint_passed": false,
+        "fallback_reason": "no_validator_injected",
+        "false_acceptance": false,
+        "repair_required": true,
+        "semantic_result": "REPAIR_HINT"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_415",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.200502,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_420",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.200037,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_428",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.20181,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_v3_505",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.202417,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_v3_510",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.198428,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_v3_513",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.201735,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_v3_534",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.201006,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_v3_544",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.19842,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_v3_551",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.200694,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_v3_559",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.195718,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_v3_569",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.200245,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_v3_594",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.201,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_v3_598",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.201378,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_v3_602",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.199712,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_v3_630",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.198097,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_v3_650",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.197665,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_v3_655",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.198894,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_v3_686",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.2027,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_v3_693",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.198856,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_v3_699",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.201123,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_v3_715",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.19693,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_v3_722",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.201475,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_v3_738",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.198856,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_v3_747",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.20194,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_v3_748",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.202047,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_v3_752",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.199442,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_v3_754",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.199635,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_v3_757",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.201071,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_v3_782",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.198297,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_v3_800",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.199757,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_v3_812",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.201855,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_v3_844",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.196454,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_v3_849",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.199401,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_v3_881",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.198662,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_v3_921",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.197127,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_v3_928",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.199196,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_v3_931",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.203903,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_v3_952",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.19831,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_v3_968",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.198297,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_v3_992",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.196772,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_v3_1000",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.197246,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_v3_1005",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.199599,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_v3_1024",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.201171,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_v3_1036",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.200655,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_v3_1056",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.199251,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_v3_1069",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 3.03653,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_v3_1082",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.202802,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_v3_1113",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.200612,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_v3_1122",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.200178,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_v3_1132",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.201562,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_v3_1141",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.198471,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_v3_1148",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.194575,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_v3_1149",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.202653,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_v3_1150",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 2.990739,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_v3_1157",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.194633,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_v3_1171",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.201222,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_v3_1212",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.204119,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_v3_1248",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.197872,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_v3_1251",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.204254,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_v3_1265",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.19986,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_v3_1324",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.199016,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_v3_1336",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.198793,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_v3_1340",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.202583,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_v3_1342",
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 0.205076,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "case_id": "math_v3_1353",
+      "fallback_reason": "validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "runtime_s": 1.976985,
+      "validation_result": {
+        "constraint_passed": false,
+        "fallback_reason": "no_validator_injected",
+        "false_acceptance": false,
+        "repair_required": true,
+        "semantic_result": "REPAIR_HINT"
+      }
+    }
+  ],
+  "repair_success_rate": 0.0,
+  "repaired_cases_successful": 0,
+  "run_date": "20260506",
+  "schema": "fullscale_pipeline_v3_repair_executor_v1",
+  "semantic_validation_pass_rate": 1.0,
+  "status": "complete",
+  "tests_run": []
+}
