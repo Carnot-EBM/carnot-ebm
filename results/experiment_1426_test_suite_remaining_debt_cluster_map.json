@@ -1,0 +1,309 @@
+{
+  "collection_clean_confirmed": true,
+  "collection_outcome": "22315 tests collected in 8.06s",
+  "commands_run": [
+    {
+      "command": "sed -n '1,220p' AGENTS.md",
+      "outcome": "read repo startup instructions"
+    },
+    {
+      "command": "sed -n '1,260p' CODEX.md",
+      "outcome": "read Codex workflow and validation requirements"
+    },
+    {
+      "command": "sed -n '1,840p' CLAUDE.md",
+      "outcome": "read canonical workflow, E2E, and STOP-related operational context"
+    },
+    {
+      "command": "sed -n '1,260p' results/experiment_1421_test_suite_execution_debt_v1.json",
+      "outcome": "Exp1421 fixed embedding-store cluster; full suite still red with 69 failures and 4 errors; spec coverage debt reported as 71"
+    },
+    {
+      "command": "sed -n '1,260p' scripts/check_spec_coverage.py",
+      "outcome": "confirmed checker enforces REQ/SCENARIO references and reports missing-count footer"
+    },
+    {
+      "command": "sed -n '1,260p' ops/e2e-test-plan.md",
+      "outcome": "read applicable E2E plan; no full training/sampling E2E applies to this diagnostic reporting artifact"
+    },
+    {
+      "command": "find openspec/capabilities -maxdepth 3 -type f | sort",
+      "outcome": "confirmed capability specs exist, including research-reporting"
+    },
+    {
+      "command": "find tests/python -path '*/__pycache__' -prune -o -type f -name 'test_*.py' -print | sort",
+      "outcome": "inspected Python test inventory for representative failure ownership"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python --collect-only -q --no-header --disable-warnings --no-cov",
+      "outcome": "initial exit 0; 22311 tests collected in 8.77s before adding Exp1426 tests"
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py",
+      "outcome": "initial exit 1; 71 test(s) missing spec traceability"
+    },
+    {
+      "command": "python3 -m json.tool .pytest_cache/v/cache/lastfailed | sed -n '1,260p'",
+      "outcome": "inspected local pytest lastfailed cache for representative paths only; not treated as fresh full-suite evidence"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python/test_test_suite_remaining_debt_cluster_map.py -q --tb=short --no-header --disable-warnings --no-cov -n0",
+      "outcome": "first run failed with ModuleNotFoundError for missing module; post-implementation run passed: 4 passed in 0.24s"
+    },
+    {
+      "command": "COVERAGE_FILE=.coverage.exp1426 .venv/bin/coverage run -m pytest tests/python/test_test_suite_remaining_debt_cluster_map.py -q --tb=short --no-header --disable-warnings --no-cov -n0 && COVERAGE_FILE=.coverage.exp1426 .venv/bin/coverage report --include='python/carnot/reporting/test_suite_remaining_debt_cluster_map.py' --fail-under=100 --show-missing",
+      "outcome": "exit 0; new module 83 statements, 0 missed, 100% coverage"
+    },
+    {
+      "command": "/usr/bin/ruff check python/carnot/reporting/test_suite_remaining_debt_cluster_map.py tests/python/test_test_suite_remaining_debt_cluster_map.py && /usr/bin/ruff format --check python/carnot/reporting/test_suite_remaining_debt_cluster_map.py tests/python/test_test_suite_remaining_debt_cluster_map.py",
+      "outcome": "exit 0 after formatting; lint clean and 2 files already formatted"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python --collect-only -q --no-header --disable-warnings --no-cov",
+      "outcome": "final exit 0; 22315 tests collected in 8.06s after adding Exp1426 tests; collection_clean_confirmed=true"
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py",
+      "outcome": "final exit 1; 71 test(s) missing spec traceability; no new Exp1426 violation added"
+    },
+    {
+      "command": "PYTHONPATH=python:. .venv/bin/python - <<'PY' ... run(...) ... PY",
+      "outcome": "wrote results/experiment_1426_test_suite_remaining_debt_cluster_map.json with status=complete"
+    },
+    {
+      "command": "python3 -m json.tool results/experiment_1426_test_suite_remaining_debt_cluster_map.json >/tmp/exp1426.validated.json",
+      "outcome": "exit 0; JSON syntax valid"
+    },
+    {
+      "command": "python3 -c \"import json; d=json.load(open('results/experiment_1426_test_suite_remaining_debt_cluster_map.json')); print(d.get('failure_cluster_map_complete'), d.get('next_cluster_recommended'), d.get('honest_verdict'))\"",
+      "outcome": "True spec_coverage_traceability_metadata diagnostic_cluster_map_complete_collection_clean_spec_coverage_red_71_full_suite_not_rerun_exp1421_runtime_debt_partitioned"
+    }
+  ],
+  "exp1421_remaining_failure_categories": [
+    "The exact required full-suite command .venv/bin/pytest tests/python -q is still red outside this focused fix: interrupted after 34m05s with 69 failures and 4 memory-watchdog errors already reported.",
+    "Representative remaining full-suite failures include paper v5 issue checks, stale live-data model-name assertions, older operational retro schema assertions, arbiter warmstart expectations, Vitis/HLS verdict checks, GPU/live-model memory-watchdog errors, and conductor/infrastructure assertions.",
+    "Spec coverage remains red on pre-existing debt: scripts/check_spec_coverage.py reports 71 tests lacking REQ-* or SCENARIO-* references, none from the edited Exp800/801/847 tests.",
+    "No ops/changelog.md, ops/status.md, or _bmad/traceability.md edits were made because the task's STOP-WHEN-DONE rule explicitly reserved those updates for the conductor reconciliation step.",
+    "No e2e plan item from ops/e2e-test-plan.md directly applies to this embedding-store unit fix; full E2E was not attempted while the required Python test suite remains red."
+  ],
+  "experiment": "1426_test_suite_remaining_debt_cluster_map",
+  "failure_cluster_map_complete": true,
+  "failure_clusters_identified": [
+    {
+      "bounded_fix_hint": "Add accurate file-level Spec lines or per-test REQ/SCENARIO references in the listed files, then rerun scripts/check_spec_coverage.py before any full-suite retry.",
+      "cluster_id": "spec_coverage_traceability_metadata",
+      "count_estimate": 71,
+      "evidence_source": "current scripts/check_spec_coverage.py output",
+      "failure_category": "spec coverage missing REQ/SCENARIO references",
+      "grouped_missing_reference_files": [
+        {
+          "missing_count": 6,
+          "path": "tests/python/test_conductor_supervisor.py",
+          "representative_tests": [
+            "tests/python/test_conductor_supervisor.py::test_pid_file_written_and_cleaned_up",
+            "tests/python/test_conductor_supervisor.py::test_heartbeat_stale_fires_alert",
+            "tests/python/test_conductor_supervisor.py::test_heartbeat_missing_fires_alert",
+            "tests/python/test_conductor_supervisor.py::test_heartbeat_fresh_no_alert",
+            "tests/python/test_conductor_supervisor.py::test_orphan_reaper_kills_extra_pids"
+          ]
+        },
+        {
+          "missing_count": 4,
+          "path": "tests/python/test_experiment_1297_sota_gguf_preflight.py",
+          "representative_tests": [
+            "tests/python/test_experiment_1297_sota_gguf_preflight.py::test_exp1297_ready_artifact_uses_local_cached_pair",
+            "tests/python/test_experiment_1297_sota_gguf_preflight.py::test_exp1297_missing_cache_blocks_headline_result",
+            "tests/python/test_experiment_1297_sota_gguf_preflight.py::test_exp1297_prior_failure_coverage_gates_provenance",
+            "tests/python/test_experiment_1297_sota_gguf_preflight.py::test_exp1297_run_experiment_writes_required_artifact"
+          ]
+        },
+        {
+          "missing_count": 12,
+          "path": "tests/python/test_experiment_1310_sota_gguf_llamacpp_smoke_load.py",
+          "representative_tests": [
+            "tests/python/test_experiment_1310_sota_gguf_llamacpp_smoke_load.py::test_exp1310_ready_pair_smoke_loads_and_writes_artifact",
+            "tests/python/test_experiment_1310_sota_gguf_llamacpp_smoke_load.py::test_exp1310_llama_import_failure_blocks_without_generation",
+            "tests/python/test_experiment_1310_sota_gguf_llamacpp_smoke_load.py::test_exp1310_exp1309_not_ready_blocks_before_runtime_probe",
+            "tests/python/test_experiment_1310_sota_gguf_llamacpp_smoke_load.py::test_exp1310_missing_exp1309_artifact_blocks_before_runtime_probe",
+            "tests/python/test_experiment_1310_sota_gguf_llamacpp_smoke_load.py::test_exp1310_cached_pair_none_blocks_after_exp1309_ready"
+          ]
+        },
+        {
+          "missing_count": 24,
+          "path": "tests/python/test_experiment_963_math_repair_sota_v3_retry.py",
+          "representative_tests": [
+            "tests/python/test_experiment_963_math_repair_sota_v3_retry.py::test_gsm8k_hash_format",
+            "tests/python/test_experiment_963_math_repair_sota_v3_retry.py::test_the_answer_is_format",
+            "tests/python/test_experiment_963_math_repair_sota_v3_retry.py::test_fallback_last_number",
+            "tests/python/test_experiment_963_math_repair_sota_v3_retry.py::test_returns_none_for_no_numbers",
+            "tests/python/test_experiment_963_math_repair_sota_v3_retry.py::test_strips_commas"
+          ]
+        },
+        {
+          "missing_count": 17,
+          "path": "tests/python/test_experiment_972_kan_milp.py",
+          "representative_tests": [
+            "tests/python/test_experiment_972_kan_milp.py::test_pwa_segments_count",
+            "tests/python/test_experiment_972_kan_milp.py::test_pwa_segments_slope_intercept",
+            "tests/python/test_experiment_972_kan_milp.py::test_pwa_segments_flat",
+            "tests/python/test_experiment_972_kan_milp.py::test_monotonicity_flat_layer_verified",
+            "tests/python/test_experiment_972_kan_milp.py::test_monotonicity_increasing_verified"
+          ]
+        },
+        {
+          "missing_count": 8,
+          "path": "tests/python/test_figure_integrity_audit.py",
+          "representative_tests": [
+            "tests/python/test_figure_integrity_audit.py::test_extract_numeric_constants_skips_trivials",
+            "tests/python/test_figure_integrity_audit.py::test_value_appears_handles_int_and_float_forms",
+            "tests/python/test_figure_integrity_audit.py::test_audit_flags_untraced_constant",
+            "tests/python/test_figure_integrity_audit.py::test_audit_passes_when_traced",
+            "tests/python/test_figure_integrity_audit.py::test_repository_audit_currently_passes"
+          ]
+        }
+      ],
+      "likely_owner": "test hygiene and owners of the listed test files",
+      "priority": 1,
+      "recommended_next": true,
+      "representative_tests": [
+        "tests/python/test_conductor_supervisor.py::test_pid_file_written_and_cleaned_up",
+        "tests/python/test_conductor_supervisor.py::test_heartbeat_stale_fires_alert",
+        "tests/python/test_conductor_supervisor.py::test_heartbeat_missing_fires_alert",
+        "tests/python/test_conductor_supervisor.py::test_heartbeat_fresh_no_alert",
+        "tests/python/test_conductor_supervisor.py::test_orphan_reaper_kills_extra_pids"
+      ]
+    },
+    {
+      "bounded_fix_hint": "Reconcile the affected publication audit fixtures with the current paper/artifact metadata, then run only the publication audit tests before broader validation.",
+      "cluster_id": "publication_paper_v5_integrity_assertions",
+      "count_estimate": 4,
+      "evidence_source": "Exp1421 remaining_debt summary, with local pytest lastfailed cache used only for representative paths",
+      "failure_category": "paper v5 issue checks",
+      "likely_owner": "publication artifact/reporting owners",
+      "priority": 2,
+      "recommended_next": false,
+      "representative_tests": [
+        "tests/python/test_experiment_1182_paper_v5_medium_low_issues_11_18.py::TestDeliverableJson::test_main_writes_success_payload",
+        "tests/python/test_experiment_1182_paper_v5_medium_low_issues_11_18.py::TestIssue11ThroughIssue15::test_issue_13_nrgpt_disclosure_or_no_citation",
+        "tests/python/test_experiment_1182_paper_v5_medium_low_issues_11_18.py::TestIssue11ThroughIssue15::test_issue_14_soskan_aurocs_have_corpus_and_n",
+        "tests/python/test_experiment_1182_paper_v5_medium_low_issues_11_18.py::TestRunReturnsSchema::test_all_8_medium_low_issues_resolved"
+      ]
+    },
+    {
+      "bounded_fix_hint": "Update the stale expected model metadata or fixture source for live-data artifacts; do not run live models while repairing assertion drift.",
+      "cluster_id": "live_data_model_name_drift",
+      "count_estimate": 5,
+      "evidence_source": "Exp1421 remaining_debt summary, with local pytest lastfailed cache used only for representative paths",
+      "failure_category": "stale live-data model-name assertions",
+      "likely_owner": "live-data experiment fixtures",
+      "priority": 3,
+      "recommended_next": false,
+      "representative_tests": [
+        "tests/python/test_experiment_294_gpu_baseline_apple.py::TestBaselineAccuracyBounds::test_accuracy_in_unit_interval_when_all_correct",
+        "tests/python/test_experiment_294_gpu_baseline_apple.py::TestTimeoutHandling::test_stall_at_field_set_on_timeout",
+        "tests/python/test_experiment_295_apple_verify_repair.py::test_cell_accuracy_is_fraction",
+        "tests/python/test_experiment_295_apple_verify_repair.py::test_checkpoint_resume_skips_completed",
+        "tests/python/test_experiment_295_apple_verify_repair.py::test_full_artifact_has_no_stall"
+      ]
+    },
+    {
+      "bounded_fix_hint": "Normalize the legacy retrospective fixtures or schema adapters in one retro-era slice, preserving historical artifacts rather than rewriting conclusions.",
+      "cluster_id": "legacy_retro_schema_drift",
+      "count_estimate": 5,
+      "evidence_source": "Exp1421 remaining_debt summary, with local pytest lastfailed cache used only for representative paths",
+      "failure_category": "older operational retro schema assertions",
+      "likely_owner": "milestone retrospective/reporting owners",
+      "priority": 4,
+      "recommended_next": false,
+      "representative_tests": [
+        "tests/python/test_experiment_337_retro.py::TestActionItems::test_action_items_is_non_empty_list",
+        "tests/python/test_experiment_337_retro.py::TestActionItems::test_all_descriptions_are_strings",
+        "tests/python/test_experiment_337_retro.py::TestActionItems::test_all_ids_are_strings",
+        "tests/python/test_experiment_337_retro.py::TestActionItems::test_each_item_has_required_keys",
+        "tests/python/test_experiment_337_retro.py::TestActionItems::test_estimated_impact_pct_is_numeric"
+      ]
+    },
+    {
+      "bounded_fix_hint": "Re-run the arbiter warmstart tests in isolation, then decide whether the energy threshold or deterministic fixture has drifted.",
+      "cluster_id": "arbiter_warmstart_expectations",
+      "count_estimate": 2,
+      "evidence_source": "Exp1421 remaining_debt summary, with local pytest lastfailed cache used only for representative paths",
+      "failure_category": "arbiter warmstart expectations",
+      "likely_owner": "multi-agent arbiter / Gibbs warmstart",
+      "priority": 5,
+      "recommended_next": false,
+      "representative_tests": [
+        "tests/python/test_experiment_822_arbiter_fix_v2_agent_auditor.py::TestArbitrate::test_consensus_penalty_favors_minority",
+        "tests/python/test_experiment_846_arbiter_warmstart.py::test_cold_start_vs_warm_start_energy_magnitude"
+      ]
+    },
+    {
+      "bounded_fix_hint": "Separate no-toolchain environment verdicts from synthesis-result assertions and verify the HLS verdict mapper without invoking vendor tools.",
+      "cluster_id": "fpga_vitis_hls_environment_verdicts",
+      "count_estimate": 5,
+      "evidence_source": "Exp1421 remaining_debt summary, with local pytest lastfailed cache used only for representative paths",
+      "failure_category": "Vitis/HLS verdict checks",
+      "likely_owner": "FPGA/HLS experiment harnesses",
+      "priority": 6,
+      "recommended_next": false,
+      "representative_tests": [
+        "tests/python/test_experiment_1048_kv260_diagnosis.py::TestCheckDtboV4Exists::test_returns_true_when_dtbo_present",
+        "tests/python/test_experiment_714_npu_iron.py::test_cpu_gemm_benchmark_larger_than_smaller",
+        "tests/python/test_experiment_750_vitis_hls.py::TestCppCompileAndRun::test_cpu_simulation_passes",
+        "tests/python/test_experiment_750_vitis_hls.py::TestCppCompileAndRun::test_energy_within_tolerance",
+        "tests/python/test_experiment_750_vitis_hls.py::TestHonestVerdictLogic::test_verdict_compile_fail_when_cpp_missing"
+      ]
+    },
+    {
+      "bounded_fix_hint": "Partition true memory-watchdog assertions from tests that accidentally load live model state, then force deterministic CPU/mock paths for unit scope.",
+      "cluster_id": "gpu_live_model_memory_watchdog",
+      "count_estimate": 5,
+      "evidence_source": "Exp1421 remaining_debt summary, with local pytest lastfailed cache used only for representative paths",
+      "failure_category": "GPU/live-model memory-watchdog errors",
+      "likely_owner": "live model, GPU harness, and memory watchdog owners",
+      "priority": 7,
+      "recommended_next": false,
+      "representative_tests": [
+        "tests/python/test_experiment_1029_fover_expansion_v2.py",
+        "tests/python/test_experiment_1031_energy_ssd_v3.py",
+        "tests/python/test_experiment_1031_energy_ssd_v3.py::TestMakeCandidates::test_pseudo_temperature_correct_is_low",
+        "tests/python/test_experiment_1043_fover_expansion_v3.py",
+        "tests/python/test_experiment_1163_nrgpt_energy.py"
+      ]
+    },
+    {
+      "bounded_fix_hint": "Fix infrastructure tests as a separate conductor-harness slice; this task did not edit scripts/research_conductor.py.",
+      "cluster_id": "conductor_infrastructure_assertions",
+      "count_estimate": 5,
+      "evidence_source": "Exp1421 remaining_debt summary, with local pytest lastfailed cache used only for representative paths",
+      "failure_category": "conductor/infrastructure assertions",
+      "likely_owner": "research conductor infrastructure",
+      "priority": 8,
+      "recommended_next": false,
+      "representative_tests": [
+        "tests/python/quarantine/test_conductor_supervisor.py",
+        "tests/python/test_failure_ledger.py::test_is_doomed_rerun_blocks_recurring_live_benchmark_chain",
+        "tests/python/test_failure_ledger.py::test_is_doomed_rerun_blocks_simulation_fallback_4th_recurrence",
+        "tests/python/test_failure_ledger_v2_cap.py::TestCapResetWhenFixCommitLands::test_cap_does_not_reset_when_no_failure_recorded",
+        "tests/python/test_failure_ledger_v2_cap.py::TestCapResetWhenFixCommitLands::test_cap_does_not_reset_when_unrelated_files_change"
+      ]
+    }
+  ],
+  "fixed_cluster_excluded": "embedding_constraint_store",
+  "full_suite_health_claimed": false,
+  "full_suite_rerun": false,
+  "honest_verdict": "diagnostic_cluster_map_complete_collection_clean_spec_coverage_red_71_full_suite_not_rerun_exp1421_runtime_debt_partitioned",
+  "next_cluster_recommended": "spec_coverage_traceability_metadata",
+  "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+  "run_date": "20260506",
+  "schema": "test_suite_remaining_debt_cluster_map_v1",
+  "source_artifacts_checked": [
+    {
+      "exists": true,
+      "honest_verdict": "focused_embedding_store_runtime_failures_fixed_collection_clean_targeted_tests_green_100pct_store_coverage_full_suite_and_preexisting_spec_coverage_debt_remain",
+      "path": "results/experiment_1421_test_suite_execution_debt_v1.json"
+    }
+  ],
+  "spec_coverage_debt_count": 71,
+  "status": "complete"
+}
