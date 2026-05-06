@@ -3623,3 +3623,49 @@ the nonforgetting gate.
 | Requirement | Python | Tests |
 |-------------|--------|-------|
 | REQ-LEARN-1433 | Implemented (`python/carnot/reporting/fr11_self_learning_v6_dvi_v3_gated.py`) | Implemented (`tests/python/test_fr11_self_learning_v6_dvi_v3_gated.py`) |
+
+## REQ-LEARN-1446: FR-11 V6 Zero-Growth Diagnosis MUST Trace Candidate Losses
+
+Exp 1446 SHALL diagnose why Exp 1433 produced zero positive FR-11 growth even
+though Exp 1432 deployed DVI v3 with nonforgetting preserved. The workflow SHALL
+trace candidates from FoVer supply through the Exp 1395 novelty exclusion, DVI
+v3 scoring, calibrated promotion thresholds, duplicate-memory handling, and the
+SessionMemory-equivalent persistence decision. The terminal artifact SHALL name
+the minimum changed v7 policy required to avoid an exact Exp 1433 rerun.
+
+### REQ-LEARN-1446 Sub-requirements
+
+- REQ-LEARN-1446-1: The workflow SHALL write
+  `results/experiment_1446_fr11_zero_growth_root_cause_diagnosis.json` first
+  with `status="in_progress"` before loading source artifacts.
+- REQ-LEARN-1446-2: The diagnosis SHALL count candidate loss by the categories
+  `no_candidates`, `verifier_rejection`, `dvi_threshold`, `novelty_threshold`,
+  `duplicate_memory`, and `persistence_blocker`.
+- REQ-LEARN-1446-3: The diagnosis SHALL report the active Exp 1433 promotion
+  thresholds and the recommended v7 thresholds or memory policy that differ
+  from Exp 1433 enough to forbid an exact rerun.
+- REQ-LEARN-1446-4: The final artifact SHALL include `status`,
+  `fr11_zero_growth_root_cause_identified`, `candidate_supply_count`,
+  `candidate_rejection_reason_counts`, `promotion_thresholds`,
+  `memory_update_policy`, `recommended_v7_policy`, `exact_rerun_forbidden`,
+  `commands_run`, and `honest_verdict`.
+- REQ-LEARN-1446-5: `exact_rerun_forbidden` SHALL be true when Exp 1433 had
+  active DVI v3 and zero positive growth, and the recommended v7 policy SHALL
+  change promotion thresholds, candidate generation, or memory update behavior.
+
+### SCENARIO-LEARN-1446: Active DVI V3 With Zero Growth Requires V7 Policy Change
+
+**Given** Exp 1432 deployed DVI v3 with nonforgetting preserved
+**And** Exp 1433 evaluated candidates but promoted zero new SessionMemory rows
+**When** the Exp 1446 diagnosis runs
+**Then** the artifact identifies the zero-growth root cause
+**And** candidate losses are counted by stage
+**And** `exact_rerun_forbidden=true`
+**And** `recommended_v7_policy` names the changed policy required for a valid
+v7 rerun.
+
+## Implementation Status (REQ-LEARN-1446)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-1446 | Implemented (`python/carnot/reporting/fr11_zero_growth_root_cause_diagnosis.py`) | Implemented (`tests/python/test_fr11_zero_growth_root_cause_diagnosis.py`) |

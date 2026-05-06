@@ -1,0 +1,78 @@
+{
+  "artifact_metadata": {
+    "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "run_date": "20260506"
+  },
+  "candidate_generation_counts": {
+    "candidate_supply": 7313,
+    "duplicate_candidate_ids": 145,
+    "duplicate_candidate_rows": 145,
+    "novelty_threshold": 1516
+  },
+  "candidate_rejection_detail": {
+    "dvi_state_mismatch": 7066,
+    "secl_confidence_below_threshold": 247
+  },
+  "candidate_rejection_reason_counts": {
+    "duplicate_memory": 0,
+    "dvi_threshold": 247,
+    "no_candidates": 0,
+    "novelty_threshold": 1516,
+    "persistence_blocker": 0,
+    "verifier_rejection": 7066
+  },
+  "candidate_supply_count": 7313,
+  "commands_run": [
+    ".venv/bin/pytest tests/python/test_fr11_zero_growth_root_cause_diagnosis.py -q (expected failure before module implementation: ImportError)",
+    ".venv/bin/pytest -q -o addopts='' tests/python/test_fr11_zero_growth_root_cause_diagnosis.py (passed: 4 tests)"
+  ],
+  "cpu_only": true,
+  "duration_s": 0.03,
+  "exact_rerun_forbidden": true,
+  "experiment": "1446_fr11_zero_growth_root_cause_diagnosis",
+  "finished_at": "2026-05-06T23:10:10.359132+00:00",
+  "fr11_zero_growth_root_cause": "Exp 1433 had candidate supply and an active DVI v3 checkpoint, but all candidates were demoted. Most candidates disagreed with the DVI state; the DVI-agreeing true positives sat at SECL confidence 0.5 and were rejected by the replay-calibrated 0.500001 threshold.",
+  "fr11_zero_growth_root_cause_identified": true,
+  "fresh_llm_inference_used": false,
+  "honest_verdict": "fr11_v6_zero_growth_root_cause_identified_asymmetric_fresh_threshold_v7_required",
+  "memory_update_policy": {
+    "exp1433_demoted_memory_count": 7313,
+    "exp1433_policy": "session_memory_updated is true only when DVI v3 verification produces one or more promoted rows; demotions are audited but do not count as positive FR-11 growth.",
+    "exp1433_promoted_memory_count": 0,
+    "exp1433_session_memory_updated": false,
+    "expected_v7_promotions_under_changed_threshold": 247,
+    "v7_policy_change": "keep replay nonforgetting calibration for replay rows, but score fresh promotion rows with the base SECL threshold so a replay-preservation epsilon cannot zero all fresh true positives."
+  },
+  "promotion_thresholds": {
+    "exp1433_dvi_incorrect_threshold": 0.7200000286102295,
+    "exp1433_secl_confidence_threshold": 0.5000010132789612,
+    "fresh_vs_replay_secl_threshold_delta": 1.013e-06,
+    "v5_base_secl_confidence_threshold": 0.5,
+    "v7_fresh_secl_confidence_threshold": 0.5,
+    "v7_replay_nonforgetting_secl_confidence_threshold": 0.5000010132789612
+  },
+  "recommended_v7_policy": {
+    "changes_exp1433_policy": true,
+    "dvi_incorrect_threshold": 0.7200000286102295,
+    "exact_rerun_avoidance": "promotion_thresholds_changed; replay_nonforgetting_threshold_kept_separate",
+    "expected_promotions_under_v7_policy": 247,
+    "fresh_secl_confidence_threshold": 0.5,
+    "minimum_change": "Do not reuse Exp 1432's replay-calibrated SECL threshold as the fresh promotion threshold. Use the v5 base fresh threshold for fresh FoVer promotion while retaining the calibrated threshold for replay nonforgetting audits.",
+    "policy_name": "fr11_v7_asymmetric_fresh_threshold",
+    "replay_nonforgetting_secl_confidence_threshold": 0.5000010132789612
+  },
+  "run_date": "20260506",
+  "schema": "fr11_zero_growth_root_cause_diagnosis_v1",
+  "source_artifacts": [
+    "results/experiment_1395_fr11_self_learning_v5.json",
+    "results/experiment_1432_dvi_v3_nonforgetting_replay_balanced.json",
+    "results/experiment_1433_fr11_self_learning_v6_dvi_v3_gated.json",
+    "data/fover_corpus.jsonl"
+  ],
+  "spec": [
+    "REQ-LEARN-1446",
+    "SCENARIO-LEARN-1446"
+  ],
+  "started_at": "2026-05-06T23:10:09.608153+00:00",
+  "status": "complete"
+}
