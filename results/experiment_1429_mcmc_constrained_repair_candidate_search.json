@@ -1,0 +1,3186 @@
+{
+  "accepted_candidate_count": 40,
+  "artifact_metadata": {
+    "project_root": ".",
+    "run_date": "20260506",
+    "source_experiments": [
+      "exp1397",
+      "exp1428"
+    ],
+    "spec": [
+      "REQ-VERIFY-1429",
+      "SCENARIO-VERIFY-1429"
+    ]
+  },
+  "cache_diagnostics": {
+    "cached_pair_available": true,
+    "cached_pair_hf_ids": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-31B-it-GGUF"
+    ],
+    "missing_hf_ids": [
+      "unsloth/gemma-4-26B-A4B-it-GGUF"
+    ],
+    "resolver_error": null
+  },
+  "candidate_search_complete": true,
+  "candidate_search_results": [
+    {
+      "accepted_candidate_count": 2,
+      "best_candidate_energy": 0.5,
+      "best_candidate_index": 2,
+      "best_of_n_success": true,
+      "candidate_results": [
+        {
+          "accepted": false,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT",
+            "final_state": "REPAIR_HINT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "reject_first_candidate localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 9.0,
+              "prototype_accept": false,
+              "prototype_variant": "reject_first_candidate"
+            }
+          },
+          "candidate_index": 0,
+          "energy": 9.0,
+          "fallback_reason": "semantic_validation_failed",
+          "rejection_reason": "constraint_failed",
+          "runtime_s": 0.00023,
+          "schema_valid": true,
+          "semantic_accepted": false,
+          "validation_result": {
+            "constraint_passed": false,
+            "energy": 9.0,
+            "false_acceptance": false,
+            "repair_required": true,
+            "semantic_result": "REPAIR_HINT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        },
+        {
+          "accepted": true,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:SAT>\nSAT",
+            "final_state": "SAT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "accept_high_energy localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 3.0,
+              "prototype_accept": true,
+              "prototype_variant": "accept_high_energy"
+            }
+          },
+          "candidate_index": 1,
+          "energy": 3.0,
+          "fallback_reason": null,
+          "rejection_reason": null,
+          "runtime_s": 0.000136,
+          "schema_valid": true,
+          "semantic_accepted": true,
+          "validation_result": {
+            "constraint_passed": true,
+            "energy": 3.0,
+            "false_acceptance": false,
+            "repair_required": false,
+            "semantic_result": "SAT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        },
+        {
+          "accepted": true,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:SAT>\nSAT",
+            "final_state": "SAT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "accept_low_energy localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 0.5,
+              "prototype_accept": true,
+              "prototype_variant": "accept_low_energy"
+            }
+          },
+          "candidate_index": 2,
+          "energy": 0.5,
+          "fallback_reason": null,
+          "rejection_reason": null,
+          "runtime_s": 0.000125,
+          "schema_valid": true,
+          "semantic_accepted": true,
+          "validation_result": {
+            "constraint_passed": true,
+            "energy": 0.5,
+            "false_acceptance": false,
+            "repair_required": false,
+            "semantic_result": "SAT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        },
+        {
+          "accepted": false,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT",
+            "final_state": "REPAIR_HINT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "reject_exploration_tail localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 8.0,
+              "prototype_accept": false,
+              "prototype_variant": "reject_exploration_tail"
+            }
+          },
+          "candidate_index": 3,
+          "energy": 8.0,
+          "fallback_reason": "semantic_validation_failed",
+          "rejection_reason": "constraint_failed",
+          "runtime_s": 0.000107,
+          "schema_valid": true,
+          "semantic_accepted": false,
+          "validation_result": {
+            "constraint_passed": false,
+            "energy": 8.0,
+            "false_acceptance": false,
+            "repair_required": true,
+            "semantic_result": "REPAIR_HINT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        }
+      ],
+      "candidates_evaluated": 4,
+      "case_id": "156",
+      "energy_rerank_improved": true,
+      "mcmc_acceptance_rate": 0.5,
+      "one_candidate_success": false,
+      "selected_candidate": {
+        "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+        "draft_state": "REPAIR_HINT",
+        "final_certificate": "<CARNOT_CERT_STATE:SAT>\nSAT",
+        "final_state": "SAT",
+        "repair_action_type": "STEP_REWRITE",
+        "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+        "repair_target": "accept_low_energy localized FoVer reasoning step",
+        "validator_metadata": {
+          "energy": 0.5,
+          "prototype_accept": true,
+          "prototype_variant": "accept_low_energy"
+        }
+      }
+    },
+    {
+      "accepted_candidate_count": 2,
+      "best_candidate_energy": 0.5,
+      "best_candidate_index": 2,
+      "best_of_n_success": true,
+      "candidate_results": [
+        {
+          "accepted": false,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT",
+            "final_state": "REPAIR_HINT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "reject_first_candidate localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 9.0,
+              "prototype_accept": false,
+              "prototype_variant": "reject_first_candidate"
+            }
+          },
+          "candidate_index": 0,
+          "energy": 9.0,
+          "fallback_reason": "semantic_validation_failed",
+          "rejection_reason": "constraint_failed",
+          "runtime_s": 9.9e-05,
+          "schema_valid": true,
+          "semantic_accepted": false,
+          "validation_result": {
+            "constraint_passed": false,
+            "energy": 9.0,
+            "false_acceptance": false,
+            "repair_required": true,
+            "semantic_result": "REPAIR_HINT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        },
+        {
+          "accepted": true,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:SAT>\nSAT",
+            "final_state": "SAT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "accept_high_energy localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 3.0,
+              "prototype_accept": true,
+              "prototype_variant": "accept_high_energy"
+            }
+          },
+          "candidate_index": 1,
+          "energy": 3.0,
+          "fallback_reason": null,
+          "rejection_reason": null,
+          "runtime_s": 0.000165,
+          "schema_valid": true,
+          "semantic_accepted": true,
+          "validation_result": {
+            "constraint_passed": true,
+            "energy": 3.0,
+            "false_acceptance": false,
+            "repair_required": false,
+            "semantic_result": "SAT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        },
+        {
+          "accepted": true,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:SAT>\nSAT",
+            "final_state": "SAT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "accept_low_energy localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 0.5,
+              "prototype_accept": true,
+              "prototype_variant": "accept_low_energy"
+            }
+          },
+          "candidate_index": 2,
+          "energy": 0.5,
+          "fallback_reason": null,
+          "rejection_reason": null,
+          "runtime_s": 0.0001,
+          "schema_valid": true,
+          "semantic_accepted": true,
+          "validation_result": {
+            "constraint_passed": true,
+            "energy": 0.5,
+            "false_acceptance": false,
+            "repair_required": false,
+            "semantic_result": "SAT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        },
+        {
+          "accepted": false,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT",
+            "final_state": "REPAIR_HINT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "reject_exploration_tail localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 8.0,
+              "prototype_accept": false,
+              "prototype_variant": "reject_exploration_tail"
+            }
+          },
+          "candidate_index": 3,
+          "energy": 8.0,
+          "fallback_reason": "semantic_validation_failed",
+          "rejection_reason": "constraint_failed",
+          "runtime_s": 9.7e-05,
+          "schema_valid": true,
+          "semantic_accepted": false,
+          "validation_result": {
+            "constraint_passed": false,
+            "energy": 8.0,
+            "false_acceptance": false,
+            "repair_required": true,
+            "semantic_result": "REPAIR_HINT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        }
+      ],
+      "candidates_evaluated": 4,
+      "case_id": "160",
+      "energy_rerank_improved": true,
+      "mcmc_acceptance_rate": 0.5,
+      "one_candidate_success": false,
+      "selected_candidate": {
+        "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+        "draft_state": "REPAIR_HINT",
+        "final_certificate": "<CARNOT_CERT_STATE:SAT>\nSAT",
+        "final_state": "SAT",
+        "repair_action_type": "STEP_REWRITE",
+        "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+        "repair_target": "accept_low_energy localized FoVer reasoning step",
+        "validator_metadata": {
+          "energy": 0.5,
+          "prototype_accept": true,
+          "prototype_variant": "accept_low_energy"
+        }
+      }
+    },
+    {
+      "accepted_candidate_count": 2,
+      "best_candidate_energy": 0.5,
+      "best_candidate_index": 2,
+      "best_of_n_success": true,
+      "candidate_results": [
+        {
+          "accepted": false,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT",
+            "final_state": "REPAIR_HINT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "reject_first_candidate localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 9.0,
+              "prototype_accept": false,
+              "prototype_variant": "reject_first_candidate"
+            }
+          },
+          "candidate_index": 0,
+          "energy": 9.0,
+          "fallback_reason": "semantic_validation_failed",
+          "rejection_reason": "constraint_failed",
+          "runtime_s": 9.6e-05,
+          "schema_valid": true,
+          "semantic_accepted": false,
+          "validation_result": {
+            "constraint_passed": false,
+            "energy": 9.0,
+            "false_acceptance": false,
+            "repair_required": true,
+            "semantic_result": "REPAIR_HINT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        },
+        {
+          "accepted": true,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:SAT>\nSAT",
+            "final_state": "SAT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "accept_high_energy localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 3.0,
+              "prototype_accept": true,
+              "prototype_variant": "accept_high_energy"
+            }
+          },
+          "candidate_index": 1,
+          "energy": 3.0,
+          "fallback_reason": null,
+          "rejection_reason": null,
+          "runtime_s": 9.3e-05,
+          "schema_valid": true,
+          "semantic_accepted": true,
+          "validation_result": {
+            "constraint_passed": true,
+            "energy": 3.0,
+            "false_acceptance": false,
+            "repair_required": false,
+            "semantic_result": "SAT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        },
+        {
+          "accepted": true,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:SAT>\nSAT",
+            "final_state": "SAT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "accept_low_energy localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 0.5,
+              "prototype_accept": true,
+              "prototype_variant": "accept_low_energy"
+            }
+          },
+          "candidate_index": 2,
+          "energy": 0.5,
+          "fallback_reason": null,
+          "rejection_reason": null,
+          "runtime_s": 9.8e-05,
+          "schema_valid": true,
+          "semantic_accepted": true,
+          "validation_result": {
+            "constraint_passed": true,
+            "energy": 0.5,
+            "false_acceptance": false,
+            "repair_required": false,
+            "semantic_result": "SAT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        },
+        {
+          "accepted": false,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT",
+            "final_state": "REPAIR_HINT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "reject_exploration_tail localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 8.0,
+              "prototype_accept": false,
+              "prototype_variant": "reject_exploration_tail"
+            }
+          },
+          "candidate_index": 3,
+          "energy": 8.0,
+          "fallback_reason": "semantic_validation_failed",
+          "rejection_reason": "constraint_failed",
+          "runtime_s": 9.7e-05,
+          "schema_valid": true,
+          "semantic_accepted": false,
+          "validation_result": {
+            "constraint_passed": false,
+            "energy": 8.0,
+            "false_acceptance": false,
+            "repair_required": true,
+            "semantic_result": "REPAIR_HINT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        }
+      ],
+      "candidates_evaluated": 4,
+      "case_id": "161",
+      "energy_rerank_improved": true,
+      "mcmc_acceptance_rate": 0.5,
+      "one_candidate_success": false,
+      "selected_candidate": {
+        "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+        "draft_state": "REPAIR_HINT",
+        "final_certificate": "<CARNOT_CERT_STATE:SAT>\nSAT",
+        "final_state": "SAT",
+        "repair_action_type": "STEP_REWRITE",
+        "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+        "repair_target": "accept_low_energy localized FoVer reasoning step",
+        "validator_metadata": {
+          "energy": 0.5,
+          "prototype_accept": true,
+          "prototype_variant": "accept_low_energy"
+        }
+      }
+    },
+    {
+      "accepted_candidate_count": 2,
+      "best_candidate_energy": 0.5,
+      "best_candidate_index": 2,
+      "best_of_n_success": true,
+      "candidate_results": [
+        {
+          "accepted": false,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT",
+            "final_state": "REPAIR_HINT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "reject_first_candidate localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 9.0,
+              "prototype_accept": false,
+              "prototype_variant": "reject_first_candidate"
+            }
+          },
+          "candidate_index": 0,
+          "energy": 9.0,
+          "fallback_reason": "semantic_validation_failed",
+          "rejection_reason": "constraint_failed",
+          "runtime_s": 0.000156,
+          "schema_valid": true,
+          "semantic_accepted": false,
+          "validation_result": {
+            "constraint_passed": false,
+            "energy": 9.0,
+            "false_acceptance": false,
+            "repair_required": true,
+            "semantic_result": "REPAIR_HINT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        },
+        {
+          "accepted": true,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:SAT>\nSAT",
+            "final_state": "SAT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "accept_high_energy localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 3.0,
+              "prototype_accept": true,
+              "prototype_variant": "accept_high_energy"
+            }
+          },
+          "candidate_index": 1,
+          "energy": 3.0,
+          "fallback_reason": null,
+          "rejection_reason": null,
+          "runtime_s": 9.1e-05,
+          "schema_valid": true,
+          "semantic_accepted": true,
+          "validation_result": {
+            "constraint_passed": true,
+            "energy": 3.0,
+            "false_acceptance": false,
+            "repair_required": false,
+            "semantic_result": "SAT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        },
+        {
+          "accepted": true,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:SAT>\nSAT",
+            "final_state": "SAT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "accept_low_energy localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 0.5,
+              "prototype_accept": true,
+              "prototype_variant": "accept_low_energy"
+            }
+          },
+          "candidate_index": 2,
+          "energy": 0.5,
+          "fallback_reason": null,
+          "rejection_reason": null,
+          "runtime_s": 9.3e-05,
+          "schema_valid": true,
+          "semantic_accepted": true,
+          "validation_result": {
+            "constraint_passed": true,
+            "energy": 0.5,
+            "false_acceptance": false,
+            "repair_required": false,
+            "semantic_result": "SAT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        },
+        {
+          "accepted": false,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT",
+            "final_state": "REPAIR_HINT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "reject_exploration_tail localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 8.0,
+              "prototype_accept": false,
+              "prototype_variant": "reject_exploration_tail"
+            }
+          },
+          "candidate_index": 3,
+          "energy": 8.0,
+          "fallback_reason": "semantic_validation_failed",
+          "rejection_reason": "constraint_failed",
+          "runtime_s": 9.2e-05,
+          "schema_valid": true,
+          "semantic_accepted": false,
+          "validation_result": {
+            "constraint_passed": false,
+            "energy": 8.0,
+            "false_acceptance": false,
+            "repair_required": true,
+            "semantic_result": "REPAIR_HINT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        }
+      ],
+      "candidates_evaluated": 4,
+      "case_id": "164_1",
+      "energy_rerank_improved": true,
+      "mcmc_acceptance_rate": 0.5,
+      "one_candidate_success": false,
+      "selected_candidate": {
+        "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+        "draft_state": "REPAIR_HINT",
+        "final_certificate": "<CARNOT_CERT_STATE:SAT>\nSAT",
+        "final_state": "SAT",
+        "repair_action_type": "STEP_REWRITE",
+        "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+        "repair_target": "accept_low_energy localized FoVer reasoning step",
+        "validator_metadata": {
+          "energy": 0.5,
+          "prototype_accept": true,
+          "prototype_variant": "accept_low_energy"
+        }
+      }
+    },
+    {
+      "accepted_candidate_count": 2,
+      "best_candidate_energy": 0.5,
+      "best_candidate_index": 2,
+      "best_of_n_success": true,
+      "candidate_results": [
+        {
+          "accepted": false,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT",
+            "final_state": "REPAIR_HINT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "reject_first_candidate localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 9.0,
+              "prototype_accept": false,
+              "prototype_variant": "reject_first_candidate"
+            }
+          },
+          "candidate_index": 0,
+          "energy": 9.0,
+          "fallback_reason": "semantic_validation_failed",
+          "rejection_reason": "constraint_failed",
+          "runtime_s": 8.5e-05,
+          "schema_valid": true,
+          "semantic_accepted": false,
+          "validation_result": {
+            "constraint_passed": false,
+            "energy": 9.0,
+            "false_acceptance": false,
+            "repair_required": true,
+            "semantic_result": "REPAIR_HINT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        },
+        {
+          "accepted": true,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:SAT>\nSAT",
+            "final_state": "SAT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "accept_high_energy localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 3.0,
+              "prototype_accept": true,
+              "prototype_variant": "accept_high_energy"
+            }
+          },
+          "candidate_index": 1,
+          "energy": 3.0,
+          "fallback_reason": null,
+          "rejection_reason": null,
+          "runtime_s": 8.5e-05,
+          "schema_valid": true,
+          "semantic_accepted": true,
+          "validation_result": {
+            "constraint_passed": true,
+            "energy": 3.0,
+            "false_acceptance": false,
+            "repair_required": false,
+            "semantic_result": "SAT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        },
+        {
+          "accepted": true,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:SAT>\nSAT",
+            "final_state": "SAT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "accept_low_energy localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 0.5,
+              "prototype_accept": true,
+              "prototype_variant": "accept_low_energy"
+            }
+          },
+          "candidate_index": 2,
+          "energy": 0.5,
+          "fallback_reason": null,
+          "rejection_reason": null,
+          "runtime_s": 9.4e-05,
+          "schema_valid": true,
+          "semantic_accepted": true,
+          "validation_result": {
+            "constraint_passed": true,
+            "energy": 0.5,
+            "false_acceptance": false,
+            "repair_required": false,
+            "semantic_result": "SAT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        },
+        {
+          "accepted": false,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT",
+            "final_state": "REPAIR_HINT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "reject_exploration_tail localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 8.0,
+              "prototype_accept": false,
+              "prototype_variant": "reject_exploration_tail"
+            }
+          },
+          "candidate_index": 3,
+          "energy": 8.0,
+          "fallback_reason": "semantic_validation_failed",
+          "rejection_reason": "constraint_failed",
+          "runtime_s": 0.000162,
+          "schema_valid": true,
+          "semantic_accepted": false,
+          "validation_result": {
+            "constraint_passed": false,
+            "energy": 8.0,
+            "false_acceptance": false,
+            "repair_required": true,
+            "semantic_result": "REPAIR_HINT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        }
+      ],
+      "candidates_evaluated": 4,
+      "case_id": "169",
+      "energy_rerank_improved": true,
+      "mcmc_acceptance_rate": 0.5,
+      "one_candidate_success": false,
+      "selected_candidate": {
+        "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+        "draft_state": "REPAIR_HINT",
+        "final_certificate": "<CARNOT_CERT_STATE:SAT>\nSAT",
+        "final_state": "SAT",
+        "repair_action_type": "STEP_REWRITE",
+        "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+        "repair_target": "accept_low_energy localized FoVer reasoning step",
+        "validator_metadata": {
+          "energy": 0.5,
+          "prototype_accept": true,
+          "prototype_variant": "accept_low_energy"
+        }
+      }
+    },
+    {
+      "accepted_candidate_count": 2,
+      "best_candidate_energy": 0.5,
+      "best_candidate_index": 2,
+      "best_of_n_success": true,
+      "candidate_results": [
+        {
+          "accepted": false,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT",
+            "final_state": "REPAIR_HINT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "reject_first_candidate localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 9.0,
+              "prototype_accept": false,
+              "prototype_variant": "reject_first_candidate"
+            }
+          },
+          "candidate_index": 0,
+          "energy": 9.0,
+          "fallback_reason": "semantic_validation_failed",
+          "rejection_reason": "constraint_failed",
+          "runtime_s": 8.6e-05,
+          "schema_valid": true,
+          "semantic_accepted": false,
+          "validation_result": {
+            "constraint_passed": false,
+            "energy": 9.0,
+            "false_acceptance": false,
+            "repair_required": true,
+            "semantic_result": "REPAIR_HINT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        },
+        {
+          "accepted": true,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:SAT>\nSAT",
+            "final_state": "SAT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "accept_high_energy localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 3.0,
+              "prototype_accept": true,
+              "prototype_variant": "accept_high_energy"
+            }
+          },
+          "candidate_index": 1,
+          "energy": 3.0,
+          "fallback_reason": null,
+          "rejection_reason": null,
+          "runtime_s": 8.7e-05,
+          "schema_valid": true,
+          "semantic_accepted": true,
+          "validation_result": {
+            "constraint_passed": true,
+            "energy": 3.0,
+            "false_acceptance": false,
+            "repair_required": false,
+            "semantic_result": "SAT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        },
+        {
+          "accepted": true,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:SAT>\nSAT",
+            "final_state": "SAT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "accept_low_energy localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 0.5,
+              "prototype_accept": true,
+              "prototype_variant": "accept_low_energy"
+            }
+          },
+          "candidate_index": 2,
+          "energy": 0.5,
+          "fallback_reason": null,
+          "rejection_reason": null,
+          "runtime_s": 9.2e-05,
+          "schema_valid": true,
+          "semantic_accepted": true,
+          "validation_result": {
+            "constraint_passed": true,
+            "energy": 0.5,
+            "false_acceptance": false,
+            "repair_required": false,
+            "semantic_result": "SAT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        },
+        {
+          "accepted": false,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT",
+            "final_state": "REPAIR_HINT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "reject_exploration_tail localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 8.0,
+              "prototype_accept": false,
+              "prototype_variant": "reject_exploration_tail"
+            }
+          },
+          "candidate_index": 3,
+          "energy": 8.0,
+          "fallback_reason": "semantic_validation_failed",
+          "rejection_reason": "constraint_failed",
+          "runtime_s": 9.5e-05,
+          "schema_valid": true,
+          "semantic_accepted": false,
+          "validation_result": {
+            "constraint_passed": false,
+            "energy": 8.0,
+            "false_acceptance": false,
+            "repair_required": true,
+            "semantic_result": "REPAIR_HINT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        }
+      ],
+      "candidates_evaluated": 4,
+      "case_id": "172",
+      "energy_rerank_improved": true,
+      "mcmc_acceptance_rate": 0.5,
+      "one_candidate_success": false,
+      "selected_candidate": {
+        "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+        "draft_state": "REPAIR_HINT",
+        "final_certificate": "<CARNOT_CERT_STATE:SAT>\nSAT",
+        "final_state": "SAT",
+        "repair_action_type": "STEP_REWRITE",
+        "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+        "repair_target": "accept_low_energy localized FoVer reasoning step",
+        "validator_metadata": {
+          "energy": 0.5,
+          "prototype_accept": true,
+          "prototype_variant": "accept_low_energy"
+        }
+      }
+    },
+    {
+      "accepted_candidate_count": 2,
+      "best_candidate_energy": 0.5,
+      "best_candidate_index": 2,
+      "best_of_n_success": true,
+      "candidate_results": [
+        {
+          "accepted": false,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT",
+            "final_state": "REPAIR_HINT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "reject_first_candidate localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 9.0,
+              "prototype_accept": false,
+              "prototype_variant": "reject_first_candidate"
+            }
+          },
+          "candidate_index": 0,
+          "energy": 9.0,
+          "fallback_reason": "semantic_validation_failed",
+          "rejection_reason": "constraint_failed",
+          "runtime_s": 8.8e-05,
+          "schema_valid": true,
+          "semantic_accepted": false,
+          "validation_result": {
+            "constraint_passed": false,
+            "energy": 9.0,
+            "false_acceptance": false,
+            "repair_required": true,
+            "semantic_result": "REPAIR_HINT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        },
+        {
+          "accepted": true,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:SAT>\nSAT",
+            "final_state": "SAT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "accept_high_energy localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 3.0,
+              "prototype_accept": true,
+              "prototype_variant": "accept_high_energy"
+            }
+          },
+          "candidate_index": 1,
+          "energy": 3.0,
+          "fallback_reason": null,
+          "rejection_reason": null,
+          "runtime_s": 8.7e-05,
+          "schema_valid": true,
+          "semantic_accepted": true,
+          "validation_result": {
+            "constraint_passed": true,
+            "energy": 3.0,
+            "false_acceptance": false,
+            "repair_required": false,
+            "semantic_result": "SAT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        },
+        {
+          "accepted": true,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:SAT>\nSAT",
+            "final_state": "SAT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "accept_low_energy localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 0.5,
+              "prototype_accept": true,
+              "prototype_variant": "accept_low_energy"
+            }
+          },
+          "candidate_index": 2,
+          "energy": 0.5,
+          "fallback_reason": null,
+          "rejection_reason": null,
+          "runtime_s": 0.000162,
+          "schema_valid": true,
+          "semantic_accepted": true,
+          "validation_result": {
+            "constraint_passed": true,
+            "energy": 0.5,
+            "false_acceptance": false,
+            "repair_required": false,
+            "semantic_result": "SAT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        },
+        {
+          "accepted": false,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT",
+            "final_state": "REPAIR_HINT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "reject_exploration_tail localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 8.0,
+              "prototype_accept": false,
+              "prototype_variant": "reject_exploration_tail"
+            }
+          },
+          "candidate_index": 3,
+          "energy": 8.0,
+          "fallback_reason": "semantic_validation_failed",
+          "rejection_reason": "constraint_failed",
+          "runtime_s": 9.3e-05,
+          "schema_valid": true,
+          "semantic_accepted": false,
+          "validation_result": {
+            "constraint_passed": false,
+            "energy": 8.0,
+            "false_acceptance": false,
+            "repair_required": true,
+            "semantic_result": "REPAIR_HINT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        }
+      ],
+      "candidates_evaluated": 4,
+      "case_id": "176",
+      "energy_rerank_improved": true,
+      "mcmc_acceptance_rate": 0.5,
+      "one_candidate_success": false,
+      "selected_candidate": {
+        "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+        "draft_state": "REPAIR_HINT",
+        "final_certificate": "<CARNOT_CERT_STATE:SAT>\nSAT",
+        "final_state": "SAT",
+        "repair_action_type": "STEP_REWRITE",
+        "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+        "repair_target": "accept_low_energy localized FoVer reasoning step",
+        "validator_metadata": {
+          "energy": 0.5,
+          "prototype_accept": true,
+          "prototype_variant": "accept_low_energy"
+        }
+      }
+    },
+    {
+      "accepted_candidate_count": 2,
+      "best_candidate_energy": 0.5,
+      "best_candidate_index": 2,
+      "best_of_n_success": true,
+      "candidate_results": [
+        {
+          "accepted": false,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT",
+            "final_state": "REPAIR_HINT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "reject_first_candidate localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 9.0,
+              "prototype_accept": false,
+              "prototype_variant": "reject_first_candidate"
+            }
+          },
+          "candidate_index": 0,
+          "energy": 9.0,
+          "fallback_reason": "semantic_validation_failed",
+          "rejection_reason": "constraint_failed",
+          "runtime_s": 8.4e-05,
+          "schema_valid": true,
+          "semantic_accepted": false,
+          "validation_result": {
+            "constraint_passed": false,
+            "energy": 9.0,
+            "false_acceptance": false,
+            "repair_required": true,
+            "semantic_result": "REPAIR_HINT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        },
+        {
+          "accepted": true,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:SAT>\nSAT",
+            "final_state": "SAT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "accept_high_energy localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 3.0,
+              "prototype_accept": true,
+              "prototype_variant": "accept_high_energy"
+            }
+          },
+          "candidate_index": 1,
+          "energy": 3.0,
+          "fallback_reason": null,
+          "rejection_reason": null,
+          "runtime_s": 8.7e-05,
+          "schema_valid": true,
+          "semantic_accepted": true,
+          "validation_result": {
+            "constraint_passed": true,
+            "energy": 3.0,
+            "false_acceptance": false,
+            "repair_required": false,
+            "semantic_result": "SAT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        },
+        {
+          "accepted": true,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:SAT>\nSAT",
+            "final_state": "SAT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "accept_low_energy localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 0.5,
+              "prototype_accept": true,
+              "prototype_variant": "accept_low_energy"
+            }
+          },
+          "candidate_index": 2,
+          "energy": 0.5,
+          "fallback_reason": null,
+          "rejection_reason": null,
+          "runtime_s": 9.1e-05,
+          "schema_valid": true,
+          "semantic_accepted": true,
+          "validation_result": {
+            "constraint_passed": true,
+            "energy": 0.5,
+            "false_acceptance": false,
+            "repair_required": false,
+            "semantic_result": "SAT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        },
+        {
+          "accepted": false,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT",
+            "final_state": "REPAIR_HINT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "reject_exploration_tail localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 8.0,
+              "prototype_accept": false,
+              "prototype_variant": "reject_exploration_tail"
+            }
+          },
+          "candidate_index": 3,
+          "energy": 8.0,
+          "fallback_reason": "semantic_validation_failed",
+          "rejection_reason": "constraint_failed",
+          "runtime_s": 8.8e-05,
+          "schema_valid": true,
+          "semantic_accepted": false,
+          "validation_result": {
+            "constraint_passed": false,
+            "energy": 8.0,
+            "false_acceptance": false,
+            "repair_required": true,
+            "semantic_result": "REPAIR_HINT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        }
+      ],
+      "candidates_evaluated": 4,
+      "case_id": "178",
+      "energy_rerank_improved": true,
+      "mcmc_acceptance_rate": 0.5,
+      "one_candidate_success": false,
+      "selected_candidate": {
+        "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+        "draft_state": "REPAIR_HINT",
+        "final_certificate": "<CARNOT_CERT_STATE:SAT>\nSAT",
+        "final_state": "SAT",
+        "repair_action_type": "STEP_REWRITE",
+        "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+        "repair_target": "accept_low_energy localized FoVer reasoning step",
+        "validator_metadata": {
+          "energy": 0.5,
+          "prototype_accept": true,
+          "prototype_variant": "accept_low_energy"
+        }
+      }
+    },
+    {
+      "accepted_candidate_count": 2,
+      "best_candidate_energy": 0.5,
+      "best_candidate_index": 2,
+      "best_of_n_success": true,
+      "candidate_results": [
+        {
+          "accepted": false,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT",
+            "final_state": "REPAIR_HINT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "reject_first_candidate localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 9.0,
+              "prototype_accept": false,
+              "prototype_variant": "reject_first_candidate"
+            }
+          },
+          "candidate_index": 0,
+          "energy": 9.0,
+          "fallback_reason": "semantic_validation_failed",
+          "rejection_reason": "constraint_failed",
+          "runtime_s": 8.4e-05,
+          "schema_valid": true,
+          "semantic_accepted": false,
+          "validation_result": {
+            "constraint_passed": false,
+            "energy": 9.0,
+            "false_acceptance": false,
+            "repair_required": true,
+            "semantic_result": "REPAIR_HINT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        },
+        {
+          "accepted": true,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:SAT>\nSAT",
+            "final_state": "SAT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "accept_high_energy localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 3.0,
+              "prototype_accept": true,
+              "prototype_variant": "accept_high_energy"
+            }
+          },
+          "candidate_index": 1,
+          "energy": 3.0,
+          "fallback_reason": null,
+          "rejection_reason": null,
+          "runtime_s": 8.5e-05,
+          "schema_valid": true,
+          "semantic_accepted": true,
+          "validation_result": {
+            "constraint_passed": true,
+            "energy": 3.0,
+            "false_acceptance": false,
+            "repair_required": false,
+            "semantic_result": "SAT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        },
+        {
+          "accepted": true,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:SAT>\nSAT",
+            "final_state": "SAT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "accept_low_energy localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 0.5,
+              "prototype_accept": true,
+              "prototype_variant": "accept_low_energy"
+            }
+          },
+          "candidate_index": 2,
+          "energy": 0.5,
+          "fallback_reason": null,
+          "rejection_reason": null,
+          "runtime_s": 0.000163,
+          "schema_valid": true,
+          "semantic_accepted": true,
+          "validation_result": {
+            "constraint_passed": true,
+            "energy": 0.5,
+            "false_acceptance": false,
+            "repair_required": false,
+            "semantic_result": "SAT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        },
+        {
+          "accepted": false,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT",
+            "final_state": "REPAIR_HINT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "reject_exploration_tail localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 8.0,
+              "prototype_accept": false,
+              "prototype_variant": "reject_exploration_tail"
+            }
+          },
+          "candidate_index": 3,
+          "energy": 8.0,
+          "fallback_reason": "semantic_validation_failed",
+          "rejection_reason": "constraint_failed",
+          "runtime_s": 9.1e-05,
+          "schema_valid": true,
+          "semantic_accepted": false,
+          "validation_result": {
+            "constraint_passed": false,
+            "energy": 8.0,
+            "false_acceptance": false,
+            "repair_required": true,
+            "semantic_result": "REPAIR_HINT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        }
+      ],
+      "candidates_evaluated": 4,
+      "case_id": "199",
+      "energy_rerank_improved": true,
+      "mcmc_acceptance_rate": 0.5,
+      "one_candidate_success": false,
+      "selected_candidate": {
+        "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+        "draft_state": "REPAIR_HINT",
+        "final_certificate": "<CARNOT_CERT_STATE:SAT>\nSAT",
+        "final_state": "SAT",
+        "repair_action_type": "STEP_REWRITE",
+        "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+        "repair_target": "accept_low_energy localized FoVer reasoning step",
+        "validator_metadata": {
+          "energy": 0.5,
+          "prototype_accept": true,
+          "prototype_variant": "accept_low_energy"
+        }
+      }
+    },
+    {
+      "accepted_candidate_count": 2,
+      "best_candidate_energy": 0.5,
+      "best_candidate_index": 2,
+      "best_of_n_success": true,
+      "candidate_results": [
+        {
+          "accepted": false,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT",
+            "final_state": "REPAIR_HINT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "reject_first_candidate localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 9.0,
+              "prototype_accept": false,
+              "prototype_variant": "reject_first_candidate"
+            }
+          },
+          "candidate_index": 0,
+          "energy": 9.0,
+          "fallback_reason": "semantic_validation_failed",
+          "rejection_reason": "constraint_failed",
+          "runtime_s": 8.5e-05,
+          "schema_valid": true,
+          "semantic_accepted": false,
+          "validation_result": {
+            "constraint_passed": false,
+            "energy": 9.0,
+            "false_acceptance": false,
+            "repair_required": true,
+            "semantic_result": "REPAIR_HINT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        },
+        {
+          "accepted": true,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:SAT>\nSAT",
+            "final_state": "SAT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "accept_high_energy localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 3.0,
+              "prototype_accept": true,
+              "prototype_variant": "accept_high_energy"
+            }
+          },
+          "candidate_index": 1,
+          "energy": 3.0,
+          "fallback_reason": null,
+          "rejection_reason": null,
+          "runtime_s": 8.3e-05,
+          "schema_valid": true,
+          "semantic_accepted": true,
+          "validation_result": {
+            "constraint_passed": true,
+            "energy": 3.0,
+            "false_acceptance": false,
+            "repair_required": false,
+            "semantic_result": "SAT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        },
+        {
+          "accepted": true,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:SAT>\nSAT",
+            "final_state": "SAT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "accept_low_energy localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 0.5,
+              "prototype_accept": true,
+              "prototype_variant": "accept_low_energy"
+            }
+          },
+          "candidate_index": 2,
+          "energy": 0.5,
+          "fallback_reason": null,
+          "rejection_reason": null,
+          "runtime_s": 9.1e-05,
+          "schema_valid": true,
+          "semantic_accepted": true,
+          "validation_result": {
+            "constraint_passed": true,
+            "energy": 0.5,
+            "false_acceptance": false,
+            "repair_required": false,
+            "semantic_result": "SAT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        },
+        {
+          "accepted": false,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT",
+            "final_state": "REPAIR_HINT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "reject_exploration_tail localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 8.0,
+              "prototype_accept": false,
+              "prototype_variant": "reject_exploration_tail"
+            }
+          },
+          "candidate_index": 3,
+          "energy": 8.0,
+          "fallback_reason": "semantic_validation_failed",
+          "rejection_reason": "constraint_failed",
+          "runtime_s": 9.2e-05,
+          "schema_valid": true,
+          "semantic_accepted": false,
+          "validation_result": {
+            "constraint_passed": false,
+            "energy": 8.0,
+            "false_acceptance": false,
+            "repair_required": true,
+            "semantic_result": "REPAIR_HINT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        }
+      ],
+      "candidates_evaluated": 4,
+      "case_id": "math_0",
+      "energy_rerank_improved": true,
+      "mcmc_acceptance_rate": 0.5,
+      "one_candidate_success": false,
+      "selected_candidate": {
+        "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+        "draft_state": "REPAIR_HINT",
+        "final_certificate": "<CARNOT_CERT_STATE:SAT>\nSAT",
+        "final_state": "SAT",
+        "repair_action_type": "STEP_REWRITE",
+        "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+        "repair_target": "accept_low_energy localized FoVer reasoning step",
+        "validator_metadata": {
+          "energy": 0.5,
+          "prototype_accept": true,
+          "prototype_variant": "accept_low_energy"
+        }
+      }
+    },
+    {
+      "accepted_candidate_count": 2,
+      "best_candidate_energy": 0.5,
+      "best_candidate_index": 2,
+      "best_of_n_success": true,
+      "candidate_results": [
+        {
+          "accepted": false,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT",
+            "final_state": "REPAIR_HINT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "reject_first_candidate localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 9.0,
+              "prototype_accept": false,
+              "prototype_variant": "reject_first_candidate"
+            }
+          },
+          "candidate_index": 0,
+          "energy": 9.0,
+          "fallback_reason": "semantic_validation_failed",
+          "rejection_reason": "constraint_failed",
+          "runtime_s": 8.8e-05,
+          "schema_valid": true,
+          "semantic_accepted": false,
+          "validation_result": {
+            "constraint_passed": false,
+            "energy": 9.0,
+            "false_acceptance": false,
+            "repair_required": true,
+            "semantic_result": "REPAIR_HINT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        },
+        {
+          "accepted": true,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:SAT>\nSAT",
+            "final_state": "SAT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "accept_high_energy localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 3.0,
+              "prototype_accept": true,
+              "prototype_variant": "accept_high_energy"
+            }
+          },
+          "candidate_index": 1,
+          "energy": 3.0,
+          "fallback_reason": null,
+          "rejection_reason": null,
+          "runtime_s": 0.000162,
+          "schema_valid": true,
+          "semantic_accepted": true,
+          "validation_result": {
+            "constraint_passed": true,
+            "energy": 3.0,
+            "false_acceptance": false,
+            "repair_required": false,
+            "semantic_result": "SAT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        },
+        {
+          "accepted": true,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:SAT>\nSAT",
+            "final_state": "SAT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "accept_low_energy localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 0.5,
+              "prototype_accept": true,
+              "prototype_variant": "accept_low_energy"
+            }
+          },
+          "candidate_index": 2,
+          "energy": 0.5,
+          "fallback_reason": null,
+          "rejection_reason": null,
+          "runtime_s": 9.1e-05,
+          "schema_valid": true,
+          "semantic_accepted": true,
+          "validation_result": {
+            "constraint_passed": true,
+            "energy": 0.5,
+            "false_acceptance": false,
+            "repair_required": false,
+            "semantic_result": "SAT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        },
+        {
+          "accepted": false,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT",
+            "final_state": "REPAIR_HINT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "reject_exploration_tail localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 8.0,
+              "prototype_accept": false,
+              "prototype_variant": "reject_exploration_tail"
+            }
+          },
+          "candidate_index": 3,
+          "energy": 8.0,
+          "fallback_reason": "semantic_validation_failed",
+          "rejection_reason": "constraint_failed",
+          "runtime_s": 9.2e-05,
+          "schema_valid": true,
+          "semantic_accepted": false,
+          "validation_result": {
+            "constraint_passed": false,
+            "energy": 8.0,
+            "false_acceptance": false,
+            "repair_required": true,
+            "semantic_result": "REPAIR_HINT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        }
+      ],
+      "candidates_evaluated": 4,
+      "case_id": "math_35",
+      "energy_rerank_improved": true,
+      "mcmc_acceptance_rate": 0.5,
+      "one_candidate_success": false,
+      "selected_candidate": {
+        "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+        "draft_state": "REPAIR_HINT",
+        "final_certificate": "<CARNOT_CERT_STATE:SAT>\nSAT",
+        "final_state": "SAT",
+        "repair_action_type": "STEP_REWRITE",
+        "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+        "repair_target": "accept_low_energy localized FoVer reasoning step",
+        "validator_metadata": {
+          "energy": 0.5,
+          "prototype_accept": true,
+          "prototype_variant": "accept_low_energy"
+        }
+      }
+    },
+    {
+      "accepted_candidate_count": 2,
+      "best_candidate_energy": 0.5,
+      "best_candidate_index": 2,
+      "best_of_n_success": true,
+      "candidate_results": [
+        {
+          "accepted": false,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT",
+            "final_state": "REPAIR_HINT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "reject_first_candidate localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 9.0,
+              "prototype_accept": false,
+              "prototype_variant": "reject_first_candidate"
+            }
+          },
+          "candidate_index": 0,
+          "energy": 9.0,
+          "fallback_reason": "semantic_validation_failed",
+          "rejection_reason": "constraint_failed",
+          "runtime_s": 8.4e-05,
+          "schema_valid": true,
+          "semantic_accepted": false,
+          "validation_result": {
+            "constraint_passed": false,
+            "energy": 9.0,
+            "false_acceptance": false,
+            "repair_required": true,
+            "semantic_result": "REPAIR_HINT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        },
+        {
+          "accepted": true,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:SAT>\nSAT",
+            "final_state": "SAT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "accept_high_energy localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 3.0,
+              "prototype_accept": true,
+              "prototype_variant": "accept_high_energy"
+            }
+          },
+          "candidate_index": 1,
+          "energy": 3.0,
+          "fallback_reason": null,
+          "rejection_reason": null,
+          "runtime_s": 8.2e-05,
+          "schema_valid": true,
+          "semantic_accepted": true,
+          "validation_result": {
+            "constraint_passed": true,
+            "energy": 3.0,
+            "false_acceptance": false,
+            "repair_required": false,
+            "semantic_result": "SAT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        },
+        {
+          "accepted": true,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:SAT>\nSAT",
+            "final_state": "SAT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "accept_low_energy localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 0.5,
+              "prototype_accept": true,
+              "prototype_variant": "accept_low_energy"
+            }
+          },
+          "candidate_index": 2,
+          "energy": 0.5,
+          "fallback_reason": null,
+          "rejection_reason": null,
+          "runtime_s": 8.9e-05,
+          "schema_valid": true,
+          "semantic_accepted": true,
+          "validation_result": {
+            "constraint_passed": true,
+            "energy": 0.5,
+            "false_acceptance": false,
+            "repair_required": false,
+            "semantic_result": "SAT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        },
+        {
+          "accepted": false,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT",
+            "final_state": "REPAIR_HINT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "reject_exploration_tail localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 8.0,
+              "prototype_accept": false,
+              "prototype_variant": "reject_exploration_tail"
+            }
+          },
+          "candidate_index": 3,
+          "energy": 8.0,
+          "fallback_reason": "semantic_validation_failed",
+          "rejection_reason": "constraint_failed",
+          "runtime_s": 8.8e-05,
+          "schema_valid": true,
+          "semantic_accepted": false,
+          "validation_result": {
+            "constraint_passed": false,
+            "energy": 8.0,
+            "false_acceptance": false,
+            "repair_required": true,
+            "semantic_result": "REPAIR_HINT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        }
+      ],
+      "candidates_evaluated": 4,
+      "case_id": "math_63",
+      "energy_rerank_improved": true,
+      "mcmc_acceptance_rate": 0.5,
+      "one_candidate_success": false,
+      "selected_candidate": {
+        "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+        "draft_state": "REPAIR_HINT",
+        "final_certificate": "<CARNOT_CERT_STATE:SAT>\nSAT",
+        "final_state": "SAT",
+        "repair_action_type": "STEP_REWRITE",
+        "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+        "repair_target": "accept_low_energy localized FoVer reasoning step",
+        "validator_metadata": {
+          "energy": 0.5,
+          "prototype_accept": true,
+          "prototype_variant": "accept_low_energy"
+        }
+      }
+    },
+    {
+      "accepted_candidate_count": 2,
+      "best_candidate_energy": 0.5,
+      "best_candidate_index": 2,
+      "best_of_n_success": true,
+      "candidate_results": [
+        {
+          "accepted": false,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT",
+            "final_state": "REPAIR_HINT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "reject_first_candidate localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 9.0,
+              "prototype_accept": false,
+              "prototype_variant": "reject_first_candidate"
+            }
+          },
+          "candidate_index": 0,
+          "energy": 9.0,
+          "fallback_reason": "semantic_validation_failed",
+          "rejection_reason": "constraint_failed",
+          "runtime_s": 0.00016,
+          "schema_valid": true,
+          "semantic_accepted": false,
+          "validation_result": {
+            "constraint_passed": false,
+            "energy": 9.0,
+            "false_acceptance": false,
+            "repair_required": true,
+            "semantic_result": "REPAIR_HINT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        },
+        {
+          "accepted": true,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:SAT>\nSAT",
+            "final_state": "SAT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "accept_high_energy localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 3.0,
+              "prototype_accept": true,
+              "prototype_variant": "accept_high_energy"
+            }
+          },
+          "candidate_index": 1,
+          "energy": 3.0,
+          "fallback_reason": null,
+          "rejection_reason": null,
+          "runtime_s": 9.3e-05,
+          "schema_valid": true,
+          "semantic_accepted": true,
+          "validation_result": {
+            "constraint_passed": true,
+            "energy": 3.0,
+            "false_acceptance": false,
+            "repair_required": false,
+            "semantic_result": "SAT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        },
+        {
+          "accepted": true,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:SAT>\nSAT",
+            "final_state": "SAT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "accept_low_energy localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 0.5,
+              "prototype_accept": true,
+              "prototype_variant": "accept_low_energy"
+            }
+          },
+          "candidate_index": 2,
+          "energy": 0.5,
+          "fallback_reason": null,
+          "rejection_reason": null,
+          "runtime_s": 8.9e-05,
+          "schema_valid": true,
+          "semantic_accepted": true,
+          "validation_result": {
+            "constraint_passed": true,
+            "energy": 0.5,
+            "false_acceptance": false,
+            "repair_required": false,
+            "semantic_result": "SAT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        },
+        {
+          "accepted": false,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT",
+            "final_state": "REPAIR_HINT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "reject_exploration_tail localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 8.0,
+              "prototype_accept": false,
+              "prototype_variant": "reject_exploration_tail"
+            }
+          },
+          "candidate_index": 3,
+          "energy": 8.0,
+          "fallback_reason": "semantic_validation_failed",
+          "rejection_reason": "constraint_failed",
+          "runtime_s": 8.9e-05,
+          "schema_valid": true,
+          "semantic_accepted": false,
+          "validation_result": {
+            "constraint_passed": false,
+            "energy": 8.0,
+            "false_acceptance": false,
+            "repair_required": true,
+            "semantic_result": "REPAIR_HINT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        }
+      ],
+      "candidates_evaluated": 4,
+      "case_id": "math_64",
+      "energy_rerank_improved": true,
+      "mcmc_acceptance_rate": 0.5,
+      "one_candidate_success": false,
+      "selected_candidate": {
+        "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+        "draft_state": "REPAIR_HINT",
+        "final_certificate": "<CARNOT_CERT_STATE:SAT>\nSAT",
+        "final_state": "SAT",
+        "repair_action_type": "STEP_REWRITE",
+        "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+        "repair_target": "accept_low_energy localized FoVer reasoning step",
+        "validator_metadata": {
+          "energy": 0.5,
+          "prototype_accept": true,
+          "prototype_variant": "accept_low_energy"
+        }
+      }
+    },
+    {
+      "accepted_candidate_count": 2,
+      "best_candidate_energy": 0.5,
+      "best_candidate_index": 2,
+      "best_of_n_success": true,
+      "candidate_results": [
+        {
+          "accepted": false,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT",
+            "final_state": "REPAIR_HINT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "reject_first_candidate localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 9.0,
+              "prototype_accept": false,
+              "prototype_variant": "reject_first_candidate"
+            }
+          },
+          "candidate_index": 0,
+          "energy": 9.0,
+          "fallback_reason": "semantic_validation_failed",
+          "rejection_reason": "constraint_failed",
+          "runtime_s": 8.4e-05,
+          "schema_valid": true,
+          "semantic_accepted": false,
+          "validation_result": {
+            "constraint_passed": false,
+            "energy": 9.0,
+            "false_acceptance": false,
+            "repair_required": true,
+            "semantic_result": "REPAIR_HINT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        },
+        {
+          "accepted": true,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:SAT>\nSAT",
+            "final_state": "SAT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "accept_high_energy localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 3.0,
+              "prototype_accept": true,
+              "prototype_variant": "accept_high_energy"
+            }
+          },
+          "candidate_index": 1,
+          "energy": 3.0,
+          "fallback_reason": null,
+          "rejection_reason": null,
+          "runtime_s": 8.4e-05,
+          "schema_valid": true,
+          "semantic_accepted": true,
+          "validation_result": {
+            "constraint_passed": true,
+            "energy": 3.0,
+            "false_acceptance": false,
+            "repair_required": false,
+            "semantic_result": "SAT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        },
+        {
+          "accepted": true,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:SAT>\nSAT",
+            "final_state": "SAT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "accept_low_energy localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 0.5,
+              "prototype_accept": true,
+              "prototype_variant": "accept_low_energy"
+            }
+          },
+          "candidate_index": 2,
+          "energy": 0.5,
+          "fallback_reason": null,
+          "rejection_reason": null,
+          "runtime_s": 9e-05,
+          "schema_valid": true,
+          "semantic_accepted": true,
+          "validation_result": {
+            "constraint_passed": true,
+            "energy": 0.5,
+            "false_acceptance": false,
+            "repair_required": false,
+            "semantic_result": "SAT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        },
+        {
+          "accepted": false,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT",
+            "final_state": "REPAIR_HINT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "reject_exploration_tail localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 8.0,
+              "prototype_accept": false,
+              "prototype_variant": "reject_exploration_tail"
+            }
+          },
+          "candidate_index": 3,
+          "energy": 8.0,
+          "fallback_reason": "semantic_validation_failed",
+          "rejection_reason": "constraint_failed",
+          "runtime_s": 8.9e-05,
+          "schema_valid": true,
+          "semantic_accepted": false,
+          "validation_result": {
+            "constraint_passed": false,
+            "energy": 8.0,
+            "false_acceptance": false,
+            "repair_required": true,
+            "semantic_result": "REPAIR_HINT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        }
+      ],
+      "candidates_evaluated": 4,
+      "case_id": "math_76",
+      "energy_rerank_improved": true,
+      "mcmc_acceptance_rate": 0.5,
+      "one_candidate_success": false,
+      "selected_candidate": {
+        "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+        "draft_state": "REPAIR_HINT",
+        "final_certificate": "<CARNOT_CERT_STATE:SAT>\nSAT",
+        "final_state": "SAT",
+        "repair_action_type": "STEP_REWRITE",
+        "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+        "repair_target": "accept_low_energy localized FoVer reasoning step",
+        "validator_metadata": {
+          "energy": 0.5,
+          "prototype_accept": true,
+          "prototype_variant": "accept_low_energy"
+        }
+      }
+    },
+    {
+      "accepted_candidate_count": 2,
+      "best_candidate_energy": 0.5,
+      "best_candidate_index": 2,
+      "best_of_n_success": true,
+      "candidate_results": [
+        {
+          "accepted": false,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT",
+            "final_state": "REPAIR_HINT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "reject_first_candidate localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 9.0,
+              "prototype_accept": false,
+              "prototype_variant": "reject_first_candidate"
+            }
+          },
+          "candidate_index": 0,
+          "energy": 9.0,
+          "fallback_reason": "semantic_validation_failed",
+          "rejection_reason": "constraint_failed",
+          "runtime_s": 0.000667,
+          "schema_valid": true,
+          "semantic_accepted": false,
+          "validation_result": {
+            "constraint_passed": false,
+            "energy": 9.0,
+            "false_acceptance": false,
+            "repair_required": true,
+            "semantic_result": "REPAIR_HINT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        },
+        {
+          "accepted": true,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:SAT>\nSAT",
+            "final_state": "SAT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "accept_high_energy localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 3.0,
+              "prototype_accept": true,
+              "prototype_variant": "accept_high_energy"
+            }
+          },
+          "candidate_index": 1,
+          "energy": 3.0,
+          "fallback_reason": null,
+          "rejection_reason": null,
+          "runtime_s": 9.5e-05,
+          "schema_valid": true,
+          "semantic_accepted": true,
+          "validation_result": {
+            "constraint_passed": true,
+            "energy": 3.0,
+            "false_acceptance": false,
+            "repair_required": false,
+            "semantic_result": "SAT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        },
+        {
+          "accepted": true,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:SAT>\nSAT",
+            "final_state": "SAT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "accept_low_energy localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 0.5,
+              "prototype_accept": true,
+              "prototype_variant": "accept_low_energy"
+            }
+          },
+          "candidate_index": 2,
+          "energy": 0.5,
+          "fallback_reason": null,
+          "rejection_reason": null,
+          "runtime_s": 9.7e-05,
+          "schema_valid": true,
+          "semantic_accepted": true,
+          "validation_result": {
+            "constraint_passed": true,
+            "energy": 0.5,
+            "false_acceptance": false,
+            "repair_required": false,
+            "semantic_result": "SAT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        },
+        {
+          "accepted": false,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT",
+            "final_state": "REPAIR_HINT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "reject_exploration_tail localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 8.0,
+              "prototype_accept": false,
+              "prototype_variant": "reject_exploration_tail"
+            }
+          },
+          "candidate_index": 3,
+          "energy": 8.0,
+          "fallback_reason": "semantic_validation_failed",
+          "rejection_reason": "constraint_failed",
+          "runtime_s": 9.1e-05,
+          "schema_valid": true,
+          "semantic_accepted": false,
+          "validation_result": {
+            "constraint_passed": false,
+            "energy": 8.0,
+            "false_acceptance": false,
+            "repair_required": true,
+            "semantic_result": "REPAIR_HINT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        }
+      ],
+      "candidates_evaluated": 4,
+      "case_id": "math_85",
+      "energy_rerank_improved": true,
+      "mcmc_acceptance_rate": 0.5,
+      "one_candidate_success": false,
+      "selected_candidate": {
+        "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+        "draft_state": "REPAIR_HINT",
+        "final_certificate": "<CARNOT_CERT_STATE:SAT>\nSAT",
+        "final_state": "SAT",
+        "repair_action_type": "STEP_REWRITE",
+        "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+        "repair_target": "accept_low_energy localized FoVer reasoning step",
+        "validator_metadata": {
+          "energy": 0.5,
+          "prototype_accept": true,
+          "prototype_variant": "accept_low_energy"
+        }
+      }
+    },
+    {
+      "accepted_candidate_count": 2,
+      "best_candidate_energy": 0.5,
+      "best_candidate_index": 2,
+      "best_of_n_success": true,
+      "candidate_results": [
+        {
+          "accepted": false,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT",
+            "final_state": "REPAIR_HINT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "reject_first_candidate localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 9.0,
+              "prototype_accept": false,
+              "prototype_variant": "reject_first_candidate"
+            }
+          },
+          "candidate_index": 0,
+          "energy": 9.0,
+          "fallback_reason": "semantic_validation_failed",
+          "rejection_reason": "constraint_failed",
+          "runtime_s": 8.4e-05,
+          "schema_valid": true,
+          "semantic_accepted": false,
+          "validation_result": {
+            "constraint_passed": false,
+            "energy": 9.0,
+            "false_acceptance": false,
+            "repair_required": true,
+            "semantic_result": "REPAIR_HINT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        },
+        {
+          "accepted": true,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:SAT>\nSAT",
+            "final_state": "SAT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "accept_high_energy localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 3.0,
+              "prototype_accept": true,
+              "prototype_variant": "accept_high_energy"
+            }
+          },
+          "candidate_index": 1,
+          "energy": 3.0,
+          "fallback_reason": null,
+          "rejection_reason": null,
+          "runtime_s": 8.5e-05,
+          "schema_valid": true,
+          "semantic_accepted": true,
+          "validation_result": {
+            "constraint_passed": true,
+            "energy": 3.0,
+            "false_acceptance": false,
+            "repair_required": false,
+            "semantic_result": "SAT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        },
+        {
+          "accepted": true,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:SAT>\nSAT",
+            "final_state": "SAT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "accept_low_energy localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 0.5,
+              "prototype_accept": true,
+              "prototype_variant": "accept_low_energy"
+            }
+          },
+          "candidate_index": 2,
+          "energy": 0.5,
+          "fallback_reason": null,
+          "rejection_reason": null,
+          "runtime_s": 9.1e-05,
+          "schema_valid": true,
+          "semantic_accepted": true,
+          "validation_result": {
+            "constraint_passed": true,
+            "energy": 0.5,
+            "false_acceptance": false,
+            "repair_required": false,
+            "semantic_result": "SAT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        },
+        {
+          "accepted": false,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT",
+            "final_state": "REPAIR_HINT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "reject_exploration_tail localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 8.0,
+              "prototype_accept": false,
+              "prototype_variant": "reject_exploration_tail"
+            }
+          },
+          "candidate_index": 3,
+          "energy": 8.0,
+          "fallback_reason": "semantic_validation_failed",
+          "rejection_reason": "constraint_failed",
+          "runtime_s": 9e-05,
+          "schema_valid": true,
+          "semantic_accepted": false,
+          "validation_result": {
+            "constraint_passed": false,
+            "energy": 8.0,
+            "false_acceptance": false,
+            "repair_required": true,
+            "semantic_result": "REPAIR_HINT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        }
+      ],
+      "candidates_evaluated": 4,
+      "case_id": "math_91",
+      "energy_rerank_improved": true,
+      "mcmc_acceptance_rate": 0.5,
+      "one_candidate_success": false,
+      "selected_candidate": {
+        "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+        "draft_state": "REPAIR_HINT",
+        "final_certificate": "<CARNOT_CERT_STATE:SAT>\nSAT",
+        "final_state": "SAT",
+        "repair_action_type": "STEP_REWRITE",
+        "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+        "repair_target": "accept_low_energy localized FoVer reasoning step",
+        "validator_metadata": {
+          "energy": 0.5,
+          "prototype_accept": true,
+          "prototype_variant": "accept_low_energy"
+        }
+      }
+    },
+    {
+      "accepted_candidate_count": 2,
+      "best_candidate_energy": 0.5,
+      "best_candidate_index": 2,
+      "best_of_n_success": true,
+      "candidate_results": [
+        {
+          "accepted": false,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT",
+            "final_state": "REPAIR_HINT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "reject_first_candidate localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 9.0,
+              "prototype_accept": false,
+              "prototype_variant": "reject_first_candidate"
+            }
+          },
+          "candidate_index": 0,
+          "energy": 9.0,
+          "fallback_reason": "semantic_validation_failed",
+          "rejection_reason": "constraint_failed",
+          "runtime_s": 0.000167,
+          "schema_valid": true,
+          "semantic_accepted": false,
+          "validation_result": {
+            "constraint_passed": false,
+            "energy": 9.0,
+            "false_acceptance": false,
+            "repair_required": true,
+            "semantic_result": "REPAIR_HINT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        },
+        {
+          "accepted": true,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:SAT>\nSAT",
+            "final_state": "SAT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "accept_high_energy localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 3.0,
+              "prototype_accept": true,
+              "prototype_variant": "accept_high_energy"
+            }
+          },
+          "candidate_index": 1,
+          "energy": 3.0,
+          "fallback_reason": null,
+          "rejection_reason": null,
+          "runtime_s": 8.6e-05,
+          "schema_valid": true,
+          "semantic_accepted": true,
+          "validation_result": {
+            "constraint_passed": true,
+            "energy": 3.0,
+            "false_acceptance": false,
+            "repair_required": false,
+            "semantic_result": "SAT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        },
+        {
+          "accepted": true,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:SAT>\nSAT",
+            "final_state": "SAT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "accept_low_energy localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 0.5,
+              "prototype_accept": true,
+              "prototype_variant": "accept_low_energy"
+            }
+          },
+          "candidate_index": 2,
+          "energy": 0.5,
+          "fallback_reason": null,
+          "rejection_reason": null,
+          "runtime_s": 8.8e-05,
+          "schema_valid": true,
+          "semantic_accepted": true,
+          "validation_result": {
+            "constraint_passed": true,
+            "energy": 0.5,
+            "false_acceptance": false,
+            "repair_required": false,
+            "semantic_result": "SAT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        },
+        {
+          "accepted": false,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT",
+            "final_state": "REPAIR_HINT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "reject_exploration_tail localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 8.0,
+              "prototype_accept": false,
+              "prototype_variant": "reject_exploration_tail"
+            }
+          },
+          "candidate_index": 3,
+          "energy": 8.0,
+          "fallback_reason": "semantic_validation_failed",
+          "rejection_reason": "constraint_failed",
+          "runtime_s": 9e-05,
+          "schema_valid": true,
+          "semantic_accepted": false,
+          "validation_result": {
+            "constraint_passed": false,
+            "energy": 8.0,
+            "false_acceptance": false,
+            "repair_required": true,
+            "semantic_result": "REPAIR_HINT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        }
+      ],
+      "candidates_evaluated": 4,
+      "case_id": "math_98",
+      "energy_rerank_improved": true,
+      "mcmc_acceptance_rate": 0.5,
+      "one_candidate_success": false,
+      "selected_candidate": {
+        "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+        "draft_state": "REPAIR_HINT",
+        "final_certificate": "<CARNOT_CERT_STATE:SAT>\nSAT",
+        "final_state": "SAT",
+        "repair_action_type": "STEP_REWRITE",
+        "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+        "repair_target": "accept_low_energy localized FoVer reasoning step",
+        "validator_metadata": {
+          "energy": 0.5,
+          "prototype_accept": true,
+          "prototype_variant": "accept_low_energy"
+        }
+      }
+    },
+    {
+      "accepted_candidate_count": 2,
+      "best_candidate_energy": 0.5,
+      "best_candidate_index": 2,
+      "best_of_n_success": true,
+      "candidate_results": [
+        {
+          "accepted": false,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT",
+            "final_state": "REPAIR_HINT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "reject_first_candidate localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 9.0,
+              "prototype_accept": false,
+              "prototype_variant": "reject_first_candidate"
+            }
+          },
+          "candidate_index": 0,
+          "energy": 9.0,
+          "fallback_reason": "semantic_validation_failed",
+          "rejection_reason": "constraint_failed",
+          "runtime_s": 8.3e-05,
+          "schema_valid": true,
+          "semantic_accepted": false,
+          "validation_result": {
+            "constraint_passed": false,
+            "energy": 9.0,
+            "false_acceptance": false,
+            "repair_required": true,
+            "semantic_result": "REPAIR_HINT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        },
+        {
+          "accepted": true,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:SAT>\nSAT",
+            "final_state": "SAT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "accept_high_energy localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 3.0,
+              "prototype_accept": true,
+              "prototype_variant": "accept_high_energy"
+            }
+          },
+          "candidate_index": 1,
+          "energy": 3.0,
+          "fallback_reason": null,
+          "rejection_reason": null,
+          "runtime_s": 8.2e-05,
+          "schema_valid": true,
+          "semantic_accepted": true,
+          "validation_result": {
+            "constraint_passed": true,
+            "energy": 3.0,
+            "false_acceptance": false,
+            "repair_required": false,
+            "semantic_result": "SAT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        },
+        {
+          "accepted": true,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:SAT>\nSAT",
+            "final_state": "SAT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "accept_low_energy localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 0.5,
+              "prototype_accept": true,
+              "prototype_variant": "accept_low_energy"
+            }
+          },
+          "candidate_index": 2,
+          "energy": 0.5,
+          "fallback_reason": null,
+          "rejection_reason": null,
+          "runtime_s": 8.8e-05,
+          "schema_valid": true,
+          "semantic_accepted": true,
+          "validation_result": {
+            "constraint_passed": true,
+            "energy": 0.5,
+            "false_acceptance": false,
+            "repair_required": false,
+            "semantic_result": "SAT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        },
+        {
+          "accepted": false,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT",
+            "final_state": "REPAIR_HINT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "reject_exploration_tail localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 8.0,
+              "prototype_accept": false,
+              "prototype_variant": "reject_exploration_tail"
+            }
+          },
+          "candidate_index": 3,
+          "energy": 8.0,
+          "fallback_reason": "semantic_validation_failed",
+          "rejection_reason": "constraint_failed",
+          "runtime_s": 0.000166,
+          "schema_valid": true,
+          "semantic_accepted": false,
+          "validation_result": {
+            "constraint_passed": false,
+            "energy": 8.0,
+            "false_acceptance": false,
+            "repair_required": true,
+            "semantic_result": "REPAIR_HINT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        }
+      ],
+      "candidates_evaluated": 4,
+      "case_id": "math_99",
+      "energy_rerank_improved": true,
+      "mcmc_acceptance_rate": 0.5,
+      "one_candidate_success": false,
+      "selected_candidate": {
+        "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+        "draft_state": "REPAIR_HINT",
+        "final_certificate": "<CARNOT_CERT_STATE:SAT>\nSAT",
+        "final_state": "SAT",
+        "repair_action_type": "STEP_REWRITE",
+        "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+        "repair_target": "accept_low_energy localized FoVer reasoning step",
+        "validator_metadata": {
+          "energy": 0.5,
+          "prototype_accept": true,
+          "prototype_variant": "accept_low_energy"
+        }
+      }
+    },
+    {
+      "accepted_candidate_count": 2,
+      "best_candidate_energy": 0.5,
+      "best_candidate_index": 2,
+      "best_of_n_success": true,
+      "candidate_results": [
+        {
+          "accepted": false,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT",
+            "final_state": "REPAIR_HINT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "reject_first_candidate localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 9.0,
+              "prototype_accept": false,
+              "prototype_variant": "reject_first_candidate"
+            }
+          },
+          "candidate_index": 0,
+          "energy": 9.0,
+          "fallback_reason": "semantic_validation_failed",
+          "rejection_reason": "constraint_failed",
+          "runtime_s": 9e-05,
+          "schema_valid": true,
+          "semantic_accepted": false,
+          "validation_result": {
+            "constraint_passed": false,
+            "energy": 9.0,
+            "false_acceptance": false,
+            "repair_required": true,
+            "semantic_result": "REPAIR_HINT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        },
+        {
+          "accepted": true,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:SAT>\nSAT",
+            "final_state": "SAT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "accept_high_energy localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 3.0,
+              "prototype_accept": true,
+              "prototype_variant": "accept_high_energy"
+            }
+          },
+          "candidate_index": 1,
+          "energy": 3.0,
+          "fallback_reason": null,
+          "rejection_reason": null,
+          "runtime_s": 8.5e-05,
+          "schema_valid": true,
+          "semantic_accepted": true,
+          "validation_result": {
+            "constraint_passed": true,
+            "energy": 3.0,
+            "false_acceptance": false,
+            "repair_required": false,
+            "semantic_result": "SAT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        },
+        {
+          "accepted": true,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:SAT>\nSAT",
+            "final_state": "SAT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "accept_low_energy localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 0.5,
+              "prototype_accept": true,
+              "prototype_variant": "accept_low_energy"
+            }
+          },
+          "candidate_index": 2,
+          "energy": 0.5,
+          "fallback_reason": null,
+          "rejection_reason": null,
+          "runtime_s": 8.8e-05,
+          "schema_valid": true,
+          "semantic_accepted": true,
+          "validation_result": {
+            "constraint_passed": true,
+            "energy": 0.5,
+            "false_acceptance": false,
+            "repair_required": false,
+            "semantic_result": "SAT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        },
+        {
+          "accepted": false,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT",
+            "final_state": "REPAIR_HINT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "reject_exploration_tail localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 8.0,
+              "prototype_accept": false,
+              "prototype_variant": "reject_exploration_tail"
+            }
+          },
+          "candidate_index": 3,
+          "energy": 8.0,
+          "fallback_reason": "semantic_validation_failed",
+          "rejection_reason": "constraint_failed",
+          "runtime_s": 8.7e-05,
+          "schema_valid": true,
+          "semantic_accepted": false,
+          "validation_result": {
+            "constraint_passed": false,
+            "energy": 8.0,
+            "false_acceptance": false,
+            "repair_required": true,
+            "semantic_result": "REPAIR_HINT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        }
+      ],
+      "candidates_evaluated": 4,
+      "case_id": "math_109",
+      "energy_rerank_improved": true,
+      "mcmc_acceptance_rate": 0.5,
+      "one_candidate_success": false,
+      "selected_candidate": {
+        "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+        "draft_state": "REPAIR_HINT",
+        "final_certificate": "<CARNOT_CERT_STATE:SAT>\nSAT",
+        "final_state": "SAT",
+        "repair_action_type": "STEP_REWRITE",
+        "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+        "repair_target": "accept_low_energy localized FoVer reasoning step",
+        "validator_metadata": {
+          "energy": 0.5,
+          "prototype_accept": true,
+          "prototype_variant": "accept_low_energy"
+        }
+      }
+    },
+    {
+      "accepted_candidate_count": 2,
+      "best_candidate_energy": 0.5,
+      "best_candidate_index": 2,
+      "best_of_n_success": true,
+      "candidate_results": [
+        {
+          "accepted": false,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT",
+            "final_state": "REPAIR_HINT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "reject_first_candidate localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 9.0,
+              "prototype_accept": false,
+              "prototype_variant": "reject_first_candidate"
+            }
+          },
+          "candidate_index": 0,
+          "energy": 9.0,
+          "fallback_reason": "semantic_validation_failed",
+          "rejection_reason": "constraint_failed",
+          "runtime_s": 8.3e-05,
+          "schema_valid": true,
+          "semantic_accepted": false,
+          "validation_result": {
+            "constraint_passed": false,
+            "energy": 9.0,
+            "false_acceptance": false,
+            "repair_required": true,
+            "semantic_result": "REPAIR_HINT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        },
+        {
+          "accepted": true,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:SAT>\nSAT",
+            "final_state": "SAT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "accept_high_energy localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 3.0,
+              "prototype_accept": true,
+              "prototype_variant": "accept_high_energy"
+            }
+          },
+          "candidate_index": 1,
+          "energy": 3.0,
+          "fallback_reason": null,
+          "rejection_reason": null,
+          "runtime_s": 8.8e-05,
+          "schema_valid": true,
+          "semantic_accepted": true,
+          "validation_result": {
+            "constraint_passed": true,
+            "energy": 3.0,
+            "false_acceptance": false,
+            "repair_required": false,
+            "semantic_result": "SAT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        },
+        {
+          "accepted": true,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:SAT>\nSAT",
+            "final_state": "SAT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "accept_low_energy localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 0.5,
+              "prototype_accept": true,
+              "prototype_variant": "accept_low_energy"
+            }
+          },
+          "candidate_index": 2,
+          "energy": 0.5,
+          "fallback_reason": null,
+          "rejection_reason": null,
+          "runtime_s": 8.9e-05,
+          "schema_valid": true,
+          "semantic_accepted": true,
+          "validation_result": {
+            "constraint_passed": true,
+            "energy": 0.5,
+            "false_acceptance": false,
+            "repair_required": false,
+            "semantic_result": "SAT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        },
+        {
+          "accepted": false,
+          "candidate": {
+            "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+            "draft_state": "REPAIR_HINT",
+            "final_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT",
+            "final_state": "REPAIR_HINT",
+            "repair_action_type": "STEP_REWRITE",
+            "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+            "repair_target": "reject_exploration_tail localized FoVer reasoning step",
+            "validator_metadata": {
+              "energy": 8.0,
+              "prototype_accept": false,
+              "prototype_variant": "reject_exploration_tail"
+            }
+          },
+          "candidate_index": 3,
+          "energy": 8.0,
+          "fallback_reason": "semantic_validation_failed",
+          "rejection_reason": "constraint_failed",
+          "runtime_s": 0.000164,
+          "schema_valid": true,
+          "semantic_accepted": false,
+          "validation_result": {
+            "constraint_passed": false,
+            "energy": 8.0,
+            "false_acceptance": false,
+            "repair_required": true,
+            "semantic_result": "REPAIR_HINT",
+            "validator_route": "prototype_schema_first_handoff"
+          }
+        }
+      ],
+      "candidates_evaluated": 4,
+      "case_id": "math_117",
+      "energy_rerank_improved": true,
+      "mcmc_acceptance_rate": 0.5,
+      "one_candidate_success": false,
+      "selected_candidate": {
+        "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: repair step.",
+        "draft_state": "REPAIR_HINT",
+        "final_certificate": "<CARNOT_CERT_STATE:SAT>\nSAT",
+        "final_state": "SAT",
+        "repair_action_type": "STEP_REWRITE",
+        "repair_rationale": "Prototype constrained candidate-search pass for validator handoff.",
+        "repair_target": "accept_low_energy localized FoVer reasoning step",
+        "validator_metadata": {
+          "energy": 0.5,
+          "prototype_accept": true,
+          "prototype_variant": "accept_low_energy"
+        }
+      }
+    }
+  ],
+  "candidates_per_case": 4,
+  "cases_evaluated": 20,
+  "energy_rerank_improved": true,
+  "executor_runtime_mode": "prototype_injected_schema_generator_no_live_sota_inference",
+  "experiment": "1429_mcmc_constrained_repair_candidate_search",
+  "honest_verdict": "complete_mcmc_constrained_repair_candidate_search_improved_prototype_no_headline_sota_claim_live_sota_inference_not_run",
+  "local_sota_model_inference_used": false,
+  "local_sota_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+  "mcmc_acceptance_rate": 0.5,
+  "model_specs": [
+    {
+      "cache_status": "available",
+      "gpu": 0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "name": "Qwen3.6-35B-A3B",
+      "role": "primary_candidate_generator"
+    },
+    {
+      "cache_status": "available",
+      "gpu": 1,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/43e80d41a220ac7c83023daacd6a0d1fd8559251/gemma-4-31B-it-Q4_K_M.gguf",
+      "name": "Gemma4-31B-it",
+      "role": "dense_fallback"
+    },
+    {
+      "cache_status": "missing",
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "role": "moe_fallback"
+    }
+  ],
+  "repair_hint_cases_available": 100,
+  "repair_success_rate_best_of_n": 1.0,
+  "repair_success_rate_one_candidate": 0.0,
+  "repair_v2_deployed_confirmed": true,
+  "run_date": "20260506",
+  "runtime_diagnostics": {
+    "headline_candidate_search_result": false,
+    "live_local_sota_inference_attempted": false,
+    "prototype_generator_used": true,
+    "runtime_blockers": [
+      "live SOTA model inference was not run in this bounded artifact pass"
+    ]
+  },
+  "schema": "mcmc_constrained_repair_candidate_search",
+  "status": "complete",
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_mcmc_constrained_repair_search.py tests/python/test_experiment_1429_mcmc_constrained_repair_candidate_search.py -q --no-cov",
+    ".venv/bin/coverage report --include='python/carnot/pipeline/mcmc_constrained_repair_search.py,python/carnot/reporting/mcmc_constrained_repair_candidate_search.py' --show-missing --fail-under=100",
+    ".venv/bin/pytest tests/python -q (failed: existing failures, worker crashes, terminated after hang)",
+    "ruff check <new 1429 files>",
+    "ruff format --check <new 1429 files>",
+    "python scripts/check_spec_coverage.py (failed: 71 pre-existing tests lack spec traceability)",
+    ".venv/bin/pytest tests/python/test_code_verification_packaging.py::test_generate_verify_repair_workflow_reverifies_cleanly -q --no-cov"
+  ],
+  "total_candidate_proposals": 80
+}
