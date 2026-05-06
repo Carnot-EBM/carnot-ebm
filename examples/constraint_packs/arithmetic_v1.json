@@ -1,0 +1,117 @@
+{
+  "$schema": "https://carnot-ebm.org/schemas/session_memory_v1.json",
+  "metadata": {
+    "backwards_compatibility": "v1 readers reject unknown major versions",
+    "carnot_version": "0.1.0",
+    "created_at": "2026-05-05T00:00:00Z",
+    "license": "Apache-2.0",
+    "source": "carnot-arithmetic-starter-pack"
+  },
+  "models": [
+    {
+      "case_memory": {
+        "entries": [],
+        "portable_entries": [],
+        "version": 1
+      },
+      "constraint_templates": [
+        {
+          "activation_count": 0,
+          "description": "Multi-digit carry propagation verification.",
+          "energy_weight": 1.0,
+          "id": "carry_check",
+          "is_active": false,
+          "min_frequency": 5,
+          "patterns": {
+            "ast": [],
+            "regex": [
+              "\\b\\d{2,}\\s*[+*]\\s*\\d{2,}\\b"
+            ]
+          },
+          "target_claim_type": "arithmetic"
+        },
+        {
+          "activation_count": 0,
+          "description": "Negative multiplied by negative should produce a positive product.",
+          "energy_weight": 1.0,
+          "id": "sign_check",
+          "is_active": false,
+          "min_frequency": 5,
+          "patterns": {
+            "ast": [],
+            "regex": [
+              "-\\d+\\s*[*x]\\s*-\\d+"
+            ]
+          },
+          "target_claim_type": "arithmetic"
+        },
+        {
+          "activation_count": 0,
+          "description": "Unit conversion consistency for common metric quantities.",
+          "energy_weight": 1.0,
+          "id": "unit_consistency",
+          "is_active": false,
+          "min_frequency": 3,
+          "patterns": {
+            "ast": [],
+            "regex": [
+              "\\b(kg|g|km|m|l|ml)\\b"
+            ]
+          },
+          "target_claim_type": "unit"
+        }
+      ],
+      "exported_at": "2026-05-05T00:00:00Z",
+      "fp_tracker": {
+        "min_observations": 10,
+        "stats": []
+      },
+      "model_id": "starter/arithmetic",
+      "safe_model_id": "starter__arithmetic",
+      "saved_at": null,
+      "session_state": {
+        "violations_by_domain": [
+          {
+            "count": 13,
+            "domain": "arithmetic"
+          }
+        ],
+        "violations_by_type": [
+          {
+            "count": 5,
+            "violation_type": "carry_check"
+          },
+          {
+            "count": 5,
+            "violation_type": "sign_check"
+          },
+          {
+            "count": 3,
+            "violation_type": "unit_consistency"
+          }
+        ]
+      },
+      "template_library": {
+        "observations": [
+          {
+            "count": 5,
+            "model_id": "starter/arithmetic",
+            "pattern_key": "carry_check"
+          },
+          {
+            "count": 5,
+            "model_id": "starter/arithmetic",
+            "pattern_key": "sign_check"
+          },
+          {
+            "count": 3,
+            "model_id": "starter/arithmetic",
+            "pattern_key": "unit_consistency"
+          }
+        ]
+      }
+    }
+  ],
+  "schema": "carnot.session_memory_pack.v1",
+  "schema_version": "1.0.0"
+}

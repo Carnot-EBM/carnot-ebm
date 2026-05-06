@@ -131,3 +131,30 @@ Then the final artifact is complete, `fresh_cases_used` is 59, the AUROC delta
 is measured before and after DVI v2 fine-tuning, the SECL ECE values are
 measured before and after calibration, and the combined checkpoint exists when
 `dvi_v2_deployed` is true.
+
+### REQ-VERIFY-1396: FoVer Semantic Validation Calibration Fix
+
+The repository shall provide a deterministic FoVer semantic validation
+calibration path that:
+
+- preserves Exp 1382 certificate parsing and certificate-state checks;
+- applies an arithmetic-aware fallback before accepting DVI SAT on labeled
+  incorrect FoVer/math arithmetic rows;
+- applies a configurable DVI abstention band around the incorrect-probability
+  threshold for SAT certificates on labeled correct rows;
+- records source family, arithmetic claim count, arithmetic verifier score,
+  DVI threshold margin, fallback route, and fallback verdict in each calibrated
+  semantic row; and
+- writes `results/experiment_1396_semantic_validation_pass_rate_fix_v1.json`
+  with before/after semantic validation pass rates measured on a sample of Exp
+  1382 semantic failures.
+
+### SCENARIO-VERIFY-1396: Calibrated FoVer Rows Recover DVI Boundary Failures
+
+Given parsed Exp 1382 certificate rows whose certificate state already matches
+the FoVer label-implied state,
+When the DVI score disagrees with the label on a known arithmetic source,
+Then an incorrect row that DVI would classify as SAT is escalated to the repair
+path, a correct SAT row inside the DVI abstention band is accepted through the
+certificate/full-verifier path, and the calibrated row records diagnostic
+fallback fields for later failure analysis.

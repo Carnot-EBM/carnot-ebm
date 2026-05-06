@@ -1,0 +1,93 @@
+{
+  "$schema": "https://carnot-ebm.org/schemas/session_memory_v1.json",
+  "metadata": {
+    "backwards_compatibility": "v1 readers reject unknown major versions",
+    "carnot_version": "0.1.0",
+    "created_at": "2026-05-05T00:00:00Z",
+    "license": "Apache-2.0",
+    "source": "carnot-python-code-starter-pack"
+  },
+  "models": [
+    {
+      "case_memory": {
+        "entries": [],
+        "portable_entries": [],
+        "version": 1
+      },
+      "constraint_templates": [
+        {
+          "activation_count": 0,
+          "description": "Python verifier failures involving missing return-type annotations.",
+          "energy_weight": 1.0,
+          "id": "python_missing_return_annotation",
+          "is_active": false,
+          "min_frequency": 3,
+          "patterns": {
+            "ast": [
+              "FunctionDef.returns is None"
+            ],
+            "regex": []
+          },
+          "target_claim_type": "python_code"
+        },
+        {
+          "activation_count": 0,
+          "description": "Python verifier failures involving mutation of input containers.",
+          "energy_weight": 1.0,
+          "id": "python_input_mutation",
+          "is_active": false,
+          "min_frequency": 3,
+          "patterns": {
+            "ast": [
+              "Subscript assignment to parameter"
+            ],
+            "regex": []
+          },
+          "target_claim_type": "python_code"
+        }
+      ],
+      "exported_at": "2026-05-05T00:00:00Z",
+      "fp_tracker": {
+        "min_observations": 10,
+        "stats": []
+      },
+      "model_id": "starter/python-code",
+      "safe_model_id": "starter__python-code",
+      "saved_at": null,
+      "session_state": {
+        "violations_by_domain": [
+          {
+            "count": 6,
+            "domain": "code_verification"
+          }
+        ],
+        "violations_by_type": [
+          {
+            "count": 3,
+            "violation_type": "python_missing_return_annotation"
+          },
+          {
+            "count": 3,
+            "violation_type": "python_input_mutation"
+          }
+        ]
+      },
+      "template_library": {
+        "observations": [
+          {
+            "count": 3,
+            "model_id": "starter/python-code",
+            "pattern_key": "python_missing_return_annotation"
+          },
+          {
+            "count": 3,
+            "model_id": "starter/python-code",
+            "pattern_key": "python_input_mutation"
+          }
+        ]
+      }
+    }
+  ],
+  "schema": "carnot.session_memory_pack.v1",
+  "schema_version": "1.0.0"
+}
