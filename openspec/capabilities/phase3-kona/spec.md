@@ -211,8 +211,9 @@ Phase 3 experiments MUST populate the `honest_verdict` schema field with one of:
 `phase4_better_than_baseline`, `phase4_tied_with_baseline`,
 `phase4_worse_than_baseline`, `prototype_only_no_convergence`,
 `diagnostics_partial_pipeline_not_found`, `pipeline_not_found_blocked`,
-`feasibility_step_viable`, `feasibility_step_not_viable`, or `blocked_*` for
-dependency failures.
+`feasibility_step_viable`, `feasibility_step_not_viable`,
+`anchored_dual_path_repair_viable`,
+`anchored_dual_path_repair_not_viable`, or `blocked_*` for dependency failures.
 
 **Rationale:** Phase 3 is where optimistic claims are most tempting. The
 `honest_verdict` discipline that caught the Phase 1 retractions (the "+64 pp VR",
@@ -1233,6 +1234,51 @@ continuous repair training scales it up.
   required fields with `status="complete"` and an honest verdict that does not
   convert off-support decoded regression into a positive Phase 3 claim.
 
+### REQ-KONA-034: Anchored Dual-Path Latent Repair Smoke
+
+After Exp 1417 detects monotone-energy latent drift that hurts decoded
+accuracy, Carnot MUST provide a deterministic CPU-only follow-up smoke test that
+compares raw latent energy descent against an anchored descent path with a
+dual-path decoder gate. The benchmark MUST reuse the smallest Exp
+1417-compatible deterministic CNF task family or an equivalent deterministic
+micro benchmark with encoder anchors, support-limited decoding, direct decode,
+raw planned decode, and anchored planned decode.
+
+The anchored path MUST apply an explicit anchor to the initial encoder latent
+state `h_x` and MUST compare decoded candidate quality before accepting a
+lower-energy latent state. The dual-path gate may be a deterministic stub for
+this smoke test, but it MUST reject candidate steps whose decoded task quality
+falls below the current accepted decode quality.
+
+The Exp 1436 artifact MUST use run date `20260506` and write
+`results/experiment_1436_anchored_dual_path_latent_repair_v1.json` with
+`status="in_progress"` before running the benchmark, then finish with
+`status="complete"` or `status="blocked"` and the fields `anchoring_applied`,
+`dual_path_decoder_stub`, `energy_monotone`, `accuracy_before_planning`,
+`accuracy_after_planning`, `accuracy_delta_after_planning`, `latent_drift_norm`,
+`off_support_rate`, `anchored_repair_viable`, and `honest_verdict`.
+`anchored_repair_viable` MUST be true only when anchored planning does not reduce
+decoded accuracy and anchored off-support drift is lower than raw descent.
+
+**Rationale:** Exp 1417 showed that lower latent energy can be a misleading
+objective when the latent leaves decoder support. Exp 1436 tests the smallest
+guardrail that could make latent repair admissible again: remain close to the
+encoded state and use decoded quality as an acceptance check rather than trusting
+latent energy alone.
+
+**Acceptance criteria:**
+
+- `python/carnot/phase3/anchored_dual_path_latent_repair.py` exposes
+  deterministic helpers to run raw descent and anchored dual-path descent on the
+  same Exp 1417-compatible benchmark.
+- Focused tests verify that anchored descent applies an anchor to `h_x`, the
+  dual-path gate rejects lower-energy candidates that reduce decoded quality,
+  raw and anchored metrics are measured on the same tasks, and
+  `anchored_repair_viable` follows the accuracy/off-support gate exactly.
+- `results/experiment_1436_anchored_dual_path_latent_repair_v1.json` records all
+  required fields with an honest verdict that distinguishes a smoke-test repair
+  from a scaled Phase 3 training claim.
+
 ## Scenarios
 
 ### SCENARIO-KONA-001: Stage 1 Primitive — RDT Fixed-Point Convergence
@@ -1676,6 +1722,23 @@ support-shift gates.
 
 **Spec traces:** REQ-KONA-033
 
+### SCENARIO-KONA-034: Exp 1436 Gates Latent Repair With Anchoring And Decode Quality
+
+**Given** the Exp 1417-compatible tiny CNF task family, raw latent descent that
+can lower energy while moving off support, and an anchored descent path with a
+dual-path decoder quality gate
+**When** Exp 1436 compares direct decode, raw planned decode, and anchored
+planned decode on the same examples
+**Then** it writes
+`results/experiment_1436_anchored_dual_path_latent_repair_v1.json` with all
+REQ-KONA-034 required fields, derives `energy_monotone`,
+`accuracy_delta_after_planning`, `latent_drift_norm`, and `off_support_rate`
+from anchored accepted trajectories, and sets `anchored_repair_viable` true only
+if anchored planning has nonnegative decoded-accuracy delta and lower
+off-support rate than raw planning.
+
+**Spec traces:** REQ-KONA-034
+
 ## Out of scope
 
 The following are deliberately **not** required by this capability:
@@ -1742,6 +1805,8 @@ The following are deliberately **not** required by this capability:
   `scripts/experiment_1291_hardnetpp_nonlinear_repair_benchmark.py`.
 - **EBRM latent trajectory drift smoke:** specified by REQ-KONA-033;
   implementation lives in `python/carnot/phase3/latent_drift_smoke.py`.
+- **Anchored dual-path latent repair smoke:** specified by REQ-KONA-034;
+  implementation lives in `python/carnot/phase3/anchored_dual_path_latent_repair.py`.
 
 First concrete next experiment:
 `experiment_XXX_rdt_primitive_convergence.py` — implement the RDT scaffold and
