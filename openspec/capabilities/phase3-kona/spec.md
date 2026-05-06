@@ -1195,6 +1195,44 @@ generalisation beyond the replay distribution.
   `hardnetpp_delta_over_replay_policy`, `dsp_feasibility_auc`, and an
   appropriately bounded `honest_verdict`.
 
+### REQ-KONA-033: EBRM Latent Trajectory Drift Smoke Diagnostic
+
+Before scaling continuous latent repair around EBRM-style trajectory planning,
+Carnot MUST run a CPU-only smoke diagnostic that measures the arXiv 2603.28248
+failure mode where latent planning lowers energy while decoded task accuracy
+falls because the optimized latent leaves the decoder's support. The diagnostic
+MUST use a tiny deterministic CNF or graph-style task, expose encoder output
+`h_x`, an optimized latent `z`, simple decomposed energy terms, a decoder with an
+explicit support radius, direct decode, and planned decode on the same dataset.
+
+The Exp 1417 artifact MUST use run date `20260506` and write
+`results/experiment_1417_ebrm_latent_trajectory_drift_smoke.json` with
+`status`, `latent_drift_smoke_complete`, `task_family`, `energy_monotone`,
+`accuracy_before_planning`, `accuracy_after_planning`,
+`accuracy_delta_after_planning`, `latent_drift_norm`,
+`dual_path_decoder_required`, `anchoring_required`, and `honest_verdict`.
+`dual_path_decoder_required` MUST be true when planning lowers energy but hurts
+or fails to improve decoded accuracy. `anchoring_required` MUST be true when the
+planned latent drift exceeds the decoder support radius.
+
+**Rationale:** Phase 3/Kona planning must not treat lower continuous latent
+energy as sufficient evidence of better decoded reasoning. A small deterministic
+support-shift smoke test makes the dangerous case visible before expensive
+continuous repair training scales it up.
+
+**Acceptance criteria:**
+
+- `python/carnot/phase3/latent_drift_smoke.py` exposes deterministic helpers to
+  build the tiny CNF task family, encode inputs, decode supported latents, plan
+  latent trajectories, compute accuracy, and build the Exp 1417 artifact.
+- Focused tests verify that direct decode and planned decode use the same
+  dataset, planning energy is monotone when reported as monotone, latent drift is
+  measured from `h_x` to `z_T`, and the dual-path/anchoring booleans follow the
+  measured energy, accuracy, and support-radius gates.
+- `results/experiment_1417_ebrm_latent_trajectory_drift_smoke.json` records all
+  required fields with `status="complete"` and an honest verdict that does not
+  convert off-support decoded regression into a positive Phase 3 claim.
+
 ## Scenarios
 
 ### SCENARIO-KONA-001: Stage 1 Primitive — RDT Fixed-Point Convergence
@@ -1622,6 +1660,22 @@ same-held-out comparison to the conservative Exp 1305 policy.
 
 **Spec traces:** REQ-KONA-032
 
+### SCENARIO-KONA-033: Exp 1417 Measures EBRM Latent Support Drift
+
+**Given** a deterministic tiny CNF task family, encoder anchors `h_x`, a
+support-limited decoder, and a weakly anchored EBRM-style latent planning energy
+**When** Exp 1417 decodes the encoder anchors directly and decodes the same
+examples after latent planning
+**Then** it writes
+`results/experiment_1417_ebrm_latent_trajectory_drift_smoke.json` with all
+REQ-KONA-033 required fields, `energy_monotone` derived from the measured energy
+trace, `accuracy_delta_after_planning` derived from the two decoded accuracies,
+`latent_drift_norm` derived from `||z_T - h_x||`, and
+`dual_path_decoder_required`/`anchoring_required` derived from the measured
+support-shift gates.
+
+**Spec traces:** REQ-KONA-033
+
 ## Out of scope
 
 The following are deliberately **not** required by this capability:
@@ -1686,6 +1740,8 @@ The following are deliberately **not** required by this capability:
 - **HardNet++ nonlinear repair benchmark:** specified by REQ-KONA-029;
   implementation lives in `python/carnot/phase3/nonlinear_repair.py` and
   `scripts/experiment_1291_hardnetpp_nonlinear_repair_benchmark.py`.
+- **EBRM latent trajectory drift smoke:** specified by REQ-KONA-033;
+  implementation lives in `python/carnot/phase3/latent_drift_smoke.py`.
 
 First concrete next experiment:
 `experiment_XXX_rdt_primitive_convergence.py` — implement the RDT scaffold and
