@@ -140,7 +140,7 @@ def build_runtime_fixed_artifact(
 
     rows = _headline_rows(exp1311_artifact, model_specs or [])
     if not rows:
-        return _blocked_artifact(artifact, "no_verifier_backed_sota_cases")
+        return _blocked_artifact(artifact, "no_verifier_backed_sota_rows")
 
     attempts, repair_attempts, tax_rows = _build_attempts(rows)
     path_metrics = _path_metrics(attempts)
@@ -168,21 +168,18 @@ def build_runtime_fixed_artifact(
             "headline_result_allowed": headline_blocker is None,
             "headline_blocker": headline_blocker,
             "honest_verdict": _honest_verdict(parse_rate, headline_blocker),
-            "minimal_changes_applied": [
-                "runtime settings: removed premature newline stop and kept deterministic temperature",
-                "prompt schema: certificate-shaped prompt with bounded final labels",
-                "parser repair: recover raw non-JSON bounded label tails",
-                "schema repair: preserve UNKNOWN and ABSTAIN as first-class labels",
-                "repair accounting: verifier-label repairs are reported separately from formalizer success",
-            ],
+            "minimal_changes_applied": _minimal_changes_applied(exp1324_artifact),
             "source_response_count": len(rows),
             "certificate_attempt_count": len(attempts),
             "verifier_backed_case_count": len(rows),
             "path_metrics": path_metrics,
             "attempts": attempts,
-            "retire_if_same_verdict": parse_rate < PARSE_GATE,
+            "retire_if_same_verdict": {
+                "enabled": parse_rate < PARSE_GATE,
+                "same_verdict": "certificate_parse_gate_still_closed_runtime_fixed_v5",
+            },
             "next_blocker": (
-                "raw-trigger/parser recovery remains below the 0.75 parse gate"
+                "parser_schema_recovery_still_below_0.75_parse_gate"
                 if parse_rate < PARSE_GATE
                 else None
             ),
@@ -404,7 +401,9 @@ def _projected_certificate(row: Mapping[str, Any], *, path: str, label: str) -> 
 def _prompt_char_counts(row: Mapping[str, Any], item: Any) -> dict[str, int]:
     if item is None:
         base_prompt = str(row.get("item_id") or "unknown certificate fixture")
-        compact_bits = f"{row.get('item_id', 'unknown')}|compact={int(bool(row.get('compact_encoding')))}"
+        compact_bits = (
+            f"{row.get('item_id', 'unknown')}|compact={int(bool(row.get('compact_encoding')))}"
+        )
     else:
         perturbation = int(row.get("perturbation_index") or 0)
         base_prompt = build_prompt(item, perturbation)
@@ -438,6 +437,26 @@ def _runtime_settings(exp1323_artifact: Mapping[str, Any]) -> dict[str, Any]:
     settings["gpu_indices"] = [0, 1]
     settings["preferred_quant"] = "Q4_K_M"
     return settings
+
+
+def _minimal_changes_applied(exp1324_artifact: Mapping[str, Any]) -> list[str]:
+    """Return only the minimal Exp 1324 repair classes allowed for this rerun.
+
+    Exp 1325 is meant to test whether the certificate gate reopens after the
+    narrow runtime/parser repair set, not after every possible downstream
+    grammar idea. This helper keeps the artifact's change list auditable by
+    filtering Exp 1324's recommendations to the bounded classes named in
+    REQ-VERIFY-1325-3 and by preserving a stable default when the taxonomy
+    artifact is missing.
+    """
+    allowed = ("runtime settings", "prompt schema", "parser repair", "schema repair")
+    priorities = exp1324_artifact.get("exp1325_fix_priorities") or ()
+    changes = [
+        str(priority)
+        for priority in priorities
+        if any(str(priority).startswith(prefix) for prefix in allowed)
+    ]
+    return changes or ["runtime settings", "parser repair"]
 
 
 def _headline_rows(
@@ -592,7 +611,9 @@ def _narrative(parse_rate: float, headline_blocker: str | None) -> str:
     )
 
 
-def _base_artifact(*, project_root: Path, run_date: str, status: str = "in_progress") -> dict[str, Any]:
+def _base_artifact(
+    *, project_root: Path, run_date: str, status: str = "in_progress"
+) -> dict[str, Any]:
     return {
         "artifact": ARTIFACT_NAME,
         "schema_version": SCHEMA_VERSION,
@@ -648,6 +669,20 @@ def _number(value: Any, default: float = 0.0) -> float:
 
 def _load_json(path: str | Path) -> dict[str, Any]:
     return json.loads(Path(path).read_text(encoding="utf-8"))
+
+
+def _read_json(path: str | Path) -> dict[str, Any]:
+    """Read optional source artifacts without turning missing debt into a crash.
+
+    Several Exp 1325 defensive branches intentionally simulate missing upstream
+    artifacts. Returning an empty mapping lets the caller produce an honest
+    blocked artifact instead of hiding the underlying gate state behind an
+    unrelated file-not-found exception.
+    """
+    try:
+        return _load_json(path)
+    except FileNotFoundError:
+        return {}
 
 
 def _write_json(path: Path, payload: Mapping[str, Any]) -> None:

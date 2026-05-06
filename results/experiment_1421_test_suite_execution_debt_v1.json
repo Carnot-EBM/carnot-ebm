@@ -1,0 +1,114 @@
+{
+  "status": "complete",
+  "collection_clean_confirmed": true,
+  "execution_failures_before": [
+    {
+      "test": "tests/python/test_experiment_1325_triggered_certificate_runtime_fixed.py::test_exp1325_edge_branches_remain_explicit",
+      "failure": "AttributeError: module 'carnot.reporting.triggered_certificate_extraction_v5_runtime_fixed_dccd_gbnf' has no attribute '_minimal_changes_applied'"
+    },
+    {
+      "test": "tests/python/test_experiment_1182_paper_v5_medium_low_issues_11_18.py::TestIssue11ThroughIssue15::test_issue_13_nrgpt_disclosure_or_no_citation",
+      "failure": "assert False is True"
+    },
+    {
+      "test": "tests/python/test_experiment_294_gpu_baseline_apple.py::TestBaselineAccuracyBounds::test_accuracy_in_unit_interval_when_all_correct",
+      "failure": "xdist worker crashed while running the test"
+    }
+  ],
+  "execution_failures_after": [
+    {
+      "test": "tests/python/test_experiment_1182_paper_v5_medium_low_issues_11_18.py::TestIssue11ThroughIssue15::test_issue_13_nrgpt_disclosure_or_no_citation",
+      "failure": "assert False is True"
+    },
+    {
+      "test": "tests/python/test_experiment_294_gpu_baseline_apple.py::TestBaselineAccuracyBounds::test_accuracy_in_unit_interval_when_all_correct",
+      "failure": "xdist worker crashed while running the test"
+    },
+    {
+      "test": "tests/python/test_experiment_563_live_data_a_v2.py::TestBuildLiveDataArtifact::test_models_field",
+      "failure": "expected google/gemma-4-E4B-it, got local GGUF SOTA model IDs"
+    },
+    {
+      "test": "tests/python/test_experiment_383_models_retrain.py::TestRunExperimentRealData::test_eorm_retrain_runs_when_enough_pairs",
+      "failure": "pytest memory watchdog reported Memory leak: +1002MB"
+    }
+  ],
+  "execution_failures_fixed": [
+    {
+      "test": "tests/python/test_experiment_1325_triggered_certificate_runtime_fixed.py::test_exp1325_edge_branches_remain_explicit",
+      "root_cause": "Exp 1325 reporting module lacked the helper/API shape that the existing REQ-VERIFY-1325 test already specified, and related blocked/retirement field values had drifted.",
+      "fix": "Restored _minimal_changes_applied and _read_json, aligned no-row blocked_reason, and emitted structured retire-if-same-verdict and next-blocker fields."
+    }
+  ],
+  "spec_coverage_checked": {
+    "checked": true,
+    "command": ".venv/bin/python scripts/check_spec_coverage.py",
+    "result": "failed: 71 pre-existing tests lack REQ-* or SCENARIO-* references; the touched exp1325 test module already references REQ-VERIFY-1325 and SCENARIO-VERIFY-1325."
+  },
+  "commands_run": [
+    {
+      "cmd": "sed -n '1,220p' AGENTS.md; sed -n '1,260p' CODEX.md; sed -n '1,260p' CLAUDE.md; sed -n '1,220p' results/experiment_1392_test_suite_hygiene_v2.json",
+      "result": "read required workflow and prior collection-hygiene artifact"
+    },
+    {
+      "cmd": ".venv/bin/pytest tests/python --collect-only -q",
+      "result": "exit 0; collected 22277 tests / 3 skipped; no collection errors observed"
+    },
+    {
+      "cmd": ".venv/bin/pytest tests/python -q --no-header --tb=short --disable-warnings -x",
+      "result": "failed before fix: 3 failed, 5475 passed, 29 skipped, 44 warnings in 119.74s; included the exp1325 AttributeError"
+    },
+    {
+      "cmd": "sed -n '17494,17555p' openspec/capabilities/verifiable-reasoning/spec.md",
+      "result": "confirmed REQ-VERIFY-1325 and SCENARIO-VERIFY-1325 exist before implementation edit"
+    },
+    {
+      "cmd": ".venv/bin/pytest tests/python/test_experiment_1325_triggered_certificate_runtime_fixed.py::test_exp1325_edge_branches_remain_explicit -q --no-header --tb=short --disable-warnings",
+      "result": "failed before fix with AttributeError for missing _minimal_changes_applied; global coverage addopts also failed on broad pre-existing coverage"
+    },
+    {
+      "cmd": ".venv/bin/pytest tests/python/test_experiment_1325_triggered_certificate_runtime_fixed.py::test_exp1325_edge_branches_remain_explicit -q --no-header --tb=short --disable-warnings --no-cov",
+      "result": "passed after fix: 1 passed, 4 warnings in 7.17s"
+    },
+    {
+      "cmd": ".venv/bin/pytest tests/python/test_experiment_1325_triggered_certificate_runtime_fixed.py -q --no-header --tb=short --disable-warnings --no-cov",
+      "result": "passed after fix and formatting: 6 passed, 4 warnings in 6.71s"
+    },
+    {
+      "cmd": ".venv/bin/coverage erase && .venv/bin/coverage run --include='python/carnot/reporting/triggered_certificate_extraction_v5_runtime_fixed_dccd_gbnf.py' -m pytest tests/python/test_experiment_1325_triggered_certificate_runtime_fixed.py -q --no-header --tb=short --disable-warnings --no-cov -n 0 && .venv/bin/coverage report --include='python/carnot/reporting/triggered_certificate_extraction_v5_runtime_fixed_dccd_gbnf.py' --fail-under=100 -m",
+      "result": "tests passed; coverage command failed at 97% for the whole pre-existing module, with missing lines 223-225, 286, 403-404, 484, 489, 497; none are the new helper lines"
+    },
+    {
+      "cmd": ".venv/bin/pytest tests/python -q",
+      "result": "required exact full-suite command was started; it reached about 52% with many unrelated failures and worker crashes, then was killed after a long CPU-bound stall without a final summary"
+    },
+    {
+      "cmd": ".venv/bin/pytest tests/python -q --no-header --tb=short --disable-warnings -x --no-cov",
+      "result": "post-fix focused probe failed on remaining unrelated debt: 3 failed, 6804 passed, 52 skipped, 44 warnings, 1 error in 124.85s; exp1325 failure absent"
+    },
+    {
+      "cmd": "sed -n '1,260p' ops/e2e-test-plan.md",
+      "result": "read E2E plan; no full training/sampling E2E was run because this scoped runtime-debt repair touched reporting artifact logic only"
+    },
+    {
+      "cmd": ".venv/bin/python scripts/check_spec_coverage.py",
+      "result": "failed with 71 pre-existing tests missing spec traceability"
+    },
+    {
+      "cmd": "ruff check python/carnot/reporting/triggered_certificate_extraction_v5_runtime_fixed_dccd_gbnf.py",
+      "result": "All checks passed"
+    },
+    {
+      "cmd": "ruff format python/carnot/reporting/triggered_certificate_extraction_v5_runtime_fixed_dccd_gbnf.py && ruff format --check python/carnot/reporting/triggered_certificate_extraction_v5_runtime_fixed_dccd_gbnf.py",
+      "result": "1 file reformatted, then 1 file already formatted"
+    }
+  ],
+  "remaining_debt": [
+    "The exact required full suite command .venv/bin/pytest tests/python -q did not pass; it exposed broad pre-existing runtime failures and stalled after more than 20 minutes around the middle of the suite.",
+    "Post-fix focused execution still fails on test_experiment_1182_paper_v5_medium_low_issues_11_18.py issue 13, test_experiment_294_gpu_baseline_apple.py worker crash, test_experiment_563_live_data_a_v2.py model-ID drift, and test_experiment_383_models_retrain.py memory-watchdog leak.",
+    "Spec coverage remains blocked by 71 pre-existing tests without REQ-* or SCENARIO-* references outside the exp1325 fix scope.",
+    "Whole-module coverage for the touched exp1325 reporting module is 97% because older branches remain uncovered; the added helper/default/read-json paths are exercised by the existing REQ-VERIFY-1325 test module.",
+    "ops/changelog.md, ops/status.md, and _bmad/traceability.md were intentionally not updated because the task's STOP-WHEN-DONE rule says the conductor reconciliation step owns those files."
+  ],
+  "honest_verdict": "exp1325_runtime_failure_fixed_collection_clean_confirmed_full_suite_still_blocked_by_unrelated_execution_and_spec_coverage_debt"
+}
