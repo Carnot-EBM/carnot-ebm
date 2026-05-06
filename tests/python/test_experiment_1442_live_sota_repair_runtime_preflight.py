@@ -280,10 +280,10 @@ def test_exp1442_gpu_probe_covers_default_helpers_and_bad_rows(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     """REQ-INFER-SOTA-007: default GPU helper imports and parse failures are covered."""
-    import scripts.experiment_template as tmpl
-
-    monkeypatch.setattr(tmpl, "_cuda_is_available", lambda: True)
-    monkeypatch.setattr(tmpl, "_detect_gpu_count_rocm_aware", lambda: 2)
+    fake_template = types.ModuleType("scripts.experiment_template")
+    fake_template._cuda_is_available = lambda: True
+    fake_template._detect_gpu_count_rocm_aware = lambda: 2
+    monkeypatch.setitem(sys.modules, "scripts.experiment_template", fake_template)
 
     def fake_run(cmd: list[str], **_: Any) -> subprocess.CompletedProcess[str]:
         return subprocess.CompletedProcess(
@@ -504,6 +504,7 @@ def test_exp1442_output_helpers_cover_edge_cases() -> None:
     assert _summarize_stream("a" * 10, limit=4) == "aaaa..."
     assert _summarize_stream("  \n\t", limit=4) == ""
     assert _extract_json_from_stdout('\nnoise\n{"ok": true}\n') == {"ok": True}
+    assert _extract_json_from_stdout('{"ok": true}\n\nnot json') == {"ok": True}
     assert _extract_json_from_stdout("not json") is None
     assert _completion_text({"choices": [{"text": "abc"}]}) == "abc"
     assert _completion_text({"choices": [{"message": {"content": "xyz"}}]}) == "xyz"
@@ -516,12 +517,13 @@ def test_exp1442_output_helpers_cover_edge_cases() -> None:
 
 def test_exp1442_default_helpers_can_be_patched(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     """REQ-INFER-SOTA-007: default helper wrappers stay wired to canonical modules."""
-    import carnot.inference.sota_models as sota_models
-    import scripts.experiment_template as tmpl
-
-    monkeypatch.setattr(tmpl, "_get_repo_root", lambda: str(tmp_path))
-    monkeypatch.setattr(sota_models, "resolve_cached_gguf", lambda hf_id, preferred_quant: "/x")
-    monkeypatch.setattr(sota_models, "cached_sota_pair", lambda **kwargs: [{"kwargs": kwargs}])
+    fake_template = types.ModuleType("scripts.experiment_template")
+    fake_template._get_repo_root = lambda: str(tmp_path)
+    fake_sota_models = types.ModuleType("carnot.inference.sota_models")
+    fake_sota_models.resolve_cached_gguf = lambda hf_id, preferred_quant: "/x"
+    fake_sota_models.cached_sota_pair = lambda **kwargs: [{"kwargs": kwargs}]
+    monkeypatch.setitem(sys.modules, "scripts.experiment_template", fake_template)
+    monkeypatch.setitem(sys.modules, "carnot.inference.sota_models", fake_sota_models)
 
     assert mod._utc_run_date().isdigit()
     assert mod._repo_root() == tmp_path
