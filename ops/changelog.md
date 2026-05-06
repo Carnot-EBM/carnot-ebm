@@ -4998,3 +4998,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-06: DVI v3 — Train on 1508 Fresh Verified Cases from FR-11 v5 (⚠️ Blocked) — honest_verdict=dvi_v3_blocked_nonforgetting_below_gate; results/experiment_1415_dvi_v3_1508_fresh_cases.json
 - 2026-05-06: EBM-CoT v3 — Temperature Scaling to Fix Hinge-Only Variance (⚠️ Research Finding) — honest_verdict=temperature_scaling_reduced_variance_and_preserved_auroc; results/experiment_1416_ebm_cot_v3_temperature_calibration.json
 - 2026-05-06: EBRM Latent Trajectory Drift Smoke — Energy Down Does Not Imply Decode Correct (⚠️ Research Finding) — honest_verdict=energy_down_accuracy_down_off_decoder_support; results/experiment_1417_ebrm_latent_trajectory_drift_smoke.json
+- 2026-05-06: Full-Scale Pipeline v3 — Gated on Exp 1414 Repair Executor (⚠️ Research Finding) — honest_verdict=not_headline_full_pipeline_below_0_40; results/experiment_1419_fullscale_pipeline_v3_repair_executor.json
