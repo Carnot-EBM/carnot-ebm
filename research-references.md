@@ -4,6 +4,92 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-05-06 Post-.109 Planning Sweep (Milestone 2026.04.110)
+
+This sweep was run after milestone `.109` completed with 10 of 13 criteria met.
+Key outcomes: temperature scaling fixed the EBM-CoT variance issue (`exp1416`);
+PRM v1 reached AUROC 0.8329 on available step labels (`exp1423`); Discrete SB
+KV260 moved from feasibility into an RTL specification (`exp1422`); the local
+SOTA repair executor was deployed but accepted 0/20 repairs (`exp1414`) and
+full-scale pipeline v3 accepted 0/100 repair-hint cases (`exp1419`), leaving
+`full_pipeline_pass_rate=0.305`; DVI v3 improved AUROC but missed the
+nonforgetting gate (`exp1415`, `nonforgetting_rate=0.968604`); FR-11 v6 gate
+blocked because DVI v3 did not deploy (`exp1418`). Primary `.110` focus:
+(1) diagnose and repair the zero-accepted-repair executor; (2) fix DVI v3
+nonforgetting so FR-11 self-learning can resume; (3) complete PRM labels and
+use PRM scores to guide repair; (4) convert Discrete SB RTL spec into honest
+lint/simulation evidence.
+
+### Constrained Sampling for Repair Execution
+- **Paper:** arXiv 2506.05754, "Constrained Sampling for Language Models Should
+  Be Easy, in Theory." June 2025.
+- **Source:** https://arxiv.org/abs/2506.05754
+- **What:** Frames constrained generation as a sampling problem and argues that
+  MCMC-style candidate exploration can make hard constraints tractable when a
+  direct autoregressive decoder struggles.
+- **Relevance to Carnot:** `exp1414` and `exp1419` both proved that free-form
+  repair execution is not enough: the local SOTA model could be called, but no
+  candidate survived the schema, semantic, and verifier gates. A repair executor
+  that samples multiple constrained candidates and accepts only verifier-clean
+  moves is a better match to Carnot's certificate contract.
+- **Concrete experiment:** exp1429 MCMC constrained repair candidate search.
+  Report `candidates_per_case`, `mcmc_acceptance_rate`,
+  `repair_success_rate_best_of_n`, and whether best-of-N constrained search
+  beats the zero-repair `.109` baseline.
+
+### Draft-Conditioned Constrained Decoding for Repair v2
+- **Paper:** arXiv 2603.03305, "Draft-Conditioned Constrained Decoding for
+  Verifiable Code Generation." March 2026.
+- **Source:** https://arxiv.org/abs/2603.03305
+- **What:** Uses a draft output plus constraint checking to steer decoding
+  toward verifiable structures instead of relying on unconstrained generation
+  and post-hoc rejection alone.
+- **Relevance to Carnot:** Carnot has structured `REPAIR_HINT` rows, semantic
+  equivalence tests, and certificate schemas. DCCD maps naturally to a
+  tag-first repair executor that emits a bounded patch object, validates the
+  object before semantic checking, and records rejection reasons.
+- **Concrete experiment:** exp1428 DCCD/schema-constrained repair executor v2.
+  Use the mandated local SOTA GGUF models and report `schema_valid_rate`,
+  `semantic_acceptance_rate`, and `repaired_case_success_rate`.
+
+### Abstraction-Augmented Training for Nonforgetting DVI Updates
+- **Paper:** HuggingFace Papers 2603.17198, "Abstraction-Augmented Training for
+  Language Agents." March 2026.
+- **Source:** https://huggingface.co/papers/2603.17198
+- **What:** Adds abstracted experience to agent training so policies generalize
+  beyond narrow demonstrations while preserving prior behavior.
+- **Relevance to Carnot:** `exp1415` improved DVI AUROC but failed deployment
+  because nonforgetting dropped to 0.968604. Replay-balanced and
+  abstraction-balanced DVI updates should be tested before scaling FR-11 v6.
+- **Concrete experiment:** exp1432 DVI v3 nonforgetting replay-balanced repair.
+  Report `dvi_v3_auroc_delta`, `nonforgetting_rate`, and whether DVI v3 deploys
+  before exp1433 FR-11 v6 runs.
+
+### FoVer and Thinking PRM Label Completion
+- **Projects/Papers:** FoVer PRM data and project page; ThinkPRM repository for
+  "Process Reward Models That Think."
+- **Sources:** https://fover-prm.github.io/ and https://github.com/mukhal/thinkprm
+- **What:** FoVer provides formally verified process-supervision data; ThinkPRM
+  implements a generate-critique-then-score process reward model pattern.
+- **Relevance to Carnot:** `exp1423` trained PRM v1 on 1030 locally labeled
+  traces but left 478 promoted traces missing local step labels. Completing
+  those labels is the highest-confidence path to PRM v2 and to a PRM-guided
+  repair selector.
+- **Concrete experiments:** exp1430 PRM-guided repair selector and exp1434 FoVer
+  PRM label completion v2. Report `missing_labels_filled`,
+  `training_traces_used`, `prmv2_auroc`, and `selection_improvement_pp`.
+
+### Process Reward Agents for Repair Selection
+- **Paper:** arXiv 2604.09482, "Process Reward Agents." April 2026.
+- **Source:** https://arxiv.org/abs/2604.09482
+- **What:** Treats process-reward estimation as an agentic verifier that can
+  inspect intermediate states rather than only final answers.
+- **Relevance to Carnot:** The repair executor needs a cheap selector before
+  expensive semantic validation. A PRM/PRA-style selector can rank repair
+  candidates from DCCD or MCMC search and reduce wasted validator calls.
+- **Concrete experiment:** exp1430 PRM-guided repair selector. Report whether
+  PRM-ranked candidates improve accepted repairs over raw best-of-N sampling.
+
 ## 2026-05-06 Post-.108 Planning Sweep (Milestone 2026.04.109)
 
 This sweep was run after milestone `.108` completed with 12 of 13 criteria met.
@@ -6912,8 +6998,8 @@ Not content itself, but signals to prioritise what to read next.
 
 ## ArXiv Scan — Exp 139 (2026-04-11)
 
-Queries: ebm_verification, ising_language, constraint_neural, kan_energy, guided_decoding, fpga_ising, continual_constraint, thermodynamic_sampling  
-Total unique papers scanned: 14  
+Queries: ebm_verification, ising_language, constraint_neural, kan_energy, guided_decoding, fpga_ising, continual_constraint, thermodynamic_sampling
+Total unique papers scanned: 14
 Top 10 selected by relevance score.
 
 ### Interpretation of Crystal Energy Landscapes with Kolmogorov-Arnold Networks
@@ -7079,9 +7165,9 @@ thermodynamic_fpga_2025, factual_verification_kb, autoregressive_ebm
 
 ## ArXiv Scan — Exp 165 (20260411)
 
-Queries: jepa_prediction, factual_verification_kg, fpga_ising_2026, ebm_reasoning_verification, orthogonal_projection, ebm_hallucination, continual_forgetting, kan_interpretable, guided_decoding_2026, thermodynamic_hardware  
-Total unique new papers scanned: 29  
-Deduplicated against Exp 139: 0 papers skipped.  
+Queries: jepa_prediction, factual_verification_kg, fpga_ising_2026, ebm_reasoning_verification, orthogonal_projection, ebm_hallucination, continual_forgetting, kan_interpretable, guided_decoding_2026, thermodynamic_hardware
+Total unique new papers scanned: 29
+Deduplicated against Exp 139: 0 papers skipped.
 Top 10 selected by relevance score.
 
 ### Cram Less to Fit More: Training Data Pruning Improves Memorization of Facts

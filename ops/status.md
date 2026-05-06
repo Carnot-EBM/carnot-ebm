@@ -1,6 +1,23 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-06 (Milestone 2026.04.109 research planning complete)
+**Last Updated:** 2026-05-06 (Milestone 2026.04.110 research planning complete)
+
+## Session 2026-05-06 - Milestone 2026.04.110 Research Planning Complete
+
+**Milestone 2026.04.110 PLANNED.**
+
+- Roadmap doc: `openspec/change-proposals/research-roadmap-vNEXT.md`
+- Execution queue: `research-roadmap-next.yaml` (14 tasks, exp1425-exp1438)
+- ID allocation: milestone `.109` ended at `exp1424`, so `.110` starts at `exp1425`.
+- Research references updated before final roadmap design with the post-.109 sweep: constrained sampling for repair execution, draft-conditioned constrained decoding, abstraction-augmented nonforgetting updates, FoVer/ThinkPRM label completion, and process reward agents for repair selection.
+- Design focus: Phase 0 activates `.109` carry-forwards and diagnostics; Phase 1 pursues repair executor v2 with DCCD/schema constraints, MCMC candidate search, PRM-guided selection, and gated 50-case pipeline validation; Phase 2 repairs DVI nonforgetting, runs mandatory FR-11 continuous self-learning v6, completes PRM labels, and audits DPO provenance; Phase 3 covers anchored latent repair, Discrete SB KV260 RTL lint/simulation, and retro.
+- LLM-bearing tasks (`exp1428`, `exp1429`, `exp1431`, and DPO provenance task `exp1435`) include mandated local SOTA GGUF `MODEL_SPECS`: `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and `unsloth/gemma-4-26B-A4B-it-GGUF`.
+- Structured gates: `exp1429` on `exp1428.repair_executor_v2_deployed == true`; `exp1430` on `exp1429.candidate_search_complete == true`; `exp1431` on `exp1428.repaired_case_success_rate > 0.0` and `exp1430.prm_guided_selection_ready == true`; `exp1433` on `exp1432.dvi_v3_deployed == true`.
+- Agent routing: all 14 tasks use `agent_type: codex`, `model: gpt-5.5`; no `requires_claude: true` tasks.
+- Validation passed: YAML parse and prompt-section/end checks, `python3 scripts/validate_prior_failures.py research-roadmap-next.yaml`, and `python3 scripts/audit_roadmap_gates.py research-roadmap-next.yaml`.
+- Did NOT modify `research-roadmap.yaml` or `scripts/research_conductor.py`.
+
+**What's next**: activate `research-roadmap-next.yaml` for milestone 2026.04.110 when ready.
 
 ## Session 2026-05-06 - Milestone 2026.04.109 Research Planning Complete
 
