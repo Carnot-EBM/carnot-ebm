@@ -67,6 +67,7 @@ from carnot.pipeline.semantic_grounding import SemanticGroundingVerifier
 from carnot.pipeline.semantic_verifier_v2 import SemanticVerifierV2
 from carnot.pipeline.structured_reasoning import StructuredReasoningController
 from carnot.pipeline.typed_reasoning import extract_typed_reasoning as build_typed_reasoning_ir
+from carnot.pipeline.verdict_record import VerdictRecord, calibrated_confidence_from_energy
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
@@ -267,6 +268,61 @@ class VerificationResult:
     Higher = more diffuse attention spectrum = higher hallucination risk.
     Populated alongside spectral_diffuse when CARNOT_SPECTRAL_PROBE=1.
     Spec: REQ-VERIFY-146, SCENARIO-VERIFY-174"""
+
+    def to_verdict_record(
+        self,
+        *,
+        budget_ms_consumed: float = 0.0,
+        producing_tier: int = 3,
+        tier_reached: int | None = None,
+        repairs_applied: list[str] | None = None,
+        extras: dict[str, Any] | None = None,
+    ) -> VerdictRecord:
+        """Convert this legacy result into a structured verdict record.
+
+        Spec: REQ-VERIFY-1408, REQ-VERIFY-1409, REQ-VERIFY-1410
+        """
+        certificate_error = self.certificate.get("error_type") or self.certificate.get("error")
+        if certificate_error:
+            verdict = "abstain"
+            rationale = f"verification_error:{certificate_error}"
+        elif self.verified:
+            verdict = "pass"
+            rationale = "no_constraints" if not self.constraints else "constraints_satisfied"
+        else:
+            verdict = "fail"
+            if self.violations:
+                violation_types = sorted({item.constraint_type for item in self.violations})
+                rationale = "constraint_violation:" + ",".join(violation_types)
+            else:
+                rationale = "verification_failed"
+
+        confidence_energy = self.energy
+        if not self.verified and confidence_energy <= 0.0:
+            confidence_energy = float(max(1, len(self.violations)))
+
+        record_extras: dict[str, Any] = {
+            "certificate": self.certificate,
+            "mode": self.mode,
+            "skipped": self.skipped,
+            "n_constraints": len(self.constraints),
+            "n_violations": len(self.violations),
+            "violation_types": [item.constraint_type for item in self.violations],
+        }
+        if extras:
+            record_extras.update(extras)
+
+        return VerdictRecord(
+            verdict=verdict,  # type: ignore[arg-type]
+            energy=float(self.energy),
+            calibrated_confidence=calibrated_confidence_from_energy(confidence_energy),
+            producing_tier=producing_tier,
+            tier_reached=producing_tier if tier_reached is None else tier_reached,
+            rationale=rationale,
+            budget_ms_consumed=budget_ms_consumed,
+            repairs_applied=[] if repairs_applied is None else repairs_applied,
+            extras=record_extras,
+        )
 
 
 @dataclass
@@ -1149,6 +1205,30 @@ class VerifyRepairPipeline:
             "reason": "low_uncertainty",
             "result": result,
         }
+
+    def verify_legacy(self, *args: Any, **kwargs: Any) -> VerificationResult:
+        """Compatibility alias for the existing ``verify()`` return type.
+
+        Spec: REQ-VERIFY-1410
+        """
+        return self.verify(*args, **kwargs)
+
+    def verify_record(self, *args: Any, **kwargs: Any) -> VerdictRecord:
+        """Verify a response and return a structured verdict record.
+
+        Existing callers should continue using ``verify()``.  New integrations
+        that need stable audit fields can use this structured API.
+
+        Spec: REQ-VERIFY-1408, REQ-VERIFY-1409, REQ-VERIFY-1410
+        """
+        started_at = time.monotonic()
+        result = self.verify(*args, **kwargs)
+        budget_ms = (time.monotonic() - started_at) * 1000.0
+        return result.to_verdict_record(
+            budget_ms_consumed=budget_ms,
+            producing_tier=3,
+            tier_reached=3,
+        )
 
     def verify(
         self,

@@ -2235,3 +2235,80 @@ validation, repair, full-pipeline, baseline-improvement, model-provenance, and
 headline-gate statistics for the processed FoVer cases.
 
 **Spec traces:** REQ-VERIFY-1397, SCENARIO-VERIFY-1397
+
+### REQ-VERIFY-1408: Structured Verdict Record Schema
+
+The pipeline MUST expose a documented `VerdictRecord` dataclass for downstream
+verification consumers that need more than a boolean pass/fail result.  The
+record SHALL include at least `verdict`, `energy`, `calibrated_confidence`,
+`producing_tier`, `tier_reached`, `rationale`, `budget_ms_consumed`,
+`repairs_applied`, and `extras`.
+
+`verdict` SHALL be one of `"pass"`, `"fail"`, or `"abstain"`.  Energy SHALL be
+stored as a float.  `calibrated_confidence` SHALL be clamped to `[0.0, 1.0]`.
+Tier fields SHALL be integer tier identifiers, where higher numbers indicate a
+deeper verifier tier.  The record SHALL serialize to a JSON-compatible dict
+without requiring callers to inspect pipeline internals.
+
+**Acceptance criteria:**
+- `VerdictRecord.to_dict()` returns every required field with JSON-compatible
+  values.
+- Invalid verdict strings are rejected.
+- Confidence values outside `[0.0, 1.0]` are clamped rather than leaked.
+- `repairs_applied` and `extras` default to empty containers.
+
+### REQ-VERIFY-1409: Energy-To-Confidence Calibration Helper
+
+The pipeline MUST provide a deterministic post-hoc calibration helper for
+structured verdicts.  The helper SHALL map raw energy to a probability-like
+confidence in `[0.0, 1.0]`, monotonic in negative energy: lower energy MUST
+produce confidence greater than or equal to higher energy under the same
+threshold and temperature.
+
+The helper SHALL be documented as a fallback calibration surface that can be
+replaced by held-out isotonic or Platt calibration parameters.  It SHALL handle
+NaN and infinities deterministically so verdict records remain serializable.
+
+**Acceptance criteria:**
+- Confidence monotonically decreases as energy increases.
+- NaN energy returns `0.0` confidence.
+- Negative infinity maps to `1.0`; positive infinity maps to `0.0`.
+- Non-positive temperatures are rejected.
+
+### REQ-VERIFY-1410: Structured Verdict API With Legacy Compatibility
+
+`VerifyRepairPipeline` and `ThreeTierPipeline` MUST expose a structured verdict
+API that returns `VerdictRecord` while preserving existing legacy callers.
+`verify_record(...)` SHALL return the structured record.  Existing `verify(...)`
+callers SHALL keep their current return shape, and `verify_legacy(...)` SHALL be
+available as an explicit compatibility alias.
+
+For `VerifyRepairPipeline`, the record SHALL be derived from the existing
+`VerificationResult` and include the raw energy, pass/fail verdict, a rationale
+derived from violations or certificate errors, and certificate details in
+`extras`.  For `ThreeTierPipeline`, the record SHALL derive from the deciding
+tier returned by the legacy cascade and SHALL include `tier_used` in `extras`.
+
+**Acceptance criteria:**
+- `VerifyRepairPipeline.verify_record()` returns a `VerdictRecord` without
+  changing `VerifyRepairPipeline.verify()` callers.
+- `ThreeTierPipeline.verify_record()` returns a `VerdictRecord` without changing
+  the legacy `(verified, tier_used, energy)` tuple from `verify()`.
+- `verify_legacy()` delegates to the unchanged legacy return path.
+- Structured records include elapsed budget milliseconds.
+
+### SCENARIO-VERIFY-1408: Structured Verdicts Preserve Legacy Semantics
+
+**Given** a correct arithmetic response and an incorrect arithmetic response,
+**When** `VerifyRepairPipeline.verify_record()` is called,
+**Then** the correct response returns `verdict="pass"` and the incorrect
+response returns `verdict="fail"`,
+**And** both records include energy, calibrated confidence, tier identifiers,
+elapsed budget milliseconds, a rationale, and JSON-compatible extras.
+
+**Given** a `ThreeTierPipeline` configured to fall through to an Ising stub,
+**When** `verify_record()` and legacy `verify()` are called on the same response,
+**Then** the structured record preserves the same verified outcome, tier name,
+and energy while the legacy tuple shape remains unchanged.
+
+**Spec traces:** REQ-VERIFY-1408, REQ-VERIFY-1409, REQ-VERIFY-1410
