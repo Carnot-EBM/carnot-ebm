@@ -992,3 +992,4 @@ web search: GitHub trending energy based mod |
 | 2026-05-06 05:48 UTC | DVI v3 — Train on 1508 Fresh Verified Cases from F | FAIL | Codex CLI error: Hard wall-clock cap after 4804s. Last output: run_date="2026 |
 | 2026-05-06 06:32 UTC | DVI v3 — Train on 1508 Fresh Verified Cases from F | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1415_dvi_v3_ |
 | 2026-05-06 07:14 UTC | DVI v3 — Train on 1508 Fresh Verified Cases from F | FAIL | No file changes produced |
+| 2026-05-06 07:31 UTC | EBM-CoT v3 — Temperature Scaling to Fix Hinge-Only | OK | 81 passed, 1 warning in 5.26s |
