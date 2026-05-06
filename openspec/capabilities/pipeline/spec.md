@@ -800,6 +800,7 @@ huggingface-cli login.  The script MUST be executable and idempotent.
 | REQ-INFRA-057 | Implemented | Exp 790 — NPU unblock: Option A (GitHub wheel) first, Option B fallback, max 2 strategies |
 | REQ-INFRA-058 | Scaffolding | Exp 793 — manifest full-scope audit; patch spec written to results/experiment_793_manifest_full_scope_audit.json |
 | REQ-INFRA-059 | Scaffolding | Exp 793 — WARNING-level logging requirement documented; patch required in pick_next_task |
+| REQ-VERIFY-1427 | Implemented | Exp 1427 — repair_rejection_ledger.py + rejection ledger artifact and repair v2 contract |
 | REQ-LOADER-010 | Planned | Exp 768 — Gemma4 call site audit + GemmaTransformersLoader enforcement |
 | REQ-LOADER-011 | Planned | Exp 786 — kill_gpu_zombies() mandatory before Gemma4 load; VRAM threshold guard |
 | REQ-PROBE-020 | Implemented | Exp 772 — SemanticEnergyProbe + SemanticCluster in python/carnot/pipeline/semantic_energy_probe.py |
@@ -2386,6 +2387,51 @@ sets `full_pipeline_headline_gate_met=true` exactly when
 `full_pipeline_pass_rate >= 0.40`.
 
 **Spec traces:** REQ-VERIFY-1419, SCENARIO-VERIFY-1419
+
+### REQ-VERIFY-1427: Repair Executor Rejection Ledger And V2 Acceptance Contract
+
+The repository shall provide a deterministic rejection-ledger builder for Exp
+1427 that reads the Exp 1414 and Exp 1419 repair-executor artifacts, records one
+ledger entry for every rejected repair candidate, and classifies each rejection
+into an auditable reason class. The reason taxonomy MUST distinguish schema
+failures, semantic failures, validator mismatches, prompt noncompliance, missing
+outputs, and timeout classes, even when a class has zero observed examples.
+
+When per-case raw model outputs, prompts, logs, or validator transcripts are
+missing from the source artifacts, the ledger MUST reconstruct the
+highest-confidence rejection reason from available aggregate and per-case fields
+and record the missing evidence explicitly instead of inventing unsupported
+detail.
+
+The Exp 1427 artifact MUST include `status`, `rejection_ledger_path`,
+`rejection_ledger_complete`, `cases_analyzed`, `top_rejection_reason`,
+`rejection_reason_counts`, `repair_v2_contract_ready`,
+`nonzero_repair_gate_required`, and `honest_verdict`. The repair v2 contract
+MUST require schema validity before semantic validation, preserve rejection
+reasons for every candidate, and gate any downstream scale run on a measured
+nonzero validated repair success rate.
+
+**Acceptance criteria:**
+- Exp 1427 writes an in-progress artifact before source artifact analysis and a
+  complete terminal artifact after the ledger and contract are written.
+- The terminal artifact reports complete counts for observed rejection reasons
+  and keeps zero-count taxonomy classes visible for repair v2 design.
+- `repair_v2_contract_ready=true` only when the contract requires schema
+  validation before semantic validation and per-candidate rejection logging.
+- `nonzero_repair_gate_required=true` prevents another Exp 1419-style scale run
+  without a positive repair-success gate.
+
+### SCENARIO-VERIFY-1427: Zero-Repair Failures Produce A Complete Rejection Ledger
+
+**Given** Exp 1414 and Exp 1419 both reached the local repair execution path
+**And** every attempted repair candidate was rejected
+**When** Exp 1427 builds the rejection ledger
+**Then** every rejected candidate contributes exactly one rejection reason, the
+top rejection reason is quantified, missing raw-output evidence is recorded, and
+the repair v2 acceptance contract is marked ready only with schema-first
+validation and nonzero-repair scale gating.
+
+**Spec traces:** REQ-VERIFY-1427, SCENARIO-VERIFY-1427
 
 ### REQ-VERIFY-1408: Structured Verdict Record Schema
 
