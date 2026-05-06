@@ -169,6 +169,41 @@ and tools are actually present.
 **Implementation status:** Implemented (Exp 1437; current local run blocked by
 missing `hardware/kv260/discrete_sb_256.v` source)
 
+### REQ-ISING-025
+
+**Discrete Simulated Bifurcation KV260 RTL source implementation MUST provide a
+minimal deterministic 256-node update core and a matching testbench before
+lint/simulation reruns.**
+
+**Rationale:**
+Exp 1437 found Verilator, Icarus Verilog, and Yosys locally available, but it
+could not lint or simulate because the planned
+`hardware/kv260/discrete_sb_256.v` source did not exist.  Exp 1441 must close
+that source-level blocker without upgrading the result into a synthesis,
+bitfile, or KV260 board execution claim.
+
+**Acceptance criteria:**
+- `hardware/kv260/discrete_sb_256.v` SHALL exist and define a synthesizable
+  `discrete_sb_256` module for `N_VARIABLES=256`.
+- The module SHALL implement the row-serial deterministic update rule from
+  `hardware/kv260/discrete_sb_rtl_spec.md`:
+  `x_i(t+1) = sign(x_i(t) + eta * sum_j J_ij * x_j(t) - pressure(t))`.
+- The source SHALL expose host-loadable packed initial spins and row-major
+  signed int8 coupling writes so a lint/simulation rerun can drive a bounded
+  deterministic case without requiring KV260 board hardware.
+- A matching testbench SHALL exist under `hardware/kv260/` or `tests/hardware/`
+  and SHALL drive reset, coupling/init inputs, start, and at least one complete
+  update step.
+- `results/experiment_1441_discrete_sb_rtl_source_implementation.json` SHALL
+  include `status`, `rtl_source_created`, `rtl_source_path`,
+  `testbench_created`, `testbench_path`, `spec_requirements_covered`,
+  `syntax_probe_command`, `commands_run`, and `honest_verdict`.
+- The artifact SHALL identify the next lint/simulation command and SHALL NOT
+  claim KV260 board execution unless an actual board command runs in the same
+  experiment.
+
+**Implementation status:** Implemented (Exp 1441)
+
 ## Scenarios
 
 ### SCENARIO-ISING-030
@@ -222,3 +257,14 @@ claims.
 
 **Implementation status:** Implemented (Exp 1437; current local run blocked by
 missing `hardware/kv260/discrete_sb_256.v` source)
+
+### SCENARIO-ISING-035
+
+**Discrete SB RTL source scaffold artifact:** Given Exp 1437's
+`blocked_missing_discrete_sb_rtl_source` verdict and no KV260 board command in
+the current run, Exp 1441 SHALL create `hardware/kv260/discrete_sb_256.v`, a
+matching testbench, run only local syntax/simulation probes when tools are
+present, and write a complete terminal artifact that names the next lint/sim
+command while preserving the no-board-claim boundary.
+
+**Implementation status:** Implemented (Exp 1441)

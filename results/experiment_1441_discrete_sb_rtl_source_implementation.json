@@ -1,0 +1,46 @@
+{
+  "status": "complete",
+  "rtl_source_created": true,
+  "rtl_source_path": "hardware/kv260/discrete_sb_256.v",
+  "testbench_created": true,
+  "testbench_path": "hardware/kv260/discrete_sb_256_tb.v",
+  "spec_requirements_covered": [
+    "REQ-ISING-025",
+    "SCENARIO-ISING-035"
+  ],
+  "syntax_probe_command": "verilator --lint-only --timing -Wall -Wno-DECLFILENAME -Wno-BLKSEQ -Wno-WIDTH hardware/kv260/discrete_sb_256.v hardware/kv260/discrete_sb_256_tb.v",
+  "next_lint_sim_command": "iverilog -g2012 -o /tmp/discrete_sb_256_tb.vvp hardware/kv260/discrete_sb_256.v hardware/kv260/discrete_sb_256_tb.v && vvp /tmp/discrete_sb_256_tb.vvp",
+  "commands_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_exp1441_discrete_sb_rtl_source.py -q",
+      "result": "expected_red_before_rtl_source_and_testbench"
+    },
+    {
+      "command": "command -v iverilog && iverilog -V | sed -n '1,3p'",
+      "result": "iverilog_available"
+    },
+    {
+      "command": "command -v verilator && verilator --version",
+      "result": "verilator_available"
+    },
+    {
+      "command": "command -v yosys && yosys --version",
+      "result": "yosys_available"
+    },
+    {
+      "command": "command -v vivado || true",
+      "result": "vivado_not_found"
+    },
+    {
+      "command": "iverilog -g2012 -o /tmp/discrete_sb_256_tb.vvp hardware/kv260/discrete_sb_256.v hardware/kv260/discrete_sb_256_tb.v && vvp /tmp/discrete_sb_256_tb.vvp",
+      "result": "pass_one_complete_update_step"
+    },
+    {
+      "command": "verilator --lint-only --timing -Wall -Wno-DECLFILENAME -Wno-BLKSEQ -Wno-WIDTH hardware/kv260/discrete_sb_256.v hardware/kv260/discrete_sb_256_tb.v",
+      "result": "pass"
+    }
+  ],
+  "hardware_execution_performed": false,
+  "hardware_claim_allowed": false,
+  "honest_verdict": "rtl_source_and_testbench_created_lint_and_smoke_sim_passed_no_kv260_execution_claim"
+}
