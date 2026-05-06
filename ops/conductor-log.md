@@ -974,3 +974,4 @@ web search: GitHub trending energy based mod |
 | 2026-05-06 00:39 UTC | Semantic Validation Pass Rate Fix v1 — Target Top  | OK | 108 passed, 1 skipped, 1 warning in 12.64s |
 | 2026-05-06 01:03 UTC | Full-Scale Pipeline v2 — 200 Cases with Semantic V | FAIL | Post-tests failed: 1 failed, 116 passed, 1 skipped, 1 warning in 13.10s |
 | 2026-05-06 01:18 UTC | Full-Scale Pipeline v2 — 200 Cases with Semantic V | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1397_fullsca |
+| 2026-05-06 01:32 UTC | Full-Scale Pipeline v2 — 200 Cases with Semantic V | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1397_fullsca |
