@@ -479,6 +479,101 @@ on the deployed verifier suite — not trust them.
 - Full framework: `docs/research-notes/phase-prototype-and-validation-framework.md`
 - Audit precedent: `docs/research-notes/phase3-architecture-blindspot-audit-results.md`
 
+## Scope-Reduction-When-Flagged Discipline (MANDATORY)
+
+**Origin:** 2026-05-06 incident. Operator queued a "SCOPE REDUCTION
+MILESTONE (.111 — preempts all other priorities)" entry at the top of
+`ops/known-issues.md` MANDATORY-NEXT-MILESTONE PRIORITIES. The entry
+specified 8 mandatory scope-reduction tasks (experiment artifact
+classifier, GRPO lineage retirement, WOPR puzzle cartridge retirement,
+known-issues.md priority audit, paper-v6 anchored-claims narrowing,
+self-learning lineage decision, hardware portfolio narrowing,
+comparator-integration audit). The `.111 planner read the entry and
+ignored it — instead generated 14 tasks continuing the repair-executor,
+FR-11, RTL, EBT lineages that were explicitly flagged as candidates
+for retirement. Planners have a strong **carry-forward bias**: when
+.110 closes with unresolved tracks, the natural move is "carry these
+forward as `.111 tasks." That bias defeats explicit scope-reduction
+priorities filed in known-issues.md alone.
+
+**The rule.** When `ops/known-issues.md` MANDATORY-NEXT-MILESTONE
+PRIORITIES contains an entry whose title contains the word
+**"SCOPE REDUCTION"** (or equivalent operator-flagged editorial
+directive), the planner MUST:
+
+1. Treat that entry as **preempting** all other priorities including
+   carry-forwards from the prior milestone's retro.
+2. Allocate at least **8 of N tasks** (where N is the planned task
+   count, typically 13-14) to the scope-reduction work specified
+   in the entry — NOT to expansion of existing lineages.
+3. Refuse to propose tasks that match the scope-reduction entry's
+   "NOISE candidates" classification list. If the entry says
+   "Retire GRPO v1-v14 lineage," do not propose GRPO v15. If the
+   entry says "Retire HardNet++/DSP repair iterations," do not
+   propose HardNet++ v_{N+1}.
+4. Output a **`scope_reduction_compliance` field** in the roadmap
+   YAML's milestone metadata, listing which scope-reduction tasks
+   from the entry are addressed by which `.NNN` task IDs.
+
+**Operational definition of "scope reduction" for this rule.** A task
+is scope-reduction if it:
+
+- Classifies, audits, or measures the existing experiment / artifact
+  / priorities corpus
+- Consolidates one or more lineages into a single retirement artifact
+- Removes / archives / blocks experiments rather than running new ones
+- Narrows a paper / spec / known-issues entry to a smaller set of
+  claims or items
+
+A task is **NOT** scope-reduction if it:
+
+- Proposes a new experiment lineage version (vN+1)
+- Carries forward an unresolved track from a prior milestone retro
+- Adds a new comparator integration or model architecture
+- Extends an existing pipeline with new functionality
+
+**Why a known-issues.md entry alone is insufficient.** The planner
+reads `known-issues.md` as input but has equal or stronger signal
+from the prior milestone's retrospective artifact, which typically
+catalogues unresolved tracks that "obviously" need follow-up. The
+planner's training distribution favors carry-forward continuity. A
+single known-issues entry can't override that bias without explicit
+CLAUDE.md authority.
+
+**How to apply (planner-side discipline).** Before drafting
+`research-roadmap-next.yaml`:
+
+1. Grep `ops/known-issues.md` for `^### NEW.*SCOPE REDUCTION` or
+   equivalent directive phrasings. If found, the directive
+   preempts other priorities.
+2. Read the directive entry's "NOISE candidates" / "tasks to
+   propose" / "expansion forbidden" sections.
+3. Allocate the mandated minimum task count to scope-reduction work.
+4. Document the allocation in the YAML's `scope_reduction_compliance`
+   field so the activation guard can verify.
+
+**Mechanical enforcement (conductor-side, future).** The conductor's
+activation guard SHOULD verify `scope_reduction_compliance` is
+non-empty and references at least the mandated minimum task count
+when a SCOPE REDUCTION directive is active. Pending mechanical
+enforcement, this rule is honor-discipline at the planner layer
+alone.
+
+**Why this is in CLAUDE.md, not just in known-issues.md.** Same
+defense-in-depth principle as Codex-Default-for-Experiments: a rule
+that only lives in known-issues.md is advisory and can be
+overridden by carry-forward bias. The planner reads CLAUDE.md as
+required input on every plan generation; that's the authority
+needed to override training-distribution priors.
+
+**The .111 incident specifically.** The `.111 planner generated 14
+tasks (exp1439-1452) continuing repair-executor / FR-11 / RTL / EBT
+lineages explicitly flagged as NOISE candidates by the operator's
+SCOPE REDUCTION directive. This rule, had it been in CLAUDE.md at
+the time, would have forced the planner to allocate 8+ tasks to
+scope reduction instead. The `.112 planner reads this rule; future
+SCOPE REDUCTION directives will be honored by design.
+
 ## Overdue-Priority Forcing Function (MANDATORY)
 
 If a `ops/known-issues.md` "MANDATORY-NEXT-MILESTONE PRIORITIES" entry has been
