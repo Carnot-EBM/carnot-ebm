@@ -5001,3 +5001,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-06: Full-Scale Pipeline v3 — Gated on Exp 1414 Repair Executor (⚠️ Research Finding) — honest_verdict=not_headline_full_pipeline_below_0_40; results/experiment_1419_fullscale_pipeline_v3_repair_executor.json
 - 2026-05-06: Full-Scale Pipeline v3 — Gated on Exp 1414 Repair Executor (⚠️ Research Finding) — honest_verdict=not_headline_full_pipeline_below_0_40; results/experiment_1419_fullscale_pipeline_v3_repair_executor.json
 - 2026-05-06: Full-Scale Pipeline v3 — Gated on Exp 1414 Repair Executor (⚠️ Research Finding) — honest_verdict=not_headline_full_pipeline_below_0_40; results/experiment_1419_fullscale_pipeline_v3_repair_executor.json
+- 2026-05-06: DPO-Style Preference Probe — Replace Retired GRPO with 1508 Verified Pairs (⚠️ Research Finding) — honest_verdict=gguf_dpo_unsupported_reranker_fallback_measured; results/experiment_1420_dpo_verified_pairs_1508.json
