@@ -605,6 +605,11 @@ from carnot.pipeline.verdict_record import (
     calibrated_confidence_from_energy,
     fit_verdict_calibration,
 )
+from carnot.pipeline.verify_stream import (
+    VerifyStreamCandidate,
+    collect_verify_stream,
+    verify_stream,
+)
 from carnot.pipeline.verify_repair import (
     RepairResult,
     VerificationResult,
@@ -709,7 +714,10 @@ __all__ = [
     "VerificationTraceStep",
     "VerdictCalibration",
     "VerdictRecord",
+    "VerifyStreamCandidate",
     "VerifyRepairPipeline",
+    "collect_verify_stream",
+    "verify_stream",
     "SelfLearningPolicy",
     "SelfLearningPolicyCompiler",
     "DualEnergyGate",

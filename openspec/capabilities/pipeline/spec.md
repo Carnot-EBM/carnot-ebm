@@ -2312,3 +2312,86 @@ elapsed budget milliseconds, a rationale, and JSON-compatible extras.
 and energy while the legacy tuple shape remains unchanged.
 
 **Spec traces:** REQ-VERIFY-1408, REQ-VERIFY-1409, REQ-VERIFY-1410
+
+### REQ-VERIFY-1411: Streaming Verification Async Iterator
+
+The pipeline MUST expose a `verify_stream(...)` Python API that accepts a pool of
+candidate responses and returns an async iterator of `VerdictRecord` objects as
+candidate verification completes.  Each emitted record SHALL include the
+candidate identifier in `extras["candidate_id"]`, a zero-based completion index
+in `extras["stream_index"]`, and a provisional energy rank in
+`extras["stream_rank"]`.
+
+The API MUST accept candidates with `id`, `question`, `answer` or `response`, and
+optional per-candidate `domain`.  The API SHALL support bounded concurrency via
+`max_concurrency`, optional total and per-candidate millisecond budgets, and a
+default `VerifyRepairPipeline(model=None)` when the caller does not provide a
+pipeline instance.
+
+**Acceptance criteria:**
+- The async iterator emits records in completion order, not input order.
+- Each record serializes through `VerdictRecord.to_dict()` with the stream
+  metadata intact.
+- Invalid `top_k`, budget, or concurrency parameters are rejected.
+- Synchronous pipeline implementations are offloaded without blocking the event
+  loop, while async pipeline implementations are awaited directly.
+
+### REQ-VERIFY-1412: Streaming Top-K Early Stop And Cancellation
+
+`verify_stream(...)` MUST support `top_k` and `early_stop_margin` controls over
+candidate pools.  When at least `top_k + 1` candidates have completed and the
+energy margin between the current kth and kth-plus-one candidate is greater than
+or equal to `early_stop_margin`, the stream SHALL stop scheduling new work,
+cancel pending workers, and annotate the final emitted record with
+`extras["stream_end"]`.
+
+`extras["stream_end"]` SHALL include at least `event="stream_end"`,
+`stopped_early`, `stop_reason`, `total_candidates`, `emitted_count`,
+`scored_count`, `residual_candidates_unscored`, `top_k`, and
+`early_stop_margin`.  When the consumer closes the async iterator before the
+pool is exhausted, the implementation MUST cancel outstanding worker tasks
+rather than leaking background verification work.
+
+**Acceptance criteria:**
+- A synthetic candidate pool with a decisive top-1 margin stops before scoring
+  every candidate.
+- Pending async workers observe cancellation when the consumer closes the
+  iterator early.
+- The stream-end annotation reports the correct residual unscored candidate
+  count.
+
+### REQ-VERIFY-1413: MCP Streaming Verification Event Surface
+
+The MCP server MUST expose a `verify_stream` tool over the same candidate schema
+as the Python API.  Because the current stdio MCP server handlers return a single
+JSON value, the tool SHALL return a streaming-compatible event payload with
+`events` containing ordered verdict events and `stream_end` containing the final
+summary.  Each verdict event SHALL carry the serialized `VerdictRecord`.
+
+The MCP tool SHALL preserve existing MCP safeguards: string input size checks,
+structured error responses through `_guarded_call`, and no model loading beyond
+`VerifyRepairPipeline(model=None)`.
+
+**Acceptance criteria:**
+- `health_check()` includes `verify_stream` in the tool list.
+- The MCP `verify_stream` handler returns ordered verdict events plus one
+  `stream_end` summary.
+- `top_k` and `early_stop_margin` parameters are passed through to the Python
+  streaming primitive.
+
+### SCENARIO-VERIFY-1411: Streaming Verification Emits Early Top Candidate
+
+**Given** three candidate responses with deterministic synthetic verifier
+energies,
+**When** `verify_stream(..., max_concurrency=2)` runs,
+**Then** verdict records are emitted as each worker completes,
+**And** the emitted records include candidate IDs and stream indexes.
+
+**Given** the same pool with `top_k=1`, `early_stop_margin=1.0`, and
+`max_concurrency=1`,
+**When** the first two completed energies have a decisive margin,
+**Then** the stream stops before scoring the third candidate,
+**And** the final record includes a `stream_end` annotation with
+`stopped_early=true`.
+
+**Spec traces:** REQ-VERIFY-1411, REQ-VERIFY-1412, REQ-VERIFY-1413

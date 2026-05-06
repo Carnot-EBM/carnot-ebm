@@ -1,0 +1,48 @@
+{
+  "experiment_id": 1411,
+  "title": "Streaming Verification API",
+  "date": "2026-05-06",
+  "status": "success",
+  "honest_verdict": "verify_stream_api_complete",
+  "github_issue": 7,
+  "implemented": {
+    "python_async_iterator": true,
+    "mcp_tool_event_surface": true,
+    "consumer_close_cancellation": true,
+    "top_k_early_stop_margin": true,
+    "docs_example_consumer": true
+  },
+  "artifacts": {
+    "python_api": "python/carnot/pipeline/verify_stream.py",
+    "mcp_server": "python/carnot/mcp/server.py",
+    "docs": "docs/verify-stream.md",
+    "tests": [
+      "tests/python/test_verify_stream.py",
+      "tests/python/test_mcp_server.py::TestVerifyStream"
+    ]
+  },
+  "requirements": [
+    "REQ-VERIFY-1411",
+    "REQ-VERIFY-1412",
+    "REQ-VERIFY-1413",
+    "SCENARIO-VERIFY-1411"
+  ],
+  "verification": {
+    "focused_pytest": {
+      "command": ".venv/bin/pytest tests/python/test_verify_stream.py tests/python/test_mcp_server.py::TestHealthCheck tests/python/test_mcp_server.py::TestVerifyStream tests/python/test_mcp_server.py::TestServerInstance -q --no-cov -p no:cacheprovider -n 0",
+      "passed": 10,
+      "failed": 0,
+      "warnings": 1
+    },
+    "full_mcp_file": {
+      "command": ".venv/bin/pytest tests/python/test_mcp_server.py -q --no-cov -p no:cacheprovider -n 0 --maxfail=1",
+      "passed_before_abort": 12,
+      "blocked": true,
+      "blocker": "existing packaged PBT memory-leak guard reports +743MB in TestVerifyCodeWithPBT"
+    }
+  },
+  "notes": [
+    "Synchronous verifier calls are offloaded through a daemon-thread queue adapter instead of asyncio.to_thread because the local sandbox ran to_thread workers but did not wake the selector.",
+    "MCP stdio returns a collected event payload; streaming transports can forward the same verdict event shape incrementally."
+  ]
+}
