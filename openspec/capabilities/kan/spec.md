@@ -72,6 +72,32 @@ Given `PromptInjectionEnergyCheckerV3()`,
 When we call `checker.n_params()`,
 Then the result is 5016 (= 8 * 32 * 19 + 8 * 19).
 
+## REQ-KAN-VERIFY-001: KAEM/KAN PWA And MILP Property Verification
+
+The repository shall provide CPU-only KAN formal-verification helpers for small
+KAEM/KAN energy layers. The helpers shall:
+
+- split spline control points into piecewise-affine segments;
+- verify monotonicity by direct knot inspection;
+- verify output range and boundary-condition properties;
+- perform a MILP or equivalent linear counterexample search for monotonicity;
+  and
+- return structured result dictionaries with a `verified` boolean and violation
+  detail fields.
+
+The verification helpers shall make no hardware correctness claim. They are
+software property checks used to audit KAN energy functions before deployment
+or repair.
+
+### SCENARIO-KAN-VERIFY-001: Small KAN Properties Are Audited
+
+Given a small KAN layer with flat, monotone, and intentionally non-monotone
+control points,
+When the PWA, monotonicity, range, boundary, and MILP helpers run,
+Then flat and monotone layers are verified, non-monotone or inverted layers
+report violations, and every result exposes deterministic keys suitable for a
+terminal experiment artifact.
+
 ## REQ-KAN-1384: EBM-CoT Hinge Calibration Probe on FoVer Pairs
 
 The KAN energy tier SHALL support a CPU-only FoVer calibration probe that
@@ -144,6 +170,7 @@ sets `variance_worsened` from the measured paraphrase variance comparison.
 |-------------|--------|-------|
 | REQ-KAN-003 | Proposed | Exp 724 target: 3000-example balanced dataset |
 | REQ-KAN-004 | Proposed | Exp 724 target: 16 knots/spline in v3 KAN |
+| REQ-KAN-VERIFY-001 | Implemented | Exp 972 KAN MILP formal verification helpers; Exp 992 violation fix reuses the same checks. |
 | REQ-KAN-020 | Implemented | Exp 866: LUT analysis complete. N=8 MLP-bound=14400 > 7680 (over budget). ISING_PRIORITY. |
 | REQ-MODEL-SOS-001 | Implemented | Exp 1047: SOSKANEnergy confirmed 0 violations on 16000 test points. |
 | REQ-KAN-1148 | Proposed | Exp 1148 target: MetaCluster-style centroid compression for SOSKANEnergyV3 with AUROC drop <= 0.02 and >=5x shrink. |

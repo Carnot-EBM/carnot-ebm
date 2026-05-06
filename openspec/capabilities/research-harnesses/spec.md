@@ -173,6 +173,24 @@ experiment-id leakage or task-specific string leakage. A terminal `complete`
 artifact shall set `hardcoded_leakage_audit_passed=true` only when all candidate
 policies pass the leakage audit.
 
+### REQ-HARNESS-013: Conductor Supervisor Health Guard
+
+The repository shall provide a deterministic external supervisor for the
+research conductor. The supervisor shall:
+
+- maintain a PID file for duplicate-process detection and cleanup;
+- inspect the conductor heartbeat file and write `heartbeat_missing` or
+  `heartbeat_stale` alerts when the heartbeat is absent or older than the
+  configured threshold;
+- leave fresh heartbeats alert-free;
+- identify and terminate orphan conductor processes that are not the legitimate
+  conductor PID recorded in state; and
+- archive and truncate the working conductor log when the log handle must be
+  reset, recording a `log_handle_reset` alert.
+
+These checks shall be testable with temporary filesystem paths and mocked
+process operations so the unit suite does not kill real conductor processes.
+
 ## Scenarios
 
 ### SCENARIO-HARNESS-001: Bootstrap Skeleton Is Not Complete
@@ -235,6 +253,15 @@ negative result rather than fabricating improvement.
 **Then** the candidate is marked as leaking
 **And** the terminal artifact cannot set `hardcoded_leakage_audit_passed=true`.
 
+### SCENARIO-HARNESS-008: Supervisor Alerts And Recovers Deterministically
+
+**Given** supervisor file paths are redirected to a temporary workspace
+**When** the heartbeat file is stale or missing, an extra conductor PID is
+present, or the conductor log handle is reset
+**Then** the supervisor writes the matching structured alert
+**And** only the orphan PID is terminated
+**And** the legitimate conductor PID and unrelated host state are left intact.
+
 ## Implementation Status
 
 | Requirement | Documentation | Artifact |
@@ -251,3 +278,4 @@ negative result rather than fabricating improvement.
 | REQ-HARNESS-010 | Implemented (`ops/meta-harness-conductor-skill.md`, `ops/conductor-harness-eval-suite.md`) | Implemented (`results/experiment_1281_meta_harness_conductor_search.json`) |
 | REQ-HARNESS-011 | Implemented (`scripts/meta_harness_conductor_search.py`) | Implemented (`meta_harness_runs/`) |
 | REQ-HARNESS-012 | Implemented (`scripts/meta_harness_conductor_search.py`) | Implemented |
+| REQ-HARNESS-013 | Implemented (`scripts/conductor_supervisor.py`) | Implemented (`results/experiment_1027_conductor_supervisor.json`) |

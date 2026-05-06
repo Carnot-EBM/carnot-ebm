@@ -1,0 +1,114 @@
+{
+  "status": "complete",
+  "spec_coverage_metadata_cluster_fixed": true,
+  "initial_spec_coverage_debt_count": 71,
+  "final_spec_coverage_debt_count": 0,
+  "files_changed": [
+    "openspec/capabilities/kan/spec.md",
+    "openspec/capabilities/research-harnesses/spec.md",
+    "openspec/capabilities/research-reporting/spec.md",
+    "scripts/check_spec_coverage.py",
+    "tests/python/test_conductor_supervisor.py",
+    "tests/python/test_figure_integrity_audit.py",
+    "tests/python/test_spec_coverage_checker.py",
+    "results/experiment_1440_spec_coverage_traceability_metadata_fix.json",
+    "results/checkpoints/experiment_631/checkpoint.json",
+    "results/experiment_1035_dualgpu_rocm_v3.json",
+    "results/experiment_1038_milestone_retro_80.json",
+    "results/experiment_1081_fpga_scale_benchmark.json",
+    "results/experiment_1089_milestone_retro_84.json",
+    "results/experiment_1103_milestone_retro_85.json",
+    "results/experiment_339_session_startup.json",
+    "results/experiment_542_fover_expansion.json",
+    "results/experiment_625_tier1_fr11_relay.json",
+    "results/experiment_638_tier1_fr11_relay.json",
+    "results/experiment_645_tier1_fr11_relay.json",
+    "results/experiment_696_icalm_abstention.json",
+    "results/experiment_833_constraint_delta_root_cause.json",
+    "results/experiment_885_spectral_attention_probe.json",
+    "results/experiment_911_drift_probe_tier0i.json"
+  ],
+  "commands_run": [
+    {
+      "command": "sed -n '1,220p' AGENTS.md && sed -n '1,260p' CODEX.md && sed -n '1,260p' CLAUDE.md",
+      "outcome": "read repo startup/workflow instructions; later STOP rule reserved ops/status/traceability reconciliation for conductor"
+    },
+    {
+      "command": "python3 -m json.tool results/experiment_1426_test_suite_remaining_debt_cluster_map.json | sed -n '1,260p'",
+      "outcome": "confirmed exp1426 recommended spec_coverage_traceability_metadata with 71 misses across six owner files"
+    },
+    {
+      "command": "sed -n '1,260p' scripts/check_spec_coverage.py",
+      "outcome": "confirmed original checker only recognized single-segment REQ/SCENARIO ids"
+    },
+    {
+      "command": "sed -n '1,260p' ops/e2e-test-plan.md",
+      "outcome": "read E2E plan; no training/sampling E2E applies to this metadata/checker fix"
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py",
+      "outcome": "initial exit 1; 71 test(s) missing spec traceability"
+    },
+    {
+      "command": "rg/sed over failing tests and openspec/capabilities",
+      "outcome": "confirmed existing valid multi-part spec anchors for SOTA GGUF, math repair, KAN verification, publication audit, and infrastructure ids; added missing/corrected anchors where needed"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python/test_spec_coverage_checker.py -q",
+      "outcome": "expected fail before implementation: checker rejected REQ-INFER-SOTA-004 and file-level multi-part metadata"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python/test_spec_coverage_checker.py -q --no-cov",
+      "outcome": "passed after checker accepted canonical multi-part OpenSpec ids"
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py",
+      "outcome": "intermediate exit 1; after fixing the 71-count cluster, one legacy lowercase-suffix file remained with 7 misses"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python/test_spec_coverage_checker.py -q --no-cov",
+      "outcome": "expected fail after adding REQ-INFRA-046b/SCENARIO-INFRA-055b regression coverage"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python/test_spec_coverage_checker.py -q --no-cov",
+      "outcome": "passed after checker accepted lowercase-suffixed numeric ids used in existing specs"
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py",
+      "outcome": "final exit 0; OK: All tests reference specification requirements"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python/test_spec_coverage_checker.py tests/python/test_conductor_supervisor.py tests/python/test_figure_integrity_audit.py -q --no-cov -n0",
+      "outcome": "exit 0; 16 passed in 1.45s"
+    },
+    {
+      "command": "COVERAGE_RCFILE=/dev/null COVERAGE_FILE=.coverage.exp1440_scripts .venv/bin/coverage run --source=scripts -m pytest tests/python/test_spec_coverage_checker.py -q --no-cov -n0",
+      "outcome": "exit 0; 2 passed in 0.38s under coverage"
+    },
+    {
+      "command": "COVERAGE_RCFILE=/dev/null COVERAGE_FILE=.coverage.exp1440_scripts .venv/bin/coverage json -o /tmp/exp1440_scripts_coverage.json --include='scripts/check_spec_coverage.py' && python3 changed-line coverage check",
+      "outcome": "exit 0; changed statement lines for the new checker regex covered at 100%"
+    },
+    {
+      "command": "ruff check scripts/check_spec_coverage.py tests/python/test_spec_coverage_checker.py tests/python/test_conductor_supervisor.py tests/python/test_figure_integrity_audit.py",
+      "outcome": "exit 0; lint clean after mechanical datetime.UTC cleanup in touched ignored supervisor test"
+    },
+    {
+      "command": "ruff format --check scripts/check_spec_coverage.py tests/python/test_spec_coverage_checker.py tests/python/test_conductor_supervisor.py tests/python/test_figure_integrity_audit.py",
+      "outcome": "exit 0; formatting clean after running ruff format on touched files"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "outcome": "required full-suite attempt ended red/interrupted after 34:46: 101 failed, 21191 passed, 103 skipped, 91 warnings, 6 errors; workers crashed in z3 and transformers paths and exp561 watchdog fired"
+    }
+  ],
+  "residual_blockers": [
+    "The bounded spec_coverage_traceability_metadata cluster is fixed: final scripts/check_spec_coverage.py exits 0 with debt count 0.",
+    "The required full command .venv/bin/pytest tests/python -q is still red outside this metadata fix: 101 failed, 21191 passed, 103 skipped, 91 warnings, 6 errors in 2086.33s before interruption.",
+    "Representative full-suite failures include paper v5 issue 13/14 checks in tests/python/test_experiment_1182_paper_v5_medium_low_issues_11_18.py, stale live-data model-name expectations in tests/python/test_experiment_552_live_data_b.py, tests/python/test_experiment_563_live_data_a_v2.py, tests/python/test_experiment_578_live_data_a_v3.py, and tests/python/test_experiment_579_live_data_c.py, Vitis/HLS energy/verdict failures in tests/python/test_experiment_750_vitis_hls.py, legacy retro schema failures, arbiter warmstart failures, GPU setup/memory-watchdog failures, and rust compatibility assertions.",
+    "The full-suite run had worker crashes unrelated to this metadata change: a z3 segmentation fault, a transformers/Qwen tokenizer abort in tests/python/test_experiment_295_apple_verify_repair.py, and xdist worker replacement events.",
+    "The full-suite run emitted ExperimentTimeoutWatchdog for experiment=561 and was interrupted after prolonged no-progress tail output; it must not be treated as a passing full-suite validation.",
+    "Running the full suite modified unrelated tracked result artifacts listed in files_changed; they are test side effects, not part of the metadata fix. They were left in place rather than hidden."
+  ],
+  "honest_verdict": "metadata_cluster_fixed_spec_coverage_zero_focused_tests_green_changed_line_coverage_100_full_suite_red_101_failures_6_errors"
+}

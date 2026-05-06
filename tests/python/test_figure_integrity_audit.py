@@ -1,9 +1,9 @@
 """Tests for ``scripts/figure_integrity_audit.py``.
 
-Spec anchor: REQ-PAPER-INTEGRITY-001 (every numerical claim in published
-figures must trace to an artifact in ``results/*.json``). The audit script
-is the mechanical enforcement of that requirement; these tests pin its
-behaviour against fabricated, traced, and edge-case constants.
+Spec anchor: REQ-PUBLISH-010 (the paper-v5 recompile gate must execute the
+figure integrity audit and record untraced constants). The audit script is the
+mechanical enforcement of that requirement; these tests pin its behaviour
+against fabricated, traced, and edge-case constants.
 """
 
 from __future__ import annotations
