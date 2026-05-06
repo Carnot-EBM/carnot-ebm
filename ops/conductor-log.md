@@ -1024,3 +1024,4 @@ web search: GitHub trending energy based mod |
 | 2026-05-06 17:32 UTC | FR-11 Self-Learning v6 — Gated on DVI v3 Deploymen | OK | 81 passed, 1 warning in 5.33s |
 | 2026-05-06 17:47 UTC | FoVer PRM Label Completion v2 — Fill 478 Missing L | OK | 81 passed, 1 warning in 5.67s |
 | 2026-05-06 17:58 UTC | DPO Headline Provenance Audit — Direct GGUF Adapte | OK | 81 passed, 1 warning in 5.78s |
+| 2026-05-06 18:09 UTC | Anchored Dual-Path Latent Repair v1 — Fix Energy-D | OK | 81 passed, 1 warning in 5.12s |
