@@ -418,4 +418,4 @@ downloading model files.
 | REQ-INFER-SOTA-004 | Implemented | 4 Python |
 | REQ-INFER-SOTA-005 | Implemented | 4 Python |
 | REQ-INFER-SOTA-006 | Implemented | 12 Python |
-| REQ-INFER-SOTA-007 | Planned | Planned |
+| REQ-INFER-SOTA-007 | Implemented | 18+ Python |
