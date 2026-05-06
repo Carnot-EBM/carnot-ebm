@@ -1036,3 +1036,5 @@ web search: GitHub trending energy based mod |
 | 2026-05-06 22:25 UTC | Discrete SB RTL Source Implementation — Create har | OK | 81 passed, 1 warning in 5.32s |
 | 2026-05-06 22:38 UTC | Live SOTA GGUF Repair Runtime Preflight — Cache, G | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1442_live_so |
 | 2026-05-06 22:48 UTC | Live SOTA GGUF Repair Runtime Preflight — Cache, G | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1442_live_so |
+| 2026-05-06 22:54 UTC | Live SOTA GGUF Repair Runtime Preflight — Cache, G | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1442_live_so |
+| 2026-05-06 22:56 UTC | Live-SOTA DCCD + SEM-CTRL Repair v3 — Nonzero Acce | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1442-live-sota-repair-runtime-preflight) |
