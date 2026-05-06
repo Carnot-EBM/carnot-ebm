@@ -698,6 +698,37 @@ publication verdicts shall preserve no-hardware-claim and publication-hold
 boundaries. The artifact shall include run metadata using run date `20260505`
 and project root `/home/ianblenke/github.com/ianblenke/carnot`.
 
+### REQ-REPORT-032: Milestone .109 Retrospective and Carry-Forward Plan
+
+The Exp 1424 `.109` milestone retrospective workflow shall read the `.109`
+roadmap planning context, conductor log, and Exp 1412 through Exp 1423 result
+artifacts without rerunning the milestone experiments. It shall write
+`results/experiment_1424_milestone_109_retro.json` with:
+
+- `status` set to `complete` in the final artifact
+- `criteria_total` set to `13`
+- `criteria_met`, derived from criteria whose status is exactly `MET`
+- `success_criteria_results`, mapping all 13 roadmap criteria to one of
+  `MET`, `NOT_MET`, `GATE_BLOCKED`, or `BLOCKED`
+- `retired_experiments`, listing exact reruns that should not be proposed again
+  without a materially different root-cause fix
+- `carry_forward_tasks`, each with a concrete root-cause plan
+- `prior_failures_required_next`, containing a `prior_failures` entry for every
+  carry-forward task
+- `gpu_utilization_summary`, using observed artifact or log telemetry when
+  present and reporting unavailability honestly otherwise
+- `honest_verdict`, formatted as a concise milestone outcome
+
+Blocked source artifacts shall not count as met criteria even when they contain
+a partial positive metric. Missing gated artifacts shall count as
+`GATE_BLOCKED` only when an upstream gate closure is visible in the roadmap,
+source artifacts, or conductor log; otherwise missing artifacts are `NOT_MET`.
+The retrospective self-criterion shall count as `MET` only in the final
+artifact when writing the retro brings the milestone to the planned
+`criteria_met >= 10/13` threshold. Carry-forward tasks shall include
+`prior_failures` entries that name the failed experiment, verdict, root-cause
+response, and whether the next attempt should be retired on the same verdict.
+
 ### REQ-REPORT-024: Local Agent Usage Snapshot
 
 The repository shall provide a local operator workflow that inspects the
