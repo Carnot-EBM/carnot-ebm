@@ -2490,6 +2490,63 @@ records schema-valid and semantic-acceptance rates for the repair-hint sample.
 
 **Spec traces:** REQ-VERIFY-1428, SCENARIO-VERIFY-1428
 
+### REQ-VERIFY-1429: MCMC Constrained Repair Candidate Search
+
+The repository shall provide a bounded constrained candidate-search layer around
+the Exp 1428 repair executor v2 for Exp 1429. The search layer MUST propose more
+than one DCCD schema-shaped repair candidate per repair-hint case, validate each
+candidate with the existing schema-first repair v2 parser, skip semantic
+validation for schema-invalid candidates, and accept candidates only when the
+semantic repair acceptance contract passes.
+
+The search layer MUST score schema-valid candidates with verifier or energy
+signals and select the lowest-energy accepted candidate as the best-of-N repair.
+It MUST report one-candidate success from the first proposal separately from
+best-of-N success across the bounded proposal set, and it MUST compute an MCMC
+acceptance rate as accepted schema-valid semantic repairs divided by total
+candidate proposals evaluated.
+
+The Exp 1429 terminal artifact at
+`results/experiment_1429_mcmc_constrained_repair_candidate_search.json` MUST
+include `status`, `model_specs`, `candidate_search_complete`,
+`cases_evaluated`, `candidates_per_case`, `mcmc_acceptance_rate`,
+`repair_success_rate_one_candidate`, `repair_success_rate_best_of_n`,
+`energy_rerank_improved`, `local_sota_model_used`, and `honest_verdict`.
+The runner MUST first confirm that
+`results/experiment_1428_dccd_schema_constrained_repair_v2.json` has
+`repair_executor_v2_deployed=true`; if not, it MUST write a blocked artifact
+with `candidate_search_complete=false`. It MUST resolve mandated local SOTA GGUF
+model metadata through `cached_sota_pair()` or an equivalent local cache
+resolver, and any prototype or smoke-test execution mode MUST be labelled so it
+cannot be mistaken for headline local-SOTA candidate-search evidence.
+
+**Decentralization implications:** The core search layer depends only on local
+generator, validator, and energy-scorer callables; it does not import
+closed-weight vendor SDKs and keeps GGUF cache resolution in the reporting
+layer.
+
+**Acceptance criteria:**
+- Candidate search evaluates a bounded number of proposals per case and records
+  one audit row per proposal.
+- Schema-invalid candidates do not reach semantic validation.
+- Best-of-N success can improve over one-candidate success only through a later
+  schema-valid semantic-valid candidate selected by verifier/energy scoring.
+- The terminal Exp 1429 artifact records model-cache/runtime blockers honestly
+  and includes all required fields with `status="complete"` or
+  `status="blocked"`.
+
+### SCENARIO-VERIFY-1429: Best-Of-N Constrained Search Beats A Failed First Candidate
+
+**Given** Exp 1428 has deployed repair executor v2
+**And** a repair-hint case has a bounded proposal budget greater than one
+**When** the first DCCD candidate fails semantic validation but a later
+schema-valid candidate passes the semantic acceptance contract
+**Then** one-candidate success is false for that case, best-of-N success is true,
+the accepted proposal contributes to MCMC acceptance rate, and the selected
+candidate is the lowest-energy accepted repair.
+
+**Spec traces:** REQ-VERIFY-1429, SCENARIO-VERIFY-1429
+
 ### REQ-VERIFY-1408: Structured Verdict Record Schema
 
 The pipeline MUST expose a documented `VerdictRecord` dataclass for downstream
