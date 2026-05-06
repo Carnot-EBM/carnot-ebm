@@ -1046,3 +1046,5 @@ web search: GitHub trending energy based mod |
 | 2026-05-06 23:02 UTC | Full Pipeline v5 100-Case Pre-Scale — Gated on Liv | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1443-live-sota-dccd-semctrl-repair-v3, ex |
 | 2026-05-06 23:12 UTC | FR-11 Zero-Growth Root Cause Diagnosis — Promotion | OK | 81 passed, 1 warning in 4.84s |
 | 2026-05-06 23:14 UTC | Full Pipeline v5 100-Case Pre-Scale — Gated on Liv | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1443-live-sota-dccd-semctrl-repair-v3, ex |
+| 2026-05-06 23:32 UTC | FR-11 v7 Continuous Self-Learning — Changed Memory | OK | 81 passed, 1 warning in 5.31s |
+| 2026-05-06 23:34 UTC | Full Pipeline v5 100-Case Pre-Scale — Gated on Liv | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1443-live-sota-dccd-semctrl-repair-v3, ex |
