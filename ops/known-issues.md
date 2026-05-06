@@ -198,6 +198,109 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### NEW 2026-05-06 (16:30Z): SCOPE REDUCTION MILESTONE (.111 — preempts all other priorities)
+
+**Operator directive 2026-05-06 ~16:30Z:** "I'm questioning how much of our project has become noise." This priority **preempts** the LARQL (.111-.115) and trace2skill+Skillify (.112-.116) series queued below. Both remain valid follow-ups but only after scope reduction settles what stays in scope.
+
+**Background.** The project has accumulated 1,400+ experiment artifacts, 110+ milestones, 26+ "MANDATORY-NEXT-MILESTONE PRIORITIES" entries, paper version proliferation v2 → v6 without v1 ever publicly shipping, and multiple experiment lineages (GRPO v1-v14, WOPR puzzle cartridges, HardNet++/DSP repair) that produce mostly `_marginal` / `_no_improvement_retired` / `_improved_non_headline` verdicts. The recent structural fixes (6 conductor bugs caught + fixed in one session) demonstrate engineering discipline is sharpening; the editorial discipline must now sharpen too.
+
+**The .111 milestone is dedicated to scope reduction, not scope expansion.** The conductor planner reading this entry MUST allocate at least 8 of ~13 tasks to scope reduction work, NOT to new experiment lineages.
+
+**Initial classifications (operator + outer-loop assessment 2026-05-06):**
+
+**Clearly SIGNAL (keep, anchor paper-v6 around these):**
+- DiffuTruth vs Carnot 0.948 vs 0.082 on FoVer (exp1265)
+- k=5 verifier ensemble 100% block on EST attacks (exp1278)
+- Q11 TSS theorem + exp1224 empirical Spera 9.2 confirmation
+- QuantKAN 3-bit AUROC 0.9801 + 2.5x speedup (exp1266)
+- 6 conductor structural fixes shipped this session (engineering, not research, but demonstrates discipline)
+
+**Clearly NOISE (formally retire to consolidated artifact):**
+- GRPO/VPRM v1-v14 lineage. Most attempts return no_improvement or marginal. Retire as single "GRPO lineage exhausted, lessons learned" artifact.
+- WOPR puzzle game cartridges (Connect Four, Hex, Nonogram, Futoshiki, Kakuro, Masyu). Cannot map to verify-repair LLM thesis or Phase-3 substrate trajectory. Retire as single "puzzle-cartridge experiments retired, no thesis link" artifact.
+- HardNet++/DSP repair stack — multiple iterations producing same "useful as conservative replay, not learned general rule" outcome (exp1305, exp1318). Retire after one final consolidation that names what was learned.
+- Self-learning lineage with `_improved_non_headline` suffix — every iteration says "improved but not headline." If it's never headline-worthy, retire the lineage and document the architectural reason.
+
+**Ambiguous (decide explicitly):**
+- Multiple comparator integrations from this session (Abstract-CoT, Meta-Harness, Autodata, LARQL, Skillify, GStack). Some are paper-v6-citation-worthy; others are inspiration-tier that may never inform action. Force a decision: cite or retire.
+- trace2skill catalog. Without daily-eval cadence (queued at .112) we don't know if catalog is decaying. Decide: ship .112 daily-eval first OR retire the catalog as untested.
+- Hardware portfolio breadth (KV260 + Strix APU + dual-RTX-3090 + Extropic + photonic + LARQL+RotorQuant). Each gets some experimental coverage, none has full validation. Pick 2-3 to invest in, retire the rest from active scope.
+
+**Mandatory .111 task allocation (8 of ~13 tasks):**
+
+```
+exp_NEXT_SCOPE_A: Experiment artifact classifier
+  - Walk all results/experiment_*.json (1,400+); classify each into:
+    SIGNAL (paper-v6 citation candidate) / NOISE (retire) /
+    AMBIGUOUS (operator decision needed)
+  - Acceptance: classification table written, signal-noise ratio
+    measured, top-50 noise candidates identified
+
+exp_NEXT_SCOPE_B: GRPO lineage consolidation + retirement
+  - Walk exp1063 → exp1393 (GRPO v1-v14 + variants); produce single
+    "GRPO_lineage_retired" artifact summarizing what was learned and
+    why each version did/didn't advance. Add lineage to exclusion
+    manifest.
+  - Acceptance: 14+ GRPO experiments consolidated to 1 artifact,
+    manifest entry added, planner blocked from proposing GRPO v15
+
+exp_NEXT_SCOPE_C: WOPR puzzle cartridge retirement
+  - Walk exp1188 (Hex), exp1198 (Connect Four), exp1214 (Nonogram),
+    exp1227 (Futoshiki), exp1240 (Kakuro), exp1262 (Masyu) etc.
+    Produce single "WOPR_puzzle_retired" artifact stating these do
+    not connect to the verify-repair thesis. Manifest-block future
+    puzzle cartridges.
+  - Acceptance: 6+ puzzle experiments consolidated, manifest entry,
+    no future puzzle cartridges.
+
+exp_NEXT_SCOPE_D: known-issues.md MANDATORY priority audit
+  - Walk all 26+ "NEW DATE" priority entries. For each: still valid?
+    superseded? promote / retire / consolidate. Output: a clean
+    priorities list, ≤10 entries.
+  - Acceptance: priorities list trimmed by ≥40%
+
+exp_NEXT_SCOPE_E: Paper-v6 anchored-claims narrowing
+  - Reduce paper-v6's claim set to 3-5 explicit anchored claims, each
+    with empirical artifact reference + theoretical support.
+    Everything else → appendix or future work. Honest about what's
+    not yet supported.
+  - Acceptance: paper-v6 has explicit "Anchored Claims" section
+    (3-5 numbered claims); appendix collects the unanchored
+    territory.
+
+exp_NEXT_SCOPE_F: Self-learning `_improved_non_headline` lineage
+  decision
+  - Walk exp1303, exp1315, exp1344 etc. Decide: is non-headline
+    progress real? If so, what's the architectural reason it never
+    becomes headline? If not, retire the lineage.
+  - Acceptance: explicit retire OR explicit headline-pivot plan.
+
+exp_NEXT_SCOPE_G: Hardware portfolio narrowing
+  - Pick 2-3 hardware tracks to actively invest in (likely:
+    dual-RTX-3090 + Strix APU + Extropic). Retire the rest from
+    active scope (KV260 stays as POC, photonic deferred,
+    LARQL+RotorQuant stays as queued .115).
+  - Acceptance: explicit "Active hardware tracks" entry in
+    architecture.md; out-of-scope tracks documented.
+
+exp_NEXT_SCOPE_H: Comparator-integration audit
+  - Walk all this-session comparator integrations (Abstract-CoT,
+    Meta-Harness, Autodata, LARQL, Skillify, GStack). For each:
+    paper-v6 cite (with one-line rationale) OR retire from
+    references. Force the decision.
+  - Acceptance: each comparator has explicit cite/retire decision.
+```
+
+**Why .111 specifically.** The .111 planner is about to fire. If it fires WITHOUT this priority pickup, it will continue the existing pattern (new experiment lineages, more variant proliferation). Putting this here forces the planner to confront scope reduction at the next planning cycle.
+
+**Cross-references:**
+- Operator question that triggered this: "I'm questioning how much of our project has become noise" (2026-05-06)
+- Outer-loop assessment: this entry's classifications above
+- LARQL series (now deferred to .116+): `ops/known-issues.md` (later in this file)
+- trace2skill+Skillify series (now deferred to .117+): `ops/known-issues.md` (later in this file)
+
+---
+
 ### NEW 2026-05-06 (15:30Z): trace2skill + Skillify Testing Rigor (.112-.116 series)
 
 **Background:** Garry Tan's Skillify pattern (https://github.com/garrytan/gbrain — OpenClaw / Hermes Agent ecosystem) implements a 10-step pipeline that promotes agent failures into permanently-tested skills: SKILL.md contract, deterministic code, unit tests, integration tests, daily LLM evals, resolver trigger, resolver eval, check-resolvable + DRY audit, E2E smoke test, brain filing rules. Carnot's existing `trace2skill` (per `openspec/change-proposals/wire-trace2skill-into-conductor.md`) extracts lessons from experiment traces and consolidates per-milestone but lacks the testing rigor of Steps 3-9.
