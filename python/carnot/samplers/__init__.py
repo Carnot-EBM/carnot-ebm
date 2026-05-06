@@ -11,6 +11,13 @@ try:
     )
     from .dwave_backend import DWaveNealBackend
     from .dwave_sampler import DWaveSampler
+    from .discrete_simulated_bifurcation import (
+        DiscreteSBConfig,
+        DiscreteSBConstraintProblem,
+        run_discrete_sb,
+        run_fover_discrete_sb_probe,
+        run_gibbs_ising_baseline,
+    )
     from .fpga_backend import FpgaBackend
     from .fpga_ising import FPGAIsingSampler
     from .gpu_oim_simulator import (
@@ -60,4 +67,9 @@ else:
         "ThrmlSamplerBackend",
         "ParallelDenseIsingConfig",
         "ParallelDenseIsingInertia",
+        "DiscreteSBConfig",
+        "DiscreteSBConstraintProblem",
+        "run_discrete_sb",
+        "run_fover_discrete_sb_probe",
+        "run_gibbs_ising_baseline",
     ]
