@@ -12,6 +12,7 @@
   ],
   "deliverables": {
     "verdict_record_module": "python/carnot/pipeline/verdict_record.py",
+    "heldout_calibration_api": "fit_verdict_calibration",
     "verify_repair_structured_api": "VerifyRepairPipeline.verify_record",
     "three_tier_structured_api": "ThreeTierPipeline.verify_record",
     "legacy_compatibility": [
@@ -22,10 +23,10 @@
     "tests": "tests/python/test_verdict_record.py"
   },
   "verification": {
-    "focused_tests": ".venv/bin/pytest tests/python/test_verdict_record.py tests/python/test_pipeline_verify_repair.py tests/python/test_three_tier_pipeline.py -q --no-cov -p no:cacheprovider passed: 134 passed, 4 warnings",
-    "lint": "RUFF_CACHE_DIR=/tmp/carnot-ruff-cache-issue3 ruff check python/carnot/pipeline/verdict_record.py python/carnot/pipeline/verify_repair.py python/carnot/pipeline/three_tier_pipeline.py python/carnot/pipeline/__init__.py tests/python/test_verdict_record.py passed",
-    "format": "RUFF_CACHE_DIR=/tmp/carnot-ruff-cache-issue3 ruff format --check python/carnot/pipeline/verdict_record.py python/carnot/pipeline/verify_repair.py python/carnot/pipeline/three_tier_pipeline.py python/carnot/pipeline/__init__.py tests/python/test_verdict_record.py passed",
-    "type_check": ".venv/bin/mypy --cache-dir /tmp/carnot-mypy-cache-issue3 python/carnot/pipeline/verdict_record.py python/carnot/pipeline/verify_repair.py python/carnot/pipeline/three_tier_pipeline.py passed",
+    "focused_tests": ".venv/bin/pytest tests/python/test_verdict_record.py tests/python/test_pipeline_verify_repair.py tests/python/test_three_tier_pipeline.py -q --no-cov -p no:cacheprovider passed: 135 passed, 4 warnings",
+    "lint": "RUFF_CACHE_DIR=/tmp/carnot-ruff-cache-issue3b ruff check python/carnot/pipeline/verdict_record.py python/carnot/pipeline/verify_repair.py python/carnot/pipeline/three_tier_pipeline.py python/carnot/pipeline/__init__.py tests/python/test_verdict_record.py passed",
+    "format": "RUFF_CACHE_DIR=/tmp/carnot-ruff-cache-issue3b ruff format --check python/carnot/pipeline/verdict_record.py python/carnot/pipeline/verify_repair.py python/carnot/pipeline/three_tier_pipeline.py python/carnot/pipeline/__init__.py tests/python/test_verdict_record.py passed",
+    "type_check": ".venv/bin/mypy --cache-dir /tmp/carnot-mypy-cache-issue3b python/carnot/pipeline/verdict_record.py python/carnot/pipeline/verify_repair.py python/carnot/pipeline/three_tier_pipeline.py passed",
     "spec_coverage": "python scripts/check_spec_coverage.py tests/python/test_verdict_record.py passed",
     "json_validation": "jq empty results/experiment_1408_structured_verdict_record.json passed",
     "diff_check": "git diff --check for touched issue #3 paths passed",

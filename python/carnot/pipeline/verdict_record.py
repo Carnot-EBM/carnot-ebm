@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import math
 from dataclasses import asdict, dataclass, field
-from typing import Any, Literal
+from typing import Any, Literal, Sequence
 
 VerdictLabel = Literal["pass", "fail", "abstain"]
 
@@ -52,6 +52,106 @@ def calibrated_confidence_from_energy(
         exp_pos = math.exp(scaled)
         confidence = 1.0 / (1.0 + exp_pos)
     return _clamp01(confidence)
+
+
+@dataclass(frozen=True)
+class VerdictCalibration:
+    """Held-out calibration parameters for verdict pass confidence.
+
+    Spec: REQ-VERIFY-1409
+    """
+
+    threshold: float
+    temperature: float
+    n_heldout: int
+    brier_score: float
+
+    def confidence(self, energy: float) -> float:
+        """Apply the fitted calibration to one energy value."""
+        return calibrated_confidence_from_energy(
+            energy,
+            threshold=self.threshold,
+            temperature=self.temperature,
+        )
+
+    def to_dict(self) -> dict[str, Any]:
+        """Return a JSON-compatible calibration summary."""
+        return _json_safe(asdict(self))
+
+
+def _brier_score(
+    heldout_pairs: Sequence[tuple[float, bool]],
+    *,
+    threshold: float,
+    temperature: float,
+) -> float:
+    total = 0.0
+    for energy, passed in heldout_pairs:
+        confidence = calibrated_confidence_from_energy(
+            float(energy),
+            threshold=threshold,
+            temperature=temperature,
+        )
+        target = 1.0 if passed else 0.0
+        total += (confidence - target) ** 2
+    return total / len(heldout_pairs)
+
+
+def fit_verdict_calibration(
+    heldout_pairs: Sequence[tuple[float, bool]],
+    *,
+    temperatures: Sequence[float] = (0.25, 0.5, 1.0, 2.0),
+) -> VerdictCalibration:
+    """Fit deterministic threshold/temperature parameters on held-out verdicts.
+
+    Each held-out pair is `(energy, passed)`, where `passed=True` means the
+    response should receive high pass confidence.  The fit performs a small
+    deterministic grid search over observed energy thresholds and candidate
+    temperatures, minimizing Brier score.  This is intentionally lightweight but
+    gives downstream deployments an auditable post-hoc calibration step.
+
+    Spec: REQ-VERIFY-1409
+    """
+    if not heldout_pairs:
+        raise ValueError("heldout_pairs must not be empty")
+    clean_pairs = [(float(energy), bool(passed)) for energy, passed in heldout_pairs]
+    if any(math.isnan(energy) for energy, _passed in clean_pairs):
+        raise ValueError("heldout_pairs must not contain NaN energy")
+    if any(temperature <= 0.0 for temperature in temperatures):
+        raise ValueError("temperatures must be positive")
+
+    finite_energies = sorted({energy for energy, _passed in clean_pairs if math.isfinite(energy)})
+    if not finite_energies:
+        raise ValueError("heldout_pairs must contain at least one finite energy")
+    thresholds = finite_energies
+    if len(finite_energies) > 1:
+        thresholds = sorted(
+            {
+                *finite_energies,
+                *[
+                    (left + right) / 2.0
+                    for left, right in zip(finite_energies, finite_energies[1:], strict=False)
+                ],
+            }
+        )
+
+    best_threshold = thresholds[0]
+    best_temperature = float(temperatures[0])
+    best_score = float("inf")
+    for threshold in thresholds:
+        for temperature in temperatures:
+            score = _brier_score(clean_pairs, threshold=threshold, temperature=float(temperature))
+            if score < best_score:
+                best_score = score
+                best_threshold = threshold
+                best_temperature = float(temperature)
+
+    return VerdictCalibration(
+        threshold=best_threshold,
+        temperature=best_temperature,
+        n_heldout=len(clean_pairs),
+        brier_score=best_score,
+    )
 
 
 def _json_safe(value: Any) -> Any:
