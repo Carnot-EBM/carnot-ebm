@@ -300,10 +300,10 @@
       <a href="technical-report.html" class="btn btn-secondary">How it works</a>
     </div>
     <div class="stats-bar" aria-label="Project headline numbers">
-      <div class="stat"><div class="stat-num">1,498</div><div class="stat-label">Experiments tracked through Exp 1411</div></div>
-      <div class="stat"><div class="stat-num">118</div><div class="stat-label">archived milestone records through .107</div></div>
-      <div class="stat"><div class="stat-num">22,201</div><div class="stat-label">Python items collected, not full pass</div></div>
-      <div class="stat"><div class="stat-num">12/13</div><div class="stat-label">latest .108 criteria met</div></div>
+      <div class="stat"><div class="stat-num">1,511</div><div class="stat-label">Experiments tracked through Exp 1424</div></div>
+      <div class="stat"><div class="stat-num">119</div><div class="stat-label">archived milestone records through .108</div></div>
+      <div class="stat"><div class="stat-num">22,300</div><div class="stat-label">Python items collected, not full pass</div></div>
+      <div class="stat"><div class="stat-num">10/13</div><div class="stat-label">latest .109 criteria met</div></div>
     </div>
   </div>
 </section>
@@ -393,7 +393,9 @@
           is why Carnot can scale beyond CPUs. A working prototype runs on a KV260
           FPGA board (April 2026), and the latest QuantKAN path preserves
           AUROC=0.9801 after 3-bit edge quantization with a 2.5&times; LUT-KAN
-          simulation speedup.
+          simulation speedup. The latest Discrete SB path has a KV260 RTL
+          specification that fits the estimated budget, with no synthesis or
+          board-execution claim yet.
         </p>
       </div>
     </div>
@@ -494,6 +496,16 @@
           1408), SessionMemory portable packs (Exp 1403), manipulable-signal
           constraint template, NLAH conductor charter (Exp 1280), meta-harness
           search (Exp 1281), and streaming verification API (Exp 1411) shipped.
+          Milestone .109 met 10/13 criteria: repair diagnosis found 100
+          executable STEP_REWRITE hints (Exp 1413), the local Qwen repair
+          executor was deployed but accepted 0/20 repairs (Exp 1414), DVI v3
+          improved AUROC delta to +0.011842 but failed the non-forgetting gate
+          at 0.968604 (Exp 1415), EBM-CoT v3 temperature scaling preserved
+          AUROC 0.985375 while reducing variance (Exp 1416), the pipeline v3
+          retry stayed at full_pipeline_pass_rate=0.305 and the exact rerun was
+          retired (Exp 1419), PRM v1 measured AUROC 0.832874 on available step
+          labels (Exp 1423), and Discrete SB RTL spec work completed without a
+          hardware claim (Exp 1422).
         </p>
       </div>
       <div class="bento-card span-2">
@@ -506,6 +518,10 @@
           Claude quota percentage remains unavailable unless structured numeric
           fields exist. Output is available as a compact table or JSON, with
           focused regression coverage passing.
+          Exp 1421 also fixed the focused embedding-store runtime failure
+          cluster with 100% line coverage on the touched store module, while
+          preserving the full-suite debt disclosure: the collection is clean,
+          but the full Python suite remains red on pre-existing failures.
         </p>
       </div>
       <div class="bento-card span-2">
@@ -880,9 +896,9 @@
       </div>
       <div class="r-card">
         <span class="r-tag">Infrastructure &mdash; pre-test suite rescue</span>
-        <h3 class="r-title">22,201 Python test items collected, not passed</h3>
+        <h3 class="r-title">22,300 Python test items collected, not passed</h3>
         <div class="r-meter"><div class="r-bar" style="width: 100%; background: #22c55e;"></div></div>
-        <div class="r-stats"><span class="r-before">Collection count only; includes verdict records, session memory pack, and manipulable-signal tests</span> <span class="r-after">2026-05-06 collection-only run</span></div>
+        <div class="r-stats"><span class="r-before">Collection count only; full suite still has pre-existing execution debt</span> <span class="r-after">2026-05-06 collection-only run</span></div>
       </div>
       <div class="r-card">
         <span class="r-tag">Runtime &mdash; llama.cpp GPU offload</span>
@@ -1125,10 +1141,10 @@
         <div class="r-stats"><span class="r-before">35 promoted, 37 demoted; replay-only, not headline DVI/GRPO</span> <span class="r-after">Exp 1344</span></div>
       </div>
       <div class="r-card">
-        <span class="r-tag">Milestone .108 &mdash; latest terminal retro</span>
-        <h3 class="r-title">12/13 criteria met</h3>
-        <div class="r-meter"><div class="r-bar" style="width: 92.31%; background: #22c55e;"></div></div>
-        <div class="r-stats"><span class="r-before">Semantic validation fixed; full pipeline remains below headline gate</span> <span class="r-after">Exp 1402</span></div>
+        <span class="r-tag">Milestone .109 &mdash; latest terminal retro</span>
+        <h3 class="r-title">10/13 criteria met</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 76.92%; background: #f59e0b;"></div></div>
+        <div class="r-stats"><span class="r-before">Repair, DVI v3, FR-11, and pipeline gates carry forward</span> <span class="r-after">Exp 1424</span></div>
       </div>
       <div class="r-card">
         <span class="r-tag">DVI + calibration &mdash; v2 + SECL</span>
@@ -1147,6 +1163,36 @@
         <h3 class="r-title">Semantic pass 1.0; full pass 0.305</h3>
         <div class="r-meter"><div class="r-bar" style="width: 30.5%; background: #f59e0b;"></div></div>
         <div class="r-stats"><span class="r-before">Parse 1.0 and repair hints 1.0; below 0.40 headline gate</span> <span class="r-after">Exp 1397</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">DVI v3 &mdash; blocked deployment</span>
+        <h3 class="r-title">AUROC delta +0.011842; non-forgetting 0.968604</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 96.86%; background: #f59e0b;"></div></div>
+        <div class="r-stats"><span class="r-before">Improves over v2 delta but misses 0.99 non-forgetting gate</span> <span class="r-after">Exp 1415</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">EBM-CoT &mdash; temperature scaling</span>
+        <h3 class="r-title">Variance 0.16045 &rarr; 0.10269; AUROC 0.98538</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 64%; background: #22c55e;"></div></div>
+        <div class="r-stats"><span class="r-before">Best temperature 1.25; AUROC preserved</span> <span class="r-after">Exp 1416</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Repair executor &mdash; local SOTA GGUF</span>
+        <h3 class="r-title">0/20 repairs accepted; pipeline remains 0.305</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 30.5%; background: #ef4444;"></div></div>
+        <div class="r-stats"><span class="r-before">Executor deployed, but exact pipeline rerun retired</span> <span class="r-after">Exps 1414/1419</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Process reward model &mdash; PRM v1</span>
+        <h3 class="r-title">AUROC=0.8329 on available step labels</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 83.29%; background: #0ea5e9;"></div></div>
+        <div class="r-stats"><span class="r-before">1,030 traces used; 478 promoted traces missing local labels</span> <span class="r-after">Exp 1423</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Hardware &mdash; Discrete SB RTL</span>
+        <h3 class="r-title">KV260 budget fits; no hardware execution claim</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 100%; background: #0ea5e9;"></div></div>
+        <div class="r-stats"><span class="r-before">RTL spec complete; synthesis and board execution not performed</span> <span class="r-after">Exp 1422</span></div>
       </div>
       <div class="r-card">
         <span class="r-tag">Public APIs &mdash; verdict, memory, stream</span>
@@ -1231,12 +1277,12 @@
       <a href="arxiv-metadata.yaml" class="btn btn-secondary">Submission metadata</a>
     </div>
     <p style="margin-top: 1.5rem; font-size: 0.9rem; color: var(--text-muted);">
-      <em>Latest paper audit status 2026-05-05: critical paper-v6 fixes complete,
+      <em>Latest paper audit status 2026-05-06: critical paper-v6 fixes complete,
       paper integrity audit resolved 5/5 issues, arXiv v11 compiled and wrote
       results/carnot-arxiv-v11-20260505.tar.gz, and production k=5
       orthogonality reports max r=0.4617 with k_eff=1.76. Exp 1390 records
-      missing SWORD credentials and generated a manual upload checklist; upload
-      remains pending.</em>
+      missing SWORD credentials; Exp 1412 adds the operator action sheet and
+      confirms submission_ready_for_operator=true. Upload remains pending.</em>
     </p>
   </div>
 </section>

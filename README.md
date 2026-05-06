@@ -17,11 +17,11 @@ call. No fine-tuning. No access to model weights.
 
 Rust + Python/JAX, Apache 2.0, `pip install carnot`.
 
-Current public research record: **1,498 experiments tracked, 118
+Current public research record: **1,511 experiments tracked, 119
 artifact-backed completed milestone records**, with checked-in result artifacts
-through Exp 1411 on 2026-05-06. `research-complete.yaml` currently archives
-**118** completed milestone records through 2026.04.107; milestone .108 has
-terminal artifacts through Exp 1402 but is not yet appended as a new archive
+through Exp 1424 on 2026-05-06. `research-complete.yaml` currently archives
+**119** completed milestone records through 2026.04.108; milestone .109 has
+terminal artifacts through Exp 1424 but is not yet appended as a new archive
 record.
 
 Milestone .106 delivered the critical fix to thinking-mode certificate
@@ -50,8 +50,15 @@ work added structured verdict records (`VerdictRecord` API, Exp 1408),
 SessionMemory portable packs (export/import/diff CLI, Exp 1403), the
 manipulable-signal dependency constraint template (Exp 1403 backport), the
 NLAH conductor charter, meta-harness conductor search (Exp 1281), and a
-streaming verification API (Exp 1411). The current test collection reports
-**22,201** items; this is a collection count, not a full-suite pass claim.
+streaming verification API (Exp 1411). Milestone .109 completed **10 of 13**
+criteria: repair diagnosis found 100 executable hints, the local Qwen repair
+executor was deployed but accepted **0/20** repairs, DVI v3 was blocked by
+non-forgetting **0.968604 < 0.99**, EBM-CoT v3 temperature scaling preserved
+AUROC **0.985375** while reducing variance, full-scale pipeline v3 stayed at
+`full_pipeline_pass_rate=0.305`, Discrete SB RTL spec work fit the KV260 budget
+without a hardware claim, and PRM v1 measured AUROC **0.832874** on available
+step labels. The current test collection reports **22,300** items; this is a
+collection count, not a full-suite pass claim.
 
 ## Install and run
 
@@ -256,10 +263,19 @@ experiment artifact under `results/`.
 | FR-11 continuous self-learning v5 | **1,508 fresh-verified cases** via DVI v2/SECL path; self-learning delta **+1,449** vs Exp 1388; GRPO v8 cases integrated **0** | Exp 1395 |
 | Full-scale pipeline v2, 200 cases | `certificate_parse_rate=1.0`, `semantic_validation_pass_rate=1.0`, `repair_hint_precision=1.0`, but `full_pipeline_pass_rate=0.305 < 0.40`, so not a headline result | Exp 1397 |
 | Milestone .108 status | **12/13 criteria met**; arXiv submission not attempted, semantic validation fixed, full pipeline below headline gate, GRPO retired, BiPRM negative | Exp 1402 |
-| Current Python test collection | **22,201** Python tests collected; collection-only snapshot, not a full-suite pass claim | 2026-05-06 collection run |
 | Structured verdict records (Issue #3) | `VerdictRecord` + `calibrated_confidence_from_energy`; `verify_record()` API on both pipeline classes; **135 tests** pass | 2026-05-06 |
 | SessionMemory portable packs (Issue #5) | `export_session_memory`, `import_session_memory`, `diff_session_memory_packs` CLI; JSON Schema v1; **89 tests** pass (1 skipped) | 2026-05-06 |
 | Streaming verification API (Issue #7) | Async `verify_stream` iterator emits `VerdictRecord` objects in completion order; MCP event payload includes verdict events and `stream_end`; focused stream/MCP tests pass **10/10** | Exp 1411 |
+| Certificate repair executor + pipeline v3 | Repair diagnosis found **100** executable STEP_REWRITE hints; local Qwen executor tested **20** cases with **0** accepted repairs; 200-case pipeline stayed at `full_pipeline_pass_rate=0.305`, so the exact rerun is retired | Exps 1413/1414/1419 |
+| DVI v3 on 1,508 fresh cases | AUROC delta **+0.011842** beats the v2 delta **+0.011458**, but non-forgetting **0.968604 < 0.99**, so v3 was not deployed | Exp 1415 |
+| EBM-CoT v3 temperature scaling | AUROC **0.985375** preserved; paraphrase energy variance **0.160449 → 0.102687** with best temperature **1.25** | Exp 1416 |
+| EBRM latent trajectory drift smoke | Energy decreased monotonically, but accuracy fell **1.0 → 0.25** and planned support fraction was **0.0**; anchoring and dual-path decoding required | Exp 1417 |
+| DPO-style verified-pair fallback | Reranker fallback measured **+99.834437pp**, but no GGUF fine-tune ran and `headline_result_allowed=false` | Exp 1420 |
+| Test execution debt v1 | Focused embedding-store runtime failures fixed with **100%** line coverage on the touched module; collection clean, but full suite remains red on pre-existing execution/spec-coverage debt | Exp 1421 |
+| Discrete SB KV260 RTL spec | RTL specification complete and estimated KV260 budget fits; no synthesis or board execution claim | Exp 1422 |
+| Process reward model v1 | PRM v1 AUROC **0.832874**, step precision **0.380282**, recall **0.6** on **1,030** available traces; **478** promoted traces lack local labels | Exp 1423 |
+| Milestone .109 status | **10/13 criteria met**; DVI v3, FR-11 v6, and full-pipeline headline gates carry forward | Exp 1424 |
+| Current Python test collection | **22,300** Python tests collected; collection-only snapshot, not a full-suite pass claim | 2026-05-06 collection run |
 | Local Claude/Codex usage snapshot | Codex reads the newest local `token_count` event; Claude aggregates local token usage and reads only subscription/tier metadata from credentials; free-form quota prose is ignored instead of guessed; focused regression tests pass | 2026-05-04 changelog |
 
 Deeper analysis of these — including everything that **didn't** work and
@@ -301,7 +317,7 @@ claim we publish.
 ## Where to go next
 
 - **[Technical report](docs/technical-report.md)** — the full research arc
-  through Exp 1411 across 118 artifact-backed milestone records, with a
+  through Exp 1424 across 119 artifact-backed milestone records, with a
   plain-English timeline of what we tried, what failed, what stuck.
 - **[Roadmap](docs/roadmap.md)** — current milestone, upcoming milestones,
   hardware track, and Phase 3 (Kona-parity foundation-model) direction.
@@ -505,7 +521,7 @@ See the [technical report](docs/technical-report.md) for the full research recor
 
 ## 14 Principles Learned
 
-Hard-won lessons from the activation-based phase of a research program that now spans Exp 1-1411 across 118 artifact-backed milestone records and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
+Hard-won lessons from the activation-based phase of a research program that now spans Exp 1-1424 across 119 artifact-backed milestone records and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
 
 ### What works
 1. **The model's own logprobs are the best energy.** No external EBM needed for rejection sampling — the LLM's own confidence is already an energy function. Simple, practical, +10%.
