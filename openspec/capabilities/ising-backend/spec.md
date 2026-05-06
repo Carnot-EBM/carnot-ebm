@@ -166,7 +166,8 @@ and tools are actually present.
 - `hardware_execution_performed=false` and `hardware_claim_allowed=false`
   unless the same run records actual KV260 board evidence.
 
-**Implementation status:** Pending (Exp 1437)
+**Implementation status:** Implemented (Exp 1437; current local run blocked by
+missing `hardware/kv260/discrete_sb_256.v` source)
 
 ## Scenarios
 
@@ -219,4 +220,5 @@ expected Discrete SB source paths, run bounded lint/simulation only when source
 and tools exist, and otherwise write a blocked artifact that disallows hardware
 claims.
 
-**Implementation status:** Pending (Exp 1437)
+**Implementation status:** Implemented (Exp 1437; current local run blocked by
+missing `hardware/kv260/discrete_sb_256.v` source)
