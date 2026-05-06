@@ -1,0 +1,125 @@
+{
+  "command_results": {
+    "rtl_lint": {
+      "attempted": false,
+      "command": [],
+      "error": "rtl_lint_not_run",
+      "returncode": null,
+      "stderr_summary": "",
+      "stdout_summary": "",
+      "timed_out": false
+    },
+    "simulation": {
+      "attempted": false,
+      "command": [],
+      "error": "simulation_not_run",
+      "returncode": null,
+      "stderr_summary": "",
+      "stdout_summary": "",
+      "timed_out": false
+    },
+    "simulation_compile": {
+      "attempted": false,
+      "command": [],
+      "error": "simulation_compile_not_run",
+      "returncode": null,
+      "stderr_summary": "",
+      "stdout_summary": "",
+      "timed_out": false
+    }
+  },
+  "exp1422_summary": {
+    "exists": true,
+    "hardware_claim_allowed": false,
+    "hardware_execution_performed": false,
+    "honest_verdict": "rtl_spec_complete_budget_fits_no_synthesis_or_board_execution",
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1422_discrete_sb_kv260_rtl_spec.json",
+    "rtl_spec_path": "hardware/kv260/discrete_sb_rtl_spec.md",
+    "status": "complete"
+  },
+  "experiment_id": 1437,
+  "hardware_claim_allowed": false,
+  "hardware_execution_performed": false,
+  "honest_verdict": "blocked_missing_discrete_sb_rtl_source",
+  "iverilog_available": true,
+  "next_bitfile_step": "Implement hardware/kv260/discrete_sb_256.v from hardware/kv260/discrete_sb_rtl_spec.md, then rerun Exp 1437 lint/sim before Vivado synthesis.",
+  "rtl_lint_complete": false,
+  "rtl_sources_checked": [
+    {
+      "exists": false,
+      "path": "hardware/kv260/discrete_sb_256.v",
+      "source": "exp1422_planned_discrete_sb_source"
+    }
+  ],
+  "run_date": "20260506",
+  "simulation_complete": false,
+  "source_experiment_id": 1422,
+  "status": "blocked",
+  "synthesis_attempted": false,
+  "testbench_exists": false,
+  "tool_probes": {
+    "iverilog": {
+      "available": true,
+      "probe": {
+        "attempted": true,
+        "command": [
+          "iverilog",
+          "-V"
+        ],
+        "error": "",
+        "returncode": 0,
+        "stderr_summary": "",
+        "stdout_summary": "Icarus Verilog version 14.0 (devel) (s20251012-148-gaeca2b07c)\n\nCopyright (c) 2000-2026 Stephen Williams (steve@icarus.com)\n\n  This program is free software; you can redistribute it and/or modify\n  it under the terms of the GNU General Public License as published by\n  the Free Software Foundation; either version 2 of the License, or\n  (at your option) any later version.\n\n  This program is distributed in the hope that it will be useful,\n  but WITHOUT ANY WARRANTY; without even the implied warranty of\n  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n  GNU General Public License for more details.\n\n  You should have received a copy of the GNU General Public License along\n  with this program; if not, write to the Free Software Foundation, Inc.,\n  51 Franklin Street, Fifth Floor,\n...[truncated]",
+        "timed_out": false
+      }
+    },
+    "verilator": {
+      "available": true,
+      "probe": {
+        "attempted": true,
+        "command": [
+          "verilator",
+          "--version"
+        ],
+        "error": "",
+        "returncode": 0,
+        "stderr_summary": "",
+        "stdout_summary": "Verilator 5.047 devel rev v5.046-331-g2cd9b8df6 (mod)",
+        "timed_out": false
+      }
+    },
+    "vivado": {
+      "available": false,
+      "probe": {
+        "attempted": true,
+        "command": [
+          "vivado",
+          "-version"
+        ],
+        "error": "[Errno 2] No such file or directory: 'vivado'",
+        "returncode": null,
+        "stderr_summary": "",
+        "stdout_summary": "",
+        "timed_out": false
+      }
+    },
+    "yosys": {
+      "available": true,
+      "probe": {
+        "attempted": true,
+        "command": [
+          "yosys",
+          "--version"
+        ],
+        "error": "",
+        "returncode": 0,
+        "stderr_summary": "",
+        "stdout_summary": "Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)",
+        "timed_out": false
+      }
+    }
+  },
+  "verilator_available": true,
+  "vivado_available": false,
+  "yosys_available": true
+}
