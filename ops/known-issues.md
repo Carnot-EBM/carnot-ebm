@@ -240,6 +240,26 @@ exp_NEXT_LARQL_E: Phase-3 substrate distribution model paper section
     results from A-D
   - Acceptance: paper-v7 has measurable sovereignty claim, not just
     architectural assertion
+
+exp_NEXT_LARQL_F: Stack RotorQuant KV compression onto LARQL split
+  - Add Clifford-rotor KV cache compression (https://github.com/
+    scrya-com/rotorquant) on top of LARQL FFN-offload
+  - Memory pressure axes: FFN remote (LARQL) + KV compressed
+    (RotorQuant 4-16x) + 4-bit weight quant (existing QuantKAN
+    exp1266) — all three stack cleanly because they target
+    orthogonal bottlenecks
+  - Verifier-class workloads benefit most: single-forward-pass
+    means no autoregressive KV-growth penalty; compression error
+    is bounded and verifier energy thresholds are robust to minor
+    numerical drift
+  - Acceptance: k=6 production verifier ensemble runs on a single
+    Strix APU + same-LAN dual-3090 weight server, with end-to-end
+    verification latency <2x all-local baseline. If achieved,
+    paper-v7 sovereignty claim has measurable hardware-portable
+    backing for consumer-grade deployment.
+  - Note: for autoregressive LLM repair (not verifier), use
+    RotorQuant ALONE (all-local) — LARQL latency cost stacks
+    badly with thousands of tokens.
 ```
 
 **Strategic alignment:**
