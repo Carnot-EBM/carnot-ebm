@@ -335,7 +335,42 @@ Then the final artifact either reports held-out step-level AUROC, precision,
 recall, and an existing checkpoint for a trained CPU classifier, or reports a
 blocked verdict with the missing positive/negative step-label counts.
 
-## Implementation Status (REQ-VERIFY-1415/1416/1423)
+### REQ-VERIFY-1434: FoVer PRM Label Completion V2
+
+The repository shall provide a deterministic, CPU-only PRM v2 label completion
+path that:
+
+- writes `results/experiment_1434_fover_prm_label_completion_v2.json` with
+  `status="in_progress"` before loading source artifacts or replaying labels;
+- reads Exp 1423 and Exp 1395 evidence to identify the promoted trace IDs that
+  lacked local step labels in PRM v1;
+- recovers only labels whose Exp 1395 promoted trace ID can be mapped back to a
+  local FoVer row through deterministic duplicate-ID replay, certificate output,
+  scheduler output, validator output, or repair-localization output;
+- writes `docs/research/prm_missing_label_ledger_v2.md` with every unrecovered
+  promoted trace ID and the concrete blocker for that trace;
+- retrains the lightweight PRM on all available local labels and reports AUROC,
+  precision, and recall on the fixed held-out split; and
+- writes a terminal artifact containing `status`, `missing_labels_before`,
+  `missing_labels_filled`, `missing_labels_remaining`,
+  `label_blocker_ledger_path`, `training_traces_used`, `prmv2_trained`,
+  `prmv2_auroc`, `prmv2_precision`, `prmv2_recall`,
+  `headline_label_coverage_ready`, and `honest_verdict`.
+
+The path MUST NOT invent labels and MUST NOT require fresh LLM inference.
+
+### SCENARIO-VERIFY-1434: Ordinal Replay Recovers PRM V1 Missing Labels
+
+Given Exp 1423 reports 478 missing local labels from Exp 1395's 1508 promoted
+FoVer traces,
+When the Exp 1434 label-completion runner replays Exp 1395's deterministic
+FoVer duplicate-ID normalization,
+Then every recovered label records the source case and label source, every
+unrecovered label is written to the blocker ledger, and
+`headline_label_coverage_ready=true` only when all 1508 promoted traces are
+covered or the remaining blockers are explicitly outside local recovery scope.
+
+## Implementation Status (REQ-VERIFY-1415/1416/1423/1434)
 
 | Requirement | Python | Tests |
 |-------------|--------|-------|
@@ -343,3 +378,4 @@ blocked verdict with the missing positive/negative step-label counts.
 | REQ-VERIFY-1432 | Implemented (`python/carnot/reporting/dvi_v3_nonforgetting_replay_balanced.py`) | Implemented (`tests/python/test_experiment_1432_dvi_v3_nonforgetting_replay_balanced.py`) |
 | REQ-VERIFY-1416 | Implemented (`python/carnot/models/ebm_cot_temperature_calibration.py`) | Implemented (`tests/python/test_experiment_1416_ebm_cot_temperature_calibration.py`) |
 | REQ-VERIFY-1423 | Implemented (`python/carnot/reporting/process_reward_model_v1_fover_1508.py`) | Implemented (`tests/python/test_experiment_1423_process_reward_model_v1.py`) |
+| REQ-VERIFY-1434 | Implemented (`python/carnot/reporting/fover_prm_label_completion_v2.py`) | Implemented (`tests/python/test_experiment_1434_fover_prm_label_completion_v2.py`) |
