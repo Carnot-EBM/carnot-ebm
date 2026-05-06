@@ -15,7 +15,7 @@ Usage:
     carnot verify-code examples/math_funcs.py --func gcd --pbt
     carnot memory export --storage-dir .carnot_sessions --model-id qwen -o pack.json
 
-Spec: REQ-CODE-001, REQ-CODE-006, REQ-CODE-020, REQ-LEARN-062
+Spec: REQ-CODE-001, REQ-CODE-006, REQ-CODE-020, REQ-LEARN-1407
 """
 
 from __future__ import annotations
@@ -385,7 +385,7 @@ def cmd_score(args: argparse.Namespace) -> int:
 def cmd_memory_export(args: argparse.Namespace) -> int:
     """Export SessionMemory as a portable JSON pack.
 
-    Spec: REQ-LEARN-062, SCENARIO-LEARN-106
+    Spec: REQ-LEARN-1407, SCENARIO-LEARN-1407
     """
     from carnot.pipeline.session_memory_pack import export_session_memory
 
@@ -408,7 +408,7 @@ def cmd_memory_export(args: argparse.Namespace) -> int:
 def cmd_memory_import(args: argparse.Namespace) -> int:
     """Import a portable SessionMemory JSON pack.
 
-    Spec: REQ-LEARN-062, SCENARIO-LEARN-106
+    Spec: REQ-LEARN-1407, SCENARIO-LEARN-1407
     """
     from carnot.pipeline.session_memory_pack import import_session_memory
 
@@ -437,7 +437,7 @@ def cmd_memory_import(args: argparse.Namespace) -> int:
 def cmd_memory_diff(args: argparse.Namespace) -> int:
     """Diff two portable SessionMemory JSON packs.
 
-    Spec: REQ-LEARN-062, SCENARIO-LEARN-106
+    Spec: REQ-LEARN-1407, SCENARIO-LEARN-1407
     """
     from carnot.pipeline.session_memory_pack import diff_session_memory_packs
 
@@ -455,7 +455,7 @@ def cmd_memory_diff(args: argparse.Namespace) -> int:
 def main() -> int:
     """CLI entry point.
 
-    Spec: REQ-CODE-006, REQ-CODE-020, REQ-INFER-015, REQ-LEARN-062
+    Spec: REQ-CODE-006, REQ-CODE-020, REQ-INFER-015, REQ-LEARN-1407
     """
     parser = argparse.ArgumentParser(
         prog="carnot",

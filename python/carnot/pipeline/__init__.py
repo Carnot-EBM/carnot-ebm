@@ -519,6 +519,13 @@ from carnot.pipeline.session_health_check import (  # noqa: E402
     ZombieProcess,
 )
 from carnot.pipeline.session_memory import SessionMemory
+from carnot.pipeline.session_memory_pack import (
+    diff_session_memory_packs,
+    export_session_memory,
+    import_session_memory,
+    load_session_memory_pack,
+    validate_session_memory_pack,
+)
 from carnot.pipeline.sink_probe import (
     SinkConcentration,
     SinkProbe,
@@ -743,6 +750,11 @@ __all__ = [
     "extract_cot_steps",
     "find_broken_links",
     "SessionMemory",
+    "diff_session_memory_packs",
+    "export_session_memory",
+    "import_session_memory",
+    "load_session_memory_pack",
+    "validate_session_memory_pack",
     "SinkConcentration",
     "SinkProbe",
     "SinkProbeResult",

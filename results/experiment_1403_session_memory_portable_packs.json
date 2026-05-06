@@ -1,0 +1,52 @@
+{
+  "schema": "carnot.session_memory_portable_packs.v1",
+  "status": "complete",
+  "github_issue": 5,
+  "run_date": "2026-05-06",
+  "requirements": [
+    "REQ-LEARN-1405",
+    "REQ-LEARN-1406",
+    "REQ-LEARN-1407"
+  ],
+  "scenarios": [
+    "SCENARIO-LEARN-1405",
+    "SCENARIO-LEARN-1406",
+    "SCENARIO-LEARN-1407"
+  ],
+  "deliverables": {
+    "schema_path": "python/carnot/schemas/session_memory_v1.json",
+    "api_module": "python/carnot/pipeline/session_memory_pack.py",
+    "cli_module": "python/carnot/cli.py",
+    "docs_path": "docs/session-memory-packs.md",
+    "starter_packs": [
+      "examples/constraint_packs/empty_v1.json",
+      "examples/constraint_packs/arithmetic_v1.json",
+      "examples/constraint_packs/python_code_v1.json"
+    ],
+    "tests_path": "tests/python/test_session_memory_pack.py"
+  },
+  "verification": {
+    "pytest_targeted": "89 passed, 1 skipped",
+    "ruff_check": "passed",
+    "ruff_format_check": "passed",
+    "mypy": "passed",
+    "spec_coverage": "passed",
+    "json_validation": "passed",
+    "git_diff_check": "passed"
+  },
+  "acceptance": {
+    "portable_schema_written": true,
+    "export_api_written": true,
+    "import_api_written": true,
+    "diff_api_written": true,
+    "cli_export_import_diff_written": true,
+    "starter_packs_written": true,
+    "merge_recomputes_duplicate_case_confidence": true,
+    "replace_mode_warns": true,
+    "dry_run_supported": true
+  },
+  "e2e_plan_applicability": {
+    "ops/e2e-test-plan.md": "No model training/sampling, PyO3 binding, cross-language model serialization, or packaged code-repair E2E path changed. The relevant end-to-end behavior is covered by export/import/diff round-trip tests."
+  },
+  "honest_verdict": "session_memory_portable_packs_complete"
+}

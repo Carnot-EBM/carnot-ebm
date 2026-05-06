@@ -1,6 +1,19 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-05 (GitHub issue #10 meta-harness conductor search implemented)
+**Last Updated:** 2026-05-06 (GitHub issue #5 SessionMemory portable packs implemented)
+
+## Session 2026-05-06 - GitHub Issue #5 SessionMemory Portable Packs Implemented
+
+**Issue #5 IMPLEMENTED.**
+
+- Added portable pack API in `python/carnot/pipeline/session_memory_pack.py` for `export_session_memory`, `import_session_memory`, `diff_session_memory_packs`, `load_session_memory_pack`, and `validate_session_memory_pack`.
+- Added JSON Schema draft-2020-12 artifact `python/carnot/schemas/session_memory_v1.json` and packaging data for `carnot.schemas`.
+- Added starter packs under `examples/constraint_packs/`: `empty_v1.json`, `arithmetic_v1.json`, and `python_code_v1.json`.
+- Added CLI routing: `carnot memory export`, `carnot memory import --merge/--replace`, and `carnot memory diff`.
+- Merge semantics are additive: duplicate cases recompute support-weighted confidence, template observations add counts, and FP tracker counters add counts. Replace mode prints an explicit reset warning.
+- Added terminal artifact `results/experiment_1403_session_memory_portable_packs.json` with `honest_verdict="session_memory_portable_packs_complete"`.
+- Verification: `.venv/bin/pytest tests/python/test_session_memory_pack.py tests/python/test_session_memory.py tests/python/test_cli.py -q --no-cov -p no:cacheprovider` passed 89 tests with 1 skipped; `ruff check`, `ruff format --check`, `mypy`, targeted spec coverage, `jq`, and `git diff --check` passed.
+- E2E checks from `ops/e2e-test-plan.md` are not applicable: this change does not alter model training/sampling, PyO3 binding, cross-language model serialization, or packaged code-repair E2E paths. The relevant end-to-end behavior is covered by export/import/diff round-trip tests.
 
 ## Session 2026-05-05 - Milestone 2026.04.108 Research Planning Complete
 
