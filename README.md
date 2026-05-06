@@ -19,7 +19,7 @@ Rust + Python/JAX, Apache 2.0, `pip install carnot`.
 
 Current public research record: **1,495 experiments tracked, 117
 artifact-backed completed milestones**, with checked-in result artifacts
-through Exp 1389 on 2026-05-05. `research-complete.yaml` currently archives
+through Exp 1408 on 2026-05-06. `research-complete.yaml` currently archives
 **117** completed milestones through 2026.04.107.
 
 Milestone .106 delivered the critical fix to thinking-mode certificate
@@ -37,7 +37,7 @@ v4 to **59 fresh-verified cases** (up from 4 in .106) with self-learning delta
 v11 bundle (submission-ready archive, manual upload required); Exp 1379
 completed the paper integrity audit (5/5 issues resolved). The only missed
 criterion was GRPO v7 JURY-RL (Exp 1383, no improvement). The current test
-collection reports **22,163** items (2 errors); this is a collection count, not
+collection reports **22,201** items; this is a collection count, not
 a full-suite pass claim.
 
 ## Install and run
@@ -239,7 +239,9 @@ experiment artifact under `results/`.
 | Milestone .105 status | **9/12 criteria met**; thinking-mode budget exhaustion diagnosed as terminal negative evidence; hardware/parity work honest; publication hold active | Exp 1363 |
 | Milestone .106 status | **11/13 criteria met**; tag-first CRANE injection resolved certificate_parse_rate=0.0 blocker; pre-test cascade SKIPs on exp1375/1376 required manual closeout | Exp 1376 retro |
 | Milestone .107 status | **13/14 criteria met**; full-scale pipeline headline allowed; arXiv v11 ready; GRPO v7 JURY-RL no improvement (sole miss); publication hold lift recommended | Exp 1389 |
-| Current Python test collection | **22,163** Python tests collected (2 errors); collection-only snapshot, not a full-suite pass claim | 2026-05-05 collection run |
+| Current Python test collection | **22,201** Python tests collected; collection-only snapshot, not a full-suite pass claim | 2026-05-06 collection run |
+| Structured verdict records (Issue #3) | `VerdictRecord` + `calibrated_confidence_from_energy`; `verify_record()` API on both pipeline classes; **135 tests** pass | 2026-05-06 |
+| SessionMemory portable packs (Issue #5) | `export_session_memory`, `import_session_memory`, `diff_session_memory_packs` CLI; JSON Schema v1; **89 tests** pass (1 skipped) | 2026-05-06 |
 | Local Claude/Codex usage snapshot | Codex reads the newest local `token_count` event; Claude aggregates local token usage and reads only subscription/tier metadata from credentials; free-form quota prose is ignored instead of guessed; focused regression tests pass | 2026-05-04 changelog |
 
 Deeper analysis of these — including everything that **didn't** work and
