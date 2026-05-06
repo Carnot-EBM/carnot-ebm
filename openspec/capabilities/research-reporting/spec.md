@@ -810,6 +810,47 @@ checker count, multiple named failure clusters, exactly one
 `next_cluster_recommended`, and an honest verdict that the full suite was not
 rerun and remains unproven.
 
+### REQ-REPORT-035: Milestone .110 Terminal Retrospective
+
+The Exp 1438 `.110` milestone retrospective workflow shall read
+`openspec/change-proposals/research-roadmap-vNEXT.md`,
+`research-roadmap.yaml`, the conductor log, and every available Exp 1425
+through Exp 1437 result artifact without rerunning the source experiments. It
+shall write `results/experiment_1438_milestone_110_retro.json` with:
+
+- `status` set to `complete` in the final artifact
+- `milestone` set to `2026.04.110`
+- `criteria_total` set to `14`
+- `criteria_met`, derived only from success criteria whose status is `met`
+- `success_criteria_results`, mapping all 14 roadmap criteria to `met`,
+  `not_met`, `blocked`, or `not_run`
+- `repair_v2_verdict`
+- `dvi_fr11_verdict`
+- `prm_verdict`
+- `hardware_verdict`
+- `carry_forward_tasks`, each with prior failure verdicts and
+  retire-if-same-verdict rules
+- `retired_exact_scopes`
+- `honest_verdict`
+
+The workflow shall count the retrospective self-criterion as met only in the
+final artifact. It shall preserve honest negative evidence: a non-headline
+FR-11 run with no positive promoted growth shall not count as continuous
+self-learning success, and an RTL artifact blocked by missing source shall not
+count as lint/simulation evidence even when tool probes are available.
+
+### SCENARIO-REPORT-035: .110 Retro Scores Positive and Negative Evidence
+
+Given Exp 1425 through Exp 1437 artifacts include repair v2, candidate search,
+pipeline micro-validation, DVI v3 deployment, completed PRM labels, DPO
+reranker relabeling, and anchored latent repair evidence, but also include an
+FR-11 non-headline no-growth result and a blocked missing-RTL-source hardware
+artifact, when the Exp 1438 workflow writes the terminal retrospective, then
+`criteria_total == 14`, `criteria_met == 12`, the FR-11 criterion is `not_met`,
+the RTL evidence criterion is `blocked`, and carry-forward rules include the
+same-verdict retirement decisions for repair, FR-11 growth, test debt, and
+hardware source implementation.
+
 ### REQ-REPORT-024: Local Agent Usage Snapshot
 
 The repository shall provide a local operator workflow that inspects the
@@ -1379,6 +1420,7 @@ embed live-GPU benchmark results from Exp 328 when available.
 | REQ-REPORT-032 | `python/carnot/reporting/milestone_retro_109.py`, `results/experiment_1424_milestone_109_retro.json` | `tests/python/test_milestone_retro_109.py` | Implemented |
 | REQ-REPORT-033 | `python/carnot/reporting/milestone_110_carryforward_activation_audit.py`, `results/experiment_1425_109_carryforward_activation_audit.json`, `ops/milestone_110_carryforward_manifest.md` | `tests/python/test_milestone_110_carryforward_activation_audit.py` | Implemented |
 | REQ-REPORT-034 | `python/carnot/reporting/test_suite_remaining_debt_cluster_map.py`, `results/experiment_1426_test_suite_remaining_debt_cluster_map.json` | `tests/python/test_test_suite_remaining_debt_cluster_map.py` | Implemented |
+| REQ-REPORT-035 | `python/carnot/reporting/milestone_retro_110.py`, `results/experiment_1438_milestone_110_retro.json` | `tests/python/test_milestone_retro_110.py` | Implemented |
 | REQ-REPORT-024 | `python/carnot/reporting/agent_usage.py`, `scripts/agent_plan_usage.py` | `tests/python/test_agent_plan_usage.py` | Implemented |
 | REQ-PUBLISH-003 | `scripts/experiment_317_hf_publish.py` | `tests/python/test_experiment_317_hf_publish.py` | Implemented |
 | REQ-PUBLISH-004 | `scripts/experiment_330_hf_live_publish.py` | `tests/python/test_experiment_330_hf_live_publish.py` | Implemented |
