@@ -17,10 +17,11 @@ call. No fine-tuning. No access to model weights.
 
 Rust + Python/JAX, Apache 2.0, `pip install carnot`.
 
-Current public research record: **1,495 experiments tracked, 117
+Current public research record: **1,498 experiments tracked, 118
 artifact-backed completed milestones**, with checked-in result artifacts
-through Exp 1408 on 2026-05-06. `research-complete.yaml` currently archives
-**117** completed milestones through 2026.04.107.
+through Exp 1411 on 2026-05-06. `research-complete.yaml` currently archives
+**117** completed milestones through 2026.04.107 (milestone .108 retro is
+complete but not yet added to that archive).
 
 Milestone .106 delivered the critical fix to thinking-mode certificate
 generation: Exp 1366 (CRANE tag-first prefix injection) reached
@@ -35,10 +36,21 @@ and `semantic_validation_pass_rate=0.59`; Exp 1388 extended FR-11 self-learning
 v4 to **59 fresh-verified cases** (up from 4 in .106) with self-learning delta
 **+1.791464** and `headline_result_allowed=true`; Exp 1380 produced the arXiv
 v11 bundle (submission-ready archive, manual upload required); Exp 1379
-completed the paper integrity audit (5/5 issues resolved). The only missed
-criterion was GRPO v7 JURY-RL (Exp 1383, no improvement). The current test
-collection reports **22,201** items; this is a collection count, not
-a full-suite pass claim.
+completed the paper integrity audit (5/5 issues resolved). Milestone .108
+completed **12 of 13** criteria: Exp 1394 deployed DVI v2 + SECL combined
+calibration (ECE reduced, positive AUROC delta); Exp 1395 extended FR-11
+self-learning v5 to **1,508 fresh-verified cases** with self-learning delta
+**+1.449** and `headline_result_allowed=true`; Exp 1396 diagnosed and fixed the
+semantic validation failures (30/30 sample failures recovered); Exp 1397 ran
+the full-scale 200-case pipeline with `semantic_validation_pass_rate=1.0` but
+`full_pipeline_pass_rate=0.305` (below 0.40 headline gate); GRPO v8 NGRPO
+retired (no improvement, all rollouts UNKNOWN). Post-milestone GitHub issue
+work added structured verdict records (`VerdictRecord` API, Exp 1408),
+SessionMemory portable packs (export/import/diff CLI, Exp 1403), the
+manipulable-signal dependency constraint template (Exp 1403 backport), the
+NLAH conductor charter, meta-harness conductor search (Exp 1281), and a
+streaming verification API (Exp 1411). The current test collection reports
+**22,201** items; this is a collection count, not a full-suite pass claim.
 
 ## Install and run
 
