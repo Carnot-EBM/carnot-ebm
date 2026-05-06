@@ -1015,3 +1015,5 @@ web search: GitHub trending energy based mod |
 | 2026-05-06 13:56 UTC | MCMC Constrained Repair Candidate Search — Gated o | OK | 81 passed, 1 warning in 4.18s |
 | 2026-05-06 14:13 UTC | PRM-Guided Repair Selector — Gated on Exp1429 Cand | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1430_prm_gui |
 | 2026-05-06 15:28 UTC | PRM-Guided Repair Selector — Gated on Exp1429 Cand | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1430_prm_gui |
+| 2026-05-06 15:34 UTC | PRM-Guided Repair Selector — Gated on Exp1429 Cand | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1430_prm_gui |
+| 2026-05-06 15:36 UTC | Full Pipeline v4 Micro Validation — Gated on Nonze | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1430-prm-guided-repair-selector) |
