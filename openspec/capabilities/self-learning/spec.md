@@ -1578,7 +1578,7 @@ Each maps to a deterministic (var1, var2, J_value) coupling spec.
 
 ---
 
-## REQ-LEARN-060: SessionMemory Portable Pack Schema
+## REQ-LEARN-1405: SessionMemory Portable Pack Schema
 
 **Given** a saved SessionMemory state containing CaseMemory, ConstraintTemplateLibrary,
          and PerModelFPTracker data
@@ -1589,18 +1589,18 @@ Each maps to a deterministic (var1, var2, J_value) coupling spec.
          false-positive tracker statistics, and session_state summaries
 **And**  schema-breaking changes MUST require a major schema_version increment.
 
-### REQ-LEARN-060 Sub-requirements
+### REQ-LEARN-1405 Sub-requirements
 
-- REQ-LEARN-060-1: `python/carnot/schemas/session_memory_v1.json` SHALL describe the
+- REQ-LEARN-1405-1: `python/carnot/schemas/session_memory_v1.json` SHALL describe the
   portable pack using JSON Schema draft-2020-12.
-- REQ-LEARN-060-2: `export_session_memory()` SHALL produce deterministic JSON-compatible
+- REQ-LEARN-1405-2: `export_session_memory()` SHALL produce deterministic JSON-compatible
   payloads with schema `carnot.session_memory_pack.v1`.
-- REQ-LEARN-060-3: `validate_session_memory_pack()` SHALL reject payloads missing required
+- REQ-LEARN-1405-3: `validate_session_memory_pack()` SHALL reject payloads missing required
   pack metadata or per-model learning-state sections.
 
 ---
 
-## REQ-LEARN-061: SessionMemory Portable Import and Merge
+## REQ-LEARN-1406: SessionMemory Portable Import and Merge
 
 **Given** an existing local SessionMemory state and an imported portable pack for the same model
 **When** `import_session_memory(..., merge=True)` is called
@@ -1610,17 +1610,17 @@ Each maps to a deterministic (var1, var2, J_value) coupling spec.
 **And** template observation counts and FP tracker counts MUST be merged additively
 **And** `replace=True` MUST perform a full reset using the imported pack contents.
 
-### REQ-LEARN-061 Sub-requirements
+### REQ-LEARN-1406 Sub-requirements
 
-- REQ-LEARN-061-1: `diff_session_memory_packs()` SHALL report an empty diff after
+- REQ-LEARN-1406-1: `diff_session_memory_packs()` SHALL report an empty diff after
   export -> import -> export round-trips with no semantic state change.
-- REQ-LEARN-061-2: `import_session_memory(..., dry_run=True)` SHALL validate and report
+- REQ-LEARN-1406-2: `import_session_memory(..., dry_run=True)` SHALL validate and report
   planned changes without writing SessionMemory files.
-- REQ-LEARN-061-3: merge and replace modes SHALL be mutually exclusive.
+- REQ-LEARN-1406-3: merge and replace modes SHALL be mutually exclusive.
 
 ---
 
-## REQ-LEARN-062: SessionMemory CLI Import/Export
+## REQ-LEARN-1407: SessionMemory CLI Import/Export
 
 **Given** the installed `carnot` CLI
 **When** a user runs `carnot memory export --storage-dir DIR --model-id MODEL -o pack.json`
@@ -1630,21 +1630,21 @@ Each maps to a deterministic (var1, var2, J_value) coupling spec.
 **And** `carnot memory import ... --replace` MUST print an explicit reset warning before
         replacing local state.
 
-### SCENARIO-LEARN-104: Portable Pack Round Trip Has Empty Diff
+### SCENARIO-LEARN-1405: Portable Pack Round Trip Has Empty Diff
 
 **Given** a SessionMemory state with one CaseMemory entry, one template observation,
          and one FP tracker statistic
 **When** it is exported, imported into a fresh storage directory, and exported again
 **Then** `diff_session_memory_packs()` returns `is_empty=True`.
 
-### SCENARIO-LEARN-105: Merge Recomputes Duplicate Case Confidence
+### SCENARIO-LEARN-1406: Merge Recomputes Duplicate Case Confidence
 
 **Given** a local case entry with support=1 and confidence=0.25
 **And**  an imported duplicate case entry with support=1 and confidence=0.75
 **When** the pack is imported with merge=True
 **Then** the merged case entry has support=2 and confidence=0.50.
 
-### SCENARIO-LEARN-106: CLI Memory Commands Route to Portable Pack APIs
+### SCENARIO-LEARN-1407: CLI Memory Commands Route to Portable Pack APIs
 
 **Given** a saved SessionMemory state
 **When** `carnot memory export`, `carnot memory import --merge`, and
@@ -1653,13 +1653,13 @@ Each maps to a deterministic (var1, var2, J_value) coupling spec.
 
 ---
 
-## Implementation Status (REQ-LEARN-060, REQ-LEARN-061, REQ-LEARN-062)
+## Implementation Status (REQ-LEARN-1405, REQ-LEARN-1406, REQ-LEARN-1407)
 
 | Requirement  | Python | Tests |
 |-------------|--------|-------|
-| REQ-LEARN-060 | Implemented (python/carnot/pipeline/session_memory_pack.py, python/carnot/schemas/session_memory_v1.json) | Implemented (tests/python/test_session_memory_pack.py) |
-| REQ-LEARN-061 | Implemented (python/carnot/pipeline/session_memory_pack.py) | Implemented (tests/python/test_session_memory_pack.py) |
-| REQ-LEARN-062 | Implemented (python/carnot/cli.py memory subcommands) | Implemented (tests/python/test_session_memory_pack.py) |
+| REQ-LEARN-1405 | Implemented (python/carnot/pipeline/session_memory_pack.py, python/carnot/schemas/session_memory_v1.json) | Implemented (tests/python/test_session_memory_pack.py) |
+| REQ-LEARN-1406 | Implemented (python/carnot/pipeline/session_memory_pack.py) | Implemented (tests/python/test_session_memory_pack.py) |
+| REQ-LEARN-1407 | Implemented (python/carnot/cli.py memory subcommands) | Implemented (tests/python/test_session_memory_pack.py) |
 
 ---
 

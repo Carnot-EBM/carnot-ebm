@@ -4,8 +4,8 @@ The native ``SessionMemory`` file is intentionally local and implementation-faci
 This module wraps that state in a stable, schema-versioned pack format so learned
 cases, template observations, and FP calibration can be shared across installations.
 
-Spec: REQ-LEARN-060, REQ-LEARN-061, REQ-LEARN-062,
-      SCENARIO-LEARN-104, SCENARIO-LEARN-105, SCENARIO-LEARN-106
+Spec: REQ-LEARN-1405, REQ-LEARN-1406, REQ-LEARN-1407,
+      SCENARIO-LEARN-1405, SCENARIO-LEARN-1406, SCENARIO-LEARN-1407
 """
 
 from __future__ import annotations
@@ -18,7 +18,7 @@ from hashlib import sha256
 from os import PathLike
 from typing import Any
 
-from carnot._version import __version__ as CARNOT_VERSION
+from carnot import _version
 from carnot.pipeline.adaptive_thresholds import PerModelFPTracker
 from carnot.pipeline.case_memory import CaseEntry, CaseMemory
 from carnot.pipeline.constraint_template_library import ConstraintTemplateLibrary
@@ -198,7 +198,7 @@ def _metadata_payload(metadata: dict[str, Any] | None, exported_at: str) -> Json
         "created_at": exported_at,
         "source": "local-session",
         "license": DEFAULT_LICENSE,
-        "carnot_version": CARNOT_VERSION,
+        "carnot_version": _version.__version__,
         "backwards_compatibility": "v1 readers reject unknown major versions",
     }
     if metadata:
@@ -223,7 +223,7 @@ def export_session_memory(
     Missing local state exports as a valid empty pack so starter packs and fresh
     installations use the same schema path as populated installations.
 
-    Spec: REQ-LEARN-060-2
+    Spec: REQ-LEARN-1405-2
     """
     exported_at = _utc_now()
     case_memory, template_library, fp_tracker, saved_at = _load_components(storage_dir, model_id)
@@ -259,7 +259,7 @@ def export_session_memory(
 def load_session_memory_pack(path: str | pathlib.Path | PathLike[str]) -> JsonDict:
     """Load and validate a portable SessionMemory pack from disk.
 
-    Spec: REQ-LEARN-060-3
+    Spec: REQ-LEARN-1405-3
     """
     payload = json.loads(pathlib.Path(path).read_text(encoding="utf-8"))
     if not isinstance(payload, dict):
@@ -282,7 +282,7 @@ def validate_session_memory_pack(payload: JsonDict) -> None:
     The checked-in JSON Schema is the public contract; this function is the
     lightweight runtime guard used by CLI and tests.
 
-    Spec: REQ-LEARN-060-3
+    Spec: REQ-LEARN-1405-3
     """
     if not isinstance(payload, dict):
         raise ValueError("SessionMemory pack must be a JSON object")
@@ -360,7 +360,9 @@ def _select_model(payload: JsonDict, model_id: str | None) -> JsonDict:
     raise ValueError(f"model_id {model_id!r} not found in pack")
 
 
-def _components_from_model(model: JsonDict) -> tuple[CaseMemory, ConstraintTemplateLibrary, PerModelFPTracker]:
+def _components_from_model(
+    model: JsonDict,
+) -> tuple[CaseMemory, ConstraintTemplateLibrary, PerModelFPTracker]:
     case_memory = CaseMemory.from_dict(model["case_memory"])
     template_library = ConstraintTemplateLibrary.from_dict(model["template_library"])
     template_library.register_builtin_templates()
@@ -445,7 +447,7 @@ def import_session_memory(
 
     The safe default is merge mode when neither merge nor replace is specified.
 
-    Spec: REQ-LEARN-061
+    Spec: REQ-LEARN-1406
     """
     if merge and replace:
         raise ValueError("merge and replace are mutually exclusive")
@@ -525,7 +527,7 @@ def diff_session_memory_packs(left: PackInput, right: PackInput) -> JsonDict:
     Export timestamps and other pack metadata are ignored. Learning state sections
     are compared exactly.
 
-    Spec: REQ-LEARN-061-1
+    Spec: REQ-LEARN-1406-1
     """
     left_payload = _coerce_pack(left)
     right_payload = _coerce_pack(right)
