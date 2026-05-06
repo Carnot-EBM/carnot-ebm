@@ -12,7 +12,13 @@ import re
 import sys
 from pathlib import Path
 
-SPEC_PATTERN = re.compile(r"(REQ-[A-Z][A-Z0-9]*-\d+|SCENARIO-[A-Z][A-Z0-9]*-\d+)")
+SPEC_PATTERN = re.compile(
+    r"\b("
+    r"REQ-[A-Z][A-Z0-9]*(?:-[A-Z][A-Z0-9]*)*-\d+[a-z]?(?:-\d+[a-z]?)*"
+    r"|"
+    r"SCENARIO-[A-Z][A-Z0-9]*(?:-[A-Z][A-Z0-9]*)*-\d+[a-z]?(?:-\d+[a-z]?)*"
+    r")\b"
+)
 
 # Rust test pattern: #[test] followed by fn test_name
 RUST_TEST_PATTERN = re.compile(r"#\[test\]\s*\n\s*fn\s+(\w+)")

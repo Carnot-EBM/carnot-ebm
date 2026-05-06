@@ -907,6 +907,42 @@ FR-11 zero-growth, PRM v1 no-improvement, and missing-source RTL lint/sim in
 `forbidden_exact_reruns`, and reports no activation-manifest changes needed for
 `scripts/research_conductor.py` or `research-roadmap.yaml`.
 
+### REQ-REPORT-037: Exp1440 Spec-Coverage Traceability Metadata Fix
+
+The Exp 1440 workflow shall fix the bounded
+`spec_coverage_traceability_metadata` cluster identified by Exp 1426 without
+changing runtime implementation behavior unless existing valid OpenSpec
+metadata cannot otherwise be recognized by the spec-coverage checker.
+
+The workflow shall write
+`results/experiment_1440_spec_coverage_traceability_metadata_fix.json` with
+`status="in_progress"` before editing traceability metadata, then record:
+
+- `status`
+- `spec_coverage_metadata_cluster_fixed`
+- `initial_spec_coverage_debt_count`
+- `final_spec_coverage_debt_count`
+- `files_changed`
+- `commands_run`
+- `residual_blockers`
+- `honest_verdict`
+
+The checker shall recognize canonical OpenSpec identifiers that contain
+multiple uppercase name segments before the numeric suffix, such as
+`REQ-INFER-SOTA-004`, `REQ-VER-MATH-001`,
+`SCENARIO-INFER-SOTA-004-001`, and `SCENARIO-VER-MATH-001`. Metadata fixes
+shall cite requirements or scenarios that are present in
+`openspec/capabilities/*/spec.md`.
+
+### SCENARIO-REPORT-037: Exp1440 Closes Current Metadata Debt Cluster
+
+Given Exp 1426 reports 71 spec-coverage metadata misses across the bounded
+cluster, when Exp 1440 runs for run date `20260506`, then the artifact records
+the initial debt count, applies only traceability/checker fixes needed for
+existing OpenSpec anchors, reruns spec coverage, records the final debt count,
+and reports any remaining blocker exactly instead of claiming full-suite health
+without evidence.
+
 ### REQ-REPORT-024: Local Agent Usage Snapshot
 
 The repository shall provide a local operator workflow that inspects the
@@ -1478,6 +1514,7 @@ embed live-GPU benchmark results from Exp 328 when available.
 | REQ-REPORT-034 | `python/carnot/reporting/test_suite_remaining_debt_cluster_map.py`, `results/experiment_1426_test_suite_remaining_debt_cluster_map.json` | `tests/python/test_test_suite_remaining_debt_cluster_map.py` | Implemented |
 | REQ-REPORT-035 | `python/carnot/reporting/milestone_retro_110.py`, `results/experiment_1438_milestone_110_retro.json` | `tests/python/test_milestone_retro_110.py` | Implemented |
 | REQ-REPORT-036 | `python/carnot/reporting/milestone_111_carryforward_activation_manifest.py`, `results/experiment_1439_110_carryforward_activation_manifest.json`, `ops/milestone_111_carryforward_manifest.md` | `tests/python/test_milestone_111_carryforward_activation_manifest.py` | Implemented |
+| REQ-REPORT-037 | `scripts/check_spec_coverage.py`, `results/experiment_1440_spec_coverage_traceability_metadata_fix.json` | `tests/python/test_spec_coverage_checker.py` | Implemented |
 | REQ-REPORT-024 | `python/carnot/reporting/agent_usage.py`, `scripts/agent_plan_usage.py` | `tests/python/test_agent_plan_usage.py` | Implemented |
 | REQ-PUBLISH-003 | `scripts/experiment_317_hf_publish.py` | `tests/python/test_experiment_317_hf_publish.py` | Implemented |
 | REQ-PUBLISH-004 | `scripts/experiment_330_hf_live_publish.py` | `tests/python/test_experiment_330_hf_live_publish.py` | Implemented |
