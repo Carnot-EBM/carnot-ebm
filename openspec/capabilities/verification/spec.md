@@ -232,8 +232,46 @@ baseline delta of 0.011458, records replay nonforgetting, and either writes an
 existing checkpoint path when `dvi_v3_deployed=true` or reports the blocking
 reason in `honest_verdict`.
 
-## Implementation Status (REQ-VERIFY-1415)
+### REQ-VERIFY-1416: EBM-CoT V3 Post-Hoc Temperature Calibration
+
+The repository shall provide a deterministic, CPU-only post-hoc temperature
+calibration pass for Exp 1401 EBM-CoT hinge-only scores that:
+
+- writes `results/experiment_1416_ebm_cot_v3_temperature_calibration.json` with
+  `status="in_progress"` before loading source scores or fitting the
+  temperature;
+- reuses Exp 1401 scores when available or regenerates only the minimal
+  deterministic FoVer split needed to recover those scores without fresh LLM
+  inference;
+- fits a single positive scalar temperature `T*` on a validation split, never on
+  the test split;
+- applies the fitted temperature to EBM-CoT energies as a post-hoc scaling
+  operation;
+- reports AUROC before and after temperature scaling, preserving Exp 1401's
+  positive AUROC delta when ranking is unchanged within measured tolerance;
+- reports paraphrase energy variance before and after scaling; and
+- writes a complete artifact containing `status`, `temperature_scaling_applied`,
+  `best_temperature`, `calibration_auroc_delta_before`,
+  `calibration_auroc_delta_after`,
+  `paraphrase_energy_variance_before_temp_scaling`,
+  `paraphrase_energy_variance_after_temp_scaling`, `variance_worsened`,
+  `auroc_preserved`, and `honest_verdict`.
+
+### SCENARIO-VERIFY-1416: Temperature Scaling Reduces Variance Without Changing Ranking
+
+Given Exp 1401 reports a positive EBM-CoT hinge-only AUROC delta and worsened
+paraphrase energy variance,
+When the post-hoc temperature calibration runner fits `T*` on a validation split
+and applies it to held-out EBM-CoT scores,
+Then the final artifact reports the before/after AUROC deltas, marks
+`auroc_preserved=true` only when the positive delta is preserved within
+tolerance, marks `variance_worsened=false` only when post-temperature variance
+is no greater than pre-temperature variance within tolerance, and records an
+honest verdict describing both gates.
+
+## Implementation Status (REQ-VERIFY-1415/1416)
 
 | Requirement | Python | Tests |
 |-------------|--------|-------|
 | REQ-VERIFY-1415 | Implemented (`python/carnot/reporting/dvi_v3_1508_fresh_cases.py`) | Implemented (`tests/python/test_experiment_1415_dvi_v3_1508_fresh_cases.py`) |
+| REQ-VERIFY-1416 | Implemented (`python/carnot/models/ebm_cot_temperature_calibration.py`) | Implemented (`tests/python/test_experiment_1416_ebm_cot_temperature_calibration.py`) |
