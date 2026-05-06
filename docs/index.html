@@ -300,10 +300,10 @@
       <a href="technical-report.html" class="btn btn-secondary">How it works</a>
     </div>
     <div class="stats-bar" aria-label="Project headline numbers">
-      <div class="stat"><div class="stat-num">1,350</div><div class="stat-label">Experiments tracked through Exp 1350</div></div>
-      <div class="stat"><div class="stat-num">114</div><div class="stat-label">research-complete milestones through .104</div></div>
-      <div class="stat"><div class="stat-num">21,955</div><div class="stat-label">Python items collected, not full pass</div></div>
-      <div class="stat"><div class="stat-num">9/12</div><div class="stat-label">latest .104 criteria met</div></div>
+      <div class="stat"><div class="stat-num">1,495+</div><div class="stat-label">Experiments tracked through Exp 1408</div></div>
+      <div class="stat"><div class="stat-num">117</div><div class="stat-label">research-complete milestones through .107</div></div>
+      <div class="stat"><div class="stat-num">22,201</div><div class="stat-label">Python items collected, not full pass</div></div>
+      <div class="stat"><div class="stat-num">13/14</div><div class="stat-label">latest .107 criteria met</div></div>
     </div>
   </div>
 </section>
@@ -470,13 +470,22 @@
           GBNF, DCCD, and repaired certificates. The certificate parse rate is
           0.712, below the 0.75 downstream gate, so semantic validators,
           safe-prefix Cactus, and DVI certificate-tail updates remain gated.
-          Newer .103/.104 artifacts recover multi-token certificate prompts,
+          .103/.104 artifacts recover multi-token certificate prompts,
           classify parser and semantic failure modes, dry-run dynamic grammar
           dispatch at parse rate 1.0 without SOTA inference, and preserve
-          failure-type memory non-forgetting at 1.0. They still do not lift the
-          certificate branch: triggered SOTA certificate reruns and semantic
-          validator execution remain missing or gated, and arXiv remains under
-          operator hold.
+          failure-type memory non-forgetting at 1.0. Milestone .105 diagnosed
+          &lt;think&gt; token budget exhaustion as the root cause of
+          certificate_parse_rate=0.0. Milestone .106 resolved it: CRANE
+          tag-first prefix injection (Exp 1366) reached
+          certificate_parse_rate=1.0; DiffuTruth non-equilibrium complement
+          measured AUROC 0.867 (Exp 1367); FR-11 self-learning v3 achieved
+          delta +1.596429 with non-forgetting rate 1.0 (Exp 1374). Milestone
+          .107 ran the full-scale 100-case pipeline with certificate_parse_rate
+          1.0, repair_hint_precision 1.0, and semantic_validation_pass_rate
+          0.59 (Exp 1382); FR-11 v4 extended to 59 fresh-verified cases with
+          delta +1.791464 (Exp 1388); arXiv v11 bundle is submission-ready.
+          Post-milestone, structured verdict records (Exp 1408) and
+          SessionMemory portable packs (Exp 1403) shipped as GitHub issues.
         </p>
       </div>
       <div class="bento-card span-2">
@@ -851,9 +860,9 @@
       </div>
       <div class="r-card">
         <span class="r-tag">Infrastructure &mdash; pre-test suite rescue</span>
-        <h3 class="r-title">21,955 Python test items collected, not passed</h3>
+        <h3 class="r-title">22,201 Python test items collected, not passed</h3>
         <div class="r-meter"><div class="r-bar" style="width: 100%; background: #22c55e;"></div></div>
-        <div class="r-stats"><span class="r-before">Current collection has 3 known import errors and 3 skipped items</span> <span class="r-after">2026-05-05 collection-only run</span></div>
+        <div class="r-stats"><span class="r-before">Collection count only; includes verdict records, session memory pack, and manipulable-signal tests</span> <span class="r-after">2026-05-06 collection-only run</span></div>
       </div>
       <div class="r-card">
         <span class="r-tag">Runtime &mdash; llama.cpp GPU offload</span>
