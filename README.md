@@ -17,12 +17,13 @@ call. No fine-tuning. No access to model weights.
 
 Rust + Python/JAX, Apache 2.0, `pip install carnot`.
 
-Current public research record: **1,511 experiments tracked, 119
+Current public research record: **1,548 experiments tracked, 120
 artifact-backed completed milestone records**, with checked-in result artifacts
-through Exp 1424 on 2026-05-06. `research-complete.yaml` currently archives
-**119** completed milestone records through 2026.04.108; milestone .109 has
-terminal artifacts through Exp 1424 but is not yet appended as a new archive
-record.
+through Exp 1438 on 2026-05-06. `research-complete.yaml` currently archives
+**120** completed milestone records through 2026.04.109; milestone .110 has
+terminal artifacts through Exp 1438 but is not yet appended as a new archive
+record. The experiment count is **1,534** archived task entries plus **14**
+.110 terminal artifacts.
 
 Milestone .106 delivered the critical fix to thinking-mode certificate
 generation: Exp 1366 (CRANE tag-first prefix injection) reached
@@ -57,7 +58,19 @@ non-forgetting **0.968604 < 0.99**, EBM-CoT v3 temperature scaling preserved
 AUROC **0.985375** while reducing variance, full-scale pipeline v3 stayed at
 `full_pipeline_pass_rate=0.305`, Discrete SB RTL spec work fit the KV260 budget
 without a hardware claim, and PRM v1 measured AUROC **0.832874** on available
-step labels. The current test collection reports **22,300** items; this is a
+step labels. Milestone .110 completed **12 of 14** criteria: DCCD
+schema-constrained repair v2 recovered **20/20** prototype repair cases, MCMC
+best-of-N candidate search reached **1.0** repair success on the 20-case pool,
+and a gated 50-case pipeline micro-validation reached
+`full_pipeline_pass_rate=0.62`, up **+0.315** from Exp 1419, but remains
+non-headline because live SOTA inference/runtime evidence did not run. DVI v3
+was replay-threshold calibrated and deployed with non-forgetting **1.0**;
+FR-11 v6 found **0** new promoted cases, so it is non-headline. PRM v2 filled
+all **478** missing local step labels and reached AUROC **0.851789**. DPO stays
+reranker-only until a direct local adapter/conversion path exists. Anchored
+dual-path latent repair preserved accuracy **1.0 -> 1.0** where raw descent fell
+**1.0 -> 0.25**. Discrete SB RTL lint/sim was blocked because the RTL source was
+missing. The current test collection reports **22,405** items; this is a
 collection count, not a full-suite pass claim.
 
 ## Install and run
@@ -275,7 +288,16 @@ experiment artifact under `results/`.
 | Discrete SB KV260 RTL spec | RTL specification complete and estimated KV260 budget fits; no synthesis or board execution claim | Exp 1422 |
 | Process reward model v1 | PRM v1 AUROC **0.832874**, step precision **0.380282**, recall **0.6** on **1,030** available traces; **478** promoted traces lack local labels | Exp 1423 |
 | Milestone .109 status | **10/13 criteria met**; DVI v3, FR-11 v6, and full-pipeline headline gates carry forward | Exp 1424 |
-| Current Python test collection | **22,300** Python tests collected; collection-only snapshot, not a full-suite pass claim | 2026-05-06 collection run |
+| DCCD repair v2 + MCMC candidate search | DCCD schema-constrained repair accepted **20/20** prototype repairs; MCMC best-of-N reached **1.0** repair success vs **0.0** one-candidate baseline over 20 cases; no live SOTA inference headline claim | Exps 1428/1429 |
+| Full-scale pipeline v4 micro-validation | 50-case gated micro run reached `full_pipeline_pass_rate=0.62`, up **+0.315** from Exp 1419, with `repair_success_rate=0.666667`; not headline-eligible until live-SOTA scale evidence exists | Exp 1431 |
+| DVI v3 replay-balanced deployment | AUROC **0.405984 → 0.417826** (+0.011842), non-forgetting **1.0**, SECL ECE reduction **55.517229%**; deployed checkpoint | Exp 1432 |
+| FR-11 self-learning v6 | DVI v3 active but **0** new promoted cases; cumulative fresh-verified count remains **1,508** and `headline_result_allowed=false` | Exp 1433 |
+| PRM label completion v2 | Filled **478/478** missing labels, **0** remaining; PRM v2 AUROC **0.851789**, precision **0.306931**, recall **0.659574** | Exp 1434 |
+| DPO headline provenance audit | Direct GGUF fine-tuning and local adapter path unsupported; Exp 1420 remains reranker-only, not a headline DPO training claim | Exp 1435 |
+| Anchored dual-path latent repair | Raw latent descent lowered energy but dropped accuracy **1.0 → 0.25**; anchored dual-path repair kept accuracy **1.0 → 1.0** with off-support rate **0.0** | Exp 1436 |
+| Discrete SB RTL lint/sim | Blocked because `hardware/kv260/discrete_sb_256.v` is missing; no lint, simulation, synthesis, board execution, or hardware claim | Exp 1437 |
+| Milestone .110 status | **12/14 criteria met**; repair v2, DVI, PRM, DPO audit, and anchored latent repair advanced; FR-11 positive growth and RTL source carry forward | Exp 1438 |
+| Current Python test collection | **22,405** Python tests collected; collection-only snapshot, not a full-suite pass claim | 2026-05-06 collection run |
 | Local Claude/Codex usage snapshot | Codex reads the newest local `token_count` event; Claude aggregates local token usage and reads only subscription/tier metadata from credentials; free-form quota prose is ignored instead of guessed; focused regression tests pass | 2026-05-04 changelog |
 
 Deeper analysis of these — including everything that **didn't** work and
@@ -317,7 +339,8 @@ claim we publish.
 ## Where to go next
 
 - **[Technical report](docs/technical-report.md)** — the full research arc
-  through Exp 1424 across 119 artifact-backed milestone records, with a
+  through Exp 1438 across 120 archived milestone records plus .110 terminal
+  artifacts, with a
   plain-English timeline of what we tried, what failed, what stuck.
 - **[Roadmap](docs/roadmap.md)** — current milestone, upcoming milestones,
   hardware track, and Phase 3 (Kona-parity foundation-model) direction.
@@ -521,7 +544,7 @@ See the [technical report](docs/technical-report.md) for the full research recor
 
 ## 14 Principles Learned
 
-Hard-won lessons from the activation-based phase of a research program that now spans Exp 1-1424 across 119 artifact-backed milestone records and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
+Hard-won lessons from the activation-based phase of a research program that now spans Exp 1-1438 across 120 archived milestone records plus .110 terminal artifacts and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
 
 ### What works
 1. **The model's own logprobs are the best energy.** No external EBM needed for rejection sampling — the LLM's own confidence is already an energy function. Simple, practical, +10%.

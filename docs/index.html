@@ -300,10 +300,10 @@
       <a href="technical-report.html" class="btn btn-secondary">How it works</a>
     </div>
     <div class="stats-bar" aria-label="Project headline numbers">
-      <div class="stat"><div class="stat-num">1,511</div><div class="stat-label">Experiments tracked through Exp 1424</div></div>
-      <div class="stat"><div class="stat-num">119</div><div class="stat-label">archived milestone records through .108</div></div>
-      <div class="stat"><div class="stat-num">22,300</div><div class="stat-label">Python items collected, not full pass</div></div>
-      <div class="stat"><div class="stat-num">10/13</div><div class="stat-label">latest .109 criteria met</div></div>
+      <div class="stat"><div class="stat-num">1,548</div><div class="stat-label">Experiments tracked through Exp 1438</div></div>
+      <div class="stat"><div class="stat-num">120</div><div class="stat-label">archived milestone records through .109</div></div>
+      <div class="stat"><div class="stat-num">22,405</div><div class="stat-label">Python items collected, not full pass</div></div>
+      <div class="stat"><div class="stat-num">12/14</div><div class="stat-label">latest .110 criteria met</div></div>
     </div>
   </div>
 </section>
@@ -505,7 +505,19 @@
           retry stayed at full_pipeline_pass_rate=0.305 and the exact rerun was
           retired (Exp 1419), PRM v1 measured AUROC 0.832874 on available step
           labels (Exp 1423), and Discrete SB RTL spec work completed without a
-          hardware claim (Exp 1422).
+          hardware claim (Exp 1422). Milestone .110 met 12/14 criteria: DCCD
+          schema-constrained repair v2 accepted 20/20 prototype repairs (Exp
+          1428), MCMC best-of-N reached 1.0 repair success on the 20-case pool
+          without live SOTA inference (Exp 1429), the gated 50-case pipeline
+          micro-validation reached full_pipeline_pass_rate=0.62 with repair
+          success 0.666667 but remains non-headline (Exp 1431), DVI v3 was
+          replay-threshold calibrated and deployed with non-forgetting 1.0
+          (Exp 1432), FR-11 v6 found zero new promoted cases (Exp 1433), PRM v2
+          filled all 478 missing local step labels and reached AUROC 0.851789
+          (Exp 1434), DPO remains reranker-only until a direct GGUF adapter path
+          exists (Exp 1435), anchored dual-path latent repair preserved accuracy
+          1.0 to 1.0 where raw descent fell to 0.25 (Exp 1436), and Discrete SB
+          lint/sim was blocked on a missing RTL source (Exp 1437).
         </p>
       </div>
       <div class="bento-card span-2">
@@ -521,7 +533,8 @@
           Exp 1421 also fixed the focused embedding-store runtime failure
           cluster with 100% line coverage on the touched store module, while
           preserving the full-suite debt disclosure: the collection is clean,
-          but the full Python suite remains red on pre-existing failures.
+          but the full Python suite remains red on pre-existing failures. The
+          current collection-only snapshot reports 22,405 Python items.
         </p>
       </div>
       <div class="bento-card span-2">
@@ -896,7 +909,7 @@
       </div>
       <div class="r-card">
         <span class="r-tag">Infrastructure &mdash; pre-test suite rescue</span>
-        <h3 class="r-title">22,300 Python test items collected, not passed</h3>
+        <h3 class="r-title">22,405 Python test items collected, not passed</h3>
         <div class="r-meter"><div class="r-bar" style="width: 100%; background: #22c55e;"></div></div>
         <div class="r-stats"><span class="r-before">Collection count only; full suite still has pre-existing execution debt</span> <span class="r-after">2026-05-06 collection-only run</span></div>
       </div>
@@ -1141,10 +1154,10 @@
         <div class="r-stats"><span class="r-before">35 promoted, 37 demoted; replay-only, not headline DVI/GRPO</span> <span class="r-after">Exp 1344</span></div>
       </div>
       <div class="r-card">
-        <span class="r-tag">Milestone .109 &mdash; latest terminal retro</span>
-        <h3 class="r-title">10/13 criteria met</h3>
-        <div class="r-meter"><div class="r-bar" style="width: 76.92%; background: #f59e0b;"></div></div>
-        <div class="r-stats"><span class="r-before">Repair, DVI v3, FR-11, and pipeline gates carry forward</span> <span class="r-after">Exp 1424</span></div>
+        <span class="r-tag">Milestone .110 &mdash; latest terminal retro</span>
+        <h3 class="r-title">12/14 criteria met</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 85.71%; background: #22c55e;"></div></div>
+        <div class="r-stats"><span class="r-before">Repair v2, DVI, PRM, DPO audit, and anchored latent repair advanced</span> <span class="r-after">Exp 1438</span></div>
       </div>
       <div class="r-card">
         <span class="r-tag">DVI + calibration &mdash; v2 + SECL</span>
@@ -1159,16 +1172,16 @@
         <div class="r-stats"><span class="r-before">Delta +1,449 vs Exp 1388; GRPO cases integrated 0</span> <span class="r-after">Exp 1395</span></div>
       </div>
       <div class="r-card">
-        <span class="r-tag">Full-scale pipeline &mdash; 200 FoVer cases</span>
-        <h3 class="r-title">Semantic pass 1.0; full pass 0.305</h3>
-        <div class="r-meter"><div class="r-bar" style="width: 30.5%; background: #f59e0b;"></div></div>
-        <div class="r-stats"><span class="r-before">Parse 1.0 and repair hints 1.0; below 0.40 headline gate</span> <span class="r-after">Exp 1397</span></div>
+        <span class="r-tag">Pipeline v4 &mdash; gated 50-case micro-run</span>
+        <h3 class="r-title">Full pass 0.305 &rarr; 0.62</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 62%; background: #22c55e;"></div></div>
+        <div class="r-stats"><span class="r-before">Repair success 0.666667; not headline until live-SOTA scale evidence exists</span> <span class="r-after">Exp 1431</span></div>
       </div>
       <div class="r-card">
-        <span class="r-tag">DVI v3 &mdash; blocked deployment</span>
-        <h3 class="r-title">AUROC delta +0.011842; non-forgetting 0.968604</h3>
-        <div class="r-meter"><div class="r-bar" style="width: 96.86%; background: #f59e0b;"></div></div>
-        <div class="r-stats"><span class="r-before">Improves over v2 delta but misses 0.99 non-forgetting gate</span> <span class="r-after">Exp 1415</span></div>
+        <span class="r-tag">DVI v3 &mdash; replay-balanced deployment</span>
+        <h3 class="r-title">AUROC 0.405984 &rarr; 0.417826</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 100%; background: #22c55e;"></div></div>
+        <div class="r-stats"><span class="r-before">Delta +0.011842; non-forgetting 1.0 after threshold calibration</span> <span class="r-after">Exp 1432</span></div>
       </div>
       <div class="r-card">
         <span class="r-tag">EBM-CoT &mdash; temperature scaling</span>
@@ -1177,22 +1190,22 @@
         <div class="r-stats"><span class="r-before">Best temperature 1.25; AUROC preserved</span> <span class="r-after">Exp 1416</span></div>
       </div>
       <div class="r-card">
-        <span class="r-tag">Repair executor &mdash; local SOTA GGUF</span>
-        <h3 class="r-title">0/20 repairs accepted; pipeline remains 0.305</h3>
-        <div class="r-meter"><div class="r-bar" style="width: 30.5%; background: #ef4444;"></div></div>
-        <div class="r-stats"><span class="r-before">Executor deployed, but exact pipeline rerun retired</span> <span class="r-after">Exps 1414/1419</span></div>
+        <span class="r-tag">Repair v2 &mdash; schema-constrained prototype</span>
+        <h3 class="r-title">20/20 repairs accepted in prototype mode</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 100%; background: #22c55e;"></div></div>
+        <div class="r-stats"><span class="r-before">MCMC best-of-N 1.0 vs one-candidate 0.0; no live SOTA inference claim</span> <span class="r-after">Exps 1428/1429</span></div>
       </div>
       <div class="r-card">
-        <span class="r-tag">Process reward model &mdash; PRM v1</span>
-        <h3 class="r-title">AUROC=0.8329 on available step labels</h3>
-        <div class="r-meter"><div class="r-bar" style="width: 83.29%; background: #0ea5e9;"></div></div>
-        <div class="r-stats"><span class="r-before">1,030 traces used; 478 promoted traces missing local labels</span> <span class="r-after">Exp 1423</span></div>
+        <span class="r-tag">Process reward model &mdash; PRM v2</span>
+        <h3 class="r-title">AUROC=0.8518; 478 labels filled</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 85.18%; background: #0ea5e9;"></div></div>
+        <div class="r-stats"><span class="r-before">0 missing labels remain; precision 0.306931, recall 0.659574</span> <span class="r-after">Exp 1434</span></div>
       </div>
       <div class="r-card">
         <span class="r-tag">Hardware &mdash; Discrete SB RTL</span>
-        <h3 class="r-title">KV260 budget fits; no hardware execution claim</h3>
-        <div class="r-meter"><div class="r-bar" style="width: 100%; background: #0ea5e9;"></div></div>
-        <div class="r-stats"><span class="r-before">RTL spec complete; synthesis and board execution not performed</span> <span class="r-after">Exp 1422</span></div>
+        <h3 class="r-title">Lint/sim blocked by missing RTL source</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 0%; background: #ef4444;"></div></div>
+        <div class="r-stats"><span class="r-before">Spec exists, but hardware/kv260/discrete_sb_256.v is absent; no hardware claim</span> <span class="r-after">Exp 1437</span></div>
       </div>
       <div class="r-card">
         <span class="r-tag">Public APIs &mdash; verdict, memory, stream</span>
