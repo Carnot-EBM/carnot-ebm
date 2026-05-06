@@ -93,6 +93,43 @@ explicit before any RTL work.
 
 **Implementation status:** Implemented (Exp 1399)
 
+### REQ-ISING-023
+
+**Discrete Simulated Bifurcation KV260 RTL specification MUST document the
+datapath, memory layout, update schedule, host interface, and honest synthesis
+claim boundary before RTL implementation or board claims.**
+
+**Rationale:**
+Exp 1399 found that a dense N=256 int8 dSB coupling matrix and one update unit
+fit the KV260 BRAM/LUT arithmetic budget, but it did not produce RTL and did
+not run Vivado synthesis or the KV260 board. Exp 1422 must turn that feasibility
+evidence into an RTL-reviewable specification and synthesis plan without
+upgrading an estimate into a hardware execution claim.
+
+**Acceptance criteria:**
+- `hardware/kv260/discrete_sb_rtl_spec.md` SHALL describe the dSB datapath,
+  dense int8 coupling memory layout, random/noise source assumptions, pressure
+  update schedule, and AXI-Lite host interface.
+- The spec SHALL derive the N=256 dense int8 matrix storage from Exp 1399 as
+  256 x 256 x 8 bits = 65536 bytes = 64 KB and compare it with the KV260 BRAM
+  budget of 144 BRAM_36 blocks = 648 KB.
+- The spec SHALL carry forward the Exp 1399 one-update-unit LUT estimate of
+  2000 LUTs and compare it with the 117000-LUT KV260 estimate budget.
+- The spec SHALL document Vivado synthesis commands for a later
+  synthesis-capable host, but the Exp 1422 run SHALL NOT claim synthesis,
+  bitfile generation, or KV260 board execution unless those steps are actually
+  performed in the current run.
+- `results/experiment_1422_discrete_sb_kv260_rtl_spec.json` SHALL include
+  `status`, `rtl_spec_complete`, `rtl_spec_path`, `estimated_lut`,
+  `estimated_bram`, `kv260_budget_fits`, `synthesis_command_documented`,
+  `hardware_execution_performed`, `hardware_claim_allowed`, and
+  `honest_verdict`.
+- `hardware_execution_performed=false` and `hardware_claim_allowed=false`
+  unless the artifact records actual synthesis or KV260 board validation in
+  the current run metadata.
+
+**Implementation status:** Implemented (Exp 1422)
+
 ## Scenarios
 
 ### SCENARIO-ISING-030
@@ -125,3 +162,13 @@ matrix BRAM estimate for N=256, report whether a single update unit fits the
 two estimates.
 
 **Implementation status:** Implemented (Exp 1399)
+
+### SCENARIO-ISING-033
+
+**Discrete SB RTL spec artifact:** Given Exp 1399's CPU-only feasibility artifact
+and no Vivado synthesis, bitfile generation, or KV260 board execution in the
+current run, Exp 1422 SHALL write a complete RTL specification plus a JSON
+artifact that reports the BRAM/LUT estimates, documents the synthesis command,
+sets `hardware_execution_performed=false`, and disallows hardware claims.
+
+**Implementation status:** Implemented (Exp 1422)
