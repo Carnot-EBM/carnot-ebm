@@ -2547,6 +2547,54 @@ candidate is the lowest-energy accepted repair.
 
 **Spec traces:** REQ-VERIFY-1429, SCENARIO-VERIFY-1429
 
+### REQ-VERIFY-1430: PRM-Guided Repair Candidate Selector
+
+The repository shall provide a deterministic PRM-guided selector for Exp 1430
+that consumes the bounded repair candidate pool produced by Exp 1429, ranks
+each case's repair candidates before semantic acceptance labels are consulted,
+and then measures whether the selected top-ranked candidate is semantically
+accepted. The selector MUST prefer a trained PRM v1 artifact and checkpoint
+from Exp 1423 when available. If the trained checkpoint is unavailable, the
+selector MAY use a deterministic proxy scorer only as a non-headline fallback
+and MUST record that fallback in the terminal artifact and honest verdict.
+
+The Exp 1430 runner MUST first write
+`results/experiment_1430_prm_guided_repair_selector.json` with
+`status="in_progress"`. It MUST then confirm that Exp 1429 contains a non-empty
+candidate pool. If no candidate pool exists, it MUST write a blocked artifact
+with `prm_guided_selection_ready=false`. Complete artifacts MUST report
+`status`, `prm_guided_selection_ready`, `cases_evaluated`, `selector_auroc`,
+`raw_best_of_n_repair_success_rate`, `selected_repair_success_rate`,
+`selection_improvement_pp`, `prmv1_artifact_used`, and `honest_verdict`.
+
+**Decentralization implications:** The selector consumes local artifacts and a
+CPU checkpoint only; it performs no closed-weight model calls and does not
+import vendor SDKs in the core pipeline.
+
+**Acceptance criteria:**
+- The selector ranks each case's candidates before inspecting acceptance labels.
+- The selector AUROC is computed from candidate acceptance labels only after
+  scores are frozen.
+- Raw best-of-N repair success from Exp 1429 is reported separately from the
+  selected-candidate repair success rate.
+- Missing Exp 1429 candidate pools produce a blocked artifact with all required
+  fields and `prm_guided_selection_ready=false`.
+- Complete artifacts distinguish trained PRM v1 scoring from deterministic
+  proxy fallback scoring.
+
+### SCENARIO-VERIFY-1430: PRM Ranking Selects A Later Accepted Repair Candidate
+
+**Given** Exp 1429 provides a bounded candidate pool where the first candidate
+fails semantic validation and a later candidate succeeds
+**And** Exp 1423 provides a trained PRM v1 checkpoint
+**When** Exp 1430 scores candidates before semantic validation
+**Then** the selected candidate is the highest PRM-scored candidate, selected
+repair success is computed from the frozen selection, selector AUROC is in
+`[0, 1]`, and the artifact reports the selection improvement in percentage
+points relative to Exp 1429 raw best-of-N success.
+
+**Spec traces:** REQ-VERIFY-1430, SCENARIO-VERIFY-1430
+
 ### REQ-VERIFY-1408: Structured Verdict Record Schema
 
 The pipeline MUST expose a documented `VerdictRecord` dataclass for downstream
