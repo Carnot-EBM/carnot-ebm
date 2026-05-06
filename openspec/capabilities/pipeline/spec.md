@@ -2236,6 +2236,50 @@ headline-gate statistics for the processed FoVer cases.
 
 **Spec traces:** REQ-VERIFY-1397, SCENARIO-VERIFY-1397
 
+### REQ-VERIFY-1413: Certificate Repair Execution Diagnosis
+
+The repository shall provide a deterministic Exp 1413 diagnostic that reads
+`results/experiment_1397_fullscale_pipeline_v2_200cases.json`, classifies the
+repair-hint rows emitted by VERGE MCS, and writes
+`results/experiment_1413_certificate_repair_execution_diagnosis.json` with
+`status="in_progress"` before loading the source artifact. The terminal
+artifact SHALL include at least `status`, `total_cases_analyzed`,
+`repair_hint_cases_total`, `no_repair_cases_total`,
+`repair_execution_diagnosis_complete`, `hint_category_counts`,
+`executable_hint_pct`, `recommended_executor_contract`,
+`expected_full_pipeline_pass_rate_if_50pct_repaired`, and `honest_verdict`.
+
+Repair hints SHALL be categorized into `FIELD_REWRITE`, `STEP_REWRITE`,
+`CONSTRAINT_REWRITE`, `CERTIFICATE_REGENERATE`, and `UNKNOWN`. The diagnostic
+SHALL estimate `executable_hint_pct` as the fraction of repair-hint rows that
+can be handled by a bounded local LLM rewrite prompt. When Exp 1397 provides a
+repair-specific denominator, the expected full-pipeline pass-rate estimate for
+50 percent repaired SHALL add half of repair-hint cases divided by total cases
+to the measured full-pipeline pass rate; otherwise it SHALL fall back to
+`full_pipeline_pass_rate + 0.5 * (1 - full_pipeline_pass_rate)`.
+
+**Acceptance criteria:**
+- The runner writes an in-progress artifact first and a terminal artifact last.
+- Category counts include all five repair-hint categories, including zero-count
+  categories.
+- The recommended executor contract names inputs, outputs, the validation call,
+  timeout, and fallback behavior needed by Exp 1414.
+- The honest verdict explicitly states whether Exp 1397's blocker is missing
+  repair execution rather than certificate parsing or semantic validation.
+
+### SCENARIO-VERIFY-1413: Exp 1397 Repair Hints Are Classified For Executor Design
+
+**Given** Exp 1397 reports parse and semantic validation pass rates of 1.0 but
+a sub-threshold full-pipeline pass rate
+**And** the repair-localization rows include VERGE MCS repair hints
+**When** Exp 1413 diagnoses the source artifact
+**Then** every repair-hint row contributes to exactly one taxonomy category,
+the executable hint percentage is computed from those rows, and the executor
+contract describes a bounded local LLM rewrite followed by semantic and
+scheduler validation before accepting a repaired certificate.
+
+**Spec traces:** REQ-VERIFY-1413, SCENARIO-VERIFY-1413
+
 ### REQ-VERIFY-1408: Structured Verdict Record Schema
 
 The pipeline MUST expose a documented `VerdictRecord` dataclass for downstream
