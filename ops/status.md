@@ -1,6 +1,23 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-06 (GitHub issue #3 structured verdict records implemented)
+**Last Updated:** 2026-05-06 (Milestone 2026.04.109 research planning complete)
+
+## Session 2026-05-06 - Milestone 2026.04.109 Research Planning Complete
+
+**Milestone 2026.04.109 PLANNED.**
+
+- Roadmap doc: `openspec/change-proposals/research-roadmap-vNEXT.md`
+- Execution queue: `research-roadmap-next.yaml` (13 tasks, exp1412-exp1424)
+- ID collision avoided: post-.108 issue work already used `exp1403`, `exp1408`, and `exp1411`, so the next milestone starts at `exp1412`.
+- Research references updated before final roadmap design with an elevated post-.108 EBRM structured-latent-trajectory signal (arXiv:2603.28248), in addition to the existing temperature-scaling, PRM, ThinkPRM, DPO/GRPO, and RAFT signals.
+- Design focus: Phase 0 closes arXiv/operator and repair-diagnosis work; Phase 1 implements local SOTA GGUF certificate repair execution, DVI v3 on 1508 cases, EBM-CoT temperature scaling, and EBRM latent-drift smoke testing; Phase 2 gates FR-11 v6 and full-scale pipeline v3; Phase 3 runs DPO-style preference probe, test execution debt, Discrete SB RTL spec, and PRM v1; Phase 4 closes with retro.
+- LLM-bearing tasks (`exp1414`, `exp1419`, `exp1420`) include mandated local SOTA GGUF `MODEL_SPECS`: `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and `unsloth/gemma-4-26B-A4B-it-GGUF`.
+- Structured gates: `exp1418` on `exp1415.dvi_v3_deployed == true`; `exp1419` on `exp1414.repair_executor_deployed == true`.
+- Agent routing: all 13 tasks use `agent_type: codex`, `model: gpt-5.5`; no `requires_claude: true` tasks.
+- Validation passed: `python3 scripts/validate_prior_failures.py research-roadmap-next.yaml`, `python3 scripts/audit_roadmap_gates.py research-roadmap-next.yaml`, prompt-section/end checks, YAML parse checks, and `git diff --check`.
+- Did NOT modify `research-roadmap.yaml` or `scripts/research_conductor.py`.
+
+**What's next**: activate `research-roadmap-next.yaml` for milestone 2026.04.109 when ready.
 
 ## Session 2026-05-06 - GitHub Issue #3 Structured Verdict Records Implemented
 
