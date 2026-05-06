@@ -7,7 +7,7 @@
     responses on top of the existing verification logic.
 
 **Detailed explanation for engineers:**
-    This server exposes seven tools over MCP (stdio JSON-RPC):
+    This server exposes nine tools over MCP (stdio JSON-RPC):
 
     1. ``verify_code`` -- Run structural tests on a Python function (from Exp 48).
     2. ``verify_with_properties`` -- Property-based testing with random inputs.
@@ -15,9 +15,12 @@
        verification for generated Python code.
     4. ``verify_llm_output`` -- Verify an LLM response via constraint extraction
        using VerifyRepairPipeline (from Exp 75).
-    5. ``verify_and_repair`` -- Full verify-then-repair loop using the pipeline.
-    6. ``list_domains`` -- List available constraint extraction domains.
-    7. ``health_check`` -- Liveness probe returning server version and status.
+    5. ``verify_stream`` -- Verify a pool of candidate responses as ordered
+       verdict events.
+    6. ``verify_and_repair`` -- Full verify-then-repair loop using the pipeline.
+    7. ``score_agent_outputs`` -- Rank competing agent responses by energy.
+    8. ``list_domains`` -- List available constraint extraction domains.
+    9. ``health_check`` -- Liveness probe returning server version and status.
 
     Production safeguards:
     - All tool handlers run inside ``_guarded_call()`` which enforces a 30-second
@@ -34,7 +37,8 @@
 Usage:
     python -m carnot.mcp
 
-Spec: REQ-CODE-001, REQ-CODE-006, REQ-CODE-021, REQ-VERIFY-001, REQ-VERIFY-003
+Spec: REQ-CODE-001, REQ-CODE-006, REQ-CODE-021, REQ-VERIFY-001, REQ-VERIFY-003,
+REQ-VERIFY-1413
 """
 
 from __future__ import annotations
@@ -44,18 +48,37 @@ import logging
 import traceback
 from typing import TYPE_CHECKING, Any, TypeVar
 
-from mcp.server.fastmcp import FastMCP
-
 if TYPE_CHECKING:
     from collections.abc import Callable
 
 logger = logging.getLogger(__name__)
 
+try:
+    from mcp.server.fastmcp import FastMCP
+except ModuleNotFoundError:  # pragma: no cover - exercised when optional MCP extra is absent.
+
+    class FastMCP:  # type: ignore[no-redef]
+        """Minimal test-time fallback when the optional MCP package is absent."""
+
+        def __init__(self, name: str) -> None:
+            self.name = name
+            self.tools: dict[str, Any] = {}
+
+        def tool(self) -> Callable[[T], T]:
+            def decorator(fn: T) -> T:
+                self.tools[getattr(fn, "__name__", str(fn))] = fn
+                return fn
+
+            return decorator
+
+        def run(self, transport: str = "stdio") -> None:
+            logger.info("MCP package unavailable; fallback server run called with %s", transport)
+
 # ---------------------------------------------------------------------------
 # Constants
 # ---------------------------------------------------------------------------
 
-SERVER_VERSION = "0.3.0"
+SERVER_VERSION = "0.4.0"
 MAX_INPUT_CHARS = 10_000
 EXECUTION_TIMEOUT_SECONDS = 30
 
@@ -752,6 +775,128 @@ def verify_and_repair(
 
 
 # ---------------------------------------------------------------------------
+# Tool: verify_stream
+# ---------------------------------------------------------------------------
+
+
+def _run_verify_stream(
+    candidates: list[dict[str, Any]],
+    domain: str | None,
+    budget_ms_total: float | None,
+    budget_ms_per_candidate: float | None,
+    max_concurrency: int,
+    top_k: int | None,
+    early_stop_margin: float | None,
+) -> dict[str, Any]:
+    """Stream verification results over candidate pools with early stopping.
+
+    **Detailed explanation for engineers:**
+        Uses Carnot's VerifyRepairPipeline to verify multiple candidates
+        in parallel. Results are emitted in completion order (not input order).
+        Supports early stopping when top-k candidates have sufficient margin
+        in energy. Consumer can close the stream and pending workers are
+        cancelled cleanly.
+
+    Args:
+        candidates: List of candidate dicts with keys id, question, answer.
+        domain: Optional domain hint.
+        budget_ms_total: Optional total stream budget in milliseconds.
+        budget_ms_per_candidate: Optional per-candidate budget in milliseconds.
+        max_concurrency: Max parallel verification workers (default 4).
+        top_k: Stop after emitting this many verdicts (default None).
+        early_stop_margin: Energy gap to trigger early stop (default None).
+
+    Returns:
+        Dict with "events" list of verdict events and "stream_end" metadata.
+
+    Spec: REQ-VERIFY-1411, REQ-VERIFY-1412, REQ-VERIFY-1413
+    """
+    if not isinstance(candidates, list):
+        raise MCPError("INVALID_INPUT", "candidates must be a list of candidate dicts")
+    if not candidates:
+        raise MCPError("INVALID_INPUT", "candidates must not be empty")
+    for i, c in enumerate(candidates):
+        if not isinstance(c, dict):
+            raise MCPError("INVALID_INPUT", f"candidate {i} must be a dict")
+        candidate_id = c.get("id", c.get("candidate_id"))
+        question = c.get("question")
+        answer = c.get("answer", c.get("response"))
+        if isinstance(candidate_id, str):
+            _validate_input(candidate_id, f"candidates[{i}].id")
+        if isinstance(question, str):
+            _validate_input(question, f"candidates[{i}].question")
+        if isinstance(answer, str):
+            _validate_input(answer, f"candidates[{i}].answer")
+
+    import asyncio
+
+    from carnot.pipeline.verify_repair import VerifyRepairPipeline
+    from carnot.pipeline.verify_stream import collect_verify_stream
+
+    pipeline = VerifyRepairPipeline(model=None, domains=[domain] if domain else None)
+
+    async def _run_async() -> dict[str, Any]:
+        return await collect_verify_stream(
+            candidates,
+            pipeline=pipeline,
+            domain=domain,
+            budget_ms_total=budget_ms_total,
+            budget_ms_per_candidate=budget_ms_per_candidate,
+            max_concurrency=max_concurrency,
+            top_k=top_k,
+            early_stop_margin=early_stop_margin,
+        )
+
+    try:
+        return asyncio.run(_run_async())
+    except ValueError as exc:
+        raise MCPError("INVALID_INPUT", str(exc)) from exc
+
+
+@mcp_server.tool()
+def verify_stream(
+    candidates: list[dict[str, Any]],
+    domain: str | None = None,
+    budget_ms_total: float | None = None,
+    budget_ms_per_candidate: float | None = None,
+    max_concurrency: int = 4,
+    top_k: int | None = None,
+    early_stop_margin: float | None = None,
+) -> dict[str, Any]:
+    """Stream verification results over multiple candidate responses.
+
+    Verifies multiple candidates in parallel and emits verdicts as they
+    complete (not in input order). Supports early stopping when the top
+    candidates have sufficient margin in energy.
+
+    Args:
+        candidates: List of candidate dicts with keys id, question, answer.
+        domain: Optional domain hint ("arithmetic", "code", "logic", "nl").
+        budget_ms_total: Optional total stream budget in milliseconds.
+        budget_ms_per_candidate: Optional per-candidate budget in milliseconds.
+        max_concurrency: Max parallel verification workers (default 4).
+        top_k: Stop after emitting this many verdicts (default None/all).
+        early_stop_margin: Energy gap for early stop (default None/disabled).
+
+    Returns:
+        Dict with "events" list of verdict objects and "stream_end" metadata
+        including stopped_early flag and residual_candidates_unscored count.
+
+    Spec: REQ-VERIFY-1411, REQ-VERIFY-1412, REQ-VERIFY-1413
+    """
+    return _guarded_call(
+        _run_verify_stream,
+        candidates,
+        domain,
+        budget_ms_total,
+        budget_ms_per_candidate,
+        max_concurrency,
+        top_k,
+        early_stop_margin,
+    )
+
+
+# ---------------------------------------------------------------------------
 # Tool: list_domains
 # ---------------------------------------------------------------------------
 
@@ -819,6 +964,7 @@ def health_check() -> dict[str, Any]:
             "verify_with_properties",
             "verify_code_with_pbt",
             "verify_llm_output",
+            "verify_stream",
             "verify_and_repair",
             "score_agent_outputs",
             "list_domains",
