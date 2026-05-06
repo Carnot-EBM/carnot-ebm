@@ -1,0 +1,142 @@
+{
+  "artifact": "experiment_1442_live_sota_repair_runtime_preflight",
+  "blockers": [
+    "no_mandated_sota_model_completed_live_inference"
+  ],
+  "cache_probe_errors": {},
+  "cached_sota_pair_error": null,
+  "cached_sota_pair_preview": [
+    {
+      "gpu": 0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "name": "Qwen3.6-35B-A3B"
+    },
+    {
+      "gpu": 1,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/43e80d41a220ac7c83023daacd6a0d1fd8559251/gemma-4-31B-it-Q4_K_M.gguf",
+      "name": "Gemma4-31B-it"
+    }
+  ],
+  "gpu_probe": {
+    "cuda_available": true,
+    "gpu_count": 2,
+    "gpus": [
+      {
+        "index": 0,
+        "memory_free_mb": 24123.0,
+        "memory_total_mb": 24576.0,
+        "memory_used_mb": 4.0,
+        "name": "NVIDIA GeForce RTX 3090"
+      },
+      {
+        "index": 1,
+        "memory_free_mb": 24123.0,
+        "memory_total_mb": 24576.0,
+        "memory_used_mb": 4.0,
+        "name": "NVIDIA GeForce RTX 3090"
+      }
+    ],
+    "nvidia_smi_available": true,
+    "nvidia_smi_error": null
+  },
+  "honest_verdict": "blocked_no_live_sota_runtime",
+  "live_sota_model_inference_used": false,
+  "local_sota_runtime_ready": false,
+  "model_specs": [
+    {
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "role": "flagship_moe_runtime_probe"
+    },
+    {
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "role": "flagship_dense_runtime_probe"
+    },
+    {
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "role": "middle_moe_runtime_probe"
+    }
+  ],
+  "models_found_in_cache": [
+    {
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "role": "flagship_moe_runtime_probe"
+    },
+    {
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/43e80d41a220ac7c83023daacd6a0d1fd8559251/gemma-4-31B-it-Q4_K_M.gguf",
+      "role": "flagship_dense_runtime_probe"
+    }
+  ],
+  "models_missing_from_cache": [
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+  "run_date": "20260506",
+  "schema_version": 1,
+  "smoke_inference_results": [
+    {
+      "blocker": "RuntimeError: Failed to load shared library '/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/llama_cpp/lib/libllama.so': libcudart.so.12: cannot open shared object file: No such file or directory",
+      "command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "carnot.reporting.live_sota_repair_runtime_preflight",
+        "--probe-one",
+        "--hf-id",
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "--role",
+        "flagship_moe_runtime_probe",
+        "--model-path",
+        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "--gpu",
+        "0",
+        "--max-tokens",
+        "16"
+      ],
+      "elapsed_s": 0.383167,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "response_text_preview": "",
+      "returncode": 2,
+      "role": "flagship_moe_runtime_probe",
+      "runtime_mode": "llama_cpp_subprocess_gpu",
+      "stderr_summary": "",
+      "stdout_summary": "{\"blocker\": \"RuntimeError: Failed to load shared library '/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/llama_cpp/lib/libllama.so': libcudart.so.12: cannot open shared object file: No such file or directory\", \"elapsed_s\": 0.001456, \"gpu\": 0, \"hf_id\": \"unsloth/Qwen3.6-35B-A3B-GGUF\", \"load_success\": false, \"model_path\": \"/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf\", \"response_text\": \"\", \"role\": \"flagship_moe_runtime_probe\", \"runtime_mode\": \"llama_cpp_direct_gpu\", \"truly_live\": false, \"usable_response\": false}",
+      "truly_live": false,
+      "usable_response": false
+    },
+    {
+      "blocker": "RuntimeError: Failed to load shared library '/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/llama_cpp/lib/libllama.so': libcudart.so.12: cannot open shared object file: No such file or directory",
+      "command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "carnot.reporting.live_sota_repair_runtime_preflight",
+        "--probe-one",
+        "--hf-id",
+        "unsloth/gemma-4-31B-it-GGUF",
+        "--role",
+        "flagship_dense_runtime_probe",
+        "--model-path",
+        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/43e80d41a220ac7c83023daacd6a0d1fd8559251/gemma-4-31B-it-Q4_K_M.gguf",
+        "--gpu",
+        "1",
+        "--max-tokens",
+        "16"
+      ],
+      "elapsed_s": 0.459129,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/43e80d41a220ac7c83023daacd6a0d1fd8559251/gemma-4-31B-it-Q4_K_M.gguf",
+      "response_text_preview": "",
+      "returncode": 2,
+      "role": "flagship_dense_runtime_probe",
+      "runtime_mode": "llama_cpp_subprocess_gpu",
+      "stderr_summary": "",
+      "stdout_summary": "{\"blocker\": \"RuntimeError: Failed to load shared library '/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/llama_cpp/lib/libllama.so': libcudart.so.12: cannot open shared object file: No such file or directory\", \"elapsed_s\": 0.001096, \"gpu\": 1, \"hf_id\": \"unsloth/gemma-4-31B-it-GGUF\", \"load_success\": false, \"model_path\": \"/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/43e80d41a220ac7c83023daacd6a0d1fd8559251/gemma-4-31B-it-Q4_K_M.gguf\", \"response_text\": \"\", \"role\": \"flagship_dense_runtime_probe\", \"runtime_mode\": \"llama_cpp_direct_gpu\", \"truly_live\": false, \"usable_response\": false}",
+      "truly_live": false,
+      "usable_response": false
+    }
+  ],
+  "status": "complete"
+}

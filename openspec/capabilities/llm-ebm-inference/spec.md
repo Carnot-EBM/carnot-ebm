@@ -362,6 +362,44 @@ GPU assignments, per-model throughput, aggregate throughput, and
 **Then** it writes a complete terminal blocker artifact
 **And** it does not import llama.cpp or attempt generation.
 
+### REQ-INFER-SOTA-007: Live SOTA Repair Runtime Gate
+
+The system SHALL provide a fail-fast local runtime gate for the mandated SOTA
+GGUF repair models before downstream repair experiments report headline claims.
+The gate SHALL inspect only local cache state for
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`, SHALL probe GPU availability, and SHALL
+attempt one tiny repair-style live inference request on at least one mandated
+model that is locally available.
+
+The artifact SHALL expose `status`, `model_specs`, `local_sota_runtime_ready`,
+`live_sota_model_inference_used`, `models_found_in_cache`,
+`models_missing_from_cache`, `gpu_probe`, `smoke_inference_results`,
+`blockers`, and `honest_verdict`.  Each smoke result SHALL record the exact
+command, runtime mode, stdout and stderr summaries, and whether the response was
+truly live.  `local_sota_runtime_ready` SHALL be true only when at least one
+mandated local SOTA GGUF model completes live inference and emits a usable
+response; otherwise the artifact SHALL remain an honest terminal blocker without
+downloading model files.
+
+### SCENARIO-INFER-SOTA-007-001: Live Local Inference Opens Gate
+
+**Given** at least one mandated SOTA GGUF model is present in local cache
+**And** the llama.cpp runtime can load it
+**When** the live SOTA repair runtime preflight runs
+**Then** the artifact records the model as found
+**And** records a smoke inference result with `truly_live=true`
+**And** sets `local_sota_runtime_ready=true` and
+`live_sota_model_inference_used=true`.
+
+### SCENARIO-INFER-SOTA-007-002: Missing Or Failed Runtime Blocks Gate
+
+**Given** no mandated SOTA GGUF model can complete live inference locally
+**When** the live SOTA repair runtime preflight runs
+**Then** the artifact records missing models or runtime failures in `blockers`
+**And** sets `local_sota_runtime_ready=false`
+**And** does not claim live SOTA model inference was used.
+
 ## Implementation Status
 
 | Requirement | Python | Tests |
@@ -380,3 +418,4 @@ GPU assignments, per-model throughput, aggregate throughput, and
 | REQ-INFER-SOTA-004 | Implemented | 4 Python |
 | REQ-INFER-SOTA-005 | Implemented | 4 Python |
 | REQ-INFER-SOTA-006 | Implemented | 12 Python |
+| REQ-INFER-SOTA-007 | Planned | Planned |
