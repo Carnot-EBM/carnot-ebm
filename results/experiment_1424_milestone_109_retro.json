@@ -1,0 +1,577 @@
+{
+  "carry_forward_tasks": [
+    {
+      "id": "repair-executor-v2-root-cause",
+      "next_action": "Instrument rejected repair outputs, split STEP_REWRITE failures by validator reason, and gate the next full-pipeline run on repaired_case_success_rate > 0.",
+      "prior_failures": [
+        {
+          "addressed_by": "Next attempt changes prompt/schema validation and must diagnose why all candidate repairs failed semantic acceptance.",
+          "experiment_id": "exp1414-certificate-llm-repair-executor-v1",
+          "retire_if_same_verdict": false,
+          "verdict": "complete_repair_executor_no_successful_repairs"
+        },
+        {
+          "addressed_by": "Do not rerun the 200-case pipeline until the executor has a measured nonzero repair-success gate.",
+          "experiment_id": "exp1419-fullscale-pipeline-v3-repair-executor",
+          "retire_if_same_verdict": true,
+          "verdict": "not_headline_full_pipeline_below_0_40"
+        }
+      ],
+      "root_cause": "Exp1414 deployed the executor but repaired 0/20 cases, and Exp1419 repaired 0/100 repair-hint cases, leaving full_pipeline_pass_rate at 0.305.",
+      "title": "Repair executor v2 must prove nonzero validated repairs before scale-up"
+    },
+    {
+      "id": "dvi-v3-nonforgetting-gate-fix",
+      "next_action": "Use replay-balanced training or threshold calibration and require both dvi_v3_deployed=true and nonforgetting gate pass before FR-11 v6.",
+      "prior_failures": [
+        {
+          "addressed_by": "The next DVI task must explicitly address the nonforgetting gate, not only optimize AUROC delta.",
+          "experiment_id": "exp1415-dvi-v3-1508-fresh-cases",
+          "retire_if_same_verdict": true,
+          "verdict": "dvi_v3_blocked_nonforgetting_below_gate"
+        }
+      ],
+      "root_cause": "Exp1415 used 1508 fresh cases and beat the AUROC-delta baseline slightly, but status stayed blocked because nonforgetting_rate was 0.968604.",
+      "title": "DVI v3 needs a nonforgetting-preserving training pass"
+    },
+    {
+      "id": "fr11-v6-after-dvi-v3",
+      "next_action": "Carry FR-11 v6 only after the DVI v3 deployment gate is proven open.",
+      "prior_failures": [
+        {
+          "addressed_by": "The next FR-11 v6 task must name exp1415 and require dvi_v3_deployed=true before launch.",
+          "experiment_id": "exp1418-fr11-self-learning-v6-dvi-v3",
+          "retire_if_same_verdict": false,
+          "verdict": "gate_blocked_upstream_dvi_v3_not_deployed"
+        }
+      ],
+      "root_cause": "Exp1418 did not run because exp1415 left dvi_v3_deployed=false.",
+      "title": "FR-11 v6 remains gated on deployable DVI v3"
+    },
+    {
+      "id": "dpo-headline-validation-or-finetune-support",
+      "next_action": "Either add a supported local adapter/fine-tune path or relabel the track as a feature-reranker benchmark with separate headline gates.",
+      "prior_failures": [
+        {
+          "addressed_by": "The next task must resolve the gap between measured fallback AUROC and headline-valid local SOTA model use.",
+          "experiment_id": "exp1420-dpo-verified-pairs-1508",
+          "retire_if_same_verdict": false,
+          "verdict": "gguf_dpo_unsupported_reranker_fallback_measured"
+        }
+      ],
+      "root_cause": "Exp1420 measured a DPO-style reranker fallback, but direct GGUF fine-tuning was not performed and headline_result_allowed=false.",
+      "title": "DPO path needs headline-valid local-model provenance"
+    },
+    {
+      "id": "test-suite-remaining-debt",
+      "next_action": "Partition the remaining full-suite failures into one bounded cluster per task and keep each task tied to explicit REQ/SCENARIO references.",
+      "prior_failures": [
+        {
+          "addressed_by": "The next test-debt task must not re-open the fixed embedding cluster; it must target a named remaining failure cluster.",
+          "experiment_id": "exp1421-test-suite-execution-debt-v1",
+          "retire_if_same_verdict": false,
+          "verdict": "focused_embedding_store_runtime_failures_fixed_collection_clean_targeted_tests_green_100pct_store_coverage_full_suite_and_preexisting_spec_coverage_debt_remain"
+        }
+      ],
+      "root_cause": "Exp1421 fixed the embedding-store runtime cluster, but the required full tests/python command and pre-existing spec-coverage debt remained red.",
+      "title": "Full Python suite and spec-coverage debt remain after focused fix"
+    },
+    {
+      "id": "prm-label-completion",
+      "next_action": "Generate or recover labels for the missing promoted traces, then re-evaluate precision/recall and AUROC on a held-out split.",
+      "prior_failures": [
+        {
+          "addressed_by": "The next PRM task must address missing-label coverage before claiming a 1508-trace PRM result.",
+          "experiment_id": "exp1423-process-reward-model-v1-fover-1508",
+          "retire_if_same_verdict": false,
+          "verdict": "prmv1_trained_on_available_step_labels_with_478_promoted_traces_missing_local_labels"
+        }
+      ],
+      "root_cause": "Exp1423 trained PRM v1 and measured AUROC, but only 1030 of the 1508 promoted traces were used because 478 local labels were missing.",
+      "title": "PRM v1 should fill missing local step labels before headline use"
+    }
+  ],
+  "criteria_met": 10,
+  "criteria_not_met_or_blocked": [
+    "dvi_v3_improves_on_v2",
+    "fr11_v6_headline_allowed",
+    "full_pipeline_clears_headline_gate"
+  ],
+  "criteria_total": 13,
+  "experiment": "1424_milestone_109_retro",
+  "experiment_statuses": {
+    "exp1412": {
+      "artifact": "results/experiment_1412_arxiv_operator_action_sheet_v3.json",
+      "exists": true,
+      "honest_verdict": "operator_action_sheet_ready_no_api_attempt",
+      "status": "complete"
+    },
+    "exp1413": {
+      "artifact": "results/experiment_1413_certificate_repair_execution_diagnosis.json",
+      "exists": true,
+      "honest_verdict": "repair_execution_diagnosis_complete_missing_repair_execution_step_rewrite_dominant_full_pipeline_0_305",
+      "status": "complete"
+    },
+    "exp1414": {
+      "artifact": "results/experiment_1414_certificate_llm_repair_executor_v1.json",
+      "exists": true,
+      "honest_verdict": "complete_repair_executor_no_successful_repairs",
+      "status": "complete"
+    },
+    "exp1415": {
+      "artifact": "results/experiment_1415_dvi_v3_1508_fresh_cases.json",
+      "exists": true,
+      "honest_verdict": "dvi_v3_blocked_nonforgetting_below_gate",
+      "status": "blocked"
+    },
+    "exp1416": {
+      "artifact": "results/experiment_1416_ebm_cot_v3_temperature_calibration.json",
+      "exists": true,
+      "honest_verdict": "temperature_scaling_reduced_variance_and_preserved_auroc",
+      "status": "complete"
+    },
+    "exp1417": {
+      "artifact": "results/experiment_1417_ebrm_latent_trajectory_drift_smoke.json",
+      "exists": true,
+      "honest_verdict": "energy_down_accuracy_down_off_decoder_support",
+      "status": "complete"
+    },
+    "exp1418": {
+      "artifact": "results/experiment_1418_fr11_self_learning_v6_dvi_v3.json",
+      "exists": false,
+      "honest_verdict": null,
+      "status": "missing"
+    },
+    "exp1419": {
+      "artifact": "results/experiment_1419_fullscale_pipeline_v3_repair_executor.json",
+      "exists": true,
+      "honest_verdict": "not_headline_full_pipeline_below_0_40",
+      "status": "complete"
+    },
+    "exp1420": {
+      "artifact": "results/experiment_1420_dpo_verified_pairs_1508.json",
+      "exists": true,
+      "honest_verdict": "gguf_dpo_unsupported_reranker_fallback_measured",
+      "status": "complete"
+    },
+    "exp1421": {
+      "artifact": "results/experiment_1421_test_suite_execution_debt_v1.json",
+      "exists": true,
+      "honest_verdict": "focused_embedding_store_runtime_failures_fixed_collection_clean_targeted_tests_green_100pct_store_coverage_full_suite_and_preexisting_spec_coverage_debt_remain",
+      "status": "complete"
+    },
+    "exp1422": {
+      "artifact": "results/experiment_1422_discrete_sb_kv260_rtl_spec.json",
+      "exists": true,
+      "honest_verdict": "rtl_spec_complete_budget_fits_no_synthesis_or_board_execution",
+      "status": "complete"
+    },
+    "exp1423": {
+      "artifact": "results/experiment_1423_process_reward_model_v1_fover_1508.json",
+      "exists": true,
+      "honest_verdict": "prmv1_trained_on_available_step_labels_with_478_promoted_traces_missing_local_labels",
+      "status": "complete"
+    },
+    "exp1424": {
+      "artifact": "results/experiment_1424_milestone_109_retro.json",
+      "exists": true,
+      "honest_verdict": "written_by_this_artifact",
+      "status": "complete"
+    }
+  },
+  "gpu_utilization_summary": {
+    "gpu_required_tasks": [
+      "exp1414",
+      "exp1419",
+      "exp1420"
+    ],
+    "observed_model_assignments": [
+      {
+        "cache_status": "available",
+        "experiment_id": "exp1414",
+        "gpu": 0,
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "role": "primary_repair_model"
+      },
+      {
+        "cache_status": "available",
+        "experiment_id": "exp1414",
+        "gpu": 1,
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "role": "dense_fallback"
+      },
+      {
+        "cache_status": "missing",
+        "experiment_id": "exp1414",
+        "gpu": null,
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "role": "moe_fallback"
+      },
+      {
+        "cache_status": "available",
+        "experiment_id": "exp1419",
+        "gpu": 0,
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "role": "primary_pipeline_repair_model"
+      },
+      {
+        "cache_status": "available",
+        "experiment_id": "exp1419",
+        "gpu": 1,
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "role": "dense_fallback"
+      },
+      {
+        "cache_status": "missing",
+        "experiment_id": "exp1419",
+        "gpu": null,
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "role": "moe_fallback"
+      },
+      {
+        "cache_status": null,
+        "experiment_id": "exp1420",
+        "gpu": null,
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "role": "primary_policy_baseline"
+      },
+      {
+        "cache_status": null,
+        "experiment_id": "exp1420",
+        "gpu": null,
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "role": "dense_baseline"
+      },
+      {
+        "cache_status": null,
+        "experiment_id": "exp1420",
+        "gpu": null,
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "role": "moe_baseline"
+      }
+    ],
+    "summary": "No .109 artifact or conductor-log entry exposes GPU utilization, VRAM, or wall-time telemetry. Available evidence only records model cache/provenance and GPU indices for exp1414/exp1419; exp1420 used a reranker fallback.",
+    "utilization_metrics_available": false
+  },
+  "honest_verdict": "milestone_109_10_of_13_criteria_met_threshold_met_but_repair_dvi_fr11_and_pipeline_carry_forward",
+  "milestone": "2026.04.109",
+  "prior_failures_required_next": {
+    "dpo-headline-validation-or-finetune-support": [
+      {
+        "addressed_by": "The next task must resolve the gap between measured fallback AUROC and headline-valid local SOTA model use.",
+        "experiment_id": "exp1420-dpo-verified-pairs-1508",
+        "retire_if_same_verdict": false,
+        "verdict": "gguf_dpo_unsupported_reranker_fallback_measured"
+      }
+    ],
+    "dvi-v3-nonforgetting-gate-fix": [
+      {
+        "addressed_by": "The next DVI task must explicitly address the nonforgetting gate, not only optimize AUROC delta.",
+        "experiment_id": "exp1415-dvi-v3-1508-fresh-cases",
+        "retire_if_same_verdict": true,
+        "verdict": "dvi_v3_blocked_nonforgetting_below_gate"
+      }
+    ],
+    "fr11-v6-after-dvi-v3": [
+      {
+        "addressed_by": "The next FR-11 v6 task must name exp1415 and require dvi_v3_deployed=true before launch.",
+        "experiment_id": "exp1418-fr11-self-learning-v6-dvi-v3",
+        "retire_if_same_verdict": false,
+        "verdict": "gate_blocked_upstream_dvi_v3_not_deployed"
+      }
+    ],
+    "prm-label-completion": [
+      {
+        "addressed_by": "The next PRM task must address missing-label coverage before claiming a 1508-trace PRM result.",
+        "experiment_id": "exp1423-process-reward-model-v1-fover-1508",
+        "retire_if_same_verdict": false,
+        "verdict": "prmv1_trained_on_available_step_labels_with_478_promoted_traces_missing_local_labels"
+      }
+    ],
+    "repair-executor-v2-root-cause": [
+      {
+        "addressed_by": "Next attempt changes prompt/schema validation and must diagnose why all candidate repairs failed semantic acceptance.",
+        "experiment_id": "exp1414-certificate-llm-repair-executor-v1",
+        "retire_if_same_verdict": false,
+        "verdict": "complete_repair_executor_no_successful_repairs"
+      },
+      {
+        "addressed_by": "Do not rerun the 200-case pipeline until the executor has a measured nonzero repair-success gate.",
+        "experiment_id": "exp1419-fullscale-pipeline-v3-repair-executor",
+        "retire_if_same_verdict": true,
+        "verdict": "not_headline_full_pipeline_below_0_40"
+      }
+    ],
+    "test-suite-remaining-debt": [
+      {
+        "addressed_by": "The next test-debt task must not re-open the fixed embedding cluster; it must target a named remaining failure cluster.",
+        "experiment_id": "exp1421-test-suite-execution-debt-v1",
+        "retire_if_same_verdict": false,
+        "verdict": "focused_embedding_store_runtime_failures_fixed_collection_clean_targeted_tests_green_100pct_store_coverage_full_suite_and_preexisting_spec_coverage_debt_remain"
+      }
+    ]
+  },
+  "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+  "retired_experiments": [
+    {
+      "experiment_id": "exp1419-fullscale-pipeline-v3-repair-executor",
+      "prior_failure_matched": "exp1397-fullscale-pipeline-v2-200cases",
+      "reason": "The task had retire_if_same_verdict=true against exp1397 and returned the same not_headline_full_pipeline_below_0_40 verdict with 0 successful repairs.",
+      "result_artifact": "results/experiment_1419_fullscale_pipeline_v3_repair_executor.json",
+      "retirement_scope": "exact rerun without a new repair-success root-cause fix",
+      "root_cause": "Repair executor deployment did not translate into accepted repairs."
+    }
+  ],
+  "roadmap_inputs": {
+    "change_proposal_present": true,
+    "missing_requested_inputs": [
+      "research-roadmap-next.yaml"
+    ],
+    "research_roadmap_next_yaml_present": false,
+    "research_roadmap_yaml_present": true
+  },
+  "run_date": "20260506",
+  "schema": "milestone_109_retro_v1",
+  "source_artifacts_checked": [
+    {
+      "exists": true,
+      "experiment_id": "exp1412",
+      "path": "results/experiment_1412_arxiv_operator_action_sheet_v3.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1413",
+      "path": "results/experiment_1413_certificate_repair_execution_diagnosis.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1414",
+      "path": "results/experiment_1414_certificate_llm_repair_executor_v1.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1415",
+      "path": "results/experiment_1415_dvi_v3_1508_fresh_cases.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1416",
+      "path": "results/experiment_1416_ebm_cot_v3_temperature_calibration.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1417",
+      "path": "results/experiment_1417_ebrm_latent_trajectory_drift_smoke.json"
+    },
+    {
+      "exists": false,
+      "experiment_id": "exp1418",
+      "path": "results/experiment_1418_fr11_self_learning_v6_dvi_v3.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1419",
+      "path": "results/experiment_1419_fullscale_pipeline_v3_repair_executor.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1420",
+      "path": "results/experiment_1420_dpo_verified_pairs_1508.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1421",
+      "path": "results/experiment_1421_test_suite_execution_debt_v1.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1422",
+      "path": "results/experiment_1422_discrete_sb_kv260_rtl_spec.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1423",
+      "path": "results/experiment_1423_process_reward_model_v1_fover_1508.json"
+    }
+  ],
+  "status": "complete",
+  "success_criteria_results": {
+    "arxiv_action_sheet_complete": {
+      "observed": {
+        "bundle_exists": true,
+        "credentialed_submission_attempted": false,
+        "submission_ready_for_operator": true
+      },
+      "rationale": "Operator action sheet is ready.",
+      "source": "exp1412.submission_ready_for_operator",
+      "status": "MET",
+      "target": "submission_ready_for_operator=true"
+    },
+    "discrete_sb_rtl_spec_complete": {
+      "observed": {
+        "hardware_claim_allowed": false,
+        "hardware_execution_performed": false,
+        "kv260_budget_fits": true,
+        "rtl_spec_complete": true,
+        "rtl_spec_path": "hardware/kv260/discrete_sb_rtl_spec.md"
+      },
+      "rationale": "Discrete SB RTL specification is complete without making a hardware claim.",
+      "source": "exp1422.rtl_spec_complete",
+      "status": "MET",
+      "target": "rtl_spec_complete=true"
+    },
+    "dpo_measured": {
+      "observed": {
+        "dpo_full_finetune_performed": false,
+        "dpo_improvement_pp": 99.834437,
+        "dpo_reranker_fallback_used": true,
+        "headline_result_allowed": false,
+        "verified_pairs_available": 1508
+      },
+      "rationale": "DPO-style fallback was measured, but not headline-ready.",
+      "source": "exp1420.dpo_improvement_pp",
+      "status": "MET",
+      "target": "dpo_improvement_pp determined"
+    },
+    "dvi_v3_improves_on_v2": {
+      "observed": {
+        "dvi_v2_auroc_delta_baseline": 0.011458,
+        "dvi_v3_auroc_delta": 0.011842,
+        "dvi_v3_deployed": false,
+        "fresh_verified_cases_used": 1508,
+        "nonforgetting_rate": 0.968604,
+        "status": "blocked"
+      },
+      "rationale": "DVI v3 was blocked by the nonforgetting gate despite a small AUROC delta.",
+      "source": "exp1415.dvi_v3_auroc_delta",
+      "status": "BLOCKED",
+      "target": "dvi_v3_auroc_delta > 0.011458"
+    },
+    "ebm_cot_variance_fixed": {
+      "observed": {
+        "auroc_preserved": true,
+        "best_temperature": 1.25,
+        "temperature_scaling_applied": true,
+        "variance_worsened": false
+      },
+      "rationale": "Temperature scaling fixed variance while preserving AUROC.",
+      "source": "exp1416.variance_worsened and exp1416.auroc_preserved",
+      "status": "MET",
+      "target": "variance_worsened=false and auroc_preserved=true"
+    },
+    "execution_debt_fixed": {
+      "observed": {
+        "collection_clean_confirmed": true,
+        "execution_failures_fixed": [
+          "EmbeddingConstraintStore now accepts embedding_mode='ci_hash' for deterministic memory-safe tests and memory-constrained runs.",
+          "EmbeddingConstraintStore keeps sentence_transformer support behind explicit sentence_transformer or auto mode, with ci_hash fallback when the optional dependency is unavailable.",
+          "EmbeddingConstraintStore.retrieve() now defaults cosine_threshold to 0.0 and returns ranked top-k entries unless a positive threshold is explicitly supplied.",
+          "Exp800 tests were reconciled with the later Exp847 REQ-VERIFY-150 L2-normalization contract instead of the superseded orthogonalizing write-path expectation.",
+          "Exp801 embedding injection tests now use explicit ci_hash mode and pass without loading MiniLM weights.",
+          "Exp847 tests import the installed carnot package path instead of python.carnot, avoiding duplicate package import memory growth."
+        ],
+        "remaining_debt": [
+          "The exact required full-suite command .venv/bin/pytest tests/python -q is still red outside this focused fix: interrupted after 34m05s with 69 failures and 4 memory-watchdog errors already reported.",
+          "Representative remaining full-suite failures include paper v5 issue checks, stale live-data model-name assertions, older operational retro schema assertions, arbiter warmstart expectations, Vitis/HLS verdict checks, GPU/live-model memory-watchdog errors, and conductor/infrastructure assertions.",
+          "Spec coverage remains red on pre-existing debt: scripts/check_spec_coverage.py reports 71 tests lacking REQ-* or SCENARIO-* references, none from the edited Exp800/801/847 tests.",
+          "No ops/changelog.md, ops/status.md, or _bmad/traceability.md edits were made because the task's STOP-WHEN-DONE rule explicitly reserved those updates for the conductor reconciliation step.",
+          "No e2e plan item from ops/e2e-test-plan.md directly applies to this embedding-store unit fix; full E2E was not attempted while the required Python test suite remains red."
+        ],
+        "spec_coverage_checked": true
+      },
+      "rationale": "Focused execution-debt cluster was fixed; broader suite debt remains.",
+      "source": "exp1421.execution_failures_fixed",
+      "status": "MET",
+      "target": "execution_failures_fixed=true"
+    },
+    "fr11_v6_headline_allowed": {
+      "observed": {
+        "exists": false,
+        "fresh_verified_sample_count": null,
+        "headline_result_allowed": null,
+        "upstream_dvi_status": "blocked",
+        "upstream_dvi_v3_deployed": false
+      },
+      "rationale": "FR-11 v6 did not run because upstream DVI v3 deployment gate stayed closed.",
+      "source": "exp1418.headline_result_allowed and exp1418.fresh_verified_sample_count",
+      "status": "GATE_BLOCKED",
+      "target": "headline_result_allowed=true and fresh_verified_sample_count > 1508"
+    },
+    "full_pipeline_clears_headline_gate": {
+      "observed": {
+        "cases_evaluated": 200,
+        "full_pipeline_headline_gate_met": false,
+        "full_pipeline_pass_rate": 0.305,
+        "repair_hint_cases_total": 100,
+        "repair_success_rate": 0.0,
+        "repaired_cases_successful": 0
+      },
+      "rationale": "Full pipeline remained at the .108 0.305 pass-rate floor.",
+      "source": "exp1419.full_pipeline_pass_rate",
+      "status": "NOT_MET",
+      "target": "full_pipeline_pass_rate >= 0.40"
+    },
+    "latent_drift_smoke_complete": {
+      "observed": {
+        "accuracy_delta_after_planning": -0.75,
+        "anchoring_required": true,
+        "dual_path_decoder_required": true,
+        "energy_monotone": true,
+        "latent_drift_smoke_complete": true
+      },
+      "rationale": "Latent drift smoke completed and exposed an off-decoder-support failure.",
+      "source": "exp1417.latent_drift_smoke_complete",
+      "status": "MET",
+      "target": "latent_drift_smoke_complete=true"
+    },
+    "llm_repair_executor_deployed": {
+      "observed": {
+        "repair_executor_deployed": true,
+        "repair_hint_cases_tested": 20,
+        "repaired_case_success_rate": 0.0,
+        "repaired_cases_successful": 0
+      },
+      "rationale": "Executor was wired in, but successful repairs still need follow-up.",
+      "source": "exp1414.repair_executor_deployed",
+      "status": "MET",
+      "target": "repair_executor_deployed=true"
+    },
+    "prm_v1_measured": {
+      "observed": {
+        "prmv1_auroc": 0.832874,
+        "prmv1_step_precision": 0.380282,
+        "prmv1_step_recall": 0.6,
+        "prmv1_trained": true,
+        "step_labels_available": 1824,
+        "training_traces_used": 1030
+      },
+      "rationale": "PRM v1 was measured on available labels; missing labels remain follow-up.",
+      "source": "exp1423.prmv1_auroc",
+      "status": "MET",
+      "target": "prmv1_auroc determined"
+    },
+    "repair_diagnosis_complete": {
+      "observed": {
+        "executable_hint_pct": 1.0,
+        "repair_execution_diagnosis_complete": true,
+        "repair_hint_cases_total": 100
+      },
+      "rationale": "Repair-hint diagnosis is complete.",
+      "source": "exp1413.repair_execution_diagnosis_complete",
+      "status": "MET",
+      "target": "repair_execution_diagnosis_complete=true"
+    },
+    "retro_complete": {
+      "observed": {
+        "criteria_met_before_retro": 9,
+        "criteria_met_if_retro_counts": 10,
+        "retro_artifact_written": true,
+        "threshold": 10
+      },
+      "rationale": "Writing this retro brings the milestone to the planned 10/13 threshold.",
+      "source": "exp1424.status and criteria threshold",
+      "status": "MET",
+      "target": "criteria_met >= 10/13"
+    }
+  }
+}
