@@ -450,6 +450,11 @@ from carnot.pipeline.prefill_uncertainty_probe import (
     compute_input_uncertainty,
     compute_prompt_uncertainty,
 )
+from carnot.pipeline.probability_calibration_verifier import (
+    ProbabilityCalibrationVerifier,
+    ProbabilityClaim,
+    ProbabilityEvidence,
+)
 from carnot.pipeline.property_code_verifier import (
     DerivedProperty,
     PropertyCodeVerificationResult,
@@ -665,6 +670,9 @@ __all__ = [
     "PATTERN_THRESHOLD",
     "PrefillUncertaintyProbe",
     "PrefillUncertaintyResult",
+    "ProbabilityCalibrationVerifier",
+    "ProbabilityClaim",
+    "ProbabilityEvidence",
     "PBTCodeVerificationResult",
     "PBTCodeVerifier",
     "PBTDerivedProperty",
