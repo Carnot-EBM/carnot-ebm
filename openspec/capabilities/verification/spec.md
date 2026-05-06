@@ -232,6 +232,42 @@ baseline delta of 0.011458, records replay nonforgetting, and either writes an
 existing checkpoint path when `dvi_v3_deployed=true` or reports the blocking
 reason in `honest_verdict`.
 
+### REQ-VERIFY-1432: DVI V3 Replay-Heldout Nonforgetting Repair
+
+The repository shall provide a deterministic, CPU-only DVI v3 repair path that:
+
+- writes `results/experiment_1432_dvi_v3_nonforgetting_replay_balanced.json`
+  with `status="in_progress"` before loading source artifacts;
+- reads Exp 1415, Exp 1394, and Exp 1395 evidence and classifies the Exp 1415
+  nonforgetting failure as thresholding, sampling imbalance, model update drift,
+  or unresolved from measured AUROC and replay-gate evidence;
+- uses the 1508 Exp 1395 fresh verified cases and a deterministic replay
+  calibration/evaluation split from Exp 1395 demotions without fresh LLM
+  inference;
+- applies a bounded replay-heldout threshold calibration or a replay-balanced
+  update before deployment;
+- uses the recorded Exp 1394 `dvi_v2_auroc_delta` as the baseline when present,
+  otherwise the fixed baseline `0.011458`;
+- deploys DVI v3 only when `nonforgetting_rate >= 0.99` on held-out replay and
+  the DVI v3 AUROC delta does not regress below the DVI v2 baseline; and
+- writes a terminal artifact containing `status`, `dvi_v3_deployed`,
+  `dvi_v3_auroc_delta`, `dvi_v2_auroc_delta_baseline`,
+  `nonforgetting_rate`, `replay_balance_applied`,
+  `threshold_calibration_applied`, `fresh_cases_used`, `tests_run`, and
+  `honest_verdict`.
+
+### SCENARIO-VERIFY-1432: Replay-Heldout Calibration Repairs Threshold Failure
+
+Given Exp 1415 improved DVI v3 AUROC but blocked deployment because
+`nonforgetting_rate < 0.99`
+And Exp 1395 provides 1508 fresh verified cases and replay demotions,
+When Exp 1432 calibrates the DVI v3 acceptance threshold on a replay
+calibration split and audits held-out replay,
+Then the final artifact records the diagnosed failure mode, the calibration
+settings, and all required deployment fields
+And `dvi_v3_deployed=true` only if held-out nonforgetting is at least 0.99 and
+the measured DVI v3 AUROC delta remains at or above the DVI v2 baseline.
+
 ### REQ-VERIFY-1416: EBM-CoT V3 Post-Hoc Temperature Calibration
 
 The repository shall provide a deterministic, CPU-only post-hoc temperature
@@ -304,5 +340,6 @@ blocked verdict with the missing positive/negative step-label counts.
 | Requirement | Python | Tests |
 |-------------|--------|-------|
 | REQ-VERIFY-1415 | Implemented (`python/carnot/reporting/dvi_v3_1508_fresh_cases.py`) | Implemented (`tests/python/test_experiment_1415_dvi_v3_1508_fresh_cases.py`) |
+| REQ-VERIFY-1432 | Implemented (`python/carnot/reporting/dvi_v3_nonforgetting_replay_balanced.py`) | Implemented (`tests/python/test_experiment_1432_dvi_v3_nonforgetting_replay_balanced.py`) |
 | REQ-VERIFY-1416 | Implemented (`python/carnot/models/ebm_cot_temperature_calibration.py`) | Implemented (`tests/python/test_experiment_1416_ebm_cot_temperature_calibration.py`) |
 | REQ-VERIFY-1423 | Implemented (`python/carnot/reporting/process_reward_model_v1_fover_1508.py`) | Implemented (`tests/python/test_experiment_1423_process_reward_model_v1.py`) |

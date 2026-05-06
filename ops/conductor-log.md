@@ -1017,3 +1017,5 @@ web search: GitHub trending energy based mod |
 | 2026-05-06 15:28 UTC | PRM-Guided Repair Selector — Gated on Exp1429 Cand | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1430_prm_gui |
 | 2026-05-06 15:34 UTC | PRM-Guided Repair Selector — Gated on Exp1429 Cand | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1430_prm_gui |
 | 2026-05-06 15:36 UTC | Full Pipeline v4 Micro Validation — Gated on Nonze | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1430-prm-guided-repair-selector) |
+| 2026-05-06 16:05 UTC | PRM-Guided Repair Selector — Gated on Exp1429 Cand | OK | Deliverable already exists in repo |
+| 2026-05-06 16:05 UTC | Full Pipeline v4 Micro Validation — Gated on Nonze | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1430-prm-guided-repair-selector) |
