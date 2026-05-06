@@ -198,6 +198,75 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### NEW 2026-05-06 (15:30Z): trace2skill + Skillify Testing Rigor (.112-.116 series)
+
+**Background:** Garry Tan's Skillify pattern (https://github.com/garrytan/gbrain — OpenClaw / Hermes Agent ecosystem) implements a 10-step pipeline that promotes agent failures into permanently-tested skills: SKILL.md contract, deterministic code, unit tests, integration tests, daily LLM evals, resolver trigger, resolver eval, check-resolvable + DRY audit, E2E smoke test, brain filing rules. Carnot's existing `trace2skill` (per `openspec/change-proposals/wire-trace2skill-into-conductor.md`) extracts lessons from experiment traces and consolidates per-milestone but lacks the testing rigor of Steps 3-9.
+
+**Why this matters for Carnot:**
+- Carnot's k=6 verifier composition mixes deterministic (Z3, AST, JSON) and latent (ThinkPRM, Semantic, SC-Energy) checks but does NOT structurally enforce that deterministic-applicable checks fire first. Skillify's "latent builds deterministic, deterministic then constrains latent" is the principled version.
+- The trace2skill consolidator runs per-milestone, NOT daily. Skills decay as upstream APIs/datasets shift; without daily eval cadence the rot is invisible.
+- Carnot has no equivalent of skillify's `check-resolvable` (audit for unreachable skills/scripts). On first run skillify found 15% of skills were "dark" (existed but unreachable). Carnot likely has a similar accumulation in retired experiment scripts, exclusion-manifest entries, and deprecated test files.
+- Carnot's `prior_failures` ledger gates against doomed reruns but doesn't verify that the RIGHT experiment fires for a given research intent. False-negative routing (skill exists, never triggers) is currently unobserved.
+
+**Mandatory .112-.116 (or whenever picked up) prototype series:**
+
+```
+exp_NEXT_TRACE2SKILL_A: trace2skill catalog daily-eval cadence
+  - Run accumulated trace2skill lessons through a daily LLM-as-judge
+    eval pass against a small fixed corpus. Flag skills whose
+    accuracy drops below threshold (skill rot detection).
+  - Acceptance: daily cron landing eval reports; ≥1 rotted skill
+    detected and refactored or retired.
+
+exp_NEXT_TRACE2SKILL_B: check-resolvable audit
+  - Walk: every script in scripts/experiment_*.py + every
+    exclusion-manifest entry + every results/experiment_*.json.
+    Verify each is reachable from at least one of: research-roadmap.yaml,
+    failure-ledger, or _bmad/traceability.md.
+  - Acceptance: % of unreachable artifacts measured + consolidation
+    plan for the dark scripts (delete, register, or archive).
+
+exp_NEXT_TRACE2SKILL_C: DRY audit on verifier ensemble
+  - Skillify pattern applied to Carnot's k=6: detect overlapping
+    triggers/scope between verifiers (cf. exp1224 P(V_i|V_j)=1.000).
+    Q11 TSS already predicts AST+JSON vacuous, Z3+ThinkPRM
+    semantic-blind, Semantic+SC-Energy gradient-aligned. The DRY
+    audit is the operational tool for catching this BEFORE Phase-5-D.
+  - Acceptance: 6x6 P(V_i|V_j) audit table + consolidation
+    recommendations cross-referenced to Q11 TSS predictions.
+
+exp_NEXT_TRACE2SKILL_D: resolver trigger + eval for research intents
+  - Build an `AGENTS.md`-style routing table mapping research intents
+    ("audit verifier orthogonality", "extend FoVer corpus", "FPGA
+    sampler benchmark") to the experiment template that handles them.
+    Eval suite: 50+ intent test cases verifying correct routing.
+  - Acceptance: routing accuracy ≥ 90% on held-out intents;
+    false-positive routing < 5%.
+
+exp_NEXT_TRACE2SKILL_E: latent-vs-deterministic discipline gate
+  - Audit Carnot's k=6 verifier ensemble for the principle: any
+    check that CAN be deterministic SHOULD be deterministic. Flag
+    cases where ThinkPRM / Semantic / SC-Energy is doing work
+    that Z3 / AST / JSON could do instead. Q12 Hypothesis B suggests
+    this matters: less latent surface = less Dark Room exploit space.
+  - Acceptance: per-verifier classification (deterministic vs latent
+    vs hybrid) + audit of which checks are misallocated.
+```
+
+**Strategic alignment:**
+- Skillify's "every failure becomes a permanent test" mirrors Carnot's `retire_if_same_verdict` discipline but at a finer grain (per-skill not per-experiment).
+- The deterministic-builds-latent loop is conceptually parallel to the LARQL+RotorQuant deployment pattern queued at .111-.115: deterministic-distinct work runs locally + cheap, latent-judgment work runs at higher cost. Same architectural principle at different abstraction levels.
+- A daily-eval cadence on accumulated skills is the operational analog of Q12.4(a) entropy regularization: continuously test that the catalog hasn't collapsed onto a degenerate subset of skills.
+
+**Cross-references:**
+- Skillify primary: https://github.com/garrytan/gbrain (open source)
+- Carnot trace2skill proposal: `openspec/change-proposals/wire-trace2skill-into-conductor.md`
+- Q11 TSS predictions for verifier dedup: `memory/project_q11_tss_and_ste_attack.md`
+- Q12 Hypothesis B Dark Room: `memory/project_q12_hypothesis_b_and_dark_room.md`
+- Existing Carnot skill-graph work: `exp1302_skill_graph_promotion_demotion_v2`
+
+---
+
 ### NEW 2026-05-06 (12:00Z): LARQL Decoupled-Attention Substrate Prototype (.111-.115 series)
 
 **Background:** Chris Hay's LARQL (https://github.com/chrishayuk/larql) decompiles transformer models into a queryable "vindex" format with SQL-like edit/query operations on knowledge edges. **Critical architectural insight from author:** attention is decoupled from weights — attention runs locally on GPU (small footprint, latency-sensitive), weights run on CPU (large, latency-tolerant within LAN). This enables consumer-GPU inference on foundation-model-class weights via a same-LAN weight server.
