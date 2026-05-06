@@ -1,6 +1,16 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-06 (GitHub issue #5 SessionMemory portable packs implemented)
+**Last Updated:** 2026-05-06 (GitHub issue #3 structured verdict records in progress)
+
+## Session 2026-05-06 - GitHub Issue #3 Structured Verdict Records In Progress
+
+**Issue #3 IN PROGRESS.**
+
+- Added spec requirements `REQ-VERIFY-1408` through `REQ-VERIFY-1410` and `SCENARIO-VERIFY-1408` for structured verdict records, deterministic fallback calibration, and legacy compatibility.
+- Added `python/carnot/pipeline/verdict_record.py` with `VerdictRecord` and `calibrated_confidence_from_energy`.
+- Added non-breaking structured APIs: `VerifyRepairPipeline.verify_record()`, `ThreeTierPipeline.verify_record()`, and `verify_legacy()` aliases for both classes.
+- Added public docs at `docs/verdict-records.md`.
+- Added terminal-artifact skeleton `results/experiment_1408_structured_verdict_record.json`; verification is currently in progress.
 
 ## Session 2026-05-06 - GitHub Issue #5 SessionMemory Portable Packs Implemented
 
