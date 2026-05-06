@@ -1,0 +1,104 @@
+{
+  "baseline_scoring_rule": "forward_only_score_i = E(s_1:T) - E(s_1:i-1, s_i+1:T)",
+  "biprm_fusion_rule": "sigma_t = (t + 1) / (T + 1); score_t = sigma_t * forward_t + (1 - sigma_t) * r2l_t",
+  "biprm_r2l_pivot_precision": 0.973333,
+  "corpus_cases_used": 75,
+  "corpus_path": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus.jsonl",
+  "duration_s": 0.331,
+  "experiment": 1400,
+  "finished_at": "2026-05-06T02:05:12Z",
+  "forward_only_pivot_precision": 0.986667,
+  "fresh_llm_inference_used": false,
+  "gpu_required": false,
+  "honest_verdict": "not_viable_negative_r2l_pivot_precision_delta_fover_negative_step_proxy_labels_used_no_human_pivots",
+  "human_annotated_pivot_cases": 0,
+  "models_used": [],
+  "pivot_precision_delta": -0.013334,
+  "pivotal_step_categories": {
+    "arithmetic_error": 5,
+    "hallucination": 7,
+    "logical_fallacy": 63,
+    "missing_premise": 0
+  },
+  "proxy_pivot_cases": 75,
+  "r2l_update_rule": "r_t^R2L = f_theta(s_t | q, s_>t)",
+  "retrospective_scoring_rule": "r2l_score_i = E(s_i, s_>i) - E(s_>i), judged from final-answer context",
+  "retrospective_verification_viable": false,
+  "run_date": "20260506",
+  "sample_scored_cases": [
+    {
+      "annotation_source": "fover_negative_proxy",
+      "biprm_correct": false,
+      "biprm_pivot_index": 2,
+      "case_id": "164",
+      "forward_correct": true,
+      "forward_pivot_index": 0,
+      "gold_pivot_category": "logical_fallacy",
+      "gold_pivot_indices": [
+        0
+      ],
+      "step_count": 3
+    },
+    {
+      "annotation_source": "fover_negative_proxy",
+      "biprm_correct": true,
+      "biprm_pivot_index": 5,
+      "case_id": "arc_challenge_0028",
+      "forward_correct": true,
+      "forward_pivot_index": 5,
+      "gold_pivot_category": "arithmetic_error",
+      "gold_pivot_indices": [
+        5
+      ],
+      "step_count": 6
+    },
+    {
+      "annotation_source": "fover_negative_proxy",
+      "biprm_correct": true,
+      "biprm_pivot_index": 4,
+      "case_id": "arc_challenge_0123",
+      "forward_correct": true,
+      "forward_pivot_index": 4,
+      "gold_pivot_category": "arithmetic_error",
+      "gold_pivot_indices": [
+        4
+      ],
+      "step_count": 5
+    },
+    {
+      "annotation_source": "fover_negative_proxy",
+      "biprm_correct": true,
+      "biprm_pivot_index": 0,
+      "case_id": "gsm8k_2001_0_0",
+      "forward_correct": true,
+      "forward_pivot_index": 0,
+      "gold_pivot_category": "logical_fallacy",
+      "gold_pivot_indices": [
+        0
+      ],
+      "step_count": 2
+    },
+    {
+      "annotation_source": "fover_negative_proxy",
+      "biprm_correct": true,
+      "biprm_pivot_index": 0,
+      "case_id": "gsm8k_2001_0_1",
+      "forward_correct": true,
+      "forward_pivot_index": 0,
+      "gold_pivot_category": "logical_fallacy",
+      "gold_pivot_indices": [
+        0
+      ],
+      "step_count": 2
+    }
+  ],
+  "schema": "biprm_retrospective_verification_probe_v1",
+  "single_step_cases": 0,
+  "spec": [
+    "REQ-VERIFY-1400",
+    "SCENARIO-VERIFY-1400"
+  ],
+  "started_at": "2026-05-06T02:05:12Z",
+  "status": "complete",
+  "title": "BiPRM R2L Retrospective Verification Probe on FoVer Pairs"
+}

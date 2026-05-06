@@ -977,3 +977,8 @@ web search: GitHub trending energy based mod |
 | 2026-05-06 01:32 UTC | Full-Scale Pipeline v2 — 200 Cases with Semantic V | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1397_fullsca |
 | 2026-05-06 01:41 UTC | NGRPO Theory Probe — Advantage Calibration Simulat | OK | 81 passed, 1 warning in 5.04s |
 | 2026-05-06 01:52 UTC | Discrete SB KV260 CPU Simulation — BRAM-Limited Al | OK | 103 passed, 1 warning in 8.10s |
+| 2026-05-06 02:08 UTC | BiPRM Retrospective Verification Probe — R2L Strea | FAIL | Post-tests failed: ImportError - if an import failed when it shouldn't have |
+| 2026-05-06 02:11 UTC | BiPRM Retrospective Verification Probe — R2L Strea | SKIP | Pre-tests failing, self-heal failed: ImportError - if an import failed when it s |
+| 2026-05-06 02:13 UTC | BiPRM Retrospective Verification Probe — R2L Strea | SKIP | Pre-tests failing, self-heal failed: ImportError - if an import failed when it s |
+| 2026-05-06 02:15 UTC | EBM-CoT v2 Hinge-Only — No Consistency Regularizat | SKIP | Pre-tests failing, self-heal failed: ImportError - if an import failed when it s |
+| 2026-05-06 02:17 UTC | EBM-CoT v2 Hinge-Only — No Consistency Regularizat | SKIP | Pre-tests failing, self-heal failed: 1 failed, 135 passed, 1 warning in 11.02s |

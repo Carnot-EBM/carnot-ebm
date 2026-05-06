@@ -102,6 +102,42 @@ When the EBM-CoT KAN calibration probe trains for 20 CPU epochs,
 Then the output artifact contains the required calibration fields and computes
 `calibration_auroc_delta = ebm_cot_auroc - baseline_auroc`.
 
+## REQ-KAN-1401: EBM-CoT V2 Hinge-Only Calibration Probe
+
+The KAN energy tier SHALL support an EBM-CoT v2 CPU-only calibration probe that
+reuses the Exp1384 FoVer split and compatible KAN checkpoint while disabling
+positive paraphrase consistency regularization.
+
+The training objective MUST be hinge-only:
+
+```
+L = max(0, margin - (E_negative - E_positive))
+```
+
+The probe MUST write `results/experiment_1401_ebm_cot_v2_hinge_only.json` with
+`consistency_regularization_weight=0.0`, `ebm_cot_v2_auroc`,
+`calibration_auroc_delta`, `paraphrase_energy_variance_before`,
+`paraphrase_energy_variance_after`, `variance_worsened`, and
+`implicit_cot_energy_viable`.
+
+**Acceptance criteria:**
+    - The probe loads `baseline_auroc` from the Exp1384 artifact so the v2 delta
+      is anchored to the prior result.
+    - `variance_worsened` is true iff paraphrase energy variance after
+      hinge-only training is greater than before.
+    - `implicit_cot_energy_viable` is true iff `calibration_auroc_delta > 0`.
+    - The artifact records an honest verdict describing whether hinge-only
+      training confirms the positive calibration signal without consistency
+      regularization.
+
+### SCENARIO-KAN-1401: Hinge-only artifact gates v2 viability
+
+Given the Exp1384 baseline artifact and the same FoVer train/test split,
+When the EBM-CoT v2 probe trains with `consistency_regularization_weight=0.0`,
+Then the output artifact uses `ebm_cot_v2_auroc` for the post-training score,
+computes `calibration_auroc_delta = ebm_cot_v2_auroc - baseline_auroc`, and
+sets `variance_worsened` from the measured paraphrase variance comparison.
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -117,6 +153,7 @@ Then the output artifact contains the required calibration fields and computes
 | REQ-KAN-1266 | Proposed | Exp 1266 target: deterministic QuantKAN-style 3-bit PTQ simulation plus LUT-KAN latency comparison for SOSKANEnergyV3. |
 | REQ-KAN-1319 | Proposed | Exp 1319 target: hardware-portability audit only for local KAN verifier/repair candidates with no FPGA or analog execution claim. |
 | REQ-KAN-1384 | Proposed | Exp 1384 target: EBM-CoT contrastive hinge calibration on FoVer verified pairs. |
+| REQ-KAN-1401 | Proposed | Exp 1401 target: EBM-CoT v2 hinge-only calibration on the Exp1384 FoVer split with consistency weight 0.0. |
 
 ## REQ-KAN-020: KAEMEnergy FPGA LUT Budget Analyzability
 
