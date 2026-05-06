@@ -5027,3 +5027,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-03 → 2026-05-06: [outer-loop] Q11 Transversal Spectral Synthesis + Q12 Hypothesis B Dark Room + DR-3 substrate consensus syntheses; integrated to memory + paper-v5 draft + roadmap. Optimal k=2 transversal pair: SC-Energy + Z3.
 - 2026-05-03 → 2026-05-06: [outer-loop] paper-v6 reviewer-readiness — Reproducibility section + GitHub URL canonical sweep (164 files) + k=6 explanation section + Notation glossary.
 - 2026-05-06: [outer-loop] queued .111-.115 LARQL Decoupled-Attention Substrate Prototype (commits 06a79790, 4ed0984a) + .112-.116 trace2skill + Skillify Testing Rigor (commit d969acf8).
+- 2026-05-06: PRM-Guided Repair Selector — Gated on Exp1429 Candidate Pool (⚠️ Research Finding) — honest_verdict=complete_prm_guided_selector_no_improvement_prototype_candidate_pool_no_headline_claim; results/experiment_1430_prm_guided_repair_selector.json
