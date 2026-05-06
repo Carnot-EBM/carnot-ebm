@@ -16,6 +16,7 @@
 - Agent routing: all 14 tasks use `agent_type: codex`, `model: gpt-5.5`; no `requires_claude: true` tasks.
 - Validation passed: YAML parse and prompt-section/end checks, `python3 scripts/validate_prior_failures.py research-roadmap-next.yaml`, `python3 scripts/audit_roadmap_gates.py research-roadmap-next.yaml`, and `git diff --check`.
 - Did NOT modify `research-roadmap.yaml` or `scripts/research_conductor.py`.
+- Follow-up test repair: `docs/technical-report.md` and regenerated `docs/technical-report.html` again expose a parseable `1548 Experiments Across ...` count label for `REQ-REPORT-004`; the milestone 111 activation-manifest module now passes targeted mypy and 100% module coverage.
 
 **What's next**: activate `research-roadmap-next.yaml` for milestone 2026.04.111 when ready.
 

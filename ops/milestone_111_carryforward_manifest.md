@@ -1,0 +1,26 @@
+# Milestone .111 Carry-Forward Manifest
+
+Prior milestone: `2026.04.110`
+Target milestone: `2026.04.111`
+Run date: `20260506`
+
+| track | prior evidence | .111 task | gate rule | retire-if-same-verdict rule |
+|---|---|---|---|---|
+| Live-SOTA repair provenance and headline-eligible scale-up | exp1428 (results/experiment_1428_dccd_schema_constrained_repair_v2.json): complete_dccd_schema_constrained_repair_v2_nonzero_repairs_prototype_no_headline_sota_claim [repaired_cases_successful=20, repaired_case_success_rate=1.0, local_sota_model_inference_used=False]; exp1429 (results/experiment_1429_mcmc_constrained_repair_candidate_search.json): complete_mcmc_constrained_repair_candidate_search_improved_prototype_no_headline_sota_claim_live_sota_inference_not_run [source metrics unavailable]; exp1431 (results/experiment_1431_fullscale_pipeline_v4_micro_gated.json): complete_micro_validation_beats_exp1419_baseline_prototype_no_headline_scaleup [cases_evaluated=50, full_pipeline_pass_rate=0.62, runtime_evidence_allows_headline_scaleup=False] | exp1442, exp1443, exp1444, exp1445 | exp1442 must prove local_sota_runtime_ready=true before exp1443; exp1445 requires nonzero live repair success and energy-reranker readiness. | If the next repair scale attempt again reports prototype/no-live-SOTA or no-headline-scaleup with the same path, retire headline repair scale claims until runtime provenance changes. |
+| FR-11 positive promoted growth after deployed DVI v3 | exp1433 (results/experiment_1433_fr11_self_learning_v6_dvi_v3_gated.json): fr11_self_learning_v6_dvi_v3_no_positive_growth_non_headline [v6_new_promoted_count=0, self_learning_delta_overall=0, headline_result_allowed=False] | exp1446, exp1447 | exp1446 must identify the zero-growth root cause before exp1447 changes promotion thresholds, candidate generation, or memory policy. | If DVI remains deployed and FR-11 again reports zero promoted growth, retire this FR-11 v6/v7 variant and require a new root-cause plan. |
+| Spec-coverage traceability metadata debt | exp1426 (results/experiment_1426_test_suite_remaining_debt_cluster_map.json): diagnostic_cluster_map_complete_collection_clean_spec_coverage_red_71_full_suite_not_rerun_exp1421_runtime_debt_partitioned [spec_coverage_debt_count=71, next_cluster_recommended=spec_coverage_traceability_metadata] | exp1440 | Fix the named spec_coverage_traceability_metadata cluster first and do not reopen the already-fixed embedding-store cluster. | Do not retire whole test debt on another red result; split persistent failures by named cluster. |
+| DPO provenance limits | exp1435 (results/experiment_1435_dpo_headline_provenance_audit.json): dpo_headline_not_ready_reranker_only_until_adapter_or_conversion_tooling [direct_gguf_finetune_supported=False, reranker_track_relabelled=True] | NON-HEADLINE RETIREMENT: no .111 DPO headline task until direct local adapter or conversion tooling exists | Headline DPO remains closed unless concrete local adapter/conversion tooling is named before execution. | If direct GGUF fine-tune support remains absent, retire DPO headline wording and preserve reranker-only status. |
+| Discrete SB RTL source before lint/simulation | exp1437 (results/experiment_1437_discrete_sb_kv260_rtl_lint_sim.json): blocked_missing_discrete_sb_rtl_source [rtl_lint_complete=False, simulation_complete=False, hardware_claim_allowed=False] | exp1441, exp1451 | exp1451 may rerun lint/simulation only after exp1441 creates hardware/kv260/discrete_sb_256.v and a testbench. | If the exact lint/sim rerun still lacks the RTL source, retire that rerun and require source implementation first. |
+| PRM selector no-improvement path | exp1430 (results/experiment_1430_prm_guided_repair_selector.json): complete_prm_guided_selector_no_improvement_prototype_candidate_pool_no_headline_claim [selection_improvement_pp=0.0, prm_guided_selection_ready=True] | exp1448 | exp1448 must use PRM v2 labels and online stepwise scoring before any claim that PRM selection improves repair acceptance. | Retire the exact PRM v1 no-improvement selector rerun; a future PRM claim must change labels, scoring policy, or candidate source. |
+
+## Forbidden Exact Reruns
+
+- prototype_repair_scaleup: exact prototype-only repair scale-up without live local SOTA inference and headline runtime provenance. Required unlock evidence: exp1442.local_sota_runtime_ready=true and exp1443.live_sota_inference_used=true before exp1445 scale-up.
+- fr11_zero_growth: exact FR-11 zero-growth rerun with deployed DVI and unchanged promotion or memory policy. Required unlock evidence: exp1446.fr11_zero_growth_root_cause_identified=true and exp1447 changes promotion thresholds, candidate generation, or memory policy.
+- prm_v1_no_improvement: exact PRM v1 no-improvement selector rerun on the same prototype candidate pool. Required unlock evidence: exp1448 uses PRM v2 labels and a changed online process-reward scoring policy.
+- missing_source_rtl_lint_sim: exact missing-source RTL lint/sim path before hardware/kv260/discrete_sb_256.v exists. Required unlock evidence: exp1441.rtl_source_created=true before exp1451 reruns lint or simulation.
+
+## No-Change Confirmation
+
+- scripts/research_conductor.py: no activation-manifest changes needed
+- research-roadmap.yaml: no activation-manifest changes needed
