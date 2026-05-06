@@ -198,6 +198,49 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### NEW 2026-05-06 (20:00Z): Repair-Loop Validation-Error-as-Context Fix (compatible with .111 scope reduction)
+
+**Background:** Perplexity 2026 SOTA survey (`~/Downloads/What is the latest best practice on helping locall.pdf`, integrated to `research-references.md`) reports:
+
+> "On validation failure, feed the failed output AND the validation error message back to the model as context for a retry. Cap retries (2-3 max) and fail safely to human review. This resolves >95% of failures for most models without human intervention."
+
+Carnot's repair-executor lineage (exp1414 / exp1427 / exp1428 / exp1430) has been producing "0 accepted repairs" / "no_successful_repairs" / "no_improvement" verdicts. Per the `.111 scope-reduction priority above, this lineage is on the NOISE candidate list. **But this specific finding suggests one architectural change might salvage it before retirement:**
+
+The repair pipeline currently re-prompts the LLM with the failed output but does NOT include the validation error message itself as context for the retry. The 2026 SOTA pattern explicitly: pass the validator's specific complaint (which schema constraint failed, which field was malformed, which assertion failed) back as the retry context. Per the survey, this resolves >95% of failures industry-wide.
+
+**Recommended .111 task allocation (1 slot, replaces a NOISE-classification task if needed):**
+
+```
+exp_NEXT_REPAIR_VALIDATION_CONTEXT: Repair-loop validation-error-as-context A/B test
+  - Modify carnot/repair/executor.py (or equivalent) to include the
+    validation-error message verbatim in the LLM retry prompt context.
+  - Run on the same FoVer subset that exp1414/1427/1428/1430 used.
+  - Acceptance: ≥1 dimension of repair-acceptance metric improves
+    (acceptance_rate, schema_validity, semantic_correctness) vs the
+    baseline that does not include validation-error context.
+  - If improvement is real: the repair-executor lineage is preserved
+    (no retirement); the architectural fix is documented as "missing
+    pattern was validation-error-as-context, addressed in exp_NEXT".
+  - If improvement is NOT real: the lineage retires per .111
+    scope-reduction directive, and the architectural finding is
+    documented as "even the 2026 SOTA repair pattern doesn't resolve
+    the underlying issue — repair-executor architecture needs deeper
+    rework, not just retry-context."
+
+This task is COMPATIBLE with .111 scope reduction because:
+  - It tests one specific architectural change before retiring the
+    lineage (skillify-style "structurally fix the missing pattern")
+  - If it works, lineage preservation = real signal advance
+  - If it doesn't, retirement decision becomes more grounded
+```
+
+**Cross-references:**
+- 2026 SOTA reference: `research-references.md` "State of the Art: Local LLM Structured Outputs & Tool Calling (2026)" section
+- Carnot repair-executor lineage: exp1414, exp1427, exp1428, exp1430
+- `.111 scope reduction milestone (priority above)
+
+---
+
 ### NEW 2026-05-06 (16:30Z): SCOPE REDUCTION MILESTONE (.111 — preempts all other priorities)
 
 **Operator directive 2026-05-06 ~16:30Z:** "I'm questioning how much of our project has become noise." This priority **preempts** the LARQL (.111-.115) and trace2skill+Skillify (.112-.116) series queued below. Both remain valid follow-ups but only after scope reduction settles what stays in scope.
