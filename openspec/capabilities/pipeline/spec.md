@@ -2595,6 +2595,61 @@ points relative to Exp 1429 raw best-of-N success.
 
 **Spec traces:** REQ-VERIFY-1430, SCENARIO-VERIFY-1430
 
+### REQ-VERIFY-1431: Full-Scale Pipeline V4 Micro-Gated Validation
+
+The repository shall provide a bounded Exp 1431 full-pipeline v4 validation
+runner that writes
+`results/experiment_1431_fullscale_pipeline_v4_micro_gated.json` with
+`status="in_progress"` before loading source artifacts. The runner MUST confirm
+the structured gates from Exp 1428 and Exp 1430 before evaluating cases:
+Exp 1428 must be complete, deploy repair executor v2, and report a nonzero
+validated repair success rate; Exp 1430 must be complete and set
+`prm_guided_selection_ready=true`.
+
+When gates are satisfied, the runner SHALL evaluate exactly 50 cases from the
+Exp 1397/1419 200-case source using a deterministic sample that is not the
+original Exp 1419 order, unless no source rows are available. The artifact MUST
+record the sample source and local invocation flags showing that repair v2 and
+PRM-guided selection were enabled. Repair credit SHALL be counted only for
+sampled repair-hint cases selected and accepted by the frozen Exp 1430
+PRM-guided selector, without double-counting original full-pipeline passes.
+
+The terminal artifact MUST include at least `status`, `model_specs`,
+`local_sota_model_used`, `cases_evaluated`, `certificate_parse_rate`,
+`semantic_validation_pass_rate`, `repair_hint_cases_total`,
+`repair_success_rate`, `full_pipeline_pass_rate`,
+`beats_exp1419_baseline`, `eligible_for_200_case_scaleup`, and
+`honest_verdict`. `beats_exp1419_baseline` SHALL compare the measured
+50-case rate against the Exp 1419 baseline of `0.305`.
+`eligible_for_200_case_scaleup` MAY be true only when the structured gates are
+satisfied, `repair_success_rate > 0`, `full_pipeline_pass_rate > 0.305`, and
+the runtime evidence is not labeled as prototype or smoke-test-only.
+
+**Acceptance criteria:**
+- The runner writes an in-progress artifact first and a terminal complete or
+  blocked artifact last.
+- Missing or failed Exp 1428/1430 gates produce a blocked artifact with
+  `eligible_for_200_case_scaleup=false`.
+- The sampled 50-case order differs from the Exp 1419 source order and the
+  sample source is recorded.
+- Full-pipeline pass rate, repair success rate, Exp 1419 baseline comparison,
+  and scale-up eligibility are computed from audited source and selector rows.
+
+### SCENARIO-VERIFY-1431: Micro Gate Applies Repair V2 And PRM Selection
+
+**Given** Exp 1397 exposes 200 source scheduler rows with repair-hint cases
+**And** Exp 1428 reports nonzero validated repair executor v2 acceptance
+**And** Exp 1430 reports PRM-guided selection readiness with accepted selected
+repair candidates
+**When** Exp 1431 runs the 50-case micro-gated validation
+**Then** the terminal artifact records 50 evaluated cases, counts only selected
+accepted repairs for repair-hint rows in the sample, compares against the
+Exp 1419 baseline `0.305`, and marks 200-case scale-up eligibility only when
+the positive repair and baseline gates are met without prototype-only runtime
+evidence.
+
+**Spec traces:** REQ-VERIFY-1431, SCENARIO-VERIFY-1431
+
 ### REQ-VERIFY-1408: Structured Verdict Record Schema
 
 The pipeline MUST expose a documented `VerdictRecord` dataclass for downstream
