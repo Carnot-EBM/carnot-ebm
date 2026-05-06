@@ -851,6 +851,62 @@ the RTL evidence criterion is `blocked`, and carry-forward rules include the
 same-verdict retirement decisions for repair, FR-11 growth, test debt, and
 hardware source implementation.
 
+### REQ-REPORT-036: Milestone .111 Carry-Forward Activation Manifest
+
+The Exp 1439 `.111` carry-forward activation workflow shall write
+`results/experiment_1439_110_carryforward_activation_manifest.json` with
+`status="in_progress"` before reading source evidence. It shall then read the
+terminal Exp 1438 `.110` retrospective, the unresolved upstream source
+artifacts named by the retro, and
+`openspec/change-proposals/research-roadmap-vNEXT.md` without rerunning or
+editing prior experiments. It shall write
+`ops/milestone_111_carryforward_manifest.md` and a terminal Exp 1439 artifact.
+
+The markdown manifest shall include a table with columns for:
+
+- track
+- prior evidence
+- `.111` task
+- gate rule
+- retire-if-same-verdict rule
+
+Every unresolved `.110` carry-forward track shall map to one or more concrete
+`.111` experiments or an explicit non-headline retirement rule. The workflow
+shall forbid exact reruns of prototype-only repair scale-up, FR-11 zero-growth,
+PRM v1 no-improvement selector, and missing-source RTL lint/simulation paths.
+It shall confirm that `scripts/research_conductor.py` and
+`research-roadmap.yaml` need no changes for this activation manifest.
+
+The final JSON artifact shall include:
+
+- `status`
+- `prior_milestone`
+- `carryforward_manifest_path`
+- `carryforward_manifest_complete`
+- `carryforward_task_count`
+- `same_verdict_retirement_rules`
+- `forbidden_exact_reruns`
+- `honest_verdict`
+
+`carryforward_task_count` shall equal the number of unresolved `.110` tracks
+mapped in the manifest. `same_verdict_retirement_rules` shall preserve the
+exact prior verdicts from the source artifacts when they exist, otherwise from
+the Exp 1438 retrospective. A complete artifact shall not claim activation
+success if any unresolved track lacks a `.111` mapping, gate rule, or
+same-verdict retirement rule.
+
+### SCENARIO-REPORT-036: Exp 1439 Activates .110 Carry-Forward Work
+
+Given Exp 1438 reports `.110` as `12/14` with carry-forward tracks for
+live-SOTA repair provenance, FR-11 positive growth, spec-coverage metadata
+debt, DPO provenance limits, PRM selector no-improvement, and missing Discrete
+SB RTL source, when Exp 1439 runs for run date `20260506`, then it writes all
+required REQ-REPORT-036 fields, maps every unresolved track to a `.111`
+experiment or explicit non-headline retirement rule, lists prototype repair,
+FR-11 zero-growth, PRM v1 no-improvement, and missing-source RTL lint/sim in
+`forbidden_exact_reruns`, and reports no activation-manifest changes needed for
+`scripts/research_conductor.py` or `research-roadmap.yaml`.
+
 ### REQ-REPORT-024: Local Agent Usage Snapshot
 
 The repository shall provide a local operator workflow that inspects the
@@ -1421,6 +1477,7 @@ embed live-GPU benchmark results from Exp 328 when available.
 | REQ-REPORT-033 | `python/carnot/reporting/milestone_110_carryforward_activation_audit.py`, `results/experiment_1425_109_carryforward_activation_audit.json`, `ops/milestone_110_carryforward_manifest.md` | `tests/python/test_milestone_110_carryforward_activation_audit.py` | Implemented |
 | REQ-REPORT-034 | `python/carnot/reporting/test_suite_remaining_debt_cluster_map.py`, `results/experiment_1426_test_suite_remaining_debt_cluster_map.json` | `tests/python/test_test_suite_remaining_debt_cluster_map.py` | Implemented |
 | REQ-REPORT-035 | `python/carnot/reporting/milestone_retro_110.py`, `results/experiment_1438_milestone_110_retro.json` | `tests/python/test_milestone_retro_110.py` | Implemented |
+| REQ-REPORT-036 | `python/carnot/reporting/milestone_111_carryforward_activation_manifest.py`, `results/experiment_1439_110_carryforward_activation_manifest.json`, `ops/milestone_111_carryforward_manifest.md` | `tests/python/test_milestone_111_carryforward_activation_manifest.py` | Implemented |
 | REQ-REPORT-024 | `python/carnot/reporting/agent_usage.py`, `scripts/agent_plan_usage.py` | `tests/python/test_agent_plan_usage.py` | Implemented |
 | REQ-PUBLISH-003 | `scripts/experiment_317_hf_publish.py` | `tests/python/test_experiment_317_hf_publish.py` | Implemented |
 | REQ-PUBLISH-004 | `scripts/experiment_330_hf_live_publish.py` | `tests/python/test_experiment_330_hf_live_publish.py` | Implemented |
