@@ -1,5 +1,9 @@
 # Carnot — Changelog
 
+## 2026-05-07 (Milestone 2026.04.113 Operational Retrospective)
+
+- 2026-05-07 11:42 UTC: Milestone 2026.04.113 operational retrospective complete. Wrote `results/operational_retro_2026_04_113.json` from the required skeleton to terminal `status=success` for the supplied 40 min / 11 completed experiment slice. Slowest-five timing was dominated by Full-Scale Pipeline v3 gate churn on Exp 1414 (25 min / 62.5%), Exp 1269 arXiv Bundle v10 gating (10 min / 25%), and a SOTA GGUF cache/provenance preflight doomed-rerun slot (2 min / 5%). Live `gpu_monitor.py` matched the supplied closeout state: both RTX 3090s idle at 4 MB / 0% utilization, no listed GPU processes, and no zombie warnings. Estimated 55% recoverable via same-verdict gate retirement, activation-time terminal readiness artifacts, DualGPURunner scheduling, GPU telemetry, and idempotent ops-doc appenders.
+
 ## 2026-05-07 (Milestone 2026.04.112 Operational Retrospective)
 
 - 2026-05-07 06:12 UTC: Refined `results/operational_retro_2026_04_112.json` from skeleton to terminal `status=success`. Confirmed the 40 min / 11 completed slice was dominated by Full-Scale Pipeline v3 gate churn on Exp 1414 (25 min), Exp 1269 arXiv Bundle v10 gating (10 min), and SOTA GGUF cache/provenance preflight churn (2 min). Live `gpu_monitor.py` matched the supplied closeout state: both RTX 3090s idle at 4 MB / 0% utilization, no listed processes, no zombie warnings. Estimated 55% recoverable via same-verdict gate retirement, activation-time readiness artifacts, DualGPURunner scheduling, and idempotent ops-doc appenders.
