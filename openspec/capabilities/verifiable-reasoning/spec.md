@@ -16676,6 +16676,65 @@ violation rate
 
 **Spec traces:** REQ-VERIFY-1482, Exp 1482
 
+## REQ-VERIFY-1493: Trigger-Token Certificate Export For CCTU Cases
+
+Carnot SHALL provide a bounded trigger-token certificate export lane for the
+Exp 1486 CCTU-style executable constraint cases, comparing free-form solve
+then explicit certificate export against an always-constrained baseline on the
+same case set or a clearly matched subset.
+
+- REQ-VERIFY-1493-1: The workflow SHALL write
+  `results/experiment_1493_trigger_token_certificate_export_v1.json` with
+  `status="in_progress"` before loading models or running certificate
+  collection.
+- REQ-VERIFY-1493-2: The trigger lane SHALL ask the model to solve freely up
+  to a bounded token budget, emit one exact trigger token, then emit a
+  structured JSON certificate containing the CCTU case ID, tool call, tool
+  result, final answer, and verifier decision.
+- REQ-VERIFY-1493-3: The parser SHALL split trigger-lane output only at the
+  explicit trigger token, preserve the preceding free-form reasoning text, and
+  fail closed when the token is missing, duplicated, or not followed by a JSON
+  object.
+- REQ-VERIFY-1493-4: The deterministic validator SHALL reuse the Exp 1486
+  executable CCTU validators where possible and SHALL report parser success,
+  validation success, and false-accept status for every case/model/lane row.
+- REQ-VERIFY-1493-5: The workflow SHALL run at least one mandated SOTA GGUF
+  model resolved through `cached_sota_pair()` or the established local GGUF
+  cache pattern before setting `trigger_certificate_ready=true`; legacy small
+  models MAY be used only for CPU smoke rows and SHALL NOT count as headline
+  certificate evidence.
+- REQ-VERIFY-1493-6: The workflow SHALL write
+  `results/cctu_trigger_certificates_1493.jsonl` with one row per
+  case/model/lane, including free-form reasoning text, trigger-token presence,
+  structured certificate JSON, parser result, deterministic validator result,
+  and false-accept status.
+- REQ-VERIFY-1493-7: The terminal artifact SHALL include `status`,
+  `model_specs`, `live_sota_model_inference_used`,
+  `trigger_certificate_ready`, `cctu_cases_attempted`,
+  `cctu_cases_completed`, `certificate_parse_rate`,
+  `certificate_validation_rate`, `always_constrained_parse_rate`,
+  `always_constrained_validation_rate`, `verifier_false_accept_rate`,
+  `certificate_manifest_path`, `models_used`, `gpu_probe`, `blockers`, and
+  `honest_verdict`.
+
+**Implementation Status:** Planned (Exp 1493)
+
+### SCENARIO-VERIFY-1493: Trigger Certificate Lane Reports Paired CCTU Rates
+
+**Given** the Exp 1486 executable CCTU cases and deterministic validators
+**When** the Exp 1493 trigger-token certificate workflow runs on the run date
+`20260507`
+**Then** it writes the in-progress artifact first
+**And** it writes one manifest row per evaluated case/model/lane
+**And** it reports trigger-lane parse and validation rates beside the
+always-constrained baseline rates
+**And** it sets `trigger_certificate_ready=true` only when at least one
+mandated live SOTA GGUF contributed headline rows
+**And** it records a terminal blocker instead of silently falling back to a
+legacy small model when the SOTA GGUF path cannot run.
+
+**Spec traces:** REQ-VERIFY-1493, SCENARIO-VERIFY-1493, Exp 1493
+
 ## REQ-VERIFY-1144: CCTU Micro-Benchmark Adapter
 
 Carnot SHALL provide a 25-task CCTU-style micro-benchmark adapter for
