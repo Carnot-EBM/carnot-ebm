@@ -479,6 +479,100 @@ on the deployed verifier suite — not trust them.
 - Full framework: `docs/research-notes/phase-prototype-and-validation-framework.md`
 - Audit precedent: `docs/research-notes/phase3-architecture-blindspot-audit-results.md`
 
+## Verdict Terminal-Prefix Discipline (MANDATORY)
+
+**Origin:** the conductor's `_verdict_is_untrustworthy` classifier
+(`scripts/research_conductor.py`) substring-matches `_PARTIAL_TOKENS`
+(marginal, blocked, no_improvement, etc.) against agent verdicts to
+detect partial runs masquerading as success. The matcher fires
+false-positives on terminal verdicts whose descriptive text contains
+nuance words. Five separate incidents required classifier patches:
+
+- exp1305 (HardNet++/DSP): `complete: ... DSP feasibility marginal ...`
+  flagged because "marginal" matched (fixed via terminal-prefix
+  whitelist, commit 95adf3c3)
+- exp1393 (GRPO v8): `no_improvement_all_unknown_retired` flagged
+  because "no_improvement" matched (fixed via `_retired` honest-finding
+  token, commit 6d9363ae)
+- exp1430 (PRM repair selector): `complete_prm_guided_no_improvement_...`
+  flagged because verdict used underscore separator not colon (fixed
+  via `complete_/success_/passed_/shipped_` underscore-prefix
+  recognition, commit fb824412)
+- exp1473 (Live Telemetry Adversarial Validity Audit):
+  `telemetry_claim_blocked_adversarial_audit` flagged because "blocked"
+  matched, even though "claim_blocked" here means "the audit
+  successfully blocked an unsupported claim" — terminal good outcome.
+  Fixed via positive-context blocked-pattern whitelist (2026-05-07).
+
+**The structural fix:** instead of expanding the classifier whitelist
+indefinitely, **all agent prompts must produce verdicts that START
+with one of the terminal prefixes:**
+
+```
+complete:    or  complete_
+success:     or  success_
+passed:      or  passed_
+shipped:     or  shipped_
+```
+
+Verdicts that lead with the experiment name or descriptive text
+(e.g., `telemetry_claim_blocked_adversarial_audit`) are vulnerable
+to substring false-positives in the partial-token check. Verdicts
+prefixed with a terminal marker bypass that check entirely.
+
+**Acceptable verdict examples:**
+
+```
+✅ complete: adversarial audit blocked the telemetry claim
+✅ complete_adversarial_audit_blocked_telemetry_claim
+✅ success_kv260_rtl_lint_passed_with_2_warnings
+✅ passed_qwen3.6_logprob_telemetry_topk_available
+✅ shipped_minimal_repair_pipeline_v5
+```
+
+**Unacceptable verdict examples (vulnerable to false-positive):**
+
+```
+❌ telemetry_claim_blocked_adversarial_audit         (no terminal prefix; "blocked" matches partial)
+❌ marginal_repair_v3_no_headline                    (no terminal prefix; "marginal" + "no_headline" both match partial)
+❌ kv260_rtl_lint_blocked_no_source                  (no terminal prefix; "blocked" matches partial)
+```
+
+**How to apply (planner-side discipline).** When the planner generates
+`research-roadmap-next.yaml` task prompts, the `REQUIRED ARTIFACT
+FIELDS` section's `honest_verdict` description must specify:
+
+> The `honest_verdict` field MUST start with one of the terminal
+> prefixes: `complete:` / `complete_` / `success:` / `success_` /
+> `passed:` / `passed_` / `shipped:` / `shipped_`. Descriptive text
+> follows the prefix. The prefix is required for the conductor's
+> reconciler to classify the verdict as terminal; without it,
+> verdicts containing words like "marginal" / "blocked" /
+> "no_improvement" risk false-positive partial classification and
+> spurious retry/retirement.
+
+**How to apply (agent-side discipline).** When writing terminal
+artifacts in `results/experiment_*.json`, prefix the `honest_verdict`
+with one of the four terminal markers. If the experiment ran fully
+and reached a scientific conclusion (positive, negative, or mixed),
+the verdict is terminal — use a prefix. Reserve missing-prefix
+verdicts for genuine bootstrap-only / partial states, where the
+conductor's reconciler should retry.
+
+**Mechanical safety net.** The conductor's `_verdict_is_untrustworthy`
+classifier patches (commits 95adf3c3, 6d9363ae, fb824412, +
+2026-05-07 positive-blocked patterns) provide partial protection for
+verdicts without prefix. But the patch-then-patch pattern is
+unsustainable — the planner-side discipline (this rule) eliminates
+the need for further classifier patches by ensuring all verdicts
+are well-formed at source.
+
+**Why this is in CLAUDE.md, not just inline in task prompts.** Same
+defense-in-depth principle as the Codex-Default and Scope-Reduction
+rules: the planner reads CLAUDE.md as required input on every plan
+generation. A rule here ensures every future task prompt's
+verdict-spec includes the prefix requirement.
+
 ## Scope-Reduction-When-Flagged Discipline (MANDATORY)
 
 **Origin:** 2026-05-06 incident. Operator queued a "SCOPE REDUCTION

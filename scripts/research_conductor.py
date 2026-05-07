@@ -1686,6 +1686,30 @@ def _verdict_is_untrustworthy(payload: dict) -> tuple[bool, str | None]:
     )
     if any(vlow.startswith(p) for p in _TERMINAL_VERDICT_PREFIXES):
         return False, verdict
+    # 2026-05-07 fix: positive-context "blocked" patterns. Agents writing
+    # adversarial-audit / defense / safety-test verdicts often produce
+    # phrases like "telemetry_claim_blocked_adversarial_audit" (exp1473)
+    # where "blocked" means "the audit successfully blocked an
+    # unsupported claim" — a TERMINAL GOOD outcome, not a partial run.
+    # Same pattern for Sakana-defense ("attack_blocked"), capability
+    # firewalls ("escape_blocked"), input validation ("injection_blocked"),
+    # and bound-checking experiments ("bound_blocked_at_threshold"). These
+    # are good results that the substring "blocked" alone misclassifies.
+    # Without this whitelist, exp1473 (Live Telemetry Adversarial Validity
+    # Audit) was retired despite shipping status=complete with a real 8KB
+    # artifact reporting the audit's success. Whitelist positive-context
+    # blocking patterns to override the partial-token check.
+    _POSITIVE_BLOCKED_PATTERNS = (
+        "_claim_blocked",  # exp1473: claim was correctly blocked by audit
+        "_attack_blocked",  # Sakana-style: attack blocked = defense worked
+        "_audit_blocked",  # audit blocked an unsupported claim
+        "_injection_blocked",  # input validation blocked injection
+        "_escape_blocked",  # capability sandbox blocked escape
+        "_violation_blocked",  # constraint violation blocked
+        "_unsupported_blocked",  # unsupported pattern blocked
+    )
+    if any(p in vlow for p in _POSITIVE_BLOCKED_PATTERNS):
+        return False, verdict
     # Issue 7 extension 2026-05-01 18:50Z: verdicts that carry both a
     # *progress* token (improved/gained/above_baseline) AND a
     # *threshold-miss* token (below/under/missed) describe an honest
