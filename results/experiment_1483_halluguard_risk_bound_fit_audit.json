@@ -1,0 +1,290 @@
+{
+  "allowed_wording": [
+    "Carnot has a HalluGuard-style fit audit that separates evidence-availability risk from reasoning-step risk using existing telemetry, FoVer-style labels, BEAVER-lite bounds, and verifier outcomes.",
+    "Full HalluGuard reproduction is not claimed: NTK/certification assumptions and complete DHRB/RHRB formal checks are unimplemented."
+  ],
+  "audit_note_path": "docs/research-notes/halluguard_carnot_risk_bound_fit.md",
+  "claim_allowed": false,
+  "data_driven_fields_available": [
+    "live_sota_model_inference_used",
+    "topk_logprobs_available",
+    "logits_available",
+    "known_verifier_label",
+    "balanced_label_counts",
+    "telemetry_adversarial_validity_verdict",
+    "missing_evidence_caveats"
+  ],
+  "data_driven_hallucination_risk_proxy": {
+    "balanced_label_counts": {
+      "correct": 22,
+      "correct_format_invalid": 13,
+      "correct_format_valid": 9,
+      "format_invalid": 22,
+      "format_valid": 14,
+      "incorrect": 14,
+      "incorrect_format_invalid": 9,
+      "incorrect_format_valid": 5
+    },
+    "known_verifier_label_available": true,
+    "known_verifier_label_values": [
+      0,
+      1
+    ],
+    "live_sota_model_inference_used": true,
+    "local_definition": "Carnot data-driven hallucination risk means risk from missing, stale, or confounded evidence about whether the generated answer is grounded.",
+    "logits_available": true,
+    "manifest_rows_audited": 36,
+    "missing_evidence_caveats": [
+      "Exp 1473 blocks telemetry-only headline claims.",
+      "Telemetry fields are availability/proxy evidence, not a formal HalluGuard DHRB certificate."
+    ],
+    "telemetry_adversarial_validity_verdict": "invalid_for_headline_claim_superficial_or_mechanical_gate",
+    "telemetry_cases_completed": 36,
+    "topk_logprobs_available": true
+  },
+  "experiment": "1483_halluguard_risk_bound_fit_audit",
+  "honest_verdict": "halluguard_style_fit_audit_only_no_full_reproduction",
+  "implemented_assumptions": [
+    "Live local SOTA telemetry artifacts report top-k logprobs and logits availability.",
+    "FoVer-style verifier labels are present in the balanced telemetry manifest.",
+    "BEAVER-lite artifacts report sound prefix-bound checks over live logprob provenance.",
+    "Adversarial telemetry validity audit blocks headline telemetry claims under superficial-confound checks.",
+    "Paper-v6 claim boundaries already avoid broad universal verifier and reproduction claims."
+  ],
+  "missing_assumptions": [
+    "HalluGuard NTK feature construction is not implemented in Carnot.",
+    "Formal HalluGuard DHRB/RHRB theorem assumptions are not checked locally.",
+    "No calibrated data-driven hallucination risk bound is certified over the deployment distribution.",
+    "No full reasoning-step certificate proves every chain-of-thought or latent reasoning step valid.",
+    "Current BEAVER-lite bounds cover terminal/prefix-closed constraints, not arbitrary hallucination semantics.",
+    "The telemetry signal is known to be vulnerable to superficial or mechanical confounds from Exp 1473.",
+    "The .114 balanced telemetry run used one live model family, not a complete HalluGuard reproduction suite."
+  ],
+  "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+  "reasoning_driven_fields_available": [
+    "bound_is_sound",
+    "unsafe_mass_bounds",
+    "empirical_violation_rates",
+    "prefix_closed_constraints",
+    "reasoning_step_validity_limitations"
+  ],
+  "reasoning_driven_hallucination_risk_proxy": {
+    "bound_is_sound": true,
+    "constraints_evaluated": 18,
+    "local_definition": "Carnot reasoning-driven hallucination risk means risk that a reasoning step or bounded certificate path is invalid even when evidence is present.",
+    "max_empirical_violation_rate": 0.0,
+    "max_unsafe_mass_bound": 0.5559349785283041,
+    "mock_or_live_logprobs": [
+      "live_exp1468",
+      "live_exp1480_plus_exp1468"
+    ],
+    "prefix_closed_constraint_count": 18,
+    "reasoning_step_validity_limitations": [
+      "BEAVER-lite covers prefix/terminal constraints in the artifact, not every hidden or chain-of-thought step.",
+      "No HalluGuard RHRB proof object is emitted by the current verifier stack."
+    ]
+  },
+  "risk_decomposition_complete": true,
+  "run_date": "20260507",
+  "schema": "halluguard_risk_bound_fit_audit_v1",
+  "source_artifacts": [
+    {
+      "fields_used": [
+        "status",
+        "honest_verdict",
+        "live_sota_model_inference_used",
+        "topk_logprobs_available",
+        "logits_available",
+        "telemetry_cases_completed"
+      ],
+      "honest_verdict": "live_sota_topk_telemetry_ready",
+      "path": "results/experiment_1468_live_sota_logprob_telemetry_preflight.json",
+      "role": "milestone_113_live_telemetry_preflight",
+      "status": "complete"
+    },
+    {
+      "fields_used": [
+        "status",
+        "honest_verdict",
+        "bound_is_sound",
+        "unsafe_mass_bounds",
+        "empirical_violation_rates",
+        "mock_or_live_logprobs"
+      ],
+      "honest_verdict": "sound_bound_live_exp1468",
+      "path": "results/experiment_1470_beaver_lite_deterministic_bound_smoke.json",
+      "role": "milestone_113_beaver_lite_bound_smoke",
+      "status": "complete"
+    },
+    {
+      "fields_used": [
+        "status",
+        "honest_verdict",
+        "claim_allowed",
+        "telemetry_validity_verdict",
+        "superficial_baseline_results"
+      ],
+      "honest_verdict": "telemetry_claim_blocked_adversarial_audit",
+      "path": "results/experiment_1473_live_telemetry_adversarial_validity_audit.json",
+      "role": "milestone_113_telemetry_validity_audit",
+      "status": "complete"
+    },
+    {
+      "fields_used": [
+        "status",
+        "honest_verdict",
+        "live_sota_model_inference_used",
+        "topk_logprobs_available",
+        "logits_available",
+        "balanced_label_counts",
+        "telemetry_cases_completed",
+        "telemetry_manifest_path"
+      ],
+      "honest_verdict": "balanced_live_sota_telemetry_ready",
+      "path": "results/experiment_1480_live_sota_balanced_telemetry_v2.json",
+      "role": "milestone_114_balanced_live_telemetry",
+      "status": "complete"
+    },
+    {
+      "fields_used": [
+        "status",
+        "honest_verdict",
+        "bound_is_sound",
+        "constraints_evaluated",
+        "unsafe_mass_bounds",
+        "empirical_violation_rates",
+        "prefix_closed_constraints",
+        "mock_or_live_logprobs"
+      ],
+      "honest_verdict": "sound_bound_live_exp1480_plus_exp1468_calibrated",
+      "path": "results/experiment_1482_beaver_lite_live_prefix_bound_calibration.json",
+      "role": "milestone_114_beaver_lite_prefix_calibration",
+      "status": "complete"
+    },
+    {
+      "fields_used": [
+        "entry_found",
+        "risk_decomposition_reference_found",
+        "full_reproduction_warning_found"
+      ],
+      "honest_verdict": null,
+      "path": "research-references.md",
+      "role": "halluguard_reference_entry",
+      "status": "read",
+      "summary": {
+        "entry_found": true,
+        "entry_line_count": 18,
+        "full_reproduction_warning_found": false,
+        "risk_decomposition_reference_found": true
+      }
+    },
+    {
+      "fields_used": [
+        "negative_boundaries_present",
+        "full_reproduction_claim_absent"
+      ],
+      "honest_verdict": null,
+      "path": "docs/research-notes/paper_v6_anchored_claim_matrix.md",
+      "role": "claim_boundary_matrix",
+      "status": "read",
+      "summary": {
+        "full_reproduction_claim_absent": true,
+        "negative_boundaries_present": true
+      }
+    },
+    {
+      "fields_used": [
+        "adversarial_wrong_answer",
+        "blocker",
+        "case_id",
+        "completion_tokens",
+        "correct",
+        "correctness_label",
+        "elapsed_seconds",
+        "error",
+        "expected_answer",
+        "family",
+        "format_label",
+        "format_valid",
+        "generation_source",
+        "gpu",
+        "hf_id",
+        "intended_correct",
+        "intended_format_valid",
+        "known_verifier_label",
+        "logits_available",
+        "logits_shape",
+        "logprob_error",
+        "model_family",
+        "model_name",
+        "model_path",
+        "prompt",
+        "response_text",
+        "response_text_available",
+        "superficial_baselines",
+        "token_logprobs",
+        "token_logprobs_available",
+        "token_texts",
+        "top_logprobs",
+        "topk_alternatives_available",
+        "topk_position_count"
+      ],
+      "honest_verdict": null,
+      "path": "results/live_sota_balanced_telemetry_manifest_1480.jsonl",
+      "role": "balanced_telemetry_jsonl_manifest",
+      "status": "read",
+      "summary": {
+        "fields_seen": [
+          "adversarial_wrong_answer",
+          "blocker",
+          "case_id",
+          "completion_tokens",
+          "correct",
+          "correctness_label",
+          "elapsed_seconds",
+          "error",
+          "expected_answer",
+          "family",
+          "format_label",
+          "format_valid",
+          "generation_source",
+          "gpu",
+          "hf_id",
+          "intended_correct",
+          "intended_format_valid",
+          "known_verifier_label",
+          "logits_available",
+          "logits_shape",
+          "logprob_error",
+          "model_family",
+          "model_name",
+          "model_path",
+          "prompt",
+          "response_text",
+          "response_text_available",
+          "superficial_baselines",
+          "token_logprobs",
+          "token_logprobs_available",
+          "token_texts",
+          "top_logprobs",
+          "topk_alternatives_available",
+          "topk_position_count"
+        ],
+        "format_valid_rows": 14,
+        "known_verifier_label_available": true,
+        "known_verifier_label_values": [
+          0,
+          1
+        ],
+        "row_count": 36,
+        "token_logprobs_available_rows": 36,
+        "topk_available_rows": 36
+      }
+    }
+  ],
+  "spec": [
+    "REQ-REPORT-051",
+    "SCENARIO-REPORT-051"
+  ],
+  "status": "complete"
+}

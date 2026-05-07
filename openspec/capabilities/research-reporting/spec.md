@@ -1630,6 +1630,62 @@ blocked reopen tracks, confirms `research-roadmap.yaml` and
 `scripts/research_conductor.py` were not modified, and writes an honest
 activation verdict.
 
+### REQ-REPORT-051: HalluGuard Risk-Bound Fit Audit
+
+The Exp 1483 HalluGuard risk-bound fit audit workflow shall write
+`results/experiment_1483_halluguard_risk_bound_fit_audit.json` with
+`status="in_progress"` before source-artifact loading. It shall then read the
+HalluGuard entry in `research-references.md`, the relevant `.113` and `.114`
+live telemetry artifacts, the BEAVER-lite deterministic-bound artifacts, and
+`docs/research-notes/paper_v6_anchored_claim_matrix.md` without modifying
+`scripts/research_conductor.py`.
+
+The workflow shall map Carnot's available evidence into a HalluGuard-style
+risk-bound fit audit by separating:
+
+- data-driven/evidence-availability risk fields, including live telemetry
+  availability, logits/top-k availability, known verifier labels, balanced
+  label counts, superficial-confound audit status, and missing-evidence
+  caveats; and
+- reasoning-driven/reasoning-step risk fields, including BEAVER-lite bound
+  soundness, unsafe-mass bounds, empirical violation rates, prefix-closed
+  constraint counts, and the limitation that the current artifacts do not
+  certify every reasoning step.
+
+The terminal artifact shall include:
+
+- `status`
+- `source_artifacts`
+- `risk_decomposition_complete`
+- `data_driven_fields_available`
+- `reasoning_driven_fields_available`
+- `implemented_assumptions`
+- `missing_assumptions`
+- `claim_allowed`
+- `audit_note_path`
+- `honest_verdict`
+
+`claim_allowed` shall be `false` for full HalluGuard reproduction unless every
+formal HalluGuard assumption, including the required NTK/certification
+conditions and full data-driven and reasoning-driven risk-bound checks, is
+implemented and checked locally. The workflow shall write
+`docs/research-notes/halluguard_carnot_risk_bound_fit.md` with implemented
+assumptions, missing assumptions, and allowed wording.
+
+### SCENARIO-REPORT-051: Exp 1483 Blocks Full HalluGuard Reproduction Claim
+
+Given Exp 1470 reports sound BEAVER-lite live-logprob bounds, Exp 1473 blocks
+telemetry headline claims under adversarial validity checks, Exp 1480 reports
+balanced live SOTA telemetry with logits/top-k availability and verifier
+labels, Exp 1482 reports calibrated live prefix bounds, and the HalluGuard
+reference entry warns not to claim full reproduction without NTK/certification
+assumptions, when Exp 1483 runs for run date `20260507`, then it writes all
+required REQ-REPORT-051 fields, completes the data-driven versus
+reasoning-driven decomposition, writes the audit note, records a non-empty
+`missing_assumptions` list, sets `claim_allowed == false`, and reports an
+honest verdict that Carnot has only a HalluGuard-style fit audit rather than a
+full HalluGuard reproduction.
+
 ### REQ-REPORT-024: Local Agent Usage Snapshot
 
 The repository shall provide a local operator workflow that inspects the
@@ -2215,6 +2271,7 @@ embed live-GPU benchmark results from Exp 328 when available.
 | REQ-REPORT-048 | `python/carnot/reporting/milestone_113_activation_manifest.py`, `results/experiment_1467_112_completion_archive_113_activation.json`, `ops/milestone_113_activation_manifest.md` | `tests/python/test_milestone_113_activation_manifest.py` | Implemented |
 | REQ-REPORT-049 | `python/carnot/reporting/milestone_retro_113.py`, `results/experiment_1478_milestone_113_retro.json` | `tests/python/test_milestone_retro_113.py` | Implemented |
 | REQ-REPORT-050 | `python/carnot/reporting/milestone_114_activation_manifest.py`, `results/experiment_1479_113_completion_archive_114_activation.json`, `ops/milestone_114_activation_manifest.md` | `tests/python/test_milestone_114_activation_manifest.py` | Implemented |
+| REQ-REPORT-051 | `python/carnot/reporting/halluguard_risk_bound_fit_audit.py`, `results/experiment_1483_halluguard_risk_bound_fit_audit.json`, `docs/research-notes/halluguard_carnot_risk_bound_fit.md` | `tests/python/test_halluguard_risk_bound_fit_audit.py` | Implemented |
 | REQ-REPORT-024 | `python/carnot/reporting/agent_usage.py`, `scripts/agent_plan_usage.py` | `tests/python/test_agent_plan_usage.py` | Implemented |
 | REQ-PUBLISH-003 | `scripts/experiment_317_hf_publish.py` | `tests/python/test_experiment_317_hf_publish.py` | Implemented |
 | REQ-PUBLISH-004 | `scripts/experiment_330_hf_live_publish.py` | `tests/python/test_experiment_330_hf_live_publish.py` | Implemented |
