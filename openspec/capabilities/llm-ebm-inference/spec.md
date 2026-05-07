@@ -400,6 +400,51 @@ downloading model files.
 **And** sets `local_sota_runtime_ready=false`
 **And** does not claim live SOTA model inference was used.
 
+### REQ-INFER-SOTA-008: Local SOTA GGUF Runtime Repair Artifact
+
+The system SHALL provide an Exp 1463 runtime-repair artifact for the mandated
+local SOTA GGUF path.  The repair SHALL write
+`results/experiment_1463_local_sota_gguf_runtime_repair.json` with
+`status="in_progress"` before runtime probes, SHALL reproduce the prior Exp
+1442 runtime gate verdict before applying any path repair, SHALL inspect CUDA
+runtime discovery evidence from `ldconfig`, `nvidia-smi`, Python package
+metadata, environment variables, and local library files, and SHALL attempt the
+minimum safe llama.cpp runtime-library path repair when the project-local venv
+contains CUDA runtime libraries that the dynamic loader cannot currently see.
+
+The artifact SHALL expose `status`, `model_specs`, `gpu_probe`,
+`libcudart_resolution_attempted`, `missing_cache_resolution_attempted`,
+`models_found_in_cache`, `models_missing_from_cache`,
+`smoke_inference_results`, `live_sota_model_inference_used`,
+`local_sota_runtime_ready`, `persistent_blockers`, and `honest_verdict`.
+`live_sota_model_inference_used` and `local_sota_runtime_ready` SHALL be true
+only when at least one mandated SOTA GGUF model produces a non-empty response
+from the local llama.cpp runtime.  Otherwise the artifact SHALL remain a
+complete terminal blocker with exact persistent blockers and SHALL NOT treat
+legacy small models as headline evidence.
+
+### SCENARIO-INFER-SOTA-008-001: Runtime Path Repair Enables Live SOTA
+
+**Given** at least one mandated SOTA GGUF model is present in local cache
+**And** the reproduced Exp 1442 probe failed because `libcudart.so.12` was not
+visible to the loader
+**When** Exp 1463 discovers project-local CUDA runtime libraries and reruns the
+probe with the repaired library path
+**Then** the artifact records the resolution attempt
+**And** records a smoke inference result with `truly_live=true`
+**And** sets `local_sota_runtime_ready=true` and
+`live_sota_model_inference_used=true`.
+
+### SCENARIO-INFER-SOTA-008-002: Persistent Blockers Stay Terminal
+
+**Given** the cache, CUDA runtime, or llama.cpp path cannot produce any usable
+mandated SOTA response
+**When** Exp 1463 completes
+**Then** the artifact records the exact cache or runtime blockers in
+`persistent_blockers`
+**And** sets `local_sota_runtime_ready=false`
+**And** does not claim live SOTA model inference was used.
+
 ## Implementation Status
 
 | Requirement | Python | Tests |
@@ -419,3 +464,4 @@ downloading model files.
 | REQ-INFER-SOTA-005 | Implemented | 4 Python |
 | REQ-INFER-SOTA-006 | Implemented | 12 Python |
 | REQ-INFER-SOTA-007 | Implemented | 18+ Python |
+| REQ-INFER-SOTA-008 | Implemented | 12 Python |
