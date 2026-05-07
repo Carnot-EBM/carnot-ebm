@@ -1,0 +1,60 @@
+{
+  "arbitrary_code_execution_path_introduced": false,
+  "blockers": [],
+  "gpu_probe": {
+    "gpu_count": 2,
+    "gpus": [
+      {
+        "memory_total": "24576 MiB",
+        "name": "NVIDIA GeForce RTX 3090"
+      },
+      {
+        "memory_total": "24576 MiB",
+        "name": "NVIDIA GeForce RTX 3090"
+      }
+    ],
+    "nvidia_smi_available": true
+  },
+  "honest_verdict": "complete: bounded safe-DSL validator compiler audit measured on live local SOTA GGUF skeleton rows",
+  "known_bad_reject_rate": 1.0,
+  "known_good_pass_rate": 1.0,
+  "live_sota_model_inference_used": true,
+  "manifest_rows": 30,
+  "manual_review_required_count": 19,
+  "model_attempts": [
+    {
+      "blocker": null,
+      "env_details": {
+        "candidate_library_dirs": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/nvidia/cuda_runtime/lib",
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/nvidia/cublas/lib"
+        ],
+        "ld_library_path_after": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/nvidia/cuda_runtime/lib:/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/nvidia/cublas/lib",
+        "ld_library_path_before": ""
+      },
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_name": "Qwen3.6-35B-A3B",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "model_used": true
+    }
+  ],
+  "model_specs": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "unsloth/gemma-4-31B-it-GGUF",
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "models_used": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF"
+  ],
+  "prompts_attempted": 30,
+  "run_date": "20260507",
+  "schema_version": 1,
+  "status": "complete",
+  "tests_run": [],
+  "validator_compile_rate": 0.933333,
+  "validator_compiler_ready": true,
+  "validator_manifest_path": "results/constrainprompt_validator_manifest_1494.jsonl",
+  "validator_skeletons_generated": 12,
+  "validators_compiled": 28,
+  "verifier_false_accept_rate": 0.0
+}
