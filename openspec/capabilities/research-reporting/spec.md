@@ -1818,6 +1818,86 @@ terminal artifacts exist, leaves `research-roadmap.yaml` and
 `scripts/research_conductor.py` unchanged, and writes an honest retrospective
 verdict with an accepted success prefix.
 
+### REQ-REPORT-054: Milestone .116 Activation Manifest
+
+The Exp 1506 `.116` activation workflow shall write
+`results/experiment_1506_115_completion_archive_116_activation.json` with
+`status="in_progress"` before terminal completion. It shall then read
+`results/experiment_1505_milestone_115_retro.json`, the Exp 1492 through
+Exp 1505 entries in `ops/conductor-log.md`, `research-complete.yaml`,
+`ops/status.md`, `ops/changelog.md`, `research-roadmap.yaml`,
+`openspec/change-proposals/research-roadmap-vNEXT.md`,
+`research-hardware-wishlist.md`, `_bmad/architecture.md`, and the Exp 1502 and
+Exp 1504 result artifacts without modifying `scripts/research_conductor.py` or
+`research-roadmap.yaml`.
+
+The workflow shall write `ops/milestone_116_activation_manifest.md` with the
+allowed `.116` tracks:
+
+- safe-DSL verifier induction
+- trigger+grammar certificate decoding
+- executable monitor runtime
+- plan-graph structural contracts
+- product-line solver oracle
+- FR-11 verifier-feedback replay
+- trace2skill portable pack
+- THRML SamplerBackend conformance
+- KAN shape normalization
+- KV260 source-level RTL properties
+
+The manifest shall explicitly preserve the blocks on Semantic Energy/logit
+telemetry headline claims, V_1 pairwise headline claims, decoded-quality claims
+from injected-failure localization, arbitrary generated-Python verifier trust,
+TSU hardware claims, KV260 board claims, synthesis claims, and legacy
+small-model headline results. The terminal artifact shall include:
+
+- `status`
+- `milestone`
+- `predecessor_milestone`
+- `predecessor_criteria_met`
+- `predecessor_criteria_total`
+- `activation_manifest_complete`
+- `prior_trigger_certificates_ready`
+- `prior_validator_compiler_ready`
+- `prior_monitor_replay_ready`
+- `prior_fr11_daily_eval_ready`
+- `prior_thrml_parity_ready`
+- `prior_kan_shape_blocker_recorded`
+- `prior_kv260_source_track_active`
+- `mandated_sota_models`
+- `continuous_self_learning_required`
+- `retired_headline_signals`
+- `allowed_116_tracks`
+- `gated_116_tracks`
+- `research_complete_has_115_entry`
+- `honest_verdict`
+
+`prior_thrml_parity_ready` shall be true only when Exp 1504 reports simulator
+parity passed without a hardware claim. `prior_kan_shape_blocker_recorded`
+shall be true only when Exp 1502 records the KAN/KAEM proxy shape-normalization
+carry-forward. `prior_kv260_source_track_active` shall be true only when the
+hardware wishlist or architecture record KV260 source-level RTL/lint/simulation
+work as active while deferring board, bitfile, and latency claims. The final
+verdict shall use a conductor-accepted success prefix and shall be complete
+only when Exp 1505 reports 12 of 12 criteria met, `research-complete.yaml`
+contains a `2026.04.115` archive row, all prior-readiness booleans above are
+recorded honestly, the `.116` activation markdown is written, and no forbidden
+file modification is reported.
+
+### SCENARIO-REPORT-054: Exp 1506 Activates .116 With .115 Evidence Archived
+
+Given Exp 1505 reports `.115` as 12 of 12 criteria met, `research-complete.yaml`
+contains a `2026.04.115` archive row, Exp 1504 reports simulator-only THRML
+parity with no hardware claim, Exp 1502 records the KAN shape-normalization
+carry-forward blocker, and the hardware wishlist or architecture keeps KV260
+source-level RTL/lint/simulation work active while deferring board claims, when
+Exp 1506 runs for run date `20260507`, then it writes all required
+REQ-REPORT-054 fields, writes the `.116` activation markdown, lists only the
+allowed `.116` tracks, records the structured gates for downstream `.116`
+tasks, confirms `research-roadmap.yaml` and `scripts/research_conductor.py`
+were not modified, and writes an honest activation verdict with an accepted
+success prefix.
+
 ### REQ-REPORT-024: Local Agent Usage Snapshot
 
 The repository shall provide a local operator workflow that inspects the
@@ -2406,6 +2486,7 @@ embed live-GPU benchmark results from Exp 328 when available.
 | REQ-REPORT-051 | `python/carnot/reporting/halluguard_risk_bound_fit_audit.py`, `results/experiment_1483_halluguard_risk_bound_fit_audit.json`, `docs/research-notes/halluguard_carnot_risk_bound_fit.md` | `tests/python/test_halluguard_risk_bound_fit_audit.py` | Implemented |
 | REQ-REPORT-052 | `python/carnot/reporting/milestone_115_activation_manifest.py`, `results/experiment_1492_114_completion_archive_115_activation.json`, `ops/milestone_115_activation_manifest.md` | `tests/python/test_milestone_115_activation_manifest.py` | Implemented |
 | REQ-REPORT-053 | `python/carnot/reporting/milestone_retro_115.py`, `results/experiment_1505_milestone_115_retro.json`, `research-complete.yaml` | `tests/python/test_milestone_retro_115.py` | Implemented |
+| REQ-REPORT-054 | `python/carnot/reporting/milestone_116_activation_manifest.py`, `results/experiment_1506_115_completion_archive_116_activation.json`, `ops/milestone_116_activation_manifest.md` | `tests/python/test_milestone_116_activation_manifest.py` | Implemented |
 | REQ-REPORT-024 | `python/carnot/reporting/agent_usage.py`, `scripts/agent_plan_usage.py` | `tests/python/test_agent_plan_usage.py` | Implemented |
 | REQ-PUBLISH-003 | `scripts/experiment_317_hf_publish.py` | `tests/python/test_experiment_317_hf_publish.py` | Implemented |
 | REQ-PUBLISH-004 | `scripts/experiment_330_hf_live_publish.py` | `tests/python/test_experiment_330_hf_live_publish.py` | Implemented |
