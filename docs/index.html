@@ -300,10 +300,10 @@
       <a href="technical-report.html" class="btn btn-secondary">How it works</a>
     </div>
     <div class="stats-bar" aria-label="Project headline numbers">
-      <div class="stat"><div class="stat-num">1,548</div><div class="stat-label">Experiments tracked through Exp 1438</div></div>
-      <div class="stat"><div class="stat-num">120</div><div class="stat-label">archived milestone records through .109</div></div>
-      <div class="stat"><div class="stat-num">22,405</div><div class="stat-label">Python items collected, not full pass</div></div>
-      <div class="stat"><div class="stat-num">12/14</div><div class="stat-label">latest .110 criteria met</div></div>
+      <div class="stat"><div class="stat-num">1,562</div><div class="stat-label">Experiments tracked through Exp 1452</div></div>
+      <div class="stat"><div class="stat-num">122</div><div class="stat-label">archived milestone records through .110</div></div>
+      <div class="stat"><div class="stat-num">22,491</div><div class="stat-label">Python items collected, not full pass</div></div>
+      <div class="stat"><div class="stat-num">10/14</div><div class="stat-label">latest .111 criteria met</div></div>
     </div>
   </div>
 </section>
@@ -517,7 +517,17 @@
           (Exp 1434), DPO remains reranker-only until a direct GGUF adapter path
           exists (Exp 1435), anchored dual-path latent repair preserved accuracy
           1.0 to 1.0 where raw descent fell to 0.25 (Exp 1436), and Discrete SB
-          lint/sim was blocked on a missing RTL source (Exp 1437).
+          lint/sim was blocked on a missing RTL source (Exp 1437). Milestone
+          .111 met 10/14 criteria and did not clear the threshold: the live
+          SOTA runtime preflight found cached Qwen3.6-35B and Gemma4-31B GGUF
+          files and idle RTX 3090s, but llama.cpp could not load
+          libcudart.so.12, so repair v3, the energy reranker, and 100-case
+          pre-scale stayed gated. The non-runtime tracks advanced: spec
+          coverage debt fell 71 to 0, Discrete SB RTL source plus lint/sim
+          completed with no hardware claim, FR-11 v7 grew fresh-verified cases
+          from 1,508 to 1,664 with non-forgetting 1.0, PRM v3 showed 0.0pp
+          selector lift on a saturated prototype pool, LTLZinc generated 24
+          finite-trace cases, and EBT/NRGPT remained smoke-only.
         </p>
       </div>
       <div class="bento-card span-2">
@@ -534,7 +544,7 @@
           cluster with 100% line coverage on the touched store module, while
           preserving the full-suite debt disclosure: the collection is clean,
           but the full Python suite remains red on pre-existing failures. The
-          current collection-only snapshot reports 22,405 Python items.
+          current collection-only snapshot reports 22,491 Python items.
         </p>
       </div>
       <div class="bento-card span-2">
@@ -909,9 +919,9 @@
       </div>
       <div class="r-card">
         <span class="r-tag">Infrastructure &mdash; pre-test suite rescue</span>
-        <h3 class="r-title">22,405 Python test items collected, not passed</h3>
+        <h3 class="r-title">22,491 Python test items collected, not passed</h3>
         <div class="r-meter"><div class="r-bar" style="width: 100%; background: #22c55e;"></div></div>
-        <div class="r-stats"><span class="r-before">Collection count only; full suite still has pre-existing execution debt</span> <span class="r-after">2026-05-06 collection-only run</span></div>
+        <div class="r-stats"><span class="r-before">Collection count only; full suite still has pre-existing execution debt</span> <span class="r-after">2026-05-07 collection-only run</span></div>
       </div>
       <div class="r-card">
         <span class="r-tag">Runtime &mdash; llama.cpp GPU offload</span>
@@ -1154,10 +1164,22 @@
         <div class="r-stats"><span class="r-before">35 promoted, 37 demoted; replay-only, not headline DVI/GRPO</span> <span class="r-after">Exp 1344</span></div>
       </div>
       <div class="r-card">
-        <span class="r-tag">Milestone .110 &mdash; latest terminal retro</span>
-        <h3 class="r-title">12/14 criteria met</h3>
-        <div class="r-meter"><div class="r-bar" style="width: 85.71%; background: #22c55e;"></div></div>
-        <div class="r-stats"><span class="r-before">Repair v2, DVI, PRM, DPO audit, and anchored latent repair advanced</span> <span class="r-after">Exp 1438</span></div>
+        <span class="r-tag">Milestone .111 &mdash; latest terminal retro</span>
+        <h3 class="r-title">10/14 criteria met; threshold not met</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 71.43%; background: #f59e0b;"></div></div>
+        <div class="r-stats"><span class="r-before">Live-SOTA runtime gate blocked repair v3, reranker, and 100-case pre-scale</span> <span class="r-after">Exp 1452</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Runtime &mdash; live SOTA GGUF preflight</span>
+        <h3 class="r-title">Blocked: no completed live inference</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 0%; background: #ef4444;"></div></div>
+        <div class="r-stats"><span class="r-before">Qwen3.6-35B + Gemma4-31B cached, GPUs idle; llama.cpp missing libcudart.so.12</span> <span class="r-after">Exp 1442</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Spec coverage &mdash; traceability metadata</span>
+        <h3 class="r-title">Debt 71 &rarr; 0</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 100%; background: #22c55e;"></div></div>
+        <div class="r-stats"><span class="r-before">Focused checks passed; full suite still red outside this fix</span> <span class="r-after">Exp 1440</span></div>
       </div>
       <div class="r-card">
         <span class="r-tag">DVI + calibration &mdash; v2 + SECL</span>
@@ -1166,10 +1188,10 @@
         <div class="r-stats"><span class="r-before">0.394526 &rarr; 0.405984 AUROC; 0.561624 &rarr; 0.306922 ECE</span> <span class="r-after">Exp 1394</span></div>
       </div>
       <div class="r-card">
-        <span class="r-tag">Self-learning &mdash; FR-11 v5</span>
-        <h3 class="r-title">1,508 fresh-verified cases</h3>
+        <span class="r-tag">Self-learning &mdash; FR-11 v7</span>
+        <h3 class="r-title">1,508 &rarr; 1,664 fresh-verified cases</h3>
         <div class="r-meter"><div class="r-bar" style="width: 100%; background: #22c55e;"></div></div>
-        <div class="r-stats"><span class="r-before">Delta +1,449 vs Exp 1388; GRPO cases integrated 0</span> <span class="r-after">Exp 1395</span></div>
+        <div class="r-stats"><span class="r-before">156 new promotions; non-forgetting 1.0; no fresh live-SOTA inference</span> <span class="r-after">Exp 1447</span></div>
       </div>
       <div class="r-card">
         <span class="r-tag">Pipeline v4 &mdash; gated 50-case micro-run</span>
@@ -1203,9 +1225,21 @@
       </div>
       <div class="r-card">
         <span class="r-tag">Hardware &mdash; Discrete SB RTL</span>
-        <h3 class="r-title">Lint/sim blocked by missing RTL source</h3>
-        <div class="r-meter"><div class="r-bar" style="width: 0%; background: #ef4444;"></div></div>
-        <div class="r-stats"><span class="r-before">Spec exists, but hardware/kv260/discrete_sb_256.v is absent; no hardware claim</span> <span class="r-after">Exp 1437</span></div>
+        <h3 class="r-title">Source, lint, and simulation complete</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 100%; background: #0ea5e9;"></div></div>
+        <div class="r-stats"><span class="r-before">discrete_sb_256.v + testbench; Verilator and Icarus pass; no board claim</span> <span class="r-after">Exps 1441/1451</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Process reward model &mdash; PRM v3</span>
+        <h3 class="r-title">Selector lift 0.0pp on saturated pool</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 50%; background: #f59e0b;"></div></div>
+        <div class="r-stats"><span class="r-before">Selector AUROC 1.0, selected success 1.0, but raw best-of-N was already 1.0</span> <span class="r-after">Exp 1448</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Temporal constraints &mdash; LTLZinc adapter</span>
+        <h3 class="r-title">24 finite-trace cases generated</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 50%; background: #0ea5e9;"></div></div>
+        <div class="r-stats"><span class="r-before">12 accepted, 12 rejected; no MiniZinc execution or DVI training claim</span> <span class="r-after">Exp 1449</span></div>
       </div>
       <div class="r-card">
         <span class="r-tag">Public APIs &mdash; verdict, memory, stream</span>
