@@ -1,0 +1,63 @@
+{
+  "benchmark_family": "BEAVER-style deterministic bounds",
+  "bound_is_sound": true,
+  "broad_benchmark_deferred": true,
+  "empirical_violation_rates": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "experiment": "1470_beaver_lite_deterministic_bound_smoke",
+  "external_fit_verdict": "adopted_minimal_beaver_smoke_fit",
+  "honest_verdict": "sound_bound_live_exp1468",
+  "mock_or_live_logprobs": "live_exp1468",
+  "model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+  "n_completions": [
+    1,
+    1,
+    1
+  ],
+  "prefix_closed_constraint": [
+    {
+      "constraint_id": "toy_1_terminal_final_integer_0_to_9999",
+      "description": "terminal response text must end with an integer in the inclusive range [0, 9999]",
+      "expected_answer": "3",
+      "prefix_closed": true,
+      "source_case_id": "fover_gsm8k_verified_001",
+      "terminal_only": true
+    },
+    {
+      "constraint_id": "toy_2_terminal_final_integer_0_to_9999",
+      "description": "terminal response text must end with an integer in the inclusive range [0, 9999]",
+      "expected_answer": "11",
+      "prefix_closed": true,
+      "source_case_id": "fover_gsm8k_verified_002",
+      "terminal_only": true
+    },
+    {
+      "constraint_id": "toy_3_terminal_final_integer_0_to_9999",
+      "description": "terminal response text must end with an integer in the inclusive range [0, 9999]",
+      "expected_answer": "12",
+      "prefix_closed": true,
+      "source_case_id": "fover_gsm8k_verified_003",
+      "terminal_only": true
+    }
+  ],
+  "questions_evaluated": [
+    "Mia has 1 marble and gets 2 more. Answer with the final integer only.",
+    "A bus has 9 riders. 4 get off and 6 get on. Answer with the final integer only.",
+    "Noah buys 3 packs with 4 pencils each. Answer with the final integer only."
+  ],
+  "run_date": "20260507",
+  "schema": "beaver_lite_deterministic_bound_smoke_v1",
+  "spec": [
+    "REQ-VERIFY-1470",
+    "SCENARIO-VERIFY-1470"
+  ],
+  "status": "complete",
+  "unsafe_mass_bounds": [
+    0.0,
+    0.0,
+    0.0
+  ]
+}

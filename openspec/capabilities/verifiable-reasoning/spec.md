@@ -16576,6 +16576,52 @@ fallback logprobs were used
 
 **Spec traces:** REQ-VERIFY-1170, Exp 1170
 
+## REQ-VERIFY-1470: BEAVER-Lite Deterministic-Bound Smoke
+
+Carnot SHALL provide a narrow BEAVER-style deterministic-bound smoke that reuses
+the existing BEAVER-lite bounder over exactly three prefix-closed arithmetic or
+code-answer constraints without implementing VNN-COMP, VNNLIB, or a broad
+external verifier runner.
+
+- REQ-VERIFY-1470-1: The smoke SHALL write
+  `results/experiment_1470_beaver_lite_deterministic_bound_smoke.json` with
+  `status="in_progress"` before evaluating inputs, and then a terminal
+  `status="complete"` artifact after all checks pass.
+- REQ-VERIFY-1470-2: The smoke SHALL evaluate exactly three deterministic toy
+  constraints through `BEAVERLiteBounder.bound_prefix_violation()` and SHALL
+  record `questions_evaluated`, `prefix_closed_constraint`,
+  `unsafe_mass_bounds`, and `empirical_violation_rates`.
+- REQ-VERIFY-1470-3: For every evaluated constraint, the smoke SHALL assert the
+  unsafe mass bound is in [0, 1] and is not below the empirical violation rate
+  measured on the same top-K setup.
+- REQ-VERIFY-1470-4: When compatible Exp 1468 telemetry exists from a mandated
+  SOTA GGUF model with token logprobs, the smoke MAY reuse those existing live
+  logprob rows without fresh LLM generation and SHALL label
+  `mock_or_live_logprobs="live_exp1468"`; otherwise it SHALL use deterministic
+  mock logprobs and label `mock_or_live_logprobs="mock_logprobs"`.
+- REQ-VERIFY-1470-5: The terminal artifact SHALL include `status`,
+  `benchmark_family`, `questions_evaluated`, `prefix_closed_constraint`,
+  `unsafe_mass_bounds`, `empirical_violation_rates`, `bound_is_sound`,
+  `mock_or_live_logprobs`, `external_fit_verdict`,
+  `broad_benchmark_deferred`, and `honest_verdict`.
+
+**Implementation Status:** Proposed (Exp 1470)
+
+### SCENARIO-VERIFY-1470: Three-Question BEAVER-Lite Smoke Is Sound
+
+**Given** Exp 1465 adopted only one minimal BEAVER-style deterministic-bound
+smoke
+**When** the Exp 1470 smoke runs on three deterministic toy constraints
+**Then** it writes the required terminal artifact fields
+**And** every unsafe mass bound is within [0, 1]
+**And** every unsafe mass bound is greater than or equal to its empirical
+violation rate
+**And** the artifact clearly labels whether Exp 1468 live logprobs or mock
+logprobs were used
+**And** `broad_benchmark_deferred=true`.
+
+**Spec traces:** REQ-VERIFY-1470, Exp 1470
+
 ## REQ-VERIFY-1144: CCTU Micro-Benchmark Adapter
 
 Carnot SHALL provide a 25-task CCTU-style micro-benchmark adapter for
