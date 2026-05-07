@@ -4,6 +4,137 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-05-07 Post-.112 Planning Sweep (Milestone 2026.04.113)
+
+This sweep was run after milestone `.112` completed all 14 criteria. Key
+outcomes: the scope-reduction directive was satisfied, `research-roadmap.yaml`
+was not touched during `.112`, the local SOTA GGUF runtime was repaired
+(`exp1463.local_sota_runtime_ready=true`, `live_sota_model_inference_used=true`),
+the validation-error-as-context repair salvage path failed to improve
+(`exp1464.acceptance_delta_pp=0.0`) and was retired, the self-learning line
+was narrowed to one `exp1447`-style verified-memory-growth pivot (`exp1459`),
+the active hardware portfolio was narrowed to three tracks (`exp1460`), paper-v6
+was narrowed to four artifact-backed claims (`exp1462`), and the external
+benchmark lane adopted exactly one BEAVER-style deterministic-bound smoke task
+(`exp1465`). Primary `.113` focus: use the repaired local SOTA runtime for
+measurement-only verifier telemetry and a small external-bound smoke, execute
+the one allowed self-learning pivot, preserve the narrowed hardware portfolio,
+and avoid retired GRPO, WOPR, HardNet++/DSP, and repair-executor branches.
+
+### HALT Logprob Time-Series Hallucination Detection
+- **Paper:** arXiv:2602.02888, "HALT: Hallucination Assessment via Log-probs
+  as Time series."
+- **Sources:** https://arxiv.org/abs/2602.02888,
+  https://huggingface.co/papers/2602.02888
+- **What:** Uses top-k output log-probabilities as a time series, with a compact
+  recurrent detector plus entropy-derived features. The paper reports a much
+  smaller/faster detector than encoder baselines and introduces the HUB
+  multi-capability hallucination benchmark.
+- **Relevance to Carnot:** `exp1463` restored live local GGUF inference, but the
+  next credible step is telemetry, not another repair loop. HALT is a natural
+  CPU-side diagnostic if the llama.cpp path can emit per-token top-k logprobs
+  for the mandated SOTA GGUFs.
+- **Concrete experiment hook:** Run a bounded live SOTA telemetry task that
+  records whether top-k logprobs are available and computes HALT-style summary
+  features on a small verified FoVer/GSM8K slice. Do not train a large detector
+  unless the logprob capture path is proven.
+
+### Online Learnability of Chain-of-Thought Verifiers
+- **Paper:** arXiv:2603.03538, "Online Learnability of Chain-of-Thought
+  Verifiers: Soundness and Completeness Trade-offs."
+- **Source:** https://arxiv.org/abs/2603.03538
+- **What:** Formalizes online learning for step-level CoT verifiers under
+  generator-verifier distribution shift, with asymmetric soundness and
+  completeness mistakes and optimal Pareto-frontier algorithms.
+- **Relevance to Carnot:** `exp1459` permits exactly one self-learning follow-up.
+  This paper gives the right acceptance language: prioritize soundness mistakes
+  more heavily than completeness mistakes when a learned verifier feeds future
+  generation or memory promotion.
+- **Concrete experiment hook:** The `.113` self-learning pivot should report
+  `soundness_mistakes`, `completeness_mistakes`, `nonforgetting_rate`, and a
+  simple asymmetric-cost score rather than only aggregate growth.
+
+### T-SKM-Net for Linear Constraint Projection
+- **Paper:** arXiv:2512.10461, "T-SKM-Net: Trainable Neural Network Framework
+  for Linear Constraint Satisfaction via Sampling Kaczmarz-Motzkin Method."
+- **Source:** https://arxiv.org/abs/2512.10461
+- **What:** Integrates randomized Sampling Kaczmarz-Motzkin iterations into a
+  trainable neural framework for equality/inequality constraint satisfaction,
+  including null-space transforms, unbiased gradient estimators, and a reported
+  zero-violation post-processing mode on DCOPF.
+- **Relevance to Carnot:** This is a better fit than reviving HardNet++/DSP:
+  it can be tested as a small verifier-side projection baseline for linear
+  certificate constraints without expanding the retired repair-stack lineage.
+- **Concrete experiment hook:** Add one CPU-only projection smoke comparing
+  Carnot's existing Z3/Ising linear checks to an SKM-style iterative projection
+  on toy arithmetic/certificate inequalities. Acceptance should be zero
+  violations and deterministic artifact fields, not a new neural training line.
+
+### Neural Ising Machines with Learned Update Rules
+- **Paper:** arXiv:2602.00302, "Neural Ising Machines via Unrolling and
+  Zeroth-Order Training."
+- **Source:** https://arxiv.org/abs/2602.00302
+- **What:** Learns compact node-wise Ising update dynamics through zeroth-order
+  optimization, recovering schedule/momentum-like behavior without unstable
+  backpropagation through long recurrent dynamics.
+- **Relevance to Carnot:** Fits the active KV260/THRML simulator tracks as a
+  sampler-policy idea, not as board-execution evidence. It may improve CPU/THRML
+  simulation quality while preserving the no-hardware-claim boundary from
+  `exp1460`.
+- **Concrete experiment hook:** Run a tiny NPIM-style schedule-policy probe only
+  in simulation, against existing Ising/Discrete SB cases, and report
+  time-to-energy and sample-quality deltas. Do not claim FPGA or TSU execution.
+
+### STATIC Vectorized Constraint Automata
+- **Paper:** arXiv:2602.22647, "Vectorizing the Trie: Efficient Constrained
+  Decoding for LLM-based Generative Retrieval on Accelerators."
+- **Sources:** https://arxiv.org/abs/2602.22647,
+  https://github.com/youtube/static-constraint-decoding
+- **What:** Flattens trie constraints into CSR sparse-matrix transitions,
+  enabling accelerator-friendly strictly constrained decoding with very low
+  per-step overhead in an industrial generative-retrieval setting.
+- **Relevance to Carnot:** Useful for the next generation of schema/certificate
+  constrained generation, but `.112` retired the repair-executor branch. The
+  safe use is a small automaton-latency smoke for certificate grammar checking,
+  not a new repair loop.
+- **Concrete experiment hook:** Benchmark a static CSR automaton over a tiny
+  Carnot certificate schema and compare to the existing Python trie/regex path.
+  Report latency and exact-acceptance equivalence only.
+
+### BEAVER Deterministic Bounds and External Verification
+- **Paper:** BEAVER, OpenReview ICLR 2026 VerifAI-2 and arXiv:2512.05439.
+- **Sources:** https://openreview.net/forum?id=xO3efBXHM9,
+  https://arxiv.org/abs/2512.05439,
+  https://huggingface.co/papers/2512.05439
+- **What:** Computes sound probability bounds for prefix-closed semantic
+  constraints using token-trie/frontier exploration, with tighter bounds and
+  better high-risk-instance discovery than loose sampling baselines.
+- **Relevance to Carnot:** `exp1465` already selected a BEAVER-style smoke as
+  the only external benchmark follow-up. This should be the first `.113`
+  verifier comparison before any VNN-COMP or broad benchmark runner.
+- **Concrete experiment hook:** Run the adopted BEAVER-lite deterministic-bound
+  smoke over three arithmetic/code-style constraints using local SOTA logprobs
+  when available, otherwise label the path `mock_logprobs` explicitly.
+
+### Extropic/THRML and Kona Source Check
+- **Sources checked:** Extropic software/THRML docs
+  (https://extropic.ai/software, https://docs.thrml.ai/), Extropic writing,
+  Logical Intelligence Kona pages
+  (https://logicalintelligence.com/kona-ebms-energy-based-models,
+  https://logicalintelligence.com/blog/energy-based-models-for-reasoning),
+  OpenReview EBT ICLR 2026 Oral, Semantic Scholar-style citation searches for
+  EBT (`arXiv:2507.02092`) and ARM-as-EBM (`arXiv:2512.15605`), HuggingFace
+  papers, and GitHub project signals including `alexiglad/EBT`,
+  `eth-sri/constrained-diffusion`, and `youtube/static-constraint-decoding`.
+- **What changed:** THRML remains the public software surface for TSU-style PGM
+  simulation; Extropic still describes Z1/XTR-0 as future hardware targets.
+  Kona continues to frame the commercial differentiator as globally scored,
+  partial-trace energy with failure localization. No public source provides
+  Carnot with authenticated TSU hardware evidence, Kona internals, or a reason
+  to reopen deferred hardware tracks.
+- **Concrete experiment hook:** Keep THRML as simulation/parity only in `.113`,
+  and cite Kona as a comparator boundary in docs, not as a dependency.
+
 ## 2026-05-07 Post-.111 Planning Sweep (Milestone 2026.04.112)
 
 This sweep was run after milestone `.111` completed below threshold with 10 of
