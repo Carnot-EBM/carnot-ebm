@@ -17,10 +17,10 @@ call. No fine-tuning. No access to model weights.
 
 Rust + Python/JAX, Apache 2.0, `pip install carnot`.
 
-Current public research record: **1,615 experiments tracked across 126
+Current public research record: **1,642 experiments tracked across 128
 artifact-backed completed milestone records**, all archived in
-`research-complete.yaml` through 2026.04.114, with checked-in result artifacts
-through Exp 1491 on 2026-05-07.
+`research-complete.yaml` through 2026.04.115, with checked-in result artifacts
+through Exp 1505 on 2026-05-07.
 
 Milestone .106 delivered the critical fix to thinking-mode certificate
 generation: Exp 1366 (CRANE tag-first prefix injection) reached
@@ -113,9 +113,19 @@ mistakes, CCTU executable constraints produced a **20**-case live benchmark,
 V_1 pairwise self-verification underperformed executable energy ranking
 (**0.05** vs **1.0** accuracy), THRML/Carnot simulator parity was skipped until
 THRML imports cleanly, and partial-trace localization hit top-1 **1.0** on
-**9** injected failures without a decoded-quality or Kona-internals claim. The
-current test collection reports **22,656** items; this is a collection count,
-not a full-suite pass claim.
+**9** injected failures without a decoded-quality or Kona-internals claim.
+Milestone .115 completed **12 of 12** criteria: trigger-token certificate export
+measured parse **0.30** and validation **0.10** with false-accept rate **0.0**,
+ConstrainPrompt-style safe-DSL validator compilation reached **0.933333** with
+good-pass and bad-reject rates **1.0**, interwhen monitoring emitted **40**
+events with **0** false interruptions, HoVer safe-prefix continuation improved
+validator pass rate **0.0 -> 0.666667**, FR-11 trace2skill evaluated **24**
+skills with **12** promotions and **0** soundness mistakes, deterministic
+plan-graph energy localized injected graph faults at node/edge top-1 **1.0**,
+KAN hardware accounting stayed no-synthesis/no-board-claim, and THRML import
+readiness plus simulator-only parity passed **2/2** checks with no hardware
+claim. The current test collection reports **23,095** items; this is a
+collection count, not a full-suite pass claim.
 
 ## Install and run
 
@@ -365,7 +375,13 @@ experiment artifact under `results/`.
 | V_1 pairwise self-verification audit | Pairwise accuracy **0.05** vs executable energy ranking **1.0** and superficial baselines **1.0**; promotion path not allowed | Exp 1487 |
 | THRML and partial-trace boundaries | THRML import preflight failed cleanly (`ModuleNotFoundError: thrml`), gating parity; partial-trace localization top-1 **1.0** on **9** injected failures with no decoded-quality claim | Exps 1488/1490 |
 | Milestone .114 status | **12/13 criteria met** with **1** honest THRML gate skip; Semantic Energy/logit telemetry retired as headline evidence, BEAVER/FR-11/CCTU/localization carry forward under narrow claim boundaries | Exp 1491 |
-| Current Python test collection | **22,656** Python tests collected; collection-only snapshot, not a full-suite pass claim | 2026-05-07 collection run |
+| Trigger-token certificates + safe validator compiler | Trigger-token export: parse **0.30**, validation **0.10**, false-accept **0.0**; safe-DSL validators compile at **0.933333** with known-good pass and known-bad reject rates **1.0** | Exps 1493/1494 |
+| interwhen monitor + HoVer safe-prefix continuation | **40** monitor events, **38** errors detected, **0** false interruptions; safe-prefix continuation improves validator pass rate **0.0 -> 0.666667** with false-accept **0.0** | Exps 1495/1496 |
+| FR-11 trace2skill daily evaluation | **24** skills evaluated, **12** promoted, **0** retired/rotted, **0** soundness mistakes; reachability audit finds **0** unreachable artifacts | Exps 1497/1498 |
+| Verifier discipline + plan-graph energy | DRY/orthogonality audit reports **k_effective=3.00** and keeps Semantic Energy/V_1 headline signals retired; deterministic plan-graph energy reaches node and edge top-1 **1.0** on **60** injected graph faults | Exps 1499-1501 |
+| KAN accounting + THRML simulator-only parity | KAN accounting records LUT proxies **27,822** naive / **6,298** QuantKAN-like / **240** KAEM with no synthesis or board claim; THRML 0.1.3 imports and simulator parity passes **2/2** checks, no hardware claim | Exps 1502-1504 |
+| Milestone .115 status | **12/12 criteria met**; trigger certificates, validator compiler, monitors, FR-11 hygiene, verifier discipline, plan-graph energy, KAN accounting, and THRML simulator parity archived with claim boundaries preserved | Exp 1505 |
+| Current Python test collection | **23,095** Python tests collected; collection-only snapshot, not a full-suite pass claim | 2026-05-07 collection run |
 | Local Claude/Codex usage snapshot | Codex reads the newest local `token_count` event; Claude aggregates local token usage and reads only subscription/tier metadata from credentials; free-form quota prose is ignored instead of guessed; focused regression tests pass | 2026-05-04 changelog |
 
 Deeper analysis of these — including everything that **didn't** work and
@@ -407,7 +423,7 @@ claim we publish.
 ## Where to go next
 
 - **[Technical report](docs/technical-report.md)** — the full research arc
-  through Exp 1491 across 126 completed milestone records, with a
+  through Exp 1505 across 128 completed milestone records, with a
   plain-English timeline of what we tried, what failed, what stuck.
 - **[Roadmap](docs/roadmap.md)** — current milestone, upcoming milestones,
   hardware track, and Phase 3 (Kona-parity foundation-model) direction.
@@ -611,7 +627,7 @@ See the [technical report](docs/technical-report.md) for the full research recor
 
 ## 14 Principles Learned
 
-Hard-won lessons from the activation-based phase of a research program that now spans 1,615 tracked experiments through Exp 1491 across 126 completed milestone records and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
+Hard-won lessons from the activation-based phase of a research program that now spans 1,642 tracked experiments through Exp 1505 across 128 completed milestone records and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
 
 ### What works
 1. **The model's own logprobs are the best energy.** No external EBM needed for rejection sampling — the LLM's own confidence is already an energy function. Simple, practical, +10%.
