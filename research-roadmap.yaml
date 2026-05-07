@@ -1,672 +1,84 @@
-milestone: 2026.04.112
-milestone_title: "Scope Reduction + Local SOTA Runtime Repair + Gated Repair Salvage"
+milestone: 2026.04.113
+milestone_title: "Live SOTA Verifier Telemetry + BEAVER Bounds + Self-Learning Pivot"
 milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
-scope_reduction_compliance:
-  directive_source: ops/known-issues.md
-  required_min_scope_reduction_tasks: 8
-  planned_scope_reduction_tasks: 10
-  satisfied: true
-  task_ids:
-    - exp1453-112-scope-reduction-activation-manifest
-    - exp1454-experiment-artifact-signal-noise-classifier
-    - exp1455-known-issues-mandatory-priority-audit
-    - exp1456-grpo-vprm-lineage-consolidation-retirement
-    - exp1457-wopr-puzzle-cartridge-retirement
-    - exp1458-hardnet-dsp-repair-stack-consolidation
-    - exp1459-self-learning-nonheadline-lineage-decision
-    - exp1460-hardware-portfolio-narrowing
-    - exp1461-comparator-integration-cite-retire-audit
-    - exp1462-paper-v6-anchored-claims-narrowing
 tasks:
 
 # ============================================================
-# Phase 0 - Scope-reduction activation
+# Phase 0 - Handoff and activation
 # ============================================================
 
-- id: exp1453-112-scope-reduction-activation-manifest
-  milestone: 2026.04.112
-  deliverable: results/experiment_1453_112_scope_reduction_activation_manifest.json
-  title: ".112 Scope-Reduction Activation Manifest — Convert .111 Retro + Known-Issues Directive into Execution Rules"
+- id: exp1467-112-completion-archive-113-activation
+  milestone: 2026.04.113
+  deliverable: results/experiment_1467_112_completion_archive_113_activation.json
+  title: ".112 Completion Archive + .113 Activation Manifest"
   agent_type: codex
   model: gpt-5.5
   max_turns: 20
-  estimated_wall_time_min: 20
+  estimated_wall_time_min: 25
   priority: critical
   requires_gpu: false
   skip_pre_test: true
-  scope_reduction_task: true
   prior_failures:
-    - experiment_id: exp1452-milestone-111-retrospective
-      verdict: milestone_111_10_of_14_criteria_met_threshold_not_met_live_sota_runtime_gate_blocked_repair_scale_carry_forward
-      addressed_by: "This task converts the .111 terminal retro and active scope-reduction known issue into a concrete .112 execution manifest before implementation begins."
+    - experiment_id: exp1439-110-carryforward-activation-manifest
+      verdict: prior_milestone_activation_manifest_scope
+      addressed_by: "This is expected per-milestone activation bookkeeping for .113; it archives .112 completion and preserves retired-lineage blocks before new research starts."
       retire_if_same_verdict: false
   prompt: |
     CONTEXT:
-    Milestone .111 completed below threshold with 10 of 14 criteria met. The
-    active ops/known-issues.md scope-reduction directive requires the next
-    milestone to allocate at least 8 tasks to reducing scope rather than adding
-    new lineages. Use {project_root} as the project root and {date} as the run
-    date.
+    Milestone .112 completed all 14 criteria, but research-complete.yaml may
+    not yet contain the .112 archive row. The next milestone must preserve the
+    scope-reduction decisions before new work starts. Use {project_root} as the
+    project root and {date} as the run date.
 
     EXISTING CODE TO READ FIRST:
     - CODEX.md
     - CLAUDE.md
-    - ops/known-issues.md
-    - results/experiment_1452_milestone_111_retro.json
     - openspec/change-proposals/research-roadmap-vNEXT.md
-    - research-roadmap-next.yaml
+    - research-roadmap.yaml
+    - research-complete.yaml
+    - ops/conductor-log.md
+    - results/experiment_1466_milestone_112_retro.json
     - ops/exclusion_manifest.yaml
+    - ops/active-priorities.md
 
     TASK:
-    Write a .112 scope-reduction activation manifest and terminal artifact that
-    maps every mandatory scope-reduction requirement to a concrete .112 task,
-    records live-SOTA runtime carry-forward rules, and forbids exact noise-line
-    expansion.
+    Write a terminal activation artifact for .113 that summarizes .112
+    completion, records the retired-lineage blocks, and states whether
+    research-complete.yaml needs a .112 archive update.
 
     REQUIRED ARTIFACT FIELDS:
     - status
     - milestone
-    - prior_milestone
-    - scope_reduction_required
-    - required_scope_reduction_task_count
-    - planned_scope_reduction_task_count
-    - scope_reduction_manifest_path
-    - planned_scope_task_ids
-    - carryforward_from_111
-    - forbidden_exact_expansions
+    - predecessor_milestone
+    - criteria_met
+    - criteria_total
+    - research_complete_has_112_entry
+    - activation_manifest_complete
+    - retired_lineages_preserved
+    - allowed_113_tracks
+    - forbidden_reopen_tracks
     - honest_verdict
 
     CONCRETE STEPS:
-    1. Create results/experiment_1453_112_scope_reduction_activation_manifest.json immediately with status="in_progress".
-    2. Read exp1452 and the scope-reduction known-issues entry; extract every mandatory scope item and live-SOTA repair carry-forward blocker.
-    3. Write ops/milestone_112_scope_reduction_manifest.md with requirement, mapped task id, deliverable path, acceptance field, and retire/block rule.
-    4. Explicitly forbid new GRPO v15, new WOPR puzzle cartridges, new HardNet++/DSP variants, and broad new comparator/hardware branches during .112.
-    5. Confirm research-roadmap.yaml and scripts/research_conductor.py are unchanged.
-    6. Write all required artifact fields with status="complete".
-
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1453_112_scope_reduction_activation_manifest.json')); print(d.get('scope_reduction_required'), d.get('planned_scope_reduction_task_count'), d.get('honest_verdict'))"
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp1454-experiment-artifact-signal-noise-classifier
-  milestone: 2026.04.112
-  deliverable: results/experiment_1454_experiment_artifact_signal_noise_classifier.json
-  title: "Experiment Artifact Signal/Noise Classifier — Classify 1,400+ Results and Top-50 Noise Candidates"
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 50
-  estimated_wall_time_min: 75
-  priority: critical
-  requires_gpu: false
-  skip_pre_test: true
-  scope_reduction_task: true
-  prior_failures:
-    - experiment_id: ops-known-issues-2026-05-06-scope-reduction
-      verdict: active_scope_reduction_directive_not_satisfied_by_milestone_111
-      addressed_by: "This task implements mandatory scope item A by classifying all result artifacts before more lineages are proposed."
-      retire_if_same_verdict: false
-  prompt: |
-    CONTEXT:
-    Carnot has accumulated more than 1,400 experiment artifacts. The .112
-    milestone needs a concrete SIGNAL / NOISE / AMBIGUOUS ledger before
-    deciding what to preserve, retire, or escalate. Use {project_root} as the
-    project root and {date} as the run date.
-
-    EXISTING CODE TO READ FIRST:
-    - CODEX.md
-    - CLAUDE.md
-    - ops/milestone_112_scope_reduction_manifest.md
-    - research-complete.yaml
-    - results/experiment_1452_milestone_111_retro.json
-    - ops/exclusion_manifest.yaml
-    - results/
-
-    TASK:
-    Walk all results/experiment_*.json artifacts and produce a reproducible
-    classification table that labels each artifact SIGNAL, NOISE, or AMBIGUOUS
-    using transparent heuristics based on verdicts, headline eligibility,
-    gates, retirements, and artifact fields.
-
-    REQUIRED ARTIFACT FIELDS:
-    - status
-    - artifacts_scanned
-    - classification_table_path
-    - summary_path
-    - signal_count
-    - noise_count
-    - ambiguous_count
-    - top_50_noise_candidates
-    - heuristic_version
-    - honest_verdict
-
-    CONCRETE STEPS:
-    1. Create results/experiment_1454_experiment_artifact_signal_noise_classifier.json immediately with status="in_progress".
-    2. Build a small deterministic scanner under scripts/ or use an inline one-off command if no persistent helper is needed; do not modify scripts/research_conductor.py.
-    3. Scan every results/experiment_*.json file and extract experiment id, title if available, honest_verdict, status, headline flags, gate/retirement fields, and key metric fields.
-    4. Write ops/experiment_signal_noise_classification.csv with one row per artifact and a reason column.
-    5. Write ops/experiment_signal_noise_summary.md with counts, top-50 noise candidates, top signal candidates, and ambiguous operator-decision items.
-    6. Keep the heuristic conservative: never classify missing-tool or environmental blockers as scientific NOISE without a reason.
+    1. Create results/experiment_1467_112_completion_archive_113_activation.json immediately with status="in_progress".
+    2. Read the .112 retro and conductor log entries for exp1453 through exp1466.
+    3. Check whether research-complete.yaml contains a 2026.04.112 entry; if absent, record the gap in the artifact and optionally append the archival row without modifying research-roadmap.yaml.
+    4. Write ops/milestone_113_activation_manifest.md with allowed tracks: live SOTA telemetry, BEAVER-lite bounds, one self-learning pivot, T-SKM/STATIC smokes, KV260 RTL regression, and THRML simulation.
+    5. Explicitly forbid GRPO/VPRM, WOPR puzzle cartridges, HardNet++/DSP, validation-error repair, broad VNN-COMP runners, and hardware execution claims unless operator-reopened.
+    6. Confirm research-roadmap.yaml and scripts/research_conductor.py are unchanged.
     7. Write all required artifact fields with status="complete".
 
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1454_experiment_artifact_signal_noise_classifier.json')); print(d.get('artifacts_scanned'), d.get('signal_count'), d.get('noise_count'), d.get('ambiguous_count'))"
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp1455-known-issues-mandatory-priority-audit
-  milestone: 2026.04.112
-  deliverable: results/experiment_1455_known_issues_mandatory_priority_audit.json
-  title: "Known-Issues Mandatory Priority Audit — Trim Active Priority List to 10 or Fewer"
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 30
-  estimated_wall_time_min: 45
-  priority: critical
-  requires_gpu: false
-  skip_pre_test: true
-  scope_reduction_task: true
-  prior_failures:
-    - experiment_id: ops-known-issues-2026-05-06-scope-reduction
-      verdict: active_priority_list_contains_26_plus_entries_and_preempts_new_lineages
-      addressed_by: "This task implements mandatory scope item D by auditing active priority entries and creating a short current-priority index without deleting historical context."
-      retire_if_same_verdict: false
-  prompt: |
-    CONTEXT:
-    ops/known-issues.md has accumulated many mandatory-priority entries. The
-    scope-reduction directive requires a clean active priority list with 10 or
-    fewer entries and at least a 40% reduction. Use {project_root} as the
-    project root and {date} as the run date.
-
-    EXISTING CODE TO READ FIRST:
-    - CODEX.md
-    - CLAUDE.md
-    - ops/known-issues.md
-    - ops/milestone_112_scope_reduction_manifest.md
-    - ops/experiment_signal_noise_summary.md
-    - openspec/change-proposals/research-roadmap-vNEXT.md
-
-    TASK:
-    Audit mandatory known-issues priorities, decide which remain active,
-    superseded, consolidated, parked, or retired, and write a concise active
-    priority index. Preserve historical entries; do not silently delete audit
-    history.
-
-    REQUIRED ARTIFACT FIELDS:
-    - status
-    - initial_priority_count
-    - active_priority_count
-    - trim_fraction
-    - priority_audit_path
-    - known_issues_updated
-    - active_priorities_index_path
-    - retired_or_consolidated_priorities
-    - honest_verdict
-
-    CONCRETE STEPS:
-    1. Create results/experiment_1455_known_issues_mandatory_priority_audit.json immediately with status="in_progress".
-    2. Count all active NEW/MANDATORY priority entries in ops/known-issues.md and record the initial count.
-    3. Write ops/mandatory_priority_audit.md with one row per active priority and status: keep, consolidate, superseded, parked, or retire.
-    4. Add or update a short current-active-priorities section in ops/known-issues.md or ops/active-priorities.md with 10 or fewer active items.
-    5. Do not remove historical text unless it is clearly duplicate generated noise; prefer marking superseded and linking to the audit.
-    6. Verify the active count is <= 10 and trim_fraction >= 0.40.
-    7. Write all required artifact fields with status="complete".
-
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1455_known_issues_mandatory_priority_audit.json')); print(d.get('initial_priority_count'), d.get('active_priority_count'), d.get('trim_fraction'), d.get('honest_verdict'))"
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1467_112_completion_archive_113_activation.json')); print(d.get('activation_manifest_complete'), d.get('research_complete_has_112_entry'), d.get('honest_verdict'))"
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
 # ============================================================
-# Phase 1 - Lineage retirement
+# Phase 1 - Live SOTA telemetry and deterministic bounds
 # ============================================================
 
-- id: exp1456-grpo-vprm-lineage-consolidation-retirement
-  milestone: 2026.04.112
-  deliverable: results/experiment_1456_grpo_vprm_lineage_consolidation_retirement.json
-  title: "GRPO/VPRM Lineage Consolidation + Retirement — Block GRPO v15 Unless Operator Reopens"
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 30
-  estimated_wall_time_min: 60
-  priority: high
-  requires_gpu: false
-  skip_pre_test: true
-  scope_reduction_task: true
-  prior_failures:
-    - experiment_id: exp1063-through-exp1393-grpo-vprm-lineage
-      verdict: repeated_grpo_vprm_marginal_no_improvement_or_non_headline_results
-      addressed_by: "This task consolidates the lineage into one retirement artifact and updates the exclusion manifest instead of proposing GRPO v15."
-      retire_if_same_verdict: true
-  prompt: |
-    CONTEXT:
-    The scope-reduction directive identifies GRPO/VPRM v1-v14 as a noisy
-    lineage with repeated marginal, no-improvement, or non-headline verdicts.
-    The goal is not another GRPO variant; it is consolidation and retirement.
-    Use {project_root} as the project root and {date} as the run date.
-
-    EXISTING CODE TO READ FIRST:
-    - CODEX.md
-    - CLAUDE.md
-    - ops/experiment_signal_noise_classification.csv
-    - ops/exclusion_manifest.yaml
-    - research-complete.yaml
-    - results/experiment_1452_milestone_111_retro.json
-    - ops/known-issues.md
-    - results/
-
-    TASK:
-    Walk the GRPO/VPRM lineage from roughly exp1063 through exp1393, summarize
-    the useful lessons, retire the lineage as active research scope, and block
-    future GRPO v15-style proposals unless the operator explicitly reopens it.
-
-    REQUIRED ARTIFACT FIELDS:
-    - status
-    - lineage_name
-    - experiments_reviewed
-    - consolidation_note_path
-    - grpo_lineage_retired
-    - exclusion_manifest_updated
-    - lessons_retained
-    - future_reopen_conditions
-    - honest_verdict
-
-    CONCRETE STEPS:
-    1. Create results/experiment_1456_grpo_vprm_lineage_consolidation_retirement.json immediately with status="in_progress".
-    2. Search research-complete.yaml and results/ for GRPO, VPRM, TinyV, preference, and related ids from exp1063 through exp1393.
-    3. Write ops/lineage-retirements/grpo_vprm_lineage_retired.md with experiment ids, verdicts, measured positives, repeated blockers, and final decision.
-    4. Update ops/exclusion_manifest.yaml or the repo's active exclusion mechanism to block GRPO v15 / VPRM v15 unless an operator reopens the scope.
-    5. Preserve any genuinely useful lesson, such as candidate-pool saturation or false-negative correction, as future reference instead of deleting it.
-    6. Write all required artifact fields with status="complete".
-
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1456_grpo_vprm_lineage_consolidation_retirement.json')); print(d.get('experiments_reviewed'), d.get('grpo_lineage_retired'), d.get('exclusion_manifest_updated'))"
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp1457-wopr-puzzle-cartridge-retirement
-  milestone: 2026.04.112
-  deliverable: results/experiment_1457_wopr_puzzle_cartridge_retirement.json
-  title: "WOPR Puzzle Cartridge Retirement — Retire Non-Thesis Game Gallery Expansion"
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 30
-  estimated_wall_time_min: 45
-  priority: high
-  requires_gpu: false
-  skip_pre_test: true
-  scope_reduction_task: true
-  prior_failures:
-    - experiment_id: exp1188-exp1198-exp1214-exp1227-exp1240-exp1262-wopr-cartridges
-      verdict: puzzle_cartridge_lineage_has_no_direct_verify_repair_or_phase3_substrate_thesis_link
-      addressed_by: "This task consolidates and retires the puzzle-cartridge gallery line instead of adding another cartridge."
-      retire_if_same_verdict: true
-  prompt: |
-    CONTEXT:
-    WOPR puzzle cartridges were useful demos but the active scope-reduction
-    directive says they do not map cleanly to Carnot's verify-repair LLM thesis
-    or Phase-3 substrate trajectory. Use {project_root} as the project root and
-    {date} as the run date.
-
-    EXISTING CODE TO READ FIRST:
-    - CODEX.md
-    - CLAUDE.md
-    - ops/experiment_signal_noise_classification.csv
-    - ops/exclusion_manifest.yaml
-    - research-complete.yaml
-    - ops/known-issues.md
-    - docs/
-    - results/
-
-    TASK:
-    Consolidate and retire the WOPR puzzle cartridge line, including Hex,
-    Connect Four, Nonogram, Futoshiki, Kakuro, Masyu, Slitherlink, and related
-    gallery tasks. Preserve any demo assets that already exist; block new
-    puzzle-cartridge research tasks.
-
-    REQUIRED ARTIFACT FIELDS:
-    - status
-    - cartridge_experiments_reviewed
-    - retirement_note_path
-    - wopr_puzzle_lineage_retired
-    - exclusion_manifest_updated
-    - preserved_assets
-    - future_reopen_conditions
-    - honest_verdict
-
-    CONCRETE STEPS:
-    1. Create results/experiment_1457_wopr_puzzle_cartridge_retirement.json immediately with status="in_progress".
-    2. Find WOPR puzzle cartridge artifacts and docs, including the ids named in ops/known-issues.md.
-    3. Write ops/lineage-retirements/wopr_puzzle_cartridges_retired.md explaining why the line is retired from research scope and what assets remain usable as demos.
-    4. Update ops/exclusion_manifest.yaml or the active exclusion mechanism to block new puzzle cartridges unless the operator explicitly reopens gallery work.
-    5. Do not delete working demo assets; this is research-scope retirement, not destructive cleanup.
-    6. Write all required artifact fields with status="complete".
-
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1457_wopr_puzzle_cartridge_retirement.json')); print(d.get('cartridge_experiments_reviewed'), d.get('wopr_puzzle_lineage_retired'), d.get('exclusion_manifest_updated'))"
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp1458-hardnet-dsp-repair-stack-consolidation
-  milestone: 2026.04.112
-  deliverable: results/experiment_1458_hardnet_dsp_repair_stack_consolidation.json
-  title: "HardNet++/DSP Repair Stack Consolidation — Retire Variant Proliferation, Preserve Hard-Constraint Lesson"
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 30
-  estimated_wall_time_min: 45
-  priority: high
-  requires_gpu: false
-  skip_pre_test: true
-  scope_reduction_task: true
-  prior_failures:
-    - experiment_id: exp1305-exp1318-hardnet-dsp-lineage
-      verdict: repeated_useful_conservative_replay_not_learned_general_rule
-      addressed_by: "This task writes one consolidation note and blocks further HardNet++/DSP variant churn during scope reduction."
-      retire_if_same_verdict: true
-  prompt: |
-    CONTEXT:
-    Recent 2026 hard-constraint papers validate the general value of hard
-    constraint satisfaction, but the Carnot HardNet++/DSP repair lineage has
-    repeated the same non-headline lesson. Use {project_root} as the project
-    root and {date} as the run date.
-
-    EXISTING CODE TO READ FIRST:
-    - CODEX.md
-    - CLAUDE.md
-    - research-references.md
-    - ops/experiment_signal_noise_classification.csv
-    - ops/exclusion_manifest.yaml
-    - research-complete.yaml
-    - results/
-
-    TASK:
-    Consolidate the HardNet++/DSP repair stack into a single retirement note
-    that preserves the hard-constraint lesson, cites relevant 2026 work, and
-    blocks further variant proliferation during .112.
-
-    REQUIRED ARTIFACT FIELDS:
-    - status
-    - hardnet_dsp_experiments_reviewed
-    - consolidation_note_path
-    - hardnet_dsp_lineage_retired
-    - exclusion_manifest_updated
-    - lessons_retained
-    - cited_recent_constraint_papers
-    - future_reopen_conditions
-    - honest_verdict
-
-    CONCRETE STEPS:
-    1. Create results/experiment_1458_hardnet_dsp_repair_stack_consolidation.json immediately with status="in_progress".
-    2. Search artifacts and research-complete.yaml for HardNet, DSP, hard constraint, conservative replay, and related experiment ids.
-    3. Read the new research-references.md section on HardNet++, KKT-Hardnet, and SnareNet.
-    4. Write ops/lineage-retirements/hardnet_dsp_repair_stack_retired.md with what was learned, why it is not active headline scope, and what future evidence would reopen it.
-    5. Update ops/exclusion_manifest.yaml or the active exclusion mechanism to block new HardNet++/DSP variants unless explicitly reopened.
-    6. Write all required artifact fields with status="complete".
-
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1458_hardnet_dsp_repair_stack_consolidation.json')); print(d.get('hardnet_dsp_experiments_reviewed'), d.get('hardnet_dsp_lineage_retired'), d.get('exclusion_manifest_updated'))"
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp1459-self-learning-nonheadline-lineage-decision
-  milestone: 2026.04.112
-  deliverable: results/experiment_1459_self_learning_nonheadline_lineage_decision.json
-  title: "Self-Learning Non-Headline Lineage Decision — Promote exp1447 FR-11 Growth or Retire the Line"
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 30
-  estimated_wall_time_min: 60
-  priority: critical
-  requires_gpu: false
-  skip_pre_test: true
-  scope_reduction_task: true
-  continuous_self_learning_task: true
-  prior_failures:
-    - experiment_id: exp1433-fr11-self-learning-v6-dvi-v3-gated
-      verdict: fr11_self_learning_v6_dvi_v3_no_positive_growth_non_headline
-      addressed_by: "Exp1447 changed the policy and produced positive verified growth; this task decides whether that line becomes headline scope or is retired as non-headline."
-      retire_if_same_verdict: true
-    - experiment_id: exp1447-fr11-v7-memory-policy-growth
-      verdict: fr11_v7_positive_verified_growth_persisted_without_forgetting
-      addressed_by: "This task uses the positive growth evidence to make a lineage-level decision instead of launching another growth variant."
-      retire_if_same_verdict: false
-  prompt: |
-    CONTEXT:
-    research-program.md requires continuous self-learning coverage. Milestone
-    .111 produced real FR-11 growth in exp1447, but the broader self-learning
-    lineage has repeatedly used non-headline verdicts. This task must decide
-    whether self-learning becomes an anchored headline claim or gets retired as
-    useful but non-headline. Use {project_root} as the project root and {date}
-    as the run date.
-
-    EXISTING CODE TO READ FIRST:
-    - CODEX.md
-    - CLAUDE.md
-    - research-program.md
-    - results/experiment_1433_fr11_self_learning_v6_dvi_v3_gated.json
-    - results/experiment_1447_fr11_v7_memory_policy_growth.json
-    - results/experiment_1449_ltlzinc_temporal_continual_learning_adapter.json
-    - ops/experiment_signal_noise_classification.csv
-    - research-complete.yaml
-
-    TASK:
-    Make the required self-learning lineage decision. Either promote the exp1447
-    verified-growth mechanism into a narrow headline-pivot plan with criteria,
-    or retire the lineage from headline scope while preserving it as internal
-    memory-policy engineering.
-
-    REQUIRED ARTIFACT FIELDS:
-    - status
-    - self_learning_artifacts_reviewed
-    - decision_note_path
-    - self_learning_headline_pivot_selected
-    - self_learning_lineage_retired
-    - exp1447_delta_overall
-    - nonforgetting_rate
-    - ltlzinc_benchmark_role
-    - next_allowed_experiment_shape
-    - honest_verdict
-
-    CONCRETE STEPS:
-    1. Create results/experiment_1459_self_learning_nonheadline_lineage_decision.json immediately with status="in_progress".
-    2. Read exp1433, exp1447, exp1449, and the Continuous Self-Learning section of research-program.md.
-    3. Search the classification table for self-learning artifacts with improved_non_headline or similar verdicts.
-    4. Write docs/research-notes/self_learning_lineage_decision.md with evidence for pivot or retirement.
-    5. If pivoting, define one narrow allowed future experiment shape, required metrics, and a nonforgetting threshold; if retiring, update the exclusion manifest with the retirement rule.
-    6. Do not launch a new self-learning training run in this task; this is a lineage decision anchored by exp1447 evidence.
-    7. Write all required artifact fields with status="complete".
-
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1459_self_learning_nonheadline_lineage_decision.json')); print(d.get('self_learning_headline_pivot_selected'), d.get('self_learning_lineage_retired'), d.get('exp1447_delta_overall'))"
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-# ============================================================
-# Phase 2 - Portfolio and claim narrowing
-# ============================================================
-
-- id: exp1460-hardware-portfolio-narrowing
-  milestone: 2026.04.112
-  deliverable: results/experiment_1460_hardware_portfolio_narrowing.json
-  title: "Hardware Portfolio Narrowing — Pick 2-3 Active Tracks and Defer the Rest"
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 30
-  estimated_wall_time_min: 45
-  priority: high
-  requires_gpu: false
-  skip_pre_test: true
-  scope_reduction_task: true
-  prior_failures:
-    - experiment_id: ops-known-issues-2026-05-06-scope-reduction
-      verdict: hardware_portfolio_too_broad_kv260_strix_dual3090_extropic_photonic_larql_rotorquant
-      addressed_by: "This task implements mandatory scope item G by choosing active hardware tracks and documenting deferred tracks."
-      retire_if_same_verdict: false
-  prompt: |
-    CONTEXT:
-    Carnot currently references KV260, Strix APU/NPU, dual RTX 3090, Extropic,
-    photonic, and other hardware paths. The scope-reduction directive requires
-    choosing 2-3 active tracks and deferring the rest. Use {project_root} as the
-    project root and {date} as the run date.
-
-    EXISTING CODE TO READ FIRST:
-    - CODEX.md
-    - CLAUDE.md
-    - _bmad/architecture.md
-    - research-hardware-wishlist.md
-    - research-references.md
-    - results/experiment_1442_live_sota_repair_runtime_preflight.json
-    - results/experiment_1451_discrete_sb_rtl_lint_sim_rerun.json
-    - ops/known-issues.md
-
-    TASK:
-    Narrow the active hardware portfolio to 2-3 tracks, update architecture and
-    hardware wishlist docs, and explicitly document deferred/out-of-scope
-    tracks with reopen conditions.
-
-    REQUIRED ARTIFACT FIELDS:
-    - status
-    - active_hardware_tracks
-    - active_hardware_track_count
-    - deferred_hardware_tracks
-    - architecture_updated
-    - hardware_wishlist_updated
-    - decision_note_path
-    - honest_verdict
-
-    CONCRETE STEPS:
-    1. Create results/experiment_1460_hardware_portfolio_narrowing.json immediately with status="in_progress".
-    2. Read architecture, hardware wishlist, exp1442, exp1451, and the Extropic/THRML reference notes.
-    3. Pick 2-3 active hardware tracks based on immediate research value and current readiness.
-    4. Update _bmad/architecture.md with an "Active hardware tracks" entry and explicit deferred tracks.
-    5. Update research-hardware-wishlist.md so the active/deferred distinction is visible.
-    6. Write docs/research-notes/hardware_portfolio_narrowing.md with rationale and reopen conditions.
-    7. Do not claim KV260 board execution, Extropic access, or NPU acceleration unless real commands have run.
-    8. Write all required artifact fields with status="complete".
-
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1460_hardware_portfolio_narrowing.json')); print(d.get('active_hardware_track_count'), d.get('active_hardware_tracks'), d.get('honest_verdict'))"
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp1461-comparator-integration-cite-retire-audit
-  milestone: 2026.04.112
-  deliverable: results/experiment_1461_comparator_integration_cite_retire_audit.json
-  title: "Comparator Integration Cite/Retire Audit — Abstract-CoT, Meta-Harness, Autodata, LARQL, Skillify, GStack"
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 30
-  estimated_wall_time_min: 60
-  priority: high
-  requires_gpu: false
-  skip_pre_test: true
-  scope_reduction_task: true
-  prior_failures:
-    - experiment_id: ops-known-issues-2026-05-06-scope-reduction
-      verdict: comparator_integrations_ambiguous_cite_or_retire_decision_missing
-      addressed_by: "This task implements mandatory scope item H by forcing each comparator to cite or retire status."
-      retire_if_same_verdict: false
-  prompt: |
-    CONTEXT:
-    Recent milestones integrated or referenced many comparators and adjacent
-    systems. The scope-reduction directive requires deciding whether each one
-    belongs in paper-v6 citations or should be retired from active scope. Use
-    {project_root} as the project root and {date} as the run date.
-
-    EXISTING CODE TO READ FIRST:
-    - CODEX.md
-    - CLAUDE.md
-    - research-references.md
-    - ops/known-issues.md
-    - ops/experiment_signal_noise_summary.md
-    - docs/
-    - _bmad/prd.md
-
-    TASK:
-    Audit comparator integrations including Abstract-CoT, Meta-Harness,
-    Autodata, LARQL, Skillify, GStack, EBT/NRGPT, ARM-as-EBM, BEAVER, and
-    ontology-constrained reasoning. For each, decide cite, retire, or future
-    watchlist with a one-line rationale.
-
-    REQUIRED ARTIFACT FIELDS:
-    - status
-    - comparator_decision_count
-    - cite_count
-    - retire_count
-    - watchlist_count
-    - decision_table_path
-    - references_updated
-    - paper_related_work_implications
-    - honest_verdict
-
-    CONCRETE STEPS:
-    1. Create results/experiment_1461_comparator_integration_cite_retire_audit.json immediately with status="in_progress".
-    2. Build a comparator list from ops/known-issues.md, research-references.md, and docs.
-    3. Write docs/research-notes/comparator_cite_retire_audit.md with comparator, decision, rationale, and impacted paper section.
-    4. Update research-references.md only where status needs clarification; do not add broad new unrelated references.
-    5. If a comparator is retired, add a concise reason and future reopen condition.
-    6. Write all required artifact fields with status="complete".
-
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1461_comparator_integration_cite_retire_audit.json')); print(d.get('comparator_decision_count'), d.get('cite_count'), d.get('retire_count'), d.get('watchlist_count'))"
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp1462-paper-v6-anchored-claims-narrowing
-  milestone: 2026.04.112
-  deliverable: results/experiment_1462_paper_v6_anchored_claims_narrowing.json
-  title: "Paper-v6 Anchored Claims Narrowing — Reduce to 3-5 Artifact-Backed Claims"
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 50
-  estimated_wall_time_min: 90
-  priority: critical
-  requires_gpu: false
-  skip_pre_test: true
-  scope_reduction_task: true
-  prior_failures:
-    - experiment_id: publication-hold-figure-integrity-and-paper-v6-scope
-      verdict: paper_claims_too_broad_and_arxiv_submission_on_hold_until_claims_and_figures_are_honest
-      addressed_by: "This task implements mandatory scope item E by narrowing paper-v6 to 3-5 artifact-backed claims before any future publication work."
-      retire_if_same_verdict: false
-  prompt: |
-    CONTEXT:
-    Publication is on hold, and the scope-reduction directive requires paper-v6
-    to be narrowed to 3-5 explicit anchored claims. This task is a claim
-    narrowing pass, not an arXiv submission task. Use {project_root} as the
-    project root and {date} as the run date.
-
-    EXISTING CODE TO READ FIRST:
-    - CODEX.md
-    - CLAUDE.md
-    - ops/known-issues.md
-    - ops/mandatory_priority_audit.md
-    - ops/experiment_signal_noise_summary.md
-    - docs/research-notes/comparator_cite_retire_audit.md
-    - _bmad/prd.md
-    - docs/
-    - paper/
-
-    TASK:
-    Produce a paper-v6 anchored-claims narrowing artifact and, if a paper
-    source exists, add or update an "Anchored Claims" section with 3-5 claims,
-    each tied to empirical artifact paths and theoretical support. Move
-    unsupported territory to appendix/future work.
-
-    REQUIRED ARTIFACT FIELDS:
-    - status
-    - paper_source_path
-    - anchored_claim_count
-    - anchored_claims
-    - unanchored_claims_moved
-    - claim_matrix_path
-    - paper_updated
-    - arxiv_submission_triggered
-    - honest_verdict
-
-    CONCRETE STEPS:
-    1. Create results/experiment_1462_paper_v6_anchored_claims_narrowing.json immediately with status="in_progress".
-    2. Locate the active paper-v6 source if present; if absent, write the claim matrix and record paper_updated=false.
-    3. Use exp1454 signal/noise outputs, exp1455 priority audit, exp1459 self-learning decision, exp1460 hardware narrowing, and exp1461 comparator audit as inputs.
-    4. Select 3-5 claims only if each has empirical artifact references and theoretical support.
-    5. Move unsupported claims into appendix/future-work notes rather than deleting context.
-    6. Ensure arxiv_submission_triggered=false; do not run any publish or submit command.
-    7. Write all required artifact fields with status="complete".
-
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1462_paper_v6_anchored_claims_narrowing.json')); print(d.get('anchored_claim_count'), d.get('paper_updated'), d.get('arxiv_submission_triggered'))"
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-# ============================================================
-# Phase 3 - Minimal runtime unblock, gated salvage, and closure
-# ============================================================
-
-- id: exp1463-local-sota-gguf-runtime-repair
-  milestone: 2026.04.112
-  deliverable: results/experiment_1463_local_sota_gguf_runtime_repair.json
-  title: "Local SOTA GGUF Runtime Repair — Fix llama.cpp CUDA libcudart + Missing Gemma Cache"
+- id: exp1468-live-sota-logprob-telemetry-preflight
+  milestone: 2026.04.113
+  deliverable: results/experiment_1468_live_sota_logprob_telemetry_preflight.json
+  title: "Live SOTA GGUF Logprob Telemetry Preflight"
   agent_type: codex
   model: gpt-5.5
   max_turns: 50
@@ -677,161 +89,440 @@ tasks:
   prior_failures:
     - experiment_id: exp1442-live-sota-repair-runtime-preflight
       verdict: blocked_no_live_sota_runtime
-      addressed_by: "This task addresses the exact blockers from exp1442: libcudart.so.12 missing from the llama_cpp runtime path and unsloth/gemma-4-26B-A4B-it-GGUF missing from cache."
+      addressed_by: "Exp1463 repaired the exact runtime/cache blockers and produced a live usable Qwen3.6 GGUF response; this task measures telemetry rather than repairing runtime again."
       retire_if_same_verdict: true
   prompt: |
     CONTEXT:
-    Exp1442 proved both RTX 3090 GPUs are visible and mostly idle, but no
-    mandated local SOTA GGUF model completed live inference because llama_cpp
-    could not load libcudart.so.12 and the middle MoE Gemma cache was missing.
-    This task repairs runtime readiness or records an exact persistent blocker.
-    Use {project_root} as the project root and {date} as the run date.
+    Exp1463 repaired the local SOTA GGUF runtime. The next credibility gap is
+    whether live local SOTA generations can emit per-token telemetry, especially
+    top-k logprobs for HALT, Spilled Energy, and BEAVER-lite bounds. Use
+    {project_root} as the project root and {date} as the run date.
 
     MODEL_SPECS:
-    - unsloth/Qwen3.6-35B-A3B-GGUF (flagship MoE; headline runtime probe)
-    - unsloth/gemma-4-31B-it-GGUF (flagship dense; headline runtime probe)
-    - unsloth/gemma-4-26B-A4B-it-GGUF (middle MoE; headline runtime probe)
-    Legacy small models are allowed only for fast CPU smoke-tests. Use
-    scripts/experiment_template.py and the cached_sota_pair() pattern for
-    locating cached models, but do not treat legacy small models as headline
-    evidence.
+    - unsloth/Qwen3.6-35B-A3B-GGUF (flagship MoE; primary telemetry model)
+    - unsloth/gemma-4-31B-it-GGUF (flagship dense; secondary telemetry model)
+    - unsloth/gemma-4-26B-A4B-it-GGUF (middle MoE; secondary telemetry model)
+    Legacy small models are allowed only as CPU smoke-tests and must not be
+    used for headline telemetry.
 
     EXISTING CODE TO READ FIRST:
     - CODEX.md
     - CLAUDE.md
     - scripts/experiment_template.py
-    - results/experiment_1442_live_sota_repair_runtime_preflight.json
     - python/carnot/reporting/live_sota_repair_runtime_preflight.py
-    - ops/milestone_112_scope_reduction_manifest.md
-    - research-hardware-wishlist.md
-    - pyproject.toml
+    - results/experiment_1463_local_sota_gguf_runtime_repair.json
+    - research-references.md
+    - ops/milestone_113_activation_manifest.md
 
     TASK:
-    Repair the local GGUF runtime enough that at least one mandated SOTA model
-    completes a live, non-empty inference, or record exact blockers that make
-    the same verdict terminal for this path.
+    Build a small live local SOTA telemetry manifest: generate a bounded set of
+    outputs from at least one mandated GGUF model and record whether token
+    logprobs, top-k alternatives, logits, and response text are available.
 
     REQUIRED ARTIFACT FIELDS:
     - status
     - model_specs
-    - gpu_probe
-    - libcudart_resolution_attempted
-    - missing_cache_resolution_attempted
-    - models_found_in_cache
-    - models_missing_from_cache
-    - smoke_inference_results
     - live_sota_model_inference_used
-    - local_sota_runtime_ready
-    - persistent_blockers
+    - telemetry_cases_requested
+    - telemetry_cases_completed
+    - topk_logprobs_available
+    - logits_available
+    - telemetry_manifest_path
+    - models_used
+    - gpu_probe
+    - blockers
     - honest_verdict
 
     CONCRETE STEPS:
-    1. Create results/experiment_1463_local_sota_gguf_runtime_repair.json immediately with status="in_progress".
-    2. Reproduce the exp1442 runtime probe and record the exact current error before changing anything.
-    3. Locate CUDA runtime libraries with ldconfig, nvidia-smi, package metadata, and environment variables; fix the runtime path or reinstall the llama_cpp wheel only if needed and safe.
-    4. Resolve the missing unsloth/gemma-4-26B-A4B-it-GGUF cache if local network/cache policy allows; otherwise record the exact cache blocker.
-    5. Run smoke inference through the existing live_sota_repair_runtime_preflight module on at least one mandated SOTA GGUF model, preferably one model per GPU.
-    6. Record live_sota_model_inference_used=true only if a mandated SOTA GGUF produces a non-empty live response from the local runtime.
-    7. Do not run repair v3, reranking, or 100-case scale in this task.
+    1. Create results/experiment_1468_live_sota_logprob_telemetry_preflight.json immediately with status="in_progress".
+    2. Use cached_sota_pair() or the exp1463 model paths; do not hardcode legacy small models as headline models.
+    3. Generate 10-20 bounded prompts from verified FoVer/GSM8K-style cases with at least one mandated SOTA GGUF.
+    4. Attempt to capture token text, token logprob, top-k alternatives, and logits where the local llama.cpp path exposes them.
+    5. Write results/live_sota_telemetry_manifest_1468.jsonl with one row per generated case.
+    6. Set topk_logprobs_available=true only if enough per-token top-k data exists for downstream HALT/Spilled Energy features.
+    7. Record precise blockers for any model that cannot emit telemetry; do not run repair experiments here.
     8. Write all required artifact fields with status="complete".
 
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1463_local_sota_gguf_runtime_repair.json')); print(d.get('local_sota_runtime_ready'), d.get('live_sota_model_inference_used'), d.get('persistent_blockers'))"
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1468_live_sota_logprob_telemetry_preflight.json')); print(d.get('live_sota_model_inference_used'), d.get('topk_logprobs_available'), d.get('telemetry_cases_completed'))"
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-- id: exp1464-repair-validation-error-context-ab
-  milestone: 2026.04.112
-  deliverable: results/experiment_1464_repair_validation_error_context_ab.json
-  title: "Repair Validation-Error-as-Context A/B — Gated on Exp1463 Runtime Ready"
+- id: exp1469-halt-spilled-energy-telemetry-diagnostic
+  milestone: 2026.04.113
+  deliverable: results/experiment_1469_halt_spilled_energy_telemetry_diagnostic.json
+  title: "HALT + Spilled Energy Diagnostic Micro-Benchmark - Gated on Exp1468 Logprobs"
   agent_type: codex
   model: gpt-5.5
   max_turns: 50
-  estimated_wall_time_min: 120
-  priority: critical
+  estimated_wall_time_min: 75
+  priority: high
   requires_gpu: true
   skip_pre_test: true
   gated_on:
-    - upstream: exp1463-local-sota-gguf-runtime-repair
-      artifact_field: local_sota_runtime_ready
+    - upstream: exp1468-live-sota-logprob-telemetry-preflight
+      artifact_field: topk_logprobs_available
       op: "=="
       value: true
   prior_failures:
-    - experiment_id: exp1414-exp1427-exp1428-exp1430-repair-executor-lineage
-      verdict: repair_executor_lineage_repeated_zero_repair_or_no_improvement_until_schema_constrained_prototype_nonzero_but_no_live_sota
-      addressed_by: "This task tests exactly one new SOTA repair pattern: include the validator's concrete error message in retry context, using live mandated GGUF inference only after exp1463 runtime readiness."
-      retire_if_same_verdict: true
-    - experiment_id: exp1443-exp1445-live-repair-chain
-      verdict: missing_artifact_gate_blocked_by_exp1442
-      addressed_by: "Structured gated_on prevents this task from spending an agent call if the live runtime remains blocked."
+    - experiment_id: exp1003-spilled-energy-live-gpu-v4
+      verdict: no_improvement_or_non_headline_energy_diagnostic
+      addressed_by: "This task uses the repaired mandated local SOTA GGUF runtime and is telemetry-only; it must retire the HALT/Spilled micro-path if signal is flat."
       retire_if_same_verdict: true
   prompt: |
     CONTEXT:
-    The known-issues file identifies one specific repair-executor salvage idea:
-    on validation failure, pass the failed output and the concrete validation
-    error message back to the model as retry context. This task runs only after
-    exp1463 proves live local SOTA GGUF inference is ready. Use {project_root}
-    as the project root and {date} as the run date.
+    The post-.112 literature sweep added HALT and preserved Spilled Energy as
+    a logprob-only verifier diagnostic. This task runs only if exp1468 proves
+    top-k logprobs are available from local mandated GGUF models. Use
+    {project_root} as the project root and {date} as the run date.
 
     MODEL_SPECS:
-    - unsloth/Qwen3.6-35B-A3B-GGUF (flagship MoE; headline repair model)
-    - unsloth/gemma-4-31B-it-GGUF (flagship dense; headline repair model)
-    - unsloth/gemma-4-26B-A4B-it-GGUF (middle MoE; headline repair model)
-    Each headline repair result must use at least one mandated local SOTA GGUF
-    model. Legacy small models are acceptable only as fast CPU smoke-tests. Use
-    scripts/experiment_template.py and cached_sota_pair() for model discovery.
+    - unsloth/Qwen3.6-35B-A3B-GGUF (source telemetry model)
+    - unsloth/gemma-4-31B-it-GGUF (optional source telemetry model)
+    - unsloth/gemma-4-26B-A4B-it-GGUF (optional source telemetry model)
+    This task should prefer reusing exp1468 telemetry rows over generating new
+    samples. If new samples are needed, use at least one mandated SOTA GGUF.
 
     EXISTING CODE TO READ FIRST:
     - CODEX.md
     - CLAUDE.md
-    - scripts/experiment_template.py
-    - results/experiment_1463_local_sota_gguf_runtime_repair.json
-    - results/experiment_1427_repair_rejection_root_cause_audit.json
-    - results/experiment_1428_dccd_schema_constrained_repair_v2.json
-    - results/experiment_1448_prm_v3_online_process_reward_agent.json
-    - python/carnot/
+    - research-references.md
+    - results/experiment_1468_live_sota_logprob_telemetry_preflight.json
+    - results/live_sota_telemetry_manifest_1468.jsonl
+    - python/carnot/verify/
+    - python/carnot/pipeline/
     - tests/python/
-    - openspec/capabilities/
 
     TASK:
-    Implement or configure a focused A/B test that compares baseline repair
-    retries against retries that include the validator's exact error message.
-    Use the same FoVer-style subset as prior repair experiments where possible.
-    If no metric improves, retire the repair-executor salvage path.
+    Compute HALT-style time-series features and Spilled-Energy-style logprob
+    diagnostics over the exp1468 telemetry rows, then compare them to the known
+    verifier labels for the bounded case set.
+
+    REQUIRED ARTIFACT FIELDS:
+    - status
+    - model_specs
+    - telemetry_rows_loaded
+    - halt_features_computed
+    - spilled_energy_features_computed
+    - telemetry_diagnostic_complete
+    - auroc_or_rank_signal
+    - best_signal_name
+    - length_or_format_confound_checked
+    - diagnostic_path
+    - diagnostic_lineage_preserved
+    - diagnostic_lineage_retired
+    - honest_verdict
+
+    CONCRETE STEPS:
+    1. Create results/experiment_1469_halt_spilled_energy_telemetry_diagnostic.json immediately with status="in_progress".
+    2. Load exp1468 telemetry rows and their known verifier labels or correctness labels.
+    3. Implement a small deterministic feature extractor if none exists: token logprob trend, entropy trend, top-k gap trend, and spilled-energy/marginal-energy proxies.
+    4. Compare feature rank signal against labels using AUROC when labels are binary; if sample size is too small, report rank separation and bootstrap caveats.
+    5. Check whether the best feature is just response length, JSON formatting, or another superficial confound.
+    6. Write results/live_sota_halt_spilled_diagnostics_1469.json with per-case features.
+    7. Preserve the diagnostic line only if a nontrivial signal exists; otherwise retire it as non-headline telemetry.
+    8. Run focused tests for any added helper code.
+    9. Write all required artifact fields with status="complete".
+
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1469_halt_spilled_energy_telemetry_diagnostic.json')); print(d.get('telemetry_diagnostic_complete'), d.get('best_signal_name'), d.get('diagnostic_lineage_retired'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp1470-beaver-lite-deterministic-bound-smoke
+  milestone: 2026.04.113
+  deliverable: results/experiment_1470_beaver_lite_deterministic_bound_smoke.json
+  title: "BEAVER-Lite Deterministic Bound Smoke - Adopted External Verifier Fit"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 30
+  estimated_wall_time_min: 45
+  priority: critical
+  requires_gpu: false
+  skip_pre_test: true
+  prior_failures:
+    - experiment_id: exp1465-external-verifier-benchmark-fit-audit
+      verdict: adopt_one_minimal_beaver_bounds_smoke
+      addressed_by: "Exp1465 selected exactly this bounded smoke and deferred broad VNN-COMP/external benchmark runners."
+      retire_if_same_verdict: false
+  prompt: |
+    CONTEXT:
+    Exp1465 selected one external verifier follow-up: a BEAVER-style
+    deterministic-bound smoke using the existing BEAVER-lite code. This is a
+    narrow fit check, not a broad benchmark implementation. Use {project_root}
+    as the project root and {date} as the run date.
+
+    MODEL_SPECS:
+    - unsloth/Qwen3.6-35B-A3B-GGUF (optional live logprob source if exp1468 produced usable telemetry)
+    - unsloth/gemma-4-31B-it-GGUF (optional live logprob source)
+    - unsloth/gemma-4-26B-A4B-it-GGUF (optional live logprob source)
+    No new LLM generation is required. If live logprobs from exp1468 are used,
+    they must come from a mandated SOTA GGUF model; otherwise label the run
+    mock_logprobs.
+
+    EXISTING CODE TO READ FIRST:
+    - CODEX.md
+    - CLAUDE.md
+    - results/experiment_1465_external_verifier_benchmark_fit_audit.json
+    - python/carnot/verify/beaver_lite.py
+    - tests/python/test_beaver_lite.py
+    - tests/python/test_beaver_lite_live_logprobs.py
+    - results/experiment_1142_beaver_lite_certificate_tier.json
+    - results/experiment_1158_beaver_lite_live_logprobs.json
+
+    TASK:
+    Run the adopted BEAVER-lite deterministic-bound smoke over three small
+    prefix-closed arithmetic or code constraints and report whether every bound
+    is sound and clearly labeled as mock or live.
+
+    REQUIRED ARTIFACT FIELDS:
+    - status
+    - benchmark_family
+    - questions_evaluated
+    - prefix_closed_constraint
+    - unsafe_mass_bounds
+    - empirical_violation_rates
+    - bound_is_sound
+    - mock_or_live_logprobs
+    - external_fit_verdict
+    - broad_benchmark_deferred
+    - honest_verdict
+
+    CONCRETE STEPS:
+    1. Create results/experiment_1470_beaver_lite_deterministic_bound_smoke.json immediately with status="in_progress".
+    2. Read exp1465 and the existing BEAVER-lite implementation/tests.
+    3. Select three deterministic toy constraints that can be judged without a broad dataset.
+    4. Use live exp1468 logprob rows if available and compatible; otherwise use the existing mock-logprob path and label it explicitly.
+    5. Assert every unsafe mass bound is in [0, 1] and is not below the empirical violation rate under the same toy setup.
+    6. Do not implement VNN-COMP, VNNLIB, or a broad external verifier runner.
+    7. Run focused BEAVER-lite tests.
+    8. Write all required artifact fields with status="complete".
+
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1470_beaver_lite_deterministic_bound_smoke.json')); print(d.get('bound_is_sound'), d.get('mock_or_live_logprobs'), d.get('external_fit_verdict'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+# ============================================================
+# Phase 2 - Self-learning pivot and verifier governance
+# ============================================================
+
+- id: exp1471-fr11-v8-verified-memory-growth-pivot
+  milestone: 2026.04.113
+  deliverable: results/experiment_1471_fr11_v8_verified_memory_growth_pivot.json
+  title: "FR-11 v8 Verified-Memory-Growth Pivot - The One Allowed Self-Learning Follow-Up"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 50
+  estimated_wall_time_min: 90
+  priority: critical
+  requires_gpu: true
+  skip_pre_test: true
+  continuous_self_learning_task: true
+  prior_failures:
+    - experiment_id: exp1433-fr11-self-learning-v6-dvi-v3-gated
+      verdict: fr11_self_learning_v6_dvi_v3_no_positive_growth_non_headline
+      addressed_by: "Exp1459 selected only the exp1447 verified-memory-growth policy as the allowed pivot; this task uses that changed policy and retires the pivot if growth fails."
+      retire_if_same_verdict: true
+    - experiment_id: exp1447-fr11-v7-memory-policy-growth
+      verdict: fr11_v7_positive_verified_growth_persisted_without_forgetting
+      addressed_by: "This task reproduces the positive policy on fresh verified rows with explicit nonforgetting and soundness/completeness metrics."
+      retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    research-program.md requires continuous self-learning. Exp1459 selected one
+    narrow allowed follow-up: reuse the exp1447 verified-memory-growth policy
+    on fresh verified local rows, with nonforgetting gates. Use {project_root}
+    as the project root and {date} as the run date.
+
+    MODEL_SPECS:
+    - unsloth/Qwen3.6-35B-A3B-GGUF (preferred fresh-row generator if new LLM cases are needed)
+    - unsloth/gemma-4-31B-it-GGUF (secondary fresh-row generator)
+    - unsloth/gemma-4-26B-A4B-it-GGUF (secondary fresh-row generator)
+    Existing verified rows may be reused. Any new headline LLM generation must
+    use at least one mandated local SOTA GGUF model.
+
+    EXISTING CODE TO READ FIRST:
+    - CODEX.md
+    - CLAUDE.md
+    - research-program.md
+    - docs/research-notes/self_learning_lineage_decision.md
+    - results/experiment_1447_fr11_v7_memory_policy_growth.json
+    - results/experiment_1449_ltlzinc_temporal_continual_learning_adapter.json
+    - results/experiment_1459_self_learning_nonheadline_lineage_decision.json
+    - python/carnot/pipeline/session_memory.py
+    - python/carnot/pipeline/
+    - tests/python/
+
+    TASK:
+    Execute the one allowed FR-11 v8 self-learning pivot: apply the exp1447
+    memory policy to fresh verified rows, optionally including exp1449 LTLZinc
+    cases as supporting feed, and report growth plus nonforgetting.
 
     REQUIRED ARTIFACT FIELDS:
     - status
     - model_specs
     - live_sota_model_inference_used
-    - validation_error_context_enabled
-    - cases_evaluated
-    - baseline_acceptance_rate
-    - context_acceptance_rate
-    - acceptance_delta_pp
-    - schema_validity_delta_pp
-    - semantic_correctness_delta_pp
-    - spilled_energy_diagnostic_available
-    - repair_executor_lineage_preserved
-    - repair_executor_lineage_retired
-    - commands_run
+    - self_learning_artifact_ready
+    - baseline_fresh_verified_sample_count
+    - fresh_verified_sample_count
+    - self_learning_delta_overall
+    - new_promoted_count
+    - memory_entries_added
+    - session_memory_updated
+    - nonforgetting_rate
+    - soundness_mistakes
+    - completeness_mistakes
+    - headline_result_allowed
+    - pivot_preserved
+    - pivot_retired
     - honest_verdict
 
     CONCRETE STEPS:
-    1. Create results/experiment_1464_repair_validation_error_context_ab.json immediately with status="in_progress".
-    2. Read repair executor code and relevant specs before editing implementation. If a needed REQ is missing, add the smallest spec update first.
-    3. Add a flag or narrow helper that includes the validator's concrete error message in retry context without changing the baseline path.
-    4. Run an A/B evaluation on a bounded FoVer repair subset with the same cases for baseline and context variants.
-    5. Use at least one mandated local SOTA GGUF model for headline evidence; record model path, GPU, and live inference evidence.
-    6. If logits are available, record whether a spilled-energy-style diagnostic can be computed; if not, record unavailable without expanding scope.
-    7. Run focused tests for any edited repair/spec code.
-    8. Set repair_executor_lineage_retired=true if no acceptance, schema-validity, semantic-correctness, or false-acceptance metric improves.
-    9. Write all required artifact fields with status="complete".
+    1. Create results/experiment_1471_fr11_v8_verified_memory_growth_pivot.json immediately with status="in_progress".
+    2. Read exp1447, exp1449, exp1459, and the Continuous Self-Learning section of research-program.md.
+    3. Reuse the exp1447 asymmetric fresh/replay memory-promotion policy; do not invent a broad new self-learning architecture.
+    4. Generate or ingest a bounded fresh verified case set. If generating new LLM cases, use mandated local SOTA GGUF inference and record the model path.
+    5. Include exp1449 temporal cases only as supporting benchmark feed, not as a standalone headline claim.
+    6. Measure fresh verified growth, promoted count, memory entries added, nonforgetting, soundness mistakes, and completeness mistakes.
+    7. Set headline_result_allowed=true only if self_learning_delta_overall > 0, new_promoted_count >= 1, and nonforgetting_rate >= 0.99.
+    8. If the gate fails, set pivot_retired=true and add a clear future-block rule.
+    9. Run focused tests for any edited self-learning code.
+    10. Write all required artifact fields with status="complete".
 
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1464_repair_validation_error_context_ab.json')); print(d.get('acceptance_delta_pp'), d.get('repair_executor_lineage_preserved'), d.get('repair_executor_lineage_retired'))"
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1471_fr11_v8_verified_memory_growth_pivot.json')); print(d.get('self_learning_delta_overall'), d.get('new_promoted_count'), d.get('nonforgetting_rate'), d.get('pivot_retired'))"
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-- id: exp1465-external-verifier-benchmark-fit-audit
-  milestone: 2026.04.112
-  deliverable: results/experiment_1465_external_verifier_benchmark_fit_audit.json
-  title: "External Verifier Benchmark Fit Audit — VNNLIB/VNN-COMP/BEAVER Adopt, Defer, or Retire"
+- id: exp1472-online-verifier-asymmetric-mistake-budget
+  milestone: 2026.04.113
+  deliverable: results/experiment_1472_online_verifier_asymmetric_mistake_budget.json
+  title: "Online Verifier Asymmetric Mistake-Budget Audit - Gated on Exp1471 Artifact"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 30
+  estimated_wall_time_min: 45
+  priority: high
+  requires_gpu: false
+  skip_pre_test: true
+  gated_on:
+    - upstream: exp1471-fr11-v8-verified-memory-growth-pivot
+      artifact_field: self_learning_artifact_ready
+      op: "=="
+      value: true
+  prior_failures:
+    - experiment_id: exp1232-verifier-joint-orthogonality-audit
+      verdict: prior_verifier_governance_audit_scope
+      addressed_by: "This audit is narrowed to exp1471 online-learnability soundness/completeness mistake accounting, not a broad verifier orthogonality or retraining pass."
+      retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    arXiv:2603.03538 frames learned verifier feedback loops in terms of
+    asymmetric soundness and completeness mistakes. Exp1471 must be audited
+    under that framing before any self-learning claim is preserved. Use
+    {project_root} as the project root and {date} as the run date.
+
+    EXISTING CODE TO READ FIRST:
+    - CODEX.md
+    - CLAUDE.md
+    - research-references.md
+    - results/experiment_1471_fr11_v8_verified_memory_growth_pivot.json
+    - results/experiment_1459_self_learning_nonheadline_lineage_decision.json
+    - docs/research-notes/self_learning_lineage_decision.md
+    - python/carnot/pipeline/
+
+    TASK:
+    Convert exp1471's self-learning outcome into an asymmetric mistake-budget
+    audit that separates dangerous missed errors from conservative false flags.
+
+    REQUIRED ARTIFACT FIELDS:
+    - status
+    - source_experiment
+    - soundness_mistakes
+    - completeness_mistakes
+    - asymmetric_cost_weights
+    - asymmetric_cost_score
+    - pareto_decision
+    - self_learning_claim_preserved
+    - self_learning_claim_retired
+    - audit_note_path
+    - honest_verdict
+
+    CONCRETE STEPS:
+    1. Create results/experiment_1472_online_verifier_asymmetric_mistake_budget.json immediately with status="in_progress".
+    2. Read exp1471 and the online verifier learnability note in research-references.md.
+    3. Define explicit cost weights where soundness mistakes cost more than completeness mistakes.
+    4. Compute the asymmetric-cost score from exp1471 fields and any available per-case ledger.
+    5. Write docs/research-notes/fr11_v8_asymmetric_mistake_budget.md with the decision and caveats.
+    6. Preserve the self-learning claim only if exp1471 passed and asymmetric soundness risk is acceptable.
+    7. Write all required artifact fields with status="complete".
+
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1472_online_verifier_asymmetric_mistake_budget.json')); print(d.get('asymmetric_cost_score'), d.get('self_learning_claim_preserved'), d.get('self_learning_claim_retired'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp1473-live-telemetry-adversarial-validity-audit
+  milestone: 2026.04.113
+  deliverable: results/experiment_1473_live_telemetry_adversarial_validity_audit.json
+  title: "Live Telemetry Adversarial Validity Audit - Length, Format, and Mock-Logprob Confounds"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 30
+  estimated_wall_time_min: 45
+  priority: high
+  requires_gpu: false
+  skip_pre_test: true
+  prior_failures:
+    - experiment_id: exp412-live-adversarial-gsm8k
+      verdict: prior_live_adversarial_benchmark_scope
+      addressed_by: "This task audits confounds in already-produced .113 telemetry and BEAVER artifacts; it does not launch a new adversarial GSM8K benchmark or repair loop."
+      retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    CLAUDE.md requires adversarial checks before scaling. Phase 1 telemetry can
+    look successful for bad reasons: response length, JSON/schema formatting,
+    prompt family, or mock-logprob leakage. This audit tries to falsify the
+    telemetry evidence before any headline claim. Use {project_root} as the
+    project root and {date} as the run date.
+
+    EXISTING CODE TO READ FIRST:
+    - CODEX.md
+    - CLAUDE.md
+    - results/experiment_1468_live_sota_logprob_telemetry_preflight.json
+    - results/experiment_1469_halt_spilled_energy_telemetry_diagnostic.json
+    - results/experiment_1470_beaver_lite_deterministic_bound_smoke.json
+    - research-references.md
+    - docs/research-notes/paper_v6_anchored_claim_matrix.md
+
+    TASK:
+    Audit whether .113 telemetry and BEAVER-lite artifacts can pass their gates
+    without measuring a real verifier signal.
+
+    REQUIRED ARTIFACT FIELDS:
+    - status
+    - artifacts_audited
+    - length_confound_checked
+    - format_confound_checked
+    - prompt_family_confound_checked
+    - mock_logprob_leakage_checked
+    - superficial_baseline_results
+    - telemetry_validity_verdict
+    - claim_allowed
+    - audit_note_path
+    - honest_verdict
+
+    CONCRETE STEPS:
+    1. Create results/experiment_1473_live_telemetry_adversarial_validity_audit.json immediately with status="in_progress".
+    2. Read exp1468, exp1469 if present, and exp1470.
+    3. Compare any reported signal against simple baselines: length, token count, JSON validity, prompt family, and mock/live flag.
+    4. Check whether BEAVER-lite used mock logprobs and whether that was clearly labeled.
+    5. Write docs/research-notes/live_telemetry_adversarial_validity_audit.md with pass/fail per confound.
+    6. Set claim_allowed=false if a superficial baseline explains the result as well as or better than the proposed diagnostic.
+    7. Write all required artifact fields with status="complete".
+
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1473_live_telemetry_adversarial_validity_audit.json')); print(d.get('telemetry_validity_verdict'), d.get('claim_allowed'), d.get('honest_verdict'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+# ============================================================
+# Phase 3 - Constraint, sampler, hardware simulation, and closure
+# ============================================================
+
+- id: exp1474-tskm-linear-constraint-projection-smoke
+  milestone: 2026.04.113
+  deliverable: results/experiment_1474_tskm_linear_constraint_projection_smoke.json
+  title: "T-SKM Linear Constraint Projection Smoke - Zero-Violation Toy Certificates"
   agent_type: codex
   model: gpt-5.5
   max_turns: 30
@@ -840,58 +531,250 @@ tasks:
   requires_gpu: false
   skip_pre_test: true
   prior_failures:
-    - experiment_id: ops-known-issues-scope-reduction-and-publication-hold
-      verdict: external_benchmark_claims_not_yet_narrowed_to_current_carnot_evidence
-      addressed_by: "This task narrows external verifier benchmark adoption to an adopt/defer/retire decision instead of launching a new benchmark lineage."
-      retire_if_same_verdict: false
+    - experiment_id: exp1458-hardnet-dsp-lineage-retirement
+      verdict: hardnet_dsp_lineage_retired
+      addressed_by: "This is a CPU-only deterministic SKM/Kaczmarz-Motzkin projection smoke over toy linear constraints; it does not reopen HardNet++, DSP, or neural constraint training."
+      retire_if_same_verdict: true
   prompt: |
     CONTEXT:
-    Carnot needs credible external verification comparisons, but .112 is a
-    scope-reduction milestone. The right task is a fit audit, not a new broad
-    benchmark implementation. Use {project_root} as the project root and {date}
-    as the run date.
+    The post-.112 sweep identified T-SKM-Net as a bounded linear-constraint
+    projection baseline. This is not a HardNet++/DSP revival; it is a toy
+    verifier-side projection smoke with deterministic acceptance fields. Use
+    {project_root} as the project root and {date} as the run date.
 
     EXISTING CODE TO READ FIRST:
     - CODEX.md
     - CLAUDE.md
     - research-references.md
-    - docs/research-notes/comparator_cite_retire_audit.md
-    - openspec/capabilities/
+    - openspec/capabilities/verification/spec.md
+    - python/carnot/verify/
+    - python/carnot/models/
     - tests/python/
-    - _bmad/prd.md
-    - ops/e2e-test-plan.md
 
     TASK:
-    Decide whether VNNLIB/VNN-COMP, BEAVER-style deterministic bounds, or a
-    smaller existing benchmark should be adopted, deferred, or retired for the
-    next verification comparison. Produce a decision note and terminal artifact.
+    Implement or script a tiny SKM-style iterative projection baseline for
+    linear equality/inequality certificate constraints and compare it to
+    existing Carnot/Z3/Ising checks on toy cases.
 
     REQUIRED ARTIFACT FIELDS:
     - status
-    - benchmarks_reviewed
-    - benchmark_decision_table_path
-    - benchmark_adoption_decision
-    - adopted_benchmark
-    - deferred_benchmarks
-    - retired_benchmarks
-    - next_minimal_benchmark_task
+    - toy_cases_evaluated
+    - zero_violation_projection
+    - max_constraint_violation
+    - baseline_verifier_agreement
+    - projection_iterations_p50
+    - projection_iterations_p95
+    - helper_path
+    - tests_run
     - honest_verdict
 
     CONCRETE STEPS:
-    1. Create results/experiment_1465_external_verifier_benchmark_fit_audit.json immediately with status="in_progress".
-    2. Review current verifier specs/tests and comparator audit outputs.
-    3. Inspect VNNLIB/VNN-COMP fit at a documentation level; do not implement a benchmark runner unless a tiny smoke check already exists.
-    4. Decide adopt, defer, or retire for each benchmark family and write docs/research-notes/external_verifier_benchmark_fit.md.
-    5. If adopting one benchmark, define exactly one minimal future task with inputs, expected artifact fields, and e2e check; otherwise explain why all are deferred/retired.
-    6. Write all required artifact fields with status="complete".
+    1. Create results/experiment_1474_tskm_linear_constraint_projection_smoke.json immediately with status="in_progress".
+    2. Read the verification spec before editing code. Add a small REQ only if a persistent helper is needed.
+    3. Build a minimal SKM/Kaczmarz-Motzkin-style projection over simple Ax <= b and equality-to-inequality transforms.
+    4. Test on toy arithmetic/certificate constraints where the correct feasible point is known.
+    5. Compare projected solutions to existing verifier/Z3/Ising verdicts.
+    6. Keep the implementation CPU-only and bounded; do not train a neural model.
+    7. Run focused tests for any helper code.
+    8. Write all required artifact fields with status="complete".
 
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1465_external_verifier_benchmark_fit_audit.json')); print(d.get('benchmark_adoption_decision'), d.get('adopted_benchmark'), d.get('next_minimal_benchmark_task'))"
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1474_tskm_linear_constraint_projection_smoke.json')); print(d.get('zero_violation_projection'), d.get('max_constraint_violation'), d.get('baseline_verifier_agreement'))"
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-- id: exp1466-milestone-112-retrospective
-  milestone: 2026.04.112
-  deliverable: results/experiment_1466_milestone_112_retro.json
-  title: "Milestone .112 Retrospective — Scope Reduction Met, Runtime/Repair Carry-Forward Rules"
+- id: exp1475-static-csr-certificate-automaton-smoke
+  milestone: 2026.04.113
+  deliverable: results/experiment_1475_static_csr_certificate_automaton_smoke.json
+  title: "STATIC CSR Certificate Automaton Smoke - Exact Acceptance and Latency"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 30
+  estimated_wall_time_min: 45
+  priority: medium
+  requires_gpu: false
+  skip_pre_test: true
+  prior_failures:
+    - experiment_id: exp1339-xgrammar2-tagdispatch-certificate-grammar
+      verdict: retired_or_gate_blocked_certificate_grammar_path
+      addressed_by: "This task is not a new generation grammar; it is a static CSR automaton equivalence/latency smoke over a tiny existing certificate schema."
+      retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    STATIC suggests flattening trie constraints into accelerator-friendly sparse
+    transitions. Carnot can test the idea safely as a tiny certificate-schema
+    automaton benchmark without reopening repair generation. Use {project_root}
+    as the project root and {date} as the run date.
+
+    EXISTING CODE TO READ FIRST:
+    - CODEX.md
+    - CLAUDE.md
+    - research-references.md
+    - python/carnot/
+    - tests/python/
+    - docs/research-notes/paper_v6_anchored_claim_matrix.md
+
+    TASK:
+    Build a minimal static CSR automaton for a tiny Carnot certificate schema,
+    compare exact acceptance against the existing parser/trie/regex path, and
+    report latency.
+
+    REQUIRED ARTIFACT FIELDS:
+    - status
+    - schema_cases_evaluated
+    - csr_automaton_path
+    - exact_acceptance_equivalent
+    - false_accepts
+    - false_rejects
+    - existing_path_latency_ms_p50
+    - csr_latency_ms_p50
+    - speedup_ratio
+    - tests_run
+    - honest_verdict
+
+    CONCRETE STEPS:
+    1. Create results/experiment_1475_static_csr_certificate_automaton_smoke.json immediately with status="in_progress".
+    2. Locate the smallest certificate schema/parser path already in the repo.
+    3. Encode a tiny allowed-token/token-class automaton as CSR-like arrays or a simple sparse transition table.
+    4. Evaluate exact acceptance equivalence on valid and invalid schema strings.
+    5. Benchmark existing path p50 latency and CSR path p50 latency on a small repeated sample.
+    6. Do not add an LLM generation path or repair loop.
+    7. Run focused tests for any helper code.
+    8. Write all required artifact fields with status="complete".
+
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1475_static_csr_certificate_automaton_smoke.json')); print(d.get('exact_acceptance_equivalent'), d.get('speedup_ratio'), d.get('honest_verdict'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp1476-kv260-discrete-sb-rtl-regression-pack
+  milestone: 2026.04.113
+  deliverable: results/experiment_1476_kv260_discrete_sb_rtl_regression_pack.json
+  title: "KV260 Discrete SB RTL Regression Pack - Source-Level Only, No Board Claim"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 30
+  estimated_wall_time_min: 45
+  priority: high
+  requires_gpu: false
+  skip_pre_test: true
+  prior_failures:
+    - experiment_id: exp1437-discrete-sb-kv260-rtl-lint-sim
+      verdict: missing_rtl_source_or_no_file_changes
+      addressed_by: "Exp1441 created the RTL source and exp1451 completed lint/simulation; this task turns that evidence into a regression pack without claiming board execution."
+      retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    Exp1460 keeps KV260 active only at the Discrete SB RTL lint/simulation
+    layer. Exp1451 completed local lint/sim but no board, bitfile, or latency
+    claim is allowed. Use {project_root} as the project root and {date} as the
+    run date.
+
+    EXISTING CODE TO READ FIRST:
+    - CODEX.md
+    - CLAUDE.md
+    - _bmad/architecture.md
+    - research-hardware-wishlist.md
+    - results/experiment_1451_discrete_sb_rtl_lint_sim_rerun.json
+    - results/experiment_1460_hardware_portfolio_narrowing.json
+    - hardware/kv260/
+    - tests/python/
+
+    TASK:
+    Package the KV260 Discrete SB source-level evidence into a repeatable RTL
+    regression manifest and run the available local lint/simulation commands.
+
+    REQUIRED ARTIFACT FIELDS:
+    - status
+    - rtl_files
+    - testbench_files
+    - rtl_regression_complete
+    - verilator_lint_passed
+    - icarus_sim_passed
+    - yosys_available
+    - board_execution_performed
+    - bitfile_produced
+    - latency_claimed
+    - regression_manifest_path
+    - honest_verdict
+
+    CONCRETE STEPS:
+    1. Create results/experiment_1476_kv260_discrete_sb_rtl_regression_pack.json immediately with status="in_progress".
+    2. Read exp1451 and exp1460 to preserve the no-board-claim boundary.
+    3. Locate hardware/kv260/discrete_sb_256.v and its testbench or create only minimal non-invasive test-vector documentation if already missing.
+    4. Run available local source-level checks: Verilator lint, Icarus simulation, and Yosys probe if installed.
+    5. Write hardware/kv260/discrete_sb_regression_manifest.md with exact commands, tool availability, and expected outputs.
+    6. Set board_execution_performed=false, bitfile_produced=false, and latency_claimed=false unless real board/synthesis commands actually run.
+    7. Write all required artifact fields with status="complete".
+
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1476_kv260_discrete_sb_rtl_regression_pack.json')); print(d.get('rtl_regression_complete'), d.get('board_execution_performed'), d.get('latency_claimed'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp1477-thrml-npim-simulator-parity-microprobe
+  milestone: 2026.04.113
+  deliverable: results/experiment_1477_thrml_npim_simulator_parity_microprobe.json
+  title: "THRML + NPIM Simulator Parity Micro-Probe - No TSU Hardware Claim"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 50
+  estimated_wall_time_min: 75
+  priority: high
+  requires_gpu: false
+  skip_pre_test: true
+  prior_failures:
+    - experiment_id: exp1347-thrml-compatibility-parity-audit
+      verdict: thrml_compatibility_simulation_only_no_hardware_claim
+      addressed_by: "Exp1460 preserved THRML only as a simulator/compatibility lane; this task keeps hardware_claim_allowed=false and adds only a bounded NPIM-style simulator probe."
+      retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    Exp1460 keeps Extropic active only as THRML/JAX compatibility and TSU
+    simulation. The post-.112 sweep added NPIM as a learned-update-rule idea
+    for Ising simulation. This task must not claim Extropic hardware access.
+    Use {project_root} as the project root and {date} as the run date.
+
+    EXISTING CODE TO READ FIRST:
+    - CODEX.md
+    - CLAUDE.md
+    - research-references.md
+    - _bmad/architecture.md
+    - research-hardware-wishlist.md
+    - results/experiment_1460_hardware_portfolio_narrowing.json
+    - python/carnot/samplers/
+    - tests/python/
+
+    TASK:
+    Run a tiny THRML/Carnot simulator parity probe and, if feasible in bounded
+    time, a compact NPIM-style schedule/update heuristic on the same toy Ising
+    cases.
+
+    REQUIRED ARTIFACT FIELDS:
+    - status
+    - thrml_available
+    - carnot_sampler_cases
+    - thrml_parity_cases
+    - parity_metric
+    - npim_probe_attempted
+    - npim_energy_delta
+    - npim_time_to_energy_delta
+    - hardware_claim_allowed
+    - simulator_only
+    - blockers
+    - honest_verdict
+
+    CONCRETE STEPS:
+    1. Create results/experiment_1477_thrml_npim_simulator_parity_microprobe.json immediately with status="in_progress".
+    2. Read exp1460 and the THRML/NPIM notes in research-references.md.
+    3. Probe whether THRML imports cleanly in the current environment; if it does not, write a terminal blocker artifact rather than installing broad dependencies.
+    4. Compare Carnot sampler and THRML simulation on 2-3 tiny Ising cases where exact or near-exact CPU reference is available.
+    5. If time permits, test one compact NPIM-style heuristic such as a learned or hand-fit momentum/schedule parameter on the same cases.
+    6. Record hardware_claim_allowed=false and simulator_only=true.
+    7. Run focused tests only if repo code is edited.
+    8. Write all required artifact fields with status="complete".
+
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1477_thrml_npim_simulator_parity_microprobe.json')); print(d.get('thrml_available'), d.get('parity_metric'), d.get('hardware_claim_allowed'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp1478-milestone-113-retrospective
+  milestone: 2026.04.113
+  deliverable: results/experiment_1478_milestone_113_retro.json
+  title: "Milestone .113 Retrospective - Telemetry, Bounds, Self-Learning, and Simulation Carry-Forwards"
   agent_type: codex
   model: gpt-5.5
   max_turns: 20
@@ -900,15 +783,15 @@ tasks:
   requires_gpu: false
   skip_pre_test: true
   prior_failures:
-    - experiment_id: exp1452-milestone-111-retrospective
-      verdict: milestone_111_10_of_14_criteria_met_threshold_not_met_live_sota_runtime_gate_blocked_repair_scale_carry_forward
-      addressed_by: "This retro must honestly score .112 criteria, especially scope reduction compliance and any runtime/repair carry-forward blockers."
+    - experiment_id: exp1466-milestone-112-retrospective
+      verdict: predecessor_milestone_retrospective_complete
+      addressed_by: "This is the terminal retrospective for the next milestone and scores .113-specific telemetry, BEAVER, self-learning, and simulation criteria."
       retire_if_same_verdict: false
   prompt: |
     CONTEXT:
-    This is the terminal retrospective for milestone .112. Score the milestone
-    honestly: scope-reduction criteria count only if artifacts and docs exist,
-    and runtime/repair gates count only if their exact fields pass. Use
+    This is the terminal retrospective for milestone .113. Score the milestone
+    honestly against the 12 criteria in the roadmap doc. Gate-blocked evidence
+    is terminal but counts as met only where the criterion allows it. Use
     {project_root} as the project root and {date} as the run date.
 
     EXISTING CODE TO READ FIRST:
@@ -918,35 +801,31 @@ tasks:
     - research-roadmap.yaml
     - research-roadmap-next.yaml
     - ops/conductor-log.md
-    - results/experiment_1453_112_scope_reduction_activation_manifest.json
-    - results/experiment_1454_experiment_artifact_signal_noise_classifier.json
-    - results/experiment_1455_known_issues_mandatory_priority_audit.json
-    - results/experiment_1456_grpo_vprm_lineage_consolidation_retirement.json
-    - results/experiment_1457_wopr_puzzle_cartridge_retirement.json
-    - results/experiment_1458_hardnet_dsp_repair_stack_consolidation.json
-    - results/experiment_1459_self_learning_nonheadline_lineage_decision.json
-    - results/experiment_1460_hardware_portfolio_narrowing.json
-    - results/experiment_1461_comparator_integration_cite_retire_audit.json
-    - results/experiment_1462_paper_v6_anchored_claims_narrowing.json
-    - results/experiment_1463_local_sota_gguf_runtime_repair.json
-    - results/experiment_1464_repair_validation_error_context_ab.json
-    - results/experiment_1465_external_verifier_benchmark_fit_audit.json
+    - results/experiment_1467_112_completion_archive_113_activation.json
+    - results/experiment_1468_live_sota_logprob_telemetry_preflight.json
+    - results/experiment_1469_halt_spilled_energy_telemetry_diagnostic.json
+    - results/experiment_1470_beaver_lite_deterministic_bound_smoke.json
+    - results/experiment_1471_fr11_v8_verified_memory_growth_pivot.json
+    - results/experiment_1472_online_verifier_asymmetric_mistake_budget.json
+    - results/experiment_1473_live_telemetry_adversarial_validity_audit.json
+    - results/experiment_1474_tskm_linear_constraint_projection_smoke.json
+    - results/experiment_1475_static_csr_certificate_automaton_smoke.json
+    - results/experiment_1476_kv260_discrete_sb_rtl_regression_pack.json
+    - results/experiment_1477_thrml_npim_simulator_parity_microprobe.json
 
     TASK:
-    Write the terminal milestone .112 retrospective artifact, including criteria
-    scoring, blocked tasks, retired lineages, carry-forward rules, and whether
-    the scope-reduction directive was satisfied.
+    Write the terminal .113 retrospective artifact, including criteria scoring,
+    any blocked tasks, any retired/preserved lineages, carry-forward rules, and
+    confirmation that forbidden files were not modified.
 
     REQUIRED ARTIFACT FIELDS:
     - status
     - milestone
     - criteria_met
     - criteria_total
-    - scope_reduction_required
-    - scope_reduction_tasks_completed
-    - scope_reduction_compliance_met
     - blocked_tasks
     - retired_lineages
+    - preserved_lineages
     - carry_forward_tracks
     - missing_artifacts
     - research_roadmap_yaml_modified
@@ -955,15 +834,14 @@ tasks:
     - honest_verdict
 
     CONCRETE STEPS:
-    1. Create results/experiment_1466_milestone_112_retro.json immediately with status="in_progress".
-    2. Read the roadmap doc, YAML, conductor log, and every .112 artifact that exists.
-    3. Score all 14 success criteria from openspec/change-proposals/research-roadmap-vNEXT.md. Gate-blocked evidence is valid but does not count as met unless the criterion says so.
-    4. Record missing artifacts and blocked tasks explicitly.
-    5. Record all retired lineages and exclusion-manifest updates.
-    6. Record carry-forward rules for runtime, repair, self-learning, paper claims, and benchmark adoption.
-    7. Confirm research-roadmap.yaml and scripts/research_conductor.py were not modified.
-    8. Update ops/status.md and ops/changelog.md with concise .112 outcomes, then set ops_docs_updated=true.
-    9. Write all required artifact fields with status="complete".
+    1. Create results/experiment_1478_milestone_113_retro.json immediately with status="in_progress".
+    2. Read the roadmap doc, active YAML, conductor log, and every .113 artifact that exists.
+    3. Score all 12 success criteria from openspec/change-proposals/research-roadmap-vNEXT.md.
+    4. Record exact reasons for any gate-blocked or failed task.
+    5. Record whether the HALT/Spilled diagnostic, self-learning pivot, T-SKM, STATIC, KV260 regression, and THRML/NPIM tracks are preserved or retired.
+    6. Confirm research-roadmap.yaml and scripts/research_conductor.py were not modified.
+    7. Update ops/status.md and ops/changelog.md with concise .113 outcomes, then set ops_docs_updated=true.
+    8. Write all required artifact fields with status="complete".
 
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1466_milestone_112_retro.json')); print(d.get('criteria_met'), d.get('criteria_total'), d.get('scope_reduction_compliance_met'), d.get('honest_verdict'))"
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1478_milestone_113_retro.json')); print(d.get('criteria_met'), d.get('criteria_total'), d.get('honest_verdict'))"
     Do NOT push. Do NOT modify scripts/research_conductor.py.
