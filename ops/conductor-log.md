@@ -1120,3 +1120,4 @@ web search: GitHub trending energy based mod |
 | 2026-05-07 18:14 UTC | interwhen Monitor Prototype - Gated on Exp1493/Exp | OK | 81 passed, 1 warning in 4.61s |
 | 2026-05-07 18:28 UTC | HoVer Safe-Prefix Continuation Audit - Gated on Ex | OK | 81 passed, 1 warning in 4.44s |
 | 2026-05-07 18:41 UTC | FR-11 v10 Trace2Skill Daily Eval + Rot Check | OK | 81 passed, 1 warning in 5.16s |
+| 2026-05-07 19:23 UTC | trace2skill Artifact Reachability Audit - Gated on | OK | 81 passed, 1 warning in 5.04s |
