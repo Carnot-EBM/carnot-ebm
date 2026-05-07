@@ -17,12 +17,10 @@ call. No fine-tuning. No access to model weights.
 
 Rust + Python/JAX, Apache 2.0, `pip install carnot`.
 
-Current public research record: **1,562 experiments tracked, 122
+Current public research record: **1,576 experiments tracked, 123
 artifact-backed completed milestone records**, with checked-in result artifacts
 through Exp 1452 on 2026-05-07. `research-complete.yaml` currently archives
-**122** completed milestone records through 2026.04.110; milestone .111 has
-terminal artifacts through Exp 1452 and is not yet appended as a new archive
-record.
+**123** completed milestone records through 2026.04.111.
 
 Milestone .106 delivered the critical fix to thinking-mode certificate
 generation: Exp 1366 (CRANE tag-first prefix injection) reached
@@ -361,8 +359,7 @@ claim we publish.
 ## Where to go next
 
 - **[Technical report](docs/technical-report.md)** — the full research arc
-  through Exp 1452 across 122 archived milestone records plus .111 terminal
-  artifacts, with a
+  through Exp 1452 across 123 archived milestone records, with a
   plain-English timeline of what we tried, what failed, what stuck.
 - **[Roadmap](docs/roadmap.md)** — current milestone, upcoming milestones,
   hardware track, and Phase 3 (Kona-parity foundation-model) direction.
@@ -566,7 +563,7 @@ See the [technical report](docs/technical-report.md) for the full research recor
 
 ## 14 Principles Learned
 
-Hard-won lessons from the activation-based phase of a research program that now spans Exp 1-1452 across 122 archived milestone records plus .111 terminal artifacts and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
+Hard-won lessons from the activation-based phase of a research program that now spans 1,576 tracked experiments through Exp 1452 across 123 archived milestone records and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
 
 ### What works
 1. **The model's own logprobs are the best energy.** No external EBM needed for rejection sampling — the LLM's own confidence is already an energy function. Simple, practical, +10%.
