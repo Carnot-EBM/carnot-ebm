@@ -4036,3 +4036,57 @@ task-success delta is non-negative.
 | Requirement | Python | Tests |
 |-------------|--------|-------|
 | REQ-LEARN-1484 | Implemented (`python/carnot/pipeline/query_time_memory_policy.py`, `python/carnot/reporting/fr11_v9_query_time_memory_policy.py`) | Implemented (`tests/python/test_fr11_v9_query_time_memory_policy.py`) |
+
+## REQ-LEARN-1485: FR-11 Completeness-Reduction Audit Preserves Zero Soundness
+
+Exp 1485 SHALL audit Exp 1484's per-case query-time memory replay ledger for
+conservative threshold or routing variants that reduce bounded replay
+completeness mistakes without introducing any soundness mistake. The audit
+SHALL reject every candidate whose soundness mistakes exceed the baseline
+soundness mistakes or exceed zero, even when that candidate reduces false
+rejects.
+
+### REQ-LEARN-1485 Sub-requirements
+
+- REQ-LEARN-1485-1: The workflow SHALL write
+  `results/experiment_1485_fr11_completeness_reduction_audit.json` first with
+  `status="in_progress"` before reading the source replay artifact.
+- REQ-LEARN-1485-2: The audit SHALL load Exp 1484's
+  `memory_policy_replay` per-case ledger, using `baseline_memory_disabled` as
+  the baseline and evaluating candidate variants against the same replay case
+  IDs.
+- REQ-LEARN-1485-3: Candidate selection SHALL minimize completeness mistakes
+  only among candidates with `candidate_soundness_mistakes <=
+  baseline_soundness_mistakes` and `candidate_soundness_mistakes == 0`.
+- REQ-LEARN-1485-4: The final artifact SHALL include `status`,
+  `source_experiment`, `completeness_reduction_audit_complete`,
+  `baseline_completeness_mistakes`, `candidate_completeness_mistakes`,
+  `completeness_mistake_delta`, `baseline_soundness_mistakes`,
+  `candidate_soundness_mistakes`, `candidate_policy`,
+  `policy_change_allowed`, `tests_run`, and `honest_verdict`.
+- REQ-LEARN-1485-5: `policy_change_allowed` SHALL be true only when the best
+  allowed candidate has zero soundness mistakes and a negative
+  `completeness_mistake_delta`.
+
+### SCENARIO-LEARN-1486: Verified-Memory Routing Reduces False Rejects
+
+**Given** Exp 1484 completed with a baseline replay ledger and an opt-in
+verified-memory candidate ledger
+**When** Exp 1485 audits candidate routing variants on the same replay case IDs
+**Then** the selected candidate has zero soundness mistakes
+**And** its completeness mistakes are lower than the baseline completeness
+mistakes
+**And** `policy_change_allowed=true`.
+
+### SCENARIO-LEARN-1487: Unsafe Broad Routing Is Rejected
+
+**Given** a candidate routing variant that accepts negative-control replay IDs
+**When** Exp 1485 compares that candidate with the baseline soundness mistakes
+**Then** the candidate is rejected from best-candidate selection
+**And** `policy_change_allowed` is not based on that unsafe candidate.
+
+## Implementation Status (REQ-LEARN-1485)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-1485 | Implemented (`python/carnot/reporting/fr11_completeness_reduction_audit.py`) | Implemented (`tests/python/test_fr11_completeness_reduction_audit.py`) |

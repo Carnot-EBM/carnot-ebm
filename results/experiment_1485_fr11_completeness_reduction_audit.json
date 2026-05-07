@@ -1,0 +1,85 @@
+{
+  "artifact_metadata": {
+    "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "run_date": "20260507"
+  },
+  "audit_note": "Policy change allowed means the selected routing candidate clears the zero-soundness gate and reduces bounded replay false rejects. This audit does not broaden memory beyond Exp 1484's opt-in verified-memory routing.",
+  "baseline_completeness_mistakes": 12,
+  "baseline_soundness_mistakes": 0,
+  "candidate_completeness_mistakes": 0,
+  "candidate_policy": {
+    "allowed": true,
+    "candidate_completeness_mistakes": 0,
+    "candidate_soundness_mistakes": 0,
+    "name": "exp1484_opt_in_verified_memory_enabled",
+    "rejection_reason": null,
+    "replay_case_count": 24,
+    "routing": "allow hits only for Exp 1484 verified promoted memory IDs",
+    "source_variant": "memory_enabled",
+    "threshold": "verified_memory_index_membership"
+  },
+  "candidate_soundness_mistakes": 0,
+  "candidate_variants": [
+    {
+      "allowed": true,
+      "candidate_completeness_mistakes": 12,
+      "candidate_soundness_mistakes": 0,
+      "name": "baseline_memory_disabled",
+      "rejection_reason": null,
+      "replay_case_count": 24,
+      "routing": "suppress all query-time memory hits",
+      "source_variant": "baseline_memory_disabled",
+      "threshold": "memory_enabled=false"
+    },
+    {
+      "allowed": true,
+      "candidate_completeness_mistakes": 0,
+      "candidate_soundness_mistakes": 0,
+      "name": "exp1484_opt_in_verified_memory_enabled",
+      "rejection_reason": null,
+      "replay_case_count": 24,
+      "routing": "allow hits only for Exp 1484 verified promoted memory IDs",
+      "source_variant": "memory_enabled",
+      "threshold": "verified_memory_index_membership"
+    },
+    {
+      "allowed": false,
+      "candidate_completeness_mistakes": 0,
+      "candidate_soundness_mistakes": 12,
+      "name": "unsafe_accept_all_replay_ids",
+      "rejection_reason": "candidate_soundness_mistakes_exceeds_zero",
+      "replay_case_count": 24,
+      "routing": "accept every replay ID as a query-time memory hit",
+      "source_variant": "synthetic_negative_control_probe",
+      "threshold": "none"
+    }
+  ],
+  "candidate_variants_audited": 3,
+  "completeness_mistake_delta": -12,
+  "completeness_reduction_audit_complete": true,
+  "duration_s": 0.001,
+  "experiment": "1485_fr11_completeness_reduction_audit",
+  "finished_at": "2026-05-07T14:44:29Z",
+  "honest_verdict": "completeness_reduction_candidate_allowed_zero_soundness",
+  "policy_change_allowed": true,
+  "run_date": "20260507",
+  "schema": "fr11_completeness_reduction_audit_v1",
+  "source_experiment": "experiment_1484_fr11_v9_query_time_memory_policy",
+  "source_experiment_path": "results/experiment_1484_fr11_v9_query_time_memory_policy.json",
+  "source_replay_case_count": 24,
+  "spec": [
+    "REQ-LEARN-1485",
+    "SCENARIO-LEARN-1486",
+    "SCENARIO-LEARN-1487"
+  ],
+  "started_at": "2026-05-07T14:44:29Z",
+  "status": "complete",
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_fr11_completeness_reduction_audit.py -q --no-cov -n 0",
+    ".venv/bin/coverage run -m pytest tests/python/test_fr11_completeness_reduction_audit.py -q --no-cov -n 0",
+    ".venv/bin/coverage report --fail-under=100 -m python/carnot/reporting/fr11_completeness_reduction_audit.py",
+    "ruff check python/carnot/reporting/fr11_completeness_reduction_audit.py tests/python/test_fr11_completeness_reduction_audit.py",
+    "python3 scripts/check_spec_coverage.py",
+    ".venv/bin/pytest tests/python -q (failed/wedged at ~93% after unrelated failures, xdist worker crashes, Z3 segfault in tests/python/test_pipeline_errors.py::test_concurrent_verify_calls, JAX abort in tests/python/test_verify_landscape.py::test_basin_radius_estimation, and tokenizer abort in tests/python/test_experiment_295_apple_verify_repair.py::test_run_all_produces_12_cells; pytest process terminated)"
+  ]
+}
