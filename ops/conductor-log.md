@@ -1069,3 +1069,4 @@ web search: GitHub trending energy based mod |
 | 2026-05-07 04:42 UTC | Paper-v6 Anchored Claims Narrowing — Reduce to 3-5 | OK | 81 passed, 1 warning in 5.28s |
 | 2026-05-07 05:00 UTC | Local SOTA GGUF Runtime Repair — Fix llama.cpp CUD | OK | 81 passed, 1 warning in 5.28s |
 | 2026-05-07 05:20 UTC | Repair Validation-Error-as-Context A/B — Gated on  | OK | 89 passed, 1 warning in 5.73s |
+| 2026-05-07 05:31 UTC | External Verifier Benchmark Fit Audit — VNNLIB/VNN | OK | 81 passed, 1 warning in 4.04s |
