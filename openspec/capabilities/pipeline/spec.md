@@ -2490,6 +2490,66 @@ records schema-valid and semantic-acceptance rates for the repair-hint sample.
 
 **Spec traces:** REQ-VERIFY-1428, SCENARIO-VERIFY-1428
 
+### REQ-VERIFY-1464: Repair Retry Validation Error Context A/B
+
+The repository shall provide a bounded Exp 1464 A/B evaluator that compares
+DCCD repair retries without validator-error retry context against retries that
+include the exact concrete validation error from the failed candidate. The
+baseline retry MUST preserve the current path by including the failed model
+output without adding the concrete validation error message. The context retry
+MUST include both the failed model output and the exact schema or semantic
+validation error message produced for that failed candidate.
+
+Both variants MUST evaluate the same FoVer repair-hint cases drawn from the
+same Exp 1397-style subset used by the repair-executor lineage when available.
+Headline evidence MUST resolve mandated local SOTA GGUF model metadata through
+`cached_sota_pair()` or an equivalent helper following
+`scripts/experiment_template.py`, and MUST record model path, GPU assignment,
+and whether live local SOTA inference actually ran. Legacy small-model or
+injected generators may be used only for tests and CPU smoke paths, and must not
+be labelled as headline evidence.
+
+The terminal Exp 1464 artifact at
+`results/experiment_1464_repair_validation_error_context_ab.json` MUST include
+`status`, `model_specs`, `live_sota_model_inference_used`,
+`validation_error_context_enabled`, `cases_evaluated`,
+`baseline_acceptance_rate`, `context_acceptance_rate`,
+`acceptance_delta_pp`, `schema_validity_delta_pp`,
+`semantic_correctness_delta_pp`, `spilled_energy_diagnostic_available`,
+`repair_executor_lineage_preserved`, `repair_executor_lineage_retired`,
+`commands_run`, and `honest_verdict`. If no acceptance, schema-validity,
+semantic-correctness, or false-acceptance metric improves for the context
+variant, the artifact MUST set `repair_executor_lineage_retired=true`.
+
+**Decentralization implications:** The evaluator depends on local open-weight
+GGUF model metadata and generator callables; it does not add closed-weight SDK
+dependencies to `python/carnot/pipeline/`.
+
+**Acceptance criteria:**
+- The retry prompt helper can build both the baseline retry prompt and the
+  validation-error-context retry prompt without changing the original DCCD
+  prompt path.
+- The A/B evaluator uses identical case IDs for baseline and context retries
+  and records per-case baseline/context outcomes.
+- The artifact computes acceptance, schema-validity, semantic-correctness, and
+  false-acceptance deltas from the audited per-case rows.
+- The lineage-preserved/retired decision follows the metric-improvement rule
+  and records live SOTA evidence honestly.
+
+### SCENARIO-VERIFY-1464: Validation Error Context Either Salvages Or Retires Repair Executor
+
+**Given** Exp 1397 repair-hint rows are available
+**And** Exp 1463 has shown that a mandated local SOTA GGUF runtime can complete
+live inference
+**When** Exp 1464 runs baseline and validation-error-context retries on the same
+bounded FoVer repair subset
+**Then** the terminal artifact records the exact model path and GPU used,
+reports the three required deltas in percentage points, and preserves the
+repair-executor lineage only when at least one acceptance, schema-validity,
+semantic-correctness, or false-acceptance metric improves.
+
+**Spec traces:** REQ-VERIFY-1464, SCENARIO-VERIFY-1464
+
 ### REQ-VERIFY-1429: MCMC Constrained Repair Candidate Search
 
 The repository shall provide a bounded constrained candidate-search layer around

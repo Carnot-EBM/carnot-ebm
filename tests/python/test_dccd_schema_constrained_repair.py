@@ -21,6 +21,7 @@ from carnot.pipeline.dccd_schema_constrained_repair import (
     DCCDRepairOutputSchemaError,
     DraftConditionedSchemaRepairExecutor,
     build_dccd_repair_prompt,
+    build_dccd_retry_prompt,
     classify_dccd_rejection,
     parse_dccd_repair_model_output,
 )
@@ -76,6 +77,36 @@ def test_req1428_prompt_is_draft_conditioned_and_schema_constrained() -> None:
     assert "validator_metadata" in prompt
     assert "x" * 60 not in prompt
     assert "[truncated]" in prompt
+
+
+def test_req1464_retry_prompt_flag_adds_exact_validation_error_context() -> None:
+    """REQ-VERIFY-1464: baseline retry omits the exact error; context retry includes it."""
+
+    request = _request()
+    error = "invalid JSON repair output: missing final_certificate.state"
+    baseline = build_dccd_retry_prompt(
+        request,
+        failed_output='{"final_certificate": {"certificate_text": "SAT"}}',
+        validation_error_message=error,
+        include_validation_error_context=False,
+        config=DCCDRepairConfig(max_field_chars=90),
+    )
+    context = build_dccd_retry_prompt(
+        request,
+        failed_output='{"final_certificate": {"certificate_text": "SAT"}}',
+        validation_error_message=error,
+        include_validation_error_context=True,
+        config=DCCDRepairConfig(max_field_chars=90),
+    )
+
+    assert "REQ-VERIFY-1464" in baseline
+    assert "REQ-VERIFY-1464" in context
+    assert "failed_model_output" in baseline
+    assert "failed_model_output" in context
+    assert error not in baseline
+    assert error in context
+    assert "validation_error_message" not in baseline
+    assert "validation_error_message" in context
 
 
 def test_req1428_parser_accepts_only_bounded_dccd_schema() -> None:

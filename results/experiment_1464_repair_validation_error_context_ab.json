@@ -1,21 +1,138 @@
 {
-  "status": "in_progress",
-  "model_specs": [
-    "unsloth/Qwen3.6-35B-A3B-GGUF",
-    "unsloth/gemma-4-31B-it-GGUF",
-    "unsloth/gemma-4-26B-A4B-it-GGUF"
-  ],
-  "live_sota_model_inference_used": false,
-  "validation_error_context_enabled": false,
-  "cases_evaluated": 0,
-  "baseline_acceptance_rate": 0.0,
-  "context_acceptance_rate": 0.0,
   "acceptance_delta_pp": 0.0,
+  "artifact_metadata": {
+    "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "run_date": "20260507",
+    "source_experiments": [
+      "exp1397",
+      "exp1427",
+      "exp1428",
+      "exp1463"
+    ],
+    "spec": [
+      "REQ-VERIFY-1464",
+      "SCENARIO-VERIFY-1464"
+    ]
+  },
+  "baseline_acceptance_rate": 0.0,
+  "baseline_false_acceptance_rate": 0.0,
+  "baseline_schema_validity_rate": 0.0,
+  "baseline_semantic_correctness_rate": 0.0,
+  "cache_diagnostics": {
+    "cached_pair_available": true,
+    "cached_pair_hf_ids": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-26B-A4B-it-GGUF"
+    ],
+    "missing_hf_ids": [
+      "unsloth/gemma-4-31B-it-GGUF"
+    ],
+    "resolver_error": null
+  },
+  "case_ids_evaluated": [
+    "156"
+  ],
+  "cases_evaluated": 1,
+  "commands_run": [
+    "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m carnot.reporting.repair_validation_error_context_ab --project-root /home/ianblenke/github.com/ianblenke/carnot --run-date 20260507 --max-cases 1",
+    "exp1464_wall_time_s=23.912042"
+  ],
+  "context_acceptance_rate": 0.0,
+  "context_false_acceptance_rate": 0.0,
+  "context_schema_validity_rate": 0.0,
+  "context_semantic_correctness_rate": 0.0,
+  "executor_runtime_mode": "live_local_sota_gguf",
+  "experiment": "1464_repair_validation_error_context_ab",
+  "false_acceptance_delta_pp": 0.0,
+  "honest_verdict": "complete_no_retry_context_improvement_repair_executor_retired",
+  "live_inference_evidence": {
+    "generation_calls": 3,
+    "gpu": 0,
+    "live_sota_model_inference_used": true,
+    "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+    "runtime_mode": "live_local_sota_gguf",
+    "selected_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF"
+  },
+  "live_sota_model_inference_used": true,
+  "model_specs": [
+    {
+      "cache_status": "available",
+      "gpu": 0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "name": "Qwen3.6-35B-A3B",
+      "role": "primary_repair_model"
+    },
+    {
+      "cache_status": "missing",
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "role": "dense_fallback"
+    },
+    {
+      "cache_status": "available",
+      "gpu": 1,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "name": "Gemma4-26B-A4B-it",
+      "role": "moe_fallback"
+    }
+  ],
+  "per_case_results": [
+    {
+      "baseline": {
+        "accepted": false,
+        "false_acceptance": false,
+        "raw_output_preview": "",
+        "rejection_reason": "schema_validation_failed",
+        "schema_valid": false,
+        "semantic_correct": false,
+        "validation_error_message": "schema_validation_failed: invalid JSON repair output: Expecting value: line 1 column 1 (char 0)",
+        "validation_result": {
+          "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+        }
+      },
+      "case_id": "156",
+      "context": {
+        "accepted": false,
+        "false_acceptance": false,
+        "raw_output_preview": "",
+        "rejection_reason": "schema_validation_failed",
+        "schema_valid": false,
+        "semantic_correct": false,
+        "validation_error_message": "schema_validation_failed: invalid JSON repair output: Expecting value: line 1 column 1 (char 0)",
+        "validation_result": {
+          "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+        }
+      },
+      "initial_failure": {
+        "accepted": false,
+        "false_acceptance": false,
+        "raw_output_preview": "",
+        "rejection_reason": "schema_validation_failed",
+        "schema_valid": false,
+        "semantic_correct": false,
+        "validation_error_message": "schema_validation_failed: invalid JSON repair output: Expecting value: line 1 column 1 (char 0)",
+        "validation_result": {
+          "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+        }
+      }
+    }
+  ],
+  "repair_executor_lineage_preserved": false,
+  "repair_executor_lineage_retired": true,
+  "run_date": "20260507",
+  "schema": "repair_validation_error_context_ab_v1",
   "schema_validity_delta_pp": 0.0,
+  "selected_model": {
+    "gpu": 0,
+    "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+    "name": "Qwen3.6-35B-A3B",
+    "role": "primary_repair_model"
+  },
   "semantic_correctness_delta_pp": 0.0,
   "spilled_energy_diagnostic_available": false,
-  "repair_executor_lineage_preserved": false,
-  "repair_executor_lineage_retired": false,
-  "commands_run": [],
-  "honest_verdict": "in_progress"
+  "spilled_energy_diagnostic_note": "Unavailable: the bounded llama.cpp text-generation path did not request logits/logprobs, and Exp 1464 did not expand scope.",
+  "status": "complete",
+  "validation_error_context_enabled": true
 }
