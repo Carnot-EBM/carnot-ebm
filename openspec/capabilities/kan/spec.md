@@ -179,6 +179,7 @@ sets `variance_worsened` from the measured paraphrase variance comparison.
 | REQ-KAN-1199 | Proposed | Exp 1199 target: KANtize-style 8-bit/4-bit SOSKANEnergyV3 spline quantization with endpoint-sensitive precision and safetensors export. |
 | REQ-KAN-1266 | Proposed | Exp 1266 target: deterministic QuantKAN-style 3-bit PTQ simulation plus LUT-KAN latency comparison for SOSKANEnergyV3. |
 | REQ-KAN-1319 | Proposed | Exp 1319 target: hardware-portability audit only for local KAN verifier/repair candidates with no FPGA or analog execution claim. |
+| REQ-KAN-1502 | Proposed | Exp 1502 target: no-synthesis KAN hardware accounting comparing naive, QuantKAN-like, and KAEM-style variants for current verifier components. |
 | REQ-KAN-1384 | Proposed | Exp 1384 target: EBM-CoT contrastive hinge calibration on FoVer verified pairs. |
 | REQ-KAN-1401 | Proposed | Exp 1401 target: EBM-CoT v2 hinge-only calibration on the Exp1384 FoVer split with consistency weight 0.0. |
 
@@ -484,3 +485,46 @@ When `scripts/experiment_1319_kan_hardware_complexity_audit.py` runs,
 Then `results/experiment_1319_kan_hardware_complexity_audit.json` is written
 with deterministic RM/BOP/NABS/LUT-memory estimates, platform classification,
 `hardware_claim_allowed=false`, and an honest non-execution verdict.
+
+## REQ-KAN-1502: no-synthesis KAN hardware accounting for verifier components
+
+Experiment 1502 MUST produce a no-synthesis hardware-accounting artifact for
+Carnot-relevant KAN verifier components. The artifact MUST compare a naive
+full-precision KAN/SOS-KAN path, a QuantKAN-like quantized lookup-table path,
+and a KAEM-style univariate approximation path using only accounting evidence
+from local source files and prior artifacts.
+
+**Rationale:**
+    Post-.114 research references added KAN hardware-complexity and ultra-light
+    accelerator signals, but Exp 1460 narrowed the active hardware portfolio and
+    forbids new KAN accelerator claims without synthesis, board, or measured
+    hardware evidence. Carnot still needs transparent operation, memory, LUT,
+    BRAM, and accuracy-risk estimates so future hardware work can stay scoped.
+
+**Acceptance criteria:**
+    - `results/experiment_1502_kan_hardware_accounting_quantkan_kaem.json` is
+      written with `run_date="20260507"` and `status="complete"`.
+    - The artifact includes `status`, `kan_hardware_accounting_ready`,
+      `accounting_only_no_synthesis_claim`, `kan_components_audited`,
+      `quantkan_proxy_estimates`, `kaem_proxy_estimates`,
+      `lut_proxy_estimate`, `bram_proxy_estimate`, `accuracy_risk_notes`,
+      `hardware_claim_allowed`, `blockers`, and `honest_verdict`.
+    - `hardware_claim_allowed` is false and
+      `accounting_only_no_synthesis_claim` is true unless actual synthesis or
+      board measurement evidence is present.
+    - The accounting table reports operation counts, memory footprints,
+      rough LUT/BRAM proxy pressure, and accuracy-risk boundaries for naive,
+      QuantKAN-like, and KAEM-style variants.
+    - `honest_verdict` starts with one of the conductor terminal prefixes:
+      `complete:`, `complete_`, `success:`, `success_`, `passed:`,
+      `passed_`, `shipped:`, or `shipped_`.
+
+### SCENARIO-KAN-1502: write conservative QuantKAN/KAEM accounting artifact
+
+Given the local Exp 1148/1162/1174/1199/1266/1319/1372 KAN artifacts and the
+current KAN verifier modules,
+When the Exp 1502 accounting helper runs,
+Then `results/experiment_1502_kan_hardware_accounting_quantkan_kaem.json`
+contains the required fields, compares naive/QuantKAN-like/KAEM-style variants,
+sets `hardware_claim_allowed=false`, and records a terminal no-synthesis honest
+verdict.

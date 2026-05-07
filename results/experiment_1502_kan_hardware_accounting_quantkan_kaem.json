@@ -1,0 +1,173 @@
+{
+  "accounting_assumptions": [
+    "RM/BOP/NABS are platform-independent proxy categories from local KAN hardware references.",
+    "BRAM pressure uses 36 Kb blocks rounded up from artifact-reported bytes.",
+    "LUT pressure is a proxy only; no RTL synthesis, place-and-route, timing, or board run occurred.",
+    "QuantKAN-like estimates use 3-bit arithmetic pressure and local LUT table storage.",
+    "KAEM-style estimates assume separable univariate tables and therefore carry interaction-risk."
+  ],
+  "accounting_only_no_synthesis_claim": true,
+  "accounting_table": [
+    {
+      "accuracy_boundary": "full_precision_reference_only_no_hardware_measurement",
+      "bop_per_inference": 81504,
+      "bram36_blocks": 3,
+      "lut_proxy": 27822,
+      "memory_bytes": 13592,
+      "nabs_per_inference": 2352,
+      "rm_per_inference": 2547,
+      "variant": "naive_full_precision_soskan"
+    },
+    {
+      "accuracy_boundary": "requires_empirical_auroc_gate_before_deployment",
+      "bop_per_inference": 72,
+      "bram36_blocks": 2,
+      "lut_proxy": 6298,
+      "memory_bytes": 7065,
+      "nabs_per_inference": 75,
+      "rm_per_inference": 24,
+      "variant": "quantkan_3bit_lut_soskan"
+    },
+    {
+      "accuracy_boundary": "only_safe_for_separable_or_revalidated_verifier_features",
+      "bop_per_inference": 48,
+      "bram36_blocks": 1,
+      "lut_proxy": 240,
+      "memory_bytes": 768,
+      "nabs_per_inference": 9,
+      "rm_per_inference": 6,
+      "variant": "kaem_univariate_table_approx"
+    }
+  ],
+  "accuracy_risk_notes": [
+    "Naive full precision preserves the reference arithmetic but has no synthesis/timing evidence.",
+    "QuantKAN-like 3-bit accounting inherits Exp 1266's AUROC proxy and must be revalidated before deployment.",
+    "KAEM-style univariate approximation is cheap but can miss cross-feature verifier interactions.",
+    "Exp 1372 permits a CPU formal-software claim only; it does not permit hardware correctness claims."
+  ],
+  "blockers": [
+    "no_vivado_synthesis_or_board_measurement_for_exp1502",
+    "no_kv260_bitfile_or_timing_report_for_this_kan_accounting",
+    "quantkan_and_kaem_proxy_shapes_must_be_normalized_before_any_future_synthesis"
+  ],
+  "bram_proxy_estimate": {
+    "bram36_bytes": 4608,
+    "variants": {
+      "kaem_univariate_table_approx": 1,
+      "naive_full_precision_soskan": 3,
+      "quantkan_3bit_lut_soskan": 2
+    }
+  },
+  "duration_s": 0.00044,
+  "experiment": 1502,
+  "hardware_claim_allowed": false,
+  "hardware_claim_basis": {
+    "kv260_board_measurement_run": false,
+    "npu_kernel_measurement_run": false,
+    "prior_hardware_claims_absent": true,
+    "vivado_synthesis_run": false
+  },
+  "honest_verdict": "complete: kan hardware accounting ready; no synthesis or hardware claim",
+  "kaem_proxy_estimates": {
+    "accuracy_boundary": "only_safe_for_separable_or_revalidated_verifier_features",
+    "accuracy_reference": {
+      "n_inputs": 3,
+      "n_lut_points": 256,
+      "n_splines_in_sos_reference": 8,
+      "source": "python/carnot/models/kaem_energy.py",
+      "univariate_separable_assumption": true
+    },
+    "bop_per_inference": 48,
+    "bram36_blocks": 1,
+    "description": "KAEM-style separable univariate approximation: one table per input, two endpoint reads for interpolation, and no cross-feature KAN layer.",
+    "lut_proxy": 240,
+    "memory_bytes": 768,
+    "nabs_per_inference": 9,
+    "rm_per_inference": 6,
+    "variant": "kaem_univariate_table_approx"
+  },
+  "kan_components_audited": [
+    {
+      "component": "KAEMEnergy / UnivariateKAEMLayer",
+      "module": "python/carnot/models/kaem_energy.py",
+      "role": "KAEM-style separable approximation baseline"
+    },
+    {
+      "component": "SOSKANEnergyV3 compression and QuantKAN/LUT path",
+      "module": "python/carnot/models/sos_kan_quantkan_lut.py",
+      "role": "QuantKAN-like quantized lookup-table accounting"
+    },
+    {
+      "component": "BiKA/SOS-KAN hardware complexity metrics",
+      "module": "python/carnot/hardware/bika_analysis.py",
+      "role": "full-precision and multiply-free operation proxy source"
+    },
+    {
+      "component": "GS-KAN PWA formal verification",
+      "module": "python/carnot/verify/kan_pwa_formal.py",
+      "role": "formal-software evidence boundary; no hardware correctness claim"
+    }
+  ],
+  "kan_hardware_accounting_ready": true,
+  "lut_proxy_estimate": {
+    "kaem_univariate_table_approx": 240,
+    "naive_full_precision_soskan": 27822,
+    "quantkan_3bit_lut_soskan": 6298
+  },
+  "naive_proxy_estimates": {
+    "accuracy_boundary": "full_precision_reference_only_no_hardware_measurement",
+    "accuracy_reference": {
+      "auroc_original": 0.9902,
+      "source": "results/experiment_1148_metacluster_sos_kan_compression.json"
+    },
+    "bop_per_inference": 81504,
+    "bram36_blocks": 3,
+    "description": "Full-precision SOS-KAN/SOSKANEnergyV3 operation proxy from Exp 1174.",
+    "lut_proxy": 27822,
+    "memory_bytes": 13592,
+    "nabs_per_inference": 2352,
+    "rm_per_inference": 2547,
+    "variant": "naive_full_precision_soskan"
+  },
+  "quantkan_proxy_estimates": {
+    "accuracy_boundary": "requires_empirical_auroc_gate_before_deployment",
+    "accuracy_reference": {
+      "lut_kan_speedup": 2.5,
+      "q3_model_bytes_from_exp1199_q4": 921,
+      "quantkan_3bit_auroc": 0.9801,
+      "source": "results/experiment_1266_quantkan_3bit_lut_kan.json",
+      "table_bytes_from_exp1162": 6144
+    },
+    "bop_per_inference": 72,
+    "bram36_blocks": 2,
+    "description": "3-bit QuantKAN-like PTQ plus LUT-KAN proxy; storage is q3 model bytes plus the Exp 1162 SOS-KAN basis table.",
+    "lut_proxy": 6298,
+    "memory_bytes": 7065,
+    "nabs_per_inference": 75,
+    "rm_per_inference": 24,
+    "variant": "quantkan_3bit_lut_soskan"
+  },
+  "reference_metrics": {
+    "exp1148_auroc_original": 0.9902,
+    "exp1162_lut_storage_bytes": 6144,
+    "exp1174_standard_lut_proxy": 27822,
+    "exp1199_soskan_4bit_auroc": 0.990137,
+    "exp1266_quantkan_3bit_auroc": 0.9801
+  },
+  "run_date": "20260507",
+  "schema": "kan_hardware_accounting_quantkan_kaem_v1",
+  "source_artifacts": {
+    "experiment_1148": "results/experiment_1148_metacluster_sos_kan_compression.json",
+    "experiment_1162": "results/experiment_1162_kanele_sos_kan_fpga_blueprint.json",
+    "experiment_1174": "results/experiment_1174_bika_hardware_analysis.json",
+    "experiment_1199": "results/experiment_1199_kantize_soskan_4bit_quantization.json",
+    "experiment_1266": "results/experiment_1266_quantkan_3bit_lut_kan.json",
+    "experiment_1319": "results/experiment_1319_kan_hardware_complexity_audit.json",
+    "experiment_1372": "results/experiment_1372_optimal_kan_pwa_formal_verification.json"
+  },
+  "spec": [
+    "REQ-KAN-1502",
+    "SCENARIO-KAN-1502"
+  ],
+  "status": "complete"
+}
