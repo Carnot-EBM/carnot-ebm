@@ -1,0 +1,67 @@
+{
+  "baseline_parser_path": "python/carnot/eval/certificate_grammar_backend_bakeoff.py",
+  "case_results": [
+    {
+      "csr_accepts": true,
+      "existing_accepts": true,
+      "name": "valid_z3_math"
+    },
+    {
+      "csr_accepts": true,
+      "existing_accepts": true,
+      "name": "valid_semenergy"
+    },
+    {
+      "csr_accepts": false,
+      "existing_accepts": false,
+      "name": "invalid_missing_confidence"
+    },
+    {
+      "csr_accepts": false,
+      "existing_accepts": false,
+      "name": "invalid_verifier_enum"
+    },
+    {
+      "csr_accepts": false,
+      "existing_accepts": false,
+      "name": "invalid_claim_id_regex"
+    },
+    {
+      "csr_accepts": false,
+      "existing_accepts": false,
+      "name": "invalid_malformed_json"
+    },
+    {
+      "csr_accepts": false,
+      "existing_accepts": false,
+      "name": "invalid_non_object_json"
+    }
+  ],
+  "csr_automaton_path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/eval/static_csr_certificate_automaton.py",
+  "csr_latency_ms_p50": 0.004689,
+  "csr_state_count": 426,
+  "csr_transition_count": 425,
+  "exact_acceptance_equivalent": true,
+  "existing_path_latency_ms_p50": 0.013675,
+  "experiment": "1475_static_csr_certificate_automaton_smoke",
+  "false_accept_case_names": [],
+  "false_accepts": 0,
+  "false_reject_case_names": [],
+  "false_rejects": 0,
+  "honest_verdict": "complete_bounded_case_equivalence_csr_faster_no_generation_or_repair",
+  "llm_inference_run": false,
+  "repair_loop_run": false,
+  "run_date": "20260507",
+  "schema": "static_csr_certificate_automaton_smoke_v1",
+  "schema_cases_evaluated": 7,
+  "speedup_ratio": 2.9164,
+  "status": "complete",
+  "tests_run": [
+    ".venv/bin/pytest -o addopts= tests/python/test_experiment_1475_static_csr_certificate_automaton.py -q: passed 4",
+    "coverage run + coverage report --include=python/carnot/eval/static_csr_certificate_automaton.py --fail-under=100: passed 100%",
+    "ruff check python/carnot/eval/static_csr_certificate_automaton.py tests/python/test_experiment_1475_static_csr_certificate_automaton.py: passed",
+    "ruff format --check python/carnot/eval/static_csr_certificate_automaton.py tests/python/test_experiment_1475_static_csr_certificate_automaton.py: passed",
+    "python scripts/check_spec_coverage.py: passed",
+    " .venv/bin/pytest tests/python -q: failed/interrupted after 38:08 with 100 failed, 5 errors, 103 skipped; Z3 segfault and experiment watchdog timeout in pre-existing tests"
+  ]
+}
