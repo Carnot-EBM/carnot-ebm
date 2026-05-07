@@ -1093,3 +1093,5 @@ web search: GitHub trending energy based mod |
 | 2026-05-07 11:03 UTC | KV260 Discrete SB RTL Regression Pack - Source-Lev | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1476_kv260_d |
 | 2026-05-07 11:19 UTC | THRML + NPIM Simulator Parity Micro-Probe - No TSU | OK | 81 passed, 1 warning in 4.90s |
 | 2026-05-07 11:34 UTC | Milestone .113 Retrospective - Telemetry, Bounds,  | OK | 81 passed, 1 warning in 5.09s |
+| 2026-05-07 12:03 UTC | Plan milestone 2026.04.114 | OK | 13 tasks proposed |
+| 2026-05-07 12:05 UTC | Milestone 2026.04.114 activated | OK | 13 tasks queued |
