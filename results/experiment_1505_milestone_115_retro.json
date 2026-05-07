@@ -1,0 +1,852 @@
+{
+  "carry_forward_lines": [
+    {
+      "claim_boundary": "Carry forward as deterministic graph-risk scoring, not trained GNN evidence.",
+      "decision": "carry_forward",
+      "evidence": "node_top1=1.0, edge_top1=1.0, trained_gnn_used=False",
+      "key": "plan_graph_energy",
+      "line": "Deterministic plan-graph energy adapter",
+      "source_experiments": [
+        "exp1501"
+      ]
+    },
+    {
+      "claim_boundary": "No board, bitfile, timing, or accelerator speed claim.",
+      "decision": "carry_forward",
+      "evidence": "No-synthesis accounting table exists for naive, QuantKAN-like, and KAEM variants.",
+      "key": "kan_hardware_accounting",
+      "line": "KAN QuantKAN/KAEM hardware accounting",
+      "source_experiments": [
+        "exp1502"
+      ]
+    },
+    {
+      "claim_boundary": "Simulator-only parity; no Extropic TSU or physical hardware claim.",
+      "decision": "carry_forward",
+      "evidence": "thrml_import_ready=True, parity_pass_count=2, simulator_only=True",
+      "key": "thrml_simulator_parity",
+      "line": "THRML import readiness and simulator-only Carnot parity",
+      "source_experiments": [
+        "exp1503",
+        "exp1504"
+      ]
+    }
+  ],
+  "completed_experiments": [
+    "exp1492",
+    "exp1493",
+    "exp1494",
+    "exp1495",
+    "exp1496",
+    "exp1497",
+    "exp1498",
+    "exp1499",
+    "exp1500",
+    "exp1501",
+    "exp1502",
+    "exp1503",
+    "exp1504"
+  ],
+  "conductor_log_exp1492_to_exp1504": {
+    "entries": {
+      "exp1492": {
+        "found": true,
+        "line": "| 2026-05-07 17:30 UTC | .114 Completion Archive + .115 Activation Manifest | OK | 81 passed, 1 warning in 5.17s |",
+        "ok": true,
+        "terminal": true
+      },
+      "exp1493": {
+        "found": true,
+        "line": "| 2026-05-07 17:46 UTC | Trigger-Token Certificate Export v1 | OK | 81 passed, 1 warning in 5.26s |",
+        "ok": true,
+        "terminal": true
+      },
+      "exp1494": {
+        "found": true,
+        "line": "| 2026-05-07 18:03 UTC | ConstrainPrompt Validator Compiler Audit | OK | 81 passed, 1 warning in 4.60s |",
+        "ok": true,
+        "terminal": true
+      },
+      "exp1495": {
+        "found": true,
+        "line": "| 2026-05-07 18:14 UTC | interwhen Monitor Prototype - Gated on Exp1493/Exp | OK | 81 passed, 1 warning in 4.61s |",
+        "ok": true,
+        "terminal": true
+      },
+      "exp1496": {
+        "found": true,
+        "line": "| 2026-05-07 18:28 UTC | HoVer Safe-Prefix Continuation Audit - Gated on Ex | OK | 81 passed, 1 warning in 4.44s |",
+        "ok": true,
+        "terminal": true
+      },
+      "exp1497": {
+        "found": true,
+        "line": "| 2026-05-07 18:41 UTC | FR-11 v10 Trace2Skill Daily Eval + Rot Check | OK | 81 passed, 1 warning in 5.16s |",
+        "ok": true,
+        "terminal": true
+      },
+      "exp1498": {
+        "found": true,
+        "line": "| 2026-05-07 19:23 UTC | trace2skill Artifact Reachability Audit - Gated on | OK | 81 passed, 1 warning in 5.04s |",
+        "ok": true,
+        "terminal": true
+      },
+      "exp1499": {
+        "found": true,
+        "line": "| 2026-05-07 19:38 UTC | Verifier Ensemble DRY + Conditional Orthogonality  | OK | 81 passed, 1 warning in 5.19s |",
+        "ok": true,
+        "terminal": true
+      },
+      "exp1500": {
+        "found": true,
+        "line": "| 2026-05-07 19:49 UTC | Latent-vs-Deterministic Discipline Gate - Gated on | OK | 81 passed, 1 warning in 5.10s |",
+        "ok": true,
+        "terminal": true
+      },
+      "exp1501": {
+        "found": true,
+        "line": "| 2026-05-07 20:32 UTC | GNNVerifier Plan-Graph Energy Adapter Smoke | OK | 81 passed, 1 warning in 5.71s |",
+        "ok": true,
+        "terminal": true
+      },
+      "exp1502": {
+        "found": true,
+        "line": "| 2026-05-07 20:47 UTC | KAN Hardware Accounting - QuantKAN/KAEM No-Synthes | OK | 81 passed, 1 warning in 5.30s |",
+        "ok": true,
+        "terminal": true
+      },
+      "exp1503": {
+        "found": true,
+        "line": "| 2026-05-07 21:00 UTC | THRML Import Readiness Repair + Terminal Gate | OK | 81 passed, 1 warning in 5.38s |",
+        "ok": true,
+        "terminal": true
+      },
+      "exp1504": {
+        "found": true,
+        "line": "| 2026-05-07 21:14 UTC | THRML/Carnot Simulator Parity v3 - Gated on Exp150 | OK | 81 passed, 1 warning in 5.07s |",
+        "ok": true,
+        "terminal": true
+      }
+    },
+    "expected_count": 13,
+    "missing_experiments": [],
+    "ok_count": 13,
+    "terminal_count": 13
+  },
+  "continuous_self_learning_outcome": "Exp1497 graduates bounded FR-11 daily evaluation with 24 skills evaluated, 12 promotions, zero soundness mistakes, and Exp1498 reachability confirming zero unreachable artifacts. This does not claim unbounded autonomous self-learning.",
+  "criteria_met": 12,
+  "criteria_score_pct": 1.0,
+  "criteria_total": 12,
+  "experiment": "1505_milestone_115_retro",
+  "experiment_verdicts": {
+    "exp1492": {
+      "complete": true,
+      "honest_verdict": "complete: milestone_115_activation_complete_114_archived_guardrails_preserved",
+      "source_path": "results/experiment_1492_114_completion_archive_115_activation.json",
+      "status": "complete",
+      "terminal": true,
+      "terminal_prefix_ok": true
+    },
+    "exp1493": {
+      "complete": true,
+      "honest_verdict": "complete: trigger-token certificate export measured on live local SOTA GGUF rows",
+      "source_path": "results/experiment_1493_trigger_token_certificate_export_v1.json",
+      "status": "complete",
+      "terminal": true,
+      "terminal_prefix_ok": true
+    },
+    "exp1494": {
+      "complete": true,
+      "honest_verdict": "complete: bounded safe-DSL validator compiler audit measured on live local SOTA GGUF skeleton rows",
+      "source_path": "results/experiment_1494_constrainprompt_validator_compiler_audit.json",
+      "status": "complete",
+      "terminal": true,
+      "terminal_prefix_ok": true
+    },
+    "exp1495": {
+      "complete": true,
+      "honest_verdict": "complete: CPU-only interwhen monitor replay ready on recorded CCTU errors",
+      "source_path": "results/experiment_1495_interwhen_monitor_prototype.json",
+      "status": "complete",
+      "terminal": true,
+      "terminal_prefix_ok": true
+    },
+    "exp1496": {
+      "complete": true,
+      "honest_verdict": "complete: safe-prefix continuation improved matched validator pass rate with zero false accepts",
+      "source_path": "results/experiment_1496_hover_safe_prefix_continuation_audit.json",
+      "status": "complete",
+      "terminal": true,
+      "terminal_prefix_ok": true
+    },
+    "exp1497": {
+      "complete": true,
+      "honest_verdict": "complete: fr11_v10_trace2skill_daily_eval_manifest_ready_zero_soundness",
+      "source_path": "results/experiment_1497_fr11_trace2skill_daily_eval_v10.json",
+      "status": "complete",
+      "terminal": true,
+      "terminal_prefix_ok": true
+    },
+    "exp1498": {
+      "complete": true,
+      "honest_verdict": "complete: trace2skill_artifact_reachability_audit_passed",
+      "source_path": "results/experiment_1498_trace2skill_artifact_reachability_audit.json",
+      "status": "complete",
+      "terminal": true,
+      "terminal_prefix_ok": true
+    },
+    "exp1499": {
+      "complete": true,
+      "honest_verdict": "complete: verifier ensemble DRY/orthogonality audit wrote matrix with k_effective=3.00",
+      "source_path": "results/experiment_1499_verifier_ensemble_dry_orthogonality_v2.json",
+      "status": "complete",
+      "terminal": true,
+      "terminal_prefix_ok": true
+    },
+    "exp1500": {
+      "complete": true,
+      "honest_verdict": "complete: latent deterministic discipline gate ready",
+      "source_path": "results/experiment_1500_latent_deterministic_discipline_gate.json",
+      "status": "complete",
+      "terminal": true,
+      "terminal_prefix_ok": true
+    },
+    "exp1501": {
+      "complete": true,
+      "honest_verdict": "complete: deterministic plan-graph energy adapter localized injected CCTU dependency faults and beat random/length baselines",
+      "source_path": "results/experiment_1501_gnnverifier_plan_graph_energy_adapter.json",
+      "status": "complete",
+      "terminal": true,
+      "terminal_prefix_ok": true
+    },
+    "exp1502": {
+      "complete": true,
+      "honest_verdict": "complete: kan hardware accounting ready; no synthesis or hardware claim",
+      "source_path": "results/experiment_1502_kan_hardware_accounting_quantkan_kaem.json",
+      "status": "complete",
+      "terminal": true,
+      "terminal_prefix_ok": true
+    },
+    "exp1503": {
+      "complete": true,
+      "honest_verdict": "complete_thrml_import_ready_repair_gate_open_simulator_only_no_hardware_claim",
+      "source_path": "results/experiment_1503_thrml_import_readiness_repair_gate.json",
+      "status": "complete",
+      "terminal": true,
+      "terminal_prefix_ok": true
+    },
+    "exp1504": {
+      "complete": true,
+      "honest_verdict": "complete_thrml_carnot_simulator_parity_passed_no_hardware_claim",
+      "source_path": "results/experiment_1504_thrml_carnot_simulator_parity_v3.json",
+      "status": "complete",
+      "terminal": true,
+      "terminal_prefix_ok": true
+    }
+  },
+  "experiments_reviewed": [
+    "exp1492",
+    "exp1493",
+    "exp1494",
+    "exp1495",
+    "exp1496",
+    "exp1497",
+    "exp1498",
+    "exp1499",
+    "exp1500",
+    "exp1501",
+    "exp1502",
+    "exp1503",
+    "exp1504"
+  ],
+  "gated_lines": [],
+  "graduated_lines": [
+    {
+      "claim_boundary": "Graduates only as certificate export plus deterministic validation.",
+      "decision": "graduated",
+      "evidence": "parse_rate=0.3, validation_rate=0.1, false_accept_rate=0.0",
+      "key": "trigger_certificate_export",
+      "line": "Trigger-token certificate export",
+      "source_experiments": [
+        "exp1493"
+      ]
+    },
+    {
+      "claim_boundary": "No arbitrary generated-code execution path is promoted.",
+      "decision": "graduated",
+      "evidence": "compile_rate=0.933333, false_accept_rate=0.0",
+      "key": "constrainprompt_validator_compiler",
+      "line": "ConstrainPrompt-style safe-DSL validator compiler",
+      "source_experiments": [
+        "exp1494"
+      ]
+    },
+    {
+      "claim_boundary": "Promotion is bounded to zero-new-false-accept replay evidence.",
+      "decision": "graduated",
+      "evidence": "monitor_ready=True, safe_prefix_ready=True",
+      "key": "interwhen_hover_monitoring",
+      "line": "interwhen monitor plus HoVer safe-prefix continuation",
+      "source_experiments": [
+        "exp1495",
+        "exp1496"
+      ]
+    },
+    {
+      "claim_boundary": "This is bounded daily evaluation, not autonomous unbounded self-learning.",
+      "decision": "graduated",
+      "evidence": "skills_evaluated=24, promoted=12, unreachable=0",
+      "key": "fr11_trace2skill",
+      "line": "FR-11 trace2skill daily evaluation and reachability hygiene",
+      "source_experiments": [
+        "exp1497",
+        "exp1498"
+      ]
+    },
+    {
+      "claim_boundary": "Latent, LLM-derived, and memory signals remain auxiliary or triage-only.",
+      "decision": "graduated",
+      "evidence": "Deterministic executable validators and conservative bounds are headline-allowed.",
+      "key": "latent_deterministic_discipline",
+      "line": "Latent-vs-deterministic discipline gate",
+      "source_experiments": [
+        "exp1499",
+        "exp1500"
+      ]
+    }
+  ],
+  "hardware_claim_boundaries": "Hardware evidence is limited to no-synthesis KAN accounting and THRML simulator-only parity; no Extropic TSU, KV260 board, bitfile, timing, or accelerator speed claim is allowed.",
+  "honest_gate_skips": [],
+  "honest_verdict": "complete: milestone_115_12_of_12_criteria_met_claim_boundaries_preserved",
+  "line_decisions": {
+    "constrainprompt_validator_compiler": {
+      "claim_boundary": "No arbitrary generated-code execution path is promoted.",
+      "decision": "graduated",
+      "evidence": "compile_rate=0.933333, false_accept_rate=0.0",
+      "key": "constrainprompt_validator_compiler",
+      "line": "ConstrainPrompt-style safe-DSL validator compiler",
+      "source_experiments": [
+        "exp1494"
+      ]
+    },
+    "decoded_quality_or_hardware_overclaims": {
+      "claim_boundary": "No decoded-quality, Kona-internal, KV260 board, or TSU hardware claim.",
+      "decision": "retired",
+      "evidence": "All relevant artifacts retain injected-fault, no-synthesis, or simulator-only bounds.",
+      "key": "decoded_quality_or_hardware_overclaims",
+      "line": "Decoded-quality, Kona-internals, and hardware overclaims from bounded probes",
+      "source_experiments": [
+        "exp1492",
+        "exp1501",
+        "exp1502",
+        "exp1504"
+      ]
+    },
+    "fr11_trace2skill": {
+      "claim_boundary": "This is bounded daily evaluation, not autonomous unbounded self-learning.",
+      "decision": "graduated",
+      "evidence": "skills_evaluated=24, promoted=12, unreachable=0",
+      "key": "fr11_trace2skill",
+      "line": "FR-11 trace2skill daily evaluation and reachability hygiene",
+      "source_experiments": [
+        "exp1497",
+        "exp1498"
+      ]
+    },
+    "interwhen_hover_monitoring": {
+      "claim_boundary": "Promotion is bounded to zero-new-false-accept replay evidence.",
+      "decision": "graduated",
+      "evidence": "monitor_ready=True, safe_prefix_ready=True",
+      "key": "interwhen_hover_monitoring",
+      "line": "interwhen monitor plus HoVer safe-prefix continuation",
+      "source_experiments": [
+        "exp1495",
+        "exp1496"
+      ]
+    },
+    "kan_hardware_accounting": {
+      "claim_boundary": "No board, bitfile, timing, or accelerator speed claim.",
+      "decision": "carry_forward",
+      "evidence": "No-synthesis accounting table exists for naive, QuantKAN-like, and KAEM variants.",
+      "key": "kan_hardware_accounting",
+      "line": "KAN QuantKAN/KAEM hardware accounting",
+      "source_experiments": [
+        "exp1502"
+      ]
+    },
+    "latent_deterministic_discipline": {
+      "claim_boundary": "Latent, LLM-derived, and memory signals remain auxiliary or triage-only.",
+      "decision": "graduated",
+      "evidence": "Deterministic executable validators and conservative bounds are headline-allowed.",
+      "key": "latent_deterministic_discipline",
+      "line": "Latent-vs-deterministic discipline gate",
+      "source_experiments": [
+        "exp1499",
+        "exp1500"
+      ]
+    },
+    "legacy_small_model_headlines": {
+      "claim_boundary": "Legacy small models are smoke tests only.",
+      "decision": "retired",
+      "evidence": "Local SOTA GGUF model specs remain the required headline model boundary.",
+      "key": "legacy_small_model_headlines",
+      "line": "Legacy small-model headline evidence",
+      "source_experiments": [
+        "exp1492",
+        "exp1493",
+        "exp1494",
+        "exp1496"
+      ]
+    },
+    "plan_graph_energy": {
+      "claim_boundary": "Carry forward as deterministic graph-risk scoring, not trained GNN evidence.",
+      "decision": "carry_forward",
+      "evidence": "node_top1=1.0, edge_top1=1.0, trained_gnn_used=False",
+      "key": "plan_graph_energy",
+      "line": "Deterministic plan-graph energy adapter",
+      "source_experiments": [
+        "exp1501"
+      ]
+    },
+    "semantic_energy_v1": {
+      "claim_boundary": "May appear only as historical or debugging context, not headline evidence.",
+      "decision": "retired",
+      "evidence": "Exp1500 keeps semantic-energy and V_1 pairwise signals in the retired set after .114 confound findings.",
+      "key": "semantic_energy_v1",
+      "line": "Semantic Energy/logit telemetry and V_1 pairwise headline signals",
+      "source_experiments": [
+        "exp1481",
+        "exp1487",
+        "exp1500"
+      ]
+    },
+    "thrml_simulator_parity": {
+      "claim_boundary": "Simulator-only parity; no Extropic TSU or physical hardware claim.",
+      "decision": "carry_forward",
+      "evidence": "thrml_import_ready=True, parity_pass_count=2, simulator_only=True",
+      "key": "thrml_simulator_parity",
+      "line": "THRML import readiness and simulator-only Carnot parity",
+      "source_experiments": [
+        "exp1503",
+        "exp1504"
+      ]
+    },
+    "trigger_certificate_export": {
+      "claim_boundary": "Graduates only as certificate export plus deterministic validation.",
+      "decision": "graduated",
+      "evidence": "parse_rate=0.3, validation_rate=0.1, false_accept_rate=0.0",
+      "key": "trigger_certificate_export",
+      "line": "Trigger-token certificate export",
+      "source_experiments": [
+        "exp1493"
+      ]
+    }
+  },
+  "milestone": "2026.04.115",
+  "missing_artifacts": [],
+  "ops_docs_update_deferred_reason": "stop_when_done_delegates_ops_status_changelog_and_traceability_to_haiku_reconciler",
+  "ops_docs_updated": false,
+  "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+  "protected_files": {
+    "research-roadmap.yaml": "unchanged",
+    "scripts/research_conductor.py": "unchanged"
+  },
+  "protected_files_unchanged": true,
+  "required_artifact_fields_present": [
+    "carry_forward_lines",
+    "completed_experiments",
+    "continuous_self_learning_outcome",
+    "criteria_met",
+    "criteria_total",
+    "experiments_reviewed",
+    "graduated_lines",
+    "hardware_claim_boundaries",
+    "honest_gate_skips",
+    "honest_verdict",
+    "milestone",
+    "ops_docs_updated",
+    "protected_files_unchanged",
+    "research_complete_updated",
+    "retired_lines",
+    "status"
+  ],
+  "research_complete_update_reason": "research_complete_already_contains_2026.04.115",
+  "research_complete_updated": true,
+  "retired_lines": [
+    {
+      "claim_boundary": "May appear only as historical or debugging context, not headline evidence.",
+      "decision": "retired",
+      "evidence": "Exp1500 keeps semantic-energy and V_1 pairwise signals in the retired set after .114 confound findings.",
+      "key": "semantic_energy_v1",
+      "line": "Semantic Energy/logit telemetry and V_1 pairwise headline signals",
+      "source_experiments": [
+        "exp1481",
+        "exp1487",
+        "exp1500"
+      ]
+    },
+    {
+      "claim_boundary": "Legacy small models are smoke tests only.",
+      "decision": "retired",
+      "evidence": "Local SOTA GGUF model specs remain the required headline model boundary.",
+      "key": "legacy_small_model_headlines",
+      "line": "Legacy small-model headline evidence",
+      "source_experiments": [
+        "exp1492",
+        "exp1493",
+        "exp1494",
+        "exp1496"
+      ]
+    },
+    {
+      "claim_boundary": "No decoded-quality, Kona-internal, KV260 board, or TSU hardware claim.",
+      "decision": "retired",
+      "evidence": "All relevant artifacts retain injected-fault, no-synthesis, or simulator-only bounds.",
+      "key": "decoded_quality_or_hardware_overclaims",
+      "line": "Decoded-quality, Kona-internals, and hardware overclaims from bounded probes",
+      "source_experiments": [
+        "exp1492",
+        "exp1501",
+        "exp1502",
+        "exp1504"
+      ]
+    }
+  ],
+  "run_date": "20260507",
+  "schema": "milestone_115_retro_v1",
+  "source_inputs_read": {
+    "openspec/change-proposals/research-roadmap-vNEXT.md": {
+      "exists": true
+    },
+    "ops/changelog.md": {
+      "exists": true
+    },
+    "ops/conductor-log.md": {
+      "exists": true
+    },
+    "ops/known-issues.md": {
+      "exists": true
+    },
+    "ops/status.md": {
+      "exists": true
+    }
+  },
+  "status": "complete",
+  "success_criteria_results": {
+    "activation": {
+      "evidence_paths": [
+        "results/experiment_1492_114_completion_archive_115_activation.json:activation_manifest_complete",
+        "results/experiment_1492_114_completion_archive_115_activation.json:guardrail_blocks_preserved"
+      ],
+      "negative_evidence": [],
+      "positive_evidence": [
+        ".115 activation manifest completed with guardrails preserved."
+      ],
+      "source_values": {
+        "activation_manifest_complete": true,
+        "guardrail_blocks_preserved": true,
+        "honest_verdict": "complete: milestone_115_activation_complete_114_archived_guardrails_preserved",
+        "status": "complete"
+      },
+      "status": "met",
+      "target": "exp1492 activation_manifest_complete=true and .114 guardrails preserved"
+    },
+    "artifact_reachability": {
+      "evidence_paths": [
+        "results/experiment_1498_trace2skill_artifact_reachability_audit.json:artifact_reachability_audit_complete",
+        "results/experiment_1498_trace2skill_artifact_reachability_audit.json:skills_checked",
+        "results/experiment_1498_trace2skill_artifact_reachability_audit.json:reachable_artifact_count",
+        "results/experiment_1498_trace2skill_artifact_reachability_audit.json:unreachable_artifact_count",
+        "results/experiment_1498_trace2skill_artifact_reachability_audit.json:ambiguous_resolver_count",
+        "results/experiment_1498_trace2skill_artifact_reachability_audit.json:repair_decisions",
+        "results/experiment_1498_trace2skill_artifact_reachability_audit.json:retirement_decisions"
+      ],
+      "negative_evidence": [],
+      "positive_evidence": [
+        "Trace2Skill artifact reachability is audited with explicit decisions."
+      ],
+      "source_values": {
+        "ambiguous_resolver_count": 0,
+        "artifact_reachability_audit_complete": true,
+        "honest_verdict": "complete: trace2skill_artifact_reachability_audit_passed",
+        "reachable_artifact_count": 2,
+        "repair_decisions": [],
+        "retirement_decisions": [],
+        "skills_checked": 24,
+        "status": "complete",
+        "unreachable_artifact_count": 0
+      },
+      "status": "met",
+      "target": "artifact reachability count is reported with repair or retire decisions"
+    },
+    "continuous_self_learning": {
+      "evidence_paths": [
+        "results/experiment_1497_fr11_trace2skill_daily_eval_v10.json:daily_eval_manifest_ready",
+        "results/experiment_1497_fr11_trace2skill_daily_eval_v10.json:continuous_self_learning_task",
+        "results/experiment_1497_fr11_trace2skill_daily_eval_v10.json:skills_evaluated",
+        "results/experiment_1497_fr11_trace2skill_daily_eval_v10.json:promoted_skill_count",
+        "results/experiment_1497_fr11_trace2skill_daily_eval_v10.json:retired_skill_count",
+        "results/experiment_1497_fr11_trace2skill_daily_eval_v10.json:soundness_mistakes",
+        "results/experiment_1497_fr11_trace2skill_daily_eval_v10.json:task_success_delta"
+      ],
+      "negative_evidence": [],
+      "positive_evidence": [
+        "Bounded FR-11 trace2skill daily evaluation is ready with zero soundness mistakes."
+      ],
+      "source_values": {
+        "continuous_self_learning_task": "FR-11 v10 bounded trace2skill daily evaluation cadence and rot check",
+        "daily_eval_manifest_ready": true,
+        "honest_verdict": "complete: fr11_v10_trace2skill_daily_eval_manifest_ready_zero_soundness",
+        "promoted_skill_count": 12,
+        "retired_skill_count": 0,
+        "skills_evaluated": 24,
+        "soundness_mistakes": 0,
+        "status": "complete",
+        "task_success_delta": 0.5
+      },
+      "status": "met",
+      "target": "daily_eval_manifest_ready=true and continuous_self_learning_task recorded"
+    },
+    "graph_adapter": {
+      "evidence_paths": [
+        "results/experiment_1501_gnnverifier_plan_graph_energy_adapter.json:plan_graph_energy_ready",
+        "results/experiment_1501_gnnverifier_plan_graph_energy_adapter.json:graph_energy_beats_baselines",
+        "results/experiment_1501_gnnverifier_plan_graph_energy_adapter.json:node_localization_top1_rate",
+        "results/experiment_1501_gnnverifier_plan_graph_energy_adapter.json:edge_localization_top1_rate",
+        "results/experiment_1501_gnnverifier_plan_graph_energy_adapter.json:trained_gnn_used"
+      ],
+      "negative_evidence": [],
+      "positive_evidence": [
+        "Deterministic plan-graph energy adapter beat random and length baselines."
+      ],
+      "source_values": {
+        "edge_localization_top1_rate": 1.0,
+        "graph_energy_beats_baselines": true,
+        "honest_verdict": "complete: deterministic plan-graph energy adapter localized injected CCTU dependency faults and beat random/length baselines",
+        "node_localization_top1_rate": 1.0,
+        "plan_graph_energy_ready": true,
+        "status": "complete",
+        "trained_gnn_used": false
+      },
+      "status": "met",
+      "target": "plan_graph_energy_ready=true or terminal no-signal finding against baselines"
+    },
+    "kan_accounting": {
+      "evidence_paths": [
+        "results/experiment_1502_kan_hardware_accounting_quantkan_kaem.json:kan_hardware_accounting_ready",
+        "results/experiment_1502_kan_hardware_accounting_quantkan_kaem.json:accounting_only_no_synthesis_claim",
+        "results/experiment_1502_kan_hardware_accounting_quantkan_kaem.json:hardware_claim_allowed",
+        "results/experiment_1502_kan_hardware_accounting_quantkan_kaem.json:blockers"
+      ],
+      "negative_evidence": [],
+      "positive_evidence": [
+        "KAN accounting is ready and bounded to no-synthesis evidence."
+      ],
+      "source_values": {
+        "accounting_only_no_synthesis_claim": true,
+        "blockers": [
+          "no_vivado_synthesis_or_board_measurement_for_exp1502",
+          "no_kv260_bitfile_or_timing_report_for_this_kan_accounting",
+          "quantkan_and_kaem_proxy_shapes_must_be_normalized_before_any_future_synthesis"
+        ],
+        "hardware_claim_allowed": false,
+        "honest_verdict": "complete: kan hardware accounting ready; no synthesis or hardware claim",
+        "kan_hardware_accounting_ready": true,
+        "status": "complete"
+      },
+      "status": "met",
+      "target": "kan_hardware_accounting_ready=true with no synthesis or board claim"
+    },
+    "retrospective": {
+      "evidence_paths": [
+        "results/experiment_1505_milestone_115_retro.json",
+        "research-roadmap.yaml",
+        "scripts/research_conductor.py"
+      ],
+      "negative_evidence": [],
+      "positive_evidence": [
+        "Retrospective artifact can be completed with protected files unchanged."
+      ],
+      "source_values": {
+        "missing_source_ids": [],
+        "protected_files_unchanged": true
+      },
+      "status": "met",
+      "target": "exp1505 writes required fields and confirms protected files unchanged"
+    },
+    "runtime_monitors": {
+      "evidence_paths": [
+        "results/experiment_1495_interwhen_monitor_prototype.json:gated_inputs_present",
+        "results/experiment_1495_interwhen_monitor_prototype.json:monitor_intervention_ready",
+        "results/experiment_1495_interwhen_monitor_prototype.json:monitor_events_emitted",
+        "results/experiment_1495_interwhen_monitor_prototype.json:false_interruptions",
+        "results/experiment_1495_interwhen_monitor_prototype.json:verifier_false_accept_rate"
+      ],
+      "negative_evidence": [],
+      "positive_evidence": [
+        "interwhen monitor replay is intervention-ready with zero false interruptions."
+      ],
+      "source_values": {
+        "false_interruptions": 0,
+        "gated_inputs_present": true,
+        "honest_verdict": "complete: CPU-only interwhen monitor replay ready on recorded CCTU errors",
+        "monitor_events_emitted": 40,
+        "monitor_intervention_ready": true,
+        "status": "complete",
+        "verifier_false_accept_rate": 0.0
+      },
+      "status": "met",
+      "target": "monitor_intervention_ready=true after structured gates with zero new false accepts"
+    },
+    "safe_prefix_continuation": {
+      "evidence_paths": [
+        "results/experiment_1496_hover_safe_prefix_continuation_audit.json:safe_prefix_continuation_ready",
+        "results/experiment_1496_hover_safe_prefix_continuation_audit.json:safe_prefix_validator_pass_rate",
+        "results/experiment_1496_hover_safe_prefix_continuation_audit.json:baseline_validator_pass_rate",
+        "results/experiment_1496_hover_safe_prefix_continuation_audit.json:full_regeneration_validator_pass_rate",
+        "results/experiment_1496_hover_safe_prefix_continuation_audit.json:verifier_false_accept_rate"
+      ],
+      "negative_evidence": [],
+      "positive_evidence": [
+        "HoVer-style safe-prefix continuation improved validator pass rate."
+      ],
+      "source_values": {
+        "baseline_validator_pass_rate": 0.0,
+        "full_regeneration_validator_pass_rate": 0.0,
+        "honest_verdict": "complete: safe-prefix continuation improved matched validator pass rate with zero false accepts",
+        "safe_prefix_continuation_ready": true,
+        "safe_prefix_validator_pass_rate": 0.666667,
+        "status": "complete",
+        "verifier_false_accept_rate": 0.0
+      },
+      "status": "met",
+      "target": "safe-prefix continuation improves matched validator pass rate with zero false accepts"
+    },
+    "thrml_readiness": {
+      "evidence_paths": [
+        "results/experiment_1503_thrml_import_readiness_repair_gate.json:thrml_import_ready",
+        "results/experiment_1504_thrml_carnot_simulator_parity_v3.json:parity_experiment_ran",
+        "results/experiment_1504_thrml_carnot_simulator_parity_v3.json:gated_off_reason",
+        "results/experiment_1504_thrml_carnot_simulator_parity_v3.json:hardware_claim_allowed"
+      ],
+      "negative_evidence": [],
+      "positive_evidence": [
+        "THRML import opened and simulator-only parity passed without hardware claims."
+      ],
+      "source_values": {
+        "exp1503_status": "complete",
+        "exp1503_thrml_import_ready": true,
+        "exp1504_status": "complete",
+        "exp1504_thrml_import_ready": true,
+        "gated_off_reason": null,
+        "gated_skip": null,
+        "hardware_claim_allowed": false,
+        "honest_verdicts": {
+          "exp1503": "complete_thrml_import_ready_repair_gate_open_simulator_only_no_hardware_claim",
+          "exp1504": "complete_thrml_carnot_simulator_parity_passed_no_hardware_claim"
+        },
+        "parity_experiment_ran": true,
+        "parity_fail_count": 0
+      },
+      "status": "met",
+      "target": "exp1503 terminal readiness and exp1504 run only when readiness is true"
+    },
+    "trigger_certificates": {
+      "evidence_paths": [
+        "results/experiment_1493_trigger_token_certificate_export_v1.json:trigger_certificate_ready",
+        "results/experiment_1493_trigger_token_certificate_export_v1.json:certificate_parse_rate",
+        "results/experiment_1493_trigger_token_certificate_export_v1.json:certificate_validation_rate",
+        "results/experiment_1493_trigger_token_certificate_export_v1.json:always_constrained_validation_rate",
+        "results/experiment_1493_trigger_token_certificate_export_v1.json:live_sota_model_inference_used"
+      ],
+      "negative_evidence": [],
+      "positive_evidence": [
+        "Trigger-token certificate export is ready on live local SOTA rows."
+      ],
+      "source_values": {
+        "always_constrained_validation_rate": 0.0,
+        "certificate_parse_rate": 0.3,
+        "certificate_validation_rate": 0.1,
+        "honest_verdict": "complete: trigger-token certificate export measured on live local SOTA GGUF rows",
+        "live_sota_model_inference_used": true,
+        "status": "complete",
+        "trigger_certificate_ready": true
+      },
+      "status": "met",
+      "target": "trigger_certificate_ready=true with paired parse and validation rates"
+    },
+    "validator_compiler": {
+      "evidence_paths": [
+        "results/experiment_1494_constrainprompt_validator_compiler_audit.json:validator_compiler_ready",
+        "results/experiment_1494_constrainprompt_validator_compiler_audit.json:validator_compile_rate",
+        "results/experiment_1494_constrainprompt_validator_compiler_audit.json:known_good_pass_rate",
+        "results/experiment_1494_constrainprompt_validator_compiler_audit.json:known_bad_reject_rate",
+        "results/experiment_1494_constrainprompt_validator_compiler_audit.json:verifier_false_accept_rate",
+        "results/experiment_1494_constrainprompt_validator_compiler_audit.json:arbitrary_code_execution_path_introduced",
+        "results/experiment_1494_constrainprompt_validator_compiler_audit.json:blockers"
+      ],
+      "negative_evidence": [],
+      "positive_evidence": [
+        "Validator compiler audit produced safe-DSL metrics and false-accept accounting."
+      ],
+      "source_values": {
+        "arbitrary_code_execution_path_introduced": false,
+        "blockers": [],
+        "honest_verdict": "complete: bounded safe-DSL validator compiler audit measured on live local SOTA GGUF skeleton rows",
+        "known_bad_reject_rate": 1.0,
+        "known_good_pass_rate": 1.0,
+        "status": "complete",
+        "validator_compile_rate": 0.933333,
+        "validator_compiler_ready": true,
+        "verifier_false_accept_rate": 0.0
+      },
+      "status": "met",
+      "target": "validator_compiler_ready=true or terminal blocker with false-accept accounting"
+    },
+    "verifier_discipline": {
+      "evidence_paths": [
+        "results/experiment_1499_verifier_ensemble_dry_orthogonality_v2.json:orthogonality_matrix_written",
+        "results/experiment_1500_latent_deterministic_discipline_gate.json:discipline_gate_ready",
+        "results/experiment_1500_latent_deterministic_discipline_gate.json:retired_signals"
+      ],
+      "negative_evidence": [],
+      "positive_evidence": [
+        "Verifier orthogonality matrix and deterministic-first discipline gate are ready."
+      ],
+      "source_values": {
+        "discipline_gate_ready": true,
+        "exp1499_status": "complete",
+        "exp1500_status": "complete",
+        "honest_verdicts": {
+          "exp1499": "complete: verifier ensemble DRY/orthogonality audit wrote matrix with k_effective=3.00",
+          "exp1500": "complete: latent deterministic discipline gate ready"
+        },
+        "orthogonality_matrix_written": true,
+        "retired_signals": [
+          "uncalibrated_latent_or_llm_scores_without_required_checks",
+          "semantic_energy_headline_telemetry",
+          "semantic_energy_logit_telemetry_headline",
+          "v1_pairwise_self_verification_active_gate"
+        ]
+      },
+      "status": "met",
+      "target": "exp1499 orthogonality_matrix_written=true and exp1500 discipline_gate_ready=true"
+    }
+  },
+  "terminal_experiments": [
+    "exp1492",
+    "exp1493",
+    "exp1494",
+    "exp1495",
+    "exp1496",
+    "exp1497",
+    "exp1498",
+    "exp1499",
+    "exp1500",
+    "exp1501",
+    "exp1502",
+    "exp1503",
+    "exp1504"
+  ],
+  "terminal_prior_tasks": true
+}
