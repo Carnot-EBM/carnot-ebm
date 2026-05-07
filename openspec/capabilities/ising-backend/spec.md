@@ -204,6 +204,41 @@ bitfile, or KV260 board execution claim.
 
 **Implementation status:** Implemented (Exp 1441)
 
+### REQ-ISING-026
+
+**Discrete Simulated Bifurcation KV260 RTL lint/simulation rerun MUST execute
+only local source-level checks, record tool failures precisely, and preserve the
+no-board-claim boundary.**
+
+**Rationale:**
+Exp 1437 proved the local HDL tools were available but was blocked by the
+missing `hardware/kv260/discrete_sb_256.v` source.  Exp 1441 created the source
+and testbench.  Exp 1451 is therefore a gated rerun: it must verify that the
+Exp 1441 source artifact is complete, run the narrowest available local RTL
+lint and simulation commands, and report exactly what passed or failed without
+upgrading the result into a KV260 hardware claim.
+
+**Acceptance criteria:**
+- The experiment SHALL create
+  `results/experiment_1451_discrete_sb_rtl_lint_sim_rerun.json` with
+  `status="in_progress"` before source/tool inspection completes.
+- The experiment SHALL verify that `hardware/kv260/discrete_sb_256.v` exists
+  and that `results/experiment_1441_discrete_sb_rtl_source_implementation.json`
+  reports `rtl_source_created=true`.
+- The experiment SHALL probe local `verilator`, `iverilog`, `yosys`, and
+  `vivado` availability without installing new toolchains.
+- When source exists, the experiment SHALL run the narrowest available local
+  lint command and SHALL run a testbench simulation when a local simulator is
+  available.
+- The terminal artifact SHALL include `status`, `rtl_source_present`,
+  `rtl_lint_complete`, `simulation_complete`, `tools_available`,
+  `lint_command`, `simulation_command`, `lint_errors`, `simulation_errors`,
+  `hardware_claim_allowed`, `commands_run`, and `honest_verdict`.
+- `hardware_claim_allowed=false` unless the same run records an actual KV260
+  board execution command and evidence.
+
+**Implementation status:** Implemented (Exp 1451)
+
 ## Scenarios
 
 ### SCENARIO-ISING-030
@@ -268,3 +303,14 @@ present, and write a complete terminal artifact that names the next lint/sim
 command while preserving the no-board-claim boundary.
 
 **Implementation status:** Implemented (Exp 1441)
+
+### SCENARIO-ISING-036
+
+**Discrete SB RTL lint/sim rerun artifact:** Given Exp 1441 reports
+`rtl_source_created=true` and the Discrete SB source exists locally, Exp 1451
+SHALL probe HDL tool availability, run bounded lint and testbench simulation
+commands when available, capture failure classes and output summaries, and
+write a complete terminal artifact that keeps `hardware_claim_allowed=false`
+unless real KV260 board evidence exists in the same run.
+
+**Implementation status:** Implemented (Exp 1451)
