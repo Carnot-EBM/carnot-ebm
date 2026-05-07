@@ -994,6 +994,61 @@ the terminal retrospective for run date `20260507`, then
 `criteria_met` counts only true successes, and the artifact records exact
 carry-forward rules for `.112` planning.
 
+### REQ-REPORT-039: Milestone .112 Scope-Reduction Activation Manifest
+
+The Exp 1453 `.112` scope-reduction activation workflow shall write
+`results/experiment_1453_112_scope_reduction_activation_manifest.json` with
+`status="in_progress"` before final manifest completion. It shall then read the
+terminal Exp 1452 `.111` retrospective, the active `ops/known-issues.md`
+scope-reduction directive, `openspec/change-proposals/research-roadmap-vNEXT.md`,
+`research-roadmap-next.yaml` when present, and `ops/exclusion_manifest.yaml`
+without modifying `scripts/research_conductor.py` or `research-roadmap.yaml`.
+
+The workflow shall write `ops/milestone_112_scope_reduction_manifest.md` with a
+table containing:
+
+- requirement
+- mapped task id
+- deliverable path
+- acceptance field
+- retire/block rule
+
+Every mandatory scope-reduction requirement from the known-issues directive
+shall map to a concrete `.112` task. The final artifact shall include:
+
+- `status`
+- `milestone`
+- `prior_milestone`
+- `scope_reduction_required`
+- `required_scope_reduction_task_count`
+- `planned_scope_reduction_task_count`
+- `scope_reduction_manifest_path`
+- `planned_scope_task_ids`
+- `carryforward_from_111`
+- `forbidden_exact_expansions`
+- `honest_verdict`
+
+`required_scope_reduction_task_count` shall be at least 8, and
+`planned_scope_reduction_task_count` shall count only tasks whose primary
+deliverable reduces active scope, retires or consolidates a noisy lineage,
+narrows claims, or blocks future variant expansion. The workflow shall record
+the `.111` live-SOTA runtime carry-forward rules before any repair-v3,
+energy-reranker, or 100-case scale-up rerun is allowed. It shall explicitly
+forbid exact noise-line expansion during `.112`, including new GRPO v15 work,
+new WOPR puzzle cartridges, new HardNet++/DSP variants, and broad new
+comparator or hardware branches before the relevant narrowing/audit task lands.
+
+### SCENARIO-REPORT-039: Exp 1453 Activates .112 Scope Reduction
+
+Given Exp 1452 reports `.111` as 10 of 14 criteria met, names the live-SOTA
+runtime blocker, and `ops/known-issues.md` requires at least 8 scope-reduction
+tasks, when Exp 1453 runs for run date `20260507`, then it writes all required
+REQ-REPORT-039 fields, maps every mandatory scope item to `.112` tasks, records
+at least 10 planned scope-reduction task ids, carries forward the live-SOTA
+repair runtime blocker, forbids exact noise-line expansions, writes the
+operator markdown manifest, and reports `scripts/research_conductor.py` and
+`research-roadmap.yaml` as unchanged by the activation workflow.
+
 ### REQ-REPORT-024: Local Agent Usage Snapshot
 
 The repository shall provide a local operator workflow that inspects the
@@ -1567,6 +1622,7 @@ embed live-GPU benchmark results from Exp 328 when available.
 | REQ-REPORT-036 | `python/carnot/reporting/milestone_111_carryforward_activation_manifest.py`, `results/experiment_1439_110_carryforward_activation_manifest.json`, `ops/milestone_111_carryforward_manifest.md` | `tests/python/test_milestone_111_carryforward_activation_manifest.py` | Implemented |
 | REQ-REPORT-037 | `scripts/check_spec_coverage.py`, `results/experiment_1440_spec_coverage_traceability_metadata_fix.json` | `tests/python/test_spec_coverage_checker.py` | Implemented |
 | REQ-REPORT-038 | `python/carnot/reporting/milestone_retro_111.py`, `results/experiment_1452_milestone_111_retro.json` | `tests/python/test_milestone_retro_111.py` | Implemented |
+| REQ-REPORT-039 | `python/carnot/reporting/milestone_112_scope_reduction_activation_manifest.py`, `results/experiment_1453_112_scope_reduction_activation_manifest.json`, `ops/milestone_112_scope_reduction_manifest.md` | `tests/python/test_milestone_112_scope_reduction_activation_manifest.py` | Implemented |
 | REQ-REPORT-024 | `python/carnot/reporting/agent_usage.py`, `scripts/agent_plan_usage.py` | `tests/python/test_agent_plan_usage.py` | Implemented |
 | REQ-PUBLISH-003 | `scripts/experiment_317_hf_publish.py` | `tests/python/test_experiment_317_hf_publish.py` | Implemented |
 | REQ-PUBLISH-004 | `scripts/experiment_330_hf_live_publish.py` | `tests/python/test_experiment_330_hf_live_publish.py` | Implemented |

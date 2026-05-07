@@ -1,0 +1,249 @@
+{
+  "blocked_reasons": [],
+  "carryforward_from_111": [
+    {
+      "id": "live_sota_runtime_repair_gate",
+      "next_rule": "Do not launch repair v3, energy reranking, or 100-case scale-up until a mandated local SOTA GGUF model completes live inference.",
+      "prior_failures": [
+        {
+          "evidence_path": "results/experiment_1442_live_sota_repair_runtime_preflight.json",
+          "experiment_id": "exp1442",
+          "verdict": "blocked_no_live_sota_runtime"
+        }
+      ],
+      "retire_if_same_verdict": true,
+      "title": "Fix live local SOTA GGUF runtime before any repair v3 or scale-up rerun."
+    },
+    {
+      "id": "repair_v3_and_prescale_gated_missing",
+      "next_rule": "A .112 repair scale task must name the live-runtime fix and cannot reuse the same gate-blocked path as success evidence.",
+      "prior_failures": [
+        {
+          "evidence_path": "results/experiment_1443_live_sota_dccd_semctrl_repair_v3.json",
+          "experiment_id": "exp1443",
+          "verdict": "missing_artifact_gate_blocked_by_exp1442"
+        },
+        {
+          "evidence_path": "results/experiment_1445_full_pipeline_v5_100case_prescale.json",
+          "experiment_id": "exp1445",
+          "verdict": "missing_artifact_gate_blocked_by_exp1443_exp1444"
+        }
+      ],
+      "retire_if_same_verdict": true,
+      "title": "Treat missing exp1443/exp1445 artifacts as gate-blocked, not successful."
+    },
+    {
+      "id": "prm_process_agent_no_improvement",
+      "next_rule": "Future PRM process-agent work must unsaturate the candidate pool or target false-acceptance reduction instead of repeating the same selection gate.",
+      "prior_failures": [
+        {
+          "evidence_path": "results/experiment_1448_prm_v3_online_process_reward_agent.json",
+          "experiment_id": "exp1448",
+          "verdict": "complete_prmv3_no_headline_improvement_prototype_candidate_pool_no_headline_claim"
+        }
+      ],
+      "retire_if_same_verdict": true,
+      "title": "Retire saturated PRM selector pools unless the candidate pool changes."
+    }
+  ],
+  "experiment": "1453_112_scope_reduction_activation_manifest",
+  "forbidden_exact_expansions": [
+    {
+      "blocked_until": "exp1456.grpo_lineage_retired=true or explicit human override",
+      "forbidden_scope": "new GRPO v15 or GRPO/VPRM variant expansion during .112",
+      "forbidden_scope_id": "grpo_v15",
+      "retire_or_block_rule": "Block as exact noise-line expansion."
+    },
+    {
+      "blocked_until": "exp1457.wopr_puzzle_lineage_retired=true",
+      "forbidden_scope": "new WOPR puzzle cartridges during .112",
+      "forbidden_scope_id": "wopr_puzzle_cartridges",
+      "retire_or_block_rule": "Block future cartridges unless they name a thesis link."
+    },
+    {
+      "blocked_until": "exp1458.hardnet_dsp_lineage_retired=true",
+      "forbidden_scope": "new HardNet++/DSP variants during .112",
+      "forbidden_scope_id": "hardnet_dsp_variants",
+      "retire_or_block_rule": "Block variant expansion and consolidate the lesson first."
+    },
+    {
+      "blocked_until": "exp1460 and exp1461 narrow active hardware and comparator scope",
+      "forbidden_scope": "broad new comparator or hardware branches during .112",
+      "forbidden_scope_id": "broad_comparator_hardware_branches",
+      "retire_or_block_rule": "Block branch expansion until cite/retire and active-track decisions land."
+    },
+    {
+      "blocked_until": "exp1459 chooses a headline pivot or retires the lineage",
+      "forbidden_scope": "new self-learning `_improved_non_headline` variants during .112",
+      "forbidden_scope_id": "self_learning_non_headline_variants",
+      "retire_or_block_rule": "Block more non-headline suffix churn without a decision."
+    }
+  ],
+  "honest_verdict": "milestone_112_scope_reduction_activation_complete_10_scope_tasks_live_sota_carryforward_and_exact_noise_expansion_forbidden",
+  "live_sota_runtime_carryforward_rules": [
+    {
+      "id": "live_sota_runtime_repair_gate",
+      "next_rule": "Do not launch repair v3, energy reranking, or 100-case scale-up until a mandated local SOTA GGUF model completes live inference.",
+      "prior_failures": [
+        {
+          "evidence_path": "results/experiment_1442_live_sota_repair_runtime_preflight.json",
+          "experiment_id": "exp1442",
+          "verdict": "blocked_no_live_sota_runtime"
+        }
+      ],
+      "retire_if_same_verdict": true,
+      "title": "Fix live local SOTA GGUF runtime before any repair v3 or scale-up rerun."
+    },
+    {
+      "id": "repair_v3_and_prescale_gated_missing",
+      "next_rule": "A .112 repair scale task must name the live-runtime fix and cannot reuse the same gate-blocked path as success evidence.",
+      "prior_failures": [
+        {
+          "evidence_path": "results/experiment_1443_live_sota_dccd_semctrl_repair_v3.json",
+          "experiment_id": "exp1443",
+          "verdict": "missing_artifact_gate_blocked_by_exp1442"
+        },
+        {
+          "evidence_path": "results/experiment_1445_full_pipeline_v5_100case_prescale.json",
+          "experiment_id": "exp1445",
+          "verdict": "missing_artifact_gate_blocked_by_exp1443_exp1444"
+        }
+      ],
+      "retire_if_same_verdict": true,
+      "title": "Treat missing exp1443/exp1445 artifacts as gate-blocked, not successful."
+    }
+  ],
+  "milestone": "2026.04.112",
+  "missing_known_issues_scope_items": [],
+  "missing_mapped_task_ids_in_roadmap": [],
+  "no_change_confirmations": {
+    "research-roadmap.yaml": "unchanged_by_exp1453_activation_workflow",
+    "scripts/research_conductor.py": "unchanged_by_exp1453_activation_workflow"
+  },
+  "planned_scope_reduction_task_count": 10,
+  "planned_scope_task_ids": [
+    "exp1453",
+    "exp1454",
+    "exp1455",
+    "exp1456",
+    "exp1457",
+    "exp1458",
+    "exp1459",
+    "exp1460",
+    "exp1461",
+    "exp1462"
+  ],
+  "prior_milestone": "2026.04.111",
+  "prior_milestone_honest_verdict": "milestone_111_10_of_14_criteria_met_threshold_not_met_live_sota_runtime_gate_blocked_repair_scale_carry_forward",
+  "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+  "required_scope_reduction_task_count": 8,
+  "roadmap_mapping_check": {
+    "mapped_scope_task_count": 10,
+    "missing_mapped_task_ids_in_roadmap": []
+  },
+  "run_date": "20260507",
+  "schema": "milestone_112_scope_reduction_activation_manifest_v1",
+  "scope_manifest_rows": [
+    {
+      "acceptance_field": "exp1453.scope_reduction_manifest_complete",
+      "deliverable_path": "results/experiment_1453_112_scope_reduction_activation_manifest.json; ops/milestone_112_scope_reduction_manifest.md",
+      "requirement": "Activation / compliance manifest",
+      "requirement_id": "activation_manifest",
+      "retire_block_rule": "Block .112 scope-compliance claims if any mandatory scope item lacks a mapped task, deliverable, acceptance field, or retire/block rule.",
+      "task_id": "exp1453"
+    },
+    {
+      "acceptance_field": "exp1454.classification_table_written",
+      "deliverable_path": "results/experiment_1454_scope_artifact_classifier.json",
+      "requirement": "Experiment artifact classifier",
+      "requirement_id": "artifact_classifier",
+      "retire_block_rule": "Classify SIGNAL / NOISE / AMBIGUOUS before adding more experiment variants.",
+      "task_id": "exp1454"
+    },
+    {
+      "acceptance_field": "exp1455.active_priority_count <= 10",
+      "deliverable_path": "results/experiment_1455_known_issues_priority_audit.json",
+      "requirement": "known-issues.md MANDATORY priority audit",
+      "requirement_id": "known_issues_priority_audit",
+      "retire_block_rule": "Block new mandatory-priority expansion until active priorities are trimmed by at least 40%.",
+      "task_id": "exp1455"
+    },
+    {
+      "acceptance_field": "exp1456.grpo_lineage_retired",
+      "deliverable_path": "results/experiment_1456_grpo_vprm_lineage_retirement.json",
+      "requirement": "GRPO/VPRM lineage consolidation and retirement",
+      "requirement_id": "grpo_vprm_retirement",
+      "retire_block_rule": "Block planner proposals for GRPO v15 unless a human override names a new root cause and falsifiable gate.",
+      "task_id": "exp1456"
+    },
+    {
+      "acceptance_field": "exp1457.wopr_puzzle_lineage_retired",
+      "deliverable_path": "results/experiment_1457_wopr_puzzle_cartridge_retirement.json",
+      "requirement": "WOPR puzzle cartridge retirement",
+      "requirement_id": "wopr_puzzle_retirement",
+      "retire_block_rule": "Block future puzzle cartridges that do not connect to the verify-repair thesis or Phase-3 substrate trajectory.",
+      "task_id": "exp1457"
+    },
+    {
+      "acceptance_field": "exp1458.hardnet_dsp_lineage_retired",
+      "deliverable_path": "results/experiment_1458_hardnet_dsp_repair_stack_retirement.json",
+      "requirement": "HardNet++/DSP repair stack consolidation",
+      "requirement_id": "hardnet_dsp_retirement",
+      "retire_block_rule": "Block new HardNet++/DSP variants; preserve the conservative-replay lesson in one consolidation artifact.",
+      "task_id": "exp1458"
+    },
+    {
+      "acceptance_field": "exp1459.self_learning_headline_pivot_selected or exp1459.self_learning_lineage_retired",
+      "deliverable_path": "results/experiment_1459_self_learning_non_headline_decision.json",
+      "requirement": "Self-learning `_improved_non_headline` lineage decision",
+      "requirement_id": "self_learning_non_headline_decision",
+      "retire_block_rule": "Block another improved-non-headline variant unless it selects a headline pivot or retires the lineage.",
+      "task_id": "exp1459"
+    },
+    {
+      "acceptance_field": "exp1460.active_hardware_track_count <= 3",
+      "deliverable_path": "results/experiment_1460_hardware_portfolio_narrowing.json",
+      "requirement": "Hardware portfolio narrowing",
+      "requirement_id": "hardware_portfolio_narrowing",
+      "retire_block_rule": "Block broad new hardware branches until active hardware tracks are capped at three and out-of-scope tracks are documented.",
+      "task_id": "exp1460"
+    },
+    {
+      "acceptance_field": "exp1461.comparator_decision_count >= 6",
+      "deliverable_path": "results/experiment_1461_comparator_integration_audit.json",
+      "requirement": "Comparator-integration audit",
+      "requirement_id": "comparator_integration_audit",
+      "retire_block_rule": "Block broad new comparator branches until Abstract-CoT, Meta-Harness, Autodata, LARQL, Skillify, and GStack each receive cite/retire decisions.",
+      "task_id": "exp1461"
+    },
+    {
+      "acceptance_field": "3 <= exp1462.anchored_claim_count <= 5",
+      "deliverable_path": "results/experiment_1462_paper_v6_anchored_claims_narrowing.json",
+      "requirement": "Paper-v6 anchored-claims narrowing",
+      "requirement_id": "paper_v6_claim_narrowing",
+      "retire_block_rule": "Block paper claim expansion until each retained claim has artifact evidence and unsupported territory is moved to appendix or future work.",
+      "task_id": "exp1462"
+    }
+  ],
+  "scope_reduction_manifest_complete": true,
+  "scope_reduction_manifest_path": "ops/milestone_112_scope_reduction_manifest.md",
+  "scope_reduction_required": true,
+  "source_inputs_read": {
+    "openspec/change-proposals/research-roadmap-vNEXT.md": {
+      "exists": true
+    },
+    "ops/exclusion_manifest.yaml": {
+      "exists": true
+    },
+    "ops/known-issues.md": {
+      "exists": true
+    },
+    "research-roadmap-next.yaml": {
+      "exists": false
+    },
+    "results/experiment_1452_milestone_111_retro.json": {
+      "exists": true
+    }
+  },
+  "status": "complete"
+}
