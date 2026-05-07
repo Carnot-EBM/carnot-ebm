@@ -5115,3 +5115,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-07: Live SOTA Telemetry v2 - Balanced Labels + Superficial Baselines (✅ Complete) — honest_verdict=balanced_live_sota_telemetry_ready; results/experiment_1480_live_sota_balanced_telemetry_v2.json
 - 2026-05-07: Semantic Energy Feasibility Audit - Gated on Exp1480 Logits (⚠️ Research Finding) — honest_verdict=retired_semantic_energy_confounded_by_superficial_baseline; results/experiment_1481_semantic_energy_feasibility_audit.json
 - 2026-05-07: BEAVER-Lite Live Prefix Bound Calibration v2 (⚠️ Research Finding) — honest_verdict=sound_bound_live_exp1480_plus_exp1468_calibrated; results/experiment_1482_beaver_lite_live_prefix_bound_calibration.json
+- 2026-05-07: HalluGuard Risk-Bound Fit Audit - Carnot Signal Decomposition (⚠️ Research Finding) — honest_verdict=halluguard_style_fit_audit_only_no_full_reproduction; results/experiment_1483_halluguard_risk_bound_fit_audit.json
