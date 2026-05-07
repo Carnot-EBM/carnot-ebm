@@ -4160,3 +4160,64 @@ drift
 | Requirement | Python | Tests |
 |-------------|--------|-------|
 | REQ-LEARN-1497 | Implemented (`python/carnot/reporting/fr11_trace2skill_daily_eval.py`) | Implemented (`tests/python/test_fr11_trace2skill_daily_eval.py`) |
+
+## REQ-LEARN-1498: Trace2Skill Artifact Reachability Audit
+
+Exp 1498 SHALL audit the Exp 1497 trace2skill daily-eval manifest for live
+source evidence, resolver freshness, and verifier-dependency reachability
+before learned skills are trusted as promotable evidence.
+
+### REQ-LEARN-1498 Sub-requirements
+
+- REQ-LEARN-1498-1: The workflow SHALL write
+  `results/experiment_1498_trace2skill_artifact_reachability_audit.json`
+  first with `status="in_progress"` before loading gated Exp 1497 inputs.
+- REQ-LEARN-1498-2: The workflow SHALL require both
+  `results/experiment_1497_fr11_trace2skill_daily_eval_v10.json` and
+  `results/fr11_trace2skill_daily_eval_manifest_1497.jsonl`; if either is
+  absent or malformed, it SHALL write a terminal gated artifact with explicit
+  blockers.
+- REQ-LEARN-1498-3: The workflow SHALL parse each daily-eval manifest row and
+  collect skill IDs, source artifact references, resolver keys, model
+  references, and verifier dependencies.
+- REQ-LEARN-1498-4: Each referenced JSON, JSONL, or YAML artifact SHALL exist,
+  parse successfully, and expose expected key fields before it is counted as
+  reachable.
+- REQ-LEARN-1498-5: The workflow SHALL mark evidence links as unreachable when
+  the path is missing or unparseable, stale when required keys or status are no
+  longer compatible with the manifest contract, and ambiguous when resolver
+  keys are missing, duplicated, or disagree across rows.
+- REQ-LEARN-1498-6: Missing, stale, and ambiguous evidence SHALL produce
+  explicit repair or retirement decisions without deleting learned skills.
+- REQ-LEARN-1498-7: The terminal artifact SHALL include `status`,
+  `artifact_reachability_audit_complete`, `gated_inputs_present`,
+  `skills_checked`, `source_artifacts_checked`, `reachable_artifact_count`,
+  `unreachable_artifact_count`, `stale_artifact_count`,
+  `ambiguous_resolver_count`, `repair_decisions`, `retirement_decisions`,
+  `blockers`, and `honest_verdict`.
+
+### SCENARIO-LEARN-1498-A: Reachable Evidence Keeps Promoted Skills Live
+
+**Given** Exp 1497 wrote a complete daily-eval artifact and manifest
+**And** every manifest source artifact resolves, parses, and exposes expected
+fields
+**When** Exp 1498 audits the manifest
+**Then** the terminal artifact reports the checked skill and source-artifact
+counts
+**And** no repair or retirement decision is required.
+
+### SCENARIO-LEARN-1498-B: Missing Or Ambiguous Evidence Produces Decisions
+
+**Given** a daily-eval manifest row references a missing source artifact or
+contains stale/ambiguous resolver evidence
+**When** Exp 1498 audits the manifest
+**Then** the terminal artifact records the unreachable, stale, or ambiguous
+counts
+**And** it emits explicit repair or retirement decisions for the affected
+learned skill evidence without deleting any skill.
+
+## Implementation Status (REQ-LEARN-1498)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-1498 | Implemented (`python/carnot/reporting/trace2skill_artifact_reachability_audit.py`) | Implemented (`tests/python/test_trace2skill_artifact_reachability_audit.py`) |
