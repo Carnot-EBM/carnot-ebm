@@ -1,0 +1,606 @@
+{
+  "blocked_tasks": [
+    {
+      "experiment_id": "exp1468",
+      "kind": "failed_conductor_attempt",
+      "log_line": "| 2026-05-07 07:06 UTC | Live SOTA GGUF Logprob Telemetry Preflight | FAIL | Codex CLI error: _fn=lambda _spec, _case: pytest.fail(\"generation must not ru |",
+      "reason": "Codex CLI error: _fn=lambda _spec, _case: pytest.fail(\"generation must not ru",
+      "status": "FAIL"
+    },
+    {
+      "experiment_id": "exp1469",
+      "kind": "failed_conductor_attempt",
+      "log_line": "| 2026-05-07 07:23 UTC | HALT + Spilled Energy Diagnostic Micro-Benchmark - | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1469_halt_sp |",
+      "reason": "artifact_not_updated_past_bootstrap (deliverable=results/experiment_1469_halt_sp",
+      "status": "FAIL"
+    },
+    {
+      "experiment_id": "exp1469",
+      "kind": "failed_conductor_attempt",
+      "log_line": "| 2026-05-07 07:28 UTC | HALT + Spilled Energy Diagnostic Micro-Benchmark - | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1469_halt_sp |",
+      "reason": "artifact_not_updated_past_bootstrap (deliverable=results/experiment_1469_halt_sp",
+      "status": "FAIL"
+    },
+    {
+      "experiment_id": "exp1469",
+      "kind": "failed_conductor_attempt",
+      "log_line": "| 2026-05-07 07:36 UTC | HALT + Spilled Energy Diagnostic Micro-Benchmark - | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1469_halt_sp |",
+      "reason": "artifact_not_updated_past_bootstrap (deliverable=results/experiment_1469_halt_sp",
+      "status": "FAIL"
+    },
+    {
+      "experiment_id": "exp1473",
+      "kind": "failed_conductor_attempt",
+      "log_line": "| 2026-05-07 08:55 UTC | Live Telemetry Adversarial Validity Audit - Length | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1473_live_te |",
+      "reason": "artifact_not_updated_past_bootstrap (deliverable=results/experiment_1473_live_te",
+      "status": "FAIL"
+    },
+    {
+      "experiment_id": "exp1473",
+      "kind": "failed_conductor_attempt",
+      "log_line": "| 2026-05-07 09:02 UTC | Live Telemetry Adversarial Validity Audit - Length | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1473_live_te |",
+      "reason": "artifact_not_updated_past_bootstrap (deliverable=results/experiment_1473_live_te",
+      "status": "FAIL"
+    },
+    {
+      "experiment_id": "exp1473",
+      "kind": "failed_conductor_attempt",
+      "log_line": "| 2026-05-07 09:08 UTC | Live Telemetry Adversarial Validity Audit - Length | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1473_live_te |",
+      "reason": "artifact_not_updated_past_bootstrap (deliverable=results/experiment_1473_live_te",
+      "status": "FAIL"
+    },
+    {
+      "experiment_id": "exp1476",
+      "kind": "failed_conductor_attempt",
+      "log_line": "| 2026-05-07 10:48 UTC | KV260 Discrete SB RTL Regression Pack - Source-Lev | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1476_kv260_d |",
+      "reason": "artifact_not_updated_past_bootstrap (deliverable=results/experiment_1476_kv260_d",
+      "status": "FAIL"
+    },
+    {
+      "experiment_id": "exp1476",
+      "kind": "failed_conductor_attempt",
+      "log_line": "| 2026-05-07 10:56 UTC | KV260 Discrete SB RTL Regression Pack - Source-Lev | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1476_kv260_d |",
+      "reason": "artifact_not_updated_past_bootstrap (deliverable=results/experiment_1476_kv260_d",
+      "status": "FAIL"
+    },
+    {
+      "experiment_id": "exp1476",
+      "kind": "failed_conductor_attempt",
+      "log_line": "| 2026-05-07 11:03 UTC | KV260 Discrete SB RTL Regression Pack - Source-Lev | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1476_kv260_d |",
+      "reason": "artifact_not_updated_past_bootstrap (deliverable=results/experiment_1476_kv260_d",
+      "status": "FAIL"
+    },
+    {
+      "blocker": "thrml_not_importable",
+      "criterion": "thrml_npim_parity",
+      "criterion_status": "met",
+      "detail": "missing Python module while importing THRML: thrml",
+      "experiment_id": "exp1477",
+      "kind": "terminal_environment_blocker"
+    }
+  ],
+  "carry_forward_tracks": [
+    {
+      "honest_verdict": "live_sota_topk_telemetry_ready",
+      "rule": "Preserve the raw top-k telemetry manifest, but do not make a headline signal claim.",
+      "source_experiment": "exp1468",
+      "status": "raw_telemetry_ready",
+      "topk_logprobs_available": true,
+      "track": "live_sota_telemetry"
+    },
+    {
+      "honest_verdict": "retired_non_headline_telemetry_flat_or_confounded",
+      "rule": "Retire as a headline diagnostic unless a future run beats superficial confounds.",
+      "source_experiment": "exp1469",
+      "status": "retired",
+      "track": "halt_spilled_energy"
+    },
+    {
+      "honest_verdict": "sound_bound_live_exp1468",
+      "mock_or_live_logprobs": "live_exp1468",
+      "rule": "Keep only the minimal deterministic-bound smoke; broad external benchmark runners stay deferred.",
+      "source_experiment": "exp1470",
+      "status": "narrow_smoke_preserved",
+      "track": "beaver_lite_bounds"
+    },
+    {
+      "completeness_mistakes": 140,
+      "rule": "Carry forward the narrow verified-memory-growth claim with zero soundness mistakes and completeness caveat.",
+      "self_learning_delta_overall": 12,
+      "soundness_mistakes": 0,
+      "source_experiment": "exp1471/exp1472",
+      "status": "preserved",
+      "track": "self_learning"
+    },
+    {
+      "honest_verdict": "telemetry_claim_blocked_adversarial_audit",
+      "rule": "Do not claim telemetry validity as a headline; adversarial audit blocked that claim.",
+      "source_experiment": "exp1473",
+      "status": "blocked",
+      "telemetry_validity_verdict": "invalid_for_headline_claim_superficial_or_mechanical_gate",
+      "track": "telemetry_headline_claim"
+    },
+    {
+      "rule": "Preserve T-SKM and STATIC only as bounded CPU toy/parser baselines.",
+      "source_experiment": "exp1474/exp1475",
+      "static_exact_equivalence": true,
+      "status": "preserved",
+      "track": "constraint_smokes",
+      "tskm_zero_violation": true
+    },
+    {
+      "hardware_claim_allowed": false,
+      "rtl_regression_complete": true,
+      "rule": "KV260 remains source-level RTL; THRML/NPIM remains simulator-only with no hardware claim.",
+      "source_experiment": "exp1476/exp1477",
+      "status": "preserved_with_environmental_blocker",
+      "thrml_available": false,
+      "track": "hardware_simulation"
+    }
+  ],
+  "criteria_met": 12,
+  "criteria_total": 12,
+  "experiment": "1478_milestone_113_retro",
+  "honest_verdict": "milestone_113_12_of_12_criteria_met_success_threshold_met_halt_spilled_retired_telemetry_headline_blocked",
+  "milestone": "2026.04.113",
+  "missing_artifacts": [
+    {
+      "path": "research-roadmap-next.yaml",
+      "reason": "requested_input_missing"
+    }
+  ],
+  "ops_docs_update_note": "ops/status.md and ops/changelog.md were not edited by Exp 1478 because the terminal stop rule delegates docs/status reconciliation to the conductor pass.",
+  "ops_docs_updated": false,
+  "preserved_lineages": [
+    {
+      "decision": "preserved",
+      "honest_verdict": "fr11_v8_positive_verified_memory_growth_persisted_without_forgetting",
+      "lineage": "FR-11 v8 verified-memory-growth pivot",
+      "rule": "Carry forward only the narrow zero-soundness-mistake memory-growth claim.",
+      "source_experiment": "exp1471"
+    },
+    {
+      "decision": "preserved",
+      "honest_verdict": "complete_cpu_only_zero_violation_baseline_agreement",
+      "lineage": "T-SKM toy linear projection",
+      "rule": "Preserve as a toy projection baseline; do not reopen HardNet++/DSP variants.",
+      "source_experiment": "exp1474"
+    },
+    {
+      "decision": "preserved",
+      "honest_verdict": "complete_bounded_case_equivalence_csr_faster_no_generation_or_repair",
+      "lineage": "STATIC CSR certificate automaton",
+      "rule": "Preserve as a bounded parser/automaton benchmark with no repair generation.",
+      "source_experiment": "exp1475"
+    },
+    {
+      "decision": "preserved",
+      "honest_verdict": "rtl_regression_manifest_complete_source_level_only_no_board_bitfile_or_latency_claim",
+      "lineage": "KV260 source-level RTL regression",
+      "rule": "Carry forward source-level lint/simulation only; no board, bitfile, or latency claim.",
+      "source_experiment": "exp1476"
+    },
+    {
+      "decision": "preserved",
+      "honest_verdict": "complete_thrml_unavailable_npim_simulator_probe_recorded",
+      "lineage": "THRML/NPIM simulator-only parity probe",
+      "rule": "Carry forward simulator-only tracking; install THRML before any parity claim.",
+      "source_experiment": "exp1477"
+    }
+  ],
+  "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+  "research_roadmap_yaml_modified": false,
+  "retired_lineages": [
+    {
+      "decision": "retired",
+      "evidence_path": "results/experiment_1469_halt_spilled_energy_telemetry_diagnostic.json",
+      "honest_verdict": "retired_non_headline_telemetry_flat_or_confounded",
+      "lineage": "HALT/Spilled Energy telemetry diagnostic",
+      "reason": "Non-headline telemetry signal was flat, confounded, or gated off by missing logprobs.",
+      "source_experiment": "exp1469"
+    }
+  ],
+  "roadmap_inputs": {
+    "active_roadmap_yaml_path": "research-roadmap.yaml",
+    "active_roadmap_yaml_present": true,
+    "change_proposal_path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+    "change_proposal_present": true,
+    "conductor_log_path": "ops/conductor-log.md",
+    "conductor_log_present": true,
+    "requested_research_roadmap_next_path": "research-roadmap-next.yaml",
+    "requested_research_roadmap_next_present": false
+  },
+  "run_date": "20260507",
+  "schema": "milestone_113_retro_v1",
+  "scripts_research_conductor_modified": false,
+  "source_artifacts_checked": [
+    {
+      "exists": true,
+      "experiment_id": "exp1467",
+      "path": "results/experiment_1467_112_completion_archive_113_activation.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1468",
+      "path": "results/experiment_1468_live_sota_logprob_telemetry_preflight.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1469",
+      "path": "results/experiment_1469_halt_spilled_energy_telemetry_diagnostic.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1470",
+      "path": "results/experiment_1470_beaver_lite_deterministic_bound_smoke.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1471",
+      "path": "results/experiment_1471_fr11_v8_verified_memory_growth_pivot.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1472",
+      "path": "results/experiment_1472_online_verifier_asymmetric_mistake_budget.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1473",
+      "path": "results/experiment_1473_live_telemetry_adversarial_validity_audit.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1474",
+      "path": "results/experiment_1474_tskm_linear_constraint_projection_smoke.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1475",
+      "path": "results/experiment_1475_static_csr_certificate_automaton_smoke.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1476",
+      "path": "results/experiment_1476_kv260_discrete_sb_rtl_regression_pack.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1477",
+      "path": "results/experiment_1477_thrml_npim_simulator_parity_microprobe.json"
+    }
+  ],
+  "status": "complete",
+  "success_criteria_results": {
+    "activation": {
+      "evidence_paths": [
+        "results/experiment_1467_112_completion_archive_113_activation.json:activation_manifest_complete",
+        "results/experiment_1467_112_completion_archive_113_activation.json:predecessor_honest_verdict",
+        "results/experiment_1467_112_completion_archive_113_activation.json:criteria_met"
+      ],
+      "negative_evidence": [],
+      "positive_evidence": [
+        ".113 activation completed and summarized .112 completion evidence."
+      ],
+      "source_values": {
+        "activation_manifest_complete": true,
+        "criteria_met": 14,
+        "honest_verdict": "milestone_113_activation_complete_112_archived_retirements_preserved",
+        "predecessor_honest_verdict": "milestone_112_14_of_14_criteria_met_scope_reduction_satisfied",
+        "status": "complete"
+      },
+      "status": "met",
+      "target": "exp1467.activation_manifest_complete=true with predecessor summary"
+    },
+    "adversarial_telemetry_audit": {
+      "evidence_paths": [
+        "results/experiment_1473_live_telemetry_adversarial_validity_audit.json:telemetry_validity_verdict",
+        "results/experiment_1473_live_telemetry_adversarial_validity_audit.json:length_confound_checked",
+        "results/experiment_1473_live_telemetry_adversarial_validity_audit.json:format_confound_checked",
+        "results/experiment_1473_live_telemetry_adversarial_validity_audit.json:mock_logprob_leakage_checked",
+        "results/experiment_1473_live_telemetry_adversarial_validity_audit.json:prompt_family_confound_checked"
+      ],
+      "negative_evidence": [],
+      "positive_evidence": [
+        "Telemetry audit reached a terminal validity verdict and named superficial checks."
+      ],
+      "source_values": {
+        "format_confound_checked": true,
+        "honest_verdict": "telemetry_claim_blocked_adversarial_audit",
+        "length_confound_checked": true,
+        "mock_logprob_leakage_checked": true,
+        "prompt_family_confound_checked": true,
+        "status": "complete",
+        "telemetry_validity_verdict": "invalid_for_headline_claim_superficial_or_mechanical_gate"
+      },
+      "status": "met",
+      "target": "exp1473.telemetry_validity_verdict is terminal and confounds are named"
+    },
+    "beaver_smoke": {
+      "evidence_paths": [
+        "results/experiment_1470_beaver_lite_deterministic_bound_smoke.json:bound_is_sound",
+        "results/experiment_1470_beaver_lite_deterministic_bound_smoke.json:mock_or_live_logprobs",
+        "results/experiment_1470_beaver_lite_deterministic_bound_smoke.json:empirical_violation_rates"
+      ],
+      "negative_evidence": [],
+      "positive_evidence": [
+        "BEAVER-lite smoke found sound bounds and labeled logprob provenance."
+      ],
+      "source_values": {
+        "bound_is_sound": true,
+        "empirical_violation_rates": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "honest_verdict": "sound_bound_live_exp1468",
+        "mock_or_live_logprobs": "live_exp1468",
+        "status": "complete"
+      },
+      "status": "met",
+      "target": "exp1470.bound_is_sound=true with live/mock logprob label"
+    },
+    "halt_energy_diagnostic": {
+      "evidence_paths": [
+        "results/experiment_1468_live_sota_logprob_telemetry_preflight.json:topk_logprobs_available",
+        "results/experiment_1469_halt_spilled_energy_telemetry_diagnostic.json:telemetry_diagnostic_complete",
+        "results/experiment_1469_halt_spilled_energy_telemetry_diagnostic.json:gated_off_reason"
+      ],
+      "negative_evidence": [],
+      "positive_evidence": [
+        "HALT/spilled diagnostic completed with available top-k telemetry."
+      ],
+      "source_values": {
+        "diagnostic_lineage_retired": true,
+        "gated_off_reason": null,
+        "honest_verdict": "retired_non_headline_telemetry_flat_or_confounded",
+        "status": "complete",
+        "telemetry_diagnostic_complete": true,
+        "topk_logprobs_available": true
+      },
+      "status": "met",
+      "target": "if exp1468.topk_logprobs_available=true then exp1469.telemetry_diagnostic_complete=true; otherwise terminal logprob skip"
+    },
+    "kv260_rtl_regression": {
+      "evidence_paths": [
+        "results/experiment_1476_kv260_discrete_sb_rtl_regression_pack.json:rtl_regression_complete",
+        "results/experiment_1476_kv260_discrete_sb_rtl_regression_pack.json:board_execution_performed",
+        "results/experiment_1476_kv260_discrete_sb_rtl_regression_pack.json:latency_claimed"
+      ],
+      "negative_evidence": [],
+      "positive_evidence": [
+        "KV260 regression stayed source-level with no board or latency claim."
+      ],
+      "source_values": {
+        "board_execution_performed": false,
+        "honest_verdict": "rtl_regression_manifest_complete_source_level_only_no_board_bitfile_or_latency_claim",
+        "latency_claimed": false,
+        "rtl_regression_complete": true,
+        "status": "complete"
+      },
+      "status": "met",
+      "target": "exp1476.rtl_regression_complete=true with no board or latency claim"
+    },
+    "mistake_audit": {
+      "evidence_paths": [
+        "results/experiment_1472_online_verifier_asymmetric_mistake_budget.json:soundness_mistakes",
+        "results/experiment_1472_online_verifier_asymmetric_mistake_budget.json:completeness_mistakes",
+        "results/experiment_1472_online_verifier_asymmetric_mistake_budget.json:pareto_decision"
+      ],
+      "negative_evidence": [],
+      "positive_evidence": [
+        "Mistake audit reported asymmetric soundness/completeness accounting."
+      ],
+      "source_values": {
+        "completeness_mistakes": 140,
+        "honest_verdict": "self_learning_claim_preserved_zero_soundness_mistakes",
+        "pareto_decision": "preserve_narrow_claim_on_soundness_frontier_with_completeness_caveat",
+        "soundness_mistakes": 0,
+        "status": "complete"
+      },
+      "status": "met",
+      "target": "exp1472 soundness/completeness mistakes reported with asymmetric decision"
+    },
+    "retro": {
+      "evidence_paths": [
+        "results/experiment_1478_milestone_113_retro.json"
+      ],
+      "negative_evidence": [],
+      "positive_evidence": [
+        "Retro closure records all required lineages and confirms forbidden files unchanged."
+      ],
+      "source_values": {
+        "carry_forward_track_count": 7,
+        "criteria_total": 12,
+        "recorded_lineage_count": 6,
+        "research_roadmap_yaml_modified": false,
+        "scripts_research_conductor_modified": false
+      },
+      "status": "met",
+      "target": "exp1478.criteria_total=12 with lineage/carry-forward records and forbidden files unchanged"
+    },
+    "self_learning_pivot": {
+      "evidence_paths": [
+        "results/experiment_1471_fr11_v8_verified_memory_growth_pivot.json:self_learning_delta_overall",
+        "results/experiment_1471_fr11_v8_verified_memory_growth_pivot.json:new_promoted_count",
+        "results/experiment_1471_fr11_v8_verified_memory_growth_pivot.json:nonforgetting_rate",
+        "results/experiment_1471_fr11_v8_verified_memory_growth_pivot.json:pivot_retired"
+      ],
+      "negative_evidence": [],
+      "positive_evidence": [
+        "Self-learning pivot produced verified growth without forgetting."
+      ],
+      "source_values": {
+        "honest_verdict": "fr11_v8_positive_verified_memory_growth_persisted_without_forgetting",
+        "new_promoted_count": 12,
+        "nonforgetting_rate": 1.0,
+        "pivot_retired": false,
+        "self_learning_delta_overall": 12,
+        "status": "complete"
+      },
+      "status": "met",
+      "target": "exp1471 growth/nonforgetting gates pass or pivot is retired"
+    },
+    "static_automaton_smoke": {
+      "evidence_paths": [
+        "results/experiment_1475_static_csr_certificate_automaton_smoke.json:exact_acceptance_equivalent",
+        "results/experiment_1475_static_csr_certificate_automaton_smoke.json:csr_latency_ms_p50",
+        "results/experiment_1475_static_csr_certificate_automaton_smoke.json:existing_path_latency_ms_p50"
+      ],
+      "negative_evidence": [],
+      "positive_evidence": [
+        "STATIC CSR automaton matched existing acceptance and reported latency."
+      ],
+      "source_values": {
+        "csr_latency_ms_p50": 0.004689,
+        "exact_acceptance_equivalent": true,
+        "existing_path_latency_ms_p50": 0.013675,
+        "honest_verdict": "complete_bounded_case_equivalence_csr_faster_no_generation_or_repair",
+        "status": "complete"
+      },
+      "status": "met",
+      "target": "exp1475.exact_acceptance_equivalent=true and latency reported"
+    },
+    "telemetry_preflight": {
+      "evidence_paths": [
+        "results/experiment_1468_live_sota_logprob_telemetry_preflight.json:live_sota_model_inference_used",
+        "results/experiment_1468_live_sota_logprob_telemetry_preflight.json:topk_logprobs_available",
+        "results/experiment_1468_live_sota_logprob_telemetry_preflight.json:telemetry_cases_completed"
+      ],
+      "negative_evidence": [],
+      "positive_evidence": [
+        "Live SOTA telemetry preflight ran and recorded top-k/logprob availability."
+      ],
+      "source_values": {
+        "honest_verdict": "live_sota_topk_telemetry_ready",
+        "live_sota_model_inference_used": true,
+        "status": "complete",
+        "telemetry_cases_completed": 12,
+        "topk_logprobs_available": true
+      },
+      "status": "met",
+      "target": "exp1468.live_sota_model_inference_used=true and top-k availability recorded"
+    },
+    "thrml_npim_parity": {
+      "evidence_paths": [
+        "results/experiment_1477_thrml_npim_simulator_parity_microprobe.json:hardware_claim_allowed",
+        "results/experiment_1477_thrml_npim_simulator_parity_microprobe.json:parity_metric",
+        "results/experiment_1477_thrml_npim_simulator_parity_microprobe.json:carnot_sampler_cases",
+        "results/experiment_1477_thrml_npim_simulator_parity_microprobe.json:npim_cases"
+      ],
+      "negative_evidence": [],
+      "positive_evidence": [
+        "THRML/NPIM remained simulator-only and reported parity/sample-quality fields."
+      ],
+      "source_values": {
+        "carnot_sampler_cases": [
+          {
+            "best_energy_gap_to_exact": 0.0,
+            "carnot_best_energy": -1.31,
+            "carnot_mean_energy": -0.58,
+            "case": "n3_biased_chain",
+            "exact_ground_energy": -1.31,
+            "exact_mean_energy": -0.658768201024,
+            "exact_reference_state_count": 8,
+            "n_spins": 3,
+            "sample_count": 64,
+            "status": "sampled",
+            "wall_time_s": 1.078783
+          },
+          {
+            "best_energy_gap_to_exact": 0.0,
+            "carnot_best_energy": -1.48,
+            "carnot_mean_energy": -0.8715625,
+            "case": "n4_signed_ring_chord",
+            "exact_ground_energy": -1.48,
+            "exact_mean_energy": -0.89201643855,
+            "exact_reference_state_count": 16,
+            "n_spins": 4,
+            "sample_count": 64,
+            "status": "sampled",
+            "wall_time_s": 0.582076
+          },
+          {
+            "best_energy_gap_to_exact": -0.0,
+            "carnot_best_energy": -1.16,
+            "carnot_mean_energy": -0.3878125,
+            "case": "n5_sparse_signed_bias",
+            "exact_ground_energy": -1.16,
+            "exact_mean_energy": -0.513673279813,
+            "exact_reference_state_count": 32,
+            "n_spins": 5,
+            "sample_count": 64,
+            "status": "sampled",
+            "wall_time_s": 0.611813
+          }
+        ],
+        "hardware_claim_allowed": false,
+        "honest_verdict": "complete_thrml_unavailable_npim_simulator_probe_recorded",
+        "npim_cases": [
+          {
+            "baseline_best_energy": -1.31,
+            "case": "n3_biased_chain",
+            "energy_delta_vs_fixed_baseline": 0.0,
+            "npim_best_energy": -1.31,
+            "selected_policy": {
+              "beta_final": 1.15,
+              "momentum": 0.0
+            },
+            "time_to_energy_delta_steps": null
+          },
+          {
+            "baseline_best_energy": -1.48,
+            "case": "n4_signed_ring_chord",
+            "energy_delta_vs_fixed_baseline": 0.0,
+            "npim_best_energy": -1.48,
+            "selected_policy": {
+              "beta_final": 1.25,
+              "momentum": 0.0
+            },
+            "time_to_energy_delta_steps": null
+          },
+          {
+            "baseline_best_energy": -1.16,
+            "case": "n5_sparse_signed_bias",
+            "energy_delta_vs_fixed_baseline": 0.0,
+            "npim_best_energy": -1.16,
+            "selected_policy": {
+              "beta_final": 1.05,
+              "momentum": 0.0
+            },
+            "time_to_energy_delta_steps": null
+          }
+        ],
+        "parity_metric": {
+          "metric": "max_abs_energy_error",
+          "reason": "missing Python module while importing THRML: thrml",
+          "status": "blocked",
+          "value": null
+        },
+        "status": "complete"
+      },
+      "status": "met",
+      "target": "exp1477.hardware_claim_allowed=false and simulator fields are reported"
+    },
+    "tskm_smoke": {
+      "evidence_paths": [
+        "results/experiment_1474_tskm_linear_constraint_projection_smoke.json:zero_violation_projection",
+        "results/experiment_1474_tskm_linear_constraint_projection_smoke.json:blockers",
+        "results/experiment_1474_tskm_linear_constraint_projection_smoke.json:baseline_verifier_agreement"
+      ],
+      "negative_evidence": [],
+      "positive_evidence": [
+        "T-SKM projection completed with zero violations or a terminal blocker."
+      ],
+      "source_values": {
+        "baseline_verifier_agreement": true,
+        "blockers": null,
+        "honest_verdict": "complete_cpu_only_zero_violation_baseline_agreement",
+        "status": "complete",
+        "zero_violation_projection": true
+      },
+      "status": "met",
+      "target": "exp1474.zero_violation_projection=true or blocker recorded"
+    }
+  }
+}

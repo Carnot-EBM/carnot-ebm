@@ -1493,6 +1493,77 @@ tracks, forbids the retired reopen tracks, confirms `research-roadmap.yaml` and
 `scripts/research_conductor.py` were not modified, and writes an honest
 activation verdict.
 
+### REQ-REPORT-049: Milestone .113 Terminal Retrospective
+
+The Exp 1478 `.113` retrospective workflow shall write
+`results/experiment_1478_milestone_113_retro.json` with `status="in_progress"`
+before it loads source artifacts. It shall then read
+`openspec/change-proposals/research-roadmap-vNEXT.md`, `research-roadmap.yaml`,
+`research-roadmap-next.yaml` when present, `ops/conductor-log.md`, and the
+authoritative Exp 1467 through Exp 1477 result artifacts that exist.
+
+The workflow shall score the 12 roadmap success criteria from exact source
+fields:
+
+- Exp 1467 activation manifest completion and predecessor summary.
+- Exp 1468 live SOTA inference plus recorded top-k/logprob availability.
+- Exp 1469 terminal HALT/spilled-energy diagnostic completion when gated on,
+  or a terminal skip explaining missing logprobs when gated off.
+- Exp 1470 sound BEAVER-lite bounds with live/mock logprob provenance labeled.
+- Exp 1471 positive self-learning growth with at least one promotion and
+  nonforgetting at or above 0.99, or an explicit pivot retirement.
+- Exp 1472 soundness and completeness mistakes plus an asymmetric-cost
+  decision.
+- Exp 1473 terminal telemetry-validity verdict with superficial-confound
+  checks or named blockers.
+- Exp 1474 zero-violation T-SKM toy projection or a recorded blocker.
+- Exp 1475 exact STATIC CSR acceptance equivalence with latency reported.
+- Exp 1476 source-level KV260 RTL regression completion with no board, bitfile,
+  or latency claim.
+- Exp 1477 no hardware claim plus simulator parity/sample-quality fields.
+- Exp 1478 closure with `criteria_total == 12`, all required lineage decisions
+  and carry-forward rules recorded, and both `research-roadmap.yaml` and
+  `scripts/research_conductor.py` unchanged.
+
+The terminal artifact shall include at least:
+
+- `status`
+- `milestone`
+- `criteria_met`
+- `criteria_total`
+- `blocked_tasks`
+- `retired_lineages`
+- `preserved_lineages`
+- `carry_forward_tracks`
+- `missing_artifacts`
+- `research_roadmap_yaml_modified`
+- `scripts_research_conductor_modified`
+- `ops_docs_updated`
+- `honest_verdict`
+
+It shall record the HALT/spilled diagnostic, self-learning pivot, T-SKM,
+STATIC, KV260 regression, and THRML/NPIM tracks as either retired or preserved.
+Failed conductor attempts and terminal environmental blockers shall be recorded
+with their exact available reasons, but prior failed attempts shall not make a
+criterion fail when the authoritative terminal artifact satisfies the roadmap
+criterion. `ops_docs_updated` shall truthfully reflect whether the retrospective
+workflow edited `ops/status.md` and `ops/changelog.md`; when an operator stop
+rule delegates ops reconciliation to the conductor, it shall remain false with a
+note rather than fabricating an update.
+
+### SCENARIO-REPORT-049: .113 Retro Scores Terminal Evidence Without Reopening Scope
+
+Given Exp 1467 through Exp 1477 terminal artifacts exist for run date
+`20260507`, `research-roadmap-next.yaml` is absent, Exp 1469 retires the
+HALT/spilled diagnostic as non-headline telemetry, Exp 1471 and Exp 1472
+preserve the narrow self-learning claim, Exp 1473 blocks the telemetry headline
+claim, Exp 1474 through Exp 1477 preserve bounded CPU/simulator tracks, and
+the forbidden files `research-roadmap.yaml` and `scripts/research_conductor.py`
+are unchanged, when Exp 1478 runs, then it writes all required REQ-REPORT-049
+fields, reports `criteria_total == 12`, records the missing next-roadmap file,
+sets `ops_docs_updated == false` when docs reconciliation is delegated, and
+writes an honest verdict with the final score.
+
 ### REQ-REPORT-024: Local Agent Usage Snapshot
 
 The repository shall provide a local operator workflow that inspects the
@@ -2076,6 +2147,7 @@ embed live-GPU benchmark results from Exp 328 when available.
 | REQ-REPORT-046 | `python/carnot/reporting/external_verifier_benchmark_fit_audit.py`, `results/experiment_1465_external_verifier_benchmark_fit_audit.json`, `docs/research-notes/external_verifier_benchmark_fit.md` | `tests/python/test_external_verifier_benchmark_fit_audit.py` | Implemented |
 | REQ-REPORT-047 | `python/carnot/reporting/milestone_retro_112.py`, `results/experiment_1466_milestone_112_retro.json` | `tests/python/test_milestone_retro_112.py` | Implemented |
 | REQ-REPORT-048 | `python/carnot/reporting/milestone_113_activation_manifest.py`, `results/experiment_1467_112_completion_archive_113_activation.json`, `ops/milestone_113_activation_manifest.md` | `tests/python/test_milestone_113_activation_manifest.py` | Implemented |
+| REQ-REPORT-049 | `python/carnot/reporting/milestone_retro_113.py`, `results/experiment_1478_milestone_113_retro.json` | `tests/python/test_milestone_retro_113.py` | Implemented |
 | REQ-REPORT-024 | `python/carnot/reporting/agent_usage.py`, `scripts/agent_plan_usage.py` | `tests/python/test_agent_plan_usage.py` | Implemented |
 | REQ-PUBLISH-003 | `scripts/experiment_317_hf_publish.py` | `tests/python/test_experiment_317_hf_publish.py` | Implemented |
 | REQ-PUBLISH-004 | `scripts/experiment_330_hf_live_publish.py` | `tests/python/test_experiment_330_hf_live_publish.py` | Implemented |
