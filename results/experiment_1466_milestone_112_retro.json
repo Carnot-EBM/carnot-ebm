@@ -1,0 +1,853 @@
+{
+  "blocked_tasks": [],
+  "carry_forward_tracks": [
+    {
+      "honest_verdict": "local_sota_runtime_ready",
+      "rule": "Preserve local SOTA GGUF runtime as a precondition for headline repair; future runtime regressions must name the exact missing cache, CUDA, or llama.cpp field.",
+      "source_experiment": "exp1463",
+      "status": "ready",
+      "track": "runtime"
+    },
+    {
+      "honest_verdict": "complete_no_retry_context_improvement_repair_executor_retired",
+      "rule": "Do not preserve the repair-executor validation-error context line unless a future task changes the executor and beats acceptance_delta_pp > 0.",
+      "source_experiment": "exp1464",
+      "status": "retired",
+      "track": "repair"
+    },
+    {
+      "honest_verdict": "self_learning_headline_pivot_selected_exp1447_verified_growth_only",
+      "rule": "Allow only one bounded exp1447-style fresh verified growth follow-up; do not revive broad non-headline self-learning claims.",
+      "source_experiment": "exp1459",
+      "status": "pivot_selected",
+      "track": "self_learning"
+    },
+    {
+      "anchored_claim_count": 4,
+      "honest_verdict": "paper_v6_narrowed_to_4_anchored_claims_paper_updated_true",
+      "rule": "Keep paper-v6 claims within the anchored claim matrix; unsupported hardware, comparator, and broad scaling claims remain appendix or future work.",
+      "source_experiment": "exp1462",
+      "track": "paper_claims"
+    },
+    {
+      "decision": "adopt_beaver_style_deterministic_bounds_smoke; defer_vnnlib_vnncomp_and_smaller_existing_benchmark",
+      "honest_verdict": "adopt_one_minimal_beaver_bounds_smoke",
+      "rule": "Adopt at most the one minimal BEAVER-style bounds smoke task; defer broad VNN-COMP or external verifier benchmark runners.",
+      "source_experiment": "exp1465",
+      "track": "benchmark_adoption"
+    }
+  ],
+  "criteria_met": 14,
+  "criteria_total": 14,
+  "experiment": "1466_milestone_112_retro",
+  "honest_verdict": "milestone_112_14_of_14_criteria_met_scope_reduction_satisfied",
+  "lessons_learned": [
+    "Scope reduction was satisfied only where JSON artifacts and backing docs existed.",
+    "The local SOTA runtime gate recovered, enabling a bounded repair salvage test.",
+    "The validation-error context repair path produced no acceptance improvement and was retired.",
+    "Paper, hardware, comparator, and benchmark work were narrowed to explicit next gates."
+  ],
+  "milestone": "2026.04.112",
+  "missing_artifacts": [
+    {
+      "path": "research-roadmap-next.yaml",
+      "reason": "requested_input_missing"
+    }
+  ],
+  "ops_docs_update_note": "ops/status.md and ops/changelog.md were not edited by Exp 1466 because the terminal stop rule delegates docs/status reconciliation to the conductor pass.",
+  "ops_docs_updated": false,
+  "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+  "research_roadmap_yaml_modified": false,
+  "retired_lineages": [
+    {
+      "evidence_path": "results/experiment_1456_grpo_vprm_lineage_consolidation_retirement.json",
+      "honest_verdict": "grpo_vprm_lineage_retired_no_v15_without_operator_reopen",
+      "lineage": "GRPO/VPRM",
+      "note_path": "ops/lineage-retirements/grpo_vprm_lineage_retired.md",
+      "source_experiment": "exp1456"
+    },
+    {
+      "evidence_path": "results/experiment_1457_wopr_puzzle_cartridge_retirement.json",
+      "honest_verdict": "wopr_puzzle_lineage_retired_demo_assets_preserved_no_new_gallery_work",
+      "lineage": "WOPR puzzle cartridges",
+      "note_path": "ops/lineage-retirements/wopr_puzzle_cartridges_retired.md",
+      "source_experiment": "exp1457"
+    },
+    {
+      "evidence_path": "results/experiment_1458_hardnet_dsp_repair_stack_consolidation.json",
+      "honest_verdict": "hardnet_dsp_lineage_retired_conservative_replay_retained_no_new_variants",
+      "lineage": "HardNet++/DSP repair stack",
+      "note_path": "ops/lineage-retirements/hardnet_dsp_repair_stack_retired.md",
+      "source_experiment": "exp1458"
+    },
+    {
+      "evidence_path": "results/experiment_1464_repair_validation_error_context_ab.json",
+      "honest_verdict": "complete_no_retry_context_improvement_repair_executor_retired",
+      "lineage": "repair executor validation-error context",
+      "note_path": null,
+      "source_experiment": "exp1464"
+    }
+  ],
+  "roadmap_inputs": {
+    "active_roadmap_yaml_path": "research-roadmap.yaml",
+    "active_roadmap_yaml_present": true,
+    "change_proposal_path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+    "change_proposal_present": true,
+    "conductor_log_path": "ops/conductor-log.md",
+    "conductor_log_present": true,
+    "requested_research_roadmap_next_path": "research-roadmap-next.yaml",
+    "requested_research_roadmap_next_present": false
+  },
+  "run_date": "20260507",
+  "schema": "milestone_112_retro_v1",
+  "scope_reduction_compliance_met": true,
+  "scope_reduction_required": true,
+  "scope_reduction_tasks_completed": [
+    "exp1453",
+    "exp1454",
+    "exp1455",
+    "exp1456",
+    "exp1457",
+    "exp1458",
+    "exp1459",
+    "exp1460",
+    "exp1461",
+    "exp1462"
+  ],
+  "scripts_research_conductor_modified": false,
+  "source_artifacts_checked": [
+    {
+      "exists": true,
+      "experiment_id": "exp1453",
+      "path": "results/experiment_1453_112_scope_reduction_activation_manifest.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1454",
+      "path": "results/experiment_1454_experiment_artifact_signal_noise_classifier.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1455",
+      "path": "results/experiment_1455_known_issues_mandatory_priority_audit.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1456",
+      "path": "results/experiment_1456_grpo_vprm_lineage_consolidation_retirement.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1457",
+      "path": "results/experiment_1457_wopr_puzzle_cartridge_retirement.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1458",
+      "path": "results/experiment_1458_hardnet_dsp_repair_stack_consolidation.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1459",
+      "path": "results/experiment_1459_self_learning_nonheadline_lineage_decision.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1460",
+      "path": "results/experiment_1460_hardware_portfolio_narrowing.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1461",
+      "path": "results/experiment_1461_comparator_integration_cite_retire_audit.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1462",
+      "path": "results/experiment_1462_paper_v6_anchored_claims_narrowing.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1463",
+      "path": "results/experiment_1463_local_sota_gguf_runtime_repair.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1464",
+      "path": "results/experiment_1464_repair_validation_error_context_ab.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1465",
+      "path": "results/experiment_1465_external_verifier_benchmark_fit_audit.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1463_reproduced_probe",
+      "path": "results/experiment_1463_reproduced_exp1442_current_probe.json"
+    }
+  ],
+  "status": "complete",
+  "success_criteria_results": {
+    "artifact_classifier": {
+      "evidence_paths": [
+        "results/experiment_1454_experiment_artifact_signal_noise_classifier.json:classification_table_written",
+        "results/experiment_1454_experiment_artifact_signal_noise_classifier.json:top_50_noise_candidates",
+        "ops/experiment_signal_noise_classification.csv",
+        "ops/experiment_signal_noise_summary.md"
+      ],
+      "negative_evidence": [],
+      "positive_evidence": [
+        "Signal/noise table was written and top noise candidates were identified."
+      ],
+      "source_values": {
+        "classification_table_written": true,
+        "honest_verdict": "complete_exp1454_signal_noise_ledger_written_1132_artifacts_547_signal_138_noise_447_ambiguous",
+        "status": "complete",
+        "top_50_noise_candidates": [
+          {
+            "experiment_id": "1087",
+            "path": "results/experiment_1087_gemini_worktree_conductor_tier_b.json",
+            "reason": "explicit retirement or retire-if-same-verdict marker",
+            "title": "Gemini Worktree Conductor Tier B \u2014 MANDATORY (3 milestones overdue per CLAUDE.md forcing function)"
+          },
+          {
+            "experiment_id": "1186",
+            "path": "results/experiment_1186_dot_ebm_diffusion_redesign.json",
+            "reason": "explicit retirement or retire-if-same-verdict marker",
+            "title": "dot ebm diffusion redesign"
+          },
+          {
+            "experiment_id": "1393",
+            "path": "results/experiment_1393_grpo_v8_ngrpo_zero_reward_fix.json",
+            "reason": "explicit retirement or retire-if-same-verdict marker",
+            "title": "grpo v8 ngrpo zero reward fix"
+          },
+          {
+            "experiment_id": "1402",
+            "path": "results/experiment_1402_milestone_108_retro.json",
+            "reason": "explicit retirement or retire-if-same-verdict marker",
+            "title": "milestone 108 retro"
+          },
+          {
+            "experiment_id": "346",
+            "path": "results/experiment_346_retired.json",
+            "reason": "explicit retirement or retire-if-same-verdict marker",
+            "title": "retired"
+          },
+          {
+            "experiment_id": "380",
+            "path": "results/experiment_380_retired.json",
+            "reason": "explicit retirement or retire-if-same-verdict marker",
+            "title": "retired"
+          },
+          {
+            "experiment_id": "381",
+            "path": "results/experiment_381_retired.json",
+            "reason": "explicit retirement or retire-if-same-verdict marker",
+            "title": "retired"
+          },
+          {
+            "experiment_id": "382",
+            "path": "results/experiment_382_retired.json",
+            "reason": "explicit retirement or retire-if-same-verdict marker",
+            "title": "retired"
+          },
+          {
+            "experiment_id": "383",
+            "path": "results/experiment_383_retired.json",
+            "reason": "explicit retirement or retire-if-same-verdict marker",
+            "title": "retired"
+          },
+          {
+            "experiment_id": "410",
+            "path": "results/experiment_410_retired.json",
+            "reason": "explicit retirement or retire-if-same-verdict marker",
+            "title": "retired"
+          },
+          {
+            "experiment_id": "425",
+            "path": "results/experiment_425_retired.json",
+            "reason": "explicit retirement or retire-if-same-verdict marker",
+            "title": "retired"
+          },
+          {
+            "experiment_id": "880",
+            "path": "results/experiment_880_preflight_v17.json",
+            "reason": "explicit retirement or retire-if-same-verdict marker",
+            "title": "Pre-flight v17 HalluSAE retirement + RETRO audit"
+          },
+          {
+            "experiment_id": "887",
+            "path": "results/experiment_887_jepa_ood_final_surgery.json",
+            "reason": "explicit retirement or retire-if-same-verdict marker",
+            "title": "jepa ood final surgery"
+          },
+          {
+            "experiment_id": "901",
+            "path": "results/experiment_901_pimi_sparse_adjacency_v4.json",
+            "reason": "explicit retirement or retire-if-same-verdict marker",
+            "title": "SparsePIMISampler \u2014 copy-node sparsification on iCE40 (FINAL PIMI attempt)"
+          },
+          {
+            "experiment_id": "914",
+            "path": "results/experiment_914_pimi_sparse_adjacency_final.json",
+            "reason": "explicit retirement or retire-if-same-verdict marker",
+            "title": "PIMI Sparse Adjacency Final \u2014 N=64 top-20% couplings (RETRO CLOSURE ATTEMPT)"
+          },
+          {
+            "experiment_id": "957",
+            "path": "results/experiment_957_fr.json",
+            "reason": "explicit retirement or retire-if-same-verdict marker",
+            "title": "JEPA v23 SC-Energy Auxiliary Loss"
+          },
+          {
+            "experiment_id": "1003",
+            "path": "results/experiment_1003_spilled_energy_live_gpu_v4.json",
+            "reason": "merit-gate negative, no-improvement, regression, or no-headline evidence",
+            "title": "SpilledEnergy Live GPU v4"
+          },
+          {
+            "experiment_id": "1033",
+            "path": "results/experiment_1033_thinkprm_v4.json",
+            "reason": "merit-gate negative, no-improvement, regression, or no-headline evidence",
+            "title": "ThinkPRM Probe v4: train & evaluate on expanded FoVer corpus"
+          },
+          {
+            "experiment_id": "1034",
+            "path": "results/experiment_1034_gskan_v4.json",
+            "reason": "merit-gate negative, no-improvement, regression, or no-headline evidence",
+            "title": "GS-KAN v4: Group-Shared KAN + QuantKAN INT8 for KV260 FPGA budget"
+          },
+          {
+            "experiment_id": "1035",
+            "path": "results/experiment_1035_dualgpu_rocm_v3.json",
+            "reason": "merit-gate negative, no-improvement, regression, or no-headline evidence",
+            "title": "DualGPU ROCm-aware Detection v3 \u2014 Patch Verified, Torch Backend Diagnosed"
+          },
+          {
+            "experiment_id": "1045",
+            "path": "results/experiment_1045_probe_ensemble_v5.json",
+            "reason": "merit-gate negative, no-improvement, regression, or no-headline evidence",
+            "title": "Probe Ensemble v5: ThinkPRM + GS-KAN + NK-KAEM on FoVer v3 corpus (216 pairs)"
+          },
+          {
+            "experiment_id": "1057",
+            "path": "results/experiment_1057_probe_ensemble_v6.json",
+            "reason": "merit-gate negative, no-improvement, regression, or no-headline evidence",
+            "title": "Probe Ensemble v6: ThinkPRM+GS-KAN+NK-KAEM+SOSKAN on FoVer v4 corpus (6548 pairs)"
+          },
+          {
+            "experiment_id": "1099",
+            "path": "results/experiment_1099_rlvr_ssd_integration_v1.json",
+            "reason": "merit-gate negative, no-improvement, regression, or no-headline evidence",
+            "title": "rlvr ssd integration v1"
+          },
+          {
+            "experiment_id": "1108",
+            "path": "results/experiment_1108_ensemble_diversity_v2_and_composition.json",
+            "reason": "merit-gate negative, no-improvement, regression, or no-headline evidence",
+            "title": "Ensemble Diversity V2: 6-Verifier AND-Composition Measurement"
+          },
+          {
+            "experiment_id": "1110",
+            "path": "results/experiment_1110_rlvr_ssd_v2_nondegenerate_live_gpu.json",
+            "reason": "merit-gate negative, no-improvement, regression, or no-headline evidence",
+            "title": "RLVR + SSD v2 \u2014 non-degenerate fresh corpus, top-k energy selection"
+          },
+          {
+            "experiment_id": "1111",
+            "path": "results/experiment_1111_thinkprm_v2_retrain_7349_prm.json",
+            "reason": "merit-gate negative, no-improvement, regression, or no-headline evidence",
+            "title": "ThinkPRM v2: retrain on 7349-example PRM corpus from exp1084"
+          },
+          {
+            "experiment_id": "1134",
+            "path": "results/experiment_1134_kv260_v4_parameter_tuning.json",
+            "reason": "merit-gate negative, no-improvement, regression, or no-headline evidence",
+            "title": "KV260 Ising Sampler v4 \u2014 Parameter Tuning + Self-Adaptive Lambda"
+          },
+          {
+            "experiment_id": "1140",
+            "path": "results/experiment_1140_roadmap_gate_prior_failures_audit.json",
+            "reason": "merit-gate negative, no-improvement, regression, or no-headline evidence",
+            "title": "roadmap gate prior failures audit"
+          },
+          {
+            "experiment_id": "1143",
+            "path": "results/experiment_1143_halluguard_cascade_router_v3.json",
+            "reason": "merit-gate negative, no-improvement, regression, or no-headline evidence",
+            "title": "HalluGuard cascade router v3 with entropy and embedding distance"
+          },
+          {
+            "experiment_id": "1146",
+            "path": "results/experiment_1146_grpo_reflection_reward_v3.json",
+            "reason": "merit-gate negative, no-improvement, regression, or no-headline evidence",
+            "title": "GRPO reflection reward v3: ThinkPRM + one-step repair energy delta"
+          },
+          {
+            "experiment_id": "1152",
+            "path": "results/experiment_1152_gate_audit_pre_activation_v2.json",
+            "reason": "merit-gate negative, no-improvement, regression, or no-headline evidence",
+            "title": "gate audit pre activation v2"
+          },
+          {
+            "experiment_id": "1156",
+            "path": "results/experiment_1156_hmc_sampler_conditional.json",
+            "reason": "merit-gate negative, no-improvement, regression, or no-headline evidence",
+            "title": "hmc sampler conditional"
+          },
+          {
+            "experiment_id": "1157",
+            "path": "results/experiment_1157_secl_cheap_tier_calibration.json",
+            "reason": "merit-gate negative, no-improvement, regression, or no-headline evidence",
+            "title": "secl cheap tier calibration"
+          },
+          {
+            "experiment_id": "1176",
+            "path": "results/experiment_1176_k6_and_compose_validation.json",
+            "reason": "merit-gate negative, no-improvement, regression, or no-headline evidence",
+            "title": "k=6 AND-Composition Validation with SC-Energy"
+          },
+          {
+            "experiment_id": "1187",
+            "path": "results/experiment_1187_latent_grpo_energy_reward.json",
+            "reason": "merit-gate negative, no-improvement, regression, or no-headline evidence",
+            "title": "Latent-GRPO invalid energy masking with one-sided reward noise"
+          },
+          {
+            "experiment_id": "1202",
+            "path": "results/experiment_1202_milestone_retro_93.json",
+            "reason": "merit-gate negative, no-improvement, regression, or no-headline evidence",
+            "title": "milestone retro 93"
+          },
+          {
+            "experiment_id": "1208",
+            "path": "results/experiment_1208_grpo_v5_tinyv_v2_dualgpu.json",
+            "reason": "merit-gate negative, no-improvement, regression, or no-headline evidence",
+            "title": "GRPO v5 TinyV confidence abstention vs v4 floor on DualGPU"
+          },
+          {
+            "experiment_id": "1226",
+            "path": "results/experiment_1226_boltzmann_gpt_phase3_seed.json",
+            "reason": "merit-gate negative, no-improvement, regression, or no-headline evidence",
+            "title": "boltzmann gpt phase3 seed"
+          },
+          {
+            "experiment_id": "1309",
+            "path": "results/experiment_1309_sota_gguf_pair_resolver_repair.json",
+            "reason": "merit-gate negative, no-improvement, regression, or no-headline evidence",
+            "title": "SOTA GGUF pair resolver repair"
+          },
+          {
+            "experiment_id": "1338",
+            "path": "results/experiment_1338_exp1325_skeleton_and_gate_state_finalizer.json",
+            "reason": "merit-gate negative, no-improvement, regression, or no-headline evidence",
+            "title": "exp1325 skeleton and gate state finalizer"
+          },
+          {
+            "experiment_id": "1344",
+            "path": "results/experiment_1344_continuous_self_learning_failure_type_memory_policy.json",
+            "reason": "merit-gate negative, no-improvement, regression, or no-headline evidence",
+            "title": "continuous self learning failure type memory policy"
+          },
+          {
+            "experiment_id": "1383",
+            "path": "results/experiment_1383_grpo_v7_jury_rl_formal_verifier_rewards.json",
+            "reason": "merit-gate negative, no-improvement, regression, or no-headline evidence",
+            "title": "grpo v7 jury rl formal verifier rewards"
+          },
+          {
+            "experiment_id": "1384",
+            "path": "results/experiment_1384_ebm_cot_energy_calibration_probe.json",
+            "reason": "merit-gate negative, no-improvement, regression, or no-headline evidence",
+            "title": "EBM-CoT KAN energy calibration probe on FoVer pairs"
+          },
+          {
+            "experiment_id": "1389",
+            "path": "results/experiment_1389_milestone_107_retro.json",
+            "reason": "merit-gate negative, no-improvement, regression, or no-headline evidence",
+            "title": "milestone 107 retro"
+          },
+          {
+            "experiment_id": "1391",
+            "path": "results/experiment_1391_fullscale_pipeline_failure_diagnosis.json",
+            "reason": "merit-gate negative, no-improvement, regression, or no-headline evidence",
+            "title": "fullscale pipeline failure diagnosis"
+          },
+          {
+            "experiment_id": "1396",
+            "path": "results/experiment_1396_semantic_validation_pass_rate_fix_v1.json",
+            "reason": "merit-gate negative, no-improvement, regression, or no-headline evidence",
+            "title": "semantic validation pass rate fix v1"
+          },
+          {
+            "experiment_id": "1397",
+            "path": "results/experiment_1397_fullscale_pipeline_v2_200cases.json",
+            "reason": "merit-gate negative, no-improvement, regression, or no-headline evidence",
+            "title": "fullscale pipeline v2 200cases"
+          },
+          {
+            "experiment_id": "1400",
+            "path": "results/experiment_1400_biprm_retrospective_verification_probe.json",
+            "reason": "merit-gate negative, no-improvement, regression, or no-headline evidence",
+            "title": "BiPRM R2L Retrospective Verification Probe on FoVer Pairs"
+          },
+          {
+            "experiment_id": "1401",
+            "path": "results/experiment_1401_ebm_cot_v2_hinge_only.json",
+            "reason": "merit-gate negative, no-improvement, regression, or no-headline evidence",
+            "title": "EBM-CoT v2 hinge-only KAN energy calibration probe on FoVer pairs"
+          },
+          {
+            "experiment_id": "1419",
+            "path": "results/experiment_1419_fullscale_pipeline_v3_repair_executor.json",
+            "reason": "merit-gate negative, no-improvement, regression, or no-headline evidence",
+            "title": "fullscale pipeline v3 repair executor"
+          }
+        ]
+      },
+      "status": "met",
+      "target": "exp1454.classification_table_written=true and top-50 noise candidates identified"
+    },
+    "comparator_audit": {
+      "evidence_paths": [
+        "results/experiment_1461_comparator_integration_cite_retire_audit.json:comparator_decision_count",
+        "results/experiment_1461_comparator_integration_cite_retire_audit.json:cite_count",
+        "results/experiment_1461_comparator_integration_cite_retire_audit.json:retire_count",
+        "results/experiment_1461_comparator_integration_cite_retire_audit.json:watchlist_count",
+        "docs/research-notes/comparator_cite_retire_audit.md"
+      ],
+      "negative_evidence": [],
+      "positive_evidence": [
+        "Comparator scope was narrowed into cite/retire/watchlist rows."
+      ],
+      "source_values": {
+        "cite_count": 6,
+        "comparator_decision_count": 10,
+        "honest_verdict": "comparator_scope_narrowed_6_cite_1_retire_3_watchlist",
+        "retire_count": 1,
+        "status": "complete",
+        "watchlist_count": 3
+      },
+      "status": "met",
+      "target": "exp1461.comparator_decision_count >= 6 and every row has cite/retire/watchlist"
+    },
+    "grpo_retirement": {
+      "evidence_paths": [
+        "results/experiment_1456_grpo_vprm_lineage_consolidation_retirement.json:grpo_lineage_retired",
+        "results/experiment_1456_grpo_vprm_lineage_consolidation_retirement.json:exclusion_manifest_updated",
+        "results/experiment_1456_grpo_vprm_lineage_consolidation_retirement.json:lessons_retained",
+        "ops/lineage-retirements/grpo_vprm_lineage_retired.md",
+        "ops/exclusion_manifest.yaml"
+      ],
+      "negative_evidence": [],
+      "positive_evidence": [
+        "GRPO/VPRM lineage was retired with lessons retained."
+      ],
+      "source_values": {
+        "exclusion_manifest_updated": true,
+        "grpo_lineage_retired": true,
+        "honest_verdict": "grpo_vprm_lineage_retired_no_v15_without_operator_reopen",
+        "lessons_retained": [
+          "Energy-shaped process rewards produced real early signal in small slices (Exp 1118 +4pp, Exp 1129 +8.51pp, Exp 1159 +10pp), but those results do not justify more variant churn after the later blocked and no-improvement path.",
+          "Step-level process supervision is the useful lesson to keep: GRPO-VPS showed +24pp in Exp 1209 and +15pp over the v4 floor in Exp 1220.",
+          "TinyV false-negative correction must be calibrated before use; Exp 1208 over-abstained on 62.5% of rewards and regressed by -35pp.",
+          "Candidate-pool saturation is a hard blocker. Future selector work must change the candidate pool or target false-acceptance reduction instead of repeating best-of-N selection.",
+          "Formal verifier rewards need non-UNKNOWN candidate diversity. Exp 1383 and Exp 1393 both produced 0pp held-out improvement because rewards stayed all zero or UNKNOWN.",
+          "Gate discipline worked: SOTA certificate, DVI lossless acceptance, parse, and non-forgetting gates should block downstream GRPO/VPRM instead of launching placeholder variants."
+        ],
+        "status": "complete"
+      },
+      "status": "met",
+      "target": "exp1456.grpo_lineage_retired=true and GRPO v15 is manifest-blocked"
+    },
+    "hardnet_dsp_retirement": {
+      "evidence_paths": [
+        "results/experiment_1458_hardnet_dsp_repair_stack_consolidation.json:hardnet_dsp_lineage_retired",
+        "results/experiment_1458_hardnet_dsp_repair_stack_consolidation.json:exclusion_manifest_updated",
+        "results/experiment_1458_hardnet_dsp_repair_stack_consolidation.json:lessons_retained",
+        "ops/lineage-retirements/hardnet_dsp_repair_stack_retired.md",
+        "ops/exclusion_manifest.yaml"
+      ],
+      "negative_evidence": [],
+      "positive_evidence": [
+        "HardNet++/DSP repair-stack scope was retired with retained lessons."
+      ],
+      "source_values": {
+        "exclusion_manifest_updated": true,
+        "hardnet_dsp_lineage_retired": true,
+        "honest_verdict": "hardnet_dsp_lineage_retired_conservative_replay_retained_no_new_variants",
+        "lessons_retained": [
+          "Hard projection and repair layers are valuable when the domain has an explicit feasible set; they should remain available for continuous numeric repair and Phase-3 substrate work.",
+          "FSNet and SnareNet-style feasibility steps reduce hard violations, but their local-linear repair behavior should stop when nonlinear residuals remain instead of spawning more variants.",
+          "HardNet++ is the retained route for residual nonlinear feasibility cases because it reached hard feasibility where repeated local-linear repairs left violations.",
+          "DSP feasibility channels are useful telemetry, but the measured AUC and false-continue behavior were marginal as a learned general stop rule.",
+          "Conservative replay is the retained operator gate: stop once hard feasibility is reached, continue only when hard violations remain, and route nonlinear residuals to the certifying repair operator.",
+          "Hard projection can certify feasibility in explicit numeric domains.",
+          "Feasibility seeking should be an operator inside repair, not a headline claim.",
+          "Adaptive repair improves local behavior but does not justify open-ended variants.",
+          "Route nonlinear residual cases to HardNet++ rather than repeated local repair.",
+          "DSP phi is useful telemetry but marginal as a learned stop signal.",
+          "Conservative replay is the retained operator gate.",
+          "The learned policy did not prove general value beyond replay distribution."
+        ],
+        "status": "complete"
+      },
+      "status": "met",
+      "target": "exp1458.hardnet_dsp_lineage_retired=true with lessons retained"
+    },
+    "hardware_narrowing": {
+      "evidence_paths": [
+        "results/experiment_1460_hardware_portfolio_narrowing.json:active_hardware_track_count",
+        "results/experiment_1460_hardware_portfolio_narrowing.json:architecture_updated",
+        "results/experiment_1460_hardware_portfolio_narrowing.json:hardware_wishlist_updated",
+        "docs/research-notes/hardware_portfolio_narrowing.md"
+      ],
+      "negative_evidence": [],
+      "positive_evidence": [
+        "Hardware portfolio was narrowed to three active tracks with docs updated."
+      ],
+      "source_values": {
+        "active_hardware_track_count": 3,
+        "architecture_updated": true,
+        "hardware_wishlist_updated": true,
+        "honest_verdict": "active_tracks_narrowed_to_3_with_no KV260 board, Extropic, NPU, or photonic execution claim",
+        "status": "complete"
+      },
+      "status": "met",
+      "target": "exp1460.active_hardware_track_count <= 3 and docs updated"
+    },
+    "live_sota_runtime": {
+      "evidence_paths": [
+        "results/experiment_1463_local_sota_gguf_runtime_repair.json:local_sota_runtime_ready",
+        "results/experiment_1463_local_sota_gguf_runtime_repair.json:persistent_blockers"
+      ],
+      "negative_evidence": [],
+      "positive_evidence": [
+        "Live local SOTA runtime reached usable inference."
+      ],
+      "source_values": {
+        "honest_verdict": "local_sota_runtime_ready",
+        "live_sota_model_inference_used": true,
+        "local_sota_runtime_ready": true,
+        "persistent_blockers": [],
+        "same_verdict_retirement_recorded": null,
+        "status": "complete"
+      },
+      "status": "met",
+      "target": "exp1463.local_sota_runtime_ready=true or precise persistent blocker with same-verdict retirement"
+    },
+    "paper_claims": {
+      "evidence_paths": [
+        "results/experiment_1462_paper_v6_anchored_claims_narrowing.json:anchored_claim_count",
+        "results/experiment_1462_paper_v6_anchored_claims_narrowing.json:paper_updated",
+        "results/experiment_1462_paper_v6_anchored_claims_narrowing.json:claim_matrix_path",
+        "docs/research-notes/paper_v6_anchored_claim_matrix.md",
+        "docs/arxiv-paper/main.tex"
+      ],
+      "negative_evidence": [],
+      "positive_evidence": [
+        "Paper v6 was narrowed to artifact-anchored claims."
+      ],
+      "source_values": {
+        "anchored_claim_count": 4,
+        "claim_matrix_path": "docs/research-notes/paper_v6_anchored_claim_matrix.md",
+        "honest_verdict": "paper_v6_narrowed_to_4_anchored_claims_paper_updated_true",
+        "paper_updated": true,
+        "status": "complete"
+      },
+      "status": "met",
+      "target": "exp1462.anchored_claim_count is between 3 and 5 with artifact references"
+    },
+    "priority_audit": {
+      "evidence_paths": [
+        "results/experiment_1455_known_issues_mandatory_priority_audit.json:active_priority_count",
+        "results/experiment_1455_known_issues_mandatory_priority_audit.json:trim_fraction",
+        "results/experiment_1455_known_issues_mandatory_priority_audit.json:known_issues_updated",
+        "ops/mandatory_priority_audit.md",
+        "ops/active-priorities.md"
+      ],
+      "negative_evidence": [],
+      "positive_evidence": [
+        "Mandatory priorities were trimmed to the required active set."
+      ],
+      "source_values": {
+        "active_priority_count": 7,
+        "honest_verdict": "complete_exp1455_known_issues_priorities_trimmed_from_24_to_7",
+        "known_issues_updated": true,
+        "status": "complete",
+        "trim_fraction": 0.7083
+      },
+      "status": "met",
+      "target": "exp1455.active_priority_count <= 10 and trim_fraction >= 0.40"
+    },
+    "repair_salvage": {
+      "evidence_paths": [
+        "results/experiment_1464_repair_validation_error_context_ab.json:acceptance_delta_pp",
+        "results/experiment_1464_repair_validation_error_context_ab.json:repair_executor_lineage_retired"
+      ],
+      "negative_evidence": [],
+      "positive_evidence": [
+        "Repair salvage improved acceptance or explicitly retired the repair-executor lineage."
+      ],
+      "source_values": {
+        "acceptance_delta_pp": 0.0,
+        "cases_evaluated": 1,
+        "honest_verdict": "complete_no_retry_context_improvement_repair_executor_retired",
+        "live_sota_model_inference_used": true,
+        "repair_executor_lineage_retired": true,
+        "status": "complete"
+      },
+      "status": "met",
+      "target": "if gated on, exp1464.acceptance_delta_pp > 0 or repair executor lineage retired"
+    },
+    "retro": {
+      "evidence_paths": [
+        "results/experiment_1466_milestone_112_retro.json"
+      ],
+      "negative_evidence": [],
+      "positive_evidence": [
+        "This final artifact records all 14 criteria and carry-forward rules."
+      ],
+      "source_values": {
+        "criteria_total": 14,
+        "status": "complete"
+      },
+      "status": "met",
+      "target": "exp1466.criteria_total=14 and carry-forward/retirement rules are recorded"
+    },
+    "scope_activation": {
+      "evidence_paths": [
+        "results/experiment_1453_112_scope_reduction_activation_manifest.json:scope_reduction_manifest_complete",
+        "results/experiment_1453_112_scope_reduction_activation_manifest.json:planned_scope_reduction_task_count",
+        "results/experiment_1453_112_scope_reduction_activation_manifest.json:required_scope_reduction_task_count",
+        "ops/milestone_112_scope_reduction_manifest.md"
+      ],
+      "negative_evidence": [],
+      "positive_evidence": [
+        "Scope-reduction activation manifest completed with enough mapped tasks."
+      ],
+      "source_values": {
+        "honest_verdict": "milestone_112_scope_reduction_activation_complete_10_scope_tasks_live_sota_carryforward_and_exact_noise_expansion_forbidden",
+        "planned_scope_reduction_task_count": 10,
+        "required_scope_reduction_task_count": 8,
+        "scope_reduction_manifest_complete": true,
+        "status": "complete"
+      },
+      "status": "met",
+      "target": "exp1453.scope_reduction_manifest_complete=true"
+    },
+    "self_learning_decision": {
+      "evidence_paths": [
+        "results/experiment_1459_self_learning_nonheadline_lineage_decision.json:self_learning_headline_pivot_selected",
+        "results/experiment_1459_self_learning_nonheadline_lineage_decision.json:self_learning_lineage_retired",
+        "results/experiment_1459_self_learning_nonheadline_lineage_decision.json:exp1447_delta_overall",
+        "docs/research-notes/self_learning_lineage_decision.md"
+      ],
+      "negative_evidence": [],
+      "positive_evidence": [
+        "Self-learning scope was narrowed to an exp1447-anchored decision."
+      ],
+      "source_values": {
+        "exp1447_delta_overall": 156,
+        "honest_verdict": "self_learning_headline_pivot_selected_exp1447_verified_growth_only",
+        "self_learning_headline_pivot_selected": true,
+        "self_learning_lineage_retired": false,
+        "status": "complete"
+      },
+      "status": "met",
+      "target": "exp1459 selects a headline pivot or retirement and cites exp1447"
+    },
+    "verifier_benchmark_fit": {
+      "evidence_paths": [
+        "results/experiment_1465_external_verifier_benchmark_fit_audit.json:benchmark_adoption_decision",
+        "results/experiment_1465_external_verifier_benchmark_fit_audit.json:adopted_benchmark",
+        "results/experiment_1465_external_verifier_benchmark_fit_audit.json:next_minimal_benchmark_task",
+        "docs/research-notes/external_verifier_benchmark_fit.md"
+      ],
+      "negative_evidence": [],
+      "positive_evidence": [
+        "External verifier benchmark fit chose a bounded next decision."
+      ],
+      "source_values": {
+        "adopted_benchmark": "BEAVER-style deterministic bounds via existing BEAVER-lite smoke",
+        "benchmark_adoption_decision": "adopt_beaver_style_deterministic_bounds_smoke; defer_vnnlib_vnncomp_and_smaller_existing_benchmark",
+        "honest_verdict": "adopt_one_minimal_beaver_bounds_smoke",
+        "next_minimal_benchmark_task": {
+          "benchmark_family": "BEAVER-style deterministic bounds",
+          "e2e_check": "run the existing BEAVER-lite bounder over three deterministic GSM8K-style arithmetic prompts and assert every reported unsafe mass bound is in [0, 1], sound, and labeled mock_or_live_logprobs",
+          "expected_artifact_fields": [
+            "status",
+            "benchmark_family",
+            "questions_evaluated",
+            "prefix_closed_constraint",
+            "unsafe_mass_bound",
+            "empirical_violation_rate",
+            "bound_is_sound",
+            "mock_or_live_logprobs",
+            "external_fit_verdict",
+            "honest_verdict"
+          ],
+          "inputs": [
+            "python/carnot/verify/beaver_lite.py",
+            "tests/python/test_beaver_lite.py",
+            "tests/python/test_beaver_lite_live_logprobs.py",
+            "results/experiment_1142_beaver_lite_certificate_tier.json",
+            "results/experiment_1158_beaver_lite_live_logprobs.json"
+          ],
+          "scope_limit": "No VNN-COMP runner, no broad BEAVER reproduction, no fresh LLM benchmark; this is a terminal smoke artifact only.",
+          "task_id": "exp_next_beaver_lite_external_bounds_smoke"
+        },
+        "status": "complete"
+      },
+      "status": "met",
+      "target": "exp1465.benchmark_adoption_decision is adopt/defer/retire with rationale"
+    },
+    "wopr_retirement": {
+      "evidence_paths": [
+        "results/experiment_1457_wopr_puzzle_cartridge_retirement.json:wopr_puzzle_lineage_retired",
+        "results/experiment_1457_wopr_puzzle_cartridge_retirement.json:exclusion_manifest_updated",
+        "results/experiment_1457_wopr_puzzle_cartridge_retirement.json:preserved_assets",
+        "ops/lineage-retirements/wopr_puzzle_cartridges_retired.md",
+        "ops/exclusion_manifest.yaml"
+      ],
+      "negative_evidence": [],
+      "positive_evidence": [
+        "WOPR puzzle-cartridge research scope was retired while preserving assets."
+      ],
+      "source_values": {
+        "exclusion_manifest_updated": true,
+        "honest_verdict": "wopr_puzzle_lineage_retired_demo_assets_preserved_no_new_gallery_work",
+        "preserved_assets": [
+          "python/carnot/games/connect_four.py",
+          "python/carnot/games/hex.py",
+          "python/carnot/games/nonogram.py",
+          "python/carnot/games/futoshiki.py",
+          "tests/python/games/test_connect_four.py",
+          "tests/python/games/test_hex.py",
+          "tests/python/test_nonogram_cartridge.py",
+          "tests/python/test_futoshiki_cartridge.py",
+          "spaces/wopr-games/app.py",
+          "spaces/wopr-games/wopr_shell.py",
+          "spaces/wopr-games/README.md",
+          "spaces/wopr-games/games/hashi.py",
+          "spaces/wopr-games/games/kakuro.py",
+          "spaces/wopr-games/games/masyu.py",
+          "spaces/wopr-games/games/slitherlink.py",
+          "spaces/wopr-games/games/sudoku.py",
+          "spaces/wopr-games/games/lights_out.py",
+          "spaces/wopr-games/games/nqueens.py",
+          "spaces/wopr-games/tests/test_kakuro.py",
+          "spaces/wopr-games/tests/test_masyu.py",
+          "spaces/wopr-games/tests/test_slitherlink.py",
+          "spaces/wopr_games/games/slitherlink.py"
+        ],
+        "status": "complete",
+        "wopr_puzzle_lineage_retired": true
+      },
+      "status": "met",
+      "target": "exp1457.wopr_puzzle_lineage_retired=true and future cartridges are blocked"
+    }
+  }
+}
