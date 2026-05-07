@@ -1,0 +1,72 @@
+{
+  "ambiguous_resolver_count": 0,
+  "artifact_metadata": {
+    "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "run_date": "20260507"
+  },
+  "artifact_reachability_audit_complete": true,
+  "blockers": [],
+  "duration_s": 0.001,
+  "experiment": "1498_trace2skill_artifact_reachability_audit",
+  "finished_at": "2026-05-07T19:20:28Z",
+  "gated_input_paths": {
+    "daily_eval_manifest": "results/fr11_trace2skill_daily_eval_manifest_1497.jsonl",
+    "exp1497_artifact": "results/experiment_1497_fr11_trace2skill_daily_eval_v10.json"
+  },
+  "gated_inputs_present": true,
+  "honest_verdict": "complete: trace2skill_artifact_reachability_audit_passed",
+  "model_references": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "unsloth/gemma-4-26B-A4B-it-GGUF",
+    "unsloth/gemma-4-31B-it-GGUF"
+  ],
+  "reachable_artifact_count": 2,
+  "repair_decisions": [],
+  "resolver_keys": [
+    "paired_replay_case",
+    "source_artifact_present",
+    "verifier_signal_present",
+    "zero_soundness_policy_allowed"
+  ],
+  "retirement_decisions": [],
+  "run_date": "20260507",
+  "schema": "trace2skill_artifact_reachability_audit_v1",
+  "skills_checked": 24,
+  "source_artifact_audit": [
+    {
+      "parse_status": "parsed",
+      "path": "results/experiment_1484_fr11_v9_query_time_memory_policy.json",
+      "referenced_as": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1484_fr11_v9_query_time_memory_policy.json",
+      "source_schema": "fr11_v9_query_time_memory_policy_v1",
+      "status": "reachable"
+    },
+    {
+      "parse_status": "parsed",
+      "path": "results/experiment_1485_fr11_completeness_reduction_audit.json",
+      "referenced_as": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1485_fr11_completeness_reduction_audit.json",
+      "source_schema": "fr11_completeness_reduction_audit_v1",
+      "status": "reachable"
+    }
+  ],
+  "source_artifacts_checked": 2,
+  "spec": [
+    "REQ-LEARN-1498",
+    "SCENARIO-LEARN-1498-A",
+    "SCENARIO-LEARN-1498-B"
+  ],
+  "stale_artifact_count": 0,
+  "started_at": "2026-05-07T19:20:28Z",
+  "status": "complete",
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_trace2skill_artifact_reachability_audit.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --include='*/python/carnot/reporting/trace2skill_artifact_reachability_audit.py' -m pytest tests/python/test_trace2skill_artifact_reachability_audit.py -q --no-cov -n 0",
+    ".venv/bin/coverage report --fail-under=100 -m python/carnot/reporting/trace2skill_artifact_reachability_audit.py",
+    "python scripts/check_spec_coverage.py",
+    ".venv/bin/pytest tests/python -q (failed: broad suite failures, Z3 segfault, watchdog timeout; interrupted wedged run)"
+  ],
+  "unreachable_artifact_count": 0,
+  "verifier_dependencies": [
+    "baseline_verifier_only",
+    "verified_memory_repair_hint"
+  ]
+}
