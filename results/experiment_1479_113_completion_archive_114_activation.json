@@ -1,0 +1,290 @@
+{
+  "activation_manifest_complete": true,
+  "allowed_114_tracks": [
+    {
+      "guardrail": "Use live local SOTA telemetry only with balanced labels and superficial baselines.",
+      "name": "Adversarial Balanced Telemetry",
+      "track": "adversarial_balanced_telemetry"
+    },
+    {
+      "guardrail": "Expand only the sound bounded-prefix calibration lane; any violation blocks claims.",
+      "name": "BEAVER-lite Calibration",
+      "track": "beaver_lite_calibration"
+    },
+    {
+      "guardrail": "Fit risk-bound language only for implemented assumptions and label missing assumptions.",
+      "name": "HalluGuard-style Risk-Bound Fit",
+      "track": "halluguard_risk_bound_fit"
+    },
+    {
+      "guardrail": "Promote only opt-in query-time utility with zero soundness mistakes.",
+      "name": "FR-11 Query-Time Self-Learning",
+      "track": "fr11_query_time_self_learning"
+    },
+    {
+      "guardrail": "Use deterministic local validators; no closed model dependency or broad benchmark claim.",
+      "name": "CCTU-style Executable Constraints",
+      "track": "cctu_executable_constraints"
+    },
+    {
+      "guardrail": "Compare pairwise self-verification against Carnot energy on bounded candidate sets.",
+      "name": "V_1 Pairwise Verification",
+      "track": "v1_pairwise_verification"
+    },
+    {
+      "guardrail": "Run install/import preflight and simulator parity only; no TSU hardware claim.",
+      "name": "THRML Preflight/Parity",
+      "track": "thrml_preflight_parity"
+    },
+    {
+      "guardrail": "Audit injected-failure localization without claiming decoded quality or Kona internals.",
+      "name": "Partial-Trace Localization",
+      "track": "partial_trace_localization"
+    }
+  ],
+  "archive_gap": null,
+  "blocked_reasons": [],
+  "conductor_log_exp1467_to_exp1478": {
+    "entries": {
+      "exp1467": {
+        "found": true,
+        "line": "| 2026-05-07 06:46 UTC | .112 Completion Archive + .113 Activation Manifest | OK | 81 passed, 1 warning in 5.23s |",
+        "ok": true
+      },
+      "exp1468": {
+        "found": true,
+        "line": "| 2026-05-07 07:08 UTC | Live SOTA GGUF Logprob Telemetry Preflight | OK | Deliverable already exists in repo |",
+        "ok": true
+      },
+      "exp1469": {
+        "found": true,
+        "line": "| 2026-05-07 07:36 UTC | HALT + Spilled Energy Diagnostic Micro-Benchmark - | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1469_halt_sp |",
+        "ok": false
+      },
+      "exp1470": {
+        "found": true,
+        "line": "| 2026-05-07 07:48 UTC | BEAVER-Lite Deterministic Bound Smoke - Adopted Ex | OK | 81 passed, 1 warning in 5.11s |",
+        "ok": true
+      },
+      "exp1471": {
+        "found": true,
+        "line": "| 2026-05-07 08:04 UTC | FR-11 v8 Verified-Memory-Growth Pivot - The One Al | OK | 81 passed, 1 warning in 5.22s |",
+        "ok": true
+      },
+      "exp1472": {
+        "found": true,
+        "line": "| 2026-05-07 08:43 UTC | Online Verifier Asymmetric Mistake-Budget Audit -  | OK | 81 passed, 1 warning in 4.84s |",
+        "ok": true
+      },
+      "exp1473": {
+        "found": true,
+        "line": "| 2026-05-07 09:08 UTC | Live Telemetry Adversarial Validity Audit - Length | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1473_live_te |",
+        "ok": false
+      },
+      "exp1474": {
+        "found": true,
+        "line": "| 2026-05-07 09:42 UTC | T-SKM Linear Constraint Projection Smoke - Zero-Vi | OK | 81 passed, 1 warning in 4.47s |",
+        "ok": true
+      },
+      "exp1475": {
+        "found": true,
+        "line": "| 2026-05-07 10:33 UTC | STATIC CSR Certificate Automaton Smoke - Exact Acc | OK | 81 passed, 1 warning in 4.63s |",
+        "ok": true
+      },
+      "exp1476": {
+        "found": true,
+        "line": "| 2026-05-07 11:03 UTC | KV260 Discrete SB RTL Regression Pack - Source-Lev | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1476_kv260_d |",
+        "ok": false
+      },
+      "exp1477": {
+        "found": true,
+        "line": "| 2026-05-07 11:19 UTC | THRML + NPIM Simulator Parity Micro-Probe - No TSU | OK | 81 passed, 1 warning in 4.90s |",
+        "ok": true
+      },
+      "exp1478": {
+        "found": true,
+        "line": "| 2026-05-07 11:34 UTC | Milestone .113 Retrospective - Telemetry, Bounds,  | OK | 81 passed, 1 warning in 5.09s |",
+        "ok": true
+      }
+    },
+    "expected_count": 12,
+    "missing_experiments": [],
+    "ok_count": 9
+  },
+  "experiment": "1479_113_completion_archive_114_activation",
+  "forbidden_reopen_tracks": [
+    {
+      "name": "Telemetry Headline Claims",
+      "rule": "Do not make a headline telemetry claim unless a future adversarial audit beats superficial baselines.",
+      "source": "Exp 1473 adversarial validity audit",
+      "track": "telemetry_headline_claims"
+    },
+    {
+      "name": "Repair-Executor Reruns",
+      "rule": "Do not rerun repair-executor or validation-error-context work without a new root cause and falsifiable gate.",
+      "source": "Exp 1464 and .113 carry-forward guardrails",
+      "track": "repair_executor_reruns"
+    },
+    {
+      "name": "GRPO/VPRM",
+      "rule": "Do not reopen GRPO/VPRM variants unless an operator reopens the line with changed evidence.",
+      "source": "Exp 1456 retirement",
+      "track": "grpo_vprm"
+    },
+    {
+      "name": "WOPR Puzzle Cartridges",
+      "rule": "Do not add puzzle cartridges or gallery work unless an operator reopens the thesis link.",
+      "source": "Exp 1457 retirement",
+      "track": "wopr_puzzle_cartridges"
+    },
+    {
+      "name": "HardNet++/DSP",
+      "rule": "Do not reopen HardNet++/DSP or FSNet-as-DSP work without non-replay evidence.",
+      "source": "Exp 1458 retirement",
+      "track": "hardnet_dsp"
+    },
+    {
+      "name": "Broad VNN-COMP Runners",
+      "rule": "Do not build broad VNNLIB/VNN-COMP runners before bounded BEAVER calibration earns expansion.",
+      "source": "Exp 1465 and Exp 1470 BEAVER-lite narrowing",
+      "track": "broad_vnn_comp_runners"
+    },
+    {
+      "name": "KV260 Board Claims",
+      "rule": "Do not claim board, bitfile, or latency evidence without live board execution evidence.",
+      "source": "Exp 1476 source-level RTL regression",
+      "track": "kv260_board_claims"
+    },
+    {
+      "name": "THRML/TSU Hardware Claims",
+      "rule": "Do not claim THRML, TSU, XTR-0, Z1, or Extropic hardware execution from simulator preflight.",
+      "source": "Exp 1477 THRML unavailable simulator probe",
+      "track": "thrml_tsu_hardware_claims"
+    }
+  ],
+  "hardware_boundaries_preserved": true,
+  "hardware_claim_boundaries": {
+    "dual_rtx_3090_runtime": {
+      "allowed_evidence": [
+        "local_sota_gguf_runtime",
+        "live_logprob_telemetry"
+      ],
+      "boundary": "Runtime evidence only for local open GGUF inference; no accelerator-substrate claim.",
+      "hardware_claim_allowed": true
+    },
+    "kv260": {
+      "allowed_evidence": [
+        "rtl_source",
+        "rtl_simulation"
+      ],
+      "boundary": "Source-level RTL lint/simulation only; no board, bitfile, or latency claim.",
+      "hardware_claim_allowed": false
+    },
+    "thrml_tsu": {
+      "allowed_evidence": [
+        "install_import_preflight",
+        "simulator_parity"
+      ],
+      "boundary": "THRML software preflight and simulator parity only; no TSU or Extropic hardware execution claim.",
+      "hardware_claim_allowed": false
+    }
+  },
+  "honest_verdict": "milestone_114_activation_complete_113_archived_guardrails_preserved",
+  "manifest_path": "ops/milestone_114_activation_manifest.md",
+  "milestone": "2026.04.114",
+  "no_change_confirmations": {
+    "research-roadmap.yaml": "unchanged_by_exp1479_activation_workflow",
+    "scripts/research_conductor.py": "unchanged_by_exp1479_activation_workflow"
+  },
+  "predecessor_carry_forward_tracks": [
+    {
+      "honest_verdict": "live_sota_topk_telemetry_ready",
+      "rule": "Preserve the raw top-k telemetry manifest, but do not make a headline signal claim.",
+      "source_experiment": "exp1468",
+      "status": "raw_telemetry_ready",
+      "topk_logprobs_available": true,
+      "track": "live_sota_telemetry"
+    },
+    {
+      "honest_verdict": "retired_non_headline_telemetry_flat_or_confounded",
+      "rule": "Retire as a headline diagnostic unless a future run beats superficial confounds.",
+      "source_experiment": "exp1469",
+      "status": "retired",
+      "track": "halt_spilled_energy"
+    },
+    {
+      "honest_verdict": "sound_bound_live_exp1468",
+      "mock_or_live_logprobs": "live_exp1468",
+      "rule": "Keep only the minimal deterministic-bound smoke; broad external benchmark runners stay deferred.",
+      "source_experiment": "exp1470",
+      "status": "narrow_smoke_preserved",
+      "track": "beaver_lite_bounds"
+    },
+    {
+      "completeness_mistakes": 140,
+      "rule": "Carry forward the narrow verified-memory-growth claim with zero soundness mistakes and completeness caveat.",
+      "self_learning_delta_overall": 12,
+      "soundness_mistakes": 0,
+      "source_experiment": "exp1471/exp1472",
+      "status": "preserved",
+      "track": "self_learning"
+    },
+    {
+      "honest_verdict": "telemetry_claim_blocked_adversarial_audit",
+      "rule": "Do not claim telemetry validity as a headline; adversarial audit blocked that claim.",
+      "source_experiment": "exp1473",
+      "status": "blocked",
+      "telemetry_validity_verdict": "invalid_for_headline_claim_superficial_or_mechanical_gate",
+      "track": "telemetry_headline_claim"
+    },
+    {
+      "rule": "Preserve T-SKM and STATIC only as bounded CPU toy/parser baselines.",
+      "source_experiment": "exp1474/exp1475",
+      "static_exact_equivalence": true,
+      "status": "preserved",
+      "track": "constraint_smokes",
+      "tskm_zero_violation": true
+    },
+    {
+      "hardware_claim_allowed": false,
+      "rtl_regression_complete": true,
+      "rule": "KV260 remains source-level RTL; THRML/NPIM remains simulator-only with no hardware claim.",
+      "source_experiment": "exp1476/exp1477",
+      "status": "preserved_with_environmental_blocker",
+      "thrml_available": false,
+      "track": "hardware_simulation"
+    }
+  ],
+  "predecessor_criteria_met": 12,
+  "predecessor_criteria_total": 12,
+  "predecessor_honest_verdict": "milestone_113_12_of_12_criteria_met_success_threshold_met_halt_spilled_retired_telemetry_headline_blocked",
+  "predecessor_milestone": "2026.04.113",
+  "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+  "research_complete_archive_update_needed": false,
+  "research_complete_has_113_entry": true,
+  "research_roadmap_yaml_modified": false,
+  "run_date": "20260507",
+  "schema": "milestone_114_activation_manifest_v1",
+  "scripts_research_conductor_modified": false,
+  "self_learning_followup_allowed": true,
+  "self_learning_followup_guardrail": "allowed only for opt-in query-time utility with zero soundness mistakes",
+  "source_inputs_read": {
+    "ops/changelog.md": {
+      "exists": true
+    },
+    "ops/conductor-log.md": {
+      "exists": true
+    },
+    "ops/status.md": {
+      "exists": true
+    },
+    "research-complete.yaml": {
+      "exists": true
+    },
+    "results/experiment_1478_milestone_113_retro.json": {
+      "exists": true
+    }
+  },
+  "status": "complete",
+  "telemetry_headline_block_preserved": true
+}
