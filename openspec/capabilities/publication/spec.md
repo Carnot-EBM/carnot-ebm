@@ -685,6 +685,49 @@ AND the deliverable records `submission_ready_for_operator == true`,
 `credentialed_submission_attempted == false`, the bundle size, and a complete
 honest verdict.
 
+### REQ-PUBLISH-021: Paper v6 Anchored-Claims Narrowing
+
+The Exp 1462 paper-v6 anchored-claims narrowing workflow MUST create
+`results/experiment_1462_paper_v6_anchored_claims_narrowing.json` with
+`status == "in_progress"` before reading paper sources or changing paper text.
+It MUST inspect the local publication hold evidence, Exp 1454 signal/noise
+summary, Exp 1455 priority audit, Exp 1459 self-learning decision, Exp 1460
+hardware narrowing decision, and Exp 1461 comparator cite/retire audit.
+
+The workflow MUST locate the active paper-v6 source when present. If a source
+exists, it MUST add or update an "Anchored Claims" section containing between
+three and five explicit claims. Each anchored claim MUST include empirical
+artifact paths and theoretical support. Unsupported territory MUST be preserved
+as appendix or future-work notes rather than deleted. If no paper source exists,
+the workflow MUST still write the claim matrix and set `paper_updated == false`.
+
+The terminal artifact MUST include:
+
+- `status`
+- `paper_source_path`
+- `anchored_claim_count`
+- `anchored_claims`
+- `unanchored_claims_moved`
+- `claim_matrix_path`
+- `paper_updated`
+- `arxiv_submission_triggered`
+- `honest_verdict`
+
+The workflow MUST set `arxiv_submission_triggered == false` and MUST NOT run any
+publish, bundle, upload, or submit command.
+
+### SCENARIO-PUBLISH-023: Exp 1462 Narrows Paper v6 Claims Without Submission
+
+**Given** publication is on hold, the scope-reduction directive is active, and
+the local Exp 1454, 1455, 1459, 1460, and 1461 evidence artifacts exist
+**When** the Exp 1462 anchored-claims narrowing workflow runs for run date
+`20260507`
+**Then** it writes the in-progress artifact first, writes a claim matrix,
+records between three and five anchored claims, records empirical artifacts and
+theoretical support for each anchored claim, moves unsupported territory to
+appendix or future-work notes, leaves `arxiv_submission_triggered == false`, and
+reports a complete honest verdict.
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -709,3 +752,4 @@ honest verdict.
 | REQ-PUBLISH-018 | Implemented | Exp 1380 audited arXiv bundle v11 submission artifact |
 | REQ-PUBLISH-019 | Implemented | Exp 1390 arXiv SWORD API submission or manual checklist |
 | REQ-PUBLISH-020 | Implemented | Exp 1412 arXiv operator action sheet |
+| REQ-PUBLISH-021 | Proposed | Exp 1462 paper-v6 anchored-claims narrowing artifact |

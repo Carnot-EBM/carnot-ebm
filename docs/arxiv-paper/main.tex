@@ -240,6 +240,32 @@ the gap between Kona~\cite{logicalintelligence2026kona} (closed
 enterprise) and EBTs~\cite{gladstone2025ebt} / NRGPT (open but
 lacking external grounding).
 
+% exp1462-anchored-claims-start
+\section{Anchored Claims}
+\label{sec:anchored-claims}
+
+This paper-v6 narrowing pass treats the following claims as the complete headline claim set. Each claim is retained only because it has checked-in empirical artifacts and a named theoretical support boundary; broader interpretations move to Appendix or future work.
+
+\begin{enumerate}
+  \item \textbf{CLAIM-1 --- Verifier composition is bounded by measured correlation.} Carnot may claim a measured heterogeneous k=5 verifier stack and a homogeneous text-probe ceiling; it may not claim arbitrary k scaling.
+  Empirical artifacts: \path{results/experiment_1093_phase1c_verifier_joint_null_space_measurement.json}, \path{results/experiment_1224_phase5c_adversarial_probe.json}, \path{results/experiment_1256_verifier_orthogonality_audit_v3.json}.
+  Theoretical support: sqrt(det(Sigma)) joint-volume correction; Welch/Rankin Simplex bound on verifier packing; Spera non-composability boundary for shared verifier null spaces.
+  Boundary: Does not claim k=6, k=15, or exponential AND-composition gains beyond the measured evidence..
+  \item \textbf{CLAIM-2 --- Exact sampling requires sparse fast-path plus CPU fallback.} Carnot's hardware story is a correctness-first chi<=4 sparse constraint fast-path with CPU fallback, not a universal FPGA speedup.
+  Empirical artifacts: \path{results/experiment_1068_kv260_smoke_test_v9.json}, \path{results/experiment_1094_phase2a_sampler_correctness_audit.json}, \path{results/experiment_1451_discrete_sb_rtl_lint_sim_rerun.json}, \path{results/experiment_1460_hardware_portfolio_narrowing.json}.
+  Theoretical support: single-site Gibbs detailed balance; chromatic-Glauber batching under graph-coloring constraints; scope-reduction hardware portfolio gate.
+  Boundary: Does not claim same-basis CPU-vs-FPGA speedup, KV260 board execution for new bitstreams, Extropic execution, NPU acceleration, or photonic execution..
+  \item \textbf{CLAIM-3 --- Energy verifier calibration is distribution-bound.} Carnot may claim in-distribution SOS-KAN calibration, a measured SOTA-output energy-ordering inversion, and a SOTA-inclusive retrain that fixes the observed inversion on its validation split.
+  Empirical artifacts: \path{results/experiment_1072_sos_kan_v3_neural_gram.json}, \path{results/experiment_1100_cascade_validation_sota_outputs.json}, \path{results/experiment_1120_energy_verifier_retrain_sota.json}, \path{results/experiment_1265_diffutruth_vs_carnot_baseline.json}.
+  Theoretical support: Goodhart/reward-hacking interpretation of verifier-shaped optimization; energy-based calibration under distribution shift; OOD boundary between FoVer and optimized SOTA-output corpora.
+  Boundary: Does not claim universal verifier dominance, cross-corpus DiffuTruth dominance, or future SOTA-family generalization..
+  \item \textbf{CLAIM-4 --- Self-learning is a narrow verified-memory-growth claim.} Carnot may claim one verified self-learning pivot: semantic-verified fresh memory growth with non-forgetting, as selected by Exp 1459.
+  Empirical artifacts: \path{results/experiment_1374_continuous_self_learning_v3_verifier_selected_or_csp_fallback.json}, \path{results/experiment_1433_fr11_self_learning_v6_dvi_v3_gated.json}, \path{results/experiment_1447_fr11_v7_memory_policy_growth.json}, \path{results/experiment_1459_self_learning_nonheadline_lineage_decision.json}.
+  Theoretical support: Zenil exogenous-grounding condition for self-distillation; primary semantic-verifier acceptance path; non-forgetting gate for persisted memory promotion.
+  Boundary: Does not claim replay-only learning, adapter-only learning, broad autonomous self-improvement, or completed DVI training..
+\end{enumerate}
+% exp1462-anchored-claims-end
+
 \section{Related Work}
 \label{sec:related}
 
@@ -1635,6 +1661,29 @@ are documented per-experiment where applicable.
 \bibliography{carnot}
 
 \appendix
+
+% exp1462-unsupported-future-work-start
+\section{Unsupported Territory Moved to Appendix/Future Work}
+\label{app:unsupported-future-work}
+
+The following topics remain useful research context, but they are not paper-v6 headline claims because the local evidence chain is not yet strong enough.
+
+\begin{itemize}
+  \item \textbf{same-basis CPU-vs-FPGA speedup} moves to future work: The KV260 latency point is measured, but same-N CPU-vs-FPGA timing has not been measured on the same per-sample basis.
+  Supporting input: \path{results/experiment_1460_hardware_portfolio_narrowing.json}.
+  \item \textbf{Extropic Z1/XTR-0, NPU, photonic, D-Wave, and large-FPGA execution} moves to future work: The 20260507 hardware narrowing keeps these tracks deferred until authenticated local execution or concrete reopen gates exist.
+  Supporting input: \path{docs/research-notes/hardware_portfolio_narrowing.md}.
+  \item \textbf{k=6, k=15, and arbitrary verifier-composition scaling} moves to appendix: Measured k\_eff and joint-null-space evidence support only the bounded k=5 framing plus theory-backed future cross-mechanism work.
+  Supporting input: \path{results/experiment_1256_verifier_orthogonality_audit_v3.json}.
+  \item \textbf{broad self-learning improves everything wording} moves to future work: Exp 1459 permits only the Exp 1447 verified-memory-growth pivot; replay-only and adapter-only claims stay non-headline.
+  Supporting input: \path{results/experiment_1459_self_learning_nonheadline_lineage_decision.json}.
+  \item \textbf{LARQL, Skillify, GStack, and ontology-governance comparator territory} moves to future work: Exp 1461 classifies these as watchlist or retired rather than active paper-v6 claims.
+  Supporting input: \path{results/experiment_1461_comparator_integration_cite_retire_audit.json}.
+  \item \textbf{full ARC-AGI-3 or Seed IQ parity} moves to future work: The local Phase-4 result is a toy proxy bridge; no full ARC-AGI-3 leaderboard or Seed IQ reproduction claim is locally anchored.
+  Supporting input: \path{results/experiment_1165_phase4_active_inference_pilot_v1.json}.
+\end{itemize}
+% exp1462-unsupported-future-work-end
+
 
 \section{What v3 Retracts from v2}
 
