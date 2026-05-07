@@ -1,0 +1,49 @@
+{
+  "anchored_repair_energy_delta_reference": -1.0,
+  "baseline_energy_delta": -0.16134290666377638,
+  "commands_run": [
+    ".venv/bin/pytest tests/python/test_experiment_1450_ebt_nrgpt_local_microprototype_audit.py -q --no-cov",
+    "ruff check python/carnot/phase3/ebt_nrgpt_local_microprototype_audit.py tests/python/test_experiment_1450_ebt_nrgpt_local_microprototype_audit.py",
+    "ruff format --check python/carnot/phase3/ebt_nrgpt_local_microprototype_audit.py tests/python/test_experiment_1450_ebt_nrgpt_local_microprototype_audit.py",
+    ".venv/bin/coverage run -m pytest tests/python/test_experiment_1450_ebt_nrgpt_local_microprototype_audit.py -q -o addopts=''",
+    ".venv/bin/coverage report --include='*/python/carnot/phase3/ebt_nrgpt_local_microprototype_audit.py' --fail-under=100 --show-missing",
+    ".venv/bin/pytest tests/python -q (failed/hung: worker crashes in z3 pipeline errors and kv260 bringup JAX abort; terminated after ExperimentTimeoutWatchdog fired for experiment=561)",
+    "python3 scripts/check_spec_coverage.py",
+    "python3 -c \"import json; d=json.load(open('results/experiment_1450_ebt_nrgpt_local_microprototype_audit.json')); print(d.get('energy_convergence_probe_complete'), d.get('scale_recommendation'), d.get('honest_verdict'))\""
+  ],
+  "convergence_steps_median": 11.0,
+  "decoded_quality_evidence": false,
+  "energy_convergence_probe_complete": true,
+  "experiment": "1450_ebt_nrgpt_local_microprototype_audit",
+  "honest_verdict": "energy_converges_but_no_decoded_quality_claim_keep_smoke_only",
+  "per_trace_convergence_steps": [
+    12.0,
+    11.0,
+    11.0,
+    11.0,
+    11.0,
+    11.0,
+    10.0,
+    10.0
+  ],
+  "per_trace_energy_deltas": [
+    -1.0377060510218143,
+    -0.04803399811498821,
+    -0.03123181010596454,
+    -0.04126284318044782,
+    -0.04325188463553786,
+    -0.043325506849214435,
+    -0.0223063244484365,
+    -0.023624834953807294
+  ],
+  "run_date": "20260507",
+  "scale_recommendation": "keep_smoke_only",
+  "schema": "carnot.phase3.ebt_nrgpt_local_microprototype_audit.v1",
+  "source_trace_family": "fover_corpus",
+  "spec_refs": [
+    "REQ-KONA-035",
+    "SCENARIO-KONA-035"
+  ],
+  "status": "complete",
+  "traces_evaluated": 8
+}
