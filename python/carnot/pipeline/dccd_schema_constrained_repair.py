@@ -306,6 +306,51 @@ def build_dccd_repair_prompt(
     )
 
 
+def build_dccd_retry_prompt(
+    request: CertificateRepairRequest,
+    *,
+    failed_output: str,
+    validation_error_message: str,
+    include_validation_error_context: bool,
+    config: DCCDRepairConfig | None = None,
+) -> str:
+    """Build the Exp 1464 retry prompt without changing the first-attempt path.
+
+    Exp 1464 compares two retry prompts after the same failed candidate.  The
+    baseline retry sees the failed output only.  The context retry sees that
+    same failed output plus the validator's exact complaint, so any measured
+    delta is attributable to the new retry context rather than a different
+    source case or output schema.
+    """
+
+    cfg = config or DCCDRepairConfig()
+    fields = {
+        "case_id": request.case_id,
+        "original_prompt": _bounded(request.original_prompt, cfg.max_field_chars),
+        "draft_certificate": _bounded(request.current_certificate, cfg.max_field_chars),
+        "repair_hint": _bounded(request.repair_hint, cfg.max_field_chars),
+        "failed_model_output": _bounded(failed_output, cfg.max_field_chars),
+    }
+    if include_validation_error_context:
+        fields["validation_error_message"] = _bounded(
+            validation_error_message,
+            cfg.max_field_chars,
+        )
+
+    payload = json.dumps(fields, sort_keys=True, indent=2)
+    schema = json.dumps(DCCD_REPAIR_OUTPUT_SCHEMA, sort_keys=True, indent=2)
+    return (
+        "REQ-VERIFY-1464 DCCD repair retry. Retry contract: repair the failed "
+        "candidate while preserving the bounded DCCD output schema.\n"
+        "Return JSON only. No markdown fences, prose, chain-of-thought, or "
+        "fields outside the allowed schema.\n\n"
+        "Retry input contract:\n"
+        f"{payload}\n\n"
+        "Allowed DCCD repair output schema:\n"
+        f"{schema}\n"
+    )
+
+
 def parse_dccd_repair_model_output(
     text: str,
     config: DCCDRepairConfig | None = None,
