@@ -1728,6 +1728,49 @@ probe status, parity follow-up gate, and a terminal no-hardware-claim verdict.
 
 **Implementation Status:** Implemented (Exp 1503)
 
+## REQ-SAMPLE-045: Exp 1504 gated THRML/Carnot simulator parity v3
+
+Carnot SHALL provide a gated simulator-only THRML/Carnot parity audit that runs
+only when Exp 1503 reports `thrml_import_ready=true`, compares the same tiny
+discrete Ising energy/stochastic case through Carnot's local simulator and the
+available THRML software API, records explicit numerical tolerances, and never
+upgrades software parity into an Extropic TSU hardware claim.
+
+Acceptance criteria:
+- The experiment SHALL create
+  `results/experiment_1504_thrml_carnot_simulator_parity_v3.json` with
+  `status="in_progress"` before gate inspection or parity execution completes.
+- The experiment SHALL read
+  `results/experiment_1503_thrml_import_readiness_repair_gate.json` and SHALL
+  run parity only when `thrml_import_ready=true`; otherwise it SHALL write a
+  terminal gated artifact with `parity_experiment_ran=false`.
+- The terminal artifact SHALL include `status`, `parity_experiment_ran`,
+  `thrml_import_ready`, `simulator_only`, `cases_compared`,
+  `parity_pass_count`, `parity_fail_count`, `tolerance`,
+  `max_observed_delta`, `hardware_claim_allowed`, `blockers`, and
+  `honest_verdict`.
+- The parity run SHALL use fixed seeds and explicit tolerances for both exact
+  energy parity and stochastic sample-summary parity on the same tiny Ising
+  case.
+- The artifact SHALL record case-level Carnot outputs, THRML outputs, observed
+  deltas, tolerance values, pass/fail status, and any THRML API limitation that
+  prevents execution.
+- `simulator_only=true` and `hardware_claim_allowed=false` SHALL remain set for
+  every terminal outcome.
+
+**Implementation Status:** Implemented (Exp 1504)
+
+### SCENARIO-SAMPLE-073: Exp 1504 writes honest gated simulator parity artifact
+
+Given: Exp 1503 may or may not report `thrml_import_ready=true`.
+When: the Exp 1504 simulator parity audit runs from the Carnot project root for
+run date 20260507.
+Then: it either writes a terminal gated artifact without running parity, or it
+compares the tiny Carnot and THRML software simulator paths with fixed seeds,
+records tolerance-bounded case deltas, and disallows all hardware claims.
+
+**Implementation Status:** Implemented (Exp 1504)
+
 ## REQ-MODEL-031: SCEnergyModel — Set-Level Energy Function for Statement Consistency (Exp 944)
 
 SCEnergyModel SHALL implement a permutation-invariant set-level energy function that assigns
