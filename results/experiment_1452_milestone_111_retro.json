@@ -1,0 +1,585 @@
+{
+  "blocked_tasks": [
+    {
+      "blocker": "Live SOTA runtime preflight recorded exact blockers and no completed live inference.",
+      "criterion": "live_sota_runtime",
+      "experiment_id": "exp1442",
+      "honest_verdict": "blocked_no_live_sota_runtime"
+    },
+    {
+      "blocker": "Exp1443 artifact is missing because the exp1442 live-SOTA runtime gate failed.",
+      "criterion": "live_repair_v3",
+      "experiment_id": "exp1443",
+      "honest_verdict": "missing_artifact_gate_blocked_by_exp1442"
+    },
+    {
+      "blocker": "Energy reranker did not run because the upstream repair-v3 candidate-pool gate failed.",
+      "criterion": "energy_reranker",
+      "experiment_id": "exp1444",
+      "honest_verdict": "blocked_gate_check_failed"
+    },
+    {
+      "blocker": "Exp1445 artifact is missing because repair-v3 and reranker gates did not pass.",
+      "criterion": "pipeline_pre_scale",
+      "experiment_id": "exp1445",
+      "honest_verdict": "missing_artifact_gate_blocked_by_exp1443_exp1444"
+    }
+  ],
+  "carry_forward_tracks": [
+    {
+      "id": "live_sota_runtime_repair_gate",
+      "next_rule": "Do not launch repair v3, energy reranking, or 100-case scale-up until a mandated local SOTA GGUF model completes live inference.",
+      "prior_failures": [
+        {
+          "evidence_path": "results/experiment_1442_live_sota_repair_runtime_preflight.json",
+          "experiment_id": "exp1442",
+          "verdict": "blocked_no_live_sota_runtime"
+        }
+      ],
+      "retire_if_same_verdict": true,
+      "title": "Fix live local SOTA GGUF runtime before any repair v3 or scale-up rerun."
+    },
+    {
+      "id": "repair_v3_and_prescale_gated_missing",
+      "next_rule": "A .112 repair scale task must name the live-runtime fix and cannot reuse the same gate-blocked path as success evidence.",
+      "prior_failures": [
+        {
+          "evidence_path": "results/experiment_1443_live_sota_dccd_semctrl_repair_v3.json",
+          "experiment_id": "exp1443",
+          "verdict": "missing_artifact_gate_blocked_by_exp1442"
+        },
+        {
+          "evidence_path": "results/experiment_1445_full_pipeline_v5_100case_prescale.json",
+          "experiment_id": "exp1445",
+          "verdict": "missing_artifact_gate_blocked_by_exp1443_exp1444"
+        }
+      ],
+      "retire_if_same_verdict": true,
+      "title": "Treat missing exp1443/exp1445 artifacts as gate-blocked, not successful."
+    },
+    {
+      "id": "prm_process_agent_no_improvement",
+      "next_rule": "Future PRM process-agent work must unsaturate the candidate pool or target false-acceptance reduction instead of repeating the same selection gate.",
+      "prior_failures": [
+        {
+          "evidence_path": "results/experiment_1448_prm_v3_online_process_reward_agent.json",
+          "experiment_id": "exp1448",
+          "verdict": "complete_prmv3_no_headline_improvement_prototype_candidate_pool_no_headline_claim"
+        }
+      ],
+      "retire_if_same_verdict": true,
+      "title": "Retire saturated PRM selector pools unless the candidate pool changes."
+    }
+  ],
+  "criteria_met": 10,
+  "criteria_total": 14,
+  "experiment": "1452_milestone_111_retro",
+  "honest_verdict": "milestone_111_10_of_14_criteria_met_threshold_not_met_live_sota_runtime_gate_blocked_repair_scale_carry_forward",
+  "lessons_learned": [
+    ".111 made real progress on non-runtime tracks: carry-forward discipline, spec coverage, Discrete SB source/lint/sim, FR-11 positive growth, LTLZinc cases, and EBT smoke evidence all closed their local gates.",
+    "The live-SOTA repair chain did not reach headline evidence because exp1442 proved the local GGUF runtime was not ready; exp1443 and exp1445 are missing gated artifacts, and exp1444 correctly stopped on the failed upstream candidate-pool gate.",
+    "FR-11 zero growth was not a DVI nonforgetting failure; policy and memory changes in exp1447 produced positive verified growth.",
+    "PRM v3 produced decisive no-improvement evidence on a saturated candidate pool, so .112 should change the pool or target false-acceptance reduction instead of repeating the selector."
+  ],
+  "milestone": "2026.04.111",
+  "missing_artifacts": [
+    {
+      "experiment_id": "exp1443",
+      "path": "results/experiment_1443_live_sota_dccd_semctrl_repair_v3.json"
+    },
+    {
+      "experiment_id": "exp1445",
+      "path": "results/experiment_1445_full_pipeline_v5_100case_prescale.json"
+    }
+  ],
+  "operational_notes": {
+    "research_roadmap_next_yaml_missing": true,
+    "research_roadmap_yaml_modified": false,
+    "score_rule": "criteria_met counts only status=met; gate_blocked_with_evidence is not success.",
+    "scripts_research_conductor_modified": false
+  },
+  "ops_docs_update_note": "ops/status.md and ops/changelog.md intentionally left unchanged because the terminal stop rule delegates docs/status reconciliation to the conductor's separate Haiku step.",
+  "ops_docs_updated": false,
+  "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+  "retired_variants": [
+    {
+      "prior_verdict": "blocked_no_live_sota_runtime",
+      "retire_if_same_verdict": true,
+      "scope": "exact no-live-SOTA runtime repair scale path without fixing llama.cpp/CUDA/cache blockers",
+      "source": "results/experiment_1442_live_sota_repair_runtime_preflight.json"
+    },
+    {
+      "prior_verdict": "missing_artifact_gate_blocked_by_exp1442_exp1444",
+      "retire_if_same_verdict": true,
+      "scope": "exact repair v3 or 100-case pre-scale rerun while exp1442.local_sota_runtime_ready=false",
+      "source": "results/experiment_1443_live_sota_dccd_semctrl_repair_v3.json + results/experiment_1445_full_pipeline_v5_100case_prescale.json"
+    },
+    {
+      "prior_verdict": "complete_prmv3_no_headline_improvement_prototype_candidate_pool_no_headline_claim",
+      "retire_if_same_verdict": true,
+      "scope": "PRM v3 no-improvement prototype selector on saturated best-of-N candidate pool",
+      "source": "results/experiment_1448_prm_v3_online_process_reward_agent.json"
+    },
+    {
+      "prior_verdict": "complete_dccd_schema_constrained_repair_v2_nonzero_repairs_prototype_no_headline_sota_claim, complete_mcmc_constrained_repair_candidate_search_improved_prototype_no_headline_sota_claim_live_sota_inference_not_run, complete_micro_validation_beats_exp1419_baseline_prototype_no_headline_scaleup",
+      "retire_if_same_verdict": true,
+      "scope": "exact prototype-only repair scale-up without live local SOTA inference and headline runtime provenance",
+      "source": "results/experiment_1439_110_carryforward_activation_manifest.json:forbidden_exact_reruns"
+    },
+    {
+      "prior_verdict": "fr11_self_learning_v6_dvi_v3_no_positive_growth_non_headline",
+      "retire_if_same_verdict": true,
+      "scope": "exact FR-11 zero-growth rerun with deployed DVI and unchanged promotion or memory policy",
+      "source": "results/experiment_1439_110_carryforward_activation_manifest.json:forbidden_exact_reruns"
+    },
+    {
+      "prior_verdict": "complete_prm_guided_selector_no_improvement_prototype_candidate_pool_no_headline_claim",
+      "retire_if_same_verdict": true,
+      "scope": "exact PRM v1 no-improvement selector rerun on the same prototype candidate pool",
+      "source": "results/experiment_1439_110_carryforward_activation_manifest.json:forbidden_exact_reruns"
+    },
+    {
+      "prior_verdict": "blocked_missing_discrete_sb_rtl_source",
+      "retire_if_same_verdict": true,
+      "scope": "exact missing-source RTL lint/sim path before hardware/kv260/discrete_sb_256.v exists",
+      "source": "results/experiment_1439_110_carryforward_activation_manifest.json:forbidden_exact_reruns"
+    }
+  ],
+  "roadmap_inputs": {
+    "active_roadmap_yaml_path": "research-roadmap.yaml",
+    "active_roadmap_yaml_present": true,
+    "change_proposal_path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+    "change_proposal_present": true,
+    "requested_research_roadmap_next_path": "research-roadmap-next.yaml",
+    "requested_research_roadmap_next_present": false
+  },
+  "run_date": "20260507",
+  "schema": "milestone_111_retro_v1",
+  "source_artifacts_checked": [
+    {
+      "exists": true,
+      "experiment_id": "exp1439",
+      "path": "results/experiment_1439_110_carryforward_activation_manifest.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1440",
+      "path": "results/experiment_1440_spec_coverage_traceability_metadata_fix.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1441",
+      "path": "results/experiment_1441_discrete_sb_rtl_source_implementation.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1442",
+      "path": "results/experiment_1442_live_sota_repair_runtime_preflight.json"
+    },
+    {
+      "exists": false,
+      "experiment_id": "exp1443",
+      "path": "results/experiment_1443_live_sota_dccd_semctrl_repair_v3.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1444",
+      "path": "results/experiment_1444_arm_carnot_energy_repair_reranker.json"
+    },
+    {
+      "exists": false,
+      "experiment_id": "exp1445",
+      "path": "results/experiment_1445_full_pipeline_v5_100case_prescale.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1446",
+      "path": "results/experiment_1446_fr11_zero_growth_root_cause_diagnosis.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1447",
+      "path": "results/experiment_1447_fr11_v7_memory_policy_growth.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1448",
+      "path": "results/experiment_1448_prm_v3_online_process_reward_agent.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1449",
+      "path": "results/experiment_1449_ltlzinc_temporal_continual_learning_adapter.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1450",
+      "path": "results/experiment_1450_ebt_nrgpt_local_microprototype_audit.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1451",
+      "path": "results/experiment_1451_discrete_sb_rtl_lint_sim_rerun.json"
+    }
+  ],
+  "status": "complete",
+  "success_criteria_results": {
+    "carry_forward_manifest": {
+      "evidence_paths": [
+        "results/experiment_1439_110_carryforward_activation_manifest.json:carryforward_manifest_complete",
+        "results/experiment_1439_110_carryforward_activation_manifest.json:carryforward_task_count"
+      ],
+      "negative_evidence": [],
+      "positive_evidence": [
+        ".110 carry-forward tracks were mapped into .111 tasks."
+      ],
+      "source_values": {
+        "carryforward_manifest_complete": true,
+        "carryforward_task_count": 6,
+        "honest_verdict": "milestone_111_carryforward_manifest_complete_6_tracks_prototype_fr11_prm_rtl_exact_reruns_forbidden",
+        "status": "complete"
+      },
+      "status": "met",
+      "target": "exp1439.carryforward_manifest_complete=true and .110 carry-forwards mapped"
+    },
+    "continuous_self_learning": {
+      "evidence_paths": [
+        "results/experiment_1447_fr11_v7_memory_policy_growth.json:self_learning_delta_overall",
+        "results/experiment_1447_fr11_v7_memory_policy_growth.json:nonforgetting_preserved",
+        "results/experiment_1447_fr11_v7_memory_policy_growth.json:nonforgetting_rate"
+      ],
+      "negative_evidence": [],
+      "positive_evidence": [
+        "FR-11 v7 produced positive verified growth while preserving nonforgetting."
+      ],
+      "source_values": {
+        "honest_verdict": "fr11_v7_positive_verified_growth_persisted_without_forgetting",
+        "nonforgetting_preserved": true,
+        "nonforgetting_rate": 1.0,
+        "self_learning_delta_overall": 156,
+        "status": "complete"
+      },
+      "status": "met",
+      "target": "exp1447.self_learning_delta_overall > 0 with nonforgetting preserved"
+    },
+    "discrete_sb_rtl_source": {
+      "evidence_paths": [
+        "results/experiment_1441_discrete_sb_rtl_source_implementation.json:rtl_source_created",
+        "results/experiment_1441_discrete_sb_rtl_source_implementation.json:rtl_source_path",
+        "results/experiment_1441_discrete_sb_rtl_source_implementation.json:testbench_created",
+        "results/experiment_1441_discrete_sb_rtl_source_implementation.json:testbench_path"
+      ],
+      "negative_evidence": [],
+      "positive_evidence": [
+        "Discrete SB RTL source and testbench were created."
+      ],
+      "source_values": {
+        "honest_verdict": "rtl_source_and_testbench_created_lint_and_smoke_sim_passed_no_kv260_execution_claim",
+        "rtl_source_created": true,
+        "rtl_source_path": "hardware/kv260/discrete_sb_256.v",
+        "status": "complete",
+        "testbench_created": true,
+        "testbench_path": "hardware/kv260/discrete_sb_256_tb.v"
+      },
+      "status": "met",
+      "target": "exp1441.rtl_source_created=true and a testbench exists"
+    },
+    "ebt_nrgpt_micro_baseline": {
+      "evidence_paths": [
+        "results/experiment_1450_ebt_nrgpt_local_microprototype_audit.json:energy_convergence_probe_complete",
+        "results/experiment_1450_ebt_nrgpt_local_microprototype_audit.json:scale_recommendation"
+      ],
+      "negative_evidence": [],
+      "positive_evidence": [
+        "EBT/NRGPT micro baseline recorded a no-scale recommendation."
+      ],
+      "source_values": {
+        "energy_convergence_probe_complete": true,
+        "honest_verdict": "energy_converges_but_no_decoded_quality_claim_keep_smoke_only",
+        "scale_recommendation": "keep_smoke_only",
+        "status": "complete"
+      },
+      "status": "met",
+      "target": "exp1450.energy_convergence_probe_complete=true with scale/no-scale recommendation"
+    },
+    "energy_reranker": {
+      "evidence_paths": [
+        "results/experiment_1444_arm_carnot_energy_repair_reranker.json:gate_check_summary"
+      ],
+      "negative_evidence": [
+        "Energy reranker did not run because the upstream repair-v3 candidate-pool gate failed."
+      ],
+      "positive_evidence": [],
+      "source_values": {
+        "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp1443-live-sota-dccd-semctrl-repair-v3.live_repair_candidate_pool_ready (upstream artifact not found for task id 'exp1443-live-sota-dccd-semctrl-repair-v3')",
+        "gates_evaluated": [
+          {
+            "actual": null,
+            "artifact_field": "live_repair_candidate_pool_ready",
+            "expected": true,
+            "op": "==",
+            "passed": false,
+            "reason": "upstream artifact not found for task id 'exp1443-live-sota-dccd-semctrl-repair-v3'",
+            "upstream": "exp1443-live-sota-dccd-semctrl-repair-v3"
+          }
+        ],
+        "honest_verdict": "blocked_gate_check_failed",
+        "status": "blocked"
+      },
+      "status": "gate_blocked_with_evidence",
+      "target": "exp1444.energy_reranker_ready=true and false-acceptance rate does not increase"
+    },
+    "fr11_diagnosis": {
+      "evidence_paths": [
+        "results/experiment_1446_fr11_zero_growth_root_cause_diagnosis.json:fr11_zero_growth_root_cause_identified",
+        "results/experiment_1446_fr11_zero_growth_root_cause_diagnosis.json:fr11_zero_growth_root_cause"
+      ],
+      "negative_evidence": [],
+      "positive_evidence": [
+        "FR-11 zero-growth root cause was identified before rerun."
+      ],
+      "source_values": {
+        "fr11_zero_growth_root_cause": "Exp 1433 had candidate supply and an active DVI v3 checkpoint, but all candidates were demoted. Most candidates disagreed with the DVI state; the DVI-agreeing true positives sat at SECL confidence 0.5 and were rejected by the replay-calibrated 0.500001 threshold.",
+        "fr11_zero_growth_root_cause_identified": true,
+        "honest_verdict": "fr11_v6_zero_growth_root_cause_identified_asymmetric_fresh_threshold_v7_required",
+        "status": "complete"
+      },
+      "status": "met",
+      "target": "exp1446.fr11_zero_growth_root_cause_identified=true"
+    },
+    "live_repair_v3": {
+      "evidence_paths": [
+        "results/experiment_1442_live_sota_repair_runtime_preflight.json",
+        "results/experiment_1443_live_sota_dccd_semctrl_repair_v3.json"
+      ],
+      "negative_evidence": [
+        "Exp1443 artifact is missing because the exp1442 live-SOTA runtime gate failed."
+      ],
+      "positive_evidence": [],
+      "source_values": {
+        "honest_verdict": "missing_artifact_gate_blocked_by_exp1442",
+        "status": "missing",
+        "upstream_exp1442_local_sota_runtime_ready": false,
+        "upstream_exp1442_verdict": "blocked_no_live_sota_runtime"
+      },
+      "status": "gate_blocked_with_evidence",
+      "target": "exp1443.live_sota_inference_used=true and live_repair_success_rate > 0.0"
+    },
+    "live_sota_runtime": {
+      "evidence_paths": [
+        "results/experiment_1442_live_sota_repair_runtime_preflight.json:local_sota_runtime_ready",
+        "results/experiment_1442_live_sota_repair_runtime_preflight.json:models_missing_from_cache",
+        "results/experiment_1442_live_sota_repair_runtime_preflight.json:blockers"
+      ],
+      "negative_evidence": [
+        "Live SOTA runtime preflight recorded exact blockers and no completed live inference."
+      ],
+      "positive_evidence": [],
+      "source_values": {
+        "blockers": [
+          "no_mandated_sota_model_completed_live_inference"
+        ],
+        "honest_verdict": "blocked_no_live_sota_runtime",
+        "live_sota_model_inference_used": false,
+        "local_sota_runtime_ready": false,
+        "models_found_in_cache": [
+          {
+            "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+            "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+            "role": "flagship_moe_runtime_probe"
+          },
+          {
+            "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+            "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/43e80d41a220ac7c83023daacd6a0d1fd8559251/gemma-4-31B-it-Q4_K_M.gguf",
+            "role": "flagship_dense_runtime_probe"
+          }
+        ],
+        "models_missing_from_cache": [
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ],
+        "status": "complete"
+      },
+      "status": "gate_blocked_with_evidence",
+      "target": "exp1442.local_sota_runtime_ready=true; otherwise precise cache/GPU blockers"
+    },
+    "ltlzinc_adapter": {
+      "evidence_paths": [
+        "results/experiment_1449_ltlzinc_temporal_continual_learning_adapter.json:ltlzinc_adapter_ready",
+        "results/experiment_1449_ltlzinc_temporal_continual_learning_adapter.json:temporal_cases_generated",
+        "results/experiment_1449_ltlzinc_temporal_continual_learning_adapter.json:accepted_case_count"
+      ],
+      "negative_evidence": [],
+      "positive_evidence": [
+        "LTLZinc adapter generated at least 20 temporal constraint cases."
+      ],
+      "source_values": {
+        "accepted_case_count": 12,
+        "honest_verdict": "ltlzinc_temporal_adapter_ready_verified_cases_only_no_training",
+        "ltlzinc_adapter_ready": true,
+        "status": "complete",
+        "temporal_cases_generated": 24
+      },
+      "status": "met",
+      "target": "exp1449.ltlzinc_adapter_ready=true and at least 20 temporal cases generated"
+    },
+    "pipeline_pre_scale": {
+      "evidence_paths": [
+        "results/experiment_1443_live_sota_dccd_semctrl_repair_v3.json",
+        "results/experiment_1444_arm_carnot_energy_repair_reranker.json",
+        "results/experiment_1445_full_pipeline_v5_100case_prescale.json"
+      ],
+      "negative_evidence": [
+        "Exp1445 artifact is missing because repair-v3 and reranker gates did not pass."
+      ],
+      "positive_evidence": [],
+      "source_values": {
+        "honest_verdict": "missing_artifact_gate_blocked_by_exp1443_exp1444",
+        "status": "missing",
+        "upstream_exp1443_present": false,
+        "upstream_exp1444_verdict": "blocked_gate_check_failed"
+      },
+      "status": "gate_blocked_with_evidence",
+      "target": "exp1445.full_pipeline_pass_rate > 0.62 or an honest blocker prevents scale-up"
+    },
+    "prm_process_agent": {
+      "evidence_paths": [
+        "results/experiment_1448_prm_v3_online_process_reward_agent.json:pra_selector_ready",
+        "results/experiment_1448_prm_v3_online_process_reward_agent.json:selection_improvement_pp",
+        "results/experiment_1448_prm_v3_online_process_reward_agent.json:step_scores_generated"
+      ],
+      "negative_evidence": [],
+      "positive_evidence": [
+        "PRM v3 produced decisive no-improvement evidence without regressing PRM v1."
+      ],
+      "source_values": {
+        "cases_evaluated": 20,
+        "honest_verdict": "complete_prmv3_no_headline_improvement_prototype_candidate_pool_no_headline_claim",
+        "pra_selector_ready": true,
+        "regression_against_prm_v1": false,
+        "selection_improvement_pp": 0.0,
+        "status": "complete",
+        "step_scores_generated": 320
+      },
+      "status": "met",
+      "target": "exp1448.pra_selector_ready=true and selection_improvement_pp > 0 or decisive no-improvement evidence"
+    },
+    "retro": {
+      "evidence_paths": [
+        "results/experiment_1452_milestone_111_retro.json"
+      ],
+      "negative_evidence": [],
+      "positive_evidence": [
+        "This final artifact records all 14 criteria and .112 carry-forward rules."
+      ],
+      "source_values": {
+        "criteria_total": 14,
+        "status": "complete"
+      },
+      "status": "met",
+      "target": "exp1452.criteria_total=14 and honest carry-forward rules are recorded"
+    },
+    "rtl_lint_sim": {
+      "evidence_paths": [
+        "results/experiment_1451_discrete_sb_rtl_lint_sim_rerun.json:rtl_lint_complete",
+        "results/experiment_1451_discrete_sb_rtl_lint_sim_rerun.json:simulation_complete",
+        "results/experiment_1451_discrete_sb_rtl_lint_sim_rerun.json:hardware_claim_allowed",
+        "results/experiment_1451_discrete_sb_rtl_lint_sim_rerun.json:hardware_execution_performed"
+      ],
+      "negative_evidence": [],
+      "positive_evidence": [
+        "Discrete SB RTL lint and simulation completed without a hardware execution claim."
+      ],
+      "source_values": {
+        "hardware_claim_allowed": false,
+        "hardware_execution_performed": false,
+        "honest_verdict": "rtl_lint_and_simulation_complete_no_hardware_execution_no_kv260_claim",
+        "rtl_lint_complete": true,
+        "simulation_complete": true,
+        "status": "complete"
+      },
+      "status": "met",
+      "target": "exp1451.rtl_lint_complete=true or precise missing-tool blockers; no hardware claim"
+    },
+    "spec_coverage_cluster": {
+      "evidence_paths": [
+        "results/experiment_1440_spec_coverage_traceability_metadata_fix.json:spec_coverage_metadata_cluster_fixed",
+        "results/experiment_1440_spec_coverage_traceability_metadata_fix.json:initial_spec_coverage_debt_count",
+        "results/experiment_1440_spec_coverage_traceability_metadata_fix.json:final_spec_coverage_debt_count",
+        "results/experiment_1440_spec_coverage_traceability_metadata_fix.json:residual_blockers"
+      ],
+      "negative_evidence": [],
+      "positive_evidence": [
+        "Spec-coverage metadata cluster was fixed to zero checker debt."
+      ],
+      "source_values": {
+        "final_spec_coverage_debt_count": 0,
+        "honest_verdict": "metadata_cluster_fixed_spec_coverage_zero_focused_tests_green_changed_line_coverage_100_full_suite_red_101_failures_6_errors",
+        "initial_spec_coverage_debt_count": 71,
+        "residual_blockers": [
+          "The bounded spec_coverage_traceability_metadata cluster is fixed: final scripts/check_spec_coverage.py exits 0 with debt count 0.",
+          "The required full command .venv/bin/pytest tests/python -q is still red outside this metadata fix: 101 failed, 21191 passed, 103 skipped, 91 warnings, 6 errors in 2086.33s before interruption.",
+          "Representative full-suite failures include paper v5 issue 13/14 checks in tests/python/test_experiment_1182_paper_v5_medium_low_issues_11_18.py, stale live-data model-name expectations in tests/python/test_experiment_552_live_data_b.py, tests/python/test_experiment_563_live_data_a_v2.py, tests/python/test_experiment_578_live_data_a_v3.py, and tests/python/test_experiment_579_live_data_c.py, Vitis/HLS energy/verdict failures in tests/python/test_experiment_750_vitis_hls.py, legacy retro schema failures, arbiter warmstart failures, GPU setup/memory-watchdog failures, and rust compatibility assertions.",
+          "The full-suite run had worker crashes unrelated to this metadata change: a z3 segmentation fault, a transformers/Qwen tokenizer abort in tests/python/test_experiment_295_apple_verify_repair.py, and xdist worker replacement events.",
+          "The full-suite run emitted ExperimentTimeoutWatchdog for experiment=561 and was interrupted after prolonged no-progress tail output; it must not be treated as a passing full-suite validation.",
+          "Running the full suite modified unrelated tracked result artifacts listed in files_changed; they are test side effects, not part of the metadata fix. They were left in place rather than hidden."
+        ],
+        "spec_coverage_metadata_cluster_fixed": true,
+        "status": "complete"
+      },
+      "status": "met",
+      "target": "exp1440.spec_coverage_metadata_cluster_fixed=true or exact residual blockers exist"
+    }
+  },
+  "successful_tasks": [
+    {
+      "criterion": "carry_forward_manifest",
+      "experiment_id": "exp1439",
+      "honest_verdict": "milestone_111_carryforward_manifest_complete_6_tracks_prototype_fr11_prm_rtl_exact_reruns_forbidden"
+    },
+    {
+      "criterion": "spec_coverage_cluster",
+      "experiment_id": "exp1440",
+      "honest_verdict": "metadata_cluster_fixed_spec_coverage_zero_focused_tests_green_changed_line_coverage_100_full_suite_red_101_failures_6_errors"
+    },
+    {
+      "criterion": "discrete_sb_rtl_source",
+      "experiment_id": "exp1441",
+      "honest_verdict": "rtl_source_and_testbench_created_lint_and_smoke_sim_passed_no_kv260_execution_claim"
+    },
+    {
+      "criterion": "fr11_diagnosis",
+      "experiment_id": "exp1446",
+      "honest_verdict": "fr11_v6_zero_growth_root_cause_identified_asymmetric_fresh_threshold_v7_required"
+    },
+    {
+      "criterion": "continuous_self_learning",
+      "experiment_id": "exp1447",
+      "honest_verdict": "fr11_v7_positive_verified_growth_persisted_without_forgetting"
+    },
+    {
+      "criterion": "prm_process_agent",
+      "experiment_id": "exp1448",
+      "honest_verdict": "complete_prmv3_no_headline_improvement_prototype_candidate_pool_no_headline_claim"
+    },
+    {
+      "criterion": "ltlzinc_adapter",
+      "experiment_id": "exp1449",
+      "honest_verdict": "ltlzinc_temporal_adapter_ready_verified_cases_only_no_training"
+    },
+    {
+      "criterion": "ebt_nrgpt_micro_baseline",
+      "experiment_id": "exp1450",
+      "honest_verdict": "energy_converges_but_no_decoded_quality_claim_keep_smoke_only"
+    },
+    {
+      "criterion": "rtl_lint_sim",
+      "experiment_id": "exp1451",
+      "honest_verdict": "rtl_lint_and_simulation_complete_no_hardware_execution_no_kv260_claim"
+    },
+    {
+      "criterion": "retro",
+      "experiment_id": "exp1452",
+      "honest_verdict": "retro_complete"
+    }
+  ]
+}
