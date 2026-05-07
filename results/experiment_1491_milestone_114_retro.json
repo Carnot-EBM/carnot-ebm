@@ -1,0 +1,467 @@
+{
+  "blocked_task_ids": [
+    "exp1489"
+  ],
+  "carry_forward_recommendations": [
+    {
+      "evidence": "sound_bound_live_exp1480_plus_exp1468_calibrated",
+      "next_focus": "Preserve sound live-prefix calibration; expand only with zero bound violations.",
+      "source_experiment": "exp1482",
+      "track": "beaver_lite_bounds"
+    },
+    {
+      "evidence": {
+        "completeness": "completeness_reduction_candidate_allowed_zero_soundness",
+        "policy": "query_time_memory_policy_improves_bounded_replay_without_false_accepts"
+      },
+      "next_focus": "Promote the opt-in policy cautiously under the zero-soundness-mistake gate.",
+      "source_experiment": "exp1484/exp1485",
+      "track": "fr11_query_time_memory"
+    },
+    {
+      "evidence": "complete: executable CCTU micro-benchmark ready with live local SOTA GGUF inference",
+      "next_focus": "Use the 20-case benchmark and energy ranking as the baseline for future tool-use work.",
+      "source_experiment": "exp1486/exp1487",
+      "track": "cctu_executable_constraints"
+    },
+    {
+      "evidence": "retired_semantic_energy_confounded_by_superficial_baseline",
+      "next_focus": "Do not use as headline evidence unless a future signal beats lexical and format baselines.",
+      "source_experiment": "exp1481",
+      "track": "semantic_energy_telemetry"
+    },
+    {
+      "evidence": "thrml_not_importable_bounded_install_probe_blocked_simulator_only",
+      "next_focus": "Fix Python/pip/import readiness before proposing simulator parity; no TSU hardware claim.",
+      "source_experiment": "exp1488",
+      "track": "thrml"
+    },
+    {
+      "evidence": "bounded_injected_failure_localization_beats_random_no_decoded_quality_claim",
+      "next_focus": "Carry forward as injected-failure localization evidence only, not decoded quality or Kona internals.",
+      "source_experiment": "exp1490",
+      "track": "partial_trace_localization"
+    }
+  ],
+  "completed_task_ids": [
+    "exp1479",
+    "exp1480",
+    "exp1481",
+    "exp1482",
+    "exp1483",
+    "exp1484",
+    "exp1485",
+    "exp1486",
+    "exp1487",
+    "exp1488",
+    "exp1490",
+    "exp1491"
+  ],
+  "conductor_gate_blocks": [
+    {
+      "log_line": "| 2026-05-07 15:46 UTC | THRML/Carnot Simulator Parity v2 - Gated on Exp148 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1488-thrml-installability-import-prefligh |",
+      "reason": "Pre-emptive skip: upstream retired (exp1488-thrml-installability-import-prefligh",
+      "task_id": "exp1489"
+    },
+    {
+      "log_line": "| 2026-05-07 16:17 UTC | THRML/Carnot Simulator Parity v2 - Gated on Exp148 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1488-thrml-installability-import-prefligh |",
+      "reason": "Pre-emptive skip: upstream retired (exp1488-thrml-installability-import-prefligh",
+      "task_id": "exp1489"
+    }
+  ],
+  "criteria_met": 12,
+  "criteria_results": {
+    "activation": {
+      "evidence_paths": [
+        "results/experiment_1479_113_completion_archive_114_activation.json:activation_manifest_complete",
+        "results/experiment_1479_113_completion_archive_114_activation.json:predecessor_criteria_met",
+        "results/experiment_1479_113_completion_archive_114_activation.json:predecessor_criteria_total",
+        "results/experiment_1479_113_completion_archive_114_activation.json:telemetry_headline_block_preserved"
+      ],
+      "note": ".114 activation preserved .113 guardrails.",
+      "source_values": {
+        "activation_manifest_complete": true,
+        "honest_verdict": "milestone_114_activation_complete_113_archived_guardrails_preserved",
+        "predecessor_criteria_met": 12,
+        "predecessor_criteria_total": 12,
+        "status": "complete",
+        "telemetry_headline_block_preserved": true
+      },
+      "status": "met",
+      "target": "Exp1479 activation manifest is complete and summarizes .113 completion.",
+      "task_id": "exp1479"
+    },
+    "balanced_telemetry": {
+      "evidence_paths": [
+        "results/experiment_1480_live_sota_balanced_telemetry_v2.json:live_sota_model_inference_used",
+        "results/experiment_1480_live_sota_balanced_telemetry_v2.json:logits_available",
+        "results/experiment_1480_live_sota_balanced_telemetry_v2.json:superficial_baselines_recorded",
+        "results/experiment_1480_live_sota_balanced_telemetry_v2.json:telemetry_cases_completed"
+      ],
+      "note": "Balanced telemetry v2 produced live SOTA rows with logits and baseline fields.",
+      "source_values": {
+        "honest_verdict": "balanced_live_sota_telemetry_ready",
+        "live_sota_model_inference_used": true,
+        "logits_available": true,
+        "status": "complete",
+        "superficial_baselines_recorded": true,
+        "telemetry_cases_completed": 36
+      },
+      "status": "met",
+      "target": "Exp1480 uses live SOTA inference, records logits, and records superficial baselines.",
+      "task_id": "exp1480"
+    },
+    "beaver_calibration": {
+      "evidence_paths": [
+        "results/experiment_1482_beaver_lite_live_prefix_bound_calibration.json:bound_is_sound",
+        "results/experiment_1482_beaver_lite_live_prefix_bound_calibration.json:bound_violations",
+        "results/experiment_1482_beaver_lite_live_prefix_bound_calibration.json:mock_or_live_logprobs",
+        "results/experiment_1482_beaver_lite_live_prefix_bound_calibration.json:constraints_evaluated"
+      ],
+      "note": "BEAVER-lite calibration remained sound and labeled live/mock provenance.",
+      "source_values": {
+        "bound_is_sound": true,
+        "bound_violations": [],
+        "constraints_evaluated": 18,
+        "honest_verdict": "sound_bound_live_exp1480_plus_exp1468_calibrated",
+        "mock_or_live_logprobs": "live_exp1480_plus_exp1468",
+        "status": "complete"
+      },
+      "status": "met",
+      "target": "Exp1482 proves sound BEAVER-lite bounds with no violations and labeled logprob lineage.",
+      "task_id": "exp1482"
+    },
+    "completeness_reduction": {
+      "evidence_paths": [
+        "results/experiment_1485_fr11_completeness_reduction_audit.json:completeness_reduction_audit_complete",
+        "results/experiment_1485_fr11_completeness_reduction_audit.json:baseline_soundness_mistakes",
+        "results/experiment_1485_fr11_completeness_reduction_audit.json:candidate_soundness_mistakes",
+        "results/experiment_1485_fr11_completeness_reduction_audit.json:completeness_mistake_delta"
+      ],
+      "note": "Completeness candidate reduced false rejects while preserving zero soundness mistakes.",
+      "source_values": {
+        "baseline_soundness_mistakes": 0,
+        "candidate_soundness_mistakes": 0,
+        "completeness_mistake_delta": -12,
+        "completeness_reduction_audit_complete": true,
+        "honest_verdict": "completeness_reduction_candidate_allowed_zero_soundness",
+        "status": "complete"
+      },
+      "status": "met",
+      "target": "Exp1485 completes the gated completeness audit without new soundness mistakes.",
+      "task_id": "exp1485"
+    },
+    "executable_tool_use_benchmark": {
+      "evidence_paths": [
+        "results/experiment_1486_cctu_executable_constraint_microbenchmark.json:executable_constraint_benchmark_ready",
+        "results/experiment_1486_cctu_executable_constraint_microbenchmark.json:benchmark_cases",
+        "results/experiment_1486_cctu_executable_constraint_microbenchmark.json:live_sota_model_inference_used",
+        "results/experiment_1486_cctu_executable_constraint_microbenchmark.json:verifier_false_accept_rate"
+      ],
+      "note": "CCTU-style executable benchmark is ready with at least 20 cases.",
+      "source_values": {
+        "benchmark_cases": 20,
+        "executable_constraint_benchmark_ready": true,
+        "honest_verdict": "complete: executable CCTU micro-benchmark ready with live local SOTA GGUF inference",
+        "live_sota_model_inference_used": true,
+        "status": "complete",
+        "verifier_false_accept_rate": 0.0
+      },
+      "status": "met",
+      "target": "Exp1486 writes a 20-case executable constraint benchmark with validators.",
+      "task_id": "exp1486"
+    },
+    "halluguard_fit": {
+      "evidence_paths": [
+        "results/experiment_1483_halluguard_risk_bound_fit_audit.json:risk_decomposition_complete",
+        "results/experiment_1483_halluguard_risk_bound_fit_audit.json:implemented_assumptions",
+        "results/experiment_1483_halluguard_risk_bound_fit_audit.json:missing_assumptions",
+        "results/experiment_1483_halluguard_risk_bound_fit_audit.json:claim_allowed"
+      ],
+      "note": "HalluGuard-style fit audit separated implemented evidence from missing assumptions.",
+      "source_values": {
+        "claim_allowed": false,
+        "honest_verdict": "halluguard_style_fit_audit_only_no_full_reproduction",
+        "implemented_assumptions": [
+          "Live local SOTA telemetry artifacts report top-k logprobs and logits availability.",
+          "FoVer-style verifier labels are present in the balanced telemetry manifest.",
+          "BEAVER-lite artifacts report sound prefix-bound checks over live logprob provenance.",
+          "Adversarial telemetry validity audit blocks headline telemetry claims under superficial-confound checks.",
+          "Paper-v6 claim boundaries already avoid broad universal verifier and reproduction claims."
+        ],
+        "missing_assumptions": [
+          "HalluGuard NTK feature construction is not implemented in Carnot.",
+          "Formal HalluGuard DHRB/RHRB theorem assumptions are not checked locally.",
+          "No calibrated data-driven hallucination risk bound is certified over the deployment distribution.",
+          "No full reasoning-step certificate proves every chain-of-thought or latent reasoning step valid.",
+          "Current BEAVER-lite bounds cover terminal/prefix-closed constraints, not arbitrary hallucination semantics.",
+          "The telemetry signal is known to be vulnerable to superficial or mechanical confounds from Exp 1473.",
+          "The .114 balanced telemetry run used one live model family, not a complete HalluGuard reproduction suite."
+        ],
+        "risk_decomposition_complete": true,
+        "status": "complete"
+      },
+      "status": "met",
+      "target": "Exp1483 completes risk decomposition with implemented and missing assumptions.",
+      "task_id": "exp1483"
+    },
+    "pairwise_verification": {
+      "evidence_paths": [
+        "results/experiment_1487_v1_pairwise_self_verification_vs_energy.json:pairwise_verification_complete",
+        "results/experiment_1487_v1_pairwise_self_verification_vs_energy.json:pairwise_accuracy",
+        "results/experiment_1487_v1_pairwise_self_verification_vs_energy.json:random_baseline_accuracy",
+        "results/experiment_1487_v1_pairwise_self_verification_vs_energy.json:superficial_baseline_accuracy",
+        "results/experiment_1487_v1_pairwise_self_verification_vs_energy.json:energy_ranking_accuracy",
+        "results/experiment_1487_v1_pairwise_self_verification_vs_energy.json:improvement_allowed"
+      ],
+      "note": "V_1 pairwise comparison completed, with no promotion when energy won.",
+      "source_values": {
+        "energy_ranking_accuracy": 1.0,
+        "honest_verdict": "complete: no V_1 pairwise improvement over executable Carnot energy",
+        "improvement_allowed": false,
+        "pairwise_accuracy": 0.05,
+        "pairwise_verification_complete": true,
+        "random_baseline_accuracy": 0.5,
+        "status": "complete",
+        "superficial_baseline_accuracy": 1.0
+      },
+      "status": "met",
+      "target": "Exp1487 completes pairwise verification and measures random plus superficial baselines.",
+      "task_id": "exp1487"
+    },
+    "partial_trace_localization": {
+      "evidence_paths": [
+        "results/experiment_1490_kona_ebt_partial_trace_localization_audit.json:localization_audit_complete",
+        "results/experiment_1490_kona_ebt_partial_trace_localization_audit.json:decoded_quality_claim_allowed",
+        "results/experiment_1490_kona_ebt_partial_trace_localization_audit.json:kona_dependency_used",
+        "results/experiment_1490_kona_ebt_partial_trace_localization_audit.json:localization_top1_rate"
+      ],
+      "note": "Partial-trace localization beat random on injected failures without overclaiming.",
+      "source_values": {
+        "decoded_quality_claim_allowed": false,
+        "honest_verdict": "bounded_injected_failure_localization_beats_random_no_decoded_quality_claim",
+        "kona_dependency_used": false,
+        "localization_audit_complete": true,
+        "localization_top1_rate": 1.0,
+        "status": "complete"
+      },
+      "status": "met",
+      "target": "Exp1490 completes bounded localization without decoded-quality or Kona-internals claims.",
+      "task_id": "exp1490"
+    },
+    "query_time_self_learning": {
+      "evidence_paths": [
+        "results/experiment_1484_fr11_v9_query_time_memory_policy.json:policy_integration_ready",
+        "results/experiment_1484_fr11_v9_query_time_memory_policy.json:soundness_mistakes",
+        "results/experiment_1484_fr11_v9_query_time_memory_policy.json:task_success_delta",
+        "results/experiment_1484_fr11_v9_query_time_memory_policy.json:promotion_allowed"
+      ],
+      "note": "Query-time memory policy improved bounded replay without false accepts.",
+      "source_values": {
+        "honest_verdict": "query_time_memory_policy_improves_bounded_replay_without_false_accepts",
+        "policy_integration_ready": true,
+        "promotion_allowed": true,
+        "soundness_mistakes": 0,
+        "status": "complete",
+        "task_success_delta": 0.5
+      },
+      "status": "met",
+      "target": "Exp1484 integrates query-time memory policy with zero soundness mistakes and reported delta.",
+      "task_id": "exp1484"
+    },
+    "retro": {
+      "evidence_paths": [],
+      "note": "Retrospective artifact completed; ops doc reconciliation is delegated by the stop rule.",
+      "source_values": {
+        "ops_docs_reconciliation": "delegated_to_followup_reconciler",
+        "research_roadmap_yaml_modified": false,
+        "scripts_research_conductor_modified": false
+      },
+      "status": "met",
+      "target": "Exp1491 writes the terminal retro, records retirements/carry-forwards, and keeps protected files unchanged.",
+      "task_id": "exp1491"
+    },
+    "semantic_energy_audit": {
+      "evidence_paths": [
+        "results/experiment_1481_semantic_energy_feasibility_audit.json:semantic_energy_audit_complete",
+        "results/experiment_1481_semantic_energy_feasibility_audit.json:signal_beats_superficial_baselines",
+        "results/experiment_1481_semantic_energy_feasibility_audit.json:claim_allowed",
+        "results/experiment_1481_semantic_energy_feasibility_audit.json:diagnostic_lineage_retired"
+      ],
+      "note": "Semantic Energy audit completed and its claim gate matches the baseline comparison.",
+      "source_values": {
+        "claim_allowed": false,
+        "diagnostic_lineage_retired": true,
+        "honest_verdict": "retired_semantic_energy_confounded_by_superficial_baseline",
+        "semantic_energy_audit_complete": true,
+        "signal_beats_superficial_baselines": false,
+        "status": "complete"
+      },
+      "status": "met",
+      "target": "Exp1481 completes the Semantic Energy audit and only allows claims when semantic signal beats superficial baselines.",
+      "task_id": "exp1481"
+    },
+    "thrml_parity": {
+      "evidence_paths": [],
+      "note": "Structured gate skip: THRML import readiness was false.",
+      "source_values": {
+        "gate_block_log_count": 2,
+        "status": "gate_skipped",
+        "thrml_import_ready": false,
+        "upstream": "exp1488"
+      },
+      "status": "gate_skipped",
+      "target": "Exp1489 is skipped honestly when Exp1488.thrml_import_ready=false.",
+      "task_id": "exp1489"
+    },
+    "thrml_preflight": {
+      "evidence_paths": [
+        "results/experiment_1488_thrml_installability_import_preflight.json:thrml_preflight_complete",
+        "results/experiment_1488_thrml_installability_import_preflight.json:thrml_import_ready",
+        "results/experiment_1488_thrml_installability_import_preflight.json:hardware_claim_allowed"
+      ],
+      "note": "THRML preflight completed and preserved no-hardware-claim boundary.",
+      "source_values": {
+        "hardware_claim_allowed": false,
+        "honest_verdict": "thrml_not_importable_bounded_install_probe_blocked_simulator_only",
+        "status": "complete",
+        "thrml_import_ready": false,
+        "thrml_preflight_complete": true
+      },
+      "status": "met",
+      "target": "Exp1488 completes THRML preflight and blocks hardware claims.",
+      "task_id": "exp1488"
+    }
+  },
+  "criteria_total": 13,
+  "experiment": "1491_milestone_114_retro",
+  "honest_structured_gate_skip_count": 1,
+  "honest_structured_gate_skips": [
+    {
+      "criterion": "thrml_parity",
+      "reason": "Structured gate skip: THRML import readiness was false.",
+      "source_values": {
+        "gate_block_log_count": 2,
+        "status": "gate_skipped",
+        "thrml_import_ready": false,
+        "upstream": "exp1488"
+      },
+      "task_id": "exp1489"
+    }
+  ],
+  "honest_verdict": "complete: milestone_114_12_of_13_criteria_met_success_threshold_met_1_honest_gate_skips_ops_reconciliation_delegated",
+  "milestone": "2026.04.114",
+  "missing_artifacts": [
+    {
+      "path": "results/experiment_1489_thrml_carnot_simulator_parity_v2.json",
+      "reason": "source_artifact_missing"
+    }
+  ],
+  "ops_docs_update_note": "ops reconciliation delegated by the operator stop rule",
+  "ops_docs_updated": false,
+  "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+  "protected_file_checks": {
+    "research-roadmap.yaml": "unchanged",
+    "scripts/research_conductor.py": "unchanged"
+  },
+  "research_complete_archive_update_needed": false,
+  "research_complete_has_114_entry": true,
+  "research_roadmap_yaml_modified": false,
+  "retired_lineages": [
+    {
+      "decision": "retired",
+      "honest_verdict": "retired_semantic_energy_confounded_by_superficial_baseline",
+      "lineage": "semantic_energy_headline_telemetry",
+      "reason": "Semantic Energy proxy was confounded by superficial baselines.",
+      "source_experiment": "exp1481"
+    },
+    {
+      "decision": "do_not_promote",
+      "honest_verdict": "complete: no V_1 pairwise improvement over executable Carnot energy",
+      "lineage": "v1_pairwise_self_verification_promotion_path",
+      "reason": "Pairwise self-verification underperformed executable Carnot energy.",
+      "source_experiment": "exp1487"
+    },
+    {
+      "decision": "gate_blocked",
+      "honest_verdict": "thrml_not_importable_bounded_install_probe_blocked_simulator_only",
+      "lineage": "thrml_carnot_simulator_parity_until_import_ready",
+      "reason": "THRML import readiness is false; parity must not run or claim hardware evidence.",
+      "source_experiment": "exp1488/exp1489"
+    },
+    {
+      "decision": "preserved",
+      "honest_verdict": "milestone_114_activation_complete_113_archived_guardrails_preserved",
+      "lineage": "prior_scope_reduction_blocks",
+      "reason": "Repair-executor reruns, GRPO/VPRM, WOPR puzzle expansion, and HardNet++/DSP remain closed.",
+      "source_experiment": "exp1479"
+    }
+  ],
+  "run_date": "20260507",
+  "schema": "milestone_114_retro_v1",
+  "scripts_research_conductor_modified": false,
+  "source_artifacts_checked": [
+    {
+      "exists": true,
+      "experiment_id": "exp1479",
+      "path": "results/experiment_1479_113_completion_archive_114_activation.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1480",
+      "path": "results/experiment_1480_live_sota_balanced_telemetry_v2.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1481",
+      "path": "results/experiment_1481_semantic_energy_feasibility_audit.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1482",
+      "path": "results/experiment_1482_beaver_lite_live_prefix_bound_calibration.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1483",
+      "path": "results/experiment_1483_halluguard_risk_bound_fit_audit.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1484",
+      "path": "results/experiment_1484_fr11_v9_query_time_memory_policy.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1485",
+      "path": "results/experiment_1485_fr11_completeness_reduction_audit.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1486",
+      "path": "results/experiment_1486_cctu_executable_constraint_microbenchmark.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1487",
+      "path": "results/experiment_1487_v1_pairwise_self_verification_vs_energy.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1488",
+      "path": "results/experiment_1488_thrml_installability_import_preflight.json"
+    },
+    {
+      "exists": false,
+      "experiment_id": "exp1489",
+      "path": "results/experiment_1489_thrml_carnot_simulator_parity_v2.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1490",
+      "path": "results/experiment_1490_kona_ebt_partial_trace_localization_audit.json"
+    }
+  ],
+  "status": "complete",
+  "success_threshold_met": true
+}
