@@ -1,0 +1,22 @@
+{
+  "adapter_tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_1509_executable_monitor_runtime_adapter.py -q --no-cov (passed)",
+    ".venv/bin/pytest tests/python/test_experiment_1509_executable_monitor_runtime_adapter.py -q -o addopts='' --cov=python/carnot/verify --cov-report=term-missing --cov-fail-under=0 (passed; executable_monitor_runtime_adapter.py 100%)",
+    "ruff check python/carnot/verify/executable_monitor_runtime_adapter.py tests/python/test_experiment_1509_executable_monitor_runtime_adapter.py (passed)",
+    "ruff format --check python/carnot/verify/executable_monitor_runtime_adapter.py tests/python/test_experiment_1509_executable_monitor_runtime_adapter.py (passed)",
+    ".venv/bin/python scripts/check_spec_coverage.py (passed)",
+    ".venv/bin/pytest tests/python -q (attempted; failed/hung with unrelated failures, Z3 segfault in tests/python/test_pipeline_errors.py::test_concurrent_verify_calls, Exp 561 watchdog timeout; killed after ~31 min)"
+  ],
+  "blockers": [],
+  "event_schema_version": "monitor-runtime-event/v1",
+  "events_loaded": 60,
+  "events_normalized": 60,
+  "gated_inputs_present": true,
+  "honest_verdict": "complete: executable monitor runtime adapter normalized replay manifest",
+  "monitor_event_manifest_path": "results/executable_monitor_events_1509.jsonl",
+  "monitor_runtime_ready": true,
+  "run_date": "20260507",
+  "safe_prefix_events_linked": 9,
+  "status": "complete",
+  "verifier_false_accept_rate": 0.0
+}
