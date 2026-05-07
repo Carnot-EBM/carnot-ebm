@@ -1090,3 +1090,4 @@ web search: GitHub trending energy based mod |
 | 2026-05-07 10:33 UTC | STATIC CSR Certificate Automaton Smoke - Exact Acc | OK | 81 passed, 1 warning in 4.63s |
 | 2026-05-07 10:48 UTC | KV260 Discrete SB RTL Regression Pack - Source-Lev | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1476_kv260_d |
 | 2026-05-07 10:56 UTC | KV260 Discrete SB RTL Regression Pack - Source-Lev | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1476_kv260_d |
+| 2026-05-07 11:03 UTC | KV260 Discrete SB RTL Regression Pack - Source-Lev | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1476_kv260_d |
