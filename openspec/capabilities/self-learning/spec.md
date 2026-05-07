@@ -3838,3 +3838,71 @@ only.
 | Requirement | Python | Tests |
 |-------------|--------|-------|
 | REQ-LEARN-1459 | Implemented (`python/carnot/reporting/self_learning_lineage_decision.py`) | Implemented (`tests/python/test_self_learning_lineage_decision.py`) |
+
+## REQ-LEARN-1471: FR-11 V8 Verified Memory Growth Pivot MUST Reuse Exp 1447 Policy
+
+Exp 1471 SHALL execute the single allowed FR-11 v8 headline pivot on run date
+`20260507`: reuse Exp 1447's asymmetric fresh/replay memory-promotion policy on
+fresh verified local rows, optionally ingest Exp 1449 LTLZinc temporal rows only
+as supporting benchmark feed, and report persisted SessionMemory growth plus
+nonforgetting. The workflow SHALL NOT introduce a broad new self-learning
+architecture or make adapter-only temporal claims.
+
+### REQ-LEARN-1471 Sub-requirements
+
+- REQ-LEARN-1471-1: The workflow SHALL write
+  `results/experiment_1471_fr11_v8_verified_memory_growth_pivot.json` first
+  with `status="in_progress"` before loading source artifacts.
+- REQ-LEARN-1471-2: The workflow SHALL require Exp 1459's allowed pivot shape,
+  Exp 1447 positive persisted growth, and Exp 1447-compatible nonforgetting
+  threshold before any v8 headline result is allowed.
+- REQ-LEARN-1471-3: Fresh candidates SHALL be verified local rows not already
+  promoted by Exp 1447. Exp 1449 temporal rows MAY be converted into DVI-style
+  candidates only after the local temporal verifier confirms each row's
+  certificate state, and those rows SHALL be reported as supporting benchmark
+  feed rather than a standalone headline result.
+- REQ-LEARN-1471-4: The v8 memory update SHALL reuse the Exp 1447 asymmetric
+  fresh/replay threshold policy and SHALL count positive self-learning growth
+  only for verified new promotions persisted through SessionMemory.
+- REQ-LEARN-1471-5: `headline_result_allowed` SHALL be true only when
+  `self_learning_delta_overall > 0`, `new_promoted_count >= 1`, and
+  `nonforgetting_rate >= 0.99`.
+- REQ-LEARN-1471-6: If the headline gate fails, the artifact SHALL set
+  `pivot_retired=true` and include a future-block rule that forbids rerunning
+  the v8 pivot without a new verified fresh-row source and a changed root cause.
+- REQ-LEARN-1471-7: The final artifact SHALL include `status`, `model_specs`,
+  `live_sota_model_inference_used`, `self_learning_artifact_ready`,
+  `baseline_fresh_verified_sample_count`, `fresh_verified_sample_count`,
+  `self_learning_delta_overall`, `new_promoted_count`,
+  `memory_entries_added`, `session_memory_updated`, `nonforgetting_rate`,
+  `soundness_mistakes`, `completeness_mistakes`, `headline_result_allowed`,
+  `pivot_preserved`, `pivot_retired`, and `honest_verdict`.
+
+### SCENARIO-LEARN-1471: V8 Reuses Exp 1447 Policy And Preserves Pivot
+
+**Given** Exp 1459 selected exactly one allowed future pivot
+**And** Exp 1447 reports positive persisted growth with nonforgetting preserved
+**And** fresh verified local rows include Exp 1449 temporal cases verified by
+the local temporal checker
+**When** v8 applies the Exp 1447 asymmetric policy and persists promoted rows
+through SessionMemory
+**Then** `new_promoted_count` equals `memory_entries_added`
+**And** `self_learning_delta_overall` equals `memory_entries_added`
+**And** `headline_result_allowed=true`
+**And** `pivot_preserved=true`
+**And** `pivot_retired=false`.
+
+### SCENARIO-LEARN-1472: Failed V8 Gate Retires The Pivot
+
+**Given** the v8 policy finds no persisted fresh verified promotions or fails
+the nonforgetting threshold
+**When** the terminal artifact is written
+**Then** `headline_result_allowed=false`
+**And** `pivot_retired=true`
+**And** the artifact includes a future-block rule for this pivot shape.
+
+## Implementation Status (REQ-LEARN-1471)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-1471 | Implemented (`python/carnot/reporting/fr11_v8_verified_memory_growth_pivot.py`) | Implemented (`tests/python/test_fr11_v8_verified_memory_growth_pivot.py`) |
