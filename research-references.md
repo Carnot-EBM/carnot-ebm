@@ -10628,3 +10628,173 @@ Status clarification only. No unrelated references were added.
 - ARM-as-EBM: paper-v6 cite - The ARM/EBM bridge is the theory boundary for interpreting local AR logits as implicit lookahead energy beside Carnot's explicit verifier energy.
 - BEAVER: paper-v6 cite - Deterministic semantic-bound reporting directly strengthens Carnot's certificate and false-acceptance-bound story.
 - ontology-constrained reasoning: future watchlist - Enterprise ontology constraints reinforce symbolic contracts, but the current paper-v6 claim set is verifier-grounded output checking rather than tool governance.
+
+---
+
+## Post-.115 Literature Sweep for Milestone .116 Planning
+
+**Date checked:** 2026-05-07
+**Scope:** arXiv, OpenReview, Hugging Face Papers, Extropic/THRML docs, Logical Intelligence/Kona public materials, GitHub/Semantic Scholar discovery queries.
+
+This sweep was completed before designing milestone `2026.04.116`, per
+`research-program.md`. It focuses on sources that change the next experiment
+sequence rather than broad background.
+
+### AutoPyVerifier: Learning Compact Executable Verifiers for LLM Outputs
+
+**Source:** https://arxiv.org/abs/2604.22937
+**Submitted:** 2026-04-24
+
+**Finding.** AutoPyVerifier synthesizes candidate Python verifier functions
+with an LLM, then searches over a DAG to select compact executable verifier
+sets whose joint satisfaction approximates a target objective. The paper
+reports large F1 improvements over initial LLM-generated verifier sets and
+shows that exposing the discovered verifier set as an external tool can improve
+downstream accuracy.
+
+**Carnot relevance.** This is the cleanest post-.115 bridge from the safe-DSL
+validator compiler (`exp1494`) to scalable verifier induction. Carnot should not
+adopt arbitrary generated Python as trusted code, but can use the paper's
+induce/search/select pattern inside a bounded safe-DSL sandbox with false-accept
+accounting.
+
+**Planned .116 hook:** `exp1507-autopyverifier-safe-dsl-induction-pack`.
+
+### Structural Verification for Reliable EDA Code Generation
+
+**Source:** https://arxiv.org/abs/2604.18834
+**Submitted:** 2026-04-20
+
+**Finding.** The paper replaces repeated tool-in-the-loop debugging with
+pre-execution structural dependency contracts over design objects, then uses
+verifier-guided synthesis and staged repair before running the tool.
+
+**Carnot relevance.** `exp1501` proved plan-graph energy can localize injected
+dependency faults after the fact. The next step is pre-execution contract
+checking: graph prerequisites, API ordering, acquisition paths, and incompatible
+tool use should be rejected before execution.
+
+**Planned .116 hook:** `exp1510-plan-graph-structural-contract-gate`.
+
+### Thinking Before Constraining
+
+**Source:** https://arxiv.org/abs/2601.07525
+**Submitted:** 2026-01-12
+
+**Finding.** The paper supports a two-stage pattern: free reasoning first, then
+switch to structured generation after an explicit trigger token. It reported
+accuracy gains over natural generation with modest token overhead.
+
+**Carnot relevance.** `exp1493` already exported trigger-token certificates.
+For .116, the useful follow-up is not another one-off certificate export; it is
+a decoder/runtime comparison that measures trigger-token plus grammar enforcement
+against schema-only parsing and checks whether local SOTA GGUF rows preserve
+reasoning quality.
+
+**Planned .116 hook:** `exp1508-trigger-grammar-certificate-decoder-audit`.
+
+### Early-Stage Product Line Validation Using LLMs
+
+**Source:** https://arxiv.org/abs/2604.20523
+**Submitted:** 2026-04-22
+
+**Finding.** LLMs can perform feature-model analysis operations over
+semi-formal product-line blueprints, but systematic errors remain in structural
+parsing and constraint reasoning. The authors compare model answers against a
+solver oracle.
+
+**Carnot relevance.** This is a domain-appropriate constraint benchmark beyond
+CCTU. Product-line feature models provide natural-language constraints,
+structured answers, and deterministic solver oracles. It also exercises the
+same PRD path as compliance/architecture governance: the LLM proposes, the
+solver/verifier decides.
+
+**Planned .116 hook:** `exp1511-product-line-solver-oracle-benchmark`.
+
+### ConstraintBench: Direct Constrained Optimization
+
+**Source:** https://arxiv.org/abs/2602.22465
+**Submitted:** 2026-02-25; revised 2026-02-27
+
+**Finding.** ConstraintBench evaluates direct LLM answers to constrained
+optimization tasks across operations-research domains, with deterministic
+verifiers and solver-proven references. The key failure mode is feasibility:
+models often find plausible but constraint-violating solutions.
+
+**Carnot relevance.** The result reinforces Carnot's decision to prioritize
+feasibility/false-accept checks before optimality claims. It is a useful
+future benchmark family after the .116 feature-model oracle pack exists.
+
+**Carnot integration tier:** evaluation/watchlist.
+
+### Once-More: Continuous Self-Correction with Verifier Feedback
+
+**Source:** https://openreview.net/forum?id=3CKdjb5SuH
+**Venue status checked:** ICLR 2026 poster page
+
+**Finding.** Once-More is a training-free inference-time self-correction method
+that uses token-level perplexity and external verifier feedback to steer
+generation before errors compound.
+
+**Carnot relevance.** This supports the FR-11 direction only if Carnot keeps
+the authority boundary external: verifier events may update a policy cache or
+continuation policy, but must not bypass deterministic validators or rollback
+checks. The .116 self-learning task should therefore learn from verifier events
+under replay, not mutate model weights or promote unverified skills.
+
+**Planned .116 hook:** `exp1512-fr11-verifier-feedback-policy-cache-v11` and
+`exp1513-fr11-policy-rollback-replay-audit`.
+
+### Learned Hallucination Detection from Token-Level Entropy Production
+
+**Source:** https://huggingface.co/papers/2509.04492
+**Published:** 2025-09-01
+
+**Finding.** The paper uses log-probability/top-token information from a single
+generation pass to identify hallucination risk at token level.
+
+**Carnot relevance.** Useful only as an auxiliary monitor feature. Because
+`.114` retired Semantic Energy/logit telemetry as headline evidence, entropy or
+log-probability features must remain below deterministic validators in any
+decision stack.
+
+**Carnot integration tier:** watchlist for monitor features after .116 runtime
+contracts are stable.
+
+### Extropic / THRML Current Public Status
+
+**Sources:**
+- https://extropic.ai/software
+- https://extropic.ai/writing/thermodynamic-computing-from-zero-to-one
+- https://docs.thrml.ai/en/latest/
+- https://docs.thrml.ai/en/latest/api/block_sampling/
+- https://docs.thrml.ai/en/latest/api/conditional_samplers/
+
+**Finding.** THRML is a JAX library for probabilistic graphical models,
+efficient block Gibbs sampling, and discrete EBM experimentation. Extropic's
+public materials frame TSUs as future hardware for sampling from EBMs/PGMs;
+current open work is simulation/software.
+
+**Carnot relevance.** `exp1503` and `exp1504` completed import readiness and
+simulator parity with no hardware claim. The next task should be a
+`SamplerBackend` conformance layer and parity manifest, not board or TSU
+hardware claims.
+
+**Planned .116 hook:** `exp1515-thrml-samplerbackend-conformance-pack`.
+
+### Logical Intelligence / Kona Public Materials
+
+**Sources:**
+- https://logicalintelligence.com/kona-ebms-energy-based-models
+- https://logicalintelligence.com/blog/energy-based-models-for-reasoning
+
+**Finding.** Public Kona materials position the system as a non-chatbot EBM
+reasoning layer that evaluates permitted states/actions, with marketing language
+around constraint enforcement and certification.
+
+**Carnot relevance.** Kona remains a comparator and claim-boundary reference.
+Carnot should keep using public descriptions only, avoid internal-architecture
+claims, and report local evidence through executable validators, structural
+contracts, and provenance.
+
+**Carnot integration tier:** architecture/claim-boundary comparator.
