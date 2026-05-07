@@ -890,7 +890,57 @@ Energy headline telemetry and V_1 pairwise self-verification are retired from
 claims, and the terminal artifact records the required acceptance rules and an
 allowed-prefix honest verdict.
 
-## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487/1495/1496/1499/1500)
+### REQ-VERIFY-1501: GNNVerifier Plan-Graph Energy Adapter
+
+The repository shall provide a deterministic CPU-only Exp 1501 adapter that
+converts bounded CCTU tool-use cases into directed plan graphs and scores
+injected dependency faults with graph-risk energy. The adapter MUST NOT claim
+trained GNN performance unless a trained model and honest train/eval split are
+implemented.
+
+The adapter shall:
+
+- write
+  `results/experiment_1501_gnnverifier_plan_graph_energy_adapter.json` with
+  `status="in_progress"` before loading CCTU rows or scoring faults;
+- select a bounded deterministic subset of CCTU tool-use cases and represent
+  each as directed nodes and edges with node types, edge types, tool
+  dependencies, and expected outputs;
+- inject deterministic dependency faults including missing edges, wrong tool
+  input type, missing intermediate, wrong ordering, and dangling output;
+- score each faulty graph with deterministic graph-risk energy and localize the
+  highest-risk node and edge when the fault exposes a node or edge target;
+- compare node and edge top-1 localization against random and length/degree
+  baselines on the same fault rows;
+- write `results/plan_graph_energy_manifest_1501.jsonl` with one row per
+  trace/fault; and
+- write a terminal artifact containing `status`, `plan_graph_energy_ready`,
+  `traces_converted`, `injected_graph_faults`,
+  `node_localization_top1_rate`, `edge_localization_top1_rate`,
+  `random_baseline_top1_rate`, `length_baseline_top1_rate`,
+  `graph_energy_beats_baselines`, `adapter_manifest_path`, `blockers`, and
+  `honest_verdict`.
+
+`plan_graph_energy_ready` MUST be true only when graph conversion rows,
+fault-injection rows, and baseline comparison metrics are written.
+`honest_verdict` MUST begin with one of `complete:`, `complete_`, `success:`,
+`success_`, `passed:`, `passed_`, `shipped:`, or `shipped_`.
+
+### SCENARIO-VERIFY-1501: Plan-Graph Energy Localizes Injected Dependency Faults
+
+Given the fixed Exp 1486 CCTU tool-use cases and deterministic local expected
+tool outputs,
+When Exp 1501 converts a bounded subset into plan graphs on the run date
+`20260507`,
+Then each manifest row records the trace ID, graph node and edge attributes,
+injected fault type, expected risky node or edge, graph-risk ranking, random
+baseline credit, length or degree baseline credit, and localization outcome
+And the terminal artifact sets `plan_graph_energy_ready=true` only when at
+least one trace and fault row are written, baseline rates are present, and the
+deterministic graph energy beats both baselines without claiming trained GNN
+performance.
+
+## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487/1495/1496/1499/1500/1501)
 
 | Requirement | Python | Tests |
 |-------------|--------|-------|
@@ -911,3 +961,4 @@ allowed-prefix honest verdict.
 | REQ-VERIFY-1496 | Planned (`python/carnot/eval/hover_safe_prefix_continuation_audit.py`) | Planned (`tests/python/test_experiment_1496_hover_safe_prefix_continuation_audit.py`) |
 | REQ-VERIFY-1499 | Implemented (`python/carnot/eval/verifier_ensemble_dry_orthogonality_v2.py`) | Implemented (`tests/python/test_experiment_1499_verifier_ensemble_dry_orthogonality_v2.py`) |
 | REQ-VERIFY-1500 | Implemented (`python/carnot/verify/latent_deterministic_gate.py`) | Implemented (`tests/python/test_experiment_1500_latent_deterministic_discipline_gate.py`) |
+| REQ-VERIFY-1501 | Implemented (`python/carnot/verify/plan_graph_energy_adapter.py`) | Implemented (`tests/python/test_experiment_1501_gnnverifier_plan_graph_energy_adapter.py`) |
