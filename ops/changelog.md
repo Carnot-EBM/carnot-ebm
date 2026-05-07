@@ -1,5 +1,9 @@
 # Carnot — Changelog
 
+## 2026-05-07 (Milestone 2026.04.111 Operational Retrospective)
+
+- 2026-05-07 02:13 UTC: Milestone 2026.04.111 operational retrospective complete. Wrote `results/operational_retro_2026_04_111.json` for the supplied 40 min / 11 completed experiment slice. The supplied slowest-five timing was dominated by Full-Scale Pipeline v3 gate churn on the Exp 1414 repair-executor path (25 min / 62.5%) plus the legacy Exp 1269 arXiv Bundle v10 gate (10 min / 25%). The active .111 conductor log shows the same readiness/gate failure class: `exp1442` blocked live SOTA runtime because `llama_cpp` could not load `libcudart.so.12` and one mandated Gemma GGUF was missing, then `exp1443`/`exp1444`/`exp1445` gate-blocked repeatedly. Both RTX 3090s were idle at closeout (4 MB each, 0% util) with no gpu_monitor.py-class zombies. Estimated 55% recoverable via deterministic runtime preflight terminalization, nonzero-success pipeline gates, same-verdict retirement, DualGPURunner telemetry, and idempotent docs appenders.
+
 ## 2026-05-06 (Milestone 2026.04.111 Research Planning)
 
 - 2026-05-06 21:21 UTC: Fixed the docs regression from the `.111` activation-manifest work by restoring a parseable `1548 Experiments Across ...` count label in `docs/technical-report.md` and regenerating `docs/technical-report.html` with `scripts/build_technical_report.py`. Tightened `python/carnot/reporting/milestone_111_carryforward_activation_manifest.py` typing for `write_in_progress_artifact` after `mypy` caught the placeholder-artifact inference issue. Verification passed: targeted milestone 111 tests at 100% module coverage, docs regression tests, ruff check/format, mypy for the milestone 111 module, staged spec coverage for touched tests, and technical-report HTML sync. Did NOT modify `scripts/research_conductor.py`.
