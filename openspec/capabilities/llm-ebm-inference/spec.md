@@ -445,6 +445,54 @@ mandated SOTA response
 **And** sets `local_sota_runtime_ready=false`
 **And** does not claim live SOTA model inference was used.
 
+### REQ-INFER-SOTA-009: Live SOTA Logprob Telemetry Preflight
+
+The system SHALL provide an Exp 1468 local telemetry preflight that verifies
+whether the repaired local SOTA GGUF runtime can expose generation telemetry for
+downstream HALT, Spilled Energy, and BEAVER-lite bound features.  The preflight
+SHALL write `results/experiment_1468_live_sota_logprob_telemetry_preflight.json`
+with `status="in_progress"` before runtime work, SHALL resolve headline models
+through `cached_sota_pair()` or the Exp 1463 mandated GGUF paths, and SHALL NOT
+use legacy small models as headline telemetry evidence.
+
+The preflight SHALL request 10-20 bounded FoVer/GSM8K-style prompts from at
+least one mandated SOTA GGUF model and write one JSONL row per requested case to
+`results/live_sota_telemetry_manifest_1468.jsonl`.  Each row SHALL record model
+identity, prompt identity, prompt text, response text, token text when exposed,
+token logprob availability, top-k alternative availability, logits
+availability, generation source, and exact blocker text for failures.
+
+The artifact SHALL expose `status`, `model_specs`,
+`live_sota_model_inference_used`, `telemetry_cases_requested`,
+`telemetry_cases_completed`, `topk_logprobs_available`, `logits_available`,
+`telemetry_manifest_path`, `models_used`, `gpu_probe`, `blockers`, and
+`honest_verdict`.  `topk_logprobs_available` SHALL be true only when enough
+per-token top-k alternatives exist for downstream HALT/Spilled Energy features;
+runtime failures or missing llama.cpp telemetry SHALL be recorded as blockers
+without running repair experiments.
+
+### SCENARIO-INFER-SOTA-009-001: Live Top-K Telemetry Opens Downstream Path
+
+**Given** `cached_sota_pair()` resolves at least one mandated SOTA GGUF model
+**And** the llama.cpp runtime returns non-empty text with token logprobs and
+top-k alternatives for bounded FoVer/GSM8K-style prompts
+**When** Exp 1468 runs
+**Then** the artifact records live SOTA inference as used
+**And** `telemetry_cases_completed` counts the completed live generations
+**And** `topk_logprobs_available=true`
+**And** the JSONL manifest contains one row per generated case with response
+text and per-token top-k evidence.
+
+### SCENARIO-INFER-SOTA-009-002: Missing Runtime Telemetry Blocks Honestly
+
+**Given** a mandated SOTA GGUF model can generate text but llama.cpp does not
+return enough token logprobs, top-k alternatives, or logits
+**When** Exp 1468 runs
+**Then** the artifact still records the live response text and completed cases
+**And** sets unavailable telemetry booleans to false
+**And** preserves precise blockers for missing telemetry without claiming
+headline top-k readiness.
+
 ## Implementation Status
 
 | Requirement | Python | Tests |
@@ -465,3 +513,4 @@ mandated SOTA response
 | REQ-INFER-SOTA-006 | Implemented | 12 Python |
 | REQ-INFER-SOTA-007 | Implemented | 18+ Python |
 | REQ-INFER-SOTA-008 | Implemented | 12 Python |
+| REQ-INFER-SOTA-009 | Implemented | 7 Python |
