@@ -1683,6 +1683,51 @@ disallows hardware claims regardless of THRML import result.
 
 **Implementation Status:** Implemented (Exp 1488)
 
+## REQ-SAMPLE-044: Exp 1503 THRML import readiness repair gate
+
+Carnot SHALL provide a bounded THRML readiness repair gate that reproduces the
+Exp 1488 import check, optionally repairs only the local project Python
+environment when the blocker is a missing `thrml` package, records THRML
+version/path/provenance on success, and never upgrades import readiness into a
+TSU hardware or simulator parity claim.
+
+Acceptance criteria:
+- The experiment SHALL create
+  `results/experiment_1503_thrml_import_readiness_repair_gate.json` with
+  `status="in_progress"` before probing THRML.
+- The terminal artifact SHALL include `status`, `thrml_import_ready`,
+  `import_error`, `repair_attempted`, `repair_actions`, `thrml_version`,
+  `thrml_import_path`, `compatibility_probe_passed`,
+  `parity_followup_allowed`, `hardware_claim_allowed`, `blockers`, and
+  `honest_verdict`.
+- The artifact metadata SHALL preserve the exact Exp 1488-style import command
+  result, including stderr traceback on failure or success details on success.
+- A mutating repair SHALL be attempted only when the active project virtualenv
+  cannot import `thrml` because the package is missing; the repair SHALL use
+  the virtualenv Python executable and SHALL NOT mutate global Python
+  toolchains.
+- If THRML remains unavailable after the bounded repair path, the artifact
+  SHALL set `thrml_import_ready=false`, record a terminal blocker, and keep
+  `parity_followup_allowed=false`.
+- If THRML imports, the experiment SHALL run only a minimal local compatibility
+  probe that inspects package metadata/path and public module surfaces without
+  running Carnot/THRML parity or TSU hardware behavior.
+- `parity_followup_allowed` SHALL equal `thrml_import_ready`, and
+  `hardware_claim_allowed=false` SHALL be set regardless of import result.
+
+**Implementation Status:** Implemented (Exp 1503)
+
+### SCENARIO-SAMPLE-072: Exp 1503 writes terminal THRML readiness gate
+
+Given: Exp 1488 previously reported `thrml_import_ready=false` for run date
+20260507.
+When: the Exp 1503 readiness repair gate runs from the Carnot project root.
+Then: the artifact records the initial import result, any local virtualenv
+repair action, THRML version/path/provenance when available, compatibility
+probe status, parity follow-up gate, and a terminal no-hardware-claim verdict.
+
+**Implementation Status:** Implemented (Exp 1503)
+
 ## REQ-MODEL-031: SCEnergyModel — Set-Level Energy Function for Statement Consistency (Exp 944)
 
 SCEnergyModel SHALL implement a permutation-invariant set-level energy function that assigns
