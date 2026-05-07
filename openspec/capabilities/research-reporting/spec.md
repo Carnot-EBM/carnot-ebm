@@ -1189,6 +1189,53 @@ records useful retained lessons, updates the exclusion manifest with a GRPO v15
 / VPRM v15 block, sets `grpo_lineage_retired == true`, and reports an honest
 retirement verdict.
 
+### REQ-REPORT-043: WOPR Puzzle Cartridge Lineage Retirement
+
+The Exp 1457 WOPR puzzle-cartridge retirement workflow shall write
+`results/experiment_1457_wopr_puzzle_cartridge_retirement.json` with
+`status="in_progress"` before terminal consolidation. It shall then review the
+WOPR puzzle and gallery records named by the scope-reduction directive,
+including Slitherlink, Connect Four, Hex, Nonogram, Futoshiki, Kakuro, Masyu,
+and related gallery deploy/update tasks, using `research-complete.yaml`,
+`ops/known-issues.md`, `ops/experiment_signal_noise_classification.csv`,
+available `results/experiment_*.json` artifacts, and public docs references.
+
+The workflow shall write
+`ops/lineage-retirements/wopr_puzzle_cartridges_retired.md` with the reviewed
+experiment ids, shipped or blocked outcomes, demo assets that remain preserved,
+known-issues id discrepancies, reopen conditions, and the final retirement
+decision. It shall update `ops/exclusion_manifest.yaml` or the active exclusion
+mechanism with a planner-visible block for future WOPR puzzle-cartridge/gallery
+research tasks unless an operator explicitly reopens gallery work with a new
+verify-repair or Phase-3 substrate thesis link and falsifiable acceptance gate.
+
+The terminal artifact shall include:
+
+- `status`
+- `cartridge_experiments_reviewed`
+- `retirement_note_path`
+- `wopr_puzzle_lineage_retired`
+- `exclusion_manifest_updated`
+- `preserved_assets`
+- `future_reopen_conditions`
+- `honest_verdict`
+
+The workflow shall preserve working demo assets and historical documentation;
+retirement here means active research-scope closure, not destructive cleanup.
+
+### SCENARIO-REPORT-043: Exp 1457 Retires WOPR Puzzle-Cartridge Research Scope
+
+Given the .112 scope-reduction directive identifies WOPR puzzle cartridges as a
+non-thesis demo lineage, and the evidence record contains shipped E=0 cartridges,
+gate-blocked precursor attempts, known-issues references, docs/gallery mentions,
+and preserved demo code under `python/carnot/games` and `spaces/wopr-games`,
+when Exp 1457 runs for run date `20260507`, then it writes all required
+REQ-REPORT-043 fields, lists at least the Hex, Connect Four, Nonogram,
+Futoshiki, Kakuro, Masyu, and Slitherlink records, writes the markdown
+retirement note, records preserved assets, updates the exclusion manifest with a
+future-puzzle-cartridge block, sets `wopr_puzzle_lineage_retired == true`, and
+reports an honest retirement verdict.
+
 ### REQ-REPORT-024: Local Agent Usage Snapshot
 
 The repository shall provide a local operator workflow that inspects the
@@ -1766,6 +1813,7 @@ embed live-GPU benchmark results from Exp 328 when available.
 | REQ-REPORT-040 | `python/carnot/reporting/experiment_artifact_signal_noise_classifier.py`, `results/experiment_1454_experiment_artifact_signal_noise_classifier.json`, `ops/experiment_signal_noise_classification.csv`, `ops/experiment_signal_noise_summary.md` | `tests/python/test_experiment_artifact_signal_noise_classifier.py` | Implemented |
 | REQ-REPORT-041 | `python/carnot/reporting/known_issues_mandatory_priority_audit.py`, `results/experiment_1455_known_issues_mandatory_priority_audit.json`, `ops/mandatory_priority_audit.md`, `ops/active-priorities.md` | `tests/python/test_known_issues_mandatory_priority_audit.py` | Implemented |
 | REQ-REPORT-042 | `python/carnot/reporting/grpo_vprm_lineage_retirement.py`, `results/experiment_1456_grpo_vprm_lineage_consolidation_retirement.json`, `ops/lineage-retirements/grpo_vprm_lineage_retired.md`, `ops/exclusion_manifest.yaml` | `tests/python/test_grpo_vprm_lineage_retirement.py` | Implemented |
+| REQ-REPORT-043 | `python/carnot/reporting/wopr_puzzle_cartridge_retirement.py`, `results/experiment_1457_wopr_puzzle_cartridge_retirement.json`, `ops/lineage-retirements/wopr_puzzle_cartridges_retired.md`, `ops/exclusion_manifest.yaml` | `tests/python/test_wopr_puzzle_cartridge_retirement.py` | Implemented |
 | REQ-REPORT-024 | `python/carnot/reporting/agent_usage.py`, `scripts/agent_plan_usage.py` | `tests/python/test_agent_plan_usage.py` | Implemented |
 | REQ-PUBLISH-003 | `scripts/experiment_317_hf_publish.py` | `tests/python/test_experiment_317_hf_publish.py` | Implemented |
 | REQ-PUBLISH-004 | `scripts/experiment_330_hf_live_publish.py` | `tests/python/test_experiment_330_hf_live_publish.py` | Implemented |

@@ -194,3 +194,55 @@ retired_extras:
     retired_by_artifact: "results/experiment_1456_grpo_vprm_lineage_consolidation_retirement.json"
     operator_reopen_required: true
     retire_if_same_verdict: true
+
+  # Added by Exp 1457 - WOPR puzzle cartridge lineage consolidation and retirement.
+  - id: wopr_puzzle_cartridge_research_scope_closed
+    reason: |
+      WOPR puzzle cartridges are retired as active research scope after Hex,
+      Connect Four, Nonogram, Futoshiki, Kakuro, Masyu, Slitherlink, and related
+      gallery tasks proved useful as demos but did not map cleanly to Carnot's
+      verify-repair LLM thesis or Phase-3 substrate trajectory. Future WOPR
+      puzzle cartridge or gallery-update research tasks are blocked unless an
+      operator explicitly reopens gallery work with a new root cause, direct
+      thesis or substrate link, and falsifiable gate.
+    experiment_ids:
+      - exp1059
+      - exp1069
+      - exp1070
+      - exp1071
+      - exp1097
+      - exp1102
+      - exp1124
+      - exp1125
+      - exp1136
+      - exp1141
+      - exp1175
+      - exp1188
+      - exp1201
+      - exp1214
+      - exp1227
+      - exp1240
+      - exp1243
+      - exp1253
+      - exp1261
+      - exp1262
+      - exp1279
+      - exp1280
+    blocked_patterns:
+      - "WOPR puzzle cartridge"
+      - "WOPR game cartridge"
+      - "WOPR games gallery"
+      - "HF Spaces gallery update"
+      - "new puzzle cartridge"
+      - "Hex cartridge"
+      - "Connect Four cartridge"
+      - "Nonogram cartridge"
+      - "Futoshiki cartridge"
+      - "Kakuro cartridge"
+      - "Masyu cartridge"
+      - "Slitherlink cartridge"
+    retired_milestone: "2026.04.112"
+    retired_by_artifact: "results/experiment_1457_wopr_puzzle_cartridge_retirement.json"
+    operator_reopen_required: true
+    preserve_demo_assets: true
+    retire_if_same_verdict: true
