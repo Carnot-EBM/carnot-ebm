@@ -1,178 +1,198 @@
-# Research Roadmap vNEXT: Milestone 2026.04.113
+# Research Roadmap vNEXT: Milestone 2026.04.114
 
 Planned: 2026-05-07
 Status: Draft for conductor execution
-Predecessor: 2026.04.112 scope reduction, local SOTA GGUF runtime repair, repair-executor retirement, self-learning pivot selection
+Predecessor: 2026.04.113 live SOTA telemetry, BEAVER-lite bound smoke, FR-11 v8 self-learning pivot, constraint/hardware smokes
 Roadmap YAML: `research-roadmap-next.yaml`
 
 ## ID Allocation Note
 
-Milestone `.112` used `exp1453` through `exp1466`. The next 12 conductor
-tasks are `exp1467` through `exp1478`.
+Milestone `.113` used `exp1467` through `exp1478`. The next 13 conductor
+tasks are `exp1479` through `exp1491`.
 
-## What Milestone .112 Proved
+## What Milestone .113 Proved
 
 | Track | Evidence | Finding |
 |---|---|---|
-| Scope reduction | `exp1453` through `exp1462`, `exp1466` | `.112` met all 14 criteria and satisfied the operator scope-reduction directive. |
-| Artifact signal/noise | `exp1454` | 1,132 experiment artifacts were classified: 547 SIGNAL, 138 NOISE, 447 AMBIGUOUS. |
-| Active priorities | `exp1455` | Mandatory priority entries were reduced from 24 to 7 active lanes. |
-| Retired lineages | `exp1456`, `exp1457`, `exp1458`, `exp1464` | GRPO/VPRM, WOPR puzzle cartridges, HardNet++/DSP, and validation-error-as-context repair are retired unless explicitly reopened. |
-| Self-learning | `exp1459` | The only allowed follow-up is an `exp1447`-style verified-memory-growth pivot with nonforgetting gates. |
-| Hardware portfolio | `exp1460` | Active tracks are dual RTX 3090 CUDA local SOTA runtime, KV260/FPGA Discrete SB RTL lint/simulation, and THRML/Extropic TSU compatibility simulation. Board, NPU, photonic, D-Wave, and large-FPGA claims are deferred. |
-| Paper claims | `exp1462` | Paper-v6 is narrowed to four artifact-backed claims; broad scaling, hardware, and self-learning claims moved to appendix/future work. |
-| Local SOTA runtime | `exp1463` | `local_sota_runtime_ready=true`; `unsloth/Qwen3.6-35B-A3B-GGUF` produced a non-empty live llama.cpp GPU response. All three mandated GGUF model caches were present. |
-| Repair salvage | `exp1464` | Validation-error-as-context retry did not improve acceptance, schema validity, or semantic correctness on the bounded live test; repair-executor lineage retired. |
-| External benchmark | `exp1465` | Adopt exactly one BEAVER-style deterministic-bound smoke; defer VNNLIB/VNN-COMP and broad external benchmark runners. |
+| Live local SOTA telemetry | `exp1468` | The mandated local GGUF runtime produced live telemetry from `unsloth/Qwen3.6-35B-A3B-GGUF`; top-k logprobs and logits are available, and all three mandated SOTA model specs were present. |
+| Telemetry validity | `exp1469`, `exp1473` | HALT/spilled-energy time-series telemetry was retired for headline claims, and the adversarial audit blocked the telemetry headline because the observed signal was superficial or mechanically gated. |
+| Deterministic bounds | `exp1470` | BEAVER-lite produced a sound live-logprob deterministic-bound smoke on bounded prefix constraints. |
+| Continuous self-learning | `exp1471`, `exp1472` | FR-11 v8 produced positive verified memory growth (`self_learning_delta_overall=12`, `new_promoted_count=12`, `nonforgetting_rate=1.0`) with zero soundness mistakes, but still had high completeness mistakes (`completeness_mistakes=140`). |
+| Linear constraints | `exp1474` | A T-SKM-style projection smoke achieved zero violations and agreed with the CPU-only baseline on the bounded suite. |
+| Static constraint automata | `exp1475` | A STATIC-style CSR certificate automaton matched exact acceptance and was faster in the bounded no-generation/no-repair setting. |
+| FPGA lane | `exp1476` | KV260/Discrete SB remains source-level RTL lint/simulation evidence only; there is no board bitfile, board execution, or latency claim. |
+| THRML/TSU lane | `exp1477` | THRML was unavailable in the active runtime, so TSU evidence remains simulator-intent only with no hardware claim. |
+| Milestone governance | `exp1478` | `.113` met all 12 criteria. It preserved the active roadmap and conductor, retired the non-headline telemetry diagnostic, and blocked overclaiming. |
 
-**Critical insight from `.112`:** the project now has a smaller active surface.
-The next milestone should spend that focus on measurement and bounded proof
-artifacts, not on reopening variant lineages. The repaired SOTA runtime is a
-precondition for credible telemetry and bounds; the repair loop itself is not
-active unless an operator reopens it.
+**Critical insight from `.113`:** Carnot now has live local SOTA telemetry and
+sound deterministic-bound smoke evidence, but the telemetry is not yet valid
+headline evidence. The next milestone should use adversarially balanced
+datasets, formal risk-bound language, and executable validators before making
+any broader verification claim. The self-learning line has a real positive
+signal, but it must now show query-time utility while preserving zero soundness
+mistakes.
 
 ## Research Signals Added Before Planning
 
-The post-.112 sweep updated `research-references.md` before this roadmap was
+The post-.113 sweep updated `research-references.md` before this roadmap was
 finalized. The near-term signals are:
 
-- HALT (`arXiv:2602.02888`) motivates top-k logprob time-series telemetry for
-  live local SOTA outputs.
-- Online learnability of CoT verifiers (`arXiv:2603.03538`) gives a soundness
-  versus completeness mistake framework for the one allowed FR-11 follow-up.
-- T-SKM-Net (`arXiv:2512.10461`) is a bounded linear-constraint projection
-  baseline that does not reopen the retired HardNet++/DSP branch.
-- Neural Ising Machines (`arXiv:2602.00302`) motivate a simulator-only learned
-  update/schedule probe for Ising dynamics.
-- STATIC (`arXiv:2602.22647`) motivates a small CSR automaton benchmark for
-  certificate constraints without reviving repair generation.
-- BEAVER remains the only external verifier benchmark selected by `.112`.
-- Extropic/THRML and Kona remain strategic comparators, but no public source
-  changes the `.112` hardware boundary: THRML simulation only, no TSU hardware
-  claim, no Kona dependency.
+- Semantic Energy (`arXiv:2508.14496`, OpenReview E5mL07Fbq8) motivates a
+  semantic-cluster/logit diagnostic that must be tested against superficial
+  length, format, and lexical baselines.
+- HalluGuard (`arXiv:2601.18753`, OpenReview SsQjVaygrC) motivates a formal
+  hallucination-risk decomposition into evidence and reasoning components,
+  without claiming full NTK certification.
+- V_1 (`arXiv:2603.04304`) motivates pairwise self-verification against
+  Carnot energy ranking on bounded candidate sets.
+- CCTU (`arXiv:2603.15309`) motivates a local executable constraint tool-use
+  micro-benchmark with deterministic validators.
+- FSNet (OpenReview mTZ7qA5MDp) is a future learned-projection reference, but
+  should not reopen retired HardNet++/DSP scope.
+- Physical Analog KANs (`arXiv:2602.07518`) are relevant to future hardware
+  planning, but do not change the active `.114` hardware boundary.
+- DeepVerifier (`arXiv:2601.15808`) is useful benchmark inspiration for future
+  multi-turn research, but too broad for this narrowed milestone.
+- THRML public software is visible, but `.113` found no active install/import
+  path in the local environment. Kona remains a comparator for partial-trace
+  energy and failure localization, not a dependency.
 
 ## Three Biggest Gaps
 
-1. **Live SOTA telemetry exists only as a smoke response.** `exp1463` proved
-   that local mandated GGUF inference works. Carnot still lacks a small,
-   reproducible live-SOTA telemetry artifact with per-token logprobs, energy
-   diagnostics, and verifier outcomes.
+1. **Telemetry validity gap.** `exp1468` proved live local SOTA telemetry, but
+   `exp1473.claim_allowed=false` means Carnot cannot use that telemetry as
+   headline verification evidence. The gap is not data capture; it is
+   adversarial validity and calibration against superficial baselines.
 
-2. **External verifier credibility is not yet measured.** `exp1465` selected
-   BEAVER-style deterministic bounds, but no `.112` artifact ran the adopted
-   smoke. A narrow BEAVER-lite run should happen before any broader benchmark
-   or publication comparison.
+2. **Self-learning utility gap.** `exp1471` and `exp1472` proved verified
+   memory growth with zero soundness mistakes, but the policy has not shown
+   query-time task benefit and still overrejects. The gap is turning safe
+   memory growth into useful verification behavior without introducing false
+   accepts.
 
-3. **Self-learning has one positive pivot but no asymmetric mistake accounting.**
-   `exp1459` allowed a single `exp1447`-style growth follow-up. The next run
-   must show fresh verified growth, nonforgetting, and separate soundness and
-   completeness mistake counts.
+3. **Substrate and hardware evidence gap.** BEAVER-lite, T-SKM, STATIC, KV260,
+   and THRML all have bounded smoke evidence, but there is no integrated
+   executable-constraint benchmark, no calibrated risk-bound view, no THRML
+   import readiness, no board evidence, and no partial-trace failure-localization
+   result comparable to EBT/Kona claims.
 
 ## Architecture
 
 ```
-.113 Milestone Architecture
+.114 Milestone Architecture
 ========================================================================
 
-Phase 0 - Handoff and Activation
-  exp1467: .112 completion archive + .113 activation manifest -----------.
+Phase 0 - Handoff and Guardrails
+  exp1479: .113 completion archive + .114 activation manifest ----------.
 
-Phase 1 - Live SOTA Telemetry and Bounds
-  exp1468: Local SOTA logprob telemetry preflight -----------------------+--> live telemetry manifest
-  exp1469: HALT + Spilled Energy diagnostic micro-benchmark (gated) -----+
-  exp1470: BEAVER-lite deterministic-bound smoke -----------------------'
+Phase 1 - Adversarial Telemetry and Formal Bounds
+  exp1480: Live SOTA telemetry v2 with balanced labels -----------------+--> balanced telemetry manifest
+  exp1481: Semantic Energy feasibility audit (gated on logits) ---------+
+  exp1482: BEAVER-lite live-prefix bound calibration -------------------+
+  exp1483: HalluGuard-style risk-bound fit audit -----------------------'
 
-Phase 2 - Self-Learning Pivot and Verifier Governance
-  exp1471: FR-11 v8 verified-memory-growth pivot -----------------------.
-  exp1472: Online verifier asymmetric mistake-budget audit -------------+--> allowed self-learning decision
-  exp1473: Live telemetry adversarial validity audit -------------------'
+Phase 2 - Continuous Self-Learning and Executable Verification
+  exp1484: FR-11 v9 query-time memory-policy integration ---------------.
+  exp1485: FR-11 completeness-reduction audit (gated) ------------------+
+  exp1486: CCTU-style executable constraint benchmark ------------------+
+  exp1487: V_1 pairwise verification vs Carnot ranking (gated) ---------'
 
-Phase 3 - Constraint, Sampler, Hardware Simulation, and Closure
-  exp1474: T-SKM linear projection smoke --------------------------------.
-  exp1475: STATIC CSR certificate automaton smoke -----------------------+
-  exp1476: KV260 Discrete SB RTL regression pack -----------------------+
-  exp1477: THRML + NPIM simulator parity micro-probe --------------------+
-  exp1478: Milestone .113 retrospective --------------------------------'
+Phase 3 - Substrate, Hardware Preflight, and Localization
+  exp1488: THRML installability/import preflight -----------------------.
+  exp1489: THRML/Carnot simulator parity v2 (gated) --------------------+
+  exp1490: Kona/EBT partial-trace energy localization micro-audit ------+
+  exp1491: Milestone .114 retrospective -------------------------------'
 ```
 
 ## Phase Descriptions
 
-**Phase 0 - handoff and activation.** `exp1467` closes the `.112` bookkeeping
-gap before new research starts. It archives `.112` completion evidence,
-records that `research-complete.yaml` lacks a `.112` entry, and writes a `.113`
-activation manifest that preserves the retired-lineage blocks.
+**Phase 0 - handoff and guardrails.** `exp1479` archives `.113` completion
+evidence, records the blocked telemetry headline and positive FR-11 result, and
+writes a `.114` activation manifest. It also preserves the retired-lineage
+rules: no repair-executor rerun, no GRPO/VPRM revival, no WOPR puzzle
+cartridge expansion, no HardNet++/DSP reopening, and no hardware claim beyond
+evidence already present.
 
-**Phase 1 - live SOTA telemetry and bounds.** `exp1468` uses the repaired
-local GGUF runtime to capture a small, reproducible telemetry set from mandated
-SOTA models. `exp1469` runs only if top-k logprobs are available; it computes
-HALT-style and spilled-energy-style features without training a broad detector.
-`exp1470` executes the adopted BEAVER-lite deterministic-bound smoke and labels
-whether bounds used live or mock logprobs.
+**Phase 1 - adversarial telemetry and formal bounds.** `exp1480` builds a
+balanced live local SOTA telemetry manifest using the mandated GGUF models and
+explicit superficial baselines. `exp1481` runs only if logits are available and
+tests Semantic Energy-style signals against those baselines. `exp1482` expands
+the BEAVER-lite deterministic-bound smoke from a tiny proof-of-soundness into a
+calibration run over live prefix constraints. `exp1483` maps available Carnot
+fields into a HalluGuard-style risk-bound decomposition, while clearly marking
+which HalluGuard assumptions are not implemented.
 
-**Phase 2 - self-learning pivot and verifier governance.** `exp1471` is the
-required continuous self-learning experiment. It reuses the `exp1447` memory
-policy on fresh verified rows, may ingest `exp1449` LTLZinc cases only as
-supporting benchmark feed, and must report nonforgetting. `exp1472` evaluates
-the run through the online verifier soundness/completeness mistake framework.
-`exp1473` adversarially audits whether the live telemetry and bounds could pass
-from superficial correlations such as response length, format validity, or
-mock-logprob leakage.
+**Phase 2 - continuous self-learning and executable verification.** `exp1484`
+is the mandatory continuous self-learning experiment. It moves from verified
+memory growth alone to opt-in query-time memory-policy use, with zero
+soundness mistakes as the hard gate. `exp1485` attempts to reduce the high
+completeness mistake count without allowing false accepts. `exp1486` creates a
+small CCTU-style local executable constraint benchmark, giving the verifier
+stack deterministic tool-use labels. `exp1487` tests V_1-style pairwise
+self-verification against Carnot energy and BEAVER-style ranking on that
+benchmark.
 
-**Phase 3 - constraint, sampler, hardware simulation, and closure.**
-`exp1474` tests a T-SKM-style linear projection baseline on toy certificate
-constraints. `exp1475` benchmarks a STATIC-style CSR automaton against the
-existing certificate schema path. `exp1476` keeps the KV260 track active at
-source-level RTL regression only. `exp1477` keeps THRML active at simulation
-parity only and tests whether NPIM-style schedule ideas improve tiny Ising
-cases. `exp1478` closes the milestone with criteria, carry-forwards, and
-retirement discipline.
+**Phase 3 - substrate, hardware preflight, and localization.** `exp1488`
+checks whether THRML can be installed/imported in the active environment and
+writes an honest terminal artifact if not. `exp1489` runs only when that
+preflight passes and compares tiny THRML simulator energies against Carnot CPU
+energies. `exp1490` tests whether partial-trace energy can localize injected
+failures, providing an EBT/Kona comparator without depending on Kona internals.
+`exp1491` closes the milestone, updates ops docs, records carry-forwards and
+retirements, and verifies that `research-roadmap.yaml` and
+`scripts/research_conductor.py` were not modified.
 
 ## Dependency Graph
 
 ```mermaid
 graph TD
-  A[exp1467 .112 archive and .113 activation]
-  B[exp1468 live SOTA telemetry preflight]
-  C[exp1469 HALT and spilled-energy diagnostic]
-  D[exp1470 BEAVER-lite bounds smoke]
-  E[exp1471 FR-11 v8 self-learning pivot]
-  F[exp1472 asymmetric verifier mistake audit]
-  G[exp1473 telemetry adversarial validity audit]
-  H[exp1474 T-SKM projection smoke]
-  I[exp1475 STATIC CSR automaton smoke]
-  J[exp1476 KV260 RTL regression]
-  K[exp1477 THRML and NPIM simulator parity]
-  L[exp1478 retro]
+  A[exp1479 .113 archive and .114 activation]
+  B[exp1480 live SOTA telemetry v2]
+  C[exp1481 Semantic Energy feasibility audit]
+  D[exp1482 BEAVER-lite bound calibration]
+  E[exp1483 HalluGuard-style risk-bound fit audit]
+  F[exp1484 FR-11 v9 query-time policy]
+  G[exp1485 FR-11 completeness reduction]
+  H[exp1486 CCTU executable constraint benchmark]
+  I[exp1487 V_1 pairwise verification]
+  J[exp1488 THRML import preflight]
+  K[exp1489 THRML/Carnot simulator parity]
+  L[exp1490 Kona/EBT localization audit]
+  M[exp1491 retro]
 
   A --> B
   B --> C
   B --> D
-  E --> F
-  C --> G
-  D --> G
-  H --> L
-  I --> L
-  J --> L
-  K --> L
-  F --> L
-  G --> L
+  B --> E
+  D --> E
+  F --> G
+  H --> I
+  J --> K
+  C --> M
+  E --> M
+  G --> M
+  I --> M
+  K --> M
+  L --> M
 ```
 
 Structured conductor gates:
 
-- `exp1469` requires `exp1468.topk_logprobs_available == true`.
-- `exp1472` requires `exp1471.self_learning_artifact_ready == true`.
+- `exp1481` requires `exp1480.logits_available == true`.
+- `exp1485` requires `exp1484.policy_integration_ready == true`.
+- `exp1487` requires `exp1486.executable_constraint_benchmark_ready == true`.
+- `exp1489` requires `exp1488.thrml_import_ready == true`.
 
-Other tasks should write terminal artifacts even when prerequisites are noisy,
-because they are bounded smoke/audit tasks.
+All gate-blocked tasks must still be terminal through the conductor's structured
+gate skip. Downstream non-gated tasks must write honest artifacts even when
+signals are weak.
 
 ## Hardware Requirements
 
 | Task | Hardware | Notes |
 |---|---|---|
-| `exp1467`, `exp1470`, `exp1472`, `exp1473`, `exp1474`, `exp1475`, `exp1476`, `exp1478` | CPU | Docs, deterministic bounds, audits, linear projection, automata, and RTL regression. |
-| `exp1468`, `exp1469`, `exp1471` | Dual RTX 3090 preferred | Must use the repaired local GGUF runtime and mandated SOTA models for live-output evidence when generating new LLM samples. |
-| `exp1477` | CPU or GPU if THRML/JAX is already configured | Simulation/parity only; no Extropic hardware claim. |
+| `exp1479`, `exp1482`, `exp1483`, `exp1484`, `exp1485`, `exp1488`, `exp1489`, `exp1490`, `exp1491` | CPU | Handoff, deterministic bounds, audits, self-learning policy replay, THRML preflight/parity, localization, and retro. `exp1489` may use GPU only if the installed THRML/JAX path already chooses it. |
+| `exp1480`, `exp1481`, `exp1486`, `exp1487` | Dual RTX 3090 preferred | New LLM generations or pairwise comparisons must use local SOTA GGUFs. CPU smoke tests may use legacy small models only for setup checks, never headline results. |
 
 Mandated local SOTA GGUF models for every LLM-bearing experiment:
 
@@ -180,57 +200,82 @@ Mandated local SOTA GGUF models for every LLM-bearing experiment:
 - `unsloth/gemma-4-31B-it-GGUF`
 - `unsloth/gemma-4-26B-A4B-it-GGUF`
 
-Legacy small models such as Qwen3.5-0.8B or gemma-4-E4B-it may be used only as
-fast CPU smoke tests. They must not be reported as headline models.
+Every LLM-bearing prompt in `research-roadmap-next.yaml` must include these
+models in `MODEL_SPECS` and should prefer the cached SOTA pattern described in
+`scripts/experiment_template.py`. Legacy small models such as Qwen3.5-0.8B or
+gemma-4-E4B-it are acceptable only for fast CPU smoke tests.
 
 ## Success Criteria
 
 | Criterion | Target |
 |---|---|
-| Activation | `exp1467.activation_manifest_complete=true` and `.112` completion evidence is summarized. |
-| Telemetry preflight | `exp1468.live_sota_model_inference_used=true` and top-k/logprob availability is recorded. |
-| HALT/energy diagnostic | If gated on, `exp1469.telemetry_diagnostic_complete=true`; if gated off, a terminal skip explains missing logprobs. |
-| BEAVER smoke | `exp1470.bound_is_sound=true` for every evaluated prompt, with `mock_or_live_logprobs` labeled. |
-| Self-learning pivot | `exp1471.self_learning_delta_overall > 0`, `new_promoted_count >= 1`, and `nonforgetting_rate >= 0.99`, or the pivot is retired. |
-| Mistake audit | `exp1472.soundness_mistakes` and `completeness_mistakes` are reported with an asymmetric-cost decision. |
-| Adversarial telemetry audit | `exp1473.telemetry_validity_verdict` is terminal and names any superficial confound. |
-| T-SKM smoke | `exp1474.zero_violation_projection=true` on the toy constraint suite or a blocker is recorded. |
-| STATIC automaton smoke | `exp1475.exact_acceptance_equivalent=true` and latency is reported. |
-| KV260 RTL regression | `exp1476.rtl_regression_complete=true` with no board or latency claim. |
-| THRML/NPIM parity | `exp1477.hardware_claim_allowed=false` and simulator parity/sample-quality fields are reported. |
-| Retro | `exp1478.criteria_total=12`, all retirements/carry-forwards recorded, and `research-roadmap.yaml` plus `scripts/research_conductor.py` remain unchanged. |
+| Activation | `exp1479.activation_manifest_complete=true` and `.113` completion evidence is summarized. |
+| Balanced telemetry | `exp1480.live_sota_model_inference_used=true`, `logits_available=true`, and `superficial_baselines_recorded=true`, or a terminal blocker records why live telemetry could not run. |
+| Semantic Energy audit | If gated on, `exp1481.semantic_energy_audit_complete=true` and `claim_allowed` is true only if the signal beats superficial baselines. |
+| BEAVER calibration | `exp1482.bound_is_sound=true`, `bound_violations=0`, and live/mock logprob lineage is labeled. |
+| HalluGuard fit | `exp1483.risk_decomposition_complete=true` with explicit implemented and missing assumptions. |
+| Query-time self-learning | `exp1484.policy_integration_ready=true`, `soundness_mistakes=0`, and task-success delta is reported. |
+| Completeness reduction | If gated on, `exp1485.completeness_reduction_audit_complete=true` and no new soundness mistakes are introduced. |
+| Executable tool-use benchmark | `exp1486.executable_constraint_benchmark_ready=true`, with deterministic validators and at least 20 cases. |
+| Pairwise verification | If gated on, `exp1487.pairwise_verification_complete=true` and improvement is measured against random plus superficial baselines. |
+| THRML preflight | `exp1488.thrml_preflight_complete=true` and `hardware_claim_allowed=false`. |
+| THRML parity | If gated on, `exp1489.simulator_parity_complete=true` with tiny-case energy agreement reported. |
+| Partial-trace localization | `exp1490.localization_audit_complete=true` and no decoded-quality or Kona-internals claim is made. |
+| Retro | `exp1491.criteria_total=13`, ops docs are updated, carry-forwards/retirements are recorded, and `research-roadmap.yaml` plus `scripts/research_conductor.py` remain unchanged. |
 
-Milestone threshold: 9 of 12 criteria met is a successful milestone. Honest
-gate-blocks are valid terminal evidence but do not count as met criteria unless
-the criterion explicitly allows a terminal skip.
+Milestone threshold: 10 of 13 criteria met is a successful milestone. Honest
+gate skips are valid terminal evidence but count as met only when the success
+criterion explicitly allows a terminal skip.
 
-## Prior Failure Summary
+## Prior Failure and Retirement Rules
 
-- `exp1442` blocked the live SOTA runtime; `exp1463` fixed that blocker.
-  `exp1468` must use the fixed runtime, not rediscover old CUDA/cache failures.
-- `exp1464` retired validation-error-as-context repair because all deltas were
-  zero. `.113` does not include any repair-executor rerun.
-- `exp1456`, `exp1457`, and `exp1458` retired GRPO/VPRM, WOPR puzzle
-  cartridges, and HardNet++/DSP. `.113` does not reopen them.
-- `exp1459` permits exactly one self-learning pivot. `exp1471` is that pivot
-  and must retire the pivot if it cannot reproduce verified growth.
-- `exp1465` selected BEAVER-lite as the single external benchmark smoke. `.113`
-  does not propose VNN-COMP or broad external verifier runners.
+- `exp1469` and `exp1473` retired non-headline HALT/spilled telemetry and
+  blocked the telemetry headline. `exp1480` and `exp1481` may continue only as
+  adversarially controlled telemetry audits. If Semantic Energy cannot beat
+  superficial baselines, retire semantic/logit telemetry as headline evidence.
+- `exp1470` proved BEAVER-lite soundness on a small live-logprob smoke.
+  `exp1482` may expand calibration, but any bound violation blocks publication
+  claims until fixed.
+- `exp1471` and `exp1472` showed safe verified memory growth but high
+  completeness mistakes. `exp1484` and `exp1485` must preserve zero soundness
+  mistakes; any false accept blocks self-learning promotion.
+- `exp1430` and related PRM/selector work failed to improve on saturated
+  candidate pools. `exp1487` is allowed only because it uses pairwise
+  self-verification on deterministic executable labels, not another scalar PRM
+  rerun.
+- `exp1477` found THRML unavailable. `exp1488` must be an install/import
+  preflight and `exp1489` must be gated on that artifact. No THRML, TSU, Z1,
+  XTR-0, or Extropic hardware claim is allowed.
+- KV260 remains source-level until there is explicit board/bitfile execution
+  evidence. This milestone does not include a KV260 board task.
+- Retired GRPO/VPRM, WOPR puzzle cartridges, HardNet++/DSP, and
+  validation-error-as-context repair remain closed unless a future operator
+  explicitly reopens them with a new rationale.
 
 ## Decentralization and Local-First Implications
 
-This milestone preserves CLAUDE.md rules 1-7: all LLM-bearing tasks use local
-open-weight GGUF models; closed-weight systems are research references only;
-hardware work remains portable and simulator-labeled unless real hardware runs;
-and no vendor-specific SDK is introduced into the core verifier stack.
+- All headline model evidence must come from local open GGUF models, not closed
+  model APIs.
+- New LLM-bearing experiments must include the mandated SOTA model specs and
+  may use legacy small models only for smoke tests.
+- Closed commercial systems may be cited as comparators only. Kona remains a
+  boundary reference for partial-trace energy and failure localization, not a
+  dependency.
+- Hardware claims must be artifact-backed. Simulator parity, RTL lint/sim, and
+  package import readiness are useful, but they are not board or TSU execution.
 
-## Conductor Notes
+## Expected Outputs
 
-- Do not modify `research-roadmap.yaml`.
-- Do not modify `scripts/research_conductor.py`.
-- Do not propose Gemini-routed tasks while the known rate-limit constraint is
-  active.
-- All tasks include a deliverable path.
-- All tasks default to `agent_type: codex`, `model: gpt-5.5` per CLAUDE.md.
-- `exp1469` and `exp1472` include structured `gated_on` blocks so the
-  conductor can skip unnecessary agent calls.
+- `results/experiment_1479_113_completion_archive_114_activation.json`
+- `results/experiment_1480_live_sota_balanced_telemetry_v2.json`
+- `results/experiment_1481_semantic_energy_feasibility_audit.json`
+- `results/experiment_1482_beaver_lite_live_prefix_bound_calibration.json`
+- `results/experiment_1483_halluguard_risk_bound_fit_audit.json`
+- `results/experiment_1484_fr11_v9_query_time_memory_policy.json`
+- `results/experiment_1485_fr11_completeness_reduction_audit.json`
+- `results/experiment_1486_cctu_executable_constraint_microbenchmark.json`
+- `results/experiment_1487_v1_pairwise_self_verification_vs_energy.json`
+- `results/experiment_1488_thrml_installability_import_preflight.json`
+- `results/experiment_1489_thrml_carnot_simulator_parity_v2.json`
+- `results/experiment_1490_kona_ebt_partial_trace_localization_audit.json`
+- `results/experiment_1491_milestone_114_retro.json`

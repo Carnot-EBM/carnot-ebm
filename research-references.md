@@ -4,6 +4,160 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-05-07 Post-.113 Planning Sweep (Milestone 2026.04.114)
+
+This sweep was run after milestone `.113` completed all 12 planned tasks.
+Key outcomes: live local SOTA telemetry is available from the mandated GGUF
+runtime (`exp1468.live_sota_model_inference_used=true`,
+`topk_logprobs_available=true`, `logits_available=true`), HALT/spilled-energy
+time-series telemetry was retired for headline claims (`exp1469`), BEAVER-lite
+produced a sound live-logprob deterministic-bound smoke (`exp1470`), FR-11 v8
+produced positive verified memory growth without soundness mistakes
+(`exp1471`, `exp1472`) but with high completeness mistakes, the adversarial
+audit blocked telemetry headline claims as superficial/mechanical (`exp1473`),
+T-SKM and STATIC smokes completed (`exp1474`, `exp1475`), KV260 evidence remains
+source-level RTL only (`exp1476`), and THRML was unavailable in the active
+environment (`exp1477`). Primary `.114` focus: adversarially balanced live
+telemetry and deterministic bounds, query-time self-learning benefit with zero
+soundness mistakes, executable constraint tool-use, and simulator/hardware
+preflight discipline.
+
+### Semantic Energy for Hallucination Detection
+- **Paper:** arXiv:2508.14496 / OpenReview E5mL07Fbq8, "Detecting LLM
+  Hallucination Through Semantic Energy."
+- **Sources:** https://arxiv.org/abs/2508.14496,
+  https://openreview.net/forum?id=E5mL07Fbq8
+- **What:** A training-free hallucination detector derived from semantic
+  clustering and model confidence/logit structure, reporting strong short-answer
+  detection results and explicitly avoiding a learned detector pipeline.
+- **Relevance to Carnot:** `exp1469` retired simple HALT/spilled time-series
+  telemetry as headline evidence and `exp1473` showed superficial confounds.
+  Semantic Energy is a more plausible next diagnostic because it asks whether
+  uncertainty concentrates over semantic alternatives, not just over response
+  length, formatting, or token-count effects.
+- **Concrete experiment hook:** Reuse live local SOTA logits/top-k telemetry
+  from a balanced prompt set, compare semantic-energy proxies against response
+  length, format-validity, and lexical-overlap baselines, and block headline
+  claims unless the signal survives those adversarial controls.
+
+### HalluGuard Formal Hallucination-Risk Bounds
+- **Paper:** arXiv:2601.18753 / OpenReview SsQjVaygrC, "HalluGuard: Provable
+  Detection and Mitigation of Hallucinations in Large Language Models via
+  Formal Verification."
+- **Sources:** https://arxiv.org/abs/2601.18753,
+  https://openreview.net/forum?id=SsQjVaygrC,
+  https://github.com/Fsoft-AIC/HalluGuard
+- **What:** Decomposes hallucination risk into data-driven and reasoning-driven
+  risk-bound components and frames hallucination mitigation as a formal
+  certification problem rather than another scalar confidence heuristic.
+- **Relevance to Carnot:** BEAVER-lite already gives Carnot a deterministic
+  prefix-bound lane, but `.113` has no calibrated decomposition of what the
+  bound is certifying. HalluGuard provides language for separating evidence
+  availability from reasoning-step validity.
+- **Concrete experiment hook:** Audit Carnot's existing telemetry, FoVer labels,
+  BEAVER-lite bounds, and verifier outcomes into DHRB/RHRB-style fields. Do not
+  claim full HalluGuard reproduction unless the required NTK/certification
+  assumptions are implemented and checked.
+
+### V_1 Pairwise Self-Verification
+- **Paper:** arXiv:2603.04304, "V_1: Unifying Generation and Self-Verification
+  for LLMs with Spontaneous Reinforcement Learning."
+- **Sources:** https://arxiv.org/abs/2603.04304,
+  https://huggingface.co/papers/2603.04304
+- **What:** Trains LLMs to compare answer pairs directly and reports that
+  pairwise self-verification is more discriminative than scalar verifier
+  scores for selecting among parallel reasoning candidates.
+- **Relevance to Carnot:** Prior PRM/selector work failed to improve on
+  saturated candidates, while `.113` produced live SOTA telemetry and verifier
+  labels. Pairwise comparison is a distinct bounded next step for ranking
+  candidate answers without reopening the retired repair-executor branch.
+- **Concrete experiment hook:** On a deterministic executable-constraint
+  benchmark, compare pairwise local-SOTA self-verification against Carnot
+  energy/BEAVER ranking. Acceptance requires improvement over random and over
+  superficial length/format baselines.
+
+### CCTU Executable Constraint Tool-Use Benchmark
+- **Paper:** arXiv:2603.15309, "CCTU: Benchmarking Large Language Models via
+  Complex Constraint Tool Use."
+- **Sources:** https://arxiv.org/abs/2603.15309,
+  https://huggingface.co/papers/2603.15309
+- **What:** A large benchmark for tool-use tasks with complex constraints,
+  deterministic local tools, and strict success criteria that expose failures
+  in constraint extraction and tool-result composition.
+- **Relevance to Carnot:** The PRD emphasizes verifiable reasoning and
+  multi-turn agentic verification, but the current artifact stack is stronger
+  on static verification than on executable tool workflows. A small CCTU-style
+  micro-benchmark matches Carnot's local-first constraints and gives pairwise
+  self-verification a clean evaluation surface.
+- **Concrete experiment hook:** Build 20 local executable-constraint cases with
+  deterministic validators, run mandated SOTA GGUF models on the same prompts,
+  and record extraction success, tool-call validity, final answer validity, and
+  verifier catch/false-accept rates.
+
+### FSNet Feasibility Seeking Networks
+- **Paper:** OpenReview mTZ7qA5MDp, "FSNet: Feasibility Seeking Networks for
+  Constrained Optimization and Linear Complementarity Problems."
+- **Source:** https://openreview.net/forum?id=mTZ7qA5MDp
+- **What:** Learns projection directions for feasibility-seeking iterations,
+  targeting constrained optimization and linear complementarity with convergence
+  guarantees and lower memory than heavier differentiable solvers.
+- **Relevance to Carnot:** `.113` showed a T-SKM-style projection can produce
+  zero violations on bounded toy constraints. FSNet is a possible future
+  extension, but it should stay behind the existing T-SKM/STATIC evidence and
+  should not reopen the retired HardNet++/DSP branch.
+- **Concrete experiment hook:** If the linear-projection lane remains active
+  after `.114`, compare a learned projection direction against deterministic
+  SKM/Kaczmarz baselines on the same certificate constraints, with zero
+  violation and wall-time as the only success metrics.
+
+### Physical Analog KANs
+- **Paper:** arXiv:2602.07518, "Physical Analog Kolmogorov-Arnold Networks
+  with Reconfigurable Nonlinear Processing Units."
+- **Source:** https://arxiv.org/abs/2602.07518
+- **What:** Explores hardware-aware KANs using reconfigurable nonlinear
+  processing units, offering a possible future bridge between structured
+  functions and analog acceleration.
+- **Relevance to Carnot:** KANs remain part of the long-term hardware/energy
+  landscape, but this does not change the active `.113` hardware boundary:
+  Carnot has dual RTX 3090 runtime evidence, source-level KV260 RTL evidence,
+  and THRML simulation intent only.
+- **Concrete experiment hook:** File for later KAN/hardware review. Do not add
+  a `.114` hardware claim or new accelerator dependency from this paper alone.
+
+### DeepVerifier Test-Time Rubric-Guided Verification
+- **Paper:** arXiv:2601.15808, "DeepVerifier: Self-Evolving Deep Research
+  Agents with Test-Time Rubric-Guided Verification."
+- **Sources:** https://arxiv.org/abs/2601.15808,
+  https://huggingface.co/papers/2601.15808
+- **What:** Uses iterative rubric-guided verification and multi-agent inference
+  to improve deep research outputs at test time.
+- **Relevance to Carnot:** Useful as a benchmark and conductor-inspiration
+  reference, but too broad for the current narrowed research surface. Carnot's
+  immediate need is artifact-backed verifier telemetry, not a new agentic
+  research stack.
+- **Concrete experiment hook:** Revisit only if a future milestone explicitly
+  targets multi-turn agentic verification beyond local executable tools.
+
+### THRML, Kona, and Citation-Search Status
+- **Sources checked:** Extropic THRML docs/software and package surfaces
+  (https://docs.thrml.ai, https://extropic.ai/software,
+  https://pypi.org/project/thrml/, https://github.com/extropic-ai/thrml),
+  Logical Intelligence Kona pages
+  (https://logicalintelligence.com/kona-ebms-energy-based-models,
+  https://logicalintelligence.com/blog/energy-based-models-for-reasoning),
+  Semantic Scholar API queries for EBT (`arXiv:2507.02092`) and ARM-EBM
+  (`arXiv:2512.15605`), HuggingFace papers, OpenReview, and GitHub project
+  searches.
+- **What changed:** Public THRML software is visible, but `.113` found the
+  package unavailable in the active runtime and no public source gives Carnot
+  authenticated Z1/XTR-0/TSU hardware access. Kona remains a strategic
+  comparator for partial-trace energy and failure localization, not an
+  implementation dependency. Semantic Scholar citation queries were
+  rate-limited during the sweep and produced no actionable citing-paper update.
+- **Concrete experiment hook:** Run a bounded THRML install/import preflight
+  before any simulator parity task, and keep Kona/EBT work at partial-trace
+  localization audits with no external dependency or hardware claim.
+
 ## 2026-05-07 Post-.112 Planning Sweep (Milestone 2026.04.113)
 
 This sweep was run after milestone `.112` completed all 14 criteria. Key
