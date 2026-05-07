@@ -1103,3 +1103,4 @@ web search: GitHub trending energy based mod |
 | 2026-05-07 14:14 UTC | FR-11 v9 Query-Time Memory Policy Integration | OK | 81 passed, 1 warning in 3.97s |
 | 2026-05-07 14:46 UTC | FR-11 Completeness Reduction Audit - Gated on Exp1 | OK | 81 passed, 1 warning in 4.45s |
 | 2026-05-07 15:04 UTC | CCTU Executable Constraint Micro-Benchmark - Local | OK | 81 passed, 1 warning in 4.92s |
+| 2026-05-07 15:19 UTC | V_1 Pairwise Self-Verification vs Carnot Energy Ra | OK | 81 passed, 1 warning in 4.81s |
