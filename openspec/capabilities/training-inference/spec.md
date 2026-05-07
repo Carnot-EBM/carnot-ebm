@@ -1639,6 +1639,50 @@ hardware claims.
 
 **Implementation Status:** Planned (Exp 1477)
 
+## REQ-SAMPLE-043: Exp 1488 THRML installability/import terminal preflight
+
+Carnot SHALL provide a bounded terminal preflight for the THRML simulator lane
+that probes whether the active Python environment can import `thrml`, records
+the observed version or import failure, and attempts only a non-mutating
+installability check when THRML is not already importable.
+
+Acceptance criteria:
+- The experiment SHALL create
+  `results/experiment_1488_thrml_installability_import_preflight.json` with
+  `status="in_progress"` before probe completion.
+- The terminal artifact SHALL include `status`, `thrml_preflight_complete`,
+  `thrml_import_ready`, `thrml_version`, `import_error`,
+  `install_probe_attempted`, `install_probe_result`,
+  `simulator_lane_allowed`, `hardware_claim_allowed`,
+  `next_task_gate_value`, and `honest_verdict`.
+- The import probe SHALL execute `python3 -c "import thrml"` or an equivalent
+  active-environment Python import command without masking the return code,
+  stderr, or exception text.
+- If THRML is not importable, the installability probe SHALL be bounded and
+  non-mutating, such as a pip dry-run/no-deps check, and SHALL NOT install or
+  upgrade project dependencies.
+- `thrml_import_ready=true` is valid only when the active-environment Python
+  import succeeds.
+- `hardware_claim_allowed=false` SHALL be set regardless of import result
+  because THRML importability is simulator readiness, not Extropic TSU hardware
+  access.
+- `simulator_lane_allowed=true` is valid after the preflight completes because
+  the simulator lane may continue with honest import-readiness gating and no
+  hardware claim.
+
+**Implementation Status:** Implemented (Exp 1488)
+
+### SCENARIO-SAMPLE-071: Exp 1488 writes honest terminal readiness artifact
+
+Given: THRML may or may not be importable in the active Python environment.
+When: the Exp 1488 preflight runs from the Carnot project root for run date
+20260507.
+Then: the artifact records import readiness, version or import error,
+bounded installability probe result when needed, simulator-lane allowance, and
+disallows hardware claims regardless of THRML import result.
+
+**Implementation Status:** Implemented (Exp 1488)
+
 ## REQ-MODEL-031: SCEnergyModel — Set-Level Energy Function for Statement Consistency (Exp 944)
 
 SCEnergyModel SHALL implement a permutation-invariant set-level energy function that assigns
