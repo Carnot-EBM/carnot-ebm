@@ -1333,6 +1333,43 @@ each audited comparator as cite, retire, or future_watchlist, records a future
 reopen condition for every retired comparator, updates `research-references.md`
 only with status clarification, and reports an honest scope-narrowing verdict.
 
+### REQ-REPORT-046: External Verifier Benchmark Fit Audit
+
+The Exp 1465 external verifier benchmark fit audit workflow shall write
+`results/experiment_1465_external_verifier_benchmark_fit_audit.json` with
+`status="in_progress"` before terminal decision work. It shall then review
+VNNLIB/VNN-COMP, BEAVER-style deterministic bounds, and one smaller existing
+benchmark option without implementing a new broad benchmark runner.
+
+The workflow shall write
+`docs/research-notes/external_verifier_benchmark_fit.md` with one row per
+reviewed benchmark family. Each row shall include benchmark name, decision
+(`adopt`, `defer`, or `retire`), rationale, fit risks, and reopen or next
+condition. The terminal artifact shall include:
+
+- `status`
+- `benchmarks_reviewed`
+- `benchmark_decision_table_path`
+- `benchmark_adoption_decision`
+- `adopted_benchmark`
+- `deferred_benchmarks`
+- `retired_benchmarks`
+- `next_minimal_benchmark_task`
+- `honest_verdict`
+
+If any benchmark is adopted, `next_minimal_benchmark_task` shall define exactly
+one future task with inputs, expected artifact fields, and an applicable
+end-to-end check. If none are adopted, the artifact shall explain why all
+families are deferred or retired.
+
+### SCENARIO-REPORT-046: Exp 1465 Selects One Minimal External Verifier Task
+
+Given the run date is `20260507` and the current comparator audit plus verifier
+specifications are available, when Exp 1465 runs, then it writes all required
+REQ-REPORT-046 artifact fields, writes the external verifier benchmark fit note,
+adopts no more than one benchmark family for the next minimal task, and defers
+or retires the remaining reviewed families with explicit reasons.
+
 ### REQ-REPORT-024: Local Agent Usage Snapshot
 
 The repository shall provide a local operator workflow that inspects the
@@ -1913,6 +1950,7 @@ embed live-GPU benchmark results from Exp 328 when available.
 | REQ-REPORT-043 | `python/carnot/reporting/wopr_puzzle_cartridge_retirement.py`, `results/experiment_1457_wopr_puzzle_cartridge_retirement.json`, `ops/lineage-retirements/wopr_puzzle_cartridges_retired.md`, `ops/exclusion_manifest.yaml` | `tests/python/test_wopr_puzzle_cartridge_retirement.py` | Implemented |
 | REQ-REPORT-044 | `python/carnot/reporting/hardnet_dsp_repair_stack_retirement.py`, `results/experiment_1458_hardnet_dsp_repair_stack_consolidation.json`, `ops/lineage-retirements/hardnet_dsp_repair_stack_retired.md`, `ops/exclusion_manifest.yaml` | `tests/python/test_hardnet_dsp_repair_stack_retirement.py` | Implemented |
 | REQ-REPORT-045 | `python/carnot/reporting/comparator_cite_retire_audit.py`, `results/experiment_1461_comparator_integration_cite_retire_audit.json`, `docs/research-notes/comparator_cite_retire_audit.md`, `research-references.md` | `tests/python/test_comparator_cite_retire_audit.py` | Implemented |
+| REQ-REPORT-046 | `python/carnot/reporting/external_verifier_benchmark_fit_audit.py`, `results/experiment_1465_external_verifier_benchmark_fit_audit.json`, `docs/research-notes/external_verifier_benchmark_fit.md` | `tests/python/test_external_verifier_benchmark_fit_audit.py` | Implemented |
 | REQ-REPORT-024 | `python/carnot/reporting/agent_usage.py`, `scripts/agent_plan_usage.py` | `tests/python/test_agent_plan_usage.py` | Implemented |
 | REQ-PUBLISH-003 | `scripts/experiment_317_hf_publish.py` | `tests/python/test_experiment_317_hf_publish.py` | Implemented |
 | REQ-PUBLISH-004 | `scripts/experiment_330_hf_live_publish.py` | `tests/python/test_experiment_330_hf_live_publish.py` | Implemented |
