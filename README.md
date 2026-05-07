@@ -17,10 +17,12 @@ call. No fine-tuning. No access to model weights.
 
 Rust + Python/JAX, Apache 2.0, `pip install carnot`.
 
-Current public research record: **1,576 experiments tracked, 123
+Current public research record: **1,590 experiments tracked, 124
 artifact-backed completed milestone records**, with checked-in result artifacts
-through Exp 1452 on 2026-05-07. `research-complete.yaml` currently archives
-**123** completed milestone records through 2026.04.111.
+through Exp 1466 on 2026-05-07. `research-complete.yaml` currently archives
+**123** completed milestone records through 2026.04.111; milestone 2026.04.112
+is terminal in `results/experiment_1466_milestone_112_retro.json` and awaits
+archive reconciliation.
 
 Milestone .106 delivered the critical fix to thinking-mode certificate
 generation: Exp 1366 (CRANE tag-first prefix injection) reached
@@ -82,7 +84,21 @@ promotions and non-forgetting **1.0**; Exp 1448 found PRM v3 selector lift
 **0.0pp** on a saturated prototype candidate pool; Exp 1449 generated **24**
 LTLZinc temporal cases (**12** accepted, **12** rejected), and Exp 1450 kept
 the EBT/NRGPT micro-prototype smoke-only because energy converged but decoded
-quality was not measured. The current test collection reports **22,491** items;
+quality was not measured. Milestone .112 completed **14 of 14** criteria by
+reducing scope instead of expanding claims: Exp 1454 classified **1,132**
+artifacts into **547** signal, **138** noise, and **447** ambiguous entries;
+Exp 1455 trimmed active known-issues priorities **24 -> 7**; Exps 1456, 1457,
+and 1458 retired GRPO/VPRM, WOPR puzzle-cartridge, and HardNet++/DSP variant
+lineages; Exp 1459 narrowed self-learning to the Exp 1447 verified-memory
+growth pivot; Exp 1460 narrowed active hardware tracks to **3**; Exp 1461 set
+**6** comparator cites, **1** retirement, and **3** watchlist items; Exp 1462
+narrowed paper-v6 to **4** anchored claims. Exp 1463 repaired the live local
+SOTA GGUF runtime by resolving CUDA library paths and downloading the missing
+Gemma4-26B GGUF; Qwen3.6-35B-A3B completed a live smoke inference. Exp 1464
+then showed validation-error retry context produced **0.0pp** acceptance lift
+on the bounded live test and retired that repair-executor line. Exp 1465
+adopted one minimal BEAVER-style deterministic-bounds smoke and deferred broad
+VNN-COMP integration. The current test collection reports **22,491** items;
 this is a collection count, not a full-suite pass claim.
 
 ## Install and run
@@ -317,6 +333,13 @@ experiment artifact under `results/`.
 | LTLZinc temporal adapter | **24** finite-trace temporal cases generated (**12** accepted, **12** rejected) across always/eventually/next/until; no MiniZinc execution or DVI training claim | Exp 1449 |
 | EBT/NRGPT micro-prototype audit | Energy converged over **8** FoVer traces with median **11** steps, but decoded quality evidence was absent; keep smoke-only | Exp 1450 |
 | Milestone .111 status | **10/14 criteria met**, threshold not met; live-SOTA runtime gate blocked repair v3, energy reranker, and 100-case pre-scale artifacts | Exp 1452 |
+| Artifact signal/noise classifier | **1,132** artifacts classified: **547** signal, **138** noise, **447** ambiguous; summary and CSV written for scope control | Exp 1454 |
+| Known-issues priority audit | Active mandatory priorities trimmed **24 -> 7** (**70.83%** reduction), clearing the .112 scope-reduction directive | Exp 1455 |
+| Lineage retirements | GRPO/VPRM, WOPR puzzle-cartridge, and HardNet++/DSP variant expansion retired; demo assets and conservative repair lessons preserved | Exps 1456-1458 |
+| Local SOTA GGUF runtime repair | CUDA library path repaired, missing Gemma4-26B GGUF downloaded, and Qwen3.6-35B-A3B completed live local smoke inference on RTX 3090 | Exp 1463 |
+| Validation-error context A/B | Live Qwen repair test evaluated 1 case with **0.0pp** acceptance/schema/semantic lift; repair-executor retry-context lineage retired | Exp 1464 |
+| Paper and benchmark scope narrowing | Paper-v6 narrowed to **4** anchored claims; external verifier benchmark fit adopts one minimal BEAVER-style bounds smoke and defers broad VNN-COMP | Exps 1462/1465 |
+| Milestone .112 status | **14/14 criteria met**; scope reduction satisfied, runtime recovered, repair context retired, and paper/hardware/comparator/benchmark claims narrowed | Exp 1466 |
 | Current Python test collection | **22,491** Python tests collected; collection-only snapshot, not a full-suite pass claim | 2026-05-07 collection run |
 | Local Claude/Codex usage snapshot | Codex reads the newest local `token_count` event; Claude aggregates local token usage and reads only subscription/tier metadata from credentials; free-form quota prose is ignored instead of guessed; focused regression tests pass | 2026-05-04 changelog |
 
@@ -359,7 +382,7 @@ claim we publish.
 ## Where to go next
 
 - **[Technical report](docs/technical-report.md)** — the full research arc
-  through Exp 1452 across 123 archived milestone records, with a
+  through Exp 1466 across 124 completed milestone records, with a
   plain-English timeline of what we tried, what failed, what stuck.
 - **[Roadmap](docs/roadmap.md)** — current milestone, upcoming milestones,
   hardware track, and Phase 3 (Kona-parity foundation-model) direction.
@@ -563,7 +586,7 @@ See the [technical report](docs/technical-report.md) for the full research recor
 
 ## 14 Principles Learned
 
-Hard-won lessons from the activation-based phase of a research program that now spans 1,576 tracked experiments through Exp 1452 across 123 archived milestone records and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
+Hard-won lessons from the activation-based phase of a research program that now spans 1,590 tracked experiments through Exp 1466 across 124 completed milestone records and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
 
 ### What works
 1. **The model's own logprobs are the best energy.** No external EBM needed for rejection sampling — the LLM's own confidence is already an energy function. Simple, practical, +10%.

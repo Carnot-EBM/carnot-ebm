@@ -300,10 +300,10 @@
       <a href="technical-report.html" class="btn btn-secondary">How it works</a>
     </div>
     <div class="stats-bar" aria-label="Project headline numbers">
-      <div class="stat"><div class="stat-num">1,576</div><div class="stat-label">Experiments tracked through Exp 1452</div></div>
-      <div class="stat"><div class="stat-num">123</div><div class="stat-label">archived milestone records through .111</div></div>
+      <div class="stat"><div class="stat-num">1,590</div><div class="stat-label">Experiments tracked through Exp 1466</div></div>
+      <div class="stat"><div class="stat-num">124</div><div class="stat-label">completed milestone records incl. .112</div></div>
       <div class="stat"><div class="stat-num">22,491</div><div class="stat-label">Python items collected, not full pass</div></div>
-      <div class="stat"><div class="stat-num">10/14</div><div class="stat-label">latest .111 criteria met</div></div>
+      <div class="stat"><div class="stat-num">14/14</div><div class="stat-label">latest .112 criteria met</div></div>
     </div>
   </div>
 </section>
@@ -527,7 +527,14 @@
           completed with no hardware claim, FR-11 v7 grew fresh-verified cases
           from 1,508 to 1,664 with non-forgetting 1.0, PRM v3 showed 0.0pp
           selector lift on a saturated prototype pool, LTLZinc generated 24
-          finite-trace cases, and EBT/NRGPT remained smoke-only.
+          finite-trace cases, and EBT/NRGPT remained smoke-only. Milestone .112
+          met 14/14 criteria by reducing scope and retiring noisy lines: 1,132
+          artifacts were classified as 547 signal, 138 noise, and 447 ambiguous;
+          active known-issues priorities were trimmed from 24 to 7; GRPO/VPRM,
+          WOPR puzzle cartridges, HardNet++/DSP variants, and the validation-error
+          repair-context line were retired; hardware scope narrowed to three
+          active tracks; paper-v6 narrowed to four anchored claims; and the live
+          local SOTA GGUF runtime recovered with Qwen3.6-35B-A3B smoke inference.
         </p>
       </div>
       <div class="bento-card span-2">
@@ -544,7 +551,9 @@
           cluster with 100% line coverage on the touched store module, while
           preserving the full-suite debt disclosure: the collection is clean,
           but the full Python suite remains red on pre-existing failures. The
-          current collection-only snapshot reports 22,491 Python items.
+          current collection-only snapshot reports 22,491 Python items. The
+          .112 scope-reduction pass added artifact signal/noise and mandatory
+          priority ledgers so future planning has narrower, explicit gates.
         </p>
       </div>
       <div class="bento-card span-2">
@@ -1164,16 +1173,40 @@
         <div class="r-stats"><span class="r-before">35 promoted, 37 demoted; replay-only, not headline DVI/GRPO</span> <span class="r-after">Exp 1344</span></div>
       </div>
       <div class="r-card">
-        <span class="r-tag">Milestone .111 &mdash; latest terminal retro</span>
-        <h3 class="r-title">10/14 criteria met; threshold not met</h3>
-        <div class="r-meter"><div class="r-bar" style="width: 71.43%; background: #f59e0b;"></div></div>
-        <div class="r-stats"><span class="r-before">Live-SOTA runtime gate blocked repair v3, reranker, and 100-case pre-scale</span> <span class="r-after">Exp 1452</span></div>
+        <span class="r-tag">Milestone .112 &mdash; latest terminal retro</span>
+        <h3 class="r-title">14/14 criteria met; scope reduction satisfied</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 100%; background: #22c55e;"></div></div>
+        <div class="r-stats"><span class="r-before">Runtime recovered, repair context retired, paper/hardware/comparator scope narrowed</span> <span class="r-after">Exp 1466</span></div>
       </div>
       <div class="r-card">
-        <span class="r-tag">Runtime &mdash; live SOTA GGUF preflight</span>
-        <h3 class="r-title">Blocked: no completed live inference</h3>
+        <span class="r-tag">Runtime &mdash; live local SOTA GGUF</span>
+        <h3 class="r-title">Qwen3.6-35B live smoke inference completed</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 100%; background: #22c55e;"></div></div>
+        <div class="r-stats"><span class="r-before">CUDA library path fixed; missing Gemma4-26B GGUF downloaded; dual RTX 3090s visible</span> <span class="r-after">Exp 1463</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Scope reduction &mdash; artifact classifier</span>
+        <h3 class="r-title">547 signal / 138 noise / 447 ambiguous</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 48.32%; background: #0ea5e9;"></div></div>
+        <div class="r-stats"><span class="r-before">1,132 artifacts scanned; summary and CSV written</span> <span class="r-after">Exp 1454</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Planning hygiene &mdash; mandatory priorities</span>
+        <h3 class="r-title">Active priorities 24 &rarr; 7</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 70.83%; background: #22c55e;"></div></div>
+        <div class="r-stats"><span class="r-before">70.83% reduction; known-issues active set trimmed</span> <span class="r-after">Exp 1455</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Repair executor &mdash; validation-error context</span>
+        <h3 class="r-title">0.0pp lift; retry-context line retired</h3>
         <div class="r-meter"><div class="r-bar" style="width: 0%; background: #ef4444;"></div></div>
-        <div class="r-stats"><span class="r-before">Qwen3.6-35B + Gemma4-31B cached, GPUs idle; llama.cpp missing libcudart.so.12</span> <span class="r-after">Exp 1442</span></div>
+        <div class="r-stats"><span class="r-before">Live Qwen test used 3 generation calls on 1 bounded case; acceptance stayed 0.0</span> <span class="r-after">Exp 1464</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Paper v6 &mdash; anchored claims</span>
+        <h3 class="r-title">4 retained claims; broad claims moved out</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 100%; background: #0ea5e9;"></div></div>
+        <div class="r-stats"><span class="r-before">k=5 bounds, sparse hardware fast-path, distribution-bound calibration, verified-memory growth</span> <span class="r-after">Exp 1462</span></div>
       </div>
       <div class="r-card">
         <span class="r-tag">Spec coverage &mdash; traceability metadata</span>
