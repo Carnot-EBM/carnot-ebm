@@ -1,0 +1,303 @@
+{
+  "benchmark_family": "BEAVER-style deterministic bounds",
+  "bound_is_sound": true,
+  "bound_violations": [],
+  "broad_benchmark_deferred": true,
+  "calibration_tightness_summary": {
+    "max_slack": 0.5559349785283041,
+    "p50_slack": 2.1809741413420343e-05,
+    "p90_slack": 0.05530298099300846
+  },
+  "constraints_evaluated": 18,
+  "empirical_violation_rates": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "experiment": "1482_beaver_lite_live_prefix_bound_calibration",
+  "honest_verdict": "sound_bound_live_exp1480_plus_exp1468_calibrated",
+  "mock_or_live_logprobs": "live_exp1480_plus_exp1468",
+  "model_specs": [
+    {
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "role": "preferred_live_prefix_logprob_source"
+    },
+    {
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "role": "optional_live_prefix_logprob_source"
+    },
+    {
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "role": "optional_live_prefix_logprob_source"
+    }
+  ],
+  "models_used": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF"
+  ],
+  "n_live_topk_alternatives": [
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5
+  ],
+  "prefix_closed_constraints": [
+    {
+      "constraint_id": "exp1482_case_001",
+      "constraint_type": "certificate",
+      "description": "terminal live prefix must end with an integer in [0, 9999]",
+      "expected_answer": "1",
+      "prefix_closed": true,
+      "prompt": "Verify claim: 2 + 5 = 7. Return 1 if true, 0 if false. Return the final integer only.",
+      "source_case_id": "balanced_correct_format_valid_001",
+      "source_family": "fover_claim",
+      "terminal_only": true
+    },
+    {
+      "constraint_id": "exp1482_case_002",
+      "constraint_type": "arithmetic",
+      "description": "terminal live prefix must end with an integer in [0, 9999]",
+      "expected_answer": "3",
+      "prefix_closed": true,
+      "prompt": "Mia has 1 marble and gets 2 more. What is the final answer? Return the final integer only.",
+      "source_case_id": "balanced_correct_format_valid_002",
+      "source_family": "arithmetic_word_problem",
+      "terminal_only": true
+    },
+    {
+      "constraint_id": "exp1482_case_003",
+      "constraint_type": "certificate",
+      "description": "terminal live prefix must end with an integer in [0, 9999]",
+      "expected_answer": "1",
+      "prefix_closed": true,
+      "prompt": "Constraint x=2 satisfies x+3=5. Return 1 if true, 0 if false. Return the final integer only.",
+      "source_case_id": "balanced_correct_format_valid_003",
+      "source_family": "constraint_check",
+      "terminal_only": true
+    },
+    {
+      "constraint_id": "exp1482_case_004",
+      "constraint_type": "certificate",
+      "description": "terminal live prefix must end with an integer in [0, 9999]",
+      "expected_answer": "0",
+      "prefix_closed": true,
+      "prompt": "Verify claim: 4 * 3 = 11. Return 1 if true, 0 if false. Return the final integer only.",
+      "source_case_id": "balanced_correct_format_valid_004",
+      "source_family": "fover_claim",
+      "terminal_only": true
+    },
+    {
+      "constraint_id": "exp1482_case_005",
+      "constraint_type": "arithmetic",
+      "description": "terminal live prefix must end with an integer in [0, 9999]",
+      "expected_answer": "11",
+      "prefix_closed": true,
+      "prompt": "A bus has 9 riders, 4 get off, and 6 get on. What is the final answer? Return the final integer only.",
+      "source_case_id": "balanced_correct_format_valid_005",
+      "source_family": "arithmetic_word_problem",
+      "terminal_only": true
+    },
+    {
+      "constraint_id": "exp1482_case_006",
+      "constraint_type": "certificate",
+      "description": "terminal live prefix must end with an integer in [0, 9999]",
+      "expected_answer": "0",
+      "prefix_closed": true,
+      "prompt": "Constraint x=4 satisfies 2*x=10. Return 1 if true, 0 if false. Return the final integer only.",
+      "source_case_id": "balanced_correct_format_valid_006",
+      "source_family": "constraint_check",
+      "terminal_only": true
+    },
+    {
+      "constraint_id": "exp1482_case_007",
+      "constraint_type": "certificate",
+      "description": "terminal live prefix must end with an integer in [0, 9999]",
+      "expected_answer": "1",
+      "prefix_closed": true,
+      "prompt": "Verify claim: 15 - 6 = 9. Return 1 if true, 0 if false. Return the final integer only.",
+      "source_case_id": "balanced_correct_format_valid_007",
+      "source_family": "fover_claim",
+      "terminal_only": true
+    },
+    {
+      "constraint_id": "exp1482_case_008",
+      "constraint_type": "arithmetic",
+      "description": "terminal live prefix must end with an integer in [0, 9999]",
+      "expected_answer": "12",
+      "prefix_closed": true,
+      "prompt": "Noah buys 3 packs with 4 pencils each. What is the final answer? Return the final integer only.",
+      "source_case_id": "balanced_correct_format_valid_008",
+      "source_family": "arithmetic_word_problem",
+      "terminal_only": true
+    },
+    {
+      "constraint_id": "exp1482_case_009",
+      "constraint_type": "certificate",
+      "description": "terminal live prefix must end with an integer in [0, 9999]",
+      "expected_answer": "1",
+      "prefix_closed": true,
+      "prompt": "Constraint y=3 satisfies y*y=9. Return 1 if true, 0 if false. Return the final integer only.",
+      "source_case_id": "balanced_correct_format_valid_009",
+      "source_family": "constraint_check",
+      "terminal_only": true
+    },
+    {
+      "constraint_id": "exp1482_case_010",
+      "constraint_type": "arithmetic",
+      "description": "terminal live prefix must end with an integer in [0, 9999]",
+      "expected_answer": "3",
+      "prefix_closed": true,
+      "prompt": "Mia has 1 marble and gets 2 more. Answer with the final integer only.",
+      "source_case_id": "fover_gsm8k_verified_001",
+      "source_family": "gsm8k_style",
+      "terminal_only": true
+    },
+    {
+      "constraint_id": "exp1482_case_011",
+      "constraint_type": "arithmetic",
+      "description": "terminal live prefix must end with an integer in [0, 9999]",
+      "expected_answer": "11",
+      "prefix_closed": true,
+      "prompt": "A bus has 9 riders. 4 get off and 6 get on. Answer with the final integer only.",
+      "source_case_id": "fover_gsm8k_verified_002",
+      "source_family": "gsm8k_style",
+      "terminal_only": true
+    },
+    {
+      "constraint_id": "exp1482_case_012",
+      "constraint_type": "arithmetic",
+      "description": "terminal live prefix must end with an integer in [0, 9999]",
+      "expected_answer": "12",
+      "prefix_closed": true,
+      "prompt": "Noah buys 3 packs with 4 pencils each. Answer with the final integer only.",
+      "source_case_id": "fover_gsm8k_verified_003",
+      "source_family": "gsm8k_style",
+      "terminal_only": true
+    },
+    {
+      "constraint_id": "exp1482_case_013",
+      "constraint_type": "arithmetic",
+      "description": "terminal live prefix must end with an integer in [0, 9999]",
+      "expected_answer": "6",
+      "prefix_closed": true,
+      "prompt": "A jar has 18 coins split equally into 3 bags. Answer with the final integer only.",
+      "source_case_id": "fover_gsm8k_verified_004",
+      "source_family": "gsm8k_style",
+      "terminal_only": true
+    },
+    {
+      "constraint_id": "exp1482_case_014",
+      "constraint_type": "arithmetic",
+      "description": "terminal live prefix must end with an integer in [0, 9999]",
+      "expected_answer": "14",
+      "prefix_closed": true,
+      "prompt": "Lina read 7 pages on Monday and twice that on Tuesday. Answer with the final integer only.",
+      "source_case_id": "fover_gsm8k_verified_005",
+      "source_family": "gsm8k_style",
+      "terminal_only": true
+    },
+    {
+      "constraint_id": "exp1482_case_015",
+      "constraint_type": "arithmetic",
+      "description": "terminal live prefix must end with an integer in [0, 9999]",
+      "expected_answer": "17",
+      "prefix_closed": true,
+      "prompt": "A shelf starts with 20 books. 8 are borrowed and 5 returned. Answer with the final integer only.",
+      "source_case_id": "fover_gsm8k_verified_006",
+      "source_family": "gsm8k_style",
+      "terminal_only": true
+    },
+    {
+      "constraint_id": "exp1482_case_016",
+      "constraint_type": "certificate",
+      "description": "terminal live prefix must end with an integer in [0, 9999]",
+      "expected_answer": "0",
+      "prefix_closed": true,
+      "prompt": "Verify the arithmetic claim: 4 * 3 = 11. Return 1 if true, 0 if false.",
+      "source_case_id": "fover_gsm8k_verified_008",
+      "source_family": "fover_style",
+      "terminal_only": true
+    },
+    {
+      "constraint_id": "exp1482_case_017",
+      "constraint_type": "certificate",
+      "description": "terminal live prefix must end with an integer in [0, 9999]",
+      "expected_answer": "1",
+      "prefix_closed": true,
+      "prompt": "Constraint check: x=2 satisfies x+3=5. Return 1 if true, 0 if false.",
+      "source_case_id": "fover_gsm8k_verified_009",
+      "source_family": "fover_style",
+      "terminal_only": true
+    },
+    {
+      "constraint_id": "exp1482_case_018",
+      "constraint_type": "certificate",
+      "description": "terminal live prefix must end with an integer in [0, 9999]",
+      "expected_answer": "0",
+      "prefix_closed": true,
+      "prompt": "Constraint check: x=4 satisfies 2*x=10. Return 1 if true, 0 if false.",
+      "source_case_id": "fover_gsm8k_verified_010",
+      "source_family": "fover_style",
+      "terminal_only": true
+    }
+  ],
+  "run_date": "20260507",
+  "schema": "beaver_lite_live_prefix_bound_calibration_v1",
+  "source_artifacts": [
+    "results/experiment_1480_live_sota_balanced_telemetry_v2.json",
+    "results/experiment_1468_live_sota_logprob_telemetry_preflight.json"
+  ],
+  "spec": [
+    "REQ-VERIFY-1482",
+    "SCENARIO-VERIFY-1482"
+  ],
+  "status": "complete",
+  "unsafe_mass_bounds": [
+    8.47527321621523e-06,
+    0.0001900674693798484,
+    3.5144209610625455e-05,
+    0.00016971917660032776,
+    0.0,
+    0.00032477468041185566,
+    5.268166857048517e-05,
+    0.0,
+    0.0005146517387091486,
+    0.0003388907642351813,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.18314241591970642,
+    0.5559349785283041
+  ]
+}

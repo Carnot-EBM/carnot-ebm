@@ -16622,6 +16622,60 @@ logprobs were used
 
 **Spec traces:** REQ-VERIFY-1470, Exp 1470
 
+## REQ-VERIFY-1482: BEAVER-Lite Live-Prefix Bound Calibration
+
+Carnot SHALL provide a bounded BEAVER-lite calibration run that reuses existing
+live local-SOTA GGUF telemetry prefixes over 12 to 20 deterministic
+prefix-closed arithmetic or certificate constraints, without implementing
+VNN-COMP, VNNLIB, broad BEAVER reproduction, or a fresh LLM generation path.
+
+- REQ-VERIFY-1482-1: The calibration run SHALL write
+  `results/experiment_1482_beaver_lite_live_prefix_bound_calibration.json` with
+  `status="in_progress"` before loading prior experiment artifacts or telemetry
+  manifests, and SHALL replace it with `status="complete"` only after the
+  bound checks pass.
+- REQ-VERIFY-1482-2: The run SHALL prefer compatible live
+  `results/live_sota_balanced_telemetry_manifest_1480.jsonl` rows from mandated
+  SOTA GGUF models, MAY fall back to compatible Exp 1468 live rows, and SHALL
+  use deterministic mock logprobs only when no compatible live rows are
+  available. The terminal artifact SHALL label this lineage as
+  `live_exp1480`, `live_exp1480_plus_exp1468`, `live_exp1468`, or
+  `mock_logprobs`.
+- REQ-VERIFY-1482-3: The run SHALL select between 12 and 20 deterministic
+  terminal-only prefix-closed constraints from arithmetic or certificate-style
+  rows, record them in both `constraints_evaluated` and
+  `prefix_closed_constraints`, and preserve each source case ID and expected
+  terminal answer.
+- REQ-VERIFY-1482-4: For every evaluated constraint, the run SHALL report an
+  unsafe mass bound in [0, 1], an empirical violation rate in [0, 1], and SHALL
+  reject the artifact if any empirical violation rate exceeds its corresponding
+  bound.
+- REQ-VERIFY-1482-5: The terminal artifact SHALL include `status`,
+  `benchmark_family`, `model_specs`, `constraints_evaluated`,
+  `prefix_closed_constraints`, `unsafe_mass_bounds`,
+  `empirical_violation_rates`, `bound_is_sound`, `bound_violations`,
+  `calibration_tightness_summary`, `mock_or_live_logprobs`,
+  `broad_benchmark_deferred`, and `honest_verdict`, with tightness summarized
+  as bound-minus-empirical slack p50, p90, and max.
+
+**Implementation Status:** Proposed (Exp 1482)
+
+### SCENARIO-VERIFY-1482: Live-Prefix Calibration Reports Sound Tightness
+
+**Given** Exp 1470 produced a sound three-case BEAVER-lite smoke and Exp 1480
+contains reusable live local-SOTA top-k telemetry
+**When** the Exp 1482 calibration run evaluates a bounded 12-to-20-case
+prefix-closed constraint set
+**Then** it writes the required terminal artifact fields
+**And** every unsafe mass bound and empirical violation rate is in [0, 1]
+**And** every unsafe mass bound is greater than or equal to the empirical
+violation rate
+**And** the artifact reports p50, p90, and max calibration slack
+**And** the artifact clearly labels live versus mock logprob lineage
+**And** `broad_benchmark_deferred=true`.
+
+**Spec traces:** REQ-VERIFY-1482, Exp 1482
+
 ## REQ-VERIFY-1144: CCTU Micro-Benchmark Adapter
 
 Carnot SHALL provide a 25-task CCTU-style micro-benchmark adapter for
