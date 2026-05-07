@@ -1,0 +1,118 @@
+{
+  "blockers": [
+    {
+      "blocker": "thrml_not_importable",
+      "detail": "missing Python module while importing THRML: thrml"
+    }
+  ],
+  "carnot_sampler_cases": [
+    {
+      "best_energy_gap_to_exact": 0.0,
+      "carnot_best_energy": -1.31,
+      "carnot_mean_energy": -0.58,
+      "case": "n3_biased_chain",
+      "exact_ground_energy": -1.31,
+      "exact_mean_energy": -0.658768201024,
+      "exact_reference_state_count": 8,
+      "n_spins": 3,
+      "sample_count": 64,
+      "status": "sampled",
+      "wall_time_s": 1.078783
+    },
+    {
+      "best_energy_gap_to_exact": 0.0,
+      "carnot_best_energy": -1.48,
+      "carnot_mean_energy": -0.8715625,
+      "case": "n4_signed_ring_chord",
+      "exact_ground_energy": -1.48,
+      "exact_mean_energy": -0.89201643855,
+      "exact_reference_state_count": 16,
+      "n_spins": 4,
+      "sample_count": 64,
+      "status": "sampled",
+      "wall_time_s": 0.582076
+    },
+    {
+      "best_energy_gap_to_exact": -0.0,
+      "carnot_best_energy": -1.16,
+      "carnot_mean_energy": -0.3878125,
+      "case": "n5_sparse_signed_bias",
+      "exact_ground_energy": -1.16,
+      "exact_mean_energy": -0.513673279813,
+      "exact_reference_state_count": 32,
+      "n_spins": 5,
+      "sample_count": 64,
+      "status": "sampled",
+      "wall_time_s": 0.611813
+    }
+  ],
+  "hardware_claim_allowed": false,
+  "honest_verdict": "complete_thrml_unavailable_npim_simulator_probe_recorded",
+  "metadata": {
+    "experiment_id": 1477,
+    "npim_policy": "zeroth_order_hand_fit_momentum_schedule_simulator",
+    "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "run_date": "20260507",
+    "schema": "thrml_npim_simulator_parity_microprobe_v1",
+    "thrml_version": null,
+    "tsu_hardware_execution": false
+  },
+  "npim_cases": [
+    {
+      "baseline_best_energy": -1.31,
+      "case": "n3_biased_chain",
+      "energy_delta_vs_fixed_baseline": 0.0,
+      "npim_best_energy": -1.31,
+      "selected_policy": {
+        "beta_final": 1.15,
+        "momentum": 0.0
+      },
+      "time_to_energy_delta_steps": null
+    },
+    {
+      "baseline_best_energy": -1.48,
+      "case": "n4_signed_ring_chord",
+      "energy_delta_vs_fixed_baseline": 0.0,
+      "npim_best_energy": -1.48,
+      "selected_policy": {
+        "beta_final": 1.25,
+        "momentum": 0.0
+      },
+      "time_to_energy_delta_steps": null
+    },
+    {
+      "baseline_best_energy": -1.16,
+      "case": "n5_sparse_signed_bias",
+      "energy_delta_vs_fixed_baseline": 0.0,
+      "npim_best_energy": -1.16,
+      "selected_policy": {
+        "beta_final": 1.05,
+        "momentum": 0.0
+      },
+      "time_to_energy_delta_steps": null
+    }
+  ],
+  "npim_energy_delta": {
+    "metric": "mean_npim_best_energy_minus_fixed_baseline_best_energy",
+    "negative_is_better": true,
+    "unit": "ising_energy",
+    "value": 0.0
+  },
+  "npim_probe_attempted": true,
+  "npim_time_to_energy_delta": {
+    "lower_is_better": true,
+    "metric": "earliest_sweep_with_lower_energy_than_fixed_baseline",
+    "unit": "sweeps",
+    "value": null
+  },
+  "parity_metric": {
+    "metric": "max_abs_energy_error",
+    "reason": "missing Python module while importing THRML: thrml",
+    "status": "blocked",
+    "value": null
+  },
+  "simulator_only": true,
+  "status": "complete",
+  "thrml_available": false,
+  "thrml_parity_cases": []
+}
