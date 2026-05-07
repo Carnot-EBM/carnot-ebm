@@ -3775,3 +3775,66 @@ supported operator family
 | Requirement | Python | Tests |
 |-------------|--------|-------|
 | REQ-LEARN-1449 | Implemented (`python/carnot/reporting/ltlzinc_temporal_continual_learning_adapter.py`) | Implemented (`tests/python/test_ltlzinc_temporal_continual_learning_adapter.py`) |
+
+## REQ-LEARN-1459: Self-Learning Lineage Decision MUST Narrow Headline Scope
+
+Exp 1459 SHALL make the mandatory self-learning lineage decision on run date
+`20260507` without launching a new self-learning training run. The decision
+SHALL review the Continuous Self-Learning program requirement, Exp 1433's
+zero-growth non-headline result, Exp 1447's persisted verified growth result,
+Exp 1449's temporal adapter role, and the signal/noise classification rows for
+self-learning artifacts that were improved but explicitly non-headline.
+
+### REQ-LEARN-1459 Sub-requirements
+
+- REQ-LEARN-1459-1: The workflow SHALL write
+  `results/experiment_1459_self_learning_nonheadline_lineage_decision.json`
+  first with `status="in_progress"` before loading the source artifacts.
+- REQ-LEARN-1459-2: The final artifact SHALL include `status`,
+  `self_learning_artifacts_reviewed`, `decision_note_path`,
+  `self_learning_headline_pivot_selected`, `self_learning_lineage_retired`,
+  `exp1447_delta_overall`, `nonforgetting_rate`, `ltlzinc_benchmark_role`,
+  `next_allowed_experiment_shape`, and `honest_verdict`.
+- REQ-LEARN-1459-3: A narrow headline pivot SHALL be selected only when Exp
+  1447 reports positive persisted `self_learning_delta_overall`, preserved
+  nonforgetting, and SessionMemory-equivalent persistence. Otherwise the
+  lineage SHALL be retired from headline scope and retained only as internal
+  memory-policy engineering.
+- REQ-LEARN-1459-4: When the pivot is selected, `next_allowed_experiment_shape`
+  SHALL define exactly one allowed future experiment shape, required metrics,
+  and a nonforgetting threshold. Replay-only, adapter-only, and broad
+  "self-learning improves everything" claims remain excluded from headline
+  scope.
+- REQ-LEARN-1459-5: The decision note at
+  `docs/research-notes/self_learning_lineage_decision.md` SHALL cite the
+  reviewed artifacts and explain why Exp 1449 is a benchmark feed rather than a
+  standalone headline claim.
+
+### SCENARIO-LEARN-1459: Exp 1447 Growth Allows One Narrow Headline Pivot
+
+**Given** Exp 1433 reports zero positive growth and non-headline status
+**And** the classification table includes improved non-headline self-learning
+rows
+**And** Exp 1447 reports positive persisted growth with nonforgetting preserved
+**When** Exp 1459 builds the lineage decision artifact
+**Then** `self_learning_headline_pivot_selected=true`
+**And** `self_learning_lineage_retired=false`
+**And** `exp1447_delta_overall` equals the Exp 1447 persisted growth delta
+**And** the next allowed experiment shape is limited to the Exp 1447 verified
+memory-policy mechanism with explicit metrics and nonforgetting threshold.
+
+### SCENARIO-LEARN-1460: Missing Persisted Growth Retires Headline Scope
+
+**Given** Exp 1447 does not report positive persisted growth or preserved
+nonforgetting
+**When** Exp 1459 builds the lineage decision artifact
+**Then** `self_learning_headline_pivot_selected=false`
+**And** `self_learning_lineage_retired=true`
+**And** the honest verdict keeps self-learning in internal memory-policy scope
+only.
+
+## Implementation Status (REQ-LEARN-1459)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-1459 | Implemented (`python/carnot/reporting/self_learning_lineage_decision.py`) | Implemented (`tests/python/test_self_learning_lineage_decision.py`) |

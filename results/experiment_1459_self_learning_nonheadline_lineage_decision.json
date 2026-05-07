@@ -1,0 +1,195 @@
+{
+  "artifact_metadata": {
+    "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "run_date": "20260507"
+  },
+  "decision_note_path": "/home/ianblenke/github.com/ianblenke/carnot/docs/research-notes/self_learning_lineage_decision.md",
+  "duration_s": 0.011,
+  "exp1447_delta_overall": 156,
+  "experiment": "1459_self_learning_nonheadline_lineage_decision",
+  "finished_at": "2026-05-07T04:01:56Z",
+  "honest_verdict": "self_learning_headline_pivot_selected_exp1447_verified_growth_only",
+  "ltlzinc_benchmark_role": "supporting benchmark feed only; Exp 1449 supplies verified temporal SAT and REPAIR_HINT cases for later FR-11/DVI ingestion, not a standalone headline claim",
+  "next_allowed_experiment_shape": {
+    "allowed_count": 1,
+    "allowed_future_experiment": "Run one bounded follow-on that reuses the Exp 1447 DVI-v7 asymmetric fresh/replay threshold policy on fresh verified local rows. Exp 1449 temporal cases may be included only as extra verified benchmark feed.",
+    "forbidden_shapes": [
+      "replay-only memory refresh as a headline self-learning claim",
+      "adapter-only LTLZinc dataset as a headline self-learning claim",
+      "broad self-learning improves everything wording without persisted memory delta"
+    ],
+    "minimum_new_promotions": 1,
+    "nonforgetting_threshold": 0.99,
+    "reference_exp1447_delta_overall": 156,
+    "required_metrics": [
+      "baseline_fresh_verified_sample_count",
+      "fresh_verified_sample_count",
+      "self_learning_delta_overall",
+      "new_promoted_count",
+      "memory_entries_added",
+      "session_memory_updated",
+      "nonforgetting_rate",
+      "headline_result_allowed"
+    ],
+    "scope": "exp1447_verified_memory_policy_growth_pivot"
+  },
+  "nonforgetting_rate": 1.0,
+  "nonheadline_lineage_evidence": [
+    {
+      "classification": "SIGNAL",
+      "experiment_id": "1273",
+      "headline_fields": "headline_result_allowed=false",
+      "honest_verdict": "smoke_only_not_headline",
+      "path": "results/experiment_1273_grpo_v8_prime_vprm_smoke.json"
+    },
+    {
+      "classification": "SIGNAL",
+      "experiment_id": "1281",
+      "headline_fields": "sota_model_usage_summary.headline_model_ids_required=[unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, unsloth/gemma-4-26B-A4B-it-GGUF]; sota_model_usage_summary.headline_model_ids_used=[]; sota_model_usage_summary.headline_result_allowed=false",
+      "honest_verdict": "milestone_99_12_of_14_criteria_met",
+      "path": "results/experiment_1281_milestone_retro_99.json"
+    },
+    {
+      "classification": "SIGNAL",
+      "experiment_id": "1288",
+      "headline_fields": "headline_result_allowed=false",
+      "honest_verdict": "online_verifier_feedback_neutral_non_headline",
+      "path": "results/experiment_1288_interwhen_dvi_verifier_feedback_replay.json"
+    },
+    {
+      "classification": "SIGNAL",
+      "experiment_id": "1295",
+      "headline_fields": "criteria_results.leanabell_grpo_v9_sota_headline_gated=GATED; self_learning_result.headline_result_allowed=false; sota_model_usage_summary.headline_model_ids_required=[unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, unsloth/gemma-4-26B-A4B-it-GGUF]; sota_model_usage_summary.headline_model_ids_used=[]; sota_model_usage_summary.headline_result_allowed=false; sota_model_usage_summary.headline_result_possible=false",
+      "honest_verdict": "milestone_100_5_of_14_criteria_met",
+      "path": "results/experiment_1295_milestone_retro_100.json"
+    },
+    {
+      "classification": "SIGNAL",
+      "experiment_id": "1303",
+      "headline_fields": "headline_result_allowed=false",
+      "honest_verdict": "online_memory_policy_improved_non_headline",
+      "path": "results/experiment_1303_querybandits_ngc_online_memory_policy.json"
+    },
+    {
+      "classification": "SIGNAL",
+      "experiment_id": "1315",
+      "headline_fields": "headline_result_allowed=false",
+      "honest_verdict": "cerce_nonforgetting_preserved_improved_non_headline",
+      "path": "results/experiment_1315_continuous_self_learning_cerce_nonforgetting_audit.json"
+    },
+    {
+      "classification": "NOISE",
+      "experiment_id": "1344",
+      "headline_fields": "headline_certificate_cases=[]; headline_result_allowed=false",
+      "honest_verdict": "failure_type_memory_policy_dvi_ready_replay_non_headline",
+      "path": "results/experiment_1344_continuous_self_learning_failure_type_memory_policy.json"
+    },
+    {
+      "classification": "SIGNAL",
+      "experiment_id": "1350",
+      "headline_fields": "certificate_branch_verdict.headline_ready=false; self_learning_verdict.headline_ready=false; self_learning_verdict.replay_non_headline=true",
+      "honest_verdict": "milestone_104_9_of_12_criteria_met_carryforward_required",
+      "path": "results/experiment_1350_milestone_104_retro_carryforward.json"
+    },
+    {
+      "classification": "SIGNAL",
+      "experiment_id": "1358",
+      "headline_fields": "headline_result_allowed=false",
+      "honest_verdict": "verifier_selected_memory_replay_only_dvi_ready_non_headline",
+      "path": "results/experiment_1358_continuous_self_learning_verifier_selected_memory.json"
+    },
+    {
+      "classification": "SIGNAL",
+      "experiment_id": "1362",
+      "headline_fields": "self_learning_evidence_summary.exp1344_headline_result_allowed=false; self_learning_evidence_summary.headline_self_learning_claim_allowed=false",
+      "honest_verdict": "publication_hold_active_local_evidence_does_not_support_ebt_arm_kona_or_hardware_claims",
+      "path": "results/experiment_1362_publication_hold_ebt_arm_kona_claim_boundary.json"
+    },
+    {
+      "classification": "SIGNAL",
+      "experiment_id": "1364",
+      "headline_fields": "self_learning_state.headline_result_allowed=false",
+      "honest_verdict": "milestone_105_carryforward_confirms_thinking_mode_missing_structural_tag_blocker_terminal_certificate_required_semantic_chain_gated_self_...",
+      "path": "results/experiment_1364_105_carryforward_thinking_mode_blocker_audit.json"
+    },
+    {
+      "classification": "NOISE",
+      "experiment_id": "1389",
+      "headline_fields": "full_scale_pipeline_verdict.headline_result_allowed=true; grpo_v7_verdict.headline_result_allowed=false; self_learning_v4_verdict.headline_result_allowed=true",
+      "honest_verdict": "milestone_107_13_of_14_criteria_met_arxiv_not_submitted_hold_lift_recommended_not_confirmed_grpo_no_improvement_fr11_dvi_only",
+      "path": "results/experiment_1389_milestone_107_retro.json"
+    },
+    {
+      "classification": "NOISE",
+      "experiment_id": "1402",
+      "headline_fields": "criteria_results.fr11_v5_fresh_count_growing.observed.headline_result_allowed=true; criteria_results.full_pipeline_v2_at_scale.observed.headline_metric_gate_passed=false; criteria_results.full_pipeline_v2_at_scale.observed.headline_result_allowed=false; fr11_v5_verdict.headline_result_allowed=true; full_pipeline_v2_verdict.headline_metric_gate_passed=false; full_pipeline_v2_verdict.headline_result_allowed=false",
+      "honest_verdict": "milestone_108_12_of_13_criteria_met_arxiv_submission_not_attempted_pipeline_semantic_fixed_full_pipeline_below_headline_grpo_retired_bipr...",
+      "path": "results/experiment_1402_milestone_108_retro.json"
+    },
+    {
+      "classification": "SIGNAL",
+      "experiment_id": "1424",
+      "headline_fields": "prior_failures_required_next.dpo-headline-validation-or-finetune-support=list[1]; success_criteria_results.dpo_measured.observed.headline_result_allowed=false; success_criteria_results.fr11_v6_headline_allowed.observed.exists=false; success_criteria_results.fr11_v6_headline_allowed.observed.fresh_verified_sample_count=null; success_criteria_results.fr11_v6_headline_allowed.observed.headline_result_allowed=null; success_criteria_results.fr11_v6_headline_allowed.observed.upstream_dvi_status=blocked; success_criteria_results.fr11_v6_headline_allowed.observed.upstream_dvi_v3_deployed=false; success_criteria_results.fr11_v6_headline_allowed.rationale=FR-11 v6 did not run because upstream DVI v3 deployment gate stayed closed.; success_criteria_results.fr11_v6_headline_allowed.source=exp1418.headline_result_allowed and exp1418.fresh_verified_sample_count; success_criteria_results.fr11_v6_headline_allowed.status=GATE_BLOCKED; success_criteria_results.fr11_v6_headline_allowed.target=headline_result_allowed=true and fresh_verified_sample_count > 1508; success_criteria_results.full_pipeline_clears_headline_gate.observed.cases_evaluated=200; success_criteria_results.full_pipeline_clears_headline_gate.observed.full_pipeline_headline_gate_met=false; success_criteria_results.full_pipeline_clears_headline_gate.observed.full_pipeline_pass_rate=0.305; success_criteria_results.full_pipeline_clears_headline_gate.observed.repair_hint_cases_total=100; success_criteria_results.full_pipeline_clears_headline_gate.observed.repair_success_rate=0.0; success_criteria_results.full_pipeline_clears_headline_gate.observed.repaired_cases_successful=0; success_criteria_results.full_pipeline_clears_headline_gate.rationale=Full pipeline remained at the .108 0.305 pass-rate floor.; success_criteria_results.full_pipeline_clears_headline_gate.source=exp1419.full_pipeline_pass_rate; success_criteria_results.full_pipeline_clears_headline_gate.status=NOT_MET",
+      "honest_verdict": "milestone_109_10_of_13_criteria_met_threshold_met_but_repair_dvi_fr11_and_pipeline_carry_forward",
+      "path": "results/experiment_1424_milestone_109_retro.json"
+    },
+    {
+      "classification": "SIGNAL",
+      "experiment_id": "1433",
+      "headline_fields": "headline_result_allowed=false",
+      "honest_verdict": "fr11_self_learning_v6_dvi_v3_no_positive_growth_non_headline",
+      "path": "results/experiment_1433_fr11_self_learning_v6_dvi_v3_gated.json"
+    },
+    {
+      "classification": "SIGNAL",
+      "experiment_id": "1438",
+      "headline_fields": "dvi_fr11_verdict.fr11_headline_allowed=false; outcome_summaries.dpo.headline_provenance_ready=false; outcome_summaries.dvi_fr11.fr11_headline_allowed=false; outcome_summaries.repair.headline_limitations=[exp1428 and exp1429 report prototype/no live SOTA inference for headline claims, exp1431 reports runtime_evidence_allows_headline_scaleup=false]; repair_v2_verdict.headline_limitations=[exp1428 and exp1429 report prototype/no live SOTA inference for headline claims, exp1431 reports runtime_evidence_allows_headline_scaleup=false]; success_criteria_results.continuous_self_learning.source_values.headline_result_allowed=false; success_criteria_results.dpo_provenance.source_values.headline_provenance_ready=false; success_criteria_results.pipeline_micro_validation.source_values.runtime_evidence_allows_headline_scaleup=false; success_criteria_results.prm_label_completion.source_values.headline_label_coverage_ready=true",
+      "honest_verdict": "milestone_110_12_of_14_criteria_met_threshold_met_repair_dvi_prm_dpo_latent_positive_fr11_growth_and_rtl_source_carry_forward",
+      "path": "results/experiment_1438_milestone_110_retro.json"
+    }
+  ],
+  "run_date": "20260507",
+  "schema": "self_learning_lineage_decision_v1",
+  "self_learning_artifacts_reviewed": [
+    "research-program.md#Continuous Self-Learning",
+    "results/experiment_1433_fr11_self_learning_v6_dvi_v3_gated.json",
+    "results/experiment_1447_fr11_v7_memory_policy_growth.json",
+    "results/experiment_1449_ltlzinc_temporal_continual_learning_adapter.json",
+    "ops/experiment_signal_noise_classification.csv",
+    "research-complete.yaml"
+  ],
+  "self_learning_headline_pivot_selected": true,
+  "self_learning_lineage_retired": false,
+  "source_artifact_summaries": {
+    "exp1433": {
+      "headline_result_allowed": false,
+      "honest_verdict": "fr11_self_learning_v6_dvi_v3_no_positive_growth_non_headline",
+      "nonforgetting_rate": 1.0,
+      "self_learning_delta_overall": 0
+    },
+    "exp1447": {
+      "baseline_fresh_verified_sample_count": 1508,
+      "fresh_verified_sample_count": 1664,
+      "headline_result_allowed": true,
+      "honest_verdict": "fr11_v7_positive_verified_growth_persisted_without_forgetting",
+      "memory_entries_added": 156,
+      "new_promoted_count": 156,
+      "session_memory_updated": true
+    },
+    "exp1449": {
+      "accepted_case_count": 12,
+      "honest_verdict": "ltlzinc_temporal_adapter_ready_verified_cases_only_no_training",
+      "ltlzinc_adapter_ready": true,
+      "rejected_case_count": 12,
+      "temporal_cases_generated": 24
+    }
+  },
+  "spec": [
+    "REQ-LEARN-1459",
+    "SCENARIO-LEARN-1459",
+    "SCENARIO-LEARN-1460"
+  ],
+  "started_at": "2026-05-07T04:01:56Z",
+  "status": "complete",
+  "training_run_launched": false
+}
