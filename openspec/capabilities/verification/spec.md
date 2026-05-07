@@ -940,7 +940,65 @@ least one trace and fault row are written, baseline rates are present, and the
 deterministic graph energy beats both baselines without claiming trained GNN
 performance.
 
-## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487/1495/1496/1499/1500/1501)
+### REQ-VERIFY-1507: Safe-DSL Verifier Induction Pack
+
+The repository shall provide a bounded AutoPyVerifier-inspired verifier
+induction pack for Exp 1507 that keeps generated verifier proposals outside
+the Python execution trust boundary.
+
+The pack shall:
+
+- write
+  `results/experiment_1507_autopyverifier_safe_dsl_induction_pack.json` with
+  `status="in_progress"` before loading manifests, models, or candidates;
+- require both `results/cctu_trigger_certificates_1493.jsonl` and
+  `results/constrainprompt_validator_manifest_1494.jsonl`, and write a
+  terminal artifact with concrete missing-path blockers if either is absent;
+- load labeled certificate rows and compiled-validator audit rows from those
+  manifests, preserving deterministic pass/fail labels for false-accept
+  accounting;
+- ask at least one mandated local SOTA GGUF model
+  (`unsloth/Qwen3.6-35B-A3B-GGUF`,
+  `unsloth/gemma-4-31B-it-GGUF`, or
+  `unsloth/gemma-4-26B-A4B-it-GGUF`) for safe-DSL verifier skeletons only,
+  while rejecting arbitrary Python, filesystem access, imports, eval/exec,
+  network calls, and non-deterministic logic;
+- compile candidate skeletons only through a minimal safe-DSL compiler or the
+  existing safe validator compiler, recording compile failures explicitly;
+- search for a compact verifier set that maximizes labeled-row coverage while
+  preserving zero false accepts on available labels;
+- write `results/safe_dsl_verifier_induction_1507.jsonl` with one row per
+  candidate and a final selected-set summary; and
+- write a terminal artifact containing `status`, `model_specs`,
+  `live_sota_model_inference_used`, `verifier_induction_ready`,
+  `labeled_rows_loaded`, `candidate_verifiers_proposed`,
+  `candidate_verifiers_compiled`, `verifier_compile_rate`,
+  `verifier_set_size`, `verifier_coverage_rate`,
+  `verifier_false_accept_rate`, `baseline_validator_coverage_rate`,
+  `induction_manifest_path`, `models_used`, `gpu_probe`, `blockers`, and
+  `honest_verdict`.
+
+`verifier_induction_ready` MUST be true only when at least one mandated live
+local SOTA GGUF model proposed candidates, at least one candidate compiled, and
+`verifier_false_accept_rate` is reported. Legacy small models may be used only
+for CPU smoke-tests and MUST NOT count as headline verifier-induction evidence.
+`honest_verdict` MUST begin with one of `complete:`, `complete_`, `success:`,
+`success_`, `passed:`, `passed_`, `shipped:`, or `shipped_`.
+
+### SCENARIO-VERIFY-1507: Safe-DSL Induction Preserves Zero False Accepts
+
+Given the Exp 1493 CCTU certificate manifest and the Exp 1494 safe validator
+compiler manifest exist on the run date `20260507`,
+When Exp 1507 asks a mandated local SOTA GGUF model for safe-DSL verifier
+skeletons, compiles them, and searches over the labeled rows,
+Then arbitrary generated Python and unsafe capabilities are rejected before
+scoring
+And each candidate manifest row records provenance, compile status, compile
+failure reason, coverage, false accepts, and accepted labeled row IDs
+And the terminal selected-set summary reports the compact zero-false-accept
+set before the artifact sets `verifier_induction_ready=true`.
+
+## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487/1495/1496/1499/1500/1501/1507)
 
 | Requirement | Python | Tests |
 |-------------|--------|-------|
@@ -962,3 +1020,4 @@ performance.
 | REQ-VERIFY-1499 | Implemented (`python/carnot/eval/verifier_ensemble_dry_orthogonality_v2.py`) | Implemented (`tests/python/test_experiment_1499_verifier_ensemble_dry_orthogonality_v2.py`) |
 | REQ-VERIFY-1500 | Implemented (`python/carnot/verify/latent_deterministic_gate.py`) | Implemented (`tests/python/test_experiment_1500_latent_deterministic_discipline_gate.py`) |
 | REQ-VERIFY-1501 | Implemented (`python/carnot/verify/plan_graph_energy_adapter.py`) | Implemented (`tests/python/test_experiment_1501_gnnverifier_plan_graph_energy_adapter.py`) |
+| REQ-VERIFY-1507 | Planned (`python/carnot/verify/safe_dsl_verifier_induction.py`) | Planned (`tests/python/test_experiment_1507_autopyverifier_safe_dsl_induction_pack.py`) |
