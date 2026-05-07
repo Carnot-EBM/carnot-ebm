@@ -1,0 +1,60 @@
+{
+  "artifact_metadata": {
+    "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "run_date": "20260507"
+  },
+  "baseline_task_success_rate": 0.5,
+  "blockers": [],
+  "completeness_mistakes": 0,
+  "continuous_self_learning_task": "FR-11 v10 bounded trace2skill daily evaluation cadence and rot check",
+  "daily_eval_manifest_path": "results/fr11_trace2skill_daily_eval_manifest_1497.jsonl",
+  "daily_eval_manifest_ready": true,
+  "duration_s": 0.002,
+  "experiment": "1497_fr11_trace2skill_daily_eval_v10",
+  "finished_at": "2026-05-07T18:38:28Z",
+  "gpu_probe": {
+    "cuda_available": null,
+    "gpu_count": null,
+    "gpu_required": false,
+    "probe_scope": "not_required_for_deterministic_replay",
+    "reason": "deterministic replay evaluation was sufficient; no LLM judge or generator was used"
+  },
+  "honest_verdict": "complete: fr11_v10_trace2skill_daily_eval_manifest_ready_zero_soundness",
+  "llm_usage_note": "deterministic replay evaluation was sufficient; no LLM judge or generator was used",
+  "memory_task_success_rate": 1.0,
+  "model_specs": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "unsloth/gemma-4-31B-it-GGUF",
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "models_used": [],
+  "promoted_skill_count": 12,
+  "retired_skill_count": 0,
+  "rotted_skill_count": 0,
+  "run_date": "20260507",
+  "schema": "fr11_trace2skill_daily_eval_v10",
+  "skills_evaluated": 24,
+  "soundness_mistakes": 0,
+  "source_artifacts": [
+    "results/experiment_1484_fr11_v9_query_time_memory_policy.json",
+    "results/experiment_1485_fr11_completeness_reduction_audit.json"
+  ],
+  "source_experiments": [
+    "experiment_1484_fr11_v9_query_time_memory_policy",
+    "experiment_1485_fr11_completeness_reduction_audit"
+  ],
+  "spec": [
+    "REQ-LEARN-1497",
+    "SCENARIO-LEARN-1497",
+    "SCENARIO-LEARN-1498"
+  ],
+  "started_at": "2026-05-07T18:38:28Z",
+  "status": "complete",
+  "task_success_delta": 0.5,
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_fr11_trace2skill_daily_eval.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --include='*/python/carnot/reporting/fr11_trace2skill_daily_eval.py' -m pytest tests/python/test_fr11_trace2skill_daily_eval.py -q --no-cov -n 0",
+    ".venv/bin/coverage report --fail-under=100 -m python/carnot/reporting/fr11_trace2skill_daily_eval.py"
+  ],
+  "trace2skill_cases_evaluated": 24
+}
