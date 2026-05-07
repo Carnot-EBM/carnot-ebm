@@ -597,7 +597,57 @@ decisions, and the verifier accept/reject outcome, while the final artifact
 reports aggregate tool-call validity, final-answer validity, verifier catch
 rate, false-accept rate, model provenance, and an honest terminal verdict.
 
-## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486)
+### REQ-VERIFY-1487: V_1 Pairwise Self-Verification vs Energy
+
+The repository shall provide a bounded V_1-style pairwise self-verification
+evaluation for Exp 1487 that:
+
+- writes
+  `results/experiment_1487_v1_pairwise_self_verification_vs_energy.json`
+  with `status="in_progress"` before loading Exp 1486 rows or calling local
+  models;
+- loads only Exp 1486 deterministic executable-constraint rows and constructs
+  candidate answer pairs with one executable-validator-valid answer and one
+  executable-validator-invalid answer where possible;
+- asks at least one mandated local SOTA GGUF verifier
+  (`unsloth/Qwen3.6-35B-A3B-GGUF`,
+  `unsloth/gemma-4-31B-it-GGUF`, or
+  `unsloth/gemma-4-26B-A4B-it-GGUF`) to select the better answer pairwise,
+  while recording blockers for unavailable mandated models;
+- scores Carnot energy and BEAVER-style ranking on the same candidate pairs
+  using deterministic executable constraint signals when available;
+- compares pairwise accuracy against random, response-length, format-validity,
+  and energy-ranking baselines; and
+- writes `results/v1_pairwise_verification_1487.json` with per-pair decisions,
+  scores, baseline decisions, and provenance before completing the terminal
+  artifact.
+
+The artifact MUST include `status`, `model_specs`,
+`live_sota_model_inference_used`, `pairwise_verification_complete`,
+`benchmark_cases_loaded`, `candidate_pairs_evaluated`, `pairwise_accuracy`,
+`energy_ranking_accuracy`, `random_baseline_accuracy`,
+`superficial_baseline_accuracy`, `pairwise_delta_over_energy`,
+`improvement_allowed`, `diagnostic_path`, `tests_run`, and `honest_verdict`.
+
+`improvement_allowed` MUST be true only when pairwise accuracy strictly exceeds
+energy-ranking accuracy and the improvement is not matched or exceeded by the
+best superficial baseline on the same pairs. Legacy small models may be used
+only for CPU smoke-tests and MUST NOT be reported as headline pairwise verifier
+results.
+
+### SCENARIO-VERIFY-1487: Pairwise Selection Must Beat Superficial Baselines
+
+Given Exp 1486 has a complete executable CCTU manifest with live local SOTA
+rows,
+When Exp 1487 constructs valid/invalid answer pairs, obtains pairwise choices
+from at least one mandated local SOTA GGUF verifier, and scores deterministic
+energy and superficial baselines on the same pair set,
+Then the diagnostic records every per-pair choice and score, the terminal
+artifact reports all required fields, and `improvement_allowed=true` only when
+the pairwise verifier beats energy ranking and is not explained by response
+length or format-validity baselines.
+
+## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487)
 
 | Requirement | Python | Tests |
 |-------------|--------|-------|
@@ -612,3 +662,4 @@ rate, false-accept rate, model provenance, and an honest terminal verdict.
 | REQ-VERIFY-1475 | Implemented (`python/carnot/eval/static_csr_certificate_automaton.py`) | Implemented (`tests/python/test_experiment_1475_static_csr_certificate_automaton.py`) |
 | REQ-VERIFY-1481 | Implemented (`python/carnot/reporting/semantic_energy_feasibility_audit.py`) | Implemented (`tests/python/test_experiment_1481_semantic_energy_feasibility_audit.py`) |
 | REQ-VERIFY-1486 | Implemented (`python/carnot/eval/cctu_executable_constraint_microbenchmark.py`) | Implemented (`tests/python/test_experiment_1486_cctu_executable_constraint_microbenchmark.py`) |
+| REQ-VERIFY-1487 | Planned (`python/carnot/eval/v1_pairwise_self_verification_vs_energy.py`) | Planned (`tests/python/test_experiment_1487_v1_pairwise_self_verification_vs_energy.py`) |
