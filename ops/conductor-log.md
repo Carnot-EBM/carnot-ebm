@@ -1101,3 +1101,4 @@ web search: GitHub trending energy based mod |
 | 2026-05-07 13:19 UTC | BEAVER-Lite Live Prefix Bound Calibration v2 | OK | 81 passed, 1 warning in 5.18s |
 | 2026-05-07 13:32 UTC | HalluGuard Risk-Bound Fit Audit - Carnot Signal De | OK | 81 passed, 1 warning in 5.29s |
 | 2026-05-07 14:14 UTC | FR-11 v9 Query-Time Memory Policy Integration | OK | 81 passed, 1 warning in 3.97s |
+| 2026-05-07 14:46 UTC | FR-11 Completeness Reduction Audit - Gated on Exp1 | OK | 81 passed, 1 warning in 4.45s |
