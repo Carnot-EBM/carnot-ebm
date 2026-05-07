@@ -493,6 +493,64 @@ return enough token logprobs, top-k alternatives, or logits
 **And** preserves precise blockers for missing telemetry without claiming
 headline top-k readiness.
 
+### REQ-INFER-SOTA-010: Balanced Live SOTA Telemetry V2 Manifest
+
+The system SHALL provide an Exp 1480 balanced telemetry manifest builder that
+turns the Exp 1468 live SOTA telemetry path into an adversarially balanced
+dataset for downstream validity audits.  The experiment SHALL write
+`results/experiment_1480_live_sota_balanced_telemetry_v2.json` with
+`status="in_progress"` before any model runtime or manifest work begins, SHALL
+resolve headline models through `cached_sota_pair()` or equivalent mandated
+GGUF cache paths, and SHALL NOT use legacy small models for headline telemetry
+rows.
+
+The builder SHALL request 30-40 bounded arithmetic/FoVer-style cases with known
+verifier labels and a deliberate mix of correct, incorrect, format-valid, and
+format-invalid expected outcomes.  It SHALL write one JSONL row per case to
+`results/live_sota_balanced_telemetry_manifest_1480.jsonl`.  Each row SHALL
+preserve prompt identity, prompt family, expected answer, live model identity,
+response text, correctness label, format-validity label, token text when
+available, token logprobs when available, top-k alternatives when available,
+logits availability, exact blockers, and the generation source.
+
+Before any telemetry diagnostic is scored, each row SHALL record superficial
+baseline fields: response length, token count, JSON/schema validity, prompt
+family, answer lexical overlap, and model family.  The terminal artifact SHALL
+expose `status`, `model_specs`, `live_sota_model_inference_used`,
+`telemetry_cases_requested`, `telemetry_cases_completed`,
+`balanced_label_counts`, `topk_logprobs_available`, `logits_available`,
+`superficial_baselines_recorded`, `telemetry_manifest_path`, `models_used`,
+`gpu_probe`, `blockers`, `claim_allowed`, and `honest_verdict`.
+`claim_allowed` SHALL default to false and SHALL become true only when the
+manifest contains balanced labels, at least one real mandated local SOTA model
+row, and enough telemetry for downstream adversarial audits.
+
+### SCENARIO-INFER-SOTA-010-001: Balanced Live Rows Allow Downstream Audit
+
+**Given** `cached_sota_pair()` resolves at least one mandated SOTA GGUF model
+**And** the runtime or injected live generation path returns non-empty response
+text with token telemetry for a 30-40 case balanced set
+**When** Exp 1480 runs
+**Then** the artifact records live SOTA inference as used
+**And** `balanced_label_counts` reports both correctness labels and both format
+validity labels
+**And** every manifest row records the required superficial baselines before
+claim gating
+**And** `claim_allowed=true` only when top-k/logit evidence is available enough
+for downstream adversarial audits.
+
+### SCENARIO-INFER-SOTA-010-002: Missing Balance Or Telemetry Blocks Honestly
+
+**Given** a mandated local SOTA model can generate text but the manifest is not
+label-balanced or the runtime cannot expose enough token telemetry
+**When** Exp 1480 completes
+**Then** the JSONL manifest still records every completed row and all
+superficial baselines
+**And** unavailable telemetry booleans or balance gaps are recorded as explicit
+blockers
+**And** `claim_allowed=false` without falling back to legacy small model
+headline rows.
+
 ## Implementation Status
 
 | Requirement | Python | Tests |
@@ -514,3 +572,4 @@ headline top-k readiness.
 | REQ-INFER-SOTA-007 | Implemented | 18+ Python |
 | REQ-INFER-SOTA-008 | Implemented | 12 Python |
 | REQ-INFER-SOTA-009 | Implemented | 7 Python |
+| REQ-INFER-SOTA-010 | Implemented (`python/carnot/reporting/live_sota_balanced_telemetry_v2.py`) | Implemented (`tests/python/test_experiment_1480_live_sota_balanced_telemetry_v2.py`) |
