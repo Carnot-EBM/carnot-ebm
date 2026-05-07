@@ -116,6 +116,7 @@
 | 2026.04.112 | Scope Reduction + Gate Hygiene | 1453-1466 | 40 min / 11 completed; Full-Scale Pipeline v3 gate churn consumed 25 min and Exp 1269 arXiv gate consumed 10 min; GPUs idle/no zombies; 55% recoverable via terminal readiness gates, same-verdict retirement, and DualGPU telemetry |
 | 2026.04.112 | Operational Retro v63 Closeout | 1453-1466 | Terminal retro artifact restored; 37/40 min slowest-five concentration, GPUs idle/no zombies, and 55% savings target via same-verdict gate retirement plus activation-time readiness artifacts |
 | 2026.04.113 | Telemetry Bounds + Scope Discipline | 1467-1478 | 12/12 criteria met; live SOTA top-k telemetry ready but headline telemetry claim blocked by adversarial audit; FR-11 v8 verified-memory growth persisted; BEAVER-lite bound, T-SKM/STATIC smokes, KV260 source-level regression, and THRML simulator record preserved; operational retro measured 40 min / 11 completed with 55% savings recoverable |
+| 2026.04.114 | Live Telemetry Guardrails + Executable Constraint Baselines | 1479-1491 | 12/13 criteria met; balanced live SOTA telemetry, BEAVER-lite live-prefix calibration, FR-11 query-time memory, CCTU executable benchmark, and bounded localization advanced; THRML parity gate-blocked honestly; operational retro measured 40 min / 11 completed with 55% savings recoverable |
 
 ## Breakthrough Results
 
