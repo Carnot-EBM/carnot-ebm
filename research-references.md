@@ -4,6 +4,203 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-05-07 Post-.114 Planning Sweep (Milestone 2026.04.115)
+
+This sweep was run after milestone `.114` completed 12 of 13 criteria with
+one honest structured gate skip. Key outcomes: `exp1480` produced a balanced
+live local SOTA telemetry manifest with logits/top-k logprobs available,
+`exp1481` retired Semantic Energy/logit telemetry as headline evidence because
+it was confounded by superficial baselines, `exp1482` calibrated BEAVER-lite
+sound bounds over 18 live-prefix constraints with zero bound violations,
+`exp1484` moved FR-11 from memory growth to query-time utility
+(`task_success_delta=0.5`, `soundness_mistakes=0`), `exp1486` created a
+20-case CCTU-style executable-constraint benchmark, `exp1487` showed V_1
+pairwise self-verification underperformed deterministic energy ranking
+(`pairwise_delta_over_energy=-0.95`), `exp1488` kept THRML blocked until local
+import readiness is true, and `exp1490` showed injected-failure localization
+on bounded traces without decoded-quality or Kona-internals claims. Primary
+`.115` focus: move from artifacts to integration surfaces, expand executable
+constraint coverage, harden query-time self-learning with rot/resolver checks,
+and keep hardware work behind import/readiness gates.
+
+### Thinking Before Constraining
+- **Paper:** arXiv:2601.07525, "Thinking Before Constraining: A Unified
+  Decoding Framework for Large Language Models."
+- **Source:** https://arxiv.org/abs/2601.07525
+- **What:** Lets the model reason freely until trigger tokens appear, then
+  switches into structured/constrained generation. The reported benefit is
+  preserving free-form reasoning while still guaranteeing parseable structured
+  output, with a small token overhead.
+- **Relevance to Carnot:** This directly addresses the repeated certificate
+  generation failure mode where hard structure too early burns reasoning
+  quality or produces empty/one-token outputs. It is a better fit than another
+  repair-executor rerun because the intervention is at the boundary between
+  reasoning and certificate emission.
+- **Concrete experiment hook:** Add a trigger-token certificate export lane on
+  the existing CCTU executable benchmark: free-form solve, explicit trigger,
+  structured certificate, deterministic validation. Acceptance requires higher
+  certificate parse/validation rate than always-constrained decoding without
+  worsening verifier false accepts.
+
+### interwhen Test-Time Monitors
+- **Paper:** arXiv:2602.11202, "interwhen: A Generalizable Framework for
+  Verifiable Reasoning with Test-time Monitors."
+- **Sources:** https://arxiv.org/abs/2602.11202,
+  https://github.com/microsoft/interwhen
+- **What:** Periodically polls a reasoning trace, forks inference to extract
+  intermediate verifiable state, runs asynchronous monitors, and interrupts the
+  main trajectory only when an error is detected. Reports accuracy gains up to
+  15 percentage points while staying within 1.5x token compute.
+- **Relevance to Carnot:** `exp1490` showed local partial-trace energy can
+  localize injected failures, but it did not intervene during generation.
+  interwhen is the clean next step: turn localization into asynchronous
+  verifier intervention on CCTU cases.
+- **Concrete experiment hook:** Implement an interwhen-style polling prototype
+  on the 20-case CCTU manifest, using deterministic validators as monitors.
+  Gate any follow-on generation experiment on `monitor_intervention_ready=true`
+  and require zero new false accepts.
+
+### ConstrainPrompt Code-Verifiable Prompt Constraints
+- **Paper:** OpenReview ICLR 2026 submission O3Kg4dLdpg,
+  "ConstrainPrompt: Code-Based Assurance of Prompt-Defined Constraints."
+- **Source:** https://openreview.net/forum?id=O3Kg4dLdpg
+- **What:** Induces semantics-agnostic, code-verifiable constraints from
+  natural-language prompts, synthesizes a logical evaluation tree, and compiles
+  executable validators. Reports +24.3% constraint-compliance accuracy and
+  +40.8% violation-rationale improvement over LLM-as-judge baselines.
+- **Relevance to Carnot:** `exp1486` hand-built CCTU validators. Carnot now
+  needs coverage expansion without hand-authoring every validator. This source
+  suggests a prompt-to-validator compiler as a bounded, deterministic
+  extension.
+- **Concrete experiment hook:** On 30 new CCTU-style prompts, generate
+  validator skeletons from prompt constraints, then manually/automatically
+  execute tests against known good/bad outputs. Acceptance requires validator
+  compile rate and false-accept rate to beat a hand-coded baseline budget.
+
+### HoVer Holistic Prefix Verification
+- **Paper:** OpenReview ICLR 2026 submission GQlF9F8HAs, "HoVer: Holistic
+  Verification for Semantic-Aware Speculative Generation."
+- **Source:** https://openreview.net/forum?id=GQlF9F8HAs
+- **What:** Uses prefill-only holistic verification to identify the earliest
+  error across multiple prefixes, then continues from the last safe prefix
+  instead of regenerating from scratch. Reports 1.2x-3.1x latency reduction
+  with minimal accuracy loss.
+- **Relevance to Carnot:** `exp1490` localizes injected failure spans, and
+  `exp1487` showed LLM pairwise verification is not competitive with energy
+  ranking. HoVer suggests using Carnot's deterministic energy/localization
+  signal for safe-prefix continuation rather than pairwise LLM judging.
+- **Concrete experiment hook:** On existing traces, compute the last safe prefix
+  from Carnot energy, truncate at the first high-energy span, and ask a mandated
+  local SOTA GGUF to continue from that prefix. Gate on improved final validator
+  pass rate versus full regeneration and no increase in false accepts.
+
+### GNNVerifier for LLM Task Planning
+- **Paper:** arXiv:2603.14730, "GNNVerifier: Graph-based Verifier for LLM Task
+  Planning."
+- **Sources:** https://arxiv.org/abs/2603.14730,
+  https://github.com/BUPT-GAMMA/GNNVerifier
+- **What:** Represents plans as directed graphs with node/edge attributes, uses
+  a GNN to score structural plausibility, localizes risky nodes/edges, and
+  guides local edits. The paper targets failures that LLM-based verifiers miss:
+  type mismatches, missing intermediates, and broken dependencies.
+- **Relevance to Carnot:** The CCTU benchmark includes tool-use and graph/path
+  cases, but Carnot does not yet score multi-step plan dependency structure as
+  a first-class energy. A graph-energy adapter would extend the deterministic
+  verifier stack beyond scalar arithmetic/code outputs.
+- **Concrete experiment hook:** Convert CCTU tool-use traces into plan graphs
+  and train or prototype a deterministic graph-risk energy using injected
+  missing-edge/type-mismatch perturbations. Acceptance requires node/edge
+  localization to beat random and length baselines.
+
+### Co-Evolving Skills and Verifiers
+- **Papers:** CoEvoSkills (arXiv:2604.01687), "Self-Evolving Agent Skills via
+  Co-Evolutionary Verification"; RL Tango (arXiv:2505.15034), "Reinforcing
+  Generator and Verifier Together for Language Reasoning."
+- **Sources:** https://arxiv.org/abs/2604.01687,
+  https://arxiv.org/abs/2505.15034
+- **What:** CoEvoSkills couples a skill generator with a surrogate verifier
+  that co-evolves to give actionable feedback for multi-file skill packages.
+  RL Tango co-trains an LLM generator and a generative process verifier, arguing
+  fixed verifiers generalize poorly and can be reward-hacked.
+- **Relevance to Carnot:** `ops/known-issues.md` already queues trace2skill +
+  Skillify rigor. `.114` proved query-time memory can help without soundness
+  mistakes, but the skill/lesson catalog still has no daily-eval, resolver,
+  or rot detection. Co-evolving verifier feedback is relevant only if grounded
+  in deterministic tests, not as another free-form LLM judge.
+- **Concrete experiment hook:** Add trace2skill daily-eval plus resolver
+  trigger tests before any new skill-generation work. A later co-evolution
+  experiment may update skills only when deterministic tests and held-out
+  resolver cases improve.
+
+### Draft, Verify, and Improve for Online Verifier Feedback
+- **Paper:** OpenReview ICLR 2026 submission CwvY6TXLxr, "Draft, Verify, &
+  Improve: Toward Training-Aware Speculative Decoding."
+- **Source:** https://openreview.net/forum?id=CwvY6TXLxr
+- **What:** Uses verifier accept/reject decisions during generation as online
+  supervision for a drafter head, with a KL-to-RL schedule and reported 2.16x
+  wall-time speedup on Spec-Bench.
+- **Relevance to Carnot:** FR-11's query-time memory policy is now opt-in and
+  useful on replay. DVI-style feedback suggests a constrained next step:
+  convert verifier accept/reject events into a local cache or drafter routing
+  policy without training a large model.
+- **Concrete experiment hook:** Record Carnot validator accept/reject events on
+  CCTU and use them to adapt candidate ordering or early-stop policy. Treat
+  this as policy-cache self-learning, not model-weight training, unless GPU
+  budget and nonforgetting gates are explicit.
+
+### KAN Hardware Complexity and Ultra-Light Accelerators
+- **Papers:** arXiv:2604.03345, "Hardware-Oriented Inference Complexity of
+  Kolmogorov-Arnold Networks"; arXiv:2602.23455, "BiKA:
+  Kolmogorov-Arnold-Network-inspired Ultra Lightweight Neural Network Hardware
+  Accelerator."
+- **Sources:** https://arxiv.org/abs/2604.03345,
+  https://arxiv.org/abs/2602.23455
+- **What:** The hardware-complexity paper derives platform-independent KAN
+  inference metrics (real multiplications, bit operations, additions/bit
+  shifts). BiKA replaces expensive nonlinear functions with binary learnable
+  thresholds and reports lower FPGA resource usage than binarized/quantized
+  neural accelerator baselines.
+- **Relevance to Carnot:** Scope reduction narrowed hardware to dual RTX 3090,
+  KV260 source-level RTL/sim, and THRML simulation. KAN hardware should not
+  reopen broad accelerator work, but these papers provide a cheap accounting
+  task for QuantKAN/KAEM before any synthesis claim.
+- **Concrete experiment hook:** Add a no-synthesis KAN hardware accounting
+  pass for existing QuantKAN/KAEM artifacts: estimate RM/BOP/NABS and compare
+  against current RTL/sim budgets. No board or accelerator claim allowed.
+
+### Extropic / THRML Current Status
+- **Sources:** Extropic hardware page (https://extropic.ai/hardware), THRML docs
+  (https://docs.thrml.ai/en/latest/), Extropic software page
+  (https://extropic.ai/software).
+- **What:** Extropic publicly describes X0 as a Q1 2025 silicon prototype,
+  XTR-0 as a Q3 2025 testing platform, and Z1 as early-access 2026 production
+  hardware with hundreds of thousands of probabilistic circuits per chip.
+  THRML docs describe a JAX library for block Gibbs sampling, PGMs, and
+  discrete EBMs/Ising-like utilities, with `pip install thrml` as the public
+  install path.
+- **Relevance to Carnot:** `exp1488.thrml_import_ready=false` is now the local
+  blocker, not lack of public software. No TSU/Z1/XTR-0 hardware claim is
+  allowed without authenticated hardware evidence, but a deterministic local
+  import/install repair remains valid.
+- **Concrete experiment hook:** Repair THRML import readiness in a bounded
+  environment and immediately gate simulator parity on a structured artifact
+  field. If import still fails, emit a terminal blocker and do not run parity.
+
+### EBRM-System Project Signal
+- **Project:** `ebrm-system` 0.30.0, PyPI/GitHub, Apache-2.0.
+- **Sources:** https://pypi.org/project/ebrm-system/,
+  https://github.com/piyushptiwari1/ebrm-system
+- **What:** A newly published Energy-Based Reasoning Machine system layer with
+  intent routing, adaptive test-time compute, Langevin candidates, external
+  mechanical verifiers, and energy-weighted self-consistency voting.
+- **Relevance to Carnot:** This is an adjacent open-source pipeline, not a
+  primary benchmark. It validates that external verifier bridges and
+  energy-weighted voting are becoming a public ecosystem pattern, but Carnot
+  should not import it unless a specific interop gap appears.
+- **Concrete experiment hook:** Do a read-only comparator fit audit against
+  Carnot's existing CCTU/FR-11 artifacts: which interfaces are equivalent,
+  which are missing, and whether any Apache-2.0 component is worth adapting.
+
 ## 2026-05-07 Post-.113 Planning Sweep (Milestone 2026.04.114)
 
 This sweep was run after milestone `.113` completed all 12 planned tasks.

@@ -1,6 +1,24 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-07 (milestone 2026.04.114 research planning complete)
+**Last Updated:** 2026-05-07 (milestone 2026.04.115 research planning complete)
+
+## Session 2026-05-07 - Milestone 2026.04.115 Research Planning Complete
+
+**Milestone 2026.04.115 PLANNED after .114 completion.**
+
+- Roadmap doc: `openspec/change-proposals/research-roadmap-vNEXT.md`
+- Execution queue: `research-roadmap-next.yaml` (14 tasks, `exp1492`-`exp1505`)
+- ID allocation: milestone `.114` ended at `exp1491`, so `.115` starts at `exp1492`.
+- Research references updated before final roadmap design with the post-.114 sweep: Thinking Before Constraining, interwhen test-time monitors, ConstrainPrompt prompt-to-validator compilation, HoVer safe-prefix continuation, GNNVerifier plan-graph verification, CoEvoSkills/RL Tango/DVI self-learning signals, KAN hardware complexity/QuantKAN/KAEM accounting, current Extropic/THRML status, and EBRM project signal.
+- Design focus: Phase 0 archives `.114` and preserves retirements; Phase 1 builds trigger-token certificates, prompt-derived validators, interwhen monitors, and safe-prefix continuation; Phase 2 adds the mandatory FR-11 trace2skill daily-eval/rot-check plus reachability and verifier-discipline gates; Phase 3 runs plan-graph energy, KAN no-synthesis accounting, and gated THRML import/parity; Phase 4 closes with retro.
+- LLM-bearing tasks (`exp1493`, `exp1494`, `exp1496`, `exp1497`) include mandated local SOTA GGUF `MODEL_SPECS`: `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and `unsloth/gemma-4-26B-A4B-it-GGUF`.
+- Continuous self-learning requirement is satisfied by `exp1497-fr11-trace2skill-daily-eval-v10` with `continuous_self_learning_task: true`.
+- Structured gates: `exp1495` on `exp1493.trigger_certificate_ready == true` and `exp1494.validator_compiler_ready == true`; `exp1496` on `exp1495.monitor_intervention_ready == true`; `exp1498` on `exp1497.daily_eval_manifest_ready == true`; `exp1500` on `exp1499.orthogonality_matrix_written == true`; `exp1504` on `exp1503.thrml_import_ready == true`.
+- Agent routing: all 14 tasks use `agent_type: codex`, `model: gpt-5.5`; no `requires_claude: true` tasks and no Gemini routing.
+- Validation passed: YAML parse and prompt-section/end checks, `python3 scripts/validate_prior_failures.py research-roadmap-next.yaml`, and `python3 scripts/audit_roadmap_gates.py research-roadmap-next.yaml`.
+- Did NOT modify `research-roadmap.yaml` or `scripts/research_conductor.py`.
+
+**What's next**: activate `research-roadmap-next.yaml` for milestone 2026.04.115 when ready.
 
 ## Session 2026-05-07 - Milestone 2026.04.114 Research Planning Complete
 
