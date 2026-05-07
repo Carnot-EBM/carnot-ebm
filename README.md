@@ -17,13 +17,12 @@ call. No fine-tuning. No access to model weights.
 
 Rust + Python/JAX, Apache 2.0, `pip install carnot`.
 
-Current public research record: **1,548 experiments tracked, 120
+Current public research record: **1,562 experiments tracked, 122
 artifact-backed completed milestone records**, with checked-in result artifacts
-through Exp 1438 on 2026-05-06. `research-complete.yaml` currently archives
-**120** completed milestone records through 2026.04.109; milestone .110 has
-terminal artifacts through Exp 1438 but is not yet appended as a new archive
-record. The experiment count is **1,534** archived task entries plus **14**
-.110 terminal artifacts.
+through Exp 1452 on 2026-05-07. `research-complete.yaml` currently archives
+**122** completed milestone records through 2026.04.110; milestone .111 has
+terminal artifacts through Exp 1452 and is not yet appended as a new archive
+record.
 
 Milestone .106 delivered the critical fix to thinking-mode certificate
 generation: Exp 1366 (CRANE tag-first prefix injection) reached
@@ -70,8 +69,23 @@ all **478** missing local step labels and reached AUROC **0.851789**. DPO stays
 reranker-only until a direct local adapter/conversion path exists. Anchored
 dual-path latent repair preserved accuracy **1.0 -> 1.0** where raw descent fell
 **1.0 -> 0.25**. Discrete SB RTL lint/sim was blocked because the RTL source was
-missing. The current test collection reports **22,405** items; this is a
-collection count, not a full-suite pass claim.
+missing. Milestone .111 closed below threshold at **10 of 14** criteria because
+the live local SOTA GGUF runtime gate failed: Exp 1442 found the Qwen3.6-35B
+and Gemma4-31B GGUF files in cache and both RTX 3090s idle, but llama.cpp could
+not load `libcudart.so.12`, and the optional Gemma4-26B GGUF was absent. Exp
+1443 and Exp 1445 are therefore missing gated artifacts, and Exp 1444 correctly
+blocked. Non-runtime tracks advanced: Exp 1440 reduced spec-coverage metadata
+debt **71 -> 0** while the full suite remained red (**101 failed**, **6
+errors** in the required full-suite attempt); Exp 1441 created
+`hardware/kv260/discrete_sb_256.v` and a testbench, and Exp 1451 completed
+RTL lint/simulation with no hardware-execution claim; Exp 1447 repaired FR-11
+growth, moving fresh-verified cases **1,508 -> 1,664** with **156** new
+promotions and non-forgetting **1.0**; Exp 1448 found PRM v3 selector lift
+**0.0pp** on a saturated prototype candidate pool; Exp 1449 generated **24**
+LTLZinc temporal cases (**12** accepted, **12** rejected), and Exp 1450 kept
+the EBT/NRGPT micro-prototype smoke-only because energy converged but decoded
+quality was not measured. The current test collection reports **22,491** items;
+this is a collection count, not a full-suite pass claim.
 
 ## Install and run
 
@@ -297,7 +311,15 @@ experiment artifact under `results/`.
 | Anchored dual-path latent repair | Raw latent descent lowered energy but dropped accuracy **1.0 → 0.25**; anchored dual-path repair kept accuracy **1.0 → 1.0** with off-support rate **0.0** | Exp 1436 |
 | Discrete SB RTL lint/sim | Blocked because `hardware/kv260/discrete_sb_256.v` is missing; no lint, simulation, synthesis, board execution, or hardware claim | Exp 1437 |
 | Milestone .110 status | **12/14 criteria met**; repair v2, DVI, PRM, DPO audit, and anchored latent repair advanced; FR-11 positive growth and RTL source carry forward | Exp 1438 |
-| Current Python test collection | **22,405** Python tests collected; collection-only snapshot, not a full-suite pass claim | 2026-05-06 collection run |
+| Spec coverage metadata cluster fix | Spec-coverage traceability debt **71 → 0**; focused checks passed, while required full-suite attempt stayed red (**101 failed**, **6 errors**) outside the metadata fix | Exp 1440 |
+| Discrete SB RTL source + lint/sim | `hardware/kv260/discrete_sb_256.v` and testbench created; Verilator lint and Icarus simulation passed, with no KV260 board execution or hardware claim | Exps 1441/1451 |
+| Live SOTA GGUF runtime preflight | **Blocked**: Qwen3.6-35B and Gemma4-31B GGUF files found and dual RTX 3090s idle, but llama.cpp failed on missing `libcudart.so.12`; Gemma4-26B GGUF absent | Exp 1442 |
+| FR-11 continuous self-learning v7 | Fresh-verified cases **1,508 → 1,664** with **156** new promotions, non-forgetting **1.0**, and `headline_result_allowed=true`; no fresh LLM/live-SOTA inference used | Exp 1447 |
+| PRM v3 online process-reward agent | Selector AUROC **1.0**, selected repair success **1.0**, but improvement over PRM v1 and raw best-of-N was **0.0pp** on a saturated prototype pool | Exp 1448 |
+| LTLZinc temporal adapter | **24** finite-trace temporal cases generated (**12** accepted, **12** rejected) across always/eventually/next/until; no MiniZinc execution or DVI training claim | Exp 1449 |
+| EBT/NRGPT micro-prototype audit | Energy converged over **8** FoVer traces with median **11** steps, but decoded quality evidence was absent; keep smoke-only | Exp 1450 |
+| Milestone .111 status | **10/14 criteria met**, threshold not met; live-SOTA runtime gate blocked repair v3, energy reranker, and 100-case pre-scale artifacts | Exp 1452 |
+| Current Python test collection | **22,491** Python tests collected; collection-only snapshot, not a full-suite pass claim | 2026-05-07 collection run |
 | Local Claude/Codex usage snapshot | Codex reads the newest local `token_count` event; Claude aggregates local token usage and reads only subscription/tier metadata from credentials; free-form quota prose is ignored instead of guessed; focused regression tests pass | 2026-05-04 changelog |
 
 Deeper analysis of these — including everything that **didn't** work and
@@ -339,7 +361,7 @@ claim we publish.
 ## Where to go next
 
 - **[Technical report](docs/technical-report.md)** — the full research arc
-  through Exp 1438 across 120 archived milestone records plus .110 terminal
+  through Exp 1452 across 122 archived milestone records plus .111 terminal
   artifacts, with a
   plain-English timeline of what we tried, what failed, what stuck.
 - **[Roadmap](docs/roadmap.md)** — current milestone, upcoming milestones,
@@ -544,7 +566,7 @@ See the [technical report](docs/technical-report.md) for the full research recor
 
 ## 14 Principles Learned
 
-Hard-won lessons from the activation-based phase of a research program that now spans Exp 1-1438 across 120 archived milestone records plus .110 terminal artifacts and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
+Hard-won lessons from the activation-based phase of a research program that now spans Exp 1-1452 across 122 archived milestone records plus .111 terminal artifacts and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
 
 ### What works
 1. **The model's own logprobs are the best energy.** No external EBM needed for rejection sampling — the LLM's own confidence is already an energy function. Simple, practical, +10%.
