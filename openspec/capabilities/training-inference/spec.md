@@ -1594,6 +1594,51 @@ parity execution occurred.
 
 **Implementation Status:** Implemented (Exp 1347)
 
+## REQ-SAMPLE-042: Exp 1477 THRML/NPIM simulator-only Ising microprobe
+
+Carnot SHALL provide a bounded simulator-only microprobe that checks local
+THRML import availability, compares Carnot sampler output against exact CPU
+reference energy on two or three tiny Ising cases, attempts THRML energy parity
+only when an already-available local THRML API imports cleanly, and evaluates a
+compact NPIM-style learned-update-rule heuristic on the same toy cases without
+claiming Extropic hardware access.
+
+Acceptance criteria:
+- The experiment SHALL create
+  `results/experiment_1477_thrml_npim_simulator_parity_microprobe.json` with
+  `status="in_progress"` before probe completion.
+- The terminal artifact SHALL include `status`, `thrml_available`,
+  `carnot_sampler_cases`, `thrml_parity_cases`, `parity_metric`,
+  `npim_probe_attempted`, `npim_energy_delta`,
+  `npim_time_to_energy_delta`, `hardware_claim_allowed`, `simulator_only`,
+  `blockers`, and `honest_verdict`.
+- The THRML probe SHALL use local imports only and SHALL NOT install packages
+  or infer hardware access from a CPU/JAX simulator.
+- If THRML is not importable, the artifact SHALL record the import blocker,
+  leave `thrml_parity_cases` empty, keep the parity metric unset or blocked,
+  and still preserve `hardware_claim_allowed=false`.
+- Carnot sampler rows SHALL use tiny Ising cases with exact enumerated CPU
+  reference energy available.
+- The NPIM-style probe, when attempted, SHALL report energy and time-to-energy
+  deltas against a fixed local update baseline and label the result as a
+  simulator heuristic only.
+- `hardware_claim_allowed=false` and `simulator_only=true` SHALL remain set
+  unless the same run records authenticated Extropic TSU hardware execution,
+  which Exp 1477 is not expected to perform.
+
+**Implementation Status:** Planned (Exp 1477)
+
+### SCENARIO-SAMPLE-070: Exp 1477 writes honest simulator parity microprobe
+
+Given: THRML may or may not be importable on the local host.
+When: the Exp 1477 microprobe runs on the tiny Ising cases.
+Then: the artifact records local Carnot sampler/reference rows, records THRML
+parity rows only when THRML imports and exposes the required Ising APIs, records
+the NPIM-style simulator heuristic deltas when attempted, and disallows all
+hardware claims.
+
+**Implementation Status:** Planned (Exp 1477)
+
 ## REQ-MODEL-031: SCEnergyModel — Set-Level Energy Function for Statement Consistency (Exp 944)
 
 SCEnergyModel SHALL implement a permutation-invariant set-level energy function that assigns
