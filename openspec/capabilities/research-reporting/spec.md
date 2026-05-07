@@ -1686,6 +1686,75 @@ reasoning-driven decomposition, writes the audit note, records a non-empty
 honest verdict that Carnot has only a HalluGuard-style fit audit rather than a
 full HalluGuard reproduction.
 
+### REQ-REPORT-052: Milestone .115 Activation Manifest
+
+The Exp 1492 `.115` activation workflow shall write
+`results/experiment_1492_114_completion_archive_115_activation.json` with
+`status="in_progress"` before terminal completion. It shall then read
+`results/experiment_1491_milestone_114_retro.json`, the Exp 1479 through
+Exp 1491 entries in `ops/conductor-log.md`, `research-complete.yaml`,
+`ops/status.md`, and `ops/changelog.md` without modifying
+`scripts/research_conductor.py` or `research-roadmap.yaml`.
+
+The workflow shall write `ops/milestone_115_activation_manifest.md` with the
+allowed `.115` tracks:
+
+- trigger-token certificate export
+- prompt-to-validator compilation
+- interwhen-style monitoring
+- HoVer safe-prefix continuation
+- FR-11 trace2skill daily eval
+- artifact reachability
+- verifier orthogonality
+- graph-energy adapters
+- KAN hardware accounting
+- gated THRML import/parity
+
+The manifest shall explicitly preserve the blocks on Semantic Energy/logit
+telemetry headline claims, V_1 pairwise headline claims, decoded-quality claims
+from injected-failure localization, THRML parity before import readiness, KV260
+board claims, TSU hardware claims, GRPO/VPRM reopenings, WOPR puzzle
+cartridges, and legacy small-model headline results. The terminal artifact
+shall include:
+
+- `status`
+- `milestone`
+- `predecessor_milestone`
+- `predecessor_criteria_met`
+- `predecessor_criteria_total`
+- `activation_manifest_complete`
+- `retired_headline_signals`
+- `allowed_115_tracks`
+- `gated_115_tracks`
+- `continuous_self_learning_required`
+- `mandated_sota_models`
+- `research_complete_has_114_entry`
+- `honest_verdict`
+
+`research_complete_has_114_entry` shall reflect whether
+`research-complete.yaml` already contains a `2026.04.114` archive row. If the
+row is absent, the artifact shall record the archive gap rather than claiming
+that `.114` is fully archived. The final verdict shall use a conductor-accepted
+success prefix and shall be complete only when the `.114` retro reports 12 of
+13 criteria met with the structured THRML gate skip recorded, the `.115`
+manifest is written, the retired headline signals and guardrail blocks are
+preserved, the continuous self-learning requirement and mandated local SOTA
+models are recorded, and no forbidden file modification is reported.
+
+### SCENARIO-REPORT-052: Exp 1492 Activates .115 With .114 Guardrails Preserved
+
+Given Exp 1491 reports `.114` as 12 of 13 criteria met with one honest
+structured gate skip, the conductor log records terminal entries for Exp 1479
+through Exp 1491, `research-complete.yaml` may or may not already contain a
+`2026.04.114` archive row, and the .115 planning docs preserve the Semantic
+Energy, V_1, THRML, hardware, self-learning, and legacy-small-model guardrails,
+when Exp 1492 runs for run date `20260507`, then it writes all required
+REQ-REPORT-052 fields, writes the `.115` activation markdown, reports the
+archive-row state honestly, lists only the allowed `.115` tracks, records the
+structured gates, confirms `research-roadmap.yaml` and
+`scripts/research_conductor.py` were not modified, and writes an honest
+activation verdict with an accepted success prefix.
+
 ### REQ-REPORT-024: Local Agent Usage Snapshot
 
 The repository shall provide a local operator workflow that inspects the
@@ -2272,6 +2341,7 @@ embed live-GPU benchmark results from Exp 328 when available.
 | REQ-REPORT-049 | `python/carnot/reporting/milestone_retro_113.py`, `results/experiment_1478_milestone_113_retro.json` | `tests/python/test_milestone_retro_113.py` | Implemented |
 | REQ-REPORT-050 | `python/carnot/reporting/milestone_114_activation_manifest.py`, `results/experiment_1479_113_completion_archive_114_activation.json`, `ops/milestone_114_activation_manifest.md` | `tests/python/test_milestone_114_activation_manifest.py` | Implemented |
 | REQ-REPORT-051 | `python/carnot/reporting/halluguard_risk_bound_fit_audit.py`, `results/experiment_1483_halluguard_risk_bound_fit_audit.json`, `docs/research-notes/halluguard_carnot_risk_bound_fit.md` | `tests/python/test_halluguard_risk_bound_fit_audit.py` | Implemented |
+| REQ-REPORT-052 | `python/carnot/reporting/milestone_115_activation_manifest.py`, `results/experiment_1492_114_completion_archive_115_activation.json`, `ops/milestone_115_activation_manifest.md` | `tests/python/test_milestone_115_activation_manifest.py` | Implemented |
 | REQ-REPORT-024 | `python/carnot/reporting/agent_usage.py`, `scripts/agent_plan_usage.py` | `tests/python/test_agent_plan_usage.py` | Implemented |
 | REQ-PUBLISH-003 | `scripts/experiment_317_hf_publish.py` | `tests/python/test_experiment_317_hf_publish.py` | Implemented |
 | REQ-PUBLISH-004 | `scripts/experiment_330_hf_live_publish.py` | `tests/python/test_experiment_330_hf_live_publish.py` | Implemented |
