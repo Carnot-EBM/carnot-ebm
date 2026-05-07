@@ -575,6 +575,54 @@ requirements, and disallows KV260 and hardware claims.
 
 ---
 
+### REQ-HW-049
+
+**Title:** Hardware portfolio narrowing MUST cap active tracks and document deferred reopen gates
+
+**Description:**
+Experiment 1460 MUST narrow Carnot's active hardware portfolio to two or three
+tracks based on immediate research value and current local readiness. The
+decision MUST distinguish active work from deferred or out-of-scope tracks in
+`_bmad/architecture.md`, `research-hardware-wishlist.md`, and
+`docs/research-notes/hardware_portfolio_narrowing.md`, and the experiment
+artifact MUST avoid claiming KV260 board execution, Extropic hardware access,
+NPU acceleration, photonic execution, or live model inference unless those
+commands actually ran in the current evidence chain.
+
+**Acceptance criteria:**
+- `results/experiment_1460_hardware_portfolio_narrowing.json` includes
+  `status`, `active_hardware_tracks`, `active_hardware_track_count`,
+  `deferred_hardware_tracks`, `architecture_updated`,
+  `hardware_wishlist_updated`, `decision_note_path`, and `honest_verdict`.
+- `active_hardware_track_count` is between two and three inclusive and equals
+  the number of active track records.
+- Each active track records its scope, evidence, immediate research value,
+  readiness, and explicit claim boundary.
+- Each deferred track records a concrete reopen condition.
+- The architecture, wishlist, and decision note all show the active/deferred
+  split and preserve the no-hardware-claim boundary for KV260, Extropic/THRML,
+  NPU, and photonic paths.
+
+**Implementation status:** Implemented (Exp 1460)
+
+---
+
+### SCENARIO-HW-049
+
+**Scenario:** Exp 1460 writes an honest hardware portfolio decision artifact.
+
+**Given:** local evidence from Exp 1442, Exp 1451, the hardware wishlist, and
+the Extropic/THRML reference notes.
+**When:** the Exp 1460 portfolio builder runs on 20260507.
+**Then:** the artifact reports two or three active tracks, deferred tracks with
+reopen conditions, updated architecture and wishlist flags, a decision note
+path, and an honest verdict that does not claim hardware execution beyond the
+local evidence.
+
+**Implementation status:** Implemented (Exp 1460)
+
+---
+
 ## Implementation Status
 
 | REQ | Status | Experiment |
@@ -590,4 +638,5 @@ requirements, and disallows KV260 and hardware claims.
 | REQ-HW-046 | Implemented | Exp 1320 |
 | REQ-HW-047 | Implemented | Exp 1348 |
 | REQ-HW-048 | Implemented | Exp 1361 |
+| REQ-HW-049 | Implemented | Exp 1460 |
 | REQ-FPGA-030 | Implemented | Exp 859 |
