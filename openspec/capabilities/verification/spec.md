@@ -647,6 +647,58 @@ artifact reports all required fields, and `improvement_allowed=true` only when
 the pairwise verifier beats energy ranking and is not explained by response
 length or format-validity baselines.
 
+### REQ-VERIFY-1494: Bounded ConstrainPrompt Validator Compiler Audit
+
+The repository shall provide a bounded ConstrainPrompt-style prompt-to-validator
+compiler audit for Exp 1494 that:
+
+- writes
+  `results/experiment_1494_constrainprompt_validator_compiler_audit.json` with
+  `status="in_progress"` before loading local models or compiling validators;
+- builds exactly 30 fixed CCTU-style prompts from Exp 1486 cases plus new
+  arithmetic, JSON-schema, simple-code, and graph/path cases;
+- asks at least one mandated local SOTA GGUF model
+  (`unsloth/Qwen3.6-35B-A3B-GGUF`,
+  `unsloth/gemma-4-31B-it-GGUF`, or
+  `unsloth/gemma-4-26B-A4B-it-GGUF`) to propose constraint fields or validator
+  skeletons, while recording a terminal blocker when the mandated model path
+  cannot load;
+- compiles validators only through a deterministic safe DSL and fixed Python
+  validator functions over restricted inputs, with no arbitrary `eval`,
+  `exec`, or model-generated code execution path;
+- tests every compiled validator against at least one known-good and one
+  known-bad output and records compile failures, manual-review markers, false
+  accepts, and false rejects;
+- writes `results/constrainprompt_validator_manifest_1494.jsonl` with one row
+  per prompt; and
+- writes a terminal artifact containing `status`, `model_specs`,
+  `live_sota_model_inference_used`, `validator_compiler_ready`,
+  `prompts_attempted`, `validator_skeletons_generated`,
+  `validators_compiled`, `validator_compile_rate`, `known_good_pass_rate`,
+  `known_bad_reject_rate`, `verifier_false_accept_rate`,
+  `manual_review_required_count`, `validator_manifest_path`, `models_used`,
+  `gpu_probe`, `blockers`, and `honest_verdict`.
+
+`validator_compiler_ready` MUST be true only when compile metrics and
+false-accept metrics are present, at least one mandated live local SOTA GGUF
+contributed skeleton rows, and the compiler did not introduce an arbitrary-code
+execution path. Legacy small models may be used only for CPU smoke-tests and
+MUST NOT count as headline validator compiler evidence.
+
+### SCENARIO-VERIFY-1494: Prompt-To-Validator Audit Reports Safe DSL Metrics
+
+Given the fixed 30-prompt Exp 1494 CCTU-style prompt set and a mandated local
+SOTA GGUF skeleton proposer,
+When the bounded ConstrainPrompt compiler audit runs on the run date `20260507`,
+Then it writes the in-progress artifact first
+And it writes one manifest row per prompt with prompt text, model skeleton
+provenance, compiled DSL, known-good result, known-bad result, manual-review
+status, and false-accept status
+And it reports compile rate, known-good pass rate, known-bad reject rate, and
+false-accept rate in the terminal artifact
+And it sets `validator_compiler_ready=true` only when the safe DSL metrics are
+present and no arbitrary-code execution path was introduced.
+
 ## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487)
 
 | Requirement | Python | Tests |
@@ -663,3 +715,4 @@ length or format-validity baselines.
 | REQ-VERIFY-1481 | Implemented (`python/carnot/reporting/semantic_energy_feasibility_audit.py`) | Implemented (`tests/python/test_experiment_1481_semantic_energy_feasibility_audit.py`) |
 | REQ-VERIFY-1486 | Implemented (`python/carnot/eval/cctu_executable_constraint_microbenchmark.py`) | Implemented (`tests/python/test_experiment_1486_cctu_executable_constraint_microbenchmark.py`) |
 | REQ-VERIFY-1487 | Planned (`python/carnot/eval/v1_pairwise_self_verification_vs_energy.py`) | Planned (`tests/python/test_experiment_1487_v1_pairwise_self_verification_vs_energy.py`) |
+| REQ-VERIFY-1494 | Planned (`python/carnot/eval/constrainprompt_validator_compiler_audit.py`) | Planned (`tests/python/test_experiment_1494_constrainprompt_validator_compiler_audit.py`) |
