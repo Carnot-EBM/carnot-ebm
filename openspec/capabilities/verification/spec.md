@@ -1056,7 +1056,65 @@ validation result, and false-accept status
 And the terminal artifact compares trigger+grammar rates against Exp 1493
 schema-only rates before setting `certificate_decoder_ready=true`.
 
-## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487/1495/1496/1499/1500/1501/1507/1508)
+### REQ-VERIFY-1509: Executable Monitor Runtime Adapter
+
+The repository shall provide a reusable CPU-only executable monitor runtime
+adapter for Exp 1509 that normalizes already-recorded monitor, safe-prefix,
+safe-DSL verifier, and trigger+grammar certificate artifacts into one
+replayable manifest without generating new LLM rows.
+
+The adapter shall:
+
+- write
+  `results/experiment_1509_executable_monitor_runtime_adapter.json` with
+  `status="in_progress"` before loading upstream gates or manifest rows;
+- require Exp 1507 verifier induction and Exp 1508 trigger+grammar certificate
+  decoder artifacts to be complete and ready before setting
+  `gated_inputs_present=true`, otherwise writing a terminal gated artifact
+  with concrete blockers;
+- inventory the Exp 1495 monitor event manifest, Exp 1496 safe-prefix
+  continuation manifest, Exp 1507 safe-DSL verifier induction manifest, and
+  Exp 1508 trigger+grammar certificate manifest;
+- define a small normalized event schema with event schema version, replay
+  order, source experiment, source path, source line, source row ID, case ID,
+  event kind, validation status, verifier false-accept status, and provenance
+  fields;
+- validate every normalized event against that schema before writing the
+  replay manifest;
+- link safe-prefix continuation rows to monitor events only when recorded
+  event IDs, token offsets, or unambiguous case IDs match, and record unmatched
+  rows without inventing links;
+- write `results/executable_monitor_events_1509.jsonl` with one normalized
+  event per source manifest row; and
+- write a terminal artifact containing `status`, `monitor_runtime_ready`,
+  `gated_inputs_present`, `events_loaded`, `events_normalized`,
+  `event_schema_version`, `verifier_false_accept_rate`,
+  `safe_prefix_events_linked`, `monitor_event_manifest_path`,
+  `adapter_tests_run`, `blockers`, and `honest_verdict`.
+
+`monitor_runtime_ready` MUST be true only when the replay manifest exists, all
+loaded events normalize successfully, the Exp 1507 and Exp 1508 gates are
+ready, and `verifier_false_accept_rate` remains reported. `honest_verdict`
+MUST begin with one of `complete:`, `complete_`, `success:`, `success_`,
+`passed:`, `passed_`, `shipped:`, or `shipped_`.
+
+### SCENARIO-VERIFY-1509: Runtime Adapter Replays Normalized Monitor Events
+
+Given complete Exp 1507 verifier induction evidence, complete Exp 1508
+trigger+grammar certificate evidence, and available .115/.116 monitor,
+safe-prefix, verifier, and certificate manifests on the run date `20260507`,
+When the Exp 1509 adapter loads and normalizes those recorded rows,
+Then it writes exactly one normalized runtime event for each source manifest
+row
+And every event carries deterministic replay order, source provenance,
+validation status, false-accept status, and a stable schema version
+And safe-prefix rows carry a monitor link only when a recorded event ID, token
+offset, or unambiguous case ID match exists
+And the terminal artifact sets `monitor_runtime_ready=true` only when the
+manifest exists, all events validate, and verifier false-accept rate is
+reported.
+
+## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487/1495/1496/1499/1500/1501/1507/1508/1509)
 
 | Requirement | Python | Tests |
 |-------------|--------|-------|
@@ -1080,3 +1138,4 @@ schema-only rates before setting `certificate_decoder_ready=true`.
 | REQ-VERIFY-1501 | Implemented (`python/carnot/verify/plan_graph_energy_adapter.py`) | Implemented (`tests/python/test_experiment_1501_gnnverifier_plan_graph_energy_adapter.py`) |
 | REQ-VERIFY-1507 | Planned (`python/carnot/verify/safe_dsl_verifier_induction.py`) | Planned (`tests/python/test_experiment_1507_autopyverifier_safe_dsl_induction_pack.py`) |
 | REQ-VERIFY-1508 | Planned (`python/carnot/verify/trigger_grammar_certificate_decoder.py`) | Planned (`tests/python/test_experiment_1508_trigger_grammar_certificate_decoder_audit.py`) |
+| REQ-VERIFY-1509 | Implemented (`python/carnot/verify/executable_monitor_runtime_adapter.py`) | Implemented (`tests/python/test_experiment_1509_executable_monitor_runtime_adapter.py`) |
