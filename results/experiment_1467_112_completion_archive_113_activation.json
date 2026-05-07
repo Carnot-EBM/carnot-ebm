@@ -1,0 +1,260 @@
+{
+  "activation_manifest_complete": true,
+  "allowed_113_tracks": [
+    {
+      "guardrail": "Use the repaired local GGUF runtime from Exp 1463; measure telemetry instead of reopening runtime repair.",
+      "name": "Live SOTA Telemetry",
+      "track": "live_sota_telemetry"
+    },
+    {
+      "guardrail": "Run exactly the minimal deterministic-bound smoke selected by Exp 1465.",
+      "name": "BEAVER-lite Bounds",
+      "track": "beaver_lite_bounds"
+    },
+    {
+      "guardrail": "Only the Exp 1447-style verified-memory-growth pivot selected by Exp 1459 is allowed.",
+      "name": "One Self-Learning Pivot",
+      "track": "one_self_learning_pivot"
+    },
+    {
+      "guardrail": "Keep these as bounded constraint-projection and CSR automaton smokes.",
+      "name": "T-SKM/STATIC Smokes",
+      "track": "tskm_static_smokes"
+    },
+    {
+      "guardrail": "Source-level RTL lint/simulation only; no board, latency, or deployment claim.",
+      "name": "KV260 RTL Regression",
+      "track": "kv260_rtl_regression"
+    },
+    {
+      "guardrail": "Simulator parity only; no Extropic or TSU hardware execution claim.",
+      "name": "THRML Simulation",
+      "track": "thrml_simulation"
+    }
+  ],
+  "archive_gap": null,
+  "blocked_reasons": [],
+  "carry_forward_tracks_from_112": [
+    {
+      "honest_verdict": "local_sota_runtime_ready",
+      "rule": "Preserve local SOTA GGUF runtime as a precondition for headline repair; future runtime regressions must name the exact missing cache, CUDA, or llama.cpp field.",
+      "source_experiment": "exp1463",
+      "status": "ready",
+      "track": "runtime"
+    },
+    {
+      "honest_verdict": "complete_no_retry_context_improvement_repair_executor_retired",
+      "rule": "Do not preserve the repair-executor validation-error context line unless a future task changes the executor and beats acceptance_delta_pp > 0.",
+      "source_experiment": "exp1464",
+      "status": "retired",
+      "track": "repair"
+    },
+    {
+      "honest_verdict": "self_learning_headline_pivot_selected_exp1447_verified_growth_only",
+      "rule": "Allow only one bounded exp1447-style fresh verified growth follow-up; do not revive broad non-headline self-learning claims.",
+      "source_experiment": "exp1459",
+      "status": "pivot_selected",
+      "track": "self_learning"
+    },
+    {
+      "anchored_claim_count": 4,
+      "honest_verdict": "paper_v6_narrowed_to_4_anchored_claims_paper_updated_true",
+      "rule": "Keep paper-v6 claims within the anchored claim matrix; unsupported hardware, comparator, and broad scaling claims remain appendix or future work.",
+      "source_experiment": "exp1462",
+      "track": "paper_claims"
+    },
+    {
+      "decision": "adopt_beaver_style_deterministic_bounds_smoke; defer_vnnlib_vnncomp_and_smaller_existing_benchmark",
+      "honest_verdict": "adopt_one_minimal_beaver_bounds_smoke",
+      "rule": "Adopt at most the one minimal BEAVER-style bounds smoke task; defer broad VNN-COMP or external verifier benchmark runners.",
+      "source_experiment": "exp1465",
+      "track": "benchmark_adoption"
+    }
+  ],
+  "conductor_log_exp1453_to_exp1466": {
+    "entries": {
+      "exp1453": {
+        "found": true,
+        "line": "| 2026-05-07 02:48 UTC | .112 Scope-Reduction Activation Manifest \u2014 Convert | OK | 81 passed, 1 warning in 4.75s |",
+        "ok": true
+      },
+      "exp1454": {
+        "found": true,
+        "line": "| 2026-05-07 03:02 UTC | Experiment Artifact Signal/Noise Classifier \u2014 Clas | OK | 81 passed, 1 warning in 4.13s |",
+        "ok": true
+      },
+      "exp1455": {
+        "found": true,
+        "line": "| 2026-05-07 03:15 UTC | Known-Issues Mandatory Priority Audit \u2014 Trim Activ | OK | 81 passed, 1 warning in 5.44s |",
+        "ok": true
+      },
+      "exp1456": {
+        "found": true,
+        "line": "| 2026-05-07 03:28 UTC | GRPO/VPRM Lineage Consolidation + Retirement \u2014 Blo | OK | 81 passed, 1 warning in 4.83s |",
+        "ok": true
+      },
+      "exp1457": {
+        "found": true,
+        "line": "| 2026-05-07 03:39 UTC | WOPR Puzzle Cartridge Retirement \u2014 Retire Non-Thes | OK | 81 passed, 1 warning in 4.85s |",
+        "ok": true
+      },
+      "exp1458": {
+        "found": true,
+        "line": "| 2026-05-07 03:52 UTC | HardNet++/DSP Repair Stack Consolidation \u2014 Retire  | OK | 81 passed, 1 warning in 4.91s |",
+        "ok": true
+      },
+      "exp1459": {
+        "found": true,
+        "line": "| 2026-05-07 04:04 UTC | Self-Learning Non-Headline Lineage Decision \u2014 Prom | OK | 81 passed, 1 warning in 5.43s |",
+        "ok": true
+      },
+      "exp1460": {
+        "found": true,
+        "line": "| 2026-05-07 04:16 UTC | Hardware Portfolio Narrowing \u2014 Pick 2-3 Active Tra | OK | 81 passed, 1 warning in 5.02s |",
+        "ok": true
+      },
+      "exp1461": {
+        "found": true,
+        "line": "| 2026-05-07 04:28 UTC | Comparator Integration Cite/Retire Audit \u2014 Abstrac | OK | 81 passed, 1 warning in 5.43s |",
+        "ok": true
+      },
+      "exp1462": {
+        "found": true,
+        "line": "| 2026-05-07 04:42 UTC | Paper-v6 Anchored Claims Narrowing \u2014 Reduce to 3-5 | OK | 81 passed, 1 warning in 5.28s |",
+        "ok": true
+      },
+      "exp1463": {
+        "found": true,
+        "line": "| 2026-05-07 05:00 UTC | Local SOTA GGUF Runtime Repair \u2014 Fix llama.cpp CUD | OK | 81 passed, 1 warning in 5.28s |",
+        "ok": true
+      },
+      "exp1464": {
+        "found": true,
+        "line": "| 2026-05-07 05:20 UTC | Repair Validation-Error-as-Context A/B \u2014 Gated on  | OK | 89 passed, 1 warning in 5.73s |",
+        "ok": true
+      },
+      "exp1465": {
+        "found": true,
+        "line": "| 2026-05-07 05:31 UTC | External Verifier Benchmark Fit Audit \u2014 VNNLIB/VNN | OK | 81 passed, 1 warning in 4.04s |",
+        "ok": true
+      },
+      "exp1466": {
+        "found": true,
+        "line": "| 2026-05-07 05:45 UTC | Milestone .112 Retrospective \u2014 Scope Reduction Met | OK | 81 passed, 1 warning in 5.07s |",
+        "ok": true
+      }
+    },
+    "expected_count": 14,
+    "missing_experiments": [],
+    "ok_count": 14
+  },
+  "criteria_met": 14,
+  "criteria_total": 14,
+  "experiment": "1467_112_completion_archive_113_activation",
+  "forbidden_reopen_tracks": [
+    {
+      "name": "GRPO/VPRM",
+      "rule": "Do not reopen GRPO/VPRM variants unless operator-reopened with a new root cause and falsifiable gate.",
+      "source": "Exp 1456 retirement",
+      "track": "grpo_vprm"
+    },
+    {
+      "name": "WOPR Puzzle Cartridges",
+      "rule": "Do not add new game/gallery cartridges unless operator-reopened with a thesis or substrate link.",
+      "source": "Exp 1457 retirement",
+      "track": "wopr_puzzle_cartridges"
+    },
+    {
+      "name": "HardNet++/DSP",
+      "rule": "Do not add HardNet++/DSP variants unless operator-reopened with non-replay evidence.",
+      "source": "Exp 1458 retirement",
+      "track": "hardnet_dsp"
+    },
+    {
+      "name": "Validation-Error Repair",
+      "rule": "Do not revive validation-error-as-context repair unless operator-reopened and acceptance_delta_pp beats zero.",
+      "source": "Exp 1464 retirement",
+      "track": "validation_error_repair"
+    },
+    {
+      "name": "Broad VNN-COMP Runners",
+      "rule": "Do not build broad VNNLIB/VNN-COMP runners before the BEAVER-lite smoke earns expansion.",
+      "source": "Exp 1465 deferral",
+      "track": "broad_vnn_comp_runners"
+    },
+    {
+      "name": "Hardware Execution Claims",
+      "rule": "Do not claim board, photonic, TSU, D-Wave, NPU, or large-FPGA execution unless operator-reopened with live evidence.",
+      "source": "Exp 1460 portfolio narrowing",
+      "track": "hardware_execution_claims"
+    }
+  ],
+  "honest_verdict": "milestone_113_activation_complete_112_archived_retirements_preserved",
+  "manifest_path": "ops/milestone_113_activation_manifest.md",
+  "milestone": "2026.04.113",
+  "no_change_confirmations": {
+    "research-roadmap.yaml": "unchanged_by_exp1467_activation_workflow",
+    "scripts/research_conductor.py": "unchanged_by_exp1467_activation_workflow"
+  },
+  "predecessor_honest_verdict": "milestone_112_14_of_14_criteria_met_scope_reduction_satisfied",
+  "predecessor_milestone": "2026.04.112",
+  "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+  "research_complete_archive_update_needed": false,
+  "research_complete_has_112_entry": true,
+  "research_roadmap_yaml_modified": false,
+  "retired_lineage_blocks": {
+    "grpo_vprm": {
+      "exclusion_manifest_present": true,
+      "name": "GRPO/VPRM",
+      "operator_reopen_required": true,
+      "preserved": true,
+      "retro_present": true
+    },
+    "hardnet_dsp": {
+      "exclusion_manifest_present": true,
+      "name": "HardNet++/DSP",
+      "operator_reopen_required": true,
+      "preserved": true,
+      "retro_present": true
+    },
+    "validation_error_repair": {
+      "exclusion_manifest_present": true,
+      "name": "Validation-error repair",
+      "operator_reopen_required": true,
+      "preserved": true,
+      "retro_present": true
+    },
+    "wopr_puzzle_cartridges": {
+      "exclusion_manifest_present": true,
+      "name": "WOPR puzzle cartridges",
+      "operator_reopen_required": true,
+      "preserved": true,
+      "retro_present": true
+    }
+  },
+  "retired_lineages_preserved": true,
+  "run_date": "20260507",
+  "schema": "milestone_113_activation_manifest_v1",
+  "scripts_research_conductor_modified": false,
+  "source_inputs_read": {
+    "ops/active-priorities.md": {
+      "exists": true
+    },
+    "ops/conductor-log.md": {
+      "exists": true
+    },
+    "ops/exclusion_manifest.yaml": {
+      "exists": true
+    },
+    "research-complete.yaml": {
+      "exists": true
+    },
+    "research-roadmap.yaml": {
+      "exists": true
+    },
+    "results/experiment_1466_milestone_112_retro.json": {
+      "exists": true
+    }
+  },
+  "status": "complete"
+}

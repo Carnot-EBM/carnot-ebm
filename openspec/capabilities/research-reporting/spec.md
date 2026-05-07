@@ -1434,6 +1434,65 @@ self-learning, paper-claim, and benchmark carry-forward rules, confirms
 `research-roadmap.yaml` and `scripts/research_conductor.py` were not modified by
 the retro workflow, and writes an honest verdict with the final score.
 
+### REQ-REPORT-048: Milestone .113 Activation Manifest
+
+The Exp 1467 `.113` activation workflow shall write
+`results/experiment_1467_112_completion_archive_113_activation.json` with
+`status="in_progress"` before terminal completion. It shall then read
+`results/experiment_1466_milestone_112_retro.json`, the Exp 1453 through
+Exp 1466 entries in `ops/conductor-log.md`, `research-complete.yaml`,
+`research-roadmap.yaml`, `ops/exclusion_manifest.yaml`, and
+`ops/active-priorities.md` without modifying `scripts/research_conductor.py` or
+`research-roadmap.yaml`.
+
+The workflow shall write `ops/milestone_113_activation_manifest.md` with the
+allowed `.113` tracks:
+
+- live SOTA telemetry
+- BEAVER-lite bounds
+- one self-learning pivot
+- T-SKM/STATIC smokes
+- KV260 RTL regression
+- THRML simulation
+
+The manifest shall explicitly forbid reopening GRPO/VPRM, WOPR puzzle
+cartridges, HardNet++/DSP, validation-error repair, broad VNN-COMP runners, and
+hardware execution claims unless an operator reopens the track with a new root
+cause and falsifiable gate. The terminal artifact shall include:
+
+- `status`
+- `milestone`
+- `predecessor_milestone`
+- `criteria_met`
+- `criteria_total`
+- `research_complete_has_112_entry`
+- `activation_manifest_complete`
+- `retired_lineages_preserved`
+- `allowed_113_tracks`
+- `forbidden_reopen_tracks`
+- `honest_verdict`
+
+`research_complete_has_112_entry` shall reflect whether
+`research-complete.yaml` already contains a `2026.04.112` archive row. If the
+row is absent, the artifact shall record the archive gap rather than claiming
+that `.112` is fully archived. The final verdict shall be complete only when
+the `.112` retro reports all 14 criteria met, the `.112` archive row exists or
+is explicitly reported as a gap, the `.113` manifest is written, every retired
+lineage block is preserved, and no forbidden file modification is reported.
+
+### SCENARIO-REPORT-048: Exp 1467 Activates .113 Without Reopening Retired Work
+
+Given Exp 1466 reports `.112` as 14 of 14 criteria met, `research-complete.yaml`
+contains a `2026.04.112` archive row, the conductor log records OK outcomes for
+Exp 1453 through Exp 1466, and the exclusion manifest preserves the GRPO/VPRM,
+WOPR puzzle-cartridge, and HardNet++/DSP retirement blocks, when Exp 1467 runs
+for run date `20260507`, then it writes all required REQ-REPORT-048 fields,
+writes the `.113` activation markdown, reports
+`research_complete_has_112_entry == true`, lists only the allowed `.113`
+tracks, forbids the retired reopen tracks, confirms `research-roadmap.yaml` and
+`scripts/research_conductor.py` were not modified, and writes an honest
+activation verdict.
+
 ### REQ-REPORT-024: Local Agent Usage Snapshot
 
 The repository shall provide a local operator workflow that inspects the
@@ -2015,6 +2074,8 @@ embed live-GPU benchmark results from Exp 328 when available.
 | REQ-REPORT-044 | `python/carnot/reporting/hardnet_dsp_repair_stack_retirement.py`, `results/experiment_1458_hardnet_dsp_repair_stack_consolidation.json`, `ops/lineage-retirements/hardnet_dsp_repair_stack_retired.md`, `ops/exclusion_manifest.yaml` | `tests/python/test_hardnet_dsp_repair_stack_retirement.py` | Implemented |
 | REQ-REPORT-045 | `python/carnot/reporting/comparator_cite_retire_audit.py`, `results/experiment_1461_comparator_integration_cite_retire_audit.json`, `docs/research-notes/comparator_cite_retire_audit.md`, `research-references.md` | `tests/python/test_comparator_cite_retire_audit.py` | Implemented |
 | REQ-REPORT-046 | `python/carnot/reporting/external_verifier_benchmark_fit_audit.py`, `results/experiment_1465_external_verifier_benchmark_fit_audit.json`, `docs/research-notes/external_verifier_benchmark_fit.md` | `tests/python/test_external_verifier_benchmark_fit_audit.py` | Implemented |
+| REQ-REPORT-047 | `python/carnot/reporting/milestone_retro_112.py`, `results/experiment_1466_milestone_112_retro.json` | `tests/python/test_milestone_retro_112.py` | Implemented |
+| REQ-REPORT-048 | `python/carnot/reporting/milestone_113_activation_manifest.py`, `results/experiment_1467_112_completion_archive_113_activation.json`, `ops/milestone_113_activation_manifest.md` | `tests/python/test_milestone_113_activation_manifest.py` | Implemented |
 | REQ-REPORT-024 | `python/carnot/reporting/agent_usage.py`, `scripts/agent_plan_usage.py` | `tests/python/test_agent_plan_usage.py` | Implemented |
 | REQ-PUBLISH-003 | `scripts/experiment_317_hf_publish.py` | `tests/python/test_experiment_317_hf_publish.py` | Implemented |
 | REQ-PUBLISH-004 | `scripts/experiment_330_hf_live_publish.py` | `tests/python/test_experiment_330_hf_live_publish.py` | Implemented |
