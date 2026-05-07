@@ -481,7 +481,39 @@ constraint violation is reported, Carnot/Z3/Ising baseline verdicts agree with
 the projection verdicts, and the experiment artifact records deterministic
 iteration quantiles and an honest CPU-only verdict.
 
-## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474)
+### REQ-VERIFY-1475: Static CSR Certificate Automaton Smoke
+
+The repository shall provide a deterministic, CPU-only STATIC-style CSR
+automaton smoke for a tiny Carnot certificate schema that:
+
+- writes `results/experiment_1475_static_csr_certificate_automaton_smoke.json`
+  with `status="in_progress"` before evaluating certificate cases;
+- reuses the smallest existing Carnot certificate parser/schema path as the
+  acceptance baseline;
+- encodes the bounded accepted certificate strings as CSR-like sparse
+  transition arrays without adding an LLM generation path, repair loop, or
+  model dependency;
+- evaluates exact acceptance equivalence on a deterministic mix of valid and
+  invalid certificate strings, reporting false accepts and false rejects; and
+- writes a terminal artifact containing `status`, `schema_cases_evaluated`,
+  `csr_automaton_path`, `exact_acceptance_equivalent`, `false_accepts`,
+  `false_rejects`, `existing_path_latency_ms_p50`, `csr_latency_ms_p50`,
+  `speedup_ratio`, `tests_run`, and `honest_verdict`.
+
+The smoke MUST NOT claim general JSON-schema language equivalence beyond the
+bounded case set measured in the artifact.
+
+### SCENARIO-VERIFY-1475: CSR Automaton Matches Existing Certificate Parser Cases
+
+Given the existing minimal certificate schema and parser/regex validation path,
+When the STATIC CSR automaton smoke evaluates canonical valid certificate
+strings and malformed or schema-invalid strings,
+Then the CSR automaton and existing path produce identical accept/reject
+decisions on every measured case, latency p50 values are reported for both
+paths, and the artifact states that the equivalence claim is bounded to the
+measured certificate strings.
+
+## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475)
 
 | Requirement | Python | Tests |
 |-------------|--------|-------|
@@ -493,3 +525,4 @@ iteration quantiles and an honest CPU-only verdict.
 | REQ-VERIFY-1469 | Implemented (`python/carnot/reporting/halt_spilled_energy_telemetry_diagnostic.py`) | Implemented (`tests/python/test_experiment_1469_halt_spilled_energy_telemetry_diagnostic.py`) |
 | REQ-VERIFY-1473 | Implemented (`python/carnot/reporting/live_telemetry_adversarial_validity_audit.py`) | Implemented (`tests/python/test_experiment_1473_live_telemetry_adversarial_validity_audit.py`) |
 | REQ-VERIFY-1474 | Implemented (`python/carnot/verify/skm_projection.py`) | Implemented (`tests/python/test_experiment_1474_tskm_linear_constraint_projection_smoke.py`) |
+| REQ-VERIFY-1475 | Implemented (`python/carnot/eval/static_csr_certificate_automaton.py`) | Implemented (`tests/python/test_experiment_1475_static_csr_certificate_automaton.py`) |
