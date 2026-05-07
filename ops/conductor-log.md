@@ -1050,3 +1050,4 @@ web search: GitHub trending energy based mod |
 | 2026-05-06 23:34 UTC | Full Pipeline v5 100-Case Pre-Scale — Gated on Liv | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1443-live-sota-dccd-semctrl-repair-v3, ex |
 | 2026-05-07 00:17 UTC | PRM v3 Online Process-Reward Agent — Improve over  | OK | 81 passed, 1 warning in 4.47s |
 | 2026-05-07 00:28 UTC | LTLZinc Temporal Continual-Learning Adapter — Dura | OK | 81 passed, 1 warning in 5.38s |
+| 2026-05-07 01:12 UTC | EBT/NRGPT Local Micro-Prototype Audit — Energy Con | OK | 81 passed, 1 warning in 4.67s |
