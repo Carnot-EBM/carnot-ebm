@@ -998,7 +998,65 @@ failure reason, coverage, false accepts, and accepted labeled row IDs
 And the terminal selected-set summary reports the compact zero-false-accept
 set before the artifact sets `verifier_induction_ready=true`.
 
-## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487/1495/1496/1499/1500/1501/1507)
+### REQ-VERIFY-1508: Trigger+Grammar Certificate Decoder Audit
+
+The repository shall provide a bounded trigger-token plus grammar/GBNF
+certificate decoder audit for Exp 1508 that compares runtime-constrained
+certificate tails against Exp 1493 schema-only certificate parsing.
+
+The audit shall:
+
+- write
+  `results/experiment_1508_trigger_grammar_certificate_decoder_audit.json`
+  with `status="in_progress"` before loading gates, manifests, models, or
+  grammar backends;
+- require
+  `results/experiment_1507_autopyverifier_safe_dsl_induction_pack.json` to
+  report `verifier_induction_ready=true`, and write a terminal gated artifact
+  when that prerequisite is absent or false;
+- load Exp 1493 CCTU certificate rows and the Exp 1507 selected verifier set
+  where available, preserving schema-only parse, validation, and false-accept
+  accounting for comparison;
+- resolve mandated local SOTA GGUF model specs through `cached_sota_pair()` or
+  the established SOTA GGUF cache resolver, without using legacy small models
+  for headline decoder evidence;
+- run at least one mandated local SOTA GGUF model for trigger+grammar decoder
+  rows when a local grammar backend can enforce a bounded certificate grammar;
+- record a concrete grammar backend name and blocker when runtime grammar
+  enforcement is unavailable, falling back only to parse-only diagnostic rows;
+- write `results/trigger_grammar_certificates_1508.jsonl` with one row per
+  case, model, and decoder mode;
+- report trigger-token presence, grammar parse, schema-only parse, grammar
+  validation, schema-only validation, and verifier false-accept rates; and
+- write a terminal artifact containing `status`, `model_specs`,
+  `live_sota_model_inference_used`, `certificate_decoder_ready`,
+  `gated_inputs_present`, `cases_attempted`, `grammar_backend`,
+  `trigger_token_presence_rate`, `grammar_parse_rate`,
+  `schema_only_parse_rate`, `grammar_validation_rate`,
+  `schema_only_validation_rate`, `verifier_false_accept_rate`,
+  `decoder_manifest_path`, `models_used`, `gpu_probe`, `blockers`, and
+  `honest_verdict`.
+
+`certificate_decoder_ready` MUST be true only when gated inputs are present,
+at least one mandated live local SOTA GGUF grammar row exists, and both parse
+and validation metrics are reported. Legacy small models may be used only for
+CPU smoke-tests and MUST NOT count as headline decoder evidence.
+`honest_verdict` MUST begin with one of `complete:`, `complete_`, `success:`,
+`success_`, `passed:`, `passed_`, `shipped:`, or `shipped_`.
+
+### SCENARIO-VERIFY-1508: Trigger+Grammar Rows Compare Against Schema-Only Rows
+
+Given Exp 1507 verifier induction is ready and Exp 1493 CCTU certificate rows
+exist on the run date `20260507`,
+When Exp 1508 runs a mandated local SOTA GGUF model through a trigger-token
+reasoning phase followed by a grammar-bounded certificate phase,
+Then each manifest row records case ID, decoder mode, model provenance,
+grammar backend, trigger-token presence, parser result, deterministic
+validation result, and false-accept status
+And the terminal artifact compares trigger+grammar rates against Exp 1493
+schema-only rates before setting `certificate_decoder_ready=true`.
+
+## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487/1495/1496/1499/1500/1501/1507/1508)
 
 | Requirement | Python | Tests |
 |-------------|--------|-------|
@@ -1021,3 +1079,4 @@ set before the artifact sets `verifier_induction_ready=true`.
 | REQ-VERIFY-1500 | Implemented (`python/carnot/verify/latent_deterministic_gate.py`) | Implemented (`tests/python/test_experiment_1500_latent_deterministic_discipline_gate.py`) |
 | REQ-VERIFY-1501 | Implemented (`python/carnot/verify/plan_graph_energy_adapter.py`) | Implemented (`tests/python/test_experiment_1501_gnnverifier_plan_graph_energy_adapter.py`) |
 | REQ-VERIFY-1507 | Planned (`python/carnot/verify/safe_dsl_verifier_induction.py`) | Planned (`tests/python/test_experiment_1507_autopyverifier_safe_dsl_induction_pack.py`) |
+| REQ-VERIFY-1508 | Planned (`python/carnot/verify/trigger_grammar_certificate_decoder.py`) | Planned (`tests/python/test_experiment_1508_trigger_grammar_certificate_decoder_audit.py`) |
