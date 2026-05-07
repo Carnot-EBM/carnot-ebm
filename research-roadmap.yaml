@@ -1,16 +1,16 @@
-milestone: 2026.04.115
-milestone_title: "Executable Constraint Monitors + FR-11 Self-Learning Hygiene + Hardware Gates"
+milestone: 2026.04.116
+milestone_title: "Verifier-Induced Runtime Contracts + FR-11 Feedback Replay + Substrate Conformance"
 milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
 tasks:
 
 # ============================================================
-# Phase 0 - Handoff and guardrails
+# Phase 0 - Handoff and activation
 # ============================================================
 
-- id: exp1492-114-completion-archive-115-activation
-  milestone: 2026.04.115
-  deliverable: results/experiment_1492_114_completion_archive_115_activation.json
-  title: ".114 Completion Archive + .115 Activation Manifest"
+- id: exp1506-115-completion-archive-116-activation
+  milestone: 2026.04.116
+  deliverable: results/experiment_1506_115_completion_archive_116_activation.json
+  title: ".115 Completion Archive + .116 Activation Manifest"
   agent_type: codex
   model: gpt-5.5
   max_turns: 20
@@ -19,18 +19,18 @@ tasks:
   requires_gpu: false
   skip_pre_test: true
   prior_failures:
-    - experiment_id: exp1479-113-completion-archive-114-activation
+    - experiment_id: exp1492-114-completion-archive-115-activation
       verdict: prior_milestone_activation_manifest_scope
-      addressed_by: "This is expected per-milestone activation bookkeeping for .115; it archives .114 completion and preserves the new retirements and carry-forward gates."
+      addressed_by: "This is expected per-milestone activation bookkeeping for .116; it archives .115 completion and exposes same-roadmap gate fields for downstream conformance tasks."
       retire_if_same_verdict: false
   prompt: |
     CONTEXT:
-    Milestone .114 completed 12 of 13 criteria with one honest structured
-    gate skip. It proved useful BEAVER-lite bounds, FR-11 query-time utility,
-    CCTU executable constraints, and injected-failure localization, while
-    retiring Semantic Energy/logit telemetry and V_1 pairwise verification as
-    headline signals. Use {project_root} as the project root and {date} as the
-    run date.
+    Milestone .115 completed all planned tasks and archived 12 of 12 success
+    criteria as met. It proved trigger-token certificates, safe validator
+    compilation, interwhen-style monitor replay, HoVer safe-prefix continuation,
+    FR-11 daily eval hygiene, verifier discipline, plan-graph energy, KAN
+    accounting, and THRML simulator parity without hardware claims. Use
+    {project_root} as the project root and {date} as the run date.
 
     EXISTING CODE TO READ FIRST:
     - CODEX.md
@@ -42,13 +42,11 @@ tasks:
     - ops/conductor-log.md
     - ops/changelog.md
     - ops/status.md
-    - results/experiment_1491_milestone_114_retro.json
+    - results/experiment_1505_milestone_115_retro.json
 
     TASK:
-    Write a terminal activation artifact for .115 that summarizes .114
-    completion, records carry-forward guardrails, and writes the .115
-    activation manifest without modifying research-roadmap.yaml or
-    scripts/research_conductor.py.
+    Write the .115 completion archive and .116 activation manifest. Do not
+    modify research-roadmap.yaml or scripts/research_conductor.py.
 
     REQUIRED ARTIFACT FIELDS:
     - status
@@ -57,34 +55,130 @@ tasks:
     - predecessor_criteria_met
     - predecessor_criteria_total
     - activation_manifest_complete
-    - retired_headline_signals
-    - allowed_115_tracks
-    - gated_115_tracks
-    - continuous_self_learning_required
+    - prior_trigger_certificates_ready
+    - prior_validator_compiler_ready
+    - prior_monitor_replay_ready
+    - prior_fr11_daily_eval_ready
+    - prior_thrml_parity_ready
+    - prior_kan_shape_blocker_recorded
+    - prior_kv260_source_track_active
     - mandated_sota_models
-    - research_complete_has_114_entry
+    - continuous_self_learning_required
+    - retired_headline_signals
+    - allowed_116_tracks
+    - gated_116_tracks
+    - research_complete_has_115_entry
     - honest_verdict (MUST start with complete:, complete_, success:, success_, passed:, passed_, shipped:, or shipped_)
 
     CONCRETE STEPS:
-    1. Create results/experiment_1492_114_completion_archive_115_activation.json immediately with status="in_progress".
-    2. Read the .114 retro, research-complete .114 archive, conductor log entries for exp1479 through exp1491, ops/status.md, and ops/changelog.md.
-    3. Check whether research-complete.yaml contains a 2026.04.114 entry; if absent, record the gap in the artifact and do not fabricate completion data.
-    4. Write ops/milestone_115_activation_manifest.md with allowed tracks: trigger-token certificate export, prompt-to-validator compilation, interwhen-style monitoring, HoVer safe-prefix continuation, FR-11 trace2skill daily eval, artifact reachability, verifier orthogonality, graph-energy adapters, KAN hardware accounting, and gated THRML import/parity.
-    5. Explicitly preserve blocks on Semantic Energy/logit telemetry headline claims, V_1 pairwise headline claims, decoded-quality claims from injected-failure localization, THRML parity before import readiness, KV260 board claims, TSU hardware claims, GRPO/VPRM reopenings, WOPR puzzle cartridges, and legacy small-model headline results.
-    6. Confirm research-roadmap.yaml and scripts/research_conductor.py are unchanged.
-    7. Write all required artifact fields with status="complete".
+    1. Create results/experiment_1506_115_completion_archive_116_activation.json immediately with status="in_progress".
+    2. Read the .115 retro, research-complete .115 archive, conductor log entries for exp1492 through exp1505, ops/status.md, and ops/changelog.md.
+    3. Verify that research-complete.yaml contains a 2026.04.115 entry and that exp1505 reports 12 of 12 criteria met.
+    4. Write ops/milestone_116_activation_manifest.md with allowed tracks: safe-DSL verifier induction, trigger+grammar certificate decoding, executable monitor runtime, plan-graph structural contracts, product-line solver oracle, FR-11 verifier-feedback replay, trace2skill portable pack, THRML SamplerBackend conformance, KAN shape normalization, and KV260 source-level RTL properties.
+    5. Explicitly preserve blocks on Semantic Energy/logit telemetry headline claims, V_1 pairwise headline claims, decoded-quality claims from injected-failure localization, arbitrary generated-Python verifier trust, TSU hardware claims, KV260 board claims, synthesis claims, and legacy small-model headline results.
+    6. Set prior_thrml_parity_ready=true only if exp1504 reports simulator parity passed without a hardware claim. Set prior_kan_shape_blocker_recorded=true only if exp1502 recorded the shape-normalization carry-forward. Set prior_kv260_source_track_active=true only if the hardware wishlist/architecture still list source-level KV260 work as allowed.
+    7. Confirm research-roadmap.yaml and scripts/research_conductor.py are unchanged.
+    8. Write all required artifact fields with status="complete".
 
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1492_114_completion_archive_115_activation.json')); print(d.get('activation_manifest_complete'), d.get('continuous_self_learning_required'), d.get('honest_verdict'))"
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1506_115_completion_archive_116_activation.json')); print(d.get('activation_manifest_complete'), d.get('prior_thrml_parity_ready'), d.get('continuous_self_learning_required'), d.get('honest_verdict'))"
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
 # ============================================================
-# Phase 1 - Executable contracts at generation time
+# Phase 1 - Runtime verifier contracts
 # ============================================================
 
-- id: exp1493-trigger-token-certificate-export-v1
-  milestone: 2026.04.115
-  deliverable: results/experiment_1493_trigger_token_certificate_export_v1.json
-  title: "Trigger-Token Certificate Export v1"
+- id: exp1507-autopyverifier-safe-dsl-induction-pack
+  milestone: 2026.04.116
+  deliverable: results/experiment_1507_autopyverifier_safe_dsl_induction_pack.json
+  title: "AutoPyVerifier-Inspired Safe-DSL Induction Pack"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 50
+  estimated_wall_time_min: 90
+  priority: critical
+  requires_gpu: true
+  skip_pre_test: true
+  prior_failures:
+    - experiment_id: exp1494-constrainprompt-validator-compiler-audit
+      verdict: bounded_safe_dsl_validator_compiler_ready
+      addressed_by: "This task changes scope from one-pass bounded validator skeleton compilation to verifier-set induction/search over labeled rows, still inside the safe DSL and false-accept accounting."
+      retire_if_same_verdict: false
+    - experiment_id: exp1486-cctu-executable-constraint-microbenchmark
+      verdict: cctu_validators_hand_authored_only
+      addressed_by: "This task induces candidate verifiers from labeled CCTU/certificate rows instead of adding more hand-authored validators."
+      retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    AutoPyVerifier suggests using an LLM to synthesize candidate executable
+    verifiers and then search for compact verifier sets. Carnot must keep the
+    trust boundary stricter: candidate verifiers must compile through the
+    existing safe DSL or be rejected, and headline claims depend on deterministic
+    false-accept accounting. Use {project_root} as the project root and {date}
+    as the run date.
+
+    MODEL_SPECS:
+    - unsloth/Qwen3.6-35B-A3B-GGUF (flagship MoE; primary verifier-induction model)
+    - unsloth/gemma-4-31B-it-GGUF (flagship dense; secondary verifier-induction model)
+    - unsloth/gemma-4-26B-A4B-it-GGUF (middle MoE; secondary verifier-induction model)
+    Legacy small models are allowed only as CPU smoke-tests and must not be
+    used for headline verifier-induction results.
+
+    EXISTING CODE TO READ FIRST:
+    - CODEX.md
+    - CLAUDE.md
+    - scripts/experiment_template.py
+    - research-references.md
+    - results/experiment_1493_trigger_token_certificate_export_v1.json
+    - results/cctu_trigger_certificates_1493.jsonl
+    - results/experiment_1494_constrainprompt_validator_compiler_audit.json
+    - results/constrainprompt_validator_manifest_1494.jsonl
+    - python/carnot/verify/
+    - tests/python/
+
+    TASK:
+    Build a bounded AutoPyVerifier-inspired induction pack that proposes,
+    compiles, searches, and scores safe-DSL verifier sets over .115 labeled
+    CCTU/certificate rows.
+
+    REQUIRED ARTIFACT FIELDS:
+    - status
+    - model_specs
+    - live_sota_model_inference_used
+    - verifier_induction_ready
+    - labeled_rows_loaded
+    - candidate_verifiers_proposed
+    - candidate_verifiers_compiled
+    - verifier_compile_rate
+    - verifier_set_size
+    - verifier_coverage_rate
+    - verifier_false_accept_rate
+    - baseline_validator_coverage_rate
+    - induction_manifest_path
+    - models_used
+    - gpu_probe
+    - blockers
+    - honest_verdict (MUST start with complete:, complete_, success:, success_, passed:, passed_, shipped:, or shipped_)
+
+    CONCRETE STEPS:
+    1. Create results/experiment_1507_autopyverifier_safe_dsl_induction_pack.json immediately with status="in_progress".
+    2. Load .115 certificate and validator manifests; if a required manifest is absent, write a terminal blocker with missing paths.
+    3. Use cached_sota_pair() or the established local SOTA GGUF cache pattern from scripts/experiment_template.py.
+    4. Run at least one mandated SOTA GGUF model for headline verifier proposals. If GPU/model loading fails, write a terminal artifact instead of falling back to a legacy small headline model.
+    5. Ask the model for safe-DSL verifier skeletons only. Reject arbitrary Python, filesystem access, imports, eval/exec, network calls, and non-deterministic logic.
+    6. Compile candidates through the existing safe validator compiler or a minimal safe-DSL helper. Record compile failures explicitly.
+    7. Search for a compact verifier set that maximizes labeled-row coverage while preserving zero false accepts on the available labels.
+    8. Write results/safe_dsl_verifier_induction_1507.jsonl with one row per candidate and a final selected-set summary.
+    9. Add focused tests for any new safe-DSL parser/compiler/search helper.
+    10. Set verifier_induction_ready=true only if at least one live SOTA model proposed candidates, at least one candidate compiled, and false_accept_rate is reported.
+    11. Write all required artifact fields with status="complete" or an honest terminal blocker.
+
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1507_autopyverifier_safe_dsl_induction_pack.json')); print(d.get('verifier_induction_ready'), d.get('candidate_verifiers_compiled'), d.get('verifier_false_accept_rate'), d.get('honest_verdict'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp1508-trigger-grammar-certificate-decoder-audit
+  milestone: 2026.04.116
+  deliverable: results/experiment_1508_trigger_grammar_certificate_decoder_audit.json
+  title: "Trigger+Grammar Certificate Decoder Audit - Gated on Exp1507 Verifier Pack"
   agent_type: codex
   model: gpt-5.5
   max_turns: 50
@@ -92,165 +186,93 @@ tasks:
   priority: critical
   requires_gpu: true
   skip_pre_test: true
+  gated_on:
+    - upstream: exp1507-autopyverifier-safe-dsl-induction-pack
+      artifact_field: verifier_induction_ready
+      op: "=="
+      value: true
   prior_failures:
-    - experiment_id: exp1486-cctu-executable-constraint-microbenchmark
-      verdict: executable_constraints_ready_but_generation_quality_gap
-      addressed_by: "Exp1486 created validators and exposed low tool/final validity. This task changes the generation boundary by using trigger-token certificate export rather than another hand-authored benchmark."
+    - experiment_id: exp1493-trigger-token-certificate-export-v1
+      verdict: trigger_certificate_export_ready_schema_only
+      addressed_by: "This task changes the boundary from schema parsing after generation to trigger-token plus grammar/GBNF constrained certificate decoding with the induced verifier pack."
       retire_if_same_verdict: false
-    - experiment_id: exp1481-semantic-energy-feasibility-audit
-      verdict: retired_semantic_energy_confounded_by_superficial_baseline
-      addressed_by: "This task uses executable certificates and deterministic validators, not Semantic Energy/logit telemetry as a diagnostic."
-      retire_if_same_verdict: true
+    - experiment_id: exp1283-certificate-grammar-backend-bakeoff
+      verdict: grammar_backend_selected_but_not_runtime_integrated
+      addressed_by: "This task uses the selected grammar path as a runtime certificate decoder for current CCTU/verifier rows instead of repeating the old bakeoff."
+      retire_if_same_verdict: false
   prompt: |
     CONTEXT:
-    Exp1486 produced a 20-case CCTU-style executable constraint benchmark with
-    a perfect verifier catch rate but low tool-call and final-answer validity.
-    The post-.114 literature sweep added "Thinking Before Constraining":
-    free-form reasoning until a trigger token, then constrained structured
-    certificate export. Use {project_root} as the project root and {date} as
-    the run date.
+    .115 exported trigger-token certificates, and the .116 literature sweep
+    reaffirmed the pattern of free reasoning followed by structured output.
+    This experiment tests whether trigger-token plus grammar/GBNF decoding
+    improves parse and validator outcomes over schema-only certificate parsing.
+    Use {project_root} as the project root and {date} as the run date.
 
     MODEL_SPECS:
-    - unsloth/Qwen3.6-35B-A3B-GGUF (flagship MoE; primary certificate model)
-    - unsloth/gemma-4-31B-it-GGUF (flagship dense; secondary certificate model)
-    - unsloth/gemma-4-26B-A4B-it-GGUF (middle MoE; secondary certificate model)
+    - unsloth/Qwen3.6-35B-A3B-GGUF (flagship MoE; primary certificate decoder model)
+    - unsloth/gemma-4-31B-it-GGUF (flagship dense; secondary certificate decoder model)
+    - unsloth/gemma-4-26B-A4B-it-GGUF (middle MoE; secondary certificate decoder model)
     Legacy small models are allowed only as CPU smoke-tests and must not be
-    used for headline certificate results.
+    used for headline decoder results.
 
     EXISTING CODE TO READ FIRST:
     - CODEX.md
     - CLAUDE.md
     - scripts/experiment_template.py
     - research-references.md
-    - results/experiment_1486_cctu_executable_constraint_microbenchmark.json
-    - results/experiment_1482_beaver_lite_prefix_calibration_live.json
+    - results/experiment_1493_trigger_token_certificate_export_v1.json
+    - results/cctu_trigger_certificates_1493.jsonl
+    - results/experiment_1507_autopyverifier_safe_dsl_induction_pack.json
+    - results/safe_dsl_verifier_induction_1507.jsonl
     - python/carnot/verify/
     - python/carnot/pipeline/
     - tests/python/
 
     TASK:
-    Add a bounded trigger-token certificate export lane for CCTU-style cases:
-    free-form solve, explicit trigger token, structured certificate, then
-    deterministic validation. Compare it to an always-constrained baseline.
+    Run a bounded trigger+grammar certificate decoder audit on current CCTU
+    rows using local SOTA GGUFs and compare it to .115 schema-only certificate
+    parsing.
 
     REQUIRED ARTIFACT FIELDS:
     - status
     - model_specs
     - live_sota_model_inference_used
-    - trigger_certificate_ready
-    - cctu_cases_attempted
-    - cctu_cases_completed
-    - certificate_parse_rate
-    - certificate_validation_rate
-    - always_constrained_parse_rate
-    - always_constrained_validation_rate
+    - certificate_decoder_ready
+    - gated_inputs_present
+    - cases_attempted
+    - grammar_backend
+    - trigger_token_presence_rate
+    - grammar_parse_rate
+    - schema_only_parse_rate
+    - grammar_validation_rate
+    - schema_only_validation_rate
     - verifier_false_accept_rate
-    - certificate_manifest_path
+    - decoder_manifest_path
     - models_used
     - gpu_probe
     - blockers
     - honest_verdict (MUST start with complete:, complete_, success:, success_, passed:, passed_, shipped:, or shipped_)
 
     CONCRETE STEPS:
-    1. Create results/experiment_1493_trigger_token_certificate_export_v1.json immediately with status="in_progress".
-    2. Reuse the exp1486 CCTU cases and validators where possible; add only the minimum helper code needed for certificate formatting and parsing.
-    3. Use cached_sota_pair() or the established local SOTA GGUF cache pattern from scripts/experiment_template.py.
-    4. Run at least one mandated SOTA GGUF model for headline rows. If GPU/model loading fails, write a terminal artifact explaining the blocker instead of silently falling back to a legacy small model.
-    5. For each case, collect free-form reasoning text, trigger token presence, structured certificate JSON, parser result, deterministic validator result, and false-accept status.
-    6. Run an always-constrained baseline on the same cases or a clearly matched subset.
-    7. Write results/cctu_trigger_certificates_1493.jsonl with one row per case/model/baseline.
-    8. Run focused tests for any new certificate parser or validator glue.
-    9. Set trigger_certificate_ready=true only if a live SOTA headline subset exists and parser/validator rates are reported.
-    10. Write all required artifact fields with status="complete" or an honest terminal blocker.
+    1. Create results/experiment_1508_trigger_grammar_certificate_decoder_audit.json immediately with status="in_progress".
+    2. Verify exp1507 verifier_induction_ready=true; if absent, write a terminal gated artifact.
+    3. Reuse .115 CCTU prompts and .116 selected verifier set where possible.
+    4. Use cached_sota_pair() or the established local SOTA GGUF cache pattern from scripts/experiment_template.py.
+    5. Run at least one mandated SOTA GGUF model for headline rows. Do not use legacy small models as headline evidence.
+    6. Implement or reuse a bounded grammar/GBNF certificate schema with trigger-token switching. If the local inference stack cannot enforce grammar, record the blocker and run only a parse-only diagnostic.
+    7. Compare trigger+grammar rows to schema-only rows on parse rate, validation rate, and false accepts.
+    8. Write results/trigger_grammar_certificates_1508.jsonl with one row per case/model/decoder mode.
+    9. Add focused tests for any grammar parser or decoder config helper.
+    10. Set certificate_decoder_ready=true only if live SOTA rows exist and both parse and validation metrics are reported.
+    11. Write all required artifact fields with status="complete" or an honest terminal blocker.
 
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1493_trigger_token_certificate_export_v1.json')); print(d.get('trigger_certificate_ready'), d.get('certificate_parse_rate'), d.get('certificate_validation_rate'), d.get('honest_verdict'))"
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1508_trigger_grammar_certificate_decoder_audit.json')); print(d.get('certificate_decoder_ready'), d.get('grammar_parse_rate'), d.get('grammar_validation_rate'), d.get('honest_verdict'))"
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-- id: exp1494-constrainprompt-validator-compiler-audit
-  milestone: 2026.04.115
-  deliverable: results/experiment_1494_constrainprompt_validator_compiler_audit.json
-  title: "ConstrainPrompt Validator Compiler Audit"
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 50
-  estimated_wall_time_min: 75
-  priority: critical
-  requires_gpu: true
-  skip_pre_test: true
-  prior_failures:
-    - experiment_id: exp1486-cctu-executable-constraint-microbenchmark
-      verdict: cctu_validators_hand_authored_only
-      addressed_by: "This task changes the scope from hand-authored validators to prompt-derived validator skeletons with deterministic compile and false-accept accounting."
-      retire_if_same_verdict: true
-  prompt: |
-    CONTEXT:
-    Exp1486 proved executable constraints are useful but hand-authored the
-    validators. The post-.114 sweep added ConstrainPrompt: extracting
-    code-verifiable constraints from prompt text. Carnot needs a bounded
-    prompt-to-validator compiler audit before scaling CCTU coverage. Use
-    {project_root} as the project root and {date} as the run date.
-
-    MODEL_SPECS:
-    - unsloth/Qwen3.6-35B-A3B-GGUF (flagship MoE; primary validator-skeleton model)
-    - unsloth/gemma-4-31B-it-GGUF (flagship dense; secondary validator-skeleton model)
-    - unsloth/gemma-4-26B-A4B-it-GGUF (middle MoE; secondary validator-skeleton model)
-    Legacy small models are allowed only as CPU smoke-tests and must not be
-    used for headline validator compiler results.
-
-    EXISTING CODE TO READ FIRST:
-    - CODEX.md
-    - CLAUDE.md
-    - scripts/experiment_template.py
-    - research-references.md
-    - results/experiment_1486_cctu_executable_constraint_microbenchmark.json
-    - python/carnot/verify/
-    - python/carnot/schemas/
-    - tests/python/
-
-    TASK:
-    Prototype a bounded ConstrainPrompt-style prompt-to-validator compiler for
-    30 CCTU-style prompts. The goal is not broad program synthesis; it is a
-    deterministic manifest that reports validator compile rate, false accepts,
-    and where human review is still required.
-
-    REQUIRED ARTIFACT FIELDS:
-    - status
-    - model_specs
-    - live_sota_model_inference_used
-    - validator_compiler_ready
-    - prompts_attempted
-    - validator_skeletons_generated
-    - validators_compiled
-    - validator_compile_rate
-    - known_good_pass_rate
-    - known_bad_reject_rate
-    - verifier_false_accept_rate
-    - manual_review_required_count
-    - validator_manifest_path
-    - models_used
-    - gpu_probe
-    - blockers
-    - honest_verdict (MUST start with complete:, complete_, success:, success_, passed:, passed_, shipped:, or shipped_)
-
-    CONCRETE STEPS:
-    1. Create results/experiment_1494_constrainprompt_validator_compiler_audit.json immediately with status="in_progress".
-    2. Build a 30-prompt CCTU-style prompt set from exp1486 plus new arithmetic, schema, simple code, and graph/path cases.
-    3. Use at least one mandated local SOTA GGUF model to propose constraint fields or validator skeletons. If model loading fails, record a terminal blocker.
-    4. Keep generated validators sandboxed and deterministic. Prefer a small safe DSL or explicit Python functions with restricted inputs over arbitrary eval.
-    5. Test each compiled validator against at least one known-good and one known-bad output.
-    6. Record compile failures, manual-review markers, false accepts, and false rejects.
-    7. Write results/constrainprompt_validator_manifest_1494.jsonl with one row per prompt.
-    8. Run focused tests for any validator compiler/parser code.
-    9. Set validator_compiler_ready=true only if compile and false-accept metrics are present and no arbitrary-code execution path is introduced.
-    10. Write all required artifact fields with status="complete" or an honest terminal blocker.
-
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1494_constrainprompt_validator_compiler_audit.json')); print(d.get('validator_compiler_ready'), d.get('validator_compile_rate'), d.get('verifier_false_accept_rate'), d.get('honest_verdict'))"
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp1495-interwhen-monitor-prototype
-  milestone: 2026.04.115
-  deliverable: results/experiment_1495_interwhen_monitor_prototype.json
-  title: "interwhen Monitor Prototype - Gated on Exp1493/Exp1494 Readiness"
+- id: exp1509-executable-monitor-runtime-adapter
+  milestone: 2026.04.116
+  deliverable: results/experiment_1509_executable_monitor_runtime_adapter.json
+  title: "Executable Monitor Runtime Adapter - Gated on Exp1507/Exp1508"
   agent_type: codex
   model: gpt-5.5
   max_turns: 30
@@ -259,728 +281,514 @@ tasks:
   requires_gpu: false
   skip_pre_test: true
   gated_on:
-    - upstream: exp1493-trigger-token-certificate-export-v1
-      artifact_field: trigger_certificate_ready
+    - upstream: exp1507-autopyverifier-safe-dsl-induction-pack
+      artifact_field: verifier_induction_ready
       op: "=="
       value: true
-    - upstream: exp1494-constrainprompt-validator-compiler-audit
-      artifact_field: validator_compiler_ready
+    - upstream: exp1508-trigger-grammar-certificate-decoder-audit
+      artifact_field: certificate_decoder_ready
       op: "=="
       value: true
   prior_failures:
+    - experiment_id: exp1495-interwhen-monitor-prototype
+      verdict: monitor_replay_ready_but_not_runtime_adapter
+      addressed_by: "This task changes scope from offline replay prototype to a reusable executable monitor runtime adapter with normalized event schema."
+      retire_if_same_verdict: false
+    - experiment_id: exp1496-hover-safe-prefix-continuation-audit
+      verdict: safe_prefix_continuation_ready_but_separate_artifact
+      addressed_by: "This task wires safe-prefix and certificate events into one runtime adapter rather than rerunning continuation quality."
+      retire_if_same_verdict: false
+  prompt: |
+    CONTEXT:
+    .115 produced monitor replay and safe-prefix continuation artifacts, while
+    .116 exp1507/exp1508 should provide induced validators and grammar-bounded
+    certificate rows. The next architecture step is a CPU-only runtime adapter
+    that normalizes these events for downstream self-learning and structural
+    gates. Use {project_root} as the project root and {date} as the run date.
+
+    EXISTING CODE TO READ FIRST:
+    - CODEX.md
+    - CLAUDE.md
+    - _bmad/architecture.md
+    - results/experiment_1495_interwhen_monitor_prototype.json
+    - results/interwhen_monitor_events_1495.jsonl
+    - results/experiment_1496_hover_safe_prefix_continuation_audit.json
+    - results/safe_prefix_continuations_1496.jsonl
+    - results/experiment_1507_autopyverifier_safe_dsl_induction_pack.json
+    - results/safe_dsl_verifier_induction_1507.jsonl
+    - results/experiment_1508_trigger_grammar_certificate_decoder_audit.json
+    - results/trigger_grammar_certificates_1508.jsonl
+    - python/carnot/verify/
+    - python/carnot/pipeline/
+    - tests/python/
+
+    TASK:
+    Implement or script a reusable executable monitor runtime adapter over
+    existing artifacts. Do not generate new LLM rows. Normalize certificate,
+    validator, monitor, and safe-prefix events into a replayable manifest.
+
+    REQUIRED ARTIFACT FIELDS:
+    - status
+    - monitor_runtime_ready
+    - gated_inputs_present
+    - events_loaded
+    - events_normalized
+    - event_schema_version
+    - verifier_false_accept_rate
+    - safe_prefix_events_linked
+    - monitor_event_manifest_path
+    - adapter_tests_run
+    - blockers
+    - honest_verdict (MUST start with complete:, complete_, success:, success_, passed:, passed_, shipped:, or shipped_)
+
+    CONCRETE STEPS:
+    1. Create results/experiment_1509_executable_monitor_runtime_adapter.json immediately with status="in_progress".
+    2. Verify exp1507 and exp1508 readiness gates; if either is absent, write a terminal gated artifact.
+    3. Inventory .115 and .116 monitor/certificate/verifier manifests and define a small normalized event schema with provenance fields.
+    4. Implement only the minimum adapter/helper needed to load, validate, normalize, and replay events.
+    5. Link safe-prefix events when offsets or case IDs match; otherwise record unmatched rows without inventing links.
+    6. Write results/executable_monitor_events_1509.jsonl with one normalized event per source event.
+    7. Add focused tests for event schema validation and replay ordering.
+    8. Set monitor_runtime_ready=true only if the manifest exists, events normalize, and verifier_false_accept_rate remains reported.
+    9. Write all required artifact fields with status="complete" or an honest terminal blocker.
+
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1509_executable_monitor_runtime_adapter.json')); print(d.get('monitor_runtime_ready'), d.get('events_normalized'), d.get('event_schema_version'), d.get('honest_verdict'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp1510-plan-graph-structural-contract-gate
+  milestone: 2026.04.116
+  deliverable: results/experiment_1510_plan_graph_structural_contract_gate.json
+  title: "Plan-Graph Structural Contract Gate"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 50
+  estimated_wall_time_min: 60
+  priority: high
+  requires_gpu: false
+  skip_pre_test: true
+  prior_failures:
+    - experiment_id: exp1501-gnnverifier-plan-graph-energy-adapter
+      verdict: plan_graph_energy_localized_injected_faults_only
+      addressed_by: "This task changes scope from post-hoc injected-fault localization to pre-execution structural dependency contracts with deterministic rejection."
+      retire_if_same_verdict: true
     - experiment_id: exp1490-kona-ebt-partial-trace-localization
-      verdict: localization_injected_failures_only_no_intervention
-      addressed_by: "This task changes the scope from offline injected-failure localization to asynchronous monitor intervention over existing certificate/validator artifacts."
+      verdict: injected_failure_localization_only_no_decoded_quality_claim
+      addressed_by: "This task keeps the claim at structural pre-execution validity and does not claim decoded output quality or Kona internals."
       retire_if_same_verdict: true
   prompt: |
     CONTEXT:
-    Exp1490 showed partial-trace localization on injected failures but did not
-    intervene during generation. The post-.114 sweep added interwhen:
-    periodically poll reasoning traces, extract verifiable intermediate state,
-    run asynchronous monitors, and interrupt only when an error is detected.
-    This task is gated on trigger certificates and validator compiler readiness.
-    Use {project_root} as the project root and {date} as the run date.
+    The .116 literature sweep added structural verification for EDA code
+    generation: use dependency graphs as execution contracts before invoking
+    tools. Carnot's exp1501 plan-graph energy work localized injected faults
+    after the fact. This task moves that signal into a deterministic
+    pre-execution gate. Use {project_root} as the project root and {date} as the
+    run date.
 
     EXISTING CODE TO READ FIRST:
     - CODEX.md
     - CLAUDE.md
     - research-references.md
-    - results/experiment_1493_trigger_token_certificate_export_v1.json
-    - results/cctu_trigger_certificates_1493.jsonl
-    - results/experiment_1494_constrainprompt_validator_compiler_audit.json
-    - results/constrainprompt_validator_manifest_1494.jsonl
-    - results/experiment_1490_kona_ebt_partial_trace_localization.json
+    - results/experiment_1501_gnnverifier_plan_graph_energy_adapter.json
+    - results/experiment_1509_executable_monitor_runtime_adapter.json
     - python/carnot/verify/
+    - python/carnot/pipeline/
     - tests/python/
 
     TASK:
-    Implement a CPU-only interwhen-style monitor prototype over existing CCTU
-    traces and certificates. Do not generate new LLM rows. Simulate polling and
-    interruption using recorded reasoning/certificate states, deterministic
-    validators, and explicit monitor events.
+    Build a deterministic plan-graph structural contract gate that checks
+    prerequisites, acquisition paths, tool ordering, and incompatible API use
+    before execution. Compare it against random and length baselines where
+    relevant.
 
     REQUIRED ARTIFACT FIELDS:
     - status
-    - monitor_intervention_ready
-    - gated_inputs_present
-    - traces_replayed
-    - polling_interval_tokens
-    - monitor_events_emitted
-    - errors_detected
-    - interruptions_triggered
-    - false_interruptions
-    - verifier_false_accept_rate
-    - monitor_event_manifest_path
+    - structural_contract_gate_ready
+    - plan_graphs_checked
+    - contracts_defined
+    - violations_injected
+    - violations_detected
+    - false_accept_rate
+    - false_reject_rate
+    - random_baseline_detection_rate
+    - length_baseline_detection_rate
+    - contract_manifest_path
     - blockers
     - honest_verdict (MUST start with complete:, complete_, success:, success_, passed:, passed_, shipped:, or shipped_)
 
     CONCRETE STEPS:
-    1. Create results/experiment_1495_interwhen_monitor_prototype.json immediately with status="in_progress".
-    2. Verify that both gated upstream artifacts exist and report readiness; if not, write a terminal gated/blocked artifact.
-    3. Convert certificate rows and validator rows into replayable trace states with token offsets or synthetic polling intervals.
-    4. Implement or script a minimal monitor loop: poll state, run deterministic validators/checks, emit monitor event, and mark interrupt/no-interrupt.
-    5. Measure detection count, interruptions, false interruptions, and false accepts.
-    6. Write results/interwhen_monitor_events_1495.jsonl with one event per poll.
-    7. Add focused tests for monitor-event schema or replay helpers.
-    8. Set monitor_intervention_ready=true only if the event manifest exists, at least one real error is detected, and false_accept_rate remains zero.
+    1. Create results/experiment_1510_plan_graph_structural_contract_gate.json immediately with status="in_progress".
+    2. Load exp1501 plan-graph cases and any normalized monitor/runtime events from exp1509 if available.
+    3. Define a small structural contract schema for graph prerequisites, tool ordering, required object acquisition, and incompatible operations.
+    4. Evaluate known-good and injected-violation plan graphs with deterministic checks.
+    5. Compute false accepts, false rejects, and baseline detection rates.
+    6. Write results/plan_graph_structural_contracts_1510.jsonl with one row per graph/contract result.
+    7. Add focused tests for contract validation and violation classification.
+    8. Set structural_contract_gate_ready=true only if the manifest exists and false_accept_rate is reported.
     9. Write all required artifact fields with status="complete" or an honest terminal blocker.
 
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1495_interwhen_monitor_prototype.json')); print(d.get('monitor_intervention_ready'), d.get('errors_detected'), d.get('false_interruptions'), d.get('honest_verdict'))"
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1510_plan_graph_structural_contract_gate.json')); print(d.get('structural_contract_gate_ready'), d.get('violations_detected'), d.get('false_accept_rate'), d.get('honest_verdict'))"
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-- id: exp1496-hover-safe-prefix-continuation-audit
-  milestone: 2026.04.115
-  deliverable: results/experiment_1496_hover_safe_prefix_continuation_audit.json
-  title: "HoVer Safe-Prefix Continuation Audit - Gated on Exp1495 Monitor Ready"
+- id: exp1511-product-line-solver-oracle-benchmark
+  milestone: 2026.04.116
+  deliverable: results/experiment_1511_product_line_solver_oracle_benchmark.json
+  title: "Product-Line Solver Oracle Benchmark"
   agent_type: codex
   model: gpt-5.5
   max_turns: 50
-  estimated_wall_time_min: 100
+  estimated_wall_time_min: 95
   priority: high
   requires_gpu: true
   skip_pre_test: true
-  gated_on:
-    - upstream: exp1495-interwhen-monitor-prototype
-      artifact_field: monitor_intervention_ready
-      op: "=="
-      value: true
   prior_failures:
-    - experiment_id: exp1490-kona-ebt-partial-trace-localization
-      verdict: injected_failure_localization_only_no_decoded_quality_claim
-      addressed_by: "This task changes the claim to safe-prefix continuation with deterministic validators and no decoded-quality/Kona-internals headline."
-      retire_if_same_verdict: true
-    - experiment_id: exp1487-v1-pairwise-self-verification-audit
-      verdict: pairwise_underperformed_energy_and_superficial_baselines
-      addressed_by: "This task uses deterministic monitor/localization signals, not pairwise LLM judging, to choose the continuation point."
-      retire_if_same_verdict: true
+    - experiment_id: exp1486-cctu-executable-constraint-microbenchmark
+      verdict: cctu_domain_only_quality_gap
+      addressed_by: "This task changes domain to product-line feature-model constraints with a deterministic solver oracle, rather than extending CCTU with more similar cases."
+      retire_if_same_verdict: false
+    - experiment_id: exp1494-constrainprompt-validator-compiler-audit
+      verdict: safe_prompt_derived_validators_bounded_to_cctu
+      addressed_by: "This task uses solver-backed feature-model feasibility as a new oracle family and records parsing/feasibility failures separately."
+      retire_if_same_verdict: false
   prompt: |
     CONTEXT:
-    HoVer suggests continuing from the last safe prefix instead of regenerating
-    from scratch. Exp1490 localized injected failures, and exp1495 should
-    provide monitor events. This task tests whether safe-prefix continuation
-    improves final validator pass rate without increasing false accepts. Use
-    {project_root} as the project root and {date} as the run date.
+    Recent product-line validation work shows LLMs can approach solver
+    correctness on semi-formal feature-model blueprints but still make
+    structural parsing and constraint reasoning errors. ConstraintBench also
+    shows feasibility is often the main bottleneck. Carnot needs a benchmark
+    outside CCTU that keeps a deterministic oracle. Use {project_root} as the
+    project root and {date} as the run date.
 
     MODEL_SPECS:
-    - unsloth/Qwen3.6-35B-A3B-GGUF (flagship MoE; primary continuation model)
-    - unsloth/gemma-4-31B-it-GGUF (flagship dense; secondary continuation model)
-    - unsloth/gemma-4-26B-A4B-it-GGUF (middle MoE; secondary continuation model)
+    - unsloth/Qwen3.6-35B-A3B-GGUF (flagship MoE; primary feature-model solver model)
+    - unsloth/gemma-4-31B-it-GGUF (flagship dense; secondary feature-model solver model)
+    - unsloth/gemma-4-26B-A4B-it-GGUF (middle MoE; secondary feature-model solver model)
     Legacy small models are allowed only as CPU smoke-tests and must not be
-    used for headline continuation results.
+    used for headline benchmark results.
 
     EXISTING CODE TO READ FIRST:
     - CODEX.md
     - CLAUDE.md
     - scripts/experiment_template.py
     - research-references.md
-    - results/experiment_1495_interwhen_monitor_prototype.json
-    - results/interwhen_monitor_events_1495.jsonl
-    - results/experiment_1490_kona_ebt_partial_trace_localization.json
+    - results/experiment_1486_cctu_executable_constraint_microbenchmark.json
     - python/carnot/verify/
     - python/carnot/pipeline/
     - tests/python/
 
     TASK:
-    Run a bounded HoVer-style safe-prefix continuation audit. Use monitor or
-    localization events to choose the last safe prefix, ask a mandated local
-    SOTA GGUF to continue from that prefix, and compare final validator pass
-    rate against full regeneration and no-continuation baselines.
+    Create a bounded feature-model/product-line constraint benchmark with a
+    deterministic solver oracle. Run at least one mandated local SOTA GGUF
+    model for headline rows and report parse, feasibility, optimality/answer,
+    and false-accept metrics.
 
     REQUIRED ARTIFACT FIELDS:
     - status
     - model_specs
     - live_sota_model_inference_used
-    - safe_prefix_continuation_ready
+    - product_line_benchmark_ready
+    - feature_models_defined
     - cases_attempted
-    - continuations_completed
-    - baseline_validator_pass_rate
-    - safe_prefix_validator_pass_rate
-    - full_regeneration_validator_pass_rate
+    - parse_rate
+    - solver_oracle_ready
+    - feasibility_rate
+    - oracle_agreement_rate
     - verifier_false_accept_rate
-    - last_safe_prefix_selection_rule
-    - continuation_manifest_path
+    - benchmark_manifest_path
     - models_used
     - gpu_probe
     - blockers
     - honest_verdict (MUST start with complete:, complete_, success:, success_, passed:, passed_, shipped:, or shipped_)
 
     CONCRETE STEPS:
-    1. Create results/experiment_1496_hover_safe_prefix_continuation_audit.json immediately with status="in_progress".
-    2. Confirm the exp1495 monitor event manifest exists; if not, write a terminal gated/blocked artifact.
-    3. Define a deterministic last_safe_prefix_selection_rule from monitor events or energy/localization markers.
-    4. Use at least one mandated local SOTA GGUF model for headline continuations. If loading fails, write a terminal blocker and do not fall back to legacy headline models.
-    5. Run matched baselines: original/no-continuation, safe-prefix continuation, and full regeneration where feasible.
-    6. Validate all outputs with the deterministic CCTU/compiled validators.
-    7. Write results/safe_prefix_continuations_1496.jsonl with one row per case/baseline.
-    8. Set safe_prefix_continuation_ready=true only if validator pass-rate and false-accept metrics are present.
-    9. Run focused tests for any continuation-selection helpers.
-    10. Write all required artifact fields with status="complete" or an honest terminal blocker.
+    1. Create results/experiment_1511_product_line_solver_oracle_benchmark.json immediately with status="in_progress".
+    2. Define a small set of semi-formal product-line blueprints with optional/mandatory/excludes/requires constraints and expected analysis operations.
+    3. Implement or reuse a deterministic solver/oracle path using available local tooling. If a full solver is not available, write a bounded brute-force oracle for small feature models.
+    4. Use cached_sota_pair() or the established local SOTA GGUF cache pattern from scripts/experiment_template.py.
+    5. Run at least one mandated SOTA GGUF model for headline rows. If GPU/model loading fails, write a terminal blocker rather than using a legacy small headline model.
+    6. Parse model outputs into structured feature selections or analysis answers and check them against the oracle.
+    7. Separate parse failures, infeasible answers, feasible-but-suboptimal or wrong answers, and verifier false accepts.
+    8. Write results/product_line_solver_oracle_1511.jsonl with one row per case/model.
+    9. Add focused tests for blueprint parsing and oracle checking.
+    10. Set product_line_benchmark_ready=true only if the oracle runs and at least one live SOTA headline subset is measured.
+    11. Write all required artifact fields with status="complete" or an honest terminal blocker.
 
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1496_hover_safe_prefix_continuation_audit.json')); print(d.get('safe_prefix_continuation_ready'), d.get('safe_prefix_validator_pass_rate'), d.get('verifier_false_accept_rate'), d.get('honest_verdict'))"
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1511_product_line_solver_oracle_benchmark.json')); print(d.get('product_line_benchmark_ready'), d.get('feasibility_rate'), d.get('verifier_false_accept_rate'), d.get('honest_verdict'))"
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
 # ============================================================
-# Phase 2 - Continuous self-learning hygiene
+# Phase 2 - FR-11 self-learning feedback loop
 # ============================================================
 
-- id: exp1497-fr11-trace2skill-daily-eval-v10
-  milestone: 2026.04.115
-  deliverable: results/experiment_1497_fr11_trace2skill_daily_eval_v10.json
-  title: "FR-11 v10 Trace2Skill Daily Eval + Rot Check"
+- id: exp1512-fr11-verifier-feedback-policy-cache-v11
+  milestone: 2026.04.116
+  deliverable: results/experiment_1512_fr11_verifier_feedback_policy_cache_v11.json
+  title: "FR-11 Verifier-Feedback Policy Cache v11"
   agent_type: codex
   model: gpt-5.5
   max_turns: 50
-  estimated_wall_time_min: 80
+  estimated_wall_time_min: 70
   priority: critical
-  requires_gpu: true
+  requires_gpu: false
   skip_pre_test: true
-  continuous_self_learning_task: true
   prior_failures:
-    - experiment_id: exp1484-fr11-query-time-memory-policy-v9
-      verdict: query_time_utility_ready_but_durability_unproven
-      addressed_by: "This task changes the target from bounded replay utility to daily trace2skill evaluation, rot detection, and promotion guardrails."
+    - experiment_id: exp1497-fr11-trace2skill-daily-eval-v10
+      verdict: daily_eval_manifest_ready_no_closed_feedback_loop
+      addressed_by: "This task changes scope from daily evaluation hygiene to a bounded verifier-feedback policy cache with no model-weight mutation."
       retire_if_same_verdict: false
-    - experiment_id: exp1485-fr11-completeness-reduction-v9
-      verdict: completeness_reduction_candidate_ready
-      addressed_by: "This task uses the policy candidate as an input but adds daily-eval and rot checks before promotion."
+    - experiment_id: exp1484-fr11-query-time-utility-audit
+      verdict: bounded_query_time_utility_ready_no_autonomous_update
+      addressed_by: "This task adds replay-derived policy updates while preserving deterministic validator authority and rollback requirements."
       retire_if_same_verdict: false
   prompt: |
     CONTEXT:
-    Exp1484 proved FR-11 query-time memory utility on bounded replay with
-    task_success_delta=0.5 and zero soundness mistakes. The PRD vision requires
-    continuous self-learning, not just one replay improvement. Known ops
-    priorities call for trace2skill daily evaluation and skill rot checks. Use
-    {project_root} as the project root and {date} as the run date.
-
-    MODEL_SPECS:
-    - unsloth/Qwen3.6-35B-A3B-GGUF (flagship MoE; primary local judge/generator if an LLM is needed)
-    - unsloth/gemma-4-31B-it-GGUF (flagship dense; secondary local judge/generator if an LLM is needed)
-    - unsloth/gemma-4-26B-A4B-it-GGUF (middle MoE; secondary local judge/generator if an LLM is needed)
-    Legacy small models are allowed only as CPU smoke-tests and must not be
-    used for headline self-learning results.
+    This is the mandatory continuous self-learning task for milestone .116.
+    Once-More and related verifier-feedback work suggest intervening during or
+    after generation using external verifier signals. Carnot's version must not
+    mutate model weights or promote unverified skills; it should build a bounded
+    query-time policy cache from verifier/monitor events, then leave promotion
+    to a rollback-gated follow-up. Use {project_root} as the project root and
+    {date} as the run date.
 
     EXISTING CODE TO READ FIRST:
     - CODEX.md
     - CLAUDE.md
-    - scripts/experiment_template.py
     - research-program.md
     - _bmad/prd.md
-    - ops/known-issues.md
-    - results/experiment_1484_fr11_query_time_memory_policy_v9.json
-    - results/experiment_1485_fr11_completeness_reduction_v9.json
+    - results/experiment_1497_fr11_trace2skill_daily_eval_v10.json
+    - results/fr11_trace2skill_daily_eval_manifest_1497.jsonl
+    - results/experiment_1509_executable_monitor_runtime_adapter.json
+    - results/executable_monitor_events_1509.jsonl
     - python/carnot/pipeline/session_memory.py
     - python/carnot/pipeline/session_memory_pack.py
     - python/carnot/pipeline/constraint_template_library.py
     - tests/python/
 
     TASK:
-    Implement a bounded FR-11 v10 trace2skill daily-eval cadence and rot
-    check. This is the mandatory continuous self-learning task for .115. It
-    should create durable evaluation artifacts and promotion/retirement
-    decisions without claiming broad autonomous learning beyond the measured
-    suite.
+    Build a bounded FR-11 verifier-feedback policy cache from existing daily
+    eval and monitor events. The cache may adjust retrieval/routing/continuation
+    choices at query time, but it must not mutate model weights or bypass
+    deterministic validators.
 
     REQUIRED ARTIFACT FIELDS:
     - status
     - continuous_self_learning_task
-    - model_specs
-    - daily_eval_manifest_ready
-    - trace2skill_cases_evaluated
-    - skills_evaluated
-    - rotted_skill_count
-    - promoted_skill_count
-    - retired_skill_count
-    - baseline_task_success_rate
-    - memory_task_success_rate
-    - task_success_delta
+    - policy_cache_ready
+    - no_model_weight_mutation
+    - source_events_loaded
+    - policy_updates_proposed
+    - policy_updates_accepted
+    - policy_update_rules
     - soundness_mistakes
-    - completeness_mistakes
-    - daily_eval_manifest_path
-    - models_used
-    - gpu_probe
+    - verifier_false_accept_rate
+    - policy_cache_manifest_path
+    - promotion_requires_rollback_audit
     - blockers
     - honest_verdict (MUST start with complete:, complete_, success:, success_, passed:, passed_, shipped:, or shipped_)
 
     CONCRETE STEPS:
-    1. Create results/experiment_1497_fr11_trace2skill_daily_eval_v10.json immediately with status="in_progress".
-    2. Reuse exp1484/exp1485 policy artifacts and existing SessionMemory/portable pack helpers; avoid broad rewrites.
-    3. Build a daily-eval manifest with a bounded set of trace-derived skills, expected resolver checks, baseline outcomes, memory-assisted outcomes, and rot criteria.
-    4. If an LLM judge/generator is needed, use at least one mandated local SOTA GGUF. If not needed, state that deterministic evaluation was sufficient while keeping MODEL_SPECS in the artifact.
-    5. Detect stale or harmful skills: missing source artifact, unresolved verifier dependency, reduced task success, new soundness mistakes, or schema drift.
-    6. Write ops/fr11_trace2skill_daily_eval_1497.md with the cadence, promotion rules, retirement rules, and boundaries.
-    7. Write results/fr11_trace2skill_daily_eval_manifest_1497.jsonl with one row per skill/case.
-    8. Run focused tests for any daily-eval or rot-check helper.
-    9. Set daily_eval_manifest_ready=true only if the manifest exists and promotion/retirement counts are explicit.
-    10. Write all required artifact fields with status="complete" or an honest terminal blocker.
+    1. Create results/experiment_1512_fr11_verifier_feedback_policy_cache_v11.json immediately with status="in_progress".
+    2. Load exp1497 daily-eval rows and exp1509 normalized monitor events if present. If exp1509 is absent, continue with exp1497 rows and record the gap.
+    3. Define explicit policy update rules for retrieval boost/demotion, continuation preference, verifier escalation, or skill quarantine. Do not mutate model weights.
+    4. Apply rules to a bounded replay set and count proposed versus accepted policy updates.
+    5. Reject or quarantine any update associated with false accepts, unreachable artifacts, stale provenance, or missing deterministic validation.
+    6. Write results/fr11_policy_cache_events_1512.jsonl with one row per source event and proposed policy action.
+    7. Add focused tests for policy-update rule determinism and no-promotion-before-rollback behavior.
+    8. Set continuous_self_learning_task=true and policy_cache_ready=true only if the manifest exists, no_model_weight_mutation=true, soundness_mistakes=0, and promotion_requires_rollback_audit=true.
+    9. Write all required artifact fields with status="complete" or an honest terminal blocker.
 
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1497_fr11_trace2skill_daily_eval_v10.json')); print(d.get('daily_eval_manifest_ready'), d.get('continuous_self_learning_task'), d.get('rotted_skill_count'), d.get('honest_verdict'))"
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1512_fr11_verifier_feedback_policy_cache_v11.json')); print(d.get('continuous_self_learning_task'), d.get('policy_cache_ready'), d.get('soundness_mistakes'), d.get('honest_verdict'))"
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-- id: exp1498-trace2skill-artifact-reachability-audit
-  milestone: 2026.04.115
-  deliverable: results/experiment_1498_trace2skill_artifact_reachability_audit.json
-  title: "trace2skill Artifact Reachability Audit - Gated on Exp1497 Daily Eval"
+- id: exp1513-fr11-policy-rollback-replay-audit
+  milestone: 2026.04.116
+  deliverable: results/experiment_1513_fr11_policy_rollback_replay_audit.json
+  title: "FR-11 Policy Rollback Replay Audit - Gated on Exp1512 Policy Cache"
   agent_type: codex
   model: gpt-5.5
   max_turns: 30
-  estimated_wall_time_min: 35
+  estimated_wall_time_min: 45
   priority: high
   requires_gpu: false
   skip_pre_test: true
   gated_on:
-    - upstream: exp1497-fr11-trace2skill-daily-eval-v10
-      artifact_field: daily_eval_manifest_ready
+    - upstream: exp1512-fr11-verifier-feedback-policy-cache-v11
+      artifact_field: policy_cache_ready
       op: "=="
       value: true
   prior_failures:
-    - experiment_id: exp1454-artifact-classifier-scope-reduction
-      verdict: artifact_lifecycle_hygiene_needed
-      addressed_by: "This task applies artifact lifecycle hygiene specifically to trace2skill learned-skill evidence and resolver reachability."
+    - experiment_id: exp1497-fr11-trace2skill-daily-eval-v10
+      verdict: daily_eval_ready_but_no_counterfactual_rollback
+      addressed_by: "This task adds counterfactual replay and rollback decisions before any learned policy can be promoted."
+      retire_if_same_verdict: true
+    - experiment_id: exp1512-fr11-verifier-feedback-policy-cache-v11
+      verdict: planned_upstream_policy_cache_needs_rollback_gate
+      addressed_by: "This downstream task exists specifically to gate promotion on rollback replay rather than trusting the cache."
       retire_if_same_verdict: false
   prompt: |
     CONTEXT:
-    Continuous self-learning is only useful if promoted skills point to live
-    evidence. Known ops priorities call out check-resolvable audits for
-    trace2skill/Skillify artifacts. This task is gated on exp1497 producing a
-    daily-eval manifest. Use {project_root} as the project root and {date} as
-    the run date.
+    Exp1512 should create a verifier-feedback policy cache but must not promote
+    it. This task is the promotion gate: replay counterfactual sessions with and
+    without proposed policy updates, measure soundness and false accepts, and
+    produce rollback/keep decisions. Use {project_root} as the project root and
+    {date} as the run date.
 
     EXISTING CODE TO READ FIRST:
     - CODEX.md
     - CLAUDE.md
-    - ops/known-issues.md
+    - results/experiment_1512_fr11_verifier_feedback_policy_cache_v11.json
+    - results/fr11_policy_cache_events_1512.jsonl
     - results/experiment_1497_fr11_trace2skill_daily_eval_v10.json
     - results/fr11_trace2skill_daily_eval_manifest_1497.jsonl
+    - python/carnot/pipeline/session_memory.py
+    - python/carnot/pipeline/session_memory_pack.py
+    - tests/python/
+
+    TASK:
+    Audit the FR-11 policy cache with deterministic counterfactual replay and
+    rollback decisions. Do not generate new LLM rows.
+
+    REQUIRED ARTIFACT FIELDS:
+    - status
+    - rollback_audit_passed
+    - gated_inputs_present
+    - policy_updates_replayed
+    - counterfactual_sessions
+    - accepted_policy_updates
+    - rolled_back_policy_updates
+    - soundness_mistakes
+    - false_accept_delta
+    - utility_delta
+    - rollback_manifest_path
+    - blockers
+    - honest_verdict (MUST start with complete:, complete_, success:, success_, passed:, passed_, shipped:, or shipped_)
+
+    CONCRETE STEPS:
+    1. Create results/experiment_1513_fr11_policy_rollback_replay_audit.json immediately with status="in_progress".
+    2. Verify exp1512 policy_cache_ready=true; if absent, write a terminal gated artifact.
+    3. Replay bounded sessions with baseline policy and proposed policy updates. Use deterministic artifacts only.
+    4. Measure soundness mistakes, false_accept_delta, utility_delta, and update-level rollback decisions.
+    5. Roll back any update that increases false accepts, references stale/unreachable evidence, or lacks deterministic validator support.
+    6. Write results/fr11_policy_rollback_replay_1513.jsonl with one row per policy update/replay result.
+    7. Add focused tests for rollback decision rules.
+    8. Set rollback_audit_passed=true only if soundness_mistakes=0 and false_accept_delta<=0 for accepted updates.
+    9. Write all required artifact fields with status="complete" or an honest terminal blocker.
+
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1513_fr11_policy_rollback_replay_audit.json')); print(d.get('rollback_audit_passed'), d.get('accepted_policy_updates'), d.get('false_accept_delta'), d.get('honest_verdict'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp1514-trace2skill-portable-skill-pack-v2
+  milestone: 2026.04.116
+  deliverable: results/experiment_1514_trace2skill_portable_skill_pack_v2.json
+  title: "trace2skill Portable Skill Pack v2 - Gated on Exp1513 Rollback Pass"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 30
+  estimated_wall_time_min: 40
+  priority: high
+  requires_gpu: false
+  skip_pre_test: true
+  gated_on:
+    - upstream: exp1513-fr11-policy-rollback-replay-audit
+      artifact_field: rollback_audit_passed
+      op: "=="
+      value: true
+  prior_failures:
+    - experiment_id: exp1498-trace2skill-artifact-reachability-audit
+      verdict: artifact_reachability_audit_complete_no_portable_pack
+      addressed_by: "This task changes scope from reachability audit to a portable skill/provenance pack for rollback-passing entries only."
+      retire_if_same_verdict: false
+    - experiment_id: exp1454-artifact-classifier-scope-reduction
+      verdict: artifact_lifecycle_hygiene_needed
+      addressed_by: "This task records provenance, resolver, and promotion status for learned skills instead of broad artifact classification."
+      retire_if_same_verdict: false
+  prompt: |
+    CONTEXT:
+    Exp1498 proved reachability hygiene for trace2skill artifacts. Exp1513
+    should identify which verifier-feedback policy updates survive rollback.
+    This task packages only rollback-passing learned skill entries with
+    provenance, resolver keys, and promotion status for future local-first
+    distribution. Use {project_root} as the project root and {date} as the run
+    date.
+
+    EXISTING CODE TO READ FIRST:
+    - CODEX.md
+    - CLAUDE.md
+    - results/experiment_1498_trace2skill_artifact_reachability_audit.json
+    - results/experiment_1513_fr11_policy_rollback_replay_audit.json
+    - results/fr11_policy_rollback_replay_1513.jsonl
     - python/carnot/pipeline/session_memory.py
     - python/carnot/pipeline/session_memory_pack.py
     - python/carnot/pipeline/constraint_template_library.py
     - tests/python/
 
     TASK:
-    Audit trace2skill learned-skill artifacts for reachability and resolver
-    freshness. Produce repair/retire decisions for missing, stale, or
-    ambiguous evidence links.
+    Build a portable trace2skill skill/provenance pack for rollback-passing
+    entries only. Do not promote entries that failed rollback, lack reachability,
+    or do not have deterministic validator support.
 
     REQUIRED ARTIFACT FIELDS:
     - status
-    - artifact_reachability_audit_complete
+    - portable_skill_pack_ready
     - gated_inputs_present
-    - skills_checked
-    - source_artifacts_checked
-    - reachable_artifact_count
-    - unreachable_artifact_count
-    - stale_artifact_count
-    - ambiguous_resolver_count
-    - repair_decisions
-    - retirement_decisions
-    - blockers
-    - honest_verdict (MUST start with complete:, complete_, success:, success_, passed:, passed_, shipped:, or shipped_)
-
-    CONCRETE STEPS:
-    1. Create results/experiment_1498_trace2skill_artifact_reachability_audit.json immediately with status="in_progress".
-    2. Confirm exp1497 daily-eval artifacts exist; if absent, write a terminal gated/blocked artifact.
-    3. Parse the daily-eval manifest and collect all source artifact references, resolver keys, model references, and verifier dependencies.
-    4. Check that each referenced path exists, is parseable if JSON/JSONL/YAML, and still satisfies the expected key fields.
-    5. Mark artifacts as reachable, unreachable, stale, or ambiguous, with explicit repair/retire recommendations.
-    6. Do not delete learned skills; record decisions in the artifact and, if useful, a small ops note.
-    7. Run focused tests for any resolver helper added.
-    8. Write all required artifact fields with status="complete" or an honest terminal blocker.
-
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1498_trace2skill_artifact_reachability_audit.json')); print(d.get('artifact_reachability_audit_complete'), d.get('unreachable_artifact_count'), d.get('retirement_decisions'), d.get('honest_verdict'))"
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp1499-verifier-ensemble-dry-orthogonality-v2
-  milestone: 2026.04.115
-  deliverable: results/experiment_1499_verifier_ensemble_dry_orthogonality_v2.json
-  title: "Verifier Ensemble DRY + Conditional Orthogonality v2"
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 50
-  estimated_wall_time_min: 45
-  priority: high
-  requires_gpu: false
-  skip_pre_test: true
-  prior_failures:
-    - experiment_id: exp1224-verifier-orthogonality-audit
-      verdict: k_eff_1_verifier_redundancy_risk
-      addressed_by: "This task changes the setup by using the post-.114 executable-constraint and memory-policy verifier surfaces rather than the older saturated ensemble."
-      retire_if_same_verdict: false
-    - experiment_id: exp1487-v1-pairwise-self-verification-audit
-      verdict: pairwise_underperformed_energy_and_superficial_baselines
-      addressed_by: "This task audits deterministic verifier redundancy and conditional acceptance rather than adding another LLM pairwise verifier."
-      retire_if_same_verdict: true
-  prompt: |
-    CONTEXT:
-    The active PRD/ops direction requires verifier orthogonality and phase
-    gates. Earlier audits found redundancy risk, and .114 showed pairwise
-    self-verification is not competitive with deterministic energy ranking.
-    This task audits the current deterministic verifier ensemble for DRY
-    violations and conditional orthogonality. Use {project_root} as the project
-    root and {date} as the run date.
-
-    EXISTING CODE TO READ FIRST:
-    - CODEX.md
-    - CLAUDE.md
-    - _bmad/architecture.md
-    - ops/known-issues.md
-    - results/experiment_1482_beaver_lite_prefix_calibration_live.json
-    - results/experiment_1486_cctu_executable_constraint_microbenchmark.json
-    - results/experiment_1490_kona_ebt_partial_trace_localization.json
-    - python/carnot/verify/
-    - python/carnot/pipeline/
-    - tests/python/
-
-    TASK:
-    Audit verifier ensemble DRY and conditional orthogonality for the current
-    post-.114 surfaces: BEAVER-lite bounds, CCTU executable validators,
-    energy/localization, memory-policy checks, and structured verdict records.
-
-    REQUIRED ARTIFACT FIELDS:
-    - status
-    - orthogonality_matrix_written
-    - verifiers_audited
-    - cases_evaluated
-    - conditional_acceptance_matrix
-    - redundant_verifier_pairs
-    - k_effective_estimate
-    - deterministic_first_recommendations
-    - retire_or_keep_decisions
-    - blockers
-    - honest_verdict (MUST start with complete:, complete_, success:, success_, passed:, passed_, shipped:, or shipped_)
-
-    CONCRETE STEPS:
-    1. Create results/experiment_1499_verifier_ensemble_dry_orthogonality_v2.json immediately with status="in_progress".
-    2. Inventory current verifier surfaces from code and .114 artifacts. Do not include retired Semantic Energy/V_1 headline signals as active verifiers.
-    3. Build or reuse a bounded case table with pass/fail labels across available verifier outputs.
-    4. Compute pairwise and conditional acceptance rates, redundant pairs, and a conservative k_effective estimate.
-    5. Identify duplicated logic or verifier wrappers that should be merged, retired, or demoted.
-    6. Write a deterministic-first recommendation list for future generation gates.
-    7. Run focused tests for any matrix/audit helper.
-    8. Write all required artifact fields with status="complete" or an honest terminal blocker.
-
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1499_verifier_ensemble_dry_orthogonality_v2.json')); print(d.get('orthogonality_matrix_written'), d.get('k_effective_estimate'), d.get('redundant_verifier_pairs'), d.get('honest_verdict'))"
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp1500-latent-deterministic-discipline-gate
-  milestone: 2026.04.115
-  deliverable: results/experiment_1500_latent_deterministic_discipline_gate.json
-  title: "Latent-vs-Deterministic Discipline Gate - Gated on Exp1499 Matrix"
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 30
-  estimated_wall_time_min: 35
-  priority: high
-  requires_gpu: false
-  skip_pre_test: true
-  gated_on:
-    - upstream: exp1499-verifier-ensemble-dry-orthogonality-v2
-      artifact_field: orthogonality_matrix_written
-      op: "=="
-      value: true
-  prior_failures:
-    - experiment_id: exp1481-semantic-energy-feasibility-audit
-      verdict: retired_semantic_energy_confounded_by_superficial_baseline
-      addressed_by: "This task codifies when latent or energy-like signals may be used only as auxiliaries, after deterministic validators and superficial-baseline checks."
-      retire_if_same_verdict: true
-  prompt: |
-    CONTEXT:
-    .114 retired Semantic Energy/logit telemetry as a headline signal and
-    showed deterministic energy ranking could be confounded by superficial
-    baselines. Carnot needs a discipline gate that says when latent,
-    energy-like, probabilistic, or LLM-derived signals may influence decisions
-    and when deterministic validators must dominate. Use {project_root} as the
-    project root and {date} as the run date.
-
-    EXISTING CODE TO READ FIRST:
-    - CODEX.md
-    - CLAUDE.md
-    - _bmad/architecture.md
-    - ops/known-issues.md
-    - results/experiment_1499_verifier_ensemble_dry_orthogonality_v2.json
-    - results/experiment_1481_semantic_energy_feasibility_audit.json
-    - results/experiment_1487_v1_pairwise_self_verification_audit.json
-    - python/carnot/verify/
-    - tests/python/
-
-    TASK:
-    Write a latent-vs-deterministic discipline gate as an ops policy plus a
-    terminal artifact. It should encode which signals can be headline evidence,
-    auxiliary ranking evidence, triage evidence, or retired/no-claim evidence.
-
-    REQUIRED ARTIFACT FIELDS:
-    - status
-    - discipline_gate_ready
-    - gated_inputs_present
-    - signal_classes_audited
-    - headline_allowed_signals
-    - auxiliary_allowed_signals
-    - retired_signals
-    - deterministic_first_rules
-    - superficial_baseline_required_rules
+    - rollback_passing_entries
+    - packaged_skill_entries
+    - rejected_skill_entries
+    - provenance_fields_present
+    - resolver_keys_present
+    - pack_manifest_path
     - ops_note_path
     - blockers
     - honest_verdict (MUST start with complete:, complete_, success:, success_, passed:, passed_, shipped:, or shipped_)
 
     CONCRETE STEPS:
-    1. Create results/experiment_1500_latent_deterministic_discipline_gate.json immediately with status="in_progress".
-    2. Confirm exp1499 wrote an orthogonality matrix; if absent, write a terminal gated/blocked artifact.
-    3. Read .114 Semantic Energy and V_1 retirement artifacts and the exp1499 recommendations.
-    4. Write ops/latent_deterministic_discipline_gate_1500.md with clear policy tables for headline, auxiliary, triage, and retired signals.
-    5. Include required checks before latent/energy-like signals are accepted: deterministic validator comparison, superficial-baseline comparison, held-out calibration, and false-accept accounting.
-    6. If implementation hooks already exist, add a small helper/test; otherwise keep this as a policy/artifact task and do not invent broad infrastructure.
-    7. Write all required artifact fields with status="complete" or an honest terminal blocker.
-
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1500_latent_deterministic_discipline_gate.json')); print(d.get('discipline_gate_ready'), d.get('retired_signals'), d.get('ops_note_path'), d.get('honest_verdict'))"
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-# ============================================================
-# Phase 3 - Graph and hardware/substrate gates
-# ============================================================
-
-- id: exp1501-gnnverifier-plan-graph-energy-adapter
-  milestone: 2026.04.115
-  deliverable: results/experiment_1501_gnnverifier_plan_graph_energy_adapter.json
-  title: "GNNVerifier Plan-Graph Energy Adapter Smoke"
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 50
-  estimated_wall_time_min: 45
-  priority: high
-  requires_gpu: false
-  skip_pre_test: true
-  prior_failures:
-    - experiment_id: exp1486-cctu-executable-constraint-microbenchmark
-      verdict: cctu_tool_use_cases_exist_without_plan_graph_energy
-      addressed_by: "This task changes the representation by converting tool-use traces into plan graphs and testing dependency-localization energy against injected faults."
-      retire_if_same_verdict: false
-    - experiment_id: exp1490-kona-ebt-partial-trace-localization
-      verdict: injected_failure_localization_only
-      addressed_by: "This task keeps the injected-fault boundary but changes the target from token/span traces to graph node/edge dependency faults."
-      retire_if_same_verdict: false
-  prompt: |
-    CONTEXT:
-    The post-.114 sweep added GNNVerifier for LLM task planning: represent
-    plans as directed graphs with node/edge attributes, score structural risk,
-    and localize risky nodes or edges. Carnot's CCTU benchmark has tool-use and
-    graph/path cases, but no first-class plan-graph energy adapter. Use
-    {project_root} as the project root and {date} as the run date.
-
-    EXISTING CODE TO READ FIRST:
-    - CODEX.md
-    - CLAUDE.md
-    - research-references.md
-    - results/experiment_1486_cctu_executable_constraint_microbenchmark.json
-    - results/experiment_1490_kona_ebt_partial_trace_localization.json
-    - python/carnot/verify/
-    - python/carnot/pipeline/
-    - tests/python/
-
-    TASK:
-    Build a CPU-only smoke adapter that converts CCTU/tool-use traces into
-    plan graphs and scores injected dependency faults with a deterministic
-    graph-risk energy. Do not claim trained GNN performance unless an actual
-    trained model is implemented and evaluated.
-
-    REQUIRED ARTIFACT FIELDS:
-    - status
-    - plan_graph_energy_ready
-    - traces_converted
-    - injected_graph_faults
-    - node_localization_top1_rate
-    - edge_localization_top1_rate
-    - random_baseline_top1_rate
-    - length_baseline_top1_rate
-    - graph_energy_beats_baselines
-    - adapter_manifest_path
-    - blockers
-    - honest_verdict (MUST start with complete:, complete_, success:, success_, passed:, passed_, shipped:, or shipped_)
-
-    CONCRETE STEPS:
-    1. Create results/experiment_1501_gnnverifier_plan_graph_energy_adapter.json immediately with status="in_progress".
-    2. Select a bounded subset of CCTU/tool-use traces and represent each as nodes, edges, node types, edge types, tool dependencies, and expected outputs.
-    3. Inject dependency faults such as missing edges, wrong tool input type, missing intermediate, wrong ordering, or dangling output.
-    4. Implement a deterministic graph-risk energy or feature scorer. If you add a learned GNN, keep it tiny and report training/eval splits honestly.
-    5. Measure node/edge localization against random and length/degree baselines.
-    6. Write results/plan_graph_energy_manifest_1501.jsonl with one row per trace/fault.
-    7. Run focused tests for graph conversion and fault injection helpers.
-    8. Set plan_graph_energy_ready=true only if traces and baseline comparisons are written.
-    9. Write all required artifact fields with status="complete" or an honest terminal blocker.
-
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1501_gnnverifier_plan_graph_energy_adapter.json')); print(d.get('plan_graph_energy_ready'), d.get('graph_energy_beats_baselines'), d.get('node_localization_top1_rate'), d.get('honest_verdict'))"
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp1502-kan-hardware-accounting-quantkan-kaem
-  milestone: 2026.04.115
-  deliverable: results/experiment_1502_kan_hardware_accounting_quantkan_kaem.json
-  title: "KAN Hardware Accounting - QuantKAN/KAEM No-Synthesis Pass"
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 30
-  estimated_wall_time_min: 35
-  priority: medium
-  requires_gpu: false
-  skip_pre_test: true
-  prior_failures:
-    - experiment_id: exp1460-hardware-portfolio-narrowing
-      verdict: hardware_tracks_narrowed_to_dual_gpu_kv260_rtl_thrml_sim
-      addressed_by: "This task stays within the narrowed hardware policy by doing resource accounting only; it makes no synthesis, board, or accelerator-performance claim."
-      retire_if_same_verdict: false
-    - experiment_id: exp1372-kan-formal-verification-milp
-      verdict: kan_formal_verification_cpu_ready_hardware_claim_deferred
-      addressed_by: "This task changes from formal KAN verification to hardware resource accounting using recent QuantKAN/KAEM-style references."
-      retire_if_same_verdict: false
-  prompt: |
-    CONTEXT:
-    The post-.114 sweep added recent KAN hardware signals: complexity bounds
-    and ultra-light accelerators such as QuantKAN/KAEM. Carnot should keep KAN
-    hardware work as accounting until real synthesis or board evidence exists.
-    Use {project_root} as the project root and {date} as the run date.
-
-    EXISTING CODE TO READ FIRST:
-    - CODEX.md
-    - CLAUDE.md
-    - research-hardware-wishlist.md
-    - research-references.md
-    - results/experiment_1460_hardware_portfolio_narrowing.json
-    - results/experiment_1372_kan_formal_verification_milp.json
-    - python/carnot/kan/
-    - tests/python/
-
-    TASK:
-    Produce a no-synthesis KAN hardware accounting pass for Carnot-relevant
-    KAN verifier components. Compare naive KAN, QuantKAN-like quantization,
-    and KAEM-style approximation in terms of operations, memory, LUT/BRAM
-    proxy estimates, and accuracy-risk boundaries.
-
-    REQUIRED ARTIFACT FIELDS:
-    - status
-    - kan_hardware_accounting_ready
-    - accounting_only_no_synthesis_claim
-    - kan_components_audited
-    - quantkan_proxy_estimates
-    - kaem_proxy_estimates
-    - lut_proxy_estimate
-    - bram_proxy_estimate
-    - accuracy_risk_notes
-    - hardware_claim_allowed
-    - blockers
-    - honest_verdict (MUST start with complete:, complete_, success:, success_, passed:, passed_, shipped:, or shipped_)
-
-    CONCRETE STEPS:
-    1. Create results/experiment_1502_kan_hardware_accounting_quantkan_kaem.json immediately with status="in_progress".
-    2. Inventory current Carnot KAN components and previous KAN verification artifacts.
-    3. Read the new KAN hardware references in research-references.md and translate only stable concepts into accounting assumptions.
-    4. Estimate operation counts, memory footprints, and rough LUT/BRAM proxy pressure for naive, quantized, and approximation-table variants.
-    5. Explicitly set hardware_claim_allowed=false unless actual synthesis or hardware measurements are performed.
-    6. Write a concise accounting table in the artifact and, if useful, a small ops note.
-    7. Run focused tests only if code helpers are added.
-    8. Write all required artifact fields with status="complete".
-
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1502_kan_hardware_accounting_quantkan_kaem.json')); print(d.get('kan_hardware_accounting_ready'), d.get('accounting_only_no_synthesis_claim'), d.get('hardware_claim_allowed'), d.get('honest_verdict'))"
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp1503-thrml-import-readiness-repair-gate
-  milestone: 2026.04.115
-  deliverable: results/experiment_1503_thrml_import_readiness_repair_gate.json
-  title: "THRML Import Readiness Repair + Terminal Gate"
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 50
-  estimated_wall_time_min: 45
-  priority: high
-  requires_gpu: false
-  skip_pre_test: true
-  prior_failures:
-    - experiment_id: exp1488-thrml-import-preflight
-      verdict: thrml_import_ready_false_environment_blocker
-      addressed_by: "This task changes the setup by performing a bounded import-readiness repair or writing a terminal environmental blocker before any parity task runs."
-      retire_if_same_verdict: true
-    - experiment_id: exp1489-thrml-carnot-simulator-parity
-      verdict: gated_block_thrml_import_not_ready
-      addressed_by: "This task exists specifically to produce the structured readiness artifact that exp1504 will gate on."
-      retire_if_same_verdict: false
-  prompt: |
-    CONTEXT:
-    Exp1488 reported thrml_import_ready=false, so exp1489 was correctly
-    gate-blocked. The post-.114 sweep confirms THRML software docs exist, but
-    Carnot must not claim TSU hardware or simulator parity until local import
-    readiness is terminal. Use {project_root} as the project root and {date} as
-    the run date.
-
-    EXISTING CODE TO READ FIRST:
-    - CODEX.md
-    - CLAUDE.md
-    - research-hardware-wishlist.md
-    - research-references.md
-    - results/experiment_1488_thrml_import_preflight.json
-    - ops/known-issues.md
-    - python/carnot/
-    - tests/python/
-
-    TASK:
-    Repair or terminally classify THRML import readiness. Keep the scope
-    bounded: import checks, version/provenance capture, minimal compatibility
-    probe, and a readiness artifact. Do not run parity or claim hardware
-    behavior in this task.
-
-    REQUIRED ARTIFACT FIELDS:
-    - status
-    - thrml_import_ready
-    - import_error
-    - repair_attempted
-    - repair_actions
-    - thrml_version
-    - thrml_import_path
-    - compatibility_probe_passed
-    - parity_followup_allowed
-    - hardware_claim_allowed
-    - blockers
-    - honest_verdict (MUST start with complete:, complete_, success:, success_, passed:, passed_, shipped:, or shipped_)
-
-    CONCRETE STEPS:
-    1. Create results/experiment_1503_thrml_import_readiness_repair_gate.json immediately with status="in_progress" before probing THRML.
-    2. Reproduce the exp1488 import check and capture the exact traceback or success details.
-    3. If the blocker is a missing optional package and a local install is safe in the existing environment, perform the smallest repair needed. Do not globally mutate unrelated toolchains.
-    4. If repair is not possible, record the terminal blocker and set thrml_import_ready=false.
-    5. If import succeeds, run only a minimal compatibility probe that does not require TSU hardware and records version/path/provenance.
-    6. Set parity_followup_allowed equal to thrml_import_ready and hardware_claim_allowed=false.
-    7. Run focused tests only for any helper code added.
+    1. Create results/experiment_1514_trace2skill_portable_skill_pack_v2.json immediately with status="in_progress".
+    2. Verify exp1513 rollback_audit_passed=true; if absent, write a terminal gated artifact.
+    3. Select only rollback-passing entries with reachable source artifacts and deterministic validator support.
+    4. Define a compact portable skill pack manifest with source artifact, verifier evidence, resolver key, created date, and promotion status.
+    5. Write ops/trace2skill_portable_skill_pack_1514.md summarizing what is packaged, rejected, and why.
+    6. Add focused tests for manifest validation if code helpers are added.
+    7. Set portable_skill_pack_ready=true only if at least one eligible entry is packaged or the artifact honestly reports zero eligible entries with no false promotion.
     8. Write all required artifact fields with status="complete" or an honest terminal blocker.
 
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1503_thrml_import_readiness_repair_gate.json')); print(d.get('thrml_import_ready'), d.get('compatibility_probe_passed'), d.get('parity_followup_allowed'), d.get('honest_verdict'))"
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1514_trace2skill_portable_skill_pack_v2.json')); print(d.get('portable_skill_pack_ready'), d.get('packaged_skill_entries'), d.get('rejected_skill_entries'), d.get('honest_verdict'))"
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-- id: exp1504-thrml-carnot-simulator-parity-v3
-  milestone: 2026.04.115
-  deliverable: results/experiment_1504_thrml_carnot_simulator_parity_v3.json
-  title: "THRML/Carnot Simulator Parity v3 - Gated on Exp1503 Import Ready"
+# ============================================================
+# Phase 3 - Substrate conformance gates
+# ============================================================
+
+- id: exp1515-thrml-samplerbackend-conformance-pack
+  milestone: 2026.04.116
+  deliverable: results/experiment_1515_thrml_samplerbackend_conformance_pack.json
+  title: "THRML SamplerBackend Conformance Pack - Gated on Exp1506 Prior Parity"
   agent_type: codex
   model: gpt-5.5
   max_turns: 50
-  estimated_wall_time_min: 55
-  priority: medium
+  estimated_wall_time_min: 75
+  priority: high
   requires_gpu: false
   skip_pre_test: true
   gated_on:
-    - upstream: exp1503-thrml-import-readiness-repair-gate
-      artifact_field: thrml_import_ready
+    - upstream: exp1506-115-completion-archive-116-activation
+      artifact_field: prior_thrml_parity_ready
       op: "=="
       value: true
   prior_failures:
-    - experiment_id: exp1489-thrml-carnot-simulator-parity
-      verdict: gated_block_thrml_import_not_ready
-      addressed_by: "This task has a structured gate on exp1503.thrml_import_ready and should be skipped before the agent call when the import is still blocked."
-      retire_if_same_verdict: true
-    - experiment_id: exp1477-thrml-carnot-discrete-sb-parity-v2
-      verdict: thrml_parity_blocked_or_simulator_only
-      addressed_by: "This task remains simulator-only and explicitly forbids TSU hardware claims."
+    - experiment_id: exp1504-thrml-carnot-simulator-parity-v3
+      verdict: thrml_carnot_simulator_parity_passed_no_hardware_claim
+      addressed_by: "This task changes scope from parity smoke to a reusable SamplerBackend conformance pack, still simulator-only and no TSU hardware claim."
       retire_if_same_verdict: false
+    - experiment_id: exp1489-thrml-carnot-parity-smoke-gated
+      verdict: gate_blocked_before_import_readiness
+      addressed_by: "Exp1503/1504 resolved import/parity readiness; this task is gated on the activation artifact recording that fact."
+      retire_if_same_verdict: true
   prompt: |
     CONTEXT:
-    THRML/Carnot parity was blocked in .114 because THRML could not be imported
-    locally. This task is gated on exp1503.thrml_import_ready=true. If it runs,
-    it must remain simulator-only and must not make Extropic TSU hardware
-    claims. Use {project_root} as the project root and {date} as the run date.
+    .115 made THRML import ready and passed THRML/Carnot simulator parity with
+    no hardware claim. Extropic's public THRML docs position it as a JAX
+    library for block Gibbs sampling and PGM/EBM experimentation. The next step
+    is an adapter-level conformance pack, not TSU hardware. Use {project_root}
+    as the project root and {date} as the run date.
 
     EXISTING CODE TO READ FIRST:
     - CODEX.md
@@ -988,115 +796,277 @@ tasks:
     - research-hardware-wishlist.md
     - research-references.md
     - results/experiment_1503_thrml_import_readiness_repair_gate.json
-    - results/experiment_1489_thrml_carnot_simulator_parity.json
+    - results/experiment_1504_thrml_carnot_simulator_parity_v3.json
     - python/carnot/
     - tests/python/
 
     TASK:
-    Run a small simulator-only THRML/Carnot parity audit only if import
-    readiness is true. Compare a tiny discrete stochastic/energy case between
-    Carnot's local simulator and THRML's available software interface, with
-    explicit numerical tolerances and no hardware claim.
+    Build a simulator-only THRML SamplerBackend conformance pack that records
+    API boundaries, seed/reproducibility behavior, sample-shape expectations,
+    and Carnot parity vectors. Do not claim Extropic TSU hardware execution.
 
     REQUIRED ARTIFACT FIELDS:
     - status
-    - parity_experiment_ran
+    - thrml_samplerbackend_conformance_ready
+    - gated_inputs_present
     - thrml_import_ready
     - simulator_only
-    - cases_compared
-    - parity_pass_count
-    - parity_fail_count
-    - tolerance
-    - max_observed_delta
-    - hardware_claim_allowed
+    - no_tsu_hardware_claim
+    - conformance_cases
+    - parity_cases_passed
+    - sample_shape_contracts
+    - seed_reproducibility_checked
+    - conformance_manifest_path
     - blockers
     - honest_verdict (MUST start with complete:, complete_, success:, success_, passed:, passed_, shipped:, or shipped_)
 
     CONCRETE STEPS:
-    1. Create results/experiment_1504_thrml_carnot_simulator_parity_v3.json immediately with status="in_progress".
-    2. Confirm exp1503 reports thrml_import_ready=true; if not, write a terminal gated/blocked artifact.
-    3. Select the smallest compatible energy/discrete stochastic case exposed by both Carnot and THRML software.
-    4. Run both simulator paths with fixed seeds and explicit tolerances.
-    5. Record case-level outputs, deltas, pass/fail status, and any API limitations.
-    6. Set simulator_only=true and hardware_claim_allowed=false in all outcomes.
-    7. Run focused tests only for any adapter code added.
-    8. Write all required artifact fields with status="complete" or an honest terminal blocker.
+    1. Create results/experiment_1515_thrml_samplerbackend_conformance_pack.json immediately with status="in_progress".
+    2. Verify exp1506 prior_thrml_parity_ready=true; if absent, write a terminal gated artifact.
+    3. Import THRML only through local environment checks. If unavailable, write a terminal simulator dependency blocker.
+    4. Define a small SamplerBackend conformance contract: accepted model shape, schedule/seed behavior, returned sample shapes, energy/parity fields, and provenance.
+    5. Reuse exp1504 parity vectors where possible and add only bounded conformance cases.
+    6. Write results/thrml_samplerbackend_conformance_1515.jsonl with one row per case.
+    7. Add focused tests for adapter contract or manifest validation if helpers are added.
+    8. Set simulator_only=true and no_tsu_hardware_claim=true in all terminal artifacts.
+    9. Set thrml_samplerbackend_conformance_ready=true only if conformance rows are written and parity/sample-shape checks are reported.
+    10. Write all required artifact fields with status="complete" or an honest terminal blocker.
 
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1504_thrml_carnot_simulator_parity_v3.json')); print(d.get('parity_experiment_ran'), d.get('simulator_only'), d.get('max_observed_delta'), d.get('honest_verdict'))"
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1515_thrml_samplerbackend_conformance_pack.json')); print(d.get('thrml_samplerbackend_conformance_ready'), d.get('simulator_only'), d.get('no_tsu_hardware_claim'), d.get('honest_verdict'))"
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-# ============================================================
-# Phase 4 - Retrospective and claim boundaries
-# ============================================================
-
-- id: exp1505-milestone-115-retro
-  milestone: 2026.04.115
-  deliverable: results/experiment_1505_milestone_115_retro.json
-  title: "Milestone .115 Retrospective + Claim Boundary Update"
+- id: exp1516-kan-shape-normalization-preflight
+  milestone: 2026.04.116
+  deliverable: results/experiment_1516_kan_shape_normalization_preflight.json
+  title: "KAN/KAEM Shape Normalization Preflight - Gated on Exp1506 KAN Carry-Forward"
   agent_type: codex
   model: gpt-5.5
   max_turns: 30
-  estimated_wall_time_min: 30
-  priority: critical
+  estimated_wall_time_min: 45
+  priority: high
   requires_gpu: false
   skip_pre_test: true
+  gated_on:
+    - upstream: exp1506-115-completion-archive-116-activation
+      artifact_field: prior_kan_shape_blocker_recorded
+      op: "=="
+      value: true
   prior_failures:
-    - experiment_id: exp1491-milestone-114-retro
-      verdict: milestone_114_criteria_met_with_one_honest_gate_skip
-      addressed_by: "This is expected closeout bookkeeping for .115; it must summarize .115 criteria, terminal gates, retirements, and carry-forward decisions."
+    - experiment_id: exp1502-kan-hardware-accounting-quantkan-kaem
+      verdict: kan_hardware_accounting_ready_no_synthesis_shape_normalization_needed
+      addressed_by: "This task addresses the recorded shape-normalization carry-forward before any future synthesis or board work."
+      retire_if_same_verdict: false
+    - experiment_id: exp866-kan-hardware-analysis
+      verdict: kan_fpga_roadmap_clear_bounded_accounting_only
+      addressed_by: "This task narrows to proxy-vs-hardware shape normalization and preserves no-synthesis/no-board boundaries."
       retire_if_same_verdict: false
   prompt: |
     CONTEXT:
-    This is the final task for milestone .115. It must summarize outcomes,
-    update claim boundaries, and reconcile ops docs without modifying the
-    active roadmap or conductor. Use {project_root} as the project root and
-    {date} as the run date.
+    Exp1502 produced no-synthesis KAN/KAEM hardware accounting and explicitly
+    recorded that proxy shapes must be normalized before future synthesis.
+    This task resolves that accounting hygiene issue without claiming synthesis,
+    timing closure, bitstreams, or board execution. Use {project_root} as the
+    project root and {date} as the run date.
+
+    EXISTING CODE TO READ FIRST:
+    - CODEX.md
+    - CLAUDE.md
+    - research-hardware-wishlist.md
+    - results/experiment_1502_kan_hardware_accounting_quantkan_kaem.json
+    - python/carnot/models/
+    - python/carnot/hardware/
+    - tests/python/
+
+    TASK:
+    Write a KAN/KAEM shape-normalization preflight that maps model/proxy shapes
+    to hardware-accounting shapes, records excluded assumptions, and blocks
+    future synthesis claims unless shape provenance is explicit.
+
+    REQUIRED ARTIFACT FIELDS:
+    - status
+    - kan_shape_manifest_ready
+    - gated_inputs_present
+    - no_synthesis_claim
+    - no_board_claim
+    - proxy_shapes_loaded
+    - normalized_shapes_written
+    - excluded_shape_assumptions
+    - hardware_accounting_shape_fields
+    - shape_manifest_path
+    - blockers
+    - honest_verdict (MUST start with complete:, complete_, success:, success_, passed:, passed_, shipped:, or shipped_)
+
+    CONCRETE STEPS:
+    1. Create results/experiment_1516_kan_shape_normalization_preflight.json immediately with status="in_progress".
+    2. Verify exp1506 prior_kan_shape_blocker_recorded=true; if absent, write a terminal gated artifact.
+    3. Read exp1502 accounting fields and identify all proxy dimensions, batch/sequence assumptions, quantization assumptions, and hardware-accounting dimensions.
+    4. Define a normalized shape schema with explicit provenance and excluded assumptions.
+    5. Write results/kan_shape_normalization_manifest_1516.json with the normalized schema and one or more example mappings.
+    6. Add focused tests for schema validation if code helpers are added.
+    7. Set no_synthesis_claim=true and no_board_claim=true in all terminal artifacts.
+    8. Set kan_shape_manifest_ready=true only if normalized shapes and exclusions are written.
+    9. Write all required artifact fields with status="complete" or an honest terminal blocker.
+
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1516_kan_shape_normalization_preflight.json')); print(d.get('kan_shape_manifest_ready'), d.get('no_synthesis_claim'), d.get('no_board_claim'), d.get('honest_verdict'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp1517-kv260-discrete-sb-rtl-property-pack-v2
+  milestone: 2026.04.116
+  deliverable: results/experiment_1517_kv260_discrete_sb_rtl_property_pack_v2.json
+  title: "KV260 Discrete SB RTL Property Pack v2 - Source-Level Only"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 50
+  estimated_wall_time_min: 65
+  priority: high
+  requires_gpu: false
+  skip_pre_test: true
+  gated_on:
+    - upstream: exp1506-115-completion-archive-116-activation
+      artifact_field: prior_kv260_source_track_active
+      op: "=="
+      value: true
+  prior_failures:
+    - experiment_id: exp1460-hardware-track-priority-retro
+      verdict: kv260_board_execution_deferred_source_level_track_active
+      addressed_by: "This task remains source-level RTL/property testing only and does not attempt board execution or bitstream claims."
+      retire_if_same_verdict: false
+    - experiment_id: exp839-kv260-ice40-bitstream
+      verdict: wrong_fpga_family_no_kv260_board_claim
+      addressed_by: "This task avoids iCE40/KV260 mismatch by staying at family-agnostic source-level properties and manifest evidence."
+      retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    The active hardware plan allows KV260/FPGA Discrete SB source-level lint and
+    simulation work, but board execution remains deferred. This task expands the
+    source-level property pack without creating bitstream, timing, or board
+    claims. Use {project_root} as the project root and {date} as the run date.
+
+    EXISTING CODE TO READ FIRST:
+    - CODEX.md
+    - CLAUDE.md
+    - research-hardware-wishlist.md
+    - _bmad/architecture.md
+    - results/experiment_1460_hardware_track_priority_retro.json
+    - python/carnot/hardware/
+    - rtl/
+    - tests/python/
+
+    TASK:
+    Create or update a KV260 Discrete SB source-level RTL property pack with
+    lint/simulation/property manifests. Do not invoke board commands, Vivado
+    bitfile generation, or hardware programming.
+
+    REQUIRED ARTIFACT FIELDS:
+    - status
+    - kv260_property_pack_ready
+    - gated_inputs_present
+    - source_level_only
+    - no_board_execution
+    - no_bitstream_claim
+    - rtl_files_checked
+    - properties_defined
+    - simulations_run
+    - lint_or_parse_results
+    - property_manifest_path
+    - blockers
+    - honest_verdict (MUST start with complete:, complete_, success:, success_, passed:, passed_, shipped:, or shipped_)
+
+    CONCRETE STEPS:
+    1. Create results/experiment_1517_kv260_discrete_sb_rtl_property_pack_v2.json immediately with status="in_progress".
+    2. Verify exp1506 prior_kv260_source_track_active=true; if absent, write a terminal gated artifact.
+    3. Inventory relevant RTL/source files and existing simulation/lint scripts. If paths differ, record the actual paths used.
+    4. Add or update source-level properties for bounded Discrete SB behavior, reset behavior, deterministic update ordering, and shape/width assumptions.
+    5. Run only source-level lint/parse/simulation commands available locally. Do not run Vivado board programming or bitstream generation.
+    6. Write results/kv260_discrete_sb_property_manifest_1517.json with checked files, commands, pass/fail results, and claim boundaries.
+    7. Add focused tests if Python helpers are added.
+    8. Set source_level_only=true, no_board_execution=true, and no_bitstream_claim=true in all terminal artifacts.
+    9. Set kv260_property_pack_ready=true only if a property manifest is written and source-level checks are reported.
+    10. Write all required artifact fields with status="complete" or an honest terminal blocker.
+
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1517_kv260_discrete_sb_rtl_property_pack_v2.json')); print(d.get('kv260_property_pack_ready'), d.get('source_level_only'), d.get('no_board_execution'), d.get('honest_verdict'))"
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+# ============================================================
+# Phase 4 - Retro and reconciliation
+# ============================================================
+
+- id: exp1518-milestone-116-retro
+  milestone: 2026.04.116
+  deliverable: results/experiment_1518_milestone_116_retro.json
+  title: "Milestone .116 Retrospective + Claim Boundary Reconciliation"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 20
+  estimated_wall_time_min: 35
+  priority: high
+  requires_gpu: false
+  skip_pre_test: true
+  prior_failures:
+    - experiment_id: exp1505-milestone-115-retro
+      verdict: prior_milestone_retro_scope
+      addressed_by: "This is expected per-milestone retrospective accounting for .116 with new criteria, gates, and carry-forward decisions."
+      retire_if_same_verdict: false
+  prompt: |
+    CONTEXT:
+    Milestone .116 is designed to integrate .115 verifier components into
+    runtime contracts, close a bounded FR-11 feedback loop, and add substrate
+    conformance packs without hardware overclaiming. This retrospective must
+    reconcile artifacts, criteria, ops docs, and carry-forward gates. Use
+    {project_root} as the project root and {date} as the run date.
 
     EXISTING CODE TO READ FIRST:
     - CODEX.md
     - CLAUDE.md
     - openspec/change-proposals/research-roadmap-vNEXT.md
     - research-roadmap.yaml
-    - research-roadmap-next.yaml
     - research-complete.yaml
     - ops/conductor-log.md
     - ops/status.md
     - ops/changelog.md
-    - ops/known-issues.md
-    - results/experiment_1492_114_completion_archive_115_activation.json
+    - results/experiment_1506_115_completion_archive_116_activation.json
+    - results/experiment_1507_autopyverifier_safe_dsl_induction_pack.json
+    - results/experiment_1508_trigger_grammar_certificate_decoder_audit.json
+    - results/experiment_1509_executable_monitor_runtime_adapter.json
+    - results/experiment_1510_plan_graph_structural_contract_gate.json
+    - results/experiment_1511_product_line_solver_oracle_benchmark.json
+    - results/experiment_1512_fr11_verifier_feedback_policy_cache_v11.json
+    - results/experiment_1513_fr11_policy_rollback_replay_audit.json
+    - results/experiment_1514_trace2skill_portable_skill_pack_v2.json
+    - results/experiment_1515_thrml_samplerbackend_conformance_pack.json
+    - results/experiment_1516_kan_shape_normalization_preflight.json
+    - results/experiment_1517_kv260_discrete_sb_rtl_property_pack_v2.json
 
     TASK:
-    Write the .115 retrospective artifact, summarize each experiment verdict,
-    decide which lines graduate, remain gated, or retire, and reconcile
-    research-complete/ops docs as appropriate. Preserve claim boundaries around
-    retired Semantic Energy/V_1 signals, self-learning scope, and hardware.
+    Write the milestone .116 retrospective artifact and reconcile ops docs.
+    Do not modify research-roadmap.yaml or scripts/research_conductor.py.
 
     REQUIRED ARTIFACT FIELDS:
     - status
     - milestone
     - criteria_met
     - criteria_total
-    - experiments_reviewed
-    - completed_experiments
-    - honest_gate_skips
-    - retired_lines
-    - graduated_lines
-    - carry_forward_lines
-    - continuous_self_learning_outcome
-    - hardware_claim_boundaries
+    - completed_tasks
+    - gated_or_blocked_tasks
+    - failed_tasks
+    - verifier_runtime_contract_ready
+    - continuous_self_learning_result
+    - substrate_conformance_result
+    - retired_or_demoted_claims
+    - carry_forward_gates
     - ops_docs_updated
-    - research_complete_updated
-    - protected_files_unchanged
+    - research_complete_entry_recommended
     - honest_verdict (MUST start with complete:, complete_, success:, success_, passed:, passed_, shipped:, or shipped_)
 
     CONCRETE STEPS:
-    1. Create results/experiment_1505_milestone_115_retro.json immediately with status="in_progress".
-    2. Read all available exp1492 through exp1504 artifacts and conductor-log entries.
-    3. Score the success criteria from openspec/change-proposals/research-roadmap-vNEXT.md, including honest structured gate skips.
-    4. Update research-complete.yaml with a concise .115 archive entry if the repository pattern supports it and enough terminal artifacts exist; otherwise record why not.
-    5. Update ops/status.md and ops/changelog.md with .115 closeout status and carry-forward decisions.
-    6. Confirm research-roadmap.yaml and scripts/research_conductor.py are unchanged.
-    7. Write all required artifact fields with status="complete".
+    1. Create results/experiment_1518_milestone_116_retro.json immediately with status="in_progress".
+    2. Read the roadmap doc success criteria and every available .116 artifact from exp1506 through exp1517.
+    3. Score each criterion using authoritative artifact fields. Count honest gate-blocks separately from failures.
+    4. Confirm whether any task modified research-roadmap.yaml or scripts/research_conductor.py; if yes, record it explicitly.
+    5. Update ops/status.md and ops/changelog.md with concise .116 outcomes and carry-forward gates. Do not remove historical content.
+    6. Recommend, but do not directly write, the research-complete.yaml entry unless the current repo workflow explicitly expects the retro task to write it.
+    7. Preserve retirements: Semantic Energy/logit telemetry and V_1 are not headline signals; generated verifier code is not trusted outside safe DSL; THRML/KAN/KV260 work is not hardware execution.
+    8. Write all required artifact fields with status="complete" or an honest terminal blocker.
 
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1505_milestone_115_retro.json')); print(d.get('criteria_met'), d.get('criteria_total'), d.get('protected_files_unchanged'), d.get('honest_verdict'))"
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1518_milestone_116_retro.json')); print(d.get('criteria_met'), d.get('criteria_total'), d.get('continuous_self_learning_result'), d.get('honest_verdict'))"
     Do NOT push. Do NOT modify scripts/research_conductor.py.
