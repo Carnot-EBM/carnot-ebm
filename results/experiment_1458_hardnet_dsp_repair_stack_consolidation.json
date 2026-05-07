@@ -1,0 +1,125 @@
+{
+  "cited_recent_constraint_papers": [
+    {
+      "citation": "arXiv:2604.19669",
+      "lesson": "Differentiable nonlinear projection supports Carnot's hard feasibility-first repair lesson.",
+      "name": "HardNet++",
+      "source": "https://arxiv.org/abs/2604.19669"
+    },
+    {
+      "citation": "arXiv:2507.08124",
+      "lesson": "KKT projection remains a possible future mechanism if a reopened scope needs machine-precision equality/inequality feasibility.",
+      "name": "KKT-Hardnet",
+      "source": "https://arxiv.org/abs/2507.08124"
+    },
+    {
+      "citation": "arXiv:2602.09317",
+      "lesson": "Adaptive repair layers validate feasibility repair, while Carnot's lineage shows they should not proliferate without new evidence.",
+      "name": "SnareNet",
+      "source": "https://arxiv.org/abs/2602.09317"
+    },
+    {
+      "citation": "arXiv:2604.02350",
+      "lesson": "Feasibility channels are worth retaining as signals, but Carnot's DSP replay tests did not establish a broad learned stop rule.",
+      "name": "Differentiable Symbolic Planning with Feasibility Channels",
+      "source": "research-references.md"
+    }
+  ],
+  "consolidation_note_path": "ops/lineage-retirements/hardnet_dsp_repair_stack_retired.md",
+  "exclusion_manifest_block_added": true,
+  "exclusion_manifest_updated": true,
+  "experiment": "1458_hardnet_dsp_repair_stack_consolidation",
+  "future_reopen_conditions": [
+    "An operator explicitly reopens the line and names the new root cause that was not addressed by Exps 1292, 1305, and 1318.",
+    "A proposal shows non-replay held-out evidence that a learned DSP or HardNet++/DSP policy improves over the conservative replay gate by a predeclared margin.",
+    "The proposal ties the repair layer to a production verifier failure or Phase-3 continuous-latent substrate gate, not just another variant of the same repair-stack benchmark.",
+    "The proposal includes a falsifiable acceptance gate, a fresh corpus or OOD split, and an explicit retire-if-same-verdict rule."
+  ],
+  "hardnet_dsp_experiments_reviewed": [
+    "exp1147",
+    "exp1275",
+    "exp1276",
+    "exp1291",
+    "exp1292",
+    "exp1305",
+    "exp1318"
+  ],
+  "hardnet_dsp_lineage_retired": true,
+  "hardnet_dsp_review_rows": [
+    {
+      "artifact_path": "results/experiment_1147_hardnet_projection_repair.json",
+      "evidence": "20 violations tested, projection_repair_accuracy=1.0, and projection_repair_latency_us=117.33625.",
+      "experiment_id": "exp1147",
+      "lesson": "Hard projection can certify feasibility in explicit numeric domains.",
+      "title": "HardNet++-Style Projection Repair Layer for Arithmetic Constraints",
+      "verdict": "projection_accurate_and_fast"
+    },
+    {
+      "artifact_path": "results/experiment_1275_fsnet_feasibility_step_continuous_ebm.json",
+      "evidence": "feasibility_delta_overall=4.58324736985576 and violation_count_mean dropped from 5.0 to 0.0.",
+      "experiment_id": "exp1275",
+      "lesson": "Feasibility seeking should be an operator inside repair, not a headline claim.",
+      "title": "FSNet Feasibility Step for Continuous EBM",
+      "verdict": "feasibility_step_viable"
+    },
+    {
+      "artifact_path": "results/experiment_1276_snarenet_repair_layer_gated.json",
+      "evidence": "final_constraint_satisfaction=0.9895926247512347 and repair_delta_over_fsnet=0.2199604492292856.",
+      "experiment_id": "exp1276",
+      "lesson": "Adaptive repair improves local behavior but does not justify open-ended variants.",
+      "title": "SnareNet Repair Layer - Gated on FSNet Feasibility Delta",
+      "verdict": "adaptive_repair_improves_fsnet"
+    },
+    {
+      "artifact_path": "results/experiment_1291_hardnetpp_nonlinear_repair_benchmark.json",
+      "evidence": "hardnetpp_delta_over_snarenet=1.2207222442957435 with nonlinear_repair_viable=true.",
+      "experiment_id": "exp1291",
+      "lesson": "Route nonlinear residual cases to HardNet++ rather than repeated local repair.",
+      "title": "HardNet++ Nonlinear Repair Benchmark",
+      "verdict": "hardnetpp_nonlinear_repair_viable"
+    },
+    {
+      "artifact_path": "results/experiment_1292_dsp_feasibility_channel_diagnostic.json",
+      "evidence": "n_cases=156, feasibility_channel_auc=0.6604651162790698, repair_help_prediction_accuracy=0.6538461538461539, and false_continue_rate=0.7714285714285715.",
+      "experiment_id": "exp1292",
+      "lesson": "DSP phi is useful telemetry but marginal as a learned stop signal.",
+      "title": "DSP Feasibility-Channel Diagnostic",
+      "verdict": "feasibility_channel_predictive_marginal"
+    },
+    {
+      "artifact_path": "results/experiment_1305_hardnetpp_dsp_feasibility_stop_policy.json",
+      "evidence": "policy_stop_accuracy=1.0, stop_policy_precision=1.0, and baseline_dsp_continue_precision=0.6142857142857143.",
+      "experiment_id": "exp1305",
+      "lesson": "Conservative replay is the retained operator gate.",
+      "title": "HardNet++ + DSP Feasibility Stop Policy",
+      "verdict": "conservative_replay_policy_useful_dsp_marginal"
+    },
+    {
+      "artifact_path": "results/experiment_1318_hardnetpp_dsp_learned_stop_policy.json",
+      "evidence": "held_out_count=36, dsp_feasibility_auc=0.640625, stop_policy_precision=1.0, stop_policy_recall=1.0, and hardnetpp_delta_over_replay_policy=0.0.",
+      "experiment_id": "exp1318",
+      "lesson": "The learned policy did not prove general value beyond replay distribution.",
+      "title": "HardNet++/DSP Learned Stop Policy Generalization",
+      "verdict": "learned_policy_matched_conservative_replay"
+    }
+  ],
+  "honest_verdict": "hardnet_dsp_lineage_retired_conservative_replay_retained_no_new_variants",
+  "lessons_retained": [
+    "Hard projection and repair layers are valuable when the domain has an explicit feasible set; they should remain available for continuous numeric repair and Phase-3 substrate work.",
+    "FSNet and SnareNet-style feasibility steps reduce hard violations, but their local-linear repair behavior should stop when nonlinear residuals remain instead of spawning more variants.",
+    "HardNet++ is the retained route for residual nonlinear feasibility cases because it reached hard feasibility where repeated local-linear repairs left violations.",
+    "DSP feasibility channels are useful telemetry, but the measured AUC and false-continue behavior were marginal as a learned general stop rule.",
+    "Conservative replay is the retained operator gate: stop once hard feasibility is reached, continue only when hard violations remain, and route nonlinear residuals to the certifying repair operator.",
+    "Hard projection can certify feasibility in explicit numeric domains.",
+    "Feasibility seeking should be an operator inside repair, not a headline claim.",
+    "Adaptive repair improves local behavior but does not justify open-ended variants.",
+    "Route nonlinear residual cases to HardNet++ rather than repeated local repair.",
+    "DSP phi is useful telemetry but marginal as a learned stop signal.",
+    "Conservative replay is the retained operator gate.",
+    "The learned policy did not prove general value beyond replay distribution."
+  ],
+  "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+  "run_date": "20260507",
+  "schema": "hardnet_dsp_repair_stack_retirement_v1",
+  "status": "complete"
+}

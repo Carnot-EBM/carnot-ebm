@@ -246,3 +246,38 @@ retired_extras:
     operator_reopen_required: true
     preserve_demo_assets: true
     retire_if_same_verdict: true
+
+  # Added by Exp 1458 - HardNet++/DSP repair-stack consolidation and retirement.
+  - id: hardnet_dsp_repair_stack_scope_closed
+    reason: |
+      HardNet++/DSP repair variants are retired as active headline research scope
+      after the stack repeatedly reduced to the same retained lesson:
+      hard-constraint repair is useful, but the learned DSP stop policy matched
+      conservative replay and did not prove a broad general rule. Future
+      HardNet++/DSP, DSP feasibility-channel, SnareNet/FSNet repair, or
+      KKT-Hardnet variant tasks are blocked unless an operator explicitly reopens the line
+      with a new root cause, non-replay evidence, and a
+      falsifiable gate.
+    experiment_ids:
+      - exp1147
+      - exp1275
+      - exp1276
+      - exp1291
+      - exp1292
+      - exp1305
+      - exp1318
+    blocked_patterns:
+      - "HardNet++"
+      - "HardNet++/DSP"
+      - "KKT-Hardnet"
+      - "DSP feasibility channel"
+      - "DSP stop policy"
+      - "SnareNet repair"
+      - "FSNet repair"
+      - "conservative replay repair policy"
+      - "repair stack variant"
+    retained_lesson: "hard constraints remain valuable; variant proliferation does not"
+    retired_milestone: "2026.04.112"
+    retired_by_artifact: "results/experiment_1458_hardnet_dsp_repair_stack_consolidation.json"
+    operator_reopen_required: true
+    retire_if_same_verdict: true

@@ -1236,6 +1236,57 @@ retirement note, records preserved assets, updates the exclusion manifest with a
 future-puzzle-cartridge block, sets `wopr_puzzle_lineage_retired == true`, and
 reports an honest retirement verdict.
 
+### REQ-REPORT-044: HardNet++/DSP Repair Stack Consolidation and Retirement
+
+The Exp 1458 HardNet++/DSP repair-stack consolidation workflow shall write
+`results/experiment_1458_hardnet_dsp_repair_stack_consolidation.json` with
+`status="in_progress"` before terminal consolidation. It shall then review the
+HardNet++, FSNet, SnareNet, DSP feasibility-channel, conservative replay, and
+learned stop-policy records using `research-complete.yaml`,
+`research-references.md`, `ops/experiment_signal_noise_classification.csv`,
+`ops/exclusion_manifest.yaml`, and available `results/experiment_*.json`
+artifacts.
+
+The workflow shall write
+`ops/lineage-retirements/hardnet_dsp_repair_stack_retired.md` with the reviewed
+experiment ids, measured positives, repeated non-headline lesson, cited recent
+hard-constraint papers, future reopen conditions, and the final retirement
+decision. It shall update `ops/exclusion_manifest.yaml` or the active exclusion
+mechanism with a planner-visible block for future HardNet++/DSP repair variants
+unless an operator explicitly reopens the line with new evidence beyond
+conservative replay.
+
+The terminal artifact shall include:
+
+- `status`
+- `hardnet_dsp_experiments_reviewed`
+- `consolidation_note_path`
+- `hardnet_dsp_lineage_retired`
+- `exclusion_manifest_updated`
+- `lessons_retained`
+- `cited_recent_constraint_papers`
+- `future_reopen_conditions`
+- `honest_verdict`
+
+The workflow shall preserve the hard-constraint lesson: projection/repair layers
+are useful for enforcing feasibility in continuous numeric domains, but the
+existing Carnot HardNet++/DSP line is retired as active headline scope because
+the latest stop-policy evidence matched conservative replay and did not prove a
+broad learned general rule.
+
+### SCENARIO-REPORT-044: Exp 1458 Retires HardNet++/DSP Variant Proliferation
+
+Given the .112 scope-reduction directive identifies HardNet++/DSP repair as a
+lineage to consolidate, and the evidence record contains HardNet++ projection
+success, FSNet/SnareNet feasibility improvements, marginal DSP feasibility
+prediction, conservative replay stop-policy utility, and learned stop-policy
+evidence that adds no delta over replay, when Exp 1458 runs for run date
+`20260507`, then it writes all required REQ-REPORT-044 fields, lists the
+reviewed HardNet++/DSP-related experiments, writes the markdown consolidation
+note, cites HardNet++, KKT-Hardnet, SnareNet, and DSP feasibility-channel work,
+updates the exclusion manifest with a future-variant block, sets
+`hardnet_dsp_lineage_retired == true`, and reports an honest retirement verdict.
+
 ### REQ-REPORT-024: Local Agent Usage Snapshot
 
 The repository shall provide a local operator workflow that inspects the
@@ -1814,6 +1865,7 @@ embed live-GPU benchmark results from Exp 328 when available.
 | REQ-REPORT-041 | `python/carnot/reporting/known_issues_mandatory_priority_audit.py`, `results/experiment_1455_known_issues_mandatory_priority_audit.json`, `ops/mandatory_priority_audit.md`, `ops/active-priorities.md` | `tests/python/test_known_issues_mandatory_priority_audit.py` | Implemented |
 | REQ-REPORT-042 | `python/carnot/reporting/grpo_vprm_lineage_retirement.py`, `results/experiment_1456_grpo_vprm_lineage_consolidation_retirement.json`, `ops/lineage-retirements/grpo_vprm_lineage_retired.md`, `ops/exclusion_manifest.yaml` | `tests/python/test_grpo_vprm_lineage_retirement.py` | Implemented |
 | REQ-REPORT-043 | `python/carnot/reporting/wopr_puzzle_cartridge_retirement.py`, `results/experiment_1457_wopr_puzzle_cartridge_retirement.json`, `ops/lineage-retirements/wopr_puzzle_cartridges_retired.md`, `ops/exclusion_manifest.yaml` | `tests/python/test_wopr_puzzle_cartridge_retirement.py` | Implemented |
+| REQ-REPORT-044 | `python/carnot/reporting/hardnet_dsp_repair_stack_retirement.py`, `results/experiment_1458_hardnet_dsp_repair_stack_consolidation.json`, `ops/lineage-retirements/hardnet_dsp_repair_stack_retired.md`, `ops/exclusion_manifest.yaml` | `tests/python/test_hardnet_dsp_repair_stack_retirement.py` | Implemented |
 | REQ-REPORT-024 | `python/carnot/reporting/agent_usage.py`, `scripts/agent_plan_usage.py` | `tests/python/test_agent_plan_usage.py` | Implemented |
 | REQ-PUBLISH-003 | `scripts/experiment_317_hf_publish.py` | `tests/python/test_experiment_317_hf_publish.py` | Implemented |
 | REQ-PUBLISH-004 | `scripts/experiment_330_hf_live_publish.py` | `tests/python/test_experiment_330_hf_live_publish.py` | Implemented |
