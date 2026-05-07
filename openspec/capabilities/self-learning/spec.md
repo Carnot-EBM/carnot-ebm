@@ -3906,3 +3906,64 @@ the nonforgetting threshold
 | Requirement | Python | Tests |
 |-------------|--------|-------|
 | REQ-LEARN-1471 | Implemented (`python/carnot/reporting/fr11_v8_verified_memory_growth_pivot.py`) | Implemented (`tests/python/test_fr11_v8_verified_memory_growth_pivot.py`) |
+
+## REQ-LEARN-1472: Online Verifier Asymmetric Mistake-Budget Audit
+
+Exp 1472 SHALL audit Exp 1471 under the online verifier learnability framing
+from arXiv:2603.03538. The audit SHALL separate dangerous soundness mistakes
+from conservative completeness mistakes before preserving any FR-11
+self-learning claim. The audit SHALL treat soundness mistakes as higher cost
+than completeness mistakes because a false accept can promote bad memory into a
+future feedback loop, while a false flag mainly withholds usable rows.
+
+### REQ-LEARN-1472 Sub-requirements
+
+- REQ-LEARN-1472-1: The workflow SHALL write
+  `results/experiment_1472_online_verifier_asymmetric_mistake_budget.json`
+  first with `status="in_progress"` before loading Exp 1471.
+- REQ-LEARN-1472-2: The audit SHALL read Exp 1471's
+  `soundness_mistakes`, `completeness_mistakes`, headline gate fields, and
+  available `memory_updates` ledger.
+- REQ-LEARN-1472-3: The audit SHALL define explicit asymmetric cost weights
+  where the soundness-mistake weight is greater than the completeness-mistake
+  weight, and SHALL compute
+  `asymmetric_cost_score = soundness_mistakes * soundness_weight +
+  completeness_mistakes * completeness_weight`.
+- REQ-LEARN-1472-4: The self-learning claim SHALL be preserved only when Exp
+  1471 completed, allowed the headline result, preserved the pivot, and has
+  acceptable soundness risk. The initial acceptable soundness budget is zero
+  dangerous missed errors.
+- REQ-LEARN-1472-5: The final artifact SHALL include `status`,
+  `source_experiment`, `soundness_mistakes`, `completeness_mistakes`,
+  `asymmetric_cost_weights`, `asymmetric_cost_score`, `pareto_decision`,
+  `self_learning_claim_preserved`, `self_learning_claim_retired`,
+  `audit_note_path`, and `honest_verdict`.
+- REQ-LEARN-1472-6: The audit note at
+  `docs/research-notes/fr11_v8_asymmetric_mistake_budget.md` SHALL state the
+  decision and caveats, including that conservative false flags limit
+  completeness rather than creating memory-corruption evidence.
+
+### SCENARIO-LEARN-1473: Zero Soundness Mistakes Preserves Narrow Claim
+
+**Given** Exp 1471 completed with `headline_result_allowed=true`,
+`pivot_preserved=true`, zero soundness mistakes, and conservative completeness
+mistakes
+**When** Exp 1472 computes the asymmetric mistake budget
+**Then** `self_learning_claim_preserved=true`
+**And** `self_learning_claim_retired=false`
+**And** `pareto_decision` records that the narrow claim is preserved on the
+soundness frontier with completeness caveats.
+
+### SCENARIO-LEARN-1474: Dangerous Soundness Mistakes Retire The Claim
+
+**Given** Exp 1471 reports one or more soundness mistakes
+**When** Exp 1472 computes the asymmetric mistake budget
+**Then** `self_learning_claim_preserved=false`
+**And** `self_learning_claim_retired=true`
+**And** the honest verdict identifies unacceptable soundness risk.
+
+## Implementation Status (REQ-LEARN-1472)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-1472 | Implemented (`python/carnot/reporting/online_verifier_asymmetric_mistake_budget.py`) | Implemented (`tests/python/test_online_verifier_asymmetric_mistake_budget.py`) |
