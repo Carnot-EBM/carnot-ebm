@@ -555,7 +555,49 @@ decisions on every measured case, latency p50 values are reported for both
 paths, and the artifact states that the equivalence claim is bounded to the
 measured certificate strings.
 
-## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481)
+### REQ-VERIFY-1486: CCTU Executable Constraint Micro-Benchmark
+
+The repository shall provide a deterministic CCTU-style executable constraint
+micro-benchmark for Exp 1486 that:
+
+- writes
+  `results/experiment_1486_cctu_executable_constraint_microbenchmark.json`
+  with `status="in_progress"` before loading source code, validators, or local
+  models;
+- defines exactly 20 local tool-use cases spanning arithmetic, table
+  filtering, string constraints, and graph/path constraints;
+- validates each model transcript with deterministic checks for tool-call
+  structure, local tool-result consistency, final-answer validity, and verifier
+  outcome agreement;
+- writes `results/cctu_microbenchmark_manifest_1486.jsonl` with prompt, model
+  output, validator result, and verifier result for every evaluated case;
+- attempts live local GGUF inference with the mandated SOTA model set
+  (`unsloth/Qwen3.6-35B-A3B-GGUF`,
+  `unsloth/gemma-4-31B-it-GGUF`, and
+  `unsloth/gemma-4-26B-A4B-it-GGUF`), using at least one model for headline
+  tool-use rows when runtime and cache state permit and recording blockers for
+  any skipped model; and
+- writes a terminal artifact containing `status`, `model_specs`,
+  `live_sota_model_inference_used`,
+  `executable_constraint_benchmark_ready`, `benchmark_cases`,
+  `validators_path`, `manifest_path`, `tool_call_validity_rate`,
+  `final_answer_validity_rate`, `verifier_catch_rate`,
+  `verifier_false_accept_rate`, `models_used`, `tests_run`, and
+  `honest_verdict`.
+
+Legacy small models may be used only for CPU smoke-tests and MUST NOT be
+reported as headline tool-use results.
+
+### SCENARIO-VERIFY-1486: Executable Tool-Use Constraints Are Auditable
+
+Given the 20 fixed local CCTU-style prompts and deterministic local tools,
+When Exp 1486 evaluates live local SOTA GGUF transcripts,
+Then each manifest row records the raw model output, the executable validator
+decisions, and the verifier accept/reject outcome, while the final artifact
+reports aggregate tool-call validity, final-answer validity, verifier catch
+rate, false-accept rate, model provenance, and an honest terminal verdict.
+
+## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486)
 
 | Requirement | Python | Tests |
 |-------------|--------|-------|
@@ -569,3 +611,4 @@ measured certificate strings.
 | REQ-VERIFY-1474 | Implemented (`python/carnot/verify/skm_projection.py`) | Implemented (`tests/python/test_experiment_1474_tskm_linear_constraint_projection_smoke.py`) |
 | REQ-VERIFY-1475 | Implemented (`python/carnot/eval/static_csr_certificate_automaton.py`) | Implemented (`tests/python/test_experiment_1475_static_csr_certificate_automaton.py`) |
 | REQ-VERIFY-1481 | Implemented (`python/carnot/reporting/semantic_energy_feasibility_audit.py`) | Implemented (`tests/python/test_experiment_1481_semantic_energy_feasibility_audit.py`) |
+| REQ-VERIFY-1486 | Implemented (`python/carnot/eval/cctu_executable_constraint_microbenchmark.py`) | Implemented (`tests/python/test_experiment_1486_cctu_executable_constraint_microbenchmark.py`) |
