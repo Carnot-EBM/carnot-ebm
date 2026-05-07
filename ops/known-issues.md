@@ -207,6 +207,72 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### NEW 2026-05-07 (16:50Z): THRML Lineage Operator-Reopen (.115+ pickup)
+
+**Background:** Three `.114 THRML tasks (exp1488 Installability and Import Preflight, exp1489 THRML/Carnot Simulator Parity v2, exp1490 Kona EBT Partial-Trace Localization Audit's THRML dependency) were retired or GATE_BLOCKed because `thrml` Python package was not installed in the venv:
+
+```
+ModuleNotFoundError: No module named 'thrml'
+```
+
+exp1488 honest verdict (`thrml_not_importable_bounded_install_probe_blocked_simulator_only`) was a real terminal finding but lacked the `complete_/success_/passed_/shipped_` terminal prefix and contained `_blocked` substring → false-positive partial classification → 3× retry → retired.
+
+**Resolution shipped 2026-05-07 16:48Z:** operator ran `pip install thrml` in the venv. `thrml-0.1.3` installed successfully along with `equinox-0.13.8`, `jaxtyping-0.3.9`, `wadler-lindig-0.1.7`. Import verified:
+
+```
+$ /home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/bin/python -c "import thrml; print(thrml.__version__, thrml.__file__)"
+thrml 0.1.3 /home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/lib/python3.12/site-packages/thrml/__init__.py
+```
+
+**Operator-reopen authority.** Per CLAUDE.md "Failed-Experiment Rerun Discipline," retired experiments cannot be re-proposed without naming the prior failure + diagnosed root cause + what is different. This entry provides operator-level authorization with all four required elements:
+
+1. **Prior failure:** exp1488 verdict `thrml_not_importable_bounded_install_probe_blocked_simulator_only` (retired by 3× bootstrap-only false positive); exp1489 `gate_block_no_artifact_thrml_lineage`
+2. **Root cause:** `thrml` Python package not installed in venv (`ModuleNotFoundError`)
+3. **What is different:** `thrml-0.1.3` installed via pip 2026-05-07 16:48Z; import verified
+4. **Acceptance gate:** if reopened experiment produces same `_not_importable` verdict, lineage retires permanently per `retire_if_same_verdict: true`
+
+**Recommended .115 (or whenever picked up) tasks:**
+
+```
+exp_NEXT_THRML_REOPEN_A: THRML Installability + Import Smoke v2
+  - Verify thrml import + version + basic API surface (thrml.sample,
+    thrml.energy, etc., per the docs.thrml.ai spec)
+  - Acceptance: import succeeds, ≥3 public API surfaces enumerated
+    and called without exception, simulator backend confirmed working
+  - Required artifact field honest_verdict MUST start with
+    complete_/success_/passed_/shipped_ per CLAUDE.md terminal-prefix
+    discipline
+
+exp_NEXT_THRML_REOPEN_B: THRML/Carnot Simulator Parity v3 — Gated on A
+  - Compare THRML's simulator output to Carnot's existing tiny-Ising
+    reference implementation on the same problem instance.
+  - Acceptance: KL divergence between THRML-sampled distribution and
+    Carnot-sampled distribution measured (< 0.05 = parity, > 0.5 =
+    divergence requiring investigation, mid range = report and
+    investigate)
+
+exp_NEXT_THRML_REOPEN_C: Kona EBT Partial-Trace Localization with
+  THRML available (.114 retired carry-forward)
+  - Originally exp1490; rerun with thrml import succeeding.
+  - Acceptance: per the .114 task spec
+```
+
+**CLAUDE.md decentralization compatibility check:**
+- Rule 1 (local-first using open weights): ✓ — thrml is Apache-2.0 PyPI package, fully local
+- Rule 2 (closed integration optional): ✓ — thrml is open source, not closed-vendor
+- Rule 3 (distribution mirroring): ✓ — PyPI + Extropic GitHub
+- Rule 4 (multiple integration surfaces): ✓ — Python API
+- Rule 5 (hardware portability): ✓ — simulator runs on CPU; TSU silicon access optional
+
+**Cross-references:**
+- exp1488 retired artifact: `results/experiment_1488_thrml_installability_import_preflight.json`
+- exp1489 GATE_BLOCK (downstream): `results/experiment_1489_thrml_carnot_simulator_parity_v2.json`
+- THRML docs: https://docs.thrml.ai/
+- Extropic hardware: https://extropic.ai/hardware (X0/XTR-0/Z1)
+- CLAUDE.md "Failed-Experiment Rerun Discipline" + "Verdict Terminal-Prefix Discipline"
+
+---
+
 ### NEW 2026-05-06 (20:00Z): Repair-Loop Validation-Error-as-Context Fix (compatible with .111 scope reduction)
 
 **Background:** Perplexity 2026 SOTA survey (`~/Downloads/What is the latest best practice on helping locall.pdf`, integrated to `research-references.md`) reports:
