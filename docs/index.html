@@ -300,10 +300,10 @@
       <a href="technical-report.html" class="btn btn-secondary">How it works</a>
     </div>
     <div class="stats-bar" aria-label="Project headline numbers">
-      <div class="stat"><div class="stat-num">1,590</div><div class="stat-label">Experiments tracked through Exp 1466</div></div>
-      <div class="stat"><div class="stat-num">124</div><div class="stat-label">completed milestones through .112</div></div>
+      <div class="stat"><div class="stat-num">1,615</div><div class="stat-label">Experiments tracked through Exp 1491</div></div>
+      <div class="stat"><div class="stat-num">126</div><div class="stat-label">completed milestones through .114</div></div>
       <div class="stat"><div class="stat-num">22,656</div><div class="stat-label">Python items collected, not full pass</div></div>
-      <div class="stat"><div class="stat-num">14/14</div><div class="stat-label">latest .112 criteria met</div></div>
+      <div class="stat"><div class="stat-num">12/13</div><div class="stat-label">latest .114 criteria met</div></div>
     </div>
   </div>
 </section>
@@ -535,6 +535,21 @@
           repair-context line were retired; hardware scope narrowed to three
           active tracks; paper-v6 narrowed to four anchored claims; and the live
           local SOTA GGUF runtime recovered with Qwen3.6-35B-A3B smoke inference.
+          Milestone .113 met 12/12 criteria: live SOTA top-k telemetry became
+          available, HALT/Spilled Energy telemetry was retired as non-headline,
+          BEAVER-lite produced sound live-logprob bounds, FR-11 v8 grew verified
+          memory from 1,664 to 1,676 cases with zero soundness mistakes, STATIC
+          CSR certificates matched existing parser acceptance with 0 false
+          accepts/rejects, and THRML parity stayed simulator-only because
+          <code>thrml</code> was not importable. Milestone .114 met 12/13
+          criteria with one honest THRML gate skip: balanced live telemetry wrote
+          36 rows, Semantic Energy/logit telemetry was retired after lexical
+          baselines matched it, BEAVER-lite calibrated 18 live-prefix constraints
+          with no empirical violations, FR-11 query-time memory improved bounded
+          replay success from 0.5 to 1.0 with 0 soundness mistakes, CCTU produced
+          a 20-case executable tool-use benchmark, V_1 pairwise self-verification
+          underperformed executable energy ranking, and partial-trace localization
+          reached top-1 1.0 on 9 injected failures without a decoded-quality claim.
         </p>
       </div>
       <div class="bento-card span-2">
@@ -553,7 +568,8 @@
           but the full Python suite remains red on pre-existing failures. The
           current collection-only snapshot reports 22,656 Python items. The
           .112 scope-reduction pass added artifact signal/noise and mandatory
-          priority ledgers so future planning has narrower, explicit gates.
+          priority ledgers, and the .114 closeout records one explicit THRML
+          gate skip rather than fabricating simulator parity.
         </p>
       </div>
       <div class="bento-card span-2">
@@ -1173,7 +1189,61 @@
         <div class="r-stats"><span class="r-before">35 promoted, 37 demoted; replay-only, not headline DVI/GRPO</span> <span class="r-after">Exp 1344</span></div>
       </div>
       <div class="r-card">
-        <span class="r-tag">Milestone .112 &mdash; latest terminal retro</span>
+        <span class="r-tag">Milestone .114 &mdash; latest terminal retro</span>
+        <h3 class="r-title">12/13 criteria met; 1 honest gate skip</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 92.31%; background: #22c55e;"></div></div>
+        <div class="r-stats"><span class="r-before">Semantic Energy retired as headline evidence; BEAVER, FR-11, CCTU, and localization carry forward narrowly</span> <span class="r-after">Exp 1491</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Live telemetry &mdash; balanced SOTA rows</span>
+        <h3 class="r-title">36 rows with logits/top-k and baselines</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 100%; background: #0ea5e9;"></div></div>
+        <div class="r-stats"><span class="r-before">Qwen3.6-35B-A3B live inference; 22 correct, 14 incorrect; 694 top-k positions</span> <span class="r-after">Exp 1480</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Semantic Energy &mdash; headline audit</span>
+        <h3 class="r-title">AUROC 1.0 matched lexical baseline 1.0</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 0%; background: #ef4444;"></div></div>
+        <div class="r-stats"><span class="r-before">Signal did not beat superficial baselines; telemetry lineage retired</span> <span class="r-after">Exp 1481</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">BEAVER-lite &mdash; live prefix calibration</span>
+        <h3 class="r-title">18 constraints; 0 empirical violations</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 100%; background: #22c55e;"></div></div>
+        <div class="r-stats"><span class="r-before">Sound bounds; p50 slack 0.0000218; live Exp 1480 + Exp 1468 logprobs</span> <span class="r-after">Exp 1482</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Self-learning &mdash; query-time memory</span>
+        <h3 class="r-title">Task success 0.5 &rarr; 1.0; 0 soundness mistakes</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 100%; background: #22c55e;"></div></div>
+        <div class="r-stats"><span class="r-before">Completeness mistakes reduced 12 &rarr; 0 in gated audit</span> <span class="r-after">Exps 1484/1485</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Tool use &mdash; executable CCTU</span>
+        <h3 class="r-title">20 live cases; verifier catch rate 1.0</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 100%; background: #22c55e;"></div></div>
+        <div class="r-stats"><span class="r-before">False-accept rate 0.0; final-answer validity 0.35; tool-call validity 0.55</span> <span class="r-after">Exp 1486</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Pairwise verification &mdash; V_1 audit</span>
+        <h3 class="r-title">Pairwise 0.05 vs energy ranking 1.0</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 5%; background: #ef4444;"></div></div>
+        <div class="r-stats"><span class="r-before">Promotion not allowed; response length baseline also reached 1.0</span> <span class="r-after">Exp 1487</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">THRML &mdash; simulator gate</span>
+        <h3 class="r-title">Import blocked; parity skipped honestly</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 0%; background: #f59e0b;"></div></div>
+        <div class="r-stats"><span class="r-before">ModuleNotFoundError: thrml; no hardware claim; Exp 1489 gate skipped</span> <span class="r-after">Exp 1488</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Partial-trace localization &mdash; Kona/EBT audit</span>
+        <h3 class="r-title">Top-1 1.0 on 9 injected failures</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 100%; background: #0ea5e9;"></div></div>
+        <div class="r-stats"><span class="r-before">Random baseline 0.161; decoded-quality and Kona-internals claims disallowed</span> <span class="r-after">Exp 1490</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Milestone .112 &mdash; scope-reduction retro</span>
         <h3 class="r-title">14/14 criteria met; scope reduction satisfied</h3>
         <div class="r-meter"><div class="r-bar" style="width: 100%; background: #22c55e;"></div></div>
         <div class="r-stats"><span class="r-before">Runtime recovered, repair context retired, paper/hardware/comparator scope narrowed</span> <span class="r-after">Exp 1466</span></div>

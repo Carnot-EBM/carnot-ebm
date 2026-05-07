@@ -17,10 +17,10 @@ call. No fine-tuning. No access to model weights.
 
 Rust + Python/JAX, Apache 2.0, `pip install carnot`.
 
-Current public research record: **1,590 experiments tracked across 124
+Current public research record: **1,615 experiments tracked across 126
 artifact-backed completed milestone records**, all archived in
-`research-complete.yaml` through 2026.04.112, with checked-in result artifacts
-through Exp 1466 on 2026-05-07.
+`research-complete.yaml` through 2026.04.114, with checked-in result artifacts
+through Exp 1491 on 2026-05-07.
 
 Milestone .106 delivered the critical fix to thinking-mode certificate
 generation: Exp 1366 (CRANE tag-first prefix injection) reached
@@ -96,8 +96,26 @@ Gemma4-26B GGUF; Qwen3.6-35B-A3B completed a live smoke inference. Exp 1464
 then showed validation-error retry context produced **0.0pp** acceptance lift
 on the bounded live test and retired that repair-executor line. Exp 1465
 adopted one minimal BEAVER-style deterministic-bounds smoke and deferred broad
-VNN-COMP integration. The current test collection reports **22,656** items;
-this is a collection count, not a full-suite pass claim.
+VNN-COMP integration. Milestone .113 completed **12 of 12** criteria: live
+SOTA top-k/logit telemetry became available, HALT/Spilled Energy telemetry was
+retired as non-headline, BEAVER-lite produced sound live-logprob bounds,
+FR-11 v8 grew verified memory **1,664 -> 1,676** with zero soundness mistakes,
+T-SKM projected **3** CPU toy cases to zero violation, STATIC CSR certificate
+acceptance matched the existing parser with **0** false accepts/rejects, KV260
+Discrete SB RTL regression stayed source-level with no board claim, and THRML
+parity remained blocked because `thrml` was not importable. Milestone .114
+completed **12 of 13** criteria with **1** honest structured gate skip: balanced
+live SOTA telemetry wrote **36** rows, Semantic Energy/logit telemetry was
+retired after a superficial lexical baseline matched it, BEAVER-lite calibrated
+**18** live-prefix constraints with **0** empirical violations, FR-11 query-time
+memory improved bounded replay success **0.5 -> 1.0** with **0** soundness
+mistakes, CCTU executable constraints produced a **20**-case live benchmark,
+V_1 pairwise self-verification underperformed executable energy ranking
+(**0.05** vs **1.0** accuracy), THRML/Carnot simulator parity was skipped until
+THRML imports cleanly, and partial-trace localization hit top-1 **1.0** on
+**9** injected failures without a decoded-quality or Kona-internals claim. The
+current test collection reports **22,656** items; this is a collection count,
+not a full-suite pass claim.
 
 ## Install and run
 
@@ -338,6 +356,15 @@ experiment artifact under `results/`.
 | Validation-error context A/B | Live Qwen repair test evaluated 1 case with **0.0pp** acceptance/schema/semantic lift; repair-executor retry-context lineage retired | Exp 1464 |
 | Paper and benchmark scope narrowing | Paper-v6 narrowed to **4** anchored claims; external verifier benchmark fit adopts one minimal BEAVER-style bounds smoke and defers broad VNN-COMP | Exps 1462/1465 |
 | Milestone .112 status | **14/14 criteria met**; scope reduction satisfied, runtime recovered, repair context retired, and paper/hardware/comparator/benchmark claims narrowed | Exp 1466 |
+| Milestone .113 status | **12/12 criteria met**; raw live telemetry preserved, telemetry headline claim blocked, FR-11 verified-memory growth preserved, and hardware/THRML claims kept source-level or simulator-only | Exp 1478 |
+| Live SOTA balanced telemetry v2 | **36** Qwen3.6-35B-A3B rows with logits/top-k logprobs, balanced labels, and superficial baselines recorded | Exp 1480 |
+| Semantic Energy headline audit | Semantic signal AUROC **1.0** matched a lexical-overlap baseline **1.0**; headline telemetry lineage retired as confounded | Exp 1481 |
+| BEAVER-lite live prefix calibration | **18** constraints, sound bounds, **0** empirical violations, p50 slack **0.0000218**, live Exp 1480 + Exp 1468 logprob provenance | Exp 1482 |
+| FR-11 query-time memory policy | Bounded replay task success **0.5 -> 1.0** with **0** soundness mistakes; completeness audit reduced false rejects **12 -> 0** | Exps 1484/1485 |
+| CCTU executable constraint benchmark | **20** live local-SOTA tool-use cases; verifier catch rate **1.0**, false-accept rate **0.0**, final-answer validity **0.35** | Exp 1486 |
+| V_1 pairwise self-verification audit | Pairwise accuracy **0.05** vs executable energy ranking **1.0** and superficial baselines **1.0**; promotion path not allowed | Exp 1487 |
+| THRML and partial-trace boundaries | THRML import preflight failed cleanly (`ModuleNotFoundError: thrml`), gating parity; partial-trace localization top-1 **1.0** on **9** injected failures with no decoded-quality claim | Exps 1488/1490 |
+| Milestone .114 status | **12/13 criteria met** with **1** honest THRML gate skip; Semantic Energy/logit telemetry retired as headline evidence, BEAVER/FR-11/CCTU/localization carry forward under narrow claim boundaries | Exp 1491 |
 | Current Python test collection | **22,656** Python tests collected; collection-only snapshot, not a full-suite pass claim | 2026-05-07 collection run |
 | Local Claude/Codex usage snapshot | Codex reads the newest local `token_count` event; Claude aggregates local token usage and reads only subscription/tier metadata from credentials; free-form quota prose is ignored instead of guessed; focused regression tests pass | 2026-05-04 changelog |
 
@@ -380,7 +407,7 @@ claim we publish.
 ## Where to go next
 
 - **[Technical report](docs/technical-report.md)** — the full research arc
-  through Exp 1466 across 124 completed milestone records, with a
+  through Exp 1491 across 126 completed milestone records, with a
   plain-English timeline of what we tried, what failed, what stuck.
 - **[Roadmap](docs/roadmap.md)** — current milestone, upcoming milestones,
   hardware track, and Phase 3 (Kona-parity foundation-model) direction.
@@ -584,7 +611,7 @@ See the [technical report](docs/technical-report.md) for the full research recor
 
 ## 14 Principles Learned
 
-Hard-won lessons from the activation-based phase of a research program that now spans 1,590 tracked experiments through Exp 1466 across 124 completed milestone records and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
+Hard-won lessons from the activation-based phase of a research program that now spans 1,615 tracked experiments through Exp 1491 across 126 completed milestone records and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
 
 ### What works
 1. **The model's own logprobs are the best energy.** No external EBM needed for rejection sampling — the LLM's own confidence is already an energy function. Simple, practical, +10%.

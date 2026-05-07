@@ -1110,3 +1110,5 @@ web search: GitHub trending energy based mod |
 | 2026-05-07 15:46 UTC | THRML/Carnot Simulator Parity v2 - Gated on Exp148 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1488-thrml-installability-import-prefligh |
 | 2026-05-07 16:15 UTC | Kona/EBT Partial-Trace Energy Localization Micro-A | OK | 81 passed, 1 warning in 4.46s |
 | 2026-05-07 16:17 UTC | THRML/Carnot Simulator Parity v2 - Gated on Exp148 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1488-thrml-installability-import-prefligh |
+| 2026-05-07 16:32 UTC | Milestone .114 Retrospective + Carry-Forward Disci | OK | 81 passed, 1 warning in 5.48s |
+| 2026-05-07 16:34 UTC | THRML/Carnot Simulator Parity v2 - Gated on Exp148 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1488-thrml-installability-import-prefligh |
