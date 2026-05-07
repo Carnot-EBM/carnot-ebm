@@ -1287,6 +1287,52 @@ note, cites HardNet++, KKT-Hardnet, SnareNet, and DSP feasibility-channel work,
 updates the exclusion manifest with a future-variant block, sets
 `hardnet_dsp_lineage_retired == true`, and reports an honest retirement verdict.
 
+### REQ-REPORT-045: Comparator Integration Cite/Retire Audit
+
+The Exp 1461 comparator-integration audit workflow shall write
+`results/experiment_1461_comparator_integration_cite_retire_audit.json` with
+`status="in_progress"` before terminal audit completion. It shall then review
+the comparator records in `ops/known-issues.md`, `research-references.md`, and
+the relevant `docs/` research notes without modifying
+`scripts/research_conductor.py`.
+
+The workflow shall write
+`docs/research-notes/comparator_cite_retire_audit.md` with one row per audited
+comparator. Each row shall include comparator name, one of `cite`, `retire`, or
+`future_watchlist`, a one-line rationale, impacted paper section, and, for any
+retired comparator, a concise future reopen condition. The comparator set shall
+include at least Abstract-CoT, Meta-Harness, Autodata, LARQL, Skillify, GStack,
+EBT/NRGPT, ARM-as-EBM, BEAVER, and ontology-constrained reasoning.
+
+The workflow may update `research-references.md` only to clarify the
+cite/retire/watchlist status of already-recorded comparator items; it shall not
+add unrelated broad references. The terminal artifact shall include:
+
+- `status`
+- `comparator_decision_count`
+- `cite_count`
+- `retire_count`
+- `watchlist_count`
+- `decision_table_path`
+- `references_updated`
+- `paper_related_work_implications`
+- `honest_verdict`
+
+The counts shall match the decision rows in the markdown table, and
+`honest_verdict` shall state that the audit narrowed paper-v6 comparator scope
+when every comparator has an explicit decision.
+
+### SCENARIO-REPORT-045: Exp 1461 Narrows Comparator Scope
+
+Given the .112 scope-reduction directive names comparator integrations as
+ambiguous scope and the local evidence record contains paper-v6 citation
+candidates, deferred infrastructure ideas, and weakly evidenced comparator
+names, when Exp 1461 runs for run date `20260507`, then it writes all required
+REQ-REPORT-045 artifact fields, writes the comparator decision table, classifies
+each audited comparator as cite, retire, or future_watchlist, records a future
+reopen condition for every retired comparator, updates `research-references.md`
+only with status clarification, and reports an honest scope-narrowing verdict.
+
 ### REQ-REPORT-024: Local Agent Usage Snapshot
 
 The repository shall provide a local operator workflow that inspects the
@@ -1866,6 +1912,7 @@ embed live-GPU benchmark results from Exp 328 when available.
 | REQ-REPORT-042 | `python/carnot/reporting/grpo_vprm_lineage_retirement.py`, `results/experiment_1456_grpo_vprm_lineage_consolidation_retirement.json`, `ops/lineage-retirements/grpo_vprm_lineage_retired.md`, `ops/exclusion_manifest.yaml` | `tests/python/test_grpo_vprm_lineage_retirement.py` | Implemented |
 | REQ-REPORT-043 | `python/carnot/reporting/wopr_puzzle_cartridge_retirement.py`, `results/experiment_1457_wopr_puzzle_cartridge_retirement.json`, `ops/lineage-retirements/wopr_puzzle_cartridges_retired.md`, `ops/exclusion_manifest.yaml` | `tests/python/test_wopr_puzzle_cartridge_retirement.py` | Implemented |
 | REQ-REPORT-044 | `python/carnot/reporting/hardnet_dsp_repair_stack_retirement.py`, `results/experiment_1458_hardnet_dsp_repair_stack_consolidation.json`, `ops/lineage-retirements/hardnet_dsp_repair_stack_retired.md`, `ops/exclusion_manifest.yaml` | `tests/python/test_hardnet_dsp_repair_stack_retirement.py` | Implemented |
+| REQ-REPORT-045 | `python/carnot/reporting/comparator_cite_retire_audit.py`, `results/experiment_1461_comparator_integration_cite_retire_audit.json`, `docs/research-notes/comparator_cite_retire_audit.md`, `research-references.md` | `tests/python/test_comparator_cite_retire_audit.py` | Implemented |
 | REQ-REPORT-024 | `python/carnot/reporting/agent_usage.py`, `scripts/agent_plan_usage.py` | `tests/python/test_agent_plan_usage.py` | Implemented |
 | REQ-PUBLISH-003 | `scripts/experiment_317_hf_publish.py` | `tests/python/test_experiment_317_hf_publish.py` | Implemented |
 | REQ-PUBLISH-004 | `scripts/experiment_330_hf_live_publish.py` | `tests/python/test_experiment_330_hf_live_publish.py` | Implemented |
