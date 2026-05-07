@@ -3,6 +3,32 @@
 This file tracks hardware that would accelerate Carnot's research and
 production goals. Updated as new needs emerge from experiments.
 
+## Portfolio Status (Exp 1460 — 20260507 scope reduction)
+
+The active hardware portfolio is narrowed to three tracks. "Active" here
+means Carnot may spend near-term research effort on the track without
+expanding scope; it is not a hardware-execution claim.
+
+### Active hardware tracks (Exp 1460)
+
+| Track | Why active now | Boundary |
+|---|---|---|
+| Dual RTX 3090 CUDA local SOTA runtime repair | Exp 1442 saw two RTX 3090s and cached flagship GGUF models; the blocker is the local llama.cpp CUDA runtime. | No live SOTA inference claim until a smoke run records `usable_response=true`. |
+| KV260/FPGA Discrete SB RTL lint and simulation | Exp 1451 completed source-level lint and simulation for `hardware/kv260/discrete_sb_256.v`; local HDL tools are usable. | No KV260 board, bitfile, or latency claim until Vivado synthesis, bitfile flashing, and board commands run. |
+| THRML/Extropic TSU compatibility simulation | Public THRML/JAX compatibility remains useful for sampler portability and future TSU integration. | No Extropic hardware access, Z1/XTR-0 execution, or TSU latency claim without authenticated hardware evidence. |
+
+### Deferred hardware tracks (Exp 1460)
+
+| Track | Deferred because | Reopen condition |
+|---|---|---|
+| KV260 board execution and latency claims | Board-level evidence is still blocked by missing Vivado bitfile and missing board-command transcript. | Reopen when Vivado produces a bitfile, `CARNOT_KV260_BITFILE` is set to it, and a KV260/PYNQ command records real latency. |
+| AMD Strix/XDNA NPU acceleration | VitisAI and IRON paths remain blocked; no NPU acceleration result exists. | Reopen when `mlir-aie` or AMD VitisAI onnxruntime is installed and a local benchmark reports real NPU speedup. |
+| Extropic Z1/XTR-0 hardware execution | Strategic target only; no local hardware access or authenticated run exists. | Reopen when early-access credentials or hardware allow a THRML/SDK run with device, latency, and sample-quality evidence. |
+| Photonic or optical Ising-machine substrates | No local photonic hardware, API, or collaborator run exists. | Reopen when a concrete photonic provider/API/collaborator can run Carnot Ising cases. |
+| D-Wave QPU cloud experiments | Adds a branch while the current blockers are local runtime and RTL readiness. | Reopen when a specific Ising/QUBO benchmark needs QPU evaluation and Leap access plus budget are available. |
+| Alveo/Agilex large production FPGA | Premature before KV260 closes the synthesis/board loop. | Reopen after KV260 produces measured sampler evidence that justifies larger fabric. |
+| RX 7900 XTX Thunderbolt eGPU | Less ready than the visible dual RTX 3090 CUDA path for immediate SOTA runtime repair. | Reopen if the RTX path is exhausted or the eGPU is connected and ROCm/JAX passes a real Carnot benchmark. |
+
 ## Priority 1: FPGA for Ising Sampling (Unblocks: Self-Learning Tiers 1-4, TSU path)
 
 ### Small FPGA — Experiment Scale (1k-10k p-bits)

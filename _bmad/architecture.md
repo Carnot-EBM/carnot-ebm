@@ -193,6 +193,34 @@ where $T$ = filter temperature, $\Phi$ = structural restorative force in $L^2(\m
 | 2+ | Extropic XTR-0 (TSU) | $10^{11}$–$10^{12}$ | $\delta_t \gtrsim 10^{-9}$ |
 | 3 | photonic / Ising-machine cluster | $\gtrsim 10^{13}$ | foundation-model regime |
 
+### Active hardware tracks (Exp 1460)
+
+As of the 20260507 scope-reduction decision, Carnot keeps exactly three
+active hardware tracks. "Active" means a milestone may spend work on the
+track now without adding another speculative branch; it does not imply
+that hardware execution has happened.
+
+| Active track | Current scope | Claim boundary |
+|---|---|---|
+| Dual RTX 3090 CUDA local SOTA runtime repair | Repair the local GGUF/llama.cpp CUDA runtime for cached Qwen/Gemma models visible in Exp 1442. | No live SOTA inference claim until a smoke run records `usable_response=true` on the target runtime. |
+| KV260/FPGA Discrete SB RTL lint and simulation | Continue source-level RTL, Verilator/Icarus/Yosys lint, and simulator evidence from Exp 1451. | No KV260 board, bitfile, or latency claim until Vivado synthesis, bitfile flashing, and board commands are captured. |
+| THRML/Extropic TSU compatibility simulation | Keep TSU readiness at the THRML/JAX compatibility, sampler-interface parity, and CPU-simulation layer. | No Extropic hardware access, Z1/XTR-0 execution, or TSU latency claim until an authenticated hardware run is captured. |
+
+### Deferred hardware tracks (Exp 1460)
+
+These tracks remain architecturally relevant but are out of active scope
+until their reopen condition is met.
+
+| Deferred track | Reason deferred | Reopen condition |
+|---|---|---|
+| KV260 board execution and latency claims | Vivado is absent, no bitfile was produced, and no board commands ran. | Vivado synthesis produces a bitfile, `CARNOT_KV260_BITFILE` points to it, and a KV260/PYNQ board run records real latency. |
+| AMD Strix/XDNA NPU acceleration | VitisAI and IRON paths remain blocked by missing packages or wheels. | `mlir-aie` or AMD's VitisAI onnxruntime wheel is installed and a local NPU benchmark reports real speedup. |
+| Extropic Z1/XTR-0 hardware execution | No local Extropic hardware or authenticated execution transcript exists. | Carnot has early-access credentials or hardware and a THRML/SDK run records model, device, latency, and sample-quality evidence. |
+| Photonic or optical Ising-machine substrates | No local optical hardware or provider run exists. | A concrete photonic provider, simulator-to-hardware API, or collaborator run can evaluate Carnot Ising cases. |
+| D-Wave QPU cloud experiments | Cloud QPU access is not the current blocker for repair/runtime evidence. | A specific Ising/QUBO benchmark cannot be answered by CPU, GPU, or KV260 simulation and a Leap token plus budget are available. |
+| Large production FPGA boards | Production FPGA purchases do not help until the KV260 RTL path closes. | KV260 lint, synthesis, and board execution produce a measured sampler result that justifies larger fabric. |
+| RX 7900 XTX Thunderbolt eGPU path | The local CUDA RTX 3090 pair is currently more ready for SOTA runtime repair. | The RTX CUDA path is exhausted or ROCm/JAX on the eGPU is connected and verified with a real Carnot benchmark. |
+
 ### Mitigations against $\tau_{\text{int}}$ blowup
 
 The continuous-to-Ising transpiler ships three structural mitigations against autocorrelation explosion at phase transitions:
