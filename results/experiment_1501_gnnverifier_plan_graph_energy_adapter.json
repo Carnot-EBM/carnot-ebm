@@ -1,0 +1,46 @@
+{
+  "adapter_manifest_path": "results/plan_graph_energy_manifest_1501.jsonl",
+  "blockers": [],
+  "edge_localization_top1_rate": 1.0,
+  "fault_types": [
+    "missing_edge",
+    "wrong_tool_input_type",
+    "missing_intermediate",
+    "wrong_ordering",
+    "dangling_output"
+  ],
+  "graph_energy_beats_baselines": true,
+  "honest_verdict": "complete: deterministic plan-graph energy adapter localized injected CCTU dependency faults and beat random/length baselines",
+  "injected_graph_faults": 60,
+  "length_baseline_top1_rate": 0.2,
+  "node_localization_top1_rate": 1.0,
+  "plan_graph_energy_ready": true,
+  "random_baseline_top1_rate": 0.159603,
+  "run_date": "20260507",
+  "schema_version": 1,
+  "scorer_type": "deterministic_graph_risk",
+  "selected_trace_ids": [
+    "cctu-1486-arith-001",
+    "cctu-1486-table-001",
+    "cctu-1486-string-001",
+    "cctu-1486-graph-001",
+    "cctu-1486-arith-002",
+    "cctu-1486-table-002",
+    "cctu-1486-string-002",
+    "cctu-1486-graph-002",
+    "cctu-1486-arith-003",
+    "cctu-1486-table-003",
+    "cctu-1486-string-003",
+    "cctu-1486-graph-003"
+  ],
+  "status": "complete",
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_1501_gnnverifier_plan_graph_energy_adapter.py -q",
+    ".venv/bin/coverage run --source=python/carnot/verify -m pytest tests/python/test_experiment_1501_gnnverifier_plan_graph_energy_adapter.py -q -n0 --no-cov && .venv/bin/coverage report --fail-under=100 -m python/carnot/verify/plan_graph_energy_adapter.py",
+    "ruff check python/carnot/verify/plan_graph_energy_adapter.py tests/python/test_experiment_1501_gnnverifier_plan_graph_energy_adapter.py",
+    "python scripts/check_spec_coverage.py",
+    ".venv/bin/pytest tests/python -q (attempted once; failed/hung after existing failures, xdist worker crash, Z3 segfault, and experiment-561 watchdog timeout)"
+  ],
+  "traces_converted": 12,
+  "trained_gnn_used": false
+}
