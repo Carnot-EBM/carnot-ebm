@@ -1,0 +1,689 @@
+{
+  "audit_note_path": "docs/research-notes/kona_ebt_partial_trace_localization_audit.md",
+  "decoded_quality_claim_allowed": false,
+  "experiment": "1490_kona_ebt_partial_trace_localization_audit",
+  "honest_verdict": "bounded_injected_failure_localization_beats_random_no_decoded_quality_claim",
+  "injected_failures": 9,
+  "kona_dependency_used": false,
+  "length_baseline_top1_rate": 0.0,
+  "localization_audit_complete": true,
+  "localization_top1_rate": 1.0,
+  "localization_top3_rate": 1.0,
+  "model_specs": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "unsloth/gemma-4-31B-it-GGUF",
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "per_trace": [
+    {
+      "case_id": "balanced_correct_format_valid_001",
+      "injected_span_index": 5,
+      "length_baseline_credit": 0.0,
+      "localization_rank": 1,
+      "span_count": 6,
+      "spans": [
+        {
+          "clean_text": "\n\n",
+          "injected_failure": false,
+          "injected_text": null,
+          "local_energy": 0.00933874398469925,
+          "span_index": 0,
+          "span_length": 2,
+          "token_surprisal": 0.00933874398469925,
+          "verifier_energy": 0.0
+        },
+        {
+          "clean_text": "<think>",
+          "injected_failure": false,
+          "injected_text": null,
+          "local_energy": 0.12016882747411728,
+          "span_index": 1,
+          "span_length": 7,
+          "token_surprisal": 0.12016882747411728,
+          "verifier_energy": 0.0
+        },
+        {
+          "clean_text": "\n\n",
+          "injected_failure": false,
+          "injected_text": null,
+          "local_energy": 0.4240645170211792,
+          "span_index": 2,
+          "span_length": 2,
+          "token_surprisal": 0.4240645170211792,
+          "verifier_energy": 0.0
+        },
+        {
+          "clean_text": "</think>",
+          "injected_failure": false,
+          "injected_text": null,
+          "local_energy": 2.3841855067985307e-07,
+          "span_index": 3,
+          "span_length": 8,
+          "token_surprisal": 2.3841855067985307e-07,
+          "verifier_energy": 0.0
+        },
+        {
+          "clean_text": "\n\n",
+          "injected_failure": false,
+          "injected_text": null,
+          "local_energy": 3.337854423079989e-06,
+          "span_index": 4,
+          "span_length": 2,
+          "token_surprisal": 3.337854423079989e-06,
+          "verifier_energy": 0.0
+        },
+        {
+          "clean_text": "1",
+          "injected_failure": true,
+          "injected_text": "0",
+          "local_energy": 15.651802062988281,
+          "span_index": 5,
+          "span_length": 1,
+          "token_surprisal": 3.4689302992774174e-05,
+          "verifier_energy": 5.0
+        }
+      ]
+    },
+    {
+      "case_id": "balanced_correct_format_valid_002",
+      "injected_span_index": 5,
+      "length_baseline_credit": 0.0,
+      "localization_rank": 1,
+      "span_count": 6,
+      "spans": [
+        {
+          "clean_text": "\n\n",
+          "injected_failure": false,
+          "injected_text": null,
+          "local_energy": 0.013764815405011177,
+          "span_index": 0,
+          "span_length": 2,
+          "token_surprisal": 0.013764815405011177,
+          "verifier_energy": 0.0
+        },
+        {
+          "clean_text": "<think>",
+          "injected_failure": false,
+          "injected_text": null,
+          "local_energy": 0.09915671497583389,
+          "span_index": 1,
+          "span_length": 7,
+          "token_surprisal": 0.09915671497583389,
+          "verifier_energy": 0.0
+        },
+        {
+          "clean_text": "\n\n",
+          "injected_failure": false,
+          "injected_text": null,
+          "local_energy": 0.5894584655761719,
+          "span_index": 2,
+          "span_length": 2,
+          "token_surprisal": 0.5894584655761719,
+          "verifier_energy": 0.0
+        },
+        {
+          "clean_text": "</think>",
+          "injected_failure": false,
+          "injected_text": null,
+          "local_energy": 0.0,
+          "span_index": 3,
+          "span_length": 8,
+          "token_surprisal": -0.0,
+          "verifier_energy": 0.0
+        },
+        {
+          "clean_text": "\n\n",
+          "injected_failure": false,
+          "injected_text": null,
+          "local_energy": 2.0980616682209074e-05,
+          "span_index": 4,
+          "span_length": 2,
+          "token_surprisal": 2.0980616682209074e-05,
+          "verifier_energy": 0.0
+        },
+        {
+          "clean_text": "3",
+          "injected_failure": true,
+          "injected_text": "4",
+          "local_energy": 14.726396560668945,
+          "span_index": 5,
+          "span_length": 1,
+          "token_surprisal": 0.00041202158899977803,
+          "verifier_energy": 5.0
+        }
+      ]
+    },
+    {
+      "case_id": "balanced_correct_format_valid_003",
+      "injected_span_index": 5,
+      "length_baseline_credit": 0.0,
+      "localization_rank": 1,
+      "span_count": 6,
+      "spans": [
+        {
+          "clean_text": "\n\n",
+          "injected_failure": false,
+          "injected_text": null,
+          "local_energy": 0.015157869085669518,
+          "span_index": 0,
+          "span_length": 2,
+          "token_surprisal": 0.015157869085669518,
+          "verifier_energy": 0.0
+        },
+        {
+          "clean_text": "<think>",
+          "injected_failure": false,
+          "injected_text": null,
+          "local_energy": 0.15707625448703766,
+          "span_index": 1,
+          "span_length": 7,
+          "token_surprisal": 0.15707625448703766,
+          "verifier_energy": 0.0
+        },
+        {
+          "clean_text": "\n\n",
+          "injected_failure": false,
+          "injected_text": null,
+          "local_energy": 0.6101387739181519,
+          "span_index": 2,
+          "span_length": 2,
+          "token_surprisal": 0.6101387739181519,
+          "verifier_energy": 0.0
+        },
+        {
+          "clean_text": "</think>",
+          "injected_failure": false,
+          "injected_text": null,
+          "local_energy": 2.0265558760002023e-06,
+          "span_index": 3,
+          "span_length": 8,
+          "token_surprisal": 2.0265558760002023e-06,
+          "verifier_energy": 0.0
+        },
+        {
+          "clean_text": "\n\n",
+          "injected_failure": false,
+          "injected_text": null,
+          "local_energy": 3.576272320060525e-06,
+          "span_index": 4,
+          "span_length": 2,
+          "token_surprisal": 3.576272320060525e-06,
+          "verifier_energy": 0.0
+        },
+        {
+          "clean_text": "1",
+          "injected_failure": true,
+          "injected_text": "0",
+          "local_energy": 8.10025405883789,
+          "span_index": 5,
+          "span_length": 1,
+          "token_surprisal": 0.04627048969268799,
+          "verifier_energy": 5.0
+        }
+      ]
+    },
+    {
+      "case_id": "balanced_correct_format_valid_004",
+      "injected_span_index": 5,
+      "length_baseline_credit": 0.0,
+      "localization_rank": 1,
+      "span_count": 6,
+      "spans": [
+        {
+          "clean_text": "\n\n",
+          "injected_failure": false,
+          "injected_text": null,
+          "local_energy": 0.009338390082120895,
+          "span_index": 0,
+          "span_length": 2,
+          "token_surprisal": 0.009338390082120895,
+          "verifier_energy": 0.0
+        },
+        {
+          "clean_text": "<think>",
+          "injected_failure": false,
+          "injected_text": null,
+          "local_energy": 0.11490952223539352,
+          "span_index": 1,
+          "span_length": 7,
+          "token_surprisal": 0.11490952223539352,
+          "verifier_energy": 0.0
+        },
+        {
+          "clean_text": "\n\n",
+          "injected_failure": false,
+          "injected_text": null,
+          "local_energy": 0.35418701171875,
+          "span_index": 2,
+          "span_length": 2,
+          "token_surprisal": 0.35418701171875,
+          "verifier_energy": 0.0
+        },
+        {
+          "clean_text": "</think>",
+          "injected_failure": false,
+          "injected_text": null,
+          "local_energy": 1.6689285757820471e-06,
+          "span_index": 3,
+          "span_length": 8,
+          "token_surprisal": 1.6689285757820471e-06,
+          "verifier_energy": 0.0
+        },
+        {
+          "clean_text": "\n\n",
+          "injected_failure": false,
+          "injected_text": null,
+          "local_energy": 8.821448318485636e-06,
+          "span_index": 4,
+          "span_length": 2,
+          "token_surprisal": 8.821448318485636e-06,
+          "verifier_energy": 0.0
+        },
+        {
+          "clean_text": "0",
+          "injected_failure": true,
+          "injected_text": "1",
+          "local_energy": 14.490361213684082,
+          "span_index": 5,
+          "span_length": 1,
+          "token_surprisal": 0.00025865068892017007,
+          "verifier_energy": 5.0
+        }
+      ]
+    },
+    {
+      "case_id": "balanced_correct_format_valid_005",
+      "injected_span_index": 6,
+      "length_baseline_credit": 0.0,
+      "localization_rank": 1,
+      "span_count": 7,
+      "spans": [
+        {
+          "clean_text": "\n\n",
+          "injected_failure": false,
+          "injected_text": null,
+          "local_energy": 0.01217729039490223,
+          "span_index": 0,
+          "span_length": 2,
+          "token_surprisal": 0.01217729039490223,
+          "verifier_energy": 0.0
+        },
+        {
+          "clean_text": "<think>",
+          "injected_failure": false,
+          "injected_text": null,
+          "local_energy": 0.06693950295448303,
+          "span_index": 1,
+          "span_length": 7,
+          "token_surprisal": 0.06693950295448303,
+          "verifier_energy": 0.0
+        },
+        {
+          "clean_text": "\n\n",
+          "injected_failure": false,
+          "injected_text": null,
+          "local_energy": 0.5110896825790405,
+          "span_index": 2,
+          "span_length": 2,
+          "token_surprisal": 0.5110896825790405,
+          "verifier_energy": 0.0
+        },
+        {
+          "clean_text": "</think>",
+          "injected_failure": false,
+          "injected_text": null,
+          "local_energy": 1.1920927533992653e-07,
+          "span_index": 3,
+          "span_length": 8,
+          "token_surprisal": 1.1920927533992653e-07,
+          "verifier_energy": 0.0
+        },
+        {
+          "clean_text": "\n\n",
+          "injected_failure": false,
+          "injected_text": null,
+          "local_energy": 1.537788011773955e-05,
+          "span_index": 4,
+          "span_length": 2,
+          "token_surprisal": 1.537788011773955e-05,
+          "verifier_energy": 0.0
+        },
+        {
+          "clean_text": "1",
+          "injected_failure": false,
+          "injected_text": null,
+          "local_energy": 0.0026566232554614544,
+          "span_index": 5,
+          "span_length": 1,
+          "token_surprisal": 0.0026566232554614544,
+          "verifier_energy": 0.0
+        },
+        {
+          "clean_text": "1",
+          "injected_failure": true,
+          "injected_text": "0",
+          "local_energy": 12.431523323059082,
+          "span_index": 6,
+          "span_length": 1,
+          "token_surprisal": 0.0022841808386147022,
+          "verifier_energy": 5.0
+        }
+      ]
+    },
+    {
+      "case_id": "balanced_correct_format_valid_006",
+      "injected_span_index": 5,
+      "length_baseline_credit": 0.0,
+      "localization_rank": 1,
+      "span_count": 6,
+      "spans": [
+        {
+          "clean_text": "\n\n",
+          "injected_failure": false,
+          "injected_text": null,
+          "local_energy": 0.014409416355192661,
+          "span_index": 0,
+          "span_length": 2,
+          "token_surprisal": 0.014409416355192661,
+          "verifier_energy": 0.0
+        },
+        {
+          "clean_text": "<think>",
+          "injected_failure": false,
+          "injected_text": null,
+          "local_energy": 0.15353861451148987,
+          "span_index": 1,
+          "span_length": 7,
+          "token_surprisal": 0.15353861451148987,
+          "verifier_energy": 0.0
+        },
+        {
+          "clean_text": "\n\n",
+          "injected_failure": false,
+          "injected_text": null,
+          "local_energy": 0.4700418710708618,
+          "span_index": 2,
+          "span_length": 2,
+          "token_surprisal": 0.4700418710708618,
+          "verifier_energy": 0.0
+        },
+        {
+          "clean_text": "</think>",
+          "injected_failure": false,
+          "injected_text": null,
+          "local_energy": 2.264974000354414e-06,
+          "span_index": 3,
+          "span_length": 8,
+          "token_surprisal": 2.264974000354414e-06,
+          "verifier_energy": 0.0
+        },
+        {
+          "clean_text": "\n\n",
+          "injected_failure": false,
+          "injected_text": null,
+          "local_energy": 4.672895011026412e-05,
+          "span_index": 4,
+          "span_length": 2,
+          "token_surprisal": 4.672895011026412e-05,
+          "verifier_energy": 0.0
+        },
+        {
+          "clean_text": "0",
+          "injected_failure": true,
+          "injected_text": "1",
+          "local_energy": 8.931500434875488,
+          "span_index": 5,
+          "span_length": 1,
+          "token_surprisal": 0.02053746208548546,
+          "verifier_energy": 5.0
+        }
+      ]
+    },
+    {
+      "case_id": "balanced_correct_format_valid_007",
+      "injected_span_index": 5,
+      "length_baseline_credit": 0.0,
+      "localization_rank": 1,
+      "span_count": 6,
+      "spans": [
+        {
+          "clean_text": "\n\n",
+          "injected_failure": false,
+          "injected_text": null,
+          "local_energy": 0.008925540372729301,
+          "span_index": 0,
+          "span_length": 2,
+          "token_surprisal": 0.008925540372729301,
+          "verifier_energy": 0.0
+        },
+        {
+          "clean_text": "<think>",
+          "injected_failure": false,
+          "injected_text": null,
+          "local_energy": 0.13706518709659576,
+          "span_index": 1,
+          "span_length": 7,
+          "token_surprisal": 0.13706518709659576,
+          "verifier_energy": 0.0
+        },
+        {
+          "clean_text": "\n\n",
+          "injected_failure": false,
+          "injected_text": null,
+          "local_energy": 0.3865540623664856,
+          "span_index": 2,
+          "span_length": 2,
+          "token_surprisal": 0.3865540623664856,
+          "verifier_energy": 0.0
+        },
+        {
+          "clean_text": "</think>",
+          "injected_failure": false,
+          "injected_text": null,
+          "local_energy": 3.5762778338721546e-07,
+          "span_index": 3,
+          "span_length": 8,
+          "token_surprisal": 3.5762778338721546e-07,
+          "verifier_energy": 0.0
+        },
+        {
+          "clean_text": "\n\n",
+          "injected_failure": false,
+          "injected_text": null,
+          "local_energy": 7.033323527139146e-06,
+          "span_index": 4,
+          "span_length": 2,
+          "token_surprisal": 7.033323527139146e-06,
+          "verifier_energy": 0.0
+        },
+        {
+          "clean_text": "1",
+          "injected_failure": true,
+          "injected_text": "0",
+          "local_energy": 13.769235610961914,
+          "span_index": 5,
+          "span_length": 1,
+          "token_surprisal": 0.00021920185827184469,
+          "verifier_energy": 5.0
+        }
+      ]
+    },
+    {
+      "case_id": "balanced_correct_format_valid_008",
+      "injected_span_index": 6,
+      "length_baseline_credit": 0.0,
+      "localization_rank": 1,
+      "span_count": 7,
+      "spans": [
+        {
+          "clean_text": "\n\n",
+          "injected_failure": false,
+          "injected_text": null,
+          "local_energy": 0.012152677401900291,
+          "span_index": 0,
+          "span_length": 2,
+          "token_surprisal": 0.012152677401900291,
+          "verifier_energy": 0.0
+        },
+        {
+          "clean_text": "<think>",
+          "injected_failure": false,
+          "injected_text": null,
+          "local_energy": 0.0395522341132164,
+          "span_index": 1,
+          "span_length": 7,
+          "token_surprisal": 0.0395522341132164,
+          "verifier_energy": 0.0
+        },
+        {
+          "clean_text": "\n\n",
+          "injected_failure": false,
+          "injected_text": null,
+          "local_energy": 0.4700753092765808,
+          "span_index": 2,
+          "span_length": 2,
+          "token_surprisal": 0.4700753092765808,
+          "verifier_energy": 0.0
+        },
+        {
+          "clean_text": "</think>",
+          "injected_failure": false,
+          "injected_text": null,
+          "local_energy": 1.1920927533992653e-07,
+          "span_index": 3,
+          "span_length": 8,
+          "token_surprisal": 1.1920927533992653e-07,
+          "verifier_energy": 0.0
+        },
+        {
+          "clean_text": "\n\n",
+          "injected_failure": false,
+          "injected_text": null,
+          "local_energy": 2.2172682292875834e-05,
+          "span_index": 4,
+          "span_length": 2,
+          "token_surprisal": 2.2172682292875834e-05,
+          "verifier_energy": 0.0
+        },
+        {
+          "clean_text": "1",
+          "injected_failure": false,
+          "injected_text": null,
+          "local_energy": 0.0004441943019628525,
+          "span_index": 5,
+          "span_length": 1,
+          "token_surprisal": 0.0004441943019628525,
+          "verifier_energy": 0.0
+        },
+        {
+          "clean_text": "2",
+          "injected_failure": true,
+          "injected_text": "0",
+          "local_energy": 16.061667442321777,
+          "span_index": 6,
+          "span_length": 1,
+          "token_surprisal": 7.545662811025977e-05,
+          "verifier_energy": 5.0
+        }
+      ]
+    },
+    {
+      "case_id": "balanced_correct_format_valid_009",
+      "injected_span_index": 5,
+      "length_baseline_credit": 0.0,
+      "localization_rank": 1,
+      "span_count": 6,
+      "spans": [
+        {
+          "clean_text": "\n\n",
+          "injected_failure": false,
+          "injected_text": null,
+          "local_energy": 0.018465403467416763,
+          "span_index": 0,
+          "span_length": 2,
+          "token_surprisal": 0.018465403467416763,
+          "verifier_energy": 0.0
+        },
+        {
+          "clean_text": "<think>",
+          "injected_failure": false,
+          "injected_text": null,
+          "local_energy": 0.08670910447835922,
+          "span_index": 1,
+          "span_length": 7,
+          "token_surprisal": 0.08670910447835922,
+          "verifier_energy": 0.0
+        },
+        {
+          "clean_text": "\n\n",
+          "injected_failure": false,
+          "injected_text": null,
+          "local_energy": 0.49899494647979736,
+          "span_index": 2,
+          "span_length": 2,
+          "token_surprisal": 0.49899494647979736,
+          "verifier_energy": 0.0
+        },
+        {
+          "clean_text": "</think>",
+          "injected_failure": false,
+          "injected_text": null,
+          "local_energy": 7.152555099310121e-07,
+          "span_index": 3,
+          "span_length": 8,
+          "token_surprisal": 7.152555099310121e-07,
+          "verifier_energy": 0.0
+        },
+        {
+          "clean_text": "\n\n",
+          "injected_failure": false,
+          "injected_text": null,
+          "local_energy": 2.610649426060263e-05,
+          "span_index": 4,
+          "span_length": 2,
+          "token_surprisal": 2.610649426060263e-05,
+          "verifier_energy": 0.0
+        },
+        {
+          "clean_text": "1",
+          "injected_failure": true,
+          "injected_text": "0",
+          "local_energy": 7.693218231201172,
+          "span_index": 5,
+          "span_length": 1,
+          "token_surprisal": 0.07114222645759583,
+          "verifier_energy": 5.0
+        }
+      ]
+    }
+  ],
+  "random_baseline_rate": 0.16137566137566137,
+  "random_top3_baseline_rate": 0.4841269841269841,
+  "run_date": "20260507",
+  "schema": "carnot.phase3.kona_partial_trace_localization_audit.v1",
+  "source_artifacts": [
+    "results/experiment_1450_ebt_nrgpt_local_microprototype_audit.json",
+    "results/experiment_1480_live_sota_balanced_telemetry_v2.json",
+    "results/live_sota_balanced_telemetry_manifest_1480.jsonl"
+  ],
+  "source_trace_manifest": "results/live_sota_balanced_telemetry_manifest_1480.jsonl",
+  "span_energy_definition": "clean spans use observed token surprisal; injected answer spans use top-k wrong-answer energy plus a verifier mismatch penalty",
+  "spec_refs": [
+    "REQ-KONA-036",
+    "SCENARIO-KONA-036"
+  ],
+  "status": "complete",
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_1490_kona_partial_trace_localization_audit.py -q --no-cov (expected TDD fail before helper: ModuleNotFoundError)",
+    ".venv/bin/pytest tests/python/test_experiment_1490_kona_partial_trace_localization_audit.py -q --no-cov (7 passed)",
+    "ruff check python/carnot/phase3/kona_partial_trace_localization_audit.py tests/python/test_experiment_1490_kona_partial_trace_localization_audit.py (passed)",
+    "ruff format python/carnot/phase3/kona_partial_trace_localization_audit.py tests/python/test_experiment_1490_kona_partial_trace_localization_audit.py",
+    "ruff format --check python/carnot/phase3/kona_partial_trace_localization_audit.py tests/python/test_experiment_1490_kona_partial_trace_localization_audit.py (passed)",
+    ".venv/bin/coverage run -m pytest tests/python/test_experiment_1490_kona_partial_trace_localization_audit.py -q -o addopts='' (7 passed)",
+    ".venv/bin/coverage report --include='*/python/carnot/phase3/kona_partial_trace_localization_audit.py' --fail-under=100 --show-missing (100%)",
+    ".venv/bin/pytest tests/python -q (failed/hung; terminated after 19m52s: 16848 passed, 67 skipped, 68 failed, 4 errors)",
+    "python3 scripts/check_spec_coverage.py (passed)",
+    "python3 -c \"import json; d=json.load(open('results/experiment_1490_kona_ebt_partial_trace_localization_audit.json')); print(d.get('localization_audit_complete'), d.get('localization_top1_rate'), d.get('decoded_quality_claim_allowed'))\""
+  ],
+  "traces_evaluated": 9
+}
