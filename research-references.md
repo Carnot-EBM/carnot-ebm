@@ -4,6 +4,143 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-05-07 Post-.111 Planning Sweep (Milestone 2026.04.112)
+
+This sweep was run after milestone `.111` completed below threshold with 10 of
+14 criteria met. Key outcomes: spec coverage metadata debt reached zero in the
+targeted cluster (`exp1440`), Discrete SB RTL source plus lint/simulation
+evidence landed (`exp1441`, `exp1451`), FR-11 memory-policy changes produced
+positive verified growth without forgetting (`exp1447`), the LTLZinc adapter
+and EBT/NRGPT smoke audit completed (`exp1449`, `exp1450`), and PRM v3 gave
+decisive no-improvement evidence on a saturated candidate pool (`exp1448`).
+The failed chain was live local SOTA repair: `exp1442` proved the host has two
+idle RTX 3090 GPUs and cached Qwen/Gemma flagship GGUFs, but `llama_cpp`
+failed to load because `libcudart.so.12` was absent from the runtime path and
+`unsloth/gemma-4-26B-A4B-it-GGUF` was missing from cache. `exp1443`,
+`exp1444`, and `exp1445` were correctly gate-blocked. Primary `.112` focus:
+honor the active scope-reduction directive, retire or consolidate noisy
+lineages, repair the local SOTA GGUF runtime before any repair scale rerun, and
+test exactly one repair-loop salvage idea before retiring that line if it
+does not improve.
+
+### Spilled Energy for Training-Free Hallucination Detection
+- **Paper:** arXiv:2602.18671, "Spilled Energy in Large Language Models."
+- **Sources:** https://arxiv.org/abs/2602.18671,
+  https://huggingface.co/papers/2602.18671
+- **What:** Reinterprets the final LLM softmax classifier as an EBM and derives
+  training-free "spilled energy" and marginalized-energy metrics from logits
+  to localize factual errors, biases, and failures.
+- **Relevance to Carnot:** This supports a narrow, low-cost verifier diagnostic
+  after the live GGUF runtime is repaired. It should not create a new broad
+  hallucination lineage in `.112`; it is a candidate metric for the
+  validation-error-as-context A/B task and later repair false-acceptance bounds.
+- **Concrete experiment hook:** exp1464 can record whether logits are available
+  from the live runtime and whether a spilled-energy-style diagnostic predicts
+  rejected repair retries. If logits are unavailable, record the blocker and do
+  not expand the scope.
+
+### Hard Constraint Layers for Neural Outputs
+- **Papers:** HardNet++ (arXiv:2604.19669), KKT-Hardnet (arXiv:2507.08124), and
+  SnareNet (arXiv:2602.09317).
+- **Sources:** https://arxiv.org/abs/2604.19669,
+  https://arxiv.org/abs/2507.08124,
+  https://arxiv.org/abs/2602.09317
+- **What:** Recent hard-constraint methods add differentiable projection or
+  repair layers that can enforce linear and nonlinear equality/inequality
+  constraints during inference instead of only penalizing violations during
+  training.
+- **Relevance to Carnot:** These papers validate Carnot's emphasis on hard
+  constraint satisfaction, but the existing known-issues directive explicitly
+  names the HardNet++/DSP lineage as noise unless it is consolidated. `.112`
+  should retire the existing lineage with lessons learned, not launch another
+  HardNet variant.
+- **Concrete experiment hook:** exp1458 should cite these works in the
+  consolidation note while manifest-blocking further HardNet++/DSP variant
+  proliferation unless an operator explicitly reopens the line.
+
+### KAN Verification Is Now a MILP-Abstraction Question
+- **Papers:** arXiv:2602.06737, "Optimal Abstractions for Verifying Properties
+  of Kolmogorov-Arnold Networks"; arXiv:2603.23854, "Symbolic-KAN."
+- **Sources:** https://arxiv.org/abs/2602.06737,
+  https://arxiv.org/abs/2603.23854
+- **What:** KAN verification work replaces nonlinear KAN units with
+  piecewise-affine abstractions and encodes property checks as MILP; Symbolic-KAN
+  explores trainable networks with explicit discrete symbolic structure.
+- **Relevance to Carnot:** KAN remains relevant to QuantKAN evidence and paper
+  claims, but `.112` should narrow claims around existing measured QuantKAN
+  artifacts rather than adding a new KAN experiment.
+- **Concrete experiment hook:** exp1462 should decide whether QuantKAN is one
+  of the 3-5 anchored paper claims and cite KAN verification only if the claim
+  is empirically backed by current artifacts.
+
+### Planning, Verification, and Repair Context
+- **Papers:** arXiv:2602.02991, "Large Language Models Can Take False First
+  Steps at Inference-time Planning"; arXiv:2512.17846, "Planning as Descent";
+  arXiv:2601.15498, "MARS: Margin-Aware Speculative Verification."
+- **Sources:** https://arxiv.org/abs/2602.02991,
+  https://arxiv.org/abs/2512.17846,
+  https://arxiv.org/abs/2601.15498,
+  https://huggingface.co/papers/2601.15498
+- **What:** 2026 planning work emphasizes that inference context changes
+  planning behavior, energy descent can synthesize and select trajectories, and
+  verification rules can be adapted by local decisiveness rather than treated
+  as rigid all-or-nothing rejection.
+- **Relevance to Carnot:** This supports the known-issues repair-loop
+  validation-error-as-context A/B test. The specific next question is whether
+  passing the validator's concrete error back into a retry improves repair
+  acceptance under mandated live local SOTA models.
+- **Concrete experiment hook:** exp1464 should be gated on runtime repair and
+  should retire the repair-executor lineage if validation-error context gives
+  no nonzero improvement.
+
+### Graph Energy Matching and Energy-Based Sampling
+- **Paper:** arXiv:2603.23398, "Graph Energy Matching:
+  Transport-Aligned Energy-Based Modeling for Graph Generation."
+- **Source:** https://arxiv.org/abs/2603.23398
+- **What:** GEM learns a transport-aligned graph energy and switches from fast
+  gradient-guided movement toward high-likelihood regions to a mixing regime
+  for exploration, improving discrete EBM sampling quality.
+- **Relevance to Carnot:** The result is relevant to Phase-3 constraint graphs,
+  but `.111` already concluded EBT/NRGPT should stay smoke-only until decoded
+  quality improves. `.112` should preserve that no-scale decision unless a
+  focused artifact shows a real decoded-quality gain.
+- **Concrete experiment hook:** exp1461 and exp1462 can cite GEM as future-work
+  context; no new GEM implementation should be proposed during the scope
+  reduction milestone.
+
+### Ontology-Constrained Agentic Reasoning
+- **Paper:** arXiv:2604.00555, "Ontology-Constrained Neural Reasoning in
+  Enterprise Agentic Systems."
+- **Source:** https://arxiv.org/abs/2604.00555
+- **What:** Formal role/domain/interaction ontologies constrain agent context,
+  tool discovery, governance thresholds, and proposed output validation.
+- **Relevance to Carnot:** The paper reinforces explicit symbolic contracts for
+  agent outputs, but Carnot already has many comparator integrations. `.112`
+  should use this as a comparator-audit signal only: cite if it sharpens a
+  paper claim, otherwise retire it from active scope.
+- **Concrete experiment hook:** exp1461 comparator audit should decide cite vs
+  retire for ontology-constrained reasoning alongside Abstract-CoT,
+  Meta-Harness, Autodata, LARQL, Skillify, GStack, EBT, and ARM-as-EBM.
+
+### Hardware and Secondary Source Sweep
+- **Sources checked:** OpenReview EBT ICLR 2026 Oral
+  (https://openreview.net/forum?id=ZBj3Qp1bYg), HuggingFace daily papers,
+  Semantic Scholar citation sweeps for EBT (`arXiv:2507.02092`) and ARM-as-EBM
+  (`arXiv:2512.15605`), Extropic writing and THRML docs
+  (https://extropic.ai/writing/thermodynamic-computing-from-zero-to-one,
+  https://docs.thrml.ai/), and public Kona 1.0 coverage
+  (https://logicalintelligence.com/ plus syndicated January 2026 launch
+  coverage).
+- **What changed:** Extropic's public 2025-2026 material still supports TSU
+  and THRML as future probabilistic-computing targets, while Kona keeps the
+  product-level benchmark focused on trace energy and failure localization. No
+  new public hardware result changes Carnot's immediate blocker.
+- **Relevance to Carnot:** `.112` should narrow the active hardware portfolio
+  rather than adding another hardware branch. The local active blocker is the
+  GGUF CUDA runtime; KV260 remains POC only unless real board commands run.
+- **Concrete experiment hook:** exp1460 should select 2-3 active hardware
+  tracks, update architecture/hardware docs, and explicitly defer the rest.
+
 ## 2026-05-06 Post-.110 Planning Sweep (Milestone 2026.04.111)
 
 This sweep was run after milestone `.110` completed with 12 of 14 criteria met.

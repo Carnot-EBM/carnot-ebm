@@ -1,192 +1,211 @@
-# Research Roadmap vNEXT: Milestone 2026.04.111
+# Research Roadmap vNEXT: Milestone 2026.04.112
 
-Planned: 2026-05-06
+Planned: 2026-05-07
 Status: Draft for conductor execution
-Predecessor: 2026.04.110 repair v2 prototype + DVI nonforgetting + PRM v2 label completion + anchored latent repair + blocked Discrete SB RTL lint/sim
+Predecessor: 2026.04.111 scope-missed live-SOTA repair gate, positive FR-11 growth, Discrete SB RTL source/lint/sim
 Roadmap YAML: `research-roadmap-next.yaml`
 
 ## ID Allocation Note
 
-Milestone `.110` used `exp1425` through `exp1438`. The next 14 conductor tasks
-are `exp1439` through `exp1452`.
+Milestone `.111` used `exp1439` through `exp1452`. The next 14 conductor
+tasks are `exp1453` through `exp1466`.
 
-## What Milestone .110 Proved
+## What Milestone .111 Proved
 
 | Track | Evidence | Finding |
 |---|---|---|
-| Carry-forward discipline | `exp1425` | Mapped 6 `.109` carry-forwards and forbade an exact `exp1419` rerun without nonzero repair evidence. |
-| Test debt | `exp1426` | Python collection is clean, but 71 spec-coverage traceability misses remain; next cluster is `spec_coverage_traceability_metadata`. |
-| Repair rejection root cause | `exp1427` | Dominant zero-repair cause was missing output or non-JSON response; repair v2 contract is schema-first with per-candidate rejection reasons. |
-| DCCD repair v2 | `exp1428` | Nonzero repairs achieved: 20 accepted, `repaired_case_success_rate=1.0`, `schema_valid_rate=1.0`, but runtime mode was prototype-injected and `live_sota_model_inference_used=false`. |
-| MCMC constrained repair search | `exp1429` | Best-of-N search beat one-candidate repair (`repair_success_rate_best_of_n=1.0`, `mcmc_acceptance_rate=0.5`), but live SOTA inference did not run. |
-| PRM repair selector | `exp1430` | Selector is ready and non-degrading, but `selection_improvement_pp=0.0`; raw best-of-N was already 1.0 on the prototype pool. |
-| Pipeline v4 micro validation | `exp1431` | 50-case pass rate improved from 0.305 to 0.62, with `semantic_validation_pass_rate=1.0`, but `runtime_evidence_allows_headline_scaleup=false`. |
-| DVI v3 nonforgetting | `exp1432` | DVI v3 deployed with `dvi_v3_auroc_delta=0.011842` and `nonforgetting_rate=1.0`. |
-| FR-11 self-learning v6 | `exp1433` | DVI v3 was active, but FR-11 promoted zero new cases and stayed non-headline (`self_learning_delta_overall=0`). |
-| PRM label completion | `exp1434` | Filled all 478 missing local labels, trained PRM v2 on 1508 traces, and reached `prmv2_auroc=0.851789`. |
-| DPO provenance | `exp1435` | DPO must remain reranker-only until direct local adapter or conversion tooling exists. |
-| Anchored latent repair | `exp1436` | Anchored dual-path repair is viable at smoke-test scale: energy decreased without accuracy loss. |
-| Discrete SB RTL lint/sim | `exp1437` | Blocked because `hardware/kv260/discrete_sb_256.v` does not exist. No hardware claim allowed. |
-| Retro | `exp1438` | `.110` met 12 of 14 criteria. Carry-forward priorities are live-SOTA repair scale-up, FR-11 positive growth, spec-coverage metadata, DPO provenance, and Discrete SB RTL source. |
+| Carry-forward discipline | `exp1439` | `.110` unresolved tracks were mapped to concrete `.111` tasks and same-verdict retirement rules. |
+| Spec coverage metadata | `exp1440` | The named spec-coverage traceability cluster was fixed to zero residual debt, though the full suite still has unrelated failures. |
+| Discrete SB RTL | `exp1441`, `exp1451` | `hardware/kv260/discrete_sb_256.v` and a testbench now exist, and lint/simulation completed locally. No KV260 board execution was claimed. |
+| Live SOTA GGUF runtime | `exp1442` | Two RTX 3090 GPUs were idle and Qwen/Gemma flagship GGUFs were cached, but `llama_cpp` failed to load because `libcudart.so.12` was unavailable; `unsloth/gemma-4-26B-A4B-it-GGUF` was not cached. |
+| Live repair chain | `exp1443`, `exp1444`, `exp1445` | Correctly gate-blocked because `exp1442.local_sota_runtime_ready=false`. Missing/gated artifacts are not success evidence. |
+| FR-11 self-learning | `exp1447` | Memory-policy changes produced positive verified growth (`self_learning_delta_overall=156`) with `nonforgetting_rate=1.0`. |
+| PRM process agent | `exp1448` | PRM v3 was ready but did not improve on a saturated candidate pool (`selection_improvement_pp=0.0`); repeat selector work should be retired unless the pool changes or false-acceptance reduction is targeted. |
+| LTLZinc adapter | `exp1449` | Temporal continual-learning cases were generated and accepted; useful as a durable constraint-growth benchmark. |
+| EBT/NRGPT baseline | `exp1450` | Energy converged at smoke scale, but decoded quality evidence was absent; keep Phase-3 energy descent smoke-only until quality improves. |
+| Retro | `exp1452` | `.111` met 10 of 14 criteria, below the 11/14 threshold. Main carry-forward blocker is the local GGUF CUDA/runtime path. |
 
-**Critical insight from `.110`:** repair is no longer a pure algorithmic
-dead-end. The schema-first and constrained-search path works in prototype form.
-The credibility gap is now runtime provenance: the next milestone must prove the
-same path with live mandated local SOTA GGUF inference before scaling or making
-headline claims.
+**Critical insight from `.111`:** Carnot has enough successful strands to be at
+risk of accumulating noise. The active known-issues directive requires the next
+milestone to reduce scope before adding new lineages. The only justified
+non-scope additions are fixing the live SOTA runtime blocker and testing the
+single validation-error-as-context repair salvage idea that was already queued
+as a retirement decision point.
 
 ## Research Signals Added Before Planning
 
-The post-.110 sweep updated `research-references.md` before this roadmap was
+The post-.111 sweep updated `research-references.md` before this roadmap was
 finalized. The near-term signals are:
 
-- EBT / NRGPT: explicit energy-based language reasoning is now an ICLR 2026
-  line of work. Carnot should run a tiny local energy-convergence baseline
-  before claiming Phase-3 direction.
-- ARM-as-EBM (`arXiv:2512.15605`): local autoregressive log probabilities can be
-  treated as implicit sequence energy, useful for repair candidate reranking.
-- ETS (`arXiv:2601.21484`): training-free energy-guided test-time scaling
-  supports using verifier energy for repair selection before fine-tuning.
-- SEM-CTRL, type-constrained decoding, and DCCD: semantic/type constraints
-  should be added to live-SOTA repair v3 rather than only JSON schema checks.
-- BEAVER: live repair scale-up artifacts should report a false-acceptance bound
-  or an exact blocker.
-- LTLZinc and agentic memory work (ALMA, Panini, BEHEMOTH): FR-11 zero growth
-  needs a changed candidate/memory policy, not an exact rerun.
-- Extropic XTR-0/Z1 and `thrml`: hardware strategy is current, but the local
-  blocker is still missing KV260 Discrete SB RTL source.
-- Kona 1.0 public architecture: partial/full trace energy and failure
-  localization are the product-level comparison point Carnot should converge
-  toward with local-first components.
+- `Spilled Energy in Large Language Models` (`arXiv:2602.18671`) gives a
+  training-free logit-energy hallucination diagnostic, useful only after live
+  GGUF logits are available.
+- HardNet++, KKT-Hardnet, and SnareNet validate hard output-constraint layers
+  but also confirm that Carnot's existing HardNet++/DSP lineage should be
+  consolidated, not variant-expanded.
+- KAN verification now has a MILP-abstraction route (`arXiv:2602.06737`), so
+  QuantKAN belongs in paper claims only if existing measured artifacts support
+  it.
+- `Large Language Models Can Take False First Steps at Inference-time Planning`
+  (`arXiv:2602.02991`), Planning as Descent (`arXiv:2512.17846`), and MARS
+  (`arXiv:2601.15498`) support a narrow validation-error-as-context A/B test:
+  feed the concrete verifier failure back to the retry and measure acceptance.
+- Graph Energy Matching (`arXiv:2603.23398`) is relevant future Phase-3 context
+  but does not justify scaling EBT/NRGPT beyond `.111` smoke evidence.
+- Extropic/THRML and Kona 1.0 remain strategically aligned with Carnot, but no
+  public 2026 update changes the immediate hardware priority: repair the local
+  GGUF CUDA runtime and narrow hardware tracks.
 
 ## Three Biggest Gaps
 
-1. **Repair v2 lacks live-SOTA provenance.** `.110` proved constrained repair
-   can accept candidates, but the result is prototype-bound. `.111` must run
-   the same repair path with mandated local GGUF models, record cache/runtime
-   blockers honestly, and only then attempt a 100-case scale run.
+1. **Editorial scope is the biggest system risk.** The repo has 1,400+
+   experiment artifacts, 110+ milestones, many mandatory-priority entries, and
+   several noisy lineages. The next milestone must turn scattered evidence into
+   a smaller set of active claims, active lineages, and active hardware tracks.
 
-2. **FR-11 deployed DVI but learned nothing new.** DVI v3 is now deployable and
-   nonforgetting, but the self-learning loop promoted zero new cases. The next
-   experiment must diagnose promotion policy, memory update policy, and
-   candidate-source scarcity before rerunning FR-11.
+2. **Live SOTA repair remains blocked by runtime plumbing.** `.111` did not
+   disprove repair; it proved `llama_cpp`/CUDA/cache readiness is not solved.
+   No live-SOTA repair v3, reranker, or scale claim is allowed until a mandated
+   GGUF model completes real inference.
 
-3. **Hardware path is blocked before lint.** Discrete SB has a plausible KV260
-   spec but no RTL source file. The next milestone must create
-   `hardware/kv260/discrete_sb_256.v` and a testbench before rerunning lint or
-   simulation.
+3. **Self-learning is positive but not yet a headline thesis.** `exp1447`
+   produced verified growth, but the broader self-learning lineage has many
+   `_improved_non_headline` variants. `.112` must decide whether this becomes a
+   paper-anchored claim or gets retired as useful but non-headline engineering.
 
-## Architecture (4 Phases)
+## Scope-Reduction Compliance
+
+`ops/known-issues.md` requires at least 8 tasks in the next milestone to reduce
+scope. This roadmap allocates 10 explicit scope-reduction tasks:
+
+| Required scope item | Task |
+|---|---|
+| Activation / compliance manifest | `exp1453` |
+| Experiment artifact classifier | `exp1454` |
+| known-issues priority audit | `exp1455` |
+| GRPO/VPRM consolidation and retirement | `exp1456` |
+| WOPR puzzle cartridge retirement | `exp1457` |
+| HardNet++/DSP repair stack consolidation | `exp1458` |
+| Self-learning non-headline lineage decision | `exp1459` |
+| Hardware portfolio narrowing | `exp1460` |
+| Comparator integration audit | `exp1461` |
+| Paper-v6 anchored-claims narrowing | `exp1462` |
+
+The remaining tasks are a live-runtime unblock (`exp1463`), a gated repair
+validation-context salvage/retire test (`exp1464`), an external verification
+benchmark fit audit (`exp1465`), and the milestone retro (`exp1466`).
+
+## Architecture
 
 ```
-.111 Milestone Architecture
+.112 Milestone Architecture
 ========================================================================
 
-Phase 0 - Carry-Forward and Preflight Repair (unconditional)
-  exp1439: .110 carry-forward activation manifest ---------------------.
-  exp1440: Spec-coverage traceability metadata cluster fix ------------+--> Phase 1/2/3 inputs
-  exp1441: Discrete SB RTL source implementation ----------------------'
+Phase 0 - Scope-Reduction Activation
+  exp1453: .112 scope-reduction activation manifest -------------------.
+  exp1454: Experiment artifact classifier -----------------------------+--> scope ledgers
+  exp1455: known-issues mandatory priority audit ----------------------'
 
-Phase 1 - Live-SOTA Repair Provenance and Scale
-  exp1442: Live local SOTA repair runtime preflight -------------------.
-  exp1443: Live-SOTA DCCD/SEM-CTRL repair v3 (gated) ------------------+
-  exp1444: ARM implicit energy + Carnot energy reranker (gated) -------+--> exp1445
-  exp1445: Full pipeline v5 100-case pre-scale (gated) ----------------'
+Phase 1 - Lineage Retirement
+  exp1456: GRPO/VPRM lineage consolidation + retirement ---------------.
+  exp1457: WOPR puzzle cartridge retirement ---------------------------+
+  exp1458: HardNet++/DSP repair stack consolidation -------------------+--> exclusion manifests
+  exp1459: Self-learning non-headline decision + FR-11 pivot ----------'
 
-Phase 2 - Continuous Self-Learning and Process Supervision
-  exp1446: FR-11 zero-growth root-cause diagnosis ---------------------.
-  exp1447: FR-11 v7 memory-policy growth experiment (gated, SOTA) -----'
-  exp1448: PRM v3 online process-reward repair agent ------------------.
-  exp1449: LTLZinc temporal continual-learning adapter ----------------'
+Phase 2 - Portfolio and Claim Narrowing
+  exp1460: Hardware portfolio narrowing -------------------------------.
+  exp1461: Comparator integration cite/retire audit -------------------+
+  exp1462: Paper-v6 anchored-claims narrowing -------------------------'
 
-Phase 3 - Phase-3 Baseline, Hardware Evidence, Retro
-  exp1450: EBT/NRGPT local micro-prototype audit ----------------------.
-  exp1451: Discrete SB RTL lint/simulation rerun (gated) --------------+
-  exp1452: Milestone .111 retrospective -------------------------------'
+Phase 3 - Minimal Salvage and Closure
+  exp1463: Local SOTA GGUF CUDA/runtime repair ------------------------.
+  exp1464: Validation-error-as-context A/B repair test (gated) --------+--> repair retire/preserve decision
+  exp1465: External verifier benchmark fit audit ----------------------+
+  exp1466: Milestone .112 retrospective -------------------------------'
 ```
 
 ## Phase Descriptions
 
-**Phase 0 - carry-forward and preflight repair.** `exp1439` turns the `.110`
-retro into an activation manifest with same-verdict retirement rules. `exp1440`
-fixes the named spec-coverage traceability metadata cluster instead of reopening
-the already-fixed embedding-store tests. `exp1441` implements the missing
-Discrete SB RTL source and testbench from the `.109/.110` specs, because
-`exp1437` proved lint/sim cannot run without source.
+**Phase 0 - scope-reduction activation.** `exp1453` turns the `.111` retro and
+the hard known-issues directive into an execution manifest. `exp1454` classifies
+all experiment artifacts as SIGNAL, NOISE, or AMBIGUOUS and identifies the
+highest-cost noise candidates. `exp1455` audits mandatory known-issues entries
+and trims the active priority list to 10 or fewer items.
 
-**Phase 1 - live-SOTA repair provenance and scale.** `exp1442` is a runtime
-preflight for the mandated local SOTA GGUF models and emits a terminal blocker
-if the host cannot perform live inference. `exp1443` runs repair v3 with live
-SOTA inference plus DCCD, semantic constraints, and type/schema checks.
-`exp1444` ranks repair candidates using both implicit ARM energy and Carnot's
-explicit verifier energy. `exp1445` performs a 100-case pre-scale only after
-nonzero live repair and reranker readiness exist.
+**Phase 1 - lineage retirement.** `exp1456` consolidates GRPO/VPRM into one
+retirement artifact and blocks GRPO v15 proposals. `exp1457` retires the WOPR
+puzzle cartridge line. `exp1458` retires the HardNet++/DSP repair stack after
+recording the hard-constraint lesson. `exp1459` is the required continuous
+self-learning decision task: it uses the positive `exp1447` result to choose a
+headline pivot or a formal retirement rule.
 
-**Phase 2 - continuous self-learning and process supervision.** `exp1446`
-diagnoses why DVI v3 produced zero FR-11 growth. `exp1447` is the mandatory
-continuous self-learning experiment: it changes promotion thresholds, candidate
-generation, and memory policy before rerunning FR-11. `exp1448` upgrades the
-non-improving PRM selector into an online process-reward agent using PRM v2
-labels. `exp1449` creates a small LTLZinc-style temporal continual-learning
-adapter so FR-11 has a durable constraint-growth benchmark.
+**Phase 2 - portfolio and claim narrowing.** `exp1460` chooses the active
+hardware portfolio and updates architecture/hardware docs. `exp1461` decides
+whether each comparator integration is cited or retired. `exp1462` narrows the
+paper-v6 claim set to 3-5 artifact-anchored claims and moves unsupported
+territory to appendix/future work.
 
-**Phase 3 - Phase-3 baseline, hardware evidence, and retro.** `exp1450` tests a
-tiny EBT/NRGPT-style energy-convergence baseline against Carnot traces, guarding
-Phase-3 claims with empirical evidence. `exp1451` reruns Discrete SB lint/sim
-only after `exp1441` creates source. `exp1452` closes the milestone and records
-carry-forward rules.
+**Phase 3 - minimal salvage and closure.** `exp1463` repairs or conclusively
+blocks the local SOTA GGUF runtime by fixing CUDA/library/cache readiness.
+`exp1464` runs only if `exp1463.local_sota_runtime_ready=true`; it tests
+validation-error-as-context repair retries and retires the repair-executor
+lineage if no metric improves. `exp1465` decides whether external verification
+benchmarks such as VNNLIB/VNN-COMP/BEAVER should be adopted now or deferred.
+`exp1466` closes the milestone with honest criteria and carry-forward rules.
 
 ## Dependency Graph
 
 ```mermaid
 graph TD
-  A[exp1439 .110 carry-forward manifest]
-  B[exp1440 spec-coverage metadata fix]
-  C[exp1441 Discrete SB RTL source]
-  D[exp1442 live SOTA runtime preflight]
-  E[exp1443 live-SOTA repair v3]
-  F[exp1444 implicit+explicit energy reranker]
-  G[exp1445 100-case pipeline v5 pre-scale]
-  H[exp1446 FR-11 zero-growth diagnosis]
-  I[exp1447 FR-11 v7 memory-policy growth]
-  J[exp1448 PRM v3 online process reward agent]
-  K[exp1449 LTLZinc continual adapter]
-  L[exp1450 EBT/NRGPT micro-prototype]
-  M[exp1451 Discrete SB RTL lint/sim]
-  N[exp1452 retro]
+  A[exp1453 scope activation]
+  B[exp1454 artifact classifier]
+  C[exp1455 known-issues audit]
+  D[exp1456 GRPO retirement]
+  E[exp1457 WOPR retirement]
+  F[exp1458 HardNet++/DSP retirement]
+  G[exp1459 self-learning decision]
+  H[exp1460 hardware portfolio]
+  I[exp1461 comparator audit]
+  J[exp1462 paper claims narrowing]
+  K[exp1463 local SOTA runtime repair]
+  L[exp1464 validation-context repair A/B]
+  M[exp1465 external verifier benchmark fit]
+  N[exp1466 retro]
 
-  A --> D
-  D --> E
-  E --> F
-  E --> G
-  F --> G
-  H --> I
-  C --> M
-  B --> N
-  G --> N
-  I --> N
+  A --> B
+  A --> C
+  B --> D
+  B --> E
+  B --> F
+  B --> G
+  C --> J
+  D --> J
+  E --> J
+  F --> J
+  G --> J
+  H --> J
+  I --> J
+  K --> L
   J --> N
-  K --> N
   L --> N
   M --> N
 ```
 
-Structured conductor gates:
+Structured conductor gate:
 
-- `exp1443` requires `exp1442.local_sota_runtime_ready == true`.
-- `exp1444` requires `exp1443.live_repair_candidate_pool_ready == true`.
-- `exp1445` requires `exp1443.live_repair_success_rate > 0.0` and
-  `exp1444.energy_reranker_ready == true`.
-- `exp1447` requires `exp1446.fr11_zero_growth_root_cause_identified == true`.
-- `exp1451` requires `exp1441.rtl_source_created == true`.
+- `exp1464` requires `exp1463.local_sota_runtime_ready == true`.
+
+Other dependencies are execution-order dependencies rather than skip gates:
+scope-reduction tasks should still write a terminal artifact even if upstream
+evidence is noisy, ambiguous, or incomplete.
 
 ## Hardware Requirements
 
 | Task | Hardware | Notes |
 |---|---|---|
-| `exp1439`, `exp1440`, `exp1446`, `exp1448`, `exp1449`, `exp1450`, `exp1452` | CPU | Diagnostics, metadata fixes, small PRM/self-learning/latent probes. |
-| `exp1441`, `exp1451` | CPU plus optional FPGA tooling | Verilog/RTL work may use yosys, verilator, iverilog, or Vivado if present. No board claim unless actual KV260 commands run. |
-| `exp1442`, `exp1443`, `exp1444`, `exp1445`, `exp1447` | Dual RTX 3090 preferred | LLM-bearing tasks must include mandated local SOTA GGUF `MODEL_SPECS`; legacy small models are smoke tests only. |
+| `exp1453` through `exp1462`, `exp1465`, `exp1466` | CPU | Audits, docs, artifact classification, claim narrowing, and benchmark-fit decisions. |
+| `exp1463` | Dual RTX 3090 preferred | Must repair or precisely block `llama_cpp`/CUDA/cache readiness for mandated local SOTA GGUF models. |
+| `exp1464` | Dual RTX 3090 preferred | Runs only after `exp1463.local_sota_runtime_ready=true`; must use mandated local SOTA GGUF inference for headline repair evidence. |
 
 Mandated local SOTA GGUF models for every LLM-bearing experiment:
 
@@ -201,51 +220,50 @@ fast CPU smoke tests. They must not be reported as headline models.
 
 | Criterion | Target |
 |---|---|
-| Carry-forward manifest | `exp1439.carryforward_manifest_complete=true` and `.110` carry-forwards have addressed-by tasks. |
-| Spec coverage cluster | `exp1440.spec_coverage_metadata_cluster_fixed=true` or an exact residual blocker ledger exists. |
-| Discrete SB RTL source | `exp1441.rtl_source_created=true` and `hardware/kv260/discrete_sb_256.v` plus a testbench exist. |
-| Live SOTA runtime | `exp1442.local_sota_runtime_ready=true` or precise cache/GPU blockers are recorded. |
-| Live repair v3 | `exp1443.live_sota_inference_used=true` and `live_repair_success_rate > 0.0`. |
-| Energy reranker | `exp1444.energy_reranker_ready=true` and false-acceptance rate does not increase. |
-| Pipeline pre-scale | `exp1445.full_pipeline_pass_rate > 0.62` or an honest blocker prevents scale-up. |
-| FR-11 diagnosis | `exp1446.fr11_zero_growth_root_cause_identified=true`. |
-| Continuous self-learning | `exp1447.self_learning_delta_overall > 0` with nonforgetting preserved, or the variant self-retires with root cause. |
-| PRM process agent | `exp1448.pra_selector_ready=true` and `selection_improvement_pp > 0` or decisive no-improvement evidence. |
-| LTLZinc adapter | `exp1449.ltlzinc_adapter_ready=true` and at least 20 temporal constraint cases generated. |
-| EBT/NRGPT micro baseline | `exp1450.energy_convergence_probe_complete=true` with a scale/no-scale recommendation. |
-| RTL lint/sim | `exp1451.rtl_lint_complete=true` or precise missing-tool blockers; `hardware_claim_allowed=false` unless hardware actually ran. |
-| Retro | `exp1452.criteria_total=14` and honest carry-forward rules are recorded. |
+| Scope activation | `exp1453.scope_reduction_manifest_complete=true`. |
+| Artifact classifier | `exp1454.classification_table_written=true` and top-50 noise candidates are identified. |
+| Priority audit | `exp1455.active_priority_count <= 10` and priority count is trimmed by at least 40%. |
+| GRPO retirement | `exp1456.grpo_lineage_retired=true` and GRPO v15 is manifest-blocked. |
+| WOPR retirement | `exp1457.wopr_puzzle_lineage_retired=true` and future puzzle cartridges are manifest-blocked. |
+| HardNet++/DSP retirement | `exp1458.hardnet_dsp_lineage_retired=true` with lessons retained. |
+| Self-learning decision | `exp1459.self_learning_headline_pivot_selected=true` or `self_learning_lineage_retired=true`, and the decision cites `exp1447`. |
+| Hardware narrowing | `exp1460.active_hardware_track_count <= 3` and architecture/hardware docs are updated. |
+| Comparator audit | `exp1461.comparator_decision_count >= 6` and every named comparator has cite/retire status. |
+| Paper claims | `exp1462.anchored_claim_count` is between 3 and 5, each with artifact references. |
+| Live SOTA runtime | `exp1463.local_sota_runtime_ready=true` or a precise persistent blocker with same-verdict retirement is recorded. |
+| Repair salvage | If gated on, `exp1464.acceptance_delta_pp > 0` or the repair-executor lineage is explicitly retired. |
+| Verifier benchmark fit | `exp1465.benchmark_adoption_decision` is `adopt`, `defer`, or `retire`, with rationale. |
+| Retro | `exp1466.criteria_total=14` and carry-forward/retirement rules are recorded. |
 
 Milestone threshold: 11 of 14 criteria met is a successful milestone. Honest
-gate-blocks caused by upstream negative evidence count as scientific evidence,
-not silent success.
+gate-blocks are valid evidence but do not count as met criteria.
 
 ## Prior Failure Summary
 
-| Carry-forward | Prior evidence | `.111` response |
-|---|---|---|
-| Repair v2 prototype-bound | `exp1428`, `exp1429`, and `exp1431` all reported prototype/no-live-SOTA/no-headline limitations | `exp1442` runtime preflight, `exp1443` live-SOTA repair v3, `exp1444` energy reranker, `exp1445` 100-case pre-scale. |
-| PRM selector no improvement | `exp1430.selection_improvement_pp=0.0` | `exp1448` uses PRM v2 labels and online PRA-style stepwise scoring; exact PRM v1 selector rerun is retired. |
-| FR-11 zero growth | `exp1433.self_learning_delta_overall=0` with DVI active | `exp1446` diagnoses root cause; `exp1447` changes promotion/memory policy before rerun and self-retires if same verdict. |
-| Spec coverage metadata debt | `exp1426.spec_coverage_debt_count=71` | `exp1440` fixes the named metadata cluster first. |
-| DPO headline unsupported | `exp1435.direct_gguf_finetune_supported=false` | No DPO headline training task in `.111`; keep reranker-only unless tooling changes. |
-| Missing Discrete SB RTL source | `exp1437.blocked_missing_discrete_sb_rtl_source` | `exp1441` creates source; `exp1451` reruns lint/sim only if source exists. |
-| Phase-3 energy claims need baseline | `exp1436` is positive but smoke-scale only | `exp1450` adds EBT/NRGPT local micro-baseline before scale-up. |
+- `exp1442` failed the live runtime gate because `libcudart.so.12` was missing
+  from the `llama_cpp` load path and the middle MoE GGUF was not cached.
+  `exp1463` addresses those exact blockers before any repair rerun.
+- `exp1443`, `exp1444`, and `exp1445` were gate-blocked. `exp1464` cannot run
+  unless runtime repair succeeds, and it must retire the line on no improvement.
+- `exp1448` proved the PRM process-agent selector does not improve on a
+  saturated candidate pool. `.112` does not repeat PRM selector work.
+- The active known-issues directive says `.111` should have been scope
+  reduction. `.112` corrects that by assigning 10 scope-reduction tasks.
 
-## Decentralization Implications
+## Decentralization and Local-First Implications
 
-`.111` preserves Carnot's local-first mandate. Live repair tasks use mandated
-local GGUF models and record cache/runtime blockers instead of depending on
-closed hosted APIs. DPO remains explicitly non-headline until local adapter or
-conversion tooling exists. Hardware work advances a portable KV260 path while
-refusing hardware claims without real board execution. External papers, Kona,
-OpenReview, HuggingFace, and Extropic sources inform experiment design only;
-they do not become runtime dependencies in the core verifier.
+The milestone preserves Carnot's local-first thesis by routing all tasks to
+Codex (`agent_type: codex`, `model: gpt-5.5`) and keeping live LLM experiments
+on mandated local GGUF models. Closed hosted models are not used for headline
+results. Extropic, Kona, OpenReview, HuggingFace, and Semantic Scholar research
+signals are planning references, not dependencies.
 
-## Codex Default Audit
+## Conductor Notes
 
-All `.111` tasks route to `agent_type: codex`, `model: gpt-5.5` in
-`research-roadmap-next.yaml`. No task is marked `requires_claude: true`.
-Formulaic code tasks such as spec metadata repair and Verilog/RTL source work
-are intentionally routed to Codex. LLM-bearing prompts include mandated SOTA
-GGUF model specs and require the `cached_sota_pair()` pattern where applicable.
+- Do not modify `research-roadmap.yaml`.
+- Do not modify `scripts/research_conductor.py`.
+- Do not propose Gemini-routed tasks while the known rate-limit constraint is
+  active.
+- All tasks include a deliverable path.
+- `exp1464` includes a structured `gated_on` block so the conductor can skip the
+  expensive repair prompt if `exp1463` does not fix runtime readiness.

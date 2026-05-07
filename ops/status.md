@@ -1,6 +1,24 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-06 (milestone 2026.04.111 research planning complete)
+**Last Updated:** 2026-05-07 (milestone 2026.04.112 research planning complete)
+
+## Session 2026-05-07 - Milestone 2026.04.112 Research Planning Complete
+
+**Milestone 2026.04.112 PLANNED after .111 completion.**
+
+- Roadmap doc: `openspec/change-proposals/research-roadmap-vNEXT.md`
+- Execution queue: `research-roadmap-next.yaml` (14 tasks, `exp1453`-`exp1466`)
+- ID allocation: milestone `.111` ended at `exp1452`, so `.112` starts at `exp1453`.
+- Research references updated before final roadmap design with the post-.111 sweep: Spilled Energy (`arXiv:2602.18671`), HardNet++/KKT-Hardnet/SnareNet hard constraints, KAN MILP verification, planning-as-context/descent and MARS verification, Graph Energy Matching, ontology-constrained reasoning, and current Extropic/THRML/Kona status.
+- Scope-reduction compliance: `research-roadmap-next.yaml` declares `planned_scope_reduction_tasks=10` against the mandatory minimum of 8 from `ops/known-issues.md`.
+- Design focus: Phase 0 activates scope reduction and classifies artifacts; Phase 1 retires noisy GRPO/VPRM, WOPR, HardNet++/DSP, and self-learning non-headline lineages; Phase 2 narrows hardware, comparators, and paper-v6 claims; Phase 3 repairs local SOTA GGUF runtime, runs one gated validation-error-as-context repair A/B test if runtime is ready, audits external verifier benchmark fit, and closes with retro.
+- LLM-bearing tasks (`exp1463`, `exp1464`) include mandated local SOTA GGUF `MODEL_SPECS`: `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and `unsloth/gemma-4-26B-A4B-it-GGUF`.
+- Structured gate: `exp1464` on `exp1463.local_sota_runtime_ready == true`.
+- Agent routing: all 14 tasks use `agent_type: codex`, `model: gpt-5.5`; no `requires_claude: true` tasks.
+- Validation passed: YAML parse and prompt-section/end checks, `python3 scripts/validate_prior_failures.py research-roadmap-next.yaml`, `python3 scripts/audit_roadmap_gates.py research-roadmap-next.yaml`, and `git diff --check`.
+- Did NOT modify `research-roadmap.yaml` or `scripts/research_conductor.py`.
+
+**What's next**: activate `research-roadmap-next.yaml` for milestone 2026.04.112 when ready.
 
 ## Session 2026-05-06 - Milestone 2026.04.111 Research Planning Complete
 

@@ -1,5 +1,17 @@
 # Carnot — Session Metrics
 
+## Session: 2026-05-07 Milestone 2026.04.112 Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-05-07T02:23:20Z | 2026-05-07T02:32:32Z | Plan milestone 2026.04.112 after 2026.04.111 completion: read project instructions and required research context, review .111 retro/runtime artifacts and known scope-reduction directive, run current 2025-2026 research sweep, update research references, rewrite vNEXT roadmap doc, create research-roadmap-next.yaml with 14 tasks exp1453-exp1466 including 10 scope-reduction tasks, validate YAML/prior failures/gates/prompt checks, align ops docs, and preserve active roadmap/conductor files. | TBD |
+
+Note: `scripts/session-metrics.py` referenced by `CLAUDE.md` is not present in this checkout, so authoritative token extraction was not available.
+
+---
+
 ## Session: 2026-05-06 Milestone 2026.04.110 Planning
 
 ### Turn Log
