@@ -748,7 +748,59 @@ And it sets `monitor_intervention_ready=true` only when at least one recorded
 error is detected, no false interruptions are triggered, and verifier
 false-accept rate remains zero.
 
-## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487/1495)
+### REQ-VERIFY-1496: HoVer Safe-Prefix Continuation Audit
+
+The repository shall provide a bounded HoVer-style safe-prefix continuation
+audit for Exp 1496 that:
+
+- writes
+  `results/experiment_1496_hover_safe_prefix_continuation_audit.json` with
+  `status="in_progress"` before loading monitor events, validators, or local
+  models;
+- requires the Exp 1495 monitor event manifest to exist before attempting
+  continuation, and writes a terminal blocked artifact with concrete blockers
+  when the gated monitor evidence is unavailable;
+- defines a deterministic last-safe-prefix selection rule from monitor events:
+  for each selected CCTU trigger-certificate row, choose the earliest
+  interrupting monitor event for that case and lane, then keep only the
+  free-form reasoning plus trigger-token boundary before the unsafe
+  certificate suffix;
+- asks at least one mandated local SOTA GGUF model
+  (`unsloth/Qwen3.6-35B-A3B-GGUF`,
+  `unsloth/gemma-4-31B-it-GGUF`, or
+  `unsloth/gemma-4-26B-A4B-it-GGUF`) to continue from those selected prefixes,
+  while recording a terminal blocker when no mandated model can load;
+- evaluates matched no-continuation, safe-prefix continuation, and full
+  regeneration rows for the same selected cases with deterministic CCTU and
+  compiled safe-DSL validators; and
+- writes `results/safe_prefix_continuations_1496.jsonl` with one row per
+  case/baseline and a terminal artifact containing `status`, `model_specs`,
+  `live_sota_model_inference_used`, `safe_prefix_continuation_ready`,
+  `cases_attempted`, `continuations_completed`,
+  `baseline_validator_pass_rate`, `safe_prefix_validator_pass_rate`,
+  `full_regeneration_validator_pass_rate`, `verifier_false_accept_rate`,
+  `last_safe_prefix_selection_rule`, `continuation_manifest_path`,
+  `models_used`, `gpu_probe`, `blockers`, and `honest_verdict`.
+
+`safe_prefix_continuation_ready` MUST be true only when the pass-rate and
+false-accept metrics are present and at least one mandated live local SOTA GGUF
+contributed safe-prefix continuation rows. Legacy small models may be used only
+for CPU smoke-tests and MUST NOT count as headline continuation evidence.
+
+### SCENARIO-VERIFY-1496: Safe-Prefix Continuation Reports Matched Validator Rates
+
+Given Exp 1495 has emitted monitor events over CCTU trigger-certificate rows,
+When the Exp 1496 audit selects the last safe prefix for interrupted cases and
+continues from that prefix on the run date `20260507`,
+Then it writes one manifest row for each no-continuation, safe-prefix, and
+full-regeneration evaluation
+And every row records the selected prefix, model provenance, deterministic
+CCTU validation result, compiled-validator result, final validator decision,
+and false-accept status
+And the terminal artifact reports matched pass rates and verifier false-accept
+rate before setting `safe_prefix_continuation_ready=true`.
+
+## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487/1495/1496)
 
 | Requirement | Python | Tests |
 |-------------|--------|-------|
@@ -766,3 +818,4 @@ false-accept rate remains zero.
 | REQ-VERIFY-1487 | Planned (`python/carnot/eval/v1_pairwise_self_verification_vs_energy.py`) | Planned (`tests/python/test_experiment_1487_v1_pairwise_self_verification_vs_energy.py`) |
 | REQ-VERIFY-1494 | Planned (`python/carnot/eval/constrainprompt_validator_compiler_audit.py`) | Planned (`tests/python/test_experiment_1494_constrainprompt_validator_compiler_audit.py`) |
 | REQ-VERIFY-1495 | Implemented (`python/carnot/eval/interwhen_monitor_prototype.py`) | Implemented (`tests/python/test_experiment_1495_interwhen_monitor_prototype.py`) |
+| REQ-VERIFY-1496 | Planned (`python/carnot/eval/hover_safe_prefix_continuation_audit.py`) | Planned (`tests/python/test_experiment_1496_hover_safe_prefix_continuation_audit.py`) |
