@@ -1099,6 +1099,48 @@ counts SIGNAL / NOISE / AMBIGUOUS rows from the CSV, lists no more than 50 top
 noise candidates, and keeps environmental blockers AMBIGUOUS rather than
 calling them scientific NOISE.
 
+### REQ-REPORT-041: Known-Issues Mandatory Priority Audit
+
+The Exp 1455 known-issues mandatory priority audit shall write
+`results/experiment_1455_known_issues_mandatory_priority_audit.json` with
+`status="in_progress"` before terminal audit completion. It shall then read
+`ops/known-issues.md`, the `.112` scope-reduction manifest, the Exp 1454
+signal/noise summary, and the `.112` roadmap proposal without modifying
+`scripts/research_conductor.py`.
+
+The audit shall parse the active `MANDATORY-NEXT-MILESTONE PRIORITIES` block,
+write `ops/mandatory_priority_audit.md` with one row per active priority, and
+assign each row exactly one status from `keep`, `consolidate`, `superseded`,
+`parked`, or `retire`. The workflow shall preserve historical known-issues
+text, adding a current-active-priorities index instead of deleting the older
+audit record.
+
+The terminal artifact shall include:
+
+- `status`
+- `initial_priority_count`
+- `active_priority_count`
+- `trim_fraction`
+- `priority_audit_path`
+- `known_issues_updated`
+- `active_priorities_index_path`
+- `retired_or_consolidated_priorities`
+- `honest_verdict`
+
+`active_priority_count` shall be no greater than 10, and `trim_fraction` shall
+be at least 0.40. The `retired_or_consolidated_priorities` value shall list all
+rows whose status is `consolidate`, `superseded`, or `retire`.
+
+### SCENARIO-REPORT-041: Exp 1455 Trims Active Mandatory Priorities
+
+Given the active known-issues mandatory block contains more than 10 current
+priorities and includes superseded, parked, and consolidation candidates, when
+Exp 1455 runs for run date `20260507`, then it writes the audit table, writes a
+current active priority index with no more than 10 items, preserves historical
+entries, updates known-issues with a pointer to the audit/index, records all
+required REQ-REPORT-041 artifact fields, and reports a trim fraction of at least
+0.40.
+
 ### REQ-REPORT-024: Local Agent Usage Snapshot
 
 The repository shall provide a local operator workflow that inspects the
@@ -1674,6 +1716,7 @@ embed live-GPU benchmark results from Exp 328 when available.
 | REQ-REPORT-038 | `python/carnot/reporting/milestone_retro_111.py`, `results/experiment_1452_milestone_111_retro.json` | `tests/python/test_milestone_retro_111.py` | Implemented |
 | REQ-REPORT-039 | `python/carnot/reporting/milestone_112_scope_reduction_activation_manifest.py`, `results/experiment_1453_112_scope_reduction_activation_manifest.json`, `ops/milestone_112_scope_reduction_manifest.md` | `tests/python/test_milestone_112_scope_reduction_activation_manifest.py` | Implemented |
 | REQ-REPORT-040 | `python/carnot/reporting/experiment_artifact_signal_noise_classifier.py`, `results/experiment_1454_experiment_artifact_signal_noise_classifier.json`, `ops/experiment_signal_noise_classification.csv`, `ops/experiment_signal_noise_summary.md` | `tests/python/test_experiment_artifact_signal_noise_classifier.py` | Implemented |
+| REQ-REPORT-041 | `python/carnot/reporting/known_issues_mandatory_priority_audit.py`, `results/experiment_1455_known_issues_mandatory_priority_audit.json`, `ops/mandatory_priority_audit.md`, `ops/active-priorities.md` | `tests/python/test_known_issues_mandatory_priority_audit.py` | Implemented |
 | REQ-REPORT-024 | `python/carnot/reporting/agent_usage.py`, `scripts/agent_plan_usage.py` | `tests/python/test_agent_plan_usage.py` | Implemented |
 | REQ-PUBLISH-003 | `scripts/experiment_317_hf_publish.py` | `tests/python/test_experiment_317_hf_publish.py` | Implemented |
 | REQ-PUBLISH-004 | `scripts/experiment_330_hf_live_publish.py` | `tests/python/test_experiment_330_hf_live_publish.py` | Implemented |

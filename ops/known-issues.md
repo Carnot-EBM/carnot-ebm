@@ -2,6 +2,15 @@
 
 **Last Updated:** 2026-04-30
 
+## CURRENT ACTIVE PRIORITIES (20260507 audit)
+
+- Initial active mandatory priority entries audited: `24`
+- Current active priority index count: `7`
+- Trim fraction: `0.7083`
+- Audit table: `ops/mandatory_priority_audit.md`
+- Active index: `ops/active-priorities.md`
+- Historical entries below are preserved for audit trail; superseded, parked, consolidated, and retired statuses live in the audit table.
+
 ## OPERATOR CONSTRAINTS (planner: do NOT propose tasks that violate these)
 
 ### ~~2026-04-30: codex backend integration paused~~ (RESOLVED 2026-05-01 ~00:15Z)
