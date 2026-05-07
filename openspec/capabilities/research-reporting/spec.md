@@ -1755,6 +1755,69 @@ structured gates, confirms `research-roadmap.yaml` and
 `scripts/research_conductor.py` were not modified, and writes an honest
 activation verdict with an accepted success prefix.
 
+### REQ-REPORT-053: Milestone .115 Terminal Retrospective
+
+The Exp 1505 `.115` retrospective workflow shall write
+`results/experiment_1505_milestone_115_retro.json` with `status="in_progress"`
+before terminal completion. It shall then read the authoritative Exp 1492
+through Exp 1504 result JSON artifacts, the Exp 1492 through Exp 1504 conductor
+log entries, `openspec/change-proposals/research-roadmap-vNEXT.md`,
+`research-complete.yaml`, `ops/status.md`, `ops/changelog.md`, and
+`ops/known-issues.md` without modifying `research-roadmap.yaml` or
+`scripts/research_conductor.py`.
+
+The workflow shall score every `.115` success criterion from the roadmap
+source fields, including honest structured gate skips where a prerequisite gate
+prevents an experiment from running. It shall summarize each experiment verdict
+and classify milestone lines as graduated, carry-forward, or retired while
+preserving claim boundaries around Semantic Energy/logit telemetry, V_1
+pairwise self-verification, bounded continuous self-learning, simulator-only
+THRML evidence, and no-synthesis/no-board hardware accounting. The terminal
+artifact shall include:
+
+- `status`
+- `milestone`
+- `criteria_met`
+- `criteria_total`
+- `experiments_reviewed`
+- `completed_experiments`
+- `honest_gate_skips`
+- `retired_lines`
+- `graduated_lines`
+- `carry_forward_lines`
+- `continuous_self_learning_outcome`
+- `hardware_claim_boundaries`
+- `ops_docs_updated`
+- `research_complete_updated`
+- `protected_files_unchanged`
+- `honest_verdict`
+
+`research_complete_updated` shall be true only when the workflow appends a
+concise `2026.04.115` archive row to `research-complete.yaml` from terminal
+artifacts; otherwise the artifact shall record why the archive was not updated.
+For conductor stop-when-done retro runs where a separate reconciliation agent
+owns `ops/status.md`, `ops/changelog.md`, and `_bmad/traceability.md`,
+`ops_docs_updated` shall remain false with an explicit deferred-reconciliation
+reason rather than modifying those files. The final verdict shall start with a
+conductor-accepted success prefix.
+
+### SCENARIO-REPORT-053: Exp 1505 Closes .115 With Claim Boundaries Preserved
+
+Given Exp 1492 through Exp 1504 terminal artifacts exist, Exp 1493 through Exp
+1496 report trigger certificates, validator compilation, monitor intervention,
+and safe-prefix continuation readiness with zero false accepts, Exp 1497 and
+Exp 1498 report bounded FR-11 daily-eval and reachable evidence, Exp 1499 and
+Exp 1500 report verifier orthogonality and deterministic-first discipline, Exp
+1501 reports deterministic plan-graph energy readiness, Exp 1502 reports
+no-synthesis KAN accounting, Exp 1503 reports `thrml_import_ready=true`, and
+Exp 1504 reports simulator-only parity with no hardware claim, when Exp 1505
+runs for run date `20260507`, then it writes all required REQ-REPORT-053
+fields, reports the success-criteria score from source fields, records any
+honest gate skips explicitly, updates `research-complete.yaml` only when enough
+terminal artifacts exist, leaves `research-roadmap.yaml` and
+`scripts/research_conductor.py` unchanged, and writes an honest retrospective
+verdict with an accepted success prefix.
+
 ### REQ-REPORT-024: Local Agent Usage Snapshot
 
 The repository shall provide a local operator workflow that inspects the
@@ -2342,6 +2405,7 @@ embed live-GPU benchmark results from Exp 328 when available.
 | REQ-REPORT-050 | `python/carnot/reporting/milestone_114_activation_manifest.py`, `results/experiment_1479_113_completion_archive_114_activation.json`, `ops/milestone_114_activation_manifest.md` | `tests/python/test_milestone_114_activation_manifest.py` | Implemented |
 | REQ-REPORT-051 | `python/carnot/reporting/halluguard_risk_bound_fit_audit.py`, `results/experiment_1483_halluguard_risk_bound_fit_audit.json`, `docs/research-notes/halluguard_carnot_risk_bound_fit.md` | `tests/python/test_halluguard_risk_bound_fit_audit.py` | Implemented |
 | REQ-REPORT-052 | `python/carnot/reporting/milestone_115_activation_manifest.py`, `results/experiment_1492_114_completion_archive_115_activation.json`, `ops/milestone_115_activation_manifest.md` | `tests/python/test_milestone_115_activation_manifest.py` | Implemented |
+| REQ-REPORT-053 | `python/carnot/reporting/milestone_retro_115.py`, `results/experiment_1505_milestone_115_retro.json`, `research-complete.yaml` | `tests/python/test_milestone_retro_115.py` | Implemented |
 | REQ-REPORT-024 | `python/carnot/reporting/agent_usage.py`, `scripts/agent_plan_usage.py` | `tests/python/test_agent_plan_usage.py` | Implemented |
 | REQ-PUBLISH-003 | `scripts/experiment_317_hf_publish.py` | `tests/python/test_experiment_317_hf_publish.py` | Implemented |
 | REQ-PUBLISH-004 | `scripts/experiment_330_hf_live_publish.py` | `tests/python/test_experiment_330_hf_live_publish.py` | Implemented |
