@@ -1,0 +1,267 @@
+{
+  "artifacts_audited": [
+    {
+      "honest_verdict": "live_sota_topk_telemetry_ready",
+      "label": "exp1468_live_sota_logprob_telemetry_preflight",
+      "path": "results/experiment_1468_live_sota_logprob_telemetry_preflight.json",
+      "status": "complete"
+    },
+    {
+      "honest_verdict": "retired_non_headline_telemetry_flat_or_confounded",
+      "label": "exp1469_halt_spilled_energy_telemetry_diagnostic",
+      "path": "results/experiment_1469_halt_spilled_energy_telemetry_diagnostic.json",
+      "status": "complete"
+    },
+    {
+      "honest_verdict": "sound_bound_live_exp1468",
+      "label": "exp1470_beaver_lite_deterministic_bound_smoke",
+      "path": "results/experiment_1470_beaver_lite_deterministic_bound_smoke.json",
+      "status": "complete"
+    }
+  ],
+  "audit_note_path": "docs/research-notes/live_telemetry_adversarial_validity_audit.md",
+  "claim_allowed": false,
+  "format_confound_checked": true,
+  "honest_verdict": "telemetry_claim_blocked_adversarial_audit",
+  "length_confound_checked": true,
+  "mock_logprob_leakage_checked": true,
+  "prompt_family_confound_checked": true,
+  "run_date": "20260507",
+  "schema_version": 1,
+  "status": "complete",
+  "superficial_baseline_results": {
+    "beaver_lite": {
+      "bound_is_sound": true,
+      "can_pass_without_real_verifier_signal": true,
+      "empirical_violation_rates": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mock_live_label_clear": true,
+      "mock_logprobs_used": false,
+      "mock_or_live_logprobs": "live_exp1468",
+      "n_completions": [
+        1,
+        1,
+        1
+      ],
+      "single_logged_completion_gate": true,
+      "surface_constraint_only": true,
+      "unsafe_mass_bounds": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "verdict": "fail_surface_constraint_only"
+    },
+    "claim_blockers": [
+      "source_diagnostic_lineage_retired",
+      "beaver_surface_constraint_only"
+    ],
+    "telemetry": {
+      "all_superficial_baselines": {
+        "best_signal": {
+          "auroc": 0.2777777777777778,
+          "direction": "lower",
+          "label_key": "known_verifier_label",
+          "n": 6,
+          "name": "response_char_length",
+          "negatives": 3,
+          "oriented_auroc": 0.7222222222222222,
+          "positives": 3
+        },
+        "best_signal_name": "response_char_length",
+        "bootstrap_caveat": "n<30; AUROC is descriptive rank evidence, not a stable estimator",
+        "label_key": "known_verifier_label",
+        "signals": [
+          {
+            "auroc": 0.2777777777777778,
+            "direction": "lower",
+            "label_key": "known_verifier_label",
+            "n": 6,
+            "name": "response_char_length",
+            "negatives": 3,
+            "oriented_auroc": 0.7222222222222222,
+            "positives": 3
+          },
+          {
+            "auroc": 0.6111111111111112,
+            "direction": "higher",
+            "label_key": "known_verifier_label",
+            "n": 6,
+            "name": "completion_tokens",
+            "negatives": 3,
+            "oriented_auroc": 0.6111111111111112,
+            "positives": 3
+          },
+          {
+            "auroc": 0.6111111111111112,
+            "direction": "higher",
+            "label_key": "known_verifier_label",
+            "n": 6,
+            "name": "token_count",
+            "negatives": 3,
+            "oriented_auroc": 0.6111111111111112,
+            "positives": 3
+          },
+          {
+            "auroc": 0.5,
+            "direction": "higher",
+            "label_key": "known_verifier_label",
+            "n": 6,
+            "name": "exact_answer_format",
+            "negatives": 3,
+            "oriented_auroc": 0.5,
+            "positives": 3
+          },
+          {
+            "auroc": 0.5,
+            "direction": "higher",
+            "label_key": "known_verifier_label",
+            "n": 6,
+            "name": "json_like_response",
+            "negatives": 3,
+            "oriented_auroc": 0.5,
+            "positives": 3
+          },
+          {
+            "auroc": 0.5,
+            "direction": "higher",
+            "label_key": "known_verifier_label",
+            "n": 6,
+            "name": "live_logprobs",
+            "negatives": 3,
+            "oriented_auroc": 0.5,
+            "positives": 3
+          },
+          {
+            "auroc": 0.5,
+            "direction": "higher",
+            "label_key": "known_verifier_label",
+            "n": 6,
+            "name": "mock_logprobs",
+            "negatives": 3,
+            "oriented_auroc": 0.5,
+            "positives": 3
+          },
+          {
+            "auroc": 0.5,
+            "direction": "higher",
+            "label_key": "known_verifier_label",
+            "n": 6,
+            "name": "prompt_family_fover",
+            "negatives": 3,
+            "oriented_auroc": 0.5,
+            "positives": 3
+          },
+          {
+            "auroc": 0.5,
+            "direction": "higher",
+            "label_key": "known_verifier_label",
+            "n": 6,
+            "name": "prompt_family_gsm8k",
+            "negatives": 3,
+            "oriented_auroc": 0.5,
+            "positives": 3
+          }
+        ],
+        "small_sample_caveat": true
+      },
+      "best_superficial_baseline": {
+        "auroc": 0.2777777777777778,
+        "direction": "lower",
+        "label_key": "known_verifier_label",
+        "n": 6,
+        "name": "response_char_length",
+        "negatives": 3,
+        "oriented_auroc": 0.7222222222222222,
+        "positives": 3
+      },
+      "best_superficial_oriented_auroc": 0.7222222222222222,
+      "claim_blockers": [
+        "source_diagnostic_lineage_retired"
+      ],
+      "format_confound": {
+        "best_oriented_auroc": 0.5,
+        "best_signal": {
+          "auroc": 0.5,
+          "direction": "higher",
+          "label_key": "known_verifier_label",
+          "n": 6,
+          "name": "exact_answer_format",
+          "negatives": 3,
+          "oriented_auroc": 0.5,
+          "positives": 3
+        },
+        "checked": true,
+        "near_margin": 0.1,
+        "verdict": "pass"
+      },
+      "label_key": "known_verifier_label",
+      "length_confound": {
+        "best_oriented_auroc": 0.7222222222222222,
+        "best_signal": {
+          "auroc": 0.2777777777777778,
+          "direction": "lower",
+          "label_key": "known_verifier_label",
+          "n": 6,
+          "name": "response_char_length",
+          "negatives": 3,
+          "oriented_auroc": 0.7222222222222222,
+          "positives": 3
+        },
+        "checked": true,
+        "near_margin": 0.1,
+        "verdict": "fail"
+      },
+      "mock_live_confound": {
+        "best_oriented_auroc": 0.5,
+        "best_signal": {
+          "auroc": 0.5,
+          "direction": "higher",
+          "label_key": "known_verifier_label",
+          "n": 6,
+          "name": "live_logprobs",
+          "negatives": 3,
+          "oriented_auroc": 0.5,
+          "positives": 3
+        },
+        "checked": true,
+        "near_margin": 0.1,
+        "verdict": "pass"
+      },
+      "prompt_family_confound": {
+        "best_oriented_auroc": 0.5,
+        "best_signal": {
+          "auroc": 0.5,
+          "direction": "higher",
+          "label_key": "known_verifier_label",
+          "n": 6,
+          "name": "prompt_family_fover",
+          "negatives": 3,
+          "oriented_auroc": 0.5,
+          "positives": 3
+        },
+        "checked": true,
+        "near_margin": 0.1,
+        "verdict": "pass"
+      },
+      "reported_oriented_auroc": 0.7777777777777778,
+      "reported_signal": {
+        "auroc": 0.2222222222222222,
+        "direction": "lower",
+        "label_key": "known_verifier_label",
+        "n": 6,
+        "name": "marginal_energy_proxy_trend",
+        "negatives": 3,
+        "oriented_auroc": 0.7777777777777778,
+        "positives": 3
+      },
+      "rows_audited": 12,
+      "source_diagnostic_lineage_retired": true,
+      "superficial_baseline_matches_or_exceeds": false
+    }
+  },
+  "telemetry_validity_verdict": "invalid_for_headline_claim_superficial_or_mechanical_gate"
+}

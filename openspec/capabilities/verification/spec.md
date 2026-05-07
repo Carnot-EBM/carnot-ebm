@@ -408,7 +408,49 @@ And the diagnostic lineage is preserved only when the best logprob feature has
 a nontrivial signal that is not matched or exceeded by length or formatting
 confounds.
 
-## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469)
+### REQ-VERIFY-1473: Live Telemetry Adversarial Validity Audit
+
+The repository shall provide a deterministic, CPU-only adversarial audit for
+Exp 1473 that:
+
+- writes `results/experiment_1473_live_telemetry_adversarial_validity_audit.json`
+  with `status="in_progress"` before loading the Exp 1468, Exp 1469, and Exp
+  1470 artifacts;
+- audits whether the Exp 1468/.113 live logprob telemetry, Exp 1469
+  HALT/Spilled-Energy diagnostic, and Exp 1470 BEAVER-lite smoke can satisfy
+  their gates through response length, token count, JSON/schema formatting,
+  prompt-family membership, or mock/live logprob labeling rather than a real
+  verifier signal;
+- compares the reported telemetry signal against explicit superficial
+  baselines and records their oriented AUROC or gate-equivalent result;
+- checks whether BEAVER-lite used mock logprobs and whether the artifact labels
+  `mock_logprobs` versus `live_exp1468` unambiguously;
+- writes `docs/research-notes/live_telemetry_adversarial_validity_audit.md`
+  with pass/fail results for length, format, prompt-family, and mock-logprob
+  confounds; and
+- writes a terminal artifact containing `status`, `artifacts_audited`,
+  `length_confound_checked`, `format_confound_checked`,
+  `prompt_family_confound_checked`, `mock_logprob_leakage_checked`,
+  `superficial_baseline_results`, `telemetry_validity_verdict`,
+  `claim_allowed`, `audit_note_path`, and `honest_verdict`.
+
+The audit MUST set `claim_allowed=false` whenever a superficial baseline
+matches or exceeds the proposed diagnostic, when the source diagnostic already
+retired its lineage, or when an external-bound smoke passes only by checking a
+surface constraint that does not measure semantic verifier correctness.
+
+### SCENARIO-VERIFY-1473: Confounded Telemetry Blocks Headline Claim
+
+Given Exp 1468 reports live top-k telemetry, Exp 1469 reports small-N
+HALT/Spilled-Energy rank evidence, and Exp 1470 reports a BEAVER-lite sound
+bound,
+When Exp 1473 audits these artifacts adversarially,
+Then the audit records each confound check, compares superficial baselines
+against the proposed signal, verifies BEAVER mock/live labeling, writes the
+research note, and allows a headline telemetry claim only when the evidence
+cannot pass for superficial or mechanical reasons.
+
+## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473)
 
 | Requirement | Python | Tests |
 |-------------|--------|-------|
@@ -418,3 +460,4 @@ confounds.
 | REQ-VERIFY-1423 | Implemented (`python/carnot/reporting/process_reward_model_v1_fover_1508.py`) | Implemented (`tests/python/test_experiment_1423_process_reward_model_v1.py`) |
 | REQ-VERIFY-1434 | Implemented (`python/carnot/reporting/fover_prm_label_completion_v2.py`) | Implemented (`tests/python/test_experiment_1434_fover_prm_label_completion_v2.py`) |
 | REQ-VERIFY-1469 | Implemented (`python/carnot/reporting/halt_spilled_energy_telemetry_diagnostic.py`) | Implemented (`tests/python/test_experiment_1469_halt_spilled_energy_telemetry_diagnostic.py`) |
+| REQ-VERIFY-1473 | Implemented (`python/carnot/reporting/live_telemetry_adversarial_validity_audit.py`) | Implemented (`tests/python/test_experiment_1473_live_telemetry_adversarial_validity_audit.py`) |
