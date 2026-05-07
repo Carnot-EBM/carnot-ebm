@@ -4090,3 +4090,73 @@ mistakes
 | Requirement | Python | Tests |
 |-------------|--------|-------|
 | REQ-LEARN-1485 | Implemented (`python/carnot/reporting/fr11_completeness_reduction_audit.py`) | Implemented (`tests/python/test_fr11_completeness_reduction_audit.py`) |
+
+## REQ-LEARN-1497: FR-11 V10 Trace2Skill Daily Evaluation Cadence And Rot Check
+
+Exp 1497 SHALL convert the bounded Exp 1484/1485 query-time memory replay into
+a daily trace2skill evaluation manifest. The cadence SHALL produce durable
+per-skill/case rows, deterministic promotion/retirement decisions, and rot
+checks without claiming broad autonomous learning beyond the measured replay
+suite.
+
+### REQ-LEARN-1497 Sub-requirements
+
+- REQ-LEARN-1497-1: The workflow SHALL write
+  `results/experiment_1497_fr11_trace2skill_daily_eval_v10.json` first with
+  `status="in_progress"` before loading the v9 source artifacts.
+- REQ-LEARN-1497-2: The workflow SHALL load
+  `results/experiment_1484_fr11_v9_query_time_memory_policy.json` and
+  `results/experiment_1485_fr11_completeness_reduction_audit.json`, then
+  derive a bounded daily-eval manifest row for each paired replay case in the
+  Exp 1484 baseline and memory-enabled ledgers.
+- REQ-LEARN-1497-3: Each manifest row SHALL include a trace-derived `skill_id`,
+  the replay `case_id`, expected resolver checks, baseline outcome,
+  memory-assisted outcome, rot criteria, rot reasons, and a decision of
+  `promote`, `retain`, or `retire`.
+- REQ-LEARN-1497-4: A skill SHALL be retired when any rot criterion is true:
+  missing source artifact, unresolved verifier dependency, reduced task
+  success, new soundness mistake, or schema drift.
+- REQ-LEARN-1497-5: A skill SHALL be promoted only when it is not rotted, has
+  zero soundness mistakes, and the memory-assisted outcome improves the paired
+  baseline outcome. Non-improving but non-rotted skills SHALL be retained.
+- REQ-LEARN-1497-6: `daily_eval_manifest_ready` SHALL be true only after
+  `results/fr11_trace2skill_daily_eval_manifest_1497.jsonl` exists and the
+  promoted, rotted, and retired skill counts are explicit.
+- REQ-LEARN-1497-7: The final artifact SHALL include `status`,
+  `continuous_self_learning_task`, `model_specs`, `daily_eval_manifest_ready`,
+  `trace2skill_cases_evaluated`, `skills_evaluated`, `rotted_skill_count`,
+  `promoted_skill_count`, `retired_skill_count`,
+  `baseline_task_success_rate`, `memory_task_success_rate`,
+  `task_success_delta`, `soundness_mistakes`, `completeness_mistakes`,
+  `daily_eval_manifest_path`, `models_used`, `gpu_probe`, `blockers`, and
+  `honest_verdict`.
+- REQ-LEARN-1497-8: If no LLM judge or generator is needed, the artifact SHALL
+  state that deterministic replay evaluation was sufficient while preserving
+  the mandated local SOTA GGUF model specs for future non-deterministic runs.
+
+### SCENARIO-LEARN-1497: Daily Eval Promotes Improved Verified-Memory Skills
+
+**Given** Exp 1484 reports a bounded replay with paired baseline and
+memory-enabled decisions
+**And** Exp 1485 selected the zero-soundness verified-memory policy
+**When** Exp 1497 builds the trace2skill daily manifest
+**Then** each memory-improved, zero-soundness row is promoted
+**And** non-improving but non-rotted rows are retained
+**And** the terminal artifact reports the same bounded task-success delta as
+the paired manifest rows.
+
+### SCENARIO-LEARN-1498: Rot Criteria Retire Stale Or Harmful Skills
+
+**Given** a trace-derived skill has a missing source artifact, unresolved
+verifier dependency, reduced task success, a new soundness mistake, or schema
+drift
+**When** Exp 1497 evaluates the daily manifest row
+**Then** that skill is marked rotted
+**And** its decision is `retire`
+**And** the rotted and retired counts include it explicitly.
+
+## Implementation Status (REQ-LEARN-1497)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-1497 | Implemented (`python/carnot/reporting/fr11_trace2skill_daily_eval.py`) | Implemented (`tests/python/test_fr11_trace2skill_daily_eval.py`) |
