@@ -1,0 +1,112 @@
+{
+  "adopted_benchmark": "BEAVER-style deterministic bounds via existing BEAVER-lite smoke",
+  "benchmark_adoption_decision": "adopt_beaver_style_deterministic_bounds_smoke; defer_vnnlib_vnncomp_and_smaller_existing_benchmark",
+  "benchmark_decision_table_path": "docs/research-notes/external_verifier_benchmark_fit.md",
+  "benchmarks_reviewed": [
+    "VNNLIB/VNN-COMP",
+    "BEAVER-style deterministic bounds",
+    "smaller existing benchmark"
+  ],
+  "decision_rows": [
+    {
+      "benchmark": "VNNLIB/VNN-COMP",
+      "decision": "defer",
+      "fit_risks": "A broad VNN-COMP runner would expand .112 scope, mix neural-network robustness verification with LLM semantic-output verification, and risk producing an integration artifact instead of a fit decision.",
+      "next_or_reopen_condition": "Reopen after Carnot has a single checked-in ONNX verifier or energy network plus one VNN-LIB property that represents a real Carnot claim boundary.",
+      "rationale": "Credible external neural-network verification standard, but the current Carnot comparison target is LLM-output semantic bounds. VNN-COMP expects ONNX networks plus VNN-LIB properties, while Carnot has not yet exported the relevant verifier comparison as a small ONNX property instance.",
+      "source_basis": "VNN-COMP official site, VNN-LIB official standard page"
+    },
+    {
+      "benchmark": "BEAVER-style deterministic bounds",
+      "decision": "adopt",
+      "fit_risks": "The next task must remain a bounded smoke check over existing BEAVER-lite code.  It must not claim full BEAVER reproduction, secure-code coverage, privacy coverage, or broad LLM safety bounds.",
+      "next_or_reopen_condition": "Adopt only one minimal BEAVER-lite external-bounds smoke task with three deterministic arithmetic prompts and explicit mock/live logprob provenance.",
+      "rationale": "Best immediate fit: BEAVER's prefix-closed semantic-constraint bounds match Carnot's certificate and false-acceptance-bound need, and the repo already contains BEAVER-lite bounder tests and artifacts that can support a tiny smoke comparison.",
+      "source_basis": "BEAVER OpenReview/arXiv, python/carnot/verify/beaver_lite.py, tests/python/test_beaver_lite.py"
+    },
+    {
+      "benchmark": "smaller existing benchmark",
+      "decision": "defer",
+      "fit_risks": "Adopting a generic local benchmark would blur the external-verifier comparison question and could repeat scope-expansion patterns that .112 is explicitly reducing.",
+      "next_or_reopen_condition": "Reconsider after the BEAVER-lite smoke produces a terminal artifact and the next comparison needs a regression corpus rather than a new external method.",
+      "rationale": "Existing local micro-benchmarks are useful regressions, but they do not provide an external verifier comparison by themselves.  They should support the adopted BEAVER-style task only after the minimal bound artifact exists.",
+      "source_basis": "openspec/capabilities/benchmarks/spec.md and existing BEAVER-lite artifact/test coverage"
+    }
+  ],
+  "deferred_benchmarks": [
+    "VNNLIB/VNN-COMP",
+    "smaller existing benchmark"
+  ],
+  "experiment": "1465_external_verifier_benchmark_fit_audit",
+  "external_sources_reviewed": [
+    {
+      "fit_signal": "standardized neural-network verification competition with ONNX networks and VNN-LIB specs; benchmark proposers provide ONNX networks and VNN-LIB specifications.",
+      "name": "VNN-COMP official site",
+      "url": "https://vnn-comp.github.io/"
+    },
+    {
+      "fit_signal": "VNN-LIB 2.0 and official parsers are available, and ONNX is the model format VNN-LIB relies on.",
+      "name": "VNN-LIB official standard page",
+      "url": "https://www.vnnlib.org/"
+    },
+    {
+      "fit_signal": "benchmarks are organized around fully connected, convolutional, and residual ONNX network families with expected-result CSVs.",
+      "name": "VNNLIB benchmarks repository",
+      "url": "https://github.com/vnnlib/benchmarks"
+    },
+    {
+      "fit_signal": "deterministic probability bounds for prefix-closed semantic constraints on LLM outputs map directly onto Carnot's existing BEAVER-lite certificate tier.",
+      "name": "BEAVER OpenReview/arXiv",
+      "url": "https://openreview.net/forum?id=xO3efBXHM9"
+    }
+  ],
+  "honest_verdict": "adopt_one_minimal_beaver_bounds_smoke",
+  "next_minimal_benchmark_task": {
+    "benchmark_family": "BEAVER-style deterministic bounds",
+    "e2e_check": "run the existing BEAVER-lite bounder over three deterministic GSM8K-style arithmetic prompts and assert every reported unsafe mass bound is in [0, 1], sound, and labeled mock_or_live_logprobs",
+    "expected_artifact_fields": [
+      "status",
+      "benchmark_family",
+      "questions_evaluated",
+      "prefix_closed_constraint",
+      "unsafe_mass_bound",
+      "empirical_violation_rate",
+      "bound_is_sound",
+      "mock_or_live_logprobs",
+      "external_fit_verdict",
+      "honest_verdict"
+    ],
+    "inputs": [
+      "python/carnot/verify/beaver_lite.py",
+      "tests/python/test_beaver_lite.py",
+      "tests/python/test_beaver_lite_live_logprobs.py",
+      "results/experiment_1142_beaver_lite_certificate_tier.json",
+      "results/experiment_1158_beaver_lite_live_logprobs.json"
+    ],
+    "scope_limit": "No VNN-COMP runner, no broad BEAVER reproduction, no fresh LLM benchmark; this is a terminal smoke artifact only.",
+    "task_id": "exp_next_beaver_lite_external_bounds_smoke"
+  },
+  "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+  "retired_benchmarks": [],
+  "run_date": "20260507",
+  "schema": "external_verifier_benchmark_fit_audit_v1",
+  "scope_note": "This is a fit audit only.  It adopts one minimal BEAVER-style bounds smoke because that is already aligned with Carnot's certificate code and .112 scope reduction; it does not implement a VNN-COMP or broad external benchmark runner.",
+  "source_files_checked": [
+    "CODEX.md",
+    "CLAUDE.md",
+    "research-references.md",
+    "docs/research-notes/comparator_cite_retire_audit.md",
+    "openspec/capabilities/benchmarks/spec.md",
+    "openspec/capabilities/verification/spec.md",
+    "openspec/capabilities/verifiable-reasoning/spec.md",
+    "tests/python/test_beaver_lite.py",
+    "tests/python/test_beaver_lite_live_logprobs.py",
+    "_bmad/prd.md",
+    "ops/e2e-test-plan.md"
+  ],
+  "spec": [
+    "REQ-REPORT-046",
+    "SCENARIO-REPORT-046"
+  ],
+  "status": "complete"
+}
