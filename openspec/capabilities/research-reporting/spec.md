@@ -943,6 +943,57 @@ existing OpenSpec anchors, reruns spec coverage, records the final debt count,
 and reports any remaining blocker exactly instead of claiming full-suite health
 without evidence.
 
+### REQ-REPORT-038: Milestone .111 Terminal Retrospective
+
+The Exp 1452 `.111` milestone retrospective workflow shall write
+`results/experiment_1452_milestone_111_retro.json` with `status="in_progress"`
+before scoring source evidence. It shall then read the `.111` roadmap criteria
+from `openspec/change-proposals/research-roadmap-vNEXT.md`, the active
+`research-roadmap.yaml`, every available Exp 1439 through Exp 1451 source
+artifact, and the named-but-missing `research-roadmap-next.yaml` input without
+rerunning source experiments.
+
+The final artifact shall include:
+
+- `status`
+- `milestone`
+- `criteria_total`
+- `criteria_met`
+- `successful_tasks`
+- `blocked_tasks`
+- `retired_variants`
+- `carry_forward_tracks`
+- `ops_docs_updated`
+- `honest_verdict`
+
+It shall also include a per-criterion evidence map that scores each of the 14
+roadmap success criteria as `met`, `unmet`, or
+`gate_blocked_with_evidence`. Only `met` criteria shall contribute to
+`criteria_met`. Missing artifacts shall be listed explicitly, and missing
+gated artifacts shall only be classified as `gate_blocked_with_evidence` when
+an upstream source artifact records the failed gate or exact blocker. The
+workflow shall not count a runtime gate block, a missing gated downstream
+artifact, or a blocked reranker artifact as a success.
+
+Carry-forward rules shall preserve exact prior verdicts for unresolved `.111`
+tracks. Same-verdict variants shall be retired when they repeat prototype-only
+repair scale-up, no-live-SOTA runtime, FR-11 zero-growth, PRM v1/v3
+no-improvement selector, unsupported DPO headline wording, or missing-source
+hardware lint/simulation behavior without a changed prerequisite.
+
+### SCENARIO-REPORT-038: .111 Retro Separates Successes from Gate Blocks
+
+Given Exp 1439 through Exp 1451 include completed carry-forward, spec-coverage,
+Discrete SB source, FR-11 diagnosis, FR-11 positive growth, PRM no-improvement,
+LTLZinc, EBT, and RTL lint/simulation evidence, but Exp 1442 records
+`local_sota_runtime_ready == false`, Exp 1443 and Exp 1445 artifacts are
+missing, and Exp 1444 records `blocked_gate_check_failed`, when Exp 1452 writes
+the terminal retrospective for run date `20260507`, then
+`criteria_total == 14`, runtime-dependent repair criteria are reported as
+`gate_blocked_with_evidence`, missing artifacts are listed explicitly,
+`criteria_met` counts only true successes, and the artifact records exact
+carry-forward rules for `.112` planning.
+
 ### REQ-REPORT-024: Local Agent Usage Snapshot
 
 The repository shall provide a local operator workflow that inspects the
@@ -1515,6 +1566,7 @@ embed live-GPU benchmark results from Exp 328 when available.
 | REQ-REPORT-035 | `python/carnot/reporting/milestone_retro_110.py`, `results/experiment_1438_milestone_110_retro.json` | `tests/python/test_milestone_retro_110.py` | Implemented |
 | REQ-REPORT-036 | `python/carnot/reporting/milestone_111_carryforward_activation_manifest.py`, `results/experiment_1439_110_carryforward_activation_manifest.json`, `ops/milestone_111_carryforward_manifest.md` | `tests/python/test_milestone_111_carryforward_activation_manifest.py` | Implemented |
 | REQ-REPORT-037 | `scripts/check_spec_coverage.py`, `results/experiment_1440_spec_coverage_traceability_metadata_fix.json` | `tests/python/test_spec_coverage_checker.py` | Implemented |
+| REQ-REPORT-038 | `python/carnot/reporting/milestone_retro_111.py`, `results/experiment_1452_milestone_111_retro.json` | `tests/python/test_milestone_retro_111.py` | Implemented |
 | REQ-REPORT-024 | `python/carnot/reporting/agent_usage.py`, `scripts/agent_plan_usage.py` | `tests/python/test_agent_plan_usage.py` | Implemented |
 | REQ-PUBLISH-003 | `scripts/experiment_317_hf_publish.py` | `tests/python/test_experiment_317_hf_publish.py` | Implemented |
 | REQ-PUBLISH-004 | `scripts/experiment_330_hf_live_publish.py` | `tests/python/test_experiment_330_hf_live_publish.py` | Implemented |
