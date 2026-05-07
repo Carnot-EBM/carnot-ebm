@@ -450,6 +450,48 @@ against the proposed signal, verifies BEAVER mock/live labeling, writes the
 research note, and allows a headline telemetry claim only when the evidence
 cannot pass for superficial or mechanical reasons.
 
+### REQ-VERIFY-1481: Semantic Energy Feasibility Audit
+
+The repository shall provide a deterministic, CPU-only Semantic Energy
+feasibility audit for Exp 1481 that:
+
+- writes `results/experiment_1481_semantic_energy_feasibility_audit.json`
+  with `status="in_progress"` before loading Exp 1480 telemetry rows;
+- reuses `results/live_sota_balanced_telemetry_manifest_1480.jsonl` and MUST
+  NOT require fresh LLM inference when that manifest contains top-k/logit
+  telemetry;
+- computes bounded Semantic Energy-style proxy features from the recorded
+  final-token top-k alternatives, including final-logit entropy, top-k
+  semantic-cluster proxy, answer-choice energy gap, and per-case uncertainty
+  spread;
+- computes rank/accuracy metrics for the superficial baselines recorded by Exp
+  1480 on the same labels;
+- sets `signal_beats_superficial_baselines=true` only when the best semantic
+  proxy beats every measured superficial baseline on the same labels;
+- writes `results/semantic_energy_features_1481.json` with per-case semantic
+  features, baseline scores, and label provenance; and
+- writes a terminal artifact containing `status`, `model_specs`,
+  `telemetry_rows_loaded`, `semantic_energy_features_computed`,
+  `baseline_features_computed`, `semantic_energy_audit_complete`,
+  `best_semantic_signal`, `best_superficial_baseline`,
+  `signal_beats_superficial_baselines`, `diagnostic_path`, `claim_allowed`,
+  `diagnostic_lineage_retired`, and `honest_verdict`.
+
+The audit MUST set `claim_allowed=false` and retire headline telemetry lineage
+when the semantic-energy proxy is flat, unavailable, or matched/exceeded by a
+superficial baseline.
+
+### SCENARIO-VERIFY-1481: Semantic Signal Must Beat Superficial Baselines
+
+Given Exp 1480 contains balanced live local SOTA rows with top-k alternatives,
+logit availability, labels, and recorded superficial baselines,
+When Exp 1481 computes Semantic Energy proxy features and evaluates them
+against the same labels used for the superficial baselines,
+Then the final artifact allows a telemetry claim only when the best semantic
+signal has nontrivial oriented rank evidence and strictly beats every
+superficial baseline, otherwise it retires the diagnostic lineage for headline
+telemetry claims.
+
 ### REQ-VERIFY-1474: T-SKM Linear Constraint Projection Smoke
 
 The repository shall provide a deterministic, CPU-only SKM/Kaczmarz-Motzkin
@@ -513,7 +555,7 @@ decisions on every measured case, latency p50 values are reported for both
 paths, and the artifact states that the equivalence claim is bounded to the
 measured certificate strings.
 
-## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475)
+## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481)
 
 | Requirement | Python | Tests |
 |-------------|--------|-------|
@@ -526,3 +568,4 @@ measured certificate strings.
 | REQ-VERIFY-1473 | Implemented (`python/carnot/reporting/live_telemetry_adversarial_validity_audit.py`) | Implemented (`tests/python/test_experiment_1473_live_telemetry_adversarial_validity_audit.py`) |
 | REQ-VERIFY-1474 | Implemented (`python/carnot/verify/skm_projection.py`) | Implemented (`tests/python/test_experiment_1474_tskm_linear_constraint_projection_smoke.py`) |
 | REQ-VERIFY-1475 | Implemented (`python/carnot/eval/static_csr_certificate_automaton.py`) | Implemented (`tests/python/test_experiment_1475_static_csr_certificate_automaton.py`) |
+| REQ-VERIFY-1481 | Implemented (`python/carnot/reporting/semantic_energy_feasibility_audit.py`) | Implemented (`tests/python/test_experiment_1481_semantic_energy_feasibility_audit.py`) |
