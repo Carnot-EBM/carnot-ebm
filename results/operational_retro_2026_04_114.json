@@ -1,0 +1,170 @@
+{
+  "schema": "carnot.operational_retro.v63",
+  "milestone": "2026.04.114",
+  "generated_at": "2026-05-07T16:47:47Z",
+  "retro_type": "operational_final",
+  "status": "success",
+  "summary": "Milestone 2026.04.114 completed the operator-supplied operational slice in 40 minutes across 11 completed experiments, averaging 4 minutes per experiment. The slowest-five timing was concentrated in recurring gate/readiness work rather than productive GPU-bound execution: Full-Scale Pipeline v3 gated on Exp 1414 Repair Executor consumed 25 minutes across three entries, Exp 1269 arXiv Bundle v10 gating consumed 10 minutes, and a SOTA GGUF cache/provenance preflight doomed-rerun block consumed 2 minutes. Both RTX 3090s were idle at closeout and in a fresh gpu_monitor.py snapshot, with 4 MB allocated per GPU, 0% utilization, no GPU processes, and no zombie warnings. Estimated next-milestone savings are 55% if repeated same-verdict gates terminalize immediately, activation-time readiness artifacts replace runtime rediscovery, and independent Qwen/Gemma work is scheduled with DualGPURunner.",
+  "timing_data_caveat": "This artifact treats the operator-supplied 40 minute / 11 completed experiment timing as authoritative for the operational retrospective. Local .114 research-retro context reports 12/13 criteria met across exp1479-exp1491, with exp1489 honestly gate-blocked by the retired/not-importable THRML preflight; that context is used only for roadmap and carry-forward framing, not to override the supplied operational timing.",
+  "total_wall_time_minutes": 40,
+  "total_wall_time_hours": 0.7,
+  "experiments_completed": 11,
+  "average_minutes_per_experiment": 4,
+  "experiment_range": "1479-1491",
+  "slowest_experiments": [
+    {
+      "rank": 1,
+      "duration_minutes": 14,
+      "label": "-0400 [conductor] Full-Scale Pipeline v3 - Gated on Exp 1414 Repair Executor",
+      "category": "gate_churn",
+      "share_of_wall_time_pct": 35.0,
+      "why_slow": "The full-pipeline path remained gated on the repair-executor dependency and reran instead of terminalizing after the upstream repair path had no new accepted-repair or pipeline-improvement signal."
+    },
+    {
+      "rank": 2,
+      "duration_minutes": 10,
+      "label": "-0400 [conductor] arXiv Bundle v10 - Gated on Exp 1269 Critical Fixes",
+      "category": "legacy_gate",
+      "share_of_wall_time_pct": 25.0,
+      "why_slow": "A known arXiv critical-fixes dependency stayed on the runtime critical path instead of being represented by an activation-time terminal readiness artifact."
+    },
+    {
+      "rank": 3,
+      "duration_minutes": 6,
+      "label": "-0400 [conductor] Full-Scale Pipeline v3 - Gated on Exp 1414 Repair Executor",
+      "category": "duplicate_gate_churn",
+      "share_of_wall_time_pct": 15.0,
+      "why_slow": "Duplicate same-dependency pipeline attempt with no evidence of a changed upstream repair capability."
+    },
+    {
+      "rank": 4,
+      "duration_minutes": 5,
+      "label": "-0400 [conductor] Full-Scale Pipeline v3 - Gated on Exp 1414 Repair Executor",
+      "category": "duplicate_gate_churn",
+      "share_of_wall_time_pct": 12.5,
+      "why_slow": "Additional same-verdict full-pipeline attempt that should have been retired until the repair executor changed."
+    },
+    {
+      "rank": 5,
+      "duration_minutes": 2,
+      "label": "-0400 [conductor] Doomed-rerun block: SOTA GGUF Cache + Provenance Preflight - P",
+      "category": "preflight_block",
+      "share_of_wall_time_pct": 5.0,
+      "why_slow": "Known cache/provenance readiness state was rediscovered during scheduled execution instead of emitted as a fast terminal preflight artifact."
+    }
+  ],
+  "bottlenecks_identified": [
+    "Full-Scale Pipeline v3 gate churn consumed 25 of 40 minutes (62.5%) across three slowest-five entries gated on Exp 1414 Repair Executor.",
+    "The Exp 1269 arXiv Bundle v10 legacy gate consumed 10 minutes (25%) and remained a recurring runtime discovery path.",
+    "The SOTA GGUF cache/provenance preflight still appeared as a doomed-rerun execution slot instead of an immediate activation-time terminal artifact.",
+    "GPU utilization was inefficient for any LLM-bearing work: both RTX 3090s were idle at closeout, each with only 4 MB allocated and 0% utilization.",
+    "No GPU zombie processes were observed. gpu_monitor.py reported an empty process list and no warnings; the 4 MB allocations are below its 1024 MB zombie threshold.",
+    "Independent Qwen and Gemma readiness, telemetry, and smoke checks were not evidenced as sustained parallel GPU work, even though both GPUs were available.",
+    "The direct pre-flight cost in the supplied slowest-five data was only 2 minutes, so pre-flight was secondary to gate churn; the remaining problem is known-blocked states becoming scheduled work.",
+    "The local .114 research retro also shows exp1489 gate-blocked twice after exp1488 retired the THRML simulator lane. That was an honest skip, but duplicate gate checks should collapse to one terminal blocked artifact.",
+    "Doc reconciliation was not a measured slowest-five bottleneck, but .114 delegated ops reconciliation to this pass; recurring changelog and roadmap updates should be idempotent to avoid closeout noise."
+  ],
+  "improvements_suggested": [
+    "Terminalize repeated Full-Scale Pipeline v3 gates after the first same-verdict blocked or no-improvement result.",
+    "Change full-pipeline gates to require nonzero accepted repairs or nonzero semantic-validation improvement before rerunning expensive validation.",
+    "Emit activation-time terminal readiness artifacts for Exp 1269 arXiv bundle state and SOTA GGUF cache/provenance state.",
+    "Use DualGPURunner whenever both GPUs are idle: run Qwen on GPU 0 and Gemma on GPU 1 for independent live telemetry, smoke, or benchmark checks.",
+    "Persist per-experiment GPU telemetry in result artifacts, including utilization, VRAM, process count, and zombie warnings before and after the task.",
+    "Shard and cache pre-flight checks by touched surface area; avoid blanket preflight for documentation-only, known-blocked, or terminal-gate tasks.",
+    "Collapse duplicate gate-block checks for retired upstreams, such as exp1489 after exp1488 retired the THRML lane, into a single terminal blocked artifact.",
+    "Make ops changelog and roadmap reconciliation idempotent by milestone and experiment range.",
+    "Add structured conductor timing categories for gate wait, preflight, GPU inference, docs reconciliation, and artifact writing."
+  ],
+  "estimated_time_savings_pct": 55,
+  "estimated_time_savings_minutes": 22,
+  "estimated_next_milestone_wall_time_minutes_if_applied": 18,
+  "top_3_highest_leverage_actions": [
+    "Retire same-verdict Full-Scale Pipeline v3 gate reruns and require nonzero repair or pipeline improvement before scheduling another pass.",
+    "Move Exp 1269 arXiv and SOTA GGUF cache/provenance readiness checks to activation-time terminal artifacts.",
+    "Use DualGPURunner plus per-experiment GPU telemetry for independent Qwen/Gemma validation work."
+  ],
+  "questions_answered": {
+    "which_experiments_took_longest_and_why": "Full-Scale Pipeline v3 gated on Exp 1414 Repair Executor was the longest path: 14, 6, and 5 minute entries for 25 minutes total. The likely cause was weak gate semantics plus duplicate same-verdict reruns. arXiv Bundle v10 gated on Exp 1269 consumed another 10 minutes as a legacy gate, and SOTA GGUF cache/provenance preflight consumed 2 minutes rediscovering known readiness state.",
+    "was_gpu_utilization_efficient": "No. The supplied GPU report and a fresh gpu_monitor.py snapshot at 2026-05-07T16:47:47.215099+00:00 both show GPU 0 and GPU 1 at 4/24576 MB and 0% utilization. This was idle capacity, not efficient sequential or parallel execution.",
+    "were_there_zombie_processes_wasting_resources": "No material GPU zombies were detected. gpu_monitor.py reported an empty process list and no warnings; its zombie detector only flags idle processes using at least 1024 MB VRAM, far above the observed 4 MB baseline allocations.",
+    "could_any_experiments_have_been_parallelized": "Yes. Independent Qwen/Gemma readiness, telemetry, and executable-constraint checks could run concurrently on GPU 0 and GPU 1. CPU-only documentation, artifact reconciliation, THRML import preflight, and bounded smoke tasks could also overlap with GPU work once their inputs exist. Repeated blocked full-pipeline gates should be retired rather than parallelized.",
+    "was_the_preflight_test_suite_a_bottleneck": "Only secondarily in the supplied timing. The direct preflight/doomed-rerun entry was 2 minutes, far below the 25 minute full-pipeline gate churn and 10 minute arXiv gate. The better fix is to make known readiness failures terminal at activation so they do not enter scheduled execution.",
+    "were_doc_reconciliation_passes_efficient": "They were not a top timing bottleneck in the supplied slice, but .114 still required a separate delegated ops reconciliation pass. The roadmap/changelog closeout should be an idempotent keyed append so a milestone cannot accumulate duplicate rows or repeated experiment lines.",
+    "what_tooling_would_speed_next_milestone": "Same-verdict gate retirement, semantic nonzero-success gates, activation-time terminal readiness artifacts, DualGPURunner scheduling, persisted GPU telemetry, sharded preflight, duplicate gate-block collapse, and idempotent ops-doc appenders."
+  },
+  "gpu_state": {
+    "snapshot_utc": "2026-05-07T16:47:47.215099+00:00",
+    "gpus": [
+      {
+        "index": 0,
+        "name": "NVIDIA GeForce RTX 3090",
+        "used_mb": 4,
+        "total_mb": 24576,
+        "utilization_pct": 0,
+        "temperature_c": 50
+      },
+      {
+        "index": 1,
+        "name": "NVIDIA GeForce RTX 3090",
+        "used_mb": 4,
+        "total_mb": 24576,
+        "utilization_pct": 0,
+        "temperature_c": 45
+      }
+    ],
+    "process_count": 0,
+    "zombie_process_count": 0,
+    "warnings": [],
+    "suggestions": [
+      "Both GPUs are idle; use DualGPURunner to run Qwen on GPU 0 and Gemma on GPU 1 simultaneously.",
+      "GPU 0 has 4 MB allocated but 0% utilization; free the context if it persists.",
+      "GPU 1 has 4 MB allocated but 0% utilization; free the context if it persists."
+    ],
+    "utilization_assessment": "idle_capacity_not_zombie_waste"
+  },
+  "local_milestone_context": {
+    "research_retro_artifact": "results/experiment_1491_milestone_114_retro.json",
+    "criteria_met": 12,
+    "criteria_total": 13,
+    "completed_task_ids": [
+      "exp1479",
+      "exp1480",
+      "exp1481",
+      "exp1482",
+      "exp1483",
+      "exp1484",
+      "exp1485",
+      "exp1486",
+      "exp1487",
+      "exp1488",
+      "exp1490",
+      "exp1491"
+    ],
+    "blocked_task_ids": [
+      "exp1489"
+    ],
+    "roadmap_experiment_range": "1479-1491",
+    "notable_research_context": [
+      "balanced_live_sota_telemetry_ready",
+      "sound_bound_live_exp1480_plus_exp1468_calibrated",
+      "query_time_memory_policy_improves_bounded_replay_without_false_accepts",
+      "complete_cctu_micro_benchmark_ready_with_live_local_sota_gguf_inference",
+      "no_v1_pairwise_improvement_over_executable_carnot_energy",
+      "thrml_not_importable_bounded_install_probe_blocked_simulator_only",
+      "bounded_injected_failure_localization_beats_random_no_decoded_quality_claim"
+    ]
+  },
+  "source_files_read": [
+    "CODEX.md",
+    "ops/metrics.md",
+    "ops/changelog.md",
+    "scripts/gpu_monitor.py",
+    "ops/e2e-test-plan.md",
+    "docs/roadmap.md",
+    "results/operational_retro_2026_04_113.json",
+    "results/operational_retro_2026_04_112.json",
+    "results/experiment_1479_113_completion_archive_114_activation.json",
+    "results/experiment_1491_milestone_114_retro.json"
+  ],
+  "meta_reflection": "The milestone was already short in absolute time, so the next gains are mostly mechanical: do not spend agent time rediscovering known-blocked readiness states, do not rerun same-verdict gates, and do not leave dual RTX 3090 capacity idle when live model work is eligible. The operational goal for the next milestone should be fewer scheduled retries, not faster retries."
+}
