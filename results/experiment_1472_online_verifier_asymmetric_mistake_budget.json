@@ -1,0 +1,63 @@
+{
+  "acceptable_soundness_mistake_budget": 0,
+  "artifact_metadata": {
+    "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "run_date": "20260507"
+  },
+  "asymmetric_cost_score": 140.0,
+  "asymmetric_cost_weights": {
+    "completeness": 1.0,
+    "rationale": "Soundness mistakes are false accepts into the feedback loop; completeness mistakes are conservative false flags.",
+    "soundness": 10.0
+  },
+  "audit_note_path": "/home/ianblenke/github.com/ianblenke/carnot/docs/research-notes/fr11_v8_asymmetric_mistake_budget.md",
+  "caveats": [
+    "The available per-case ledger records promoted/demoted IDs and aggregate rejection reasons, not full per-row semantic states.",
+    "Completeness mistakes are conservative false flags; they limit usable growth but are not evidence of poisoned memory promotion.",
+    "The preserved claim is the narrow Exp 1471 memory-growth claim only."
+  ],
+  "commands_run": [
+    ".venv/bin/pytest tests/python/test_online_verifier_asymmetric_mistake_budget.py -q --no-cov -n 0",
+    ".venv/bin/coverage run -m pytest tests/python/test_online_verifier_asymmetric_mistake_budget.py -q --no-cov -n 0",
+    ".venv/bin/coverage report --fail-under=100 -m python/carnot/reporting/online_verifier_asymmetric_mistake_budget.py",
+    ".venv/bin/pytest tests/python -q (failed: unrelated existing failures, Z3 segfault in test_pipeline_errors.py::test_concurrent_verify_calls, ExperimentTimeoutWatchdog timeout; terminated after wedge)",
+    "python3 scripts/check_spec_coverage.py",
+    "ruff check python/carnot/reporting/online_verifier_asymmetric_mistake_budget.py tests/python/test_online_verifier_asymmetric_mistake_budget.py"
+  ],
+  "completeness_mistakes": 140,
+  "duration_s": 0.0,
+  "experiment": "1472_online_verifier_asymmetric_mistake_budget",
+  "finished_at": "2026-05-07T08:42:08Z",
+  "honest_verdict": "self_learning_claim_preserved_zero_soundness_mistakes",
+  "ledger_summary": {
+    "demoted_ledger_count": 140,
+    "demoted_memory_count": 140,
+    "demotion_count_matches_mistake_count": true,
+    "mismatch_count_from_fields": 140,
+    "promoted_ledger_count": 12,
+    "promoted_memory_count": 12,
+    "verifier_rejection_count": 140
+  },
+  "pareto_decision": "preserve_narrow_claim_on_soundness_frontier_with_completeness_caveat",
+  "run_date": "20260507",
+  "schema": "online_verifier_asymmetric_mistake_budget_v1",
+  "score_formula": "10.0 * soundness_mistakes + 1.0 * completeness_mistakes",
+  "self_learning_claim_preserved": true,
+  "self_learning_claim_retired": false,
+  "soundness_mistakes": 0,
+  "soundness_risk_acceptable": true,
+  "source_experiment": "experiment_1471_fr11_v8_verified_memory_growth_pivot",
+  "source_experiment_path": "results/experiment_1471_fr11_v8_verified_memory_growth_pivot.json",
+  "source_headline_result_allowed": true,
+  "source_nonforgetting_rate": 1.0,
+  "source_pivot_preserved": true,
+  "source_self_learning_delta_overall": 12,
+  "source_status": "complete",
+  "spec": [
+    "REQ-LEARN-1472",
+    "SCENARIO-LEARN-1473",
+    "SCENARIO-LEARN-1474"
+  ],
+  "started_at": "2026-05-07T08:42:08Z",
+  "status": "complete"
+}
