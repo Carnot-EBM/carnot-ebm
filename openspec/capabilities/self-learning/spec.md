@@ -3730,3 +3730,48 @@ positive self-learning growth.
 | Requirement | Python | Tests |
 |-------------|--------|-------|
 | REQ-LEARN-1447 | Implemented (`python/carnot/reporting/fr11_v7_memory_policy_growth.py`) | Implemented (`tests/python/test_fr11_v7_memory_policy_growth.py`) |
+
+## REQ-LEARN-1449: LTLZinc Temporal Continual-Learning Adapter
+
+Exp 1449 SHALL run on `20260507` and provide a tiny deterministic
+LTLZinc-style temporal-constraint dataset that future FR-11 and DVI milestones
+can consume without relying only on the legacy FR-11 candidate source. The
+adapter SHALL use local CPU-only checks over finite traces and SHALL NOT claim
+MiniZinc execution or external LTLZinc benchmark parity.
+
+### REQ-LEARN-1449 Sub-requirements
+
+- REQ-LEARN-1449-1: The workflow SHALL write
+  `results/experiment_1449_ltlzinc_temporal_continual_learning_adapter.json`
+  first with `status="in_progress"` and the required artifact fields before
+  generating or verifying cases.
+- REQ-LEARN-1449-2: The generated dataset SHALL contain at least 20
+  LTLZinc-style temporal cases with labels, finite Boolean traces, a temporal
+  formula, a MiniZinc-style constraint string, and a Carnot-friendly
+  `certificate_state` suitable for FR-11/DVI ingestion.
+- REQ-LEARN-1449-3: The local verifier SHALL distinguish accepted SAT cases
+  from rejected REPAIR_HINT cases by evaluating the finite trace against the
+  supported temporal operators `always`, `eventually`, `next`, and `until`.
+- REQ-LEARN-1449-4: The final artifact SHALL include `status`,
+  `ltlzinc_adapter_ready`, `temporal_cases_generated`, `verifier_available`,
+  `accepted_case_count`, `rejected_case_count`, `dataset_path`,
+  `commands_run`, and `honest_verdict`.
+- REQ-LEARN-1449-5: The artifact SHALL record how the dataset can feed FR-11
+  memory growth and DVI contrastive training in a later milestone while making
+  clear that this run creates verified cases only, not a trained adapter.
+
+### SCENARIO-LEARN-1449: Temporal Dataset Separates SAT And Repair-Hint Cases
+
+**Given** the Exp 1449 adapter emits paired finite traces for simple temporal
+constraints
+**When** the verifier evaluates generated `always`, `eventually`, `next`, and
+`until` cases
+**Then** the dataset has at least one accepted and one rejected case for every
+supported operator family
+**And** the artifact reports a complete dataset path and honest verdict.
+
+## Implementation Status (REQ-LEARN-1449)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-1449 | Implemented (`python/carnot/reporting/ltlzinc_temporal_continual_learning_adapter.py`) | Implemented (`tests/python/test_ltlzinc_temporal_continual_learning_adapter.py`) |
