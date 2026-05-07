@@ -1066,3 +1066,4 @@ web search: GitHub trending energy based mod |
 | 2026-05-07 04:04 UTC | Self-Learning Non-Headline Lineage Decision — Prom | OK | 81 passed, 1 warning in 5.43s |
 | 2026-05-07 04:16 UTC | Hardware Portfolio Narrowing — Pick 2-3 Active Tra | OK | 81 passed, 1 warning in 5.02s |
 | 2026-05-07 04:28 UTC | Comparator Integration Cite/Retire Audit — Abstrac | OK | 81 passed, 1 warning in 5.43s |
+| 2026-05-07 04:42 UTC | Paper-v6 Anchored Claims Narrowing — Reduce to 3-5 | OK | 81 passed, 1 warning in 5.28s |
