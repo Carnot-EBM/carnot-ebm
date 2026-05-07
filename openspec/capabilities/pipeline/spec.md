@@ -2595,6 +2595,56 @@ points relative to Exp 1429 raw best-of-N success.
 
 **Spec traces:** REQ-VERIFY-1430, SCENARIO-VERIFY-1430
 
+### REQ-VERIFY-1448: PRM V3 Online Process-Reward Repair Agent
+
+The repository shall provide a deterministic PRM v3 online process-reward repair
+agent for Exp 1448 that consumes the Exp 1429 bounded repair candidate pool,
+the Exp 1430 PRM v1 selector artifact, and the Exp 1434 PRM v2 label-completion
+artifact. The agent MUST score intermediate repair or reasoning steps within
+each candidate before consulting final semantic acceptance labels, aggregate
+those step scores into a candidate score, and compare the frozen PRM v3
+selection behavior against raw best-of-N and the Exp 1430 PRM v1 selection.
+
+The Exp 1448 runner MUST first write
+`results/experiment_1448_prm_v3_online_process_reward_agent.json` with
+`status="in_progress"`. Complete artifacts MUST report `status`,
+`pra_selector_ready`, `prm_v2_labels_used`, `traces_evaluated`,
+`step_scores_generated`, `selection_improvement_pp`,
+`false_acceptance_rate_delta`, `regression_against_prm_v1`, `commands_run`, and
+`honest_verdict`. The honest verdict MUST avoid an improvement claim when PRM
+v3 only ties raw best-of-N, regresses against PRM v1, or worsens semantic false
+acceptance. Missing or incomplete PRM v2 labels MUST produce a blocked artifact
+with `pra_selector_ready=false`.
+
+**Decentralization implications:** The PRM v3 agent consumes local artifacts and
+CPU checkpoints only; it performs no closed-weight model calls and does not
+import vendor SDKs in the core pipeline.
+
+**Acceptance criteria:**
+- Candidate scoring emits one or more step-level score rows per candidate when
+  candidate process text is available.
+- Step-score aggregation is frozen before final candidate acceptance labels are
+  used for selection metrics.
+- Complete artifacts compare raw best-of-N, PRM v1, and PRM v3 selected repair
+  success rates.
+- Complete artifacts report false-acceptance deltas and an explicit
+  `regression_against_prm_v1` boolean.
+- Missing or incomplete PRM v2 label artifacts produce a blocked artifact with
+  all required fields and `pra_selector_ready=false`.
+
+### SCENARIO-VERIFY-1448: Online Step Scores Prefer A Better Repair Trace
+
+**Given** Exp 1429 provides a bounded candidate pool with multiple repair
+candidates and Exp 1434 provides a trained PRM v2 checkpoint
+**When** Exp 1448 scores candidate repair steps before consulting final semantic
+acceptance labels
+**Then** the PRM v3 selector chooses the candidate with the highest aggregated
+step score, reports the number of traces and step scores evaluated, computes
+selection improvement relative to raw best-of-N, and records whether the result
+regresses against Exp 1430 PRM v1 selection.
+
+**Spec traces:** REQ-VERIFY-1448, SCENARIO-VERIFY-1448
+
 ### REQ-VERIFY-1431: Full-Scale Pipeline V4 Micro-Gated Validation
 
 The repository shall provide a bounded Exp 1431 full-pipeline v4 validation
