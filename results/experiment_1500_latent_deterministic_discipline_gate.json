@@ -1,0 +1,70 @@
+{
+  "status": "complete",
+  "discipline_gate_ready": true,
+  "gated_inputs_present": true,
+  "run_date": "20260507",
+  "signal_classes_audited": [
+    "deterministic_executable_validators",
+    "deterministic_bounds",
+    "energy_ranking",
+    "latent_energy_like_signals",
+    "probabilistic_or_llm_derived_signals",
+    "memory_policy_signals",
+    "schema_record_signals",
+    "retired_semantic_energy_telemetry",
+    "retired_v1_pairwise_self_verification"
+  ],
+  "headline_allowed_signals": [
+    "deterministic_executable_validators",
+    "conservative_deterministic_bounds"
+  ],
+  "auxiliary_allowed_signals": [
+    "carnot_energy_ranking_after_validator_comparison",
+    "partial_trace_energy_localization_for_repair",
+    "query_time_memory_policy_zero_soundness_gated",
+    "calibrated_probabilistic_verifiers_after_all_checks"
+  ],
+  "triage_allowed_signals": [
+    "llm_or_latent_uncertainty_for_manual_review_priority",
+    "uncalibrated_energy_like_scores_for_debugging_only",
+    "structured_verdict_records_for_auditability_only"
+  ],
+  "retired_signals": [
+    "uncalibrated_latent_or_llm_scores_without_required_checks",
+    "semantic_energy_headline_telemetry",
+    "semantic_energy_logit_telemetry_headline",
+    "v1_pairwise_self_verification_active_gate"
+  ],
+  "deterministic_first_rules": [
+    "Run applicable deterministic validators before latent, energy-like, probabilistic, or LLM-derived signals.",
+    "When deterministic validators address the same claim, their reject decision dominates any latent accept or rank.",
+    "Use energy ranking only after deterministic validity is known, or for repair localization rather than answer acceptance.",
+    "Do not let memory hits, schema records, or LLM judge votes bypass deterministic validator failures."
+  ],
+  "superficial_baseline_required_rules": [
+    "Any latent, energy-like, probabilistic, or LLM-derived signal must beat matched superficial baselines before supporting a claim.",
+    "Matched superficial baselines must include response length, lexical overlap, format validity, or another task-specific cheap confound when applicable.",
+    "Held-out calibration must be measured before a probabilistic or latent score can leave triage status.",
+    "False accepts must be counted on the same decision surface before a latent signal can influence ranking or routing."
+  ],
+  "ops_note_path": "ops/latent_deterministic_discipline_gate_1500.md",
+  "blockers": [],
+  "source_artifacts": [
+    "results/experiment_1499_verifier_ensemble_dry_orthogonality_v2.json",
+    "results/experiment_1481_semantic_energy_feasibility_audit.json",
+    "results/experiment_1487_v1_pairwise_self_verification_vs_energy.json"
+  ],
+  "upstream_findings": {
+    "exp1499_orthogonality_matrix_written": true,
+    "exp1481_semantic_energy_claim_allowed": false,
+    "exp1481_signal_beats_superficial_baselines": false,
+    "exp1487_improvement_allowed": false,
+    "exp1487_pairwise_delta_over_energy": -0.95
+  },
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_1500_latent_deterministic_discipline_gate.py -q",
+    "PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 .venv/bin/coverage run -m pytest tests/python/test_experiment_1500_latent_deterministic_discipline_gate.py -q -o addopts=''",
+    ".venv/bin/coverage report --fail-under=100 python/carnot/verify/latent_deterministic_gate.py"
+  ],
+  "honest_verdict": "complete: latent deterministic discipline gate ready"
+}
