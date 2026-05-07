@@ -1086,3 +1086,4 @@ web search: GitHub trending energy based mod |
 | 2026-05-07 08:55 UTC | Live Telemetry Adversarial Validity Audit - Length | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1473_live_te |
 | 2026-05-07 09:02 UTC | Live Telemetry Adversarial Validity Audit - Length | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1473_live_te |
 | 2026-05-07 09:08 UTC | Live Telemetry Adversarial Validity Audit - Length | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1473_live_te |
+| 2026-05-07 09:42 UTC | T-SKM Linear Constraint Projection Smoke - Zero-Vi | OK | 81 passed, 1 warning in 4.47s |
