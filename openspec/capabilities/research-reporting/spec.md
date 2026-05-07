@@ -1049,6 +1049,56 @@ repair runtime blocker, forbids exact noise-line expansions, writes the
 operator markdown manifest, and reports `scripts/research_conductor.py` and
 `research-roadmap.yaml` as unchanged by the activation workflow.
 
+### REQ-REPORT-040: Experiment Artifact Signal/Noise Classifier
+
+The Exp 1454 artifact classifier shall write
+`results/experiment_1454_experiment_artifact_signal_noise_classifier.json` with
+`status="in_progress"` before scanning source artifacts. It shall then scan
+every `results/experiment_*.json` file, including the Exp 1454 artifact itself,
+and write a deterministic CSV ledger at
+`ops/experiment_signal_noise_classification.csv` with one row per scanned
+artifact.
+
+Each ledger row shall include the experiment id, source path, title when
+available, status, honest verdict, headline-related fields, gate or blocker
+fields, retirement fields, key metric fields, a conservative
+`SIGNAL` / `NOISE` / `AMBIGUOUS` classification, and a transparent reason.
+
+The classifier shall treat explicit headline eligibility, live verified
+improvement, and completed positive milestone evidence as `SIGNAL`. It shall
+treat explicit retirements, no-improvement verdicts, negative regressions,
+not-viable findings, and failed merit gates as `NOISE`. It shall keep missing
+tools, live-runtime blockers, missing upstream gated artifacts, environmental
+preconditions, malformed artifacts, in-progress artifacts, and otherwise
+uncertain records as `AMBIGUOUS` unless a separate retirement field provides a
+specific reason for noise classification.
+
+The workflow shall also write `ops/experiment_signal_noise_summary.md` with
+counts, top 50 noise candidates, top signal candidates, and ambiguous
+operator-decision items. The terminal Exp 1454 artifact shall include:
+
+- `status`
+- `artifacts_scanned`
+- `classification_table_path`
+- `summary_path`
+- `signal_count`
+- `noise_count`
+- `ambiguous_count`
+- `top_50_noise_candidates`
+- `heuristic_version`
+- `honest_verdict`
+
+### SCENARIO-REPORT-040: Exp 1454 Produces Conservative Scope Ledger
+
+Given result artifacts include headline-eligible successes, explicit
+retirements, no-improvement verdicts, live-runtime blockers, missing-tool
+blockers, and in-progress artifacts, when Exp 1454 runs for run date
+`20260507`, then it writes all required REQ-REPORT-040 fields, scans every
+`results/experiment_*.json` file, writes the CSV and markdown summary paths,
+counts SIGNAL / NOISE / AMBIGUOUS rows from the CSV, lists no more than 50 top
+noise candidates, and keeps environmental blockers AMBIGUOUS rather than
+calling them scientific NOISE.
+
 ### REQ-REPORT-024: Local Agent Usage Snapshot
 
 The repository shall provide a local operator workflow that inspects the
@@ -1623,6 +1673,7 @@ embed live-GPU benchmark results from Exp 328 when available.
 | REQ-REPORT-037 | `scripts/check_spec_coverage.py`, `results/experiment_1440_spec_coverage_traceability_metadata_fix.json` | `tests/python/test_spec_coverage_checker.py` | Implemented |
 | REQ-REPORT-038 | `python/carnot/reporting/milestone_retro_111.py`, `results/experiment_1452_milestone_111_retro.json` | `tests/python/test_milestone_retro_111.py` | Implemented |
 | REQ-REPORT-039 | `python/carnot/reporting/milestone_112_scope_reduction_activation_manifest.py`, `results/experiment_1453_112_scope_reduction_activation_manifest.json`, `ops/milestone_112_scope_reduction_manifest.md` | `tests/python/test_milestone_112_scope_reduction_activation_manifest.py` | Implemented |
+| REQ-REPORT-040 | `python/carnot/reporting/experiment_artifact_signal_noise_classifier.py`, `results/experiment_1454_experiment_artifact_signal_noise_classifier.json`, `ops/experiment_signal_noise_classification.csv`, `ops/experiment_signal_noise_summary.md` | `tests/python/test_experiment_artifact_signal_noise_classifier.py` | Implemented |
 | REQ-REPORT-024 | `python/carnot/reporting/agent_usage.py`, `scripts/agent_plan_usage.py` | `tests/python/test_agent_plan_usage.py` | Implemented |
 | REQ-PUBLISH-003 | `scripts/experiment_317_hf_publish.py` | `tests/python/test_experiment_317_hf_publish.py` | Implemented |
 | REQ-PUBLISH-004 | `scripts/experiment_330_hf_live_publish.py` | `tests/python/test_experiment_330_hf_live_publish.py` | Implemented |
