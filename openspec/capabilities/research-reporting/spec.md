@@ -1370,6 +1370,70 @@ REQ-REPORT-046 artifact fields, writes the external verifier benchmark fit note,
 adopts no more than one benchmark family for the next minimal task, and defers
 or retires the remaining reviewed families with explicit reasons.
 
+### REQ-REPORT-047: Milestone .112 Terminal Retrospective
+
+The Exp 1466 `.112` milestone retrospective workflow shall write
+`results/experiment_1466_milestone_112_retro.json` with
+`status="in_progress"` before scoring source evidence. It shall then read the
+`.112` roadmap success criteria from
+`openspec/change-proposals/research-roadmap-vNEXT.md`, `research-roadmap.yaml`,
+`research-roadmap-next.yaml` when present, `ops/conductor-log.md`, and every
+available Exp 1453 through Exp 1465 source artifact without modifying
+`scripts/research_conductor.py` or `research-roadmap.yaml`.
+
+The terminal artifact shall include:
+
+- `status`
+- `milestone`
+- `criteria_met`
+- `criteria_total`
+- `scope_reduction_required`
+- `scope_reduction_tasks_completed`
+- `scope_reduction_compliance_met`
+- `blocked_tasks`
+- `retired_lineages`
+- `carry_forward_tracks`
+- `missing_artifacts`
+- `research_roadmap_yaml_modified`
+- `scripts_research_conductor_modified`
+- `ops_docs_updated`
+- `honest_verdict`
+
+The workflow shall score all 14 roadmap success criteria as `met`, `unmet`, or
+`gate_blocked_with_evidence`. Only `met` criteria shall contribute to
+`criteria_met`. Scope-reduction criteria shall count as `met` only when the
+terminal artifact exists and the required markdown, CSV, paper, or exclusion
+manifest evidence named by that artifact also exists or is explicitly recorded
+as updated. Runtime and repair gates shall count as `met` only when their exact
+fields pass: `exp1463.local_sota_runtime_ready == true` for runtime, and for
+repair either `exp1464.acceptance_delta_pp > 0` or
+`exp1464.repair_executor_lineage_retired == true` after the runtime gate is on.
+Gate-blocked evidence shall be surfaced, but it shall not count as met unless
+the criterion explicitly allows a blocker or retirement outcome.
+
+The retrospective shall record all retired lineages from Exp 1456, Exp 1457,
+Exp 1458, and Exp 1464, plus carry-forward rules for runtime, repair,
+self-learning, paper claims, and benchmark adoption. It shall report whether
+`research-roadmap.yaml` and `scripts/research_conductor.py` were modified by the
+retro workflow. If an operator stop rule delegates ops-doc reconciliation to a
+separate conductor pass, the artifact shall set `ops_docs_updated=false` and
+explain the delegation instead of claiming an update that did not occur.
+
+### SCENARIO-REPORT-047: .112 Retro Scores Scope Reduction and Repair Honestly
+
+Given Exp 1453 through Exp 1465 exist and include completed scope-reduction
+artifacts, lineages retired into notes and exclusion-manifest updates, Exp 1463
+with `local_sota_runtime_ready == true`, Exp 1464 with
+`acceptance_delta_pp == 0.0` and `repair_executor_lineage_retired == true`, and
+`research-roadmap-next.yaml` is missing at retro time, when Exp 1466 runs for
+run date `20260507`, then it writes all required REQ-REPORT-047 fields, reports
+`criteria_total == 14`, counts only source-field and documentation-backed
+criteria as met, records the completed scope-reduction task ids, lists
+`research-roadmap-next.yaml` in `missing_artifacts`, records runtime, repair,
+self-learning, paper-claim, and benchmark carry-forward rules, confirms
+`research-roadmap.yaml` and `scripts/research_conductor.py` were not modified by
+the retro workflow, and writes an honest verdict with the final score.
+
 ### REQ-REPORT-024: Local Agent Usage Snapshot
 
 The repository shall provide a local operator workflow that inspects the
