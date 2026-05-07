@@ -239,6 +239,47 @@ upgrading the result into a KV260 hardware claim.
 
 **Implementation status:** Implemented (Exp 1451)
 
+### REQ-ISING-027
+
+**Discrete Simulated Bifurcation KV260 RTL regression packaging MUST preserve
+the Exp 1451/1460 no-board-claim boundary while emitting a repeatable manifest
+and terminal evidence artifact.**
+
+**Rationale:**
+Exp 1451 proved that the Discrete SB RTL source and testbench can pass local
+Verilator lint and Icarus simulation, while Exp 1460 narrowed KV260 activity to
+source-level lint/simulation evidence only. Exp 1476 must package that evidence
+into a repeatable regression manifest without upgrading the result into a
+Vivado, bitfile, KV260 board, or latency claim.
+
+**Acceptance criteria:**
+- The experiment SHALL create
+  `results/experiment_1476_kv260_discrete_sb_rtl_regression_pack.json` with
+  `status="in_progress"` before regression packaging completes.
+- The experiment SHALL read
+  `results/experiment_1451_discrete_sb_rtl_lint_sim_rerun.json` and
+  `results/experiment_1460_hardware_portfolio_narrowing.json` to preserve the
+  no-board-claim boundary.
+- The experiment SHALL locate `hardware/kv260/discrete_sb_256.v` and its
+  testbench, or document any missing source/testbench blocker without
+  fabricating tool passes.
+- The experiment SHALL run available local source-level Verilator lint,
+  Icarus compile/simulation, and Yosys availability/probe commands without
+  installing new tools.
+- The experiment SHALL write
+  `hardware/kv260/discrete_sb_regression_manifest.md` with exact commands, tool
+  availability, expected outputs, and the board/bitfile/latency claim boundary.
+- The terminal artifact SHALL include `status`, `rtl_files`,
+  `testbench_files`, `rtl_regression_complete`, `verilator_lint_passed`,
+  `icarus_sim_passed`, `yosys_available`, `board_execution_performed`,
+  `bitfile_produced`, `latency_claimed`, `regression_manifest_path`, and
+  `honest_verdict`.
+- `board_execution_performed=false`, `bitfile_produced=false`, and
+  `latency_claimed=false` unless the same run records actual board execution,
+  bitfile generation, or latency measurement evidence.
+
+**Implementation status:** Implemented (Exp 1476)
+
 ## Scenarios
 
 ### SCENARIO-ISING-030
@@ -314,3 +355,15 @@ write a complete terminal artifact that keeps `hardware_claim_allowed=false`
 unless real KV260 board evidence exists in the same run.
 
 **Implementation status:** Implemented (Exp 1451)
+
+### SCENARIO-ISING-037
+
+**Discrete SB RTL regression pack artifact:** Given Exp 1451 reports local
+source-level lint/simulation success and Exp 1460 keeps KV260 active only at the
+RTL lint/simulation layer, Exp 1476 SHALL rerun the available local RTL
+commands, write a repeatable regression manifest, set
+`rtl_regression_complete=true` only from source-level evidence, and keep
+`board_execution_performed`, `bitfile_produced`, and `latency_claimed` false
+unless real board, bitfile, or latency commands run in the same experiment.
+
+**Implementation status:** Implemented (Exp 1476)
