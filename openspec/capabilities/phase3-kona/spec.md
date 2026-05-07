@@ -1321,6 +1321,49 @@ lacks decoded quality evidence.
   all required fields with an honest verdict that distinguishes smoke-only
   evidence from a future milestone scale recommendation.
 
+### REQ-KONA-036: Kona/EBT Partial-Trace Localization Audit
+
+Carnot MUST provide a deterministic CPU-only Exp 1490 audit that tests a local
+analog of Kona-style partial-trace failure localization without importing Kona
+internals, depending on a Kona service, or claiming decoded quality. The audit
+MUST reuse existing local trace telemetry when available, inject deterministic
+bad spans into otherwise clean traces, and rank the injected span against clean
+spans using available local energy or verifier features.
+
+The Exp 1490 workflow MUST write
+`results/experiment_1490_kona_ebt_partial_trace_localization_audit.json` with
+`status="in_progress"` before evaluation, then finish with `status="complete"`
+or `status="blocked"` and the fields `status`, `model_specs`,
+`localization_audit_complete`, `traces_evaluated`, `injected_failures`,
+`localization_top1_rate`, `localization_top3_rate`, `random_baseline_rate`,
+`decoded_quality_claim_allowed`, `kona_dependency_used`, `audit_note_path`,
+`tests_run`, and `honest_verdict`.
+
+The audit MUST set `decoded_quality_claim_allowed=false` and
+`kona_dependency_used=false`. Its random baseline MUST be computed from the
+number of candidate spans per trace, and a superficial span-length baseline
+SHOULD be recorded when span lengths are available.
+
+**Rationale:** public Kona positioning emphasizes globally scored partial traces
+and failure localization. Exp 1490 checks whether Carnot's local trace features
+can localize injected failures at bounded scale while keeping the result framed
+as a diagnostic, not as evidence of Kona parity or decoded answer quality.
+
+**Acceptance criteria:**
+
+- `python/carnot/phase3/kona_partial_trace_localization_audit.py` exposes
+  deterministic helpers that load bounded Exp 1480-style telemetry rows, inject
+  known bad spans, rank spans by local energy/verifier features, and compute
+  top-1, top-3, random, and span-length baseline rates.
+- Focused tests verify that the injected bad span is ranked above clean spans
+  for deterministic telemetry, the random baseline is derived from span count,
+  boundary flags forbid decoded-quality and Kona-dependency claims, and the
+  artifact contains every required field.
+- `results/experiment_1490_kona_ebt_partial_trace_localization_audit.json`
+  records all required fields with an honest verdict that reports whether the
+  bounded injected-span localization diagnostic beat random without claiming
+  live decoded quality.
+
 ## Scenarios
 
 ### SCENARIO-KONA-001: Stage 1 Primitive — RDT Fixed-Point Convergence
@@ -1796,6 +1839,24 @@ energy-delta reference, and emits `keep_smoke_only` unless the local baseline
 has enough trace, convergence, and quality evidence to justify scale-up.
 
 **Spec traces:** REQ-KONA-035
+
+### SCENARIO-KONA-036: Exp 1490 Localizes Injected Partial-Trace Failures
+
+**Given** bounded local Exp 1480-style telemetry rows with token logprobs,
+top-k alternatives, expected answers, and deterministic adversarial wrong
+answers
+**When** Exp 1490 injects the wrong answer span into each clean trace on the
+fixed run date `20260507`
+**Then** it writes
+`results/experiment_1490_kona_ebt_partial_trace_localization_audit.json` with
+all REQ-KONA-036 required fields, sets
+`localization_audit_complete=true` only when at least one injected failure is
+evaluated, computes top-1/top-3 localization rates against a random baseline,
+sets `decoded_quality_claim_allowed=false` and `kona_dependency_used=false`,
+and emits a bounded diagnostic honest verdict rather than a Kona-parity or
+decoded quality claim.
+
+**Spec traces:** REQ-KONA-036
 
 ## Out of scope
 
