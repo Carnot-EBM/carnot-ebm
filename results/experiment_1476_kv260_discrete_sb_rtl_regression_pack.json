@@ -1,0 +1,181 @@
+{
+  "bitfile_produced": false,
+  "board_execution_performed": false,
+  "commands_run": [
+    {
+      "command": [
+        "verilator",
+        "--version"
+      ],
+      "command_string": "verilator --version",
+      "error": "",
+      "error_class": "none",
+      "returncode": 0,
+      "stderr_summary": "",
+      "stdout_summary": "Verilator 5.047 devel rev v5.046-331-g2cd9b8df6 (mod)"
+    },
+    {
+      "command": [
+        "iverilog",
+        "-V"
+      ],
+      "command_string": "iverilog -V",
+      "error": "",
+      "error_class": "none",
+      "returncode": 0,
+      "stderr_summary": "",
+      "stdout_summary": "Icarus Verilog version 14.0 (devel) (s20251012-148-gaeca2b07c)\n\nCopyright (c) 2000-2026 Stephen Williams (steve@icarus.com)\n\n  This program is free software; you can redistribute it and/or modify\n  it under the terms of the GNU General Public License as published by\n  the Free Software Foundation; either version 2 of the License, or\n  (at your option) any later version.\n\n  This program is distributed in the hope that it will be useful,\n  but WITHOUT ANY WARRANTY; without even the implied warranty of\n  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n  GNU General Public License for more details.\n\n  You should have received a copy of the GNU General Public License along\n  with this program; if not, write to the Free Software Foundation, Inc.,\n  51 Franklin Street, Fifth Floor,\n...[truncated]"
+    },
+    {
+      "command": [
+        "yosys",
+        "--version"
+      ],
+      "command_string": "yosys --version",
+      "error": "",
+      "error_class": "none",
+      "returncode": 0,
+      "stderr_summary": "",
+      "stdout_summary": "Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)"
+    },
+    {
+      "command": [
+        "verilator",
+        "--lint-only",
+        "--timing",
+        "-Wall",
+        "-Wno-DECLFILENAME",
+        "-Wno-BLKSEQ",
+        "-Wno-WIDTH",
+        "hardware/kv260/discrete_sb_256.v",
+        "hardware/kv260/discrete_sb_256_tb.v"
+      ],
+      "command_string": "verilator --lint-only --timing -Wall -Wno-DECLFILENAME -Wno-BLKSEQ -Wno-WIDTH hardware/kv260/discrete_sb_256.v hardware/kv260/discrete_sb_256_tb.v",
+      "error": "",
+      "error_class": "none",
+      "returncode": 0,
+      "stderr_summary": "",
+      "stdout_summary": "- V e r i l a t i o n   R e p o r t: Verilator 5.047 devel rev v5.046-331-g2cd9b8df6 (mod)\n- Verilator: Built from 0.064 MB sources in 3 modules, into 0.057 MB in 3 C++ files needing 0.000 MB\n- Verilator: Walltime 0.015 s (elab=0.002, cvt=0.008, bld=0.000); cpu 0.015 s on 1 threads; allocated 21.148 MB"
+    },
+    {
+      "command": [
+        "iverilog",
+        "-g2012",
+        "-o",
+        "/tmp/discrete_sb_256_tb_1476.vvp",
+        "hardware/kv260/discrete_sb_256.v",
+        "hardware/kv260/discrete_sb_256_tb.v"
+      ],
+      "command_string": "iverilog -g2012 -o /tmp/discrete_sb_256_tb_1476.vvp hardware/kv260/discrete_sb_256.v hardware/kv260/discrete_sb_256_tb.v",
+      "error": "",
+      "error_class": "none",
+      "returncode": 0,
+      "stderr_summary": "",
+      "stdout_summary": ""
+    },
+    {
+      "command": [
+        "vvp",
+        "/tmp/discrete_sb_256_tb_1476.vvp"
+      ],
+      "command_string": "vvp /tmp/discrete_sb_256_tb_1476.vvp",
+      "error": "",
+      "error_class": "none",
+      "returncode": 0,
+      "stderr_summary": "",
+      "stdout_summary": "CHECK PASS: busy asserted after start\nCHECK PASS: done asserted after 65537 cycles\nCHECK PASS: exactly one completed update step\nCHECK PASS: final row index reached 255\nCHECK PASS: deterministic ring sweep converged to all +1\nSIMULATION RESULT: PASS\nhardware/kv260/discrete_sb_256_tb.v:172: $finish called at 665835000 (1ps)"
+    },
+    {
+      "command": [
+        "yosys",
+        "-q",
+        "-p",
+        "help read_verilog"
+      ],
+      "command_string": "yosys -q -p help read_verilog",
+      "error": "",
+      "error_class": "none",
+      "returncode": 0,
+      "stderr_summary": "",
+      "stdout_summary": ""
+    }
+  ],
+  "experiment_id": 1476,
+  "honest_verdict": "rtl_regression_manifest_complete_source_level_only_no_board_bitfile_or_latency_claim",
+  "icarus_sim_command": "iverilog -g2012 -o /tmp/discrete_sb_256_tb_1476.vvp hardware/kv260/discrete_sb_256.v hardware/kv260/discrete_sb_256_tb.v && vvp /tmp/discrete_sb_256_tb_1476.vvp",
+  "icarus_sim_passed": true,
+  "latency_claimed": false,
+  "prior_boundary_preserved": true,
+  "regression_manifest_path": "hardware/kv260/discrete_sb_regression_manifest.md",
+  "rtl_errors": [],
+  "rtl_files": [
+    "hardware/kv260/discrete_sb_256.v"
+  ],
+  "rtl_regression_complete": true,
+  "run_date": "20260507",
+  "source_experiment_ids": [
+    1451,
+    1460
+  ],
+  "status": "complete",
+  "testbench_files": [
+    "hardware/kv260/discrete_sb_256_tb.v"
+  ],
+  "tool_probe_results": {
+    "iverilog": {
+      "available": true,
+      "probe": {
+        "command": [
+          "iverilog",
+          "-V"
+        ],
+        "command_string": "iverilog -V",
+        "error": "",
+        "error_class": "none",
+        "returncode": 0,
+        "stderr_summary": "",
+        "stdout_summary": "Icarus Verilog version 14.0 (devel) (s20251012-148-gaeca2b07c)\n\nCopyright (c) 2000-2026 Stephen Williams (steve@icarus.com)\n\n  This program is free software; you can redistribute it and/or modify\n  it under the terms of the GNU General Public License as published by\n  the Free Software Foundation; either version 2 of the License, or\n  (at your option) any later version.\n\n  This program is distributed in the hope that it will be useful,\n  but WITHOUT ANY WARRANTY; without even the implied warranty of\n  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n  GNU General Public License for more details.\n\n  You should have received a copy of the GNU General Public License along\n  with this program; if not, write to the Free Software Foundation, Inc.,\n  51 Franklin Street, Fifth Floor,\n...[truncated]"
+      }
+    },
+    "verilator": {
+      "available": true,
+      "probe": {
+        "command": [
+          "verilator",
+          "--version"
+        ],
+        "command_string": "verilator --version",
+        "error": "",
+        "error_class": "none",
+        "returncode": 0,
+        "stderr_summary": "",
+        "stdout_summary": "Verilator 5.047 devel rev v5.046-331-g2cd9b8df6 (mod)"
+      }
+    },
+    "yosys": {
+      "available": true,
+      "probe": {
+        "command": [
+          "yosys",
+          "--version"
+        ],
+        "command_string": "yosys --version",
+        "error": "",
+        "error_class": "none",
+        "returncode": 0,
+        "stderr_summary": "",
+        "stdout_summary": "Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)"
+      }
+    }
+  },
+  "tools_available": {
+    "iverilog": true,
+    "verilator": true,
+    "yosys": true
+  },
+  "verilator_lint_command": "verilator --lint-only --timing -Wall -Wno-DECLFILENAME -Wno-BLKSEQ -Wno-WIDTH hardware/kv260/discrete_sb_256.v hardware/kv260/discrete_sb_256_tb.v",
+  "verilator_lint_passed": true,
+  "yosys_available": true,
+  "yosys_probe_command": "yosys -q -p help read_verilog",
+  "yosys_probe_passed": true
+}
