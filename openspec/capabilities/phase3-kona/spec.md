@@ -1279,6 +1279,48 @@ latent energy alone.
   required fields with an honest verdict that distinguishes a smoke-test repair
   from a scaled Phase 3 training claim.
 
+### REQ-KONA-035: EBT/NRGPT Local Energy-Convergence Microprototype Audit
+
+Carnot MUST provide a deterministic CPU-only Exp 1450 microprototype that
+compares an EBT/NRGPT-style iterative energy-convergence baseline against the
+Exp 1436 anchored latent repair reference before any larger Phase-3 scale-up.
+The microprototype MUST use existing local Carnot trace and energy abstractions
+rather than live model inference or a new external dependency.
+
+The Exp 1450 workflow MUST write
+`results/experiment_1450_ebt_nrgpt_local_microprototype_audit.json` with
+`status="in_progress"` before evaluation, then finish with `status="complete"`
+or `status="blocked"` and the fields `status`,
+`energy_convergence_probe_complete`, `traces_evaluated`,
+`baseline_energy_delta`, `anchored_repair_energy_delta_reference`,
+`convergence_steps_median`, `scale_recommendation`, `commands_run`, and
+`honest_verdict`.
+
+`scale_recommendation` MUST be one of `retire`, `keep_smoke_only`, or
+`scale_future_milestone`. The recommendation MUST be derived from measured
+trace count, energy delta, convergence steps, and the anchored repair reference,
+and MUST NOT present lower baseline energy alone as a decoded-accuracy or
+Phase-3 scale claim.
+
+**Rationale:** Exp 1436 showed anchored latent repair can reduce energy without
+accuracy regression at smoke-test scale. Exp 1450 adds a minimal explicit
+EBT/NRGPT-style convergence comparator so Carnot can distinguish a useful
+"think until energy flattens" signal from an energy-only baseline that still
+lacks decoded quality evidence.
+
+**Acceptance criteria:**
+
+- `python/carnot/phase3/ebt_nrgpt_local_microprototype_audit.py` exposes
+  deterministic helpers that load a tiny local trace sample, run iterative
+  energy minimization, compute median convergence steps, and read the Exp 1436
+  anchored energy-delta reference.
+- Focused tests verify that the baseline energy trace converges, the artifact
+  contains every required field, and the scale recommendation follows the
+  measured smoke gate rather than assuming energy reduction is enough to scale.
+- `results/experiment_1450_ebt_nrgpt_local_microprototype_audit.json` records
+  all required fields with an honest verdict that distinguishes smoke-only
+  evidence from a future milestone scale recommendation.
+
 ## Scenarios
 
 ### SCENARIO-KONA-001: Stage 1 Primitive — RDT Fixed-Point Convergence
@@ -1738,6 +1780,22 @@ if anchored planning has nonnegative decoded-accuracy delta and lower
 off-support rate than raw planning.
 
 **Spec traces:** REQ-KONA-034
+
+### SCENARIO-KONA-035: Exp 1450 Compares Local EBT/NRGPT Convergence Against Anchored Repair
+
+**Given** local Carnot trace rows, the existing reasoning embedding path, a
+deterministic local energy-convergence probe, and the Exp 1436 anchored repair
+artifact
+**When** Exp 1450 runs at smoke-test scale on the fixed run date `20260507`
+**Then** it writes
+`results/experiment_1450_ebt_nrgpt_local_microprototype_audit.json` with all
+REQ-KONA-035 required fields, sets
+`energy_convergence_probe_complete=true` only when at least one trace converges
+with a measured negative baseline energy delta, records the Exp 1436 anchored
+energy-delta reference, and emits `keep_smoke_only` unless the local baseline
+has enough trace, convergence, and quality evidence to justify scale-up.
+
+**Spec traces:** REQ-KONA-035
 
 ## Out of scope
 
