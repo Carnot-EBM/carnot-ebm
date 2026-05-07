@@ -17,12 +17,10 @@ call. No fine-tuning. No access to model weights.
 
 Rust + Python/JAX, Apache 2.0, `pip install carnot`.
 
-Current public research record: **1,590 experiments tracked, 124
-artifact-backed completed milestone records**, with checked-in result artifacts
-through Exp 1466 on 2026-05-07. `research-complete.yaml` currently archives
-**123** completed milestone records through 2026.04.111; milestone 2026.04.112
-is terminal in `results/experiment_1466_milestone_112_retro.json` and awaits
-archive reconciliation.
+Current public research record: **1,590 experiments tracked across 124
+artifact-backed completed milestone records**, all archived in
+`research-complete.yaml` through 2026.04.112, with checked-in result artifacts
+through Exp 1466 on 2026-05-07.
 
 Milestone .106 delivered the critical fix to thinking-mode certificate
 generation: Exp 1366 (CRANE tag-first prefix injection) reached
@@ -98,7 +96,7 @@ Gemma4-26B GGUF; Qwen3.6-35B-A3B completed a live smoke inference. Exp 1464
 then showed validation-error retry context produced **0.0pp** acceptance lift
 on the bounded live test and retired that repair-executor line. Exp 1465
 adopted one minimal BEAVER-style deterministic-bounds smoke and deferred broad
-VNN-COMP integration. The current test collection reports **22,491** items;
+VNN-COMP integration. The current test collection reports **22,656** items;
 this is a collection count, not a full-suite pass claim.
 
 ## Install and run
@@ -340,7 +338,7 @@ experiment artifact under `results/`.
 | Validation-error context A/B | Live Qwen repair test evaluated 1 case with **0.0pp** acceptance/schema/semantic lift; repair-executor retry-context lineage retired | Exp 1464 |
 | Paper and benchmark scope narrowing | Paper-v6 narrowed to **4** anchored claims; external verifier benchmark fit adopts one minimal BEAVER-style bounds smoke and defers broad VNN-COMP | Exps 1462/1465 |
 | Milestone .112 status | **14/14 criteria met**; scope reduction satisfied, runtime recovered, repair context retired, and paper/hardware/comparator/benchmark claims narrowed | Exp 1466 |
-| Current Python test collection | **22,491** Python tests collected; collection-only snapshot, not a full-suite pass claim | 2026-05-07 collection run |
+| Current Python test collection | **22,656** Python tests collected; collection-only snapshot, not a full-suite pass claim | 2026-05-07 collection run |
 | Local Claude/Codex usage snapshot | Codex reads the newest local `token_count` event; Claude aggregates local token usage and reads only subscription/tier metadata from credentials; free-form quota prose is ignored instead of guessed; focused regression tests pass | 2026-05-04 changelog |
 
 Deeper analysis of these — including everything that **didn't** work and

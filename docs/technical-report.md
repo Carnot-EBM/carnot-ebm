@@ -1,6 +1,6 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report — 1590 Experiments Across 124 Completed Research Milestones, 22,491 Python Test Items Collected (Artifacts Tracked Through Exp 1466)
+## A Technical Report — 1590 Experiments Across 124 Completed Research Milestones, 22,656 Python Test Items Collected (Artifacts Tracked Through Exp 1466)
 
 **Author:** Ian Blenke
 **Date:** 2026-05-07
@@ -31,9 +31,9 @@ adversarial-audit results are labeled by artifact provenance.
 This report documents the research arc behind the framework — **1,590
 experiments tracked through Exp 1466, with 124 artifact-backed completed
 milestone records through the .112 terminal retro** — run between February and
-May 2026. `research-complete.yaml` currently archives **123** completed
-milestone records through 2026.04.111; the latest terminal milestone artifact is
-2026.04.112 at `results/experiment_1466_milestone_112_retro.json`.
+May 2026. `research-complete.yaml` currently archives all **124** completed
+milestone records through 2026.04.112; the latest terminal milestone artifact is
+`results/experiment_1466_milestone_112_retro.json`.
 The story now spans activation-based negative results, constraint-based
 verification, live SOTA-model benchmarks, production verifier ensembles,
 hardware sampler audits, continuous self-learning, Phase-5 in-situ training
@@ -70,7 +70,7 @@ claims, local SOTA GGUF runtime repair, validation-error repair-context
 retirement, and BEAVER-style external verifier benchmark fit selection.
 
 The latest archived milestone entry in `research-complete.yaml` is
-2026.04.111; checked-in result artifacts now extend through Exp 1466, including
+2026.04.112; checked-in result artifacts now extend through Exp 1466, which is
 the 2026.04.112 terminal retro.
 Milestone .105 diagnosed the SOTA thinking-mode certificate path as a terminal
 negative: `<think>` output consumed
@@ -195,7 +195,7 @@ minimal BEAVER-style deterministic-bounds smoke and deferred broad VNN-COMP
 integration.
 
 The current 2026-05-07 Python test collection-only snapshot reports
-**22,491** items; this is a collection count, not a full-suite pass claim. A
+**22,656** items; this is a collection count, not a full-suite pass claim. A
 plain-English summary of that journey is in the next section; deeper analysis
 follows in the body of the report and in the per-milestone retrospective
 artifacts checked into `results/operational_retro_*.json`.
@@ -651,9 +651,9 @@ artifacts checked into `results/operational_retro_*.json`.
   prior-failure auto-population task hit a circular metadata failure, and Exp
   1268 later counted retro-95 complete from available result fields.
 - **Latest .96-.112 artifact status:** `research-complete.yaml` now archives
-  **123** completed milestone records through .111, and .112 is terminal in
-  `results/experiment_1466_milestone_112_retro.json`; checked-in result
-  artifacts extend through Exp 1466. The checked-in .96/.97 and stale .103
+  **124** completed milestone records through .112, and the latest terminal
+  artifact is `results/experiment_1466_milestone_112_retro.json`; checked-in
+  result artifacts extend through Exp 1466. The checked-in .96/.97 and stale .103
   artifacts should still be read conservatively. Exp 1268 backfilled .96 at
   **2/13** and .97 at **4/13**. .98 closed **5/13** criteria through Exp 1267,
   .99 closed **12/14** criteria through Exp 1281, .100 closed **5/14** criteria
@@ -1978,7 +1978,7 @@ The architecture is model-agnostic (Experiment 69), scales to 5000+ variables (E
 | Research conductor | Autonomous Claude Code agent loop, YAML-driven | N/A | Experimental |
 | PyPI packaging | `pip install carnot`, extras for rust/mcp/cuda/llm | Integration tests | Beta |
 
-**Total:** **22,491** Python test items are currently collected in the repo (`.venv/bin/python -m pytest tests/python --collect-only -q --no-cov`, collected 2026-05-07). This is a collection count, not a claim that the full suite passes. Exp 1392 records zero collection errors after the semantic-validator repair, Exp 1411's focused stream/MCP checks pass **10/10**, Exp 1421 fixes the focused embedding-store runtime-failure cluster with 100% line coverage on the touched module, Exp 1426 records **71** remaining spec-coverage traceability debt items, and Exp 1440 reduces that spec-coverage metadata debt **71 -> 0** while recording the required full-suite red result (**101 failed**, **6 errors**) outside the metadata fix. Full validation therefore remains command-specific in the relevant experiment artifacts.
+**Total:** **22,656** Python test items are currently collected in the repo (`.venv/bin/python -m pytest tests/python --collect-only -q --no-cov`, collected 2026-05-07). This is a collection count, not a claim that the full suite passes. Exp 1392 records zero collection errors after the semantic-validator repair, Exp 1411's focused stream/MCP checks pass **10/10**, Exp 1421 fixes the focused embedding-store runtime-failure cluster with 100% line coverage on the touched module, Exp 1426 records **71** remaining spec-coverage traceability debt items, and Exp 1440 reduces that spec-coverage metadata debt **71 -> 0** while recording the required full-suite red result (**101 failed**, **6 errors**) outside the metadata fix. Full validation therefore remains command-specific in the relevant experiment artifacts.
 
 ---
 
@@ -3444,10 +3444,10 @@ The archive now contains **124 completed milestone records** through the
 2026.04.112 terminal retro, and checked-in result artifacts extend through Exp
 1466. The artifact layer is more conservative than the milestone list. Several
 .96, .97, and .103 deliverables listed in `research-complete.yaml` do not have
-terminal result artifacts in this checkout, while .112 is terminal but not yet
-archived into `research-complete.yaml`. The public docs should therefore report
-1,590 tracked experiment/task records while treating only terminal artifacts as
-measured findings.
+terminal result artifacts in this checkout; .112 is both archived and terminal
+via Exp 1466. The public docs should therefore report 1,590 tracked
+experiment/task records while treating only terminal artifacts as measured
+findings.
 
 **Prior-failure autofill v2 (Exp 1230):** The conductor autofill utility shipped
 at `scripts/conductor_priors_autofill.py`. Focused tests report **7 passed**,
@@ -4143,7 +4143,7 @@ threshold. Exp 1439 created the .110 carry-forward activation manifest, and Exp
 remained red outside that metadata fix with **101 failed**, **21191 passed**,
 **103 skipped**, **6 errors**, and **91 warnings** before interruption. The
 current public test number is therefore the 2026-05-07 collection snapshot:
-**22,491** Python items collected, not a full-suite pass claim.
+**22,656** Python items collected, not a full-suite pass claim.
 
 The live-SOTA scale branch was correctly blocked. Exp 1442 found local
 Qwen3.6-35B and Gemma4-31B GGUF files cached and both RTX 3090s idle, but
