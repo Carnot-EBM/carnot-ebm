@@ -699,7 +699,56 @@ false-accept rate in the terminal artifact
 And it sets `validator_compiler_ready=true` only when the safe DSL metrics are
 present and no arbitrary-code execution path was introduced.
 
-## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487)
+### REQ-VERIFY-1495: CPU-Only Interwhen Monitor Prototype Replay
+
+The repository shall provide a CPU-only interwhen-style monitor prototype for
+Exp 1495 that replays existing CCTU trigger-certificate and validator-compiler
+artifacts without generating new LLM rows.
+
+- REQ-VERIFY-1495-1: The workflow SHALL write
+  `results/experiment_1495_interwhen_monitor_prototype.json` with
+  `status="in_progress"` before loading gated upstream artifacts or emitting
+  monitor events.
+- REQ-VERIFY-1495-2: The workflow SHALL require both
+  `results/experiment_1493_trigger_token_certificate_export_v1.json` and
+  `results/experiment_1494_constrainprompt_validator_compiler_audit.json` to
+  be complete and ready before setting `gated_inputs_present=true`; otherwise
+  it SHALL write a terminal gated artifact with concrete blockers.
+- REQ-VERIFY-1495-3: Certificate rows and validator rows SHALL be converted
+  into replayable trace states with deterministic token offsets or synthetic
+  polling intervals and no fresh model generation.
+- REQ-VERIFY-1495-4: Each poll SHALL run deterministic certificate,
+  validator, and verifier checks, emit exactly one JSONL monitor event, and
+  mark whether the monitor interrupts only because an error was detected.
+- REQ-VERIFY-1495-5: The workflow SHALL write
+  `results/interwhen_monitor_events_1495.jsonl` with one event per poll and
+  SHALL report detection count, interruptions, false interruptions, false
+  accepts, and verifier false-accept rate.
+- REQ-VERIFY-1495-6: The terminal artifact SHALL include `status`,
+  `monitor_intervention_ready`, `gated_inputs_present`, `traces_replayed`,
+  `polling_interval_tokens`, `monitor_events_emitted`, `errors_detected`,
+  `interruptions_triggered`, `false_interruptions`,
+  `verifier_false_accept_rate`, `monitor_event_manifest_path`, `blockers`, and
+  `honest_verdict`.
+
+`monitor_intervention_ready` MUST be true only when the event manifest exists,
+at least one real recorded error is detected, and the verifier false-accept
+rate is zero.
+
+### SCENARIO-VERIFY-1495: Replayed Monitor Events Gate Intervention Readiness
+
+Given complete Exp 1493 trigger-certificate evidence and complete Exp 1494
+safe-DSL validator evidence,
+When the Exp 1495 CPU-only interwhen replay runs on the run date `20260507`,
+Then it emits one monitor event per synthetic poll over the replayed trace
+states
+And each event records the case ID, poll offset, deterministic check outcomes,
+error detection status, interrupt decision, and false-interruption status
+And it sets `monitor_intervention_ready=true` only when at least one recorded
+error is detected, no false interruptions are triggered, and verifier
+false-accept rate remains zero.
+
+## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487/1495)
 
 | Requirement | Python | Tests |
 |-------------|--------|-------|
@@ -716,3 +765,4 @@ present and no arbitrary-code execution path was introduced.
 | REQ-VERIFY-1486 | Implemented (`python/carnot/eval/cctu_executable_constraint_microbenchmark.py`) | Implemented (`tests/python/test_experiment_1486_cctu_executable_constraint_microbenchmark.py`) |
 | REQ-VERIFY-1487 | Planned (`python/carnot/eval/v1_pairwise_self_verification_vs_energy.py`) | Planned (`tests/python/test_experiment_1487_v1_pairwise_self_verification_vs_energy.py`) |
 | REQ-VERIFY-1494 | Planned (`python/carnot/eval/constrainprompt_validator_compiler_audit.py`) | Planned (`tests/python/test_experiment_1494_constrainprompt_validator_compiler_audit.py`) |
+| REQ-VERIFY-1495 | Implemented (`python/carnot/eval/interwhen_monitor_prototype.py`) | Implemented (`tests/python/test_experiment_1495_interwhen_monitor_prototype.py`) |
