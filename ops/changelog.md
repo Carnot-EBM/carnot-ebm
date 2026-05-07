@@ -2,6 +2,7 @@
 
 ## 2026-05-07 (Milestone 2026.04.112 Operational Retrospective)
 
+- 2026-05-07 06:12 UTC: Refined `results/operational_retro_2026_04_112.json` from skeleton to terminal `status=success`. Confirmed the 40 min / 11 completed slice was dominated by Full-Scale Pipeline v3 gate churn on Exp 1414 (25 min), Exp 1269 arXiv Bundle v10 gating (10 min), and SOTA GGUF cache/provenance preflight churn (2 min). Live `gpu_monitor.py` matched the supplied closeout state: both RTX 3090s idle at 4 MB / 0% utilization, no listed processes, no zombie warnings. Estimated 55% recoverable via same-verdict gate retirement, activation-time readiness artifacts, DualGPURunner scheduling, and idempotent ops-doc appenders.
 - 2026-05-07 05:53 UTC: Milestone 2026.04.112 operational retrospective complete. Wrote `results/operational_retro_2026_04_112.json` for the supplied 40 min / 11 completed experiment slice. The slowest-five timing was dominated by Full-Scale Pipeline v3 gate churn on the Exp 1414 repair-executor path (25 min / 62.5%) plus the legacy Exp 1269 arXiv Bundle v10 gate (10 min / 25%) and a SOTA GGUF cache/provenance preflight slot (2 min / 5%). Both RTX 3090s were idle at closeout (4 MB each, 0% utilization) with no material GPU zombie evidence. Estimated 55% recoverable next milestone via nonzero-success full-pipeline gates, same-verdict retirement, activation-time terminal readiness artifacts, DualGPURunner scheduling, GPU telemetry, focused preflight gating, and idempotent docs appenders.
 
 ## 2026-05-07 (Milestone 2026.04.112 Research Planning)
