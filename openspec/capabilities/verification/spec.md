@@ -450,7 +450,38 @@ against the proposed signal, verifies BEAVER mock/live labeling, writes the
 research note, and allows a headline telemetry claim only when the evidence
 cannot pass for superficial or mechanical reasons.
 
-## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473)
+### REQ-VERIFY-1474: T-SKM Linear Constraint Projection Smoke
+
+The repository shall provide a deterministic, CPU-only SKM/Kaczmarz-Motzkin
+style projection smoke for toy linear certificate constraints that:
+
+- writes `results/experiment_1474_tskm_linear_constraint_projection_smoke.json`
+  with `status="in_progress"` before loading or evaluating toy cases;
+- supports bounded iterative projection over `Ax <= b` constraints and exact
+  equality constraints by transforming each equality into two inequalities;
+- evaluates a small deterministic set of toy arithmetic/certificate cases with
+  known feasible points;
+- compares the projected solution verdicts against existing Carnot, Z3
+  arithmetic, and Ising energy checks; and
+- writes a terminal artifact containing `status`, `toy_cases_evaluated`,
+  `zero_violation_projection`, `max_constraint_violation`,
+  `baseline_verifier_agreement`, `projection_iterations_p50`,
+  `projection_iterations_p95`, `helper_path`, `tests_run`, and
+  `honest_verdict`.
+
+The smoke MUST NOT train a neural model, call an LLM, require GPU hardware, or
+revive the retired HardNet++/DSP repair lineage.
+
+### SCENARIO-VERIFY-1474: Projected Toy Linear Certificates Agree With Baselines
+
+Given deterministic toy linear certificate systems with known feasible points,
+When the SKM-style projection helper runs from infeasible starting points,
+Then each projected solution has zero violation within tolerance, the maximum
+constraint violation is reported, Carnot/Z3/Ising baseline verdicts agree with
+the projection verdicts, and the experiment artifact records deterministic
+iteration quantiles and an honest CPU-only verdict.
+
+## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474)
 
 | Requirement | Python | Tests |
 |-------------|--------|-------|
@@ -461,3 +492,4 @@ cannot pass for superficial or mechanical reasons.
 | REQ-VERIFY-1434 | Implemented (`python/carnot/reporting/fover_prm_label_completion_v2.py`) | Implemented (`tests/python/test_experiment_1434_fover_prm_label_completion_v2.py`) |
 | REQ-VERIFY-1469 | Implemented (`python/carnot/reporting/halt_spilled_energy_telemetry_diagnostic.py`) | Implemented (`tests/python/test_experiment_1469_halt_spilled_energy_telemetry_diagnostic.py`) |
 | REQ-VERIFY-1473 | Implemented (`python/carnot/reporting/live_telemetry_adversarial_validity_audit.py`) | Implemented (`tests/python/test_experiment_1473_live_telemetry_adversarial_validity_audit.py`) |
+| REQ-VERIFY-1474 | Implemented (`python/carnot/verify/skm_projection.py`) | Implemented (`tests/python/test_experiment_1474_tskm_linear_constraint_projection_smoke.py`) |
