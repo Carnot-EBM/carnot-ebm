@@ -370,7 +370,45 @@ unrecovered label is written to the blocker ledger, and
 `headline_label_coverage_ready=true` only when all 1508 promoted traces are
 covered or the remaining blockers are explicitly outside local recovery scope.
 
-## Implementation Status (REQ-VERIFY-1415/1416/1423/1434)
+### REQ-VERIFY-1469: HALT and Spilled-Energy Telemetry Diagnostic
+
+The repository shall provide a deterministic, CPU-only telemetry diagnostic for
+Exp 1469 that:
+
+- writes `results/experiment_1469_halt_spilled_energy_telemetry_diagnostic.json`
+  with `status="in_progress"` before loading Exp 1468 telemetry rows;
+- reuses `results/live_sota_telemetry_manifest_1468.jsonl` and MUST NOT require
+  fresh LLM inference when that manifest contains top-k logprobs;
+- computes HALT-style time-series features including token logprob trend,
+  top-k entropy trend, and top-k gap trend from per-token telemetry;
+- computes Spilled-Energy-style logprob proxies including spilled-energy and
+  marginal-energy estimates from the top-k logprob mass;
+- compares feature rank signals against the bounded case labels with AUROC
+  when binary labels are available, while recording small-sample caveats;
+- checks whether the best rank signal is explained by response length, exact
+  answer formatting, JSON-like formatting, or another superficial confound;
+- writes `results/live_sota_halt_spilled_diagnostics_1469.json` with per-case
+  feature rows and label provenance; and
+- writes a terminal artifact containing `status`, `model_specs`,
+  `telemetry_rows_loaded`, `halt_features_computed`,
+  `spilled_energy_features_computed`, `telemetry_diagnostic_complete`,
+  `auroc_or_rank_signal`, `best_signal_name`,
+  `length_or_format_confound_checked`, `diagnostic_path`,
+  `diagnostic_lineage_preserved`, `diagnostic_lineage_retired`, and
+  `honest_verdict`.
+
+### SCENARIO-VERIFY-1469: Small-N Telemetry Signal Retires When Confounded
+
+Given Exp 1468 has live local SOTA top-k telemetry for a bounded FoVer/GSM8K
+case set,
+When Exp 1469 computes HALT and Spilled-Energy features over the manifest,
+Then the diagnostic records per-case features, AUROC or rank-separation
+evidence, and label provenance,
+And the diagnostic lineage is preserved only when the best logprob feature has
+a nontrivial signal that is not matched or exceeded by length or formatting
+confounds.
+
+## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469)
 
 | Requirement | Python | Tests |
 |-------------|--------|-------|
@@ -379,3 +417,4 @@ covered or the remaining blockers are explicitly outside local recovery scope.
 | REQ-VERIFY-1416 | Implemented (`python/carnot/models/ebm_cot_temperature_calibration.py`) | Implemented (`tests/python/test_experiment_1416_ebm_cot_temperature_calibration.py`) |
 | REQ-VERIFY-1423 | Implemented (`python/carnot/reporting/process_reward_model_v1_fover_1508.py`) | Implemented (`tests/python/test_experiment_1423_process_reward_model_v1.py`) |
 | REQ-VERIFY-1434 | Implemented (`python/carnot/reporting/fover_prm_label_completion_v2.py`) | Implemented (`tests/python/test_experiment_1434_fover_prm_label_completion_v2.py`) |
+| REQ-VERIFY-1469 | Implemented (`python/carnot/reporting/halt_spilled_energy_telemetry_diagnostic.py`) | Implemented (`tests/python/test_experiment_1469_halt_spilled_energy_telemetry_diagnostic.py`) |

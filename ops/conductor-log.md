@@ -1075,3 +1075,5 @@ web search: GitHub trending energy based mod |
 | 2026-05-07 06:31 UTC | Plan milestone 2026.04.113 | OK | 12 tasks proposed |
 | 2026-05-07 06:33 UTC | Milestone 2026.04.113 activated | OK | 12 tasks queued |
 | 2026-05-07 06:46 UTC | .112 Completion Archive + .113 Activation Manifest | OK | 81 passed, 1 warning in 5.23s |
+| 2026-05-07 07:06 UTC | Live SOTA GGUF Logprob Telemetry Preflight | FAIL | Codex CLI error: _fn=lambda _spec, _case: pytest.fail("generation must not ru |
+| 2026-05-07 07:08 UTC | Live SOTA GGUF Logprob Telemetry Preflight | OK | Deliverable already exists in repo |
