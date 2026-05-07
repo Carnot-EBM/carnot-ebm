@@ -1,0 +1,310 @@
+{
+  "consolidation_note_path": "ops/lineage-retirements/grpo_vprm_lineage_retired.md",
+  "exclusion_manifest_block_added": true,
+  "exclusion_manifest_updated": true,
+  "experiment": "1456_grpo_vprm_lineage_consolidation_retirement",
+  "experiment_review_rows": [
+    {
+      "blocker": "corpus generation alone was not a GRPO result",
+      "experiment_id": "exp1084",
+      "lesson": "Process-level labels are useful infrastructure.",
+      "measured_positive": "large process-reward corpus created",
+      "title": "Step-Level PRM Data Generation",
+      "verdict": "7349-step corpus generated"
+    },
+    {
+      "blocker": "300-sample retrain quality was not production-grade",
+      "experiment_id": "exp1111",
+      "lesson": "Reward model quality must be verified on held-out slices.",
+      "measured_positive": "ThinkPRM reward source available for v1/v2",
+      "title": "ThinkPRM v2 Retrain on 7349-Step PRM Corpus",
+      "verdict": "retrain attempted"
+    },
+    {
+      "blocker": "small eval slice",
+      "experiment_id": "exp1118",
+      "lesson": "Energy-shaped rewards can move in-distribution slices.",
+      "measured_positive": "+4pp on 25 live-GPU eval questions",
+      "title": "GRPO with ThinkPRM v2 Energy Reward",
+      "verdict": "positive_improvement"
+    },
+    {
+      "blocker": "evaluation wall budget hit",
+      "experiment_id": "exp1129",
+      "lesson": "DRA diversity and proxy reuse were useful but budget-sensitive.",
+      "measured_positive": "+8.51pp on 47 completed eval questions",
+      "title": "GRPO Energy PRM Full Training v2",
+      "verdict": "positive_improvement"
+    },
+    {
+      "blocker": "below Exp 1129 and reflection reward mean stayed 0.0",
+      "experiment_id": "exp1146",
+      "lesson": "Reflection reward did not add a stronger signal by itself.",
+      "measured_positive": "+2.86pp",
+      "title": "GRPO Reflection Reward v3",
+      "verdict": "positive_below_exp1129"
+    },
+    {
+      "blocker": "still small and lineage-specific",
+      "experiment_id": "exp1159",
+      "lesson": "Structural warm-up was the best GRPO-only historical result.",
+      "measured_positive": "+10pp, +1.49pp over Exp 1129",
+      "title": "GRPO Reflection Reward v4 Structural Warm-up",
+      "verdict": "structural_warmup_above_0851"
+    },
+    {
+      "blocker": "llama.cpp runtime lacked GPU offload",
+      "experiment_id": "exp1173",
+      "lesson": "Runtime prerequisites must gate training variants.",
+      "measured_positive": "",
+      "title": "GRPO v5 + TinyV False-Negative Correction",
+      "verdict": "training_wall_hit"
+    },
+    {
+      "blocker": "CPU-only llama.cpp build",
+      "experiment_id": "exp1184",
+      "lesson": "Do not score blocked runtime setup as science.",
+      "measured_positive": "",
+      "title": "GRPO v5 + TinyV v2",
+      "verdict": "gpu_offload_prerequisite_not_met"
+    },
+    {
+      "blocker": "0.0pp delta on the proxy",
+      "experiment_id": "exp1187",
+      "lesson": "Invalid-sample masking needs actual invalid samples or a nonzero target.",
+      "measured_positive": "",
+      "title": "Latent-GRPO Energy Reward",
+      "verdict": "latent_grpo_no_delta"
+    },
+    {
+      "blocker": "missing artifact in .93 retro",
+      "experiment_id": "exp1195",
+      "lesson": "Missing gated artifacts must not be treated as successful retries.",
+      "measured_positive": "",
+      "title": "GRPO v5 TinyV v2 rerun",
+      "verdict": "missing"
+    },
+    {
+      "blocker": "prior_failures metadata incomplete",
+      "experiment_id": "exp1196",
+      "lesson": "Prior-failure hygiene must be complete before reruns.",
+      "measured_positive": "",
+      "title": "GRPO-VPS Step-Level Process Supervision",
+      "verdict": "blocked_gate_check_failed"
+    },
+    {
+      "blocker": "TinyV abstained on 62.5% of rewards and regressed -35pp",
+      "experiment_id": "exp1208",
+      "lesson": "False-negative correction can suppress valid rewards if over-calibrated.",
+      "measured_positive": "",
+      "title": "GRPO v5 TinyV Confidence Abstention",
+      "verdict": "improvement_below_v4"
+    },
+    {
+      "blocker": "process-supervision result, not a reason for GRPO v15 churn",
+      "experiment_id": "exp1209",
+      "lesson": "Preserve VPS as process-supervision evidence.",
+      "measured_positive": "+24pp over outcome-only baseline",
+      "title": "GRPO-VPS Step-Level Supervision",
+      "verdict": "step_supervision_improves_over_outcome"
+    },
+    {
+      "blocker": "diagnosis confirmed v5 regression",
+      "experiment_id": "exp1219",
+      "lesson": "Abstention thresholds need calibration and reward-mass checks.",
+      "measured_positive": "diagnosed TinyV abstention root cause",
+      "title": "GRPO v5 Regression Diagnosis",
+      "verdict": "root_cause_identified"
+    },
+    {
+      "blocker": "VPS is the retained lesson, not open-ended GRPO expansion",
+      "experiment_id": "exp1220",
+      "lesson": "Step rewards are more promising than more variant labels.",
+      "measured_positive": "+15pp over v4 floor",
+      "title": "GRPO-VPS Full Training",
+      "verdict": "vps_training_beats_v4"
+    },
+    {
+      "blocker": "-6.11pp on only 9 questions",
+      "experiment_id": "exp1221",
+      "lesson": "FSPO needs logprob coverage before claims.",
+      "measured_positive": "",
+      "title": "GRPO v6 FSPO + VPS",
+      "verdict": "insufficient_logprob_coverage"
+    },
+    {
+      "blocker": "no terminal improvement artifact",
+      "experiment_id": "exp1235",
+      "lesson": "In-progress skeletons are not evidence.",
+      "measured_positive": "",
+      "title": "GRPO v6 FSPO + VPS Extended",
+      "verdict": "in_progress"
+    },
+    {
+      "blocker": "planned artifact absent",
+      "experiment_id": "exp1236",
+      "lesson": "Execution-grounded credit never produced terminal evidence.",
+      "measured_positive": "",
+      "title": "GRPO Execution-Grounded Credit",
+      "verdict": "missing"
+    },
+    {
+      "blocker": "no measured outcome",
+      "experiment_id": "exp1247",
+      "lesson": "Simplification did not close the lineage.",
+      "measured_positive": "",
+      "title": "GRPO v7 Simplified",
+      "verdict": "in_progress"
+    },
+    {
+      "blocker": "no measured outcome",
+      "experiment_id": "exp1259",
+      "lesson": "PROGRS did not produce terminal evidence.",
+      "measured_positive": "",
+      "title": "GRPO v7 PROGRS + VPS",
+      "verdict": "in_progress"
+    },
+    {
+      "blocker": "audit only",
+      "experiment_id": "exp1272",
+      "lesson": "Verifier weighting is useful as an input to process supervision.",
+      "measured_positive": "process/outcome alignment weights selected",
+      "title": "PRIME Verifier Selection Audit",
+      "verdict": "prime weights selected"
+    },
+    {
+      "blocker": "headline_result_allowed=false",
+      "experiment_id": "exp1273",
+      "lesson": "Smoke-only deltas must not become headline claims.",
+      "measured_positive": "smoke delta +83.798pp",
+      "title": "GRPO v8 PRIME+VPRM Smoke",
+      "verdict": "smoke_only_not_headline"
+    },
+    {
+      "blocker": "SOTA certificate path did not open",
+      "experiment_id": "exp1289",
+      "lesson": "SOTA/DVI gates must precede headline GRPO/VPRM.",
+      "measured_positive": "",
+      "title": "GRPO/VPRM v9 SOTA Headline Attempt",
+      "verdict": "gated/missing"
+    },
+    {
+      "blocker": "absent SOTA certificate headline result",
+      "experiment_id": "exp1304",
+      "lesson": "No downstream GRPO launch without live certificate evidence.",
+      "measured_positive": "",
+      "title": "GRPO/VPRM v10 SOTA Gated",
+      "verdict": "gated/missing"
+    },
+    {
+      "blocker": "deterministic replay audit; no large training job or new generation",
+      "experiment_id": "exp1317",
+      "lesson": "Keep as micro-audit evidence, not a mandate for variants.",
+      "measured_positive": "+0.45 score delta on 40 replay cases",
+      "title": "GRPO/VPRM v11 Headline Gate",
+      "verdict": "grpo_vprm_v11_positive_headline_gate"
+    },
+    {
+      "blocker": "DVI lossless claim gate absent",
+      "experiment_id": "exp1330",
+      "lesson": "DVI acceptance gates correctly block downstream claims.",
+      "measured_positive": "",
+      "title": "GRPO/VPRM v12 Micro-Audit",
+      "verdict": "missing/gated"
+    },
+    {
+      "blocker": "DVI lossless claim gate absent",
+      "experiment_id": "exp1346",
+      "lesson": "Repeating the same gate does not add evidence.",
+      "measured_positive": "",
+      "title": "GRPO/VPRM v13 Micro-Audit",
+      "verdict": "missing/gated"
+    },
+    {
+      "blocker": "missing exp1359 lossless_acceptance_claim_allowed",
+      "experiment_id": "exp1360",
+      "lesson": "Final v14 attempt stayed downstream of a closed DVI gate.",
+      "measured_positive": "",
+      "title": "GRPO/VPRM v14 Micro-Audit",
+      "verdict": "blocked_gate_check_failed"
+    },
+    {
+      "blocker": "0pp held-out improvement on all-UNKNOWN rewards",
+      "experiment_id": "exp1383",
+      "lesson": "Formal-verifier reward policies need non-UNKNOWN diversity.",
+      "measured_positive": "",
+      "title": "GRPO v7 JURY-RL Formal Verifier Rewards",
+      "verdict": "grpo_v7_jury_rl_no_improvement"
+    },
+    {
+      "blocker": "grpo_cases_integrated=0",
+      "experiment_id": "exp1388",
+      "lesson": "Self-learning should stay DVI-only until GRPO produces positive evidence.",
+      "measured_positive": "DVI path integrated 59 fresh verified cases",
+      "title": "FR-11 Self-Learning v4 DVI + GRPO Integration",
+      "verdict": "dvi_only_headline_allowed"
+    },
+    {
+      "blocker": "0pp improvement, UNKNOWN rollout rate 1.0, retire_if_same_verdict=true",
+      "experiment_id": "exp1393",
+      "lesson": "NGRPO calibration did not fix the zero-reward root cause.",
+      "measured_positive": "",
+      "title": "GRPO v8 NGRPO Zero-Reward Fix",
+      "verdict": "grpo_v8_ngrpo_no_improvement_all_unknown_retired"
+    }
+  ],
+  "experiments_reviewed": [
+    "exp1084",
+    "exp1111",
+    "exp1118",
+    "exp1129",
+    "exp1146",
+    "exp1159",
+    "exp1173",
+    "exp1184",
+    "exp1187",
+    "exp1195",
+    "exp1196",
+    "exp1208",
+    "exp1209",
+    "exp1219",
+    "exp1220",
+    "exp1221",
+    "exp1235",
+    "exp1236",
+    "exp1247",
+    "exp1259",
+    "exp1272",
+    "exp1273",
+    "exp1289",
+    "exp1304",
+    "exp1317",
+    "exp1330",
+    "exp1346",
+    "exp1360",
+    "exp1383",
+    "exp1388",
+    "exp1393"
+  ],
+  "future_reopen_conditions": [
+    "An operator explicitly reopens the GRPO/VPRM scope and names the prior failure mode being addressed.",
+    "The proposal identifies a root cause not already tested by TinyV, VPS, FSPO, PROGRS, PRIME/VPRM, JURY-RL, or NGRPO variants.",
+    "The proposal changes a prerequisite that failed before, such as non-UNKNOWN reward diversity, calibrated false-negative correction, an unsaturated candidate pool, live SOTA certificate parse/truthfulness gates, or DVI lossless acceptance.",
+    "The proposal states a falsifiable acceptance gate: at least +10pp over the best retained v4/VPS baseline on 50 or more evaluation cases, with headline eligibility and no missing upstream artifacts."
+  ],
+  "grpo_lineage_retired": true,
+  "honest_verdict": "grpo_vprm_lineage_retired_no_v15_without_operator_reopen",
+  "lessons_retained": [
+    "Energy-shaped process rewards produced real early signal in small slices (Exp 1118 +4pp, Exp 1129 +8.51pp, Exp 1159 +10pp), but those results do not justify more variant churn after the later blocked and no-improvement path.",
+    "Step-level process supervision is the useful lesson to keep: GRPO-VPS showed +24pp in Exp 1209 and +15pp over the v4 floor in Exp 1220.",
+    "TinyV false-negative correction must be calibrated before use; Exp 1208 over-abstained on 62.5% of rewards and regressed by -35pp.",
+    "Candidate-pool saturation is a hard blocker. Future selector work must change the candidate pool or target false-acceptance reduction instead of repeating best-of-N selection.",
+    "Formal verifier rewards need non-UNKNOWN candidate diversity. Exp 1383 and Exp 1393 both produced 0pp held-out improvement because rewards stayed all zero or UNKNOWN.",
+    "Gate discipline worked: SOTA certificate, DVI lossless acceptance, parse, and non-forgetting gates should block downstream GRPO/VPRM instead of launching placeholder variants."
+  ],
+  "lineage_name": "GRPO/VPRM",
+  "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+  "run_date": "20260507",
+  "schema": "grpo_vprm_lineage_retirement_v1",
+  "status": "complete"
+}

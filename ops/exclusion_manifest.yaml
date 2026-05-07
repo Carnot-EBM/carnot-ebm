@@ -149,3 +149,48 @@ retired_extras:
       milestones .77, .78, .79 — three consecutive milestone carryovers without advancement.
       Retired by manifest enforcement step to prevent continued conductor wall-time burn.
     retire_if_same_verdict: true
+
+  # Added by Exp 1456 - GRPO/VPRM lineage consolidation and retirement.
+  - id: grpo_vprm_v15_scope_closed
+    reason: |
+      GRPO/VPRM v1-v14 is retired as active research scope after repeated
+      blocked, missing, smoke-only, no-improvement, and non-headline outcomes.
+      Future GRPO v15 or VPRM v15 proposals are blocked unless an operator
+      explicitly reopens the scope with a new root cause and falsifiable gate.
+    experiment_ids:
+      - exp1118
+      - exp1129
+      - exp1146
+      - exp1159
+      - exp1173
+      - exp1184
+      - exp1187
+      - exp1195
+      - exp1196
+      - exp1208
+      - exp1209
+      - exp1219
+      - exp1220
+      - exp1221
+      - exp1235
+      - exp1236
+      - exp1247
+      - exp1259
+      - exp1273
+      - exp1289
+      - exp1304
+      - exp1317
+      - exp1330
+      - exp1346
+      - exp1360
+      - exp1383
+      - exp1388
+      - exp1393
+    blocked_patterns:
+      - "GRPO v15"
+      - "VPRM v15"
+      - "GRPO/VPRM v15"
+    retired_milestone: "2026.04.112"
+    retired_by_artifact: "results/experiment_1456_grpo_vprm_lineage_consolidation_retirement.json"
+    operator_reopen_required: true
+    retire_if_same_verdict: true

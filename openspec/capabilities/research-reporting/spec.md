@@ -1141,6 +1141,54 @@ entries, updates known-issues with a pointer to the audit/index, records all
 required REQ-REPORT-041 artifact fields, and reports a trim fraction of at least
 0.40.
 
+### REQ-REPORT-042: GRPO/VPRM Lineage Consolidation and Retirement
+
+The Exp 1456 GRPO/VPRM lineage-retirement workflow shall write
+`results/experiment_1456_grpo_vprm_lineage_consolidation_retirement.json` with
+`status="in_progress"` before terminal consolidation. It shall then review the
+GRPO/VPRM-related records from roughly Exp 1063 through Exp 1393 using
+`research-complete.yaml`, `ops/experiment_signal_noise_classification.csv`, the
+terminal milestone retrospectives, and available `results/experiment_*.json`
+artifacts.
+
+The workflow shall write
+`ops/lineage-retirements/grpo_vprm_lineage_retired.md` with the reviewed
+experiment ids, verdicts, measured positives, repeated blockers, retained
+lessons, reopen conditions, and the final retirement decision. It shall update
+the exclusion manifest or active exclusion mechanism so future GRPO v15 or
+VPRM v15 variant proposals are blocked unless an operator explicitly reopens
+the scope with a new root cause and falsifiable acceptance gate.
+
+The terminal artifact shall include:
+
+- `status`
+- `lineage_name`
+- `experiments_reviewed`
+- `consolidation_note_path`
+- `grpo_lineage_retired`
+- `exclusion_manifest_updated`
+- `lessons_retained`
+- `future_reopen_conditions`
+- `honest_verdict`
+
+The workflow shall preserve useful lessons such as false-negative correction,
+candidate-pool saturation, and step-level process supervision instead of
+deleting them. It shall retire the lineage as active research scope when the
+review shows repeated no-improvement, gate-blocked, smoke-only, missing, or
+non-headline outcomes after the earlier positive v1-v4/VPS results.
+
+### SCENARIO-REPORT-042: Exp 1456 Retires GRPO/VPRM Scope
+
+Given the .112 scope-reduction directive identifies GRPO/VPRM v1-v14 as a noisy
+lineage, and the evidence record contains early positive GRPO/VPS results,
+TinyV regression evidence, repeated SOTA/DVI gate blocks, smoke-only non-headline
+results, and final JURY-RL/NGRPO zero-improvement evidence, when Exp 1456 runs
+for run date `20260507`, then it writes all required REQ-REPORT-042 fields,
+lists at least 14 reviewed experiments, writes the markdown consolidation note,
+records useful retained lessons, updates the exclusion manifest with a GRPO v15
+/ VPRM v15 block, sets `grpo_lineage_retired == true`, and reports an honest
+retirement verdict.
+
 ### REQ-REPORT-024: Local Agent Usage Snapshot
 
 The repository shall provide a local operator workflow that inspects the
@@ -1717,6 +1765,7 @@ embed live-GPU benchmark results from Exp 328 when available.
 | REQ-REPORT-039 | `python/carnot/reporting/milestone_112_scope_reduction_activation_manifest.py`, `results/experiment_1453_112_scope_reduction_activation_manifest.json`, `ops/milestone_112_scope_reduction_manifest.md` | `tests/python/test_milestone_112_scope_reduction_activation_manifest.py` | Implemented |
 | REQ-REPORT-040 | `python/carnot/reporting/experiment_artifact_signal_noise_classifier.py`, `results/experiment_1454_experiment_artifact_signal_noise_classifier.json`, `ops/experiment_signal_noise_classification.csv`, `ops/experiment_signal_noise_summary.md` | `tests/python/test_experiment_artifact_signal_noise_classifier.py` | Implemented |
 | REQ-REPORT-041 | `python/carnot/reporting/known_issues_mandatory_priority_audit.py`, `results/experiment_1455_known_issues_mandatory_priority_audit.json`, `ops/mandatory_priority_audit.md`, `ops/active-priorities.md` | `tests/python/test_known_issues_mandatory_priority_audit.py` | Implemented |
+| REQ-REPORT-042 | `python/carnot/reporting/grpo_vprm_lineage_retirement.py`, `results/experiment_1456_grpo_vprm_lineage_consolidation_retirement.json`, `ops/lineage-retirements/grpo_vprm_lineage_retired.md`, `ops/exclusion_manifest.yaml` | `tests/python/test_grpo_vprm_lineage_retirement.py` | Implemented |
 | REQ-REPORT-024 | `python/carnot/reporting/agent_usage.py`, `scripts/agent_plan_usage.py` | `tests/python/test_agent_plan_usage.py` | Implemented |
 | REQ-PUBLISH-003 | `scripts/experiment_317_hf_publish.py` | `tests/python/test_experiment_317_hf_publish.py` | Implemented |
 | REQ-PUBLISH-004 | `scripts/experiment_330_hf_live_publish.py` | `tests/python/test_experiment_330_hf_live_publish.py` | Implemented |
