@@ -1099,3 +1099,4 @@ web search: GitHub trending energy based mod |
 | 2026-05-07 12:50 UTC | Live SOTA Telemetry v2 - Balanced Labels + Superfi | OK | 81 passed, 1 warning in 5.06s |
 | 2026-05-07 13:04 UTC | Semantic Energy Feasibility Audit - Gated on Exp14 | OK | 81 passed, 1 warning in 4.71s |
 | 2026-05-07 13:19 UTC | BEAVER-Lite Live Prefix Bound Calibration v2 | OK | 81 passed, 1 warning in 5.18s |
+| 2026-05-07 13:32 UTC | HalluGuard Risk-Bound Fit Audit - Carnot Signal De | OK | 81 passed, 1 warning in 5.29s |
