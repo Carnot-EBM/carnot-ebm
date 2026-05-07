@@ -1124,3 +1124,4 @@ web search: GitHub trending energy based mod |
 | 2026-05-07 19:38 UTC | Verifier Ensemble DRY + Conditional Orthogonality  | OK | 81 passed, 1 warning in 5.19s |
 | 2026-05-07 19:49 UTC | Latent-vs-Deterministic Discipline Gate - Gated on | OK | 81 passed, 1 warning in 5.10s |
 | 2026-05-07 20:32 UTC | GNNVerifier Plan-Graph Energy Adapter Smoke | OK | 81 passed, 1 warning in 5.71s |
+| 2026-05-07 20:47 UTC | KAN Hardware Accounting - QuantKAN/KAEM No-Synthes | OK | 81 passed, 1 warning in 5.30s |
