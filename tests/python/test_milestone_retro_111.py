@@ -8,6 +8,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import carnot.reporting.milestone_retro_111 as retro111
 from carnot.reporting.milestone_retro_111 import (
     GATE_BLOCKED_WITH_EVIDENCE,
     MET,
@@ -211,6 +212,29 @@ def test_req_report_038_step0_skeleton_has_required_null_fields(tmp_path: Path) 
     assert all(written[field] is None for field in REQUIRED_ARTIFACT_FIELDS if field != "status")
 
 
+def test_req_report_038_run_writes_step0_before_loading_sources(
+    tmp_path: Path, monkeypatch
+) -> None:
+    """REQ-REPORT-038: run writes the in-progress artifact before source scoring."""
+
+    observations: dict[str, object] = {}
+    out_path = tmp_path / "results" / "experiment_1452_milestone_111_retro.json"
+
+    def fake_load_sources(_results_dir: Path):
+        observations["step0"] = json.loads(out_path.read_text(encoding="utf-8"))
+        return _scenario_sources(), ["exp1443", "exp1445"]
+
+    monkeypatch.setattr(retro111, "_load_sources", fake_load_sources)
+
+    artifact = run(root=tmp_path, out_path=out_path)
+
+    step0 = observations["step0"]
+    assert isinstance(step0, dict)
+    assert step0["status"] == "in_progress"
+    assert set(step0) == set(REQUIRED_ARTIFACT_FIELDS)
+    assert artifact["status"] == "complete"
+
+
 def test_req_report_038_run_marks_missing_gated_artifacts(tmp_path: Path) -> None:
     """REQ-REPORT-038: missing gated artifacts are explicit and not counted as met."""
 
@@ -255,7 +279,8 @@ def test_req_report_038_alternate_source_states_stay_auditable() -> None:
             "forbidden_scope": "exact prototype-only repair scale-up",
             "prior_verdicts": ["prototype_no_headline"],
             "retire_if_same_verdict": True,
-        }
+        },
+        "malformed-entry-ignored",
     ]
     sources["exp1442"] = {
         "status": "complete",
@@ -300,6 +325,7 @@ def test_req_report_038_alternate_source_states_stay_auditable() -> None:
         item["scope"] == "exact prototype-only repair scale-up"
         for item in artifact["retired_variants"]
     )
+    assert not any(item["scope"] == "malformed-entry-ignored" for item in artifact["retired_variants"])
 
 
 def test_req_report_038_missing_and_blocked_branches_are_not_successes() -> None:

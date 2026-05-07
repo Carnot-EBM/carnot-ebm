@@ -760,6 +760,7 @@ def build_artifact(
 
 def run(root: Path | str = REPO_ROOT, out_path: Path | str = DEFAULT_OUT_PATH) -> dict[str, Any]:
     root_path = Path(root)
+    write_in_progress_artifact(out_path)
     sources, missing = _load_sources(root_path / "results")
     artifact = build_artifact(
         sources,
