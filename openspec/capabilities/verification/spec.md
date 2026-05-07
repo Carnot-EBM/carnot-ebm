@@ -841,7 +841,56 @@ other at the configured redundancy threshold,
 And it excludes retired Semantic Energy and V_1 headline signals from the
 active verifier inventory.
 
-## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487/1495/1496/1499)
+### REQ-VERIFY-1500: Latent-Vs-Deterministic Discipline Gate
+
+The repository shall provide a deterministic Exp 1500 discipline gate that
+classifies post-.114 verifier and telemetry signals by the strongest claim
+surface they may support: headline evidence, auxiliary ranking evidence,
+triage evidence, or retired/no-claim evidence.
+
+The gate shall:
+
+- write
+  `results/experiment_1500_latent_deterministic_discipline_gate.json` with
+  `status="in_progress"` before loading gated upstream artifacts;
+- require Exp 1499 to have written an orthogonality matrix before setting
+  `discipline_gate_ready=true`, otherwise write a terminal gated artifact with
+  concrete blockers;
+- read the Exp 1481 Semantic Energy retirement, Exp 1487 V_1 pairwise
+  self-verification comparison, and Exp 1499 deterministic-first
+  recommendations before assigning signal roles;
+- publish `ops/latent_deterministic_discipline_gate_1500.md` with policy
+  tables for headline, auxiliary ranking, triage, and retired/no-claim
+  signals;
+- allow latent, energy-like, probabilistic, or LLM-derived signals to influence
+  decisions only after deterministic validator comparison, superficial-baseline
+  comparison, held-out calibration, and false-accept accounting are present;
+- require deterministic validators to dominate whenever a deterministic
+  validator is applicable to the same claim; and
+- write a terminal artifact containing `status`, `discipline_gate_ready`,
+  `gated_inputs_present`, `signal_classes_audited`,
+  `headline_allowed_signals`, `auxiliary_allowed_signals`, `retired_signals`,
+  `deterministic_first_rules`, `superficial_baseline_required_rules`,
+  `ops_note_path`, `blockers`, and `honest_verdict`.
+
+`honest_verdict` MUST begin with one of `complete:`, `complete_`, `success:`,
+`success_`, `passed:`, `passed_`, `shipped:`, or `shipped_`.
+
+### SCENARIO-VERIFY-1500: Discipline Gate Demotes Confounded Latent Signals
+
+Given Exp 1499 contains a written orthogonality matrix, Exp 1481 retires
+Semantic Energy because it does not beat superficial baselines, and Exp 1487
+shows V_1 pairwise self-verification does not beat deterministic energy
+ranking,
+When the Exp 1500 discipline gate builds the policy artifact,
+Then deterministic executable validators and conservative deterministic bounds
+are the only headline-allowed signals, energy/localization and calibrated
+probabilistic signals are limited to auxiliary or triage roles, Semantic
+Energy headline telemetry and V_1 pairwise self-verification are retired from
+claims, and the terminal artifact records the required acceptance rules and an
+allowed-prefix honest verdict.
+
+## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487/1495/1496/1499/1500)
 
 | Requirement | Python | Tests |
 |-------------|--------|-------|
@@ -861,3 +910,4 @@ active verifier inventory.
 | REQ-VERIFY-1495 | Implemented (`python/carnot/eval/interwhen_monitor_prototype.py`) | Implemented (`tests/python/test_experiment_1495_interwhen_monitor_prototype.py`) |
 | REQ-VERIFY-1496 | Planned (`python/carnot/eval/hover_safe_prefix_continuation_audit.py`) | Planned (`tests/python/test_experiment_1496_hover_safe_prefix_continuation_audit.py`) |
 | REQ-VERIFY-1499 | Implemented (`python/carnot/eval/verifier_ensemble_dry_orthogonality_v2.py`) | Implemented (`tests/python/test_experiment_1499_verifier_ensemble_dry_orthogonality_v2.py`) |
+| REQ-VERIFY-1500 | Implemented (`python/carnot/verify/latent_deterministic_gate.py`) | Implemented (`tests/python/test_experiment_1500_latent_deterministic_discipline_gate.py`) |
