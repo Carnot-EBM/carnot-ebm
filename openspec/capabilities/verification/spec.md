@@ -800,7 +800,48 @@ and false-accept status
 And the terminal artifact reports matched pass rates and verifier false-accept
 rate before setting `safe_prefix_continuation_ready=true`.
 
-## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487/1495/1496)
+### REQ-VERIFY-1499: Verifier Ensemble DRY And Conditional Orthogonality Audit
+
+The repository shall provide a deterministic Exp 1499 audit over the active
+post-.114 verifier surfaces: BEAVER-lite bounds, CCTU executable validators,
+energy/localization, query-time memory-policy checks, and structured verdict
+records. The audit MUST NOT count retired Semantic Energy or V_1 headline
+signals as active verifiers.
+
+The audit shall:
+
+- write
+  `results/experiment_1499_verifier_ensemble_dry_orthogonality_v2.json` with
+  `status="in_progress"` before loading source artifacts;
+- inventory active verifier surfaces from code and checked-in result artifacts;
+- build a bounded case table with pass/fail/abstain labels from available
+  verifier outputs;
+- compute pairwise agreement, pairwise conditional acceptance rates,
+  redundant verifier pairs, and a conservative `k_effective_estimate`;
+- identify duplicated verifier wrappers or conditional duplicates that should
+  be merged, retired, or demoted;
+- prefer deterministic validators and energy ranking ahead of generative
+  pairwise self-verification in recommendations; and
+- write a terminal artifact containing `status`,
+  `orthogonality_matrix_written`, `verifiers_audited`, `cases_evaluated`,
+  `conditional_acceptance_matrix`, `redundant_verifier_pairs`,
+  `k_effective_estimate`, `deterministic_first_recommendations`,
+  `retire_or_keep_decisions`, `blockers`, and `honest_verdict`.
+
+### SCENARIO-VERIFY-1499: Conditional Matrix Flags Duplicate Validators
+
+Given complete Exp 1482 BEAVER-lite, Exp 1486 CCTU, Exp 1490 localization,
+Exp 1484 query-time memory, and structured-verdict artifacts,
+When the Exp 1499 audit builds the bounded case table,
+Then it writes a terminal artifact with a conditional acceptance matrix for
+the active verifier labels,
+And it reports redundant verifier pairs when two labels accept exactly the
+same observed cases or one label's accepts are conditionally contained in the
+other at the configured redundancy threshold,
+And it excludes retired Semantic Energy and V_1 headline signals from the
+active verifier inventory.
+
+## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487/1495/1496/1499)
 
 | Requirement | Python | Tests |
 |-------------|--------|-------|
@@ -819,3 +860,4 @@ rate before setting `safe_prefix_continuation_ready=true`.
 | REQ-VERIFY-1494 | Planned (`python/carnot/eval/constrainprompt_validator_compiler_audit.py`) | Planned (`tests/python/test_experiment_1494_constrainprompt_validator_compiler_audit.py`) |
 | REQ-VERIFY-1495 | Implemented (`python/carnot/eval/interwhen_monitor_prototype.py`) | Implemented (`tests/python/test_experiment_1495_interwhen_monitor_prototype.py`) |
 | REQ-VERIFY-1496 | Planned (`python/carnot/eval/hover_safe_prefix_continuation_audit.py`) | Planned (`tests/python/test_experiment_1496_hover_safe_prefix_continuation_audit.py`) |
+| REQ-VERIFY-1499 | Implemented (`python/carnot/eval/verifier_ensemble_dry_orthogonality_v2.py`) | Implemented (`tests/python/test_experiment_1499_verifier_ensemble_dry_orthogonality_v2.py`) |
