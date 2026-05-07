@@ -1,3 +1,518 @@
 {
-  "status": "in_progress"
+  "artifact_metadata": {
+    "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "run_date": "20260507"
+  },
+  "baseline_task_success_rate": 0.5,
+  "completeness_mistakes": 140,
+  "continuous_self_learning_task": {
+    "family": "FR-11",
+    "new_headline_llm_generation_used": false,
+    "opt_in_memory_signal": true,
+    "source_experiments": [
+      1471,
+      1472
+    ],
+    "task": "query-time verified-memory policy replay"
+  },
+  "duration_s": 0.001,
+  "experiment": "1484_fr11_v9_query_time_memory_policy",
+  "finished_at": "2026-05-07T14:13:10Z",
+  "honest_verdict": "query_time_memory_policy_improves_bounded_replay_without_false_accepts",
+  "memory_policy_path": "carnot.pipeline.query_time_memory_policy.evaluate_query_time_memory_policy",
+  "memory_policy_replay": {
+    "baseline_memory_disabled": {
+      "completeness_mistakes": 12,
+      "decisions": [
+        {
+          "case_id": "dvi_v8:verified:exp1449:ltlzinc-always-power_ok-repair-hint-00",
+          "completeness_mistake": true,
+          "memory_enabled": false,
+          "memory_hit": false,
+          "soundness_mistake": false,
+          "task_success": false,
+          "verifier_signal": "baseline_verifier_only"
+        },
+        {
+          "case_id": "dvi_v8:verified:exp1449:ltlzinc-always-access_safe-repair-hint-01",
+          "completeness_mistake": true,
+          "memory_enabled": false,
+          "memory_hit": false,
+          "soundness_mistake": false,
+          "task_success": false,
+          "verifier_signal": "baseline_verifier_only"
+        },
+        {
+          "case_id": "dvi_v8:verified:exp1449:ltlzinc-always-below_limit-repair-hint-02",
+          "completeness_mistake": true,
+          "memory_enabled": false,
+          "memory_hit": false,
+          "soundness_mistake": false,
+          "task_success": false,
+          "verifier_signal": "baseline_verifier_only"
+        },
+        {
+          "case_id": "dvi_v8:verified:exp1449:ltlzinc-eventually-ready-repair-hint-03",
+          "completeness_mistake": true,
+          "memory_enabled": false,
+          "memory_hit": false,
+          "soundness_mistake": false,
+          "task_success": false,
+          "verifier_signal": "baseline_verifier_only"
+        },
+        {
+          "case_id": "dvi_v8:verified:exp1449:ltlzinc-eventually-ack-repair-hint-04",
+          "completeness_mistake": true,
+          "memory_enabled": false,
+          "memory_hit": false,
+          "soundness_mistake": false,
+          "task_success": false,
+          "verifier_signal": "baseline_verifier_only"
+        },
+        {
+          "case_id": "dvi_v8:verified:exp1449:ltlzinc-eventually-recovered-repair-hint-05",
+          "completeness_mistake": true,
+          "memory_enabled": false,
+          "memory_hit": false,
+          "soundness_mistake": false,
+          "task_success": false,
+          "verifier_signal": "baseline_verifier_only"
+        },
+        {
+          "case_id": "dvi_v8:verified:exp1449:ltlzinc-next-armed-repair-hint-06",
+          "completeness_mistake": true,
+          "memory_enabled": false,
+          "memory_hit": false,
+          "soundness_mistake": false,
+          "task_success": false,
+          "verifier_signal": "baseline_verifier_only"
+        },
+        {
+          "case_id": "dvi_v8:verified:exp1449:ltlzinc-next-token_valid-repair-hint-07",
+          "completeness_mistake": true,
+          "memory_enabled": false,
+          "memory_hit": false,
+          "soundness_mistake": false,
+          "task_success": false,
+          "verifier_signal": "baseline_verifier_only"
+        },
+        {
+          "case_id": "dvi_v8:verified:exp1449:ltlzinc-next-checkpoint-repair-hint-08",
+          "completeness_mistake": true,
+          "memory_enabled": false,
+          "memory_hit": false,
+          "soundness_mistake": false,
+          "task_success": false,
+          "verifier_signal": "baseline_verifier_only"
+        },
+        {
+          "case_id": "dvi_v8:verified:exp1449:ltlzinc-until-ready-repair-hint-09",
+          "completeness_mistake": true,
+          "memory_enabled": false,
+          "memory_hit": false,
+          "soundness_mistake": false,
+          "task_success": false,
+          "verifier_signal": "baseline_verifier_only"
+        },
+        {
+          "case_id": "dvi_v8:verified:exp1449:ltlzinc-until-success-repair-hint-10",
+          "completeness_mistake": true,
+          "memory_enabled": false,
+          "memory_hit": false,
+          "soundness_mistake": false,
+          "task_success": false,
+          "verifier_signal": "baseline_verifier_only"
+        },
+        {
+          "case_id": "dvi_v8:verified:exp1449:ltlzinc-until-released-repair-hint-11",
+          "completeness_mistake": true,
+          "memory_enabled": false,
+          "memory_hit": false,
+          "soundness_mistake": false,
+          "task_success": false,
+          "verifier_signal": "baseline_verifier_only"
+        },
+        {
+          "case_id": "dvi_v8:verified:fover:159",
+          "completeness_mistake": false,
+          "memory_enabled": false,
+          "memory_hit": false,
+          "soundness_mistake": false,
+          "task_success": true,
+          "verifier_signal": "baseline_verifier_only"
+        },
+        {
+          "case_id": "dvi_v8:verified:fover:164",
+          "completeness_mistake": false,
+          "memory_enabled": false,
+          "memory_hit": false,
+          "soundness_mistake": false,
+          "task_success": true,
+          "verifier_signal": "baseline_verifier_only"
+        },
+        {
+          "case_id": "dvi_v8:verified:fover:165",
+          "completeness_mistake": false,
+          "memory_enabled": false,
+          "memory_hit": false,
+          "soundness_mistake": false,
+          "task_success": true,
+          "verifier_signal": "baseline_verifier_only"
+        },
+        {
+          "case_id": "dvi_v8:verified:fover:166",
+          "completeness_mistake": false,
+          "memory_enabled": false,
+          "memory_hit": false,
+          "soundness_mistake": false,
+          "task_success": true,
+          "verifier_signal": "baseline_verifier_only"
+        },
+        {
+          "case_id": "dvi_v8:verified:fover:168",
+          "completeness_mistake": false,
+          "memory_enabled": false,
+          "memory_hit": false,
+          "soundness_mistake": false,
+          "task_success": true,
+          "verifier_signal": "baseline_verifier_only"
+        },
+        {
+          "case_id": "dvi_v8:verified:fover:180",
+          "completeness_mistake": false,
+          "memory_enabled": false,
+          "memory_hit": false,
+          "soundness_mistake": false,
+          "task_success": true,
+          "verifier_signal": "baseline_verifier_only"
+        },
+        {
+          "case_id": "dvi_v8:verified:fover:183",
+          "completeness_mistake": false,
+          "memory_enabled": false,
+          "memory_hit": false,
+          "soundness_mistake": false,
+          "task_success": true,
+          "verifier_signal": "baseline_verifier_only"
+        },
+        {
+          "case_id": "dvi_v8:verified:fover:187",
+          "completeness_mistake": false,
+          "memory_enabled": false,
+          "memory_hit": false,
+          "soundness_mistake": false,
+          "task_success": true,
+          "verifier_signal": "baseline_verifier_only"
+        },
+        {
+          "case_id": "dvi_v8:verified:fover:195",
+          "completeness_mistake": false,
+          "memory_enabled": false,
+          "memory_hit": false,
+          "soundness_mistake": false,
+          "task_success": true,
+          "verifier_signal": "baseline_verifier_only"
+        },
+        {
+          "case_id": "dvi_v8:verified:fover:math_8",
+          "completeness_mistake": false,
+          "memory_enabled": false,
+          "memory_hit": false,
+          "soundness_mistake": false,
+          "task_success": true,
+          "verifier_signal": "baseline_verifier_only"
+        },
+        {
+          "case_id": "dvi_v8:verified:fover:math_20",
+          "completeness_mistake": false,
+          "memory_enabled": false,
+          "memory_hit": false,
+          "soundness_mistake": false,
+          "task_success": true,
+          "verifier_signal": "baseline_verifier_only"
+        },
+        {
+          "case_id": "dvi_v8:verified:fover:math_27",
+          "completeness_mistake": false,
+          "memory_enabled": false,
+          "memory_hit": false,
+          "soundness_mistake": false,
+          "task_success": true,
+          "verifier_signal": "baseline_verifier_only"
+        }
+      ],
+      "memory_enabled": false,
+      "soundness_mistakes": 0,
+      "task_success_rate": 0.5
+    },
+    "bounded_replay_pairs": 12,
+    "memory_enabled": {
+      "completeness_mistakes": 0,
+      "decisions": [
+        {
+          "case_id": "dvi_v8:verified:exp1449:ltlzinc-always-power_ok-repair-hint-00",
+          "completeness_mistake": false,
+          "memory_enabled": true,
+          "memory_hit": true,
+          "soundness_mistake": false,
+          "task_success": true,
+          "verifier_signal": "verified_memory_repair_hint"
+        },
+        {
+          "case_id": "dvi_v8:verified:exp1449:ltlzinc-always-access_safe-repair-hint-01",
+          "completeness_mistake": false,
+          "memory_enabled": true,
+          "memory_hit": true,
+          "soundness_mistake": false,
+          "task_success": true,
+          "verifier_signal": "verified_memory_repair_hint"
+        },
+        {
+          "case_id": "dvi_v8:verified:exp1449:ltlzinc-always-below_limit-repair-hint-02",
+          "completeness_mistake": false,
+          "memory_enabled": true,
+          "memory_hit": true,
+          "soundness_mistake": false,
+          "task_success": true,
+          "verifier_signal": "verified_memory_repair_hint"
+        },
+        {
+          "case_id": "dvi_v8:verified:exp1449:ltlzinc-eventually-ready-repair-hint-03",
+          "completeness_mistake": false,
+          "memory_enabled": true,
+          "memory_hit": true,
+          "soundness_mistake": false,
+          "task_success": true,
+          "verifier_signal": "verified_memory_repair_hint"
+        },
+        {
+          "case_id": "dvi_v8:verified:exp1449:ltlzinc-eventually-ack-repair-hint-04",
+          "completeness_mistake": false,
+          "memory_enabled": true,
+          "memory_hit": true,
+          "soundness_mistake": false,
+          "task_success": true,
+          "verifier_signal": "verified_memory_repair_hint"
+        },
+        {
+          "case_id": "dvi_v8:verified:exp1449:ltlzinc-eventually-recovered-repair-hint-05",
+          "completeness_mistake": false,
+          "memory_enabled": true,
+          "memory_hit": true,
+          "soundness_mistake": false,
+          "task_success": true,
+          "verifier_signal": "verified_memory_repair_hint"
+        },
+        {
+          "case_id": "dvi_v8:verified:exp1449:ltlzinc-next-armed-repair-hint-06",
+          "completeness_mistake": false,
+          "memory_enabled": true,
+          "memory_hit": true,
+          "soundness_mistake": false,
+          "task_success": true,
+          "verifier_signal": "verified_memory_repair_hint"
+        },
+        {
+          "case_id": "dvi_v8:verified:exp1449:ltlzinc-next-token_valid-repair-hint-07",
+          "completeness_mistake": false,
+          "memory_enabled": true,
+          "memory_hit": true,
+          "soundness_mistake": false,
+          "task_success": true,
+          "verifier_signal": "verified_memory_repair_hint"
+        },
+        {
+          "case_id": "dvi_v8:verified:exp1449:ltlzinc-next-checkpoint-repair-hint-08",
+          "completeness_mistake": false,
+          "memory_enabled": true,
+          "memory_hit": true,
+          "soundness_mistake": false,
+          "task_success": true,
+          "verifier_signal": "verified_memory_repair_hint"
+        },
+        {
+          "case_id": "dvi_v8:verified:exp1449:ltlzinc-until-ready-repair-hint-09",
+          "completeness_mistake": false,
+          "memory_enabled": true,
+          "memory_hit": true,
+          "soundness_mistake": false,
+          "task_success": true,
+          "verifier_signal": "verified_memory_repair_hint"
+        },
+        {
+          "case_id": "dvi_v8:verified:exp1449:ltlzinc-until-success-repair-hint-10",
+          "completeness_mistake": false,
+          "memory_enabled": true,
+          "memory_hit": true,
+          "soundness_mistake": false,
+          "task_success": true,
+          "verifier_signal": "verified_memory_repair_hint"
+        },
+        {
+          "case_id": "dvi_v8:verified:exp1449:ltlzinc-until-released-repair-hint-11",
+          "completeness_mistake": false,
+          "memory_enabled": true,
+          "memory_hit": true,
+          "soundness_mistake": false,
+          "task_success": true,
+          "verifier_signal": "verified_memory_repair_hint"
+        },
+        {
+          "case_id": "dvi_v8:verified:fover:159",
+          "completeness_mistake": false,
+          "memory_enabled": true,
+          "memory_hit": false,
+          "soundness_mistake": false,
+          "task_success": true,
+          "verifier_signal": "baseline_verifier_only"
+        },
+        {
+          "case_id": "dvi_v8:verified:fover:164",
+          "completeness_mistake": false,
+          "memory_enabled": true,
+          "memory_hit": false,
+          "soundness_mistake": false,
+          "task_success": true,
+          "verifier_signal": "baseline_verifier_only"
+        },
+        {
+          "case_id": "dvi_v8:verified:fover:165",
+          "completeness_mistake": false,
+          "memory_enabled": true,
+          "memory_hit": false,
+          "soundness_mistake": false,
+          "task_success": true,
+          "verifier_signal": "baseline_verifier_only"
+        },
+        {
+          "case_id": "dvi_v8:verified:fover:166",
+          "completeness_mistake": false,
+          "memory_enabled": true,
+          "memory_hit": false,
+          "soundness_mistake": false,
+          "task_success": true,
+          "verifier_signal": "baseline_verifier_only"
+        },
+        {
+          "case_id": "dvi_v8:verified:fover:168",
+          "completeness_mistake": false,
+          "memory_enabled": true,
+          "memory_hit": false,
+          "soundness_mistake": false,
+          "task_success": true,
+          "verifier_signal": "baseline_verifier_only"
+        },
+        {
+          "case_id": "dvi_v8:verified:fover:180",
+          "completeness_mistake": false,
+          "memory_enabled": true,
+          "memory_hit": false,
+          "soundness_mistake": false,
+          "task_success": true,
+          "verifier_signal": "baseline_verifier_only"
+        },
+        {
+          "case_id": "dvi_v8:verified:fover:183",
+          "completeness_mistake": false,
+          "memory_enabled": true,
+          "memory_hit": false,
+          "soundness_mistake": false,
+          "task_success": true,
+          "verifier_signal": "baseline_verifier_only"
+        },
+        {
+          "case_id": "dvi_v8:verified:fover:187",
+          "completeness_mistake": false,
+          "memory_enabled": true,
+          "memory_hit": false,
+          "soundness_mistake": false,
+          "task_success": true,
+          "verifier_signal": "baseline_verifier_only"
+        },
+        {
+          "case_id": "dvi_v8:verified:fover:195",
+          "completeness_mistake": false,
+          "memory_enabled": true,
+          "memory_hit": false,
+          "soundness_mistake": false,
+          "task_success": true,
+          "verifier_signal": "baseline_verifier_only"
+        },
+        {
+          "case_id": "dvi_v8:verified:fover:math_8",
+          "completeness_mistake": false,
+          "memory_enabled": true,
+          "memory_hit": false,
+          "soundness_mistake": false,
+          "task_success": true,
+          "verifier_signal": "baseline_verifier_only"
+        },
+        {
+          "case_id": "dvi_v8:verified:fover:math_20",
+          "completeness_mistake": false,
+          "memory_enabled": true,
+          "memory_hit": false,
+          "soundness_mistake": false,
+          "task_success": true,
+          "verifier_signal": "baseline_verifier_only"
+        },
+        {
+          "case_id": "dvi_v8:verified:fover:math_27",
+          "completeness_mistake": false,
+          "memory_enabled": true,
+          "memory_hit": false,
+          "soundness_mistake": false,
+          "task_success": true,
+          "verifier_signal": "baseline_verifier_only"
+        }
+      ],
+      "memory_enabled": true,
+      "soundness_mistakes": 0,
+      "task_success_rate": 1.0
+    },
+    "source_completeness_mistakes": 140,
+    "source_soundness_mistakes": 0
+  },
+  "memory_task_success_rate": 1.0,
+  "model_specs": [
+    {
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "role": "preferred_fresh_row_generator_if_new_llm_cases_are_needed"
+    },
+    {
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "role": "secondary_fresh_row_generator_if_new_llm_cases_are_needed"
+    },
+    {
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "role": "secondary_fresh_row_generator_if_new_llm_cases_are_needed"
+    }
+  ],
+  "nonforgetting_rate": 1.0,
+  "policy_integration_ready": true,
+  "promotion_allowed": true,
+  "replay_cases_evaluated": 24,
+  "run_date": "20260507",
+  "schema": "fr11_v9_query_time_memory_policy_v1",
+  "soundness_mistakes": 0,
+  "source_artifacts": [
+    "results/experiment_1471_fr11_v8_verified_memory_growth_pivot.json",
+    "results/experiment_1472_online_verifier_asymmetric_mistake_budget.json"
+  ],
+  "spec": [
+    "REQ-LEARN-1484",
+    "SCENARIO-LEARN-1484",
+    "SCENARIO-LEARN-1485"
+  ],
+  "started_at": "2026-05-07T14:13:10Z",
+  "status": "complete",
+  "task_success_delta": 0.5,
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_fr11_v9_query_time_memory_policy.py -q --no-cov -n 0",
+    ".venv/bin/coverage run -m pytest tests/python/test_fr11_v9_query_time_memory_policy.py -q --no-cov -n 0",
+    ".venv/bin/coverage report --fail-under=100 -m python/carnot/pipeline/query_time_memory_policy.py python/carnot/reporting/fr11_v9_query_time_memory_policy.py",
+    "python3 scripts/check_spec_coverage.py",
+    "/usr/bin/ruff check python/carnot/pipeline/query_time_memory_policy.py python/carnot/reporting/fr11_v9_query_time_memory_policy.py tests/python/test_fr11_v9_query_time_memory_policy.py",
+    ".venv/bin/pytest tests/python -q (failed/wedged after unrelated failures, xdist worker aborts, and ExperimentTimeoutWatchdog experiment=561 timeout; pytest process terminated)"
+  ]
 }

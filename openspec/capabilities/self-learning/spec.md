@@ -3967,3 +3967,72 @@ soundness frontier with completeness caveats.
 | Requirement | Python | Tests |
 |-------------|--------|-------|
 | REQ-LEARN-1472 | Implemented (`python/carnot/reporting/online_verifier_asymmetric_mistake_budget.py`) | Implemented (`tests/python/test_online_verifier_asymmetric_mistake_budget.py`) |
+
+## REQ-LEARN-1484: FR-11 V9 Query-Time Memory Policy Replay
+
+Exp 1484 SHALL integrate Exp 1471's verified FR-11 memory entries as a narrow
+opt-in query-time verifier signal and SHALL compare verifier outcomes with
+memory disabled versus enabled on the same bounded replay cases. The memory
+signal SHALL NOT become global default behavior; callers that do not pass the
+opt-in flag must receive baseline verifier behavior.
+
+### REQ-LEARN-1484 Sub-requirements
+
+- REQ-LEARN-1484-1: The workflow SHALL write
+  `results/experiment_1484_fr11_v9_query_time_memory_policy.json` first with
+  `status="in_progress"` before loading Exp 1471 or Exp 1472.
+- REQ-LEARN-1484-2: The workflow SHALL load Exp 1471 verified promoted memory
+  IDs as memory-positive replay cases and SHALL use Exp 1471 demoted IDs only
+  as bounded negative controls. Demoted IDs SHALL NOT be inserted into the
+  verified query-time memory index.
+- REQ-LEARN-1484-3: The query-time policy path SHALL expose an explicit
+  opt-in flag. With the flag disabled or omitted, memory hits SHALL be
+  suppressed even when the replay case ID exists in verified memory.
+- REQ-LEARN-1484-4: The replay audit SHALL evaluate memory-disabled and
+  memory-enabled verifier outcomes on the same bounded replay set, then report
+  `replay_cases_evaluated`, `baseline_task_success_rate`,
+  `memory_task_success_rate`, and `task_success_delta`.
+- REQ-LEARN-1484-5: The audit SHALL report soundness mistakes as false accepts
+  from either the source asymmetric-budget audit or the query-time memory
+  policy, and SHALL preserve source completeness mistakes as known false
+  rejects while separately recording policy-level replay mistakes.
+- REQ-LEARN-1484-6: `promotion_allowed` SHALL be true only when
+  `soundness_mistakes == 0`, `task_success_delta >= 0.0`, non-forgetting is
+  preserved, and the opt-in policy integration path is ready.
+- REQ-LEARN-1484-7: The final artifact SHALL include `status`,
+  `model_specs`, `policy_integration_ready`,
+  `continuous_self_learning_task`, `replay_cases_evaluated`,
+  `baseline_task_success_rate`, `memory_task_success_rate`,
+  `task_success_delta`, `soundness_mistakes`, `completeness_mistakes`,
+  `nonforgetting_rate`, `memory_policy_path`, `tests_run`,
+  `promotion_allowed`, and `honest_verdict`.
+
+### SCENARIO-LEARN-1484: Opt-In Memory Signal Improves Bounded Replay
+
+**Given** Exp 1471 completed with verified promoted memory IDs, zero source
+soundness mistakes, and non-forgetting preserved
+**And** Exp 1472 preserved the narrow self-learning claim with zero dangerous
+soundness mistakes
+**When** Exp 1484 evaluates the same balanced replay cases with memory disabled
+and then with the opt-in memory signal enabled
+**Then** the memory-enabled task success rate is at least the baseline task
+success rate
+**And** `soundness_mistakes=0`
+**And** `promotion_allowed=true` only when the non-negative delta and
+non-forgetting gates also pass.
+
+### SCENARIO-LEARN-1485: Dangerous Source Soundness Blocks Promotion
+
+**Given** the source asymmetric-budget audit reports one or more soundness
+mistakes
+**When** Exp 1484 evaluates the query-time memory policy replay
+**Then** `promotion_allowed=false`
+**And** `policy_integration_ready=false`
+**And** the honest verdict names the soundness-risk blocker even if the bounded
+task-success delta is non-negative.
+
+## Implementation Status (REQ-LEARN-1484)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-1484 | Implemented (`python/carnot/pipeline/query_time_memory_policy.py`, `python/carnot/reporting/fr11_v9_query_time_memory_policy.py`) | Implemented (`tests/python/test_fr11_v9_query_time_memory_policy.py`) |
