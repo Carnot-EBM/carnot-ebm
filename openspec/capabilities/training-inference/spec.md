@@ -2470,6 +2470,53 @@ KL parity with THRML as `0.0`.
 
 **Implementation Status:** Planned (Exp 1564)
 
+## REQ-SAMPLE-059: Exp 1565 Soft-Gibbs residual BRS for contradictory verifier composition
+
+Carnot SHALL provide both a hard rejection sampler and a Soft-Gibbs residual
+sampler for verifier-composed prior sampling.  The hard sampler SHALL draw
+from a caller-supplied prior sampler and accept only states in the caller's
+hard accept set.  The soft sampler SHALL draw from the same prior interface,
+compute the residual violation count
+`V(y) = sum_i 1{verifier_i(y) is false}`, and accept each proposal with
+probability `A(y) = exp(-beta * V(y))`.
+
+Acceptance criteria:
+- `python/carnot/sampling/brs_residual.py` SHALL expose
+  `hard_brs(prior_sampler, accept_set_S, n_steps)` and
+  `soft_brs(prior_sampler, verifiers, beta, n_steps)`.
+- The Exp 1565 harness SHALL build an `n=8` latent EBM prior by sampling a
+  continuous latent vector and pushing it forward through `sgn` to produce
+  uniform `{-1, +1}` spin states.
+- The harness SHALL include three deliberately contradictory verifiers:
+  `y_1 = +1`, `y_1 = -1`, and `y_2 = +1 OR y_3 = +1`, whose hard
+  intersection is logically empty and whose minimum violation count is `1`.
+- The harness SHALL run hard and soft BRS for `N in {10, 100, 1000, 10000}`
+  and soft beta values `{0.5, 1.0, 2.0, 5.0}`, tracking empirical SubOpt,
+  acceptance rate, and the distribution over minimum-violation states.
+- Hard-BRS SHALL report empirical acceptance rate `0.0` for the contradictory
+  verifier set at every requested `N`.
+- Soft-BRS SHALL report exponential SubOpt decay consistent with
+  `(1 - Z_beta)^N` for at least one tested beta and SHALL find a
+  minimum-violation state with `V(y) = 1`.
+- `results/experiment_1565_soft_gibbs_residual_implementation.json` SHALL
+  include `status`, `soft_gibbs_residual_implemented`,
+  `hard_brs_acceptance_rate`, `soft_brs_decay_confirmed`,
+  `min_violation_state_found`, `z_beta_curve`, and `honest_verdict`.
+
+**Implementation Status:** Implemented (Exp 1565)
+
+### SCENARIO-SAMPLE-087: Exp 1565 soft residual survives empty hard intersection
+
+Given: the Exp 1565 `n=8` sign-pushforward prior and the contradictory
+three-verifier composition.
+When: Hard-BRS and Soft-BRS are each run for the requested step counts.
+Then: Hard-BRS accepts no samples, Soft-BRS accepts with beta-dependent rates
+near `Z_beta`, the empirical no-acceptance SubOpt curve decays like
+`(1 - Z_beta)^N` for at least one beta, and accepted Soft-BRS samples include
+states with the exact minimum residual violation count `V(y) = 1`.
+
+**Implementation Status:** Implemented (Exp 1565)
+
 ## REQ-MODEL-031: SCEnergyModel — Set-Level Energy Function for Statement Consistency (Exp 944)
 
 SCEnergyModel SHALL implement a permutation-invariant set-level energy function that assigns
