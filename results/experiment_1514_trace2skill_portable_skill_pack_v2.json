@@ -1,0 +1,30 @@
+{
+  "blockers": [],
+  "finished_at": "2026-05-08T01:13:17Z",
+  "gated_inputs_present": true,
+  "honest_verdict": "complete: trace2skill_portable_skill_pack_ready",
+  "ops_note_path": "ops/trace2skill_portable_skill_pack_1514.md",
+  "pack_manifest_path": "results/trace2skill_portable_skill_pack_manifest_1514.json",
+  "packaged_skill_entries": 24,
+  "portable_skill_pack_ready": true,
+  "provenance_fields_present": true,
+  "rejected_skill_entries": 60,
+  "resolver_keys_present": true,
+  "rollback_passing_entries": 24,
+  "run_date": "20260508",
+  "schema": "trace2skill_portable_skill_pack_artifact_v2",
+  "source_summary": {
+    "artifact_reachability_audit_complete": true,
+    "rollback_audit_passed": true
+  },
+  "spec": [
+    "REQ-LEARN-1514",
+    "SCENARIO-LEARN-1516",
+    "SCENARIO-LEARN-1517"
+  ],
+  "status": "complete",
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_trace2skill_portable_skill_pack.py -q --no-cov",
+    ".venv/bin/coverage run --include=*/python/carnot/reporting/trace2skill_portable_skill_pack.py -m pytest tests/python/test_trace2skill_portable_skill_pack.py -q -o addopts= && .venv/bin/coverage report --include=*/python/carnot/reporting/trace2skill_portable_skill_pack.py --show-missing --fail-under=100"
+  ]
+}

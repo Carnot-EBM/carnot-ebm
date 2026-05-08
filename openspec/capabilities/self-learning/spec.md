@@ -4355,3 +4355,60 @@ lacks deterministic validator support
 | Requirement | Python | Tests |
 |-------------|--------|-------|
 | REQ-LEARN-1513 | Implemented (`python/carnot/reporting/fr11_policy_rollback_replay_audit.py`) | Implemented (`tests/python/test_fr11_policy_rollback_replay_audit.py`) |
+
+## REQ-LEARN-1514: Trace2Skill Portable Skill/Provenance Pack
+
+Exp 1514 SHALL build a compact portable trace2skill skill/provenance pack from
+Exp 1513 rollback replay rows. The pack SHALL include only rollback-passing
+entries whose source evidence is reachable and whose verifier support is
+deterministic. The workflow SHALL NOT promote or package entries that failed
+rollback, lack reachability, reference stale evidence, or lack deterministic
+validator support.
+
+### REQ-LEARN-1514 Sub-requirements
+
+- REQ-LEARN-1514-1: The workflow SHALL write
+  `results/experiment_1514_trace2skill_portable_skill_pack_v2.json` first
+  with `status="in_progress"` before loading Exp 1498 or Exp 1513 sources.
+- REQ-LEARN-1514-2: The workflow SHALL require Exp 1513 to report
+  `rollback_audit_passed=true`, require the Exp 1513 rollback manifest to
+  exist, and require Exp 1498 to report completed artifact reachability with
+  zero unreachable, stale, or ambiguous resolver findings. If any gate is
+  absent, it SHALL write a terminal gated artifact.
+- REQ-LEARN-1514-3: Eligible entries SHALL have `decision="keep"`,
+  `source_evidence_reachable=true`, `source_evidence_stale=false`,
+  `deterministic_validator_supported=true`, `soundness_mistakes=0`,
+  `false_accept_delta <= 0`, and a non-empty `skill_id`.
+- REQ-LEARN-1514-4: The portable pack manifest SHALL record each packaged
+  entry's source artifact, verifier evidence, resolver key, created date, and
+  promotion status. Rejected entries SHALL be listed with deterministic
+  rejection reasons and SHALL NOT be promoted.
+- REQ-LEARN-1514-5: The terminal artifact SHALL include `status`,
+  `portable_skill_pack_ready`, `gated_inputs_present`,
+  `rollback_passing_entries`, `packaged_skill_entries`,
+  `rejected_skill_entries`, `provenance_fields_present`,
+  `resolver_keys_present`, `pack_manifest_path`, `ops_note_path`, `blockers`,
+  and `honest_verdict`.
+
+### SCENARIO-LEARN-1516: Rollback-Passing Entries Become Portable
+
+**Given** Exp 1513 passed rollback audit and rollback rows are kept with
+reachable source evidence and deterministic validator support
+**When** Exp 1514 builds the portable manifest
+**Then** every eligible row is packaged with provenance fields, resolver key,
+created date, and `promotion_status="packaged_rollback_passed"`
+**And** `portable_skill_pack_ready=true`.
+
+### SCENARIO-LEARN-1517: Unsupported Entries Are Rejected Without Promotion
+
+**Given** a rollback row failed rollback, references unreachable or stale
+evidence, or lacks deterministic validator support
+**When** Exp 1514 evaluates pack eligibility
+**Then** the row appears only in `rejected_entries`
+**And** its promotion status is `rejected_not_promoted`.
+
+## Implementation Status (REQ-LEARN-1514)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-1514 | Implemented (`python/carnot/reporting/trace2skill_portable_skill_pack.py`) | Implemented (`tests/python/test_trace2skill_portable_skill_pack.py`) |
