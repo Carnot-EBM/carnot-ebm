@@ -2258,6 +2258,63 @@ synthesis, bitstream, and hardware claims.
 
 **Implementation Status:** Implemented (Exp 1544)
 
+## REQ-SAMPLE-055: Exp 1545 Extropic Z1 access-readiness packet
+
+Carnot SHALL provide an Extropic Z1/XTR-0 access-readiness packet after the
+Exp 1543 n=256 schedule-stress and Exp 1544 n=64 diverse-topology simulator
+parity artifacts exist. The packet SHALL transform software-only THRML/Carnot
+parity evidence into benchmark manifests, transcript requirements, evidence
+boundaries, and rollback criteria for a future authenticated device run, while
+never claiming Extropic TSU, Z1, XTR-0, board, synthesis, bitstream, latency,
+or hardware execution in the current run.
+
+Acceptance criteria:
+- The experiment SHALL create
+  `results/experiment_1545_extropic_z1_access_readiness_packet.json` with
+  `status="in_progress"` before source-artifact inspection or packet rendering
+  completes.
+- The experiment SHALL read
+  `results/experiment_1543_thrml_carnot_parity_n256_schedule_stress.json`,
+  `results/experiment_1544_thrml_diverse_topology_parity_n64.json`,
+  `research-hardware-wishlist.md`, `research-references.md`, and
+  `ops/known-issues.md` before declaring readiness.
+- The readiness packet at `ops/extropic_z1_readiness_packet.md` SHALL include
+  a benchmark case list, seed/schedule/topology manifests, required device
+  metadata, transcript schema, expected output checksum or metric fields,
+  no-hardware-claim boundary language, explicit access blockers, and rollback
+  criteria.
+- A machine-readable transcript schema SHALL be written under `ops/` or
+  `results/` and SHALL require device identity, SDK/THRML versions,
+  authenticated access proof, benchmark case identifiers, latency fields,
+  sample-shape fields, output checksum or metric fields, and claim-boundary
+  fields.
+- The terminal artifact SHALL include `status`, `milestone`,
+  `extropic_z1_readiness_packet_ready`, `readiness_packet_path`,
+  `benchmark_cases_included`, `transcript_schema_path`,
+  `required_device_evidence_fields`, `no_hardware_execution_claim`,
+  `simulator_artifacts_referenced`, `access_blockers`,
+  `focused_checks_passed`, and `honest_verdict`.
+- `extropic_z1_readiness_packet_ready=true` is valid only when the packet and
+  transcript schema exist, the simulator artifacts are complete and remain
+  simulator/no-TSU-claim only, access blockers are listed explicitly, focused
+  schema checks pass, and `no_hardware_execution_claim=true`.
+
+**Implementation Status:** Planned (Exp 1545)
+
+### SCENARIO-SAMPLE-083: Exp 1545 writes Z1 access packet without hardware claim
+
+Given: Exp 1543 reports n=256 schedule-stress simulator parity ready, Exp 1544
+reports n=64 diverse-topology simulator parity ready, and Carnot has no
+authenticated Extropic Z1/XTR-0 device access.
+When: the Exp 1545 readiness workflow runs from the Carnot project root for run
+date 20260508.
+Then: it writes the markdown readiness packet, writes a transcript JSON schema,
+writes a terminal artifact with all required fields, lists the prior simulator
+artifacts and access blockers, confirms no hardware execution claim is made,
+and provides rollback criteria for any future authenticated run.
+
+**Implementation Status:** Planned (Exp 1545)
+
 ## REQ-MODEL-031: SCEnergyModel — Set-Level Energy Function for Statement Consistency (Exp 944)
 
 SCEnergyModel SHALL implement a permutation-invariant set-level energy function that assigns
