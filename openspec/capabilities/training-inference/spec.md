@@ -2315,6 +2315,65 @@ and provides rollback criteria for any future authenticated run.
 
 **Implementation Status:** Planned (Exp 1545)
 
+## REQ-SAMPLE-056: Exp 1548 THRML/Carnot independent-RNG parity audit
+
+Carnot SHALL provide an independent-RNG audit for THRML/Carnot simulator
+parity that treats bit-identical stochastic summaries as a failure signal, not
+as evidence of stronger parity. The audit SHALL use disjoint root seeds and
+separate PRNG lineages for Carnot and THRML, SHALL inspect whether the Carnot
+lane imports or calls the THRML sampler, SHALL compare bounded distributional
+agreement at n=32, n=64, and n=128 across complete, sparse-random, lattice,
+and scale-free graph families, and SHALL preserve simulator-only/no-hardware
+claim boundaries.
+
+Acceptance criteria:
+- The experiment SHALL create
+  `results/experiment_1548_thrml_carnot_parity_independent_rng_audit.json`
+  with `status="in_progress"` before parity execution completes.
+- The audit SHALL write a seed manifest with disjoint Carnot and THRML root
+  seeds and per-case lineage records, and SHALL reject manifests that reuse a
+  root seed or derive both sampler seeds by splitting one shared key object.
+- The audit SHALL record `code_path_independent=false` if the Carnot lane
+  imports or calls the THRML sampler path, and SHALL not claim an independent
+  code-path result in that case.
+- The sampled comparison SHALL record sample-path hashes, histogram counts,
+  mean energy deltas, KL divergence, and a KS-style distribution check for
+  every n/topology pair.
+- `independent_rng_audit_ready=true` is valid only when there are no
+  byte-identical stochastic sample-hash pairs, at least one nonzero
+  stochastic delta is observed, KL is positive but bounded, KS checks pass,
+  simulator-only/no-TSU-hardware boundaries remain true, and focused tests
+  pass.
+- The terminal artifact SHALL include `status`, `milestone`,
+  `independent_rng_audit_ready`, `rng_path_independent`,
+  `code_path_independent`, `rng_seed_manifest_path`, `n_values_tested`,
+  `topologies_tested`, `sample_path_hashes`, `byte_identical_pairs`,
+  `nonzero_stochastic_delta_observed`, `per_case_results`,
+  `max_mean_energy_delta_abs`, `max_kl_divergence`, `min_ks_p_value`,
+  `bounded_kl_passed`, `ks_test_passed`, `rng_path_not_independent`,
+  `simulator_only`, `no_tsu_hardware_claim`, `focused_tests_passed`, and
+  `honest_verdict`.
+- `simulator_only=true` and `no_tsu_hardware_claim=true` SHALL remain set for
+  every terminal outcome, and the artifact SHALL NOT claim Z1, XTR-0, TSU,
+  FPGA, board, synthesis, bitstream, latency, or other hardware execution.
+
+**Implementation Status:** Planned (Exp 1548)
+
+### SCENARIO-SAMPLE-084: Exp 1548 audits THRML/Carnot parity with independent RNG
+
+Given: prior THRML/Carnot parity artifacts reported byte-identical stochastic
+histograms at larger n, and no Extropic TSU/Z1/XTR-0 hardware claim is
+available.
+When: the Exp 1548 independent-RNG audit runs from the Carnot project root for
+run date 20260508.
+Then: it writes a seed manifest, executes or prototypes independent Carnot and
+THRML simulator lanes at n=32, n=64, and n=128 across four topology families,
+reports non-identical stochastic sample hashes with bounded distribution
+agreement, fails any byte-identical stochastic pair as not independent, and
+writes the required terminal artifact fields without hardware claims.
+
+**Implementation Status:** Planned (Exp 1548)
+
 ## REQ-MODEL-031: SCEnergyModel — Set-Level Energy Function for Statement Consistency (Exp 944)
 
 SCEnergyModel SHALL implement a permutation-invariant set-level energy function that assigns

@@ -1,0 +1,634 @@
+{
+  "bounded_kl_passed": false,
+  "byte_identical_pairs": [],
+  "code_path_independent": true,
+  "focused_tests_passed": true,
+  "honest_verdict": "complete: independent_rng_thrml_carnot_parity_not_ready_simulator_only_no_hardware_claim",
+  "independent_rng_audit_ready": false,
+  "ks_test_passed": true,
+  "max_kl_divergence": 0.169802350136,
+  "max_mean_energy_delta_abs": 0.4356875,
+  "metadata": {
+    "audit_manifest_path": "results/thrml_carnot_independent_rng_audit_1548.jsonl",
+    "carnot_sampler_callable": "carnot.samplers.thrml_carnot_parity_independent_rng_audit.carnot_cpu_sampler",
+    "energy_bin_count": 2,
+    "experiment_id": 1548,
+    "fpga_execution": false,
+    "harness_code_path_audit": {
+      "code_path_independent": true,
+      "existing_carnot_path_imports_or_calls_thrml_sampler": false,
+      "existing_thrml_lane_uses_carnot_cpu_fallback_adapter": true,
+      "harnesses_checked": [
+        {
+          "carnot_assignment_thrml": false,
+          "carnot_backend_default_thrml": false,
+          "path": "python/carnot/samplers/thrml_carnot_parity_n32_sample.py",
+          "thrml_lane_uses_thrml_sampler_backend": true
+        },
+        {
+          "carnot_assignment_thrml": false,
+          "carnot_backend_default_thrml": false,
+          "path": "python/carnot/samplers/thrml_carnot_parity_n64_sample.py",
+          "thrml_lane_uses_thrml_sampler_backend": true
+        },
+        {
+          "carnot_assignment_thrml": false,
+          "carnot_backend_default_thrml": false,
+          "path": "python/carnot/samplers/thrml_carnot_parity_n128_production_scale.py",
+          "thrml_lane_uses_thrml_sampler_backend": true
+        },
+        {
+          "carnot_assignment_thrml": false,
+          "carnot_backend_default_thrml": false,
+          "path": "python/carnot/samplers/thrml_diverse_topology_parity_n32.py",
+          "thrml_lane_uses_thrml_sampler_backend": true
+        },
+        {
+          "carnot_assignment_thrml": false,
+          "carnot_backend_default_thrml": false,
+          "path": "python/carnot/samplers/thrml_diverse_topology_parity_n64.py",
+          "thrml_lane_uses_thrml_sampler_backend": true
+        }
+      ],
+      "new_audit_carnot_path": "carnot.samplers.backend.CpuBackend",
+      "new_audit_thrml_path": "installed_thrml_api_sample_states"
+    },
+    "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "run_date": "20260508",
+    "sample_count_per_case": 64,
+    "schema": "thrml_carnot_parity_independent_rng_audit_v1",
+    "thresholds": {
+      "kl_divergence_max": 0.05,
+      "ks_p_value_min": 0.01,
+      "mean_energy_delta_abs_max": 0.6
+    },
+    "thrml_sampler_callable": "carnot.samplers.thrml_carnot_parity_independent_rng_audit.direct_thrml_sampler",
+    "tsu_hardware_execution": false,
+    "xtr0_hardware_execution": false,
+    "z1_hardware_execution": false
+  },
+  "milestone": "2026.04.119",
+  "min_ks_p_value": 0.017459888718,
+  "n_values_tested": [
+    32,
+    64,
+    128
+  ],
+  "no_tsu_hardware_claim": true,
+  "nonzero_stochastic_delta_observed": true,
+  "per_case_results": [
+    {
+      "carnot_mean_energy": 0.03921875,
+      "carnot_sample_hash": "2541c2937b8a994c9f2c2c989ab222ea3147437b04d986b82b3536dc3505ebb7",
+      "carnot_seed": 385767466,
+      "case_id": "n32_signed_ring_chord",
+      "case_type": "independent_rng_case",
+      "histogram_counts": {
+        "bin_edges": [
+          -0.608,
+          0.034,
+          0.676
+        ],
+        "carnot_counts": [
+          34,
+          30
+        ],
+        "energy_bin_count": 2,
+        "thrml_counts": [
+          43,
+          21
+        ]
+      },
+      "kl_divergence": 0.041044517595,
+      "ks_p_value": 0.124991038234,
+      "ks_statistic": 0.203125,
+      "mean_energy_delta_abs": 0.093875,
+      "n_spins": 32,
+      "no_tsu_hardware_claim": true,
+      "sample_count_per_backend": 64,
+      "schedule": {
+        "beta": 0.35,
+        "n_warmup": 4,
+        "steps_per_sample": 1,
+        "use_checkerboard": true
+      },
+      "simulator_only": true,
+      "thrml_mean_energy": -0.05465625,
+      "thrml_sample_hash": "4f6994dc0ff27dd991b0c4dd2120a442fbb98b54489944145fea01e5113711f2",
+      "thrml_seed": 3355875088,
+      "topology": "signed_ring_chord"
+    },
+    {
+      "carnot_mean_energy": -0.02625,
+      "carnot_sample_hash": "3756bd2dcffc3b07e931b675f1f047d38233d557dec0931d892cc23620e880fd",
+      "carnot_seed": 1625615737,
+      "case_id": "n32_sparse_random",
+      "case_type": "independent_rng_case",
+      "histogram_counts": {
+        "bin_edges": [
+          -1.466,
+          -0.174,
+          1.118
+        ],
+        "carnot_counts": [
+          28,
+          36
+        ],
+        "energy_bin_count": 2,
+        "thrml_counts": [
+          30,
+          34
+        ]
+      },
+      "kl_divergence": 0.001906741361,
+      "ks_p_value": 0.929287275678,
+      "ks_statistic": 0.09375,
+      "mean_energy_delta_abs": 0.06103125,
+      "n_spins": 32,
+      "no_tsu_hardware_claim": true,
+      "sample_count_per_backend": 64,
+      "schedule": {
+        "beta": 0.35,
+        "n_warmup": 4,
+        "steps_per_sample": 1,
+        "use_checkerboard": true
+      },
+      "simulator_only": true,
+      "thrml_mean_energy": -0.08728125,
+      "thrml_sample_hash": "7bebf2534d84c38c1d6d6d6de382e8800d4177e7452dcc695e56f19beee7f0d6",
+      "thrml_seed": 1199848101,
+      "topology": "sparse_random"
+    },
+    {
+      "carnot_mean_energy": -0.10303125,
+      "carnot_sample_hash": "9f2d801f93e1005992600f38f7fd7da1610b1c9c6c35c6d7d33190b7c2560f42",
+      "carnot_seed": 1227486306,
+      "case_id": "n32_lattice",
+      "case_type": "independent_rng_case",
+      "histogram_counts": {
+        "bin_edges": [
+          -1.113,
+          -0.066,
+          0.981
+        ],
+        "carnot_counts": [
+          33,
+          31
+        ],
+        "energy_bin_count": 2,
+        "thrml_counts": [
+          28,
+          36
+        ]
+      },
+      "kl_divergence": 0.011911642497,
+      "ks_p_value": 0.18824997343,
+      "ks_statistic": 0.1875,
+      "mean_energy_delta_abs": 0.126375,
+      "n_spins": 32,
+      "no_tsu_hardware_claim": true,
+      "sample_count_per_backend": 64,
+      "schedule": {
+        "beta": 0.35,
+        "n_warmup": 4,
+        "steps_per_sample": 1,
+        "use_checkerboard": true
+      },
+      "simulator_only": true,
+      "thrml_mean_energy": 0.02334375,
+      "thrml_sample_hash": "047e1d6c4dccc363d44b50bd5a24f4d7d3ae577a733e02bcf1a0ca9ae656b610",
+      "thrml_seed": 914976057,
+      "topology": "lattice"
+    },
+    {
+      "carnot_mean_energy": 0.0086875,
+      "carnot_sample_hash": "5f4fdf9b82216b36d7b715d0b1309f57a4cb0de1d371fe55bb8a5c75fef0bc6d",
+      "carnot_seed": 635995403,
+      "case_id": "n32_scale_free",
+      "case_type": "independent_rng_case",
+      "histogram_counts": {
+        "bin_edges": [
+          -1.354,
+          -0.19,
+          0.974
+        ],
+        "carnot_counts": [
+          16,
+          48
+        ],
+        "energy_bin_count": 2,
+        "thrml_counts": [
+          22,
+          42
+        ]
+      },
+      "kl_divergence": 0.019805233856,
+      "ks_p_value": 0.816371178107,
+      "ks_statistic": 0.109375,
+      "mean_energy_delta_abs": 0.02078125,
+      "n_spins": 32,
+      "no_tsu_hardware_claim": true,
+      "sample_count_per_backend": 64,
+      "schedule": {
+        "beta": 0.35,
+        "n_warmup": 4,
+        "steps_per_sample": 1,
+        "use_checkerboard": true
+      },
+      "simulator_only": true,
+      "thrml_mean_energy": -0.01209375,
+      "thrml_sample_hash": "399a1776a9ff992478659bfcbf83135d3286a4a4227d97d45542c8baaf3f396f",
+      "thrml_seed": 3716489718,
+      "topology": "scale_free"
+    },
+    {
+      "carnot_mean_energy": -0.088125,
+      "carnot_sample_hash": "59eac8e6bfec2c6e4b0d94caf84c37d5b62f3dc7820a2f1395334192dcf1ee73",
+      "carnot_seed": 741766695,
+      "case_id": "n64_signed_ring_chord",
+      "case_type": "independent_rng_case",
+      "histogram_counts": {
+        "bin_edges": [
+          -0.724,
+          0.075,
+          0.874
+        ],
+        "carnot_counts": [
+          44,
+          20
+        ],
+        "energy_bin_count": 2,
+        "thrml_counts": [
+          38,
+          26
+        ]
+      },
+      "kl_divergence": 0.018188004926,
+      "ks_p_value": 0.274053112603,
+      "ks_statistic": 0.171875,
+      "mean_energy_delta_abs": 0.08728125,
+      "n_spins": 64,
+      "no_tsu_hardware_claim": true,
+      "sample_count_per_backend": 64,
+      "schedule": {
+        "beta": 0.35,
+        "n_warmup": 4,
+        "steps_per_sample": 1,
+        "use_checkerboard": true
+      },
+      "simulator_only": true,
+      "thrml_mean_energy": -0.00084375,
+      "thrml_sample_hash": "666bc83cdd268e0634f87e6c0ca082914913c0178938750c92cf8c4412057708",
+      "thrml_seed": 1559356587,
+      "topology": "signed_ring_chord"
+    },
+    {
+      "carnot_mean_energy": -0.00225,
+      "carnot_sample_hash": "0705fd118c1fce1ebb34d5e0456b215ec8bf34dcc22a497148db5dbbdf6f6bce",
+      "carnot_seed": 1355113153,
+      "case_id": "n64_sparse_random",
+      "case_type": "independent_rng_case",
+      "histogram_counts": {
+        "bin_edges": [
+          -2.316,
+          -0.303,
+          1.71
+        ],
+        "carnot_counts": [
+          20,
+          44
+        ],
+        "energy_bin_count": 2,
+        "thrml_counts": [
+          24,
+          40
+        ]
+      },
+      "kl_divergence": 0.008265266559,
+      "ks_p_value": 0.124991038234,
+      "ks_statistic": 0.203125,
+      "mean_energy_delta_abs": 0.21103125,
+      "n_spins": 64,
+      "no_tsu_hardware_claim": true,
+      "sample_count_per_backend": 64,
+      "schedule": {
+        "beta": 0.35,
+        "n_warmup": 4,
+        "steps_per_sample": 1,
+        "use_checkerboard": true
+      },
+      "simulator_only": true,
+      "thrml_mean_energy": -0.21328125,
+      "thrml_sample_hash": "dd156edd20015ad7ce63b89d04464a4b754399f488ebdd9a87cbc392c74b8889",
+      "thrml_seed": 2246608038,
+      "topology": "sparse_random"
+    },
+    {
+      "carnot_mean_energy": -0.07740625,
+      "carnot_sample_hash": "b81634b99f5ce96994d224a973a2431464856e8dd8059f81383ddc85b13a5e3d",
+      "carnot_seed": 4036535416,
+      "case_id": "n64_lattice",
+      "case_type": "independent_rng_case",
+      "histogram_counts": {
+        "bin_edges": [
+          -1.526,
+          0.091,
+          1.708
+        ],
+        "carnot_counts": [
+          39,
+          25
+        ],
+        "energy_bin_count": 2,
+        "thrml_counts": [
+          47,
+          17
+        ]
+      },
+      "kl_divergence": 0.03561893878,
+      "ks_p_value": 0.274053112603,
+      "ks_statistic": 0.171875,
+      "mean_energy_delta_abs": 0.17278125,
+      "n_spins": 64,
+      "no_tsu_hardware_claim": true,
+      "sample_count_per_backend": 64,
+      "schedule": {
+        "beta": 0.35,
+        "n_warmup": 4,
+        "steps_per_sample": 1,
+        "use_checkerboard": true
+      },
+      "simulator_only": true,
+      "thrml_mean_energy": -0.2501875,
+      "thrml_sample_hash": "de0763d53cacb1c5b6b499a837b75bdfc6df9652846b7548d264aca78d445b0a",
+      "thrml_seed": 3489693410,
+      "topology": "lattice"
+    },
+    {
+      "carnot_mean_energy": -0.08765625,
+      "carnot_sample_hash": "0a08f62d00349bc3bdbbf8771ec52346e5fefc936c2fecaf5bf949ae9ff86d2d",
+      "carnot_seed": 1938060145,
+      "case_id": "n64_scale_free",
+      "case_type": "independent_rng_case",
+      "histogram_counts": {
+        "bin_edges": [
+          -1.994,
+          -0.34,
+          1.314
+        ],
+        "carnot_counts": [
+          19,
+          45
+        ],
+        "energy_bin_count": 2,
+        "thrml_counts": [
+          21,
+          43
+        ]
+      },
+      "kl_divergence": 0.002174430634,
+      "ks_p_value": 0.519774192545,
+      "ks_statistic": 0.140625,
+      "mean_energy_delta_abs": 0.07925,
+      "n_spins": 64,
+      "no_tsu_hardware_claim": true,
+      "sample_count_per_backend": 64,
+      "schedule": {
+        "beta": 0.35,
+        "n_warmup": 4,
+        "steps_per_sample": 1,
+        "use_checkerboard": true
+      },
+      "simulator_only": true,
+      "thrml_mean_energy": -0.16690625,
+      "thrml_sample_hash": "aa8be072be84240373c4b083ee627d8c32fb98fb65328b8a93247355a9bd4e01",
+      "thrml_seed": 2758051194,
+      "topology": "scale_free"
+    },
+    {
+      "carnot_mean_energy": -0.0286875,
+      "carnot_sample_hash": "fa2a4936e59cf2413be5f94c5b1528dcb51a9908bede67e9c1923c1c482c6512",
+      "carnot_seed": 2918772570,
+      "case_id": "n128_signed_ring_chord",
+      "case_type": "independent_rng_case",
+      "histogram_counts": {
+        "bin_edges": [
+          -1.444,
+          0.023,
+          1.49
+        ],
+        "carnot_counts": [
+          34,
+          30
+        ],
+        "energy_bin_count": 2,
+        "thrml_counts": [
+          41,
+          23
+        ]
+      },
+      "kl_divergence": 0.024289606842,
+      "ks_p_value": 0.080277651334,
+      "ks_statistic": 0.21875,
+      "mean_energy_delta_abs": 0.16759375,
+      "n_spins": 128,
+      "no_tsu_hardware_claim": true,
+      "sample_count_per_backend": 64,
+      "schedule": {
+        "beta": 0.35,
+        "n_warmup": 4,
+        "steps_per_sample": 1,
+        "use_checkerboard": true
+      },
+      "simulator_only": true,
+      "thrml_mean_energy": -0.19628125,
+      "thrml_sample_hash": "56f0545a5589c885148d9fa47988fbea97164ce055d7ee7f2dd94f106823c3e6",
+      "thrml_seed": 3846895205,
+      "topology": "signed_ring_chord"
+    },
+    {
+      "carnot_mean_energy": 0.00971875,
+      "carnot_sample_hash": "8c41692570236e7d7613eb0704c4a6d567527a7ad3c3a880ed17d76f1e9dac92",
+      "carnot_seed": 1525850285,
+      "case_id": "n128_sparse_random",
+      "case_type": "independent_rng_case",
+      "histogram_counts": {
+        "bin_edges": [
+          -2.388,
+          0.34,
+          3.068
+        ],
+        "carnot_counts": [
+          42,
+          22
+        ],
+        "energy_bin_count": 2,
+        "thrml_counts": [
+          49,
+          15
+        ]
+      },
+      "kl_divergence": 0.029311979831,
+      "ks_p_value": 0.274053112603,
+      "ks_statistic": 0.171875,
+      "mean_energy_delta_abs": 0.23578125,
+      "n_spins": 128,
+      "no_tsu_hardware_claim": true,
+      "sample_count_per_backend": 64,
+      "schedule": {
+        "beta": 0.35,
+        "n_warmup": 4,
+        "steps_per_sample": 1,
+        "use_checkerboard": true
+      },
+      "simulator_only": true,
+      "thrml_mean_energy": -0.2260625,
+      "thrml_sample_hash": "a238b1a4a5cc0030430fd763bbf18ef1ebe8c9d083114e477f190ef5d74b94e1",
+      "thrml_seed": 2774712745,
+      "topology": "sparse_random"
+    },
+    {
+      "carnot_mean_energy": -0.02865625,
+      "carnot_sample_hash": "0602df5d4d02bee2c38451d5dfbbab7364685161b279b982ccc860a9b59b7710",
+      "carnot_seed": 2622933058,
+      "case_id": "n128_lattice",
+      "case_type": "independent_rng_case",
+      "histogram_counts": {
+        "bin_edges": [
+          -2.305,
+          -0.251,
+          1.803
+        ],
+        "carnot_counts": [
+          22,
+          42
+        ],
+        "energy_bin_count": 2,
+        "thrml_counts": [
+          28,
+          36
+        ]
+      },
+      "kl_divergence": 0.017683148394,
+      "ks_p_value": 0.670094486954,
+      "ks_statistic": 0.125,
+      "mean_energy_delta_abs": 0.0673125,
+      "n_spins": 128,
+      "no_tsu_hardware_claim": true,
+      "sample_count_per_backend": 64,
+      "schedule": {
+        "beta": 0.35,
+        "n_warmup": 4,
+        "steps_per_sample": 1,
+        "use_checkerboard": true
+      },
+      "simulator_only": true,
+      "thrml_mean_energy": -0.09596875,
+      "thrml_sample_hash": "9cf32f965f60e6c31624eb4ca01ff0652632479e637ac7747ebd08e87f0fe5ac",
+      "thrml_seed": 3198637193,
+      "topology": "lattice"
+    },
+    {
+      "carnot_mean_energy": 0.047375,
+      "carnot_sample_hash": "7da5e1fa369d22be4034214f1c6372d3ecab0498d424e6efaf3c1665f9b7d6ad",
+      "carnot_seed": 3219901999,
+      "case_id": "n128_scale_free",
+      "case_type": "independent_rng_case",
+      "histogram_counts": {
+        "bin_edges": [
+          -1.931,
+          0.133,
+          2.197
+        ],
+        "carnot_counts": [
+          34,
+          30
+        ],
+        "energy_bin_count": 2,
+        "thrml_counts": [
+          51,
+          13
+        ]
+      },
+      "kl_divergence": 0.169802350136,
+      "ks_p_value": 0.017459888718,
+      "ks_statistic": 0.265625,
+      "mean_energy_delta_abs": 0.4356875,
+      "n_spins": 128,
+      "no_tsu_hardware_claim": true,
+      "sample_count_per_backend": 64,
+      "schedule": {
+        "beta": 0.35,
+        "n_warmup": 4,
+        "steps_per_sample": 1,
+        "use_checkerboard": true
+      },
+      "simulator_only": true,
+      "thrml_mean_energy": -0.3883125,
+      "thrml_sample_hash": "f8d3612ed0ae06933b96861a8a5f51c72fc60a134ab02f46c7590d0981b60e03",
+      "thrml_seed": 3193506755,
+      "topology": "scale_free"
+    }
+  ],
+  "rng_path_independent": true,
+  "rng_path_not_independent": false,
+  "rng_seed_manifest_path": "/home/ianblenke/github.com/ianblenke/carnot/results/thrml_carnot_independent_rng_seed_manifest_1548.json",
+  "sample_path_hashes": {
+    "n128_lattice": {
+      "carnot": "0602df5d4d02bee2c38451d5dfbbab7364685161b279b982ccc860a9b59b7710",
+      "thrml": "9cf32f965f60e6c31624eb4ca01ff0652632479e637ac7747ebd08e87f0fe5ac"
+    },
+    "n128_scale_free": {
+      "carnot": "7da5e1fa369d22be4034214f1c6372d3ecab0498d424e6efaf3c1665f9b7d6ad",
+      "thrml": "f8d3612ed0ae06933b96861a8a5f51c72fc60a134ab02f46c7590d0981b60e03"
+    },
+    "n128_signed_ring_chord": {
+      "carnot": "fa2a4936e59cf2413be5f94c5b1528dcb51a9908bede67e9c1923c1c482c6512",
+      "thrml": "56f0545a5589c885148d9fa47988fbea97164ce055d7ee7f2dd94f106823c3e6"
+    },
+    "n128_sparse_random": {
+      "carnot": "8c41692570236e7d7613eb0704c4a6d567527a7ad3c3a880ed17d76f1e9dac92",
+      "thrml": "a238b1a4a5cc0030430fd763bbf18ef1ebe8c9d083114e477f190ef5d74b94e1"
+    },
+    "n32_lattice": {
+      "carnot": "9f2d801f93e1005992600f38f7fd7da1610b1c9c6c35c6d7d33190b7c2560f42",
+      "thrml": "047e1d6c4dccc363d44b50bd5a24f4d7d3ae577a733e02bcf1a0ca9ae656b610"
+    },
+    "n32_scale_free": {
+      "carnot": "5f4fdf9b82216b36d7b715d0b1309f57a4cb0de1d371fe55bb8a5c75fef0bc6d",
+      "thrml": "399a1776a9ff992478659bfcbf83135d3286a4a4227d97d45542c8baaf3f396f"
+    },
+    "n32_signed_ring_chord": {
+      "carnot": "2541c2937b8a994c9f2c2c989ab222ea3147437b04d986b82b3536dc3505ebb7",
+      "thrml": "4f6994dc0ff27dd991b0c4dd2120a442fbb98b54489944145fea01e5113711f2"
+    },
+    "n32_sparse_random": {
+      "carnot": "3756bd2dcffc3b07e931b675f1f047d38233d557dec0931d892cc23620e880fd",
+      "thrml": "7bebf2534d84c38c1d6d6d6de382e8800d4177e7452dcc695e56f19beee7f0d6"
+    },
+    "n64_lattice": {
+      "carnot": "b81634b99f5ce96994d224a973a2431464856e8dd8059f81383ddc85b13a5e3d",
+      "thrml": "de0763d53cacb1c5b6b499a837b75bdfc6df9652846b7548d264aca78d445b0a"
+    },
+    "n64_scale_free": {
+      "carnot": "0a08f62d00349bc3bdbbf8771ec52346e5fefc936c2fecaf5bf949ae9ff86d2d",
+      "thrml": "aa8be072be84240373c4b083ee627d8c32fb98fb65328b8a93247355a9bd4e01"
+    },
+    "n64_signed_ring_chord": {
+      "carnot": "59eac8e6bfec2c6e4b0d94caf84c37d5b62f3dc7820a2f1395334192dcf1ee73",
+      "thrml": "666bc83cdd268e0634f87e6c0ca082914913c0178938750c92cf8c4412057708"
+    },
+    "n64_sparse_random": {
+      "carnot": "0705fd118c1fce1ebb34d5e0456b215ec8bf34dcc22a497148db5dbbdf6f6bce",
+      "thrml": "dd156edd20015ad7ce63b89d04464a4b754399f488ebdd9a87cbc392c74b8889"
+    }
+  },
+  "simulator_only": true,
+  "status": "complete",
+  "topologies_tested": [
+    "signed_ring_chord",
+    "sparse_random",
+    "lattice",
+    "scale_free"
+  ]
+}
