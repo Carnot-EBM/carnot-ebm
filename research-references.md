@@ -4,6 +4,146 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-05-08 Post-.118 Planning Sweep (Milestone 2026.04.119)
+
+This sweep was run after milestone `.118` completed with 13 of 14 success
+criteria met. Key outcomes: `exp1535` made automata/ABS contract decoding
+useful with zero false accepts; `exp1536` produced a SATQuest benchmark but
+found 3 solver-oracle false accepts; `exp1538` recorded 134 multi-turn cases
+with residual drift visible and zero false accepts; `exp1539` kept FR-11 safe
+but still had `utility_delta=0.0`; `exp1540` and `exp1541` showed product-line
+and claim-isolation paths can scale under zero-false-accept gates; `exp1542`
+kept ARM/EBT signals diagnostic-only because logprobs were unavailable; and
+`exp1543`/`exp1544` advanced THRML simulator parity while `ops/known-issues.md`
+flagged byte-identical Carnot/THRML histograms as a mandatory `.119`
+independent-RNG audit.
+
+### Mandatory THRML Independent-RNG Audit
+- **Source:** `ops/known-issues.md` entry "THRML/Carnot Parity
+  Independent-RNG Audit (.119+ MANDATORY)"; THRML docs and repository:
+  https://docs.thrml.ai/en/latest/architecture/ and
+  https://github.com/extropic-ai/thrml
+- **What:** THRML is a JAX block-Gibbs library for graphical models and
+  discrete EBMs. The local `.117` and `.118` artifacts show real integration,
+  but byte-identical Carnot and THRML sample histograms at n=32/64/128/256 are
+  not credible evidence of independent stochastic parity.
+- **Relevance to Carnot:** Hardware-portability claims depend on empirical
+  parity between Carnot samplers and THRML-style samplers. Until the RNG and
+  code paths are proven independent, prior parity numbers must be treated as
+  preliminary hookup tests.
+- **Concrete experiment hook:** Start `.119` with an independent-RNG audit:
+  disjoint root seeds, separate PRNG lineages, sample-path hashes, code-path
+  inspection for THRML imports in the Carnot path, non-zero stochastic deltas,
+  bounded KL, KS-test pass, simulator-only/no-hardware-claim fields.
+
+### ConstraintBench, NLCO, and OPF Constraint Failures
+- **Papers:** arXiv:2602.22465 "ConstraintBench"; arXiv:2602.02188 "NLCO";
+  arXiv:2603.23004 "Can Large Language Models Reason and Optimize Under
+  Constraints?"
+- **Sources:** https://arxiv.org/abs/2602.22465,
+  https://arxiv.org/abs/2602.02188, https://arxiv.org/abs/2603.23004
+- **What:** Recent 2026 benchmarks converge on the same finding: current LLMs
+  can produce plausible constrained-optimization answers, but feasibility and
+  solver-grounded optimality degrade sharply as structure grows. ConstraintBench
+  reports no tested model above 30.5 percent joint feasibility and near-optimal
+  objective, and OPF work finds SOTA models fail most complex constrained power
+  grid tasks.
+- **Relevance to Carnot:** `.118` product-line success is promising but still
+  bounded. The PRD vision needs solver-grounded feasibility/optimality checks
+  on larger, structured, natural-language constraint workloads.
+- **Concrete experiment hook:** Scale product-line staged benchmarks with
+  ConstraintBench/NLCO-style feasibility, oracle agreement, objective gap, and
+  entity-hallucination fields. Do not accept model answers without deterministic
+  solver or verifier evidence.
+
+### FALCON Hard-Constraint Generation
+- **Paper:** arXiv:2602.01090, "Hard Constraints Meet Soft Generation:
+  Guaranteed Feasibility for LLM-based Combinatorial Optimization."
+- **Source:** https://arxiv.org/abs/2602.01090
+- **What:** FALCON combines grammar-constrained decoding, a feasibility repair
+  layer, and adaptive Best-of-N sampling to report 100 percent feasibility on
+  seven NP-hard combinatorial-optimization problems.
+- **Relevance to Carnot:** This is the closest 2026 pattern to Carnot's desired
+  generation stack after `.118`: syntactic masks first, semantic repair second,
+  and deterministic solver checks as final authority.
+- **Concrete experiment hook:** Build an automata/SAT unified contract gate:
+  ABS or grammar masks for syntax, SAT/product-line repair for semantic
+  feasibility, and Carnot validators as the only acceptance authority.
+
+### Context-Sensitive Constraint Learning
+- **Paper:** arXiv:2604.10667, "Learning and Enforcing Context-Sensitive
+  Control for LLMs."
+- **Source:** https://arxiv.org/abs/2604.10667
+- **What:** Learns context-sensitive constraints from LLM interactions via an
+  exploration/exploitation loop, then enforces them during generation. The
+  paper reports perfect constraint adherence even for small models on its
+  evaluated tasks.
+- **Relevance to Carnot:** `.118` automata masks are manually specified. Carnot
+  can use rejected/accepted runtime-contract traces to induce additional
+  context-sensitive constraints, but only below deterministic validators.
+- **Concrete experiment hook:** In `.119`, let residual-drift and product-line
+  failures propose candidate context-sensitive constraints. Promote only those
+  that replay cleanly with zero false accepts.
+
+### Weaver Verification-Compute Routing
+- **Paper:** OpenReview NeurIPS 2025, "Weaver: Shrinking the
+  Generation-Verification Gap by Scaling Compute for Verification."
+- **Source:** https://openreview.net/forum?id=dRjt4vlYVQ
+- **What:** Combines multiple weak verifiers with weak supervision for repeated
+  sampling and response selection, then distills verifier compute into a
+  compact scorer.
+- **Relevance to Carnot:** `.118` has several imperfect-but-useful signals:
+  automata validity, SAT/solver checks, residual-drift ledgers, claim-router
+  uncertainty, BEAVER bounds, and ARM/EBT diagnostics. Weaver suggests routing
+  verification compute explicitly rather than treating every signal as equal.
+- **Concrete experiment hook:** Add a verification-compute router that learns
+  when to spend local SOTA generation, deterministic solver checks, or cheap
+  weak-verifier passes, while preserving zero false accepts as a hard gate.
+
+### VERGE and ReLoop for Silent Verification Failures
+- **Papers:** arXiv:2601.20055 "VERGE"; arXiv:2602.15983 "ReLoop."
+- **Sources:** https://huggingface.co/papers/2601.20055 and
+  https://huggingface.co/papers/2602.15983
+- **What:** VERGE uses semantic routing, formal equivalence, and Minimal
+  Correction Subsets for localized repair. ReLoop targets silent failures in
+  LLM-generated optimization code with structured modeling and behavioral
+  verification under solver perturbations.
+- **Relevance to Carnot:** `.118` SATQuest exposed a solver-oracle
+  false-accept class. `.119` should repair the oracle and add witness/proof
+  fields before any SAT benchmark becomes acceptance authority.
+- **Concrete experiment hook:** SATQuest repair should write assignment or
+  unsat/proof witnesses, test perturbations, and report zero solver-oracle
+  false accepts before re-running mandated local SOTA models.
+
+### Copy-as-Decode for Minimal Repairs
+- **Paper:** arXiv:2604.18170, "Copy-as-Decode: Grammar-Constrained Parallel
+  Prefill for LLM Editing."
+- **Source:** https://arxiv.org/abs/2604.18170
+- **What:** Recasts edits as a two-primitive grammar over copy spans and
+  generated spans, with an FSM enforcing syntactic validity and deterministic
+  resolver checks. The paper reports large theoretical copy-speed ceilings and
+  all oracle programs round-tripping through the resolver.
+- **Relevance to Carnot:** Residual drift and product-line repair should avoid
+  regenerating whole artifacts when only one localized constraint was violated.
+- **Concrete experiment hook:** For residual-drift repair, prefer localized
+  span/edit plans with deterministic replay over whole-answer regeneration.
+
+### EBT, NRGPT, and Kona Status Check
+- **Sources:** EBT OpenReview ICLR 2026 Oral
+  https://openreview.net/forum?id=ZBj3Qp1bYg; NRGPT ICLR 2026 Poster
+  https://openreview.net/forum?id=B3Muyi2zgo; Logical Intelligence Kona blog
+  https://logicalintelligence.com/blog/energy-based-models-for-reasoning
+- **What:** EBT frames prediction as energy minimization over input/candidate
+  compatibility; NRGPT tests a GPT-like language model whose inference is
+  gradient descent on energy; Kona's public architecture emphasizes partial
+  trace energies and localized repair signals.
+- **Relevance to Carnot:** These validate the direction of energy-native
+  reasoning, but `.118` showed local ARM/EBT diagnostics still lack logprob
+  telemetry. Carnot should not promote soft values to acceptance authority.
+- **Concrete experiment hook:** Repair local logprob/top-k telemetry for the
+  mandated GGUF models if possible, then keep energy/logprob signals diagnostic
+  beneath deterministic contract, SAT, and solver validators.
+
 ## 2026-05-08 Post-.117 Planning Sweep (Milestone 2026.04.118)
 
 This sweep was run after milestone `.117` completed all 14 planned tasks.

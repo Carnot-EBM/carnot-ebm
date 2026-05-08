@@ -1,5 +1,17 @@
 # Carnot — Session Metrics
 
+## Session: 2026-05-08 Milestone 2026.04.119 Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-05-08T12:43:27Z | 2026-05-08T13:01:03Z | Plan milestone 2026.04.119 after 2026.04.118 completion: read project instructions and required research context, review .118 terminal artifacts and conductor outcomes, run current 2025-2026 research sweep, update research references, rewrite vNEXT roadmap doc, create research-roadmap-next.yaml with 13 tasks exp1547-exp1559 including structured gates and mandated SOTA GGUF model specs, validate YAML/prior failures/gates/prompt checks, align ops docs, and preserve active roadmap/conductor files. | TBD |
+
+Note: `scripts/session-metrics.py` referenced by `CLAUDE.md` is not present in this checkout, so authoritative token extraction was not available.
+
+---
+
 ## Session: 2026-05-08 Milestone 2026.04.118 Planning
 
 ### Turn Log
