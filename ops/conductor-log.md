@@ -1199,3 +1199,4 @@ web search: GitHub trending energy based mod |
 | 2026-05-08 10:28 UTC | FR-11 External-Feedback Skill Promotion v13 - Gate | OK | 81 passed, 1 warning in 5.13s |
 | 2026-05-08 10:48 UTC | Product-Line Staged Benchmark Scale v3 - Gated on  | OK | 81 passed, 1 warning in 4.81s |
 | 2026-05-08 11:04 UTC | Claim-Isolation Uncertainty Router v2 - Gated on E | OK | 81 passed, 1 warning in 5.15s |
+| 2026-05-08 11:16 UTC | ARM/EBT Soft-Value Diagnostic - Gated on Exp1536+E | OK | 81 passed, 1 warning in 5.23s |
