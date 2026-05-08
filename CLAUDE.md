@@ -911,6 +911,8 @@ Every user instruction must be captured and traceable to outcomes:
 - JAX: CPU by default, CUDA 12 via `pip install carnot[cuda]`
 - JAX on ROCm: `JAX_PLATFORMS=cpu` to force CPU when ROCm plugin is loaded (thrml crashes on ROCm, see extropic-ai/thrml#41)
 - Research experiments: always prefix with `JAX_PLATFORMS=cpu` for reproducibility
+- **JAX CUDA12 plugins installed on dual RTX 3090 rig (2026-05-08)** — `pip install "jax[cuda12]"` adds `jax-cuda12-pjrt`, `jax-cuda12-plugin`, `nvidia-cuda-nvcc-cu12` to the venv at `/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/`. Default backend now `gpu` with `[CudaDevice(id=0), CudaDevice(id=1)]` available. THRML's JAX-native sampling primitives inherit GPU automatically. Reproducibility rule unchanged: research experiments still use `JAX_PLATFORMS=cpu` for headline claims; GPU JAX is opt-in for non-headline development and parity-sweep work.
+- **THRML 0.1.3 installed (2026-05-07)** — `pip install thrml` in the carnot-ebm venv. Apache-2.0 PyPI package, JAX-native sampling. Used by `.115 exp1503/1504 to demonstrate THRML/Carnot tiny-Ising parity (delta = 1.14e-7 exact, 0.042 stochastic mean). Aligned with CLAUDE.md decentralization rule 5 (hardware portability) and the queued `.117+ THRML/Carnot parity scaling sweep at n=8/16/32/64/128.
 
 ## Key Paths
 
