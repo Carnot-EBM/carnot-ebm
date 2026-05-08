@@ -118,6 +118,7 @@
 | 2026.04.113 | Telemetry Bounds + Scope Discipline | 1467-1478 | 12/12 criteria met; live SOTA top-k telemetry ready but headline telemetry claim blocked by adversarial audit; FR-11 v8 verified-memory growth persisted; BEAVER-lite bound, T-SKM/STATIC smokes, KV260 source-level regression, and THRML simulator record preserved; operational retro measured 40 min / 11 completed with 55% savings recoverable |
 | 2026.04.114 | Live Telemetry Guardrails + Executable Constraint Baselines | 1479-1491 | 12/13 criteria met; balanced live SOTA telemetry, BEAVER-lite live-prefix calibration, FR-11 query-time memory, CCTU executable benchmark, and bounded localization advanced; THRML parity gate-blocked honestly; operational retro measured 40 min / 11 completed with 55% savings recoverable |
 | 2026.04.115 | Trigger Certificates + Runtime Monitors + THRML Parity | 1492-1505 | 12/12 criteria met; trigger-token certificate export, safe-DSL validator compiler, interwhen/HoVer monitoring, FR-11 trace2skill daily eval, verifier k_effective=3.00 discipline gate, and simulator-only THRML/Carnot parity completed; operational retro measured 40 min / 11 completed with 55% savings recoverable |
+| 2026.04.116 | Runtime Contracts + FR-11 Feedback + Substrate Boundaries | 1506-1518 | 13/13 criteria met; safe-DSL/grammar/runtime monitor/plan-graph contracts ready, FR-11 policy cache and rollback portable, THRML/KAN/KV260 claim boundaries preserved |
 
 ## Breakthrough Results
 
