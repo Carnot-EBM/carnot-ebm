@@ -1177,3 +1177,4 @@ web search: GitHub trending energy based mod |
 | 2026-05-08 04:10 UTC | .116 Completion Archive + .117 Activation Manifest | OK | 81 passed, 1 warning in 5.75s |
 | 2026-05-08 04:26 UTC | Runtime-Contract E2E Harness - Gated on Exp1519 Ru | OK | 81 passed, 1 warning in 7.97s |
 | 2026-05-08 04:40 UTC | Live SOTA Contract-Guided Repair v1 - Gated on Exp | OK | 81 passed, 1 warning in 5.21s |
+| 2026-05-08 04:53 UTC | Constraint Dependency Graph Root-Cause Repair - Ga | OK | 81 passed, 1 warning in 5.19s |
