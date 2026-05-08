@@ -1,0 +1,945 @@
+{
+  "carry_forward_gates": [
+    {
+      "artifact_fields": [
+        "runtime_contract_e2e_ready",
+        "false_accept_rate",
+        "contract_cases_total"
+      ],
+      "gate": "runtime_contract_regression_gate",
+      "required": "runtime_contract_e2e_ready == true and false_accept_rate == 0.0",
+      "source_artifact": "results/experiment_1520_runtime_contract_e2e_harness.json"
+    },
+    {
+      "artifact_fields": [
+        "contract_guided_repair_ready",
+        "live_sota_model_inference_used",
+        "models_used",
+        "false_accept_rate"
+      ],
+      "gate": "live_sota_contract_repair_scale_gate",
+      "required": "contract_guided_repair_ready == true with mandated SOTA GGUF and zero false accepts",
+      "source_artifact": "results/experiment_1521_live_sota_contract_guided_repair_v1.json"
+    },
+    {
+      "artifact_fields": [
+        "product_line_rescue_ready",
+        "product_line_branch_retired",
+        "rescue_parse_rate",
+        "rescue_oracle_agreement_rate",
+        "false_accept_rate"
+      ],
+      "gate": "product_line_continuation_gate",
+      "required": "continue only if rescued and not retired; otherwise require a materially different parser or benchmark",
+      "source_artifact": "results/experiment_1523_product_line_parser_feasibility_rescue_v2.json"
+    },
+    {
+      "artifact_fields": [
+        "live_policy_promotion_ready",
+        "no_model_weight_mutation",
+        "soundness_mistakes",
+        "utility_delta"
+      ],
+      "gate": "fr11_live_policy_positive_utility_gate",
+      "required": "soundness_mistakes == 0 and future promotion claims require utility_delta > 0",
+      "source_artifact": "results/experiment_1524_fr11_live_policy_promotion_v12.json"
+    },
+    {
+      "artifact_fields": [
+        "claim_isolation_ablation_ready",
+        "claim_isolation_delta",
+        "budget_delta",
+        "false_accept_rate"
+      ],
+      "gate": "claim_isolation_scale_gate",
+      "required": "scale only with deterministic validator outcomes and explicit budget accounting",
+      "source_artifact": "results/experiment_1525_march_claim_isolation_verifier_ablation.json"
+    },
+    {
+      "artifact_fields": [
+        "thrml_parity_n128_passed",
+        "diverse_topology_parity_ready",
+        "simulator_only",
+        "no_tsu_hardware_claim"
+      ],
+      "gate": "thrml_next_scaling_gate",
+      "required": "n=128 and diverse n=32 software parity must stay true before n=256/n=64-diverse work",
+      "source_artifacts": [
+        "results/experiment_1530_thrml_carnot_parity_n128_production_scale.json",
+        "results/experiment_1531_thrml_diverse_topology_parity_n32.json"
+      ]
+    }
+  ],
+  "cdg_root_cause_outcome": {
+    "cdg_efficiency_delta": 0.05015,
+    "false_accept_count": 0,
+    "false_accept_rate": 0.0,
+    "no_signal_terminal": false,
+    "ready": true,
+    "root_cause_cases_attempted": 111,
+    "source_artifact": "results/experiment_1522_constraint_dependency_graph_root_cause_repair.json"
+  },
+  "claim_boundaries_preserved": true,
+  "claim_boundary_checks": [
+    {
+      "boundary": "no_tsu_hardware_claim",
+      "evidence": "Exp1526-1531 all report simulator_only and no_tsu_hardware_claim.",
+      "preserved": true
+    },
+    {
+      "boundary": "no_kan_synthesis_claim",
+      "evidence": ".117 does not report KAN synthesis, timing, bitstream, or board artifacts.",
+      "preserved": true
+    },
+    {
+      "boundary": "no_kv260_board_claim",
+      "evidence": ".117 does not report KV260 board execution or latency artifacts.",
+      "preserved": true
+    },
+    {
+      "boundary": "no_arbitrary_generated_python_trust",
+      "evidence": "Runtime acceptance flows through deterministic contract fields.",
+      "preserved": true
+    },
+    {
+      "boundary": "no_legacy_small_model_headline_result",
+      "evidence": "LLM-bearing headline rows use mandated local SOTA GGUF model ids.",
+      "preserved": true
+    },
+    {
+      "boundary": "no_llm_judge_final_authority",
+      "evidence": "False-accept and soundness fields, not LLM text, determine acceptance.",
+      "preserved": true
+    }
+  ],
+  "claim_isolation_outcome": {
+    "budget_delta": 3,
+    "cases_loaded": 1,
+    "claim_isolation_ablation_ready": true,
+    "claim_isolation_delta": 0.0,
+    "claims_extracted": 4,
+    "deterministic_validators_final_authority": true,
+    "false_accept_rate": 0.0,
+    "source_artifact": "results/experiment_1525_march_claim_isolation_verifier_ablation.json"
+  },
+  "conductor_log_exp1519_to_exp1531": {
+    "entries": {
+      "exp1519": {
+        "found": true,
+        "ok": true
+      },
+      "exp1520": {
+        "found": true,
+        "ok": true
+      },
+      "exp1521": {
+        "found": true,
+        "ok": true
+      },
+      "exp1522": {
+        "found": true,
+        "ok": true
+      },
+      "exp1523": {
+        "found": true,
+        "ok": true
+      },
+      "exp1524": {
+        "found": true,
+        "ok": true
+      },
+      "exp1525": {
+        "found": true,
+        "ok": true
+      },
+      "exp1526": {
+        "found": true,
+        "ok": true
+      },
+      "exp1527": {
+        "found": true,
+        "ok": true
+      },
+      "exp1528": {
+        "found": true,
+        "ok": true
+      },
+      "exp1529": {
+        "found": true,
+        "ok": true
+      },
+      "exp1530": {
+        "found": true,
+        "ok": true
+      },
+      "exp1531": {
+        "found": true,
+        "ok": true
+      }
+    },
+    "expected_count": 13,
+    "missing_experiments": [],
+    "ok_count": 13
+  },
+  "continuous_self_learning_outcome": {
+    "boundary": "query-time policy promotion only; no model-weight mutation",
+    "continuous_self_learning_task": true,
+    "live_policy_promotion_ready": true,
+    "no_model_weight_mutation": true,
+    "rollback_passing_updates_loaded": 24,
+    "soundness_mistakes": 0,
+    "source_artifact": "results/experiment_1524_fr11_live_policy_promotion_v12.json",
+    "utility_delta": 0.0
+  },
+  "criteria_met": 14,
+  "criteria_results": {
+    "activation": {
+      "criterion": "activation",
+      "evidence_paths": [
+        "results/experiment_1519_116_completion_archive_117_activation.json:activation_manifest_complete",
+        "results/experiment_1519_116_completion_archive_117_activation.json:research_roadmap_yaml_modified",
+        "results/experiment_1519_116_completion_archive_117_activation.json:scripts_research_conductor_modified"
+      ],
+      "experiment_id": "exp1519",
+      "reason": "criterion satisfied",
+      "source_values": {
+        "activation_manifest_complete": true,
+        "honest_verdict": "complete: milestone_117_activation_complete_116_archived_runtime_fr11_thrml_gates_ready",
+        "research_roadmap_yaml_modified": false,
+        "scripts_research_conductor_modified": false,
+        "status": "complete",
+        "terminal": true,
+        "terminal_prefix_ok": true
+      },
+      "status": "MET",
+      "target": "activation_manifest_complete=true with protected roadmap/conductor files unchanged"
+    },
+    "cdg_root_cause": {
+      "criterion": "cdg_root_cause",
+      "evidence_paths": [
+        "results/experiment_1522_constraint_dependency_graph_root_cause_repair.json:cdg_root_cause_repair_ready",
+        "results/experiment_1522_constraint_dependency_graph_root_cause_repair.json:root_cause_cases_attempted",
+        "results/experiment_1522_constraint_dependency_graph_root_cause_repair.json:cdg_efficiency_delta",
+        "results/experiment_1522_constraint_dependency_graph_root_cause_repair.json:false_accept_count",
+        "results/experiment_1522_constraint_dependency_graph_root_cause_repair.json:false_accept_rate"
+      ],
+      "experiment_id": "exp1522",
+      "reason": "criterion satisfied",
+      "source_values": {
+        "cdg_efficiency_delta": 0.05015,
+        "cdg_root_cause_repair_ready": true,
+        "false_accept_count": 0,
+        "false_accept_rate": 0.0,
+        "honest_verdict": "complete: CDG root-cause repair ordering metrics computed",
+        "root_cause_cases_attempted": 111,
+        "status": "complete",
+        "terminal": true,
+        "terminal_prefix_ok": true
+      },
+      "status": "MET",
+      "target": "cdg_root_cause_repair_ready=true or honest no-signal terminal artifact"
+    },
+    "claim_isolation": {
+      "criterion": "claim_isolation",
+      "evidence_paths": [
+        "results/experiment_1525_march_claim_isolation_verifier_ablation.json:claim_isolation_ablation_ready",
+        "results/experiment_1525_march_claim_isolation_verifier_ablation.json:cases_loaded",
+        "results/experiment_1525_march_claim_isolation_verifier_ablation.json:claims_extracted",
+        "results/experiment_1525_march_claim_isolation_verifier_ablation.json:budget_delta",
+        "results/experiment_1525_march_claim_isolation_verifier_ablation.json:false_accept_count",
+        "results/experiment_1525_march_claim_isolation_verifier_ablation.json:false_accept_rate"
+      ],
+      "experiment_id": "exp1525",
+      "reason": "criterion satisfied",
+      "source_values": {
+        "budget_delta": 3,
+        "cases_loaded": 1,
+        "claim_isolation_ablation_ready": true,
+        "claims_extracted": 4,
+        "false_accept_count": 0,
+        "false_accept_rate": 0.0,
+        "honest_verdict": "complete: march_claim_isolation_ablation_ready",
+        "status": "complete",
+        "terminal": true,
+        "terminal_prefix_ok": true
+      },
+      "status": "MET",
+      "target": "claim isolation ablation reports deterministic validator outcomes and budget metrics"
+    },
+    "continuous_self_learning": {
+      "criterion": "continuous_self_learning",
+      "evidence_paths": [
+        "results/experiment_1524_fr11_live_policy_promotion_v12.json:live_policy_promotion_ready",
+        "results/experiment_1524_fr11_live_policy_promotion_v12.json:continuous_self_learning_task",
+        "results/experiment_1524_fr11_live_policy_promotion_v12.json:no_model_weight_mutation",
+        "results/experiment_1524_fr11_live_policy_promotion_v12.json:rollback_passing_updates_loaded",
+        "results/experiment_1524_fr11_live_policy_promotion_v12.json:soundness_mistakes"
+      ],
+      "experiment_id": "exp1524",
+      "reason": "criterion satisfied",
+      "source_values": {
+        "continuous_self_learning_task": true,
+        "honest_verdict": "complete: fr11_live_policy_promotion_ready",
+        "live_policy_promotion_ready": true,
+        "no_model_weight_mutation": true,
+        "rollback_passing_updates_loaded": 24,
+        "soundness_mistakes": 0,
+        "status": "complete",
+        "terminal": true,
+        "terminal_prefix_ok": true
+      },
+      "status": "MET",
+      "target": "live policy promotion is query-time only with zero soundness mistakes"
+    },
+    "diverse_topologies": {
+      "criterion": "diverse_topologies",
+      "evidence_paths": [
+        "results/experiment_1531_thrml_diverse_topology_parity_n32.json:diverse_topology_parity_ready",
+        "results/experiment_1531_thrml_diverse_topology_parity_n32.json:topologies_tested",
+        "results/experiment_1531_thrml_diverse_topology_parity_n32.json:topologies_passed",
+        "results/experiment_1531_thrml_diverse_topology_parity_n32.json:kl_divergence_by_topology",
+        "results/experiment_1531_thrml_diverse_topology_parity_n32.json:simulator_only",
+        "results/experiment_1531_thrml_diverse_topology_parity_n32.json:no_tsu_hardware_claim"
+      ],
+      "experiment_id": "exp1531",
+      "reason": "criterion satisfied",
+      "source_values": {
+        "diverse_topology_parity_ready": true,
+        "honest_verdict": "complete_thrml_diverse_topology_parity_n32_passed_no_tsu_hardware_claim",
+        "kl_divergence_by_topology": {
+          "complete": 0.0,
+          "lattice": 0.0,
+          "scale_free": 0.0,
+          "sparse_random": 0.0
+        },
+        "no_tsu_hardware_claim": true,
+        "simulator_only": true,
+        "status": "complete",
+        "terminal": true,
+        "terminal_prefix_ok": true,
+        "topologies_passed": [
+          "complete",
+          "sparse_random",
+          "lattice",
+          "scale_free"
+        ],
+        "topologies_tested": [
+          "complete",
+          "sparse_random",
+          "lattice",
+          "scale_free"
+        ]
+      },
+      "status": "MET",
+      "target": "diverse topology n=32 parity passes with per-topology metrics"
+    },
+    "live_contract_repair": {
+      "criterion": "live_contract_repair",
+      "evidence_paths": [
+        "results/experiment_1521_live_sota_contract_guided_repair_v1.json:contract_guided_repair_ready",
+        "results/experiment_1521_live_sota_contract_guided_repair_v1.json:live_sota_model_inference_used",
+        "results/experiment_1521_live_sota_contract_guided_repair_v1.json:models_used",
+        "results/experiment_1521_live_sota_contract_guided_repair_v1.json:repair_cases_attempted",
+        "results/experiment_1521_live_sota_contract_guided_repair_v1.json:false_accept_count",
+        "results/experiment_1521_live_sota_contract_guided_repair_v1.json:false_accept_rate"
+      ],
+      "experiment_id": "exp1521",
+      "reason": "criterion satisfied",
+      "source_values": {
+        "contract_guided_repair_ready": true,
+        "false_accept_count": 0,
+        "false_accept_rate": 0.0,
+        "honest_verdict": "complete: contract-guided repair ready",
+        "live_sota_model_inference_used": true,
+        "models_used": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF"
+        ],
+        "repair_cases_attempted": 2,
+        "status": "complete",
+        "terminal": true,
+        "terminal_prefix_ok": true
+      },
+      "status": "MET",
+      "target": "contract_guided_repair_ready=true with mandated SOTA GGUF and zero false accepts"
+    },
+    "product_line_rescue": {
+      "criterion": "product_line_rescue",
+      "evidence_paths": [
+        "results/experiment_1523_product_line_parser_feasibility_rescue_v2.json:product_line_rescue_ready",
+        "results/experiment_1523_product_line_parser_feasibility_rescue_v2.json:product_line_branch_retired",
+        "results/experiment_1523_product_line_parser_feasibility_rescue_v2.json:baseline_parse_rate",
+        "results/experiment_1523_product_line_parser_feasibility_rescue_v2.json:rescue_parse_rate",
+        "results/experiment_1523_product_line_parser_feasibility_rescue_v2.json:baseline_oracle_agreement_rate",
+        "results/experiment_1523_product_line_parser_feasibility_rescue_v2.json:rescue_oracle_agreement_rate",
+        "results/experiment_1523_product_line_parser_feasibility_rescue_v2.json:false_accept_rate"
+      ],
+      "experiment_id": "exp1523",
+      "reason": "criterion satisfied",
+      "source_values": {
+        "baseline_oracle_agreement_rate": 0.0,
+        "baseline_parse_rate": 0.333333,
+        "false_accept_rate": 0.0,
+        "honest_verdict": "complete: product-line staged feedback rescue ready with zero false accepts",
+        "product_line_branch_retired": false,
+        "product_line_rescue_ready": true,
+        "rescue_oracle_agreement_rate": 1.0,
+        "rescue_parse_rate": 1.0,
+        "status": "complete",
+        "terminal": true,
+        "terminal_prefix_ok": true
+      },
+      "status": "MET",
+      "target": "product-line rescue improves parse/oracle metrics or retires the branch"
+    },
+    "retrospective": {
+      "criterion": "retrospective",
+      "evidence_paths": [
+        "results/experiment_1532_milestone_117_retro.json",
+        "research-roadmap.yaml",
+        "scripts/research_conductor.py"
+      ],
+      "experiment_id": "exp1532",
+      "reason": "retrospective artifact can close from terminal sources",
+      "source_values": {
+        "missing_source_ids": [],
+        "protected_file_modification_findings": {
+          "any_modification_reported": false,
+          "source_reports": [],
+          "working_tree": {
+            "research-roadmap.yaml": "unchanged",
+            "scripts/research_conductor.py": "unchanged"
+          }
+        }
+      },
+      "status": "MET",
+      "target": "criteria_met and criteria_total summarize .117 with carry-forward decisions"
+    },
+    "runtime_contract_e2e": {
+      "criterion": "runtime_contract_e2e",
+      "evidence_paths": [
+        "results/experiment_1520_runtime_contract_e2e_harness.json:runtime_contract_e2e_ready",
+        "results/experiment_1520_runtime_contract_e2e_harness.json:source_artifacts_loaded",
+        "results/experiment_1520_runtime_contract_e2e_harness.json:contract_cases_total",
+        "results/experiment_1520_runtime_contract_e2e_harness.json:false_accept_count",
+        "results/experiment_1520_runtime_contract_e2e_harness.json:false_accept_rate"
+      ],
+      "experiment_id": "exp1520",
+      "reason": "criterion satisfied",
+      "source_values": {
+        "contract_cases_total": 458,
+        "false_accept_count": 0,
+        "false_accept_rate": 0.0,
+        "honest_verdict": "complete: runtime-contract E2E harness linked .116 contract families",
+        "runtime_contract_e2e_ready": true,
+        "source_artifacts_loaded": true,
+        "status": "complete",
+        "terminal": true,
+        "terminal_prefix_ok": true
+      },
+      "status": "MET",
+      "target": "runtime_contract_e2e_ready=true with all contract inputs and zero false accepts"
+    },
+    "thrml_n128": {
+      "criterion": "thrml_n128",
+      "evidence_paths": [
+        "results/experiment_1530_thrml_carnot_parity_n128_production_scale.json:thrml_parity_n128_passed",
+        "results/experiment_1530_thrml_carnot_parity_n128_production_scale.json:simulator_only",
+        "results/experiment_1530_thrml_carnot_parity_n128_production_scale.json:no_tsu_hardware_claim",
+        "results/experiment_1530_thrml_carnot_parity_n128_production_scale.json:n_spins",
+        "results/experiment_1530_thrml_carnot_parity_n128_production_scale.json:kl_divergence",
+        "results/experiment_1530_thrml_carnot_parity_n128_production_scale.json:blockers"
+      ],
+      "experiment_id": "exp1530",
+      "reason": "criterion satisfied",
+      "source_values": {
+        "blockers": [],
+        "honest_verdict": "complete_thrml_carnot_parity_n128_passed_no_tsu_hardware_claim",
+        "kl_divergence": 0.0,
+        "n_spins": 128,
+        "no_tsu_hardware_claim": true,
+        "simulator_only": true,
+        "status": "complete",
+        "terminal": true,
+        "terminal_prefix_ok": true,
+        "thrml_parity_n128_passed": true
+      },
+      "status": "MET",
+      "target": "THRML/Carnot n=128 software parity passes or honestly blocks"
+    },
+    "thrml_n16": {
+      "criterion": "thrml_n16",
+      "evidence_paths": [
+        "results/experiment_1527_thrml_carnot_parity_n16.json:thrml_parity_n16_passed",
+        "results/experiment_1527_thrml_carnot_parity_n16.json:simulator_only",
+        "results/experiment_1527_thrml_carnot_parity_n16.json:no_tsu_hardware_claim",
+        "results/experiment_1527_thrml_carnot_parity_n16.json:n_spins",
+        "results/experiment_1527_thrml_carnot_parity_n16.json:kl_divergence",
+        "results/experiment_1527_thrml_carnot_parity_n16.json:blockers"
+      ],
+      "experiment_id": "exp1527",
+      "reason": "criterion satisfied",
+      "source_values": {
+        "blockers": [],
+        "honest_verdict": "complete_thrml_carnot_parity_n16_passed_no_tsu_hardware_claim",
+        "kl_divergence": 0.0,
+        "n_spins": 16,
+        "no_tsu_hardware_claim": true,
+        "simulator_only": true,
+        "status": "complete",
+        "terminal": true,
+        "terminal_prefix_ok": true,
+        "thrml_parity_n16_passed": true
+      },
+      "status": "MET",
+      "target": "THRML/Carnot n=16 software parity passes or honestly blocks"
+    },
+    "thrml_n32": {
+      "criterion": "thrml_n32",
+      "evidence_paths": [
+        "results/experiment_1528_thrml_carnot_parity_n32_sample.json:thrml_parity_n32_passed",
+        "results/experiment_1528_thrml_carnot_parity_n32_sample.json:simulator_only",
+        "results/experiment_1528_thrml_carnot_parity_n32_sample.json:no_tsu_hardware_claim",
+        "results/experiment_1528_thrml_carnot_parity_n32_sample.json:n_spins",
+        "results/experiment_1528_thrml_carnot_parity_n32_sample.json:kl_divergence",
+        "results/experiment_1528_thrml_carnot_parity_n32_sample.json:blockers"
+      ],
+      "experiment_id": "exp1528",
+      "reason": "criterion satisfied",
+      "source_values": {
+        "blockers": [],
+        "honest_verdict": "complete_thrml_carnot_parity_n32_passed_no_tsu_hardware_claim",
+        "kl_divergence": 0.0,
+        "n_spins": 32,
+        "no_tsu_hardware_claim": true,
+        "simulator_only": true,
+        "status": "complete",
+        "terminal": true,
+        "terminal_prefix_ok": true,
+        "thrml_parity_n32_passed": true
+      },
+      "status": "MET",
+      "target": "THRML/Carnot n=32 software parity passes or honestly blocks"
+    },
+    "thrml_n64": {
+      "criterion": "thrml_n64",
+      "evidence_paths": [
+        "results/experiment_1529_thrml_carnot_parity_n64_sample.json:thrml_parity_n64_passed",
+        "results/experiment_1529_thrml_carnot_parity_n64_sample.json:simulator_only",
+        "results/experiment_1529_thrml_carnot_parity_n64_sample.json:no_tsu_hardware_claim",
+        "results/experiment_1529_thrml_carnot_parity_n64_sample.json:n_spins",
+        "results/experiment_1529_thrml_carnot_parity_n64_sample.json:kl_divergence",
+        "results/experiment_1529_thrml_carnot_parity_n64_sample.json:blockers"
+      ],
+      "experiment_id": "exp1529",
+      "reason": "criterion satisfied",
+      "source_values": {
+        "blockers": [],
+        "honest_verdict": "complete_thrml_carnot_parity_n64_passed_no_tsu_hardware_claim",
+        "kl_divergence": 0.0,
+        "n_spins": 64,
+        "no_tsu_hardware_claim": true,
+        "simulator_only": true,
+        "status": "complete",
+        "terminal": true,
+        "terminal_prefix_ok": true,
+        "thrml_parity_n64_passed": true
+      },
+      "status": "MET",
+      "target": "THRML/Carnot n=64 software parity passes or honestly blocks"
+    },
+    "thrml_n8": {
+      "criterion": "thrml_n8",
+      "evidence_paths": [
+        "results/experiment_1526_thrml_carnot_parity_n8.json:thrml_parity_n8_passed",
+        "results/experiment_1526_thrml_carnot_parity_n8.json:simulator_only",
+        "results/experiment_1526_thrml_carnot_parity_n8.json:no_tsu_hardware_claim",
+        "results/experiment_1526_thrml_carnot_parity_n8.json:n_spins",
+        "results/experiment_1526_thrml_carnot_parity_n8.json:kl_divergence",
+        "results/experiment_1526_thrml_carnot_parity_n8.json:blockers"
+      ],
+      "experiment_id": "exp1526",
+      "reason": "criterion satisfied",
+      "source_values": {
+        "blockers": [],
+        "honest_verdict": "complete_thrml_carnot_parity_n8_passed_no_tsu_hardware_claim",
+        "kl_divergence": 0.0,
+        "n_spins": 8,
+        "no_tsu_hardware_claim": true,
+        "simulator_only": true,
+        "status": "complete",
+        "terminal": true,
+        "terminal_prefix_ok": true,
+        "thrml_parity_n8_passed": true
+      },
+      "status": "MET",
+      "target": "THRML/Carnot n=8 software parity passes or honestly blocks"
+    }
+  },
+  "criteria_score_pct": 1.0,
+  "criteria_total": 14,
+  "experiment": "1532_milestone_117_retro",
+  "experiment_verdicts": {
+    "exp1519": {
+      "honest_verdict": "complete: milestone_117_activation_complete_116_archived_runtime_fr11_thrml_gates_ready",
+      "source_path": "results/experiment_1519_116_completion_archive_117_activation.json",
+      "status": "complete",
+      "terminal": true,
+      "terminal_prefix_ok": true
+    },
+    "exp1520": {
+      "honest_verdict": "complete: runtime-contract E2E harness linked .116 contract families",
+      "source_path": "results/experiment_1520_runtime_contract_e2e_harness.json",
+      "status": "complete",
+      "terminal": true,
+      "terminal_prefix_ok": true
+    },
+    "exp1521": {
+      "honest_verdict": "complete: contract-guided repair ready",
+      "source_path": "results/experiment_1521_live_sota_contract_guided_repair_v1.json",
+      "status": "complete",
+      "terminal": true,
+      "terminal_prefix_ok": true
+    },
+    "exp1522": {
+      "honest_verdict": "complete: CDG root-cause repair ordering metrics computed",
+      "source_path": "results/experiment_1522_constraint_dependency_graph_root_cause_repair.json",
+      "status": "complete",
+      "terminal": true,
+      "terminal_prefix_ok": true
+    },
+    "exp1523": {
+      "honest_verdict": "complete: product-line staged feedback rescue ready with zero false accepts",
+      "source_path": "results/experiment_1523_product_line_parser_feasibility_rescue_v2.json",
+      "status": "complete",
+      "terminal": true,
+      "terminal_prefix_ok": true
+    },
+    "exp1524": {
+      "honest_verdict": "complete: fr11_live_policy_promotion_ready",
+      "source_path": "results/experiment_1524_fr11_live_policy_promotion_v12.json",
+      "status": "complete",
+      "terminal": true,
+      "terminal_prefix_ok": true
+    },
+    "exp1525": {
+      "honest_verdict": "complete: march_claim_isolation_ablation_ready",
+      "source_path": "results/experiment_1525_march_claim_isolation_verifier_ablation.json",
+      "status": "complete",
+      "terminal": true,
+      "terminal_prefix_ok": true
+    },
+    "exp1526": {
+      "honest_verdict": "complete_thrml_carnot_parity_n8_passed_no_tsu_hardware_claim",
+      "source_path": "results/experiment_1526_thrml_carnot_parity_n8.json",
+      "status": "complete",
+      "terminal": true,
+      "terminal_prefix_ok": true
+    },
+    "exp1527": {
+      "honest_verdict": "complete_thrml_carnot_parity_n16_passed_no_tsu_hardware_claim",
+      "source_path": "results/experiment_1527_thrml_carnot_parity_n16.json",
+      "status": "complete",
+      "terminal": true,
+      "terminal_prefix_ok": true
+    },
+    "exp1528": {
+      "honest_verdict": "complete_thrml_carnot_parity_n32_passed_no_tsu_hardware_claim",
+      "source_path": "results/experiment_1528_thrml_carnot_parity_n32_sample.json",
+      "status": "complete",
+      "terminal": true,
+      "terminal_prefix_ok": true
+    },
+    "exp1529": {
+      "honest_verdict": "complete_thrml_carnot_parity_n64_passed_no_tsu_hardware_claim",
+      "source_path": "results/experiment_1529_thrml_carnot_parity_n64_sample.json",
+      "status": "complete",
+      "terminal": true,
+      "terminal_prefix_ok": true
+    },
+    "exp1530": {
+      "honest_verdict": "complete_thrml_carnot_parity_n128_passed_no_tsu_hardware_claim",
+      "source_path": "results/experiment_1530_thrml_carnot_parity_n128_production_scale.json",
+      "status": "complete",
+      "terminal": true,
+      "terminal_prefix_ok": true
+    },
+    "exp1531": {
+      "honest_verdict": "complete_thrml_diverse_topology_parity_n32_passed_no_tsu_hardware_claim",
+      "source_path": "results/experiment_1531_thrml_diverse_topology_parity_n32.json",
+      "status": "complete",
+      "terminal": true,
+      "terminal_prefix_ok": true
+    }
+  },
+  "failed_tasks": [],
+  "gated_or_blocked_tasks": [],
+  "honest_verdict": "complete: milestone_117_14_of_14_criteria_met_runtime_contract_fr11_thrml_claim_boundaries_preserved",
+  "live_contract_repair_outcome": {
+    "false_accept_count": 0,
+    "false_accept_rate": 0.0,
+    "mandated_sota_used": true,
+    "models_used": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF"
+    ],
+    "ready": true,
+    "repair_accept_rate_delta": 0.0,
+    "repair_cases_attempted": 2,
+    "source_artifact": "results/experiment_1521_live_sota_contract_guided_repair_v1.json"
+  },
+  "milestone": "2026.04.117",
+  "missing_artifacts": [],
+  "ops_docs_reconciled": false,
+  "ops_docs_reconciliation_deferred_reason": "separate_reconciliation_agent_owns_ops_status_changelog_and_traceability",
+  "product_line_decision": {
+    "baseline_oracle_agreement_rate": 0.0,
+    "baseline_parse_rate": 0.333333,
+    "carry_forward": "continue with larger staged benchmark while gating on parser/oracle metrics",
+    "decision": "continue",
+    "false_accept_rate": 0.0,
+    "product_line_branch_retired": false,
+    "product_line_rescue_ready": true,
+    "rescue_oracle_agreement_rate": 1.0,
+    "rescue_parse_rate": 1.0,
+    "source_artifact": "results/experiment_1523_product_line_parser_feasibility_rescue_v2.json"
+  },
+  "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+  "protected_file_modification_findings": {
+    "any_modification_reported": false,
+    "source_reports": [],
+    "working_tree": {
+      "research-roadmap.yaml": "unchanged",
+      "scripts/research_conductor.py": "unchanged"
+    }
+  },
+  "protected_files_unchanged": true,
+  "required_artifact_fields_present": [
+    "carry_forward_gates",
+    "cdg_root_cause_outcome",
+    "claim_boundaries_preserved",
+    "claim_isolation_outcome",
+    "continuous_self_learning_outcome",
+    "criteria_met",
+    "criteria_total",
+    "honest_verdict",
+    "live_contract_repair_outcome",
+    "milestone",
+    "ops_docs_reconciled",
+    "product_line_decision",
+    "research_complete_entry_recommended",
+    "runtime_contract_e2e_outcome",
+    "status",
+    "thrml_scaling_outcome"
+  ],
+  "research_complete_entry_recommended": {
+    "already_present": false,
+    "entry": {
+      "completed": "2026-05-08",
+      "doc": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "finding": "Milestone .117 met 14 of 14 criteria. Runtime-contract E2E, local-SOTA contract repair, CDG repair, product-line decision=continue, FR-11 live policy promotion, claim isolation, and THRML scaling closed. Next THRML gate: advance_to_n256_sampled_and_n64_diverse. Claim boundaries remain preserved.",
+      "id": "2026.04.117",
+      "tasks": [
+        {
+          "deliverable": "results/experiment_1519_116_completion_archive_117_activation.json",
+          "id": "exp1519-.116-completion-archive-+-.117-activation-manifest",
+          "result": "OK (conductor)",
+          "title": ".116 Completion Archive + .117 Activation Manifest"
+        },
+        {
+          "deliverable": "results/experiment_1520_runtime_contract_e2e_harness.json",
+          "id": "exp1520-runtime-contract-e2e-harness",
+          "result": "OK (conductor)",
+          "title": "Runtime-Contract E2E Harness"
+        },
+        {
+          "deliverable": "results/experiment_1521_live_sota_contract_guided_repair_v1.json",
+          "id": "exp1521-live-sota-contract-guided-repair-v1",
+          "result": "OK (conductor)",
+          "title": "Live SOTA Contract-Guided Repair v1"
+        },
+        {
+          "deliverable": "results/experiment_1522_constraint_dependency_graph_root_cause_repair.json",
+          "id": "exp1522-constraint-dependency-graph-root-cause-repair",
+          "result": "OK (conductor)",
+          "title": "Constraint Dependency Graph Root-Cause Repair"
+        },
+        {
+          "deliverable": "results/experiment_1523_product_line_parser_feasibility_rescue_v2.json",
+          "id": "exp1523-product-line-parser-feasibility-rescue-v2",
+          "result": "OK (conductor)",
+          "title": "Product-Line Parser Feasibility Rescue v2"
+        },
+        {
+          "deliverable": "results/experiment_1524_fr11_live_policy_promotion_v12.json",
+          "id": "exp1524-fr-11-live-policy-promotion-v12",
+          "result": "OK (conductor)",
+          "title": "FR-11 Live Policy Promotion v12"
+        },
+        {
+          "deliverable": "results/experiment_1525_march_claim_isolation_verifier_ablation.json",
+          "id": "exp1525-march-claim-isolation-verifier-ablation",
+          "result": "OK (conductor)",
+          "title": "MARCH Claim-Isolation Verifier Ablation"
+        },
+        {
+          "deliverable": "results/experiment_1526_thrml_carnot_parity_n8.json",
+          "id": "exp1526-thrml/carnot-parity-n=8-exact",
+          "result": "OK (conductor)",
+          "title": "THRML/Carnot Parity n=8 Exact"
+        },
+        {
+          "deliverable": "results/experiment_1527_thrml_carnot_parity_n16.json",
+          "id": "exp1527-thrml/carnot-parity-n=16-exact",
+          "result": "OK (conductor)",
+          "title": "THRML/Carnot Parity n=16 Exact"
+        },
+        {
+          "deliverable": "results/experiment_1528_thrml_carnot_parity_n32_sample.json",
+          "id": "exp1528-thrml/carnot-parity-n=32-sample",
+          "result": "OK (conductor)",
+          "title": "THRML/Carnot Parity n=32 Sample"
+        },
+        {
+          "deliverable": "results/experiment_1529_thrml_carnot_parity_n64_sample.json",
+          "id": "exp1529-thrml/carnot-parity-n=64-sample",
+          "result": "OK (conductor)",
+          "title": "THRML/Carnot Parity n=64 Sample"
+        },
+        {
+          "deliverable": "results/experiment_1530_thrml_carnot_parity_n128_production_scale.json",
+          "id": "exp1530-thrml/carnot-parity-n=128-production-scale-sample",
+          "result": "OK (conductor)",
+          "title": "THRML/Carnot Parity n=128 Production-Scale Sample"
+        },
+        {
+          "deliverable": "results/experiment_1531_thrml_diverse_topology_parity_n32.json",
+          "id": "exp1531-thrml-diverse-topology-parity-n=32",
+          "result": "OK (conductor)",
+          "title": "THRML Diverse Topology Parity n=32"
+        },
+        {
+          "deliverable": "results/experiment_1532_milestone_117_retro.json",
+          "id": "exp1532-milestone-117-retro",
+          "result": "OK (codex retro)",
+          "title": "Milestone .117 Retrospective and Carry-Forward Gates"
+        }
+      ],
+      "title": "Runtime-Contract E2E Closure + FR-11 Live Promotion + THRML Parity Scaling"
+    },
+    "reason": "recommended_only_stop_when_done_delegates_archive_write",
+    "written": false
+  },
+  "run_date": "20260508",
+  "runtime_contract_e2e_outcome": {
+    "contract_cases_total": 458,
+    "false_accept_count": 0,
+    "false_accept_rate": 0.0,
+    "manifest_path": "results/runtime_contract_e2e_manifest_1520.jsonl",
+    "ready": true,
+    "source_artifact": "results/experiment_1520_runtime_contract_e2e_harness.json",
+    "source_artifacts_loaded": true
+  },
+  "schema": "milestone_117_retro_v1",
+  "source_inputs_read": {
+    "openspec/change-proposals/research-roadmap-vNEXT.md": {
+      "exists": true
+    },
+    "ops/changelog.md": {
+      "exists": true
+    },
+    "ops/conductor-log.md": {
+      "exists": true
+    },
+    "ops/status.md": {
+      "exists": true
+    },
+    "research-complete.yaml": {
+      "exists": true
+    },
+    "research-roadmap.yaml": {
+      "exists": true
+    }
+  },
+  "status": "complete",
+  "thrml_scaling_outcome": {
+    "diverse_topology": {
+      "no_tsu_hardware_claim": true,
+      "ready": true,
+      "simulator_only": true,
+      "source_artifact": "results/experiment_1531_thrml_diverse_topology_parity_n32.json",
+      "topologies_passed": [
+        "complete",
+        "sparse_random",
+        "lattice",
+        "scale_free"
+      ],
+      "topologies_tested": [
+        "complete",
+        "sparse_random",
+        "lattice",
+        "scale_free"
+      ]
+    },
+    "next_scaling_gate": {
+      "artifact_fields": [
+        "thrml_parity_n256_passed",
+        "diverse_topology_parity_n64_ready",
+        "simulator_only",
+        "no_tsu_hardware_claim"
+      ],
+      "claim_boundary": "software/simulator parity only; no TSU, synthesis, bitstream, or board claim",
+      "decision": "advance_to_n256_sampled_and_n64_diverse"
+    },
+    "software_sweep": [
+      {
+        "experiment_id": "exp1526",
+        "kl_divergence": 0.0,
+        "n_spins": 8,
+        "no_tsu_hardware_claim": true,
+        "passed": true,
+        "passed_field": "thrml_parity_n8_passed",
+        "simulator_only": true,
+        "source_artifact": "results/experiment_1526_thrml_carnot_parity_n8.json"
+      },
+      {
+        "experiment_id": "exp1527",
+        "kl_divergence": 0.0,
+        "n_spins": 16,
+        "no_tsu_hardware_claim": true,
+        "passed": true,
+        "passed_field": "thrml_parity_n16_passed",
+        "simulator_only": true,
+        "source_artifact": "results/experiment_1527_thrml_carnot_parity_n16.json"
+      },
+      {
+        "experiment_id": "exp1528",
+        "kl_divergence": 0.0,
+        "n_spins": 32,
+        "no_tsu_hardware_claim": true,
+        "passed": true,
+        "passed_field": "thrml_parity_n32_passed",
+        "simulator_only": true,
+        "source_artifact": "results/experiment_1528_thrml_carnot_parity_n32_sample.json"
+      },
+      {
+        "experiment_id": "exp1529",
+        "kl_divergence": 0.0,
+        "n_spins": 64,
+        "no_tsu_hardware_claim": true,
+        "passed": true,
+        "passed_field": "thrml_parity_n64_passed",
+        "simulator_only": true,
+        "source_artifact": "results/experiment_1529_thrml_carnot_parity_n64_sample.json"
+      },
+      {
+        "experiment_id": "exp1530",
+        "kl_divergence": 0.0,
+        "n_spins": 128,
+        "no_tsu_hardware_claim": true,
+        "passed": true,
+        "passed_field": "thrml_parity_n128_passed",
+        "simulator_only": true,
+        "source_artifact": "results/experiment_1530_thrml_carnot_parity_n128_production_scale.json"
+      }
+    ]
+  }
+}
