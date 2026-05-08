@@ -30,7 +30,9 @@ classifiers = [
 dependencies = [
     "jax>=0.4.30",
     "jaxlib>=0.4.30",
+    "equinox>=0.11.2",
     "flax>=0.10",
+    "jaxtyping>=0.2.23",
     "optax>=0.2",
     "hypothesis>=6.0",
     "numpy>=1.26",
@@ -79,6 +81,7 @@ where = ["python"]
 
 [tool.setuptools.package-data]
 "carnot.schemas" = ["*.json"]
+"carnot.sampling._vendored_thrml" = ["LICENSE", "py.typed"]
 
 [tool.setuptools.dynamic]
 version = {attr = "carnot._version.__version__"}
@@ -129,6 +132,8 @@ omit = [
     "python/carnot/models/lagoon.py",
     "python/carnot/pipeline/knowledge_base.py",
     "python/carnot/pipeline/lookahead_energy.py",
+    "python/carnot/sampling/_vendored_thrml/*",
+    "python/carnot/sampling/_vendored_thrml/models/*",
     # Other untested scripts (not core product code)
     "scripts/*.py",
 ]
