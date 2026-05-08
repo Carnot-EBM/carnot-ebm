@@ -121,6 +121,7 @@
 | 2026.04.116 | Runtime Contracts + FR-11 Feedback + Substrate Boundaries | 1506-1518 | 13/13 criteria met; safe-DSL/grammar/runtime monitor/plan-graph contracts ready, FR-11 policy cache and rollback portable, THRML/KAN/KV260 claim boundaries preserved |
 | 2026.04.116 | Operational Efficiency Closeout | 1506-1518 | 40 min / 11 completed; 37/40 min concentrated in legacy Exp1419/Exp1270 gate churn, GPUs idle/no zombies, and 55% recoverable via terminal gates plus DualGPU scheduling |
 | 2026.04.117 | Runtime Contracts + THRML Parity Operational Closeout | 1519-1532 | 14/14 criteria met; operational retro measured 40 min / 11 completed with 37/40 min concentrated in legacy gate churn, GPUs idle/no zombies, and 55% recoverable via same-verdict retirement plus DualGPURunner scheduling |
+| 2026.04.118 | Contract Decoding + Residual Drift + THRML Scale | 1533-1546 | 13/14 criteria met; XGrammar/ABS contract decoding, BEAVER prefix bounds, product-line scale, claim-isolation routing, and THRML n=256/n=64 simulator parity advanced, with SATQuest/FR-11 limits carried to .119 |
 
 ## Breakthrough Results
 
