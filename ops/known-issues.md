@@ -207,6 +207,79 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### NEW 2026-05-08 (10:40Z): THRML/Carnot Parity Independent-RNG Audit (.119+ MANDATORY)
+
+**Adversarial finding.** The .117 THRML scaling sweep (exp1526-1531) reports
+mean_energy_delta = 0.0, KL = 0.0, magnetization_delta = 0.0 at n=32/64/128
+across 4 topologies (complete, lattice, scale_free, sparse_random). Reading
+the actual artifact data, the histogram bin counts are **byte-identical**
+between Carnot and THRML across 10,240-sample distributions:
+
+```
+n=128 production-scale (signed_ring_chord):
+  carnot_counts: [2, 3, 5, 9, 29, 49, 79, 152, 219, 314, 460, 582, 716, ...]
+  thrml_counts:  [2, 3, 5, 9, 29, 49, 79, 152, 219, 314, 460, 582, 716, ...]
+  carnot_lag1 = 0.01185482441 == thrml_lag1 = 0.01185482441
+
+n=32 diverse topology (4 topologies × 5 seeds × 2048 samples each):
+  ALL FOUR topologies show carnot_counts == thrml_counts byte-identical
+  ALL FOUR topologies show autocorrelation_lag1 byte-identical
+```
+
+**Two truly independent stochastic samplers cannot produce bit-identical
+10,240-sample histograms.** The earlier n=4 result (.115 exp1504) reported
+a non-zero stochastic mean delta of 0.042 — that's the structurally-correct
+shape. The n=32+ "0.0 exactly" pattern means one of:
+
+1. Carnot's sampler shares THRML's JAX PRNGKey path → both produce the same
+   sequence (tautology, not parity)
+2. Carnot has been silently replaced by THRML in the test harness
+3. The test compares a single sampler against itself
+
+**Why this is a paper-v6 credibility risk.** Paper-v6's hardware-portability
+claim leans on "Carnot's substrate matches THRML's reference simulator at
+production scale (n=128) across 4 topology classes." A reviewer who opens
+`results/experiment_1530_thrml_carnot_parity_n128_production_scale.json` and
+sees byte-identical histograms will spot the issue in seconds and ask why.
+That's a credibility hit, not a methodological footnote.
+
+**The good news.** Structural hookup works — THRML 0.1.3 imports, runs at
+n=128 with topology variety, completes in ~3s wall-clock. That part is real
+and useful. We just don't yet have independent empirical confirmation.
+
+**`.119 task to propose** (planner: hard pickup):
+
+```yaml
+- id: exp15XX-thrml-carnot-parity-independent-rng-audit
+  milestone: 2026.04.119
+  agent_type: codex
+  model: gpt-5.5
+  priority: critical
+  prior_failures:
+    - experiment_id: exp1526-1531
+      verdict: tautological_byte_identical_histograms
+      addressed_by: "Re-run n=32/64/128 with two provably-independent
+                     PRNGKey paths (separate jax.random.split lineages
+                     from disjoint root seeds). Expect non-zero stochastic
+                     delta within tolerance — if zero, the test still
+                     wrong."
+      retire_if_same_verdict: true
+  acceptance_gate: |
+    For n=32/64/128 and each topology:
+      mean_energy_delta NEQ 0.0 (independent samplers won't perfectly match)
+      mean_energy_delta_abs LT mean_energy_delta_abs_max (statistical bound)
+      KL divergence in (0, 0.05]  (must be non-zero, must be bounded)
+      KS-test p-value GT 0.01    (distributions statistically indistinguishable)
+    If any pair gives mean_energy_delta == 0.0 exactly, FAIL the test as
+    "rng_path_not_independent" rather than report a passed parity claim.
+```
+
+**How to apply (planner-side discipline).** Add this as a `.119 task with
+the prior_failures: block above. Until this runs successfully, paper-v6
+should NOT include the n=32-n=128 THRML parity numbers in headline
+hardware-portability claims. Mark them as "preliminary, pending
+independent-RNG audit" in any draft text.
+
 ### NEW 2026-05-08 (03:55Z): Planner Orphan-Test Discipline (.118+ pickup)
 
 **Incident.** `.117 planner emitted `tests/python/test_milestone_117_activation_manifest.py` that imports from `carnot.reporting.milestone_117_activation_manifest`, but the corresponding task `exp1519-116-completion-archive-117-activation` only writes a markdown manifest at `ops/milestone_117_activation_manifest.md` — no Python module is created. The orphan test caused pytest collection-error → pre-test fail → exp1519 SKIP × 3 (03:33/35/37 UTC) → 11 downstream `.117 tasks GATE_BLOCKed in cascade. Outer-loop deleted the orphan test 2026-05-08 03:53Z; conductor unwedged on next iter.
