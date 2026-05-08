@@ -1606,7 +1606,56 @@ And low-risk cases remain full-context-only
 And the terminal artifact reports whether routing improves verifier-call cost
 or error detection without deterministic false accepts.
 
-## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487/1495/1496/1499/1500/1501/1507/1508/1509/1510/1520/1521/1522/1525/1537/1541)
+### REQ-VERIFY-1542: ARM/EBT Soft-Value Diagnostic
+
+The repository shall provide an Exp 1542 ARM/EBT diagnostic that compares
+autoregressive soft-value proxies with explicit Carnot energy and deterministic
+validator labels without using soft values as verifier authority.
+
+The diagnostic shall:
+
+- write `results/experiment_1542_arm_ebm_soft_value_diagnostic.json` with
+  `status="in_progress"` before source loading or metric computation;
+- load deterministic-labeled cases from SATQuest CNF rows, runtime-contract
+  rows, and BEAVER-lite prefix-risk outputs;
+- use mandated local SOTA GGUF provenance when available and record whether
+  logprob/top-k/value proxies are available; legacy small GGUFs shall not count
+  as headline evidence;
+- compute explicit Carnot-energy-to-label correlation whenever finite energy
+  scores and both deterministic labels are present;
+- compute soft-value/logprob-to-label correlation only when real soft-value
+  telemetry is present, otherwise report `logprob_available=false` and an
+  honest blocker while still running the Carnot-energy-only diagnostic;
+- compute a bounded routing AUC when the case set supports positive and
+  negative deterministic labels;
+- keep deterministic SAT/runtime-contract validators as the final accept/reject
+  authority and record `no_model_weight_mutation=true`; and
+- write a terminal artifact containing `status`, `milestone`,
+  `arm_ebm_diagnostic_ready`, `model_specs`,
+  `live_sota_model_inference_used`, `diagnostic_cases`,
+  `logprob_available`, `carnot_energy_available`,
+  `energy_label_correlation`, `soft_value_label_correlation`, `routing_auc`,
+  `deterministic_validators_final_authority`, `no_model_weight_mutation`,
+  `diagnostic_report_path`, `focused_tests_passed`, and `honest_verdict`.
+
+`arm_ebm_diagnostic_ready` MUST be true only when at least one diagnostic case
+is loaded, explicit Carnot energy is available, deterministic validators remain
+final authority, no model weights are mutated, and focused tests have passed.
+`honest_verdict` MUST begin with one of `complete:`, `complete_`, `success:`,
+`success_`, `passed:`, `passed_`, `shipped:`, or `shipped_`.
+
+### SCENARIO-VERIFY-1542: Soft Values Remain Diagnostic Only
+
+Given complete Exp 1536 SATQuest rows, Exp 1520 runtime-contract rows, and Exp
+1537 BEAVER-lite prefix-risk outputs on the run date `20260508`,
+When Exp 1542 builds the ARM/EBT soft-value diagnostic,
+Then the report compares explicit Carnot energy, available soft-value/logprob
+proxies, prefix-risk scores, and deterministic accept/reject labels
+And missing logprob telemetry blocks only the soft-value correlation field
+And deterministic SAT/runtime-contract labels remain the final accept/reject
+authority in every diagnostic row.
+
+## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487/1495/1496/1499/1500/1501/1507/1508/1509/1510/1520/1521/1522/1525/1537/1541/1542)
 
 | Requirement | Python | Tests |
 |-------------|--------|-------|
@@ -1639,3 +1688,4 @@ or error detection without deterministic false accepts.
 | REQ-VERIFY-1537 | Implemented (`python/carnot/verify/beaver_prefix_bound_contracts.py`) | Implemented (`tests/python/test_experiment_1537_beaver_prefix_bound_contracts.py`) |
 | REQ-VERIFY-1538 | Planned (`python/carnot/verify/residual_drift_commitment_ledger.py`) | Planned (`tests/python/test_experiment_1538_residual_drift_commitment_ledger.py`) |
 | REQ-VERIFY-1541 | Implemented (`python/carnot/verify/claim_isolation_uncertainty_router.py`) | Implemented (`tests/python/test_experiment_1541_claim_isolation_uncertainty_router.py`) |
+| REQ-VERIFY-1542 | Implemented (`python/carnot/verify/arm_ebm_soft_value_diagnostic.py`) | Implemented (`tests/python/test_experiment_1542_arm_ebm_soft_value_diagnostic.py`) |
