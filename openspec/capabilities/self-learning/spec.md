@@ -4657,3 +4657,71 @@ missing replay, replay failure, false accepts, or soundness mistakes
 | Requirement | Python | Tests |
 |-------------|--------|-------|
 | REQ-LEARN-1555 | Implemented (`python/carnot/reporting/fr11_positive_utility_or_retire.py`) | Implemented (`tests/python/test_fr11_positive_utility_or_retire.py`) |
+
+---
+
+## REQ-LEARN-1568: FR-11 v14 Retained Policy Mode-Collapse Audit
+
+Exp 1568 SHALL audit the retained v14 policies that passed the Exp 1555
+Positive-Utility-or-Retire gate for anti-exploration mode-collapse predictors.
+The audit SHALL snapshot the retained policy set from the Exp 1555 terminal
+artifact and v14 skill graph, measure every available retained policy against
+checked-in held-out or replay evidence, and SHALL NOT fabricate missing policy
+count, pre-RL baseline, fresh k=8 reward groups, or OOD adversarial accuracy
+evidence when the source artifacts do not contain it.
+
+### REQ-LEARN-1568 Sub-requirements
+
+- REQ-LEARN-1568-1: The workflow SHALL write
+  `results/experiment_1568_fr11_v14_retained_mode_collapse_audit.json` with
+  `status="complete"` and an `honest_verdict` prefixed by `complete:`.
+- REQ-LEARN-1568-2: The retained policy snapshot SHALL include exactly the
+  v14 policies with `promotion_decision="promote"` or equivalent retained-node
+  status from Exp 1555; if fewer than the target N=5 exist, the artifact SHALL
+  report the actual count and a source limitation.
+- REQ-LEARN-1568-3: For each retained policy, the audit SHALL report the four
+  requested predictors: token-entropy drop versus pre-RL baseline, boilerplate
+  fraction versus a training/reference corpus, k=8 reward-variance collapse,
+  and adversarial OOD accuracy regression.  Predictors whose source evidence is
+  unavailable SHALL be marked unavailable rather than confirmed.
+- REQ-LEARN-1568-4: A predictor SHALL be confirmed only under the requested
+  gates: token-entropy drop >= 0.5 nats per token, boilerplate fraction >= 0.30,
+  reward variance collapsed to a single mode, or OOD adversarial accuracy worse
+  than the pre-RL baseline.
+- REQ-LEARN-1568-5: `mode_collapse_confirmed_count` SHALL count retained
+  policies with at least two confirmed predictors, and
+  `mode_collapse_confirmed_percent` SHALL equal that count divided by
+  `retained_policies_audited_count`.
+- REQ-LEARN-1568-6: `reversal_recommended_count` SHALL equal the confirmed
+  retained-policy count only when at least 50% of audited retained policies show
+  at least two confirmed predictors; otherwise it SHALL be zero.
+- REQ-LEARN-1568-7: The terminal artifact SHALL include
+  `mode_collapse_audit_complete`, `retained_policies_audited_count`,
+  `mode_collapse_confirmed_count`, `reversal_recommended_count`,
+  `retained_policy_audits`, `source_limitations`, `spec`, and
+  `honest_verdict`.
+
+### SCENARIO-LEARN-1568: Multiple Predictors Flag Retained Policies
+
+**Given** retained v14 policies with held-out generated repairs, reference
+training text, k=8 reward groups, and OOD adversarial baseline/post accuracy
+evidence
+**When** Exp 1568 evaluates the anti-mode-collapse gates
+**Then** any retained policy with at least two confirmed predictors contributes
+to `mode_collapse_confirmed_count`
+**And** reversal recommendations are emitted only if the confirmed share is at
+least 50% of audited retained policies.
+
+### SCENARIO-LEARN-1569: Missing Audit Evidence Remains Honest
+
+**Given** the Exp 1555 retained-policy artifacts contain fewer than five retained
+policies or omit pre-RL, fresh k=8, or OOD adversarial evidence
+**When** Exp 1568 writes the terminal artifact
+**Then** it reports the actual audited count and source limitations
+**And** unavailable predictors are not counted as confirmed.
+
+## Implementation Status (REQ-LEARN-1568)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-1568 | Implemented (`python/carnot/reporting/fr11_v14_retained_mode_collapse_audit.py`) | Implemented (`tests/python/test_fr11_v14_retained_mode_collapse_audit.py`) |
