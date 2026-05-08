@@ -3091,6 +3091,51 @@ inspections all pass
 verdict mismatch is recorded with the exact task id and field.
 
 
+### REQ-REPORT-065: Exp 1577 Extropic Z1 Readiness Packet THRML Alignment
+
+The Exp 1577 workflow shall update the Extropic Z1 readiness packet after
+THRML vendoring without upgrading simulator or readiness evidence into a
+Z1/XTR/TSU hardware claim.
+
+The workflow shall first write
+`results/experiment_1577_extropic_z1_readiness_packet_thrml_alignment_resumed.json`
+with `status="in_progress"`. The terminal workflow shall write
+`docs/research-notes/extropic-z1-readiness-packet-2026-05-121.md` and then
+write the terminal JSON artifact with these top-level fields:
+
+- `status`
+- `packet_path`
+- `extropic_z1_packet_updated`
+- `thrml_vendoring_reflected`
+- `analog_drift_correction_required`
+- `simulator_only_no_hardware_claim`
+- `honest_verdict`
+
+The markdown packet shall reflect THRML 0.1.3 vendoring from Exp 1564, the
+candidate warm-start API requirement from Exp 1566, Soft-Gibbs Residual
+relevance from Exp 1565, and the existing Exp 1545 access-readiness boundary.
+It shall contain a `pre-silicon correction prerequisites` section naming
+detailed-balance drift correction as required before any Z1 claim. The packet
+shall explicitly state that the current status is simulator-only and shall not
+claim access to Z1, XTR, or TSU hardware.
+
+### SCENARIO-REPORT-065: Exp 1577 Updates Z1 Packet Without Hardware Claim
+
+**Given** Exp 1545 produced an access-readiness packet with no hardware
+execution claim
+**And** Exp 1564 reports `thrml_vendoring_complete=true`,
+`thrml_version="0.1.3"`, `simulator_only=true`, and
+`no_tsu_hardware_claim=true`
+**And** Exp 1565 reports Soft-Gibbs Residual implemented
+**And** Exp 1566 reports `candidate_warm_start_validated=true`
+**When** the Exp 1577 workflow runs
+**Then** it writes the required REQ-REPORT-065 fields, writes the markdown
+packet, sets `thrml_vendoring_reflected=true`,
+`analog_drift_correction_required=true`, and
+`simulator_only_no_hardware_claim=true`, and records an honest verdict that
+keeps Z1/XTR/TSU hardware execution unclaimed.
+
+
 ### REQ-PUBLISH-003: HuggingFace README Accuracy Audit
 
 All HuggingFace model READMEs for Phase 1 per-token activation EBMs shall
