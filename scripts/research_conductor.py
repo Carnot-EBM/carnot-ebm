@@ -4168,6 +4168,143 @@ def research_step(
     return True
 
 
+def _check_parity_tautology(task: dict) -> None:
+    """Detect parity tests reporting bit-identical / exactly-zero deltas.
+
+    Two truly independent stochastic samplers (e.g. Carnot vs THRML, Carnot
+    vs reference impl) cannot produce identical histograms over thousands
+    of samples. If a "parity" deliverable reports mean_energy_delta = 0.0 /
+    KL = 0.0 / magnetization_delta = 0.0 *exactly*, the test almost
+    certainly compares one sampler against itself — same JAX PRNGKey path,
+    or one wrapper around the other. That's a tautology, not parity.
+
+    This check fires when EITHER:
+      - 2+ delta-shaped numeric fields are exactly 0.0, OR
+      - Paired histograms (carnot_counts / thrml_counts, or X_counts /
+        Y_counts) are byte-identical
+
+    Background: caught in adversarial review of .117 exp1526-1531 THRML
+    scaling sweep (2026-05-08). Sweep reported delta=0.0 across n=32-128
+    and 4 topologies with byte-identical 10,240-sample histograms; .115
+    exp1504 at n=4 had reported delta=0.042 (non-zero, the structurally-
+    correct shape), so the regression is in the n=32+ test harness.
+    Without this detector the bug would have shipped into paper-v6 and
+    been caught by a reviewer instead of by us.
+
+    Spec: REQ-CONDUCTOR-PARITY-TAUTOLOGY, SCENARIO-CONDUCTOR-PARITY-1, -2.
+    """
+    import json as _json
+
+    deliverable = task.get("deliverable")
+    if not deliverable:
+        return
+    try:
+        path = PROJECT_ROOT / deliverable
+        if not path.exists():
+            return
+        data = _json.loads(path.read_text())
+    except (OSError, ValueError):
+        return
+
+    # Heuristic gate: only run on parity-class artifacts to avoid false
+    # positives on legitimate zero deltas (e.g., perfect classifier on
+    # trivial fixture data). Identify by schema name or key shape.
+    schema = ""
+    if isinstance(data.get("metadata"), dict):
+        schema = str(data["metadata"].get("schema", ""))
+    is_parity = (
+        "parity" in schema.lower()
+        or "parity" in str(data.get("experiment", "")).lower()
+        or "parity_manifest_path" in data
+        or any("parity" in str(k).lower() for k in data.keys())
+    )
+    if not is_parity:
+        return
+
+    # Collect delta-shaped numeric fields at top level + topology_results.*
+    def _collect_deltas(d: dict, prefix: str = "") -> list[tuple[str, float]]:
+        out: list[tuple[str, float]] = []
+        for k, v in d.items():
+            full = f"{prefix}.{k}" if prefix else k
+            if isinstance(v, (int, float)) and any(
+                tok in str(k).lower()
+                for tok in ("delta", "kl_divergence", "magnetization_delta")
+            ):
+                out.append((full, float(v)))
+            elif isinstance(v, dict) and len(prefix) < 80:
+                out.extend(_collect_deltas(v, full))
+        return out
+
+    deltas = _collect_deltas(data)
+    exact_zero_deltas = [(k, v) for k, v in deltas if v == 0.0]
+
+    # Detect byte-identical histograms: any pair of array fields whose
+    # names share a stem (e.g. carnot_counts / thrml_counts, A_counts /
+    # B_counts) and whose contents are equal.
+    def _collect_histograms(d: dict, prefix: str = "") -> list[tuple[str, list]]:
+        out: list[tuple[str, list]] = []
+        for k, v in d.items():
+            full = f"{prefix}.{k}" if prefix else k
+            if isinstance(v, list) and len(v) >= 8 and all(
+                isinstance(x, (int, float)) for x in v
+            ):
+                if "count" in str(k).lower() or "hist" in str(k).lower():
+                    out.append((full, list(v)))
+            elif isinstance(v, dict) and len(prefix) < 80:
+                out.extend(_collect_histograms(v, full))
+        return out
+
+    hists = _collect_histograms(data)
+    identical_pairs: list[tuple[str, str]] = []
+    for i in range(len(hists)):
+        for j in range(i + 1, len(hists)):
+            ki, vi = hists[i]
+            kj, vj = hists[j]
+            # Only flag pairs that look paired by name (last segment
+            # differs but stem is the same prefix path).
+            if vi == vj and len(vi) > 0:
+                identical_pairs.append((ki, kj))
+
+    is_tautology = len(exact_zero_deltas) >= 2 or len(identical_pairs) > 0
+    if not is_tautology:
+        return
+
+    alerts_path = PROJECT_ROOT / "ops" / "supervisor-alerts.json"
+    alerts_path.parent.mkdir(parents=True, exist_ok=True)
+    record = {
+        "alert_type": "PARITY_TAUTOLOGY",
+        "timestamp": datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "task_id": task.get("id", "unknown"),
+        "deliverable": deliverable,
+        "exact_zero_deltas": [
+            {"key": k, "value": v} for k, v in exact_zero_deltas[:8]
+        ],
+        "identical_histogram_pairs": [
+            {"a": a, "b": b} for a, b in identical_pairs[:8]
+        ],
+        "detail": (
+            f"Task {task.get('id', 'unknown')} reports parity-test outputs "
+            f"that are bit-identical or exactly zero across "
+            f"{len(exact_zero_deltas)} delta fields and "
+            f"{len(identical_pairs)} histogram pairs. Two truly independent "
+            f"stochastic samplers cannot produce bit-identical 10k-sample "
+            f"histograms; the test likely compares one sampler against "
+            f"itself (shared PRNGKey path, or one is a wrapper around the "
+            f"other). Audit before shipping in any headline claim. See "
+            f".117 exp1526-1531 incident in ops/known-issues.md (2026-05-08)."
+        ),
+    }
+    with open(alerts_path, "a") as f:
+        f.write(_json.dumps(record) + "\n")
+    logger.warning(
+        "PARITY_TAUTOLOGY alert for %s: %d exact-zero deltas, "
+        "%d identical histogram pairs",
+        task.get("id", "unknown"),
+        len(exact_zero_deltas),
+        len(identical_pairs),
+    )
+
+
 def _log_experiment_completion(task: dict, test_summary: str) -> None:
     """Log a research step's completion, downgrading OK -> FAIL when the
     artifact is bootstrap-only (Sonnet bailed without updating it).
@@ -4181,6 +4318,15 @@ def _log_experiment_completion(task: dict, test_summary: str) -> None:
     The downgrade lets MAX_FAILURES_PER_TASK kick in after 3 attempts so the
     burn loop terminates and the operator gets a visible signal in the log
     rather than a silent infinite OK cycle.
+
+    Also runs the result anomaly detectors (`_check_auroc_anomaly`,
+    `_check_parity_tautology`) — they read the deliverable and append
+    JSONL records to `ops/supervisor-alerts.json` if anything looks
+    suspicious. Both detectors are silent on normal results; an entry
+    only appears when an edge-case pattern fires. Wired here at
+    completion-time per exp1048's original intent (the auroc detector
+    has been defined but unwired since 2026-04; .118 wires both at once
+    in response to the .117 THRML byte-identical-histogram finding).
     """
     if not _artifact_is_finished(task):
         deliverable = task.get("deliverable", "<no deliverable>")
@@ -4190,6 +4336,14 @@ def _log_experiment_completion(task: dict, test_summary: str) -> None:
             f"artifact_not_updated_past_bootstrap (deliverable={deliverable}); pytest: {test_summary}",
         )
         return
+    try:
+        _check_auroc_anomaly(task)
+    except Exception as exc:
+        logger.warning("AUROC anomaly check failed for %s: %s", task.get("id", "?"), exc)
+    try:
+        _check_parity_tautology(task)
+    except Exception as exc:
+        logger.warning("Parity tautology check failed for %s: %s", task.get("id", "?"), exc)
     log_step(task["title"], "OK", test_summary)
 
 
