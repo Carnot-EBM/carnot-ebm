@@ -7,6 +7,168 @@ integration-plan update + .NNN priority adjustment.
 
 ---
 
+## DT-MCMC-K1 response (received 2026-05-08, ~18:30Z) — **VERDICT: K=1 PCD DIVERGES ON NON-CONVEX ISING; NEED ADAPTIVE K + SA/PT**
+
+**Question summary:** Is MCMC Layers' K=1 Fenchel-Young unbiased gradient
+practically sufficient for Carnot's Phase 5 in-situ training at n=128
+production scale, or does it need a K-schedule?
+
+**Verdict: Carnot's premise contains a load-bearing CATEGORY ERROR.**
+We've been conflating CD-1 guarantees (where MCMC Layers' K=1 holds)
+with PCD mechanics (Carnot's actual training regime). On a non-convex
+moving target, K=1 PCD **diverges** — the chains freeze and carve
+"ghost modes" exactly when the verifier starts learning. Phase 5
+needs adaptive K + temperature-cycling.
+
+### Key findings
+
+**(a) Quantitative bias model — AR(1) tracking lag:**
+
+```
+Bias(s) ≈ O((η / γ(n, t, ‖J_s‖)) · ‖∂E_π[Y]/∂θ‖)
+       ≈ O(η · exp(c · √n · ‖J_s‖_∞ / t))
+```
+
+For n=128, t=1: barrier scale `√128 ≈ 11.3`. Once `‖J_s‖_∞` reaches
+O(1) during training, γ collapses to **~10⁻⁵**. Since η ≫ γ, parameter
+updates vastly outpace mixing time. **Persistent chains freeze,
+decouple from target distribution, carve massive spurious local
+minima ("ghost modes").**
+
+**Verdict: BIAS-DOMINATED REGIME. Training diverges.**
+
+**(b) Per-step ≠ converged-distribution unbiasedness:**
+
+Proposition 3's K=1 unbiased gradient is for a **local surrogate loss
+anchored at starting state y**, evaluated exclusively over the
+Hamming-1 marginal polytope. The paper sidesteps the Sutskever-Tieleman
+impossibility by **changing the objective**, not solving the original.
+
+**The PCD mismatch (load-bearing):** To inherit the FY guarantee, you
+must evaluate the loss centered at `y_data` (CD-1). Carnot's PCD starts
+each K=1 step at `y_persistent`. **You're computing a perfectly
+unbiased gradient for an FY loss anchored to a wandering hallucination.**
+
+**(e) Non-convexity addressed:** the FY loss only looks 1-hop; its
+mathematical guarantee survives global non-convexity *by ignoring it*.
+Provides an unbiased gradient pointing to the bottom of whatever local
+trap the persistent chain is in. Useless for global EBM convergence.
+
+**(c) Discriminative training makes mixing EXPONENTIALLY WORSE:**
+
+Carnot trains J to confidently separate valid from invalid candidates →
+carves deep energy wells for valid candidates, erects massive barriers
+around invalid ones → sharpens the spectrum of J → rapidly inflates
+`‖J_s‖_∞`. **A K=1 chain that appears healthy at step 0 hits a
+catastrophic mixing wall exactly when the verifier begins succeeding.**
+
+This is a counter-intuitive result worth highlighting: **training
+quality and chain mixing are inversely correlated** under standard PCD.
+
+**(d) Practical K-schedule:**
+
+| Phase | Strategy |
+|---|---|
+| Early (warm-up) | K=1 while J near 0; spectral gap wide |
+| Mid | Scale K dynamically 5 → 20 to compute ceiling |
+| Late | K capped → **must inject noise**: Simulated Annealing within K steps (spike to t=5 then cool to t=1), OR Parallel Tempering across replicas |
+
+**Linearly raising K cannot overcome an exponential gap.** Late-phase
+training requires explicit barrier-bridging via SA or PT.
+
+**Checkable signals (do NOT monitor gradient variance — it stays
+artificially stable when chains freeze):**
+
+1. **Hamming Velocity**: `Δ_H = Hamming(y_p^(s), y_p^(s−50))`. If
+   chain flips fewer than 2-3 bits over 50 gradient steps, **chain is
+   hard-frozen** in local minimum. Raise K.
+2. **Persistent Energy Gap**: `ΔE = E[E(y_persistent)] − E[E(y_data)]`.
+   In healthy PCD, ΔE ≈ 0. If ΔE rises and plateaus high → locked out
+   by barriers. If ΔE drops deeply negative → found unpenalized
+   spurious mode (ghost mode).
+
+### Falsifiable empirical predicate (cosine-similarity audit)
+
+Use Carnot's existing exp1503/1504 tiny-Ising parity infrastructure:
+
+1. Train identical Carnot parity models at n ∈ {4, 8, 16, 24, 32} using
+   K=1 Phase 5 update rule.
+2. **Oracle**: at every epoch, pause training and analytically compute
+   the **exact global MLE gradient** ∇_MLE via brute-force state
+   enumeration of the 2^n partition function (trivial up to n=25).
+3. **Metric**: plot cosine similarity between K=1 PCD gradient and
+   true MLE gradient over time.
+4. **Predicted falsification**:
+   - For n=4 and n=8: cosine similarity ≈ 1.0 (robust)
+   - For n ≥ 16: cosine similarity **permanently crashes toward zero
+     precisely at the epoch where verifier loss drops and discriminative
+     `‖J‖_∞` grows**
+   - Exact enumeration will reveal **K=1 PCD is actively spawning
+     massive "ghost modes"** (hallucinated minima) because local K=1
+     updates are blind to global probability mass
+
+This is the cheap, definitive test. If cosine similarity crashes at
+n=16, we have proof of failure mode before scaling to n=128.
+
+### Tasks to file
+
+1. **NEW `.120 task** (highest priority): `exp15QQ-phase5-pcd-divergence-
+   audit-tiny-ising`. Run the cosine-similarity audit on n=4..32. If
+   prediction confirmed, Phase 5 architecture rewrites are NEEDED.
+
+2. **NEW `.121 task** (gated on .120 audit): `exp15RR-phase5-adaptive-K-
+   schedule-implementation`. Implement adaptive K with Hamming-Velocity
+   + Persistent-Energy-Gap monitoring; SA temperature-cycling and/or
+   Parallel Tempering for late-phase training.
+
+3. **Phase 5 architecture revision**: the in-situ training spec at
+   `_bmad/architecture.md` Phase 5 section assumes K=1 PCD on the
+   final substrate. Per DT-MCMC-K1, this is structurally insufficient.
+   Phase 5 architecture must specify:
+   - Adaptive K schedule
+   - Temperature-cycling protocol (SA in-K-steps vs PT replicas)
+   - Hamming-Velocity + Energy-Gap diagnostics as gating signals
+   - Acceptance gate: training proceeds only if cosine-similarity-to-
+     enumeration > 0.8 at every checkpoint where enumeration is feasible
+     (likely n ≤ 25 in production)
+
+4. **Paper-v6 §3 disclosure (revised)**: "Carnot's Phase 5 in-situ
+   training uses adaptive K-PCD with temperature-cycling. K=1
+   simplifications, while theoretically attractive (Sullivan 2026's
+   Fenchel-Young guarantee), structurally diverge on non-convex Ising
+   with discriminative training, per the cosine-similarity audit in
+   Appendix Y."
+
+### Implications for Carnot's research record
+
+- **Counter-intuitive insight (worth a paper-v6 callout)**: training
+  quality and chain mixing are inversely correlated under standard PCD.
+  Carnot's Phase 5 architecture must explicitly engineer for this.
+- **Prior `_bmad/architecture.md` Phase 5 spec assumed K=1 sufficiency.**
+  Revise.
+- **MCMC Layers' role in Carnot pipeline**: now bounded to
+  - Inference sampling: ELIMINATED (DT-7, vendor THRML)
+  - Phase 5 training (CD-1, K=1): VIABLE but not for production
+  - Phase 5 training (PCD, K=1): **NOT VIABLE** at production scale
+  - Useful only as building block: the FY loss is fine on local
+    surrogates; problem is using it as global MLE proxy
+
+### Cascade for follow-up prompts
+
+- **DT-MCMC-NULL** (security): unchanged — still asks about MH proposal
+  correction concentrating on null space. May be moot if MCMC Layers
+  is also disqualified for Phase 5, but the question is structurally
+  independent.
+- **DT-MCMC-STATELESS**: even more moot — MCMC Layers is now eliminated
+  from both inference (DT-7) AND production-scale Phase 5 (DT-MCMC-K1).
+- **DT-COMPOSITION**: revised. Distribution-learning role for MCMC
+  Layers needs replacement. Candidates: BRAIN's REINFORCE (if Phase 3
+  expressivity question DT-BRAIN-CORRELATIONS resolves favorably),
+  Spectral Annealing for argmin only, or a Carnot-specific PCD with
+  adaptive K + SA/PT (the path DT-MCMC-K1 explicitly recommends).
+
+---
+
 ## DT-2 response (received 2026-05-08, ~18:00Z) — **VERDICT: HYPOTHESIS INVERTED — RETENTIONS ARE THE BUG, NOT RETIREMENTS**
 
 **Question summary:** Does Sullivan's `|λ|`-bug cause spurious FR-11 v14
