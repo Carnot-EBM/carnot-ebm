@@ -1136,3 +1136,4 @@ web search: GitHub trending energy based mod |
 | 2026-05-07 23:42 UTC | Executable Monitor Runtime Adapter - Gated on Exp1 | OK | 81 passed, 1 warning in 5.35s |
 | 2026-05-08 00:11 UTC | Plan-Graph Structural Contract Gate | OK | 81 passed, 1 warning in 4.00s |
 | 2026-05-08 00:30 UTC | Product-Line Solver Oracle Benchmark | OK | 81 passed, 1 warning in 5.57s |
+| 2026-05-08 00:43 UTC | FR-11 Verifier-Feedback Policy Cache v11 | OK | 81 passed, 1 warning in 5.52s |
