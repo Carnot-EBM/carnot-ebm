@@ -307,3 +307,23 @@ retired_extras:
     retired_by_artifact: "results/experiment_1560_119_completion_archive_120_activation.json"
     operator_reopen_required: true
     retire_if_same_verdict: true
+  # Added by Exp 1563 - SpecAnn Phase 3 sampler rejection.
+  - id: specann_phase3_sampler_optimization_rejected
+    reason: |
+      Spectral Annealing is retired for Phase 3 inference-time argmin after
+      Deep Think DT-COMPOSITION (e)/(f): HUBO→QUBO reductions inject gadgets
+      and penalties that fracture the spectral homotopy path, phase-transition
+      level-crossings force cold-restarts, and SpecAnn+BRAIN+MCMC Layers
+      triggers Gadget-Induced Mean-Field Collapse. Carnot retains the existing
+      Gibbs-heuristic argmin on unreduced HUBO energy.
+    experiment_ids:
+      - exp1563
+    blocked_patterns:
+      - Spectral Annealing
+      - SpecAnn
+      - SpecAnn+BRAIN+MCMC Layers
+      - HUBO→QUBO Spectral Annealing
+    retired_milestone: "2026.05.120"
+    retired_by_artifact: "results/experiment_1563_specann_rejection_architecture_record.json"
+    operator_reopen_required: true
+    retire_if_same_verdict: true

@@ -203,6 +203,11 @@ The audit shall report how many roadmaps, tests, and local import targets were
 checked, how many missing imports were found, and how many missing imports were
 allowed because the roadmap explicitly declared the implementation deliverable.
 
+### REQ-HARNESS-SAMPLER-NO-SPECANN: Phase 3 SpecAnn Ban
+
+Phase 3 substrate sampler MUST NOT use Spectral Annealing (Deep Think
+DT-COMPOSITION 2026-05-08).
+
 ## Scenarios
 
 ### SCENARIO-HARNESS-001: Bootstrap Skeleton Is Not Complete
@@ -285,6 +290,22 @@ deliverable
 **Then** the audit fails before pytest collection
 **And** the orphan import is reported with the test file and module path.
 
+### SCENARIO-HARNESS-SAMPLER-1: Direct HUBO Evaluation At Production Scale
+
+**Given** a Phase 3 substrate sampler evaluates an unreduced HUBO energy
+**And** the production-scale problem has n≥128 variables
+**When** the sampler performs inference-time argmin
+**Then** HUBO direct evaluation MUST succeed without QUBO reduction at
+production scale (n≥128).
+
+### SCENARIO-HARNESS-SAMPLER-2: Future SpecAnn Proposals Rebut Rejection
+
+**Given** a future Phase 3 planning proposal recommends SpecAnn or Spectral
+Annealing
+**When** it enters the research harness
+**Then** the proposal MUST document why the rejection rationale no longer
+applies.
+
 ## Implementation Status
 
 | Requirement | Documentation | Artifact |
@@ -303,3 +324,4 @@ deliverable
 | REQ-HARNESS-012 | Implemented (`scripts/meta_harness_conductor_search.py`) | Implemented |
 | REQ-HARNESS-013 | Implemented (`scripts/conductor_supervisor.py`) | Implemented (`results/experiment_1027_conductor_supervisor.json`) |
 | REQ-HARNESS-014 | Implemented (`scripts/audit_orphan_test_imports.py`) | Implemented (`tests/python/test_audit_orphan_test_imports.py`) |
+| REQ-HARNESS-SAMPLER-NO-SPECANN | Implemented (`_bmad/architecture.md`, `ops/exclusion_manifest.yaml`) | Implemented (`results/experiment_1563_specann_rejection_architecture_record.json`) |
