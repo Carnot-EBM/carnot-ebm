@@ -377,6 +377,100 @@ abstracts available via:
                        finite K; spectral-gap cure requires K ≫ 10^15."
         retire_if_same_verdict: true
 
+- id: exp15QQ-phase5-pcd-divergence-audit-tiny-ising
+  title: "Phase 5 PCD Divergence Audit — Cosine Similarity vs Enumerated MLE (DT-MCMC-K1 follow-up)"
+  agent_type: codex
+  model: gpt-5.5
+  priority: critical
+  prompt_seed: |
+    Per Deep Think DT-MCMC-K1 verdict (2026-05-08, docs/research-notes/
+    iclr26-deep-think-responses.md): Carnot's Phase 5 in-situ training
+    plan assumed K=1 PCD with MCMC Layers' Fenchel-Young guarantee
+    sufficient. Deep Think identified a CATEGORY ERROR — the FY
+    guarantee is for CD-1 anchored at y_data, but PCD starts at
+    y_persistent. On a non-convex moving target, K=1 PCD diverges:
+    chains freeze when ‖J‖_∞ grows during discriminative training,
+    decouple from the target, carve "ghost modes."
+
+    This audit definitively proves or refutes the divergence claim
+    using existing tiny-Ising infrastructure (exp1503/1504-class).
+
+    Steps:
+    1. Train Carnot parity models at n ∈ {4, 8, 16, 24, 32} using
+       K=1 PCD update rule.
+    2. At every epoch, pause training and analytically compute exact
+       global MLE gradient ∇_MLE via brute-force state enumeration
+       of 2^n partition function (trivial up to n=25; ~10^7.5
+       configurations at n=25).
+    3. Plot cosine similarity between K=1 PCD gradient and ∇_MLE over
+       training time, for each n.
+    4. Predicted falsification (per DT-MCMC-K1):
+       - n=4, 8: cosine similarity ≈ 1.0 (robust)
+       - n ≥ 16: cosine similarity permanently crashes toward 0
+         exactly when verifier loss drops and ‖J‖_∞ grows
+       - Exact enumeration shows K=1 PCD spawns ghost modes
+    5. If predictions confirmed: Phase 5 architecture rewrite needed.
+       File adaptive K + SA/PT design follow-up.
+       If predictions refuted at n ≥ 16: K=1 sufficient at scale; note
+       the mathematical surprise and re-evaluate DT-MCMC-K1's premise.
+
+    Acceptance gate: cosine-similarity curves for n ∈ {4,8,16,24,32}
+    plotted; verdict {confirmed, refuted, partial} stated explicitly
+    with the epoch where similarity crosses 0.5 (if it does).
+
+    prior_failures:
+      - experiment_id: none
+        verdict: novel_audit
+        addressed_by: "Brute-force-enumeration oracle for tiny n provides
+                       analytical ground truth; falsifies or confirms
+                       PCD-vs-FY-loss category error before scaling."
+
+- id: exp15RR-phase5-adaptive-K-schedule-implementation
+  title: "Phase 5 Adaptive K + SA/PT Implementation (gated on exp15QQ)"
+  agent_type: codex
+  model: gpt-5.5
+  priority: high
+  gated_on:
+    - upstream: exp15QQ-phase5-pcd-divergence-audit-tiny-ising
+      gate_field: divergence_confirmed
+      expected_value: true
+  prompt_seed: |
+    Gated on exp15QQ confirming K=1 PCD divergence at n ≥ 16.
+    Per Deep Think DT-MCMC-K1 recommendation: implement adaptive K
+    PCD with temperature-cycling.
+
+    Components:
+    1. Adaptive K controller:
+       - Monitor Hamming-Velocity Δ_H = Hamming(y_p^(s), y_p^(s−50))
+         over sliding 50-step window
+       - If Δ_H < 3 bits, raise K by 5 (cap at compute ceiling)
+       - Monitor Persistent Energy Gap ΔE = E[E(y_p)] − E[E(y_data)]
+       - If ΔE rises and plateaus high OR drops deeply negative,
+         flag chain pathology
+    2. Simulated Annealing within K steps (late-training):
+       - Spike t to 5 at K=0, cool to 1 by K=k_max
+       - Within-step temperature schedule: t(k) = 1 + 4·(1 − k/k_max)
+    3. Parallel Tempering option (alternative to SA):
+       - 4 replicas at t ∈ {1, 1.5, 2.5, 5}
+       - Swap proposals every 10 sweeps using metropolis criterion
+    4. Diagnostic dashboard:
+       - Hamming-Velocity time series
+       - Persistent Energy Gap time series
+       - Cosine-similarity-to-enumeration at every checkpoint where
+         feasible (n ≤ 25)
+
+    Acceptance gate (must hold during entire Phase 5 training run):
+    - Cosine similarity to enumerated MLE > 0.8 at every checkpoint
+      with n ≤ 25
+    - Hamming Velocity > 3 bits / 50 steps in steady state
+    - No persistent ΔE plateau > 2 standard deviations from healthy
+
+    prior_failures:
+      - experiment_id: exp15QQ-phase5-pcd-divergence-audit-tiny-ising
+        verdict: divergence_confirmed (expected)
+        addressed_by: "Adaptive K + SA/PT implements the explicit
+                       fix recommended by DT-MCMC-K1."
+
 - id: exp15PP-adversarial-pass-rate-saturation-rho-of-C
   title: "Adversarial Pass-Rate Saturation — ρ(C) Measurement for k=6 Ensemble"
   agent_type: codex
