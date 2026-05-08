@@ -1655,6 +1655,62 @@ And missing logprob telemetry blocks only the soft-value correlation field
 And deterministic SAT/runtime-contract labels remain the final accept/reject
 authority in every diagnostic row.
 
+### REQ-VERIFY-1556: ARM/EBT Logprob Telemetry Repair Diagnostic
+
+The repository shall provide an Exp 1556 ARM/EBT telemetry-repair diagnostic
+that reuses the mandated local SOTA GGUF runtime path to capture token logprob
+and top-k telemetry for deterministic-labeled verifier cases when the runtime
+exposes that telemetry, and otherwise records exact blockers without promoting
+soft signals to acceptance authority.
+
+The diagnostic shall:
+
+- write `results/experiment_1556_arm_ebm_logprob_telemetry_repair.json` with
+  `status="in_progress"` before source loading, runtime probing, or metric
+  computation;
+- select a bounded case set from SATQuest, runtime-contract, or product-line
+  rows where deterministic accept/reject labels and explicit energy scores are
+  available;
+- invoke the existing local SOTA GGUF telemetry path for at least one mandated
+  model when locally available, requesting token logprobs and top-k alternatives
+  without using legacy small GGUFs as headline telemetry evidence;
+- parse token logprobs and top-k alternatives into per-case diagnostic rows,
+  recording `logprob_available=false` or `topk_available=false` with precise
+  blockers when the runtime returns text without those telemetry fields;
+- compute energy-to-label correlation and routing AUC only as diagnostic
+  measurements over deterministic labels;
+- keep deterministic SAT/runtime-contract/product-line validators as the final
+  accept/reject authority, so logprob, top-k, soft-value, model confidence, and
+  model-declared acceptance can never override a validator rejection; and
+- write a terminal artifact containing `status`, `milestone`,
+  `arm_ebm_logprob_telemetry_ready`, `model_specs`,
+  `live_sota_model_inference_used`, `logprob_available`, `topk_available`,
+  `telemetry_adapter_path`, `diagnostic_cases`,
+  `energy_label_correlation`, `routing_auc`,
+  `deterministic_validators_final_authority`, `telemetry_blockers`,
+  `focused_tests_passed`, and `honest_verdict`.
+
+`arm_ebm_logprob_telemetry_ready` MUST be true only when at least one
+diagnostic case has live mandated SOTA text, token logprob telemetry, top-k
+alternatives, deterministic validator labels, explicit energy scores,
+deterministic validators remain final authority, and focused tests have passed.
+`honest_verdict` MUST begin with one of `complete:`, `complete_`, `success:`,
+`success_`, `passed:`, `passed_`, `shipped:`, or `shipped_`.
+
+### SCENARIO-VERIFY-1556: Logprobs Stay Below Validator Authority
+
+Given deterministic-labeled SATQuest, runtime-contract, or product-line cases
+on the run date `20260508`,
+When Exp 1556 captures local SOTA token logprob and top-k telemetry for those
+cases,
+Then the diagnostic report records available token logprobs, top-k
+alternatives, energy scores, deterministic labels, energy-label correlation,
+and routing AUC
+And missing runtime telemetry is recorded as explicit blockers rather than
+fabricated from legacy models
+And every final accept/reject decision remains the deterministic validator
+decision even when soft telemetry would prefer the opposite answer.
+
 ### REQ-VERIFY-1551: Automata/SAT Unified Contract Gate
 
 The repository shall provide an Exp 1551 unified contract gate that sequences
@@ -1905,6 +1961,7 @@ before a ready artifact can be reported.
 | REQ-VERIFY-1538 | Planned (`python/carnot/verify/residual_drift_commitment_ledger.py`) | Planned (`tests/python/test_experiment_1538_residual_drift_commitment_ledger.py`) |
 | REQ-VERIFY-1541 | Implemented (`python/carnot/verify/claim_isolation_uncertainty_router.py`) | Implemented (`tests/python/test_experiment_1541_claim_isolation_uncertainty_router.py`) |
 | REQ-VERIFY-1542 | Implemented (`python/carnot/verify/arm_ebm_soft_value_diagnostic.py`) | Implemented (`tests/python/test_experiment_1542_arm_ebm_soft_value_diagnostic.py`) |
+| REQ-VERIFY-1556 | Implemented (`python/carnot/verify/arm_ebm_logprob_telemetry_repair.py`) | Implemented (`tests/python/test_experiment_1556_arm_ebm_logprob_telemetry_repair.py`) |
 | REQ-VERIFY-1551 | Implemented (`python/carnot/verify/unified_contract_gate.py`) | Implemented (`tests/python/test_experiment_1551_automata_sat_unified_contract_gate.py`) |
 | REQ-VERIFY-1552 | Implemented (`python/carnot/verify/residual_drift_repair_policy.py`) | Implemented (`tests/python/test_experiment_1552_residual_drift_repair_policy.py`) |
 | REQ-VERIFY-1553 | Implemented (`python/carnot/verify/claim_isolation_router_scale.py`) | Implemented (`tests/python/test_experiment_1553_claim_isolation_router_scale.py`) |
