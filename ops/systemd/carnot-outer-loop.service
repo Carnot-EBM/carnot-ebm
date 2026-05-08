@@ -1,0 +1,8 @@
+[Unit]
+Description=Carnot outer-loop hourly monitor (codex/gpt-5.5)
+
+[Service]
+Type=oneshot
+ExecStart=/home/ianblenke/.carnot/outer-loop-codex.sh
+StandardOutput=journal
+StandardError=journal
