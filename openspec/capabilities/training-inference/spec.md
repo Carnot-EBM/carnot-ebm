@@ -2429,6 +2429,47 @@ planted null space at MH-class rates.
 
 **Implementation Status:** Implemented (Exp 1561)
 
+## REQ-SAMPLE-058: Exp 1564 vendored THRML block-Gibbs inference sampler
+
+Carnot SHALL replace the inference-time hand-rolled Gibbs sampler adapter with
+a thin adapter over vendored Extropic THRML 0.1.3 block-Gibbs sampling. The
+adapter SHALL initialize each inference chain from the user-provided
+`candidate` in the verifier API payload `{prompt, candidate}`, never from a
+random, cached, or previous-prompt state.
+
+Acceptance criteria:
+- The repository SHALL include a vendored THRML 0.1.3 source subtree under
+  `python/carnot/sampling/_vendored_thrml/` with Apache-2.0 license provenance.
+- `python/carnot/sampling/gibbs.py` SHALL import the vendored THRML package and
+  dispatch Ising sampling through THRML `IsingEBM`, `IsingSamplingProgram`, and
+  `sample_states` block-Gibbs APIs.
+- The adapter SHALL expose a verifier-payload entry point that accepts
+  `{prompt, candidate}` and SHALL use `candidate` as the initial free-block
+  state passed to THRML.
+- A zero-coupling K=1 sanity check SHALL show THRML block-Gibbs randomizes from
+  the supplied initial state with binomial-center Hamming-distance behavior.
+- An Exp 1548-style constructive parity audit SHALL report
+  `kl_to_thrml_after_vendoring = 0.0` because the Carnot adapter and THRML
+  reference path execute the same vendored transition operator.
+- `results/experiment_1564_thrml_vendored_block_gibbs_replacement.json` SHALL
+  include `status`, `thrml_vendoring_complete`,
+  `kl_to_thrml_after_vendoring`, `candidate_warm_start_implemented`,
+  `regression_tests_passed`, `mirror_repo_url`, and `honest_verdict`.
+
+**Implementation Status:** Planned (Exp 1564)
+
+### SCENARIO-SAMPLE-086: Exp 1564 uses candidate-warm-started vendored THRML
+
+Given: a verifier API payload containing `prompt` and a binary `candidate`
+state, and an Ising model with deterministic biases and couplings.
+When: the Carnot Gibbs adapter runs the inference sampler.
+Then: the first THRML chain state is initialized from the supplied candidate,
+the returned samples come from vendored THRML block-Gibbs rather than Carnot's
+legacy random initialization, and the Exp 1564 deliverable records constructive
+KL parity with THRML as `0.0`.
+
+**Implementation Status:** Planned (Exp 1564)
+
 ## REQ-MODEL-031: SCEnergyModel — Set-Level Energy Function for Statement Consistency (Exp 944)
 
 SCEnergyModel SHALL implement a permutation-invariant set-level energy function that assigns
