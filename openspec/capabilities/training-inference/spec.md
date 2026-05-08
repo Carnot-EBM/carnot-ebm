@@ -2374,6 +2374,61 @@ writes the required terminal artifact fields without hardware claims.
 
 **Implementation Status:** Planned (Exp 1548)
 
+## REQ-SAMPLE-057: Exp 1561 kinetic-defense zero-coupling null-space test
+
+Carnot SHALL provide a bounded simulator-only kinetic-defense audit for the
+DT-MCMC-NULL zero-coupling falsifiable predicate. The audit SHALL compare
+single-site Metropolis-Hastings, single-site Glauber Gibbs, and THRML 0.1.3
+graph-color block-Gibbs semantics on the same planted 64-bit verifier-null-space
+landscape without claiming Extropic TSU, Z1/XTR-0, board, synthesis, bitstream,
+or hardware execution.
+
+Acceptance criteria:
+- The experiment SHALL create
+  `results/experiment_1561_kinetic_defense_zero_coupling_test.json` with
+  `status="complete"` after writing a bootstrap-safe terminal artifact.
+- The landscape SHALL use `n=64` binary variables, 15 independent 4-bit
+  verifier blocks, a 4-bit free null suffix, target block `1111`, and
+  `E(y) = -10 * sum_i 1{block_i = target}` at temperature `t=1.0`.
+- The default run SHALL initialize 10,000 chains at all-zero verifier blocks and
+  measure checkpoints `K in {10, 50, 100, 500, 1000}` sweeps.
+- The audit SHALL record empirical single-block hitting-time estimates in
+  bit-update steps for Algorithm 1 single-site Metropolis-Hastings,
+  single-site Glauber Gibbs, and THRML graph-color block-Gibbs semantics.
+- The audit SHALL record per-checkpoint current null-space mass, cumulative
+  null-space hit mass, mean global hitting sweeps, and per-sample energy
+  distributions for each sampler.
+- The terminal artifact SHALL include `kinetic_defense_in_depth_validated`,
+  `mh_hitting_time_steps_per_block`,
+  `single_site_gibbs_hitting_time_steps_per_block`,
+  `thrml_block_gibbs_hitting_time_steps_per_block`,
+  `thrml_security_parity_with_single_site_gibbs`, `p_n_at_k100_mh`,
+  `p_n_at_k100_single_site_gibbs`, `p_n_at_k100_thrml_block_gibbs`,
+  `blockers`, and `honest_verdict`.
+- `thrml_security_parity_with_single_site_gibbs=true` is valid only when the
+  THRML block-Gibbs hitting time is greater than or equal to the single-site
+  Gibbs hitting time. If THRML reaches the null space at MH-class rates, the
+  artifact SHALL set `kinetic_defense_in_depth_validated=false`, record a
+  falsification note, and include a mitigation proposal.
+- `honest_verdict` SHALL use a terminal prefix such as `complete_` for every
+  complete outcome.
+
+**Implementation Status:** Implemented (Exp 1561)
+
+### SCENARIO-SAMPLE-085: Exp 1561 writes kinetic-defense falsification evidence
+
+Given: DT-MCMC-NULL predicts MH plateau traversal should beat single-site
+Gibbs, while THRML block-Gibbs should preserve Gibbs-class plateau friction.
+When: the Exp 1561 zero-coupling audit runs from the Carnot project root for
+run date 20260508.
+Then: it writes the required terminal artifact, reports all three empirical
+hitting-time estimates and checkpoint energy distributions, validates the
+kinetic-defense claim only when THRML is no faster than single-site Gibbs, and
+records a mitigation note if the THRML graph-color update schedule reaches the
+planted null space at MH-class rates.
+
+**Implementation Status:** Implemented (Exp 1561)
+
 ## REQ-MODEL-031: SCEnergyModel — Set-Level Energy Function for Statement Consistency (Exp 944)
 
 SCEnergyModel SHALL implement a permutation-invariant set-level energy function that assigns
