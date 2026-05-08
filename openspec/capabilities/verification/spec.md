@@ -1655,7 +1655,62 @@ And missing logprob telemetry blocks only the soft-value correlation field
 And deterministic SAT/runtime-contract labels remain the final accept/reject
 authority in every diagnostic row.
 
-## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487/1495/1496/1499/1500/1501/1507/1508/1509/1510/1520/1521/1522/1525/1537/1541/1542)
+### REQ-VERIFY-1551: Automata/SAT Unified Contract Gate
+
+The repository shall provide an Exp 1551 unified contract gate that sequences
+generation-time constraints and deterministic validators for bounded SATQuest,
+product-line, and runtime-contract cases.
+
+The gate shall:
+
+- write `results/experiment_1551_automata_sat_unified_contract_gate.json` with
+  `status="in_progress"` before loading predecessor artifacts or evaluating
+  cases;
+- load Exp 1535 automata/ABS, Exp 1549 SATQuest oracle repair, and Exp 1540
+  product-line artifacts, and refuse SATQuest acceptance authority unless Exp
+  1549 reports zero repaired solver-oracle false accepts;
+- expose one shared gate abstraction that routes a generated output through
+  syntax or automata masks, semantic repair, the relevant SAT or product-line
+  solver oracle, and runtime contracts in that order;
+- keep deterministic SAT, product-line, and runtime-contract validators as the
+  final accept/reject authority, so soft signals, model confidence, or prefix
+  masks can never override a validator mismatch;
+- run at least one mandated headline SOTA GGUF model when locally available,
+  otherwise record concrete availability blockers and exclude legacy small
+  GGUF smoke tests from headline metrics;
+- evaluate a bounded mixed set containing SATQuest, product-line, and
+  runtime-contract cases, reporting syntax acceptance, semantic repair success,
+  oracle agreement, false accepts, and latency delta; and
+- write a terminal artifact containing `status`, `milestone`,
+  `unified_contract_gate_ready`, `model_specs`,
+  `live_sota_model_inference_used`, `cases_attempted`,
+  `automata_masks_used`, `semantic_repair_layer_used`, `sat_oracle_used`,
+  `product_line_oracle_used`, `runtime_contracts_used`,
+  `syntax_accept_rate`, `semantic_repair_success_rate`,
+  `oracle_agreement_rate`, `false_accept_rate`, `latency_delta_seconds`,
+  `gate_module_path`, `focused_tests_passed`, and `honest_verdict`.
+
+`unified_contract_gate_ready` MUST be true only when each available case family
+is evaluated, automata masks and semantic repair are exercised, deterministic
+validator final authority is preserved, focused tests have passed, and
+`false_accept_rate` is exactly `0.0`. `honest_verdict` MUST begin with one of
+`complete:`, `complete_`, `success:`, `success_`, `passed:`, `passed_`,
+`shipped:`, or `shipped_`.
+
+### SCENARIO-VERIFY-1551: Gate Rejects Solver Mismatches After Repair
+
+Given complete Exp 1535, Exp 1549, and Exp 1540 artifacts on the run date
+`20260508`,
+When Exp 1551 evaluates bounded SATQuest, product-line, and runtime-contract
+outputs through the unified gate,
+Then syntax or automata masks run before semantic repair
+And semantic repair runs before SAT/product-line/runtime validators
+And any solver or runtime-contract mismatch is rejected even when a soft signal
+or model-declared accept says the output should pass
+And the terminal artifact reports zero deterministic false accepts for the
+bounded mixed case set.
+
+## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487/1495/1496/1499/1500/1501/1507/1508/1509/1510/1520/1521/1522/1525/1537/1541/1542/1551)
 
 | Requirement | Python | Tests |
 |-------------|--------|-------|
@@ -1689,3 +1744,4 @@ authority in every diagnostic row.
 | REQ-VERIFY-1538 | Planned (`python/carnot/verify/residual_drift_commitment_ledger.py`) | Planned (`tests/python/test_experiment_1538_residual_drift_commitment_ledger.py`) |
 | REQ-VERIFY-1541 | Implemented (`python/carnot/verify/claim_isolation_uncertainty_router.py`) | Implemented (`tests/python/test_experiment_1541_claim_isolation_uncertainty_router.py`) |
 | REQ-VERIFY-1542 | Implemented (`python/carnot/verify/arm_ebm_soft_value_diagnostic.py`) | Implemented (`tests/python/test_experiment_1542_arm_ebm_soft_value_diagnostic.py`) |
+| REQ-VERIFY-1551 | Implemented (`python/carnot/verify/unified_contract_gate.py`) | Implemented (`tests/python/test_experiment_1551_automata_sat_unified_contract_gate.py`) |
