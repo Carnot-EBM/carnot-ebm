@@ -1236,3 +1236,4 @@ web search: GitHub trending energy based mod |
 | 2026-05-08 20:27 UTC | Paper-v6 §3 Sampler Section Draft - Gated on Exp15 | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-08 20:29 UTC | Paper-v6 §3 Sampler Section Draft - Gated on Exp15 | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-08 20:39 UTC | Soft-Gibbs Coverage Bound Empirical Verification - | OK | 81 passed, 1 warning in 5.56s |
+| 2026-05-08 21:01 UTC | Step-Wise Baseline AR-REINFORCE - Gated on Exp1562 | OK | 81 passed, 1 warning in 5.79s |
