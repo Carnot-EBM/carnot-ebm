@@ -2160,6 +2160,28 @@ def _load_roadmap_metadata() -> dict:
         return {}
 
 
+def _expected_next_milestone(current: str) -> str:
+    """Compute the expected next milestone string from the current one.
+
+    Format is "YYYY.MM.NNN" (e.g. "2026.04.119" → "2026.04.120"). Returns
+    empty string if the format doesn't parse so the caller falls through
+    to running the planner.
+
+    Used by the pre-staged-roadmap check in `_plan_next_milestone` to
+    distinguish "operator drafted the next milestone, preserve it" from
+    "stale leftover from a prior cycle, overwrite it" (operator-trust
+    directive 2026-05-08; see CLAUDE.md "Pre-Staged Roadmap Convention").
+    """
+    parts = current.split(".")
+    if len(parts) != 3:
+        return ""
+    try:
+        next_idx = int(parts[2]) + 1
+    except (ValueError, IndexError):
+        return ""
+    return f"{parts[0]}.{parts[1]}.{next_idx:03d}"
+
+
 def _archive_current_milestone(push: bool = True) -> bool:
     """Archive the current milestone's tasks to research-complete.yaml.
 
@@ -2694,6 +2716,28 @@ def _load_roadmap_metadata() -> dict:
         return {}
 
 
+def _expected_next_milestone(current: str) -> str:
+    """Compute the expected next milestone string from the current one.
+
+    Format is "YYYY.MM.NNN" (e.g. "2026.04.119" → "2026.04.120"). Returns
+    empty string if the format doesn't parse so the caller falls through
+    to running the planner.
+
+    Used by the pre-staged-roadmap check in `_plan_next_milestone` to
+    distinguish "operator drafted the next milestone, preserve it" from
+    "stale leftover from a prior cycle, overwrite it" (operator-trust
+    directive 2026-05-08; see CLAUDE.md "Pre-Staged Roadmap Convention").
+    """
+    parts = current.split(".")
+    if len(parts) != 3:
+        return ""
+    try:
+        next_idx = int(parts[2]) + 1
+    except (ValueError, IndexError):
+        return ""
+    return f"{parts[0]}.{parts[1]}.{next_idx:03d}"
+
+
 def _archive_current_milestone(push: bool = True) -> bool:
     """Archive the current milestone's tasks to research-complete.yaml.
 
@@ -2819,13 +2863,48 @@ def _plan_next_milestone(push: bool = True) -> bool:
     milestone with a full set of experiment tasks.
 
     Returns True if a next roadmap was successfully created.
-    """
-    if NEXT_ROADMAP_FILE.exists():
-        logger.info("research-roadmap-next.yaml already exists — skipping planning")
-        return False
 
+    Pre-staged-roadmap convention (2026-05-08, operator-trust directive):
+    if research-roadmap-next.yaml exists with a `milestone:` field that
+    matches the EXPECTED next milestone (current+1), the planner is
+    skipped entirely. This preserves operator/outer-loop-drafted plans
+    that have higher context (e.g., post-Deep-Think synthesis) than
+    codex's planner can recover from carry-forward bias.
+
+    If the file exists but with a STALE milestone (mismatch), it's
+    treated as leftover-from-prior-cycle and the planner runs normally
+    (the activation guard will then overwrite the stale draft).
+    """
     current = _load_roadmap_metadata()
     current_milestone = current.get("milestone", "unknown")
+
+    if NEXT_ROADMAP_FILE.exists():
+        try:
+            with open(NEXT_ROADMAP_FILE) as f:
+                next_data = yaml.safe_load(f) or {}
+            next_milestone = str(next_data.get("milestone", ""))
+            expected_next = _expected_next_milestone(current_milestone)
+            if next_milestone == expected_next:
+                logger.info(
+                    "research-roadmap-next.yaml is pre-staged for %s — "
+                    "preserving operator/outer-loop draft, skipping planner",
+                    next_milestone,
+                )
+                return False
+            else:
+                logger.warning(
+                    "research-roadmap-next.yaml has STALE milestone %s "
+                    "(expected %s based on current %s) — running planner",
+                    next_milestone,
+                    expected_next,
+                    current_milestone,
+                )
+        except Exception as exc:
+            logger.warning(
+                "research-roadmap-next.yaml exists but unreadable (%s) — "
+                "running planner to overwrite",
+                exc,
+            )
 
     logger.info("=" * 60)
     logger.info("PLANNING NEXT MILESTONE (current: %s)", current_milestone)
