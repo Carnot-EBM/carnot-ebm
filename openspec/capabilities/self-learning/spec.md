@@ -4285,4 +4285,73 @@ provenance, or missing deterministic validation
 
 | Requirement | Python | Tests |
 |-------------|--------|-------|
-| REQ-LEARN-1512 | Planned (`python/carnot/reporting/fr11_verifier_feedback_policy_cache.py`) | Planned (`tests/python/test_fr11_verifier_feedback_policy_cache.py`) |
+| REQ-LEARN-1512 | Implemented (`python/carnot/reporting/fr11_verifier_feedback_policy_cache.py`) | Implemented (`tests/python/test_fr11_verifier_feedback_policy_cache.py`) |
+
+## REQ-LEARN-1513: FR-11 Policy Rollback Replay Audit
+
+Exp 1513 SHALL audit the Exp 1512 verifier-feedback policy cache before any
+promotion. The audit SHALL replay the bounded deterministic source sessions
+with baseline policy behavior and with each proposed query-time policy update,
+then emit keep or rollback decisions per update. The workflow SHALL NOT
+generate new LLM rows or mutate model weights.
+
+### REQ-LEARN-1513 Sub-requirements
+
+- REQ-LEARN-1513-1: The workflow SHALL write
+  `results/experiment_1513_fr11_policy_rollback_replay_audit.json` first with
+  `status="in_progress"` before loading Exp 1512 or replay manifests.
+- REQ-LEARN-1513-2: The workflow SHALL require
+  `results/experiment_1512_fr11_verifier_feedback_policy_cache_v11.json` with
+  `policy_cache_ready=true` and
+  `results/fr11_policy_cache_events_1512.jsonl`; if either gate is absent or
+  not ready, the workflow SHALL write a terminal gated artifact.
+- REQ-LEARN-1513-3: Replay rows SHALL be derived only from deterministic
+  checked-in artifacts, including Exp 1512 policy-cache rows, Exp 1497
+  trace2skill daily-eval rows, and Exp 1509 executable monitor events when
+  referenced.
+- REQ-LEARN-1513-4: Each policy update SHALL be replayed with a baseline
+  outcome and a proposed-policy outcome, reporting update-level
+  `false_accept_delta`, `utility_delta`, `soundness_mistakes`,
+  evidence reachability, deterministic validator support, and a decision of
+  `keep` or `rollback`.
+- REQ-LEARN-1513-5: The audit SHALL roll back any update that increases false
+  accepts, references stale or unreachable evidence, has any soundness mistake,
+  is quarantined by Exp 1512, or lacks deterministic validator support.
+- REQ-LEARN-1513-6: The replay manifest SHALL be written to
+  `results/fr11_policy_rollback_replay_1513.jsonl` with one row per policy
+  update and SHALL be deterministic for identical inputs.
+- REQ-LEARN-1513-7: `rollback_audit_passed` SHALL be true only when accepted
+  updates have `soundness_mistakes=0` and aggregate accepted
+  `false_accept_delta <= 0`.
+- REQ-LEARN-1513-8: The terminal artifact SHALL include `status`,
+  `rollback_audit_passed`, `gated_inputs_present`,
+  `policy_updates_replayed`, `counterfactual_sessions`,
+  `accepted_policy_updates`, `rolled_back_policy_updates`,
+  `soundness_mistakes`, `false_accept_delta`, `utility_delta`,
+  `rollback_manifest_path`, `blockers`, and `honest_verdict`.
+
+### SCENARIO-LEARN-1514: Safe Counterfactual Updates Are Kept
+
+**Given** Exp 1512 is policy-cache ready and a policy update has reachable
+source evidence, deterministic validator support, no rejection reasons, and no
+false accepts
+**When** Exp 1513 replays the baseline and proposed-policy outcomes from
+deterministic manifests
+**Then** the update decision is `keep`
+**And** accepted aggregate `soundness_mistakes=0`
+**And** accepted aggregate `false_accept_delta <= 0`.
+
+### SCENARIO-LEARN-1515: Unsafe Or Unsupported Updates Are Rolled Back
+
+**Given** a proposed policy update increases false accepts, references stale or
+unreachable evidence, was quarantined by Exp 1512, has a soundness mistake, or
+lacks deterministic validator support
+**When** Exp 1513 evaluates the update-level rollback rules
+**Then** the update decision is `rollback`
+**And** the manifest row records the rollback reasons.
+
+## Implementation Status (REQ-LEARN-1513)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-1513 | Implemented (`python/carnot/reporting/fr11_policy_rollback_replay_audit.py`) | Implemented (`tests/python/test_fr11_policy_rollback_replay_audit.py`) |

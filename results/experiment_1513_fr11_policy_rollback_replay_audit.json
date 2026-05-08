@@ -1,0 +1,31 @@
+{
+  "accepted_policy_updates": 84,
+  "blockers": [],
+  "counterfactual_sessions": 84,
+  "false_accept_delta": 0,
+  "finished_at": "2026-05-08T00:56:20Z",
+  "gated_inputs_present": true,
+  "honest_verdict": "complete: fr11_policy_rollback_replay_audit_passed",
+  "policy_updates_replayed": 84,
+  "rollback_audit_passed": true,
+  "rollback_manifest_path": "results/fr11_policy_rollback_replay_1513.jsonl",
+  "rolled_back_policy_updates": 0,
+  "run_date": "20260508",
+  "schema": "fr11_policy_rollback_replay_audit_v1",
+  "soundness_mistakes": 0,
+  "spec": [
+    "REQ-LEARN-1513",
+    "SCENARIO-LEARN-1514",
+    "SCENARIO-LEARN-1515"
+  ],
+  "status": "complete",
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_fr11_policy_rollback_replay_audit.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --include='*/python/carnot/reporting/fr11_policy_rollback_replay_audit.py' -m pytest tests/python/test_fr11_policy_rollback_replay_audit.py -q --no-cov -n 0",
+    ".venv/bin/coverage report --fail-under=100 -m python/carnot/reporting/fr11_policy_rollback_replay_audit.py",
+    "ruff check python/carnot/reporting/fr11_policy_rollback_replay_audit.py tests/python/test_fr11_policy_rollback_replay_audit.py",
+    "ruff format --check python/carnot/reporting/fr11_policy_rollback_replay_audit.py tests/python/test_fr11_policy_rollback_replay_audit.py",
+    "python scripts/check_spec_coverage.py"
+  ],
+  "utility_delta": 70
+}
