@@ -2386,6 +2386,79 @@ gates, confirms `research-roadmap.yaml` and `scripts/research_conductor.py`
 were not modified, and writes an honest retrospective verdict with an accepted
 success prefix.
 
+### REQ-REPORT-062: Milestone .120 Activation Manifest
+
+The Exp 1560 `.119` completion archive and `.120` activation workflow shall
+write `results/experiment_1560_119_completion_archive_120_activation.json`
+with `status="in_progress"` before terminal completion. It shall then read
+Exp 1559, Exp 1548, Exp 1543, Exp 1544, the `.119` archive in
+`research-complete.yaml`, the conductor log entries for Exp 1547 through
+Exp 1559, `ops/status.md`, `ops/changelog.md`, `ops/known-issues.md`, the
+nine Deep Think verdicts in
+`docs/research-notes/iclr26-deep-think-responses.md`, and
+`docs/research-notes/iclr26-integration-plan.md` without modifying
+`research-roadmap.yaml` or `scripts/research_conductor.py`.
+
+The terminal artifact shall include:
+
+- `status`
+- `milestone`
+- `predecessor_milestone`
+- `predecessor_criteria_met`
+- `predecessor_criteria_total`
+- `research_complete_has_119_entry`
+- `exp1559_reports_criteria_met`
+- `activation_manifest_complete`
+- `allowed_120_tracks`
+- `kinetic_defense_validation_ready`
+- `brain_linear_ar_validation_ready`
+- `thrml_vendoring_ready`
+- `soft_gibbs_residual_ready`
+- `rho_C_measurement_ready`
+- `paper_v6_drafting_ready`
+- `preserved_headline_blocks`
+- `thrml_scaling_sweep_lineage_retired`
+- `research_roadmap_yaml_modified`
+- `scripts_research_conductor_modified`
+- `honest_verdict`
+
+`kinetic_defense_validation_ready` shall be true only when Exp 1543 prior
+THRML parity data exists. `brain_linear_ar_validation_ready` shall be true
+only when both Exp 1543 and Exp 1544 THRML data exist. `thrml_vendoring_ready`
+shall be true only when the Exp 1548 KL≈0.17 mismatch finding is recorded.
+`soft_gibbs_residual_ready` shall be true for the `.120` n=8 prototype track.
+`rho_C_measurement_ready` shall be true only when a k=6 calibration/evaluation
+corpus exists. `paper_v6_drafting_ready` shall be true only when
+`docs/research-notes/iclr26-integration-plan.md` exists.
+
+The activation markdown shall list only these `.120` tracks:
+kinetic-defense-in-depth validation, BRAIN+Linear-AR rescue, SpecAnn rejection
+record, THRML vendoring + candidate-warm-start, Soft-Gibbs Residual
+implementation + coverage bound, ρ(C) measurement, FR-11 v14 retention audit,
+paper-v6 §3 sampler drafting, AR-REINFORCE step-wise baseline, and `.120`
+retro. The workflow shall preserve blocks on Semantic Energy/logit headline
+claims, pairwise LLM verifier headline claims, arbitrary generated-Python
+verifier trust, TSU hardware claims, KV260 board claims, KAN synthesis claims,
+and legacy small-model headline results. It shall update
+`ops/exclusion_manifest.yaml` to retire the THRML scaling sweep lineage
+(Exp 1526 through Exp 1531 plus Exp 1543 and Exp 1544 patterns) because THRML
+vendoring makes parity constructive and moves the scaling sweep into the
+paper-v6 retrospective record rather than active research.
+
+### SCENARIO-REPORT-062: Exp 1560 Activates .120 With ICLR-26 Gates
+
+Given Exp 1559 reports `.119` as 12 of 13 criteria met, `research-complete.yaml`
+contains the `2026.04.119` archive, Exp 1543 and Exp 1544 contain THRML parity
+data, Exp 1548 records the KL≈0.17 mismatch, a k=6 calibration corpus exists,
+`docs/research-notes/iclr26-integration-plan.md` exists, and the Deep Think
+response file contains nine verdict sections, when Exp 1560 runs for run date
+`20260508`, then it writes all required REQ-REPORT-062 fields, writes
+`ops/milestone_120_activation_manifest.md`, exposes the same-roadmap gate
+fields, updates the exclusion manifest with the THRML scaling sweep retirement,
+confirms `research-roadmap.yaml` and `scripts/research_conductor.py` were not
+modified, and writes an honest activation verdict with an accepted success
+prefix.
+
 ### REQ-REPORT-024: Local Agent Usage Snapshot
 
 The repository shall provide a local operator workflow that inspects the
@@ -2982,6 +3055,7 @@ embed live-GPU benchmark results from Exp 328 when available.
 | REQ-REPORT-059 | `python/carnot/reporting/milestone_retro_118.py`, `results/experiment_1546_milestone_118_retro.json` | `tests/python/test_milestone_retro_118.py` | Implemented |
 | REQ-REPORT-060 | `python/carnot/reporting/milestone_119_activation_manifest.py`, `results/experiment_1547_118_completion_archive_119_activation.json`, `ops/milestone_119_activation_manifest.md` | `tests/python/test_milestone_119_activation_manifest.py` | Implemented |
 | REQ-REPORT-061 | `python/carnot/reporting/milestone_retro_119.py`, `results/experiment_1559_milestone_119_retro.json` | `tests/python/test_milestone_retro_119.py` | Implemented |
+| REQ-REPORT-062 | `python/carnot/reporting/milestone_120_activation_manifest.py`, `results/experiment_1560_119_completion_archive_120_activation.json`, `ops/milestone_120_activation_manifest.md`, `ops/exclusion_manifest.yaml` | `tests/python/test_milestone_120_activation_manifest.py` | Implemented |
 | REQ-REPORT-024 | `python/carnot/reporting/agent_usage.py`, `scripts/agent_plan_usage.py` | `tests/python/test_agent_plan_usage.py` | Implemented |
 | REQ-PUBLISH-003 | `scripts/experiment_317_hf_publish.py` | `tests/python/test_experiment_317_hf_publish.py` | Implemented |
 | REQ-PUBLISH-004 | `scripts/experiment_330_hf_live_publish.py` | `tests/python/test_experiment_330_hf_live_publish.py` | Implemented |

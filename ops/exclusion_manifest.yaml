@@ -281,3 +281,29 @@ retired_extras:
     retired_by_artifact: "results/experiment_1458_hardnet_dsp_repair_stack_consolidation.json"
     operator_reopen_required: true
     retire_if_same_verdict: true
+  # Added by Exp 1560 - THRML scaling sweep lineage retirement.
+  - id: thrml_scaling_sweep_lineage_retired_after_vendoring
+    reason: |
+      Retire the THRML scaling sweep lineage (exp1526-1531, 1543-1544 patterns). Once THRML is vendored (exp1564), parity is constructive (KL=0 by definition); the scaling sweep becomes a paper-v6 retrospective entry, not active research.
+    experiment_ids:
+      - exp1526
+      - exp1527
+      - exp1528
+      - exp1529
+      - exp1530
+      - exp1531
+      - exp1543
+      - exp1544
+    blocked_patterns:
+      - THRML/Carnot parity n=8
+      - THRML/Carnot parity n=16
+      - THRML/Carnot parity n=32
+      - THRML/Carnot parity n=64
+      - THRML/Carnot parity n=128
+      - THRML/Carnot parity n=256
+      - THRML diverse topology parity
+      - THRML scaling sweep
+    retired_milestone: "2026.05.120"
+    retired_by_artifact: "results/experiment_1560_119_completion_archive_120_activation.json"
+    operator_reopen_required: true
+    retire_if_same_verdict: true
