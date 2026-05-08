@@ -178,6 +178,36 @@ accepts.
 
 **Spec traces:** REQ-BENCH-1523
 
+### REQ-BENCH-1536: SATQuest CNF Verifier Benchmark
+
+Carnot MUST provide a bounded SATQuest-style CNF verifier benchmark that
+generates a deterministic mix of satisfiable and unsatisfiable SAT instances,
+labels them with PySAT when available or a local exhaustive solver fallback
+when PySAT is unavailable, emits machine, symbolic, and narrative prompt
+formats for each instance, and scores mandated local SOTA GGUF answers against
+the solver oracle rather than model self-verification.
+
+The benchmark MUST record baseline answer accuracy, Carnot energy-ranked
+candidate accuracy, repair-hint-assisted accuracy, and solver-oracle false
+accepts separately from ordinary wrong answers.  Missing SOTA GGUF runtime
+provenance MUST be recorded honestly without substituting legacy small models
+as headline models.
+
+**Decentralization implications:** The benchmark preserves local-first
+operation by using local GGUF model provenance and a local deterministic SAT
+oracle.
+
+### SCENARIO-BENCH-1536: CNF Formats Are Reproducibly Labeled
+
+**Given** the fixed Exp1536 run date and bounded CNF generator seed
+**When** the SATQuest benchmark builds machine, symbolic, and narrative prompts
+for each CNF instance
+**Then** every format shares the same deterministic solver label, the manifest
+records the solver backend used, and false accepts are counted only when a
+model-declared verifier accepts a non-oracle answer.
+
+**Spec traces:** REQ-BENCH-1536
+
 ## Implementation Status
 
 | Requirement | Status | Experiment |
@@ -187,8 +217,10 @@ accepts.
 | REQ-BENCH-011 | Implemented | Exp 840 |
 | REQ-BENCH-1511 | Implemented (`python/carnot/eval/product_line_solver_oracle_benchmark.py`) | Exp 1511 |
 | REQ-BENCH-1523 | Planned (`python/carnot/eval/product_line_parser_feasibility_rescue.py`) | Exp 1523 |
+| REQ-BENCH-1536 | Planned (`python/carnot/eval/satquest_cnf_verifier_benchmark.py`) | Exp 1536 |
 | SCENARIO-BENCH-020 | Implemented | Exp 427 |
 | SCENARIO-BENCH-025 | Implemented | Exp 840 |
 | SCENARIO-BENCH-030 | Implemented | Exp 840 |
 | SCENARIO-BENCH-1511 | Implemented (`tests/python/test_experiment_1511_product_line_solver_oracle_benchmark.py`) | Exp 1511 |
 | SCENARIO-BENCH-1523 | Planned (`tests/python/test_experiment_1523_product_line_parser_feasibility_rescue.py`) | Exp 1523 |
+| SCENARIO-BENCH-1536 | Planned (`tests/python/test_experiment_1536_satquest_cnf_verifier_benchmark.py`) | Exp 1536 |
