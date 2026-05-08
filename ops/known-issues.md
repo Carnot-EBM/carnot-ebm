@@ -260,21 +260,42 @@ abstracts available via:
     (4) flag if any Carnot claim conflicts with the paper's
     geometric bound. NOT a wholesale rewrite — surgical adoption.
 
-- id: exp15ZZ-iclr26-mcmc-layer-as-sampler-fix
-  title: "ICLR-26 MCMC Layer as Structural Fix for .119 KL=0.17 Mismatch"
+- id: exp15ZZ-thrml-vendored-block-gibbs-replacement
+  title: "Vendor THRML Block-Gibbs as Carnot's Inference Sampler"
   agent_type: codex
   priority: critical
   prompt_seed: |
-    Read ICLR 2026 paper "Learning with Local Search MCMC Layers"
-    + .119 exp1548 audit (KL=0.17 between Carnot sampler and
-    THRML reference). The paper provides theoretical guarantees
-    on differentiable MCMC layers with INEXACT solvers. Hypothesis:
-    rather than fix Carnot's sampler from scratch, replace the
-    sampler module with a learned MCMC layer whose theoretical
-    properties match THRML's distribution by construction. Audit
-    feasibility, prototype on n=32 first, gate scale-up to n=64+
-    on KL drop below 0.05 (the .119 threshold). prior_failures:
-    must reference exp1548 verdict + paper claims.
+    Replace Carnot's hand-rolled Gibbs sampler with THRML's exact
+    block-Gibbs transition operator. Per Deep Think DT-7 verdict
+    (2026-05-08, docs/research-notes/iclr26-deep-think-responses.md):
+    MCMC Layers' single-site MH cannot match THRML's block-Gibbs
+    at finite K — the transition kernels structurally diverge from
+    K=1 (MH accepts downhill with prob 1; Gibbs uses sigmoid).
+    Mixing-time parity at n=128 SK glass requires K ≫ 10^15 sweeps,
+    computationally infeasible. Correct fix: vendor THRML directly.
+
+    Steps:
+    1. Pre-flight zero-coupling test (10 min): run Carnot's current
+       Gibbs and THRML.sample at K=1 with J=h=0 starting from same
+       y_0. Confirm Hamming-distance divergence (Carnot~64 binomial
+       vs MH~128 deterministic OR Carnot's actual implementation
+       sits somewhere). Falsifies/confirms operator-mismatch finding.
+    2. Mirror THRML 0.1.3 to Carnot-controlled gitea + github (Rule 3
+       distribution mirroring); pin Apache-2.0 license.
+    3. Replace python/carnot/sampling/gibbs.py with THRML import +
+       thin Carnot adapter (preserve Carnot HTTP API contract).
+    4. Re-run exp1548 audit with vendored sampler. Acceptance gate:
+       KL(Carnot || THRML) = 0.0 by construction (same code).
+    5. Document in paper-v6 §3 as "Carnot uses Extropic THRML 0.1.3
+       as the reference sampler implementation, vendored Apache-2.0."
+
+    prior_failures:
+      - experiment_id: exp1548-thrml-carnot-parity-independent-rng-audit
+        verdict: complete: independent_rng_thrml_carnot_parity_not_ready
+        addressed_by: "Vendor THRML directly per DT-7. Operator mismatch
+                       (block-Gibbs vs single-site MH) is structural at
+                       finite K; spectral-gap cure requires K ≫ 10^15."
+        retire_if_same_verdict: true
 
 - id: exp15WW-iclr26-brain-spectral-ising-hardware
   title: "ICLR-26 BRAIN + Spectral Annealing for Phase 2 Hardware Roadmap"
