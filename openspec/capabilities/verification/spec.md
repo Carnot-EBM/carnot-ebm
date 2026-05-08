@@ -1384,6 +1384,60 @@ bound
 And the terminal artifact reports `deterministic_validator_final_authority=true`
 with `false_accept_rate` computed from validator rows, not BEAVER bounds.
 
+### REQ-VERIFY-1538: Residual-Drift Commitment Ledger
+
+The repository shall provide an Exp 1538 deterministic commitment ledger that
+replays bounded multi-turn SATQuest, product-line, and runtime-contract cases
+and classifies residual failures as true contradictions, satisfiable drift, or
+other blockers.
+
+The ledger shall:
+
+- write `results/experiment_1538_residual_drift_commitment_ledger.json` with
+  `status="in_progress"` before loading source manifests;
+- load bounded cases from `results/satquest_cnf_verifier_1536.jsonl`,
+  `results/product_line_rescue_1523.jsonl`, and
+  `results/cdg_root_cause_repair_1522.jsonl` when available, preserving
+  concrete missing-source blockers without fabricating rows;
+- record per-turn commitments introduced by the prompt, intermediate answer or
+  staged feedback, oracle/validator replay, and final decision;
+- validate final answers with the deterministic SAT, product-line, and
+  runtime-contract validators rather than LLM self-evaluation;
+- classify a failure as `satisfiable_drift` only when the prior commitments
+  have a deterministic satisfying completion but the final answer or plan
+  forgets at least one prior commitment;
+- classify a failure as `true_contradiction` only when the solver or contract
+  oracle proves the combined commitments are unsatisfiable for the attempted
+  final decision;
+- write `results/residual_drift_commitment_ledger_1538.jsonl` with one row per
+  replayed case plus a final summary row; and
+- write a terminal artifact containing `status`, `milestone`,
+  `residual_drift_ledger_ready`, `model_specs`,
+  `live_sota_model_inference_used`, `multi_turn_cases`,
+  `contradiction_cases`, `satisfiable_drift_cases`, `drift_rate`,
+  `repaired_drift_cases`, `solver_oracle_used`, `false_accept_rate`,
+  `ledger_path`, `focused_tests_passed`, and `honest_verdict`.
+
+`residual_drift_ledger_ready` MUST be true only when at least one case from
+each available SATQuest, product-line, and runtime-contract source is replayed,
+deterministic oracle replay has run, the ledger file exists, focused tests have
+passed, and `false_accept_rate` is exactly `0.0`. `honest_verdict` MUST begin
+with one of `complete:`, `complete_`, `success:`, `success_`, `passed:`,
+`passed_`, `shipped:`, or `shipped_`.
+
+### SCENARIO-VERIFY-1538: Ledger Distinguishes Drift From Contradiction
+
+Given complete Exp 1536 SATQuest rows, Exp 1523 product-line rescue rows, and
+Exp 1522 runtime-contract CDG rows on the run date `20260508`,
+When Exp 1538 builds the residual-drift commitment ledger,
+Then every ledger case records ordered commitments and deterministic validation
+evidence before classification
+And SAT/product-line/runtime failures with a known satisfying completion are
+classified as satisfiable drift rather than contradiction
+And impossible SAT final decisions are classified as true contradictions
+And the terminal artifact reports bounded metrics without claiming results
+beyond the replayed source manifests.
+
 ### REQ-VERIFY-1522: Constraint Dependency Graph Root-Cause Repair Ordering
 
 The repository shall provide an Exp 1522 deterministic CPU-only Constraint
@@ -1529,3 +1583,4 @@ rows and a false-accept rate is reported.
 | REQ-VERIFY-1522 | Implemented (`python/carnot/verify/constraint_dependency_graph_repair.py`) | Implemented (`tests/python/test_experiment_1522_constraint_dependency_graph_repair.py`) |
 | REQ-VERIFY-1525 | Implemented (`python/carnot/verify/march_claim_isolation_ablation.py`) | Implemented (`tests/python/test_experiment_1525_march_claim_isolation_ablation.py`) |
 | REQ-VERIFY-1537 | Implemented (`python/carnot/verify/beaver_prefix_bound_contracts.py`) | Implemented (`tests/python/test_experiment_1537_beaver_prefix_bound_contracts.py`) |
+| REQ-VERIFY-1538 | Planned (`python/carnot/verify/residual_drift_commitment_ledger.py`) | Planned (`tests/python/test_experiment_1538_residual_drift_commitment_ledger.py`) |
