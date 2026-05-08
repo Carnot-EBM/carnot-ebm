@@ -1201,3 +1201,4 @@ web search: GitHub trending energy based mod |
 | 2026-05-08 11:04 UTC | Claim-Isolation Uncertainty Router v2 - Gated on E | OK | 81 passed, 1 warning in 5.15s |
 | 2026-05-08 11:16 UTC | ARM/EBT Soft-Value Diagnostic - Gated on Exp1536+E | OK | 81 passed, 1 warning in 5.23s |
 | 2026-05-08 11:31 UTC | THRML/Carnot Parity n=256 Schedule Stress - Gated  | OK | 81 passed, 1 warning in 5.03s |
+| 2026-05-08 11:47 UTC | THRML Diverse Topology Parity n=64 - Gated on Exp1 | OK | 81 passed, 1 warning in 5.01s |
