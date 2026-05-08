@@ -2020,7 +2020,50 @@ And records `made_optional` as null unless the Linear-AR `k=15` KL exceeds
 And maps a `k=15` ratio below `5.0` to `phase_3_recommendation="brain_dropped"`
 instead of claiming the Linear-AR rescue was validated.
 
-## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487/1495/1496/1499/1500/1501/1507/1508/1509/1510/1520/1521/1522/1525/1537/1538/1541/1542/1551/1552/1553/1554/1557/1562)
+### REQ-VERIFY-1571: Step-Wise Baseline AR-REINFORCE
+
+The repository shall provide a runnable Exp 1571 AR-REINFORCE variance
+microbenchmark for a Linear-AR Bernoulli model on an `n=32`, `k=15`
+AND-composition stress case with `3%` Gaussian energy noise.
+
+The workflow shall:
+
+- implement a per-token step-wise baseline for Linear-AR REINFORCE whose
+  baseline for token `t` depends only on the prefix `x_<t` and model
+  parameters, not on `x_t` or later sampled tokens;
+- compare scalar-batch-mean REINFORCE against the step-wise baseline using
+  trace variance over the Linear-AR coupling-parameter score-function
+  gradient;
+- report `gradient_variance_reduction_factor >= 10.0` for the step-wise
+  baseline versus the scalar baseline on the `n=32`, `k=15` noisy-energy
+  benchmark;
+- adapt BRAIN Theorem 2's noise-resilience claim to AR stochastic
+  approximation by comparing the step-wise estimator's noisy and noiseless
+  gradient signal-to-noise convergence-rate proxy, and require the noisy
+  `3%` run to retain at least `97%` of the noiseless proxy; and
+- write `results/experiment_1571_step_wise_baseline_AR_REINFORCE.json` with
+  `status`, `step_wise_baseline_implemented`,
+  `gradient_variance_reduction_factor`,
+  `convergence_rate_matches_theorem_2`, and `honest_verdict`.
+
+`status` MUST be `complete` for terminal artifacts. `honest_verdict` MUST begin
+with `complete:` and MUST state whether the variance and noise-resilience gates
+passed.
+
+### SCENARIO-VERIFY-1571: Step-Wise Baseline Reduces AR Coupling Variance
+
+Given the planted `n=32`, `k=15`, ten-constraint AND-composition stress case
+with `3%` Gaussian reward noise,
+When Exp 1571 evaluates Linear-AR REINFORCE gradient samples with a scalar
+batch-mean baseline and with the prefix-only step-wise baseline,
+Then the artifact reports `step_wise_baseline_implemented=true`
+And the reported AR-coupling gradient variance reduction factor is at least
+`10.0`
+And `convergence_rate_matches_theorem_2=true` only when the noisy step-wise
+signal-to-noise convergence-rate proxy is at least `97%` of the noiseless
+step-wise proxy.
+
+## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487/1495/1496/1499/1500/1501/1507/1508/1509/1510/1520/1521/1522/1525/1537/1538/1541/1542/1551/1552/1553/1554/1557/1562/1571)
 
 | Requirement | Python | Tests |
 |-------------|--------|-------|
@@ -2061,3 +2104,4 @@ instead of claiming the Linear-AR rescue was validated.
 | REQ-VERIFY-1554 | Planned (`python/carnot/verify/product_line_staged_scale_v4.py`) | Planned (`tests/python/test_experiment_1554_product_line_staged_scale_v4.py`) |
 | REQ-VERIFY-1557 | Implemented (`python/carnot/verify/verification_compute_router.py`) | Implemented (`tests/python/test_experiment_1557_weaver_verification_compute_router.py`) |
 | REQ-VERIFY-1562 | Implemented (`python/scripts/dt_brain_correlations_verification.py`) | Implemented (`tests/python/test_experiment_1562_brain_linear_ar_k_sweep.py`) |
+| REQ-VERIFY-1571 | Implemented (`python/carnot/training/ar_reinforce_stepwise_baseline.py`) | Implemented (`tests/python/test_experiment_1571_step_wise_baseline_ar_reinforce.py`) |
