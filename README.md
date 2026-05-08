@@ -130,10 +130,12 @@ safe-DSL verifier induction compiled **2/2** candidate verifiers with coverage
 reached parse and validation rates **1.0** on bounded live local SOTA rows;
 runtime monitors normalized **60** events; structural plan-graph contracts
 detected **60/60** injected violations with false-accept rate **0.0**; the
-FR-11 verifier-feedback policy accepted and replayed **84** updates with
-**0** soundness mistakes, then packaged **24** rollback-passing trace2skill
-entries; THRML, KAN, and KV260 work stayed simulator/source-level with no
-hardware claim. The current test collection reports **23,095** items; this is a
+product-line solver oracle covered **6** feature models with false-accept rate
+**0.0** while recording parse **0.333333** and feasibility **0.0**; the FR-11
+verifier-feedback policy accepted and replayed **84** updates with **0**
+soundness mistakes, then packaged **24** rollback-passing trace2skill entries;
+THRML, KAN, and KV260 work stayed simulator/source-level with no hardware
+claim. The current test collection reports **23,095** items; this is a
 collection count, not a full-suite pass claim.
 
 ## Install and run
@@ -392,6 +394,7 @@ experiment artifact under `results/`.
 | Milestone .115 status | **12/12 criteria met**; trigger certificates, validator compiler, monitors, FR-11 hygiene, verifier discipline, plan-graph energy, KAN accounting, and THRML simulator parity archived with claim boundaries preserved | Exp 1505 |
 | Safe-DSL verifier induction + grammar decoding | **2/2** candidate verifiers compiled; verifier coverage **1.0**, grammar parse **1.0**, grammar validation **1.0**, false-accept **0.0** on bounded live local SOTA rows | Exps 1507/1508 |
 | Runtime monitor + structural contract gates | **60** monitor events normalized; **60/60** injected plan-graph violations detected; false-accept **0.0**; random baseline **0.0**, length baseline **0.183333** | Exps 1509/1510 |
+| Product-line solver oracle | **6** feature models; false-accept **0.0**; parse **0.333333** and feasibility **0.0**, so this is a bounded oracle surface and failure taxonomy, not broad solver success | Exp 1511 |
 | FR-11 verifier-feedback policy + portable skill pack | **84** policy updates accepted and rollback-replayed, utility delta **70**, **0** soundness mistakes; **24** rollback-passing trace2skill entries packaged and **60** rejected | Exps 1512-1514 |
 | Substrate conformance boundaries | THRML SamplerBackend conformance ready, simulator-only parity **2/2**; **3** KAN shapes normalized; KV260 property pack defines **4** source-level properties with lint/parse/simulation passing; no TSU, synthesis, bitstream, or board claim | Exps 1515-1517 |
 | Milestone .116 status | **13/13 criteria met**; runtime verifier contracts, FR-11 feedback policy, portable skills, THRML conformance, KAN shape normalization, and KV260 source-level property gates archived with claim boundaries preserved | Exp 1518 |
