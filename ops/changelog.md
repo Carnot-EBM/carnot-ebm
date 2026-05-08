@@ -5184,3 +5184,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-08: THRML/Carnot Parity n=8 Exact - Gated on Exp1519 THRML Conformance (✅ Complete) — honest_verdict=complete_thrml_carnot_parity_n8_passed_no_tsu_hardware_claim; results/experiment_1526_thrml_carnot_parity_n8.json
 - 2026-05-08: THRML/Carnot Parity n=16 Exact - Gated on Exp1526 n=8 (✅ Complete) — honest_verdict=complete_thrml_carnot_parity_n16_passed_no_tsu_hardware_claim; results/experiment_1527_thrml_carnot_parity_n16.json
 - 2026-05-08: THRML/Carnot Parity n=32 Sample - Gated on Exp1527 n=16 (✅ Complete) — honest_verdict=complete_thrml_carnot_parity_n32_passed_no_tsu_hardware_claim; results/experiment_1528_thrml_carnot_parity_n32_sample.json
+- 2026-05-08: THRML/Carnot Parity n=64 Sample - Gated on Exp1528 n=32 (✅ Complete) — honest_verdict=complete_thrml_carnot_parity_n64_passed_no_tsu_hardware_claim; results/experiment_1529_thrml_carnot_parity_n64_sample.json
