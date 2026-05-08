@@ -287,6 +287,44 @@ CNF and perturbation checks, and writes
 
 **Spec traces:** REQ-BENCH-1549
 
+### REQ-BENCH-1550: SATQuest SOTA Re-Evaluation Under Repaired Oracle
+
+Carnot MUST provide a SATQuest SOTA re-evaluation workflow that runs only after
+the Exp1549 repair artifact confirms `satquest_zero_false_accepts=true`.  The
+workflow MUST use mandated local SOTA GGUF provenance for headline model rows
+when available, honestly block without substituting legacy small GGUFs when
+the mandated cache or llama.cpp runtime is unavailable, and keep the repaired
+solver/proof oracle as the only acceptance authority.
+
+The workflow MUST:
+
+- write `results/experiment_1550_satquest_sota_reeval_zero_false_accepts.json`
+  with `status="in_progress"` before model probing or evaluation;
+- load the repaired SATQuest manifest from Exp1549 and refuse evaluation when
+  the repaired zero-false-accept gate is not present;
+- evaluate at least 30 bounded machine, symbolic, and narrative/natural-language
+  CNF prompt cases when runtime permits;
+- validate SAT assignment witnesses or UNSAT contradiction certificates before
+  accepting any answer;
+- report answer accuracy, witness-validity rate, false-accept rate, solver
+  oracle false accepts, and Carnot energy/ranking AUC as diagnostics only; and
+- include the required artifact fields for model specs, attempted models, case
+  counts, format coverage, automata or format constraints, availability
+  blockers, focused-test status, and an honest terminal verdict.
+
+### SCENARIO-BENCH-1550: SOTA Rows Remain Solver-Grounded
+
+**Given** Exp1549 has written a repaired manifest and
+`satquest_zero_false_accepts=true`
+**When** the Exp1550 runner resolves mandated local SOTA GGUF specs with the
+`cached_sota_pair()` pattern and aggregates generated SATQuest answers
+**Then** every accepted row is backed by a checked assignment witness or UNSAT
+certificate, model self-verification never overrides the solver/proof oracle,
+and the terminal artifact records zero solver-oracle false accepts or an honest
+availability blocker when no mandated SOTA model can run.
+
+**Spec traces:** REQ-BENCH-1550
+
 ## Implementation Status
 
 | Requirement | Status | Experiment |
@@ -299,6 +337,7 @@ CNF and perturbation checks, and writes
 | REQ-BENCH-1536 | Planned (`python/carnot/eval/satquest_cnf_verifier_benchmark.py`) | Exp 1536 |
 | REQ-BENCH-1549 | Implemented (`python/carnot/eval/satquest_oracle_false_accept_repair.py`) | Exp 1549 |
 | REQ-BENCH-1540 | Implemented (`python/carnot/eval/product_line_staged_benchmark_scale.py`) | Exp 1540 |
+| REQ-BENCH-1550 | Planned (`python/carnot/eval/satquest_sota_reeval_zero_false_accepts.py`) | Exp 1550 |
 | SCENARIO-BENCH-020 | Implemented | Exp 427 |
 | SCENARIO-BENCH-025 | Implemented | Exp 840 |
 | SCENARIO-BENCH-030 | Implemented | Exp 840 |
@@ -306,3 +345,4 @@ CNF and perturbation checks, and writes
 | SCENARIO-BENCH-1523 | Planned (`tests/python/test_experiment_1523_product_line_parser_feasibility_rescue.py`) | Exp 1523 |
 | SCENARIO-BENCH-1536 | Planned (`tests/python/test_experiment_1536_satquest_cnf_verifier_benchmark.py`) | Exp 1536 |
 | SCENARIO-BENCH-1540 | Implemented (`tests/python/test_experiment_1540_product_line_staged_benchmark_scale.py`) | Exp 1540 |
+| SCENARIO-BENCH-1550 | Planned (`tests/python/test_experiment_1550_satquest_sota_reeval_zero_false_accepts.py`) | Exp 1550 |
