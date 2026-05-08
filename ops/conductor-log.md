@@ -1231,3 +1231,4 @@ web search: GitHub trending energy based mod |
 | 2026-05-08 19:30 UTC | Soft-Gibbs Residual Implementation + Hard-BRS Fals | OK | 81 passed, 1 warning in 5.82s |
 | 2026-05-08 19:53 UTC | Candidate-Warm-Start vs Cold-Start Benchmark - Gat | OK | 81 passed, 1 warning in 6.29s |
 | 2026-05-08 20:08 UTC | ρ(C) Measurement for k=6 Ensemble — Q11 TSS Satura | OK | 81 passed, 1 warning in 6.27s |
+| 2026-05-08 20:23 UTC | FR-11 v14 Retained Policies Mode-Collapse Audit -  | OK | 81 passed, 1 warning in 5.99s |
