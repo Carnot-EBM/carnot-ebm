@@ -1,240 +1,184 @@
-# Research Roadmap vNEXT: Milestone 2026.04.119
+# Research Roadmap vNEXT: 2026.05.121
 
-**Planned:** 2026-05-08
-**Status:** Ready for conductor activation
-**Predecessor:** Milestone 2026.04.118 completed 2026-05-08
-**Roadmap YAML:** `research-roadmap-next.yaml`
+Milestone title: **Phase-1 Ship Readiness + BRAIN Dynamics + Hardware Portfolio Correction**
 
-## ID Allocation Note
+Planning date: 2026-05-08
+Planner role: research planning agent
+Execution queue: `research-roadmap-next.yaml`
 
-Milestone `.118` used `exp1533` through `exp1546`. Milestone `.119`
-therefore allocates `exp1547` through `exp1559`. The active execution file
-`research-roadmap.yaml` and the conductor implementation are not modified by
-this plan.
+## Previous Milestone Result
 
-## What Milestone 2026.04.118 Proved
+Milestone `2026.05.120` moved the sampler stack from debate to evidence:
 
-| Finding | Evidence | Impact on .119 |
-| --- | --- | --- |
-| Automata-guided runtime contracts are now useful. | `exp1535` moved from post-decode repair toward automata/ABS-style generation-time constraints with parse and accept rates at 1.0, false accepts at 0.0, and a negative latency delta. | Use automata masks as the front door for structured generation, then cross-check with SAT/product-line/runtime validators instead of treating syntax as sufficient. |
-| SATQuest is not acceptance-ready yet. | `exp1536` produced a SATQuest-style benchmark but the `.118` retro recorded `solver_oracle_false_accepts=3` and `false_accept_rate=0.166667`. | Repair the solver oracle, add proof/witness fields, and require zero false accepts before any SOTA SATQuest re-evaluation. |
-| Residual drift is measurable and needs localized repair. | `exp1538` recorded 134 multi-turn cases, 64 satisfiable-drift cases, 2 contradiction cases, and zero false accepts. | Add a repair policy that targets forgotten commitments with minimal edits and deterministic replay. |
-| FR-11 is safe but still not useful. | `exp1539` preserved `soundness_mistakes=0` and `no_model_weight_mutation=true`, but `utility_delta=0.0` and `positive_utility_achieved=false`. | `.119` must either demonstrate measurable external utility or retire the positive-utility self-learning claim. |
-| Product-line and claim-isolation branches have zero-false-accept signal. | `exp1540` scaled product-line cases with zero false accepts; `exp1541` reduced budget by routing 7 cases with zero false accepts. | Scale both behind the unified automata/SAT contract gate and keep deterministic false accepts as the stop condition. |
-| ARM/EBT soft values remain diagnostic. | `exp1542` reported routing AUC and energy-label correlation, but `logprob_available=false` and deterministic validators remained final authority. | Repair telemetry if possible, but do not promote logprob/energy signals to acceptance authority. |
-| THRML simulator hookup works but parity evidence has an RNG credibility risk. | `exp1543` and `exp1544` passed simulator-only n=256 and diverse n=64 checks, but `ops/known-issues.md` identified byte-identical Carnot/THRML histograms in earlier scaling artifacts. | Make the independent-RNG audit the first hard correctness task before any further parity headline or Extropic-readiness upgrade. |
-| Extropic readiness is a packet, not hardware execution. | `exp1545` produced a readiness packet with no hardware execution claim and explicit access blockers. | Update the packet only after independent-RNG evidence exists; still require authenticated device transcripts before any Z1/XTR-0/TSU claim. |
-| The milestone closed honestly. | `exp1546` recorded 13 of 14 criteria met and carried SATQuest, FR-11, THRML RNG, and logprob telemetry limits into `.119`. | Start `.119` with archive/activation fields that expose those carry-forward gates to the conductor. |
-
-## Research Signals Added Before Planning
-
-The 2026-05-08 post-`.118` sweep was appended to `research-references.md`
-before this design. Signals that materially shape `.119`:
-
-- **THRML independent-RNG audit** from `ops/known-issues.md`, THRML docs, and
-  Extropic's THRML repository requires disjoint stochastic paths before parity
-  claims are credible.
-- **ConstraintBench, NLCO, and OPF constraint-reasoning papers** show that
-  direct LLM answers remain feasibility-limited and solver checks must stay in
-  the acceptance path.
-- **FALCON hard-constraint generation** motivates grammar-constrained
-  decoding, semantic repair, and adaptive Best-of-N as a single contract gate.
-- **Context-sensitive constraint learning** suggests mining rejected/accepted
-  traces for new constraints, but only under replay and zero-false-accept gates.
-- **Weaver verification-compute routing** motivates explicit allocation across
-  weak signals and deterministic validators instead of uniform verification
-  spend.
-- **VERGE and ReLoop** motivate proof/witness fields, semantic routing, and
-  perturbation checks for silent solver-oracle failures.
-- **Copy-as-Decode** motivates minimal localized repairs for residual drift
-  instead of whole-answer regeneration.
-- **EBT, NRGPT, and Kona public status** keep energy-native reasoning in scope,
-  but `.119` treats local logprob/energy as diagnostic until deterministic
-  authority is available.
+| Finding | Evidence | Consequence for `.121` |
+|---|---|---|
+| THRML block Gibbs is useful software, but not security-equivalent to Carnot single-site Gibbs. | `exp1561` reported THRML hitting null-space states at MH-class rates. | Do not claim kinetic defense parity for THRML; use THRML as the reference software sampler and keep security discussion honest. |
+| BRAIN+Linear-AR expressivity rescue was falsified. | `exp1562`: factorized/AR ratio collapses to about `1.00x` at k=15. | Test the missing axis: REINFORCE training dynamics and gradient starvation. |
+| SpecAnn is rejected for Phase-3 inference-time argmin. | `exp1563` decision record. | Keep Gibbs-heuristic argmin on unreduced HUBO energy. |
+| THRML vendoring and candidate warm-start landed, but full Python suite hang remains operational debt. | `exp1564`, `exp1566`. | Use vendored THRML in downstream publication/readiness docs; keep broad-suite hang as non-blocking but visible. |
+| Soft-Gibbs Residual is now an operational contribution. | `exp1565`, `exp1570`. | Paper-v6 Section 3 should integrate the residual and bound. |
+| FR-11 v14 retained policies contain at least one mode-collapse retention. | `exp1568`: one retention flagged for reversal. | `.121` must include continuous self-learning repair, not just an audit. |
+| Two tasks were blocked by invalid prior-failure metadata. | `exp1569`, `exp1573`: `blocked_gate_check_failed`. | Start `.121` with prior-failure autofill/audit, then resume both tasks with exact prior failure records. |
 
 ## Three Biggest Gaps
 
-1. **Correctness evidence has two hard trust breaks.** SATQuest had solver
-   false accepts, and THRML parity had suspicious byte-identical stochastic
-   outputs. Both must be fixed before their signals can support acceptance,
-   scale, or paper claims.
+1. **Phase-1 software shipping is still not externally reproducible.** The new
+   operator directive decouples Phase 1 from paper and hardware. PyPI, HF mirror,
+   MCP/CLI docs, and an external reproducer are now the highest product gap.
 
-2. **Constraint handling is still split across layers.** `.118` separately
-   advanced automata masks, SATQuest, residual drift, product-line checks, and
-   claim isolation. The PRD vision needs a coherent cascade: generation-time
-   masks, semantic repair, deterministic solvers, runtime contracts, and
-   verifier-compute routing.
+2. **Core research claims need final disambiguation before paper-v6 prose hardens.**
+   BRAIN is not expressivity-limited at k=15, but it may still be REINFORCE-
+   dynamics-limited. FR-11 v14 is useful but contaminated by mode collapse.
+   Paper-v6 also needs the ICLR 2026 OT verifier framework before claiming
+   verifier-stack geometry.
 
-3. **Self-learning and energy diagnostics remain non-operational.** FR-11 has
-   safety but no positive utility, and ARM/EBT diagnostics still lack usable
-   local SOTA logprob telemetry. `.119` must either turn these into measurable
-   utility/diagnostic infrastructure or retire the corresponding headline
-   claims.
+3. **Hardware strategy must stop treating every board as a production sampler.**
+   The hardware evaluation report reframes Z1 as needing software detailed-balance
+   correction, Tenstorrent and PolarFire as sovereignty candidates, Strix Point as
+   dev/verifier-edge rather than production sampler, and KV260 as a Vivado-bound
+   lineage to retire or re-scope.
 
-## Architecture
+## Architecture Target
 
-```text
-                 Milestone 2026.04.119 Research Stack
-
-   .118 archive + .119 activation manifest
-       |
-       +-------------------------------+
-       |                               |
-       v                               v
-   hard evidence repair            THRML independent-RNG audit
-   SATQuest oracle witnesses       disjoint seeds | code-path audit
-   zero solver false accepts       non-zero bounded stochastic deltas
-       |                               |
-       v                               v
-   local SOTA SATQuest re-eval      THRML scale/readiness decision
-   Qwen3.6-35B-A3B | gemma-4-31B | gemma-4-26B
-       |
-       v
-   unified contract generation cascade
-   automata masks -> semantic repair -> SAT/product-line/runtime validators
-       |
-       +-------------------------------+
-       |                               |
-       v                               v
-   residual-drift repair           product-line + claim-router scale
-   minimal localized edits         deterministic zero-false-accept gates
-       |
-       v
-   FR-11 external self-learning gate
-   positive utility or retire claim | no model-weight mutation
-       |
-       v
-   ARM/EBT telemetry + Weaver-style verification routing
-   soft signals diagnostic below deterministic validators
-       |
-       v
-   Extropic packet update + .119 retrospective/carry-forward gates
+```mermaid
+flowchart TD
+    A[Local SOTA GGUF models] --> B[Structured draft + constrained regeneration]
+    B --> C[Deterministic validators: schemas, contracts, SAT/Z3, tests]
+    C --> D[Energy/sampler layer: THRML block Gibbs + Soft-Gibbs Residual]
+    D --> E[OT-framed verifier stack: coverage, ROC, sub-optimality]
+    C --> F[FR-11 continuous self-learning policy cache]
+    F --> G[lambda-GRPO patch + retention reversal]
+    D --> H[Hardware abstraction: SamplerBackend]
+    H --> I[Z1 drift-correction simulator]
+    H --> J[Tenstorrent Wormhole preflight]
+    H --> K[PolarFire SoC preflight]
+    H --> L[Strix dev/verifier-edge tier]
+    E --> M[Paper-v6 Section 3 sampler/verifier prose]
+    C --> N[Phase-1 ship readiness: PyPI, HF mirror, MCP/CLI docs, reproducer]
 ```
 
-## Phase Descriptions
+The `.121` architecture keeps deterministic validators as acceptance authority.
+Energy, sampler, OT, and hardware signals are diagnostic or ranking layers unless
+a deterministic contract verifies the output.
 
-### Phase 0 - Activation and Hard Evidence Repair
+## Phase Plan
 
-`exp1547` archives `.118`, records the 13-of-14 closure, and exposes
-carry-forward gate fields. `exp1548` performs the mandatory THRML/Carnot
-independent-RNG audit from `ops/known-issues.md`. `exp1549` repairs SATQuest
-solver-oracle false accepts with proof/witness artifacts. `exp1550` re-runs
-SATQuest with mandated local SOTA GGUFs only after the repaired oracle reports
-zero false accepts.
+### Phase 0: Activation and Carry-Forward Repair
 
-### Phase 1 - Unified Runtime-Contract Scale
+- **exp1574** archives `.120`, exposes gates for BRAIN, THRML, FR-11,
+  publication carry-forwards, Phase-1 ship, and hardware evaluation.
+- **exp1575** runs the prior-failure autofill/audit workflow before any
+  carry-forward task launches.
+- **exp1576** resumes paper-v6 Section 3 sampler drafting with proper prior
+  failure metadata.
+- **exp1577** resumes the Extropic Z1 readiness packet update with THRML
+  vendoring and analog-drift caveats.
 
-`exp1551` combines automata masks, semantic repair, SAT checks, and runtime
-contracts into one acceptance cascade. `exp1552` adds localized residual-drift
-repair. `exp1553` scales claim-isolation routing behind the unified gate.
-`exp1554` scales product-line benchmarks with ConstraintBench/FALCON-style
-feasibility, objective, and oracle-agreement metrics.
+### Phase 1: Research Claim Resolution
 
-### Phase 2 - Self-Learning and Energy Diagnostics
+- **exp1578** tests BRAIN's missing REINFORCE training-dynamics axis at k=15:
+  gradient norms, KL convergence, factorized vs Linear-AR.
+- **exp1579** adopts the ICLR 2026 OT verification framework in paper-v6 and
+  writes a conflict ledger.
+- **exp1580** runs a DCCD/JSONSchemaBench structured-output smoke on mandated
+  local SOTA GGUF models.
+- **exp1581** satisfies the continuous self-learning requirement by applying
+  lambda-GRPO and reversing the v14 mode-collapsed retention if replay confirms.
 
-`exp1555` is the required continuous self-learning experiment: FR-11 must show
-positive external utility or retire the positive-utility claim while preserving
-zero soundness mistakes and no model-weight mutation. `exp1556` repairs or
-honestly blocks local SOTA logprob/top-k telemetry for ARM/EBT diagnostics.
-`exp1557` uses Weaver-style verification-compute routing over deterministic
-and weak verifier signals without turning soft values into acceptance
-authority.
+### Phase 2: Phase-1 Software Ship Readiness
 
-### Phase 3 - Hardware Readiness and Retrospective
+- **exp1582** audits the software-only Phase-1 ship gate: PyPI packaging,
+  HuggingFace and second mirror readiness, MCP/CLI docs, and independent
+  reproducer path. This task must not publish credentials or push releases; it
+  produces an actionable readiness ledger.
 
-`exp1558` updates THRML/Extropic scale readiness only if independent RNG
-evidence passes. It remains simulator-only and no-hardware-claim. `exp1559`
-closes `.119` with criteria accounting, retirements, carry-forward gates, and
-ops reconciliation instructions for `.120`.
+### Phase 3: Hardware Portfolio Correction and Retro
+
+- **exp1583** builds synthetic Z1 analog drift and software detailed-balance
+  correction.
+- **exp1584** evaluates Tenstorrent Wormhole n150d as an open-toolchain
+  block-Gibbs target via local/remote preflight.
+- **exp1585** scopes a PolarFire SoC adaptive K-PCD prototype and toolchain
+  feasibility.
+- **exp1586** re-scopes Strix Point as dev/verifier-edge and retires or
+  re-labels KV260 claims that depend on Vivado.
+- **exp1587** records operational/research retro and identifies `.122`
+  carry-forwards.
 
 ## Dependency Graph
 
 ```mermaid
-flowchart TD
-    E1547[exp1547 .118 archive + .119 activation]
-    E1548[exp1548 THRML independent-RNG audit]
-    E1549[exp1549 SATQuest oracle repair]
-    E1550[exp1550 SATQuest SOTA re-eval]
-    E1551[exp1551 automata/SAT unified contract gate]
-    E1552[exp1552 residual-drift repair policy]
-    E1553[exp1553 claim-isolation router scale]
-    E1554[exp1554 product-line staged scale]
-    E1555[exp1555 FR-11 positive utility or retire]
-    E1556[exp1556 ARM/EBT logprob telemetry repair]
-    E1557[exp1557 Weaver verification router]
-    E1558[exp1558 THRML post-RNG scale decision]
-    E1559[exp1559 .119 retro]
-
-    E1547 --> E1548
-    E1547 --> E1549
-    E1549 --> E1550
-    E1547 --> E1551
-    E1549 --> E1551
-    E1547 --> E1552
-    E1551 --> E1553
-    E1547 --> E1553
-    E1551 --> E1554
-    E1547 --> E1554
-    E1547 --> E1555
-    E1547 --> E1556
-    E1550 --> E1557
-    E1551 --> E1557
-    E1548 --> E1558
-    E1548 --> E1559
-    E1549 --> E1559
-    E1555 --> E1559
-    E1557 --> E1559
-    E1558 --> E1559
+flowchart LR
+    E1574[exp1574 activation] --> E1575[exp1575 prior-failure audit]
+    E1575 --> E1576[exp1576 paper Section 3]
+    E1575 --> E1577[exp1577 Z1 packet]
+    E1574 --> E1578[exp1578 BRAIN REINFORCE]
+    E1576 --> E1579[exp1579 OT paper adoption]
+    E1574 --> E1580[exp1580 DCCD JSONSchemaBench]
+    E1574 --> E1581[exp1581 FR-11 lambda-GRPO]
+    E1581 --> E1582[exp1582 Phase-1 ship readiness]
+    E1577 --> E1583[exp1583 Z1 drift correction]
+    E1583 --> E1584[exp1584 Tenstorrent preflight]
+    E1583 --> E1585[exp1585 PolarFire preflight]
+    E1574 --> E1586[exp1586 Strix/KV260 rescope]
+    E1576 --> E1587[exp1587 retro]
+    E1578 --> E1587
+    E1582 --> E1587
+    E1584 --> E1587
+    E1585 --> E1587
+    E1586 --> E1587
 ```
 
 ## Hardware Requirements
 
-| Task range | Hardware | Requirement boundary |
-| --- | --- | --- |
-| `exp1550`-`exp1556` | Dual RTX 3090 local workstation preferred for LLM-bearing rows | Every LLM-bearing experiment must include at least one mandated headline GGUF in `MODEL_SPECS`: `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, or `unsloth/gemma-4-26B-A4B-it-GGUF`. Legacy small models may appear only as fast CPU smoke tests. |
-| `exp1547`, `exp1549`, `exp1557`, `exp1559` | CPU acceptable | Archive, oracle repair, routing over existing artifacts, and retrospective. These tasks must not touch `research-roadmap.yaml` or `scripts/research_conductor.py`. |
-| `exp1548`, `exp1558` | CPU acceptable; local JAX/THRML libraries allowed if already installed | THRML/Carnot software or simulator checks only. No Extropic TSU, Z1, XTR-0, FPGA board, synthesis, bitstream, or board-execution claim. |
-| Any task using local SOTA GGUFs | Local model cache and llama.cpp/Ollama-compatible runtime if available | If a mandated model is unavailable, the task must write an honest artifact with model availability fields rather than substitute legacy small models as headline results. |
+| Tasks | Required hardware | Notes |
+|---|---|---|
+| `exp1574`, `exp1575`, `exp1576`, `exp1577`, `exp1579`, `exp1582`, `exp1586`, `exp1587` | CPU only | Documentation, audit, and planning tasks. |
+| `exp1578`, `exp1581` | CPU acceptable; GPU optional | REINFORCE and lambda-GRPO may use PyTorch/JAX acceleration if available, but must have deterministic CPU fallback or write a blocked artifact. |
+| `exp1580` | Dual RTX 3090 preferred | Must use at least one mandated SOTA GGUF model; legacy tiny models are smoke-test fallback only. |
+| `exp1583` | CPU/GPU simulation only | No Z1/TSU hardware claim; synthetic drift only. |
+| `exp1584` | Remote/cloud Tenstorrent optional | If no Wormhole access exists, produce a blocked/preflight artifact and acquisition path, not a fake benchmark. |
+| `exp1585` | No board required for `.121` | Prototype plan and simulator/toolchain feasibility only unless hardware is already present. |
+
+## Local SOTA Model Discipline
+
+Any `.121` experiment that runs local LLM inference must define `MODEL_SPECS`
+with at least one of:
+
+- `unsloth/Qwen3.6-35B-A3B-GGUF`
+- `unsloth/gemma-4-31B-it-GGUF`
+- `unsloth/gemma-4-26B-A4B-it-GGUF`
+
+The preferred pattern is `cached_sota_pair(gpu_indices=(0, 1))` from
+`scripts/experiment_template.py`. Legacy small models may appear only as
+explicit CPU smoke-test fallback with a loud artifact warning.
 
 ## Success Criteria
 
-| Criterion | Acceptance |
-| --- | --- |
-| Activation | `exp1547.activation_manifest_complete=true`, `.118` criteria are recorded, and all `.119` carry-forward gates are explicit. |
-| THRML RNG | `exp1548.independent_rng_audit_ready=true`, `rng_path_independent=true`, byte-identical stochastic pairs are rejected, and no hardware claim is made. |
-| SATQuest repair | `exp1549.satquest_oracle_repair_ready=true`, `satquest_zero_false_accepts=true`, and proof/witness fields are present. |
-| SATQuest SOTA | `exp1550.satquest_sota_reeval_ready=true` only if the repaired oracle has zero false accepts and at least one mandated local SOTA GGUF ran or was honestly blocked. |
-| Unified contract gate | `exp1551.unified_contract_gate_ready=true` with automata masks, semantic repair, deterministic validators, and zero false accepts. |
-| Residual drift | `exp1552.residual_drift_repair_ready=true` with localized repair metrics and zero deterministic false accepts. |
-| Claim isolation | `exp1553.claim_isolation_router_scale_ready=true` with routed-case budget metrics and zero false accepts. |
-| Product line | `exp1554.product_line_scale_v4_ready=true` or `branch_retired=true`, with parse, feasibility, objective/oracle, and false-accept metrics. |
-| Continuous self-learning | `exp1555.continuous_self_learning_task=true`, `no_model_weight_mutation=true`, `soundness_mistakes=0`, and positive-utility claims only if `utility_delta > 0`; otherwise `positive_utility_claim_retired=true`. |
-| ARM/EBT telemetry | `exp1556.arm_ebm_logprob_telemetry_ready=true` or an honest telemetry blocker, with deterministic validators final authority. |
-| Verification router | `exp1557.verification_compute_router_ready=true` with cost, weak-verifier, deterministic-validator, and false-accept metrics. |
-| Hardware readiness | `exp1558.thrml_post_rng_scale_decision_ready=true` only after independent-RNG evidence passes; otherwise scale/readiness claims stay blocked. |
-| Retrospective | `exp1559.criteria_met`/`criteria_total` are computed from actual artifacts, and `.120` carry-forward gates are explicit. |
+| Criterion | Owning task | Gate |
+|---|---|---|
+| `.120` terminal findings archived and `.121` gates exposed | `exp1574` | `activation_manifest_complete=true` |
+| Carry-forward prior-failure metadata repaired before launch | `exp1575` | `carryforward_prior_failures_ready=true` |
+| Paper-v6 Section 3 sampler draft resumed | `exp1576` | `paper_v6_sampler_section_draft_ready=true` |
+| Z1 readiness packet updated with THRML and drift caveats | `exp1577` | `extropic_z1_packet_updated=true` |
+| BRAIN k=15 training-dynamics verdict settled | `exp1578` | `brain_training_dynamics_verdict_ready=true` |
+| OT verification framework adopted or conflict ledger written | `exp1579` | `ot_framework_adopted=true` |
+| Structured-output smoke uses mandated SOTA GGUFs | `exp1580` | `dccd_jsonschema_smoke_complete=true` |
+| Continuous self-learning task completed | `exp1581` | `continuous_self_learning_task=true` and `fr11_v15_decision_ready=true` |
+| Phase-1 ship readiness ledger written | `exp1582` | `phase1_ship_readiness_ledger_ready=true` |
+| Z1 drift-correction simulation completed | `exp1583` | `detailed_balance_correction_ready=true` |
+| Tenstorrent preflight completed or honestly blocked | `exp1584` | `wormhole_preflight_ready=true` or `blocked_reason` set |
+| PolarFire preflight completed or honestly blocked | `exp1585` | `polarfire_preflight_ready=true` or `blocked_reason` set |
+| Strix/KV260 role corrected | `exp1586` | `hardware_portfolio_rescope_ready=true` |
+| Retro captures research and operations follow-up | `exp1587` | `milestone_121_retro_complete=true` |
 
-## Prior Failure and Retirement Rules
+## Guardrails
 
-- `exp1548` directly addresses the `exp1526`-`exp1531` prior-failure class
-  `tautological_byte_identical_histograms`. If byte-identical sample summaries
-  recur, the task must fail as `rng_path_not_independent` instead of reporting
-  a passed parity claim.
-- `exp1549` directly addresses `exp1536` SATQuest solver false accepts. No
-  downstream SATQuest acceptance or SOTA benchmark may run unless the repaired
-  oracle reports zero false accepts.
-- `exp1555` must retire the positive-utility FR-11 headline if utility remains
-  zero. Safety-only self-learning is useful, but it is not positive utility.
-- `exp1556` must keep ARM/EBT/logprob signals diagnostic-only. They cannot
-  override deterministic validators.
-- `exp1558` must update Extropic readiness only after independent-RNG evidence
-  passes and must not imply Z1/XTR-0/TSU hardware execution.
-
-## Local-First and Decentralization Boundary
-
-The milestone remains local-first. Mandated local SOTA GGUFs are the headline
-LLM models. Closed APIs may be cited as literature baselines but are not
-required for execution. Extropic, THRML, and Kona are used as research signals
-and compatibility targets; the only executable hardware track in `.119` is
-software/simulator evidence unless authenticated device access and transcript
-evidence become available outside the roadmap.
+- Do not modify `research-roadmap.yaml`.
+- Do not modify `scripts/research_conductor.py`.
+- Do not push.
+- Do not claim Extropic Z1/XTR/TSU, Tenstorrent, PolarFire, Strix NPU, or
+  KV260 board execution unless the artifact includes an authenticated device
+  transcript.
+- Do not promote soft energy/logprob/ARM/EBT scores to acceptance authority.
+- Publication-track work remains separate from Phase-1 ship readiness.
