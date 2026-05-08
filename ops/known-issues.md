@@ -386,6 +386,95 @@ abstracts available via:
                        finite K; spectral-gap cure requires K ≫ 10^15."
         retire_if_same_verdict: true
 
+- id: exp15ZA-brain-linear-ar-vs-factorized-bernoulli-benchmark
+  title: "BRAIN+Linear-AR vs Factorized Bernoulli Benchmark (DT-BRAIN-CORRELATIONS)"
+  agent_type: codex
+  model: gpt-5.5
+  priority: critical
+  prompt_seed: |
+    Per Deep Think DT-BRAIN-CORRELATIONS verdict (2026-05-08, docs/
+    research-notes/iclr26-deep-think-responses.md): BRAIN's factorized
+    Bernoulli q_θ is mathematically incapable of representing
+    correlations that AND-composed verifier ensembles structurally
+    require.
+
+    Plefka/TAP closed-form lower bound:
+      inf KL(q_factorized || π_β) ≥ (β²/2) Σ J_ij² m_i(1-m_i) m_j(1-m_j)
+
+    For Carnot's red-team-required ensemble (m_i ≈ 0.5) with verifier
+    correlations ‖J‖_∞ ~ O(1), the penalty scales as Ω(β² n² ‖J‖_rms²)
+    — mathematically inescapable. BRAIN-as-published is fundamentally
+    the wrong tool for Phase 3.
+
+    Deep Think's RESCUE: Linear Autoregressive parameterization
+      q_θ(y_i = 1 | y_<i) = σ(b_i + Σ_{j<i} W_ij y_j)
+    n(n-1)/2 weights + n biases. Captures pairwise correlations exactly.
+    Compatible with REINFORCE prerequisites.
+
+    Deep Think provided a runnable verification script (saved at
+    python/scripts/dt_brain_correlations_verification.py). Setup:
+    n=16, k=4, m=10 random AND-composition constraints. Brute-force
+    enumeration of 2^16 states. Optimize both factorized Bernoulli
+    and Linear AR with exact KL loss.
+
+    Steps:
+    1. Run python/scripts/dt_brain_correlations_verification.py.
+       Verify predicate holds: KL_factorized stalls at large gap;
+       KL_AR drops near zero.
+    2. Extend to training-dynamics under REINFORCE: compare convergence
+       rate, gradient variance, mode-coverage of factorized vs Linear-AR
+       over batches of N ∈ {100, 1000, 10000}.
+    3. Acceptance gate (per DT-BRAIN-CORRELATIONS predictions):
+       - Factorized KL stalls at TAP-predicted bound (≥ 1.0)
+       - Linear-AR KL drops to ≤ 0.1 of factorized
+       - Linear-AR REINFORCE converges within 10× more steps than
+         BRAIN's published budget (the AR coupling inflates score
+         variance per Deep Think's note (e))
+    4. If predicate holds: BRAIN+Linear-AR is the path. Document.
+       If predicate fails: BRAIN may be usable as-published; revise
+       the architecture decision.
+
+    prior_failures:
+      - experiment_id: none
+        verdict: novel_construction
+        addressed_by: "First empirical validation of TAP-predicted
+                       factorized expressivity barrier and Linear-AR
+                       rescue path."
+
+- id: exp15ZB-step-wise-baseline-for-AR-REINFORCE
+  title: "Step-Wise Baseline for AR-REINFORCE Variance Reduction (gated on exp15ZA)"
+  agent_type: codex
+  model: gpt-5.5
+  priority: high
+  gated_on:
+    - upstream: exp15ZA-brain-linear-ar-vs-factorized-bernoulli-benchmark
+      gate_field: linear_ar_kl_gap_confirmed
+      expected_value: true
+  prompt_seed: |
+    Per Deep Think DT-BRAIN-CORRELATIONS (e): Linear AR sequences
+    inflate score-function variance because AR coupling breaks the
+    score-function independence assumption in BRAIN's Theorem 2. To
+    regain noise resilience, augment scalar batch-mean baseline with
+    step-wise or sequence-dependent baseline.
+
+    Steps:
+    1. Implement step-wise baseline for REINFORCE on Linear AR model
+       (per-token control variate; well-studied in sequence-generation
+       literature, e.g., Mnih & Gregor 2014).
+    2. A/B test: AR-REINFORCE with scalar baseline vs step-wise baseline
+       on noisy energy (inject 3% Gaussian per BRAIN's noise model) at
+       n=32, k=15 AND-composition.
+    3. Acceptance gate: step-wise baseline reduces gradient variance
+       by ≥10× vs scalar baseline; convergence rate matches BRAIN's
+       Theorem 2 noise-resilience claim adapted to AR setting.
+
+    prior_failures:
+      - experiment_id: exp15ZA-brain-linear-ar-vs-factorized-bernoulli-benchmark
+        verdict: linear_ar_kl_gap_confirmed (expected)
+        addressed_by: "Once Linear-AR is the right parameterization,
+                       this task makes BRAIN+Linear-AR practical on
+                       noisy hardware."
+
 - id: exp15XY-specann-rejection-architecture-record
   title: "Document SpecAnn Rejection for Phase 3 in Architecture Record (DT-COMPOSITION)"
   agent_type: codex

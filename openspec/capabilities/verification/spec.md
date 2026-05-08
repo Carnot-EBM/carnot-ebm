@@ -1764,7 +1764,61 @@ runtime-contract replay passes
 And candidate repairs that would create false accepts are rejected before they
 can reduce the reported drift count.
 
-## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487/1495/1496/1499/1500/1501/1507/1508/1509/1510/1520/1521/1522/1525/1537/1538/1541/1542/1551/1552)
+### REQ-VERIFY-1553: Claim-Isolation Router Scale Behind Unified Gate
+
+The repository shall provide an Exp 1553 claim-isolation router scale run that
+loads the Exp 1541 uncertainty-router artifact and the Exp 1551 unified
+contract-gate artifact before evaluating a larger mixed case set.
+
+The scale run shall:
+
+- write `results/experiment_1553_claim_isolation_router_scale_v3.json` with
+  `status="in_progress"` before loading predecessor artifacts or source rows;
+- require `unified_contract_gate_ready=true` from Exp 1551 before claiming a
+  ready terminal artifact;
+- reuse the Exp 1541 routing policy and evaluate at least 75 mixed cases when
+  the checked-in manifests contain enough rows, including runtime-contract,
+  SATQuest, product-line, and residual-drift examples;
+- compare routed claim-isolation verifier calls against a full-context
+  verification baseline under matched unified-gate acceptance criteria;
+- keep deterministic SAT, product-line, runtime-contract, and residual-drift
+  replay validators as final authority so hidden deterministic failures cannot
+  be accepted by either routed or bypassed paths;
+- compute `budget_delta`, `budget_reduced`, `false_accept_rate`, and
+  `missed_failure_count` from deterministic labels rather than model
+  self-evaluation;
+- record mandated SOTA GGUF provenance from predecessor artifacts and concrete
+  availability blockers whenever a mandated model is unavailable; and
+- write a terminal artifact containing `status`, `milestone`,
+  `claim_isolation_router_scale_ready`, `model_specs`,
+  `live_sota_model_inference_used`, `cases_total`, `routed_cases`,
+  `full_context_cases`, `claims_extracted`, `budget_delta`, `budget_reduced`,
+  `false_accept_rate`, `missed_failure_count`, `router_policy_path`,
+  `focused_tests_passed`, and `honest_verdict`.
+
+`claim_isolation_router_scale_ready` MUST be true only when Exp 1551 is ready,
+at least 75 cases are evaluated, all four required source kinds are present,
+at least one but not all cases are routed, focused tests have passed,
+`false_accept_rate` is exactly `0.0`, and `budget_reduced=true`.
+`budget_reduced` MUST be true only when the routed verifier-call budget is
+lower than the full-context baseline under the same unified-gate acceptance
+criteria. `honest_verdict` MUST begin with one of `complete:`, `complete_`,
+`success:`, `success_`, `passed:`, `passed_`, `shipped:`, or `shipped_`.
+
+### SCENARIO-VERIFY-1553: Scaled Routing Preserves Gate Safety
+
+Given complete Exp 1541 and Exp 1551 artifacts on the run date `20260508`,
+When Exp 1553 evaluates the uncertainty router on a 75+ mixed case set behind
+the unified contract gate,
+Then threshold-risky, prefix-risky, validator-disagreement, and residual-drift
+cases are routed to claim-isolated verification
+And low-risk cases are excluded from the routed verifier-call budget
+And every final accept is still gated by deterministic SAT/product-line/
+runtime-contract or residual-drift replay authority
+And the terminal artifact reports whether the routed budget is lower than the
+full-context baseline with zero deterministic false accepts.
+
+## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487/1495/1496/1499/1500/1501/1507/1508/1509/1510/1520/1521/1522/1525/1537/1538/1541/1542/1551/1552/1553)
 
 | Requirement | Python | Tests |
 |-------------|--------|-------|
@@ -1800,3 +1854,4 @@ can reduce the reported drift count.
 | REQ-VERIFY-1542 | Implemented (`python/carnot/verify/arm_ebm_soft_value_diagnostic.py`) | Implemented (`tests/python/test_experiment_1542_arm_ebm_soft_value_diagnostic.py`) |
 | REQ-VERIFY-1551 | Implemented (`python/carnot/verify/unified_contract_gate.py`) | Implemented (`tests/python/test_experiment_1551_automata_sat_unified_contract_gate.py`) |
 | REQ-VERIFY-1552 | Implemented (`python/carnot/verify/residual_drift_repair_policy.py`) | Implemented (`tests/python/test_experiment_1552_residual_drift_repair_policy.py`) |
+| REQ-VERIFY-1553 | Implemented (`python/carnot/verify/claim_isolation_router_scale.py`) | Implemented (`tests/python/test_experiment_1553_claim_isolation_router_scale.py`) |
