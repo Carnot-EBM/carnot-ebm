@@ -3046,6 +3046,50 @@ tracks and the preserved claim blocks
 **And** `research-roadmap.yaml` and `scripts/research_conductor.py` remain
 unchanged by the activation workflow.
 
+### REQ-REPORT-064: Exp 1575 Carry-Forward Prior-Failure Audit
+
+The Exp 1575 audit workflow shall write
+`results/experiment_1575_carry_forward_prior_failures_autofill_audit.json` to
+prove that the Exp 1576 and Exp 1577 `.121` carry-forward roadmap entries cite
+real prior failures with exact source-artifact verdicts before either task is
+dispatched.
+
+The workflow shall first write the JSON artifact with `status="in_progress"`.
+The terminal artifact shall include these top-level fields:
+
+- `status`
+- `autofill_dry_run_completed`
+- `validate_prior_failures_passed`
+- `audit_roadmap_gates_passed`
+- `exp1576_prior_failures_valid`
+- `exp1577_prior_failures_valid`
+- `carryforward_prior_failures_ready`
+- `honest_verdict`
+
+The workflow shall request `research-roadmap-next.yaml` and fall back to the
+active `research-roadmap.yaml` when the next-roadmap handoff file is absent.
+It shall dry-run `scripts/conductor_priors_autofill.py`, run
+`scripts/validate_prior_failures.py`, run `scripts/audit_roadmap_gates.py`, and
+record command outputs plus dry-run task/stub counts. It shall independently
+inspect Exp 1576 and Exp 1577 prior-failure entries in the selected roadmap,
+confirm that Exp 1576 cites Exp 1569's exact `honest_verdict`, confirm that Exp
+1577 cites Exp 1573's exact `honest_verdict`, and confirm that every additional
+`expNNNN-*` prior listed by those tasks has a real source artifact whose
+`honest_verdict` exactly equals the roadmap `verdict`.
+
+### SCENARIO-REPORT-064: Exp 1575 Blocks Carry-Forward Gaps
+
+**Given** the selected `.121` roadmap contains Exp 1576 and Exp 1577
+**And** the source artifacts for Exp 1569 and Exp 1573 both report
+`honest_verdict="blocked_gate_check_failed"`
+**When** the Exp 1575 audit workflow runs
+**Then** it writes the required REQ-REPORT-064 fields
+**And** `carryforward_prior_failures_ready` is true only when the autofill
+dry-run, prior-failure validator, roadmap-gate audit, and both target task
+inspections all pass
+**And** any missing task, missing prior entry, missing source artifact, or
+verdict mismatch is recorded with the exact task id and field.
+
 
 ### REQ-PUBLISH-003: HuggingFace README Accuracy Audit
 
@@ -3182,6 +3226,7 @@ embed live-GPU benchmark results from Exp 328 when available.
 | REQ-REPORT-061 | `python/carnot/reporting/milestone_retro_119.py`, `results/experiment_1559_milestone_119_retro.json` | `tests/python/test_milestone_retro_119.py` | Implemented |
 | REQ-REPORT-062 | `python/carnot/reporting/milestone_120_activation_manifest.py`, `results/experiment_1560_119_completion_archive_120_activation.json`, `ops/milestone_120_activation_manifest.md`, `ops/exclusion_manifest.yaml` | `tests/python/test_milestone_120_activation_manifest.py` | Implemented |
 | REQ-REPORT-063 | `python/carnot/reporting/milestone_121_activation_manifest.py`, `results/experiment_1574_120_completion_archive_121_activation.json`, `ops/milestone_121_activation_manifest.md` | `tests/python/test_milestone_121_activation_manifest.py` | Implemented |
+| REQ-REPORT-064 | `scripts/experiment_1575_carry_forward_prior_failures_autofill_audit.py`, `results/experiment_1575_carry_forward_prior_failures_autofill_audit.json` | `tests/python/test_experiment_1575_carry_forward_prior_failures_audit.py` | Implemented |
 | REQ-REPORT-024 | `python/carnot/reporting/agent_usage.py`, `scripts/agent_plan_usage.py` | `tests/python/test_agent_plan_usage.py` | Implemented |
 | REQ-PUBLISH-003 | `scripts/experiment_317_hf_publish.py` | `tests/python/test_experiment_317_hf_publish.py` | Implemented |
 | REQ-PUBLISH-004 | `scripts/experiment_330_hf_live_publish.py` | `tests/python/test_experiment_330_hf_live_publish.py` | Implemented |

@@ -1,0 +1,92 @@
+{
+  "artifact": "experiment_1575_carry_forward_prior_failures_autofill_audit",
+  "artifact_metadata": {
+    "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "run_date": "20260508"
+  },
+  "audit_roadmap_gates_passed": true,
+  "autofill_dry_run_completed": true,
+  "autofill_summary": {
+    "already_populated": 14,
+    "stubs_generated": 0,
+    "tasks_scanned": 14
+  },
+  "carryforward_prior_failures_ready": true,
+  "command_results": {
+    "audit_roadmap_gates": {
+      "command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/audit_roadmap_gates.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+        "--complete",
+        "/home/ianblenke/github.com/ianblenke/carnot/research-complete.yaml"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "{\n  \"audit_script_written\": true,\n  \"failure_details\": [],\n  \"honest_verdict\": \"all_checks_pass\",\n  \"n_gate_field_cross_ref_failures\": 0,\n  \"n_gate_upstream_checks\": 12,\n  \"n_gate_upstream_failures\": 0,\n  \"n_model_agent_coherence_failures\": 0,\n  \"n_prior_failures_checks\": 14,\n  \"n_prior_failures_missing\": 0,\n  \"n_tasks_audited\": 14,\n  \"roadmap_gate_audit_passed\": true,\n  \"roadmap_path_note\": \"requested roadmap path exists\",\n  \"roadmap_path_used\": \"/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml\"\n}\n"
+    },
+    "autofill_dry_run": {
+      "command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/conductor_priors_autofill.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+        "--dry-run"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "14 tasks scanned, 0 stubs generated, 14 already populated\ndry-run: no file changes written to /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml\n"
+    },
+    "validate_prior_failures": {
+      "command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/validate_prior_failures.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "[OK] /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml \u2014 no schema errors, no prior_failures violations\n"
+    }
+  },
+  "exp1576_prior_failures_valid": true,
+  "exp1577_prior_failures_valid": true,
+  "experiment": "exp1575-carry-forward-prior-failures-autofill-audit",
+  "honest_verdict": "carryforward_prior_failures_ready",
+  "prior_failure_gap_details": [],
+  "roadmap_path_note": "requested next roadmap missing; audited active research-roadmap.yaml",
+  "roadmap_path_requested": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap-next.yaml",
+  "roadmap_path_used": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+  "run_date": "20260508",
+  "schema_version": 1,
+  "status": "complete",
+  "target_prior_checks": {
+    "exp1576-paper-v6-section-3-sampler-draft-resumed": [
+      {
+        "experiment_id": "exp1569-paper-v6-section-3-sampler-draft",
+        "roadmap_verdict": "blocked_gate_check_failed",
+        "source_artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1569_paper_v6_section_3_sampler_draft.json",
+        "source_honest_verdict": "blocked_gate_check_failed"
+      },
+      {
+        "experiment_id": "exp1269-paper-v6-critical-fixes-v2",
+        "roadmap_verdict": "paper_v6_critical_fixes_v2_complete",
+        "source_artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1269_paper_v6_critical_fixes_v2.json",
+        "source_honest_verdict": "paper_v6_critical_fixes_v2_complete"
+      }
+    ],
+    "exp1577-extropic-z1-readiness-packet-thrml-alignment-resumed": [
+      {
+        "experiment_id": "exp1573-extropic-z1-readiness-packet-thrml-alignment-update",
+        "roadmap_verdict": "blocked_gate_check_failed",
+        "source_artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1573_extropic_z1_readiness_packet_thrml_alignment_update.json",
+        "source_honest_verdict": "blocked_gate_check_failed"
+      },
+      {
+        "experiment_id": "exp1558-thrml-post-rng-scale-decision-extropic-update",
+        "roadmap_verdict": "blocked_gate_check_failed",
+        "source_artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1558_thrml_post_rng_scale_decision_extropic_update.json",
+        "source_honest_verdict": "blocked_gate_check_failed"
+      }
+    ]
+  },
+  "validate_prior_failures_passed": true
+}
