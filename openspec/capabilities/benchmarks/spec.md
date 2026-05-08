@@ -147,6 +147,37 @@ answers, and records any model self-verifier false accept in the manifest.
 
 **Spec traces:** REQ-BENCH-1511
 
+### REQ-BENCH-1523: Product-Line Staged Feedback Rescue
+
+Carnot MUST provide a deterministic staged-feedback rescue path for the
+product-line solver-oracle benchmark that:
+
+- loads the Exp1511 JSONL rows and reproduces baseline parse, feasibility,
+  oracle-agreement, and false-accept metrics before rescue;
+- uses only mandated local SOTA GGUF provenance for headline rows and blocks
+  rather than substituting legacy tiny models when the mandated cache path is
+  unavailable;
+- applies auditable syntax-parse, feature-model consistency, solver
+  feasibility, and policy/compliance feedback stages to each row;
+- records per-stage outcomes in a JSONL rescue manifest; and
+- sets `product_line_rescue_ready=true` only when parse rate improves over
+  Exp1511 and either feasibility or oracle agreement improves while
+  `false_accept_rate=0.0`; otherwise it retires the branch with an explicit
+  reason.
+
+### SCENARIO-BENCH-1523: Staged Feedback Rescues Or Retires Product-Line Rows
+
+**Given** Exp1511 product-line rows whose parse rate is 0.333333 and whose
+feasibility and oracle-agreement rates are 0.0
+**When** the staged rescue runner replays those rows through deterministic
+parse, feature-model, feasibility, and policy feedback
+**Then** the final artifact contains the required baseline and rescue metric
+fields, the rescue manifest records every stage per row, and the branch is
+marked ready only when the acceptance gate is satisfied with zero false
+accepts.
+
+**Spec traces:** REQ-BENCH-1523
+
 ## Implementation Status
 
 | Requirement | Status | Experiment |
@@ -155,7 +186,9 @@ answers, and records any model self-verifier false accept in the manifest.
 | REQ-BENCH-010 | Implemented | Exp 840 |
 | REQ-BENCH-011 | Implemented | Exp 840 |
 | REQ-BENCH-1511 | Implemented (`python/carnot/eval/product_line_solver_oracle_benchmark.py`) | Exp 1511 |
+| REQ-BENCH-1523 | Planned (`python/carnot/eval/product_line_parser_feasibility_rescue.py`) | Exp 1523 |
 | SCENARIO-BENCH-020 | Implemented | Exp 427 |
 | SCENARIO-BENCH-025 | Implemented | Exp 840 |
 | SCENARIO-BENCH-030 | Implemented | Exp 840 |
 | SCENARIO-BENCH-1511 | Implemented (`tests/python/test_experiment_1511_product_line_solver_oracle_benchmark.py`) | Exp 1511 |
+| SCENARIO-BENCH-1523 | Planned (`tests/python/test_experiment_1523_product_line_parser_feasibility_rescue.py`) | Exp 1523 |
