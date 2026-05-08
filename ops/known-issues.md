@@ -207,6 +207,97 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### NEW 2026-05-08 (21:25Z): exp1569 + exp1573 Carry-Forward to .121 (with proper prior_failures discipline)
+
+**Origin.** During `.120 milestone execution, two tasks hit
+DOOMED_RERUN_BLOCK 3× each and retired:
+
+- **exp1569 paper-v6 §3 sampler section draft** — DOOMED_RERUN_BLOCK
+  ×3 at 20:25, 20:27, 20:29Z. Reason: my `.120 yaml drafted
+  `prior_failures: [{experiment_id: none, verdict: novel_paper_drafting}]`
+  but the failure-ledger detected 1 real prior paper-drafting failure
+  in scope; placeholder violates discipline.
+
+- **exp1573 Extropic Z1 readiness packet THRML alignment** —
+  DOOMED_RERUN_BLOCK ×3 at 21:04, 21:06, 21:08Z. Reason: cited
+  `exp1545 verdict: complete: extropic_z1_access_readiness_packet_shipped`
+  as a "prior failure" but the verdict is a SUCCESS; ledger detected
+  2 actual prior Z1/hardware-readiness failures and rejected the YAML.
+
+**Methodology lesson** (filed for future planner-side discipline,
+including outer-loop Claude when authoring pre-staged roadmaps):
+
+The Failed-Experiment Rerun Discipline (CLAUDE.md MANDATORY rule)
+requires `prior_failures:` blocks to:
+
+1. Cite REAL prior failed experiments by experiment_id
+2. Cite the EXACT honest_verdict of those failures (not made-up labels
+   like `novel_*` or `none`)
+3. Explain `addressed_by` in terms of what specifically changed since
+   the prior attempts
+4. Set `retire_if_same_verdict: true` for tasks where same-verdict
+   means permanent retirement
+
+**Outer-loop authorship error:** I drafted `.120 with placeholder
+`prior_failures` blocks (using `experiment_id: none` and
+`verdict: novel_*`). The ledger does NOT recognize these as compliant.
+
+**Two .121 tasks to file** (with proper discipline):
+
+```yaml
+- id: exp15ZC-paper-v6-section-3-sampler-draft-resumed
+  title: "Paper-v6 §3 Sampler Section Draft (carry-forward from .120 exp1569)"
+  agent_type: codex
+  model: gpt-5.5
+  priority: critical
+  prior_failures:
+    - experiment_id: <find via ops/known-issues.md grep + research-complete.yaml>
+      verdict: <exact verdict from prior failed paper-v6 drafting attempt>
+      addressed_by: "9 Deep Think verdicts now provide load-bearing
+                     §3 prose content (DT-7, DT-5, DT-2, DT-MCMC-K1,
+                     DT-MCMC-NULL, DT-MCMC-STATELESS, DT-OT-RESIDUAL,
+                     DT-COMPOSITION, DT-BRAIN-CORRELATIONS) plus 4 novel
+                     Carnot contributions empirically validated in .120
+                     (exp1561, 1562, 1564-1567). Prior attempt lacked
+                     this content."
+      retire_if_same_verdict: true
+  prompt: <same as exp1569 from research-roadmap.yaml>
+
+- id: exp15ZD-extropic-z1-readiness-packet-thrml-alignment-resumed
+  title: "Extropic Z1 Readiness Packet — THRML Alignment Update (carry-forward from .120 exp1573)"
+  agent_type: codex
+  model: gpt-5.5
+  priority: medium
+  prior_failures:
+    - experiment_id: <find prior Z1/hardware-readiness failed task>
+      verdict: <exact verdict>
+      addressed_by: "exp1564 vendored THRML 0.1.3 successfully; this
+                     task updates the Z1 readiness packet (exp1545)
+                     to reflect that vendoring + flag the report's
+                     red-team finding C (analog drift detailed-balance
+                     correction needed)."
+      retire_if_same_verdict: false
+  prompt: <same as exp1573 from research-roadmap.yaml>
+```
+
+**Pre-emit checklist for outer-loop / planner authorship:**
+
+When writing `prior_failures:` blocks:
+1. ✓ Run `grep -A2 "DOOMED_RERUN_BLOCK\|FAIL.*exp" ops/conductor-log.md`
+   to find recent task failures matching scope
+2. ✓ Cite the actual experiment_id (never `none` or `standard_*`)
+3. ✓ Cite the exact verdict string from the result artifact (never
+   `novel_*` placeholders)
+4. ✓ Explain in addressed_by what specifically changed since prior
+   attempts — specific evidence, not aspirational claims
+5. ✓ Set retire_if_same_verdict thoughtfully
+
+**Mechanical safety net:** `scripts/conductor_priors_autofill.py`
+exists from the .96 milestone fix (memory entry
+`feedback_failure_ledger_gaps.md`) and can auto-populate prior_failures
+from the ledger. Outer-loop drafting should run this script as part
+of the pre-stage roadmap workflow.
+
 ### NEW 2026-05-08 (20:30Z): Hardware Eval Report Cascade (.121+ MANDATORY)
 
 **Source.** Google Deep Research output, "Carnot Hardware Evaluation

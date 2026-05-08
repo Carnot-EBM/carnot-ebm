@@ -1241,3 +1241,4 @@ web search: GitHub trending energy based mod |
 | 2026-05-08 21:06 UTC | Extropic Z1 Readiness Packet — THRML Alignment Upd | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-08 21:08 UTC | Extropic Z1 Readiness Packet — THRML Alignment Upd | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-08 21:10 UTC | Milestone .120 Retro and .121 Carry-Forward Gates | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1569-paper-v6-section-3-sampler-draft, ex |
+| 2026-05-08 21:23 UTC | Milestone 2026.05.120 retro re-activated after gate-fix (outer-loop) | OK | exp1569+exp1573 carry forward to .121 |
