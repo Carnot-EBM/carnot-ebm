@@ -1,0 +1,77 @@
+{
+  "benchmark_manifest_path": "results/product_line_solver_oracle_1511.jsonl",
+  "blockers": [],
+  "cached_sota_pair": [
+    {
+      "gpu": 0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "name": "Qwen3.6-35B-A3B"
+    },
+    {
+      "gpu": 1,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "name": "Gemma4-26B-A4B-it"
+    }
+  ],
+  "cases_attempted": 6,
+  "classification_counts": {
+    "infeasible": 2,
+    "parse_failure": 4
+  },
+  "feasibility_rate": 0.0,
+  "feature_models_defined": 6,
+  "gpu_probe": {
+    "cuda_available": true,
+    "gpu_count": 2
+  },
+  "honest_verdict": "complete: product-line solver oracle benchmark ready with live local SOTA GGUF rows",
+  "live_sota_model_inference_used": true,
+  "model_attempts": [
+    {
+      "blocker": null,
+      "env_details": {
+        "candidate_library_dirs": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/nvidia/cuda_runtime/lib",
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/nvidia/cublas/lib"
+        ],
+        "ld_library_path_after": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/nvidia/cuda_runtime/lib:/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/nvidia/cublas/lib",
+        "ld_library_path_before": ""
+      },
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_name": "Qwen3.6-35B-A3B",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "model_used": true
+    },
+    {
+      "blocker": "not_attempted_runtime_budget",
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_name": "Gemma4-31B-it",
+      "model_used": false
+    },
+    {
+      "blocker": "not_attempted_runtime_budget",
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_used": false
+    }
+  ],
+  "model_specs": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "unsloth/gemma-4-31B-it-GGUF",
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "models_used": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF"
+  ],
+  "oracle_agreement_rate": 0.0,
+  "parse_rate": 0.333333,
+  "product_line_benchmark_ready": true,
+  "run_date": "20260508",
+  "schema_version": 1,
+  "solver_oracle_ready": true,
+  "status": "complete",
+  "tests_run": [],
+  "verifier_false_accept_rate": 0.0
+}
