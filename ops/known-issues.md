@@ -207,6 +207,70 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### NEW 2026-05-08 (00:00Z): THRML/Carnot Parity Scaling Sweep (.117+ pickup)
+
+**Background:** exp1504 (THRML/Carnot Simulator Parity v3, `.115) demonstrated numerical equivalence between Carnot's tiny-Ising substrate and Extropic's open-source THRML reference simulator on `n=4 signed ring chord`:
+
+- Exact-enumeration energy: delta = 1.14e-7 (within tolerance 1e-6, essentially float-precision-limited)
+- Fixed-seed Gibbs sample-mean energy: delta = 0.042 (within tolerance 0.35, stochastic equivalence)
+- Verdict: `complete_thrml_carnot_simulator_parity_passed_no_hardware_claim`
+
+This is the first real empirical anchor for Carnot's hardware-acceleration thesis. **Without further validation, the result is bounded to n=4.** Production Carnot Phase-5-D runs at d=128 (n=128 Ising bits), with even larger configurations queued for Phase-3 substrate scale-up. The headline claim "Carnot's substrate is hardware-portable to the THRML/Extropic ecosystem" requires empirical evidence at production scale.
+
+**The cost-benefit is decisive:** simulator-on-simulator parity sweeps run on CPU (no silicon needed, no thermal hardware required). Each sweep is cheap. Catching parity breakdown at scale BEFORE making a paper-v6 claim is much cheaper than retracting the claim post-publication.
+
+**Recommended .117+ tasks:**
+
+```
+exp_NEXT_THRML_PARITY_N8: THRML/Carnot parity at n=8 ring chord
+  - Repeat exp1504 protocol with n=8 signed ring chord problem
+  - Both exact enumeration (256 states) and fixed-seed Gibbs sampling
+  - Acceptance: deltas within tolerances established at n=4
+
+exp_NEXT_THRML_PARITY_N16: THRML/Carnot parity at n=16 ring chord
+  - Same protocol, exact enumeration tractable (65,536 states)
+  - Acceptance: deltas within scaled tolerances
+
+exp_NEXT_THRML_PARITY_N32: THRML/Carnot parity at n=32 ring chord
+  - Exact enumeration becomes 4B states — too expensive; switch to
+    importance-sampled energy distribution comparison
+  - Acceptance: KL(Carnot_dist || THRML_dist) < 0.05 on 10K Gibbs samples each
+
+exp_NEXT_THRML_PARITY_N64: THRML/Carnot parity at n=64
+  - Sample-only comparison; longer mixing time
+  - Acceptance: empirical mean energy delta < 5%, KL < 0.1
+
+exp_NEXT_THRML_PARITY_N128: THRML/Carnot parity at n=128
+  - Production-scale Phase-5-D substrate dimension
+  - Acceptance: empirical mean energy delta < 10%, KL < 0.15
+  - If parity holds: paper-v6 anchor claim "Carnot substrate is
+    hardware-portable to Extropic TSU at production scale"
+  - If parity fails: investigate which step diverges
+    (sampler kernel? energy function? RNG? float precision?)
+    and either fix or document limitation honestly
+
+exp_NEXT_THRML_PARITY_DIVERSE: parity on diverse Ising topologies
+  - Beyond ring chord: complete graph, sparse random graph,
+    lattice, scale-free network. Each at n=32 if tractable.
+  - Acceptance: parity holds across at least 3 distinct topologies
+    OR document which topologies break and why
+```
+
+**Strategic alignment:**
+
+- Validates / refutes Phase-2 hardware-acceleration thesis at production scale
+- Connects to LARQL+RotorQuant queued series (`.116+) — both are sovereignty-deployment infrastructure
+- CLAUDE.md decentralization rule 5 (hardware portability as political, not just engineering): empirical parity = empirical sovereignty
+- Provides paper-v6 anchored claim with empirical evidence (vs architectural assertion)
+
+**Cross-references:**
+- exp1504 baseline: `results/experiment_1504_thrml_carnot_simulator_parity_v3.json`
+- THRML repo: https://github.com/extropic-corp/thrml (or PyPI thrml-0.1.3)
+- DR-3 substrate consensus: `memory/reference_dr3_consensus_and_dual_svid.md`
+- CLAUDE.md hardware portfolio (Active hardware tracks: dual RTX 3090, KV260 RTL, THRML simulator)
+
+---
+
 ### NEW 2026-05-07 (16:50Z): THRML Lineage Operator-Reopen (.115+ pickup)
 
 **Background:** Three `.114 THRML tasks (exp1488 Installability and Import Preflight, exp1489 THRML/Carnot Simulator Parity v2, exp1490 Kona EBT Partial-Trace Localization Audit's THRML dependency) were retired or GATE_BLOCKed because `thrml` Python package was not installed in the venv:
