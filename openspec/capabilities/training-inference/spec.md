@@ -1978,6 +1978,60 @@ hardware claims.
 
 **Implementation Status:** Implemented (Exp 1528)
 
+## REQ-SAMPLE-050: Exp 1529 sampled n=64 THRML/Carnot simulator parity
+
+Carnot SHALL provide a sampled n=64 THRML/Carnot Ising parity run that reuses
+the Exp 1528 sampled-metrics helper pattern, stays software/simulator-only,
+uses a deterministic signed ring-chord topology, reports repeated fixed-seed
+energy, magnetization, autocorrelation, and sampled energy-histogram KL
+metrics, and never claims Extropic TSU hardware execution, board execution,
+synthesis, or bitstream evidence.
+
+Acceptance criteria:
+- The experiment SHALL create
+  `results/experiment_1529_thrml_carnot_parity_n64_sample.json` with
+  `status="in_progress"` before upstream gate inspection, THRML import probing,
+  or parity execution completes.
+- The experiment SHALL verify Exp 1528 n=32 sampled parity passed before
+  running the n=64 scale step and SHALL write a simulator-only terminal blocker
+  if the upstream parity evidence is missing, malformed, or not passed.
+- The parity case SHALL use 64 spins, explicit deterministic biases,
+  symmetric zero-diagonal couplings, beta, topology, repeated fixed seeds,
+  warmup, sample count, and thinning parameters.
+- The sampled comparison SHALL run Carnot and THRML software samplers with
+  identical model parameters and comparable fixed-temperature schedules for
+  each seed.
+- The manifest at `results/thrml_carnot_parity_n64_1529.jsonl` SHALL contain
+  one JSON object per seed/backend plus a summary row.
+- The terminal artifact SHALL include `status`,
+  `thrml_parity_n64_passed`, `simulator_only`, `no_tsu_hardware_claim`,
+  `n_spins`, `topology`, `seeds`, `n_samples_per_backend`,
+  `mean_energy_delta`, `magnetization_delta`, `autocorrelation_summary`,
+  `kl_divergence`, `parity_manifest_path`, `blockers`, and
+  `honest_verdict`.
+- `thrml_parity_n64_passed=true` is valid only when the sampled mean-energy
+  delta is within the documented absolute or percent threshold, the sampled KL
+  divergence is below the documented threshold, magnetization and stability
+  diagnostics are present, and the terminal artifact records the thresholds
+  used for that decision.
+- `simulator_only=true` and `no_tsu_hardware_claim=true` SHALL remain set for
+  every terminal outcome.
+
+**Implementation Status:** Implemented (Exp 1529)
+
+### SCENARIO-SAMPLE-078: Exp 1529 writes sampled n=64 parity evidence
+
+Given: Exp 1528 reports sampled n=32 THRML/Carnot simulator parity passed and
+no TSU hardware claim.
+When: the Exp 1529 sampled parity run executes from the Carnot project root for
+run date 20260508.
+Then: it writes JSONL rows for each seed/backend and a summary row, writes a
+terminal artifact with all required fields, marks the run passed only when
+sampled energy, magnetization, KL, and stability gates pass, and disallows all
+TSU hardware, board, synthesis, and bitstream claims.
+
+**Implementation Status:** Implemented (Exp 1529)
+
 ## REQ-MODEL-031: SCEnergyModel — Set-Level Energy Function for Statement Consistency (Exp 944)
 
 SCEnergyModel SHALL implement a permutation-invariant set-level energy function that assigns
