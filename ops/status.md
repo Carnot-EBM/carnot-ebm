@@ -1,6 +1,24 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-07 (milestone 2026.04.116 research planning complete)
+**Last Updated:** 2026-05-08 (milestone 2026.04.117 research planning complete)
+
+## Session 2026-05-08 - Milestone 2026.04.117 Research Planning Complete
+
+**Milestone 2026.04.117 PLANNED after .116 completion.**
+
+- Roadmap doc: `openspec/change-proposals/research-roadmap-vNEXT.md`
+- Execution queue: `research-roadmap-next.yaml` (14 tasks, `exp1519`-`exp1532`)
+- ID allocation: milestone `.116` ended at `exp1518`, so `.117` starts at `exp1519`.
+- Research references updated before final roadmap design with the post-.116 sweep: AeroTherm-GPT CDG repair, TerraFormer verifier feedback, Draft-Conditioned Constrained Decoding, MARCH claim isolation, Verify When Uncertain, Spilled Energy, GRAD, DC energy-based iterative reasoning, probabilistic hardware for diffusion-like models, THRML/Extropic software status, and Logical Intelligence/Kona public claim-boundary signal.
+- Design focus: Phase 0 archives `.116` and exposes same-roadmap gate fields; Phase 1 closes the runtime-contract E2E loop and runs live SOTA contract-guided repair, CDG root-cause repair, and product-line rescue/retirement; Phase 2 satisfies continuous self-learning with FR-11 live policy promotion and claim-isolation ablation; Phase 3 scales THRML/Carnot parity through n=8/n=16 exact, n=32/n=64/n=128 sampled, and n=32 diverse topologies; Phase 4 closes with retro.
+- LLM-bearing tasks (`exp1521`, `exp1522`, `exp1523`, `exp1524`, `exp1525`) include mandated local SOTA GGUF `MODEL_SPECS`: `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and `unsloth/gemma-4-26B-A4B-it-GGUF`.
+- Continuous self-learning requirement is satisfied by `exp1524-fr11-live-policy-promotion-v12` with `continuous_self_learning_task: true`.
+- Structured gates: `exp1520` on `exp1519.prior_runtime_contract_ready == true`; `exp1521` and `exp1522` on `exp1520.runtime_contract_e2e_ready == true`; `exp1523` on `exp1519.prior_product_line_benchmark_ready == true`; `exp1524` on `exp1519.prior_fr11_rollback_ready == true` and `exp1520.runtime_contract_e2e_ready == true`; `exp1525` on `exp1524.live_policy_promotion_ready == true`; `exp1526` on `exp1519.prior_thrml_conformance_ready == true`; `exp1527` on `exp1526.thrml_parity_n8_passed == true`; `exp1528` on `exp1527.thrml_parity_n16_passed == true`; `exp1529` on `exp1528.thrml_parity_n32_passed == true`; `exp1530` on `exp1529.thrml_parity_n64_passed == true`; `exp1531` on `exp1528.thrml_parity_n32_passed == true`.
+- Agent routing: all 14 tasks use `agent_type: codex`, `model: gpt-5.5`; no Claude/Gemini routing.
+- Validation passed: YAML parse and prompt-section/end checks, `python3 scripts/validate_prior_failures.py research-roadmap-next.yaml`, `python3 scripts/audit_roadmap_gates.py research-roadmap-next.yaml`, and `git diff --check`.
+- Did NOT modify `research-roadmap.yaml` or `scripts/research_conductor.py`.
+
+**What's next**: activate `research-roadmap-next.yaml` for milestone 2026.04.117 when ready.
 
 ## Session 2026-05-07 - Milestone 2026.04.116 Research Planning Complete
 
