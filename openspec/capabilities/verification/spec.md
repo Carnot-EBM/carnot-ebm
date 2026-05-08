@@ -1874,6 +1874,58 @@ runtime-contract or residual-drift replay authority
 And the terminal artifact reports whether the routed budget is lower than the
 full-context baseline with zero deterministic false accepts.
 
+### REQ-VERIFY-1557: Weaver Verification-Compute Router
+
+The repository shall provide an Exp 1557 verification-compute router that loads
+the Exp 1550 SATQuest SOTA re-evaluation artifact and the Exp 1551 unified
+contract-gate artifact before selecting a bounded mixed candidate set.
+
+The router shall:
+
+- write `results/experiment_1557_weaver_verification_compute_router.json` with
+  `status="in_progress"` before loading predecessor artifacts or source rows;
+- use weak verifier signals, including automata/format validity, BEAVER-style
+  prefix risk, claim-router uncertainty, energy/logprob diagnostics, and model
+  self-declared accept flags, only to choose how much verification compute to
+  spend;
+- never allow a weak or soft signal to become acceptance authority;
+- run at least one deterministic validator before any candidate can be accepted
+  and run all available deterministic validators for high-risk candidates;
+- compare routed verification cost against an always-run-all-deterministic
+  baseline on the same bounded candidate set;
+- compute `false_accept_rate` and `missed_failure_count` from deterministic
+  validator outcomes rather than model self-evaluation;
+- mark `verification_compute_router_ready=false` whenever routing would hide a
+  deterministic failure; and
+- write a terminal artifact containing `status`, `milestone`,
+  `verification_compute_router_ready`, `candidate_selection_cases`,
+  `weak_verifiers_used`, `deterministic_validators_used`,
+  `soft_signals_used_for_routing_only`, `verification_cost_baseline`,
+  `verification_cost_router`, `verification_cost_delta`, `false_accept_rate`,
+  `missed_failure_count`, `router_policy_path`, `focused_tests_passed`, and
+  `honest_verdict`.
+
+`verification_compute_router_ready` MUST be true only when Exp 1550 and Exp
+1551 are loaded, at least one candidate is evaluated, focused tests have
+passed, routed cost is lower than the all-deterministic baseline, every final
+accept has deterministic validator support, `false_accept_rate` is exactly
+`0.0`, and `missed_failure_count` is `0`. `honest_verdict` MUST begin with one
+of `complete:`, `complete_`, `success:`, `success_`, `passed:`, `passed_`,
+`shipped:`, or `shipped_`.
+
+### SCENARIO-VERIFY-1557: Routing Saves Cost Without Acceptance Authority
+
+Given complete Exp 1550 and Exp 1551 artifacts on the run date `20260508`,
+When Exp 1557 evaluates weak verifier signals over a bounded SATQuest,
+runtime-contract, product-line, and residual-drift candidate set,
+Then low-risk candidates use the cheap path plus one deterministic source
+validator
+And high-risk candidates fall back to all available deterministic validators
+And a soft accept or high confidence signal never overrides a deterministic
+rejection
+And the terminal artifact reports whether routed verification cost decreases
+with zero deterministic false accepts and zero missed deterministic failures.
+
 ### REQ-VERIFY-1554: Product-Line Staged Scale V4 Behind Unified Gate
 
 The repository shall provide an Exp 1554 product-line staged scale run that
@@ -1927,7 +1979,7 @@ false-accept metrics are aggregated from deterministic row fields
 And any false accept or missing deterministic oracle field retires the branch
 before a ready artifact can be reported.
 
-## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487/1495/1496/1499/1500/1501/1507/1508/1509/1510/1520/1521/1522/1525/1537/1538/1541/1542/1551/1552/1553/1554)
+## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487/1495/1496/1499/1500/1501/1507/1508/1509/1510/1520/1521/1522/1525/1537/1538/1541/1542/1551/1552/1553/1554/1557)
 
 | Requirement | Python | Tests |
 |-------------|--------|-------|
@@ -1966,3 +2018,4 @@ before a ready artifact can be reported.
 | REQ-VERIFY-1552 | Implemented (`python/carnot/verify/residual_drift_repair_policy.py`) | Implemented (`tests/python/test_experiment_1552_residual_drift_repair_policy.py`) |
 | REQ-VERIFY-1553 | Implemented (`python/carnot/verify/claim_isolation_router_scale.py`) | Implemented (`tests/python/test_experiment_1553_claim_isolation_router_scale.py`) |
 | REQ-VERIFY-1554 | Planned (`python/carnot/verify/product_line_staged_scale_v4.py`) | Planned (`tests/python/test_experiment_1554_product_line_staged_scale_v4.py`) |
+| REQ-VERIFY-1557 | Implemented (`python/carnot/verify/verification_compute_router.py`) | Implemented (`tests/python/test_experiment_1557_weaver_verification_compute_router.py`) |
