@@ -1,24 +1,35 @@
 {
-  "experiment": 1527,
-  "schema": "blocked_gate_check_v1",
-  "run_date": "2026-05-08",
-  "started_at": "2026-05-08T03:55:44.099009+00:00",
-  "finished_at": "2026-05-08T03:55:44.099009+00:00",
-  "duration_s": 0.0,
-  "status": "blocked",
-  "title": "THRML/Carnot Parity n=16 Exact - Gated on Exp1526 n=8",
-  "honest_verdict": "blocked_gate_check_failed",
-  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp1526-thrml-carnot-parity-n8.thrml_parity_n8_passed (upstream artifact not found for task id 'exp1526-thrml-carnot-parity-n8')",
-  "gates_evaluated": [
-    {
-      "upstream": "exp1526-thrml-carnot-parity-n8",
-      "artifact_field": "thrml_parity_n8_passed",
-      "op": "==",
-      "expected": true,
-      "actual": null,
-      "passed": false,
-      "reason": "upstream artifact not found for task id 'exp1526-thrml-carnot-parity-n8'"
-    }
-  ],
-  "blocked_at_layer": "conductor_pre_gate"
+  "blockers": [],
+  "carnot_partition_function": 970812.3789688251,
+  "exact_states_enumerated": 65536,
+  "honest_verdict": "complete_thrml_carnot_parity_n16_passed_no_tsu_hardware_claim",
+  "kl_divergence": 0.0,
+  "mean_energy_delta": 1.68225e-07,
+  "metadata": {
+    "exp1526_status": "complete",
+    "experiment_id": 1527,
+    "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "run_date": "20260508",
+    "schema": "thrml_carnot_parity_n16_v1",
+    "thrml_import_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/thrml/__init__.py",
+    "thrml_version": "0.1.3",
+    "tsu_hardware_execution": false
+  },
+  "n_spins": 16,
+  "no_tsu_hardware_claim": true,
+  "parity_manifest_path": "results/thrml_carnot_parity_n16_1527.jsonl",
+  "partition_relative_error": 7.3268e-08,
+  "sample_mean_energy_delta": 0.0,
+  "seed": 20260508,
+  "simulator_only": true,
+  "status": "complete",
+  "thresholds": {
+    "kl_divergence_max": 1e-06,
+    "mean_energy_delta_abs_max": 1e-06,
+    "partition_relative_error_max": 1e-06,
+    "sample_mean_energy_delta_abs_max": 0.35
+  },
+  "thrml_parity_n16_passed": true,
+  "thrml_partition_function": 970812.4500982722,
+  "topology": "signed_ring_chord"
 }
