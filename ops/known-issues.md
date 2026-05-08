@@ -364,10 +364,19 @@ abstracts available via:
        distribution mirroring); pin Apache-2.0 license.
     3. Replace python/carnot/sampling/gibbs.py with THRML import +
        thin Carnot adapter (preserve Carnot HTTP API contract).
+       CRITICAL DESIGN CONSTRAINT (per DT-MCMC-STATELESS): the
+       inference Gibbs chain MUST initialize at the user-provided
+       `candidate` from the API payload `{ prompt, candidate }`. NOT
+       random state, NOT cached state. The candidate is the warm
+       start; this bypasses the χ² cold-start penalty
+       √χ²(μ₀ ‖ π_{θ,t}) ≈ O(e^{ΔE_max/2t}) which would otherwise
+       dominate the K=100 latency budget.
     4. Re-run exp1548 audit with vendored sampler. Acceptance gate:
        KL(Carnot || THRML) = 0.0 by construction (same code).
     5. Document in paper-v6 §3 as "Carnot uses Extropic THRML 0.1.3
-       as the reference sampler implementation, vendored Apache-2.0."
+       as the reference sampler implementation, vendored Apache-2.0,
+       initialized at the user-provided candidate per the verifier
+       API contract."
 
     prior_failures:
       - experiment_id: exp1548-thrml-carnot-parity-independent-rng-audit
@@ -376,6 +385,62 @@ abstracts available via:
                        (block-Gibbs vs single-site MH) is structural at
                        finite K; spectral-gap cure requires K ≫ 10^15."
         retire_if_same_verdict: true
+
+- id: exp15UU-candidate-warm-start-vs-cold-start-benchmark
+  title: "Candidate-Warm-Start vs Cold-Start Inference Benchmark (DT-MCMC-STATELESS follow-up)"
+  agent_type: codex
+  model: gpt-5.5
+  priority: high
+  prompt_seed: |
+    Per Deep Think DT-MCMC-STATELESS verdict (2026-05-08, docs/research-
+    notes/iclr26-deep-think-responses.md): Carnot's API payload
+    { prompt, candidate } already contains a structurally valid warm
+    start for the inference Gibbs chain. The candidate is a localized
+    proxy for the target mode π_{θ,t}(· | prompt) and bypasses the
+    catastrophic χ² cold-start penalty.
+
+    Predicted χ² penalty for cold-start at K=100: dominated by lowest-
+    probability states ≈ 1/√π_min ≈ O(e^{ΔE_max/2t}). For Carnot's
+    n=128 substrate at t=1 with realistic ΔE_max ~ 10, this is
+    O(e^5) ≈ 150× the warm-start penalty.
+
+    This benchmark empirically measures the cold-vs-warm gap and rules
+    out cached-state as a deployment pattern.
+
+    Steps:
+    1. Build a held-out verification corpus of N ≥ 200 (prompt,
+       candidate, oracle_verdict) tuples spanning diverse code-repair
+       cases. Mix of correct, incorrect, and edge cases.
+    2. Implement THRML block-Gibbs inference with three init policies:
+       (a) candidate-warm-start: y_init = bits(candidate)
+       (b) cold-start: y_init = uniform random
+       (c) cached-state-warm-start: y_init = (last sample from a
+          DIFFERENT prompt's chain, randomly selected from a cache)
+    3. For each init policy, run K ∈ {10, 50, 100, 500, 1000} sweeps
+       on the full corpus. Measure:
+       - End-to-end verification accuracy (vs oracle)
+       - Mean energy at termination (proxy for sampling quality)
+       - Wall-clock latency per request (95th percentile)
+    4. Acceptance gate (per DT-MCMC-STATELESS predictions):
+       - candidate-warm-start at K=100 achieves accuracy within 1% of
+         K=1000 baseline (warm start "lands close" to π)
+       - cold-start at K=100 accuracy DROPS substantially (predicted
+         50%+ degradation) vs K=1000
+       - cached-state at K=100 accuracy is WORSE than cold-start
+         (predicted: out-of-distribution init = adversarial init)
+    5. Report: cold-vs-warm-vs-cached accuracy delta at K=100;
+       95th-percentile latency; recommended deployment policy.
+
+    Falsification: if candidate-warm-start does NOT outperform
+    cold-start at K=100, the design assumption is wrong and the
+    THRML vendoring task (exp15ZZ) needs revision.
+
+    prior_failures:
+      - experiment_id: none
+        verdict: novel_benchmark
+        addressed_by: "Empirically validates DT-MCMC-STATELESS's
+                       χ²-penalty argument for the specific Carnot
+                       deployment pattern."
 
 - id: exp15TT-thrml-block-gibbs-plateau-friction-audit
   title: "THRML Block-Gibbs Plateau-Friction Audit (DT-MCMC-NULL follow-up)"
