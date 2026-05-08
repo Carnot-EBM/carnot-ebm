@@ -4,6 +4,182 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-05-08 Post-.116 Planning Sweep (Milestone 2026.04.117)
+
+This sweep was run after milestone `.116` completed all 13 planned tasks.
+Key outcomes: `exp1507` induced bounded safe-DSL verifier candidates with
+`compile_rate=1.0` and `false_accept_rate=0.0`; `exp1508` proved
+trigger+grammar certificate decoding can reach `grammar_parse_rate=1.0` while
+schema-only parsing stayed lower; `exp1509` normalized 60 monitor events with
+zero false accepts; `exp1510` detected all injected plan-graph contract
+violations with zero false accepts; `exp1511` exposed a product-line gap
+(`parse_rate=0.333333`, `feasibility_rate=0.0`,
+`oracle_agreement_rate=0.0`); `exp1512` and `exp1513` proved FR-11
+query-time policy updates and rollback replay with zero soundness mistakes;
+`exp1515` made THRML software conformance simulator-only; `exp1516` normalized
+KAN shapes without synthesis/board claims; `exp1517` produced KV260
+source-level RTL property evidence only. Primary `.117` focus: close the
+runtime-contract E2E loop, rescue or retire the product-line solver oracle,
+promote only rollback-passing FR-11 policy updates, and scale THRML/Carnot
+parity beyond the n=4 smoke.
+
+### AeroTherm-GPT Constraint Dependency Graphs
+- **Paper:** arXiv:2604.01738, "AeroTherm-GPT: A Verification-Centered LLM
+  Framework for Thermal Protection System Engineering Workflows."
+- **Source:** https://arxiv.org/abs/2604.01738
+- **What:** Uses a constraint-closed-loop generation workflow with generation,
+  validation, CDG-guided repair, execution, and audit. The Constraint
+  Dependency Graph encodes co-resolution structure and upstream-priority repair,
+  reporting much higher root-cause fix efficiency than flat checklist repair.
+- **Relevance to Carnot:** `.116` produced separate deterministic contract
+  pieces. The CDG idea is directly useful for turning validator failures into
+  root-cause repair candidates without trusting an LLM judge.
+- **Concrete experiment hook:** Build a constraint dependency graph over the
+  `.116` runtime-contract cases and compare CDG-guided repair/localization
+  against flat validator ordering, preserving zero false accepts.
+
+### TerraFormer Policy-Guided Verifier Feedback
+- **Paper:** arXiv:2601.08734, "TerraFormer: Automated Infrastructure-as-Code
+  with LLMs Fine-Tuned via Policy-Guided Verifier Feedback."
+- **Source:** https://arxiv.org/abs/2601.08734
+- **What:** Combines LLM generation/mutation with formal verifier feedback over
+  syntax, deployability, and policy compliance. The published ICSE 2026 version
+  reports large correctness gains from multi-stage verification and
+  self-correction on IaC tasks.
+- **Relevance to Carnot:** `exp1511` product-line validation failed at the
+  parse/feasibility/oracle interface. TerraFormer reinforces that solver-backed
+  structural domains need staged feedback, not one-pass generation.
+- **Concrete experiment hook:** Run a product-line parser/feasibility rescue
+  using staged syntax, feature-model, feasibility, and policy feedback. If
+  parse/oracle agreement does not improve, retire the benchmark as premature.
+
+### Draft-Conditioned Constrained Decoding
+- **Paper:** arXiv:2603.03305, "Draft-Conditioned Constrained Decoding for
+  Structured Generation in LLMs."
+- **Sources:** https://arxiv.org/abs/2603.03305,
+  https://huggingface.co/papers/2603.03305
+- **What:** Separates semantic planning from structural enforcement by
+  generating an unconstrained draft and then applying constrained decoding
+  conditioned on that draft. The paper frames the benefit as reducing the
+  projection tax of hard constraints.
+- **Relevance to Carnot:** `.116` showed trigger+grammar decoding improves
+  parseability, but strict structure can still degrade semantic repair. DCCD
+  is a concrete way to test draft-first contract repair with mandated local
+  SOTA GGUFs.
+- **Concrete experiment hook:** Compare baseline generation, grammar-only
+  certificate generation, and draft-conditioned contract-guided repair on the
+  runtime-contract E2E harness.
+
+### MARCH Asymmetric Claim Checking
+- **Paper:** arXiv:2603.24579, "MARCH: Multi-Agent Reinforced Self-Check for
+  LLM Hallucination."
+- **Source:** https://arxiv.org/abs/2603.24579
+- **What:** Decomposes responses into claim-level propositions and checks them
+  in isolation from the original answer to reduce confirmation bias. The
+  method uses information asymmetry across solver/proposer/checker roles.
+- **Relevance to Carnot:** Carnot should not adopt MARL or LLM-as-judge as a
+  trust boundary, but claim isolation is useful as an ablation over deterministic
+  validators and FR-11 policy promotion.
+- **Concrete experiment hook:** Compare full-context verifier feedback against
+  claim-isolated verifier feedback on rollback-passing FR-11/runtime-contract
+  cases, using deterministic validators as final authority.
+
+### Verify When Uncertain
+- **Paper:** arXiv:2502.15845, "Verify when Uncertain: Beyond
+  Self-Consistency in Black Box Hallucination Detection."
+- **Source:** https://arxiv.org/abs/2502.15845
+- **What:** Uses a budgeted two-stage hallucination detector that switches from
+  self-consistency to cross-model verification only for uncertain cases.
+- **Relevance to Carnot:** Useful for verifier-budget scheduling, not a
+  headline detector. Carnot can use uncertainty to decide when to invoke
+  heavier SOTA GGUF repair/checking while retaining deterministic validators as
+  the acceptance authority.
+- **Concrete experiment hook:** Use uncertainty/claim-isolation as a routing
+  feature inside the MARCH-style ablation, and report compute avoided versus
+  false accepts.
+
+### Spilled Energy in LLMs
+- **Paper:** arXiv:2602.18671, "Spilled Energy in Large Language Models."
+- **Sources:** https://arxiv.org/abs/2602.18671,
+  https://huggingface.co/papers/2602.18671
+- **What:** Reinterprets the LLM softmax classifier as an EBM and derives
+  training-free spilled/marginalized-energy metrics from logits for
+  hallucination localization.
+- **Relevance to Carnot:** Prior Carnot telemetry audits found simple logit
+  signals confounded for headline claims. This paper remains relevant as an
+  auxiliary monitor/routing signal only, especially for localizing token spans
+  that should be fed to deterministic validators.
+- **Concrete experiment hook:** Optional auxiliary feature for runtime-contract
+  repair routing; no `.117` headline claim unless it beats superficial
+  baselines and deterministic validator outcomes.
+
+### GRAD Graph-Retrieved Adaptive Decoding
+- **Paper:** arXiv:2511.03900, "GRAD: Graph-Retrieved Adaptive Decoding for
+  Hallucination Mitigation."
+- **Sources:** https://arxiv.org/abs/2511.03900,
+  https://huggingface.co/papers/2511.03900
+- **What:** Builds a sparse token-transition graph from retrieved evidence and
+  fuses graph-retrieved logits with model logits during decoding to steer
+  generation toward evidence-supported continuations without retraining.
+- **Relevance to Carnot:** The graph-retrieval idea is adjacent to CDG repair,
+  but Carnot's near-term graph should encode verifier dependencies and contract
+  failures, not external RAG evidence.
+- **Concrete experiment hook:** File for future graph-guided decoding; `.117`
+  should prefer deterministic CDG root-cause repair first.
+
+### Difference-of-Convex Energy-Based Iterative Reasoning
+- **Paper:** OpenReview/NeurIPS 2025, "A Difference-of-Convex Functions
+  Approach to Energy-Based Iterative Reasoning."
+- **Source:** https://openreview.net/forum?id=QvsDTpf4yF
+- **What:** Proposes a DC-functions optimization algorithm for energy-based
+  iterative reasoning with faster inference and local-minimum convergence
+  guarantees on continuous reasoning tasks.
+- **Relevance to Carnot:** Relevant to future continuous/relaxed reasoning
+  layers, but `.117` is dominated by deterministic contract closure and THRML
+  parity scaling.
+- **Concrete experiment hook:** Revisit after runtime-contract E2E and THRML
+  parity scaling are stable; do not reopen continuous-reasoning claims in
+  `.117`.
+
+### Probabilistic Hardware for Diffusion-Like Models
+- **Paper:** arXiv:2510.23972, "An efficient probabilistic hardware
+  architecture for diffusion-like models."
+- **Source:** https://arxiv.org/abs/2510.23972
+- **What:** Proposes an all-transistor probabilistic computer for denoising
+  models and reports system-level energy-efficiency projections versus GPUs.
+- **Relevance to Carnot:** Supports the strategic direction of probabilistic
+  hardware and p-bit/thermodynamic sampling, but does not change the local
+  evidence boundary. Carnot has THRML software and source-level RTL only, not
+  TSU hardware.
+- **Concrete experiment hook:** Scale THRML/Carnot simulator parity across
+  n=8,16,32,64,128 and diverse topologies before making any hardware-path
+  claims.
+
+### THRML / Extropic Software Status
+- **Sources:** THRML docs (https://docs.thrml.ai/en/latest/), Extropic
+  software page (https://extropic.ai/software), `ops/known-issues.md`.
+- **What:** THRML is a JAX library for block Gibbs sampling and probabilistic
+  graphical models, and Extropic describes it as the software simulation layer
+  for future TSU/Z1 hardware. Carnot now has local `thrml-0.1.3` import and
+  simulator conformance evidence, but no authenticated hardware transcript.
+- **Relevance to Carnot:** `ops/known-issues.md` explicitly carries forward
+  THRML/Carnot parity scaling. This should be the main `.117` substrate track.
+- **Concrete experiment hook:** Run exact n=8/n=16 and sampled n=32/n=64/n=128
+  parity sweeps plus a diverse-topology n=32 sweep. Every artifact must state
+  simulator/software only and no TSU hardware claim.
+
+### Logical Intelligence / Kona Public Signal
+- **Sources:** https://logicalintelligence.com/ and public Kona/Aleph pages.
+- **What:** Logical Intelligence publicly positions Kona/Aleph around EBMs for
+  critical-system reasoning and verified code, but does not expose internal
+  implementation details sufficient for Carnot parity claims.
+- **Relevance to Carnot:** Kona remains a strategic comparator and
+  claim-boundary reference. It should not drive implementation dependencies in
+  `.117`.
+- **Concrete experiment hook:** Keep Kona to literature/context language until
+  Carnot has a complete runtime-contract E2E artifact and external evidence
+  suitable for an apples-to-apples comparator.
+
 ## 2026-05-07 Post-.114 Planning Sweep (Milestone 2026.04.115)
 
 This sweep was run after milestone `.114` completed 12 of 13 criteria with
