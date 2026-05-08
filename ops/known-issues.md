@@ -207,6 +207,133 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### NEW 2026-05-08 (18:25Z): BRAIN REINFORCE Training-Dynamics Audit at k=15 (.121+ MANDATORY)
+
+**Counter-finding origin.** Exp1562 (`.120 BRAIN+Linear-AR k-sweep)
+landed 2026-05-08 18:14Z with the OPPOSITE finding from Deep Think
+DT-BRAIN-CORRELATIONS' prediction. The k-sweep at n=16, β=2.0
+measured analytical-KL expressivity:
+
+```
+k=4:  KL_factorized=1.075, KL_AR=0.335, ratio=3.21x
+k=8:  KL_factorized=0.147, KL_AR=0.138, ratio=1.06x
+k=12: KL_factorized=0.0106, KL_AR=0.0105, ratio=1.007x
+k=15: KL_factorized=0.00134, KL_AR=0.00134, ratio=1.0007x
+```
+
+The expressivity gap CLOSES exponentially with k (not widens as
+Deep Think predicted). Reason: sparse AND-composition at large k
+concentrates the target distribution onto a near-delta; any
+parameterization that puts mass on the right state matches.
+exp1562 verdict: `brain_dropped` (rescue solves a non-existent
+expressivity problem).
+
+**The OPEN question (not addressed by exp1562).** Deep Think's
+gradient-starvation argument was about TRAINING DYNAMICS under
+REINFORCE, not expressivity. Specifically: at uniform init m_i=0.5,
+the expected k=15 AND-satisfaction probability is `0.5^15 ≈ 3×10⁻⁵`,
+so REINFORCE gradients are zero in nearly every batch → optimization
+instantaneously stalls on flat plateaus. **exp1562 used analytical
+gradient through enumeration, not REINFORCE**, so it tested a
+different question.
+
+**The .121 task to file.**
+
+```yaml
+- id: expNNNN-brain-reinforce-training-dynamics-at-k15
+  milestone: 2026.05.121
+  agent_type: codex
+  model: gpt-5.5
+  priority: critical
+  prompt_seed: |
+    Per exp1562 counter-finding (`.120, 2026-05-08): factorized-vs-AR
+    expressivity gap CLOSES at k=15, not widens (ratio 1.0007×). But
+    Deep Think DT-BRAIN-CORRELATIONS' gradient-starvation argument
+    was about REINFORCE training dynamics, NOT analytical
+    expressivity. exp1562 tested the wrong axis.
+
+    This task tests the right axis: train BRAIN's REINFORCE on a
+    k=15 AND-composed target via factorized Bernoulli q_θ. Measure:
+      (a) gradient magnitude per training step
+      (b) whether the chain escapes the uniform init m_i=0.5
+      (c) wall-time-to-target-KL convergence
+      (d) compare against same setup with Linear-AR q_θ
+
+    SETUP:
+    - n=16, k=15 (matching exp1562 regime)
+    - 10 random AND-composition constraints
+    - β=2.0 target Boltzmann (matching exp1562)
+    - REINFORCE with batch-mean baseline (BRAIN's published method)
+    - Initial m_i = 0.5 (uniform; this is what's gradient-starvation-
+      vulnerable per Deep Think)
+
+    Compare two parameterizations:
+      (a) Factorized Bernoulli (n=16 params; BRAIN-as-published)
+      (b) Linear AR (n + n(n-1)/2 = 136 params)
+
+    For each, run 50,000 REINFORCE iterations with batch size 512
+    samples at each step. Track:
+      - Gradient L2 norm per iteration (log scale)
+      - q_θ marginals m_i over training
+      - KL(q_θ || π_β) every 1000 iterations
+      - Wall time
+
+    Acceptance gate:
+      - GATE A: gradient_norm > 1e-6 in ≥ 50% of first 1000 iterations
+        (predicts not gradient-starvation-stalled)
+      - GATE B: KL drops below 0.01 within 50,000 iterations
+        (predicts trainable)
+      - GATE C: AR converges no slower than factorized (since
+        expressivity is equivalent, training dynamics is the
+        differentiator)
+
+    Falsification scenarios:
+      (1) GATE A fails for factorized → gradient starvation REAL
+        → BRAIN-as-published unusable at k=15 → Linear-AR rescue
+        VALIDATED on training-dynamics axis even though expressivity
+        ratio is 1.0
+      (2) GATE A passes for factorized → gradient starvation
+        OVERSTATED → BRAIN-as-published is fine at k=15 → drop the
+        rescue entirely (matches exp1562)
+      (3) GATE B fails for both → BRAIN's REINFORCE is wrong tool
+        for k=15 ANY parameterization → Phase 3 needs different
+        distribution-learning method (perhaps SOTA importance
+        sampling or annealed sequential MC)
+
+    prior_failures:
+      - experiment_id: exp1562-brain-linear-ar-k-sweep-extended
+        verdict: complete: falsified_brain_linear_ar_rescue_widening
+        addressed_by: "exp1562 falsified expressivity widening but
+                       did NOT test gradient-starvation (training
+                       dynamics) which is a separate axis. This task
+                       tests the right axis with REINFORCE."
+
+  acceptance_gate: |
+    Verdict per scenario above. Phase-3 distribution-learning
+    recommendation updated based on which scenario fires.
+
+  paper_v6_implication: |
+    If GATE A fails for factorized: Linear-AR rescue is justified
+    on training-dynamics grounds even though expressivity is
+    equivalent. Paper-v6 §3.6 stays.
+    If GATE A passes: BRAIN-as-published is fine; paper-v6 §3.6
+    is dropped (rescue solves no real problem).
+    If GATE B fails for both: paper-v6 §3.6 is replaced with
+    "BRAIN's REINFORCE is structurally inadequate for k=15
+    AND-composition; alternative distribution-learning required."
+```
+
+**Why this is a MANDATORY-NEXT-MILESTONE PRIORITY:** exp1562 just
+generated a partial-counter-finding that affects one of paper-v6's
+4 novel contributions. The training-dynamics axis is the un-tested
+half. Without this audit, we either ship a paper-v6 contribution
+that's solving a non-existent problem (if BRAIN-as-published is
+fine) OR drop a contribution that was actually needed for a
+different reason (if gradient starvation is real). Either error is
+worse than running a focused 1-2 hour audit experiment to settle it.
+
+### NEW 2026-05-08 (14:25Z): ICLR 2026 Literature Integration (.120+ MANDATORY)
+
 ### NEW 2026-05-08 (14:25Z): ICLR 2026 Literature Integration (.120+ MANDATORY)
 
 **Background.** Operator-flagged 2026-05-08 (post-.119 RNG audit) — ICLR
