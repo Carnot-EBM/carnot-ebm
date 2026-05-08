@@ -1215,3 +1215,4 @@ web search: GitHub trending energy based mod |
 | 2026-05-08 15:40 UTC | Residual Drift Repair Policy v1 - Gated on Exp1547 | OK | 81 passed, 1 warning in 5.81s |
 | 2026-05-08 15:56 UTC | Claim-Isolation Router Scale v3 - Gated on Exp1551 | OK | 81 passed, 1 warning in 8.95s |
 | 2026-05-08 16:10 UTC | Product-Line Staged Scale v4 - Gated on Exp1551 Co | OK | 81 passed, 1 warning in 6.13s |
+| 2026-05-08 16:24 UTC | FR-11 Positive-Utility or Retire Gate v14 - Gated  | OK | 81 passed, 1 warning in 5.43s |
