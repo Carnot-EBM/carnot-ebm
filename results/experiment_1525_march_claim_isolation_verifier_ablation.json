@@ -1,24 +1,41 @@
 {
-  "experiment": 1525,
-  "schema": "blocked_gate_check_v1",
-  "run_date": "2026-05-08",
-  "started_at": "2026-05-08T03:49:39.463594+00:00",
-  "finished_at": "2026-05-08T03:49:39.463594+00:00",
-  "duration_s": 0.0,
-  "status": "blocked",
-  "title": "MARCH Claim-Isolation Verifier Ablation - Gated on Exp1524 Live Policy Promotion",
-  "honest_verdict": "blocked_gate_check_failed",
-  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp1524-fr11-live-policy-promotion-v12.live_policy_promotion_ready (upstream artifact not found for task id 'exp1524-fr11-live-policy-promotion-v12')",
-  "gates_evaluated": [
+  "blockers": [],
+  "budget_delta": 3,
+  "cases_loaded": 1,
+  "claim_isolated_accept_rate": 0.0,
+  "claim_isolation_ablation_ready": true,
+  "claim_isolation_delta": 0.0,
+  "claim_isolation_manifest_path": "results/march_claim_isolation_1525.jsonl",
+  "claims_extracted": 4,
+  "false_accept_count": 0,
+  "false_accept_rate": 0.0,
+  "full_context_accept_rate": 0.0,
+  "honest_verdict": "complete: march_claim_isolation_ablation_ready",
+  "live_sota_model_inference_used": true,
+  "model_specs": [
     {
-      "upstream": "exp1524-fr11-live-policy-promotion-v12",
-      "artifact_field": "live_policy_promotion_ready",
-      "op": "==",
-      "expected": true,
-      "actual": null,
-      "passed": false,
-      "reason": "upstream artifact not found for task id 'exp1524-fr11-live-policy-promotion-v12'"
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "role": "flagship_moe_primary_claim_proposer_checker"
+    },
+    {
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "role": "flagship_dense_secondary_claim_proposer_checker"
+    },
+    {
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "role": "middle_moe_secondary_claim_proposer_checker"
     }
   ],
-  "blocked_at_layer": "conductor_pre_gate"
+  "models_used": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF"
+  ],
+  "run_date": "20260508",
+  "schema": "march_claim_isolation_verifier_ablation_v1",
+  "spec": [
+    "REQ-VERIFY-1525",
+    "SCENARIO-VERIFY-1525"
+  ],
+  "status": "complete",
+  "verifier_calls_claim_isolated": 4,
+  "verifier_calls_full_context": 1
 }
