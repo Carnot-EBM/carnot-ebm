@@ -1329,7 +1329,65 @@ accept status
 And the terminal artifact sets `cdg_root_cause_repair_ready=true` exactly when
 case metrics are computed and the reported false-accept rate remains zero.
 
-## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487/1495/1496/1499/1500/1501/1507/1508/1509/1510/1520/1521/1522)
+### REQ-VERIFY-1525: MARCH Claim-Isolation Verifier Ablation
+
+The repository shall provide an Exp 1525 MARCH-style ablation that compares
+full-context verifier feedback against claim-isolated verifier feedback on
+promoted Exp 1524 FR-11/runtime-contract cases while keeping deterministic
+runtime-contract validators as the final authority.
+
+The ablation shall:
+
+- write
+  `results/experiment_1525_march_claim_isolation_verifier_ablation.json` with
+  `status="in_progress"` before loading source rows or running model checks;
+- load promoted-policy evaluation rows from
+  `results/fr11_live_policy_promotion_1524.jsonl` and deterministic contract
+  rows from `results/runtime_contract_e2e_manifest_1520.jsonl`;
+- resolve mandated local SOTA GGUFs using `cached_sota_pair()` or the same
+  local cache pattern, and write a terminal blocker if no mandated SOTA GGUF can
+  run rather than using legacy tiny models for headline claim-isolation rows;
+- extract an atomic-claim schema from each answer or contract row and record
+  stable claim IDs, source case IDs, claim text, source mode, source family, and
+  deterministic accept/reject labels;
+- run both full-context and claim-isolated checker modes, where the
+  claim-isolated checker does not receive the original answer text;
+- validate every checker accept/reject through the Exp 1520 deterministic
+  runtime-contract ledger and treat checker disagreement as auxiliary evidence
+  only;
+- write `results/march_claim_isolation_1525.jsonl` with one row per claim/case
+  plus a summary row;
+- report full-context and claim-isolated accept rates, verifier-call budgets,
+  `budget_delta`, false-accept count, and false-accept rate; and
+- write a terminal artifact containing `status`, `model_specs`,
+  `live_sota_model_inference_used`, `claim_isolation_ablation_ready`,
+  `cases_loaded`, `claims_extracted`, `full_context_accept_rate`,
+  `claim_isolated_accept_rate`, `claim_isolation_delta`,
+  `verifier_calls_full_context`, `verifier_calls_claim_isolated`,
+  `budget_delta`, `false_accept_count`, `false_accept_rate`,
+  `claim_isolation_manifest_path`, `models_used`, `blockers`, and
+  `honest_verdict`.
+
+`claim_isolation_ablation_ready` MUST be true only when both checker modes run
+on at least one mandated SOTA GGUF and `false_accept_rate` is reported.
+`honest_verdict` MUST begin with one of `complete:`, `complete_`, `success:`,
+`success_`, `passed:`, `passed_`, `shipped:`, or `shipped_`.
+
+### SCENARIO-VERIFY-1525: Claim-Isolated Feedback Stays Validator-Grounded
+
+Given promoted Exp 1524 FR-11 policy rows and deterministic Exp 1520
+runtime-contract rows on the run date `20260508`,
+When Exp 1525 extracts atomic claims and evaluates each case in full-context
+and claim-isolated checker modes,
+Then every claim row records whether the original answer was hidden from the
+claim-isolated checker
+And deterministic runtime-contract labels remain the final accept/reject
+authority for false accepts
+And the terminal artifact sets `claim_isolation_ablation_ready=true` only when
+at least one mandated SOTA GGUF produced both full-context and claim-isolated
+rows and a false-accept rate is reported.
+
+## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487/1495/1496/1499/1500/1501/1507/1508/1509/1510/1520/1521/1522/1525)
 
 | Requirement | Python | Tests |
 |-------------|--------|-------|
@@ -1358,3 +1416,4 @@ case metrics are computed and the reported false-accept rate remains zero.
 | REQ-VERIFY-1520 | Implemented (`python/carnot/verify/runtime_contract_e2e_harness.py`) | Implemented (`tests/python/test_experiment_1520_runtime_contract_e2e_harness.py`) |
 | REQ-VERIFY-1521 | Implemented (`python/carnot/verify/live_sota_contract_guided_repair.py`) | Implemented (`tests/python/test_experiment_1521_live_sota_contract_guided_repair.py`) |
 | REQ-VERIFY-1522 | Implemented (`python/carnot/verify/constraint_dependency_graph_repair.py`) | Implemented (`tests/python/test_experiment_1522_constraint_dependency_graph_repair.py`) |
+| REQ-VERIFY-1525 | Implemented (`python/carnot/verify/march_claim_isolation_ablation.py`) | Implemented (`tests/python/test_experiment_1525_march_claim_isolation_ablation.py`) |
