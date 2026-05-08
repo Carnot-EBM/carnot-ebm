@@ -2614,6 +2614,56 @@ the measured SRS accepted accuracy at `C > C_inv` is below `s_r*`.
 
 **Implementation Status:** Planned (Exp 1567)
 
+## REQ-SAMPLE-062: Exp 1570 Soft-Gibbs Jensen coverage-bound calibration
+
+Carnot SHALL provide a reproducible Exp 1570 harness that empirically verifies
+the DT-OT-RESIDUAL Jensen lower bound for the Soft-Gibbs residual over the
+paper-v6 k=6 verifier ensemble.  The harness SHALL measure
+`alpha_i = P_mu(y notin S_i)` for each verifier on a calibration corpus with
+`N >= 500` rows, then compare the Jensen prediction
+`Z_beta >= product_i exp(-beta * alpha_i)` against measured Soft-BRS
+acceptance rates.
+
+Acceptance criteria:
+- The harness SHALL use the checked-in FoVer calibration corpus when it
+  provides at least 500 rows, or deterministically build an equivalent
+  calibration corpus of at least 500 rows when the checked-in corpus is
+  unavailable.
+- The verifier ensemble SHALL contain exactly the six paper-v6 k=6 verifier
+  channels: Z3 SMT, AST structural, semantic consistency, ThinkPRM v2,
+  SOSKAN-Energy v3, and SemEnergy probe.
+- The harness SHALL compute and report `alpha_i_per_verifier` as a list of six
+  floats in k=6 verifier order.
+- For beta values `{0.1, 0.5, 1.0, 2.0, 5.0, 10.0}`, the harness SHALL report
+  `z_beta_jensen_bound` rows containing `beta` and `predicted_lower`, and
+  SHALL run corpus-level Soft-BRS to report `z_beta_empirical` rows containing
+  `beta` and `empirical_acceptance_rate`.
+- The acceptance gate SHALL set `jensen_bound_holds_for_all_beta=true` only
+  when every empirical acceptance rate is greater than or equal to the matching
+  Jensen-predicted lower bound.
+- The harness SHALL determine `optimal_beta_for_deployment` by maximizing
+  coverage tightness times empirical acceptance rate, where tightness is
+  `predicted_lower / empirical_acceptance_rate`.
+- `results/experiment_1570_soft_gibbs_coverage_bound_empirical_verification.json`
+  SHALL include `status="complete"`, `alpha_i_per_verifier`,
+  `z_beta_jensen_bound`, `z_beta_empirical`,
+  `jensen_bound_holds_for_all_beta`, `optimal_beta_for_deployment`, and an
+  `honest_verdict` prefixed with `complete:`.
+
+**Implementation Status:** Planned (Exp 1570)
+
+### SCENARIO-SAMPLE-090: Exp 1570 verifies the Jensen lower bound
+
+Given: a calibration corpus with at least 500 rows and the six k=6 verifier
+channels in paper-v6 order.
+When: the Exp 1570 harness measures per-verifier alpha values and sweeps the
+requested beta values through corpus-level Soft-BRS.
+Then: every empirical `Z_beta` acceptance rate is at least the Jensen-predicted
+lower bound, the artifact records the beta-wise predicted and empirical
+curves, and the selected deployment beta is one of the swept beta values.
+
+**Implementation Status:** Planned (Exp 1570)
+
 ## REQ-MODEL-031: SCEnergyModel — Set-Level Energy Function for Statement Consistency (Exp 944)
 
 SCEnergyModel SHALL implement a permutation-invariant set-level energy function that assigns
