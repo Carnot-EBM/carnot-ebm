@@ -1260,3 +1260,5 @@ web search: GitHub trending energy based mod |
 | 2026-05-08 21:58 UTC | Extropic Z1 Readiness Packet — THRML Alignment Upd | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-08 22:00 UTC | Extropic Z1 Readiness Packet — THRML Alignment Upd | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-08 22:02 UTC | Extropic Z1 Readiness Packet — THRML Alignment Upd | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-08 22:20 UTC | Milestone .120 Retro and .121 Carry-Forward Gates | OK | 81 passed, 1 warning in 5.78s |
+| 2026-05-08 22:22 UTC | Milestone 2026.05.121 activated | OK | 14 tasks queued |
