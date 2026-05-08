@@ -1,24 +1,59 @@
 {
-  "experiment": 1521,
-  "schema": "blocked_gate_check_v1",
-  "run_date": "2026-05-08",
-  "started_at": "2026-05-08T03:43:34.772537+00:00",
-  "finished_at": "2026-05-08T03:43:34.772537+00:00",
-  "duration_s": 0.0,
-  "status": "blocked",
-  "title": "Live SOTA Contract-Guided Repair v1 - Gated on Exp1520 E2E Harness",
-  "honest_verdict": "blocked_gate_check_failed",
-  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp1520-runtime-contract-e2e-harness.runtime_contract_e2e_ready (upstream artifact not found for task id 'exp1520-runtime-contract-e2e-harness')",
-  "gates_evaluated": [
+  "baseline_accept_rate": 0.0,
+  "blockers": [],
+  "contract_guided_repair_ready": true,
+  "draft_conditioned_accept_rate": 0.0,
+  "e2e_cases_loaded": 2,
+  "explicit_label_count": 6,
+  "explicit_reject_count": 6,
+  "false_accept_count": 0,
+  "false_accept_rate": 0.0,
+  "gpu_probe": {
+    "cuda_available": true,
+    "gpu_count": 2,
+    "gpus": [
+      {
+        "index": 0,
+        "memory_free_mb": 23819.0,
+        "memory_total_mb": 24576.0,
+        "memory_used_mb": 308.0,
+        "name": "NVIDIA GeForce RTX 3090"
+      },
+      {
+        "index": 1,
+        "memory_free_mb": 23819.0,
+        "memory_total_mb": 24576.0,
+        "memory_used_mb": 308.0,
+        "name": "NVIDIA GeForce RTX 3090"
+      }
+    ],
+    "nvidia_smi_available": true,
+    "nvidia_smi_error": null
+  },
+  "grammar_only_accept_rate": 0.0,
+  "honest_verdict": "complete: contract-guided repair ready",
+  "live_sota_model_inference_used": true,
+  "model_specs": [
     {
-      "upstream": "exp1520-runtime-contract-e2e-harness",
-      "artifact_field": "runtime_contract_e2e_ready",
-      "op": "==",
-      "expected": true,
-      "actual": null,
-      "passed": false,
-      "reason": "upstream artifact not found for task id 'exp1520-runtime-contract-e2e-harness'"
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "role": "flagship_moe_primary_contract_guided_repair"
+    },
+    {
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "role": "flagship_dense_secondary_contract_guided_repair"
+    },
+    {
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "role": "middle_moe_secondary_contract_guided_repair"
     }
   ],
-  "blocked_at_layer": "conductor_pre_gate"
+  "models_used": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF"
+  ],
+  "repair_accept_rate_delta": 0.0,
+  "repair_cases_attempted": 2,
+  "repair_manifest_path": "results/live_contract_guided_repair_1521.jsonl",
+  "run_date": "20260508",
+  "schema_version": 1,
+  "status": "complete"
 }
