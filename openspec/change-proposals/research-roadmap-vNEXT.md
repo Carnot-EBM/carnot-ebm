@@ -1,244 +1,252 @@
-# Research Roadmap vNEXT: Milestone 2026.04.117
+# Research Roadmap vNEXT: Milestone 2026.04.118
 
 **Planned:** 2026-05-08
 **Status:** Ready for conductor activation
-**Predecessor:** Milestone 2026.04.116 completed 2026-05-08
+**Predecessor:** Milestone 2026.04.117 completed 2026-05-08
 **Roadmap YAML:** `research-roadmap-next.yaml`
 
 ## ID Allocation Note
 
-Milestone `.116` used `exp1506` through `exp1518`. Milestone `.117`
-therefore allocates `exp1519` through `exp1532`. The active execution file
-`research-roadmap.yaml` is not modified by this plan.
+Milestone `.117` used `exp1519` through `exp1532`. Milestone `.118`
+therefore allocates `exp1533` through `exp1546`. The active execution file
+`research-roadmap.yaml` and the conductor implementation are not modified by
+this plan.
 
-## What Milestone 2026.04.116 Proved
+## What Milestone 2026.04.117 Proved
 
-| Finding | Evidence | Impact on .117 |
+| Finding | Evidence | Impact on .118 |
 | --- | --- | --- |
-| Bounded safe-DSL verifier induction is viable under local SOTA GGUFs. | `exp1507` loaded 70 labeled rows, proposed 2 bounded verifiers, compiled 2, and reported `false_accept_rate=0.0`. | Use the induced verifier pack as one component of a runtime-contract E2E harness rather than another isolated compiler audit. |
-| Trigger+grammar certificate decoding is stronger than schema-only parsing. | `exp1508` reported `grammar_parse_rate=1.0`, `schema_only_parse_rate=0.5`, and zero false accepts. | Test draft-first and grammar-bounded repair under the full contract stack. |
-| Executable monitor and structural contracts are ready for integration. | `exp1509` normalized 60 monitor events with zero false accepts; `exp1510` detected 60 of 60 injected plan-graph violations with zero false accepts. | Combine monitors, certificates, safe DSL validators, and structural contracts into a single E2E acceptance surface. |
-| Product-line validation is the weak runtime-contract branch. | `exp1511` built the benchmark but reached only `parse_rate=0.333333`, `feasibility_rate=0.0`, and `oracle_agreement_rate=0.0`. | Run one targeted parser/feasibility rescue, then retire the branch if it still does not produce useful solver-oracle signal. |
-| FR-11 query-time self-learning can update and replay without soundness mistakes. | `exp1512` proposed and accepted 84 policy updates with `false_accept_rate=0.0`; `exp1513` replayed 84 counterfactual sessions with `soundness_mistakes=0` and positive utility delta; `exp1514` packaged rollback-passing skills. | Promote only rollback-passing policy updates into a live query-time policy experiment. No model-weight mutation. |
-| THRML/KAN/KV260 evidence is honest but still pre-hardware. | `exp1515` passed simulator-only THRML conformance; `exp1516` normalized KAN shapes without synthesis; `exp1517` passed source-level RTL/property checks without board execution. | Scale THRML/Carnot parity in software before any TSU, synthesis, bitstream, or board claim. Keep KAN/KV260 claims bounded. |
-| `.116` met every planned criterion. | `exp1518.criteria_met=13`, `criteria_total=13`, with carry-forward gates recorded. | `.117` can focus on integration and scale rather than rescue bookkeeping. |
+| Runtime contracts are now an end-to-end acceptance surface. | `exp1520` linked 458 runtime-contract cases with `runtime_contract_e2e_ready=true`, source artifacts loaded, `false_accept_rate=0.0`, and `false_reject_count=0`. | Scale the zero-false-accept contract stack into automata-guided decoding, SAT/CNF verifier tasks, prefix-risk bounds, and multi-turn commitment drift. |
+| Live SOTA repair is wired but not yet useful at scale. | `exp1521` used `unsloth/Qwen3.6-35B-A3B-GGUF` but only attempted 2 repair cases, with `repair_accept_rate_delta=0.0`. | Keep mandated local SOTA in the loop, but measure concrete parse/accept/latency gains from automata and SAT-guided constraints before making stronger repair claims. |
+| CDG root-cause ordering has positive signal. | `exp1522` loaded 458 E2E cases, attempted 111 root-cause cases, and improved fix efficiency from `0.188589` to `0.238739` (`delta=+0.05015`) with zero false accepts. | Add SATQuest-style deterministic oracles and residual-drift ledgers so root-cause evidence covers both contradictions and forgotten commitments. |
+| Product-line rescue succeeded only on a bounded benchmark. | `exp1523` raised parse, feasibility, and oracle-agreement rates from weak baselines to `1.0`, with zero false accepts. | Scale product-line evidence to a staged benchmark pack before deciding whether the branch deserves more research time. |
+| FR-11 promotion is safe but still lacks positive utility. | `exp1524` promoted one rollback-passing policy with `soundness_mistakes=0`, `no_model_weight_mutation=true`, and `utility_delta=0.0`. | The required `.118` self-learning task must use external verifier feedback and require `utility_delta > 0` for any headline positive self-learning claim. |
+| Claim isolation is too small and too expensive so far. | `exp1525` ran 1 case, extracted 4 claims, preserved zero false accepts, but had `budget_delta=+3`. | Scale claim isolation behind uncertainty/prefix-risk routing; do not claim budget savings unless the routed path beats full-context verification. |
+| THRML/Carnot parity is strong in software up to the next scale gate. | `exp1526` through `exp1531` passed software-only parity through n=128 and diverse n=32 topologies. | Stress n=256 schedules and diverse n=64 topologies while maintaining explicit no-TSU/no-hardware claim boundaries. |
+| The planner still needs orphan-test discipline. | `.117` initially wedged on a generated pytest importing a non-existent artifact module; the outer loop deleted the orphan test, reactivated the conductor, and completed all tasks. | `.118` starts with an orphan-test/import-target guard before downstream experiments can run. |
 
 ## Research Signals Added Before Planning
 
-The 2026-05-08 literature sweep was appended to `research-references.md` before
-this design. Signals that materially shape `.117`:
+The 2026-05-08 sweep was appended to `research-references.md` before this
+design. Signals that materially shape `.118`:
 
-- **AeroTherm-GPT** (`arXiv:2604.01738`) motivates a Constraint Dependency
-  Graph for root-cause repair across contract categories.
-- **TerraFormer** (`arXiv:2601.08734`) motivates staged syntax, feasibility,
-  deployability, and policy feedback for the weak product-line branch.
-- **Draft-Conditioned Constrained Decoding** (`arXiv:2603.03305`) motivates
-  draft-first, grammar-bounded structured repair rather than hard constraints
-  from token 1.
-- **MARCH** (`arXiv:2603.24579`) motivates claim-isolated checking to reduce
-  verifier confirmation bias, with deterministic Carnot validators as final
-  authority.
-- **Verify When Uncertain** (`arXiv:2502.15845`) motivates budgeted escalation
-  to heavier verifier/model calls only on uncertain cases.
-- **Spilled Energy in LLMs** (`arXiv:2602.18671`) remains an auxiliary monitor
-  or routing signal, not headline evidence.
-- **GRAD** (`arXiv:2511.03900`) reinforces graph-guided decoding, but `.117`
-  should encode verifier dependencies first rather than external RAG graphs.
-- **Difference-of-Convex Energy-Based Iterative Reasoning** (OpenReview
-  `QvsDTpf4yF`) is a future continuous-reasoning candidate, deferred until
-  runtime-contract E2E and THRML scaling are stable.
-- **Probabilistic hardware for diffusion-like models** (`arXiv:2510.23972`)
-  supports the long-term p-bit/thermodynamic direction, but local evidence
-  remains THRML software only.
-- **THRML/Extropic docs** and `ops/known-issues.md` make THRML/Carnot parity
-  scaling the main `.117` substrate priority.
+- **XGrammar-2** (`arXiv:2601.04426`) and **ABS automata-guided beam search**
+  motivate a DFA/grammar-backed contract decoder below semantic validators.
+- **SATQuest** motivates a local CNF benchmark with PySAT as deterministic
+  authority and format-diverse prompts for local SOTA GGUFs.
+- **BEAVER** motivates deterministic prefix-risk bounds as a routing signal,
+  not as a replacement for Carnot validators.
+- **Residual Drift** motivates a commitment ledger that distinguishes true
+  contradictions from satisfiable but forgotten constraints in multi-turn
+  reasoning.
+- **SkillLearnBench** and **Audited Skill-Graph Self-Improvement** motivate
+  external-feedback FR-11 skill promotion with auditable lineage, replay
+  evidence, and positive utility gates.
+- **EBT** (`arXiv:2507.02092`) and **Autoregressive LMs as EBMs**
+  (`arXiv:2512.15605`) motivate a soft-value diagnostic comparing local SOTA
+  logprob/energy proxies with deterministic Carnot labels.
+- **Extropic Z1/XTR-0** and **Kona** public status updates keep hardware
+  planning relevant, but `.118` remains software-only unless authenticated
+  device access and transcripts exist.
 
 ## Three Biggest Gaps
 
-1. **Runtime-contract pieces are still not one acceptance path.** `.116`
-   proved safe-DSL induction, grammar certificates, monitor replay, and
-   structural contracts independently. The PRD vision needs one generation-time
-   surface that rejects false accepts across all of them.
+1. **Generation-time constraints are still mostly post-hoc.** `.117` proved
+   contracts can reject outputs, but the PRD vision needs the generator itself
+   constrained by automata, SAT oracles, and prefix-risk signals before repair
+   loops consume expensive local SOTA cycles.
 
-2. **Self-learning has replay evidence but no live promotion test.** FR-11 can
-   propose and roll back query-time policies, but `.117` must prove that only
-   rollback-passing policies improve live contract-guided evaluation without
-   mutating model weights.
+2. **Continuous self-learning is safe but not yet valuable.** FR-11 promotion
+   now avoids soundness mistakes and weight mutation, but a promoted policy
+   with `utility_delta=0.0` is not enough. The next milestone must prove
+   positive task utility from externally verified, replay-passing skill updates
+   or honestly block the claim.
 
-3. **Substrate conformance stops at smoke-scale THRML.** THRML import and small
-   conformance passed, but the hardware path is not credible until Carnot and
-   THRML agree across larger Ising sizes and diverse topologies in software.
+3. **Hardware readiness lacks stress and handoff artifacts.** THRML software
+   parity is credible through n=128 and diverse n=32, but the hardware roadmap
+   needs larger schedule/topology stress plus an access packet that says exactly
+   what Carnot will run when Z1/TSU access becomes real.
 
 ## Architecture
 
 ```text
-                 Milestone 2026.04.117 Research Stack
+                 Milestone 2026.04.118 Research Stack
 
-   .116 completion archive and activation gates
+   .117 archive + .118 activation + orphan-test guard
        |
        v
-   runtime-contract E2E harness
-   safe DSL validators | grammar certificates | monitor events | plan contracts
+   runtime-contract authority from .117
+   safe DSL | grammar certificates | monitors | structural contracts
        |
        v
-   mandated local SOTA GGUF repair/evaluation
+   generation-time constraint layer
+   XGrammar-2-style dynamic grammars | ABS DFA masks | SATQuest CNF oracle
+       |
+       +-------------------------------+
+       |                               |
+       v                               v
+   prefix-risk + drift audits      product-line staged scale
+   BEAVER-lite bounds              syntax -> feature model -> oracle feedback
+   residual commitment ledger
+       |
+       v
+   mandated local SOTA GGUF diagnostics and repair
    Qwen3.6-35B-A3B | gemma-4-31B-it | gemma-4-26B-A4B-it
        |
-       +-----------------------------+
-       |                             |
-       v                             v
-   CDG root-cause repair       product-line rescue or retirement
-   verifier dependency graph   staged syntax/feasibility/oracle feedback
+       +-------------------------------+
+       |                               |
+       v                               v
+   FR-11 external-feedback        ARM/EBT soft-value diagnostic
+   auditable skill graph          logits/energy proxies below validators
+   positive utility required
        |
        v
-   FR-11 live query-time policy promotion
-   rollback-passing updates only | no model-weight mutation
+   THRML/Carnot software stress
+   n=256 schedule stress | diverse n=64 topology parity
        |
        v
-   asymmetric claim-isolation ablation
-   isolated propositions | deterministic validators | budgeted escalation
-       |
-       v
-   THRML/Carnot parity scaling
-   n=8 exact -> n=16 exact -> n=32/64/128 sampled -> diverse topologies
-       |
-       v
-   .117 retro: claim boundaries, retirements, .118 gates
+   Extropic Z1 readiness packet + .118 retro/carry-forward gates
 ```
 
 ## Phase Descriptions
 
-### Phase 0 - Archive and Activation
+### Phase 0 - Archive, Activation, and Planner Guard
 
-`exp1519` writes the `.116` completion archive and `.117` activation manifest.
-It records the runtime-contract, FR-11 rollback, product-line, THRML, KAN, and
-KV260 carry-forward fields that downstream tasks gate on. It also checks
-whether `research-complete.yaml` has already archived `.116`, since `exp1518`
-reported that reconciliation was still pending.
+`exp1533` writes the `.117` completion archive and `.118` activation manifest,
+including the completed `.117` criteria, live SOTA, FR-11, product-line,
+claim-isolation, THRML, and orphan-test carry-forward fields. `exp1534` is a
+mandatory guardrail task: it creates or updates an import-target/orphan-test
+audit so generated roadmap tests cannot import non-existent implementation
+modules again.
 
-### Phase 1 - Runtime-Contract E2E Closure
+### Phase 1 - Automata, SAT, and Drift-Aware Runtime Contracts
 
-`exp1520` builds the integrated runtime-contract E2E harness from `.116`
-artifacts. `exp1521` is gated on that harness and runs live local SOTA
-contract-guided repair, including a draft-conditioned constrained-decoding
-variant. `exp1522` adds a Constraint Dependency Graph to localize upstream
-root causes across validator, certificate, monitor, and structural-contract
-failures. `exp1523` targets the known weak product-line solver branch with a
-staged TerraFormer-style feedback rescue and a hard retirement rule if the
-branch remains uninformative.
+`exp1535` adds an XGrammar-2/ABS-style contract decoder adapter and compares
+generation-time constraints against the current grammar-only/post-decode path.
+`exp1536` creates a bounded SATQuest-style CNF verifier benchmark with PySAT as
+authority. `exp1537` adds a BEAVER-lite prefix-bound audit for high-risk
+contract prefixes, keeping deterministic validators as final authority.
+`exp1538` adds a residual-drift commitment ledger over multi-turn
+SAT/product-line/runtime-contract cases so Carnot can distinguish
+contradictions from satisfiable but forgotten commitments.
 
-### Phase 2 - Continuous Self-Learning and Asymmetric Verification
+### Phase 2 - Positive-Utility Self-Learning and Product Scale
 
-`exp1524` is the required continuous self-learning experiment. It promotes
-only rollback-passing FR-11 query-time policies into live contract-guided
-evaluation, with no model-weight mutation. `exp1525` is gated on live policy
-promotion and tests whether MARCH-style claim isolation reduces confirmation
-bias compared with full-context verifier feedback, again using deterministic
-validators as the acceptance authority.
+`exp1539` is the required continuous self-learning experiment. It converts
+rollback-passing FR-11 updates into an auditable skill graph, promotes only
+externally verified updates, forbids model-weight mutation, and treats
+`utility_delta > 0` as the threshold for headline success. `exp1540` scales the
+rescued product-line branch to a staged benchmark pack. `exp1541` scales claim
+isolation behind uncertainty/prefix-risk routing. `exp1542` runs an ARM/EBT
+soft-value diagnostic over local SOTA outputs and deterministic labels without
+turning logits into acceptance authority.
 
-### Phase 3 - THRML/Carnot Parity Scaling
+### Phase 3 - THRML Stress, Hardware Readiness, and Retro
 
-`exp1526` through `exp1530` run the core parity scaling sweep requested in
-`ops/known-issues.md`: n=8 exact, n=16 exact, n=32 sampled, n=64 sampled, and
-n=128 production-scale sampled. `exp1531` adds a diverse-topology n=32 sweep
-across complete, sparse random, lattice, and scale-free graphs. Every task is
-software/simulator only and must explicitly block TSU or hardware claims.
-
-### Phase 4 - Retrospective and Claim Boundaries
-
-`exp1532` closes `.117` with criteria accounting, gate-block analysis,
-retirements, ops reconciliation needs, and `.118` carry-forward decisions.
+`exp1543` stresses THRML/Carnot software parity at n=256 with schedule
+variation. `exp1544` scales diverse topology parity to n=64. `exp1545` writes
+an Extropic Z1 access-readiness packet with benchmark manifests, transcript
+schema, and no-hardware-claim boundaries. `exp1546` closes `.118` with
+criteria accounting, retirements, carry-forward gates, and ops reconciliation
+instructions for `.119`.
 
 ## Dependency Graph
 
 ```mermaid
 flowchart TD
-    E1519[exp1519 .116 archive + .117 activation]
-    E1520[exp1520 runtime-contract E2E harness]
-    E1521[exp1521 live SOTA contract-guided repair]
-    E1522[exp1522 CDG root-cause repair]
-    E1523[exp1523 product-line rescue]
-    E1524[exp1524 FR-11 live policy promotion]
-    E1525[exp1525 claim-isolation ablation]
-    E1526[exp1526 THRML parity n=8]
-    E1527[exp1527 THRML parity n=16]
-    E1528[exp1528 THRML parity n=32]
-    E1529[exp1529 THRML parity n=64]
-    E1530[exp1530 THRML parity n=128]
-    E1531[exp1531 THRML diverse topology n=32]
-    E1532[exp1532 .117 retro]
+    E1533[exp1533 .117 archive + .118 activation]
+    E1534[exp1534 orphan-test guard]
+    E1535[exp1535 XGrammar/ABS decoder adapter]
+    E1536[exp1536 SATQuest CNF benchmark]
+    E1537[exp1537 BEAVER-lite prefix bounds]
+    E1538[exp1538 residual drift ledger]
+    E1539[exp1539 FR-11 external-feedback skill graph]
+    E1540[exp1540 product-line staged scale]
+    E1541[exp1541 claim isolation uncertainty router]
+    E1542[exp1542 ARM/EBT soft-value diagnostic]
+    E1543[exp1543 THRML n=256 schedule stress]
+    E1544[exp1544 THRML diverse n=64]
+    E1545[exp1545 Extropic Z1 readiness packet]
+    E1546[exp1546 .118 retro]
 
-    E1519 --> E1520
-    E1520 --> E1521
-    E1520 --> E1522
-    E1519 --> E1523
-    E1519 --> E1524
-    E1520 --> E1524
-    E1524 --> E1525
-    E1519 --> E1526
-    E1526 --> E1527
-    E1527 --> E1528
-    E1528 --> E1529
-    E1529 --> E1530
-    E1528 --> E1531
-    E1521 --> E1532
-    E1522 --> E1532
-    E1523 --> E1532
-    E1525 --> E1532
-    E1530 --> E1532
-    E1531 --> E1532
+    E1533 --> E1534
+    E1533 --> E1535
+    E1534 --> E1535
+    E1533 --> E1536
+    E1535 --> E1537
+    E1536 --> E1538
+    E1533 --> E1539
+    E1538 --> E1539
+    E1533 --> E1540
+    E1535 --> E1540
+    E1533 --> E1541
+    E1537 --> E1541
+    E1536 --> E1542
+    E1537 --> E1542
+    E1533 --> E1543
+    E1543 --> E1544
+    E1543 --> E1545
+    E1544 --> E1545
+    E1539 --> E1546
+    E1540 --> E1546
+    E1541 --> E1546
+    E1542 --> E1546
+    E1545 --> E1546
 ```
 
 ## Hardware Requirements
 
 | Task range | Hardware | Requirement boundary |
 | --- | --- | --- |
-| `exp1521`, `exp1522`, `exp1523`, `exp1524`, `exp1525` | Dual RTX 3090 local workstation preferred | LLM-bearing tasks must use at least one mandated local SOTA GGUF headline model: `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, or `unsloth/gemma-4-26B-A4B-it-GGUF`. Legacy small models are smoke tests only. |
-| `exp1519`, `exp1520`, `exp1532` | CPU acceptable | Archive, deterministic E2E harness assembly, and retrospective. |
-| `exp1526`-`exp1531` | CPU acceptable; local JAX/THRML accelerator libraries allowed only if already available | THRML software/simulator parity only. No Extropic TSU, Z1, XTR-0, FPGA board, synthesis, bitstream, or board-execution claim. |
-| Future hardware tracks | KV260 board, Extropic TSU, larger FPGA, D-Wave, NPU | Remain deferred unless a later milestone creates authenticated readiness artifacts and transcripts. |
+| `exp1535`-`exp1542` | Dual RTX 3090 local workstation preferred for LLM-bearing rows | Every LLM-bearing experiment must include at least one mandated headline GGUF in `MODEL_SPECS`: `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, or `unsloth/gemma-4-26B-A4B-it-GGUF`. Legacy small models may appear only as fast CPU smoke tests. |
+| `exp1533`, `exp1534`, `exp1546` | CPU acceptable | Archive, planner guard, and retrospective. These tasks must not touch `research-roadmap.yaml` or `scripts/research_conductor.py`. |
+| `exp1543`, `exp1544` | CPU acceptable; local JAX/THRML accelerator libraries allowed only if already available | THRML/Carnot software or simulator parity only. No Extropic TSU, Z1, XTR-0, FPGA board, synthesis, bitstream, or board-execution claim. |
+| `exp1545` | CPU acceptable | Readiness packet only. It may define an access/transcript protocol but must not imply hardware execution happened. |
 
 ## Success Criteria
 
 | Criterion | Acceptance |
 | --- | --- |
-| Activation | `exp1519.activation_manifest_complete=true` and `.116` outcomes are archived without touching `research-roadmap.yaml`. |
-| Runtime-contract E2E | `exp1520.runtime_contract_e2e_ready=true` with all `.116` contract inputs loaded and zero false accepts. |
-| Live contract repair | `exp1521.contract_guided_repair_ready=true` with at least one mandated SOTA GGUF used for headline rows. |
-| CDG root cause | `exp1522.cdg_root_cause_repair_ready=true` or an honest no-signal terminal artifact, with false accepts reported. |
-| Product-line rescue | `exp1523.product_line_rescue_ready=true` with improvement over `exp1511` parse/oracle metrics, or `product_line_branch_retired=true`. |
-| Continuous self-learning | `exp1524.live_policy_promotion_ready=true`, `continuous_self_learning_task=true`, and `no_model_weight_mutation=true`. |
-| Claim isolation | `exp1525.claim_isolation_ablation_ready=true` with deterministic validator outcomes and budget metrics. |
-| THRML n=8 | `exp1526.thrml_parity_n8_passed=true` or an honest simulator-only blocker. |
-| THRML n=16 | `exp1527.thrml_parity_n16_passed=true` or an honest simulator-only blocker. |
-| THRML n=32 | `exp1528.thrml_parity_n32_passed=true` or an honest simulator-only blocker. |
-| THRML n=64 | `exp1529.thrml_parity_n64_passed=true` or an honest simulator-only blocker. |
-| THRML n=128 | `exp1530.thrml_parity_n128_passed=true` or an honest simulator-only blocker. |
-| Diverse topologies | `exp1531.diverse_topology_parity_ready=true` with per-topology pass/fail metrics. |
-| Retrospective | `exp1532.criteria_met` and `criteria_total` summarize `.117` with carry-forward decisions. |
+| Activation | `exp1533.activation_manifest_complete=true`, `.117` criteria are recorded, and `.118` gates are explicit. |
+| Planner guard | `exp1534.orphan_test_guard_ready=true` and generated roadmap import targets are audited without touching the conductor. |
+| Automata decoder | `exp1535.contract_decoder_adapter_ready=true` with mandated local SOTA in `MODEL_SPECS`, false accepts reported, and latency/validity deltas measured. |
+| SATQuest benchmark | `exp1536.satquest_benchmark_ready=true` with PySAT oracle authority and zero solver-oracle false accepts. |
+| Prefix-risk bounds | `exp1537.beaver_bound_ready=true` with prefix-risk metrics clearly labeled as auxiliary. |
+| Residual drift | `exp1538.residual_drift_ledger_ready=true` with contradiction versus satisfiable-drift counts. |
+| Continuous self-learning | `exp1539.continuous_self_learning_task=true`, `no_model_weight_mutation=true`, `soundness_mistakes=0`, and positive-utility claims only if `utility_delta > 0`. |
+| Product-line scale | `exp1540.product_line_scale_ready=true` or `branch_retired=true`, with parse, feasibility, oracle-agreement, and false-accept metrics. |
+| Claim isolation routing | `exp1541.uncertainty_router_ready=true` with routed-case budget metrics and zero deterministic false accepts. |
+| ARM/EBT diagnostic | `exp1542.arm_ebm_diagnostic_ready=true` with deterministic validators preserved as final authority. |
+| THRML n=256 | `exp1543.thrml_parity_n256_schedule_ready=true` or an honest simulator-only blocker. |
+| THRML diverse n=64 | `exp1544.diverse_topology_parity_n64_ready=true` or an honest simulator-only blocker. |
+| Hardware readiness | `exp1545.extropic_z1_readiness_packet_ready=true`, with explicit no-hardware-claim boundary. |
+| Retrospective | `exp1546.criteria_met` and `criteria_total` summarize `.118` with `.119` carry-forward gates. |
 
-Target threshold: at least 12 of 14 tasks complete or honestly terminal
-gate-blocked, with no task modifying `research-roadmap.yaml` or
-`scripts/research_conductor.py`.
+Target threshold: at least 12 of 14 tasks complete or honestly terminal with
+zero unbounded hardware, verifier, or self-learning claims.
 
 ## Prior Failure and Retirement Rules
 
-| Lineage | Rule in .117 |
-| --- | --- |
-| Product-line solver oracle | One rescue attempt is allowed because `exp1511` was the only `.116` failure-shaped result. If parse/oracle signal still does not improve, retire the product-line branch until a new benchmark or parser exists. |
-| Runtime-contract integration | False accepts remain fatal. Any LLM repair result is auxiliary until the deterministic contract stack accepts it. |
-| FR-11 self-learning | Only rollback-passing query-time policy updates can be promoted. No model-weight mutation, finetuning, or hidden memory growth claim is allowed. |
-| THRML and Extropic hardware | THRML tasks are simulator/software parity tasks only. Hardware claims require an authenticated TSU/Z1/XTR-0 transcript in a later milestone. |
-| KAN and KV260 | `.117` does not reopen KAN synthesis or KV260 board execution. Existing `.116` outputs are carry-forward context only. |
-| Legacy small models | Qwen3.5-0.8B and Gemma E4B are smoke-test models only and cannot support headline LLM results. |
+- The `.117` orphan-test wedge must be closed before downstream LLM-bearing
+  tasks run. If `exp1534` cannot produce a guard, later tasks may still produce
+  honest terminal artifacts, but `.118` cannot claim full activation success.
+- Product-line work continues only if `exp1540` improves over the bounded
+  `.117` rescue at non-trivial case count. Otherwise it must emit
+  `branch_retired=true` with a replacement recommendation.
+- FR-11 may claim safety if replay and soundness pass, but may claim positive
+  self-learning only when externally verified promotion yields
+  `utility_delta > 0`.
+- BEAVER/prefix-risk and ARM/EBT soft-value signals are routing diagnostics
+  only. Deterministic Carnot validators, PySAT, and runtime contracts remain
+  the acceptance authority.
+- THRML tasks remain software-only. Any real TSU/Z1/XTR-0, FPGA, synthesis, or
+  bitstream claim is out of scope for `.118`.
 
 ## Local-First and Decentralization Implications
 
-- All headline LLM-bearing results stay on local GGUF runtimes and record exact
-  model IDs in `models_used`.
-- Deterministic validators, solver oracles, and parity metrics remain the trust
-  boundary.
-- Self-learning is query-time policy adaptation with replay and rollback,
-  suitable for local deployment without centralized finetuning.
-- Hardware work remains reproducible software conformance until actual hardware
-  transcripts exist.
+`.118` keeps the Carnot roadmap local-first: mandated GGUF experiments run on
+local workstation hardware, deterministic validators remain local, and hardware
+readiness artifacts are written before external access is assumed. The milestone
+intentionally treats recent EBM, automata, SAT, and self-learning work as
+interfaces around Carnot's verifier stack rather than reasons to depend on a
+central hosted verifier or mutate model weights.
