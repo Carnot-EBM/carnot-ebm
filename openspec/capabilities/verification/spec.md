@@ -1552,7 +1552,61 @@ And the terminal artifact sets `claim_isolation_ablation_ready=true` only when
 at least one mandated SOTA GGUF produced both full-context and claim-isolated
 rows and a false-accept rate is reported.
 
-## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487/1495/1496/1499/1500/1501/1507/1508/1509/1510/1520/1521/1522/1525/1537)
+### REQ-VERIFY-1541: Claim-Isolation Uncertainty Router
+
+The repository shall provide an Exp 1541 claim-isolation uncertainty router
+that combines Verify-When-Uncertain-style validator uncertainty with
+BEAVER-lite prefix-risk signals so claim-isolated verification is applied only
+to cases where it can change risk or cost.
+
+The router shall:
+
+- write `results/experiment_1541_claim_isolation_uncertainty_router_v2.json`
+  with `status="in_progress"` before source manifest loading;
+- load the Exp 1525 claim-isolation artifact/manifest and Exp 1537
+  BEAVER-lite high-risk instance rankings;
+- build a bounded case set from `results/runtime_contract_e2e_manifest_1520.jsonl`,
+  `results/satquest_cnf_verifier_1536.jsonl`, and
+  `results/product_line_rescue_1523.jsonl`, preserving source family, case ID,
+  deterministic validator label, and extractable atomic claims;
+- route only cases with uncertainty, prefix risk, or validator disagreement to
+  claim-isolated verification while leaving low-risk full-context decisions
+  unexpanded;
+- compute full-context acceptance, routed claim-isolated acceptance,
+  disagreements, verifier-call budget delta, and false-accept rate from
+  deterministic SAT/product-line/runtime-contract validators rather than LLM
+  self-evaluation;
+- write `results/claim_isolation_uncertainty_router_1541.jsonl` with one row
+  per routed or bypassed case plus a summary row; and
+- write a terminal artifact containing `status`, `milestone`,
+  `uncertainty_router_ready`, `model_specs`,
+  `live_sota_model_inference_used`, `cases_loaded`, `claims_extracted`,
+  `routed_cases`, `full_context_accept_rate`, `claim_isolated_accept_rate`,
+  `disagreements`, `budget_delta`, `false_accept_rate`,
+  `routing_policy_path`, `focused_tests_passed`, and `honest_verdict`.
+
+`uncertainty_router_ready` MUST be true only when at least one case from each
+available source family is loaded, at least one but not all cases are routed,
+focused tests have passed, and `false_accept_rate` is exactly `0.0`.  The
+artifact MUST claim budget improvement only when `budget_delta <= 0` and
+`false_accept_rate == 0.0`.  `honest_verdict` MUST begin with one of
+`complete:`, `complete_`, `success:`, `success_`, `passed:`, `passed_`,
+`shipped:`, or `shipped_`.
+
+### SCENARIO-VERIFY-1541: Uncertainty Routing Limits Claim Isolation
+
+Given complete Exp 1525 claim-isolation rows, Exp 1537 BEAVER-lite risk
+rankings, Exp 1536 SATQuest rows, Exp 1523 product-line rows, and Exp 1520
+runtime-contract rows on the run date `20260508`,
+When Exp 1541 extracts deterministic claims and evaluates the uncertainty
+routing policy,
+Then uncertain, prefix-risky, or validator-disagreement cases are routed to
+claim-isolated verification
+And low-risk cases remain full-context-only
+And the terminal artifact reports whether routing improves verifier-call cost
+or error detection without deterministic false accepts.
+
+## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487/1495/1496/1499/1500/1501/1507/1508/1509/1510/1520/1521/1522/1525/1537/1541)
 
 | Requirement | Python | Tests |
 |-------------|--------|-------|
@@ -1584,3 +1638,4 @@ rows and a false-accept rate is reported.
 | REQ-VERIFY-1525 | Implemented (`python/carnot/verify/march_claim_isolation_ablation.py`) | Implemented (`tests/python/test_experiment_1525_march_claim_isolation_ablation.py`) |
 | REQ-VERIFY-1537 | Implemented (`python/carnot/verify/beaver_prefix_bound_contracts.py`) | Implemented (`tests/python/test_experiment_1537_beaver_prefix_bound_contracts.py`) |
 | REQ-VERIFY-1538 | Planned (`python/carnot/verify/residual_drift_commitment_ledger.py`) | Planned (`tests/python/test_experiment_1538_residual_drift_commitment_ledger.py`) |
+| REQ-VERIFY-1541 | Implemented (`python/carnot/verify/claim_isolation_uncertainty_router.py`) | Implemented (`tests/python/test_experiment_1541_claim_isolation_uncertainty_router.py`) |
