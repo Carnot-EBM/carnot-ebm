@@ -2314,6 +2314,78 @@ for `.119`, confirms `research-roadmap.yaml` and `scripts/research_conductor.py`
 were not modified, and writes an honest activation verdict with an accepted
 success prefix.
 
+### REQ-REPORT-061: Milestone .119 Terminal Retrospective
+
+The Exp 1559 `.119` retrospective workflow shall write
+`results/experiment_1559_milestone_119_retro.json` with `status="in_progress"`
+before terminal completion. It shall then read the authoritative Exp 1547
+through Exp 1558 result JSON artifacts, the `.119` success criteria in
+`openspec/change-proposals/research-roadmap-vNEXT.md`, `research-roadmap.yaml`,
+`research-roadmap-next.yaml`, `research-complete.yaml`, `ops/conductor-log.md`,
+`ops/status.md`, `ops/changelog.md`, and `ops/known-issues.md` without
+modifying `research-roadmap.yaml` or `scripts/research_conductor.py`.
+
+The workflow shall score every `.119` success criterion from source artifact
+fields as `MET`, `NOT_MET`, or `HONESTLY_TERMINAL`. It shall record missing,
+blocked, skipped, or criterion-failing source artifacts explicitly rather than
+inferring success from downstream tasks. THRML independent-RNG work shall only
+pass the RNG criterion when `independent_rng_audit_ready=true`,
+`rng_path_independent=true`, byte-identical stochastic pairs are absent, and no
+hardware claim is made. THRML/Extropic readiness shall be recorded as honestly
+terminal, not ready, when the conductor blocks Exp 1558 because Exp 1548 failed
+the independent-RNG or bounded-KL gate. ARM/EBT and Weaver soft signals shall
+remain diagnostic or routing-only below deterministic validator authority. The
+terminal artifact shall include:
+
+- `status`
+- `milestone`
+- `criteria_met`
+- `criteria_total`
+- `completed_tasks`
+- `honestly_terminal_tasks`
+- `failed_or_blocked_tasks`
+- `thrml_independent_rng_gate`
+- `satquest_oracle_repair_gate`
+- `satquest_sota_gate`
+- `unified_contract_gate`
+- `residual_drift_repair_gate`
+- `claim_isolation_scale_gate`
+- `product_line_scale_gate`
+- `fr11_positive_utility_or_retire_gate`
+- `arm_ebt_telemetry_gate`
+- `verification_compute_router_gate`
+- `extropic_readiness_gate`
+- `recommended_120_focus`
+- `ops_reconciliation_needed`
+- `active_roadmap_modified`
+- `conductor_modified`
+- `honest_verdict`
+
+For conductor stop-when-done retro runs where a separate reconciliation agent
+owns `research-complete.yaml`, `ops/status.md`, `ops/changelog.md`, and
+`_bmad/traceability.md`, `ops_reconciliation_needed` shall identify the needed
+follow-up but the workflow shall not edit those files. The final verdict shall
+start with a conductor-accepted success prefix.
+
+### SCENARIO-REPORT-061: Exp 1559 Closes .119 With .120 Gates
+
+Given Exp 1547 activates `.119`, Exp 1548 proves independent RNG paths but
+reports `independent_rng_audit_ready=false` because bounded KL fails, Exp 1549
+repairs SATQuest to zero oracle false accepts, Exp 1550 runs local SOTA
+SATQuest with zero solver false accepts, Exp 1551 through Exp 1554 report
+unified contract, residual-drift, claim-router, and product-line scale
+readiness with zero deterministic false accepts, Exp 1555 reports positive
+FR-11 utility without model-weight mutation, Exp 1556 reports ARM/EBT logprob
+telemetry while keeping deterministic validators final, Exp 1557 reports
+Weaver-style routing with soft signals used only for routing, and Exp 1558 is
+conductor-blocked by the failed Exp 1548 RNG/KL gate, when Exp 1559 runs for
+run date `20260508`, then it writes all required REQ-REPORT-061 fields,
+reports the success-criteria score from source fields, records the THRML and
+Extropic blocks without inventing readiness, records `.120` carry-forward
+gates, confirms `research-roadmap.yaml` and `scripts/research_conductor.py`
+were not modified, and writes an honest retrospective verdict with an accepted
+success prefix.
+
 ### REQ-REPORT-024: Local Agent Usage Snapshot
 
 The repository shall provide a local operator workflow that inspects the
@@ -2909,6 +2981,7 @@ embed live-GPU benchmark results from Exp 328 when available.
 | REQ-REPORT-058 | `python/carnot/reporting/milestone_118_activation_manifest.py`, `results/experiment_1533_117_completion_archive_118_activation.json`, `ops/milestone_118_activation_manifest.md` | `tests/python/test_milestone_118_activation_manifest.py` | Implemented |
 | REQ-REPORT-059 | `python/carnot/reporting/milestone_retro_118.py`, `results/experiment_1546_milestone_118_retro.json` | `tests/python/test_milestone_retro_118.py` | Implemented |
 | REQ-REPORT-060 | `python/carnot/reporting/milestone_119_activation_manifest.py`, `results/experiment_1547_118_completion_archive_119_activation.json`, `ops/milestone_119_activation_manifest.md` | `tests/python/test_milestone_119_activation_manifest.py` | Implemented |
+| REQ-REPORT-061 | `python/carnot/reporting/milestone_retro_119.py`, `results/experiment_1559_milestone_119_retro.json` | `tests/python/test_milestone_retro_119.py` | Implemented |
 | REQ-REPORT-024 | `python/carnot/reporting/agent_usage.py`, `scripts/agent_plan_usage.py` | `tests/python/test_agent_plan_usage.py` | Implemented |
 | REQ-PUBLISH-003 | `scripts/experiment_317_hf_publish.py` | `tests/python/test_experiment_317_hf_publish.py` | Implemented |
 | REQ-PUBLISH-004 | `scripts/experiment_330_hf_live_publish.py` | `tests/python/test_experiment_330_hf_live_publish.py` | Implemented |

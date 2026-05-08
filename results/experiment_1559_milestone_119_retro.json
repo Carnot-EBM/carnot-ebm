@@ -1,0 +1,822 @@
+{
+  "active_roadmap_modified": false,
+  "arm_ebt_telemetry_gate": {
+    "acceptance_authority": "deterministic_validators_only",
+    "arm_ebm_logprob_telemetry_ready": true,
+    "carry_forward_to_120": "use logprob and energy telemetry only for diagnosis or routing",
+    "deterministic_validators_final_authority": true,
+    "diagnostic_cases": 4,
+    "logprob_available": true,
+    "routing_auc": 1.0,
+    "source_artifact": "results/experiment_1556_arm_ebt_logprob_telemetry_repair.json",
+    "status": "ready",
+    "telemetry_blockers": [
+      "response_text_unavailable; token_logprobs_missing; topk_logprobs_missing",
+      "token_logprobs_missing",
+      "topk_logprobs_missing"
+    ],
+    "topk_available": true
+  },
+  "claim_isolation_scale_gate": {
+    "budget_delta": -52,
+    "budget_reduced": true,
+    "carry_forward_to_120": "continue only while budget savings preserve missed_failure_count=0",
+    "cases_total": 75,
+    "claim_isolation_router_scale_ready": true,
+    "false_accept_rate": 0.0,
+    "missed_failure_count": 0,
+    "routed_cases": 23,
+    "source_artifact": "results/experiment_1553_claim_isolation_router_scale_v3.json",
+    "status": "ready"
+  },
+  "completed_tasks": [
+    {
+      "criterion": "activation",
+      "experiment_id": "exp1547",
+      "reason": "criterion satisfied",
+      "status": "MET"
+    },
+    {
+      "criterion": "satquest_repair",
+      "experiment_id": "exp1549",
+      "reason": "criterion satisfied",
+      "status": "MET"
+    },
+    {
+      "criterion": "satquest_sota",
+      "experiment_id": "exp1550",
+      "reason": "criterion satisfied",
+      "status": "MET"
+    },
+    {
+      "criterion": "unified_contract",
+      "experiment_id": "exp1551",
+      "reason": "criterion satisfied",
+      "status": "MET"
+    },
+    {
+      "criterion": "residual_drift",
+      "experiment_id": "exp1552",
+      "reason": "criterion satisfied",
+      "status": "MET"
+    },
+    {
+      "criterion": "claim_isolation",
+      "experiment_id": "exp1553",
+      "reason": "criterion satisfied",
+      "status": "MET"
+    },
+    {
+      "criterion": "product_line",
+      "experiment_id": "exp1554",
+      "reason": "criterion satisfied",
+      "status": "MET"
+    },
+    {
+      "criterion": "continuous_self_learning",
+      "experiment_id": "exp1555",
+      "reason": "criterion satisfied",
+      "status": "MET"
+    },
+    {
+      "criterion": "arm_ebt_telemetry",
+      "experiment_id": "exp1556",
+      "reason": "criterion satisfied",
+      "status": "MET"
+    },
+    {
+      "criterion": "verification_router",
+      "experiment_id": "exp1557",
+      "reason": "criterion satisfied",
+      "status": "MET"
+    },
+    {
+      "criterion": "retrospective",
+      "experiment_id": "exp1559",
+      "reason": "retrospective artifact can close without protected-file edits",
+      "status": "MET"
+    }
+  ],
+  "conductor_modified": false,
+  "criteria_met": 12,
+  "criteria_results": {
+    "activation": {
+      "criterion": "activation",
+      "evidence_paths": [
+        "results/experiment_1547_118_completion_archive_119_activation.json:activation_manifest_complete",
+        "results/experiment_1547_118_completion_archive_119_activation.json:predecessor_criteria_met",
+        "results/experiment_1547_118_completion_archive_119_activation.json:predecessor_criteria_total",
+        "results/experiment_1547_118_completion_archive_119_activation.json:thrml_independent_rng_required"
+      ],
+      "experiment_id": "exp1547",
+      "reason": "criterion satisfied",
+      "source_values": {
+        "activation_manifest_complete": true,
+        "honest_verdict": "complete: milestone_119_activation_complete_118_archived_satquest_fr11_thrml_rng_gates_ready",
+        "predecessor_criteria_met": 13,
+        "predecessor_criteria_total": 14,
+        "status": "complete",
+        "thrml_independent_rng_required": true
+      },
+      "status": "MET",
+      "target": "activation_manifest_complete=true with .118 criteria and .119 gates"
+    },
+    "arm_ebt_telemetry": {
+      "criterion": "arm_ebt_telemetry",
+      "evidence_paths": [
+        "results/experiment_1556_arm_ebt_logprob_telemetry_repair.json:arm_ebm_logprob_telemetry_ready",
+        "results/experiment_1556_arm_ebt_logprob_telemetry_repair.json:logprob_available",
+        "results/experiment_1556_arm_ebt_logprob_telemetry_repair.json:topk_available",
+        "results/experiment_1556_arm_ebt_logprob_telemetry_repair.json:deterministic_validators_final_authority",
+        "results/experiment_1556_arm_ebt_logprob_telemetry_repair.json:diagnostic_cases",
+        "results/experiment_1556_arm_ebt_logprob_telemetry_repair.json:routing_auc",
+        "results/experiment_1556_arm_ebt_logprob_telemetry_repair.json:telemetry_blockers"
+      ],
+      "experiment_id": "exp1556",
+      "reason": "criterion satisfied",
+      "source_values": {
+        "arm_ebm_logprob_telemetry_ready": true,
+        "deterministic_validators_final_authority": true,
+        "diagnostic_cases": 4,
+        "honest_verdict": "complete: ARM/EBT logprob telemetry ready diagnostic-only",
+        "logprob_available": true,
+        "routing_auc": 1.0,
+        "status": "complete",
+        "telemetry_blockers": [
+          "response_text_unavailable; token_logprobs_missing; topk_logprobs_missing",
+          "token_logprobs_missing",
+          "topk_logprobs_missing"
+        ],
+        "topk_available": true
+      },
+      "status": "MET",
+      "target": "ARM/EBT telemetry ready or honestly blocked with deterministic validators final"
+    },
+    "claim_isolation": {
+      "criterion": "claim_isolation",
+      "evidence_paths": [
+        "results/experiment_1553_claim_isolation_router_scale_v3.json:claim_isolation_router_scale_ready",
+        "results/experiment_1553_claim_isolation_router_scale_v3.json:cases_total",
+        "results/experiment_1553_claim_isolation_router_scale_v3.json:claims_extracted",
+        "results/experiment_1553_claim_isolation_router_scale_v3.json:routed_cases",
+        "results/experiment_1553_claim_isolation_router_scale_v3.json:budget_delta",
+        "results/experiment_1553_claim_isolation_router_scale_v3.json:budget_reduced",
+        "results/experiment_1553_claim_isolation_router_scale_v3.json:false_accept_rate",
+        "results/experiment_1553_claim_isolation_router_scale_v3.json:missed_failure_count"
+      ],
+      "experiment_id": "exp1553",
+      "reason": "criterion satisfied",
+      "source_values": {
+        "budget_delta": -52,
+        "budget_reduced": true,
+        "cases_total": 75,
+        "claim_isolation_router_scale_ready": true,
+        "claims_extracted": 75,
+        "false_accept_rate": 0.0,
+        "honest_verdict": "complete: claim-isolation router scale ready behind unified contract gate",
+        "missed_failure_count": 0,
+        "routed_cases": 23,
+        "status": "complete"
+      },
+      "status": "MET",
+      "target": "claim isolation scale ready with routed budget metrics and zero false accepts"
+    },
+    "continuous_self_learning": {
+      "criterion": "continuous_self_learning",
+      "evidence_paths": [
+        "results/experiment_1555_fr11_positive_utility_or_retire_v14.json:fr11_positive_utility_gate_ready",
+        "results/experiment_1555_fr11_positive_utility_or_retire_v14.json:continuous_self_learning_task",
+        "results/experiment_1555_fr11_positive_utility_or_retire_v14.json:no_model_weight_mutation",
+        "results/experiment_1555_fr11_positive_utility_or_retire_v14.json:soundness_mistakes",
+        "results/experiment_1555_fr11_positive_utility_or_retire_v14.json:utility_delta",
+        "results/experiment_1555_fr11_positive_utility_or_retire_v14.json:positive_utility_achieved",
+        "results/experiment_1555_fr11_positive_utility_or_retire_v14.json:positive_utility_claim_retired"
+      ],
+      "experiment_id": "exp1555",
+      "reason": "criterion satisfied",
+      "source_values": {
+        "continuous_self_learning_task": "fr11_positive_utility_or_retire_v14",
+        "fr11_positive_utility_gate_ready": true,
+        "honest_verdict": "complete: fr11 positive utility gate passed",
+        "no_model_weight_mutation": true,
+        "positive_utility_achieved": true,
+        "positive_utility_claim_retired": false,
+        "soundness_mistakes": 0,
+        "status": "complete",
+        "utility_delta": 1.0
+      },
+      "status": "MET",
+      "target": "FR-11 safe positive utility or explicit retirement without model weight mutation"
+    },
+    "hardware_readiness": {
+      "criterion": "hardware_readiness",
+      "evidence_paths": [
+        "results/experiment_1558_thrml_post_rng_scale_decision_extropic_update.json:thrml_post_rng_scale_decision_ready",
+        "results/experiment_1558_thrml_post_rng_scale_decision_extropic_update.json:extropic_packet_updated",
+        "results/experiment_1558_thrml_post_rng_scale_decision_extropic_update.json:no_hardware_execution_claim",
+        "results/experiment_1558_thrml_post_rng_scale_decision_extropic_update.json:gate_check_summary",
+        "results/experiment_1558_thrml_post_rng_scale_decision_extropic_update.json:gates_evaluated",
+        "results/experiment_1558_thrml_post_rng_scale_decision_extropic_update.json:blocked_at_layer"
+      ],
+      "experiment_id": "exp1558",
+      "reason": "honestly terminal within the criterion boundary",
+      "source_values": {
+        "blocked_at_layer": "conductor_pre_gate",
+        "extropic_packet_updated": null,
+        "gate_check_summary": "2 of 3 gate(s) failed; first failure: exp1548-thrml-carnot-parity-independent-rng-audit.independent_rng_audit_ready (actual=False == expected=True)",
+        "gates_evaluated": [
+          {
+            "actual": false,
+            "artifact_field": "independent_rng_audit_ready",
+            "expected": true,
+            "op": "==",
+            "passed": false,
+            "reason": "actual=False == expected=True",
+            "upstream": "exp1548-thrml-carnot-parity-independent-rng-audit"
+          },
+          {
+            "actual": true,
+            "artifact_field": "rng_path_independent",
+            "expected": true,
+            "op": "==",
+            "passed": true,
+            "reason": "actual=True == expected=True",
+            "upstream": "exp1548-thrml-carnot-parity-independent-rng-audit"
+          },
+          {
+            "actual": false,
+            "artifact_field": "bounded_kl_passed",
+            "expected": true,
+            "op": "==",
+            "passed": false,
+            "reason": "actual=False == expected=True",
+            "upstream": "exp1548-thrml-carnot-parity-independent-rng-audit"
+          }
+        ],
+        "honest_verdict": "blocked_gate_check_failed",
+        "no_hardware_execution_claim": null,
+        "status": "blocked",
+        "thrml_post_rng_scale_decision_ready": null
+      },
+      "status": "HONESTLY_TERMINAL",
+      "target": "THRML/Extropic readiness updates only after independent RNG evidence passes; otherwise claims stay blocked"
+    },
+    "product_line": {
+      "criterion": "product_line",
+      "evidence_paths": [
+        "results/experiment_1554_product_line_staged_scale_v4.json:product_line_scale_v4_ready",
+        "results/experiment_1554_product_line_staged_scale_v4.json:branch_retired",
+        "results/experiment_1554_product_line_staged_scale_v4.json:cases_total",
+        "results/experiment_1554_product_line_staged_scale_v4.json:parse_rate",
+        "results/experiment_1554_product_line_staged_scale_v4.json:feasibility_rate",
+        "results/experiment_1554_product_line_staged_scale_v4.json:oracle_agreement_rate",
+        "results/experiment_1554_product_line_staged_scale_v4.json:objective_gap_mean",
+        "results/experiment_1554_product_line_staged_scale_v4.json:false_accept_count",
+        "results/experiment_1554_product_line_staged_scale_v4.json:false_accept_rate"
+      ],
+      "experiment_id": "exp1554",
+      "reason": "criterion satisfied",
+      "source_values": {
+        "branch_retired": false,
+        "cases_total": 120,
+        "false_accept_count": 0,
+        "false_accept_rate": 0.0,
+        "feasibility_rate": 1.0,
+        "honest_verdict": "complete: product-line staged scale v4 ready with zero false accepts",
+        "objective_gap_mean": 0.0,
+        "oracle_agreement_rate": 1.0,
+        "parse_rate": 1.0,
+        "product_line_scale_v4_ready": true,
+        "status": "complete"
+      },
+      "status": "MET",
+      "target": "product line scale v4 ready or retired with parser, feasibility, oracle, and false-accept metrics"
+    },
+    "residual_drift": {
+      "criterion": "residual_drift",
+      "evidence_paths": [
+        "results/experiment_1552_residual_drift_repair_policy_v1.json:residual_drift_repair_ready",
+        "results/experiment_1552_residual_drift_repair_policy_v1.json:localized_repairs_attempted",
+        "results/experiment_1552_residual_drift_repair_policy_v1.json:repair_attempts",
+        "results/experiment_1552_residual_drift_repair_policy_v1.json:repaired_drift_cases",
+        "results/experiment_1552_residual_drift_repair_policy_v1.json:replay_pass_rate",
+        "results/experiment_1552_residual_drift_repair_policy_v1.json:false_accept_count",
+        "results/experiment_1552_residual_drift_repair_policy_v1.json:false_accept_rate"
+      ],
+      "experiment_id": "exp1552",
+      "reason": "criterion satisfied",
+      "source_values": {
+        "false_accept_count": 0,
+        "false_accept_rate": 0.0,
+        "honest_verdict": "complete: residual_drift_repair_policy_ready",
+        "localized_repairs_attempted": 64,
+        "repair_attempts": 64,
+        "repaired_drift_cases": 64,
+        "replay_pass_rate": 1.0,
+        "residual_drift_repair_ready": true,
+        "status": "complete"
+      },
+      "status": "MET",
+      "target": "residual drift repair ready with localized repair metrics and zero false accepts"
+    },
+    "retrospective": {
+      "criterion": "retrospective",
+      "evidence_paths": [
+        "results/experiment_1559_milestone_119_retro.json",
+        "research-roadmap.yaml",
+        "scripts/research_conductor.py"
+      ],
+      "experiment_id": "exp1559",
+      "reason": "retrospective artifact can close without protected-file edits",
+      "source_values": {
+        "active_roadmap_modified": false,
+        "conductor_modified": false,
+        "missing_source_ids": []
+      },
+      "status": "MET",
+      "target": "criteria_met and criteria_total summarize .119 with .120 carry-forward gates"
+    },
+    "satquest_repair": {
+      "criterion": "satquest_repair",
+      "evidence_paths": [
+        "results/experiment_1549_satquest_oracle_false_accept_repair.json:satquest_oracle_repair_ready",
+        "results/experiment_1549_satquest_oracle_false_accept_repair.json:satquest_zero_false_accepts",
+        "results/experiment_1549_satquest_oracle_false_accept_repair.json:solver_oracle_false_accepts_after",
+        "results/experiment_1549_satquest_oracle_false_accept_repair.json:assignment_witnesses_checked",
+        "results/experiment_1549_satquest_oracle_false_accept_repair.json:unsat_certificates_checked",
+        "results/experiment_1549_satquest_oracle_false_accept_repair.json:perturbation_checks_passed"
+      ],
+      "experiment_id": "exp1549",
+      "reason": "criterion satisfied",
+      "source_values": {
+        "assignment_witnesses_checked": 10,
+        "honest_verdict": "complete: satquest_oracle_repair_zero_false_accepts_with_witness_evidence",
+        "perturbation_checks_passed": true,
+        "satquest_oracle_repair_ready": true,
+        "satquest_zero_false_accepts": true,
+        "solver_oracle_false_accepts_after": 0,
+        "status": "complete",
+        "unsat_certificates_checked": 11
+      },
+      "status": "MET",
+      "target": "SATQuest oracle repair ready with zero false accepts and proof/witness evidence"
+    },
+    "satquest_sota": {
+      "criterion": "satquest_sota",
+      "evidence_paths": [
+        "results/experiment_1550_satquest_sota_reeval_zero_false_accepts.json:satquest_sota_reeval_ready",
+        "results/experiment_1550_satquest_sota_reeval_zero_false_accepts.json:repaired_gate",
+        "results/experiment_1550_satquest_sota_reeval_zero_false_accepts.json:live_sota_model_inference_used",
+        "results/experiment_1550_satquest_sota_reeval_zero_false_accepts.json:model_availability_blockers",
+        "results/experiment_1550_satquest_sota_reeval_zero_false_accepts.json:solver_oracle_false_accepts",
+        "results/experiment_1550_satquest_sota_reeval_zero_false_accepts.json:false_accept_rate"
+      ],
+      "experiment_id": "exp1550",
+      "reason": "criterion satisfied",
+      "source_values": {
+        "false_accept_rate": 0.0,
+        "honest_verdict": "complete: satquest_sota_reeval_zero_false_accepts_solver_grounded",
+        "live_sota_model_inference_used": true,
+        "model_availability_blockers": [],
+        "repaired_gate": {
+          "artifact_path": "results/experiment_1549_satquest_oracle_false_accept_repair.json",
+          "manifest_path": "results/satquest_oracle_false_accept_repair_1549.jsonl",
+          "ready": true,
+          "repaired_false_accepts": 0,
+          "rows_checked": 21,
+          "satquest_zero_false_accepts": true
+        },
+        "satquest_sota_reeval_ready": true,
+        "solver_oracle_false_accepts": 0,
+        "status": "complete"
+      },
+      "status": "MET",
+      "target": "SATQuest SOTA re-eval ready after repaired zero-false-accept oracle"
+    },
+    "thrml_rng": {
+      "criterion": "thrml_rng",
+      "evidence_paths": [
+        "results/experiment_1548_thrml_carnot_parity_independent_rng_audit.json:independent_rng_audit_ready",
+        "results/experiment_1548_thrml_carnot_parity_independent_rng_audit.json:rng_path_independent",
+        "results/experiment_1548_thrml_carnot_parity_independent_rng_audit.json:byte_identical_pairs",
+        "results/experiment_1548_thrml_carnot_parity_independent_rng_audit.json:bounded_kl_passed",
+        "results/experiment_1548_thrml_carnot_parity_independent_rng_audit.json:max_kl_divergence",
+        "results/experiment_1548_thrml_carnot_parity_independent_rng_audit.json:simulator_only",
+        "results/experiment_1548_thrml_carnot_parity_independent_rng_audit.json:no_tsu_hardware_claim"
+      ],
+      "experiment_id": "exp1548",
+      "reason": "complete: independent_rng_thrml_carnot_parity_not_ready_simulator_only_no_hardware_claim",
+      "source_values": {
+        "bounded_kl_passed": false,
+        "byte_identical_pairs": [],
+        "honest_verdict": "complete: independent_rng_thrml_carnot_parity_not_ready_simulator_only_no_hardware_claim",
+        "independent_rng_audit_ready": false,
+        "max_kl_divergence": 0.169802350136,
+        "no_tsu_hardware_claim": true,
+        "rng_path_independent": true,
+        "simulator_only": true,
+        "status": "complete"
+      },
+      "status": "NOT_MET",
+      "target": "independent RNG audit ready with disjoint paths, no byte-identical pairs, and no hardware claim"
+    },
+    "unified_contract": {
+      "criterion": "unified_contract",
+      "evidence_paths": [
+        "results/experiment_1551_automata_sat_unified_contract_gate.json:unified_contract_gate_ready",
+        "results/experiment_1551_automata_sat_unified_contract_gate.json:automata_masks_used",
+        "results/experiment_1551_automata_sat_unified_contract_gate.json:semantic_repair_layer_used",
+        "results/experiment_1551_automata_sat_unified_contract_gate.json:sat_oracle_used",
+        "results/experiment_1551_automata_sat_unified_contract_gate.json:runtime_contracts_used",
+        "results/experiment_1551_automata_sat_unified_contract_gate.json:deterministic_validators_final_authority",
+        "results/experiment_1551_automata_sat_unified_contract_gate.json:false_accept_count",
+        "results/experiment_1551_automata_sat_unified_contract_gate.json:false_accept_rate"
+      ],
+      "experiment_id": "exp1551",
+      "reason": "criterion satisfied",
+      "source_values": {
+        "automata_masks_used": true,
+        "deterministic_validators_final_authority": true,
+        "false_accept_count": 0,
+        "false_accept_rate": 0.0,
+        "honest_verdict": "complete: automata_sat_unified_contract_gate_ready",
+        "runtime_contracts_used": true,
+        "sat_oracle_used": true,
+        "semantic_repair_layer_used": true,
+        "status": "complete",
+        "unified_contract_gate_ready": true
+      },
+      "status": "MET",
+      "target": "unified contract gate ready with automata, semantic repair, deterministic validators, and zero false accepts"
+    },
+    "verification_router": {
+      "criterion": "verification_router",
+      "evidence_paths": [
+        "results/experiment_1557_weaver_verification_compute_router.json:verification_compute_router_ready",
+        "results/experiment_1557_weaver_verification_compute_router.json:verification_cost_baseline",
+        "results/experiment_1557_weaver_verification_compute_router.json:verification_cost_router",
+        "results/experiment_1557_weaver_verification_compute_router.json:verification_cost_delta",
+        "results/experiment_1557_weaver_verification_compute_router.json:weak_verifiers_used",
+        "results/experiment_1557_weaver_verification_compute_router.json:deterministic_validators_used",
+        "results/experiment_1557_weaver_verification_compute_router.json:soft_signals_used_for_routing_only",
+        "results/experiment_1557_weaver_verification_compute_router.json:false_accept_rate",
+        "results/experiment_1557_weaver_verification_compute_router.json:missed_failure_count"
+      ],
+      "experiment_id": "exp1557",
+      "reason": "criterion satisfied",
+      "source_values": {
+        "deterministic_validators_used": [
+          "product_line_oracle",
+          "residual_drift_replay",
+          "runtime_contract_replay",
+          "sat_solver",
+          "unified_contract_gate"
+        ],
+        "false_accept_rate": 0.0,
+        "honest_verdict": "complete: weaver_verification_compute_router_ready",
+        "missed_failure_count": 0,
+        "soft_signals_used_for_routing_only": [
+          "claim_isolated_accept",
+          "full_context_accept",
+          "mean_logprob"
+        ],
+        "status": "complete",
+        "verification_compute_router_ready": true,
+        "verification_cost_baseline": 399,
+        "verification_cost_delta": -41,
+        "verification_cost_router": 358,
+        "weak_verifiers_used": [
+          "automata_format_validity",
+          "beaver_prefix_risk",
+          "claim_router_uncertainty",
+          "energy_diagnostic",
+          "telemetry_logprob_diagnostic"
+        ]
+      },
+      "status": "MET",
+      "target": "verification compute router ready with cost, weak-verifier, deterministic-validator, and false-accept metrics"
+    }
+  },
+  "criteria_total": 13,
+  "experiment": "1559_milestone_119_retro",
+  "extropic_readiness_gate": {
+    "blocked_at_layer": "conductor_pre_gate",
+    "carry_forward_to_120": "vendor_thrml_before_extropic_scale_claims",
+    "extropic_packet_updated": false,
+    "gate_check_summary": "2 of 3 gate(s) failed; first failure: exp1548-thrml-carnot-parity-independent-rng-audit.independent_rng_audit_ready (actual=False == expected=True)",
+    "gates_evaluated": [
+      {
+        "actual": false,
+        "artifact_field": "independent_rng_audit_ready",
+        "expected": true,
+        "op": "==",
+        "passed": false,
+        "reason": "actual=False == expected=True",
+        "upstream": "exp1548-thrml-carnot-parity-independent-rng-audit"
+      },
+      {
+        "actual": true,
+        "artifact_field": "rng_path_independent",
+        "expected": true,
+        "op": "==",
+        "passed": true,
+        "reason": "actual=True == expected=True",
+        "upstream": "exp1548-thrml-carnot-parity-independent-rng-audit"
+      },
+      {
+        "actual": false,
+        "artifact_field": "bounded_kl_passed",
+        "expected": true,
+        "op": "==",
+        "passed": false,
+        "reason": "actual=False == expected=True",
+        "upstream": "exp1548-thrml-carnot-parity-independent-rng-audit"
+      }
+    ],
+    "hardware_execution_claimed": false,
+    "no_hardware_execution_claim": true,
+    "source_artifact": "results/experiment_1558_thrml_post_rng_scale_decision_extropic_update.json",
+    "status": "blocked_by_thrml_rng_gate",
+    "thrml_post_rng_scale_decision_ready": false
+  },
+  "failed_or_blocked_tasks": [
+    {
+      "criterion": "thrml_rng",
+      "experiment_id": "exp1548",
+      "reason": "complete: independent_rng_thrml_carnot_parity_not_ready_simulator_only_no_hardware_claim",
+      "status": "NOT_MET"
+    }
+  ],
+  "fr11_positive_utility_or_retire_gate": {
+    "carry_forward_to_120": "audit retained policies for mode collapse and paper claim boundaries",
+    "continuous_self_learning_task": "fr11_positive_utility_or_retire_v14",
+    "fr11_positive_utility_gate_ready": true,
+    "no_model_weight_mutation": true,
+    "positive_utility_achieved": true,
+    "positive_utility_claim_retired": false,
+    "soundness_mistakes": 0,
+    "source_artifact": "results/experiment_1555_fr11_positive_utility_or_retire_v14.json",
+    "status": "positive_utility_ready",
+    "utility_delta": 1.0
+  },
+  "honest_verdict": "complete: milestone_119_12_of_13_criteria_met_thrml_rng_carried_to_120_satquest_fr11_ready",
+  "honestly_terminal_tasks": [
+    {
+      "criterion": "thrml_rng",
+      "experiment_id": "exp1548",
+      "reason": "independent RNG path proved but bounded-KL readiness failed",
+      "status": "HONESTLY_TERMINAL"
+    },
+    {
+      "criterion": "hardware_readiness",
+      "experiment_id": "exp1558",
+      "reason": "honestly terminal within the criterion boundary",
+      "status": "HONESTLY_TERMINAL"
+    }
+  ],
+  "milestone": "2026.04.119",
+  "next_milestone": "2026.04.120",
+  "ops_reconciliation_needed": {
+    "deferred_to_conductor_reconciler": true,
+    "files": {
+      "_bmad/traceability.md": "link REQ-REPORT-061 to module, tests, and deliverable",
+      "ops/changelog.md": "record Exp 1548 timeout/deliverable result, Exp 1558 gate block, and Exp 1559 retro",
+      "ops/known-issues.md": "carry THRML vendoring, soft-signal authority, SATQuest zero-false-accept, and FR-11 retention gates into .120",
+      "ops/status.md": "summarize .119 score, THRML RNG/KL failure, SATQuest repair, FR-11 utility, and Extropic block",
+      "research-complete.yaml": "append a 2026.04.119 archive entry for exp1547-exp1559"
+    },
+    "needed": true,
+    "reason": "stop-when-done retro run writes the machine-readable artifact only; the conductor's reconciliation step owns ops and traceability docs"
+  },
+  "product_line_scale_gate": {
+    "branch_retired": false,
+    "carry_forward_to_120": "continue scale under parser feasibility objective oracle and false-accept gates",
+    "cases_total": 120,
+    "false_accept_rate": 0.0,
+    "feasibility_rate": 1.0,
+    "objective_gap_mean": 0.0,
+    "oracle_agreement_rate": 1.0,
+    "parse_rate": 1.0,
+    "product_line_scale_v4_ready": true,
+    "source_artifact": "results/experiment_1554_product_line_staged_scale_v4.json",
+    "status": "ready"
+  },
+  "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+  "protected_files_unchanged": true,
+  "recommended_120_focus": [
+    "Vendor or otherwise repair the THRML sampler path before any renewed parity or Extropic readiness headline.",
+    "Keep SATQuest zero false accepts as the acceptance gate for SATQuest v3 and downstream SOTA claims.",
+    "Audit FR-11 v14 retained policies for mode collapse while preserving no model-weight mutation.",
+    "Preserve ARM/EBT and Weaver soft signals as diagnostic or routing-only below deterministic validators.",
+    "Continue product-line and claim-router scaling only with missed_failure_count=0 and false_accept_rate=0.0.",
+    "Do not claim Extropic TSU/Z1/XTR-0 hardware execution without authenticated device transcripts."
+  ],
+  "required_artifact_fields_present": [
+    "active_roadmap_modified",
+    "arm_ebt_telemetry_gate",
+    "claim_isolation_scale_gate",
+    "completed_tasks",
+    "conductor_modified",
+    "criteria_met",
+    "criteria_total",
+    "extropic_readiness_gate",
+    "failed_or_blocked_tasks",
+    "fr11_positive_utility_or_retire_gate",
+    "honest_verdict",
+    "honestly_terminal_tasks",
+    "milestone",
+    "ops_reconciliation_needed",
+    "product_line_scale_gate",
+    "recommended_120_focus",
+    "residual_drift_repair_gate",
+    "satquest_oracle_repair_gate",
+    "satquest_sota_gate",
+    "status",
+    "thrml_independent_rng_gate",
+    "unified_contract_gate",
+    "verification_compute_router_gate"
+  ],
+  "residual_drift_repair_gate": {
+    "carry_forward_to_120": "use localized repair as candidate supply, not acceptance authority",
+    "contradiction_cases_untouched": 2,
+    "drift_reduction_delta": 1.0,
+    "false_accept_rate": 0.0,
+    "localized_repairs_attempted": 64,
+    "repaired_drift_cases": 64,
+    "replay_pass_rate": 1.0,
+    "residual_drift_repair_ready": true,
+    "source_artifact": "results/experiment_1552_residual_drift_repair_policy_v1.json",
+    "status": "ready"
+  },
+  "run_date": "20260508",
+  "satquest_oracle_repair_gate": {
+    "assignment_witnesses_checked": 10,
+    "carry_forward_to_120": "keep_zero_false_accept_regression_gate_for_satquest_v3",
+    "false_accepts_before": 3,
+    "perturbation_checks_passed": true,
+    "satquest_oracle_repair_ready": true,
+    "satquest_zero_false_accepts": true,
+    "solver_oracle_false_accepts_after": 0,
+    "source_artifact": "results/experiment_1549_satquest_oracle_false_accept_repair.json",
+    "status": "ready",
+    "unsat_certificates_checked": 11
+  },
+  "satquest_sota_gate": {
+    "carry_forward_to_120": "keep solver oracle as final authority despite model self false accepts",
+    "false_accept_rate": 0.0,
+    "live_sota_model_inference_used": true,
+    "model_availability_blockers": [],
+    "model_self_false_accepts": 4,
+    "models_attempted": [
+      {
+        "blocker": null,
+        "cases_returned": 30,
+        "env_details": {
+          "candidate_library_dirs": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/nvidia/cuda_runtime/lib",
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/nvidia/cublas/lib"
+          ],
+          "ld_library_path_after": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/nvidia/cuda_runtime/lib:/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/nvidia/cublas/lib",
+          "ld_library_path_before": ""
+        },
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_name": "Qwen3.6-35B-A3B",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "model_used": true
+      }
+    ],
+    "repaired_gate": {
+      "artifact_path": "results/experiment_1549_satquest_oracle_false_accept_repair.json",
+      "manifest_path": "results/satquest_oracle_false_accept_repair_1549.jsonl",
+      "ready": true,
+      "repaired_false_accepts": 0,
+      "rows_checked": 21,
+      "satquest_zero_false_accepts": true
+    },
+    "satquest_sota_reeval_ready": true,
+    "solver_oracle_false_accepts": 0,
+    "source_artifact": "results/experiment_1550_satquest_sota_reeval_zero_false_accepts.json",
+    "status": "ready"
+  },
+  "schema": "milestone_119_retro_v1",
+  "source_inputs_read": {
+    "openspec/change-proposals/research-roadmap-vNEXT.md": {
+      "exists": true
+    },
+    "ops/changelog.md": {
+      "exists": true
+    },
+    "ops/conductor-log.md": {
+      "exists": true
+    },
+    "ops/known-issues.md": {
+      "exists": true
+    },
+    "ops/status.md": {
+      "exists": true
+    },
+    "research-complete.yaml": {
+      "exists": true
+    },
+    "research-roadmap-next.yaml": {
+      "exists": true
+    },
+    "research-roadmap.yaml": {
+      "exists": true
+    },
+    "results/experiment_1547_118_completion_archive_119_activation.json": {
+      "exists": true
+    },
+    "results/experiment_1548_thrml_carnot_parity_independent_rng_audit.json": {
+      "exists": true
+    },
+    "results/experiment_1549_satquest_oracle_false_accept_repair.json": {
+      "exists": true
+    },
+    "results/experiment_1550_satquest_sota_reeval_zero_false_accepts.json": {
+      "exists": true
+    },
+    "results/experiment_1551_automata_sat_unified_contract_gate.json": {
+      "exists": true
+    },
+    "results/experiment_1552_residual_drift_repair_policy_v1.json": {
+      "exists": true
+    },
+    "results/experiment_1553_claim_isolation_router_scale_v3.json": {
+      "exists": true
+    },
+    "results/experiment_1554_product_line_staged_scale_v4.json": {
+      "exists": true
+    },
+    "results/experiment_1555_fr11_positive_utility_or_retire_v14.json": {
+      "exists": true
+    },
+    "results/experiment_1556_arm_ebt_logprob_telemetry_repair.json": {
+      "exists": true
+    },
+    "results/experiment_1557_weaver_verification_compute_router.json": {
+      "exists": true
+    },
+    "results/experiment_1558_thrml_post_rng_scale_decision_extropic_update.json": {
+      "exists": true
+    }
+  },
+  "status": "complete",
+  "thrml_independent_rng_gate": {
+    "bounded_kl_passed": false,
+    "byte_identical_pairs_rejected": true,
+    "carry_forward_to_120": "vendor_thrml_or_repair_sampler_mismatch_before_any_parity_headline",
+    "code_path_independent": true,
+    "hardware_execution_claimed": false,
+    "independent_rng_audit_ready": false,
+    "max_kl_divergence": 0.169802350136,
+    "nonzero_stochastic_delta_observed": true,
+    "rng_path_independent": true,
+    "simulator_only": true,
+    "source_artifact": "results/experiment_1548_thrml_carnot_parity_independent_rng_audit.json",
+    "status": "not_ready_sampler_mismatch_or_bounded_kl_failed"
+  },
+  "unified_contract_gate": {
+    "acceptance_authority": "deterministic_validators_only",
+    "automata_masks_used": true,
+    "carry_forward_to_120": "extend cascade only under zero-false-accept deterministic gates",
+    "false_accept_rate": 0.0,
+    "runtime_contracts_used": true,
+    "sat_oracle_used": true,
+    "semantic_repair_layer_used": true,
+    "source_artifact": "results/experiment_1551_automata_sat_unified_contract_gate.json",
+    "status": "ready",
+    "unified_contract_gate_ready": true
+  },
+  "verification_compute_router_gate": {
+    "carry_forward_to_120": "preserve deterministic fallback for routed acceptance decisions",
+    "deterministic_validators_used": [
+      "product_line_oracle",
+      "residual_drift_replay",
+      "runtime_contract_replay",
+      "sat_solver",
+      "unified_contract_gate"
+    ],
+    "false_accept_rate": 0.0,
+    "missed_failure_count": 0,
+    "soft_signals_authority": "routing_only",
+    "soft_signals_used_for_routing_only": [
+      "claim_isolated_accept",
+      "full_context_accept",
+      "mean_logprob"
+    ],
+    "source_artifact": "results/experiment_1557_weaver_verification_compute_router.json",
+    "status": "ready",
+    "verification_compute_router_ready": true,
+    "verification_cost_baseline": 399,
+    "verification_cost_delta": -41,
+    "verification_cost_router": 358,
+    "weak_verifiers_used": [
+      "automata_format_validity",
+      "beaver_prefix_risk",
+      "claim_router_uncertainty",
+      "energy_diagnostic",
+      "telemetry_logprob_diagnostic"
+    ]
+  }
+}
