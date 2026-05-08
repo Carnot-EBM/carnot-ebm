@@ -3,29 +3,37 @@ requires = ["setuptools>=68.0", "setuptools-scm>=8.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "carnot"
+name = "carnot-ebm"
 dynamic = ["version"]
-description = "Open-source Energy Based Model framework — Rust + JAX"
+description = "Open-source Energy Based Model framework for verifying and repairing LLM outputs (Rust + JAX)"
 readme = "README.md"
 license = {text = "Apache-2.0"}
-authors = [{name = "Ian Blenke"}]
+authors = [{name = "Ian Blenke", email = "ian@blenke.com"}]
+maintainers = [{name = "Ian Blenke", email = "ian@blenke.com"}]
 keywords = [
     "energy-based-models",
     "ebm",
-    "machine-learning",
+    "llm-verification",
+    "llm-repair",
+    "constraint-satisfaction",
+    "ising",
     "sampling",
-    "verification",
+    "machine-learning",
     "jax",
 ]
 requires-python = ">=3.11"
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Science/Research",
+    "Intended Audience :: Developers",
     "License :: OSI Approved :: Apache Software License",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: MacOS",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 dependencies = [
     "jax>=0.4.30",
@@ -44,8 +52,12 @@ dependencies = [
 carnot = "carnot.cli:main"
 
 [project.urls]
+Homepage = "https://github.com/Carnot-EBM/carnot-ebm"
 Repository = "https://github.com/Carnot-EBM/carnot-ebm"
 Documentation = "https://carnot-ebm.org"
+Issues = "https://github.com/Carnot-EBM/carnot-ebm/issues"
+"Model Hub" = "https://huggingface.co/Carnot-EBM"
+Changelog = "https://github.com/Carnot-EBM/carnot-ebm/blob/main/ops/changelog.md"
 
 [project.optional-dependencies]
 dev = [
