@@ -1,0 +1,673 @@
+{
+  "batch_sequence_assumptions": [
+    {
+      "name": "batch_size",
+      "normalized_value": 1,
+      "provenance": [
+        {
+          "artifact": "results/experiment_1502_kan_hardware_accounting_quantkan_kaem.json",
+          "field": "accounting_table[*].*_per_inference"
+        }
+      ],
+      "status": "per_inference_accounting_only"
+    },
+    {
+      "name": "sequence_length",
+      "normalized_value": null,
+      "provenance": [
+        {
+          "artifact": "python/carnot/models/sos_kan.py",
+          "field": "SOSKANEnergyV3.energy(x)",
+          "note": "single fixed feature vector input"
+        }
+      ],
+      "status": "excluded_from_hardware_accounting_shape"
+    }
+  ],
+  "blockers": [
+    "future_synthesis_claim_requires_new_synthesis_evidence",
+    "future_board_claim_requires_bitstream_and_board_transcript",
+    "no_vivado_synthesis_or_board_measurement_for_exp1502",
+    "no_kv260_bitfile_or_timing_report_for_this_kan_accounting",
+    "quantkan_and_kaem_proxy_shapes_must_be_normalized_before_any_future_synthesis"
+  ],
+  "excluded_shape_assumptions": [
+    {
+      "assumption": "batch_size_gt_1",
+      "reason": "Exp 1502 reports per-inference accounting, not batched throughput."
+    },
+    {
+      "assumption": "token_sequence_length",
+      "reason": "The audited KAN/KAEM inputs are fixed feature vectors, not token sequences."
+    },
+    {
+      "assumption": "rtl_pipeline_depth_or_clock_frequency",
+      "reason": "No RTL synthesis, place-and-route, timing report, or clock constraint was run."
+    },
+    {
+      "assumption": "kv260_board_latency_or_bitstream",
+      "reason": "No bitstream was built or executed on a board during Exp 1502 or Exp 1516."
+    },
+    {
+      "assumption": "proxy_lut_or_bram_counts_are_utilization",
+      "reason": "Proxy LUT/BRAM pressure is planning evidence, not post-synthesis utilization."
+    },
+    {
+      "assumption": "quantkan_empirical_timing_or_accuracy_after_synthesis",
+      "reason": "The QuantKAN shape carries simulation/proxy AUROC and must be revalidated."
+    },
+    {
+      "assumption": "cross_feature_interactions_preserved_by_univariate_kaem_proxy",
+      "reason": "KAEM's cheap univariate proxy excludes cross-feature interaction preservation."
+    }
+  ],
+  "experiment": 1516,
+  "future_synthesis_claim_gate": {
+    "future_synthesis_claim_allowed": false,
+    "requires_new_evidence": [
+      "RTL or HLS source tied to this manifest's normalized shape fields",
+      "synthesis/place-and-route report with timing and utilization",
+      "bitstream and board-command transcript before board claims",
+      "post-normalization QuantKAN/KAEM accuracy validation before deployment claims"
+    ],
+    "shape_provenance_explicit": true
+  },
+  "gated_inputs": {
+    "exp1502_complete": true,
+    "exp1502_hardware_claim_allowed": false,
+    "exp1502_no_synthesis_claim": true,
+    "exp1506_prior_kan_shape_blocker_recorded": true
+  },
+  "hardware_accounting_shape_fields": [
+    "rm_per_inference",
+    "bop_per_inference",
+    "nabs_per_inference",
+    "memory_bytes",
+    "lut_proxy",
+    "bram36_blocks"
+  ],
+  "honest_verdict": "complete: kan shape normalization manifest ready; no synthesis or board claim",
+  "kan_shape_manifest_ready": true,
+  "no_board_claim": true,
+  "no_synthesis_claim": true,
+  "normalized_shapes": [
+    {
+      "excluded_assumptions": [],
+      "hardware_accounting_shape": {
+        "bop_per_inference": {
+          "provenance": [
+            {
+              "artifact": "results/experiment_1502_kan_hardware_accounting_quantkan_kaem.json",
+              "field": "naive_proxy_estimates.bop_per_inference"
+            },
+            {
+              "artifact": "results/experiment_1502_kan_hardware_accounting_quantkan_kaem.json",
+              "field": "accounting_table[naive_full_precision_soskan].bop_per_inference",
+              "note": "duplicate accounting-table row used to catch variant drift"
+            }
+          ],
+          "value": 81504
+        },
+        "bram36_blocks": {
+          "provenance": [
+            {
+              "artifact": "results/experiment_1502_kan_hardware_accounting_quantkan_kaem.json",
+              "field": "naive_proxy_estimates.bram36_blocks"
+            },
+            {
+              "artifact": "results/experiment_1502_kan_hardware_accounting_quantkan_kaem.json",
+              "field": "accounting_table[naive_full_precision_soskan].bram36_blocks",
+              "note": "duplicate accounting-table row used to catch variant drift"
+            }
+          ],
+          "value": 3
+        },
+        "lut_proxy": {
+          "provenance": [
+            {
+              "artifact": "results/experiment_1502_kan_hardware_accounting_quantkan_kaem.json",
+              "field": "naive_proxy_estimates.lut_proxy"
+            },
+            {
+              "artifact": "results/experiment_1502_kan_hardware_accounting_quantkan_kaem.json",
+              "field": "accounting_table[naive_full_precision_soskan].lut_proxy",
+              "note": "duplicate accounting-table row used to catch variant drift"
+            }
+          ],
+          "value": 27822
+        },
+        "memory_bytes": {
+          "provenance": [
+            {
+              "artifact": "results/experiment_1502_kan_hardware_accounting_quantkan_kaem.json",
+              "field": "naive_proxy_estimates.memory_bytes"
+            },
+            {
+              "artifact": "results/experiment_1502_kan_hardware_accounting_quantkan_kaem.json",
+              "field": "accounting_table[naive_full_precision_soskan].memory_bytes",
+              "note": "duplicate accounting-table row used to catch variant drift"
+            }
+          ],
+          "value": 13592
+        },
+        "nabs_per_inference": {
+          "provenance": [
+            {
+              "artifact": "results/experiment_1502_kan_hardware_accounting_quantkan_kaem.json",
+              "field": "naive_proxy_estimates.nabs_per_inference"
+            },
+            {
+              "artifact": "results/experiment_1502_kan_hardware_accounting_quantkan_kaem.json",
+              "field": "accounting_table[naive_full_precision_soskan].nabs_per_inference",
+              "note": "duplicate accounting-table row used to catch variant drift"
+            }
+          ],
+          "value": 2352
+        },
+        "rm_per_inference": {
+          "provenance": [
+            {
+              "artifact": "results/experiment_1502_kan_hardware_accounting_quantkan_kaem.json",
+              "field": "naive_proxy_estimates.rm_per_inference"
+            },
+            {
+              "artifact": "results/experiment_1502_kan_hardware_accounting_quantkan_kaem.json",
+              "field": "accounting_table[naive_full_precision_soskan].rm_per_inference",
+              "note": "duplicate accounting-table row used to catch variant drift"
+            }
+          ],
+          "value": 2547
+        }
+      },
+      "model_shape": {
+        "feature_dim": {
+          "provenance": [
+            {
+              "artifact": "results/experiment_1162_kanele_sos_kan_fpga_blueprint.json",
+              "field": "sos_kan_n_inputs"
+            }
+          ],
+          "value": 3
+        },
+        "hidden_dim": {
+          "provenance": [
+            {
+              "artifact": "results/experiment_1162_kanele_sos_kan_fpga_blueprint.json",
+              "field": "sos_kan_hidden_dim"
+            }
+          ],
+          "value": 16
+        },
+        "rank": {
+          "provenance": [
+            {
+              "artifact": "results/experiment_1162_kanele_sos_kan_fpga_blueprint.json",
+              "field": "sos_kan_rank"
+            }
+          ],
+          "value": 4
+        },
+        "spline_basis_count": {
+          "provenance": [
+            {
+              "artifact": "results/experiment_1162_kanele_sos_kan_fpga_blueprint.json",
+              "field": "sos_kan_k_splines"
+            }
+          ],
+          "value": 8
+        },
+        "spline_knot_count": {
+          "provenance": [
+            {
+              "artifact": "results/experiment_1162_kanele_sos_kan_fpga_blueprint.json",
+              "field": "sos_kan_n_knots"
+            }
+          ],
+          "value": 8
+        }
+      },
+      "proxy_dimensions": {
+        "precision_policy": {
+          "provenance": [
+            {
+              "artifact": "results/experiment_1502_kan_hardware_accounting_quantkan_kaem.json",
+              "field": "naive_proxy_estimates.accuracy_boundary"
+            }
+          ],
+          "value": "full_precision_reference"
+        }
+      },
+      "source_variant_field": "naive_proxy_estimates",
+      "synthesis_claim_ready": false,
+      "variant": "naive_full_precision_soskan"
+    },
+    {
+      "excluded_assumptions": [
+        "quantkan_empirical_timing_or_accuracy_after_synthesis"
+      ],
+      "hardware_accounting_shape": {
+        "bop_per_inference": {
+          "provenance": [
+            {
+              "artifact": "results/experiment_1502_kan_hardware_accounting_quantkan_kaem.json",
+              "field": "quantkan_proxy_estimates.bop_per_inference"
+            },
+            {
+              "artifact": "results/experiment_1502_kan_hardware_accounting_quantkan_kaem.json",
+              "field": "accounting_table[quantkan_3bit_lut_soskan].bop_per_inference",
+              "note": "duplicate accounting-table row used to catch variant drift"
+            }
+          ],
+          "value": 72
+        },
+        "bram36_blocks": {
+          "provenance": [
+            {
+              "artifact": "results/experiment_1502_kan_hardware_accounting_quantkan_kaem.json",
+              "field": "quantkan_proxy_estimates.bram36_blocks"
+            },
+            {
+              "artifact": "results/experiment_1502_kan_hardware_accounting_quantkan_kaem.json",
+              "field": "accounting_table[quantkan_3bit_lut_soskan].bram36_blocks",
+              "note": "duplicate accounting-table row used to catch variant drift"
+            }
+          ],
+          "value": 2
+        },
+        "lut_proxy": {
+          "provenance": [
+            {
+              "artifact": "results/experiment_1502_kan_hardware_accounting_quantkan_kaem.json",
+              "field": "quantkan_proxy_estimates.lut_proxy"
+            },
+            {
+              "artifact": "results/experiment_1502_kan_hardware_accounting_quantkan_kaem.json",
+              "field": "accounting_table[quantkan_3bit_lut_soskan].lut_proxy",
+              "note": "duplicate accounting-table row used to catch variant drift"
+            }
+          ],
+          "value": 6298
+        },
+        "memory_bytes": {
+          "provenance": [
+            {
+              "artifact": "results/experiment_1502_kan_hardware_accounting_quantkan_kaem.json",
+              "field": "quantkan_proxy_estimates.memory_bytes"
+            },
+            {
+              "artifact": "results/experiment_1502_kan_hardware_accounting_quantkan_kaem.json",
+              "field": "accounting_table[quantkan_3bit_lut_soskan].memory_bytes",
+              "note": "duplicate accounting-table row used to catch variant drift"
+            }
+          ],
+          "value": 7065
+        },
+        "nabs_per_inference": {
+          "provenance": [
+            {
+              "artifact": "results/experiment_1502_kan_hardware_accounting_quantkan_kaem.json",
+              "field": "quantkan_proxy_estimates.nabs_per_inference"
+            },
+            {
+              "artifact": "results/experiment_1502_kan_hardware_accounting_quantkan_kaem.json",
+              "field": "accounting_table[quantkan_3bit_lut_soskan].nabs_per_inference",
+              "note": "duplicate accounting-table row used to catch variant drift"
+            }
+          ],
+          "value": 75
+        },
+        "rm_per_inference": {
+          "provenance": [
+            {
+              "artifact": "results/experiment_1502_kan_hardware_accounting_quantkan_kaem.json",
+              "field": "quantkan_proxy_estimates.rm_per_inference"
+            },
+            {
+              "artifact": "results/experiment_1502_kan_hardware_accounting_quantkan_kaem.json",
+              "field": "accounting_table[quantkan_3bit_lut_soskan].rm_per_inference",
+              "note": "duplicate accounting-table row used to catch variant drift"
+            }
+          ],
+          "value": 24
+        }
+      },
+      "model_shape": {
+        "feature_dim": {
+          "provenance": [
+            {
+              "artifact": "results/experiment_1162_kanele_sos_kan_fpga_blueprint.json",
+              "field": "sos_kan_n_inputs"
+            }
+          ],
+          "value": 3
+        },
+        "hidden_dim": {
+          "provenance": [
+            {
+              "artifact": "results/experiment_1162_kanele_sos_kan_fpga_blueprint.json",
+              "field": "sos_kan_hidden_dim"
+            }
+          ],
+          "value": 16
+        },
+        "rank": {
+          "provenance": [
+            {
+              "artifact": "results/experiment_1162_kanele_sos_kan_fpga_blueprint.json",
+              "field": "sos_kan_rank"
+            }
+          ],
+          "value": 4
+        },
+        "spline_basis_count": {
+          "provenance": [
+            {
+              "artifact": "results/experiment_1162_kanele_sos_kan_fpga_blueprint.json",
+              "field": "sos_kan_k_splines"
+            }
+          ],
+          "value": 8
+        },
+        "spline_knot_count": {
+          "provenance": [
+            {
+              "artifact": "results/experiment_1162_kanele_sos_kan_fpga_blueprint.json",
+              "field": "sos_kan_n_knots"
+            }
+          ],
+          "value": 8
+        }
+      },
+      "proxy_dimensions": {
+        "auroc_proxy": {
+          "provenance": [
+            {
+              "artifact": "results/experiment_1502_kan_hardware_accounting_quantkan_kaem.json",
+              "field": "quantkan_proxy_estimates.accuracy_reference.quantkan_3bit_auroc"
+            },
+            {
+              "artifact": "results/experiment_1266_quantkan_3bit_lut_kan.json",
+              "field": "quantkan_3bit_auroc"
+            }
+          ],
+          "value": 0.9801
+        },
+        "lut_grid_points": {
+          "provenance": [
+            {
+              "artifact": "results/experiment_1266_quantkan_3bit_lut_kan.json",
+              "field": "simulation.lut_grid_points"
+            },
+            {
+              "artifact": "results/experiment_1162_kanele_sos_kan_fpga_blueprint.json",
+              "field": "n_lut_points"
+            }
+          ],
+          "value": 256
+        },
+        "lut_speedup_proxy": {
+          "provenance": [
+            {
+              "artifact": "results/experiment_1502_kan_hardware_accounting_quantkan_kaem.json",
+              "field": "quantkan_proxy_estimates.accuracy_reference.lut_kan_speedup"
+            },
+            {
+              "artifact": "results/experiment_1266_quantkan_3bit_lut_kan.json",
+              "field": "lut_kan_speedup"
+            }
+          ],
+          "value": 2.5
+        },
+        "lut_value_dtype": {
+          "provenance": [
+            {
+              "artifact": "results/experiment_1266_quantkan_3bit_lut_kan.json",
+              "field": "simulation.lut_value_dtype"
+            }
+          ],
+          "value": "int8"
+        },
+        "q3_model_bytes": {
+          "provenance": [
+            {
+              "artifact": "results/experiment_1502_kan_hardware_accounting_quantkan_kaem.json",
+              "field": "quantkan_proxy_estimates.accuracy_reference.q3_model_bytes_from_exp1199_q4"
+            },
+            {
+              "artifact": "results/experiment_1199_kantize_soskan_4bit_quantization.json",
+              "field": "soskan_4bit_size_mb"
+            }
+          ],
+          "value": 921
+        },
+        "quantization_bits": {
+          "provenance": [
+            {
+              "artifact": "python/carnot/hardware/kan_hardware_accounting_quantkan_kaem.py",
+              "field": "QUANTKAN_PROXY_BITS"
+            }
+          ],
+          "value": 3
+        },
+        "table_bytes": {
+          "provenance": [
+            {
+              "artifact": "results/experiment_1502_kan_hardware_accounting_quantkan_kaem.json",
+              "field": "quantkan_proxy_estimates.accuracy_reference.table_bytes_from_exp1162"
+            },
+            {
+              "artifact": "results/experiment_1162_kanele_sos_kan_fpga_blueprint.json",
+              "field": "lut_storage_bytes"
+            }
+          ],
+          "value": 6144
+        }
+      },
+      "source_variant_field": "quantkan_proxy_estimates",
+      "synthesis_claim_ready": false,
+      "variant": "quantkan_3bit_lut_soskan"
+    },
+    {
+      "excluded_assumptions": [
+        "cross_feature_interactions_preserved_by_univariate_kaem_proxy"
+      ],
+      "hardware_accounting_shape": {
+        "bop_per_inference": {
+          "provenance": [
+            {
+              "artifact": "results/experiment_1502_kan_hardware_accounting_quantkan_kaem.json",
+              "field": "kaem_proxy_estimates.bop_per_inference"
+            },
+            {
+              "artifact": "results/experiment_1502_kan_hardware_accounting_quantkan_kaem.json",
+              "field": "accounting_table[kaem_univariate_table_approx].bop_per_inference",
+              "note": "duplicate accounting-table row used to catch variant drift"
+            }
+          ],
+          "value": 48
+        },
+        "bram36_blocks": {
+          "provenance": [
+            {
+              "artifact": "results/experiment_1502_kan_hardware_accounting_quantkan_kaem.json",
+              "field": "kaem_proxy_estimates.bram36_blocks"
+            },
+            {
+              "artifact": "results/experiment_1502_kan_hardware_accounting_quantkan_kaem.json",
+              "field": "accounting_table[kaem_univariate_table_approx].bram36_blocks",
+              "note": "duplicate accounting-table row used to catch variant drift"
+            }
+          ],
+          "value": 1
+        },
+        "lut_proxy": {
+          "provenance": [
+            {
+              "artifact": "results/experiment_1502_kan_hardware_accounting_quantkan_kaem.json",
+              "field": "kaem_proxy_estimates.lut_proxy"
+            },
+            {
+              "artifact": "results/experiment_1502_kan_hardware_accounting_quantkan_kaem.json",
+              "field": "accounting_table[kaem_univariate_table_approx].lut_proxy",
+              "note": "duplicate accounting-table row used to catch variant drift"
+            }
+          ],
+          "value": 240
+        },
+        "memory_bytes": {
+          "provenance": [
+            {
+              "artifact": "results/experiment_1502_kan_hardware_accounting_quantkan_kaem.json",
+              "field": "kaem_proxy_estimates.memory_bytes"
+            },
+            {
+              "artifact": "results/experiment_1502_kan_hardware_accounting_quantkan_kaem.json",
+              "field": "accounting_table[kaem_univariate_table_approx].memory_bytes",
+              "note": "duplicate accounting-table row used to catch variant drift"
+            }
+          ],
+          "value": 768
+        },
+        "nabs_per_inference": {
+          "provenance": [
+            {
+              "artifact": "results/experiment_1502_kan_hardware_accounting_quantkan_kaem.json",
+              "field": "kaem_proxy_estimates.nabs_per_inference"
+            },
+            {
+              "artifact": "results/experiment_1502_kan_hardware_accounting_quantkan_kaem.json",
+              "field": "accounting_table[kaem_univariate_table_approx].nabs_per_inference",
+              "note": "duplicate accounting-table row used to catch variant drift"
+            }
+          ],
+          "value": 9
+        },
+        "rm_per_inference": {
+          "provenance": [
+            {
+              "artifact": "results/experiment_1502_kan_hardware_accounting_quantkan_kaem.json",
+              "field": "kaem_proxy_estimates.rm_per_inference"
+            },
+            {
+              "artifact": "results/experiment_1502_kan_hardware_accounting_quantkan_kaem.json",
+              "field": "accounting_table[kaem_univariate_table_approx].rm_per_inference",
+              "note": "duplicate accounting-table row used to catch variant drift"
+            }
+          ],
+          "value": 6
+        }
+      },
+      "model_shape": {
+        "feature_dim": {
+          "provenance": [
+            {
+              "artifact": "results/experiment_1162_kanele_sos_kan_fpga_blueprint.json",
+              "field": "sos_kan_n_inputs"
+            }
+          ],
+          "value": 3
+        },
+        "spline_knot_count": {
+          "provenance": [
+            {
+              "artifact": "results/experiment_1162_kanele_sos_kan_fpga_blueprint.json",
+              "field": "sos_kan_n_knots"
+            }
+          ],
+          "value": 8
+        },
+        "univariate_table_count": {
+          "provenance": [
+            {
+              "artifact": "results/experiment_1162_kanele_sos_kan_fpga_blueprint.json",
+              "field": "sos_kan_n_inputs"
+            },
+            {
+              "artifact": "results/experiment_1502_kan_hardware_accounting_quantkan_kaem.json",
+              "field": "kaem_proxy_estimates.accuracy_reference.n_inputs"
+            }
+          ],
+          "value": 3
+        }
+      },
+      "proxy_dimensions": {
+        "interpolation_endpoint_reads_per_input": {
+          "provenance": [
+            {
+              "artifact": "python/carnot/hardware/kan_hardware_accounting_quantkan_kaem.py",
+              "field": "kaem_rm = 2 * n_inputs"
+            }
+          ],
+          "value": 2
+        },
+        "lut_grid_points": {
+          "provenance": [
+            {
+              "artifact": "results/experiment_1162_kanele_sos_kan_fpga_blueprint.json",
+              "field": "n_lut_points"
+            },
+            {
+              "artifact": "results/experiment_1502_kan_hardware_accounting_quantkan_kaem.json",
+              "field": "kaem_proxy_estimates.accuracy_reference.n_lut_points"
+            }
+          ],
+          "value": 256
+        },
+        "reference_sos_spline_count": {
+          "provenance": [
+            {
+              "artifact": "results/experiment_1502_kan_hardware_accounting_quantkan_kaem.json",
+              "field": "kaem_proxy_estimates.accuracy_reference.n_splines_in_sos_reference"
+            }
+          ],
+          "value": 8
+        },
+        "separable_univariate_tables": {
+          "provenance": [
+            {
+              "artifact": "results/experiment_1502_kan_hardware_accounting_quantkan_kaem.json",
+              "field": "kaem_proxy_estimates.accuracy_reference.univariate_separable_assumption"
+            }
+          ],
+          "value": true
+        }
+      },
+      "source_variant_field": "kaem_proxy_estimates",
+      "synthesis_claim_ready": false,
+      "variant": "kaem_univariate_table_approx"
+    }
+  ],
+  "quantization_assumptions": [
+    {
+      "name": "quantkan_proxy_bits",
+      "normalized_value": 3,
+      "provenance": [
+        {
+          "artifact": "python/carnot/hardware/kan_hardware_accounting_quantkan_kaem.py",
+          "field": "QUANTKAN_PROXY_BITS"
+        }
+      ],
+      "scope": "quantkan_3bit_lut_soskan"
+    },
+    {
+      "name": "soskan_4bit_size_mb_source",
+      "normalized_value": 0.001228,
+      "provenance": [
+        {
+          "artifact": "results/experiment_1199_kantize_soskan_4bit_quantization.json",
+          "field": "soskan_4bit_size_mb"
+        }
+      ],
+      "scope": "q3_model_bytes_from_exp1199_q4"
+    }
+  ],
+  "run_date": "20260508",
+  "schema": "kan_shape_normalization_manifest_v1",
+  "source_accounting_artifact": "results/experiment_1502_kan_hardware_accounting_quantkan_kaem.json",
+  "source_blocker_artifact": "results/experiment_1506_115_completion_archive_116_activation.json",
+  "spec": [
+    "REQ-KAN-1516",
+    "SCENARIO-KAN-1516"
+  ],
+  "status": "complete"
+}
