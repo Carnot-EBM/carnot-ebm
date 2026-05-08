@@ -7,6 +7,188 @@ integration-plan update + .NNN priority adjustment.
 
 ---
 
+## DT-MCMC-STATELESS response (received 2026-05-08, ~19:30Z) — **VERDICT: WARM-START AT THE CANDIDATE; DECOUPLE TRAINING SAMPLER FROM INFERENCE**
+
+**Question summary:** Persistent-chain PCD vs. Carnot's stateless HTTP
+API contract. Cold-start vs warm-start vs cached-warm-start vs
+client-passed-state. Is fresh-restart MH ever strictly worse than
+fresh-restart Gibbs?
+
+**Verdict (despite the "moot" framing after DT-7/MCMC-K1/MCMC-NULL):
+this prompt produced a load-bearing architectural insight I had missed.
+Carnot's API payload `{ prompt, candidate }` already contains the warm
+start — initialize Gibbs at the candidate.** This bypasses the χ²
+cold-start penalty without any session state, no client-passed state,
+no cached state.
+
+### Key findings
+
+**(a) Spectral-gap-parameterized TVD bound:**
+
+```
+d_TV(μ₀ Q^100, π_{θ,t}) ≤ (1/2) · √χ²(μ₀ ‖ π_{θ,t}) · (1 − γ)^100
+```
+
+| Initialization | χ² penalty | TVD at K=100 |
+|---|---|---|
+| Warm-start (PCD persistent) | O(1) | tightly controlled by (1−γ)^100 alone |
+| Cold-start (uniform random) | O(e^{ΔE_max/2t}) — astronomical (e.g., 2^512 in 128-byte space) | hopelessly fails to mix at K=100 |
+
+**The gap between cold and warm NEVER closes** for production K=100 —
+would require γ ≈ 1 − O(e^{−D/200}) ≈ 1, which local-search MH
+categorically cannot achieve.
+
+**(b) No target-free K=1 analog.** Proposition 3's K=1 unbiasedness is
+a *training-time gradient construct* requiring ground-truth `y` for
+the target-dependent regularizer Ω_y. At inference, you don't compute
+gradients — you sample from the primal `π_{θ,t}(· | prompt)`. There
+is no mathematical mechanism to collapse mixing time to K=1 without
+ground truth. Dropping Ω_y forfeits exactness and reverts to standard
+asymptotic K → ∞ unbiasedness.
+
+**(c) Cached warm-start: REJECT.** A cached state from a recent
+production sample belongs to a *completely different prompt's
+landscape*. Initializing the chain with out-of-distribution state
+"traps the sampler in an irrelevant deep local minimum, acting as an
+adversarial initialization that performs WORSE than a uniform cold
+start." Counter-intuitive but correct: stale state ≠ warm state when
+the conditional distribution depends on prompt.
+
+**(d) Client-passed-state: CONDITIONALLY ACCEPT but practically
+flawed.** Mathematically preserves PCD persistence (recovers Prop 5).
+But only works for repeated iterative queries on the same prompt. For
+zero-shot verification (Carnot's primary load — one new prompt, one
+new candidate), client has no valid prior state. Forces cold-start
+regime anyway.
+
+**(e) Fresh-restart MH is STRICTLY WORSE than fresh-restart Gibbs at
+K=100 in low-acceptance regimes.**
+
+When the landscape has high correlations or low temperatures, MH's
+acceptance rate α ≪ 1. With α = 0.05, MH rejects 95% of proposals →
+only ~5 actual state transitions in 100 sweeps → wastes 95% of the
+100ms compute budget standing still.
+
+Gibbs analytically integrates over 1D/block conditional distributions
+and samples directly → mathematically guaranteed effective coordinate
+acceptance rate of 1.0 → 100 energy-lowering transitions per K=100.
+
+**Under strict latency constraint, Gibbs vastly outperforms MH during
+critical burn-in phase.** This compounds DT-MCMC-NULL's security
+recommendation with a separate latency-quality argument.
+
+### THE LOAD-BEARING INSIGHT: candidate-as-warm-start
+
+> "Carnot's API payload is `{ prompt, candidate }`. Instead of
+> complicated state-passing, initialize the Gibbs chain directly at
+> the provided candidate. The user's candidate is a structurally
+> valid, localized proxy for the target mode. This bypasses the
+> catastrophic χ² cold-start divergence penalty, allowing Gibbs to
+> greedily explore the valid local verification neighborhood without
+> wasting a single sweep of your 100ms budget."
+
+This is brilliant and obvious in retrospect. **The verifier's job is
+to verify a candidate; the candidate IS the warm start.** No session
+store, no client-passed state, no cached state needed. The API
+contract already provides what we need.
+
+### Final architecture (synthesizes DT-7 + DT-MCMC-K1 + DT-MCMC-NULL + DT-MCMC-STATELESS)
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│ Carnot's two-sampler architecture (decoupled by use case)   │
+│                                                              │
+│ INFERENCE API (stateless HTTP):                              │
+│   Sampler:     THRML block-Gibbs (vendored Apache-2.0)       │
+│   Init:        the user-provided `candidate` from payload    │
+│   K:           100 sweeps (latency budget)                   │
+│   Justified:   correctness (DT-7), security (DT-MCMC-NULL),  │
+│                latency (DT-MCMC-STATELESS), warm-start       │
+│                                                              │
+│ PHASE 5 TRAINING (offline, batch):                           │
+│   Sampler:     adaptive K-PCD with SA/PT (DT-MCMC-K1)        │
+│                may use MH layer for FY gradient (Prop 3)     │
+│   K:           dynamically scheduled per chain pathology     │
+│   Diagnostics: Hamming Velocity + Persistent Energy Gap      │
+│   Init:        persistent chain (PCD per Prop 5)             │
+│                                                              │
+│ Decoupling is mathematically valid: both target same π_{θ,t} │
+│ (DT-MCMC-STATELESS explicit confirmation).                   │
+└─────────────────────────────────────────────────────────────┘
+```
+
+This is the **complete sampler-side architecture for Carnot** after
+five Deep Think verdicts. No further questions about samplers in
+isolation are open — only cross-paper composition (DT-COMPOSITION) and
+substrate-measurability (DT-OT-RESIDUAL).
+
+### Tasks to file
+
+1. **UPDATE** `.120 task seed `exp15ZZ-thrml-vendored-block-gibbs-
+   replacement`: add specification that the inference Gibbs chain MUST
+   initialize at the user-provided candidate (not at random state, not
+   from cache). This is a Carnot-specific design constraint on top of
+   the THRML vendoring.
+
+2. **NEW** `.121 task seed `exp15UU-candidate-warm-start-vs-cold-start-
+   benchmark`: empirically measure inference latency and verification
+   quality for (a) candidate-warm-start (b) cold-start (c) cached-state
+   warm-start at K ∈ {10, 50, 100, 500} sweeps. Confirms the χ² penalty
+   prediction empirically and rules out cached-state as a deployment
+   pattern.
+
+3. **Phase 5 architecture revision** (`_bmad/architecture.md`): the
+   in-situ training spec must explicitly note that **the training
+   sampler can differ from the inference sampler**. Both target π_{θ,t}.
+   Training: differentiable MH layer (PCD, adaptive K, SA/PT).
+   Inference: fresh-restart Gibbs initialized at candidate.
+
+4. **Paper-v6 §3 disclosure (revised)**: add the candidate-as-warm-
+   start design choice as a Carnot-specific contribution. Draft text:
+
+   > "Carnot decouples its training-time and inference-time samplers.
+   > Training uses a differentiable MCMC layer with adaptive K-PCD and
+   > simulated-annealing temperature cycling [Sullivan 2026, K-schedule
+   > rationale per Appendix Y]. Inference uses fresh-restart block-Gibbs
+   > [vendored from Extropic THRML 0.1.3], initialized at the user-
+   > provided candidate. This exploits the verifier API contract:
+   > the candidate `y_init = candidate` is a structurally valid,
+   > prompt-conditioned proxy for π_{θ,t}, bypassing the χ² cold-start
+   > penalty `√χ²(μ₀ ‖ π_{θ,t}) ≈ O(e^{ΔE_max/2t})` that would
+   > otherwise dominate the K=100 latency budget. Cached-state and
+   > client-passed-state alternatives were rejected: cached state from
+   > a different prompt is mathematically equivalent to adversarial
+   > initialization (Deep Think 2026-05-08)."
+
+### Methodological note (worth recording)
+
+I had marked DT-MCMC-STATELESS "completely moot" after the
+DT-7/MCMC-K1/MCMC-NULL cascade eliminated MCMC Layers from inference.
+Sending the prompt anyway surfaced the candidate-warm-start
+architectural insight that would otherwise have been missed.
+
+**Lesson**: even when a prompt's headline question becomes moot, the
+prompt's *secondary* questions (in this case (e) on fresh-restart MH
+vs Gibbs and the API-contract reasoning) can produce load-bearing
+insights. Send all drafted prompts even if their headline is
+already-resolved.
+
+### Cascade for follow-up prompts
+
+- **DT-OT-RESIDUAL**: unchanged. Substrate-measurability is orthogonal
+  to sampler architecture.
+- **DT-BRAIN-CORRELATIONS**: unchanged. Phase-3 expressivity question
+  still gates BRAIN's role in distribution learning.
+- **DT-COMPOSITION**: simplified by candidate-warm-start design. The
+  three-sampler composition becomes:
+  - (I) Inference: fresh-restart THRML block-Gibbs at candidate
+        (DT-7 + DT-MCMC-NULL + DT-MCMC-STATELESS)
+  - (II) Argmin: Spectral Annealing (still pending DT-COMPOSITION)
+  - (III) Distribution learning: BRAIN's REINFORCE OR adaptive-K PCD
+        with SA/PT (DT-MCMC-K1 + DT-BRAIN-CORRELATIONS pending)
+
+---
+
 ## DT-MCMC-NULL response (received 2026-05-08, ~19:00Z) — **VERDICT: STICK WITH GIBBS — ITS SLUGGISHNESS IS A SECURITY FEATURE**
 
 **Question summary:** Does MH proposal correction concentrate on the
