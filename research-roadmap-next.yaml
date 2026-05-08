@@ -193,7 +193,7 @@ tasks:
       expected_value: true
   prior_failures:
     - experiment_id: dt_brain_correlations_runnable_predicate_k4
-      verdict: complete: predicate_partial_3.21x_at_k4
+      verdict: "complete: predicate_partial_3.21x_at_k4"
       addressed_by: "Initial k=4 run gave 3.21× AR advantage (PARTIAL
                      validation). Per DT-BRAIN-CORRELATIONS, gap is
                      exponential in k. Extending to k=8/12/15 to confirm
@@ -330,13 +330,13 @@ tasks:
       expected_value: true
   prior_failures:
     - experiment_id: exp1548-thrml-carnot-parity-independent-rng-audit
-      verdict: complete: independent_rng_thrml_carnot_parity_not_ready
+      verdict: "complete: independent_rng_thrml_carnot_parity_not_ready"
       addressed_by: "Per Deep Think DT-7: structural mismatch between
                      single-site MH and block-Gibbs at finite K. Vendor
                      THRML's exact transition operator. Per DT-MCMC-
                      STATELESS: initialize at user-provided candidate
                      to bypass χ² cold-start penalty."
-    retire_if_same_verdict: true
+      retire_if_same_verdict: true
   prompt: |
     Per Deep Think DT-7 + DT-MCMC-NULL + DT-MCMC-STATELESS combined:
     Carnot's hand-rolled Gibbs sampler is replaced by THRML 0.1.3
@@ -779,7 +779,7 @@ tasks:
       expected_value: true
   prior_failures:
     - experiment_id: exp1565-soft-gibbs-residual-implementation
-      verdict: complete: soft_brs_decay_confirmed (expected)
+      verdict: "complete: soft_brs_decay_confirmed (expected)"
       addressed_by: "Once Soft-BRS is verified to decay correctly,
                      this task measures the per-deployment β
                      calibration on Carnot's k=6 ensemble."
@@ -831,7 +831,7 @@ tasks:
       expected_value: true
   prior_failures:
     - experiment_id: exp1562-brain-linear-ar-k-sweep-extended
-      verdict: complete: brain_linear_ar_rescue_validated (expected)
+      verdict: "complete: brain_linear_ar_rescue_validated (expected)"
       addressed_by: "Once Linear-AR is validated as the right
                      parameterization at k=15, implement step-wise
                      baseline (Mnih-Gregor NVIL-style) to restore
@@ -861,6 +861,80 @@ tasks:
 
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
+- id: exp1573-extropic-z1-readiness-packet-thrml-alignment-update
+  milestone: 2026.04.120
+  deliverable: results/experiment_1573_extropic_z1_readiness_packet_thrml_alignment_update.json
+  title: "Extropic Z1 Readiness Packet — THRML Alignment Update - Gated on Exp1564"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 30
+  estimated_wall_time_min: 45
+  priority: medium
+  gated_on:
+    - upstream: exp1564-thrml-vendored-block-gibbs-replacement
+      gate_field: thrml_vendoring_complete
+      expected_value: true
+  prior_failures:
+    - experiment_id: exp1545-extropic-z1-access-readiness-packet
+      verdict: "complete: extropic_z1_access_readiness_packet_shipped"
+      addressed_by: "Update prior Z1 readiness packet (exp1545) to
+                     reflect that Carnot now uses Extropic's THRML
+                     0.1.3 as the reference sampler implementation,
+                     vendored. Z1 migration path becomes backend swap
+                     rather than substrate rewrite."
+  prompt: |
+    Per operator question 2026-05-08 (memory entry feedback_thrml_
+    vendoring_z1_strengthening.md): retiring the THRML scaling-parity
+    lineage doesn't weaken the Extropic Z1 hardware-acceleration
+    ambition; it strengthens it by aligning Carnot's substrate to
+    Extropic's reference simulator that Z1 silicon will implement.
+
+    Update the Z1 readiness packet (originally shipped at exp1545)
+    to reflect this alignment.
+
+    STEPS:
+    1. Read the existing Z1 readiness packet (results/experiment_1545_
+       extropic_z1_access_readiness_packet.json or equivalent
+       deliverable from .118 milestone).
+    2. Add a new section "THRML Alignment Update (2026-05-08)":
+       (a) Carnot's inference sampler is now Extropic THRML 0.1.3,
+           vendored Apache-2.0 (per exp1564). Mirror at <gitea-mirror>
+           and <github-mirror>.
+       (b) Z1 migration path: swap python/carnot/sampling/_vendored_thrml/
+           for python/carnot/sampling/_z1_hardware_backend/ when Z1
+           silicon ships. Same SamplerBackend protocol per CLAUDE.md
+           Rule 7.
+       (c) Pre-Z1 testing strategy: validate Carnot pipeline on
+           THRML simulator at production scale (n=128); when Z1 ships,
+           validate Z1-vs-THRML parity using THRML as reference oracle.
+       (d) Open question for Z1 hardware: does the kinetic-defense-in-
+           depth plateau-friction property (memory project_kinetic_
+           defense_in_depth.md) transfer to Z1's thermodynamic silicon?
+           Thermodynamic computing samples directly from the Boltzmann
+           measure, so at flat plateaus should produce uniform samples
+           (closer to block-Gibbs than MH). LIKELY TRANSFERS, must
+           empirically verify when silicon ships.
+    3. Verify CLAUDE.md decentralization rules:
+       - Rule 3 (mirroring): THRML mirrored to Carnot-controlled
+         repos before exp1564 adoption?
+       - Rule 5 (hardware portability): KV260 / open-FPGA tracks
+         remain ALIVE in Phase 2 roadmap. Z1 is NOT the sole hardware
+         path.
+       - Rule 7 (no vendor abstractions in core): THRML import is in
+         clearly-named submodule (_vendored_thrml/), core depends on
+         abstract SamplerBackend protocol.
+    4. Update Phase 2 hardware-portfolio entry in CLAUDE.md if needed.
+
+    Write deliverable with status="complete" and honest_verdict
+    prefixed with "complete:". Required fields:
+    - z1_readiness_packet_updated: bool
+    - thrml_vendor_mirroring_verified: bool
+    - kv260_open_fpga_tracks_preserved: bool
+    - kinetic_defense_z1_transfer_question_filed: bool
+    - sampler_backend_protocol_documented: bool
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
 - id: exp1572-milestone-120-retro
   milestone: 2026.04.120
   deliverable: results/experiment_1572_milestone_120_retro.json
@@ -886,6 +960,9 @@ tasks:
     - upstream: exp1569-paper-v6-section-3-sampler-draft
       gate_field: section_3_drafted
       expected_value: true
+    - upstream: exp1573-extropic-z1-readiness-packet-thrml-alignment-update
+      gate_field: z1_readiness_packet_updated
+      expected_value: true
   prior_failures:
     - experiment_id: standard_milestone_retro
       verdict: novel_milestone_120_retro
@@ -908,7 +985,7 @@ tasks:
     Write deliverable with status="complete" and honest_verdict
     prefixed with "complete:". Required fields:
     - criteria_met: int
-    - criteria_total: int (= 13)
+    - criteria_total: int (= 14)
     - paper_v6_section_3_drafted: bool
     - all_4_carnot_contributions_validated: bool
     - rho_C_curve_published_ready: bool
