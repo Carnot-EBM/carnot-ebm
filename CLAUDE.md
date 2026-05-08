@@ -22,11 +22,23 @@ Spawn an adversarial sub-agent to review non-trivial changes before reporting co
 - **trust_remote_code is gated:** HuggingFace model loading requires `CARNOT_TRUST_REMOTE_CODE=1` to enable remote code execution. Default is False (safe).
 - **Production autoresearch:** Use Docker with the gVisor (runsc) runtime for sandbox isolation when running autonomous experiments in production. Firecracker was initially considered but cannot pass GPUs through, and the pipeline needs CUDA/ROCm; gVisor intercepts syscalls in userspace and plays nicely with nvidia-container-toolkit.
 
-## Project Vision (Three Phases)
+## Project Vision (Three Phases + Parallel Tracks)
 
-1. **Phase 1 (current):** Verify and repair LLM outputs using constraint-based energy models. Ship a useful product.
-2. **Phase 2 (medium-term):** Hardware acceleration via Extropic TSU, FPGA Ising machines, and potentially photonic computing.
+1. **Phase 1 (current):** Verify and repair LLM outputs using constraint-based energy models. **Ship a useful, operational software product** (Apache-2.0 package + MCP server + CLI + HuggingFace mirror). Phase 1 ship gate is purely *software-operational*:
+   - All FR-* technical requirements implemented (✓ as of 2026-05-08)
+   - PyPI package + Apache-2.0 license shipped
+   - HuggingFace mirror per Rule 3 (mandatory mirroring)
+   - MCP server + CLI documentation for external integrators
+   - At least one independent reproducer (could be a teammate, a CI run, or an external user)
+
+   Phase 1 ship is **NOT gated on**: paper publication, hardware validation, FPGA bring-up, Phase 4 active-inference validation, or any non-software deliverable (operator directives 2026-05-08).
+2. **Phase 2 (medium-term):** Hardware acceleration via Extropic TSU, FPGA Ising machines, and potentially photonic computing. Sovereignty hardware demos (GateMate, PolarFire SoC, Tenstorrent eval) live here, not in Phase 1.
 3. **Phase 3 (long-term):** Evolve into an open-source foundation model based on hardware-acceleratable EBM/EBT. Functional parity with Kona — continuous latent space, non-autoregressive reasoning, self-correcting. Apache 2.0, hardware-portable.
+
+**Parallel tracks** (run alongside whatever phase is current — do not gate phase advancement):
+
+- **Phase 4 (committed 2026-05-02):** Active inference / verifier-as-free-energy hypothesis. Three mandatory tasks per `feedback_active_inference_phase4_committed.md`. Empirical validation is gating for paper publication, NOT for Phase 1 ship.
+- **Publication track:** Paper-v6 final integration, integrity audit, arXiv submission. Runs when ready. Per `feedback_publication_holds_until_phase4_pivot.md`, arXiv submission HOLDS until Phase 4 empirically validates — but **this hold does not block Phase 1 ship** (operator directive 2026-05-08). Paper-v6 ships when paper-v6 is ready; Phase 1 ships when the package is on PyPI + HuggingFace mirror is up + at least one external reproducer exists.
 
 The verify-repair pipeline is Phase 1, not the endgame. Every architectural decision should ask: "does this move us toward the foundation model?"
 
