@@ -219,6 +219,79 @@ honest discipline at the planner layer alone.
 - **The energy function is ground truth.** It cannot be gamed. This is the invariant across all three phases.
 - **No-doomed-rerun discipline:** see "Failed-Experiment Rerun Discipline" above.
 
+## Pre-Staged Roadmap Convention (MANDATORY)
+
+**Origin:** 2026-05-08 operator-trust directive: "I tend to trust your
+plan over codex' when you've made one." Filed after a 9-prompt Deep
+Think synthesis produced a `.120 roadmap with substantially more
+context (4 novel paper-v6 contributions, 3 documented rule-outs,
+operator-prioritization tier structure) than codex's planner could
+recover from carry-forward bias alone.
+
+**The rule.** When `research-roadmap-next.yaml` exists with a
+`milestone:` field that matches the EXPECTED next milestone (current+1),
+the conductor's `_plan_next_milestone()` function MUST preserve it and
+skip the planner entirely. The activation guard's existing YAML
+validation handles structural correctness regardless of who drafted
+the file.
+
+If the file exists but with a STALE milestone (mismatch), it's treated
+as leftover-from-prior-cycle and the planner runs normally to
+overwrite. Empty/unreadable file → planner runs.
+
+**Authoring protocol** (operator or outer-loop Claude drafting a
+roadmap ahead of milestone close):
+
+1. Write the YAML to `research-roadmap-next.yaml` with `milestone:`
+   field set to current+1 (e.g., if active is 2026.04.119, draft has
+   `milestone: 2026.04.120`).
+2. Include the standard activation manifest task as exp(N+1) where
+   N is the last task ID in the prior milestone.
+3. Follow Codex-Default discipline (all tasks `agent_type: codex`
+   unless `requires_claude: true` is justified per the positive
+   criterion in this CLAUDE.md).
+4. Follow Verdict Terminal-Prefix Discipline (every task's prompt
+   spec'ing `honest_verdict` MUST start with `complete:`/`complete_`/
+   `success:`/`success_`/`passed:`/`passed_`/`shipped:`/`shipped_`).
+5. Follow Failed-Experiment Rerun Discipline (every task that
+   re-proposes scope similar to a prior failure MUST include
+   `prior_failures:` block).
+6. Commit with `[outer-loop]` or `[operator]` prefix to make the
+   provenance auditable.
+
+**Mechanical enforcement (lives in `scripts/research_conductor.py`):**
+`_plan_next_milestone()` calls `_expected_next_milestone(current)` and
+compares against the existing draft's `milestone:` field. Match →
+preserve. Mismatch → planner runs. The check is structural; no
+content inspection beyond the milestone-version field.
+
+**Why this is in CLAUDE.md, not just in code.** Same defense-in-depth
+pattern as Codex-Default and Verdict Terminal-Prefix Discipline: the
+planner reads CLAUDE.md as required input, and the conductor's
+mechanical check enforces if the planner respects the convention at
+design time. Putting the rule here also documents the operator-trust
+contract explicitly.
+
+**When to author a pre-staged roadmap (operator/outer-loop discipline):**
+
+- After a Deep Think round that materially shifts priorities (e.g.,
+  the 2026-05-08 9-prompt sweep that produced the .120 roadmap).
+- When known-issues.md priorities have grown faster than the planner's
+  carry-forward window can absorb.
+- When operator has higher context than the conductor's planner can
+  reach via its standard input set (CLAUDE.md, prd.md, status.md, etc.).
+- When mechanical safety nets (activation guard, verdict prefix
+  discipline) need a specific task structure the planner might not
+  produce.
+
+**When to LET the planner run** (don't pre-stage):
+
+- Routine milestones with no special context.
+- When operator wants to test whether the planner converges to the
+  same priorities the operator would have chosen.
+- When known-issues.md is the source of truth and the planner's
+  carry-forward bias isn't a concern for the current milestone.
+
 ## Codex-Default for Experiments (MANDATORY — Quota Preservation)
 
 **Origin:** 2026-05-02 user directive ("default all new experiments to
