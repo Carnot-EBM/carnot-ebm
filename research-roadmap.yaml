@@ -1,1144 +1,993 @@
-milestone: 2026.04.119
-milestone_title: "THRML Independent-RNG Audit + SATQuest Repair + Verification-Router Scale"
+# research-roadmap-next.yaml
+# Drafted by Claude (outer-loop) acting as planner per operator request 2026-05-08 16:10Z.
+# Synthesizes 9 Deep Think verdicts + .119 carry-forward + paper-v6 critical-path.
+
+milestone: 2026.05.120
+milestone_title: "ICLR-26 Tier 1 Validation + THRML Vendoring + paper-v6 §3 Drafting"
 milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
+
+# ============================================================
+# Milestone strategy (per operator prioritization analysis 2026-05-08):
+#
+# Tier 1 (target completion in first 3 hours wall time):
+#   exp1561 zero-coupling test         (~10 min, kinetic-defense gate)
+#   exp1562 BRAIN+Linear-AR k-sweep    (~1-2h, validates rescue at k=15)
+#   exp1563 SpecAnn rejection record   (~30 min, prevents re-litigation)
+#   exp1564 THRML vendoring            (single codex session, KL=0.17 fix)
+#   exp1565 Soft-Gibbs Residual impl   (~2h, novel contribution)
+#
+# Tier 2 (parallel background, gated on Tier 1 completions):
+#   exp1566 candidate-warm-start bench  (gated on exp1564)
+#   exp1567 ρ(C) measurement            (GPU sweep, Q11 TSS curve)
+#   exp1568 FR-11 v14 retention audit   (mode-collapse signal)
+#   exp1569 paper-v6 §3 sampler draft  (composes prior verdicts)
+#   exp1570 Soft-Gibbs coverage bound  (gated on exp1565)
+#
+# Tier 3 (research-track, gated):
+#   exp1571 step-wise baseline AR-REINFORCE  (gated on exp1562)
+#   exp1572 .120 retro
+#
+# Total: 13 tasks. All-codex per CLAUDE.md Codex-Default discipline.
+# Verdict-prefix discipline: all honest_verdict outputs MUST start with
+# `complete:` / `complete_` / `success:` / `success_` / `passed:` /
+# `passed_` / `shipped:` / `shipped_` to satisfy reconciler classifier.
+# ============================================================
+
 tasks:
 
-# ============================================================
-# Phase 0 - Activation and hard evidence repair
-# ============================================================
-
-- id: exp1547-118-completion-archive-119-activation
-  milestone: 2026.04.119
-  deliverable: results/experiment_1547_118_completion_archive_119_activation.json
-  title: ".118 Completion Archive + .119 Activation Manifest"
+- id: exp1560-119-completion-archive-120-activation
+  milestone: 2026.05.120
+  deliverable: results/experiment_1560_119_completion_archive_120_activation.json
+  title: ".119 Completion Archive + .120 Activation Manifest"
   agent_type: codex
   model: gpt-5.5
   max_turns: 20
   estimated_wall_time_min: 25
   priority: critical
-  requires_gpu: false
-  skip_pre_test: true
   prior_failures:
-    - experiment_id: exp1546-milestone-118-retro
-      verdict: prior_milestone_retrospective_scope
-      addressed_by: "This is expected per-milestone activation bookkeeping for .119; it archives .118 completion and exposes carry-forward gates for SATQuest repair, FR-11 utility, THRML independent RNG, ARM/EBT telemetry, and contract scaling."
-      retire_if_same_verdict: false
+    - experiment_id: standard_milestone_activation
+      verdict: novel_milestone_120
+      addressed_by: "Standard per-milestone bookkeeping; archives .119
+                     completion data, exposes carry-forward gate fields
+                     for kinetic-defense, BRAIN-rescue, THRML-vendoring,
+                     Soft-Gibbs-Residual, and paper-v6 §3 drafting tracks."
   prompt: |
-    CONTEXT:
-    Milestone .118 completed all tasks and the retro reported 13 of 14
-    criteria met. The carried limits are specific: SATQuest had 3 solver-oracle
-    false accepts, FR-11 remained safety-only with utility_delta=0.0, ARM/EBT
-    diagnostics lacked logprob telemetry, and THRML simulator parity must pass
-    an independent-RNG audit before any further parity headline. Use
-    {project_root} as the project root and {date} as the run date.
-
-    EXISTING CODE TO READ FIRST:
-    - CODEX.md
-    - CLAUDE.md
-    - openspec/change-proposals/research-roadmap-vNEXT.md
-    - research-roadmap.yaml
-    - research-roadmap-next.yaml
-    - research-complete.yaml
-    - research-references.md
-    - ops/known-issues.md
-    - ops/conductor-log.md
-    - ops/changelog.md
-    - ops/status.md
-    - results/experiment_1546_milestone_118_retro.json
-    - results/experiment_1535_xgrammar_abs_contract_decoder_adapter.json
-    - results/experiment_1536_satquest_cnf_verifier_benchmark.json
-    - results/experiment_1538_residual_drift_commitment_ledger.json
-    - results/experiment_1539_fr11_external_feedback_skill_promotion_v13.json
-    - results/experiment_1540_product_line_staged_benchmark_scale_v3.json
-    - results/experiment_1541_claim_isolation_uncertainty_router_v2.json
-    - results/experiment_1542_arm_ebm_soft_value_diagnostic.json
-    - results/experiment_1543_thrml_carnot_parity_n256_schedule_stress.json
-    - results/experiment_1544_thrml_diverse_topology_parity_n64.json
-    - results/experiment_1545_extropic_z1_access_readiness_packet.json
-
-    TASK:
-    Write the .118 completion archive and .119 activation manifest. Do not
-    modify research-roadmap.yaml or scripts/research_conductor.py.
-
-    REQUIRED ARTIFACT FIELDS:
-    - status
-    - milestone
-    - predecessor_milestone
-    - predecessor_criteria_met
-    - predecessor_criteria_total
-    - activation_manifest_complete
-    - prior_automata_ready
-    - prior_satquest_benchmark_ready
-    - prior_satquest_solver_oracle_false_accepts
-    - prior_satquest_zero_solver_false_accepts
-    - prior_residual_drift_ready
-    - prior_fr11_safe_only
-    - prior_fr11_positive_utility
-    - prior_product_line_ready
-    - prior_claim_router_ready
-    - prior_arm_ebm_diagnostic_ready
-    - prior_thrml_n256_ready
-    - prior_thrml_diverse_n64_ready
-    - thrml_independent_rng_required
-    - prior_extropic_packet_ready
-    - research_complete_has_118_entry
-    - mandated_sota_models
-    - continuous_self_learning_required
-    - allowed_119_tracks
-    - retired_headline_signals
-    - honest_verdict (MUST start with complete:, complete_, success:, success_, passed:, passed_, shipped:, or shipped_)
+    You are activating milestone 2026.05.120 ("ICLR-26 Tier 1 Validation
+    + THRML Vendoring + paper-v6 §3 Drafting").
 
     CONCRETE STEPS:
-    1. Create results/experiment_1547_118_completion_archive_119_activation.json immediately with status="in_progress".
-    2. Load exp1546 and all listed .118 artifacts. If an artifact is missing, record the missing path instead of inventing a result.
-    3. Record predecessor_criteria_met=13 and predecessor_criteria_total=14 only if exp1546 supports those values.
-    4. Write ops/milestone_119_activation_manifest.md with allowed tracks: THRML independent-RNG audit, SATQuest oracle repair, SATQuest SOTA re-eval, unified automata/SAT/runtime contract gate, residual-drift repair, claim-isolation scale, product-line scale, FR-11 positive-utility-or-retire, ARM/EBT telemetry repair, Weaver-style verification routing, THRML/Extropic packet update, and milestone retro.
-    5. Expose same-roadmap gate fields. Set prior_satquest_solver_oracle_false_accepts from exp1546, prior_satquest_zero_solver_false_accepts=false if any false accepts remain, prior_fr11_safe_only=true only if soundness_mistakes=0 and no_model_weight_mutation=true, and prior_fr11_positive_utility=false unless exp1546 reports positive_utility_achieved=true.
-    6. Set thrml_independent_rng_required=true if ops/known-issues.md contains the mandatory THRML/Carnot independent-RNG audit entry.
-    7. Preserve blocks on legacy small-model headline claims, SATQuest acceptance before oracle repair, ARM/EBT soft-value acceptance authority, Extropic TSU/Z1/XTR-0 hardware execution claims, KV260 board claims, and model-weight mutation.
-    8. Confirm research-roadmap.yaml and scripts/research_conductor.py are unchanged.
+    1. Create results/experiment_1560_119_completion_archive_120_activation.json
+       immediately with status="in_progress".
+    2. Read research-complete.yaml, conductor log entries for exp1547-1559,
+       ops/status.md, ops/changelog.md, ops/known-issues.md, and
+       docs/research-notes/iclr26-deep-think-responses.md (the 9 Deep
+       Think verdicts).
+    3. Verify exp1559 .119 retro reports criteria-met. Record whether
+       research-complete.yaml has a 2026.04.119 entry.
+    4. Write ops/milestone_120_activation_manifest.md with allowed
+       tracks: kinetic-defense-in-depth validation, BRAIN+Linear-AR
+       rescue, SpecAnn rejection record, THRML vendoring + candidate-
+       warm-start, Soft-Gibbs Residual implementation + coverage bound,
+       ρ(C) measurement, FR-11 v14 retention audit, paper-v6 §3 sampler
+       drafting, AR-REINFORCE step-wise baseline, .120 retro.
+    5. Expose same-roadmap gate fields:
+       - kinetic_defense_validation_ready=true if exp1543 prior parity
+         data exists
+       - brain_linear_ar_validation_ready=true if exp1543/1544 THRML
+         data exists
+       - thrml_vendoring_ready=true if exp1548 KL=0.17 finding logged
+       - soft_gibbs_residual_ready=true (always — n=8 prototype)
+       - rho_C_measurement_ready=true if k=6 calibration corpus exists
+       - paper_v6_drafting_ready=true if docs/research-notes/iclr26-
+         integration-plan.md exists
+    6. Preserve blocks on Semantic Energy/logit headline claims, pairwise
+       LLM verifier headline claims, arbitrary generated-Python verifier
+       trust, TSU hardware claims, KV260 board claims, KAN synthesis
+       claims, legacy small-model headline results.
+    7. Confirm research-roadmap.yaml and scripts/research_conductor.py
+       are unchanged.
+    8. Add to ops/exclusion_manifest.yaml: retire the THRML scaling
+       sweep lineage (exp1526-1531, 1543-1544 patterns). Reason: once
+       THRML is vendored (exp1564), parity is constructive (KL=0 by
+       definition); the scaling sweep becomes a paper-v6 retrospective
+       entry, not active research.
     9. Write all required artifact fields with status="complete".
 
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1547_118_completion_archive_119_activation.json')); print(d.get('activation_manifest_complete'), d.get('prior_satquest_solver_oracle_false_accepts'), d.get('prior_fr11_positive_utility'), d.get('thrml_independent_rng_required'), d.get('honest_verdict'))"
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp1548-thrml-carnot-parity-independent-rng-audit
-  milestone: 2026.04.119
-  deliverable: results/experiment_1548_thrml_carnot_parity_independent_rng_audit.json
-  title: "THRML/Carnot Parity Independent-RNG Audit - Gated on Exp1547 THRML Carry-Forward"
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 50
-  estimated_wall_time_min: 70
-  priority: critical
-  requires_gpu: false
-  skip_pre_test: true
-  gated_on:
-    - upstream: exp1547-118-completion-archive-119-activation
-      artifact_field: prior_thrml_n256_ready
-      op: "=="
-      value: true
-    - upstream: exp1547-118-completion-archive-119-activation
-      artifact_field: thrml_independent_rng_required
-      op: "=="
-      value: true
-  prior_failures:
-    - experiment_id: exp1526-1531
-      verdict: tautological_byte_identical_histograms
-      addressed_by: "Re-run n=32/64/128 with provably independent RNG and code paths, require non-zero stochastic deltas within statistical tolerance, and fail the test as rng_path_not_independent if byte-identical distributions recur."
-      retire_if_same_verdict: true
-  prompt: |
-    CONTEXT:
-    ops/known-issues.md flags a mandatory .119 audit: earlier THRML/Carnot
-    parity artifacts reported byte-identical histograms and lag-1
-    autocorrelations across large stochastic runs. Independent samplers should
-    match distributions, not sample summaries byte for byte. The good news is
-    that THRML imports and runs locally; the missing evidence is independence.
-    Use {project_root} as the project root and {date} as the run date.
-
-    EXISTING CODE TO READ FIRST:
-    - CODEX.md
-    - CLAUDE.md
-    - ops/known-issues.md
-    - research-hardware-wishlist.md
-    - results/experiment_1530_thrml_carnot_parity_n128.json
-    - results/experiment_1531_thrml_diverse_topology_parity_n32.json
-    - results/experiment_1543_thrml_carnot_parity_n256_schedule_stress.json
-    - results/experiment_1544_thrml_diverse_topology_parity_n64.json
-    - results/experiment_1547_118_completion_archive_119_activation.json
-    - python/carnot/thrml/
-    - python/carnot/energy/
-    - scripts/
-    - tests/python/
-
-    TASK:
-    Audit and re-run Carnot-vs-THRML software parity with independent RNG and
-    code paths. The correct success shape is bounded distribution agreement
-    with non-identical stochastic summaries, not exact equality. Do not claim
-    Z1, XTR-0, TSU, FPGA, or other hardware execution.
-
-    REQUIRED ARTIFACT FIELDS:
-    - status
-    - milestone
-    - independent_rng_audit_ready
-    - rng_path_independent
-    - code_path_independent
-    - rng_seed_manifest_path
-    - n_values_tested
-    - topologies_tested
-    - sample_path_hashes
-    - byte_identical_pairs
-    - nonzero_stochastic_delta_observed
-    - per_case_results
-    - max_mean_energy_delta_abs
-    - max_kl_divergence
-    - min_ks_p_value
-    - bounded_kl_passed
-    - ks_test_passed
-    - rng_path_not_independent
-    - simulator_only
-    - no_tsu_hardware_claim
-    - focused_tests_passed
-    - honest_verdict (MUST start with complete:, complete_, success:, success_, passed:, passed_, shipped:, or shipped_)
-
-    CONCRETE STEPS:
-    1. Create results/experiment_1548_thrml_carnot_parity_independent_rng_audit.json immediately with status="in_progress".
-    2. Inspect the existing THRML parity harness and confirm whether the Carnot path imports or calls the THRML sampler. Record code_path_independent=false if it does.
-    3. Create a seed manifest with disjoint root seeds and separate PRNG lineages for Carnot and THRML. Do not split both samplers from the same key object.
-    4. Re-run or prototype parity checks at n=32, n=64, and n=128 across at least complete, sparse_random, lattice, and scale_free or the closest existing topologies.
-    5. For each pair, record sample-path hashes, histogram counts, mean energy delta, KL divergence, and a KS-style distribution check where appropriate.
-    6. Treat byte-identical stochastic summaries as failure: set rng_path_not_independent=true and independent_rng_audit_ready=false unless you can prove deterministic enumeration was intentionally used.
-    7. Treat success as nonzero stochastic deltas that remain within tolerance, bounded nonzero KL, and KS pass. Preserve simulator_only=true and no_tsu_hardware_claim=true.
-    8. Add or run focused tests for seed-manifest validation, hash inequality detection, and metric computation.
-    9. Confirm research-roadmap.yaml and scripts/research_conductor.py are unchanged.
-
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1548_thrml_carnot_parity_independent_rng_audit.json')); print(d.get('independent_rng_audit_ready'), d.get('rng_path_independent'), d.get('byte_identical_pairs'), d.get('bounded_kl_passed'), d.get('honest_verdict'))"
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp1549-satquest-oracle-false-accept-repair
-  milestone: 2026.04.119
-  deliverable: results/experiment_1549_satquest_oracle_false_accept_repair.json
-  title: "SATQuest Solver-Oracle False-Accept Repair - Gated on Exp1547 False Accepts"
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 50
-  estimated_wall_time_min: 75
-  priority: critical
-  requires_gpu: false
-  skip_pre_test: true
-  gated_on:
-    - upstream: exp1547-118-completion-archive-119-activation
-      artifact_field: prior_satquest_solver_oracle_false_accepts
-      op: ">"
-      value: 0
-  prior_failures:
-    - experiment_id: exp1536-satquest-cnf-verifier-benchmark
-      verdict: solver_oracle_false_accepts_3
-      addressed_by: "Repair the SATQuest oracle and require assignment or unsat/proof witnesses plus perturbation checks before any downstream acceptance use."
-      retire_if_same_verdict: true
-  prompt: |
-    CONTEXT:
-    .118 built a SATQuest-style CNF benchmark but the retro recorded 3
-    solver-oracle false accepts. SATQuest cannot become acceptance authority
-    until the oracle produces proof or witness evidence and reports zero false
-    accepts on the known failing rows. Use {project_root} as the project root
-    and {date} as the run date.
-
-    EXISTING CODE TO READ FIRST:
-    - CODEX.md
-    - CLAUDE.md
-    - research-references.md
-    - results/experiment_1536_satquest_cnf_verifier_benchmark.json
-    - results/experiment_1546_milestone_118_retro.json
-    - results/experiment_1547_118_completion_archive_119_activation.json
-    - python/carnot/verify/
-    - python/carnot/grammar/
-    - scripts/
-    - tests/python/
-
-    TASK:
-    Repair the SATQuest solver oracle, add proof/witness evidence, and produce
-    a zero-false-accept gate for downstream SATQuest and unified-contract work.
-    Do not modify research-roadmap.yaml or scripts/research_conductor.py.
-
-    REQUIRED ARTIFACT FIELDS:
-    - status
-    - milestone
-    - satquest_oracle_repair_ready
-    - satquest_zero_false_accepts
-    - false_accepts_before
-    - solver_oracle_false_accepts_after
-    - failing_case_ids_rechecked
-    - pysat_available
-    - exact_fallback_available
-    - assignment_witnesses_checked
-    - unsat_certificates_checked
-    - perturbation_checks_passed
-    - oracle_module_path
-    - repaired_case_manifest_path
-    - focused_tests_passed
-    - honest_verdict (MUST start with complete:, complete_, success:, success_, passed:, passed_, shipped:, or shipped_)
-
-    CONCRETE STEPS:
-    1. Create results/experiment_1549_satquest_oracle_false_accept_repair.json immediately with status="in_progress".
-    2. Load the exp1536 artifact and identify the false-accept rows, formats, expected labels, and solver path used.
-    3. Inspect the CNF parser, exact fallback, and any PySAT integration. Prefer PySAT when available, but keep an exact local fallback for small cases.
-    4. Add assignment witnesses for SAT cases and unsat/proof or exhaustive contradiction evidence for UNSAT cases. The oracle must reject malformed or witness-less success.
-    5. Re-run the known failing rows and a bounded regression pack with format variations and perturbation checks.
-    6. Add focused tests covering the 3 false-accept shapes, malformed CNF handling, assignment checking, and unsat fallback behavior.
-    7. Set satquest_zero_false_accepts=true only if solver_oracle_false_accepts_after=0 across the regression pack.
-    8. Confirm research-roadmap.yaml and scripts/research_conductor.py are unchanged.
-
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1549_satquest_oracle_false_accept_repair.json')); print(d.get('satquest_oracle_repair_ready'), d.get('satquest_zero_false_accepts'), d.get('solver_oracle_false_accepts_after'), d.get('focused_tests_passed'), d.get('honest_verdict'))"
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp1550-satquest-sota-reeval-zero-false-accepts
-  milestone: 2026.04.119
-  deliverable: results/experiment_1550_satquest_sota_reeval_zero_false_accepts.json
-  title: "SATQuest SOTA Re-Eval - Gated on Exp1549 Zero False Accepts"
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 50
-  estimated_wall_time_min: 90
-  priority: high
-  requires_gpu: true
-  skip_pre_test: true
-  gated_on:
-    - upstream: exp1549-satquest-oracle-false-accept-repair
-      artifact_field: satquest_zero_false_accepts
-      op: "=="
-      value: true
-  prior_failures:
-    - experiment_id: exp1536-satquest-cnf-verifier-benchmark
-      verdict: satquest_benchmark_blocked_by_oracle_false_accepts
-      addressed_by: "This task only runs after exp1549 proves the SATQuest oracle has zero false accepts, then evaluates mandated local SOTA GGUFs under deterministic solver authority."
-      retire_if_same_verdict: false
-  prompt: |
-    CONTEXT:
-    SATQuest becomes useful only after the repaired oracle has zero false
-    accepts. This experiment should measure mandated local SOTA GGUF behavior
-    on solver-grounded CNF formats while keeping the solver as final authority.
-    Use {project_root} as the project root and {date} as the run date.
-
-    MODEL_SPECS:
-    - unsloth/Qwen3.6-35B-A3B-GGUF (headline flagship MoE)
-    - unsloth/gemma-4-31B-it-GGUF (headline flagship dense)
-    - unsloth/gemma-4-26B-A4B-it-GGUF (headline middle MoE)
-    - Legacy small GGUFs may be used only as CPU smoke tests and must not be headline-result models.
-
-    EXISTING CODE TO READ FIRST:
-    - CODEX.md
-    - CLAUDE.md
-    - scripts/experiment_template.py
-    - research-references.md
-    - results/experiment_1549_satquest_oracle_false_accept_repair.json
-    - results/experiment_1535_xgrammar_abs_contract_decoder_adapter.json
-    - python/carnot/verify/
-    - python/carnot/grammar/
-    - scripts/
-    - tests/python/
-
-    TASK:
-    Re-evaluate SATQuest with mandated local SOTA GGUFs under the repaired
-    zero-false-accept oracle. Report model quality and energy-ranking signals,
-    but keep solver/proof evidence as the only acceptance authority.
-
-    REQUIRED ARTIFACT FIELDS:
-    - status
-    - milestone
-    - satquest_sota_reeval_ready
-    - model_specs
-    - live_sota_model_inference_used
-    - models_attempted
-    - cases_attempted
-    - formats_attempted
-    - solver_oracle_false_accepts
-    - false_accept_rate
-    - answer_accuracy
-    - witness_validity_rate
-    - energy_ranking_auc
-    - automata_or_format_constraints_used
-    - model_availability_blockers
-    - focused_tests_passed
-    - honest_verdict (MUST start with complete:, complete_, success:, success_, passed:, passed_, shipped:, or shipped_)
-
-    CONCRETE STEPS:
-    1. Create results/experiment_1550_satquest_sota_reeval_zero_false_accepts.json immediately with status="in_progress".
-    2. Load the repaired SATQuest manifest and confirm satquest_zero_false_accepts=true before running any model evaluation.
-    3. Use the cached_sota_pair() pattern from scripts/experiment_template.py where applicable. Run at least one mandated headline model if locally available; otherwise record model availability blockers honestly.
-    4. Evaluate at least 30 bounded CNF cases if runtime permits, covering machine, symbolic, and narrative or natural-language formats.
-    5. Require assignment/proof witness validation for each accepted answer. Report false_accept_rate and solver_oracle_false_accepts even if both are zero.
-    6. Compare Carnot energy or ranking hints against solver labels as diagnostic metrics only.
-    7. Add or run focused tests for manifest loading and result aggregation.
-    8. Confirm research-roadmap.yaml and scripts/research_conductor.py are unchanged.
-
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1550_satquest_sota_reeval_zero_false_accepts.json')); print(d.get('satquest_sota_reeval_ready'), d.get('live_sota_model_inference_used'), d.get('cases_attempted'), d.get('false_accept_rate'), d.get('honest_verdict'))"
+    Run command: python3 -c "import json; d=json.load(open('results/experiment_1560_119_completion_archive_120_activation.json')); print(d.get('activation_manifest_complete'), d.get('thrml_vendoring_ready'), d.get('soft_gibbs_residual_ready'), d.get('paper_v6_drafting_ready'), d.get('honest_verdict'))"
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
 # ============================================================
-# Phase 1 - Unified runtime-contract scale
+# Tier 1 — fast critical-path validation
 # ============================================================
 
-- id: exp1551-automata-sat-unified-contract-gate
-  milestone: 2026.04.119
-  deliverable: results/experiment_1551_automata_sat_unified_contract_gate.json
-  title: "Automata/SAT Unified Contract Gate - Gated on Exp1549 Zero False Accepts"
+- id: exp1561-kinetic-defense-zero-coupling-test
+  milestone: 2026.05.120
+  deliverable: results/experiment_1561_kinetic_defense_zero_coupling_test.json
+  title: "Kinetic Defense Zero-Coupling Hamming-Distance Test - Gated on Exp1560"
   agent_type: codex
   model: gpt-5.5
-  max_turns: 50
-  estimated_wall_time_min: 90
+  max_turns: 30
+  estimated_wall_time_min: 25
   priority: critical
-  requires_gpu: true
-  skip_pre_test: true
   gated_on:
-    - upstream: exp1547-118-completion-archive-119-activation
-      artifact_field: prior_automata_ready
-      op: "=="
-      value: true
-    - upstream: exp1549-satquest-oracle-false-accept-repair
-      artifact_field: satquest_zero_false_accepts
-      op: "=="
-      value: true
+    - upstream: exp1560-119-completion-archive-120-activation
+      gate_field: kinetic_defense_validation_ready
+      expected_value: true
   prior_failures:
-    - experiment_id: exp1535-xgrammar-abs-contract-decoder-adapter
-      verdict: automata_adapter_ready_without_sat_unification
-      addressed_by: "This task unifies automata masks with SAT/product-line/runtime contract authority after SATQuest oracle repair."
-      retire_if_same_verdict: false
+    - experiment_id: none
+      verdict: novel_security_validation
+      addressed_by: "First empirical test of kinetic-defense-in-depth
+                     property — Glauber Gibbs plateau-friction as security
+                     feature. Single fastest test in the milestone (10 min
+                     compute); validates the most novel paper-v6
+                     contribution before scaling commits."
   prompt: |
-    CONTEXT:
-    .118 proved automata/ABS-style constraints can improve structured
-    generation, but Carnot still needs a single cascade that combines syntax
-    masks, semantic repair, SAT/product-line solver checks, and runtime
-    contracts. FALCON, VERGE, ReLoop, and context-sensitive constraint work all
-    point to this architecture. Use {project_root} as the project root and
-    {date} as the run date.
+    Per Deep Think DT-MCMC-NULL verdict (docs/research-notes/iclr26-
+    deep-think-responses.md): Glauber Gibbs's algorithmic inefficiency
+    on flat plateaus acts as kinetic defense-in-depth against null-space
+    mimicry attacks on AND-composed verifier ensembles. Single-site MH
+    explores plateaus 2× faster than Gibbs, amplifying adversarial
+    null-space concentration.
 
-    MODEL_SPECS:
-    - unsloth/Qwen3.6-35B-A3B-GGUF (headline flagship MoE)
-    - unsloth/gemma-4-31B-it-GGUF (headline flagship dense)
-    - unsloth/gemma-4-26B-A4B-it-GGUF (headline middle MoE)
-    - Legacy small GGUFs may be used only as CPU smoke tests and must not be headline-result models.
+    This experiment empirically validates the predicted hitting-time
+    differential.
 
-    EXISTING CODE TO READ FIRST:
-    - CODEX.md
-    - CLAUDE.md
-    - scripts/experiment_template.py
-    - research-references.md
-    - results/experiment_1535_xgrammar_abs_contract_decoder_adapter.json
-    - results/experiment_1549_satquest_oracle_false_accept_repair.json
-    - results/experiment_1540_product_line_staged_benchmark_scale_v3.json
-    - python/carnot/verify/
-    - python/carnot/grammar/
-    - python/carnot/runtime/
-    - scripts/
-    - tests/python/
+    SETUP (per DT-MCMC-NULL falsifiable predicate):
+    - n=64 binary Ising representing k=15 AND-composed verifiers
+    - 15 independent structural blocks of 4 bits each
+    - E(y) = -10 · Σ_{i=1..15} 1{block_i = target}
+    - Remaining 4 bits free → planted null space N of size 2^4 at global
+      minimum
+    - Initialize 10,000 chains at y_0 = {0}^64 (all verifiers unmet)
 
-    TASK:
-    Build a unified contract gate that routes generated outputs through
-    automata masks, semantic repair, SAT/product-line solvers, and runtime
-    contracts. Deterministic validators remain final authority.
+    SAMPLERS (run side-by-side at t=1.0):
+    (a) Carnot's current single-site Glauber Gibbs (python/carnot/sampling/gibbs.py)
+    (b) THRML 0.1.3 block-Gibbs (vendored if exp1564 ran first;
+        otherwise via direct THRML import)
+    (c) Algorithm 1 single-site Metropolis-Hastings (uniform proposal,
+        Metropolis acceptance) as reference
 
-    REQUIRED ARTIFACT FIELDS:
-    - status
-    - milestone
-    - unified_contract_gate_ready
-    - model_specs
-    - live_sota_model_inference_used
-    - cases_attempted
-    - automata_masks_used
-    - semantic_repair_layer_used
-    - sat_oracle_used
-    - product_line_oracle_used
-    - runtime_contracts_used
-    - syntax_accept_rate
-    - semantic_repair_success_rate
-    - oracle_agreement_rate
-    - false_accept_rate
-    - latency_delta_seconds
-    - gate_module_path
-    - focused_tests_passed
-    - honest_verdict (MUST start with complete:, complete_, success:, success_, passed:, passed_, shipped:, or shipped_)
+    MEASUREMENTS at K ∈ {10, 50, 100, 500, 1000} sweeps:
+    - Mean hitting time: first sweep at which any chain reaches y ∈ N
+    - P_chain^(K)(N): fraction of 10,000 chains hitting N at each K
+    - Per-sample energy distribution
 
-    CONCRETE STEPS:
-    1. Create results/experiment_1551_automata_sat_unified_contract_gate.json immediately with status="in_progress".
-    2. Load exp1535, exp1549, and product-line artifacts. Confirm the repaired SATQuest oracle reports zero false accepts.
-    3. Implement the smallest shared gate abstraction needed to sequence syntax masks, semantic repair, SAT/product-line checks, and runtime contracts.
-    4. Run at least one mandated SOTA headline model if locally available; otherwise record availability blockers. Legacy small models may only smoke-test the gate.
-    5. Evaluate a bounded mixed set of SATQuest, product-line, and runtime-contract cases. Report parse/syntax accept, semantic repair success, oracle agreement, false accepts, and latency.
-    6. Add focused tests for routing order, rejection on solver mismatch, and no soft-signal override.
-    7. Confirm research-roadmap.yaml and scripts/research_conductor.py are unchanged.
+    ACCEPTANCE GATE (predicted by DT-MCMC-NULL):
+    - MH hitting time ≈ 21.3 steps/block → fast convergence on N
+    - Single-site Gibbs ≈ 32.9 steps/block → 50% slower than MH
+    - THRML block-Gibbs hitting time ≥ single-site Gibbs hitting time
+      (per-bit randomization rate identical; block parallelism is
+      compute speed only)
 
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1551_automata_sat_unified_contract_gate.json')); print(d.get('unified_contract_gate_ready'), d.get('cases_attempted'), d.get('false_accept_rate'), d.get('focused_tests_passed'), d.get('honest_verdict'))"
+    FALSIFICATION TRIGGER: if THRML block-Gibbs hits N at MH-class
+    rates, the parallel-block-update structure creates a new attack
+    surface. Document and propose mitigation. Otherwise: kinetic-
+    defense-in-depth validated as paper-v6 contribution.
+
+    Write deliverable with status="complete" and honest_verdict prefixed
+    with "complete:" / "complete_" / etc per Verdict Terminal-Prefix
+    Discipline. Required fields:
+    - kinetic_defense_in_depth_validated: bool
+    - mh_hitting_time_steps_per_block: float
+    - single_site_gibbs_hitting_time_steps_per_block: float
+    - thrml_block_gibbs_hitting_time_steps_per_block: float
+    - thrml_security_parity_with_single_site_gibbs: bool
+    - p_n_at_k100_mh: float
+    - p_n_at_k100_single_site_gibbs: float
+    - p_n_at_k100_thrml_block_gibbs: float
+
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-- id: exp1552-residual-drift-repair-policy-v1
-  milestone: 2026.04.119
-  deliverable: results/experiment_1552_residual_drift_repair_policy_v1.json
-  title: "Residual Drift Repair Policy v1 - Gated on Exp1547 Drift Ledger"
+- id: exp1562-brain-linear-ar-k-sweep-extended
+  milestone: 2026.05.120
+  deliverable: results/experiment_1562_brain_linear_ar_k_sweep_extended.json
+  title: "BRAIN+Linear-AR Extended k-Sweep (k ∈ {4,8,12,15}) - Gated on Exp1560"
   agent_type: codex
   model: gpt-5.5
-  max_turns: 50
-  estimated_wall_time_min: 80
-  priority: high
-  requires_gpu: true
-  skip_pre_test: true
-  gated_on:
-    - upstream: exp1547-118-completion-archive-119-activation
-      artifact_field: prior_residual_drift_ready
-      op: "=="
-      value: true
-  prior_failures:
-    - experiment_id: exp1538-residual-drift-commitment-ledger
-      verdict: residual_drift_measured_without_general_repair_policy
-      addressed_by: "This task adds localized repair and replay for satisfiable drift cases instead of only classifying them."
-      retire_if_same_verdict: false
-  prompt: |
-    CONTEXT:
-    .118 showed residual drift is the dominant multi-turn failure mode: many
-    cases remain satisfiable but violate earlier commitments. Copy-as-Decode
-    suggests localized edits are preferable to regenerating whole answers when
-    only one commitment drifted. Use {project_root} as the project root and
-    {date} as the run date.
-
-    MODEL_SPECS:
-    - unsloth/Qwen3.6-35B-A3B-GGUF (headline flagship MoE)
-    - unsloth/gemma-4-31B-it-GGUF (headline flagship dense)
-    - unsloth/gemma-4-26B-A4B-it-GGUF (headline middle MoE)
-    - Legacy small GGUFs may be used only as CPU smoke tests and must not be headline-result models.
-
-    EXISTING CODE TO READ FIRST:
-    - CODEX.md
-    - CLAUDE.md
-    - scripts/experiment_template.py
-    - research-references.md
-    - results/experiment_1538_residual_drift_commitment_ledger.json
-    - results/experiment_1537_beaver_prefix_bound_contracts_v3.json
-    - results/experiment_1551_automata_sat_unified_contract_gate.json
-    - python/carnot/verify/
-    - python/carnot/runtime/
-    - scripts/
-    - tests/python/
-
-    TASK:
-    Implement and evaluate a residual-drift repair policy that localizes
-    forgotten commitments, proposes minimal repairs, and replays deterministic
-    validators before accepting any output.
-
-    REQUIRED ARTIFACT FIELDS:
-    - status
-    - milestone
-    - residual_drift_repair_ready
-    - model_specs
-    - live_sota_model_inference_used
-    - drift_cases_before
-    - repair_attempts
-    - localized_repairs_attempted
-    - repaired_drift_cases
-    - drift_reduction_delta
-    - contradiction_cases_untouched
-    - false_accept_rate
-    - replay_pass_rate
-    - repair_policy_path
-    - focused_tests_passed
-    - honest_verdict (MUST start with complete:, complete_, success:, success_, passed:, passed_, shipped:, or shipped_)
-
-    CONCRETE STEPS:
-    1. Create results/experiment_1552_residual_drift_repair_policy_v1.json immediately with status="in_progress".
-    2. Load the residual-drift ledger and separate contradiction cases from satisfiable drift cases.
-    3. Implement a minimal repair policy that targets the violated commitment or span rather than regenerating the entire response when possible.
-    4. Use at least one mandated SOTA model if available for repair proposals; record blockers if unavailable.
-    5. Replay deterministic validators and ledger checks after every repair. Do not accept repairs that hide contradictions or fail runtime/SAT/product-line validators.
-    6. Add focused tests for drift localization, contradiction non-repair, replay acceptance, and false-accept rejection.
-    7. Confirm research-roadmap.yaml and scripts/research_conductor.py are unchanged.
-
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1552_residual_drift_repair_policy_v1.json')); print(d.get('residual_drift_repair_ready'), d.get('repair_attempts'), d.get('drift_reduction_delta'), d.get('false_accept_rate'), d.get('honest_verdict'))"
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp1553-claim-isolation-router-scale-v3
-  milestone: 2026.04.119
-  deliverable: results/experiment_1553_claim_isolation_router_scale_v3.json
-  title: "Claim-Isolation Router Scale v3 - Gated on Exp1551 Contract Gate"
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 50
-  estimated_wall_time_min: 80
-  priority: high
-  requires_gpu: true
-  skip_pre_test: true
-  gated_on:
-    - upstream: exp1547-118-completion-archive-119-activation
-      artifact_field: prior_claim_router_ready
-      op: "=="
-      value: true
-    - upstream: exp1551-automata-sat-unified-contract-gate
-      artifact_field: unified_contract_gate_ready
-      op: "=="
-      value: true
-  prior_failures:
-    - experiment_id: exp1541-claim-isolation-uncertainty-router-v2
-      verdict: claim_router_small_sample_budget_savings_unproven
-      addressed_by: "This task scales routed claim isolation behind the unified contract gate and requires budget savings without deterministic false accepts."
-      retire_if_same_verdict: false
-  prompt: |
-    CONTEXT:
-    .118 claim isolation reduced routed verification budget on a small set
-    while preserving zero false accepts. The next question is whether routed
-    isolation remains cheaper and safe at a larger case count once outputs pass
-    through the unified contract gate. Use {project_root} as the project root
-    and {date} as the run date.
-
-    MODEL_SPECS:
-    - unsloth/Qwen3.6-35B-A3B-GGUF (headline flagship MoE)
-    - unsloth/gemma-4-31B-it-GGUF (headline flagship dense)
-    - unsloth/gemma-4-26B-A4B-it-GGUF (headline middle MoE)
-    - Legacy small GGUFs may be used only as CPU smoke tests and must not be headline-result models.
-
-    EXISTING CODE TO READ FIRST:
-    - CODEX.md
-    - CLAUDE.md
-    - scripts/experiment_template.py
-    - results/experiment_1541_claim_isolation_uncertainty_router_v2.json
-    - results/experiment_1551_automata_sat_unified_contract_gate.json
-    - python/carnot/verify/
-    - python/carnot/runtime/
-    - scripts/
-    - tests/python/
-
-    TASK:
-    Scale the claim-isolation uncertainty router behind the unified contract
-    gate and measure budget savings, routed-case safety, and deterministic
-    false accepts.
-
-    REQUIRED ARTIFACT FIELDS:
-    - status
-    - milestone
-    - claim_isolation_router_scale_ready
-    - model_specs
-    - live_sota_model_inference_used
-    - cases_total
-    - routed_cases
-    - full_context_cases
-    - claims_extracted
-    - budget_delta
-    - budget_reduced
-    - false_accept_rate
-    - missed_failure_count
-    - router_policy_path
-    - focused_tests_passed
-    - honest_verdict (MUST start with complete:, complete_, success:, success_, passed:, passed_, shipped:, or shipped_)
-
-    CONCRETE STEPS:
-    1. Create results/experiment_1553_claim_isolation_router_scale_v3.json immediately with status="in_progress".
-    2. Load the exp1541 router artifact and the unified contract gate artifact. Confirm unified_contract_gate_ready=true.
-    3. Build or select at least 75 mixed cases if runtime permits, including runtime-contract, SATQuest, product-line, and residual-drift examples.
-    4. Run routed claim isolation against a full-context verification baseline. Use mandated SOTA models where needed and record availability blockers.
-    5. Compute budget_delta, budget_reduced, missed failures, and deterministic false accepts. Set budget_reduced=true only if routed verification is cheaper under matched acceptance criteria.
-    6. Add focused tests for router threshold behavior, claim extraction schema, and rejection on hidden deterministic failures.
-    7. Confirm research-roadmap.yaml and scripts/research_conductor.py are unchanged.
-
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1553_claim_isolation_router_scale_v3.json')); print(d.get('claim_isolation_router_scale_ready'), d.get('cases_total'), d.get('budget_reduced'), d.get('false_accept_rate'), d.get('honest_verdict'))"
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp1554-product-line-staged-scale-v4
-  milestone: 2026.04.119
-  deliverable: results/experiment_1554_product_line_staged_scale_v4.json
-  title: "Product-Line Staged Scale v4 - Gated on Exp1551 Contract Gate"
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 50
-  estimated_wall_time_min: 90
-  priority: high
-  requires_gpu: true
-  skip_pre_test: true
-  gated_on:
-    - upstream: exp1547-118-completion-archive-119-activation
-      artifact_field: prior_product_line_ready
-      op: "=="
-      value: true
-    - upstream: exp1551-automata-sat-unified-contract-gate
-      artifact_field: unified_contract_gate_ready
-      op: "=="
-      value: true
-  prior_failures:
-    - experiment_id: exp1540-product-line-staged-benchmark-scale-v3
-      verdict: product_line_scaled_zero_false_accepts_bounded_pack
-      addressed_by: "This task advances the product-line branch to larger ConstraintBench/FALCON-style feasibility and oracle checks behind the unified contract gate."
-      retire_if_same_verdict: false
-  prompt: |
-    CONTEXT:
-    .118 product-line scaling reached zero false accepts on a bounded staged
-    pack. ConstraintBench, NLCO, OPF, and FALCON indicate that feasibility,
-    objective quality, and entity grounding must be measured as structured
-    solver-backed fields at larger scale. Use {project_root} as the project
-    root and {date} as the run date.
-
-    MODEL_SPECS:
-    - unsloth/Qwen3.6-35B-A3B-GGUF (headline flagship MoE)
-    - unsloth/gemma-4-31B-it-GGUF (headline flagship dense)
-    - unsloth/gemma-4-26B-A4B-it-GGUF (headline middle MoE)
-    - Legacy small GGUFs may be used only as CPU smoke tests and must not be headline-result models.
-
-    EXISTING CODE TO READ FIRST:
-    - CODEX.md
-    - CLAUDE.md
-    - scripts/experiment_template.py
-    - research-references.md
-    - results/experiment_1540_product_line_staged_benchmark_scale_v3.json
-    - results/experiment_1551_automata_sat_unified_contract_gate.json
-    - python/carnot/verify/
-    - python/carnot/grammar/
-    - scripts/
-    - tests/python/
-
-    TASK:
-    Scale the product-line benchmark under the unified contract gate and
-    report solver-grounded syntax, feasibility, objective, and false-accept
-    metrics. Retire the branch if it cannot preserve zero false accepts.
-
-    REQUIRED ARTIFACT FIELDS:
-    - status
-    - milestone
-    - product_line_scale_v4_ready
-    - branch_retired
-    - model_specs
-    - live_sota_model_inference_used
-    - cases_total
-    - stages_tested
-    - parse_rate
-    - feasibility_rate
-    - objective_gap_mean
-    - oracle_agreement_rate
-    - entity_hallucination_rate
-    - false_accept_rate
-    - automata_constraints_used
-    - product_line_manifest_path
-    - focused_tests_passed
-    - honest_verdict (MUST start with complete:, complete_, success:, success_, passed:, passed_, shipped:, or shipped_)
-
-    CONCRETE STEPS:
-    1. Create results/experiment_1554_product_line_staged_scale_v4.json immediately with status="in_progress".
-    2. Load exp1540 and exp1551. Confirm unified_contract_gate_ready=true before running scale tests.
-    3. Build or select a larger staged pack, targeting 120 cases if runtime permits. Include syntax-only, feasibility, objective, and natural-language product-line variations.
-    4. Run mandated SOTA models where available through the unified gate. Record model availability blockers honestly.
-    5. Compute parse rate, feasibility rate, oracle agreement, objective gap, entity hallucination rate, and false_accept_rate.
-    6. Set branch_retired=true if false accepts recur or feasibility/oracle checks cannot be made deterministic.
-    7. Add focused tests for stage manifest validation and aggregation.
-    8. Confirm research-roadmap.yaml and scripts/research_conductor.py are unchanged.
-
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1554_product_line_staged_scale_v4.json')); print(d.get('product_line_scale_v4_ready'), d.get('branch_retired'), d.get('cases_total'), d.get('false_accept_rate'), d.get('honest_verdict'))"
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-# ============================================================
-# Phase 2 - Self-learning and energy diagnostics
-# ============================================================
-
-- id: exp1555-fr11-positive-utility-or-retire-v14
-  milestone: 2026.04.119
-  deliverable: results/experiment_1555_fr11_positive_utility_or_retire_v14.json
-  title: "FR-11 Positive-Utility or Retire Gate v14 - Gated on Exp1547 FR-11 Safe-Only"
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 50
-  estimated_wall_time_min: 80
-  priority: critical
-  requires_gpu: true
-  skip_pre_test: true
-  gated_on:
-    - upstream: exp1547-118-completion-archive-119-activation
-      artifact_field: prior_fr11_safe_only
-      op: "=="
-      value: true
-  prior_failures:
-    - experiment_id: exp1539-fr11-external-feedback-skill-promotion-v13
-      verdict: fr11_safety_only_utility_delta_zero
-      addressed_by: "This task is the required continuous self-learning experiment for .119 and must either demonstrate positive external utility or retire the positive-utility claim."
-      retire_if_same_verdict: true
-  prompt: |
-    CONTEXT:
-    This is the required continuous self-learning experiment for .119. .118
-    showed FR-11 can remain safe with no model-weight mutation, but the
-    promoted policy had utility_delta=0.0. The research-program.md goal is
-    continuous self-learning with external verifier feedback, not self-feedback
-    drift. Use {project_root} as the project root and {date} as the run date.
-
-    MODEL_SPECS:
-    - unsloth/Qwen3.6-35B-A3B-GGUF (headline flagship MoE)
-    - unsloth/gemma-4-31B-it-GGUF (headline flagship dense)
-    - unsloth/gemma-4-26B-A4B-it-GGUF (headline middle MoE)
-    - Legacy small GGUFs may be used only as CPU smoke tests and must not be headline-result models.
-
-    EXISTING CODE TO READ FIRST:
-    - CODEX.md
-    - CLAUDE.md
-    - research-program.md
-    - _bmad/prd.md
-    - scripts/experiment_template.py
-    - results/experiment_1539_fr11_external_feedback_skill_promotion_v13.json
-    - results/experiment_1538_residual_drift_commitment_ledger.json
-    - results/experiment_1540_product_line_staged_benchmark_scale_v3.json
-    - results/experiment_1541_claim_isolation_uncertainty_router_v2.json
-    - results/experiment_1552_residual_drift_repair_policy_v1.json
-    - results/experiment_1554_product_line_staged_scale_v4.json
-    - python/carnot/
-    - scripts/
-    - tests/python/
-
-    TASK:
-    Run an FR-11 continuous self-learning gate that promotes only externally
-    verified skill or policy updates. It must either demonstrate positive
-    measured utility or retire the positive-utility self-learning headline.
-
-    REQUIRED ARTIFACT FIELDS:
-    - status
-    - milestone
-    - continuous_self_learning_task
-    - fr11_positive_utility_gate_ready
-    - model_specs
-    - live_sota_model_inference_used
-    - no_model_weight_mutation
-    - external_feedback_used
-    - self_feedback_only_rejected
-    - candidate_skill_updates
-    - skill_updates_promoted
-    - replay_cases
-    - replay_pass_rate
-    - soundness_mistakes
-    - baseline_utility
-    - post_promotion_utility
-    - utility_delta
-    - positive_utility_achieved
-    - positive_utility_claim_retired
-    - skill_graph_path
-    - focused_tests_passed
-    - honest_verdict (MUST start with complete:, complete_, success:, success_, passed:, passed_, shipped:, or shipped_)
-
-    CONCRETE STEPS:
-    1. Create results/experiment_1555_fr11_positive_utility_or_retire_v14.json immediately with status="in_progress".
-    2. Load .118 FR-11 evidence and any available .119 repair/scale artifacts. If downstream artifacts are absent, use existing .118 externally verified cases and record the limitation.
-    3. Generate or select candidate skill/policy updates only from externally verified successes and failure repairs. Reject self-feedback-only updates.
-    4. Run replay checks before and after promotion. Model weights must not be mutated.
-    5. Use mandated SOTA models only where needed for task execution; record model availability blockers honestly.
-    6. Compute baseline_utility, post_promotion_utility, utility_delta, and soundness_mistakes on a held-out verifier-backed set.
-    7. Set positive_utility_achieved=true only if utility_delta>0 with soundness_mistakes=0. If utility_delta<=0, set positive_utility_claim_retired=true.
-    8. Add focused tests for promotion gating, rollback, no-weight-mutation, and self-feedback rejection.
-    9. Confirm research-roadmap.yaml and scripts/research_conductor.py are unchanged.
-
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1555_fr11_positive_utility_or_retire_v14.json')); print(d.get('continuous_self_learning_task'), d.get('utility_delta'), d.get('positive_utility_achieved'), d.get('positive_utility_claim_retired'), d.get('honest_verdict'))"
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp1556-arm-ebt-logprob-telemetry-repair
-  milestone: 2026.04.119
-  deliverable: results/experiment_1556_arm_ebt_logprob_telemetry_repair.json
-  title: "ARM/EBT Logprob Telemetry Repair - Gated on Exp1547 Diagnostic Ready"
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 50
-  estimated_wall_time_min: 75
-  priority: medium
-  requires_gpu: true
-  skip_pre_test: true
-  gated_on:
-    - upstream: exp1547-118-completion-archive-119-activation
-      artifact_field: prior_arm_ebm_diagnostic_ready
-      op: "=="
-      value: true
-  prior_failures:
-    - experiment_id: exp1542-arm-ebm-soft-value-diagnostic
-      verdict: logprob_available_false_diagnostic_only
-      addressed_by: "This task repairs or honestly blocks local SOTA logprob/top-k telemetry while preserving deterministic validators as final authority."
-      retire_if_same_verdict: false
-  prompt: |
-    CONTEXT:
-    .118 ARM/EBT diagnostics found useful routing signal but logprob telemetry
-    was unavailable, so soft values remained diagnostic-only. EBT, NRGPT, and
-    Kona keep energy-native reasoning relevant, but Carnot acceptance must
-    remain deterministic. Use {project_root} as the project root and {date} as
-    the run date.
-
-    MODEL_SPECS:
-    - unsloth/Qwen3.6-35B-A3B-GGUF (headline flagship MoE)
-    - unsloth/gemma-4-31B-it-GGUF (headline flagship dense)
-    - unsloth/gemma-4-26B-A4B-it-GGUF (headline middle MoE)
-    - Legacy small GGUFs may be used only as CPU smoke tests and must not be headline-result models.
-
-    EXISTING CODE TO READ FIRST:
-    - CODEX.md
-    - CLAUDE.md
-    - scripts/experiment_template.py
-    - research-references.md
-    - results/experiment_1542_arm_ebm_soft_value_diagnostic.json
-    - results/experiment_1550_satquest_sota_reeval_zero_false_accepts.json
-    - results/experiment_1551_automata_sat_unified_contract_gate.json
-    - python/carnot/
-    - scripts/
-    - tests/python/
-
-    TASK:
-    Repair or honestly block local SOTA logprob/top-k telemetry for ARM/EBT
-    diagnostics, then re-run a small diagnostic under deterministic validator
-    authority.
-
-    REQUIRED ARTIFACT FIELDS:
-    - status
-    - milestone
-    - arm_ebm_logprob_telemetry_ready
-    - model_specs
-    - live_sota_model_inference_used
-    - logprob_available
-    - topk_available
-    - telemetry_adapter_path
-    - diagnostic_cases
-    - energy_label_correlation
-    - routing_auc
-    - deterministic_validators_final_authority
-    - telemetry_blockers
-    - focused_tests_passed
-    - honest_verdict (MUST start with complete:, complete_, success:, success_, passed:, passed_, shipped:, or shipped_)
-
-    CONCRETE STEPS:
-    1. Create results/experiment_1556_arm_ebm_logprob_telemetry_repair.json immediately with status="in_progress".
-    2. Inspect exp1542 and the local model/runtime invocation paths for logprob or top-k support.
-    3. Implement the smallest adapter needed to capture logprob/top-k telemetry for at least one mandated SOTA model if the runtime exposes it. If unavailable, record telemetry_blockers clearly.
-    4. Re-run a bounded diagnostic over SATQuest, runtime-contract, or product-line cases where deterministic labels exist.
-    5. Report energy/logprob correlation and routing AUC as diagnostic only. Set deterministic_validators_final_authority=true.
-    6. Add focused tests for telemetry parsing and rejection of soft-signal acceptance overrides.
-    7. Confirm research-roadmap.yaml and scripts/research_conductor.py are unchanged.
-
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1556_arm_ebm_logprob_telemetry_repair.json')); print(d.get('arm_ebm_logprob_telemetry_ready'), d.get('logprob_available'), d.get('deterministic_validators_final_authority'), d.get('honest_verdict'))"
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp1557-weaver-verification-compute-router
-  milestone: 2026.04.119
-  deliverable: results/experiment_1557_weaver_verification_compute_router.json
-  title: "Weaver Verification-Compute Router - Gated on Exp1550+Exp1551"
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 50
+  max_turns: 30
   estimated_wall_time_min: 60
-  priority: medium
-  requires_gpu: false
-  skip_pre_test: true
+  priority: critical
   gated_on:
-    - upstream: exp1550-satquest-sota-reeval-zero-false-accepts
-      artifact_field: satquest_sota_reeval_ready
-      op: "=="
-      value: true
-    - upstream: exp1551-automata-sat-unified-contract-gate
-      artifact_field: unified_contract_gate_ready
-      op: "=="
-      value: true
+    - upstream: exp1560-119-completion-archive-120-activation
+      gate_field: brain_linear_ar_validation_ready
+      expected_value: true
   prior_failures:
-    - experiment_id: exp1537-beaver-prefix-bound-contracts-v3
-      verdict: prefix_bounds_auxiliary_no_compute_router
-      addressed_by: "This task uses Weaver-style verification-compute routing to allocate weak and deterministic verifier effort while preserving zero false accepts."
-      retire_if_same_verdict: false
+    - experiment_id: dt_brain_correlations_runnable_predicate_k4
+      verdict: "complete: predicate_partial_3.21x_at_k4"
+      addressed_by: "Initial k=4 run gave 3.21× AR advantage (PARTIAL
+                     validation). Per DT-BRAIN-CORRELATIONS, gap is
+                     exponential in k. Extending to k=8/12/15 to confirm
+                     the rescue path holds at Phase 3's actual scale.
+                     If Linear-AR insufficient at k=15, fall back to
+                     MADE-with-hidden-layers."
   prompt: |
-    CONTEXT:
-    .118 and .119 produce many signals: automata validity, SAT/proof witnesses,
-    runtime contracts, residual-drift ledgers, claim-router uncertainty, BEAVER
-    bounds, and ARM/EBT diagnostics. Weaver suggests treating verification
-    compute as an explicit routing problem. Use {project_root} as the project
-    root and {date} as the run date.
+    Per Deep Think DT-BRAIN-CORRELATIONS (docs/research-notes/iclr26-
+    deep-think-responses.md): BRAIN's factorized Bernoulli is
+    mathematically inadequate for AND-composed verifier ensembles per
+    Plefka/TAP closed-form bound. Linear AR rescue captures pairwise
+    correlations at O(n²) parameter cost.
 
-    EXISTING CODE TO READ FIRST:
-    - CODEX.md
-    - CLAUDE.md
-    - research-references.md
-    - results/experiment_1537_beaver_prefix_bound_contracts_v3.json
-    - results/experiment_1550_satquest_sota_reeval_zero_false_accepts.json
-    - results/experiment_1551_automata_sat_unified_contract_gate.json
-    - results/experiment_1553_claim_isolation_router_scale_v3.json
-    - results/experiment_1556_arm_ebm_logprob_telemetry_repair.json
-    - python/carnot/verify/
-    - scripts/
-    - tests/python/
+    Initial k=4 empirical run (2026-05-08): KL_factorized=1.075,
+    KL_AR=0.335, ratio 3.21× (PARTIAL validation — gap exists but
+    smaller than Deep Think's prediction at k=4).
 
-    TASK:
-    Build a verification-compute router that decides when to spend cheap weak
-    checks versus deterministic solver/runtime validators. It may use soft
-    scores for routing, but never as acceptance authority.
+    EXTEND the runnable script python/scripts/dt_brain_correlations_
+    verification.py to k ∈ {4, 8, 12, 15}, n=16. Brute-force 2^16 =
+    65,536 enumeration remains tractable. Optimize:
+    (a) Factorized Bernoulli (n=16 params)
+    (b) Linear AR (n + n(n-1)/2 = 136 params)
+    (c) [If (b) insufficient at k=15] MADE with 1 hidden layer of 32 units
 
-    REQUIRED ARTIFACT FIELDS:
-    - status
-    - milestone
-    - verification_compute_router_ready
-    - candidate_selection_cases
-    - weak_verifiers_used
-    - deterministic_validators_used
-    - soft_signals_used_for_routing_only
-    - verification_cost_baseline
-    - verification_cost_router
-    - verification_cost_delta
-    - false_accept_rate
-    - missed_failure_count
-    - router_policy_path
-    - focused_tests_passed
-    - honest_verdict (MUST start with complete:, complete_, success:, success_, passed:, passed_, shipped:, or shipped_)
+    For each k, report KL(q || π_β) for each parameterization.
 
-    CONCRETE STEPS:
-    1. Create results/experiment_1557_weaver_verification_compute_router.json immediately with status="in_progress".
-    2. Load the SATQuest SOTA re-eval and unified contract gate artifacts. Use claim-router and telemetry artifacts if they exist, but do not block if optional artifacts are absent.
-    3. Define a simple router policy over available weak signals and deterministic validators.
-    4. Compare router cost against an always-run-all-deterministic baseline on a bounded candidate set.
-    5. Report false_accept_rate and missed_failure_count. If routing hides a deterministic failure, mark the router not ready.
-    6. Add focused tests for route selection, soft-signal non-authority, and deterministic fallback on high risk.
-    7. Confirm research-roadmap.yaml and scripts/research_conductor.py are unchanged.
+    ACCEPTANCE GATE:
+    - Factorized vs AR ratio at k=15: ≥ 10× (k=4 baseline of 3.21×
+      should widen substantially)
+    - Best parameterization KL at k=15: ≤ 0.1
+    - If Linear-AR insufficient at k=15, MADE-with-hidden-layers must
+      satisfy ≤ 0.1 KL gate
 
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1557_weaver_verification_compute_router.json')); print(d.get('verification_compute_router_ready'), d.get('verification_cost_delta'), d.get('false_accept_rate'), d.get('honest_verdict'))"
+    FALSIFICATION: if AR/factorized ratio at k=15 is < 5×, the
+    BRAIN+Linear-AR rescue is structurally weaker than predicted;
+    Phase 3 may need to drop BRAIN entirely.
+
+    Write deliverable with status="complete" and honest_verdict
+    prefixed with "complete:". Required fields:
+    - brain_linear_ar_rescue_validated: bool
+    - kl_by_k_by_parameterization: dict (k → {factorized, linear_ar,
+      made_optional} → KL)
+    - factorized_vs_ar_ratio_at_k15: float
+    - made_required_at_k15: bool
+    - phase_3_recommendation: str (one of {linear_ar_sufficient,
+      made_required, brain_dropped})
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp1563-specann-rejection-architecture-record
+  milestone: 2026.05.120
+  deliverable: results/experiment_1563_specann_rejection_architecture_record.json
+  title: "SpecAnn Phase 3 Rejection — Architecture Decision Record - Gated on Exp1560"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 15
+  estimated_wall_time_min: 25
+  priority: high
+  gated_on:
+    - upstream: exp1560-119-completion-archive-120-activation
+      gate_field: activation_manifest_complete
+      expected_value: true
+  prior_failures:
+    - experiment_id: none
+      verdict: novel_negative_record
+      addressed_by: "Documents Deep Think DT-COMPOSITION (e) verdict:
+                     SpecAnn mathematically unviable for Phase 3 due to
+                     HUBO→QUBO reduction destroying spectral guarantees.
+                     Prevents future planners re-litigating."
+  prompt: |
+    Per Deep Think DT-COMPOSITION (e) verdict: Spectral Annealing is
+    mathematically unviable for Phase 3 due to:
+    (1) HUBO→QUBO reduction injects gadgets+penalties that fracture
+        the continuous α-homotopy path
+    (2) Phase-transition level-crossings during training force
+        catastrophic cold-restarts
+    (3) Three-paper composition (SpecAnn+BRAIN+MCMC Layers) triggers
+        Gadget-Induced Mean-Field Collapse — strictly worse than
+        status-quo Gibbs
+
+    Document this rejection in the architecture record so future
+    planners don't re-propose SpecAnn variants.
+
+    STEPS:
+    1. Read DT-COMPOSITION section in docs/research-notes/iclr26-
+       deep-think-responses.md for full mathematical reasoning.
+    2. Add to _bmad/architecture.md Phase 3 substrate section a
+       subsection "Sampler-Optimization Decision Record" stating:
+       "SpecAnn rejected for Phase 3 inference-time argmin. Rationale:
+       (a) HUBO→QUBO reduction injects gadgets+penalties that fracture
+       SpecAnn's spectral homotopy path; (b) phase-transition level-
+       crossings during training force catastrophic cold-restarts;
+       (c) three-paper composition (SpecAnn+BRAIN+MCMC Layers) triggers
+       Gadget-Induced Mean-Field Collapse (Deep Think DT-COMPOSITION (f),
+       2026-05-08). Carnot retains existing Gibbs-heuristic argmin on
+       unreduced HUBO energy."
+    3. Add to openspec/capabilities/research-harnesses/spec.md:
+       - REQ-HARNESS-SAMPLER-NO-SPECANN: "Phase 3 substrate sampler
+         MUST NOT use Spectral Annealing (Deep Think DT-COMPOSITION
+         2026-05-08)."
+       - SCENARIO-HARNESS-SAMPLER-1: HUBO direct evaluation MUST
+         succeed without QUBO reduction at production scale (n≥128).
+       - SCENARIO-HARNESS-SAMPLER-2: any future SpecAnn proposal MUST
+         document why the rejection rationale no longer applies.
+    4. Append entry to ops/exclusion_manifest.yaml retiring the
+       SpecAnn experiment lineage.
+
+    ACCEPTANCE GATE:
+    - _bmad/architecture.md Phase 3 has the new subsection
+    - openspec/capabilities/research-harnesses/spec.md has the new
+      REQ + SCENARIOs
+    - ops/exclusion_manifest.yaml has the SpecAnn entry
+
+    Write deliverable with status="complete" and honest_verdict
+    prefixed with "complete:". Required fields:
+    - architecture_record_updated: bool
+    - spec_requirements_added: int
+    - exclusion_manifest_updated: bool
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp1564-thrml-vendored-block-gibbs-replacement
+  milestone: 2026.05.120
+  deliverable: results/experiment_1564_thrml_vendored_block_gibbs_replacement.json
+  title: "THRML Vendored Block-Gibbs Replacement + Candidate-Warm-Start - Gated on Exp1560"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 80
+  estimated_wall_time_min: 90
+  priority: critical
+  gated_on:
+    - upstream: exp1560-119-completion-archive-120-activation
+      gate_field: thrml_vendoring_ready
+      expected_value: true
+  prior_failures:
+    - experiment_id: exp1548-thrml-carnot-parity-independent-rng-audit
+      verdict: "complete: independent_rng_thrml_carnot_parity_not_ready"
+      addressed_by: "Per Deep Think DT-7: structural mismatch between
+                     single-site MH and block-Gibbs at finite K. Vendor
+                     THRML's exact transition operator. Per DT-MCMC-
+                     STATELESS: initialize at user-provided candidate
+                     to bypass χ² cold-start penalty."
+      retire_if_same_verdict: true
+  prompt: |
+    Per Deep Think DT-7 + DT-MCMC-NULL + DT-MCMC-STATELESS combined:
+    Carnot's hand-rolled Gibbs sampler is replaced by THRML 0.1.3
+    block-Gibbs, vendored under Apache-2.0, initialized at the user-
+    provided candidate.
+
+    Justified by:
+    - Correctness (DT-7): KL=0.17 → 0 by construction
+    - Security (DT-MCMC-NULL): block-Gibbs inherits Glauber plateau-
+      friction as kinetic defense-in-depth
+    - Latency (DT-MCMC-STATELESS): fresh-restart Gibbs guarantees
+      coordinate-acceptance = 1.0 (vs MH wasting 95% of budget)
+    - Warm-start (DT-MCMC-STATELESS): candidate is structurally valid
+      proxy for π_{θ,t}(· | prompt)
+
+    STEPS:
+    1. Pre-flight zero-coupling sanity test (10 min): run Carnot's
+       current Gibbs vs THRML.sample at K=1 with J=h=0 from same y_0.
+       Confirm Hamming-distance behavior (Gibbs binomial ~64; expected
+       behavior).
+    2. Mirror THRML 0.1.3 to Carnot-controlled gitea + github (Rule 3
+       distribution mirroring). Pin Apache-2.0 license. Commit
+       reference at python/carnot/sampling/_vendored_thrml/__init__.py.
+    3. Replace python/carnot/sampling/gibbs.py with a thin Carnot
+       adapter that imports and dispatches to THRML's block-Gibbs.
+       Preserve Carnot HTTP API contract.
+
+       CRITICAL DESIGN CONSTRAINT: the inference Gibbs chain MUST
+       initialize at the user-provided `candidate` from the API
+       payload `{ prompt, candidate }`. NOT random state, NOT cached
+       state. The candidate is the warm start; bypass χ² cold-start
+       penalty.
+
+    4. Re-run exp1548 audit (n=128 independent-RNG parity test) with
+       vendored sampler. Acceptance gate: KL(Carnot || THRML) = 0.0
+       by construction (same code).
+    5. Run regression tests on tests/python (skip live-API tests if
+       not configured).
+    6. Document in paper-v6 §3 source draft as: "Carnot uses Extropic
+       THRML 0.1.3 as the reference sampler implementation, vendored
+       Apache-2.0, initialized at the user-provided candidate per the
+       verifier API contract."
+
+    ACCEPTANCE GATE:
+    - exp1548-style parity audit reports KL=0.0 (constructive)
+    - Carnot HTTP API regression tests pass
+    - python/carnot/sampling/gibbs.py uses THRML; documented in code
+      comments
+    - ops/changelog.md entry written
+
+    Write deliverable with status="complete" and honest_verdict
+    prefixed with "complete:". Required fields:
+    - thrml_vendoring_complete: bool
+    - kl_to_thrml_after_vendoring: float (must be 0.0)
+    - candidate_warm_start_implemented: bool
+    - regression_tests_passed: bool
+    - mirror_repo_url: str
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp1565-soft-gibbs-residual-implementation
+  milestone: 2026.05.120
+  deliverable: results/experiment_1565_soft_gibbs_residual_implementation.json
+  title: "Soft-Gibbs Residual Implementation + Hard-BRS Falsification - Gated on Exp1560"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 60
+  estimated_wall_time_min: 60
+  priority: critical
+  gated_on:
+    - upstream: exp1560-119-completion-archive-120-activation
+      gate_field: soft_gibbs_residual_ready
+      expected_value: true
+  prior_failures:
+    - experiment_id: none
+      verdict: novel_construction
+      addressed_by: "First implementation of Soft-Gibbs Residual
+                     (Carnot's novel paper-v6 contribution). Validates
+                     Hard-BRS catastrophic failure under k=15 AND-
+                     composition while Soft-BRS decays exponentially."
+  prompt: |
+    Per Deep Think DT-OT-RESIDUAL: Hard-BRS fails operationally under
+    k=15 AND-composition (M ~ 2^O(15), decay bound flatlines).
+    Constructed Soft-Gibbs Residual:
+
+      V(y) = Σ_{i=1..k} 1{y ∉ Ŝ_i}              # failed verifier count
+      µ_res^β(y) = µ(y) · exp(-β V(y)) / Z_β     # Boltzmann-softened
+      A(y) = exp(-β V(y)) ∈ (0, 1]               # accept probability
+      Z_β ≥ ∏_{i=1..k} exp(-β α_i)               # Jensen coverage bound
+
+    STEPS:
+    1. Implement at python/carnot/sampling/brs_residual.py both:
+       - hard_brs(prior_sampler, accept_set_S, n_steps): standard
+         Hard-BRS rejection-sample
+       - soft_brs(prior_sampler, verifiers, beta, n_steps): Soft-BRS
+         using Soft-Gibbs Residual
+       Both share the prior-sampler interface (returns y from µ).
+    2. Build n=8 latent EBM prior (uniform pushforward through sgn).
+    3. Construct k=3 deliberately-contradictory verifiers:
+       - v_1: demands y_1 = +1
+       - v_2: demands y_1 = -1
+       - v_3: demands y_2 = +1 OR y_3 = +1
+       Hard intersection ∩_i Ŝ_i is logically empty.
+    4. Run both for N ∈ {10, 100, 1000, 10000} steps. Track:
+       - Empirical SubOpt over time
+       - Acceptance rate
+       - Distribution over min-violation states
+    5. Acceptance gate:
+       - Hard-BRS empirical acceptance rate at all N: 0.0 (infinite
+         rejection, falsifies operational Theorem 3.10)
+       - Soft-BRS empirical SubOpt decays exponentially, matching
+         (1 - Z_β)^N for at least one β value tested
+       - Soft-BRS finds min-violation state correctly (V(y) = 1, since
+         3 contradictory verifiers must miss at least 1)
+    6. Repeat Soft-BRS sweep at β ∈ {0.5, 1.0, 2.0, 5.0} to map
+       β-vs-acceptance-rate curve.
+
+    Write deliverable with status="complete" and honest_verdict
+    prefixed with "complete:". Required fields:
+    - soft_gibbs_residual_implemented: bool
+    - hard_brs_acceptance_rate: float (must be 0.0)
+    - soft_brs_decay_confirmed: bool
+    - min_violation_state_found: bool
+    - z_beta_curve: list of {beta, empirical_acceptance_rate}
+
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
 # ============================================================
-# Phase 3 - Hardware readiness and retrospective
+# Tier 2 — high-leverage gated work
 # ============================================================
 
-- id: exp1558-thrml-post-rng-scale-decision-extropic-update
-  milestone: 2026.04.119
-  deliverable: results/experiment_1558_thrml_post_rng_scale_decision_extropic_update.json
-  title: "THRML Post-RNG Scale Decision + Extropic Packet Update - Gated on Exp1548 Independent RNG"
+- id: exp1566-candidate-warm-start-vs-cold-start-benchmark
+  milestone: 2026.05.120
+  deliverable: results/experiment_1566_candidate_warm_start_vs_cold_start_benchmark.json
+  title: "Candidate-Warm-Start vs Cold-Start Benchmark - Gated on Exp1564"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 50
+  estimated_wall_time_min: 75
+  priority: high
+  gated_on:
+    - upstream: exp1564-thrml-vendored-block-gibbs-replacement
+      gate_field: thrml_vendoring_complete
+      expected_value: true
+  prior_failures:
+    - experiment_id: none
+      verdict: novel_benchmark
+      addressed_by: "Empirically validates DT-MCMC-STATELESS χ²-penalty
+                     argument and rules out cached-state as deployment
+                     pattern."
+  prompt: |
+    Per Deep Think DT-MCMC-STATELESS: Carnot's API payload {prompt,
+    candidate} contains a structurally valid warm start. Predicted
+    χ² penalty for cold-start at K=100 dominates accuracy; cached
+    state from a different prompt acts as adversarial initialization.
+
+    Empirically benchmark three init policies on the now-vendored
+    THRML block-Gibbs sampler.
+
+    SETUP:
+    - Held-out verification corpus: N ≥ 200 (prompt, candidate,
+      oracle_verdict) tuples spanning correct/incorrect/edge cases
+    - THRML block-Gibbs (vendored from exp1564), K ∈ {10, 50, 100,
+      500, 1000} sweeps
+
+    INIT POLICIES:
+    (a) candidate-warm-start: y_init = bits(candidate)
+    (b) cold-start: y_init = uniform random
+    (c) cached-state-warm-start: y_init = (last sample from a DIFFERENT
+        prompt's chain, randomly selected from cache of recent calls)
+
+    MEASUREMENTS per init × K:
+    - End-to-end verification accuracy (vs oracle)
+    - Mean energy at termination
+    - 95th-percentile latency per request (10ms granularity)
+
+    ACCEPTANCE GATE (per DT-MCMC-STATELESS predictions):
+    - candidate-warm-start at K=100 achieves ≥ 99% of K=1000 accuracy
+    - cold-start at K=100 accuracy DROPS ≥ 50% vs K=1000
+    - cached-state at K=100 accuracy is WORSE than cold-start
+
+    FALSIFICATION: if candidate-warm-start does NOT outperform
+    cold-start at K=100, the design assumption underlying exp1564
+    is wrong; revisit.
+
+    Write deliverable with status="complete" and honest_verdict
+    prefixed with "complete:". Required fields:
+    - candidate_warm_start_validated: bool
+    - cold_start_accuracy_drop_percent_at_k100: float
+    - cached_state_worse_than_cold_start: bool
+    - recommended_deployment_policy: str
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp1567-rho-of-C-measurement-k6-ensemble
+  milestone: 2026.05.120
+  deliverable: results/experiment_1567_rho_of_C_measurement_k6_ensemble.json
+  title: "ρ(C) Measurement for k=6 Ensemble — Q11 TSS Saturation - Gated on Exp1560"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 50
+  estimated_wall_time_min: 120
+  requires_gpu: true
+  priority: high
+  gated_on:
+    - upstream: exp1560-119-completion-archive-120-activation
+      gate_field: rho_C_measurement_ready
+      expected_value: true
+  prior_failures:
+    - experiment_id: none
+      verdict: novel_measurement
+      addressed_by: "First measurement of compute-dependent FPR
+                     for Carnot k=6 ensemble. Builds on Q11 TSS
+                     (memory project_q11_tss_and_ste_attack.md) and
+                     Mukherjee Theorem 3.6 base framework. Validates
+                     Deep Think DT-5's C-parameterized robustified
+                     theorem with empirical C* and C_inv values."
+  prompt: |
+    Per Deep Think DT-5 verdict: paper-v6 §3 publishes the C-parameterized
+    robustified version of Mukherjee et al's Theorem 3.6. Two critical
+    compute thresholds:
+
+      C*    = ρ⁻¹((s_r⋆·FNR/(1−s_r⋆)) − FPR_iid)    PI regime boundary
+      C_inv = ρ⁻¹(TPR − FPR_iid)                     INVERSION threshold
+
+    where ρ(C) is the rate at which Q11 TSS adversarial compute C
+    inflates the AND-composed verifier's FPR. Above C_inv, verify-and-
+    resample becomes an adversarial sieve.
+
+    To publish this contribution, Carnot needs empirical ρ(C) curve
+    for the k=6 ensemble.
+
+    STEPS:
+    1. Build holdout corpus of base generator queries known to be
+       oracle-incorrect (y ∉ S⋆). Use existing Carnot calibration
+       infrastructure where available. Target N ≥ 200.
+    2. Run Q11 TSS structural optimization against these targets,
+       sweeping compute budgets C ∈ {2^0, 2^2, 2^4, 2^6, 2^8} GPU-hours
+       (5 budgets, log-spaced).
+    3. For each C, pass optimized adversarial responses through the
+       k=6 AND-ensemble (Z3 SMT, AST structural, semantic consistency,
+       ThinkPRM v2, SOSKAN-Energy v3, SemEnergy probe). Measure
+       FPR_AND(C) = (count passing) / N.
+    4. Fit ρ(C) = FPR_AND(C) − FPR_iid. Report curve with R² ≥ 0.9 CI.
+    5. Compute empirical C* and C_inv from fitted curve. Report with
+       95% CI.
+    6. Validate falsification predicate: at C > C_inv, run full SRS
+       pipeline; confirm end-to-end accepted accuracy drops below
+       s_r⋆ (proving inversion).
+
+    ACCEPTANCE GATE:
+    - ρ(C) curve fit R² ≥ 0.9
+    - C* and C_inv reported with CI
+    - At C > C_inv, SRS accepted accuracy < s_r⋆ (inversion confirmed)
+
+    Write deliverable with status="complete" and honest_verdict
+    prefixed with "complete:". Required fields:
+    - rho_C_curve_fitted: bool
+    - rho_C_r_squared: float
+    - C_star_estimate: float
+    - C_star_ci_lower: float
+    - C_star_ci_upper: float
+    - C_inv_estimate: float
+    - C_inv_ci_lower: float
+    - C_inv_ci_upper: float
+    - inversion_empirically_confirmed: bool
+    - srs_accepted_accuracy_at_C_above_C_inv: float
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp1568-fr11-v14-retained-mode-collapse-audit
+  milestone: 2026.05.120
+  deliverable: results/experiment_1568_fr11_v14_retained_mode_collapse_audit.json
+  title: "FR-11 v14 Retained Policies Mode-Collapse Audit - Gated on Exp1560"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 60
+  estimated_wall_time_min: 180
+  requires_gpu: true
+  priority: high
+  gated_on:
+    - upstream: exp1560-119-completion-archive-120-activation
+      gate_field: activation_manifest_complete
+      expected_value: true
+  prior_failures:
+    - experiment_id: none
+      verdict: novel_audit_inverted_hypothesis
+      addressed_by: "Per Deep Think DT-2: operator's spurious-retirement
+                     hypothesis is mathematically impossible under AND-
+                     composition (R(λ) ≥ r_mean(G) always for solitary
+                     fix). Real bug is spurious RETENTION via anti-
+                     exploration. This task audits retentions, not
+                     retirements."
+  prompt: |
+    Per Deep Think DT-2 verdict: standard GRPO's |λ|-bug causes
+    mode-collapse via anti-exploration in the v14 retained policy
+    manifest. The operator's spurious-retirement hypothesis was
+    mathematically impossible under AND-composition; the real bug
+    runs in the opposite direction.
+
+    Audit retained v14 policies for boilerplate overfit / token-entropy
+    drop / single-mode reward variance / OOD adversarial accuracy
+    regression.
+
+    STEPS:
+    1. Snapshot all v14-retained policies (passed Positive-Utility-
+       or-Retire gate). Target N ≥ 5.
+    2. For each retained policy, measure on held-out test corpus:
+       (a) Token-entropy distribution per generated repair, vs
+           pre-RL checkpoint baseline.
+       (b) Boilerplate-fraction (template-recycle vs novel tokens
+           via N-gram match against training corpus).
+       (c) Per-group reward variance on fresh sampled groups (k=8).
+       (d) Out-of-distribution adversarial code accuracy vs pre-RL
+           baseline.
+    3. Acceptance gate (anti-mode-collapse predictions):
+       - Token-entropy drop ≥ 0.5 nats per token vs pre-RL → CONFIRMED
+       - Boilerplate-fraction ≥ 30% on novel code → CONFIRMED
+       - Per-group reward variance collapsed to single mode → CONFIRMED
+       - Adversarial OOD accuracy WORSE than pre-RL → severe CONFIRMED
+    4. Report: % of retained policies showing 2+ confirmed predictors.
+    5. If ≥ 50% of retained policies show 2+ predictors, flag those
+       retentions for reversal in next milestone.
+
+    Write deliverable with status="complete" and honest_verdict
+    prefixed with "complete:". Required fields:
+    - mode_collapse_audit_complete: bool
+    - retained_policies_audited_count: int
+    - mode_collapse_confirmed_count: int
+    - reversal_recommended_count: int
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp1569-paper-v6-section-3-sampler-draft
+  milestone: 2026.05.120
+  deliverable: docs/arxiv-paper/section_3_sampler_draft.md
+  title: "Paper-v6 §3 Sampler Section Draft - Gated on Exp1564+Exp1565"
   agent_type: codex
   model: gpt-5.5
   max_turns: 30
   estimated_wall_time_min: 45
   priority: high
-  requires_gpu: false
-  skip_pre_test: true
   gated_on:
-    - upstream: exp1548-thrml-carnot-parity-independent-rng-audit
-      artifact_field: independent_rng_audit_ready
-      op: "=="
-      value: true
-    - upstream: exp1548-thrml-carnot-parity-independent-rng-audit
-      artifact_field: rng_path_independent
-      op: "=="
-      value: true
-    - upstream: exp1548-thrml-carnot-parity-independent-rng-audit
-      artifact_field: bounded_kl_passed
-      op: "=="
-      value: true
+    - upstream: exp1564-thrml-vendored-block-gibbs-replacement
+      gate_field: thrml_vendoring_complete
+      expected_value: true
+    - upstream: exp1565-soft-gibbs-residual-implementation
+      gate_field: soft_gibbs_residual_implemented
+      expected_value: true
   prior_failures:
-    - experiment_id: exp1545-extropic-z1-access-readiness-packet
-      verdict: readiness_packet_before_independent_rng_followup
-      addressed_by: "This task updates THRML/Extropic readiness only after independent-RNG parity evidence exists and keeps all claims simulator-only."
-      retire_if_same_verdict: false
+    - experiment_id: none
+      verdict: novel_paper_drafting
+      addressed_by: "Composes 9 Deep Think verdicts into paper-v6 §3
+                     prose. Captures all 4 Carnot-specific contributions
+                     + 3 documented rule-outs."
   prompt: |
-    CONTEXT:
-    .118 produced an Extropic readiness packet but explicitly carried forward
-    the THRML independent-RNG follow-up. If exp1548 passes, .119 can update the
-    simulator evidence and decide whether n=512 software stress is worthwhile.
-    If exp1548 fails, this task should be skipped by the conductor gate. Use
-    {project_root} as the project root and {date} as the run date.
+    Draft paper-v6 §3 sampler/verifier section composing the 9 Deep
+    Think verdicts (docs/research-notes/iclr26-deep-think-responses.md)
+    + integration plan (docs/research-notes/iclr26-integration-plan.md).
 
-    EXISTING CODE TO READ FIRST:
-    - CODEX.md
-    - CLAUDE.md
-    - research-hardware-wishlist.md
-    - research-references.md
-    - results/experiment_1545_extropic_z1_access_readiness_packet.json
-    - results/experiment_1548_thrml_carnot_parity_independent_rng_audit.json
-    - ops/extropic_z1_readiness_packet.md
-    - ops/known-issues.md
-    - python/carnot/thrml/
-    - ops/
+    OUTPUT: docs/arxiv-paper/section_3_sampler_draft.md (markdown
+    source for the LaTeX source-of-truth).
 
-    TASK:
-    Update the THRML/Extropic readiness packet and scale decision after the
-    independent-RNG audit. Do not claim hardware execution.
+    REQUIRED CONTENT (each as a subsection):
 
-    REQUIRED ARTIFACT FIELDS:
-    - status
-    - milestone
-    - thrml_post_rng_scale_decision_ready
-    - independent_rng_evidence_referenced
-    - n512_schedule_recommended
-    - n512_schedule_manifest_path
-    - extropic_packet_updated
-    - updated_readiness_packet_path
-    - claim_downgrade_required
-    - simulator_only
-    - no_hardware_execution_claim
-    - access_blockers
-    - focused_checks_passed
-    - honest_verdict (MUST start with complete:, complete_, success:, success_, passed:, passed_, shipped:, or shipped_)
+    §3.1 Sampler Architecture (decoupled):
+    - Inference: THRML block-Gibbs at candidate-warm-start (DT-7 +
+      DT-MCMC-NULL + DT-MCMC-STATELESS justifications)
+    - Training: adaptive K-PCD with SA/PT (DT-MCMC-K1)
+    - Mathematical validity of decoupling
 
-    CONCRETE STEPS:
-    1. Create results/experiment_1558_thrml_post_rng_scale_decision_extropic_update.json immediately with status="in_progress".
-    2. Load exp1548 and exp1545. Confirm independent_rng_audit_ready=true, rng_path_independent=true, and bounded_kl_passed=true.
-    3. Update ops/extropic_z1_readiness_packet.md or write a clearly versioned supplement that references independent-RNG evidence and the remaining access blockers.
-    4. Decide whether an n=512 software-only stress schedule is warranted. If yes, write a schedule manifest; if no, record why.
-    5. Set simulator_only=true and no_hardware_execution_claim=true. Do not imply Z1, XTR-0, TSU, FPGA, synthesis, bitstream, or board execution.
-    6. Confirm research-roadmap.yaml and scripts/research_conductor.py are unchanged.
-    7. Write the final artifact with readiness and scale-decision fields.
+    §3.2 Verifier Geometry (extended OT):
+    - Mukherjee et al's Theorem 3.6 base framework (citation)
+    - C-parameterized robustified extension (Carnot contribution)
+    - Closed forms: C* and C_inv definitions
+    - Inversion result: at C > C_inv, verify-and-resample becomes
+      adversarial sieve
 
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1558_thrml_post_rng_scale_decision_extropic_update.json')); print(d.get('thrml_post_rng_scale_decision_ready'), d.get('n512_schedule_recommended'), d.get('extropic_packet_updated'), d.get('no_hardware_execution_claim'), d.get('honest_verdict'))"
+    §3.3 Soft-Gibbs Residual (Carnot contribution):
+    - Construction: V(y), µ_res^β, Z_β bound
+    - PAC-Bayes-like coverage from individual α_i (no joint estimation)
+    - Graceful degradation on empty intersections
+    - Why Hard-BRS fails under k=15 AND-composition
+
+    §3.4 Kinetic Defense-in-Depth (Carnot contribution):
+    - Glauber plateau-friction as security feature
+    - Mathematical comparison: MH plateau-diffusion 2× faster than Gibbs
+    - Why faster mixing inverts to security liability for null-space-
+      vulnerable EBMs
+
+    §3.5 FR-11 Disclosure:
+    - v12-v14 standard TRL-GRPO; v15+ adopts λ-GRPO (Sullivan 2026)
+    - Mode-collapse via anti-exploration (the inverted-hypothesis
+      finding)
+    - Retained-policy audit results (cite exp1568)
+
+    §3.6 BRAIN+Linear-AR (Carnot contribution):
+    - Plefka/TAP barrier on factorized Bernoulli
+    - Linear AR rescue: O(n²) parameter cost, captures pairwise
+      correlations
+    - Step-wise baseline for variance-reduced AR-REINFORCE
+    - Empirical k-progression (cite exp1562)
+
+    §3.7 Negative Results (rule-outs):
+    - SpecAnn rejected: HUBO→QUBO + level-crossing fatal
+    - MCMC Layers rejected for inference: 4 separate verdicts
+    - BRAIN-as-published rejected for Phase 3: factorized expressivity
+    - Rationale documented to prevent re-litigation
+
+    §3.8 Worst-Case Composition Analysis:
+    - Gadget-Induced Mean-Field Collapse failure mode (DT-COMPOSITION (f))
+    - Three-paper naive composition strictly worse than status-quo Gibbs
+
+    LENGTH TARGET: 4000-6000 words for the section.
+    CITATIONS: cite all 5 ICLR 2026 papers + Spera 9.2 + Q11 TSS record.
+    VERDICT-PREFIX DISCIPLINE for honest_verdict: prefix with "complete:".
+
+    Write deliverable with status="complete" and honest_verdict
+    prefixed with "complete:". Required fields:
+    - section_3_drafted: bool
+    - word_count: int
+    - subsections_completed: int (must be 8)
+    - all_4_carnot_contributions_present: bool
+    - all_3_ruleouts_documented: bool
+
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-- id: exp1559-milestone-119-retro
-  milestone: 2026.04.119
-  deliverable: results/experiment_1559_milestone_119_retro.json
-  title: "Milestone .119 Retro and .120 Carry-Forward Gates"
+- id: exp1570-soft-gibbs-coverage-bound-empirical-verification
+  milestone: 2026.05.120
+  deliverable: results/experiment_1570_soft_gibbs_coverage_bound_empirical_verification.json
+  title: "Soft-Gibbs Coverage Bound Empirical Verification - Gated on Exp1565"
   agent_type: codex
   model: gpt-5.5
-  max_turns: 20
-  estimated_wall_time_min: 35
-  priority: critical
-  requires_gpu: false
-  skip_pre_test: true
+  max_turns: 40
+  estimated_wall_time_min: 75
+  priority: medium
+  gated_on:
+    - upstream: exp1565-soft-gibbs-residual-implementation
+      gate_field: soft_brs_decay_confirmed
+      expected_value: true
   prior_failures:
-    - experiment_id: exp1546-milestone-118-retro
-      verdict: prior_milestone_retrospective_scope
-      addressed_by: "This is expected per-milestone closure; it summarizes .119 criteria, retirements, and carry-forward gates for .120."
-      retire_if_same_verdict: false
+    - experiment_id: exp1565-soft-gibbs-residual-implementation
+      verdict: "complete: soft_brs_decay_confirmed (expected)"
+      addressed_by: "Once Soft-BRS is verified to decay correctly,
+                     this task measures the per-deployment β
+                     calibration on Carnot's k=6 ensemble."
   prompt: |
-    CONTEXT:
-    This is the closing task for milestone .119. It must summarize what the
-    THRML independent-RNG audit, SATQuest repair, unified contract gate,
-    residual-drift repair, product-line/claim-router scale, FR-11
-    positive-utility-or-retire gate, ARM/EBT telemetry repair, Weaver router,
-    and Extropic packet update actually proved. Use {project_root} as the
-    project root and {date} as the run date.
+    Per Deep Think DT-OT-RESIDUAL: the Soft-Gibbs Residual admits a
+    Jensen-bounded coverage Z_β ≥ ∏ exp(-β α_i). Measure α_i for
+    Carnot's k=6 ensemble on a calibration corpus and determine
+    optimal β.
 
-    EXISTING CODE TO READ FIRST:
-    - CODEX.md
-    - CLAUDE.md
-    - openspec/change-proposals/research-roadmap-vNEXT.md
-    - research-roadmap.yaml
-    - research-roadmap-next.yaml
-    - research-complete.yaml
-    - ops/status.md
-    - ops/changelog.md
-    - ops/conductor-log.md
-    - ops/known-issues.md
-    - results/experiment_1547_118_completion_archive_119_activation.json
-    - results/experiment_1548_thrml_carnot_parity_independent_rng_audit.json
-    - results/experiment_1549_satquest_oracle_false_accept_repair.json
-    - results/experiment_1550_satquest_sota_reeval_zero_false_accepts.json
-    - results/experiment_1551_automata_sat_unified_contract_gate.json
-    - results/experiment_1552_residual_drift_repair_policy_v1.json
-    - results/experiment_1553_claim_isolation_router_scale_v3.json
-    - results/experiment_1554_product_line_staged_scale_v4.json
-    - results/experiment_1555_fr11_positive_utility_or_retire_v14.json
-    - results/experiment_1556_arm_ebt_logprob_telemetry_repair.json
-    - results/experiment_1557_weaver_verification_compute_router.json
-    - results/experiment_1558_thrml_post_rng_scale_decision_extropic_update.json
+    STEPS:
+    1. Use Carnot's existing calibration corpus (or build a new one
+       of size N ≥ 500). Compute α_i = P_µ(y ∉ Ŝ_i) per verifier in
+       the k=6 ensemble.
+    2. For β ∈ {0.1, 0.5, 1.0, 2.0, 5.0, 10.0}: compute predicted
+       Z_β lower bound via Jensen, run actual Soft-BRS, measure
+       empirical Z_β (= acceptance rate over corpus).
+    3. Acceptance gate: empirical Z_β ≥ Jensen-predicted bound for
+       all β tested (validates the coverage bound).
+    4. Determine optimal β: maximizes coverage tightness × acceptance
+       rate. Report as Carnot deployment hyperparameter for paper-v6
+       Appendix.
 
-    TASK:
-    Write the .119 retrospective artifact with criteria accounting,
-    retirements, and .120 carry-forward gates. Do not modify
-    research-roadmap.yaml or scripts/research_conductor.py.
+    Write deliverable with status="complete" and honest_verdict
+    prefixed with "complete:". Required fields:
+    - alpha_i_per_verifier: list of 6 floats
+    - z_beta_jensen_bound: list of {beta, predicted_lower}
+    - z_beta_empirical: list of {beta, empirical_acceptance_rate}
+    - jensen_bound_holds_for_all_beta: bool
+    - optimal_beta_for_deployment: float
 
-    REQUIRED ARTIFACT FIELDS:
-    - status
-    - milestone
-    - criteria_met
-    - criteria_total
-    - completed_tasks
-    - honestly_terminal_tasks
-    - failed_or_blocked_tasks
-    - thrml_independent_rng_gate
-    - satquest_oracle_repair_gate
-    - satquest_sota_gate
-    - unified_contract_gate
-    - residual_drift_repair_gate
-    - claim_isolation_scale_gate
-    - product_line_scale_gate
-    - fr11_positive_utility_or_retire_gate
-    - arm_ebt_telemetry_gate
-    - verification_compute_router_gate
-    - extropic_readiness_gate
-    - recommended_120_focus
-    - ops_reconciliation_needed
-    - active_roadmap_modified
-    - conductor_modified
-    - honest_verdict (MUST start with complete:, complete_, success:, success_, passed:, passed_, shipped:, or shipped_)
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-    CONCRETE STEPS:
-    1. Create results/experiment_1559_milestone_119_retro.json immediately with status="in_progress".
-    2. Load all .119 artifacts that exist. If a gated task skipped, count it explicitly as skipped or honestly terminal rather than inventing success.
-    3. Score each success criterion from openspec/change-proposals/research-roadmap-vNEXT.md and compute criteria_met and criteria_total.
-    4. Record carry-forward gates for .120, especially SATQuest zero false accepts, THRML independent RNG, FR-11 utility/retirement, soft-signal authority boundaries, and product-line/claim-router continuation.
-    5. Record ops reconciliation needed for research-complete.yaml, ops/status.md, ops/changelog.md, _bmad/traceability.md, and any known issues.
-    6. Confirm research-roadmap.yaml and scripts/research_conductor.py are unchanged.
-    7. Write the final artifact with status="complete" and an honest verdict.
+# ============================================================
+# Tier 3 — research-track, gated
+# ============================================================
 
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1559_milestone_119_retro.json')); print(d.get('criteria_met'), d.get('criteria_total'), d.get('thrml_independent_rng_gate'), d.get('fr11_positive_utility_or_retire_gate'), d.get('honest_verdict'))"
+- id: exp1571-step-wise-baseline-AR-REINFORCE
+  milestone: 2026.05.120
+  deliverable: results/experiment_1571_step_wise_baseline_AR_REINFORCE.json
+  title: "Step-Wise Baseline AR-REINFORCE - Gated on Exp1562"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 60
+  estimated_wall_time_min: 120
+  priority: medium
+  gated_on:
+    - upstream: exp1562-brain-linear-ar-k-sweep-extended
+      gate_field: brain_linear_ar_rescue_validated
+      expected_value: true
+  prior_failures:
+    - experiment_id: exp1562-brain-linear-ar-k-sweep-extended
+      verdict: "complete: brain_linear_ar_rescue_validated (expected)"
+      addressed_by: "Once Linear-AR is validated as the right
+                     parameterization at k=15, implement step-wise
+                     baseline (Mnih-Gregor NVIL-style) to restore
+                     BRAIN's noise-resilience claim under AR coupling."
+  prompt: |
+    Per Deep Think DT-BRAIN-CORRELATIONS (e): Linear AR sequences
+    inflate score-function variance. Step-wise baseline restores
+    BRAIN's Theorem 2 noise-resilience adapted to AR setting.
+
+    STEPS:
+    1. Implement step-wise baseline for REINFORCE on Linear AR model
+       (per-token control variate; Mnih-Gregor NVIL-style).
+    2. A/B test: AR-REINFORCE with scalar baseline vs step-wise baseline
+       on noisy energy (inject 3% Gaussian per BRAIN's noise model) at
+       n=32, k=15 AND-composition.
+    3. Acceptance gate:
+       - Step-wise baseline reduces gradient variance by ≥ 10× vs
+         scalar baseline
+       - Convergence rate matches BRAIN's Theorem 2 noise-resilience
+         claim adapted to AR setting
+
+    Write deliverable with status="complete" and honest_verdict
+    prefixed with "complete:". Required fields:
+    - step_wise_baseline_implemented: bool
+    - gradient_variance_reduction_factor: float
+    - convergence_rate_matches_theorem_2: bool
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp1573-extropic-z1-readiness-packet-thrml-alignment-update
+  milestone: 2026.05.120
+  deliverable: results/experiment_1573_extropic_z1_readiness_packet_thrml_alignment_update.json
+  title: "Extropic Z1 Readiness Packet — THRML Alignment Update - Gated on Exp1564"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 30
+  estimated_wall_time_min: 45
+  priority: medium
+  gated_on:
+    - upstream: exp1564-thrml-vendored-block-gibbs-replacement
+      gate_field: thrml_vendoring_complete
+      expected_value: true
+  prior_failures:
+    - experiment_id: exp1545-extropic-z1-access-readiness-packet
+      verdict: "complete: extropic_z1_access_readiness_packet_shipped"
+      addressed_by: "Update prior Z1 readiness packet (exp1545) to
+                     reflect that Carnot now uses Extropic's THRML
+                     0.1.3 as the reference sampler implementation,
+                     vendored. Z1 migration path becomes backend swap
+                     rather than substrate rewrite."
+  prompt: |
+    Per operator question 2026-05-08 (memory entry feedback_thrml_
+    vendoring_z1_strengthening.md): retiring the THRML scaling-parity
+    lineage doesn't weaken the Extropic Z1 hardware-acceleration
+    ambition; it strengthens it by aligning Carnot's substrate to
+    Extropic's reference simulator that Z1 silicon will implement.
+
+    Update the Z1 readiness packet (originally shipped at exp1545)
+    to reflect this alignment.
+
+    STEPS:
+    1. Read the existing Z1 readiness packet (results/experiment_1545_
+       extropic_z1_access_readiness_packet.json or equivalent
+       deliverable from .118 milestone).
+    2. Add a new section "THRML Alignment Update (2026-05-08)":
+       (a) Carnot's inference sampler is now Extropic THRML 0.1.3,
+           vendored Apache-2.0 (per exp1564). Mirror at <gitea-mirror>
+           and <github-mirror>.
+       (b) Z1 migration path: swap python/carnot/sampling/_vendored_thrml/
+           for python/carnot/sampling/_z1_hardware_backend/ when Z1
+           silicon ships. Same SamplerBackend protocol per CLAUDE.md
+           Rule 7.
+       (c) Pre-Z1 testing strategy: validate Carnot pipeline on
+           THRML simulator at production scale (n=128); when Z1 ships,
+           validate Z1-vs-THRML parity using THRML as reference oracle.
+       (d) Open question for Z1 hardware: does the kinetic-defense-in-
+           depth plateau-friction property (memory project_kinetic_
+           defense_in_depth.md) transfer to Z1's thermodynamic silicon?
+           Thermodynamic computing samples directly from the Boltzmann
+           measure, so at flat plateaus should produce uniform samples
+           (closer to block-Gibbs than MH). LIKELY TRANSFERS, must
+           empirically verify when silicon ships.
+    3. Verify CLAUDE.md decentralization rules:
+       - Rule 3 (mirroring): THRML mirrored to Carnot-controlled
+         repos before exp1564 adoption?
+       - Rule 5 (hardware portability): KV260 / open-FPGA tracks
+         remain ALIVE in Phase 2 roadmap. Z1 is NOT the sole hardware
+         path.
+       - Rule 7 (no vendor abstractions in core): THRML import is in
+         clearly-named submodule (_vendored_thrml/), core depends on
+         abstract SamplerBackend protocol.
+    4. Update Phase 2 hardware-portfolio entry in CLAUDE.md if needed.
+
+    Write deliverable with status="complete" and honest_verdict
+    prefixed with "complete:". Required fields:
+    - z1_readiness_packet_updated: bool
+    - thrml_vendor_mirroring_verified: bool
+    - kv260_open_fpga_tracks_preserved: bool
+    - kinetic_defense_z1_transfer_question_filed: bool
+    - sampler_backend_protocol_documented: bool
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp1572-milestone-120-retro
+  milestone: 2026.05.120
+  deliverable: results/experiment_1572_milestone_120_retro.json
+  title: "Milestone .120 Retro and .121 Carry-Forward Gates"
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 30
+  estimated_wall_time_min: 30
+  priority: critical
+  gated_on:
+    - upstream: exp1561-kinetic-defense-zero-coupling-test
+      gate_field: kinetic_defense_in_depth_validated
+      expected_value: true
+    - upstream: exp1562-brain-linear-ar-k-sweep-extended
+      gate_field: brain_linear_ar_rescue_validated
+      expected_value: true
+    - upstream: exp1564-thrml-vendored-block-gibbs-replacement
+      gate_field: thrml_vendoring_complete
+      expected_value: true
+    - upstream: exp1565-soft-gibbs-residual-implementation
+      gate_field: soft_gibbs_residual_implemented
+      expected_value: true
+    - upstream: exp1569-paper-v6-section-3-sampler-draft
+      gate_field: section_3_drafted
+      expected_value: true
+    - upstream: exp1573-extropic-z1-readiness-packet-thrml-alignment-update
+      gate_field: z1_readiness_packet_updated
+      expected_value: true
+  prior_failures:
+    - experiment_id: standard_milestone_retro
+      verdict: novel_milestone_120_retro
+      addressed_by: "Standard per-milestone closure with criteria
+                     accounting + carry-forward gates for .121."
+  prompt: |
+    Close milestone 2026.05.120. Audit each Tier 1 / Tier 2 / Tier 3
+    task's terminal verdict against the acceptance gates. Report
+    criteria-met fraction. Identify carry-forward gates for .121:
+    - paper-v6 §3 finalization (after exp1569 draft)
+    - .121 next-batch tasks: SpecAnn rejection record verification,
+      Phase 5 PCD divergence audit (if not already started),
+      Soft-Gibbs Residual at production scale (n=128), MCMC-Layer-
+      free Phase 5 architecture.
+
+    Mode of operation: codex executes a deliverable-shaped retro
+    artifact. Honest verdict prefix per Verdict Terminal-Prefix
+    Discipline.
+
+    Write deliverable with status="complete" and honest_verdict
+    prefixed with "complete:". Required fields:
+    - criteria_met: int
+    - criteria_total: int (= 14)
+    - paper_v6_section_3_drafted: bool
+    - all_4_carnot_contributions_validated: bool
+    - rho_C_curve_published_ready: bool
+
     Do NOT push. Do NOT modify scripts/research_conductor.py.
