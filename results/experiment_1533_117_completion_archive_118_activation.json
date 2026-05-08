@@ -1,0 +1,331 @@
+{
+  "activation_manifest_complete": true,
+  "allowed_118_tracks": [
+    {
+      "guardrail": "Audit generated tests for import targets before downstream work runs.",
+      "name": "orphan-test guard",
+      "track": "orphan_test_guard"
+    },
+    {
+      "guardrail": "Runtime contracts remain acceptance authority; decoding masks are auxiliary.",
+      "name": "automata/XGrammar/ABS contract decoding",
+      "track": "automata_contract_decoding"
+    },
+    {
+      "guardrail": "PySAT or an equivalent deterministic solver is the oracle.",
+      "name": "SATQuest CNF benchmark",
+      "track": "satquest_cnf_benchmark"
+    },
+    {
+      "guardrail": "Prefix/logprob bounds route risk but do not accept answers.",
+      "name": "BEAVER-lite prefix-risk audit",
+      "track": "beaver_prefix_risk_audit"
+    },
+    {
+      "guardrail": "Separate contradictions from satisfiable forgotten commitments.",
+      "name": "residual-drift ledger",
+      "track": "residual_drift_ledger"
+    },
+    {
+      "guardrail": "No model-weight mutation; positive utility is required for headline claims.",
+      "name": "external-feedback FR-11 skill graph",
+      "track": "external_feedback_fr11_skill_graph"
+    },
+    {
+      "guardrail": "Scale only against parser, feasibility, oracle, and false-accept metrics.",
+      "name": "product-line scale",
+      "track": "product_line_scale"
+    },
+    {
+      "guardrail": "Claim isolation must report routed budget cost and deterministic outcomes.",
+      "name": "claim-isolation uncertainty routing",
+      "track": "claim_isolation_uncertainty_routing"
+    },
+    {
+      "guardrail": "Soft-value signals stay below deterministic validators.",
+      "name": "ARM/EBT soft-value diagnostics",
+      "track": "arm_ebt_soft_value_diagnostics"
+    },
+    {
+      "guardrail": "Software/simulator parity only; no TSU, synthesis, bitstream, or board claim.",
+      "name": "THRML n=256/n=64-diverse stress",
+      "track": "thrml_n256_n64_diverse_stress"
+    },
+    {
+      "guardrail": "Write access and transcript requirements without claiming hardware execution.",
+      "name": "Extropic Z1 readiness packet",
+      "track": "extropic_z1_readiness_packet"
+    },
+    {
+      "guardrail": "Close .118 with criteria accounting and .119 carry-forward gates.",
+      "name": "milestone retro",
+      "track": "milestone_retro"
+    }
+  ],
+  "blocked_reasons": [],
+  "conductor_log_exp1519_to_exp1532": {
+    "entries": {
+      "exp1519": {
+        "found": true,
+        "ok": true
+      },
+      "exp1520": {
+        "found": true,
+        "ok": true
+      },
+      "exp1521": {
+        "found": true,
+        "ok": true
+      },
+      "exp1522": {
+        "found": true,
+        "ok": true
+      },
+      "exp1523": {
+        "found": true,
+        "ok": true
+      },
+      "exp1524": {
+        "found": true,
+        "ok": true
+      },
+      "exp1525": {
+        "found": true,
+        "ok": true
+      },
+      "exp1526": {
+        "found": true,
+        "ok": true
+      },
+      "exp1527": {
+        "found": true,
+        "ok": true
+      },
+      "exp1528": {
+        "found": true,
+        "ok": true
+      },
+      "exp1529": {
+        "found": true,
+        "ok": true
+      },
+      "exp1530": {
+        "found": true,
+        "ok": true
+      },
+      "exp1531": {
+        "found": true,
+        "ok": true
+      },
+      "exp1532": {
+        "found": true,
+        "ok": true
+      }
+    },
+    "expected_count": 14,
+    "missing_experiments": [],
+    "ok_count": 14
+  },
+  "continuous_self_learning_required": true,
+  "continuous_self_learning_requirement_recorded": true,
+  "experiment": "1533_117_completion_archive_118_activation",
+  "gated_118_tracks": [
+    {
+      "gated_on": [
+        "exp1533.prior_orphan_test_incident_recorded == true"
+      ],
+      "task_id": "exp1534",
+      "track": "orphan_test_guard"
+    },
+    {
+      "gated_on": [
+        "exp1533.prior_runtime_contract_e2e_ready == true",
+        "exp1534.orphan_test_guard_ready == true"
+      ],
+      "task_id": "exp1535",
+      "track": "automata_contract_decoding"
+    },
+    {
+      "gated_on": [
+        "exp1533.prior_runtime_contract_e2e_ready == true"
+      ],
+      "task_id": "exp1536",
+      "track": "satquest_cnf_benchmark"
+    },
+    {
+      "gated_on": [
+        "exp1535.contract_decoder_adapter_ready == true"
+      ],
+      "task_id": "exp1537",
+      "track": "beaver_prefix_risk_audit"
+    },
+    {
+      "gated_on": [
+        "exp1536.satquest_benchmark_ready == true"
+      ],
+      "task_id": "exp1538",
+      "track": "residual_drift_ledger"
+    },
+    {
+      "gated_on": [
+        "exp1533.prior_fr11_promotion_ready == true",
+        "exp1538.residual_drift_ledger_ready == true"
+      ],
+      "task_id": "exp1539",
+      "track": "external_feedback_fr11_skill_graph"
+    },
+    {
+      "gated_on": [
+        "exp1533.prior_product_line_ready == true",
+        "exp1535.contract_decoder_adapter_ready == true"
+      ],
+      "task_id": "exp1540",
+      "track": "product_line_scale"
+    },
+    {
+      "gated_on": [
+        "exp1533.prior_claim_isolation_ready == true",
+        "exp1537.beaver_bound_ready == true"
+      ],
+      "task_id": "exp1541",
+      "track": "claim_isolation_uncertainty_routing"
+    },
+    {
+      "gated_on": [
+        "exp1536.satquest_benchmark_ready == true",
+        "exp1537.beaver_bound_ready == true"
+      ],
+      "task_id": "exp1542",
+      "track": "arm_ebt_soft_value_diagnostics"
+    },
+    {
+      "gated_on": [
+        "exp1533.prior_thrml_n128_ready == true"
+      ],
+      "task_id": "exp1543",
+      "track": "thrml_n256_n64_diverse_stress"
+    },
+    {
+      "gated_on": [
+        "exp1533.prior_thrml_diverse_ready == true",
+        "exp1543.thrml_parity_n256_schedule_ready == true"
+      ],
+      "task_id": "exp1544",
+      "track": "thrml_n256_n64_diverse_stress"
+    },
+    {
+      "gated_on": [
+        "exp1543.thrml_parity_n256_schedule_ready == true",
+        "exp1544.diverse_topology_parity_n64_ready == true"
+      ],
+      "task_id": "exp1545",
+      "track": "extropic_z1_readiness_packet"
+    }
+  ],
+  "honest_verdict": "complete: milestone_118_activation_complete_117_archived_runtime_fr11_thrml_orphan_gate_ready",
+  "mandated_sota_models": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "unsloth/gemma-4-31B-it-GGUF",
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "mandated_sota_models_recorded": true,
+  "manifest_path": "ops/milestone_118_activation_manifest.md",
+  "milestone": "2026.04.118",
+  "no_change_confirmations": {
+    "research-roadmap.yaml": "unchanged_by_exp1533_activation_workflow",
+    "scripts/research_conductor.py": "unchanged_by_exp1533_activation_workflow"
+  },
+  "predecessor_criteria_met": 14,
+  "predecessor_criteria_total": 14,
+  "predecessor_honest_verdict": "complete: milestone_117_14_of_14_criteria_met_runtime_contract_fr11_thrml_claim_boundaries_preserved",
+  "predecessor_milestone": "2026.04.117",
+  "prior_cdg_ready": true,
+  "prior_claim_isolation_ready": true,
+  "prior_fr11_promotion_ready": true,
+  "prior_live_sota_repair_ready": true,
+  "prior_orphan_test_incident_recorded": true,
+  "prior_product_line_ready": true,
+  "prior_runtime_contract_e2e_ready": true,
+  "prior_thrml_diverse_ready": true,
+  "prior_thrml_n128_ready": true,
+  "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+  "protected_files_unchanged": true,
+  "required_artifact_fields_present": [
+    "activation_manifest_complete",
+    "allowed_118_tracks",
+    "continuous_self_learning_required",
+    "gated_118_tracks",
+    "honest_verdict",
+    "mandated_sota_models",
+    "milestone",
+    "predecessor_criteria_met",
+    "predecessor_criteria_total",
+    "predecessor_milestone",
+    "prior_cdg_ready",
+    "prior_claim_isolation_ready",
+    "prior_fr11_promotion_ready",
+    "prior_live_sota_repair_ready",
+    "prior_orphan_test_incident_recorded",
+    "prior_product_line_ready",
+    "prior_runtime_contract_e2e_ready",
+    "prior_thrml_diverse_ready",
+    "prior_thrml_n128_ready",
+    "research_complete_has_117_entry",
+    "retired_headline_signals",
+    "status"
+  ],
+  "research_complete_has_117_entry": true,
+  "research_roadmap_yaml_modified": false,
+  "retired_headline_signal_blocks_preserved": true,
+  "retired_headline_signals": [
+    "legacy small-model headline claims",
+    "BEAVER/logprob acceptance authority",
+    "ARM/EBT soft-value acceptance authority",
+    "Extropic TSU/Z1 hardware execution claims",
+    "KV260 board claims",
+    "model-weight mutation"
+  ],
+  "run_date": "20260508",
+  "schema": "milestone_118_activation_manifest_v1",
+  "scripts_research_conductor_modified": false,
+  "source_evidence_paths": {
+    "exp1520": "results/experiment_1520_runtime_contract_e2e_harness.json",
+    "exp1521": "results/experiment_1521_live_sota_contract_guided_repair_v1.json",
+    "exp1522": "results/experiment_1522_constraint_dependency_graph_root_cause_repair.json",
+    "exp1523": "results/experiment_1523_product_line_parser_feasibility_rescue_v2.json",
+    "exp1524": "results/experiment_1524_fr11_live_policy_promotion_v12.json",
+    "exp1525": "results/experiment_1525_march_claim_isolation_verifier_ablation.json",
+    "exp1530": "results/experiment_1530_thrml_carnot_parity_n128_production_scale.json",
+    "exp1531": "results/experiment_1531_thrml_diverse_topology_parity_n32.json"
+  },
+  "source_inputs_read": {
+    "openspec/change-proposals/research-roadmap-vNEXT.md": {
+      "exists": true
+    },
+    "ops/changelog.md": {
+      "exists": true
+    },
+    "ops/conductor-log.md": {
+      "exists": true
+    },
+    "ops/known-issues.md": {
+      "exists": true
+    },
+    "ops/status.md": {
+      "exists": true
+    },
+    "research-complete.yaml": {
+      "exists": true
+    },
+    "research-references.md": {
+      "exists": true
+    },
+    "research-roadmap.yaml": {
+      "exists": true
+    },
+    "results/experiment_1532_milestone_117_retro.json": {
+      "exists": true
+    }
+  },
+  "status": "complete"
+}

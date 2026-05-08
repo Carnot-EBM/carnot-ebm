@@ -2084,6 +2084,85 @@ were not modified, recommends but does not append the `research-complete.yaml`
 entry, and writes an honest retrospective verdict with an accepted success
 prefix.
 
+### REQ-REPORT-058: Milestone .118 Activation Manifest
+
+The Exp 1533 `.117` completion archive and `.118` activation workflow shall
+write `results/experiment_1533_117_completion_archive_118_activation.json` with
+`status="in_progress"` before terminal completion. It shall then read Exp 1532,
+the `.117` source artifacts for Exp 1520, Exp 1521, Exp 1522, Exp 1523, Exp
+1524, Exp 1525, Exp 1530, and Exp 1531, `research-complete.yaml`,
+`ops/conductor-log.md`, `ops/status.md`, `ops/changelog.md`,
+`ops/known-issues.md`, and the `.118` roadmap materials without modifying
+`research-roadmap.yaml` or `scripts/research_conductor.py`.
+
+The terminal artifact shall include:
+
+- `status`
+- `milestone`
+- `predecessor_milestone`
+- `predecessor_criteria_met`
+- `predecessor_criteria_total`
+- `activation_manifest_complete`
+- `prior_runtime_contract_e2e_ready`
+- `prior_live_sota_repair_ready`
+- `prior_cdg_ready`
+- `prior_product_line_ready`
+- `prior_fr11_promotion_ready`
+- `prior_claim_isolation_ready`
+- `prior_thrml_n128_ready`
+- `prior_thrml_diverse_ready`
+- `prior_orphan_test_incident_recorded`
+- `research_complete_has_117_entry`
+- `mandated_sota_models`
+- `continuous_self_learning_required`
+- `allowed_118_tracks`
+- `gated_118_tracks`
+- `retired_headline_signals`
+- `honest_verdict`
+
+`prior_runtime_contract_e2e_ready` shall be true only when Exp 1520 is complete,
+reports `runtime_contract_e2e_ready=true`, and records `false_accept_rate=0.0`.
+`prior_live_sota_repair_ready` shall be true only when Exp 1521 reports a
+mandated local SOTA GGUF model. `prior_cdg_ready` shall be true only when Exp
+1522 reports `cdg_root_cause_repair_ready=true`. `prior_product_line_ready`
+shall be true only when Exp 1523 either rescues the branch or explicitly retires
+it. `prior_fr11_promotion_ready` shall be true only when Exp 1524 reports
+`soundness_mistakes=0` and `no_model_weight_mutation=true`.
+`prior_claim_isolation_ready` shall be true only when Exp 1525 reports
+deterministic validator outcomes with explicit budget metrics.
+`prior_thrml_n128_ready` and `prior_thrml_diverse_ready` shall come from Exp
+1530 and Exp 1531 software-only parity fields. `prior_orphan_test_incident_recorded`
+shall be true only when `ops/known-issues.md` or `ops/conductor-log.md`
+documents the `.117` orphan-test wedge.
+
+The activation markdown shall list allowed `.118` tracks for orphan-test guard,
+automata/XGrammar/ABS contract decoding, SATQuest CNF benchmark, BEAVER-lite
+prefix-risk audit, residual-drift ledger, external-feedback FR-11 skill graph,
+product-line scale, claim-isolation uncertainty routing, ARM/EBT soft-value
+diagnostics, THRML n=256/n=64-diverse stress, Extropic Z1 readiness packet, and
+milestone retro. It shall preserve blocks on legacy small-model headline
+claims, BEAVER/logprob acceptance authority, ARM/EBT soft-value acceptance
+authority, Extropic TSU/Z1 hardware execution claims, KV260 board claims, and
+model-weight mutation. The final verdict shall use a conductor-accepted success
+prefix and shall be complete only when Exp 1532 reports 14 of 14 criteria met,
+the activation markdown is written, all readiness gates are recorded honestly,
+the orphan-test incident is recorded, and protected roadmap/conductor files
+remain unchanged.
+
+### SCENARIO-REPORT-058: Exp 1533 Activates .118 With .117 Evidence Archived
+
+Given Exp 1532 reports `.117` as 14 of 14 criteria met, Exp 1520 reports
+zero-false-accept runtime-contract E2E readiness, Exp 1521 uses a mandated local
+SOTA GGUF, Exp 1522 through Exp 1525 report their `.117` readiness fields at
+the correct trust boundary, Exp 1530 and Exp 1531 report software-only THRML
+parity readiness, and the `.117` orphan-test wedge is documented, when Exp 1533
+runs for run date `20260508`, then it writes all required REQ-REPORT-058
+fields, writes `ops/milestone_118_activation_manifest.md`, lists only the
+allowed `.118` tracks and same-roadmap gates, records whether
+`research-complete.yaml` already contains a `2026.04.117` archive row, confirms
+`research-roadmap.yaml` and `scripts/research_conductor.py` were not modified,
+and writes an honest activation verdict with an accepted success prefix.
+
 ### REQ-REPORT-024: Local Agent Usage Snapshot
 
 The repository shall provide a local operator workflow that inspects the
@@ -2676,6 +2755,7 @@ embed live-GPU benchmark results from Exp 328 when available.
 | REQ-REPORT-055 | `python/carnot/reporting/milestone_retro_116.py`, `results/experiment_1518_milestone_116_retro.json` | `tests/python/test_milestone_retro_116.py` | Implemented |
 | REQ-REPORT-056 | `python/carnot/reporting/milestone_117_activation_manifest.py`, `results/experiment_1519_116_completion_archive_117_activation.json`, `ops/milestone_117_activation_manifest.md` | `tests/python/test_milestone_117_activation_manifest.py` | Implemented |
 | REQ-REPORT-057 | `python/carnot/reporting/milestone_retro_117.py`, `results/experiment_1532_milestone_117_retro.json` | `tests/python/test_milestone_retro_117.py` | Implemented |
+| REQ-REPORT-058 | `python/carnot/reporting/milestone_118_activation_manifest.py`, `results/experiment_1533_117_completion_archive_118_activation.json`, `ops/milestone_118_activation_manifest.md` | `tests/python/test_milestone_118_activation_manifest.py` | Implemented |
 | REQ-REPORT-024 | `python/carnot/reporting/agent_usage.py`, `scripts/agent_plan_usage.py` | `tests/python/test_agent_plan_usage.py` | Implemented |
 | REQ-PUBLISH-003 | `scripts/experiment_317_hf_publish.py` | `tests/python/test_experiment_317_hf_publish.py` | Implemented |
 | REQ-PUBLISH-004 | `scripts/experiment_330_hf_live_publish.py` | `tests/python/test_experiment_330_hf_live_publish.py` | Implemented |
