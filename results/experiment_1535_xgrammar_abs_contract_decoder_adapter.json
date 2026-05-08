@@ -1,0 +1,71 @@
+{
+  "abs_dfa_masks_used": true,
+  "adapter_path": "python/carnot/verify/xgrammar_abs_contract_decoder_adapter.py",
+  "automata_contract_accept_rate": 1.0,
+  "automata_parse_rate": 1.0,
+  "baseline_contract_accept_rate": 0.0,
+  "baseline_parse_rate": 0.0,
+  "blockers": [],
+  "cases_attempted": 4,
+  "contract_decoder_adapter_ready": true,
+  "decoder_manifest_path": "results/xgrammar_abs_contract_decoder_adapter_1535.jsonl",
+  "explicit_label_count": 6,
+  "explicit_reject_count": 2,
+  "false_accept_count": 0,
+  "false_accept_rate": 0.0,
+  "focused_tests_passed": true,
+  "gpu_probe": {
+    "cuda_available": true,
+    "gpu_count": 2,
+    "gpus": [
+      {
+        "index": 0,
+        "memory_free_mb": 23825.0,
+        "memory_total_mb": 24576.0,
+        "memory_used_mb": 302.0,
+        "name": "NVIDIA GeForce RTX 3090"
+      },
+      {
+        "index": 1,
+        "memory_free_mb": 23823.0,
+        "memory_total_mb": 24576.0,
+        "memory_used_mb": 304.0,
+        "name": "NVIDIA GeForce RTX 3090"
+      }
+    ],
+    "nvidia_smi_available": true,
+    "nvidia_smi_error": null
+  },
+  "honest_verdict": "complete: XGrammar/ABS contract decoder adapter ready",
+  "latency_delta_seconds": -0.204209,
+  "legacy_small_models_excluded_from_headline_metrics": true,
+  "live_sota_model_inference_used": true,
+  "milestone": ".118",
+  "model_specs": [
+    {
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "role": "flagship_moe_contract_decoder"
+    },
+    {
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "role": "flagship_dense_contract_decoder"
+    },
+    {
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "role": "middle_moe_contract_decoder"
+    }
+  ],
+  "models_used": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF"
+  ],
+  "run_date": "20260508",
+  "schema_version": 1,
+  "selected_case_families": [
+    "grammar_certificate",
+    "monitor_event",
+    "safe_dsl",
+    "structural_contract"
+  ],
+  "status": "complete",
+  "xgrammar_available": false
+}
