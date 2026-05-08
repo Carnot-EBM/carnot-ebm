@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Technical Report - A Technical Report — 1669 Experiments Across 130 Completed Research Milestone Records, 23,095 Python Test Items Collected (Artifacts Tracked Through Exp 1532)</title>
-  <meta name="description" content="Carnot technical report: A Technical Report — 1669 Experiments Across 130 Completed Research Milestone Records, 23,095 Python Test Items Collected (Artifacts Tracked Through Exp 1532). Live GPU benchmarks with statistical confidence intervals, honest negative results, and a public experiment history with provenance labels for every headline claim.">
+  <title>Technical Report - A Technical Report — 1697 Experiments Across the Public Record, 131 Archived Milestone Records, 23,363 Python Test Items Collected (Artifacts Tracked Through Exp 1546)</title>
+  <meta name="description" content="Carnot technical report: A Technical Report — 1697 Experiments Across the Public Record, 131 Archived Milestone Records, 23,363 Python Test Items Collected (Artifacts Tracked Through Exp 1546). Live GPU benchmarks with statistical confidence intervals, honest negative results, and a public experiment history with provenance labels for every headline claim.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M30,50 Q30,20 50,20 Q70,20 70,50 Q70,80 50,80 Q30,80 30,50' fill='none' stroke='%23f97316' stroke-width='8'/><circle cx='50' cy='50' r='10' fill='%23f97316'/></svg>">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -160,7 +160,7 @@
 
 <article>
 <h1 id="carnot-energy-based-verification-for-llm-output">Carnot: Energy-Based Verification for LLM Output</h1>
-<h2 id="a-technical-report-1669-experiments-across-130-completed-research-milestone-records-23095-python-test-items-collected-artifacts-tracked-through-exp-1532">A Technical Report — 1669 Experiments Across 130 Completed Research Milestone Records, 23,095 Python Test Items Collected (Artifacts Tracked Through Exp 1532)</h2>
+<h2 id="a-technical-report-1697-experiments-across-the-public-record-131-archived-milestone-records-23363-python-test-items-collected-artifacts-tracked-through-exp-1546">A Technical Report — 1697 Experiments Across the Public Record, 131 Archived Milestone Records, 23,363 Python Test Items Collected (Artifacts Tracked Through Exp 1546)</h2>
 <p><strong>Author:</strong> Ian Blenke
 <strong>Date:</strong> 2026-05-08
 <strong>Repository:</strong> github.com/Carnot-EBM/carnot-ebm
@@ -182,14 +182,15 @@ lines of Python. Headline model-generation benchmark numbers are from
 <strong>live GPU inference on real public models</strong> (Qwen 3.5, Gemma 4,
 Qwen3.6-35B-A3B), never from simulated runs; hardware, ensemble, and
 adversarial-audit results are labeled by artifact provenance.</p>
-<p>This report documents the research arc behind the framework — <strong>1,669
-experiments tracked through Exp 1532, with 130 artifact-backed completed
-milestone records archived through .116 and terminal artifacts through .117</strong> —
-run between February and May 2026. <code>research-complete.yaml</code> currently archives
-<strong>130</strong> completed milestone records through 2026.04.116; checked-in terminal
-artifacts now extend through milestone 2026.04.117, whose latest retro is
-<code>results/experiment_1532_milestone_117_retro.json</code> and whose artifact carries
-the recommended <code>.117</code> archive entry for the next reconciliation pass.
+<p>This report documents the research arc behind the framework — <strong>1,697
+experiment records tracked through Exp 1546, with 1,683 task records in 131
+artifact-backed completed milestone records archived through .117 and terminal
+artifacts through .118</strong> — run between February and May 2026.
+<code>research-complete.yaml</code> currently archives <strong>131</strong> completed milestone records
+through 2026.04.117; checked-in terminal artifacts now extend through milestone
+2026.04.118, whose latest retro is
+<code>results/experiment_1546_milestone_118_retro.json</code> and whose artifact carries
+the recommended <code>.118</code> archive entry for the next reconciliation pass.
 The story now spans activation-based negative results, constraint-based
 verification, live SOTA-model benchmarks, production verifier ensembles,
 hardware sampler audits, continuous self-learning, Phase-5 in-situ training
@@ -240,11 +241,17 @@ and rollback replay, portable trace2skill packs, THRML SamplerBackend
 conformance, KAN shape normalization, KV260 source-level property packs,
 runtime-contract E2E harnessing, live SOTA contract-guided repair gates, CDG
 root-cause repair ordering, product-line staged rescue, FR-11 live policy
-promotion, MARCH claim-isolation ablation, and THRML/Carnot simulator-only
-parity scaling through n=128 and diverse n=32 topologies.</p>
+promotion, MARCH claim-isolation ablation, THRML/Carnot simulator-only parity
+scaling through n=128 and diverse n=32 topologies, planner orphan-test guards,
+XGrammar/ABS automata contract decoding, SATQuest CNF false-accept
+measurement, BEAVER-lite prefix contracts, residual-drift ledgers, FR-11
+external-feedback promotion with positive-utility gating, product-line staged
+scale-up, claim-isolation uncertainty routing, ARM/EBT soft-value diagnostics,
+THRML/Carnot n=256 and diverse n=64 simulator parity, and Extropic Z1/XTR-0
+readiness packets.</p>
 <p>The latest archived milestone entry in <code>research-complete.yaml</code> is
-2026.04.116; checked-in result artifacts now extend through Exp 1532, which is
-the 2026.04.117 terminal retro.
+2026.04.117; checked-in result artifacts now extend through Exp 1546, which is
+the 2026.04.118 terminal retro.
 Milestone .105 diagnosed the SOTA thinking-mode certificate path as a terminal
 negative: <code>&lt;think&gt;</code> output consumed
 the generation budget before structural tags, producing
@@ -430,8 +437,31 @@ from <strong>1</strong> case for MARCH claim isolation, with budget delta <stron
 acceptance lift. Exps 1526-1531 scaled THRML/Carnot simulator-only parity to
 n=8, 16, 32, 64, and 128 plus <strong>4/4</strong> n=32 topologies; all reported KL <strong>0.0</strong>
 and explicitly preserve the no-TSU/no-hardware-claim boundary.</p>
-<p>The current 2026-05-07 Python test collection-only snapshot reports
-<strong>23,095</strong> items; this is a collection count, not a full-suite pass claim. A
+<p>Milestone .118 met <strong>13 of 14</strong> criteria. Exp 1534 added the planner orphan-test
+guard; focused checks passed and the broad Python suite remained red on
+pre-existing debt. Exp 1535 made XGrammar/ABS-style automata masks useful for
+contract generation: baseline parse and contract acceptance were <strong>0.0</strong>, while
+automata parse and contract acceptance were <strong>1.0</strong>, latency delta was
+<strong>-0.204209s</strong>, and false accepts stayed <strong>0.0</strong>. Exp 1536 made a SATQuest CNF
+benchmark ready with live local SOTA rows, but measured <strong>3</strong> solver-oracle
+false accepts and false-accept rate <strong>0.166667</strong>, so CNF verification is not
+yet acceptance-authority ready. Exp 1537 bounded <strong>78</strong> prefixes with no bound
+violations; Exp 1538 classified <strong>134</strong> residual-drift replay cases with drift
+rate <strong>0.477612</strong> and false accepts <strong>0.0</strong>. Exp 1539 promoted one externally
+verified FR-11 policy update safely, but positive utility was not demonstrated
+(<code>utility_delta=0.0</code>). Exp 1540 scaled the product-line benchmark to <strong>40</strong>
+cases with syntax, feasibility, and oracle agreement rates <strong>1.0</strong> and false
+accepts <strong>0.0</strong>. Exp 1541 reduced claim-isolated verifier calls <strong>18 -&gt; 7</strong>
+with false accepts <strong>0.0</strong>. Exp 1542 kept ARM/EBT soft-value signals diagnostic
+only: routing AUROC was <strong>1.0</strong>, energy-label correlation was <strong>0.683698</strong>, and
+deterministic validators remain final authority. Exps 1543-1544 advanced
+THRML/Carnot simulator-only parity to n=256 schedule stress (KL
+<strong>0.002662339801</strong>) and n=64 diverse topology parity (<strong>4/4</strong> topologies, KL
+<strong>0.000728807813</strong>), with no TSU or hardware claim. Exp 1545 wrote the Extropic
+Z1/XTR-0 readiness packet and transcript schema while recording no authenticated
+device access or hardware-run evidence.</p>
+<p>The current 2026-05-08 Python test collection-only snapshot reports
+<strong>23,363</strong> items; this is a collection count, not a full-suite pass claim. A
 plain-English summary of that journey is in the next section; deeper analysis
 follows in the body of the report and in the per-milestone retrospective
 artifacts checked into <code>results/operational_retro_*.json</code>.</p>
@@ -673,6 +703,17 @@ artifacts checked into <code>results/operational_retro_*.json</code>.</p>
   <strong>24</strong> rollback-passing updates with <strong>0</strong> soundness mistakes; THRML/Carnot
   simulator-only parity passed through n=128 plus <strong>4/4</strong> n=32 topologies with
   KL <strong>0.0</strong> and no TSU hardware claim (Exps 1519-1532).</li>
+<li><strong>Milestone .118 automata contracts, SATQuest boundary, and THRML scaling:</strong>
+  the milestone closed <strong>13/14</strong>. Automata-guided contract decoding moved parse
+  and contract acceptance <strong>0.0 -&gt; 1.0</strong> with false accepts <strong>0.0</strong>; BEAVER-lite
+  bounded <strong>78</strong> prefixes with no violations; residual-drift replay classified
+  <strong>134</strong> multi-turn cases; product-line staged scaling reached syntax,
+  feasibility, and oracle agreement <strong>1.0</strong> on <strong>40</strong> cases; claim isolation
+  reduced verifier calls <strong>18 -&gt; 7</strong> with false accepts <strong>0.0</strong>; THRML/Carnot
+  simulator-only parity advanced to n=256 and <strong>4/4</strong> n=64 topologies. SATQuest
+  CNF verification carries forward because false accepts were <strong>3</strong> (rate
+  <strong>0.166667</strong>), and FR-11 external-feedback promotion carries forward because
+  utility delta stayed <strong>0.0</strong> (Exps 1533-1546).</li>
 <li><strong>arXiv package v11 + publication hold:</strong> the .94/.99 integrity passes fixed
   the critical paper issues and updated the claim set against the latest
   orthogonality, TSS, DiffuTruth, and QuantKAN artifacts. Exp 1380 compiled the
@@ -937,10 +978,10 @@ artifacts checked into <code>results/operational_retro_*.json</code>.</p>
   LLM-verifier gaming defense exceeded the codex max-turn budget, the
   prior-failure auto-population task hit a circular metadata failure, and Exp
   1268 later counted retro-95 complete from available result fields.</li>
-<li><strong>Latest .96-.117 artifact status:</strong> <code>research-complete.yaml</code> now archives
-  <strong>130</strong> completed milestone records through .116, while terminal result
-  artifacts extend through Exp 1532 / <code>.117</code>; Exp 1532 includes the recommended
-  <code>.117</code> archive entry for the next reconciliation pass. The checked-in .96/.97
+<li><strong>Latest .96-.118 artifact status:</strong> <code>research-complete.yaml</code> now archives
+  <strong>131</strong> completed milestone records through .117, while terminal result
+  artifacts extend through Exp 1546 / <code>.118</code>; Exp 1546 includes the recommended
+  <code>.118</code> archive entry for the next reconciliation pass. The checked-in .96/.97
   and stale .103
   artifacts should still be read conservatively. Exp 1268 backfilled .96 at
   <strong>2/13</strong> and .97 at <strong>4/13</strong>. .98 closed <strong>5/13</strong> criteria through Exp 1267,
@@ -983,7 +1024,12 @@ artifacts checked into <code>results/operational_retro_*.json</code>.</p>
   contract-guided repair, CDG root-cause ordering, product-line staged rescue,
   FR-11 live policy promotion, MARCH claim isolation, and THRML parity scaling
   through n=128 plus diverse n=32 topologies while preserving all
-  no-hardware-claim boundaries.</li>
+  no-hardware-claim boundaries. Milestone .118 closed <strong>13/14</strong> through Exp
+  1546, advancing automata-guided contract decoding, BEAVER-lite prefix bounds,
+  residual-drift ledgers, product-line staged scaling, claim-isolation routing,
+  ARM/EBT diagnostics, THRML n=256/n=64 simulator parity, and Extropic readiness
+  while carrying SATQuest false accepts and the FR-11 positive-utility gap to
+  .119.</li>
 </ul>
 <p><strong>Claims that did not survive audit</strong> are kept in the research record as
 negative findings and documented alongside the audits that surfaced them
@@ -2819,6 +2865,69 @@ but are not included as model-generation headline claims.</p>
 <td>Runtime contracts, bounded live repair, CDG/product-line rescue, FR-11 policy promotion, claim isolation, and THRML scaling closed with claim boundaries preserved</td>
 <td>Exp 1532</td>
 </tr>
+<tr>
+<td>XGrammar/ABS contract decoder</td>
+<td>automata masks for contract generation</td>
+<td>parse <strong>0.0 -&gt; 1.0</strong>; contract accept <strong>0.0 -&gt; 1.0</strong></td>
+<td>Latency delta <strong>-0.204209s</strong>, false accepts <strong>0.0</strong> on bounded local SOTA rows</td>
+<td>Exp 1535</td>
+</tr>
+<tr>
+<td>SATQuest CNF verifier benchmark</td>
+<td>CNF solver oracle on live local rows</td>
+<td>false accepts <strong>3</strong>, rate <strong>0.166667</strong></td>
+<td>Benchmark ready, but acceptance authority is blocked until solver-oracle false accepts are repaired</td>
+<td>Exp 1536</td>
+</tr>
+<tr>
+<td>BEAVER-lite + residual drift</td>
+<td>prefix bounds and drift ledger</td>
+<td><strong>78</strong> prefixes; <strong>134</strong> drift cases</td>
+<td>No bound violations; drift rate <strong>0.477612</strong>, false accepts <strong>0.0</strong></td>
+<td>Exps 1537/1538</td>
+</tr>
+<tr>
+<td>Product-line staged benchmark v3</td>
+<td>scale parser/feasibility/oracle gate</td>
+<td><strong>40</strong> cases; syntax/feasibility/oracle <strong>1.0</strong></td>
+<td>Automata constraints used, false accepts <strong>0.0</strong>, branch continues</td>
+<td>Exp 1540</td>
+</tr>
+<tr>
+<td>Claim-isolation uncertainty router</td>
+<td>reduce verifier budget safely</td>
+<td>verifier calls <strong>18 -&gt; 7</strong></td>
+<td><strong>7</strong> routed cases, budget delta <strong>-11</strong>, false accepts <strong>0.0</strong></td>
+<td>Exp 1541</td>
+</tr>
+<tr>
+<td>ARM/EBT soft-value diagnostic</td>
+<td>diagnostic routing only</td>
+<td>routing AUROC <strong>1.0</strong></td>
+<td><strong>24</strong> cases, energy-label correlation <strong>0.683698</strong>; deterministic validators remain final authority</td>
+<td>Exp 1542</td>
+</tr>
+<tr>
+<td>THRML/Carnot .118 scaling</td>
+<td>simulator-only parity stress</td>
+<td>n=256 KL <strong>0.002662339801</strong>; n=64 diverse KL <strong>0.000728807813</strong></td>
+<td><strong>3</strong> n=256 schedules and <strong>4/4</strong> n=64 topologies pass; no TSU hardware claim</td>
+<td>Exps 1543/1544</td>
+</tr>
+<tr>
+<td>FR-11 external-feedback promotion v13</td>
+<td>positive utility gate</td>
+<td>utility delta <strong>0.0</strong></td>
+<td>One rollback-backed update promoted safely, but no positive utility; no model-weight mutation</td>
+<td>Exp 1539</td>
+</tr>
+<tr>
+<td>Milestone .118 outcome</td>
+<td>14 criteria</td>
+<td><strong>13/14</strong> met</td>
+<td>Automata contracts, product-line scale, claim routing, ARM/EBT diagnostics, THRML scaling, and Extropic readiness advanced; SATQuest false accepts and FR-11 utility carry to .119</td>
+<td>Exp 1546</td>
+</tr>
 </tbody>
 </table>
 <h3 id="pending-validation-not-yet-headline">Pending Validation (Not Yet Headline)</h3>
@@ -3327,7 +3436,7 @@ result = pipeline.verify_and_repair(
 <p>The constraint pipeline dog-foods itself as a "fourth gate" in the autoresearch evaluator. When the orchestrator evaluates a hypothesis, it extracts verifiable claims via the NL and code constraint extractors, then verifies them via Ising sampling. This catches bogus hypotheses that pass energy, time, and memory gates but make false claims about their results.</p>
 <hr>
 <h2 id="7-principles-learned">7. Principles Learned</h2>
-<p>From the activation-based phase of a research program that now spans 1,669 experiments tracked across 130 completed milestone records, we distilled 14 principles. Principles 1-3 describe what works. Principles 4-14 describe what doesn't work for activation-based hallucination detection — these systematic negative results are the project's primary contribution to the literature, saving other researchers months of dead ends.</p>
+<p>From the activation-based phase of a research program that now spans 1,697 experiment records through Exp 1546 and 131 archived completed milestone records, we distilled 14 principles. Principles 1-3 describe what works. Principles 4-14 describe what doesn't work for activation-based hallucination detection — these systematic negative results are the project's primary contribution to the literature, saving other researchers months of dead ends.</p>
 <h3 id="what-works">What works</h3>
 <ol>
 <li>
@@ -3380,7 +3489,7 @@ result = pipeline.verify_and_repair(
 <p>The failure of Principles 4-14 establishes a fundamental limit: <strong>you cannot detect factual hallucination without access to factual knowledge.</strong> No internal signal can distinguish true from false statements about the external world. The solution is to bring external knowledge into the verification loop — as constraints. This is the insight that drove the paradigm shift from Phase 1 to Phase 2, and the constraint pipeline's 100% detection rate (Experiment 56) vs activation EBMs' 50% practical rate validates it empirically.</p>
 <hr>
 <h2 id="8-the-production-architecture">8. The Production Architecture</h2>
-<p>The architecture that emerged from 1,669 tracked experiments:</p>
+<p>The architecture that emerged from 1,697 tracked experiment records:</p>
 <pre><code>User Question
      |
      v
@@ -3585,7 +3694,7 @@ Verified + Repaired Answer
 </tr>
 </tbody>
 </table>
-<p><strong>Total:</strong> <strong>23,095</strong> Python test items are currently collected in the repo (<code>.venv/bin/pytest tests/python --collect-only -q -o addopts='' --disable-warnings</code>, collected 2026-05-07). This is a collection count, not a claim that the full suite passes. Exp 1392 records zero collection errors after the semantic-validator repair, Exp 1411's focused stream/MCP checks pass <strong>10/10</strong>, Exp 1421 fixes the focused embedding-store runtime-failure cluster with 100% line coverage on the touched module, Exp 1426 records <strong>71</strong> remaining spec-coverage traceability debt items, Exp 1440 reduces that spec-coverage metadata debt <strong>71 -&gt; 0</strong> while recording the required full-suite red result (<strong>101 failed</strong>, <strong>6 errors</strong>) outside the metadata fix, the .115 focused conductor rows report <strong>81</strong> tests passing per task, the .116 artifacts record changed-module checks for the new contract, policy, skill-pack, and source-level conformance modules, and the .117 artifacts record focused readiness checks for the runtime-contract harness, CDG/product-line rescue, FR-11 policy promotion, MARCH ablation, and THRML parity manifests. Full validation therefore remains command-specific in the relevant experiment artifacts.</p>
+<p><strong>Total:</strong> <strong>23,363</strong> Python test items are currently collected in the repo (<code>.venv/bin/pytest tests/python --collect-only -q -o addopts='' --disable-warnings</code>, collected 2026-05-08). This is a collection count, not a claim that the full suite passes. Exp 1392 records zero collection errors after the semantic-validator repair, Exp 1411's focused stream/MCP checks pass <strong>10/10</strong>, Exp 1421 fixes the focused embedding-store runtime-failure cluster with 100% line coverage on the touched module, Exp 1426 records <strong>71</strong> remaining spec-coverage traceability debt items, Exp 1440 reduces that spec-coverage metadata debt <strong>71 -&gt; 0</strong> while recording the required full-suite red result (<strong>101 failed</strong>, <strong>6 errors</strong>) outside the metadata fix, the .115 focused conductor rows report <strong>81</strong> tests passing per task, the .116 artifacts record changed-module checks for the new contract, policy, skill-pack, and source-level conformance modules, the .117 artifacts record focused readiness checks for the runtime-contract harness, CDG/product-line rescue, FR-11 policy promotion, MARCH ablation, and THRML parity manifests, and Exp 1534 records the latest broad-suite attempt as still red (<strong>94 failed</strong>, <strong>20,015 passed</strong>, <strong>103 skipped</strong>, <strong>4 errors</strong>) from pre-existing failures. Full validation therefore remains command-specific in the relevant experiment artifacts.</p>
 <hr>
 <h2 id="11-reproduction">11. Reproduction</h2>
 <pre><code class="language-bash"># Clone and setup
@@ -3636,7 +3745,7 @@ make research-loop
 </code></pre>
 <hr>
 <h2 id="12-conclusion">12. Conclusion</h2>
-<p>Across <strong>1,669 tracked experiments</strong> on model families spanning 350M to 35B parameters, <strong>130 completed milestone records</strong>, and a complete arc from failed activation approaches through simulation artifact discovery to credible live results, we reached a clear three-part conclusion.</p>
+<p>Across <strong>1,697 tracked experiment records</strong> on model families spanning 350M to 35B parameters, <strong>131 archived completed milestone records</strong>, and a complete arc from failed activation approaches through simulation artifact discovery to credible live results, we reached a clear three-part conclusion.</p>
 <h3 id="part-1-activation-based-detection-fails">Part 1: Activation-based detection fails</h3>
 <p>Activation-based EBMs detect model confidence, not factual correctness. The 75-88% test-set accuracy is statistically real but practically misleading — in deployment, the EBM agrees with ground truth only 50% of the time. Four compounding effects defeat activation-based detection:</p>
 <ol>
@@ -3663,7 +3772,7 @@ make research-loop
 <li><strong>HumanEval 50 dual-model (Exp 220):</strong> +2.0pp on both Qwen and Gemma</li>
 </ul>
 <h3 id="the-story">The story</h3>
-<p>The trajectory of this project is: we tried the obvious approach (train an EBM on activations to detect hallucination), learned through 38 experiments that it fundamentally cannot work for factual verification, identified the root cause (internal signals capture confidence, not truth), pivoted to encoding external knowledge as formal constraints, discovered that early constraint results were simulation artifacts, rebuilt extraction for real instruction-tuned models, proved that code verification (+3.0pp HumanEval) and typed constraint verification (+4.9pp) work on live GPU inference, calibrated semantic verification on live artifacts without overstating what it fixes, documented the honest flat-delta Qwen PBT follow-up plus its <strong>17/23</strong> wrong-baseline detections and <strong>2</strong> weak-harness misses, showed that newer self-learning improves retrieval quality before it improves held-out task success, added provenance-labeled FPGA blocker and replay artifacts, distilled the strongest code traces into reusable spec-backed checks, packaged the PBT path as a standalone API, CLI, and 7-tool MCP surface, deployed DualGPURunner achieving 1.98x throughput in production, fixed LIVE-ENV propagation, synthesized open FPGA energy-oracle paths, expanded FoVer to 8,829 pairs, repaired the SOTA-output energy inversion, deployed and then fixed the k=5 verifier ensemble, obtained the first positive GRPO + ThinkPRM v2 self-learning result, then improved it with GRPO v4 structural warm-up, fixed cheap-tier FPR with SECL, restored KV260 sampler correctness with sequential Gibbs, seeded Phase 3 hardware/architecture paths with KANELE and NRGPT, ran the first Phase 4 active-inference pilot, proved BEAVER live-logprob certificates, retired k=6 after regularization still failed to beat k=5, retired DoT after the redesign stayed below random, added Hex, Nonogram, Futoshiki, Kakuro, and Masyu to the WOPR cartridges, downgraded the first Phase 4 result to a BFS tie, then got a stronger synthetic Phase 4 advantage on BFS-intractable puzzles, preserved SOS-KAN AUROC above 0.99 after 4-bit quantization and QuantKAN AUROC 0.9801 at 3-bit, documented .93's missing-artifact/gate-block failure mode, recovered in .94 with a 13/13 milestone, used .95 to confirm GRPO-VPS full training while uncovering a Phase-5 verifier-orthogonality blocker, measured Boltzmann-GPT CD AUROC 0.960744 while classifying NRGPT non-monotonicity as expected causal-context shift, recovered production k=5 orthogonality at max r=0.4617/k_eff=1.76, added TSS, DiffuTruth, and 3-bit QuantKAN edge measurements, closed .99-.104 with arXiv v10 packaging, PRIME verifier weights, certificate-memory replay, continuous repair, gaming-defense proxy evidence, WOPR Kakuro/Masyu, SOTA GGUF runtime recovery, DCCD/GBNF parse measurements, dynamic grammar readiness, failure-type memory, and hardware/parity boundaries, then used .105-.117 to diagnose thinking-mode budget failure, recover tag-first certificates, compile the arXiv v11 bundle, measure DVI v1/v2/v3 and SECL calibration, expand FR-11 self-learning to <strong>1,676</strong> fresh-verified cases, fix semantic validation, retire GRPO/BiPRM and exact pipeline reruns that failed, harden the public <code>VerdictRecord</code>, SessionMemory, and streaming verification APIs, expose repair-executor and off-decoder-support failure modes, write and lint/sim the Discrete SB RTL source, train PRM v1/v2/v3 on available labels while documenting <strong>0.0pp</strong> selector lift, recover repair-v2 prototype success, deploy replay-calibrated DVI v3, audit DPO provenance, fix latent repair anchoring, reduce spec-coverage metadata debt <strong>71 -&gt; 0</strong>, generate 24 temporal LTLZinc cases, keep EBT/NRGPT at smoke-only scope, document and repair the live SOTA runtime blocker, classify artifact signal/noise, trim active priorities, retire noisy lineages, narrow paper/hardware/comparator scope, adopt BEAVER-style live-prefix bounds, retire Semantic Energy/logit telemetry as headline evidence, add query-time memory and CCTU executable-constraint evidence, reject V_1 pairwise promotion, graduate bounded trigger-token certificate export and safe-DSL validator compilation, add interwhen/HoVer monitor evidence, formalize FR-11 trace2skill daily evaluation and reachability hygiene, enforce deterministic-first verifier discipline, add deterministic plan-graph energy localization, keep KAN hardware accounting no-synthesis, repair THRML import enough to run simulator-only parity with no hardware claim, add safe-DSL verifier induction and trigger+grammar decoding, normalize executable monitor events, catch all injected plan-graph structural violations, rollback-test FR-11 verifier-feedback policies, package only rollback-passing skills, link a 458-case runtime-contract E2E harness, rescue the product-line parser/oracle path, promote FR-11 live policies only at query time, and scale THRML/Carnot simulator parity through n=128 plus four n=32 topologies — all across <strong>1,669 tracked experiments and 130 completed milestone records</strong>.</p>
+<p>The trajectory of this project is: we tried the obvious approach (train an EBM on activations to detect hallucination), learned through 38 experiments that it fundamentally cannot work for factual verification, identified the root cause (internal signals capture confidence, not truth), pivoted to encoding external knowledge as formal constraints, discovered that early constraint results were simulation artifacts, rebuilt extraction for real instruction-tuned models, proved that code verification (+3.0pp HumanEval) and typed constraint verification (+4.9pp) work on live GPU inference, calibrated semantic verification on live artifacts without overstating what it fixes, documented the honest flat-delta Qwen PBT follow-up plus its <strong>17/23</strong> wrong-baseline detections and <strong>2</strong> weak-harness misses, showed that newer self-learning improves retrieval quality before it improves held-out task success, added provenance-labeled FPGA blocker and replay artifacts, distilled the strongest code traces into reusable spec-backed checks, packaged the PBT path as a standalone API, CLI, and 7-tool MCP surface, deployed DualGPURunner achieving 1.98x throughput in production, fixed LIVE-ENV propagation, synthesized open FPGA energy-oracle paths, expanded FoVer to 8,829 pairs, repaired the SOTA-output energy inversion, deployed and then fixed the k=5 verifier ensemble, obtained the first positive GRPO + ThinkPRM v2 self-learning result, then improved it with GRPO v4 structural warm-up, fixed cheap-tier FPR with SECL, restored KV260 sampler correctness with sequential Gibbs, seeded Phase 3 hardware/architecture paths with KANELE and NRGPT, ran the first Phase 4 active-inference pilot, proved BEAVER live-logprob certificates, retired k=6 after regularization still failed to beat k=5, retired DoT after the redesign stayed below random, added Hex, Nonogram, Futoshiki, Kakuro, and Masyu to the WOPR cartridges, downgraded the first Phase 4 result to a BFS tie, then got a stronger synthetic Phase 4 advantage on BFS-intractable puzzles, preserved SOS-KAN AUROC above 0.99 after 4-bit quantization and QuantKAN AUROC 0.9801 at 3-bit, documented .93's missing-artifact/gate-block failure mode, recovered in .94 with a 13/13 milestone, used .95 to confirm GRPO-VPS full training while uncovering a Phase-5 verifier-orthogonality blocker, measured Boltzmann-GPT CD AUROC 0.960744 while classifying NRGPT non-monotonicity as expected causal-context shift, recovered production k=5 orthogonality at max r=0.4617/k_eff=1.76, added TSS, DiffuTruth, and 3-bit QuantKAN edge measurements, closed .99-.104 with arXiv v10 packaging, PRIME verifier weights, certificate-memory replay, continuous repair, gaming-defense proxy evidence, WOPR Kakuro/Masyu, SOTA GGUF runtime recovery, DCCD/GBNF parse measurements, dynamic grammar readiness, failure-type memory, and hardware/parity boundaries, then used .105-.118 to diagnose thinking-mode budget failure, recover tag-first certificates, compile the arXiv v11 bundle, measure DVI v1/v2/v3 and SECL calibration, expand FR-11 self-learning to <strong>1,676</strong> fresh-verified cases, fix semantic validation, retire GRPO/BiPRM and exact pipeline reruns that failed, harden the public <code>VerdictRecord</code>, SessionMemory, and streaming verification APIs, expose repair-executor and off-decoder-support failure modes, write and lint/sim the Discrete SB RTL source, train PRM v1/v2/v3 on available labels while documenting <strong>0.0pp</strong> selector lift, recover repair-v2 prototype success, deploy replay-calibrated DVI v3, audit DPO provenance, fix latent repair anchoring, reduce spec-coverage metadata debt <strong>71 -&gt; 0</strong>, generate 24 temporal LTLZinc cases, keep EBT/NRGPT at smoke-only scope, document and repair the live SOTA runtime blocker, classify artifact signal/noise, trim active priorities, retire noisy lineages, narrow paper/hardware/comparator scope, adopt BEAVER-style live-prefix bounds, retire Semantic Energy/logit telemetry as headline evidence, add query-time memory and CCTU executable-constraint evidence, reject V_1 pairwise promotion, graduate bounded trigger-token certificate export and safe-DSL validator compilation, add interwhen/HoVer monitor evidence, formalize FR-11 trace2skill daily evaluation and reachability hygiene, enforce deterministic-first verifier discipline, add deterministic plan-graph energy localization, keep KAN hardware accounting no-synthesis, repair THRML import enough to run simulator-only parity with no hardware claim, add safe-DSL verifier induction and trigger+grammar decoding, normalize executable monitor events, catch all injected plan-graph structural violations, rollback-test FR-11 verifier-feedback policies, package only rollback-passing skills, link a 458-case runtime-contract E2E harness, rescue the product-line parser/oracle path, promote FR-11 live policies only at query time, scale THRML/Carnot simulator parity through n=128 plus four n=32 topologies, add automata-guided contract decoding, expose SATQuest solver-oracle false accepts, add residual-drift and BEAVER prefix ledgers, scale product-line staged validation, reduce claim-isolated verifier calls, keep ARM/EBT soft values diagnostic-only, advance THRML simulator parity to n=256 and n=64 diverse topology, and package Extropic access-readiness evidence — all across <strong>1,697 tracked experiment records and 131 archived completed milestone records</strong>.</p>
 <p>The LLM handles language. The Ising model handles logic. Each does what it's best at. And someday, the Ising model runs on thermodynamic hardware.</p>
 <hr>
 <h2 id="13-pre-trained-models">13. Pre-trained Models</h2>
@@ -3722,7 +3831,7 @@ make research-loop
 <li><strong>Plan.</strong> When all tasks in a milestone complete, a planning agent reads <code>research-program.md</code> (human-written goals) and autonomously designs the next milestone — selecting experiments, ordering dependencies, and writing full conductor-ready prompts.</li>
 <li><strong>Repeat.</strong> The loop runs until a circuit breaker halts it after N consecutive failures.</li>
 </ol>
-<p>In a 50-iteration run with Claude 3.5 Sonnet as the proposer, the loop achieved near-optimal energy on two benchmark functions (DoubleWell: 0.0001, Rosenbrock: 0.0092) before the circuit breaker engaged at iteration 18. The research conductor now drives a 130-record artifact-backed research archive spanning 1,669 tracked experiments with automatic milestone archival and transition.</p>
+<p>In a 50-iteration run with Claude 3.5 Sonnet as the proposer, the loop achieved near-optimal energy on two benchmark functions (DoubleWell: 0.0001, Rosenbrock: 0.0092) before the circuit breaker engaged at iteration 18. The research conductor now drives a 131-record artifact-backed research archive spanning 1,697 tracked experiment records with automatic milestone archival and transition.</p>
 <p>The energy function serves as the objective judge — no human evaluation or LLM-as-judge is needed. This is a key advantage of the EBM paradigm: the mathematics provides ground truth.</p>
 <hr>
 <h2 id="15-limitations">15. Limitations</h2>
@@ -5035,19 +5144,20 @@ cleanly; artifacts stayed at bootstrap/in-progress state. Operationally, .96
 therefore starts by closing the .95 retro and then runs the production
 orthogonality audit before paper-v6 or Phase-5 scale-up work.</p>
 <h3 id="phase-21-9697-artifact-reality-boltzmann-gpt-cd-and-nrgpt-type-b-classification-exps-12291254">Phase 21 — .96/.97 Artifact Reality, Boltzmann-GPT CD, and NRGPT Type-B Classification (Exps 1229–1254)</h3>
-<p>The archive now contains <strong>130 artifact-backed completed milestone records</strong>
-through the 2026.04.116 terminal retro, and checked-in result artifacts extend
-through Exp 1532. The artifact layer is more conservative than the terminal
+<p>The archive now contains <strong>131 artifact-backed completed milestone records</strong>
+through the 2026.04.117 terminal retro, and checked-in result artifacts extend
+through Exp 1546. The artifact layer is more conservative than the terminal
 artifact list: <code>research-complete.yaml</code> is currently archived through
-2026.04.116, and Exp 1532 includes the recommended <code>.117</code> entry for the next
+2026.04.117, and Exp 1546 includes the recommended <code>.118</code> entry for the next
 reconciliation pass. Several
 .96, .97, and .103 deliverables listed in <code>research-complete.yaml</code> do not have
 terminal result artifacts in this checkout; .112 is both archived and terminal
-via Exp 1466, .115 is both archived and terminal via Exp 1505, and .116 is
-both archived and terminal via Exp 1518. The .117 terminal artifact is present
-via Exp 1532 but not yet written into <code>research-complete.yaml</code>. The public docs
-should therefore report <strong>1,669</strong> tracked experiment/task records while treating
-only terminal artifacts as measured findings.</p>
+via Exp 1466, .115 is both archived and terminal via Exp 1505, .116 is both
+archived and terminal via Exp 1518, and .117 is both archived and terminal via
+Exp 1532. The .118 terminal artifact is present via Exp 1546 but not yet written
+into <code>research-complete.yaml</code>. The public docs should therefore report <strong>1,697</strong>
+tracked experiment records while treating only terminal artifacts as measured
+findings.</p>
 <p><strong>Prior-failure autofill v2 (Exp 1230):</strong> The conductor autofill utility shipped
 at <code>scripts/conductor_priors_autofill.py</code>. Focused tests report <strong>7 passed</strong>,
 <strong>0 failed</strong>, and <strong>100%</strong> changed-code coverage. The dry run scanned 13 tasks,
@@ -5640,8 +5750,8 @@ threshold. Exp 1439 created the .110 carry-forward activation manifest, and Exp
 <strong>71 -&gt; 0</strong>. Focused checks passed, but the required broad suite attempt
 remained red outside that metadata fix with <strong>101 failed</strong>, <strong>21191 passed</strong>,
 <strong>103 skipped</strong>, <strong>6 errors</strong>, and <strong>91 warnings</strong> before interruption. The
-current public test number is therefore the 2026-05-07 collection snapshot:
-<strong>23,095</strong> Python items collected, not a full-suite pass claim.</p>
+current public test number is now the 2026-05-08 collection snapshot:
+<strong>23,363</strong> Python items collected, not a full-suite pass claim.</p>
 <p>The live-SOTA scale branch was correctly blocked. Exp 1442 found local
 Qwen3.6-35B and Gemma4-31B GGUF files cached and both RTX 3090s idle, but
 llama.cpp failed to load <code>libcudart.so.12</code>; the optional Gemma4-26B GGUF was
@@ -5881,6 +5991,49 @@ four passed with KL <strong>0.0</strong>. Every artifact is marked simulator-onl
 <code>no_tsu_hardware_claim=true</code>; no TSU, synthesis, bitstream, timing, or board
 execution claim is allowed. Exp 1532 records the terminal retro:
 <code>milestone_117_14_of_14_criteria_met_runtime_contract_fr11_thrml_claim_boundaries_preserved</code>.</p>
+<h3 id="phase-42-118-automata-contracts-satquest-boundary-product-line-scale-and-thrml-n256-exps-1533-1546">Phase 42 — .118 Automata Contracts, SATQuest Boundary, Product-Line Scale, and THRML n=256 (Exps 1533-1546)</h3>
+<p>Milestone .118 met <strong>13 of 14</strong> criteria. Exp 1533 archived the .117 completion
+state, confirmed <strong>14/14</strong> predecessor criteria, and activated .118 gates without
+modifying <code>research-roadmap.yaml</code> or <code>scripts/research_conductor.py</code>. Exp 1534
+added a planner orphan-test discipline guard: focused tests passed <strong>5/5</strong> with
+100% coverage on <code>scripts/audit_orphan_test_imports.py</code>, the active guard passed,
+and the broad Python suite remained honestly red on pre-existing failures
+(<strong>94 failed</strong>, <strong>20,015 passed</strong>, <strong>103 skipped</strong>, <strong>4 errors</strong>) after xdist
+worker aborts.</p>
+<p>The contract-generation branch improved, but acceptance authority stayed
+deterministic. Exp 1535 used XGrammar/ABS-style automata masks with local
+Qwen3.6-35B-A3B rows: baseline parse rate and contract accept rate were both
+<strong>0.0</strong>, automata parse and contract accept were both <strong>1.0</strong>, latency delta was
+<strong>-0.204209s</strong>, and false-accept rate was <strong>0.0</strong>. Exp 1536 then built a
+SATQuest CNF verifier benchmark from <strong>18</strong> prompt cases and <strong>6</strong> CNF
+instances with live local SOTA rows. It is useful as a benchmark, but not as an
+acceptance authority yet: solver-oracle false accepts were <strong>3</strong> and
+false-accept rate was <strong>0.166667</strong>. Exp 1537 added BEAVER-lite prefix-bound
+contracts over <strong>78</strong> bounded prefixes with no bound violations and false
+accepts <strong>0.0</strong>.</p>
+<p>The replay, product-line, and routing tracks produced bounded gates. Exp 1538
+wrote a residual-drift commitment ledger for <strong>134</strong> multi-turn cases:
+<strong>2</strong> contradiction cases, <strong>64</strong> satisfiable-drift cases, drift rate
+<strong>0.477612</strong>, and false accepts <strong>0.0</strong>. Exp 1539 promoted one externally
+verified FR-11 update with no model-weight mutation and <strong>0</strong> soundness mistakes,
+but positive utility was not demonstrated (<code>utility_delta=0.0</code>), so the next
+gate is repeat-with-positive-utility or retire that headline claim. Exp 1540
+scaled product-line staged validation to <strong>40</strong> cases with syntax, feasibility,
+and oracle agreement all <strong>1.0</strong> and false accepts <strong>0.0</strong>. Exp 1541 added a
+claim-isolation uncertainty router that reduced verifier calls <strong>18 -&gt; 7</strong> over
+<strong>7</strong> routed cases, budget delta <strong>-11</strong>, and false accepts <strong>0.0</strong>.</p>
+<p>The ARM/EBT and hardware-adjacent outputs remain diagnostic or readiness-only.
+Exp 1542 measured <strong>24</strong> ARM/EBT soft-value diagnostic cases with routing AUROC
+<strong>1.0</strong> and energy-label correlation <strong>0.683698</strong>; deterministic validators
+remain final authority and no model weights were mutated. Exp 1543 advanced
+THRML/Carnot simulator parity to n=256 schedule stress over <strong>3</strong> schedules with
+KL <strong>0.002662339801</strong>. Exp 1544 passed <strong>4/4</strong> n=64 diverse topologies
+(complete, sparse-random, lattice, scale-free) with KL <strong>0.000728807813</strong>. Both
+are simulator-only and preserve <code>no_tsu_hardware_claim=true</code>. Exp 1545 wrote an
+Extropic Z1/XTR-0 access-readiness packet and transcript schema, but records no
+authenticated device access, no hardware-run transcript, no device latency, and
+no sample-quality evidence. Exp 1546 records the terminal retro:
+<code>milestone_118_13_of_14_criteria_met_satquest_fr11_limits_carried_to_119</code>.</p>
 </article>
 
 <footer>

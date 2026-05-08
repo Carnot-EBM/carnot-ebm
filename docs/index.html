@@ -300,10 +300,10 @@
       <a href="technical-report.html" class="btn btn-secondary">How it works</a>
     </div>
     <div class="stats-bar" aria-label="Project headline numbers">
-      <div class="stat"><div class="stat-num">1,669</div><div class="stat-label">Experiments tracked through Exp 1532</div></div>
-      <div class="stat"><div class="stat-num">130</div><div class="stat-label">artifact records through .116</div></div>
-      <div class="stat"><div class="stat-num">23,095</div><div class="stat-label">Python items collected, not full pass</div></div>
-      <div class="stat"><div class="stat-num">14/14</div><div class="stat-label">latest .117 criteria met</div></div>
+      <div class="stat"><div class="stat-num">1,697</div><div class="stat-label">Experiment records through Exp 1546</div></div>
+      <div class="stat"><div class="stat-num">131</div><div class="stat-label">archived records through .117</div></div>
+      <div class="stat"><div class="stat-num">23,363</div><div class="stat-label">Python items collected, not full pass</div></div>
+      <div class="stat"><div class="stat-num">13/14</div><div class="stat-label">latest .118 criteria met</div></div>
     </div>
   </div>
 </section>
@@ -577,6 +577,16 @@
           policy promotion loaded 24 rollback-passing updates with no model
           weight mutation, and THRML/Carnot simulator-only parity scaled to
           n=128 plus four n=32 topologies with KL 0.0 and no TSU claim.
+          Milestone .118 met 13/14 criteria: automata-guided contract decoding
+          moved parse and contract acceptance from 0.0 to 1.0 with false
+          accepts 0.0, BEAVER-lite bounded 78 prefixes with no violations,
+          residual-drift replay classified 134 multi-turn cases, product-line
+          staged scaling reached syntax, feasibility, and oracle agreement 1.0
+          on 40 cases, claim isolation reduced verifier calls from 18 to 7, and
+          THRML simulator parity advanced to n=256 plus four n=64 topologies.
+          SATQuest CNF verification carries forward because solver-oracle false
+          accepts reached 0.166667, and FR-11 external-feedback promotion stays
+          query-time-only because utility delta remained 0.0.
         </p>
       </div>
       <div class="bento-card span-2">
@@ -593,14 +603,18 @@
           cluster with 100% line coverage on the touched store module, while
           preserving the full-suite debt disclosure: the collection is clean,
           but the full Python suite remains red on pre-existing failures. The
-          current collection-only snapshot reports 23,095 Python items. The
+          current collection-only snapshot reports 23,363 Python items. The
           .112 scope-reduction pass added artifact signal/noise and mandatory
           priority ledgers. The .116 closeout records runtime-contract,
           FR-11 feedback, product-line solver-oracle, THRML conformance, KAN
           shape-normalization, and KV260 source-property gates; the .117
           closeout adds a 458-case runtime-contract E2E harness, CDG and
-          product-line rescue gates, and THRML parity scaling through n=128
-          while preserving the no-hardware-claim boundary.
+          product-line rescue gates, and THRML parity scaling through n=128.
+          The .118 closeout adds the orphan-test guard, XGrammar/ABS contract
+          masks, SATQuest false-accept carry-forward, residual-drift ledgers,
+          product-line staged scaling, claim-isolation routing, ARM/EBT
+          diagnostic-only routing, THRML n=256/n=64 scaling, and Extropic
+          readiness packets while preserving the no-hardware-claim boundary.
         </p>
       </div>
       <div class="bento-card span-2">
@@ -619,6 +633,10 @@
           1514. The .117 artifacts connect those packs into a runtime-contract
           E2E manifest and carry-forward gates for contract-guided repair,
           product-line rescue, FR-11 live policy promotion, and THRML scaling.
+          The .118 artifacts add automata-mask contract generation, residual
+          drift and BEAVER-lite manifest surfaces, a product-line scale gate,
+          and an Extropic transcript schema for future authenticated hardware
+          access.
         </p>
       </div>
     </div>
@@ -981,9 +999,9 @@
       </div>
       <div class="r-card">
         <span class="r-tag">Infrastructure &mdash; pre-test suite rescue</span>
-        <h3 class="r-title">23,095 Python test items collected, not passed</h3>
-        <div class="r-meter"><div class="r-bar" style="width: 100%; background: #22c55e;"></div></div>
-        <div class="r-stats"><span class="r-before">Collection count only; full suite still has pre-existing execution debt</span> <span class="r-after">2026-05-07 collection-only run</span></div>
+        <h3 class="r-title">23,363 Python test items collected, not passed</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 100%; background: #f59e0b;"></div></div>
+        <div class="r-stats"><span class="r-before">Collection count only; latest full-suite attempt still red on pre-existing debt</span> <span class="r-after">2026-05-08 collection-only run</span></div>
       </div>
       <div class="r-card">
         <span class="r-tag">Runtime &mdash; llama.cpp GPU offload</span>
@@ -1322,7 +1340,7 @@
         <div class="r-stats"><span class="r-before">Parse rate 0.333; feasibility 0.0 on bounded live local SOTA rows</span> <span class="r-after">Exp 1511</span></div>
       </div>
       <div class="r-card">
-        <span class="r-tag">Milestone .117 &mdash; latest terminal retro</span>
+        <span class="r-tag">Milestone .117 &mdash; prior terminal retro</span>
         <h3 class="r-title">14/14 criteria met; claim boundaries preserved</h3>
         <div class="r-meter"><div class="r-bar" style="width: 100%; background: #22c55e;"></div></div>
         <div class="r-stats"><span class="r-before">Runtime contracts, bounded live repair, FR-11 policy promotion, and THRML scaling closed</span> <span class="r-after">Exp 1532</span></div>
@@ -1362,6 +1380,54 @@
         <h3 class="r-title">n=8..128 plus 4 topologies; KL 0.0</h3>
         <div class="r-meter"><div class="r-bar" style="width: 100%; background: #0ea5e9;"></div></div>
         <div class="r-stats"><span class="r-before">Simulator-only Carnot/THRML parity; no TSU, synthesis, bitstream, or board claim</span> <span class="r-after">Exps 1526-1531</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Milestone .118 &mdash; latest terminal retro</span>
+        <h3 class="r-title">13/14 criteria met; two limits carried forward</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 92.86%; background: #f59e0b;"></div></div>
+        <div class="r-stats"><span class="r-before">SATQuest false accepts and FR-11 positive-utility gap carry to .119</span> <span class="r-after">Exp 1546</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Automata decoding &mdash; XGrammar/ABS</span>
+        <h3 class="r-title">Parse 0.0 &rarr; 1.0; contract accept 0.0 &rarr; 1.0</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 100%; background: #22c55e;"></div></div>
+        <div class="r-stats"><span class="r-before">Latency delta -0.204209s, false accepts 0.0 on bounded local SOTA rows</span> <span class="r-after">Exp 1535</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">SATQuest CNF &mdash; acceptance boundary</span>
+        <h3 class="r-title">False-accept rate 0.166667; not authority-ready</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 16.67%; background: #ef4444;"></div></div>
+        <div class="r-stats"><span class="r-before">18 prompt cases; 3 solver-oracle false accepts carry forward</span> <span class="r-after">Exp 1536</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Bounds + drift &mdash; BEAVER/residual ledger</span>
+        <h3 class="r-title">78 prefixes bounded; 134 drift cases classified</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 100%; background: #0ea5e9;"></div></div>
+        <div class="r-stats"><span class="r-before">No bound violations; drift rate 0.477612; false accepts 0.0</span> <span class="r-after">Exps 1537/1538</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Product-line scale &mdash; staged benchmark</span>
+        <h3 class="r-title">40 cases; syntax/feasibility/oracle all 1.0</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 100%; background: #22c55e;"></div></div>
+        <div class="r-stats"><span class="r-before">Automata constraints used; false accepts 0.0; branch continues</span> <span class="r-after">Exp 1540</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Claim isolation &mdash; uncertainty router</span>
+        <h3 class="r-title">Verifier calls 18 &rarr; 7; false accepts 0.0</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 61.11%; background: #22c55e;"></div></div>
+        <div class="r-stats"><span class="r-before">7 routed cases; budget delta -11; deterministic validators final</span> <span class="r-after">Exp 1541</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">THRML parity &mdash; simulator scaling v2</span>
+        <h3 class="r-title">n=256 KL 0.00266; n=64 diverse KL 0.000729</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 100%; background: #0ea5e9;"></div></div>
+        <div class="r-stats"><span class="r-before">3 schedules and 4/4 topologies pass; no TSU or hardware claim</span> <span class="r-after">Exps 1543/1544</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Extropic readiness &mdash; Z1/XTR-0</span>
+        <h3 class="r-title">Transcript schema ready; access still blocked</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 50%; background: #f59e0b;"></div></div>
+        <div class="r-stats"><span class="r-before">No authenticated device access, hardware transcript, latency, or sample-quality evidence</span> <span class="r-after">Exp 1545</span></div>
       </div>
       <div class="r-card">
         <span class="r-tag">Certificates &mdash; trigger-token export</span>

@@ -17,10 +17,11 @@ call. No fine-tuning. No access to model weights.
 
 Rust + Python/JAX, Apache 2.0, `pip install carnot`.
 
-Current public research record: **1,669 experiments tracked across 130
-artifact-backed completed milestone records**. `research-complete.yaml`
-currently archives through 2026.04.116, while checked-in terminal result
-artifacts extend through Exp 1532 / milestone 2026.04.117 on 2026-05-08.
+Current public research record: **1,697 experiment records tracked through Exp
+1546**. `research-complete.yaml` currently archives **1,683** task records
+across **131** artifact-backed completed milestone records through
+2026.04.117; checked-in terminal result artifacts extend through milestone
+2026.04.118 on 2026-05-08.
 
 Milestone .106 delivered the critical fix to thinking-mode certificate
 generation: Exp 1366 (CRANE tag-first prefix injection) reached
@@ -146,8 +147,17 @@ updates with utility delta **0.0** and **0** soundness mistakes; MARCH claim
 isolation extracted **4** claims from **1** case with budget delta **+3** and no
 acceptance lift; THRML/Carnot simulator-only parity passed n=8, 16, 32, 64, and
 128 plus **4/4** n=32 diverse topologies, all with KL **0.0** and no TSU or
-hardware claim. The current test collection reports **23,095** items; this is a
-collection count, not a full-suite pass claim.
+hardware claim. Milestone .118 completed **13 of 14** criteria: automata-guided
+contract decoding moved parse and contract acceptance **0.0 -> 1.0** with false
+accepts **0.0**; BEAVER-lite bounded **78** prefixes with no violations;
+residual-drift replay classified **134** multi-turn cases; product-line staged
+scaling reached syntax, feasibility, and oracle agreement **1.0** on **40**
+cases; claim isolation reduced verifier calls **18 -> 7** with false accepts
+**0.0**; and THRML/Carnot simulator parity scaled to n=256 plus **4/4** n=64
+topologies. SATQuest CNF verification carried forward with false-accept rate
+**0.166667**, and FR-11 external-feedback promotion stayed query-time only with
+utility delta **0.0**. The current test collection reports **23,363** items;
+this is a collection count, not a full-suite pass claim.
 
 ## Install and run
 
@@ -417,7 +427,16 @@ experiment artifact under `results/`.
 | MARCH claim-isolation ablation | **4** claims extracted from **1** case; budget delta **+3**, claim-isolation delta **0.0**, false-accept **0.0** | Exp 1525 |
 | THRML/Carnot parity scaling | Simulator-only parity passed n=8, 16, 32, 64, and 128 plus **4/4** n=32 diverse topologies; KL **0.0** throughout; no TSU hardware claim | Exps 1526-1531 |
 | Milestone .117 status | **14/14 criteria met**; runtime contracts, bounded live repair evidence, CDG/product-line rescue, FR-11 live policy promotion, claim isolation, and THRML scaling closed with claim boundaries preserved | Exp 1532 |
-| Current Python test collection | **23,095** Python tests collected; collection-only snapshot, not a full-suite pass claim | 2026-05-07 collection run |
+| XGrammar/ABS contract decoder adapter | Baseline parse and contract accept **0.0 -> 1.0**, latency delta **-0.204209s**, false-accept **0.0** on bounded local SOTA rows | Exp 1535 |
+| SATQuest CNF verifier benchmark | Live local SOTA benchmark ready, but solver-oracle false accepts were **3** with false-accept rate **0.166667**; not acceptance-authority ready | Exp 1536 |
+| BEAVER-lite + residual drift ledgers | **78** bounded prefixes with no violations; residual-drift ledger covers **134** multi-turn cases, drift rate **0.477612**, false-accept **0.0** | Exps 1537/1538 |
+| Product-line staged benchmark v3 | **40** cases; syntax, feasibility, and oracle agreement all **1.0** with false-accept **0.0**; branch continues under scale gates | Exp 1540 |
+| Claim-isolation uncertainty router | Routed **7** cases and reduced verifier calls **18 -> 7** with budget delta **-11** and false-accept **0.0** | Exp 1541 |
+| ARM/EBT soft-value diagnostic | **24** diagnostic cases; routing AUROC **1.0**, energy-label correlation **0.683698**; deterministic validators remain final authority | Exp 1542 |
+| THRML/Carnot parity .118 scaling | n=256 schedule stress passed with KL **0.002662339801**; n=64 diverse-topology parity passed **4/4** with KL **0.000728807813**; no TSU hardware claim | Exps 1543/1544 |
+| FR-11 external-feedback promotion v13 | One rollback-backed external-feedback update promoted safely, but positive utility was not demonstrated: utility delta **0.0** | Exp 1539 |
+| Milestone .118 status | **13/14 criteria met**; SATQuest false accepts and FR-11 positive-utility gap carry to .119; THRML/Extropic boundaries preserved | Exp 1546 |
+| Current Python test collection | **23,363** Python tests collected; collection-only snapshot, not a full-suite pass claim | 2026-05-08 collection run |
 | Local Claude/Codex usage snapshot | Codex reads the newest local `token_count` event; Claude aggregates local token usage and reads only subscription/tier metadata from credentials; free-form quota prose is ignored instead of guessed; focused regression tests pass | 2026-05-04 changelog |
 
 Deeper analysis of these — including everything that **didn't** work and
@@ -459,7 +478,8 @@ claim we publish.
 ## Where to go next
 
 - **[Technical report](docs/technical-report.md)** — the full research arc
-  through Exp 1532 across 130 completed milestone records, with a
+  through Exp 1546 across 131 archived completed milestone records plus the
+  latest .118 terminal artifacts, with a
   plain-English timeline of what we tried, what failed, what stuck.
 - **[Roadmap](docs/roadmap.md)** — current milestone, upcoming milestones,
   hardware track, and Phase 3 (Kona-parity foundation-model) direction.
@@ -663,7 +683,7 @@ See the [technical report](docs/technical-report.md) for the full research recor
 
 ## 14 Principles Learned
 
-Hard-won lessons from the activation-based phase of a research program that now spans 1,669 tracked experiments through Exp 1532 across 130 completed milestone records and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
+Hard-won lessons from the activation-based phase of a research program that now spans 1,697 tracked experiment records through Exp 1546, 131 archived completed milestone records, and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
 
 ### What works
 1. **The model's own logprobs are the best energy.** No external EBM needed for rejection sampling — the LLM's own confidence is already an energy function. Simple, practical, +10%.
