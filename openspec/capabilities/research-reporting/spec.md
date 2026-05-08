@@ -2230,6 +2230,90 @@ confirms `research-roadmap.yaml` and `scripts/research_conductor.py` were not
 modified, and writes an honest retrospective verdict with an accepted success
 prefix.
 
+### REQ-REPORT-060: Milestone .119 Activation Manifest
+
+The Exp 1547 `.118` completion archive and `.119` activation workflow shall
+write `results/experiment_1547_118_completion_archive_119_activation.json` with
+`status="in_progress"` before terminal completion. It shall then read Exp 1546,
+the listed `.118` source artifacts for Exp 1535, Exp 1536, Exp 1538, Exp 1539,
+Exp 1540, Exp 1541, Exp 1542, Exp 1543, Exp 1544, and Exp 1545,
+`research-complete.yaml`, `research-references.md`, `ops/conductor-log.md`,
+`ops/status.md`, `ops/changelog.md`, `ops/known-issues.md`, and `.119`
+roadmap materials without modifying `research-roadmap.yaml` or
+`scripts/research_conductor.py`. Missing listed artifacts or text inputs shall
+be recorded by path rather than replaced with invented evidence.
+
+The terminal artifact shall include:
+
+- `status`
+- `milestone`
+- `predecessor_milestone`
+- `predecessor_criteria_met`
+- `predecessor_criteria_total`
+- `activation_manifest_complete`
+- `prior_automata_ready`
+- `prior_satquest_benchmark_ready`
+- `prior_satquest_solver_oracle_false_accepts`
+- `prior_satquest_zero_solver_false_accepts`
+- `prior_residual_drift_ready`
+- `prior_fr11_safe_only`
+- `prior_fr11_positive_utility`
+- `prior_product_line_ready`
+- `prior_claim_router_ready`
+- `prior_arm_ebm_diagnostic_ready`
+- `prior_thrml_n256_ready`
+- `prior_thrml_diverse_n64_ready`
+- `thrml_independent_rng_required`
+- `prior_extropic_packet_ready`
+- `research_complete_has_118_entry`
+- `mandated_sota_models`
+- `continuous_self_learning_required`
+- `allowed_119_tracks`
+- `retired_headline_signals`
+- `honest_verdict`
+
+`predecessor_criteria_met` and `predecessor_criteria_total` shall be set to 13
+and 14 only when Exp 1546 supports those values. `prior_satquest_solver_oracle_false_accepts`
+shall come from Exp 1546's SATQuest carry-forward gate when available, and
+`prior_satquest_zero_solver_false_accepts` shall be false whenever any solver
+oracle false accepts remain. `prior_fr11_safe_only` shall be true only when
+FR-11 evidence reports `soundness_mistakes=0` and `no_model_weight_mutation=true`.
+`prior_fr11_positive_utility` shall be true only when Exp 1546 reports
+`positive_utility_achieved=true`. `thrml_independent_rng_required` shall be
+true only when `ops/known-issues.md` contains the mandatory THRML/Carnot
+independent-RNG audit entry.
+
+The activation markdown shall list allowed `.119` tracks for THRML
+independent-RNG audit, SATQuest oracle repair, SATQuest SOTA re-evaluation,
+unified automata/SAT/runtime contract gate, residual-drift repair,
+claim-isolation scale, product-line scale, FR-11 positive-utility-or-retire,
+ARM/EBT telemetry repair, Weaver-style verification routing, THRML/Extropic
+packet update, and milestone retro. It shall preserve blocks on legacy
+small-model headline claims, SATQuest acceptance before oracle repair, ARM/EBT
+soft-value acceptance authority, Extropic TSU/Z1/XTR-0 hardware execution
+claims, KV260 board claims, and model-weight mutation. The final verdict shall
+use a conductor-accepted success prefix and shall be complete only when the
+Exp 1546 13-of-14 predecessor evidence is supported, all required carry-forward
+fields are explicit, the activation markdown is written, and protected
+roadmap/conductor files remain unchanged.
+
+### SCENARIO-REPORT-060: Exp 1547 Activates .119 With .118 Limits Archived
+
+Given Exp 1546 reports `.118` as 13 of 14 criteria met, Exp 1535 reports ready
+automata/ABS contract decoding, Exp 1536 reports three SATQuest solver-oracle
+false accepts, Exp 1539 reports safe FR-11 promotion with `utility_delta=0.0`,
+Exp 1540 and Exp 1541 report product-line and claim-router readiness, Exp 1542
+reports diagnostic-only ARM/EBT evidence without logprob telemetry, Exp 1543
+and Exp 1544 report software-only THRML readiness, Exp 1545 reports an
+Extropic packet without hardware execution, `research-complete.yaml` already
+contains a `.118` archive row, and `ops/known-issues.md` contains the mandatory
+THRML/Carnot independent-RNG audit entry, when Exp 1547 runs for run date
+`20260508`, then it writes all required REQ-REPORT-060 fields, writes
+`ops/milestone_119_activation_manifest.md`, exposes same-roadmap gate fields
+for `.119`, confirms `research-roadmap.yaml` and `scripts/research_conductor.py`
+were not modified, and writes an honest activation verdict with an accepted
+success prefix.
+
 ### REQ-REPORT-024: Local Agent Usage Snapshot
 
 The repository shall provide a local operator workflow that inspects the
@@ -2824,6 +2908,7 @@ embed live-GPU benchmark results from Exp 328 when available.
 | REQ-REPORT-057 | `python/carnot/reporting/milestone_retro_117.py`, `results/experiment_1532_milestone_117_retro.json` | `tests/python/test_milestone_retro_117.py` | Implemented |
 | REQ-REPORT-058 | `python/carnot/reporting/milestone_118_activation_manifest.py`, `results/experiment_1533_117_completion_archive_118_activation.json`, `ops/milestone_118_activation_manifest.md` | `tests/python/test_milestone_118_activation_manifest.py` | Implemented |
 | REQ-REPORT-059 | `python/carnot/reporting/milestone_retro_118.py`, `results/experiment_1546_milestone_118_retro.json` | `tests/python/test_milestone_retro_118.py` | Implemented |
+| REQ-REPORT-060 | `python/carnot/reporting/milestone_119_activation_manifest.py`, `results/experiment_1547_118_completion_archive_119_activation.json`, `ops/milestone_119_activation_manifest.md` | `tests/python/test_milestone_119_activation_manifest.py` | Implemented |
 | REQ-REPORT-024 | `python/carnot/reporting/agent_usage.py`, `scripts/agent_plan_usage.py` | `tests/python/test_agent_plan_usage.py` | Implemented |
 | REQ-PUBLISH-003 | `scripts/experiment_317_hf_publish.py` | `tests/python/test_experiment_317_hf_publish.py` | Implemented |
 | REQ-PUBLISH-004 | `scripts/experiment_330_hf_live_publish.py` | `tests/python/test_experiment_330_hf_live_publish.py` | Implemented |
