@@ -41,12 +41,22 @@ prefixes = wrong position on the OTC vs J curve).
 
 ### Theme B: Three orthogonal sampler-level options
 
-The three sampling-related papers attack different sub-problems:
+**Update 2026-05-08 (DT-7 response):** The "match-by-construction" route
+via MCMC Layers is RULED OUT for Carnot's inference sampler. Single-site
+MH and block-Gibbs structurally diverge at finite K (different transition
+kernels; mixing-time parity at n=128 SK glass requires K ≫ 10^15 sweeps).
+Algorithm 2 mixed-neighborhoods cannot recover block-Gibbs without
+destroying the differentiability premise. **Correct path: vendor THRML
+directly.** See `iclr26-deep-think-responses.md` § DT-7 for full reasoning.
+The three sampling-related papers now map differently:
 
+- **THRML 0.1.3 (vendored)**: the inference sampler. Apache-2.0,
+  PyPI-shipped, JAX-native. Mirror to Carnot-controlled gitea + github
+  per Rule 3.
 - **MCMC Layers**: match-by-construction (proposal correction → exact
-  stationary distribution `π_{θ,t}`). Best for "I want my sampler to BE
-  THRML's distribution by construction." Gating question: block-Gibbs vs
-  single-site MH parity at finite K.
+  stationary distribution `π_{θ,t}`). RULED OUT for inference sampling.
+  May still be useful for Phase 5 *training-time* differentiable PCD
+  on a non-THRML target — DT-MCMC-K1 needs rescoping under this lens.
 - **BRAIN**: learn the distribution from noisy energy reads via REINFORCE.
   Best for "I have a noisy hardware oracle and want to fit qθ to its
   Boltzmann." Caveat: factorized Bernoulli loses correlations.
