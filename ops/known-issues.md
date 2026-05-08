@@ -418,21 +418,30 @@ abstracts available via:
     and Linear AR with exact KL loss.
 
     Steps:
-    1. Run python/scripts/dt_brain_correlations_verification.py.
-       Verify predicate holds: KL_factorized stalls at large gap;
-       KL_AR drops near zero.
-    2. Extend to training-dynamics under REINFORCE: compare convergence
+    1. Initial predicate run already executed 2026-05-08:
+       KL Factorized = 1.075, KL Linear AR = 0.335, Ratio = 3.21×
+       (PARTIAL validation — AR is strictly better but not by
+       catastrophic margin Deep Think predicted at k=4).
+    2. EXTEND the test to k=8, k=12, k=15 (matching Phase 3 design).
+       Measure how the AR-vs-factorized gap progresses with k. Per
+       Deep Think (c), the gap is exponential in k; at Phase 3's
+       k=15 the gap should widen substantially (gradient-starvation
+       prefactor 0.5^15 ≈ 3×10^-5 vs k=4's 6.25%).
+    3. If Linear-AR still leaves > 0.1 KL at k=15, also test
+       MADE-with-hidden-layers (sparse higher-order parameterization).
+       Carnot may need higher-order capacity than pairwise.
+    4. Extend to training-dynamics under REINFORCE: compare convergence
        rate, gradient variance, mode-coverage of factorized vs Linear-AR
-       over batches of N ∈ {100, 1000, 10000}.
-    3. Acceptance gate (per DT-BRAIN-CORRELATIONS predictions):
-       - Factorized KL stalls at TAP-predicted bound (≥ 1.0)
-       - Linear-AR KL drops to ≤ 0.1 of factorized
-       - Linear-AR REINFORCE converges within 10× more steps than
-         BRAIN's published budget (the AR coupling inflates score
-         variance per Deep Think's note (e))
-    4. If predicate holds: BRAIN+Linear-AR is the path. Document.
-       If predicate fails: BRAIN may be usable as-published; revise
-       the architecture decision.
+       (vs MADE if needed) over batches of N ∈ {100, 1000, 10000}.
+    5. Acceptance gate:
+       - Factorized vs AR ratio at k=15 ≥ 10× (the empirical k=4
+         baseline of 3.21× should widen substantially)
+       - Linear-AR or MADE final KL ≤ 0.1 at k=15 with sufficient
+         training steps
+       - REINFORCE convergence within 10× BRAIN's published budget
+         (acceptable overhead from AR variance inflation)
+    6. Update memory entry project_brain_linear_ar_rescue.md with
+       the actual k-progression numbers.
 
     prior_failures:
       - experiment_id: none
