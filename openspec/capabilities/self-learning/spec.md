@@ -4412,3 +4412,85 @@ evidence, or lacks deterministic validator support
 | Requirement | Python | Tests |
 |-------------|--------|-------|
 | REQ-LEARN-1514 | Implemented (`python/carnot/reporting/trace2skill_portable_skill_pack.py`) | Implemented (`tests/python/test_trace2skill_portable_skill_pack.py`) |
+
+## REQ-LEARN-1524: FR-11 Live Policy Promotion From Rollback-Passing Updates
+
+Exp 1524 SHALL promote only rollback-passing FR-11 query-time policy updates
+into a bounded live contract-guided evaluation loop. The learning mechanism is
+policy/cache adaptation only: it SHALL NOT train, finetune, write checkpoints,
+or mutate model parameters. Legacy small models MAY be used only for CPU smoke
+tests and SHALL NOT produce headline live self-learning results.
+
+### REQ-LEARN-1524 Sub-requirements
+
+- REQ-LEARN-1524-1: The workflow SHALL write
+  `results/experiment_1524_fr11_live_policy_promotion_v12.json` first with
+  `status="in_progress"` before loading Exp 1512, Exp 1513, Exp 1514, or
+  Exp 1520 sources.
+- REQ-LEARN-1524-2: The workflow SHALL load the Exp 1512 policy-cache artifact
+  and manifest, the Exp 1513 rollback replay artifact and manifest, the
+  Exp 1514 portable skill/provenance artifact and manifest, and the Exp 1520
+  runtime-contract artifact and manifest.
+- REQ-LEARN-1524-3: Eligible policy updates SHALL have an Exp 1513 replay
+  decision of `keep`, `source_evidence_reachable=true`,
+  `source_evidence_stale=false`, `deterministic_validator_supported=true`,
+  `soundness_mistakes=0`, `false_accept_delta <= 0`, and matching Exp 1514
+  packaged provenance with `promotion_status="packaged_rollback_passed"`.
+- REQ-LEARN-1524-4: Every rejected update SHALL remain unpromoted and SHALL
+  record deterministic rejection reasons such as rollback failure, stale or
+  unreachable provenance, missing deterministic validator support, false accept
+  increase, soundness mistake, or missing portable provenance.
+- REQ-LEARN-1524-5: Live headline evaluation SHALL resolve the mandated local
+  SOTA GGUF models via `cached_sota_pair()` or the same local GGUF cache
+  pattern. If no mandated SOTA GGUF completes inference, the workflow SHALL
+  write a terminal blocker and SHALL NOT report legacy tiny-model headline
+  results.
+- REQ-LEARN-1524-6: The evaluation manifest SHALL be written to
+  `results/fr11_live_policy_promotion_1524.jsonl` with one row per promoted
+  update and contract case, plus one summary row. Each row SHALL record model
+  provenance, baseline policy outcome, promoted policy outcome, utility delta,
+  false-accept delta, soundness mistakes, and runtime-contract validation
+  evidence.
+- REQ-LEARN-1524-7: `live_policy_promotion_ready` SHALL be true only when at
+  least one promoted update is evaluated with a mandated live SOTA GGUF,
+  `soundness_mistakes=0`, aggregate `false_accept_delta <= 0`, and
+  `no_model_weight_mutation=true`.
+- REQ-LEARN-1524-8: The terminal artifact SHALL include `status`,
+  `continuous_self_learning_task`, `model_specs`,
+  `live_sota_model_inference_used`, `live_policy_promotion_ready`,
+  `rollback_passing_updates_loaded`, `promoted_policy_updates`,
+  `baseline_task_success_rate`, `promoted_task_success_rate`,
+  `utility_delta`, `false_accept_delta`, `soundness_mistakes`,
+  `no_model_weight_mutation`, `policy_promotion_manifest_path`, `models_used`,
+  `blockers`, and `honest_verdict`.
+
+### SCENARIO-LEARN-1524: Rollback-Passing Provenance Is Promoted Live
+
+**Given** Exp 1513 kept a policy update with reachable evidence and Exp 1514
+packaged matching provenance
+**And** Exp 1520 provides deterministic runtime-contract cases
+**And** a mandated local SOTA GGUF completes inference
+**When** Exp 1524 runs baseline policy and promoted policy evaluation
+**Then** the promoted update is evaluated through the runtime-contract ledger
+**And** the manifest row records zero soundness mistakes and no positive
+false-accept delta
+**And** the terminal artifact may set `live_policy_promotion_ready=true`.
+
+### SCENARIO-LEARN-1525: Unsupported Updates And Missing SOTA Stay Blocked
+
+**Given** a policy update failed rollback, lacks reachable provenance, lacks
+deterministic validator support, increases false accepts, has a soundness
+mistake, or is absent from the portable pack
+**When** Exp 1524 filters promotion candidates
+**Then** the update is rejected and is not promoted.
+
+**Given** no mandated local SOTA GGUF completes inference
+**When** Exp 1524 attempts live evaluation
+**Then** the workflow writes a terminal blocker
+**And** `live_policy_promotion_ready=false`.
+
+## Implementation Status (REQ-LEARN-1524)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-1524 | Planned (`python/carnot/reporting/fr11_live_policy_promotion.py`) | Planned (`tests/python/test_fr11_live_policy_promotion.py`) |
