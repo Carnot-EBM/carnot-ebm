@@ -1239,3 +1239,5 @@ web search: GitHub trending energy based mod |
 | 2026-05-08 21:01 UTC | Step-Wise Baseline AR-REINFORCE - Gated on Exp1562 | OK | 81 passed, 1 warning in 5.79s |
 | 2026-05-08 21:04 UTC | Extropic Z1 Readiness Packet — THRML Alignment Upd | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-08 21:06 UTC | Extropic Z1 Readiness Packet — THRML Alignment Upd | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-08 21:08 UTC | Extropic Z1 Readiness Packet — THRML Alignment Upd | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-08 21:10 UTC | Milestone .120 Retro and .121 Carry-Forward Gates | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1569-paper-v6-section-3-sampler-draft, ex |

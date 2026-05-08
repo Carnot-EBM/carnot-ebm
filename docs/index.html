@@ -300,10 +300,10 @@
       <a href="technical-report.html" class="btn btn-secondary">How it works</a>
     </div>
     <div class="stats-bar" aria-label="Project headline numbers">
-      <div class="stat"><div class="stat-num">1,697</div><div class="stat-label">Experiment records through Exp 1546</div></div>
-      <div class="stat"><div class="stat-num">131</div><div class="stat-label">archived records through .117</div></div>
+      <div class="stat"><div class="stat-num">1,723</div><div class="stat-label">Experiment records through Exp 1573</div></div>
+      <div class="stat"><div class="stat-num">133</div><div class="stat-label">archived records through .119</div></div>
       <div class="stat"><div class="stat-num">23,363</div><div class="stat-label">Python items collected, not full pass</div></div>
-      <div class="stat"><div class="stat-num">13/14</div><div class="stat-label">latest .118 criteria met</div></div>
+      <div class="stat"><div class="stat-num">12/13</div><div class="stat-label">latest .119 criteria met</div></div>
     </div>
   </div>
 </section>
@@ -587,6 +587,17 @@
           SATQuest CNF verification carries forward because solver-oracle false
           accepts reached 0.166667, and FR-11 external-feedback promotion stays
           query-time-only because utility delta remained 0.0.
+          Milestone .119 met 12/13 criteria: SATQuest solver-oracle false
+          accepts were repaired from 3 to 0, live SOTA SATQuest re-eval kept
+          solver-oracle false accepts at 0 over 30 cases, residual drift repaired
+          64/64 replay cases, product-line staged scale reached parse,
+          feasibility, and oracle agreement 1.0 on 120 cases, claim isolation
+          reduced verifier budget from 75 to 23, FR-11 v14 passed the
+          positive-utility gate with utility delta 1.0, and Weaver-style
+          verification routing reduced cost from 399 to 358 with false accepts
+          0.0. The .119 THRML independent-RNG audit proved separate code and RNG
+          paths but failed bounded KL at max KL 0.169802350136, so Extropic scale
+          claims remain blocked.
         </p>
       </div>
       <div class="bento-card span-2">
@@ -615,6 +626,12 @@
           product-line staged scaling, claim-isolation routing, ARM/EBT
           diagnostic-only routing, THRML n=256/n=64 scaling, and Extropic
           readiness packets while preserving the no-hardware-claim boundary.
+          The .119 closeout adds SATQuest zero-false-accept repair, product-line
+          120-case scale, claim-router and verification-compute routing scale,
+          FR-11 positive-utility evidence, and a THRML RNG/KL blocker. Early
+          .120 artifacts through Exp 1573 add sampler-security falsifications,
+          candidate-warm-start validation, Soft-Gibbs coverage bounds, k=6
+          rho(C) adversarial-curve measurement, and FR-11 retention audits.
         </p>
       </div>
       <div class="bento-card span-2">
@@ -637,6 +654,11 @@
           drift and BEAVER-lite manifest surfaces, a product-line scale gate,
           and an Extropic transcript schema for future authenticated hardware
           access.
+          The .119/.120 surfaces add SATQuest witness/certificate manifests,
+          residual-drift repair-policy artifacts, product-line scale manifests,
+          verification-compute router policy files, vendored-Gibbs regression
+          coverage, candidate-warm-start benchmark artifacts, and Soft-Gibbs
+          residual coverage-bound artifacts.
         </p>
       </div>
     </div>
@@ -1382,7 +1404,7 @@
         <div class="r-stats"><span class="r-before">Simulator-only Carnot/THRML parity; no TSU, synthesis, bitstream, or board claim</span> <span class="r-after">Exps 1526-1531</span></div>
       </div>
       <div class="r-card">
-        <span class="r-tag">Milestone .118 &mdash; latest terminal retro</span>
+        <span class="r-tag">Milestone .118 &mdash; prior terminal retro</span>
         <h3 class="r-title">13/14 criteria met; two limits carried forward</h3>
         <div class="r-meter"><div class="r-bar" style="width: 92.86%; background: #f59e0b;"></div></div>
         <div class="r-stats"><span class="r-before">SATQuest false accepts and FR-11 positive-utility gap carry to .119</span> <span class="r-after">Exp 1546</span></div>
@@ -1428,6 +1450,54 @@
         <h3 class="r-title">Transcript schema ready; access still blocked</h3>
         <div class="r-meter"><div class="r-bar" style="width: 50%; background: #f59e0b;"></div></div>
         <div class="r-stats"><span class="r-before">No authenticated device access, hardware transcript, latency, or sample-quality evidence</span> <span class="r-after">Exp 1545</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Milestone .119 &mdash; latest archived retro</span>
+        <h3 class="r-title">12/13 criteria met; THRML RNG carried forward</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 92.31%; background: #f59e0b;"></div></div>
+        <div class="r-stats"><span class="r-before">SATQuest and FR-11 gates passed; bounded-KL readiness failed for THRML</span> <span class="r-after">Exp 1559</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">SATQuest &mdash; solver-grounded repair</span>
+        <h3 class="r-title">False accepts 3 &rarr; 0; SOTA re-eval 0.0</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 100%; background: #22c55e;"></div></div>
+        <div class="r-stats"><span class="r-before">30 live local SOTA cases; model self false accepts remain 4, solver oracle is final</span> <span class="r-after">Exps 1549/1550</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Product-line + claim routing &mdash; scale gates</span>
+        <h3 class="r-title">120 product-line cases; budget 75 &rarr; 23</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 100%; background: #22c55e;"></div></div>
+        <div class="r-stats"><span class="r-before">Parse, feasibility, oracle agreement 1.0; claim-router false accepts 0.0</span> <span class="r-after">Exps 1553/1554</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Verification routing &mdash; Weaver-style compute router</span>
+        <h3 class="r-title">Cost 399 &rarr; 358; missed failures 0</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 89.72%; background: #22c55e;"></div></div>
+        <div class="r-stats"><span class="r-before">Soft signals are routing-only; deterministic validators remain final authority</span> <span class="r-after">Exp 1557</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">THRML RNG audit &mdash; honest blocker</span>
+        <h3 class="r-title">Independent paths proven; max KL 0.1698</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 0%; background: #ef4444;"></div></div>
+        <div class="r-stats"><span class="r-before">Bounded KL threshold was 0.05; Extropic scale update stayed blocked</span> <span class="r-after">Exps 1548/1558</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Early .120 &mdash; sampler security audit</span>
+        <h3 class="r-title">THRML block-Gibbs falsifies kinetic parity</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 0%; background: #ef4444;"></div></div>
+        <div class="r-stats"><span class="r-before">p_N at k=100: THRML block-Gibbs 0.9908 vs single-site 0.99; no security claim</span> <span class="r-after">Exp 1561</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Early .120 &mdash; candidate warm-start</span>
+        <h3 class="r-title">Accuracy 1.0 at k=10..1000</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 100%; background: #22c55e;"></div></div>
+        <div class="r-stats"><span class="r-before">Cold start accuracy at k=100 was 0.465; cached-state warm-start rejected</span> <span class="r-after">Exp 1566</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Early .120 &mdash; Soft-Gibbs + AR baseline</span>
+        <h3 class="r-title">Jensen bound passed; variance gate 10.45&times;</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 100%; background: #22c55e;"></div></div>
+        <div class="r-stats"><span class="r-before">Optimal deployment beta 0.1; convergence proxy retained 0.995 of noiseless baseline</span> <span class="r-after">Exps 1570/1571</span></div>
       </div>
       <div class="r-card">
         <span class="r-tag">Certificates &mdash; trigger-token export</span>
