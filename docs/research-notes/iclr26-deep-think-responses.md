@@ -7,6 +7,189 @@ integration-plan update + .NNN priority adjustment.
 
 ---
 
+## DT-MCMC-NULL response (received 2026-05-08, ~19:00Z) — **VERDICT: STICK WITH GIBBS — ITS SLUGGISHNESS IS A SECURITY FEATURE**
+
+**Question summary:** Does MH proposal correction concentrate on the
+joint null space N (Spera 9.2) faster than current Gibbs? Could
+adopting MCMC Layers in Phase 3 amplify the null-space-mimicry attack?
+
+**Verdict: YES, MH amplifies the attack. The recommendation is to
+stick with Gibbs and DOCUMENT THE SLUGGISHNESS AS A SECURITY FEATURE.**
+This is a paper-v6-publishable insight: **kinetic-defense-in-depth**.
+
+### Key findings
+
+**(a) MH concentrates on N strictly faster than Gibbs at finite K.**
+Peskun's Theorem + acceptance mechanics:
+
+| Move type | MH | Gibbs (heat-bath) |
+|---|---|---|
+| Downhill (Δ > 0) | accepts with p = 1 | accepts with sigmoid(Δ/t) < 1 |
+| **Flat plateau (Δ = 0)** | **accepts with p = 1.0** | **rejects 50% of the time** |
+
+MH explores flat combinatorial plateaus **2× faster** than Gibbs.
+Both target the same π asymptotically, but in finite-K windows,
+`P_MH^(K)(N) ≫ P_Gibbs^(K)(N)`.
+
+**(b) Carnot's landscape is plateau-dominated.** AND-composed verifiers
+create a topography of:
+- Wide flat plateaus where verifier-unmet states have zero gradient
+- Sparse, spectrally isolated targets (verifier-block satisfaction)
+
+The bottleneck for adversaries is plateau traversal. MH's superior
+plateau-diffusion speed means it finds isolated null-space vulnerabilities
+**strictly faster**.
+
+**(c) Mixed-neighborhood (Algorithm 2) makes it STRICTLY WORSE.**
+Localized null spaces are frequently protected by Hamming-1 energy
+barriers (e.g., satisfying verifier 15 might temporarily require breaking
+another constraint). Single-site chains naturally stall in these benign
+local minima. **Algorithm 2's Hamming-k jumps allow the chain to bypass
+these localized penalties entirely, tunneling directly across plateaus
+and barriers into N.** Direct optimization shortcut for the adversary.
+
+**(d) Red-Team audit becomes UNSOUND under MH.** Defender faces a
+universal coverage problem (patch entire combinatorial manifold of N,
+which is coNP-complete to enumerate per Spera 9.2). Attacker faces an
+existential problem (need ONE unpatched y ∈ N). **If production upgrades
+to MH, the reduction in search time disproportionately helps the
+attacker, who can weaponize Carnot's own optimized inference engine
+to find unpatched holes using negligible test-time compute.**
+
+**(e) Null-space-aware MH proposal modification mathematically conflicts
+with the Fenchel-Young loss guarantee.** Two cases:
+
+- **With Hastings correction**: ratio q(y,y')/q(y',y) perfectly
+  counteracts your bias; stationary distribution still concentrates on
+  N. You merely cripple mixing speed without defending against the attack.
+- **Without Hastings correction**: break detailed balance, target an
+  invalid distribution, mathematically void the FY gradient estimator.
+
+Detailed balance + null-space-defense are FUNDAMENTALLY IRRECONCILABLE
+under standard MH machinery.
+
+### Falsifiable predicate (synthetic isolation test)
+
+Construct n=64 binary Ising representing k=15 AND-composed verifiers:
+- 15 independent structural blocks of 4 bits
+- E(y) = −10 · Σ_{i=1..15} **1**{block_i = target}
+- Remaining 4 bits are free, planting null space N of size 2^4 at
+  global minimum
+
+Initialize 10,000 chains at y = {0}^64 (massive plateau, all verifiers
+unmet). Run single-site Gibbs + Algorithm 1 MH at t=1.0.
+
+**Mean hitting time for a single 4-bit block to traverse its plateau:**
+- MH: ≈ 21.3 steps
+- Gibbs: ≈ 32.9 steps (50% slower)
+
+Composed over 15 blocks, P_MH^(K)(N) shows massive pre-asymptotic
+surge, crossing the 10% mass threshold at substantially lower K than
+Gibbs.
+
+### Recommendation: Stick with Gibbs (Conservative — but for a publishable reason)
+
+> "Carnot must rely on the inherent sluggishness of Glauber Gibbs. Its
+> algorithmic inefficiency on plateaus acts as 'computational friction'
+> — a kinetic defense-in-depth moat that dramatically inflates the
+> test-time inference compute an adversary requires to successfully
+> exploit residual null spaces."
+
+**This is a paper-v6 publishable insight.** The "kinetic-defense-in-depth"
+framing is novel: a sampler's algorithmic inefficiency on flat plateaus
+becomes a security property when combined with combinatorially-detected
+joint null spaces (Spera 9.2). Carnot can claim this as a contribution
+on top of standard MCMC literature.
+
+### Composition with prior verdicts
+
+DT-7 (vendor THRML) and DT-MCMC-NULL compose ELEGANTLY:
+
+- **DT-7**: vendor THRML's block-Gibbs to fix KL=0.17 mismatch
+  (correctness)
+- **DT-MCMC-NULL**: Gibbs-class samplers' plateau-friction is a
+  security feature against null-space mimicry (security)
+
+**The single recommendation is: vendor THRML block-Gibbs. Justified
+by both correctness AND security.** No tension between the two paths.
+
+### CRITICAL FOLLOW-UP: does THRML block-Gibbs inherit Gibbs's
+plateau-friction property?
+
+Block-Gibbs is multi-site (parallel update of independent vertex sets
+via graph coloring) but per-bit sampling is heat-bath conditional —
+NOT proposal-and-accept like Algorithm 2. At a flat plateau, each bit
+in a colored block samples from sigmoid(0) = 0.5 independently → the
+per-bit randomization rate is identical to single-site Gibbs.
+
+**The difference between block-Gibbs and single-site Gibbs is
+parallelism (compute speed), NOT mixing speed at the per-bit level.**
+Therefore block-Gibbs SHOULD inherit single-site Gibbs's
+plateau-friction security property.
+
+**This claim needs explicit Deep Think confirmation.** Recommended
+follow-up prompt: DT-MCMC-NULL-BLOCK-GIBBS — does THRML's block-Gibbs
+implementation inherit the kinetic-defense-in-depth property from
+single-site Gibbs, or does the parallel-block update structure create
+a new attack surface?
+
+### Tasks to file
+
+1. **NEW `.121 task** (post-vendoring): `exp15TT-thrml-block-gibbs-
+   plateau-friction-audit`. Run the synthetic null-space isolation
+   test (n=64, k=15 4-bit blocks) on THRML's block-Gibbs vs Carnot's
+   current single-site Gibbs vs (hypothetically) MCMC Layers Algorithm
+   1. Measure mean hitting time to N at K=1..1000 sweeps. Acceptance
+   gate: THRML block-Gibbs hitting time ≥ single-site Gibbs's hitting
+   time (security parity). If THRML is faster than single-site Gibbs,
+   audit whether the parallel-block update creates a new attack
+   surface and document.
+
+2. **Paper-v6 §3 sampler section** (`.121 task): add the kinetic-
+   defense-in-depth callout. Draft text:
+
+   > "Carnot's substrate uses block-Gibbs sampling (vendored from
+   > Extropic THRML 0.1.3) rather than Metropolis-Hastings or learned
+   > differentiable MCMC layers. While MH provides faster mixing to
+   > stationarity, on AND-composed verifier energies — which are
+   > dominated by flat plateaus with sparse spectrally-isolated null
+   > regions — MH's plateau-traversal advantage becomes a security
+   > liability: it accelerates adversarial concentration on the
+   > coNP-complete-detectable joint null space (Spera Theorem 9.2).
+   > Glauber-class samplers' algorithmic inefficiency on plateaus
+   > acts as kinetic defense-in-depth: an attacker exploiting residual
+   > null spaces requires Ω(plateau-diffusion-time) inference compute,
+   > which Glauber's heat-bath rejection rate doubles relative to MH."
+
+3. **Phase 3 architecture entry** (per `_bmad/architecture.md`): add
+   "Sampler choice: block-Gibbs is the security-required minimum.
+   MH or learned MCMC layers are NOT acceptable for production
+   substrate without a constructive null-space-empty proof."
+
+4. **Add to memory**: kinetic-defense-in-depth as a Carnot-discovered
+   security property of sampler choice for null-space-vulnerable EBMs.
+
+### Cascade for follow-up prompts
+
+- **DT-MCMC-STATELESS**: now COMPLETELY MOOT. MCMC Layers eliminated
+  from inference (DT-7), production-scale Phase 5 (DT-MCMC-K1), and
+  Phase 3 substrate (DT-MCMC-NULL). The only remaining role for MCMC
+  Layers in Carnot is theoretical-foundation for Phase 5 K-schedule
+  reasoning.
+- **DT-OT-RESIDUAL**: unchanged (substrate-measurability question is
+  orthogonal to sampler choice).
+- **DT-BRAIN-CORRELATIONS**: unchanged.
+- **DT-COMPOSITION**: revised. Three-sampler composition simplified
+  to:
+  - (I) Inference sampling: THRML block-Gibbs (DT-7 + DT-MCMC-NULL)
+  - (II) Optimization (argmin): Spectral Annealing (DT-COMPOSITION
+    pending)
+  - (III) Distribution learning at training: BRAIN's REINFORCE (gated
+    on DT-BRAIN-CORRELATIONS) OR Carnot-specific PCD with adaptive
+    K + SA/PT (DT-MCMC-K1 explicit recommendation)
+
+---
+
 ## DT-MCMC-K1 response (received 2026-05-08, ~18:30Z) — **VERDICT: K=1 PCD DIVERGES ON NON-CONVEX ISING; NEED ADAPTIVE K + SA/PT**
 
 **Question summary:** Is MCMC Layers' K=1 Fenchel-Young unbiased gradient
