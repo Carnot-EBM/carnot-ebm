@@ -297,6 +297,54 @@ abstracts available via:
                        finite K; spectral-gap cure requires K ≫ 10^15."
         retire_if_same_verdict: true
 
+- id: exp15PP-adversarial-pass-rate-saturation-rho-of-C
+  title: "Adversarial Pass-Rate Saturation — ρ(C) Measurement for k=6 Ensemble"
+  agent_type: codex
+  model: gpt-5.5
+  priority: critical
+  prompt_seed: |
+    Per Deep Think DT-5 verdict (2026-05-08, docs/research-notes/
+    iclr26-deep-think-responses.md): paper-v6 §3 publishes the
+    C-parameterized robustified version of Mukherjee et al's Theorem
+    3.6, with two critical compute thresholds:
+
+      C*    = ρ⁻¹((s_r⋆·FNR/(1−s_r⋆)) − FPR_iid)    PI regime boundary
+      C_inv = ρ⁻¹(TPR − FPR_iid)                     INVERSION threshold
+
+    where ρ(C) is the rate at which Q11 TSS adversarial compute C
+    inflates the AND-composed verifier's FPR. Above C_inv, verify-and-
+    resample becomes an adversarial sieve.
+
+    To publish this contribution, Carnot needs empirical ρ(C) curve
+    for the k=6 ensemble.
+
+    Steps:
+    1. Build holdout corpus of base generator queries known to be
+       oracle-incorrect (y ∉ S⋆). Target N ≥ 200.
+    2. Run Q11 TSS structural optimization against these targets,
+       sweeping compute budgets C ∈ {2^0, 2^1, ..., 2^k} GPU-hours
+       (or token-equivalents).
+    3. For each C, pass optimized adversarial responses through the
+       k=6 AND-ensemble. Measure FPR_AND(C) = (count passing)/(N).
+    4. Fit ρ(C) = FPR_AND(C) − FPR_iid; report curve with R² ≥ 0.9
+       confidence interval.
+    5. Compute empirical C* and C_inv from fitted curve. Report with
+       95% CI.
+    6. Validate falsification predicate: at C > C_inv, run full SRS
+       pipeline; confirm end-to-end accepted accuracy drops below
+       s_r⋆ (proving inversion).
+
+    Acceptance gate: report (ρ(C) fit quality, C*, C_inv, inversion
+    confirmed/refuted). Paper-v6 §3 cites these numbers verbatim.
+
+    prior_failures:
+      - experiment_id: none
+        verdict: novel_measurement
+        addressed_by: "First measurement of compute-dependent FPR
+                       for Carnot k=6 ensemble. Builds on Q11 TSS
+                       (project_q11_tss_and_ste_attack.md) and
+                       Mukherjee Theorem 3.6 base framework."
+
 - id: exp15WW-iclr26-brain-spectral-ising-hardware
   title: "ICLR-26 BRAIN + Spectral Annealing for Phase 2 Hardware Roadmap"
   agent_type: codex
