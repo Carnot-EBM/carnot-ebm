@@ -1257,3 +1257,4 @@ web search: GitHub trending energy based mod |
 | 2026-05-08 21:55 UTC | Paper-v6 §3 Sampler Section Draft - Gated on Exp15 | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-08 21:57 UTC | Soft-Gibbs Coverage Bound Empirical Verification - | OK | Deliverable already exists in repo |
 | 2026-05-08 21:57 UTC | Step-Wise Baseline AR-REINFORCE - Gated on Exp1562 | OK | Deliverable already exists in repo |
+| 2026-05-08 21:58 UTC | Extropic Z1 Readiness Packet — THRML Alignment Upd | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
