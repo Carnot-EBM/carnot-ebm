@@ -178,6 +178,46 @@ accepts.
 
 **Spec traces:** REQ-BENCH-1523
 
+### REQ-BENCH-1540: Product-Line Staged Benchmark Scale
+
+Carnot MUST provide a scaled product-line staged benchmark pack that extends
+the Exp1523 bounded rescue beyond the six checked rows while keeping
+deterministic validators as the only acceptance authority.  The benchmark MUST:
+
+- write `results/experiment_1540_product_line_staged_benchmark_scale_v3.json`
+  with `status="in_progress"` before source loading or model probing;
+- load the Exp1511/Exp1523 product-line rows and record the syntax,
+  feature-model, solver-feasibility, and policy/oracle fixes responsible for
+  the bounded rescue;
+- build or load at least 40 staged product-line cases unless the available
+  corpus is smaller, in which case it MUST record the available count and
+  blocker;
+- evaluate syntax parsing, feature-model consistency, feasibility, and
+  solver-oracle agreement as separate stages with the exhaustive product-line
+  oracle as authority;
+- run at least one mandated local SOTA GGUF model on benchmark prompts, using
+  automata-style constrained JSON where useful while never allowing that
+  automaton to replace the deterministic oracle;
+- set `product_line_scale_ready=true` only when the scaled pack reaches the
+  case-count gate, all staged rows agree with the oracle, and
+  `false_accept_rate=0.0`; and
+- set `branch_retired=true` with an explicit reason when the branch cannot
+  scale beyond the bounded rescue, the live SOTA provenance gate fails, or
+  `false_accept_rate` exceeds zero.
+
+### SCENARIO-BENCH-1540: Scaled Product-Line Rows Preserve Oracle Labels
+
+**Given** the Exp1523 rescue manifest and the fixed run date `20260508`
+**When** the scaled staged benchmark pack generates product-line variants and
+replays them through syntax, feature-model, feasibility, and policy feedback
+**Then** every manifest row contains reproducible oracle labels, stage
+outcomes, and a final policy decision that accepts only oracle-agreeing
+selections
+**And** the terminal artifact contains the required scale/retirement fields and
+an honest verdict prefix accepted by the conductor.
+
+**Spec traces:** REQ-BENCH-1540
+
 ### REQ-BENCH-1536: SATQuest CNF Verifier Benchmark
 
 Carnot MUST provide a bounded SATQuest-style CNF verifier benchmark that
@@ -218,9 +258,11 @@ model-declared verifier accepts a non-oracle answer.
 | REQ-BENCH-1511 | Implemented (`python/carnot/eval/product_line_solver_oracle_benchmark.py`) | Exp 1511 |
 | REQ-BENCH-1523 | Planned (`python/carnot/eval/product_line_parser_feasibility_rescue.py`) | Exp 1523 |
 | REQ-BENCH-1536 | Planned (`python/carnot/eval/satquest_cnf_verifier_benchmark.py`) | Exp 1536 |
+| REQ-BENCH-1540 | Implemented (`python/carnot/eval/product_line_staged_benchmark_scale.py`) | Exp 1540 |
 | SCENARIO-BENCH-020 | Implemented | Exp 427 |
 | SCENARIO-BENCH-025 | Implemented | Exp 840 |
 | SCENARIO-BENCH-030 | Implemented | Exp 840 |
 | SCENARIO-BENCH-1511 | Implemented (`tests/python/test_experiment_1511_product_line_solver_oracle_benchmark.py`) | Exp 1511 |
 | SCENARIO-BENCH-1523 | Planned (`tests/python/test_experiment_1523_product_line_parser_feasibility_rescue.py`) | Exp 1523 |
 | SCENARIO-BENCH-1536 | Planned (`tests/python/test_experiment_1536_satquest_cnf_verifier_benchmark.py`) | Exp 1536 |
+| SCENARIO-BENCH-1540 | Implemented (`tests/python/test_experiment_1540_product_line_staged_benchmark_scale.py`) | Exp 1540 |
