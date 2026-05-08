@@ -1,3 +1,320 @@
 {
-  "status": "in_progress"
+  "activation_manifest_complete": true,
+  "allowed_117_tracks": [
+    {
+      "guardrail": "Integrate .116 contracts into one deterministic false-accept ledger.",
+      "name": "runtime-contract E2E",
+      "track": "runtime_contract_e2e"
+    },
+    {
+      "guardrail": "Use mandated local GGUF models; deterministic contracts remain authoritative.",
+      "name": "live SOTA contract-guided repair",
+      "track": "live_sota_contract_guided_repair"
+    },
+    {
+      "guardrail": "Use dependency graphs for repair localization, not LLM-judge acceptance.",
+      "name": "CDG root-cause repair",
+      "track": "cdg_root_cause_repair"
+    },
+    {
+      "guardrail": "One parser/feasibility rescue is allowed before retiring the weak branch.",
+      "name": "product-line rescue/retirement",
+      "track": "product_line_rescue_retirement"
+    },
+    {
+      "guardrail": "Promote only rollback-passing query-time policies; no model-weight mutation.",
+      "name": "FR-11 live policy promotion",
+      "track": "fr11_live_policy_promotion"
+    },
+    {
+      "guardrail": "Claim isolation is an ablation; deterministic validators are the trust boundary.",
+      "name": "MARCH-style claim isolation",
+      "track": "march_claim_isolation"
+    },
+    {
+      "guardrail": "Software/simulator parity only; no TSU, synthesis, bitstream, or board claim.",
+      "name": "THRML/Carnot parity scaling",
+      "track": "thrml_carnot_parity_scaling"
+    }
+  ],
+  "blocked_reasons": [],
+  "conductor_log_exp1506_to_exp1518": {
+    "entries": {
+      "exp1506": {
+        "found": true,
+        "line": "| 2026-05-07 22:25 UTC | .115 Completion Archive + .116 Activation Manifest | OK | 81 passed, 1 warning in 5.54s |",
+        "ok": true,
+        "terminal": true
+      },
+      "exp1507": {
+        "found": true,
+        "line": "| 2026-05-07 22:44 UTC | AutoPyVerifier-Inspired Safe-DSL Induction Pack | OK | 81 passed, 1 warning in 5.19s |",
+        "ok": true,
+        "terminal": true
+      },
+      "exp1508": {
+        "found": true,
+        "line": "| 2026-05-07 22:57 UTC | Trigger+Grammar Certificate Decoder Audit - Gated  | OK | 81 passed, 1 warning in 5.15s |",
+        "ok": true,
+        "terminal": true
+      },
+      "exp1509": {
+        "found": true,
+        "line": "| 2026-05-07 23:42 UTC | Executable Monitor Runtime Adapter - Gated on Exp1 | OK | 81 passed, 1 warning in 5.35s |",
+        "ok": true,
+        "terminal": true
+      },
+      "exp1510": {
+        "found": true,
+        "line": "| 2026-05-08 00:11 UTC | Plan-Graph Structural Contract Gate | OK | 81 passed, 1 warning in 4.00s |",
+        "ok": true,
+        "terminal": true
+      },
+      "exp1511": {
+        "found": true,
+        "line": "| 2026-05-08 00:30 UTC | Product-Line Solver Oracle Benchmark | OK | 81 passed, 1 warning in 5.57s |",
+        "ok": true,
+        "terminal": true
+      },
+      "exp1512": {
+        "found": true,
+        "line": "| 2026-05-08 00:43 UTC | FR-11 Verifier-Feedback Policy Cache v11 | OK | 81 passed, 1 warning in 5.52s |",
+        "ok": true,
+        "terminal": true
+      },
+      "exp1513": {
+        "found": true,
+        "line": "| 2026-05-08 00:59 UTC | FR-11 Policy Rollback Replay Audit - Gated on Exp1 | OK | 81 passed, 1 warning in 4.75s |",
+        "ok": true,
+        "terminal": true
+      },
+      "exp1514": {
+        "found": true,
+        "line": "| 2026-05-08 01:16 UTC | trace2skill Portable Skill Pack v2 - Gated on Exp1 | OK | 81 passed, 1 warning in 5.49s |",
+        "ok": true,
+        "terminal": true
+      },
+      "exp1515": {
+        "found": true,
+        "line": "| 2026-05-08 01:28 UTC | THRML SamplerBackend Conformance Pack - Gated on E | OK | 81 passed, 1 warning in 5.34s |",
+        "ok": true,
+        "terminal": true
+      },
+      "exp1516": {
+        "found": true,
+        "line": "| 2026-05-08 01:44 UTC | KAN/KAEM Shape Normalization Preflight - Gated on  | OK | 81 passed, 1 warning in 5.32s |",
+        "ok": true,
+        "terminal": true
+      },
+      "exp1517": {
+        "found": true,
+        "line": "| 2026-05-08 02:03 UTC | KV260 Discrete SB RTL Property Pack v2 - Source-Le | OK | 81 passed, 1 warning in 4.42s |",
+        "ok": true,
+        "terminal": true
+      },
+      "exp1518": {
+        "found": true,
+        "line": "| 2026-05-08 02:18 UTC | Milestone .116 Retrospective + Claim Boundary Reco | OK | 81 passed, 1 warning in 5.29s |",
+        "ok": true,
+        "terminal": true
+      }
+    },
+    "expected_count": 13,
+    "missing_experiments": [],
+    "ok_count": 13,
+    "terminal_count": 13
+  },
+  "continuous_self_learning_required": true,
+  "continuous_self_learning_requirement_recorded": true,
+  "experiment": "1519_116_completion_archive_117_activation",
+  "gated_117_tracks": [
+    {
+      "gated_on": [
+        "exp1519.prior_runtime_contract_ready == true"
+      ],
+      "task_id": "exp1520",
+      "track": "runtime_contract_e2e"
+    },
+    {
+      "gated_on": [
+        "exp1520.runtime_contract_e2e_ready == true"
+      ],
+      "task_id": "exp1521",
+      "track": "live_sota_contract_guided_repair"
+    },
+    {
+      "gated_on": [
+        "exp1520.runtime_contract_e2e_ready == true"
+      ],
+      "task_id": "exp1522",
+      "track": "cdg_root_cause_repair"
+    },
+    {
+      "gated_on": [
+        "exp1519.prior_product_line_benchmark_ready == true"
+      ],
+      "task_id": "exp1523",
+      "track": "product_line_rescue_retirement"
+    },
+    {
+      "gated_on": [
+        "exp1519.prior_fr11_rollback_ready == true",
+        "exp1520.runtime_contract_e2e_ready == true"
+      ],
+      "task_id": "exp1524",
+      "track": "fr11_live_policy_promotion"
+    },
+    {
+      "gated_on": [
+        "exp1524.live_policy_promotion_ready == true"
+      ],
+      "task_id": "exp1525",
+      "track": "march_claim_isolation"
+    },
+    {
+      "gated_on": [
+        "exp1519.prior_thrml_conformance_ready == true"
+      ],
+      "task_id": "exp1526",
+      "track": "thrml_carnot_parity_scaling"
+    },
+    {
+      "gated_on": [
+        "exp1526.thrml_parity_n8_passed == true"
+      ],
+      "task_id": "exp1527",
+      "track": "thrml_carnot_parity_scaling"
+    },
+    {
+      "gated_on": [
+        "exp1527.thrml_parity_n16_passed == true"
+      ],
+      "task_id": "exp1528",
+      "track": "thrml_carnot_parity_scaling"
+    },
+    {
+      "gated_on": [
+        "exp1528.thrml_parity_n32_passed == true"
+      ],
+      "task_id": "exp1529",
+      "track": "thrml_carnot_parity_scaling"
+    },
+    {
+      "gated_on": [
+        "exp1529.thrml_parity_n64_passed == true"
+      ],
+      "task_id": "exp1530",
+      "track": "thrml_carnot_parity_scaling"
+    },
+    {
+      "gated_on": [
+        "exp1528.thrml_parity_n32_passed == true"
+      ],
+      "task_id": "exp1531",
+      "track": "thrml_carnot_parity_scaling"
+    }
+  ],
+  "honest_verdict": "complete: milestone_117_activation_complete_116_archived_runtime_fr11_thrml_gates_ready",
+  "mandated_sota_models": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "unsloth/gemma-4-31B-it-GGUF",
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "mandated_sota_models_recorded": true,
+  "manifest_path": "ops/milestone_117_activation_manifest.md",
+  "milestone": "2026.04.117",
+  "no_change_confirmations": {
+    "research-roadmap.yaml": "unchanged_by_exp1519_activation_workflow",
+    "scripts/research_conductor.py": "unchanged_by_exp1519_activation_workflow"
+  },
+  "predecessor_criteria_met": 13,
+  "predecessor_criteria_total": 13,
+  "predecessor_honest_verdict": "complete: milestone_116_13_of_13_criteria_met_runtime_contracts_fr11_feedback_substrate_claim_boundaries_preserved",
+  "predecessor_milestone": "2026.04.116",
+  "prior_fr11_rollback_ready": true,
+  "prior_kan_shape_manifest_ready": true,
+  "prior_kv260_property_pack_ready": true,
+  "prior_product_line_benchmark_ready": true,
+  "prior_runtime_contract_ready": true,
+  "prior_thrml_conformance_ready": true,
+  "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+  "protected_files_unchanged": true,
+  "required_artifact_fields_present": [
+    "activation_manifest_complete",
+    "allowed_117_tracks",
+    "continuous_self_learning_required",
+    "gated_117_tracks",
+    "honest_verdict",
+    "mandated_sota_models",
+    "milestone",
+    "predecessor_criteria_met",
+    "predecessor_criteria_total",
+    "predecessor_milestone",
+    "prior_fr11_rollback_ready",
+    "prior_kan_shape_manifest_ready",
+    "prior_kv260_property_pack_ready",
+    "prior_product_line_benchmark_ready",
+    "prior_runtime_contract_ready",
+    "prior_thrml_conformance_ready",
+    "research_complete_has_116_entry",
+    "retired_headline_signals",
+    "status"
+  ],
+  "research_complete_has_116_entry": true,
+  "research_roadmap_yaml_modified": false,
+  "retired_headline_signal_blocks_preserved": true,
+  "retired_headline_signals": [
+    "Semantic Energy/logit telemetry headline claims",
+    "pairwise LLM verifier headline claims",
+    "arbitrary generated-Python verifier trust",
+    "TSU hardware claims",
+    "KV260 board claims",
+    "KAN synthesis claims",
+    "legacy small-model headline results"
+  ],
+  "run_date": "20260508",
+  "schema": "milestone_117_activation_manifest_v1",
+  "scripts_research_conductor_modified": false,
+  "source_evidence_paths": {
+    "exp1507": "results/experiment_1507_autopyverifier_safe_dsl_induction_pack.json",
+    "exp1508": "results/experiment_1508_trigger_grammar_certificate_decoder_audit.json",
+    "exp1509": "results/experiment_1509_executable_monitor_runtime_adapter.json",
+    "exp1510": "results/experiment_1510_plan_graph_structural_contract_gate.json",
+    "exp1511": "results/experiment_1511_product_line_solver_oracle_benchmark.json",
+    "exp1512": "results/experiment_1512_fr11_verifier_feedback_policy_cache_v11.json",
+    "exp1513": "results/experiment_1513_fr11_policy_rollback_replay_audit.json",
+    "exp1515": "results/experiment_1515_thrml_samplerbackend_conformance_pack.json",
+    "exp1516": "results/experiment_1516_kan_shape_normalization_preflight.json",
+    "exp1517": "results/experiment_1517_kv260_discrete_sb_rtl_property_pack_v2.json"
+  },
+  "source_inputs_read": {
+    "openspec/change-proposals/research-roadmap-vNEXT.md": {
+      "exists": true
+    },
+    "ops/changelog.md": {
+      "exists": true
+    },
+    "ops/conductor-log.md": {
+      "exists": true
+    },
+    "ops/known-issues.md": {
+      "exists": true
+    },
+    "ops/status.md": {
+      "exists": true
+    },
+    "research-complete.yaml": {
+      "exists": true
+    },
+    "research-references.md": {
+      "exists": true
+    },
+    "research-roadmap.yaml": {
+      "exists": true
+    },
+    "results/experiment_1518_milestone_116_retro.json": {
+      "exists": true
+    }
+  },
+  "status": "complete"
 }
