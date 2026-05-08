@@ -2566,6 +2566,54 @@ candidate-warm-start while rejecting cached previous-prompt state reuse.
 
 **Implementation Status:** Planned (Exp 1566)
 
+## REQ-SAMPLE-061: Exp 1567 rho(C) measurement for k=6 verifier ensemble
+
+Carnot SHALL provide a reproducible Exp 1567 harness that measures the
+compute-dependent Q11 TSS false-positive inflation curve `rho(C)` for the
+k=6 AND-composed verifier ensemble over a holdout of at least 200
+oracle-incorrect base-generator rows.  The harness SHALL use the existing
+calibration corpus machinery where available and SHALL record whether the
+measurement is a deterministic replay/proxy or a fresh GPU run.
+
+Acceptance criteria:
+- The harness SHALL build a holdout corpus with `N >= 200` rows whose oracle
+  labels are incorrect (`y not in S*`).
+- The harness SHALL sweep the Q11 TSS compute budgets
+  `C in {2^0, 2^2, 2^4, 2^6, 2^8}` GPU-hours and pass the optimized
+  adversarial responses through the k=6 AND ensemble: Z3 SMT, AST structural,
+  semantic consistency, ThinkPRM v2, SOSKAN-Energy v3, and SemEnergy probe.
+- For every compute budget, the artifact SHALL report
+  `FPR_AND(C) = n_passed / N` and `rho(C) = FPR_AND(C) - FPR_iid`.
+- The harness SHALL fit a monotone saturating `rho(C)` curve, report
+  `rho_C_r_squared`, and set `rho_C_curve_fitted=true` only when
+  `R^2 >= 0.9`.
+- The harness SHALL compute empirical `C*` and `C_inv` from the fitted curve
+  using the paper-v6 formulas and SHALL include 95% confidence intervals.
+- The harness SHALL evaluate the SRS inversion predicate at a budget strictly
+  above `C_inv` and SHALL set `inversion_empirically_confirmed=true` only when
+  the accepted accuracy is below `s_r*`.
+- `results/experiment_1567_rho_of_C_measurement_k6_ensemble.json` SHALL include
+  `status="complete"`, `rho_C_curve_fitted`, `rho_C_r_squared`,
+  `C_star_estimate`, `C_star_ci_lower`, `C_star_ci_upper`,
+  `C_inv_estimate`, `C_inv_ci_lower`, `C_inv_ci_upper`,
+  `inversion_empirically_confirmed`,
+  `srs_accepted_accuracy_at_C_above_C_inv`, and an `honest_verdict` prefixed
+  with `complete:`.
+
+**Implementation Status:** Planned (Exp 1567)
+
+### SCENARIO-SAMPLE-089: Exp 1567 fits rho(C) and confirms inversion
+
+Given: at least 200 checked oracle-incorrect base-generator rows and the
+paper-v6 calibration constants `FPR_iid`, `TPR`, `FNR`, and `s_r*`.
+When: the Exp 1567 harness sweeps the five Q11 TSS compute budgets and fits the
+monotone `rho(C)` curve.
+Then: the terminal artifact reports an `R^2 >= 0.9` fit, finite ordered 95%
+confidence intervals for `C*` and `C_inv`, and confirms inversion only when
+the measured SRS accepted accuracy at `C > C_inv` is below `s_r*`.
+
+**Implementation Status:** Planned (Exp 1567)
+
 ## REQ-MODEL-031: SCEnergyModel — Set-Level Energy Function for Statement Consistency (Exp 944)
 
 SCEnergyModel SHALL implement a permutation-invariant set-level energy function that assigns
