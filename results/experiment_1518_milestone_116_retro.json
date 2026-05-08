@@ -1,0 +1,671 @@
+{
+  "carry_forward_gates": [
+    {
+      "gate": "runtime_contract_e2e",
+      "requirement": "Combine induced safe-DSL validators, grammar certificates, monitor events, and structural contracts with zero false accepts."
+    },
+    {
+      "gate": "fr11_policy_promotion",
+      "requirement": "Promote only rollback-passing query-time policy updates; keep no model-weight mutation."
+    },
+    {
+      "gate": "thrml_hardware_claim",
+      "requirement": "Requires actual TSU or hardware transcript; current THRML evidence remains simulator/software only."
+    },
+    {
+      "gate": "kan_synthesis_or_board_claim",
+      "requirement": "Requires normalized shapes plus synthesis reports, timing, bitstream, and board transcript."
+    },
+    {
+      "gate": "kv260_board_execution_claim",
+      "requirement": "Requires bitstream and board execution transcript; current KV260 evidence is source-level only."
+    }
+  ],
+  "completed_tasks": [
+    "exp1506",
+    "exp1507",
+    "exp1508",
+    "exp1509",
+    "exp1510",
+    "exp1511",
+    "exp1512",
+    "exp1513",
+    "exp1514",
+    "exp1515",
+    "exp1516",
+    "exp1517",
+    "exp1518"
+  ],
+  "conductor_log_exp1506_to_exp1517": {
+    "entries": {
+      "exp1506": {
+        "found": true,
+        "ok": true
+      },
+      "exp1507": {
+        "found": true,
+        "ok": true
+      },
+      "exp1508": {
+        "found": true,
+        "ok": true
+      },
+      "exp1509": {
+        "found": true,
+        "ok": true
+      },
+      "exp1510": {
+        "found": true,
+        "ok": true
+      },
+      "exp1511": {
+        "found": true,
+        "ok": true
+      },
+      "exp1512": {
+        "found": true,
+        "ok": true
+      },
+      "exp1513": {
+        "found": true,
+        "ok": true
+      },
+      "exp1514": {
+        "found": true,
+        "ok": true
+      },
+      "exp1515": {
+        "found": true,
+        "ok": true
+      },
+      "exp1516": {
+        "found": true,
+        "ok": true
+      },
+      "exp1517": {
+        "found": true,
+        "ok": true
+      }
+    },
+    "expected_count": 12,
+    "missing_experiments": [],
+    "ok_count": 12
+  },
+  "continuous_self_learning_result": "Bounded FR-11 feedback loop ready: policy cache=True, no model-weight mutation=True, rollback_audit_passed=True, accepted_policy_updates=84, portable_entries=24.",
+  "criteria_met": 13,
+  "criteria_score_pct": 1.0,
+  "criteria_total": 13,
+  "experiment": "1518_milestone_116_retro",
+  "experiment_verdicts": {
+    "exp1506": {
+      "honest_verdict": "complete: milestone_116_activation_complete_115_archived_gate_fields_ready",
+      "source_path": "results/experiment_1506_115_completion_archive_116_activation.json",
+      "status": "complete",
+      "terminal": true,
+      "terminal_prefix_ok": true
+    },
+    "exp1507": {
+      "honest_verdict": "complete: safe-DSL verifier induction pack measured on live local SOTA GGUF proposals",
+      "source_path": "results/experiment_1507_autopyverifier_safe_dsl_induction_pack.json",
+      "status": "complete",
+      "terminal": true,
+      "terminal_prefix_ok": true
+    },
+    "exp1508": {
+      "honest_verdict": "complete: trigger+grammar certificate decoder measured on live local SOTA GGUF rows",
+      "source_path": "results/experiment_1508_trigger_grammar_certificate_decoder_audit.json",
+      "status": "complete",
+      "terminal": true,
+      "terminal_prefix_ok": true
+    },
+    "exp1509": {
+      "honest_verdict": "complete: executable monitor runtime adapter normalized replay manifest",
+      "source_path": "results/experiment_1509_executable_monitor_runtime_adapter.json",
+      "status": "complete",
+      "terminal": true,
+      "terminal_prefix_ok": true
+    },
+    "exp1510": {
+      "honest_verdict": "complete: deterministic plan-graph structural contract gate rejects injected pre-execution violations",
+      "source_path": "results/experiment_1510_plan_graph_structural_contract_gate.json",
+      "status": "complete",
+      "terminal": true,
+      "terminal_prefix_ok": true
+    },
+    "exp1511": {
+      "honest_verdict": "complete: product-line solver oracle benchmark ready with live local SOTA GGUF rows",
+      "source_path": "results/experiment_1511_product_line_solver_oracle_benchmark.json",
+      "status": "complete",
+      "terminal": true,
+      "terminal_prefix_ok": true
+    },
+    "exp1512": {
+      "honest_verdict": "complete: fr11_v11_verifier_feedback_policy_cache_ready",
+      "source_path": "results/experiment_1512_fr11_verifier_feedback_policy_cache_v11.json",
+      "status": "complete",
+      "terminal": true,
+      "terminal_prefix_ok": true
+    },
+    "exp1513": {
+      "honest_verdict": "complete: fr11_policy_rollback_replay_audit_passed",
+      "source_path": "results/experiment_1513_fr11_policy_rollback_replay_audit.json",
+      "status": "complete",
+      "terminal": true,
+      "terminal_prefix_ok": true
+    },
+    "exp1514": {
+      "honest_verdict": "complete: trace2skill_portable_skill_pack_ready",
+      "source_path": "results/experiment_1514_trace2skill_portable_skill_pack_v2.json",
+      "status": "complete",
+      "terminal": true,
+      "terminal_prefix_ok": true
+    },
+    "exp1515": {
+      "honest_verdict": "complete_thrml_samplerbackend_conformance_ready_no_tsu_hardware_claim",
+      "source_path": "results/experiment_1515_thrml_samplerbackend_conformance_pack.json",
+      "status": "complete",
+      "terminal": true,
+      "terminal_prefix_ok": true
+    },
+    "exp1516": {
+      "honest_verdict": "complete: kan shape manifest ready; synthesis and board claims blocked",
+      "source_path": "results/experiment_1516_kan_shape_normalization_preflight.json",
+      "status": "complete",
+      "terminal": true,
+      "terminal_prefix_ok": true
+    },
+    "exp1517": {
+      "honest_verdict": "complete: kv260_discrete_sb_property_pack_ready_source_level_only",
+      "source_path": "results/experiment_1517_kv260_discrete_sb_rtl_property_pack_v2.json",
+      "status": "complete",
+      "terminal": true,
+      "terminal_prefix_ok": true
+    }
+  },
+  "failed_tasks": [],
+  "gated_or_blocked_tasks": [],
+  "honest_verdict": "complete: milestone_116_13_of_13_criteria_met_runtime_contracts_fr11_feedback_substrate_claim_boundaries_preserved",
+  "milestone": "2026.04.116",
+  "missing_artifacts": [],
+  "ops_docs_update_deferred_reason": "separate_reconciliation_agent_owns_ops_status_changelog_and_traceability",
+  "ops_docs_updated": false,
+  "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+  "protected_file_modification_findings": {
+    "any_modification_reported": false,
+    "source_reports": [],
+    "working_tree": {
+      "research-roadmap.yaml": "unchanged",
+      "scripts/research_conductor.py": "unchanged"
+    }
+  },
+  "protected_files_unchanged": true,
+  "required_artifact_fields_present": [
+    "carry_forward_gates",
+    "completed_tasks",
+    "continuous_self_learning_result",
+    "criteria_met",
+    "criteria_total",
+    "failed_tasks",
+    "gated_or_blocked_tasks",
+    "honest_verdict",
+    "milestone",
+    "ops_docs_updated",
+    "research_complete_entry_recommended",
+    "retired_or_demoted_claims",
+    "status",
+    "substrate_conformance_result",
+    "verifier_runtime_contract_ready"
+  ],
+  "research_complete_entry_recommended": {
+    "already_present": false,
+    "entry": {
+      "completed": "2026-05-08",
+      "doc": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "finding": "Milestone .116 met 13 of 13 criteria. Runtime verifier contracts, bounded FR-11 feedback, and software/source substrate conformance are complete with retired telemetry, generated-code, and hardware claim boundaries preserved.",
+      "id": "2026.04.116",
+      "tasks": [
+        {
+          "deliverable": "results/experiment_1506_115_completion_archive_116_activation.json",
+          "id": "exp1506-.115-completion-archive-+-.116-activation-manifest",
+          "result": "OK (conductor)",
+          "title": ".115 Completion Archive + .116 Activation Manifest"
+        },
+        {
+          "deliverable": "results/experiment_1507_autopyverifier_safe_dsl_induction_pack.json",
+          "id": "exp1507-autopyverifier-inspired-safe-dsl-induction-pack",
+          "result": "OK (conductor)",
+          "title": "AutoPyVerifier-Inspired Safe-DSL Induction Pack"
+        },
+        {
+          "deliverable": "results/experiment_1508_trigger_grammar_certificate_decoder_audit.json",
+          "id": "exp1508-trigger+grammar-certificate-decoder-audit",
+          "result": "OK (conductor)",
+          "title": "Trigger+Grammar Certificate Decoder Audit"
+        },
+        {
+          "deliverable": "results/experiment_1509_executable_monitor_runtime_adapter.json",
+          "id": "exp1509-executable-monitor-runtime-adapter",
+          "result": "OK (conductor)",
+          "title": "Executable Monitor Runtime Adapter"
+        },
+        {
+          "deliverable": "results/experiment_1510_plan_graph_structural_contract_gate.json",
+          "id": "exp1510-plan-graph-structural-contract-gate",
+          "result": "OK (conductor)",
+          "title": "Plan-Graph Structural Contract Gate"
+        },
+        {
+          "deliverable": "results/experiment_1511_product_line_solver_oracle_benchmark.json",
+          "id": "exp1511-product-line-solver-oracle-benchmark",
+          "result": "OK (conductor)",
+          "title": "Product-Line Solver Oracle Benchmark"
+        },
+        {
+          "deliverable": "results/experiment_1512_fr11_verifier_feedback_policy_cache_v11.json",
+          "id": "exp1512-fr-11-verifier-feedback-policy-cache-v11",
+          "result": "OK (conductor)",
+          "title": "FR-11 Verifier-Feedback Policy Cache v11"
+        },
+        {
+          "deliverable": "results/experiment_1513_fr11_policy_rollback_replay_audit.json",
+          "id": "exp1513-fr-11-policy-rollback-replay-audit",
+          "result": "OK (conductor)",
+          "title": "FR-11 Policy Rollback Replay Audit"
+        },
+        {
+          "deliverable": "results/experiment_1514_trace2skill_portable_skill_pack_v2.json",
+          "id": "exp1514-trace2skill-portable-skill-pack-v2",
+          "result": "OK (conductor)",
+          "title": "trace2skill Portable Skill Pack v2"
+        },
+        {
+          "deliverable": "results/experiment_1515_thrml_samplerbackend_conformance_pack.json",
+          "id": "exp1515-thrml-samplerbackend-conformance-pack",
+          "result": "OK (conductor)",
+          "title": "THRML SamplerBackend Conformance Pack"
+        },
+        {
+          "deliverable": "results/experiment_1516_kan_shape_normalization_preflight.json",
+          "id": "exp1516-kan/kaem-shape-normalization-preflight",
+          "result": "OK (conductor)",
+          "title": "KAN/KAEM Shape Normalization Preflight"
+        },
+        {
+          "deliverable": "results/experiment_1517_kv260_discrete_sb_rtl_property_pack_v2.json",
+          "id": "exp1517-kv260-discrete-sb-rtl-property-pack-v2",
+          "result": "OK (conductor)",
+          "title": "KV260 Discrete SB RTL Property Pack v2"
+        },
+        {
+          "deliverable": "results/experiment_1518_milestone_116_retro.json",
+          "id": "exp1518-milestone-116-retrospective",
+          "result": "OK (codex retro)",
+          "title": "Milestone .116 Retrospective + Claim Boundary Reconciliation"
+        }
+      ],
+      "title": "Runtime Verifier Contracts + FR-11 Feedback + Substrate Conformance Gates"
+    },
+    "reason": "recommended_only_stop_when_done_delegates_archive_write",
+    "written": false
+  },
+  "retired_or_demoted_claims": [
+    {
+      "boundary": "May appear only as auxiliary monitor/debug telemetry below deterministic validators.",
+      "claim": "Semantic Energy/logit telemetry",
+      "decision": "retired_as_headline_signal"
+    },
+    {
+      "boundary": "No pairwise self-verification headline unless future evidence beats executable energy.",
+      "claim": "V_1 pairwise self-verification",
+      "decision": "retired_as_headline_signal"
+    },
+    {
+      "boundary": "Trusted only after safe-DSL compilation, coverage, and false-accept accounting.",
+      "claim": "Generated verifier code",
+      "decision": "demoted_to_safe_dsl_only"
+    },
+    {
+      "boundary": "Current evidence is simulator, shape-accounting, or source-level property conformance only.",
+      "claim": "THRML/KAN/KV260 hardware execution",
+      "decision": "not_claimed"
+    }
+  ],
+  "run_date": "20260508",
+  "schema": "milestone_116_retro_v1",
+  "source_inputs_read": {
+    "openspec/change-proposals/research-roadmap-vNEXT.md": {
+      "exists": true
+    },
+    "ops/changelog.md": {
+      "exists": true
+    },
+    "ops/conductor-log.md": {
+      "exists": true
+    },
+    "ops/status.md": {
+      "exists": true
+    },
+    "research-complete.yaml": {
+      "exists": true
+    },
+    "research-roadmap.yaml": {
+      "exists": true
+    }
+  },
+  "status": "complete",
+  "substrate_conformance_result": "Substrate work is software/source conformance only: THRML simulator_only=True and no_tsu_hardware_claim=True; KAN no_synthesis_claim=True and no_board_claim=True; KV260 source_level_only=True and no_board_execution=True.",
+  "success_criteria_results": {
+    "activation": {
+      "criterion": "activation",
+      "evidence_paths": [
+        "results/experiment_1506_115_completion_archive_116_activation.json:activation_manifest_complete",
+        "results/experiment_1506_115_completion_archive_116_activation.json:protected_files_unchanged",
+        "results/experiment_1506_115_completion_archive_116_activation.json:research_roadmap_yaml_modified",
+        "results/experiment_1506_115_completion_archive_116_activation.json:scripts_research_conductor_modified"
+      ],
+      "experiment_id": "exp1506",
+      "reason": "criterion satisfied",
+      "source_values": {
+        "activation_manifest_complete": true,
+        "honest_verdict": "complete: milestone_116_activation_complete_115_archived_gate_fields_ready",
+        "protected_files_unchanged": true,
+        "research_roadmap_yaml_modified": false,
+        "scripts_research_conductor_modified": false,
+        "status": "complete",
+        "terminal": true,
+        "terminal_prefix_ok": true
+      },
+      "status": "met",
+      "target": "activation_manifest_complete=true and no protected roadmap/conductor edits"
+    },
+    "continuous_self_learning": {
+      "criterion": "continuous_self_learning",
+      "evidence_paths": [
+        "results/experiment_1512_fr11_verifier_feedback_policy_cache_v11.json:policy_cache_ready",
+        "results/experiment_1512_fr11_verifier_feedback_policy_cache_v11.json:continuous_self_learning_task",
+        "results/experiment_1512_fr11_verifier_feedback_policy_cache_v11.json:no_model_weight_mutation",
+        "results/experiment_1512_fr11_verifier_feedback_policy_cache_v11.json:soundness_mistakes",
+        "results/experiment_1512_fr11_verifier_feedback_policy_cache_v11.json:verifier_false_accept_rate"
+      ],
+      "experiment_id": "exp1512",
+      "reason": "criterion satisfied",
+      "source_values": {
+        "continuous_self_learning_task": true,
+        "honest_verdict": "complete: fr11_v11_verifier_feedback_policy_cache_ready",
+        "no_model_weight_mutation": true,
+        "policy_cache_ready": true,
+        "soundness_mistakes": 0,
+        "status": "complete",
+        "terminal": true,
+        "terminal_prefix_ok": true,
+        "verifier_false_accept_rate": 0.0
+      },
+      "status": "met",
+      "target": "policy_cache_ready=true, continuous_self_learning_task=true, and no model-weight mutation"
+    },
+    "feature_model_oracle": {
+      "criterion": "feature_model_oracle",
+      "evidence_paths": [
+        "results/experiment_1511_product_line_solver_oracle_benchmark.json:product_line_benchmark_ready",
+        "results/experiment_1511_product_line_solver_oracle_benchmark.json:solver_oracle_ready",
+        "results/experiment_1511_product_line_solver_oracle_benchmark.json:feasibility_rate",
+        "results/experiment_1511_product_line_solver_oracle_benchmark.json:verifier_false_accept_rate"
+      ],
+      "experiment_id": "exp1511",
+      "reason": "criterion satisfied",
+      "source_values": {
+        "feasibility_rate": 0.0,
+        "honest_verdict": "complete: product-line solver oracle benchmark ready with live local SOTA GGUF rows",
+        "product_line_benchmark_ready": true,
+        "solver_oracle_ready": true,
+        "status": "complete",
+        "terminal": true,
+        "terminal_prefix_ok": true,
+        "verifier_false_accept_rate": 0.0
+      },
+      "status": "met",
+      "target": "product_line_benchmark_ready=true with solver-oracle feasibility and false-accept rates"
+    },
+    "grammar_certificate_decoder": {
+      "criterion": "grammar_certificate_decoder",
+      "evidence_paths": [
+        "results/experiment_1508_trigger_grammar_certificate_decoder_audit.json:certificate_decoder_ready",
+        "results/experiment_1508_trigger_grammar_certificate_decoder_audit.json:live_sota_model_inference_used",
+        "results/experiment_1508_trigger_grammar_certificate_decoder_audit.json:grammar_parse_rate",
+        "results/experiment_1508_trigger_grammar_certificate_decoder_audit.json:grammar_validation_rate",
+        "results/experiment_1508_trigger_grammar_certificate_decoder_audit.json:verifier_false_accept_rate"
+      ],
+      "experiment_id": "exp1508",
+      "reason": "criterion satisfied",
+      "source_values": {
+        "certificate_decoder_ready": true,
+        "grammar_parse_rate": 1.0,
+        "grammar_validation_rate": 1.0,
+        "honest_verdict": "complete: trigger+grammar certificate decoder measured on live local SOTA GGUF rows",
+        "live_sota_model_inference_used": true,
+        "status": "complete",
+        "terminal": true,
+        "terminal_prefix_ok": true,
+        "verifier_false_accept_rate": 0.0
+      },
+      "status": "met",
+      "target": "certificate_decoder_ready=true with live local SOTA rows and parser/validator rates"
+    },
+    "kan_shape_accounting": {
+      "criterion": "kan_shape_accounting",
+      "evidence_paths": [
+        "results/experiment_1516_kan_shape_normalization_preflight.json:kan_shape_manifest_ready",
+        "results/experiment_1516_kan_shape_normalization_preflight.json:no_synthesis_claim",
+        "results/experiment_1516_kan_shape_normalization_preflight.json:no_board_claim",
+        "results/experiment_1516_kan_shape_normalization_preflight.json:blockers"
+      ],
+      "experiment_id": "exp1516",
+      "reason": "criterion satisfied",
+      "source_values": {
+        "blockers": [
+          "future_synthesis_claim_requires_new_synthesis_evidence",
+          "future_board_claim_requires_bitstream_and_board_transcript",
+          "no_vivado_synthesis_or_board_measurement_for_exp1502",
+          "no_kv260_bitfile_or_timing_report_for_this_kan_accounting",
+          "quantkan_and_kaem_proxy_shapes_must_be_normalized_before_any_future_synthesis"
+        ],
+        "honest_verdict": "complete: kan shape manifest ready; synthesis and board claims blocked",
+        "kan_shape_manifest_ready": true,
+        "no_board_claim": true,
+        "no_synthesis_claim": true,
+        "status": "complete",
+        "terminal": true,
+        "terminal_prefix_ok": true
+      },
+      "status": "met",
+      "target": "kan_shape_manifest_ready=true and no synthesis/board claim"
+    },
+    "kv260_source_properties": {
+      "criterion": "kv260_source_properties",
+      "evidence_paths": [
+        "results/experiment_1517_kv260_discrete_sb_rtl_property_pack_v2.json:kv260_property_pack_ready",
+        "results/experiment_1517_kv260_discrete_sb_rtl_property_pack_v2.json:source_level_only",
+        "results/experiment_1517_kv260_discrete_sb_rtl_property_pack_v2.json:no_board_execution",
+        "results/experiment_1517_kv260_discrete_sb_rtl_property_pack_v2.json:no_bitstream_claim"
+      ],
+      "experiment_id": "exp1517",
+      "reason": "criterion satisfied",
+      "source_values": {
+        "honest_verdict": "complete: kv260_discrete_sb_property_pack_ready_source_level_only",
+        "kv260_property_pack_ready": true,
+        "no_bitstream_claim": true,
+        "no_board_execution": true,
+        "source_level_only": true,
+        "status": "complete",
+        "terminal": true,
+        "terminal_prefix_ok": true
+      },
+      "status": "met",
+      "target": "kv260_property_pack_ready=true with source-level RTL tests only"
+    },
+    "monitor_runtime": {
+      "criterion": "monitor_runtime",
+      "evidence_paths": [
+        "results/experiment_1509_executable_monitor_runtime_adapter.json:monitor_runtime_ready",
+        "results/experiment_1509_executable_monitor_runtime_adapter.json:events_normalized",
+        "results/experiment_1509_executable_monitor_runtime_adapter.json:verifier_false_accept_rate"
+      ],
+      "experiment_id": "exp1509",
+      "reason": "criterion satisfied",
+      "source_values": {
+        "events_normalized": 60,
+        "honest_verdict": "complete: executable monitor runtime adapter normalized replay manifest",
+        "monitor_runtime_ready": true,
+        "status": "complete",
+        "terminal": true,
+        "terminal_prefix_ok": true,
+        "verifier_false_accept_rate": 0.0
+      },
+      "status": "met",
+      "target": "monitor_runtime_ready=true with replayable events and zero new false accepts"
+    },
+    "portable_skill_pack": {
+      "criterion": "portable_skill_pack",
+      "evidence_paths": [
+        "results/experiment_1514_trace2skill_portable_skill_pack_v2.json:portable_skill_pack_ready",
+        "results/experiment_1514_trace2skill_portable_skill_pack_v2.json:rollback_passing_entries",
+        "results/experiment_1514_trace2skill_portable_skill_pack_v2.json:packaged_skill_entries",
+        "results/experiment_1514_trace2skill_portable_skill_pack_v2.json:rejected_skill_entries"
+      ],
+      "experiment_id": "exp1514",
+      "reason": "criterion satisfied",
+      "source_values": {
+        "honest_verdict": "complete: trace2skill_portable_skill_pack_ready",
+        "packaged_skill_entries": 24,
+        "portable_skill_pack_ready": true,
+        "rejected_skill_entries": 60,
+        "rollback_passing_entries": 24,
+        "status": "complete",
+        "terminal": true,
+        "terminal_prefix_ok": true
+      },
+      "status": "met",
+      "target": "portable_skill_pack_ready=true only for rollback-passing entries"
+    },
+    "retrospective": {
+      "criterion": "retrospective",
+      "evidence_paths": [
+        "results/experiment_1518_milestone_116_retro.json",
+        "research-roadmap.yaml",
+        "scripts/research_conductor.py"
+      ],
+      "experiment_id": "exp1518",
+      "reason": "retrospective artifact can close from terminal sources",
+      "source_values": {
+        "missing_source_ids": [],
+        "protected_file_modification_findings": {
+          "any_modification_reported": false,
+          "source_reports": [],
+          "working_tree": {
+            "research-roadmap.yaml": "unchanged",
+            "scripts/research_conductor.py": "unchanged"
+          }
+        }
+      },
+      "status": "met",
+      "target": "criteria_met and criteria_total summarize .116 with carry-forward decisions"
+    },
+    "rollback_replay": {
+      "criterion": "rollback_replay",
+      "evidence_paths": [
+        "results/experiment_1513_fr11_policy_rollback_replay_audit.json:rollback_audit_passed",
+        "results/experiment_1513_fr11_policy_rollback_replay_audit.json:accepted_policy_updates",
+        "results/experiment_1513_fr11_policy_rollback_replay_audit.json:false_accept_delta",
+        "results/experiment_1513_fr11_policy_rollback_replay_audit.json:soundness_mistakes"
+      ],
+      "experiment_id": "exp1513",
+      "reason": "criterion satisfied",
+      "source_values": {
+        "accepted_policy_updates": 84,
+        "false_accept_delta": 0,
+        "honest_verdict": "complete: fr11_policy_rollback_replay_audit_passed",
+        "rollback_audit_passed": true,
+        "soundness_mistakes": 0,
+        "status": "complete",
+        "terminal": true,
+        "terminal_prefix_ok": true
+      },
+      "status": "met",
+      "target": "rollback_audit_passed=true before any learned policy is promoted"
+    },
+    "structural_contracts": {
+      "criterion": "structural_contracts",
+      "evidence_paths": [
+        "results/experiment_1510_plan_graph_structural_contract_gate.json:structural_contract_gate_ready",
+        "results/experiment_1510_plan_graph_structural_contract_gate.json:violations_detected",
+        "results/experiment_1510_plan_graph_structural_contract_gate.json:false_accept_rate",
+        "results/experiment_1510_plan_graph_structural_contract_gate.json:random_baseline_detection_rate",
+        "results/experiment_1510_plan_graph_structural_contract_gate.json:length_baseline_detection_rate"
+      ],
+      "experiment_id": "exp1510",
+      "reason": "criterion satisfied",
+      "source_values": {
+        "false_accept_rate": 0.0,
+        "honest_verdict": "complete: deterministic plan-graph structural contract gate rejects injected pre-execution violations",
+        "length_baseline_detection_rate": 0.183333,
+        "random_baseline_detection_rate": 0.0,
+        "status": "complete",
+        "structural_contract_gate_ready": true,
+        "terminal": true,
+        "terminal_prefix_ok": true,
+        "violations_detected": 60
+      },
+      "status": "met",
+      "target": "structural_contract_gate_ready=true or terminal no-signal artifact"
+    },
+    "thrml_conformance": {
+      "criterion": "thrml_conformance",
+      "evidence_paths": [
+        "results/experiment_1515_thrml_samplerbackend_conformance_pack.json:thrml_samplerbackend_conformance_ready",
+        "results/experiment_1515_thrml_samplerbackend_conformance_pack.json:simulator_only",
+        "results/experiment_1515_thrml_samplerbackend_conformance_pack.json:no_tsu_hardware_claim",
+        "results/experiment_1515_thrml_samplerbackend_conformance_pack.json:blockers"
+      ],
+      "experiment_id": "exp1515",
+      "reason": "criterion satisfied",
+      "source_values": {
+        "blockers": [],
+        "honest_verdict": "complete_thrml_samplerbackend_conformance_ready_no_tsu_hardware_claim",
+        "no_tsu_hardware_claim": true,
+        "simulator_only": true,
+        "status": "complete",
+        "terminal": true,
+        "terminal_prefix_ok": true,
+        "thrml_samplerbackend_conformance_ready": true
+      },
+      "status": "met",
+      "target": "thrml_samplerbackend_conformance_ready=true or honest simulator-only blocker"
+    },
+    "verifier_induction": {
+      "criterion": "verifier_induction",
+      "evidence_paths": [
+        "results/experiment_1507_autopyverifier_safe_dsl_induction_pack.json:verifier_induction_ready",
+        "results/experiment_1507_autopyverifier_safe_dsl_induction_pack.json:candidate_verifiers_compiled",
+        "results/experiment_1507_autopyverifier_safe_dsl_induction_pack.json:verifier_compile_rate",
+        "results/experiment_1507_autopyverifier_safe_dsl_induction_pack.json:verifier_coverage_rate",
+        "results/experiment_1507_autopyverifier_safe_dsl_induction_pack.json:verifier_false_accept_rate"
+      ],
+      "experiment_id": "exp1507",
+      "reason": "criterion satisfied",
+      "source_values": {
+        "candidate_verifiers_compiled": 2,
+        "honest_verdict": "complete: safe-DSL verifier induction pack measured on live local SOTA GGUF proposals",
+        "status": "complete",
+        "terminal": true,
+        "terminal_prefix_ok": true,
+        "verifier_compile_rate": 1.0,
+        "verifier_coverage_rate": 1.0,
+        "verifier_false_accept_rate": 0.0,
+        "verifier_induction_ready": true
+      },
+      "status": "met",
+      "target": "verifier_induction_ready=true with compile, coverage, and false-accept metrics"
+    }
+  },
+  "verifier_runtime_contract_ready": true
+}
