@@ -1,0 +1,115 @@
+{
+  "honest_verdict": "complete: audited 2 retained v14 policies; 1 showed 2+ mode-collapse predictors; 1 retention flagged for next-milestone reversal",
+  "mode_collapse_audit_complete": true,
+  "mode_collapse_confirmed_count": 1,
+  "mode_collapse_confirmed_percent": 0.5,
+  "retained_policies_audited_count": 2,
+  "retained_policy_audits": [
+    {
+      "confirmed_predictor_count": 0,
+      "confirmed_predictors": [],
+      "evidence_basis": "exp1539_model_output_excerpts",
+      "mode_collapse_confirmed": false,
+      "policy_id": "daily_eval:dvi_v8:verified:exp1449:ltlzinc-always-power_ok-repair-hint-00",
+      "predictors": {
+        "boilerplate_fraction": {
+          "available": true,
+          "boilerplate_fraction": 0.01087,
+          "confirmed": false,
+          "ngram_size": 3,
+          "threshold": 0.3
+        },
+        "ood_adversarial_accuracy_regression": {
+          "available": false,
+          "confirmed": false,
+          "reason": "ood_adversarial_accuracy_baseline_or_post_unavailable"
+        },
+        "reward_variance_collapse": {
+          "available": false,
+          "confirmed": false,
+          "reason": "fresh_k8_reward_groups_unavailable"
+        },
+        "token_entropy_drop": {
+          "available": true,
+          "baseline_distribution_nats_per_token": [
+            3.170917
+          ],
+          "baseline_mean_nats_per_token": 3.170917,
+          "confirmed": false,
+          "drop_nats_per_token": 0.320979,
+          "generated_distribution_nats_per_token": [
+            2.849938
+          ],
+          "generated_mean_nats_per_token": 2.849938,
+          "threshold_nats_per_token": 0.5
+        }
+      },
+      "source": "exp1539_external_feedback"
+    },
+    {
+      "confirmed_predictor_count": 2,
+      "confirmed_predictors": [
+        "boilerplate_fraction",
+        "reward_variance_collapse"
+      ],
+      "evidence_basis": "exp1552_checked_in_replay_proxy",
+      "mode_collapse_confirmed": true,
+      "policy_id": "policy:residual_drift_repair:1552",
+      "predictors": {
+        "boilerplate_fraction": {
+          "available": true,
+          "boilerplate_fraction": 1.0,
+          "confirmed": true,
+          "ngram_size": 3,
+          "threshold": 0.3
+        },
+        "ood_adversarial_accuracy_regression": {
+          "available": false,
+          "confirmed": false,
+          "reason": "ood_adversarial_accuracy_baseline_or_post_unavailable"
+        },
+        "reward_variance_collapse": {
+          "available": true,
+          "collapse_epsilon": 1e-12,
+          "confirmed": true,
+          "group_size": 8,
+          "group_variances": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "single_mode": true
+        },
+        "token_entropy_drop": {
+          "available": false,
+          "confirmed": false,
+          "reason": "pre_rl_or_generated_repair_text_unavailable"
+        }
+      },
+      "source": "exp1552_residual_drift_repair"
+    }
+  ],
+  "retained_policy_target_count": 5,
+  "retained_policy_target_met": false,
+  "retention_reversal_recommended_policy_ids": [
+    "policy:residual_drift_repair:1552"
+  ],
+  "reversal_recommended_count": 1,
+  "source_limitations": [
+    "retained_policy_target_not_met:2_of_5",
+    "reward_variance_collapse_unavailable:daily_eval:dvi_v8:verified:exp1449:ltlzinc-always-power_ok-repair-hint-00:fresh_k8_reward_groups_unavailable",
+    "ood_adversarial_accuracy_regression_unavailable:daily_eval:dvi_v8:verified:exp1449:ltlzinc-always-power_ok-repair-hint-00:ood_adversarial_accuracy_baseline_or_post_unavailable",
+    "token_entropy_drop_unavailable:policy:residual_drift_repair:1552:pre_rl_or_generated_repair_text_unavailable",
+    "ood_adversarial_accuracy_regression_unavailable:policy:residual_drift_repair:1552:ood_adversarial_accuracy_baseline_or_post_unavailable"
+  ],
+  "spec": [
+    "REQ-LEARN-1568",
+    "SCENARIO-LEARN-1568",
+    "SCENARIO-LEARN-1569"
+  ],
+  "status": "complete"
+}
