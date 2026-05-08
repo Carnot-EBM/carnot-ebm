@@ -207,6 +207,131 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### NEW 2026-05-08 (21:35Z): Phase 1 Ship Track — Decoupled from Paper + Hardware (.121+ MANDATORY)
+
+**Operator directives 2026-05-08 ~21:30Z:**
+1. "I want to kick the paper and arXiv submission into the next phase
+   as it should not block us"
+2. "I do not want to wait on the GateMate + PolarFire Soc hardware
+   validation for phase 1 as it should not block us"
+
+**Effect:** Phase 1 ship gate is now purely software-operational. See
+CLAUDE.md "Project Vision" + memory entry
+`feedback_phase_1_ship_decoupled_from_paper_and_hardware.md`.
+
+**Phase 1 ship-track tasks** (file as MANDATORY for `.121-.123 planner
+pickup):
+
+```yaml
+- id: expNNNN-pypi-package-shipping
+  title: "Carnot PyPI Package — Apache-2.0 Release"
+  agent_type: codex
+  priority: critical
+  prompt_seed: |
+    Phase 1 ship: package the Carnot Python codebase as a PyPI
+    distribution under Apache-2.0. Includes:
+    - python/carnot/* as the installable package
+    - Versioned __init__.py + setup.py / pyproject.toml
+    - All required dependencies pinned (jax, scipy, thrml,
+      torch, transformers, ...)
+    - PyPI publication via twine; verify pip install carnot works
+      cleanly in a fresh venv
+    - README with quick-start showing verify_code, verify_with_properties
+    - LICENSE: Apache-2.0
+    Acceptance: `pip install carnot` succeeds in fresh venv on
+    Linux/macOS; `carnot --version` returns; example verify call
+    produces expected output.
+
+- id: expNNNN-huggingface-mirror-setup
+  title: "HuggingFace Mirror per CLAUDE.md Rule 3"
+  agent_type: codex
+  priority: critical
+  prompt_seed: |
+    Phase 1 ship: establish HuggingFace mirror for Carnot trained
+    models, datasets, and model cards. Per CLAUDE.md Rule 3
+    (distribution mirroring), every published artifact must be
+    available via at least two independent channels.
+
+    Steps:
+    - Verify huggingface.co/Carnot-EBM org access (per
+      reference_huggingface.md memory entry)
+    - Upload current trained EBMs (SOSKAN-Energy v3, ThinkPRM v2
+      adapter, FoVer-trained verifiers)
+    - Write model cards in compliance with CLAUDE.md "no emojis in
+      docs" rule + verbose layman explanations rule
+    - Set up Carnot-controlled gitea mirror as second channel (per
+      Rule 3); pin commit hashes
+    - Document the mirror URLs in README + paper-v6 §6 references
+
+    Acceptance: huggingface.co/Carnot-EBM has all production trained
+    models with proper model cards; second mirror channel functional
+    and indexed; pip install carnot users can fetch models.
+
+- id: expNNNN-mcp-cli-docs-pass
+  title: "MCP Server + CLI Documentation for External Integrators"
+  agent_type: codex
+  priority: critical
+  prompt_seed: |
+    Phase 1 ship: documentation polish for the MCP server (FR-18) and
+    CLI for external integrators. The implementation is complete; this
+    task is solely documentation/onboarding.
+
+    Steps:
+    - README.md polish: quick-start sections for verify_code,
+      verify_with_properties, verify_code_with_pbt, verify_llm_output
+    - MCP server install + Claude Desktop config example
+    - CLI: examples for `carnot verify`, `carnot verify-code`
+    - One-page integrator-onboarding doc at docs/integrator-guide.md
+    - "Reproduce paper-v6 results" section pointing at the validation
+      scripts (post-paper-v6 ship; for now, point at .120 empirical
+      results)
+
+    Acceptance: external integrator can clone repo, follow docs, get
+    a working verify-and-repair flow within 15 minutes. NO emojis per
+    CLAUDE.md.
+
+- id: expNNNN-independent-reproducer-engagement
+  title: "Independent Reproducer for Phase 1 Ship"
+  agent_type: codex
+  priority: high
+  prompt_seed: |
+    Phase 1 ship final criterion: at least one independent reproducer
+    confirms the verify-and-repair flow works on their environment.
+
+    Could be:
+    - A teammate or known collaborator running in their dev env
+    - A CI run on a fresh GitHub Actions runner
+    - An external user (Reddit, HuggingFace community, Hackster, etc.)
+
+    Document the reproducer at ops/phase-1-reproducers.md.
+
+    Acceptance: at least one log entry showing `pip install carnot`
+    + working verify call from someone outside the operator's
+    immediate dev environment.
+```
+
+**These four tasks complete Phase 1.** No paper, no hardware, no
+Phase 4 — purely software shipping. ETA 1-2 weeks of focused work.
+
+**Hardware track tasks** (NOW Phase 2 prep, not Phase 1 critical):
+
+The hardware-eval-cascade tasks already filed (exp15ZA-ZD/PP/QQ/RR/TT/
+UU/VV/WW/XY/YY/ZA/ZB) move to Phase 2 track. They run when hardware
+arrives + the operator validates.
+
+**Publication-track tasks** (NOW Publication track, not Phase 1
+critical):
+
+- exp1569 paper-v6 §3 sampler section draft (carry-forward from .120)
+- exp1573 Z1 readiness packet (note: this is reframed as Publication-
+  track since the Z1 assessment lives in paper-v6's hardware section,
+  not in Phase 1 ship)
+- Future: paper-v6 §3-§7 final integration, integrity audit, arXiv
+  submission
+
+The Publication track HOLDS until Phase 4 validates per existing
+discipline; that hold doesn't block Phase 1.
+
 ### NEW 2026-05-08 (21:25Z): exp1569 + exp1573 Carry-Forward to .121 (with proper prior_failures discipline)
 
 **Origin.** During `.120 milestone execution, two tasks hit
