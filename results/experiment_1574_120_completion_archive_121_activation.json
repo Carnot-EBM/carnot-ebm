@@ -1,14 +1,138 @@
 {
-  "status": "in_progress",
-  "activation_manifest_complete": false,
-  "prior_failure_autofill_ready": false,
-  "paper_v6_sampler_resume_ready": false,
-  "extropic_packet_resume_ready": false,
-  "brain_reinforce_training_ready": false,
-  "ot_framework_adoption_ready": false,
-  "dccd_jsonschema_smoke_ready": false,
-  "fr11_v15_patch_ready": false,
-  "phase1_ship_readiness_ready": false,
-  "hardware_eval_ready": false,
-  "honest_verdict": "in_progress"
+  "activation_manifest_complete": true,
+  "allowed_121_tracks": [
+    {
+      "guardrail": "Fix exp1569 and exp1573 prior_failures metadata before resuming them.",
+      "name": "prior-failure repair",
+      "track": "prior_failure_repair"
+    },
+    {
+      "guardrail": "Draft from .120 evidence, with blocked claims marked explicitly.",
+      "name": "paper-v6 sampler drafting",
+      "track": "paper_v6_sampler_drafting"
+    },
+    {
+      "guardrail": "Update the packet as simulator/readiness work only; no Z1 execution claim.",
+      "name": "Extropic Z1 readiness update",
+      "track": "extropic_z1_readiness_update"
+    },
+    {
+      "guardrail": "Test the training axis that exp1562 did not cover.",
+      "name": "BRAIN REINFORCE training dynamics",
+      "track": "brain_reinforce_training_dynamics"
+    },
+    {
+      "guardrail": "Adopt terminology and conflict ledger without upgrading acceptance authority.",
+      "name": "OT verification framework adoption",
+      "track": "ot_framework_adoption"
+    },
+    {
+      "guardrail": "Smoke structured outputs on mandated SOTA GGUFs; tiny models are fallback only.",
+      "name": "DCCD/JSONSchemaBench SOTA smoke",
+      "track": "dccd_jsonschema_sota_smoke"
+    },
+    {
+      "guardrail": "Reverse only replay-confirmed mode-collapsed v14 retentions.",
+      "name": "FR-11 lambda-GRPO retention repair",
+      "track": "fr11_lambda_grpo_retention_repair"
+    },
+    {
+      "guardrail": "Audit software ship readiness independent of paper and hardware.",
+      "name": "Phase-1 ship readiness",
+      "track": "phase1_ship_readiness"
+    },
+    {
+      "guardrail": "Treat analog drift correction as a prerequisite, not executed hardware evidence.",
+      "name": "Z1 drift correction",
+      "track": "z1_drift_correction"
+    },
+    {
+      "guardrail": "Correct portfolio scope without board, TSU, or latency claims.",
+      "name": "Tenstorrent/PolarFire/Strix/KV260 hardware portfolio correction",
+      "track": "hardware_portfolio_correction"
+    },
+    {
+      "guardrail": "Close .121 from source artifacts and exact gate fields.",
+      "name": "retro",
+      "track": "milestone_retro"
+    }
+  ],
+  "blocked_reasons": [],
+  "brain_reinforce_training_ready": true,
+  "carried_forward": [
+    "exp1569 paper-v6 sampler draft must resume with corrected prior-failure metadata",
+    "exp1573 Extropic Z1 packet must resume with corrected prior-failure metadata",
+    "BRAIN REINFORCE training dynamics remain untested at k=15",
+    "FR-11 lambda-GRPO retention reversal is required for the flagged v14 policy",
+    "exp1569: paper_v6_section_3_finalization_after_exp1569_draft",
+    "exp1563: specann_rejection_record_verification",
+    "docs/research-notes/iclr26-deep-think-responses.md: phase5_pcd_divergence_audit",
+    "exp1565+exp1570: soft_gibbs_residual_production_scale_n128",
+    "exp1561+exp1562+exp1563: mcmc_layer_free_phase5_architecture"
+  ],
+  "dccd_jsonschema_smoke_ready": true,
+  "experiment": "1574_120_completion_archive_121_activation",
+  "extropic_packet_resume_ready": true,
+  "falsified": [
+    "kinetic defense-in-depth for THRML block-Gibbs was falsified in exp1561",
+    "BRAIN+Linear-AR expressivity widening was falsified in exp1562",
+    "one FR-11 v14 retained policy showed mode-collapse predictors in exp1568"
+  ],
+  "fr11_v15_patch_ready": true,
+  "gate_fields": {
+    "brain_reinforce_training_ready": true,
+    "dccd_jsonschema_smoke_ready": true,
+    "extropic_packet_resume_ready": true,
+    "fr11_v15_patch_ready": true,
+    "hardware_eval_ready": true,
+    "ot_framework_adoption_ready": true,
+    "paper_v6_sampler_resume_ready": true,
+    "phase1_ship_readiness_ready": true,
+    "prior_failure_autofill_ready": true
+  },
+  "hardware_eval_ready": true,
+  "hardware_eval_scope": "portfolio_correction_preflight_only_no_board_or_tsu_claim",
+  "honest_verdict": "complete: milestone_121_activation_complete_120_archived_phase1_brain_hardware_gates_ready",
+  "manifest_path": "ops/milestone_121_activation_manifest.md",
+  "milestone": "2026.05.121",
+  "missing_source_paths": [],
+  "ot_framework_adoption_ready": true,
+  "paper_v6_sampler_resume_ready": true,
+  "phase1_ship_readiness_ready": true,
+  "predecessor_criteria_met": 10,
+  "predecessor_criteria_total": 14,
+  "predecessor_milestone": "2026.05.120",
+  "preserved_claim_blocks": [
+    "TSU/Z1 hardware execution claims",
+    "KV260 board claims without transcripts",
+    "legacy-small-model headline results",
+    "soft energy/logprob scores as acceptance authority"
+  ],
+  "prior_failure_autofill_ready": true,
+  "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+  "proved": [
+    "THRML vendoring reached KL=0 parity and candidate warm-start support in exp1564",
+    "candidate warm-start beat cold/cached starts in exp1566",
+    "Soft-Gibbs Residual and its Jensen coverage bound were operational in exp1565/exp1570",
+    "step-wise AR-REINFORCE baseline reduced variance in exp1571"
+  ],
+  "research_roadmap_yaml_modified": false,
+  "run_date": "20260508",
+  "schema": "milestone_121_activation_manifest_v1",
+  "scripts_research_conductor_modified": false,
+  "source_inputs_read": {
+    "_bmad/architecture.md": {
+      "exists": true
+    },
+    "ops/known-issues.md": {
+      "exists": true
+    },
+    "research-roadmap.yaml": {
+      "exists": true
+    },
+    "results/experiment_1572_milestone_120_retro.json": {
+      "exists": true
+    }
+  },
+  "status": "complete"
 }

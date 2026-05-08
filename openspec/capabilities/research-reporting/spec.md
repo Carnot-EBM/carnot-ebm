@@ -2991,6 +2991,61 @@ windows
 **And** it surfaces the live usage windows without echoing the OAuth access
 token or refresh token
 
+### REQ-REPORT-063: Milestone .121 Activation Manifest
+
+The Exp 1574 activation workflow shall archive milestone `2026.05.120` and
+activate milestone `2026.05.121` by writing
+`results/experiment_1574_120_completion_archive_121_activation.json` and
+`ops/milestone_121_activation_manifest.md`.
+
+The workflow shall first write the JSON artifact with `status="in_progress"`.
+The terminal artifact shall include these top-level fields:
+
+- `status`
+- `activation_manifest_complete`
+- `prior_failure_autofill_ready`
+- `paper_v6_sampler_resume_ready`
+- `extropic_packet_resume_ready`
+- `brain_reinforce_training_ready`
+- `ot_framework_adoption_ready`
+- `dccd_jsonschema_smoke_ready`
+- `fr11_v15_patch_ready`
+- `phase1_ship_readiness_ready`
+- `hardware_eval_ready`
+- `honest_verdict`
+
+The workflow shall summarize what `.120` proved, falsified, and carried
+forward from source artifacts, including the blocked Exp 1569 paper-v6 sampler
+draft and blocked Exp 1573 Extropic Z1 readiness packet. It shall expose .121
+allowed tracks for prior-failure repair, paper-v6 sampler drafting, Extropic
+Z1 readiness update, BRAIN REINFORCE training dynamics, OT verification
+framework adoption, DCCD/JSONSchemaBench SOTA smoke, FR-11 lambda-GRPO
+retention repair, Phase-1 ship readiness, Z1 drift correction,
+Tenstorrent/PolarFire/Strix/KV260 hardware portfolio correction, and retro.
+
+The workflow shall preserve blocks on TSU/Z1 hardware execution claims, KV260
+board claims without transcripts, legacy-small-model headline results, and soft
+energy/logprob scores as acceptance authority. It shall report
+`research-roadmap.yaml` and `scripts/research_conductor.py` as unchanged when
+`git diff --quiet --` confirms no activation-workflow edits to those paths.
+
+### SCENARIO-REPORT-063: Exp 1574 Activates .121 Carry-Forward Gates
+
+**Given** Exp 1572 reports milestone `.120` as complete with `10/14` criteria
+met and carries forward Exp 1569, Exp 1573, BRAIN REINFORCE training dynamics,
+and FR-11 lambda-GRPO reversal work
+**And** Exp 1569 and Exp 1573 are blocked at the conductor prior-failure gate
+**And** Exp 1571 provides the step-wise AR-REINFORCE baseline evidence
+**When** the Exp 1574 activation workflow runs
+**Then** it writes the required REQ-REPORT-063 fields
+**And** `activation_manifest_complete`,
+`brain_reinforce_training_ready`, `phase1_ship_readiness_ready`, and
+`hardware_eval_ready` are true
+**And** `ops/milestone_121_activation_manifest.md` lists the allowed .121
+tracks and the preserved claim blocks
+**And** `research-roadmap.yaml` and `scripts/research_conductor.py` remain
+unchanged by the activation workflow.
+
 
 ### REQ-PUBLISH-003: HuggingFace README Accuracy Audit
 
@@ -3126,6 +3181,7 @@ embed live-GPU benchmark results from Exp 328 when available.
 | REQ-REPORT-060 | `python/carnot/reporting/milestone_119_activation_manifest.py`, `results/experiment_1547_118_completion_archive_119_activation.json`, `ops/milestone_119_activation_manifest.md` | `tests/python/test_milestone_119_activation_manifest.py` | Implemented |
 | REQ-REPORT-061 | `python/carnot/reporting/milestone_retro_119.py`, `results/experiment_1559_milestone_119_retro.json` | `tests/python/test_milestone_retro_119.py` | Implemented |
 | REQ-REPORT-062 | `python/carnot/reporting/milestone_120_activation_manifest.py`, `results/experiment_1560_119_completion_archive_120_activation.json`, `ops/milestone_120_activation_manifest.md`, `ops/exclusion_manifest.yaml` | `tests/python/test_milestone_120_activation_manifest.py` | Implemented |
+| REQ-REPORT-063 | `python/carnot/reporting/milestone_121_activation_manifest.py`, `results/experiment_1574_120_completion_archive_121_activation.json`, `ops/milestone_121_activation_manifest.md` | `tests/python/test_milestone_121_activation_manifest.py` | Implemented |
 | REQ-REPORT-024 | `python/carnot/reporting/agent_usage.py`, `scripts/agent_plan_usage.py` | `tests/python/test_agent_plan_usage.py` | Implemented |
 | REQ-PUBLISH-003 | `scripts/experiment_317_hf_publish.py` | `tests/python/test_experiment_317_hf_publish.py` | Implemented |
 | REQ-PUBLISH-004 | `scripts/experiment_330_hf_live_publish.py` | `tests/python/test_experiment_330_hf_live_publish.py` | Implemented |
