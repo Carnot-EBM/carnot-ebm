@@ -17,11 +17,11 @@ call. No fine-tuning. No access to model weights.
 
 Rust + Python/JAX, Apache 2.0, `pip install carnot`.
 
-Current public research record: **1,697 experiment records tracked through Exp
-1546**. `research-complete.yaml` currently archives **1,683** task records
-across **131** artifact-backed completed milestone records through
-2026.04.117; checked-in terminal result artifacts extend through milestone
-2026.04.118 on 2026-05-08.
+Current public research record: **1,723 experiment records tracked through Exp
+1573**. `research-complete.yaml` currently archives **1,710** task records
+across **133** artifact-backed completed milestone records through
+2026.04.119; checked-in result artifacts extend into milestone 2026.05.120 on
+2026-05-08.
 
 Milestone .106 delivered the critical fix to thinking-mode certificate
 generation: Exp 1366 (CRANE tag-first prefix injection) reached
@@ -156,8 +156,24 @@ cases; claim isolation reduced verifier calls **18 -> 7** with false accepts
 **0.0**; and THRML/Carnot simulator parity scaled to n=256 plus **4/4** n=64
 topologies. SATQuest CNF verification carried forward with false-accept rate
 **0.166667**, and FR-11 external-feedback promotion stayed query-time only with
-utility delta **0.0**. The current test collection reports **23,363** items;
-this is a collection count, not a full-suite pass claim.
+utility delta **0.0**. Milestone .119 completed **12 of 13** criteria: SATQuest
+solver-oracle false accepts were repaired **3 -> 0**, live SOTA SATQuest
+re-eval kept solver-oracle false accepts at **0** over **30** cases, residual
+drift repaired **64/64** replay cases, claim isolation scaled to **75** cases
+while reducing verifier budget **75 -> 23**, product-line staged scale reached
+parse, feasibility, and oracle agreement **1.0** on **120** cases, FR-11 v14
+passed the positive-utility gate (`utility_delta=1.0`), and the
+verification-compute router reduced cost **399 -> 358** with false accepts
+**0.0**. The one .119 miss is important: THRML independent RNG proved separate
+paths but failed bounded KL (`max_kl_divergence=0.169802350136`), so Extropic
+readiness remains blocked. Early .120 artifacts through Exp 1573 falsify the
+THRML block-Gibbs kinetic-security parity argument, reject the BRAIN+Linear-AR
+rescue as a Phase-3 path, validate candidate-warm-start over cold/cached starts,
+fit a k=6 rho(C) adversarial curve, flag one FR-11 v14 retention for reversal,
+verify the Soft-Gibbs Jensen bound at optimal beta **0.1**, and pass the
+step-wise AR-REINFORCE variance gate at **10.45x**. The current test collection
+reports **23,363** items; this is a collection count, not a full-suite pass
+claim.
 
 ## Install and run
 
@@ -436,6 +452,12 @@ experiment artifact under `results/`.
 | THRML/Carnot parity .118 scaling | n=256 schedule stress passed with KL **0.002662339801**; n=64 diverse-topology parity passed **4/4** with KL **0.000728807813**; no TSU hardware claim | Exps 1543/1544 |
 | FR-11 external-feedback promotion v13 | One rollback-backed external-feedback update promoted safely, but positive utility was not demonstrated: utility delta **0.0** | Exp 1539 |
 | Milestone .118 status | **13/14 criteria met**; SATQuest false accepts and FR-11 positive-utility gap carry to .119; THRML/Extropic boundaries preserved | Exp 1546 |
+| Milestone .119 status | **12/13 criteria met**; SATQuest and FR-11 gates repaired, THRML independent RNG still failed bounded KL and blocks Extropic scale claims | Exp 1559 |
+| SATQuest solver-oracle repair + SOTA re-eval | Solver-oracle false accepts **3 -> 0**; live local SOTA re-eval over **30** cases kept solver-oracle false accepts **0** while model self false accepts remained **4** | Exps 1549/1550 |
+| Product-line, claim-isolation, and verification routing scale | Product-line **120** cases reached parse/feasibility/oracle agreement **1.0**; claim isolation reduced budget **75 -> 23**; verification router reduced cost **399 -> 358**, all with false accepts **0.0** | Exps 1553/1554/1557 |
+| THRML independent-RNG audit | RNG and code paths were independent, but bounded KL failed with max KL **0.169802350136**; no TSU or hardware claim | Exp 1548 |
+| Early .120 sampler and self-learning audits | THRML block-Gibbs falsified kinetic-security parity; candidate-warm-start held accuracy **1.0** where cold start was **0.465** at k=100; FR-11 audit flagged **1/2** retained v14 policies for reversal | Exps 1561/1566/1568 |
+| Soft-Gibbs and AR-REINFORCE follow-ons | Soft-Gibbs Jensen bound held for all beta values with deployment beta **0.1**; step-wise AR baseline passed the variance gate at **10.45x** | Exps 1570/1571 |
 | Current Python test collection | **23,363** Python tests collected; collection-only snapshot, not a full-suite pass claim | 2026-05-08 collection run |
 | Local Claude/Codex usage snapshot | Codex reads the newest local `token_count` event; Claude aggregates local token usage and reads only subscription/tier metadata from credentials; free-form quota prose is ignored instead of guessed; focused regression tests pass | 2026-05-04 changelog |
 
@@ -478,8 +500,8 @@ claim we publish.
 ## Where to go next
 
 - **[Technical report](docs/technical-report.md)** — the full research arc
-  through Exp 1546 across 131 archived completed milestone records plus the
-  latest .118 terminal artifacts, with a
+  through Exp 1573 across 133 archived completed milestone records plus the
+  latest early .120 artifacts, with a
   plain-English timeline of what we tried, what failed, what stuck.
 - **[Roadmap](docs/roadmap.md)** — current milestone, upcoming milestones,
   hardware track, and Phase 3 (Kona-parity foundation-model) direction.
@@ -683,7 +705,7 @@ See the [technical report](docs/technical-report.md) for the full research recor
 
 ## 14 Principles Learned
 
-Hard-won lessons from the activation-based phase of a research program that now spans 1,697 tracked experiment records through Exp 1546, 131 archived completed milestone records, and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
+Hard-won lessons from the activation-based phase of a research program that now spans 1,723 tracked experiment records through Exp 1573, 133 archived completed milestone records, and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
 
 ### What works
 1. **The model's own logprobs are the best energy.** No external EBM needed for rejection sampling — the LLM's own confidence is already an energy function. Simple, practical, +10%.
