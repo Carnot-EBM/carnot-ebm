@@ -1,0 +1,24 @@
+{
+  "experiment": 1521,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-05-08",
+  "started_at": "2026-05-08T03:39:31.319530+00:00",
+  "finished_at": "2026-05-08T03:39:31.319530+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Live SOTA Contract-Guided Repair v1 - Gated on Exp1520 E2E Harness",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp1520-runtime-contract-e2e-harness.runtime_contract_e2e_ready (upstream artifact not found for task id 'exp1520-runtime-contract-e2e-harness')",
+  "gates_evaluated": [
+    {
+      "upstream": "exp1520-runtime-contract-e2e-harness",
+      "artifact_field": "runtime_contract_e2e_ready",
+      "op": "==",
+      "expected": true,
+      "actual": null,
+      "passed": false,
+      "reason": "upstream artifact not found for task id 'exp1520-runtime-contract-e2e-harness'"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}

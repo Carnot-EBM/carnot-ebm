@@ -1146,3 +1146,7 @@ web search: GitHub trending energy based mod |
 | 2026-05-08 02:41 UTC | Plan next milestone | FAIL | Codex CLI error: r.org/paper/Energy-Based-Transformers-are-Scalable-Learners- |
 | 2026-05-08 03:19 UTC | Plan milestone 2026.04.117 | OK | 14 tasks proposed |
 | 2026-05-08 03:21 UTC | Milestone 2026.04.117 activated | OK | 14 tasks queued |
+| 2026-05-08 03:33 UTC | .116 Completion Archive + .117 Activation Manifest | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-08 03:35 UTC | .116 Completion Archive + .117 Activation Manifest | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-08 03:37 UTC | .116 Completion Archive + .117 Activation Manifest | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-08 03:39 UTC | Runtime-Contract E2E Harness - Gated on Exp1519 Ru | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1519-116-completion-archive-117-activatio |
