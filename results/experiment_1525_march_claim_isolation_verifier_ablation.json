@@ -1,0 +1,24 @@
+{
+  "experiment": 1525,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-05-08",
+  "started_at": "2026-05-08T03:45:36.260220+00:00",
+  "finished_at": "2026-05-08T03:45:36.260220+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "MARCH Claim-Isolation Verifier Ablation - Gated on Exp1524 Live Policy Promotion",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp1524-fr11-live-policy-promotion-v12.live_policy_promotion_ready (upstream artifact not found for task id 'exp1524-fr11-live-policy-promotion-v12')",
+  "gates_evaluated": [
+    {
+      "upstream": "exp1524-fr11-live-policy-promotion-v12",
+      "artifact_field": "live_policy_promotion_ready",
+      "op": "==",
+      "expected": true,
+      "actual": null,
+      "passed": false,
+      "reason": "upstream artifact not found for task id 'exp1524-fr11-live-policy-promotion-v12'"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
