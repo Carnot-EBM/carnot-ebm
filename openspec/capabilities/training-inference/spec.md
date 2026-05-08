@@ -1771,6 +1771,59 @@ records tolerance-bounded case deltas, and disallows all hardware claims.
 
 **Implementation Status:** Implemented (Exp 1504)
 
+## REQ-SAMPLE-046: Exp 1515 THRML SamplerBackend simulator conformance pack
+
+Carnot SHALL provide a simulator-only THRML SamplerBackend conformance pack
+that is gated on Exp 1506 `prior_thrml_parity_ready=true`, verifies THRML
+import readiness only in the active local Python environment, records adapter
+API boundaries, seed/reproducibility behavior, sample-shape expectations, and
+Exp 1504 Carnot/THRML parity vectors, and never claims Extropic TSU hardware
+execution.
+
+Acceptance criteria:
+- The experiment SHALL create
+  `results/experiment_1515_thrml_samplerbackend_conformance_pack.json` with
+  `status="in_progress"` before gate inspection, THRML import checks, or
+  conformance execution completes.
+- The experiment SHALL read
+  `results/experiment_1506_115_completion_archive_116_activation.json` and
+  SHALL write a terminal gated artifact if
+  `prior_thrml_parity_ready=true` is absent.
+- The experiment SHALL import `thrml` only from the active local Python
+  environment; if import fails, the terminal artifact SHALL report a simulator
+  dependency blocker instead of installing packages or claiming hardware.
+- The terminal artifact SHALL include `status`,
+  `thrml_samplerbackend_conformance_ready`, `gated_inputs_present`,
+  `thrml_import_ready`, `simulator_only`, `no_tsu_hardware_claim`,
+  `conformance_cases`, `parity_cases_passed`, `sample_shape_contracts`,
+  `seed_reproducibility_checked`, `conformance_manifest_path`, `blockers`, and
+  `honest_verdict`.
+- The conformance manifest at
+  `results/thrml_samplerbackend_conformance_1515.jsonl` SHALL contain one JSON
+  object per bounded conformance case covering accepted model shape,
+  schedule/seed behavior, returned sample shapes, energy/parity fields, and
+  provenance.
+- `thrml_samplerbackend_conformance_ready=true` is valid only when conformance
+  rows are written, sample-shape checks are reported, and at least one Exp 1504
+  parity vector is carried forward as passed.
+- `simulator_only=true` and `no_tsu_hardware_claim=true` SHALL remain set for
+  every terminal outcome.
+
+**Implementation Status:** Implemented (Exp 1515)
+
+### SCENARIO-SAMPLE-074: Exp 1515 writes simulator-only conformance manifest
+
+Given: Exp 1506 reports `prior_thrml_parity_ready=true` and local THRML import
+is available.
+When: the Exp 1515 conformance pack runs from the Carnot project root for run
+date 20260508.
+Then: it writes a JSONL manifest with adapter contract, seed reproducibility,
+sample-shape, and Exp 1504 parity-vector rows, writes a terminal JSON artifact
+with all required fields, marks the conformance pack ready only when the rows
+and checks exist, and disallows all TSU hardware claims.
+
+**Implementation Status:** Implemented (Exp 1515)
+
 ## REQ-MODEL-031: SCEnergyModel — Set-Level Energy Function for Statement Consistency (Exp 944)
 
 SCEnergyModel SHALL implement a permutation-invariant set-level energy function that assigns

@@ -1,0 +1,82 @@
+{
+  "blockers": [],
+  "conformance_cases": [
+    {
+      "case_id": "adapter:accepted_model_shape",
+      "case_type": "accepted_model_shape",
+      "passed": true
+    },
+    {
+      "case_id": "adapter:sample_shape_contract",
+      "case_type": "sample_shape_contract",
+      "passed": true
+    },
+    {
+      "case_id": "adapter:minimize_shape_contract",
+      "case_type": "minimize_shape_contract",
+      "passed": true
+    },
+    {
+      "case_id": "adapter:same_seed_reproducibility",
+      "case_type": "seed_reproducibility",
+      "passed": true
+    },
+    {
+      "case_id": "exp1504:tiny_ising:n4_signed_ring_chord:exact_energy",
+      "case_type": "carnot_thrml_parity_vector",
+      "passed": true
+    },
+    {
+      "case_id": "exp1504:tiny_ising:n4_signed_ring_chord:fixed_seed_sample_mean_energy",
+      "case_type": "carnot_thrml_parity_vector",
+      "passed": true
+    }
+  ],
+  "conformance_manifest_path": "results/thrml_samplerbackend_conformance_1515.jsonl",
+  "gated_inputs_present": true,
+  "honest_verdict": "complete_thrml_samplerbackend_conformance_ready_no_tsu_hardware_claim",
+  "metadata": {
+    "experiment_id": 1515,
+    "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "run_date": "20260508",
+    "schema": "thrml_samplerbackend_conformance_pack_v1",
+    "thrml_import_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/thrml/__init__.py",
+    "thrml_version": "0.1.3",
+    "tsu_hardware_execution": false
+  },
+  "no_tsu_hardware_claim": true,
+  "parity_cases_passed": 2,
+  "sample_shape_contracts": [
+    {
+      "dtype": "bool",
+      "expected_shape": [
+        8,
+        4
+      ],
+      "method": "sample",
+      "observed_shape": [
+        8,
+        4
+      ],
+      "passed": true
+    },
+    {
+      "dtype": "bool",
+      "expected_shape": [
+        8,
+        4
+      ],
+      "method": "minimize_energy",
+      "observed_shape": [
+        8,
+        4
+      ],
+      "passed": true
+    }
+  ],
+  "seed_reproducibility_checked": true,
+  "simulator_only": true,
+  "status": "complete",
+  "thrml_import_ready": true,
+  "thrml_samplerbackend_conformance_ready": true
+}
