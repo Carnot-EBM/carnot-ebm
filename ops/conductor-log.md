@@ -1228,3 +1228,4 @@ web search: GitHub trending energy based mod |
 | 2026-05-08 18:14 UTC | BRAIN+Linear-AR Extended k-Sweep (k ∈ {4,8,12,15}) | OK | 81 passed, 1 warning in 6.35s |
 | 2026-05-08 18:25 UTC | SpecAnn Phase 3 Rejection — Architecture Decision  | OK | 81 passed, 1 warning in 5.24s |
 | 2026-05-08 19:16 UTC | THRML Vendored Block-Gibbs Replacement + Candidate | OK | 81 passed, 1 warning in 4.58s |
+| 2026-05-08 19:30 UTC | Soft-Gibbs Residual Implementation + Hard-BRS Fals | OK | 81 passed, 1 warning in 5.82s |
