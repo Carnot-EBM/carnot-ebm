@@ -4221,3 +4221,68 @@ learned skill evidence without deleting any skill.
 | Requirement | Python | Tests |
 |-------------|--------|-------|
 | REQ-LEARN-1498 | Implemented (`python/carnot/reporting/trace2skill_artifact_reachability_audit.py`) | Implemented (`tests/python/test_trace2skill_artifact_reachability_audit.py`) |
+
+## REQ-LEARN-1512: FR-11 Verifier-Feedback Query-Time Policy Cache
+
+Exp 1512 SHALL build a bounded query-time policy cache from existing FR-11
+daily-eval rows and executable monitor events. The cache MAY affect retrieval,
+routing, verifier escalation, or continuation preference during query-time
+replay, but it SHALL NOT mutate model weights, bypass deterministic validators,
+or promote learned skills before a rollback audit.
+
+### REQ-LEARN-1512 Sub-requirements
+
+- REQ-LEARN-1512-1: The workflow SHALL write
+  `results/experiment_1512_fr11_verifier_feedback_policy_cache_v11.json` first
+  with `status="in_progress"` before loading Exp 1497 or Exp 1509 sources.
+- REQ-LEARN-1512-2: The workflow SHALL load
+  `results/fr11_trace2skill_daily_eval_manifest_1497.jsonl` and, when present,
+  `results/executable_monitor_events_1509.jsonl`; if Exp 1509 monitor events
+  are absent, the workflow SHALL continue from Exp 1497 rows and record the
+  source gap as a blocker.
+- REQ-LEARN-1512-3: The policy update rules SHALL be explicit and limited to
+  query-time actions: retrieval boost or demotion, routing preference,
+  continuation preference, verifier escalation, and skill quarantine.
+- REQ-LEARN-1512-4: The replay SHALL write
+  `results/fr11_policy_cache_events_1512.jsonl` with one row per source event,
+  including source identity, proposed policy action, acceptance state, and any
+  rejection or quarantine reason.
+- REQ-LEARN-1512-5: The workflow SHALL reject or quarantine any proposed update
+  associated with false accepts, unreachable source artifacts, stale
+  provenance, or missing deterministic validation.
+- REQ-LEARN-1512-6: `policy_cache_ready` SHALL be true only when the manifest
+  exists, `no_model_weight_mutation=true`, `soundness_mistakes=0`, and
+  `promotion_requires_rollback_audit=true`.
+- REQ-LEARN-1512-7: The terminal artifact SHALL include `status`,
+  `continuous_self_learning_task`, `policy_cache_ready`,
+  `no_model_weight_mutation`, `source_events_loaded`,
+  `policy_updates_proposed`, `policy_updates_accepted`,
+  `policy_update_rules`, `soundness_mistakes`,
+  `verifier_false_accept_rate`, `policy_cache_manifest_path`,
+  `promotion_requires_rollback_audit`, `blockers`, and `honest_verdict`.
+
+### SCENARIO-LEARN-1512: Deterministic Verifier Feedback Builds A Bounded Cache
+
+**Given** Exp 1497 daily-eval rows and Exp 1509 monitor events with zero
+verifier false accepts and deterministic validation statuses
+**When** Exp 1512 applies the policy update rules
+**Then** the same inputs produce the same ordered policy-cache rows each time
+**And** accepted rows affect only query-time retrieval, routing, continuation,
+or verifier-escalation choices
+**And** the terminal artifact reports the proposed and accepted update counts.
+
+### SCENARIO-LEARN-1513: Promotion Waits For Rollback Audit
+
+**Given** a source row would otherwise propose a retrieval boost or
+continuation preference
+**When** the row is associated with a false accept, unreachable artifact, stale
+provenance, or missing deterministic validation
+**Then** the update is rejected or quarantined
+**And** no learned skill is promoted by Exp 1512
+**And** `promotion_requires_rollback_audit` remains true.
+
+## Implementation Status (REQ-LEARN-1512)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-1512 | Planned (`python/carnot/reporting/fr11_verifier_feedback_policy_cache.py`) | Planned (`tests/python/test_fr11_verifier_feedback_policy_cache.py`) |
