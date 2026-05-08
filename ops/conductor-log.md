@@ -1229,3 +1229,4 @@ web search: GitHub trending energy based mod |
 | 2026-05-08 18:25 UTC | SpecAnn Phase 3 Rejection — Architecture Decision  | OK | 81 passed, 1 warning in 5.24s |
 | 2026-05-08 19:16 UTC | THRML Vendored Block-Gibbs Replacement + Candidate | OK | 81 passed, 1 warning in 4.58s |
 | 2026-05-08 19:30 UTC | Soft-Gibbs Residual Implementation + Hard-BRS Fals | OK | 81 passed, 1 warning in 5.82s |
+| 2026-05-08 19:53 UTC | Candidate-Warm-Start vs Cold-Start Benchmark - Gat | OK | 81 passed, 1 warning in 6.29s |
