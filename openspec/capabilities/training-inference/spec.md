@@ -2517,6 +2517,55 @@ states with the exact minimum residual violation count `V(y) = 1`.
 
 **Implementation Status:** Implemented (Exp 1565)
 
+## REQ-SAMPLE-060: Exp 1566 candidate warm-start vs cold-start benchmark
+
+Carnot SHALL provide a bounded, held-out benchmark for the DT-MCMC-STATELESS
+prediction that verifier inference chains must initialize from the current
+`{prompt, candidate}` payload rather than a random or cached previous-prompt
+state.  The benchmark SHALL compare candidate-warm-start, cold-start, and
+cached-state-warm-start initialization policies over a corpus of at least 200
+`(prompt, candidate, oracle_verdict)` rows spanning correct, incorrect, and
+edge-case structurally valid candidates.
+
+Acceptance criteria:
+- The benchmark SHALL evaluate THRML block-Gibbs-compatible sweeps at
+  `K in {10, 50, 100, 500, 1000}` for each initialization policy.
+- Candidate-warm-start SHALL set `y_init = bits(candidate)`, cold-start SHALL
+  set `y_init` from uniform random bits, and cached-state-warm-start SHALL set
+  `y_init` from a recent chain state belonging to a different prompt.
+- For every policy and K, the artifact SHALL report end-to-end verification
+  accuracy against the oracle, mean terminal energy, and 95th-percentile
+  latency per request rounded to 10 ms granularity.
+- `candidate_warm_start_validated=true` only when candidate-warm-start at
+  `K=100` reaches at least 99% of its `K=1000` accuracy and also outperforms
+  cold-start at `K=100`.
+- `cold_start_accuracy_drop_percent_at_k100` SHALL equal the relative accuracy
+  drop from cold-start `K=1000` to cold-start `K=100`; the DT gate passes only
+  when the drop is at least 50%.
+- `cached_state_worse_than_cold_start=true` only when cached-state-warm-start
+  at `K=100` is less accurate than cold-start at `K=100`.
+- `results/experiment_1566_candidate_warm_start_vs_cold_start_benchmark.json`
+  SHALL include `status="complete"`, `candidate_warm_start_validated`,
+  `cold_start_accuracy_drop_percent_at_k100`,
+  `cached_state_worse_than_cold_start`,
+  `recommended_deployment_policy`, and an `honest_verdict` prefixed with
+  `complete:`.
+
+**Implementation Status:** Planned (Exp 1566)
+
+### SCENARIO-SAMPLE-088: Exp 1566 validates stateless candidate initialization
+
+Given: a held-out corpus with at least 200 structurally valid verifier payloads
+and a recent-state cache whose entries come from different prompts.
+When: the Exp 1566 benchmark runs candidate-warm-start, cold-start, and
+cached-state-warm-start policies over the requested K sweep values.
+Then: the terminal artifact records per-policy/per-K accuracy, energy, and
+latency measurements, validates candidate-warm-start only under the DT gates,
+reports the cold-start K=100 relative accuracy drop, and recommends deploying
+candidate-warm-start while rejecting cached previous-prompt state reuse.
+
+**Implementation Status:** Planned (Exp 1566)
+
 ## REQ-MODEL-031: SCEnergyModel — Set-Level Energy Function for Statement Consistency (Exp 944)
 
 SCEnergyModel SHALL implement a permutation-invariant set-level energy function that assigns
