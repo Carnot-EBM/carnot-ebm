@@ -2142,6 +2142,63 @@ negative topology result honestly, and disallows all TSU hardware claims.
 
 **Implementation Status:** Implemented (Exp 1531)
 
+## REQ-SAMPLE-053: Exp 1543 n=256 THRML/Carnot schedule-stress simulator parity
+
+Carnot SHALL provide a sampled n=256 THRML/Carnot Ising parity stress run
+across multiple fixed-temperature schedule variants, reusing the Exp 1530 n=128
+and Exp 1531 diverse-topology sampled-metric tolerances unless a stronger
+local reason is recorded, staying software/simulator-only, and never claiming
+Extropic TSU, Z1, XTR-0, board, synthesis, bitstream, or hardware execution.
+
+Acceptance criteria:
+- The experiment SHALL create
+  `results/experiment_1543_thrml_carnot_parity_n256_schedule_stress.json` with
+  `status="in_progress"` before schedule generation, THRML import probing, or
+  parity execution completes.
+- The experiment SHALL load the Exp 1530 n=128 production-scale parity artifact
+  and Exp 1531 diverse-topology parity artifact, SHALL reuse their documented
+  sampled tolerances where applicable, and SHALL record those tolerance sources
+  in the terminal artifact.
+- The n=256 case SHALL use explicit deterministic biases, symmetric
+  zero-diagonal couplings, sampled states, and at least three schedule variants
+  that differ in beta, warmup, thinning, or checkerboard setting.
+- The sampled comparison SHALL run Carnot and THRML software simulator lanes
+  with identical model parameters and comparable schedules for each schedule
+  variant. If the THRML lane is the local CPU fallback, the artifact SHALL
+  label it as simulator fallback rather than hardware execution.
+- The schedule-stress manifest SHALL contain one JSON object per
+  schedule/backend plus a summary row, and each schedule row SHALL record its
+  schedule identifier, sample count, mean energy, magnetization, lag-one energy
+  autocorrelation, KL inputs, and simulator-only/no-TSU claim boundary.
+- The terminal artifact SHALL include `status`, `milestone`,
+  `thrml_parity_n256_schedule_ready`, `n_spins`, `schedules_tested`,
+  `samples_per_schedule`, `mean_energy_delta`, `max_energy_delta`,
+  `kl_divergence`, `autocorrelation_delta`, `parity_passed`,
+  `simulator_only`, `no_tsu_hardware_claim`, `parity_report_path`,
+  `focused_tests_passed`, and `honest_verdict`.
+- `thrml_parity_n256_schedule_ready=true` and `parity_passed=true` are valid
+  only when every schedule variant has both Carnot and THRML software rows, the
+  aggregate sampled mean-energy, max-energy, KL, and autocorrelation deltas pass
+  the recorded thresholds, the artifact records the manifest path, and
+  `simulator_only=true` plus `no_tsu_hardware_claim=true`.
+
+**Implementation Status:** Planned (Exp 1543)
+
+### SCENARIO-SAMPLE-081: Exp 1543 writes n=256 schedule-stress parity evidence
+
+Given: Exp 1530 reports sampled n=128 THRML/Carnot simulator parity passed,
+Exp 1531 reports diverse-topology simulator parity ready, and no TSU hardware
+claim is available.
+When: the Exp 1543 n=256 schedule-stress run executes from the Carnot project
+root for run date 20260508.
+Then: it writes schedule/backend JSONL evidence plus a terminal artifact with
+all required fields, marks schedule readiness true only when documented sampled
+metric gates pass across the schedule variants, labels all execution as
+software/simulator-only, and disallows all TSU, Z1, XTR-0, board, synthesis,
+bitstream, and hardware claims.
+
+**Implementation Status:** Planned (Exp 1543)
+
 ## REQ-MODEL-031: SCEnergyModel — Set-Level Energy Function for Statement Consistency (Exp 944)
 
 SCEnergyModel SHALL implement a permutation-invariant set-level energy function that assigns
