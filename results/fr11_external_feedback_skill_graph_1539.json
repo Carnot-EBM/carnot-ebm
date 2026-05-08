@@ -1,0 +1,87 @@
+{
+  "edges": [
+    {
+      "from": "daily_eval:dvi_v8:verified:exp1449:ltlzinc-always-power_ok-repair-hint-00",
+      "relation": "external_feedback_replay_promotes_skill_node",
+      "to": "skill:fr11_v13/dvi_v8-verified-exp1449-ltlzinc-always-power_ok-repair-hint-00"
+    }
+  ],
+  "nodes": [
+    {
+      "external_verifier_feedback": {
+        "baseline_task_success": false,
+        "false_accept_delta": 0,
+        "feedback_source": "runtime_contract_deterministic_verifier",
+        "promoted_task_success": false,
+        "self_feedback_only": false,
+        "soundness_mistakes": 0,
+        "verifier_reward": 0.0
+      },
+      "interface": {
+        "expected_outputs": {
+          "final_deterministic_accept": false,
+          "final_deterministic_decision": "reject"
+        },
+        "inputs": {
+          "contract_case_id": "grammar_certificate:cctu-1486-arith-001:schema_only:1",
+          "policy_action": "retrieval_boost",
+          "prompt_or_case_id": "cctu-1486-arith-001",
+          "skill_id": "fr11_v10_trace2skill/dvi_v8-verified-exp1449-ltlzinc-always-power_ok-repair-hint-00",
+          "source_family": "grammar_certificate"
+        }
+      },
+      "lineage": {
+        "parent_policy_update_id": "daily_eval:dvi_v8:verified:exp1449:ltlzinc-always-power_ok-repair-hint-00",
+        "parent_skill_id": "fr11_v10_trace2skill/dvi_v8-verified-exp1449-ltlzinc-always-power_ok-repair-hint-00",
+        "source_artifacts": [
+          "results/fr11_live_policy_promotion_1524.jsonl",
+          "results/fr11_policy_rollback_replay_1513.jsonl",
+          "results/residual_drift_commitment_ledger_1538.jsonl"
+        ],
+        "source_case_id": "dvi_v8:verified:exp1449:ltlzinc-always-power_ok-repair-hint-00"
+      },
+      "node_id": "skill:fr11_v13/dvi_v8-verified-exp1449-ltlzinc-always-power_ok-repair-hint-00",
+      "policy_update_id": "daily_eval:dvi_v8:verified:exp1449:ltlzinc-always-power_ok-repair-hint-00",
+      "promotion_decision": {
+        "no_model_weight_mutation": true,
+        "positive_utility": false,
+        "status": "promoted_external_feedback",
+        "utility_delta": 0.0
+      },
+      "replay_evidence": {
+        "deterministic_validator_supported": true,
+        "residual_drift_cases_observed": 0,
+        "residual_drift_false_accepts": 0,
+        "rollback_decision": "keep",
+        "rollback_false_accept_delta": 0,
+        "rollback_soundness_mistakes": 0,
+        "source_evidence_reachable": true,
+        "source_evidence_stale": false
+      },
+      "skill_id": "fr11_v10_trace2skill/dvi_v8-verified-exp1449-ltlzinc-always-power_ok-repair-hint-00"
+    }
+  ],
+  "run_date": "20260508",
+  "schema": "fr11_external_feedback_skill_graph_v13",
+  "skill_graph_path": "results/fr11_external_feedback_skill_graph_1539.json",
+  "source_artifacts": [
+    "results/experiment_1524_fr11_live_policy_promotion_v12.json",
+    "results/fr11_live_policy_promotion_1524.jsonl",
+    "results/fr11_policy_rollback_replay_1513.jsonl",
+    "results/experiment_1538_residual_drift_commitment_ledger.json",
+    "results/residual_drift_commitment_ledger_1538.jsonl"
+  ],
+  "spec": [
+    "REQ-LEARN-1539",
+    "SCENARIO-LEARN-1539",
+    "SCENARIO-LEARN-1540",
+    "SCENARIO-LEARN-1541"
+  ],
+  "summary": {
+    "candidate_update_count": 1,
+    "externally_verified_count": 1,
+    "no_model_weight_mutation": true,
+    "positive_utility_node_count": 0,
+    "promoted_node_count": 1
+  }
+}

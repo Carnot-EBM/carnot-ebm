@@ -1,0 +1,42 @@
+{
+  "global_rollback_triggers": [
+    "soundness_mistakes_positive",
+    "false_accept_delta_positive",
+    "missing_external_deterministic_verifier_feedback",
+    "source_evidence_stale_or_unreachable",
+    "replay_evidence_missing_or_failed"
+  ],
+  "no_model_weight_mutation": true,
+  "rollback_entries": [
+    {
+      "action": "disable_query_time_skill_and_revert_to_baseline_policy",
+      "node_id": "skill:fr11_v13/dvi_v8-verified-exp1449-ltlzinc-always-power_ok-repair-hint-00",
+      "policy_update_id": "daily_eval:dvi_v8:verified:exp1449:ltlzinc-always-power_ok-repair-hint-00",
+      "replay_evidence": {
+        "deterministic_validator_supported": true,
+        "residual_drift_cases_observed": 0,
+        "residual_drift_false_accepts": 0,
+        "rollback_decision": "keep",
+        "rollback_false_accept_delta": 0,
+        "rollback_soundness_mistakes": 0,
+        "source_evidence_reachable": true,
+        "source_evidence_stale": false
+      },
+      "rollback_triggers": [
+        "soundness_mistakes_positive",
+        "false_accept_delta_positive",
+        "external_verifier_feedback_missing_or_stale",
+        "rollback_replay_fails_or_source_unreachable",
+        "future_replay_utility_negative"
+      ],
+      "skill_id": "fr11_v10_trace2skill/dvi_v8-verified-exp1449-ltlzinc-always-power_ok-repair-hint-00"
+    }
+  ],
+  "rollback_plan_path": "results/fr11_external_feedback_skill_rollback_plan_1539.json",
+  "run_date": "20260508",
+  "schema": "fr11_external_feedback_skill_rollback_plan_v13",
+  "summary": {
+    "promoted_updates_with_rollback_handles": 1,
+    "rejected_updates_with_demotion_handles": 0
+  }
+}
