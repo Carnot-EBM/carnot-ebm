@@ -1,6 +1,24 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-08 (milestone 2026.04.118 research planning complete)
+**Last Updated:** 2026-05-08 (milestone 2026.04.119 research planning complete)
+
+## Session 2026-05-08 - Milestone 2026.04.119 Research Planning Complete
+
+**Milestone 2026.04.119 PLANNED after .118 completion.**
+
+- Roadmap doc: `openspec/change-proposals/research-roadmap-vNEXT.md`
+- Execution queue: `research-roadmap-next.yaml` (13 tasks, `exp1547`-`exp1559`)
+- ID allocation: milestone `.118` ended at `exp1546`, so `.119` starts at `exp1547`.
+- Research references updated before final roadmap design with the post-.118 sweep: mandatory THRML independent-RNG audit, ConstraintBench/NLCO/OPF constraint failures, FALCON hard-constraint generation, context-sensitive constraint learning, Weaver verification-compute routing, VERGE/ReLoop silent verification repair, Copy-as-Decode localized edits, and EBT/NRGPT/Kona status boundaries.
+- Design focus: Phase 0 archives `.118` and fixes hard evidence breaks with THRML independent-RNG audit plus SATQuest solver-oracle repair/re-eval; Phase 1 unifies automata, SAT, runtime-contract, residual-drift, product-line, and claim-isolation checks; Phase 2 satisfies the continuous self-learning requirement with FR-11 positive-utility-or-retire plus ARM/EBT telemetry and Weaver-style verification routing; Phase 3 updates simulator-only THRML/Extropic readiness after RNG evidence and closes with retro.
+- LLM-bearing tasks (`exp1550`-`exp1556`) include mandated local SOTA GGUF `MODEL_SPECS`: `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and `unsloth/gemma-4-26B-A4B-it-GGUF`.
+- Continuous self-learning requirement is satisfied by `exp1555-fr11-positive-utility-or-retire-v14` with `continuous_self_learning_task` in its artifact contract and an explicit retire path if `utility_delta <= 0`.
+- Structured gates: `exp1548` on `exp1547.prior_thrml_n256_ready == true` and `exp1547.thrml_independent_rng_required == true`; `exp1549` on `exp1547.prior_satquest_solver_oracle_false_accepts > 0`; `exp1550` on `exp1549.satquest_zero_false_accepts == true`; `exp1551` on `exp1547.prior_automata_ready == true` and `exp1549.satquest_zero_false_accepts == true`; `exp1552` on `exp1547.prior_residual_drift_ready == true`; `exp1553` on `exp1547.prior_claim_router_ready == true` and `exp1551.unified_contract_gate_ready == true`; `exp1554` on `exp1547.prior_product_line_ready == true` and `exp1551.unified_contract_gate_ready == true`; `exp1555` on `exp1547.prior_fr11_safe_only == true`; `exp1556` on `exp1547.prior_arm_ebm_diagnostic_ready == true`; `exp1557` on `exp1550.satquest_sota_reeval_ready == true` and `exp1551.unified_contract_gate_ready == true`; `exp1558` on `exp1548.independent_rng_audit_ready == true`, `exp1548.rng_path_independent == true`, and `exp1548.bounded_kl_passed == true`.
+- Agent routing: all 13 tasks use `agent_type: codex`, `model: gpt-5.5`; no Claude/Gemini routing.
+- Validation passed: YAML parse and prompt-section/end checks, `python3 scripts/validate_prior_failures.py research-roadmap-next.yaml`, `python3 scripts/audit_roadmap_gates.py research-roadmap-next.yaml`, schema validation via `scripts/roadmap_schema.py`, and `git diff --check`.
+- Did NOT modify `research-roadmap.yaml` or `scripts/research_conductor.py`.
+
+**What's next**: activate `research-roadmap-next.yaml` for milestone 2026.04.119 when ready.
 
 ## Session 2026-05-08 - Milestone 2026.04.118 Research Planning Complete
 
