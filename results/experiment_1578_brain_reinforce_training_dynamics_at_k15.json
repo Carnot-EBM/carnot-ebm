@@ -1,0 +1,70 @@
+{
+  "brain_training_dynamics_verdict": "starvation overstated",
+  "brain_training_dynamics_verdict_ready": true,
+  "factorized_converged": true,
+  "factorized_convergence_iteration": 0,
+  "factorized_final_kl": 0.001337,
+  "factorized_gradient_active_fraction_first_1000": 0.996,
+  "factorized_iterations_run": 1000,
+  "factorized_trace": [
+    {
+      "gradient_l2": 0.0,
+      "iteration": 0,
+      "kl": 0.001338,
+      "marginal_escape_from_half": 0.0
+    },
+    {
+      "gradient_l2": 0.000375,
+      "iteration": 1000,
+      "kl": 0.001337,
+      "marginal_escape_from_half": 0.000153
+    }
+  ],
+  "factorized_wall_time_s": 0.277461,
+  "honest_verdict": "complete: starvation overstated; factorized_final_KL=0.001337, linear_AR_final_KL=0.001336",
+  "linear_ar_converged": true,
+  "linear_ar_convergence_iteration": 0,
+  "linear_ar_final_kl": 0.001336,
+  "linear_ar_gradient_active_fraction_first_1000": 1.0,
+  "linear_ar_iterations_run": 1000,
+  "linear_ar_trace": [
+    {
+      "gradient_l2": 0.0,
+      "iteration": 0,
+      "kl": 0.001338,
+      "marginal_escape_from_half": 0.0
+    },
+    {
+      "gradient_l2": 0.000757,
+      "iteration": 1000,
+      "kl": 0.001336,
+      "marginal_escape_from_half": 0.000188
+    }
+  ],
+  "linear_ar_wall_time_s": 0.374877,
+  "metadata": {
+    "batch_size": 512,
+    "beta": 2.0,
+    "checkpoint_interval": 1000,
+    "constraint_seed": 42,
+    "constraints_per_k": 10,
+    "convergence_kl_threshold": 0.005,
+    "experiment_id": 1578,
+    "factorized_parameter_count": 16,
+    "k": 15,
+    "linear_ar_parameter_count": 136,
+    "max_iterations": 50000,
+    "min_iterations": 1000,
+    "n": 16,
+    "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "run_date": "20260508",
+    "sampling_seed": 1578,
+    "schema": "brain_reinforce_training_dynamics_k15_v1",
+    "spec_refs": [
+      "REQ-VERIFY-1578",
+      "SCENARIO-VERIFY-1578"
+    ]
+  },
+  "paper_v6_brain_recommendation": "paper_v6: treat BRAIN gradient-starvation as overstated at k=15",
+  "status": "complete"
+}

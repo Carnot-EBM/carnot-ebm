@@ -2063,7 +2063,54 @@ And `convergence_rate_matches_theorem_2=true` only when the noisy step-wise
 signal-to-noise convergence-rate proxy is at least `97%` of the noiseless
 step-wise proxy.
 
-## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487/1495/1496/1499/1500/1501/1507/1508/1509/1510/1520/1521/1522/1525/1537/1538/1541/1542/1551/1552/1553/1554/1557/1562/1571)
+### REQ-VERIFY-1578: BRAIN REINFORCE Training-Dynamics Audit at k=15
+
+The repository shall provide a runnable Exp 1578 BRAIN REINFORCE
+training-dynamics audit for the same `n=16`, `k=15`, `beta=2.0`, ten random
+AND-composition regime used to interpret Exp 1562.
+
+The workflow shall:
+
+- initialise both the factorized Bernoulli and Linear-AR Bernoulli
+  parameterizations uniformly with zero logits and zero lower-triangular AR
+  weights;
+- train both parameterizations with a scalar-baseline REINFORCE estimator for
+  reverse KL `KL(q || pi_beta)`, using batch size `512` and at most `50,000`
+  iterations;
+- compute exact finite-state `KL(q || pi_beta)` against the enumerated
+  `2^16`-state target distribution at iteration `0` and every `1000`
+  iterations;
+- track gradient L2 norm, marginal escape from `0.5`, first-1000-iteration
+  gradient-active fraction, convergence iteration, and wall-clock time for
+  both parameterizations;
+- write `results/experiment_1578_brain_reinforce_training_dynamics_at_k15.json`
+  with `status`, `factorized_gradient_active_fraction_first_1000`,
+  `linear_ar_gradient_active_fraction_first_1000`, `factorized_final_kl`,
+  `linear_ar_final_kl`, `factorized_converged`, `linear_ar_converged`,
+  `brain_training_dynamics_verdict_ready`, `paper_v6_brain_recommendation`,
+  and `honest_verdict`; and
+- choose exactly one training-dynamics verdict from `factorized gradient starvation real`,
+  `starvation overstated`, or `both parameterizations inadequate`, then propagate that recommendation into
+  `docs/research-notes/brain-reinforce-training-dynamics-k15.md`.
+
+`status` MUST be `complete` for terminal artifacts. `honest_verdict` MUST begin
+with `complete:` and MUST state the selected training-dynamics verdict.
+
+### SCENARIO-VERIFY-1578: k15 REINFORCE Audit Writes a Paper-v6 Recommendation
+
+Given the deterministic `n=16`, `k=15`, ten-constraint BRAIN target with
+`beta=2.0` and uniform initial q-parameters,
+When Exp 1578 trains factorized Bernoulli and Linear-AR q models with
+REINFORCE,
+Then the artifact reports per-parameterization first-1000 gradient-active
+fractions and terminal exact KL values
+And `brain_training_dynamics_verdict_ready=true` only when both required
+parameterizations have complete traces and one allowed verdict is selected
+And `paper_v6_brain_recommendation` records whether paper v6 should cite
+factorized starvation, treat starvation as overstated, or drop both
+parameterizations as inadequate.
+
+## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487/1495/1496/1499/1500/1501/1507/1508/1509/1510/1520/1521/1522/1525/1537/1538/1541/1542/1551/1552/1553/1554/1557/1562/1571/1578)
 
 | Requirement | Python | Tests |
 |-------------|--------|-------|
@@ -2105,3 +2152,4 @@ step-wise proxy.
 | REQ-VERIFY-1557 | Implemented (`python/carnot/verify/verification_compute_router.py`) | Implemented (`tests/python/test_experiment_1557_weaver_verification_compute_router.py`) |
 | REQ-VERIFY-1562 | Implemented (`python/scripts/dt_brain_correlations_verification.py`) | Implemented (`tests/python/test_experiment_1562_brain_linear_ar_k_sweep.py`) |
 | REQ-VERIFY-1571 | Implemented (`python/carnot/training/ar_reinforce_stepwise_baseline.py`) | Implemented (`tests/python/test_experiment_1571_step_wise_baseline_ar_reinforce.py`) |
+| REQ-VERIFY-1578 | Implemented (`python/carnot/training/brain_reinforce_training_dynamics.py`) | Implemented (`tests/python/test_experiment_1578_brain_reinforce_training_dynamics.py`) |
