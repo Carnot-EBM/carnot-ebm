@@ -180,6 +180,7 @@ sets `variance_worsened` from the measured paraphrase variance comparison.
 | REQ-KAN-1266 | Proposed | Exp 1266 target: deterministic QuantKAN-style 3-bit PTQ simulation plus LUT-KAN latency comparison for SOSKANEnergyV3. |
 | REQ-KAN-1319 | Proposed | Exp 1319 target: hardware-portability audit only for local KAN verifier/repair candidates with no FPGA or analog execution claim. |
 | REQ-KAN-1502 | Proposed | Exp 1502 target: no-synthesis KAN hardware accounting comparing naive, QuantKAN-like, and KAEM-style variants for current verifier components. |
+| REQ-KAN-1516 | Implemented | Exp 1516 normalized KAN/KAEM proxy and model shapes into an explicit provenance manifest before any future synthesis claim. |
 | REQ-KAN-1384 | Proposed | Exp 1384 target: EBM-CoT contrastive hinge calibration on FoVer verified pairs. |
 | REQ-KAN-1401 | Proposed | Exp 1401 target: EBM-CoT v2 hinge-only calibration on the Exp1384 FoVer split with consistency weight 0.0. |
 
@@ -528,3 +529,52 @@ Then `results/experiment_1502_kan_hardware_accounting_quantkan_kaem.json`
 contains the required fields, compares naive/QuantKAN-like/KAEM-style variants,
 sets `hardware_claim_allowed=false`, and records a terminal no-synthesis honest
 verdict.
+
+## REQ-KAN-1516: KAN/KAEM shape normalization preflight
+
+Experiment 1516 MUST normalize KAN/KAEM model and proxy dimensions into a
+separate shape manifest before future hardware synthesis work can cite Exp 1502
+accounting. The preflight MUST read the Exp 1502 hardware-accounting artifact,
+verify the Exp 1506 prior blocker, map model/proxy dimensions to
+hardware-accounting dimensions with explicit provenance, and record excluded
+shape assumptions.
+
+**Rationale:**
+    Exp 1502 intentionally avoided Vivado, bitstreams, board execution, and
+    timing closure. It also recorded that QuantKAN and KAEM proxy shapes must be
+    normalized before future synthesis. That hygiene gate prevents later work
+    from treating proxy read-memory, bit-operation, LUT, or BRAM counts as
+    synthesis-ready shapes unless the exact source fields and exclusions are
+    visible.
+
+**Acceptance criteria:**
+    - `results/experiment_1516_kan_shape_normalization_preflight.json` is
+      written with `run_date="20260508"` and the required terminal fields:
+      `status`, `kan_shape_manifest_ready`, `gated_inputs_present`,
+      `no_synthesis_claim`, `no_board_claim`, `proxy_shapes_loaded`,
+      `normalized_shapes_written`, `excluded_shape_assumptions`,
+      `hardware_accounting_shape_fields`, `shape_manifest_path`, `blockers`,
+      and `honest_verdict`.
+    - The preflight verifies
+      `results/experiment_1506_115_completion_archive_116_activation.json`
+      has `prior_kan_shape_blocker_recorded=true`; otherwise it writes a
+      terminal gated artifact and does not mark the manifest ready.
+    - The normalized manifest records proxy dimensions, batch/sequence
+      assumptions, quantization assumptions, and hardware-accounting dimensions
+      with explicit artifact-field provenance for each mapped variant.
+    - The terminal artifact sets `no_synthesis_claim=true` and
+      `no_board_claim=true`; `kan_shape_manifest_ready` is true only when the
+      normalized manifest and excluded assumptions are written.
+    - `honest_verdict` starts with one of the conductor terminal prefixes:
+      `complete:`, `complete_`, `success:`, `success_`, `passed:`,
+      `passed_`, `shipped:`, or `shipped_`.
+
+### SCENARIO-KAN-1516: write normalized KAN shape manifest
+
+Given the completed Exp 1502 KAN hardware-accounting artifact and the Exp 1506
+prior blocker record,
+When the Exp 1516 shape-normalization preflight runs,
+Then `results/kan_shape_normalization_manifest_1516.json` maps at least the
+naive SOS-KAN, QuantKAN LUT, and KAEM univariate variants to normalized
+hardware-accounting shapes, records all excluded shape assumptions, blocks
+synthesis and board claims, and writes a complete Exp 1516 artifact.

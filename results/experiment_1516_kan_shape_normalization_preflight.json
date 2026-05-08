@@ -1,0 +1,75 @@
+{
+  "blockers": [
+    "future_synthesis_claim_requires_new_synthesis_evidence",
+    "future_board_claim_requires_bitstream_and_board_transcript",
+    "no_vivado_synthesis_or_board_measurement_for_exp1502",
+    "no_kv260_bitfile_or_timing_report_for_this_kan_accounting",
+    "quantkan_and_kaem_proxy_shapes_must_be_normalized_before_any_future_synthesis"
+  ],
+  "duration_s": 0.001362,
+  "excluded_shape_assumptions": [
+    {
+      "assumption": "batch_size_gt_1",
+      "reason": "Exp 1502 reports per-inference accounting, not batched throughput."
+    },
+    {
+      "assumption": "token_sequence_length",
+      "reason": "The audited KAN/KAEM inputs are fixed feature vectors, not token sequences."
+    },
+    {
+      "assumption": "rtl_pipeline_depth_or_clock_frequency",
+      "reason": "No RTL synthesis, place-and-route, timing report, or clock constraint was run."
+    },
+    {
+      "assumption": "kv260_board_latency_or_bitstream",
+      "reason": "No bitstream was built or executed on a board during Exp 1502 or Exp 1516."
+    },
+    {
+      "assumption": "proxy_lut_or_bram_counts_are_utilization",
+      "reason": "Proxy LUT/BRAM pressure is planning evidence, not post-synthesis utilization."
+    },
+    {
+      "assumption": "quantkan_empirical_timing_or_accuracy_after_synthesis",
+      "reason": "The QuantKAN shape carries simulation/proxy AUROC and must be revalidated."
+    },
+    {
+      "assumption": "cross_feature_interactions_preserved_by_univariate_kaem_proxy",
+      "reason": "KAEM's cheap univariate proxy excludes cross-feature interaction preservation."
+    }
+  ],
+  "experiment": 1516,
+  "future_synthesis_claim_gate": {
+    "future_synthesis_claim_allowed": false,
+    "requires_new_evidence": [
+      "RTL or HLS source tied to this manifest's normalized shape fields",
+      "synthesis/place-and-route report with timing and utilization",
+      "bitstream and board-command transcript before board claims",
+      "post-normalization QuantKAN/KAEM accuracy validation before deployment claims"
+    ],
+    "shape_provenance_explicit": true
+  },
+  "gated_inputs_present": true,
+  "hardware_accounting_shape_fields": [
+    "rm_per_inference",
+    "bop_per_inference",
+    "nabs_per_inference",
+    "memory_bytes",
+    "lut_proxy",
+    "bram36_blocks"
+  ],
+  "honest_verdict": "complete: kan shape manifest ready; synthesis and board claims blocked",
+  "kan_shape_manifest_ready": true,
+  "no_board_claim": true,
+  "no_synthesis_claim": true,
+  "normalized_shape_count": 3,
+  "normalized_shapes_written": true,
+  "proxy_shapes_loaded": true,
+  "run_date": "20260508",
+  "schema": "kan_shape_normalization_preflight_v1",
+  "shape_manifest_path": "/home/ianblenke/github.com/ianblenke/carnot/results/kan_shape_normalization_manifest_1516.json",
+  "spec": [
+    "REQ-KAN-1516",
+    "SCENARIO-KAN-1516"
+  ],
+  "status": "complete"
+}
