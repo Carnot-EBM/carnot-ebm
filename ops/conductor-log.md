@@ -1139,3 +1139,4 @@ web search: GitHub trending energy based mod |
 | 2026-05-08 00:43 UTC | FR-11 Verifier-Feedback Policy Cache v11 | OK | 81 passed, 1 warning in 5.52s |
 | 2026-05-08 00:59 UTC | FR-11 Policy Rollback Replay Audit - Gated on Exp1 | OK | 81 passed, 1 warning in 4.75s |
 | 2026-05-08 01:16 UTC | trace2skill Portable Skill Pack v2 - Gated on Exp1 | OK | 81 passed, 1 warning in 5.49s |
+| 2026-05-08 01:28 UTC | THRML SamplerBackend Conformance Pack - Gated on E | OK | 81 passed, 1 warning in 5.34s |
