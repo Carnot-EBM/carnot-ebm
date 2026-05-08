@@ -1273,6 +1273,64 @@ rows rather than from generated prose
 And the terminal artifact sets `contract_guided_repair_ready=true` only when
 live SOTA inference completed and the reported false-accept rate remains zero.
 
+### REQ-VERIFY-1535: XGrammar/ABS Contract Decoder Adapter
+
+The repository shall provide an Exp 1535 contract decoder adapter that compares
+the current grammar-only/post-decode runtime-contract path against an
+XGrammar-2-compatible adapter interface with ABS-style DFA token masking for
+bounded regular contract constraints.
+
+The adapter shall:
+
+- write `results/experiment_1535_xgrammar_abs_contract_decoder_adapter.json`
+  with `status="in_progress"` before loading source manifests, probing
+  optional grammar packages, or resolving models;
+- load the Exp 1520 runtime-contract E2E manifest and select a bounded case set
+  containing certificate, safe-DSL validator, monitor-event, and structural
+  contract families when those families are available;
+- probe whether a local XGrammar-compatible package is importable, and when it
+  is absent, provide the same adapter interface through a deterministic
+  ABS-style DFA mask simulation for regular contract fields;
+- resolve mandated local SOTA GGUF model specs through the established
+  `cached_sota_pair()` cache pattern where runtime inference is attempted, and
+  mark any legacy small model rows as smoke-test-only and excluded from
+  headline metrics;
+- compare baseline grammar-only/post-decode outputs with automata-guided
+  outputs on parse rate, contract accept rate, latency delta, and deterministic
+  false-accept rate;
+- hand every parsed output to the existing Exp 1520 deterministic validators
+  before treating a row as accepted; and
+- write a terminal artifact containing `status`, `milestone`,
+  `contract_decoder_adapter_ready`, `model_specs`,
+  `live_sota_model_inference_used`, `cases_attempted`,
+  `baseline_parse_rate`, `automata_parse_rate`,
+  `baseline_contract_accept_rate`, `automata_contract_accept_rate`,
+  `latency_delta_seconds`, `false_accept_rate`, `xgrammar_available`,
+  `abs_dfa_masks_used`, `adapter_path`, `focused_tests_passed`, and
+  `honest_verdict`.
+
+`contract_decoder_adapter_ready` MUST be true only when at least one case from
+each available runtime-contract family is evaluated, automata metrics are
+reported, deterministic validator handoff runs, and `false_accept_rate` is
+exactly `0.0`. `honest_verdict` MUST begin with one of `complete:`,
+`complete_`, `success:`, `success_`, `passed:`, `passed_`, `shipped:`, or
+`shipped_`.
+
+### SCENARIO-VERIFY-1535: Automata Decoder Masks Invalid Contract Prefixes
+
+Given the Exp 1520 runtime-contract E2E manifest contains certificate,
+safe-DSL, monitor-event, and structural contract rows on the run date
+`20260508`,
+When Exp 1535 compiles bounded DFA masks for the selected contract cases and
+compares grammar-only/post-decode decoding against automata-guided decoding,
+Then malformed or case-mismatched baseline outputs may fail parsing before
+validation
+And automata-guided outputs preserve only valid bounded JSON contract fields
+before deterministic validator handoff
+And the terminal artifact reports parse-rate, contract-accept-rate, latency,
+and false-accept metrics without counting legacy small-model smoke rows as
+headline evidence.
+
 ### REQ-VERIFY-1522: Constraint Dependency Graph Root-Cause Repair Ordering
 
 The repository shall provide an Exp 1522 deterministic CPU-only Constraint
