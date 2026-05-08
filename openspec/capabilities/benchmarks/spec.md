@@ -109,6 +109,44 @@ Running baseline first and computing signed improvement exposes this failure mod
 
 **Spec traces:** REQ-BENCH-010
 
+### REQ-BENCH-1511: Product-Line Solver Oracle Benchmark
+
+Carnot MUST provide a bounded product-line / feature-model benchmark that
+parses semi-formal blueprints into mandatory, optional, requires, and excludes
+constraints, evaluates small instances with a deterministic exhaustive oracle,
+and records separate parse, feasibility, oracle-agreement, and false-accept
+metrics for mandated local SOTA GGUF model outputs.
+
+**Rationale:** CCTU-style executable constraints exercise local tool use, but
+product-line analysis stresses structural parsing and feasibility reasoning in
+a different domain while preserving an auditable oracle.
+
+**Acceptance criteria:**
+- The benchmark defines multiple semi-formal feature-model blueprints with
+  bounded feature counts and expected analysis operations.
+- The oracle enumerates the bounded configuration space deterministically and
+  rejects infeasible configurations before checking optimality or answer
+  agreement.
+- Headline rows come only from mandated local SOTA GGUF models; missing or
+  failed SOTA loading produces an honest terminal blocker rather than a legacy
+  small-model headline.
+- The artifact includes `parse_rate`, `feasibility_rate`,
+  `oracle_agreement_rate`, `verifier_false_accept_rate`,
+  `solver_oracle_ready`, `product_line_benchmark_ready`, and the JSONL
+  manifest path.
+
+### SCENARIO-BENCH-1511: Feature-Model Answers Are Checked Against Oracle
+
+**Given** a bounded feature-model blueprint with mandatory, optional,
+requires, and excludes clauses
+**When** a mandated local SOTA GGUF model emits a JSON answer containing a
+feature selection and self-verifier decision
+**Then** Carnot parses the answer, checks selection feasibility with the
+deterministic oracle, distinguishes infeasible from feasible-but-suboptimal
+answers, and records any model self-verifier false accept in the manifest.
+
+**Spec traces:** REQ-BENCH-1511
+
 ## Implementation Status
 
 | Requirement | Status | Experiment |
@@ -116,6 +154,8 @@ Running baseline first and computing signed improvement exposes this failure mod
 | REQ-BENCH-001 | Implemented | Exp 427 |
 | REQ-BENCH-010 | Implemented | Exp 840 |
 | REQ-BENCH-011 | Implemented | Exp 840 |
+| REQ-BENCH-1511 | Implemented (`python/carnot/eval/product_line_solver_oracle_benchmark.py`) | Exp 1511 |
 | SCENARIO-BENCH-020 | Implemented | Exp 427 |
 | SCENARIO-BENCH-025 | Implemented | Exp 840 |
 | SCENARIO-BENCH-030 | Implemented | Exp 840 |
+| SCENARIO-BENCH-1511 | Implemented (`tests/python/test_experiment_1511_product_line_solver_oracle_benchmark.py`) | Exp 1511 |
