@@ -1,0 +1,42 @@
+{
+  "experiment": 1558,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-05-08",
+  "started_at": "2026-05-08T17:02:23.066218+00:00",
+  "finished_at": "2026-05-08T17:02:23.066218+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "THRML Post-RNG Scale Decision + Extropic Packet Update - Gated on Exp1548 Independent RNG",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "2 of 3 gate(s) failed; first failure: exp1548-thrml-carnot-parity-independent-rng-audit.independent_rng_audit_ready (actual=False == expected=True)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp1548-thrml-carnot-parity-independent-rng-audit",
+      "artifact_field": "independent_rng_audit_ready",
+      "op": "==",
+      "expected": true,
+      "actual": false,
+      "passed": false,
+      "reason": "actual=False == expected=True"
+    },
+    {
+      "upstream": "exp1548-thrml-carnot-parity-independent-rng-audit",
+      "artifact_field": "rng_path_independent",
+      "op": "==",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "reason": "actual=True == expected=True"
+    },
+    {
+      "upstream": "exp1548-thrml-carnot-parity-independent-rng-audit",
+      "artifact_field": "bounded_kl_passed",
+      "op": "==",
+      "expected": true,
+      "actual": false,
+      "passed": false,
+      "reason": "actual=False == expected=True"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
