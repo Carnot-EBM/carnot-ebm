@@ -1185,3 +1185,4 @@ web search: GitHub trending energy based mod |
 | 2026-05-08 06:10 UTC | THRML/Carnot Parity n=16 Exact - Gated on Exp1526  | OK | 81 passed, 1 warning in 4.87s |
 | 2026-05-08 06:25 UTC | THRML/Carnot Parity n=32 Sample - Gated on Exp1527 | OK | 81 passed, 1 warning in 5.24s |
 | 2026-05-08 06:38 UTC | THRML/Carnot Parity n=64 Sample - Gated on Exp1528 | OK | 81 passed, 1 warning in 5.34s |
+| 2026-05-08 06:53 UTC | THRML/Carnot Parity n=128 Production-Scale Sample  | OK | 81 passed, 1 warning in 5.19s |
