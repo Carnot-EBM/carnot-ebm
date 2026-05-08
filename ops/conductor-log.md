@@ -1179,3 +1179,4 @@ web search: GitHub trending energy based mod |
 | 2026-05-08 04:40 UTC | Live SOTA Contract-Guided Repair v1 - Gated on Exp | OK | 81 passed, 1 warning in 5.21s |
 | 2026-05-08 04:53 UTC | Constraint Dependency Graph Root-Cause Repair - Ga | OK | 81 passed, 1 warning in 5.19s |
 | 2026-05-08 05:07 UTC | Product-Line Parser Feasibility Rescue v2 - Gated  | OK | 81 passed, 1 warning in 5.02s |
+| 2026-05-08 05:25 UTC | FR-11 Live Policy Promotion v12 - Gated on Exp1519 | OK | 81 passed, 1 warning in 5.22s |
