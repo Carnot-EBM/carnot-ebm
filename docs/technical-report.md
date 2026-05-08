@@ -31,7 +31,7 @@ adversarial-audit results are labeled by artifact provenance.
 This report documents the research arc behind the framework — **1,655
 experiments tracked through Exp 1518, with 129 artifact-backed completed
 milestone records through the .116 terminal retro** — run between February and
-May 2026. `research-complete.yaml` currently archives **128** completed
+May 2026. `research-complete.yaml` currently archives **129** completed
 milestone records through 2026.04.115; checked-in terminal artifacts now extend
 through milestone 2026.04.116, whose latest retro is
 `results/experiment_1518_milestone_116_retro.json` and whose artifact carries
@@ -499,7 +499,9 @@ artifacts checked into `results/operational_retro_*.json`.
   verifiers with coverage **1.0** and false accepts **0.0**; trigger+grammar
   decoding reached parse and validation **1.0** on bounded live local SOTA rows;
   executable monitors normalized **60** events; structural plan-graph contracts
-  caught **60/60** injected violations; FR-11 verifier feedback accepted and
+  caught **60/60** injected violations; the product-line solver oracle covered
+  **6** feature models with false accepts **0.0** while parse stayed
+  **0.333333** and feasibility **0.0**; FR-11 verifier feedback accepted and
   replayed **84** policy updates with **0** soundness mistakes and packaged
   **24** rollback-passing skills; THRML/KAN/KV260 evidence remained
   simulator/source-level with no hardware claim (Exps 1506-1518).
@@ -1554,6 +1556,7 @@ but are not included as model-generation headline claims.
 | Milestone .115 outcome | 12 criteria | **12/12** met | Trigger certificates, validators, monitors, FR-11 hygiene, verifier discipline, graph energy, KAN accounting, and THRML parity archived with boundaries preserved | Exp 1505 |
 | Safe-DSL verifier induction + grammar decoding | generated verifier code must stay bounded | compile **1.0**; grammar parse and validation **1.0** | **2/2** candidate verifiers compiled, coverage **1.0**, false accepts **0.0** on bounded live local SOTA rows | Exps 1507/1508 |
 | Runtime monitor + structural contract gates | executable monitors and plan-graph contracts | **60** events; **60/60** injected violations caught | Monitor false-accept **0.0**; plan-graph false-accept and false-reject **0.0**; random baseline **0.0**, length baseline **0.183333** | Exps 1509/1510 |
+| Product-line solver oracle | feature-model verification needs solver-backed oracles | **6** feature models; false accepts **0.0** | Parse **0.333333** and feasibility **0.0**, so this is a bounded oracle surface and failure taxonomy rather than broad solver success | Exp 1511 |
 | FR-11 verifier-feedback policy + portable skill pack | policy updates require rollback proof | **84** updates replayed; **24** skills packaged | Utility delta **70**, **0** soundness mistakes, no model-weight mutation, **60** skill entries rejected | Exps 1512-1514 |
 | Substrate conformance boundaries | THRML/KAN/KV260 claims need provenance | software/source gates ready | THRML simulator-only parity **2/2**, **3** KAN shapes normalized, **4** KV260 source-level properties; no TSU, synthesis, bitstream, timing, or board claim | Exps 1515-1517 |
 | Milestone .116 outcome | 13 criteria | **13/13** met | Runtime verifier contracts, bounded FR-11 feedback, portable skills, and software/source substrate conformance archived with claim boundaries preserved | Exp 1518 |

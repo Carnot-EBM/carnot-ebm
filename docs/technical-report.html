@@ -185,7 +185,7 @@ adversarial-audit results are labeled by artifact provenance.</p>
 <p>This report documents the research arc behind the framework — <strong>1,655
 experiments tracked through Exp 1518, with 129 artifact-backed completed
 milestone records through the .116 terminal retro</strong> — run between February and
-May 2026. <code>research-complete.yaml</code> currently archives <strong>128</strong> completed
+May 2026. <code>research-complete.yaml</code> currently archives <strong>129</strong> completed
 milestone records through 2026.04.115; checked-in terminal artifacts now extend
 through milestone 2026.04.116, whose latest retro is
 <code>results/experiment_1518_milestone_116_retro.json</code> and whose artifact carries
@@ -639,7 +639,9 @@ artifacts checked into <code>results/operational_retro_*.json</code>.</p>
   verifiers with coverage <strong>1.0</strong> and false accepts <strong>0.0</strong>; trigger+grammar
   decoding reached parse and validation <strong>1.0</strong> on bounded live local SOTA rows;
   executable monitors normalized <strong>60</strong> events; structural plan-graph contracts
-  caught <strong>60/60</strong> injected violations; FR-11 verifier feedback accepted and
+  caught <strong>60/60</strong> injected violations; the product-line solver oracle covered
+  <strong>6</strong> feature models with false accepts <strong>0.0</strong> while parse stayed
+  <strong>0.333333</strong> and feasibility <strong>0.0</strong>; FR-11 verifier feedback accepted and
   replayed <strong>84</strong> policy updates with <strong>0</strong> soundness mistakes and packaged
   <strong>24</strong> rollback-passing skills; THRML/KAN/KV260 evidence remained
   simulator/source-level with no hardware claim (Exps 1506-1518).</li>
@@ -2699,6 +2701,13 @@ but are not included as model-generation headline claims.</p>
 <td><strong>60</strong> events; <strong>60/60</strong> injected violations caught</td>
 <td>Monitor false-accept <strong>0.0</strong>; plan-graph false-accept and false-reject <strong>0.0</strong>; random baseline <strong>0.0</strong>, length baseline <strong>0.183333</strong></td>
 <td>Exps 1509/1510</td>
+</tr>
+<tr>
+<td>Product-line solver oracle</td>
+<td>feature-model verification needs solver-backed oracles</td>
+<td><strong>6</strong> feature models; false accepts <strong>0.0</strong></td>
+<td>Parse <strong>0.333333</strong> and feasibility <strong>0.0</strong>, so this is a bounded oracle surface and failure taxonomy rather than broad solver success</td>
+<td>Exp 1511</td>
 </tr>
 <tr>
 <td>FR-11 verifier-feedback policy + portable skill pack</td>

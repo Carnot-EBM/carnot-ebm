@@ -1,8 +1,8 @@
 {
   "schema": "carnot.operational_retro.v63",
   "milestone": "2026.04.116",
-  "generated_at": "2026-05-08T02:31:58Z",
-  "completed_at": "2026-05-08T02:33:01Z",
+  "generated_at": "2026-05-08T02:53:28Z",
+  "completed_at": "2026-05-08T02:57:17Z",
   "retro_type": "operational_final",
   "status": "success",
   "summary": "Milestone 2026.04.116 completed the supplied operational slice in 40 minutes across 11 completed experiments, averaging 4 minutes per experiment. The slowest-five timing was dominated by recurring gate churn rather than productive GPU-bound work: Full-Scale Pipeline v3 entries gated on the Exp 1414 repair-executor path consumed 25 minutes (62.5%), the legacy Exp 1269 arXiv Bundle v10 gate consumed 10 minutes (25%), and a SOTA GGUF cache/provenance preflight block consumed 2 minutes (5%). Both RTX 3090s were idle at closeout, with only 4 MB allocated on each GPU, 0% utilization, and no GPU processes. Estimated next-milestone savings are 55% if same-verdict gates terminalize, readiness checks move to activation time, and independent model lanes use DualGPURunner.",
@@ -12,6 +12,8 @@
   "total_wall_time_hours": 0.7,
   "experiments_completed": 11,
   "average_minutes_per_experiment": 4,
+  "slowest_experiments_total_minutes": 37,
+  "slowest_experiments_share_of_wall_time_pct": 92.5,
   "research_milestone_context": {
     "experiment_range": "1506-1518",
     "criteria_met": 13,
@@ -119,8 +121,8 @@
     "what_tooling_infrastructure_changes_would_speed_up_the_next_milestone": "Nonzero-success gates, same-verdict retirement, activation-time readiness artifacts, DualGPURunner lane assignment, per-experiment GPU telemetry, cluster-scoped preflight, structured conductor timing categories, and idempotent changelog/roadmap appenders."
   },
   "gpu_state": {
-    "operator_snapshot_timestamp": "2026-05-08T02:31:43.280153+00:00",
-    "verified_snapshot_timestamp": "2026-05-08T02:32:56.497542+00:00",
+    "operator_snapshot_timestamp": "2026-05-08T02:53:10.099038+00:00",
+    "verified_snapshot_timestamp": "2026-05-08T02:54:07.569883+00:00",
     "dualgpu_used_at_closeout": false,
     "process_count": 0,
     "zombie_process_count": 0,
@@ -169,7 +171,13 @@
     "scripts/gpu_monitor.py",
     "ops/e2e-test-plan.md",
     "docs/roadmap.md",
+    "ops/conductor-log.md",
     "results/experiment_1518_milestone_116_retro.json"
   ],
+  "docs_updates": {
+    "ops_changelog_appended": true,
+    "docs_roadmap_completed_milestones_row_appended": true,
+    "current_milestone_block_touched": false
+  },
   "meta_reflection": "The milestone is already short in absolute terms, so the remaining win is mostly scheduler discipline rather than faster agents. The conductor needs stronger evidence boundaries: available is not the same as useful, blocked is not the same as worth rediscovering, and GPU-ready hardware is not the same as GPU-used execution."
 }
