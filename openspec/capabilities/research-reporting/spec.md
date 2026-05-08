@@ -2459,6 +2459,76 @@ confirms `research-roadmap.yaml` and `scripts/research_conductor.py` were not
 modified, and writes an honest activation verdict with an accepted success
 prefix.
 
+### REQ-REPORT-063: Milestone .120 Terminal Retrospective
+
+The Exp 1572 `.120` retrospective workflow shall read the authoritative
+Exp 1560 through Exp 1571 result JSON artifacts plus the Exp 1573 blocked-gate
+artifact and write `results/experiment_1572_milestone_120_retro.json` with
+`status="in_progress"` before terminal completion. The terminal artifact shall
+audit every `.120` activation, Tier 1, Tier 2, Tier 3, Extropic readiness, and
+retrospective criterion from source artifact fields rather than from terminal
+verdict prefixes alone.
+
+The terminal artifact shall include:
+
+- `status`
+- `milestone`
+- `next_milestone`
+- `criteria_results`
+- `criteria_met`
+- `criteria_total` set to `14`
+- `criteria_met_fraction`
+- `criteria_score_pct`
+- `paper_v6_section_3_drafted`
+- `all_4_carnot_contributions_validated`
+- `rho_C_curve_published_ready`
+- `terminal_verdicts`
+- `notable_successes`
+- `failures_or_partials`
+- `bottlenecks_identified`
+- `carry_forward_gates_121`
+- `retro_complete`
+- `honest_verdict`
+
+Missing source artifacts shall count as `MISSING`. Blocked pre-gate artifacts
+shall count as `BLOCKED`. Falsified acceptance gates shall count as `NOT_MET`
+even when their source artifact uses a conductor-accepted `complete:` honest
+verdict prefix. THRML vendoring may satisfy the sampler-replacement criterion
+when the vendored sampler, KL=0 parity, candidate warm start, focused
+regression, and applicable E2E gates pass, but the terminal artifact shall
+retain any full-suite regression caveat from the source artifact. FR-11 v14
+retention audit may satisfy the audit criterion when it completes the retained
+policy review and files a reversal recommendation, but the terminal artifact
+shall retain any target-count caveat from the source artifact.
+
+`all_4_carnot_contributions_validated` shall be true only when all four
+paper-v6 contribution gates are met: C-parameterized rho(C) curve, Soft-Gibbs
+Residual, kinetic defense-in-depth, and BRAIN+Linear-AR rescue. `rho_C_curve_
+published_ready` shall be derived from the Exp 1567 fitted curve, confidence
+intervals, and inversion validation fields. The final `honest_verdict` shall
+start with `complete:` and encode the met/total criteria count.
+
+### SCENARIO-REPORT-063: Exp 1572 Closes .120 With Carry-Forward Gates
+
+Given Exp 1560 activates `.120`, Exp 1561 falsifies THRML kinetic-security
+parity, Exp 1562 falsifies the predicted BRAIN+Linear-AR widening, Exp 1563
+documents the SpecAnn rejection, Exp 1564 vendors THRML with candidate warm
+start while retaining the full-suite regression caveat, Exp 1565 implements
+Soft-Gibbs Residual, Exp 1566 validates candidate warm-start, Exp 1567 fits the
+rho(C) curve, Exp 1568 completes the retained-policy audit with a reversal
+recommendation and target-count caveat, Exp 1569 is blocked by the
+prior-failure pre-gate, Exp 1570 verifies the Soft-Gibbs coverage bound,
+Exp 1571 passes the step-wise AR-REINFORCE baseline gate, and Exp 1573 is
+blocked by the prior-failure pre-gate, when Exp 1572 runs for run date
+`20260508`, then it writes all required REQ-REPORT-063 fields, reports
+`criteria_total == 14`, counts only met acceptance gates in `criteria_met`,
+sets `paper_v6_section_3_drafted == false`, sets
+`all_4_carnot_contributions_validated == false`, records the required `.121`
+carry-forward gates for paper-v6 Section 3 finalization, SpecAnn rejection
+record verification, Phase 5 PCD divergence audit, Soft-Gibbs Residual at
+production scale n=128, and MCMC-Layer-free Phase 5 architecture, and writes an
+honest retrospective verdict with an accepted success prefix.
+
 ### REQ-REPORT-024: Local Agent Usage Snapshot
 
 The repository shall provide a local operator workflow that inspects the
