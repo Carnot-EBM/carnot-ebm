@@ -1,0 +1,84 @@
+{
+  "baseline_task_success_rate": 0.0,
+  "candidate_updates": [
+    {
+      "expected_outputs": {
+        "final_deterministic_accept": false,
+        "final_deterministic_decision": "reject"
+      },
+      "explicit_inputs": {
+        "contract_case_id": "grammar_certificate:cctu-1486-arith-001:schema_only:1",
+        "policy_action": "retrieval_boost",
+        "prompt_or_case_id": "cctu-1486-arith-001",
+        "skill_id": "fr11_v10_trace2skill/dvi_v8-verified-exp1449-ltlzinc-always-power_ok-repair-hint-00",
+        "source_family": "grammar_certificate"
+      },
+      "external_deterministic_feedback": true,
+      "lineage": {
+        "parent_policy_update_id": "daily_eval:dvi_v8:verified:exp1449:ltlzinc-always-power_ok-repair-hint-00",
+        "parent_skill_id": "fr11_v10_trace2skill/dvi_v8-verified-exp1449-ltlzinc-always-power_ok-repair-hint-00",
+        "source_artifacts": [
+          "results/fr11_live_policy_promotion_1524.jsonl",
+          "results/fr11_policy_rollback_replay_1513.jsonl",
+          "results/residual_drift_commitment_ledger_1538.jsonl"
+        ],
+        "source_case_id": "dvi_v8:verified:exp1449:ltlzinc-always-power_ok-repair-hint-00"
+      },
+      "model_outputs": {
+        "baseline_excerpt": "*   `tool_call`: `arithmetic.evaluate`.\\n    *   `tool_call_args`: `{\\\"numbers\\\": [12, 18, 15], \\\"operation\\\": \\\"sum\\\"}`.\\n    *   `tool_call_result`: `45`.\\n    *   `tool_call_status`: `success`.\\n    *   `tool_call_type`: `arithmetic`.\\n    *   `trigger_token`: `<<<CCTU_CERTIFICATE_V1>>>`.\\n\\n4.  **Review and Refine:**\\n    *   Prose matches calculation? Yes.\\n    *   Trigger token present? Yes.\\n    *   JSON structure matches shape? Yes.\\n    *   Values correct? Yes.\\n    *   Result: 45.\\n\\n5",
+        "baseline_sha256": "34349d6f84d6a2c36106479d7cb503869c87b0391266733591b07c458f4118af",
+        "promoted_excerpt": "*   **Decision Logic:**\n        *   The `certificate_parse_result` shows `parsed: false` and `verifier_accepted: false`.\n        *   The `monitor_event_result` shows `linked: false`.\n        *   The `safe_dsl_verifier_result` shows `linked: false`.\n        *   The `structural_contract_result` shows `linked: false`.\n        *   Essentially, the system has failed to parse, verify, or link the certificate. The `deterministic_validation_passed` is `false`.\n        *   The `promoted_policy_update` su",
+        "promoted_sha256": "b1141ac4f7ac2527561e186866804023d5bdcea21c68ba1539fec2e92736367b"
+      },
+      "node_id": "skill:fr11_v13/dvi_v8-verified-exp1449-ltlzinc-always-power_ok-repair-hint-00",
+      "policy_update_id": "daily_eval:dvi_v8:verified:exp1449:ltlzinc-always-power_ok-repair-hint-00",
+      "promotion_decision": "promote_external_feedback",
+      "replay_evidence": {
+        "deterministic_validator_supported": true,
+        "residual_drift_cases_observed": 0,
+        "residual_drift_false_accepts": 0,
+        "rollback_decision": "keep",
+        "rollback_false_accept_delta": 0,
+        "rollback_soundness_mistakes": 0,
+        "source_evidence_reachable": true,
+        "source_evidence_stale": false
+      },
+      "rollback_triggers": [],
+      "skill_id": "fr11_v10_trace2skill/dvi_v8-verified-exp1449-ltlzinc-always-power_ok-repair-hint-00",
+      "verifier_reward": 0.0
+    }
+  ],
+  "continuous_self_learning_task": true,
+  "externally_verified_updates": [
+    "daily_eval:dvi_v8:verified:exp1449:ltlzinc-always-power_ok-repair-hint-00"
+  ],
+  "focused_tests_passed": true,
+  "fr11_external_feedback_ready": true,
+  "honest_verdict": "complete: fr11 external-feedback skill graph ready; positive utility not demonstrated",
+  "live_sota_model_inference_used": true,
+  "milestone": ".118",
+  "model_specs": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "unsloth/gemma-4-31B-it-GGUF",
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "no_model_weight_mutation": true,
+  "positive_utility_promotion_ready": false,
+  "promoted_task_success_rate": 0.0,
+  "promoted_updates": [
+    "daily_eval:dvi_v8:verified:exp1449:ltlzinc-always-power_ok-repair-hint-00"
+  ],
+  "rollback_plan_path": "results/fr11_external_feedback_skill_rollback_plan_1539.json",
+  "run_date": "20260508",
+  "schema": "fr11_external_feedback_skill_promotion_v13",
+  "skill_graph_path": "results/fr11_external_feedback_skill_graph_1539.json",
+  "soundness_mistakes": 0,
+  "spec": [
+    "REQ-LEARN-1539",
+    "SCENARIO-LEARN-1539",
+    "SCENARIO-LEARN-1540",
+    "SCENARIO-LEARN-1541"
+  ],
+  "status": "complete",
+  "utility_delta": 0.0
+}

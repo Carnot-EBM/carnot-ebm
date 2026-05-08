@@ -4494,3 +4494,92 @@ mistake, or is absent from the portable pack
 | Requirement | Python | Tests |
 |-------------|--------|-------|
 | REQ-LEARN-1524 | Planned (`python/carnot/reporting/fr11_live_policy_promotion.py`) | Planned (`tests/python/test_fr11_live_policy_promotion.py`) |
+
+---
+
+## REQ-LEARN-1539: FR-11 External-Feedback Skill Graph Promotion
+
+Exp 1539 SHALL convert rollback-passing FR-11 query-time policy updates into an
+auditable skill graph whose promoted nodes cite external deterministic verifier
+feedback, replay evidence, and explicit skill lineage.  The workflow SHALL NOT
+train, finetune, write checkpoints, or mutate model weights.  Positive headline
+self-learning readiness SHALL require strictly positive task utility and zero
+soundness mistakes; a safe zero-utility result SHALL remain complete but SHALL
+NOT claim positive-utility promotion readiness.
+
+### REQ-LEARN-1539 Sub-requirements
+
+- REQ-LEARN-1539-1: The workflow SHALL write
+  `results/experiment_1539_fr11_external_feedback_skill_promotion_v13.json`
+  first with `status="in_progress"` before loading Exp 1524 live-policy
+  promotion sources, Exp 1513 rollback replay sources, or Exp 1538
+  residual-drift ledger sources.
+- REQ-LEARN-1539-2: Candidate updates SHALL be extracted with explicit
+  query-time policy inputs, expected verifier outputs, model outputs or output
+  hashes, verifier rewards, rollback evidence, replay evidence, and skill
+  lineage.
+- REQ-LEARN-1539-3: Skill graph nodes SHALL be promoted only when the update
+  has external deterministic verifier feedback, rollback replay evidence,
+  no positive false-accept delta, no soundness mistakes, and no model-weight
+  mutation.  Self-feedback alone SHALL NOT satisfy this requirement.
+- REQ-LEARN-1539-4: The skill graph artifact SHALL be written under `results/`
+  or `ops/`, and each promoted node SHALL cite the source artifacts and row
+  identifiers that support the node.
+- REQ-LEARN-1539-5: The rollback plan SHALL identify each promoted node,
+  the policy update it can disable, and deterministic triggers for demotion
+  or rollback, including soundness mistakes, false-accept increases, missing
+  verifier feedback, stale provenance, or replay failure.
+- REQ-LEARN-1539-6: Baseline and promoted task success rates SHALL be computed
+  on a bounded mandated SOTA headline model task set from Exp 1524 live
+  promotion evidence.  Legacy small GGUFs MAY NOT become headline-result
+  models for this artifact.
+- REQ-LEARN-1539-7: `positive_utility_promotion_ready` SHALL be true only
+  when `utility_delta > 0`, `soundness_mistakes == 0`, at least one promoted
+  skill-graph node has external verifier feedback, live mandated SOTA
+  inference evidence is present, and `no_model_weight_mutation=true`.
+- REQ-LEARN-1539-8: The terminal artifact SHALL include `status`,
+  `milestone`, `continuous_self_learning_task`,
+  `fr11_external_feedback_ready`, `positive_utility_promotion_ready`,
+  `model_specs`, `live_sota_model_inference_used`, `skill_graph_path`,
+  `candidate_updates`, `externally_verified_updates`, `promoted_updates`,
+  `baseline_task_success_rate`, `promoted_task_success_rate`,
+  `utility_delta`, `soundness_mistakes`, `no_model_weight_mutation`,
+  `rollback_plan_path`, `focused_tests_passed`, and `honest_verdict`.
+
+### SCENARIO-LEARN-1539: External Verifier Feedback Promotes An Auditable Node
+
+**Given** an Exp 1524 live-policy evaluation row for a mandated SOTA GGUF
+**And** the row records deterministic runtime-contract verifier feedback
+with zero false accepts and zero soundness mistakes
+**And** rollback replay evidence kept the same policy update
+**When** Exp 1539 builds the FR-11 skill graph
+**Then** the candidate update becomes a promoted skill-graph node
+**And** the node records its policy input interface, expected verifier output,
+verifier reward, replay evidence, source artifacts, and rollback plan handle.
+
+### SCENARIO-LEARN-1540: Positive Utility Is Required For Headline Readiness
+
+**Given** a promoted external-feedback skill node with zero soundness mistakes
+**And** live SOTA evidence where promoted task success does not exceed baseline
+task success
+**When** Exp 1539 writes the terminal artifact
+**Then** `fr11_external_feedback_ready=true`
+**And** `positive_utility_promotion_ready=false`
+**And** `honest_verdict` reports the safety-only result without claiming
+positive utility.
+
+### SCENARIO-LEARN-1541: Self-Feedback Or Unsafe Replay Rolls Back
+
+**Given** a candidate update that lacks external deterministic verifier
+feedback, increases false accepts, records a soundness mistake, or lacks
+rollback replay evidence
+**When** Exp 1539 evaluates promotion eligibility
+**Then** the update is not promoted
+**And** the rollback plan records the deterministic demotion or rollback
+trigger.
+
+## Implementation Status (REQ-LEARN-1539)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-1539 | Implemented (`python/carnot/reporting/fr11_external_feedback_skill_promotion.py`) | Implemented (`tests/python/test_fr11_external_feedback_skill_promotion.py`) |
