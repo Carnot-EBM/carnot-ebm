@@ -1166,7 +1166,62 @@ violation status, detected violation status, classifier outcome, random
 baseline outcome, length baseline outcome, and contract evidence before the
 terminal artifact sets `structural_contract_gate_ready=true`.
 
-## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487/1495/1496/1499/1500/1501/1507/1508/1509/1510)
+### REQ-VERIFY-1520: Runtime-Contract E2E Harness
+
+The repository shall provide a deterministic CPU-only runtime-contract E2E
+harness for Exp 1520 that loads the Exp 1507 safe-DSL verifier induction pack,
+Exp 1508 trigger+grammar certificate decoder audit, Exp 1509 executable
+monitor runtime adapter, and Exp 1510 plan-graph structural contract gate into
+one acceptance manifest without generating new LLM rows.
+
+The harness shall:
+
+- write `results/experiment_1520_runtime_contract_e2e_harness.json` with
+  `status="in_progress"` before loading source artifacts or manifest rows;
+- load the Exp 1507, Exp 1508, Exp 1509, Exp 1510, and Exp 1511 terminal JSON
+  artifacts and the Exp 1507, Exp 1508, Exp 1509, and Exp 1510 source JSONL
+  manifests, writing a terminal blocker with concrete missing paths when any
+  required source cannot be resolved;
+- define a normalized contract-case schema containing prompt or case ID,
+  proposed output, certificate parse result, safe-DSL verifier result, monitor
+  event result, structural-contract result, expected label when explicitly
+  available, and final deterministic accept/reject;
+- write `results/runtime_contract_e2e_manifest_1520.jsonl` with one normalized
+  contract-case row per linked source row and a final summary row;
+- compute false accepts and false rejects only for normalized rows with an
+  explicit expected label, never by inferring success from LLM prose;
+- report linked-row counts separately for safe-DSL, grammar certificate,
+  monitor event, and structural-contract families; and
+- write a terminal artifact containing `status`, `runtime_contract_e2e_ready`,
+  `source_artifacts_loaded`, `contract_cases_total`,
+  `safe_dsl_cases_linked`, `grammar_certificate_cases_linked`,
+  `monitor_events_linked`, `structural_contract_cases_linked`,
+  `false_accept_count`, `false_accept_rate`, `false_reject_count`,
+  `runtime_contract_manifest_path`, `focused_tests_passed`, `blockers`, and
+  `honest_verdict`.
+
+`runtime_contract_e2e_ready` MUST be true only when all mandatory source
+artifacts load, at least one row from each of the four .116 contract families
+is linked, `false_accept_rate` is reported as `0.0`, and the focused harness
+tests have passed. `honest_verdict` MUST begin with one of `complete:`,
+`complete_`, `success:`, `success_`, `passed:`, `passed_`, `shipped:`, or
+`shipped_`.
+
+### SCENARIO-VERIFY-1520: Runtime Contract Ledger Combines .116 Families
+
+Given complete Exp 1507 safe-DSL, Exp 1508 certificate, Exp 1509 monitor, and
+Exp 1510 structural-contract artifacts on the run date `20260508`,
+When Exp 1520 resolves source manifests, normalizes rows, and writes the E2E
+manifest,
+Then every contract-case row records source provenance plus certificate,
+safe-DSL, monitor, and structural-contract result fields
+And the false-accept ledger counts only rows whose source artifact provides an
+explicit expected label
+And the terminal artifact sets `runtime_contract_e2e_ready=true` only when each
+.116 contract family contributes at least one linked row and the reported
+false-accept rate is exactly zero.
+
+## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487/1495/1496/1499/1500/1501/1507/1508/1509/1510/1520)
 
 | Requirement | Python | Tests |
 |-------------|--------|-------|
@@ -1192,3 +1247,4 @@ terminal artifact sets `structural_contract_gate_ready=true`.
 | REQ-VERIFY-1508 | Planned (`python/carnot/verify/trigger_grammar_certificate_decoder.py`) | Planned (`tests/python/test_experiment_1508_trigger_grammar_certificate_decoder_audit.py`) |
 | REQ-VERIFY-1509 | Implemented (`python/carnot/verify/executable_monitor_runtime_adapter.py`) | Implemented (`tests/python/test_experiment_1509_executable_monitor_runtime_adapter.py`) |
 | REQ-VERIFY-1510 | Implemented (`python/carnot/verify/plan_graph_structural_contract_gate.py`) | Implemented (`tests/python/test_experiment_1510_plan_graph_structural_contract_gate.py`) |
+| REQ-VERIFY-1520 | Implemented (`python/carnot/verify/runtime_contract_e2e_harness.py`) | Implemented (`tests/python/test_experiment_1520_runtime_contract_e2e_harness.py`) |
