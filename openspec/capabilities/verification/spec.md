@@ -1818,7 +1818,60 @@ runtime-contract or residual-drift replay authority
 And the terminal artifact reports whether the routed budget is lower than the
 full-context baseline with zero deterministic false accepts.
 
-## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487/1495/1496/1499/1500/1501/1507/1508/1509/1510/1520/1521/1522/1525/1537/1538/1541/1542/1551/1552/1553)
+### REQ-VERIFY-1554: Product-Line Staged Scale V4 Behind Unified Gate
+
+The repository shall provide an Exp 1554 product-line staged scale run that
+loads the Exp 1540 product-line scale artifact and the Exp 1551 unified
+contract gate before reporting larger solver-grounded product-line metrics.
+
+The scale run shall:
+
+- write `results/experiment_1554_product_line_staged_scale_v4.json` with
+  `status="in_progress"` before loading predecessor artifacts or evaluating
+  product-line cases;
+- require `unified_contract_gate_ready=true` from Exp 1551 before claiming a
+  ready terminal artifact;
+- build or select a staged product-line pack up to 120 cases when the
+  checked-in generators and runtime permit, covering syntax-only,
+  feasibility, objective-quality, and natural-language product-line variants;
+- route rows through deterministic product-line parsing and solver-oracle
+  evaluation, preserving the unified contract gate as an upstream prerequisite
+  and the product-line solver oracle as final accept/reject authority;
+- compute parse rate, feasibility rate, oracle agreement rate, mean objective
+  gap, entity hallucination rate, and false accept rate from structured row
+  fields rather than model self-evaluation;
+- record mandated SOTA GGUF model availability honestly, excluding legacy
+  small GGUF smoke tests from headline-result model lists; and
+- write a terminal artifact containing `status`, `milestone`,
+  `product_line_scale_v4_ready`, `branch_retired`, `model_specs`,
+  `live_sota_model_inference_used`, `cases_total`, `stages_tested`,
+  `parse_rate`, `feasibility_rate`, `objective_gap_mean`,
+  `oracle_agreement_rate`, `entity_hallucination_rate`, `false_accept_rate`,
+  `automata_constraints_used`, `product_line_manifest_path`,
+  `focused_tests_passed`, and `honest_verdict`.
+
+`product_line_scale_v4_ready` MUST be true only when Exp 1551 is ready, at
+least one product-line case is evaluated, focused tests have passed,
+deterministic checks are made from structured solver-backed fields,
+`false_accept_rate` is exactly `0.0`, and `branch_retired=false`.
+`branch_retired` MUST be true when false accepts recur or deterministic
+feasibility/oracle checks cannot be made. `honest_verdict` MUST begin with one
+of `complete:`, `complete_`, `success:`, `success_`, `passed:`, `passed_`,
+`shipped:`, or `shipped_`.
+
+### SCENARIO-VERIFY-1554: Product-Line Scaling Reports Solver-Grounded Fields
+
+Given complete Exp 1540 and Exp 1551 artifacts on the run date `20260508`,
+When Exp 1554 evaluates a larger staged product-line pack behind the unified
+contract gate,
+Then syntax-only, feasibility, objective-quality, and natural-language product
+line variants are represented in the manifest
+And parse, feasibility, objective-gap, oracle-agreement, hallucination, and
+false-accept metrics are aggregated from deterministic row fields
+And any false accept or missing deterministic oracle field retires the branch
+before a ready artifact can be reported.
+
+## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487/1495/1496/1499/1500/1501/1507/1508/1509/1510/1520/1521/1522/1525/1537/1538/1541/1542/1551/1552/1553/1554)
 
 | Requirement | Python | Tests |
 |-------------|--------|-------|
@@ -1855,3 +1908,4 @@ full-context baseline with zero deterministic false accepts.
 | REQ-VERIFY-1551 | Implemented (`python/carnot/verify/unified_contract_gate.py`) | Implemented (`tests/python/test_experiment_1551_automata_sat_unified_contract_gate.py`) |
 | REQ-VERIFY-1552 | Implemented (`python/carnot/verify/residual_drift_repair_policy.py`) | Implemented (`tests/python/test_experiment_1552_residual_drift_repair_policy.py`) |
 | REQ-VERIFY-1553 | Implemented (`python/carnot/verify/claim_isolation_router_scale.py`) | Implemented (`tests/python/test_experiment_1553_claim_isolation_router_scale.py`) |
+| REQ-VERIFY-1554 | Planned (`python/carnot/verify/product_line_staged_scale_v4.py`) | Planned (`tests/python/test_experiment_1554_product_line_staged_scale_v4.py`) |
