@@ -2163,6 +2163,73 @@ allowed `.118` tracks and same-roadmap gates, records whether
 `research-roadmap.yaml` and `scripts/research_conductor.py` were not modified,
 and writes an honest activation verdict with an accepted success prefix.
 
+### REQ-REPORT-059: Milestone .118 Terminal Retrospective
+
+The Exp 1546 `.118` retrospective workflow shall write
+`results/experiment_1546_milestone_118_retro.json` with `status="in_progress"`
+before terminal completion. It shall then read the authoritative Exp 1533
+through Exp 1545 result JSON artifacts, the `.118` success criteria in
+`openspec/change-proposals/research-roadmap-vNEXT.md`, `research-roadmap.yaml`,
+`research-roadmap-next.yaml`, `research-complete.yaml`, `ops/conductor-log.md`,
+`ops/status.md`, `ops/changelog.md`, and `ops/known-issues.md` without
+modifying `research-roadmap.yaml` or `scripts/research_conductor.py`.
+
+The workflow shall score every `.118` success criterion from source artifact
+fields as `MET`, `NOT_MET`, or `HONESTLY_TERMINAL`, record missing, blocked, or
+criterion-failing source artifacts explicitly, and preserve the `.118` claim
+boundaries: automata and SAT evidence may improve contract generation or
+diagnose false accepts, but deterministic runtime contracts and solver oracles
+remain the authority; FR-11 may claim safe query-time promotion only when
+`no_model_weight_mutation=true` and `soundness_mistakes=0`, and may claim
+positive utility only when `utility_delta > 0`; ARM/EBT soft-value signals
+remain diagnostic-only; THRML and Extropic work shall not claim hardware
+execution without authenticated device evidence. The terminal artifact shall
+include:
+
+- `status`
+- `milestone`
+- `criteria_met`
+- `criteria_total`
+- `completed_tasks`
+- `honestly_terminal_tasks`
+- `failed_or_blocked_tasks`
+- `automata_contract_gate`
+- `satquest_verifier_gate`
+- `residual_drift_gate`
+- `fr11_positive_utility_gate`
+- `product_line_carry_forward_gate`
+- `claim_isolation_router_gate`
+- `arm_ebm_diagnostic_boundary`
+- `thrml_next_scaling_gate`
+- `extropic_access_readiness_gate`
+- `recommended_119_focus`
+- `ops_reconciliation_needed`
+- `active_roadmap_modified`
+- `conductor_modified`
+- `honest_verdict`
+
+For conductor stop-when-done retro runs where a separate reconciliation agent
+owns `research-complete.yaml`, `ops/status.md`, `ops/changelog.md`, and
+`_bmad/traceability.md`, `ops_reconciliation_needed` shall identify the needed
+follow-up but the workflow shall not edit those files. The final verdict shall
+start with a conductor-accepted success prefix.
+
+### SCENARIO-REPORT-059: Exp 1546 Closes .118 With .119 Gates
+
+Given Exp 1533 through Exp 1545 terminal artifacts exist, Exp 1535 improves
+contract parsing through automata/ABS constraints, Exp 1536 reports SATQuest
+solver-oracle false accepts, Exp 1539 reports safe FR-11 promotion but
+`utility_delta=0.0`, Exp 1540 and Exp 1541 report product-line and
+claim-isolation budget evidence with zero deterministic false accepts, Exp 1542
+keeps ARM/EBT diagnostic-only, Exp 1543 and Exp 1544 report software-only THRML
+parity, and Exp 1545 reports readiness without hardware execution, when Exp
+1546 runs for run date `20260508`, then it writes all required REQ-REPORT-059
+fields, reports the success-criteria score from source fields, records SATQuest
+and FR-11 limits without inventing success, records `.119` carry-forward gates,
+confirms `research-roadmap.yaml` and `scripts/research_conductor.py` were not
+modified, and writes an honest retrospective verdict with an accepted success
+prefix.
+
 ### REQ-REPORT-024: Local Agent Usage Snapshot
 
 The repository shall provide a local operator workflow that inspects the
@@ -2756,6 +2823,7 @@ embed live-GPU benchmark results from Exp 328 when available.
 | REQ-REPORT-056 | `python/carnot/reporting/milestone_117_activation_manifest.py`, `results/experiment_1519_116_completion_archive_117_activation.json`, `ops/milestone_117_activation_manifest.md` | `tests/python/test_milestone_117_activation_manifest.py` | Implemented |
 | REQ-REPORT-057 | `python/carnot/reporting/milestone_retro_117.py`, `results/experiment_1532_milestone_117_retro.json` | `tests/python/test_milestone_retro_117.py` | Implemented |
 | REQ-REPORT-058 | `python/carnot/reporting/milestone_118_activation_manifest.py`, `results/experiment_1533_117_completion_archive_118_activation.json`, `ops/milestone_118_activation_manifest.md` | `tests/python/test_milestone_118_activation_manifest.py` | Implemented |
+| REQ-REPORT-059 | `python/carnot/reporting/milestone_retro_118.py`, `results/experiment_1546_milestone_118_retro.json` | `tests/python/test_milestone_retro_118.py` | Implemented |
 | REQ-REPORT-024 | `python/carnot/reporting/agent_usage.py`, `scripts/agent_plan_usage.py` | `tests/python/test_agent_plan_usage.py` | Implemented |
 | REQ-PUBLISH-003 | `scripts/experiment_317_hf_publish.py` | `tests/python/test_experiment_317_hf_publish.py` | Implemented |
 | REQ-PUBLISH-004 | `scripts/experiment_330_hf_live_publish.py` | `tests/python/test_experiment_330_hf_live_publish.py` | Implemented |
