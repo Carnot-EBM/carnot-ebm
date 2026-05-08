@@ -1221,7 +1221,59 @@ And the terminal artifact sets `runtime_contract_e2e_ready=true` only when each
 .116 contract family contributes at least one linked row and the reported
 false-accept rate is exactly zero.
 
-## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487/1495/1496/1499/1500/1501/1507/1508/1509/1510/1520)
+### REQ-VERIFY-1521: Live SOTA Contract-Guided Repair
+
+The repository shall provide an Exp 1521 live local-SOTA repair adapter that
+uses the Exp 1520 runtime-contract E2E manifest as deterministic authority and
+compares baseline generation, grammar-only repair, and draft-conditioned
+contract-guided repair without using legacy small models for headline rows.
+
+The adapter shall:
+
+- write `results/experiment_1521_live_sota_contract_guided_repair_v1.json`
+  with `status="in_progress"` before model loading or row generation;
+- load `results/runtime_contract_e2e_manifest_1520.jsonl` and select a bounded
+  subset of deterministic, explicitly labeled contract-failing or
+  contract-marginal rows;
+- resolve mandated local SOTA GGUFs using `cached_sota_pair()` or the same local
+  cache pattern, and write a terminal blocker if no mandated SOTA GGUF completes
+  live inference;
+- generate one baseline, grammar-only, and draft-conditioned output for each
+  selected case and model, recording a raw-output hash or path per row;
+- validate every generated output by converting it into an Exp 1520
+  contract-case row and computing deterministic false-accept outcomes with the
+  runtime-contract ledger helpers, never by trusting LLM prose;
+- write `results/live_contract_guided_repair_1521.jsonl` with one row per case,
+  model, and mode containing model provenance, mode, output hash or raw path,
+  deterministic validator outcome, and repair outcome;
+- report `baseline_accept_rate`, `grammar_only_accept_rate`,
+  `draft_conditioned_accept_rate`, `repair_accept_rate_delta`,
+  `false_accept_count`, and `false_accept_rate`; and
+- write a terminal artifact containing `status`, `model_specs`,
+  `live_sota_model_inference_used`, `contract_guided_repair_ready`,
+  `e2e_cases_loaded`, `repair_cases_attempted`, `models_used`, `gpu_probe`,
+  `repair_manifest_path`, `blockers`, and `honest_verdict`.
+
+`contract_guided_repair_ready` MUST be true only when at least one mandated SOTA
+GGUF produced live inference rows, repair metrics are reported, and
+`false_accept_rate` is exactly `0.0`. `honest_verdict` MUST begin with one of
+`complete:`, `complete_`, `success:`, `success_`, `passed:`, `passed_`,
+`shipped:`, or `shipped_`.
+
+### SCENARIO-VERIFY-1521: Draft-Conditioned Repair Stays Contract-Grounded
+
+Given a complete Exp 1520 runtime-contract E2E manifest with explicitly labeled
+reject or marginal rows on the run date `20260508`,
+When Exp 1521 runs mandated local SOTA GGUF generation in baseline,
+grammar-only, and draft-conditioned modes,
+Then the JSONL repair manifest records a deterministic validator outcome for
+each model, case, and mode
+And the aggregate false-accept ledger is computed from Exp 1520 contract-case
+rows rather than from generated prose
+And the terminal artifact sets `contract_guided_repair_ready=true` only when
+live SOTA inference completed and the reported false-accept rate remains zero.
+
+## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487/1495/1496/1499/1500/1501/1507/1508/1509/1510/1520/1521)
 
 | Requirement | Python | Tests |
 |-------------|--------|-------|
@@ -1248,3 +1300,4 @@ false-accept rate is exactly zero.
 | REQ-VERIFY-1509 | Implemented (`python/carnot/verify/executable_monitor_runtime_adapter.py`) | Implemented (`tests/python/test_experiment_1509_executable_monitor_runtime_adapter.py`) |
 | REQ-VERIFY-1510 | Implemented (`python/carnot/verify/plan_graph_structural_contract_gate.py`) | Implemented (`tests/python/test_experiment_1510_plan_graph_structural_contract_gate.py`) |
 | REQ-VERIFY-1520 | Implemented (`python/carnot/verify/runtime_contract_e2e_harness.py`) | Implemented (`tests/python/test_experiment_1520_runtime_contract_e2e_harness.py`) |
+| REQ-VERIFY-1521 | Implemented (`python/carnot/verify/live_sota_contract_guided_repair.py`) | Implemented (`tests/python/test_experiment_1521_live_sota_contract_guided_repair.py`) |
