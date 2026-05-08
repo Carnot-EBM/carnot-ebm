@@ -280,6 +280,55 @@ Vivado, bitfile, KV260 board, or latency claim.
 
 **Implementation status:** Implemented (Exp 1476)
 
+### REQ-ISING-028
+
+**Discrete Simulated Bifurcation KV260 RTL property packaging MUST define
+source-level bounded-behavior, reset, deterministic-ordering, and width/shape
+properties while preserving the no-board and no-bitstream claim boundary.**
+
+**Rationale:**
+Exp 1476 packaged repeatable source-level lint and simulation evidence for
+`hardware/kv260/discrete_sb_256.v`, but it did not name the behavioral
+properties that future RTL changes must preserve. Exp 1517 must add that
+property pack at the source/simulator layer only, because Exp 1460 keeps the
+active KV260 track limited to lint/simulation evidence until Vivado synthesis,
+bitfile flashing, and board commands are captured.
+
+**Acceptance criteria:**
+- The experiment SHALL create
+  `results/experiment_1517_kv260_discrete_sb_rtl_property_pack_v2.json` with
+  `status="in_progress"` before source, prior-artifact, or tool inspection
+  completes.
+- The experiment SHALL verify that Exp 1506 reports
+  `prior_kv260_source_track_active=true`; if absent, it SHALL write a terminal
+  gated artifact instead of running source checks.
+- The experiment SHALL inventory the actual Discrete SB RTL, testbench,
+  supplemental property source, existing regression manifest, and local HDL
+  helper scripts; if a requested path differs from the actual path, the
+  terminal manifest SHALL record the path mismatch.
+- The property pack SHALL define source-level properties covering bounded
+  Discrete SB behavior, reset behavior, deterministic update ordering, and
+  shape/width assumptions for the 256-variable, int8-coupling source.
+- The experiment SHALL run only local source-level lint, parse, and simulation
+  commands such as Verilator, Icarus Verilog, and Yosys probes; it SHALL NOT run
+  Vivado bitfile generation, board programming, PYNQ, SSH, or hardware latency
+  commands.
+- The experiment SHALL write
+  `results/kv260_discrete_sb_property_manifest_1517.json` with checked files,
+  property definitions, exact commands, pass/fail results, claim boundaries,
+  blockers, and the actual Exp 1460 path used.
+- The terminal artifact SHALL include `status`, `kv260_property_pack_ready`,
+  `gated_inputs_present`, `source_level_only`, `no_board_execution`,
+  `no_bitstream_claim`, `rtl_files_checked`, `properties_defined`,
+  `simulations_run`, `lint_or_parse_results`, `property_manifest_path`,
+  `blockers`, and `honest_verdict`.
+- `source_level_only=true`, `no_board_execution=true`, and
+  `no_bitstream_claim=true` SHALL be true in every terminal artifact.
+- `kv260_property_pack_ready=true` only when the property manifest is written
+  and source-level lint/parse/simulation results are reported.
+
+**Implementation status:** Implemented (Exp 1517)
+
 ## Scenarios
 
 ### SCENARIO-ISING-030
@@ -367,3 +416,15 @@ commands, write a repeatable regression manifest, set
 unless real board, bitfile, or latency commands run in the same experiment.
 
 **Implementation status:** Implemented (Exp 1476)
+
+### SCENARIO-ISING-038
+
+**Discrete SB source-level property pack artifact:** Given Exp 1506 keeps the
+KV260 source track active and Exp 1460 limits KV260 work to RTL lint/simulation
+evidence, Exp 1517 SHALL define the bounded-behavior, reset, deterministic
+ordering, and shape/width property set for `hardware/kv260/discrete_sb_256.v`,
+run only local source-level lint/parse/simulation commands, write
+`results/kv260_discrete_sb_property_manifest_1517.json`, and keep board
+execution, bitstream, and hardware latency claims disabled.
+
+**Implementation status:** Implemented (Exp 1517)

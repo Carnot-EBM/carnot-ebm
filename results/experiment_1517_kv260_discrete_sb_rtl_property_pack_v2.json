@@ -1,0 +1,277 @@
+{
+  "blockers": [],
+  "gated_inputs_present": true,
+  "honest_verdict": "complete: kv260_discrete_sb_property_pack_ready_source_level_only",
+  "kv260_property_pack_ready": true,
+  "lint_or_parse_results": [
+    {
+      "command": [
+        "verilator",
+        "--lint-only",
+        "--timing",
+        "-Wall",
+        "-Wno-DECLFILENAME",
+        "-Wno-BLKSEQ",
+        "-Wno-WIDTH",
+        "--top-module",
+        "discrete_sb_256_property_tb",
+        "hardware/kv260/discrete_sb_256.v",
+        "hardware/kv260/discrete_sb_256_property_tb.sv"
+      ],
+      "command_string": "verilator --lint-only --timing -Wall -Wno-DECLFILENAME -Wno-BLKSEQ -Wno-WIDTH --top-module discrete_sb_256_property_tb hardware/kv260/discrete_sb_256.v hardware/kv260/discrete_sb_256_property_tb.sv",
+      "error": "",
+      "error_class": "none",
+      "returncode": 0,
+      "stage": "verilator_property_lint",
+      "stderr_summary": "",
+      "stdout_summary": "- V e r i l a t i o n   R e p o r t: Verilator 5.047 devel rev v5.046-331-g2cd9b8df6 (mod)\n- Verilator: Built from 0.067 MB sources in 3 modules, into 0.067 MB in 3 C++ files needing 0.000 MB\n- Verilator: Walltime 0.017 s (elab=0.002, cvt=0.009, bld=0.000); cpu 0.017 s on 1 threads; allocated 21.230 MB"
+    },
+    {
+      "command": [
+        "iverilog",
+        "-tnull",
+        "-g2012",
+        "hardware/kv260/discrete_sb_256.v",
+        "hardware/kv260/discrete_sb_256_property_tb.sv"
+      ],
+      "command_string": "iverilog -tnull -g2012 hardware/kv260/discrete_sb_256.v hardware/kv260/discrete_sb_256_property_tb.sv",
+      "error": "",
+      "error_class": "none",
+      "returncode": 0,
+      "stage": "iverilog_property_parse",
+      "stderr_summary": "",
+      "stdout_summary": ""
+    }
+  ],
+  "no_bitstream_claim": true,
+  "no_board_execution": true,
+  "properties_defined": [
+    {
+      "category": "bounded_behavior",
+      "checks": [
+        {
+          "passed": true,
+          "path": "hardware/kv260/discrete_sb_256.v",
+          "token": "STATE_ROW"
+        },
+        {
+          "passed": true,
+          "path": "hardware/kv260/discrete_sb_256.v",
+          "token": "STATE_COMMIT"
+        },
+        {
+          "passed": true,
+          "path": "hardware/kv260/discrete_sb_256.v",
+          "token": "(step_count + 16'd1) >= max_steps_active"
+        },
+        {
+          "passed": true,
+          "path": "hardware/kv260/discrete_sb_256_property_tb.sv",
+          "token": "PROP_BOUNDED_ONE_STEP_DONE"
+        }
+      ],
+      "description": "A bounded one-step run must reach DONE after row 255.",
+      "id": "KV260-DSB-PROP-BOUNDED-001",
+      "passed": true,
+      "spec_refs": [
+        "REQ-ISING-028",
+        "SCENARIO-ISING-038"
+      ]
+    },
+    {
+      "category": "reset_behavior",
+      "checks": [
+        {
+          "passed": true,
+          "path": "hardware/kv260/discrete_sb_256.v",
+          "token": "if (rst) begin"
+        },
+        {
+          "passed": true,
+          "path": "hardware/kv260/discrete_sb_256.v",
+          "token": "state <= STATE_IDLE;"
+        },
+        {
+          "passed": true,
+          "path": "hardware/kv260/discrete_sb_256.v",
+          "token": "busy <= 1'b0;"
+        },
+        {
+          "passed": true,
+          "path": "hardware/kv260/discrete_sb_256.v",
+          "token": "step_count <= 16'd0;"
+        },
+        {
+          "passed": true,
+          "path": "hardware/kv260/discrete_sb_256_property_tb.sv",
+          "token": "PROP_RESET_KNOWN_STATE"
+        }
+      ],
+      "description": "Reset must drive IDLE, clear counters, and expose known spins.",
+      "id": "KV260-DSB-PROP-RESET-001",
+      "passed": true,
+      "spec_refs": [
+        "REQ-ISING-028",
+        "SCENARIO-ISING-038"
+      ]
+    },
+    {
+      "category": "deterministic_update_ordering",
+      "checks": [
+        {
+          "passed": true,
+          "path": "hardware/kv260/discrete_sb_256.v",
+          "token": "spin_snapshot <= spin_cur;"
+        },
+        {
+          "passed": true,
+          "path": "hardware/kv260/discrete_sb_256.v",
+          "token": "spin_next[row_idx]"
+        },
+        {
+          "passed": true,
+          "path": "hardware/kv260/discrete_sb_256.v",
+          "token": "spin_cur <= spin_next;"
+        },
+        {
+          "passed": true,
+          "path": "hardware/kv260/discrete_sb_256.v",
+          "token": "spin_out <= spin_next;"
+        },
+        {
+          "passed": true,
+          "path": "hardware/kv260/discrete_sb_256_property_tb.sv",
+          "token": "PROP_SNAPSHOT_STABLE_DURING_ROW_UPDATE"
+        }
+      ],
+      "description": "Rows must read spin_snapshot and commit spin_next only after a sweep.",
+      "id": "KV260-DSB-PROP-ORDER-001",
+      "passed": true,
+      "spec_refs": [
+        "REQ-ISING-028",
+        "SCENARIO-ISING-038"
+      ]
+    },
+    {
+      "category": "shape_width_assumptions",
+      "checks": [
+        {
+          "passed": true,
+          "path": "hardware/kv260/discrete_sb_256.v",
+          "token": "parameter integer N_VARIABLES = 256"
+        },
+        {
+          "passed": true,
+          "path": "hardware/kv260/discrete_sb_256.v",
+          "token": "parameter integer COUPLING_BITS = 8"
+        },
+        {
+          "passed": true,
+          "path": "hardware/kv260/discrete_sb_256.v",
+          "token": "COUPLING_COUNT = N_VARIABLES * N_VARIABLES"
+        },
+        {
+          "passed": true,
+          "path": "hardware/kv260/discrete_sb_256.v",
+          "token": "[15:0]"
+        },
+        {
+          "passed": true,
+          "path": "hardware/kv260/discrete_sb_256.v",
+          "token": "[4:0]"
+        },
+        {
+          "passed": true,
+          "path": "hardware/kv260/discrete_sb_256.v",
+          "token": "output reg [N_VARIABLES-1:0]"
+        },
+        {
+          "passed": true,
+          "path": "hardware/kv260/discrete_sb_256_property_tb.sv",
+          "token": "PROP_SHAPE_WIDTH_DEFAULTS"
+        }
+      ],
+      "description": "The source must preserve 256 variables and int8 dense couplings.",
+      "id": "KV260-DSB-PROP-SHAPE-001",
+      "passed": true,
+      "spec_refs": [
+        "REQ-ISING-028",
+        "SCENARIO-ISING-038"
+      ]
+    }
+  ],
+  "property_manifest_path": "results/kv260_discrete_sb_property_manifest_1517.json",
+  "rtl_files_checked": [
+    {
+      "exists": true,
+      "kind": "rtl_source",
+      "path": "hardware/kv260/discrete_sb_256.v"
+    },
+    {
+      "exists": true,
+      "kind": "smoke_testbench",
+      "path": "hardware/kv260/discrete_sb_256_tb.v"
+    },
+    {
+      "exists": true,
+      "kind": "property_testbench",
+      "path": "hardware/kv260/discrete_sb_256_property_tb.sv"
+    },
+    {
+      "exists": true,
+      "kind": "existing_regression_manifest",
+      "path": "hardware/kv260/discrete_sb_regression_manifest.md"
+    },
+    {
+      "exists": true,
+      "kind": "python_helper",
+      "path": "python/carnot/hardware/discrete_sb_regression_pack.py"
+    },
+    {
+      "exists": true,
+      "kind": "python_helper",
+      "path": "python/carnot/hardware/discrete_sb_rtl_lint_sim_rerun.py"
+    }
+  ],
+  "simulations_run": [
+    {
+      "command_string": "iverilog -g2012 -o /tmp/discrete_sb_256_property_tb_1517.vvp hardware/kv260/discrete_sb_256.v hardware/kv260/discrete_sb_256_property_tb.sv && vvp /tmp/discrete_sb_256_property_tb_1517.vvp",
+      "compile_result": {
+        "command": [
+          "iverilog",
+          "-g2012",
+          "-o",
+          "/tmp/discrete_sb_256_property_tb_1517.vvp",
+          "hardware/kv260/discrete_sb_256.v",
+          "hardware/kv260/discrete_sb_256_property_tb.sv"
+        ],
+        "command_string": "iverilog -g2012 -o /tmp/discrete_sb_256_property_tb_1517.vvp hardware/kv260/discrete_sb_256.v hardware/kv260/discrete_sb_256_property_tb.sv",
+        "error": "",
+        "error_class": "none",
+        "returncode": 0,
+        "stderr_summary": "",
+        "stdout_summary": ""
+      },
+      "error": "",
+      "error_class": "none",
+      "returncode": 0,
+      "run_result": {
+        "command": [
+          "vvp",
+          "/tmp/discrete_sb_256_property_tb_1517.vvp"
+        ],
+        "command_string": "vvp /tmp/discrete_sb_256_property_tb_1517.vvp",
+        "error": "",
+        "error_class": "none",
+        "returncode": 0,
+        "stderr_summary": "",
+        "stdout_summary": "PROPERTY RESULT: PASS\nhardware/kv260/discrete_sb_256_property_tb.sv:217: $finish called at 665835000 (1ps)"
+      },
+      "stage": "icarus_property_simulation",
+      "stderr_summary": "",
+      "stdout_summary": "PROPERTY RESULT: PASS\nhardware/kv260/discrete_sb_256_property_tb.sv:217: $finish called at 665835000 (1ps)"
+    }
+  ],
+  "source_level_only": true,
+  "status": "complete"
+}
