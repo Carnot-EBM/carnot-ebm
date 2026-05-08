@@ -1,0 +1,89 @@
+{
+  "automata_constraints_used": true,
+  "available_case_count": 40,
+  "benchmark_manifest_path": "results/product_line_staged_benchmark_scale_1540.jsonl",
+  "blockers": [],
+  "branch_retired": false,
+  "cached_sota_pair": [
+    {
+      "gpu": 0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "name": "Qwen3.6-35B-A3B"
+    },
+    {
+      "gpu": 1,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "name": "Gemma4-26B-A4B-it"
+    }
+  ],
+  "cases_total": 40,
+  "deterministic_validator_final_authority": true,
+  "false_accept_count": 0,
+  "false_accept_rate": 0.0,
+  "feasibility_stage_pass_rate": 1.0,
+  "feature_model_stage_pass_rate": 1.0,
+  "focused_tests_passed": true,
+  "gpu_probe": {
+    "cuda_available": true,
+    "gpu_count": 2
+  },
+  "honest_verdict": "complete: product-line staged benchmark scaled with zero false accepts",
+  "live_inference_blockers": [],
+  "live_prompt_limit": 1,
+  "live_rows_evaluated": 1,
+  "live_sota_model_inference_used": true,
+  "milestone": "20260508",
+  "model_specs": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "unsloth/gemma-4-31B-it-GGUF",
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "models_used": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF"
+  ],
+  "oracle_agreement_rate": 1.0,
+  "product_line_scale_ready": true,
+  "rescue_context": {
+    "artifact_path": "results/experiment_1523_product_line_parser_feasibility_rescue_v2.json",
+    "baseline_parse_rate": 0.333333,
+    "bounded_cases": 6,
+    "fix_summary": {
+      "feasibility": "the exhaustive solver replaces infeasible or suboptimal selections with an optimum",
+      "feature_model": "unknown features are removed, required features are added, and requires edges are closed",
+      "policy": "final accept is true only when deterministic oracle_agrees is true",
+      "syntax": "parse failures are converted into schema JSON seeded from case contracts"
+    },
+    "manifest_path": "results/product_line_rescue_1523.jsonl",
+    "product_line_rescue_ready": true,
+    "rescue_false_accept_rate": 0.0,
+    "rescue_oracle_agreement_rate": 1.0,
+    "rescue_parse_rate": 1.0,
+    "stage_counts": {
+      "feature_model_consistency_feedback": {
+        "passed": 4,
+        "repaired": 2
+      },
+      "policy_compliance_feedback": {
+        "accepted": 6
+      },
+      "solver_feasibility_feedback": {
+        "passed": 2,
+        "repaired": 4
+      },
+      "syntax_parse_feedback": {
+        "passed": 2,
+        "repaired": 4
+      }
+    }
+  },
+  "retirement_reason": "",
+  "schema_version": 1,
+  "stage_classification_counts": {
+    "oracle_agreement": 40
+  },
+  "status": "complete",
+  "syntax_stage_pass_rate": 1.0,
+  "target_cases_requested": 40
+}
