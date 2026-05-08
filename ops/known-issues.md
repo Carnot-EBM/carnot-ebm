@@ -386,6 +386,57 @@ abstracts available via:
                        finite K; spectral-gap cure requires K ≫ 10^15."
         retire_if_same_verdict: true
 
+- id: exp15XY-specann-rejection-architecture-record
+  title: "Document SpecAnn Rejection for Phase 3 in Architecture Record (DT-COMPOSITION)"
+  agent_type: codex
+  model: gpt-5.5
+  priority: high
+  prompt_seed: |
+    Per Deep Think DT-COMPOSITION verdict (2026-05-08, docs/research-
+    notes/iclr26-deep-think-responses.md): Spectral Annealing is
+    mathematically unviable for Phase 3 and must be explicitly rejected
+    in the architecture record so the question is not re-litigated.
+
+    Two killing arguments:
+    (1) HUBO→QUBO reduction fatal: Carnot's k=15 AND-composed indicator
+        energy is HUBO. SpecAnn requires QUBO. Reduction needs O(k)
+        auxiliary "gadget" variables per clause + massive penalty
+        weights M ≫ w_i to enforce logical consistency. The penalty
+        stiffness clusters eigenvalues, exponentially shrinks
+        eigengaps, fractures the continuous α-homotopy path, and
+        permanently traps SpecAnn in spurious gadget-satisfying minima.
+    (2) Level-crossing brittleness: Davis-Kahan eigenspace rotation
+        is smooth under continuous ΔJ, BUT at first-order phase
+        transitions (where spectral gap closes), the principal
+        eigenvector abruptly orthogonalizes to the new ground state.
+        Continuous homotopy path SHATTERS, forcing cold-restart at
+        the worst possible training moment.
+    (3) Worst-case three-paper composition triggers "Gadget-Induced
+        Mean-Field Collapse" — strictly worse than status-quo Gibbs.
+
+    Steps:
+    1. Read DT-COMPOSITION section in iclr26-deep-think-responses.md
+       for the full mathematical reasoning.
+    2. Add to _bmad/architecture.md Phase 3 substrate section:
+       "SpecAnn rejected for Phase 3 inference-time argmin. Rationale:
+       (a) HUBO→QUBO reduction injects gadgets+penalties that fracture
+       SpecAnn's spectral homotopy path; (b) phase-transition level-
+       crossings during training force catastrophic cold-restarts;
+       (c) three-paper composition (SpecAnn+BRAIN+MCMC Layers) triggers
+       Gadget-Induced Mean-Field Collapse (DT-COMPOSITION (f), 2026-
+       05-08). Carnot retains existing Gibbs-heuristic argmin on
+       unreduced HUBO energy."
+    3. Update openspec/capabilities/research-harnesses/spec.md with
+       a corresponding REQ-* and SCENARIO-* entry codifying this
+       rejection.
+
+    prior_failures:
+      - experiment_id: exp1543-thrml-carnot-parity-n256-schedule-stress
+        verdict: complete_thrml_parity_n256_schedule_passed
+        addressed_by: "Phase 3 substrate uses Gibbs-heuristic argmin,
+                       not SpecAnn. Empirical validation that HUBO
+                       direct evaluation works at scale."
+
 - id: exp15VV-soft-gibbs-residual-implementation
   title: "Soft-Gibbs Residual Implementation + Hard-BRS Comparison (DT-OT-RESIDUAL)"
   agent_type: codex

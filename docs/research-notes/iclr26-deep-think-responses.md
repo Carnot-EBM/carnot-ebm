@@ -7,6 +7,248 @@ integration-plan update + .NNN priority adjustment.
 
 ---
 
+## DT-COMPOSITION response (received 2026-05-08, ~20:30Z) — **MIXED VERDICT: VALUABLE FAILURE-MODE FINDINGS; TOP-LINE RECOMMENDATION CONTRADICTS PRIOR VERDICTS**
+
+**Question summary:** Can MCMC Layers + BRAIN + Spectral Annealing be
+composed in different sampler-pipeline roles, or do their assumptions
+conflict?
+
+**Verdict (split):**
+- **Accept** Deep Think's findings on (b) BRAIN+MCMC Layers training
+  incompatibility, (c) SpecAnn level-crossing failures, (e) HUBO→QUBO
+  reduction fatal for SpecAnn, (f) Gadget-Induced Mean-Field Collapse
+  failure mode.
+- **Reject** Deep Think's top-line recommendation ("Adopt MCMC Layers
+  jointly for sampling AND distribution learning"). This contradicts
+  DT-7 (KL=0.17 fix requires THRML, not MH), DT-MCMC-NULL (MH amplifies
+  null-space mimicry — security forbids), DT-MCMC-K1 (K=1 PCD diverges
+  on non-convex Ising), and DT-MCMC-STATELESS (fresh-restart MH ≪ Gibbs
+  at K=100). **Deep Think appears to have lost context across sessions.**
+
+### Findings to ACCEPT and integrate
+
+**(a) (I) inference and (III) distribution learning are NOT cleanly
+separable** because they share state via PCD. Persistent chains in (I)
+serve as initialization for negative-phase gradient updates in (III).
+Decoupling severs the shared-state loop.
+
+This is a structural insight worth keeping. **Implication for Carnot**:
+the candidate-warm-start architecture (DT-MCMC-STATELESS) gives us
+something interesting — at INFERENCE, the chain is initialized at the
+candidate (no PCD persistence). At TRAINING, the chain persists across
+gradient steps (PCD as required by DT-MCMC-K1's adaptive-K spec). These
+are explicitly decoupled.
+
+**(b) BRAIN + MCMC Layers training paradigms are STRICTLY INCOMPATIBLE.**
+
+```
+MCMC Layers Fenchel-Young K=1 guarantee: requires chain near π_{θ,t}
+BRAIN REINFORCE: explicitly off-policy, mode-seeking, high-variance
+                  → repeatedly knocks MCMC chains out of stationarity
+                  → voids Fenchel-Young K=1 guarantees
+```
+
+Rules out a hybrid we hadn't explicitly considered. Confirms each
+paper's paradigm is internally consistent but pairwise incompatible.
+
+**(c) SpecAnn warm-start fails at phase transitions.** Davis-Kahan
+gives smooth eigenspace rotation under continuous ΔJ for *most*
+training steps. But at "level crossings" (first-order phase transitions
+where spectral gap closes), the principal eigenvector abruptly
+orthogonalizes to the new ground state. **Continuous homotopy path
+shatters; SpecAnn forced into cold-restart at the worst possible
+moment** (mid-training when EBM is most rapidly evolving).
+
+This is a genuine new finding. Phase 3 substrate training will hit
+phase transitions — predicted by anomalous behavior of `‖J‖_∞` per
+DT-MCMC-K1 — making SpecAnn brittle exactly when we need it most.
+
+**(d) Match-by-construction obviates noise-as-resource (in some
+contexts).** This finding is correct *if* Carnot's energy is analytic
+and noiseless. **Caveat for Carnot**: our energy comes from k=6
+verifier ensemble outcomes, which involve LLM stochasticity, code
+execution oracle calls, and probabilistic verifier outputs. Energy
+IS noisy in practice. So BRAIN's variance-reduction baseline does
+solve a real problem in Carnot's setting — but the OTHER objections
+to BRAIN (factorized expressivity, DT-BRAIN-CORRELATIONS pending)
+likely still rule it out.
+
+**(e) HUBO→QUBO reduction is FATAL for SpecAnn on Phase 3.** Carnot's
+k=15 AND-composed indicator energy is HUBO. SpecAnn requires QUBO.
+Reduction needs O(k) auxiliary "gadget" variables per clause + massive
+penalty weights M ≫ w_i to enforce logical consistency.
+
+```
+Penalty stiffness → eigenvalue clustering → exponentially shrinking
+eigengaps → fractured continuous path → SpecAnn trapped in spurious
+gadget-satisfying local minima
+```
+
+**SpecAnn is mathematically unviable for Phase 3.** Strong rule-out.
+
+**(f) Gadget-Induced Mean-Field Collapse worst-case failure mode:**
+
+The naive three-technique composition produces a regime *strictly
+worse than status-quo Gibbs baseline*:
+
+1. **Trap (SpecAnn)**: HUBO→QUBO injects gadgets + massive penalties
+2. **Collapse (BRAIN)**: factorized Bernoulli q_θ cannot represent
+   rigid gadget-base correlations → mean-field collapse → hallucinated
+   invalid state updates
+3. **Freeze (MCMC Layers)**: receives broken parameter updates →
+   confronted by infinite-penalty walls → MH acceptance plummets to
+   near-zero → chains permanently freeze
+
+**Result**: optimizer hallucinates, sampler paralyzed, distribution
+learner captures broken marginals. **Carnot's existing Gibbs sampler
+on unreduced k=15 energy effortlessly avoids the entire lockup.**
+
+This is an excellent worst-case argument for keeping the existing
+Gibbs path. Codifies the Phase 3 architecture decisions.
+
+### What I REJECT and why
+
+**Deep Think's top-line recommendation: "Adopt MCMC Layers jointly for
+sampling AND distribution learning. It resolves the inference KL=0.17
+gap via its exact match-by-construction MH target."**
+
+This DIRECTLY contradicts the prior 4 verdicts:
+
+1. **DT-7 (vendor THRML)**: single-site MH **cannot match block-Gibbs**
+   at finite K. Mixing-time parity at n=128 SK glass requires K ≫ 10^15
+   sweeps. **MCMC Layers does NOT resolve KL=0.17 by construction.**
+   Deep Think contradicts itself.
+
+2. **DT-MCMC-NULL (kinetic-defense-in-depth)**: MH plateau-diffusion
+   advantage is a security LIABILITY for null-space-vulnerable EBMs.
+   Adopting MH at inference amplifies null-space mimicry 50%. **Forbids
+   MH at inference on security grounds.**
+
+3. **DT-MCMC-K1 (K=1 PCD diverges)**: on non-convex Ising at production
+   scale (n=128, t=1), K=1 PCD freezes when `‖J‖_∞` grows during
+   discriminative training. **Phase 5 needs adaptive K + SA/PT, NOT
+   "joint MCMC Layers for full forward-backward pass."**
+
+4. **DT-MCMC-STATELESS (warm-start at candidate)**: fresh-restart MH at
+   K=100 is STRICTLY WORSE than fresh-restart Gibbs in low-acceptance
+   regimes (wastes 95% of latency budget standing still). **Forbids MH
+   at inference on latency grounds.**
+
+**The pattern**: DT-COMPOSITION evaluated each technique on its own
+mathematical merits but lost track of the empirical constraints
+established by prior verdicts. Specifically, DT-COMPOSITION assumed:
+- "MCMC Layers gives exact match to π" (FALSE per DT-7 — only
+  asymptotically, not at production K)
+- "MCMC Layers safely replaces PCD loop" (FALSE per DT-MCMC-K1 —
+  K=1 PCD diverges)
+- The "exact deterministic mathematical match" framing ignores the
+  block-Gibbs vs single-site-MH structural divergence DT-7 proved.
+
+**Methodology lesson**: Deep Think's verdicts can conflict across
+sessions. Synthesize the architecture from ALL verdicts, not just the
+latest one. The integration plan is the source of truth, not any
+individual prompt response.
+
+### The actual final architecture (synthesizing 8 verdicts honestly)
+
+```
+INFERENCE API (stateless HTTP):
+  Sampler:    THRML block-Gibbs (vendored Apache-2.0)
+              [DT-7: structural mismatch with single-site MH at finite K]
+  Init:       user-provided candidate from { prompt, candidate } payload
+              [DT-MCMC-STATELESS: avoids χ² cold-start penalty]
+  K:          100 sweeps (latency budget)
+  Conditioning: Soft-Gibbs Residual µ_res^β(y) ∝ µ(y) · exp(-β V(y))
+              [DT-OT-RESIDUAL: Hard-BRS fails under k=15 AND-composition]
+  Justified:  correctness (DT-7), security (DT-MCMC-NULL), latency
+              (DT-MCMC-STATELESS), AND-composition (DT-OT-RESIDUAL)
+
+PHASE 5 TRAINING (offline, batch):
+  Sampler:    Adaptive K-PCD (Carnot-developed; not MCMC Layers)
+              [DT-MCMC-K1: K=1 PCD diverges; need adaptive K + SA/PT]
+  Diagnostics: Hamming Velocity + Persistent Energy Gap
+  Temperature cycling: SA in-K-steps OR PT replicas
+  Init:       persistent chain (PCD)
+  FR-11:      v15+ uses λ-GRPO patch
+              [DT-2: standard GRPO has |λ|-bug causing mode-collapse via
+              anti-exploration; v14 retentions need audit]
+
+OPTIMIZATION (argmin):
+  Method:     Carnot's existing Gibbs heuristic on unreduced HUBO energy
+              [DT-COMPOSITION (e): SpecAnn requires QUBO reduction; the
+              required HUBO→QUBO gadgets are mathematically fatal]
+  REJECTED alternative: SpecAnn (level-crossing brittleness +
+              gadget-induced mean-field collapse)
+
+VERIFICATION GEOMETRY:
+  Framework:  Mukherjee OT + Carnot's C-parameterized robustified
+              extension [DT-5]
+  Two thresholds: C* (PI boundary), C_inv (inversion threshold)
+  Coverage:   PAC-Bayes via Soft-Gibbs Z_β ≥ ∏ exp(-β α_i)
+
+SECURITY:
+  Property:   Kinetic defense-in-depth [DT-MCMC-NULL]
+              Glauber Gibbs plateau-friction inflates adversary's
+              compute requirement; raises C_inv
+  Anchor:     k=15 AND-composition + red-team audit + tripwire
+              (Phase 3 architecture per existing project record)
+```
+
+### Tasks adjusted (none new from DT-COMPOSITION; existing tasks reaffirmed)
+
+DT-COMPOSITION's findings reinforce existing `.120 priorities. No new
+tasks needed because the valuable findings are *negative* — ruling out
+hybrid compositions that we hadn't actively considered:
+
+1. ✅ **exp15ZZ-thrml-vendored-block-gibbs-replacement** (DT-7) —
+   reaffirmed; DT-COMPOSITION does NOT change this.
+2. ✅ **exp15PP-adversarial-pass-rate-saturation-rho-of-C** (DT-5) —
+   reaffirmed.
+3. ✅ **exp15QQ-phase5-pcd-divergence-audit-tiny-ising** (DT-MCMC-K1) —
+   reaffirmed; DT-COMPOSITION's recommendation to "use MCMC Layers
+   jointly" is REJECTED.
+4. ✅ **exp15RR-phase5-adaptive-K-schedule-implementation** —
+   reaffirmed (still gated on QQ).
+5. ✅ **exp15TT-thrml-block-gibbs-plateau-friction-audit** (DT-MCMC-NULL).
+6. ✅ **exp15UU-candidate-warm-start-vs-cold-start-benchmark**
+   (DT-MCMC-STATELESS).
+7. ✅ **exp15VV-soft-gibbs-residual-implementation** (DT-OT-RESIDUAL).
+8. ✅ **exp15WW-soft-gibbs-coverage-bound-empirical-verification**.
+9. ✅ FR-11 retention audit + v15 λ-GRPO patch (DT-2).
+10. **NEW** `.121 task: explicitly add **SpecAnn rejected for Phase 3**
+    to architecture decision record. Document the HUBO→QUBO + level-
+    crossing reasoning in `_bmad/architecture.md` so the question
+    doesn't get re-litigated.
+
+### Implications for follow-up prompts (cascade)
+
+- **DT-BRAIN-CORRELATIONS**: still pending. DT-COMPOSITION (b) ruled
+  out BRAIN + MCMC Layers hybrid; DT-BRAIN-CORRELATIONS specifically
+  asks whether BRAIN's factorized Bernoulli can model Phase 3
+  correlations. If answer is no (likely per the paper's own
+  limitations), BRAIN is fully ruled out — making the negative-adoption
+  story complete.
+
+### Striking outcome of the 5-paper sweep
+
+After 8 Deep Think verdicts, **3 of 5 ICLR 2026 papers' algorithms are
+RULED OUT for production adoption** in Carnot:
+
+| Paper | Algorithm | Adoption status |
+|---|---|---|
+| OT Verification | Hard-BRS / SRS / SMC | EXTENDED (C-parameterized + Soft-Gibbs Residual) |
+| GRPO-as-PRM | λ-GRPO patch | ADOPTED for FR-11 v15+ |
+| MCMC Layers | Algorithm 1 / Algorithm 2 | RULED OUT (DT-7, DT-MCMC-NULL, DT-MCMC-K1, DT-MCMC-STATELESS) |
+| BRAIN | REINFORCE on factorized Bernoulli | RULED OUT (DT-COMPOSITION; DT-BRAIN-CORRELATIONS pending) |
+| Spectral Annealing | Eigenvalue homotopy | RULED OUT (DT-COMPOSITION (e), HUBO→QUBO fatal) |
+
+The rule-outs are *informative* — each paper's analysis revealed a
+constraint Carnot must respect. The integration plan's value is in
+having documented the negative results, so future planners don't
+re-litigate.
+
+---
+
 ## DT-OT-RESIDUAL response (received 2026-05-08, ~20:00Z) — **VERDICT: LEMMA 3.4 SURVIVES BUT THEOREM 3.10 FAILS IN PRACTICE; CARNOT'S SOFT-GIBBS RESIDUAL IS A NOVEL EXTENSION**
 
 **Question summary:** Does Lemma 3.4's residual identity µ_res = µ(· | Ŝ)
