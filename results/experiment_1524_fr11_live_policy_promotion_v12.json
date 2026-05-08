@@ -1,0 +1,44 @@
+{
+  "baseline_task_success_rate": 0.0,
+  "blockers": [],
+  "continuous_self_learning_task": true,
+  "false_accept_delta": 0,
+  "honest_verdict": "complete: fr11_live_policy_promotion_ready",
+  "live_policy_promotion_ready": true,
+  "live_sota_model_inference_used": true,
+  "model_specs": [
+    {
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "role": "flagship_moe_primary_live_policy_evaluation"
+    },
+    {
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "role": "flagship_dense_secondary_live_policy_evaluation"
+    },
+    {
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "role": "middle_moe_secondary_live_policy_evaluation"
+    }
+  ],
+  "models_used": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF"
+  ],
+  "no_model_weight_mutation": true,
+  "policy_promotion_manifest_path": "results/fr11_live_policy_promotion_1524.jsonl",
+  "promoted_policy_updates": [
+    "daily_eval:dvi_v8:verified:exp1449:ltlzinc-always-power_ok-repair-hint-00"
+  ],
+  "promoted_task_success_rate": 0.0,
+  "rollback_passing_updates_loaded": 24,
+  "run_date": "20260508",
+  "schema": "fr11_live_policy_promotion_v12",
+  "soundness_mistakes": 0,
+  "spec": [
+    "REQ-LEARN-1524",
+    "SCENARIO-LEARN-1524",
+    "SCENARIO-LEARN-1525"
+  ],
+  "status": "complete",
+  "tests_run": [],
+  "utility_delta": 0.0
+}
