@@ -386,6 +386,94 @@ abstracts available via:
                        finite K; spectral-gap cure requires K ≫ 10^15."
         retire_if_same_verdict: true
 
+- id: exp15VV-soft-gibbs-residual-implementation
+  title: "Soft-Gibbs Residual Implementation + Hard-BRS Comparison (DT-OT-RESIDUAL)"
+  agent_type: codex
+  model: gpt-5.5
+  priority: critical
+  prompt_seed: |
+    Per Deep Think DT-OT-RESIDUAL verdict (2026-05-08, docs/research-
+    notes/iclr26-deep-think-responses.md): the OT framework's Hard-BRS
+    cannot be adopted for Phase 3 — k=15 AND-composition makes
+    µ(∩ Ŝ_i) ~ 2^{-O(15)}, Theorem 3.10 decay bound flatlines, and
+    contradictory verifiers cause infinite-loop rejection.
+
+    Deep Think constructed a NOVEL replacement: the Soft-Gibbs Residual
+    (paper-v6 contribution).
+
+      V(y) = Σ_{i=1..k} 1{y ∉ Ŝ_i}
+      µ_res^β(y) = µ(y) · exp(-β V(y)) / Z_β
+      A(y) = exp(-β V(y))                          # accept probability
+      Z_β ≥ ∏_{i=1..k} exp(-β α_i)                 # Jensen coverage bound
+
+    Properties:
+    (i) Preserves rejection-sampling implementability
+    (ii) PAC-Bayes-like coverage bound from individual verifier risks
+    (iii) Gracefully handles empty hard intersections — concentrates
+         on minimum-violation subspace
+
+    Steps:
+    1. Implement Hard-BRS and Soft-BRS at python/carnot/sampling/
+       brs_residual.py. Both share the same prior sampler interface.
+    2. Build n=8 latent EBM prior (uniform pushforward through sgn);
+       construct k=3 deliberately-contradictory verifiers (e.g., v_1
+       demands y_1=+1, v_2 demands y_1=-1, v_3 demands y_2=+1).
+    3. Run both for N ∈ {10, 100, 1000, 10000} steps. Track empirical
+       SubOpt over time.
+    4. Acceptance gate (per DT-OT-RESIDUAL predictions):
+       - Hard-BRS empirical SubOpt FLATLINES at 1.0 (acceptance rate 0)
+         → falsifies operational Theorem 3.10 translation
+       - Soft-BRS empirical SubOpt decays exponentially, matching
+         theoretical (1 - Z_β)^N
+       - Soft-BRS finds the minimum-violation state correctly
+    5. If gate passes, add Soft-Gibbs Residual to paper-v6 §3 as
+       Carnot's contribution.
+
+    prior_failures:
+      - experiment_id: none
+        verdict: novel_construction
+        addressed_by: "First implementation of Soft-Gibbs Residual
+                       sampler; falsifies operational Theorem 3.10
+                       at k=3 contradictory verifiers; demonstrates
+                       Soft-BRS's graceful degradation."
+
+- id: exp15WW-soft-gibbs-coverage-bound-empirical-verification
+  title: "Soft-Gibbs Coverage Bound Empirical Verification (gated on exp15VV)"
+  agent_type: codex
+  model: gpt-5.5
+  priority: high
+  gated_on:
+    - upstream: exp15VV-soft-gibbs-residual-implementation
+      gate_field: soft_brs_decay_confirmed
+      expected_value: true
+  prompt_seed: |
+    Per Deep Think DT-OT-RESIDUAL: the Soft-Gibbs Residual admits a
+    Jensen-bounded coverage Z_β ≥ ∏ exp(-β α_i) where α_i is the
+    individual marginal failure rate of verifier i. This task measures
+    α_i for Carnot's k=6 ensemble on a calibration corpus and
+    determines optimal β.
+
+    Steps:
+    1. Use Carnot's existing calibration corpus (or build a new one
+       of size N ≥ 500). Compute α_i = P_µ(y ∉ Ŝ_i) per verifier in
+       the k=6 ensemble {Z3, AST, semantic, ThinkPRM v2, SOSKAN-Energy
+       v3, SemEnergy probe}.
+    2. For β ∈ {0.1, 0.5, 1.0, 2.0, 5.0, 10.0}: compute predicted
+       Z_β lower bound via Jensen, run actual Soft-BRS, measure
+       empirical Z_β (= acceptance rate over corpus).
+    3. Acceptance gate: empirical Z_β ≥ Jensen-predicted bound for
+       all β tested (validates the coverage bound).
+    4. Determine "optimal β": maximizes coverage tightness × acceptance
+       rate. Report as a Carnot deployment hyperparameter for paper-v6
+       Appendix.
+
+    prior_failures:
+      - experiment_id: exp15VV-soft-gibbs-residual-implementation
+        verdict: soft_brs_decay_confirmed (expected)
+        addressed_by: "Once Soft-BRS is verified to decay correctly,
+                       this task measures the per-deployment β
+                       calibration."
+
 - id: exp15UU-candidate-warm-start-vs-cold-start-benchmark
   title: "Candidate-Warm-Start vs Cold-Start Inference Benchmark (DT-MCMC-STATELESS follow-up)"
   agent_type: codex

@@ -7,6 +7,208 @@ integration-plan update + .NNN priority adjustment.
 
 ---
 
+## DT-OT-RESIDUAL response (received 2026-05-08, ~20:00Z) — **VERDICT: LEMMA 3.4 SURVIVES BUT THEOREM 3.10 FAILS IN PRACTICE; CARNOT'S SOFT-GIBBS RESIDUAL IS A NOVEL EXTENSION**
+
+**Question summary:** Does Lemma 3.4's residual identity µ_res = µ(· | Ŝ)
+survive when µ is the EBT prior pushed through sgn → {-1,+1}^d and Ŝ
+is k-AND-composed? Does Theorem 3.10's exponential decay still bound
+SubOpt for Phase 3?
+
+**Verdict: Lemma 3.4 survives translation cleanly. But Theorem 3.10
+SURVIVES IN THEORY, FAILS IN PRACTICE — k=15 AND-composition makes
+hard-BRS catastrophically unusable. Carnot's "Soft-Gibbs Residual"
+(constructed by Deep Think) is a novel paper-v6 contribution that
+salvages the bound.**
+
+### Translation analysis (a)–(d)
+
+**(a) Pushforward measurability: SURVIVES.**
+
+`Y = {-1,+1}^d` has the trivial power-set σ-algebra. The sgn map
+`sgn: [-1,1]^d → Y` is Borel-measurable (orthant preimage). The
+pushforward `µ(y) = µ_z(sgn⁻¹(y))` is well-defined. Conditioning
+commutes with pushforward — rejecting latent z samples outside
+`sgn⁻¹(Ŝ)` is operationally identical to pushing forward to Y and
+conditioning directly on Ŝ.
+
+**(b) AND-composition zero-measure pathology: SURVIVES (the pathology
+doesn't exist on discrete spaces).**
+
+In finite discrete space, every y has strictly positive mass under any
+EBT prior with full bounded support. Therefore `µ(∩_i Ŝ_i) = 0` iff
+the verifiers are *logically contradictory* and the intersection is
+strictly empty (`∩_i Ŝ_i = ∅`). The continuous-space pathology where
+positive-measure sets intersect to form measure-zero overlap (k planes
+intersecting at a line) **doesn't exist on `{-1,+1}^d`**.
+
+If intersection is non-empty: positive mass, Lemma 3.4 holds.
+If intersection is empty: `0/0` division is universally undefined —
+that's a logic failure, not a measure-theoretic lemma failure.
+
+**(c) Discrete densities: SURVIVES (and simplifies).**
+
+Finite discrete spaces are Polish under discrete metric. PMFs act as
+exact densities w.r.t. counting measure. The OT residual identity
+`µ_res = µ(· | Ŝ)` relies purely on Total Variation algebraic
+cancellation and holds for discrete PMFs without Radon-Nikodym
+derivatives. The continuous-density framing in the original paper is
+a **red herring** for Carnot's substrate.
+
+**(d) Theorem 3.10 decay bound: SURVIVES IN THEORY, FAILS IN PRACTICE.**
+
+```
+SubOpt(BRS) = OTC(β)·(1 − 1/M)^N
+where M = 1/µ(Ŝ_AND)
+```
+
+For k=15 AND-composition, `µ(Ŝ_AND)` becomes vanishingly small even
+when non-empty. **M scales toward `2^O(k)`** → expected acceptance rate
+plunges → operational decay bound flatlines → **BRS unusable at
+test-time for Phase 3**.
+
+The theorem is analytically true but operationally hollow. Catastrophic
+infinite-loops when verifiers logically conflict.
+
+### THE NOVEL EXTENSION (paper-v6 contribution): Soft-Gibbs Residual
+
+Deep Think constructed a Carnot-specific residual that handles the
+combinatorial collapse:
+
+```
+V(y) = Σ_{i=1..k} 1{y ∉ Ŝ_i}              # count of failed verifiers
+β > 0 (Carnot hyperparameter)
+µ_res^β(y) = µ(y) · exp(−β V(y)) / Z_β     # Boltzmann-softened residual
+Z_β = E_µ[exp(−β V(y))]                     # partition function
+```
+
+**To sample**: draw `z ~ µ_z`, bottleneck to `y = sgn(z)`, evaluate
+V(y), accept with probability `A(y) = exp(−β V(y)) ∈ (0, 1]`.
+
+Three properties:
+
+1. **Preserves rejection-sampling implementability.** No complex OT
+   coupling solvers needed; just one prior sample + one V evaluation +
+   one Bernoulli accept.
+
+2. **Quotes a coverage bound via Jensen.** Since `f(x) = e^{-βx}` is
+   convex:
+
+   ```
+   Z_β ≥ exp(−β · E_µ[V(y)]) = ∏_{i=1..k} e^{−β α_i}
+   ```
+
+   where `α_i = P_µ(y ∉ Ŝ_i)` is the individual marginal failure rate
+   of verifier i. **Coverage bounded by individual verifier risks alone**
+   — no joint estimation needed. PAC-Bayes-like.
+
+3. **Handles AND-composition geometry gracefully.** When strict
+   intersection is empty (`min V(y) > 0`), Z_β never crashes to zero.
+   Sampler automatically concentrates probability mass on the
+   minimum-violation subspace — the responses satisfying the maximum
+   possible subset of verifiers. Degrades smoothly instead of failing.
+
+### Falsifiable predicate
+
+Setup: n=8 latent EBM prior + k=3 deliberately-contradictory verifiers
+(e.g., v_1 demands y_1=+1, v_2 demands y_1=-1).
+
+Run unmodified Hard-BRS and adapted Soft-BRS for N steps each. Track
+empirical SubOpt.
+
+Predicted falsification:
+- **Hard-BRS empirical SubOpt flatlines at 1.0** (infinite rejection
+  loop, exactly 0 acceptance rate) — falsifies operational translation
+  of Theorem 3.10.
+- **Soft-BRS empirical SubOpt decays exponentially**, tightly matching
+  `≈ (1 − Z_β)^N` (the predicted theoretical trajectory).
+
+### Tasks to file
+
+1. **NEW `.121 task** (post-Soft-Gibbs derivation): `exp15VV-soft-gibbs-
+   residual-implementation`. Implement the Soft-Gibbs residual sampler
+   alongside Hard-BRS for comparison. Acceptance gate: at n=8, k=3
+   contradictory verifiers, Hard-BRS flatlines + Soft-BRS decays per
+   prediction.
+
+2. **NEW `.121 task**: `exp15VV-bis-soft-gibbs-coverage-bound-empirical-
+   verification`. Measure individual α_i for k=6 ensemble on Carnot's
+   calibration corpus. Verify Jensen-bounded `Z_β ≥ ∏ e^{-β α_i}` holds
+   empirically. Determine optimal β (tradeoff: low β → loose coverage
+   but high acceptance rate; high β → tight coverage but low acceptance).
+
+3. **Phase 3 architecture revision**: the k=15 AND-composition design
+   intent is preserved BUT the sampling-time conditioning under it
+   uses Soft-Gibbs Residual, not hard intersection. `_bmad/architecture.md`
+   Phase 3 substrate spec must specify:
+   - Inference: THRML block-Gibbs (DT-7) at candidate-warm-start
+     (DT-MCMC-STATELESS), with Soft-Gibbs Residual conditioning
+   - β as a per-deployment hyperparameter (paper-v6 Appendix should
+     report calibration values)
+
+4. **Paper-v6 §3 disclosure paragraph (new)**:
+
+   > "Carnot's Phase 3 verification pipeline cannot adopt the
+   > Optimal Transport framework's Hard-BRS, SRS, or SMC algorithms
+   > out-of-the-box. The k=15 AND-composition reduces the joint
+   > acceptance probability `µ(∩_{i=1..15} Ŝ_i)` toward 2^{-O(15)},
+   > rendering Theorem 3.10's exponential decay analytically true but
+   > operationally vacuous. Worse, when verifiers logically conflict,
+   > Hard-BRS rejects all samples (infinite loop). We instead introduce
+   > the Soft-Gibbs Residual: `µ_res^β(y) ∝ µ(y) · exp(-β V(y))` where
+   > V(y) counts failed verifiers and β > 0 is a calibration parameter.
+   > This residual: (i) preserves rejection-sampling at constant
+   > per-step cost; (ii) admits a PAC-Bayes-like coverage bound
+   > Z_β ≥ ∏_{i} e^{-β α_i} via Jensen's inequality, requiring only
+   > individual verifier marginal failure rates; (iii) gracefully
+   > handles empty hard intersections by concentrating on minimum-
+   > violation subspace. The Soft-Gibbs Residual is, to our knowledge,
+   > a novel construction in the OT-verification literature."
+
+### Composition with prior verdicts
+
+The verdicts now compose into a complete Phase 3 architecture:
+
+```
+PHASE 3 SUBSTRATE (Deep Think 2026-05-08, 7 verdicts):
+
+  Inference Sampling (per request):
+    THRML block-Gibbs at candidate-warm-start (DT-7 + DT-MCMC-NULL +
+    DT-MCMC-STATELESS), K=100 sweeps.
+    Provides: correctness (parity to reference), security (kinetic
+    defense-in-depth via Glauber plateau-friction), latency.
+
+  Verification Conditioning (per accepted sample):
+    Soft-Gibbs Residual µ_res^β(y) ∝ µ(y) · exp(-β V(y)) (DT-OT-RESIDUAL).
+    Replaces hard ∩_i Ŝ_i conditioning with Boltzmann-softened
+    rejection. β calibrated per-deployment.
+
+  Compute-Bounded Safety Regime:
+    SubOpt(A; C) = OTC(β_OT) · (1 - α(C) · J(C)) (DT-5).
+    Two thresholds: C* (PI boundary), C_inv (inversion).
+    Paper-v6 reports C_max < C_inv guarantee.
+
+  Training (offline, batch):
+    Adaptive K-PCD with SA/PT (DT-MCMC-K1).
+    FR-11 v15+ uses λ-GRPO patch (DT-2).
+```
+
+**Note**: there are TWO different β parameters in this stack:
+- β_OT (coverage) from DT-5
+- β_softgibbs (residual softness) from DT-OT-RESIDUAL
+
+These are independent. Need to disambiguate notation in paper-v6.
+
+### Implications for follow-up prompts (cascade)
+
+- **DT-BRAIN-CORRELATIONS**: unchanged. Phase 3 expressivity question
+  for distribution learning still pending.
+- **DT-COMPOSITION**: substantially advanced. Phase 3 architecture now
+  has concrete answers for inference sampling + verification conditioning;
+  composition question remaining is on training-time distribution
+  learning role.
+
+---
+
 ## DT-MCMC-STATELESS response (received 2026-05-08, ~19:30Z) — **VERDICT: WARM-START AT THE CANDIDATE; DECOUPLE TRAINING SAMPLER FROM INFERENCE**
 
 **Question summary:** Persistent-chain PCD vs. Carnot's stateless HTTP
