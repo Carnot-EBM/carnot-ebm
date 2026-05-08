@@ -4583,3 +4583,77 @@ trigger.
 | Requirement | Python | Tests |
 |-------------|--------|-------|
 | REQ-LEARN-1539 | Implemented (`python/carnot/reporting/fr11_external_feedback_skill_promotion.py`) | Implemented (`tests/python/test_fr11_external_feedback_skill_promotion.py`) |
+
+---
+
+## REQ-LEARN-1555: FR-11 Positive Utility Or Retire Gate
+
+Exp 1555 SHALL run the .119 continuous self-learning gate over the .118
+external-feedback skill graph plus any available .119 repair or scale artifacts.
+The gate SHALL promote only externally verified skill or policy updates, SHALL
+reject self-feedback-only updates, SHALL NOT mutate model weights, and SHALL
+compute held-out verifier-backed baseline and post-promotion utility.  If the
+measured `utility_delta` is not strictly positive, the artifact SHALL retire the
+positive-utility self-learning headline instead of reporting promotion success.
+
+### REQ-LEARN-1555 Sub-requirements
+
+- REQ-LEARN-1555-1: The workflow SHALL write
+  `results/experiment_1555_fr11_positive_utility_or_retire_v14.json` first with
+  `status="in_progress"` before loading predecessor evidence.
+- REQ-LEARN-1555-2: Candidate updates SHALL be selected only from externally
+  verified successes or deterministic failure repairs.  Candidates whose only
+  evidence is model self-feedback SHALL be rejected and SHALL NOT appear in
+  `skill_updates_promoted`.
+- REQ-LEARN-1555-3: Every promoted update SHALL pass pre-promotion replay and
+  post-promotion replay checks, SHALL have zero false accepts, SHALL have zero
+  soundness mistakes, and SHALL declare `no_model_weight_mutation=true`.
+- REQ-LEARN-1555-4: `baseline_utility`, `post_promotion_utility`, and
+  `utility_delta` SHALL be computed on a held-out verifier-backed replay set
+  derived from checked-in experiment artifacts.
+- REQ-LEARN-1555-5: `positive_utility_achieved` SHALL be true only when
+  `utility_delta > 0`, `soundness_mistakes == 0`, at least one update is
+  promoted, external feedback is used, and model weights are not mutated.
+- REQ-LEARN-1555-6: If `utility_delta <= 0`, the artifact SHALL set
+  `positive_utility_claim_retired=true`.
+- REQ-LEARN-1555-7: The terminal artifact SHALL include `status`, `milestone`,
+  `continuous_self_learning_task`, `fr11_positive_utility_gate_ready`,
+  `model_specs`, `live_sota_model_inference_used`, `no_model_weight_mutation`,
+  `external_feedback_used`, `self_feedback_only_rejected`,
+  `candidate_skill_updates`, `skill_updates_promoted`, `replay_cases`,
+  `replay_pass_rate`, `soundness_mistakes`, `baseline_utility`,
+  `post_promotion_utility`, `utility_delta`, `positive_utility_achieved`,
+  `positive_utility_claim_retired`, `skill_graph_path`,
+  `focused_tests_passed`, and `honest_verdict`.
+
+### SCENARIO-LEARN-1555: Externally Verified Repair Promotion Demonstrates Utility
+
+**Given** Exp 1552 residual-drift repair rows with accepted deterministic replay
+repairs and zero false accepts
+**When** Exp 1555 builds candidate updates from available .119 repair evidence
+**Then** the repair policy candidate is eligible for promotion
+**And** the held-out replay set records a post-promotion utility greater than
+baseline utility when accepted repairs pass deterministic replay.
+
+### SCENARIO-LEARN-1556: Zero Or Negative Utility Retires The Headline
+
+**Given** externally verified candidates whose post-promotion utility does not
+exceed baseline utility
+**When** Exp 1555 writes the terminal artifact
+**Then** `positive_utility_achieved=false`
+**And** `positive_utility_claim_retired=true`
+**And** `honest_verdict` uses a terminal prefix while reporting the retirement.
+
+### SCENARIO-LEARN-1557: Self-Feedback Or Unsafe Replay Is Rejected
+
+**Given** a candidate with self-feedback-only evidence, model-weight mutation,
+missing replay, replay failure, false accepts, or soundness mistakes
+**When** Exp 1555 evaluates promotion eligibility
+**Then** the candidate is not promoted
+**And** its deterministic rejection reason is recorded for audit.
+
+## Implementation Status (REQ-LEARN-1555)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-1555 | Implemented (`python/carnot/reporting/fr11_positive_utility_or_retire.py`) | Implemented (`tests/python/test_fr11_positive_utility_or_retire.py`) |
