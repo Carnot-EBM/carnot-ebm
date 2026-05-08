@@ -1710,7 +1710,61 @@ or model-declared accept says the output should pass
 And the terminal artifact reports zero deterministic false accepts for the
 bounded mixed case set.
 
-## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487/1495/1496/1499/1500/1501/1507/1508/1509/1510/1520/1521/1522/1525/1537/1541/1542/1551)
+### REQ-VERIFY-1552: Residual-Drift Local Repair Policy
+
+The repository shall provide an Exp 1552 residual-drift repair policy that
+loads the Exp 1538 commitment ledger, separates true contradictions from
+satisfiable drift cases, localizes the violated commitment or validator span,
+and proposes minimal repairs instead of regenerating whole answers.
+
+The policy shall:
+
+- write `results/experiment_1552_residual_drift_repair_policy_v1.json` with
+  `status="in_progress"` before loading the residual-drift ledger;
+- load `results/residual_drift_commitment_ledger_1538.jsonl` and preserve
+  concrete missing-ledger blockers without fabricating drift rows;
+- attempt repair only for `satisfiable_drift` rows and leave
+  `true_contradiction` rows untouched;
+- localize each attempted repair to the forgotten SAT answer/assignment,
+  product-line feature selection, or runtime-contract root-cause span;
+- use at least one mandated local SOTA GGUF model for repair-proposal text when
+  available, otherwise record concrete availability blockers and exclude
+  legacy small GGUFs from headline results;
+- replay deterministic SAT, product-line, and runtime-contract validators after
+  every proposed repair;
+- reject repairs that hide contradictions, create deterministic false accepts,
+  or fail the relevant validator; and
+- write a terminal artifact containing `status`, `milestone`,
+  `residual_drift_repair_ready`, `model_specs`,
+  `live_sota_model_inference_used`, `drift_cases_before`,
+  `repair_attempts`, `localized_repairs_attempted`,
+  `repaired_drift_cases`, `drift_reduction_delta`,
+  `contradiction_cases_untouched`, `false_accept_rate`,
+  `replay_pass_rate`, `repair_policy_path`, `focused_tests_passed`, and
+  `honest_verdict`.
+
+`residual_drift_repair_ready` MUST be true only when at least one satisfiable
+drift case is attempted, all true contradictions are untouched, every accepted
+repair passes deterministic replay, focused tests have passed, and
+`false_accept_rate` is exactly `0.0`. `honest_verdict` MUST begin with one of
+`complete:`, `complete_`, `success:`, `success_`, `passed:`, `passed_`,
+`shipped:`, or `shipped_`.
+
+### SCENARIO-VERIFY-1552: Local Repairs Replay Before Acceptance
+
+Given a complete Exp 1538 residual-drift commitment ledger on the run date
+`20260508`,
+When Exp 1552 evaluates the repair policy,
+Then true contradiction rows are counted as untouched and receive no repair
+proposal
+And satisfiable drift rows receive localized edit plans for only the violated
+commitment or validator span
+And candidate repairs are accepted only after deterministic SAT/product-line/
+runtime-contract replay passes
+And candidate repairs that would create false accepts are rejected before they
+can reduce the reported drift count.
+
+## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487/1495/1496/1499/1500/1501/1507/1508/1509/1510/1520/1521/1522/1525/1537/1538/1541/1542/1551/1552)
 
 | Requirement | Python | Tests |
 |-------------|--------|-------|
@@ -1745,3 +1799,4 @@ bounded mixed case set.
 | REQ-VERIFY-1541 | Implemented (`python/carnot/verify/claim_isolation_uncertainty_router.py`) | Implemented (`tests/python/test_experiment_1541_claim_isolation_uncertainty_router.py`) |
 | REQ-VERIFY-1542 | Implemented (`python/carnot/verify/arm_ebm_soft_value_diagnostic.py`) | Implemented (`tests/python/test_experiment_1542_arm_ebm_soft_value_diagnostic.py`) |
 | REQ-VERIFY-1551 | Implemented (`python/carnot/verify/unified_contract_gate.py`) | Implemented (`tests/python/test_experiment_1551_automata_sat_unified_contract_gate.py`) |
+| REQ-VERIFY-1552 | Implemented (`python/carnot/verify/residual_drift_repair_policy.py`) | Implemented (`tests/python/test_experiment_1552_residual_drift_repair_policy.py`) |
