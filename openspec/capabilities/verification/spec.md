@@ -1114,7 +1114,59 @@ And the terminal artifact sets `monitor_runtime_ready=true` only when the
 manifest exists, all events validate, and verifier false-accept rate is
 reported.
 
-## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487/1495/1496/1499/1500/1501/1507/1508/1509)
+### REQ-VERIFY-1510: Plan-Graph Structural Contract Gate
+
+The repository shall provide a deterministic CPU-only Exp 1510 structural
+contract gate that checks CCTU plan graphs before execution. The gate moves
+Exp 1501's post-hoc dependency localization signal into a pre-execution
+contract check and MUST NOT invoke external tools, LLMs, or learned graph
+models while classifying violations.
+
+The gate shall:
+
+- write
+  `results/experiment_1510_plan_graph_structural_contract_gate.json` with
+  `status="in_progress"` before loading Exp 1501 or Exp 1509 artifacts;
+- load Exp 1501 plan-graph cases and normalized Exp 1509 runtime events when
+  available, preserving concrete source blockers without fabricating rows;
+- define a small structural contract schema covering required prerequisites,
+  acquisition paths from tool calls to final answers, tool ordering, required
+  object acquisition, and incompatible API operations;
+- evaluate known-good graphs and deterministic injected-violation graphs with
+  exact structural checks rather than probabilistic scoring;
+- classify violations by contract family and compare detection against
+  deterministic random and length baselines when injected violations exist;
+- write `results/plan_graph_structural_contracts_1510.jsonl` with one row per
+  graph and contract result; and
+- write a terminal artifact containing `status`,
+  `structural_contract_gate_ready`, `plan_graphs_checked`,
+  `contracts_defined`, `violations_injected`, `violations_detected`,
+  `false_accept_rate`, `false_reject_rate`,
+  `random_baseline_detection_rate`, `length_baseline_detection_rate`,
+  `contract_manifest_path`, `blockers`, and `honest_verdict`.
+
+`structural_contract_gate_ready` MUST be true only when the contract manifest
+exists, at least one graph is checked, at least one contract is defined, and
+`false_accept_rate` is reported. `honest_verdict` MUST begin with one of
+`complete:`, `complete_`, `success:`, `success_`, `passed:`, `passed_`,
+`shipped:`, or `shipped_`.
+
+### SCENARIO-VERIFY-1510: Contract Gate Rejects Structural Plan Violations
+
+Given Exp 1501 plan graphs and any available Exp 1509 normalized runtime
+events on the run date `20260507`,
+When Exp 1510 defines structural contracts and evaluates known-good plus
+injected-violation plan graphs,
+Then known-good graphs pass without false rejects,
+And injected missing-prerequisite, broken-acquisition-path, wrong-ordering,
+missing-object-acquisition, and incompatible-operation graphs are rejected
+with deterministic violation classifications,
+And each manifest row records graph provenance, contract family, expected
+violation status, detected violation status, classifier outcome, random
+baseline outcome, length baseline outcome, and contract evidence before the
+terminal artifact sets `structural_contract_gate_ready=true`.
+
+## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487/1495/1496/1499/1500/1501/1507/1508/1509/1510)
 
 | Requirement | Python | Tests |
 |-------------|--------|-------|
@@ -1139,3 +1191,4 @@ reported.
 | REQ-VERIFY-1507 | Planned (`python/carnot/verify/safe_dsl_verifier_induction.py`) | Planned (`tests/python/test_experiment_1507_autopyverifier_safe_dsl_induction_pack.py`) |
 | REQ-VERIFY-1508 | Planned (`python/carnot/verify/trigger_grammar_certificate_decoder.py`) | Planned (`tests/python/test_experiment_1508_trigger_grammar_certificate_decoder_audit.py`) |
 | REQ-VERIFY-1509 | Implemented (`python/carnot/verify/executable_monitor_runtime_adapter.py`) | Implemented (`tests/python/test_experiment_1509_executable_monitor_runtime_adapter.py`) |
+| REQ-VERIFY-1510 | Implemented (`python/carnot/verify/plan_graph_structural_contract_gate.py`) | Implemented (`tests/python/test_experiment_1510_plan_graph_structural_contract_gate.py`) |
