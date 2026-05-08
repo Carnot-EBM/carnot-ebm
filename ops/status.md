@@ -1,6 +1,24 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-08 (milestone 2026.04.119 research planning complete)
+**Last Updated:** 2026-05-08 (milestone 2026.05.121 research planning complete)
+
+## Session 2026-05-08 - Milestone 2026.05.121 Research Planning Complete
+
+**Milestone 2026.05.121 PLANNED after .120 completion.**
+
+- Roadmap doc: `openspec/change-proposals/research-roadmap-vNEXT.md`
+- Execution queue: `research-roadmap-next.yaml` (14 tasks, `exp1574`-`exp1587`)
+- ID allocation: milestone `.120` used through `exp1573`, so `.121` starts at `exp1574`.
+- Research references updated before final roadmap design with the post-.120 sweep: ICLR 2026 OT verification, DCCD, JSONSchemaBench, vectorized trie constrained decoding, EBT/ARM citation-watch papers, THRML/Extropic/Kona public-status boundaries, and 2026 KAN verification/hardware-accounting papers.
+- Design focus: Phase 0 archives `.120` and fixes exp1569/exp1573 carry-forward prior-failure discipline; Phase 1 settles BRAIN k=15 REINFORCE training dynamics, integrates OT verification framing, runs DCCD/JSONSchemaBench on mandated SOTA GGUFs, and performs the required continuous self-learning FR-11 lambda-GRPO/retention-reversal task; Phase 2 audits Phase-1 software ship readiness; Phase 3 corrects hardware strategy with Z1 drift correction, Tenstorrent, PolarFire, Strix/KV260 rescope, and retro.
+- LLM-bearing task `exp1580` includes mandated local SOTA GGUF `MODEL_SPECS`: `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and `unsloth/gemma-4-26B-A4B-it-GGUF`.
+- Continuous self-learning requirement is satisfied by `exp1581-fr11-v15-lambda-grpo-retention-reversal` with `continuous_self_learning_task` in its artifact contract.
+- Structured gates: `exp1575` on `exp1574.prior_failure_autofill_ready == true`; `exp1576` and `exp1577` on `exp1575.carryforward_prior_failures_ready == true`; `exp1578` on `exp1574.brain_reinforce_training_ready == true`; `exp1579` on `exp1576.paper_v6_sampler_section_draft_ready == true`; `exp1580` on `exp1574.dccd_jsonschema_smoke_ready == true`; `exp1581` on `exp1574.fr11_v15_patch_ready == true`; `exp1582` on `exp1574.phase1_ship_readiness_ready == true`; `exp1583` on `exp1577.extropic_z1_packet_updated == true`; `exp1584` and `exp1585` on `exp1583.detailed_balance_correction_ready == true`; `exp1586` on `exp1574.hardware_eval_ready == true`.
+- Agent routing: all 14 tasks use `agent_type: codex`, `model: gpt-5.5`; no Claude/Gemini routing.
+- Validation passed: YAML parse and prompt-section/end checks, `python3 scripts/validate_prior_failures.py research-roadmap-next.yaml`, `python3 scripts/audit_roadmap_gates.py research-roadmap-next.yaml`, schema validation via `scripts/roadmap_schema.py`, `python3 scripts/conductor_priors_autofill.py research-roadmap-next.yaml --dry-run`, and `git diff --check`.
+- Did NOT modify `research-roadmap.yaml` or `scripts/research_conductor.py`.
+
+**What's next**: activate `research-roadmap-next.yaml` for milestone 2026.05.121 when ready.
 
 ## Session 2026-05-08 - Milestone 2026.04.119 Research Planning Complete
 

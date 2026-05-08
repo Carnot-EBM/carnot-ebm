@@ -4,6 +4,134 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-05-08 Post-.120 Planning Sweep (Milestone 2026.05.121)
+
+This sweep was run after the operator reported all `.120` tasks completed.
+Local `.120` outcomes shape the next milestone: THRML vendoring and
+candidate warm-start landed (`exp1564`, `exp1566`), Soft-Gibbs Residual
+and its Jensen-style bound landed (`exp1565`, `exp1570`), kinetic-security
+parity was falsified for THRML block Gibbs (`exp1561`), SpecAnn was rejected
+for Phase-3 inference (`exp1563`), BRAIN+Linear-AR expressivity widening was
+falsified (`exp1562`) but its REINFORCE training-dynamics axis remains open,
+FR-11 v14 retained-policy audit found one mode-collapse retention requiring
+reversal (`exp1568`), and two publication/hardware tasks (`exp1569`,
+`exp1573`) carry forward because their `.120` YAML used invalid
+`prior_failures` discipline.
+
+### Test-Time Verification via Optimal Transport
+- **Paper:** arXiv:2510.18982, ICLR 2026, "Test-time Verification via
+  Optimal Transport: Coverage, ROC, & Sub-optimality."
+- **Sources:** https://arxiv.org/abs/2510.18982 and ICLR download listing
+  https://iclr.cc/Downloads/2026
+- **What:** Frames test-time verification as a transport problem governed by
+  generator coverage, verifier region of convergence, and sampling
+  sub-optimality. It gives Carnot a cleaner vocabulary for the verifier-stack
+  claims that paper-v6 has been approaching informally.
+- **Relevance to Carnot:** `.120` proved several sampler/verifier behaviors
+  but the paper needs a principled test-time-verification formalism. Adopt OT
+  terminology for paper-v6 Section 3 and check whether Carnot's hard-gate
+  claims overstate what verifier ROC and finite-K sampling can support.
+- **Concrete experiment hook:** Add an `.121` paper-v6 OT adoption task that
+  surgically rewrites the sampler/verifier section, cites the framework, and
+  writes a conflict ledger for any Carnot claim that violates coverage/ROC/
+  sub-optimality boundaries.
+
+### Draft-Conditioned and JSON-Schema Constrained Decoding
+- **Papers:** arXiv:2603.03305 "Draft-Conditioned Constrained Decoding for
+  Structured Generation in LLMs"; arXiv:2501.10868 "Generating Structured
+  Outputs from Language Models: Benchmark and Studies."
+- **Sources:** https://arxiv.org/abs/2603.03305,
+  https://arxiv.org/abs/2501.10868, and
+  https://github.com/guidance-ai/jsonschemabench
+- **What:** DCCD separates semantic drafting from constrained regeneration,
+  while JSONSchemaBench supplies roughly 10K real-world JSON schemas plus
+  MaskBench-style structured-output engine coverage and latency tests.
+- **Relevance to Carnot:** Phase-1 shipping needs external users to get
+  reliable structured verifier outputs from local models. `.118`/`.119`
+  showed ABS/XGrammar-style structured generation can be useful, but `.121`
+  should measure whether draft conditioning reduces repair drift on mandated
+  local SOTA GGUF outputs rather than just validating post-hoc JSON.
+- **Concrete experiment hook:** Run a DCCD/JSONSchemaBench smoke on
+  `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+  `unsloth/gemma-4-26B-A4B-it-GGUF`: strict schema validity, verifier-output
+  semantic correctness, projection-tax proxy, latency, and zero false accepts.
+
+### Vectorized Constraint Masks for Accelerators
+- **Paper:** arXiv:2602.22647, "Vectorizing the Trie: Efficient Constrained
+  Decoding for LLM-based Generative Retrieval on Accelerators."
+- **Source:** https://arxiv.org/abs/2602.22647
+- **What:** STATIC reformulates trie-constrained decoding as sparse transition
+  matrix operations for GPU/TPU execution, avoiding pointer-chasing latency in
+  large constraint sets.
+- **Relevance to Carnot:** Carnot's contract decoder should not remain a CPU
+  bottleneck if Phase 1 exposes structured tool/API outputs at user-facing
+  latency. This is a follow-up after the `.121` DCCD/JSONSchemaBench smoke,
+  not the first implementation step.
+- **Concrete experiment hook:** If structured-output smoke passes, prototype a
+  sparse-transition mask for Carnot's highest-frequency schema/contract family
+  and compare mask-computation latency against the current grammar/runtime
+  path.
+
+### EBT and ARM-EBM Citation Watch
+- **Sources:** Semantic Scholar citation APIs for arXiv:2507.02092 and
+  arXiv:2512.15605:
+  https://api.semanticscholar.org/graph/v1/paper/arXiv:2507.02092/citations
+  and
+  https://api.semanticscholar.org/graph/v1/paper/arXiv:2512.15605/citations
+- **Notable 2025-2026 citing papers:** "Planning as Descent: Goal-Conditioned
+  Latent Trajectory Synthesis in Learned Energy Landscapes" (arXiv:2512.17846),
+  "Current Agents Fail to Leverage World Model as Tool for Foresight"
+  (arXiv:2601.03905), "Graph Energy Matching: Transport-Aligned Energy-Based
+  Modeling for Graph Generation" (arXiv:2603.23398), and "Large Language
+  Models Can Take False First Steps at Inference-time Planning"
+  (arXiv:2602.02991).
+- **Relevance to Carnot:** The literature is moving toward energy-guided
+  planning, transport-aligned energy matching, and explicit first-step failure
+  diagnostics. These are useful related-work anchors, but no `.121` experiment
+  should promote ARM/EBT soft values to acceptance authority until local
+  logprob/energy telemetry is live and deterministic validators remain final.
+- **Concrete experiment hook:** Use the citation watch in paper-v6 related work
+  and as future input for an energy-planning benchmark. Keep `.121` focused on
+  OT framing, structured-output smoke, BRAIN dynamics, and ship readiness.
+
+### THRML, Extropic, and Kona Public Status Boundaries
+- **Sources:** THRML GitHub and docs
+  https://github.com/extropic-ai/thrml,
+  https://docs.thrml.ai/en/latest/api/models/discrete_ebm/; Extropic software
+  and hardware pages https://extropic.ai/software,
+  https://extropic.ai/hardware; Extropic essay
+  https://extropic.ai/writing/thermodynamic-computing-from-zero-to-one; Kona
+  public pages https://logicalintelligence.com/blog/energy-based-models-for-reasoning
+  and https://logicalintelligence.com/kona-ebms-energy-based-models
+- **What:** THRML remains a public JAX library for probabilistic graphical
+  models, block Gibbs sampling, and discrete EBMs. Extropic publicly describes
+  Z1/XTR-style hardware direction and early access, but Carnot has no hardware
+  transcript. Kona publicly positions EBMs/EBRMs as reasoning engines with
+  partial-trace energy and local repair signals, but the implementation is not
+  available for Carnot integration.
+- **Relevance to Carnot:** `.120` vendoring makes THRML the software sampler
+  reference, but Z1 and Kona remain related-work/readiness targets only.
+  Hardware claims in `.121` must stay simulation/preflight/readiness scoped.
+- **Concrete experiment hook:** Carry forward the Extropic Z1 readiness packet
+  only after proper `prior_failures` repair. Add a separate Z1 analog-drift
+  detailed-balance correction simulation; do not claim Extropic hardware
+  execution.
+
+### KAN Verification and Hardware Accounting
+- **Papers:** arXiv:2602.06737 "Optimal Abstractions for Verifying Properties
+  of Kolmogorov-Arnold Networks"; arXiv:2604.03345 "Hardware-Oriented
+  Inference Complexity of Kolmogorov-Arnold Networks"; arXiv:2602.07518
+  "Physical Analog Kolmogorov-Arnold Networks based on Reconfigurable
+  Nonlinear-Processing Units."
+- **Sources:** https://arxiv.org/abs/2602.06737,
+  https://arxiv.org/abs/2604.03345, https://arxiv.org/abs/2602.07518
+- **Relevance to Carnot:** KAN/SOS-KAN remains important for energy scoring,
+  but `.121` has more urgent unblockers: Phase-1 shipping, BRAIN
+  training-dynamics, FR-11 retention reversal, and hardware portfolio
+  correction. Use these KAN papers as guardrails for future verification and
+  hardware-cost claims; do not add another KAN task until current ship and
+  sampler questions are settled.
+
 ## 2026-05-08 Post-.118 Planning Sweep (Milestone 2026.04.119)
 
 This sweep was run after milestone `.118` completed with 13 of 14 success
