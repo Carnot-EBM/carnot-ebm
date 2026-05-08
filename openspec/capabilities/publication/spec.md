@@ -728,6 +728,56 @@ theoretical support for each anchored claim, moves unsupported territory to
 appendix or future-work notes, leaves `arxiv_submission_triggered == false`, and
 reports a complete honest verdict.
 
+### REQ-PUBLISH-022: Paper v6 Section 3 Sampler Draft Resumption
+
+The Exp 1576 paper-v6 Section 3 sampler-draft workflow MUST create
+`results/experiment_1576_paper_v6_section_3_sampler_draft_resumed.json` with
+`status == "in_progress"` before drafting the sampler/verifier subsection. It
+MUST write `docs/research-notes/paper-v6-section-3-sampler-draft.md` as a
+focused paper-v6 Section 3 update, not a wholesale paper rewrite.
+
+The draft MUST include subsections for:
+
+- THRML vendored sampler
+- candidate warm-start
+- Soft-Gibbs Residual
+- kinetic-security caveat
+- SpecAnn rejection
+- BRAIN expressivity vs training-dynamics open question
+
+The draft MUST anchor its claims to the local `.120`/resumed evidence artifacts
+for Exp 1561, Exp 1562, Exp 1563 or the available SpecAnn rejection source,
+Exp 1564, Exp 1565, Exp 1566, Exp 1570, and Exp 1571. It MUST explicitly avoid
+claiming THRML security parity or Extropic hardware execution. It MUST include
+a short paper-v6 integration checklist with exact insertion points for the
+active paper source and record whether the draft is ready for Exp 1579 OT
+framework integration.
+
+The terminal artifact MUST include:
+
+- `status`
+- `draft_path`
+- `paper_v6_sampler_section_draft_ready`
+- `kinetic_security_caveat_included`
+- `brain_training_dynamics_open_question_included`
+- `no_hardware_execution_claim`
+- `honest_verdict`
+
+### SCENARIO-PUBLISH-024: Exp 1576 Draft Is Honest And OT-Ready
+
+**Given** the Exp 1561, Exp 1562, Exp 1564, Exp 1565, Exp 1566, Exp 1570, and
+Exp 1571 evidence artifacts exist locally
+AND the requested Exp 1563 SpecAnn rejection artifact may be absent but the
+draft cites the available SpecAnn rejection source explicitly
+**When** the Exp 1576 sampler-draft workflow completes
+**Then** it writes the Section 3 sampler/verifier draft with all required
+subsections, includes the kinetic-security caveat and BRAIN training-dynamics
+open question, avoids THRML security-parity and hardware-execution claims,
+records exact active-paper insertion points, sets
+`paper_v6_sampler_section_draft_ready == true`, and reports a complete honest
+verdict that states whether Exp 1579 OT framework integration can consume the
+draft.
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -753,3 +803,4 @@ reports a complete honest verdict.
 | REQ-PUBLISH-019 | Implemented | Exp 1390 arXiv SWORD API submission or manual checklist |
 | REQ-PUBLISH-020 | Implemented | Exp 1412 arXiv operator action sheet |
 | REQ-PUBLISH-021 | Proposed | Exp 1462 paper-v6 anchored-claims narrowing artifact |
+| REQ-PUBLISH-022 | Proposed | Exp 1576 paper-v6 Section 3 sampler/verifier draft |
