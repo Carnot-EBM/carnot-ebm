@@ -1,0 +1,168 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": true,
+  "properties": {
+    "access_grant_reference": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "authenticated_access_proof": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "benchmark_case_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "claim_boundary_acknowledged": {
+      "const": true,
+      "type": "boolean"
+    },
+    "device_discovery_command": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "device_family": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "device_firmware_or_runtime": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "device_identifier": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "energy_metric_fields": {
+      "required": [
+        "mean_energy",
+        "magnetization",
+        "kl_divergence_vs_simulator"
+      ],
+      "type": "object"
+    },
+    "energy_trace_sha256": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "execution_timestamp_utc": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "hardware_execution_performed": {
+      "const": true,
+      "type": "boolean"
+    },
+    "host_identifier": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "latency_metric_fields": {
+      "required": [
+        "host_to_device_latency_us",
+        "device_sampling_latency_us",
+        "device_to_host_latency_us",
+        "end_to_end_latency_us"
+      ],
+      "type": "object"
+    },
+    "n_spins": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "output_samples_sha256": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "provider_or_lab_operator": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "run_date": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "sample_count": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "sample_dtype": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "sample_shape": {
+      "items": {
+        "minimum": 1,
+        "type": "integer"
+      },
+      "minItems": 2,
+      "type": "array"
+    },
+    "schedule_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "sdk_package_name": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "sdk_version": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "simulator_fallback_used": {
+      "const": false,
+      "type": "boolean"
+    },
+    "state_encoding": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "thrml_version": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "topology": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "transcript_schema_version": {
+      "minLength": 1,
+      "type": "string"
+    }
+  },
+  "required": [
+    "transcript_schema_version",
+    "run_date",
+    "authenticated_access_proof",
+    "access_grant_reference",
+    "provider_or_lab_operator",
+    "device_family",
+    "device_identifier",
+    "device_firmware_or_runtime",
+    "sdk_package_name",
+    "sdk_version",
+    "thrml_version",
+    "device_discovery_command",
+    "execution_timestamp_utc",
+    "host_identifier",
+    "benchmark_case_id",
+    "schedule_id",
+    "topology",
+    "n_spins",
+    "sample_count",
+    "state_encoding",
+    "sample_shape",
+    "sample_dtype",
+    "output_samples_sha256",
+    "energy_trace_sha256",
+    "energy_metric_fields",
+    "latency_metric_fields",
+    "hardware_execution_performed",
+    "simulator_fallback_used",
+    "claim_boundary_acknowledged"
+  ],
+  "title": "Extropic Z1 authenticated benchmark transcript",
+  "type": "object"
+}
