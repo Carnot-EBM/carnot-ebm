@@ -207,6 +207,105 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### NEW 2026-05-08 (14:25Z): ICLR 2026 Literature Integration (.120+ MANDATORY)
+
+**Background.** Operator-flagged 2026-05-08 (post-.119 RNG audit) — ICLR
+2026 has multiple papers directly intersecting Carnot's open questions.
+Per the **Literature priority discipline** memory entry (build on
+shoulders of giants by design; mandatory pre-claim checklist; two-source
+rule before claiming novelty), these MUST be evaluated and integrated
+before paper-v6 ships and before Phase 2/3 substrate decisions are
+finalized. The .119 RNG audit's KL=0.17 finding amplifies this — at
+least one ICLR-26 paper (MCMC Layers) may be a structural fix.
+
+**Sources:** OpenReview API not WebFetch (ICLR virtual page is JS-rendered).
+Curated reference list at memory `reference_iclr_2026_papers.md`. Full
+abstracts available via:
+`curl -sL "https://api2.openreview.net/notes/search?query=<term>&group=ICLR.cc/2026/Conference&limit=10"`
+
+**.120+ tasks to propose** (planner: hard pickup, all codex):
+
+```yaml
+- id: exp15XX-iclr26-grpo-secretly-prm-audit
+  title: "ICLR-26 GRPO-as-PRM Audit Against FR-11 v12-v14 Lineage"
+  agent_type: codex
+  priority: critical
+  prompt_seed: |
+    Read ICLR 2026 paper "GRPO is Secretly a Process Reward Model"
+    via OpenReview API. The paper proves GRPO induces a non-trivial
+    PRM under within-group token-overlap conditions and identifies
+    a flaw where non-uniformly distributed process steps hinder
+    BOTH exploration and exploitation. FR-11 v12-v14 lineage in
+    Carnot is GRPO-based. Audit whether the paper's identified
+    flaw applies to Carnot's FR-11 training trajectories. If yes,
+    file as known-issue + propose fix. If no, document why FR-11
+    is exempt. Acceptance gate: deterministic verdict
+    {applies, does_not_apply, requires_more_evidence} with cited
+    evidence from FR-11 logs + paper text.
+
+- id: exp15YY-iclr26-ot-verification-framework-paper-v6
+  title: "ICLR-26 OT-Verification Framework Adoption for Paper-v6"
+  agent_type: codex
+  priority: critical
+  prompt_seed: |
+    Read ICLR 2026 paper "Test-time Verification via Optimal
+    Transport: Coverage, ROC, & Sub-optimality." Paper frames
+    verification as geometry of three interacting quantities:
+    generator coverage, verifier ROC, sampling sub-optimality.
+    Carnot's verifier-stack section in paper-v6 has been
+    sketching toward but not formalized this exact framework.
+    Action: (1) read paper, (2) adopt nomenclature in paper-v6
+    Section 3 verifier-stack, (3) file related-work entry
+    citing the paper as the structural formalism source,
+    (4) flag if any Carnot claim conflicts with the paper's
+    geometric bound. NOT a wholesale rewrite — surgical adoption.
+
+- id: exp15ZZ-iclr26-mcmc-layer-as-sampler-fix
+  title: "ICLR-26 MCMC Layer as Structural Fix for .119 KL=0.17 Mismatch"
+  agent_type: codex
+  priority: critical
+  prompt_seed: |
+    Read ICLR 2026 paper "Learning with Local Search MCMC Layers"
+    + .119 exp1548 audit (KL=0.17 between Carnot sampler and
+    THRML reference). The paper provides theoretical guarantees
+    on differentiable MCMC layers with INEXACT solvers. Hypothesis:
+    rather than fix Carnot's sampler from scratch, replace the
+    sampler module with a learned MCMC layer whose theoretical
+    properties match THRML's distribution by construction. Audit
+    feasibility, prototype on n=32 first, gate scale-up to n=64+
+    on KL drop below 0.05 (the .119 threshold). prior_failures:
+    must reference exp1548 verdict + paper claims.
+
+- id: exp15WW-iclr26-brain-spectral-ising-hardware
+  title: "ICLR-26 BRAIN + Spectral Annealing for Phase 2 Hardware Roadmap"
+  agent_type: codex
+  priority: high
+  prompt_seed: |
+    Read ICLR 2026 papers "BRAIN: Boltzmann Reinforcement For
+    Analog Ising Networks" + "Spectral Annealing for Scalable
+    Ising Model Optimization." Both inform Phase 2 substrate
+    decisions: KV260 POC scope, Extropic Z1 readiness packet
+    contents. Action: synthesize a 1-page architectural memo at
+    docs/research-notes/iclr26-ising-hardware-implications.md
+    that names which findings update Carnot's hardware roadmap
+    and which are orthogonal. NOT a re-architecture — a literature
+    integration pass.
+```
+
+**How to apply (planner-side discipline).** When generating .120
+roadmap, allocate at least 4 of N tasks to ICLR-26 integration.
+Verify each task's `prior_failures` references the relevant paper
++ Carnot artifact pair. Codex reads paper abstracts via OpenReview
+API; full PDF reads are optional but recommended for Tier 1 papers.
+
+**Why this is in MANDATORY-NEXT-MILESTONE PRIORITIES.** Without
+explicit prioritization, the planner's carry-forward bias will keep
+proposing FR-11 v15 / SATQuest v3 / THRML scaling sweep continuations
+even when ICLR-26 work points at structural answers. The literature
+integration is a forcing-function task — the planner cannot ignore
+it without producing an explicit written rationale (per CLAUDE.md
+Overdue-Priority Forcing Function).
+
 ### NEW 2026-05-08 (10:40Z): THRML/Carnot Parity Independent-RNG Audit (.119+ MANDATORY)
 
 **Adversarial finding.** The .117 THRML scaling sweep (exp1526-1531) reports
