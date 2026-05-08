@@ -1252,3 +1252,4 @@ web search: GitHub trending energy based mod |
 | 2026-05-08 21:51 UTC | Candidate-Warm-Start vs Cold-Start Benchmark - Gat | OK | Deliverable already exists in repo |
 | 2026-05-08 21:51 UTC | ρ(C) Measurement for k=6 Ensemble — Q11 TSS Satura | OK | Deliverable already exists in repo |
 | 2026-05-08 21:51 UTC | FR-11 v14 Retained Policies Mode-Collapse Audit - | OK | Deliverable already exists in repo |
+| 2026-05-08 21:51 UTC | Paper-v6 §3 Sampler Section Draft - Gated on Exp15 | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
