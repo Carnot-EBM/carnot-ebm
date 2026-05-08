@@ -292,6 +292,62 @@ contract explicitly.
 - When known-issues.md is the source of truth and the planner's
   carry-forward bias isn't a concern for the current milestone.
 
+## Calendar-Month Prefix Rollover (MANDATORY)
+
+**Origin:** 2026-05-08 operator question — "now that we are in May,
+when will the milestones start numbering with 2026.05. as a prefix
+instead of 2026.04. which was for april?" Honest answer: nobody had
+wired the rollover; the `2026.04` prefix had been frozen since the
+milestone series began. Fixed 2026-05-08 by updating
+`_expected_next_milestone()` to derive the prefix from today's UTC
+date rather than preserving the prior milestone's prefix.
+
+**The rule.** Milestone identifiers have format `YYYY.MM.NNN`:
+
+- **NNN**: a global sequence ID that increments by exactly 1 per
+  milestone (e.g., 119 → 120 → 121 → ...). Never restarts.
+- **YYYY.MM**: the calendar month of TODAY (UTC) at the moment the
+  milestone is planned, not the prior milestone's month. So a milestone
+  planned 2026-05-08 carries prefix `2026.05` regardless of whether
+  the prior milestone was `2026.04.NNN` or `2026.05.NNN-1`.
+
+**Examples:**
+
+```
+prior=2026.04.119, today=2026-05-08 → next=2026.05.120  (May rollover)
+prior=2026.04.119, today=2026-04-30 → next=2026.04.120  (still April)
+prior=2026.05.123, today=2026-05-15 → next=2026.05.124  (no rollover)
+prior=2026.05.130, today=2026-06-01 → next=2026.06.131  (June rollover)
+```
+
+**Why this matters:**
+
+- Future paper drafts that cite milestones by `YYYY.MM.NNN` get the
+  correct planning month for free.
+- `ops/changelog.md` entries already include the calendar date; the
+  milestone prefix should match for grep-ability.
+- The existing milestones under `2026.04.NNN` (.99 through .119) stay
+  as-is — they really were planned in April. No retroactive renaming.
+
+**How to apply (operator/outer-loop authoring a pre-staged roadmap):**
+
+When drafting `research-roadmap-next.yaml` per the Pre-Staged Roadmap
+Convention, set the `milestone:` field using today's UTC date as the
+prefix and current+1 as the trailing index. Don't copy the prefix from
+the prior milestone if today is in a different month.
+
+**How to apply (planner-side):** the planner reads CLAUDE.md as input.
+When generating a milestone YAML, the `milestone:` field MUST match
+the result of `_expected_next_milestone(current)` evaluated at planner
+runtime. The activation guard verifies this match before activating.
+
+**Mechanical enforcement.** `scripts/research_conductor.py:
+_expected_next_milestone()` returns the calendar-month-rolled expected
+next milestone. The pre-staged-roadmap check in `_plan_next_milestone`
+compares the existing draft's `milestone:` field against this
+expectation. Stale prefixes (e.g., `2026.04.120` drafted in May)
+trigger planner re-run.
+
 ## Codex-Default for Experiments (MANDATORY — Quota Preservation)
 
 **Origin:** 2026-05-02 user directive ("default all new experiments to

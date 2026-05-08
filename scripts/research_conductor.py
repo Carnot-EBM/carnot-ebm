@@ -2163,14 +2163,25 @@ def _load_roadmap_metadata() -> dict:
 def _expected_next_milestone(current: str) -> str:
     """Compute the expected next milestone string from the current one.
 
-    Format is "YYYY.MM.NNN" (e.g. "2026.04.119" → "2026.04.120"). Returns
-    empty string if the format doesn't parse so the caller falls through
-    to running the planner.
+    Format is "YYYY.MM.NNN". The trailing NNN is a global sequence ID
+    that increments by 1 per milestone. The YYYY.MM prefix is the
+    calendar month of *today* (UTC), so milestones planned in May 2026
+    use "2026.05.NNN" regardless of what month the prior milestone
+    was planned in.
+
+    Examples:
+      current="2026.04.119", today=2026-05-08 → "2026.05.120"
+      current="2026.04.119", today=2026-04-30 → "2026.04.120"
+      current="2026.05.123", today=2026-05-15 → "2026.05.124"
+
+    Returns empty string if the format doesn't parse so the caller
+    falls through to running the planner.
 
     Used by the pre-staged-roadmap check in `_plan_next_milestone` to
     distinguish "operator drafted the next milestone, preserve it" from
     "stale leftover from a prior cycle, overwrite it" (operator-trust
-    directive 2026-05-08; see CLAUDE.md "Pre-Staged Roadmap Convention").
+    directive 2026-05-08; see CLAUDE.md "Pre-Staged Roadmap Convention"
+    and "Calendar-Month Prefix Rollover" entries).
     """
     parts = current.split(".")
     if len(parts) != 3:
@@ -2179,7 +2190,8 @@ def _expected_next_milestone(current: str) -> str:
         next_idx = int(parts[2]) + 1
     except (ValueError, IndexError):
         return ""
-    return f"{parts[0]}.{parts[1]}.{next_idx:03d}"
+    today = datetime.now(UTC)
+    return f"{today.year}.{today.month:02d}.{next_idx:03d}"
 
 
 def _archive_current_milestone(push: bool = True) -> bool:
@@ -2719,14 +2731,25 @@ def _load_roadmap_metadata() -> dict:
 def _expected_next_milestone(current: str) -> str:
     """Compute the expected next milestone string from the current one.
 
-    Format is "YYYY.MM.NNN" (e.g. "2026.04.119" → "2026.04.120"). Returns
-    empty string if the format doesn't parse so the caller falls through
-    to running the planner.
+    Format is "YYYY.MM.NNN". The trailing NNN is a global sequence ID
+    that increments by 1 per milestone. The YYYY.MM prefix is the
+    calendar month of *today* (UTC), so milestones planned in May 2026
+    use "2026.05.NNN" regardless of what month the prior milestone
+    was planned in.
+
+    Examples:
+      current="2026.04.119", today=2026-05-08 → "2026.05.120"
+      current="2026.04.119", today=2026-04-30 → "2026.04.120"
+      current="2026.05.123", today=2026-05-15 → "2026.05.124"
+
+    Returns empty string if the format doesn't parse so the caller
+    falls through to running the planner.
 
     Used by the pre-staged-roadmap check in `_plan_next_milestone` to
     distinguish "operator drafted the next milestone, preserve it" from
     "stale leftover from a prior cycle, overwrite it" (operator-trust
-    directive 2026-05-08; see CLAUDE.md "Pre-Staged Roadmap Convention").
+    directive 2026-05-08; see CLAUDE.md "Pre-Staged Roadmap Convention"
+    and "Calendar-Month Prefix Rollover" entries).
     """
     parts = current.split(".")
     if len(parts) != 3:
@@ -2735,7 +2758,8 @@ def _expected_next_milestone(current: str) -> str:
         next_idx = int(parts[2]) + 1
     except (ValueError, IndexError):
         return ""
-    return f"{parts[0]}.{parts[1]}.{next_idx:03d}"
+    today = datetime.now(UTC)
+    return f"{today.year}.{today.month:02d}.{next_idx:03d}"
 
 
 def _archive_current_milestone(push: bool = True) -> bool:
