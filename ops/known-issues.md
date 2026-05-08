@@ -377,6 +377,69 @@ abstracts available via:
                        finite K; spectral-gap cure requires K ≫ 10^15."
         retire_if_same_verdict: true
 
+- id: exp15TT-thrml-block-gibbs-plateau-friction-audit
+  title: "THRML Block-Gibbs Plateau-Friction Audit (DT-MCMC-NULL follow-up)"
+  agent_type: codex
+  model: gpt-5.5
+  priority: critical
+  prompt_seed: |
+    Per Deep Think DT-MCMC-NULL verdict (2026-05-08, docs/research-notes/
+    iclr26-deep-think-responses.md): Glauber-class samplers' algorithmic
+    inefficiency on flat plateaus acts as KINETIC DEFENSE-IN-DEPTH against
+    null-space-mimicry attacks on AND-composed verifier ensembles.
+    Single-site Metropolis-Hastings amplifies the attack 50% (plateau
+    diffusion 2× faster than Gibbs). Algorithm 2 mixed-neighborhood MH
+    makes it strictly worse via Hamming-k tunneling.
+
+    DT-7 verdict (vendor THRML) and DT-MCMC-NULL compose: vendoring
+    THRML block-Gibbs is justified by BOTH correctness AND security.
+    BUT block-Gibbs is multi-site like Algorithm 2 — does it inherit
+    the plateau-friction security property from single-site Gibbs, or
+    does the parallel-block update create a new attack surface?
+
+    Hypothesis (to be tested): per-bit randomization rate of block-Gibbs
+    equals that of single-site Gibbs (sigmoid(0) = 0.5 independent flips
+    per bit at flat plateau); block-Gibbs is faster only in COMPUTE,
+    not in MIXING. Therefore block-Gibbs inherits the security feature.
+
+    Steps (synthetic null-space isolation test from DT-MCMC-NULL):
+    1. Construct n=64 binary Ising representing k=15 AND-composed
+       verifiers: 15 independent structural blocks of 4 bits each;
+       E(y) = -10 · Σ_{i=1..15} 1{block_i = target}; remaining 4 bits
+       are free → planted null space N of size 2^4 at global minimum.
+    2. Initialize 10,000 chains at y = {0}^64 (massive plateau).
+    3. Run THREE samplers side-by-side at t=1.0:
+       (a) Carnot's current single-site Glauber Gibbs
+       (b) THRML 0.1.3 block-Gibbs (vendored)
+       (c) Algorithm 1 single-site MH (reference, must be SLOWER to
+           reach security parity)
+    4. Track mean hitting time for any chain to reach y ∈ N at
+       K = 10, 50, 100, 500, 1000 sweeps.
+    5. Track P_chain^(K)(N) — fraction of 10,000 chains hitting N
+       at each K.
+    6. Acceptance gate: THRML block-Gibbs hitting time ≥ single-site
+       Gibbs hitting time. If THRML is faster, document the new attack
+       surface and propose mitigation.
+
+    Predicted (per DT-MCMC-NULL math):
+    - MH: ~21.3 steps/block → fast convergence on N
+    - Single-site Gibbs: ~32.9 steps/block → 50% slower than MH
+    - THRML block-Gibbs: equivalent per-bit rate, similar wall time
+      to single-site Gibbs (block parallelism is compute speed only)
+
+    Falsification: if THRML block-Gibbs hits N at MH-class rates, the
+    parallel-block-update structure does create a new attack surface.
+    Carnot must investigate (e.g., serial-block update mode in THRML?
+    color-class shuffling?).
+
+    prior_failures:
+      - experiment_id: none
+        verdict: novel_audit
+        addressed_by: "Block-Gibbs vs single-site Gibbs vs MH on
+                       synthetic plateau-isolation landscape; verifies
+                       kinetic-defense-in-depth property survives
+                       block parallelization."
+
 - id: exp15QQ-phase5-pcd-divergence-audit-tiny-ising
   title: "Phase 5 PCD Divergence Audit — Cosine Similarity vs Enumerated MLE (DT-MCMC-K1 follow-up)"
   agent_type: codex
