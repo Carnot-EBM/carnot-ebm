@@ -207,6 +207,152 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### NEW 2026-05-08 (20:30Z): Hardware Eval Report Cascade (.121+ MANDATORY)
+
+**Source.** Google Deep Research output, "Carnot Hardware Evaluation
+Report" (16 pages, 37 cited sources), saved at memory entry
+`reference_carnot_hardware_evaluation_report.md`. The report's
+recommendations + red-team critique drive several .121 priorities.
+
+**Three actionable .121 tasks** (all `agent_type: codex`):
+
+```yaml
+- id: expNNNN-thermodynamic-calibration-software-error-correction
+  title: "Software Detailed-Balance Error Correction for Z1 Analog Drift"
+  priority: critical
+  prompt_seed: |
+    Per Carnot Hardware Evaluation Report (2026-05-08) red-team
+    finding C: physical thermodynamic platforms (Extropic Z1) operate
+    at ambient thermal noise limit. Calibrating analog β to match
+    precise scheduling required for adaptive K-PCD non-convex
+    optimization is "notoriously difficult in mixed-signal silicon."
+    Analog drift across die + temperature + voltage VIOLATES detailed-
+    balance equations mathematically required for sound CD.
+
+    Carnot Phase 3 needs software-based detailed-balance error
+    correction. This task implements + validates a correction routine.
+
+    Scope:
+    1. Survey detailed-balance correction techniques for biased Markov
+       chains (Metropolis-corrected Langevin, Hastings-correction with
+       drift estimation, REMC with drift compensation).
+    2. Build a synthetic-drift Ising simulator: take exact block-Gibbs
+       at n=128, inject controlled drift in β values per spin (+/- 5%
+       std) to mimic analog variation.
+    3. Implement detailed-balance correction at the SamplerBackend
+       protocol layer: post-hoc importance reweighting OR proposal-
+       acceptance correction.
+    4. Validate: with drift injected, uncorrected sampler produces
+       biased mean energy + magnetization; corrected sampler recovers
+       exact statistics (within 1σ).
+    5. Document the correction protocol so it ships standalone, ready
+       for Z1 silicon when available.
+
+    prior_failures:
+      - experiment_id: hardware_evaluation_report_finding_c
+        verdict: novel_software_correction_for_analog_drift
+        addressed_by: "Pre-emptive software correction; Phase 3 cannot
+                       depend on Z1 silicon hitting perfect analog β
+                       calibration which mixed-signal silicon cannot
+                       guarantee."
+
+- id: expNNNN-tenstorrent-wormhole-evaluation-prototype
+  title: "Tenstorrent Wormhole n150d Block-Gibbs Prototype"
+  priority: high
+  prompt_seed: |
+    Per Carnot Hardware Evaluation Report top-3 sovereignty platforms:
+    Tenstorrent Wormhole n150d ($1,099) is the most powerful platform
+    satisfying Carnot's sovereignty mandate. TT-Metalium open SDK
+    grants bare-metal RISC-V + Tensix access; spatial NoC architecture
+    ideal for partitioning n=128 Ising graph across cores; per-core
+    RISC-V controllers execute localized Markov chains without SIMT
+    warp stalling.
+
+    This task evaluates Wormhole n150d as a Carnot SamplerBackend
+    candidate.
+
+    Scope:
+    1. (REMOTE/CLOUD if no n150d on-prem): rent Wormhole instance via
+       Tenstorrent's cloud OR via Vast.ai-class marketplace.
+    2. Implement n=128 block-Gibbs sampler in TT-Metalium primitives
+       (Tensix kernels for chromatic block update).
+    3. Benchmark: samples/sec, sample-quality (KL to THRML reference),
+       wall-time-to-K=100-sweeps.
+    4. Compare against RTX 3090 baseline + THRML CPU reference.
+    5. Acceptance gate: Wormhole achieves ≥ 50% of RTX 3090 throughput
+       with at least 4× better samples/W AND open-toolchain
+       reproducibility (TT-Metalium codebase Apache-2.0).
+    6. If gate passes: file Wormhole acquisition recommendation +
+       integrate as primary sovereignty-compliant production sampler.
+
+- id: expNNNN-polarfire-soc-pcie-elimination-prototype
+  title: "Microchip PolarFire SoC PCIe-Eliminating Adaptive K-PCD Prototype"
+  priority: high
+  prompt_seed: |
+    Per Carnot Hardware Evaluation Report contrarian pick: $130
+    Microchip PolarFire SoC integrates quad-core Linux-capable RISC-V
+    on the SAME DIE as 95K-element FPGA fabric. RISC-V cores compute
+    soft-Gibbs residual + verifier composition natively; FPGA logic
+    serves as zero-latency block-Gibbs co-processor. ELIMINATES PCIe
+    bottleneck for adaptive K-PCD inference loop.
+
+    This task evaluates PolarFire SoC Discovery Kit as a Phase 5
+    integrated-node candidate.
+
+    Scope:
+    1. Acquire PolarFire SoC Discovery Kit ($130).
+    2. Implement n=128 block-Gibbs in FPGA fabric (Verilog/Amaranth)
+       via Yosys-PolarFire flow (best-effort; Microchip Libero closed
+       fallback for unsupported features).
+    3. Implement adaptive K + soft-Gibbs residual on RISC-V Linux side.
+    4. Validate end-to-end inference loop: K=100 sweeps + verifier
+       evaluation + soft-Gibbs accept/reject.
+    5. Acceptance gate: K=100 inference latency < 100ms (vs naive
+       PCIe-FPGA architecture), AND Yosys-only path achieves >70% of
+       Libero-built bitstream performance (sovereignty bound).
+
+- id: expNNNN-strix-point-secondary-tier-rescope
+  title: "Strix Point APU Tier Re-scope (per Hardware Eval Report)"
+  priority: critical
+  prompt_seed: |
+    Per Carnot Hardware Evaluation Report red-team finding A: Strix
+    Point gfx1150 (67GB unified memory) is structurally wrong for the
+    K=100 inference loop. Block-Gibbs requires SRAM-class local memory
+    (not GDDR/LPDDR); cache coherence + sync delays at K=100 per
+    generated LLM token saturate the unified memory controller and
+    DESTROY inference throughput.
+
+    This task re-scopes Strix Point's role in Carnot's hardware
+    portfolio. It does NOT remove Strix Point — it documents what
+    Strix Point IS good for (verifier-edge inference, dev) vs NOT
+    good for (production sampler).
+
+    Scope:
+    1. Empirically validate the report's claim: run K=100 block-Gibbs
+       at n=128 on Strix Point, measure throughput degradation vs
+       theoretical SRAM-class peak.
+    2. Update CLAUDE.md Phase 2 hardware portfolio to mark Strix Point
+       as: DEV + verifier-edge inference (NPU tier), NOT production
+       sampler.
+    3. Update paper-v6 §4 (or wherever hardware portfolio is described)
+       to reflect the corrected role.
+
+    prior_failures:
+      - experiment_id: hardware_evaluation_report_finding_a
+        verdict: validates_strix_point_inference_throughput_concern
+        addressed_by: "Empirical confirmation of report's analytical
+                       finding; paper-v6 honest-results discipline
+                       requires we don't claim Strix Point as a
+                       production sampler when memory architecture
+                       structurally fails."
+```
+
+**Why these 4 tasks all together:** the report is a cohesive hardware
+strategy update. Splitting into separate milestones risks losing the
+context. .121 should adopt all 4 + retire the KV260 lineage entry from
+ops/exclusion_manifest.yaml (the report explicitly identifies KV260 as
+violating Rule 3 due to Vivado dependency).
+
 ### NEW 2026-05-08 (18:25Z): BRAIN REINFORCE Training-Dynamics Audit at k=15 (.121+ MANDATORY)
 
 **Counter-finding origin.** Exp1562 (`.120 BRAIN+Linear-AR k-sweep)
