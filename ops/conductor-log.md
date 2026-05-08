@@ -1242,3 +1242,13 @@ web search: GitHub trending energy based mod |
 | 2026-05-08 21:08 UTC | Extropic Z1 Readiness Packet — THRML Alignment Upd | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-08 21:10 UTC | Milestone .120 Retro and .121 Carry-Forward Gates | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1569-paper-v6-section-3-sampler-draft, ex |
 | 2026-05-08 21:23 UTC | Milestone 2026.05.120 retro re-activated after gate-fix (outer-loop) | OK | exp1569+exp1573 carry forward to .121 |
+| 2026-05-08 21:49 UTC | Plan milestone 2026.05.121 | OK | 14 tasks proposed |
+| 2026-05-08 21:51 UTC | .119 Completion Archive + .120 Activation Manifest | OK | Deliverable already exists in repo |
+| 2026-05-08 21:51 UTC | Kinetic Defense Zero-Coupling Hamming-Distance Tes | OK | Deliverable already exists in repo |
+| 2026-05-08 21:51 UTC | BRAIN+Linear-AR Extended k-Sweep (k ∈ {4,8,12,15}) | OK | Deliverable already exists in repo |
+| 2026-05-08 21:51 UTC | SpecAnn Phase 3 Rejection — Architecture Decision | OK | Deliverable already exists in repo |
+| 2026-05-08 21:51 UTC | THRML Vendored Block-Gibbs Replacement + Candidate | OK | Deliverable already exists in repo |
+| 2026-05-08 21:51 UTC | Soft-Gibbs Residual Implementation + Hard-BRS Fals | OK | Deliverable already exists in repo |
+| 2026-05-08 21:51 UTC | Candidate-Warm-Start vs Cold-Start Benchmark - Gat | OK | Deliverable already exists in repo |
+| 2026-05-08 21:51 UTC | ρ(C) Measurement for k=6 Ensemble — Q11 TSS Satura | OK | Deliverable already exists in repo |
+| 2026-05-08 21:51 UTC | FR-11 v14 Retained Policies Mode-Collapse Audit - | OK | Deliverable already exists in repo |
