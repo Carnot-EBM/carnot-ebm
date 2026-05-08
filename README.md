@@ -17,10 +17,10 @@ call. No fine-tuning. No access to model weights.
 
 Rust + Python/JAX, Apache 2.0, `pip install carnot`.
 
-Current public research record: **1,642 experiments tracked across 128
-artifact-backed completed milestone records**, all archived in
-`research-complete.yaml` through 2026.04.115, with checked-in result artifacts
-through Exp 1505 on 2026-05-07.
+Current public research record: **1,655 experiments tracked across 129
+artifact-backed completed milestone records**. `research-complete.yaml`
+currently archives through 2026.04.115, while checked-in terminal result
+artifacts extend through Exp 1518 / milestone 2026.04.116 on 2026-05-08.
 
 Milestone .106 delivered the critical fix to thinking-mode certificate
 generation: Exp 1366 (CRANE tag-first prefix injection) reached
@@ -124,7 +124,16 @@ skills with **12** promotions and **0** soundness mistakes, deterministic
 plan-graph energy localized injected graph faults at node/edge top-1 **1.0**,
 KAN hardware accounting stayed no-synthesis/no-board-claim, and THRML import
 readiness plus simulator-only parity passed **2/2** checks with no hardware
-claim. The current test collection reports **23,095** items; this is a
+claim. Milestone .116 completed **13 of 13** criteria: AutoPyVerifier-style
+safe-DSL verifier induction compiled **2/2** candidate verifiers with coverage
+**1.0** and false-accept rate **0.0**; trigger+grammar certificate decoding
+reached parse and validation rates **1.0** on bounded live local SOTA rows;
+runtime monitors normalized **60** events; structural plan-graph contracts
+detected **60/60** injected violations with false-accept rate **0.0**; the
+FR-11 verifier-feedback policy accepted and replayed **84** updates with
+**0** soundness mistakes, then packaged **24** rollback-passing trace2skill
+entries; THRML, KAN, and KV260 work stayed simulator/source-level with no
+hardware claim. The current test collection reports **23,095** items; this is a
 collection count, not a full-suite pass claim.
 
 ## Install and run
@@ -381,6 +390,11 @@ experiment artifact under `results/`.
 | Verifier discipline + plan-graph energy | DRY/orthogonality audit reports **k_effective=3.00** and keeps Semantic Energy/V_1 headline signals retired; deterministic plan-graph energy reaches node and edge top-1 **1.0** on **60** injected graph faults | Exps 1499-1501 |
 | KAN accounting + THRML simulator-only parity | KAN accounting records LUT proxies **27,822** naive / **6,298** QuantKAN-like / **240** KAEM with no synthesis or board claim; THRML 0.1.3 imports and simulator parity passes **2/2** checks, no hardware claim | Exps 1502-1504 |
 | Milestone .115 status | **12/12 criteria met**; trigger certificates, validator compiler, monitors, FR-11 hygiene, verifier discipline, plan-graph energy, KAN accounting, and THRML simulator parity archived with claim boundaries preserved | Exp 1505 |
+| Safe-DSL verifier induction + grammar decoding | **2/2** candidate verifiers compiled; verifier coverage **1.0**, grammar parse **1.0**, grammar validation **1.0**, false-accept **0.0** on bounded live local SOTA rows | Exps 1507/1508 |
+| Runtime monitor + structural contract gates | **60** monitor events normalized; **60/60** injected plan-graph violations detected; false-accept **0.0**; random baseline **0.0**, length baseline **0.183333** | Exps 1509/1510 |
+| FR-11 verifier-feedback policy + portable skill pack | **84** policy updates accepted and rollback-replayed, utility delta **70**, **0** soundness mistakes; **24** rollback-passing trace2skill entries packaged and **60** rejected | Exps 1512-1514 |
+| Substrate conformance boundaries | THRML SamplerBackend conformance ready, simulator-only parity **2/2**; **3** KAN shapes normalized; KV260 property pack defines **4** source-level properties with lint/parse/simulation passing; no TSU, synthesis, bitstream, or board claim | Exps 1515-1517 |
+| Milestone .116 status | **13/13 criteria met**; runtime verifier contracts, FR-11 feedback policy, portable skills, THRML conformance, KAN shape normalization, and KV260 source-level property gates archived with claim boundaries preserved | Exp 1518 |
 | Current Python test collection | **23,095** Python tests collected; collection-only snapshot, not a full-suite pass claim | 2026-05-07 collection run |
 | Local Claude/Codex usage snapshot | Codex reads the newest local `token_count` event; Claude aggregates local token usage and reads only subscription/tier metadata from credentials; free-form quota prose is ignored instead of guessed; focused regression tests pass | 2026-05-04 changelog |
 
@@ -423,7 +437,7 @@ claim we publish.
 ## Where to go next
 
 - **[Technical report](docs/technical-report.md)** — the full research arc
-  through Exp 1505 across 128 completed milestone records, with a
+  through Exp 1518 across 129 completed milestone records, with a
   plain-English timeline of what we tried, what failed, what stuck.
 - **[Roadmap](docs/roadmap.md)** — current milestone, upcoming milestones,
   hardware track, and Phase 3 (Kona-parity foundation-model) direction.
@@ -627,7 +641,7 @@ See the [technical report](docs/technical-report.md) for the full research recor
 
 ## 14 Principles Learned
 
-Hard-won lessons from the activation-based phase of a research program that now spans 1,642 tracked experiments through Exp 1505 across 128 completed milestone records and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
+Hard-won lessons from the activation-based phase of a research program that now spans 1,655 tracked experiments through Exp 1518 across 129 completed milestone records and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
 
 ### What works
 1. **The model's own logprobs are the best energy.** No external EBM needed for rejection sampling — the LLM's own confidence is already an energy function. Simple, practical, +10%.
