@@ -778,6 +778,48 @@ records exact active-paper insertion points, sets
 verdict that states whether Exp 1579 OT framework integration can consume the
 draft.
 
+### REQ-PUBLISH-023: Paper v6 OT Verification Framework Adoption
+
+The Exp 1579 paper-v6 OT verification framework adoption workflow MUST create
+`results/experiment_1579_iclr26_ot_verification_framework_paper_v6_adoption.json`
+with `status == "in_progress"` before writing the adoption note. It MUST write
+`docs/research-notes/paper-v6-ot-verification-framework-adoption.md` as a
+focused paper-v6 vocabulary and claim-boundary note using the ICLR 2026
+framework from arXiv:2510.18982.
+
+The note MUST map coverage, verifier ROC, and sampling sub-optimality onto
+Carnot's verifier cascade without claiming a new Carnot theorem. It MUST include
+a conflict ledger that records every paper-v6 claim that must be softened
+because finite-K sampling, verifier ROC, or out-of-distribution verifier
+calibration does not support the stronger reading. If
+`docs/papers/paper-v6/main.tex` is absent or lacks a clearly isolated related
+work or Section 3 insertion point, the workflow MUST not patch the paper source;
+instead it MUST include a patch plan in the note.
+
+The terminal artifact MUST include:
+
+- `status`
+- `adoption_note_path`
+- `ot_framework_adopted`
+- `claim_conflict_count`
+- `paper_patch_applied`
+- `no_publication_trigger`
+- `honest_verdict`
+
+`no_publication_trigger` MUST remain true, and the workflow MUST not trigger any
+arXiv submission, release, or push action.
+
+### SCENARIO-PUBLISH-025: Exp 1579 Adopts OT Vocabulary Without Overclaiming
+
+**Given** the Exp 1576 sampler/verifier draft exists and arXiv:2510.18982 has
+been reviewed
+**When** the Exp 1579 OT adoption workflow completes
+**Then** it writes the adoption note with explicit coverage, ROC, and
+sub-optimality mappings, records at least four claim conflicts, records whether
+a paper patch was applied, keeps `no_publication_trigger == true`, and reports
+a complete honest verdict that preserves the finite-K and verifier-ROC
+boundaries.
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -804,3 +846,4 @@ draft.
 | REQ-PUBLISH-020 | Implemented | Exp 1412 arXiv operator action sheet |
 | REQ-PUBLISH-021 | Proposed | Exp 1462 paper-v6 anchored-claims narrowing artifact |
 | REQ-PUBLISH-022 | Proposed | Exp 1576 paper-v6 Section 3 sampler/verifier draft |
+| REQ-PUBLISH-023 | Proposed | Exp 1579 ICLR 2026 OT verification framework adoption |
