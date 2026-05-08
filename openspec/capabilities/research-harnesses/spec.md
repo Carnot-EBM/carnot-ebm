@@ -191,6 +191,18 @@ research conductor. The supervisor shall:
 These checks shall be testable with temporary filesystem paths and mocked
 process operations so the unit suite does not kill real conductor processes.
 
+### REQ-HARNESS-014: Generated Test Import Guard
+
+The repository shall provide a lightweight audit for planner-generated Python
+tests. The audit shall parse test files without importing them, inspect local
+`carnot.*` and `scripts.*` import targets, and fail when a test imports a local
+module path that is neither present in the repository nor declared by the
+audited roadmap as an implementation deliverable.
+
+The audit shall report how many roadmaps, tests, and local import targets were
+checked, how many missing imports were found, and how many missing imports were
+allowed because the roadmap explicitly declared the implementation deliverable.
+
 ## Scenarios
 
 ### SCENARIO-HARNESS-001: Bootstrap Skeleton Is Not Complete
@@ -262,6 +274,17 @@ present, or the conductor log handle is reset
 **And** only the orphan PID is terminated
 **And** the legitimate conductor PID and unrelated host state are left intact.
 
+### SCENARIO-HARNESS-009: Orphan Generated Test Import Is Blocked
+
+**Given** a generated pytest imports
+`carnot.reporting.milestone_117_activation_manifest`
+**And** the audited project has no matching Python module file
+**And** the audited roadmap does not declare that module as an implementation
+deliverable
+**When** the generated-test import guard runs
+**Then** the audit fails before pytest collection
+**And** the orphan import is reported with the test file and module path.
+
 ## Implementation Status
 
 | Requirement | Documentation | Artifact |
@@ -279,3 +302,4 @@ present, or the conductor log handle is reset
 | REQ-HARNESS-011 | Implemented (`scripts/meta_harness_conductor_search.py`) | Implemented (`meta_harness_runs/`) |
 | REQ-HARNESS-012 | Implemented (`scripts/meta_harness_conductor_search.py`) | Implemented |
 | REQ-HARNESS-013 | Implemented (`scripts/conductor_supervisor.py`) | Implemented (`results/experiment_1027_conductor_supervisor.json`) |
+| REQ-HARNESS-014 | Implemented (`scripts/audit_orphan_test_imports.py`) | Implemented (`tests/python/test_audit_orphan_test_imports.py`) |
