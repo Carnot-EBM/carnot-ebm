@@ -1874,6 +1874,58 @@ disallows all TSU hardware claims.
 
 **Implementation Status:** Implemented (Exp 1526)
 
+## REQ-SAMPLE-048: Exp 1527 exact n=16 THRML/Carnot simulator parity
+
+Carnot SHALL provide an exact n=16 THRML/Carnot Ising parity run that reuses
+the Exp 1526 simulator-parity helper pattern, stays software-only, uses a
+deterministic signed ring-chord topology, enumerates all 65,536 states for
+partition/distribution comparisons when the local THRML API is available,
+records fixed-seed sampling as a secondary check, and never claims Extropic
+TSU hardware execution.
+
+Acceptance criteria:
+- The experiment SHALL create
+  `results/experiment_1527_thrml_carnot_parity_n16.json` with
+  `status="in_progress"` before THRML import probing or parity execution
+  completes.
+- The experiment SHALL verify Exp 1526 n=8 parity passed before running the
+  n=16 scale step and SHALL write a simulator-only terminal blocker if the
+  upstream parity evidence is missing, malformed, or not passed.
+- The parity case SHALL use 16 spins, explicit deterministic biases,
+  symmetric zero-diagonal couplings, beta, topology, and fixed seed.
+- Exact comparison SHALL enumerate 65,536 states and report Carnot and THRML
+  partition functions, partition relative error, exact mean-energy delta, and
+  KL divergence between the exact Boltzmann distributions.
+- Fixed-seed sampling SHALL be recorded as secondary evidence in
+  `results/thrml_carnot_parity_n16_1527.jsonl` without being treated as TSU
+  hardware evidence.
+- `thrml_parity_n16_passed=true` is valid only when the exact partition
+  relative error, exact mean-energy delta, exact KL divergence, and secondary
+  sample mean-energy delta are within the documented thresholds in the
+  terminal artifact/manifest.
+- The terminal artifact SHALL include `status`, `thrml_parity_n16_passed`,
+  `simulator_only`, `no_tsu_hardware_claim`, `n_spins`,
+  `exact_states_enumerated`, `topology`, `seed`,
+  `partition_relative_error`, `mean_energy_delta`, `kl_divergence`,
+  `parity_manifest_path`, `blockers`, and `honest_verdict`.
+- `simulator_only=true` and `no_tsu_hardware_claim=true` SHALL remain set for
+  every terminal outcome.
+
+**Implementation Status:** Implemented (Exp 1527)
+
+### SCENARIO-SAMPLE-076: Exp 1527 writes exact n=16 parity evidence
+
+Given: Exp 1526 reports exact n=8 THRML/Carnot simulator parity passed and no
+TSU hardware claim.
+When: the Exp 1527 parity run executes from the Carnot project root for run
+date 20260508.
+Then: it writes JSONL rows for exact n=16 distribution metrics and fixed-seed
+sampling metrics, writes a terminal artifact with all required fields, marks
+the run passed only when exact and secondary sampling metrics meet the
+documented thresholds, and disallows all TSU hardware claims.
+
+**Implementation Status:** Implemented (Exp 1527)
+
 ## REQ-MODEL-031: SCEnergyModel — Set-Level Energy Function for Statement Consistency (Exp 944)
 
 SCEnergyModel SHALL implement a permutation-invariant set-level energy function that assigns
