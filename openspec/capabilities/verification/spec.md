@@ -1979,7 +1979,48 @@ false-accept metrics are aggregated from deterministic row fields
 And any false accept or missing deterministic oracle field retires the branch
 before a ready artifact can be reported.
 
-## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487/1495/1496/1499/1500/1501/1507/1508/1509/1510/1520/1521/1522/1525/1537/1538/1541/1542/1551/1552/1553/1554/1557)
+### REQ-VERIFY-1562: BRAIN Linear-AR k-Sweep Verification
+
+The repository shall provide a runnable Exp 1562 BRAIN-correlation verification
+workflow that extends the DT-BRAIN-CORRELATIONS brute-force enumeration from
+`k=4` to `k in {4, 8, 12, 15}` at `n=16`.
+
+The workflow shall:
+
+- enumerate all `2^16 = 65,536` binary states exactly for each `k`;
+- preserve the original deterministic `k=4` seed semantics so the baseline
+  factorized and Linear-AR KL values remain comparable to the 2026-05-08
+  partial validation run;
+- optimize and report reverse KL `KL(q || pi_beta)` for a factorized Bernoulli
+  model with `n=16` parameters and a Linear-AR model with
+  `n + n(n - 1) / 2 = 136` parameters;
+- run the optional one-hidden-layer MADE arm with 32 hidden units only when the
+  Linear-AR `k=15` KL is above `0.1`;
+- write `results/experiment_1562_brain_linear_ar_k_sweep_extended.json` with
+  `status`, `brain_linear_ar_rescue_validated`,
+  `kl_by_k_by_parameterization`, `factorized_vs_ar_ratio_at_k15`,
+  `made_required_at_k15`, `phase_3_recommendation`, and `honest_verdict`; and
+- recommend `linear_ar_sufficient` only when the `k=15` ratio is at least
+  `10.0` and the best `k=15` KL is at most `0.1`, `made_required` only when
+  MADE is needed and reaches the `0.1` KL gate, and `brain_dropped` when the
+  `k=15` factorized-vs-AR ratio is below `5.0`.
+
+`status` MUST be `complete` for terminal artifacts. `honest_verdict` MUST begin
+with `complete:` and MUST distinguish positive validation from falsification.
+
+### SCENARIO-VERIFY-1562: k-Sweep Writes Honest BRAIN Recommendation
+
+Given the deterministic DT-BRAIN-CORRELATIONS constraint generator with
+`n=16`, `m=10`, `beta=2.0`, and `seed=42`,
+When Exp 1562 runs the exact `{4, 8, 12, 15}` k-sweep,
+Then the artifact reports factorized and Linear-AR reverse KL for every `k`
+And preserves the `k=4` baseline comparison fields
+And records `made_optional` as null unless the Linear-AR `k=15` KL exceeds
+`0.1`
+And maps a `k=15` ratio below `5.0` to `phase_3_recommendation="brain_dropped"`
+instead of claiming the Linear-AR rescue was validated.
+
+## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487/1495/1496/1499/1500/1501/1507/1508/1509/1510/1520/1521/1522/1525/1537/1538/1541/1542/1551/1552/1553/1554/1557/1562)
 
 | Requirement | Python | Tests |
 |-------------|--------|-------|
@@ -2019,3 +2060,4 @@ before a ready artifact can be reported.
 | REQ-VERIFY-1553 | Implemented (`python/carnot/verify/claim_isolation_router_scale.py`) | Implemented (`tests/python/test_experiment_1553_claim_isolation_router_scale.py`) |
 | REQ-VERIFY-1554 | Planned (`python/carnot/verify/product_line_staged_scale_v4.py`) | Planned (`tests/python/test_experiment_1554_product_line_staged_scale_v4.py`) |
 | REQ-VERIFY-1557 | Implemented (`python/carnot/verify/verification_compute_router.py`) | Implemented (`tests/python/test_experiment_1557_weaver_verification_compute_router.py`) |
+| REQ-VERIFY-1562 | Implemented (`python/scripts/dt_brain_correlations_verification.py`) | Implemented (`tests/python/test_experiment_1562_brain_linear_ar_k_sweep.py`) |
