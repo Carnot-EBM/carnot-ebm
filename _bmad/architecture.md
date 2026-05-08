@@ -193,6 +193,16 @@ where $T$ = filter temperature, $\Phi$ = structural restorative force in $L^2(\m
 | 2+ | Extropic XTR-0 (TSU) | $10^{11}$–$10^{12}$ | $\delta_t \gtrsim 10^{-9}$ |
 | 3 | photonic / Ising-machine cluster | $\gtrsim 10^{13}$ | foundation-model regime |
 
+### Sampler-Optimization Decision Record
+
+SpecAnn rejected for Phase 3 inference-time argmin. Rationale: (a)
+HUBO→QUBO reduction injects gadgets+penalties that fracture SpecAnn's spectral
+homotopy path; (b) phase-transition level-crossings during training force
+catastrophic cold-restarts; (c) three-paper composition
+(SpecAnn+BRAIN+MCMC Layers) triggers Gadget-Induced Mean-Field Collapse (Deep
+Think DT-COMPOSITION (f), 2026-05-08). Carnot retains existing
+Gibbs-heuristic argmin on unreduced HUBO energy.
+
 ### Active hardware tracks (Exp 1460)
 
 As of the 20260507 scope-reduction decision, Carnot keeps exactly three
