@@ -248,6 +248,45 @@ model-declared verifier accepts a non-oracle answer.
 
 **Spec traces:** REQ-BENCH-1536
 
+### REQ-BENCH-1549: SATQuest Oracle Evidence Repair
+
+Carnot MUST provide a SATQuest oracle repair gate that replays the Exp1536
+false-accept rows and a bounded regression pack with proof or witness evidence
+before downstream SATQuest or unified-contract work can treat SATQuest as an
+acceptance authority.  The repaired gate MUST:
+
+- prefer PySAT when available while preserving a deterministic exact fallback
+  for bounded local CNFs;
+- attach a checked full assignment witness to every SAT oracle success;
+- attach a checked UNSAT certificate or exhaustive contradiction record to
+  every UNSAT oracle success;
+- reject malformed CNF rows, wrong labels, invalid SAT assignments, SAT answers
+  without full assignment witnesses, and UNSAT answers when no proof or
+  exhaustive contradiction evidence is available;
+- replay the three known Exp1536 false-accept rows and report zero repaired
+  oracle false accepts before setting `satquest_zero_false_accepts=true`; and
+- write an artifact and repaired-case manifest that expose the prior
+  false-accept count, rechecked case IDs, evidence counts, perturbation checks,
+  and honest terminal verdict.
+
+**Decentralization implications:** The repair preserves local-first operation:
+PySAT is optional, exact exhaustive evidence is available locally for the
+bounded benchmark, and no closed-weight model becomes an oracle.
+
+### SCENARIO-BENCH-1549: False Accept Rows Are Replayed With Evidence
+
+**Given** `results/experiment_1536_satquest_cnf_verifier_benchmark.json` and
+`results/satquest_cnf_verifier_1536.jsonl`
+**When** the Exp1549 repair gate extracts the rows where a model self-verifier
+accepted a non-oracle answer
+**Then** the repaired oracle rechecks each row with SAT assignment witnesses or
+UNSAT contradiction evidence, rejects every known false accept, runs malformed
+CNF and perturbation checks, and writes
+`results/experiment_1549_satquest_oracle_false_accept_repair.json` with
+`solver_oracle_false_accepts_after=0`.
+
+**Spec traces:** REQ-BENCH-1549
+
 ## Implementation Status
 
 | Requirement | Status | Experiment |
@@ -258,6 +297,7 @@ model-declared verifier accepts a non-oracle answer.
 | REQ-BENCH-1511 | Implemented (`python/carnot/eval/product_line_solver_oracle_benchmark.py`) | Exp 1511 |
 | REQ-BENCH-1523 | Planned (`python/carnot/eval/product_line_parser_feasibility_rescue.py`) | Exp 1523 |
 | REQ-BENCH-1536 | Planned (`python/carnot/eval/satquest_cnf_verifier_benchmark.py`) | Exp 1536 |
+| REQ-BENCH-1549 | Implemented (`python/carnot/eval/satquest_oracle_false_accept_repair.py`) | Exp 1549 |
 | REQ-BENCH-1540 | Implemented (`python/carnot/eval/product_line_staged_benchmark_scale.py`) | Exp 1540 |
 | SCENARIO-BENCH-020 | Implemented | Exp 427 |
 | SCENARIO-BENCH-025 | Implemented | Exp 840 |
