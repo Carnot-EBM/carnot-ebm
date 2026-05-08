@@ -224,23 +224,35 @@ pickup):
 
 ```yaml
 - id: expNNNN-pypi-package-shipping
-  title: "Carnot PyPI Package — Apache-2.0 Release"
+  title: "Carnot PyPI Package — Apache-2.0 Release as carnot-ebm"
   agent_type: codex
   priority: critical
   prompt_seed: |
     Phase 1 ship: package the Carnot Python codebase as a PyPI
-    distribution under Apache-2.0. Includes:
-    - python/carnot/* as the installable package
-    - Versioned __init__.py + setup.py / pyproject.toml
-    - All required dependencies pinned (jax, scipy, thrml,
-      torch, transformers, ...)
-    - PyPI publication via twine; verify pip install carnot works
-      cleanly in a fresh venv
+    distribution under Apache-2.0. Operator confirmed 2026-05-08:
+    PyPI package name is `carnot-ebm` (the bare `carnot` is taken).
+    Import name stays `import carnot` per standard PyPI-name-vs-
+    import-name pattern (like scikit-learn → sklearn).
+
+    Setup includes:
+    - pyproject.toml with name = "carnot-ebm", project URLs pointing
+      to github.com/Carnot-EBM/carnot-ebm and huggingface.co/Carnot-EBM
+    - python/carnot/* as the installable package (import name unchanged)
+    - Versioned __init__.py with __version__
+    - All required dependencies pinned (jax, scipy, thrml, torch,
+      transformers, ...)
+    - PyPI publication via twine; verify `pip install carnot-ebm`
+      → `import carnot` works cleanly in a fresh venv
     - README with quick-start showing verify_code, verify_with_properties
     - LICENSE: Apache-2.0
-    Acceptance: `pip install carnot` succeeds in fresh venv on
-    Linux/macOS; `carnot --version` returns; example verify call
-    produces expected output.
+    Acceptance: `pip install carnot-ebm` succeeds in fresh venv on
+    Linux/macOS; `python -c "import carnot; carnot.__version__"`
+    returns; example verify call produces expected output.
+
+    Naming consistency: github org=Carnot-EBM, repo=carnot-ebm,
+    HuggingFace org=Carnot-EBM, PyPI=carnot-ebm. All public-facing
+    distribution channels use the carnot-ebm name; only the Python
+    import statement and code identifiers stay `carnot`.
 
 - id: expNNNN-huggingface-primary-publication
   title: "HuggingFace Primary Publication (Phase 1 ship)"
