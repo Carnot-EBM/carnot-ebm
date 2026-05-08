@@ -1956,6 +1956,74 @@ were not modified, recommends but does not append the `research-complete.yaml`
 entry, and writes an honest retrospective verdict with an accepted success
 prefix.
 
+### REQ-REPORT-056: Milestone .117 Activation Manifest
+
+The Exp 1519 `.116` completion archive and `.117` activation workflow shall
+write `results/experiment_1519_116_completion_archive_117_activation.json` with
+`status="in_progress"` before terminal completion. It shall then read Exp 1518,
+`research-complete.yaml`, conductor log evidence for Exp 1506 through Exp 1518,
+`ops/status.md`, `ops/changelog.md`, `ops/known-issues.md`, and the `.117`
+roadmap plan without modifying `research-roadmap.yaml` or
+`scripts/research_conductor.py`.
+
+The terminal artifact shall include:
+
+- `status`
+- `milestone`
+- `predecessor_milestone`
+- `predecessor_criteria_met`
+- `predecessor_criteria_total`
+- `activation_manifest_complete`
+- `prior_runtime_contract_ready`
+- `prior_fr11_rollback_ready`
+- `prior_product_line_benchmark_ready`
+- `prior_thrml_conformance_ready`
+- `prior_kan_shape_manifest_ready`
+- `prior_kv260_property_pack_ready`
+- `research_complete_has_116_entry`
+- `mandated_sota_models`
+- `continuous_self_learning_required`
+- `allowed_117_tracks`
+- `gated_117_tracks`
+- `retired_headline_signals`
+- `honest_verdict`
+
+`prior_runtime_contract_ready` shall be true only when Exp 1507, Exp 1508,
+Exp 1509, and Exp 1510 are complete and record zero false accepts.
+`prior_fr11_rollback_ready` shall be true only when Exp 1512 and Exp 1513 are
+complete and record zero soundness mistakes. `prior_product_line_benchmark_ready`
+shall be true when Exp 1511 produced the product-line benchmark manifest, even
+if its parse, feasibility, and oracle-agreement metrics are weak.
+`prior_thrml_conformance_ready` shall be true only when Exp 1515 completed
+simulator-only THRML conformance. `prior_kan_shape_manifest_ready` and
+`prior_kv260_property_pack_ready` shall preserve the `.116` no-synthesis,
+no-board, source-level claim boundaries.
+
+The activation markdown shall list allowed `.117` tracks for runtime-contract
+E2E, live SOTA contract-guided repair, CDG root-cause repair, product-line
+rescue/retirement, FR-11 live policy promotion, MARCH-style claim isolation,
+and THRML/Carnot parity scaling. It shall preserve blocks on Semantic
+Energy/logit telemetry headline claims, pairwise LLM verifier headline claims,
+arbitrary generated-Python verifier trust, TSU hardware claims, KV260 board
+claims, KAN synthesis claims, and legacy small-model headline results. The
+final verdict shall use a conductor-accepted success prefix and shall be
+complete only when Exp 1518 reports 13 of 13 criteria met, the activation
+markdown is written, all readiness gates are recorded honestly, and protected
+roadmap/conductor files remain unchanged.
+
+### SCENARIO-REPORT-056: Exp 1519 Activates .117 With .116 Evidence Archived
+
+Given Exp 1518 reports `.116` as 13 of 13 criteria met, Exp 1507 through Exp
+1510 report zero-false-accept runtime-contract evidence, Exp 1512 and Exp 1513
+report zero soundness mistakes, Exp 1511 produced the product-line benchmark
+manifest, and Exp 1515 through Exp 1517 record simulator/source-only substrate
+evidence, when Exp 1519 runs for run date `20260508`, then it writes all
+required REQ-REPORT-056 fields, writes `ops/milestone_117_activation_manifest.md`,
+lists only the allowed `.117` tracks and same-roadmap gates, records whether
+`research-complete.yaml` already contains a `2026.04.116` archive row, confirms
+`research-roadmap.yaml` and `scripts/research_conductor.py` were not modified,
+and writes an honest activation verdict with an accepted success prefix.
+
 ### REQ-REPORT-024: Local Agent Usage Snapshot
 
 The repository shall provide a local operator workflow that inspects the
@@ -2546,6 +2614,7 @@ embed live-GPU benchmark results from Exp 328 when available.
 | REQ-REPORT-053 | `python/carnot/reporting/milestone_retro_115.py`, `results/experiment_1505_milestone_115_retro.json`, `research-complete.yaml` | `tests/python/test_milestone_retro_115.py` | Implemented |
 | REQ-REPORT-054 | `python/carnot/reporting/milestone_116_activation_manifest.py`, `results/experiment_1506_115_completion_archive_116_activation.json`, `ops/milestone_116_activation_manifest.md` | `tests/python/test_milestone_116_activation_manifest.py` | Implemented |
 | REQ-REPORT-055 | `python/carnot/reporting/milestone_retro_116.py`, `results/experiment_1518_milestone_116_retro.json` | `tests/python/test_milestone_retro_116.py` | Implemented |
+| REQ-REPORT-056 | `python/carnot/reporting/milestone_117_activation_manifest.py`, `results/experiment_1519_116_completion_archive_117_activation.json`, `ops/milestone_117_activation_manifest.md` | `tests/python/test_milestone_117_activation_manifest.py` | Implemented |
 | REQ-REPORT-024 | `python/carnot/reporting/agent_usage.py`, `scripts/agent_plan_usage.py` | `tests/python/test_agent_plan_usage.py` | Implemented |
 | REQ-PUBLISH-003 | `scripts/experiment_317_hf_publish.py` | `tests/python/test_experiment_317_hf_publish.py` | Implemented |
 | REQ-PUBLISH-004 | `scripts/experiment_330_hf_live_publish.py` | `tests/python/test_experiment_330_hf_live_publish.py` | Implemented |
