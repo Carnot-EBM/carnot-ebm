@@ -1221,3 +1221,5 @@ web search: GitHub trending energy based mod |
 | 2026-05-08 17:02 UTC | THRML Post-RNG Scale Decision + Extropic Packet Up | GATE_BLOCK | 2 of 3 gate(s) failed; first failure: exp1548-thrml-carnot-parity-independent-rn |
 | 2026-05-08 17:04 UTC | THRML Post-RNG Scale Decision + Extropic Packet Up | GATE_BLOCK | 2 of 3 gate(s) failed; first failure: exp1548-thrml-carnot-parity-independent-rn |
 | 2026-05-08 17:06 UTC | THRML Post-RNG Scale Decision + Extropic Packet Up | GATE_BLOCK | 2 of 3 gate(s) failed; first failure: exp1548-thrml-carnot-parity-independent-rn |
+| 2026-05-08 17:22 UTC | Milestone .119 Retro and .120 Carry-Forward Gates | OK | 81 passed, 1 warning in 5.80s |
+| 2026-05-08 17:25 UTC | Milestone 2026.05.120 activated | OK | 14 tasks queued |
