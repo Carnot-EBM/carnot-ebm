@@ -207,6 +207,16 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### NEW 2026-05-08 (03:55Z): Planner Orphan-Test Discipline (.118+ pickup)
+
+**Incident.** `.117 planner emitted `tests/python/test_milestone_117_activation_manifest.py` that imports from `carnot.reporting.milestone_117_activation_manifest`, but the corresponding task `exp1519-116-completion-archive-117-activation` only writes a markdown manifest at `ops/milestone_117_activation_manifest.md` — no Python module is created. The orphan test caused pytest collection-error → pre-test fail → exp1519 SKIP × 3 (03:33/35/37 UTC) → 11 downstream `.117 tasks GATE_BLOCKed in cascade. Outer-loop deleted the orphan test 2026-05-08 03:53Z; conductor unwedged on next iter.
+
+**Rule.** When the planner emits a `tests/python/test_*.py` file, it MUST verify the import target exists or is going to be created by the task being tested. If the task only produces non-Python deliverables (markdown, JSON, YAML), the planner MUST NOT emit a Python test that imports a non-existent module. Test for the deliverable's structure with `json.load(...)` / `yaml.safe_load(...)` / file-existence assertions instead.
+
+**How to apply.** Pre-emit checklist: for every test file the planner generates, grep its `from carnot.X import Y` statements. If `python/carnot/X.py` does not exist AND the task does not list it as a deliverable, refuse to emit the test. Or downgrade the test to use only stdlib + json/yaml without importing the carnot module.
+
+**Mechanical safety net (future).** Conductor pre-test phase should detect collection-error ImportErrors that name a module matching the current task's expected deliverable shape and treat as "task creates this module" rather than gate-fail. Pending implementation; honor-discipline for now.
+
 ### NEW 2026-05-08 (00:00Z): THRML/Carnot Parity Scaling Sweep (.117+ pickup)
 
 **Background:** exp1504 (THRML/Carnot Simulator Parity v3, `.115) demonstrated numerical equivalence between Carnot's tiny-Ising substrate and Extropic's open-source THRML reference simulator on `n=4 signed ring chord`:
