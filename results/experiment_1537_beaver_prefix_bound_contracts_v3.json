@@ -1,0 +1,137 @@
+{
+  "audit_module_path": "python/carnot/verify/beaver_prefix_bound_contracts.py",
+  "beaver_bound_ready": true,
+  "blockers": [
+    "token_logprobs_unavailable_structural_simulation_used",
+    "topk_unavailable_structural_simulation_used"
+  ],
+  "bound_audit_path": "results/beaver_prefix_bound_contracts_1537.jsonl",
+  "bound_violations": [],
+  "bounded_prefixes": 78,
+  "deterministic_validator_final_authority": true,
+  "explicit_label_count": 6,
+  "explicit_reject_count": 2,
+  "false_accept_count": 0,
+  "false_accept_rate": 0.0,
+  "focused_tests_passed": true,
+  "high_risk_instances": [
+    {
+      "bound_used_as_authority": false,
+      "contract_case_id": "structural_contract:cctu-1486-arith-001:known_good:0:graph_prerequisites:1",
+      "decoder_mode": "baseline_post_decode",
+      "deterministic_false_accept": false,
+      "deterministic_validator_accept": false,
+      "expected_label": true,
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "prefix_consistent": true,
+      "risk_upper_bound": 1.0,
+      "source_family": "structural_contract"
+    },
+    {
+      "bound_used_as_authority": false,
+      "contract_case_id": "safe_dsl:certificate:cctu-1486-arith-002:trigger_certificate:2",
+      "decoder_mode": "baseline_post_decode",
+      "deterministic_false_accept": false,
+      "deterministic_validator_accept": false,
+      "expected_label": true,
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "prefix_consistent": true,
+      "risk_upper_bound": 1.0,
+      "source_family": "safe_dsl"
+    },
+    {
+      "bound_used_as_authority": false,
+      "contract_case_id": "monitor_event:runtime-1509-000001",
+      "decoder_mode": "baseline_post_decode",
+      "deterministic_false_accept": false,
+      "deterministic_validator_accept": false,
+      "expected_label": null,
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "prefix_consistent": true,
+      "risk_upper_bound": 1.0,
+      "source_family": "monitor_event"
+    },
+    {
+      "bound_used_as_authority": false,
+      "contract_case_id": "grammar_certificate:cctu-1486-arith-001:schema_only:1",
+      "decoder_mode": "baseline_post_decode",
+      "deterministic_false_accept": false,
+      "deterministic_validator_accept": false,
+      "expected_label": false,
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "prefix_consistent": true,
+      "risk_upper_bound": 1.0,
+      "source_family": "grammar_certificate"
+    },
+    {
+      "bound_used_as_authority": false,
+      "contract_case_id": "structural_contract:cctu-1486-arith-001:known_good:0:graph_prerequisites:1",
+      "decoder_mode": "automata_guided",
+      "deterministic_false_accept": false,
+      "deterministic_validator_accept": true,
+      "expected_label": true,
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "prefix_consistent": true,
+      "risk_upper_bound": 0.0,
+      "source_family": "structural_contract"
+    },
+    {
+      "bound_used_as_authority": false,
+      "contract_case_id": "safe_dsl:certificate:cctu-1486-arith-002:trigger_certificate:2",
+      "decoder_mode": "automata_guided",
+      "deterministic_false_accept": false,
+      "deterministic_validator_accept": true,
+      "expected_label": true,
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "prefix_consistent": true,
+      "risk_upper_bound": 0.0,
+      "source_family": "safe_dsl"
+    },
+    {
+      "bound_used_as_authority": false,
+      "contract_case_id": "monitor_event:runtime-1509-000001",
+      "decoder_mode": "automata_guided",
+      "deterministic_false_accept": false,
+      "deterministic_validator_accept": true,
+      "expected_label": null,
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "prefix_consistent": true,
+      "risk_upper_bound": 0.0,
+      "source_family": "monitor_event"
+    },
+    {
+      "bound_used_as_authority": false,
+      "contract_case_id": "grammar_certificate:cctu-1486-arith-001:schema_only:1",
+      "decoder_mode": "automata_guided",
+      "deterministic_false_accept": false,
+      "deterministic_validator_accept": true,
+      "expected_label": false,
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "prefix_consistent": true,
+      "risk_upper_bound": 0.0,
+      "source_family": "grammar_certificate"
+    }
+  ],
+  "honest_verdict": "complete: BEAVER-lite prefix-bound contract audit ready",
+  "live_sota_model_inference_used": true,
+  "milestone": ".118",
+  "model_specs": [
+    {
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "role": "flagship_moe_contract_decoder"
+    },
+    {
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "role": "flagship_dense_contract_decoder"
+    },
+    {
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "role": "middle_moe_contract_decoder"
+    }
+  ],
+  "run_date": "20260508",
+  "schema_version": 1,
+  "status": "complete",
+  "token_logprob_available": false,
+  "topk_available": false
+}

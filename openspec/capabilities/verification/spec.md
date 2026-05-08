@@ -1331,6 +1331,59 @@ And the terminal artifact reports parse-rate, contract-accept-rate, latency,
 and false-accept metrics without counting legacy small-model smoke rows as
 headline evidence.
 
+### REQ-VERIFY-1537: BEAVER-Lite Prefix-Bound Contract Audit
+
+The repository shall provide an Exp 1537 BEAVER-lite prefix-bound audit that
+uses the Exp 1535 contract decoder adapter rows and Exp 1520 runtime-contract
+rows to produce deterministic routing-risk bounds for selected contract and
+automata-decoder prefixes.  The audit shall never treat BEAVER bounds,
+logprobs, or top-k mass as acceptance authority; deterministic runtime-contract
+validators remain the final source of false-accept truth.
+
+The audit shall:
+
+- write `results/experiment_1537_beaver_prefix_bound_contracts_v3.json` with
+  `status="in_progress"` before source manifest loading or prefix evaluation;
+- select bounded runtime-contract and automata-decoder cases from Exp 1535,
+  preserving contract case IDs, source families, decoder modes, and
+  deterministic accept/reject labels;
+- build a bounded prefix trie/frontier over canonical contract JSON targets and
+  report monotone structural upper bounds for unexplored or invalid prefixes;
+- use token logprob and top-k telemetry when a selected decoder row exposes it,
+  otherwise set `token_logprob_available=false`, `topk_available=false`, and
+  record the structural-bound simulation path explicitly;
+- rank high-risk instances by BEAVER-lite structural/logprob bound and compare
+  them with deterministic validator outcomes without promoting any bound to an
+  accept/reject decision;
+- compute `false_accept_rate` from Exp 1520-compatible validator rows rather
+  than from prefix bounds; and
+- write a terminal artifact containing `status`, `milestone`,
+  `beaver_bound_ready`, `model_specs`, `live_sota_model_inference_used`,
+  `bounded_prefixes`, `token_logprob_available`, `topk_available`,
+  `bound_violations`, `high_risk_instances`,
+  `deterministic_validator_final_authority`, `false_accept_rate`,
+  `bound_audit_path`, `focused_tests_passed`, and `honest_verdict`.
+
+`beaver_bound_ready` MUST be true only when at least one selected prefix is
+bounded, every reported upper bound is in `[0, 1]`, deterministic validator
+authority is explicitly true, false-accept metrics come from validator rows,
+and focused tests have passed. `honest_verdict` MUST begin with one of
+`complete:`, `complete_`, `success:`, `success_`, `passed:`, `passed_`,
+`shipped:`, or `shipped_`.
+
+### SCENARIO-VERIFY-1537: Prefix Bounds Rank Risk Without Acceptance Authority
+
+Given complete Exp 1535 decoder rows and the Exp 1520 runtime-contract manifest
+on the run date `20260508`,
+When Exp 1537 audits selected contract JSON prefixes with live telemetry when
+available or structural simulation otherwise,
+Then prefix-bound series remain structurally monotone for canonical automata
+targets
+And high-risk rankings record deterministic validator outcomes alongside the
+bound
+And the terminal artifact reports `deterministic_validator_final_authority=true`
+with `false_accept_rate` computed from validator rows, not BEAVER bounds.
+
 ### REQ-VERIFY-1522: Constraint Dependency Graph Root-Cause Repair Ordering
 
 The repository shall provide an Exp 1522 deterministic CPU-only Constraint
@@ -1445,7 +1498,7 @@ And the terminal artifact sets `claim_isolation_ablation_ready=true` only when
 at least one mandated SOTA GGUF produced both full-context and claim-isolated
 rows and a false-accept rate is reported.
 
-## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487/1495/1496/1499/1500/1501/1507/1508/1509/1510/1520/1521/1522/1525)
+## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487/1495/1496/1499/1500/1501/1507/1508/1509/1510/1520/1521/1522/1525/1537)
 
 | Requirement | Python | Tests |
 |-------------|--------|-------|
@@ -1475,3 +1528,4 @@ rows and a false-accept rate is reported.
 | REQ-VERIFY-1521 | Implemented (`python/carnot/verify/live_sota_contract_guided_repair.py`) | Implemented (`tests/python/test_experiment_1521_live_sota_contract_guided_repair.py`) |
 | REQ-VERIFY-1522 | Implemented (`python/carnot/verify/constraint_dependency_graph_repair.py`) | Implemented (`tests/python/test_experiment_1522_constraint_dependency_graph_repair.py`) |
 | REQ-VERIFY-1525 | Implemented (`python/carnot/verify/march_claim_isolation_ablation.py`) | Implemented (`tests/python/test_experiment_1525_march_claim_isolation_ablation.py`) |
+| REQ-VERIFY-1537 | Implemented (`python/carnot/verify/beaver_prefix_bound_contracts.py`) | Implemented (`tests/python/test_experiment_1537_beaver_prefix_bound_contracts.py`) |
