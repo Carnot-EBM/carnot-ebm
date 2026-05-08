@@ -1175,3 +1175,4 @@ web search: GitHub trending energy based mod |
 | 2026-05-08 03:55 UTC | THRML/Carnot Parity n=16 Exact - Gated on Exp1526  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1526-thrml-carnot-parity-n8.thrml_parit |
 | 2026-05-08 03:57 UTC | Milestone 2026.04.117 re-activated after orphan-test fix (outer-loop) | OK | exp1519 + 11 downstream unwedged |
 | 2026-05-08 04:10 UTC | .116 Completion Archive + .117 Activation Manifest | OK | 81 passed, 1 warning in 5.75s |
+| 2026-05-08 04:26 UTC | Runtime-Contract E2E Harness - Gated on Exp1519 Ru | OK | 81 passed, 1 warning in 7.97s |
