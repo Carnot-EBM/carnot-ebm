@@ -1141,3 +1141,4 @@ web search: GitHub trending energy based mod |
 | 2026-05-08 01:16 UTC | trace2skill Portable Skill Pack v2 - Gated on Exp1 | OK | 81 passed, 1 warning in 5.49s |
 | 2026-05-08 01:28 UTC | THRML SamplerBackend Conformance Pack - Gated on E | OK | 81 passed, 1 warning in 5.34s |
 | 2026-05-08 01:44 UTC | KAN/KAEM Shape Normalization Preflight - Gated on  | OK | 81 passed, 1 warning in 5.32s |
+| 2026-05-08 02:03 UTC | KV260 Discrete SB RTL Property Pack v2 - Source-Le | OK | 81 passed, 1 warning in 4.42s |
