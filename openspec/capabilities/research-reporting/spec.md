@@ -2024,6 +2024,66 @@ lists only the allowed `.117` tracks and same-roadmap gates, records whether
 `research-roadmap.yaml` and `scripts/research_conductor.py` were not modified,
 and writes an honest activation verdict with an accepted success prefix.
 
+### REQ-REPORT-057: Milestone .117 Terminal Retrospective
+
+The Exp 1532 `.117` retrospective workflow shall write
+`results/experiment_1532_milestone_117_retro.json` with `status="in_progress"`
+before terminal completion. It shall then read the authoritative Exp 1519
+through Exp 1531 result JSON artifacts, the `.117` success criteria in
+`openspec/change-proposals/research-roadmap-vNEXT.md`, `research-roadmap.yaml`,
+`research-complete.yaml`, `ops/conductor-log.md`, `ops/status.md`, and
+`ops/changelog.md` without modifying `research-roadmap.yaml` or
+`scripts/research_conductor.py`.
+
+The workflow shall score every `.117` success criterion from source artifact
+fields as `MET`, `NOT_MET`, or `GATE_BLOCKED`, record missing or gated source
+artifacts explicitly, and preserve the `.117` claim boundaries: no TSU hardware
+claim, no KAN synthesis claim, no KV260 board claim, no arbitrary
+generated-Python trust, no legacy small-model headline result, and no LLM judge
+as final authority. It shall decide whether the product-line branch continues
+or retires from Exp 1523, and it shall decide the next THRML scaling gate from
+Exp 1530 and Exp 1531. The terminal artifact shall include:
+
+- `status`
+- `milestone`
+- `criteria_met`
+- `criteria_total`
+- `runtime_contract_e2e_outcome`
+- `live_contract_repair_outcome`
+- `cdg_root_cause_outcome`
+- `product_line_decision`
+- `continuous_self_learning_outcome`
+- `claim_isolation_outcome`
+- `thrml_scaling_outcome`
+- `claim_boundaries_preserved`
+- `carry_forward_gates`
+- `research_complete_entry_recommended`
+- `ops_docs_reconciled`
+- `honest_verdict`
+
+For conductor stop-when-done retro runs where a separate reconciliation agent
+owns `ops/status.md`, `ops/changelog.md`, and `_bmad/traceability.md`,
+`ops_docs_reconciled` shall remain false with an explicit deferred
+reconciliation reason rather than modifying those files.
+`research_complete_entry_recommended` shall describe the recommended `.117`
+archive row without appending it. The final verdict shall start with a
+conductor-accepted success prefix.
+
+### SCENARIO-REPORT-057: Exp 1532 Closes .117 With Carry-Forward Gates
+
+Given Exp 1519 through Exp 1531 terminal artifacts exist, Exp 1520 through Exp
+1525 report zero false accepts or soundness mistakes at their trust boundary,
+Exp 1523 reports either `product_line_rescue_ready=true` or
+`product_line_branch_retired=true`, and Exp 1526 through Exp 1531 report
+software/simulator-only THRML parity outcomes without hardware claims, when Exp
+1532 runs for run date `20260508`, then it writes all required REQ-REPORT-057
+fields, reports the success-criteria score from source fields, records
+carry-forward gates for `.118` with exact artifact fields future tasks must
+gate on, confirms `research-roadmap.yaml` and `scripts/research_conductor.py`
+were not modified, recommends but does not append the `research-complete.yaml`
+entry, and writes an honest retrospective verdict with an accepted success
+prefix.
+
 ### REQ-REPORT-024: Local Agent Usage Snapshot
 
 The repository shall provide a local operator workflow that inspects the
@@ -2615,6 +2675,7 @@ embed live-GPU benchmark results from Exp 328 when available.
 | REQ-REPORT-054 | `python/carnot/reporting/milestone_116_activation_manifest.py`, `results/experiment_1506_115_completion_archive_116_activation.json`, `ops/milestone_116_activation_manifest.md` | `tests/python/test_milestone_116_activation_manifest.py` | Implemented |
 | REQ-REPORT-055 | `python/carnot/reporting/milestone_retro_116.py`, `results/experiment_1518_milestone_116_retro.json` | `tests/python/test_milestone_retro_116.py` | Implemented |
 | REQ-REPORT-056 | `python/carnot/reporting/milestone_117_activation_manifest.py`, `results/experiment_1519_116_completion_archive_117_activation.json`, `ops/milestone_117_activation_manifest.md` | `tests/python/test_milestone_117_activation_manifest.py` | Implemented |
+| REQ-REPORT-057 | `python/carnot/reporting/milestone_retro_117.py`, `results/experiment_1532_milestone_117_retro.json` | `tests/python/test_milestone_retro_117.py` | Implemented |
 | REQ-REPORT-024 | `python/carnot/reporting/agent_usage.py`, `scripts/agent_plan_usage.py` | `tests/python/test_agent_plan_usage.py` | Implemented |
 | REQ-PUBLISH-003 | `scripts/experiment_317_hf_publish.py` | `tests/python/test_experiment_317_hf_publish.py` | Implemented |
 | REQ-PUBLISH-004 | `scripts/experiment_330_hf_live_publish.py` | `tests/python/test_experiment_330_hf_live_publish.py` | Implemented |
