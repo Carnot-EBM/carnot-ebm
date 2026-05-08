@@ -107,17 +107,64 @@ This is a tractable extension — variance-reduced REINFORCE for AR
 models is well-studied (e.g., REINFORCE-with-step-baselines in
 sequence-generation literature).
 
-**(6) Runnable falsifiable verification script:**
+**(6) Runnable falsifiable verification script — RAN 2026-05-08:**
 
 Deep Think provided a zero-dependency Python script (n=16, k=4,
 m=10 random AND-composition constraints, 2^16 = 65,536 brute-force
-enumeration tractable). Optimizes both factorized Bernoulli (n
-params) and Linear AR (n + n(n-1)/2 = 136 params). Predicate: KL
-of factorized stalls at a massive gap predicted by TAP; KL of AR
-drops near zero.
+enumeration tractable). Saved at
+`python/scripts/dt_brain_correlations_verification.py`. Ran
+immediately to verify Deep Think's prediction.
 
-Saved verbatim at `python/scripts/dt_brain_correlations_verification.py`
-for `.121 task exp15ZA execution.
+**Empirical result:**
+
+```
+KL Factorized:  1.074764
+KL Pairwise AR: 0.334573
+Ratio (Fact/AR): 3.21×
+
+Verdict: PREDICATE PARTIAL — gap exists but not as catastrophic
+as Deep Think predicted.
+```
+
+**Interpretation:**
+
+- Linear AR is **3.21× better** than factorized Bernoulli — a real,
+  measurable advantage
+- BUT factorized didn't stall at "irrevocably massive divergence";
+  it landed at KL ≈ 1.07 (nontrivial but not catastrophic)
+- AND Linear AR didn't drop "near zero"; it landed at KL ≈ 0.33
+  (still substantial residual error)
+
+**Why Deep Think's prediction was overconfident at n=16, k=4:**
+
+- The k=4 setting (matching the test script) is much milder than
+  Carnot's planned k=15. Per Deep Think's own finding (c), the
+  catastrophe is *exponential in k*. At k=4 the gradient-starvation
+  prefactor is 0.5^4 ≈ 6.25%, vs 0.5^15 ≈ 3×10⁻⁵ at k=15.
+- The Plefka/TAP bound is asymptotic in n and β; at n=16 the
+  finite-size corrections are large.
+- Linear AR's residual error at 0.33 KL suggests pairwise correlations
+  alone don't fully capture the k=4 AND structure (k-th-order tensor
+  not representable by 2nd-order coupling). Phase 3 may need
+  higher-order parameterization (e.g., MADE with hidden layers) to
+  get below 0.1 KL.
+
+**Implication for Phase 3:**
+
+The Linear-AR rescue path remains valid (AR is **strictly better**
+than factorized — 3.21× at k=4, expected to widen at k=15). But
+exp15ZA must extend the test to k=8, k=12, k=15 to measure the
+actual gap progression. Linear AR may not be sufficient at k=15 —
+Carnot may need MADE-with-hidden-layers or a sparse higher-order
+parameterization. **Filed as additional acceptance criterion in
+exp15ZA.**
+
+**Methodological note**: this is the SECOND time Deep Think's
+prediction has been more confident than reality (the first was
+DT-COMPOSITION's contradicted top-line). Carnot should treat Deep
+Think predictions as falsifiable hypotheses, not conclusions.
+The runnable falsification predicates Deep Think provides ARE
+useful — they expose when the predictions are right vs overconfident.
 
 ### Tasks to file
 
