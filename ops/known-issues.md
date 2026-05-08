@@ -226,22 +226,102 @@ abstracts available via:
 **.120+ tasks to propose** (planner: hard pickup, all codex):
 
 ```yaml
-- id: exp15XX-iclr26-grpo-secretly-prm-audit
-  title: "ICLR-26 GRPO-as-PRM Audit Against FR-11 v12-v14 Lineage"
+- id: exp15XX-fr11-v14-retained-mode-collapse-audit
+  title: "FR-11 v14 Retained Policies — Mode-Collapse Audit (DT-2 follow-up)"
   agent_type: codex
+  model: gpt-5.5
   priority: critical
   prompt_seed: |
-    Read ICLR 2026 paper "GRPO is Secretly a Process Reward Model"
-    via OpenReview API. The paper proves GRPO induces a non-trivial
-    PRM under within-group token-overlap conditions and identifies
-    a flaw where non-uniformly distributed process steps hinder
-    BOTH exploration and exploitation. FR-11 v12-v14 lineage in
-    Carnot is GRPO-based. Audit whether the paper's identified
-    flaw applies to Carnot's FR-11 training trajectories. If yes,
-    file as known-issue + propose fix. If no, document why FR-11
-    is exempt. Acceptance gate: deterministic verdict
-    {applies, does_not_apply, requires_more_evidence} with cited
-    evidence from FR-11 logs + paper text.
+    Per Deep Think DT-2 verdict (2026-05-08, docs/research-notes/
+    iclr26-deep-think-responses.md): the operator's hypothesis about
+    spurious v14 retirements (lone-genius suppression) is
+    MATHEMATICALLY IMPOSSIBLE under AND-composition. Algebraic proof:
+    a solitary clever fix r_c > 0 in a sea of AND-zero failures
+    has R(λ) = r_c/|λ| ≥ r_mean(G) = r_c/k since |λ| ≤ k,
+    therefore Â(λ) ≥ 0 always.
+
+    BUT the bug exists in the OPPOSITE direction: spurious RETENTIONS
+    via anti-exploration. Mediocre safe prefix slightly beats group
+    mean ⇒ Â(λ) > 0 ⇒ standard GRPO multiplies positive gradient by
+    |λ| ⇒ rapid mode-collapse onto safe boilerplate ⇒ artificially
+    inflated training rewards survive the v14 utility gate.
+
+    Carnot's RETAINED v14 manifest is likely polluted with overfit,
+    low-entropy models. This task audits the retention quality.
+
+    Steps:
+    1. Snapshot all v14-retained policies (passed Positive-Utility-
+       or-Retire gate). Target N ≥ 5.
+    2. For each retained policy, measure on held-out test corpus:
+       (a) Token-entropy distribution per generated repair, vs
+           pre-RL checkpoint baseline.
+       (b) Boilerplate-fraction (template-recycle vs novel tokens
+           via N-gram match against training corpus).
+       (c) Per-group reward variance on fresh sampled groups (k=8).
+       (d) Out-of-distribution adversarial code accuracy vs pre-RL
+           baseline.
+    3. Acceptance gate (anti-mode-collapse predictions):
+       - Token-entropy drop ≥ 0.5 nats per token vs pre-RL → CONFIRMED
+       - Boilerplate-fraction ≥ 30% on novel code → CONFIRMED
+       - Per-group reward variance collapsed to single mode → CONFIRMED
+       - Adversarial OOD accuracy WORSE than pre-RL → severe CONFIRMED
+    4. Report: % of retained policies showing 2+ confirmed predictors.
+
+    If ≥ 50% of retained policies show 2+ predictors, retire those
+    retentions (reverse the v14 gate decision). Document v14's
+    contamination scope in paper-v6.
+
+    prior_failures:
+      - experiment_id: none
+        verdict: novel_audit
+        addressed_by: "Inverted hypothesis from Deep Think DT-2:
+                       audit retentions, not retirements. Algebraic
+                       proof rules out lone-genius suppression."
+
+- id: exp15YY-fr11-v15-lambda-grpo-patch
+  title: "FR-11 v15 — λ-GRPO Patch + Mode-Collapse Cure"
+  agent_type: codex
+  model: gpt-5.5
+  priority: critical
+  prompt_seed: |
+    Per Deep Think DT-2 verdict (2026-05-08, docs/research-notes/
+    iclr26-deep-think-responses.md): apply Sullivan's one-line
+    λ-GRPO patch (divide token loss contribution by |λ_{(i,t)}|)
+    to TRL's GRPO trainer in Carnot's FR-11 pipeline. The patch
+    cures the spurious-retention bug detected in v14 retained
+    policies (mode-collapse via anti-exploration).
+
+    Steps:
+    1. Implement λ-GRPO as a one-line patch to TRL's GRPO loss
+       reduction. Vendored copy (per CLAUDE.md Rule 3).
+    2. Train one v15 candidate from current pre-RL checkpoint
+       on FR-11's training corpus.
+    3. Measure on held-out test corpus:
+       - Token-entropy preservation (vs pre-RL baseline)
+       - Boilerplate-fraction (vs v14 retained baseline)
+       - Adversarial OOD accuracy (vs v14 retained, vs pre-RL)
+    4. Acceptance gate (per DT-2 recommendation):
+       - Token-entropy preserved at ≥ 90% relative to pre-RL
+       - Boilerplate-fraction REDUCED relative to v14
+       - Adversarial OOD accuracy ≥ v14 (or honest verdict
+         identifying why not)
+
+    If the gate passes, v15 supersedes v14. If it fails, retain
+    v14 with a documented mode-collapse caveat.
+
+    Paper-v6 §3 disclosure paragraph (drafted): "FR-11 v12-v14
+    trained with standard TRL-GRPO; v15+ adopts λ-GRPO (Sullivan
+    2026) to prevent mode-collapse via anti-exploration. v14-
+    retained policies audited for boilerplate overfit in Appendix X."
+
+    prior_failures:
+      - experiment_id: none
+        verdict: novel_implementation
+        addressed_by: "Direct application of Sullivan's verified
+                       proof; one-line patch with negligible compute
+                       overhead."
+
+
 
 - id: exp15YY-iclr26-ot-verification-framework-paper-v6
   title: "ICLR-26 OT-Verification Framework Adoption for Paper-v6"
