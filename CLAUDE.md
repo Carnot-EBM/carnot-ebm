@@ -75,12 +75,35 @@ energy — must survive any of these failures.
 
 3. **Distribution mirroring for any published artifact.** Trained
    weights, model cards, datasets, and Python packages must be
-   published through at least two independent channels (e.g.
-   HuggingFace + IPFS, or HF + a Carnot-controlled gitea/git mirror).
-   The conductor's multi-URL git remote (gitea + github) is the
-   precedent — apply the same pattern to model weights and any other
-   downstream-consumed artifact. Single-point distribution failure
+   published through at least two independent channels.
+   **Preferred: HuggingFace as primary channel + IPFS as secondary
+   channel** (per operator directive 2026-05-08: IPFS chosen over
+   gitea because it's content-addressed and genuinely decentralized,
+   while a self-hosted gitea is still vendor-controlled-by-us with a
+   single point of failure). PyPI packages mirror to PyPI + content-
+   addressed source distribution (sdist on IPFS or equivalent). The
+   conductor's multi-URL git remote (gitea + github) is the precedent
+   — apply the same pattern to artifacts BUT prefer content-addressed
+   storage over duplicate-host git mirrors when the artifact is binary
+   (weights, datasets, packages). Single-point distribution failure
    is unacceptable.
+
+   **IPFS implementation guidance:**
+   - Pin model artifacts via at least one Filecoin-backed pinning
+     service (web3.storage / Storj / Filebase) for durability
+   - Document CIDs alongside HuggingFace model cards + in README
+   - Users running their own IPFS node automatically become mirrors
+     when they fetch artifacts — this is the sovereignty-multiplier
+     effect that gitea cannot match
+   - Cloudflare-IPFS / ipfs.io gateways serve as low-friction fallback
+     for users without IPFS clients
+
+   **Why IPFS over gitea:** content-addressing (CID = hash of content)
+   means any pinning party verifies integrity automatically. Gitea
+   would still be "Carnot-controlled-mirror," structurally subject to
+   takedown / re-licensing / DNS-level interference. IPFS makes the
+   entire user base potential mirrors — true decentralization, not
+   "we control a second copy."
 
 4. **Multiple integration surfaces in parallel.** Carnot exposes its
    capabilities via Python API, CLI, MCP server, and HTTP REST. None

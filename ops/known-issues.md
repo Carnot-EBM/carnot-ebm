@@ -242,15 +242,15 @@ pickup):
     Linux/macOS; `carnot --version` returns; example verify call
     produces expected output.
 
-- id: expNNNN-huggingface-mirror-setup
-  title: "HuggingFace Mirror per CLAUDE.md Rule 3"
+- id: expNNNN-huggingface-primary-publication
+  title: "HuggingFace Primary Publication (Phase 1 ship)"
   agent_type: codex
   priority: critical
   prompt_seed: |
-    Phase 1 ship: establish HuggingFace mirror for Carnot trained
-    models, datasets, and model cards. Per CLAUDE.md Rule 3
-    (distribution mirroring), every published artifact must be
-    available via at least two independent channels.
+    Phase 1 ship: publish Carnot trained models, datasets, and model
+    cards to HuggingFace as the primary distribution channel. The
+    secondary IPFS mirror (per CLAUDE.md Rule 3) is filed separately
+    as a Phase 2 task.
 
     Steps:
     - Verify huggingface.co/Carnot-EBM org access (per
@@ -259,13 +259,54 @@ pickup):
       adapter, FoVer-trained verifiers)
     - Write model cards in compliance with CLAUDE.md "no emojis in
       docs" rule + verbose layman explanations rule
-    - Set up Carnot-controlled gitea mirror as second channel (per
-      Rule 3); pin commit hashes
-    - Document the mirror URLs in README + paper-v6 §6 references
+    - Document HuggingFace URLs in README; flag the IPFS mirror as
+      Phase 2 work (don't lie about being mirrored)
 
     Acceptance: huggingface.co/Carnot-EBM has all production trained
-    models with proper model cards; second mirror channel functional
-    and indexed; pip install carnot users can fetch models.
+    models with proper model cards; pip install carnot users can
+    fetch models from HuggingFace.
+
+- id: expNNNN-ipfs-mirror-setup
+  title: "IPFS Mirror Setup per CLAUDE.md Rule 3 (Phase 2)"
+  agent_type: codex
+  priority: high
+  milestone_phase: phase_2
+  prompt_seed: |
+    Phase 2 sovereignty work: establish IPFS as the secondary
+    distribution channel per CLAUDE.md Rule 3 (updated 2026-05-08
+    per operator directive choosing IPFS over gitea for genuine
+    decentralization).
+
+    Per Rule 3 IPFS implementation guidance:
+    - Pin model artifacts via at least one Filecoin-backed pinning
+      service (web3.storage / Storj / Filebase) for durability
+    - Document CIDs alongside HuggingFace model cards + in README
+    - Cloudflare-IPFS / ipfs.io gateways serve as low-friction
+      fallback for users without IPFS clients
+
+    Steps:
+    1. Choose Filecoin-backed pinning service (recommend evaluating
+       web3.storage first — Filecoin redundancy + free tier).
+    2. Generate IPFS CIDs for all HuggingFace-published artifacts.
+    3. Pin via chosen service.
+    4. Update HuggingFace model cards to include IPFS CIDs.
+    5. Update Carnot README with IPFS gateway URLs alongside HF URLs.
+    6. Add `carnot.distribution.ipfs` Python module that can fetch
+       artifacts via any IPFS gateway as fallback when HuggingFace
+       is unavailable.
+    7. Document the sovereignty-multiplier effect (users running
+       their own IPFS node automatically become mirrors when they
+       fetch — this is the architectural advantage over gitea).
+
+    Acceptance: every HuggingFace artifact has a published IPFS CID;
+    `carnot.distribution.ipfs.fetch(cid)` works via at least three
+    gateways (cloudflare-ipfs, ipfs.io, w3s.link); CIDs documented
+    in model cards + README + paper-v6 §6 references.
+
+    Why IPFS not gitea: gitea is Carnot-controlled-mirror, structurally
+    subject to takedown / re-licensing / DNS-level interference. IPFS
+    makes the entire user base potential mirrors — true decentralization,
+    not 'we control a second copy.'
 
 - id: expNNNN-mcp-cli-docs-pass
   title: "MCP Server + CLI Documentation for External Integrators"
