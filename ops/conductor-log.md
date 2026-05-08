@@ -1183,3 +1183,4 @@ web search: GitHub trending energy based mod |
 | 2026-05-08 05:41 UTC | MARCH Claim-Isolation Verifier Ablation - Gated on | OK | 81 passed, 1 warning in 4.43s |
 | 2026-05-08 05:56 UTC | THRML/Carnot Parity n=8 Exact - Gated on Exp1519 T | OK | 81 passed, 1 warning in 5.09s |
 | 2026-05-08 06:10 UTC | THRML/Carnot Parity n=16 Exact - Gated on Exp1526  | OK | 81 passed, 1 warning in 4.87s |
+| 2026-05-08 06:25 UTC | THRML/Carnot Parity n=32 Sample - Gated on Exp1527 | OK | 81 passed, 1 warning in 5.24s |
