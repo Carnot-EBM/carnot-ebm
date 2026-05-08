@@ -1168,3 +1168,5 @@ web search: GitHub trending energy based mod |
 | 2026-05-08 03:49 UTC | FR-11 Live Policy Promotion v12 - Gated on Exp1519 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1519-116-completion-archive-117-activatio |
 | 2026-05-08 03:49 UTC | MARCH Claim-Isolation Verifier Ablation - Gated on | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1524-fr11-live-policy-promotion-v12.liv |
 | 2026-05-08 03:51 UTC | THRML/Carnot Parity n=8 Exact - Gated on Exp1519 T | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1519-116-completion-archive-117-activatio |
+| 2026-05-08 03:51 UTC | THRML/Carnot Parity n=16 Exact - Gated on Exp1526  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1526-thrml-carnot-parity-n8.thrml_parit |
+| 2026-05-08 03:53 UTC | THRML/Carnot Parity n=8 Exact - Gated on Exp1519 T | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1519-116-completion-archive-117-activatio |
