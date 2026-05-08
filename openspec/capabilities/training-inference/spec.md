@@ -2199,6 +2199,65 @@ bitstream, and hardware claims.
 
 **Implementation Status:** Planned (Exp 1543)
 
+## REQ-SAMPLE-054: Exp 1544 sampled n=64 diverse-topology THRML/Carnot parity
+
+Carnot SHALL provide a sampled n=64 THRML/Carnot Ising parity run across
+complete, sparse random, lattice, and scale-free graph families after the Exp
+1543 n=256 schedule-stress gate, staying software/simulator-only, recording
+per-topology pass/fail metrics, and never claiming Extropic TSU, Z1, XTR-0,
+board, synthesis, bitstream, or hardware execution.
+
+Acceptance criteria:
+- The experiment SHALL create
+  `results/experiment_1544_thrml_diverse_topology_parity_n64.json` with
+  `status="in_progress"` before graph generation, prior-artifact inspection,
+  THRML import probing, or parity execution completes.
+- The experiment SHALL load the Exp 1531 n=32 diverse-topology parity artifact
+  and Exp 1543 n=256 schedule-stress artifact, SHALL require both to be
+  complete, simulator-only, and no-TSU-claim, and SHALL write a simulator-only
+  terminal blocker if either prerequisite is missing, malformed, or not ready.
+- The topology cases SHALL use exactly 64 spins, complete, sparse random,
+  lattice, and scale-free graph families, deterministic seeds where randomness
+  is part of graph construction, deterministic biases, symmetric zero-diagonal
+  couplings, beta, warmup, sample count, and thinning parameters.
+- The sampled comparison SHALL run Carnot and THRML software simulator lanes
+  with identical model parameters and comparable schedules for each topology
+  and seed. If the THRML lane is the local CPU fallback, the artifact SHALL
+  label it as simulator fallback rather than hardware execution.
+- The manifest at `results/thrml_diverse_topology_parity_n64_1544.jsonl`
+  SHALL contain one JSON object per topology/backend/seed plus a summary row,
+  and each row SHALL record topology, sample count, mean energy,
+  magnetization, KL inputs, and simulator-only/no-TSU claim boundary.
+- The terminal artifact SHALL include `status`, `milestone`,
+  `diverse_topology_parity_n64_ready`, `n_spins`, `topologies_tested`,
+  `per_topology_results`, `mean_energy_delta`, `max_energy_delta`,
+  `kl_divergence`, `parity_passed`, `simulator_only`,
+  `no_tsu_hardware_claim`, `parity_report_path`, `focused_tests_passed`, and
+  `honest_verdict`.
+- `diverse_topology_parity_n64_ready=true` and `parity_passed=true` are valid
+  only when all four topology families have Carnot and THRML software rows, at
+  least three topology families pass the recorded sampled metric thresholds,
+  aggregate mean-energy, max-energy, and KL deltas pass the recorded
+  thresholds, the artifact records the manifest path, and
+  `simulator_only=true` plus `no_tsu_hardware_claim=true`.
+
+**Implementation Status:** Implemented (Exp 1544)
+
+### SCENARIO-SAMPLE-082: Exp 1544 writes n=64 diverse-topology parity evidence
+
+Given: Exp 1531 reports n=32 diverse-topology THRML/Carnot simulator parity
+ready, Exp 1543 reports n=256 schedule-stress simulator parity ready, and no
+TSU hardware claim is available.
+When: the Exp 1544 n=64 diverse-topology parity run executes from the Carnot
+project root for run date 20260508.
+Then: it writes topology/backend JSONL evidence plus a terminal artifact with
+all required fields, marks n=64 diverse-topology readiness true only when the
+documented sampled metric gates pass across the topology families, labels all
+execution as software/simulator-only, and disallows all TSU, Z1, XTR-0, board,
+synthesis, bitstream, and hardware claims.
+
+**Implementation Status:** Implemented (Exp 1544)
+
 ## REQ-MODEL-031: SCEnergyModel — Set-Level Energy Function for Statement Consistency (Exp 944)
 
 SCEnergyModel SHALL implement a permutation-invariant set-level energy function that assigns
