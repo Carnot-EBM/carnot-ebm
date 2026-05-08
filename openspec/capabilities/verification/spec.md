@@ -1273,7 +1273,63 @@ rows rather than from generated prose
 And the terminal artifact sets `contract_guided_repair_ready=true` only when
 live SOTA inference completed and the reported false-accept rate remains zero.
 
-## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487/1495/1496/1499/1500/1501/1507/1508/1509/1510/1520/1521)
+### REQ-VERIFY-1522: Constraint Dependency Graph Root-Cause Repair Ordering
+
+The repository shall provide an Exp 1522 deterministic CPU-only Constraint
+Dependency Graph (CDG) analyzer that uses the Exp 1520 runtime-contract E2E
+manifest as the local trust boundary and optionally loads Exp 1521 repair rows
+when present.
+
+The analyzer shall:
+
+- write `results/experiment_1522_constraint_dependency_graph_root_cause_repair.json`
+  with `status="in_progress"` before loading source rows;
+- define auditable CDG nodes for parse, certificate, safe-DSL verifier, monitor
+  event, structural dependency, solver oracle, and final accept contract
+  categories;
+- estimate directed dependencies deterministically from lifecycle ordering and
+  observed co-failure evidence in the loaded runtime-contract rows;
+- select failing rows from Exp 1520, compare flat validator-order localization
+  against CDG-prioritized upstream localization, and report one manifest row per
+  attempted failing case;
+- validate every candidate repair decision through deterministic Exp 1520
+  contract ledger semantics and never through LLM self-evaluation;
+- write `results/cdg_root_cause_repair_1522.jsonl` with one row per case plus
+  a final graph summary row containing node, edge, efficiency, and false-accept
+  metrics;
+- report `flat_order_fix_efficiency`, `cdg_fix_efficiency`, and
+  `cdg_efficiency_delta`; and
+- write a terminal artifact containing `status`, `model_specs`,
+  `live_sota_model_inference_used`, `cdg_root_cause_repair_ready`,
+  `e2e_cases_loaded`, `cdg_nodes`, `cdg_edges`,
+  `root_cause_cases_attempted`, `flat_order_fix_efficiency`,
+  `cdg_fix_efficiency`, `cdg_efficiency_delta`, `false_accept_count`,
+  `false_accept_rate`, `cdg_manifest_path`, `models_used`, `blockers`, and
+  `honest_verdict`.
+
+`cdg_root_cause_repair_ready` MUST be true when CDG metrics are computed and
+the deterministic false-accept rate is exactly `0.0`, even if the CDG
+efficiency delta is negative. If no LLM repair proposal is invoked, the
+artifact MUST set `live_sota_model_inference_used=false` and `models_used=[]`
+while still recording the mandated local SOTA GGUF `model_specs`.
+`honest_verdict` MUST begin with one of `complete:`, `complete_`, `success:`,
+`success_`, `passed:`, `passed_`, `shipped:`, or `shipped_`.
+
+### SCENARIO-VERIFY-1522: CDG Prioritizes Upstream Contract Failures
+
+Given a complete Exp 1520 runtime-contract E2E manifest on the run date
+`20260508` and optional Exp 1521 repair rows,
+When Exp 1522 builds the runtime-contract CDG and analyzes failing contract
+rows,
+Then graph edges are deterministic and derived from lifecycle ordering plus
+observed co-failures
+And each attempted case records flat and CDG localization order, root-cause
+category, repair-ready status, deterministic validation outcome, and false
+accept status
+And the terminal artifact sets `cdg_root_cause_repair_ready=true` exactly when
+case metrics are computed and the reported false-accept rate remains zero.
+
+## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487/1495/1496/1499/1500/1501/1507/1508/1509/1510/1520/1521/1522)
 
 | Requirement | Python | Tests |
 |-------------|--------|-------|
@@ -1301,3 +1357,4 @@ live SOTA inference completed and the reported false-accept rate remains zero.
 | REQ-VERIFY-1510 | Implemented (`python/carnot/verify/plan_graph_structural_contract_gate.py`) | Implemented (`tests/python/test_experiment_1510_plan_graph_structural_contract_gate.py`) |
 | REQ-VERIFY-1520 | Implemented (`python/carnot/verify/runtime_contract_e2e_harness.py`) | Implemented (`tests/python/test_experiment_1520_runtime_contract_e2e_harness.py`) |
 | REQ-VERIFY-1521 | Implemented (`python/carnot/verify/live_sota_contract_guided_repair.py`) | Implemented (`tests/python/test_experiment_1521_live_sota_contract_guided_repair.py`) |
+| REQ-VERIFY-1522 | Implemented (`python/carnot/verify/constraint_dependency_graph_repair.py`) | Implemented (`tests/python/test_experiment_1522_constraint_dependency_graph_repair.py`) |

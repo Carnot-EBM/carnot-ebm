@@ -1,0 +1,148 @@
+{
+  "blockers": [],
+  "cdg_edges": [
+    {
+      "observed_cofailure_count": 2,
+      "reason": "lifecycle_order",
+      "source": "parse",
+      "target": "certificate",
+      "weight": 3
+    },
+    {
+      "observed_cofailure_count": 0,
+      "reason": "lifecycle_order",
+      "source": "certificate",
+      "target": "safe_dsl_verifier",
+      "weight": 1
+    },
+    {
+      "observed_cofailure_count": 0,
+      "reason": "lifecycle_order",
+      "source": "certificate",
+      "target": "monitor_event",
+      "weight": 1
+    },
+    {
+      "observed_cofailure_count": 0,
+      "reason": "lifecycle_order",
+      "source": "safe_dsl_verifier",
+      "target": "monitor_event",
+      "weight": 1
+    },
+    {
+      "observed_cofailure_count": 0,
+      "reason": "lifecycle_order",
+      "source": "safe_dsl_verifier",
+      "target": "structural_dependency",
+      "weight": 1
+    },
+    {
+      "observed_cofailure_count": 0,
+      "reason": "lifecycle_order",
+      "source": "structural_dependency",
+      "target": "solver_oracle",
+      "weight": 1
+    },
+    {
+      "observed_cofailure_count": 3,
+      "reason": "lifecycle_order",
+      "source": "certificate",
+      "target": "final_accept",
+      "weight": 4
+    },
+    {
+      "observed_cofailure_count": 48,
+      "reason": "lifecycle_order",
+      "source": "monitor_event",
+      "target": "final_accept",
+      "weight": 49
+    },
+    {
+      "observed_cofailure_count": 60,
+      "reason": "lifecycle_order",
+      "source": "structural_dependency",
+      "target": "final_accept",
+      "weight": 61
+    },
+    {
+      "observed_cofailure_count": 0,
+      "reason": "lifecycle_order",
+      "source": "solver_oracle",
+      "target": "final_accept",
+      "weight": 1
+    }
+  ],
+  "cdg_efficiency_delta": 0.05015,
+  "cdg_fix_efficiency": 0.238739,
+  "cdg_manifest_path": "results/cdg_root_cause_repair_1522.jsonl",
+  "cdg_nodes": [
+    {
+      "id": "parse",
+      "label": "parse",
+      "lifecycle_index": 0
+    },
+    {
+      "id": "certificate",
+      "label": "certificate",
+      "lifecycle_index": 1
+    },
+    {
+      "id": "safe_dsl_verifier",
+      "label": "safe dsl verifier",
+      "lifecycle_index": 2
+    },
+    {
+      "id": "monitor_event",
+      "label": "monitor event",
+      "lifecycle_index": 3
+    },
+    {
+      "id": "structural_dependency",
+      "label": "structural dependency",
+      "lifecycle_index": 4
+    },
+    {
+      "id": "solver_oracle",
+      "label": "solver oracle",
+      "lifecycle_index": 5
+    },
+    {
+      "id": "final_accept",
+      "label": "final accept",
+      "lifecycle_index": 6
+    }
+  ],
+  "cdg_root_cause_repair_ready": true,
+  "e2e_cases_loaded": 458,
+  "exp1521_repair_rows_loaded": 6,
+  "explicit_label_count": 63,
+  "explicit_reject_count": 63,
+  "false_accept_count": 0,
+  "false_accept_rate": 0.0,
+  "flat_order_fix_efficiency": 0.188589,
+  "honest_verdict": "complete: CDG root-cause repair ordering metrics computed",
+  "live_sota_model_inference_used": true,
+  "model_specs": [
+    {
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "role": "flagship_moe_primary_contract_guided_repair"
+    },
+    {
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "role": "flagship_dense_secondary_contract_guided_repair"
+    },
+    {
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "role": "middle_moe_secondary_contract_guided_repair"
+    }
+  ],
+  "models_used": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF"
+  ],
+  "optional_scope_notes": [],
+  "root_cause_cases_attempted": 111,
+  "run_date": "20260508",
+  "schema_version": 1,
+  "source_scope": "exp1520_plus_exp1521",
+  "status": "complete"
+}
