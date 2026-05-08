@@ -1150,3 +1150,5 @@ web search: GitHub trending energy based mod |
 | 2026-05-08 03:35 UTC | .116 Completion Archive + .117 Activation Manifest | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-08 03:37 UTC | .116 Completion Archive + .117 Activation Manifest | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-08 03:39 UTC | Runtime-Contract E2E Harness - Gated on Exp1519 Ru | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1519-116-completion-archive-117-activatio |
+| 2026-05-08 03:39 UTC | Live SOTA Contract-Guided Repair v1 - Gated on Exp | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1520-runtime-contract-e2e-harness.runti |
+| 2026-05-08 03:41 UTC | Runtime-Contract E2E Harness - Gated on Exp1519 Ru | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1519-116-completion-archive-117-activatio |
