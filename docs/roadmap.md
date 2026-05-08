@@ -120,6 +120,7 @@
 | 2026.04.115 | Trigger Certificates + Runtime Monitors + THRML Parity | 1492-1505 | 12/12 criteria met; trigger-token certificate export, safe-DSL validator compiler, interwhen/HoVer monitoring, FR-11 trace2skill daily eval, verifier k_effective=3.00 discipline gate, and simulator-only THRML/Carnot parity completed; operational retro measured 40 min / 11 completed with 55% savings recoverable |
 | 2026.04.116 | Runtime Contracts + FR-11 Feedback + Substrate Boundaries | 1506-1518 | 13/13 criteria met; safe-DSL/grammar/runtime monitor/plan-graph contracts ready, FR-11 policy cache and rollback portable, THRML/KAN/KV260 claim boundaries preserved |
 | 2026.04.116 | Operational Efficiency Closeout | 1506-1518 | 40 min / 11 completed; 37/40 min concentrated in legacy Exp1419/Exp1270 gate churn, GPUs idle/no zombies, and 55% recoverable via terminal gates plus DualGPU scheduling |
+| 2026.04.117 | Runtime Contracts + THRML Parity Operational Closeout | 1519-1532 | 14/14 criteria met; operational retro measured 40 min / 11 completed with 37/40 min concentrated in legacy gate churn, GPUs idle/no zombies, and 55% recoverable via same-verdict retirement plus DualGPURunner scheduling |
 
 ## Breakthrough Results
 
