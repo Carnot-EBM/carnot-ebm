@@ -4,6 +4,258 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-05-08 Post-.117 Planning Sweep (Milestone 2026.04.118)
+
+This sweep was run after milestone `.117` completed all 14 planned tasks.
+Key outcomes: `exp1520` linked 458 runtime-contract cases with zero false
+accepts; `exp1521` ran live SOTA contract-guided repair but only attempted
+2 cases and produced `repair_accept_rate_delta=0.0`; `exp1522` showed a
+small positive CDG efficiency delta (`+0.05015`) over 111 root-cause cases;
+`exp1523` rescued product-line parsing and oracle agreement to 1.0 on the
+bounded benchmark; `exp1524` promoted one rollback-passing FR-11 policy with
+zero soundness mistakes but `utility_delta=0.0`; `exp1525` ran claim isolation
+on only 1 case with `budget_delta=+3`; `exp1526` through `exp1531` passed
+software-only THRML/Carnot parity through n=128 and diverse n=32 topologies.
+Primary `.118` focus: prevent another planner-orphan test cascade, scale the
+zero-false-accept contract stack to SAT/automata/multi-turn drift tasks, turn
+FR-11 into positive-utility external-feedback learning, and stress THRML
+parity beyond the simple n=128 path while preserving no-hardware-claim bounds.
+
+### XGrammar-2 Dynamic Structured Generation
+- **Paper:** arXiv:2601.04426, "XGrammar-2: Efficient Dynamic Structured
+  Generation Engine for Agentic LLMs."
+- **Sources:** https://arxiv.org/abs/2601.04426 and
+  https://blog.mlc.ai/2026/05/04/xgrammar-2-fast-customizable-structured-generation
+- **What:** Introduces TagDispatch, structural tags, cross-grammar cache,
+  adaptive token-mask caching, just-in-time compilation, repetition-state
+  compression, and serving/speculative-decoding support for dynamic structured
+  agent outputs. The arXiv paper reports more than 6x faster compilation than
+  earlier structured generation engines; the MLC engineering post reports up
+  to 80x efficiency gain in selected structured-serving scenarios.
+- **Relevance to Carnot:** `.116` and `.117` proved trigger+grammar decoding
+  and runtime contracts, but the local stack still uses ad hoc grammar/runtime
+  adapters. XGrammar-2 is the current open structured-generation target for
+  Qwen 3.6-style reasoning/tool-output protocols.
+- **Concrete experiment hook:** Build an XGrammar-2/ABS-compatible contract
+  decoder adapter for Carnot's runtime-contract cases. Measure schema/contract
+  validity, latency, and false accepts against the current grammar-only path.
+
+### ABS Automata-Guided Beam Search
+- **Paper:** OpenReview ICLR 2026 submission, "ABS: Enforcing Constraint
+  Satisfaction on Generated Sequences via Automata-Guided Beam Search."
+- **Source:** https://openreview.net/forum?id=3OUGEUVL6U
+- **What:** Enforces any constraint compilable into a deterministic finite
+  automaton by masking violating transitions during beam search and dynamically
+  re-ranking paths by model probability plus automaton acceptance structure.
+  The paper reports perfect constraint satisfaction on evaluated tasks.
+- **Relevance to Carnot:** Runtime contracts and product-line grammars contain
+  many regular-language constraints. ABS gives a deterministic, model-agnostic
+  path for guarantees below semantic validators.
+- **Concrete experiment hook:** Compile selected contract/protocol constraints
+  into DFAs and compare ABS-style automata masking against the current
+  post-decode validator+repair loop on mandated local SOTA GGUF outputs.
+
+### SATQuest Verifier for Logical Reasoning
+- **Paper:** OpenReview ICLR 2026 Workshop LLM Reasoning, "SATQuest: A
+  Verifier for Logical Reasoning Evaluation and Reinforcement Fine-Tuning of
+  LLMs."
+- **Source:** https://openreview.net/forum?id=Qc2lUJsgOt
+- **What:** Generates diverse SAT-based reasoning tasks from CNF instances and
+  checks answers objectively with PySAT. It factorizes evaluation by instance,
+  problem type, and question format, exposing transfer gaps across machine,
+  symbolic, and narrative formulations.
+- **Relevance to Carnot:** This is a clean benchmark for the PRD's
+  verifiable-reasoning requirement because the solver oracle is deterministic,
+  local, and format-diverse. It also pairs naturally with Carnot's Ising/SAT
+  heritage and runtime contracts.
+- **Concrete experiment hook:** Add a bounded SATQuest-style CNF benchmark pack
+  for mandated local SOTA GGUFs, with PySAT as authority and Carnot energy
+  scores used for candidate ranking and repair hints.
+
+### BEAVER Deterministic LLM Verifier
+- **Paper:** OpenReview ICLR 2026 Workshop VerifAI-2, "Beaver: An Efficient
+  Deterministic LLM Verifier."
+- **Source:** https://openreview.net/forum?id=xO3efBXHM9
+- **What:** Computes deterministic, sound probability bounds on semantic
+  constraint satisfaction using token tries and frontier structures for
+  prefix-closed constraints. The paper reports tighter bounds and more
+  high-risk instance discovery than baselines under matched budgets.
+- **Relevance to Carnot:** `.117` has zero false accepts on deterministic
+  rows, but no bounded probability estimate for prefixes that were not
+  enumerated. BEAVER suggests a principled "risk bound" layer for contract
+  acceptance, especially before scaling repair claims.
+- **Concrete experiment hook:** Implement a BEAVER-lite prefix-bound audit over
+  runtime-contract tasks using local SOTA logprobs/top-k where available. Keep
+  the result below deterministic validators and report bounds, not truth.
+
+### Residual Drift in Multi-Turn Constraint Reasoning
+- **Paper:** OpenReview ICLR 2026 Workshop LLM Reasoning, "Residual Drift
+  Dominates Contradiction in Multi-Turn Constraint Reasoning."
+- **Source:** https://openreview.net/forum?id=B9gtT1hhEm
+- **What:** DRIFT-Bench decomposes multi-turn constraint failures into
+  contradiction versus satisfiable drift. After solver-guided repair, residual
+  errors are reported as 98-100 percent satisfiable drift: the maintained
+  state remains consistent, but the final answer silently violates prior
+  commitments.
+- **Relevance to Carnot:** Carnot's global consistency checker and CDG repair
+  target contradictions and upstream failures, but `.117` did not separately
+  audit "forgotten commitments." This is likely the next failure mode once
+  MUS-style repair and runtime contracts suppress outright contradictions.
+- **Concrete experiment hook:** Add a state-commitment ledger over SAT/product-
+  line/runtime-contract multi-turn cases and classify failures as contradiction
+  or satisfiable drift. Repair only after the ledger localizes the drift.
+
+### Hypergraph Neural Networks for MUS Enumeration
+- **Paper:** OpenReview AISTATS 2026, "Hypergraph Neural Networks Accelerate
+  MUS Enumeration."
+- **Source:** https://openreview.net/forum?id=gCHIAqnoip
+- **Code signal:** https://github.com/hitachi-ais/HGNN-MUSE
+- **What:** Treats constraints as vertices and enumerated MUSes as hyperedges,
+  then trains an HGNN agent to reduce satisfiability checks needed to find
+  more minimal unsatisfiable subsets under a fixed budget.
+- **Relevance to Carnot:** CDG repair improved ordering slightly in `.117`,
+  but root-cause localization is still heuristic. MUS enumeration is the
+  deterministic version of "what minimal contract set broke," and HGNN-MUSE is
+  a possible future accelerator once deterministic MUS traces exist.
+- **Concrete experiment hook:** First build deterministic MUS ledgers over
+  SATQuest and product-line failures. Defer HGNN training until the MUS corpus
+  is large enough to avoid another speculative learning branch.
+
+### SkillLearnBench Continual Skill Learning
+- **Paper:** arXiv:2604.20087, "SkillLearnBench: Benchmarking Continual
+  Learning Methods for Agent Skill Generation on Real-World Tasks."
+- **Source:** https://arxiv.org/abs/2604.20087
+- **Code signal:** https://github.com/cxcscmu/SkillLearnBench
+- **What:** Benchmarks continual skill generation across 20 verified,
+  skill-dependent real-world tasks. It finds that continual learning improves
+  over no-skill baselines, but gains are inconsistent; external feedback and
+  multiple iterations help, while self-feedback alone causes recursive drift.
+- **Relevance to Carnot:** `.117` FR-11 promoted a rollback-passing policy with
+  zero soundness mistakes but no utility gain. SkillLearnBench strongly
+  suggests that Carnot should require external verifier feedback and reusable
+  workflow tasks before promoting skills, not self-feedback-only loops.
+- **Concrete experiment hook:** Run an FR-11 v13 skill-promotion task that
+  accepts only externally verified policy/skill updates and requires
+  `utility_delta > 0` for future headline self-learning claims.
+
+### Audited Skill-Graph Self-Improvement
+- **Paper:** arXiv:2512.23760, "Audited Skill-Graph Self-Improvement for
+  Agentic LLMs via Verifiable Rewards, Experience Synthesis, and Continual
+  Memory."
+- **Source:** https://arxiv.org/abs/2512.23760
+- **What:** Treats self-improvement as compilation into a growing auditable
+  skill graph. Candidate improvements are extracted from successful
+  trajectories, normalized into explicit interfaces, and promoted only after
+  verifier-backed replay and contract checks.
+- **Relevance to Carnot:** This is almost exactly Carnot's trace2skill +
+  rollback discipline, but framed as an auditable graph rather than a flat
+  cache. It also makes reward decomposition and promotion auditability first
+  class, addressing FR-11 governance.
+- **Concrete experiment hook:** Convert FR-11 policy updates into a small
+  skill graph with replay evidence, verifier-derived rewards, and promotion
+  lineage. Gate promotion on deterministic contract replay and positive utility.
+
+### Energy-Based Transformers and Citation Signals
+- **Paper:** "Energy-Based Transformers are Scalable Learners and Thinkers,"
+  arXiv:2507.02092, ICLR 2026 Oral.
+- **Sources:** https://openreview.net/forum?id=ZBj3Qp1bYg,
+  https://www.semanticscholar.org/paper/Energy-Based-Transformers-are-Scalable-Learners-and-Gladstone-Nanduru/2da9163730998a4368c609972ccff0582518b36b,
+  https://github.com/alexiglad/EBT
+- **What:** EBTs assign energy to input/candidate pairs and perform prediction
+  by minimizing energy. The OpenReview page reports up to 35 percent faster
+  pretraining and up to 29 percent inference-time improvement; Semantic
+  Scholar now lists 14 citations, including NRGPT, EBT-Policy, and an EBT
+  metacognitive-code pipeline.
+- **Relevance to Carnot:** EBT remains the nearest public foundation-model
+  comparator for Carnot's Phase-3 goal. The public Apache-2.0 repository makes
+  a local smoke audit possible, but `.118` should not attempt foundation-model
+  training. The useful near-term step is diagnostics: can Carnot's explicit
+  verifier energy predict when local ARMs behave like a soft-value EBM?
+- **Concrete experiment hook:** Run an ARM-as-EBM soft-value diagnostic over
+  local SOTA contract/SAT cases, comparing next-token logprob signals,
+  explicit Carnot energy, and deterministic accept/reject labels.
+
+### Autoregressive Language Models as EBMs
+- **Paper:** arXiv:2512.15605, "Autoregressive Language Models are Secretly
+  Energy-Based Models: Insights into the Lookahead Capabilities of Next-Token
+  Prediction."
+- **Source:** https://arxiv.org/abs/2512.15605
+- **What:** Establishes an explicit function-space bijection between globally
+  normalized sequence EBMs and locally normalized autoregressive models, tied
+  to soft Bellman equations in maximum-entropy RL. The paper also derives
+  distillation error bounds.
+- **Relevance to Carnot:** This gives theory for interpreting local SOTA GGUF
+  logits as an implicit energy/value estimate, but it does not make logits a
+  trusted verifier. Carnot can use the theory for auxiliary diagnostics and
+  routing, while deterministic validators remain authority.
+- **Concrete experiment hook:** Pair with the EBT diagnostic above: estimate
+  whether local ARM logprob/value proxies correlate with explicit Carnot energy
+  and whether they identify cases worth expensive deterministic verification.
+
+### Energy-Based Fine-Tuning of Language Models
+- **Paper:** Microsoft Research, "Matching Features, Not Tokens:
+  Energy-Based Fine-Tuning of Language Models" (March 2026).
+- **Source:** https://www.microsoft.com/en-us/research/publication/matching-features-not-tokens-energy-based-fine-tuning-of-language-models/
+- **What:** Introduces EBFT, a feature-matching objective for language-model
+  fine-tuning that targets sequence-level statistics under rollouts. The method
+  uses strided block-parallel sampling and batches feature extraction to perform
+  on-policy updates, connecting the objective to KL-regularized
+  feature-matching and EBMs.
+- **Relevance to Carnot:** Useful long-term for Phase-3 training, but not a
+  near-term `.118` model-weight mutation task. It reinforces that rollout-level
+  features matter more than teacher-forced token loss for verifier-aligned
+  behavior.
+- **Concrete experiment hook:** Use EBFT only as analysis framing for the
+  ARM/EBT diagnostic and FR-11 skill graph. Do not fine-tune mandated SOTA
+  models in `.118`.
+
+### Pinet, HardNet++, and SnareNet Constraint Layers
+- **Papers:** Pinet (OpenReview ICLR 2026 Oral), HardNet++ (arXiv:2604.19669),
+  and SnareNet (arXiv:2602.09317).
+- **Sources:** https://openreview.net/forum?id=EJ680UQeZG,
+  https://arxiv.org/abs/2604.19669,
+  https://arxiv.org/abs/2602.09317
+- **What:** These works enforce feasibility directly in neural outputs using
+  projection, damped local linearization, or differentiable repair layers.
+- **Relevance to Carnot:** They are scientifically relevant to constraint
+  repair, but Carnot's HardNet++/DSP repair lineage was recently retired as
+  noise. Do not reopen it in `.118` unless a specific deterministic substrate
+  need arises. Keep these as reference material for future differentiable
+  constraint layers after the runtime-contract stack scales.
+- **Concrete experiment hook:** Deferred. A future task may use Pinet-style
+  projection inside a bounded KAN/KAEM verifier, but `.118` should not spend a
+  slot reopening the retired HardNet++ lineage.
+
+### Extropic Z1 / XTR-0 Public Hardware Status
+- **Sources:** https://extropic.ai/hardware,
+  https://extropic.ai/writing/thermodynamic-computing-from-zero-to-one,
+  https://extropic.ai/software
+- **What:** Extropic's public hardware page lists X0 silicon prototype in Q1
+  2025, XTR-0 experimental platform in Q3 2025, and Z1 "early access 2026."
+  The public software page positions `thrml` as the JAX simulation layer for
+  PGMs/EBMs that will map to future Z1 hardware.
+- **Relevance to Carnot:** `.117` THRML parity gives Carnot a credible
+  software-readiness story, but no authenticated hardware access. The next
+  hardware task should be a readiness packet and benchmark spec, not a hardware
+  claim.
+- **Concrete experiment hook:** Build an Extropic/Z1 access-readiness packet
+  with the exact Carnot Ising benchmark suite, required transcript fields,
+  sample-quality metrics, and claim-boundary text for any future authenticated
+  run.
+
+### Logical Intelligence / Kona Public Status
+- **Sources:** https://logicalintelligence.com/blog/energy-based-models-for-reasoning,
+  https://logicalintelligence.com/kona-ebms-energy-based-models
+- **What:** Logical Intelligence publicly frames Kona as a non-autoregressive,
+  continuous-latent EBRM that scores partial and complete reasoning traces, with
+  Aleph as an orchestration layer over Kona, LLMs, and tools.
+- **Relevance to Carnot:** The public story reinforces Carnot's direction:
+  LLMs generate candidates, EBRMs/verifiers supply global constraint feedback.
+  No internal Kona implementation details are public enough for parity claims.
+- **Concrete experiment hook:** Use Kona only as a claim-boundary comparator in
+  `.118`. The measurable work remains local runtime-contract, SAT/automata,
+  FR-11 skill graph, and THRML parity artifacts.
+
 ## 2026-05-08 Post-.116 Planning Sweep (Milestone 2026.04.117)
 
 This sweep was run after milestone `.116` completed all 13 planned tasks.
