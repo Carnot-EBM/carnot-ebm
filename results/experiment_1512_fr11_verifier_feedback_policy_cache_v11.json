@@ -1,0 +1,65 @@
+{
+  "blockers": [],
+  "continuous_self_learning_task": true,
+  "finished_at": "2026-05-08T00:40:41Z",
+  "honest_verdict": "complete: fr11_v11_verifier_feedback_policy_cache_ready",
+  "no_model_weight_mutation": true,
+  "policy_cache_manifest_path": "results/fr11_policy_cache_events_1512.jsonl",
+  "policy_cache_ready": true,
+  "policy_update_rules": [
+    {
+      "action": "retrieval_boost",
+      "description": "Promoted, reachable, zero-soundness daily-eval rows may boost retrieval.",
+      "rule_id": "daily_promote_retrieval_boost"
+    },
+    {
+      "action": "retrieval_demote",
+      "description": "Non-improving retained skills are demoted from active retrieval boosts.",
+      "rule_id": "daily_retain_retrieval_demote"
+    },
+    {
+      "action": "verifier_escalation",
+      "description": "Failing monitor or validator events escalate deterministic verification.",
+      "rule_id": "monitor_failure_verifier_escalation"
+    },
+    {
+      "action": "continuation_preference",
+      "description": "Validated safe-prefix continuations may be preferred at query time.",
+      "rule_id": "safe_prefix_pass_continuation_preference"
+    },
+    {
+      "action": "routing_prefer_deterministic_validator",
+      "description": "Passing verifier or certificate events may route toward deterministic validators.",
+      "rule_id": "deterministic_validator_routing_preference"
+    },
+    {
+      "action": "routing_prefer_baseline",
+      "description": "Benign pass events with no stronger signal keep baseline routing.",
+      "rule_id": "baseline_routing_preference"
+    },
+    {
+      "action": "skill_quarantine",
+      "description": "False accepts, unreachable artifacts, stale provenance, or missing validation quarantine the update.",
+      "rule_id": "unsafe_or_unreachable_skill_quarantine"
+    }
+  ],
+  "policy_updates_accepted": 84,
+  "policy_updates_proposed": 84,
+  "promotion_requires_rollback_audit": true,
+  "run_date": "20260508",
+  "schema": "fr11_verifier_feedback_policy_cache_v11",
+  "soundness_mistakes": 0,
+  "source_events_loaded": 84,
+  "spec": [
+    "REQ-LEARN-1512",
+    "SCENARIO-LEARN-1512",
+    "SCENARIO-LEARN-1513"
+  ],
+  "status": "complete",
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_fr11_verifier_feedback_policy_cache.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --include='*/python/carnot/reporting/fr11_verifier_feedback_policy_cache.py' -m pytest tests/python/test_fr11_verifier_feedback_policy_cache.py -q --no-cov -n 0",
+    ".venv/bin/coverage report --fail-under=100 -m python/carnot/reporting/fr11_verifier_feedback_policy_cache.py"
+  ],
+  "verifier_false_accept_rate": 0.0
+}
