@@ -17,10 +17,10 @@ call. No fine-tuning. No access to model weights.
 
 Rust + Python/JAX, Apache 2.0, `pip install carnot`.
 
-Current public research record: **1,655 experiments tracked across 129
+Current public research record: **1,669 experiments tracked across 130
 artifact-backed completed milestone records**. `research-complete.yaml`
-currently archives through 2026.04.115, while checked-in terminal result
-artifacts extend through Exp 1518 / milestone 2026.04.116 on 2026-05-08.
+currently archives through 2026.04.116, while checked-in terminal result
+artifacts extend through Exp 1532 / milestone 2026.04.117 on 2026-05-08.
 
 Milestone .106 delivered the critical fix to thinking-mode certificate
 generation: Exp 1366 (CRANE tag-first prefix injection) reached
@@ -135,7 +135,18 @@ product-line solver oracle covered **6** feature models with false-accept rate
 verifier-feedback policy accepted and replayed **84** updates with **0**
 soundness mistakes, then packaged **24** rollback-passing trace2skill entries;
 THRML, KAN, and KV260 work stayed simulator/source-level with no hardware
-claim. The current test collection reports **23,095** items; this is a
+claim. Milestone .117 completed **14 of 14** criteria: runtime-contract E2E
+linked **458** contract cases with false-accept rate **0.0**; live local SOTA
+contract-guided repair used Qwen3.6-35B-A3B over **2** repair cases with false
+accepts **0** but acceptance lift **0.0**; CDG root-cause ordering attempted
+**111** cases with efficiency delta **+0.05015**; product-line staged rescue
+moved parse **0.333333 -> 1.0** and oracle agreement **0.0 -> 1.0** with false
+accepts **0.0**; FR-11 live policy promotion loaded **24** rollback-passing
+updates with utility delta **0.0** and **0** soundness mistakes; MARCH claim
+isolation extracted **4** claims from **1** case with budget delta **+3** and no
+acceptance lift; THRML/Carnot simulator-only parity passed n=8, 16, 32, 64, and
+128 plus **4/4** n=32 diverse topologies, all with KL **0.0** and no TSU or
+hardware claim. The current test collection reports **23,095** items; this is a
 collection count, not a full-suite pass claim.
 
 ## Install and run
@@ -398,6 +409,14 @@ experiment artifact under `results/`.
 | FR-11 verifier-feedback policy + portable skill pack | **84** policy updates accepted and rollback-replayed, utility delta **70**, **0** soundness mistakes; **24** rollback-passing trace2skill entries packaged and **60** rejected | Exps 1512-1514 |
 | Substrate conformance boundaries | THRML SamplerBackend conformance ready, simulator-only parity **2/2**; **3** KAN shapes normalized; KV260 property pack defines **4** source-level properties with lint/parse/simulation passing; no TSU, synthesis, bitstream, or board claim | Exps 1515-1517 |
 | Milestone .116 status | **13/13 criteria met**; runtime verifier contracts, FR-11 feedback policy, portable skills, THRML conformance, KAN shape normalization, and KV260 source-level property gates archived with claim boundaries preserved | Exp 1518 |
+| Runtime-contract E2E harness | **458** contract cases linked from .116 artifacts; false-accept **0.0**, false-reject **0.0**, source artifacts loaded | Exp 1520 |
+| Live SOTA contract-guided repair | Local Qwen3.6-35B-A3B inference used on **2** repair cases; false-accept **0.0**, repair accept lift **0.0**; ready as a bounded gate, not a scale claim | Exp 1521 |
+| CDG root-cause repair ordering | **111** cases attempted; CDG fix efficiency **0.238739** vs flat order **0.188589**, delta **+0.05015**, false-accept **0.0** | Exp 1522 |
+| Product-line parser/feasibility rescue | Parse **0.333333 -> 1.0**, oracle agreement **0.0 -> 1.0**, rescue feasibility **1.0**, false-accept **0.0**; branch continues under larger staged benchmark gate | Exp 1523 |
+| FR-11 live policy promotion v12 | **24** rollback-passing updates loaded; no model-weight mutation, utility delta **0.0**, soundness mistakes **0** | Exp 1524 |
+| MARCH claim-isolation ablation | **4** claims extracted from **1** case; budget delta **+3**, claim-isolation delta **0.0**, false-accept **0.0** | Exp 1525 |
+| THRML/Carnot parity scaling | Simulator-only parity passed n=8, 16, 32, 64, and 128 plus **4/4** n=32 diverse topologies; KL **0.0** throughout; no TSU hardware claim | Exps 1526-1531 |
+| Milestone .117 status | **14/14 criteria met**; runtime contracts, bounded live repair evidence, CDG/product-line rescue, FR-11 live policy promotion, claim isolation, and THRML scaling closed with claim boundaries preserved | Exp 1532 |
 | Current Python test collection | **23,095** Python tests collected; collection-only snapshot, not a full-suite pass claim | 2026-05-07 collection run |
 | Local Claude/Codex usage snapshot | Codex reads the newest local `token_count` event; Claude aggregates local token usage and reads only subscription/tier metadata from credentials; free-form quota prose is ignored instead of guessed; focused regression tests pass | 2026-05-04 changelog |
 
@@ -440,7 +459,7 @@ claim we publish.
 ## Where to go next
 
 - **[Technical report](docs/technical-report.md)** — the full research arc
-  through Exp 1518 across 129 completed milestone records, with a
+  through Exp 1532 across 130 completed milestone records, with a
   plain-English timeline of what we tried, what failed, what stuck.
 - **[Roadmap](docs/roadmap.md)** — current milestone, upcoming milestones,
   hardware track, and Phase 3 (Kona-parity foundation-model) direction.
@@ -644,7 +663,7 @@ See the [technical report](docs/technical-report.md) for the full research recor
 
 ## 14 Principles Learned
 
-Hard-won lessons from the activation-based phase of a research program that now spans 1,655 tracked experiments through Exp 1518 across 129 completed milestone records and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
+Hard-won lessons from the activation-based phase of a research program that now spans 1,669 tracked experiments through Exp 1532 across 130 completed milestone records and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
 
 ### What works
 1. **The model's own logprobs are the best energy.** No external EBM needed for rejection sampling — the LLM's own confidence is already an energy function. Simple, practical, +10%.
