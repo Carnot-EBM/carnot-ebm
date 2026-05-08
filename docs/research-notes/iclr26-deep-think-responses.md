@@ -7,6 +7,170 @@ integration-plan update + .NNN priority adjustment.
 
 ---
 
+## DT-2 response (received 2026-05-08, ~18:00Z) — **VERDICT: HYPOTHESIS INVERTED — RETENTIONS ARE THE BUG, NOT RETIREMENTS**
+
+**Question summary:** Does Sullivan's `|λ|`-bug cause spurious FR-11 v14
+retirements? Predicate: ≥20% flip rate when re-scoring under λ-GRPO
+falsifies v14's retirement decisions.
+
+**Verdict: NO — operator hypothesis is mathematically impossible under
+AND-composition.** But the bug exists in the opposite direction:
+v14's *retained* policies are likely polluted with mode-collapsed
+overfit candidates. Apply λ-GRPO to v15 immediately, but for a
+different reason than we expected.
+
+### Key results
+
+**(a) Quantitative flip-rate model:**
+
+```
+F ≈ C · P(S_G ≥ 2) · P(R(λ) < r_mean(G) | g* ∈ λ) · E[(|λ| − 1) · |Â(λ)|]
+```
+
+For F ≥ 20%, the corpus must produce groups with multiple successful
+trajectories distributed across different prefixes, intermediate median
+`|λ|`, and high within-group reward variance.
+
+**(b) Flip rate is NON-MONOTONE in median |λ|** (inverted-U):
+
+| |λ| regime | Behavior |
+|---|---|
+| `|λ| → 1` (diffuse) | Multiplier = 1. Standard GRPO ≡ λ-GRPO. Bug impact = 0 |
+| `|λ| ≈ k/2` (intermediate) | **Maximally destructive.** Prefix isolates a subset, severe negative advantage, large multiplier |
+| `|λ| → k` (saturated) | `R(λ) = r_mean(G)` ⇒ `Â(λ) = 0`. Multiplier scales zero gradient. **Bug neutralizes itself** |
+
+**(c) Transfer to FR-11 (overestimates flip rate):**
+
+- **Code-repair corpus** forces immense shared boilerplate (imports,
+  signatures, prompt echoes) → median `|λ|` pushed toward k → bug
+  naturally mitigates
+- **k=8 vs Sullivan's k=36** caps max catastrophic multiplier at 7×
+  vs 35×
+- **7B-32B models** have lower token entropy → tighter prefix
+  concentration → further mitigation
+
+**(d) MATHEMATICAL IMPOSSIBILITY OF OPERATOR HYPOTHESIS** under
+AND-composition:
+
+Operator theorized: "a single completion finds a clever fix but its
+prefix gets down-weighted because the rest failed."
+
+**Algebraic proof of impossibility:**
+
+```
+Let r_c > 0 = reward of single clever fix.
+AND-zero condition: other k−1 completions get r = 0.
+Shared prefix λ containing the fix:  R(λ) = r_c / |λ|
+Group mean:                            r_mean(G) = r_c / k
+Constraint: |λ| ≤ k (prefix is subset of group)
+Therefore:  R(λ) ≥ r_mean(G)
+           ⇒ Â(λ) ≥ 0
+```
+
+**A solitary clever fix in a sea of failures is ALWAYS up-weighted.**
+Mathematically barred from receiving negative advantage.
+
+For anti-exploitation to fire, S_G ≥ 2 (multiple distinct successes
+pulling r_mean above R(λ)). Under AND-composition's sparsity,
+S_G ≥ 2 is exceptionally rare for borderline models.
+
+**(e) THE SECOND-ORDER FINDING — spurious RETENTION via anti-exploration:**
+
+The bug structurally distorts the training landscape **in both
+directions**. The neglected direction is the load-bearing one:
+
+```
+Mediocre safe prefix slightly beats group mean ⇒ Â(λ) > 0
+Standard GRPO multiplies positive gradient by |λ|
+Rapid MODE-COLLAPSE onto safe boilerplate
+Artificially inflated training rewards
+```
+
+**Carnot's RETAINED v14 manifest is likely polluted with overfit,
+low-entropy models that survived the gate by exploiting the bug.**
+
+This is a more concerning failure mode than what we hypothesized:
+- Hypothesis: we were *retiring good policies* (false alarm)
+- Reality: we are *retaining mode-collapsed degenerate policies*
+  (silent quality regression)
+
+### Falsifiable experiment + sample size
+
+**For the (now-disproven) hypothesis** (re-run retired candidates):
+
+| Test | N |
+|---|---|
+| 80% power, Cohen's h=0.2, two-tailed Z | 196 |
+| Same, one-tailed | 155 |
+| Detecting 20% flip rate vs 5% baseline noise floor (exact binomial) | 27 |
+
+**For the actual problem** (audit retained v14 policies for
+mode-collapse): see "Tasks to file" below — this is a different
+experiment shape.
+
+### Recommendation: Option (iii) + immediate λ-GRPO for v15
+
+> Carnot should choose (iii): Accept v14 retirements as-is and document
+> the `|λ|`-bug caveat in paper-v6. The operators' subjective fear of
+> "lone-genius suppression" is mathematically invalid under FR-11's
+> AND-composition sparsity. Retraining retired candidates is misallocation
+> of compute.
+>
+> However, you should immediately apply the zero-overhead λ-GRPO patch
+> for v15 to cure the unseen Spurious Retentions (mode-collapse via
+> anti-exploration) that the bug is currently injecting into accepted
+> policies.
+
+### Tasks to file
+
+1. **DROP** the originally-filed `.120 task seed
+   `exp15XX-iclr26-grpo-secretly-prm-audit` (was: re-run retired v14
+   under λ-GRPO). Mathematical impossibility proof renders this
+   redundant.
+
+2. **NEW `.120 task**: `exp15XX-fr11-v14-retained-mode-collapse-audit`.
+   Audit v14 RETAINED policies for the spurious-retention failure
+   mode. Acceptance metrics:
+   - Token-entropy distribution vs pre-RL checkpoint (predicts
+     drop ≥ 0.5 nats per token if mode-collapse)
+   - Boilerplate-fraction in generated repairs (predicts ≥30% of
+     output is template-recycle)
+   - Per-group reward variance (predicts collapse to single-mode
+     reward distribution)
+   - On a held-out adversarial test set, retained-v14 vs pre-RL
+     baseline accuracy (predicts retained models WORSE than pre-RL
+     on out-of-distribution adversarial code)
+
+3. **NEW `.120 task**: `exp15YY-fr11-v15-lambda-grpo-patch`. Implement
+   the one-line `|λ|`-correction in TRL's GRPO trainer; train one
+   FR-11 v15 candidate from current pre-RL checkpoint. Acceptance
+   gate: token-entropy preserved relative to baseline at ≥90%; no
+   accuracy regression vs v14 (or honest verdict identifying why);
+   reduced boilerplate-fraction.
+
+4. **Paper-v6 §3 disclosure paragraph**: "FR-11 v12-v14 trained with
+   standard GRPO. v15+ adopts λ-GRPO (Sullivan 2026) to prevent
+   mode-collapse via anti-exploration. v14-retained policies were
+   audited for boilerplate overfit; results in Appendix X."
+
+### Implications for Carnot's research record
+
+- **`project_continuous_improvement.md` memory entry update**: the
+  retention-quality dimension was previously implicit in v14's
+  positive-utility-or-retire gate. Now explicit: v14's gate measures
+  utility on a *biased* training distribution. The fix is upstream
+  in training, not in the gate logic.
+- **Phase 4 active-inference track relevance**: anti-exploration =
+  precision-weighting suppressing high-entropy explorations of model
+  prior. There may be a clean Phase-4 reformulation of this fix in
+  free-energy-principle terms.
+- **paper-v6 honest-results discipline**: the "lone genius suppression"
+  intuition was wrong — but it surfaced a real bug (mode-collapse
+  retention). Document the inversion in the limitations section as
+  an example of how operator intuition needed mathematical scrutiny.
+
+---
+
 ## DT-5 response (received 2026-05-08, ~17:30Z) — **VERDICT: PAPER-V6 PUBLISHES THE C-PARAMETERIZED VERSION**
 
 **Question summary:** Does OT Theorem 3.6 (`SubOpt = OTC(β)·(1−αJ)`)
