@@ -5314,3 +5314,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-09: Exp 1629: Live SOTA validation of EBRM trajectory optimization (✅ Complete) — honest_verdict=ebrm_sota_validation_complete; results/experiment_1629_ebrm_sota.json
 - 2026-05-09: Exp 1630: LTLZinc temporal constraint benchmark expansion for non-forgetting checks (⚠️ Research Finding) — honest_verdict=ltlzinc_temporal_retention_benchmark_passed; results/experiment_1630_ltlzinc.json
 - 2026-05-09: Exp 1633: Pi-net style differentiable projection layer prototype (⚠️ Research Finding) — honest_verdict=pinet_projection_satisfies_hard_constraints; results/experiment_1633_pinet.json
+- 2026-05-09: Exp 1634: Compare Pi-net projection against T-SKM on CCTU constraints (⚠️ Research Finding) — honest_verdict=tskm_faster; results/experiment_1634_pinet_vs_tskm.json
