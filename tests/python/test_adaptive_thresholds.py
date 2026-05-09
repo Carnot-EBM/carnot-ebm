@@ -417,10 +417,21 @@ class TestCaseMemoryAddTraceSelective:
         record = _make_record()
         # contrast = abs(0.9 - 0.05) = 0.85 > 0.5
         result = memory.add_trace_selective(
-            record, violation_energy=0.9, model_confidence=0.05, min_contrast=0.5
+            record, violation_energy=0.9, model_confidence=0.05, min_contrast=0.5, certified_update_success=True
         )
         assert result is True
         assert len(memory) == 1
+
+    def test_uncertified_update_returns_false(self) -> None:
+        """High contrast trace without certified update is NOT stored and returns False."""
+        memory = CaseMemory()
+        record = _make_record()
+        # contrast = abs(0.9 - 0.05) = 0.85 > 0.5
+        result = memory.add_trace_selective(
+            record, violation_energy=0.9, model_confidence=0.05, min_contrast=0.5, certified_update_success=False
+        )
+        assert result is False
+        assert len(memory) == 0
 
     def test_low_contrast_discarded_returns_false(self) -> None:
         """SCENARIO-LEARN-028: Low contrast → not stored → returns False."""
@@ -428,7 +439,7 @@ class TestCaseMemoryAddTraceSelective:
         record = _make_record()
         # contrast = abs(0.6 - 0.55) = 0.05 < 0.5
         result = memory.add_trace_selective(
-            record, violation_energy=0.6, model_confidence=0.55, min_contrast=0.5
+            record, violation_energy=0.6, model_confidence=0.55, min_contrast=0.5, certified_update_success=True
         )
         assert result is False
         assert len(memory) == 0
@@ -439,7 +450,7 @@ class TestCaseMemoryAddTraceSelective:
         record = _make_record()
         # contrast = abs(1.0 - 0.5) = 0.5 → NOT strictly > 0.5
         result = memory.add_trace_selective(
-            record, violation_energy=1.0, model_confidence=0.5, min_contrast=0.5
+            record, violation_energy=1.0, model_confidence=0.5, min_contrast=0.5, certified_update_success=True
         )
         assert result is False
         assert len(memory) == 0
@@ -453,7 +464,7 @@ class TestCaseMemoryAddTraceSelective:
         # Selective add should also add when high-contrast
         record2 = _make_record(model_name="other_model")
         memory.add_trace_selective(
-            record2, violation_energy=0.9, model_confidence=0.1, min_contrast=0.5
+            record2, violation_energy=0.9, model_confidence=0.1, min_contrast=0.5, certified_update_success=True
         )
         assert len(memory) == 2
 
@@ -463,7 +474,7 @@ class TestCaseMemoryAddTraceSelective:
         record = _make_record()
         # contrast = 0.3, min_contrast = 0.2 → stored
         result = memory.add_trace_selective(
-            record, violation_energy=0.7, model_confidence=0.4, min_contrast=0.2
+            record, violation_energy=0.7, model_confidence=0.4, min_contrast=0.2, certified_update_success=True
         )
         assert result is True
         assert len(memory) == 1
@@ -474,6 +485,6 @@ class TestCaseMemoryAddTraceSelective:
         for i in range(3):
             rec = _make_record(model_name=f"model_{i}")
             memory.add_trace_selective(
-                rec, violation_energy=0.95, model_confidence=0.05, min_contrast=0.5
+                rec, violation_energy=0.95, model_confidence=0.05, min_contrast=0.5, certified_update_success=True
             )
         assert len(memory) == 3

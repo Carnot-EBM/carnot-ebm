@@ -571,6 +571,7 @@ def _run_selective_consolidation(
             violation_energy=q["violation_energy"],
             model_confidence=q["model_confidence"],
             min_contrast=min_contrast,
+            certified_update_success=True,
         )
         if stored:
             n_retained += 1
