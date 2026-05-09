@@ -1,0 +1,33 @@
+{
+  "schema": "carnot.operational_retro.v63",
+  "milestone": "2026.05.124",
+  "generated_at": "2026-05-09T15:20:00Z",
+  "retro_type": "operational_success",
+  "summary": "Milestone 2026.05.124 operational retrospective complete. Analyzed 449 min wall time / 99 experiments (avg ~4.5 min). Slowest paths: Exp 1603 (88 min), Exp 1591 (48 min), Exp 1606 (15 min), Exp 1609 (14 min), and Full-Scale Pipeline v3 gate (14 min). Both RTX 3090s were completely idle at 4 MB / 0% utilization throughout, meaning DualGPURunner was not utilized and parallelization was missed. Estimated 40% savings recoverable via DualGPURunner parallelization and addressing Exp 1603/1591 bottlenecks.",
+  "slowest_experiments": [
+    "Exp 1603: Energy-Based Constraint Network (EBCN) coherence sco (88 min)",
+    "Exp 1591: Upgrade DCCD smoke to reusable structured verdict ad (48 min)",
+    "Exp 1606: DCCD repair on multi-hop reasoning tasks (15 min)",
+    "Exp 1609: Context-sensitive constraint induction (14 min)",
+    "Full-Scale Pipeline v3 — Gated on Exp 1414 Repair Executor (14 min)"
+  ],
+  "bottlenecks_identified": [
+    "Exp 1603 and Exp 1591 consumed disproportionate amounts of wall time.",
+    "Both RTX 3090 GPUs were completely idle, missing parallelization opportunities.",
+    "Full-Scale Pipeline v3 gate churn persists."
+  ],
+  "improvements_suggested": [
+    "Utilize DualGPURunner to run experiments in parallel.",
+    "Address the Exp 1603 and 1591 execution paths directly.",
+    "Terminalize Full-Scale Pipeline v3 gate blocks early."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Implement DualGPURunner parallelization.",
+    "Address Exp 1603 bottlenecks.",
+    "Terminalize Full-Scale Pipeline v3 gate blocks."
+  ],
+  "meta_reflection": "Retrospective highlights repeated missing of DualGPU parallelization.",
+  "total_wall_time_minutes": 449,
+  "experiments_completed": 99,
+  "estimated_time_savings_pct": 40
+}
