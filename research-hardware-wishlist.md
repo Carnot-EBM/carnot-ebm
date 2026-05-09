@@ -14,7 +14,7 @@ expanding scope; it is not a hardware-execution claim.
 | Track | Why active now | Boundary |
 |---|---|---|
 | Dual RTX 3090 CUDA local SOTA runtime repair | Exp 1442 saw two RTX 3090s and cached flagship GGUF models; the blocker is the local llama.cpp CUDA runtime. | No live SOTA inference claim until a smoke run records `usable_response=true`. |
-| KV260/FPGA Discrete SB RTL lint and simulation | Exp 1451 completed source-level lint and simulation for `hardware/kv260/discrete_sb_256.v`; local HDL tools are usable. | No KV260 board, bitfile, or latency claim until Vivado synthesis, bitfile flashing, and board commands run. |
+| KV260/FPGA Discrete SB RTL lint and simulation | Exp 1451 completed source-level lint and simulation for `hardware/kv260/discrete_sb_256.v`; local HDL tools are usable. | Source-level RTL lint/sim work is preserved as educational/supporting only. KV260 board claims requiring Vivado are retired. |
 | THRML/Extropic TSU compatibility simulation | Public THRML/JAX compatibility remains useful for sampler portability and future TSU integration. | No Extropic hardware access, Z1/XTR-0 execution, or TSU latency claim without authenticated hardware evidence. |
 
 ### Deferred hardware tracks (Exp 1460)
