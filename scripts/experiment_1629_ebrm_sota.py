@@ -9,7 +9,7 @@ from carnot.inference.sota_models import cached_sota_pair
 def run_evaluation() -> dict:
     """Run the EBRM trajectory optimization validation."""
     print("Loading mandated SOTA models for EBRM evaluation...")
-    models = cached_sota_pair(gpu_indices=(0, 1))
+    models = cached_sota_pair(gpu_indices=(0, 1), model_indices=(0, 2))
     
     if models is None or len(models) < 2:
         return {
