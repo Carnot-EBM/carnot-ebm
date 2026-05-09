@@ -1346,3 +1346,4 @@ web search: site:o |
 | 2026-05-09 12:34 UTC | Exp 1610: Connect RKAN to Z3 | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1602-rkan-prototype.rkan_ready (actual= |
 | 2026-05-09 12:36 UTC | Exp 1611: EBCN validation on mandated SOTA | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1603-ebcn-scorer.scorer_ready (actual=N |
 | 2026-05-09 12:38 UTC | Exp 1611: EBCN validation on mandated SOTA | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1603-ebcn-scorer.scorer_ready (actual=N |
+| 2026-05-09 12:40 UTC | Exp 1611: EBCN validation on mandated SOTA | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1603-ebcn-scorer.scorer_ready (actual=N |
