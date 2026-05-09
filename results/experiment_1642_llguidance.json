@@ -1,0 +1,168 @@
+{
+  "adapter_class": "LlGuidanceStructuredVerdictAdapter",
+  "adapter_module": "scripts.experiment_1642_llguidance",
+  "adapter_rows": {
+    "invalid": {
+      "budget_ms_consumed": 0.0,
+      "calibrated_confidence": 0.2141650169574414,
+      "energy": 1.8,
+      "extras": {
+        "adapter_schema_version": "carnot.llguidance_structured_verdict_adapter.v1",
+        "backend": {
+          "backend_name": "post_decode_fallback",
+          "fallback_backend_available": true,
+          "grammar_compiled": false,
+          "grammar_error": "llguidance not installed",
+          "grammar_validation_message": null,
+          "llguidance_backend_available": false,
+          "llguidance_version": null
+        },
+        "parsed_payload": {
+          "calibrated_confidence": 1.4,
+          "energy": "low",
+          "verdict": "pass"
+        },
+        "schema_errors": [
+          "$.producing_tier is required",
+          "$.tier_reached is required",
+          "$.rationale is required",
+          "$.budget_ms_consumed is required",
+          "$.repairs_applied is required",
+          "$.extras is required",
+          "$.calibrated_confidence expected <= 1.0",
+          "$.energy expected number"
+        ]
+      },
+      "producing_tier": 0,
+      "rationale": "structured_output_invalid",
+      "repairs_applied": [],
+      "tier_reached": 0,
+      "verdict": "abstain"
+    },
+    "roundtrip": {
+      "budget_ms_consumed": 2.5,
+      "calibrated_confidence": 0.93,
+      "energy": 0.0,
+      "extras": {
+        "case_id": "case-1642",
+        "source": "fixture"
+      },
+      "producing_tier": 3,
+      "rationale": "constraints_satisfied",
+      "repairs_applied": [
+        "none"
+      ],
+      "tier_reached": 3,
+      "verdict": "pass"
+    }
+  },
+  "adapter_schema_version": "carnot.llguidance_structured_verdict_adapter.v1",
+  "adapter_success": true,
+  "arbitrary_code_execution_path_introduced": false,
+  "backend_diagnostics": {
+    "backend_name": "post_decode_fallback",
+    "fallback_backend_available": true,
+    "grammar_compiled": false,
+    "grammar_error": "llguidance not installed",
+    "grammar_validation_message": null,
+    "llguidance_backend_available": false,
+    "llguidance_version": null
+  },
+  "experiment_id": 1642,
+  "fallback_backend_available": true,
+  "grammar_compiled": false,
+  "honest_verdict": "complete: llguidance structured-verdict adapter exposes llama.cpp metadata and preserves deterministic abstaining fallback validation",
+  "invalid_output_abstains": true,
+  "llama_cpp_adapter_ready": true,
+  "llama_cpp_metadata": {
+    "adapter_schema_version": "carnot.llguidance_structured_verdict_adapter.v1",
+    "backend": {
+      "backend_name": "post_decode_fallback",
+      "fallback_backend_available": true,
+      "grammar_compiled": false,
+      "grammar_error": "llguidance not installed",
+      "grammar_validation_message": null,
+      "llguidance_backend_available": false,
+      "llguidance_version": null
+    },
+    "grammar": null,
+    "json_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "budget_ms_consumed": {
+          "minimum": 0.0,
+          "type": "number"
+        },
+        "calibrated_confidence": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "type": "number"
+        },
+        "energy": {
+          "type": "number"
+        },
+        "extras": {
+          "type": "object"
+        },
+        "producing_tier": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "rationale": {
+          "type": "string"
+        },
+        "repairs_applied": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "tier_reached": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "verdict": {
+          "enum": [
+            "pass",
+            "fail",
+            "abstain"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "verdict",
+        "energy",
+        "calibrated_confidence",
+        "producing_tier",
+        "tier_reached",
+        "rationale",
+        "budget_ms_consumed",
+        "repairs_applied",
+        "extras"
+      ],
+      "type": "object"
+    },
+    "llama_cpp_kwargs": {
+      "max_tokens": 256,
+      "response_format": {
+        "type": "json_object"
+      },
+      "temperature": 0.0
+    },
+    "prompt": "Return exactly one Carnot VerdictRecord JSON object. Do not include prose before or after the JSON.\nTask:\nVerify the candidate response.\nJSON schema:\n{\"additionalProperties\":false,\"properties\":{\"budget_ms_consumed\":{\"minimum\":0.0,\"type\":\"number\"},\"calibrated_confidence\":{\"maximum\":1.0,\"minimum\":0.0,\"type\":\"number\"},\"energy\":{\"type\":\"number\"},\"extras\":{\"type\":\"object\"},\"producing_tier\":{\"minimum\":0,\"type\":\"integer\"},\"rationale\":{\"type\":\"string\"},\"repairs_applied\":{\"items\":{\"type\":\"string\"},\"type\":\"array\"},\"tier_reached\":{\"minimum\":0,\"type\":\"integer\"},\"verdict\":{\"enum\":[\"pass\",\"fail\",\"abstain\"],\"type\":\"string\"}},\"required\":[\"verdict\",\"energy\",\"calibrated_confidence\",\"producing_tier\",\"tier_reached\",\"rationale\",\"budget_ms_consumed\",\"repairs_applied\",\"extras\"],\"type\":\"object\"}\n"
+  },
+  "llguidance_backend_available": false,
+  "run_date": "20260509",
+  "spec_traces": [
+    "REQ-VERIFY-1642",
+    "SCENARIO-VERIFY-1642"
+  ],
+  "status": "complete",
+  "structured_verdict_roundtrip": true,
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_1642_llguidance.py -q -o addopts=''",
+    "COVERAGE_RCFILE=/dev/null .venv/bin/pytest tests/python/test_experiment_1642_llguidance.py -q -o addopts='' --cov=scripts.experiment_1642_llguidance --cov-report=term-missing --cov-fail-under=100",
+    ".venv/bin/pytest tests/python -q (attempted; unrelated failures and xdist worker segfaults observed, stopped after >40 minutes)"
+  ]
+}

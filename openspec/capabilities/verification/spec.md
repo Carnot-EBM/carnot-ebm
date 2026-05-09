@@ -2238,6 +2238,47 @@ the known-bad output,
 And `results/experiment_1640_nsvif_dsl.json` records `parser_success=true` with
 `false_accept_rate=0.0`.
 
+### REQ-VERIFY-1642: llguidance Adapter For Structured Verdict Generation
+
+The repository shall provide an Exp 1642 llguidance adapter that exposes
+Carnot structured verdict records to local GGUF/llama.cpp call sites without
+making the deterministic verifier depend on optional grammar bindings.
+
+The adapter shall:
+
+- define `scripts/experiment_1642_llguidance.py`;
+- build a bounded JSON schema for `VerdictRecord` payloads emitted by Carnot's
+  structured verdict pipeline;
+- compile llguidance JSON-schema grammar metadata when optional `llguidance`
+  bindings are importable or injected by tests;
+- expose llama.cpp request metadata containing the prompt, schema, backend
+  diagnostics, and compiled grammar when available;
+- preserve a post-decode deterministic fallback that validates generated JSON
+  and returns abstaining `VerdictRecord` rows for malformed or schema-invalid
+  output;
+- round-trip a known-good `VerdictRecord` through JSON without arbitrary code
+  execution; and
+- write `results/experiment_1642_llguidance.json` with `status`,
+  `experiment_id`, `adapter_module`, `adapter_success`,
+  `llguidance_backend_available`, `fallback_backend_available`,
+  `llama_cpp_adapter_ready`, `structured_verdict_roundtrip`,
+  `invalid_output_abstains`, `tests_run`, and `honest_verdict`.
+
+`adapter_success` MUST be true only when the known-good verdict round-trips,
+invalid generated output abstains rather than passing, llama.cpp metadata is
+available, and the deterministic fallback remains available even when
+llguidance is absent.
+
+### SCENARIO-VERIFY-1642: Adapter Emits llguidance And Fallback Verdict Rows
+
+Given a Carnot `VerdictRecord` and a bounded structured-verdict JSON schema,
+When Exp 1642 builds llguidance/llama.cpp generation metadata and parses both
+valid and invalid generated JSON,
+Then the valid JSON returns the original pass/fail/abstain verdict fields,
+the invalid JSON returns an abstaining `VerdictRecord` with schema diagnostics,
+and `results/experiment_1642_llguidance.json` records
+`adapter_success=true`.
+
 ### REQ-VERIFY-1591: Reusable DCCD Structured Verdict Adapter
 
 The repository shall provide a reusable structured-verdict adapter for Exp 1591
@@ -2284,7 +2325,7 @@ the semantic false accept returns a `VerdictRecord` with `verdict="fail"` and
 and `results/experiment_1591_dccd_adapter.json` records complete metrics and
 backend diagnostics for the reusable adapter.
 
-## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487/1495/1496/1499/1500/1501/1507/1508/1509/1510/1520/1521/1522/1525/1537/1538/1541/1542/1551/1552/1553/1554/1557/1562/1571/1578/1580/1588/1591)
+## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487/1495/1496/1499/1500/1501/1507/1508/1509/1510/1520/1521/1522/1525/1537/1538/1541/1542/1551/1552/1553/1554/1557/1562/1571/1578/1580/1588/1591/1642)
 
 | Requirement | Python | Tests |
 |-------------|--------|-------|
@@ -2333,6 +2374,7 @@ backend diagnostics for the reusable adapter.
 | REQ-VERIFY-1609 | Implemented (`python/carnot/pipeline/context_induction.py`) | Implemented (`tests/python/test_experiment_1609_context_induction.py`) |
 | REQ-VERIFY-1640 | Implemented (`scripts/experiment_1640_nsvif_dsl.py`) | Implemented (`tests/python/test_experiment_1640_nsvif_dsl.py`) |
 | REQ-VERIFY-1641 | Implemented (`scripts/experiment_1641_nsvif_sota.py`) | Implemented (`tests/python/test_experiment_1641_nsvif_sota.py`) |
+| REQ-VERIFY-1642 | Implemented (`scripts/experiment_1642_llguidance.py`) | Implemented (`tests/python/test_experiment_1642_llguidance.py`) |
 
 ### REQ-VERIFY-1593: CDG Repair Acceptance Rates
 The repository shall provide a CDG repair analysis tool that builds a CDG over runtime-contract cases, compares repair localization, and contrasts repair acceptance rates between flat check and CDG ordering using the mandated MODEL_SPECS.
