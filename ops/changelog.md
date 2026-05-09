@@ -5288,3 +5288,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-09: Exp 1606: DCCD repair on multi-hop reasoning tasks (✅ Complete) — honest_verdict=complete: dccd_multihop_constraints_injected_accuracy_above_50pct; results/experiment_1606_dccd_multihop.json
 - 2026-05-09: Exp 1607: Extract DSL constraints from HumanEval (✅ Complete) — honest_verdict=complete: HumanEval prompt-derived NSVIF DSL constraints compiled locally for mandated model specs without live inference; results/experiment_1607_dsl_humaneval.json
 - 2026-05-09: Exp 1608: FR-11 continuous self-learning CerCE scale (✅ Complete) — honest_verdict=complete: fr11_cerce_scale_positive_utility_no_forgetting; results/experiment_1608_fr11_cerce.json
+- 2026-05-09: Exp 1609: Context-sensitive constraint induction (✅ Complete) — honest_verdict=complete: context_induction_ready; results/experiment_1609_context_induction.json
