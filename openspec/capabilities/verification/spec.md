@@ -2200,7 +2200,53 @@ constraint IDs,
 And `results/experiment_1588_nsvif_dsl.json` records complete validator metrics
 with `false_accept_rate=0.0`.
 
-## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487/1495/1496/1499/1500/1501/1507/1508/1509/1510/1520/1521/1522/1525/1537/1538/1541/1542/1551/1552/1553/1554/1557/1562/1571/1578/1580/1588)
+### REQ-VERIFY-1591: Reusable DCCD Structured Verdict Adapter
+
+The repository shall provide a reusable structured-verdict adapter for Exp 1591
+that upgrades the Exp 1580 DCCD smoke path into a deterministic API for Carnot
+verifier-output JSON schemas.
+
+The adapter shall:
+
+- define `DCCDStructuredVerdictAdapter` under `python/carnot/verifiers/`;
+- accept a bounded JSON schema, an optional semantic-path expectation mapping,
+  and raw unconstrained draft text;
+- compile an llguidance JSON-schema grammar when the optional `llguidance`
+  Python bindings are importable, while preserving a deterministic post-decode
+  fallback when they are not installed;
+- perform DCCD-style structural projection from draft payload to target payload
+  without introducing arbitrary code execution;
+- return a structured `VerdictRecord` whose `extras` include schema errors,
+  semantic errors, false-accept status, backend diagnostics, and the parsed
+  payload;
+- expose prompt and grammar metadata that downstream local GGUF/llama.cpp
+  call sites can use for constrained regeneration; and
+- write `results/experiment_1591_dccd_adapter.json` with `status`,
+  `experiment_id`, `adapter_module`, `llguidance_backend_available`,
+  `fallback_backend_available`, `strict_schema_validity_rate`,
+  `semantic_correctness_rate`, `false_accept_count`,
+  `arbitrary_code_execution_path_introduced`, `tests_run`, and
+  `honest_verdict`.
+
+`status` MUST be `complete` only when the adapter accepts known-good structured
+rows, rejects schema-valid semantic false accepts, records backend diagnostics,
+and the deterministic fallback remains available without `llguidance`.
+
+### SCENARIO-VERIFY-1591: DCCD Adapter Emits Structured Verdict Records
+
+Given a Carnot verifier-output schema with deterministic semantic-path
+expectations and a target payload,
+When `DCCDStructuredVerdictAdapter` evaluates unconstrained draft text, a
+DCCD-projected payload, and a schema-valid semantic false accept,
+Then the draft row records schema/semantic failures without becoming a pass,
+the DCCD-projected row returns a `VerdictRecord` with `verdict="pass"` and
+zero false accepts,
+the semantic false accept returns a `VerdictRecord` with `verdict="fail"` and
+`extras["false_accept"]=true`,
+and `results/experiment_1591_dccd_adapter.json` records complete metrics and
+backend diagnostics for the reusable adapter.
+
+## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487/1495/1496/1499/1500/1501/1507/1508/1509/1510/1520/1521/1522/1525/1537/1538/1541/1542/1551/1552/1553/1554/1557/1562/1571/1578/1580/1588/1591)
 
 | Requirement | Python | Tests |
 |-------------|--------|-------|
@@ -2245,3 +2291,4 @@ with `false_accept_rate=0.0`.
 | REQ-VERIFY-1578 | Implemented (`python/carnot/training/brain_reinforce_training_dynamics.py`) | Implemented (`tests/python/test_experiment_1578_brain_reinforce_training_dynamics.py`) |
 | REQ-VERIFY-1580 | Implemented (`python/carnot/reporting/dccd_jsonschemabench_sota_structured_output_smoke.py`) | Implemented (`tests/python/test_experiment_1580_dccd_jsonschemabench_sota_structured_output_smoke.py`) |
 | REQ-VERIFY-1588 | Implemented (`python/carnot/verifiers/dsl.py`) | Implemented (`tests/python/test_experiment_1588_nsvif_dsl.py`) |
+| REQ-VERIFY-1591 | Implemented (`python/carnot/verifiers/dccd_adapter.py`) | Implemented (`tests/python/test_experiment_1591_dccd_adapter.py`) |
