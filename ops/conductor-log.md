@@ -1331,3 +1331,4 @@ web search: site:o |
 | 2026-05-09 11:06 UTC | Exp 1603: Energy-Based Constraint Network (EBCN) c | FAIL | Gemini CLI error: Hard wall-clock cap after 4802s. Last output: at(energy)
 +
 + |
+| 2026-05-09 11:13 UTC | Exp 1603: Energy-Based Constraint Network (EBCN) c | OK | cache hit: 106 passed, 1 warning in 6.77s |
