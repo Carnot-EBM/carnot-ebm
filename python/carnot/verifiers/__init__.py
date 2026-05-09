@@ -1,5 +1,6 @@
 """Verifier utilities that compile bounded constraint packs."""
 
+from carnot.verifiers.dccd_adapter import DCCDAdapterError, DCCDStructuredVerdictAdapter
 from carnot.verifiers.dsl import (
     CompiledInstructionValidator,
     ConstraintDslError,
@@ -15,6 +16,8 @@ from carnot.verifiers.dsl import (
 
 __all__ = [
     "CompiledInstructionValidator",
+    "DCCDAdapterError",
+    "DCCDStructuredVerdictAdapter",
     "ConstraintDslError",
     "ConstraintPack",
     "ConstraintSpec",
