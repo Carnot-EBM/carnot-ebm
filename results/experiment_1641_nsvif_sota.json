@@ -1,21 +1,452 @@
 {
-  "experiment_id": 1641,
-  "false_accepts": 0,
-  "honest_verdict": "complete: NSVIF compiled validators reject all invalid outputs from mandated SOTA models with zero false accepts.",
-  "models_used": [
+  "adapter_rows": [
     {
-      "gpu": 0,
-      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
-      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
-      "name": "Qwen3.6-35B-A3B"
+      "adapter_success": true,
+      "carnot_constraints": [
+        {
+          "constraint_type": "instruction_constraint",
+          "description": "SOTA NSVIF constraint c001-json_object: json_object on json",
+          "energy_term": null,
+          "metadata": {
+            "case_id": "json-text-bound",
+            "constraint_id": "c001-json_object",
+            "dsl_schema_version": "carnot.instruction_constraints.v1",
+            "field": "json",
+            "instruction": "Respond in JSON with keys answer and confidence. Include \"approved\". Do not mention \"secret\". Use at most 12 words.",
+            "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+            "model_name": "Qwen3.6-35B-A3B",
+            "model_path": "/models/qwen.gguf",
+            "nsvif_operator": "json_object",
+            "raw_output_sha256": "5a9f9990782a0a1c6371c1fee52fd4a8d9bac839e959911468b18f65f04807f3",
+            "source_text": "json",
+            "spec_traces": [
+              "REQ-VERIFY-1641",
+              "SCENARIO-VERIFY-1641"
+            ],
+            "value": true
+          }
+        },
+        {
+          "constraint_type": "instruction_constraint",
+          "description": "SOTA NSVIF constraint c002-json_has_keys: json_has_keys on json",
+          "energy_term": null,
+          "metadata": {
+            "case_id": "json-text-bound",
+            "constraint_id": "c002-json_has_keys",
+            "dsl_schema_version": "carnot.instruction_constraints.v1",
+            "field": "json",
+            "instruction": "Respond in JSON with keys answer and confidence. Include \"approved\". Do not mention \"secret\". Use at most 12 words.",
+            "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+            "model_name": "Qwen3.6-35B-A3B",
+            "model_path": "/models/qwen.gguf",
+            "nsvif_operator": "json_has_keys",
+            "raw_output_sha256": "5a9f9990782a0a1c6371c1fee52fd4a8d9bac839e959911468b18f65f04807f3",
+            "source_text": "with keys answer and confidence",
+            "spec_traces": [
+              "REQ-VERIFY-1641",
+              "SCENARIO-VERIFY-1641"
+            ],
+            "value": [
+              "answer",
+              "confidence"
+            ]
+          }
+        },
+        {
+          "constraint_type": "instruction_constraint",
+          "description": "SOTA NSVIF constraint c003-contains: contains on text",
+          "energy_term": null,
+          "metadata": {
+            "case_id": "json-text-bound",
+            "constraint_id": "c003-contains",
+            "dsl_schema_version": "carnot.instruction_constraints.v1",
+            "field": "text",
+            "instruction": "Respond in JSON with keys answer and confidence. Include \"approved\". Do not mention \"secret\". Use at most 12 words.",
+            "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+            "model_name": "Qwen3.6-35B-A3B",
+            "model_path": "/models/qwen.gguf",
+            "nsvif_operator": "contains",
+            "raw_output_sha256": "5a9f9990782a0a1c6371c1fee52fd4a8d9bac839e959911468b18f65f04807f3",
+            "source_text": "Include \"approved\"",
+            "spec_traces": [
+              "REQ-VERIFY-1641",
+              "SCENARIO-VERIFY-1641"
+            ],
+            "value": "approved"
+          }
+        },
+        {
+          "constraint_type": "instruction_constraint",
+          "description": "SOTA NSVIF constraint c004-not_contains: not_contains on text",
+          "energy_term": null,
+          "metadata": {
+            "case_id": "json-text-bound",
+            "constraint_id": "c004-not_contains",
+            "dsl_schema_version": "carnot.instruction_constraints.v1",
+            "field": "text",
+            "instruction": "Respond in JSON with keys answer and confidence. Include \"approved\". Do not mention \"secret\". Use at most 12 words.",
+            "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+            "model_name": "Qwen3.6-35B-A3B",
+            "model_path": "/models/qwen.gguf",
+            "nsvif_operator": "not_contains",
+            "raw_output_sha256": "5a9f9990782a0a1c6371c1fee52fd4a8d9bac839e959911468b18f65f04807f3",
+            "source_text": "Do not mention \"secret\"",
+            "spec_traces": [
+              "REQ-VERIFY-1641",
+              "SCENARIO-VERIFY-1641"
+            ],
+            "value": "secret"
+          }
+        },
+        {
+          "constraint_type": "instruction_constraint",
+          "description": "SOTA NSVIF constraint c005-max_words: max_words on text",
+          "energy_term": null,
+          "metadata": {
+            "case_id": "json-text-bound",
+            "constraint_id": "c005-max_words",
+            "dsl_schema_version": "carnot.instruction_constraints.v1",
+            "field": "text",
+            "instruction": "Respond in JSON with keys answer and confidence. Include \"approved\". Do not mention \"secret\". Use at most 12 words.",
+            "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+            "model_name": "Qwen3.6-35B-A3B",
+            "model_path": "/models/qwen.gguf",
+            "nsvif_operator": "max_words",
+            "raw_output_sha256": "5a9f9990782a0a1c6371c1fee52fd4a8d9bac839e959911468b18f65f04807f3",
+            "source_text": "Use at most 12 words",
+            "spec_traces": [
+              "REQ-VERIFY-1641",
+              "SCENARIO-VERIFY-1641"
+            ],
+            "value": 12
+          }
+        }
+      ],
+      "case_id": "json-text-bound",
+      "dsl_input": {
+        "constraints": [
+          {
+            "field": "json",
+            "id": "c001-json_object",
+            "op": "json_object",
+            "source_text": "json",
+            "value": true
+          },
+          {
+            "field": "json",
+            "id": "c002-json_has_keys",
+            "op": "json_has_keys",
+            "source_text": "with keys answer and confidence",
+            "value": [
+              "answer",
+              "confidence"
+            ]
+          },
+          {
+            "field": "text",
+            "id": "c003-contains",
+            "op": "contains",
+            "source_text": "Include \"approved\"",
+            "value": "approved"
+          },
+          {
+            "field": "text",
+            "id": "c004-not_contains",
+            "op": "not_contains",
+            "source_text": "Do not mention \"secret\"",
+            "value": "secret"
+          },
+          {
+            "field": "text",
+            "id": "c005-max_words",
+            "op": "max_words",
+            "source_text": "Use at most 12 words",
+            "value": 12
+          }
+        ],
+        "instruction": "Respond in JSON with keys answer and confidence. Include \"approved\". Do not mention \"secret\". Use at most 12 words.",
+        "max_constraints": 8,
+        "parser_version": "rule-v1",
+        "schema_version": "carnot.instruction_constraints.v1"
+      },
+      "error": "",
+      "known_bad": {
+        "accepted": false,
+        "failure_ids": [
+          "c002-json_has_keys",
+          "c003-contains",
+          "c004-not_contains"
+        ],
+        "issues": [
+          {
+            "constraint_id": "c002-json_has_keys",
+            "expected": [
+              "answer",
+              "confidence"
+            ],
+            "message": "json_has_keys constraint failed",
+            "observed": {
+              "missing": [
+                "confidence"
+              ]
+            }
+          },
+          {
+            "constraint_id": "c003-contains",
+            "expected": "approved",
+            "message": "contains constraint failed",
+            "observed": "not found"
+          },
+          {
+            "constraint_id": "c004-not_contains",
+            "expected": "not secret",
+            "message": "not_contains constraint failed",
+            "observed": "found"
+          }
+        ]
+      },
+      "known_good": {
+        "accepted": true,
+        "failure_ids": [],
+        "issues": []
+      },
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_name": "Qwen3.6-35B-A3B",
+      "model_path": "/models/qwen.gguf",
+      "raw_output_excerpt": "{\"instruction\": \"Respond in JSON with keys answer and confidence. Include \\\"approved\\\". Do not mention \\\"secret\\\". Use at most 12 words.\"}",
+      "raw_output_sha256": "5a9f9990782a0a1c6371c1fee52fd4a8d9bac839e959911468b18f65f04807f3",
+      "validator_compiled": true
     },
     {
-      "gpu": 1,
-      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
-      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
-      "name": "Gemma4-26B-A4B-it"
+      "adapter_success": true,
+      "carnot_constraints": [
+        {
+          "constraint_type": "instruction_constraint",
+          "description": "SOTA NSVIF constraint choice: enum on text",
+          "energy_term": null,
+          "metadata": {
+            "case_id": "enum-answer",
+            "constraint_id": "choice",
+            "dsl_schema_version": "carnot.instruction_constraints.v1",
+            "field": "text",
+            "instruction": "Answer one of \"yes\", \"no\".",
+            "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+            "model_name": "Gemma4-31B-it",
+            "model_path": "/models/gemma31.gguf",
+            "nsvif_operator": "enum",
+            "raw_output_sha256": "88d03203827caceba6d5aae20d0b90e0c92f331892e694f8c9d31ac7bc9ed5a5",
+            "source_text": "bounded yes/no answer",
+            "spec_traces": [
+              "REQ-VERIFY-1641",
+              "SCENARIO-VERIFY-1641"
+            ],
+            "value": [
+              "yes",
+              "no"
+            ]
+          }
+        }
+      ],
+      "case_id": "enum-answer",
+      "dsl_input": {
+        "constraints": [
+          {
+            "field": "text",
+            "id": "choice",
+            "op": "enum",
+            "source_text": "bounded yes/no answer",
+            "value": [
+              "yes",
+              "no"
+            ]
+          }
+        ],
+        "instruction": "Answer one of \"yes\", \"no\".",
+        "max_constraints": 8,
+        "parser_version": "rule-v1",
+        "schema_version": "carnot.instruction_constraints.v1"
+      },
+      "error": "",
+      "known_bad": {
+        "accepted": false,
+        "failure_ids": [
+          "choice"
+        ],
+        "issues": [
+          {
+            "constraint_id": "choice",
+            "expected": [
+              "no",
+              "yes"
+            ],
+            "message": "enum constraint failed",
+            "observed": "maybe"
+          }
+        ]
+      },
+      "known_good": {
+        "accepted": true,
+        "failure_ids": [],
+        "issues": []
+      },
+      "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_name": "Gemma4-31B-it",
+      "model_path": "/models/gemma31.gguf",
+      "raw_output_excerpt": "{\"instruction\": \"Answer one of \\\"yes\\\", \\\"no\\\".\", \"constraints\": [{\"id\": \"choice\", \"op\": \"enum\", \"field\": \"text\", \"value\": [\"yes\", \"no\"], \"source_text\": \"bounded yes/no answer\"}]}",
+      "raw_output_sha256": "88d03203827caceba6d5aae20d0b90e0c92f331892e694f8c9d31ac7bc9ed5a5",
+      "validator_compiled": true
+    },
+    {
+      "adapter_success": true,
+      "carnot_constraints": [
+        {
+          "constraint_type": "instruction_constraint",
+          "description": "SOTA NSVIF constraint c001-contains: contains on text",
+          "energy_term": null,
+          "metadata": {
+            "case_id": "existing-pack",
+            "constraint_id": "c001-contains",
+            "dsl_schema_version": "carnot.instruction_constraints.v1",
+            "field": "text",
+            "instruction": "Include \"north\". Use at least 2 words.",
+            "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+            "model_name": "Gemma4-26B-it",
+            "model_path": "/models/gemma26.gguf",
+            "nsvif_operator": "contains",
+            "raw_output_sha256": "cff8585350b577511504bf13e54f38b9c43648dba1cd4cf6457e7481678e0071",
+            "source_text": "",
+            "spec_traces": [
+              "REQ-VERIFY-1641",
+              "SCENARIO-VERIFY-1641"
+            ],
+            "value": "north"
+          }
+        },
+        {
+          "constraint_type": "instruction_constraint",
+          "description": "SOTA NSVIF constraint c002-min_words: min_words on text",
+          "energy_term": null,
+          "metadata": {
+            "case_id": "existing-pack",
+            "constraint_id": "c002-min_words",
+            "dsl_schema_version": "carnot.instruction_constraints.v1",
+            "field": "text",
+            "instruction": "Include \"north\". Use at least 2 words.",
+            "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+            "model_name": "Gemma4-26B-it",
+            "model_path": "/models/gemma26.gguf",
+            "nsvif_operator": "min_words",
+            "raw_output_sha256": "cff8585350b577511504bf13e54f38b9c43648dba1cd4cf6457e7481678e0071",
+            "source_text": "",
+            "spec_traces": [
+              "REQ-VERIFY-1641",
+              "SCENARIO-VERIFY-1641"
+            ],
+            "value": 2
+          }
+        }
+      ],
+      "case_id": "existing-pack",
+      "dsl_input": {
+        "constraints": [
+          {
+            "field": "text",
+            "id": "c001-contains",
+            "op": "contains",
+            "value": "north"
+          },
+          {
+            "field": "text",
+            "id": "c002-min_words",
+            "op": "min_words",
+            "value": 2
+          }
+        ],
+        "instruction": "Include \"north\". Use at least 2 words.",
+        "max_constraints": 8,
+        "parser_version": "rule-v1",
+        "schema_version": "carnot.instruction_constraints.v1"
+      },
+      "error": "",
+      "known_bad": {
+        "accepted": false,
+        "failure_ids": [
+          "c002-min_words"
+        ],
+        "issues": [
+          {
+            "constraint_id": "c002-min_words",
+            "expected": ">=2",
+            "message": "min_words constraint failed",
+            "observed": 1
+          }
+        ]
+      },
+      "known_good": {
+        "accepted": true,
+        "failure_ids": [],
+        "issues": []
+      },
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-it",
+      "model_path": "/models/gemma26.gguf",
+      "raw_output_excerpt": "{\"constraint_pack\": {\"schema_version\": \"carnot.instruction_constraints.v1\", \"instruction\": \"Include \\\"north\\\". Use at least 2 words.\", \"constraints\": [{\"id\": \"c001-contains\", \"op\": \"contains\", \"field\": \"text\", \"value\": \"north\"}, {\"id\": \"c002-min_words\", \"op\": \"min_words\", \"field\": \"text\", \"value\": 2}]}}",
+      "raw_output_sha256": "cff8585350b577511504bf13e54f38b9c43648dba1cd4cf6457e7481678e0071",
+      "validator_compiled": true
     }
   ],
+  "adapter_schema_version": "carnot.nsvif_sota_adapter.v1",
+  "arbitrary_code_execution_path_introduced": false,
+  "artifact_path": "results/experiment_1641_nsvif_sota.json",
+  "dsl_inputs_emitted": 3,
+  "dsl_schema": {
+    "constraint_fields": {
+      "field": "text or json",
+      "id": "stable local constraint id",
+      "op": "one supported operator",
+      "source_text": "instruction fragment that produced the constraint",
+      "value": "operator-specific expected value"
+    },
+    "max_constraints": 8,
+    "max_instruction_chars": 2000,
+    "schema_version": "carnot.instruction_constraints.v1",
+    "supported_operators": [
+      "contains",
+      "enum",
+      "exact_bullets",
+      "json_has_keys",
+      "json_object",
+      "max_words",
+      "min_words",
+      "not_contains"
+    ]
+  },
+  "dsl_schema_version": "carnot.instruction_constraints.v1",
+  "experiment": "1641_nsvif_sota",
+  "experiment_id": 1641,
+  "false_accept_rate": 0.0,
+  "false_accepts": 0,
+  "honest_verdict": "complete: SOTA GGUF outputs normalize into NSVIF DSL inputs and compile to local validators with zero false accepts",
+  "known_bad_reject_rate": 1.0,
+  "known_good_pass_rate": 1.0,
+  "live_sota_model_inference_used": false,
+  "model_specs": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "unsloth/gemma-4-31B-it-GGUF",
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "run_date": "20260509",
+  "sota_outputs_seen": 3,
+  "spec_traces": [
+    "REQ-VERIFY-1641",
+    "SCENARIO-VERIFY-1641"
+  ],
   "status": "complete",
-  "validation_rate": 1.0
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_pipeline_nsvif_sota.py -q --no-cov",
+    "PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 .venv/bin/coverage run --source=python/carnot/pipeline -m pytest tests/python/test_pipeline_nsvif_sota.py -q -o addopts=",
+    ".venv/bin/coverage report --include=python/carnot/pipeline/nsvif_sota.py --fail-under=100 --show-missing"
+  ],
+  "timestamp": "2026-05-09T22:10:57Z",
+  "validators_compiled": 3
 }

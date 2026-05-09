@@ -2238,6 +2238,49 @@ the known-bad output,
 And `results/experiment_1640_nsvif_dsl.json` records `parser_success=true` with
 `false_accept_rate=0.0`.
 
+### REQ-VERIFY-1641: NSVIF SOTA GGUF Output Adapter
+
+The repository shall provide an importable pipeline adapter that translates
+bounded local SOTA GGUF generation outputs into NSVIF DSL inputs without
+executing model-generated code.
+
+The adapter shall:
+
+- define `python/carnot/pipeline/nsvif_sota.py`;
+- accept GGUF output rows containing model provenance, case IDs, raw output
+  text, and optional expected-good / expected-bad validation examples;
+- extract JSON objects from raw SOTA output and accept only bounded NSVIF input
+  shapes: `instruction` / `nsvif_instruction`, `dsl_pack` / `constraint_pack`,
+  or a supported `constraints` list;
+- normalize accepted rows into the existing
+  `carnot.verifiers.dsl.ConstraintPack` JSON schema and serializable Carnot
+  `ConstraintResult` rows with model provenance metadata;
+- compile each normalized pack through the existing NSVIF DSL compiler and
+  evaluate the supplied validation examples when present;
+- fail closed for unparseable output, unsupported operators, unsafe text,
+  empty constraint packs, or unbounded constraint counts;
+- write `results/experiment_1641_nsvif_sota.json` with `status`,
+  `experiment_id`, `adapter_schema_version`, `dsl_schema_version`,
+  `sota_outputs_seen`, `dsl_inputs_emitted`, `validators_compiled`,
+  `known_good_pass_rate`, `known_bad_reject_rate`, `false_accept_rate`,
+  `arbitrary_code_execution_path_introduced`, `tests_run`, and
+  `honest_verdict`; and
+- set terminal `status="complete"` only when every supplied SOTA output row
+  emits a schema-valid DSL input, every emitted validator compiles, known-good
+  examples pass, known-bad examples reject, and no arbitrary-code execution
+  path is introduced.
+
+### SCENARIO-VERIFY-1641: SOTA Output Becomes NSVIF DSL Input
+
+Given bounded JSON output from a mandated local SOTA GGUF model that proposes
+NSVIF instructions or safe constraints,
+When the adapter normalizes the row,
+Then it emits an existing NSVIF `ConstraintPack` schema payload plus Carnot
+constraint rows carrying model provenance,
+And the same pack compiles through the local DSL validator,
+And the terminal artifact records emitted DSL inputs, validator metrics, and
+`false_accept_rate=0.0`.
+
 ### REQ-VERIFY-1642: llguidance Adapter For Structured Verdict Generation
 
 The repository shall provide an Exp 1642 llguidance adapter that exposes
@@ -2414,7 +2457,7 @@ backend diagnostics for the reusable adapter.
 | REQ-VERIFY-1591 | Implemented (`python/carnot/verifiers/dccd_adapter.py`) | Implemented (`tests/python/test_experiment_1591_dccd_adapter.py`) |
 | REQ-VERIFY-1609 | Implemented (`python/carnot/pipeline/context_induction.py`) | Implemented (`tests/python/test_experiment_1609_context_induction.py`) |
 | REQ-VERIFY-1640 | Implemented (`scripts/experiment_1640_nsvif_dsl.py`) | Implemented (`tests/python/test_experiment_1640_nsvif_dsl.py`) |
-| REQ-VERIFY-1641 | Implemented (`scripts/experiment_1641_nsvif_sota.py`) | Implemented (`tests/python/test_experiment_1641_nsvif_sota.py`) |
+| REQ-VERIFY-1641 | Implemented (`python/carnot/pipeline/nsvif_sota.py`; legacy wrapper `scripts/experiment_1641_nsvif_sota.py`) | Implemented (`tests/python/test_pipeline_nsvif_sota.py`, `tests/python/test_experiment_1641_nsvif_sota.py`) |
 | REQ-VERIFY-1642 | Implemented (`scripts/experiment_1642_llguidance.py`) | Implemented (`tests/python/test_experiment_1642_llguidance.py`) |
 | REQ-VERIFY-1646 | Implemented (`scripts/experiment_1646_ebcn.py`) | Implemented (`tests/python/test_experiment_1646_ebcn.py`) |
 
