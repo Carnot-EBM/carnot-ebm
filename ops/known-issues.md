@@ -207,6 +207,74 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### NEW 2026-05-09 (01:20Z): Gemini Verdict-Prefix Discipline Reinforcement (.122+ MANDATORY)
+
+**Origin.** 2026-05-09 01:04-01:17Z incident: exp1582 Phase-1 Software
+Ship Readiness Ledger FAILed 3x. Root cause: gemini wrote
+`honest_verdict: blocked_9_items_remaining` which violated CLAUDE.md
+Verdict Terminal-Prefix Discipline. Conductor classifier saw "blocked"
+as partial/poisoned → retried until MAX_FAILURES.
+
+**Reality:** the artifact content was correct — 9 ship-readiness items
+audited honestly, 1 done, 8 remaining, 100% test coverage. Gemini
+didn't lie. The verdict label was non-compliant.
+
+**Why this matters going forward.** Gemini's prompt-following may
+differ from codex's. While the rule is in CLAUDE.md (mandatory),
+gemini may not weight CLAUDE.md instructions as heavily as codex
+does. Two-fold defense:
+
+**Rule (planner-side discipline for `.122+):** When generating
+`research-roadmap-next.yaml` task prompts under gemini agent dispatch,
+the `REQUIRED ARTIFACT FIELDS` section MUST explicitly include the
+verdict-prefix requirement in the prompt body itself, not just rely
+on CLAUDE.md inheritance. Specifically every task prompt must contain:
+
+```
+The honest_verdict field MUST start with one of these terminal prefixes:
+  complete:    or  complete_
+  success:     or  success_
+  passed:      or  passed_
+  shipped:     or  shipped_
+
+Examples of compliant terminal verdicts:
+  complete: phase1_ship_readiness_audit_complete_8_items_remaining
+  success_kv260_rtl_lint_passed_with_2_warnings
+  passed_qwen3.6_logprob_telemetry_topk_available
+  shipped_minimal_repair_pipeline_v5
+
+Examples of non-compliant verdicts (DO NOT USE — will trigger
+spurious failure retries):
+  blocked_9_items_remaining            (no terminal prefix)
+  marginal_repair_v3_no_headline       (no terminal prefix)
+  in_progress                          (not terminal)
+  needs_review                         (not terminal)
+
+If the experiment ran fully and reached a scientific conclusion
+(positive, negative, or mixed), the verdict is terminal — use a
+prefix. Reserve missing-prefix verdicts for genuine bootstrap-only
+states where the conductor's reconciler should retry.
+```
+
+**How to apply (planner):** Append the above block to every task
+prompt body in research-roadmap-next.yaml. Increases per-task prompt
+length by ~300 tokens but eliminates the entire class of false-positive
+DOOMED-RERUN-or-FAIL retries due to verdict labeling.
+
+**Mechanical safety net (already exists):** the conductor's
+`_verdict_is_untrustworthy` classifier substring-matches partial
+tokens (`marginal`, `blocked`, `no_improvement`, etc.). This is the
+last line of defense; the planner-side reinforcement is the primary
+prevention.
+
+**Operational implication.** While gemini is the inner-loop agent
+(per `feedback_inner_loop_switched_to_gemini.md`), every task prompt
+needs explicit verdict-prefix instruction in-body. When inner loop
+switches back to codex (post-quota-reset), this reinforcement is still
+useful but slightly redundant.
+
+
+
 ### NEW 2026-05-08 (21:35Z): Phase 1 Ship Track — Decoupled from Paper + Hardware (.121+ MANDATORY)
 
 **Operator directives 2026-05-08 ~21:30Z:**
