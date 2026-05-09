@@ -18540,3 +18540,25 @@ the initial energy
 
 **Spec traces:** REQ-VERIFY-1627, SCENARIO-VERIFY-1627, Exp 1627
 
+## REQ-VERIFY-1628: EBRM Latent Trace Scoring via Nabla Reasoner
+
+**Summary:** Carnot SHALL implement continuous latent trace scoring using the repaired Nabla Reasoner to calculate an EBRM-style trace score.
+
+**Requirements:**
+
+- REQ-VERIFY-1628-1: A function `score_latent_trace(trace_logits: jnp.ndarray) -> float` SHALL be implemented, utilizing `differentiable_ebcn_energy` as the basis for an EBRM-style score.
+- REQ-VERIFY-1628-2: The trace score SHALL be defined such that lower structural energy corresponds to a better (higher) score, e.g., `score = exp(-energy)`.
+- REQ-VERIFY-1628-3: A script `scripts/experiment_1628_ebrm_scoring.py` SHALL be implemented to evaluate the trace scoring.
+- REQ-VERIFY-1628-4: The script SHALL output an artifact `results/experiment_1628_ebrm_scoring.json` which includes `scoring_accuracy` (a float representing how well the score distinguishes valid vs invalid traces).
+
+**Implementation Status:** Implemented (Exp 1628)
+
+### SCENARIO-VERIFY-1628: EBRM Scoring Distinguishes Traces
+
+**Given** a batch of latent traces, some with high contradiction and some with low contradiction
+**When** the traces are scored using the continuous latent trace scoring mechanism
+**Then** the script calculates a `scoring_accuracy` based on its ability to assign higher scores to low-contradiction traces
+**And** it writes `results/experiment_1628_ebrm_scoring.json` containing the `scoring_accuracy` and an honest verdict.
+
+**Spec traces:** REQ-VERIFY-1628, SCENARIO-VERIFY-1628, Exp 1628
+
