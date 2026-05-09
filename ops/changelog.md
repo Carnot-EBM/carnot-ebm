@@ -5276,3 +5276,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-09: Exp 1597: CPU-only inertial-update Ising ablation (✅ Complete) — honest_verdict=complete: inertial_ising_speedup_observed_cpu_simulator_only; results/experiment_1597_inertial_ising.json
 - 2026-05-09: Exp 1598: Convert Z1 drift simulation into SamplerBackend test (✅ Complete) — honest_verdict=complete: z1_drift_samplerbackend_compatibility_simulator_only_no_execution_claim; results/experiment_1598_z1_drift.json
 - 2026-05-09: Exp 1599: KANELÉ LUT-based evaluation audit for QuantKAN (✅ Complete) — honest_verdict=complete_no_synthesis_kan_accounting; results/experiment_1599_kanele_audit.json
+- 2026-05-09: Exp 1593: Compare CDG-guided repair against flat validator ordering (✅ Complete) — honest_verdict=complete: cdg repair analysis done; results/experiment_1593_cdg_repair.json
