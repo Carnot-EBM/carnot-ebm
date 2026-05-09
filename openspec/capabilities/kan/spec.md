@@ -181,6 +181,7 @@ sets `variance_worsened` from the measured paraphrase variance comparison.
 | REQ-KAN-1319 | Proposed | Exp 1319 target: hardware-portability audit only for local KAN verifier/repair candidates with no FPGA or analog execution claim. |
 | REQ-KAN-1502 | Proposed | Exp 1502 target: no-synthesis KAN hardware accounting comparing naive, QuantKAN-like, and KAEM-style variants for current verifier components. |
 | REQ-KAN-1516 | Implemented | Exp 1516 normalized KAN/KAEM proxy and model shapes into an explicit provenance manifest before any future synthesis claim. |
+| REQ-KAN-1602 | Implemented | Exp 1602 exact-rational KAN forward pass uses Python `fractions.Fraction` for bit-identical formal-verification arithmetic. |
 | REQ-KAN-1384 | Proposed | Exp 1384 target: EBM-CoT contrastive hinge calibration on FoVer verified pairs. |
 | REQ-KAN-1401 | Proposed | Exp 1401 target: EBM-CoT v2 hinge-only calibration on the Exp1384 FoVer split with consistency weight 0.0. |
 
@@ -604,3 +605,43 @@ When the Exp 1599 audit runs,
 Then `results/experiment_1599_kanele_audit.json` is created with RM, BOP,
 and NABS estimates, and `hardware_execution_confirmed: False`.
 
+## REQ-KAN-1602: Exact-Rational KAN Forward Pass
+
+The KAN model tier MUST provide an exact-rational CPU forward pass for formal
+verification. The implementation MUST evaluate edge and bias spline
+contributions entirely with Python `fractions.Fraction` values so repeated
+passes over equivalent rational inputs produce identical numerator/denominator
+results without floating-point rounding or JAX tracing.
+
+**Rationale:**
+    Formal verification needs arithmetic whose semantics are explicit and
+    replayable. The JAX KAN path is appropriate for training and differentiable
+    inference, but binary floating-point evaluation can obscure whether two
+    proof runs differ because of model semantics or because of backend numeric
+    details. A small exact-rational RKAN forward pass gives property tests and
+    formal auditors a deterministic reference for KAN energy evaluation.
+
+**Acceptance criteria:**
+    - `python/carnot/models/rkan.py` exposes `RationalLinearSpline` and
+      `RationalKANEnergyFunction`.
+    - The RKAN forward pass accepts integers, strings, and `Fraction` inputs,
+      converts them to `Fraction`, validates input shape and edge indices, and
+      returns a `Fraction`.
+    - Edge products, piecewise-linear interpolation, bias terms, and total
+      energy accumulation use exact rational operations only.
+    - Repeated forward passes over equivalent rational inputs produce identical
+      `Fraction` outputs.
+    - The experiment artifact `results/experiment_1602_rkan.json` is written
+      with `schema`, `status`, `experiment_id`, `spec`,
+      `exact_rational_forward_pass_ready`, `float_operations_used`,
+      `repeated_forward_outputs_identical`, `sample_outputs`, and a terminal
+      `honest_verdict`.
+
+### SCENARIO-KAN-1602: exact-rational RKAN artifact and deterministic energy
+
+Given a small RKAN with rational edge and bias spline control points,
+When the exact-rational forward pass evaluates rational input vectors twice,
+Then every intermediate contribution and output remains a `Fraction`, the
+second pass is bit-identical to the first, and
+`results/experiment_1602_rkan.json` records the completed deterministic
+reference artifact.

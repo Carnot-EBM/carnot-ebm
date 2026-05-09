@@ -64,6 +64,12 @@ from carnot.models.potts_machine import (
     PottsMachineVerifier,
     PottsState,
 )
+from carnot.models.rkan import (
+    RationalKANEnergyFunction,
+    RationalLinearSpline,
+    build_experiment_1602_artifact,
+    write_experiment_1602_artifact,
+)
 from carnot.models.sparse_kaem_energy import SparseKAEMEnergy
 from carnot.models.symbolic_kan_energy import (
     SymbolicActivation,
@@ -121,6 +127,10 @@ __all__ = [
     "PottsCoupling",
     "PottsMachineVerifier",
     "PottsState",
+    "RationalKANEnergyFunction",
+    "RationalLinearSpline",
+    "build_experiment_1602_artifact",
+    "write_experiment_1602_artifact",
     "SparseKAEMEnergy",
     "SymbolicActivation",
     "SymbolicKANEnergy",
