@@ -1291,3 +1291,4 @@ web search: GitHub trending energy based mod |
 | 2026-05-09 04:04 UTC | Microchip PolarFire SoC Adaptive K-PCD Prototype P | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1585_polarfi |
 | 2026-05-09 04:08 UTC | Microchip PolarFire SoC Adaptive K-PCD Prototype P | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1585_polarfi |
 | 2026-05-09 04:14 UTC | Strix Point Secondary-Tier Rescope + KV260 Vivado- | OK | cache hit: 81 passed, 1 warning in 4.42s |
+| 2026-05-09 04:20 UTC | Milestone 2026.05.121 Research + Operational Retro | OK | cache hit: 81 passed, 1 warning in 4.42s |
