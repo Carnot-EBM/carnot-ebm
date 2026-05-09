@@ -2303,3 +2303,36 @@ Then the tool shall generate a CDG graph, compute flat vs CDG repair acceptance 
 Given a valid runtime-contract manifest and candidate repair rows,
 When Exp 1593 repair analysis is executed,
 Then it outputs a valid JSON artifact with schema fields `status`, `cdg_nodes`, `cdg_edges`, `flat_acceptance_rate`, `cdg_acceptance_rate`, and `honest_verdict`.
+
+### REQ-VERIFY-1603: EBCN Hidden-State Structural Violation Energy
+The repository shall provide a deterministic, CPU-only EBCN scorer prototype for
+Exp 1603 that evaluates structural coherence without autoregressive generation.
+
+The scorer shall:
+
+- define an EBCN module under `python/carnot/verify/` that accepts fixed hidden
+  states and optional proposition metadata;
+- use two independently parameterized attention heads over hidden states, one
+  for support/coherence evidence and one for contradiction/violation evidence;
+- return a scalar non-negative structural violation energy where direct logical
+  contradictions score higher than consistent synthetic traces;
+- provide deterministic synthetic logical contradiction cases without calling
+  an LLM, decoder, or autoregressive generator;
+- write `results/experiment_1603_ebcn.json` with `status`, `experiment_id`,
+  `ebcn_scorer_ready`, `dual_head_attention_used`,
+  `autoregressive_generation_used`, `hidden_state_source`,
+  `synthetic_cases_total`, `contradiction_cases`, `consistent_cases`,
+  `contradiction_mean_energy`, `consistent_mean_energy`, `energy_gap`,
+  `tests_run`, and `honest_verdict`; and
+- set terminal `status="complete"` only when the dual-head scorer runs on the
+  synthetic cases, contradiction energy exceeds consistent energy, and
+  `autoregressive_generation_used=false`.
+
+#### SCENARIO-VERIFY-1603: Synthetic Contradictions Have Higher EBCN Energy
+Given deterministic hidden states for consistent and contradictory logical
+traces,
+When the EBCN scorer applies its support and contradiction attention heads,
+Then contradiction traces receive higher structural violation energy than
+consistent traces,
+And `results/experiment_1603_ebcn.json` records complete Exp 1603 metrics
+without any autoregressive generation path.
