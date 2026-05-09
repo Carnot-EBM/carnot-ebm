@@ -3,6 +3,7 @@
 ## 2026-05-09 (Milestone 2026.05.121 Operational Retrospective)
 
 - 2026-05-09 04:39 UTC: Milestone 2026.05.121 operational retrospective complete. Wrote `results/operational_retro_2026_05_121.json` from the required skeleton to terminal `status=success` for the supplied 40 min / 11 completed experiment slice. Slowest-five timing was 37/40 min dominated by repeated Full-Scale Pipeline v3 gate churn on the Exp 1414 repair-executor path (25 min) plus the recurring Exp 1269 arXiv Bundle v10 gate (10 min) and a 2 min SOTA GGUF cache/provenance doomed-rerun preflight. Live `gpu_monitor.py` matched the supplied closeout state: both RTX 3090s idle at 4 MB / 0% utilization, no listed GPU processes, and no zombie warnings. Estimated 55% recoverable via same-verdict gate retirement, activation-time readiness artifacts, dependency-lane fanout, DualGPURunner telemetry, and idempotent docs appenders.
+- 2026-05-09 04:56 UTC: Refreshed `results/operational_retro_2026_05_121.json` after mandatory skeleton-first write. Confirmed the supplied 40 min / 11 experiment operational slice, live GPU idle state at 2026-05-09T04:55:38Z, no GPU zombies, and the same 55% savings estimate from terminalizing repeated gates, activation-time readiness artifacts, lane fanout, and idempotent docs reconciliation.
 
 ## 2026-05-08 (Milestone 2026.05.121 Research Planning)
 

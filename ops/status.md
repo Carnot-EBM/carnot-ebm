@@ -1,6 +1,17 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-08 (milestone 2026.05.121 research planning complete)
+**Last Updated:** 2026-05-09 (milestone 2026.05.121 operational retrospective complete)
+
+## Session 2026-05-09 - Milestone 2026.05.121 Operational Retrospective Complete
+
+**Milestone 2026.05.121 operational retro COMPLETE.**
+
+- Retro artifact: `results/operational_retro_2026_05_121.json` (`schema=carnot.operational_retro.v63`, `status=success`).
+- Operational slice: 40 minutes, 11 completed experiments, average 4 minutes per experiment.
+- Slowest-five concentration: 37/40 minutes in recurring orchestration paths: Full-Scale Pipeline v3 gate churn on Exp 1414 Repair Executor (25 min), Exp 1269 arXiv Bundle v10 legacy gate (10 min), and SOTA GGUF cache/provenance doomed-rerun preflight (2 min).
+- GPU state: both RTX 3090s idle at closeout and verification, 4 MB allocated each, 0% utilization, no compute processes, and no gpu_monitor.py-class zombies.
+- Next-milestone speedup target: 55% recoverable through same-verdict gate retirement, activation-time readiness artifacts, dependency-lane fanout, DualGPURunner telemetry, cluster-scoped preflight, and idempotent docs appenders.
+- Did NOT modify `scripts/research_conductor.py` or `research-roadmap.yaml`.
 
 ## Session 2026-05-08 - Milestone 2026.05.121 Research Planning Complete
 
