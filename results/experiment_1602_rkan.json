@@ -1,0 +1,108 @@
+{
+  "artifact_path": "results/experiment_1602_rkan.json",
+  "bias_count": 3,
+  "edge_count": 2,
+  "exact_rational_forward_pass_ready": true,
+  "experiment": 1602,
+  "experiment_id": 1602,
+  "float_operations_used": false,
+  "fraction_type": "fractions.Fraction",
+  "honest_verdict": "complete: exact_rational_kan_forward_pass_uses_fraction_arithmetic",
+  "input_dim": 3,
+  "model": {
+    "biases": [
+      {
+        "control_points": [
+          "0",
+          "0",
+          "0"
+        ],
+        "domain": [
+          "-1",
+          "1"
+        ]
+      },
+      {
+        "control_points": [
+          "1/2",
+          "1/2",
+          "1/2"
+        ],
+        "domain": [
+          "-1",
+          "1"
+        ]
+      },
+      {
+        "control_points": [
+          "-1",
+          "0",
+          "1"
+        ],
+        "domain": [
+          "-1",
+          "1"
+        ]
+      }
+    ],
+    "edges": {
+      "0,1": {
+        "control_points": [
+          "0",
+          "1",
+          "2"
+        ],
+        "domain": [
+          "-1",
+          "1"
+        ]
+      },
+      "1,2": {
+        "control_points": [
+          "1/3",
+          "2/3",
+          "1"
+        ],
+        "domain": [
+          "-1",
+          "1"
+        ]
+      }
+    },
+    "input_dim": 3
+  },
+  "module": "python/carnot/models/rkan.py",
+  "n_params": 15,
+  "reference_energy": "79/36",
+  "repeated_forward_outputs_identical": true,
+  "run_date": "20260509",
+  "sample_outputs": [
+    {
+      "energy": "79/36",
+      "input": [
+        "1/2",
+        "-1/2",
+        "1/3"
+      ],
+      "repeat_energy": "79/36",
+      "type": "fractions.Fraction"
+    },
+    {
+      "energy": "19/6",
+      "input": [
+        "-1",
+        "0",
+        "1"
+      ],
+      "repeat_energy": "19/6",
+      "type": "fractions.Fraction"
+    }
+  ],
+  "schema": "carnot.rkan_exact_fraction.v1",
+  "spec": [
+    "REQ-KAN-1602",
+    "SCENARIO-KAN-1602"
+  ],
+  "status": "complete",
+  "title": "Exact-rational KAN forward pass"
+}
