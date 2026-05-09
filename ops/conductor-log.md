@@ -1318,3 +1318,4 @@ web search: site:o |
 | 2026-05-09 08:04 UTC | Exp 1597: CPU-only inertial-update Ising ablation | OK | 97 passed, 1 warning in 6.16s |
 | 2026-05-09 08:15 UTC | Exp 1598: Convert Z1 drift simulation into Sampler | OK | 81 passed, 1 warning in 5.07s |
 | 2026-05-09 08:23 UTC | Exp 1599: KANELÉ LUT-based evaluation audit for Qu | OK | 81 passed, 1 warning in 4.24s |
+| 2026-05-09 08:36 UTC | Exp 1593: Compare CDG-guided repair against flat v | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: erateContent?alt=ss |
