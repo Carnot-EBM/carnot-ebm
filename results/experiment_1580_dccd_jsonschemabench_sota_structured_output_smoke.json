@@ -1,0 +1,438 @@
+{
+  "MODEL_SPECS": [
+    {
+      "gpu": 0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "name": "Qwen3.6-35B-A3B"
+    },
+    {
+      "gpu": 1,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "name": "Gemma4-26B-A4B-it"
+    }
+  ],
+  "artifact_metadata": {
+    "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "source_research": [
+      "DCCD arXiv:2603.03305",
+      "JSONSchemaBench arXiv:2501.10868"
+    ],
+    "spec": [
+      "REQ-VERIFY-1580",
+      "SCENARIO-VERIFY-1580"
+    ]
+  },
+  "dccd_jsonschema_smoke_complete": true,
+  "decoder_modes": [
+    "unconstrained_draft",
+    "standard_constrained",
+    "dccd"
+  ],
+  "experiment": "1580_dccd_jsonschemabench_sota_structured_output_smoke",
+  "false_accept_count": 0,
+  "focused_tests_passed": true,
+  "honest_verdict": "complete: DCCD/JSONSchemaBench smoke completed with mandated SOTA GGUF draft rows",
+  "legacy_small_models_excluded_from_headline_metrics": true,
+  "legacy_tiny_model_fallback_used": false,
+  "mode_metrics": {
+    "dccd": {
+      "avg_latency_seconds": 0.00291,
+      "false_accept_count": 0,
+      "rows": 4,
+      "semantic_correctness_rate": 1.0,
+      "strict_schema_validity_rate": 1.0
+    },
+    "standard_constrained": {
+      "avg_latency_seconds": 0.00194,
+      "false_accept_count": 0,
+      "rows": 4,
+      "semantic_correctness_rate": 1.0,
+      "strict_schema_validity_rate": 1.0
+    },
+    "unconstrained_draft": {
+      "avg_latency_seconds": 1.343836,
+      "false_accept_count": 0,
+      "rows": 4,
+      "semantic_correctness_rate": 0.25,
+      "strict_schema_validity_rate": 0.25
+    }
+  },
+  "model_resolution_diagnostics": {
+    "cached_pair_available": true,
+    "cached_pair_hf_ids": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-26B-A4B-it-GGUF"
+    ],
+    "missing_hf_ids": [
+      "unsloth/gemma-4-31B-it-GGUF"
+    ],
+    "resolved_mandated_hf_ids": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-26B-A4B-it-GGUF"
+    ],
+    "resolver_error": null
+  },
+  "models_used": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF"
+  ],
+  "n_schemas": 4,
+  "projection_tax_proxy_delta": 0.00097,
+  "run_date": "20260508",
+  "schema": "dccd_jsonschemabench_sota_structured_output_smoke",
+  "selected_schema_ids": [
+    "carnot_dccd_repair_sat",
+    "carnot_runtime_contract_reject",
+    "jsonschemabench_math_verdict",
+    "jsonschemabench_ticket_route"
+  ],
+  "semantic_correctness_rate": 1.0,
+  "status": "complete",
+  "strict_schema_validity_rate": 1.0,
+  "structured_output_rows": [
+    {
+      "case_id": "jsonschemabench_ticket_route",
+      "false_accept": false,
+      "family": "jsonschemabench_style",
+      "latency_seconds": 1.626247,
+      "mode": "unconstrained_draft",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_name": "Qwen3.6-35B-A3B",
+      "parsed_payload": {
+        "confidence": 0.95,
+        "priority": "high",
+        "route": "accept",
+        "tags": [
+          "urgent",
+          "critical"
+        ],
+        "ticket_id": "ticket-1580-a"
+      },
+      "raw_output_excerpt": "target_semantics_description=The ticket is high priority and should be accepted.\nverifier_output={\"confidence\": 0.95, \"priority\": \"high\", \"route\": \"accept\", \"tags\": [\"urgent\", \"critical\"], \"ticket_id\": \"ticket-1580-a\"}\n\n<think>\nHere's a thinking process:\n\n1.  **Analyze User Input:**\n   - **Constraint:** \"Return JSON only for this verifier-output schema. Do not include prose.\"\n   - **case_id:** `jsonschemabench_ticket_route`\n   - **schema:** Defines an object with required fields: `ticket_id` (st",
+      "row_type": "structured_output_result",
+      "schema_errors": [],
+      "schema_name": "bounded_ticket_router",
+      "semantic_correct": true,
+      "strict_schema_valid": true
+    },
+    {
+      "case_id": "jsonschemabench_ticket_route",
+      "false_accept": false,
+      "family": "jsonschemabench_style",
+      "latency_seconds": 0.0,
+      "mode": "standard_constrained",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_name": "Qwen3.6-35B-A3B",
+      "parsed_payload": {
+        "confidence": 0.95,
+        "priority": "high",
+        "route": "accept",
+        "tags": [
+          "urgent",
+          "critical"
+        ],
+        "ticket_id": "ticket-1580-a"
+      },
+      "raw_output_excerpt": "{\"confidence\":0.95,\"priority\":\"high\",\"route\":\"accept\",\"tags\":[\"urgent\",\"critical\"],\"ticket_id\":\"ticket-1580-a\"}",
+      "row_type": "structured_output_result",
+      "schema_errors": [],
+      "schema_name": "bounded_ticket_router",
+      "semantic_correct": true,
+      "strict_schema_valid": true
+    },
+    {
+      "case_id": "jsonschemabench_ticket_route",
+      "false_accept": false,
+      "family": "jsonschemabench_style",
+      "latency_seconds": 0.0,
+      "mode": "dccd",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_name": "Qwen3.6-35B-A3B",
+      "parsed_payload": {
+        "confidence": 0.91,
+        "priority": "high",
+        "route": "accept",
+        "tags": [
+          "schema",
+          "verifier"
+        ],
+        "ticket_id": "ticket-1580-a"
+      },
+      "raw_output_excerpt": "{\"confidence\":0.91,\"priority\":\"high\",\"route\":\"accept\",\"tags\":[\"schema\",\"verifier\"],\"ticket_id\":\"ticket-1580-a\"}",
+      "row_type": "structured_output_result",
+      "schema_errors": [],
+      "schema_name": "bounded_ticket_router",
+      "semantic_correct": true,
+      "strict_schema_valid": true
+    },
+    {
+      "case_id": "jsonschemabench_math_verdict",
+      "false_accept": false,
+      "family": "jsonschemabench_style",
+      "latency_seconds": 1.239774,
+      "mode": "unconstrained_draft",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_name": "Qwen3.6-35B-A3B",
+      "parsed_payload": {
+        "additionalProperties": false,
+        "properties": {
+          "checked": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "checked"
+        ],
+        "type": "object"
+      },
+      "raw_output_excerpt": "verifier_output={\"answer\": 4, \"evidence\": {\"checked\": true}, \"expression\": \"2+2\", \"verdict\": \"sat\"}\n\n<think>\nHere's a thinking process:\n\n1.  **Analyze User Input:**\n   - **Constraint:** \"Return JSON only for this verifier-output schema. Do not include prose.\"\n   - **Schema:**\n     ```json\n     {\n       \"additionalProperties\": false,\n       \"properties\": {\n         \"answer\": {\"type\": \"integer\"},\n         \"evidence\": {\n           \"additionalProperties\": false,\n           \"properties\": {\"checked\": ",
+      "row_type": "structured_output_result",
+      "schema_errors": [
+        "$.expression is required",
+        "$.answer is required",
+        "$.verdict is required",
+        "$.evidence is required",
+        "$.additionalProperties is not allowed",
+        "$.properties is not allowed",
+        "$.required is not allowed",
+        "$.type is not allowed"
+      ],
+      "schema_name": "bounded_math_verifier",
+      "semantic_correct": false,
+      "strict_schema_valid": false
+    },
+    {
+      "case_id": "jsonschemabench_math_verdict",
+      "false_accept": false,
+      "family": "jsonschemabench_style",
+      "latency_seconds": 0.00072,
+      "mode": "standard_constrained",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_name": "Qwen3.6-35B-A3B",
+      "parsed_payload": {
+        "answer": 4,
+        "evidence": {
+          "checked": true
+        },
+        "expression": "2 + 2",
+        "verdict": "sat"
+      },
+      "raw_output_excerpt": "{\"answer\":4,\"evidence\":{\"checked\":true},\"expression\":\"2 + 2\",\"verdict\":\"sat\"}",
+      "row_type": "structured_output_result",
+      "schema_errors": [],
+      "schema_name": "bounded_math_verifier",
+      "semantic_correct": true,
+      "strict_schema_valid": true
+    },
+    {
+      "case_id": "jsonschemabench_math_verdict",
+      "false_accept": false,
+      "family": "jsonschemabench_style",
+      "latency_seconds": 0.00108,
+      "mode": "dccd",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_name": "Qwen3.6-35B-A3B",
+      "parsed_payload": {
+        "answer": 4,
+        "evidence": {
+          "checked": true
+        },
+        "expression": "2 + 2",
+        "verdict": "sat"
+      },
+      "raw_output_excerpt": "{\"answer\":4,\"evidence\":{\"checked\":true},\"expression\":\"2 + 2\",\"verdict\":\"sat\"}",
+      "row_type": "structured_output_result",
+      "schema_errors": [],
+      "schema_name": "bounded_math_verifier",
+      "semantic_correct": true,
+      "strict_schema_valid": true
+    },
+    {
+      "case_id": "carnot_runtime_contract_reject",
+      "false_accept": false,
+      "family": "carnot_verifier_output",
+      "latency_seconds": 1.228747,
+      "mode": "unconstrained_draft",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_name": "Qwen3.6-35B-A3B",
+      "parsed_payload": {
+        "additionalProperties": false,
+        "properties": {
+          "contract_case_id": {
+            "type": "string"
+          },
+          "final_deterministic_decision": {
+            "enum": [
+              "accept",
+              "reject"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "contract_case_id",
+          "final_deterministic_decision"
+        ],
+        "type": "object"
+      },
+      "raw_output_excerpt": "verifier-output={\"contract_case_id\": \"contract-reject-001\", \"final_deterministic_decision\": \"reject\"}\n\n<think>\nThinking Process:\n1.  **Analyze User Input:**\n   - Constraint: \"Return JSON only for this verifier-output schema. Do not include prose.\"\n   - `case_id`: `carnot_runtime_contract_reject`\n   - `schema`: `{\"additionalProperties\": false, \"properties\": {\"contract_case_id\": {\"type\": \"string\"}, \"final_deterministic_decision\": {\"enum\": [\"accept\", \"reject\"], \"type\": \"string\"}}, \"required\": [\"con",
+      "row_type": "structured_output_result",
+      "schema_errors": [
+        "$.contract_case_id is required",
+        "$.final_deterministic_decision is required",
+        "$.additionalProperties is not allowed",
+        "$.properties is not allowed",
+        "$.required is not allowed",
+        "$.type is not allowed"
+      ],
+      "schema_name": "runtime_contract_decision",
+      "semantic_correct": false,
+      "strict_schema_valid": false
+    },
+    {
+      "case_id": "carnot_runtime_contract_reject",
+      "false_accept": false,
+      "family": "carnot_verifier_output",
+      "latency_seconds": 0.0031,
+      "mode": "standard_constrained",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_name": "Qwen3.6-35B-A3B",
+      "parsed_payload": {
+        "contract_case_id": "contract-reject-001",
+        "final_deterministic_decision": "reject"
+      },
+      "raw_output_excerpt": "{\"contract_case_id\":\"contract-reject-001\",\"final_deterministic_decision\":\"reject\"}",
+      "row_type": "structured_output_result",
+      "schema_errors": [],
+      "schema_name": "runtime_contract_decision",
+      "semantic_correct": true,
+      "strict_schema_valid": true
+    },
+    {
+      "case_id": "carnot_runtime_contract_reject",
+      "false_accept": false,
+      "family": "carnot_verifier_output",
+      "latency_seconds": 0.00465,
+      "mode": "dccd",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_name": "Qwen3.6-35B-A3B",
+      "parsed_payload": {
+        "contract_case_id": "contract-reject-001",
+        "final_deterministic_decision": "reject"
+      },
+      "raw_output_excerpt": "{\"contract_case_id\":\"contract-reject-001\",\"final_deterministic_decision\":\"reject\"}",
+      "row_type": "structured_output_result",
+      "schema_errors": [],
+      "schema_name": "runtime_contract_decision",
+      "semantic_correct": true,
+      "strict_schema_valid": true
+    },
+    {
+      "case_id": "carnot_dccd_repair_sat",
+      "false_accept": false,
+      "family": "carnot_verifier_output",
+      "latency_seconds": 1.280576,
+      "mode": "unconstrained_draft",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_name": "Qwen3.6-35B-A3B",
+      "parsed_payload": {
+        "draft_certificate": {
+          "certificate_text": "The system is not SAT.",
+          "state": "UNSAT"
+        },
+        "final_certificate": {
+          "certificate_text": "The system is SAT.",
+          "state": "SAT"
+        },
+        "repair_action": {
+          "action_type": "add_clause",
+          "rationale": "The system is not SAT.",
+          "target": "system"
+        }
+      },
+      "raw_output_excerpt": "verifier_output={\"draft_certificate\": {\"certificate_text\": \"The system is not SAT.\", \"state\": \"UNSAT\"}, \"repair_action\": {\"action_type\": \"add_clause\", \"rationale\": \"The system is not SAT.\", \"target\": \"system\"}, \"final_certificate\": {\"certificate_text\": \"The system is not SAT.\", \"certificate_text\": \"The system is SAT.\", \"state\": \"SAT\"}}\n\n<think>\nHere's a thinking process:\n\n1.  **Analyze User Input:**\n   - **Input Format:** The user provides a `case_id`, a `schema` (JSON schema), `target_semantics",
+      "row_type": "structured_output_result",
+      "schema_errors": [
+        "$.validator_metadata is required"
+      ],
+      "schema_name": "dccd_repair_output",
+      "semantic_correct": false,
+      "strict_schema_valid": false
+    },
+    {
+      "case_id": "carnot_dccd_repair_sat",
+      "false_accept": false,
+      "family": "carnot_verifier_output",
+      "latency_seconds": 0.00394,
+      "mode": "standard_constrained",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_name": "Qwen3.6-35B-A3B",
+      "parsed_payload": {
+        "draft_certificate": {
+          "certificate_text": "The system is not SAT.",
+          "state": "UNSAT"
+        },
+        "final_certificate": {
+          "certificate_text": "The system is SAT.",
+          "state": "SAT"
+        },
+        "repair_action": {
+          "action_type": "add_clause",
+          "rationale": "The system is not SAT.",
+          "target": "system"
+        },
+        "validator_metadata": {
+          "expected_semantic_result": "SAT",
+          "repair_hint_case_id": "case_1580"
+        }
+      },
+      "raw_output_excerpt": "{\"draft_certificate\":{\"certificate_text\":\"The system is not SAT.\",\"state\":\"UNSAT\"},\"final_certificate\":{\"certificate_text\":\"The system is SAT.\",\"state\":\"SAT\"},\"repair_action\":{\"action_type\":\"add_clause\",\"rationale\":\"The system is not SAT.\",\"target\":\"system\"},\"validator_metadata\":{\"expected_semantic_result\":\"SAT\",\"repair_hint_case_id\":\"case_1580\"}}",
+      "row_type": "structured_output_result",
+      "schema_errors": [],
+      "schema_name": "dccd_repair_output",
+      "semantic_correct": true,
+      "strict_schema_valid": true
+    },
+    {
+      "case_id": "carnot_dccd_repair_sat",
+      "false_accept": false,
+      "family": "carnot_verifier_output",
+      "latency_seconds": 0.00591,
+      "mode": "dccd",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_name": "Qwen3.6-35B-A3B",
+      "parsed_payload": {
+        "draft_certificate": {
+          "certificate_text": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: add bound.",
+          "state": "REPAIR_HINT"
+        },
+        "final_certificate": {
+          "certificate_text": "<CARNOT_CERT_STATE:SAT>\nSAT",
+          "state": "SAT"
+        },
+        "repair_action": {
+          "action_type": "STEP_REWRITE",
+          "rationale": "Repair the localized incorrect step before accepting.",
+          "target": "localized FoVer reasoning step"
+        },
+        "validator_metadata": {
+          "expected_semantic_result": "SAT",
+          "repair_hint_case_id": "case_1580"
+        }
+      },
+      "raw_output_excerpt": "{\"draft_certificate\":{\"certificate_text\":\"<CARNOT_CERT_STATE:REPAIR_HINT>\\nREPAIR_HINT: add bound.\",\"state\":\"REPAIR_HINT\"},\"final_certificate\":{\"certificate_text\":\"<CARNOT_CERT_STATE:SAT>\\nSAT\",\"state\":\"SAT\"},\"repair_action\":{\"action_type\":\"STEP_REWRITE\",\"rationale\":\"Repair the localized incorrect step before accepting.\",\"target\":\"localized FoVer reasoning step\"},\"validator_metadata\":{\"expected_semantic_result\":\"SAT\",\"repair_hint_case_id\":\"case_1580\"}}",
+      "row_type": "structured_output_result",
+      "schema_errors": [],
+      "schema_name": "dccd_repair_output",
+      "semantic_correct": true,
+      "strict_schema_valid": true
+    }
+  ],
+  "tests_run": [
+    ".venv/bin/pytest -q -o addopts=\"\" tests/python/test_experiment_1580_dccd_jsonschemabench_sota_structured_output_smoke.py",
+    ".venv/bin/coverage run --include=*/python/carnot/reporting/dccd_jsonschemabench_sota_structured_output_smoke.py -m pytest -q -o addopts=\"\" tests/python/test_experiment_1580_dccd_jsonschemabench_sota_structured_output_smoke.py && .venv/bin/coverage report --fail-under=100 -m",
+    ".venv/bin/pytest tests/python -q (attempted; failed/hung at 91% after unrelated JAX/Z3 worker crashes)"
+  ],
+  "used_mandated_sota_gguf": true
+}

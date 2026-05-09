@@ -1331,6 +1331,54 @@ And the terminal artifact reports parse-rate, contract-accept-rate, latency,
 and false-accept metrics without counting legacy small-model smoke rows as
 headline evidence.
 
+### REQ-VERIFY-1580: DCCD/JSONSchemaBench SOTA Structured-Output Smoke
+
+The repository shall provide an Exp 1580 bounded structured-output smoke test
+for Carnot verifier-output schemas using a JSONSchemaBench-style schema slice
+and draft-conditioned constrained decoding.
+
+The smoke test shall:
+
+- write
+  `results/experiment_1580_dccd_jsonschemabench_sota_structured_output_smoke.json`
+  with `status="in_progress"` before resolving models or running decoders;
+- define `MODEL_SPECS` by calling `cached_sota_pair(gpu_indices=(0, 1))`
+  where local SOTA GGUF inference is attempted, and record exact resolved
+  model paths and hub IDs;
+- include at least one mandated SOTA GGUF from
+  `unsloth/Qwen3.6-35B-A3B-GGUF`,
+  `unsloth/gemma-4-31B-it-GGUF`, or
+  `unsloth/gemma-4-26B-A4B-it-GGUF` in `models_used` when live rows complete;
+- evaluate a bounded case slice that includes both JSONSchemaBench-style
+  object constraints and Carnot verifier-output schemas;
+- compare unconstrained draft output, standard constrained decoding, and DCCD
+  output where local runtime support is available;
+- report strict schema validity, semantic verifier correctness, latency,
+  projection-tax proxy delta, false accepts, and whether a legacy tiny-model
+  fallback path was used; and
+- write a terminal artifact containing `status`, `MODEL_SPECS`, `models_used`,
+  `used_mandated_sota_gguf`, `legacy_tiny_model_fallback_used`, `n_schemas`,
+  `strict_schema_validity_rate`, `semantic_correctness_rate`,
+  `false_accept_count`, `projection_tax_proxy_delta`,
+  `dccd_jsonschema_smoke_complete`, and `honest_verdict`.
+
+Legacy tiny-model fallback rows MUST be excluded from headline metrics and MUST
+NOT set `used_mandated_sota_gguf=true`. `dccd_jsonschema_smoke_complete` MUST
+be true only when at least one mandated SOTA GGUF row completes and the DCCD
+mode reports strict schema validity and semantic correctness for every selected
+schema without false accepts.
+
+### SCENARIO-VERIFY-1580: DCCD Output Remains Schema-Strict And Semantically Checked
+
+Given cached SOTA GGUFs are available through
+`cached_sota_pair(gpu_indices=(0, 1))` and the selected Carnot verifier-output
+schemas include deterministic semantic targets,
+When Exp 1580 evaluates unconstrained draft, constrained decoding, and DCCD
+outputs on the bounded JSONSchemaBench-style slice,
+Then the terminal artifact records exact models used, per-mode schema and
+semantic metrics, latency and projection-tax proxy deltas, and zero DCCD false
+accepts before setting `dccd_jsonschema_smoke_complete=true`.
+
 ### REQ-VERIFY-1537: BEAVER-Lite Prefix-Bound Contract Audit
 
 The repository shall provide an Exp 1537 BEAVER-lite prefix-bound audit that
@@ -2110,7 +2158,7 @@ And `paper_v6_brain_recommendation` records whether paper v6 should cite
 factorized starvation, treat starvation as overstated, or drop both
 parameterizations as inadequate.
 
-## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487/1495/1496/1499/1500/1501/1507/1508/1509/1510/1520/1521/1522/1525/1537/1538/1541/1542/1551/1552/1553/1554/1557/1562/1571/1578)
+## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487/1495/1496/1499/1500/1501/1507/1508/1509/1510/1520/1521/1522/1525/1537/1538/1541/1542/1551/1552/1553/1554/1557/1562/1571/1578/1580)
 
 | Requirement | Python | Tests |
 |-------------|--------|-------|
@@ -2153,3 +2201,4 @@ parameterizations as inadequate.
 | REQ-VERIFY-1562 | Implemented (`python/scripts/dt_brain_correlations_verification.py`) | Implemented (`tests/python/test_experiment_1562_brain_linear_ar_k_sweep.py`) |
 | REQ-VERIFY-1571 | Implemented (`python/carnot/training/ar_reinforce_stepwise_baseline.py`) | Implemented (`tests/python/test_experiment_1571_step_wise_baseline_ar_reinforce.py`) |
 | REQ-VERIFY-1578 | Implemented (`python/carnot/training/brain_reinforce_training_dynamics.py`) | Implemented (`tests/python/test_experiment_1578_brain_reinforce_training_dynamics.py`) |
+| REQ-VERIFY-1580 | Implemented (`python/carnot/reporting/dccd_jsonschemabench_sota_structured_output_smoke.py`) | Implemented (`tests/python/test_experiment_1580_dccd_jsonschemabench_sota_structured_output_smoke.py`) |
