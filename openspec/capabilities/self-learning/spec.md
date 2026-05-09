@@ -4497,6 +4497,73 @@ mistake, or is absent from the portable pack
 
 ---
 
+## REQ-LEARN-1594: CerCE Certificate Ledger For FR-11 Policy Promotion
+
+Exp 1594 SHALL build a CerCE-style certificate ledger for FR-11 policy
+promotion.  The ledger SHALL preserve constraint-violation evidence from the
+FR-11 update loop and promotion evaluation rows so a policy update can only be
+marked promotion-safe when its certificate shows non-forgetting, zero accepted
+violations, and no positive false-accept delta.  The mechanism is query-time
+policy bookkeeping only: it SHALL NOT train, finetune, write checkpoints, or
+mutate model parameters.
+
+### REQ-LEARN-1594 Sub-requirements
+
+- REQ-LEARN-1594-1: The workflow SHALL write
+  `results/experiment_1594_cerce_ledger.json` first with
+  `status="in_progress"` before loading promotion, rollback, or FR-11 event
+  inputs.
+- REQ-LEARN-1594-2: The ledger SHALL record one normalized certificate row per
+  policy update and constraint case. Each row SHALL include `policy_update_id`,
+  `constraint_id`, `constraint_type`, `source`, `baseline_violation`,
+  `promoted_violation`, `accepted_violation`, `false_accept_delta`,
+  `soundness_mistake`, and a deterministic `certificate_id`.
+- REQ-LEARN-1594-3: The ledger SHALL expose an FR-11 event subscriber hook so
+  `ViolationEvent` records from the update loop increment constraint-violation
+  counts without bypassing the existing EventBus semantics.
+- REQ-LEARN-1594-4: A policy certificate SHALL be promotion-safe only when every
+  row for that policy has `accepted_violation=false`,
+  `soundness_mistake=false`, and aggregate `false_accept_delta <= 0`.
+- REQ-LEARN-1594-5: `nonforgetting_certificate_rate` SHALL equal the fraction
+  of policies whose certificate is promotion-safe.  `cerce_ledger_ready` SHALL
+  be true only when at least one policy certificate exists and the rate is
+  exactly 1.0.
+- REQ-LEARN-1594-6: The terminal artifact SHALL include `status`, `schema`,
+  `continuous_self_learning_task`, `cerce_ledger_ready`,
+  `policy_certificates_evaluated`, `constraint_violation_records`,
+  `fr11_events_recorded`, `accepted_violation_count`,
+  `false_accept_delta`, `nonforgetting_certificate_rate`,
+  `promotion_safe_policy_updates`, `blocked_policy_updates`,
+  `ledger_rows`, `blockers`, and `honest_verdict`.
+
+### SCENARIO-LEARN-1594: FR-11 Events And Promotion Rows Produce Safe Certificates
+
+**Given** FR-11 emits constraint-violation events for a policy update
+**And** the promotion evaluation rows show zero accepted violations, zero
+soundness mistakes, and no positive false-accept delta
+**When** Exp 1594 builds the CerCE ledger
+**Then** the policy certificate is promotion-safe
+**And** `cerce_ledger_ready=true`
+**And** the terminal artifact records the policy id in
+`promotion_safe_policy_updates`.
+
+### SCENARIO-LEARN-1595: Accepted Violations Block Policy Promotion
+
+**Given** a promotion evaluation row accepts a constraint case whose expected
+contract label is reject
+**When** Exp 1594 builds the CerCE ledger
+**Then** the policy certificate is not promotion-safe
+**And** the policy id is recorded in `blocked_policy_updates`
+**And** `cerce_ledger_ready=false`.
+
+## Implementation Status (REQ-LEARN-1594)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-1594 | Implemented (`python/carnot/training/cerce_certificate_ledger.py`) | Implemented (`tests/python/test_experiment_1594_cerce_ledger.py`) |
+
+---
+
 ## REQ-LEARN-1539: FR-11 External-Feedback Skill Graph Promotion
 
 Exp 1539 SHALL convert rollback-passing FR-11 query-time policy updates into an
