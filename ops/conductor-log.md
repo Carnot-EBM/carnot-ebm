@@ -1311,3 +1311,4 @@ web search: site:o |
 | 2026-05-09 07:12 UTC | Exp 1593: Compare CDG-guided repair against flat v | OK | 81 passed, 1 warning in 4.61s |
 | 2026-05-09 07:23 UTC | Exp 1594: Add CerCE-style certificate ledger aroun | OK | 81 passed, 1 warning in 5.12s |
 | 2026-05-09 07:35 UTC | Exp 1595: Pre/post constraint violation bounds che | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: regular expression  |
+| 2026-05-09 07:46 UTC | Exp 1595: Pre/post constraint violation bounds che | OK | 81 passed, 1 warning in 5.27s |
