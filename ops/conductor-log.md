@@ -1323,3 +1323,4 @@ web search: site:o |
 | 2026-05-09 08:45 UTC | Exp 1593: Compare CDG-guided repair against flat v | OK | cache hit: 81 passed, 1 warning in 4.24s |
 | 2026-05-09 08:48 UTC | Exp 1600: Paper v6 OT terminology rewrite | FAIL | Gemini CLI error: Error: Reached max turns (20) |
 | 2026-05-09 08:52 UTC | Exp 1600: Paper v6 OT terminology rewrite | FAIL | Gemini CLI error: Error: Reached max turns (20) |
+| 2026-05-09 08:56 UTC | Exp 1600: Paper v6 OT terminology rewrite | FAIL | Gemini CLI error: Error: Reached max turns (20) |

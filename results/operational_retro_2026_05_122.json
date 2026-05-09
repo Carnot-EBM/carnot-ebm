@@ -1,0 +1,33 @@
+{
+  "schema": "carnot.operational_retro.v63",
+  "milestone": "2026.05.122",
+  "generated_at": "2026-05-09T09:08:49Z",
+  "retro_type": "operational",
+  "summary": "Milestone 2026.05.122 operational retrospective complete. Analyzed 173 min / 40 experiments for execution efficiency. Average per experiment was 4 minutes. Slowest experiments were dominated by Exp 1591 (48 min) and recurring gate churn from Full-Scale Pipeline v3 (14 min) and arXiv Bundle v10 (10 min). GPU utilization was highly inefficient: both RTX 3090s were completely idle at 0% utilization with 4MB allocated each, failing to utilize DualGPURunner for parallel execution.",
+  "total_wall_time_minutes": 173,
+  "experiments_completed": 40,
+  "slowest_experiments": [
+    "Exp 1591: Upgrade DCCD smoke to reusable structured verdict ad (48m)",
+    "Full-Scale Pipeline v3 \u2014 Gated on Exp 1414 Repair Executor (14m)",
+    "Exp 1588: Build bounded instruction-to-constraint DSL (13m)",
+    "arXiv Bundle v10 - Gated on Exp 1269 Critical Fixes (10m)",
+    "Exp 1597: CPU-only inertial-update Ising ablation (10m)"
+  ],
+  "bottlenecks_identified": [
+    "Recurring gate churn on Full-Scale Pipeline v3 and arXiv Bundle v10",
+    "Both GPUs completely idle at 0% utilization throughout, sequential execution used instead of parallel",
+    "Exp 1591 consumed 48 minutes single-handedly"
+  ],
+  "improvements_suggested": [
+    "Use DualGPURunner to run models on GPU 0 and GPU 1 simultaneously",
+    "Implement activation-time gate/doomed-rerun preflight to emit terminal blocked artifacts instantly",
+    "Terminalize legacy gate checks (Exp 1414, Exp 1269) to stop recurring churn"
+  ],
+  "estimated_time_savings_pct": 45,
+  "top_3_highest_leverage_actions": [
+    "Deploy DualGPURunner by default for all GPU-eligible tasks",
+    "Cache gate verdicts for legacy experiments (Exp 1414, Exp 1269)",
+    "Apply terminal artifact finalization to prevent repeated doomed reruns"
+  ],
+  "meta_reflection": "The retro continues to highlight the same recurring legacy gates and GPU idleness. Mechanical enforcement in the conductor is required."
+}

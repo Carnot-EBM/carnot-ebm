@@ -1,5 +1,9 @@
 # Carnot — Changelog
 
+## 2026-05-09 (Milestone 2026.05.122 Operational Retrospective)
+
+- 2026-05-09 09:08 UTC: Milestone 2026.05.122 operational retrospective complete. Analyzed 173 min wall time / 40 experiments (avg 4 min). Slowest paths: Exp 1591 (48 min), Full-Scale Pipeline v3 gate on Exp 1414 (14 min), Exp 1588 (13 min), and the legacy Exp 1269 arXiv Bundle v10 gate (10 min). Both RTX 3090s were completely idle at 4 MB / 0% utilization throughout, meaning DualGPURunner was not utilized. Estimated 45% savings recoverable via DualGPURunner parallelization and gate caching.
+
 ## 2026-05-09 (Milestone 2026.05.121 Operational Retrospective)
 
 - 2026-05-09 04:39 UTC: Milestone 2026.05.121 operational retrospective complete. Wrote `results/operational_retro_2026_05_121.json` from the required skeleton to terminal `status=success` for the supplied 40 min / 11 completed experiment slice. Slowest-five timing was 37/40 min dominated by repeated Full-Scale Pipeline v3 gate churn on the Exp 1414 repair-executor path (25 min) plus the recurring Exp 1269 arXiv Bundle v10 gate (10 min) and a 2 min SOTA GGUF cache/provenance doomed-rerun preflight. Live `gpu_monitor.py` matched the supplied closeout state: both RTX 3090s idle at 4 MB / 0% utilization, no listed GPU processes, and no zombie warnings. Estimated 55% recoverable via same-verdict gate retirement, activation-time readiness artifacts, dependency-lane fanout, DualGPURunner telemetry, and idempotent docs appenders.
