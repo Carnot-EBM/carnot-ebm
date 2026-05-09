@@ -1268,3 +1268,4 @@ web search: GitHub trending energy based mod |
 | 2026-05-08 23:13 UTC | Extropic Z1 Readiness Packet THRML Alignment Resum | OK | 81 passed, 1 warning in 5.38s |
 | 2026-05-08 23:30 UTC | BRAIN REINFORCE Training Dynamics at k=15 | OK | 81 passed, 1 warning in 5.63s |
 | 2026-05-08 23:41 UTC | ICLR-26 OT Verification Framework Adoption for Pap | OK | 81 passed, 1 warning in 5.17s |
+| 2026-05-09 00:32 UTC | DCCD + JSONSchemaBench Structured-Output Smoke on  | OK | 81 passed, 1 warning in 4.85s |
