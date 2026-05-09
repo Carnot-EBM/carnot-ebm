@@ -370,3 +370,38 @@ class EmbeddingConstraintStore:
                     source_violation_type=key,
                 )
                 self.store(spo)
+
+    def prune_redundant(self, overlap_threshold: float = 0.9) -> int:
+        """Offline consolidation phase: remove redundant constraints via spectral overlap pruning.
+
+        Computes the spectral overlap (cosine similarity) between all pairs of stored
+        constraint embeddings. If two embeddings have overlap > overlap_threshold,
+        the duplicate is pruned.
+        
+        Returns the number of redundant constraints pruned.
+
+        Spec: REQ-LEARN-1624
+        """
+        assert self.retrieval_l2_normalized, "class invariant: L2-normalization must be enabled"
+        to_remove = set()
+        n = len(self._store)
+        for i in range(n):
+            if i in to_remove:
+                continue
+            emb_i = self._store[i].embedding
+            if emb_i is None:
+                continue
+            for j in range(i + 1, n):
+                if j in to_remove:
+                    continue
+                emb_j = self._store[j].embedding
+                if emb_j is None:
+                    continue
+                sim = _dot(emb_i, emb_j)
+                if sim > overlap_threshold:
+                    to_remove.add(j)
+        
+        if to_remove:
+            self._store = [entry for idx, entry in enumerate(self._store) if idx not in to_remove]
+        return len(to_remove)
+

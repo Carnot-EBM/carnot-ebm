@@ -4952,3 +4952,17 @@ confirmed mode-collapse predictors or nonzero soundness mistakes
 | Requirement | Python | Tests |
 |-------------|--------|-------|
 | REQ-LEARN-1581 | Implemented (`python/carnot/reporting/fr11_v15_lambda_grpo_retention_reversal.py`) | Implemented (`tests/python/test_fr11_v15_lambda_grpo_retention_reversal.py`) |
+
+## REQ-LEARN-1624: Offline Consolidation via Spectral Overlap Pruning
+
+**Given** a set of active energy constraints
+**When** the offline consolidation phase runs
+**Then** redundant constraints MUST be removed using spectral overlap pruning
+**And** the pruned network MUST yield identical energy minima on a hold-out set.
+
+### REQ-LEARN-1624 Sub-requirements
+- REQ-LEARN-1624-1: Pruning SHALL calculate spectral overlap between constraint embeddings or matrices.
+- REQ-LEARN-1624-2: The test MUST validate energy minima on a hold-out set.
+- REQ-LEARN-1624-3: Artifact MUST be saved to results/experiment_1624_adaptive_reconfig.json.
+
+---
