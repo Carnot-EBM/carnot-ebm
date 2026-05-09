@@ -1320,3 +1320,4 @@ web search: site:o |
 | 2026-05-09 08:23 UTC | Exp 1599: KANELÉ LUT-based evaluation audit for Qu | OK | 81 passed, 1 warning in 4.24s |
 | 2026-05-09 08:36 UTC | Exp 1593: Compare CDG-guided repair against flat v | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: erateContent?alt=ss |
 | 2026-05-09 08:41 UTC | Exp 1593: Compare CDG-guided repair against flat v | FAIL | No file changes produced |
+| 2026-05-09 08:45 UTC | Exp 1593: Compare CDG-guided repair against flat v | OK | cache hit: 81 passed, 1 warning in 4.24s |
