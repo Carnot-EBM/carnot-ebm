@@ -1,0 +1,269 @@
+{
+  "arbitrary_code_execution_path_introduced": false,
+  "constraints_extracted": 10,
+  "dsl_schema": {
+    "constraint_fields": {
+      "field": "text or json",
+      "id": "stable local constraint id",
+      "op": "one supported operator",
+      "source_text": "instruction fragment that produced the constraint",
+      "value": "operator-specific expected value"
+    },
+    "max_constraints": 8,
+    "max_instruction_chars": 2000,
+    "schema_version": "carnot.instruction_constraints.v1",
+    "supported_operators": [
+      "contains",
+      "enum",
+      "exact_bullets",
+      "json_has_keys",
+      "json_object",
+      "max_words",
+      "min_words",
+      "not_contains"
+    ]
+  },
+  "dsl_schema_version": "carnot.instruction_constraints.v1",
+  "experiment_id": "experiment_1588_nsvif_dsl",
+  "false_accept_rate": 0.0,
+  "fixture_rows": [
+    {
+      "constraint_ids": [
+        "c001-json_object",
+        "c002-json_has_keys",
+        "c003-contains",
+        "c004-not_contains",
+        "c005-max_words"
+      ],
+      "constraint_ops": [
+        "json_object",
+        "json_has_keys",
+        "contains",
+        "not_contains",
+        "max_words"
+      ],
+      "instruction": "Respond in JSON with keys answer and confidence. Include \"approved\". Do not mention \"secret\". Use at most 12 words.",
+      "known_bad": {
+        "accepted": false,
+        "failure_ids": [
+          "c002-json_has_keys",
+          "c003-contains",
+          "c004-not_contains"
+        ],
+        "issues": [
+          {
+            "constraint_id": "c002-json_has_keys",
+            "expected": [
+              "answer",
+              "confidence"
+            ],
+            "message": "json_has_keys constraint failed",
+            "observed": {
+              "missing": [
+                "confidence"
+              ]
+            }
+          },
+          {
+            "constraint_id": "c003-contains",
+            "expected": "approved",
+            "message": "contains constraint failed",
+            "observed": "not found"
+          },
+          {
+            "constraint_id": "c004-not_contains",
+            "expected": "not secret",
+            "message": "not_contains constraint failed",
+            "observed": "found"
+          }
+        ]
+      },
+      "known_good": {
+        "accepted": true,
+        "failure_ids": [],
+        "issues": []
+      },
+      "pysat_problem": {
+        "backend": "pysat-compatible-cnf",
+        "clauses": [
+          [
+            1
+          ],
+          [
+            2
+          ],
+          [
+            3
+          ],
+          [
+            4
+          ],
+          [
+            5
+          ]
+        ],
+        "description": "hard conjunction of instruction constraints",
+        "variables": {
+          "c001-json_object": 1,
+          "c002-json_has_keys": 2,
+          "c003-contains": 3,
+          "c004-not_contains": 4,
+          "c005-max_words": 5
+        }
+      }
+    },
+    {
+      "constraint_ids": [
+        "c001-enum"
+      ],
+      "constraint_ops": [
+        "enum"
+      ],
+      "instruction": "Answer must be one of \"yes\", \"no\".",
+      "known_bad": {
+        "accepted": false,
+        "failure_ids": [
+          "c001-enum"
+        ],
+        "issues": [
+          {
+            "constraint_id": "c001-enum",
+            "expected": [
+              "no",
+              "yes"
+            ],
+            "message": "enum constraint failed",
+            "observed": "maybe"
+          }
+        ]
+      },
+      "known_good": {
+        "accepted": true,
+        "failure_ids": [],
+        "issues": []
+      },
+      "pysat_problem": {
+        "backend": "pysat-compatible-cnf",
+        "clauses": [
+          [
+            1
+          ]
+        ],
+        "description": "hard conjunction of instruction constraints",
+        "variables": {
+          "c001-enum": 1
+        }
+      }
+    },
+    {
+      "constraint_ids": [
+        "c001-exact_bullets"
+      ],
+      "constraint_ops": [
+        "exact_bullets"
+      ],
+      "instruction": "Use exactly 2 bullet points.",
+      "known_bad": {
+        "accepted": false,
+        "failure_ids": [
+          "c001-exact_bullets"
+        ],
+        "issues": [
+          {
+            "constraint_id": "c001-exact_bullets",
+            "expected": 2,
+            "message": "exact_bullets constraint failed",
+            "observed": 1
+          }
+        ]
+      },
+      "known_good": {
+        "accepted": true,
+        "failure_ids": [],
+        "issues": []
+      },
+      "pysat_problem": {
+        "backend": "pysat-compatible-cnf",
+        "clauses": [
+          [
+            1
+          ]
+        ],
+        "description": "hard conjunction of instruction constraints",
+        "variables": {
+          "c001-exact_bullets": 1
+        }
+      }
+    },
+    {
+      "constraint_ids": [
+        "c001-contains",
+        "c002-max_words",
+        "c003-min_words"
+      ],
+      "constraint_ops": [
+        "contains",
+        "max_words",
+        "min_words"
+      ],
+      "instruction": "Include \"north\". Use at least 2 words and at most 5 words.",
+      "known_bad": {
+        "accepted": false,
+        "failure_ids": [
+          "c003-min_words"
+        ],
+        "issues": [
+          {
+            "constraint_id": "c003-min_words",
+            "expected": ">=2",
+            "message": "min_words constraint failed",
+            "observed": 1
+          }
+        ]
+      },
+      "known_good": {
+        "accepted": true,
+        "failure_ids": [],
+        "issues": []
+      },
+      "pysat_problem": {
+        "backend": "pysat-compatible-cnf",
+        "clauses": [
+          [
+            1
+          ],
+          [
+            2
+          ],
+          [
+            3
+          ]
+        ],
+        "description": "hard conjunction of instruction constraints",
+        "variables": {
+          "c001-contains": 1,
+          "c002-max_words": 2,
+          "c003-min_words": 3
+        }
+      }
+    }
+  ],
+  "honest_verdict": "complete: bounded instruction-to-constraint DSL compiled local Python validators and PySAT-compatible CNF with zero fixture false accepts",
+  "instructions_tested": 4,
+  "known_bad_reject_rate": 1.0,
+  "known_good_pass_rate": 1.0,
+  "pysat_backend_available": false,
+  "pysat_cnf_compiled": 4,
+  "python_validator_pass_rate": 1.0,
+  "run_date": "20260509",
+  "spec_traces": [
+    "REQ-VERIFY-1588",
+    "SCENARIO-VERIFY-1588"
+  ],
+  "status": "complete",
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_1588_nsvif_dsl.py -q --no-cov",
+    ".venv/bin/coverage run --source=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verifiers -m pytest tests/python/test_experiment_1588_nsvif_dsl.py -q --no-cov -n 0 && .venv/bin/coverage report --fail-under=100 --include='*/python/carnot/verifiers/dsl.py' -m"
+  ],
+  "validators_compiled": 4
+}
