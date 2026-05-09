@@ -1359,3 +1359,4 @@ web search: site:o |
 | 2026-05-09 13:43 UTC | Exp 1617: Live SOTA validation of Nabla-Reasoner | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1616-nabla-reasoner.optimizer_converges |
 | 2026-05-09 13:45 UTC | Exp 1617: Live SOTA validation of Nabla-Reasoner | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1616-nabla-reasoner.optimizer_converges |
 | 2026-05-09 13:47 UTC | Exp 1617: Live SOTA validation of Nabla-Reasoner | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1616-nabla-reasoner.optimizer_converges |
+| 2026-05-09 13:58 UTC | Exp 1618: PWA Abstraction Layer for KANs | OK | 81 passed, 1 warning in 4.98s |
