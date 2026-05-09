@@ -129,6 +129,7 @@
 | 2026.05.121 | Operational Retro Final | 1574-1587 | 40 min / 11 completed; slowest-five dominated by pipeline gate churn; both GPUs idle/no zombies; 55% savings recoverable via terminal gate retirement and parallel GPU scheduling |
 | 2026.05.122 | DSL and Inference Efficiency Analysis | 1588-1627 | 40 experiments completed in 173 min; Exp 1591 DCCD structured verdict complete; Both GPUs remained idle, highlighting parallelization gap |
 | 2026.05.123 | Operational Efficiency and Constraint Induction | 1591-1609+ | 70 experiments completed in 364 min; Exp 1603 Energy-Based Constraint Network evaluated; Both GPUs remained idle |
+| 2026.05.124 | Operational Efficiency Analysis | 1591-1609+ | 449 min wall time; GPUs fully idle (DualGPU unused); identified Exp 1603 & 1591 bottlenecks; 40% savings via parallel scheduling |
 
 ## Breakthrough Results
 
