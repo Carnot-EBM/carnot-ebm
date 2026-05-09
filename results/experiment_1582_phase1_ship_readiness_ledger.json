@@ -1,0 +1,122 @@
+{
+  "blocking_items": [
+    {
+      "commands": [
+        "python3 -m venv /tmp/carnot-phase1-package-smoke",
+        "/tmp/carnot-phase1-package-smoke/bin/python -m pip install --upgrade pip",
+        "/tmp/carnot-phase1-package-smoke/bin/python -m pip install --no-deps .",
+        "/tmp/carnot-phase1-package-smoke/bin/python -c \"import carnot; print(carnot.__version__)\"",
+        "/tmp/carnot-phase1-package-smoke/bin/carnot --help",
+        "python -m build && twine check dist/*"
+      ],
+      "details": "public docs still use the unavailable package name `pip install carnot`: README.md:18: Rust + Python/JAX, Apache 2.0, `pip install carnot`.; README.md:192: GPU: `pip install carnot[cuda]` for CUDA 12. On AMD/ROCm, use; README.md:193: `JAX_PLATFORMS=cpu`. Rust bindings (optional): `pip install carnot[rust]`; docs/getting-started.md:13: > JAX runs on CPU by default. For GPU acceleration, install with `pip install carnot[cuda]`.; docs/usage-guide.md:27: - **Install:** `pip install carnot` (~50MB with JAX CPU); docs/usage-guide.md:39: - **Optional:** TensorRT-LLM for 2-4x inference speedup (`pip install carnot[cuda]`); examples/README.md:22: pip install carnot",
+      "gate": "pypi_package_ready"
+    },
+    {
+      "commands": [
+        "python3 -m venv /tmp/carnot-phase1-package-smoke",
+        "/tmp/carnot-phase1-package-smoke/bin/python -m pip install --upgrade pip",
+        "/tmp/carnot-phase1-package-smoke/bin/python -m pip install --no-deps .",
+        "/tmp/carnot-phase1-package-smoke/bin/python -c \"import carnot; print(carnot.__version__)\"",
+        "/tmp/carnot-phase1-package-smoke/bin/carnot --help",
+        "python -m build && twine check dist/*"
+      ],
+      "details": "HuggingFace model loading paths import huggingface_hub, but pyproject.toml does not declare huggingface-hub in dependencies or optional extras.",
+      "gate": "pypi_package_ready"
+    },
+    {
+      "commands": [
+        "find exports -maxdepth 2 -type f | sort",
+        "python - <<'PY'\nfrom pathlib import Path\nfor p in sorted(Path('exports').glob('per-token-ebm-*')):\n    print(p.name, all((p / f).exists() for f in ['README.md','config.json','model.safetensors','training_metadata.json']))\nPY",
+        "huggingface-cli repo-files Carnot-EBM/<repo-id>"
+      ],
+      "details": "docs/huggingface-plan.md lists data/token_activations_tqa_qwen35.safetensors, but that dataset artifact is not present locally.",
+      "gate": "hf_mirror_ready"
+    },
+    {
+      "commands": [
+        "find exports -maxdepth 2 -type f | sort",
+        "python - <<'PY'\nfrom pathlib import Path\nfor p in sorted(Path('exports').glob('per-token-ebm-*')):\n    print(p.name, all((p / f).exists() for f in ['README.md','config.json','model.safetensors','training_metadata.json']))\nPY",
+        "huggingface-cli repo-files Carnot-EBM/<repo-id>"
+      ],
+      "details": "docs/huggingface-plan.md still contains unresolved 'Action needed' export work.",
+      "gate": "hf_mirror_ready"
+    },
+    {
+      "commands": [
+        "find exports -maxdepth 2 -type f | sort",
+        "python - <<'PY'\nfrom pathlib import Path\nfor p in sorted(Path('exports').glob('per-token-ebm-*')):\n    print(p.name, all((p / f).exists() for f in ['README.md','config.json','model.safetensors','training_metadata.json']))\nPY",
+        "huggingface-cli repo-files Carnot-EBM/<repo-id>"
+      ],
+      "details": "README.md still says only two Phase 1 research artifacts are published, which conflicts with later per-token/model-card references.",
+      "gate": "hf_mirror_ready"
+    },
+    {
+      "commands": [
+        "ipfs add -r exports/per-token-ebm-*",
+        "ipfs add dist/carnot_ebm-*.tar.gz",
+        "python -m json.tool results/ipfs_mirrors.json"
+      ],
+      "details": "results/ipfs_mirrors.json lacks content-addressed CIDs for required keys: per_token_ebm_exports, pypi_sdist",
+      "gate": "second_mirror_ready"
+    },
+    {
+      "commands": [
+        "carnot verify examples/math_funcs.py --func gcd --test '(12,8):4' --test '(7,13):1'",
+        "carnot verify-code examples/math_funcs.py --func gcd --pbt",
+        "python -m carnot.mcp"
+      ],
+      "details": ".mcp.json.example/docs still point at tools/verify-mcp/server.py instead of the packaged `python -m carnot.mcp` entry point.",
+      "gate": "mcp_cli_docs_ready"
+    },
+    {
+      "commands": [
+        "carnot verify examples/math_funcs.py --func gcd --test '(12,8):4' --test '(7,13):1'",
+        "carnot verify-code examples/math_funcs.py --func gcd --pbt",
+        "python -m carnot.mcp"
+      ],
+      "details": "README.md reports 7 MCP tools, but python/carnot/mcp/server.py exposes 9.",
+      "gate": "mcp_cli_docs_ready"
+    },
+    {
+      "commands": [
+        "carnot verify examples/math_funcs.py --func gcd --test '(12,8):4' --test '(7,13):1'",
+        "carnot verify-code examples/math_funcs.py --func gcd --pbt",
+        "python -m carnot.mcp"
+      ],
+      "details": "docs/integrator-guide.md is missing.",
+      "gate": "mcp_cli_docs_ready"
+    }
+  ],
+  "blocking_items_count": 9,
+  "gate_evidence": {
+    "hf_mirror_ready": [
+      "16 per-token EBM export directories are locally staged."
+    ],
+    "independent_reproducer_path_ready": [
+      "fresh-venv and CI reproducer commands are recorded in ops/phase1_ship_readiness.md.",
+      "safe local smoke command was run without publishing or credentials."
+    ],
+    "mcp_cli_docs_ready": [
+      "docs/usage-guide.md includes CLI verify and verify-code examples."
+    ],
+    "pypi_package_ready": [
+      "pyproject.toml uses PyPI distribution name carnot-ebm.",
+      "console script carnot resolves to carnot.cli:main.",
+      "dynamic version resolves through python/carnot/_version.py.",
+      "Apache-2.0 metadata and LICENSE file are present.",
+      "declared package-data globs resolve to local files."
+    ],
+    "second_mirror_ready": []
+  },
+  "hf_mirror_ready": false,
+  "honest_verdict": "blocked_9_items_remaining",
+  "independent_reproducer_path_ready": true,
+  "ledger_path": "ops/phase1_ship_readiness.md",
+  "mcp_cli_docs_ready": false,
+  "phase1_ship_readiness_ledger_ready": true,
+  "pypi_package_ready": false,
+  "safe_local_smoke_ran": true,
+  "second_mirror_ready": false,
+  "status": "complete"
+}

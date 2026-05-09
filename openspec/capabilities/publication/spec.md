@@ -820,6 +820,53 @@ a paper patch was applied, keeps `no_publication_trigger == true`, and reports
 a complete honest verdict that preserves the finite-K and verifier-ROC
 boundaries.
 
+### REQ-PUBLISH-024: Phase 1 Software Ship Readiness Ledger
+
+The Exp 1582 Phase 1 ship-readiness workflow MUST create
+`results/experiment_1582_phase1_ship_readiness_ledger.json` with
+`status == "in_progress"` before inspecting release metadata. It MUST inspect
+the software-only Phase 1 ship gates that the operator decoupled from paper,
+arXiv, and hardware validation:
+
+- PyPI/package readiness for `pip install .`, console script exposure,
+  versioning, Apache-2.0 license metadata, and package data.
+- HuggingFace/model-card readiness, including missing local model or dataset
+  artifacts needed by the documented mirror plan.
+- Second-channel mirror readiness, preferring content-addressed IPFS CIDs.
+- MCP and CLI external-integrator quick-start completeness.
+- Independent reproducer readiness using a fresh venv or CI path, with any
+  safe local smoke command recorded when run.
+
+The workflow MUST NOT publish packages, upload credentials, push releases, or
+modify `scripts/research_conductor.py`. The terminal artifact MUST include:
+
+- `status`
+- `phase1_ship_readiness_ledger_ready`
+- `pypi_package_ready`
+- `hf_mirror_ready`
+- `second_mirror_ready`
+- `mcp_cli_docs_ready`
+- `independent_reproducer_path_ready`
+- `safe_local_smoke_ran`
+- `blocking_items_count`
+- `ledger_path`
+- `honest_verdict`
+
+The workflow MUST write `ops/phase1_ship_readiness.md` with a pass/fail
+checklist, exact blockers, and concrete commands that can be run without
+publishing or uploading credentials unless explicitly marked as operator-only.
+
+### SCENARIO-PUBLISH-026: Phase 1 Ledger Blocks Ship Until Software Gates Pass
+
+**Given** the repository contains local package metadata, model-card references,
+mirror records, MCP/CLI docs, and Phase 1 reproducer evidence
+**When** the Exp 1582 readiness workflow completes
+**Then** it writes the markdown ledger and terminal JSON artifact
+AND the artifact contains every REQ-PUBLISH-024 required field
+AND `blocking_items_count` equals the number of unresolved ship blockers
+AND `honest_verdict` is `phase1_software_ship_ready` only when all five
+software gates are ready.
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -847,3 +894,4 @@ boundaries.
 | REQ-PUBLISH-021 | Proposed | Exp 1462 paper-v6 anchored-claims narrowing artifact |
 | REQ-PUBLISH-022 | Proposed | Exp 1576 paper-v6 Section 3 sampler/verifier draft |
 | REQ-PUBLISH-023 | Proposed | Exp 1579 ICLR 2026 OT verification framework adoption |
+| REQ-PUBLISH-024 | Proposed | Exp 1582 Phase 1 software ship readiness ledger |
