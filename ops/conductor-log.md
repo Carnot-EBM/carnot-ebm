@@ -1406,3 +1406,4 @@ web search: site:o |
 | 2026-05-09 19:49 UTC | Exp 1642: llguidance adapter for reusable external | OK | 81 passed, 1 warning in 4.10s |
 | 2026-05-09 19:54 UTC | Exp 1643: gated on Exp 1642 adapter_success==true  | OK | 81 passed, 1 warning in 5.95s |
 | 2026-05-09 19:58 UTC | Exp 1644: CerCE-style certificate ledger for FR-11 | OK | 81 passed, 1 warning in 4.87s |
+| 2026-05-09 20:00 UTC | Exp 1645: gated on Exp 1644 ledger_implemented==tr | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
