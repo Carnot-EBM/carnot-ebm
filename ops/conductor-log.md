@@ -1403,3 +1403,4 @@ web search: site:o |
 | 2026-05-09 18:07 UTC | Milestone 2026.05.126 activated | OK | 12 tasks queued |
 | 2026-05-09 18:48 UTC | Exp 1640: NSVIF instruction-to-constraint DSL impl | OK | 81 passed, 1 warning in 5.39s |
 | 2026-05-09 18:53 UTC | Exp 1641: gated on Exp 1640 parser_success==true — | OK | 81 passed, 1 warning in 5.22s |
+| 2026-05-09 19:49 UTC | Exp 1642: llguidance adapter for reusable external | OK | 81 passed, 1 warning in 4.10s |
