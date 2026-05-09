@@ -1362,3 +1362,5 @@ web search: site:o |
 | 2026-05-09 13:58 UTC | Exp 1618: PWA Abstraction Layer for KANs | OK | 81 passed, 1 warning in 4.98s |
 | 2026-05-09 14:00 UTC | Exp 1619: MILP Compilation of PWA KANs | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1618-pwa-kan-abstraction.pwa_ready (act |
 | 2026-05-09 14:02 UTC | Exp 1619: MILP Compilation of PWA KANs | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1618-pwa-kan-abstraction.pwa_ready (act |
+| 2026-05-09 14:04 UTC | Exp 1619: MILP Compilation of PWA KANs | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1618-pwa-kan-abstraction.pwa_ready (act |
+| 2026-05-09 14:06 UTC | Exp 1620: Certify FR-11 Ledger via MILP bounds | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1619-milp-kan-compiler) |
