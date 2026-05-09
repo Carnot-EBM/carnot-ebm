@@ -1340,3 +1340,4 @@ web search: site:o |
 | 2026-05-09 11:47 UTC | Exp 1606: DCCD repair on multi-hop reasoning tasks | OK | cache hit: 120 passed, 1 warning in 6.00s |
 | 2026-05-09 11:58 UTC | Exp 1607: Extract DSL constraints from HumanEval | OK | 81 passed, 1 warning in 4.92s |
 | 2026-05-09 12:12 UTC | Exp 1608: FR-11 continuous self-learning CerCE sca | OK | 81 passed, 1 warning in 5.38s |
+| 2026-05-09 12:28 UTC | Exp 1609: Context-sensitive constraint induction | OK | 81 passed, 1 warning in 5.26s |
