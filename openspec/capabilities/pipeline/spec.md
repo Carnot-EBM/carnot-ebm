@@ -773,6 +773,40 @@ huggingface-cli login.  The script MUST be executable and idempotent.
 
 **Spec traces:** REQ-PUBLISH-005, REQ-PUBLISH-006
 
+### REQ-DCCD-1606: DCCD Multi-Hop Logical Evaluation
+
+**Statement:** The DCCD multi-hop evaluator MUST accept a list of multi-hop logical
+reasoning questions, produce a draft response via `DraftConditionedVerifier`, extract
+structural constraints, and score each hop for structural consistency using energy-based
+constraint signals.  The evaluator MUST work purely on synthetic deterministic data (no
+live model calls required) so tests run in CI without GPU.
+
+**Why multi-hop:** Single-hop questions (e.g., "3 + 5 = ?") have shallow constraint
+graphs.  Multi-hop logical problems ("If A implies B, and B implies C, is A sufficient
+for C?") require chaining constraint checks across N inference steps.  DCCD's
+draft-conditioning is more valuable here: the draft structure reveals which hops the
+model believes are sequential vs. parallel, allowing the Ising tier to penalize
+structurally inconsistent reasoning chains.
+
+**Acceptance criteria:**
+- `DCCDMultiHopEvaluator.evaluate(questions)` returns a list of `MultiHopResult`.
+- Each result contains `structural_constraints`, `hop_count`, `chain_valid` bool.
+- `evaluate_multihop_dataset()` returns aggregate metrics with `accuracy_rate`,
+  `mean_hop_count`, `mean_constraint_count`, `dccd_applied` bool.
+- Runner function writes artifact to `results/experiment_1606_dccd_multihop.json`.
+- `honest_verdict` starts with `complete:` prefix.
+
+**Spec traces:** REQ-DCCD-1606 (Exp 1606)
+
+### SCENARIO-DCCD-1606: Multi-Hop Chain Correctly Detected
+
+**Given** a multi-hop question with 3 logical inference steps
+**When** `DCCDMultiHopEvaluator.evaluate([question])` is called
+**Then** the result has `hop_count >= 3` and `structural_constraints` is non-empty
+**And** `chain_valid` is True for well-formed transitive chains
+
+**Spec traces:** REQ-DCCD-1606
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
