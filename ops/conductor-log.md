@@ -1327,3 +1327,4 @@ web search: site:o |
 | 2026-05-09 09:18 UTC | Plan milestone 2026.05.123 | OK | 13 tasks proposed |
 | 2026-05-09 09:21 UTC | Milestone 2026.05.123 activated | OK | 13 tasks queued |
 | 2026-05-09 09:33 UTC | Exp 1601: Archive .122 and initialize .123 | OK | 81 passed, 1 warning in 4.81s |
+| 2026-05-09 09:43 UTC | Exp 1602: Exact-Rational KAN (RKAN) prototype | OK | 81 passed, 1 warning in 5.08s |
