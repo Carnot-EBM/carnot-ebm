@@ -640,3 +640,33 @@ local evidence.
 | REQ-HW-048 | Implemented | Exp 1361 |
 | REQ-HW-049 | Implemented | Exp 1460 |
 | REQ-FPGA-030 | Implemented | Exp 859 |
+| REQ-HW-050 | Implemented | Exp 1585 |
+
+---
+
+### REQ-HW-050
+
+**Title:** PolarFire SoC adaptive K-PCD prototype preflight MUST define toolchain and board boundaries
+
+**Description:**
+Experiment 1585 MUST produce a preflight artifact for the PolarFire SoC adaptive K-PCD prototype.
+The artifact MUST define the toolchain availability, board availability, and simulator boundaries.
+It MUST NOT overclaim board work if no board or vendor toolchain (Libero) is available.
+
+**Acceptance criteria:**
+- `results/experiment_1585_polarfire_soc_adaptive_kpcd_prototype_preflight.json` is produced.
+- The artifact contains `status`, `polarfire_board_available`, `yosys_polarfire_available`, `libero_available`, `reusable_rtl_components_count`, `preflight_note_path`, `polarfire_preflight_ready`, `blocked_reason`, `no_board_execution_claim`, and `honest_verdict`.
+
+**Implementation status:** Implemented (Exp 1585)
+
+---
+
+### SCENARIO-HW-050
+
+**Scenario:** PolarFire preflight writes honest boundary artifact.
+
+**Given:** No PolarFire SoC board is physically present and Libero toolchain is missing.
+**When:** The Exp 1585 preflight runs.
+**Then:** The artifact records toolchain and board boundaries, limits execution to simulator first, and writes an honest verdict.
+
+**Implementation status:** Implemented (Exp 1585)
