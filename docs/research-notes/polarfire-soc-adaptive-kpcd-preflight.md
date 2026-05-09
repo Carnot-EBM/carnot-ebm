@@ -1,22 +1,25 @@
 # PolarFire SoC Adaptive K-PCD Prototype Preflight
 
-## 1. Board Acquisition Path
-Currently, no PolarFire SoC physical board is available in the lab. The recommended acquisition path is to procure the PolarFire SoC Icicle Kit or a similar evaluation board from authorized Microchip distributors.
+## Overview
+This document outlines the preflight plan for prototyping an adaptive K-PCD algorithm on a PolarFire SoC (RISC-V cores + FPGA fabric).
 
-## 2. Open-Toolchain Feasibility
-While `yosys` is present on the system (via oss-cad-suite), fully open-source toolchain support for the Microchip PolarFire fabric is immature or non-existent. A purely open-source bitstream generation flow is currently not feasible for this architecture.
+## Board Acquisition Path
+Currently, no PolarFire SoC board is locally available. A development board such as the Microchip PolarFire SoC Icicle Kit or a similar board needs to be acquired to execute hardware tests.
 
-## 3. Libero Fallback Caveat
-Because an open-source flow is unavailable, compiling for the physical PolarFire FPGA requires Microchip's proprietary Libero SoC Design Suite. A local check confirms Libero is not currently installed (`which libero` returned no result). Installing Libero requires managing proprietary licenses and large software installations, which presents a significant environmental blocker.
+## Open-Toolchain Feasibility
+An open-source toolchain path using Yosys exists via OSS-CAD-Suite (yosys is available locally at `/opt/oss-cad-suite/bin/yosys`). However, full synthesis, place-and-route, and bitstream generation for PolarFire typically require vendor tools or specialized plugins.
 
-## 4. Simulator-First Plan
-Given the lack of a physical board and the missing Libero toolchain, the prototype development must proceed with a **Simulator-First Plan**.
-- We will reuse existing RTL components (e.g., `ising_sampler_v3.v`, `ising_energy_n8_comb.v`).
-- Development will focus on building testbenches and verifying the n=128 block-Gibbs logic using open-source simulators (e.g., Verilator or Icarus Verilog) which are available and compatible.
+## Libero Fallback Caveat
+Microchip's Libero SoC toolchain is the standard vendor fallback for full bitstream compilation. It is currently not installed on this machine. Installation of privileged software/vendor tools is required if open-toolchain efforts fall short of supporting the specific PolarFire device primitives.
 
-## 5. Acceptance Gates
-To progress beyond simulation to hardware, the following gates must be cleared:
-- **Gate 1:** Successful RTL simulation of the adaptive K-PCD sampler and integration tests.
-- **Gate 2:** Procurement and connection of a supported PolarFire SoC hardware board.
-- **Gate 3:** Installation and licensing of the Libero SoC Design Suite (or maturation of a FOSS alternative).
-- **Gate 4:** Successful bitstream generation and "Hello World" deployment to the target board.
+## Simulator-First Plan
+Given the lack of physical hardware and Libero tools, the immediate plan is simulator-first:
+1. Re-use existing Carnot Verilog components (24 files found, e.g. `ising_sampler_v*`).
+2. Compose the n=128 block-Gibbs adaptive K-PCD logic.
+3. Validate RTL via Python-driven testbenches and open-source simulators (e.g., Icarus Verilog or Verilator).
+4. Run open-source linting and synthesis checks using Yosys to ensure the design is sound and synthesizable before moving to physical hardware.
+
+## Acceptance Gates
+1. **RTL Simulation**: Passes all adaptive K-PCD behavior tests in software simulation.
+2. **Toolchain readiness**: Either open-toolchain supports bitstream generation, or Libero SoC is installed and functional.
+3. **Hardware execution**: PolarFire SoC board is connected, bitstream is programmed, and RISC-V host can successfully dispatch and retrieve K-PCD tasks from the FPGA fabric.
