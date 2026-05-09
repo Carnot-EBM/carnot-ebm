@@ -2292,6 +2292,7 @@ backend diagnostics for the reusable adapter.
 | REQ-VERIFY-1580 | Implemented (`python/carnot/reporting/dccd_jsonschemabench_sota_structured_output_smoke.py`) | Implemented (`tests/python/test_experiment_1580_dccd_jsonschemabench_sota_structured_output_smoke.py`) |
 | REQ-VERIFY-1588 | Implemented (`python/carnot/verifiers/dsl.py`) | Implemented (`tests/python/test_experiment_1588_nsvif_dsl.py`) |
 | REQ-VERIFY-1591 | Implemented (`python/carnot/verifiers/dccd_adapter.py`) | Implemented (`tests/python/test_experiment_1591_dccd_adapter.py`) |
+| REQ-VERIFY-1609 | Implemented (`python/carnot/pipeline/context_induction.py`) | Implemented (`tests/python/test_experiment_1609_context_induction.py`) |
 
 ### REQ-VERIFY-1593: CDG Repair Acceptance Rates
 The repository shall provide a CDG repair analysis tool that builds a CDG over runtime-contract cases, compares repair localization, and contrasts repair acceptance rates between flat check and CDG ordering using the mandated MODEL_SPECS.
@@ -2336,3 +2337,43 @@ Then contradiction traces receive higher structural violation energy than
 consistent traces,
 And `results/experiment_1603_ebcn.json` records complete Exp 1603 metrics
 without any autoregressive generation path.
+
+### REQ-VERIFY-1609: Residual-Drift Context Induction
+The repository shall provide an Exp 1609 deterministic induction loop that
+mines recent residual-drift failure logs and generates context-sensitive
+constraint candidates for future gate insertion.
+
+The induction loop shall:
+
+- load recent residual-drift rows from `results/residual_drift_commitment_ledger_1538.jsonl`,
+  `results/residual_drift_repair_policy_1552.jsonl`, and `logs/conductor.log`
+  when present, preserving missing-source blockers without fabricating rows;
+- select only satisfiable residual-drift failures and rejected or unrepaired
+  drift repair rows as candidate evidence, while keeping true contradictions as
+  exclusion evidence;
+- group evidence by source domain, localized span, repair kind, validator, and
+  structural contract family where available so induced constraints are
+  context-sensitive rather than global string rules;
+- generate at least one candidate constraint when qualifying drift evidence is
+  present, with stable IDs, trigger context, predicate description, positive and
+  negative evidence case IDs, support count, confidence score, and guardrails
+  against true-contradiction overreach;
+- write `results/experiment_1609_context_induction.json` with `status`,
+  `experiment_id`, `context_induction_ready`, `failure_logs_mined`,
+  `source_paths`, `candidate_constraints_generated`,
+  `selected_candidate`, `constraint_candidates`, `true_contradiction_exclusions`,
+  `blockers`, `focused_tests_passed`, and `honest_verdict`; and
+- set terminal `status="complete"` only when at least one qualifying residual
+  drift failure is mined, at least one candidate is generated, true
+  contradiction rows are excluded from positive evidence, and focused tests have
+  passed.
+
+#### SCENARIO-VERIFY-1609: Context-Sensitive Constraints Come From Residual Drift
+Given residual-drift ledger rows, repair-policy rows, and recent conductor
+failure logs,
+When Exp 1609 mines failures and induces a new constraint candidate,
+Then the candidate trigger includes source-domain and localized-context fields,
+positive evidence contains satisfiable drift failures,
+true contradictions remain exclusion evidence,
+and `results/experiment_1609_context_induction.json` records a complete
+bounded artifact without modifying the research conductor.

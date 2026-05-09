@@ -1,0 +1,1551 @@
+{
+  "blockers": [],
+  "candidate_constraints_generated": 8,
+  "claim_scope": "bounded induction over checked-in residual-drift failure logs only",
+  "constraint_candidates": [
+    {
+      "confidence": 0.923077,
+      "constraint_id": "ctx1609_runtime_contract_64cbe95aac4a",
+      "constraint_type": "context_sensitive_residual_drift_guard",
+      "evidence_sources": [
+        "results/residual_drift_commitment_ledger_1538.jsonl"
+      ],
+      "exclusion_count": 2,
+      "guardrails": [
+        "exclude failure_classification=true_contradiction from positive evidence",
+        "keep deterministic validator replay as final acceptance authority",
+        "apply only when every trigger_context field matches"
+      ],
+      "induced_from_signals": [
+        "ledger_satisfiable_drift"
+      ],
+      "negative_evidence_case_ids": [
+        "cnf-1536-unsat-two-var-cover-narrative",
+        "cnf-1536-unsat-unit-clash-narrative"
+      ],
+      "positive_evidence_case_ids": [
+        "structural_contract:cctu-1486-arith-001:injected_violation:2:acquisition_path:12",
+        "structural_contract:cctu-1486-arith-002:injected_violation:26:acquisition_path:132",
+        "structural_contract:cctu-1486-arith-003:injected_violation:50:acquisition_path:252",
+        "structural_contract:cctu-1486-graph-001:injected_violation:20:acquisition_path:102",
+        "structural_contract:cctu-1486-graph-002:injected_violation:44:acquisition_path:222",
+        "structural_contract:cctu-1486-graph-003:injected_violation:68:acquisition_path:342",
+        "structural_contract:cctu-1486-string-001:injected_violation:14:acquisition_path:72",
+        "structural_contract:cctu-1486-string-002:injected_violation:38:acquisition_path:192",
+        "structural_contract:cctu-1486-string-003:injected_violation:62:acquisition_path:312",
+        "structural_contract:cctu-1486-table-001:injected_violation:8:acquisition_path:42",
+        "structural_contract:cctu-1486-table-002:injected_violation:32:acquisition_path:162",
+        "structural_contract:cctu-1486-table-003:injected_violation:56:acquisition_path:282"
+      ],
+      "predicate": "When runtime_contract reaches commitments[1].evidence.root_cause_category, require the final decision to replay against runtime_contract before acceptance.",
+      "support_count": 12,
+      "trigger_context": {
+        "contract_family": "acquisition_path",
+        "localized_span": "commitments[1].evidence.root_cause_category",
+        "repair_kind": "runtime_contract_root_cause_patch",
+        "source_domain": "runtime_contract",
+        "validator": "runtime_contract"
+      }
+    },
+    {
+      "confidence": 0.923077,
+      "constraint_id": "ctx1609_runtime_contract_b820d32968b4",
+      "constraint_type": "context_sensitive_residual_drift_guard",
+      "evidence_sources": [
+        "results/residual_drift_commitment_ledger_1538.jsonl"
+      ],
+      "exclusion_count": 2,
+      "guardrails": [
+        "exclude failure_classification=true_contradiction from positive evidence",
+        "keep deterministic validator replay as final acceptance authority",
+        "apply only when every trigger_context field matches"
+      ],
+      "induced_from_signals": [
+        "ledger_satisfiable_drift"
+      ],
+      "negative_evidence_case_ids": [
+        "cnf-1536-unsat-two-var-cover-narrative",
+        "cnf-1536-unsat-unit-clash-narrative"
+      ],
+      "positive_evidence_case_ids": [
+        "structural_contract:cctu-1486-arith-001:injected_violation:1:graph_prerequisites:6",
+        "structural_contract:cctu-1486-arith-002:injected_violation:25:graph_prerequisites:126",
+        "structural_contract:cctu-1486-arith-003:injected_violation:49:graph_prerequisites:246",
+        "structural_contract:cctu-1486-graph-001:injected_violation:19:graph_prerequisites:96",
+        "structural_contract:cctu-1486-graph-002:injected_violation:43:graph_prerequisites:216",
+        "structural_contract:cctu-1486-graph-003:injected_violation:67:graph_prerequisites:336",
+        "structural_contract:cctu-1486-string-001:injected_violation:13:graph_prerequisites:66",
+        "structural_contract:cctu-1486-string-002:injected_violation:37:graph_prerequisites:186",
+        "structural_contract:cctu-1486-string-003:injected_violation:61:graph_prerequisites:306",
+        "structural_contract:cctu-1486-table-001:injected_violation:7:graph_prerequisites:36",
+        "structural_contract:cctu-1486-table-002:injected_violation:31:graph_prerequisites:156",
+        "structural_contract:cctu-1486-table-003:injected_violation:55:graph_prerequisites:276"
+      ],
+      "predicate": "When runtime_contract reaches commitments[1].evidence.root_cause_category, require the final decision to replay against runtime_contract before acceptance.",
+      "support_count": 12,
+      "trigger_context": {
+        "contract_family": "graph_prerequisites",
+        "localized_span": "commitments[1].evidence.root_cause_category",
+        "repair_kind": "runtime_contract_root_cause_patch",
+        "source_domain": "runtime_contract",
+        "validator": "runtime_contract"
+      }
+    },
+    {
+      "confidence": 0.923077,
+      "constraint_id": "ctx1609_runtime_contract_cdfdfaab24c3",
+      "constraint_type": "context_sensitive_residual_drift_guard",
+      "evidence_sources": [
+        "results/residual_drift_commitment_ledger_1538.jsonl"
+      ],
+      "exclusion_count": 2,
+      "guardrails": [
+        "exclude failure_classification=true_contradiction from positive evidence",
+        "keep deterministic validator replay as final acceptance authority",
+        "apply only when every trigger_context field matches"
+      ],
+      "induced_from_signals": [
+        "ledger_satisfiable_drift"
+      ],
+      "negative_evidence_case_ids": [
+        "cnf-1536-unsat-two-var-cover-narrative",
+        "cnf-1536-unsat-unit-clash-narrative"
+      ],
+      "positive_evidence_case_ids": [
+        "structural_contract:cctu-1486-arith-001:injected_violation:4:required_object_acquisition:24",
+        "structural_contract:cctu-1486-arith-002:injected_violation:28:required_object_acquisition:144",
+        "structural_contract:cctu-1486-arith-003:injected_violation:52:required_object_acquisition:264",
+        "structural_contract:cctu-1486-graph-001:injected_violation:22:required_object_acquisition:114",
+        "structural_contract:cctu-1486-graph-002:injected_violation:46:required_object_acquisition:234",
+        "structural_contract:cctu-1486-graph-003:injected_violation:70:required_object_acquisition:354",
+        "structural_contract:cctu-1486-string-001:injected_violation:16:required_object_acquisition:84",
+        "structural_contract:cctu-1486-string-002:injected_violation:40:required_object_acquisition:204",
+        "structural_contract:cctu-1486-string-003:injected_violation:64:required_object_acquisition:324",
+        "structural_contract:cctu-1486-table-001:injected_violation:10:required_object_acquisition:54",
+        "structural_contract:cctu-1486-table-002:injected_violation:34:required_object_acquisition:174",
+        "structural_contract:cctu-1486-table-003:injected_violation:58:required_object_acquisition:294"
+      ],
+      "predicate": "When runtime_contract reaches commitments[1].evidence.root_cause_category, require the final decision to replay against runtime_contract before acceptance.",
+      "support_count": 12,
+      "trigger_context": {
+        "contract_family": "required_object_acquisition",
+        "localized_span": "commitments[1].evidence.root_cause_category",
+        "repair_kind": "runtime_contract_root_cause_patch",
+        "source_domain": "runtime_contract",
+        "validator": "runtime_contract"
+      }
+    },
+    {
+      "confidence": 0.923077,
+      "constraint_id": "ctx1609_runtime_contract_d158017ab134",
+      "constraint_type": "context_sensitive_residual_drift_guard",
+      "evidence_sources": [
+        "results/residual_drift_commitment_ledger_1538.jsonl"
+      ],
+      "exclusion_count": 2,
+      "guardrails": [
+        "exclude failure_classification=true_contradiction from positive evidence",
+        "keep deterministic validator replay as final acceptance authority",
+        "apply only when every trigger_context field matches"
+      ],
+      "induced_from_signals": [
+        "ledger_satisfiable_drift"
+      ],
+      "negative_evidence_case_ids": [
+        "cnf-1536-unsat-two-var-cover-narrative",
+        "cnf-1536-unsat-unit-clash-narrative"
+      ],
+      "positive_evidence_case_ids": [
+        "structural_contract:cctu-1486-arith-001:injected_violation:3:tool_ordering:18",
+        "structural_contract:cctu-1486-arith-002:injected_violation:27:tool_ordering:138",
+        "structural_contract:cctu-1486-arith-003:injected_violation:51:tool_ordering:258",
+        "structural_contract:cctu-1486-graph-001:injected_violation:21:tool_ordering:108",
+        "structural_contract:cctu-1486-graph-002:injected_violation:45:tool_ordering:228",
+        "structural_contract:cctu-1486-graph-003:injected_violation:69:tool_ordering:348",
+        "structural_contract:cctu-1486-string-001:injected_violation:15:tool_ordering:78",
+        "structural_contract:cctu-1486-string-002:injected_violation:39:tool_ordering:198",
+        "structural_contract:cctu-1486-string-003:injected_violation:63:tool_ordering:318",
+        "structural_contract:cctu-1486-table-001:injected_violation:9:tool_ordering:48",
+        "structural_contract:cctu-1486-table-002:injected_violation:33:tool_ordering:168",
+        "structural_contract:cctu-1486-table-003:injected_violation:57:tool_ordering:288"
+      ],
+      "predicate": "When runtime_contract reaches commitments[1].evidence.root_cause_category, require the final decision to replay against runtime_contract before acceptance.",
+      "support_count": 12,
+      "trigger_context": {
+        "contract_family": "tool_ordering",
+        "localized_span": "commitments[1].evidence.root_cause_category",
+        "repair_kind": "runtime_contract_root_cause_patch",
+        "source_domain": "runtime_contract",
+        "validator": "runtime_contract"
+      }
+    },
+    {
+      "confidence": 0.923077,
+      "constraint_id": "ctx1609_runtime_contract_ed354c552c97",
+      "constraint_type": "context_sensitive_residual_drift_guard",
+      "evidence_sources": [
+        "results/residual_drift_commitment_ledger_1538.jsonl"
+      ],
+      "exclusion_count": 2,
+      "guardrails": [
+        "exclude failure_classification=true_contradiction from positive evidence",
+        "keep deterministic validator replay as final acceptance authority",
+        "apply only when every trigger_context field matches"
+      ],
+      "induced_from_signals": [
+        "ledger_satisfiable_drift"
+      ],
+      "negative_evidence_case_ids": [
+        "cnf-1536-unsat-two-var-cover-narrative",
+        "cnf-1536-unsat-unit-clash-narrative"
+      ],
+      "positive_evidence_case_ids": [
+        "structural_contract:cctu-1486-arith-001:injected_violation:5:incompatible_api_use:30",
+        "structural_contract:cctu-1486-arith-002:injected_violation:29:incompatible_api_use:150",
+        "structural_contract:cctu-1486-arith-003:injected_violation:53:incompatible_api_use:270",
+        "structural_contract:cctu-1486-graph-001:injected_violation:23:incompatible_api_use:120",
+        "structural_contract:cctu-1486-graph-002:injected_violation:47:incompatible_api_use:240",
+        "structural_contract:cctu-1486-graph-003:injected_violation:71:incompatible_api_use:360",
+        "structural_contract:cctu-1486-string-001:injected_violation:17:incompatible_api_use:90",
+        "structural_contract:cctu-1486-string-002:injected_violation:41:incompatible_api_use:210",
+        "structural_contract:cctu-1486-string-003:injected_violation:65:incompatible_api_use:330",
+        "structural_contract:cctu-1486-table-001:injected_violation:11:incompatible_api_use:60",
+        "structural_contract:cctu-1486-table-002:injected_violation:35:incompatible_api_use:180",
+        "structural_contract:cctu-1486-table-003:injected_violation:59:incompatible_api_use:300"
+      ],
+      "predicate": "When runtime_contract reaches commitments[1].evidence.root_cause_category, require the final decision to replay against runtime_contract before acceptance.",
+      "support_count": 12,
+      "trigger_context": {
+        "contract_family": "incompatible_api_use",
+        "localized_span": "commitments[1].evidence.root_cause_category",
+        "repair_kind": "runtime_contract_root_cause_patch",
+        "source_domain": "runtime_contract",
+        "validator": "runtime_contract"
+      }
+    },
+    {
+      "confidence": 0.666667,
+      "constraint_id": "ctx1609_product_line_5df5309c27b1",
+      "constraint_type": "context_sensitive_residual_drift_guard",
+      "evidence_sources": [
+        "results/residual_drift_commitment_ledger_1538.jsonl"
+      ],
+      "exclusion_count": 2,
+      "guardrails": [
+        "exclude failure_classification=true_contradiction from positive evidence",
+        "keep deterministic validator replay as final acceptance authority",
+        "apply only when every trigger_context field matches"
+      ],
+      "induced_from_signals": [
+        "ledger_satisfiable_drift"
+      ],
+      "negative_evidence_case_ids": [
+        "cnf-1536-unsat-two-var-cover-narrative",
+        "cnf-1536-unsat-unit-clash-narrative"
+      ],
+      "positive_evidence_case_ids": [
+        "plc-1511-clinic-budget",
+        "plc-1511-media-budget"
+      ],
+      "predicate": "When product_line reaches commitments[1].evidence.selected_features, require the final decision to replay against product_line_oracle before acceptance.",
+      "support_count": 2,
+      "trigger_context": {
+        "localized_span": "commitments[1].evidence.selected_features",
+        "repair_kind": "product_line_feature_selection_patch",
+        "source_domain": "product_line",
+        "validator": "product_line_oracle"
+      }
+    },
+    {
+      "confidence": 0.5,
+      "constraint_id": "ctx1609_satquest_542104634255",
+      "constraint_type": "context_sensitive_residual_drift_guard",
+      "evidence_sources": [
+        "results/residual_drift_commitment_ledger_1538.jsonl"
+      ],
+      "exclusion_count": 2,
+      "guardrails": [
+        "exclude failure_classification=true_contradiction from positive evidence",
+        "keep deterministic validator replay as final acceptance authority",
+        "apply only when every trigger_context field matches"
+      ],
+      "induced_from_signals": [
+        "ledger_satisfiable_drift"
+      ],
+      "negative_evidence_case_ids": [
+        "cnf-1536-unsat-two-var-cover-narrative",
+        "cnf-1536-unsat-unit-clash-narrative"
+      ],
+      "positive_evidence_case_ids": [
+        "cnf-1536-sat-chain-machine"
+      ],
+      "predicate": "When satquest reaches commitments[1].evidence.answer, require the final decision to replay against sat_oracle before acceptance.",
+      "support_count": 1,
+      "trigger_context": {
+        "localized_span": "commitments[1].evidence.answer",
+        "repair_kind": "sat_answer_or_assignment_patch",
+        "source_domain": "satquest",
+        "validator": "sat_oracle"
+      }
+    },
+    {
+      "confidence": 0.5,
+      "constraint_id": "ctx1609_satquest_cc262502555a",
+      "constraint_type": "context_sensitive_residual_drift_guard",
+      "evidence_sources": [
+        "results/residual_drift_commitment_ledger_1538.jsonl"
+      ],
+      "exclusion_count": 2,
+      "guardrails": [
+        "exclude failure_classification=true_contradiction from positive evidence",
+        "keep deterministic validator replay as final acceptance authority",
+        "apply only when every trigger_context field matches"
+      ],
+      "induced_from_signals": [
+        "ledger_satisfiable_drift"
+      ],
+      "negative_evidence_case_ids": [
+        "cnf-1536-unsat-two-var-cover-narrative",
+        "cnf-1536-unsat-unit-clash-narrative"
+      ],
+      "positive_evidence_case_ids": [
+        "cnf-1536-sat-negated-path-narrative"
+      ],
+      "predicate": "When satquest reaches commitments[1].evidence.assignment, require the final decision to replay against sat_oracle before acceptance.",
+      "support_count": 1,
+      "trigger_context": {
+        "localized_span": "commitments[1].evidence.assignment",
+        "repair_kind": "sat_answer_or_assignment_patch",
+        "source_domain": "satquest",
+        "validator": "sat_oracle"
+      }
+    }
+  ],
+  "context_induction_ready": true,
+  "experiment_id": "1609",
+  "failure_logs_mined": 68,
+  "focused_tests_passed": true,
+  "honest_verdict": "complete: context_induction_ready",
+  "mined_evidence": [
+    {
+      "case_id": "cnf-1536-sat-chain-machine",
+      "contract_family": null,
+      "details": {
+        "live_sota_model_inference_used": true
+      },
+      "failure_classification": "satisfiable_drift",
+      "is_exclusion": false,
+      "is_positive": true,
+      "localized_span": "commitments[1].evidence.answer",
+      "repair_kind": "sat_answer_or_assignment_patch",
+      "signal": "ledger_satisfiable_drift",
+      "source_domain": "satquest",
+      "source_kind": "ledger",
+      "source_path": "results/residual_drift_commitment_ledger_1538.jsonl",
+      "validator": "sat_oracle"
+    },
+    {
+      "case_id": "cnf-1536-unsat-unit-clash-narrative",
+      "contract_family": null,
+      "details": {
+        "live_sota_model_inference_used": true
+      },
+      "failure_classification": "true_contradiction",
+      "is_exclusion": true,
+      "is_positive": false,
+      "localized_span": "commitments[1].evidence.answer",
+      "repair_kind": "sat_answer_or_assignment_patch",
+      "signal": "true_contradiction_exclusion",
+      "source_domain": "satquest",
+      "source_kind": "ledger",
+      "source_path": "results/residual_drift_commitment_ledger_1538.jsonl",
+      "validator": "sat_oracle"
+    },
+    {
+      "case_id": "cnf-1536-unsat-two-var-cover-narrative",
+      "contract_family": null,
+      "details": {
+        "live_sota_model_inference_used": true
+      },
+      "failure_classification": "true_contradiction",
+      "is_exclusion": true,
+      "is_positive": false,
+      "localized_span": "commitments[1].evidence.answer",
+      "repair_kind": "sat_answer_or_assignment_patch",
+      "signal": "true_contradiction_exclusion",
+      "source_domain": "satquest",
+      "source_kind": "ledger",
+      "source_path": "results/residual_drift_commitment_ledger_1538.jsonl",
+      "validator": "sat_oracle"
+    },
+    {
+      "case_id": "cnf-1536-sat-negated-path-narrative",
+      "contract_family": null,
+      "details": {
+        "live_sota_model_inference_used": true
+      },
+      "failure_classification": "satisfiable_drift",
+      "is_exclusion": false,
+      "is_positive": true,
+      "localized_span": "commitments[1].evidence.assignment",
+      "repair_kind": "sat_answer_or_assignment_patch",
+      "signal": "ledger_satisfiable_drift",
+      "source_domain": "satquest",
+      "source_kind": "ledger",
+      "source_path": "results/residual_drift_commitment_ledger_1538.jsonl",
+      "validator": "sat_oracle"
+    },
+    {
+      "case_id": "plc-1511-clinic-budget",
+      "contract_family": null,
+      "details": {
+        "live_sota_model_inference_used": true
+      },
+      "failure_classification": "satisfiable_drift",
+      "is_exclusion": false,
+      "is_positive": true,
+      "localized_span": "commitments[1].evidence.selected_features",
+      "repair_kind": "product_line_feature_selection_patch",
+      "signal": "ledger_satisfiable_drift",
+      "source_domain": "product_line",
+      "source_kind": "ledger",
+      "source_path": "results/residual_drift_commitment_ledger_1538.jsonl",
+      "validator": "product_line_oracle"
+    },
+    {
+      "case_id": "plc-1511-media-budget",
+      "contract_family": null,
+      "details": {
+        "live_sota_model_inference_used": true
+      },
+      "failure_classification": "satisfiable_drift",
+      "is_exclusion": false,
+      "is_positive": true,
+      "localized_span": "commitments[1].evidence.selected_features",
+      "repair_kind": "product_line_feature_selection_patch",
+      "signal": "ledger_satisfiable_drift",
+      "source_domain": "product_line",
+      "source_kind": "ledger",
+      "source_path": "results/residual_drift_commitment_ledger_1538.jsonl",
+      "validator": "product_line_oracle"
+    },
+    {
+      "case_id": "structural_contract:cctu-1486-arith-001:injected_violation:1:graph_prerequisites:6",
+      "contract_family": "graph_prerequisites",
+      "details": {
+        "live_sota_model_inference_used": false
+      },
+      "failure_classification": "satisfiable_drift",
+      "is_exclusion": false,
+      "is_positive": true,
+      "localized_span": "commitments[1].evidence.root_cause_category",
+      "repair_kind": "runtime_contract_root_cause_patch",
+      "signal": "ledger_satisfiable_drift",
+      "source_domain": "runtime_contract",
+      "source_kind": "ledger",
+      "source_path": "results/residual_drift_commitment_ledger_1538.jsonl",
+      "validator": "runtime_contract"
+    },
+    {
+      "case_id": "structural_contract:cctu-1486-arith-001:injected_violation:2:acquisition_path:12",
+      "contract_family": "acquisition_path",
+      "details": {
+        "live_sota_model_inference_used": false
+      },
+      "failure_classification": "satisfiable_drift",
+      "is_exclusion": false,
+      "is_positive": true,
+      "localized_span": "commitments[1].evidence.root_cause_category",
+      "repair_kind": "runtime_contract_root_cause_patch",
+      "signal": "ledger_satisfiable_drift",
+      "source_domain": "runtime_contract",
+      "source_kind": "ledger",
+      "source_path": "results/residual_drift_commitment_ledger_1538.jsonl",
+      "validator": "runtime_contract"
+    },
+    {
+      "case_id": "structural_contract:cctu-1486-arith-001:injected_violation:3:tool_ordering:18",
+      "contract_family": "tool_ordering",
+      "details": {
+        "live_sota_model_inference_used": false
+      },
+      "failure_classification": "satisfiable_drift",
+      "is_exclusion": false,
+      "is_positive": true,
+      "localized_span": "commitments[1].evidence.root_cause_category",
+      "repair_kind": "runtime_contract_root_cause_patch",
+      "signal": "ledger_satisfiable_drift",
+      "source_domain": "runtime_contract",
+      "source_kind": "ledger",
+      "source_path": "results/residual_drift_commitment_ledger_1538.jsonl",
+      "validator": "runtime_contract"
+    },
+    {
+      "case_id": "structural_contract:cctu-1486-arith-001:injected_violation:4:required_object_acquisition:24",
+      "contract_family": "required_object_acquisition",
+      "details": {
+        "live_sota_model_inference_used": false
+      },
+      "failure_classification": "satisfiable_drift",
+      "is_exclusion": false,
+      "is_positive": true,
+      "localized_span": "commitments[1].evidence.root_cause_category",
+      "repair_kind": "runtime_contract_root_cause_patch",
+      "signal": "ledger_satisfiable_drift",
+      "source_domain": "runtime_contract",
+      "source_kind": "ledger",
+      "source_path": "results/residual_drift_commitment_ledger_1538.jsonl",
+      "validator": "runtime_contract"
+    },
+    {
+      "case_id": "structural_contract:cctu-1486-arith-001:injected_violation:5:incompatible_api_use:30",
+      "contract_family": "incompatible_api_use",
+      "details": {
+        "live_sota_model_inference_used": false
+      },
+      "failure_classification": "satisfiable_drift",
+      "is_exclusion": false,
+      "is_positive": true,
+      "localized_span": "commitments[1].evidence.root_cause_category",
+      "repair_kind": "runtime_contract_root_cause_patch",
+      "signal": "ledger_satisfiable_drift",
+      "source_domain": "runtime_contract",
+      "source_kind": "ledger",
+      "source_path": "results/residual_drift_commitment_ledger_1538.jsonl",
+      "validator": "runtime_contract"
+    },
+    {
+      "case_id": "structural_contract:cctu-1486-table-001:injected_violation:7:graph_prerequisites:36",
+      "contract_family": "graph_prerequisites",
+      "details": {
+        "live_sota_model_inference_used": false
+      },
+      "failure_classification": "satisfiable_drift",
+      "is_exclusion": false,
+      "is_positive": true,
+      "localized_span": "commitments[1].evidence.root_cause_category",
+      "repair_kind": "runtime_contract_root_cause_patch",
+      "signal": "ledger_satisfiable_drift",
+      "source_domain": "runtime_contract",
+      "source_kind": "ledger",
+      "source_path": "results/residual_drift_commitment_ledger_1538.jsonl",
+      "validator": "runtime_contract"
+    },
+    {
+      "case_id": "structural_contract:cctu-1486-table-001:injected_violation:8:acquisition_path:42",
+      "contract_family": "acquisition_path",
+      "details": {
+        "live_sota_model_inference_used": false
+      },
+      "failure_classification": "satisfiable_drift",
+      "is_exclusion": false,
+      "is_positive": true,
+      "localized_span": "commitments[1].evidence.root_cause_category",
+      "repair_kind": "runtime_contract_root_cause_patch",
+      "signal": "ledger_satisfiable_drift",
+      "source_domain": "runtime_contract",
+      "source_kind": "ledger",
+      "source_path": "results/residual_drift_commitment_ledger_1538.jsonl",
+      "validator": "runtime_contract"
+    },
+    {
+      "case_id": "structural_contract:cctu-1486-table-001:injected_violation:9:tool_ordering:48",
+      "contract_family": "tool_ordering",
+      "details": {
+        "live_sota_model_inference_used": false
+      },
+      "failure_classification": "satisfiable_drift",
+      "is_exclusion": false,
+      "is_positive": true,
+      "localized_span": "commitments[1].evidence.root_cause_category",
+      "repair_kind": "runtime_contract_root_cause_patch",
+      "signal": "ledger_satisfiable_drift",
+      "source_domain": "runtime_contract",
+      "source_kind": "ledger",
+      "source_path": "results/residual_drift_commitment_ledger_1538.jsonl",
+      "validator": "runtime_contract"
+    },
+    {
+      "case_id": "structural_contract:cctu-1486-table-001:injected_violation:10:required_object_acquisition:54",
+      "contract_family": "required_object_acquisition",
+      "details": {
+        "live_sota_model_inference_used": false
+      },
+      "failure_classification": "satisfiable_drift",
+      "is_exclusion": false,
+      "is_positive": true,
+      "localized_span": "commitments[1].evidence.root_cause_category",
+      "repair_kind": "runtime_contract_root_cause_patch",
+      "signal": "ledger_satisfiable_drift",
+      "source_domain": "runtime_contract",
+      "source_kind": "ledger",
+      "source_path": "results/residual_drift_commitment_ledger_1538.jsonl",
+      "validator": "runtime_contract"
+    },
+    {
+      "case_id": "structural_contract:cctu-1486-table-001:injected_violation:11:incompatible_api_use:60",
+      "contract_family": "incompatible_api_use",
+      "details": {
+        "live_sota_model_inference_used": false
+      },
+      "failure_classification": "satisfiable_drift",
+      "is_exclusion": false,
+      "is_positive": true,
+      "localized_span": "commitments[1].evidence.root_cause_category",
+      "repair_kind": "runtime_contract_root_cause_patch",
+      "signal": "ledger_satisfiable_drift",
+      "source_domain": "runtime_contract",
+      "source_kind": "ledger",
+      "source_path": "results/residual_drift_commitment_ledger_1538.jsonl",
+      "validator": "runtime_contract"
+    },
+    {
+      "case_id": "structural_contract:cctu-1486-string-001:injected_violation:13:graph_prerequisites:66",
+      "contract_family": "graph_prerequisites",
+      "details": {
+        "live_sota_model_inference_used": false
+      },
+      "failure_classification": "satisfiable_drift",
+      "is_exclusion": false,
+      "is_positive": true,
+      "localized_span": "commitments[1].evidence.root_cause_category",
+      "repair_kind": "runtime_contract_root_cause_patch",
+      "signal": "ledger_satisfiable_drift",
+      "source_domain": "runtime_contract",
+      "source_kind": "ledger",
+      "source_path": "results/residual_drift_commitment_ledger_1538.jsonl",
+      "validator": "runtime_contract"
+    },
+    {
+      "case_id": "structural_contract:cctu-1486-string-001:injected_violation:14:acquisition_path:72",
+      "contract_family": "acquisition_path",
+      "details": {
+        "live_sota_model_inference_used": false
+      },
+      "failure_classification": "satisfiable_drift",
+      "is_exclusion": false,
+      "is_positive": true,
+      "localized_span": "commitments[1].evidence.root_cause_category",
+      "repair_kind": "runtime_contract_root_cause_patch",
+      "signal": "ledger_satisfiable_drift",
+      "source_domain": "runtime_contract",
+      "source_kind": "ledger",
+      "source_path": "results/residual_drift_commitment_ledger_1538.jsonl",
+      "validator": "runtime_contract"
+    },
+    {
+      "case_id": "structural_contract:cctu-1486-string-001:injected_violation:15:tool_ordering:78",
+      "contract_family": "tool_ordering",
+      "details": {
+        "live_sota_model_inference_used": false
+      },
+      "failure_classification": "satisfiable_drift",
+      "is_exclusion": false,
+      "is_positive": true,
+      "localized_span": "commitments[1].evidence.root_cause_category",
+      "repair_kind": "runtime_contract_root_cause_patch",
+      "signal": "ledger_satisfiable_drift",
+      "source_domain": "runtime_contract",
+      "source_kind": "ledger",
+      "source_path": "results/residual_drift_commitment_ledger_1538.jsonl",
+      "validator": "runtime_contract"
+    },
+    {
+      "case_id": "structural_contract:cctu-1486-string-001:injected_violation:16:required_object_acquisition:84",
+      "contract_family": "required_object_acquisition",
+      "details": {
+        "live_sota_model_inference_used": false
+      },
+      "failure_classification": "satisfiable_drift",
+      "is_exclusion": false,
+      "is_positive": true,
+      "localized_span": "commitments[1].evidence.root_cause_category",
+      "repair_kind": "runtime_contract_root_cause_patch",
+      "signal": "ledger_satisfiable_drift",
+      "source_domain": "runtime_contract",
+      "source_kind": "ledger",
+      "source_path": "results/residual_drift_commitment_ledger_1538.jsonl",
+      "validator": "runtime_contract"
+    },
+    {
+      "case_id": "structural_contract:cctu-1486-string-001:injected_violation:17:incompatible_api_use:90",
+      "contract_family": "incompatible_api_use",
+      "details": {
+        "live_sota_model_inference_used": false
+      },
+      "failure_classification": "satisfiable_drift",
+      "is_exclusion": false,
+      "is_positive": true,
+      "localized_span": "commitments[1].evidence.root_cause_category",
+      "repair_kind": "runtime_contract_root_cause_patch",
+      "signal": "ledger_satisfiable_drift",
+      "source_domain": "runtime_contract",
+      "source_kind": "ledger",
+      "source_path": "results/residual_drift_commitment_ledger_1538.jsonl",
+      "validator": "runtime_contract"
+    },
+    {
+      "case_id": "structural_contract:cctu-1486-graph-001:injected_violation:19:graph_prerequisites:96",
+      "contract_family": "graph_prerequisites",
+      "details": {
+        "live_sota_model_inference_used": false
+      },
+      "failure_classification": "satisfiable_drift",
+      "is_exclusion": false,
+      "is_positive": true,
+      "localized_span": "commitments[1].evidence.root_cause_category",
+      "repair_kind": "runtime_contract_root_cause_patch",
+      "signal": "ledger_satisfiable_drift",
+      "source_domain": "runtime_contract",
+      "source_kind": "ledger",
+      "source_path": "results/residual_drift_commitment_ledger_1538.jsonl",
+      "validator": "runtime_contract"
+    },
+    {
+      "case_id": "structural_contract:cctu-1486-graph-001:injected_violation:20:acquisition_path:102",
+      "contract_family": "acquisition_path",
+      "details": {
+        "live_sota_model_inference_used": false
+      },
+      "failure_classification": "satisfiable_drift",
+      "is_exclusion": false,
+      "is_positive": true,
+      "localized_span": "commitments[1].evidence.root_cause_category",
+      "repair_kind": "runtime_contract_root_cause_patch",
+      "signal": "ledger_satisfiable_drift",
+      "source_domain": "runtime_contract",
+      "source_kind": "ledger",
+      "source_path": "results/residual_drift_commitment_ledger_1538.jsonl",
+      "validator": "runtime_contract"
+    },
+    {
+      "case_id": "structural_contract:cctu-1486-graph-001:injected_violation:21:tool_ordering:108",
+      "contract_family": "tool_ordering",
+      "details": {
+        "live_sota_model_inference_used": false
+      },
+      "failure_classification": "satisfiable_drift",
+      "is_exclusion": false,
+      "is_positive": true,
+      "localized_span": "commitments[1].evidence.root_cause_category",
+      "repair_kind": "runtime_contract_root_cause_patch",
+      "signal": "ledger_satisfiable_drift",
+      "source_domain": "runtime_contract",
+      "source_kind": "ledger",
+      "source_path": "results/residual_drift_commitment_ledger_1538.jsonl",
+      "validator": "runtime_contract"
+    },
+    {
+      "case_id": "structural_contract:cctu-1486-graph-001:injected_violation:22:required_object_acquisition:114",
+      "contract_family": "required_object_acquisition",
+      "details": {
+        "live_sota_model_inference_used": false
+      },
+      "failure_classification": "satisfiable_drift",
+      "is_exclusion": false,
+      "is_positive": true,
+      "localized_span": "commitments[1].evidence.root_cause_category",
+      "repair_kind": "runtime_contract_root_cause_patch",
+      "signal": "ledger_satisfiable_drift",
+      "source_domain": "runtime_contract",
+      "source_kind": "ledger",
+      "source_path": "results/residual_drift_commitment_ledger_1538.jsonl",
+      "validator": "runtime_contract"
+    },
+    {
+      "case_id": "structural_contract:cctu-1486-graph-001:injected_violation:23:incompatible_api_use:120",
+      "contract_family": "incompatible_api_use",
+      "details": {
+        "live_sota_model_inference_used": false
+      },
+      "failure_classification": "satisfiable_drift",
+      "is_exclusion": false,
+      "is_positive": true,
+      "localized_span": "commitments[1].evidence.root_cause_category",
+      "repair_kind": "runtime_contract_root_cause_patch",
+      "signal": "ledger_satisfiable_drift",
+      "source_domain": "runtime_contract",
+      "source_kind": "ledger",
+      "source_path": "results/residual_drift_commitment_ledger_1538.jsonl",
+      "validator": "runtime_contract"
+    },
+    {
+      "case_id": "structural_contract:cctu-1486-arith-002:injected_violation:25:graph_prerequisites:126",
+      "contract_family": "graph_prerequisites",
+      "details": {
+        "live_sota_model_inference_used": false
+      },
+      "failure_classification": "satisfiable_drift",
+      "is_exclusion": false,
+      "is_positive": true,
+      "localized_span": "commitments[1].evidence.root_cause_category",
+      "repair_kind": "runtime_contract_root_cause_patch",
+      "signal": "ledger_satisfiable_drift",
+      "source_domain": "runtime_contract",
+      "source_kind": "ledger",
+      "source_path": "results/residual_drift_commitment_ledger_1538.jsonl",
+      "validator": "runtime_contract"
+    },
+    {
+      "case_id": "structural_contract:cctu-1486-arith-002:injected_violation:26:acquisition_path:132",
+      "contract_family": "acquisition_path",
+      "details": {
+        "live_sota_model_inference_used": false
+      },
+      "failure_classification": "satisfiable_drift",
+      "is_exclusion": false,
+      "is_positive": true,
+      "localized_span": "commitments[1].evidence.root_cause_category",
+      "repair_kind": "runtime_contract_root_cause_patch",
+      "signal": "ledger_satisfiable_drift",
+      "source_domain": "runtime_contract",
+      "source_kind": "ledger",
+      "source_path": "results/residual_drift_commitment_ledger_1538.jsonl",
+      "validator": "runtime_contract"
+    },
+    {
+      "case_id": "structural_contract:cctu-1486-arith-002:injected_violation:27:tool_ordering:138",
+      "contract_family": "tool_ordering",
+      "details": {
+        "live_sota_model_inference_used": false
+      },
+      "failure_classification": "satisfiable_drift",
+      "is_exclusion": false,
+      "is_positive": true,
+      "localized_span": "commitments[1].evidence.root_cause_category",
+      "repair_kind": "runtime_contract_root_cause_patch",
+      "signal": "ledger_satisfiable_drift",
+      "source_domain": "runtime_contract",
+      "source_kind": "ledger",
+      "source_path": "results/residual_drift_commitment_ledger_1538.jsonl",
+      "validator": "runtime_contract"
+    },
+    {
+      "case_id": "structural_contract:cctu-1486-arith-002:injected_violation:28:required_object_acquisition:144",
+      "contract_family": "required_object_acquisition",
+      "details": {
+        "live_sota_model_inference_used": false
+      },
+      "failure_classification": "satisfiable_drift",
+      "is_exclusion": false,
+      "is_positive": true,
+      "localized_span": "commitments[1].evidence.root_cause_category",
+      "repair_kind": "runtime_contract_root_cause_patch",
+      "signal": "ledger_satisfiable_drift",
+      "source_domain": "runtime_contract",
+      "source_kind": "ledger",
+      "source_path": "results/residual_drift_commitment_ledger_1538.jsonl",
+      "validator": "runtime_contract"
+    },
+    {
+      "case_id": "structural_contract:cctu-1486-arith-002:injected_violation:29:incompatible_api_use:150",
+      "contract_family": "incompatible_api_use",
+      "details": {
+        "live_sota_model_inference_used": false
+      },
+      "failure_classification": "satisfiable_drift",
+      "is_exclusion": false,
+      "is_positive": true,
+      "localized_span": "commitments[1].evidence.root_cause_category",
+      "repair_kind": "runtime_contract_root_cause_patch",
+      "signal": "ledger_satisfiable_drift",
+      "source_domain": "runtime_contract",
+      "source_kind": "ledger",
+      "source_path": "results/residual_drift_commitment_ledger_1538.jsonl",
+      "validator": "runtime_contract"
+    },
+    {
+      "case_id": "structural_contract:cctu-1486-table-002:injected_violation:31:graph_prerequisites:156",
+      "contract_family": "graph_prerequisites",
+      "details": {
+        "live_sota_model_inference_used": false
+      },
+      "failure_classification": "satisfiable_drift",
+      "is_exclusion": false,
+      "is_positive": true,
+      "localized_span": "commitments[1].evidence.root_cause_category",
+      "repair_kind": "runtime_contract_root_cause_patch",
+      "signal": "ledger_satisfiable_drift",
+      "source_domain": "runtime_contract",
+      "source_kind": "ledger",
+      "source_path": "results/residual_drift_commitment_ledger_1538.jsonl",
+      "validator": "runtime_contract"
+    },
+    {
+      "case_id": "structural_contract:cctu-1486-table-002:injected_violation:32:acquisition_path:162",
+      "contract_family": "acquisition_path",
+      "details": {
+        "live_sota_model_inference_used": false
+      },
+      "failure_classification": "satisfiable_drift",
+      "is_exclusion": false,
+      "is_positive": true,
+      "localized_span": "commitments[1].evidence.root_cause_category",
+      "repair_kind": "runtime_contract_root_cause_patch",
+      "signal": "ledger_satisfiable_drift",
+      "source_domain": "runtime_contract",
+      "source_kind": "ledger",
+      "source_path": "results/residual_drift_commitment_ledger_1538.jsonl",
+      "validator": "runtime_contract"
+    },
+    {
+      "case_id": "structural_contract:cctu-1486-table-002:injected_violation:33:tool_ordering:168",
+      "contract_family": "tool_ordering",
+      "details": {
+        "live_sota_model_inference_used": false
+      },
+      "failure_classification": "satisfiable_drift",
+      "is_exclusion": false,
+      "is_positive": true,
+      "localized_span": "commitments[1].evidence.root_cause_category",
+      "repair_kind": "runtime_contract_root_cause_patch",
+      "signal": "ledger_satisfiable_drift",
+      "source_domain": "runtime_contract",
+      "source_kind": "ledger",
+      "source_path": "results/residual_drift_commitment_ledger_1538.jsonl",
+      "validator": "runtime_contract"
+    },
+    {
+      "case_id": "structural_contract:cctu-1486-table-002:injected_violation:34:required_object_acquisition:174",
+      "contract_family": "required_object_acquisition",
+      "details": {
+        "live_sota_model_inference_used": false
+      },
+      "failure_classification": "satisfiable_drift",
+      "is_exclusion": false,
+      "is_positive": true,
+      "localized_span": "commitments[1].evidence.root_cause_category",
+      "repair_kind": "runtime_contract_root_cause_patch",
+      "signal": "ledger_satisfiable_drift",
+      "source_domain": "runtime_contract",
+      "source_kind": "ledger",
+      "source_path": "results/residual_drift_commitment_ledger_1538.jsonl",
+      "validator": "runtime_contract"
+    },
+    {
+      "case_id": "structural_contract:cctu-1486-table-002:injected_violation:35:incompatible_api_use:180",
+      "contract_family": "incompatible_api_use",
+      "details": {
+        "live_sota_model_inference_used": false
+      },
+      "failure_classification": "satisfiable_drift",
+      "is_exclusion": false,
+      "is_positive": true,
+      "localized_span": "commitments[1].evidence.root_cause_category",
+      "repair_kind": "runtime_contract_root_cause_patch",
+      "signal": "ledger_satisfiable_drift",
+      "source_domain": "runtime_contract",
+      "source_kind": "ledger",
+      "source_path": "results/residual_drift_commitment_ledger_1538.jsonl",
+      "validator": "runtime_contract"
+    },
+    {
+      "case_id": "structural_contract:cctu-1486-string-002:injected_violation:37:graph_prerequisites:186",
+      "contract_family": "graph_prerequisites",
+      "details": {
+        "live_sota_model_inference_used": false
+      },
+      "failure_classification": "satisfiable_drift",
+      "is_exclusion": false,
+      "is_positive": true,
+      "localized_span": "commitments[1].evidence.root_cause_category",
+      "repair_kind": "runtime_contract_root_cause_patch",
+      "signal": "ledger_satisfiable_drift",
+      "source_domain": "runtime_contract",
+      "source_kind": "ledger",
+      "source_path": "results/residual_drift_commitment_ledger_1538.jsonl",
+      "validator": "runtime_contract"
+    },
+    {
+      "case_id": "structural_contract:cctu-1486-string-002:injected_violation:38:acquisition_path:192",
+      "contract_family": "acquisition_path",
+      "details": {
+        "live_sota_model_inference_used": false
+      },
+      "failure_classification": "satisfiable_drift",
+      "is_exclusion": false,
+      "is_positive": true,
+      "localized_span": "commitments[1].evidence.root_cause_category",
+      "repair_kind": "runtime_contract_root_cause_patch",
+      "signal": "ledger_satisfiable_drift",
+      "source_domain": "runtime_contract",
+      "source_kind": "ledger",
+      "source_path": "results/residual_drift_commitment_ledger_1538.jsonl",
+      "validator": "runtime_contract"
+    },
+    {
+      "case_id": "structural_contract:cctu-1486-string-002:injected_violation:39:tool_ordering:198",
+      "contract_family": "tool_ordering",
+      "details": {
+        "live_sota_model_inference_used": false
+      },
+      "failure_classification": "satisfiable_drift",
+      "is_exclusion": false,
+      "is_positive": true,
+      "localized_span": "commitments[1].evidence.root_cause_category",
+      "repair_kind": "runtime_contract_root_cause_patch",
+      "signal": "ledger_satisfiable_drift",
+      "source_domain": "runtime_contract",
+      "source_kind": "ledger",
+      "source_path": "results/residual_drift_commitment_ledger_1538.jsonl",
+      "validator": "runtime_contract"
+    },
+    {
+      "case_id": "structural_contract:cctu-1486-string-002:injected_violation:40:required_object_acquisition:204",
+      "contract_family": "required_object_acquisition",
+      "details": {
+        "live_sota_model_inference_used": false
+      },
+      "failure_classification": "satisfiable_drift",
+      "is_exclusion": false,
+      "is_positive": true,
+      "localized_span": "commitments[1].evidence.root_cause_category",
+      "repair_kind": "runtime_contract_root_cause_patch",
+      "signal": "ledger_satisfiable_drift",
+      "source_domain": "runtime_contract",
+      "source_kind": "ledger",
+      "source_path": "results/residual_drift_commitment_ledger_1538.jsonl",
+      "validator": "runtime_contract"
+    },
+    {
+      "case_id": "structural_contract:cctu-1486-string-002:injected_violation:41:incompatible_api_use:210",
+      "contract_family": "incompatible_api_use",
+      "details": {
+        "live_sota_model_inference_used": false
+      },
+      "failure_classification": "satisfiable_drift",
+      "is_exclusion": false,
+      "is_positive": true,
+      "localized_span": "commitments[1].evidence.root_cause_category",
+      "repair_kind": "runtime_contract_root_cause_patch",
+      "signal": "ledger_satisfiable_drift",
+      "source_domain": "runtime_contract",
+      "source_kind": "ledger",
+      "source_path": "results/residual_drift_commitment_ledger_1538.jsonl",
+      "validator": "runtime_contract"
+    },
+    {
+      "case_id": "structural_contract:cctu-1486-graph-002:injected_violation:43:graph_prerequisites:216",
+      "contract_family": "graph_prerequisites",
+      "details": {
+        "live_sota_model_inference_used": false
+      },
+      "failure_classification": "satisfiable_drift",
+      "is_exclusion": false,
+      "is_positive": true,
+      "localized_span": "commitments[1].evidence.root_cause_category",
+      "repair_kind": "runtime_contract_root_cause_patch",
+      "signal": "ledger_satisfiable_drift",
+      "source_domain": "runtime_contract",
+      "source_kind": "ledger",
+      "source_path": "results/residual_drift_commitment_ledger_1538.jsonl",
+      "validator": "runtime_contract"
+    },
+    {
+      "case_id": "structural_contract:cctu-1486-graph-002:injected_violation:44:acquisition_path:222",
+      "contract_family": "acquisition_path",
+      "details": {
+        "live_sota_model_inference_used": false
+      },
+      "failure_classification": "satisfiable_drift",
+      "is_exclusion": false,
+      "is_positive": true,
+      "localized_span": "commitments[1].evidence.root_cause_category",
+      "repair_kind": "runtime_contract_root_cause_patch",
+      "signal": "ledger_satisfiable_drift",
+      "source_domain": "runtime_contract",
+      "source_kind": "ledger",
+      "source_path": "results/residual_drift_commitment_ledger_1538.jsonl",
+      "validator": "runtime_contract"
+    },
+    {
+      "case_id": "structural_contract:cctu-1486-graph-002:injected_violation:45:tool_ordering:228",
+      "contract_family": "tool_ordering",
+      "details": {
+        "live_sota_model_inference_used": false
+      },
+      "failure_classification": "satisfiable_drift",
+      "is_exclusion": false,
+      "is_positive": true,
+      "localized_span": "commitments[1].evidence.root_cause_category",
+      "repair_kind": "runtime_contract_root_cause_patch",
+      "signal": "ledger_satisfiable_drift",
+      "source_domain": "runtime_contract",
+      "source_kind": "ledger",
+      "source_path": "results/residual_drift_commitment_ledger_1538.jsonl",
+      "validator": "runtime_contract"
+    },
+    {
+      "case_id": "structural_contract:cctu-1486-graph-002:injected_violation:46:required_object_acquisition:234",
+      "contract_family": "required_object_acquisition",
+      "details": {
+        "live_sota_model_inference_used": false
+      },
+      "failure_classification": "satisfiable_drift",
+      "is_exclusion": false,
+      "is_positive": true,
+      "localized_span": "commitments[1].evidence.root_cause_category",
+      "repair_kind": "runtime_contract_root_cause_patch",
+      "signal": "ledger_satisfiable_drift",
+      "source_domain": "runtime_contract",
+      "source_kind": "ledger",
+      "source_path": "results/residual_drift_commitment_ledger_1538.jsonl",
+      "validator": "runtime_contract"
+    },
+    {
+      "case_id": "structural_contract:cctu-1486-graph-002:injected_violation:47:incompatible_api_use:240",
+      "contract_family": "incompatible_api_use",
+      "details": {
+        "live_sota_model_inference_used": false
+      },
+      "failure_classification": "satisfiable_drift",
+      "is_exclusion": false,
+      "is_positive": true,
+      "localized_span": "commitments[1].evidence.root_cause_category",
+      "repair_kind": "runtime_contract_root_cause_patch",
+      "signal": "ledger_satisfiable_drift",
+      "source_domain": "runtime_contract",
+      "source_kind": "ledger",
+      "source_path": "results/residual_drift_commitment_ledger_1538.jsonl",
+      "validator": "runtime_contract"
+    },
+    {
+      "case_id": "structural_contract:cctu-1486-arith-003:injected_violation:49:graph_prerequisites:246",
+      "contract_family": "graph_prerequisites",
+      "details": {
+        "live_sota_model_inference_used": false
+      },
+      "failure_classification": "satisfiable_drift",
+      "is_exclusion": false,
+      "is_positive": true,
+      "localized_span": "commitments[1].evidence.root_cause_category",
+      "repair_kind": "runtime_contract_root_cause_patch",
+      "signal": "ledger_satisfiable_drift",
+      "source_domain": "runtime_contract",
+      "source_kind": "ledger",
+      "source_path": "results/residual_drift_commitment_ledger_1538.jsonl",
+      "validator": "runtime_contract"
+    },
+    {
+      "case_id": "structural_contract:cctu-1486-arith-003:injected_violation:50:acquisition_path:252",
+      "contract_family": "acquisition_path",
+      "details": {
+        "live_sota_model_inference_used": false
+      },
+      "failure_classification": "satisfiable_drift",
+      "is_exclusion": false,
+      "is_positive": true,
+      "localized_span": "commitments[1].evidence.root_cause_category",
+      "repair_kind": "runtime_contract_root_cause_patch",
+      "signal": "ledger_satisfiable_drift",
+      "source_domain": "runtime_contract",
+      "source_kind": "ledger",
+      "source_path": "results/residual_drift_commitment_ledger_1538.jsonl",
+      "validator": "runtime_contract"
+    },
+    {
+      "case_id": "structural_contract:cctu-1486-arith-003:injected_violation:51:tool_ordering:258",
+      "contract_family": "tool_ordering",
+      "details": {
+        "live_sota_model_inference_used": false
+      },
+      "failure_classification": "satisfiable_drift",
+      "is_exclusion": false,
+      "is_positive": true,
+      "localized_span": "commitments[1].evidence.root_cause_category",
+      "repair_kind": "runtime_contract_root_cause_patch",
+      "signal": "ledger_satisfiable_drift",
+      "source_domain": "runtime_contract",
+      "source_kind": "ledger",
+      "source_path": "results/residual_drift_commitment_ledger_1538.jsonl",
+      "validator": "runtime_contract"
+    },
+    {
+      "case_id": "structural_contract:cctu-1486-arith-003:injected_violation:52:required_object_acquisition:264",
+      "contract_family": "required_object_acquisition",
+      "details": {
+        "live_sota_model_inference_used": false
+      },
+      "failure_classification": "satisfiable_drift",
+      "is_exclusion": false,
+      "is_positive": true,
+      "localized_span": "commitments[1].evidence.root_cause_category",
+      "repair_kind": "runtime_contract_root_cause_patch",
+      "signal": "ledger_satisfiable_drift",
+      "source_domain": "runtime_contract",
+      "source_kind": "ledger",
+      "source_path": "results/residual_drift_commitment_ledger_1538.jsonl",
+      "validator": "runtime_contract"
+    },
+    {
+      "case_id": "structural_contract:cctu-1486-arith-003:injected_violation:53:incompatible_api_use:270",
+      "contract_family": "incompatible_api_use",
+      "details": {
+        "live_sota_model_inference_used": false
+      },
+      "failure_classification": "satisfiable_drift",
+      "is_exclusion": false,
+      "is_positive": true,
+      "localized_span": "commitments[1].evidence.root_cause_category",
+      "repair_kind": "runtime_contract_root_cause_patch",
+      "signal": "ledger_satisfiable_drift",
+      "source_domain": "runtime_contract",
+      "source_kind": "ledger",
+      "source_path": "results/residual_drift_commitment_ledger_1538.jsonl",
+      "validator": "runtime_contract"
+    },
+    {
+      "case_id": "structural_contract:cctu-1486-table-003:injected_violation:55:graph_prerequisites:276",
+      "contract_family": "graph_prerequisites",
+      "details": {
+        "live_sota_model_inference_used": false
+      },
+      "failure_classification": "satisfiable_drift",
+      "is_exclusion": false,
+      "is_positive": true,
+      "localized_span": "commitments[1].evidence.root_cause_category",
+      "repair_kind": "runtime_contract_root_cause_patch",
+      "signal": "ledger_satisfiable_drift",
+      "source_domain": "runtime_contract",
+      "source_kind": "ledger",
+      "source_path": "results/residual_drift_commitment_ledger_1538.jsonl",
+      "validator": "runtime_contract"
+    },
+    {
+      "case_id": "structural_contract:cctu-1486-table-003:injected_violation:56:acquisition_path:282",
+      "contract_family": "acquisition_path",
+      "details": {
+        "live_sota_model_inference_used": false
+      },
+      "failure_classification": "satisfiable_drift",
+      "is_exclusion": false,
+      "is_positive": true,
+      "localized_span": "commitments[1].evidence.root_cause_category",
+      "repair_kind": "runtime_contract_root_cause_patch",
+      "signal": "ledger_satisfiable_drift",
+      "source_domain": "runtime_contract",
+      "source_kind": "ledger",
+      "source_path": "results/residual_drift_commitment_ledger_1538.jsonl",
+      "validator": "runtime_contract"
+    },
+    {
+      "case_id": "structural_contract:cctu-1486-table-003:injected_violation:57:tool_ordering:288",
+      "contract_family": "tool_ordering",
+      "details": {
+        "live_sota_model_inference_used": false
+      },
+      "failure_classification": "satisfiable_drift",
+      "is_exclusion": false,
+      "is_positive": true,
+      "localized_span": "commitments[1].evidence.root_cause_category",
+      "repair_kind": "runtime_contract_root_cause_patch",
+      "signal": "ledger_satisfiable_drift",
+      "source_domain": "runtime_contract",
+      "source_kind": "ledger",
+      "source_path": "results/residual_drift_commitment_ledger_1538.jsonl",
+      "validator": "runtime_contract"
+    },
+    {
+      "case_id": "structural_contract:cctu-1486-table-003:injected_violation:58:required_object_acquisition:294",
+      "contract_family": "required_object_acquisition",
+      "details": {
+        "live_sota_model_inference_used": false
+      },
+      "failure_classification": "satisfiable_drift",
+      "is_exclusion": false,
+      "is_positive": true,
+      "localized_span": "commitments[1].evidence.root_cause_category",
+      "repair_kind": "runtime_contract_root_cause_patch",
+      "signal": "ledger_satisfiable_drift",
+      "source_domain": "runtime_contract",
+      "source_kind": "ledger",
+      "source_path": "results/residual_drift_commitment_ledger_1538.jsonl",
+      "validator": "runtime_contract"
+    },
+    {
+      "case_id": "structural_contract:cctu-1486-table-003:injected_violation:59:incompatible_api_use:300",
+      "contract_family": "incompatible_api_use",
+      "details": {
+        "live_sota_model_inference_used": false
+      },
+      "failure_classification": "satisfiable_drift",
+      "is_exclusion": false,
+      "is_positive": true,
+      "localized_span": "commitments[1].evidence.root_cause_category",
+      "repair_kind": "runtime_contract_root_cause_patch",
+      "signal": "ledger_satisfiable_drift",
+      "source_domain": "runtime_contract",
+      "source_kind": "ledger",
+      "source_path": "results/residual_drift_commitment_ledger_1538.jsonl",
+      "validator": "runtime_contract"
+    },
+    {
+      "case_id": "structural_contract:cctu-1486-string-003:injected_violation:61:graph_prerequisites:306",
+      "contract_family": "graph_prerequisites",
+      "details": {
+        "live_sota_model_inference_used": false
+      },
+      "failure_classification": "satisfiable_drift",
+      "is_exclusion": false,
+      "is_positive": true,
+      "localized_span": "commitments[1].evidence.root_cause_category",
+      "repair_kind": "runtime_contract_root_cause_patch",
+      "signal": "ledger_satisfiable_drift",
+      "source_domain": "runtime_contract",
+      "source_kind": "ledger",
+      "source_path": "results/residual_drift_commitment_ledger_1538.jsonl",
+      "validator": "runtime_contract"
+    },
+    {
+      "case_id": "structural_contract:cctu-1486-string-003:injected_violation:62:acquisition_path:312",
+      "contract_family": "acquisition_path",
+      "details": {
+        "live_sota_model_inference_used": false
+      },
+      "failure_classification": "satisfiable_drift",
+      "is_exclusion": false,
+      "is_positive": true,
+      "localized_span": "commitments[1].evidence.root_cause_category",
+      "repair_kind": "runtime_contract_root_cause_patch",
+      "signal": "ledger_satisfiable_drift",
+      "source_domain": "runtime_contract",
+      "source_kind": "ledger",
+      "source_path": "results/residual_drift_commitment_ledger_1538.jsonl",
+      "validator": "runtime_contract"
+    },
+    {
+      "case_id": "structural_contract:cctu-1486-string-003:injected_violation:63:tool_ordering:318",
+      "contract_family": "tool_ordering",
+      "details": {
+        "live_sota_model_inference_used": false
+      },
+      "failure_classification": "satisfiable_drift",
+      "is_exclusion": false,
+      "is_positive": true,
+      "localized_span": "commitments[1].evidence.root_cause_category",
+      "repair_kind": "runtime_contract_root_cause_patch",
+      "signal": "ledger_satisfiable_drift",
+      "source_domain": "runtime_contract",
+      "source_kind": "ledger",
+      "source_path": "results/residual_drift_commitment_ledger_1538.jsonl",
+      "validator": "runtime_contract"
+    },
+    {
+      "case_id": "structural_contract:cctu-1486-string-003:injected_violation:64:required_object_acquisition:324",
+      "contract_family": "required_object_acquisition",
+      "details": {
+        "live_sota_model_inference_used": false
+      },
+      "failure_classification": "satisfiable_drift",
+      "is_exclusion": false,
+      "is_positive": true,
+      "localized_span": "commitments[1].evidence.root_cause_category",
+      "repair_kind": "runtime_contract_root_cause_patch",
+      "signal": "ledger_satisfiable_drift",
+      "source_domain": "runtime_contract",
+      "source_kind": "ledger",
+      "source_path": "results/residual_drift_commitment_ledger_1538.jsonl",
+      "validator": "runtime_contract"
+    },
+    {
+      "case_id": "structural_contract:cctu-1486-string-003:injected_violation:65:incompatible_api_use:330",
+      "contract_family": "incompatible_api_use",
+      "details": {
+        "live_sota_model_inference_used": false
+      },
+      "failure_classification": "satisfiable_drift",
+      "is_exclusion": false,
+      "is_positive": true,
+      "localized_span": "commitments[1].evidence.root_cause_category",
+      "repair_kind": "runtime_contract_root_cause_patch",
+      "signal": "ledger_satisfiable_drift",
+      "source_domain": "runtime_contract",
+      "source_kind": "ledger",
+      "source_path": "results/residual_drift_commitment_ledger_1538.jsonl",
+      "validator": "runtime_contract"
+    },
+    {
+      "case_id": "structural_contract:cctu-1486-graph-003:injected_violation:67:graph_prerequisites:336",
+      "contract_family": "graph_prerequisites",
+      "details": {
+        "live_sota_model_inference_used": false
+      },
+      "failure_classification": "satisfiable_drift",
+      "is_exclusion": false,
+      "is_positive": true,
+      "localized_span": "commitments[1].evidence.root_cause_category",
+      "repair_kind": "runtime_contract_root_cause_patch",
+      "signal": "ledger_satisfiable_drift",
+      "source_domain": "runtime_contract",
+      "source_kind": "ledger",
+      "source_path": "results/residual_drift_commitment_ledger_1538.jsonl",
+      "validator": "runtime_contract"
+    },
+    {
+      "case_id": "structural_contract:cctu-1486-graph-003:injected_violation:68:acquisition_path:342",
+      "contract_family": "acquisition_path",
+      "details": {
+        "live_sota_model_inference_used": false
+      },
+      "failure_classification": "satisfiable_drift",
+      "is_exclusion": false,
+      "is_positive": true,
+      "localized_span": "commitments[1].evidence.root_cause_category",
+      "repair_kind": "runtime_contract_root_cause_patch",
+      "signal": "ledger_satisfiable_drift",
+      "source_domain": "runtime_contract",
+      "source_kind": "ledger",
+      "source_path": "results/residual_drift_commitment_ledger_1538.jsonl",
+      "validator": "runtime_contract"
+    },
+    {
+      "case_id": "structural_contract:cctu-1486-graph-003:injected_violation:69:tool_ordering:348",
+      "contract_family": "tool_ordering",
+      "details": {
+        "live_sota_model_inference_used": false
+      },
+      "failure_classification": "satisfiable_drift",
+      "is_exclusion": false,
+      "is_positive": true,
+      "localized_span": "commitments[1].evidence.root_cause_category",
+      "repair_kind": "runtime_contract_root_cause_patch",
+      "signal": "ledger_satisfiable_drift",
+      "source_domain": "runtime_contract",
+      "source_kind": "ledger",
+      "source_path": "results/residual_drift_commitment_ledger_1538.jsonl",
+      "validator": "runtime_contract"
+    },
+    {
+      "case_id": "structural_contract:cctu-1486-graph-003:injected_violation:70:required_object_acquisition:354",
+      "contract_family": "required_object_acquisition",
+      "details": {
+        "live_sota_model_inference_used": false
+      },
+      "failure_classification": "satisfiable_drift",
+      "is_exclusion": false,
+      "is_positive": true,
+      "localized_span": "commitments[1].evidence.root_cause_category",
+      "repair_kind": "runtime_contract_root_cause_patch",
+      "signal": "ledger_satisfiable_drift",
+      "source_domain": "runtime_contract",
+      "source_kind": "ledger",
+      "source_path": "results/residual_drift_commitment_ledger_1538.jsonl",
+      "validator": "runtime_contract"
+    },
+    {
+      "case_id": "structural_contract:cctu-1486-graph-003:injected_violation:71:incompatible_api_use:360",
+      "contract_family": "incompatible_api_use",
+      "details": {
+        "live_sota_model_inference_used": false
+      },
+      "failure_classification": "satisfiable_drift",
+      "is_exclusion": false,
+      "is_positive": true,
+      "localized_span": "commitments[1].evidence.root_cause_category",
+      "repair_kind": "runtime_contract_root_cause_patch",
+      "signal": "ledger_satisfiable_drift",
+      "source_domain": "runtime_contract",
+      "source_kind": "ledger",
+      "source_path": "results/residual_drift_commitment_ledger_1538.jsonl",
+      "validator": "runtime_contract"
+    },
+    {
+      "case_id": "cnf-1536-unsat-unit-clash-narrative",
+      "contract_family": null,
+      "details": {
+        "rejection_reason": "true_contradiction_untouched"
+      },
+      "failure_classification": "true_contradiction",
+      "is_exclusion": true,
+      "is_positive": false,
+      "localized_span": "true_contradiction",
+      "repair_kind": "no_repair",
+      "signal": "repair_true_contradiction_exclusion",
+      "source_domain": "satquest",
+      "source_kind": "repair_manifest",
+      "source_path": "results/residual_drift_repair_policy_1552.jsonl",
+      "validator": "deterministic_replay"
+    },
+    {
+      "case_id": "cnf-1536-unsat-two-var-cover-narrative",
+      "contract_family": null,
+      "details": {
+        "rejection_reason": "true_contradiction_untouched"
+      },
+      "failure_classification": "true_contradiction",
+      "is_exclusion": true,
+      "is_positive": false,
+      "localized_span": "true_contradiction",
+      "repair_kind": "no_repair",
+      "signal": "repair_true_contradiction_exclusion",
+      "source_domain": "satquest",
+      "source_kind": "repair_manifest",
+      "source_path": "results/residual_drift_repair_policy_1552.jsonl",
+      "validator": "deterministic_replay"
+    }
+  ],
+  "module_path": "python/carnot/pipeline/context_induction.py",
+  "run_date": "20260509",
+  "schema_version": 1,
+  "selected_candidate": {
+    "confidence": 0.923077,
+    "constraint_id": "ctx1609_runtime_contract_64cbe95aac4a",
+    "constraint_type": "context_sensitive_residual_drift_guard",
+    "evidence_sources": [
+      "results/residual_drift_commitment_ledger_1538.jsonl"
+    ],
+    "exclusion_count": 2,
+    "guardrails": [
+      "exclude failure_classification=true_contradiction from positive evidence",
+      "keep deterministic validator replay as final acceptance authority",
+      "apply only when every trigger_context field matches"
+    ],
+    "induced_from_signals": [
+      "ledger_satisfiable_drift"
+    ],
+    "negative_evidence_case_ids": [
+      "cnf-1536-unsat-two-var-cover-narrative",
+      "cnf-1536-unsat-unit-clash-narrative"
+    ],
+    "positive_evidence_case_ids": [
+      "structural_contract:cctu-1486-arith-001:injected_violation:2:acquisition_path:12",
+      "structural_contract:cctu-1486-arith-002:injected_violation:26:acquisition_path:132",
+      "structural_contract:cctu-1486-arith-003:injected_violation:50:acquisition_path:252",
+      "structural_contract:cctu-1486-graph-001:injected_violation:20:acquisition_path:102",
+      "structural_contract:cctu-1486-graph-002:injected_violation:44:acquisition_path:222",
+      "structural_contract:cctu-1486-graph-003:injected_violation:68:acquisition_path:342",
+      "structural_contract:cctu-1486-string-001:injected_violation:14:acquisition_path:72",
+      "structural_contract:cctu-1486-string-002:injected_violation:38:acquisition_path:192",
+      "structural_contract:cctu-1486-string-003:injected_violation:62:acquisition_path:312",
+      "structural_contract:cctu-1486-table-001:injected_violation:8:acquisition_path:42",
+      "structural_contract:cctu-1486-table-002:injected_violation:32:acquisition_path:162",
+      "structural_contract:cctu-1486-table-003:injected_violation:56:acquisition_path:282"
+    ],
+    "predicate": "When runtime_contract reaches commitments[1].evidence.root_cause_category, require the final decision to replay against runtime_contract before acceptance.",
+    "support_count": 12,
+    "trigger_context": {
+      "contract_family": "acquisition_path",
+      "localized_span": "commitments[1].evidence.root_cause_category",
+      "repair_kind": "runtime_contract_root_cause_patch",
+      "source_domain": "runtime_contract",
+      "validator": "runtime_contract"
+    }
+  },
+  "source_counts": {
+    "conductor_failure_lines": 0,
+    "ledger_rows": 135,
+    "positive_evidence_rows": 64,
+    "repair_rows": 135,
+    "true_contradiction_exclusions": 4
+  },
+  "source_paths": [
+    "results/residual_drift_commitment_ledger_1538.jsonl",
+    "results/residual_drift_repair_policy_1552.jsonl",
+    "logs/conductor.log"
+  ],
+  "status": "complete",
+  "true_contradiction_exclusions": [
+    "cnf-1536-unsat-two-var-cover-narrative",
+    "cnf-1536-unsat-unit-clash-narrative"
+  ]
+}
