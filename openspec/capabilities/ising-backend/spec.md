@@ -329,6 +329,42 @@ bitfile flashing, and board commands are captured.
 
 **Implementation status:** Implemented (Exp 1517)
 
+### REQ-ISING-029
+
+**Discrete Simulated Bifurcation inertial CPU ablation MUST compare an
+inertia-augmented simulator against Carnot sequential Gibbs on the same
+FoVer-derived Ising problems without making hardware claims.**
+
+**Rationale:**
+Exp 1399 compared the base dSB sign-pressure simulator against sequential
+Gibbs, while Exp 860 validated EMA inertia for a separate Ising sampler. Exp
+1597 must isolate whether an explicit inertial update term is useful in the dSB
+CPU simulator before any RTL, KV260, or accelerator work is considered.
+
+**Acceptance criteria:**
+- The simulator SHALL expose an inertial dSB update with a configurable inertia
+  coefficient and deterministic seeded execution.
+- Setting the inertia coefficient to `0.0` SHALL reduce to the existing
+  non-inertial dSB update on the same problem, seed, pressure schedule, and
+  `eta`.
+- The experiment SHALL load between 3 and 5 local FoVer-derived Ising/QUBO
+  problems and compare inertial dSB convergence against Carnot's sequential
+  Gibbs baseline on the same problems and seeds.
+- `results/experiment_1597_inertial_ising.json` SHALL include `status`,
+  `experiment_id`, `algorithm`, `baseline_algorithm`,
+  `constraint_problems_tested`, `n_variables`, `seeds`,
+  `steps_to_convergence_gibbs_baseline`,
+  `steps_to_convergence_inertial_ising`,
+  `convergence_speedup_inertial_ising`, `inertia_coefficient`,
+  `pressure_schedule`, `eta`, `cpu_only`, `simulator_only`,
+  `hardware_execution_performed`, `hardware_claim_allowed`,
+  `kv260_claim_allowed`, `honest_verdict`, and `per_problem_results`.
+- `hardware_execution_performed`, `hardware_claim_allowed`, and
+  `kv260_claim_allowed` SHALL remain false because Exp 1597 is a CPU/simulator
+  ablation only.
+
+**Implementation status:** Implemented (Exp 1597)
+
 ## Scenarios
 
 ### SCENARIO-ISING-030
@@ -428,3 +464,13 @@ run only local source-level lint/parse/simulation commands, write
 execution, bitstream, and hardware latency claims disabled.
 
 **Implementation status:** Implemented (Exp 1517)
+
+### SCENARIO-ISING-039
+
+**Inertial dSB CPU ablation artifact:** Given local FoVer rows and no hardware
+execution in the current run, Exp 1597 SHALL write
+`results/experiment_1597_inertial_ising.json`, compare inertial dSB against
+Carnot sequential Gibbs on matched problems and seeds, report convergence steps
+and speedup, and keep all hardware/KV260 claim fields false.
+
+**Implementation status:** Implemented (Exp 1597)

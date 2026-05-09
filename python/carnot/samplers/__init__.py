@@ -14,9 +14,12 @@ try:
     from .discrete_simulated_bifurcation import (
         DiscreteSBConfig,
         DiscreteSBConstraintProblem,
+        InertialDiscreteSBConfig,
         run_discrete_sb,
         run_fover_discrete_sb_probe,
+        run_fover_inertial_ising_probe,
         run_gibbs_ising_baseline,
+        run_inertial_discrete_sb,
     )
     from .fpga_backend import FpgaBackend
     from .fpga_ising import FPGAIsingSampler
@@ -69,7 +72,10 @@ else:
         "ParallelDenseIsingInertia",
         "DiscreteSBConfig",
         "DiscreteSBConstraintProblem",
+        "InertialDiscreteSBConfig",
         "run_discrete_sb",
         "run_fover_discrete_sb_probe",
+        "run_fover_inertial_ising_probe",
         "run_gibbs_ising_baseline",
+        "run_inertial_discrete_sb",
     ]
