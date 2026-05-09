@@ -5013,3 +5013,47 @@ confirmed mode-collapse predictors or nonzero soundness mistakes
 - REQ-LEARN-1624-3: Artifact MUST be saved to results/experiment_1624_adaptive_reconfig.json.
 
 ---
+
+## REQ-LEARN-1635: Label-Free ConsFormer Refiner on FoVer CSP Rows
+
+Exp 1635 SHALL train a deterministic, CPU-only ConsFormer-style refiner on
+FoVer constraint-satisfaction rows without using labels for the training
+objective.  The refiner SHALL turn each FoVer step into local CSP features,
+apply a lightweight transformer-style self-attention refinement pass, and
+evaluate the refined satisfaction score against held-out FoVer labels only for
+reporting.
+
+### REQ-LEARN-1635 Sub-requirements
+
+- REQ-LEARN-1635-1: The workflow SHALL implement
+  `scripts/experiment_1635_consformer.py` and write
+  `results/experiment_1635_consformer.json`.
+- REQ-LEARN-1635-2: FoVer loading SHALL accept JSONL rows with `step_text` and
+  `label`, skip malformed or unsupported rows, and preserve deterministic row
+  ordering.
+- REQ-LEARN-1635-3: Training SHALL fit the refiner's scoring statistics from
+  unlabeled CSP features only; held-out FoVer labels SHALL be used only by the
+  evaluation routine that computes accuracy.
+- REQ-LEARN-1635-4: The terminal artifact SHALL include `status`, `schema`,
+  `experiment_id`, `spec_refs`, `dataset_rows`, `train_rows`, `eval_rows`,
+  `refiner_accuracy`, `baseline_accuracy`, `label_free_training`,
+  `tests_run`, and `honest_verdict`.
+- REQ-LEARN-1635-5: A complete artifact SHALL require at least one train row,
+  at least one eval row, `label_free_training=true`, and
+  `0.0 <= refiner_accuracy <= 1.0`.
+
+### SCENARIO-LEARN-1635: ConsFormer Refiner Writes FoVer Accuracy
+
+**Given** a FoVer JSONL corpus containing correct and incorrect step rows
+**When** Exp 1635 trains the label-free ConsFormer-style refiner and evaluates
+the held-out split
+**Then** it writes `results/experiment_1635_consformer.json`
+**And** the artifact records `refiner_accuracy` and `baseline_accuracy`
+**And** `refiner_accuracy` is computed from labels that were not used by the
+training objective.
+
+## Implementation Status (REQ-LEARN-1635)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-1635 | Implemented (`scripts/experiment_1635_consformer.py`) | Implemented (`tests/python/test_experiment_1635_consformer.py`) |

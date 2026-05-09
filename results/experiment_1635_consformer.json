@@ -1,0 +1,62 @@
+{
+  "baseline_accuracy": 0.8173991844,
+  "dataset_rows": 8829,
+  "eval_rows": 2207,
+  "experiment_id": 1635,
+  "honest_verdict": "consformer_refiner_evaluated_label_free",
+  "label_free_training": true,
+  "prediction_counts": {
+    "correct": 1782,
+    "incorrect": 425
+  },
+  "refiner": {
+    "attention": [
+      0.1578333157,
+      0.0957227742,
+      0.1330630218,
+      0.1280497292,
+      0.1536514987,
+      0.1223301788,
+      0.1108102494,
+      0.0985392307
+    ],
+    "center": [
+      0.8780172933,
+      0.3716399879,
+      0.9293435277,
+      0.7999282694,
+      0.9269344609,
+      0.9423135005,
+      0.9780791484,
+      0.9915433404
+    ],
+    "label_free_training": true,
+    "scale": [
+      0.2525741122,
+      0.2772224012,
+      0.2515145732,
+      0.250848807,
+      0.1383924433,
+      0.2831496672,
+      0.1565610658,
+      0.1415704348
+    ],
+    "threshold": 0.7751055357,
+    "threshold_quantile": 0.2
+  },
+  "refiner_accuracy": 0.8948799275,
+  "run_date": "20260509",
+  "schema": "carnot.self_learning.consformer_refiner.v1",
+  "spec_refs": [
+    "REQ-LEARN-1635",
+    "SCENARIO-LEARN-1635"
+  ],
+  "status": "complete",
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_1635_consformer.py -q -o addopts=''",
+    "COVERAGE_RCFILE=/dev/null .venv/bin/pytest tests/python/test_experiment_1635_consformer.py -q -o addopts='' --cov=scripts.experiment_1635_consformer --cov-report=term-missing --cov-fail-under=100"
+  ],
+  "threshold": 0.7751055357,
+  "threshold_quantile": 0.2,
+  "train_rows": 6622
+}
