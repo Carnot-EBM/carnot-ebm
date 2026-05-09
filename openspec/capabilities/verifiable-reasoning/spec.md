@@ -18334,3 +18334,47 @@ Lagrange-iteration, penalty-tuning, viability, and honest-verdict fields
 **And** viability is gated only by measured per-problem convergence speedups.
 
 **Spec traces:** REQ-VERIFY-1385, SCENARIO-VERIFY-1385, Exp 1385
+
+## REQ-SAMPLE-063: Z1 Analog Beta-Drift Detailed-Balance Correction Prototype
+
+**Summary:** Carnot SHALL provide a simulator-only prototype for per-spin
+analog beta drift on a 128-spin Ising block-Gibbs path and a software
+detailed-balance correction before any Z1 silicon sampling claim is made.
+
+**Requirements:**
+
+- REQ-SAMPLE-063-1: The workflow SHALL write
+  `results/experiment_1583_z1_analog_drift_detailed_balance_correction.json`
+  with `status="in_progress"` before running the synthetic drift experiment.
+- REQ-SAMPLE-063-2: The simulator SHALL construct an n=128 Ising problem and
+  run block-Gibbs sampling for a no-drift reference and a per-spin beta-drift
+  proposal with drift standard deviation approximately 5 percent.
+- REQ-SAMPLE-063-3: The correction SHALL operate at a `SamplerBackend`-shaped
+  boundary using a Hastings accept/reject ratio against the scalar-beta target
+  distribution and the drifted block proposal probabilities.
+- REQ-SAMPLE-063-4: The experiment SHALL report uncorrected and corrected
+  mean-energy bias, magnetization bias, and an empirical KL/KS proxy against
+  the no-drift reference.
+- REQ-SAMPLE-063-5: `detailed_balance_correction_ready` SHALL be true only
+  when the corrected energy and magnetization biases are within a one-sigma
+  combined sampling interval and `simulator_only_no_hardware_claim` is true.
+- REQ-SAMPLE-063-6: The report
+  `docs/research-notes/z1-detailed-balance-drift-correction.md` SHALL mark
+  `simulator_only_no_hardware_claim=true` and SHALL avoid any Z1, XTR, TSU,
+  latency, throughput, or hardware sample-quality claim.
+
+**Implementation Status:** Planned (Exp 1583)
+
+### SCENARIO-SAMPLE-091: Synthetic Drift Correction Writes Simulator-Only Artifact
+
+**Given** the repository has no authenticated Z1 hardware transcript
+**When** the Exp 1583 synthetic beta-drift experiment runs
+**Then** it writes an in-progress artifact first
+**And** it writes a complete artifact with status, simulator readiness,
+correction method, uncorrected and corrected energy bias, uncorrected and
+corrected magnetization bias, one-sigma readiness gate, detailed-balance
+readiness, simulator-only claim boundary, and honest verdict fields
+**And** the Hastings correction satisfies detailed balance for each drifted
+block proposal against the scalar-beta target.
+
+**Spec traces:** REQ-SAMPLE-063, SCENARIO-SAMPLE-091, Exp 1583
