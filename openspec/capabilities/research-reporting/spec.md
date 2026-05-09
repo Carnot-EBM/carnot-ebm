@@ -3136,6 +3136,56 @@ packet, sets `thrml_vendoring_reflected=true`,
 keeps Z1/XTR/TSU hardware execution unclaimed.
 
 
+### REQ-REPORT-066: Milestone .122 Archive and .123 State Artifact
+
+The Exp 1601 workflow shall archive milestone `2026.05.122` and confirm
+milestone `2026.05.123` is the active roadmap state by writing
+`results/experiment_1601_archive.json`.
+
+The workflow shall first write the JSON artifact with `status="in_progress"`.
+The terminal artifact shall include these top-level fields:
+
+- `status`
+- `milestone`
+- `predecessor_milestone`
+- `predecessor_archived`
+- `predecessor_task_count`
+- `predecessor_tasks_terminal`
+- `active_roadmap_milestone`
+- `active_roadmap_task_count`
+- `first_active_task_id`
+- `status_moved_to_changelog`
+- `setup_123_state`
+- `missing_task_deliverables`
+- `research_roadmap_yaml_modified`
+- `scripts_research_conductor_modified`
+- `honest_verdict`
+
+The workflow shall treat `research-complete.yaml` as the milestone archive
+source of truth, record every `.122` task id/title/deliverable/result, confirm
+the active roadmap is `2026.05.123`, confirm Exp 1601 is the first active task,
+and confirm `ops/changelog.md` contains the milestone `.122` status transfer.
+It shall record missing task deliverables without fabricating their contents.
+It shall not modify `research-roadmap.yaml` or `scripts/research_conductor.py`.
+
+### SCENARIO-REPORT-066: Exp 1601 Archives .122 and Activates .123 State
+
+**Given** `research-complete.yaml` contains milestone `2026.05.122` with
+Exp 1588 through Exp 1600 tasks
+**And** the active `research-roadmap.yaml` declares milestone `2026.05.123`
+with Exp 1601 as its first task
+**And** `ops/changelog.md` contains the milestone `.122` status entry
+**When** the Exp 1601 archive workflow runs
+**Then** it writes the required REQ-REPORT-066 fields
+**And** `predecessor_archived`, `predecessor_tasks_terminal`,
+`status_moved_to_changelog`, and `setup_123_state` are true
+**And** any missing task deliverable is listed in `missing_task_deliverables`
+without blocking the archive when `research-complete.yaml` reports the task
+terminal.
+**And** `research-roadmap.yaml` and `scripts/research_conductor.py` remain
+unchanged by the workflow.
+
+
 ### REQ-PUBLISH-003: HuggingFace README Accuracy Audit
 
 All HuggingFace model READMEs for Phase 1 per-token activation EBMs shall
@@ -3272,6 +3322,7 @@ embed live-GPU benchmark results from Exp 328 when available.
 | REQ-REPORT-062 | `python/carnot/reporting/milestone_120_activation_manifest.py`, `results/experiment_1560_119_completion_archive_120_activation.json`, `ops/milestone_120_activation_manifest.md`, `ops/exclusion_manifest.yaml` | `tests/python/test_milestone_120_activation_manifest.py` | Implemented |
 | REQ-REPORT-063 | `python/carnot/reporting/milestone_121_activation_manifest.py`, `results/experiment_1574_120_completion_archive_121_activation.json`, `ops/milestone_121_activation_manifest.md` | `tests/python/test_milestone_121_activation_manifest.py` | Implemented |
 | REQ-REPORT-064 | `scripts/experiment_1575_carry_forward_prior_failures_autofill_audit.py`, `results/experiment_1575_carry_forward_prior_failures_autofill_audit.json` | `tests/python/test_experiment_1575_carry_forward_prior_failures_audit.py` | Implemented |
+| REQ-REPORT-066 | `python/carnot/reporting/milestone_123_archive.py`, `results/experiment_1601_archive.json` | `tests/python/test_milestone_123_archive.py` | Implemented |
 | REQ-REPORT-024 | `python/carnot/reporting/agent_usage.py`, `scripts/agent_plan_usage.py` | `tests/python/test_agent_plan_usage.py` | Implemented |
 | REQ-PUBLISH-003 | `scripts/experiment_317_hf_publish.py` | `tests/python/test_experiment_317_hf_publish.py` | Implemented |
 | REQ-PUBLISH-004 | `scripts/experiment_330_hf_live_publish.py` | `tests/python/test_experiment_330_hf_live_publish.py` | Implemented |
