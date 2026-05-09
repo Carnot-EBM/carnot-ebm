@@ -15,13 +15,14 @@ ground-truth, and — if anything fails — sends the violations back to the
 LLM as targeted feedback for a repair pass. It works with any LLM you can
 call. No fine-tuning. No access to model weights.
 
-Rust + Python/JAX, Apache 2.0, `pip install carnot`.
+Rust + Python/JAX, Apache 2.0, local editable install via `pip install -e ".[dev]"`.
+The public PyPI package remains a Phase-1 ship blocker as of Exp 1582.
 
-Current public research record: **1,723 experiment records tracked through Exp
-1573**. `research-complete.yaml` currently archives **1,710** task records
-across **133** artifact-backed completed milestone records through
-2026.04.119; checked-in result artifacts extend into milestone 2026.05.120 on
-2026-05-08.
+Current public research record: **1,738 experiment records tracked through Exp
+1587**. `research-complete.yaml` currently archives **1,724** task records
+across **134** artifact-backed completed milestone records through
+2026.05.120; checked-in result artifacts and `ops/changelog.md` extend through
+milestone 2026.05.121 on 2026-05-09.
 
 Milestone .106 delivered the critical fix to thinking-mode certificate
 generation: Exp 1366 (CRANE tag-first prefix injection) reached
@@ -166,14 +167,23 @@ passed the positive-utility gate (`utility_delta=1.0`), and the
 verification-compute router reduced cost **399 -> 358** with false accepts
 **0.0**. The one .119 miss is important: THRML independent RNG proved separate
 paths but failed bounded KL (`max_kl_divergence=0.169802350136`), so Extropic
-readiness remains blocked. Early .120 artifacts through Exp 1573 falsify the
-THRML block-Gibbs kinetic-security parity argument, reject the BRAIN+Linear-AR
-rescue as a Phase-3 path, validate candidate-warm-start over cold/cached starts,
-fit a k=6 rho(C) adversarial curve, flag one FR-11 v14 retention for reversal,
-verify the Soft-Gibbs Jensen bound at optimal beta **0.1**, and pass the
-step-wise AR-REINFORCE variance gate at **10.45x**. The current test collection
-reports **23,363** items; this is a collection count, not a full-suite pass
-claim.
+readiness remains blocked. Milestone .120 completed **10 of 14** criteria:
+THRML block-Gibbs falsified the kinetic-security parity argument, BRAIN+Linear-AR
+was rejected as a Phase-3 rescue path, candidate-warm-start beat cold/cached
+starts with accuracy **1.0** from k=10 through k=1000, k=6 rho(C) showed AND
+false-positive risk rising to **0.8625** at the 256 GPU-hour proxy budget,
+FR-11 flagged one retained v14 policy for reversal, Soft-Gibbs verified the
+Jensen bound at deployment beta **0.1**, and step-wise AR-REINFORCE passed the
+variance gate at **10.45x**. Milestone .121 result artifacts then met **14 of
+14** criteria while completing **12 of 14** tasks: BRAIN starvation was
+overstated at k=15 (`factorized_final_KL=0.001337`,
+`linear_AR_final_KL=0.001336`), DCCD/JSONSchemaBench reached strict schema and
+semantic correctness **1.0** with **0** false accepts on mandated Qwen3.6-35B
+GGUF rows, FR-11 v15 reversed the collapsed v14 retention, the Phase-1 ship
+ledger found **9** remaining blockers, and hardware scope moved to simulator-only
+Z1 drift correction plus blocked Tenstorrent/PolarFire preflights with no
+hardware claim. The current test collection reports **23,363** items; this is a
+collection count, not a full-suite pass claim.
 
 ## Install and run
 
@@ -189,9 +199,10 @@ print(pipeline.verify('What is 15 + 27?', '15 + 27 = 43').verified)  # False
 "
 ```
 
-GPU: `pip install carnot[cuda]` for CUDA 12. On AMD/ROCm, use
-`JAX_PLATFORMS=cpu`. Rust bindings (optional): `pip install carnot[rust]`
-with the Rust toolchain installed.
+GPU source install: `pip install -e ".[cuda]"` for CUDA 12. On AMD/ROCm, use
+`JAX_PLATFORMS=cpu`. Rust bindings from source: `pip install -e ".[rust]"`
+with the Rust toolchain installed. Public PyPI packaging is still blocked by the
+Exp 1582 ship-readiness ledger.
 
 ## How it works
 
@@ -456,8 +467,12 @@ experiment artifact under `results/`.
 | SATQuest solver-oracle repair + SOTA re-eval | Solver-oracle false accepts **3 -> 0**; live local SOTA re-eval over **30** cases kept solver-oracle false accepts **0** while model self false accepts remained **4** | Exps 1549/1550 |
 | Product-line, claim-isolation, and verification routing scale | Product-line **120** cases reached parse/feasibility/oracle agreement **1.0**; claim isolation reduced budget **75 -> 23**; verification router reduced cost **399 -> 358**, all with false accepts **0.0** | Exps 1553/1554/1557 |
 | THRML independent-RNG audit | RNG and code paths were independent, but bounded KL failed with max KL **0.169802350136**; no TSU or hardware claim | Exp 1548 |
-| Early .120 sampler and self-learning audits | THRML block-Gibbs falsified kinetic-security parity; candidate-warm-start held accuracy **1.0** where cold start was **0.465** at k=100; FR-11 audit flagged **1/2** retained v14 policies for reversal | Exps 1561/1566/1568 |
+| Milestone .120 sampler and self-learning audits | **10/14 criteria met**; THRML block-Gibbs falsified kinetic-security parity; candidate-warm-start held accuracy **1.0** where cold start was **0.465** at k=100; FR-11 audit flagged **1/2** retained v14 policies for reversal | Exps 1561/1566/1568/1572 |
 | Soft-Gibbs and AR-REINFORCE follow-ons | Soft-Gibbs Jensen bound held for all beta values with deployment beta **0.1**; step-wise AR baseline passed the variance gate at **10.45x** | Exps 1570/1571 |
+| Milestone .121 closeout | **14/14 criteria met** with **12/14** tasks completed; BRAIN starvation overstated, paper-v6 sampler/OT evidence updated, FR-11 v14 retention reversed, Wormhole/PolarFire carried forward | Exp 1587 |
+| DCCD + JSONSchemaBench SOTA smoke | Mandated Qwen3.6-35B-A3B GGUF rows reached strict schema validity **1.0**, semantic correctness **1.0**, and **0** false accepts across **4** schemas | Exp 1580 |
+| Phase-1 ship readiness ledger | Phase-1 software ship remains blocked by **9** operational items spanning package docs/dependencies, HF export, IPFS CIDs, MCP docs/tool count, and missing integrator guide | Exp 1582 |
+| Hardware portfolio rescope | Z1 drift correction is simulator-only and within 1 sigma; Tenstorrent access and PolarFire board/toolchain remain blocked; Strix becomes secondary tier and KV260 Vivado lineage is retired while source-level KV260 work is preserved | Exps 1583-1586 |
 | Current Python test collection | **23,363** Python tests collected; collection-only snapshot, not a full-suite pass claim | 2026-05-08 collection run |
 | Local Claude/Codex usage snapshot | Codex reads the newest local `token_count` event; Claude aggregates local token usage and reads only subscription/tier metadata from credentials; free-form quota prose is ignored instead of guessed; focused regression tests pass | 2026-05-04 changelog |
 
@@ -500,8 +515,8 @@ claim we publish.
 ## Where to go next
 
 - **[Technical report](docs/technical-report.md)** — the full research arc
-  through Exp 1573 across 133 archived completed milestone records plus the
-  latest early .120 artifacts, with a
+  through Exp 1587 across 134 archived completed milestone records plus the
+  latest .121 result artifacts, with a
   plain-English timeline of what we tried, what failed, what stuck.
 - **[Roadmap](docs/roadmap.md)** — current milestone, upcoming milestones,
   hardware track, and Phase 3 (Kona-parity foundation-model) direction.
@@ -705,7 +720,7 @@ See the [technical report](docs/technical-report.md) for the full research recor
 
 ## 14 Principles Learned
 
-Hard-won lessons from the activation-based phase of a research program that now spans 1,723 tracked experiment records through Exp 1573, 133 archived completed milestone records, and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
+Hard-won lessons from the activation-based phase of a research program that now spans 1,738 tracked experiment records through Exp 1587, 134 archived completed milestone records, and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
 
 ### What works
 1. **The model's own logprobs are the best energy.** No external EBM needed for rejection sampling — the LLM's own confidence is already an energy function. Simple, practical, +10%.
