@@ -18562,3 +18562,13 @@ the initial energy
 
 **Spec traces:** REQ-VERIFY-1628, SCENARIO-VERIFY-1628, Exp 1628
 
+## REQ-EBRM-1629: SOTA EBRM Validation
+The system SHALL validate EBRM trajectory optimization against mandated local SOTA models, specifically `unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF`. It SHALL use the `cached_sota_pair()` pattern for loading model specifications and write output to `results/experiment_1629_ebrm_sota.json`.
+
+### SCENARIO-EBRM-1629: Validate EBRM with SOTA Pair
+
+**Given** the mandated local SOTA models are available in the system cache
+**When** the pipeline requests `cached_sota_pair()`
+**Then** it loads the SOTA GGUFs and evaluates EBRM trajectory optimization
+**And** it outputs a complete deliverable to `results/experiment_1629_ebrm_sota.json` containing the models used and an honest verdict.
+

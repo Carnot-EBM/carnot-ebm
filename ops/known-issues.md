@@ -207,6 +207,46 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### NEW 2026-05-09 (15:25Z): Planner Gate-Field Discipline (.125+ MANDATORY)
+
+**Pattern.** `.123 lost 4 of 13 tasks to gate-block cascade; `.124 lost
+5 of 13. Common cause: planner specifies gate fields like
+`optimizer_converges`, `pwa_ready`, `verilog_generated` but the agent
+(gemini or codex) produces `status: complete` artifacts WITHOUT
+setting those specific named flags. Conductor sees the field absent
+or `false` and pre-emptively skips downstream tasks.
+
+**Fix at planner level:** every task that has a downstream gate MUST:
+
+1. Include the gate field name in the task prompt's REQUIRED ARTIFACT
+   FIELDS section explicitly.
+2. Specify the exact condition that maps to `true` for that field.
+3. Specify the fallback: "if the condition isn't met, set field=false
+   and continue — DO NOT abort the task."
+
+Example task prompt addition:
+
+```
+REQUIRED ARTIFACT FIELDS:
+- status: "complete"
+- pwa_ready: bool — set to TRUE if abstraction layer compiles + tests
+  pass; set to FALSE if compilation errors remain. ALWAYS write this
+  field, even on negative outcome.
+- honest_verdict: prefixed with complete:/success:/passed:/shipped: per
+  CLAUDE.md Verdict Terminal-Prefix Discipline
+```
+
+**Why:** gates exist to prevent useless downstream work, but only when
+the gate signal is reliably written. Today's pattern is "agent
+completes the task but doesn't write the specific field" → gates fail
+on absent field rather than on a real condition.
+
+**Track via gate-cascade-retire-rate metric:** % of milestone tasks
+retired by gate-block alone (not by real failure). `.123: 4/13 = 31%.
+`.124: 5/13 = 38%. Target: `<10% by .126.
+
+
+
 ### NEW 2026-05-09 (12:50Z): NLA-Class Probing as 16th Verifier (.124+ MANDATORY)
 
 **Origin.** 2026-05-09 ~12:50Z operator directive after reviewing
