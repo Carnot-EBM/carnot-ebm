@@ -1321,3 +1321,4 @@ web search: site:o |
 | 2026-05-09 08:36 UTC | Exp 1593: Compare CDG-guided repair against flat v | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: erateContent?alt=ss |
 | 2026-05-09 08:41 UTC | Exp 1593: Compare CDG-guided repair against flat v | FAIL | No file changes produced |
 | 2026-05-09 08:45 UTC | Exp 1593: Compare CDG-guided repair against flat v | OK | cache hit: 81 passed, 1 warning in 4.24s |
+| 2026-05-09 08:48 UTC | Exp 1600: Paper v6 OT terminology rewrite | FAIL | Gemini CLI error: Error: Reached max turns (20) |
