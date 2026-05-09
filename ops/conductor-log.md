@@ -1412,3 +1412,4 @@ web search: site:o |
 | 2026-05-09 20:18 UTC | Exp 1646: Energy-Based Constraint Networks (EBCNs) | OK | 81 passed, 1 warning in 5.69s |
 | 2026-05-09 20:23 UTC | Exp 1647: Exact-Rational KANs (RKANs) export for L | OK | 81 passed, 1 warning in 5.53s |
 | 2026-05-09 20:32 UTC | Exp 1648: Sparse KANs with spectral constraints fo | OK | 81 passed, 1 warning in 5.41s |
+| 2026-05-09 20:37 UTC | Exp 1649: KV260 Vivado bitfile synthesis for q=3 P | OK | 81 passed, 1 warning in 4.52s |
