@@ -230,6 +230,7 @@ def resolve_cached_gguf(
 def cached_sota_pair(
     gpu_indices: tuple[int, int] = (0, 1),
     preferred_quant: str = "Q4_K_M",
+    model_indices: tuple[int, int] | None = None,
 ) -> list[dict] | None:
     """Return a two-model ``MODEL_SPECS`` list using cached SOTA GGUFs.
 
@@ -252,10 +253,18 @@ def cached_sota_pair(
             pipe = transformers.pipeline("text-generation", specs[0]["hf_id"])
     """
     cached_models: list[tuple[SotaModelSpec, str]] = []
-    for model in SOTA_GGUF_MODELS:
-        model_path = resolve_cached_gguf(model["hf_id"], preferred_quant)
-        if model_path is not None:
-            cached_models.append((model, model_path))
+    
+    if model_indices is not None:
+        for i in model_indices:
+            model = SOTA_GGUF_MODELS[i]
+            model_path = resolve_cached_gguf(model["hf_id"], preferred_quant)
+            if model_path is not None:
+                cached_models.append((model, model_path))
+    else:
+        for model in SOTA_GGUF_MODELS:
+            model_path = resolve_cached_gguf(model["hf_id"], preferred_quant)
+            if model_path is not None:
+                cached_models.append((model, model_path))
 
     if len(cached_models) < 2:
         return None
