@@ -1410,3 +1410,4 @@ web search: site:o |
 | 2026-05-09 20:02 UTC | Exp 1645: gated on Exp 1644 ledger_implemented==tr | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-09 20:04 UTC | Exp 1645: gated on Exp 1644 ledger_implemented==tr | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-09 20:18 UTC | Exp 1646: Energy-Based Constraint Networks (EBCNs) | OK | 81 passed, 1 warning in 5.69s |
+| 2026-05-09 20:23 UTC | Exp 1647: Exact-Rational KANs (RKANs) export for L | OK | 81 passed, 1 warning in 5.53s |
