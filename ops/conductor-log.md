@@ -1375,3 +1375,5 @@ web search: site:o |
 | 2026-05-09 14:42 UTC | Exp 1625: EBM vs LLM Task Allocation Router | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1625_task_ro |
 | 2026-05-09 14:53 UTC | Exp 1625: EBM vs LLM Task Allocation Router | OK | 81 passed, 1 warning in 5.46s |
 | 2026-05-09 15:01 UTC | Exp 1626: Milestone .124 Retro | OK | 81 passed, 1 warning in 5.16s |
+| 2026-05-09 15:21 UTC | Plan milestone 2026.05.125 | OK | 13 tasks proposed |
+| 2026-05-09 15:23 UTC | Milestone 2026.05.125 activated | OK | 13 tasks queued |
