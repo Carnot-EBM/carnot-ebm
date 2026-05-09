@@ -1299,3 +1299,4 @@ web search:
 web search: site:o |
 | 2026-05-09 05:39 UTC | Plan milestone 2026.05.122 | OK | 13 tasks proposed |
 | 2026-05-09 05:41 UTC | Milestone 2026.05.122 activated | OK | 13 tasks queued |
+| 2026-05-09 05:56 UTC | Exp 1588: Build bounded instruction-to-constraint  | OK | 81 passed, 1 warning in 5.29s |
