@@ -1,5 +1,9 @@
 # Carnot — Changelog
 
+## 2026-05-09 (Milestone 2026.05.123 Operational Retrospective)
+
+- 2026-05-09 13:00 UTC: Milestone 2026.05.123 operational retrospective complete. Analyzed 364 min wall time / 70 experiments (avg 5 min). Slowest paths: Exp 1603 (88 min), Exp 1591 (48 min), Exp 1606 (15 min), Exp 1609 (14 min), and Full-Scale Pipeline v3 gate (14 min). Both RTX 3090s were completely idle at 4 MB / 0% utilization throughout, meaning DualGPURunner was not utilized. Estimated 40% savings recoverable via DualGPURunner parallelization and addressing Exp 1603 bottleneck.
+
 ## 2026-05-09 (Milestone 2026.05.122 Operational Retrospective)
 
 - 2026-05-09 09:08 UTC: Milestone 2026.05.122 operational retrospective complete. Analyzed 173 min wall time / 40 experiments (avg 4 min). Slowest paths: Exp 1591 (48 min), Full-Scale Pipeline v3 gate on Exp 1414 (14 min), Exp 1588 (13 min), and the legacy Exp 1269 arXiv Bundle v10 gate (10 min). Both RTX 3090s were completely idle at 4 MB / 0% utilization throughout, meaning DualGPURunner was not utilized. Estimated 45% savings recoverable via DualGPURunner parallelization and gate caching.
