@@ -1378,3 +1378,4 @@ web search: site:o |
 | 2026-05-09 15:21 UTC | Plan milestone 2026.05.125 | OK | 13 tasks proposed |
 | 2026-05-09 15:23 UTC | Milestone 2026.05.125 activated | OK | 13 tasks queued |
 | 2026-05-09 15:32 UTC | Exp 1627: Nabla-Reasoner convergence debugging and | OK | 81 passed, 1 warning in 5.29s |
+| 2026-05-09 15:39 UTC | Exp 1628: gated on Exp 1627 optimizer_converges==t | OK | 81 passed, 1 warning in 4.63s |
