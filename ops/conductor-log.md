@@ -1308,3 +1308,4 @@ web search: site:o |
 | 2026-05-09 07:01 UTC | Exp 1592: Run DCCD repair on FoVer cases using SOT | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1591-dccd-adapter.adapter_ready (actual |
 | 2026-05-09 07:03 UTC | Exp 1592: Run DCCD repair on FoVer cases using SOT | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1591-dccd-adapter.adapter_ready (actual |
 | 2026-05-09 07:05 UTC | Exp 1592: Run DCCD repair on FoVer cases using SOT | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1591-dccd-adapter.adapter_ready (actual |
+| 2026-05-09 07:12 UTC | Exp 1593: Compare CDG-guided repair against flat v | OK | 81 passed, 1 warning in 4.61s |
