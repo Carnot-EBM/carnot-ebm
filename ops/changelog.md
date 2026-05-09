@@ -5309,3 +5309,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-09: Exp 1625: EBM vs LLM Task Allocation Router (⚠️ Research Finding) — honest_verdict=router_tested_successfully; results/experiment_1625_task_router.json
 - 2026-05-09: Exp 1626: Milestone .124 Retro (✅ Complete) — honest_verdict=milestone_124_retrospective_filed_6_of_12_complete; results/experiment_1626_retro.json
 - 2026-05-09: Exp 1627: Nabla-Reasoner convergence debugging and learning rate sweep (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_1627_nabla_debug.json
+- 2026-05-09: Exp 1628: gated on Exp 1627 optimizer_converges==true — EBRM-style continuous latent trace scoring prototype (⚠️ Research Finding) — honest_verdict=ebrm_scoring_distinguishes_traces; results/experiment_1628_ebrm_scoring.json
