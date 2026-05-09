@@ -1,8 +1,8 @@
 {
   "schema": "carnot.operational_retro.v63",
   "milestone": "2026.05.121",
-  "generated_at": "2026-05-09T04:38:22Z",
-  "completed_at": "2026-05-09T04:39:22Z",
+  "generated_at": "2026-05-09T04:54:52Z",
+  "completed_at": "2026-05-09T04:56:05Z",
   "retro_type": "operational_final",
   "status": "success",
   "summary": "Milestone 2026.05.121 completed the supplied operational slice in 40 minutes across 11 completed experiments, averaging 4 minutes per experiment. The slowest-five timing was concentrated in recurring orchestration work: Full-Scale Pipeline v3 entries gated on the Exp 1414 repair-executor path consumed 25 minutes (62.5%), the recurring Exp 1269 arXiv Bundle v10 gate consumed 10 minutes (25%), and a SOTA GGUF cache/provenance doomed-rerun preflight consumed 2 minutes (5%). Both RTX 3090s were idle in the supplied closeout state and local verification snapshot, with 4 MB allocated per GPU, 0% utilization, no compute processes, and no gpu_monitor.py-class zombie warnings. Estimated next-milestone savings are 55% if duplicate same-verdict gates terminalize, known readiness checks move to activation time, independent lanes fan out, and docs reconciliation becomes idempotent.",
@@ -120,8 +120,8 @@
     "what_tooling_infrastructure_changes_would_speed_up_the_next_milestone": "Nonzero-success gates, same-verdict retirement, activation-time readiness artifacts, DualGPURunner lane assignment, per-experiment GPU telemetry, cluster-scoped preflight, structured conductor timing categories, and idempotent changelog/roadmap appenders."
   },
   "gpu_state": {
-    "operator_snapshot_timestamp": "2026-05-09T04:38:01.939405+00:00",
-    "verified_snapshot_timestamp": "2026-05-09T04:39:07.844156+00:00",
+    "operator_snapshot_timestamp": "2026-05-09T04:54:33.780622+00:00",
+    "verified_snapshot_timestamp": "2026-05-09T04:55:38.989104+00:00",
     "dualgpu_used_at_closeout": false,
     "process_count": 0,
     "zombie_process_count": 0,
@@ -145,7 +145,7 @@
         "used_mb": 4,
         "total_mb": 24576,
         "utilization_pct": 0,
-        "temperature_c": 52
+        "temperature_c": 55
       }
     ],
     "verified_gpus": [
@@ -155,7 +155,7 @@
         "used_mb": 4,
         "total_mb": 24576,
         "utilization_pct": 0,
-        "temperature_c": 52
+        "temperature_c": 51
       },
       {
         "index": 1,
@@ -163,7 +163,7 @@
         "used_mb": 4,
         "total_mb": 24576,
         "utilization_pct": 0,
-        "temperature_c": 52
+        "temperature_c": 55
       }
     ],
     "monitor_suggestions": [
@@ -189,14 +189,18 @@
     "CODEX.md",
     "ops/metrics.md",
     "ops/changelog.md",
+    "ops/status.md",
     "scripts/gpu_monitor.py",
     "ops/e2e-test-plan.md",
     "docs/roadmap.md",
+    "results/operational_retro_2026_04_115.json",
     "results/operational_retro_2026_05_120.json",
-    "results/experiment_1587_milestone_121_retro.json"
+    "results/experiment_1587_milestone_121_retro.json",
+    "results/experiment_1574_120_completion_archive_121_activation.json through results/experiment_1586_strix_point_secondary_tier_rescope_kv260_retirement.json status summary"
   ],
   "docs_updates": {
     "ops_changelog_appended": true,
+    "ops_status_updated": true,
     "docs_roadmap_completed_milestones_row_appended": true,
     "current_milestone_block_touched": false
   },
