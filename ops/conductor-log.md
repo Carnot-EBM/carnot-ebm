@@ -1391,3 +1391,4 @@ web search: site:o |
 | 2026-05-09 17:05 UTC | Exp 1634: Compare Pi-net projection against T-SKM  | OK | 81 passed, 1 warning in 4.98s |
 | 2026-05-09 17:07 UTC | Exp 1632: gated on Exp 1631 certified_update_succe | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1631-smgi-certified-updates) |
 | 2026-05-09 17:17 UTC | Exp 1635: ConsFormer-style refiner prototype for F | OK | 81 passed, 1 warning in 5.74s |
+| 2026-05-09 17:19 UTC | Exp 1636: Energy-Guided Decoding implementation us | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
