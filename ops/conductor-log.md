@@ -1332,3 +1332,4 @@ web search: site:o |
 +
 + |
 | 2026-05-09 11:13 UTC | Exp 1603: Energy-Based Constraint Network (EBCN) c | OK | cache hit: 106 passed, 1 warning in 6.77s |
+| 2026-05-09 11:24 UTC | Exp 1604: Sparse KAN clustering with spectral cons | OK | 81 passed, 1 warning in 4.98s |
