@@ -1270,3 +1270,4 @@ web search: GitHub trending energy based mod |
 | 2026-05-08 23:41 UTC | ICLR-26 OT Verification Framework Adoption for Pap | OK | 81 passed, 1 warning in 5.17s |
 | 2026-05-09 00:32 UTC | DCCD + JSONSchemaBench Structured-Output Smoke on  | OK | 81 passed, 1 warning in 4.85s |
 | 2026-05-09 00:48 UTC | FR-11 v15 lambda-GRPO Patch + v14 Retention Revers | OK | 81 passed, 1 warning in 5.99s |
+| 2026-05-09 01:04 UTC | Phase-1 Software Ship Readiness Ledger | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1582_phase1_ |
