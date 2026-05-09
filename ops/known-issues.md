@@ -245,6 +245,62 @@ on absent field rather than on a real condition.
 retired by gate-block alone (not by real failure). `.123: 4/13 = 31%.
 `.124: 5/13 = 38%. Target: `<10% by .126.
 
+---
+
+**EXTENSION 2026-05-09 (20:30Z): Harness-Fit Pre-Emit Linter**
+
+Per `reference_model_harness_fit.md` (Bustamante May 2026): models are
+post-trained against specific harnesses; mismatched harnesses degrade
+performance measurably. Carnot's gate-field cascades are partly
+harness-fit debt — task prompts in research-roadmap.yaml are
+agent-agnostic but trained on codex-style conventions.
+
+**The linter** (run during planner emit, NOT just at activation):
+
+For each emitted task `T` with `agent_type: A`, verify:
+
+1. **Memory file references match agent's training distribution**
+   - `agent_type: claude` → prompt references CLAUDE.md, MEMORY.md
+   - `agent_type: codex` → prompt references CODEX.md, AGENTS.md
+   - `agent_type: gemini` → prompt references GEMINI.md if exists,
+     otherwise AGENTS.md (gemini's most-trained convention)
+   - `agent_type: opus` (Claude variant) → CLAUDE.md, MEMORY.md
+   - **REJECT** prompts that hardcode "Read CODEX.md and CLAUDE.md"
+     for a gemini-routed task (same for any cross-agent reference)
+
+2. **Tool format matches agent expectation**
+   - codex: patch-based edits ("apply this diff to file X at line Y")
+   - claude: file-based string-replace ("change 'old' to 'new' in X")
+   - gemini: yolo-mode tool calls (less specific format expectations)
+   - **WARN** if prompt specifies a tool format mismatched to agent
+
+3. **max_turns sized to agent's typical loop length**
+   - codex: 20-50 turns typical for multi-file Edit + Read + Bash
+   - claude: 20-80 turns typical (Sonnet) or 50-100 (Opus)
+   - gemini: 20-50 turns typical (yolo mode amplifies per-turn work)
+   - **WARN** if max_turns < 50 for a task touching ≥3 files,
+     regardless of agent
+
+4. **Gate field naming consistent with agent's emit conventions**
+   - `_ready`, `_complete`, `_success` are codex-trained idioms
+   - `_passed`, `_validated` are more agent-neutral
+   - **REQUIRE** the gate field to be defined in REQUIRED ARTIFACT
+     FIELDS with explicit "always write this; set to false if condition
+     fails" instruction (per the gate-field discipline above)
+
+**Implementation:** add `scripts/harness_fit_lint.py` that takes a
+research-roadmap-next.yaml and emits warnings/errors. Wire into the
+planner's pre-commit step OR into the activation guard.
+
+**Why this isn't a separate priority:** harness-fit and gate-field
+discipline are the same defect surface (planner specifies fields/
+formats the agent doesn't honor). One linter checks both. Filing
+together prevents conflicting fixes from drifting apart.
+
+**Acceptance gate.** Gate-cascade-retire-rate drops to <10% within
+2 milestones of linter deployment AND no false-positives on
+correctly-formatted tasks.
+
 
 
 ### NEW 2026-05-09 (12:50Z): NLA-Class Probing as 16th Verifier (.124+ MANDATORY)
