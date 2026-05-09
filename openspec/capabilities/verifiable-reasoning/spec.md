@@ -18378,3 +18378,55 @@ readiness, simulator-only claim boundary, and honest verdict fields
 block proposal against the scalar-beta target.
 
 **Spec traces:** REQ-SAMPLE-063, SCENARIO-SAMPLE-091, Exp 1583
+
+## REQ-SAMPLE-064: Tenstorrent Wormhole n150d Block-Gibbs Preflight
+
+**Summary:** Carnot SHALL provide an honest Tenstorrent Wormhole n150d
+preflight/prototype plan for THRML-compatible block-Gibbs sampling before any
+Wormhole execution, throughput, energy-efficiency, or hardware-readiness claim.
+
+**Requirements:**
+
+- REQ-SAMPLE-064-1: The workflow SHALL write
+  `results/experiment_1584_tenstorrent_wormhole_n150d_block_gibbs_preflight.json`
+  with `status="in_progress"` before probing local or remote Tenstorrent
+  availability.
+- REQ-SAMPLE-064-2: The preflight SHALL check only non-privileged local and
+  remote availability signals: TT-Metalium imports/commands/source checkouts,
+  Wormhole PCI identifiers, `/dev/tenstorrent*` device nodes, TT environment
+  variables, and public TT-Metal remote reachability. It SHALL NOT install
+  privileged software or mutate the toolchain.
+- REQ-SAMPLE-064-3: If Wormhole access and TT-Metalium are both available, the
+  preflight SHALL run only a minimal non-destructive smoke command and SHALL
+  record the transcript path before setting `wormhole_preflight_ready=true`.
+- REQ-SAMPLE-064-4: If Wormhole access or TT-Metalium is unavailable, the
+  artifact SHALL be a terminal blocked artifact with exact acquisition/cloud
+  next steps and an expected benchmark protocol for KL to THRML, samples/sec,
+  samples/W, and open-toolchain reproducibility.
+- REQ-SAMPLE-064-5: The report
+  `docs/research-notes/tenstorrent-wormhole-block-gibbs-preflight.md` SHALL
+  include acceptance gates for KL to THRML, samples/sec, samples/W, and
+  open-toolchain reproducibility.
+- REQ-SAMPLE-064-6: `no_hardware_claim_without_transcript` SHALL be true in
+  every artifact, and the workflow SHALL NOT claim Wormhole execution unless a
+  hardware transcript path records a successful TT-Metalium/Wormhole smoke.
+
+**Implementation Status:** Implemented (Exp 1584)
+
+### SCENARIO-SAMPLE-092: Wormhole Preflight Blocks Honestly Without Transcript
+
+**Given** the repository may run on a host without Tenstorrent Wormhole hardware
+or TT-Metalium
+**When** the Exp 1584 preflight runs
+**Then** it writes an in-progress artifact first
+**And** it writes a terminal artifact with status, Wormhole access,
+TT-Metalium availability, transcript path, benchmark protocol path,
+preflight-readiness gate, blocked reason, no-hardware-claim guard, and honest
+verdict fields
+**And** `wormhole_preflight_ready` is true only when both hardware access and
+TT-Metalium are present and a transcript path proves a successful
+non-destructive smoke.
+
+**Implementation Status:** Implemented (Exp 1584)
+
+**Spec traces:** REQ-SAMPLE-064, SCENARIO-SAMPLE-092, Exp 1584
