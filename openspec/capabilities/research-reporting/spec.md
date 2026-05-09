@@ -3236,6 +3236,64 @@ terminal.
 unchanged by the workflow.
 
 
+### REQ-REPORT-068: Milestone .126 Archive and .127 Initialization Artifact
+
+The Exp 1652 workflow shall archive milestone `2026.05.126` and confirm
+milestone `2026.05.127` is the active roadmap state by writing
+`results/experiment_1652_archive.json` from `scripts/experiment_1652_archive.py`.
+
+The workflow shall first write the JSON artifact with `status="in_progress"`.
+The terminal artifact shall include these top-level fields:
+
+- `status`
+- `milestone`
+- `predecessor_milestone`
+- `predecessor_archived`
+- `predecessor_task_count`
+- `predecessor_tasks_terminal`
+- `active_roadmap_milestone`
+- `active_roadmap_task_count`
+- `first_active_task_id`
+- `status_moved_to_changelog`
+- `setup_127_state`
+- `nsvif_dsl_landed`
+- `kv260_potts_synthesis_landed`
+- `cerce_ledger_landed`
+- `missing_task_deliverables`
+- `research_roadmap_yaml_modified`
+- `scripts_research_conductor_modified`
+- `honest_verdict`
+
+The workflow shall treat `research-complete.yaml` as the milestone archive
+source of truth, record every `.126` task id/title/deliverable/result, confirm
+the active roadmap is `2026.05.127`, confirm Exp 1652 is the first active task,
+and confirm `ops/changelog.md` contains the milestone `.126` status transfer.
+It shall record that NSVIF DSL, KV260 Potts synthesis, and CerCE ledger landed
+when those tracks are present in the `.126` archive, the `.127` roadmap, and
+their available result artifacts. It shall also preserve lower-level evidence
+such as Vivado availability or missing bring-up deliverables without fabricating
+hardware execution success. It shall not modify `research-roadmap.yaml` or
+`scripts/research_conductor.py`.
+
+### SCENARIO-REPORT-068: Exp 1652 Archives .126 and Initializes .127 State
+
+**Given** `research-complete.yaml` contains milestone `2026.05.126` with
+Exp 1640 through Exp 1651 tasks
+**And** the active `research-roadmap.yaml` declares milestone `2026.05.127`
+with Exp 1652 as its first task
+**And** `ops/changelog.md` contains the milestone `.126` status entry
+**When** the Exp 1652 archive workflow runs
+**Then** it writes the required REQ-REPORT-068 fields
+**And** `predecessor_archived`, `predecessor_tasks_terminal`,
+`status_moved_to_changelog`, `setup_127_state`, `nsvif_dsl_landed`,
+`kv260_potts_synthesis_landed`, and `cerce_ledger_landed` are true
+**And** any missing task deliverable is listed in `missing_task_deliverables`
+without blocking the archive when `research-complete.yaml` reports the task
+terminal.
+**And** `research-roadmap.yaml` and `scripts/research_conductor.py` remain
+unchanged by the workflow.
+
+
 ### REQ-PUBLISH-003: HuggingFace README Accuracy Audit
 
 All HuggingFace model READMEs for Phase 1 per-token activation EBMs shall
@@ -3374,6 +3432,7 @@ embed live-GPU benchmark results from Exp 328 when available.
 | REQ-REPORT-064 | `scripts/experiment_1575_carry_forward_prior_failures_autofill_audit.py`, `results/experiment_1575_carry_forward_prior_failures_autofill_audit.json` | `tests/python/test_experiment_1575_carry_forward_prior_failures_audit.py` | Implemented |
 | REQ-REPORT-066 | `python/carnot/reporting/milestone_123_archive.py`, `results/experiment_1601_archive.json` | `tests/python/test_milestone_123_archive.py` | Implemented |
 | REQ-REPORT-067 | `python/carnot/reporting/milestone_124_archive.py`, `results/experiment_1614_archive.json` | `tests/python/test_milestone_124_archive.py` | Implemented |
+| REQ-REPORT-068 | `scripts/experiment_1652_archive.py`, `results/experiment_1652_archive.json` | `tests/python/test_experiment_1652_archive.py` | Planned |
 | REQ-REPORT-024 | `python/carnot/reporting/agent_usage.py`, `scripts/agent_plan_usage.py` | `tests/python/test_agent_plan_usage.py` | Implemented |
 | REQ-PUBLISH-003 | `scripts/experiment_317_hf_publish.py` | `tests/python/test_experiment_317_hf_publish.py` | Implemented |
 | REQ-PUBLISH-004 | `scripts/experiment_330_hf_live_publish.py` | `tests/python/test_experiment_330_hf_live_publish.py` | Implemented |
@@ -3385,4 +3444,3 @@ The pipeline SHALL evaluate all tasks from the .124 milestone and generate a sin
 ### SCENARIO-REPORT-124
 
 Given the .124 artifact sources in `results/` (experiments 1614 to 1625), when Exp 1626 runs, then it writes all required REQ-REPORT-124 fields, reports the honest\_verdict, and scores the milestone pass/fail ratio accurately based on terminal artifact presence and `status` flag.
-
