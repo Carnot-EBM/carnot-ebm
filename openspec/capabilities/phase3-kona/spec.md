@@ -1395,6 +1395,18 @@ declared constraints, not merely a lower-energy latent.
 - `results/experiment_1633_pinet.json` records all required fields with an
   honest verdict derived from measured residuals and convergence.
 
+### REQ-KONA-038: Pi-Net vs T-SKM Comparison on CCTU Constraints
+
+Carnot MUST provide an Exp 1634 comparison script evaluating the Pi-Net-style continuous projection layer against the prior T-SKM approach on CCTU constraints.
+
+The Exp 1634 workflow MUST write `results/experiment_1634_pinet_vs_tskm.json` with `status`, `schema`, `experiment_id`, `spec_refs`, `pinet_faster_than_tskm`, `latency_diff`, and `honest_verdict`.
+
+**Acceptance criteria:**
+
+- `scripts/experiment_1634_comparison.py` exists and measures performance of Pi-Net versus T-SKM.
+- Focused tests verify the comparison.
+- `results/experiment_1634_pinet_vs_tskm.json` records the required fields.
+
 ## Scenarios
 
 ### SCENARIO-KONA-001: Stage 1 Primitive — RDT Fixed-Point Convergence
