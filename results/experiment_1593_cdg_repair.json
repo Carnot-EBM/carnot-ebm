@@ -1,122 +1,17 @@
 {
-  "blockers": [],
+  "blockers": [
+    "missing_runtime_contract_e2e_manifest:/home/ianblenke/github.com/ianblenke/carnot/missing.jsonl"
+  ],
   "cdg_acceptance_rate": 0.0,
-  "cdg_edges": [
-    {
-      "observed_cofailure_count": 2,
-      "reason": "lifecycle_order",
-      "source": "parse",
-      "target": "certificate",
-      "weight": 3
-    },
-    {
-      "observed_cofailure_count": 0,
-      "reason": "lifecycle_order",
-      "source": "certificate",
-      "target": "safe_dsl_verifier",
-      "weight": 1
-    },
-    {
-      "observed_cofailure_count": 0,
-      "reason": "lifecycle_order",
-      "source": "certificate",
-      "target": "monitor_event",
-      "weight": 1
-    },
-    {
-      "observed_cofailure_count": 0,
-      "reason": "lifecycle_order",
-      "source": "safe_dsl_verifier",
-      "target": "monitor_event",
-      "weight": 1
-    },
-    {
-      "observed_cofailure_count": 0,
-      "reason": "lifecycle_order",
-      "source": "safe_dsl_verifier",
-      "target": "structural_dependency",
-      "weight": 1
-    },
-    {
-      "observed_cofailure_count": 0,
-      "reason": "lifecycle_order",
-      "source": "structural_dependency",
-      "target": "solver_oracle",
-      "weight": 1
-    },
-    {
-      "observed_cofailure_count": 3,
-      "reason": "lifecycle_order",
-      "source": "certificate",
-      "target": "final_accept",
-      "weight": 4
-    },
-    {
-      "observed_cofailure_count": 48,
-      "reason": "lifecycle_order",
-      "source": "monitor_event",
-      "target": "final_accept",
-      "weight": 49
-    },
-    {
-      "observed_cofailure_count": 60,
-      "reason": "lifecycle_order",
-      "source": "structural_dependency",
-      "target": "final_accept",
-      "weight": 61
-    },
-    {
-      "observed_cofailure_count": 0,
-      "reason": "lifecycle_order",
-      "source": "solver_oracle",
-      "target": "final_accept",
-      "weight": 1
-    }
-  ],
-  "cdg_nodes": [
-    {
-      "id": "parse",
-      "label": "parse",
-      "lifecycle_index": 0
-    },
-    {
-      "id": "certificate",
-      "label": "certificate",
-      "lifecycle_index": 1
-    },
-    {
-      "id": "safe_dsl_verifier",
-      "label": "safe dsl verifier",
-      "lifecycle_index": 2
-    },
-    {
-      "id": "monitor_event",
-      "label": "monitor event",
-      "lifecycle_index": 3
-    },
-    {
-      "id": "structural_dependency",
-      "label": "structural dependency",
-      "lifecycle_index": 4
-    },
-    {
-      "id": "solver_oracle",
-      "label": "solver oracle",
-      "lifecycle_index": 5
-    },
-    {
-      "id": "final_accept",
-      "label": "final accept",
-      "lifecycle_index": 6
-    }
-  ],
+  "cdg_edges": [],
+  "cdg_nodes": [],
   "flat_acceptance_rate": 0.0,
-  "honest_verdict": "complete: cdg repair analysis done",
+  "honest_verdict": "complete: blocked missing manifest",
   "model_specs": [
     {
       "file_name": "gemma-4-26B-A4B-it-Q4_K_M.gguf",
       "hf_repo_id": "unsloth/gemma-4-26B-A4B-it-GGUF"
     }
   ],
-  "status": "complete"
+  "status": "blocked"
 }
