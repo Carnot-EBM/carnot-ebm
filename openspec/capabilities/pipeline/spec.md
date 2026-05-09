@@ -3011,3 +3011,23 @@ verifier enabled,
 positive energy gap.
 
 **Spec traces:** REQ-VERIFY-1414, REQ-VERIFY-1415
+
+### REQ-PIPELINE-1615: ETS Decoder (Energy-Guided Decoding with Monte Carlo Estimation)
+
+The pipeline MUST provide an ETSDecoder that implements Energy-Guided Decoding using
+online Monte Carlo estimation of transition probabilities to dynamically scale compute at test-time.
+It MUST weight the base LLM policy probabilities with an EBM score using Monte Carlo samples.
+
+**Acceptance criteria:**
+- `python/carnot/pipeline/ets_decoder.py` exposes `ETSDecoder`.
+- Implements Monte Carlo transition probability formulation.
+- `decode()` method uses candidate generation, Monte Carlo evaluation of the energy, and
+  returns the selected sequence or next token.
+- Returns a JSON artifact to `results/experiment_1615_ets_decoding.json` containing metrics
+  about the decode step (e.g., number of MC samples used, energy values).
+
+### SCENARIO-PIPELINE-1615: ETS Decoder Reduces Energy
+**Given** a set of candidate tokens with base LLM probabilities
+**When** `ETSDecoder.decode()` is run with a mock energy function and Monte Carlo sampling
+**Then** the selected token maximizes the combined probability `p_llm * exp(-beta * E_mc)`.
+
