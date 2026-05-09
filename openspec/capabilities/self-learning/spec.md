@@ -4597,6 +4597,66 @@ Exp 1595 SHALL execute a pre/post bounds check on the CerCE ledger using local m
 
 ---
 
+## REQ-LEARN-1608: FR-11 Continuous Self-Learning CerCE Scale Run
+
+Exp 1608 SHALL run the FR-11 continuous self-learning loop over exactly 1000
+deterministic examples while enforcing CerCE no-forgetting bounds.  The run
+SHALL use the CerCE certificate ledger to replay prior certificates and to
+record every new example-level update before claiming utility.  A terminal
+artifact SHALL be written to `results/experiment_1608_fr11_cerce.json`, and
+the artifact SHALL include `continuous_self_learning_task`.
+
+### REQ-LEARN-1608 Sub-requirements
+
+- REQ-LEARN-1608-1: The workflow SHALL write
+  `results/experiment_1608_fr11_cerce.json` first with `status="in_progress"`
+  before loading prior CerCE certificates or running the training loop.
+- REQ-LEARN-1608-2: The training loop SHALL process exactly 1000 examples and
+  SHALL record one CerCE ledger row per example-level update.
+- REQ-LEARN-1608-3: The workflow SHALL replay prior CerCE certificate rows from
+  `results/experiment_1594_cerce_ledger.json` into the ledger before evaluating
+  the new policy updates.
+- REQ-LEARN-1608-4: `utility_delta` SHALL be strictly positive only when the
+  promoted self-learning policy has a higher success rate than the baseline on
+  the 1000-example loop.
+- REQ-LEARN-1608-5: The terminal artifact SHALL report a safe complete result
+  only when the prior and new certificate rows have zero accepted violations,
+  zero soundness mistakes, non-positive false-accept delta, and
+  `nonforgetting_certificate_rate == 1.0`.
+- REQ-LEARN-1608-6: The terminal artifact SHALL include `status`, `schema`,
+  `continuous_self_learning_task`, `examples_processed`, `utility_delta`,
+  `cerce_ledger_ready`, `bounds_check_passed`, `past_certificates_checked`,
+  `accepted_violation_count`, `false_accept_delta`,
+  `nonforgetting_certificate_rate`, `no_model_weight_mutation`, and
+  `honest_verdict`.
+
+### SCENARIO-LEARN-1608: 1000-Example Scale Run Preserves No-Forgetting
+
+**Given** a prior CerCE ledger whose policy certificates are promotion-safe
+**When** Exp 1608 runs the FR-11 self-learning loop over 1000 examples
+**Then** the terminal artifact reports `examples_processed=1000`
+**And** `utility_delta > 0`
+**And** `cerce_ledger_ready=true`
+**And** `nonforgetting_certificate_rate=1.0`
+**And** `continuous_self_learning_task=true`.
+
+### SCENARIO-LEARN-1609: Worsened Certificate Blocks The Scale Run
+
+**Given** a prior or new certificate row accepts a violation, introduces a
+soundness mistake, or increases false accepts
+**When** Exp 1608 evaluates the CerCE ledger
+**Then** the terminal artifact is blocked
+**And** `cerce_ledger_ready=false`
+**And** the unsafe policy id is listed in `blocked_policy_updates`.
+
+## Implementation Status (REQ-LEARN-1608)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-1608 | Implemented (`python/carnot/training/fr11_cerce_scale.py`) | Implemented (`tests/python/test_experiment_1608_fr11_cerce.py`) |
+
+---
+
 ## REQ-LEARN-1539: FR-11 External-Feedback Skill Graph Promotion
 
 Exp 1539 SHALL convert rollback-passing FR-11 query-time policy updates into an
