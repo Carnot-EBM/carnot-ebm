@@ -61,3 +61,14 @@ Sub-requirements:
   `tests_passing`, and `honest_verdict`.
 - REQ-POTTS-005-2: `honest_verdict` SHALL be one of
   `potts_sim_and_rtl_complete`, `potts_sim_only_rtl_stub`, or `failed`.
+
+## REQ-POTTS-006: Experiment 1649 Vivado Synthesis
+
+Experiment 1649 MUST write `results/experiment_1649_vivado_synthesis.json`
+with the required synthesis status fields.
+
+Sub-requirements:
+- REQ-POTTS-006-1: The script SHALL attempt Vivado synthesis for the q=3 Potts machine (`hardware/kv260/potts_sampler_v1.v`).
+- REQ-POTTS-006-2: The artifact SHALL include `synthesis_success`, `vivado_available`, and `honest_verdict`.
+- REQ-POTTS-006-3: If Vivado is not available, `honest_verdict` SHALL report "vivado_not_installed" and `synthesis_success` SHALL be false.
+
