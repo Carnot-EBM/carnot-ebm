@@ -18,11 +18,11 @@ call. No fine-tuning. No access to model weights.
 Rust + Python/JAX, Apache 2.0, local editable install via `pip install -e ".[dev]"`.
 The public PyPI package remains a Phase-1 ship blocker as of Exp 1582.
 
-Current public research record: **1,941 experiment records tracked through Exp
-1626**. `research-complete.yaml` currently archives **1,777** task records
-across **138** artifact-backed completed milestone records through
-2026.05.124; checked-in result artifacts and `ops/changelog.md` extend through
-milestone 2026.05.124 on 2026-05-09.
+Current public research record: **1,954 experiment records tracked through Exp
+1639**. `research-complete.yaml` currently archives **1,790** task records
+across **139** artifact-backed completed milestone records through
+2026.05.125; checked-in result artifacts and `ops/changelog.md` extend through
+milestone 2026.05.125 on 2026-05-09.
 
 Milestone .106 delivered the critical fix to thinking-mode certificate
 generation: Exp 1366 (CRANE tag-first prefix injection) reached
@@ -469,14 +469,17 @@ experiment artifact under `results/`.
 | THRML independent-RNG audit | RNG and code paths were independent, but bounded KL failed with max KL **0.169802350136**; no TSU or hardware claim | Exp 1548 |
 | Milestone .120 sampler and self-learning audits | **10/14 criteria met**; THRML block-Gibbs falsified kinetic-security parity; candidate-warm-start held accuracy **1.0** where cold start was **0.465** at k=100; FR-11 audit flagged **1/2** retained v14 policies for reversal | Exps 1561/1566/1568/1572 |
 | Soft-Gibbs and AR-REINFORCE follow-ons | Soft-Gibbs Jensen bound held for all beta values with deployment beta **0.1**; step-wise AR baseline passed the variance gate at **10.45x** | Exps 1570/1571 |
-| Milestone .124 closeout (DualGPURunner Profiling) | Both RTX 3090s completely idle at 0% utilization. Estimated 40% time savings recoverable via DualGPURunner parallelization and addressing bottlenecks | Exp 1626 |
-| Probability Calibration Verifier | Opt-in verifier scores explicit probability claims against simple reference-class evidence; returns structured `VerdictRecord` | Exp 1414 |
-| KANELÉ Validation & Routing | KANELÉ RTL linting, latency accounting vs Ising baseline; adaptive energy reconfiguration and EBM vs LLM Task Allocation Router | Exps 1622-1625 |
 | Milestone .121 closeout | **14/14 criteria met** with **12/14** tasks completed; BRAIN starvation overstated, paper-v6 sampler/OT evidence updated, FR-11 v14 retention reversed, Wormhole/PolarFire carried forward | Exp 1627 |
 | DCCD + JSONSchemaBench SOTA smoke | Mandated Qwen3.6-35B-A3B GGUF rows reached strict schema validity **1.0**, semantic correctness **1.0**, and **0** false accepts across **4** schemas | Exp 1580 |
 | Phase-1 ship readiness ledger | Exp 1582 recorded **9** audit-time operational blockers spanning package docs/dependencies, HF export, IPFS CIDs, MCP docs/tool count, and missing integrator guide; the count stays at Exp 1582 provenance until a fresh ship-readiness audit reruns | Exp 1582 |
 | Hardware portfolio rescope | Z1 drift correction is simulator-only and within 1 sigma; Tenstorrent access and PolarFire board/toolchain remain blocked; Strix becomes secondary tier and KV260 Vivado lineage is retired while source-level KV260 work is preserved | Exps 1583-1586 |
-| Current Python test collection | **23,749** Python tests collected; collection-only snapshot, not a full-suite pass claim | 2026-05-09 collection run |
+| Milestone .124 closeout (DualGPURunner Profiling) | Both RTX 3090s completely idle at 0% utilization. Estimated 40% time savings recoverable via DualGPURunner parallelization and addressing bottlenecks | Exp 1626 |
+| Probability Calibration Verifier | Opt-in verifier scores explicit probability claims against simple reference-class evidence; returns structured `VerdictRecord` | Exp 1414 |
+| KANELÉ Validation & Routing | KANELÉ RTL linting, latency accounting vs Ising baseline; adaptive energy reconfiguration and EBM vs LLM Task Allocation Router | Exps 1622-1625 |
+| Milestone .125 closeout | Analyzed 125 experiments in 569 mins. Both RTX 3090s idle; 40% savings possible via DualGPURunner parallelization of Exp 1603/1633 | Exp 1639 |
+| Pi-net Projection & ConsFormer | Prototyped Pi-net style differentiable projection layer for continuous latents and a ConsFormer-style refiner | Exps 1633-1635 |
+| SMGI & Energy-Guided Decoding | Integrated SMGI certified update logic and implemented EGD using mandated SOTA GGUFs | Exps 1631/1636 |
+| Current Python test collection | **23,543** Python tests collected; collection-only snapshot, not a full-suite pass claim | 2026-05-09 collection run |
 | Local Claude/Codex usage snapshot | Codex reads the newest local `token_count` event; Claude aggregates local token usage and reads only subscription/tier metadata from credentials; free-form quota prose is ignored instead of guessed; focused regression tests pass | 2026-05-04 changelog |
 
 Deeper analysis of these — including everything that **didn't** work and
@@ -518,7 +521,7 @@ claim we publish.
 ## Where to go next
 
 - **[Technical report](docs/technical-report.md)** — the full research arc
-  through Exp 1626 across 137 archived completed milestone records plus the
+  through Exp 1639 across 139 archived completed milestone records plus the
   latest .121 result artifacts, with a
   plain-English timeline of what we tried, what failed, what stuck.
 - **[Roadmap](docs/roadmap.md)** — current milestone, upcoming milestones,
@@ -725,7 +728,7 @@ See the [technical report](docs/technical-report.md) for the full research recor
 
 ## 14 Principles Learned
 
-Hard-won lessons from the activation-based phase of a research program that now spans 1,888 tracked experiment records through Exp 1626, 137 archived completed milestone records, and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
+Hard-won lessons from the activation-based phase of a research program that now spans 1,954 tracked experiment records through Exp 1639, 139 archived completed milestone records, and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
 
 ### What works
 1. **The model's own logprobs are the best energy.** No external EBM needed for rejection sampling — the LLM's own confidence is already an energy function. Simple, practical, +10%.
