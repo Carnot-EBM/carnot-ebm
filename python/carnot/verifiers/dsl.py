@@ -23,10 +23,16 @@ JsonDict = dict[str, Any]
 
 RUN_DATE = "20260509"
 EXPERIMENT_ID = "experiment_1588_nsvif_dsl"
+HUMANEVAL_EXPERIMENT_ID = "experiment_1607_dsl_humaneval"
 DSL_SCHEMA_VERSION = "carnot.instruction_constraints.v1"
 DEFAULT_ARTIFACT_PATH = Path("results/experiment_1588_nsvif_dsl.json")
+DEFAULT_HUMANEVAL_ARTIFACT_PATH = Path("results/experiment_1607_dsl_humaneval.json")
 MAX_INSTRUCTION_CHARS = 2000
 MAX_CONSTRAINTS = 8
+MODEL_SPECS: tuple[str, ...] = (
+    "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "unsloth/gemma-4-31B-it-GGUF",
+)
 SUPPORTED_OPERATORS: frozenset[str] = frozenset(
     {
         "contains",
@@ -395,6 +401,163 @@ def write_experiment_artifact(
     return artifact
 
 
+def load_humaneval_prompt_cases(*, sample_size: int | None = None) -> list[JsonDict]:
+    """Load HumanEval prompt rows in the minimal shape needed by Exp 1607."""
+
+    from datasets import load_dataset
+
+    dataset = load_dataset("openai_humaneval", split="test")
+    limit = len(dataset) if sample_size is None else min(sample_size, len(dataset))
+    cases: list[JsonDict] = []
+    for dataset_idx in range(limit):
+        row = dataset[dataset_idx]
+        cases.append(
+            {
+                "dataset_idx": dataset_idx,
+                "task_id": row["task_id"],
+                "prompt": row["prompt"],
+                "entry_point": row["entry_point"],
+            }
+        )
+    return cases
+
+
+def extract_humaneval_prompt_constraints(case: Mapping[str, Any]) -> ConstraintPack:
+    """Extract bounded code-output constraints from one HumanEval prompt.
+
+    HumanEval prompts describe the function a model should produce.  Exp 1607
+    compiles only structural obligations that the local DSL can check without
+    executing generated code: the output should define the requested entry
+    point, return a value, and avoid common non-code placeholders.
+    """
+
+    prompt = str(case.get("prompt") or "")
+    entry_point = _humaneval_entry_point(case, prompt)
+    constraints = (
+        ("contains", "text", f"def {entry_point}", f"entry_point:{entry_point}"),
+        ("contains", "text", "return", "humaneval_return_value"),
+        ("not_contains", "text", "```", "markdown_fence_free_code"),
+        ("not_contains", "text", "TODO", "placeholder_free_code"),
+        ("not_contains", "text", "pass", "placeholder_free_code"),
+        ("not_contains", "text", "NotImplementedError", "placeholder_free_code"),
+    )
+    specs = tuple(
+        ConstraintSpec(
+            id=f"c{index:03d}-{op}",
+            op=op,
+            field=field,
+            value=value,
+            source_text=source,
+        )
+        for index, (op, field, value, source) in enumerate(constraints, start=1)
+    )
+    return ConstraintPack(
+        instruction=_humaneval_instruction(case, entry_point),
+        constraints=specs,
+        parser_version="humaneval-rule-v1",
+    )
+
+
+def evaluate_humaneval_dsl_extraction(
+    cases: Iterable[Mapping[str, Any]],
+    *,
+    model_specs: Iterable[str] = MODEL_SPECS,
+    sample_rows_limit: int = 10,
+) -> JsonDict:
+    """Run Exp 1607 DSL compilation over HumanEval prompt rows."""
+
+    case_rows: list[JsonDict] = []
+    for case in cases:
+        task_id = str(case.get("task_id") or "")
+        try:
+            pack = extract_humaneval_prompt_constraints(case)
+            validator = compile_constraint_pack(pack)
+        except ConstraintDslError as exc:
+            case_rows.append(
+                {
+                    "task_id": task_id,
+                    "entry_point": str(case.get("entry_point") or ""),
+                    "valid_extraction": False,
+                    "compiled_validator": False,
+                    "constraints_count": 0,
+                    "constraint_ops": [],
+                    "pysat_clause_count": 0,
+                    "error": str(exc),
+                }
+            )
+            continue
+        case_rows.append(
+            {
+                "task_id": task_id,
+                "entry_point": _humaneval_entry_point(case, str(case.get("prompt") or "")),
+                "valid_extraction": True,
+                "compiled_validator": True,
+                "constraints_count": len(pack.constraints),
+                "constraint_ops": [constraint.op for constraint in pack.constraints],
+                "pysat_clause_count": len(validator.pysat_problem.clauses),
+                "constraint_pack": pack.to_dict(),
+            }
+        )
+
+    prompts_attempted = len(case_rows)
+    valid_extractions = sum(1 for row in case_rows if row["valid_extraction"])
+    validators_compiled = sum(1 for row in case_rows if row["compiled_validator"])
+    constraints_extracted = sum(int(row["constraints_count"]) for row in case_rows)
+    valid_rate = _rate(valid_extractions, prompts_attempted)
+    compiled_rate = _rate(validators_compiled, prompts_attempted)
+    status = "complete" if valid_extractions == prompts_attempted == validators_compiled else "partial"
+    models = list(model_specs)
+    model_spec_results = [
+        {
+            "model_spec": model_spec,
+            "evaluation_mode": "deterministic_dsl_compilation_no_inference",
+            "prompts_attempted": prompts_attempted,
+            "valid_extraction_rate": valid_rate,
+            "compiled_validator_rate": compiled_rate,
+        }
+        for model_spec in models
+    ]
+    return {
+        "status": status,
+        "run_date": RUN_DATE,
+        "experiment_id": HUMANEVAL_EXPERIMENT_ID,
+        "spec_traces": ["REQ-CODE-034", "SCENARIO-CODE-032", "REQ-VERIFY-1588"],
+        "dataset_source": "openai_humaneval",
+        "model_specs": models,
+        "model_spec_results": model_spec_results,
+        "inference_mode": "not_applicable_dsl_only",
+        "dsl_schema_version": DSL_SCHEMA_VERSION,
+        "dsl_schema": DSL_SCHEMA,
+        "prompts_attempted": prompts_attempted,
+        "valid_extractions": valid_extractions,
+        "extraction_failures": prompts_attempted - valid_extractions,
+        "constraints_extracted": constraints_extracted,
+        "validators_compiled": validators_compiled,
+        "pysat_cnf_compiled": validators_compiled,
+        "valid_extraction_rate": valid_rate,
+        "compiled_validator_rate": compiled_rate,
+        "arbitrary_code_execution_path_introduced": compiler_uses_arbitrary_code_execution(),
+        "sample_rows": case_rows[:sample_rows_limit],
+        "case_rows": case_rows,
+        "honest_verdict": _humaneval_verdict(status, valid_rate, compiled_rate),
+    }
+
+
+def write_humaneval_dsl_artifact(
+    output_path: Path | str = DEFAULT_HUMANEVAL_ARTIFACT_PATH,
+    *,
+    cases: Iterable[Mapping[str, Any]] | None = None,
+    tests_run: list[str] | None = None,
+) -> JsonDict:
+    """Write the Exp 1607 HumanEval prompt DSL extraction artifact."""
+
+    prompt_cases = list(cases) if cases is not None else load_humaneval_prompt_cases()
+    artifact = evaluate_humaneval_dsl_extraction(prompt_cases)
+    artifact["tests_run"] = list(tests_run or [])
+    _write_json(Path(output_path), artifact)
+    return artifact
+
+
 def _clean_instruction(instruction: str) -> str:
     if not isinstance(instruction, str):
         raise ConstraintDslError("instruction must be string")
@@ -598,6 +761,36 @@ def _unsafe_reason(value: Any) -> str | None:
 
 def _rate(numerator: int, denominator: int) -> float:
     return round(numerator / denominator, 6) if denominator else 0.0
+
+
+def _humaneval_entry_point(case: Mapping[str, Any], prompt: str) -> str:
+    raw_entry_point = case.get("entry_point")
+    if isinstance(raw_entry_point, str) and re.match(r"^[A-Za-z_]\w*$", raw_entry_point):
+        return raw_entry_point
+    match = re.search(r"^\s*def\s+([A-Za-z_]\w*)\s*\(", prompt, flags=re.MULTILINE)
+    if match:
+        return match.group(1)
+    raise ConstraintDslError("missing HumanEval entry point")
+
+
+def _humaneval_instruction(case: Mapping[str, Any], entry_point: str) -> str:
+    task_id = str(case.get("task_id") or "unknown")
+    return (
+        f"{task_id}: generate Python code defining def {entry_point}; include a return "
+        "statement; do not output markdown fences or placeholder bodies."
+    )
+
+
+def _humaneval_verdict(status: str, valid_rate: float, compiled_rate: float) -> str:
+    if status == "complete":
+        return (
+            "complete: HumanEval prompt-derived NSVIF DSL constraints compiled "
+            "locally for mandated model specs without live inference"
+        )
+    return (
+        "partial: HumanEval NSVIF DSL extraction completed with unsupported "
+        f"prompts; valid_extraction_rate={valid_rate}, compiled_validator_rate={compiled_rate}"
+    )
 
 
 def _experiment_fixtures() -> list[JsonDict]:
