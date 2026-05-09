@@ -1,5 +1,9 @@
 # Carnot — Changelog
 
+## 2026-05-09 (Milestone 2026.05.125 Operational Retrospective)
+
+- 2026-05-09 18:00 UTC: Milestone 2026.05.125 operational retrospective complete. Analyzed 569 min wall time / 125 experiments (avg 4.5 min). Slowest paths: Exp 1603 (88 min), Exp 1633 (50 min), Exp 1591 (48 min), Exp 1606 (15 min), and Exp 1609 (14 min). Both RTX 3090s were completely idle at 4 MB / 0% utilization throughout, meaning DualGPURunner was not utilized and parallelization was missed. No zombie processes were detected. Estimated 40% savings recoverable via DualGPURunner parallelization and addressing the sequential execution bottlenecks of long-running experiments.
+
 ## 2026-05-09 (Milestone 2026.05.124 Operational Retrospective)
 
 - 2026-05-09 15:20 UTC: Milestone 2026.05.124 operational retrospective complete. Analyzed 449 min wall time / 99 experiments (avg 4.5 min). Slowest paths: Exp 1603 (88 min), Exp 1591 (48 min), Exp 1606 (15 min), Exp 1609 (14 min), and Full-Scale Pipeline v3 gate (14 min). Both RTX 3090s were completely idle at 4 MB / 0% utilization throughout, meaning DualGPURunner was not utilized and parallelization was missed. Estimated 40% savings recoverable via DualGPURunner parallelization and addressing Exp 1603/1591 bottlenecks.

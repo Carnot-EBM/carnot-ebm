@@ -1,6 +1,6 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report — 1888 Experiments Across the Public Record, 137 Archived Milestone Records, 23,714 Python Test Items Collected (Artifacts Tracked Through Exp 1626)
+## A Technical Report — 1941 Experiments Across the Public Record, 138 Archived Milestone Records, 23,749 Python Test Items Collected (Artifacts Tracked Through Exp 1626)
 
 **Author:** Ian Blenke
 **Date:** 2026-05-09
@@ -29,15 +29,15 @@ a handful of lines of Python. Headline model-generation benchmark numbers are fr
 Qwen3.6-35B-A3B), never from simulated runs; hardware, ensemble, and
 adversarial-audit results are labeled by artifact provenance.
 
-This report documents the research arc behind the framework — **1,888
-experiment records tracked through Exp 1626, with 1,764 task records in 136
-artifact-backed completed milestone records archived through .121 and
-checked-in result artifacts extending through .122** — run between February
-and May 2026. `research-complete.yaml` currently archives **137** completed
-milestone records through 2026.05.120; checked-in result artifacts now extend
-through `results/experiment_1587_milestone_121_retro.json`. Milestone .121 is
+This report documents the research arc behind the framework — **1,941
+experiment records tracked through Exp 1626, with 1,777 task records in 138
+artifact-backed completed milestone records archived through .124 and
+checked-in result artifacts extending through .124** — run between February
+and May 2026. `research-complete.yaml` currently archives **138** completed
+milestone records through 2026.05.124; checked-in result artifacts now extend
+through `results/experiment_1626_retro.json`. Milestone .124 is
 present in the result-artifact and changelog layer; the `research-complete.yaml`
-archive currently stops at .121.
+archive currently stops at .124.
 The story now spans activation-based negative results, constraint-based
 verification, live SOTA-model benchmarks, production verifier ensembles,
 hardware sampler audits, continuous self-learning, Phase-5 in-situ training
@@ -5056,9 +5056,15 @@ closeout: **14/14** criteria met, **12/14** tasks completed, Wormhole and
 PolarFire carried forward, and the Phase-1 ship ledger remaining as the key
 operational blocker.
 
-### Phase 46 — .122 DSL and Inference Efficiency Analysis (Exps 1588-1626)
+### Phase 46 — .122 to .124 Operational and Efficiency Analysis (Exps 1588-1626)
 
-**DualGPURunner Profiling (.123 closeout):** Analyzed 364 min wall time / 70 experiments (avg 5 min). Slowest paths included Exp 1603 (88 min) and Exp 1591 (48 min). Both RTX 3090s were completely idle at 4 MB / 0% utilization throughout, meaning DualGPURunner was not utilized. Estimated 40% savings recoverable via DualGPURunner parallelization.
+**DualGPURunner Profiling (.124 closeout):** Analyzed 449 min wall time / 99 experiments (avg 4.5 min). Slowest paths included Exp 1603 (88 min) and Exp 1591 (48 min). Both RTX 3090s were completely idle at 4 MB / 0% utilization throughout, meaning DualGPURunner was not utilized. Estimated 40% savings recoverable via DualGPURunner parallelization and addressing bottlenecks.
 
+Milestone .124 introduced key architectural expansions:
 
-Milestone .122 completes an operational retrospective over 40 experiments running in 173 minutes. The slowest paths were dominated by Exp 1591 (48 min), which completed the DCCD structured verdict, and repeated gate churn. Live telemetry confirmed that both RTX 3090 GPUs remained entirely idle at 0% utilization (4 MB allocated), highlighting a severe parallelization gap. The retrospective estimates a 45% potential time savings recoverable through DualGPURunner parallelization and aggressive gate caching.
+- **Exp 1414 Probability Calibration Verifier:** An opt-in verifier that scores explicit probability claims against simple reference-class evidence, returning a structured `VerdictRecord`. It integrates smoothly into `VerifyRepairPipeline`.
+- **Exp 1622 & 1623 KANELÉ Validation:** KANELÉ RTL linting and simulation, along with detailed latency and resource accounting versus the Ising baseline, establishing a path for FPGA-accelerated evaluation.
+- **Exp 1624 & 1625 Architectural Routing:** Explored adaptive energy landscape reconfiguration and a novel EBM vs LLM Task Allocation Router, pushing Phase 5 capabilities forward.
+
+Milestone .122 completes an operational retrospective over 40 experiments running in 173 minutes. The slowest paths were dominated by Exp 1591 (48 min), which completed the DCCD structured verdict, and repeated gate churn. The retrospective estimates a 45% potential time savings recoverable through aggressive gate caching.
+gate caching.
