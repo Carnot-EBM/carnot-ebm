@@ -802,3 +802,21 @@ When the Exp 1623 accounting helper runs,
 Then `results/experiment_1623_kanele_accounting.json` records deterministic
 per-node LUT, logic-depth, and maximum-clock estimates for KANELÉ and Ising v3
 while preserving the no-synthesis/no-board hardware-claim boundary.
+
+## REQ-KAN-1637: KANELÉ RTL Vivado Linting Preflight
+
+The KAN capability MUST perform a preflight check for Vivado installation and attempt linting on KANELÉ RTL (`hardware/kv260/kan_lut_block.v`).
+
+**Rationale:**
+    RTL linting was blocked due to missing Vivado paths. We need to explicitly check if Vivado is available in the environment before attempting to run `xvlog` or `vivado`, and output the results to a structured artifact.
+
+**Acceptance criteria:**
+    - `scripts/experiment_1637_lint.py` is written and executable.
+    - `results/experiment_1637_vivado_lint.json` contains `vivado_installed` and `lint_passed`.
+    - Unit tests exist for the preflight script logic and reference `REQ-KAN-1637`.
+
+### SCENARIO-KAN-1637: KANELÉ RTL Vivado Linting Preflight
+
+Given the `hardware/kv260/` directory,
+When `scripts/experiment_1637_lint.py` is executed,
+Then it checks for Vivado, attempts linting if possible, and outputs `vivado_installed` and `lint_passed` to the JSON artifact.
