@@ -3377,3 +3377,12 @@ embed live-GPU benchmark results from Exp 328 when available.
 | REQ-REPORT-024 | `python/carnot/reporting/agent_usage.py`, `scripts/agent_plan_usage.py` | `tests/python/test_agent_plan_usage.py` | Implemented |
 | REQ-PUBLISH-003 | `scripts/experiment_317_hf_publish.py` | `tests/python/test_experiment_317_hf_publish.py` | Implemented |
 | REQ-PUBLISH-004 | `scripts/experiment_330_hf_live_publish.py` | `tests/python/test_experiment_330_hf_live_publish.py` | Implemented |
+
+### REQ-REPORT-124: Milestone .124 Terminal Retrospective
+
+The pipeline SHALL evaluate all tasks from the .124 milestone and generate a single consolidated retrospective artifact containing outcome status, gate failures, and the overall criteria\_met count.
+
+### SCENARIO-REPORT-124
+
+Given the .124 artifact sources in `results/` (experiments 1614 to 1625), when Exp 1626 runs, then it writes all required REQ-REPORT-124 fields, reports the honest\_verdict, and scores the milestone pass/fail ratio accurately based on terminal artifact presence and `status` flag.
+
