@@ -7,7 +7,7 @@ parallel sign update with a standard Gibbs baseline on the same planted
 problems. The KV260 estimate is arithmetic only: it checks whether the dense
 int8 J matrix and one update unit fit the checked-in KV260 resource budget.
 
-Spec: REQ-ISING-022, SCENARIO-ISING-032
+Spec: REQ-ISING-022, REQ-ISING-029, SCENARIO-ISING-032, SCENARIO-ISING-039
 """
 
 from __future__ import annotations
@@ -73,6 +73,28 @@ class DiscreteSBConfig:
 
 
 @dataclass(frozen=True)
+class InertialDiscreteSBConfig(DiscreteSBConfig):
+    """Configuration for dSB with an explicit momentum-like inertia term.
+
+    The inertial update is
+    ``v(t+1) = inertia_coefficient * v(t) + eta * J @ x(t) - pressure(t)`` and
+    ``x(t+1) = sign(x(t) + v(t+1))``. Setting ``inertia_coefficient`` to
+    ``0.0`` removes momentum and exactly recovers the base dSB update.
+
+    Spec: REQ-ISING-029
+    """
+
+    inertia_coefficient: float = 0.6
+
+    def __post_init__(self) -> None:
+        """Validate the inertial dSB controls before simulation starts."""
+
+        super().__post_init__()
+        if not 0.0 <= self.inertia_coefficient < 1.0:
+            raise ValueError("inertia_coefficient must be in [0, 1)")
+
+
+@dataclass(frozen=True)
 class IsingConvergenceRun:
     """Convergence result for either Gibbs or dSB on one problem and seed."""
 
@@ -94,6 +116,33 @@ class IsingConvergenceRun:
             "best_state": list(self.best_state),
             "energy_trace": list(self.energy_trace),
         }
+
+
+@dataclass(frozen=True)
+class InertialIsingConvergenceRun(IsingConvergenceRun):
+    """Convergence result for the inertial dSB simulator.
+
+    ``momentum_norm_trace`` records the per-step norm of the internal inertial
+    velocity vector so the CPU-only ablation can verify that the extra term was
+    actually active when the coefficient is nonzero.
+
+    Spec: REQ-ISING-029
+    """
+
+    inertia_coefficient: float
+    momentum_norm_trace: tuple[float, ...]
+
+    def as_dict(self) -> dict[str, Any]:
+        """Return JSON-safe values for experiment artifacts."""
+
+        payload = super().as_dict()
+        payload.update(
+            {
+                "inertia_coefficient": self.inertia_coefficient,
+                "momentum_norm_trace": list(self.momentum_norm_trace),
+            }
+        )
+        return payload
 
 
 def make_pressure_schedule(
@@ -177,6 +226,73 @@ def run_discrete_sb(
         final_energy=float(energy_trace[-1]),
         best_state=tuple(int(value) for value in best_state),
         energy_trace=tuple(float(value) for value in energy_trace),
+    )
+
+
+def run_inertial_discrete_sb(
+    problem: DiscreteSBConstraintProblem,
+    *,
+    seed: int,
+    config: InertialDiscreteSBConfig | None = None,
+) -> InertialIsingConvergenceRun:
+    """Run dSB with a configurable inertial momentum term.
+
+    Each step first updates a continuous momentum vector, then applies the same
+    bipolar sign projection used by the base dSB simulator. With
+    ``inertia_coefficient=0.0``, the momentum is just the current dSB field
+    increment, so the state, energy trace, and convergence step match
+    :func:`run_discrete_sb` for the same seed and schedule.
+
+    Spec: REQ-ISING-029
+    """
+
+    cfg = config or InertialDiscreteSBConfig()
+    rng = np.random.default_rng(seed)
+    position = rng.normal(loc=0.0, scale=0.01, size=problem.n_variables)
+    spins = _sign_pm(position)
+    momentum = np.zeros(problem.n_variables, dtype=np.float64)
+    best_state = spins.copy()
+    best_energy = bipolar_ising_energy(spins, problem.coupling_matrix)
+    energy_trace: list[float] = []
+    momentum_norm_trace: list[float] = []
+    schedule = make_pressure_schedule(
+        cfg.max_steps,
+        pressure_start=cfg.pressure_start,
+        pressure_end=cfg.pressure_end,
+    )
+
+    for step, pressure in enumerate(schedule, start=1):
+        field = np.asarray(problem.coupling_matrix, dtype=np.float64) @ spins
+        momentum = cfg.inertia_coefficient * momentum + cfg.eta * field - pressure
+        position = _sign_pm(position + momentum)
+        spins = position
+        energy = bipolar_ising_energy(spins, problem.coupling_matrix)
+        energy_trace.append(energy)
+        momentum_norm_trace.append(float(np.linalg.norm(momentum)))
+        if energy < best_energy:
+            best_energy = energy
+            best_state = spins.copy()
+        if best_energy <= problem.convergence_energy:
+            return InertialIsingConvergenceRun(
+                steps_to_convergence=step,
+                converged=True,
+                best_energy=float(best_energy),
+                final_energy=float(energy),
+                best_state=tuple(int(value) for value in best_state),
+                energy_trace=tuple(float(value) for value in energy_trace),
+                inertia_coefficient=cfg.inertia_coefficient,
+                momentum_norm_trace=tuple(momentum_norm_trace),
+            )
+
+    return InertialIsingConvergenceRun(
+        steps_to_convergence=cfg.max_steps,
+        converged=False,
+        best_energy=float(best_energy),
+        final_energy=float(energy_trace[-1]),
+        best_state=tuple(int(value) for value in best_state),
+        energy_trace=tuple(float(value) for value in energy_trace),
+        inertia_coefficient=cfg.inertia_coefficient,
+        momentum_norm_trace=tuple(momentum_norm_trace),
     )
 
 
@@ -459,6 +575,146 @@ def run_fover_discrete_sb_probe(
                 "Exp 1387 was LUT-limited at 540K LUTs for 15 PT replicas; "
                 "this dSB estimate fits one 2K-LUT update unit and a 64 KB "
                 "N=256 int8 J matrix within the KV260 arithmetic budget."
+            ),
+        },
+    }
+
+
+def run_fover_inertial_ising_probe(
+    *,
+    repo_root: str | Path,
+    limit: int = 5,
+    n_variable_schedule: Sequence[int] | None = None,
+    max_steps: int = 128,
+    seeds: Sequence[int] = (0, 1, 2),
+    inertia_coefficient: float = 0.6,
+    run_date: str = "20260509",
+    fover_path: str | Path | None = None,
+) -> dict[str, Any]:
+    """Run Exp 1597 and return the JSON-ready inertial dSB ablation artifact.
+
+    Spec: REQ-ISING-029, SCENARIO-ISING-039
+    """
+
+    problems = load_fover_discrete_sb_problems(
+        repo_root=repo_root,
+        limit=limit,
+        n_variable_schedule=n_variable_schedule,
+        fover_path=fover_path,
+    )
+    config = InertialDiscreteSBConfig(
+        max_steps=max_steps,
+        inertia_coefficient=inertia_coefficient,
+    )
+    per_problem_results: list[dict[str, Any]] = []
+    baseline_steps_all: list[float] = []
+    inertial_steps_all: list[float] = []
+    baseline_best_energy_all: list[float] = []
+    inertial_best_energy_all: list[float] = []
+
+    for problem in problems:
+        baseline_runs = [
+            run_gibbs_ising_baseline(problem, seed=int(seed), max_steps=max_steps) for seed in seeds
+        ]
+        inertial_runs = [
+            run_inertial_discrete_sb(problem, seed=int(seed), config=config) for seed in seeds
+        ]
+        baseline_steps = [run.steps_to_convergence for run in baseline_runs]
+        inertial_steps = [run.steps_to_convergence for run in inertial_runs]
+        baseline_steps_all.extend(float(value) for value in baseline_steps)
+        inertial_steps_all.extend(float(value) for value in inertial_steps)
+        baseline_best_energy_all.extend(float(run.best_energy) for run in baseline_runs)
+        inertial_best_energy_all.extend(float(run.best_energy) for run in inertial_runs)
+
+        baseline_mean = _mean(baseline_steps)
+        inertial_mean = _mean(inertial_steps)
+        per_problem_results.append(
+            {
+                "problem": problem.name,
+                "question_id": problem.question_id,
+                "label": problem.label,
+                "n_variables": problem.n_variables,
+                "ground_energy": problem.ground_energy,
+                "convergence_energy": problem.convergence_energy,
+                "gibbs_baseline_mean_steps": baseline_mean,
+                "inertial_ising_mean_steps": inertial_mean,
+                "speedup": baseline_mean / inertial_mean if inertial_mean > 0.0 else None,
+                "gibbs_baseline_runs": [run.as_dict() for run in baseline_runs],
+                "inertial_ising_runs": [run.as_dict() for run in inertial_runs],
+            }
+        )
+
+    baseline_mean_all = _mean(baseline_steps_all)
+    inertial_mean_all = _mean(inertial_steps_all)
+    speedup = baseline_mean_all / inertial_mean_all if inertial_mean_all > 0.0 else None
+    if speedup is not None and speedup > 1.0:
+        verdict = "complete: inertial_ising_speedup_observed_cpu_simulator_only"
+    else:
+        verdict = "complete: inertial_ising_no_speedup_observed_cpu_simulator_only"
+
+    return {
+        "status": "complete",
+        "run_date": run_date,
+        "experiment_id": 1597,
+        "spec_refs": ["REQ-ISING-029", "SCENARIO-ISING-039"],
+        "algorithm": (
+            "Inertial Discrete Simulated Bifurcation CPU update "
+            "v(t+1)=mu*v(t)+eta*J*x(t)-pressure(t); x(t+1)=sign(x(t)+v(t+1))"
+        ),
+        "baseline_algorithm": "Carnot sequential bipolar Gibbs Ising baseline",
+        "constraint_problems_tested": [problem.name for problem in problems],
+        "n_variables": [problem.n_variables for problem in problems],
+        "seeds": [int(seed) for seed in seeds],
+        "steps_to_convergence_gibbs_baseline": {
+            "mean_steps": baseline_mean_all,
+            "per_problem": [
+                {
+                    "problem": result["problem"],
+                    "n_variables": result["n_variables"],
+                    "mean_steps": result["gibbs_baseline_mean_steps"],
+                }
+                for result in per_problem_results
+            ],
+        },
+        "steps_to_convergence_inertial_ising": {
+            "mean_steps": inertial_mean_all,
+            "per_problem": [
+                {
+                    "problem": result["problem"],
+                    "n_variables": result["n_variables"],
+                    "mean_steps": result["inertial_ising_mean_steps"],
+                    "speedup": result["speedup"],
+                }
+                for result in per_problem_results
+            ],
+        },
+        "convergence_speedup_inertial_ising": speedup,
+        "mean_best_energy_gibbs_baseline": _mean(baseline_best_energy_all),
+        "mean_best_energy_inertial_ising": _mean(inertial_best_energy_all),
+        "inertia_coefficient": config.inertia_coefficient,
+        "pressure_schedule": {
+            "start": config.pressure_start,
+            "end": config.pressure_end,
+            "steps": config.max_steps,
+        },
+        "eta": config.eta,
+        "cpu_only": True,
+        "simulator_only": True,
+        "hardware_execution_performed": False,
+        "hardware_claim_allowed": False,
+        "kv260_claim_allowed": False,
+        "honest_verdict": verdict,
+        "per_problem_results": per_problem_results,
+        "metadata": {
+            "fover_source": str(
+                Path(fover_path)
+                if fover_path is not None
+                else Path(repo_root) / "data/fover_corpus.jsonl"
+            ),
+            "comparison": (
+                "CPU-only inertial dSB simulator ablation against Carnot "
+                "sequential Gibbs; no RTL, synthesis, accelerator, or board "
+                "execution was performed."
             ),
         },
     }
