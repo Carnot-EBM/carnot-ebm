@@ -183,6 +183,7 @@ sets `variance_worsened` from the measured paraphrase variance comparison.
 | REQ-KAN-1516 | Implemented | Exp 1516 normalized KAN/KAEM proxy and model shapes into an explicit provenance manifest before any future synthesis claim. |
 | REQ-KAN-1602 | Implemented | Exp 1602 exact-rational KAN forward pass uses Python `fractions.Fraction` for bit-identical formal-verification arithmetic. |
 | REQ-KAN-1604 | Implemented | Exp 1604 Sparse KAN clustering records Global Group Lasso, spectral regularization, sparsity, and memory-compression metrics. |
+| REQ-KAN-1648 | Implemented | Exp 1648 spectral constraint grouping layers Laplacian row groups on Sparse KAN centroid compression and records direct `compression_ratio`. |
 | REQ-KAN-1618 | Proposed | Exp 1618 target: model-level PWA KAN wrapper for logical affine activation bounds over arbitrary 1D spline callables. |
 | REQ-KAN-1623 | Implemented | Exp 1623 no-synthesis LUT and logic-depth accounting compares KANELÉ LUT mapping with KV260 Ising v3. |
 | REQ-KAN-1384 | Proposed | Exp 1384 target: EBM-CoT contrastive hinge calibration on FoVer verified pairs. |
@@ -695,6 +696,46 @@ Then the low-norm groups are pruned, the sparsity ratio is measured from the
 active centroid codebook, the compressed-memory estimate is smaller than the
 dense matrix, and `results/experiment_1604_sparse_kan.json` records the
 completed compression artifact.
+
+## REQ-KAN-1648: Spectral Constraint Grouping for Tier 4 Sparse KAN Landscapes
+
+The KAN model tier MUST provide a CPU-only Exp 1648 probe that layers spectral
+constraint grouping on top of the existing Sparse KAN centroid compressor for
+Tier 4 adaptive landscapes.  The probe MUST derive a deterministic row-affinity
+graph from adaptive-landscape observations, group rows in spectral embedding
+space, compress each group through Sparse KAN centroids, and report both the
+spectral grouping quality and memory compression.
+
+The artifact MUST record the direct field `compression_ratio` in addition to
+the inherited Sparse KAN memory accounting so the conductor can compare Exp
+1648 against prior sparse-compression experiments without schema-specific
+field names.
+
+**Acceptance criteria:**
+    - `scripts/experiment_1648_sparse_kan.py` exposes deterministic helpers for
+      building a Tier 4 adaptive-landscape matrix, spectral grouping rows, and
+      computing grouped Sparse KAN compression metrics.
+    - Spectral grouping uses a graph Laplacian embedding or equivalent
+      eigenvector-derived ordering before assigning rows to groups.
+    - The artifact includes `schema`, `status`, `experiment_id`, `spec_traces`,
+      `n_constraint_rows`, `n_spectral_groups`, `spectral_gap`,
+      `spectral_grouping_penalty`, `dense_memory_bytes`,
+      `compressed_memory_bytes`, `compression_ratio`, and `honest_verdict`.
+    - `compression_ratio` is exactly
+      `dense_memory_bytes / max(compressed_memory_bytes, 1)`.
+    - A completed result is written to
+      `results/experiment_1648_sparse_kan.json` with a terminal
+      `honest_verdict`.
+
+### SCENARIO-KAN-1648: spectral grouping records compression ratio
+
+Given a deterministic adaptive-landscape matrix with repeated local structures,
+When Exp 1648 builds spectral groups and compresses them with Sparse KAN
+centroids,
+Then high-affinity rows remain grouped, the spectral grouping penalty is finite,
+the compressed-memory estimate is smaller than the dense matrix, and
+`results/experiment_1648_sparse_kan.json` records the direct
+`compression_ratio` field.
 
 ## REQ-KAN-1618: PWA KAN Wrapper for Logical Spline Activation Bounds
 
