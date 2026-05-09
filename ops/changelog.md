@@ -5281,3 +5281,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-09: Exp 1598: Convert Z1 drift simulation into SamplerBackend test (✅ Complete) — honest_verdict=complete: z1_drift_samplerbackend_compatibility_simulator_only_no_execution_claim; results/experiment_1598_z1_drift.json
 - 2026-05-09: Exp 1599: KANELÉ LUT-based evaluation audit for QuantKAN (✅ Complete) — honest_verdict=complete_no_synthesis_kan_accounting; results/experiment_1599_kanele_audit.json
 - 2026-05-09: Exp 1593: Compare CDG-guided repair against flat validator ordering (✅ Complete) — honest_verdict=complete: cdg repair analysis done; results/experiment_1593_cdg_repair.json
+- 2026-05-09: Exp 1601: Archive .122 and initialize .123 (✅ Complete) — honest_verdict=complete: milestone_123_state_initialized_122_archived; results/experiment_1601_archive.json
