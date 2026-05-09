@@ -180,9 +180,9 @@ overstated at k=15 (`factorized_final_KL=0.001337`,
 `linear_AR_final_KL=0.001336`), DCCD/JSONSchemaBench reached strict schema and
 semantic correctness **1.0** with **0** false accepts on mandated Qwen3.6-35B
 GGUF rows, FR-11 v15 reversed the collapsed v14 retention, the Phase-1 ship
-ledger found **9** remaining blockers, and hardware scope moved to simulator-only
+ledger recorded **9** audit-time blockers, and hardware scope moved to simulator-only
 Z1 drift correction plus blocked Tenstorrent/PolarFire preflights with no
-hardware claim. The current test collection reports **23,363** items; this is a
+hardware claim. The current test collection reports **23,571** items; this is a
 collection count, not a full-suite pass claim.
 
 ## Install and run
@@ -471,9 +471,9 @@ experiment artifact under `results/`.
 | Soft-Gibbs and AR-REINFORCE follow-ons | Soft-Gibbs Jensen bound held for all beta values with deployment beta **0.1**; step-wise AR baseline passed the variance gate at **10.45x** | Exps 1570/1571 |
 | Milestone .121 closeout | **14/14 criteria met** with **12/14** tasks completed; BRAIN starvation overstated, paper-v6 sampler/OT evidence updated, FR-11 v14 retention reversed, Wormhole/PolarFire carried forward | Exp 1587 |
 | DCCD + JSONSchemaBench SOTA smoke | Mandated Qwen3.6-35B-A3B GGUF rows reached strict schema validity **1.0**, semantic correctness **1.0**, and **0** false accepts across **4** schemas | Exp 1580 |
-| Phase-1 ship readiness ledger | Phase-1 software ship remains blocked by **9** operational items spanning package docs/dependencies, HF export, IPFS CIDs, MCP docs/tool count, and missing integrator guide | Exp 1582 |
+| Phase-1 ship readiness ledger | Exp 1582 recorded **9** audit-time operational blockers spanning package docs/dependencies, HF export, IPFS CIDs, MCP docs/tool count, and missing integrator guide; the count stays at Exp 1582 provenance until a fresh ship-readiness audit reruns | Exp 1582 |
 | Hardware portfolio rescope | Z1 drift correction is simulator-only and within 1 sigma; Tenstorrent access and PolarFire board/toolchain remain blocked; Strix becomes secondary tier and KV260 Vivado lineage is retired while source-level KV260 work is preserved | Exps 1583-1586 |
-| Current Python test collection | **23,363** Python tests collected; collection-only snapshot, not a full-suite pass claim | 2026-05-08 collection run |
+| Current Python test collection | **23,571** Python tests collected; collection-only snapshot, not a full-suite pass claim | 2026-05-09 collection run |
 | Local Claude/Codex usage snapshot | Codex reads the newest local `token_count` event; Claude aggregates local token usage and reads only subscription/tier metadata from credentials; free-form quota prose is ignored instead of guessed; focused regression tests pass | 2026-05-04 changelog |
 
 Deeper analysis of these — including everything that **didn't** work and

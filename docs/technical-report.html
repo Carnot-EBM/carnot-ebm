@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Technical Report - A Technical Report — 1738 Experiments Across the Public Record, 134 Archived Milestone Records, 23,363 Python Test Items Collected (Artifacts Tracked Through Exp 1587)</title>
-  <meta name="description" content="Carnot technical report: A Technical Report — 1738 Experiments Across the Public Record, 134 Archived Milestone Records, 23,363 Python Test Items Collected (Artifacts Tracked Through Exp 1587). Live GPU benchmarks with statistical confidence intervals, honest negative results, and a public experiment history with provenance labels for every headline claim.">
+  <title>Technical Report - A Technical Report — 1738 Experiments Across the Public Record, 134 Archived Milestone Records, 23,571 Python Test Items Collected (Artifacts Tracked Through Exp 1587)</title>
+  <meta name="description" content="Carnot technical report: A Technical Report — 1738 Experiments Across the Public Record, 134 Archived Milestone Records, 23,571 Python Test Items Collected (Artifacts Tracked Through Exp 1587). Live GPU benchmarks with statistical confidence intervals, honest negative results, and a public experiment history with provenance labels for every headline claim.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M30,50 Q30,20 50,20 Q70,20 70,50 Q70,80 50,80 Q30,80 30,50' fill='none' stroke='%23f97316' stroke-width='8'/><circle cx='50' cy='50' r='10' fill='%23f97316'/></svg>">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -160,7 +160,7 @@
 
 <article>
 <h1 id="carnot-energy-based-verification-for-llm-output">Carnot: Energy-Based Verification for LLM Output</h1>
-<h2 id="a-technical-report-1738-experiments-across-the-public-record-134-archived-milestone-records-23363-python-test-items-collected-artifacts-tracked-through-exp-1587">A Technical Report — 1738 Experiments Across the Public Record, 134 Archived Milestone Records, 23,363 Python Test Items Collected (Artifacts Tracked Through Exp 1587)</h2>
+<h2 id="a-technical-report-1738-experiments-across-the-public-record-134-archived-milestone-records-23571-python-test-items-collected-artifacts-tracked-through-exp-1587">A Technical Report — 1738 Experiments Across the Public Record, 134 Archived Milestone Records, 23,571 Python Test Items Collected (Artifacts Tracked Through Exp 1587)</h2>
 <p><strong>Author:</strong> Ian Blenke
 <strong>Date:</strong> 2026-05-09
 <strong>Repository:</strong> github.com/Carnot-EBM/carnot-ebm
@@ -529,7 +529,7 @@ gate with <strong>10.454576x</strong> coupling-trace variance reduction while re
 <p>Milestone .121 result artifacts are also checked in. The closeout artifact
 records <strong>14 of 14</strong> criteria met with <strong>12 of 14</strong> tasks completed; Tenstorrent
 Wormhole and PolarFire remain research carry-forwards, and the Phase-1 ship
-ledger records <strong>9</strong> operational blockers. Exp 1578 settles the BRAIN training
+ledger records <strong>9</strong> audit-time operational blockers. Exp 1578 settles the BRAIN training
 dynamics question by showing starvation was overstated at k=15:
 <code>factorized_final_KL=0.001337</code>, <code>linear_AR_final_KL=0.001336</code>, and both traces
 converged. Exp 1580 runs a DCCD/JSONSchemaBench structured-output smoke over
@@ -543,8 +543,8 @@ Hastings-style correction is within 1 sigma with corrected acceptance
 Wormhole and PolarFire execution for lack of access/board/toolchain, and Exp
 1586 rescopes Strix Point as secondary tier while retiring the KV260 Vivado
 lineage and preserving source-level KV260 work.</p>
-<p>The current 2026-05-08 Python test collection-only snapshot reports
-<strong>23,363</strong> items; this is a collection count, not a full-suite pass claim. A
+<p>The current 2026-05-09 Python test collection-only snapshot reports
+<strong>23,571</strong> items; this is a collection count, not a full-suite pass claim. A
 plain-English summary of that journey is in the next section; deeper analysis
 follows in the body of the report and in the per-milestone retrospective
 artifacts checked into <code>results/operational_retro_*.json</code>.</p>
@@ -821,8 +821,8 @@ artifacts checked into <code>results/operational_retro_*.json</code>.</p>
   result artifacts record <strong>14/14</strong> criteria met with <strong>12/14</strong> tasks completed.
   DCCD/JSONSchemaBench strict schema validity and semantic correctness both
   reached <strong>1.0</strong> with false accepts <strong>0</strong> on mandated Qwen3.6-35B-A3B GGUF
-  rows; FR-11 v15 reversed the collapsed v14 retention; Phase-1 ship readiness
-  remains blocked by <strong>9</strong> operational items; and Wormhole/PolarFire hardware
+  rows; FR-11 v15 reversed the collapsed v14 retention; Exp 1582 records
+  <strong>9</strong> audit-time operational items; and Wormhole/PolarFire hardware
   execution remains blocked with no hardware claim (Exps 1574-1587).</li>
 <li><strong>arXiv package v11 + publication hold:</strong> the .94/.99 integrity passes fixed
   the critical paper issues and updated the claim set against the latest
@@ -3126,7 +3126,7 @@ but are not included as model-generation headline claims.</p>
 <td>Milestone .121 closeout</td>
 <td>.120 carried paper-v6/Z1 gates</td>
 <td><strong>14/14</strong> criteria met; <strong>12/14</strong> tasks completed</td>
-<td>BRAIN dynamics settled, FR-11 retention reversed, Phase-1 ship blockers counted, Wormhole/PolarFire carried forward</td>
+<td>BRAIN dynamics settled, FR-11 retention reversed, Phase-1 ship blockers recorded, Wormhole/PolarFire carried forward</td>
 <td>Exp 1587</td>
 </tr>
 <tr>
@@ -3146,8 +3146,8 @@ but are not included as model-generation headline claims.</p>
 <tr>
 <td>Phase-1 ship readiness</td>
 <td>software ship gate unaudited after .120</td>
-<td><strong>9</strong> blockers remaining</td>
-<td>Package naming/deps, HF export, IPFS CIDs, MCP docs/tool count, and integrator guide must be fixed before Phase-1 ship</td>
+<td><strong>9</strong> audit-time blockers recorded</td>
+<td>Package naming/deps, HF export, IPFS CIDs, MCP docs/tool count, and integrator guide must be re-audited before Phase-1 ship</td>
 <td>Exp 1582</td>
 </tr>
 <tr>
@@ -3923,7 +3923,7 @@ Verified + Repaired Answer
 </tr>
 </tbody>
 </table>
-<p><strong>Total:</strong> <strong>23,363</strong> Python test items are currently collected in the repo (<code>.venv/bin/pytest tests/python --collect-only -q -o addopts='' --disable-warnings</code>, collected 2026-05-08). This is a collection count, not a claim that the full suite passes. Exp 1392 records zero collection errors after the semantic-validator repair, Exp 1411's focused stream/MCP checks pass <strong>10/10</strong>, Exp 1421 fixes the focused embedding-store runtime-failure cluster with 100% line coverage on the touched module, Exp 1426 records <strong>71</strong> remaining spec-coverage traceability debt items, Exp 1440 reduces that spec-coverage metadata debt <strong>71 -&gt; 0</strong> while recording the required full-suite red result (<strong>101 failed</strong>, <strong>6 errors</strong>) outside the metadata fix, the .115 focused conductor rows report <strong>81</strong> tests passing per task, the .116 artifacts record changed-module checks for the new contract, policy, skill-pack, and source-level conformance modules, the .117 artifacts record focused readiness checks for the runtime-contract harness, CDG/product-line rescue, FR-11 policy promotion, MARCH ablation, and THRML parity manifests, Exp 1534 records the latest broad-suite attempt as still red (<strong>94 failed</strong>, <strong>20,015 passed</strong>, <strong>103 skipped</strong>, <strong>4 errors</strong>) from pre-existing failures, and Exp 1580 records focused DCCD/JSONSchemaBench tests and 100% changed-module coverage while the broad <code>tests/python</code> attempt failed/hung at 91% from unrelated JAX/Z3 worker crashes. Full validation therefore remains command-specific in the relevant experiment artifacts.</p>
+<p><strong>Total:</strong> <strong>23,571</strong> Python test items are currently collected in the repo (<code>.venv/bin/pytest tests/python --collect-only -q -o addopts='' --disable-warnings</code>, collected 2026-05-09). This is a collection count, not a claim that the full suite passes. Exp 1392 records zero collection errors after the semantic-validator repair, Exp 1411's focused stream/MCP checks pass <strong>10/10</strong>, Exp 1421 fixes the focused embedding-store runtime-failure cluster with 100% line coverage on the touched module, Exp 1426 records <strong>71</strong> remaining spec-coverage traceability debt items, Exp 1440 reduces that spec-coverage metadata debt <strong>71 -&gt; 0</strong> while recording the required full-suite red result (<strong>101 failed</strong>, <strong>6 errors</strong>) outside the metadata fix, the .115 focused conductor rows report <strong>81</strong> tests passing per task, the .116 artifacts record changed-module checks for the new contract, policy, skill-pack, and source-level conformance modules, the .117 artifacts record focused readiness checks for the runtime-contract harness, CDG/product-line rescue, FR-11 policy promotion, MARCH ablation, and THRML parity manifests, Exp 1534 records the latest broad-suite attempt as still red (<strong>94 failed</strong>, <strong>20,015 passed</strong>, <strong>103 skipped</strong>, <strong>4 errors</strong>) from pre-existing failures, and Exp 1580 records focused DCCD/JSONSchemaBench tests and 100% changed-module coverage while the broad <code>tests/python</code> attempt failed/hung at 91% from unrelated JAX/Z3 worker crashes. Full validation therefore remains command-specific in the relevant experiment artifacts.</p>
 <hr>
 <h2 id="11-reproduction">11. Reproduction</h2>
 <pre><code class="language-bash"># Clone and setup
@@ -5978,8 +5978,8 @@ threshold. Exp 1439 created the .110 carry-forward activation manifest, and Exp
 <strong>71 -&gt; 0</strong>. Focused checks passed, but the required broad suite attempt
 remained red outside that metadata fix with <strong>101 failed</strong>, <strong>21191 passed</strong>,
 <strong>103 skipped</strong>, <strong>6 errors</strong>, and <strong>91 warnings</strong> before interruption. The
-current public test number is now the 2026-05-08 collection snapshot:
-<strong>23,363</strong> Python items collected, not a full-suite pass claim.</p>
+current public test number is now the 2026-05-09 collection snapshot:
+<strong>23,571</strong> Python items collected, not a full-suite pass claim.</p>
 <p>The live-SOTA scale branch was correctly blocked. Exp 1442 found local
 Qwen3.6-35B and Gemma4-31B GGUF files cached and both RTX 3090s idle, but
 llama.cpp failed to load <code>libcudart.so.12</code>; the optional Gemma4-26B GGUF was
@@ -6370,8 +6370,9 @@ reconfirms mode collapse for the previously retained v14 policy over <strong>56<
 held-out replay cases, applies the retention reversal, records <strong>0</strong> soundness
 mistakes, and marks the lambda-GRPO patch as simulated-only with no model-weight
 mutation. Exp 1582 audits Phase-1 software ship readiness and blocks ship on
-<strong>9</strong> remaining items: package naming/dependency docs, HF export artifacts,
-IPFS CIDs, MCP docs/tool count, and a missing integrator guide.</p>
+<strong>9</strong> audit-time remaining items: package naming/dependency docs, HF export
+artifacts, IPFS CIDs, MCP docs/tool count, and a missing integrator guide. The
+count remains Exp 1582 provenance until a fresh ship-readiness audit reruns.</p>
 <p>The hardware closeout narrows claims. Exp 1583 gives simulator-only evidence
 for a Hastings-style Z1 analog-drift correction within one sigma, with corrected
 acceptance <strong>0.9624255952380952</strong> and no hardware claim. Exp 1584 blocks
