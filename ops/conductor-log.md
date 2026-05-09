@@ -1274,3 +1274,13 @@ web search: GitHub trending energy based mod |
 | 2026-05-09 01:11 UTC | Phase-1 Software Ship Readiness Ledger | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1582_phase1_ |
 | 2026-05-09 01:17 UTC | Phase-1 Software Ship Readiness Ledger | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1582_phase1_ |
 | 2026-05-09 01:19 UTC | Milestone 2026.05.121 re-activated after exp1582 verdict-prefix fix (outer-loop) | OK | exp1582 verdict normalized; honest 9-items-remaining preserved |
+| 2026-05-09 01:28 UTC | Software Detailed-Balance Error Correction for Z1  | OK | 81 passed, 1 warning in 4.65s |
+| 2026-05-09 01:30 UTC | .120 Completion Archive + .121 Activation Manifest | OK | Deliverable already exists in repo |
+| 2026-05-09 01:30 UTC | Carry-Forward prior_failures Autofill Audit for ex | OK | Deliverable already exists in repo |
+| 2026-05-09 01:30 UTC | Paper-v6 Section 3 Sampler Draft Resumed from .120 | OK | Deliverable already exists in repo |
+| 2026-05-09 01:30 UTC | Extropic Z1 Readiness Packet THRML Alignment Resum | OK | Deliverable already exists in repo |
+| 2026-05-09 01:30 UTC | BRAIN REINFORCE Training Dynamics at k=15 | OK | Deliverable already exists in repo |
+| 2026-05-09 01:30 UTC | ICLR-26 OT Verification Framework Adoption for Pap | OK | Deliverable already exists in repo |
+| 2026-05-09 01:30 UTC | DCCD + JSONSchemaBench Structured-Output Smoke on | OK | Deliverable already exists in repo |
+| 2026-05-09 01:30 UTC | FR-11 v15 lambda-GRPO Patch + v14 Retention Revers | OK | Deliverable already exists in repo |
+| 2026-05-09 01:30 UTC | Phase-1 Software Ship Readiness Ledger | OK | Deliverable already exists in repo |
