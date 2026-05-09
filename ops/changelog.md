@@ -5312,3 +5312,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-09: Exp 1628: gated on Exp 1627 optimizer_converges==true — EBRM-style continuous latent trace scoring prototype (⚠️ Research Finding) — honest_verdict=ebrm_scoring_distinguishes_traces; results/experiment_1628_ebrm_scoring.json
 - 2026-05-09: Exp 1629: Live SOTA validation of EBRM trajectory optimization (⚠️ Research Finding) — honest_verdict=ebrm_sota_validation_partial; results/experiment_1629_ebrm_sota.json
 - 2026-05-09: Exp 1629: Live SOTA validation of EBRM trajectory optimization (✅ Complete) — honest_verdict=ebrm_sota_validation_complete; results/experiment_1629_ebrm_sota.json
+- 2026-05-09: Exp 1630: LTLZinc temporal constraint benchmark expansion for non-forgetting checks (⚠️ Research Finding) — honest_verdict=ltlzinc_temporal_retention_benchmark_passed; results/experiment_1630_ltlzinc.json
