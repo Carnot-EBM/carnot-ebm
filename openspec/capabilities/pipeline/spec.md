@@ -3031,3 +3031,21 @@ It MUST weight the base LLM policy probabilities with an EBM score using Monte C
 **When** `ETSDecoder.decode()` is run with a mock energy function and Monte Carlo sampling
 **Then** the selected token maximizes the combined probability `p_llm * exp(-beta * E_mc)`.
 
+### REQ-PIPELINE-1625: Entropy-Based Task Router
+
+The pipeline MUST provide a task router that uses prompt entropy as a heuristic to classify and route queries. Logic/math questions MUST be routed to the EBM verifier, and general QA MUST be routed to the base LLM.
+
+**Rationale:** Logic and math prompts often have different entropy profiles compared to general open-ended QA. Using prompt entropy provides a fast, zero-shot heuristic to decide whether the expensive constraint-based EBM verifier is needed.
+
+**Acceptance criteria:**
+- `python/carnot/pipeline/task_router.py` exposes `EntropyTaskRouter` with a `route(prompt)` method.
+- The router correctly routes low-entropy (or high-entropy depending on the heuristic) math/logic questions to `"ebm_verifier"` and general QA to `"base_llm"`.
+- A test runs on a mixed dataset of GSM8K (math) and OpenAssistant (QA) examples.
+- The experiment artifact is saved to `results/experiment_1625_task_router.json` with metrics like accuracy, threshold, etc.
+
+### SCENARIO-PIPELINE-1625: Entropy Router Routes GSM8K to EBM Verifier
+
+**Given** a math question from GSM8K and a general QA question from OpenAssistant
+**When** `EntropyTaskRouter.route(prompt)` is called
+**Then** the math question is routed to `"ebm_verifier"` and the QA question is routed to `"base_llm"`.
+
