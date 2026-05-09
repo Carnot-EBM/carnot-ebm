@@ -2279,6 +2279,47 @@ the invalid JSON returns an abstaining `VerdictRecord` with schema diagnostics,
 and `results/experiment_1642_llguidance.json` records
 `adapter_success=true`.
 
+### REQ-VERIFY-1646: EBCN Reasoning-Trace Coherence Prototype
+
+The repository shall provide an Exp 1646 deterministic EBCN prototype that
+assigns structural-coherence energy scores to reasoning traces and flags direct
+logical inconsistencies without calling an autoregressive generator.
+
+The workflow shall:
+
+- define `scripts/experiment_1646_ebcn.py`;
+- reuse the existing fixed hidden-state EBCN scorer for dual support and
+  contradiction heads;
+- add a deterministic state-space rollout over encoded reasoning-trace steps
+  before scoring, so trace order contributes to the hidden state without model
+  sampling;
+- evaluate bounded synthetic reasoning traces containing both consistent and
+  directly contradictory claims;
+- compute `coherence_score_accuracy`, where coherent traces should receive
+  higher coherence scores than contradictory traces; and
+- write `results/experiment_1646_ebcn.json` with `status`, `experiment_id`,
+  `ebcn_prototype_ready`, `dual_head_attention_used`,
+  `state_space_transition_used`, `autoregressive_generation_used`,
+  `hidden_state_source`, `reasoning_trace_cases_total`, `inconsistent_cases`,
+  `consistent_cases`, `inconsistent_mean_energy`, `consistent_mean_energy`,
+  `energy_gap`, `coherence_score_accuracy`, `tests_run`, and
+  `honest_verdict`.
+
+`status` MUST be `complete` only when dual-head attention and state-space
+rollout are used, autoregressive generation is not used, inconsistent traces
+have higher mean energy than consistent traces, and `coherence_score_accuracy`
+is at least `0.8`.
+
+### SCENARIO-VERIFY-1646: EBCN Scores Reasoning-Trace Inconsistencies
+
+Given deterministic reasoning traces with consistent claims and paired traces
+that negate a prior claim,
+When Exp 1646 encodes the steps, applies the state-space rollout, and scores
+them with the EBCN support and contradiction heads,
+Then direct logical inconsistencies receive higher energy and lower coherence
+scores than consistent traces,
+And `results/experiment_1646_ebcn.json` records `coherence_score_accuracy`.
+
 ### REQ-VERIFY-1591: Reusable DCCD Structured Verdict Adapter
 
 The repository shall provide a reusable structured-verdict adapter for Exp 1591
@@ -2375,6 +2416,7 @@ backend diagnostics for the reusable adapter.
 | REQ-VERIFY-1640 | Implemented (`scripts/experiment_1640_nsvif_dsl.py`) | Implemented (`tests/python/test_experiment_1640_nsvif_dsl.py`) |
 | REQ-VERIFY-1641 | Implemented (`scripts/experiment_1641_nsvif_sota.py`) | Implemented (`tests/python/test_experiment_1641_nsvif_sota.py`) |
 | REQ-VERIFY-1642 | Implemented (`scripts/experiment_1642_llguidance.py`) | Implemented (`tests/python/test_experiment_1642_llguidance.py`) |
+| REQ-VERIFY-1646 | Implemented (`scripts/experiment_1646_ebcn.py`) | Implemented (`tests/python/test_experiment_1646_ebcn.py`) |
 
 ### REQ-VERIFY-1593: CDG Repair Acceptance Rates
 The repository shall provide a CDG repair analysis tool that builds a CDG over runtime-contract cases, compares repair localization, and contrasts repair acceptance rates between flat check and CDG ordering using the mandated MODEL_SPECS.
