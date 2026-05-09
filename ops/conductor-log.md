@@ -1408,3 +1408,4 @@ web search: site:o |
 | 2026-05-09 19:58 UTC | Exp 1644: CerCE-style certificate ledger for FR-11 | OK | 81 passed, 1 warning in 4.87s |
 | 2026-05-09 20:00 UTC | Exp 1645: gated on Exp 1644 ledger_implemented==tr | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-09 20:02 UTC | Exp 1645: gated on Exp 1644 ledger_implemented==tr | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-09 20:04 UTC | Exp 1645: gated on Exp 1644 ledger_implemented==tr | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
