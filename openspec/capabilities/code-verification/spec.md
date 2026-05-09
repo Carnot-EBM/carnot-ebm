@@ -844,6 +844,35 @@ then the correction prompt includes the original code, the full traceback, and t
 problem description, and subsequent attempts use the repaired code, continuing until
 a passing attempt is found or max_retries is exhausted.
 
+### REQ-CODE-034: HumanEval Prompt NSVIF DSL Extraction Evaluation
+
+The repository shall provide a deterministic Exp 1607 evaluation that applies
+the NSVIF instruction-to-constraint DSL to HumanEval prompts:
+- The workflow loads HumanEval prompts, extracts bounded code-generation
+  constraints such as entry-point presence, markdown-free code output, placeholder
+  avoidance, and return-statement expectations from each prompt.
+- Each extracted constraint pack compiles through the existing safe local DSL
+  compiler without arbitrary code execution.
+- The workflow reports attempted prompts, valid extractions, extraction failures,
+  constraints extracted, valid extraction rate, and compiled validator rate.
+- The artifact records the mandated model specs
+  `unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF` as the target
+  code-verification model cohort without requiring live model inference for this
+  deterministic DSL-only extraction step.
+- The workflow writes `results/experiment_1607_dsl_humaneval.json` with complete
+  summary metrics, per-model extraction summaries, sample rows, tests run, and an
+  honest verdict.
+
+### SCENARIO-CODE-032: HumanEval Prompts Compile To Safe DSL Packs
+
+Given a deterministic HumanEval prompt cohort and the mandated Exp 1607 model
+spec list,
+When the Exp 1607 NSVIF extraction workflow runs,
+Then every prompt with supported prompt-derived code constraints produces a
+schema-valid DSL pack, the pack compiles to a local validator and PySAT-compatible
+CNF, no arbitrary code execution path is introduced, and the terminal artifact
+records valid extraction and compiled validator rates for both model specs.
+
 ## Implementation Status
 
 | Requirement | Status |
@@ -884,6 +913,7 @@ a passing attempt is found or max_retries is exhausted.
 | REQ-CODE-031 | Implemented |
 | REQ-CODE-032 | Implemented |
 | REQ-CODE-033 | Implemented |
+| REQ-CODE-034 | Implemented (`python/carnot/verifiers/dsl.py`) |
 | REQ-REPAIR-020 | Implemented |
 | REQ-REPAIR-021 | Implemented |
 | REQ-REPAIR-022 | Implemented |

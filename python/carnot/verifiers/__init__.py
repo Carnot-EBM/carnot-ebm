@@ -10,8 +10,12 @@ from carnot.verifiers.dsl import (
     ValidationResult,
     compile_constraint_pack,
     compile_instruction_validator,
+    evaluate_humaneval_dsl_extraction,
+    extract_humaneval_prompt_constraints,
+    load_humaneval_prompt_cases,
     parse_instruction_constraints,
     validate_constraint_pack,
+    write_humaneval_dsl_artifact,
 )
 
 __all__ = [
@@ -25,6 +29,10 @@ __all__ = [
     "ValidationResult",
     "compile_constraint_pack",
     "compile_instruction_validator",
+    "evaluate_humaneval_dsl_extraction",
+    "extract_humaneval_prompt_constraints",
+    "load_humaneval_prompt_cases",
     "parse_instruction_constraints",
     "validate_constraint_pack",
+    "write_humaneval_dsl_artifact",
 ]
