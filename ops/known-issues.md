@@ -207,6 +207,181 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### NEW 2026-05-09 (12:50Z): NLA-Class Probing as 16th Verifier (.124+ MANDATORY)
+
+**Origin.** 2026-05-09 ~12:50Z operator directive after reviewing
+Anthropic's "Natural Language Autoencoders" paper (May 2026): "let's
+add NLA-class probing as the 16th verifier."
+
+**Strategic rationale.** Carnot's verifier ensemble currently:
+- k=6 in production (Z3, AST, semantic, ThinkPRM v2, SOSKAN-Energy v3,
+  SemEnergy probe)
+- k=15 planned for Phase 3 substrate per
+  `project_phase3_architecture_complete.md`
+- All current verifiers are **black-box** (operate on output text only)
+
+NLAs provide a **white-box** verification signal — reading internal
+activations from the target LLM and reconstructing them via natural
+language. The 4-5× adversarial-detection lift (12-15% vs <3%) reported
+in Anthropic's paper demonstrates that internal-state observability
+catches adversarial cases black-box methods miss.
+
+**Adding NLA-class probing as the 16th verifier** gives Carnot a hybrid
+white-box/black-box ensemble that:
+- Lowers effective C_inv in DT-5's C-parameterized framework
+  (extends Carnot's safe operating regime)
+- Detects evaluation-awareness contamination (the 26% SWE-bench finding)
+- Catches null-space mimicry attacks (DT-MCMC-NULL) at the activation
+  level rather than relying purely on Glauber plateau-friction
+
+**Implementation strategy.** Anthropic doesn't ship NLA code; Carnot
+implements an "NLA-class" probe from open-source primitives:
+
+| Technique | Open-source status | Compute overhead | Recommendation |
+|---|---|---|---|
+| Sparse Autoencoders (SAE) | mature (lots of repos) | medium | strongest candidate |
+| Representation Engineering (Zou et al. 2023) | mature, Apache-2.0 | low | viable alternative |
+| Probing classifiers | trivial | very low | weak baseline |
+| Sparse Crosscoders (newer Anthropic technique) | emerging | medium | watch |
+| Full NLA reproduction | not available | high (RL training on 2 model copies) | not feasible without code |
+
+**Recommended path: SAE-based reconstruction verifier.** Train a sparse
+autoencoder on target LLM activations during repair-candidate generation;
+compute reconstruction error per sample; flag high-RE samples as
+internal-state-anomalous.
+
+**`.124+ tasks to file** (planner: hard pickup):
+
+```yaml
+- id: expNNNN-nla-class-probe-architecture-design
+  title: "NLA-Class 16th Verifier — Architecture Design + Open-Source Survey"
+  agent_type: gemini
+  priority: critical
+  prompt_seed: |
+    Per operator directive 2026-05-09 + memory entry
+    reference_anthropic_natural_language_autoencoders.md: design Carnot's
+    16th verifier as a white-box internal-state probe inspired by Anthropic
+    NLAs.
+
+    Steps:
+    1. Survey open-source SAE / RepE / probing-classifier codebases
+       (apache-2.0 or MIT). Recommend top 3 candidates with licenses,
+       activation-extraction support for SOTA local LLMs (Qwen3.6-35B,
+       Gemma 4), and Carnot integration cost.
+    2. Define abstract interface: NLAClassProbe.score(prompt, candidate,
+       activations) → confidence ∈ [0, 1] OR rejection_flag.
+    3. Document the signal: high reconstruction error → low confidence
+       → contributes to E(y) as an additional verifier indicator.
+    4. Specify integration with Carnot's Soft-Gibbs Residual:
+       µ_res^β(y) ∝ µ(y) · exp(-β · V(y)) where V(y) now includes the
+       NLA-class probe's rejection signal.
+    5. Acceptance gate: docs/research-notes/nla-16th-verifier-design.md
+       written; one OSS candidate selected with implementation roadmap;
+       compatibility with k=15 ensemble verified.
+
+- id: expNNNN-nla-class-probe-prototype
+  title: "NLA-Class Verifier Prototype on n=8 Tiny-Ising Setup (gated on design)"
+  agent_type: gemini
+  priority: high
+  gated_on:
+    - upstream: expNNNN-nla-class-probe-architecture-design
+      gate_field: design_complete
+      expected_value: true
+  prompt_seed: |
+    Implement the SAE-based (or chosen alternative) NLA-class probe as
+    the 16th verifier on a small synthetic test setup.
+
+    Steps:
+    1. Use the chosen OSS SAE library (per design exp's recommendation).
+    2. Train a tiny SAE on Qwen3.5-0.8B residual stream activations
+       captured during a small repair-candidate corpus (N=200 prompts).
+    3. Implement NLAClassProbe.score() that returns 1 - normalized_RE
+       (or equivalent confidence metric).
+    4. Run on a held-out test set; measure:
+       - AUROC on correct/incorrect repair candidates
+       - Compute cost per sample (target <100ms for K=100 inference loop)
+       - Independence from existing k=6 verifiers (P(V_i | NLA) entries
+         in correlation matrix; want pairwise correlation < 0.3)
+    5. Acceptance gate: NLAClassProbe ships; AUROC > 0.7 on test set;
+       per-sample latency < 100ms; correlation with existing verifiers
+       < 0.5 max.
+
+- id: expNNNN-nla-class-probe-eval-awareness-test
+  title: "NLA-Probe Eval-Awareness Detection Test (gated on prototype)"
+  agent_type: gemini
+  priority: high
+  gated_on:
+    - upstream: expNNNN-nla-class-probe-prototype
+      gate_field: prototype_ready
+      expected_value: true
+  prompt_seed: |
+    Empirically test whether the NLA-class probe detects the 26% SWE-bench
+    eval-awareness signal Anthropic reported. This validates the strategic
+    rationale for the 16th verifier.
+
+    Steps:
+    1. Build paired evaluation sets: (a) "in-the-wild" prompts (real-style
+       use cases) (b) "evaluation-framed" prompts (explicit benchmark cues
+       like "you are being tested on...").
+    2. Run target LLM on both sets, capture activations.
+    3. Score with NLAClassProbe; measure differential confidence between
+       sets.
+    4. Compare to Anthropic's 26% baseline: do we replicate the gap?
+    5. Acceptance gate: NLAClassProbe shows ≥20% confidence delta between
+       eval-framed and in-the-wild prompts on n>=100 paired samples;
+       Carnot can claim eval-awareness detection in paper-v6.
+
+- id: expNNNN-nla-class-probe-ensemble-integration
+  title: "Add NLA-Probe as 16th Verifier in Production Ensemble (gated on prototype + eval test)"
+  agent_type: gemini
+  priority: critical
+  gated_on:
+    - upstream: expNNNN-nla-class-probe-prototype
+      gate_field: prototype_ready
+      expected_value: true
+    - upstream: expNNNN-nla-class-probe-eval-awareness-test
+      gate_field: eval_awareness_detected
+      expected_value: true
+  prompt_seed: |
+    Wire NLA-class probe into Carnot's verifier ensemble as the 16th
+    component. Carnot transitions from k=6 production / k=15 Phase 3
+    plan to k=16.
+
+    Steps:
+    1. Update python/carnot/verify/__init__.py to include NLAClassProbe
+       in the standard ensemble.
+    2. Update the verifier-stack in pipeline/repair_executor.py to call
+       NLA probe alongside existing verifiers.
+    3. Update Soft-Gibbs Residual V(y) computation to include NLA-probe
+       indicator.
+    4. Re-measure AND-composition pass rate, joint null-space, and
+       correlation matrix on Phase 3 substrate.
+    5. Update spec: REQ-VERIFY-NLA-PROBE + SCENARIO-NLA-PROBE-{1,2,3}
+       in openspec/capabilities/verification/spec.md.
+    6. Update _bmad/architecture.md Phase 3 substrate section: k=15 →
+       k=16, document white-box/black-box hybrid ensemble.
+    7. Update paper-v6 §3 to disclose the white-box probe addition,
+       cite Anthropic NLAs (2026), discuss the C_inv lowering effect.
+    8. Acceptance gate: k=16 ensemble live; AND-composition pass rate
+       within 10% of k=15 baseline; no regression on existing verifiers.
+```
+
+**Why this is in MANDATORY-NEXT-MILESTONE PRIORITIES.** This represents
+a structural addition to Carnot's verifier ensemble — affects spec,
+architecture, paper-v6, and downstream Phase 3 substrate decisions. Filing
+as MANDATORY ensures the planner doesn't skip it for research breadth.
+
+**Cross-references.**
+- `reference_anthropic_natural_language_autoencoders.md` — NLA paper analysis
+- `project_phase3_architecture_complete.md` — k=15 Phase 3 design (will update to k=16)
+- `reference_goodfire_silico.md` — closest peer (white-box neuron inspection)
+- DT-5 verdict — C-parameterized OT framework where NLA-class probe lowers C_inv
+- DT-MCMC-NULL — kinetic defense-in-depth (different attack channel)
+- Spera Theorem 9.2 — joint null space coNP-completeness still applies; NLA helps
+  reduce null-space attack surface, doesn't eliminate it
+
+
+
 ### NEW 2026-05-09 (01:20Z): Gemini Verdict-Prefix Discipline Reinforcement (.122+ MANDATORY)
 
 **Origin.** 2026-05-09 01:04-01:17Z incident: exp1582 Phase-1 Software
