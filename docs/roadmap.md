@@ -123,6 +123,7 @@
 | 2026.04.117 | Runtime Contracts + THRML Parity Operational Closeout | 1519-1532 | 14/14 criteria met; operational retro measured 40 min / 11 completed with 37/40 min concentrated in legacy gate churn, GPUs idle/no zombies, and 55% recoverable via same-verdict retirement plus DualGPURunner scheduling |
 | 2026.04.118 | Contract Decoding + Residual Drift + THRML Scale | 1533-1546 | 13/14 criteria met; XGrammar/ABS contract decoding, BEAVER prefix bounds, product-line scale, claim-isolation routing, and THRML n=256/n=64 simulator parity advanced, with SATQuest/FR-11 limits carried to .119 |
 | 2026.05.120 | Sampler Discipline + Operational Gate Hygiene | 1560-1573 | Soft-Gibbs residuals and warm-start checks advanced while operational retro found 40 min / 11 completed, 37/40 min in legacy gate churn, idle GPUs/no zombies, and 55% recoverable |
+| 2026.05.121 | BRAIN Dynamics + Phase-1 Ship Readiness | 1574-1587 | 14/14 criteria met; BRAIN training dynamics settled, hardware scopes corrected, FR-11 v14 retention mode collapse resolved, Phase-1 ship blockers audited; operational retro found 40 min / 11 completed with idle GPUs/no zombies and 55% recoverable |
 
 ## Breakthrough Results
 
