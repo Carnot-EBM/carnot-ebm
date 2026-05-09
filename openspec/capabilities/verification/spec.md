@@ -2332,6 +2332,7 @@ backend diagnostics for the reusable adapter.
 | REQ-VERIFY-1591 | Implemented (`python/carnot/verifiers/dccd_adapter.py`) | Implemented (`tests/python/test_experiment_1591_dccd_adapter.py`) |
 | REQ-VERIFY-1609 | Implemented (`python/carnot/pipeline/context_induction.py`) | Implemented (`tests/python/test_experiment_1609_context_induction.py`) |
 | REQ-VERIFY-1640 | Implemented (`scripts/experiment_1640_nsvif_dsl.py`) | Implemented (`tests/python/test_experiment_1640_nsvif_dsl.py`) |
+| REQ-VERIFY-1641 | Implemented (`scripts/experiment_1641_nsvif_sota.py`) | Implemented (`tests/python/test_experiment_1641_nsvif_sota.py`) |
 
 ### REQ-VERIFY-1593: CDG Repair Acceptance Rates
 The repository shall provide a CDG repair analysis tool that builds a CDG over runtime-contract cases, compares repair localization, and contrasts repair acceptance rates between flat check and CDG ordering using the mandated MODEL_SPECS.
@@ -2401,6 +2402,22 @@ The induction loop shall:
   `experiment_id`, `context_induction_ready`, `failure_logs_mined`,
   `source_paths`, `candidate_constraints_generated`,
   `selected_candidate`, `constraint_candidates`, `true_contradiction_exclusions`,
+  `blockers`, `focused_tests_passed`, and `honest_verdict`; and
+- set terminal `status="complete"` only when at least one qualifying residual
+  drift failure is mined, at least one candidate is generated, true
+  contradiction rows are excluded from positive evidence, and focused tests have
+  passed.
+
+#### SCENARIO-VERIFY-1609: Context-Sensitive Constraints Come From Residual Drift
+Given residual-drift ledger rows, repair-policy rows, and recent conductor
+failure logs,
+When Exp 1609 mines failures and induces a new constraint candidate,
+Then the candidate trigger includes source-domain and localized-context fields,
+positive evidence contains satisfiable drift failures,
+true contradictions remain exclusion evidence,
+and `results/experiment_1609_context_induction.json` records a complete
+bounded artifact without modifying the research conductor.
+_candidates`, `true_contradiction_exclusions`,
   `blockers`, `focused_tests_passed`, and `honest_verdict`; and
 - set terminal `status="complete"` only when at least one qualifying residual
   drift failure is mined, at least one candidate is generated, true
