@@ -1,0 +1,200 @@
+milestone: 2026.05.127
+milestone_title: "Phase-5 EBRM Trace Scoring, SMGI Continuous Learning, and Energy-Guided Decoding"
+milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
+tasks:
+  - id: exp1652-archive-126
+    title: 'Exp 1652: Archive .126 and initialize .127'
+    deliverable: results/experiment_1652_archive.json
+    max_turns: 20
+    agent_type: codex
+    prompt: |
+      CONTEXT: Milestone .126 completed.
+      EXISTING CODE TO READ FIRST: ops/status.md, ops/changelog.md
+      TASK: Create an initialization artifact for .127 recording the successful landing of NSVIF DSL, KV260 Potts synthesis, and CerCE ledger.
+      CONCRETE STEPS:
+      1. Write `scripts/experiment_1652_archive.py` to write the JSON artifact.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1653-nsvif-sota-integration
+    title: 'Exp 1653: NSVIF DSL SOTA GGUF Integration'
+    deliverable: python/carnot/pipeline/nsvif_sota.py
+    agent_type: codex
+    prompt: |
+      CONTEXT: We need to connect the NSVIF DSL to the SOTA LLM generation paths.
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/verify_api_responses.py
+      TASK: Implement an adapter that translates SOTA GGUF outputs into NSVIF DSL inputs.
+      CONCRETE STEPS:
+      1. Write `python/carnot/pipeline/nsvif_sota.py`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1654-energy-guided-decoding
+    title: 'Exp 1654: Energy-Guided Decoding via STATIC CSR'
+    deliverable: python/carnot/samplers/energy_guided.py
+    agent_type: codex
+    prompt: |
+      CONTEXT: We have STATIC CSR masks from .126. We need to implement energy-guided decoding.
+      EXISTING CODE TO READ FIRST: python/carnot/samplers/
+      TASK: Implement `EnergyGuidedSampler` that applies STATIC CSR mask constraints during sampling.
+      CONCRETE STEPS:
+      1. Write `python/carnot/samplers/energy_guided.py`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1655-e2e-guided-decoding-eval
+    title: 'Exp 1655: gated on Exp 1653, 1654: E2E Guided Decoding Eval'
+    deliverable: results/experiment_1655_e2e_guided.json
+    gated_on:
+      - upstream: exp1653-nsvif-sota-integration
+        artifact_field: status
+        op: '=='
+        value: "complete"
+    model_specs: ['unsloth/Qwen3.6-35B-A3B-GGUF', 'unsloth/gemma-4-31B-it-GGUF', 'unsloth/gemma-4-26B-A4B-it-GGUF']
+    agent_type: codex
+    prompt: |
+      CONTEXT: Evaluate energy-guided decoding with mandated SOTA models.
+      EXISTING CODE TO READ FIRST: python/carnot/samplers/energy_guided.py
+      TASK: Run E2E validation of energy guided decoding on CCTU.
+      CONCRETE STEPS:
+      1. Create `scripts/experiment_1655_e2e_guided.py` to run the evaluation and write to JSON. Must use local SOTA models.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1656-ebrm-trace-scorer
+    title: 'Exp 1656: EBRM Trace Scorer'
+    deliverable: python/carnot/models/ebrm_scorer.py
+    agent_type: codex
+    prompt: |
+      CONTEXT: Implement Energy-Based Reasoning Model (EBRM) trace scoring to evaluate reasoning constraints.
+      EXISTING CODE TO READ FIRST: python/carnot/models/
+      TASK: Write a model to assign continuous energy scores to extracted logical traces.
+      CONCRETE STEPS:
+      1. Write `python/carnot/models/ebrm_scorer.py`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1657-kv260-ebrm-integration
+    title: 'Exp 1657: KV260 EBRM Hardware Offload'
+    deliverable: crates/carnot-gpu/src/kv260_ebrm.rs
+    model: opus
+    max_turns: 100
+    agent_type: codex
+    prompt: |
+      CONTEXT: Connect the KV260 Potts synthesis from .126 to the EBRM trace scorer.
+      EXISTING CODE TO READ FIRST: crates/carnot-gpu/
+      TASK: Implement Rust bindings for KV260 execution of trace scoring constraints.
+      CONCRETE STEPS:
+      1. Write `crates/carnot-gpu/src/kv260_ebrm.rs`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1658-hardware-trace-scoring-eval
+    title: 'Exp 1658: gated on Exp 1656, 1657: Hardware Trace Eval'
+    deliverable: results/experiment_1658_hw_eval.json
+    gated_on:
+      - upstream: exp1656-ebrm-trace-scorer
+        artifact_field: status
+        op: '=='
+        value: "complete"
+    model_specs: ['unsloth/Qwen3.6-35B-A3B-GGUF', 'unsloth/gemma-4-31B-it-GGUF', 'unsloth/gemma-4-26B-A4B-it-GGUF']
+    agent_type: codex
+    prompt: |
+      CONTEXT: Validate EBRM trace scoring accuracy on SOTA model outputs using CPU vs KV260 offload.
+      EXISTING CODE TO READ FIRST: crates/carnot-gpu/src/kv260_ebrm.rs
+      TASK: Compare execution latency and scoring delta.
+      CONCRETE STEPS:
+      1. Write `scripts/experiment_1658_hw_eval.py` using KV260 backend.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1659-smgi-certified-updates
+    title: 'Exp 1659: SMGI Certified Updates for FR-11'
+    deliverable: python/carnot/pipeline/smgi_updates.py
+    agent_type: codex
+    prompt: |
+      CONTEXT: Self-Modeling Generative Intelligence (SMGI) prevents catastrophic forgetting via certified updates.
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/session_memory_pack.py
+      TASK: Implement certified update gates for FR-11 CerCE ledger based on SMGI principles.
+      CONCRETE STEPS:
+      1. Write `python/carnot/pipeline/smgi_updates.py`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1660-ltlzinc-benchmark
+    title: 'Exp 1660: LTLZinc Temporal Benchmark'
+    deliverable: data/ltlzinc_benchmark.json
+    agent_type: codex
+    prompt: |
+      CONTEXT: We need a temporal benchmark to validate non-forgetting.
+      EXISTING CODE TO READ FIRST: data/constraint_templates.json
+      TASK: Generate LTLZinc temporal logic cases for evaluation.
+      CONCRETE STEPS:
+      1. Write `scripts/generate_ltlzinc.py` to create `data/ltlzinc_benchmark.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1661-fr11-smgi-learning
+    title: 'Exp 1661: gated on Exp 1659, 1660: FR-11 SMGI Continuous Learning'
+    deliverable: results/experiment_1661_smgi_learning.json
+    continuous_self_learning_task: true
+    gated_on:
+      - upstream: exp1659-smgi-certified-updates
+        artifact_field: status
+        op: '=='
+        value: "complete"
+    model_specs: ['unsloth/Qwen3.6-35B-A3B-GGUF', 'unsloth/gemma-4-31B-it-GGUF', 'unsloth/gemma-4-26B-A4B-it-GGUF']
+    agent_type: codex
+    prompt: |
+      CONTEXT: Run the continuous self-learning loop with SMGI updates to guarantee zero forgetting on LTLZinc.
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/smgi_updates.py
+      TASK: Execute policy promotion loop. Verify continuous self-learning.
+      CONCRETE STEPS:
+      1. Write `scripts/experiment_1661_smgi.py` asserting `continuous_self_learning_task`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1662-pinet-projection-layer
+    title: 'Exp 1662: Pi-net Differentiable Projection'
+    deliverable: python/carnot/models/pinet_layer.py
+    agent_type: codex
+    prompt: |
+      CONTEXT: Feasible-by-design projection via Pi-net mechanism.
+      EXISTING CODE TO READ FIRST: python/carnot/models/boltzmann.py
+      TASK: Prototype differentiable Douglas-Rachford projection layer.
+      CONCRETE STEPS:
+      1. Write `python/carnot/models/pinet_layer.py`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1663-pinet-vs-tskm
+    title: 'Exp 1663: gated on Exp 1662: Pi-net vs T-SKM Eval'
+    deliverable: results/experiment_1663_pinet.json
+    gated_on:
+      - upstream: exp1662-pinet-projection-layer
+        artifact_field: status
+        op: '=='
+        value: "complete"
+    agent_type: codex
+    prompt: |
+      CONTEXT: Compare the Pi-net prototype against our T-SKM projection.
+      EXISTING CODE TO READ FIRST: python/carnot/models/pinet_layer.py
+      TASK: Run comparative evaluation of constraint satisfaction accuracy.
+      CONCRETE STEPS:
+      1. Write `scripts/experiment_1663_eval.py`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1664-update-e2e-plan
+    title: 'Exp 1664: Update E2E Test Plan for SMGI/EBRM'
+    deliverable: results/experiment_1664_e2e_plan.json
+    max_turns: 20
+    agent_type: codex
+    prompt: |
+      CONTEXT: New hardware and SMGI learning require E2E testing.
+      EXISTING CODE TO READ FIRST: ops/e2e-test-plan.md
+      TASK: Add test scenarios for EBRM scorers and SMGI update verification.
+      CONCRETE STEPS:
+      1. Write `scripts/experiment_1664_e2e.py` to update the plan.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1665-retro-127
+    title: 'Exp 1665: Milestone .127 Retrospective'
+    deliverable: results/operational_retro_2026_05_127.json
+    max_turns: 20
+    agent_type: codex
+    prompt: |
+      CONTEXT: Close out milestone .127.
+      EXISTING CODE TO READ FIRST: ops/changelog.md
+      TASK: Summarize findings for .127.
+      CONCRETE STEPS:
+      1. Write `scripts/experiment_1665_retro.py` to produce the retrospective JSON.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
