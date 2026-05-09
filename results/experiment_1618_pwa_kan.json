@@ -1,0 +1,145 @@
+{
+  "arbitrary_1d_spline_supported": true,
+  "artifact_path": "results/experiment_1618_pwa_kan.json",
+  "bspline_wrapper_supported": true,
+  "exact_linear": {
+    "domain": [
+      -1.0,
+      1.0
+    ],
+    "max_abs_error": 0.0,
+    "name": "exact_linear_reference",
+    "segment_count": 2,
+    "segments": [
+      {
+        "intercept": 1.0,
+        "lower_intercept": 1.0,
+        "lower_x": -1.0,
+        "max_abs_error": 0.0,
+        "residual_max": 0.0,
+        "residual_min": 0.0,
+        "slope": 1.0,
+        "upper_intercept": 1.0,
+        "upper_x": 0.0
+      },
+      {
+        "intercept": 1.0,
+        "lower_intercept": 1.0,
+        "lower_x": 0.0,
+        "max_abs_error": 0.0,
+        "residual_max": 0.0,
+        "residual_min": 0.0,
+        "slope": 1.0,
+        "upper_intercept": 1.0,
+        "upper_x": 1.0
+      }
+    ]
+  },
+  "exact_linear_max_abs_error": 0.0,
+  "experiment": 1618,
+  "experiment_id": 1618,
+  "honest_verdict": "complete: pwa_kan_logical_affine_bounds_ready",
+  "logical_constraint_count": 4,
+  "logical_constraints": [
+    {
+      "center_intercept": 1.0,
+      "condition": "-1.0 <= x <= 0.0",
+      "lower": "1.0 * x + 1.0 <= y",
+      "lower_intercept": 1.0,
+      "lower_x": -1.0,
+      "segment_index": 0,
+      "slope": 1.0,
+      "upper": "y <= 1.0 * x + 1.0",
+      "upper_intercept": 1.0,
+      "upper_x": 0.0
+    },
+    {
+      "center_intercept": 1.0,
+      "condition": "0.0 <= x <= 1.0",
+      "lower": "1.0 * x + 1.0 <= y",
+      "lower_intercept": 1.0,
+      "lower_x": 0.0,
+      "segment_index": 1,
+      "slope": 1.0,
+      "upper": "y <= 1.0 * x + 1.0",
+      "upper_intercept": 1.0,
+      "upper_x": 1.0
+    },
+    {
+      "center_intercept": 0.0,
+      "condition": "-1.0 <= x <= 0.0",
+      "lower": "-1.0 * x + -0.25 <= y",
+      "lower_intercept": -0.25,
+      "lower_x": -1.0,
+      "segment_index": 0,
+      "slope": -1.0,
+      "upper": "y <= -1.0 * x + 0.0",
+      "upper_intercept": 0.0,
+      "upper_x": 0.0
+    },
+    {
+      "center_intercept": 0.0,
+      "condition": "0.0 <= x <= 1.0",
+      "lower": "1.0 * x + -0.25 <= y",
+      "lower_intercept": -0.25,
+      "lower_x": 0.0,
+      "segment_index": 1,
+      "slope": 1.0,
+      "upper": "y <= 1.0 * x + 0.0",
+      "upper_intercept": 0.0,
+      "upper_x": 1.0
+    }
+  ],
+  "module": "python/carnot/models/pwa_kan.py",
+  "nonlinear_max_abs_error": 0.25,
+  "nonlinear_reference": {
+    "domain": [
+      -1.0,
+      1.0
+    ],
+    "max_abs_error": 0.25,
+    "name": "quadratic_callable",
+    "segment_count": 2,
+    "segments": [
+      {
+        "intercept": 0.0,
+        "lower_intercept": -0.25,
+        "lower_x": -1.0,
+        "max_abs_error": 0.25,
+        "residual_max": 0.0,
+        "residual_min": -0.25,
+        "slope": -1.0,
+        "upper_intercept": 0.0,
+        "upper_x": 0.0
+      },
+      {
+        "intercept": 0.0,
+        "lower_intercept": -0.25,
+        "lower_x": 0.0,
+        "max_abs_error": 0.25,
+        "residual_max": 0.0,
+        "residual_min": -0.25,
+        "slope": 1.0,
+        "upper_intercept": 0.0,
+        "upper_x": 1.0
+      }
+    ]
+  },
+  "nonlinear_sample_violations": 0,
+  "pwa_kan_ready": true,
+  "run_date": "20260509",
+  "sample_interval_bound": {
+    "lower": -0.25,
+    "lower_witness_x": 0.0,
+    "segment_count": 2,
+    "upper": 0.75,
+    "upper_witness_x": -0.75
+  },
+  "schema": "carnot.pwa_kan_logical_bounds.v1",
+  "spec": [
+    "REQ-KAN-1618",
+    "SCENARIO-KAN-1618"
+  ],
+  "status": "complete",
+  "title": "PWA KAN logical spline activation bounds"
+}

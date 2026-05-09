@@ -183,6 +183,7 @@ sets `variance_worsened` from the measured paraphrase variance comparison.
 | REQ-KAN-1516 | Implemented | Exp 1516 normalized KAN/KAEM proxy and model shapes into an explicit provenance manifest before any future synthesis claim. |
 | REQ-KAN-1602 | Implemented | Exp 1602 exact-rational KAN forward pass uses Python `fractions.Fraction` for bit-identical formal-verification arithmetic. |
 | REQ-KAN-1604 | Implemented | Exp 1604 Sparse KAN clustering records Global Group Lasso, spectral regularization, sparsity, and memory-compression metrics. |
+| REQ-KAN-1618 | Proposed | Exp 1618 target: model-level PWA KAN wrapper for logical affine activation bounds over arbitrary 1D spline callables. |
 | REQ-KAN-1384 | Proposed | Exp 1384 target: EBM-CoT contrastive hinge calibration on FoVer verified pairs. |
 | REQ-KAN-1401 | Proposed | Exp 1401 target: EBM-CoT v2 hinge-only calibration on the Exp1384 FoVer split with consistency weight 0.0. |
 
@@ -693,3 +694,42 @@ Then the low-norm groups are pruned, the sparsity ratio is measured from the
 active centroid codebook, the compressed-memory estimate is smaller than the
 dense matrix, and `results/experiment_1604_sparse_kan.json` records the
 completed compression artifact.
+
+## REQ-KAN-1618: PWA KAN Wrapper for Logical Spline Activation Bounds
+
+The KAN model tier MUST provide a CPU-only Piecewise Affine (PWA) wrapper for
+one-dimensional KAN spline activations. The wrapper MUST support arbitrary 1D
+spline callables by sampling them at declared breakpoints, computing affine
+center lines, and deriving conservative affine lower and upper activation
+boundaries for each segment.
+
+**Rationale:**
+    Formal verification workflows need KAN activations to be expressible as
+    local linear implications: if an input lies in one segment, the activation
+    lies between two affine boundary functions. Exact knot-aligned linear KAN
+    splines should have zero envelope error, while nonlinear or externally
+    supplied spline callables still need deterministic sampled envelopes that
+    are safe for logical downstream checks.
+
+**Acceptance criteria:**
+    - `python/carnot/models/pwa_kan.py` exposes a PWA spline wrapper for
+      arbitrary 1D callables and existing `BSpline` KAN units.
+    - Each segment records `slope`, `intercept`, affine lower/upper boundaries,
+      residual bounds, and `max_abs_error`.
+    - Interval activation-bound queries check every overlapping segment and
+      return deterministic lower/upper values with witness inputs.
+    - The wrapper can emit JSON-safe logical constraints of the form
+      `x in [lo, hi] => lower_affine(x) <= y <= upper_affine(x)`.
+    - The experiment artifact `results/experiment_1618_pwa_kan.json` is written
+      with `schema`, `status`, `experiment_id`, `spec`, logical-bound metrics,
+      and a terminal `honest_verdict`.
+
+### SCENARIO-KAN-1618: PWA wrapper bounds exact and nonlinear spline units
+
+Given an exact piecewise-linear KAN spline and a nonlinear 1D spline callable,
+When the PWA wrapper builds affine segment boundaries and evaluates interval
+activation bounds,
+Then the exact KAN spline has zero sampled envelope error, nonlinear samples are
+contained inside their segment lower/upper affine envelopes, and
+`results/experiment_1618_pwa_kan.json` records the completed model-level PWA
+KAN abstraction artifact.

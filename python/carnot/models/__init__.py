@@ -64,6 +64,14 @@ from carnot.models.potts_machine import (
     PottsMachineVerifier,
     PottsState,
 )
+from carnot.models.pwa_kan import (
+    ActivationIntervalBound,
+    PWAKANUnit,
+    PWASplineSegment,
+    build_experiment_1618_artifact,
+    build_pwa_for_bspline,
+    write_experiment_1618_artifact,
+)
 from carnot.models.rkan import (
     RationalKANEnergyFunction,
     RationalLinearSpline,
@@ -127,6 +135,12 @@ __all__ = [
     "PottsCoupling",
     "PottsMachineVerifier",
     "PottsState",
+    "ActivationIntervalBound",
+    "PWAKANUnit",
+    "PWASplineSegment",
+    "build_experiment_1618_artifact",
+    "build_pwa_for_bspline",
+    "write_experiment_1618_artifact",
     "RationalKANEnergyFunction",
     "RationalLinearSpline",
     "build_experiment_1602_artifact",
