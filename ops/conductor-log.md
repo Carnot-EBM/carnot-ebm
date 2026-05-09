@@ -1328,3 +1328,6 @@ web search: site:o |
 | 2026-05-09 09:21 UTC | Milestone 2026.05.123 activated | OK | 13 tasks queued |
 | 2026-05-09 09:33 UTC | Exp 1601: Archive .122 and initialize .123 | OK | 81 passed, 1 warning in 4.81s |
 | 2026-05-09 09:43 UTC | Exp 1602: Exact-Rational KAN (RKAN) prototype | OK | 81 passed, 1 warning in 5.08s |
+| 2026-05-09 11:06 UTC | Exp 1603: Energy-Based Constraint Network (EBCN) c | FAIL | Gemini CLI error: Hard wall-clock cap after 4802s. Last output: at(energy)
++
++ |

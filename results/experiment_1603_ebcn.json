@@ -1,0 +1,73 @@
+{
+  "autoregressive_generation_used": false,
+  "case_scores": [
+    {
+      "autoregressive_generation_used": false,
+      "case_id": "consistent-alpha",
+      "contradiction_energy": 0.0,
+      "contradiction_pairs": [],
+      "dual_head_attention_used": true,
+      "energy": 0.072856,
+      "expected_contradiction": false,
+      "support_energy": 1.457114
+    },
+    {
+      "autoregressive_generation_used": false,
+      "case_id": "consistent-delta",
+      "contradiction_energy": 0.0,
+      "contradiction_pairs": [],
+      "dual_head_attention_used": true,
+      "energy": 0.090799,
+      "expected_contradiction": false,
+      "support_energy": 1.815981
+    },
+    {
+      "autoregressive_generation_used": false,
+      "case_id": "contradict-alpha",
+      "contradiction_energy": 2.792726,
+      "contradiction_pairs": [
+        [
+          "alpha",
+          0,
+          2
+        ]
+      ],
+      "dual_head_attention_used": true,
+      "energy": 2.865698,
+      "expected_contradiction": true,
+      "support_energy": 1.459439
+    },
+    {
+      "autoregressive_generation_used": false,
+      "case_id": "contradict-gamma",
+      "contradiction_energy": 1.955337,
+      "contradiction_pairs": [
+        [
+          "gamma",
+          0,
+          2
+        ]
+      ],
+      "dual_head_attention_used": true,
+      "energy": 2.036501,
+      "expected_contradiction": true,
+      "support_energy": 1.623281
+    }
+  ],
+  "consistent_cases": 2,
+  "consistent_mean_energy": 0.081827,
+  "contradiction_cases": 2,
+  "contradiction_mean_energy": 2.451099,
+  "dual_head_attention_used": true,
+  "ebcn_scorer_ready": true,
+  "energy_gap": 2.369272,
+  "experiment_id": 1603,
+  "false_accept_rate": 0.0,
+  "hidden_state_source": "deterministic_synthetic_logical_trace_encoder",
+  "honest_verdict": "complete: EBCN dual-head hidden-state scorer separates synthetic logical contradictions without autoregressive generation",
+  "run_date": "20260509",
+  "schema_version": 1,
+  "status": "complete",
+  "synthetic_cases_total": 4,
+  "tests_run": []
+}
