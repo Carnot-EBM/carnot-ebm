@@ -626,6 +626,7 @@ class CaseMemory:
         violation_energy: float,
         model_confidence: float,
         min_contrast: float = 0.5,
+        certified_update_success: bool = False,
     ) -> bool:
         """Store a trace only when violation_energy and model_confidence disagree.
 
@@ -648,12 +649,16 @@ class CaseMemory:
             model_confidence:  Model's self-reported confidence in [0, 1].
             min_contrast:      Minimum contrast required to retain the trace.
                                Default 0.5 (target: ~40% retention per ATLAS).
+            certified_update_success: LTLZinc certified update flag. Default False.
 
         Returns:
-            True if the trace was stored, False if discarded as low-contrast.
+            True if the trace was stored, False if discarded as low-contrast or uncertified.
 
-        Spec: REQ-LEARN-016-3, REQ-LEARN-016-4, SCENARIO-LEARN-028
+        Spec: REQ-LEARN-016-3, REQ-LEARN-016-4, SCENARIO-LEARN-028, SMGI
         """
+        if not certified_update_success:
+            return False
+            
         contrast = abs(violation_energy - model_confidence)
         if contrast <= min_contrast:
             return False

@@ -1364,6 +1364,37 @@ as a diagnostic, not as evidence of Kona parity or decoded answer quality.
   bounded injected-span localization diagnostic beat random without claiming
   live decoded quality.
 
+### REQ-KONA-037: Pi-Net-Style Continuous Constraint Projection Layer
+
+Carnot MUST provide a deterministic CPU-only Exp 1633 prototype of a Pi-Net-style
+projection layer for the continuous constraint tier. The layer MUST be implemented
+with JAX tensor operations, accept a continuous latent state plus linear equality
+constraints `A_eq @ z = b_eq` and inequality constraints `A_ineq @ z <= b_ineq`,
+and project infeasible states into the hard-constraint set without training a
+neural model or requiring GPU hardware.
+
+The Exp 1633 workflow MUST write `results/experiment_1633_pinet.json` with
+`status`, `schema`, `experiment_id`, `spec_refs`, `projection_error`,
+`convergence_steps`, `cases_evaluated`, `differentiable_projection`, and
+`honest_verdict`. `projection_error` MUST be the maximum residual over equality
+violations and positive inequality violations after projection.
+
+**Rationale:** Existing Phase 3 feasibility repair prototypes reduce violation
+energy, but Pi-Net-style hard projection is the sharper contract for a continuous
+constraint tier: the next layer should receive a latent that satisfies the
+declared constraints, not merely a lower-energy latent.
+
+**Acceptance criteria:**
+
+- `scripts/experiment_1633_pinet.py` exposes a JAX-based projection layer with
+  deterministic validation and projection diagnostics.
+- Focused tests verify that infeasible toy continuous states are projected to
+  satisfy all declared hard constraints, the projection is differentiable through
+  JAX autodiff for the continuous state, malformed constraints are rejected, and
+  the artifact contains `projection_error` and `convergence_steps`.
+- `results/experiment_1633_pinet.json` records all required fields with an
+  honest verdict derived from measured residuals and convergence.
+
 ## Scenarios
 
 ### SCENARIO-KONA-001: Stage 1 Primitive — RDT Fixed-Point Convergence
@@ -1858,6 +1889,19 @@ decoded quality claim.
 
 **Spec traces:** REQ-KONA-036
 
+### SCENARIO-KONA-037: Exp 1633 Projects Continuous Latents Into Hard Constraints
+
+**Given** deterministic continuous toy states with linear equality and inequality
+constraints for the Phase 3 continuous tier
+**When** Exp 1633 applies the JAX Pi-Net-style projection layer
+**Then** it writes `results/experiment_1633_pinet.json` with all REQ-KONA-037
+required fields, reports `projection_error` from the measured final hard
+constraint residual, reports `convergence_steps` from the bounded projection
+loop, and sets `differentiable_projection=true` only when JAX autodiff produces
+a finite gradient through the projected state.
+
+**Spec traces:** REQ-KONA-037
+
 ## Out of scope
 
 The following are deliberately **not** required by this capability:
@@ -1926,6 +1970,8 @@ The following are deliberately **not** required by this capability:
   implementation lives in `python/carnot/phase3/latent_drift_smoke.py`.
 - **Anchored dual-path latent repair smoke:** specified by REQ-KONA-034;
   implementation lives in `python/carnot/phase3/anchored_dual_path_latent_repair.py`.
+- **Pi-Net-style continuous hard projection:** specified by REQ-KONA-037;
+  implementation lives in `scripts/experiment_1633_pinet.py`.
 
 First concrete next experiment:
 `experiment_XXX_rdt_primitive_convergence.py` — implement the RDT scaffold and
