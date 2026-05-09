@@ -1423,3 +1423,4 @@ web search: site:o |
 | 2026-05-09 22:13 UTC | Exp 1653: NSVIF DSL SOTA GGUF Integration | OK | 81 passed, 1 warning in 4.71s |
 | 2026-05-09 22:15 UTC | Exp 1654: Energy-Guided Decoding via STATIC CSR | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-09 22:17 UTC | Exp 1654: Energy-Guided Decoding via STATIC CSR | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-09 22:19 UTC | Exp 1654: Energy-Guided Decoding via STATIC CSR | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
