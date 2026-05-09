@@ -1388,3 +1388,5 @@ web search: site:o |
 | 2026-05-09 16:48 UTC | Exp 1632: gated on Exp 1631 certified_update_succe | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1631-smgi-certified-updates) |
 | 2026-05-09 16:58 UTC | Exp 1633: Pi-net style differentiable projection l | OK | 126 passed, 1 warning in 5.58s |
 | 2026-05-09 17:00 UTC | Exp 1632: gated on Exp 1631 certified_update_succe | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1631-smgi-certified-updates) |
+| 2026-05-09 17:05 UTC | Exp 1634: Compare Pi-net projection against T-SKM  | OK | 81 passed, 1 warning in 4.98s |
+| 2026-05-09 17:07 UTC | Exp 1632: gated on Exp 1631 certified_update_succe | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1631-smgi-certified-updates) |
