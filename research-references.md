@@ -4,6 +4,172 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-05-09 Post-.121 Planning Sweep (Milestone 2026.05.122)
+
+This sweep was run after milestone `.121` completed. Local outcomes: BRAIN
+REINFORCE gradient-starvation was overstated (`exp1578`, factorized and
+Linear-AR both converged to KL about 0.001336), DCCD/JSONSchemaBench produced a
+clean mandated-SOTA structured-output smoke (`exp1580`, schema validity 1.0,
+semantic correctness 1.0, false accepts 0), FR-11 v15 reversed the v14
+mode-collapsed retention but only shipped a simulator/deferred lambda-GRPO path
+(`exp1581`), Phase-1 ship readiness still has 9 concrete blockers (`exp1582`),
+Z1 detailed-balance correction is simulator-only but within the one-sigma gate
+(`exp1583`), Tenstorrent/PolarFire remain blocked by absent hardware/toolchain
+(`exp1584`, `exp1585`), and Strix/KV260 were correctly re-scoped (`exp1586`).
+
+### NSVIF and RvLLM: Constraint Extraction as the Main Product Gap
+- **Papers:** arXiv:2601.17789 "Neuro-Symbolic Verification on Instruction
+  Following of LLMs"; arXiv:2505.18585 "RvLLM: LLM Runtime Verification with
+  Domain Knowledge."
+- **Sources:** https://arxiv.org/abs/2601.17789 and
+  https://arxiv.org/abs/2505.18585
+- **What:** NSVIF models user instructions as logical and semantic constraints
+  and solves them through a unified neuro-symbolic verifier. RvLLM supplies a
+  lightweight domain specification language for runtime verification.
+- **Relevance to Carnot:** `research-program.md` still names extraction as the
+  highest-priority bottleneck. `.121` proved structured outputs can be made
+  valid, but external users still need a way to turn prompts, tool contracts,
+  and domain rules into executable Carnot constraints.
+- **Concrete experiment hook:** Build a bounded instruction-to-constraint pack:
+  parse NL instructions into a small Carnot DSL, compile logical constraints to
+  Z3/PySAT/Python validators, and evaluate zero-false-accept behavior on
+  mandated local SOTA GGUF outputs.
+
+### FALCON, DCCD, STATIC, and llguidance: Scale Structured Repair Without Drift
+- **Papers/repos:** arXiv:2602.01090 FALCON; arXiv:2603.03305 DCCD;
+  arXiv:2602.22647 STATIC; `guidance-ai/llguidance`.
+- **Sources:** https://arxiv.org/abs/2602.01090,
+  https://arxiv.org/abs/2603.03305, https://arxiv.org/abs/2602.22647,
+  https://github.com/guidance-ai/llguidance
+- **What:** FALCON combines grammar-constrained decoding, semantic repair, and
+  adaptive Best-of-N to guarantee feasibility for LLM combinatorial
+  optimization. DCCD separates unconstrained drafting from constrained
+  regeneration and frames hard constraints as projection tax. STATIC flattens
+  trie masks into CSR sparse matrix operations for accelerators. llguidance is
+  a production-grade structured-output engine integrated with llama.cpp/vLLM/
+  SGLang and reports about 50 microseconds CPU mask time per token.
+- **Relevance to Carnot:** `.121` proved a small DCCD/schema smoke. The next
+  question is whether Carnot can ship a reusable external structured-verdict
+  path with low latency and zero false accepts, not just a one-off JSON demo.
+- **Concrete experiment hook:** Upgrade DCCD smoke to a reusable structured
+  verdict adapter using llguidance/llama.cpp where available, then gate a
+  STATIC-style CSR-mask prototype only if schema validity and semantic
+  correctness remain at 1.0 on the local SOTA GGUF pair.
+
+### Constrained Diffusion LLMs: Non-Autoregressive Future Hook
+- **Paper/repo:** arXiv:2508.10111 "Constrained Decoding of Diffusion LLMs with
+  Context-Free Grammars"; `eth-sri/constrained-diffusion`.
+- **Sources:** https://arxiv.org/abs/2508.10111 and
+  https://github.com/eth-sri/constrained-diffusion
+- **What:** Extends grammar-constrained decoding to diffusion and multi-region
+  infilling models, supporting JSON, C++, and SMILES constraints while
+  preserving or improving functional correctness.
+- **Relevance to Carnot:** Kona/EBT parity points away from strictly
+  autoregressive generation. This is a future bridge from Carnot's current
+  llama.cpp/GGUF path to non-autoregressive structured generation.
+- **Concrete experiment hook:** Do not prioritize full diffusion-LLM integration
+  before Phase-1 ship blockers. Keep a small design note or interface audit so
+  Carnot's constraint adapters are not autoregressive-only.
+
+### CerCE: Certified Non-Forgetting for Continuous Self-Learning
+- **Paper:** OpenReview ICLR 2026 submission "CerCE: Towards Certifiable
+  Continual Learning."
+- **Source:** https://openreview.net/forum?id=Anh6VfNM22
+- **What:** Recasts continual learning as constrained optimization with LiRPA
+  certificates, gradient projection, and Lagrangian relaxation to guarantee
+  non-forgetting during updates.
+- **Relevance to Carnot:** FR-11 has repeatedly proven safety/rollback but only
+  intermittently shows positive utility. `.121` reversed a collapsed retained
+  policy, which makes an explicit non-forgetting certificate the next natural
+  requirement before promoting new policies.
+- **Concrete experiment hook:** Add a certificate ledger around FR-11 policy
+  promotion: pre/post constraint violation bounds, replay retention checks, and
+  a reject-if-bound-worsens gate. This can run CPU-only and preserves the
+  hardware path because the certificate is arithmetic plus small matrix bounds.
+
+### Spilled Energy, HalluGuard, and EBT Citation Watch
+- **Papers:** arXiv:2602.18671 "Spilled Energy in Large Language Models";
+  arXiv:2601.18753 "HalluGuard"; arXiv:2507.02092 "Energy-Based Transformers
+  are Scalable Learners and Thinkers."
+- **Sources:** https://arxiv.org/abs/2602.18671,
+  https://arxiv.org/abs/2601.18753, https://arxiv.org/abs/2507.02092,
+  Semantic Scholar citation API for arXiv:2507.02092 and arXiv:2512.15605.
+- **What:** Spilled Energy derives training-free logit-energy metrics for
+  hallucination localization; HalluGuard decomposes hallucination risk into
+  data-driven and reasoning-driven components; EBT continues to attract
+  follow-on work on energy-guided planning and transport-aligned graph EBMs.
+- **Semantic Scholar watch:** Recent citing papers include "Planning as
+  Descent" (arXiv:2512.17846), "Graph Energy Matching" (arXiv:2603.23398),
+  "Large Language Models Can Take False First Steps at Inference-time
+  Planning" (arXiv:2602.02991), and "Ontology-Constrained Neural Reasoning"
+  (arXiv:2604.00555).
+- **Relevance to Carnot:** These remain valuable diagnostic and related-work
+  signals, but `.121` reinforces that deterministic validators, not soft
+  energy/logprob scores, must remain acceptance authority.
+- **Concrete experiment hook:** Use local SOTA GGUF logits to add a diagnostic
+  "first-step/spilled-energy" telemetry row under the structured verdict, then
+  verify that it never changes acceptance without a deterministic validator.
+
+### Parallel Inertial Probabilistic Ising Machines
+- **Paper:** arXiv:2604.17109 "A fully parallel densely connected
+  probabilistic Ising machine with inertia for real-time applications."
+- **Source:** https://arxiv.org/abs/2604.17109
+- **What:** Adds an inertia term to p-bit Ising dynamics so fully parallel,
+  synchronous updates can work for dense problems; reports algorithmic
+  simulations, FPGA hardware emulation, and FPGA experiments with large
+  speedups for Max-Cut/SK/MIMO cases.
+- **Relevance to Carnot:** Carnot previously retired KV260 board claims but
+  preserved source-level RTL/simulation. Inertial parallel updates are directly
+  relevant to the source-level simulator lane and may fix the synchronous
+  detailed-balance failures seen in earlier KV260 work.
+- **Concrete experiment hook:** CPU/simulator-only inertial-update ablation
+  against Carnot sequential Gibbs and vendored THRML block Gibbs. This should
+  be explicitly source-level/simulator-only; no board or latency claim.
+
+### Probabilistic/Thermodynamic Hardware Status Boundary
+- **Sources:** Extropic essay "Thermodynamic Computing From Zero to One"
+  (https://extropic.ai/writing/thermodynamic-computing-from-zero-to-one),
+  THRML GitHub (https://github.com/extropic-ai/thrml), and arXiv:2510.23972
+  "An efficient probabilistic hardware architecture for diffusion-like models."
+- **What:** Extropic publicly describes XTR-0 as a hardware proof-of-technology,
+  THRML as the Python simulator path, and the TSU architecture as probabilistic
+  hardware for generative workloads.
+- **Relevance to Carnot:** `.121` already added synthetic detailed-balance
+  correction for Z1 drift. Next work should use THRML simulation and drift
+  envelopes only; no Z1/XTR hardware execution claim is permissible without an
+  authenticated transcript.
+- **Concrete experiment hook:** Convert the Z1 drift simulation into a
+  `SamplerBackend` compatibility test with explicit fields for device
+  transcript absent/present, drift envelope, correction method, and bounded KL.
+
+### KAN Verification and Hardware Claims Remain Useful but Not Phase-1 Blocking
+- **Papers:** arXiv:2602.06737 KAN property verification; arXiv:2604.03345
+  KAN hardware inference complexity; arXiv:2602.07518 physical analog KANs.
+- **Sources:** https://arxiv.org/abs/2602.06737,
+  https://arxiv.org/abs/2604.03345, https://arxiv.org/abs/2602.07518
+- **What:** KAN verification can be encoded as MILP over piecewise-affine
+  abstractions with error bounds. Hardware-complexity metrics can be computed
+  before synthesis, and analog KAN work suggests realistic low-energy edge
+  inference paths.
+- **Relevance to Carnot:** KAN/SOS-KAN claims should use these verification and
+  complexity frameworks, but Phase-1 ship blockers and structured constraint
+  extraction outrank another KAN benchmark this milestone.
+- **Concrete experiment hook:** If KAN work is included, make it an audit that
+  adds complexity/certificate fields to existing KAN artifacts rather than a new
+  performance-claim branch.
+
+### Kona Public Status
+- **Sources:** https://logicalintelligence.com/kona-ebms-energy-based-models
+  and https://logicalintelligence.com/blog/energy-based-models-for-reasoning
+- **What:** Logical Intelligence publicly positions Kona as an EBM reasoning
+  layer below modern AI stacks, enforcing validity/safety/permissibility rather
+  than generating text.
+- **Relevance to Carnot:** This validates Carnot's "verifier beneath the model"
+  direction but remains a public claim boundary, not an integration target.
+- **Concrete experiment hook:** Use Kona as related-work framing for paper-v6
+  and Phase-3 architecture notes; do not plan integration tasks until an API or
+  public artifact exists.
+
 ## 2026-05-08 Post-.120 Planning Sweep (Milestone 2026.05.121)
 
 This sweep was run after the operator reported all `.120` tasks completed.
