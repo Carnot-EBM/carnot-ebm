@@ -1,0 +1,33 @@
+{
+  "schema": "carnot.operational_retro.v63",
+  "milestone": "2026.05.126",
+  "generated_at": "2026-05-09T20:59:58Z",
+  "retro_type": "operational_final",
+  "summary": "Milestone 2026.05.126 operational retrospective complete. Analyzed 711 min wall time / 151 experiments (avg 5 min). Slowest paths: Exp 1603 (88 min), Exp 1642 (54 min), Exp 1633 (50 min), Exp 1591 (48 min), Exp 1640 (38 min). Both RTX 3090s were completely idle at 4 MB / 0% utilization throughout, meaning DualGPURunner was not utilized and parallelization was missed. No zombie processes were detected. Estimated 40% savings recoverable via DualGPURunner parallelization and addressing the sequential execution bottlenecks of long-running experiments.",
+  "total_wall_time_minutes": 711,
+  "experiments_completed": 151,
+  "slowest_experiments": [
+    "1603: Energy-Based Constraint Network (EBCN) coherence sco (88min)",
+    "1642: llguidance adapter for reusable external structured- (54min)",
+    "1633: Pi-net style differentiable projection layer prototy (50min)",
+    "1591: Upgrade DCCD smoke to reusable structured verdict ad (48min)",
+    "1640: NSVIF instruction-to-constraint DSL implementation (38min)"
+  ],
+  "bottlenecks_identified": [
+    "Sequential scheduling: 151 experiments ran sequentially without parallel execution.",
+    "GPU Underutilization: Both RTX 3090 GPUs (GPU 0 and GPU 1) remained completely idle (0% utilization) despite available capacity.",
+    "Long-running experiments (Exp 1603, 1642, 1633) blocked downstream tasks."
+  ],
+  "improvements_suggested": [
+    "Utilize DualGPURunner to run models on GPU 0 and GPU 1 simultaneously for parallel execution.",
+    "Schedule independent experiments concurrently to utilize idle GPU resources.",
+    "Investigate and free up the 4MB allocated on GPUs to ensure clean execution state."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Enable DualGPURunner parallelization.",
+    "Address execution bottlenecks in constraint and projection layer prototypes.",
+    "Optimize sequential scheduling into concurrent batches."
+  ],
+  "estimated_time_savings_pct": 40,
+  "meta_reflection": "Sequential execution of 151 experiments caused significant delays (711 minutes). Implementing parallel execution via DualGPURunner could save approximately 40% of wall time."
+}

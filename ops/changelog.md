@@ -5332,3 +5332,7 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-09: Exp 1648: Sparse KANs with spectral constraints for manifold compression (✅ Complete) — honest_verdict=complete: spectral_sparse_kan_compressed_tier4_landscape; results/experiment_1648_sparse_kan.json
 - 2026-05-09: Exp 1649: KV260 Vivado bitfile synthesis for q=3 Potts machine (⚠️ Research Finding) — honest_verdict=vivado_not_installed; results/experiment_1649_vivado_synthesis.json
 - 2026-05-09: Exp 1651: Milestone 126 Retrospective (✅ Complete) — honest_verdict=milestone_126_retrospective_filed_8_of_11_complete; results/experiment_1651_retro.json
+
+## 2026-05-09 (Milestone 2026.05.126 Operational Retrospective)
+
+- 2026-05-09: Milestone 2026.05.126 operational retrospective complete. Analyzed 711 min wall time / 151 experiments (avg 5 min). Slowest paths: Exp 1603 (88 min), Exp 1642 (54 min), Exp 1633 (50 min), Exp 1591 (48 min), Exp 1640 (38 min). Both RTX 3090s were completely idle at 4 MB / 0% utilization throughout, meaning DualGPURunner was not utilized and parallelization was missed. Estimated 40% savings recoverable via DualGPURunner parallelization and addressing sequential execution bottlenecks.
