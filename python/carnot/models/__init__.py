@@ -17,6 +17,13 @@ from carnot.models.ebm_cot_calibrator_v3 import (
     EPCouplingUpdate,
     SyntheticCoTPairGenerator,
 )
+from carnot.models.ebrm_scorer import (
+    EBRMTraceScore,
+    EBRMTraceScorer,
+    EBRMTraceScorerConfig,
+    LogicalTrace,
+    LogicalTraceStep,
+)
 from carnot.models.ebt import EBTConfig, EBTransformer
 from carnot.models.eorm import CoTEnergyInput, EORMModel, EORMTrainer
 from carnot.models.gibbs import GibbsConfig, GibbsModel
@@ -90,6 +97,9 @@ __all__ = [
     "BoltzmannModel",
     "EBMCoTCalibrator",
     "EBMCoTCalibratorV3",
+    "EBRMTraceScore",
+    "EBRMTraceScorer",
+    "EBRMTraceScorerConfig",
     "EPCouplingUpdate",
     "SyntheticCoTPairGenerator",
     "ComplianceDomain",
@@ -132,6 +142,8 @@ __all__ = [
     "ConstraintBoundary",
     "LowRankKAEMEnergy",
     "LowRankProjector",
+    "LogicalTrace",
+    "LogicalTraceStep",
     "PottsCoupling",
     "PottsMachineVerifier",
     "PottsState",

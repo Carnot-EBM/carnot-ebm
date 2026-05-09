@@ -18572,3 +18572,39 @@ The system SHALL validate EBRM trajectory optimization against mandated local SO
 **Then** it loads the SOTA GGUFs and evaluates EBRM trajectory optimization
 **And** it outputs a complete deliverable to `results/experiment_1629_ebrm_sota.json` containing the models used and an honest verdict.
 
+## REQ-VERIFY-1656: EBRM Extracted Logical Trace Scorer
+
+Carnot SHALL provide a deterministic model-layer EBRM scorer for extracted
+logical traces at `python/carnot/models/ebrm_scorer.py`.
+
+The scorer SHALL:
+
+- accept extracted trace rows containing proposition/claim identity, truth
+  polarity, confidence, support links, contradiction links, and constraint IDs;
+- return a finite continuous energy value where lower energy means the trace is
+  more logically coherent;
+- include an auditable component breakdown for contradiction, unsupported-step,
+  confidence, constraint-coverage, and ordering penalties;
+- support stable batch scoring while preserving input order; and
+- expose artifact helpers that can write
+  `results/experiment_1656_ebrm_trace_scorer.json` with `status`,
+  `experiment_id`, `ebrm_trace_scorer_ready`, `continuous_energy_used`,
+  `synthetic_cases_total`, `consistent_cases`, `inconsistent_cases`,
+  `consistent_mean_energy`, `inconsistent_mean_energy`, `energy_gap`,
+  `score_accuracy`, `spec_traces`, `tests_run`, and `honest_verdict`.
+
+**Implementation Status:** Implemented (Exp 1656)
+
+### SCENARIO-VERIFY-1656: EBRM Scores Extracted Logical Trace Constraints
+
+**Given** extracted logical traces containing both coherent support chains and
+paired traces with direct contradictions or unsupported conclusions,
+**When** the EBRM trace scorer evaluates the traces,
+**Then** inconsistent traces receive higher continuous energy than coherent
+traces,
+**And** each score exposes component fields explaining which reasoning
+constraints contributed to the energy,
+**And** the Exp 1656 artifact records the required schema fields and
+`score_accuracy`.
+
+**Spec traces:** REQ-VERIFY-1656, SCENARIO-VERIFY-1656, Exp 1656
