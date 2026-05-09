@@ -1,0 +1,33 @@
+{
+  "experiment": 1645,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-05-09",
+  "started_at": "2026-05-09T20:00:42.504729+00:00",
+  "finished_at": "2026-05-09T20:00:42.504729+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Exp 1645: gated on Exp 1644 ledger_implemented==true \u2014 FR-11 CerCE continuous self-learning loop",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "2 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: no prior_failures field on task",
+  "gates_evaluated": [
+    {
+      "upstream": "exp1388-fr11-self-learning-v4-dvi-grpo-integration",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Research Finding: fr11_self_learning_v4_dvi_only_exp1382_headline_allowed_fresh_59"
+    },
+    {
+      "upstream": "exp1395-fr11-self-learning-v5",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Research Finding: fr11_self_learning_v5_dvi_v2_secl_headline_allowed_fresh_1508_delta_1449_grpo_0"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}

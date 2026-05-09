@@ -1405,3 +1405,4 @@ web search: site:o |
 | 2026-05-09 18:53 UTC | Exp 1641: gated on Exp 1640 parser_success==true — | OK | 81 passed, 1 warning in 5.22s |
 | 2026-05-09 19:49 UTC | Exp 1642: llguidance adapter for reusable external | OK | 81 passed, 1 warning in 4.10s |
 | 2026-05-09 19:54 UTC | Exp 1643: gated on Exp 1642 adapter_success==true  | OK | 81 passed, 1 warning in 5.95s |
+| 2026-05-09 19:58 UTC | Exp 1644: CerCE-style certificate ledger for FR-11 | OK | 81 passed, 1 warning in 4.87s |
