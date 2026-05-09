@@ -5274,3 +5274,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-09: Exp 1594: Add CerCE-style certificate ledger around FR-11 (✅ Complete) — honest_verdict=complete: cerce_certificate_ledger_ready; results/experiment_1594_cerce_ledger.json
 - 2026-05-09: Exp 1595: Pre/post constraint violation bounds check (✅ Complete) — honest_verdict=complete: cerce_bounds_checked; results/experiment_1595_cerce_bounds.json
 - 2026-05-09: Exp 1597: CPU-only inertial-update Ising ablation (✅ Complete) — honest_verdict=complete: inertial_ising_speedup_observed_cpu_simulator_only; results/experiment_1597_inertial_ising.json
+- 2026-05-09: Exp 1598: Convert Z1 drift simulation into SamplerBackend test (✅ Complete) — honest_verdict=complete: z1_drift_samplerbackend_compatibility_simulator_only_no_execution_claim; results/experiment_1598_z1_drift.json
