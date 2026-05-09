@@ -1304,3 +1304,4 @@ web search: site:o |
 | 2026-05-09 06:00 UTC | Exp 1589: Evaluate zero-false-accept on mandated S | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1588-nsvif-dsl.dsl_compiled (actual=Non |
 | 2026-05-09 06:02 UTC | Exp 1589: Evaluate zero-false-accept on mandated S | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1588-nsvif-dsl.dsl_compiled (actual=Non |
 | 2026-05-09 06:09 UTC | Exp 1590: STATIC-style CSR-mask prototype for DSL | OK | 81 passed, 1 warning in 5.23s |
+| 2026-05-09 06:59 UTC | Exp 1591: Upgrade DCCD smoke to reusable structure | OK | 81 passed, 1 warning in 4.80s |
