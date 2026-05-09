@@ -733,3 +733,31 @@ Then the exact KAN spline has zero sampled envelope error, nonlinear samples are
 contained inside their segment lower/upper affine envelopes, and
 `results/experiment_1618_pwa_kan.json` records the completed model-level PWA
 KAN abstraction artifact.
+
+## REQ-KAN-1621: KANELE Python-to-Verilog 6-input LUT synthesis
+
+The KAN capability MUST include a Python-to-Verilog compiler that translates 1D
+edge functions directly into configuration bits for 6-input LUTs.
+
+**Rationale:**
+    To synthesize KAN edges into FPGA fabric, we need to map generic 1D
+    functions directly to 6-input LUT initializations (INIT parameters) rather
+    than relying on Vivado to infer tables.
+
+**Acceptance criteria:**
+    - A Python script `python/carnot/hardware/kan_lut_compiler.py` (or similar)
+      can take a generic 1D Python function `f(x)` over 6-bit input and produce
+      a 64-bit Verilog LUT INIT string.
+    - The compiler generates `hardware/kv260/kan_lut_block.v` containing
+      instantiated `LUT6` primitives.
+    - The experiment artifact `results/experiment_1621_kanele_mapping.json` is
+      written with `schema`, `status`, `experiment_id`, `spec`,
+      `kan_lut_verilog_ready`, `lut_config_bits_generated`,
+      `kan_lut_block_written`, and a terminal `honest_verdict`.
+
+### SCENARIO-KAN-1621: Generates KAN LUT Verilog module
+
+Given a simple 1D KAN edge function,
+When the LUT compiler translates it into 6-input LUT configuration bits,
+Then `hardware/kv260/kan_lut_block.v` is generated with the correct INIT values,
+and `results/experiment_1621_kanele_mapping.json` records the completion.
