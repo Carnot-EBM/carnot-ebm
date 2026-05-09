@@ -578,3 +578,29 @@ Then `results/kan_shape_normalization_manifest_1516.json` maps at least the
 naive SOS-KAN, QuantKAN LUT, and KAEM univariate variants to normalized
 hardware-accounting shapes, records all excluded shape assumptions, blocks
 synthesis and board claims, and writes a complete Exp 1516 artifact.
+
+## REQ-KAN-1599: KANELÉ hardware LUT-complexity accounting
+
+Experiment 1599 MUST perform a no-synthesis hardware accounting pass for KANs.
+It MUST estimate RM, BOP, and NABS for KANs and write the artifact
+`results/experiment_1599_kanele_audit.json` without claiming any actual
+hardware synthesis or board execution.
+
+**Rationale:**
+    We need to track KANELÉ LUT complexity (Resource Metrics, Bit Operations,
+    Number of Additions/Subtractions) for the current milestone without
+    actually running Vivado or claiming board execution.
+
+**Acceptance criteria:**
+    - Calculates RM, BOP, and NABS based on some existing KAN architecture or artifact.
+    - Writes `results/experiment_1599_kanele_audit.json` with fields `rm_per_inference`, `bop_per_inference`, and `nabs_per_inference`.
+    - Makes absolutely no claims of synthesis or execution (`hardware_execution_confirmed: False`).
+    - Contains an approved `honest_verdict`.
+
+### SCENARIO-KAN-1599: write no-synthesis KAN accounting artifact
+
+Given a KAN architecture or prior artifact,
+When the Exp 1599 audit runs,
+Then `results/experiment_1599_kanele_audit.json` is created with RM, BOP,
+and NABS estimates, and `hardware_execution_confirmed: False`.
+
