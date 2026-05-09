@@ -1,0 +1,187 @@
+{
+  "schema": "carnot.operational_retro.v63",
+  "milestone": "2026.05.123",
+  "generated_at": "2026-05-09T13:00:00Z",
+  "retro_type": "operational",
+  "summary": "Milestone 2026.05.123 retrospective complete. 8 of 13 tasks completed; 4 blocked by conductor pre-gate artifact field name mismatches (rkan_ready vs exact_rational_forward_pass_ready; scorer_ready vs ebcn_scorer_ready). The two root gate failures cascaded into four blocked experiments. Core research goals were substantially achieved: RKAN exact-rational forward pass (fractions.Fraction, bit-identical), EBCN dual-head scorer (energy gap 2.37 on synthetic contradictions), sparse KAN clustering (1.88x memory compression), FR-11 CerCE scale (positive utility delta, no forgetting), DCCD multi-hop (58.3% chain valid rate), HumanEval NSVIF DSL compilation, and context-sensitive constraint induction (8 high-confidence candidates). Z3 bridge, EBCN SOTA validation, and hardware RKAN accounting all blocked by gate mismatch.",
+  "total_wall_time_minutes": 45,
+  "experiments_completed": 8,
+  "experiments_blocked": 4,
+  "experiments_total_planned": 13,
+  "task_outcomes": [
+    {
+      "id": "exp1601-archive-122",
+      "title": "Archive .122 and initialize .123",
+      "status": "complete",
+      "honest_verdict": "complete: milestone_123_state_initialized_122_archived"
+    },
+    {
+      "id": "exp1602-rkan-prototype",
+      "title": "Exact-Rational KAN (RKAN) prototype",
+      "status": "complete",
+      "honest_verdict": "complete: exact_rational_kan_forward_pass_uses_fraction_arithmetic",
+      "note": "Artifact emits exact_rational_forward_pass_ready=true but gates downstream on rkan_ready — field name mismatch caused 2 downstream blocks"
+    },
+    {
+      "id": "exp1603-ebcn-scorer",
+      "title": "EBCN coherence scorer",
+      "status": "complete",
+      "honest_verdict": "complete: EBCN dual-head hidden-state scorer separates synthetic logical contradictions without autoregressive generation",
+      "note": "Artifact emits ebcn_scorer_ready=true but gates downstream on scorer_ready — field name mismatch caused 2 downstream blocks"
+    },
+    {
+      "id": "exp1604-sparse-kan-clustering",
+      "title": "Sparse KAN clustering with spectral constraints",
+      "status": "complete",
+      "honest_verdict": "complete: sparse_kan_clustering_compressed_constraint_memory"
+    },
+    {
+      "id": "exp1605-latent-gradient-repair",
+      "title": "Latent gradient editing using EBCN",
+      "status": "blocked",
+      "honest_verdict": "blocked_gate_check_failed",
+      "blocked_reason": "exp1603-ebcn-scorer.scorer_ready gate expected true, actual null (field is named ebcn_scorer_ready in artifact)"
+    },
+    {
+      "id": "exp1606-dccd-multihop",
+      "title": "DCCD repair on multi-hop reasoning tasks",
+      "status": "complete",
+      "honest_verdict": "complete: dccd_multihop_constraints_injected_accuracy_above_50pct"
+    },
+    {
+      "id": "exp1607-dsl-humaneval",
+      "title": "Extract DSL constraints from HumanEval",
+      "status": "complete",
+      "honest_verdict": "complete: HumanEval prompt-derived NSVIF DSL constraints compiled locally for mandated model specs without live inference"
+    },
+    {
+      "id": "exp1608-fr11-cerce-scale",
+      "title": "FR-11 continuous self-learning CerCE scale",
+      "status": "complete",
+      "honest_verdict": "complete: fr11_cerce_scale_positive_utility_no_forgetting",
+      "continuous_self_learning_task": true
+    },
+    {
+      "id": "exp1609-context-sensitive-induction",
+      "title": "Context-sensitive constraint induction",
+      "status": "complete",
+      "honest_verdict": "complete: context_induction_ready"
+    },
+    {
+      "id": "exp1610-z3-formal-bridge",
+      "title": "Connect RKAN to Z3",
+      "status": "blocked",
+      "honest_verdict": "blocked_gate_check_failed",
+      "blocked_reason": "exp1602-rkan-prototype.rkan_ready gate expected true, actual null (field is named exact_rational_forward_pass_ready in artifact)"
+    },
+    {
+      "id": "exp1611-ebcn-sota-validation",
+      "title": "EBCN validation on mandated SOTA",
+      "status": "blocked",
+      "honest_verdict": "blocked_gate_check_failed",
+      "blocked_reason": "exp1603-ebcn-scorer.scorer_ready gate expected true, actual null (field is named ebcn_scorer_ready in artifact)"
+    },
+    {
+      "id": "exp1612-hardware-rkan-accounting",
+      "title": "Hardware accounting for RKAN",
+      "status": "blocked",
+      "honest_verdict": "blocked_gate_check_failed",
+      "blocked_reason": "exp1602-rkan-prototype.rkan_ready gate expected true, actual null (field is named exact_rational_forward_pass_ready in artifact)"
+    }
+  ],
+  "root_causes_of_blocks": [
+    {
+      "root_cause": "Artifact field name mismatch: exp1602 emits exact_rational_forward_pass_ready but roadmap gates reference rkan_ready",
+      "experiments_blocked": ["exp1610-z3-formal-bridge", "exp1612-hardware-rkan-accounting"],
+      "fix": "Either rename the artifact field to rkan_ready in python/carnot/models/rkan.py output, or update the roadmap gate field references before next execution"
+    },
+    {
+      "root_cause": "Artifact field name mismatch: exp1603 emits ebcn_scorer_ready but roadmap gates reference scorer_ready",
+      "experiments_blocked": ["exp1605-latent-gradient-repair", "exp1611-ebcn-sota-validation"],
+      "fix": "Either rename the artifact field to scorer_ready in EBCN scorer output, or update the roadmap gate field references before next execution"
+    }
+  ],
+  "bottlenecks_identified": [
+    "Gate field name mismatches: 4 experiments blocked by two naming discrepancies (rkan_ready vs exact_rational_forward_pass_ready; scorer_ready vs ebcn_scorer_ready)",
+    "Cascading gate failures: each root mismatch blocked 2 downstream experiments, so 2 naming bugs became 4 blocked tasks",
+    "No gate smoke-test at roadmap authoring time to validate that upstream artifacts would actually emit the referenced field names"
+  ],
+  "improvements_suggested": [
+    "Add a roadmap validation step that cross-checks gate field names against actual artifact outputs from completed experiments before launching downstream tasks",
+    "Standardize gate field naming: prefer the experiment ID prefix + _ready suffix pattern (rkan_ready, ebcn_scorer_ready) consistently in both artifact schema and roadmap YAML",
+    "For the next milestone: carry forward exp1605, exp1610, exp1611, exp1612 with corrected gate field names after aliasing or renaming the artifact fields"
+  ],
+  "estimated_time_savings_pct": 30,
+  "top_3_highest_leverage_actions": [
+    "Patch rkan.py to emit rkan_ready=true alongside exact_rational_forward_pass_ready so gate checks pass without roadmap edits",
+    "Patch EBCN scorer to emit scorer_ready=true alongside ebcn_scorer_ready so gate checks pass",
+    "Add a conductor-level gate field validation step that flags missing artifact fields at pre-gate time with a human-readable error naming both the expected field and the actual fields present"
+  ],
+  "meta_reflection": "The milestone achieved its core research goals across formal verification (RKAN), energy-based coherence (EBCN), constraint compression (sparse KAN), and continuous self-learning (CerCE FR-11), but lost 4 of 13 task slots to a preventable naming-mismatch pattern. The pattern is distinct from the legacy-gate-churn issue in prior milestones — these are new experiments with new artifacts where the roadmap author and the experiment implementer used different field name conventions. The fix is low-cost (alias the fields or update the gates) but the detection should be mechanical, not human. A gate smoke-test at roadmap activation time would catch this class of failure at zero execution cost.",
+  "research_findings_summary": {
+    "rkan": {
+      "status": "complete",
+      "finding": "Exact rational KAN forward pass using fractions.Fraction achieves bit-identical outputs across repeated evaluations; reference energy 79/36 on test input"
+    },
+    "ebcn_scorer": {
+      "status": "complete",
+      "finding": "Dual-head attention EBCN scorer achieves energy gap 2.37 between consistent (mean 0.082) and contradictory (mean 2.45) logical traces; false accept rate 0.0 on 4-case synthetic suite"
+    },
+    "sparse_kan": {
+      "status": "complete",
+      "finding": "Global Group Lasso penalty achieves 1.88x memory compression (192 -> 102 bytes), 25% sparsity ratio, reconstruction loss 2.7e-4"
+    },
+    "dccd_multihop": {
+      "status": "complete",
+      "finding": "DCCD structural constraints injected across 12 multi-hop questions; chain valid rate 58.3%; draft mismatch rate consistent with structural constraint enforcement"
+    },
+    "fr11_cerce": {
+      "status": "complete",
+      "finding": "FR-11 CerCE scale over 1000 examples with positive utility delta and no certificate violations; continuous_self_learning_task satisfied"
+    },
+    "context_induction": {
+      "status": "complete",
+      "finding": "8 context-sensitive constraint candidates generated from 68 failure log rows; highest confidence 0.923 (runtime_contract acquisition_path family)"
+    },
+    "z3_bridge": {
+      "status": "blocked_carry_forward",
+      "finding": "Blocked by rkan_ready field mismatch; carry forward to next milestone after field alias patch"
+    },
+    "ebcn_sota_validation": {
+      "status": "blocked_carry_forward",
+      "finding": "Blocked by scorer_ready field mismatch; carry forward to next milestone after field alias patch"
+    },
+    "hardware_rkan_accounting": {
+      "status": "blocked_carry_forward",
+      "finding": "Blocked by rkan_ready field mismatch; carry forward to next milestone after field alias patch"
+    }
+  },
+  "carry_forward_tasks": [
+    {
+      "id": "exp1605-latent-gradient-repair",
+      "prerequisite_fix": "Patch exp1603 artifact or roadmap gate: scorer_ready must resolve from ebcn_scorer_ready"
+    },
+    {
+      "id": "exp1610-z3-formal-bridge",
+      "prerequisite_fix": "Patch exp1602 artifact or roadmap gate: rkan_ready must resolve from exact_rational_forward_pass_ready"
+    },
+    {
+      "id": "exp1611-ebcn-sota-validation",
+      "prerequisite_fix": "Patch exp1603 artifact or roadmap gate: scorer_ready must resolve from ebcn_scorer_ready"
+    },
+    {
+      "id": "exp1612-hardware-rkan-accounting",
+      "prerequisite_fix": "Patch exp1602 artifact or roadmap gate: rkan_ready must resolve from exact_rational_forward_pass_ready"
+    }
+  ],
+  "gpu_state": "not_observed",
+  "did_not_modify": [
+    "scripts/research_conductor.py",
+    "research-roadmap.yaml"
+  ],
+  "honest_verdict": "complete: milestone_123_retrospective_filed_8_of_13_complete_4_blocked_gate_mismatch",
+  "experiment": "exp1613-retro-123",
+  "experiment_id": 1613,
+  "run_date": "20260509",
+  "status": "complete"
+}
