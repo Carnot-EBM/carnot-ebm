@@ -4725,3 +4725,70 @@ policies or omit pre-RL, fresh k=8, or OOD adversarial evidence
 | Requirement | Python | Tests |
 |-------------|--------|-------|
 | REQ-LEARN-1568 | Implemented (`python/carnot/reporting/fr11_v14_retained_mode_collapse_audit.py`) | Implemented (`tests/python/test_fr11_v14_retained_mode_collapse_audit.py`) |
+
+---
+
+## REQ-LEARN-1581: FR-11 v15 Lambda-GRPO Retention Reversal
+
+Exp 1581 SHALL execute the .121 continuous self-learning correction path for
+the v14 retention that Exp 1568 flagged as mode-collapsed.  The workflow SHALL
+replay `policy:residual_drift_repair:1552` against held-out checked-in evidence,
+apply the lambda-GRPO loss-normalization correction when a local trainer path is
+available, otherwise write a deterministic simulator showing the corrected
+non-collapsed weighting, and SHALL reverse the retained v14 policy only if the
+fresh replay still confirms the Exp 1568 mode-collapse criteria.
+
+### REQ-LEARN-1581 Sub-requirements
+
+- REQ-LEARN-1581-1: The workflow SHALL write
+  `results/experiment_1581_fr11_v15_lambda_grpo_retention_reversal.json` with
+  `status="in_progress"` before replaying predecessor artifacts.
+- REQ-LEARN-1581-2: The replay SHALL target
+  `policy:residual_drift_repair:1552` only when Exp 1568 recommended that
+  policy for retention reversal, and SHALL report whether the flagged policy
+  was replayed.
+- REQ-LEARN-1581-3: The replay SHALL measure the Exp 1568 predictors on
+  held-out accepted repair rows, including entropy preservation, boilerplate
+  fraction delta, OOD accuracy proxy, reward-variance collapse, and soundness
+  mistakes.
+- REQ-LEARN-1581-4: The lambda-GRPO correction path SHALL normalize per-case
+  weights so uniform rewards do not collapse all update mass onto boilerplate
+  repairs.  If the live trainer dependency is unavailable, the workflow SHALL
+  mark `implementation_deferred=true`, set `lambda_grpo_simulated_only=true`,
+  and include deterministic simulator evidence for the corrected weighting.
+- REQ-LEARN-1581-5: `retention_reversal_applied` SHALL be true only when the
+  flagged policy was replayed, soundness mistakes are zero, at least two
+  replay predictors still confirm mode collapse, no model weights were mutated,
+  and the lambda-GRPO correction path has either been implemented locally or
+  deterministically simulated.
+- REQ-LEARN-1581-6: The terminal artifact SHALL include `status`,
+  `continuous_self_learning_task`, `flagged_policy_replayed`,
+  `retention_reversal_applied`, `lambda_grpo_patch_implemented`,
+  `lambda_grpo_simulated_only`, `soundness_mistakes`,
+  `entropy_preservation_rate`, `boilerplate_fraction_delta`,
+  `fr11_v15_decision_ready`, and `honest_verdict`.
+
+### SCENARIO-LEARN-1581: Replay-Confirmed Collapse Reverses Retention
+
+**Given** Exp 1568 recommended `policy:residual_drift_repair:1552` for reversal
+**And** held-out repair replay still shows at least two mode-collapse predictors
+with zero soundness mistakes
+**When** Exp 1581 writes the terminal artifact
+**Then** `flagged_policy_replayed=true`
+**And** `retention_reversal_applied=true`
+**And** the artifact records lambda-GRPO correction evidence without mutating
+model weights.
+
+### SCENARIO-LEARN-1582: Unconfirmed Collapse Does Not Reverse Retention
+
+**Given** a flagged retained policy whose fresh replay has fewer than two
+confirmed mode-collapse predictors or nonzero soundness mistakes
+**When** Exp 1581 evaluates the retention reversal gate
+**Then** `retention_reversal_applied=false`
+**And** `honest_verdict` reports that reversal was blocked by the replay.
+
+## Implementation Status (REQ-LEARN-1581)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-1581 | Implemented (`python/carnot/reporting/fr11_v15_lambda_grpo_retention_reversal.py`) | Implemented (`tests/python/test_fr11_v15_lambda_grpo_retention_reversal.py`) |
