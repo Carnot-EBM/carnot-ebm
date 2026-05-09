@@ -1,34 +1,65 @@
-# Carnot Research Roadmap: v124 (Phase-2 Latent Space Navigation, KANELÉ RTL Synthesis, and Energy-Guided Decoding)
+# Research Roadmap: Milestone 2026.05.126
 
-## State of the Project (Milestone 123 Retrospective)
-Milestone .123 successfully formalized our Exact-Rational KAN (RKAN) forward pass and bridged it to Z3. It proved the Energy-Based Constraint Network (EBCN) coherence scorer could operate without autoregressive generation and demonstrated Sparse KAN clustering for memory compression. Furthermore, the FR-11 continuous self-learning loop was scaled using the CerCE non-forgetting bounds, marking a major success in safe autonomous learning.
+**Title:** Phase-4 Structured Verdict Scaling, CerCE Continual Learning, and Formal KAN Verification
+**Target Date:** 2026-05-18
 
-## The 3 Biggest Gaps (v124 Focus)
-1. **Continuous Test-Time Scaling (Latent Navigation)**: While we have EBCN, we have not closed the loop on full gradient-based continuous latent space decoding (like Kona 1.0 or $\nabla$-Reasoner). We need Energy-Guided Test-Time Scaling (ETS) during inference.
-2. **Formal MILP Verification for KANs**: RKAN translation to Z3 is limited. We need Piecewise Affine (PWA) abstractions to formally verify KAN logical bounds via MILP (Mixed Integer Linear Programming) per arXiv:2602.06737.
-3. **Hardware KAN Mapping (KANELÉ)**: FPGA synthesis has focused on Ising and Potts. We need to implement KANELÉ-style direct LUT mapping (FPGA '26) to translate KAN edge splines into Verilog for our KV260 track.
+## 1. What the Previous Milestone Proved
 
-## Phase 1: Continuous Latent Space Navigation & Energy-Guided Decoding
-* **Exp 1614:** Archive .123 and initialize .124
-* **Exp 1615:** Energy-Guided Test-Time Scaling (ETS). Implement online Monte Carlo energy estimation during inference.
-* **Exp 1616:** $\nabla$-Reasoner Continuous Latent Optimization. Differentiable Textual Optimization over continuous logits via Langevin dynamics.
-* **Exp 1617:** Live SOTA Validation of $\nabla$-Reasoner. Benchmark continuous reasoning on `unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF`.
+Milestone 2026.05.125 achieved key breakthroughs:
+- Nabla-Reasoner latent trace scoring effectively optimized trajectories.
+- LTLZinc temporal constraint benchmarking established baseline FR-11 retention limits.
+- SMGI certified updates safely promoted policies during query-time self-learning.
+- Pi-net and ConsFormer projection mechanisms were prototyped for constraint refinement.
+- Energy-Guided Decoding directly integrated hallucination mitigations into SOTA generation.
 
-## Phase 2: Formal Verification of KANs (MILP Abstractions)
-* **Exp 1618:** PWA Abstraction Layer for KANs. Implement piecewise affine boundaries for KAN splines (arXiv:2602.06737).
-* **Exp 1619:** MILP Compilation of PWA KANs. Connect abstract KANs to PySAT/Z3 to establish formal correctness proofs.
-* **Exp 1620:** Certify FR-11 Ledger via MILP. Use formal MILP bounds to enforce 100% safe continuous learning updates.
+However, the three biggest gaps to the PRD vision remain:
+1. **Constraint Extraction:** Turning natural language into a robust DSL (NSVIF).
+2. **Structured Repair Scale:** Validating robust external structured-verdict adapter paths like DCCD and llguidance.
+3. **Formal Verification of Architectures:** Ensuring KANs are formally verifiable (RKAN/Lean 4) and extending hardware acceleration via KV260 Potts machine synthesis.
 
-## Phase 3: Hardware Mapping (KANELÉ RTL)
-* **Exp 1621:** KANELÉ LUT-Mapping Logic Synthesis. Construct Python-to-Verilog logic for KAN splines directly to LUTs.
-* **Exp 1622:** KANELÉ RTL Linting and Simulation. Source-level Verilator/Icarus linting of KAN logic.
-* **Exp 1623:** Latency/Resource Accounting for KANELÉ vs Ising. Theoretical logic depth modeling for KV260 deployment.
+## 2. Milestone 2026.05.126 Objectives
 
-## Phase 4: Self-Learning & Consolidation
-* **Exp 1624:** Adaptive Energy Landscape Reconfiguration. Implement Tier 4 self-learning via spectral constraint pruning.
-* **Exp 1625:** EBM vs LLM Task Allocation Router. Heuristic routing of queries based on entropy.
-* **Exp 1626:** Milestone .124 Retrospective.
+This milestone focuses on:
+- **Phase 1: Constraint Extraction and Scaling.** Implementing an NSVIF-style DSL and `llguidance` adapter to solidify Carnot's external constraint API and latency using local SOTA models.
+- **Phase 2: CerCE Continual Learning.** Adding a CerCE-style certificate ledger with bounds-checking to FR-11 continuous self-learning to eliminate catastrophic forgetting.
+- **Phase 3: Formal Verification and Architecture.** Prototyping Energy-Based Constraint Networks (EBCNs) and Exact-Rational KANs (RKANs) to make Carnot's constraint tiers formally certifiable.
+- **Phase 4: Hardware Target Preflight.** Resuming hardware acceleration by targeting Vivado synthesis for a q=3 Potts machine on the KV260, aiming for true hardware bring-up if synthesis passes.
 
-## Hardware Dependencies
-* **Local Dual RTX 3090**: Required for continuous gradient steps in Exp 1617.
-* **KV260 Discrete RTL**: Simulator-only scope for Exp 1622. No board claim.
+## 3. Architecture Context
+
+```mermaid
+graph TD
+    Prompt[User Instruction] --> NSVIF[NSVIF DSL Parser]
+    NSVIF --> SOTA[SOTA LLM GGUF Generation]
+    SOTA --> LLGuidance[llguidance + STATIC CSR]
+    LLGuidance --> EBCN[EBCN Coherence Scorer]
+    EBCN --> FR11[FR-11 Continuous Learning with CerCE Ledger]
+    FR11 --> KAN[RKAN Formal Verification]
+    KAN --> Hardware[KV260 Potts Acceleration]
+```
+
+## 4. Phase Descriptions
+
+### Phase 1: Structured Verdicts & Constraint Extraction (Exps 1640-1643)
+Tackles the instruction-to-constraint gap using the NSVIF framework and an `llguidance` integration. The local SOTA models (`unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF`) will act as the generation testbeds to confirm zero false accepts.
+
+### Phase 2: Verifier Certification and Self-Learning (Exps 1644-1646)
+Addresses continuous self-learning by wrapping FR-11 in a CerCE bounds-checking ledger. This guarantees monotonic utility non-forgetting. EBCNs are also introduced to verify structural coherence across multi-turn latent traces. We will use `unsloth/gemma-4-26B-A4B-it-GGUF` for the self-learning loop.
+
+### Phase 3: Formal KAN Verification (Exps 1647-1648)
+Brings formal specifications into the Carnot stack by mapping KAN layers to Exact-Rational KANs (RKANs) suitable for Lean 4 analysis, alongside spectral constraints for sparse manifold compression.
+
+### Phase 4: Hardware and Retrospective (Exps 1649-1651)
+Unblocks the hardware execution path by performing a focused Vivado synthesis of the Potts machine (q=3) and subsequent board bring-up. The milestone completes with an automated retrospective.
+
+## 5. Hardware Requirements
+
+- **GPU:** Dual RTX 3090 (or equivalent VRAM) required to cache and infer the mandated SOTA GGUF models.
+- **FPGA:** AMD/Xilinx Kria KV260, with Xilinx Vivado 2023.2 installed on the host for the synthesis step.
+
+## 6. Dependency Graph
+
+- **1640** -> **1641** (Parser -> SOTA Validate)
+- **1642** -> **1643** (Adapter -> CSR Mask)
+- **1644** -> **1645** (CerCE Ledger -> FR11 Loop)
+- **1649** -> **1650** (Vivado Synthesis -> KV260 Bringup)
