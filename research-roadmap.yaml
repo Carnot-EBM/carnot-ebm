@@ -1,880 +1,207 @@
-# research-roadmap-next.yaml
-# Drafted by Codex (outer-loop) acting as planner per operator request 2026-05-08.
-# Next milestone after completed 2026.05.120.
-
-milestone: 2026.05.121
-milestone_title: "Phase-1 Ship Readiness + BRAIN Dynamics + Hardware Portfolio Correction"
-milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
-
-# ============================================================
-# Milestone strategy:
-#
-# Phase 0: archive .120, repair prior-failure carry-forwards, resume
-#          paper-v6 sampler prose and Z1 readiness packet.
-# Phase 1: settle BRAIN REINFORCE dynamics, adopt OT verification
-#          framework, smoke DCCD/JSONSchemaBench on mandated SOTA GGUFs,
-#          and repair FR-11 v14 retention mode collapse.
-# Phase 2: audit Phase-1 software ship readiness independent of paper
-#          and hardware.
-# Phase 3: correct hardware strategy: Z1 drift correction, Tenstorrent,
-#          PolarFire, Strix/KV260 rescope, then retro.
-#
-# All tasks use agent_type=codex and model=gpt-5.5 per CLAUDE.md
-# Codex-default discipline. Any task running LLM inference must include
-# mandated SOTA GGUF MODEL_SPECS in its prompt/artifact.
-# ============================================================
-
+milestone: 2026.05.122
+milestone_title: "Phase-1 Ship Readiness + Constraint Extraction + CerCE FR-11"
+milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
 tasks:
-
-- id: exp1574-120-completion-archive-121-activation
-  milestone: 2026.05.121
-  deliverable: results/experiment_1574_120_completion_archive_121_activation.json
-  title: ".120 Completion Archive + .121 Activation Manifest"
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 20
-  estimated_wall_time_min: 20
-  priority: critical
-  prior_failures:
-    - experiment_id: standard_milestone_activation
-      verdict: recurring_scaffolding_not_failed_scope
-      addressed_by: "Standard milestone activation; archives .120 results and exposes same-roadmap gates for .121 tasks."
-      retire_if_same_verdict: false
-  prompt: |
-    CONTEXT:
-    You are activating milestone 2026.05.121 after the operator reported all milestone 2026.05.120 tasks completed. This milestone must carry forward exp1569 and exp1573 correctly, test the missing BRAIN REINFORCE dynamics axis, include continuous self-learning, and begin Phase-1 software ship readiness independent of paper and hardware.
-
-    EXISTING CODE TO READ FIRST:
-    - CODEX.md
-    - CLAUDE.md
-    - research-program.md
-    - _bmad/prd.md
-    - _bmad/architecture.md
-    - ops/status.md
-    - ops/changelog.md
-    - ops/known-issues.md
-    - ops/conductor-log.md
-    - results/experiment_1561_kinetic_defense_zero_coupling_test.json
-    - results/experiment_1562_brain_linear_ar_k_sweep_extended.json
-    - results/experiment_1564_thrml_vendored_block_gibbs_replacement.json
-    - results/experiment_1565_soft_gibbs_residual_implementation.json
-    - results/experiment_1566_candidate_warm_start_vs_cold_start_benchmark.json
-    - results/experiment_1568_fr11_v14_retained_mode_collapse_audit.json
-    - results/experiment_1569_paper_v6_section_3_sampler_draft.json
-    - results/experiment_1570_soft_gibbs_coverage_bound_empirical_verification.json
-    - results/experiment_1571_step_wise_baseline_AR_REINFORCE.json
-    - results/experiment_1573_extropic_z1_readiness_packet_thrml_alignment_update.json
-
-    TASK:
-    Create the .121 activation manifest and expose structured gate fields for downstream tasks.
-
-    CONCRETE STEPS:
-    1. Create results/experiment_1574_120_completion_archive_121_activation.json immediately with status="in_progress".
-    2. Summarize what .120 proved, falsified, and carried forward.
-    3. Write ops/milestone_121_activation_manifest.md with allowed tracks: prior-failure repair, paper-v6 sampler drafting, Extropic Z1 readiness update, BRAIN REINFORCE training dynamics, OT verification framework adoption, DCCD/JSONSchemaBench SOTA smoke, FR-11 lambda-GRPO retention repair, Phase-1 ship readiness, Z1 drift correction, Tenstorrent/PolarFire/Strix/KV260 hardware portfolio correction, and retro.
-    4. Preserve blocks on TSU/Z1 hardware execution claims, KV260 board claims without transcripts, legacy-small-model headline results, and soft energy/logprob scores as acceptance authority.
-    5. Confirm research-roadmap.yaml and scripts/research_conductor.py are unchanged.
-
-    REQUIRED ARTIFACT FIELDS:
-    - status
-    - activation_manifest_complete
-    - prior_failure_autofill_ready
-    - paper_v6_sampler_resume_ready
-    - extropic_packet_resume_ready
-    - brain_reinforce_training_ready
-    - ot_framework_adoption_ready
-    - dccd_jsonschema_smoke_ready
-    - fr11_v15_patch_ready
-    - phase1_ship_readiness_ready
-    - hardware_eval_ready
-    - honest_verdict
-
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1574_120_completion_archive_121_activation.json')); print(d.get('activation_manifest_complete'), d.get('brain_reinforce_training_ready'), d.get('phase1_ship_readiness_ready'), d.get('hardware_eval_ready'), d.get('honest_verdict'))"
-    Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-- id: exp1575-carry-forward-prior-failures-autofill-audit
-  milestone: 2026.05.121
-  deliverable: results/experiment_1575_carry_forward_prior_failures_autofill_audit.json
-  title: "Carry-Forward prior_failures Autofill Audit for exp1569+exp1573"
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 20
-  estimated_wall_time_min: 20
-  priority: critical
-  gated_on:
-    - upstream: exp1574-120-completion-archive-121-activation
-      artifact_field: prior_failure_autofill_ready
-      op: "=="
-      value: true
-  prior_failures:
-    - experiment_id: exp1230-auto-populate-prior-failures-v2
-      verdict: autofill_script_shipped
-      addressed_by: "Reuses the shipped autofill tooling to prevent another exp1569/exp1573 DOOMED_RERUN_BLOCK cascade."
-      retire_if_same_verdict: false
-    - experiment_id: exp1140-roadmap-gate-prior-failures-audit
-      verdict: prior_failures_gaps_found
-      addressed_by: "Runs the current roadmap-gate and prior-failure checks before resuming carry-forward tasks."
-      retire_if_same_verdict: false
-  prompt: |
-    CONTEXT:
-    Milestone .120 blocked exp1569 and exp1573 because their roadmap entries had invalid prior_failures metadata. This task must mechanically verify that the new .121 carry-forward entries cite real prior failures and exact verdicts.
-
-    EXISTING CODE TO READ FIRST:
-    - scripts/conductor_priors_autofill.py
-    - scripts/failure_ledger.py
-    - scripts/validate_prior_failures.py
-    - scripts/audit_roadmap_gates.py
-    - ops/known-issues.md
-    - ops/conductor-log.md
-    - results/experiment_1569_paper_v6_section_3_sampler_draft.json
-    - results/experiment_1573_extropic_z1_readiness_packet_thrml_alignment_update.json
-    - research-roadmap-next.yaml
-
-    TASK:
-    Produce a carry-forward prior-failure audit artifact that proves exp1576 and exp1577 are no longer doomed reruns before the conductor spends an agent call on them.
-
-    CONCRETE STEPS:
-    1. Create results/experiment_1575_carry_forward_prior_failures_autofill_audit.json immediately with status="in_progress".
-    2. Run the autofill tool in dry-run mode on research-roadmap-next.yaml and record task/stub counts.
-    3. Run scripts/validate_prior_failures.py research-roadmap-next.yaml and scripts/audit_roadmap_gates.py research-roadmap-next.yaml; record outputs.
-    4. Explicitly inspect exp1576 and exp1577 in the YAML and confirm they cite exp1569/exp1573 exact verdicts plus any additional real scope priors.
-    5. If any prior-failure gap remains, set carryforward_prior_failures_ready=false and explain the exact missing task/field.
-
-    REQUIRED ARTIFACT FIELDS:
-    - status
-    - autofill_dry_run_completed
-    - validate_prior_failures_passed
-    - audit_roadmap_gates_passed
-    - exp1576_prior_failures_valid
-    - exp1577_prior_failures_valid
-    - carryforward_prior_failures_ready
-    - honest_verdict
-
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1575_carry_forward_prior_failures_autofill_audit.json')); print(d.get('carryforward_prior_failures_ready'), d.get('validate_prior_failures_passed'), d.get('audit_roadmap_gates_passed'), d.get('honest_verdict'))"
-    Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-- id: exp1576-paper-v6-section-3-sampler-draft-resumed
-  milestone: 2026.05.121
-  deliverable: results/experiment_1576_paper_v6_section_3_sampler_draft_resumed.json
-  title: "Paper-v6 Section 3 Sampler Draft Resumed from .120 exp1569"
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 30
-  estimated_wall_time_min: 35
-  priority: critical
-  gated_on:
-    - upstream: exp1575-carry-forward-prior-failures-autofill-audit
-      artifact_field: carryforward_prior_failures_ready
-      op: "=="
-      value: true
-  prior_failures:
-    - experiment_id: exp1569-paper-v6-section-3-sampler-draft
-      verdict: blocked_gate_check_failed
-      addressed_by: "This resumed task includes real prior_failures metadata and is gated on exp1575's prior-failure audit instead of using placeholder novel_paper_drafting metadata."
-      retire_if_same_verdict: true
-    - experiment_id: exp1269-paper-v6-critical-fixes-v2
-      verdict: paper_v6_critical_fixes_v2_complete
-      addressed_by: "Successful paper-v6 critical-fix upstream is used as context only; this task drafts the sampler subsection from .120 terminal evidence."
-      retire_if_same_verdict: false
-  prompt: |
-    CONTEXT:
-    exp1569 was intended to draft paper-v6 Section 3 sampler content but blocked before launch. The draft now needs to integrate .120 evidence: THRML vendoring, candidate warm-start, Soft-Gibbs Residual, kinetic-security falsification for THRML, BRAIN expressivity falsification, and SpecAnn rejection.
-
-    EXISTING CODE TO READ FIRST:
-    - docs/research-notes/iclr26-deep-think-responses.md
-    - docs/research-notes/iclr26-integration-plan.md
-    - docs/papers/paper-v6/main.tex
-    - results/experiment_1561_kinetic_defense_zero_coupling_test.json
-    - results/experiment_1562_brain_linear_ar_k_sweep_extended.json
-    - results/experiment_1563_specann_rejection_record.json
-    - results/experiment_1564_thrml_vendored_block_gibbs_replacement.json
-    - results/experiment_1565_soft_gibbs_residual_implementation.json
-    - results/experiment_1566_candidate_warm_start_vs_cold_start_benchmark.json
-    - results/experiment_1570_soft_gibbs_coverage_bound_empirical_verification.json
-    - results/experiment_1571_step_wise_baseline_AR_REINFORCE.json
-
-    TASK:
-    Draft a focused paper-v6 Section 3 sampler/verifier subsection update that is faithful to the .120 evidence and explicitly marks unresolved questions.
-
-    CONCRETE STEPS:
-    1. Create results/experiment_1576_paper_v6_section_3_sampler_draft_resumed.json immediately with status="in_progress".
-    2. Write docs/research-notes/paper-v6-section-3-sampler-draft.md with subsections: THRML vendored sampler, candidate warm-start, Soft-Gibbs Residual, kinetic-security caveat, SpecAnn rejection, BRAIN expressivity vs training-dynamics open question.
-    3. Do not claim THRML security parity or Extropic hardware execution.
-    4. Add a short paper-v6 integration checklist showing exact main.tex insertion points but do not perform a wholesale paper rewrite.
-    5. Record whether the draft is ready for exp1579 OT framework integration.
-
-    REQUIRED ARTIFACT FIELDS:
-    - status
-    - draft_path
-    - paper_v6_sampler_section_draft_ready
-    - kinetic_security_caveat_included
-    - brain_training_dynamics_open_question_included
-    - no_hardware_execution_claim
-    - honest_verdict
-
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1576_paper_v6_section_3_sampler_draft_resumed.json')); print(d.get('paper_v6_sampler_section_draft_ready'), d.get('draft_path'), d.get('honest_verdict'))"
-    Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-- id: exp1577-extropic-z1-readiness-packet-thrml-alignment-resumed
-  milestone: 2026.05.121
-  deliverable: results/experiment_1577_extropic_z1_readiness_packet_thrml_alignment_resumed.json
-  title: "Extropic Z1 Readiness Packet THRML Alignment Resumed from .120 exp1573"
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 30
-  estimated_wall_time_min: 30
-  priority: high
-  gated_on:
-    - upstream: exp1575-carry-forward-prior-failures-autofill-audit
-      artifact_field: carryforward_prior_failures_ready
-      op: "=="
-      value: true
-  prior_failures:
-    - experiment_id: exp1573-extropic-z1-readiness-packet-thrml-alignment-update
-      verdict: blocked_gate_check_failed
-      addressed_by: "This resumed task cites the actual .120 blocked artifact and is gated on exp1575's prior-failure audit."
-      retire_if_same_verdict: true
-    - experiment_id: exp1558-thrml-post-rng-scale-decision-extropic-update
-      verdict: blocked_gate_check_failed
-      addressed_by: "exp1564 vendored THRML and exp1566 validated candidate warm-start after exp1558's blocked scale-decision update; this task updates readiness with simulator-only evidence."
-      retire_if_same_verdict: false
-  prompt: |
-    CONTEXT:
-    exp1573 was meant to update the Extropic Z1 readiness packet after THRML vendoring, but it blocked due to prior-failure metadata. .121 must update the packet while preserving a strict no-hardware-claim boundary and adding analog-drift/detailed-balance correction as a prerequisite.
-
-    EXISTING CODE TO READ FIRST:
-    - results/experiment_1545_extropic_z1_access_readiness_packet.json
-    - results/experiment_1558_thrml_post_rng_scale_decision_extropic_update.json
-    - results/experiment_1564_thrml_vendored_block_gibbs_replacement.json
-    - results/experiment_1566_candidate_warm_start_vs_cold_start_benchmark.json
-    - research-hardware-wishlist.md
-    - ops/known-issues.md
-    - _bmad/architecture.md
-    - research-references.md
-
-    TASK:
-    Produce an updated Extropic Z1 readiness packet that reflects THRML vendoring, candidate warm-start, and hardware-evaluation drift risks.
-
-    CONCRETE STEPS:
-    1. Create results/experiment_1577_extropic_z1_readiness_packet_thrml_alignment_resumed.json immediately with status="in_progress".
-    2. Write docs/research-notes/extropic-z1-readiness-packet-2026-05-121.md.
-    3. Include THRML 0.1.3 vendoring status, candidate warm-start API requirement, Soft-Gibbs Residual relevance, and explicit simulator-only status.
-    4. Add a "pre-silicon correction prerequisites" section naming detailed-balance drift correction as required before any Z1 claim.
-    5. Do not claim access to Z1/XTR/TSU hardware.
-
-    REQUIRED ARTIFACT FIELDS:
-    - status
-    - packet_path
-    - extropic_z1_packet_updated
-    - thrml_vendoring_reflected
-    - analog_drift_correction_required
-    - simulator_only_no_hardware_claim
-    - honest_verdict
-
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1577_extropic_z1_readiness_packet_thrml_alignment_resumed.json')); print(d.get('extropic_z1_packet_updated'), d.get('analog_drift_correction_required'), d.get('simulator_only_no_hardware_claim'), d.get('honest_verdict'))"
-    Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-- id: exp1578-brain-reinforce-training-dynamics-at-k15
-  milestone: 2026.05.121
-  deliverable: results/experiment_1578_brain_reinforce_training_dynamics_at_k15.json
-  title: "BRAIN REINFORCE Training Dynamics at k=15"
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 50
-  estimated_wall_time_min: 90
-  priority: critical
-  gated_on:
-    - upstream: exp1574-120-completion-archive-121-activation
-      artifact_field: brain_reinforce_training_ready
-      op: "=="
-      value: true
-  prior_failures:
-    - experiment_id: exp1562-brain-linear-ar-k-sweep-extended
-      verdict: "complete: falsified BRAIN+Linear-AR rescue widening; factorized/AR ratio=1.00x and best_KL=0.001336"
-      addressed_by: "exp1562 tested analytical expressivity, not REINFORCE training dynamics. This task tests gradient starvation under the BRAIN training method."
-      retire_if_same_verdict: false
-    - experiment_id: exp1571-step-wise-baseline-AR-REINFORCE
-      verdict: "complete: step-wise Linear-AR REINFORCE baseline passed 10.0x AR-coupling variance gate (10.45x) and retained 0.995 of the noiseless 3% noise convergence-rate proxy"
-      addressed_by: "Uses exp1571 as the step-wise AR-REINFORCE baseline, now comparing full factorized vs Linear-AR training dynamics at k=15."
-      retire_if_same_verdict: false
-  prompt: |
-    CONTEXT:
-    exp1562 falsified the predicted BRAIN expressivity widening at k=15, but it did not test the Deep Think gradient-starvation argument. This experiment must train factorized Bernoulli and Linear-AR q_theta with REINFORCE on the same k=15 regime.
-
-    EXISTING CODE TO READ FIRST:
-    - results/experiment_1562_brain_linear_ar_k_sweep_extended.json
-    - results/experiment_1571_step_wise_baseline_AR_REINFORCE.json
-    - python/scripts/dt_brain_correlations_verification.py
-    - scripts/experiment_template.py
-    - openspec/capabilities/verifiable-reasoning/spec.md
-    - _bmad/traceability.md
-
-    TASK:
-    Implement and run a focused BRAIN REINFORCE training-dynamics audit at n=16, k=15, beta=2.0.
-
-    CONCRETE STEPS:
-    1. Create results/experiment_1578_brain_reinforce_training_dynamics_at_k15.json immediately with status="in_progress".
-    2. If implementation code changes are needed, first confirm relevant OpenSpec requirements exist or add/update them before code edits.
-    3. Train factorized Bernoulli and Linear-AR q_theta with REINFORCE, batch size 512, up to 50,000 iterations, 10 random AND-composition constraints, uniform init.
-    4. Track gradient L2 norm, marginal escape from 0.5, KL(q||pi_beta) every 1000 iterations, convergence time, and wall time.
-    5. Decide among: factorized gradient starvation real, starvation overstated, or both parameterizations inadequate.
-    6. Update docs/research-notes/brain-reinforce-training-dynamics-k15.md with paper-v6 recommendation.
-
-    REQUIRED ARTIFACT FIELDS:
-    - status
-    - factorized_gradient_active_fraction_first_1000
-    - linear_ar_gradient_active_fraction_first_1000
-    - factorized_final_kl
-    - linear_ar_final_kl
-    - factorized_converged
-    - linear_ar_converged
-    - brain_training_dynamics_verdict_ready
-    - paper_v6_brain_recommendation
-    - honest_verdict
-
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1578_brain_reinforce_training_dynamics_at_k15.json')); print(d.get('brain_training_dynamics_verdict_ready'), d.get('factorized_final_kl'), d.get('linear_ar_final_kl'), d.get('honest_verdict'))"
-    Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-- id: exp1579-iclr26-ot-verification-framework-paper-v6-adoption
-  milestone: 2026.05.121
-  deliverable: results/experiment_1579_iclr26_ot_verification_framework_paper_v6_adoption.json
-  title: "ICLR-26 OT Verification Framework Adoption for Paper-v6"
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 30
-  estimated_wall_time_min: 35
-  priority: critical
-  gated_on:
-    - upstream: exp1576-paper-v6-section-3-sampler-draft-resumed
-      artifact_field: paper_v6_sampler_section_draft_ready
-      op: "=="
-      value: true
-  prior_failures:
-    - experiment_id: exp1569-paper-v6-section-3-sampler-draft
-      verdict: blocked_gate_check_failed
-      addressed_by: "OT adoption is scoped after the resumed sampler draft so it does not repeat the blocked .120 paper-drafting task."
-      retire_if_same_verdict: false
-    - experiment_id: iclr26_ot_verification_framework_source
-      verdict: "arxiv:2510.18982_source_identified"
-      addressed_by: "New source found in the post-.120 literature sweep; task is surgical related-work/formalism adoption, not a publication trigger."
-      retire_if_same_verdict: false
-  prompt: |
-    CONTEXT:
-    The ICLR 2026 paper "Test-time Verification via Optimal Transport: Coverage, ROC, & Sub-optimality" gives a clean framework for verifier-stack geometry. Carnot paper-v6 should adopt the vocabulary without overclaiming.
-
-    EXISTING CODE TO READ FIRST:
-    - research-references.md
-    - docs/research-notes/paper-v6-section-3-sampler-draft.md
-    - docs/papers/paper-v6/main.tex
-    - ops/known-issues.md
-    - openspec/change-proposals/research-roadmap-vNEXT.md
-
-    TASK:
-    Adopt OT verification terminology in paper-v6 notes and write a conflict ledger for Carnot claims.
-
-    CONCRETE STEPS:
-    1. Create results/experiment_1579_iclr26_ot_verification_framework_paper_v6_adoption.json immediately with status="in_progress".
-    2. Read arXiv:2510.18982 or the local downloaded PDF if already present.
-    3. Write docs/research-notes/paper-v6-ot-verification-framework-adoption.md with coverage, ROC, and sub-optimality mapping to Carnot's verifier cascade.
-    4. Add a small patch to docs/papers/paper-v6/main.tex only if there is a clearly isolated related-work or Section 3 insertion point; otherwise write a patch plan.
-    5. Record any Carnot claims that must be softened because finite-K sampling or verifier ROC does not support them.
-
-    REQUIRED ARTIFACT FIELDS:
-    - status
-    - adoption_note_path
-    - ot_framework_adopted
-    - claim_conflict_count
-    - paper_patch_applied
-    - no_publication_trigger
-    - honest_verdict
-
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1579_iclr26_ot_verification_framework_paper_v6_adoption.json')); print(d.get('ot_framework_adopted'), d.get('claim_conflict_count'), d.get('paper_patch_applied'), d.get('honest_verdict'))"
-    Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-- id: exp1580-dccd-jsonschemabench-sota-structured-output-smoke
-  milestone: 2026.05.121
-  deliverable: results/experiment_1580_dccd_jsonschemabench_sota_structured_output_smoke.json
-  title: "DCCD + JSONSchemaBench Structured-Output Smoke on Mandated SOTA GGUFs"
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 50
-  estimated_wall_time_min: 120
-  priority: high
-  gated_on:
-    - upstream: exp1574-120-completion-archive-121-activation
-      artifact_field: dccd_jsonschema_smoke_ready
-      op: "=="
-      value: true
-  prior_failures:
-    - experiment_id: exp1428-dccd-schema-constrained-repair-v2
-      verdict: complete_dccd_schema_constrained_repair_v2_nonzero_repairs_prototype_no_headline_sota_claim
-      addressed_by: "Extends the prototype into a structured-output smoke using JSONSchemaBench-style schemas and the mandated local SOTA GGUF model set."
-      retire_if_same_verdict: false
-    - experiment_id: exp1535-xgrammar-abs-contract-decoder-adapter
-      verdict: "complete: XGrammar/ABS contract decoder adapter ready"
-      addressed_by: "Uses the contract-decoder adapter as a baseline, measuring DCCD projection tax and schema validity rather than redoing adapter wiring."
-      retire_if_same_verdict: false
-  prompt: |
-    CONTEXT:
-    Post-.120 research identified DCCD (arXiv:2603.03305) and JSONSchemaBench (arXiv:2501.10868) as concrete Phase-1 ship aids for reliable structured outputs. This experiment must run at least one mandated SOTA GGUF model, with tiny models allowed only as smoke fallback.
-
-    EXISTING CODE TO READ FIRST:
-    - scripts/experiment_template.py
-    - python/carnot/inference/sota_models.py
-    - results/experiment_1428_dccd_schema_constrained_repair_v2.json
-    - results/experiment_1535_xgrammar_abs_contract_decoder_adapter.json
-    - python/carnot/pipeline/
-    - tests/python/
-
-    TASK:
-    Build and run a bounded DCCD/JSONSchemaBench structured-output smoke test for Carnot verifier-output schemas.
-
-    CONCRETE STEPS:
-    1. Create results/experiment_1580_dccd_jsonschemabench_sota_structured_output_smoke.json immediately with status="in_progress".
-    2. If implementation code changes are needed, use spec-first discipline before editing implementation code.
-    3. Define MODEL_SPECS with cached_sota_pair(gpu_indices=(0, 1)) and record exact models. The artifact must include at least one of:
-       - unsloth/Qwen3.6-35B-A3B-GGUF
-       - unsloth/gemma-4-31B-it-GGUF
-       - unsloth/gemma-4-26B-A4B-it-GGUF
-    4. Select a bounded JSONSchemaBench-style slice plus Carnot verifier-output schemas.
-    5. Compare unconstrained draft, standard constrained decoding, and DCCD where locally feasible.
-    6. Report strict schema validity, semantic verifier correctness, latency, projection-tax proxy, false accepts, and fallback path if SOTA GGUFs are unavailable.
-    7. Do not promote legacy small-model fallback to headline results.
-
-    REQUIRED ARTIFACT FIELDS:
-    - status
-    - MODEL_SPECS
-    - models_used
-    - used_mandated_sota_gguf
-    - legacy_tiny_model_fallback_used
-    - n_schemas
-    - strict_schema_validity_rate
-    - semantic_correctness_rate
-    - false_accept_count
-    - projection_tax_proxy_delta
-    - dccd_jsonschema_smoke_complete
-    - honest_verdict
-
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1580_dccd_jsonschemabench_sota_structured_output_smoke.json')); print(d.get('used_mandated_sota_gguf'), d.get('strict_schema_validity_rate'), d.get('false_accept_count'), d.get('honest_verdict'))"
-    Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-- id: exp1581-fr11-v15-lambda-grpo-retention-reversal
-  milestone: 2026.05.121
-  deliverable: results/experiment_1581_fr11_v15_lambda_grpo_retention_reversal.json
-  title: "FR-11 v15 lambda-GRPO Patch + v14 Retention Reversal"
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 50
-  estimated_wall_time_min: 100
-  priority: critical
-  gated_on:
-    - upstream: exp1574-120-completion-archive-121-activation
-      artifact_field: fr11_v15_patch_ready
-      op: "=="
-      value: true
-  prior_failures:
-    - experiment_id: exp1568-fr11-v14-retained-mode-collapse-audit
-      verdict: "complete: audited 2 retained v14 policies; 1 showed 2+ mode-collapse predictors; 1 retention flagged for next-milestone reversal"
-      addressed_by: "Implements the required next-milestone reversal/replay and lambda-GRPO cure rather than merely auditing retained policies again."
-      retire_if_same_verdict: false
-    - experiment_id: exp1555-fr11-positive-utility-or-retire-v14
-      verdict: "complete: fr11 positive utility gate passed"
-      addressed_by: "Keeps the positive-utility signal but corrects the retained-policy mode-collapse contamination detected after v14."
-      retire_if_same_verdict: false
-  prompt: |
-    CONTEXT:
-    research-program.md requires every milestone to include continuous self-learning. exp1568 found one v14 retained policy with mode-collapse predictors and recommended next-milestone reversal. This task is the required FR-11 self-learning experiment for .121.
-
-    EXISTING CODE TO READ FIRST:
-    - research-program.md
-    - results/experiment_1555_fr11_positive_utility_or_retire_v14.json
-    - results/experiment_1568_fr11_v14_retained_mode_collapse_audit.json
-    - python/carnot/pipeline/session_memory.py
-    - python/carnot/pipeline/session_memory_pack.py
-    - scripts/experiment_template.py
-    - openspec/capabilities/verifiable-reasoning/spec.md
-
-    TASK:
-    Implement or simulate the lambda-GRPO correction path and reverse the flagged v14 retention only if replay confirms it remains mode-collapsed.
-
-    CONCRETE STEPS:
-    1. Create results/experiment_1581_fr11_v15_lambda_grpo_retention_reversal.json immediately with status="in_progress".
-    2. Follow spec-first discipline before touching implementation code.
-    3. Re-run the exp1568 replay criteria for policy:residual_drift_repair:1552 on held-out cases.
-    4. Implement the smallest local lambda-GRPO loss-normalization patch or, if the trainer dependency is unavailable, write a deterministic simulator demonstrating the corrected weighting and mark implementation_deferred=true.
-    5. Measure entropy preservation, boilerplate fraction, OOD accuracy proxy, and soundness mistakes.
-    6. If reversal criteria still pass, mark the v14 retention as reversed in an audit note. Do not mutate model weights unless the existing FR-11 path already supports it.
-    7. Record continuous_self_learning_task=true.
-
-    REQUIRED ARTIFACT FIELDS:
-    - status
-    - continuous_self_learning_task
-    - flagged_policy_replayed
-    - retention_reversal_applied
-    - lambda_grpo_patch_implemented
-    - lambda_grpo_simulated_only
-    - soundness_mistakes
-    - entropy_preservation_rate
-    - boilerplate_fraction_delta
-    - fr11_v15_decision_ready
-    - honest_verdict
-
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1581_fr11_v15_lambda_grpo_retention_reversal.json')); print(d.get('continuous_self_learning_task'), d.get('fr11_v15_decision_ready'), d.get('retention_reversal_applied'), d.get('honest_verdict'))"
-    Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-- id: exp1582-phase1-ship-readiness-ledger
-  milestone: 2026.05.121
-  deliverable: results/experiment_1582_phase1_ship_readiness_ledger.json
-  title: "Phase-1 Software Ship Readiness Ledger"
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 30
-  estimated_wall_time_min: 45
-  priority: critical
-  gated_on:
-    - upstream: exp1574-120-completion-archive-121-activation
-      artifact_field: phase1_ship_readiness_ready
-      op: "=="
-      value: true
-  prior_failures:
-    - experiment_id: operator_phase1_ship_directive_2026_05_08
-      verdict: phase1_decoupled_from_paper_and_hardware
-      addressed_by: "This task audits the software-only Phase-1 gate: PyPI, HuggingFace mirror, MCP/CLI docs, and independent reproducer readiness."
-      retire_if_same_verdict: false
-  prompt: |
-    CONTEXT:
-    The operator explicitly decoupled Phase 1 from paper/arXiv and hardware validation. Phase 1 is now a software-operational ship gate: PyPI package, HuggingFace mirror plus second channel, MCP/CLI docs, and at least one independent reproducer path.
-
-    EXISTING CODE TO READ FIRST:
-    - CLAUDE.md
-    - pyproject.toml
-    - README.md
-    - docs/
-    - ops/known-issues.md
-    - ops/e2e-test-plan.md
-    - python/carnot/
-    - examples/
-
-    TASK:
-    Write a Phase-1 readiness ledger with exact blockers and commands. Do not publish a package, upload credentials, or push releases.
-
-    CONCRETE STEPS:
-    1. Create results/experiment_1582_phase1_ship_readiness_ledger.json immediately with status="in_progress".
-    2. Inspect packaging metadata and determine whether `pip install .`, console scripts, versioning, license, and package data are release-ready.
-    3. Inspect HuggingFace/model-card/mirror references and identify missing model/dataset artifacts.
-    4. Inspect MCP and CLI docs for external integrator quick-start completeness.
-    5. Define an independent reproducer plan using fresh venv or CI; if runnable locally without publishing, run the safe subset.
-    6. Write ops/phase1_ship_readiness.md with pass/fail checklist and next concrete tasks.
-    7. Record what remains before Phase 1 can be declared shipped.
-
-    REQUIRED ARTIFACT FIELDS:
-    - status
-    - phase1_ship_readiness_ledger_ready
-    - pypi_package_ready
-    - hf_mirror_ready
-    - second_mirror_ready
-    - mcp_cli_docs_ready
-    - independent_reproducer_path_ready
-    - safe_local_smoke_ran
-    - blocking_items_count
-    - ledger_path
-    - honest_verdict
-
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1582_phase1_ship_readiness_ledger.json')); print(d.get('phase1_ship_readiness_ledger_ready'), d.get('blocking_items_count'), d.get('ledger_path'), d.get('honest_verdict'))"
-    Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-- id: exp1583-z1-analog-drift-detailed-balance-correction
-  milestone: 2026.05.121
-  deliverable: results/experiment_1583_z1_analog_drift_detailed_balance_correction.json
-  title: "Software Detailed-Balance Error Correction for Z1 Analog Drift"
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 50
-  estimated_wall_time_min: 90
-  priority: critical
-  gated_on:
-    - upstream: exp1577-extropic-z1-readiness-packet-thrml-alignment-resumed
-      artifact_field: extropic_z1_packet_updated
-      op: "=="
-      value: true
-  prior_failures:
-    - experiment_id: hardware_evaluation_report_finding_c
-      verdict: software_correction_needed_for_analog_drift
-      addressed_by: "Builds a simulator and software detailed-balance correction so Z1 readiness does not assume perfect analog beta calibration."
-      retire_if_same_verdict: false
-  prompt: |
-    CONTEXT:
-    The hardware evaluation report flags analog beta drift as a threat to detailed balance on thermodynamic platforms. .121 must prototype software correction in simulation before any Z1 silicon claim.
-
-    EXISTING CODE TO READ FIRST:
-    - python/carnot/sampling/
-    - python/carnot/hardware/
-    - results/experiment_1564_thrml_vendored_block_gibbs_replacement.json
-    - docs/research-notes/extropic-z1-readiness-packet-2026-05-121.md
-    - research-hardware-wishlist.md
-    - openspec/capabilities/verifiable-reasoning/spec.md
-
-    TASK:
-    Implement a synthetic-drift Ising simulator and a software detailed-balance correction experiment.
-
-    CONCRETE STEPS:
-    1. Create results/experiment_1583_z1_analog_drift_detailed_balance_correction.json immediately with status="in_progress".
-    2. Use spec-first discipline before implementation edits.
-    3. Simulate n=128 block-Gibbs with controlled per-spin beta drift, e.g. +/-5% std, using THRML/Carnot reference where available.
-    4. Implement post-hoc importance reweighting or Hastings-style correction at the SamplerBackend boundary, keeping code isolated and testable.
-    5. Measure uncorrected vs corrected mean energy, magnetization, and KL/KS proxy against no-drift reference.
-    6. Write docs/research-notes/z1-detailed-balance-drift-correction.md and mark simulator_only_no_hardware_claim=true.
-
-    REQUIRED ARTIFACT FIELDS:
-    - status
-    - synthetic_drift_simulator_ready
-    - correction_method
-    - uncorrected_energy_bias
-    - corrected_energy_bias
-    - uncorrected_magnetization_bias
-    - corrected_magnetization_bias
-    - correction_within_1sigma
-    - detailed_balance_correction_ready
-    - simulator_only_no_hardware_claim
-    - honest_verdict
-
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1583_z1_analog_drift_detailed_balance_correction.json')); print(d.get('detailed_balance_correction_ready'), d.get('correction_within_1sigma'), d.get('simulator_only_no_hardware_claim'), d.get('honest_verdict'))"
-    Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-- id: exp1584-tenstorrent-wormhole-n150d-block-gibbs-preflight
-  milestone: 2026.05.121
-  deliverable: results/experiment_1584_tenstorrent_wormhole_n150d_block_gibbs_preflight.json
-  title: "Tenstorrent Wormhole n150d Block-Gibbs Preflight"
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 50
-  estimated_wall_time_min: 75
-  priority: high
-  gated_on:
-    - upstream: exp1583-z1-analog-drift-detailed-balance-correction
-      artifact_field: detailed_balance_correction_ready
-      op: "=="
-      value: true
-  prior_failures:
-    - experiment_id: hardware_evaluation_report_wormhole_candidate
-      verdict: novel_wormhole_sampler_preflight
-      addressed_by: "Evaluates Wormhole as a sovereignty-compliant sampler candidate without claiming hardware throughput unless access exists."
-      retire_if_same_verdict: false
-  prompt: |
-    CONTEXT:
-    The hardware evaluation report identifies Tenstorrent Wormhole n150d as a possible open-toolchain sovereignty platform for block-Gibbs sampling. Local hardware may not be present; an honest blocked/preflight artifact is acceptable.
-
-    EXISTING CODE TO READ FIRST:
-    - research-hardware-wishlist.md
-    - _bmad/architecture.md
-    - python/carnot/hardware/
-    - python/carnot/sampling/
-    - results/experiment_1583_z1_analog_drift_detailed_balance_correction.json
-    - ops/known-issues.md
-
-    TASK:
-    Produce a Tenstorrent Wormhole preflight/prototype plan and run any safe local/remote availability checks.
-
-    CONCRETE STEPS:
-    1. Create results/experiment_1584_tenstorrent_wormhole_n150d_block_gibbs_preflight.json immediately with status="in_progress".
-    2. Check whether TT-Metalium tooling or Wormhole hardware/cloud access is present locally without installing privileged software.
-    3. If access exists, run a minimal non-destructive kernel/toolchain smoke and record transcript paths.
-    4. If no access exists, write a blocked artifact with exact acquisition/cloud next steps and expected benchmark protocol.
-    5. Write docs/research-notes/tenstorrent-wormhole-block-gibbs-preflight.md including acceptance gates: KL to THRML, samples/sec, samples/W, open-toolchain reproducibility.
-    6. Do not claim Wormhole execution without transcript evidence.
-
-    REQUIRED ARTIFACT FIELDS:
-    - status
-    - wormhole_access_available
-    - tt_metalium_available
-    - hardware_transcript_path
-    - benchmark_protocol_path
-    - wormhole_preflight_ready
-    - blocked_reason
-    - no_hardware_claim_without_transcript
-    - honest_verdict
-
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1584_tenstorrent_wormhole_n150d_block_gibbs_preflight.json')); print(d.get('wormhole_preflight_ready'), d.get('wormhole_access_available'), d.get('blocked_reason'), d.get('honest_verdict'))"
-    Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-- id: exp1585-polarfire-soc-adaptive-kpcd-prototype-preflight
-  milestone: 2026.05.121
-  deliverable: results/experiment_1585_polarfire_soc_adaptive_kpcd_prototype_preflight.json
-  title: "Microchip PolarFire SoC Adaptive K-PCD Prototype Preflight"
-  agent_type: gemini
-  model: gpt-5.5
-  max_turns: 50
-  estimated_wall_time_min: 75
-  priority: high
-  gated_on:
-    - upstream: exp1583-z1-analog-drift-detailed-balance-correction
-      artifact_field: detailed_balance_correction_ready
-      op: "=="
-      value: true
-  prior_failures:
-    - experiment_id: hardware_evaluation_report_polarfire_candidate
-      verdict: novel_polarfire_soc_preflight
-      addressed_by: "Scopes PolarFire SoC as a PCIe-eliminating adaptive K-PCD node without pretending a board or closed toolchain is already available."
-      retire_if_same_verdict: false
-  prompt: |
-    CONTEXT:
-    The hardware evaluation report's contrarian candidate is PolarFire SoC: RISC-V cores colocated with FPGA fabric. .121 should determine the exact prototype path and toolchain blocker, not overclaim board work.
-
-    EXISTING CODE TO READ FIRST:
-    - research-hardware-wishlist.md
-    - _bmad/architecture.md
-    - python/carnot/hardware/
-    - fpga/
-    - rtl/
-    - ops/known-issues.md
-
-    TASK:
-    Produce a PolarFire SoC adaptive K-PCD prototype preflight with toolchain, board, and simulator boundaries.
-
-    CONCRETE STEPS:
-    1. Create results/experiment_1585_polarfire_soc_adaptive_kpcd_prototype_preflight.json immediately with status="in_progress".
-    2. Inspect the repo for existing FPGA/RTL sampler components reusable for n=128 block-Gibbs.
-    3. Check whether PolarFire/Yosys/Libero tooling is present without installing privileged software.
-    4. Write docs/research-notes/polarfire-soc-adaptive-kpcd-preflight.md with board acquisition path, open-toolchain feasibility, Libero fallback caveat, simulator-first plan, and acceptance gates.
-    5. If no board/toolchain exists, set blocked_reason honestly and keep polarfire_preflight_ready=true only for the plan, not execution.
-
-    REQUIRED ARTIFACT FIELDS:
-    - status
-    - polarfire_board_available
-    - yosys_polarfire_available
-    - libero_available
-    - reusable_rtl_components_count
-    - preflight_note_path
-    - polarfire_preflight_ready
-    - blocked_reason
-    - no_board_execution_claim
-    - honest_verdict
-
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1585_polarfire_soc_adaptive_kpcd_prototype_preflight.json')); print(d.get('polarfire_preflight_ready'), d.get('polarfire_board_available'), d.get('blocked_reason'), d.get('honest_verdict'))"
-    Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-- id: exp1586-strix-point-secondary-tier-rescope-kv260-retirement
-  milestone: 2026.05.121
-  deliverable: results/experiment_1586_strix_point_secondary_tier_rescope_kv260_retirement.json
-  title: "Strix Point Secondary-Tier Rescope + KV260 Vivado-Lineage Retirement"
-  agent_type: gemini
-  model: gpt-5.5
-  max_turns: 30
-  estimated_wall_time_min: 45
-  priority: critical
-  gated_on:
-    - upstream: exp1574-120-completion-archive-121-activation
-      artifact_field: hardware_eval_ready
-      op: "=="
-      value: true
-  prior_failures:
-    - experiment_id: exp584-kv260-synthesis
-      verdict: vivado_not_installed
-      addressed_by: "Re-scopes KV260 away from Phase-1/production-sampler claims because the lineage repeatedly depends on Vivado or board access."
-      retire_if_same_verdict: false
-    - experiment_id: exp993-kv260-board-programming-v3
-      verdict: board_unreachable_human_required
-      addressed_by: "Separates source-level/educational KV260 artifacts from board-execution claims and records the board-access boundary."
-      retire_if_same_verdict: false
-  prompt: |
-    CONTEXT:
-    The hardware evaluation report says Strix Point unified memory is unsuitable as the production K=100 sampler path, but useful as dev/verifier-edge. KV260 remains valuable for source-level RTL learning but is not a sovereignty production sampler when Vivado or unreachable board access is required.
-
-    EXISTING CODE TO READ FIRST:
-    - research-hardware-wishlist.md
-    - _bmad/architecture.md
-    - CLAUDE.md
-    - ops/exclusion_manifest.yaml
-    - results/experiment_584_kv260_synthesis.json
-    - results/experiment_993_kv260_board_programming_v3.json
-    - results/experiment_1517_kv260_discrete_sb_rtl_property_pack_v2.json
-    - ops/known-issues.md
-
-    TASK:
-    Correct the hardware portfolio documentation and exclusion manifest for Strix Point and KV260.
-
-    CONCRETE STEPS:
-    1. Create results/experiment_1586_strix_point_secondary_tier_rescope_kv260_retirement.json immediately with status="in_progress".
-    2. Update research-hardware-wishlist.md and/or docs/research-notes/hardware-portfolio-rescope-2026-05-121.md to mark Strix Point as dev/verifier-edge, not production sampler.
-    3. Add or update ops/exclusion_manifest.yaml entries retiring KV260 board/hardware-performance claims that require Vivado or unreachable board access; preserve source-level RTL lint/sim work as educational/supporting only.
-    4. Be careful with CLAUDE.md: if it contains concurrent user changes, do not overwrite them. Prefer a separate note unless a minimal localized edit is clearly safe.
-    5. Do not claim live Strix/ROCm/NPU measurements unless actually run and recorded.
-
-    REQUIRED ARTIFACT FIELDS:
-    - status
-    - strix_point_rescoped
-    - kv260_vivado_lineage_retired
-    - source_level_kv260_preserved
-    - hardware_portfolio_rescope_ready
-    - docs_updated
-    - exclusion_manifest_updated
-    - no_new_hardware_claims
-    - honest_verdict
-
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1586_strix_point_secondary_tier_rescope_kv260_retirement.json')); print(d.get('hardware_portfolio_rescope_ready'), d.get('kv260_vivado_lineage_retired'), d.get('no_new_hardware_claims'), d.get('honest_verdict'))"
-    Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-- id: exp1587-milestone-121-retro
-  milestone: 2026.05.121
-  deliverable: results/experiment_1587_milestone_121_retro.json
-  title: "Milestone 2026.05.121 Research + Operational Retro"
-  agent_type: gemini
-  model: gpt-5.5
-  max_turns: 20
-  estimated_wall_time_min: 20
-  priority: medium
-  prior_failures:
-    - experiment_id: recurring_milestone_retro
-      verdict: recurring_scaffolding_not_failed_scope
-      addressed_by: "Standard closeout; reads available .121 artifacts and records missing/blocked tasks without requiring every upstream task to pass."
-      retire_if_same_verdict: false
-  prompt: |
-    CONTEXT:
-    Close out milestone 2026.05.121. This retro must be able to run even if one or more upstream experiments blocked, because it is the artifact that records carry-forwards for .122.
-
-    EXISTING CODE TO READ FIRST:
-    - research-roadmap-next.yaml
-    - ops/conductor-log.md
-    - ops/status.md
-    - ops/changelog.md
-    - results/experiment_1574_120_completion_archive_121_activation.json
-    - results/experiment_1575_carry_forward_prior_failures_autofill_audit.json
-    - results/experiment_1576_paper_v6_section_3_sampler_draft_resumed.json
-    - results/experiment_1577_extropic_z1_readiness_packet_thrml_alignment_resumed.json
-    - results/experiment_1578_brain_reinforce_training_dynamics_at_k15.json
-    - results/experiment_1579_iclr26_ot_verification_framework_paper_v6_adoption.json
-    - results/experiment_1580_dccd_jsonschemabench_sota_structured_output_smoke.json
-    - results/experiment_1581_fr11_v15_lambda_grpo_retention_reversal.json
-    - results/experiment_1582_phase1_ship_readiness_ledger.json
-    - results/experiment_1583_z1_analog_drift_detailed_balance_correction.json
-    - results/experiment_1584_tenstorrent_wormhole_n150d_block_gibbs_preflight.json
-    - results/experiment_1585_polarfire_soc_adaptive_kpcd_prototype_preflight.json
-    - results/experiment_1586_strix_point_secondary_tier_rescope_kv260_retirement.json
-
-    TASK:
-    Write the milestone retro with research verdicts, operational losses, and exact .122 carry-forwards.
-
-    CONCRETE STEPS:
-    1. Create results/experiment_1587_milestone_121_retro.json immediately with status="in_progress".
-    2. Read every available .121 artifact; tolerate missing files by recording missing_artifacts.
-    3. Record success criteria met/not met from openspec/change-proposals/research-roadmap-vNEXT.md.
-    4. Record whether Phase-1 ship readiness advanced and what remains.
-    5. Record whether BRAIN, FR-11, OT, DCCD, and hardware correction tasks produced decisive outcomes.
-    6. Append concise updates to ops/status.md and ops/changelog.md if not already present.
-    7. Write .122 planning recommendations with exact carry-forward IDs and prior-failure requirements.
-
-    REQUIRED ARTIFACT FIELDS:
-    - status
-    - milestone_121_retro_complete
-    - tasks_planned
-    - tasks_completed
-    - missing_artifacts
-    - criteria_met_count
-    - criteria_total
-    - phase1_ship_next_actions
-    - research_carryforwards
-    - operational_carryforwards
-    - honest_verdict
-
-    Run command: python3 -c "import json; d=json.load(open('results/experiment_1587_milestone_121_retro.json')); print(d.get('milestone_121_retro_complete'), d.get('criteria_met_count'), d.get('criteria_total'), d.get('honest_verdict'))"
-    Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  - id: exp1588-nsvif-dsl
+    title: "Exp 1588: Build bounded instruction-to-constraint DSL (NSVIF/RvLLM hook)"
+    deliverable: results/experiment_1588_nsvif_dsl.json
+    max_turns: 30
+    agent_type: codex
+    prompt: |
+      CONTEXT: The product gap is extracting semantic constraints from instructions.
+      EXISTING CODE TO READ FIRST: python/carnot/verifiers/
+      TASK: Build a bounded instruction-to-constraint pack that parses NL instructions into a small Carnot DSL and compiles to Python validators.
+      CONCRETE STEPS:
+      1. Define DSL schema in {project_root}/python/carnot/verifiers/dsl.py.
+      2. Write compiler to PySAT/Python verifiers.
+      3. Save artifact to results/experiment_1588_nsvif_dsl.json.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1589-dsl-sota-validation
+    title: "Exp 1589: Evaluate zero-false-accept on mandated SOTA GGUF"
+    deliverable: results/experiment_1589_dsl_sota.json
+    max_turns: 50
+    gated_on:
+      - upstream: exp1588-nsvif-dsl
+        artifact_field: dsl_compiled
+        op: '=='
+        value: true
+    prompt: |
+      CONTEXT: Testing the DSL against live SOTA models.
+      EXISTING CODE TO READ FIRST: python/carnot/verifiers/dsl.py
+      TASK: Evaluate zero-false-accept behavior using mandated local SOTA models. Use MODEL_SPECS: ["unsloth/Qwen3.6-35B-A3B-GGUF", "unsloth/gemma-4-31B-it-GGUF"].
+      CONCRETE STEPS:
+      1. Load compiled DSL constraints.
+      2. Execute 10 generation trials per model.
+      3. Save structured artifact to results/experiment_1589_dsl_sota.json.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1590-csr-mask
+    title: "Exp 1590: STATIC-style CSR-mask prototype for DSL"
+    deliverable: results/experiment_1590_csr_mask.json
+    max_turns: 30
+    model: opus
+    prompt: |
+      CONTEXT: Flatten trie masks into CSR sparse matrix for acceleration.
+      EXISTING CODE TO READ FIRST: python/carnot/samplers/
+      TASK: Implement STATIC-style CSR-mask prototype for the newly built DSL.
+      CONCRETE STEPS:
+      1. Write CSR mask generator.
+      2. Measure latency overhead vs regex path.
+      3. Save artifact to results/experiment_1590_csr_mask.json.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1591-dccd-adapter
+    title: "Exp 1591: Upgrade DCCD smoke to reusable structured verdict adapter"
+    deliverable: results/experiment_1591_dccd_adapter.json
+    max_turns: 30
+    agent_type: codex
+    prompt: |
+      CONTEXT: Scale structured repair using DCCD.
+      EXISTING CODE TO READ FIRST: python/carnot/verifiers/
+      TASK: Upgrade DCCD smoke to a reusable structured verdict adapter.
+      CONCRETE STEPS:
+      1. Write the adapter class integrating llguidance.
+      2. Write tests.
+      3. Save artifact to results/experiment_1591_dccd_adapter.json.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1592-dccd-repair-sota
+    title: "Exp 1592: Run DCCD repair on FoVer cases using SOTA"
+    deliverable: results/experiment_1592_dccd_repair.json
+    max_turns: 50
+    gated_on:
+      - upstream: exp1591-dccd-adapter
+        artifact_field: adapter_ready
+        op: '=='
+        value: true
+    prompt: |
+      CONTEXT: Run the structured verdict adapter on live cases.
+      EXISTING CODE TO READ FIRST: python/carnot/verifiers/
+      TASK: Run DCCD repair on 50 FoVer cases using MODEL_SPECS: ["unsloth/gemma-4-31B-it-GGUF"].
+      CONCRETE STEPS:
+      1. Execute repair loops.
+      2. Log valid rates.
+      3. Save artifact to results/experiment_1592_dccd_repair.json.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1593-cdg-repair
+    title: "Exp 1593: Compare CDG-guided repair against flat validator ordering"
+    deliverable: results/experiment_1593_cdg_repair.json
+    max_turns: 50
+    prompt: |
+      CONTEXT: Improve repair ordering via Constraint Dependency Graphs.
+      EXISTING CODE TO READ FIRST: python/carnot/verifiers/
+      TASK: Build a CDG over the runtime-contract cases and compare repair localization. Use MODEL_SPECS: ["unsloth/gemma-4-26B-A4B-it-GGUF"].
+      CONCRETE STEPS:
+      1. Generate CDG graph.
+      2. Compare repair acceptance rates against flat check.
+      3. Save artifact to results/experiment_1593_cdg_repair.json.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1594-cerce-ledger
+    title: "Exp 1594: Add CerCE-style certificate ledger around FR-11"
+    deliverable: results/experiment_1594_cerce_ledger.json
+    max_turns: 30
+    agent_type: codex
+    prompt: |
+      CONTEXT: Ensure continuous self-learning does not forget.
+      EXISTING CODE TO READ FIRST: python/carnot/training/
+      TASK: Implement CerCE-style certificate ledger for policy promotion.
+      CONCRETE STEPS:
+      1. Add ledger tracking for constraint violations.
+      2. Hook into FR-11 update loop.
+      3. Save artifact to results/experiment_1594_cerce_ledger.json.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1595-cerce-bounds
+    title: "Exp 1595: Pre/post constraint violation bounds check"
+    deliverable: results/experiment_1595_cerce_bounds.json
+    max_turns: 50
+    prompt: |
+      CONTEXT: Test the CerCE ledger bounds.
+      EXISTING CODE TO READ FIRST: python/carnot/training/
+      TASK: Execute a pre/post bounds check on the CerCE ledger using local models.
+      CONCRETE STEPS:
+      1. Run simulated policy updates.
+      2. Reject if bound worsens.
+      3. Save artifact to results/experiment_1595_cerce_bounds.json.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1596-fr11-v16
+    title: "Exp 1596: Run FR-11 v16 skill-promotion with CerCE gate"
+    deliverable: results/experiment_1596_fr11_v16.json
+    max_turns: 50
+    gated_on:
+      - upstream: exp1594-cerce-ledger
+        artifact_field: ledger_ready
+        op: '=='
+        value: true
+    prompt: |
+      CONTEXT: Promote self-learning policies with strict non-forgetting checks.
+      EXISTING CODE TO READ FIRST: python/carnot/training/
+      TASK: Run FR-11 skill-promotion requiring utility_delta > 0.
+      CONCRETE STEPS:
+      1. Execute FR-11 update.
+      2. Measure utility_delta.
+      3. Save artifact to results/experiment_1596_fr11_v16.json.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1597-inertial-ising
+    title: "Exp 1597: CPU-only inertial-update Ising ablation"
+    deliverable: results/experiment_1597_inertial_ising.json
+    max_turns: 100
+    model: opus
+    agent_type: codex
+    prompt: |
+      CONTEXT: Evaluate inertial updates for discrete SB simulators.
+      EXISTING CODE TO READ FIRST: python/carnot/samplers/
+      TASK: CPU/simulator-only inertial-update ablation against Carnot sequential Gibbs.
+      CONCRETE STEPS:
+      1. Add inertia term to Ising simulator.
+      2. Compare to Gibbs.
+      3. Save artifact to results/experiment_1597_inertial_ising.json.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1598-z1-drift
+    title: "Exp 1598: Convert Z1 drift simulation into SamplerBackend test"
+    deliverable: results/experiment_1598_z1_drift.json
+    max_turns: 50
+    agent_type: codex
+    prompt: |
+      CONTEXT: Test hardware drift boundaries without claiming execution.
+      EXISTING CODE TO READ FIRST: python/carnot/samplers/
+      TASK: Convert Z1 drift simulation into a compatibility test.
+      CONCRETE STEPS:
+      1. Write compatibility test.
+      2. Ensure strict transcript absent fields.
+      3. Save artifact to results/experiment_1598_z1_drift.json.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1599-kanele-audit
+    title: "Exp 1599: KANELÉ LUT-based evaluation audit for QuantKAN"
+    deliverable: results/experiment_1599_kanele_audit.json
+    max_turns: 100
+    model: opus
+    prompt: |
+      CONTEXT: Hardware accounting for KANs without synthesis.
+      EXISTING CODE TO READ FIRST: python/carnot/models/
+      TASK: Add a no-synthesis KAN hardware accounting pass for existing artifacts.
+      CONCRETE STEPS:
+      1. Estimate RM/BOP/NABS.
+      2. Save artifact without any hardware claims to results/experiment_1599_kanele_audit.json.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1600-ot-rewrite
+    title: "Exp 1600: Paper v6 OT terminology rewrite"
+    deliverable: results/experiment_1600_ot_rewrite.json
+    max_turns: 20
+    agent_type: claude
+    prompt: |
+      CONTEXT: Formalize paper using Optimal Transport terminology.
+      EXISTING CODE TO READ FIRST: docs/technical-report.md
+      TASK: Rewrite the sampler/verifier section of the paper-v6 draft.
+      CONCRETE STEPS:
+      1. Surgically rewrite text to include OT coverage and ROC concepts.
+      2. Save artifact to results/experiment_1600_ot_rewrite.json.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
