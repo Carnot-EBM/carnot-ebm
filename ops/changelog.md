@@ -5253,3 +5253,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-09: Phase-1 Software Ship Readiness Ledger (⚠️ Blocked) — honest_verdict=blocked_9_items_remaining; results/experiment_1582_phase1_ship_readiness_ledger.json
 - 2026-05-09: Software Detailed-Balance Error Correction for Z1 Analog Drift (✅ Complete) — honest_verdict=complete: simulator_only_hastings_correction_within_1sigma; results/experiment_1583_z1_analog_drift_detailed_balance_correction.json
 - 2026-05-09: Tenstorrent Wormhole n150d Block-Gibbs Preflight (⚠️ Blocked) — honest_verdict=complete: wormhole_preflight_blocked_no_access_no_hardware_claim; results/experiment_1584_tenstorrent_wormhole_n150d_block_gibbs_preflight.json
+- 2026-05-09: Tenstorrent Wormhole n150d Block-Gibbs Preflight (⚠️ Blocked) — honest_verdict=complete: wormhole_preflight_blocked_no_access_no_hardware_claim; results/experiment_1584_tenstorrent_wormhole_n150d_block_gibbs_preflight.json
