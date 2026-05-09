@@ -11660,3 +11660,13 @@ claims, and report local evidence through executable validators, structural
 contracts, and provenance.
 
 **Carnot integration tier:** architecture/claim-boundary comparator.
+
+### KANELÉ and Symbolic-KAN: Scaling Kolmogorov-Arnold Networks
+- **Papers:** arXiv:2512.12850 (KANELÉ); arXiv:2603.23854 (Symbolic-KAN).
+- **What:** KANELÉ maps KANs to FPGAs using LUTs for efficiency. Symbolic-KAN embeds symbolic structure for interpretable learning.
+- **Relevance:** Hardware efficiency for KAN scoring and symbolic constraint checking.
+
+### SIGOOD: Prompt-Driven Self-Improving Optimization
+- **Paper:** arXiv:2602.17342
+- **What:** Test-time self-improvement using Energy Preference Optimization.
+- **Relevance:** Continuous self-learning at inference time via energy guidance.
