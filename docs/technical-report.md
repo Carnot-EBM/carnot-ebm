@@ -1,6 +1,6 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report — 1738 Experiments Across the Public Record, 134 Archived Milestone Records, 23,363 Python Test Items Collected (Artifacts Tracked Through Exp 1587)
+## A Technical Report — 1738 Experiments Across the Public Record, 134 Archived Milestone Records, 23,571 Python Test Items Collected (Artifacts Tracked Through Exp 1587)
 
 **Author:** Ian Blenke
 **Date:** 2026-05-09
@@ -392,7 +392,7 @@ gate with **10.454576x** coupling-trace variance reduction while retaining
 Milestone .121 result artifacts are also checked in. The closeout artifact
 records **14 of 14** criteria met with **12 of 14** tasks completed; Tenstorrent
 Wormhole and PolarFire remain research carry-forwards, and the Phase-1 ship
-ledger records **9** operational blockers. Exp 1578 settles the BRAIN training
+ledger records **9** audit-time operational blockers. Exp 1578 settles the BRAIN training
 dynamics question by showing starvation was overstated at k=15:
 `factorized_final_KL=0.001337`, `linear_AR_final_KL=0.001336`, and both traces
 converged. Exp 1580 runs a DCCD/JSONSchemaBench structured-output smoke over
@@ -407,8 +407,8 @@ Wormhole and PolarFire execution for lack of access/board/toolchain, and Exp
 1586 rescopes Strix Point as secondary tier while retiring the KV260 Vivado
 lineage and preserving source-level KV260 work.
 
-The current 2026-05-08 Python test collection-only snapshot reports
-**23,363** items; this is a collection count, not a full-suite pass claim. A
+The current 2026-05-09 Python test collection-only snapshot reports
+**23,571** items; this is a collection count, not a full-suite pass claim. A
 plain-English summary of that journey is in the next section; deeper analysis
 follows in the body of the report and in the per-milestone retrospective
 artifacts checked into `results/operational_retro_*.json`.
@@ -686,8 +686,8 @@ artifacts checked into `results/operational_retro_*.json`.
   result artifacts record **14/14** criteria met with **12/14** tasks completed.
   DCCD/JSONSchemaBench strict schema validity and semantic correctness both
   reached **1.0** with false accepts **0** on mandated Qwen3.6-35B-A3B GGUF
-  rows; FR-11 v15 reversed the collapsed v14 retention; Phase-1 ship readiness
-  remains blocked by **9** operational items; and Wormhole/PolarFire hardware
+  rows; FR-11 v15 reversed the collapsed v14 retention; Exp 1582 records
+  **9** audit-time operational items; and Wormhole/PolarFire hardware
   execution remains blocked with no hardware claim (Exps 1574-1587).
 - **arXiv package v11 + publication hold:** the .94/.99 integrity passes fixed
   the critical paper issues and updated the claim set against the latest
@@ -1789,10 +1789,10 @@ but are not included as model-generation headline claims.
 | Candidate warm-start benchmark | cold start accuracy **0.465** at k=100 | candidate warm-start accuracy **1.0** | Candidate-warm-start held **1.0** from k=10 through k=1000; cached-state warm-start rejected | Exp 1566 |
 | Soft-Gibbs residual + coverage bound | Hard-BRS proposed | Hard-BRS acceptance **0.0**; Soft-Gibbs bound verified | Jensen lower bound held for all tested beta values; optimal deployment beta **0.1** | Exps 1565/1570 |
 | k=6 rho(C) and AR-REINFORCE | k=6 adversarial scaling unmeasured | rho(C) fit r^2 **0.999983**; variance gate **10.45x** | AND false-positive rate rises to **0.8625** at 256 GPU-hour proxy budget; step-wise AR baseline retains **0.995** convergence proxy | Exps 1567/1571 |
-| Milestone .121 closeout | .120 carried paper-v6/Z1 gates | **14/14** criteria met; **12/14** tasks completed | BRAIN dynamics settled, FR-11 retention reversed, Phase-1 ship blockers counted, Wormhole/PolarFire carried forward | Exp 1587 |
+| Milestone .121 closeout | .120 carried paper-v6/Z1 gates | **14/14** criteria met; **12/14** tasks completed | BRAIN dynamics settled, FR-11 retention reversed, Phase-1 ship blockers recorded, Wormhole/PolarFire carried forward | Exp 1587 |
 | DCCD + JSONSchemaBench SOTA smoke | structured-output SOTA smoke pending | strict schema **1.0**; semantic correctness **1.0** | **4** schemas on mandated Qwen3.6-35B-A3B GGUF rows; false accepts **0**; broad full-suite attempt still failed/hung on unrelated JAX/Z3 worker crashes | Exp 1580 |
 | FR-11 v15 retention reversal | one v14 retained policy flagged | retention reversed | **56** held-out replay cases, **2** predictors reconfirmed, **0** soundness mistakes; lambda-GRPO patch is simulated only with no model-weight mutation | Exp 1581 |
-| Phase-1 ship readiness | software ship gate unaudited after .120 | **9** blockers remaining | Package naming/deps, HF export, IPFS CIDs, MCP docs/tool count, and integrator guide must be fixed before Phase-1 ship | Exp 1582 |
+| Phase-1 ship readiness | software ship gate unaudited after .120 | **9** audit-time blockers recorded | Package naming/deps, HF export, IPFS CIDs, MCP docs/tool count, and integrator guide must be re-audited before Phase-1 ship | Exp 1582 |
 | Hardware portfolio .121 | Z1/Wormhole/PolarFire/KV260 scope open | simulator-only correction + rescope | Z1 drift correction within 1 sigma, corrected acceptance **0.9624255952380952**; Wormhole access false, PolarFire board false; Strix secondary tier, KV260 Vivado lineage retired | Exps 1583-1586 |
 
 ### Pending Validation (Not Yet Headline)
@@ -2373,7 +2373,7 @@ The architecture is model-agnostic (Experiment 69), scales to 5000+ variables (E
 | Research conductor | Autonomous Claude Code agent loop, YAML-driven | N/A | Experimental |
 | PyPI packaging | source install plus extras for rust/mcp/cuda/llm; public PyPI release blocked by Exp 1582 | Integration tests | Beta/blocker |
 
-**Total:** **23,363** Python test items are currently collected in the repo (`.venv/bin/pytest tests/python --collect-only -q -o addopts='' --disable-warnings`, collected 2026-05-08). This is a collection count, not a claim that the full suite passes. Exp 1392 records zero collection errors after the semantic-validator repair, Exp 1411's focused stream/MCP checks pass **10/10**, Exp 1421 fixes the focused embedding-store runtime-failure cluster with 100% line coverage on the touched module, Exp 1426 records **71** remaining spec-coverage traceability debt items, Exp 1440 reduces that spec-coverage metadata debt **71 -> 0** while recording the required full-suite red result (**101 failed**, **6 errors**) outside the metadata fix, the .115 focused conductor rows report **81** tests passing per task, the .116 artifacts record changed-module checks for the new contract, policy, skill-pack, and source-level conformance modules, the .117 artifacts record focused readiness checks for the runtime-contract harness, CDG/product-line rescue, FR-11 policy promotion, MARCH ablation, and THRML parity manifests, Exp 1534 records the latest broad-suite attempt as still red (**94 failed**, **20,015 passed**, **103 skipped**, **4 errors**) from pre-existing failures, and Exp 1580 records focused DCCD/JSONSchemaBench tests and 100% changed-module coverage while the broad `tests/python` attempt failed/hung at 91% from unrelated JAX/Z3 worker crashes. Full validation therefore remains command-specific in the relevant experiment artifacts.
+**Total:** **23,571** Python test items are currently collected in the repo (`.venv/bin/pytest tests/python --collect-only -q -o addopts='' --disable-warnings`, collected 2026-05-09). This is a collection count, not a claim that the full suite passes. Exp 1392 records zero collection errors after the semantic-validator repair, Exp 1411's focused stream/MCP checks pass **10/10**, Exp 1421 fixes the focused embedding-store runtime-failure cluster with 100% line coverage on the touched module, Exp 1426 records **71** remaining spec-coverage traceability debt items, Exp 1440 reduces that spec-coverage metadata debt **71 -> 0** while recording the required full-suite red result (**101 failed**, **6 errors**) outside the metadata fix, the .115 focused conductor rows report **81** tests passing per task, the .116 artifacts record changed-module checks for the new contract, policy, skill-pack, and source-level conformance modules, the .117 artifacts record focused readiness checks for the runtime-contract harness, CDG/product-line rescue, FR-11 policy promotion, MARCH ablation, and THRML parity manifests, Exp 1534 records the latest broad-suite attempt as still red (**94 failed**, **20,015 passed**, **103 skipped**, **4 errors**) from pre-existing failures, and Exp 1580 records focused DCCD/JSONSchemaBench tests and 100% changed-module coverage while the broad `tests/python` attempt failed/hung at 91% from unrelated JAX/Z3 worker crashes. Full validation therefore remains command-specific in the relevant experiment artifacts.
 
 ---
 
@@ -4600,8 +4600,8 @@ threshold. Exp 1439 created the .110 carry-forward activation manifest, and Exp
 **71 -> 0**. Focused checks passed, but the required broad suite attempt
 remained red outside that metadata fix with **101 failed**, **21191 passed**,
 **103 skipped**, **6 errors**, and **91 warnings** before interruption. The
-current public test number is now the 2026-05-08 collection snapshot:
-**23,363** Python items collected, not a full-suite pass claim.
+current public test number is now the 2026-05-09 collection snapshot:
+**23,571** Python items collected, not a full-suite pass claim.
 
 The live-SOTA scale branch was correctly blocked. Exp 1442 found local
 Qwen3.6-35B and Gemma4-31B GGUF files cached and both RTX 3090s idle, but
@@ -5040,8 +5040,9 @@ reconfirms mode collapse for the previously retained v14 policy over **56**
 held-out replay cases, applies the retention reversal, records **0** soundness
 mistakes, and marks the lambda-GRPO patch as simulated-only with no model-weight
 mutation. Exp 1582 audits Phase-1 software ship readiness and blocks ship on
-**9** remaining items: package naming/dependency docs, HF export artifacts,
-IPFS CIDs, MCP docs/tool count, and a missing integrator guide.
+**9** audit-time remaining items: package naming/dependency docs, HF export
+artifacts, IPFS CIDs, MCP docs/tool count, and a missing integrator guide. The
+count remains Exp 1582 provenance until a fresh ship-readiness audit reruns.
 
 The hardware closeout narrows claims. Exp 1583 gives simulator-only evidence
 for a Hastings-style Z1 analog-drift correction within one sigma, with corrected
