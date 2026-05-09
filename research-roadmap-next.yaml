@@ -1,0 +1,214 @@
+milestone: 2026.05.123
+milestone_title: "Phase-2 Formal KANs, EBCN Latent Reasoning, and CerCE Scale"
+milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
+tasks:
+  - id: exp1601-archive-122
+    title: "Exp 1601: Archive .122 and initialize .123"
+    deliverable: results/experiment_1601_archive.json
+    max_turns: 20
+    agent_type: codex
+    prompt: |
+      CONTEXT: Milestone transition.
+      EXISTING CODE TO READ FIRST: ops/status.md
+      TASK: Archive milestone 122 tasks and set up 123 state.
+      CONCRETE STEPS:
+      1. Move 122 status to changelog.
+      2. Save artifact to results/experiment_1601_archive.json.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1602-rkan-prototype
+    title: "Exp 1602: Exact-Rational KAN (RKAN) prototype"
+    deliverable: results/experiment_1602_rkan.json
+    max_turns: 30
+    agent_type: codex
+    prompt: |
+      CONTEXT: Formal verification requires deterministic exact arithmetic.
+      EXISTING CODE TO READ FIRST: python/carnot/models/
+      TASK: Implement an Exact-Rational KAN (RKAN) forward pass using Python's fractions.Fraction to ensure bit-identical operations.
+      CONCRETE STEPS:
+      1. Create python/carnot/models/rkan.py.
+      2. Implement rational field forward pass.
+      3. Save artifact to results/experiment_1602_rkan.json.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1603-ebcn-scorer
+    title: "Exp 1603: Energy-Based Constraint Network (EBCN) coherence scorer"
+    deliverable: results/experiment_1603_ebcn.json
+    max_turns: 50
+    agent_type: codex
+    prompt: |
+      CONTEXT: Evaluating structural coherence without autoregressive generation.
+      EXISTING CODE TO READ FIRST: python/carnot/verify/
+      TASK: Prototype an EBCN scorer using dual-head attention over hidden states to produce a scalar structural violation energy.
+      CONCRETE STEPS:
+      1. Write EBCN scorer module.
+      2. Test on synthetic logical contradictions.
+      3. Save artifact to results/experiment_1603_ebcn.json.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1604-sparse-kan-clustering
+    title: "Exp 1604: Sparse KAN clustering with spectral constraints"
+    deliverable: results/experiment_1604_sparse_kan.json
+    max_turns: 30
+    agent_type: codex
+    prompt: |
+      CONTEXT: Adaptive energy landscapes (Tier 4) via structure sparsification.
+      EXISTING CODE TO READ FIRST: python/carnot/models/
+      TASK: Implement Sparse KAN clustering using Global Group Lasso penalty to compress constraint memory.
+      CONCRETE STEPS:
+      1. Add spectral constraint regularization to KAN loss.
+      2. Measure sparsity ratio.
+      3. Save artifact to results/experiment_1604_sparse_kan.json.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1605-latent-gradient-repair
+    title: "Exp 1605: Latent gradient editing using EBCN"
+    deliverable: results/experiment_1605_latent_repair.json
+    max_turns: 50
+    agent_type: codex
+    gated_on:
+      - upstream: exp1603-ebcn-scorer
+        artifact_field: scorer_ready
+        op: '=='
+        value: true
+    prompt: |
+      CONTEXT: Continuous latent space reasoning and repair.
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/
+      TASK: Implement gradient-based latent editing by minimizing the EBCN scalar energy with respect to a dummy continuous latent state.
+      CONCRETE STEPS:
+      1. Implement latent optimization loop.
+      2. Verify energy monotonically decreases.
+      3. Save artifact to results/experiment_1605_latent_repair.json.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1606-dccd-multihop
+    title: "Exp 1606: DCCD repair on multi-hop reasoning tasks"
+    deliverable: results/experiment_1606_dccd_multihop.json
+    max_turns: 50
+    agent_type: claude
+    prompt: |
+      CONTEXT: Scale DCCD to complex reasoning.
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/
+      TASK: Evaluate Draft-Conditioned Constrained Decoding (DCCD) on multi-hop logical tasks. Use MODEL_SPECS: ["unsloth/Qwen3.6-35B-A3B-GGUF", "unsloth/gemma-4-31B-it-GGUF", "unsloth/gemma-4-26B-A4B-it-GGUF"].
+      CONCRETE STEPS:
+      1. Load multi-hop dataset.
+      2. Execute DCCD using local SOTA models.
+      3. Save artifact to results/experiment_1606_dccd_multihop.json.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1607-dsl-humaneval
+    title: "Exp 1607: Extract DSL constraints from HumanEval"
+    deliverable: results/experiment_1607_dsl_humaneval.json
+    max_turns: 50
+    agent_type: codex
+    prompt: |
+      CONTEXT: Test instruction-to-constraint DSL on code verification.
+      EXISTING CODE TO READ FIRST: python/carnot/verifiers/dsl.py
+      TASK: Extract constraints from HumanEval prompts using the NSVIF DSL. Evaluate with MODEL_SPECS: ["unsloth/Qwen3.6-35B-A3B-GGUF", "unsloth/gemma-4-31B-it-GGUF"].
+      CONCRETE STEPS:
+      1. Run DSL compilation on HumanEval prompts.
+      2. Check valid extraction rates.
+      3. Save artifact to results/experiment_1607_dsl_humaneval.json.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1608-fr11-cerce-scale
+    title: "Exp 1608: FR-11 continuous self-learning CerCE scale"
+    deliverable: results/experiment_1608_fr11_cerce.json
+    max_turns: 50
+    agent_type: codex
+    prompt: |
+      CONTEXT: Scale continuous self-learning safely.
+      EXISTING CODE TO READ FIRST: python/carnot/training/
+      TASK: Run FR-11 self-learning over 1000 examples with the CerCE bounds ledger enforcing no-forgetting. Must include `continuous_self_learning_task` flag in artifact.
+      CONCRETE STEPS:
+      1. Run training loop.
+      2. Ensure utility_delta > 0 without violating past certificates.
+      3. Save artifact to results/experiment_1608_fr11_cerce.json.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1609-context-sensitive-induction
+    title: "Exp 1609: Context-sensitive constraint induction"
+    deliverable: results/experiment_1609_context_induction.json
+    max_turns: 30
+    agent_type: codex
+    prompt: |
+      CONTEXT: Induce rules dynamically from failures.
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/
+      TASK: Implement an induction loop that creates new context-sensitive constraints from residual drift failures.
+      CONCRETE STEPS:
+      1. Mine recent failure logs.
+      2. Generate new constraint candidate.
+      3. Save artifact to results/experiment_1609_context_induction.json.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1610-z3-formal-bridge
+    title: "Exp 1610: Connect RKAN to Z3"
+    deliverable: results/experiment_1610_z3_bridge.json
+    max_turns: 30
+    agent_type: codex
+    gated_on:
+      - upstream: exp1602-rkan-prototype
+        artifact_field: rkan_ready
+        op: '=='
+        value: true
+    prompt: |
+      CONTEXT: Formal verification bridge.
+      EXISTING CODE TO READ FIRST: python/carnot/models/rkan.py
+      TASK: Translate RKAN rational weights and piecewise functions into Z3 SMT constraints to check formal equivalence.
+      CONCRETE STEPS:
+      1. Write Z3 translator for RKAN.
+      2. Verify small 2-variable KAN in Z3.
+      3. Save artifact to results/experiment_1610_z3_bridge.json.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1611-ebcn-sota-validation
+    title: "Exp 1611: EBCN validation on mandated SOTA"
+    deliverable: results/experiment_1611_ebcn_sota.json
+    max_turns: 50
+    agent_type: codex
+    gated_on:
+      - upstream: exp1603-ebcn-scorer
+        artifact_field: scorer_ready
+        op: '=='
+        value: true
+    prompt: |
+      CONTEXT: Validate structural coherence using real model representations.
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/
+      TASK: Score generated outputs from MODEL_SPECS: ["unsloth/Qwen3.6-35B-A3B-GGUF", "unsloth/gemma-4-31B-it-GGUF"] using the EBCN scorer.
+      CONCRETE STEPS:
+      1. Generate traces.
+      2. Record EBCN energy correlation with true correctness.
+      3. Save artifact to results/experiment_1611_ebcn_sota.json.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1612-hardware-rkan-accounting
+    title: "Exp 1612: Hardware accounting for RKAN"
+    deliverable: results/experiment_1612_rkan_accounting.json
+    max_turns: 20
+    agent_type: codex
+    gated_on:
+      - upstream: exp1602-rkan-prototype
+        artifact_field: rkan_ready
+        op: '=='
+        value: true
+    prompt: |
+      CONTEXT: Evaluate logic depth of exact rational arithmetic.
+      EXISTING CODE TO READ FIRST: python/carnot/models/rkan.py
+      TASK: Perform theoretical hardware accounting (LUTs, depth) for replacing floats with rational fractions in KAN evaluation.
+      CONCRETE STEPS:
+      1. Compute theoretical bounds.
+      2. Save artifact to results/experiment_1612_rkan_accounting.json.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1613-retro-123
+    title: "Exp 1613: Milestone .123 Retro"
+    deliverable: results/experiment_1613_retro.json
+    max_turns: 20
+    agent_type: claude
+    prompt: |
+      CONTEXT: Milestone wrap up.
+      EXISTING CODE TO READ FIRST: ops/status.md
+      TASK: Run retrospective for milestone 123.
+      CONCRETE STEPS:
+      1. Write results/experiment_1613_retro.json.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
