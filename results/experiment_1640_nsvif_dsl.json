@@ -1,0 +1,493 @@
+{
+  "arbitrary_code_execution_path_introduced": false,
+  "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1640_nsvif_dsl.json",
+  "carnot_constraints_emitted": 10,
+  "case_results": [
+    {
+      "carnot_constraint_count": 5,
+      "carnot_constraints": [
+        {
+          "constraint_type": "instruction_constraint",
+          "description": "Instruction constraint c001-json_object: json_object on json",
+          "energy_term": null,
+          "metadata": {
+            "constraint_id": "c001-json_object",
+            "dsl_schema_version": "carnot.instruction_constraints.v1",
+            "field": "json",
+            "instruction": "Respond in JSON with keys answer and confidence. Include \"approved\". Do not mention \"secret\". Use at most 12 words.",
+            "nsvif_operator": "json_object",
+            "source_text": "json",
+            "spec_traces": [
+              "REQ-VERIFY-1640",
+              "SCENARIO-VERIFY-1640"
+            ],
+            "value": true
+          }
+        },
+        {
+          "constraint_type": "instruction_constraint",
+          "description": "Instruction constraint c002-json_has_keys: json_has_keys on json",
+          "energy_term": null,
+          "metadata": {
+            "constraint_id": "c002-json_has_keys",
+            "dsl_schema_version": "carnot.instruction_constraints.v1",
+            "field": "json",
+            "instruction": "Respond in JSON with keys answer and confidence. Include \"approved\". Do not mention \"secret\". Use at most 12 words.",
+            "nsvif_operator": "json_has_keys",
+            "source_text": "with keys answer and confidence",
+            "spec_traces": [
+              "REQ-VERIFY-1640",
+              "SCENARIO-VERIFY-1640"
+            ],
+            "value": [
+              "answer",
+              "confidence"
+            ]
+          }
+        },
+        {
+          "constraint_type": "instruction_constraint",
+          "description": "Instruction constraint c003-contains: contains on text",
+          "energy_term": null,
+          "metadata": {
+            "constraint_id": "c003-contains",
+            "dsl_schema_version": "carnot.instruction_constraints.v1",
+            "field": "text",
+            "instruction": "Respond in JSON with keys answer and confidence. Include \"approved\". Do not mention \"secret\". Use at most 12 words.",
+            "nsvif_operator": "contains",
+            "source_text": "Include \"approved\"",
+            "spec_traces": [
+              "REQ-VERIFY-1640",
+              "SCENARIO-VERIFY-1640"
+            ],
+            "value": "approved"
+          }
+        },
+        {
+          "constraint_type": "instruction_constraint",
+          "description": "Instruction constraint c004-not_contains: not_contains on text",
+          "energy_term": null,
+          "metadata": {
+            "constraint_id": "c004-not_contains",
+            "dsl_schema_version": "carnot.instruction_constraints.v1",
+            "field": "text",
+            "instruction": "Respond in JSON with keys answer and confidence. Include \"approved\". Do not mention \"secret\". Use at most 12 words.",
+            "nsvif_operator": "not_contains",
+            "source_text": "Do not mention \"secret\"",
+            "spec_traces": [
+              "REQ-VERIFY-1640",
+              "SCENARIO-VERIFY-1640"
+            ],
+            "value": "secret"
+          }
+        },
+        {
+          "constraint_type": "instruction_constraint",
+          "description": "Instruction constraint c005-max_words: max_words on text",
+          "energy_term": null,
+          "metadata": {
+            "constraint_id": "c005-max_words",
+            "dsl_schema_version": "carnot.instruction_constraints.v1",
+            "field": "text",
+            "instruction": "Respond in JSON with keys answer and confidence. Include \"approved\". Do not mention \"secret\". Use at most 12 words.",
+            "nsvif_operator": "max_words",
+            "source_text": "Use at most 12 words",
+            "spec_traces": [
+              "REQ-VERIFY-1640",
+              "SCENARIO-VERIFY-1640"
+            ],
+            "value": 12
+          }
+        }
+      ],
+      "case_id": "json-text-bound",
+      "constraint_count": 5,
+      "dsl_pack": {
+        "constraints": [
+          {
+            "field": "json",
+            "id": "c001-json_object",
+            "op": "json_object",
+            "source_text": "json",
+            "value": true
+          },
+          {
+            "field": "json",
+            "id": "c002-json_has_keys",
+            "op": "json_has_keys",
+            "source_text": "with keys answer and confidence",
+            "value": [
+              "answer",
+              "confidence"
+            ]
+          },
+          {
+            "field": "text",
+            "id": "c003-contains",
+            "op": "contains",
+            "source_text": "Include \"approved\"",
+            "value": "approved"
+          },
+          {
+            "field": "text",
+            "id": "c004-not_contains",
+            "op": "not_contains",
+            "source_text": "Do not mention \"secret\"",
+            "value": "secret"
+          },
+          {
+            "field": "text",
+            "id": "c005-max_words",
+            "op": "max_words",
+            "source_text": "Use at most 12 words",
+            "value": 12
+          }
+        ],
+        "instruction": "Respond in JSON with keys answer and confidence. Include \"approved\". Do not mention \"secret\". Use at most 12 words.",
+        "max_constraints": 8,
+        "parser_version": "rule-v1",
+        "schema_version": "carnot.instruction_constraints.v1"
+      },
+      "error": "",
+      "instruction": "Respond in JSON with keys answer and confidence. Include \"approved\". Do not mention \"secret\". Use at most 12 words.",
+      "known_bad": {
+        "accepted": false,
+        "failure_ids": [
+          "c002-json_has_keys",
+          "c003-contains",
+          "c004-not_contains"
+        ],
+        "issues": [
+          {
+            "constraint_id": "c002-json_has_keys",
+            "expected": [
+              "answer",
+              "confidence"
+            ],
+            "message": "json_has_keys constraint failed",
+            "observed": {
+              "missing": [
+                "confidence"
+              ]
+            }
+          },
+          {
+            "constraint_id": "c003-contains",
+            "expected": "approved",
+            "message": "contains constraint failed",
+            "observed": "not found"
+          },
+          {
+            "constraint_id": "c004-not_contains",
+            "expected": "not secret",
+            "message": "not_contains constraint failed",
+            "observed": "found"
+          }
+        ]
+      },
+      "known_good": {
+        "accepted": true,
+        "failure_ids": [],
+        "issues": []
+      },
+      "parser_success": true,
+      "validator_compiled": true
+    },
+    {
+      "carnot_constraint_count": 1,
+      "carnot_constraints": [
+        {
+          "constraint_type": "instruction_constraint",
+          "description": "Instruction constraint c001-enum: enum on text",
+          "energy_term": null,
+          "metadata": {
+            "constraint_id": "c001-enum",
+            "dsl_schema_version": "carnot.instruction_constraints.v1",
+            "field": "text",
+            "instruction": "Answer must be one of \"yes\", \"no\".",
+            "nsvif_operator": "enum",
+            "source_text": "one of \"yes\", \"no\"",
+            "spec_traces": [
+              "REQ-VERIFY-1640",
+              "SCENARIO-VERIFY-1640"
+            ],
+            "value": [
+              "yes",
+              "no"
+            ]
+          }
+        }
+      ],
+      "case_id": "enum-answer",
+      "constraint_count": 1,
+      "dsl_pack": {
+        "constraints": [
+          {
+            "field": "text",
+            "id": "c001-enum",
+            "op": "enum",
+            "source_text": "one of \"yes\", \"no\"",
+            "value": [
+              "yes",
+              "no"
+            ]
+          }
+        ],
+        "instruction": "Answer must be one of \"yes\", \"no\".",
+        "max_constraints": 8,
+        "parser_version": "rule-v1",
+        "schema_version": "carnot.instruction_constraints.v1"
+      },
+      "error": "",
+      "instruction": "Answer must be one of \"yes\", \"no\".",
+      "known_bad": {
+        "accepted": false,
+        "failure_ids": [
+          "c001-enum"
+        ],
+        "issues": [
+          {
+            "constraint_id": "c001-enum",
+            "expected": [
+              "no",
+              "yes"
+            ],
+            "message": "enum constraint failed",
+            "observed": "maybe"
+          }
+        ]
+      },
+      "known_good": {
+        "accepted": true,
+        "failure_ids": [],
+        "issues": []
+      },
+      "parser_success": true,
+      "validator_compiled": true
+    },
+    {
+      "carnot_constraint_count": 1,
+      "carnot_constraints": [
+        {
+          "constraint_type": "instruction_constraint",
+          "description": "Instruction constraint c001-exact_bullets: exact_bullets on text",
+          "energy_term": null,
+          "metadata": {
+            "constraint_id": "c001-exact_bullets",
+            "dsl_schema_version": "carnot.instruction_constraints.v1",
+            "field": "text",
+            "instruction": "Use exactly 2 bullet points.",
+            "nsvif_operator": "exact_bullets",
+            "source_text": "Use exactly 2 bullet points",
+            "spec_traces": [
+              "REQ-VERIFY-1640",
+              "SCENARIO-VERIFY-1640"
+            ],
+            "value": 2
+          }
+        }
+      ],
+      "case_id": "exact-bullets",
+      "constraint_count": 1,
+      "dsl_pack": {
+        "constraints": [
+          {
+            "field": "text",
+            "id": "c001-exact_bullets",
+            "op": "exact_bullets",
+            "source_text": "Use exactly 2 bullet points",
+            "value": 2
+          }
+        ],
+        "instruction": "Use exactly 2 bullet points.",
+        "max_constraints": 8,
+        "parser_version": "rule-v1",
+        "schema_version": "carnot.instruction_constraints.v1"
+      },
+      "error": "",
+      "instruction": "Use exactly 2 bullet points.",
+      "known_bad": {
+        "accepted": false,
+        "failure_ids": [
+          "c001-exact_bullets"
+        ],
+        "issues": [
+          {
+            "constraint_id": "c001-exact_bullets",
+            "expected": 2,
+            "message": "exact_bullets constraint failed",
+            "observed": 1
+          }
+        ]
+      },
+      "known_good": {
+        "accepted": true,
+        "failure_ids": [],
+        "issues": []
+      },
+      "parser_success": true,
+      "validator_compiled": true
+    },
+    {
+      "carnot_constraint_count": 3,
+      "carnot_constraints": [
+        {
+          "constraint_type": "instruction_constraint",
+          "description": "Instruction constraint c001-contains: contains on text",
+          "energy_term": null,
+          "metadata": {
+            "constraint_id": "c001-contains",
+            "dsl_schema_version": "carnot.instruction_constraints.v1",
+            "field": "text",
+            "instruction": "Include \"north\". Use at least 2 words and at most 5 words.",
+            "nsvif_operator": "contains",
+            "source_text": "Include \"north\"",
+            "spec_traces": [
+              "REQ-VERIFY-1640",
+              "SCENARIO-VERIFY-1640"
+            ],
+            "value": "north"
+          }
+        },
+        {
+          "constraint_type": "instruction_constraint",
+          "description": "Instruction constraint c002-max_words: max_words on text",
+          "energy_term": null,
+          "metadata": {
+            "constraint_id": "c002-max_words",
+            "dsl_schema_version": "carnot.instruction_constraints.v1",
+            "field": "text",
+            "instruction": "Include \"north\". Use at least 2 words and at most 5 words.",
+            "nsvif_operator": "max_words",
+            "source_text": " at most 5 words",
+            "spec_traces": [
+              "REQ-VERIFY-1640",
+              "SCENARIO-VERIFY-1640"
+            ],
+            "value": 5
+          }
+        },
+        {
+          "constraint_type": "instruction_constraint",
+          "description": "Instruction constraint c003-min_words: min_words on text",
+          "energy_term": null,
+          "metadata": {
+            "constraint_id": "c003-min_words",
+            "dsl_schema_version": "carnot.instruction_constraints.v1",
+            "field": "text",
+            "instruction": "Include \"north\". Use at least 2 words and at most 5 words.",
+            "nsvif_operator": "min_words",
+            "source_text": "Use at least 2 words",
+            "spec_traces": [
+              "REQ-VERIFY-1640",
+              "SCENARIO-VERIFY-1640"
+            ],
+            "value": 2
+          }
+        }
+      ],
+      "case_id": "text-min-max",
+      "constraint_count": 3,
+      "dsl_pack": {
+        "constraints": [
+          {
+            "field": "text",
+            "id": "c001-contains",
+            "op": "contains",
+            "source_text": "Include \"north\"",
+            "value": "north"
+          },
+          {
+            "field": "text",
+            "id": "c002-max_words",
+            "op": "max_words",
+            "source_text": " at most 5 words",
+            "value": 5
+          },
+          {
+            "field": "text",
+            "id": "c003-min_words",
+            "op": "min_words",
+            "source_text": "Use at least 2 words",
+            "value": 2
+          }
+        ],
+        "instruction": "Include \"north\". Use at least 2 words and at most 5 words.",
+        "max_constraints": 8,
+        "parser_version": "rule-v1",
+        "schema_version": "carnot.instruction_constraints.v1"
+      },
+      "error": "",
+      "instruction": "Include \"north\". Use at least 2 words and at most 5 words.",
+      "known_bad": {
+        "accepted": false,
+        "failure_ids": [
+          "c003-min_words"
+        ],
+        "issues": [
+          {
+            "constraint_id": "c003-min_words",
+            "expected": ">=2",
+            "message": "min_words constraint failed",
+            "observed": 1
+          }
+        ]
+      },
+      "known_good": {
+        "accepted": true,
+        "failure_ids": [],
+        "issues": []
+      },
+      "parser_success": true,
+      "validator_compiled": true
+    }
+  ],
+  "constraints_extracted": 10,
+  "dsl_schema": {
+    "constraint_fields": {
+      "field": "text or json",
+      "id": "stable local constraint id",
+      "op": "one supported operator",
+      "source_text": "instruction fragment that produced the constraint",
+      "value": "operator-specific expected value"
+    },
+    "max_constraints": 8,
+    "max_instruction_chars": 2000,
+    "schema_version": "carnot.instruction_constraints.v1",
+    "supported_operators": [
+      "contains",
+      "enum",
+      "exact_bullets",
+      "json_has_keys",
+      "json_object",
+      "max_words",
+      "min_words",
+      "not_contains"
+    ]
+  },
+  "dsl_schema_version": "carnot.instruction_constraints.v1",
+  "experiment": "1640_nsvif_dsl",
+  "experiment_id": 1640,
+  "false_accept_rate": 0.0,
+  "honest_verdict": "complete: NSVIF instruction DSL parsed into Carnot constraints and compiled local Python validators with zero false accepts",
+  "instructions_tested": 4,
+  "known_bad_reject_rate": 1.0,
+  "known_good_pass_rate": 1.0,
+  "parser_success": true,
+  "run_date": "20260509",
+  "schema": "nsvif_instruction_constraint_workflow_v1",
+  "spec_traces": [
+    "REQ-VERIFY-1640",
+    "SCENARIO-VERIFY-1640"
+  ],
+  "status": "complete",
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_1640_nsvif_dsl.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --source=scripts -m pytest tests/python/test_experiment_1640_nsvif_dsl.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include='*/scripts/experiment_1640_nsvif_dsl.py' --fail-under=100 -m",
+    "ruff check scripts/experiment_1640_nsvif_dsl.py tests/python/test_experiment_1640_nsvif_dsl.py",
+    ".venv/bin/python scripts/check_spec_coverage.py (failed: pre-existing test_experiment_1625_task_router tests lack spec references)",
+    ".venv/bin/pytest tests/python -q (attempted once; failed/hung after worker OOM, Z3/JAX crashes, and experiment watchdog timeout)"
+  ],
+  "timestamp": "2026-05-09T18:47:00Z",
+  "validators_compiled": 4
+}

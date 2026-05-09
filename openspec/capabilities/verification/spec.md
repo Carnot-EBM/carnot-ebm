@@ -2200,6 +2200,44 @@ constraint IDs,
 And `results/experiment_1588_nsvif_dsl.json` records complete validator metrics
 with `false_accept_rate=0.0`.
 
+### REQ-VERIFY-1640: NSVIF DSL Parser Emits Carnot Constraints
+
+The repository shall provide an Exp 1640 NSVIF-style instruction-to-constraint
+workflow that reuses the bounded safe DSL and exposes the parsed instructions as
+Carnot `ConstraintResult` rows plus compiled local Python validators.
+
+The workflow shall:
+
+- define `scripts/experiment_1640_nsvif_dsl.py`;
+- parse supported natural-language instruction cases through the bounded
+  instruction DSL without executing generated Python or model-proposed code;
+- convert each parsed DSL constraint into a serializable Carnot
+  `ConstraintResult` shape with operator, field, value, source text, and DSL
+  schema metadata;
+- compile the same constraints into local Python validators and evaluate at
+  least one known-good and one known-bad output for every parsed case;
+- write `results/experiment_1640_nsvif_dsl.json` with `status`,
+  `experiment_id`, `dsl_schema_version`, `parser_success`,
+  `instructions_tested`, `constraints_extracted`, `carnot_constraints_emitted`,
+  `validators_compiled`, `known_good_pass_rate`, `known_bad_reject_rate`,
+  `false_accept_rate`, `arbitrary_code_execution_path_introduced`,
+  `tests_run`, and `honest_verdict`; and
+- set `parser_success=true` only when every instruction case parses into at
+  least one schema-valid constraint, and set terminal `status="complete"` only
+  when parser success, validator compilation, known-good acceptance, known-bad
+  rejection, and zero arbitrary-code execution all hold.
+
+### SCENARIO-VERIFY-1640: Parsed Instructions Become Carnot Constraints And Validators
+
+Given bounded NSVIF-style natural-language instructions,
+When Exp 1640 parses the instructions and compiles validators,
+Then each instruction emits schema-valid DSL constraints and serializable Carnot
+constraint rows,
+And the compiled Python validator accepts the known-good output while rejecting
+the known-bad output,
+And `results/experiment_1640_nsvif_dsl.json` records `parser_success=true` with
+`false_accept_rate=0.0`.
+
 ### REQ-VERIFY-1591: Reusable DCCD Structured Verdict Adapter
 
 The repository shall provide a reusable structured-verdict adapter for Exp 1591
@@ -2293,6 +2331,7 @@ backend diagnostics for the reusable adapter.
 | REQ-VERIFY-1588 | Implemented (`python/carnot/verifiers/dsl.py`) | Implemented (`tests/python/test_experiment_1588_nsvif_dsl.py`) |
 | REQ-VERIFY-1591 | Implemented (`python/carnot/verifiers/dccd_adapter.py`) | Implemented (`tests/python/test_experiment_1591_dccd_adapter.py`) |
 | REQ-VERIFY-1609 | Implemented (`python/carnot/pipeline/context_induction.py`) | Implemented (`tests/python/test_experiment_1609_context_induction.py`) |
+| REQ-VERIFY-1640 | Implemented (`scripts/experiment_1640_nsvif_dsl.py`) | Implemented (`tests/python/test_experiment_1640_nsvif_dsl.py`) |
 
 ### REQ-VERIFY-1593: CDG Repair Acceptance Rates
 The repository shall provide a CDG repair analysis tool that builds a CDG over runtime-contract cases, compares repair localization, and contrasts repair acceptance rates between flat check and CDG ordering using the mandated MODEL_SPECS.
