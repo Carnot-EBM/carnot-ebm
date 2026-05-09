@@ -5271,3 +5271,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-09: Exp 1590: STATIC-style CSR-mask prototype for DSL (✅ Complete) — honest_verdict=complete_bounded_case_equivalence_latency_reported_no_generation_or_repair; results/experiment_1590_csr_mask.json
 - 2026-05-09: Exp 1591: Upgrade DCCD smoke to reusable structured verdict adapter (✅ Complete) — honest_verdict=complete: reusable DCCD structured verdict adapter emits VerdictRecord outputs, rejects semantic false accepts, and preserves fallback validation; results/experiment_1591_dccd_adapter.json
 - 2026-05-09: Exp 1593: Compare CDG-guided repair against flat validator ordering (✅ Complete) — honest_verdict=complete: cdg repair analysis done; results/experiment_1593_cdg_repair.json
+- 2026-05-09: Exp 1594: Add CerCE-style certificate ledger around FR-11 (✅ Complete) — honest_verdict=complete: cerce_certificate_ledger_ready; results/experiment_1594_cerce_ledger.json
