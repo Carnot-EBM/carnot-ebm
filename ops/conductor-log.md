@@ -1370,3 +1370,4 @@ web search: site:o |
 | 2026-05-09 14:15 UTC | Exp 1620: Certify FR-11 Ledger via MILP bounds | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1619-milp-kan-compiler) |
 | 2026-05-09 14:15 UTC | Exp 1622: KANELÉ RTL Linting and Simulation | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1621-kanele-lut-mapping.verilog_generat |
 | 2026-05-09 14:17 UTC | Exp 1622: KANELÉ RTL Linting and Simulation | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1621-kanele-lut-mapping.verilog_generat |
+| 2026-05-09 14:28 UTC | Exp 1623: Latency/Resource Accounting for KANELÉ v | OK | 81 passed, 1 warning in 5.08s |
