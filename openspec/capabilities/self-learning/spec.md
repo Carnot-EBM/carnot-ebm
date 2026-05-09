@@ -4657,6 +4657,53 @@ soundness mistake, or increases false accepts
 
 ---
 
+## REQ-LEARN-1630: LTLZinc Temporal Retention Benchmark
+
+Exp 1630 SHALL generate a deterministic LTLZinc-style temporal-constraint
+benchmark for FR-11 query-time learning non-forgetting checks.  The benchmark
+SHALL exercise the existing additive `CaseMemory` retrieval path by inserting
+temporal constraints, applying additional query-time update rows, and then
+verifying that the original temporal constraints can still be retrieved and
+locally checked.
+
+### REQ-LEARN-1630 Sub-requirements
+
+- REQ-LEARN-1630-1: The workflow SHALL write
+  `results/experiment_1630_ltlzinc.json` with a terminal JSON artifact.
+- REQ-LEARN-1630-2: The generated benchmark cases SHALL include
+  LTLZinc-style finite Boolean traces, temporal formulas, MiniZinc-style
+  constraint strings, expected satisfaction labels, and deterministic case IDs.
+- REQ-LEARN-1630-3: Each benchmark case SHALL be converted into a
+  `CaseRecord` shape compatible with `CaseMemory`, and the benchmark SHALL
+  score a case as retained only when the local temporal verifier agrees with
+  the expected label and retrieval after later updates returns the same case
+  key.
+- REQ-LEARN-1630-4: The terminal artifact SHALL include `status`, `schema`,
+  `experiment_id`, `benchmark_size`, `pass_rate`, `retained_case_count`,
+  `memory_entry_count`, `case_results`, and `honest_verdict`.
+- REQ-LEARN-1630-5: A complete benchmark result SHALL require
+  `benchmark_size > 0`, `pass_rate == 1.0`, and every retained case result to
+  cite the temporal operator and retrieved CaseMemory fingerprint.
+
+### SCENARIO-LEARN-1630: Temporal Constraints Survive Query-Time Updates
+
+**Given** finite-trace `always`, `eventually`, `next`, and `until` temporal
+constraints have been recorded into `CaseMemory`
+**When** additional temporal update cases are recorded and the original cases
+are replayed through the retention benchmark
+**Then** every original case is locally verified against its expected label
+**And** retrieval returns the same temporal CaseMemory key for each original
+case
+**And** the terminal artifact reports `benchmark_size` and `pass_rate`.
+
+## Implementation Status (REQ-LEARN-1630)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-1630 | Implemented (`scripts/experiment_1630_ltlzinc.py`) | Implemented (`tests/python/test_experiment_1630_ltlzinc.py`) |
+
+---
+
 ## REQ-LEARN-1539: FR-11 External-Feedback Skill Graph Promotion
 
 Exp 1539 SHALL convert rollback-passing FR-11 query-time policy updates into an
