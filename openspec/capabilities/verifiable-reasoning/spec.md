@@ -18516,3 +18516,27 @@ the initial energy
 **And** an honest verdict is recorded.
 
 **Spec traces:** REQ-VERIFY-1616, SCENARIO-VERIFY-1616, Exp 1616
+
+## REQ-VERIFY-1627: Nabla Reasoner Debugging and Sweep
+
+**Summary:** Carnot SHALL perform a learning rate and momentum sweep to debug the Nabla Reasoner convergence.
+
+**Requirements:**
+
+- REQ-VERIFY-1627-1: A script `scripts/experiment_1627_nabla_debug.py` SHALL be implemented to test combinations of learning rates and momentum values on the Nabla Reasoner.
+- REQ-VERIFY-1627-2: The sweep SHALL test multiple learning rates and momentum configurations using the EBCN structural energy computation.
+- REQ-VERIFY-1627-3: The script SHALL output an artifact `results/experiment_1627_nabla_debug.json`.
+- REQ-VERIFY-1627-4: The artifact SHALL include the boolean `optimizer_converges`, the `optimal_learning_rate`, and the `optimal_momentum`.
+
+**Implementation Status:** Implemented (Exp 1627)
+
+### SCENARIO-VERIFY-1627: Sweep Identifies Converging Parameters
+
+**Given** the continuous Nabla Reasoner
+**When** the sweep is performed over learning rate and momentum
+**Then** it identifies parameters where the optimizer converges
+**And** it outputs an artifact with `optimizer_converges` boolean set appropriately
+**And** it records the optimal parameters.
+
+**Spec traces:** REQ-VERIFY-1627, SCENARIO-VERIFY-1627, Exp 1627
+
