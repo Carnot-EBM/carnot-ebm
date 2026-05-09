@@ -2158,7 +2158,49 @@ And `paper_v6_brain_recommendation` records whether paper v6 should cite
 factorized starvation, treat starvation as overstated, or drop both
 parameterizations as inadequate.
 
-## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487/1495/1496/1499/1500/1501/1507/1508/1509/1510/1520/1521/1522/1525/1537/1538/1541/1542/1551/1552/1553/1554/1557/1562/1571/1578/1580)
+### REQ-VERIFY-1588: Bounded Instruction-To-Constraint DSL Pack
+
+The repository shall provide a bounded instruction-to-constraint pack for Exp
+1588 that converts natural-language output instructions into a small Carnot DSL
+and compiles that DSL into deterministic local validators.
+
+The pack shall:
+
+- define the DSL schema in `python/carnot/verifiers/dsl.py`;
+- parse only a fixed, auditable set of instruction patterns, including required
+  text, forbidden text, JSON-object requirements, JSON key requirements, word
+  count bounds, answer enumerations, and exact bullet counts;
+- cap instruction length and constraint count, and fail closed rather than
+  executing generated Python or accepting unsupported operators;
+- compile every supported DSL constraint into a Python validator that reports
+  per-constraint failures;
+- emit a PySAT-compatible CNF representation of the hard conjunction whenever
+  constraints compile, without requiring the optional `python-sat` package in
+  the Python test environment;
+- write `results/experiment_1588_nsvif_dsl.json` with `status`,
+  `experiment_id`, `dsl_schema_version`, `instructions_tested`,
+  `constraints_extracted`, `validators_compiled`, `pysat_cnf_compiled`,
+  `python_validator_pass_rate`, `known_good_pass_rate`,
+  `known_bad_reject_rate`, `false_accept_rate`,
+  `arbitrary_code_execution_path_introduced`, `tests_run`, and
+  `honest_verdict`; and
+- set terminal `status="complete"` only when all fixture validators compile,
+  known-good examples pass, known-bad examples reject, and no arbitrary-code
+  execution path is introduced.
+
+### SCENARIO-VERIFY-1588: Natural-Language Instructions Compile To Local Validators
+
+Given bounded natural-language instructions with supported semantic constraints,
+When the Exp 1588 DSL parser and compiler run,
+Then the parsed pack validates against the local schema,
+And the compiled Python validator accepts the known-good output while reporting
+specific constraint failures for known-bad output,
+And a PySAT-compatible CNF hard-conjunction view is available for the same
+constraint IDs,
+And `results/experiment_1588_nsvif_dsl.json` records complete validator metrics
+with `false_accept_rate=0.0`.
+
+## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487/1495/1496/1499/1500/1501/1507/1508/1509/1510/1520/1521/1522/1525/1537/1538/1541/1542/1551/1552/1553/1554/1557/1562/1571/1578/1580/1588)
 
 | Requirement | Python | Tests |
 |-------------|--------|-------|
@@ -2202,3 +2244,4 @@ parameterizations as inadequate.
 | REQ-VERIFY-1571 | Implemented (`python/carnot/training/ar_reinforce_stepwise_baseline.py`) | Implemented (`tests/python/test_experiment_1571_step_wise_baseline_ar_reinforce.py`) |
 | REQ-VERIFY-1578 | Implemented (`python/carnot/training/brain_reinforce_training_dynamics.py`) | Implemented (`tests/python/test_experiment_1578_brain_reinforce_training_dynamics.py`) |
 | REQ-VERIFY-1580 | Implemented (`python/carnot/reporting/dccd_jsonschemabench_sota_structured_output_smoke.py`) | Implemented (`tests/python/test_experiment_1580_dccd_jsonschemabench_sota_structured_output_smoke.py`) |
+| REQ-VERIFY-1588 | Implemented (`python/carnot/verifiers/dsl.py`) | Implemented (`tests/python/test_experiment_1588_nsvif_dsl.py`) |
