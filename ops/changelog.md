@@ -5298,3 +5298,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-09: Exp 1615: Energy-Guided Test-Time Scaling (ETS) prototype (⚠️ Research Finding) — honest_verdict=ets_decoding_successful; results/experiment_1615_ets_decoding.json
 - 2026-05-09: Exp 1616: Nabla-Reasoner Continuous Latent Optimization (✅ Complete) — honest_verdict=complete: Langevin dynamics successfully minimized EBCN energy in continuous logit space; results/experiment_1616_nabla_reasoner.json
 - 2026-05-09: Exp 1618: PWA Abstraction Layer for KANs (✅ Complete) — honest_verdict=complete: pwa_kan_logical_affine_bounds_ready; results/experiment_1618_pwa_kan.json
+- 2026-05-09: Exp 1621: KANELÉ LUT-Mapping Logic Synthesis (✅ Complete) — honest_verdict=success: kanele python-to-verilog mapping complete; results/experiment_1621_kanele_mapping.json
