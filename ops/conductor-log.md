@@ -1379,3 +1379,4 @@ web search: site:o |
 | 2026-05-09 15:23 UTC | Milestone 2026.05.125 activated | OK | 13 tasks queued |
 | 2026-05-09 15:32 UTC | Exp 1627: Nabla-Reasoner convergence debugging and | OK | 81 passed, 1 warning in 5.29s |
 | 2026-05-09 15:39 UTC | Exp 1628: gated on Exp 1627 optimizer_converges==t | OK | 81 passed, 1 warning in 4.63s |
+| 2026-05-09 15:46 UTC | Exp 1629: Live SOTA validation of EBRM trajectory  | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1629_ebrm_so |
