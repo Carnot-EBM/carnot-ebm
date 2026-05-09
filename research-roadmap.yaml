@@ -1,215 +1,184 @@
-milestone: 2026.05.124
-milestone_title: "Phase-2 Latent Space Navigation, KANELÉ RTL Synthesis, and Energy-Guided Decoding"
-milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
+milestone: 2026.05.125
+milestone_title: "Phase-3 Energy-Based Reasoning, Certified Self-Learning, and Energy-Guided Decoding"
+milestone_doc: "openspec/change-proposals/research-roadmap-v2026.05.125.md"
 tasks:
-  - id: exp1614-archive-123
-    title: "Exp 1614: Archive .123 and initialize .124"
-    deliverable: results/experiment_1614_archive.json
-    max_turns: 20
-    agent_type: codex
+  - id: exp1627-nabla-reasoner-debug
+    title: "Exp 1627: Nabla-Reasoner convergence debugging and learning rate sweep"
+    deliverable: results/experiment_1627_nabla_debug.json
     prompt: |
-      CONTEXT: Milestone transition.
-      EXISTING CODE TO READ FIRST: ops/status.md
-      TASK: Archive milestone 123 tasks and set up 124 state.
+      CONTEXT: The Nabla-Reasoner in Exp 1616/1617 failed to converge on the validation set.
+      EXISTING CODE TO READ FIRST: results/experiment_1616_nabla.json, python/carnot/pipeline/
+      TASK: Debug the continuous latent optimizer convergence. Perform a learning rate and momentum sweep.
       CONCRETE STEPS:
-      1. Move 123 status to changelog.
-      2. Save artifact to results/experiment_1614_archive.json.
+      1. Write a script `scripts/experiment_1627_nabla_debug.py` to test learning rates.
+      2. Record `optimizer_converges` boolean and the optimal learning rate in the JSON result.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp1615-ets-decoding
-    title: "Exp 1615: Energy-Guided Test-Time Scaling (ETS) prototype"
-    deliverable: results/experiment_1615_ets_decoding.json
-    max_turns: 50
-    agent_type: gemini
-    prompt: |
-      CONTEXT: Energy-Guided Decoding using online Monte Carlo estimation (ETS).
-      EXISTING CODE TO READ FIRST: python/carnot/pipeline/
-      TASK: Implement ETS to dynamically scale compute at test-time by weighting the base LLM policy with a Monte Carlo energy estimator.
-      CONCRETE STEPS:
-      1. Create python/carnot/pipeline/ets_decoder.py.
-      2. Implement Monte Carlo transition probability formulation.
-      3. Save artifact to results/experiment_1615_ets_decoding.json.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp1616-nabla-reasoner
-    title: "Exp 1616: Nabla-Reasoner Continuous Latent Optimization"
-    deliverable: results/experiment_1616_nabla_reasoner.json
-    max_turns: 50
-    agent_type: gemini
-    prompt: |
-      CONTEXT: Iterative generation with Differentiable Textual Optimization.
-      EXISTING CODE TO READ FIRST: python/carnot/verify/
-      TASK: Implement gradient-based latent editing via Langevin dynamics in a continuous logit space, minimizing the EBCN structural energy.
-      CONCRETE STEPS:
-      1. Write differentiable logit state optimizer in JAX.
-      2. Evaluate convergence speed.
-      3. Save artifact to results/experiment_1616_nabla_reasoner.json.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp1617-nabla-sota-validation
-    title: "Exp 1617: Live SOTA validation of Nabla-Reasoner"
-    deliverable: results/experiment_1617_nabla_sota.json
-    max_turns: 50
-    agent_type: gemini
+  - id: exp1628-ebrm-scoring-prototype
+    title: "Exp 1628: gated on Exp 1627 optimizer_converges==true — EBRM-style continuous latent trace scoring prototype"
+    deliverable: results/experiment_1628_ebrm_scoring.json
     gated_on:
-      - upstream: exp1616-nabla-reasoner
+      - upstream: exp1627-nabla-reasoner-debug
         artifact_field: optimizer_converges
         op: '=='
         value: true
     prompt: |
-      CONTEXT: Validate continuous reasoning on mandated SOTA models.
-      EXISTING CODE TO READ FIRST: python/carnot/pipeline/
-      TASK: Evaluate Nabla-Reasoner on MODEL_SPECS: ["unsloth/Qwen3.6-35B-A3B-GGUF", "unsloth/gemma-4-31B-it-GGUF"].
-      CONCRETE STEPS:
-      1. Inject differentiable loop into the inference pipeline.
-      2. Record generation trajectory and final energy.
-      3. Save artifact to results/experiment_1617_nabla_sota.json.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp1618-pwa-kan-abstraction
-    title: "Exp 1618: PWA Abstraction Layer for KANs"
-    deliverable: results/experiment_1618_pwa_kan.json
-    max_turns: 30
-    agent_type: codex
-    prompt: |
-      CONTEXT: Formal verification using optimal abstractions (arXiv:2602.06737).
+      CONTEXT: Building an EBRM-style latent trace scoring mechanism using the converged Nabla-Reasoner.
       EXISTING CODE TO READ FIRST: python/carnot/models/
-      TASK: Implement a Piecewise Affine (PWA) abstraction wrapper for KAN units to bound spline activations logically.
+      TASK: Implement continuous latent trace scoring using the repaired Nabla-Reasoner. 
       CONCRETE STEPS:
-      1. Create python/carnot/models/pwa_kan.py.
-      2. Implement affine boundary calculations for arbitrary 1D splines.
-      3. Save artifact to results/experiment_1618_pwa_kan.json.
+      1. Write `scripts/experiment_1628_ebrm_scoring.py` to evaluate the trace scoring.
+      2. Record `scoring_accuracy` in the JSON deliverable.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp1619-milp-kan-compiler
-    title: "Exp 1619: MILP Compilation of PWA KANs"
-    deliverable: results/experiment_1619_milp_kan.json
+  - id: exp1629-ebrm-live-sota
+    title: "Exp 1629: Live SOTA validation of EBRM trajectory optimization"
+    deliverable: results/experiment_1629_ebrm_sota.json
     max_turns: 50
-    agent_type: codex
-    gated_on:
-      - upstream: exp1618-pwa-kan-abstraction
-        artifact_field: pwa_ready
-        op: '=='
-        value: true
-    prompt: |
-      CONTEXT: Compile KAN abstractions into Mixed Integer Linear Programming.
-      EXISTING CODE TO READ FIRST: python/carnot/models/pwa_kan.py
-      TASK: Write a compiler that converts a PWA-abstracted KAN into Z3/PySAT MILP constraints for formal property verification.
-      CONCRETE STEPS:
-      1. Map affine inequalities to Z3 expressions.
-      2. Run formal verification on a 2-layer KAN.
-      3. Save artifact to results/experiment_1619_milp_kan.json.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp1620-milp-fr11-certification
-    title: "Exp 1620: Certify FR-11 Ledger via MILP bounds"
-    deliverable: results/experiment_1620_milp_fr11.json
-    max_turns: 50
-    agent_type: gemini
-    gated_on:
-      - upstream: exp1619-milp-kan-compiler
-        artifact_field: compiler_ready
-        op: '=='
-        value: true
-    prompt: |
-      CONTEXT: Enforce 100% safe continuous learning updates.
-      EXISTING CODE TO READ FIRST: python/carnot/training/
-      TASK: Integrate the MILP formal verifier into the FR-11 CerCE ledger to mathematically guarantee no-forgetting before accepting weight updates.
-      CONCRETE STEPS:
-      1. Wire Z3 verification to the FR-11 accept/reject gate.
-      2. Simulate an adversarial gradient step and verify rejection.
-      3. Save artifact to results/experiment_1620_milp_fr11.json.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp1621-kanele-lut-mapping
-    title: "Exp 1621: KANELÉ LUT-Mapping Logic Synthesis"
-    deliverable: results/experiment_1621_kanele_mapping.json
-    max_turns: 100
     model: opus
     prompt: |
-      CONTEXT: Direct instantiation of KANs into FPGA LUT logic (FPGA '26).
-      EXISTING CODE TO READ FIRST: hardware/kv260/
-      TASK: Design a Python-to-Verilog compiler that translates KAN edge functions directly into configuration bits for 6-input LUTs.
+      CONTEXT: The EBRM trajectory optimization must be validated against mandated local SOTA models.
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/
+      TASK: Use `unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF` to validate EBRM optimizations.
       CONCRETE STEPS:
-      1. Write Python logic synthesis script for generic 1D functions to LUT.
-      2. Generate hardware/kv260/kan_lut_block.v.
-      3. Save artifact to results/experiment_1621_kanele_mapping.json.
+      1. Ensure caching handles the SOTA models properly using the `cached_sota_pair()` pattern.
+      2. Execute the evaluation via `scripts/experiment_1629_ebrm_sota.py` and output to the deliverable JSON.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp1622-kanele-rtl-lint
-    title: "Exp 1622: KANELÉ RTL Linting and Simulation"
-    deliverable: results/experiment_1622_kanele_lint.json
-    max_turns: 100
-    model: opus
+  - id: exp1630-ltlzinc-benchmark
+    title: "Exp 1630: LTLZinc temporal constraint benchmark expansion for non-forgetting checks"
+    deliverable: results/experiment_1630_ltlzinc.json
+    agent_type: codex
+    prompt: |
+      CONTEXT: FR-11 query-time learning needs a non-forgetting check mechanism based on temporal constraints.
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/case_memory.py
+      TASK: Implement an LTLZinc-style benchmark to test temporal logic constraint retention.
+      CONCRETE STEPS:
+      1. Write `scripts/experiment_1630_ltlzinc.py` to generate the test cases.
+      2. Record `benchmark_size` and `pass_rate` in the JSON result.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1631-smgi-certified-updates
+    title: "Exp 1631: Integrate SMGI certified update logic into the FR-11 pipeline"
+    deliverable: results/experiment_1631_smgi.json
+    max_turns: 50
+    prompt: |
+      CONTEXT: Implementing SMGI principles to ensure policy promotion doesn't forget prior constraints.
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/case_memory.py, ops/status.md
+      TASK: Modify the FR-11 memory policy to require a "certified update" via the LTLZinc benchmark.
+      CONCRETE STEPS:
+      1. Write `scripts/experiment_1631_smgi.py` to simulate a certified update check.
+      2. Output the `certified_update_success` boolean flag to the JSON.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1632-fr11-continuous-learning
+    title: "Exp 1632: gated on Exp 1631 certified_update_success==true — FR-11 query-time continuous self-learning"
+    deliverable: results/experiment_1632_fr11_learning.json
     gated_on:
-      - upstream: exp1621-kanele-lut-mapping
-        artifact_field: verilog_generated
+      - upstream: exp1631-smgi-certified-updates
+        artifact_field: certified_update_success
         op: '=='
         value: true
     prompt: |
-      CONTEXT: Source-level verification of KAN hardware logic.
-      EXISTING CODE TO READ FIRST: hardware/kv260/kan_lut_block.v
-      TASK: Use Verilator or Icarus Verilog to lint and simulate the KANELÉ LUT block against Python reference outputs.
+      CONTEXT: FR-11 must continuously learn at query-time without catastrophic forgetting.
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/case_memory.py
+      TASK: Run a continuous self-learning loop using the FR-11 memory policy and SMGI certified update gate.
       CONCRETE STEPS:
-      1. Write Verilog testbench.
-      2. Run source-level simulation and assert bit-exact match.
-      3. Save artifact to results/experiment_1622_kanele_lint.json.
+      1. Write `scripts/experiment_1632_fr11_learning.py` to evaluate the query-time self-learning performance.
+      2. Record `non_forgetting_rate` and `memory_growth` in the JSON result.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp1623-kanele-resource-accounting
-    title: "Exp 1623: Latency/Resource Accounting for KANELÉ vs Ising"
-    deliverable: results/experiment_1623_kanele_accounting.json
-    max_turns: 30
+  - id: exp1633-pinet-projection
+    title: "Exp 1633: Pi-net style differentiable projection layer prototype"
+    deliverable: results/experiment_1633_pinet.json
     agent_type: codex
     prompt: |
-      CONTEXT: Hardware bounds analysis for KV260 deployment.
-      EXISTING CODE TO READ FIRST: hardware/kv260/
-      TASK: Perform theoretical LUT and logic-depth accounting comparing the new KANELÉ architecture vs the existing Ising v3 formulation.
+      CONTEXT: Pi-net offers a differentiable layer to guarantee hard constraint satisfaction.
+      EXISTING CODE TO READ FIRST: python/carnot/models/
+      TASK: Prototype a Pi-net style projection layer using JAX for the continuous constraint tier.
       CONCRETE STEPS:
-      1. Calculate per-node LUT consumption.
-      2. Estimate maximum clock frequency.
-      3. Save artifact to results/experiment_1623_kanele_accounting.json.
+      1. Write `scripts/experiment_1633_pinet.py` to implement and test the projection layer.
+      2. Output `projection_error` and `convergence_steps` to the JSON.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp1624-adaptive-energy-reconfig
-    title: "Exp 1624: Adaptive Energy Landscape Reconfiguration"
-    deliverable: results/experiment_1624_adaptive_reconfig.json
+  - id: exp1634-pinet-vs-tskm
+    title: "Exp 1634: Compare Pi-net projection against T-SKM on CCTU constraints"
+    deliverable: results/experiment_1634_pinet_vs_tskm.json
+    prompt: |
+      CONTEXT: Compare the Pi-net prototype against the prior T-SKM approach on CCTU constraints.
+      EXISTING CODE TO READ FIRST: python/carnot/models/
+      TASK: Run a performance and correctness comparison between Pi-net and T-SKM.
+      CONCRETE STEPS:
+      1. Write `scripts/experiment_1634_comparison.py`.
+      2. Record `pinet_faster_than_tskm` boolean and the `latency_diff` in the JSON result.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1635-consformer-refiner
+    title: "Exp 1635: ConsFormer-style refiner prototype for FoVer CSPs"
+    deliverable: results/experiment_1635_consformer.json
+    agent_type: codex
+    prompt: |
+      CONTEXT: ConsFormer provides a transformer-based refiner for constraint satisfaction without labels.
+      EXISTING CODE TO READ FIRST: data/fover_corpus.jsonl
+      TASK: Train a lightweight ConsFormer-style refiner on the FoVer CSP dataset.
+      CONCRETE STEPS:
+      1. Write `scripts/experiment_1635_consformer.py` to implement the refiner.
+      2. Output `refiner_accuracy` to the JSON.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1636-energy-guided-decoding
+    title: "Exp 1636: Energy-Guided Decoding implementation using mandated SOTA GGUFs"
+    deliverable: results/experiment_1636_guided_decoding.json
     max_turns: 50
-    agent_type: gemini
+    model: opus
     prompt: |
-      CONTEXT: Tier 4 self-learning via constraint graph restructuring.
+      CONTEXT: Integrate Energy-Guided Decoding directly into the generation step for hallucination mitigation.
       EXISTING CODE TO READ FIRST: python/carnot/pipeline/
-      TASK: Implement an offline consolidation phase that removes redundant energy constraints using spectral overlap pruning.
+      TASK: Implement an energy-guided selection mechanism during decoding using `unsloth/gemma-4-26B-A4B-it-GGUF`.
       CONCRETE STEPS:
-      1. Add pruning pass to constraint memory.
-      2. Validate that pruned network yields identical energy minima on hold-out set.
-      3. Save artifact to results/experiment_1624_adaptive_reconfig.json.
+      1. Write `scripts/experiment_1636_guided_decoding.py`.
+      2. Utilize the `cached_sota_pair()` pattern as mandated.
+      3. Report `hallucination_reduction_rate` in the JSON result.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp1625-ebm-llm-router
-    title: "Exp 1625: EBM vs LLM Task Allocation Router"
-    deliverable: results/experiment_1625_task_router.json
-    max_turns: 30
-    agent_type: gemini
-    prompt: |
-      CONTEXT: Adaptive routing between pure language and constraint reasoning.
-      EXISTING CODE TO READ FIRST: python/carnot/pipeline/
-      TASK: Build a heuristic classifier based on prompt entropy to route logic/math questions to the EBM verifier and general QA to the base LLM.
-      CONCRETE STEPS:
-      1. Write entropy scorer and routing gate.
-      2. Test on mixed GSM8K + OpenAssistant dataset.
-      3. Save artifact to results/experiment_1625_task_router.json.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp1626-retro-124
-    title: "Exp 1626: Milestone .124 Retro"
-    deliverable: results/experiment_1626_retro.json
+  - id: exp1637-vivado-linting
+    title: "Exp 1637: Vivado linting integration preflight check"
+    deliverable: results/experiment_1637_vivado_lint.json
     max_turns: 20
-    agent_type: gemini
     prompt: |
-      CONTEXT: Milestone wrap up.
-      EXISTING CODE TO READ FIRST: ops/status.md
-      TASK: Run retrospective for milestone 124.
+      CONTEXT: KANELÉ RTL linting was blocked in .124 due to missing Vivado paths.
+      EXISTING CODE TO READ FIRST: hardware/kv260/
+      TASK: Perform a preflight check for Vivado installation and attempt linting.
       CONCRETE STEPS:
-      1. Write results/experiment_1626_retro.json.
+      1. Write `scripts/experiment_1637_lint.py`.
+      2. Output `vivado_installed` and `lint_passed` to the JSON.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1638-kanele-rtl-simulation
+    title: "Exp 1638: gated on Exp 1637 vivado_installed==true — KANELÉ RTL simulation on synthesized LUT mappings"
+    deliverable: results/experiment_1638_kanele_sim.json
+    gated_on:
+      - upstream: exp1637-vivado-linting
+        artifact_field: vivado_installed
+        op: '=='
+        value: true
+    prompt: |
+      CONTEXT: Once Vivado is confirmed, proceed with KANELÉ RTL simulation.
+      EXISTING CODE TO READ FIRST: hardware/kv260/
+      TASK: Execute the RTL simulation for KANELÉ.
+      CONCRETE STEPS:
+      1. Write `scripts/experiment_1638_sim.py` and capture output.
+      2. Record `simulation_success` in the JSON result.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1639-milestone-retro
+    title: "Exp 1639: Milestone 125 Retrospective"
+    deliverable: results/experiment_1639_retro.json
+    max_turns: 20
+    prompt: |
+      CONTEXT: The .125 milestone is complete.
+      EXISTING CODE TO READ FIRST: ops/status.md
+      TASK: Summarize the results of milestone .125.
+      CONCRETE STEPS:
+      1. Write `scripts/experiment_1639_retro.py` to produce `results/experiment_1639_retro.json`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
