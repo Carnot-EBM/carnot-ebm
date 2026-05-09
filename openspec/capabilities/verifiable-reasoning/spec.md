@@ -18430,3 +18430,55 @@ non-destructive smoke.
 **Implementation Status:** Implemented (Exp 1584)
 
 **Spec traces:** REQ-SAMPLE-064, SCENARIO-SAMPLE-092, Exp 1584
+
+## REQ-SAMPLE-065: Exp 1598 Z1 Drift SamplerBackend Compatibility Test
+
+**Summary:** Carnot SHALL convert the synthetic Z1 analog beta-drift simulator
+into a bounded `SamplerBackend` compatibility test that proves the software
+boundary without claiming Z1, XTR-0, TSU, board, latency, throughput, or
+hardware sample-quality execution.
+
+**Requirements:**
+
+- REQ-SAMPLE-065-1: The workflow SHALL write
+  `results/experiment_1598_z1_drift.json` with `status="complete"` after the
+  compatibility test runs.
+- REQ-SAMPLE-065-2: The compatibility test SHALL instantiate the corrected
+  `SyntheticDriftIsingBackend` from the Exp 1583 drift simulator and exercise
+  both `sample(...)` and `minimize_energy(...)` through the
+  `carnot.samplers.backend.SamplerBackend` structural interface.
+- REQ-SAMPLE-065-3: The artifact SHALL record deterministic sample/minimize
+  shapes, boolean dtypes, beta, drift standard deviation, backend name, and
+  acceptance-rate bounds from the simulator-only compatibility run.
+- REQ-SAMPLE-065-4: Strict authenticated transcript fields including
+  `transcript_schema_version`, `authenticated_access_proof`,
+  `access_grant_reference`, `provider_or_lab_operator`, `device_family`,
+  `device_identifier`,
+  `device_firmware_or_runtime`, `sdk_package_name`, `sdk_version`,
+  `thrml_version`, `device_discovery_command`, `execution_timestamp_utc`,
+  `host_identifier`, `benchmark_case_id`, `schedule_id`, `topology`,
+  `sample_count`, `state_encoding`, `output_samples_sha256`,
+  `energy_trace_sha256`, `energy_metric_fields`, `latency_metric_fields`,
+  `simulator_fallback_used`, and `claim_boundary_acknowledged` SHALL be
+  absent from the simulator-only artifact.
+- REQ-SAMPLE-065-5: `hardware_execution_performed`, `hardware_claim_allowed`,
+  `z1_hardware_execution`, and `tsu_hardware_execution` SHALL remain false,
+  while `simulator_only_no_hardware_claim` and
+  `strict_transcript_fields_absent` SHALL remain true for every terminal
+  artifact.
+
+**Implementation Status:** Implemented (Exp 1598)
+
+### SCENARIO-SAMPLE-093: Exp 1598 Writes Drift Compatibility Artifact
+
+**Given** the repository has no authenticated Extropic Z1/XTR-0/TSU transcript
+**When** the Exp 1598 Z1 drift compatibility test runs from the project root
+**Then** it writes `results/experiment_1598_z1_drift.json` with complete
+status, SamplerBackend protocol evidence, simulator-only claim boundaries, and
+strict authenticated transcript fields absent
+**And** the artifact validation rejects any drift into hardware-execution or
+strict transcript evidence fields.
+
+**Implementation Status:** Implemented (Exp 1598)
+
+**Spec traces:** REQ-SAMPLE-065, SCENARIO-SAMPLE-093, Exp 1598
