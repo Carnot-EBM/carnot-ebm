@@ -5284,3 +5284,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-09: Exp 1601: Archive .122 and initialize .123 (✅ Complete) — honest_verdict=complete: milestone_123_state_initialized_122_archived; results/experiment_1601_archive.json
 - 2026-05-09: Exp 1602: Exact-Rational KAN (RKAN) prototype (✅ Complete) — honest_verdict=complete: exact_rational_kan_forward_pass_uses_fraction_arithmetic; results/experiment_1602_rkan.json
 - 2026-05-09: Exp 1603: Energy-Based Constraint Network (EBCN) coherence scorer (✅ Complete) — honest_verdict=complete: EBCN dual-head hidden-state scorer separates synthetic logical contradictions without autoregressive generation; results/experiment_1603_ebcn.json
+- 2026-05-09: Exp 1604: Sparse KAN clustering with spectral constraints (✅ Complete) — honest_verdict=complete: sparse_kan_clustering_compressed_constraint_memory; results/experiment_1604_sparse_kan.json
