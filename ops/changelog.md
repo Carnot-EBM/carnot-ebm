@@ -5330,3 +5330,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-09: Exp 1646: Energy-Based Constraint Networks (EBCNs) structural coherence prototype (✅ Complete) — honest_verdict=complete: EBCN state-space reasoning-trace prototype separates direct logical inconsistencies with coherence_score_accuracy=1.0; results/experiment_1646_ebcn.json
 - 2026-05-09: Exp 1647: Exact-Rational KANs (RKANs) export for Lean 4 verification (✅ Complete) — honest_verdict=complete: rkan_lean_export_successful; results/experiment_1647_rkan.json
 - 2026-05-09: Exp 1648: Sparse KANs with spectral constraints for manifold compression (✅ Complete) — honest_verdict=complete: spectral_sparse_kan_compressed_tier4_landscape; results/experiment_1648_sparse_kan.json
+- 2026-05-09: Exp 1649: KV260 Vivado bitfile synthesis for q=3 Potts machine (⚠️ Research Finding) — honest_verdict=vivado_not_installed; results/experiment_1649_vivado_synthesis.json
