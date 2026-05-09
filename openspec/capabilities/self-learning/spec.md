@@ -4564,6 +4564,39 @@ contract label is reject
 
 ---
 
+## REQ-LEARN-1595: CerCE Ledger Pre/Post Bounds Check
+
+Exp 1595 SHALL execute a pre/post bounds check on the CerCE ledger using local models. The workflow SHALL run simulated policy updates against the ledger and reject them if the bound worsens. It SHALL write the terminal artifact to `results/experiment_1595_cerce_bounds.json`.
+
+### REQ-LEARN-1595 Sub-requirements
+
+- REQ-LEARN-1595-1: The workflow SHALL write `results/experiment_1595_cerce_bounds.json` first with `status="in_progress"`.
+- REQ-LEARN-1595-2: The workflow SHALL run simulated policy updates against the CerCE ledger bounds.
+- REQ-LEARN-1595-3: If a simulated update worsens the bounds, the update SHALL be rejected.
+- REQ-LEARN-1595-4: The terminal artifact SHALL include `status`, `schema`, `continuous_self_learning_task`, `bounds_check_passed`, `simulated_updates_run`, `rejected_updates`, and `honest_verdict`.
+
+### SCENARIO-LEARN-1595-A: Worsened Bound Rejects Update
+
+**Given** a simulated policy update
+**When** Exp 1595 runs the bounds check and the bound worsens
+**Then** the update is rejected
+**And** it is recorded in `rejected_updates`.
+
+### SCENARIO-LEARN-1595-B: Valid Bounds Pass Check
+
+**Given** simulated policy updates where the bound does not worsen
+**When** Exp 1595 runs the bounds check
+**Then** the updates are not rejected
+**And** `bounds_check_passed=true` and `honest_verdict` is `complete: cerce_bounds_checked`.
+
+## Implementation Status (REQ-LEARN-1595)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-1595 | Implemented (`python/carnot/training/cerce_bounds_check.py`) | Implemented (`tests/python/test_experiment_1595_cerce_bounds.py`) |
+
+---
+
 ## REQ-LEARN-1539: FR-11 External-Feedback Skill Graph Promotion
 
 Exp 1539 SHALL convert rollback-passing FR-11 query-time policy updates into an
