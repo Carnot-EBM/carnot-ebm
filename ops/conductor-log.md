@@ -1342,3 +1342,4 @@ web search: site:o |
 | 2026-05-09 12:12 UTC | Exp 1608: FR-11 continuous self-learning CerCE sca | OK | 81 passed, 1 warning in 5.38s |
 | 2026-05-09 12:28 UTC | Exp 1609: Context-sensitive constraint induction | OK | 81 passed, 1 warning in 5.26s |
 | 2026-05-09 12:30 UTC | Exp 1610: Connect RKAN to Z3 | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1602-rkan-prototype.rkan_ready (actual= |
+| 2026-05-09 12:32 UTC | Exp 1610: Connect RKAN to Z3 | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1602-rkan-prototype.rkan_ready (actual= |
