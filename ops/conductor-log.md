@@ -1315,3 +1315,4 @@ web search: site:o |
 | 2026-05-09 07:48 UTC | Exp 1596: Run FR-11 v16 skill-promotion with CerCE | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1594-cerce-ledger.ledger_ready (actual= |
 | 2026-05-09 07:50 UTC | Exp 1596: Run FR-11 v16 skill-promotion with CerCE | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1594-cerce-ledger.ledger_ready (actual= |
 | 2026-05-09 07:52 UTC | Exp 1596: Run FR-11 v16 skill-promotion with CerCE | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1594-cerce-ledger.ledger_ready (actual= |
+| 2026-05-09 08:04 UTC | Exp 1597: CPU-only inertial-update Ising ablation | OK | 97 passed, 1 warning in 6.16s |
