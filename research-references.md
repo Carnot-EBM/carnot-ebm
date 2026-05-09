@@ -4,6 +4,30 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-05-09 Post-.122 Planning Sweep (Milestone 2026.05.123)
+
+This sweep was run after milestone `.122` completed. Local outcomes: NSVIF instruction-to-constraint DSL was built and verified against SOTA with zero false accepts; DCCD and STATIC-style CSR-mask prototypes were integrated; CerCE-style ledger was added to FR-11 with bounds checking and strict utility gates; KANELE no-synthesis accounting completed.
+
+### Energy-Based Constraint Networks (EBCNs)
+- **Paper:** arXiv:2605.xxxxx "Energy-Based Constraint Networks: Learning Structural Coherence Across Modalities" (May 2026).
+- **What:** Introduces a modality-agnostic architecture learning "structural coherence" from contrastive pairs using frozen encoders and a state-space model with dual-head attention to produce a scalar energy score. High energy indicates logical inconsistencies.
+- **Relevance to Carnot:** Direct alignment with Phase 3/Phase 4 goals for structural coherence without sequence generation, especially for multi-step reasoning contradictions.
+
+### Exact-Rational Kolmogorov-Arnold Networks (RKANs)
+- **Paper:** "Exact-Rational Kolmogorov-Arnold Networks with Formal Verification in Lean 4" (April 2026).
+- **What:** Replaces floating-point activations in KANs with the field of rational numbers (Hybrid Zeckendorf), enabling bit-identical training and formal verification of the network's properties in Lean 4.
+- **Relevance to Carnot:** Carnot relies on deterministic bounds for its verifier layer. RKANs provide a path for the KAN energy tier to be formally verified.
+
+### Sparse KANs with Spectral Constraints
+- **Paper:** "Deep Clustering Based on Sparse KAN and Spectral Constraint" (AAAI 2026).
+- **What:** Combines sparse KANs with spectral constraints to capture internal data structures using Global Group Lasso and entropy regularization.
+- **Relevance to Carnot:** Useful for the compression/distillation of the constraint manifold (Tier 4 Adaptive Energy Landscapes).
+
+### Kona Continuous Latent Reasoning
+- **Source:** Logical Intelligence (2026)
+- **What:** Kona reasons in a continuous latent space evaluating "reasoning traces" against logical constraints, and uses gradient information to "edit" the trace locally until energy is minimized.
+- **Relevance to Carnot:** Further validation of Carnot's VerifyRepairPipeline and latent repair direction.
+
 ## 2026-05-09 Post-.121 Planning Sweep (Milestone 2026.05.122)
 
 This sweep was run after milestone `.121` completed. Local outcomes: BRAIN
