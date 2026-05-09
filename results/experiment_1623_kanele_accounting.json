@@ -1,0 +1,92 @@
+{
+  "accounting_assumptions": [
+    "KANELE node uses one 8-bit LUT6 edge block per fan-in edge.",
+    "KANELE accumulation uses one LUT per accumulator bit per adder stage.",
+    "Ising v3 LUT count uses the documented 48.5% KV260 utilization comment.",
+    "Clock estimates are theoretical LUT-depth estimates, not Vivado timing results."
+  ],
+  "board_execution_performed": false,
+  "clock_estimate_detail": {
+    "ising_v3": {
+      "capped_max_clock_mhz": 140.845,
+      "critical_path_ns": 7.1,
+      "logic_depth_lut_levels": 18,
+      "raw_max_clock_mhz": 140.845
+    },
+    "kanele": {
+      "capped_max_clock_mhz": 300.0,
+      "critical_path_ns": 2.2,
+      "logic_depth_lut_levels": 4,
+      "raw_max_clock_mhz": 454.545
+    }
+  },
+  "clock_timing_model": {
+    "kv260_practical_cap_mhz": 300.0,
+    "lut_delay_ns": 0.35,
+    "register_overhead_ns": 0.8,
+    "timing_closure_claimed": false
+  },
+  "duration_s": 0.000556,
+  "exp1621_mapping_ready": true,
+  "experiment_id": "1623",
+  "hardware_claim_allowed": false,
+  "honest_verdict": "complete: kanele vs ising v3 accounting ready; no synthesis or hardware claim",
+  "kanele_accounting_ready": true,
+  "kv260_budget": {
+    "lut_budget": 117120,
+    "part": "xck26-sfvc784-2LV-c",
+    "source": "openspec/capabilities/fpga/spec.md"
+  },
+  "logic_depth_estimate": {
+    "ising_v3": 18,
+    "kanele": 4
+  },
+  "max_clock_frequency_estimate_mhz": {
+    "ising_v3": 140.845,
+    "kanele": 300.0
+  },
+  "per_node_lut_consumption": {
+    "ising_to_kanele_lut_ratio": 20.1818,
+    "ising_v3": {
+      "architecture": "ising_sampler_v3",
+      "derivation": "ceil(round(kv260_lut_budget * utilization_pct / 100) / n_nodes)",
+      "documented_total_luts": 56803,
+      "kv260_lut_budget": 117120,
+      "n_nodes": 64,
+      "node_definition": "one Ising v3 spin update lane",
+      "source_utilization_pct": 48.5,
+      "total_luts_per_node": 888
+    },
+    "kanele": {
+      "accumulator_luts_per_node": 16,
+      "architecture": "kanele_lut6_edge_mapping",
+      "control_luts_per_node": 4,
+      "derivation": "fan_in * LUT6_per_edge + (fan_in - 1) * accumulator_bits + control_luts",
+      "edge_lut6_primitives_per_edge": 8,
+      "edge_luts_per_node": 24,
+      "fan_in_edges_per_node": 3,
+      "node_definition": "one KANELE additive node with fan-in edge LUT blocks",
+      "total_luts_per_node": 44
+    }
+  },
+  "run_date": "2026-05-09",
+  "schema": "kanele_vs_ising_v3_accounting_v1",
+  "source_files": {
+    "exp1621": "results/experiment_1621_kanele_mapping.json",
+    "ising_v3": "hardware/kv260/ising_sampler_v3.v",
+    "kanele_lut_block": "hardware/kv260/kan_lut_block.v"
+  },
+  "spec": [
+    "REQ-KAN-1623",
+    "SCENARIO-KAN-1623"
+  ],
+  "status": "complete",
+  "synthesis_performed": false,
+  "total_lut_projection_at_64_nodes": {
+    "ising_v3_luts": 56803,
+    "ising_v3_utilization_pct": 48.5,
+    "kanele_luts": 2816,
+    "kanele_utilization_pct": 2.4044,
+    "node_count": 64
+  }
+}

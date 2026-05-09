@@ -184,6 +184,7 @@ sets `variance_worsened` from the measured paraphrase variance comparison.
 | REQ-KAN-1602 | Implemented | Exp 1602 exact-rational KAN forward pass uses Python `fractions.Fraction` for bit-identical formal-verification arithmetic. |
 | REQ-KAN-1604 | Implemented | Exp 1604 Sparse KAN clustering records Global Group Lasso, spectral regularization, sparsity, and memory-compression metrics. |
 | REQ-KAN-1618 | Proposed | Exp 1618 target: model-level PWA KAN wrapper for logical affine activation bounds over arbitrary 1D spline callables. |
+| REQ-KAN-1623 | Implemented | Exp 1623 no-synthesis LUT and logic-depth accounting compares KANELÉ LUT mapping with KV260 Ising v3. |
 | REQ-KAN-1384 | Proposed | Exp 1384 target: EBM-CoT contrastive hinge calibration on FoVer verified pairs. |
 | REQ-KAN-1401 | Proposed | Exp 1401 target: EBM-CoT v2 hinge-only calibration on the Exp1384 FoVer split with consistency weight 0.0. |
 
@@ -761,3 +762,43 @@ Given a simple 1D KAN edge function,
 When the LUT compiler translates it into 6-input LUT configuration bits,
 Then `hardware/kv260/kan_lut_block.v` is generated with the correct INIT values,
 and `results/experiment_1621_kanele_mapping.json` records the completion.
+
+## REQ-KAN-1623: KANELÉ vs Ising v3 LUT and Logic-Depth Accounting
+
+Experiment 1623 MUST produce a no-synthesis KV260 hardware-bounds accounting
+artifact comparing the KANELÉ LUT-mapped edge datapath from Exp 1621 with the
+existing `hardware/kv260/ising_sampler_v3.v` formulation. The accounting MUST
+calculate per-node LUT consumption, estimate maximum clock frequency from
+logic-depth assumptions, and keep synthesis and board-execution claims false.
+
+**Rationale:**
+    Exp 1621 generated direct LUT6 Verilog for a KANELÉ-style 1D edge block.
+    Before requesting Vivado synthesis or KV260 board time, Carnot needs a
+    transparent resource and critical-path estimate against the Ising v3 RTL
+    baseline already present under `hardware/kv260/`.
+
+**Acceptance criteria:**
+    - `results/experiment_1623_kanele_accounting.json` is written with
+      `schema`, `status`, `experiment_id`, `spec`, `per_node_lut_consumption`,
+      `logic_depth_estimate`, `max_clock_frequency_estimate_mhz`,
+      `kv260_budget`, `hardware_claim_allowed`, and `honest_verdict`.
+    - The KANELÉ per-node LUT count is derived from the number of `LUT6`
+      primitives in `hardware/kv260/kan_lut_block.v` plus explicit control and
+      accumulation assumptions.
+    - The Ising v3 per-node LUT count is derived from the documented KV260
+      utilization comment in `hardware/kv260/ising_sampler_v3.v` and the
+      XCK26 LUT budget used by the existing FPGA spec.
+    - The maximum clock-frequency estimates use stated LUT-delay and
+      register-overhead assumptions and do not claim timing closure.
+    - `hardware_claim_allowed=false`, `synthesis_performed=false`, and
+      `board_execution_performed=false` unless the current run records actual
+      synthesis or KV260 board evidence.
+
+### SCENARIO-KAN-1623: write KANELÉ vs Ising accounting artifact
+
+Given `hardware/kv260/kan_lut_block.v`, the Exp 1621 mapping artifact, and
+`hardware/kv260/ising_sampler_v3.v`,
+When the Exp 1623 accounting helper runs,
+Then `results/experiment_1623_kanele_accounting.json` records deterministic
+per-node LUT, logic-depth, and maximum-clock estimates for KANELÉ and Ising v3
+while preserving the no-synthesis/no-board hardware-claim boundary.
