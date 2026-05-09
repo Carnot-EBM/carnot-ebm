@@ -1,0 +1,160 @@
+{
+  "accepted_replay_case_count": 64,
+  "blockers": [],
+  "boilerplate_fraction_delta": -0.400568,
+  "continuous_self_learning_task": true,
+  "entropy_preservation_rate": 0.0,
+  "flagged_policy_id": "policy:residual_drift_repair:1552",
+  "flagged_policy_replayed": true,
+  "fr11_v15_decision_ready": true,
+  "heldout_replay_case_count": 56,
+  "honest_verdict": "complete: replay reconfirmed mode collapse; v14 retention reversed",
+  "implementation_deferred": true,
+  "lambda_grpo_patch_implemented": false,
+  "lambda_grpo_simulated_only": true,
+  "lambda_grpo_simulator": {
+    "boilerplate_fraction_before": 1.0,
+    "boilerplate_fraction_delta": -0.400568,
+    "collapsed_weight_total": 0.44072,
+    "corrected_weight_examples": [
+      {
+        "boilerplate_fraction": 1.0,
+        "case_id": "structural_contract:cctu-1486-arith-001:injected_violation:5:incompatible_api_use:30:collapsed_model_excerpt",
+        "corrected_score": 1.1,
+        "entropy_preservation": 1.0,
+        "normalized_weight": 0.00787,
+        "ood_accuracy_proxy": 1.0,
+        "option_type": "collapsed_model_excerpt",
+        "reward": 1.0,
+        "soundness_mistake": 0
+      },
+      {
+        "boilerplate_fraction": 0.283784,
+        "case_id": "structural_contract:cctu-1486-arith-001:injected_violation:5:incompatible_api_use:30:localized_repair_view",
+        "corrected_score": 1.39591,
+        "entropy_preservation": 0.924609,
+        "normalized_weight": 0.009987,
+        "ood_accuracy_proxy": 1.0,
+        "option_type": "localized_repair_view",
+        "reward": 1.0,
+        "soundness_mistake": 0
+      },
+      {
+        "boilerplate_fraction": 1.0,
+        "case_id": "structural_contract:cctu-1486-table-001:injected_violation:7:graph_prerequisites:36:collapsed_model_excerpt",
+        "corrected_score": 1.1,
+        "entropy_preservation": 1.0,
+        "normalized_weight": 0.00787,
+        "ood_accuracy_proxy": 1.0,
+        "option_type": "collapsed_model_excerpt",
+        "reward": 1.0,
+        "soundness_mistake": 0
+      },
+      {
+        "boilerplate_fraction": 0.283784,
+        "case_id": "structural_contract:cctu-1486-table-001:injected_violation:7:graph_prerequisites:36:localized_repair_view",
+        "corrected_score": 1.39591,
+        "entropy_preservation": 0.924609,
+        "normalized_weight": 0.009987,
+        "ood_accuracy_proxy": 1.0,
+        "option_type": "localized_repair_view",
+        "reward": 1.0,
+        "soundness_mistake": 0
+      },
+      {
+        "boilerplate_fraction": 1.0,
+        "case_id": "structural_contract:cctu-1486-table-001:injected_violation:8:acquisition_path:42:collapsed_model_excerpt",
+        "corrected_score": 1.1,
+        "entropy_preservation": 1.0,
+        "normalized_weight": 0.00787,
+        "ood_accuracy_proxy": 1.0,
+        "option_type": "collapsed_model_excerpt",
+        "reward": 1.0,
+        "soundness_mistake": 0
+      },
+      {
+        "boilerplate_fraction": 0.283784,
+        "case_id": "structural_contract:cctu-1486-table-001:injected_violation:8:acquisition_path:42:localized_repair_view",
+        "corrected_score": 1.39591,
+        "entropy_preservation": 0.924609,
+        "normalized_weight": 0.009987,
+        "ood_accuracy_proxy": 1.0,
+        "option_type": "localized_repair_view",
+        "reward": 1.0,
+        "soundness_mistake": 0
+      }
+    ],
+    "localized_weight_total": 0.55928,
+    "option_count": 112,
+    "simulator_ready": true,
+    "weighted_boilerplate_fraction_after": 0.599432
+  },
+  "no_model_weight_mutation": true,
+  "ood_accuracy_proxy": 1.0,
+  "replay_boilerplate_fraction": 1.0,
+  "replay_confirmed_predictor_count": 2,
+  "replay_confirmed_predictors": [
+    "boilerplate_fraction",
+    "reward_variance_collapse"
+  ],
+  "replay_mode_collapse_confirmed": true,
+  "replay_policy_audit": {
+    "confirmed_predictor_count": 2,
+    "confirmed_predictors": [
+      "boilerplate_fraction",
+      "reward_variance_collapse"
+    ],
+    "evidence_basis": "exp1581_heldout_replay",
+    "mode_collapse_confirmed": true,
+    "policy_id": "policy:residual_drift_repair:1552",
+    "predictors": {
+      "boilerplate_fraction": {
+        "available": true,
+        "boilerplate_fraction": 1.0,
+        "confirmed": true,
+        "ngram_size": 3,
+        "threshold": 0.3
+      },
+      "ood_adversarial_accuracy_regression": {
+        "available": false,
+        "confirmed": false,
+        "reason": "ood_adversarial_accuracy_baseline_or_post_unavailable"
+      },
+      "reward_variance_collapse": {
+        "available": true,
+        "collapse_epsilon": 1e-12,
+        "confirmed": true,
+        "group_size": 8,
+        "group_variances": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "single_mode": true
+      },
+      "token_entropy_drop": {
+        "available": false,
+        "confirmed": false,
+        "reason": "pre_rl_or_generated_repair_text_unavailable"
+      }
+    },
+    "source": "exp1552_residual_drift_repair"
+  },
+  "retention_reversal_applied": true,
+  "retention_reversal_audit_note": {
+    "action": "v14_retention_reversed",
+    "policy_id": "policy:residual_drift_repair:1552",
+    "reason": "held-out replay reconfirmed mode collapse after lambda-GRPO correction evidence"
+  },
+  "soundness_mistakes": 0,
+  "spec": [
+    "REQ-LEARN-1581",
+    "SCENARIO-LEARN-1581",
+    "SCENARIO-LEARN-1582"
+  ],
+  "status": "complete"
+}
