@@ -5317,3 +5317,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-09: Exp 1634: Compare Pi-net projection against T-SKM on CCTU constraints (⚠️ Research Finding) — honest_verdict=tskm_faster; results/experiment_1634_pinet_vs_tskm.json
 - 2026-05-09: Exp 1635: ConsFormer-style refiner prototype for FoVer CSPs (⚠️ Research Finding) — honest_verdict=consformer_refiner_evaluated_label_free; results/experiment_1635_consformer.json
 - 2026-05-09: Exp 1637: Vivado linting integration preflight check (✅ Complete) — honest_verdict=success: vivado lint preflight complete; results/experiment_1637_vivado_lint.json
+- 2026-05-09: Exp 1639: Milestone 125 Retrospective (✅ Complete) — honest_verdict=milestone_125_retrospective_filed_7_of_12_complete; results/experiment_1639_retro.json
