@@ -1395,3 +1395,4 @@ web search: site:o |
 | 2026-05-09 17:21 UTC | Exp 1636: Energy-Guided Decoding implementation us | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-09 17:23 UTC | Exp 1636: Energy-Guided Decoding implementation us | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-09 17:29 UTC | Exp 1637: Vivado linting integration preflight che | OK | 81 passed, 1 warning in 4.81s |
+| 2026-05-09 17:31 UTC | Exp 1638: gated on Exp 1637 vivado_installed==true | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1637-vivado-linting.vivado_installed (a |
