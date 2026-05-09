@@ -1273,3 +1273,4 @@ web search: GitHub trending energy based mod |
 | 2026-05-09 01:04 UTC | Phase-1 Software Ship Readiness Ledger | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1582_phase1_ |
 | 2026-05-09 01:11 UTC | Phase-1 Software Ship Readiness Ledger | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1582_phase1_ |
 | 2026-05-09 01:17 UTC | Phase-1 Software Ship Readiness Ledger | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1582_phase1_ |
+| 2026-05-09 01:19 UTC | Milestone 2026.05.121 re-activated after exp1582 verdict-prefix fix (outer-loop) | OK | exp1582 verdict normalized; honest 9-items-remaining preserved |
