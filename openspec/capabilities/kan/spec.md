@@ -182,6 +182,7 @@ sets `variance_worsened` from the measured paraphrase variance comparison.
 | REQ-KAN-1502 | Proposed | Exp 1502 target: no-synthesis KAN hardware accounting comparing naive, QuantKAN-like, and KAEM-style variants for current verifier components. |
 | REQ-KAN-1516 | Implemented | Exp 1516 normalized KAN/KAEM proxy and model shapes into an explicit provenance manifest before any future synthesis claim. |
 | REQ-KAN-1602 | Implemented | Exp 1602 exact-rational KAN forward pass uses Python `fractions.Fraction` for bit-identical formal-verification arithmetic. |
+| REQ-KAN-1604 | Implemented | Exp 1604 Sparse KAN clustering records Global Group Lasso, spectral regularization, sparsity, and memory-compression metrics. |
 | REQ-KAN-1384 | Proposed | Exp 1384 target: EBM-CoT contrastive hinge calibration on FoVer verified pairs. |
 | REQ-KAN-1401 | Proposed | Exp 1401 target: EBM-CoT v2 hinge-only calibration on the Exp1384 FoVer split with consistency weight 0.0. |
 
@@ -645,3 +646,50 @@ Then every intermediate contribution and output remains a `Fraction`, the
 second pass is bit-identical to the first, and
 `results/experiment_1602_rkan.json` records the completed deterministic
 reference artifact.
+
+## REQ-KAN-1604: Sparse KAN Clustering With Global Group Lasso
+
+The KAN model tier MUST provide a CPU-only Sparse KAN clustering helper that
+compresses constraint-memory rows by learning a small centroid codebook while
+penalizing whole inactive groups with a Global Group Lasso term and preserving
+cluster geometry with a spectral constraint regularizer.
+
+The regularized loss MUST expose separate components:
+
+```
+L = reconstruction_loss
+    + lambda_group_lasso * sum_g ||C_g||_2
+    + lambda_spectral * trace(Z^T L Z)
+```
+
+where `C_g` is one centroid/control-vector group, `Z` is the row-to-cluster
+assignment matrix, and `L` is a graph Laplacian derived from constraint-row
+affinity.  The helper MUST report a deterministic sparsity ratio from the
+number of zeroed centroid groups divided by the total group count.
+
+**Acceptance criteria:**
+    - `SparseKANClusterer.regularized_loss_components()` returns
+      `reconstruction_loss`, `global_group_lasso_penalty`,
+      `spectral_constraint_regularization`, and `total_loss`.
+    - Applying the sparsifier with a deterministic threshold zeroes low-norm
+      centroid groups and the result `sparsity_ratio` returns
+      `zero_group_count / n_clusters`.
+    - `fit()` produces finite centroids, deterministic assignments, and a
+      compressed-memory estimate smaller than the dense constraint matrix.
+    - `write_experiment_1604_artifact()` writes
+      `results/experiment_1604_sparse_kan.json` with `schema`, `status`,
+      `experiment_id`, `spec`, `sparse_kan_clustering_ready`,
+      `global_group_lasso_penalty`, `spectral_constraint_regularization`,
+      `sparsity_ratio`, `memory_compression_ratio`, and a terminal
+      `honest_verdict`.
+
+### SCENARIO-KAN-1604: sparse KAN clustering artifact records compression
+
+Given a deterministic synthetic constraint-memory matrix with repeated
+structure,
+When Sparse KAN clustering fits a small centroid codebook with Global Group
+Lasso and spectral regularization enabled,
+Then the low-norm groups are pruned, the sparsity ratio is measured from the
+active centroid codebook, the compressed-memory estimate is smaller than the
+dense matrix, and `results/experiment_1604_sparse_kan.json` records the
+completed compression artifact.
