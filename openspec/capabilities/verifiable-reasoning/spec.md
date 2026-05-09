@@ -18482,3 +18482,37 @@ strict transcript evidence fields.
 **Implementation Status:** Implemented (Exp 1598)
 
 **Spec traces:** REQ-SAMPLE-065, SCENARIO-SAMPLE-093, Exp 1598
+
+## REQ-VERIFY-1616: Nabla Reasoner Logit State Optimizer
+
+**Summary:** Carnot SHALL implement gradient-based latent editing via Langevin dynamics in a continuous logit space, minimizing the EBCN structural energy.
+
+**Requirements:**
+
+- REQ-VERIFY-1616-1: The workflow SHALL write
+  `results/experiment_1616_nabla_reasoner.json` with `status="in_progress"`
+  before starting optimization.
+- REQ-VERIFY-1616-2: The optimizer SHALL be implemented in JAX and provide a
+  differentiable EBCN structural energy computation over continuous logit states.
+- REQ-VERIFY-1616-3: The optimizer SHALL apply Langevin dynamics (gradient
+  descent with noise injection) to edit latent logit states, minimizing the
+  EBCN structural energy.
+- REQ-VERIFY-1616-4: The workflow SHALL evaluate convergence speed and report it.
+- REQ-VERIFY-1616-5: The artifact SHALL include `status`, `experiment_id`,
+  `initial_energy`, `final_energy`, `convergence_speed`, `steps_run`,
+  `honest_verdict`.
+
+**Implementation Status:** Planned (Exp 1616)
+
+### SCENARIO-VERIFY-1616: Langevin Dynamics Converges on EBCN Energy
+
+**Given** the run date is `20260509`
+**And** an initial continuous logit state
+**When** the Nabla Reasoner optimizes the state via JAX Langevin dynamics
+**Then** it writes an in-progress artifact first
+**And** it writes a complete artifact with the final energy being lower than
+the initial energy
+**And** the convergence speed and step count are reported
+**And** an honest verdict is recorded.
+
+**Spec traces:** REQ-VERIFY-1616, SCENARIO-VERIFY-1616, Exp 1616
