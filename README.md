@@ -663,18 +663,20 @@ On **116** held-out cases against **344** learning cases, `no_learning`, `tracke
 - **Live precision pipeline with CRANE extractor (Exp 419):** `CRANEExtractionGate` (CPU-only, regex + deterministic-math constraint extractor with structural confidence gate) implemented as primary extractor for FULL_STACK variant; LLM call used only as fallback when CRANE returns zero violations. Hard gate sequence: Exp 413 preflight check → LiveGPUGate → setup_gpu → model load (Gemma4-E4B-it GPU0, Qwen3.5-0.8B GPU1). 73 new tests pass. Live run pending — will produce first credible precision-stack headline number once GPU session is active.
 - **Path to first live results:** Run `source scripts/session_startup.sh` (or rely on Exp 413 `EnvironmentAutoFix` self-injection) before the next conductor session. Exp 413 confirms `honest_verdict=auto_fix_applied` — the RTX 3090 is present and CARNOT_FORCE_LIVE can now be auto-injected.
 
-### HuggingFace Published Models (Exp 293 / v0.2.0-research)
+### HuggingFace Published Models and Artifacts (Exps 293-330, Exp 1582 ledger)
 > **Exp 304 (2026-04-14):** Upload confirmed. Credentials verified via Python API. FCV artifact live at https://huggingface.co/Carnot-EBM/carnot-formal-claim-verifier-v1.
 
 
-Two Phase 1 research artifacts are published to [Carnot-EBM](https://huggingface.co/Carnot-EBM) on HuggingFace Hub:
+The [Carnot-EBM](https://huggingface.co/Carnot-EBM) HuggingFace org now contains the FCV verifier, legacy joint-constraint prototype, KAN/JEPA research cards, and 16 per-token EBM research models. Exp 1582 still blocks the Phase-1 software ship: the HF mirror is not complete, the required second-mirror CIDs are missing for per-token exports / PyPI sdist, and follow-up export action items remain open.
 
 | Artifact | Repo | Format | Notes |
 |----------|------|--------|-------|
-| Exp 66 joint EBM + Ising | [Carnot-EBM/carnot-joint-constraint-v1](https://huggingface.co/Carnot-EBM/carnot-joint-constraint-v1) | safetensors | Phase 1 prototype. 1.0 AUROC on held-out validation (simulated training). |
 | FormalClaimVerifier | [Carnot-EBM/carnot-formal-claim-verifier-v1](https://huggingface.co/Carnot-EBM/carnot-formal-claim-verifier-v1) | ONNX + Python | Arithmetic and comparison routes as ONNX (opset 13); set_membership + boolean_entailment as pure Python. |
+| Exp 66 joint EBM + Ising | [Carnot-EBM/carnot-joint-constraint-v1](https://huggingface.co/Carnot-EBM/carnot-joint-constraint-v1) | safetensors | Phase 1 prototype. 1.0 AUROC on held-out validation (simulated training). |
+| Per-token EBM exports | [Carnot-EBM](https://huggingface.co/Carnot-EBM) | safetensors + model cards | 16 READMEs updated with live-GPU benchmark numbers in Exp 330; confidence-not-correctness caveat still applies. |
+| KAN Tier 0b / Step-Level JEPA cards | [Carnot-EBM](https://huggingface.co/Carnot-EBM) | model cards + tensors | Research cards and tensors prepared for the public artifact set; not a complete Phase-1 ship mirror. |
 
-> Both are tagged `v0.2.0-research`. Phase 1 research prototypes — not production quality.
+These are research artifacts, not production hallucination detectors. Treat the activation-space EBMs as confidence probes unless a later experiment explicitly promotes a specific verifier path.
 
 ### Revalidation Sweep (Exp 271-279)
 
@@ -753,7 +755,7 @@ carnot verify examples/math_funcs.py --func gcd --test "(12,8):4" --test "(7,13)
 
 ### MCP Server
 
-Configure with `cp .mcp.json.example .mcp.json` for Claude Code integration. The hardened stdio JSON-RPC server now exposes **7** tools: `verify_code`, `verify_with_properties`, `verify_code_with_pbt`, `verify_llm_output`, `verify_and_repair`, `list_domains`, and `health_check`. These tools perform **Python code verification** and pipeline checks — they do not implement the activation-based EBM hallucination detection described in the research sections.
+Configure with `cp .mcp.json.example .mcp.json` for Claude Code integration. The hardened stdio JSON-RPC server now exposes **9** tools: `verify_code`, `verify_with_properties`, `verify_code_with_pbt`, `verify_llm_output`, `verify_stream`, `verify_and_repair`, `score_agent_outputs`, `list_domains`, and `health_check`. Exp 1582 still blocks Phase-1 ship on the MCP docs/integrator-guide path, but the packaged server surface is 9 tools. These tools perform **Python code verification** and pipeline checks — they do not implement the activation-based EBM hallucination detection described in the research sections.
 
 See [docs/usage-guide.md](docs/usage-guide.md) for detailed setup and usage instructions.
 
