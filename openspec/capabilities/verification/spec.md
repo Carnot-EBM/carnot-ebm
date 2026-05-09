@@ -2292,3 +2292,14 @@ backend diagnostics for the reusable adapter.
 | REQ-VERIFY-1580 | Implemented (`python/carnot/reporting/dccd_jsonschemabench_sota_structured_output_smoke.py`) | Implemented (`tests/python/test_experiment_1580_dccd_jsonschemabench_sota_structured_output_smoke.py`) |
 | REQ-VERIFY-1588 | Implemented (`python/carnot/verifiers/dsl.py`) | Implemented (`tests/python/test_experiment_1588_nsvif_dsl.py`) |
 | REQ-VERIFY-1591 | Implemented (`python/carnot/verifiers/dccd_adapter.py`) | Implemented (`tests/python/test_experiment_1591_dccd_adapter.py`) |
+
+### REQ-VERIFY-1593: CDG Repair Acceptance Rates
+The repository shall provide a CDG repair analysis tool that builds a CDG over runtime-contract cases, compares repair localization, and contrasts repair acceptance rates between flat check and CDG ordering using the mandated MODEL_SPECS.
+Given a set of runtime-contract cases and candidate repairs,
+When Exp 1593 analyzes repair ordering,
+Then the tool shall generate a CDG graph, compute flat vs CDG repair acceptance rates, and save the artifact to `results/experiment_1593_cdg_repair.json`.
+
+#### SCENARIO-VERIFY-1593: CDG Repair Execution
+Given a valid runtime-contract manifest and candidate repair rows,
+When Exp 1593 repair analysis is executed,
+Then it outputs a valid JSON artifact with schema fields `status`, `cdg_nodes`, `cdg_edges`, `flat_acceptance_rate`, `cdg_acceptance_rate`, and `honest_verdict`.
