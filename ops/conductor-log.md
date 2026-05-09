@@ -1336,3 +1336,4 @@ web search: site:o |
 | 2026-05-09 11:26 UTC | Exp 1605: Latent gradient editing using EBCN | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1603-ebcn-scorer.scorer_ready (actual=N |
 | 2026-05-09 11:28 UTC | Exp 1605: Latent gradient editing using EBCN | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1603-ebcn-scorer.scorer_ready (actual=N |
 | 2026-05-09 11:30 UTC | Exp 1605: Latent gradient editing using EBCN | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1603-ebcn-scorer.scorer_ready (actual=N |
+| 2026-05-09 11:42 UTC | Exp 1606: DCCD repair on multi-hop reasoning tasks | FAIL | Gemini CLI error: Error: Reached max turns (50) |
