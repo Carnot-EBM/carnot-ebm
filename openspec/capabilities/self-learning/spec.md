@@ -5154,3 +5154,54 @@ memory hashes, negative utility, certificate mismatch, or model-weight mutation
 | Requirement | Python | Tests |
 |-------------|--------|-------|
 | REQ-LEARN-1659 | Implemented (`python/carnot/pipeline/smgi_updates.py`) | Implemented (`tests/python/test_smgi_updates.py`) |
+
+---
+
+## REQ-LEARN-1664: E2E Plan Coverage For EBRM Scorers And SMGI Updates
+
+Exp 1664 SHALL update `ops/e2e-test-plan.md` with deterministic end-to-end
+test scenarios for the new EBRM scorer/hardware path and the SMGI certified
+update path.  The updater SHALL be idempotent, SHALL preserve the existing E2E
+plan content, and SHALL write `results/experiment_1664_e2e_plan.json`.
+
+### REQ-LEARN-1664 Sub-requirements
+
+- REQ-LEARN-1664-1: The updater SHALL add an EBRM scorer E2E scenario that
+  references Exp 1656 CPU trace scoring, Exp 1657 KV260 q=3 Potts binding, and
+  Exp 1658 CPU-vs-KV260 SOTA trace evaluation.
+- REQ-LEARN-1664-2: The updater SHALL add an SMGI certified-update E2E
+  scenario that references Exp 1659 gates, CerCE certificate evidence, replay
+  retention, SessionMemory hash changes, and `no_model_weight_mutation=true`.
+- REQ-LEARN-1664-3: The updater SHALL validate source artifacts before marking
+  the Exp 1664 artifact complete; missing or incomplete EBRM/SMGI evidence SHALL
+  produce `status="blocked"` with explicit blockers.
+- REQ-LEARN-1664-4: Re-running the updater SHALL NOT duplicate E2E sections or
+  rewrite the plan when the required scenarios are already present.
+- REQ-LEARN-1664-5: The terminal artifact SHALL include `status`, `schema`,
+  `experiment_id`, `run_date`, `plan_path`, `e2e_sections_added`,
+  `e2e_section_ids`, `ebrm_e2e_ready`, `smgi_e2e_ready`, `source_artifacts`,
+  `plan_hash_before`, `plan_hash_after`, `plan_updated`, `spec_traces`,
+  `tests_run`, `blockers`, and `honest_verdict`.
+
+### SCENARIO-LEARN-1664: EBRM And SMGI E2E Plan Entries Are Stable
+
+**Given** the current E2E plan and complete Exp 1656, 1657, 1658, and 1659
+artifacts
+**When** Exp 1664 updates the plan
+**Then** the plan contains one EBRM scorer/hardware scenario and one SMGI
+certified-update verification scenario
+**And** the terminal artifact is complete with source evidence and spec traces.
+
+### SCENARIO-LEARN-1665: Missing Source Evidence Blocks Completion
+
+**Given** missing or incomplete Exp 1656, 1657, 1658, or 1659 artifacts
+**When** Exp 1664 evaluates source evidence
+**Then** it records explicit blockers
+**And** it does not mark `ebrm_e2e_ready` or `smgi_e2e_ready` true without the
+required evidence.
+
+## Implementation Status (REQ-LEARN-1664)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-1664 | Implemented (`scripts/experiment_1664_e2e.py`) | Implemented (`tests/python/test_experiment_1664_e2e.py`) |
