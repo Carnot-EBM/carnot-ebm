@@ -8077,3 +8077,65 @@ milestones:
     title: 'Exp 1651: Milestone 126 Retrospective'
     deliverable: results/experiment_1651_retro.json
     result: OK (conductor)
+- id: 2026.05.127
+  title: Phase-5 EBRM Trace Scoring, SMGI Continuous Learning, and Energy-Guided Decoding
+  doc: openspec/change-proposals/research-roadmap-vNEXT.md
+  completed: '2026-05-10'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp1652-archive-126
+    title: 'Exp 1652: Archive .126 and initialize .127'
+    deliverable: results/experiment_1652_archive.json
+    result: OK (conductor)
+  - id: exp1653-nsvif-sota-integration
+    title: 'Exp 1653: NSVIF DSL SOTA GGUF Integration'
+    deliverable: python/carnot/pipeline/nsvif_sota.py
+    result: OK (conductor)
+  - id: exp1654-energy-guided-decoding
+    title: 'Exp 1654: Energy-Guided Decoding via STATIC CSR'
+    deliverable: python/carnot/samplers/energy_guided.py
+    result: OK (conductor)
+  - id: exp1655-e2e-guided-decoding-eval
+    title: 'Exp 1655: gated on Exp 1653, 1654: E2E Guided Decoding Eval'
+    deliverable: results/experiment_1655_e2e_guided.json
+    result: OK (conductor)
+  - id: exp1656-ebrm-trace-scorer
+    title: 'Exp 1656: EBRM Trace Scorer'
+    deliverable: python/carnot/models/ebrm_scorer.py
+    result: OK (conductor)
+  - id: exp1657-kv260-ebrm-integration
+    title: 'Exp 1657: KV260 EBRM Hardware Offload'
+    deliverable: crates/carnot-gpu/src/kv260_ebrm.rs
+    result: OK (conductor)
+  - id: exp1658-hardware-trace-scoring-eval
+    title: 'Exp 1658: gated on Exp 1656, 1657: Hardware Trace Eval'
+    deliverable: results/experiment_1658_hw_eval.json
+    result: OK (conductor)
+  - id: exp1659-smgi-certified-updates
+    title: 'Exp 1659: SMGI Certified Updates for FR-11'
+    deliverable: python/carnot/pipeline/smgi_updates.py
+    result: OK (conductor)
+  - id: exp1660-ltlzinc-benchmark
+    title: 'Exp 1660: LTLZinc Temporal Benchmark'
+    deliverable: data/ltlzinc_benchmark.json
+    result: OK (conductor)
+  - id: exp1661-fr11-smgi-learning
+    title: 'Exp 1661: gated on Exp 1659, 1660: FR-11 SMGI Continuous Learning'
+    deliverable: results/experiment_1661_smgi_learning.json
+    result: OK (conductor)
+  - id: exp1662-pinet-projection-layer
+    title: 'Exp 1662: Pi-net Differentiable Projection'
+    deliverable: python/carnot/models/pinet_layer.py
+    result: OK (conductor)
+  - id: exp1663-pinet-vs-tskm
+    title: 'Exp 1663: gated on Exp 1662: Pi-net vs T-SKM Eval'
+    deliverable: results/experiment_1663_pinet.json
+    result: OK (conductor)
+  - id: exp1664-update-e2e-plan
+    title: 'Exp 1664: Update E2E Test Plan for SMGI/EBRM'
+    deliverable: results/experiment_1664_e2e_plan.json
+    result: OK (conductor)
+  - id: exp1665-retro-127
+    title: 'Exp 1665: Milestone .127 Retrospective'
+    deliverable: results/operational_retro_2026_05_127.json
+    result: OK (conductor)
