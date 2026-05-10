@@ -81,4 +81,13 @@ Sub-requirements:
 - REQ-POTTS-007-2: The RTL SHALL use standard synchronous design constraints.
 - REQ-POTTS-007-3: The task SHALL write `results/experiment_1692_potts_export.json` with the experiment artifact.
 
+## REQ-POTTS-008: Experiment 1704 KV260
+
+Experiment 1704 MUST write `results/experiment_1704_kv260.json` with the required artifact fields.
+
+Sub-requirements:
+- REQ-POTTS-008-1: The artifact SHALL include `vivado_available`, `synthesis_success`, `performance`, `resource_utilization`, and `honest_verdict`.
+- REQ-POTTS-008-2: If Vivado is not available, `honest_verdict` SHALL report "vivado_not_installed", `synthesis_success` SHALL be false, and `vivado_available` SHALL be false.
+
+
 
