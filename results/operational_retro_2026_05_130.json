@@ -1,0 +1,33 @@
+{
+  "schema": "carnot.operational_retro.v63",
+  "milestone": "2026.05.130",
+  "generated_at": "2026-05-10T13:34:26Z",
+  "retro_type": "operational_final",
+  "summary": "Completed 209 experiments in 1152 minutes. Efficiency was severely degraded by sequential execution (DualGPURunner unutilized, GPUs idle) and a massive 82-minute doomed-rerun block.",
+  "slowest_experiments": [
+    "Exp 1603 (88 min): Energy-Based Constraint Network (EBCN) coherence sco",
+    "Exp 1663 (82 min): Doomed-rerun block gated on Exp 1662",
+    "Exp 1657 (57 min): KV260 EBRM Hardware Offload",
+    "Exp 1642 (54 min): llguidance adapter",
+    "Exp 1653 (53 min): NSVIF DSL SOTA GGUF Integration"
+  ],
+  "bottlenecks_identified": [
+    "Doomed-rerun block consuming 82 minutes for Exp 1663.",
+    "Complete lack of DualGPURunner utilization leaving both RTX 3090 GPUs idle (0% utilization).",
+    "Sequential execution of long-running hardware and integration experiments."
+  ],
+  "improvements_suggested": [
+    "Implement fail-fast for doomed-rerun blocks to eliminate the 82-minute wait.",
+    "Deploy DualGPURunner for parallel execution across the two RTX 3090s.",
+    "Optimize sequential execution of long-running experiments like Exp 1603."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Parallelize GPU workload.",
+    "Fix doomed-rerun logic.",
+    "Optimize hardware offload steps."
+  ],
+  "meta_reflection": "Retrospective clearly identifies lack of parallelization as the primary operational gap, alongside ineffective failure caching.",
+  "total_wall_time_minutes": 1152,
+  "experiments_completed": 209,
+  "estimated_time_savings_pct": 45
+}
