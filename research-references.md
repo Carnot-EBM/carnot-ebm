@@ -4,6 +4,35 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-05-09 Post-.127 Planning Sweep (Milestone 2026.05.128)
+
+This sweep was run after milestone `.127` completed. The literature search revealed major advances in energy-based reasoning, continuous latent generation, and hard constraint layers.
+
+### Energy-Based Transformers and Compositional Energy Minimization
+- **Papers:** "Generalizable Reasoning through Compositional Energy Minimization" (arXiv:2510.20607) and "Energy-Based Transformers are Scalable Learners and Thinkers" (arXiv:2507.02092).
+- **What:** EBTs frame reasoning as gradient-based energy minimization. Compositional Energy Minimization proposes solving complex tasks (e.g., 3-SAT) by decomposing them into subproblems, each with an EBM, and minimizing the sum.
+- **Relevance to Carnot:** Directly aligns with Carnot's Phase-3 transition towards globally-scored energy-based reasoning and Phase-4 compositional constraint checking.
+
+### Continuous Autoregressive Language Models (CALM)
+- **Paper:** "Continuous Autoregressive Language Models" (arXiv:2510.27688).
+- **What:** Shifts from discrete tokens to continuous next-vector prediction, using an energy-based objective to enable controllable sampling.
+- **Relevance to Carnot:** Validates the Continuous Latent Reasoning goals (Kona parity) without the rigid bounds of token-by-token generation.
+
+### Energy-Guided Decoding for Structured Generation
+- **Paper:** "Energy-Guided Decoding for Object Hallucination Mitigation" (arXiv:2507.07731).
+- **What:** A hyperparameter-free decoding strategy that selects hidden states from the layer with the minimal energy score to reduce hallucination bias.
+- **Relevance to Carnot:** Energy-Guided Decoding was mentioned in the `.127` title. This provides a direct, training-free way to use energy scores on top of existing LLMs to enforce structured constraint parsing.
+
+### Interleaved Gibbs Diffusion (IGD)
+- **Paper:** "Interleaved Gibbs Diffusion for Constrained Generation" (ICLR 2025).
+- **What:** Designed for mixed continuous-discrete data, handles complex constrained generation (3-SAT, molecules) via interleaved Markov chains.
+- **Relevance to Carnot:** Future bridge from Carnot's deterministic solvers to diffusion-based non-autoregressive constraint fulfillment.
+
+### Lagrange Oscillatory Neural Networks (LagONN)
+- **Paper:** "Lagrange Oscillatory Neural Networks for Constraint Satisfaction and Optimization" (arXiv:2505.07179).
+- **What:** Uses "Lagrange oscillators" rather than soft penalty terms to guide the system toward feasible states, targeting Max-3-SAT.
+- **Relevance to Carnot:** Hardware/Simulation target. This provides a formal mechanical model for satisfying hard constraints with oscillatory hardware, relevant to Carnot's Ising/Potts simulation tracks.
+
 ## 2026-05-09 Post-.122 Planning Sweep (Milestone 2026.05.123)
 
 This sweep was run after milestone `.122` completed. Local outcomes: NSVIF instruction-to-constraint DSL was built and verified against SOTA with zero false accepts; DCCD and STATIC-style CSR-mask prototypes were integrated; CerCE-style ledger was added to FR-11 with bounds checking and strict utility gates; KANELE no-synthesis accounting completed.
