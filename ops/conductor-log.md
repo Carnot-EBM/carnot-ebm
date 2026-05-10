@@ -1484,3 +1484,4 @@ web search: site:o |
 | 2026-05-10 11:58 UTC | Exp 1687: gated on Exp 1686: Certify KArAt Bounds  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1686-pwa-karat.status (actual='complete |
 | 2026-05-10 12:05 UTC | Exp 1688: Constraint-Informed KAN (CIKAN) Monotoni | OK | 81 passed, 1 warning in 5.12s |
 | 2026-05-10 12:09 UTC | Exp 1689: End-to-end Evaluation of Certified KArAt | OK | 81 passed, 1 warning in 4.71s |
+| 2026-05-10 12:22 UTC | Exp 1690: Deep Energy-Guided Test-Time Scaling wit | OK | 81 passed, 1 warning in 4.46s |
