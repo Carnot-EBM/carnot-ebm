@@ -8215,3 +8215,65 @@ milestones:
     title: 'Phase 3: Milestone 2026.05.129 Retrospective'
     deliverable: ''
     result: OK (conductor)
+- id: 2026.05.130
+  title: Phase-7 Continuous Constraint Discovery, Certified KArAt, and Deep Energy Decoding
+  doc: openspec/change-proposals/research-roadmap-vNEXT.md
+  completed: '2026-05-10'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp1682-archive-129
+    title: 'Exp 1682: Archive .129 and initialize .130'
+    deliverable: results/experiment_1682_archive.json
+    result: OK (conductor)
+  - id: exp1683-self-play-constraint-discovery
+    title: 'Exp 1683: Self-Play Constraint Discovery Prototype'
+    deliverable: python/carnot/pipeline/self_play_discovery.py
+    result: OK (conductor)
+  - id: exp1684-fr11-ledger-integration
+    title: 'Exp 1684: gated on Exp 1683: Integrate Self-Play with FR-11 Ledger'
+    deliverable: results/experiment_1684_fr11_integration.json
+    result: OK (conductor)
+  - id: exp1685-live-sota-self-play
+    title: 'Exp 1685: Live evaluation of Self-Play FR-11 on mandated SOTA GGUFs'
+    deliverable: results/experiment_1685_live_sota.json
+    result: OK (conductor)
+  - id: exp1686-pwa-karat
+    title: 'Exp 1686: PWA (Piecewise Affine) Abstractions for KArAt Attention'
+    deliverable: python/carnot/models/pwa_karat.py
+    result: OK (conductor)
+  - id: exp1687-milp-karat-verification
+    title: 'Exp 1687: gated on Exp 1686: Certify KArAt Bounds via MILP'
+    deliverable: results/experiment_1687_milp_karat.json
+    result: OK (conductor)
+  - id: exp1688-cikan-regularization
+    title: 'Exp 1688: Constraint-Informed KAN (CIKAN) Monotonicity Regularization'
+    deliverable: python/carnot/models/cikan_reg.py
+    result: OK (conductor)
+  - id: exp1689-certified-karat-eval
+    title: 'Exp 1689: End-to-end Evaluation of Certified KArAt on Reasoning'
+    deliverable: results/experiment_1689_certified_karat.json
+    result: OK (conductor)
+  - id: exp1690-deep-ets-nabla
+    title: 'Exp 1690: Deep Energy-Guided Test-Time Scaling with Nabla-Reasoner'
+    deliverable: python/carnot/samplers/nabla_ets.py
+    result: OK (conductor)
+  - id: exp1691-nabla-ets-ablation
+    title: 'Exp 1691: gated on Exp 1690: Test-Time Scaling (ETS) Ablation'
+    deliverable: results/experiment_1691_nabla_ets_ablation.json
+    result: OK (conductor)
+  - id: exp1692-potts-vivado-export
+    title: 'Exp 1692: KV260 Vivado Synthesizable Verilog Export for Potts'
+    deliverable: rtl/potts_machine_v2.v
+    result: OK (conductor)
+  - id: exp1693-potts-cycle-simulation
+    title: 'Exp 1693: gated on Exp 1692: Cycle-Accurate Potts Simulation'
+    deliverable: results/experiment_1693_potts_sim.json
+    result: OK (conductor)
+  - id: exp1694-full-pipeline-sota
+    title: 'Exp 1694: Full Pipeline Live SOTA Eval (KArAt + Nabla + FR11)'
+    deliverable: results/experiment_1694_full_pipeline.json
+    result: OK (conductor)
+  - id: exp1695-milestone-130-retro
+    title: 'Exp 1695: Milestone .130 Retrospective'
+    deliverable: results/experiment_1695_retro.json
+    result: OK (conductor)
