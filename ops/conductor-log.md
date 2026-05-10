@@ -1513,3 +1513,5 @@ web search: site:o |
 | 2026-05-10 15:35 UTC | Exp 1704: Synthesize and execute Potts q=3 on KV26 | OK | 81 passed, 1 warning in 5.36s |
 | 2026-05-10 15:37 UTC | Exp 1705: Benchmark KV260 Potts hardware latency | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1704-potts-hardware-execution.bitstream |
 | 2026-05-10 15:39 UTC | Exp 1705: Benchmark KV260 Potts hardware latency | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1704-potts-hardware-execution.bitstream |
+| 2026-05-10 15:41 UTC | Exp 1705: Benchmark KV260 Potts hardware latency | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1704-potts-hardware-execution.bitstream |
+| 2026-05-10 15:43 UTC | Exp 1706: Energy-Guided Decoding for factuality | OK | Deliverable already exists in repo |
