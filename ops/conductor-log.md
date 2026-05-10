@@ -1576,3 +1576,4 @@ web search: site:o |
 | 2026-05-10 21:23 UTC | Exp 1739: Tier 3 EORM Live Updates | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1738-live-telemetry-streamer.status (ac |
 | 2026-05-10 21:25 UTC | Exp 1739: Tier 3 EORM Live Updates | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1738-live-telemetry-streamer.status (ac |
 | 2026-05-10 21:27 UTC | Exp 1739: Tier 3 EORM Live Updates | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1738-live-telemetry-streamer.status (ac |
+| 2026-05-10 21:40 UTC | Exp 1740: EqM Sampler GPU Integration | OK | 97 passed, 1 warning in 7.54s |
