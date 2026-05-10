@@ -1,0 +1,33 @@
+{
+  "schema": "carnot.operational_retro.v63",
+  "milestone": "2026.05.131",
+  "generated_at": "2026-05-10T16:07:44Z",
+  "retro_type": "full_milestone_augmented",
+  "summary": "Milestone 2026.05.131 operational retrospective complete. Analyzed 1267 min wall time / 231 experiments (avg 5 min). Slowest paths included Exp 1603 (88 min) and Exp 1663 doomed-rerun block (82 min). GPUs were completely idle at 0% utilization, indicating a missed opportunity for parallelization. No zombie processes detected.",
+  "total_wall_time_minutes": 1267,
+  "experiments_completed": 231,
+  "slowest_experiments": [
+    "Exp 1603: Energy-Based Constraint Network (EBCN) coherence sco (88 min)",
+    "Exp 1663: Doomed-rerun block: gated on Exp 1662 (82 min)",
+    "Exp 1657: KV260 EBRM Hardware Offload (57 min)",
+    "Exp 1642: llguidance adapter for reusable external structured- (54 min)",
+    "Exp 1653: NSVIF DSL SOTA GGUF Integration (53 min)"
+  ],
+  "bottlenecks_identified": [
+    "Doomed-rerun block: Exp 1663 wasted 82 min waiting on a failing/gated upstream experiment instead of failing fast.",
+    "Sequential execution: Independent tasks like Exp 1603, 1657, 1642 ran sequentially instead of parallelizing.",
+    "DualGPU IDLE: Both RTX 3090s sat at 0% utilization (5MB/4MB allocated), meaning DualGPURunner was unused and potential throughput was halved."
+  ],
+  "improvements_suggested": [
+    "Fix doomed-rerun preflight to emit terminal blocked artifacts in <1s instead of rediscovering blocked states.",
+    "Enforce DualGPURunner by default for GPU-eligible experiments to utilize both RTX 3090s.",
+    "Parallelize independent CPU and GPU execution lanes."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Fail-fast doomed-rerun block",
+    "DualGPURunner parallelization",
+    "Independent task parallelization"
+  ],
+  "estimated_time_savings_pct": 40,
+  "meta_reflection": "Execution efficiency remains bottlenecked by the same patterns (idle GPUs, sequential execution, doomed-rerun waits) highlighted in previous retros. Mechanical conductor-level enforcement is necessary to realize the 40% estimated savings."
+}
