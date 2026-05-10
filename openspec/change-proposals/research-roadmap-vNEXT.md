@@ -1,53 +1,63 @@
-# Research Roadmap Change Proposal vNEXT (Milestone 2026.05.131)
+# Milestone 2026.05.132: Phase-9 Dynamic Constraint Elicitation, FR-11 Consolidation, and Hardware-Offloaded Verification
 
-## What the Previous Milestone (.130) Proved
-Milestone `.130` successfully closed the loop on constraint self-discovery via the FR-11 ledger, formally certified the KArAt abstractions using MILP, proved monotonicity regularization with CIKAN, and exported the Potts Vivado simulator. However, we discovered two key limitations:
-1. **MILP Certification Overhead:** Running MILP over KArAt is NP-hard and scales poorly for test-time verification.
-2. **Reasoning-Accuracy Trade-offs in Self-Play:** As the FR-11 framework discovered more complex structural constraints, reasoning engines increasingly distorted facts to satisfy the structural gates.
+**Status:** Proposed  
+**Author:** Carnot Research Planning Agent  
+**Date:** 2026-05-13  
 
-## Milestone .131 Goals
-1. **GloroKAN Robustness:** Implement B-spline local Lipschitz bound tracking from the ICLR 2026 GloroKAN paper to provide computationally cheap, provable robustness bounds during the forward pass.
-2. **Eidoku Verification & Factuality:** Integrate the Eidoku System-2 structural verification gate (arXiv:2512.20664) and pair it with a fact-distortion detector to prevent our models from sacrificing semantic truth for structural validity.
-3. **Continuous FR-11 Learning:** Introduce a replay buffer for FR-11 to support non-forgetting, continual self-learning, directly addressing the PRD's vision for autonomous constraint expansion.
-4. **Hardware Acceleration:** Execute the Potts q=3 bitstream on actual KV260 hardware, moving past the Vivado source-level simulation from milestone .130.
+## What Milestone .131 Proved
+Milestone .131 successfully implemented provable robustness for KANs (GloroKAN), established the Eidoku structural constraint satisfaction gate, and proved that a Potts q=3 model can be synthesized and executed on KV260 hardware. FR-11 continual learning replay buffers were integrated, and energy-guided decoding for factuality was evaluated. However, the system still relies on static, pre-defined constraints, the replay buffer faces eventual scaling limitations (catastrophic saturation), and the KV260 hardware execution was isolated from the live SOTA inference loop.
 
-## Architecture Diagram Update
+## The 3 Biggest Gaps (PRD Alignment)
+1. **Dynamic / Open-World Constraint Elicitation**: To escape hard-coded verification, Carnot must extract verifiable rules on-the-fly from unstructured user prompts (ROCE).
+2. **Continual Learning Memory Decay**: The FR-11 loop lacks a consolidation/pruning mechanism, threatening scalability. 
+3. **Hardware Speed vs Live Inference**: KV260 hardware executes constraints, but it is not yet "in-the-loop" during token generation (HILED).
+
+## Architecture Diagram
+
 ```mermaid
-graph TD;
-    A[LLM Output Candidate] --> B[Eidoku Structural Gate];
-    A --> C[Fact Distortion Detector];
-    B --> D{Verification Consensus};
-    C --> D;
-    D -- Valid --> E[Accept];
-    D -- Invalid --> F[Energy-Guided Decoding Repair];
-    
-    E --> G[FR-11 Continuous Replay Buffer];
-    G --> H[Self-Learning Update];
+graph TD
+    A[User Prompt] --> B[Dynamic Constraint Elicitation]
+    B --> C[SOTA GGUF Model]
+    C --> D[Hardware-Offloaded Verification]
+    D --> E[KV260 Potts Hardware]
+    D --> F{Eidoku Gate}
+    F -->|Pass| G[Output]
+    F -->|Fail| H[Energy-Guided Decoder Repair]
+    H --> C
+    G --> I[FR-11 Continual Learning]
+    I --> J[Semantic Memory Pruner]
 ```
 
 ## Phase Descriptions
-- **Phase 1: Foundation Setup (Exp 1696)**
-  - Archive .130 and initialize tracking logic.
-- **Phase 2: Mathematical Robustness & Gates (Exp 1697-1701)**
-  - Implement GloroKAN bounds for KArAt.
-  - Implement the Eidoku verification gate and Fact Distortion detector to handle the reasoning-accuracy gap. Evaluate on local SOTA GGUFs (`unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF`).
-- **Phase 3: Continuous Learning & Hardware (Exp 1702-1705)**
-  - Implement the FR-11 continuous constraint learning replay buffer.
-  - Synthesize and execute the Potts q=3 design on the KV260 FPGA.
-- **Phase 4: Synthesis & Final Evaluation (Exp 1706-1708)**
-  - Introduce Energy-Guided Decoding to mitigate hallucinations on the fly.
-  - Connect all components for a 100-case full-pipeline `.131` run using mandated GGUF targets.
-  - Conduct the milestone retrospective.
+
+### Phase 1: Hardware-Offloaded Verification
+Connecting the KV260 Potts execution layer to the Python verification pipeline via PyO3, allowing hardware to participate in live gating.
+
+### Phase 2: Continual Learning Memory Consolidation
+Implementing semantic pruning (arXiv:2604.19882) to discard redundant constraints in FR-11's replay buffer, ensuring nonforgetting rates remain high without unbounded memory growth.
+
+### Phase 3: Dynamic Constraint Elicitation
+Extracting formal constraint representations from natural language user prompts on the fly, bridging the gap to open-world verifiable reasoning.
+
+### Phase 4: Energy-Guided Decoding Integration
+Tying the dynamic gates and hardware feedback into the local SOTA GGUF decoding loops to mitigate factual distortion.
+
+### Phase 5: Pipeline & Retrospective
+A full E2E run evaluating zero-shot constrained generation over 100 cases with hardware-in-the-loop, followed by a formal retrospective.
 
 ## Dependency Graph
-`exp1696` -> `exp1697` -> `exp1698` -> `exp1706`
-`exp1699` -> `exp1700` -> `exp1706`
-`exp1701` -> `exp1706`
-`exp1702` -> `exp1703` -> `exp1706`
-`exp1704` -> `exp1705` -> `exp1706`
-`exp1706` -> `exp1708`
+- Exp 1709 -> [Exp 1710, Exp 1712, Exp 1714]
+- Exp 1710 -> Exp 1711
+- Exp 1712 -> Exp 1713
+- Exp 1714 -> Exp 1715
+- Exp 1715 -> Exp 1716
+- [Exp 1711, Exp 1716] -> Exp 1717
+- Exp 1717 -> Exp 1718
+- Exp 1718 -> Exp 1719
+- [Exp 1713, Exp 1719] -> Exp 1720
+- Exp 1720 -> Exp 1721
 
 ## Hardware Requirements
-- **Local GGUF Runtime:** 2x RTX 3090s with `libcudart.so.12` installed.
-- **KV260 FPGA:** For `exp1704` and `exp1705`, hardware access is required to flash the Vivado `.bit` file and perform latency benchmarking.
-- **CPU:** Standard 32-core Threadripper for GloroKAN evaluation and Eidoku graph processing.
+- **Local SOTA inference:** Dual RTX 3090 (CUDA) running `unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF`.
+- **FPGA execution:** AMD/Xilinx Kria KV260 (required for Phase 1).
+- **CPU:** Standard host required for PyO3 bridging and compiling constraints.
