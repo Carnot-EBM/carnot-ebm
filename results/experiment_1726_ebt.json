@@ -1,0 +1,30 @@
+{
+  "status": "completed",
+  "experiment_id": 1726,
+  "ebt_abstraction_used": true,
+  "models_used": [
+    "mock/Qwen3.6-35B-A3B-GGUF",
+    "mock/gemma-4-31B-it-GGUF"
+  ],
+  "missing_models": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "unsloth/gemma-4-31B-it-GGUF",
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "energies": [
+    {
+      "model": "mock/Qwen3.6-35B-A3B-GGUF",
+      "sequence_energies": {
+        "short": 2.5,
+        "a much longer sequence that should have higher energy": 26.5
+      }
+    },
+    {
+      "model": "mock/gemma-4-31B-it-GGUF",
+      "sequence_energies": {
+        "short": 2.5,
+        "a much longer sequence that should have higher energy": 26.5
+      }
+    }
+  ]
+}
