@@ -1,0 +1,33 @@
+{
+  "schema": "carnot.operational_retro.v63",
+  "milestone": "2026.05.129",
+  "generated_at": "2026-05-10T11:14:51Z",
+  "retro_type": "operational_complete",
+  "summary": "Milestone 2026.05.129 took 1070 minutes for 180 experiments (6 min avg). The slowest path was Exp 1603 (88 min) followed by a 82 minute doomed-rerun block on Exp 1663. Both RTX 3090s were completely idle (5MB/4MB used, 0% util), missing the opportunity to parallelize models using DualGPURunner. No zombie processes were wasting resources.",
+  "slowest_experiments": [
+    "Exp 1603: Energy-Based Constraint Network (EBCN) coherence sco (88 min)",
+    "Doomed-rerun block: Exp 1663: gated on Exp 1662: Pi-net vs T-S (82 min)",
+    "Exp 1657: KV260 EBRM Hardware Offload (57 min)",
+    "Exp 1642: llguidance adapter for reusable external structured- (54 min)",
+    "Exp 1653: NSVIF DSL SOTA GGUF Integration (53 min)"
+  ],
+  "bottlenecks_identified": [
+    "Doomed-rerun block cascade wasting 82 minutes on Exp 1663",
+    "Completely idle GPUs (0% utilization) missing parallelization",
+    "Long-running individual experiments (Exp 1603, 1657) running sequentially"
+  ],
+  "improvements_suggested": [
+    "Implement activation-time gate preflight to emit terminal blocked artifacts in <1s instead of 82m doomed reruns",
+    "Schedule GPU-bearing experiments via DualGPURunner (Qwen on GPU 0, Gemma on GPU 1)",
+    "Parallelize long-running hardware offload tasks"
+  ],
+  "top_3_highest_leverage_actions": [
+    "Fix doomed-rerun blocks to fail fast during preflight",
+    "Utilize DualGPURunner for parallel evaluation",
+    "Adopt idempotent docs appenders"
+  ],
+  "meta_reflection": "The retro continues to find idle GPUs and doomed-rerun blocks. The highest-leverage action remains fixing the conductor preflight to terminalize gate failures immediately.",
+  "total_wall_time_minutes": 1070,
+  "experiments_completed": 180,
+  "estimated_time_savings_pct": 40
+}

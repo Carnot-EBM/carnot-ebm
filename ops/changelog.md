@@ -1,5 +1,9 @@
 # Carnot — Changelog
 
+## 2026-05-10 (Milestone 2026.05.129 Operational Retrospective)
+
+- 2026-05-10 11:14 UTC: Milestone 2026.05.129 operational retrospective complete. Analyzed 1070 min wall time / 180 experiments (avg 6 min). Slowest paths: Exp 1603 (88 min), Exp 1663 doomed-rerun block (82 min), Exp 1657 (57 min), Exp 1642 (54 min), and Exp 1653 (53 min). Both RTX 3090s were idle at 5MB/4MB / 0% utilization throughout, meaning DualGPURunner was not utilized and parallelization was missed. Estimated 40% savings recoverable via DualGPURunner parallelization and fixing the doomed-rerun block to fail fast.
+
 ## 2026-05-09 (Milestone 2026.05.127 Operational Retrospective)
 
 - 2026-05-09 20:00 UTC: Milestone 2026.05.127 operational retrospective complete. Analyzed 1070 min wall time / 180 experiments (avg 6 min). Slowest paths: Exp 1603 (88 min), Exp 1663 doomed-rerun block (82 min), Exp 1657 (57 min), Exp 1642 (54 min), and Exp 1653 (53 min). Both RTX 3090s were idle at 266 MB / 0% utilization throughout, meaning DualGPURunner was not utilized and parallelization was missed. Estimated 40% savings recoverable via DualGPURunner parallelization and fixing the doomed-rerun block to fail fast.
