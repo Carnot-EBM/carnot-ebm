@@ -5368,3 +5368,20 @@ The deliverable SHALL be written to `results/experiment_1685_live_sota.json`.
 **Given** an FR-11 replay buffer containing a structural constraint rule X
 **When** a semantically equivalent structural constraint rule Y is added
 **Then** the pruning mechanism calculates a similarity score above the threshold and removes rule Y (or X) to prevent redundancy.
+
+---
+
+## REQ-LEARN-101: Continuous Online Updater for CIKAN Models
+
+**Given** a deployed CIKAN verifier
+**When** the verification loop encounters streaming violations or valid responses
+**Then** an online updater mechanism (e.g. SGD/AdamW) MUST adjust the CIKAN residual head weights to minimize binary cross-entropy loss against the verified outcome.
+
+### REQ-LEARN-101 Sub-requirements
+- REQ-LEARN-101-1: The updater MUST support stochastic updates based on single streaming observations.
+- REQ-LEARN-101-2: The verification loop MUST route features and verified labels (violation vs. valid) to the updater.
+
+### SCENARIO-LEARN-101: Online CIKAN Verification Loop
+**Given** an instantiated `OnlineUpdater` and `VerificationLoop`
+**When** a synthetic stream of alternating valid and violation samples is processed
+**Then** the CIKAN residual energy for valid samples MUST decrease and the residual energy for violation samples MUST increase.
