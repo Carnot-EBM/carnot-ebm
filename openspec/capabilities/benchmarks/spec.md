@@ -346,3 +346,22 @@ availability blocker when no mandated SOTA model can run.
 | SCENARIO-BENCH-1536 | Planned (`tests/python/test_experiment_1536_satquest_cnf_verifier_benchmark.py`) | Exp 1536 |
 | SCENARIO-BENCH-1540 | Implemented (`tests/python/test_experiment_1540_product_line_staged_benchmark_scale.py`) | Exp 1540 |
 | SCENARIO-BENCH-1550 | Planned (`tests/python/test_experiment_1550_satquest_sota_reeval_zero_false_accepts.py`) | Exp 1550 |
+
+### REQ-DUALGPU-101: DualGPU System-2 EqM Benchmark
+
+Carnot MUST provide a comprehensive DualGPU benchmark combining System-2 EqM, FourierCSP, and continuous learning.
+The implementation MUST ensure SOTA models (`unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF`) are split or utilized effectively.
+Results MUST be written to `results/experiment_1733_dualgpu.json`.
+
+**Acceptance criteria:**
+- Script `scripts/experiment_1733_dualgpu.py` runs the combined benchmark.
+- SOTA models are referenced in the script.
+- Artifact is written to `results/experiment_1733_dualgpu.json`.
+
+### SCENARIO-DUALGPU-101: Comprehensive DualGPU execution
+
+**Given** a DualGPU environment
+**When** the Exp 1733 script runs
+**Then** the System-2 EqM and FourierCSP pipelines execute using the specified SOTA models and write the required artifact.
+
+**Spec traces:** REQ-DUALGPU-101
