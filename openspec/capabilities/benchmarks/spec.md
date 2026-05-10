@@ -325,6 +325,25 @@ availability blocker when no mandated SOTA model can run.
 
 **Spec traces:** REQ-BENCH-1550
 
+### REQ-BENCH-1744: Phase 4 EqM Latency-Accuracy Synthesis
+
+Carnot MUST provide an impact analysis script for Exp 1744 that reads the large benchmark
+results (Exp 1743) and synthesizes the tradeoff between EqM-guided decoding latency
+and final accuracy gains.
+The script MUST calculate and write a JSON summary to `results/experiment_1744_impact.json`
+containing the fields `status`, `eqm_latency_overhead_ms`, `accuracy_gain_pct`,
+and `honest_verdict`. Missing input files MUST NOT crash the process but produce
+a blocked artifact or mock data for testing.
+
+### SCENARIO-BENCH-1744: Impact Analysis Generates Scatter Data
+
+**Given** the Exp 1744 analysis script
+**When** executed against the Exp 1743 large benchmark logs
+**Then** it parses token-latency and repair-success rates
+**And** produces a valid `results/experiment_1744_impact.json` artifact containing the synthesized tradeoff metrics.
+
+**Spec traces:** REQ-BENCH-1744
+
 ## Implementation Status
 
 | Requirement | Status | Experiment |
