@@ -1,0 +1,32 @@
+{
+  "experiment": "1681_milestone_retro",
+  "schema": "milestone_retro_v2",
+  "run_date": "2026-05-10T00:00:00Z",
+  "milestone": "2026.05.129",
+  "criteria_results": {
+    "eds_prototype_success": true,
+    "crane_implemented_and_verified": true,
+    "karat_attention_block_implemented_and_verified": true,
+    "continual_learning_eds_not_blocked": false
+  },
+  "criteria_met": 3,
+  "criteria_total": 4,
+  "experiment_honest_verdicts": {
+    "exp1677": "eds_prototype_success",
+    "exp1678": "complete: CRANE interleaving improved semantic coherence at parse_rate>=0.9",
+    "exp1679": "complete: karat_attention_block_implemented_and_verified",
+    "exp1680": "blocked_gate_check_failed"
+  },
+  "notable_successes": [
+    "EDS prototype steered generation successfully reduced energy.",
+    "CRANE interleaving improved semantic coherence at parse_rate>=0.9.",
+    "KArAt miniature attention block was implemented and bounds verified."
+  ],
+  "failures_or_partials": [
+    "Continual learning for EDS is blocked by gate checks."
+  ],
+  "bottlenecks_identified": [
+    "Gate check failed for exp1680 due to missing success expectation from exp1677."
+  ],
+  "honest_verdict": "completed_with_blockers"
+}
