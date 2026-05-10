@@ -893,6 +893,25 @@ Given the `hardware/kv260/` directory,
 When `scripts/experiment_1637_lint.py` is executed,
 Then it checks for Vivado, attempts linting if possible, and outputs `vivado_installed` and `lint_passed` to the JSON artifact.
 
+## REQ-KAN-1688: CIKAN Regularizer for Monotonic B-splines
+
+The KAN model tier MUST provide a CIKAN regularizer that enforces monotonic behavior on B-spline coefficients directly, without requiring post-hoc projection.
+
+**Rationale:**
+    B-spline monotonicity can be enforced by constraining differences between adjacent coefficients. A regularizer that penalizes non-monotonic coefficient sequences allows continuous gradient-based optimization while encouraging the spline to become monotonically increasing or decreasing.
+
+**Acceptance criteria:**
+    - `python/carnot/models/cikan_reg.py` implements `CIKANRegularizer`.
+    - Tests verify that the regularizer computes the correct penalty for non-monotonic coefficients.
+    - A test spline's non-monotonic behavior is penalized correctly.
+    - `results/experiment_1688_cikan.json` is written with the appropriate results.
+
+### SCENARIO-KAN-1688: CIKAN Regularizer penalizes non-monotonicity
+
+Given a set of B-spline coefficients,
+When `CIKANRegularizer` is applied,
+Then it computes a penalty proportional to the non-monotonic adjacent differences, and `results/experiment_1688_cikan.json` records the success.
+
 ## REQ-KAN-1679: Miniature KArAt Attention Block
 
 The KAN capability MUST provide a miniature KArAt attention block (Kolmogorov-Arnold Attention) that replaces Softmax with learnable spline/rational bases. The implementation MUST be designed for energy calculation, and its parameter counts and bounding bounds MUST be verified using rational abstractions.
