@@ -930,3 +930,21 @@ The KAN capability MUST provide a miniature KArAt attention block (Kolmogorov-Ar
 Given the `karat_attention.py` module,
 When the parameter counts and bounding bounds are verified,
 Then the tests pass, coverage is 100%, and `results/experiment_1679_karat.json` is written.
+
+## REQ-KAN-1689: Certified KArAt Model Evaluation
+
+The KAN capability MUST provide a script to evaluate the predictive performance of the MILP-certified KArAt model against an uncertified baseline on a synthetic reasoning dataset.
+
+**Rationale:**
+    To ensure the MILP-certified KArAt model maintains or improves accuracy and output bounds compared to the uncertified baseline.
+
+**Acceptance criteria:**
+    - `python/carnot/models/certified_karat.py` implements the certified KArAt wrapper and benchmark logic.
+    - Tests verify the model logic and achieve 100% test coverage.
+    - `results/experiment_1689_certified_karat.json` is written with the required schema fields, comparing accuracy and output bounds, and an honest verdict.
+
+### SCENARIO-KAN-1689: Certified KArAt Evaluation
+
+Given the `certified_karat.py` module,
+When the benchmark script is run on the synthetic reasoning dataset,
+Then accuracy and output bounds are compared, tests pass, coverage is 100%, and `results/experiment_1689_certified_karat.json` is written.
