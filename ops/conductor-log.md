@@ -1570,3 +1570,4 @@ web search: site:o |
 | 2026-05-10 21:05 UTC | Exp 1735: Dual RTX 3090 SOTA CUDA Runtime Smoke Te | DOOMED_RERUN_BLOCK | 3 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-10 21:07 UTC | Exp 1735: Dual RTX 3090 SOTA CUDA Runtime Smoke Te | DOOMED_RERUN_BLOCK | 3 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-10 21:09 UTC | Exp 1735: Dual RTX 3090 SOTA CUDA Runtime Smoke Te | DOOMED_RERUN_BLOCK | 3 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-10 21:13 UTC | Exp 1736: KV260 KANELÉ Vivado Synthesis | OK | 81 passed, 1 warning in 5.76s |
