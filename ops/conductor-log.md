@@ -1481,3 +1481,4 @@ web search: site:o |
 | 2026-05-10 11:52 UTC | Exp 1686: PWA (Piecewise Affine) Abstractions for  | OK | 81 passed, 1 warning in 4.78s |
 | 2026-05-10 11:54 UTC | Exp 1687: gated on Exp 1686: Certify KArAt Bounds  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1686-pwa-karat.status (actual='complete |
 | 2026-05-10 11:56 UTC | Exp 1687: gated on Exp 1686: Certify KArAt Bounds  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1686-pwa-karat.status (actual='complete |
+| 2026-05-10 11:58 UTC | Exp 1687: gated on Exp 1686: Certify KArAt Bounds  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1686-pwa-karat.status (actual='complete |
