@@ -1439,3 +1439,4 @@ web search: site:o |
 | 2026-05-10 02:48 UTC | Exp 1662: Pi-net Differentiable Projection | OK | Deliverable already exists in repo |
 | 2026-05-10 02:48 UTC | Exp 1663: gated on Exp 1662: Pi-net vs T-SKM Eval | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-10 02:50 UTC | Exp 1663: gated on Exp 1662: Pi-net vs T-SKM Eval | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-10 02:52 UTC | Exp 1663: gated on Exp 1662: Pi-net vs T-SKM Eval | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
