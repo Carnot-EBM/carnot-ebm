@@ -207,6 +207,93 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### NEW 2026-05-10 (14:55Z): Retro Template Hallucination Fix + Harness-Fit Linter Integration (.132+ MANDATORY)
+
+**Pattern (already shipped 2026-05-10 14:55Z):**
+
+1. **Retro template fixed** (`scripts/research_conductor.py:_run_operational_retrospective`).
+   Bug: `git log --since="7 days ago"` pulled ~1700 conductor commits
+   spanning 8-10 milestones. Gemini retro then hallucinated per-milestone
+   numbers from multi-milestone aggregates — three consecutive retros
+   (`.127, .128, .129) cited identical "1070 min / 180 experiments /
+   exp1603 88min / exp1663 82min" verbatim. Verification: exp1663 was
+   doomed-rerun-blocked PRE-LAUNCH in <1s — the "82 min wasted" was
+   fabricated. Fix: bound to `[conductor] Activate milestone <CURRENT>..HEAD`
+   commit range; tag each experiment as `compute_bound` based on YAML
+   prompt markers (GGUF/CUDA/requires_gpu); add anti-hallucination
+   guard in retro prompt; bump schema v63 → v64.
+
+2. **Harness-fit linter shipped** (`scripts/harness_fit_lint.py`).
+   Detects 3 risk classes: (A) exact-match `status == X` where multiple
+   terminal markers are agent-conventional (`complete`/`success`/`passed`/
+   `shipped`); (B) exact-match `field == True` (string-vs-bool drift);
+   (C) gate field not mentioned in upstream task's prompt. Caught 6
+   risks in live `.131 (exp1700→1699.pytest_passed, exp1703→1702.
+   pytest_passed, exp1705→1704.bitstream_loaded — all class B+C).
+
+**MANDATORY for `.132+ planner:**
+
+1. **Run linter pre-emit:** before activating a milestone, run
+   `python scripts/harness_fit_lint.py research-roadmap-next.yaml`.
+   If non-zero exit, REWRITE the offending gates per the linter's
+   suggestions (op:'truthy' instead of `==`, or move the gate field
+   into the upstream prompt's REQUIRED ARTIFACT FIELDS).
+
+2. **Wire linter into conductor activation guard:** the activation
+   guard already validates roadmap structure. Extend it to call
+   `harness_fit_lint.lint(NEXT_ROADMAP_FILE)`. Non-empty risk list →
+   refuse activation; the planner gets the linter output as feedback
+   for re-planning.
+
+3. **Conductor side:** the retro now requires schema v64. Existing
+   v63 retros (`.127-.129) are known-hallucinated; treat as informal
+   data only. The `.130 retro is the last v63; `.131 onward must be v64.
+
+**Files touched:** `scripts/research_conductor.py` (retro section),
+`scripts/harness_fit_lint.py` (new).
+
+**Cross-references:**
+- Bustamante "Model-Harness-Fit" (memory `reference_model_harness_fit.md`)
+- Verdict Terminal-Prefix Discipline (CLAUDE.md MANDATORY)
+- Gate-Field Discipline (the `.125+ entry below — this entry hardens
+  the mechanical enforcement; the rule there remains the planner-side
+  authority)
+
+---
+
+### NEW 2026-05-10 (14:55Z): DualGPURunner Enforcement — Compute-Bound Multi-Model Tasks Only (.132+ pickup)
+
+**Scope correction.** Prior `.127-.129 retros flagged "0% GPU
+utilization" as a milestone-wide bottleneck and recommended
+"enforce DualGPURunner usage." Investigation showed:
+
+1. The .127-.129 retros were hallucinated (see entry above).
+2. Most `.123-.131 tasks were synthesis-only (write a Python module,
+   write a JSON artifact); 0% GPU is correct behavior, not a bug.
+3. Single-model GGUF inference tasks (exp1670 EGD, exp1677 EDS,
+   exp1685 live SOTA) are correctly single-GPU; DualGPURunner is
+   the wrong abstraction for them.
+
+**The genuine bug class.** DualGPURunner SHOULD engage when a single
+task loads two distinct models in parallel (e.g., parity sweep
+between Carnot model A on GPU0 and reference model B on GPU1, or a
+verifier-ensemble eval where two GGUFs are compared head-to-head).
+
+**MANDATORY for `.132+ planner:**
+
+When proposing a task whose prompt references **two or more** distinct
+GGUF models or invokes parallel inference (`DualGPURunner`,
+`DualGPUHarness`), the prompt MUST instruct the agent to use
+`carnot.pipeline.dual_gpu_harness.DualGPUHarness` rather than
+sequential `.cuda()` calls. The retro v64 schema's
+`gpu_idle_on_compute_bound_tasks` field will flag failures.
+
+**NOT in scope:** single-model inference. Synthesis-only tasks. The
+prior recommendation to "enforce DualGPURunner usage" without
+qualification is hereby rescinded.
+
+---
+
 ### NEW 2026-05-09 (15:25Z): Planner Gate-Field Discipline (.125+ MANDATORY)
 
 **Pattern.** `.123 lost 4 of 13 tasks to gate-block cascade; `.124 lost

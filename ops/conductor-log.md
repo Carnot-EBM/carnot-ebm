@@ -1504,3 +1504,4 @@ web search: site:o |
 | 2026-05-10 14:56 UTC | Exp 1700: Live evaluation of Eidoku gate on mandat | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1699-eidoku-verification-gate.pytest_pa |
 | 2026-05-10 14:58 UTC | Exp 1700: Live evaluation of Eidoku gate on mandat | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1699-eidoku-verification-gate.pytest_pa |
 | 2026-05-10 15:00 UTC | Exp 1700: Live evaluation of Eidoku gate on mandat | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1699-eidoku-verification-gate.pytest_pa |
+| 2026-05-10 15:06 UTC | Exp 1701: Factual distortion detector for reasonin | OK | 81 passed, 1 warning in 5.40s |
