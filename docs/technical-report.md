@@ -30,14 +30,14 @@ Qwen3.6-35B-A3B), never from simulated runs; hardware, ensemble, and
 adversarial-audit results are labeled by artifact provenance.
 
 This report documents the research arc behind the framework — **1,991
-experiment records tracked through Exp 1676, with 1,802 task records in 140
-artifact-backed completed milestone records archived through .126 and
-checked-in result artifacts extending through .126** — run between February
-and May 2026. `research-complete.yaml` currently archives **140** completed
-milestone records through 2026.05.126; checked-in result artifacts now extend
+experiment records tracked through Exp 1676, with 1,827 task records in 142
+artifact-backed completed milestone records archived through .128 and
+checked-in result artifacts extending through .128** — run between February
+and May 2026. `research-complete.yaml` currently archives **142** completed
+milestone records through 2026.05.128; checked-in result artifacts now extend
 through `results/experiment_1651_retro.json`. Milestone .126 is
 present in the result-artifact and changelog layer; the `research-complete.yaml`
-archive currently stops at .126.
+archive currently stops at .128.
 The story now spans activation-based negative results, constraint-based
 verification, live SOTA-model benchmarks, production verifier ensembles,
 hardware sampler audits, continuous self-learning, Phase-5 in-situ training
