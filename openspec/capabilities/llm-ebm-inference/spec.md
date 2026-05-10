@@ -551,6 +551,19 @@ blockers
 **And** `claim_allowed=false` without falling back to legacy small model
 headline rows.
 
+### REQ-INFER-018: EBT Abstraction Layer
+
+The system SHALL provide an Energy-Based Transformer (EBT) abstraction layer that bridges autoregressive LLMs (like the mandated SOTA GGUF models) to an EBT formulation. This enables System-2 gradient refinement at inference time by providing a way to calculate sequence energy.
+- `ebt_bridge.py` SHALL define an `EBTBridge` class that takes a model and calculates `sequence_energy` from logits or logprobs.
+- The `sequence_energy` SHALL be formulated such that higher probability sequences have lower energy.
+
+### SCENARIO-INFER-018-001: Sequence Energy Calculation
+
+**Given** an initialized `EBTBridge` wrapping an autoregressive model
+**When** a text sequence is passed to the bridge
+**Then** it returns a valid sequence energy value
+**And** sequences with higher likelihood are assigned lower energy
+
 ## Implementation Status
 
 | Requirement | Python | Tests |
