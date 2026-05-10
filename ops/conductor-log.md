@@ -1553,3 +1553,4 @@ web search: site:o |
 | 2026-05-10 19:24 UTC | Exp 1725: E2E FourierCSP + CIKAN with Feedback | OK | 81 passed, 1 warning in 5.20s |
 | 2026-05-10 19:29 UTC | Exp 1726: Energy-Based Transformer (EBT) Bridge | OK | 81 passed, 1 warning in 5.19s |
 | 2026-05-10 19:38 UTC | Exp 1727: Equilibrium Matching (EqM) Gradient Samp | OK | 97 passed, 1 warning in 7.55s |
+| 2026-05-10 19:40 UTC | Exp 1728: System-2 Reasoning Benchmark (GSM8k & MA | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1727-eqm-sampler.status (actual=None == |
