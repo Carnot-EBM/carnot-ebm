@@ -1,0 +1,44 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.132",
+  "generated_at": "2026-05-10T18:40:04Z",
+  "retro_type": "operational_complete",
+  "summary": "Milestone 2026.05.132 operational retrospective complete. Analyzed 1388 min wall time / 253 experiments (avg 5 min). Slowest paths: Exp 1603 (88 min), Exp 1657 (57 min), Pre-gate block Exp 1711 (56 min), Exp 1642 (54 min). Doomed-rerun blocks correctly failed fast. Both RTX 3090s were idle (0% utilization) but there were no compute-bound tasks, so this is correct behavior. Estimated savings: implement fail-fast for pre-gate blocks.",
+  "slowest_experiments": [
+    {
+      "experiment": "Exp 1603: Energy-Based Constraint Network (EBCN) coherence sco",
+      "duration_min": 88,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Exp 1657: KV260 EBRM Hardware Offload",
+      "duration_min": 57,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Pre-gate block: Exp 1711: Ablation of Eidoku Gate using KV260",
+      "duration_min": 56,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Exp 1642: llguidance adapter for reusable external structured-",
+      "duration_min": 54,
+      "compute_bound": false
+    }
+  ],
+  "bottlenecks_identified": [
+    "Pre-gate block for Exp 1711 consumed 56 minutes, indicating it does not fail fast like doomed-reruns."
+  ],
+  "improvements_suggested": [
+    "Implement fail-fast mechanism for Pre-gate blocks similar to doomed-reruns to save wall time."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Implement fail-fast mechanism for Pre-gate blocks"
+  ],
+  "compute_bound_experiments_count": 0,
+  "gpu_idle_on_compute_bound_tasks": null,
+  "meta_reflection": "Questions: 1. Which compute-bound experiments took the longest, and why? no data available this milestone. 2. Was GPU utilization efficient on the compute-bound tasks? no data available this milestone. 3. Did any compute-bound task with 2+ models in parallel fail to engage DualGPURunner? no data available this milestone. 4. What tooling change would speed up the next milestone? Implement fail-fast for pre-gate blocks.",
+  "total_wall_time_minutes": 1388,
+  "experiments_completed": 253,
+  "estimated_time_savings_pct": 4
+}
