@@ -5268,3 +5268,54 @@ post-update constraint-violation bound is greater than its pre-update bound
 | Requirement | Python | Tests |
 |-------------|--------|-------|
 | REQ-LEARN-1668 | Implemented (`python/carnot/pipeline/cerce_ledger.py`) | Implemented (`tests/python/test_cerce_ledger.py`) |
+
+---
+
+## REQ-LEARN-1669: LTLZinc CerCE Continual-Learning Adapter
+
+Exp 1669 SHALL provide a deterministic LTLZinc-style continual-learning adapter
+in `python/carnot/pipeline/ltlzinc_adapter.py`.  The adapter SHALL generate
+finite temporal-constraint replay cases with LTL-style formulas and
+MiniZinc-style constraint strings, evaluate the replay cases through the
+pipeline CerCE ledger, and write
+`results/experiment_1669_ltlzinc.json`.  The run SHALL be query-time
+bookkeeping only: it SHALL NOT train, finetune, write checkpoints, or mutate
+model weights.
+
+### REQ-LEARN-1669 Sub-requirements
+
+- REQ-LEARN-1669-1: The adapter SHALL generate deterministic cases for the
+  temporal operators `always`, `eventually`, `next`, and `until`; each case
+  SHALL include `case_id`, `temporal_operator`, finite Boolean `trace`,
+  `expected_satisfied`, `ltl_formula`, and `minizinc_constraint`.
+- REQ-LEARN-1669-2: The local verifier SHALL evaluate generated finite traces
+  against the supported temporal operators and reject malformed or mislabeled
+  rows before CerCE replay evidence is built.
+- REQ-LEARN-1669-3: The adapter SHALL convert temporal cases into CerCE
+  `ReplayCase` evidence, preserving one replay row per temporal case and using
+  non-worsening pre/post violation bounds for retained cases.
+- REQ-LEARN-1669-4: The benchmark SHALL call the CerCE promotion gate and
+  report `forgetting_rate`, `cerce_nonforgetting_rate`,
+  `replay_retention_rate`, `accepted_violation_count`,
+  `policy_certificates_evaluated`, and per-case replay outcomes.
+- REQ-LEARN-1669-5: The terminal artifact SHALL include `status`, `schema`,
+  `experiment_id`, `ltlzinc_adapter_ready`, `temporal_cases_generated`,
+  `cerce_ledger_ready`, `promotion_gate_passed`, `forgetting_rate`,
+  `cerce_nonforgetting_rate`, `ledger_artifact`, `case_results`, `blockers`,
+  `tests_run`, and `honest_verdict`.
+
+### SCENARIO-LEARN-1669a: LTLZinc Temporal Cases Do Not Forget Under CerCE
+
+**Given** deterministic temporal replay cases for `always`, `eventually`,
+`next`, and `until`
+**When** the LTLZinc adapter verifies the cases and evaluates their replay
+evidence through the CerCE ledger
+**Then** the terminal artifact reports `ltlzinc_adapter_ready=true`
+**And** `forgetting_rate=0.0`
+**And** `cerce_nonforgetting_rate=1.0`.
+
+## Implementation Status (REQ-LEARN-1669)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-1669 | Implemented (`python/carnot/pipeline/ltlzinc_adapter.py`) | Implemented (`tests/python/test_ltlzinc_adapter.py`) |
