@@ -1486,3 +1486,4 @@ web search: site:o |
 | 2026-05-10 12:09 UTC | Exp 1689: End-to-end Evaluation of Certified KArAt | OK | 81 passed, 1 warning in 4.71s |
 | 2026-05-10 12:22 UTC | Exp 1690: Deep Energy-Guided Test-Time Scaling wit | OK | 81 passed, 1 warning in 4.46s |
 | 2026-05-10 12:24 UTC | Exp 1691: gated on Exp 1690: Test-Time Scaling (ET | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1690-deep-ets-nabla.status (actual='com |
+| 2026-05-10 12:26 UTC | Exp 1691: gated on Exp 1690: Test-Time Scaling (ET | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1690-deep-ets-nabla.status (actual='com |
