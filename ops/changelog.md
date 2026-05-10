@@ -1,5 +1,9 @@
 # Carnot — Changelog
 
+## 2026-05-10 (Milestone 2026.05.132 Operational Retrospective)
+
+- 2026-05-10 18:40 UTC: Milestone 2026.05.132 operational retrospective complete. Analyzed 1388 min wall time / 253 experiments (avg 5 min). Slowest paths: Exp 1603 (88 min), Exp 1657 (57 min), Pre-gate block Exp 1711 (56 min), Exp 1642 (54 min). Doomed-rerun blocks correctly failed fast. Both RTX 3090s were completely idle at 0% utilization throughout, which is correct behavior as there were no compute-bound tasks. Estimated savings: implement fail-fast for pre-gate blocks.
+
 ## 2026-05-10 (Milestone 2026.05.131 Operational Retrospective)
 
 - 2026-05-10 16:07 UTC: Milestone 2026.05.131 operational retrospective complete. Analyzed 1267 min wall time / 231 experiments (avg 5 min). Slowest paths: Exp 1603 (88 min), Exp 1663 doomed-rerun block (82 min), Exp 1657 (57 min), Exp 1642 (54 min), and Exp 1653 (53 min). Both RTX 3090s were completely idle at 4-5MB / 0% utilization throughout, meaning DualGPURunner was not utilized and parallelization was missed. No zombie processes detected. Estimated 40% savings recoverable via DualGPURunner parallelization and fixing the doomed-rerun block to fail fast.
