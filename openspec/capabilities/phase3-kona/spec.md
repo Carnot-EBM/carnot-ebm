@@ -1407,6 +1407,34 @@ The Exp 1634 workflow MUST write `results/experiment_1634_pinet_vs_tskm.json` wi
 - Focused tests verify the comparison.
 - `results/experiment_1634_pinet_vs_tskm.json` records the required fields.
 
+### REQ-KONA-039: Pi-Net Douglas-Rachford Model Layer
+
+Carnot MUST provide `python/carnot/models/pinet_layer.py` as a reusable,
+CPU-safe JAX projection layer for feasible-by-design continuous latents. The
+layer MUST accept linear equality constraints `A_eq @ z = b_eq` and inequality
+constraints `A_ineq @ z <= b_ineq`, validate malformed shapes before
+projection, and use a bounded Douglas-Rachford-style iteration with closed-form
+affine and half-space projections.
+
+The Exp 1662 workflow MUST write `results/experiment_1662_pinet_layer.json`
+with `status`, `schema`, `experiment_id`, `spec_refs`, `module_path`,
+`projection_error`, `convergence_steps`, `differentiable_projection`, and
+`honest_verdict`. A complete artifact MUST report a final projection error at
+or below the configured tolerance and MUST only set `differentiable_projection`
+when JAX autodiff produces finite gradients through the projected state.
+
+**Acceptance criteria:**
+
+- `python/carnot/models/pinet_layer.py` exposes a Douglas-Rachford Pi-Net
+  projection layer and validated linear constraint-set dataclass.
+- Focused tests verify that infeasible toy states are projected into the hard
+  constraint set, feasible states remain unchanged within tolerance, malformed
+  constraints are rejected, gradients through `project_vector` are finite, and
+  the Exp 1662 artifact contains all required fields.
+- `results/experiment_1662_pinet_layer.json` records a complete status with an
+  honest verdict derived from measured projection residuals and differentiable
+  projection checks.
+
 ## Scenarios
 
 ### SCENARIO-KONA-001: Stage 1 Primitive — RDT Fixed-Point Convergence
@@ -1913,6 +1941,18 @@ loop, and sets `differentiable_projection=true` only when JAX autodiff produces
 a finite gradient through the projected state.
 
 **Spec traces:** REQ-KONA-037
+
+### SCENARIO-KONA-039: Exp 1662 Provides Reusable Pi-Net Projection Layer
+
+**Given** deterministic linear continuous constraint systems with infeasible
+and already-feasible latent states
+**When** `DouglasRachfordPiNetLayer.project` and `project_vector` are applied
+with a bounded iteration count
+**Then** the projected state satisfies equality and inequality residuals within
+tolerance, the diagnostic result reports convergence steps and final residual,
+and the Exp 1662 artifact records the reusable module path and complete schema.
+
+**Spec traces:** REQ-KONA-039
 
 ## Out of scope
 
