@@ -18779,6 +18779,17 @@ ends_with, no_repetition) with a clearly violating response
 
 **Spec traces:** REQ-EXTRACT-055-4, REQ-EXTRACT-055-5
 
+
+### REQ-DYNAMIC-EIDOKU-001: Dynamic Eidoku Gate Compiler
+- REQ-DYNAMIC-EIDOKU-001-1: `DynamicEidokuCompiler` shall be implemented in `python/carnot/pipeline/dynamic_eidoku.py`.
+- REQ-DYNAMIC-EIDOKU-001-2: It shall convert extracted `DynamicConstraint` instances into a `CompiledEidokuGate`.
+- REQ-DYNAMIC-EIDOKU-001-3: `CompiledEidokuGate.compute_cost` shall calculate violation cost based on constraint evaluation.
+
+#### SCENARIO-DYNAMIC-EIDOKU-001: Synthesize dynamic gate
+**Given** a set of `DynamicConstraint` objects
+**When** the `DynamicEidokuCompiler.compile()` is called with these constraints
+**Then** it returns an executable `CompiledEidokuGate` instance that can evaluate responses.
+
 ### REQ-VERIFY-1500: Eidoku Structural Verification Gate
 - REQ-VERIFY-1500-1: `EidokuGate` shall be implemented in `python/carnot/pipeline/eidoku_gate.py`.
 - REQ-VERIFY-1500-2: `EidokuGate` shall calculate structural violation costs over constraint graphs (as per arXiv:2512.20664).

@@ -1530,3 +1530,5 @@ web search: site:o |
 | 2026-05-10 17:28 UTC | Exp 1713: Evaluate FR-11 semantic pruning on long- | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1712-fr11-semantic-pruning.pytest_passe |
 | 2026-05-10 17:30 UTC | Exp 1713: Evaluate FR-11 semantic pruning on long- | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1712-fr11-semantic-pruning.pytest_passe |
 | 2026-05-10 17:42 UTC | Exp 1714: Instruct-to-Constraint extraction from f | OK | 81 passed, 1 warning in 4.88s |
+| 2026-05-10 17:55 UTC | Exp 1715: Synthesizing Dynamic Eidoku Gates | FAIL | Gemini CLI error: Stalled after 600s silence. Last output:  enabled. All tool  |
+| 2026-05-10 17:57 UTC | Exp 1715: Synthesizing Dynamic Eidoku Gates | OK | Deliverable already exists in repo |
