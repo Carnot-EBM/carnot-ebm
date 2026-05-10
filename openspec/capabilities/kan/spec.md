@@ -189,6 +189,7 @@ sets `variance_worsened` from the measured paraphrase variance comparison.
 | REQ-KAN-1623 | Implemented | Exp 1623 no-synthesis LUT and logic-depth accounting compares KANELÉ LUT mapping with KV260 Ising v3. |
 | REQ-KAN-1384 | Proposed | Exp 1384 target: EBM-CoT contrastive hinge calibration on FoVer verified pairs. |
 | REQ-KAN-1401 | Proposed | Exp 1401 target: EBM-CoT v2 hinge-only calibration on the Exp1384 FoVer split with consistency weight 0.0. |
+| REQ-KAN-1690 | Proposed | Exp 1690 target: GloroKAN-style local Lipschitz forward-pass bounds for rational KArAt attention. |
 
 ## REQ-KAN-020: KAEMEnergy FPGA LUT Budget Analyzability
 
@@ -948,3 +949,43 @@ The KAN capability MUST provide a script to evaluate the predictive performance 
 Given the `certified_karat.py` module,
 When the benchmark script is run on the synthetic reasoning dataset,
 Then accuracy and output bounds are compared, tests pass, coverage is 100%, and `results/experiment_1689_certified_karat.json` is written.
+
+## REQ-KAN-1690: GloroKAN-style Local Lipschitz Bounds for KArAt
+
+The KAN capability MUST provide a CPU-only GloroKAN-style forward-pass local
+Lipschitz bound calculator for the miniature rational KArAt attention model.
+The calculator MUST use spline control-point slopes, dot-product interval
+bounds, and norm-bounded query/key magnitudes to return a deterministic upper
+bound on how much the KArAt energy can change under a local input perturbation.
+
+**Rationale:**
+    GloroKAN-style robustness relies on a spline-specific observation: a
+    forward pass does not need a black-box global neural-network Lipschitz
+    estimate when each one-dimensional activation exposes knot-aligned local
+    slopes. For KArAt, each attention term is
+    `spline(q_i dot k_j)`, so the local bound can combine the maximum spline
+    slope on the reachable dot-product interval with a conservative chain-rule
+    bound for the local query and key vector norms.
+
+**Acceptance criteria:**
+    - `python/carnot/models/kan/glorokan_robustness.py` exposes
+      `GloroKANBounder`.
+    - The bounder accepts a `RationalKArAtLayer` and exact rational query/key
+      inputs.
+    - It returns a structured bound report with schema-safe fields including
+      `local_lipschitz_bound`, `radius`, `norm`, per-term dot intervals, and
+      per-term spline slope bounds.
+    - The reported local Lipschitz bound is deterministic and is at least as
+      large as a finite-difference energy-change witness inside the requested
+      local radius.
+    - `results/experiment_1690_glorokan_robustness.json` is written with the
+      required schema fields and an honest verdict.
+
+### SCENARIO-KAN-1690: KArAt local robustness report bounds a perturbation
+
+Given a `RationalKArAtLayer` with rational spline control points and rational
+query/key matrices,
+When `GloroKANBounder.bound_forward()` is called with a positive local radius,
+Then the report includes deterministic per-term dot intervals and a nonnegative
+local Lipschitz bound that upper-bounds the observed KArAt energy change for a
+same-radius perturbation.
