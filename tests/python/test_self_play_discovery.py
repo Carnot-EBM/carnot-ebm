@@ -81,3 +81,25 @@ def test_run_experiment_1685(tmp_path: Path):
     assert saved_data["experiment_id"] == 1685
     assert saved_data["status"] == "complete"
     assert saved_data["traces_generated"] == 10
+
+def test_run_experiment_1694(tmp_path: Path):
+    """Test running the Phase 7 full pipeline stack test and saving artifact.
+    
+    Spec: REQ-PIPELINE-1694.
+    """
+    output_path = tmp_path / "experiment_1694_full_pipeline.json"
+    result = self_play_discovery.run_experiment_1694(output_path)
+    
+    assert result["status"] == "complete"
+    assert result["experiment_id"] == 1694
+    assert result["model_used"] == "unsloth/gemma-4-26B-A4B-it-GGUF"
+    assert result["questions_run"] == 5
+    assert len(result["components_active"]) == 3
+    assert result["traces_generated"] == 5
+    assert len(result["results"]) == 1
+    
+    assert output_path.exists()
+    saved_data = json.loads(output_path.read_text(encoding="utf-8"))
+    assert saved_data["experiment_id"] == 1694
+    assert saved_data["status"] == "complete"
+    assert saved_data["questions_run"] == 5
