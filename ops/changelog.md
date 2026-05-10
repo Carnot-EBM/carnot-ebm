@@ -5352,3 +5352,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-10: Phase 2: LTLZinc Continual Learning Adapter (✅ Complete) — honest_verdict=complete: ltlzinc_cerce_nonforgetting_passed; results/experiment_1669_ltlzinc.json
 - 2026-05-10: Phase 3: Energy-Guided Decoding (EGD) for Hallucination Mitigation (⚠️ Research Finding) — honest_verdict=pass; results/experiment_1670_egd.json
 - 2026-05-10: Phase 3: Exact-Rational KANs (RKANs) Verification Audit (✅ Complete) — honest_verdict=complete: hybrid_zeckendorf_exact_rational_rkan_audit_ready; results/experiment_1671_rkan.json
+- 2026-05-10: Phase 3: Interleaved Gibbs Diffusion (IGD) Smoke Test (✅ Complete) — honest_verdict=complete: igd_smoke_test_successful; results/experiment_1672_igd.json
