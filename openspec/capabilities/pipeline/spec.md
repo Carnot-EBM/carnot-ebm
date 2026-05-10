@@ -3115,3 +3115,28 @@ phase,
 strict grammar-only baseline.
 
 **Spec traces:** REQ-PIPELINE-1678, SCENARIO-PIPELINE-1678, Exp 1678
+
+### REQ-PIPELINE-1694: Phase 7 Full Pipeline Stack Evaluation
+
+The pipeline MUST execute a combined integration test of the Phase 7 full pipeline stack:
+Certified KArAt, NablaETS, and FR-11 Self-Play discoverer. The evaluation MUST target the
+mandated SOTA model identifier `unsloth/gemma-4-26B-A4B-it-GGUF`. It MUST evaluate 5 multi-hop
+reasoning questions, utilizing all three components.
+
+The experiment MUST write an artifact to `results/experiment_1694_full_pipeline.json`
+containing at least `status`, `experiment_id`, `experiment`, `model_used`, `questions_run`,
+`components_active`, and `timestamp`.
+
+**Acceptance criteria:**
+- A run function `run_experiment_1694(output_path)` executes the 5 multi-hop reasoning questions.
+- The pipeline configuration combines Certified KArAt, NablaETS, and FR-11 Self-Play.
+- The JSON artifact is written successfully with `questions_run == 5`.
+
+### SCENARIO-PIPELINE-1694: Phase 7 Pipeline Runs Multi-Hop Questions
+
+**Given** the Phase 7 pipeline configured with KArAt, NablaETS, and FR-11 Self-Play
+**When** 5 multi-hop reasoning questions are evaluated against `unsloth/gemma-4-26B-A4B-it-GGUF`
+**Then** the combined stack executes successfully and produces the valid artifact.
+
+**Spec traces:** REQ-PIPELINE-1694, SCENARIO-PIPELINE-1694, Exp 1694
+

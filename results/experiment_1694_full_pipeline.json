@@ -1,0 +1,32 @@
+{
+  "components_active": [
+    "certified_karat",
+    "nabla_ets",
+    "fr11_self_play"
+  ],
+  "experiment": "1694_full_pipeline",
+  "experiment_id": 1694,
+  "model_used": "unsloth/gemma-4-26B-A4B-it-GGUF",
+  "questions_run": 5,
+  "results": [
+    {
+      "dsl_input": {
+        "constraints": [
+          {
+            "field": "text",
+            "id": "c_no_secret",
+            "op": "not_contains",
+            "value": "secret"
+          }
+        ],
+        "instruction": "Avoid the detected logical failure.",
+        "schema_version": "carnot.instruction_constraints.v1"
+      },
+      "root_conflict": "invalid_format",
+      "trace_id": "multihop_trace_2"
+    }
+  ],
+  "status": "complete",
+  "timestamp": "2026-05-10T13:04:58Z",
+  "traces_generated": 5
+}
