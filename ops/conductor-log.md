@@ -1454,3 +1454,4 @@ web search: site:o |
 | 2026-05-10 06:44 UTC | Phase 3: Energy-Guided Decoding (EGD) for Hallucin | OK | 81 passed, 1 warning in 5.46s |
 | 2026-05-10 07:26 UTC | Phase 3: Exact-Rational KANs (RKANs) Verification  | OK | 81 passed, 1 warning in 4.87s |
 | 2026-05-10 07:40 UTC | Phase 3: Interleaved Gibbs Diffusion (IGD) Smoke T | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: t: 'Too Many Reques |
+| 2026-05-10 07:47 UTC | Phase 3: Interleaved Gibbs Diffusion (IGD) Smoke T | OK | 85 passed, 1 warning in 4.67s |
