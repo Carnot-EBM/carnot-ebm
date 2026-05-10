@@ -18654,3 +18654,51 @@ traces,
 Potts synthesis status, fallback/hardware execution status, and score accuracy.
 
 **Spec traces:** REQ-VERIFY-1657, SCENARIO-VERIFY-1657, Exp 1657
+
+## REQ-VERIFY-1658: SOTA Output CPU vs KV260 Trace-Scoring Evaluation
+
+Carnot SHALL provide `scripts/experiment_1658_hw_eval.py` to compare CPU EBRM
+trace scoring with the KV260 Potts trace-scoring backend on bounded local SOTA
+model outputs.
+
+The evaluation SHALL:
+
+- consume live SOTA output rows from the existing balanced telemetry manifest
+  when available, preserving model ID, generation source, prompt, response, and
+  correctness provenance;
+- convert those rows into extracted logical traces compatible with
+  `python/carnot/models/ebrm_scorer.py` and the Exp 1657 KV260 q=3 Potts
+  binding contract;
+- require completed Exp 1656 and Exp 1657 gate artifacts before reporting a
+  complete result;
+- measure CPU scorer latency and KV260-backend latency over the same trace
+  batch;
+- report per-case CPU energy, KV260 energy, absolute score delta, Potts states,
+  and backend provenance;
+- require the maximum CPU/KV260 score delta to remain within a fixed tolerance;
+  and
+- write `results/experiment_1658_hw_eval.json` with `status`,
+  `experiment_id`, `schema`, `run_date`, `sota_manifest_path`,
+  `live_sota_model_inference_used`, `models_used`, `hardware_execution_available`,
+  `software_fallback_used`, `potts_q_states`, `cases_total`,
+  `consistent_cases`, `inconsistent_cases`, `cpu_latency_ms`,
+  `kv260_latency_ms`, `latency_delta_ms`, `kv260_speedup_vs_cpu`,
+  `cpu_score_accuracy`, `kv260_score_accuracy`, `max_score_delta`,
+  `mean_abs_score_delta`, `scoring_delta_within_tolerance`, `case_scores`,
+  `spec_traces`, `tests_run`, `blockers`, and `honest_verdict`.
+
+**Implementation Status:** Implemented (Exp 1658)
+
+### SCENARIO-VERIFY-1658: CPU and KV260 Scores Match on SOTA Outputs
+
+**Given** completed Exp 1656 and Exp 1657 artifacts and a bounded live SOTA
+telemetry manifest,
+**When** Exp 1658 converts the SOTA output rows into logical traces and scores
+the same traces on the CPU scorer and the KV260 backend,
+**Then** the artifact records both execution latencies,
+**And** every case includes the CPU energy, KV260 energy, absolute delta, and
+q=3 Potts states,
+**And** the artifact is complete only when the maximum score delta is within
+tolerance and both backends preserve the same scoring accuracy.
+
+**Spec traces:** REQ-VERIFY-1658, SCENARIO-VERIFY-1658, Exp 1658
