@@ -1,52 +1,41 @@
-# Research Roadmap vNEXT (Milestone 2026.05.127)
+# Milestone 2026.05.128: NSVIF Constraint Extraction, EBCN Coherence, and Continuous Non-Forgetting
 
-## 1. What Previous Milestone Proved
-Milestone 2026.05.126 successfully shipped:
-- **NSVIF DSL**: Bridged external SMT formal verifiers.
-- **STATIC CSR Mask**: Pre-computed structure constraint boundaries.
-- **FR-11 CerCE Ledger**: Safely tracked memory updates to constraint solvers.
-- **KV260 Potts Synthesis**: Confirmed our Ising formulation fits under FPGA BRAM limits.
+**Status:** Proposed
+**Author:** Research Planning Agent
+**Target Date:** 2026-05-12
 
-## 2. Gaps and Phase Definitions
-**Gap 1 (Execution):** The NSVIF DSL and STATIC CSR mask need integration into full pipeline execution across SOTA LLMs for E2E energy-guided decoding.
-**Gap 2 (Self-Learning):** Scaling FR-11 CerCE ledger to actual continuous policy updates (SMGI certified updates) on larger datasets without catastrophic forgetting.
-**Gap 3 (Hardware/EBM):** Deploying the KV260 Potts sampler inside the execution loop to rank LLM generated traces via EBRM-style trace scoring.
+## Context and Completed Work (.127)
+Milestone `.127` demonstrated Energy-Guided Decoding, SMGI Continuous Learning, and EBRM Trace Scoring. However, significant gaps remain. The main product gap is extracting actionable constraints from natural language (NSVIF). Continuous self-learning exhibits intermittently positive utility but lacks a certified non-forgetting guarantee (CerCE). Hardware/simulation paths require independent-RNG audits for simulator parity.
 
-### Phase 0: Preflight and Archiving
-- Archive `.126` and initialize `.127`.
+## Vision and Primary Objectives
+This milestone addresses the three largest gaps to fulfilling the PRD vision:
+1. **Constraint Extraction & Structural Coherence:** Implement Neuro-Symbolic Verification on Instruction Following (NSVIF) parsing and Energy-Based Constraint Networks (EBCN).
+2. **Continuous Self-Learning & Certification:** Add CerCE-style certified non-forgetting ledgers to FR-11 to guarantee zero regression during policy promotion.
+3. **Structured EGD and Hardware Readiness:** Port Energy-Guided Decoding for constraint hallucination mitigation, conduct the mandatory THRML independent-RNG parity audit, and prototype Exact-Rational KANs (RKANs) for verifiable KAN tiers.
 
-### Phase 1: Verification & Energy-Guided Decoding
-- Integrate NSVIF DSL with local SOTA GGUFs.
-- Implement Energy-Guided Decoding with STATIC CSR masks.
-- Validate on mandated SOTA models (Qwen3.6-35B, Gemma-4-31B).
+## Phase Descriptions
 
-### Phase 2: EBRM Trace Scoring & Hardware 
-- Implement continuous latent trace scorer based on EBRM findings.
-- Offload EBRM scoring to the synthesized KV260 Potts hardware.
-- Compare CPU vs hardware scoring latencies on SOTA generation outputs.
+### Phase 1: NSVIF Extraction and EBCN Structural Coherence
+* **Objective:** Enable Carnot to turn prompts into executable constraints and score reasoning structurally.
+* **Key Deliverables:** NSVIF DSL Parser, EBCN State-Space Coherence Scorer.
 
-### Phase 3: Continuous Self-Learning (SMGI)
-- Integrate SMGI "certified updates" to guarantee zero-forgetting.
-- Introduce LTLZinc temporal benchmark for memory retention tests.
-- Run complete FR-11 self-learning cycle scaling CerCE.
-- Prototype Pi-net differentiable projection as a fallback.
+### Phase 2: CerCE Certified Non-Forgetting for FR-11
+* **Objective:** Guarantee that continuous self-learning does not suffer from mode collapse or forgetting.
+* **Key Deliverables:** CerCE bounds checking ledger for FR-11 policy updates, LTLZinc continual learning benchmark adapter.
 
-### Phase 4: Synthesis & Retro
-- Evaluate Pi-net accuracy.
-- Update E2E test plans and perform the milestone retrospective.
+### Phase 3: Energy-Guided Decoding and Formal RKANs
+* **Objective:** Validate hyperparameter-free energy-guided decoding on SOTA models and formally verify KAN properties.
+* **Key Deliverables:** EGD prototype, RKAN (Exact-Rational KAN) verification audit in Lean 4 (or simulation), Interleaved Gibbs Diffusion (IGD) smoke test.
 
-## 3. Dependency Graph
-```mermaid
-graph TD
-    exp1653 --> exp1655
-    exp1654 --> exp1655
-    exp1656 --> exp1658
-    exp1657 --> exp1658
-    exp1659 --> exp1661
-    exp1660 --> exp1661
-    exp1662 --> exp1663
-```
+### Phase 4: Hardware Simulation Fidelity
+* **Objective:** Ensure simulation artifacts are distinct and empirically sound before hardware claims.
+* **Key Deliverables:** THRML Independent-RNG Parity Audit, Inertial Ising Machine (PIPIM) simulator updates, LagONN prototype.
 
-## 4. Hardware Requirements
-- **Compute:** Dual RTX 3090 (local SOTA execution for exp1655, exp1658, exp1661).
-- **FPGA:** KV260 board connected and available for `carnot-gpu` execution.
+## Dependency Graph
+- **Phase 1** must complete before Phase 2 uses the new structured coherence for memory evaluation.
+- **Phase 3** depends on Phase 1 for NSVIF schemas.
+- **Phase 4** is standalone and can proceed concurrently.
+
+## Hardware Requirements
+- **Local SOTA GGUFs:** `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, `unsloth/gemma-4-26B-A4B-it-GGUF`
+- **Simulation:** THRML package, CPU execution, No TSU/FPGA claims allowed without transcript.
