@@ -1452,3 +1452,4 @@ web search: site:o |
 | 2026-05-10 05:45 UTC | Phase 2: CerCE-style Certified Non-Forgetting Ledg | OK | 81 passed, 1 warning in 4.81s |
 | 2026-05-10 06:39 UTC | Phase 2: LTLZinc Continual Learning Adapter | OK | 81 passed, 1 warning in 4.43s |
 | 2026-05-10 06:44 UTC | Phase 3: Energy-Guided Decoding (EGD) for Hallucin | OK | 81 passed, 1 warning in 5.46s |
+| 2026-05-10 07:26 UTC | Phase 3: Exact-Rational KANs (RKANs) Verification  | OK | 81 passed, 1 warning in 4.87s |
