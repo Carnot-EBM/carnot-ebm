@@ -26,6 +26,7 @@ def test_rust_available_when_extension_present() -> None:
     assert compat.RustIsingModel is not None
     assert compat.RustGibbsModel is not None
     assert compat.RustBoltzmannModel is not None
+    assert compat.RustKv260PottsSampler is not None
     assert compat.RustLangevinSampler is not None
     assert compat.RustHMCSampler is not None
 
@@ -55,6 +56,7 @@ def test_rust_fallback_when_extension_missing() -> None:
         assert mod.RustIsingModel is None
         assert mod.RustGibbsModel is None
         assert mod.RustBoltzmannModel is None
+        assert mod.RustKv260PottsSampler is None
         assert mod.RustLangevinSampler is None
         assert mod.RustHMCSampler is None
     finally:

@@ -1520,3 +1520,5 @@ web search: site:o |
 | 2026-05-10 16:10 UTC | Plan milestone 2026.05.132 | OK | 13 tasks proposed |
 | 2026-05-10 16:12 UTC | Milestone 2026.05.132 activated | OK | 13 tasks queued |
 | 2026-05-10 16:17 UTC | Exp 1709: Archive milestone .131 and initialize .1 | OK | 81 passed, 1 warning in 5.43s |
+| 2026-05-10 17:14 UTC | Exp 1710: PyO3 gateway for KV260 hardware offloadi | FAIL | Post-tests failed: 1 failed, 82 passed, 1 warning in 5.43s |
+| 2026-05-10 17:16 UTC | Exp 1710: PyO3 gateway for KV260 hardware offloadi | OK | Deliverable already exists in repo |

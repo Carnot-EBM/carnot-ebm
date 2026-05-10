@@ -8,6 +8,7 @@
 use numpy::{PyArray1, PyReadonlyArray1, PyReadonlyArray2};
 use pyo3::prelude::*;
 
+mod kv260;
 mod pipeline;
 
 use carnot_boltzmann::{BoltzmannConfig, BoltzmannModel};
@@ -357,6 +358,9 @@ fn _rust(m: &Bound<'_, PyModule>) -> PyResult<()> {
 
     // Pipeline (verification)
     pipeline::register_pipeline_module(m)?;
+
+    // KV260 Potts hardware sampler
+    kv260::register_kv260_module(m)?;
 
     Ok(())
 }

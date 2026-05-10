@@ -29,5 +29,6 @@
 //! - WGSL shaders are compiled by the browser, not arbitrary code
 
 pub mod gateway;
+pub mod kv260_bindings;
 pub mod protocol;
 pub mod worker_page;

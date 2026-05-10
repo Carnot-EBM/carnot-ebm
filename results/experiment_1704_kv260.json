@@ -1,0 +1,34 @@
+{
+  "schema": "kv260_potts_pyo3_binding_v1",
+  "experiment_id": 1704,
+  "vivado_available": false,
+  "synthesis_success": false,
+  "performance": null,
+  "resource_utilization": null,
+  "kv260_potts_binding_ready": true,
+  "pyo3_binding_ready": true,
+  "rust_binding_path": "crates/carnot-webgpu-gateway/src/kv260_bindings.rs",
+  "python_binding_name": "RustKv260PottsSampler",
+  "driver_interface": "generic-uio mmap register window",
+  "register_map": {
+    "control": "0x0000",
+    "status": "0x0004",
+    "spin_count": "0x0008",
+    "beta_final": "0x001c",
+    "bias_base": "0x1000",
+    "adjacency_base": "0x2000",
+    "coupling_base": "0x6000",
+    "spin_output_base": "0xa010",
+    "status_done_mask": "0x00000004"
+  },
+  "spec_traces": [
+    "REQ-POTTS-008-3",
+    "REQ-POTTS-008-4",
+    "REQ-POTTS-008-5"
+  ],
+  "tests_run": [
+    "crates/carnot-webgpu-gateway/tests/test_kv260_bindings.rs",
+    "tests/python/test_experiment_1704_kv260_bindings.py"
+  ],
+  "honest_verdict": "kv260_potts_pyo3_binding_ready_vivado_not_installed"
+}

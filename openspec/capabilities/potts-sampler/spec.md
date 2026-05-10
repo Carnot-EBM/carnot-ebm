@@ -88,6 +88,8 @@ Experiment 1704 MUST write `results/experiment_1704_kv260.json` with the require
 Sub-requirements:
 - REQ-POTTS-008-1: The artifact SHALL include `vivado_available`, `synthesis_success`, `performance`, `resource_utilization`, and `honest_verdict`.
 - REQ-POTTS-008-2: If Vivado is not available, `honest_verdict` SHALL report "vivado_not_installed", `synthesis_success` SHALL be false, and `vivado_available` SHALL be false.
-
+- REQ-POTTS-008-3: `crates/carnot-webgpu-gateway/src/kv260_bindings.rs` SHALL expose a Rust KV260 q=3 Potts sampler binding that writes the `potts_sampler_v1.v` AXI-Lite register map, polls `STATUS.DONE`, and unpacks 2-bit Potts states.
+- REQ-POTTS-008-4: `carnot-python` SHALL expose the KV260 Potts sampler through PyO3 without requiring KV260 hardware at import time.
+- REQ-POTTS-008-5: The Exp 1704 artifact SHALL record the Rust binding path, Python binding name, driver interface, register map, spec traces, tests run, and whether the binding is ready.
 
 
