@@ -5406,3 +5406,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-10: Exp 1726: Energy-Based Transformer (EBT) Bridge (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_1726_ebt.json
 - 2026-05-10: Exp 1727: Equilibrium Matching (EqM) Gradient Sampler (⚠️ Research Finding) — honest_verdict=eqm_converged_faster; results/experiment_1727_eqm.json
 - 2026-05-10: Exp 1729: KANELÉ LUT-based Synthesis Pipeline (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_1729_kanele.json
+- 2026-05-10: Exp 1730: FPGA Deployment of CIKAN Verification (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_1730_cikan_fpga.json
