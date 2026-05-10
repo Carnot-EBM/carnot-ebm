@@ -1,36 +1,39 @@
-# Milestone 2026.05.129: Energy-Driven Steering, KArAt Attention, and CRANE Decoding
+# Carnot Research Roadmap: Milestone 2026.05.130 (Phase 7)
 
-## Context and Vision
+## Title: Continuous Constraint Discovery, Certified KArAt, and Deep Energy Decoding
 
-This milestone tackles the fundamental gap between strict zero-false-accept parsing and high-quality semantic reasoning. As observed in prior milestones (including `.128` NSVIF extraction and EBCN scoring), forcing LLMs into early structured formatting creates a "reasoning tax" where the model's performance degrades. Furthermore, while we have established scalar energy scores for tracing contradictions, we still rely heavily on standard autoregressive decoding.
+**Status:** Proposed
+**Author:** Carnot Planning Agent
+**Date:** 2026-05-10
 
-To bridge Carnot toward Kona-style continuous latent trace generation and true Energy-Based Models (EBMs), we will introduce three new capabilities in this milestone:
-1.  **Energy-Driven Steering (EDS):** Direct guidance of LLM hidden states using external energy gradients.
-2.  **CRANE Decoding:** An interleaved mechanism that separates free-form natural language "thinking" from structured "constraining".
-3.  **Kolmogorov-Arnold Attention (KArAt):** An architectural exploration replacing traditional attention with explicitly learnable, verifiable spline/rational bases.
+## 1. Context and Previous Milestone (.129)
+Milestone 2026.05.129 successfully introduced Energy-Driven Steering (EDS), CRANE Decoding, and Kolmogorov-Arnold Attention (KArAt). However, key gaps remain in realizing the PRD's vision of autonomous directed self-learning. While the FR-11 continuous learning loop exists, it relies on manually designed constraints. Furthermore, the newly introduced KArAt attention lacks formal verification bounds, limiting its deployment in critical reasoning pipelines. 
 
-## What Previous Milestones Proved
+## 2. Milestone Objectives
+This milestone addresses the three largest remaining gaps:
+1. **Continuous Self-Learning via Self-Play:** Move beyond manual constraint extraction by enabling the EBM to autonomously discover new constraints from failed LLM reasoning traces.
+2. **Formal Verification of KArAt:** Leverage recent advances in KAN verification (e.g., MILP abstractions and algebraic geometry, arXiv:2602.06737) to certify KArAt attention blocks.
+3. **Deep Energy-Guided Decoding:** Integrate the Nabla-Reasoner continuous latent optimization into the primary decoding loop for Test-Time Scaling (ETS).
 
-Milestone `.128` proved that we can achieve zero false-accept parsing using the NSVIF bounded DSL and that EBCN can successfully score the structural coherence of logical traces. However, it also confirmed that strict grammar parsing early in the generation process lowers the semantic validity of the resulting trace.
+## 3. Phase Breakdown
 
-## Phase Descriptions
+### Phase 1: Continuous Constraint Discovery (Self-Learning)
+Implement a self-play loop where mandated SOTA models generate reasoning traces, the EBCN identifies coherence violations, and an automated extractor transpiles these failures into new NSVIF DSL constraints added to the FR-11 ledger.
 
-### Phase 1: Decoding and Steering Integration (EDS & CRANE)
-The first phase integrates Energy-Driven Steering (EDS) to guide internal hidden states away from high-energy (invalid) paths. In parallel, we implement CRANE decoding to mitigate the reasoning tax. By interleaving free-form unconstrained steps and strictly constrained generation, the model can reason safely before being forced to emit a structured certificate.
+### Phase 2: Formal Verification of KArAt Attention
+Build on the PWA (Piecewise Affine) KAN abstractions to support KArAt. Encode the attention splines as MILP problems to verify Lipschitz bounds and prevent attention collapse during long-horizon reasoning. Incorporate Constraint-Informed KAN (CIKAN) regularizers.
 
-### Phase 2: KArAt Architecture Exploration
-The second phase explores Kolmogorov-Arnold Attention (KArAt). We will substitute standard Softmax MLPs in a miniature model with rational function KANs. This tests the hypothesis that explicitly learnable bases in the attention mechanism yield better localized energy bounds than traditional attention maps.
+### Phase 3: Deep Energy-Guided Decoding
+Expand the Nabla-Reasoner from a prototype into a production Test-Time Scaling (ETS) decoder, directly guiding continuous latent states to satisfy EBCN bounds during generation.
 
-### Phase 3: Continual Self-Learning Validation
-Following the PRD mandate for continuous non-forgetting learning, we will deploy a CerCE-style ledger test against the EDS/CRANE stack to ensure the newly added constraints do not introduce recursive drift.
+### Phase 4: Emulation & Retrospective
+Push the KV260 Vivado integration toward cycle-accurate simulation for larger Potts constraints and conclude with an operational retrospective.
 
-## Dependency Graph
-`exp1677-eds-prototype` (Independent)
-`exp1678-crane-decoding` (Independent)
-`exp1679-karat-attention` (Independent)
-`exp1680-continual-learning-eds` (Depends on exp1677 and exp1678)
-`exp1681-milestone-retro` (Depends on all)
+## 4. Hardware Requirements
+- **Local SOTA Testing:** Dual RTX 3090s for running `unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF`.
+- **FPGA Simulation:** Vivado 2023.2+ simulator for cycle-accurate RTL verification (no physical KV260 board required yet).
 
-## Hardware Requirements
-- Local Dual RTX 3090 (for local SOTA GGUFs inference: Qwen3.6-35B-A3B-GGUF and gemma-4-31B-it-GGUF)
-- CPU Fallback for architecture testing and simulator parity tasks.
+## 5. Dependency Graph
+- Exp 1683 (Self-Play Prototype) -> Exp 1684 (FR-11 Ledger)
+- Exp 1686 (PWA KArAt) -> Exp 1687 (MILP Verification)
+- Exp 1690 (Deep ETS) -> Exp 1694 (Full Pipeline Live SOTA)
