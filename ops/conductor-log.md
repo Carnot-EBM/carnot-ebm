@@ -1561,3 +1561,5 @@ web search: site:o |
 | 2026-05-10 20:06 UTC | Exp 1730: FPGA Deployment of CIKAN Verification | OK | 81 passed, 1 warning in 4.85s |
 | 2026-05-10 20:10 UTC | Exp 1731: Hardware vs CPU Latency Audit | OK | 81 passed, 1 warning in 5.01s |
 | 2026-05-10 20:16 UTC | Exp 1732: Unified Self-Learning + Hardware Pipelin | OK | 81 passed, 1 warning in 5.51s |
+| 2026-05-10 20:29 UTC | Exp 1733: DualGPU Live Run with SOTA Models | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: erateContent?alt=ss |
+| 2026-05-10 20:41 UTC | Exp 1733: DualGPU Live Run with SOTA Models | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: Warning: 256-color  |
