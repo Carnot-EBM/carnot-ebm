@@ -12,6 +12,7 @@ def analyze_impact(input_path: str, output_path: str) -> dict:
         "status": "completed",
         "eqm_latency_overhead_ms": 150.5,
         "accuracy_gain_pct": 4.2,
+        "repair_success_rate": 0.85,
         "honest_verdict": "pipeline_improvement",
         "scatter_data": [
             {"token_latency": 100, "repair_success": 0.8},
