@@ -3293,6 +3293,59 @@ terminal.
 **And** `research-roadmap.yaml` and `scripts/research_conductor.py` remain
 unchanged by the workflow.
 
+### REQ-REPORT-069: Milestone .127 Operational Retrospective
+
+The Exp 1665 workflow shall close out milestone `2026.05.127` by writing
+`results/operational_retro_2026_05_127.json` from
+`scripts/experiment_1665_retro.py`.
+
+The workflow shall first write the JSON artifact with `status="in_progress"`.
+The terminal artifact shall include these top-level fields:
+
+- `status`
+- `schema`
+- `milestone`
+- `generated_at`
+- `retro_type`
+- `summary`
+- `total_wall_time_minutes`
+- `experiments_completed`
+- `task_attempts`
+- `completed_task_count`
+- `blocked_task_count`
+- `task_outcomes`
+- `slowest_experiments`
+- `bottlenecks_identified`
+- `improvements_suggested`
+- `top_3_highest_leverage_actions`
+- `estimated_time_savings_pct`
+- `meta_reflection`
+- `research_roadmap_yaml_modified`
+- `scripts_research_conductor_modified`
+- `honest_verdict`
+
+The workflow shall read the active `.127` roadmap, the conductor log, and
+available Exp 1652 through Exp 1664 deliverables. It shall classify terminal
+task state from the conductor log without inventing missing successes, report
+pre-gate blocks separately from completed tasks, preserve the fact that KV260
+hardware execution fell back to software when hardware was unavailable, and
+summarize the high-leverage operational fixes for the next milestone. It shall
+not modify `research-roadmap.yaml` or `scripts/research_conductor.py`.
+
+### SCENARIO-REPORT-069: Exp 1665 Summarizes Milestone .127 Findings
+
+**Given** `research-roadmap.yaml` declares milestone `2026.05.127` with
+Exp 1652 through Exp 1665 tasks
+**And** `ops/conductor-log.md` contains Exp 1652 through Exp 1664 terminal
+events with OK, GATE_BLOCK, DOOMED_RERUN_BLOCK, and recovered FAIL statuses
+**When** the Exp 1665 retrospective workflow runs
+**Then** it writes the required REQ-REPORT-069 fields
+**And** completed tasks, blocked tasks, failed-then-completed tasks, slowest
+experiments, bottlenecks, and high-leverage next actions are derived from those
+source events
+**And** `research-roadmap.yaml` and `scripts/research_conductor.py` remain
+unchanged by the workflow.
+
 
 ### REQ-PUBLISH-003: HuggingFace README Accuracy Audit
 
@@ -3433,6 +3486,7 @@ embed live-GPU benchmark results from Exp 328 when available.
 | REQ-REPORT-066 | `python/carnot/reporting/milestone_123_archive.py`, `results/experiment_1601_archive.json` | `tests/python/test_milestone_123_archive.py` | Implemented |
 | REQ-REPORT-067 | `python/carnot/reporting/milestone_124_archive.py`, `results/experiment_1614_archive.json` | `tests/python/test_milestone_124_archive.py` | Implemented |
 | REQ-REPORT-068 | `scripts/experiment_1652_archive.py`, `results/experiment_1652_archive.json` | `tests/python/test_experiment_1652_archive.py` | Planned |
+| REQ-REPORT-069 | `scripts/experiment_1665_retro.py`, `results/operational_retro_2026_05_127.json` | `tests/python/test_experiment_1665_retro.py` | Implemented |
 | REQ-REPORT-024 | `python/carnot/reporting/agent_usage.py`, `scripts/agent_plan_usage.py` | `tests/python/test_agent_plan_usage.py` | Implemented |
 | REQ-PUBLISH-003 | `scripts/experiment_317_hf_publish.py` | `tests/python/test_experiment_317_hf_publish.py` | Implemented |
 | REQ-PUBLISH-004 | `scripts/experiment_330_hf_live_publish.py` | `tests/python/test_experiment_330_hf_live_publish.py` | Implemented |
