@@ -1,39 +1,53 @@
-# Carnot Research Roadmap: Milestone 2026.05.130 (Phase 7)
+# Research Roadmap Change Proposal vNEXT (Milestone 2026.05.131)
 
-## Title: Continuous Constraint Discovery, Certified KArAt, and Deep Energy Decoding
+## What the Previous Milestone (.130) Proved
+Milestone `.130` successfully closed the loop on constraint self-discovery via the FR-11 ledger, formally certified the KArAt abstractions using MILP, proved monotonicity regularization with CIKAN, and exported the Potts Vivado simulator. However, we discovered two key limitations:
+1. **MILP Certification Overhead:** Running MILP over KArAt is NP-hard and scales poorly for test-time verification.
+2. **Reasoning-Accuracy Trade-offs in Self-Play:** As the FR-11 framework discovered more complex structural constraints, reasoning engines increasingly distorted facts to satisfy the structural gates.
 
-**Status:** Proposed
-**Author:** Carnot Planning Agent
-**Date:** 2026-05-10
+## Milestone .131 Goals
+1. **GloroKAN Robustness:** Implement B-spline local Lipschitz bound tracking from the ICLR 2026 GloroKAN paper to provide computationally cheap, provable robustness bounds during the forward pass.
+2. **Eidoku Verification & Factuality:** Integrate the Eidoku System-2 structural verification gate (arXiv:2512.20664) and pair it with a fact-distortion detector to prevent our models from sacrificing semantic truth for structural validity.
+3. **Continuous FR-11 Learning:** Introduce a replay buffer for FR-11 to support non-forgetting, continual self-learning, directly addressing the PRD's vision for autonomous constraint expansion.
+4. **Hardware Acceleration:** Execute the Potts q=3 bitstream on actual KV260 hardware, moving past the Vivado source-level simulation from milestone .130.
 
-## 1. Context and Previous Milestone (.129)
-Milestone 2026.05.129 successfully introduced Energy-Driven Steering (EDS), CRANE Decoding, and Kolmogorov-Arnold Attention (KArAt). However, key gaps remain in realizing the PRD's vision of autonomous directed self-learning. While the FR-11 continuous learning loop exists, it relies on manually designed constraints. Furthermore, the newly introduced KArAt attention lacks formal verification bounds, limiting its deployment in critical reasoning pipelines. 
+## Architecture Diagram Update
+```mermaid
+graph TD;
+    A[LLM Output Candidate] --> B[Eidoku Structural Gate];
+    A --> C[Fact Distortion Detector];
+    B --> D{Verification Consensus};
+    C --> D;
+    D -- Valid --> E[Accept];
+    D -- Invalid --> F[Energy-Guided Decoding Repair];
+    
+    E --> G[FR-11 Continuous Replay Buffer];
+    G --> H[Self-Learning Update];
+```
 
-## 2. Milestone Objectives
-This milestone addresses the three largest remaining gaps:
-1. **Continuous Self-Learning via Self-Play:** Move beyond manual constraint extraction by enabling the EBM to autonomously discover new constraints from failed LLM reasoning traces.
-2. **Formal Verification of KArAt:** Leverage recent advances in KAN verification (e.g., MILP abstractions and algebraic geometry, arXiv:2602.06737) to certify KArAt attention blocks.
-3. **Deep Energy-Guided Decoding:** Integrate the Nabla-Reasoner continuous latent optimization into the primary decoding loop for Test-Time Scaling (ETS).
+## Phase Descriptions
+- **Phase 1: Foundation Setup (Exp 1696)**
+  - Archive .130 and initialize tracking logic.
+- **Phase 2: Mathematical Robustness & Gates (Exp 1697-1701)**
+  - Implement GloroKAN bounds for KArAt.
+  - Implement the Eidoku verification gate and Fact Distortion detector to handle the reasoning-accuracy gap. Evaluate on local SOTA GGUFs (`unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF`).
+- **Phase 3: Continuous Learning & Hardware (Exp 1702-1705)**
+  - Implement the FR-11 continuous constraint learning replay buffer.
+  - Synthesize and execute the Potts q=3 design on the KV260 FPGA.
+- **Phase 4: Synthesis & Final Evaluation (Exp 1706-1708)**
+  - Introduce Energy-Guided Decoding to mitigate hallucinations on the fly.
+  - Connect all components for a 100-case full-pipeline `.131` run using mandated GGUF targets.
+  - Conduct the milestone retrospective.
 
-## 3. Phase Breakdown
+## Dependency Graph
+`exp1696` -> `exp1697` -> `exp1698` -> `exp1706`
+`exp1699` -> `exp1700` -> `exp1706`
+`exp1701` -> `exp1706`
+`exp1702` -> `exp1703` -> `exp1706`
+`exp1704` -> `exp1705` -> `exp1706`
+`exp1706` -> `exp1708`
 
-### Phase 1: Continuous Constraint Discovery (Self-Learning)
-Implement a self-play loop where mandated SOTA models generate reasoning traces, the EBCN identifies coherence violations, and an automated extractor transpiles these failures into new NSVIF DSL constraints added to the FR-11 ledger.
-
-### Phase 2: Formal Verification of KArAt Attention
-Build on the PWA (Piecewise Affine) KAN abstractions to support KArAt. Encode the attention splines as MILP problems to verify Lipschitz bounds and prevent attention collapse during long-horizon reasoning. Incorporate Constraint-Informed KAN (CIKAN) regularizers.
-
-### Phase 3: Deep Energy-Guided Decoding
-Expand the Nabla-Reasoner from a prototype into a production Test-Time Scaling (ETS) decoder, directly guiding continuous latent states to satisfy EBCN bounds during generation.
-
-### Phase 4: Emulation & Retrospective
-Push the KV260 Vivado integration toward cycle-accurate simulation for larger Potts constraints and conclude with an operational retrospective.
-
-## 4. Hardware Requirements
-- **Local SOTA Testing:** Dual RTX 3090s for running `unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF`.
-- **FPGA Simulation:** Vivado 2023.2+ simulator for cycle-accurate RTL verification (no physical KV260 board required yet).
-
-## 5. Dependency Graph
-- Exp 1683 (Self-Play Prototype) -> Exp 1684 (FR-11 Ledger)
-- Exp 1686 (PWA KArAt) -> Exp 1687 (MILP Verification)
-- Exp 1690 (Deep ETS) -> Exp 1694 (Full Pipeline Live SOTA)
+## Hardware Requirements
+- **Local GGUF Runtime:** 2x RTX 3090s with `libcudart.so.12` installed.
+- **KV260 FPGA:** For `exp1704` and `exp1705`, hardware access is required to flash the Vivado `.bit` file and perform latency benchmarking.
+- **CPU:** Standard 32-core Threadripper for GloroKAN evaluation and Eidoku graph processing.

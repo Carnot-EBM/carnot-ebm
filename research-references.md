@@ -11825,3 +11825,21 @@ This sweep was run after milestone `.124` completed. Local outcomes: KANELÉ RTL
 - **What:** Self-supervised Transformer framework acting as a solution refiner for CSPs without requiring labeled feasible solutions.
 - **Relevance to Carnot:** Could provide an alternative to the SATQuest/PySAT oracle or help refine hard constraint graphs before Ising sampling.
 - **Concrete experiment hook:** Train a small ConsFormer-style refiner on FoVer CSPs to observe if it can pre-condition Ising samplers for faster energy convergence.
+
+
+## 2026-05-11 Post-.130 Planning Sweep (Milestone 2026.05.131)
+
+### Eidoku: Neuro-Symbolic Verification Gate
+- **Paper:** Eidoku: A Neuro-Symbolic Verification Gate for LLM Reasoning via Structural Constraint Satisfaction (arXiv:2512.20664)
+- **What:** Calculates a structural violation cost based on graph connectivity, geometric consistency in feature space, and symbolic logic.
+- **Relevance to Carnot:** Directly provides a system-2 verification gate mapped to our structured extraction pipelines.
+
+### GloroKAN: Provable Robustness for KANs
+- **Paper:** Training and Verifying robust Kolmogorov-Arnold Networks (ICLR 2026)
+- **What:** Leverages B-spline structures of KANs to approximate local Lipschitz constants during the forward pass, enabling provable robustness against adversarial attacks.
+- **Relevance to Carnot:** Extends our MILP-certified KArAt from milestone .130 by providing computationally cheap forward-pass robustness bounds.
+
+### The Reasoning-Accuracy Trade-off
+- **Paper:** arXiv:2601.03404 (Jan 2026)
+- **What:** Reveals that reasoning models satisfy complex constraints by systematically distorting known facts.
+- **Relevance to Carnot:** We need factual constraint extractors paired with logical constraints to prevent our FR-11 self-play from drifting into factually incorrect logic spaces.
