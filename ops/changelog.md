@@ -5357,3 +5357,7 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-10: Phase 4: Parallel Inertial Probabilistic Ising Machines (PIPIM) Simulation (⚠️ Research Finding) — honest_verdict=complete_pipim_no_improvement_observed_cpu_simulator_only; results/experiment_1674_pipim.json
 - 2026-05-10: Phase 4: Lagrange Oscillatory Neural Networks (LagONN) Prototype (✅ Complete) — honest_verdict=complete_lagonn_converged_soft_penalty_stalled_cpu_only; results/experiment_1675_lagonn.json
 - 2026-05-10: Phase 4: Milestone 2026.05.128 Retrospective (✅ Complete) — honest_verdict=milestone_128_retrospective_filed_9_of_10_complete; results/experiment_1676_retro.json
+
+## 2026-05-10 (Milestone 2026.05.128 Operational Retrospective)
+
+- 2026-05-10 09:47 UTC: Milestone 2026.05.128 operational retrospective complete. Analyzed 1070 min wall time / 180 experiments (avg 6 min). Slowest paths: Exp 1603 (88 min), Exp 1663 doomed-rerun block (82 min), Exp 1657 (57 min), Exp 1642 (54 min), and Exp 1653 (53 min). Both RTX 3090s were completely idle at 0% utilization, meaning DualGPURunner was not utilized and parallelization was missed. Estimated 40% savings recoverable via DualGPURunner parallelization and fixing the doomed-rerun block to fail fast.
