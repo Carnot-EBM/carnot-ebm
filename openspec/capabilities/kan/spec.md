@@ -892,3 +892,22 @@ The KAN capability MUST perform a preflight check for Vivado installation and at
 Given the `hardware/kv260/` directory,
 When `scripts/experiment_1637_lint.py` is executed,
 Then it checks for Vivado, attempts linting if possible, and outputs `vivado_installed` and `lint_passed` to the JSON artifact.
+
+## REQ-KAN-1679: Miniature KArAt Attention Block
+
+The KAN capability MUST provide a miniature KArAt attention block (Kolmogorov-Arnold Attention) that replaces Softmax with learnable spline/rational bases. The implementation MUST be designed for energy calculation, and its parameter counts and bounding bounds MUST be verified using rational abstractions.
+
+**Rationale:**
+    Moving beyond standard MLP and attention to fully learnable, verifiable bases (arXiv:2503.10632). Replacing Softmax with rational bases allows for exact verification and bounding, which is critical for formal property checks and deterministic energy calculations.
+
+**Acceptance criteria:**
+    - `python/carnot/models/karat_attention.py` exposes a single KArAt layer designed for energy calculation.
+    - Parameter counts and bounding bounds are verified using rational abstractions.
+    - Tests verify the model logic and achieve 100% test coverage.
+    - `results/experiment_1679_karat.json` is written with the required schema fields, parameter counts, bounding bounds validation, and an honest verdict.
+
+### SCENARIO-KAN-1679: KArAt attention block artifact
+
+Given the `karat_attention.py` module,
+When the parameter counts and bounding bounds are verified,
+Then the tests pass, coverage is 100%, and `results/experiment_1679_karat.json` is written.

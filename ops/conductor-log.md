@@ -1463,3 +1463,4 @@ web search: site:o |
 | 2026-05-10 09:55 UTC | Milestone 2026.05.129 activated | OK | 5 tasks queued |
 | 2026-05-10 10:05 UTC | Phase 1: Energy-Driven Steering (EDS) for Hidden S | OK | 81 passed, 1 warning in 5.10s |
 | 2026-05-10 10:39 UTC | Phase 1: CRANE Reasoning-Augmented Constrained Dec | OK | 81 passed, 1 warning in 4.28s |
+| 2026-05-10 10:51 UTC | Phase 2: Kolmogorov-Arnold Attention (KArAt) Proto | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: Warning: 256-color  |
