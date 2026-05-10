@@ -1,0 +1,61 @@
+{
+  "artifact_path": "results/experiment_1678_crane.json",
+  "case_count": 2,
+  "case_results": [
+    {
+      "case_id": "weekly-lab-cases",
+      "crane_parseable": true,
+      "crane_phase_order": [
+        "free_text",
+        "constrained"
+      ],
+      "crane_reasoning_quality": 1.0,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "quality_delta": 0.5,
+      "strict_parseable": true,
+      "strict_phase_order": [
+        "strict_baseline"
+      ],
+      "strict_reasoning_quality": 0.5
+    },
+    {
+      "case_id": "battery-inventory",
+      "crane_parseable": true,
+      "crane_phase_order": [
+        "free_text",
+        "constrained"
+      ],
+      "crane_reasoning_quality": 1.0,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "quality_delta": 0.5,
+      "strict_parseable": true,
+      "strict_phase_order": [
+        "strict_baseline"
+      ],
+      "strict_reasoning_quality": 0.5
+    }
+  ],
+  "crane_mean_reasoning_quality": 1.0,
+  "evaluation_mode": "deterministic_gemma_4_26b_a4b_proxy",
+  "experiment": "1678_crane",
+  "experiment_id": 1678,
+  "honest_verdict": "complete: CRANE interleaving improved semantic coherence at parse_rate>=0.9",
+  "live_sota_model_inference_used": false,
+  "model_specs": [
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "parse_rate": 1.0,
+  "reasoning_quality_delta": 0.5,
+  "run_date": "20260510",
+  "spec_traces": [
+    "REQ-PIPELINE-1678",
+    "SCENARIO-PIPELINE-1678"
+  ],
+  "status": "complete",
+  "strict_baseline_parse_rate": 1.0,
+  "strict_mean_reasoning_quality": 0.5,
+  "tests_run": [
+    ".venv/bin/pytest -o addopts='' tests/python/test_pipeline_crane_decoding.py --cov=python/carnot --cov-report= --cov-fail-under=0 -q && .venv/bin/python -m coverage report --include='*/python/carnot/pipeline/crane_decoding.py' --fail-under=100 --show-missing"
+  ],
+  "timestamp": "2026-05-10T10:15:44Z"
+}

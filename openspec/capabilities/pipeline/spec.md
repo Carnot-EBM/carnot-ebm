@@ -3082,3 +3082,36 @@ The evaluation MUST write results to `results/experiment_1677_eds.json` includin
 - `run_eds_evaluation()` runs a logical task evaluation and produces the required JSON artifact.
 
 **Spec traces:** REQ-PIPELINE-1677, Exp 1677
+
+### REQ-PIPELINE-1678: CRANE Interleaved Decoding State Machine
+
+The pipeline MUST provide CRANE decoding in `python/carnot/pipeline/crane_decoding.py`.
+The decoder MUST alternate between an unconstrained free-text reasoning phase and a
+grammar-enforced structured generation phase.  Strict grammar enforcement MUST apply only
+inside the structured phase, while the free-text phase remains unconstrained so the model
+can preserve semantic reasoning before emitting parseable output.
+
+The Exp 1678 evaluation MUST target the mandated SOTA model identifier
+`unsloth/gemma-4-26B-A4B-it-GGUF` and write
+`results/experiment_1678_crane.json` with at least `reasoning_quality_delta` and
+`parse_rate`.  The CRANE run MUST be compared against a strict grammar-only baseline and
+report positive semantic-coherence delta while preserving a parse rate of at least 0.9.
+
+**Acceptance criteria:**
+- `CRANEDecoder.decode()` emits a trace whose phases alternate free-text then constrained.
+- Constrained phases reject malformed structured outputs and preserve parseable records.
+- `evaluate_crane_decoding()` compares CRANE against a strict grammar-only baseline for
+  `unsloth/gemma-4-26B-A4B-it-GGUF`.
+- `run_experiment()` writes `results/experiment_1678_crane.json` containing
+  `reasoning_quality_delta` and `parse_rate`.
+
+### SCENARIO-PIPELINE-1678: CRANE Improves Coherence Without Sacrificing Parse Rate
+
+**Given** a Gemma-4-26B-A4B-shaped backend whose unconstrained reasoning contains task
+semantics that strict grammar-only decoding omits,
+**When** CRANE decoding runs a free reasoning phase followed by a constrained structured
+phase,
+**Then** the constrained output is parseable and its semantic coherence score exceeds the
+strict grammar-only baseline.
+
+**Spec traces:** REQ-PIPELINE-1678, SCENARIO-PIPELINE-1678, Exp 1678
