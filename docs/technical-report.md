@@ -1,9 +1,9 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report — 2023 Experiments Across the Public Record, 144 Archived Milestone Records, 23,597 Python Test Items Collected (Artifacts Tracked Through Exp 1708)
+## A Technical Report — 2049 Experiments Across the Public Record, 145 Archived Milestone Records, 23,714 Python Test Items Collected (Artifacts Tracked Through Exp 1721)
 
 **Author:** Ian Blenke
-**Date:** 2026-05-09
+**Date:** 2026-05-10
 **Repository:** github.com/Carnot-EBM/carnot-ebm
 **License:** Apache 2.0
 
@@ -2252,7 +2252,7 @@ The constraint pipeline dog-foods itself as a "fourth gate" in the autoresearch 
 
 ## 7. Principles Learned
 
-From the activation-based phase of a research program that now spans 2,023 experiment records through Exp 1708 and 140 archived completed milestone records, we distilled 14 principles. Principles 1-3 describe what works. Principles 4-14 describe what doesn't work for activation-based hallucination detection — these systematic negative results are the project's primary contribution to the literature, saving other researchers months of dead ends.
+From the activation-based phase of a research program that now spans 2,049 experiment records through Exp 1721 and 145 archived completed milestone records, we distilled 14 principles. Principles 1-3 describe what works. Principles 4-14 describe what doesn't work for activation-based hallucination detection — these systematic negative results are the project's primary contribution to the literature, saving other researchers months of dead ends.
 
 ### What works
 
@@ -5125,3 +5125,14 @@ Experiment 1707 successfully verified the full pipeline SOTA integration combini
 
 **KV260 Hardware Execution Blocked**  
 Experiment 1704 attempted to synthesize and execute Potts q=3 on KV260 hardware, but was blocked due to Vivado not being installed.
+
+### 4.10 Recent Additions (Milestone .132)
+
+**E2E Pipeline Evaluation**
+Experiment 1720 successfully verified the full E2E pipeline evaluating Dynamic Extract, Hardware trace eval, and Continual Learning.
+
+**HILED Inference Latency**
+Experiment 1719 measured the inference latency impact of HILED, establishing baseline constraints for test-time decoding overhead.
+
+**Continual Learning Enhancements**
+Experiments 1712 and 1714 verified semantic pruning for FR-11 continual learning and instruct-to-constraint extraction from free-text.

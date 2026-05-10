@@ -1544,3 +1544,4 @@ web search: site:o |
 | 2026-05-10 18:16 UTC | Exp 1718: Evaluate Hallucination Mitigation using | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1717-energy-guided-integration) |
 | 2026-05-10 18:23 UTC | Exp 1720: E2E Pipeline Evaluation (Dynamic Extract | OK | 81 passed, 1 warning in 4.90s |
 | 2026-05-10 18:25 UTC | Exp 1718: Evaluate Hallucination Mitigation using  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1717-energy-guided-integration.pytest_p |
+| 2026-05-10 18:30 UTC | Exp 1721: Milestone .132 Retrospective | OK | cache hit: 81 passed, 1 warning in 4.90s |
