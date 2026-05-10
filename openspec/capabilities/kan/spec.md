@@ -182,6 +182,7 @@ sets `variance_worsened` from the measured paraphrase variance comparison.
 | REQ-KAN-1502 | Proposed | Exp 1502 target: no-synthesis KAN hardware accounting comparing naive, QuantKAN-like, and KAEM-style variants for current verifier components. |
 | REQ-KAN-1516 | Implemented | Exp 1516 normalized KAN/KAEM proxy and model shapes into an explicit provenance manifest before any future synthesis claim. |
 | REQ-KAN-1602 | Implemented | Exp 1602 exact-rational KAN forward pass uses Python `fractions.Fraction` for bit-identical formal-verification arithmetic. |
+| REQ-KAN-1671 | Proposed | Exp 1671 target: no-synthesis Hybrid Zeckendorf rational CPU simulation and complexity/bounding certificate artifact for RKAN tiers. |
 | REQ-KAN-1604 | Implemented | Exp 1604 Sparse KAN clustering records Global Group Lasso, spectral regularization, sparsity, and memory-compression metrics. |
 | REQ-KAN-1648 | Implemented | Exp 1648 spectral constraint grouping layers Laplacian row groups on Sparse KAN centroid compression and records direct `compression_ratio`. |
 | REQ-KAN-1618 | Proposed | Exp 1618 target: model-level PWA KAN wrapper for logical affine activation bounds over arbitrary 1D spline callables. |
@@ -258,6 +259,36 @@ with zero violations possible regardless of parameter values V and c.
 Given SOSKANEnergy with V overwritten to random N(0, 10) values,
 When verify_invariants(n_samples=1000) is called,
 Then n_monotone_violations == 0 and invariants_hold == True.
+
+## REQ-KAN-1671: Hybrid Zeckendorf Exact-Rational RKAN Audit
+
+The repository SHALL provide a CPU-only, no-synthesis audit script for
+Exact-Rational KAN tiers that replaces mock floating-point KAN arithmetic with
+Hybrid Zeckendorf rational arithmetic. The audit MUST:
+
+- define `scripts/experiment_1671_rkan_audit.py`;
+- evaluate a deterministic mock KAN using exact rational arithmetic, rejecting
+  implicit Python floats at the audit boundary;
+- expose Hybrid Zeckendorf certificates for rational numerators and
+  denominators so every reported value has an integer-decomposition witness;
+- report operation-count complexity for edge, bias, interpolation, addition,
+  and multiplication work;
+- report deterministic bounding certificates for spline outputs and simulated
+  sample energies; and
+- write `results/experiment_1671_rkan.json` with terminal `status="complete"`
+  only when the no-synthesis, exact-arithmetic, and certificate gates pass.
+
+The script MUST NOT claim FPGA, ASIC, analog, or other hardware synthesis
+validation. The output is an accounting pass and CPU simulation artifact only.
+
+### SCENARIO-KAN-1671: Exact-rational audit emits bounded certificate artifact
+
+Given the deterministic mock RKAN tier fixture,
+When `scripts/experiment_1671_rkan_audit.py` runs on CPU,
+Then `results/experiment_1671_rkan.json` records `float_operations_used=false`,
+`hardware_synthesis_claimed=false`, operation complexity counts, Hybrid
+Zeckendorf witness decompositions, and bounding certificates whose exact
+sample-energy bounds contain every simulated exact energy.
 
 ## REQ-KAN-1148: SOSKANEnergyV3 centroid codebook compression
 
