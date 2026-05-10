@@ -5374,3 +5374,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-10: Exp 1686: PWA (Piecewise Affine) Abstractions for KArAt Attention (✅ Complete) — honest_verdict=complete: pwa_karat_attention_implemented; results/experiment_1686_pwa_karat.json
 - 2026-05-10: Exp 1688: Constraint-Informed KAN (CIKAN) Monotonicity Regularization (✅ Complete) — honest_verdict=complete: CIKAN Regularizer implemented and verified to penalize non-monotonic B-spline coefficients.; results/experiment_1688_cikan.json
 - 2026-05-10: Exp 1689: End-to-end Evaluation of Certified KArAt on Reasoning (✅ Complete) — honest_verdict=complete: certified_karat_evaluated; results/experiment_1689_certified_karat.json
+- 2026-05-10: Exp 1690: Deep Energy-Guided Test-Time Scaling with Nabla-Reasoner (✅ Complete) — honest_verdict=nabla_ets_sampler_implemented; results/experiment_1690_nabla_ets.json
