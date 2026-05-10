@@ -1510,3 +1510,4 @@ web search: site:o |
 | 2026-05-10 15:20 UTC | Exp 1703: Evaluate FR-11 continuous learning stabi | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1702-continuous-constraint-learning.pyt |
 | 2026-05-10 15:22 UTC | Exp 1703: Evaluate FR-11 continuous learning stabi | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1702-continuous-constraint-learning.pyt |
 | 2026-05-10 15:24 UTC | Exp 1703: Evaluate FR-11 continuous learning stabi | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1702-continuous-constraint-learning.pyt |
+| 2026-05-10 15:35 UTC | Exp 1704: Synthesize and execute Potts q=3 on KV26 | OK | 81 passed, 1 warning in 5.36s |
