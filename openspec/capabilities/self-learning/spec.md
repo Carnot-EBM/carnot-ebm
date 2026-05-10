@@ -4684,6 +4684,18 @@ locally checked.
 - REQ-LEARN-1630-5: A complete benchmark result SHALL require
   `benchmark_size > 0`, `pass_rate == 1.0`, and every retained case result to
   cite the temporal operator and retrieved CaseMemory fingerprint.
+- REQ-LEARN-1630-6: The repository SHALL provide a deterministic generator for
+  `data/ltlzinc_benchmark.json` that reads `data/constraint_templates.json`,
+  emits a top-level schema/version/provenance summary, and writes stable JSON
+  with `case_count`, `anchor_case_count`, `update_case_count`,
+  `sat_case_count`, `repair_hint_case_count`, `supported_operators`, and
+  `cases`.
+- REQ-LEARN-1630-7: Each reusable benchmark case SHALL include a deterministic
+  `case_id`, source template provenance, non-forgetting phase, temporal
+  operator, LTL-style formula, MiniZinc-style constraint, finite Boolean trace,
+  expected satisfaction label, certificate state, DVI label, verifier path, and
+  retention metadata so evaluation code can distinguish original anchors from
+  later updates.
 
 ### SCENARIO-LEARN-1630: Temporal Constraints Survive Query-Time Updates
 
@@ -4696,11 +4708,25 @@ are replayed through the retention benchmark
 case
 **And** the terminal artifact reports `benchmark_size` and `pass_rate`.
 
+### SCENARIO-LEARN-1630-JSON: Reusable Temporal Benchmark JSON Is Stable
+
+**Given** `data/constraint_templates.json` contains deterministic source
+template IDs
+**When** `scripts/generate_ltlzinc.py` writes
+`data/ltlzinc_benchmark.json`
+**Then** the JSON contains balanced SAT and REPAIR_HINT temporal cases for
+`always`, `eventually`, `next`, and `until`
+**And** every case can be validated by the local LTLZinc finite-trace verifier
+against its expected label
+**And** anchor cases are explicitly marked for retention checks after update
+cases are applied.
+
 ## Implementation Status (REQ-LEARN-1630)
 
 | Requirement | Python | Tests |
 |-------------|--------|-------|
 | REQ-LEARN-1630 | Implemented (`scripts/experiment_1630_ltlzinc.py`) | Implemented (`tests/python/test_experiment_1630_ltlzinc.py`) |
+| REQ-LEARN-1630-6/7 | Implemented (`scripts/generate_ltlzinc.py`) | Implemented (`tests/python/test_generate_ltlzinc.py`) |
 
 ---
 

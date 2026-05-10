@@ -1,0 +1,1659 @@
+{
+  "anchor_case_count": 24,
+  "benchmark_id": "ltlzinc_temporal_nonforgetting_v1",
+  "case_count": 32,
+  "cases": [
+    {
+      "case_id": "ltlzinc-always-power_ok-sat-00",
+      "certificate_state": "SAT",
+      "constraint_family": "always",
+      "dvi_label": 0,
+      "evaluation": {
+        "expected_verifier_result": true,
+        "verifier_path": "carnot.reporting.ltlzinc_temporal_continual_learning_adapter.verify_temporal_case"
+      },
+      "expected_satisfied": true,
+      "fr11_memory_hint": "promote_temporal_constraint_success",
+      "guard_signal": null,
+      "label": "accepted",
+      "ltl_formula": "G power_ok",
+      "minizinc_constraint": "constraint forall(t in TIME)(power_ok[t]);",
+      "nonforgetting_phase": "anchor",
+      "retention": {
+        "anchor_case_id": "ltlzinc-always-power_ok-sat-00",
+        "must_retrieve_after_updates": true,
+        "nonforgetting_check": "retrieve_same_case_after_update_rows",
+        "phase": "anchor"
+      },
+      "signal": "power_ok",
+      "source": "exp1449_ltlzinc_style_synthetic",
+      "source_template": {
+        "source_experiment": 683,
+        "template_id": "0",
+        "violation_pattern_excerpt": "COMPUTE: Janet\u2019s ducks lay 16 eggs per day. She eats three for breakfast every morning an (synthetic_compute_pattern)",
+        "violation_type": "verified_repair"
+      },
+      "split": "train",
+      "tags": [
+        "ltlzinc",
+        "temporal",
+        "nonforgetting",
+        "operator:always",
+        "phase:anchor"
+      ],
+      "temporal_operator": "always",
+      "trace": [
+        {
+          "power_ok": true,
+          "t": 0
+        },
+        {
+          "power_ok": true,
+          "t": 1
+        }
+      ]
+    },
+    {
+      "case_id": "ltlzinc-always-power_ok-repair-hint-00",
+      "certificate_state": "REPAIR_HINT",
+      "constraint_family": "always",
+      "dvi_label": 1,
+      "evaluation": {
+        "expected_verifier_result": false,
+        "verifier_path": "carnot.reporting.ltlzinc_temporal_continual_learning_adapter.verify_temporal_case"
+      },
+      "expected_satisfied": false,
+      "fr11_memory_hint": "promote_temporal_constraint_violation",
+      "guard_signal": null,
+      "label": "rejected",
+      "ltl_formula": "G power_ok",
+      "minizinc_constraint": "constraint forall(t in TIME)(power_ok[t]);",
+      "nonforgetting_phase": "anchor",
+      "retention": {
+        "anchor_case_id": "ltlzinc-always-power_ok-repair-hint-00",
+        "must_retrieve_after_updates": true,
+        "nonforgetting_check": "retrieve_same_case_after_update_rows",
+        "phase": "anchor"
+      },
+      "signal": "power_ok",
+      "source": "exp1449_ltlzinc_style_synthetic",
+      "source_template": {
+        "source_experiment": 683,
+        "template_id": "1",
+        "violation_pattern_excerpt": "COMPUTE: A robe takes 2 bolts of blue fiber and half that much white fiber.  How many bol (synthetic_compute_pattern)",
+        "violation_type": "verified_repair"
+      },
+      "split": "train",
+      "tags": [
+        "ltlzinc",
+        "temporal",
+        "nonforgetting",
+        "operator:always",
+        "phase:anchor"
+      ],
+      "temporal_operator": "always",
+      "trace": [
+        {
+          "power_ok": false,
+          "t": 0
+        }
+      ]
+    },
+    {
+      "case_id": "ltlzinc-always-access_safe-sat-01",
+      "certificate_state": "SAT",
+      "constraint_family": "always",
+      "dvi_label": 0,
+      "evaluation": {
+        "expected_verifier_result": true,
+        "verifier_path": "carnot.reporting.ltlzinc_temporal_continual_learning_adapter.verify_temporal_case"
+      },
+      "expected_satisfied": true,
+      "fr11_memory_hint": "promote_temporal_constraint_success",
+      "guard_signal": null,
+      "label": "accepted",
+      "ltl_formula": "G access_safe",
+      "minizinc_constraint": "constraint forall(t in TIME)(access_safe[t]);",
+      "nonforgetting_phase": "anchor",
+      "retention": {
+        "anchor_case_id": "ltlzinc-always-access_safe-sat-01",
+        "must_retrieve_after_updates": true,
+        "nonforgetting_check": "retrieve_same_case_after_update_rows",
+        "phase": "anchor"
+      },
+      "signal": "access_safe",
+      "source": "exp1449_ltlzinc_style_synthetic",
+      "source_template": {
+        "source_experiment": 683,
+        "template_id": "2",
+        "violation_pattern_excerpt": "COMPUTE: Josh decides to try flipping a house.  He buys a house for $80,000 and then puts (synthetic_compute_pattern)",
+        "violation_type": "verified_repair"
+      },
+      "split": "train",
+      "tags": [
+        "ltlzinc",
+        "temporal",
+        "nonforgetting",
+        "operator:always",
+        "phase:anchor"
+      ],
+      "temporal_operator": "always",
+      "trace": [
+        {
+          "access_safe": true,
+          "t": 0
+        }
+      ]
+    },
+    {
+      "case_id": "ltlzinc-always-access_safe-repair-hint-01",
+      "certificate_state": "REPAIR_HINT",
+      "constraint_family": "always",
+      "dvi_label": 1,
+      "evaluation": {
+        "expected_verifier_result": false,
+        "verifier_path": "carnot.reporting.ltlzinc_temporal_continual_learning_adapter.verify_temporal_case"
+      },
+      "expected_satisfied": false,
+      "fr11_memory_hint": "promote_temporal_constraint_violation",
+      "guard_signal": null,
+      "label": "rejected",
+      "ltl_formula": "G access_safe",
+      "minizinc_constraint": "constraint forall(t in TIME)(access_safe[t]);",
+      "nonforgetting_phase": "anchor",
+      "retention": {
+        "anchor_case_id": "ltlzinc-always-access_safe-repair-hint-01",
+        "must_retrieve_after_updates": true,
+        "nonforgetting_check": "retrieve_same_case_after_update_rows",
+        "phase": "anchor"
+      },
+      "signal": "access_safe",
+      "source": "exp1449_ltlzinc_style_synthetic",
+      "source_template": {
+        "source_experiment": 683,
+        "template_id": "3",
+        "violation_pattern_excerpt": "COMPUTE: James decides to run 3 sprints 3 times a week.  He runs 60 meters each sprint. (synthetic_compute_pattern)",
+        "violation_type": "verified_repair"
+      },
+      "split": "train",
+      "tags": [
+        "ltlzinc",
+        "temporal",
+        "nonforgetting",
+        "operator:always",
+        "phase:anchor"
+      ],
+      "temporal_operator": "always",
+      "trace": [
+        {
+          "access_safe": true,
+          "t": 0
+        },
+        {
+          "access_safe": false,
+          "t": 1
+        }
+      ]
+    },
+    {
+      "case_id": "ltlzinc-always-below_limit-sat-02",
+      "certificate_state": "SAT",
+      "constraint_family": "always",
+      "dvi_label": 0,
+      "evaluation": {
+        "expected_verifier_result": true,
+        "verifier_path": "carnot.reporting.ltlzinc_temporal_continual_learning_adapter.verify_temporal_case"
+      },
+      "expected_satisfied": true,
+      "fr11_memory_hint": "promote_temporal_constraint_success",
+      "guard_signal": null,
+      "label": "accepted",
+      "ltl_formula": "G below_limit",
+      "minizinc_constraint": "constraint forall(t in TIME)(below_limit[t]);",
+      "nonforgetting_phase": "anchor",
+      "retention": {
+        "anchor_case_id": "ltlzinc-always-below_limit-sat-02",
+        "must_retrieve_after_updates": true,
+        "nonforgetting_check": "retrieve_same_case_after_update_rows",
+        "phase": "anchor"
+      },
+      "signal": "below_limit",
+      "source": "exp1449_ltlzinc_style_synthetic",
+      "source_template": {
+        "source_experiment": 683,
+        "template_id": "4",
+        "violation_pattern_excerpt": "COMPUTE: Every day, Wendi feeds each of her chickens three cups of mixed chicken feed, co (synthetic_compute_pattern)",
+        "violation_type": "verified_repair"
+      },
+      "split": "train",
+      "tags": [
+        "ltlzinc",
+        "temporal",
+        "nonforgetting",
+        "operator:always",
+        "phase:anchor"
+      ],
+      "temporal_operator": "always",
+      "trace": [
+        {
+          "below_limit": true,
+          "t": 0
+        },
+        {
+          "below_limit": true,
+          "t": 1
+        },
+        {
+          "below_limit": true,
+          "t": 2
+        }
+      ]
+    },
+    {
+      "case_id": "ltlzinc-always-below_limit-repair-hint-02",
+      "certificate_state": "REPAIR_HINT",
+      "constraint_family": "always",
+      "dvi_label": 1,
+      "evaluation": {
+        "expected_verifier_result": false,
+        "verifier_path": "carnot.reporting.ltlzinc_temporal_continual_learning_adapter.verify_temporal_case"
+      },
+      "expected_satisfied": false,
+      "fr11_memory_hint": "promote_temporal_constraint_violation",
+      "guard_signal": null,
+      "label": "rejected",
+      "ltl_formula": "G below_limit",
+      "minizinc_constraint": "constraint forall(t in TIME)(below_limit[t]);",
+      "nonforgetting_phase": "anchor",
+      "retention": {
+        "anchor_case_id": "ltlzinc-always-below_limit-repair-hint-02",
+        "must_retrieve_after_updates": true,
+        "nonforgetting_check": "retrieve_same_case_after_update_rows",
+        "phase": "anchor"
+      },
+      "signal": "below_limit",
+      "source": "exp1449_ltlzinc_style_synthetic",
+      "source_template": {
+        "source_experiment": 683,
+        "template_id": "5",
+        "violation_pattern_excerpt": "COMPUTE: Kylar went to the store to buy glasses for his new apartment. One glass costs $5 (synthetic_compute_pattern)",
+        "violation_type": "verified_repair"
+      },
+      "split": "train",
+      "tags": [
+        "ltlzinc",
+        "temporal",
+        "nonforgetting",
+        "operator:always",
+        "phase:anchor"
+      ],
+      "temporal_operator": "always",
+      "trace": [
+        {
+          "below_limit": true,
+          "t": 0
+        },
+        {
+          "below_limit": false,
+          "t": 1
+        }
+      ]
+    },
+    {
+      "case_id": "ltlzinc-eventually-ready-sat-03",
+      "certificate_state": "SAT",
+      "constraint_family": "eventually",
+      "dvi_label": 0,
+      "evaluation": {
+        "expected_verifier_result": true,
+        "verifier_path": "carnot.reporting.ltlzinc_temporal_continual_learning_adapter.verify_temporal_case"
+      },
+      "expected_satisfied": true,
+      "fr11_memory_hint": "promote_temporal_constraint_success",
+      "guard_signal": null,
+      "label": "accepted",
+      "ltl_formula": "F ready",
+      "minizinc_constraint": "constraint exists(t in TIME)(ready[t]);",
+      "nonforgetting_phase": "anchor",
+      "retention": {
+        "anchor_case_id": "ltlzinc-eventually-ready-sat-03",
+        "must_retrieve_after_updates": true,
+        "nonforgetting_check": "retrieve_same_case_after_update_rows",
+        "phase": "anchor"
+      },
+      "signal": "ready",
+      "source": "exp1449_ltlzinc_style_synthetic",
+      "source_template": {
+        "source_experiment": 683,
+        "template_id": "6",
+        "violation_pattern_excerpt": "COMPUTE: Toulouse has twice as many sheep as Charleston. Charleston has 4 times as many s (synthetic_compute_pattern)",
+        "violation_type": "verified_repair"
+      },
+      "split": "train",
+      "tags": [
+        "ltlzinc",
+        "temporal",
+        "nonforgetting",
+        "operator:eventually",
+        "phase:anchor"
+      ],
+      "temporal_operator": "eventually",
+      "trace": [
+        {
+          "ready": false,
+          "t": 0
+        },
+        {
+          "ready": true,
+          "t": 1
+        }
+      ]
+    },
+    {
+      "case_id": "ltlzinc-eventually-ready-repair-hint-03",
+      "certificate_state": "REPAIR_HINT",
+      "constraint_family": "eventually",
+      "dvi_label": 1,
+      "evaluation": {
+        "expected_verifier_result": false,
+        "verifier_path": "carnot.reporting.ltlzinc_temporal_continual_learning_adapter.verify_temporal_case"
+      },
+      "expected_satisfied": false,
+      "fr11_memory_hint": "promote_temporal_constraint_violation",
+      "guard_signal": null,
+      "label": "rejected",
+      "ltl_formula": "F ready",
+      "minizinc_constraint": "constraint exists(t in TIME)(ready[t]);",
+      "nonforgetting_phase": "anchor",
+      "retention": {
+        "anchor_case_id": "ltlzinc-eventually-ready-repair-hint-03",
+        "must_retrieve_after_updates": true,
+        "nonforgetting_check": "retrieve_same_case_after_update_rows",
+        "phase": "anchor"
+      },
+      "signal": "ready",
+      "source": "exp1449_ltlzinc_style_synthetic",
+      "source_template": {
+        "source_experiment": 683,
+        "template_id": "7",
+        "violation_pattern_excerpt": "COMPUTE: Carla is downloading a 200 GB file. Normally she can download 2 GB/minute, but 4 (synthetic_compute_pattern)",
+        "violation_type": "verified_repair"
+      },
+      "split": "train",
+      "tags": [
+        "ltlzinc",
+        "temporal",
+        "nonforgetting",
+        "operator:eventually",
+        "phase:anchor"
+      ],
+      "temporal_operator": "eventually",
+      "trace": [
+        {
+          "ready": false,
+          "t": 0
+        },
+        {
+          "ready": false,
+          "t": 1
+        }
+      ]
+    },
+    {
+      "case_id": "ltlzinc-eventually-ack-sat-04",
+      "certificate_state": "SAT",
+      "constraint_family": "eventually",
+      "dvi_label": 0,
+      "evaluation": {
+        "expected_verifier_result": true,
+        "verifier_path": "carnot.reporting.ltlzinc_temporal_continual_learning_adapter.verify_temporal_case"
+      },
+      "expected_satisfied": true,
+      "fr11_memory_hint": "promote_temporal_constraint_success",
+      "guard_signal": null,
+      "label": "accepted",
+      "ltl_formula": "F ack",
+      "minizinc_constraint": "constraint exists(t in TIME)(ack[t]);",
+      "nonforgetting_phase": "anchor",
+      "retention": {
+        "anchor_case_id": "ltlzinc-eventually-ack-sat-04",
+        "must_retrieve_after_updates": true,
+        "nonforgetting_check": "retrieve_same_case_after_update_rows",
+        "phase": "anchor"
+      },
+      "signal": "ack",
+      "source": "exp1449_ltlzinc_style_synthetic",
+      "source_template": {
+        "source_experiment": 683,
+        "template_id": "8",
+        "violation_pattern_excerpt": "COMPUTE: John drives for 3 hours at a speed of 60 mph and then turns around because he re (synthetic_compute_pattern)",
+        "violation_type": "verified_repair"
+      },
+      "split": "train",
+      "tags": [
+        "ltlzinc",
+        "temporal",
+        "nonforgetting",
+        "operator:eventually",
+        "phase:anchor"
+      ],
+      "temporal_operator": "eventually",
+      "trace": [
+        {
+          "ack": false,
+          "t": 0
+        },
+        {
+          "ack": true,
+          "t": 1
+        }
+      ]
+    },
+    {
+      "case_id": "ltlzinc-eventually-ack-repair-hint-04",
+      "certificate_state": "REPAIR_HINT",
+      "constraint_family": "eventually",
+      "dvi_label": 1,
+      "evaluation": {
+        "expected_verifier_result": false,
+        "verifier_path": "carnot.reporting.ltlzinc_temporal_continual_learning_adapter.verify_temporal_case"
+      },
+      "expected_satisfied": false,
+      "fr11_memory_hint": "promote_temporal_constraint_violation",
+      "guard_signal": null,
+      "label": "rejected",
+      "ltl_formula": "F ack",
+      "minizinc_constraint": "constraint exists(t in TIME)(ack[t]);",
+      "nonforgetting_phase": "anchor",
+      "retention": {
+        "anchor_case_id": "ltlzinc-eventually-ack-repair-hint-04",
+        "must_retrieve_after_updates": true,
+        "nonforgetting_check": "retrieve_same_case_after_update_rows",
+        "phase": "anchor"
+      },
+      "signal": "ack",
+      "source": "exp1449_ltlzinc_style_synthetic",
+      "source_template": {
+        "source_experiment": 683,
+        "template_id": "9",
+        "violation_pattern_excerpt": "COMPUTE: Eliza's rate per hour for the first 40 hours she works each week is $10. She als (synthetic_compute_pattern)",
+        "violation_type": "verified_repair"
+      },
+      "split": "train",
+      "tags": [
+        "ltlzinc",
+        "temporal",
+        "nonforgetting",
+        "operator:eventually",
+        "phase:anchor"
+      ],
+      "temporal_operator": "eventually",
+      "trace": [
+        {
+          "ack": false,
+          "t": 0
+        },
+        {
+          "ack": false,
+          "t": 1
+        },
+        {
+          "ack": false,
+          "t": 2
+        }
+      ]
+    },
+    {
+      "case_id": "ltlzinc-eventually-recovered-sat-05",
+      "certificate_state": "SAT",
+      "constraint_family": "eventually",
+      "dvi_label": 0,
+      "evaluation": {
+        "expected_verifier_result": true,
+        "verifier_path": "carnot.reporting.ltlzinc_temporal_continual_learning_adapter.verify_temporal_case"
+      },
+      "expected_satisfied": true,
+      "fr11_memory_hint": "promote_temporal_constraint_success",
+      "guard_signal": null,
+      "label": "accepted",
+      "ltl_formula": "F recovered",
+      "minizinc_constraint": "constraint exists(t in TIME)(recovered[t]);",
+      "nonforgetting_phase": "anchor",
+      "retention": {
+        "anchor_case_id": "ltlzinc-eventually-recovered-sat-05",
+        "must_retrieve_after_updates": true,
+        "nonforgetting_check": "retrieve_same_case_after_update_rows",
+        "phase": "anchor"
+      },
+      "signal": "recovered",
+      "source": "exp1449_ltlzinc_style_synthetic",
+      "source_template": {
+        "source_experiment": 683,
+        "template_id": "10",
+        "violation_pattern_excerpt": "COMPUTE: A new program had 60 downloads in the first month. The number of downloads in th (synthetic_compute_pattern)",
+        "violation_type": "verified_repair"
+      },
+      "split": "train",
+      "tags": [
+        "ltlzinc",
+        "temporal",
+        "nonforgetting",
+        "operator:eventually",
+        "phase:anchor"
+      ],
+      "temporal_operator": "eventually",
+      "trace": [
+        {
+          "recovered": false,
+          "t": 0
+        },
+        {
+          "recovered": true,
+          "t": 1
+        }
+      ]
+    },
+    {
+      "case_id": "ltlzinc-eventually-recovered-repair-hint-05",
+      "certificate_state": "REPAIR_HINT",
+      "constraint_family": "eventually",
+      "dvi_label": 1,
+      "evaluation": {
+        "expected_verifier_result": false,
+        "verifier_path": "carnot.reporting.ltlzinc_temporal_continual_learning_adapter.verify_temporal_case"
+      },
+      "expected_satisfied": false,
+      "fr11_memory_hint": "promote_temporal_constraint_violation",
+      "guard_signal": null,
+      "label": "rejected",
+      "ltl_formula": "F recovered",
+      "minizinc_constraint": "constraint exists(t in TIME)(recovered[t]);",
+      "nonforgetting_phase": "anchor",
+      "retention": {
+        "anchor_case_id": "ltlzinc-eventually-recovered-repair-hint-05",
+        "must_retrieve_after_updates": true,
+        "nonforgetting_check": "retrieve_same_case_after_update_rows",
+        "phase": "anchor"
+      },
+      "signal": "recovered",
+      "source": "exp1449_ltlzinc_style_synthetic",
+      "source_template": {
+        "source_experiment": 683,
+        "template_id": "11",
+        "violation_pattern_excerpt": "COMPUTE: Toula went to the bakery and bought various types of pastries. She bought 3 doze (synthetic_compute_pattern)",
+        "violation_type": "verified_repair"
+      },
+      "split": "train",
+      "tags": [
+        "ltlzinc",
+        "temporal",
+        "nonforgetting",
+        "operator:eventually",
+        "phase:anchor"
+      ],
+      "temporal_operator": "eventually",
+      "trace": [
+        {
+          "recovered": false,
+          "t": 0
+        }
+      ]
+    },
+    {
+      "case_id": "ltlzinc-next-armed-sat-06",
+      "certificate_state": "SAT",
+      "constraint_family": "next",
+      "dvi_label": 0,
+      "evaluation": {
+        "expected_verifier_result": true,
+        "verifier_path": "carnot.reporting.ltlzinc_temporal_continual_learning_adapter.verify_temporal_case"
+      },
+      "expected_satisfied": true,
+      "fr11_memory_hint": "promote_temporal_constraint_success",
+      "guard_signal": null,
+      "label": "accepted",
+      "ltl_formula": "X armed",
+      "minizinc_constraint": "constraint armed[2];",
+      "nonforgetting_phase": "anchor",
+      "retention": {
+        "anchor_case_id": "ltlzinc-next-armed-sat-06",
+        "must_retrieve_after_updates": true,
+        "nonforgetting_check": "retrieve_same_case_after_update_rows",
+        "phase": "anchor"
+      },
+      "signal": "armed",
+      "source": "exp1449_ltlzinc_style_synthetic",
+      "source_template": {
+        "source_experiment": 683,
+        "template_id": "12",
+        "violation_pattern_excerpt": "COMPUTE: Carlos is planting a lemon tree. The tree will cost $90 to plant. Each year it w (synthetic_compute_pattern)",
+        "violation_type": "verified_repair"
+      },
+      "split": "train",
+      "tags": [
+        "ltlzinc",
+        "temporal",
+        "nonforgetting",
+        "operator:next",
+        "phase:anchor"
+      ],
+      "temporal_operator": "next",
+      "trace": [
+        {
+          "armed": false,
+          "t": 0
+        },
+        {
+          "armed": true,
+          "t": 1
+        }
+      ]
+    },
+    {
+      "case_id": "ltlzinc-next-armed-repair-hint-06",
+      "certificate_state": "REPAIR_HINT",
+      "constraint_family": "next",
+      "dvi_label": 1,
+      "evaluation": {
+        "expected_verifier_result": false,
+        "verifier_path": "carnot.reporting.ltlzinc_temporal_continual_learning_adapter.verify_temporal_case"
+      },
+      "expected_satisfied": false,
+      "fr11_memory_hint": "promote_temporal_constraint_violation",
+      "guard_signal": null,
+      "label": "rejected",
+      "ltl_formula": "X armed",
+      "minizinc_constraint": "constraint armed[2];",
+      "nonforgetting_phase": "anchor",
+      "retention": {
+        "anchor_case_id": "ltlzinc-next-armed-repair-hint-06",
+        "must_retrieve_after_updates": true,
+        "nonforgetting_check": "retrieve_same_case_after_update_rows",
+        "phase": "anchor"
+      },
+      "signal": "armed",
+      "source": "exp1449_ltlzinc_style_synthetic",
+      "source_template": {
+        "source_experiment": 683,
+        "template_id": "0",
+        "violation_pattern_excerpt": "COMPUTE: Janet\u2019s ducks lay 16 eggs per day. She eats three for breakfast every morning an (synthetic_compute_pattern)",
+        "violation_type": "verified_repair"
+      },
+      "split": "train",
+      "tags": [
+        "ltlzinc",
+        "temporal",
+        "nonforgetting",
+        "operator:next",
+        "phase:anchor"
+      ],
+      "temporal_operator": "next",
+      "trace": [
+        {
+          "armed": true,
+          "t": 0
+        },
+        {
+          "armed": false,
+          "t": 1
+        }
+      ]
+    },
+    {
+      "case_id": "ltlzinc-next-token_valid-sat-07",
+      "certificate_state": "SAT",
+      "constraint_family": "next",
+      "dvi_label": 0,
+      "evaluation": {
+        "expected_verifier_result": true,
+        "verifier_path": "carnot.reporting.ltlzinc_temporal_continual_learning_adapter.verify_temporal_case"
+      },
+      "expected_satisfied": true,
+      "fr11_memory_hint": "promote_temporal_constraint_success",
+      "guard_signal": null,
+      "label": "accepted",
+      "ltl_formula": "X token_valid",
+      "minizinc_constraint": "constraint token_valid[2];",
+      "nonforgetting_phase": "anchor",
+      "retention": {
+        "anchor_case_id": "ltlzinc-next-token_valid-sat-07",
+        "must_retrieve_after_updates": true,
+        "nonforgetting_check": "retrieve_same_case_after_update_rows",
+        "phase": "anchor"
+      },
+      "signal": "token_valid",
+      "source": "exp1449_ltlzinc_style_synthetic",
+      "source_template": {
+        "source_experiment": 683,
+        "template_id": "1",
+        "violation_pattern_excerpt": "COMPUTE: A robe takes 2 bolts of blue fiber and half that much white fiber.  How many bol (synthetic_compute_pattern)",
+        "violation_type": "verified_repair"
+      },
+      "split": "train",
+      "tags": [
+        "ltlzinc",
+        "temporal",
+        "nonforgetting",
+        "operator:next",
+        "phase:anchor"
+      ],
+      "temporal_operator": "next",
+      "trace": [
+        {
+          "t": 0,
+          "token_valid": false
+        },
+        {
+          "t": 1,
+          "token_valid": true
+        }
+      ]
+    },
+    {
+      "case_id": "ltlzinc-next-token_valid-repair-hint-07",
+      "certificate_state": "REPAIR_HINT",
+      "constraint_family": "next",
+      "dvi_label": 1,
+      "evaluation": {
+        "expected_verifier_result": false,
+        "verifier_path": "carnot.reporting.ltlzinc_temporal_continual_learning_adapter.verify_temporal_case"
+      },
+      "expected_satisfied": false,
+      "fr11_memory_hint": "promote_temporal_constraint_violation",
+      "guard_signal": null,
+      "label": "rejected",
+      "ltl_formula": "X token_valid",
+      "minizinc_constraint": "constraint token_valid[2];",
+      "nonforgetting_phase": "anchor",
+      "retention": {
+        "anchor_case_id": "ltlzinc-next-token_valid-repair-hint-07",
+        "must_retrieve_after_updates": true,
+        "nonforgetting_check": "retrieve_same_case_after_update_rows",
+        "phase": "anchor"
+      },
+      "signal": "token_valid",
+      "source": "exp1449_ltlzinc_style_synthetic",
+      "source_template": {
+        "source_experiment": 683,
+        "template_id": "2",
+        "violation_pattern_excerpt": "COMPUTE: Josh decides to try flipping a house.  He buys a house for $80,000 and then puts (synthetic_compute_pattern)",
+        "violation_type": "verified_repair"
+      },
+      "split": "train",
+      "tags": [
+        "ltlzinc",
+        "temporal",
+        "nonforgetting",
+        "operator:next",
+        "phase:anchor"
+      ],
+      "temporal_operator": "next",
+      "trace": [
+        {
+          "t": 0,
+          "token_valid": false
+        },
+        {
+          "t": 1,
+          "token_valid": false
+        }
+      ]
+    },
+    {
+      "case_id": "ltlzinc-next-checkpoint-sat-08",
+      "certificate_state": "SAT",
+      "constraint_family": "next",
+      "dvi_label": 0,
+      "evaluation": {
+        "expected_verifier_result": true,
+        "verifier_path": "carnot.reporting.ltlzinc_temporal_continual_learning_adapter.verify_temporal_case"
+      },
+      "expected_satisfied": true,
+      "fr11_memory_hint": "promote_temporal_constraint_success",
+      "guard_signal": null,
+      "label": "accepted",
+      "ltl_formula": "X checkpoint",
+      "minizinc_constraint": "constraint checkpoint[2];",
+      "nonforgetting_phase": "anchor",
+      "retention": {
+        "anchor_case_id": "ltlzinc-next-checkpoint-sat-08",
+        "must_retrieve_after_updates": true,
+        "nonforgetting_check": "retrieve_same_case_after_update_rows",
+        "phase": "anchor"
+      },
+      "signal": "checkpoint",
+      "source": "exp1449_ltlzinc_style_synthetic",
+      "source_template": {
+        "source_experiment": 683,
+        "template_id": "3",
+        "violation_pattern_excerpt": "COMPUTE: James decides to run 3 sprints 3 times a week.  He runs 60 meters each sprint. (synthetic_compute_pattern)",
+        "violation_type": "verified_repair"
+      },
+      "split": "eval",
+      "tags": [
+        "ltlzinc",
+        "temporal",
+        "nonforgetting",
+        "operator:next",
+        "phase:anchor"
+      ],
+      "temporal_operator": "next",
+      "trace": [
+        {
+          "checkpoint": false,
+          "t": 0
+        },
+        {
+          "checkpoint": true,
+          "t": 1
+        }
+      ]
+    },
+    {
+      "case_id": "ltlzinc-next-checkpoint-repair-hint-08",
+      "certificate_state": "REPAIR_HINT",
+      "constraint_family": "next",
+      "dvi_label": 1,
+      "evaluation": {
+        "expected_verifier_result": false,
+        "verifier_path": "carnot.reporting.ltlzinc_temporal_continual_learning_adapter.verify_temporal_case"
+      },
+      "expected_satisfied": false,
+      "fr11_memory_hint": "promote_temporal_constraint_violation",
+      "guard_signal": null,
+      "label": "rejected",
+      "ltl_formula": "X checkpoint",
+      "minizinc_constraint": "constraint checkpoint[2];",
+      "nonforgetting_phase": "anchor",
+      "retention": {
+        "anchor_case_id": "ltlzinc-next-checkpoint-repair-hint-08",
+        "must_retrieve_after_updates": true,
+        "nonforgetting_check": "retrieve_same_case_after_update_rows",
+        "phase": "anchor"
+      },
+      "signal": "checkpoint",
+      "source": "exp1449_ltlzinc_style_synthetic",
+      "source_template": {
+        "source_experiment": 683,
+        "template_id": "4",
+        "violation_pattern_excerpt": "COMPUTE: Every day, Wendi feeds each of her chickens three cups of mixed chicken feed, co (synthetic_compute_pattern)",
+        "violation_type": "verified_repair"
+      },
+      "split": "eval",
+      "tags": [
+        "ltlzinc",
+        "temporal",
+        "nonforgetting",
+        "operator:next",
+        "phase:anchor"
+      ],
+      "temporal_operator": "next",
+      "trace": [
+        {
+          "checkpoint": true,
+          "t": 0
+        }
+      ]
+    },
+    {
+      "case_id": "ltlzinc-until-ready-sat-09",
+      "certificate_state": "SAT",
+      "constraint_family": "until",
+      "dvi_label": 0,
+      "evaluation": {
+        "expected_verifier_result": true,
+        "verifier_path": "carnot.reporting.ltlzinc_temporal_continual_learning_adapter.verify_temporal_case"
+      },
+      "expected_satisfied": true,
+      "fr11_memory_hint": "promote_temporal_constraint_success",
+      "guard_signal": "waiting",
+      "label": "accepted",
+      "ltl_formula": "waiting U ready",
+      "minizinc_constraint": "constraint exists(t in TIME)(ready[t] /\\ forall(p in 1..t-1)(waiting[p]));",
+      "nonforgetting_phase": "anchor",
+      "retention": {
+        "anchor_case_id": "ltlzinc-until-ready-sat-09",
+        "must_retrieve_after_updates": true,
+        "nonforgetting_check": "retrieve_same_case_after_update_rows",
+        "phase": "anchor"
+      },
+      "signal": "ready",
+      "source": "exp1449_ltlzinc_style_synthetic",
+      "source_template": {
+        "source_experiment": 683,
+        "template_id": "5",
+        "violation_pattern_excerpt": "COMPUTE: Kylar went to the store to buy glasses for his new apartment. One glass costs $5 (synthetic_compute_pattern)",
+        "violation_type": "verified_repair"
+      },
+      "split": "eval",
+      "tags": [
+        "ltlzinc",
+        "temporal",
+        "nonforgetting",
+        "operator:until",
+        "phase:anchor"
+      ],
+      "temporal_operator": "until",
+      "trace": [
+        {
+          "ready": false,
+          "t": 0,
+          "waiting": true
+        },
+        {
+          "ready": true,
+          "t": 1,
+          "waiting": false
+        }
+      ]
+    },
+    {
+      "case_id": "ltlzinc-until-ready-repair-hint-09",
+      "certificate_state": "REPAIR_HINT",
+      "constraint_family": "until",
+      "dvi_label": 1,
+      "evaluation": {
+        "expected_verifier_result": false,
+        "verifier_path": "carnot.reporting.ltlzinc_temporal_continual_learning_adapter.verify_temporal_case"
+      },
+      "expected_satisfied": false,
+      "fr11_memory_hint": "promote_temporal_constraint_violation",
+      "guard_signal": "waiting",
+      "label": "rejected",
+      "ltl_formula": "waiting U ready",
+      "minizinc_constraint": "constraint exists(t in TIME)(ready[t] /\\ forall(p in 1..t-1)(waiting[p]));",
+      "nonforgetting_phase": "anchor",
+      "retention": {
+        "anchor_case_id": "ltlzinc-until-ready-repair-hint-09",
+        "must_retrieve_after_updates": true,
+        "nonforgetting_check": "retrieve_same_case_after_update_rows",
+        "phase": "anchor"
+      },
+      "signal": "ready",
+      "source": "exp1449_ltlzinc_style_synthetic",
+      "source_template": {
+        "source_experiment": 683,
+        "template_id": "6",
+        "violation_pattern_excerpt": "COMPUTE: Toulouse has twice as many sheep as Charleston. Charleston has 4 times as many s (synthetic_compute_pattern)",
+        "violation_type": "verified_repair"
+      },
+      "split": "eval",
+      "tags": [
+        "ltlzinc",
+        "temporal",
+        "nonforgetting",
+        "operator:until",
+        "phase:anchor"
+      ],
+      "temporal_operator": "until",
+      "trace": [
+        {
+          "ready": false,
+          "t": 0,
+          "waiting": false
+        },
+        {
+          "ready": true,
+          "t": 1,
+          "waiting": true
+        }
+      ]
+    },
+    {
+      "case_id": "ltlzinc-until-success-sat-10",
+      "certificate_state": "SAT",
+      "constraint_family": "until",
+      "dvi_label": 0,
+      "evaluation": {
+        "expected_verifier_result": true,
+        "verifier_path": "carnot.reporting.ltlzinc_temporal_continual_learning_adapter.verify_temporal_case"
+      },
+      "expected_satisfied": true,
+      "fr11_memory_hint": "promote_temporal_constraint_success",
+      "guard_signal": "retrying",
+      "label": "accepted",
+      "ltl_formula": "retrying U success",
+      "minizinc_constraint": "constraint exists(t in TIME)(success[t] /\\ forall(p in 1..t-1)(retrying[p]));",
+      "nonforgetting_phase": "anchor",
+      "retention": {
+        "anchor_case_id": "ltlzinc-until-success-sat-10",
+        "must_retrieve_after_updates": true,
+        "nonforgetting_check": "retrieve_same_case_after_update_rows",
+        "phase": "anchor"
+      },
+      "signal": "success",
+      "source": "exp1449_ltlzinc_style_synthetic",
+      "source_template": {
+        "source_experiment": 683,
+        "template_id": "7",
+        "violation_pattern_excerpt": "COMPUTE: Carla is downloading a 200 GB file. Normally she can download 2 GB/minute, but 4 (synthetic_compute_pattern)",
+        "violation_type": "verified_repair"
+      },
+      "split": "eval",
+      "tags": [
+        "ltlzinc",
+        "temporal",
+        "nonforgetting",
+        "operator:until",
+        "phase:anchor"
+      ],
+      "temporal_operator": "until",
+      "trace": [
+        {
+          "retrying": true,
+          "success": false,
+          "t": 0
+        },
+        {
+          "retrying": true,
+          "success": false,
+          "t": 1
+        },
+        {
+          "retrying": false,
+          "success": true,
+          "t": 2
+        }
+      ]
+    },
+    {
+      "case_id": "ltlzinc-until-success-repair-hint-10",
+      "certificate_state": "REPAIR_HINT",
+      "constraint_family": "until",
+      "dvi_label": 1,
+      "evaluation": {
+        "expected_verifier_result": false,
+        "verifier_path": "carnot.reporting.ltlzinc_temporal_continual_learning_adapter.verify_temporal_case"
+      },
+      "expected_satisfied": false,
+      "fr11_memory_hint": "promote_temporal_constraint_violation",
+      "guard_signal": "retrying",
+      "label": "rejected",
+      "ltl_formula": "retrying U success",
+      "minizinc_constraint": "constraint exists(t in TIME)(success[t] /\\ forall(p in 1..t-1)(retrying[p]));",
+      "nonforgetting_phase": "anchor",
+      "retention": {
+        "anchor_case_id": "ltlzinc-until-success-repair-hint-10",
+        "must_retrieve_after_updates": true,
+        "nonforgetting_check": "retrieve_same_case_after_update_rows",
+        "phase": "anchor"
+      },
+      "signal": "success",
+      "source": "exp1449_ltlzinc_style_synthetic",
+      "source_template": {
+        "source_experiment": 683,
+        "template_id": "8",
+        "violation_pattern_excerpt": "COMPUTE: John drives for 3 hours at a speed of 60 mph and then turns around because he re (synthetic_compute_pattern)",
+        "violation_type": "verified_repair"
+      },
+      "split": "eval",
+      "tags": [
+        "ltlzinc",
+        "temporal",
+        "nonforgetting",
+        "operator:until",
+        "phase:anchor"
+      ],
+      "temporal_operator": "until",
+      "trace": [
+        {
+          "retrying": true,
+          "success": false,
+          "t": 0
+        },
+        {
+          "retrying": false,
+          "success": false,
+          "t": 1
+        }
+      ]
+    },
+    {
+      "case_id": "ltlzinc-until-released-sat-11",
+      "certificate_state": "SAT",
+      "constraint_family": "until",
+      "dvi_label": 0,
+      "evaluation": {
+        "expected_verifier_result": true,
+        "verifier_path": "carnot.reporting.ltlzinc_temporal_continual_learning_adapter.verify_temporal_case"
+      },
+      "expected_satisfied": true,
+      "fr11_memory_hint": "promote_temporal_constraint_success",
+      "guard_signal": "locked",
+      "label": "accepted",
+      "ltl_formula": "locked U released",
+      "minizinc_constraint": "constraint exists(t in TIME)(released[t] /\\ forall(p in 1..t-1)(locked[p]));",
+      "nonforgetting_phase": "anchor",
+      "retention": {
+        "anchor_case_id": "ltlzinc-until-released-sat-11",
+        "must_retrieve_after_updates": true,
+        "nonforgetting_check": "retrieve_same_case_after_update_rows",
+        "phase": "anchor"
+      },
+      "signal": "released",
+      "source": "exp1449_ltlzinc_style_synthetic",
+      "source_template": {
+        "source_experiment": 683,
+        "template_id": "9",
+        "violation_pattern_excerpt": "COMPUTE: Eliza's rate per hour for the first 40 hours she works each week is $10. She als (synthetic_compute_pattern)",
+        "violation_type": "verified_repair"
+      },
+      "split": "eval",
+      "tags": [
+        "ltlzinc",
+        "temporal",
+        "nonforgetting",
+        "operator:until",
+        "phase:anchor"
+      ],
+      "temporal_operator": "until",
+      "trace": [
+        {
+          "locked": true,
+          "released": false,
+          "t": 0
+        },
+        {
+          "locked": false,
+          "released": true,
+          "t": 1
+        }
+      ]
+    },
+    {
+      "case_id": "ltlzinc-until-released-repair-hint-11",
+      "certificate_state": "REPAIR_HINT",
+      "constraint_family": "until",
+      "dvi_label": 1,
+      "evaluation": {
+        "expected_verifier_result": false,
+        "verifier_path": "carnot.reporting.ltlzinc_temporal_continual_learning_adapter.verify_temporal_case"
+      },
+      "expected_satisfied": false,
+      "fr11_memory_hint": "promote_temporal_constraint_violation",
+      "guard_signal": "locked",
+      "label": "rejected",
+      "ltl_formula": "locked U released",
+      "minizinc_constraint": "constraint exists(t in TIME)(released[t] /\\ forall(p in 1..t-1)(locked[p]));",
+      "nonforgetting_phase": "anchor",
+      "retention": {
+        "anchor_case_id": "ltlzinc-until-released-repair-hint-11",
+        "must_retrieve_after_updates": true,
+        "nonforgetting_check": "retrieve_same_case_after_update_rows",
+        "phase": "anchor"
+      },
+      "signal": "released",
+      "source": "exp1449_ltlzinc_style_synthetic",
+      "source_template": {
+        "source_experiment": 683,
+        "template_id": "10",
+        "violation_pattern_excerpt": "COMPUTE: A new program had 60 downloads in the first month. The number of downloads in th (synthetic_compute_pattern)",
+        "violation_type": "verified_repair"
+      },
+      "split": "eval",
+      "tags": [
+        "ltlzinc",
+        "temporal",
+        "nonforgetting",
+        "operator:until",
+        "phase:anchor"
+      ],
+      "temporal_operator": "until",
+      "trace": [
+        {
+          "locked": false,
+          "released": false,
+          "t": 0
+        },
+        {
+          "locked": false,
+          "released": true,
+          "t": 1
+        }
+      ]
+    },
+    {
+      "case_id": "ltlzinc-update-always-coolant_ok-sat-00",
+      "certificate_state": "SAT",
+      "constraint_family": "always",
+      "dvi_label": 0,
+      "evaluation": {
+        "expected_verifier_result": true,
+        "verifier_path": "carnot.reporting.ltlzinc_temporal_continual_learning_adapter.verify_temporal_case"
+      },
+      "expected_satisfied": true,
+      "fr11_memory_hint": "promote_temporal_constraint_success",
+      "guard_signal": null,
+      "label": "accepted",
+      "ltl_formula": "G coolant_ok",
+      "minizinc_constraint": "constraint forall(t in TIME)(coolant_ok[t]);",
+      "nonforgetting_phase": "update",
+      "retention": {
+        "anchor_case_id": "ltlzinc-update-always-coolant_ok-sat-00",
+        "must_retrieve_after_updates": false,
+        "nonforgetting_check": "post_anchor_update",
+        "phase": "update"
+      },
+      "signal": "coolant_ok",
+      "source": "exp1449_ltlzinc_style_synthetic",
+      "source_template": {
+        "source_experiment": 683,
+        "template_id": "11",
+        "violation_pattern_excerpt": "COMPUTE: Toula went to the bakery and bought various types of pastries. She bought 3 doze (synthetic_compute_pattern)",
+        "violation_type": "verified_repair"
+      },
+      "split": "update",
+      "tags": [
+        "ltlzinc",
+        "temporal",
+        "nonforgetting",
+        "operator:always",
+        "phase:update"
+      ],
+      "temporal_operator": "always",
+      "trace": [
+        {
+          "coolant_ok": true,
+          "t": 0
+        },
+        {
+          "coolant_ok": true,
+          "t": 1
+        }
+      ]
+    },
+    {
+      "case_id": "ltlzinc-update-always-coolant_ok-repair-hint-00",
+      "certificate_state": "REPAIR_HINT",
+      "constraint_family": "always",
+      "dvi_label": 1,
+      "evaluation": {
+        "expected_verifier_result": false,
+        "verifier_path": "carnot.reporting.ltlzinc_temporal_continual_learning_adapter.verify_temporal_case"
+      },
+      "expected_satisfied": false,
+      "fr11_memory_hint": "promote_temporal_constraint_violation",
+      "guard_signal": null,
+      "label": "rejected",
+      "ltl_formula": "G coolant_ok",
+      "minizinc_constraint": "constraint forall(t in TIME)(coolant_ok[t]);",
+      "nonforgetting_phase": "update",
+      "retention": {
+        "anchor_case_id": "ltlzinc-update-always-coolant_ok-repair-hint-00",
+        "must_retrieve_after_updates": false,
+        "nonforgetting_check": "post_anchor_update",
+        "phase": "update"
+      },
+      "signal": "coolant_ok",
+      "source": "exp1449_ltlzinc_style_synthetic",
+      "source_template": {
+        "source_experiment": 683,
+        "template_id": "12",
+        "violation_pattern_excerpt": "COMPUTE: Carlos is planting a lemon tree. The tree will cost $90 to plant. Each year it w (synthetic_compute_pattern)",
+        "violation_type": "verified_repair"
+      },
+      "split": "update",
+      "tags": [
+        "ltlzinc",
+        "temporal",
+        "nonforgetting",
+        "operator:always",
+        "phase:update"
+      ],
+      "temporal_operator": "always",
+      "trace": [
+        {
+          "coolant_ok": true,
+          "t": 0
+        },
+        {
+          "coolant_ok": false,
+          "t": 1
+        }
+      ]
+    },
+    {
+      "case_id": "ltlzinc-update-eventually-commit_seen-sat-01",
+      "certificate_state": "SAT",
+      "constraint_family": "eventually",
+      "dvi_label": 0,
+      "evaluation": {
+        "expected_verifier_result": true,
+        "verifier_path": "carnot.reporting.ltlzinc_temporal_continual_learning_adapter.verify_temporal_case"
+      },
+      "expected_satisfied": true,
+      "fr11_memory_hint": "promote_temporal_constraint_success",
+      "guard_signal": null,
+      "label": "accepted",
+      "ltl_formula": "F commit_seen",
+      "minizinc_constraint": "constraint exists(t in TIME)(commit_seen[t]);",
+      "nonforgetting_phase": "update",
+      "retention": {
+        "anchor_case_id": "ltlzinc-update-eventually-commit_seen-sat-01",
+        "must_retrieve_after_updates": false,
+        "nonforgetting_check": "post_anchor_update",
+        "phase": "update"
+      },
+      "signal": "commit_seen",
+      "source": "exp1449_ltlzinc_style_synthetic",
+      "source_template": {
+        "source_experiment": 683,
+        "template_id": "0",
+        "violation_pattern_excerpt": "COMPUTE: Janet\u2019s ducks lay 16 eggs per day. She eats three for breakfast every morning an (synthetic_compute_pattern)",
+        "violation_type": "verified_repair"
+      },
+      "split": "update",
+      "tags": [
+        "ltlzinc",
+        "temporal",
+        "nonforgetting",
+        "operator:eventually",
+        "phase:update"
+      ],
+      "temporal_operator": "eventually",
+      "trace": [
+        {
+          "commit_seen": false,
+          "t": 0
+        },
+        {
+          "commit_seen": true,
+          "t": 1
+        }
+      ]
+    },
+    {
+      "case_id": "ltlzinc-update-eventually-commit_seen-repair-hint-01",
+      "certificate_state": "REPAIR_HINT",
+      "constraint_family": "eventually",
+      "dvi_label": 1,
+      "evaluation": {
+        "expected_verifier_result": false,
+        "verifier_path": "carnot.reporting.ltlzinc_temporal_continual_learning_adapter.verify_temporal_case"
+      },
+      "expected_satisfied": false,
+      "fr11_memory_hint": "promote_temporal_constraint_violation",
+      "guard_signal": null,
+      "label": "rejected",
+      "ltl_formula": "F commit_seen",
+      "minizinc_constraint": "constraint exists(t in TIME)(commit_seen[t]);",
+      "nonforgetting_phase": "update",
+      "retention": {
+        "anchor_case_id": "ltlzinc-update-eventually-commit_seen-repair-hint-01",
+        "must_retrieve_after_updates": false,
+        "nonforgetting_check": "post_anchor_update",
+        "phase": "update"
+      },
+      "signal": "commit_seen",
+      "source": "exp1449_ltlzinc_style_synthetic",
+      "source_template": {
+        "source_experiment": 683,
+        "template_id": "1",
+        "violation_pattern_excerpt": "COMPUTE: A robe takes 2 bolts of blue fiber and half that much white fiber.  How many bol (synthetic_compute_pattern)",
+        "violation_type": "verified_repair"
+      },
+      "split": "update",
+      "tags": [
+        "ltlzinc",
+        "temporal",
+        "nonforgetting",
+        "operator:eventually",
+        "phase:update"
+      ],
+      "temporal_operator": "eventually",
+      "trace": [
+        {
+          "commit_seen": false,
+          "t": 0
+        },
+        {
+          "commit_seen": false,
+          "t": 1
+        }
+      ]
+    },
+    {
+      "case_id": "ltlzinc-update-next-rollback_ready-sat-02",
+      "certificate_state": "SAT",
+      "constraint_family": "next",
+      "dvi_label": 0,
+      "evaluation": {
+        "expected_verifier_result": true,
+        "verifier_path": "carnot.reporting.ltlzinc_temporal_continual_learning_adapter.verify_temporal_case"
+      },
+      "expected_satisfied": true,
+      "fr11_memory_hint": "promote_temporal_constraint_success",
+      "guard_signal": null,
+      "label": "accepted",
+      "ltl_formula": "X rollback_ready",
+      "minizinc_constraint": "constraint rollback_ready[2];",
+      "nonforgetting_phase": "update",
+      "retention": {
+        "anchor_case_id": "ltlzinc-update-next-rollback_ready-sat-02",
+        "must_retrieve_after_updates": false,
+        "nonforgetting_check": "post_anchor_update",
+        "phase": "update"
+      },
+      "signal": "rollback_ready",
+      "source": "exp1449_ltlzinc_style_synthetic",
+      "source_template": {
+        "source_experiment": 683,
+        "template_id": "2",
+        "violation_pattern_excerpt": "COMPUTE: Josh decides to try flipping a house.  He buys a house for $80,000 and then puts (synthetic_compute_pattern)",
+        "violation_type": "verified_repair"
+      },
+      "split": "update",
+      "tags": [
+        "ltlzinc",
+        "temporal",
+        "nonforgetting",
+        "operator:next",
+        "phase:update"
+      ],
+      "temporal_operator": "next",
+      "trace": [
+        {
+          "rollback_ready": false,
+          "t": 0
+        },
+        {
+          "rollback_ready": true,
+          "t": 1
+        }
+      ]
+    },
+    {
+      "case_id": "ltlzinc-update-next-rollback_ready-repair-hint-02",
+      "certificate_state": "REPAIR_HINT",
+      "constraint_family": "next",
+      "dvi_label": 1,
+      "evaluation": {
+        "expected_verifier_result": false,
+        "verifier_path": "carnot.reporting.ltlzinc_temporal_continual_learning_adapter.verify_temporal_case"
+      },
+      "expected_satisfied": false,
+      "fr11_memory_hint": "promote_temporal_constraint_violation",
+      "guard_signal": null,
+      "label": "rejected",
+      "ltl_formula": "X rollback_ready",
+      "minizinc_constraint": "constraint rollback_ready[2];",
+      "nonforgetting_phase": "update",
+      "retention": {
+        "anchor_case_id": "ltlzinc-update-next-rollback_ready-repair-hint-02",
+        "must_retrieve_after_updates": false,
+        "nonforgetting_check": "post_anchor_update",
+        "phase": "update"
+      },
+      "signal": "rollback_ready",
+      "source": "exp1449_ltlzinc_style_synthetic",
+      "source_template": {
+        "source_experiment": 683,
+        "template_id": "3",
+        "violation_pattern_excerpt": "COMPUTE: James decides to run 3 sprints 3 times a week.  He runs 60 meters each sprint. (synthetic_compute_pattern)",
+        "violation_type": "verified_repair"
+      },
+      "split": "update",
+      "tags": [
+        "ltlzinc",
+        "temporal",
+        "nonforgetting",
+        "operator:next",
+        "phase:update"
+      ],
+      "temporal_operator": "next",
+      "trace": [
+        {
+          "rollback_ready": true,
+          "t": 0
+        },
+        {
+          "rollback_ready": false,
+          "t": 1
+        }
+      ]
+    },
+    {
+      "case_id": "ltlzinc-update-until-lease_released-sat-03",
+      "certificate_state": "SAT",
+      "constraint_family": "until",
+      "dvi_label": 0,
+      "evaluation": {
+        "expected_verifier_result": true,
+        "verifier_path": "carnot.reporting.ltlzinc_temporal_continual_learning_adapter.verify_temporal_case"
+      },
+      "expected_satisfied": true,
+      "fr11_memory_hint": "promote_temporal_constraint_success",
+      "guard_signal": "lease_held",
+      "label": "accepted",
+      "ltl_formula": "lease_held U lease_released",
+      "minizinc_constraint": "constraint exists(t in TIME)(lease_released[t] /\\ forall(p in 1..t-1)(lease_held[p]));",
+      "nonforgetting_phase": "update",
+      "retention": {
+        "anchor_case_id": "ltlzinc-update-until-lease_released-sat-03",
+        "must_retrieve_after_updates": false,
+        "nonforgetting_check": "post_anchor_update",
+        "phase": "update"
+      },
+      "signal": "lease_released",
+      "source": "exp1449_ltlzinc_style_synthetic",
+      "source_template": {
+        "source_experiment": 683,
+        "template_id": "4",
+        "violation_pattern_excerpt": "COMPUTE: Every day, Wendi feeds each of her chickens three cups of mixed chicken feed, co (synthetic_compute_pattern)",
+        "violation_type": "verified_repair"
+      },
+      "split": "update",
+      "tags": [
+        "ltlzinc",
+        "temporal",
+        "nonforgetting",
+        "operator:until",
+        "phase:update"
+      ],
+      "temporal_operator": "until",
+      "trace": [
+        {
+          "lease_held": true,
+          "lease_released": false,
+          "t": 0
+        },
+        {
+          "lease_held": false,
+          "lease_released": true,
+          "t": 1
+        }
+      ]
+    },
+    {
+      "case_id": "ltlzinc-update-until-lease_released-repair-hint-03",
+      "certificate_state": "REPAIR_HINT",
+      "constraint_family": "until",
+      "dvi_label": 1,
+      "evaluation": {
+        "expected_verifier_result": false,
+        "verifier_path": "carnot.reporting.ltlzinc_temporal_continual_learning_adapter.verify_temporal_case"
+      },
+      "expected_satisfied": false,
+      "fr11_memory_hint": "promote_temporal_constraint_violation",
+      "guard_signal": "lease_held",
+      "label": "rejected",
+      "ltl_formula": "lease_held U lease_released",
+      "minizinc_constraint": "constraint exists(t in TIME)(lease_released[t] /\\ forall(p in 1..t-1)(lease_held[p]));",
+      "nonforgetting_phase": "update",
+      "retention": {
+        "anchor_case_id": "ltlzinc-update-until-lease_released-repair-hint-03",
+        "must_retrieve_after_updates": false,
+        "nonforgetting_check": "post_anchor_update",
+        "phase": "update"
+      },
+      "signal": "lease_released",
+      "source": "exp1449_ltlzinc_style_synthetic",
+      "source_template": {
+        "source_experiment": 683,
+        "template_id": "5",
+        "violation_pattern_excerpt": "COMPUTE: Kylar went to the store to buy glasses for his new apartment. One glass costs $5 (synthetic_compute_pattern)",
+        "violation_type": "verified_repair"
+      },
+      "split": "update",
+      "tags": [
+        "ltlzinc",
+        "temporal",
+        "nonforgetting",
+        "operator:until",
+        "phase:update"
+      ],
+      "temporal_operator": "until",
+      "trace": [
+        {
+          "lease_held": false,
+          "lease_released": false,
+          "t": 0
+        },
+        {
+          "lease_held": false,
+          "lease_released": true,
+          "t": 1
+        }
+      ]
+    }
+  ],
+  "generator": "scripts/generate_ltlzinc.py",
+  "repair_hint_case_count": 16,
+  "run_date": "20260509",
+  "sat_case_count": 16,
+  "schema": "carnot.ltlzinc_temporal_nonforgetting_benchmark.v1",
+  "source": {
+    "constraint_templates_path": "data/constraint_templates.json",
+    "source_experiments": [
+      683
+    ],
+    "template_count": 13,
+    "template_ids": [
+      "0",
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8",
+      "9",
+      "10",
+      "11",
+      "12"
+    ]
+  },
+  "spec": [
+    "REQ-LEARN-1630-6",
+    "REQ-LEARN-1630-7",
+    "SCENARIO-LEARN-1630"
+  ],
+  "supported_operators": [
+    "always",
+    "eventually",
+    "next",
+    "until"
+  ],
+  "update_case_count": 8
+}
