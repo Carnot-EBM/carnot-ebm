@@ -1556,3 +1556,4 @@ web search: site:o |
 | 2026-05-10 19:40 UTC | Exp 1728: System-2 Reasoning Benchmark (GSM8k & MA | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1727-eqm-sampler.status (actual=None == |
 | 2026-05-10 19:42 UTC | Exp 1728: System-2 Reasoning Benchmark (GSM8k & MA | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1727-eqm-sampler.status (actual=None == |
 | 2026-05-10 19:44 UTC | Exp 1728: System-2 Reasoning Benchmark (GSM8k & MA | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1727-eqm-sampler.status (actual=None == |
+| 2026-05-10 19:57 UTC | Exp 1729: KANELÉ LUT-based Synthesis Pipeline | FAIL | Gemini CLI error: Stalled after 600s silence. Last output:  enabled. All tool  |
