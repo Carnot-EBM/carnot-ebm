@@ -5333,3 +5333,21 @@ The deliverable SHALL be written to `results/experiment_1685_live_sota.json`.
 **When** the discovery loop is executed
 **Then** it generates 10 traces
 **And** successfully identifies at least one hallucination and confirms repair.
+
+---
+
+## REQ-FR11-040: FR-11 Continual Learning Replay Buffer with Structural Diversity
+
+**Given** the FR-11 constraint self-discovery loop generating constraint violations
+**When** the continual learning replay buffer is updated and sampled
+**Then** it MUST prioritize structural constraint diversity (e.g. maintaining a diverse set of constraint types) to prevent catastrophic forgetting of rare constraint types.
+
+### REQ-FR11-040 Sub-requirements
+- REQ-FR11-040-1: The replay buffer MUST categorize samples by their structural constraint type.
+- REQ-FR11-040-2: When adding samples, the buffer MUST ensure representation of diverse structural constraint types up to a max capacity per type.
+- REQ-FR11-040-3: Sampling MUST return a batch that preserves structural diversity by sampling evenly across available constraint types.
+
+### SCENARIO-FR11-040: Structural Diversity Preserved
+**Given** a replay buffer flooded with constraint type A
+**When** a constraint type B is added and the buffer is sampled
+**Then** constraint type B is sampled at a proportionally higher rate than its naive frequency, preserving structural diversity.
