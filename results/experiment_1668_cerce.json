@@ -1,0 +1,90 @@
+{
+  "accepted_violation_count": 0,
+  "blocked_policy_updates": [],
+  "blockers": [],
+  "cerce_ledger_ready": true,
+  "certificates": [
+    {
+      "accepted_violation_count": 0,
+      "certificate_id": "8a8c2acb1cf87d24f5ae5d973083c05f740eaf5956b825877ba8e93b02b7c18e",
+      "gate_failures": [],
+      "no_model_weight_mutation": true,
+      "policy_update_id": "policy:fr11:simulated-memory:experiment-1668",
+      "post_violation_bound": 2.0,
+      "pre_violation_bound": 4.0,
+      "prior_memory_hash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "promotion_safe": true,
+      "provenance": [
+        "REQ-LEARN-1668",
+        "SCENARIO-LEARN-1668"
+      ],
+      "replay_case_count": 3,
+      "replay_cases": [
+        {
+          "bound_delta": -1.0,
+          "bound_worsened": false,
+          "case_id": "retained-arithmetic-carry",
+          "post_violation_bound": 0.0,
+          "pre_violation_bound": 1.0,
+          "replay_failed": false,
+          "retained": true,
+          "source": "experiment_1668_simulated_memory"
+        },
+        {
+          "bound_delta": 0.0,
+          "bound_worsened": false,
+          "case_id": "retained-temporal-order",
+          "post_violation_bound": 1.0,
+          "pre_violation_bound": 1.0,
+          "replay_failed": false,
+          "retained": true,
+          "source": "experiment_1668_simulated_memory"
+        },
+        {
+          "bound_delta": -1.0,
+          "bound_worsened": false,
+          "case_id": "retained-schema-contract",
+          "post_violation_bound": 1.0,
+          "pre_violation_bound": 2.0,
+          "replay_failed": false,
+          "retained": true,
+          "source": "experiment_1668_simulated_memory"
+        }
+      ],
+      "replay_failure_count": 0,
+      "replay_retention_passed": true,
+      "replay_retention_rate": 1.0,
+      "retained_case_count": 3,
+      "updated_memory_hash": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "utility_delta": 0.125,
+      "violation_bound_delta": -2.0
+    }
+  ],
+  "continuous_self_learning_task": true,
+  "experiment_id": 1668,
+  "honest_verdict": "complete: cerce_promotion_ledger_ready",
+  "nonforgetting_certificate_rate": 1.0,
+  "nonforgetting_rate": 1.0,
+  "policy_certificates_evaluated": 1,
+  "post_violation_bound": 2.0,
+  "pre_violation_bound": 4.0,
+  "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+  "promotion_gate_passed": true,
+  "promotion_safe_policy_updates": [
+    "policy:fr11:simulated-memory:experiment-1668"
+  ],
+  "replay_retention_rate": 1.0,
+  "run_date": "20260510",
+  "schema": "carnot.pipeline_cerce_ledger.v1",
+  "spec_traces": [
+    "REQ-LEARN-1668",
+    "SCENARIO-LEARN-1668",
+    "SCENARIO-LEARN-1669"
+  ],
+  "status": "complete",
+  "tests_run": [
+    "coverage run --source=python/carnot/pipeline -m pytest tests/python/test_cerce_ledger.py -q -o addopts=''",
+    "coverage report --include=python/carnot/pipeline/cerce_ledger.py --fail-under=100 --show-missing"
+  ],
+  "violation_bound_delta": -2.0
+}
