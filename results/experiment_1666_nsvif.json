@@ -1,0 +1,451 @@
+{
+  "arbitrary_code_execution_path_introduced": false,
+  "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1666_nsvif.json",
+  "case_results": [
+    {
+      "carnot_constraints": [
+        {
+          "constraint_type": "instruction_constraint",
+          "description": "NSVIF instruction constraint c001-json_object: json_object on json",
+          "energy_term": null,
+          "metadata": {
+            "case_id": "qwen-json-text-bound",
+            "constraint_id": "c001-json_object",
+            "dsl_schema_version": "carnot.instruction_constraints.v1",
+            "field": "json",
+            "instruction": "Respond in JSON with keys answer and confidence. Include \"approved\". Do not mention \"secret\". Use at most 12 words.",
+            "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+            "nsvif_operator": "json_object",
+            "parser_schema_version": "carnot.pipeline.nsvif_parser.v1",
+            "source_text": "json",
+            "spec_traces": [
+              "REQ-VERIFY-1666",
+              "SCENARIO-VERIFY-1666"
+            ],
+            "value": true
+          }
+        },
+        {
+          "constraint_type": "instruction_constraint",
+          "description": "NSVIF instruction constraint c002-json_has_keys: json_has_keys on json",
+          "energy_term": null,
+          "metadata": {
+            "case_id": "qwen-json-text-bound",
+            "constraint_id": "c002-json_has_keys",
+            "dsl_schema_version": "carnot.instruction_constraints.v1",
+            "field": "json",
+            "instruction": "Respond in JSON with keys answer and confidence. Include \"approved\". Do not mention \"secret\". Use at most 12 words.",
+            "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+            "nsvif_operator": "json_has_keys",
+            "parser_schema_version": "carnot.pipeline.nsvif_parser.v1",
+            "source_text": "with keys answer and confidence",
+            "spec_traces": [
+              "REQ-VERIFY-1666",
+              "SCENARIO-VERIFY-1666"
+            ],
+            "value": [
+              "answer",
+              "confidence"
+            ]
+          }
+        },
+        {
+          "constraint_type": "instruction_constraint",
+          "description": "NSVIF instruction constraint c003-contains: contains on text",
+          "energy_term": null,
+          "metadata": {
+            "case_id": "qwen-json-text-bound",
+            "constraint_id": "c003-contains",
+            "dsl_schema_version": "carnot.instruction_constraints.v1",
+            "field": "text",
+            "instruction": "Respond in JSON with keys answer and confidence. Include \"approved\". Do not mention \"secret\". Use at most 12 words.",
+            "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+            "nsvif_operator": "contains",
+            "parser_schema_version": "carnot.pipeline.nsvif_parser.v1",
+            "source_text": "Include \"approved\"",
+            "spec_traces": [
+              "REQ-VERIFY-1666",
+              "SCENARIO-VERIFY-1666"
+            ],
+            "value": "approved"
+          }
+        },
+        {
+          "constraint_type": "instruction_constraint",
+          "description": "NSVIF instruction constraint c004-not_contains: not_contains on text",
+          "energy_term": null,
+          "metadata": {
+            "case_id": "qwen-json-text-bound",
+            "constraint_id": "c004-not_contains",
+            "dsl_schema_version": "carnot.instruction_constraints.v1",
+            "field": "text",
+            "instruction": "Respond in JSON with keys answer and confidence. Include \"approved\". Do not mention \"secret\". Use at most 12 words.",
+            "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+            "nsvif_operator": "not_contains",
+            "parser_schema_version": "carnot.pipeline.nsvif_parser.v1",
+            "source_text": "Do not mention \"secret\"",
+            "spec_traces": [
+              "REQ-VERIFY-1666",
+              "SCENARIO-VERIFY-1666"
+            ],
+            "value": "secret"
+          }
+        },
+        {
+          "constraint_type": "instruction_constraint",
+          "description": "NSVIF instruction constraint c005-max_words: max_words on text",
+          "energy_term": null,
+          "metadata": {
+            "case_id": "qwen-json-text-bound",
+            "constraint_id": "c005-max_words",
+            "dsl_schema_version": "carnot.instruction_constraints.v1",
+            "field": "text",
+            "instruction": "Respond in JSON with keys answer and confidence. Include \"approved\". Do not mention \"secret\". Use at most 12 words.",
+            "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+            "nsvif_operator": "max_words",
+            "parser_schema_version": "carnot.pipeline.nsvif_parser.v1",
+            "source_text": "Use at most 12 words",
+            "spec_traces": [
+              "REQ-VERIFY-1666",
+              "SCENARIO-VERIFY-1666"
+            ],
+            "value": 12
+          }
+        }
+      ],
+      "case_id": "qwen-json-text-bound",
+      "compiled_backends": [
+        "python",
+        "pysat_cnf",
+        "z3"
+      ],
+      "constraint_count": 5,
+      "dsl_pack": {
+        "constraints": [
+          {
+            "field": "json",
+            "id": "c001-json_object",
+            "op": "json_object",
+            "source_text": "json",
+            "value": true
+          },
+          {
+            "field": "json",
+            "id": "c002-json_has_keys",
+            "op": "json_has_keys",
+            "source_text": "with keys answer and confidence",
+            "value": [
+              "answer",
+              "confidence"
+            ]
+          },
+          {
+            "field": "text",
+            "id": "c003-contains",
+            "op": "contains",
+            "source_text": "Include \"approved\"",
+            "value": "approved"
+          },
+          {
+            "field": "text",
+            "id": "c004-not_contains",
+            "op": "not_contains",
+            "source_text": "Do not mention \"secret\"",
+            "value": "secret"
+          },
+          {
+            "field": "text",
+            "id": "c005-max_words",
+            "op": "max_words",
+            "source_text": "Use at most 12 words",
+            "value": 12
+          }
+        ],
+        "instruction": "Respond in JSON with keys answer and confidence. Include \"approved\". Do not mention \"secret\". Use at most 12 words.",
+        "max_constraints": 8,
+        "parser_version": "rule-v1",
+        "schema_version": "carnot.instruction_constraints.v1"
+      },
+      "error": "",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "parser_success": true,
+      "prompt": "Respond in JSON with keys answer and confidence. Include \"approved\". Do not mention \"secret\". Use at most 12 words.",
+      "pysat_problem": {
+        "backend": "pysat-compatible-cnf",
+        "clauses": [
+          [
+            1
+          ],
+          [
+            2
+          ],
+          [
+            3
+          ],
+          [
+            4
+          ],
+          [
+            5
+          ]
+        ],
+        "description": "hard conjunction of instruction constraints",
+        "variables": {
+          "c001-json_object": 1,
+          "c002-json_has_keys": 2,
+          "c003-contains": 3,
+          "c004-not_contains": 4,
+          "c005-max_words": 5
+        }
+      },
+      "python_known_bad": {
+        "accepted": false,
+        "failure_ids": [
+          "c002-json_has_keys",
+          "c003-contains",
+          "c004-not_contains"
+        ],
+        "issues": [
+          {
+            "constraint_id": "c002-json_has_keys",
+            "expected": [
+              "answer",
+              "confidence"
+            ],
+            "message": "json_has_keys constraint failed",
+            "observed": {
+              "missing": [
+                "confidence"
+              ]
+            }
+          },
+          {
+            "constraint_id": "c003-contains",
+            "expected": "approved",
+            "message": "contains constraint failed",
+            "observed": "not found"
+          },
+          {
+            "constraint_id": "c004-not_contains",
+            "expected": "not secret",
+            "message": "not_contains constraint failed",
+            "observed": "found"
+          }
+        ]
+      },
+      "python_known_good": {
+        "accepted": true,
+        "failure_ids": [],
+        "issues": []
+      },
+      "validators_compiled": true,
+      "z3_known_bad": {
+        "accepted": false,
+        "failure_ids": [
+          "c002-json_has_keys",
+          "c003-contains",
+          "c004-not_contains"
+        ],
+        "sat_status": "unsat",
+        "z3_backend_available": true
+      },
+      "z3_known_good": {
+        "accepted": true,
+        "failure_ids": [],
+        "sat_status": "sat",
+        "z3_backend_available": true
+      },
+      "z3_problem": {
+        "assertions": [
+          "c001_json_object",
+          "c002_json_has_keys",
+          "c003_contains",
+          "c004_not_contains",
+          "c005_max_words"
+        ],
+        "backend": "z3-compatible-hard-conjunction",
+        "variables": {
+          "c001-json_object": "c001_json_object",
+          "c002-json_has_keys": "c002_json_has_keys",
+          "c003-contains": "c003_contains",
+          "c004-not_contains": "c004_not_contains",
+          "c005-max_words": "c005_max_words"
+        },
+        "z3_backend_available": true
+      }
+    },
+    {
+      "carnot_constraints": [
+        {
+          "constraint_type": "instruction_constraint",
+          "description": "NSVIF instruction constraint c001-enum: enum on text",
+          "energy_term": null,
+          "metadata": {
+            "case_id": "gemma-enum-answer",
+            "constraint_id": "c001-enum",
+            "dsl_schema_version": "carnot.instruction_constraints.v1",
+            "field": "text",
+            "instruction": "Answer must be one of \"yes\", \"no\".",
+            "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+            "nsvif_operator": "enum",
+            "parser_schema_version": "carnot.pipeline.nsvif_parser.v1",
+            "source_text": "one of \"yes\", \"no\"",
+            "spec_traces": [
+              "REQ-VERIFY-1666",
+              "SCENARIO-VERIFY-1666"
+            ],
+            "value": [
+              "yes",
+              "no"
+            ]
+          }
+        }
+      ],
+      "case_id": "gemma-enum-answer",
+      "compiled_backends": [
+        "python",
+        "pysat_cnf",
+        "z3"
+      ],
+      "constraint_count": 1,
+      "dsl_pack": {
+        "constraints": [
+          {
+            "field": "text",
+            "id": "c001-enum",
+            "op": "enum",
+            "source_text": "one of \"yes\", \"no\"",
+            "value": [
+              "yes",
+              "no"
+            ]
+          }
+        ],
+        "instruction": "Answer must be one of \"yes\", \"no\".",
+        "max_constraints": 8,
+        "parser_version": "rule-v1",
+        "schema_version": "carnot.instruction_constraints.v1"
+      },
+      "error": "",
+      "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "parser_success": true,
+      "prompt": "Answer must be one of \"yes\", \"no\".",
+      "pysat_problem": {
+        "backend": "pysat-compatible-cnf",
+        "clauses": [
+          [
+            1
+          ]
+        ],
+        "description": "hard conjunction of instruction constraints",
+        "variables": {
+          "c001-enum": 1
+        }
+      },
+      "python_known_bad": {
+        "accepted": false,
+        "failure_ids": [
+          "c001-enum"
+        ],
+        "issues": [
+          {
+            "constraint_id": "c001-enum",
+            "expected": [
+              "no",
+              "yes"
+            ],
+            "message": "enum constraint failed",
+            "observed": "maybe"
+          }
+        ]
+      },
+      "python_known_good": {
+        "accepted": true,
+        "failure_ids": [],
+        "issues": []
+      },
+      "validators_compiled": true,
+      "z3_known_bad": {
+        "accepted": false,
+        "failure_ids": [
+          "c001-enum"
+        ],
+        "sat_status": "unsat",
+        "z3_backend_available": true
+      },
+      "z3_known_good": {
+        "accepted": true,
+        "failure_ids": [],
+        "sat_status": "sat",
+        "z3_backend_available": true
+      },
+      "z3_problem": {
+        "assertions": [
+          "c001_enum"
+        ],
+        "backend": "z3-compatible-hard-conjunction",
+        "variables": {
+          "c001-enum": "c001_enum"
+        },
+        "z3_backend_available": true
+      }
+    }
+  ],
+  "cases_attempted": 2,
+  "compilation_rate": 1.0,
+  "dsl_schema": {
+    "constraint_fields": {
+      "field": "text or json",
+      "id": "stable local constraint id",
+      "op": "one supported operator",
+      "source_text": "instruction fragment that produced the constraint",
+      "value": "operator-specific expected value"
+    },
+    "max_constraints": 8,
+    "max_instruction_chars": 2000,
+    "schema_version": "carnot.instruction_constraints.v1",
+    "supported_operators": [
+      "contains",
+      "enum",
+      "exact_bullets",
+      "json_has_keys",
+      "json_object",
+      "max_words",
+      "min_words",
+      "not_contains"
+    ]
+  },
+  "dsl_schema_version": "carnot.instruction_constraints.v1",
+  "experiment": "1666_nsvif",
+  "experiment_id": 1666,
+  "false_accept_rate": 0.0,
+  "false_accepts": 0,
+  "honest_verdict": "complete: NSVIF prompts compiled to Python, PySAT-compatible CNF, and Z3 validators with zero false accepts",
+  "known_bad_reject_rate": 1.0,
+  "known_good_pass_rate": 1.0,
+  "live_sota_model_inference_used": false,
+  "model_specs": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "unsloth/gemma-4-31B-it-GGUF"
+  ],
+  "parser_schema_version": "carnot.pipeline.nsvif_parser.v1",
+  "pysat_validators_compiled": 2,
+  "python_known_bad_reject_rate": 1.0,
+  "python_known_good_pass_rate": 1.0,
+  "python_validators_compiled": 2,
+  "run_date": "20260509",
+  "spec_traces": [
+    "REQ-VERIFY-1666",
+    "SCENARIO-VERIFY-1666"
+  ],
+  "status": "complete",
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_pipeline_nsvif_parser.py -q -o addopts=",
+    "coverage run targeted nsvif_parser.py; coverage report --fail-under=100"
+  ],
+  "timestamp": "2026-05-10T03:55:19Z",
+  "validators_compiled": 2,
+  "z3_known_bad_reject_rate": 1.0,
+  "z3_known_good_pass_rate": 1.0,
+  "z3_validators_compiled": 2
+}
