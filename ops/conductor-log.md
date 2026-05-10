@@ -1488,3 +1488,4 @@ web search: site:o |
 | 2026-05-10 12:24 UTC | Exp 1691: gated on Exp 1690: Test-Time Scaling (ET | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1690-deep-ets-nabla.status (actual='com |
 | 2026-05-10 12:26 UTC | Exp 1691: gated on Exp 1690: Test-Time Scaling (ET | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1690-deep-ets-nabla.status (actual='com |
 | 2026-05-10 12:28 UTC | Exp 1691: gated on Exp 1690: Test-Time Scaling (ET | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1690-deep-ets-nabla.status (actual='com |
+| 2026-05-10 12:36 UTC | Exp 1692: KV260 Vivado Synthesizable Verilog Expor | OK | 81 passed, 1 warning in 3.97s |
