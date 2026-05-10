@@ -11862,3 +11862,10 @@ This sweep was run after milestone `.124` completed. Local outcomes: KANELÉ RTL
 - **Paper:** arXiv:2601.03404 (Jan 2026)
 - **What:** Reveals that reasoning models satisfy complex constraints by systematically distorting known facts.
 - **Relevance to Carnot:** We need factual constraint extractors paired with logical constraints to prevent our FR-11 self-play from drifting into factually incorrect logic spaces.
+
+## 2026-05-13 ArXiv Scan Updates
+- **Energy-Based Transformers (EBTs)**: Iterative refinement via gradient descent at inference time for System 2 thinking.
+- **Equilibrium Matching (EqM) (NeurIPS 2025)**: Generative framework learning the equilibrium gradient of an implicit energy landscape.
+- **Constraint-Informed KANs (CIKAN) (PMLR 2025)**: Applies KANs with physical and safety constraints directly into the network architecture.
+- **FourierCSP (2025)**: Continuous optimization for Constraint Satisfaction Problems using generalized Walsh-Fourier transform.
+- **KANELÉ (ISFPGA 2026)**: Hardware Acceleration framework optimizing KANs for FPGA deployment using LUTs (up to 2700x speedup).
