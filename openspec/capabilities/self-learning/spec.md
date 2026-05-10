@@ -5351,3 +5351,20 @@ The deliverable SHALL be written to `results/experiment_1685_live_sota.json`.
 **Given** a replay buffer flooded with constraint type A
 **When** a constraint type B is added and the buffer is sampled
 **Then** constraint type B is sampled at a proportionally higher rate than its naive frequency, preserving structural diversity.
+
+---
+
+## REQ-FR11-041: Semantic Pruning for FR-11 Replay Buffer
+
+**Given** the FR-11 continual learning replay buffer
+**When** constraint rules are added that are semantically redundant to existing rules
+**Then** a semantic pruning mechanism MUST identify and remove redundant structural constraint rules to reduce semantic redundancy.
+
+### REQ-FR11-041 Sub-requirements
+- REQ-FR11-041-1: The pruning mechanism MUST compute a similarity score between structural constraint rules.
+- REQ-FR11-041-2: Redundant rules exceeding a similarity threshold MUST be pruned from the replay buffer.
+
+### SCENARIO-FR11-041: Semantic Pruning of Redundant Rules
+**Given** an FR-11 replay buffer containing a structural constraint rule X
+**When** a semantically equivalent structural constraint rule Y is added
+**Then** the pruning mechanism calculates a similarity score above the threshold and removes rule Y (or X) to prevent redundancy.
