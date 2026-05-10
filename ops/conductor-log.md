@@ -1429,3 +1429,4 @@ web search: site:o |
 | 2026-05-09 22:25 UTC | Exp 1655: gated on Exp 1653, 1654: E2E Guided Deco | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1653-nsvif-sota-integration.status (ups |
 | 2026-05-09 23:11 UTC | Exp 1656: EBRM Trace Scorer | OK | 81 passed, 1 warning in 5.20s |
 | 2026-05-10 00:10 UTC | Exp 1657: KV260 EBRM Hardware Offload | OK | cache hit: 81 passed, 1 warning in 5.20s |
+| 2026-05-10 00:22 UTC | Exp 1658: gated on Exp 1656, 1657: Hardware Trace  | OK | 81 passed, 1 warning in 5.14s |
