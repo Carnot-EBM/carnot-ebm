@@ -18608,3 +18608,49 @@ constraints contributed to the energy,
 `score_accuracy`.
 
 **Spec traces:** REQ-VERIFY-1656, SCENARIO-VERIFY-1656, Exp 1656
+
+## REQ-VERIFY-1657: KV260 EBRM Trace-Scoring Binding
+
+Carnot SHALL provide a Rust binding at `crates/carnot-gpu/src/kv260_ebrm.rs`
+that maps extracted EBRM logical-trace constraints onto the q=3 KV260 Potts
+execution contract from `hardware/kv260/potts_sampler_v1.v`.
+
+The binding SHALL:
+
+- encode trace steps with proposition identity, truth polarity, confidence,
+  support links, contradiction links, and constraint IDs;
+- preserve the EBRM continuous-energy components used by
+  `python/carnot/models/ebrm_scorer.py`;
+- expose a stable executor trait so a KV260 MMIO backend can be substituted for
+  the deterministic software executor without changing caller-facing score
+  rows;
+- report whether upstream Potts synthesis succeeded by reading the same
+  `synthesis_success` field written by
+  `results/experiment_1649_vivado_synthesis.json`;
+- fail closed on malformed traces before any executor is called; and
+- expose artifact helpers that can write
+  `results/experiment_1657_kv260_ebrm_binding.json` with `status`,
+  `experiment_id`, `schema`, `kv260_ebrm_binding_ready`,
+  `continuous_energy_used`, `potts_q_states`, `potts_rtl_path`,
+  `synthesis_artifact_path`, `upstream_synthesis_success`,
+  `hardware_execution_available`,
+  `software_fallback_used`, `synthetic_cases_total`, `consistent_cases`,
+  `inconsistent_cases`, `consistent_mean_energy`, `inconsistent_mean_energy`,
+  `energy_gap`, `score_accuracy`, `case_scores`, `spec_traces`, `tests_run`,
+  and `honest_verdict`.
+
+**Implementation Status:** Implemented (Exp 1657)
+
+### SCENARIO-VERIFY-1657: KV260 Binding Scores Trace Constraints
+
+**Given** extracted logical traces containing coherent support chains and
+inconsistent traces with contradictions or unsupported steps,
+**When** the Rust KV260 EBRM binding encodes the traces for q=3 Potts execution
+and scores them through its executor trait,
+**Then** inconsistent traces receive higher continuous energy than coherent
+traces,
+**And** every score row preserves the auditable EBRM component breakdown,
+**And** the Exp 1657 artifact records the required schema fields, upstream
+Potts synthesis status, fallback/hardware execution status, and score accuracy.
+
+**Spec traces:** REQ-VERIFY-1657, SCENARIO-VERIFY-1657, Exp 1657

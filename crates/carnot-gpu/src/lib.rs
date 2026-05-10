@@ -19,6 +19,7 @@
 
 mod context;
 mod ising_gpu;
+pub mod kv260_ebrm;
 
 pub use context::GpuContext;
 pub use ising_gpu::IsingGpu;

@@ -1,0 +1,118 @@
+{
+  "status": "complete",
+  "experiment_id": 1657,
+  "schema": "kv260_ebrm_binding_v1",
+  "run_date": "20260509",
+  "kv260_ebrm_binding_ready": true,
+  "continuous_energy_used": true,
+  "potts_q_states": 3,
+  "potts_rtl_path": "hardware/kv260/potts_sampler_v1.v",
+  "synthesis_artifact_path": "results/experiment_1649_vivado_synthesis.json",
+  "upstream_synthesis_success": false,
+  "hardware_execution_available": false,
+  "software_fallback_used": true,
+  "synthetic_cases_total": 4,
+  "consistent_cases": 2,
+  "inconsistent_cases": 2,
+  "consistent_mean_energy": 0.0,
+  "inconsistent_mean_energy": 2.808,
+  "energy_gap": 2.808,
+  "score_accuracy": 1.0,
+  "case_scores": [
+    {
+      "trace_id": "inventory-consistent",
+      "energy": 0.0,
+      "coherence_score": 1.0,
+      "component_energies": {
+        "contradiction_energy": 0.0,
+        "unsupported_energy": 0.0,
+        "confidence_energy": 0.0,
+        "coverage_energy": 0.0,
+        "ordering_energy": 0.0
+      },
+      "violation_count": 0,
+      "continuous_energy_used": true,
+      "potts_q_states": 3,
+      "potts_states": [
+        0,
+        0
+      ],
+      "backend": "software-kv260-potts",
+      "hardware_execution_available": false
+    },
+    {
+      "trace_id": "inventory-contradiction",
+      "energy": 3.486,
+      "coherence_score": 0.030623,
+      "component_energies": {
+        "contradiction_energy": 3.486,
+        "unsupported_energy": 0.0,
+        "confidence_energy": 0.0,
+        "coverage_energy": 0.0,
+        "ordering_energy": 0.0
+      },
+      "violation_count": 2,
+      "continuous_energy_used": true,
+      "potts_q_states": 3,
+      "potts_states": [
+        0,
+        2
+      ],
+      "backend": "software-kv260-potts",
+      "hardware_execution_available": false
+    },
+    {
+      "trace_id": "route-consistent",
+      "energy": 0.0,
+      "coherence_score": 1.0,
+      "component_energies": {
+        "contradiction_energy": 0.0,
+        "unsupported_energy": 0.0,
+        "confidence_energy": 0.0,
+        "coverage_energy": 0.0,
+        "ordering_energy": 0.0
+      },
+      "violation_count": 0,
+      "continuous_energy_used": true,
+      "potts_q_states": 3,
+      "potts_states": [
+        0,
+        0
+      ],
+      "backend": "software-kv260-potts",
+      "hardware_execution_available": false
+    },
+    {
+      "trace_id": "route-unsupported",
+      "energy": 2.13,
+      "coherence_score": 0.118837,
+      "component_energies": {
+        "contradiction_energy": 0.0,
+        "unsupported_energy": 1.25,
+        "confidence_energy": 0.23,
+        "coverage_energy": 0.65,
+        "ordering_energy": 0.0
+      },
+      "violation_count": 1,
+      "continuous_energy_used": true,
+      "potts_q_states": 3,
+      "potts_states": [
+        0,
+        2
+      ],
+      "backend": "software-kv260-potts",
+      "hardware_execution_available": false
+    }
+  ],
+  "spec_traces": [
+    "REQ-VERIFY-1657",
+    "SCENARIO-VERIFY-1657"
+  ],
+  "tests_run": [
+    "cargo test -p carnot-gpu",
+    "cargo clippy -p carnot-gpu --all-targets -- -D warnings",
+    "llvm-cov report ... crates/carnot-gpu/src/kv260_ebrm.rs",
+    ".venv/bin/pytest tests/python -q"
+  ],
+  "honest_verdict": "complete: KV260 EBRM binding separates trace constraints with score_accuracy=1"
+}
