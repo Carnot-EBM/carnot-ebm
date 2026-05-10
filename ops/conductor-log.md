@@ -1552,3 +1552,4 @@ web search: site:o |
 | 2026-05-10 19:18 UTC | Exp 1724: Continuous Online Updater Prototype | OK | 81 passed, 1 warning in 5.33s |
 | 2026-05-10 19:24 UTC | Exp 1725: E2E FourierCSP + CIKAN with Feedback | OK | 81 passed, 1 warning in 5.20s |
 | 2026-05-10 19:29 UTC | Exp 1726: Energy-Based Transformer (EBT) Bridge | OK | 81 passed, 1 warning in 5.19s |
+| 2026-05-10 19:38 UTC | Exp 1727: Equilibrium Matching (EqM) Gradient Samp | OK | 97 passed, 1 warning in 7.55s |
