@@ -1563,3 +1563,4 @@ web search: site:o |
 | 2026-05-10 20:16 UTC | Exp 1732: Unified Self-Learning + Hardware Pipelin | OK | 81 passed, 1 warning in 5.51s |
 | 2026-05-10 20:29 UTC | Exp 1733: DualGPU Live Run with SOTA Models | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: erateContent?alt=ss |
 | 2026-05-10 20:41 UTC | Exp 1733: DualGPU Live Run with SOTA Models | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: Warning: 256-color  |
+| 2026-05-10 20:45 UTC | Exp 1733: DualGPU Live Run with SOTA Models | OK | cache hit: 82 passed, 1 warning in 4.23s |
