@@ -3049,3 +3049,21 @@ The pipeline MUST provide a task router that uses prompt entropy as a heuristic 
 **When** `EntropyTaskRouter.route(prompt)` is called
 **Then** the math question is routed to `"ebm_verifier"` and the QA question is routed to `"base_llm"`.
 
+### REQ-PIPELINE-1670: Energy-Guided Decoding (EGD) for SOTA Models
+
+The pipeline MUST provide an Energy-Guided Decoding wrapper for SOTA models (e.g. `unsloth/gemma-4-31B-it-GGUF`).
+It MUST apply EGD selection across inference calls.
+It MUST be tested on a bounded dataset to evaluate the hallucination "Yes-ratio" bias.
+
+**Acceptance criteria:**
+- `python/carnot/pipeline/energy_guided_decoding.py` exposes `EGDWrapper` or similar.
+- Wraps inference calls applying EGD selection.
+- Tested on a bounded dataset evaluating the hallucination "Yes-ratio" bias.
+- Writes an experiment artifact to `results/experiment_1670_egd.json`.
+
+### SCENARIO-PIPELINE-1670: EGD Wrapper Evaluates Hallucination Bias
+
+**Given** inference calls to a SOTA model
+**When** wrapped with EGD selection
+**Then** it evaluates hallucination Yes-ratio bias and produces `experiment_1670_egd.json`.
+
