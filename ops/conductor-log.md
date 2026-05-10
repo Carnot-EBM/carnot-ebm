@@ -1476,3 +1476,4 @@ web search: site:o |
 | 2026-05-10 11:38 UTC | Exp 1683: Self-Play Constraint Discovery Prototype | OK | Deliverable already exists in repo |
 | 2026-05-10 11:38 UTC | Exp 1684: gated on Exp 1683: Integrate Self-Play w | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1683-self-play-constraint-discovery.sta |
 | 2026-05-10 11:40 UTC | Exp 1684: gated on Exp 1683: Integrate Self-Play w | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1683-self-play-constraint-discovery.sta |
+| 2026-05-10 11:42 UTC | Exp 1684: gated on Exp 1683: Integrate Self-Play w | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1683-self-play-constraint-discovery.sta |
