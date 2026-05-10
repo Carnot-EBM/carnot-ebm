@@ -2538,3 +2538,13 @@ Note: `scripts/session-metrics.py` referenced by `CLAUDE.md` is not present in t
 | exp1103 | 2026-05-01T14:09:41Z | 2026-05-01T14:14:50Z | Milestone .85 retro: evaluated 14 criteria (13 MET/1 NOT_MET), wrote results/experiment_1103_milestone_retro_85.json, script + 45 tests | ~5m9s |
 | planning-95 | 2026-05-03T15:00:00Z | 2026-05-03T16:09:00Z | Milestone 2026.04.95 research planning: read 10 project files + .94 retro JSON + exp1203-1215 verdicts; arxiv scan (6 papers filed to research-references.md: FSPO 2505.24630, LLMs-Gaming-Verifiers 2604.15149, Verifiable-Composite-Rewards 2509.15557, Boltzmann-GPT 2601.17094, Eidoku 2512.20664, Gradient-Fingerprints 2604.16242); wrote openspec/change-proposals/research-roadmap-vNEXT.md (285 lines, 5 phases, 13 criteria) + research-roadmap-next.yaml (1302 lines, 13 exps 1216-1228). Key decisions: exp1216=pre-commit staged_files_only data-loss fix (HIGHEST PRIORITY); exp1217=conductor_priors_autofill.py; exp1218=paper v6 related work 5 citations; exp1219=GRPO v5 regression diagnosis; exp1220=GRPO-VPS full training; exp1221=GRPO v6 FSPO+VPS; exp1222-1224=Phase-5-A/B/C derisking (committed, overdue); exp1225=gaming-verifiers k=5 defense; exp1226=Boltzmann-GPT Phase-3; exp1227=WOPR Futoshiki; exp1228=retro. | ~69m |
 | 2026-05-09T05:32:56Z | 2026-05-09T05:34:15Z | Write an operational retrospective for milestone 2026.05.121 | Agent |
+
+---
+
+## Session: 2026-05-10 Milestone 2026.05.133 Operational Retrospective
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-05-10T20:58:00Z | 2026-05-10T20:59:18Z | Write an operational retrospective for milestone 2026.05.133 | TBD |

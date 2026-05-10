@@ -1,0 +1,43 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.133",
+  "generated_at": "2026-05-10T20:58:00Z",
+  "retro_type": "operational",
+  "total_wall_time_minutes": 1483,
+  "experiments_completed": 280,
+  "compute_bound_experiments_count": 0,
+  "gpu_idle_on_compute_bound_tasks": null,
+  "slowest_experiments": [
+    {
+      "duration_minutes": 88,
+      "experiment_id": "1603",
+      "name": "Energy-Based Constraint Network (EBCN) coherence sco",
+      "compute_bound": false
+    },
+    {
+      "duration_minutes": 57,
+      "experiment_id": "1657",
+      "name": "KV260 EBRM Hardware Offload",
+      "compute_bound": false
+    },
+    {
+      "duration_minutes": 56,
+      "experiment_id": "1711",
+      "name": "Pre-gate block: Exp 1711: Ablation of Eidoku Gate using KV260",
+      "compute_bound": false
+    },
+    {
+      "duration_minutes": 54,
+      "experiment_id": "1642",
+      "name": "llguidance adapter for reusable external structured-",
+      "compute_bound": false
+    }
+  ],
+  "bottlenecks_identified": [
+    "Pre-gate blocks are not failing fast like Doomed-rerun blocks, consuming 56 minutes on Exp 1711."
+  ],
+  "improvements_suggested": [
+    "Implement fail-fast mechanism for Pre-gate blocks to prevent them from becoming wall-time bottlenecks."
+  ],
+  "estimated_time_savings_pct": 3
+}
