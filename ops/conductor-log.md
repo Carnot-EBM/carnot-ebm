@@ -1527,3 +1527,4 @@ web search: site:o |
 | 2026-05-10 17:20 UTC | Exp 1711: Ablation of Eidoku Gate using KV260 hard | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1710-kv260-pyo3-gateway.pytest_passed ( |
 | 2026-05-10 17:24 UTC | Exp 1712: Semantic pruning for FR-11 continual lea | OK | 81 passed, 1 warning in 4.65s |
 | 2026-05-10 17:26 UTC | Exp 1713: Evaluate FR-11 semantic pruning on long- | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1712-fr11-semantic-pruning.pytest_passe |
+| 2026-05-10 17:28 UTC | Exp 1713: Evaluate FR-11 semantic pruning on long- | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1712-fr11-semantic-pruning.pytest_passe |
