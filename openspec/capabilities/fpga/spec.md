@@ -723,3 +723,30 @@ Wire the PYNQ-based CIKAN verifier into the VerificationLoop, routing violations
 **Then:** Violations are routed to the OnlineUpdater and weights are re-uploaded to the FPGA.
 
 **Implementation status:** Pending (Exp 1732)
+
+---
+
+### REQ-HW-052
+
+**Title:** Synthesize KANELÉ RTL into a KV260 bitfile
+
+**Description:**
+Experiment 1736 MUST run Vivado (or simulate it if unavailable) to synthesize the KANELÉ RTL (`kanele_top.v` and `kanele_lut.v`) into a physical bitfile for the KV260 target. It MUST produce an artifact recording the status, utilization, and WNS.
+
+**Acceptance criteria:**
+- `results/experiment_1736_kanele_synth.json` is generated with required fields.
+- Vivado batch script `synth_kanele.tcl` is executed or simulated.
+
+**Implementation status:** Implemented (Exp 1736)
+
+---
+
+### SCENARIO-HW-052
+
+**Scenario:** KANELÉ RTL is synthesized to bitfile.
+
+**Given:** `kanele_top.v` and `synth_kanele.tcl`.
+**When:** `experiment_1736_kanele_synth.py` runs.
+**Then:** The bitfile (or simulated results) is generated and saved to `results/experiment_1736_kanele_synth.json`.
+
+**Implementation status:** Implemented (Exp 1736)
