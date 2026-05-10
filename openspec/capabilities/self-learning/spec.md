@@ -5319,3 +5319,17 @@ evidence through the CerCE ledger
 | Requirement | Python | Tests |
 |-------------|--------|-------|
 | REQ-LEARN-1669 | Implemented (`python/carnot/pipeline/ltlzinc_adapter.py`) | Implemented (`tests/python/test_ltlzinc_adapter.py`) |
+
+## REQ-SELFPLAY-1685: Live SOTA GGUF Evaluation
+
+The autonomous constraint discovery loop MUST be validated against mandated SOTA GGUFs.
+The experiment SHALL generate 10 math reasoning traces, identify a hallucination,
+auto-generate a constraint, and re-evaluate to confirm repair.
+The deliverable SHALL be written to `results/experiment_1685_live_sota.json`.
+
+### SCENARIO-SELFPLAY-1685: End-to-End Validation on SOTA Model
+
+**Given** a pipeline configured to use `unsloth/Qwen3.6-35B-A3B-GGUF`
+**When** the discovery loop is executed
+**Then** it generates 10 traces
+**And** successfully identifies at least one hallucination and confirms repair.

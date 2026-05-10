@@ -58,3 +58,26 @@ def test_run_experiment(tmp_path: Path):
     assert saved_data["experiment_id"] == 1683
     assert saved_data["status"] == "complete"
     assert saved_data["run_date"] == self_play_discovery.RUN_DATE
+
+def test_run_experiment_1685(tmp_path: Path):
+    """Test running the live SOTA experiment and saving artifact.
+    
+    Spec: REQ-SELFPLAY-1685.
+    """
+    output_path = tmp_path / "experiment_1685_live_sota.json"
+    result = self_play_discovery.run_experiment_1685(output_path)
+    
+    assert result["status"] == "complete"
+    assert result["experiment_id"] == 1685
+    assert result["model_used"] == "unsloth/Qwen3.6-35B-A3B-GGUF"
+    assert result["traces_generated"] == 10
+    assert result["hallucination_identified"] is True
+    assert result["repair_confirmed"] is True
+    assert result["constraint_generated"] is not None
+    assert len(result["results"]) == 1
+    
+    assert output_path.exists()
+    saved_data = json.loads(output_path.read_text(encoding="utf-8"))
+    assert saved_data["experiment_id"] == 1685
+    assert saved_data["status"] == "complete"
+    assert saved_data["traces_generated"] == 10
