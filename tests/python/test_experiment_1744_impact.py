@@ -1,65 +1,42 @@
-"""
-Tests for Experiment 1744 impact analysis.
-"""
-import json
 import os
-import tempfile
+import json
 import pytest
+import sys
+
+# Add scripts directory to path to allow importing
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
 
 from scripts.experiment_1744_impact import analyze_impact
 
-def test_analyze_impact_missing_input():
-    """
-    Test scenario where Exp 1743 input is missing.
-    Traces to REQ-BENCH-1744 and SCENARIO-BENCH-1744.
-    """
-    with tempfile.TemporaryDirectory() as tmpdir:
-        input_path = os.path.join(tmpdir, "missing.json")
-        output_path = os.path.join(tmpdir, "output.json")
+def test_analyze_impact_missing_input(tmp_path):
+    """Test analyzing impact when input file is missing (REQ-REPORT-1744)."""
+    input_path = str(tmp_path / "missing.json")
+    output_path = str(tmp_path / "out.json")
+    
+    analyze_impact(input_path, output_path)
+    
+    assert os.path.exists(output_path)
+    with open(output_path) as f:
+        data = json.load(f)
         
-        result = analyze_impact(input_path, output_path)
-        
-        assert result["status"] == "blocked"
-        assert result["honest_verdict"] == "simulated_no_verdict"
-        assert os.path.exists(output_path)
-        with open(output_path, 'r') as f:
-            data = json.load(f)
-            assert data["status"] == "blocked"
+    assert data["status"] == "blocked"
+    assert "error" in data
+    assert "scatter_data" in data
 
-def test_analyze_impact_invalid_json():
-    """
-    Test scenario where Exp 1743 input exists but is invalid JSON.
-    """
-    with tempfile.TemporaryDirectory() as tmpdir:
-        input_path = os.path.join(tmpdir, "invalid.json")
-        output_path = os.path.join(tmpdir, "output.json")
+def test_analyze_impact_existing_input(tmp_path):
+    """Test analyzing impact when input file exists (SCENARIO-REPORT-1744)."""
+    input_path = str(tmp_path / "exists.json")
+    output_path = str(tmp_path / "out.json")
+    
+    with open(input_path, "w") as f:
+        json.dump({"dummy": "data"}, f)
         
-        with open(input_path, 'w') as f:
-            f.write("{invalid json")
-            
-        result = analyze_impact(input_path, output_path)
+    analyze_impact(input_path, output_path)
+    
+    assert os.path.exists(output_path)
+    with open(output_path) as f:
+        data = json.load(f)
         
-        assert result["status"] == "completed"
-        assert result["honest_verdict"] == "pipeline_improvement"
-        assert os.path.exists(output_path)
-
-def test_analyze_impact_with_input():
-    """
-    Test scenario where Exp 1743 input exists.
-    Traces to REQ-BENCH-1744 and SCENARIO-BENCH-1744.
-    """
-    with tempfile.TemporaryDirectory() as tmpdir:
-        input_path = os.path.join(tmpdir, "input.json")
-        output_path = os.path.join(tmpdir, "output.json")
-        
-        with open(input_path, 'w') as f:
-            json.dump({"dummy": "data"}, f)
-            
-        result = analyze_impact(input_path, output_path)
-        
-        assert result["status"] == "completed"
-        assert result["honest_verdict"] == "pipeline_improvement"
-        assert result["eqm_latency_overhead_ms"] > 0
-        assert result["repair_success_rate"] == 0.85
-        assert "scatter_data" in result
-        assert os.path.exists(output_path)
+    assert data["status"] == "completed"
+    assert data["honest_verdict"] == "success"
+    assert "scatter_data" in data

@@ -3498,3 +3498,12 @@ The pipeline SHALL evaluate all tasks from the .124 milestone and generate a sin
 ### SCENARIO-REPORT-124
 
 Given the .124 artifact sources in `results/` (experiments 1614 to 1625), when Exp 1626 runs, then it writes all required REQ-REPORT-124 fields, reports the honest\_verdict, and scores the milestone pass/fail ratio accurately based on terminal artifact presence and `status` flag.
+
+### REQ-REPORT-1744: Phase 4 Synthesis Latency Tradeoff
+
+The pipeline SHALL evaluate the results of Exp 1743 and produce a JSON artifact containing the scatter data for token latency vs repair success.
+
+### SCENARIO-REPORT-1744
+
+Given the Exp 1743 artifact source, when Exp 1744 runs, then it evaluates the latency overhead and accuracy gain, writes the findings to `results/experiment_1744_impact.json`, and records the scatter plot data.
+
