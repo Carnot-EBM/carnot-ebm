@@ -5378,3 +5378,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-10: Exp 1692: KV260 Vivado Synthesizable Verilog Export for Potts (✅ Complete) — honest_verdict=potts_sim_and_rtl_complete; results/experiment_1692_potts_export.json
 - 2026-05-10: Exp 1693: gated on Exp 1692: Cycle-Accurate Potts Simulation (✅ Complete) — honest_verdict=simulation_complete; results/experiment_1693_potts_sim.json
 - 2026-05-10: Exp 1694: Full Pipeline Live SOTA Eval (KArAt + Nabla + FR11) (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_1694_full_pipeline.json
+- 2026-05-10: Exp 1695: Milestone .130 Retrospective (✅ Complete) — honest_verdict=milestone_130_retrospective_filed_8_of_13_complete; results/experiment_1695_retro.json
