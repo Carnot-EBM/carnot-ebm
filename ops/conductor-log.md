@@ -1434,3 +1434,4 @@ web search: site:o |
 | 2026-05-10 01:18 UTC | Exp 1660: LTLZinc Temporal Benchmark | OK | 81 passed, 1 warning in 4.61s |
 | 2026-05-10 01:20 UTC | Exp 1661: gated on Exp 1659, 1660: FR-11 SMGI Cont | DOOMED_RERUN_BLOCK | 3 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-10 01:22 UTC | Exp 1661: gated on Exp 1659, 1660: FR-11 SMGI Cont | DOOMED_RERUN_BLOCK | 3 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-10 01:24 UTC | Exp 1661: gated on Exp 1659, 1660: FR-11 SMGI Cont | DOOMED_RERUN_BLOCK | 3 prior failure(s) match this task's scope but prior_failures field is missing o |
