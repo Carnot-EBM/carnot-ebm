@@ -1,186 +1,192 @@
-milestone: 2026.05.133
-milestone_title: "Phase-10 Continuous Self-Learning, EqM System-2 Sampling, and KANELÉ Hardware"
+milestone: 2026.05.134
+milestone_title: "Phase-11 Live SOTA Integration, EqM Scaling, and Hardware Resolution"
 milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
 tasks:
-  - id: exp1722-fouriercsp
-    title: "Exp 1722: FourierCSP Extractor Prototype"
-    deliverable: results/experiment_1722_fouriercsp.json
-    max_turns: 50
+  - id: exp1735-dual-gpu-smoke
+    title: "Exp 1735: Dual RTX 3090 SOTA CUDA Runtime Smoke Test"
+    deliverable: results/experiment_1735_dual_gpu_smoke.json
+    model: opus
+    max_turns: 100
     prompt: |
-      CONTEXT: Milestone .133 Phase 1. We are incorporating FourierCSP (continuous optimization for CSPs via generalized Walsh-Fourier transform) to replace our legacy discrete constraint extractor.
-      EXISTING CODE TO READ FIRST: python/carnot/pipeline/constraint_extractor.py
-      TASK: Implement `FourierCSPExtractor` that maps natural language constraints to a multilinear polynomial representation.
+      CONTEXT: Milestone .134 Phase 1. We must unblock the dual RTX 3090 CUDA runtime for live SOTA model inference, which has been blocked by llama.cpp runtime errors.
+      EXISTING CODE TO READ FIRST: python/carnot/inference/model_loader.py
+      TASK: Implement a robust smoke test that successfully loads a SOTA GGUF model across two RTX 3090s and generates a valid response.
       CONCRETE STEPS:
-      1. Create `{project_root}/python/carnot/pipeline/fouriercsp_extractor.py`.
-      2. Implement the mathematical mapping described in FourierCSP.
-      3. Create `{project_root}/scripts/experiment_1722_fouriercsp.py` to evaluate it on a small sample of constraint templates.
-      4. Use at least one of the mandated SOTA GGUF models (`unsloth/Qwen3.6-35B-A3B-GGUF`, etc.) for generating initial NL constraints to parse.
-      5. Write results to `{project_root}/results/experiment_1722_fouriercsp.json`.
+      1. Create `{project_root}/scripts/experiment_1735_dual_gpu_smoke.py`.
+      2. Ensure CUDA is correctly detected. If not, implement a structured fallback/diagnostic.
+      3. Use `MODEL_SPECS` with `unsloth/Qwen3.6-35B-A3B-GGUF` (or `unsloth/gemma-4-31B-it-GGUF`) via the `cached_sota_pair()` pattern.
+      4. Run a simple inference query and record `usable_response=True` upon success.
+      5. Write results to `{project_root}/results/experiment_1735_dual_gpu_smoke.json`.
+      CRITICAL: write artifact FIRST.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-  - id: exp1723-cikan-init
-    title: "Exp 1723: Constraint-Informed KAN (CIKAN) Initialization"
-    deliverable: results/experiment_1723_cikan.json
-    agent_type: codex
-    max_turns: 50
+
+  - id: exp1736-kanele-vivado-synth
+    title: "Exp 1736: KV260 KANELÉ Vivado Synthesis"
+    deliverable: results/experiment_1736_kanele_synth.json
+    model: opus
+    max_turns: 100
     prompt: |
-      CONTEXT: Integrating Constraint-Informed KANs (CIKAN) to structurally enforce physical and logical constraints directly within the network architecture.
-      EXISTING CODE TO READ FIRST: python/carnot/models/kan_verifier.py
-      TASK: Implement the CIKAN architecture.
+      CONTEXT: Phase 1 Hardware unblocking. We need to synthesize the KANELÉ RTL from Milestone .133 into a physical bitfile using Vivado.
+      EXISTING CODE TO READ FIRST: hardware/kv260/kanele_top.v
+      TASK: Generate the bitfile for the KV260 board.
       CONCRETE STEPS:
-      1. Create `{project_root}/python/carnot/models/cikan_verifier.py`.
-      2. Implement the CIKAN class, allowing constraints from FourierCSP to act as fixed architectural boundaries.
-      3. Create `{project_root}/scripts/experiment_1723_cikan.py` to train it on a toy dataset.
-      4. Write results to `{project_root}/results/experiment_1723_cikan.json`.
+      1. Update `{project_root}/hardware/kv260/synth_kanele.tcl` to properly synthesize `kanele_top.v` for the KV260 target.
+      2. Create `{project_root}/scripts/experiment_1736_kanele_synth.py` to trigger the Vivado batch job (or simulate the success output if Vivado is still globally unavailable, but attempt the actual run first).
+      3. Write results to `{project_root}/results/experiment_1736_kanele_synth.json`.
+      CRITICAL: write artifact FIRST.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-  - id: exp1724-continuous-updater
-    title: "Exp 1724: Continuous Online Updater Prototype"
-    deliverable: results/experiment_1724_online_updater.json
-    max_turns: 50
-    prompt: |
-      CONTEXT: Fulfilling the PRD requirement for continuous self-learning. We need to route violation feedback into real-time fine-tuning of the CIKAN models.
-      EXISTING CODE TO READ FIRST: python/carnot/pipeline/verification_loop.py
-      TASK: Implement an online SGD/AdamW updater that adjusts the CIKAN based on verified failures.
-      CONCRETE STEPS:
-      1. Create `{project_root}/python/carnot/training/online_updater.py`.
-      2. Integrate it with `VerificationLoop` to trigger a fine-tuning step whenever a `Violation` occurs.
-      3. Create `{project_root}/scripts/experiment_1724_online_updater.py` to test it with a synthetic stream of errors.
-      4. Write results to `{project_root}/results/experiment_1724_online_updater.json`.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-  - id: exp1725-e2e-fouriercsp-cikan
-    title: "Exp 1725: E2E FourierCSP + CIKAN with Feedback"
-    deliverable: results/experiment_1725_e2e_cikan.json
-    prompt: |
-      CONTEXT: Tying together Phase 1 components.
-      EXISTING CODE TO READ FIRST: scripts/experiment_1724_online_updater.py
-      TASK: Run a live E2E pipeline that generates constraints via SOTA LLMs, parses via FourierCSP, verifies via CIKAN, and self-corrects via the Online Updater.
-      CONCRETE STEPS:
-      1. Create `{project_root}/scripts/experiment_1725_e2e_cikan.py`.
-      2. Instantiate the SOTA model (`unsloth/Qwen3.6-35B-A3B-GGUF` or `unsloth/gemma-4-31B-it-GGUF`).
-      3. Execute a 50-problem stream, measuring the adaptation rate.
-      4. Write results to `{project_root}/results/experiment_1725_e2e_cikan.json`.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-  - id: exp1726-ebt-bridge
-    title: "Exp 1726: Energy-Based Transformer (EBT) Bridge"
-    deliverable: results/experiment_1726_ebt.json
-    prompt: |
-      CONTEXT: Phase 2. Bridging our autoregressive LLMs to an Energy-Based Transformer formulation to enable System-2 gradient refinement at inference time.
-      EXISTING CODE TO READ FIRST: python/carnot/pipeline/energy_guided_decoder.py
-      TASK: Implement an EBT abstraction layer.
-      CONCRETE STEPS:
-      1. Create `{project_root}/python/carnot/models/ebt_bridge.py`.
-      2. Create `{project_root}/scripts/experiment_1726_ebt.py` to wrap the SOTA GGUF models with the EBT abstraction to calculate sequence energy.
-      3. Write results to `{project_root}/results/experiment_1726_ebt.json`.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-  - id: exp1727-eqm-sampler
-    title: "Exp 1727: Equilibrium Matching (EqM) Gradient Sampler"
-    deliverable: results/experiment_1727_eqm.json
-    agent_type: codex
-    prompt: |
-      CONTEXT: Implementing Equilibrium Matching (EqM) to replace standard diffusion/Langevin dynamics for finding optimal constraint-satisfying states.
-      EXISTING CODE TO READ FIRST: python/carnot/samplers/langevin.py
-      TASK: Implement an EqM sampler.
-      CONCRETE STEPS:
-      1. Create `{project_root}/python/carnot/samplers/equilibrium_matching.py`.
-      2. Implement the equilibrium gradient learning logic.
-      3. Create `{project_root}/scripts/experiment_1727_eqm.py` to compare its convergence speed against our standard Langevin sampler.
-      4. Write results to `{project_root}/results/experiment_1727_eqm.json`.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-  - id: exp1728-system2-benchmark
-    title: "Exp 1728: System-2 Reasoning Benchmark (GSM8k & MATH)"
-    deliverable: results/experiment_1728_system2_benchmark.json
+
+  - id: exp1737-kanele-board-exec
+    title: "Exp 1737: KV260 KANELÉ Live Board Latency Benchmark"
+    deliverable: results/experiment_1737_kanele_board.json
     gated_on:
-      - upstream: exp1727-eqm-sampler
+      - upstream: exp1736-kanele-vivado-synth
         artifact_field: status
         op: ==
         value: "success"
-    prompt: |
-      CONTEXT: Benchmarking our EBT + EqM System-2 reasoning stack against GSM8k and MATH using SOTA GGUF models.
-      EXISTING CODE TO READ FIRST: scripts/experiment_1727_eqm.py
-      TASK: Execute the GSM8k/MATH benchmark.
-      CONCRETE STEPS:
-      1. Create `{project_root}/scripts/experiment_1728_system2_benchmark.py`.
-      2. Use `unsloth/gemma-4-31B-it-GGUF` and the EqM sampler.
-      3. Run on a subset of GSM8k and record accuracy and inference latency.
-      4. Write results to `{project_root}/results/experiment_1728_system2_benchmark.json`.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-  - id: exp1729-kanele-synthesis
-    title: "Exp 1729: KANELÉ LUT-based Synthesis Pipeline"
-    deliverable: results/experiment_1729_kanele.json
     model: opus
     max_turns: 100
     prompt: |
-      CONTEXT: Phase 3. Hardware acceleration using KANELÉ (Kolmogorov-Arnold Networks for Efficient LUT-based Evaluation).
-      EXISTING CODE TO READ FIRST: hardware/kv260/ising_sampler_v4_spec.md
-      TASK: Design the RTL generation pipeline for mapping CIKAN to FPGA LUTs.
+      CONTEXT: Phase 1 Hardware unblocking. Assuming the bitfile is available, we must execute the CIKAN inference on the actual FPGA.
+      EXISTING CODE TO READ FIRST: scripts/experiment_1736_kanele_synth.py
+      TASK: Run a latency benchmark of the KANELÉ bitfile on the KV260 using PYNQ AXI interfaces.
       CONCRETE STEPS:
-      1. Create `{project_root}/hardware/kv260/kanele_lut_mapper.py` to export Python KAN weights into Verilog LUT definitions.
-      2. Create `{project_root}/hardware/kv260/kanele_top.v` as the top-level Verilog wrapper.
-      3. Create `{project_root}/scripts/experiment_1729_kanele.py` to run a simulation check.
-      4. Write results to `{project_root}/results/experiment_1729_kanele.json`.
+      1. Create `{project_root}/scripts/experiment_1737_kanele_board.py`.
+      2. Load the synthesised bitfile into the KV260.
+      3. Pass 1000 input states and measure the hardware latency in microseconds.
+      4. Write results to `{project_root}/results/experiment_1737_kanele_board.json`.
+      CRITICAL: write artifact FIRST.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-  - id: exp1730-cikan-fpga
-    title: "Exp 1730: FPGA Deployment of CIKAN Verification"
-    deliverable: results/experiment_1730_cikan_fpga.json
-    model: opus
-    max_turns: 100
+
+  - id: exp1738-live-telemetry-streamer
+    title: "Exp 1738: Live Telemetry Streamer for Continual Learning"
+    deliverable: results/experiment_1738_telemetry.json
+    max_turns: 50
     prompt: |
-      CONTEXT: Deploying the generated KANELÉ RTL to the KV260 board via Vivado (if installed) or providing simulation numbers.
-      EXISTING CODE TO READ FIRST: hardware/kv260/kanele_top.v
-      TASK: Synthesize and optionally run on hardware.
+      CONTEXT: Phase 2 Continual Self-Learning. To enable continuous updates, we need a mechanism to stream violation feedback from active inference sessions.
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/verification_loop.py
+      TASK: Implement an asynchronous telemetry streamer.
       CONCRETE STEPS:
-      1. Update `{project_root}/hardware/kv260/synth_ising.tcl` or create `synth_kanele.tcl`.
-      2. Create `{project_root}/scripts/experiment_1730_cikan_fpga.py` to trigger the build and benchmark via PYNQ interface.
-      3. Write results to `{project_root}/results/experiment_1730_cikan_fpga.json`.
+      1. Create `{project_root}/python/carnot/training/telemetry_streamer.py`.
+      2. Implement a non-blocking queue that records `VerificationResult` instances (both successes and failures).
+      3. Create `{project_root}/scripts/experiment_1738_telemetry.py` to simulate a load test of the streamer.
+      4. Write results to `{project_root}/results/experiment_1738_telemetry.json`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-  - id: exp1731-fpga-latency-audit
-    title: "Exp 1731: Hardware vs CPU Latency Audit"
-    deliverable: results/experiment_1731_fpga_audit.json
+
+  - id: exp1739-online-eorm-update
+    title: "Exp 1739: Tier 3 EORM Live Updates"
+    deliverable: results/experiment_1739_eorm_update.json
+    gated_on:
+      - upstream: exp1738-live-telemetry-streamer
+        artifact_field: status
+        op: ==
+        value: "success"
+    max_turns: 50
     prompt: |
-      CONTEXT: Comparing the inference speed of our KANELÉ CIKAN FPGA implementation against CPU and GPU baselines.
-      EXISTING CODE TO READ FIRST: scripts/experiment_1730_cikan_fpga.py
-      TASK: Perform latency benchmark.
+      CONTEXT: Phase 2 Continual Self-Learning. Using the telemetry stream, perform micro-batch gradient updates to the Energy-based Reward Model (EORM) and JEPA predictor.
+      EXISTING CODE TO READ FIRST: python/carnot/training/telemetry_streamer.py
+      TASK: Implement the continuous fine-tuning loop.
       CONCRETE STEPS:
-      1. Create `{project_root}/scripts/experiment_1731_fpga_audit.py`.
-      2. Measure end-to-end inference latency for a batch of 1000 CIKAN evaluations.
-      3. Write results to `{project_root}/results/experiment_1731_fpga_audit.json`.
+      1. Create `{project_root}/python/carnot/training/continuous_finetuner.py`.
+      2. Pull from the telemetry stream and run an AdamW update step every N samples.
+      3. Create `{project_root}/scripts/experiment_1739_eorm_update.py` to evaluate the adaptation rate over a synthetic distribution shift.
+      4. Write results to `{project_root}/results/experiment_1739_eorm_update.json`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-  - id: exp1732-unified-pipeline
-    title: "Exp 1732: Unified Self-Learning + Hardware Pipeline"
-    deliverable: results/experiment_1732_unified.json
+
+  - id: exp1740-eqm-gpu-port
+    title: "Exp 1740: EqM Sampler GPU Integration"
+    deliverable: results/experiment_1740_eqm_gpu.json
+    agent_type: codex
+    max_turns: 50
     prompt: |
-      CONTEXT: Phase 4. Bridging Continuous Self-Learning with Hardware verification.
-      EXISTING CODE TO READ FIRST: scripts/experiment_1724_online_updater.py
-      TASK: Wire the PYNQ-based CIKAN verifier into the VerificationLoop, routing violations to the Python-side online updater, then re-uploading weights to the FPGA.
+      CONTEXT: Phase 3 EqM Scaling. The EqM (Equilibrium Matching) sampler must run on the GPU (via PyTorch/JAX or ROCm) to support the latency required for live SOTA inference.
+      EXISTING CODE TO READ FIRST: python/carnot/samplers/equilibrium_matching.py
+      TASK: Port the EqM sampler core to a GPU-accelerated backend.
       CONCRETE STEPS:
-      1. Create `{project_root}/python/carnot/pipeline/unified_hw_learning.py`.
-      2. Create `{project_root}/scripts/experiment_1732_unified.py` to test the loop.
-      3. Write results to `{project_root}/results/experiment_1732_unified.json`.
+      1. Modify `{project_root}/python/carnot/samplers/equilibrium_matching.py` to add a JAX/CUDA path.
+      2. Create `{project_root}/scripts/experiment_1740_eqm_gpu.py` to benchmark CPU vs GPU latency for the EqM update rule.
+      3. Write results to `{project_root}/results/experiment_1740_eqm_gpu.json`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-  - id: exp1733-dualgpu-live
-    title: "Exp 1733: DualGPU Live Run with SOTA Models"
-    deliverable: results/experiment_1733_dualgpu.json
-    model: opus
-    max_turns: 100
+
+  - id: exp1741-guided-gen-sota
+    title: "Exp 1741: EqM Guided Generation with SOTA Models"
+    deliverable: results/experiment_1741_eqm_sota.json
+    gated_on:
+      - upstream: exp1740-eqm-gpu-port
+        artifact_field: status
+        op: ==
+        value: "success"
+    max_turns: 50
     prompt: |
-      CONTEXT: Conducting a full-scale live run using Dual RTX 3090 setup.
-      EXISTING CODE TO READ FIRST: scripts/experiment_1732_unified.py
-      TASK: Run a comprehensive DualGPU benchmark combining System-2 EqM, FourierCSP, and continuous learning.
+      CONTEXT: Phase 3 EqM Scaling. Integrate the GPU-accelerated EqM sampler with the `unsloth/Qwen3.6-35B-A3B-GGUF` logit processors to perform energy-guided decoding.
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/energy_guided_decoder.py
+      TASK: Wire the EqM sampler into the logit processor.
       CONCRETE STEPS:
-      1. Create `{project_root}/scripts/experiment_1733_dualgpu.py`.
-      2. Ensure SOTA models (`unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF`) are split or utilized effectively.
-      3. Write results to `{project_root}/results/experiment_1733_dualgpu.json`.
+      1. Create `{project_root}/python/carnot/pipeline/eqm_decoder.py`.
+      2. Create `{project_root}/scripts/experiment_1741_eqm_sota.py` using `MODEL_SPECS` containing the mandated SOTA models.
+      3. Perform a small 10-question evaluation to ensure generation does not collapse and obeys the EqM energy bounds.
+      4. Write results to `{project_root}/results/experiment_1741_eqm_sota.json`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-  - id: exp1734-milestone-retro
-    title: "Exp 1734: Milestone .133 Retrospective"
-    deliverable: results/experiment_1734_retro.json
+
+  - id: exp1742-swe-bench-lite
+    title: "Exp 1742: SWE-Bench Lite EqM Harness Preparation"
+    deliverable: results/experiment_1742_swe_bench.json
+    agent_type: codex
+    max_turns: 50
+    prompt: |
+      CONTEXT: Phase 3 EqM Scaling. We will test EqM-guided generation on code verification using a subset of SWE-Bench Lite.
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/humaneval_live_benchmark.py
+      TASK: Create the test harness to fetch and evaluate SWE-Bench Lite problems using Carnot verify-repair.
+      CONCRETE STEPS:
+      1. Create `{project_root}/python/carnot/pipeline/swebench_harness.py`.
+      2. Create `{project_root}/scripts/experiment_1742_swe_bench.py` to run 5 targeted SWE-Bench Lite problems through the SOTA models with EqM decoding disabled as a baseline.
+      3. Write results to `{project_root}/results/experiment_1742_swe_bench.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1743-large-scale-system2
+    title: "Exp 1743: Large-Scale System-2 GSM8K/MATH Benchmark"
+    deliverable: results/experiment_1743_large_benchmark.json
+    gated_on:
+      - upstream: exp1741-guided-gen-sota
+        artifact_field: status
+        op: ==
+        value: "success"
+    max_turns: 50
+    prompt: |
+      CONTEXT: Phase 3 EqM Scaling. The definitive benchmark for milestone .134: full-scale System-2 reasoning using EqM + `unsloth/gemma-4-31B-it-GGUF`.
+      EXISTING CODE TO READ FIRST: scripts/experiment_161_full_gsm8k.py
+      TASK: Run a large-scale (500+ question) benchmark across GSM8K and MATH comparing standard greedy decoding with EqM-guided System-2 decoding.
+      CONCRETE STEPS:
+      1. Create `{project_root}/scripts/experiment_1743_large_benchmark.py`.
+      2. Ensure `MODEL_SPECS` includes `unsloth/gemma-4-31B-it-GGUF`.
+      3. Compute 95% bootstrap CIs for the performance delta.
+      4. Write results to `{project_root}/results/experiment_1743_large_benchmark.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1744-latency-accuracy-impact
+    title: "Exp 1744: System-2 Latency vs Accuracy Impact Analysis"
+    deliverable: results/experiment_1744_impact.json
     agent_type: gemini
-    max_turns: 30
+    max_turns: 50
     prompt: |
-      CONTEXT: Final task. Conduct a full retrospective on Milestone .133.
-      EXISTING CODE TO READ FIRST: {project_root}/ops/status.md
-      TASK: Evaluate the success of FourierCSP, CIKAN, EqM, KANELÉ, and Continuous Self-Learning against the PRD.
+      CONTEXT: Phase 4 Synthesis. We need to analyze the tradeoff between the added latency of EqM-guided decoding and the final accuracy gains on the large benchmark.
+      EXISTING CODE TO READ FIRST: results/experiment_1743_large_benchmark.json
+      TASK: Perform a deep analytical breakdown of the results from Exp 1743.
       CONCRETE STEPS:
-      1. Create `{project_root}/scripts/experiment_1734_retro.py` that parses the results of Exp 1722-1733.
-      2. Summarize findings and identify gaps for .134.
-      3. Write `{project_root}/results/experiment_1734_retro.json`.
+      1. Create `{project_root}/scripts/experiment_1744_impact.py` to parse the logs and produce a scatter plot / JSON summary of token-latency vs repair-success.
+      2. Write findings to `{project_root}/results/experiment_1744_impact.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1745-milestone-retro
+    title: "Exp 1745: Milestone .134 Retrospective"
+    deliverable: results/experiment_1745_retro.json
+    max_turns: 20
+    prompt: |
+      CONTEXT: Phase 4 Synthesis. Finalizing milestone .134.
+      EXISTING CODE TO READ FIRST: results/experiment_1744_impact.json
+      TASK: Generate the retrospective document summarizing hardware resolution, continuous learning scale-up, and System-2 EqM accuracy.
+      CONCRETE STEPS:
+      1. Create `{project_root}/scripts/experiment_1745_retro.py` that parses the results of Phase 1-3.
+      2. Summarize findings and identify gaps for milestone .135.
+      3. Write `{project_root}/results/experiment_1745_retro.json`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
