@@ -1456,3 +1456,4 @@ web search: site:o |
 | 2026-05-10 07:40 UTC | Phase 3: Interleaved Gibbs Diffusion (IGD) Smoke T | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: t: 'Too Many Reques |
 | 2026-05-10 07:47 UTC | Phase 3: Interleaved Gibbs Diffusion (IGD) Smoke T | OK | 85 passed, 1 warning in 4.67s |
 | 2026-05-10 07:56 UTC | Phase 4: Mandatory THRML Independent-RNG Audit | OK | 81 passed, 1 warning in 5.03s |
+| 2026-05-10 08:49 UTC | Phase 4: Parallel Inertial Probabilistic Ising Mac | OK | 81 passed, 1 warning in 4.57s |
