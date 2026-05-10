@@ -1450,3 +1450,4 @@ web search: site:o |
 | 2026-05-10 04:34 UTC | Phase 1: NSVIF Instruction-to-Constraint DSL Parse | OK | 81 passed, 1 warning in 5.67s |
 | 2026-05-10 04:41 UTC | Phase 1: Energy-Based Constraint Networks (EBCN) C | OK | 81 passed, 1 warning in 5.56s |
 | 2026-05-10 05:45 UTC | Phase 2: CerCE-style Certified Non-Forgetting Ledg | OK | 81 passed, 1 warning in 4.81s |
+| 2026-05-10 06:39 UTC | Phase 2: LTLZinc Continual Learning Adapter | OK | 81 passed, 1 warning in 4.43s |
