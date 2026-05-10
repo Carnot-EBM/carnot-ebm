@@ -1560,3 +1560,4 @@ web search: site:o |
 | 2026-05-10 20:02 UTC | Exp 1729: KANELÉ LUT-based Synthesis Pipeline | OK | 83 passed, 1 warning in 3.98s |
 | 2026-05-10 20:06 UTC | Exp 1730: FPGA Deployment of CIKAN Verification | OK | 81 passed, 1 warning in 4.85s |
 | 2026-05-10 20:10 UTC | Exp 1731: Hardware vs CPU Latency Audit | OK | 81 passed, 1 warning in 5.01s |
+| 2026-05-10 20:16 UTC | Exp 1732: Unified Self-Learning + Hardware Pipelin | OK | 81 passed, 1 warning in 5.51s |
