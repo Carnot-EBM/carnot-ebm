@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Technical Report - A Technical Report — 2023 Experiments Across the Public Record, 144 Archived Milestone Records, 23,597 Python Test Items Collected (Artifacts Tracked Through Exp 1708)</title>
-  <meta name="description" content="Carnot technical report: A Technical Report — 2023 Experiments Across the Public Record, 144 Archived Milestone Records, 23,597 Python Test Items Collected (Artifacts Tracked Through Exp 1708). Live GPU benchmarks with statistical confidence intervals, honest negative results, and a public experiment history with provenance labels for every headline claim.">
+  <title>Technical Report - A Technical Report — 2049 Experiments Across the Public Record, 145 Archived Milestone Records, 23,714 Python Test Items Collected (Artifacts Tracked Through Exp 1721)</title>
+  <meta name="description" content="Carnot technical report: A Technical Report — 2049 Experiments Across the Public Record, 145 Archived Milestone Records, 23,714 Python Test Items Collected (Artifacts Tracked Through Exp 1721). Live GPU benchmarks with statistical confidence intervals, honest negative results, and a public experiment history with provenance labels for every headline claim.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M30,50 Q30,20 50,20 Q70,20 70,50 Q70,80 50,80 Q30,80 30,50' fill='none' stroke='%23f97316' stroke-width='8'/><circle cx='50' cy='50' r='10' fill='%23f97316'/></svg>">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -160,9 +160,9 @@
 
 <article>
 <h1 id="carnot-energy-based-verification-for-llm-output">Carnot: Energy-Based Verification for LLM Output</h1>
-<h2 id="a-technical-report-2023-experiments-across-the-public-record-144-archived-milestone-records-23597-python-test-items-collected-artifacts-tracked-through-exp-1708">A Technical Report — 2023 Experiments Across the Public Record, 144 Archived Milestone Records, 23,597 Python Test Items Collected (Artifacts Tracked Through Exp 1708)</h2>
+<h2 id="a-technical-report-2049-experiments-across-the-public-record-145-archived-milestone-records-23714-python-test-items-collected-artifacts-tracked-through-exp-1721">A Technical Report — 2049 Experiments Across the Public Record, 145 Archived Milestone Records, 23,714 Python Test Items Collected (Artifacts Tracked Through Exp 1721)</h2>
 <p><strong>Author:</strong> Ian Blenke
-<strong>Date:</strong> 2026-05-09
+<strong>Date:</strong> 2026-05-10
 <strong>Repository:</strong> github.com/Carnot-EBM/carnot-ebm
 <strong>License:</strong> Apache 2.0</p>
 <hr>
@@ -3665,7 +3665,7 @@ result = pipeline.verify_and_repair(
 <p>The constraint pipeline dog-foods itself as a "fourth gate" in the autoresearch evaluator. When the orchestrator evaluates a hypothesis, it extracts verifiable claims via the NL and code constraint extractors, then verifies them via Ising sampling. This catches bogus hypotheses that pass energy, time, and memory gates but make false claims about their results.</p>
 <hr>
 <h2 id="7-principles-learned">7. Principles Learned</h2>
-<p>From the activation-based phase of a research program that now spans 2,023 experiment records through Exp 1708 and 140 archived completed milestone records, we distilled 14 principles. Principles 1-3 describe what works. Principles 4-14 describe what doesn't work for activation-based hallucination detection — these systematic negative results are the project's primary contribution to the literature, saving other researchers months of dead ends.</p>
+<p>From the activation-based phase of a research program that now spans 2,049 experiment records through Exp 1721 and 145 archived completed milestone records, we distilled 14 principles. Principles 1-3 describe what works. Principles 4-14 describe what doesn't work for activation-based hallucination detection — these systematic negative results are the project's primary contribution to the literature, saving other researchers months of dead ends.</p>
 <h3 id="what-works">What works</h3>
 <ol>
 <li>
@@ -6433,6 +6433,13 @@ Experiments 1692 and 1693 successfully completed the Vivado synthesizable Verilo
 Experiment 1707 successfully verified the full pipeline SOTA integration combining GloroKAN, Eidoku, and FR11.</p>
 <p><strong>KV260 Hardware Execution Blocked</strong><br>
 Experiment 1704 attempted to synthesize and execute Potts q=3 on KV260 hardware, but was blocked due to Vivado not being installed.</p>
+<h3 id="410-recent-additions-milestone-132">4.10 Recent Additions (Milestone .132)</h3>
+<p><strong>E2E Pipeline Evaluation</strong>
+Experiment 1720 successfully verified the full E2E pipeline evaluating Dynamic Extract, Hardware trace eval, and Continual Learning.</p>
+<p><strong>HILED Inference Latency</strong>
+Experiment 1719 measured the inference latency impact of HILED, establishing baseline constraints for test-time decoding overhead.</p>
+<p><strong>Continual Learning Enhancements</strong>
+Experiments 1712 and 1714 verified semantic pruning for FR-11 continual learning and instruct-to-constraint extraction from free-text.</p>
 </article>
 
 <footer>
