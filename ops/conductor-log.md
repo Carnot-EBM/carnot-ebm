@@ -1499,3 +1499,4 @@ web search: site:o |
 | 2026-05-10 14:40 UTC | Exp 1697: GloroKAN B-spline local Lipschitz bounds | OK | 81 passed, 1 warning in 5.07s |
 | 2026-05-10 14:42 UTC | Exp 1698: Ablation study of GloroKAN robustness vs | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1697-glorokan-robustness.test_coverage  |
 | 2026-05-10 14:44 UTC | Exp 1698: Ablation study of GloroKAN robustness vs | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1697-glorokan-robustness.test_coverage  |
+| 2026-05-10 14:46 UTC | Exp 1698: Ablation study of GloroKAN robustness vs | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1697-glorokan-robustness.test_coverage  |
