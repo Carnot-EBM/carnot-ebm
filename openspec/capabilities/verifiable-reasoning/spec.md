@@ -18702,3 +18702,25 @@ q=3 Potts states,
 tolerance and both backends preserve the same scoring accuracy.
 
 **Spec traces:** REQ-VERIFY-1658, SCENARIO-VERIFY-1658, Exp 1658
+
+## REQ-VERIFY-1690: Deep Energy-Guided Decoding via NablaETS
+
+**Summary:** Carnot SHALL implement `NablaETS` sampler that optimizes latent state guided by EBCN energy before token decoding, exposing scaling parameter `K_steps` for continuous Langevin dynamics.
+
+**Requirements:**
+
+- REQ-VERIFY-1690-1: A sampler `NablaETS` SHALL be implemented in `python/carnot/samplers/nabla_ets.py`.
+- REQ-VERIFY-1690-2: `NablaETS` SHALL expose `K_steps` for continuous Langevin dynamics optimization of the latent state.
+- REQ-VERIFY-1690-3: `NablaETS` SHALL minimize the EBCN energy function to guide the latent state before token decoding.
+- REQ-VERIFY-1690-4: The workflow SHALL output an artifact `results/experiment_1690_nabla_ets.json`.
+
+**Implementation Status:** Implemented (Exp 1690)
+
+### SCENARIO-VERIFY-1690: NablaETS Latent Optimization
+
+**Given** the continuous Nabla Reasoner and an energy function
+**When** `NablaETS` runs with `K_steps`
+**Then** it applies continuous Langevin dynamics to optimize the latent state
+**And** it exposes `K_steps` parameter.
+
+**Spec traces:** REQ-VERIFY-1690, SCENARIO-VERIFY-1690, Exp 1690
