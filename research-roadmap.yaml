@@ -1,178 +1,82 @@
-milestone: 2026.05.128
-milestone_title: "Phase-6 NSVIF Extraction, EBCN Coherence, and Continuous Non-Forgetting"
+milestone: 2026.05.129
+milestone_title: "Phase-6 Energy-Driven Steering, KArAt Attention, and CRANE Decoding"
 milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
 tasks:
-  - id: exp1666-nsvif-dsl-parser
-    title: "Phase 1: NSVIF Instruction-to-Constraint DSL Parser"
-    agent_type: codex
-    max_turns: 50
-    prompt: |
-      CONTEXT: We need to solve the primary product gap: turning NL prompts into executable Carnot constraints.
-      EXISTING CODE TO READ FIRST: python/carnot/pipeline/
-      TASK: Build an NSVIF-style instruction-to-constraint parser and bounded DSL.
-      CONCRETE STEPS:
-      1. Write a parser in `python/carnot/pipeline/nsvif_parser.py` that maps natural language into a small Carnot DSL.
-      2. Compile logical constraints to PySAT/Z3 validators.
-      3. Evaluate zero-false-accept behavior using `unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF`.
-      4. Write the results to `{project_root}/results/experiment_1666_nsvif.json` with fields `false_accepts` and `compilation_rate`.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp1667-ebcn-coherence
-    title: "Phase 1: Energy-Based Constraint Networks (EBCN) Coherence Score"
+  - id: exp1677-eds-prototype
+    title: "Phase 1: Energy-Driven Steering (EDS) for Hidden States"
     model: sonnet
     max_turns: 50
-    gated_on:
-      - upstream: exp1666-nsvif-dsl-parser
-        artifact_field: false_accepts
-        op: '=='
-        value: 0
     prompt: |
-      CONTEXT: Following Phase 3/Phase 4 goals for structural coherence without sequence generation.
-      EXISTING CODE TO READ FIRST: python/carnot/models/
-      TASK: Implement an EBCN prototype to score the coherence of reasoning traces.
+      CONTEXT: We need to guide generation without restrictive grammar masks by directly steering hidden states using energy gradients (arXiv:2605.xxxxx EDS).
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/
+      TASK: Build an Energy-Driven Steering (EDS) prototype for local SOTA GGUF models.
       CONCRETE STEPS:
-      1. Create `python/carnot/models/ebcn_coherence.py`.
-      2. Implement a dual-head attention state-space model that produces a scalar energy score for contradiction detection.
-      3. Evaluate against a small set of logical contradictions.
-      4. Write `{project_root}/results/experiment_1667_ebcn.json`.
+      1. Create `python/carnot/pipeline/energy_driven_steering.py`.
+      2. Implement a lightweight external EBM adapter that maps internal model activations to an energy landscape.
+      3. Use gradients of this energy to steer hidden states during generation for `unsloth/gemma-4-31B-it-GGUF` and `unsloth/Qwen3.6-35B-A3B-GGUF`.
+      4. Evaluate on a small logical task and write the results to `{project_root}/results/experiment_1677_eds.json`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp1668-cerce-ledger
-    title: "Phase 2: CerCE-style Certified Non-Forgetting Ledger for FR-11"
+  - id: exp1678-crane-decoding
+    title: "Phase 1: CRANE Reasoning-Augmented Constrained Decoding"
     agent_type: codex
     max_turns: 40
     prompt: |
-      CONTEXT: FR-11 needs a CerCE-style certificate ledger to prevent mode collapse during policy promotion.
+      CONTEXT: Strict zero-false-accept parsing reduces semantic reasoning quality (the "reasoning tax"). CRANE (arXiv:2405.20485) interleaves free "thinking" and structured generation.
       EXISTING CODE TO READ FIRST: python/carnot/pipeline/
-      TASK: Add a certificate ledger around FR-11 policy promotion.
+      TASK: Implement CRANE decoding to alternate between unconstrained reasoning and grammar-enforced generation.
       CONCRETE STEPS:
-      1. Update or create `python/carnot/pipeline/cerce_ledger.py`.
-      2. Implement pre/post constraint violation bounds, replay retention checks, and a reject-if-bound-worsens gate.
-      3. Test the promotion gate with simulated memory updates.
-      4. Write `{project_root}/results/experiment_1668_cerce.json` containing `nonforgetting_rate`.
+      1. Create `python/carnot/pipeline/crane_decoding.py`.
+      2. Implement the state machine that toggles between free-text and strict constraint enforcement.
+      3. Test the mechanism on `unsloth/gemma-4-26B-A4B-it-GGUF` ensuring semantic coherence improves compared to strict grammar decoding.
+      4. Write `{project_root}/results/experiment_1678_crane.json` containing `reasoning_quality_delta` and `parse_rate`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp1669-ltlzinc-benchmark
-    title: "Phase 2: LTLZinc Continual Learning Adapter"
-    agent_type: codex
-    max_turns: 30
+  - id: exp1679-karat-attention
+    title: "Phase 2: Kolmogorov-Arnold Attention (KArAt) Prototype"
+    model: sonnet
+    max_turns: 50
     prompt: |
-      CONTEXT: We need a temporal benchmark for the new CerCE non-forgetting ledger.
+      CONTEXT: Moving beyond standard MLP and attention to fully learnable, verifiable bases (arXiv:2503.10632).
+      EXISTING CODE TO READ FIRST: python/carnot/models/
+      TASK: Build a miniature KArAt attention block replacing Softmax with learnable spline/rational bases.
+      CONCRETE STEPS:
+      1. Create `python/carnot/models/karat_attention.py`.
+      2. Implement a single KArAt layer designed for energy calculation.
+      3. Verify the parameter counts and bounding bounds using rational abstractions.
+      4. Write `{project_root}/results/experiment_1679_karat.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1680-continual-learning-eds
+    title: "Phase 3: Continuous Self-Learning Verification for EDS"
+    agent_type: codex
+    max_turns: 40
+    gated_on:
+      - upstream: exp1677-eds-prototype
+        artifact_field: success
+        op: '=='
+        value: true
+    prompt: |
+      CONTEXT: We must guarantee that our Energy-Driven Steering and CRANE mechanisms do not induce recursive forgetting during continuous self-learning.
       EXISTING CODE TO READ FIRST: python/carnot/pipeline/cerce_ledger.py
-      TASK: Build an LTLZinc continual learning adapter.
+      TASK: Evaluate the new EDS and CRANE decoding with the CerCE non-forgetting ledger.
       CONCRETE STEPS:
-      1. Create `python/carnot/pipeline/ltlzinc_adapter.py`.
-      2. Generate temporal/constraint cases using MiniZinc format logic.
-      3. Measure the forgetting rate using the CerCE ledger on these cases.
-      4. Write `{project_root}/results/experiment_1669_ltlzinc.json`.
+      1. Create `scripts/experiment_1680_eds_learning.py`.
+      2. Run the FR-11 query-time update cycle over the EDS trace candidates.
+      3. Confirm that the `nonforgetting_rate` stays strictly at 1.0.
+      4. Write `{project_root}/results/experiment_1680_continual_eds.json`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp1670-egd-decoding
-    title: "Phase 3: Energy-Guided Decoding (EGD) for Hallucination Mitigation"
-    model: sonnet
-    max_turns: 50
-    prompt: |
-      CONTEXT: EGD offers a hyperparameter-free strategy to select hidden states using minimal energy scores.
-      EXISTING CODE TO READ FIRST: python/carnot/models/
-      TASK: Port EGD to Carnot's SOTA models for structured generation.
-      CONCRETE STEPS:
-      1. Create `python/carnot/pipeline/energy_guided_decoding.py`.
-      2. Wrap inference calls to `unsloth/gemma-4-31B-it-GGUF` applying EGD selection.
-      3. Test on a bounded dataset to evaluate the hallucination "Yes-ratio" bias.
-      4. Write `{project_root}/results/experiment_1670_egd.json`.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp1671-rkan-audit
-    title: "Phase 3: Exact-Rational KANs (RKANs) Verification Audit"
-    agent_type: codex
-    max_turns: 30
-    prompt: |
-      CONTEXT: We need a path to formally verify KAN tiers using exact rational math.
-      EXISTING CODE TO READ FIRST: python/carnot/models/
-      TASK: Conduct a no-synthesis accounting pass and CPU simulation for Exact-Rational KANs.
-      CONCRETE STEPS:
-      1. Create `scripts/experiment_1671_rkan_audit.py`.
-      2. Replace floating-point logic in a mock KAN with Hybrid Zeckendorf rational math.
-      3. Report the complexity and bounding certificates.
-      4. Write `{project_root}/results/experiment_1671_rkan.json`.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp1672-igd-smoke
-    title: "Phase 3: Interleaved Gibbs Diffusion (IGD) Smoke Test"
+  - id: exp1681-milestone-retro
+    title: "Phase 3: Milestone 2026.05.129 Retrospective"
     model: sonnet
     max_turns: 30
     prompt: |
-      CONTEXT: IGD handles mixed continuous-discrete constrained generation.
-      EXISTING CODE TO READ FIRST: python/carnot/models/
-      TASK: Run a small continuous-discrete denoising smoke test.
-      CONCRETE STEPS:
-      1. Create `scripts/experiment_1672_igd_smoke.py`.
-      2. Implement a mock interleaved Markov chain for a 3-SAT style problem.
-      3. Ensure execution on CPU.
-      4. Write `{project_root}/results/experiment_1672_igd.json`.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp1673-thrml-rng-audit
-    title: "Phase 4: Mandatory THRML Independent-RNG Audit"
-    model: opus
-    max_turns: 100
-    prompt: |
-      CONTEXT: Known-issues requires verifying that Carnot samplers and THRML-style samplers have independent PRNG lineages.
-      EXISTING CODE TO READ FIRST: python/carnot/models/, ops/known-issues.md
-      TASK: Perform an independent-RNG audit for THRML vs Carnot.
-      CONCRETE STEPS:
-      1. Create `scripts/experiment_1673_thrml_rng_audit.py`.
-      2. Setup disjoint root seeds and separate PRNG lineages.
-      3. Perform exact n=32/n=64 parity sweeps.
-      4. Confirm non-zero stochastic deltas and independent sample-path hashes.
-      5. Write `{project_root}/results/experiment_1673_rng_audit.json` with field `simulator_only_no_hardware_claim: true`.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp1674-pipim-simulator
-    title: "Phase 4: Parallel Inertial Probabilistic Ising Machines (PIPIM) Simulation"
-    agent_type: codex
-    max_turns: 30
-    prompt: |
-      CONTEXT: We need to test adding an inertia term to p-bit Ising dynamics for dense problems.
-      EXISTING CODE TO READ FIRST: python/carnot/models/ising/
-      TASK: Implement an inertial-update ablation against Carnot sequential Gibbs.
-      CONCRETE STEPS:
-      1. Create `scripts/experiment_1674_pipim.py`.
-      2. Run CPU/simulator-only PIPIM ablation.
-      3. Verify time-to-energy and sample-quality deltas.
-      4. Write `{project_root}/results/experiment_1674_pipim.json` with field `hardware_claim_allowed: false`.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp1675-lagonn-prototype
-    title: "Phase 4: Lagrange Oscillatory Neural Networks (LagONN) Prototype"
-    agent_type: codex
-    max_turns: 40
-    prompt: |
-      CONTEXT: LagONN applies Lagrange multipliers to ONNs to guide toward feasible states for Max-3-SAT.
-      EXISTING CODE TO READ FIRST: python/carnot/models/
-      TASK: Prototype a LagONN solver for constraint satisfaction.
-      CONCRETE STEPS:
-      1. Create `scripts/experiment_1675_lagonn.py`.
-      2. Implement a Lagrange oscillator logic for a toy Max-3-SAT instance.
-      3. Compare convergence against standard Ising soft penalties.
-      4. Write `{project_root}/results/experiment_1675_lagonn.json`.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp1676-milestone-retro
-    title: "Phase 4: Milestone 2026.05.128 Retrospective"
-    model: sonnet
-    max_turns: 20
-    gated_on:
-      - upstream: exp1666-nsvif-dsl-parser
-        artifact_field: false_accepts
-        op: '=='
-        value: 0
-    prompt: |
-      CONTEXT: All milestone experiments have concluded.
+      CONTEXT: Finalizing the 2026.05.129 milestone.
       EXISTING CODE TO READ FIRST: ops/status.md, ops/changelog.md
-      TASK: Summarize findings for .128.
+      TASK: Summarize the findings of EDS, CRANE, and KArAt implementations.
       CONCRETE STEPS:
-      1. Write `scripts/experiment_1676_retro.py` to produce the retrospective JSON.
-      2. Update `ops/status.md` and `ops/changelog.md` with new results.
-      3. Write `{project_root}/results/experiment_1676_retro.json`.
+      1. Compile outcomes and create `scripts/experiment_1681_retro.py` to aggregate JSON artifacts.
+      2. Update `ops/status.md` and `ops/changelog.md` to reflect the new pipeline capabilities.
+      3. Write `{project_root}/results/experiment_1681_retro.json`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
