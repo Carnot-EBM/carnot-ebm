@@ -4,6 +4,25 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-05-13 Post-.131 Planning Sweep (Milestone 2026.05.132)
+
+This sweep was run after milestone `.131` completed. The literature search revealed advances in open-world constraint elicitation, semantic memory pruning for continual learning, and hardware-in-the-loop decoding.
+
+### Reasoning-Time Open Constraint Elicitation (ROCE)
+- **Paper:** "Reasoning-Time Open Constraint Elicitation for Verifiable LLMs" (arXiv:2605.01124)
+- **What:** Extracts dynamic, verifiable logical constraints from unstructured user prompts on-the-fly and enforces them during generation.
+- **Relevance to Carnot:** Carnot has strong static constraint verification (Eidoku, GloroKAN). ROCE bridges the gap to dynamic constraint generation, allowing users to specify natural language rules that are automatically verified.
+
+### Semantic Pruning in Continual EBM Learning
+- **Paper:** "Mitigating Interference via Semantic Pruning in Continual Energy-Based Models" (arXiv:2604.19882)
+- **What:** Introduces a pruning mechanism for replay buffers that discards redundant structural constraints based on semantic similarity, preventing context saturation and catastrophic forgetting.
+- **Relevance to Carnot:** Directly targets the scalability of the FR-11 continuous self-learning loop implemented in `.131`.
+
+### Hardware-In-The-Loop Energy Decoding (HILED)
+- **Paper:** "Hardware-In-The-Loop Energy Decoding for Fast Constraint Satisfaction" (arXiv:2604.22105)
+- **What:** Offloads energy scoring and Gibbs/Potts sampling to an FPGA over PCIe/AXI during the autoregressive decoding step of an LLM.
+- **Relevance to Carnot:** Provides a roadmap for integrating the KV260 Potts hardware execution (proved in `.131`) into the live decoding loop of our SOTA GGUF models.
+
 ## 2026-05-10 Post-.128 Planning Sweep (Milestone 2026.05.129)
 
 This sweep was run after milestone `.128` completed. The literature search revealed advances in energy-driven steering, Kolmogorov-Arnold Attention, and interleaved constrained decoding.
