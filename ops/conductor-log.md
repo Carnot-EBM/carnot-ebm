@@ -1568,3 +1568,4 @@ web search: site:o |
 | 2026-05-10 21:01 UTC | Plan milestone 2026.05.134 | OK | 11 tasks proposed |
 | 2026-05-10 21:03 UTC | Milestone 2026.05.134 activated | OK | 11 tasks queued |
 | 2026-05-10 21:05 UTC | Exp 1735: Dual RTX 3090 SOTA CUDA Runtime Smoke Te | DOOMED_RERUN_BLOCK | 3 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-10 21:07 UTC | Exp 1735: Dual RTX 3090 SOTA CUDA Runtime Smoke Te | DOOMED_RERUN_BLOCK | 3 prior failure(s) match this task's scope but prior_failures field is missing o |
