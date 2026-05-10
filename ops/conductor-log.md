@@ -1532,3 +1532,4 @@ web search: site:o |
 | 2026-05-10 17:42 UTC | Exp 1714: Instruct-to-Constraint extraction from f | OK | 81 passed, 1 warning in 4.88s |
 | 2026-05-10 17:55 UTC | Exp 1715: Synthesizing Dynamic Eidoku Gates | FAIL | Gemini CLI error: Stalled after 600s silence. Last output:  enabled. All tool  |
 | 2026-05-10 17:57 UTC | Exp 1715: Synthesizing Dynamic Eidoku Gates | OK | Deliverable already exists in repo |
+| 2026-05-10 17:57 UTC | Exp 1716: Live evaluation of zero-shot dynamic con | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1715-dynamic-eidoku-synth.pytest_passed |
