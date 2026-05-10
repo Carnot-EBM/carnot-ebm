@@ -1478,3 +1478,4 @@ web search: site:o |
 | 2026-05-10 11:40 UTC | Exp 1684: gated on Exp 1683: Integrate Self-Play w | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1683-self-play-constraint-discovery.sta |
 | 2026-05-10 11:42 UTC | Exp 1684: gated on Exp 1683: Integrate Self-Play w | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1683-self-play-constraint-discovery.sta |
 | 2026-05-10 11:48 UTC | Exp 1685: Live evaluation of Self-Play FR-11 on ma | OK | 85 passed, 1 warning in 5.81s |
+| 2026-05-10 11:52 UTC | Exp 1686: PWA (Piecewise Affine) Abstractions for  | OK | 81 passed, 1 warning in 4.78s |
