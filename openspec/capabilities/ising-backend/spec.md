@@ -530,3 +530,46 @@ execution in the current run, Exp 1674 SHALL write
 `results/experiment_1674_pipim.json`, compare inertial PIPIM against Carnot
 sequential Gibbs on matched dense problems and seeds, report time-to-energy and
 sample-quality deltas, and keep `hardware_claim_allowed=false`.
+
+### REQ-ISING-042
+
+**LagONN toy Max-3-SAT prototype MUST compare Lagrange multiplier oscillation
+against a fixed Ising soft-penalty baseline.**
+
+**Rationale:**
+LagONN applies Lagrange multipliers to oscillatory neural networks so violated
+constraints grow their own penalties over time instead of relying on one static
+soft-penalty weight. Exp 1675 must isolate that mechanism on a tiny,
+deterministic Max-3-SAT instance before applying it to larger FoVer-derived or
+hardware-bound workloads.
+
+**Acceptance criteria:**
+- The experiment SHALL define `scripts/experiment_1675_lagonn.py`.
+- The toy problem SHALL contain a deterministic Max-3-SAT instance with
+  three-literal clauses and an initially infeasible all-true assignment.
+- The LagONN solver SHALL maintain one non-negative Lagrange multiplier per
+  clause, update multipliers from current clause violations, and use the
+  augmented energy to choose local binary flips.
+- The baseline SHALL use a fixed-weight Ising-style soft penalty on the same
+  clauses, initial assignment, bias, and step budget.
+- `results/experiment_1675_lagonn.json` SHALL include `status`,
+  `experiment_id`, `spec_refs`, `algorithm`, `baseline_algorithm`,
+  `toy_problem`, `initial_assignment`, `steps_to_convergence_lagonn`,
+  `steps_to_convergence_soft_penalty`, `lagonn_converged`,
+  `soft_penalty_converged`, `final_violations_lagonn`,
+  `final_violations_soft_penalty`, `convergence_speedup_lagonn_over_soft_penalty`,
+  `lagrange_multiplier_trace`, `soft_penalty_trace`, `cpu_only`,
+  `simulator_only`, `hardware_execution_performed`, `hardware_claim_allowed`,
+  and `honest_verdict`.
+- `hardware_execution_performed` and `hardware_claim_allowed` SHALL remain
+  false because Exp 1675 is a CPU-only prototype.
+
+**Implementation:** `scripts/experiment_1675_lagonn.py`
+
+### SCENARIO-ISING-042
+
+**LagONN Max-3-SAT artifact:** Given the deterministic toy Max-3-SAT instance,
+Exp 1675 SHALL write `results/experiment_1675_lagonn.json`, show the LagONN
+multiplier solver reaching zero violated clauses within the configured step
+budget, compare it against the fixed soft-penalty baseline, and keep
+`hardware_claim_allowed=false`.
