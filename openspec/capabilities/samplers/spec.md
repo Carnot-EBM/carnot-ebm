@@ -38,6 +38,24 @@ Sub-requirements:
 - REQ-SAMPLE-1728-3: The comparison SHALL be deterministic for a fixed seed and
   SHALL not require GPU, network, or hardware backends.
 
+### REQ-SAMPLE-1740: EqM GPU-Accelerated Backend
+
+Carnot MUST provide an EqM backend path that places EqM state and gradients on a
+selected JAX device and JIT-compiles the EqM update loop so live inference can
+use CUDA/ROCm acceleration when a GPU backend is available.
+
+Sub-requirements:
+- REQ-SAMPLE-1740-1: The sampler SHALL expose `backend="auto" | "cpu" | "gpu"`
+  and select a GPU device for `"auto"` only when JAX reports one.
+- REQ-SAMPLE-1740-2: `backend="gpu"` SHALL place the EqM state on the selected
+  GPU device and report an unavailable GPU as a clear runtime error.
+- REQ-SAMPLE-1740-3: The accelerated update rule SHALL preserve the existing EqM
+  CPU numerical behavior within floating-point tolerance.
+- REQ-SAMPLE-1740-4: Experiment 1740 SHALL benchmark CPU versus GPU EqM update
+  latency when a GPU is available, and SHALL write
+  `results/experiment_1740_eqm_gpu.json` with honest backend availability and
+  latency fields.
+
 ## Scenarios
 
 ### SCENARIO-SAMPLE-1727: EqM Converges On A Soft Constraint Bowl
@@ -55,3 +73,11 @@ target state
 **When** it is executed on the deterministic benchmark
 **Then** it writes a JSON artifact with EqM and Langevin convergence metrics
 **And** records whether EqM reached the threshold in fewer steps.
+
+### SCENARIO-SAMPLE-1740: EqM GPU Benchmark Writes Backend-Aware Artifact
+
+**Given** the Exp 1740 EqM GPU benchmark runner
+**When** it is executed on the local JAX installation
+**Then** it writes a JSON artifact with CPU latency, GPU availability, selected
+device metadata, and a backend verdict
+**And** it records GPU latency and parity only when a GPU backend is available.

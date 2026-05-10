@@ -1,4 +1,4 @@
-"""Equilibrium Matching sampler -- JAX implementation.
+"""Equilibrium Matching sampler -- JAX/GPU implementation.
 
 Equilibrium Matching (EqM) is an optimization-oriented sampler for energy
 landscapes where the goal is to find a low-energy constraint-satisfying state,
@@ -7,16 +7,20 @@ inject diffusion noise. It learns a smoothed equilibrium gradient online and
 uses that learned field to move steadily toward states where the energy
 gradient vanishes.
 
-Spec: REQ-SAMPLE-1727
+Spec: REQ-SAMPLE-1727, REQ-SAMPLE-1740
 """
 
 from __future__ import annotations
 
-from dataclasses import dataclass
-from typing import Any
+from collections.abc import Callable
+from dataclasses import dataclass, field
+from typing import Any, Literal
 
 import jax
 import jax.numpy as jnp
+
+EqMBackend = Literal["auto", "cpu", "gpu"]
+_GPU_PLATFORMS = {"gpu", "cuda", "rocm"}
 
 
 @dataclass
@@ -36,8 +40,12 @@ class EquilibriumMatchingSampler:
             0 uses the instantaneous gradient only; 1 uses the learned gradient.
         momentum: Heavy-ball velocity carryover for repeated EqM steps.
         clip_norm: Optional maximum L2 norm for raw energy gradients.
+        backend: JAX device backend to use. ``"auto"`` selects GPU when JAX
+            exposes one and otherwise falls back to CPU.
+        jit: Whether to JIT-compile and cache the EqM scan update loop.
+        device_index: Device index within the selected backend.
 
-    Spec: REQ-SAMPLE-1727
+    Spec: REQ-SAMPLE-1727, REQ-SAMPLE-1740
     """
 
     step_size: float = 0.1
@@ -45,6 +53,64 @@ class EquilibriumMatchingSampler:
     matching_strength: float = 0.5
     momentum: float = 0.0
     clip_norm: float | None = None
+    backend: EqMBackend = "auto"
+    jit: bool = True
+    device_index: int = 0
+    _run_cache: dict[tuple[object, ...], Callable[[jax.Array], tuple[jax.Array, jax.Array]]] = (
+        field(default_factory=dict, init=False, repr=False, compare=False)
+    )
+
+    def _devices_for_platform(self, platform: str) -> list[jax.Device]:
+        """Return JAX devices for a platform without leaking backend probe errors."""
+        try:
+            return list(jax.devices(platform))
+        except RuntimeError:
+            return []
+
+    def _select_indexed_device(self, devices: list[jax.Device], platform: str) -> jax.Device:
+        """Return the configured device index with a clear bounds error."""
+        if self.device_index < 0 or self.device_index >= len(devices):
+            raise RuntimeError(
+                f"JAX {platform} backend has {len(devices)} device(s); "
+                f"device_index={self.device_index} is unavailable."
+            )
+        return devices[self.device_index]
+
+    def _select_device(self) -> jax.Device:
+        """Choose the JAX device for the requested EqM backend.
+
+        Spec: REQ-SAMPLE-1740-1, REQ-SAMPLE-1740-2
+        """
+        if self.backend not in {"auto", "cpu", "gpu"}:
+            raise ValueError(f"Unsupported EqM backend {self.backend!r}; expected auto, cpu, or gpu.")
+
+        if self.backend in {"auto", "gpu"}:
+            gpu_devices = self._devices_for_platform("gpu")
+            if gpu_devices:
+                return self._select_indexed_device(gpu_devices, "gpu")
+            if self.backend == "gpu":
+                raise RuntimeError("JAX GPU backend is not available for Equilibrium Matching.")
+
+        cpu_devices = self._devices_for_platform("cpu")
+        if not cpu_devices:
+            raise RuntimeError("JAX CPU backend is not available for Equilibrium Matching.")
+        return self._select_indexed_device(cpu_devices, "cpu")
+
+    def backend_summary(self) -> dict[str, object]:
+        """Describe the concrete backend selected for this sampler.
+
+        Spec: REQ-SAMPLE-1740-1
+        """
+        device = self._select_device()
+        platform = str(getattr(device, "platform", "unknown"))
+        return {
+            "requested_backend": self.backend,
+            "selected_platform": platform,
+            "selected_device": str(device),
+            "device_index": self.device_index,
+            "jit": self.jit,
+            "accelerated": platform in _GPU_PLATFORMS,
+        }
 
     def _clip_gradient(self, grad: jax.Array) -> jax.Array:
         """Bound gradient norm while preserving direction.
@@ -72,6 +138,78 @@ class EquilibriumMatchingSampler:
         """
         return (1.0 - self.matching_strength) * grad + self.matching_strength * learned_gradient
 
+    def _build_run_fn(
+        self,
+        energy_fn: Any,
+        n_steps: int,
+        device: jax.Device,
+    ) -> Callable[[jax.Array], tuple[jax.Array, jax.Array]]:
+        """Build one EqM scan runner for the selected backend.
+
+        Spec: REQ-SAMPLE-1740-3
+        """
+
+        def run_impl(init: jax.Array) -> tuple[jax.Array, jax.Array]:
+            zeros = jnp.zeros_like(init)
+
+            def step(
+                carry: tuple[jax.Array, jax.Array, jax.Array], _: None
+            ) -> tuple[tuple[jax.Array, jax.Array, jax.Array], jax.Array]:
+                x, learned_gradient, velocity = carry
+                grad = self._clip_gradient(energy_fn.grad_energy(x))
+                learned_gradient = self._update_learned_gradient(learned_gradient, grad)
+                matched_gradient = self._matched_gradient(grad, learned_gradient)
+                velocity = self.momentum * velocity - self.step_size * matched_gradient
+                x_new = x + velocity
+                return (x_new, learned_gradient, velocity), x_new
+
+            (x_final, _, _), chain = jax.lax.scan(step, (init, zeros, zeros), None, length=n_steps)
+            return x_final, chain
+
+        del device  # Inputs are already device_put; JAX compiles for that device.
+        if self.jit:
+            return jax.jit(run_impl)
+        return run_impl
+
+    def _run_cache_key(
+        self,
+        energy_fn: Any,
+        init: jax.Array,
+        n_steps: int,
+        device: jax.Device,
+    ) -> tuple[object, ...]:
+        """Key cached compiled EqM runners by behavior-affecting inputs."""
+        return (
+            id(energy_fn),
+            tuple(init.shape),
+            str(init.dtype),
+            int(n_steps),
+            str(device),
+            self.step_size,
+            self.learning_rate,
+            self.matching_strength,
+            self.momentum,
+            self.clip_norm,
+        )
+
+    def _run_fn(
+        self,
+        energy_fn: Any,
+        init: jax.Array,
+        n_steps: int,
+        device: jax.Device,
+    ) -> Callable[[jax.Array], tuple[jax.Array, jax.Array]]:
+        """Return a cached JIT runner or a fresh unjitted runner."""
+        if not self.jit:
+            return self._build_run_fn(energy_fn, n_steps, device)
+
+        cache_key = self._run_cache_key(energy_fn, init, n_steps, device)
+        run_fn = self._run_cache.get(cache_key)
+        if run_fn is None:
+            run_fn = self._build_run_fn(energy_fn, n_steps, device)
+            self._run_cache[cache_key] = run_fn
+        return run_fn
+
     def _run(
         self,
         energy_fn: Any,
@@ -81,22 +219,13 @@ class EquilibriumMatchingSampler:
     ) -> tuple[jax.Array, jax.Array]:
         """Run EqM and return both the final state and full chain."""
         del key  # EqM is deterministic; key is accepted for sampler interface parity.
-        init = jnp.asarray(init)
-        zeros = jnp.zeros_like(init)
+        if n_steps < 0:
+            raise ValueError("n_steps must be non-negative.")
 
-        def step(
-            carry: tuple[jax.Array, jax.Array, jax.Array], _: None
-        ) -> tuple[tuple[jax.Array, jax.Array, jax.Array], jax.Array]:
-            x, learned_gradient, velocity = carry
-            grad = self._clip_gradient(energy_fn.grad_energy(x))
-            learned_gradient = self._update_learned_gradient(learned_gradient, grad)
-            matched_gradient = self._matched_gradient(grad, learned_gradient)
-            velocity = self.momentum * velocity - self.step_size * matched_gradient
-            x_new = x + velocity
-            return (x_new, learned_gradient, velocity), x_new
-
-        (x_final, _, _), chain = jax.lax.scan(step, (init, zeros, zeros), None, length=n_steps)
-        return x_final, chain
+        device = self._select_device()
+        init = jax.device_put(init, device)
+        run_fn = self._run_fn(energy_fn, init, n_steps, device)
+        return run_fn(init)
 
     def sample(
         self,
