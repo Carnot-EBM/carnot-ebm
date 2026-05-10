@@ -1,191 +1,186 @@
-milestone: 2026.05.132
-milestone_title: "Phase-9 Dynamic Constraint Elicitation, FR-11 Consolidation, and Hardware-Offloaded Verification"
+milestone: 2026.05.133
+milestone_title: "Phase-10 Continuous Self-Learning, EqM System-2 Sampling, and KANELÉ Hardware"
 milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
 tasks:
-  - id: exp1709-archive-131
-    title: "Exp 1709: Archive milestone .131 and initialize .132"
-    deliverable: ops/lineage-retirements/milestone_131_archive.json
-    max_turns: 20
-    prompt: >
-      CONTEXT: Milestone .131 is complete.
-      EXISTING CODE TO READ FIRST: `research-roadmap.yaml`, `ops/changelog.md`
-      TASK: Archive milestone .131 results and initialize .132 tracking.
-      CONCRETE STEPS:
-      1. Move .131 results into ops/lineage-retirements/.
-      2. Write {project_root}/ops/lineage-retirements/milestone_131_archive.json.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp1710-kv260-pyo3-gateway
-    title: "Exp 1710: PyO3 gateway for KV260 hardware offloading"
-    deliverable: crates/carnot-webgpu-gateway/src/kv260_bindings.rs
-    model: opus
-    max_turns: 100
-    agent_type: codex
-    prompt: >
-      CONTEXT: We must integrate the KV260 Potts execution (Exp 1704) into the Python verification pipeline via Rust/PyO3.
-      EXISTING CODE TO READ FIRST: `crates/carnot-python/`, `hardware/`
-      TASK: CRITICAL: write artifact FIRST. Create PyO3 bindings for the KV260 hardware sampler.
-      CONCRETE STEPS:
-      1. Implement `crates/carnot-webgpu-gateway/src/kv260_bindings.rs` to communicate with the KV260 driver.
-      2. Expose the bindings to Python via `carnot-python`.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp1711-hardware-eidoku-ablation
-    title: "Exp 1711: Ablation of Eidoku Gate using KV260 hardware offloading"
-    deliverable: results/experiment_1711_hw_eidoku.json
-    model: opus
-    max_turns: 100
-    gated_on:
-      - upstream: exp1710-kv260-pyo3-gateway
-        artifact_field: pytest_passed
-        op: '=='
-        value: true
-    prompt: >
-      CONTEXT: Test if the hardware offloaded sampler accelerates Eidoku structural verification.
-      EXISTING CODE TO READ FIRST: `python/carnot/pipeline/eidoku_gate.py`
-      TASK: Run an ablation of the Eidoku gate comparing CPU sampling against KV260 hardware sampling.
-      CONCRETE STEPS:
-      1. Write an evaluation script hooking the KV260 backend into EidokuGate.
-      2. Output `{project_root}/results/experiment_1711_hw_eidoku.json`.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp1712-fr11-semantic-pruning
-    title: "Exp 1712: Semantic pruning for FR-11 continual learning"
-    deliverable: python/carnot/training/semantic_pruning.py
-    prompt: >
-      CONTEXT: Based on arXiv:2604.19882, replay buffers suffer from semantic redundancy. FR-11 needs pruning.
-      EXISTING CODE TO READ FIRST: `python/carnot/training/fr11_continuous.py`
-      TASK: Implement semantic pruning based on constraint similarity for the FR-11 replay buffer.
-      CONCRETE STEPS:
-      1. Create `python/carnot/training/semantic_pruning.py`.
-      2. Write a pruning mechanism that identifies and removes redundant structural constraint rules.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp1713-fr11-pruning-eval
-    title: "Exp 1713: Evaluate FR-11 semantic pruning on long-horizon tasks"
-    deliverable: results/experiment_1713_pruning_eval.json
-    gated_on:
-      - upstream: exp1712-fr11-semantic-pruning
-        artifact_field: pytest_passed
-        op: '=='
-        value: true
-    prompt: >
-      CONTEXT: Evaluate the new pruning logic to ensure nonforgetting rate remains high while memory size stays bounded.
-      EXISTING CODE TO READ FIRST: `python/carnot/training/semantic_pruning.py`
-      TASK: Run a long-horizon temporal evaluation.
-      CONCRETE STEPS:
-      1. Run a 1000-task continuous learning sequence with `unsloth/gemma-4-26B-A4B-it-GGUF`.
-      2. Measure retention and replay buffer size.
-      3. Output `{project_root}/results/experiment_1713_pruning_eval.json`.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp1714-dynamic-constraint-extract
-    title: "Exp 1714: Instruct-to-Constraint extraction from free-text"
-    deliverable: python/carnot/pipeline/constraint_extractor.py
-    agent_type: claude
-    prompt: >
-      CONTEXT: Following ROCE (arXiv:2605.01124), we need to extract dynamic constraints from natural language on-the-fly.
-      EXISTING CODE TO READ FIRST: `python/carnot/pipeline/`
-      TASK: Implement an extraction module that turns user prompts into formal Carnot logical constraints.
-      CONCRETE STEPS:
-      1. Write `python/carnot/pipeline/constraint_extractor.py` utilizing `unsloth/Qwen3.6-35B-A3B-GGUF`.
-      2. Add tests ensuring zero false accepts for 10 common instruction types.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp1715-dynamic-eidoku-synth
-    title: "Exp 1715: Synthesizing Dynamic Eidoku Gates"
-    deliverable: python/carnot/pipeline/dynamic_eidoku.py
-    prompt: >
-      CONTEXT: Eidoku gates from .131 are static. We must synthesize them dynamically from extracted constraints.
-      EXISTING CODE TO READ FIRST: `python/carnot/pipeline/constraint_extractor.py`, `python/carnot/pipeline/eidoku_gate.py`
-      TASK: Create a compiler that converts extracted constraints into executable Eidoku gates.
-      CONCRETE STEPS:
-      1. Write `python/carnot/pipeline/dynamic_eidoku.py`.
-      2. Write tests covering graph compilation.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp1716-live-dynamic-eval
-    title: "Exp 1716: Live evaluation of zero-shot dynamic constraint generation"
-    deliverable: results/experiment_1716_dynamic_eval.json
-    gated_on:
-      - upstream: exp1715-dynamic-eidoku-synth
-        artifact_field: pytest_passed
-        op: '=='
-        value: true
-    prompt: >
-      CONTEXT: We must evaluate the end-to-end dynamic extraction and gating logic on SOTA models.
-      EXISTING CODE TO READ FIRST: `python/carnot/pipeline/dynamic_eidoku.py`
-      TASK: Evaluate the zero-shot extraction and enforcement loop on 100 benchmark tasks.
-      CONCRETE STEPS:
-      1. Script a 100-case evaluation against `unsloth/Qwen3.6-35B-A3B-GGUF`.
-      2. Output `{project_root}/results/experiment_1716_dynamic_eval.json`.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp1717-energy-guided-integration
-    title: "Exp 1717: Integrate Energy-Guided Decoder with Dynamic Eidoku"
-    deliverable: python/carnot/pipeline/hiled_decoder.py
-    prompt: >
-      CONTEXT: Implement Hardware-In-The-Loop Energy Decoding (HILED) integrating Exp 1706 and dynamic gates.
-      EXISTING CODE TO READ FIRST: `python/carnot/pipeline/energy_guided_decoding.py`
-      TASK: Connect the energy-guided decoding loop directly to the dynamically synthesized Eidoku gates.
-      CONCRETE STEPS:
-      1. Write `python/carnot/pipeline/hiled_decoder.py`.
-      2. Write smoke tests.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp1718-eval-hiled-glorokan
-    title: "Exp 1718: Evaluate Hallucination Mitigation using HILED and GloroKAN"
-    deliverable: results/experiment_1718_hiled_eval.json
-    gated_on:
-      - upstream: exp1717-energy-guided-integration
-        artifact_field: pytest_passed
-        op: '=='
-        value: true
-    prompt: >
-      CONTEXT: Check if HILED actually mitigates factual distortions using our best local SOTA models.
-      EXISTING CODE TO READ FIRST: `python/carnot/pipeline/hiled_decoder.py`
-      TASK: Evaluate hallucination mitigation with `unsloth/gemma-4-31B-it-GGUF`.
-      CONCRETE STEPS:
-      1. Run the new decoder on 50 complex cases.
-      2. Output `{project_root}/results/experiment_1718_hiled_eval.json`.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp1719-hiled-latency-measure
-    title: "Exp 1719: Measure inference latency impact of HILED"
-    deliverable: results/experiment_1719_latency.json
-    prompt: >
-      CONTEXT: We must understand the projection tax of HILED during live decoding.
-      EXISTING CODE TO READ FIRST: `python/carnot/pipeline/hiled_decoder.py`
-      TASK: Measure latency per token with and without HILED.
-      CONCRETE STEPS:
-      1. Run a latency benchmark script.
-      2. Output `{project_root}/results/experiment_1719_latency.json`.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp1720-e2e-pipeline-132
-    title: "Exp 1720: E2E Pipeline Evaluation (Dynamic Extract + HW + Continual Learning)"
-    deliverable: results/experiment_1720_e2e.json
-    prompt: >
-      CONTEXT: Final pipeline run for milestone .132.
-      EXISTING CODE TO READ FIRST: `python/carnot/pipeline/`
-      TASK: Run the complete integrated stack on all SOTA models.
-      CONCRETE STEPS:
-      1. Hook FR-11 pruning, HW Eidoku, and dynamic constraints into a unified pipeline.
-      2. Evaluate 100 cases.
-      3. Output `{project_root}/results/experiment_1720_e2e.json`.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp1721-milestone-132-retro
-    title: "Exp 1721: Milestone .132 Retrospective"
-    deliverable: results/experiment_1721_retro.json
+  - id: exp1722-fouriercsp
+    title: "Exp 1722: FourierCSP Extractor Prototype"
+    deliverable: results/experiment_1722_fouriercsp.json
     max_turns: 50
-    agent_type: claude
-    prompt: >
-      CONTEXT: Milestone wrap-up and analysis.
-      EXISTING CODE TO READ FIRST: All output JSONs from .132.
-      TASK: Retrospective for .132.
+    prompt: |
+      CONTEXT: Milestone .133 Phase 1. We are incorporating FourierCSP (continuous optimization for CSPs via generalized Walsh-Fourier transform) to replace our legacy discrete constraint extractor.
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/constraint_extractor.py
+      TASK: Implement `FourierCSPExtractor` that maps natural language constraints to a multilinear polynomial representation.
       CONCRETE STEPS:
-      1. Analyze the output JSONs from the conductor.
-      2. Summarize findings, comparing HILED vs CPU, and dynamic vs static extraction.
-      3. Write `{project_root}/results/experiment_1721_retro.json`.
+      1. Create `{project_root}/python/carnot/pipeline/fouriercsp_extractor.py`.
+      2. Implement the mathematical mapping described in FourierCSP.
+      3. Create `{project_root}/scripts/experiment_1722_fouriercsp.py` to evaluate it on a small sample of constraint templates.
+      4. Use at least one of the mandated SOTA GGUF models (`unsloth/Qwen3.6-35B-A3B-GGUF`, etc.) for generating initial NL constraints to parse.
+      5. Write results to `{project_root}/results/experiment_1722_fouriercsp.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  - id: exp1723-cikan-init
+    title: "Exp 1723: Constraint-Informed KAN (CIKAN) Initialization"
+    deliverable: results/experiment_1723_cikan.json
+    agent_type: codex
+    max_turns: 50
+    prompt: |
+      CONTEXT: Integrating Constraint-Informed KANs (CIKAN) to structurally enforce physical and logical constraints directly within the network architecture.
+      EXISTING CODE TO READ FIRST: python/carnot/models/kan_verifier.py
+      TASK: Implement the CIKAN architecture.
+      CONCRETE STEPS:
+      1. Create `{project_root}/python/carnot/models/cikan_verifier.py`.
+      2. Implement the CIKAN class, allowing constraints from FourierCSP to act as fixed architectural boundaries.
+      3. Create `{project_root}/scripts/experiment_1723_cikan.py` to train it on a toy dataset.
+      4. Write results to `{project_root}/results/experiment_1723_cikan.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  - id: exp1724-continuous-updater
+    title: "Exp 1724: Continuous Online Updater Prototype"
+    deliverable: results/experiment_1724_online_updater.json
+    max_turns: 50
+    prompt: |
+      CONTEXT: Fulfilling the PRD requirement for continuous self-learning. We need to route violation feedback into real-time fine-tuning of the CIKAN models.
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/verification_loop.py
+      TASK: Implement an online SGD/AdamW updater that adjusts the CIKAN based on verified failures.
+      CONCRETE STEPS:
+      1. Create `{project_root}/python/carnot/training/online_updater.py`.
+      2. Integrate it with `VerificationLoop` to trigger a fine-tuning step whenever a `Violation` occurs.
+      3. Create `{project_root}/scripts/experiment_1724_online_updater.py` to test it with a synthetic stream of errors.
+      4. Write results to `{project_root}/results/experiment_1724_online_updater.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  - id: exp1725-e2e-fouriercsp-cikan
+    title: "Exp 1725: E2E FourierCSP + CIKAN with Feedback"
+    deliverable: results/experiment_1725_e2e_cikan.json
+    prompt: |
+      CONTEXT: Tying together Phase 1 components.
+      EXISTING CODE TO READ FIRST: scripts/experiment_1724_online_updater.py
+      TASK: Run a live E2E pipeline that generates constraints via SOTA LLMs, parses via FourierCSP, verifies via CIKAN, and self-corrects via the Online Updater.
+      CONCRETE STEPS:
+      1. Create `{project_root}/scripts/experiment_1725_e2e_cikan.py`.
+      2. Instantiate the SOTA model (`unsloth/Qwen3.6-35B-A3B-GGUF` or `unsloth/gemma-4-31B-it-GGUF`).
+      3. Execute a 50-problem stream, measuring the adaptation rate.
+      4. Write results to `{project_root}/results/experiment_1725_e2e_cikan.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  - id: exp1726-ebt-bridge
+    title: "Exp 1726: Energy-Based Transformer (EBT) Bridge"
+    deliverable: results/experiment_1726_ebt.json
+    prompt: |
+      CONTEXT: Phase 2. Bridging our autoregressive LLMs to an Energy-Based Transformer formulation to enable System-2 gradient refinement at inference time.
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/energy_guided_decoder.py
+      TASK: Implement an EBT abstraction layer.
+      CONCRETE STEPS:
+      1. Create `{project_root}/python/carnot/models/ebt_bridge.py`.
+      2. Create `{project_root}/scripts/experiment_1726_ebt.py` to wrap the SOTA GGUF models with the EBT abstraction to calculate sequence energy.
+      3. Write results to `{project_root}/results/experiment_1726_ebt.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  - id: exp1727-eqm-sampler
+    title: "Exp 1727: Equilibrium Matching (EqM) Gradient Sampler"
+    deliverable: results/experiment_1727_eqm.json
+    agent_type: codex
+    prompt: |
+      CONTEXT: Implementing Equilibrium Matching (EqM) to replace standard diffusion/Langevin dynamics for finding optimal constraint-satisfying states.
+      EXISTING CODE TO READ FIRST: python/carnot/samplers/langevin.py
+      TASK: Implement an EqM sampler.
+      CONCRETE STEPS:
+      1. Create `{project_root}/python/carnot/samplers/equilibrium_matching.py`.
+      2. Implement the equilibrium gradient learning logic.
+      3. Create `{project_root}/scripts/experiment_1727_eqm.py` to compare its convergence speed against our standard Langevin sampler.
+      4. Write results to `{project_root}/results/experiment_1727_eqm.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  - id: exp1728-system2-benchmark
+    title: "Exp 1728: System-2 Reasoning Benchmark (GSM8k & MATH)"
+    deliverable: results/experiment_1728_system2_benchmark.json
+    gated_on:
+      - upstream: exp1727-eqm-sampler
+        artifact_field: status
+        op: ==
+        value: "success"
+    prompt: |
+      CONTEXT: Benchmarking our EBT + EqM System-2 reasoning stack against GSM8k and MATH using SOTA GGUF models.
+      EXISTING CODE TO READ FIRST: scripts/experiment_1727_eqm.py
+      TASK: Execute the GSM8k/MATH benchmark.
+      CONCRETE STEPS:
+      1. Create `{project_root}/scripts/experiment_1728_system2_benchmark.py`.
+      2. Use `unsloth/gemma-4-31B-it-GGUF` and the EqM sampler.
+      3. Run on a subset of GSM8k and record accuracy and inference latency.
+      4. Write results to `{project_root}/results/experiment_1728_system2_benchmark.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  - id: exp1729-kanele-synthesis
+    title: "Exp 1729: KANELÉ LUT-based Synthesis Pipeline"
+    deliverable: results/experiment_1729_kanele.json
+    model: opus
+    max_turns: 100
+    prompt: |
+      CONTEXT: Phase 3. Hardware acceleration using KANELÉ (Kolmogorov-Arnold Networks for Efficient LUT-based Evaluation).
+      EXISTING CODE TO READ FIRST: hardware/kv260/ising_sampler_v4_spec.md
+      TASK: Design the RTL generation pipeline for mapping CIKAN to FPGA LUTs.
+      CONCRETE STEPS:
+      1. Create `{project_root}/hardware/kv260/kanele_lut_mapper.py` to export Python KAN weights into Verilog LUT definitions.
+      2. Create `{project_root}/hardware/kv260/kanele_top.v` as the top-level Verilog wrapper.
+      3. Create `{project_root}/scripts/experiment_1729_kanele.py` to run a simulation check.
+      4. Write results to `{project_root}/results/experiment_1729_kanele.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  - id: exp1730-cikan-fpga
+    title: "Exp 1730: FPGA Deployment of CIKAN Verification"
+    deliverable: results/experiment_1730_cikan_fpga.json
+    model: opus
+    max_turns: 100
+    prompt: |
+      CONTEXT: Deploying the generated KANELÉ RTL to the KV260 board via Vivado (if installed) or providing simulation numbers.
+      EXISTING CODE TO READ FIRST: hardware/kv260/kanele_top.v
+      TASK: Synthesize and optionally run on hardware.
+      CONCRETE STEPS:
+      1. Update `{project_root}/hardware/kv260/synth_ising.tcl` or create `synth_kanele.tcl`.
+      2. Create `{project_root}/scripts/experiment_1730_cikan_fpga.py` to trigger the build and benchmark via PYNQ interface.
+      3. Write results to `{project_root}/results/experiment_1730_cikan_fpga.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  - id: exp1731-fpga-latency-audit
+    title: "Exp 1731: Hardware vs CPU Latency Audit"
+    deliverable: results/experiment_1731_fpga_audit.json
+    prompt: |
+      CONTEXT: Comparing the inference speed of our KANELÉ CIKAN FPGA implementation against CPU and GPU baselines.
+      EXISTING CODE TO READ FIRST: scripts/experiment_1730_cikan_fpga.py
+      TASK: Perform latency benchmark.
+      CONCRETE STEPS:
+      1. Create `{project_root}/scripts/experiment_1731_fpga_audit.py`.
+      2. Measure end-to-end inference latency for a batch of 1000 CIKAN evaluations.
+      3. Write results to `{project_root}/results/experiment_1731_fpga_audit.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  - id: exp1732-unified-pipeline
+    title: "Exp 1732: Unified Self-Learning + Hardware Pipeline"
+    deliverable: results/experiment_1732_unified.json
+    prompt: |
+      CONTEXT: Phase 4. Bridging Continuous Self-Learning with Hardware verification.
+      EXISTING CODE TO READ FIRST: scripts/experiment_1724_online_updater.py
+      TASK: Wire the PYNQ-based CIKAN verifier into the VerificationLoop, routing violations to the Python-side online updater, then re-uploading weights to the FPGA.
+      CONCRETE STEPS:
+      1. Create `{project_root}/python/carnot/pipeline/unified_hw_learning.py`.
+      2. Create `{project_root}/scripts/experiment_1732_unified.py` to test the loop.
+      3. Write results to `{project_root}/results/experiment_1732_unified.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  - id: exp1733-dualgpu-live
+    title: "Exp 1733: DualGPU Live Run with SOTA Models"
+    deliverable: results/experiment_1733_dualgpu.json
+    model: opus
+    max_turns: 100
+    prompt: |
+      CONTEXT: Conducting a full-scale live run using Dual RTX 3090 setup.
+      EXISTING CODE TO READ FIRST: scripts/experiment_1732_unified.py
+      TASK: Run a comprehensive DualGPU benchmark combining System-2 EqM, FourierCSP, and continuous learning.
+      CONCRETE STEPS:
+      1. Create `{project_root}/scripts/experiment_1733_dualgpu.py`.
+      2. Ensure SOTA models (`unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF`) are split or utilized effectively.
+      3. Write results to `{project_root}/results/experiment_1733_dualgpu.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  - id: exp1734-milestone-retro
+    title: "Exp 1734: Milestone .133 Retrospective"
+    deliverable: results/experiment_1734_retro.json
+    agent_type: gemini
+    max_turns: 30
+    prompt: |
+      CONTEXT: Final task. Conduct a full retrospective on Milestone .133.
+      EXISTING CODE TO READ FIRST: {project_root}/ops/status.md
+      TASK: Evaluate the success of FourierCSP, CIKAN, EqM, KANELÉ, and Continuous Self-Learning against the PRD.
+      CONCRETE STEPS:
+      1. Create `{project_root}/scripts/experiment_1734_retro.py` that parses the results of Exp 1722-1733.
+      2. Summarize findings and identify gaps for .134.
+      3. Write `{project_root}/results/experiment_1734_retro.json`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
