@@ -1537,3 +1537,5 @@ web search: site:o |
 | 2026-05-10 18:01 UTC | Exp 1716: Live evaluation of zero-shot dynamic con | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1715-dynamic-eidoku-synth.pytest_passed |
 | 2026-05-10 18:03 UTC | Exp 1717: Integrate Energy-Guided Decoder with Dyn | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-10 18:05 UTC | Exp 1717: Integrate Energy-Guided Decoder with Dyn | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-10 18:07 UTC | Exp 1717: Integrate Energy-Guided Decoder with Dyn | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-10 18:09 UTC | Exp 1718: Evaluate Hallucination Mitigation using | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1717-energy-guided-integration) |
