@@ -1,0 +1,24 @@
+{
+  "experiment": 1739,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-05-10",
+  "started_at": "2026-05-10T21:23:43.128810+00:00",
+  "finished_at": "2026-05-10T21:23:43.128810+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Exp 1739: Tier 3 EORM Live Updates",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp1738-live-telemetry-streamer.status (actual=None == expected='success')",
+  "gates_evaluated": [
+    {
+      "upstream": "exp1738-live-telemetry-streamer",
+      "artifact_field": "status",
+      "op": "==",
+      "expected": "success",
+      "actual": null,
+      "passed": false,
+      "reason": "actual=None == expected='success'"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
