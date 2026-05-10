@@ -5403,3 +5403,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-10: Exp 1723: Constraint-Informed KAN (CIKAN) Initialization (✅ Complete) — honest_verdict=complete: FourierCSP constraint compiled into fixed CIKAN boundary and preserved through toy residual training; results/experiment_1723_cikan.json
 - 2026-05-10: Exp 1724: Continuous Online Updater Prototype (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_1724_online_updater.json
 - 2026-05-10: Exp 1725: E2E FourierCSP + CIKAN with Feedback (⚠️ Research Finding) — honest_verdict=e2e_pipeline_successful; results/experiment_1725_e2e_cikan.json
+- 2026-05-10: Exp 1726: Energy-Based Transformer (EBT) Bridge (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_1726_ebt.json
