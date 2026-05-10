@@ -696,3 +696,30 @@ write the results to `results/experiment_1731_fpga_audit.json`.
 **Then:** The artifact records toolchain and board boundaries, limits execution to simulator first, and writes an honest verdict.
 
 **Implementation status:** Implemented (Exp 1585)
+
+---
+
+### REQ-HW-LEARN-101
+
+**Title:** Unified HW Verification Loop with Online Updater
+
+**Description:**
+Wire the PYNQ-based CIKAN verifier into the VerificationLoop, routing violations to the Python-side online updater, then re-uploading weights to the FPGA.
+
+**Acceptance criteria:**
+- `UnifiedHWVerificationLoop` extends or wraps the hardware loop to route violations to the Python-side `OnlineUpdater` and re-upload weights to the FPGA.
+- Results written to `results/experiment_1732_unified.json`.
+
+**Implementation status:** Pending (Exp 1732)
+
+---
+
+### SCENARIO-HW-LEARN-101
+
+**Scenario:** Wire PYNQ-based CIKAN verifier into the VerificationLoop.
+
+**Given:** A PYNQ-based CIKAN verifier and OnlineUpdater.
+**When:** The Exp 1732 unified script runs.
+**Then:** Violations are routed to the OnlineUpdater and weights are re-uploaded to the FPGA.
+
+**Implementation status:** Pending (Exp 1732)
