@@ -1465,3 +1465,4 @@ web search: site:o |
 | 2026-05-10 10:39 UTC | Phase 1: CRANE Reasoning-Augmented Constrained Dec | OK | 81 passed, 1 warning in 4.28s |
 | 2026-05-10 10:51 UTC | Phase 2: Kolmogorov-Arnold Attention (KArAt) Proto | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: Warning: 256-color  |
 | 2026-05-10 10:55 UTC | Phase 2: Kolmogorov-Arnold Attention (KArAt) Proto | OK | cache hit: 87 passed, 1 warning in 4.96s |
+| 2026-05-10 10:57 UTC | Phase 3: Continuous Self-Learning Verification for | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1677-eds-prototype.success (actual=None |
