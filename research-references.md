@@ -4,6 +4,30 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-05-10 Post-.128 Planning Sweep (Milestone 2026.05.129)
+
+This sweep was run after milestone `.128` completed. The literature search revealed advances in energy-driven steering, Kolmogorov-Arnold Attention, and interleaved constrained decoding.
+
+### Energy-Driven Steering (EDS)
+- **Paper:** "Energy-Driven Steering: Reducing False Refusals via Energy-Based Models" (OpenReview 2026)
+- **What:** Uses a lightweight external EBM to map an LLM's internal activations to an energy landscape. Gradients of this energy steer hidden states toward desirable outputs.
+- **Relevance to Carnot:** Extends our work on Energy-Guided Decoding to the hidden state level, offering a way to guide reasoning traces during generation rather than just at the decoding step.
+
+### CRANE: Reasoning-Augmented Constrained Decoding
+- **Paper:** "CRANE: Reasoning-Augmented Constrained Decoding" (arXiv:2405.20485)
+- **What:** Interleaves constrained and unconstrained decoding to allow models to "think" freely before forcing structured formats, reducing the "reasoning tax."
+- **Relevance to Carnot:** Directly addresses the tension between zero-false-accept parsing and semantic reasoning quality found in earlier structured generation experiments.
+
+### Kolmogorov-Arnold Attention (KArAt) and Transformers (KAT)
+- **Paper:** "Kolmogorov-Arnold Transformer" (arXiv:2409.10594) and "Kolmogorov-Arnold Attention" (arXiv:2503.10632)
+- **What:** Replaces MLPs and attention mechanisms with learnable nonlinear bases (splines, rational functions).
+- **Relevance to Carnot:** Provides the next evolutionary step for our KAN energy tiers. Moving beyond MLPs to full KAT architectures allows for highly interpretable, explicitly verifiable reasoning layers.
+
+### Energy-Guided ODEs for Continuous Latent Decoding (DICE)
+- **Paper:** "Debiasing Language Models Using Energy-Guided Ordinary Differential Equations" (arXiv:2309.12612)
+- **What:** Maps text to a continuous latent space and uses EBM gradients to steer an ODE solver.
+- **Relevance to Carnot:** A step towards Kona-parity for continuous latent trace optimization.
+
 ## 2026-05-09 Post-.127 Planning Sweep (Milestone 2026.05.128)
 
 This sweep was run after milestone `.127` completed. The literature search revealed major advances in energy-based reasoning, continuous latent generation, and hard constraint layers.
