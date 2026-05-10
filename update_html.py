@@ -1,5 +1,5 @@
-import sys
 import re
+import sys
 
 try:
     import markdown
@@ -20,17 +20,29 @@ with open(md_path, "r", encoding="utf-8") as f:
 # Convert markdown to html
 md_html = markdown.markdown(md_content, extensions=['tables', 'fenced_code'])
 
+# Extract header string from markdown
+m = re.search(r'^## A Technical Report[^\n]*', md_content, re.MULTILINE)
+if m:
+    header_str = m.group(0).replace('## ', '')
+else:
+    header_str = "A Technical Report — 1979 Experiments Across the Public Record, 140 Archived Milestone Records, 23,597 Python Test Items Collected (Artifacts Tracked Through Exp 1664)"
+
 # Find everything before <article> and after </article>
 pre_article = html_content.split("<article>")[0]
 post_article = html_content.split("</article>")[1]
 
 # Update the title and description in pre_article
-pre_article = pre_article.replace(
-    "1888 Experiments", "1941 Experiments"
-).replace(
-    "137 Archived Milestone Records", "138 Archived Milestone Records"
-).replace(
-    "23,714 Python Test Items", "23,749 Python Test Items"
+# Replaces <title>...</title>
+pre_article = re.sub(
+    r'<title>.*?</title>',
+    f'<title>Technical Report - {header_str}</title>',
+    pre_article
+)
+# Replaces content in description
+pre_article = re.sub(
+    r'<meta name="description" content="Carnot technical report: .*?\. Live GPU benchmarks',
+    f'<meta name="description" content="Carnot technical report: {header_str}. Live GPU benchmarks',
+    pre_article
 )
 
 new_html = pre_article + "<article>\n" + md_html + "\n</article>" + post_article

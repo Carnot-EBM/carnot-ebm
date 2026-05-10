@@ -18,9 +18,9 @@ call. No fine-tuning. No access to model weights.
 Rust + Python/JAX, Apache 2.0, local editable install via `pip install -e ".[dev]"`.
 The public PyPI package remains a Phase-1 ship blocker as of Exp 1582.
 
-Current public research record: **1,954 experiment records tracked through Exp
-1639**. `research-complete.yaml` currently archives **1,790** task records
-across **139** artifact-backed completed milestone records through
+Current public research record: **1,979 experiment records tracked through Exp
+1664**. `research-complete.yaml` currently archives **1,802** task records
+across **140** artifact-backed completed milestone records through
 2026.05.125; checked-in result artifacts and `ops/changelog.md` extend through
 milestone 2026.05.125 on 2026-05-09.
 
@@ -38,11 +38,11 @@ v4 to **59 fresh-verified cases** (up from 4 in .106) with self-learning delta
 **+1.791464** and `headline_result_allowed=true`; Exp 1380 produced the arXiv
 v11 bundle (submission-ready archive, manual upload required); Exp 1379
 completed the paper integrity audit (5/5 issues resolved). Milestone .108
-completed **12 of 13** criteria: Exp 1394 deployed DVI v2 + SECL combined
-calibration (ECE reduced, positive AUROC delta); Exp 1395 extended FR-11
+completed **12 of 13** criteria: Exp 1404 deployed DVI v2 + SECL combined
+calibration (ECE reduced, positive AUROC delta); Exp 1405 extended FR-11
 self-learning v5 to **1,508 fresh-verified cases** with self-learning delta
-**+1.449** and `headline_result_allowed=true`; Exp 1396 diagnosed and fixed the
-semantic validation failures (30/30 sample failures recovered); Exp 1397 ran
+**+1.449** and `headline_result_allowed=true`; Exp 1406 diagnosed and fixed the
+semantic validation failures (30/30 sample failures recovered); Exp 1407 ran
 the full-scale 200-case pipeline with `semantic_validation_pass_rate=1.0` but
 `full_pipeline_pass_rate=0.305` (below 0.40 headline gate); GRPO v8 NGRPO
 retired (no improvement, all rollouts UNKNOWN). Post-milestone GitHub issue
@@ -367,7 +367,7 @@ experiment artifact under `results/`.
 | Milestone .101 status | **8/13 criteria met**; activation audit, cache preflight, skill graph, online memory policy, stop policy, bridge audit, arXiv hold receipt, and retro completed. SOTA certificates and downstream headline learning remain gated | Exps 1296-1308 |
 | SOTA GGUF runtime recovery | Two headline local GGUF models resolved and loaded through llama.cpp: Qwen3.6-35B-A3B on GPU0 and Gemma4-31B-it on GPU1; optional Gemma4-26B-A4B remains absent, but the headline pair is ready | Exps 1309/1310 |
 | ConstraintBench/SATQuest SOTA stability | **0.90** answer stability across **40** live llama.cpp responses, PySAT verification **0.525**, cross-model disagreement **0.80**, meaningful disagreement **0.0** | Exp 1311 |
-| Triggered certificates with DCCD/GBNF | Overall parse rate **0.71223** and truthfulness **0.69697** over **139** attempts; raw trigger parsed **0/40**, GBNF parsed **40/40** with **21/40** truthful, DCCD parsed **40/40** with **29/40** truthful, repaired certificates were **19/19** truthful; below the 0.75 downstream gate | Exp 1312 |
+| Triggered certificates with DCCD/GBNF | Overall parse rate **0.71223** and truthfulness **0.69697** over **140** attempts; raw trigger parsed **0/40**, GBNF parsed **40/40** with **21/40** truthful, DCCD parsed **40/40** with **29/40** truthful, repaired certificates were **19/19** truthful; below the 0.75 downstream gate | Exp 1312 |
 | CerCE + GRPO/VPRM v11 replay self-learning | CerCE non-forgetting **1.0** and self-learning delta **+1.596429**; GRPO/VPRM replay score **0.525 -> 0.725** and verifier-feedback token-mask score **0.975**; no large GRPO training job or new model generation was run | Exps 1315/1317 |
 | HardNet++/DSP learned stop policy | Held-out replay split reached stop precision **1.0** and recall **1.0** over **36** cases; DSP feasibility AUROC **0.640625**; learned policy matched the conservative replay policy, so this is not yet a broad general stop rule | Exp 1318 |
 | KAN + p-bit portability audits | KAN audit records **192** BOP, **75** NABS, **24** RM, and a **6,144-byte** LUT table with FPGA as the near-term target; p-bit packet reaches KL **0.000412** to CPU Gibbs at 6-bit DAC/reuse=4 with dual-BRAM mapping ready; no FPGA/NPU/analog hardware execution claimed | Exps 1319/1320 |
@@ -385,9 +385,9 @@ experiment artifact under `results/`.
 | Milestone .105 status | **9/12 criteria met**; thinking-mode budget exhaustion diagnosed as terminal negative evidence; hardware/parity work honest; publication hold active | Exp 1363 |
 | Milestone .106 status | **11/13 criteria met**; tag-first CRANE injection resolved certificate_parse_rate=0.0 blocker; pre-test cascade SKIPs on exp1375/1376 required manual closeout | Exp 1376 retro |
 | Milestone .107 status | **13/14 criteria met**; full-scale pipeline headline allowed; arXiv v11 ready; GRPO v7 JURY-RL no improvement (sole miss); publication hold lift recommended | Exp 1389 |
-| DVI v2 + SECL combined calibration | DVI AUROC **0.394526 → 0.405984** (+0.011458); SECL ECE **0.561624 → 0.306922** (45.35096% reduction); deployed from 59 fresh cases and 1,770 held-out FoVer cases | Exp 1394 |
-| FR-11 continuous self-learning v5 | **1,508 fresh-verified cases** via DVI v2/SECL path; self-learning delta **+1,449** vs Exp 1388; GRPO v8 cases integrated **0** | Exp 1395 |
-| Full-scale pipeline v2, 200 cases | `certificate_parse_rate=1.0`, `semantic_validation_pass_rate=1.0`, `repair_hint_precision=1.0`, but `full_pipeline_pass_rate=0.305 < 0.40`, so not a headline result | Exp 1397 |
+| DVI v2 + SECL combined calibration | DVI AUROC **0.394526 → 0.405984** (+0.011458); SECL ECE **0.561624 → 0.306922** (45.35096% reduction); deployed from 59 fresh cases and 1,770 held-out FoVer cases | Exp 1404 |
+| FR-11 continuous self-learning v5 | **1,508 fresh-verified cases** via DVI v2/SECL path; self-learning delta **+1,449** vs Exp 1388; GRPO v8 cases integrated **0** | Exp 1405 |
+| Full-scale pipeline v2, 200 cases | `certificate_parse_rate=1.0`, `semantic_validation_pass_rate=1.0`, `repair_hint_precision=1.0`, but `full_pipeline_pass_rate=0.305 < 0.40`, so not a headline result | Exp 1407 |
 | Milestone .108 status | **12/13 criteria met**; arXiv submission not attempted, semantic validation fixed, full pipeline below headline gate, GRPO retired, BiPRM negative | Exp 1402 |
 | Structured verdict records (Issue #3) | `VerdictRecord` + `calibrated_confidence_from_energy`; `verify_record()` API on both pipeline classes; **135 tests** pass | 2026-05-06 |
 | SessionMemory portable packs (Issue #5) | `export_session_memory`, `import_session_memory`, `diff_session_memory_packs` CLI; JSON Schema v1; **89 tests** pass (1 skipped) | 2026-05-06 |
@@ -476,10 +476,10 @@ experiment artifact under `results/`.
 | Milestone .124 closeout (DualGPURunner Profiling) | Both RTX 3090s completely idle at 0% utilization. Estimated 40% time savings recoverable via DualGPURunner parallelization and addressing bottlenecks | Exp 1626 |
 | Probability Calibration Verifier | Opt-in verifier scores explicit probability claims against simple reference-class evidence; returns structured `VerdictRecord` | Exp 1414 |
 | KANELÉ Validation & Routing | KANELÉ RTL linting, latency accounting vs Ising baseline; adaptive energy reconfiguration and EBM vs LLM Task Allocation Router | Exps 1622-1625 |
-| Milestone .125 closeout | Analyzed 125 experiments in 569 mins. Both RTX 3090s idle; 40% savings possible via DualGPURunner parallelization of Exp 1603/1633 | Exp 1639 |
+| Milestone .126 closeout | Analyzed 151 experiments in 711 mins. Both RTX 3090s idle; 40% savings possible via DualGPURunner parallelization | Exp 1664 |
 | Pi-net Projection & ConsFormer | Prototyped Pi-net style differentiable projection layer for continuous latents and a ConsFormer-style refiner | Exps 1633-1635 |
 | SMGI & Energy-Guided Decoding | Integrated SMGI certified update logic and implemented EGD using mandated SOTA GGUFs | Exps 1631/1636 |
-| Current Python test collection | **23,543** Python tests collected; collection-only snapshot, not a full-suite pass claim | 2026-05-09 collection run |
+| Current Python test collection | **23,597** Python tests collected; collection-only snapshot, not a full-suite pass claim | 2026-05-10 collection run |
 | Local Claude/Codex usage snapshot | Codex reads the newest local `token_count` event; Claude aggregates local token usage and reads only subscription/tier metadata from credentials; free-form quota prose is ignored instead of guessed; focused regression tests pass | 2026-05-04 changelog |
 
 Deeper analysis of these — including everything that **didn't** work and
@@ -521,7 +521,7 @@ claim we publish.
 ## Where to go next
 
 - **[Technical report](docs/technical-report.md)** — the full research arc
-  through Exp 1639 across 139 archived completed milestone records plus the
+  through Exp 1664 across 140 archived completed milestone records plus the
   latest .121 result artifacts, with a
   plain-English timeline of what we tried, what failed, what stuck.
 - **[Roadmap](docs/roadmap.md)** — current milestone, upcoming milestones,
@@ -728,7 +728,7 @@ See the [technical report](docs/technical-report.md) for the full research recor
 
 ## 14 Principles Learned
 
-Hard-won lessons from the activation-based phase of a research program that now spans 1,954 tracked experiment records through Exp 1639, 139 archived completed milestone records, and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
+Hard-won lessons from the activation-based phase of a research program that now spans 1,979 tracked experiment records through Exp 1664, 140 archived completed milestone records, and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
 
 ### What works
 1. **The model's own logprobs are the best energy.** No external EBM needed for rejection sampling — the LLM's own confidence is already an energy function. Simple, practical, +10%.
