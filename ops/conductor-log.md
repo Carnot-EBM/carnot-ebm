@@ -1584,3 +1584,5 @@ web search: site:o |
 | 2026-05-10 22:20 UTC | Exp 1742: SWE-Bench Lite EqM Harness Preparation | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-10 22:22 UTC | Exp 1742: SWE-Bench Lite EqM Harness Preparation | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-10 22:24 UTC | Exp 1743: Large-Scale System-2 GSM8K/MATH Benchmar | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1741-guided-gen-sota) |
+| 2026-05-10 22:26 UTC | Exp 1744: System-2 Latency vs Accuracy Impact Anal | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1744_impact. |
+| 2026-05-10 22:28 UTC | Exp 1743: Large-Scale System-2 GSM8K/MATH Benchmar | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1741-guided-gen-sota) |
