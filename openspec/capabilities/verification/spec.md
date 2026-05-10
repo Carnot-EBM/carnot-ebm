@@ -2281,6 +2281,43 @@ And the same pack compiles through the local DSL validator,
 And the terminal artifact records emitted DSL inputs, validator metrics, and
 `false_accept_rate=0.0`.
 
+### REQ-VERIFY-1666: Product NSVIF Instruction-To-Constraint Parser
+
+The repository shall provide an importable product parser that turns bounded
+natural-language prompts into executable Carnot constraints and local validator
+backends without executing generated code.
+
+The parser shall:
+
+- define `python/carnot/pipeline/nsvif_parser.py`;
+- parse supported natural-language instruction prompts into the existing
+  bounded Carnot instruction DSL and serializable Carnot `ConstraintResult`
+  rows;
+- compile each parsed prompt to local Python, PySAT-compatible CNF, and
+  Z3-compatible hard-conjunction validator artifacts;
+- fail closed for unsafe prompts, unsupported operators, empty constraint
+  packs, or unbounded constraint counts;
+- evaluate bounded GGUF model-spec rows for
+  `unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF` against at
+  least one known-good and one known-bad output per row;
+- write `results/experiment_1666_nsvif.json` with at minimum `false_accepts`
+  and `compilation_rate`; and
+- set terminal `status="complete"` only when every bounded model row parses,
+  every validator backend compiles, every known-good output passes, every
+  known-bad output rejects, and `false_accepts=0`.
+
+### SCENARIO-VERIFY-1666: Product Prompts Compile To Executable Constraints
+
+Given bounded natural-language prompts from the mandated GGUF model-spec rows,
+When the NSVIF parser evaluates the prompt cases,
+Then each prompt emits a schema-valid DSL pack and Carnot constraint rows,
+And Python, PySAT-compatible CNF, and Z3-compatible validator artifacts compile
+for every case,
+And known-good outputs pass while known-bad outputs reject with zero false
+accepts,
+And `results/experiment_1666_nsvif.json` records `compilation_rate=1.0` and
+`false_accepts=0`.
+
 ### REQ-VERIFY-1642: llguidance Adapter For Structured Verdict Generation
 
 The repository shall provide an Exp 1642 llguidance adapter that exposes
@@ -2409,7 +2446,7 @@ the semantic false accept returns a `VerdictRecord` with `verdict="fail"` and
 and `results/experiment_1591_dccd_adapter.json` records complete metrics and
 backend diagnostics for the reusable adapter.
 
-## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487/1495/1496/1499/1500/1501/1507/1508/1509/1510/1520/1521/1522/1525/1537/1538/1541/1542/1551/1552/1553/1554/1557/1562/1571/1578/1580/1588/1591/1642)
+## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487/1495/1496/1499/1500/1501/1507/1508/1509/1510/1520/1521/1522/1525/1537/1538/1541/1542/1551/1552/1553/1554/1557/1562/1571/1578/1580/1588/1591/1642/1666)
 
 | Requirement | Python | Tests |
 |-------------|--------|-------|
@@ -2460,6 +2497,7 @@ backend diagnostics for the reusable adapter.
 | REQ-VERIFY-1641 | Implemented (`python/carnot/pipeline/nsvif_sota.py`; legacy wrapper `scripts/experiment_1641_nsvif_sota.py`) | Implemented (`tests/python/test_pipeline_nsvif_sota.py`, `tests/python/test_experiment_1641_nsvif_sota.py`) |
 | REQ-VERIFY-1642 | Implemented (`scripts/experiment_1642_llguidance.py`) | Implemented (`tests/python/test_experiment_1642_llguidance.py`) |
 | REQ-VERIFY-1646 | Implemented (`scripts/experiment_1646_ebcn.py`) | Implemented (`tests/python/test_experiment_1646_ebcn.py`) |
+| REQ-VERIFY-1666 | Implemented (`python/carnot/pipeline/nsvif_parser.py`) | Implemented (`tests/python/test_pipeline_nsvif_parser.py`) |
 
 ### REQ-VERIFY-1593: CDG Repair Acceptance Rates
 The repository shall provide a CDG repair analysis tool that builds a CDG over runtime-contract cases, compares repair localization, and contrasts repair acceptance rates between flat check and CDG ordering using the mandated MODEL_SPECS.
