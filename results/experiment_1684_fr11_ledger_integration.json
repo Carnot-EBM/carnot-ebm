@@ -1,0 +1,24 @@
+{
+  "experiment": 1684,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-05-10",
+  "started_at": "2026-05-10T11:38:42.912005+00:00",
+  "finished_at": "2026-05-10T11:38:42.912005+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Exp 1684: gated on Exp 1683: Integrate Self-Play with FR-11 Ledger",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp1683-self-play-constraint-discovery.status (upstream artifact not found for task id 'exp1683-self-play-constraint-discovery')",
+  "gates_evaluated": [
+    {
+      "upstream": "exp1683-self-play-constraint-discovery",
+      "artifact_field": "status",
+      "op": "==",
+      "expected": "success",
+      "actual": null,
+      "passed": false,
+      "reason": "upstream artifact not found for task id 'exp1683-self-play-constraint-discovery'"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
