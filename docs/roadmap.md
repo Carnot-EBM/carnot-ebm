@@ -133,6 +133,7 @@
 | 2026.05.125 | Operational Retrospective | 1591-1633+ | 569 min wall time; GPUs completely idle; DualGPURunner missed; 40% savings via parallel scheduling |
 | 2026.05.126 | Operational Retrospective | 1591-1651+ | 711 min wall time; GPUs completely idle; DualGPURunner missed; 40% savings via parallel scheduling |
 | 2026.05.127 | Operational Retrospective | 1603-1663+ | 1070 min wall time; GPUs completely idle; DualGPURunner missed; 82m doomed-rerun block |
+| 2026.05.128 | Operational Retrospective | 1603-1663+ | 1070 min wall time; GPUs completely idle; DualGPURunner missed; 82m doomed-rerun block |
 
 ## Breakthrough Results
 

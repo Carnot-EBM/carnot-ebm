@@ -1,0 +1,33 @@
+{
+  "schema": "carnot.operational_retro.v63",
+  "milestone": "2026.05.128",
+  "generated_at": "2026-05-10T09:47:00Z",
+  "retro_type": "operational_full",
+  "summary": "Analyzed 1070 min wall time / 180 experiments (avg 6 min). Both RTX 3090s were completely idle at 0% utilization, meaning DualGPURunner was not utilized and parallelization was missed. Doomed-rerun block on Exp 1663 consumed 82 minutes instead of failing fast. Estimated 40% savings recoverable via DualGPURunner and fail-fast blocks.",
+  "total_wall_time_minutes": 1070,
+  "experiments_completed": 180,
+  "slowest_experiments": [
+    "Exp 1603: Energy-Based Constraint Network (EBCN) coherence (88min)",
+    "Exp 1663: Doomed-rerun block (82min)",
+    "Exp 1657: KV260 EBRM Hardware Offload (57min)",
+    "Exp 1642: llguidance adapter (54min)",
+    "Exp 1653: NSVIF DSL SOTA GGUF Integration (53min)"
+  ],
+  "bottlenecks_identified": [
+    "Both GPUs were idle at 0% utilization throughout, indicating a failure to use DualGPURunner for parallel execution.",
+    "Doomed-rerun block (Exp 1663) consumed 82 minutes, wasting time instead of failing fast.",
+    "Sequential execution bottlenecks on long-running tasks like Exp 1603."
+  ],
+  "improvements_suggested": [
+    "Enforce use of DualGPURunner to parallelize workloads across both idle RTX 3090 GPUs.",
+    "Implement a fail-fast mechanism for doomed-rerun blocks to emit terminal artifacts immediately.",
+    "Optimize sequential bottlenecks in long-running experiments."
+  ],
+  "estimated_time_savings_pct": 40,
+  "top_3_highest_leverage_actions": [
+    "Enforce DualGPURunner usage",
+    "Implement fail-fast for doomed-rerun",
+    "Optimize sequential evaluation tasks"
+  ],
+  "meta_reflection": "The retrospective highlights a persistent failure to utilize available GPU resources for parallelization. Enforcing DualGPURunner and fixing the doomed-rerun blocks are critical to recovering efficiency."
+}
