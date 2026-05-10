@@ -1,6 +1,6 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report — 2049 Experiments Across the Public Record, 145 Archived Milestone Records, 23,714 Python Test Items Collected (Artifacts Tracked Through Exp 1721)
+## A Technical Report — 2049 Experiments Across the Public Record, 146 Archived Milestone Records, 23,849 Python Test Items Collected (Artifacts Tracked Through Exp 1721)
 
 **Author:** Ian Blenke
 **Date:** 2026-05-10
@@ -29,15 +29,15 @@ a handful of lines of Python. Headline model-generation benchmark numbers are fr
 Qwen3.6-35B-A3B), never from simulated runs; hardware, ensemble, and
 adversarial-audit results are labeled by artifact provenance.
 
-This report documents the research arc behind the framework — **2,023
-experiment records tracked through Exp 1708, with 1,846 task records in 142
-artifact-backed completed milestone records archived through .130 and
-checked-in result artifacts extending through .130** — run between February
-and May 2026. `research-complete.yaml` currently archives **142** completed
-milestone records through 2026.05.130; checked-in result artifacts now extend
-through `results/experiment_1651_retro.json`. Milestone .126 is
+This report documents the research arc behind the framework — **2,049
+experiment records tracked through Exp 1721, with 1,872 task records in 146
+artifact-backed completed milestone records archived through .132 and
+checked-in result artifacts extending through .132** — run between February
+and May 2026. `research-complete.yaml` currently archives **146** completed
+milestone records through 2026.05.132; checked-in result artifacts now extend
+through `results/experiment_1721_retro.json`. Milestone .132 is
 present in the result-artifact and changelog layer; the `research-complete.yaml`
-archive currently stops at .128.
+archive currently stops at .132.
 The story now spans activation-based negative results, constraint-based
 verification, live SOTA-model benchmarks, production verifier ensembles,
 hardware sampler audits, continuous self-learning, Phase-5 in-situ training
@@ -5136,3 +5136,6 @@ Experiment 1719 measured the inference latency impact of HILED, establishing bas
 
 **Continual Learning Enhancements**
 Experiments 1712 and 1714 verified semantic pruning for FR-11 continual learning and instruct-to-constraint extraction from free-text.
+
+**Operational Retrospective (.132)**
+Analyzed 1388 min wall time / 253 experiments. Both RTX 3090s were completely idle at 0% utilization throughout, which is correct behavior as there were no compute-bound tasks. Estimated savings: implement fail-fast for pre-gate blocks.
