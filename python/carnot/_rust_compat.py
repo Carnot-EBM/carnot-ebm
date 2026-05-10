@@ -20,6 +20,7 @@ try:
         RustGibbsModel,
         RustHMCSampler,
         RustIsingModel,
+        RustKv260PottsSampler,
         RustLangevinSampler,
         RustVerificationResult,
         RustVerifyPipeline,
@@ -31,6 +32,7 @@ except ImportError:
     RustIsingModel = None  # type: ignore[assignment,misc]
     RustGibbsModel = None  # type: ignore[assignment,misc]
     RustBoltzmannModel = None  # type: ignore[assignment,misc]
+    RustKv260PottsSampler = None  # type: ignore[assignment,misc]
     RustLangevinSampler = None  # type: ignore[assignment,misc]
     RustHMCSampler = None  # type: ignore[assignment,misc]
     RustVerifyPipeline = None  # type: ignore[assignment,misc]
@@ -42,6 +44,7 @@ __all__ = [
     "RustGibbsModel",
     "RustHMCSampler",
     "RustIsingModel",
+    "RustKv260PottsSampler",
     "RustLangevinSampler",
     "RustVerificationResult",
     "RustVerifyPipeline",
