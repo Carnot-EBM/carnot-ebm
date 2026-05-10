@@ -3067,3 +3067,18 @@ It MUST be tested on a bounded dataset to evaluate the hallucination "Yes-ratio"
 **When** wrapped with EGD selection
 **Then** it evaluates hallucination Yes-ratio bias and produces `experiment_1670_egd.json`.
 
+
+### REQ-PIPELINE-1677: Energy-Driven Steering (EDS) Prototype
+
+The pipeline MUST provide an Energy-Driven Steering (EDS) prototype in `python/carnot/pipeline/energy_driven_steering.py`.
+It MUST include an `ExternalEBMAdapter` that maps internal model activations to an energy landscape,
+and an `EnergyDrivenSteerer` that computes gradients of this energy with respect to hidden states to steer generation.
+The steerer MUST support local SOTA GGUF models (`unsloth/gemma-4-31B-it-GGUF` and `unsloth/Qwen3.6-35B-A3B-GGUF`).
+The evaluation MUST write results to `results/experiment_1677_eds.json` including fields: `models_tested`, `steered_generation_success`, `energy_landscape_mapped`, and `honest_verdict`.
+
+**Acceptance criteria:**
+- `ExternalEBMAdapter(hidden_dim).compute_energy(hidden_states)` returns a scalar energy.
+- `EnergyDrivenSteerer(ebm_adapter).steer(hidden_states)` returns steered hidden states by subtracting the energy gradient.
+- `run_eds_evaluation()` runs a logical task evaluation and produces the required JSON artifact.
+
+**Spec traces:** REQ-PIPELINE-1677, Exp 1677
