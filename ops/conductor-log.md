@@ -1474,3 +1474,4 @@ web search: site:o |
 | 2026-05-10 11:24 UTC | Exp 1682: Archive .129 and initialize .130 | OK | cache hit: 81 passed, 1 warning in 5.66s |
 | 2026-05-10 11:36 UTC | Exp 1683: Self-Play Constraint Discovery Prototype | FAIL | Gemini CLI error: Stalled after 600s silence. Last output:  enabled. All tool  |
 | 2026-05-10 11:38 UTC | Exp 1683: Self-Play Constraint Discovery Prototype | OK | Deliverable already exists in repo |
+| 2026-05-10 11:38 UTC | Exp 1684: gated on Exp 1683: Integrate Self-Play w | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1683-self-play-constraint-discovery.sta |
