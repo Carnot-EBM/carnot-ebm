@@ -487,3 +487,46 @@ Previous audits produced byte-identical histograms across 10,240-sample distribu
 ### SCENARIO-ISING-040
 
 **Independent RNG artifact:** Given exact parity sweeps on n=32 and n=64, the test SHALL output `results/experiment_1673_rng_audit.json` with field `simulator_only_no_hardware_claim: true`, confirm disjoint root seeds, and observe non-zero stochastic deltas and distinct sample-path hashes.
+
+### REQ-ISING-041
+
+**PIPIM dense-problem inertial-update ablation MUST compare CPU-only
+inertial p-bit Ising dynamics against Carnot sequential Gibbs.**
+
+**Rationale:**
+Dense Ising/QUBO problems expose the oscillation and slow-mixing failure modes
+that motivate p-bit inertia. Exp 1674 must isolate the algorithmic effect of
+the inertial p-bit update in a simulator-only setting before any hardware or
+accelerator claim is considered.
+
+**Acceptance criteria:**
+- The experiment SHALL define `scripts/experiment_1674_pipim.py`.
+- The experiment SHALL derive between 3 and 5 deterministic dense Ising
+  problems from local FoVer rows.
+- The PIPIM simulator SHALL use synchronous p-bit updates with a configurable
+  EMA inertia term over local fields and deterministic seeded execution.
+- The baseline SHALL be Carnot's sequential bipolar Gibbs Ising baseline run on
+  the same problems and seeds.
+- The artifact SHALL report both time-to-energy deltas and sample-quality
+  deltas between PIPIM and sequential Gibbs.
+- `results/experiment_1674_pipim.json` SHALL include `status`,
+  `experiment_id`, `spec_refs`, `algorithm`, `baseline_algorithm`,
+  `dense_problems_tested`, `n_variables`, `seeds`,
+  `time_to_energy_gibbs_baseline`, `time_to_energy_pipim`,
+  `time_to_energy_delta_steps`, `time_to_energy_speedup`,
+  `sample_quality_gibbs_baseline`, `sample_quality_pipim`,
+  `sample_quality_delta`, `cpu_only`, `simulator_only`,
+  `hardware_execution_performed`, `hardware_claim_allowed`, and
+  `honest_verdict`.
+- `hardware_execution_performed` and `hardware_claim_allowed` SHALL remain
+  false because Exp 1674 is a CPU/simulator-only ablation.
+
+**Implementation:** `scripts/experiment_1674_pipim.py`
+
+### SCENARIO-ISING-041
+
+**PIPIM CPU ablation artifact:** Given local FoVer rows and no hardware
+execution in the current run, Exp 1674 SHALL write
+`results/experiment_1674_pipim.json`, compare inertial PIPIM against Carnot
+sequential Gibbs on matched dense problems and seeds, report time-to-energy and
+sample-quality deltas, and keep `hardware_claim_allowed=false`.
