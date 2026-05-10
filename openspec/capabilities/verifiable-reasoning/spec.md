@@ -18793,3 +18793,12 @@ ends_with, no_repetition) with a clearly violating response
 ### REQ-VERIFY-1500: Eidoku Structural Verification Gate
 - REQ-VERIFY-1500-1: `EidokuGate` shall be implemented in `python/carnot/pipeline/eidoku_gate.py`.
 - REQ-VERIFY-1500-2: `EidokuGate` shall calculate structural violation costs over constraint graphs (as per arXiv:2512.20664).
+
+### REQ-EXTRACT-056: FourierCSP Constraint Extractor
+- REQ-EXTRACT-056-1: `FourierCSPExtractor` shall be implemented in `python/carnot/pipeline/fouriercsp_extractor.py`.
+- REQ-EXTRACT-056-2: It shall map natural language constraints to a multilinear polynomial representation.
+
+#### SCENARIO-EXTRACT-096: Extract to Polynomial
+**Given** a natural language constraint
+**When** `FourierCSPExtractor.extract()` is called
+**Then** it returns a multilinear polynomial representation of the constraint.
