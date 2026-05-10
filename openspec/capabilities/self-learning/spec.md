@@ -5401,3 +5401,21 @@ The deliverable SHALL be written to `results/experiment_1685_live_sota.json`.
 **When** the pipeline processes the stream
 **Then** the Online Updater adapts to the verified violations
 **And** the `adaptation_rate` (updated/processed) is computed and written to `results/experiment_1725_e2e_cikan.json`.
+
+---
+
+## REQ-LEARN-102: Asynchronous Telemetry Streamer
+
+**Given** a continuous self-learning pipeline
+**When** active inference sessions generate violation feedback
+**Then** an asynchronous telemetry streamer MUST queue and record `VerificationResult` instances (both successes and failures) without blocking the main inference loop.
+
+### REQ-LEARN-102 Sub-requirements
+- REQ-LEARN-102-1: `TelemetryStreamer` MUST implement a non-blocking queue.
+- REQ-LEARN-102-2: It MUST record `VerificationResult` objects.
+- REQ-LEARN-102-3: A load test script MUST verify the asynchronous operation and report `experiment_1738_telemetry.json` with appropriate telemetry load metrics.
+
+### SCENARIO-LEARN-102: Async Streamer Load Test
+**Given** an instantiated `TelemetryStreamer`
+**When** multiple simulated inference threads submit results
+**Then** the streamer processes them asynchronously without dropping items and outputs the results JSON.
