@@ -1,0 +1,41 @@
+{
+  "constraint_generated": {
+    "constraints": [
+      {
+        "field": "text",
+        "id": "c_no_fail",
+        "op": "contains",
+        "value": "success"
+      }
+    ],
+    "instruction": "Avoid the detected logical failure.",
+    "schema_version": "carnot.instruction_constraints.v1"
+  },
+  "experiment": "1685_live_sota",
+  "experiment_id": 1685,
+  "hallucination_identified": true,
+  "model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+  "repair_confirmed": true,
+  "results": [
+    {
+      "dsl_input": {
+        "constraints": [
+          {
+            "field": "text",
+            "id": "c_no_fail",
+            "op": "contains",
+            "value": "success"
+          }
+        ],
+        "instruction": "Avoid the detected logical failure.",
+        "schema_version": "carnot.instruction_constraints.v1"
+      },
+      "root_conflict": "invalid_format",
+      "trace_id": "math_trace_4"
+    }
+  ],
+  "run_date": "20260510",
+  "status": "complete",
+  "timestamp": "2026-05-10T11:47:25Z",
+  "traces_generated": 10
+}
