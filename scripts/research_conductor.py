@@ -2541,22 +2541,144 @@ def _run_operational_retrospective(push: bool = True) -> bool:
         f"4. Do NOT modify scripts/research_conductor.py or research-roadmap.yaml.\n"
     )
 
-    logger.info("Calling agent for operational retrospective...")
+    # Programmatic skeleton write (2026-05-10 21:30Z second-pass fix):
+    # The .132 and .133 retros showed that gemini ignores TIMING DATA in
+    # the prompt and copy-pastes prior-milestone numbers regardless. The
+    # anti-hallucination prompt guard isn't enough; gemini's training-
+    # distribution prior toward "180 experiments / 1070 min / exp1603 88
+    # min / exp1663 82 min" overrides any in-prompt instruction. Fix:
+    # write the deterministic timing fields ourselves BEFORE calling the
+    # agent, and instruct the agent to ONLY add interpretive fields. The
+    # agent can no longer change total_wall_time_minutes,
+    # experiments_completed, slowest_experiments, or
+    # compute_bound_experiments_count — those are pre-filled.
+    from datetime import datetime as _dt_now
+    from datetime import timezone as _tz_now
+
+    retro_artifact_path = (
+        PROJECT_ROOT / "results" / f"operational_retro_{current.replace('.', '_')}.json"
+    )
+    pre_total_min = (
+        sum(e["duration_min"] for e in experiment_times) if experiment_times else 0
+    )
+    pre_slowest = sorted(
+        experiment_times, key=lambda x: x["duration_min"], reverse=True
+    )[:5]
+    skeleton: dict = {
+        "schema": "carnot.operational_retro.v64",
+        "milestone": current,
+        "generated_at": _dt_now.now(_tz_now.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "retro_type": "operational_full",
+        "total_wall_time_minutes": round(pre_total_min, 1),
+        "experiments_completed": len(experiment_times),
+        "compute_bound_experiments_count": compute_bound_count,
+        "slowest_experiments": [
+            {
+                "experiment": e["experiment"],
+                "duration_minutes": e["duration_min"],
+                "compute_bound": bool(e.get("compute_bound", False)),
+            }
+            for e in pre_slowest
+        ],
+        "gpu_idle_on_compute_bound_tasks": (
+            None if compute_bound_count == 0 else False
+        ),
+        "summary": "",
+        "bottlenecks_identified": [],
+        "improvements_suggested": [],
+        "top_3_highest_leverage_actions": [],
+        "estimated_time_savings_pct": 0,
+        "meta_reflection": "",
+    }
+    try:
+        retro_artifact_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(retro_artifact_path, "w") as _sf:
+            json.dump(skeleton, _sf, indent=2)
+        logger.info(
+            "Pre-wrote retro skeleton with bounded data: %d experiments, "
+            "%.0f min total, %d compute-bound",
+            len(experiment_times),
+            pre_total_min,
+            compute_bound_count,
+        )
+    except Exception as _e:
+        logger.warning("Failed to pre-write retro skeleton: %s", _e)
+
+    # Replace the prompt's DELIVERABLES section with a narrower
+    # instruction: agent only adds interpretive fields. The
+    # deterministic numeric fields are locked.
+    retro_prompt += (
+        f"\n\nLOCKED FIELDS (DO NOT MODIFY):\n"
+        f"The skeleton at {retro_artifact_path.name} has been pre-written "
+        f"with the following fields populated from authoritative TIMING\n"
+        f"DATA:\n"
+        f"  - total_wall_time_minutes: {round(pre_total_min, 1)}\n"
+        f"  - experiments_completed: {len(experiment_times)}\n"
+        f"  - compute_bound_experiments_count: {compute_bound_count}\n"
+        f"  - slowest_experiments: pre-filled from bounded data\n"
+        f"  - gpu_idle_on_compute_bound_tasks: pre-filled\n"
+        f"You MUST NOT change those values. Read the skeleton, then add\n"
+        f"ONLY the interpretive fields:\n"
+        f"  - summary (1-3 sentences, using ONLY the pre-filled numbers)\n"
+        f"  - bottlenecks_identified (list of strings)\n"
+        f"  - improvements_suggested (list of strings)\n"
+        f"  - top_3_highest_leverage_actions (list of strings)\n"
+        f"  - estimated_time_savings_pct (integer 0-100)\n"
+        f"  - meta_reflection (1-3 sentences)\n"
+        f"If you change the locked fields, the conductor will overwrite\n"
+        f"your changes after you exit. Save your turn budget by leaving\n"
+        f"those fields alone.\n"
+    )
+
+    logger.info("Calling agent for operational retrospective interpretive layer...")
     # Retrospective benefits from Opus-class honest self-evaluation (anti-
     # sycophancy + anti-scheming training makes it less likely to paper over
     # failures). Set AGENT_MODEL_RETRO=opus to enable; defaults to Sonnet.
-    # max_turns 15 → 60 (operator fix 2026-05-03 13:55Z): heavy retros (12+
-    # experiments to read + cascade-pattern analysis + structured JSON write)
-    # don't fit in 15-turn budget; .92 retro retired 3× and .93 retro is on
-    # path to retire as artifact_not_updated_past_bootstrap. STEP 0 skeleton
-    # write (added to retro_prompt above) is belt-and-braces against budget
-    # exhaustion; longer max_turns is the suspenders.
     success, output = run_agent(
         retro_prompt,
         max_turns=60,
         model_override=AGENT_MODEL_RETRO,
         agent_type_override=AGENT_TYPE_RETRO,
     )
+
+    # Post-agent: enforce the locked-fields contract. If the agent
+    # changed any locked field, restore it from the skeleton. This is
+    # the structural defense that makes the prompt-level instruction
+    # robust against gemini's training-distribution priors.
+    try:
+        with open(retro_artifact_path) as _rf:
+            agent_artifact = json.load(_rf)
+        locked_keys = (
+            "total_wall_time_minutes",
+            "experiments_completed",
+            "compute_bound_experiments_count",
+            "slowest_experiments",
+            "schema",
+            "milestone",
+        )
+        restored = 0
+        for k in locked_keys:
+            if agent_artifact.get(k) != skeleton.get(k):
+                agent_artifact[k] = skeleton[k]
+                restored += 1
+        # gpu_idle_on_compute_bound_tasks: only restore the null case,
+        # let the agent set true/false when there ARE compute-bound tasks.
+        if (
+            compute_bound_count == 0
+            and agent_artifact.get("gpu_idle_on_compute_bound_tasks") is not None
+        ):
+            agent_artifact["gpu_idle_on_compute_bound_tasks"] = None
+            restored += 1
+        if restored > 0:
+            with open(retro_artifact_path, "w") as _rf:
+                json.dump(agent_artifact, _rf, indent=2)
+            logger.warning(
+                "Retro post-fix: restored %d locked fields the agent "
+                "modified despite instruction",
+                restored,
+            )
+    except Exception as _e:
+        logger.warning("Failed to verify/restore locked retro fields: %s", _e)
 
     if success:
         logger.info("Operational retrospective complete")
