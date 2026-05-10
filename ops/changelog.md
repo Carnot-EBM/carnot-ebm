@@ -5370,3 +5370,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-10: Phase 2: Kolmogorov-Arnold Attention (KArAt) Prototype (✅ Complete) — honest_verdict=complete: karat_attention_block_implemented_and_verified; results/experiment_1679_karat.json
 - 2026-05-10: Phase 3: Milestone 2026.05.129 Retrospective (✅ Complete) — honest_verdict=completed_with_blockers; results/experiment_1681_retro.json
 - 2026-05-10: Exp 1682: Archive .129 and initialize .130 (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_1682_archive.json
+- 2026-05-10: Exp 1685: Live evaluation of Self-Play FR-11 on mandated SOTA GGUFs (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_1685_live_sota.json
