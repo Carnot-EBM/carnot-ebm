@@ -5376,3 +5376,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-10: Exp 1689: End-to-end Evaluation of Certified KArAt on Reasoning (✅ Complete) — honest_verdict=complete: certified_karat_evaluated; results/experiment_1689_certified_karat.json
 - 2026-05-10: Exp 1690: Deep Energy-Guided Test-Time Scaling with Nabla-Reasoner (✅ Complete) — honest_verdict=nabla_ets_sampler_implemented; results/experiment_1690_nabla_ets.json
 - 2026-05-10: Exp 1692: KV260 Vivado Synthesizable Verilog Export for Potts (✅ Complete) — honest_verdict=potts_sim_and_rtl_complete; results/experiment_1692_potts_export.json
+- 2026-05-10: Exp 1693: gated on Exp 1692: Cycle-Accurate Potts Simulation (✅ Complete) — honest_verdict=simulation_complete; results/experiment_1693_potts_sim.json
