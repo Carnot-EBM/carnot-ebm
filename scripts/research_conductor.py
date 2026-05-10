@@ -2883,6 +2883,40 @@ def _activate_next_roadmap(push: bool = True) -> bool:
             len(next_tasks),
         )
 
+        # Harness-fit lint pre-emit check (2026-05-10): refuses to
+        # activate roadmaps whose gates use exact-match `==` against
+        # values the assigned agent's training conventions don't reliably
+        # emit. See scripts/harness_fit_lint.py for risk classes. This
+        # catches the cascade pattern that retired ~21-40% of tasks per
+        # milestone across .123-.131. Soft-warn (don't block activation)
+        # so existing pre-staged roadmaps still proceed; the warning is
+        # logged and prefixed in the conductor-log so the operator can
+        # see and intervene. Hard-block requires another iteration to
+        # validate against false positives.
+        try:
+            sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
+            from harness_fit_lint import lint as _harness_fit_lint  # type: ignore[import-not-found]
+
+            risks = _harness_fit_lint(NEXT_ROADMAP_FILE)
+            if risks:
+                logger.warning(
+                    "Harness-fit linter found %d risk(s) in roadmap; "
+                    "activation proceeding with WARNING (not blocking)",
+                    len(risks),
+                )
+                for risk in risks[:10]:
+                    logger.warning(
+                        "  HARNESS-FIT RISK: %s -> %s.%s %s %r (agent: %s)",
+                        risk.downstream_id,
+                        risk.upstream_id,
+                        risk.gate_field,
+                        risk.gate_op,
+                        risk.gate_value,
+                        risk.agent_type,
+                    )
+        except Exception as _e:
+            logger.debug("Harness-fit linter unavailable: %s", _e)
+
         shutil.copy2(NEXT_ROADMAP_FILE, ROADMAP_FILE)
         NEXT_ROADMAP_FILE.unlink()
 
