@@ -6,6 +6,7 @@ from carnot.models.cikan_energy import (
     CIKANLayer,
     ConstraintBoundary,
 )
+from carnot.models.cikan_verifier import CIKAN, CIKANBoundary
 from carnot.models.compliance_checker import (
     ComplianceDomain,
     ComplianceEnergyChecker,
@@ -139,6 +140,8 @@ __all__ = [
     "benchmark_kaem_vs_mcmc",
     "CIKANEnergy",
     "CIKANLayer",
+    "CIKAN",
+    "CIKANBoundary",
     "ConstraintBoundary",
     "LowRankKAEMEnergy",
     "LowRankProjector",

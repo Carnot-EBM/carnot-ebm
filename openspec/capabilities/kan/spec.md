@@ -190,6 +190,7 @@ sets `variance_worsened` from the measured paraphrase variance comparison.
 | REQ-KAN-1384 | Proposed | Exp 1384 target: EBM-CoT contrastive hinge calibration on FoVer verified pairs. |
 | REQ-KAN-1401 | Proposed | Exp 1401 target: EBM-CoT v2 hinge-only calibration on the Exp1384 FoVer split with consistency weight 0.0. |
 | REQ-KAN-1690 | Proposed | Exp 1690 target: GloroKAN-style local Lipschitz forward-pass bounds for rational KArAt attention. |
+| REQ-KAN-1723 | Implemented | Exp 1723: FourierCSP constraints compile into fixed CIKAN architectural boundaries with toy artifact evidence. |
 
 ## REQ-KAN-020: KAEMEnergy FPGA LUT Budget Analyzability
 
@@ -912,6 +913,44 @@ The KAN model tier MUST provide a CIKAN regularizer that enforces monotonic beha
 Given a set of B-spline coefficients,
 When `CIKANRegularizer` is applied,
 Then it computes a penalty proportional to the non-monotonic adjacent differences, and `results/experiment_1688_cikan.json` records the success.
+
+## REQ-KAN-1723: FourierCSP-Boundary CIKAN Verifier
+
+The KAN model tier MUST provide a `CIKAN` verifier that accepts constraints
+emitted by `FourierCSPExtractor` and compiles them into fixed architectural
+boundary units before any residual KAN training occurs.
+
+The boundary units SHALL:
+
+- preserve the FourierCSP variable names, expression text, and polynomial text;
+- evaluate the supported Boolean operators `AND`, `OR`, `NOT`, and `XOR` over
+  thresholded feature values;
+- contribute a fixed violation penalty to the verifier energy/logit path; and
+- remain immutable across `fit()` calls so gradient updates cannot move or
+  remove physical/logical constraint boundaries.
+
+The verifier MAY train a small residual KAN head on top of those fixed
+boundaries, but a violated FourierCSP constraint MUST retain higher energy than
+an otherwise matching satisfying assignment after training.
+
+**Acceptance criteria:**
+    - `python/carnot/models/cikan_verifier.py` exposes `CIKAN` and
+      `CIKANBoundary`.
+    - Tests show FourierCSP constraints compile into fixed architectural
+      boundaries and remain unchanged after training.
+    - Tests show a violating assignment has higher CIKAN energy than a
+      satisfying assignment for the same FourierCSP constraint.
+    - `scripts/experiment_1723_cikan.py` trains on a deterministic toy dataset
+      and writes `results/experiment_1723_cikan.json` with artifact schema,
+      constraint, training, metric, and verdict fields.
+
+### SCENARIO-KAN-1723: FourierCSP constraints remain fixed during CIKAN training
+
+Given a FourierCSP multilinear polynomial for `X AND Y`,
+When the CIKAN verifier compiles it and trains on a toy dataset,
+Then its boundary snapshot before and after training is identical, the violated
+assignment has higher energy than the satisfying assignment, and the Exp 1723
+artifact reports `fixed_boundaries_preserved=true`.
 
 ## REQ-KAN-1679: Miniature KArAt Attention Block
 
