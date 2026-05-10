@@ -1442,3 +1442,4 @@ web search: site:o |
 | 2026-05-10 02:52 UTC | Exp 1663: gated on Exp 1662: Pi-net vs T-SKM Eval | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-10 03:03 UTC | Exp 1664: Update E2E Test Plan for SMGI/EBRM | OK | 81 passed, 1 warning in 5.05s |
 | 2026-05-10 03:16 UTC | Exp 1665: Milestone .127 Retrospective | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/operational_retro_2026_ |
+| 2026-05-10 03:22 UTC | Exp 1665: Milestone .127 Retrospective | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/operational_retro_2026_ |
