@@ -1040,4 +1040,6 @@ __all__ = [
     "GGUFModelNotFoundError",
     "resolve_gguf_path",
     "ExclusionManifestEnforcer",
+    "EidokuGate",
+    "EidokuGateResult",
 ]

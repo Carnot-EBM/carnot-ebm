@@ -18724,3 +18724,7 @@ tolerance and both backends preserve the same scoring accuracy.
 **And** it exposes `K_steps` parameter.
 
 **Spec traces:** REQ-VERIFY-1690, SCENARIO-VERIFY-1690, Exp 1690
+
+### REQ-VERIFY-1500: Eidoku Structural Verification Gate
+- REQ-VERIFY-1500-1: `EidokuGate` shall be implemented in `python/carnot/pipeline/eidoku_gate.py`.
+- REQ-VERIFY-1500-2: `EidokuGate` shall calculate structural violation costs over constraint graphs (as per arXiv:2512.20664).
