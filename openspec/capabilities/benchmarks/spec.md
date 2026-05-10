@@ -365,3 +365,30 @@ Results MUST be written to `results/experiment_1733_dualgpu.json`.
 **Then** the System-2 EqM and FourierCSP pipelines execute using the specified SOTA models and write the required artifact.
 
 **Spec traces:** REQ-DUALGPU-101
+
+### REQ-BENCH-1742: SWE-Bench Lite Verify-Repair Harness
+
+Carnot MUST provide an Exp 1742 SWE-Bench Lite harness that selects five
+targeted `princeton-nlp/SWE-bench_Lite` test instances, prompts the mandated
+SOTA GGUF model pair for unified-diff patches with EqM decoding disabled as the
+baseline condition, verifies each patch through bounded Carnot patch checks,
+and evaluates accepted patches through a SWE-Bench-compatible evaluator.
+
+The experiment MUST write `results/experiment_1742_swe_bench.json` with the
+selected instance IDs, model provenance, `eqm_decoding_enabled=false`,
+baseline and verify-repair resolve metrics, per-case attempts, evaluator
+provenance, blockers, and an honest verdict. Missing SOTA weights or missing
+SWE-Bench evaluator dependencies MUST produce a blocked artifact instead of a
+simulated headline result.
+
+### SCENARIO-BENCH-1742: SWE-Bench Lite Baseline Artifact Is Honest
+
+**Given** the Exp 1742 runner and the targeted SWE-Bench Lite cohort
+**When** SOTA GGUF weights or the SWE-Bench evaluator are unavailable
+**Then** the runner writes the required artifact with `status="blocked"`,
+`eqm_decoding_enabled=false`, the selected instance metadata when fetchable,
+and no fabricated resolve-rate headline.
+**And** when injected model and evaluator backends are available, the runner
+records baseline and verify-repair outcomes for each selected instance.
+
+**Spec traces:** REQ-BENCH-1742
