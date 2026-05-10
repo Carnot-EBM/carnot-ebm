@@ -5372,3 +5372,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-10: Exp 1682: Archive .129 and initialize .130 (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_1682_archive.json
 - 2026-05-10: Exp 1685: Live evaluation of Self-Play FR-11 on mandated SOTA GGUFs (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_1685_live_sota.json
 - 2026-05-10: Exp 1686: PWA (Piecewise Affine) Abstractions for KArAt Attention (✅ Complete) — honest_verdict=complete: pwa_karat_attention_implemented; results/experiment_1686_pwa_karat.json
+- 2026-05-10: Exp 1688: Constraint-Informed KAN (CIKAN) Monotonicity Regularization (✅ Complete) — honest_verdict=complete: CIKAN Regularizer implemented and verified to penalize non-monotonic B-spline coefficients.; results/experiment_1688_cikan.json
