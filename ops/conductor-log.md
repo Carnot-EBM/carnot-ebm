@@ -1491,3 +1491,4 @@ web search: site:o |
 | 2026-05-10 12:36 UTC | Exp 1692: KV260 Vivado Synthesizable Verilog Expor | OK | 81 passed, 1 warning in 3.97s |
 | 2026-05-10 12:51 UTC | Exp 1693: gated on Exp 1692: Cycle-Accurate Potts  | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: t: 'Too Many Reques |
 | 2026-05-10 12:56 UTC | Exp 1693: gated on Exp 1692: Cycle-Accurate Potts  | OK | cache hit: 81 passed, 1 warning in 3.97s |
+| 2026-05-10 13:07 UTC | Exp 1694: Full Pipeline Live SOTA Eval (KArAt + Na | OK | 86 passed, 1 warning in 5.63s |
