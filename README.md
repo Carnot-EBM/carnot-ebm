@@ -19,9 +19,9 @@ Rust + Python/JAX, Apache 2.0, local editable install via `pip install -e ".[dev
 The public PyPI package remains a Phase-1 ship blocker as of Exp 1582.
 
 Current public research record: **2,049 experiment records tracked through Exp
-1721**. `research-complete.yaml` currently archives **1,830** task records
-across **144** artifact-backed completed milestone records through
-2026.05.131; checked-in result artifacts and `ops/changelog.md` extend through
+1721**. `research-complete.yaml` currently archives **1,872** task records
+across **146** artifact-backed completed milestone records through
+2026.05.132; checked-in result artifacts and `ops/changelog.md` extend through
 milestone 2026.05.132 on 2026-05-10.
 
 Milestone .106 delivered the critical fix to thinking-mode certificate
@@ -476,10 +476,10 @@ experiment artifact under `results/`.
 | Milestone .124 closeout (DualGPURunner Profiling) | Both RTX 3090s completely idle at 0% utilization. Estimated 40% time savings recoverable via DualGPURunner parallelization and addressing bottlenecks | Exp 1626 |
 | Probability Calibration Verifier | Opt-in verifier scores explicit probability claims against simple reference-class evidence; returns structured `VerdictRecord` | Exp 1414 |
 | KANELÉ Validation & Routing | KANELÉ RTL linting, latency accounting vs Ising baseline; adaptive energy reconfiguration and EBM vs LLM Task Allocation Router | Exps 1622-1625 |
-| Milestone .130 closeout | Analyzed latest experiments (Exp 1682 to 1695); 8 of 13 criteria complete | Exp 1708 |
+| Milestone .132 closeout | Analyzed 1388 min wall time / 253 experiments. Both RTX 3090s completely idle at 0% utilization. | Exp 1721 |
 | Pi-net Projection & ConsFormer | Prototyped Pi-net style differentiable projection layer for continuous latents and a ConsFormer-style refiner | Exps 1633-1635 |
 | SMGI & Energy-Guided Decoding | Integrated SMGI certified update logic and implemented EGD using mandated SOTA GGUFs | Exps 1631/1636 |
-| Current Python test collection | **23,597** Python tests collected; collection-only snapshot, not a full-suite pass claim | 2026-05-10 collection run |
+| Current Python test collection | **23,849** Python tests collected; collection-only snapshot, not a full-suite pass claim | 2026-05-10 collection run |
 | Local Claude/Codex usage snapshot | Codex reads the newest local `token_count` event; Claude aggregates local token usage and reads only subscription/tier metadata from credentials; free-form quota prose is ignored instead of guessed; focused regression tests pass | 2026-05-04 changelog |
 
 Deeper analysis of these — including everything that **didn't** work and
