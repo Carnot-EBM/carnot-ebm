@@ -5057,3 +5057,74 @@ training objective.
 | Requirement | Python | Tests |
 |-------------|--------|-------|
 | REQ-LEARN-1635 | Implemented (`scripts/experiment_1635_consformer.py`) | Implemented (`tests/python/test_experiment_1635_consformer.py`) |
+
+---
+
+## REQ-LEARN-1659: SMGI Certified Update Gates For FR-11 CerCE Ledger
+
+Exp 1659 SHALL implement reusable SMGI certified-update gates for FR-11 CerCE
+ledger policy updates in `python/carnot/pipeline/smgi_updates.py`.  A certified
+update SHALL be query-time bookkeeping only: it MAY update portable memory and
+policy metadata after certification, but it SHALL NOT train, finetune, write
+checkpoints, or mutate model weights.  The terminal certification report SHALL
+be written to `results/experiment_1659_smgi_certified_updates.json` when the
+module is run for the current roadmap gate.
+
+### REQ-LEARN-1659 Sub-requirements
+
+- REQ-LEARN-1659-1: The module SHALL emit a deterministic JSON-compatible
+  certification report with `status`, `schema`, `experiment_id`,
+  `continuous_self_learning_task`, `smgi_certified_update_ready`,
+  `certified_update_success`, `cerce_ledger_ready`,
+  `policy_certificates_evaluated`, `accepted_violation_count`,
+  `false_accept_delta`, `soundness_mistakes`,
+  `nonforgetting_certificate_rate`, `promotion_safe_policy_updates`,
+  `blocked_policy_updates`, `certified_updates`, `rejected_updates`,
+  `blockers`, and `honest_verdict`.
+- REQ-LEARN-1659-2: The CerCE ledger gate SHALL pass only when the source
+  ledger is complete, `cerce_ledger_ready=true`, at least one policy
+  certificate exists, every certificate is promotion-safe, zero accepted
+  violations and zero soundness mistakes are present, aggregate
+  `false_accept_delta <= 0`, and `nonforgetting_certificate_rate == 1.0`.
+- REQ-LEARN-1659-3: The SMGI update gate SHALL certify a candidate only when
+  its policy id is promotion-safe in the CerCE ledger, its certificate id
+  matches the ledger certificate, it cites prior and updated SessionMemory
+  state hashes, it has retained every replayed case, it has zero replay
+  failures, it has non-negative utility delta, and it declares
+  `no_model_weight_mutation=true`.
+- REQ-LEARN-1659-4: If no explicit candidates are provided, the module SHALL
+  derive deterministic certification candidates from promotion-safe CerCE
+  certificates so downstream FR-11 experiments can gate on the existing ledger
+  without bypassing the same checks.
+- REQ-LEARN-1659-5: Validation SHALL fail closed: missing required report
+  fields, impossible complete reports, unsafe ledgers, replay failures,
+  negative utility, missing hashes, certificate mismatches, or model-weight
+  mutation SHALL produce `status="blocked"` and SHALL NOT set
+  `certified_update_success=true`.
+
+### SCENARIO-LEARN-1659: Promotion-Safe CerCE Row Becomes Certified Update
+
+**Given** an FR-11 CerCE ledger whose policy certificate is promotion-safe
+**And** an SMGI update candidate that cites matching certificate and memory
+hashes with zero replay failures and no model-weight mutation
+**When** Exp 1659 evaluates the certified-update gates
+**Then** the report is complete
+**And** `smgi_certified_update_ready=true`
+**And** `certified_update_success=true`
+**And** the policy id appears in `certified_updates`.
+
+### SCENARIO-LEARN-1660: Unsafe CerCE Or Replay Evidence Blocks Certification
+
+**Given** a CerCE ledger or SMGI update candidate with accepted violations,
+positive false-accept delta, soundness mistakes, replay failures, missing
+memory hashes, negative utility, certificate mismatch, or model-weight mutation
+**When** Exp 1659 evaluates the certified-update gates
+**Then** the report is blocked
+**And** `certified_update_success=false`
+**And** the unsafe policy id appears in `rejected_updates`.
+
+## Implementation Status (REQ-LEARN-1659)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-1659 | Implemented (`python/carnot/pipeline/smgi_updates.py`) | Implemented (`tests/python/test_smgi_updates.py`) |
