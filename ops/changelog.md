@@ -5420,3 +5420,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-10: Exp 1738: Live Telemetry Streamer for Continual Learning (⚠️ Research Finding) — honest_verdict=streamer_load_test_successful; results/experiment_1738_telemetry.json
 - 2026-05-10: Exp 1740: EqM Sampler GPU Integration (⚠️ Research Finding) — honest_verdict=gpu_faster; results/experiment_1740_eqm_gpu.json
 - 2026-05-10: Exp 1742: SWE-Bench Lite EqM Harness Preparation (⚠️ Blocked) — honest_verdict=blocked_no_sota_gguf; results/experiment_1742_swe_bench.json
+- 2026-05-10: Exp 1744: System-2 Latency vs Accuracy Impact Analysis (⚠️ Research Finding) — honest_verdict=simulated_no_verdict; results/experiment_1744_impact.json
