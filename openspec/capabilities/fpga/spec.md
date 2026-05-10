@@ -657,9 +657,35 @@ It MUST NOT overclaim board work if no board or vendor toolchain (Libero) is ava
 - `results/experiment_1585_polarfire_soc_adaptive_kpcd_prototype_preflight.json` is produced.
 - The artifact contains `status`, `polarfire_board_available`, `yosys_polarfire_available`, `libero_available`, `reusable_rtl_components_count`, `preflight_note_path`, `polarfire_preflight_ready`, `blocked_reason`, `no_board_execution_claim`, and `honest_verdict`.
 
-**Implementation status:** Implemented (Exp 1585)
+---
+
+### REQ-HW-051
+
+**Title:** CIKAN FPGA implementation MUST benchmark inference latency against baselines
+
+**Description:**
+Experiment 1731 MUST provide an audit measuring the end-to-end inference latency for a batch
+of 1000 CIKAN evaluations on the FPGA implementation. The audit must record the timing and
+write the results to `results/experiment_1731_fpga_audit.json`.
+
+**Acceptance criteria:**
+- `scripts/experiment_1731_fpga_audit.py` successfully executes.
+- `results/experiment_1731_fpga_audit.json` contains `experiment`, `batch_size`, and `latency_ms` metrics.
+- Output JSON contains valid measurements for a batch size of 1000.
+
+**Implementation status:** Pending (Exp 1731)
 
 ---
+
+### SCENARIO-HW-051
+
+**Scenario:** Audit measures inference latency for 1000 CIKAN evaluations.
+
+**Given:** CIKAN FPGA implementation.
+**When:** The Exp 1731 audit script runs.
+**Then:** The latency for 1000 evaluations is measured and saved to `results/experiment_1731_fpga_audit.json`.
+
+**Implementation status:** Pending (Exp 1731)
 
 ### SCENARIO-HW-050
 
