@@ -1,0 +1,52 @@
+{
+  "experiment_id": "1740",
+  "spec_refs": [
+    "REQ-SAMPLE-1740",
+    "SCENARIO-SAMPLE-1740"
+  ],
+  "problem": {
+    "name": "eqm_smooth_bowl_update_rule",
+    "dimension": 65536,
+    "n_steps": 64,
+    "repeats": 5
+  },
+  "backend": {
+    "jax_version": "0.10.0",
+    "cpu": {
+      "available": true,
+      "selected_device": {
+        "device": "cpu:0",
+        "platform": "cpu",
+        "id": 0
+      }
+    },
+    "gpu": {
+      "available": true,
+      "selected_device": {
+        "device": "cuda:0",
+        "platform": "gpu",
+        "id": 0
+      },
+      "visible_device_count": 2
+    }
+  },
+  "latency_ms": {
+    "cpu": {
+      "mean": 7.537566794781014,
+      "min": 6.815075990743935,
+      "max": 8.40625399723649
+    },
+    "gpu": {
+      "mean": 5.1619281934108585,
+      "min": 4.874322999967262,
+      "max": 5.470431002322584
+    }
+  },
+  "parity": {
+    "tolerance": 0.0001,
+    "max_abs_delta": 1.7881393432617188e-07,
+    "within_tolerance": true
+  },
+  "speedup": 1.4602231012052107,
+  "honest_verdict": "gpu_faster"
+}
