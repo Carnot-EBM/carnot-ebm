@@ -23,6 +23,7 @@ try:
     )
     from .fpga_backend import FpgaBackend
     from .fpga_ising import FPGAIsingSampler
+    from .equilibrium_matching import EquilibriumMatchingSampler
     from .gpu_oim_simulator import (
         GPUOscillatorIsingSimulator,
         JEPARetrainResult,
@@ -48,6 +49,7 @@ except ModuleNotFoundError as exc:
 else:
     __all__ = [
         "LangevinSampler",
+        "EquilibriumMatchingSampler",
         "HMCSampler",
         "ParallelIsingSampler",
         "Phase4Sampler",
