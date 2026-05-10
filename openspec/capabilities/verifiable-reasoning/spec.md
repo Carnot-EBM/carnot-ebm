@@ -18725,6 +18725,60 @@ tolerance and both backends preserve the same scoring accuracy.
 
 **Spec traces:** REQ-VERIFY-1690, SCENARIO-VERIFY-1690, Exp 1690
 
+### REQ-EXTRACT-055: Dynamic Prompt Constraint Extraction (ROCE)
+
+Following ROCE (arXiv:2605.01124), the repository shall provide
+`python/carnot/pipeline/constraint_extractor.py` that extracts formal
+logical constraints from natural-language user prompts on-the-fly so that
+the verification pipeline can check LLM-generated outputs against those
+constraints in the same turn without a pre-built knowledge base.
+
+The extractor MUST:
+- REQ-EXTRACT-055-1: Define a `DynamicConstraint` dataclass with fields
+  `instruction_type`, `description`, `metadata`, and a `check(response) -> bool`
+  method that returns `True` when the response satisfies the constraint.
+- REQ-EXTRACT-055-2: Support the following 10 instruction types via deterministic
+  regex-based extraction (no LLM required in CI mode):
+  `must_contain`, `must_not_contain`, `format_json`, `format_list`,
+  `max_words`, `min_words`, `numeric_range`, `starts_with`, `ends_with`,
+  `no_repetition`.
+- REQ-EXTRACT-055-3: Implement `PromptConstraintExtractor` with method
+  `extract_from_prompt(prompt: str) -> list[DynamicConstraint]` that runs
+  the regex-based rule extractor and, when `CARNOT_FORCE_LIVE=1`, also calls
+  an injectable `generate_fn` (defaulting to `unsloth/Qwen3.6-35B-A3B-GGUF`)
+  to catch constraints the regex misses.
+- REQ-EXTRACT-055-4: In CI mode (CARNOT_FORCE_LIVE not set), no LLM call is made;
+  only the deterministic rule extractor runs.
+- REQ-EXTRACT-055-5: `PromptConstraintExtractor.check_response(response, constraints)`
+  returns a list of `DynamicConstraint` objects for which `check(response)` is False
+  (violated constraints).
+
+**Acceptance criteria:**
+- `extract_from_prompt("Your response must include the word 'hello'")` returns
+  a `DynamicConstraint` with `instruction_type="must_contain"` and metadata
+  `{"term": "hello"}`.
+- For each of the 10 instruction types, `check(violating_response)` returns `False`.
+- In CI mode, no `generate_fn` is called.
+
+### SCENARIO-EXTRACT-094: Rule-Based Extraction of must_contain Constraint
+
+**Given** a prompt containing "Your response must include the word 'summary'"
+**When** `PromptConstraintExtractor().extract_from_prompt(prompt)` is called
+**Then** a `DynamicConstraint` with `instruction_type="must_contain"` and
+`metadata["term"]` == "summary" is returned, and `check("This is the end.")` returns False.
+
+**Spec traces:** REQ-EXTRACT-055-2
+
+### SCENARIO-EXTRACT-095: Zero False Accepts for 10 Instruction Types
+
+**Given** one test case per instruction type (must_contain, must_not_contain,
+format_json, format_list, max_words, min_words, numeric_range, starts_with,
+ends_with, no_repetition) with a clearly violating response
+**When** `constraint.check(violating_response)` is called
+**Then** all 10 checks return False (zero false accepts).
+
+**Spec traces:** REQ-EXTRACT-055-4, REQ-EXTRACT-055-5
+
 ### REQ-VERIFY-1500: Eidoku Structural Verification Gate
 - REQ-VERIFY-1500-1: `EidokuGate` shall be implemented in `python/carnot/pipeline/eidoku_gate.py`.
 - REQ-VERIFY-1500-2: `EidokuGate` shall calculate structural violation costs over constraint graphs (as per arXiv:2512.20664).
