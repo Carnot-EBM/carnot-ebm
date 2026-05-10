@@ -72,3 +72,13 @@ Sub-requirements:
 - REQ-POTTS-006-2: The artifact SHALL include `synthesis_success`, `vivado_available`, and `honest_verdict`.
 - REQ-POTTS-006-3: If Vivado is not available, `honest_verdict` SHALL report "vivado_not_installed" and `synthesis_success` SHALL be false.
 
+## REQ-POTTS-007: Experiment 1692 Potts v2 RTL
+
+Experiment 1692 MUST provide `rtl/potts_machine_v2.v` as a synthesizable q=3 Potts block suitable for Vivado.
+
+Sub-requirements:
+- REQ-POTTS-007-1: The top-level RTL SHALL be located at `rtl/potts_machine_v2.v`.
+- REQ-POTTS-007-2: The RTL SHALL use standard synchronous design constraints.
+- REQ-POTTS-007-3: The task SHALL write `results/experiment_1692_potts_export.json` with the experiment artifact.
+
+
