@@ -1028,3 +1028,22 @@ When `GloroKANBounder.bound_forward()` is called with a positive local radius,
 Then the report includes deterministic per-term dot intervals and a nonnegative
 local Lipschitz bound that upper-bounds the observed KArAt energy change for a
 same-radius perturbation.
+
+## REQ-KAN-1729: KANELÉ CIKAN to FPGA LUT Mapping Pipeline
+
+The KAN capability MUST provide an RTL generation pipeline that maps Continuous Interpretable Kolmogorov-Arnold Networks (CIKAN) to FPGA Lookup Tables (LUTs), creating a top-level Verilog wrapper and a Python-to-Verilog mapper.
+
+**Rationale:**
+To accelerate CIKANs on FPGA hardware (Phase 3), the trained Python model weights must be compiled directly into Verilog LUT definitions. This requires a dedicated mapper script and a top-level module to orchestrate the LUT blocks for deployment on the KV260 board.
+
+**Acceptance criteria:**
+- `hardware/kv260/kanele_lut_mapper.py` implements the CIKAN to FPGA LUT mapping logic.
+- `hardware/kv260/kanele_top.v` provides the top-level Verilog wrapper.
+- `scripts/experiment_1729_kanele.py` executes a simulation check and writes `results/experiment_1729_kanele.json`.
+- Tests verify the generation pipeline logic.
+
+### SCENARIO-KAN-1729: CIKAN to FPGA LUT Mapping
+
+Given a CIKAN model,
+When the LUT mapper and RTL generation pipeline run,
+Then the correct Verilog files are generated, the simulation check passes, and `results/experiment_1729_kanele.json` records the success.
