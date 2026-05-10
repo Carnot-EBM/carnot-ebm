@@ -750,3 +750,31 @@ Experiment 1736 MUST run Vivado (or simulate it if unavailable) to synthesize th
 **Then:** The bitfile (or simulated results) is generated and saved to `results/experiment_1736_kanele_synth.json`.
 
 **Implementation status:** Implemented (Exp 1736)
+
+---
+
+### REQ-HW-053
+
+**Title:** Execute KANELÉ bitfile on KV260 board
+
+**Description:**
+Experiment 1737 MUST run a latency benchmark of the KANELÉ bitfile on the KV260 using PYNQ AXI interfaces. It must load the bitfile, pass 1000 input states, and measure the hardware latency in microseconds.
+
+**Acceptance criteria:**
+- `results/experiment_1737_kanele_board.json` is generated.
+- The artifact records `hardware_latency_us`, `throughput_fps`, and `batch_size`.
+- The benchmark evaluates a batch size of 1000.
+
+**Implementation status:** Implemented (Exp 1737)
+
+---
+
+### SCENARIO-HW-053
+
+**Scenario:** Latency benchmark of KANELÉ bitfile.
+
+**Given:** Synthesized KANELÉ bitfile and KV260 PYNQ environment (or a mocked fallback).
+**When:** `scripts/experiment_1737_kanele_board.py` runs.
+**Then:** It performs the 1000 state latency test and saves the results to `results/experiment_1737_kanele_board.json`.
+
+**Implementation status:** Implemented (Exp 1737)
