@@ -5205,3 +5205,66 @@ required evidence.
 | Requirement | Python | Tests |
 |-------------|--------|-------|
 | REQ-LEARN-1664 | Implemented (`scripts/experiment_1664_e2e.py`) | Implemented (`tests/python/test_experiment_1664_e2e.py`) |
+
+---
+
+## REQ-LEARN-1668: Pipeline CerCE Ledger For FR-11 Promotion Bounds
+
+Exp 1668 SHALL provide a reusable CerCE-style promotion ledger in
+`python/carnot/pipeline/cerce_ledger.py` so FR-11 policy and memory updates can
+be certified before promotion.  The ledger SHALL compare pre-update and
+post-update constraint-violation bounds, verify replay retention, and reject any
+candidate whose post-update bound is worse than its pre-update bound.  The
+mechanism is query-time bookkeeping only: it SHALL NOT train, finetune, write
+checkpoints, or mutate model weights.  The terminal artifact SHALL be written to
+`results/experiment_1668_cerce.json` and SHALL include `nonforgetting_rate`.
+
+### REQ-LEARN-1668 Sub-requirements
+
+- REQ-LEARN-1668-1: The module SHALL expose deterministic JSON-compatible
+  policy certificates for simulated or real memory updates, including
+  `policy_update_id`, `certificate_id`, `pre_violation_bound`,
+  `post_violation_bound`, `violation_bound_delta`,
+  `replay_retention_rate`, `replay_retention_passed`, and
+  `promotion_safe`.
+- REQ-LEARN-1668-2: The pre/post bound gate SHALL mark a candidate unsafe when
+  any replay case has `post_violation_bound > pre_violation_bound` or when the
+  aggregate post-update violation bound is greater than the aggregate
+  pre-update violation bound.
+- REQ-LEARN-1668-3: The replay-retention gate SHALL pass only when at least one
+  replay case is present, every replayed case is retained, and no replay case
+  reports a replay failure.
+- REQ-LEARN-1668-4: The terminal artifact SHALL report
+  `policy_certificates_evaluated`, `promotion_safe_policy_updates`,
+  `blocked_policy_updates`, `accepted_violation_count`,
+  `pre_violation_bound`, `post_violation_bound`, `violation_bound_delta`,
+  `replay_retention_rate`, `nonforgetting_rate`, `certificates`, `blockers`,
+  and `honest_verdict`.
+- REQ-LEARN-1668-5: The promotion gate SHALL fail closed: worsened bounds,
+  missing replay cases, replay failures, dropped replay cases, unchanged memory
+  hashes, or model-weight mutation SHALL prevent `cerce_ledger_ready=true`.
+
+### SCENARIO-LEARN-1668: Simulated Memory Update Preserves Bounds
+
+**Given** an FR-11 simulated memory update with retained replay cases
+**And** each post-update constraint-violation bound is less than or equal to the
+matching pre-update bound
+**When** the pipeline CerCE promotion ledger evaluates the update
+**Then** the policy certificate is promotion-safe
+**And** `cerce_ledger_ready=true`
+**And** `nonforgetting_rate=1.0`.
+
+### SCENARIO-LEARN-1669: Worsened Bound Blocks Policy Promotion
+
+**Given** an FR-11 simulated memory update with a replay case whose
+post-update constraint-violation bound is greater than its pre-update bound
+**When** the pipeline CerCE promotion ledger evaluates the update
+**Then** the update is rejected
+**And** the policy id appears in `blocked_policy_updates`
+**And** `cerce_ledger_ready=false`.
+
+## Implementation Status (REQ-LEARN-1668)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-1668 | Implemented (`python/carnot/pipeline/cerce_ledger.py`) | Implemented (`tests/python/test_cerce_ledger.py`) |
