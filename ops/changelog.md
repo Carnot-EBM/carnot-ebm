@@ -5379,3 +5379,9 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-10: Exp 1693: gated on Exp 1692: Cycle-Accurate Potts Simulation (✅ Complete) — honest_verdict=simulation_complete; results/experiment_1693_potts_sim.json
 - 2026-05-10: Exp 1694: Full Pipeline Live SOTA Eval (KArAt + Nabla + FR11) (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_1694_full_pipeline.json
 - 2026-05-10: Exp 1695: Milestone .130 Retrospective (✅ Complete) — honest_verdict=milestone_130_retrospective_filed_8_of_13_complete; results/experiment_1695_retro.json
+
+## Operational Retrospective 2026.05.130
+- Completed 209 experiments in 1152 minutes wall time.
+- GPU utilization was severely inefficient, with both RTX 3090s completely idle while execution remained sequential.
+- Doomed-rerun blocks (specifically Exp 1663) consumed 82 minutes.
+- Estimated ~45% time savings recoverable for the next milestone by parallelizing workloads using DualGPURunner and fixing the fail-fast mechanism on doomed-rerun blocks.
