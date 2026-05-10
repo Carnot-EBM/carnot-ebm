@@ -1,189 +1,191 @@
-milestone: 2026.05.131
-milestone_title: "Phase-8 Continuous Learning, GloroKAN Robustness, and Eidoku Verification"
+milestone: 2026.05.132
+milestone_title: "Phase-9 Dynamic Constraint Elicitation, FR-11 Consolidation, and Hardware-Offloaded Verification"
 milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
 tasks:
-  - id: exp1696-archive-130
-    title: "Exp 1696: Archive milestone .130 and initialize .131"
-    deliverable: ops/lineage-retirements/milestone_130_archive.json
+  - id: exp1709-archive-131
+    title: "Exp 1709: Archive milestone .131 and initialize .132"
+    deliverable: ops/lineage-retirements/milestone_131_archive.json
     max_turns: 20
     prompt: >
-      CONTEXT: Milestone .130 is complete.
+      CONTEXT: Milestone .131 is complete.
       EXISTING CODE TO READ FIRST: `research-roadmap.yaml`, `ops/changelog.md`
-      TASK: Archive milestone .130 results and initialize .131 tracking.
+      TASK: Archive milestone .131 results and initialize .132 tracking.
       CONCRETE STEPS:
-      1. Move .130 results into ops/lineage-retirements/.
-      2. Write {project_root}/ops/lineage-retirements/milestone_130_archive.json.
+      1. Move .131 results into ops/lineage-retirements/.
+      2. Write {project_root}/ops/lineage-retirements/milestone_131_archive.json.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp1697-glorokan-robustness
-    title: "Exp 1697: GloroKAN B-spline local Lipschitz bounds for KArAt"
-    deliverable: python/carnot/models/kan/glorokan_robustness.py
+  - id: exp1710-kv260-pyo3-gateway
+    title: "Exp 1710: PyO3 gateway for KV260 hardware offloading"
+    deliverable: crates/carnot-webgpu-gateway/src/kv260_bindings.rs
+    model: opus
+    max_turns: 100
     agent_type: codex
     prompt: >
-      CONTEXT: The recent ICLR 2026 GloroKAN paper shows KANs can achieve provable robustness using B-spline properties.
-      EXISTING CODE TO READ FIRST: `python/carnot/models/kan/karat.py`
-      TASK: Implement a GloroKAN-style forward-pass local Lipschitz bound calculator for our KArAt model.
+      CONTEXT: We must integrate the KV260 Potts execution (Exp 1704) into the Python verification pipeline via Rust/PyO3.
+      EXISTING CODE TO READ FIRST: `crates/carnot-python/`, `hardware/`
+      TASK: CRITICAL: write artifact FIRST. Create PyO3 bindings for the KV260 hardware sampler.
       CONCRETE STEPS:
-      1. Implement `GloroKANBounder` in `python/carnot/models/kan/glorokan_robustness.py`.
-      2. Add a test suite.
+      1. Implement `crates/carnot-webgpu-gateway/src/kv260_bindings.rs` to communicate with the KV260 driver.
+      2. Expose the bindings to Python via `carnot-python`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp1698-glorokan-ablation
-    title: "Exp 1698: Ablation study of GloroKAN robustness vs MILP bounds"
-    deliverable: results/experiment_1698_glorokan.json
+  - id: exp1711-hardware-eidoku-ablation
+    title: "Exp 1711: Ablation of Eidoku Gate using KV260 hardware offloading"
+    deliverable: results/experiment_1711_hw_eidoku.json
+    model: opus
+    max_turns: 100
     gated_on:
-      - upstream: exp1697-glorokan-robustness
-        artifact_field: test_coverage
-        op: '>='
-        value: 0.9
-    prompt: >
-      CONTEXT: We need to compare the new GloroKAN bounds against the MILP bounds from milestone .130.
-      EXISTING CODE TO READ FIRST: `python/carnot/models/kan/glorokan_robustness.py`
-      TASK: Run an ablation over 50 cases comparing bounding speed and tightness.
-      CONCRETE STEPS:
-      1. Write an evaluation script using both bounders.
-      2. Output `{project_root}/results/experiment_1698_glorokan.json`.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp1699-eidoku-verification-gate
-    title: "Exp 1699: Eidoku structural constraint satisfaction gate"
-    deliverable: python/carnot/pipeline/eidoku_gate.py
-    prompt: >
-      CONTEXT: Eidoku (arXiv:2512.20664) provides a System-2 structural verification gate calculating violation costs.
-      EXISTING CODE TO READ FIRST: `python/carnot/pipeline/z3_gated_repair.py`
-      TASK: Implement an Eidoku-style structural verification gate.
-      CONCRETE STEPS:
-      1. Create `EidokuGate` in `python/carnot/pipeline/eidoku_gate.py` that computes structural violation costs over constraint graphs.
-      2. Write unit tests.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp1700-eidoku-live-sota
-    title: "Exp 1700: Live evaluation of Eidoku gate on mandated SOTA models"
-    deliverable: results/experiment_1700_eidoku_eval.json
-    gated_on:
-      - upstream: exp1699-eidoku-verification-gate
+      - upstream: exp1710-kv260-pyo3-gateway
         artifact_field: pytest_passed
         op: '=='
         value: true
     prompt: >
-      CONTEXT: We must test the Eidoku gate on our local SOTA models.
+      CONTEXT: Test if the hardware offloaded sampler accelerates Eidoku structural verification.
       EXISTING CODE TO READ FIRST: `python/carnot/pipeline/eidoku_gate.py`
-      TASK: Evaluate `EidokuGate` using `unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF`.
+      TASK: Run an ablation of the Eidoku gate comparing CPU sampling against KV260 hardware sampling.
       CONCRETE STEPS:
-      1. Write an eval script invoking the models and passing their traces through `EidokuGate`.
-      2. Output `{project_root}/results/experiment_1700_eidoku_eval.json`.
+      1. Write an evaluation script hooking the KV260 backend into EidokuGate.
+      2. Output `{project_root}/results/experiment_1711_hw_eidoku.json`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp1701-fact-distortion-detector
-    title: "Exp 1701: Factual distortion detector for reasoning constraints"
-    deliverable: python/carnot/pipeline/fact_distortion.py
+  - id: exp1712-fr11-semantic-pruning
+    title: "Exp 1712: Semantic pruning for FR-11 continual learning"
+    deliverable: python/carnot/training/semantic_pruning.py
     prompt: >
-      CONTEXT: Recent studies (arXiv:2601.03404) show reasoning models distort facts to satisfy constraints.
-      EXISTING CODE TO READ FIRST: `python/carnot/pipeline/eidoku_gate.py`
-      TASK: Implement a factual grounding checker that prevents hallucinated premises from passing logical constraints.
-      CONCRETE STEPS:
-      1. Write `FactDistortionDetector` in `python/carnot/pipeline/fact_distortion.py`.
-      2. Write tests.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp1702-continuous-constraint-learning
-    title: "Exp 1702: FR-11 continuous constraint learning replay buffer"
-    deliverable: python/carnot/training/fr11_continuous.py
-    prompt: >
-      CONTEXT: FR-11 needs continuous self-learning without catastrophic forgetting.
-      EXISTING CODE TO READ FIRST: `python/carnot/training/`
-      TASK: Implement a continual learning replay buffer for the FR-11 constraint self-discovery loop.
-      CONCRETE STEPS:
-      1. Create `python/carnot/training/fr11_continuous.py`.
-      2. Implement the replay buffer prioritizing structural constraint diversity.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp1703-fr11-continuous-eval
-    title: "Exp 1703: Evaluate FR-11 continuous learning stability"
-    deliverable: results/experiment_1703_fr11_eval.json
-    gated_on:
-      - upstream: exp1702-continuous-constraint-learning
-        artifact_field: pytest_passed
-        op: '=='
-        value: true
-    prompt: >
-      CONTEXT: Test if the new FR-11 continual learning prevents forgetting.
+      CONTEXT: Based on arXiv:2604.19882, replay buffers suffer from semantic redundancy. FR-11 needs pruning.
       EXISTING CODE TO READ FIRST: `python/carnot/training/fr11_continuous.py`
-      TASK: Run a 500-task continuous learning simulation with `unsloth/gemma-4-26B-A4B-it-GGUF`.
+      TASK: Implement semantic pruning based on constraint similarity for the FR-11 replay buffer.
       CONCRETE STEPS:
-      1. Write the evaluation runner.
-      2. Output `{project_root}/results/experiment_1703_fr11_eval.json`.
+      1. Create `python/carnot/training/semantic_pruning.py`.
+      2. Write a pruning mechanism that identifies and removes redundant structural constraint rules.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp1704-potts-hardware-execution
-    title: "Exp 1704: Synthesize and execute Potts q=3 on KV260 hardware"
-    deliverable: results/experiment_1704_kv260.json
-    model: opus
-    max_turns: 100
-    prompt: >
-      CONTEXT: Milestone .130 finished Potts Vivado export and sim. We must now execute on KV260 hardware.
-      EXISTING CODE TO READ FIRST: `hardware/`
-      TASK: CRITICAL: Write artifact FIRST. Run synthesis and bitstream loading on the KV260 FPGA.
-      CONCRETE STEPS:
-      1. Execute Vivado synthesis for Potts q=3.
-      2. Capture performance and resource utilization.
-      3. Output `{project_root}/results/experiment_1704_kv260.json`.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp1705-potts-latency-benchmark
-    title: "Exp 1705: Benchmark KV260 Potts hardware latency"
-    deliverable: results/experiment_1705_kv260_bench.json
-    model: opus
-    max_turns: 100
+  - id: exp1713-fr11-pruning-eval
+    title: "Exp 1713: Evaluate FR-11 semantic pruning on long-horizon tasks"
+    deliverable: results/experiment_1713_pruning_eval.json
     gated_on:
-      - upstream: exp1704-potts-hardware-execution
-        artifact_field: bitstream_loaded
+      - upstream: exp1712-fr11-semantic-pruning
+        artifact_field: pytest_passed
         op: '=='
         value: true
     prompt: >
-      CONTEXT: Compare hardware and CPU performance.
-      EXISTING CODE TO READ FIRST: `hardware/`
-      TASK: CRITICAL: Write artifact FIRST. Benchmark latency for Potts sampling.
+      CONTEXT: Evaluate the new pruning logic to ensure nonforgetting rate remains high while memory size stays bounded.
+      EXISTING CODE TO READ FIRST: `python/carnot/training/semantic_pruning.py`
+      TASK: Run a long-horizon temporal evaluation.
       CONCRETE STEPS:
-      1. Execute benchmark suite against FPGA.
-      2. Output `{project_root}/results/experiment_1705_kv260_bench.json`.
+      1. Run a 1000-task continuous learning sequence with `unsloth/gemma-4-26B-A4B-it-GGUF`.
+      2. Measure retention and replay buffer size.
+      3. Output `{project_root}/results/experiment_1713_pruning_eval.json`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp1706-energy-guided-vlm
-    title: "Exp 1706: Energy-Guided Decoding for factuality"
-    deliverable: python/carnot/pipeline/energy_guided_decoding.py
+  - id: exp1714-dynamic-constraint-extract
+    title: "Exp 1714: Instruct-to-Constraint extraction from free-text"
+    deliverable: python/carnot/pipeline/constraint_extractor.py
+    agent_type: claude
     prompt: >
-      CONTEXT: arXiv:2507.07731 shows energy-guided decoding mitigates hallucination.
+      CONTEXT: Following ROCE (arXiv:2605.01124), we need to extract dynamic constraints from natural language on-the-fly.
       EXISTING CODE TO READ FIRST: `python/carnot/pipeline/`
-      TASK: Implement an energy-guided hidden state selector during decoding.
+      TASK: Implement an extraction module that turns user prompts into formal Carnot logical constraints.
       CONCRETE STEPS:
-      1. Write `EnergyGuidedDecoder` in `python/carnot/pipeline/energy_guided_decoding.py`.
-      2. Output a smoke test evaluating this against a standard autoregressive baseline.
+      1. Write `python/carnot/pipeline/constraint_extractor.py` utilizing `unsloth/Qwen3.6-35B-A3B-GGUF`.
+      2. Add tests ensuring zero false accepts for 10 common instruction types.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp1707-full-pipeline-131
-    title: "Exp 1707: Full Pipeline SOTA integration (GloroKAN + Eidoku + FR11)"
-    deliverable: results/experiment_1707_full_pipeline.json
+  - id: exp1715-dynamic-eidoku-synth
+    title: "Exp 1715: Synthesizing Dynamic Eidoku Gates"
+    deliverable: python/carnot/pipeline/dynamic_eidoku.py
     prompt: >
-      CONTEXT: Final pipeline evaluation for milestone .131.
-      EXISTING CODE TO READ FIRST: `python/carnot/`
-      TASK: Run a full pipeline test using `unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF`.
+      CONTEXT: Eidoku gates from .131 are static. We must synthesize them dynamically from extracted constraints.
+      EXISTING CODE TO READ FIRST: `python/carnot/pipeline/constraint_extractor.py`, `python/carnot/pipeline/eidoku_gate.py`
+      TASK: Create a compiler that converts extracted constraints into executable Eidoku gates.
       CONCRETE STEPS:
-      1. Connect GloroKAN, EidokuGate, and FR-11 continual learning.
-      2. Evaluate on 100 constraint extraction scenarios.
-      3. Output `{project_root}/results/experiment_1707_full_pipeline.json`.
+      1. Write `python/carnot/pipeline/dynamic_eidoku.py`.
+      2. Write tests covering graph compilation.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp1708-milestone-131-retro
-    title: "Exp 1708: Milestone .131 Retrospective"
-    deliverable: results/experiment_1708_retro.json
+  - id: exp1716-live-dynamic-eval
+    title: "Exp 1716: Live evaluation of zero-shot dynamic constraint generation"
+    deliverable: results/experiment_1716_dynamic_eval.json
+    gated_on:
+      - upstream: exp1715-dynamic-eidoku-synth
+        artifact_field: pytest_passed
+        op: '=='
+        value: true
+    prompt: >
+      CONTEXT: We must evaluate the end-to-end dynamic extraction and gating logic on SOTA models.
+      EXISTING CODE TO READ FIRST: `python/carnot/pipeline/dynamic_eidoku.py`
+      TASK: Evaluate the zero-shot extraction and enforcement loop on 100 benchmark tasks.
+      CONCRETE STEPS:
+      1. Script a 100-case evaluation against `unsloth/Qwen3.6-35B-A3B-GGUF`.
+      2. Output `{project_root}/results/experiment_1716_dynamic_eval.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1717-energy-guided-integration
+    title: "Exp 1717: Integrate Energy-Guided Decoder with Dynamic Eidoku"
+    deliverable: python/carnot/pipeline/hiled_decoder.py
+    prompt: >
+      CONTEXT: Implement Hardware-In-The-Loop Energy Decoding (HILED) integrating Exp 1706 and dynamic gates.
+      EXISTING CODE TO READ FIRST: `python/carnot/pipeline/energy_guided_decoding.py`
+      TASK: Connect the energy-guided decoding loop directly to the dynamically synthesized Eidoku gates.
+      CONCRETE STEPS:
+      1. Write `python/carnot/pipeline/hiled_decoder.py`.
+      2. Write smoke tests.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1718-eval-hiled-glorokan
+    title: "Exp 1718: Evaluate Hallucination Mitigation using HILED and GloroKAN"
+    deliverable: results/experiment_1718_hiled_eval.json
+    gated_on:
+      - upstream: exp1717-energy-guided-integration
+        artifact_field: pytest_passed
+        op: '=='
+        value: true
+    prompt: >
+      CONTEXT: Check if HILED actually mitigates factual distortions using our best local SOTA models.
+      EXISTING CODE TO READ FIRST: `python/carnot/pipeline/hiled_decoder.py`
+      TASK: Evaluate hallucination mitigation with `unsloth/gemma-4-31B-it-GGUF`.
+      CONCRETE STEPS:
+      1. Run the new decoder on 50 complex cases.
+      2. Output `{project_root}/results/experiment_1718_hiled_eval.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1719-hiled-latency-measure
+    title: "Exp 1719: Measure inference latency impact of HILED"
+    deliverable: results/experiment_1719_latency.json
+    prompt: >
+      CONTEXT: We must understand the projection tax of HILED during live decoding.
+      EXISTING CODE TO READ FIRST: `python/carnot/pipeline/hiled_decoder.py`
+      TASK: Measure latency per token with and without HILED.
+      CONCRETE STEPS:
+      1. Run a latency benchmark script.
+      2. Output `{project_root}/results/experiment_1719_latency.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1720-e2e-pipeline-132
+    title: "Exp 1720: E2E Pipeline Evaluation (Dynamic Extract + HW + Continual Learning)"
+    deliverable: results/experiment_1720_e2e.json
+    prompt: >
+      CONTEXT: Final pipeline run for milestone .132.
+      EXISTING CODE TO READ FIRST: `python/carnot/pipeline/`
+      TASK: Run the complete integrated stack on all SOTA models.
+      CONCRETE STEPS:
+      1. Hook FR-11 pruning, HW Eidoku, and dynamic constraints into a unified pipeline.
+      2. Evaluate 100 cases.
+      3. Output `{project_root}/results/experiment_1720_e2e.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1721-milestone-132-retro
+    title: "Exp 1721: Milestone .132 Retrospective"
+    deliverable: results/experiment_1721_retro.json
     max_turns: 50
+    agent_type: claude
     prompt: >
-      CONTEXT: Time to review the entire milestone.
-      EXISTING CODE TO READ FIRST: All output JSONs from .131.
-      TASK: Retrospective for .131.
+      CONTEXT: Milestone wrap-up and analysis.
+      EXISTING CODE TO READ FIRST: All output JSONs from .132.
+      TASK: Retrospective for .132.
       CONCRETE STEPS:
       1. Analyze the output JSONs from the conductor.
-      2. Summarize findings.
-      3. Write `{project_root}/results/experiment_1708_retro.json`.
+      2. Summarize findings, comparing HILED vs CPU, and dynamic vs static extraction.
+      3. Write `{project_root}/results/experiment_1721_retro.json`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
