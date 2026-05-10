@@ -1542,3 +1542,4 @@ web search: site:o |
 | 2026-05-10 18:14 UTC | Exp 1719: Measure inference latency impact of HILE | OK | 81 passed, 1 warning in 4.80s |
 | 2026-05-10 18:16 UTC | Exp 1717: Integrate Energy-Guided Decoder with Dyn | OK | Deliverable already exists in repo |
 | 2026-05-10 18:16 UTC | Exp 1718: Evaluate Hallucination Mitigation using | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1717-energy-guided-integration) |
+| 2026-05-10 18:23 UTC | Exp 1720: E2E Pipeline Evaluation (Dynamic Extract | OK | 81 passed, 1 warning in 4.90s |
