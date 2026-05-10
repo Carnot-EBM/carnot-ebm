@@ -474,3 +474,16 @@ Carnot sequential Gibbs on matched problems and seeds, report convergence steps
 and speedup, and keep all hardware/KV260 claim fields false.
 
 **Implementation status:** Implemented (Exp 1597)
+
+### REQ-ISING-040
+
+**THRML/Carnot Parity Independent-RNG Audit MUST confirm independent PRNG lineages.**
+
+**Rationale:**
+Previous audits produced byte-identical histograms across 10,240-sample distributions, indicating shared random number generation rather than independent validation. This test ensures that Carnot and THRML utilize completely disjoint root seeds and distinct PRNG lineages for parity sweeps (e.g., n=32, n=64) to confirm legitimate independent sampler parity and observe valid, non-zero stochastic deltas.
+
+**Implementation:** `scripts/experiment_1673_thrml_rng_audit.py`
+
+### SCENARIO-ISING-040
+
+**Independent RNG artifact:** Given exact parity sweeps on n=32 and n=64, the test SHALL output `results/experiment_1673_rng_audit.json` with field `simulator_only_no_hardware_claim: true`, confirm disjoint root seeds, and observe non-zero stochastic deltas and distinct sample-path hashes.
