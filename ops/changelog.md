@@ -5477,3 +5477,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-11: Exp 1805: End-to-end formal verification smoke test on KAEM (⚠️ Research Finding) — honest_verdict=success; results/experiment_1805_smoke.json
 - 2026-05-11: Exp 1806: Denoising Thermodynamic Model (DTM) simulation using thrml (⚠️ Blocked) — honest_verdict=thrml_not_importable_sim_blocked; results/experiment_1806_dtm.json
 - 2026-05-11: Exp 1807: EDDP benchmarking of the DTM simulator (✅ Complete) — honest_verdict=complete_eddp_benchmark_passed; results/experiment_1807_eddp.json
+- 2026-05-11: Exp 1808: Capstone E2E Pipeline with Qwen3.6-35B-A3B (✅ Complete) — honest_verdict=complete: capstone_qwen_evaluation_finished; results/experiment_1808_qwen.json
