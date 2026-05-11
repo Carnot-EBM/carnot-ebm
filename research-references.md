@@ -4,6 +4,25 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-05-11 Post-.144 Planning Sweep (Milestone 2026.05.145)
+
+This sweep was run after milestone `.144` completed. The literature search revealed advances in Verification Learning, Energy Matching, and symbolic KANs.
+
+### Verification Learning (VL)
+- **Paper:** "Verification Learning: Make Unsupervised Neuro-Symbolic System Feasible" (arXiv:2503.12917)
+- **What:** Replaces label-based training with a label-free verification process, formalizing learning as a Constraint Optimization Problem.
+- **Relevance to Carnot:** Directly relates to continuous self-learning and learning without labeled data by relying on our verifier infrastructure.
+
+### Energy Matching
+- **Paper:** "Energy Matching: Unifying Flow Matching and Energy-Based Models for Generative Modeling" (arXiv:2504.10612)
+- **What:** Combines flow matching with EBMs, allowing constraints and partial observations to be incorporated into the generative process.
+- **Relevance to Carnot:** Provides a continuous latent path to incorporate hard constraints into generation.
+
+### GloroKAN and S2KAN
+- **Papers:** "Training and Verifying Robust Kolmogorov-Arnold Networks" (ICLR 2026 VerifAI), "Softly Symbolified Kolmogorov-Arnold Networks" (2025)
+- **What:** GloroKAN leverages algebraic geometry for robustness verification. S2KAN integrates symbolic primitives directly into KANs.
+- **Relevance to Carnot:** Essential for formal verification of KAN energy tiers and avoiding uninterpretable "pathological decomposition".
+
 ## 2026-05-11 Post-.142 Planning Sweep (Milestone 2026.05.143)
 
 This sweep was run after milestone `.142` completed. The literature search revealed advances in formal KAN verification, hardware-oriented metrics, gradient-guided online learning, and reasoning-time constraint elicitation.
