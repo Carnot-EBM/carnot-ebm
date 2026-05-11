@@ -1,0 +1,247 @@
+{
+  "dataset_size": 20,
+  "successes": 16,
+  "success_rate": 0.8,
+  "results": [
+    {
+      "input": "The response ```json\n{\"constraints\": [{\"type\": \"length\", \"max\": 100}]}\n```",
+      "output": {
+        "model": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "extracted_constraints": [
+          {
+            "type": "length",
+            "max": 100
+          }
+        ],
+        "success": true
+      }
+    },
+    {
+      "input": "It must contain 'apple'.",
+      "output": {
+        "model": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "extracted_constraints": [
+          {
+            "type": "contains",
+            "value": "apple"
+          }
+        ],
+        "success": true
+      }
+    },
+    {
+      "input": "No constraints found here.",
+      "output": {
+        "model": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "extracted_constraints": [],
+        "success": false
+      }
+    },
+    {
+      "input": "```json\n{\"type\": \"format\", \"format\": \"csv\"}\n```",
+      "output": {
+        "model": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "extracted_constraints": [
+          {
+            "type": "format",
+            "format": "csv"
+          }
+        ],
+        "success": true
+      }
+    },
+    {
+      "input": "You must contain 'banana'.",
+      "output": {
+        "model": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "extracted_constraints": [
+          {
+            "type": "contains",
+            "value": "banana"
+          }
+        ],
+        "success": true
+      }
+    },
+    {
+      "input": "```{\"constraints\": [{\"type\": \"keyword\", \"word\": \"urgent\"}]}```",
+      "output": {
+        "model": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "extracted_constraints": [
+          {
+            "type": "keyword",
+            "word": "urgent"
+          }
+        ],
+        "success": true
+      }
+    },
+    {
+      "input": "Just a normal text.",
+      "output": {
+        "model": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "extracted_constraints": [],
+        "success": false
+      }
+    },
+    {
+      "input": "Must contain \"secret\".",
+      "output": {
+        "model": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "extracted_constraints": [
+          {
+            "type": "contains",
+            "value": "secret"
+          }
+        ],
+        "success": true
+      }
+    },
+    {
+      "input": "```json\n{invalid json}\n```",
+      "output": {
+        "model": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "extracted_constraints": [],
+        "success": false
+      }
+    },
+    {
+      "input": "```json\n{\"constraints\": []}\n```",
+      "output": {
+        "model": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "extracted_constraints": [],
+        "success": false
+      }
+    },
+    {
+      "input": "must contain 'word'",
+      "output": {
+        "model": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "extracted_constraints": [
+          {
+            "type": "contains",
+            "value": "word"
+          }
+        ],
+        "success": true
+      }
+    },
+    {
+      "input": "must contain 'test'",
+      "output": {
+        "model": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "extracted_constraints": [
+          {
+            "type": "contains",
+            "value": "test"
+          }
+        ],
+        "success": true
+      }
+    },
+    {
+      "input": "must contain 'hello'",
+      "output": {
+        "model": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "extracted_constraints": [
+          {
+            "type": "contains",
+            "value": "hello"
+          }
+        ],
+        "success": true
+      }
+    },
+    {
+      "input": "must contain 'world'",
+      "output": {
+        "model": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "extracted_constraints": [
+          {
+            "type": "contains",
+            "value": "world"
+          }
+        ],
+        "success": true
+      }
+    },
+    {
+      "input": "must contain 'foo'",
+      "output": {
+        "model": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "extracted_constraints": [
+          {
+            "type": "contains",
+            "value": "foo"
+          }
+        ],
+        "success": true
+      }
+    },
+    {
+      "input": "must contain 'bar'",
+      "output": {
+        "model": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "extracted_constraints": [
+          {
+            "type": "contains",
+            "value": "bar"
+          }
+        ],
+        "success": true
+      }
+    },
+    {
+      "input": "must contain 'baz'",
+      "output": {
+        "model": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "extracted_constraints": [
+          {
+            "type": "contains",
+            "value": "baz"
+          }
+        ],
+        "success": true
+      }
+    },
+    {
+      "input": "must contain 'qux'",
+      "output": {
+        "model": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "extracted_constraints": [
+          {
+            "type": "contains",
+            "value": "qux"
+          }
+        ],
+        "success": true
+      }
+    },
+    {
+      "input": "must contain 'quux'",
+      "output": {
+        "model": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "extracted_constraints": [
+          {
+            "type": "contains",
+            "value": "quux"
+          }
+        ],
+        "success": true
+      }
+    },
+    {
+      "input": "must contain 'corge'",
+      "output": {
+        "model": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "extracted_constraints": [
+          {
+            "type": "contains",
+            "value": "corge"
+          }
+        ],
+        "success": true
+      }
+    }
+  ]
+}

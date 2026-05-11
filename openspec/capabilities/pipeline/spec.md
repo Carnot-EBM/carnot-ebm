@@ -3308,3 +3308,12 @@ The artifact MUST include the status, model_specs, objective gradients applied, 
 **Given** the Gemma-4 26B model and the COCOM pipeline
 **When** the pipeline processes continuous learning steps with epsilon constraints and strict utility/non-forgetting checks
 **Then** the parameters are updated, enforcing zero-forgetting FR-11 checks, and written to `results/experiment_1848_gemma26_epsilon.json`.
+
+
+### REQ-ROCE-1864: ROCE Open Constraint Elicitation Prototype
+The system shall implement an open constraint elicitation prototype that extracts structured logic from unconstrained SOTA generation, specifically targeting `unsloth/Qwen3.6-35B-A3B-GGUF` natural language output. It MUST evaluate the extraction success rate on a 20-prompt dataset and save output to `results/experiment_1864_roce.json`.
+
+### SCENARIO-ROCE-1864: ROCE Dynamic Logic Extraction
+**Given** the Qwen3.6 MoE model output
+**When** ROCE processes the natural language output for 20 prompts
+**Then** dynamic verifiable logic is extracted successfully, success rate is evaluated, and results are written to `results/experiment_1864_roce.json`.
