@@ -1,0 +1,55 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.146",
+  "generated_at": "2026-05-11T22:36:45Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 52.5,
+  "experiments_completed": 20,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "-0400 [conductor] Pre-gate block: Exp 1870: Test HILED simulator on live gemma-4",
+      "duration_minutes": 15.7,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1872: Prototype Ising loss as an oracle for multi-agent co",
+      "duration_minutes": 5.1,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1871: Implement Rust backend for S2KAN fast evaluation",
+      "duration_minutes": 3.7,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1868: Evaluate catastrophic forgetting on the MoE using LT",
+      "duration_minutes": 3.1,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1864: Reasoning-Time Open Constraint Elicitation (ROCE) pr",
+      "duration_minutes": 2.9,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Milestone 2026.05.146 completed 20 synthesis-only experiments in 52.5 minutes with 0 compute-bound experiments. There is no compute-bound GPU utilization data to assess, so idle GPUs are not a bottleneck for this milestone.",
+  "bottlenecks_identified": [
+    "No compute-bound bottleneck data available this milestone.",
+    "Wall time concentrated in synthesis-only execution and reconciliation; the slowest listed synthesis item took 15.7 minutes."
+  ],
+  "improvements_suggested": [
+    "Add per-phase timing for synthesis-only experiments so code-writing, tests, artifact finalization, and docs reconciliation are separated in the next retrospective.",
+    "Batch milestone closeout reconciliation for synthesis-only runs to avoid repeating changelog and roadmap updates experiment-by-experiment.",
+    "Gate GPU scheduling recommendations on compute_bound metadata plus explicit multi-model parallelism metadata before suggesting DualGPURunner.",
+    "Add a closeout artifact linter that checks terminal retrospective status and locked timing fields before the milestone is reported complete."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Instrument synthesis-only phase timings in the conductor.",
+    "Make milestone closeout reconciliation idempotent and batchable.",
+    "Filter GPU utilization advice through compute_bound and multi-model metadata."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "No data available this milestone for longest compute-bound tasks, compute-bound GPU efficiency, or missed DualGPURunner engagement because the authoritative timing data contains 0 compute-bound experiments. The savings estimate is recorded as 0 because no quantified savings model is provided in the milestone data."
+}
