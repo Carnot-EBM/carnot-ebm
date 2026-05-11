@@ -1,0 +1,52 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.134",
+  "generated_at": "2026-05-11T00:33:10Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 1562.1,
+  "experiments_completed": 309,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "-0400 [conductor] Exp 1603: Energy-Based Constraint Network (EBCN) coherence sco",
+      "duration_minutes": 88.2,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Doomed-rerun block: Exp 1663: gated on Exp 1662: Pi-net vs T-S",
+      "duration_minutes": 82.1,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1657: KV260 EBRM Hardware Offload",
+      "duration_minutes": 56.7,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Pre-gate block: Exp 1711: Ablation of Eidoku Gate using KV260 ",
+      "duration_minutes": 56.3,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1642: llguidance adapter for reusable external structured-",
+      "duration_minutes": 54.2,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Milestone 2026.05.134 completed 309 synthesis-only experiments in 1562.1 minutes. There were 0 compute-bound experiments, correctly resulting in 0% GPU utilization. Doomed-rerun blocks properly failed fast and are not bottlenecks, but pre-gate blocks like Exp 1711 still consume significant wall time.",
+  "bottlenecks_identified": [
+    "Exp 1603 took 88.2 minutes.",
+    "Exp 1657 took 56.7 minutes.",
+    "Pre-gate blocks like Exp 1711 are consuming 56.3 minutes instead of failing fast.",
+    "Exp 1642 took 54.2 minutes."
+  ],
+  "improvements_suggested": [
+    "Implement fail-fast mechanism for pre-gate blocks so they terminate immediately like doomed-rerun blocks."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Implement fail-fast mechanism for pre-gate blocks."
+  ],
+  "estimated_time_savings_pct": 5,
+  "meta_reflection": "For the compute-bound questions: no data available this milestone. Both GPUs correctly remained idle at 0% during synthesis-only tasks."
+}

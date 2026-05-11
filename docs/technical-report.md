@@ -5148,3 +5148,9 @@ Experiments 1712 and 1714 verified semantic pruning for FR-11 continual learning
 
 **Operational Retrospective (.134)**
 Analyzed 1388 min wall time / 253 experiments. Both RTX 3090s were completely idle at 0% utilization throughout, which is correct behavior as there were no compute-bound tasks. Estimated savings: implement fail-fast for pre-gate blocks.
+
+
+### 4.12 Recent Additions (Milestone .134)
+
+**Hardware Synthesis and EqM Sampler Evaluation**
+Experiments 1736-1745 focused on hardware synthesis for KV260 KANELÉ and integrating the EqM Sampler onto GPU. We measured latency on the live board and prepared the SWE-Bench Lite EqM Harness. Additionally, a Live Telemetry Streamer for Continual Learning was load-tested successfully, paving the way for more robust telemetry in the continuous learning pipeline.
