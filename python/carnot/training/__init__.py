@@ -1,6 +1,7 @@
 """Training algorithms for Energy Based Models."""
 
 from carnot.training.capo_loss import capo_loss, ece_loss
+from carnot.training.ebft_objective import ebft_loss
 from carnot.training.multilevel_kan_trainer import KnotRefinementInterpolator, MultilevelKAEMTrainer
 from carnot.training.multilevel_sparse_kaem import MultilevelSparseKAEMTrainer
 from carnot.training.nce import nce_loss, nce_loss_stochastic
@@ -19,6 +20,7 @@ __all__ = [
     "capo_loss",
     "dsm_loss",
     "dsm_loss_stochastic",
+    "ebft_loss",
     "ece_loss",
     "nce_loss",
     "nce_loss_stochastic",

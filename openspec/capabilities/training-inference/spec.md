@@ -2690,3 +2690,15 @@ Then: The model assigns lower mean energy to coherent sets than contradictory se
       achieving AUROC > 0.60 on held-out pairs.
 
 **Implementation Status:** Implemented (Exp 944)
+
+
+### REQ-TRAIN-007: Energy-Based Fine-Tuning (EBFT)
+The system shall implement sequence-level feature matching via EBFT, where:
+- The objective minimizes expert sequence energy while maximizing rollout sequence energy.
+- The objective calculation supports gradient flow for differentiable energy functions.
+- It operates without explicit external verifiers.
+
+### SCENARIO-TRAIN-007: EBFT Gradient Flow
+Given expert and rollout sequences
+When the EBFT loss is calculated
+Then the gradient properly flows through the energy function to the parameters.
