@@ -1841,3 +1841,4 @@ Ripgrep is |
 | 2026-05-11 18:02 UTC | Milestone 2026.05.144 activated | OK | 5 tasks queued |
 | 2026-05-11 18:04 UTC | Exp 1849: Phase 4 Active Inference — verifier-as-f | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-11 18:06 UTC | Exp 1849: Phase 4 Active Inference — verifier-as-f | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-11 18:08 UTC | Exp 1849: Phase 4 Active Inference — verifier-as-f | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
