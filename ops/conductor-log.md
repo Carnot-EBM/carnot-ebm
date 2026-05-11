@@ -1828,3 +1828,5 @@ Ripgrep is |
 | 2026-05-11 16:25 UTC | Exp 1843: Gradient-Guided Epsilon Constraint for O | FAIL | Gemini CLI error: Stalled after 600s silence. Last output:  enabled. All tool  |
 | 2026-05-11 16:31 UTC | Exp 1843: Gradient-Guided Epsilon Constraint for O | OK | cache hit: 89 passed, 1 warning in 5.72s |
 | 2026-05-11 16:36 UTC | Exp 1844: Reasoning-Time Open Constraint Elicitati | OK | 81 passed, 1 warning in 4.72s |
+| 2026-05-11 16:48 UTC | Exp 1845: Hardware-In-The-Loop Energy Decoding (HI | FAIL | Gemini CLI error: Stalled after 600s silence. Last output:  enabled. All tool  |
+| 2026-05-11 17:02 UTC | Exp 1845: Hardware-In-The-Loop Energy Decoding (HI | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: t: 'Too Many Reques |
