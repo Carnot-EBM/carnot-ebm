@@ -1713,3 +1713,4 @@ Ripgrep is |
 | 2026-05-11 09:58 UTC | Exp 1801: gated on Exp 1800 generated_count>=2000: | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1800-verified-traces-dataset.generated_ |
 | 2026-05-11 10:00 UTC | Exp 1802: Evaluate continuous self-learning non-fo | DOOMED_RERUN_BLOCK | 5 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-11 10:02 UTC | Exp 1802: Evaluate continuous self-learning non-fo | DOOMED_RERUN_BLOCK | 5 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-11 10:04 UTC | Exp 1802: Evaluate continuous self-learning non-fo | DOOMED_RERUN_BLOCK | 5 prior failure(s) match this task's scope but prior_failures field is missing o |
