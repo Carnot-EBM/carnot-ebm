@@ -11869,3 +11869,23 @@ This sweep was run after milestone `.124` completed. Local outcomes: KANELÉ RTL
 - **Constraint-Informed KANs (CIKAN) (PMLR 2025)**: Applies KANs with physical and safety constraints directly into the network architecture.
 - **FourierCSP (2025)**: Continuous optimization for Constraint Satisfaction Problems using generalized Walsh-Fourier transform.
 - **KANELÉ (ISFPGA 2026)**: Hardware Acceleration framework optimizing KANs for FPGA deployment using LUTs (up to 2700x speedup).
+
+
+## 2026-05-10 Post-.134 Planning Sweep (Milestone 2026.05.135)
+
+This sweep was run after milestone `.134` completed. The literature search revealed Kona 1.0 architecture confirmations, new symbolic KAN architectures, and energy-guided decoding scaling.
+
+### Kona 1.0 and Energy-Based Reasoning Models (EBRM)
+- **Sources:** Logical Intelligence announcements, "The mouth is not the brain" (arXiv:2601.17094).
+- **What:** Kona 1.0 is an entirely non-autoregressive EBRM that maps problems to continuous latent space and finds solutions via energy minimization, avoiding step-by-step token drift. It solved 96.2% of hard Sudoku puzzles.
+- **Relevance to Carnot:** Directly validates Phase-3 scaling for EqM latency and continuous System-2 evaluation. EqM overhead needs to be minimized to match these capabilities.
+
+### Symbolic-KAN and KArAt Scaling
+- **Papers:** Symbolic-KAN (arXiv:2603.23854), Hybrid KAN (arXiv:2602.07702).
+- **What:** Symbolic-KAN embeds discrete symbolic structures in deep trainable networks, bridging symbolic regression and KANs. KANO expands spectral operator representations.
+- **Relevance to Carnot:** Essential for Tier 3 and Phase-3 constraint layers. The symbolic structure supports the goal of having deterministic, formally verifiable energy tiers without sacrificing learnability.
+
+### Energy-Guided Decoding (EGD) Mitigation
+- **Paper:** "Energy-Guided Decoding for Object Hallucination Mitigation" (arXiv:2601.18510 / AAAI 2026).
+- **What:** Uses EBMs to refine the decoding process directly at test time, mitigating hallucination bias in vision-language models without retraining.
+- **Relevance to Carnot:** Confirms our EGD integration path with SOTA models. Shows that energy guidance can act as an immediate test-time patch for structural and semantic hallucinations.
