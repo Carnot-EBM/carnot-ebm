@@ -1914,3 +1914,5 @@ IMPORTANT:
 
 IMPORTANT:
 - Do NOT modify research-road |
+| 2026-05-11 22:34 UTC | Exp 1875: Milestone 146 Retrospective | FAIL | Gemini CLI error: js:309138:14)
+    at async file:///usr/lib/node_modules/@goo |
