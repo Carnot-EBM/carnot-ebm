@@ -1,153 +1,173 @@
-milestone: 2026.05.141
-milestone_title: "Phase-18: KAN-Guided EBM Generation, Dual-GPU Scaling, and MoE Distillation"
+milestone: 2026.05.142
+milestone_title: "Phase-19: Energy-Based Latent Planning, Zero-Violation Online Learning, and Fail-Fast Pipeline Orchestration"
 milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
 tasks:
-  - id: exp1814-dual-gpu-profiling
-    title: "Exp 1814: Dual RTX 3090 GPU Setup and VRAM Profiling"
+  - id: exp1825-archive-activate
+    title: 'Exp 1825: Archive .141 and Activate .142'
     prompt: |
-      CONTEXT: The previous milestone identified the lack of a Dual RTX 3090 GPU Baseline as a critical gap.
-      EXISTING CODE TO READ FIRST: `scripts/experiment_template.py`
-      TASK: Implement a basic profiler to measure load time, VRAM usage, and throughput for Dual RTX 3090 setups.
+      CONTEXT: Milestone transition on {date}.
+      EXISTING CODE TO READ FIRST: `ops/status.md`
+      TASK: Archive .141 logs and activate .142 environment.
       CONCRETE STEPS:
-      1. Create `python/carnot/pipeline/dual_gpu_profiler.py`.
-      2. Measure dummy tensor allocation across both GPUs using JAX.
-      3. Generate the artifact `{project_root}/results/experiment_1814_gpu_profile.json` with the metrics.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-    model: opus
-    max_turns: 100
-
-  - id: exp1815-sota-inference-pipeline
-    title: "Exp 1815: 3B SOTA Model Inference Pipeline"
-    gated_on:
-      - upstream: exp1814-dual-gpu-profiling
-        artifact_field: success
-        op: "=="
-        value: true
-    prompt: |
-      CONTEXT: We need to scale our experiments to the mandated SOTA local GGUF models.
-      EXISTING CODE TO READ FIRST: `python/carnot/models/`
-      TASK: Create an inference pipeline capable of loading `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and `unsloth/gemma-4-26B-A4B-it-GGUF`.
-      CONCRETE STEPS:
-      1. Create `python/carnot/models/sota_pipeline.py` with `MODEL_SPECS = ["unsloth/Qwen3.6-35B-A3B-GGUF", "unsloth/gemma-4-31B-it-GGUF", "unsloth/gemma-4-26B-A4B-it-GGUF"]`.
-      2. Ensure it leverages JAX bindings or a GGUF backend to load these models.
-      3. Generate `{project_root}/results/experiment_1815_sota_load.json` indicating load success.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp1816-gsm8k-baseline
-    title: "Exp 1816: GSM8K Baseline using 3B Models on Dual GPUs"
-    gated_on:
-      - upstream: exp1815-sota-inference-pipeline
-        artifact_field: success
-        op: "=="
-        value: true
-    prompt: |
-      CONTEXT: We must establish definitive GSM8K benchmark numbers using real GPU inference on RTX 3090.
-      EXISTING CODE TO READ FIRST: `python/carnot/pipeline/sota_pipeline.py`
-      TASK: Run a subset of GSM8K using the new SOTA pipeline.
-      CONCRETE STEPS:
-      1. Create `python/carnot/eval/gsm8k_sota_eval.py` setting `MODEL_SPECS = ["unsloth/Qwen3.6-35B-A3B-GGUF"]`.
-      2. Run generation on 50 GSM8K problems and measure baseline accuracy without verification.
-      3. Save results to `{project_root}/results/experiment_1816_gsm8k_baseline.json`.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp1817-kan-verifier
-    title: "Exp 1817: Implement Continuous KAN Verifier"
-    prompt: |
-      CONTEXT: Following arXiv:2602.04567, KANs can act as high-efficiency verifiers.
-      EXISTING CODE TO READ FIRST: `python/carnot/kan/`
-      TASK: Implement a Continuous Kolmogorov-Arnold Network to verify intermediate LLM decoding steps.
-      CONCRETE STEPS:
-      1. Add continuous verification mode to `python/carnot/kan/cikan_core.py`.
-      2. Write a unit test verifying constraint satisfaction on a dummy token sequence.
-      3. Generate `{project_root}/results/experiment_1817_kan_verifier.json`.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-    agent_type: gemini
-    model: gpt-5.5
-
-  - id: exp1818-verify-repair-scaling
-    title: "Exp 1818: Verify-Repair Scaling on GSM8K using 3B Models"
-    prompt: |
-      CONTEXT: We need to test if Verify-Repair helps at 3B scale.
-      EXISTING CODE TO READ FIRST: `python/carnot/eval/gsm8k_sota_eval.py`
-      TASK: Run verify-repair loop on GSM8K using the new verifier pipeline.
-      CONCRETE STEPS:
-      1. Wrap the SOTA pipeline with the verifier using `MODEL_SPECS = ["unsloth/gemma-4-26B-A4B-it-GGUF"]`.
-      2. Evaluate on the same 50 GSM8K problems.
-      3. Save accuracy difference to `{project_root}/results/experiment_1818_vr_scaling.json`.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp1819-kan-latency-eval
-    title: "Exp 1819: Evaluate KAN Decoding Latency vs Accuracy"
-    prompt: |
-      CONTEXT: Verify the efficiency claims of KAN-based verifiers.
-      EXISTING CODE TO READ FIRST: `python/carnot/kan/cikan_core.py`
-      TASK: Benchmark the latency overhead of the KAN verifier on the 3B model pipeline.
-      CONCRETE STEPS:
-      1. Measure token-per-second with and without the KAN verifier active using `MODEL_SPECS = ["unsloth/gemma-4-31B-it-GGUF"]`.
-      2. Generate `{project_root}/results/experiment_1819_kan_latency.json` with the performance delta.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp1820-moe-online-distillation
-    title: "Exp 1820: Continuous Online Distillation for MoE Routers"
-    prompt: |
-      CONTEXT: Implement continuous self-learning via online distillation (arXiv:2604.08912).
-      EXISTING CODE TO READ FIRST: `python/carnot/pipeline/sota_pipeline.py`
-      TASK: Build a continuous learning loop that distills successful EBM constraints into the router.
-      CONCRETE STEPS:
-      1. Create `python/carnot/training/moe_distill.py` using `MODEL_SPECS = ["unsloth/Qwen3.6-35B-A3B-GGUF"]`.
-      2. Setup an online replay buffer that fine-tunes the router logits during inference.
-      3. Log the distillation loss to `{project_root}/results/experiment_1820_moe_distill.json`.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp1821-thermo-gradients-bbim
-    title: "Exp 1821: Map Thermodynamic Gradients to BBIM"
-    prompt: |
-      CONTEXT: Inspired by arXiv:2509.11234, mapping discrete constraints to continuous energy landscapes for hardware.
-      EXISTING CODE TO READ FIRST: `crates/carnot-gpu/src/`
-      TASK: Implement gradient mapping in Rust for the Bounce-Bind Ising Machine.
-      CONCRETE STEPS:
-      1. Modify BBIM modules to accept continuous energy gradient constraints.
-      2. Write a Rust unit test validating the gradient descent flow.
-      3. Export test results to `{project_root}/results/experiment_1821_thermo_bbim.json`.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-    agent_type: gemini
-    model: gpt-5.5
-
-  - id: exp1822-bbim-rtl-synth
-    title: "Exp 1822: FPGA Bitstream Synthesis for Continuous EBM Constraints"
-    prompt: |
-      CONTEXT: We need to synthesize the updated BBIM with thermodynamic mappings for the KV260.
-      EXISTING CODE TO READ FIRST: `rtl/`
-      TASK: Run Yosys/NextPNR synthesis for the new BBIM RTL.
-      CONCRETE STEPS:
-      1. Update the Makefile to synthesize the new constraints module.
-      2. Run the synthesis flow.
-      3. Record utilization and timing in `{project_root}/results/experiment_1822_rtl_synth.json`.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-    model: opus
-    max_turns: 100
-
-  - id: exp1823-final-gsm8k-eval
-    title: "Exp 1823: EBM-CoT GSM8K Final Evaluation with Continuous Self-Learning Loop"
-    prompt: |
-      CONTEXT: Combine all Phase 18 advances into a final evaluation run.
-      EXISTING CODE TO READ FIRST: `python/carnot/eval/gsm8k_sota_eval.py`, `python/carnot/training/moe_distill.py`
-      TASK: Run the complete system on 100 GSM8K problems.
-      CONCRETE STEPS:
-      1. Execute the MoE-distilled model with the KAN verifier active using `MODEL_SPECS = ["unsloth/Qwen3.6-35B-A3B-GGUF", "unsloth/gemma-4-31B-it-GGUF"]`.
-      2. Record final accuracy, latency, and self-learning delta.
-      3. Write to `{project_root}/results/experiment_1823_final_eval.json`.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp1824-retro
-    title: "Exp 1824: Milestone 2026.05.141 Retrospective"
-    prompt: |
-      CONTEXT: The milestone has concluded.
-      EXISTING CODE TO READ FIRST: `ops/conductor-log.md`
-      TASK: Summarize findings, hardware integration results, and online distillation metrics.
-      CONCRETE STEPS:
-      1. Analyze all JSON artifacts generated in Phase 18.
-      2. Identify top 3 gaps for the next phase.
-      3. Write to `{project_root}/results/experiment_1824_retro.json`.
+      1. Update milestone IDs in ops status.
+      2. Write {project_root}/results/experiment_1825_activation.json
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
     max_turns: 20
+
+  - id: exp1826-conductor-fail-fast
+    title: 'Exp 1826: Implement Conductor Pre-Gate Fail-Fast blocks'
+    agent_type: codex
+    model: gpt-5.5
+    prompt: |
+      CONTEXT: The retro logs continuously highlight synthesis gate waste. Current date is {date}.
+      EXISTING CODE TO READ FIRST: `python/carnot/pipeline/`
+      TASK: Implement activation-time terminal artifacts for doomed reruns.
+      CONCRETE STEPS:
+      1. Add fail-fast check to pipeline API.
+      2. Write {project_root}/results/experiment_1826_fail_fast.json
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+    max_turns: 30
+
+  - id: exp1827-ebrm-latent-trajectory
+    title: 'Exp 1827: Implement EBRM Latent Reasoning Trajectory Optimizer'
+    prompt: |
+      CONTEXT: Energy-Based Reasoning via Structured Latent Planning (arXiv:2603.04948). Task run on {date}.
+      EXISTING CODE TO READ FIRST: `python/carnot/models/`
+      TASK: Build latent trajectory optimization layer.
+      CONCRETE STEPS:
+      1. Create `python/carnot/models/ebrm.py`
+      2. Model trajectory optimization with energy scoring.
+      3. Write {project_root}/results/experiment_1827_ebrm.json
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1828-dca-reasoner
+    title: 'Exp 1828: gated on Exp 1827 honest_verdict in success: DCAReasoner Difference-of-Convex Acceleration'
+    gated_on:
+      - upstream: exp1827-ebrm-latent-trajectory
+        artifact_field: honest_verdict
+        op: 'contains'
+        value: 'success'
+    prompt: |
+      CONTEXT: DCAReasoner speeds up continuous EBM reasoning. Current date is {date}.
+      EXISTING CODE TO READ FIRST: `python/carnot/models/ebrm.py`
+      TASK: Apply Difference-of-Convex functions acceleration to EBRM.
+      CONCRETE STEPS:
+      1. Extend `ebrm.py` with DCA method.
+      2. Write {project_root}/results/experiment_1828_dca.json
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1829-eqm-adaptive-compute
+    title: 'Exp 1829: Equilibrium Matching (EqM) Adaptive Compute Calibration'
+    prompt: |
+      CONTEXT: EqM allows adaptive computation steps for stable valley finding. Date: {date}.
+      EXISTING CODE TO READ FIRST: `python/carnot/inference/`
+      TASK: Integrate EqM (arXiv:2510.02300) into inference stack.
+      CONCRETE STEPS:
+      1. Create `python/carnot/inference/eqm_calibration.py`.
+      2. Write {project_root}/results/experiment_1829_eqm.json
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1830-energy-guided-vision
+    title: 'Exp 1830: Energy-Guided Vision-Language Decoding'
+    prompt: |
+      CONTEXT: Energy-guided decoding for VLM object hallucination mitigation (arXiv:2507.07731). Date is {date}.
+      EXISTING CODE TO READ FIRST: `python/carnot/inference/guided_decoding.py`
+      TASK: Extend guided decoding to vision-language contexts.
+      CONCRETE STEPS:
+      1. Add VLM minimal energy score routing.
+      2. Write {project_root}/results/experiment_1830_vlm_guided.json
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1831-cocom-online-convex
+    title: 'Exp 1831: COCO-M Online Convex Optimization with Memory'
+    prompt: |
+      CONTEXT: Constrained Online Convex Optimization with Memory (arXiv:2603.21375). {date} run.
+      EXISTING CODE TO READ FIRST: `python/carnot/models/continual_gibbs.py`
+      TASK: Update online learning to track memory-based constraints.
+      CONCRETE STEPS:
+      1. Create `python/carnot/pipeline/cocom.py`.
+      2. Write {project_root}/results/experiment_1831_cocom.json
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1832-zero-violation-fr11
+    title: 'Exp 1832: Continuous Self-Learning: Zero Constraint Violation Policy'
+    prompt: |
+      CONTEXT: FR-11 continuous self-learning requires safety bounds (AISTATS 2025). Date: {date}.
+      EXISTING CODE TO READ FIRST: `python/carnot/pipeline/cocom.py`
+      TASK: Implement zero-constraint violation guarantee for self-learning.
+      CONCRETE STEPS:
+      1. Integrate safety policy into continuous replay loop.
+      2. Write {project_root}/results/experiment_1832_zero_violation.json
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1833-unknown-constraints-learning
+    title: 'Exp 1833: Online Learning with Unknown Constraints'
+    prompt: |
+      CONTEXT: Meta-algorithm for unknown constraints (ICML 2025). As of {date}.
+      EXISTING CODE TO READ FIRST: `python/carnot/pipeline/cocom.py`
+      TASK: Allow the online learner to estimate hidden safety constraints.
+      CONCRETE STEPS:
+      1. Build online regression oracle.
+      2. Write {project_root}/results/experiment_1833_unknown_constraints.json
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1834-thrml-turnover-constraints
+    title: 'Exp 1834: THRML Multi-Period Turnover Constraints'
+    model: opus
+    max_turns: 100
+    prompt: |
+      CONTEXT: THRML library hardware updates (arXiv:2601.xxxxx). Testing hardware integration on {date}.
+      EXISTING CODE TO READ FIRST: `python/carnot/samplers/`
+      TASK: Implement multi-period turnover constraint sampling.
+      CONCRETE STEPS:
+      1. Extend Extropic/THRML adapter.
+      2. Write {project_root}/results/experiment_1834_thrml_turnover.json
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1835-qwen-capstone
+    title: 'Exp 1835: Capstone: Dual-GPU SOTA Pipeline with Qwen3.6-35B-A3B-GGUF'
+    prompt: |
+      CONTEXT: Integrate SOTA LLM pipeline with EBRM and Zero-Violation loops. Date: {date}.
+      EXISTING CODE TO READ FIRST: `scripts/`
+      TASK: E2E Pipeline with unsloth/Qwen3.6-35B-A3B-GGUF.
+      MODEL_SPECS: ["unsloth/Qwen3.6-35B-A3B-GGUF"]
+      CONCRETE STEPS:
+      1. Run full verify-repair on Qwen3.6.
+      2. Write {project_root}/results/experiment_1835_qwen.json
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1836-gemma31-capstone
+    title: 'Exp 1836: Capstone: Dual-GPU SOTA Pipeline with Gemma4-31B-it-GGUF'
+    prompt: |
+      CONTEXT: Evaluate on Gemma dense flagship. Scheduled on {date}.
+      EXISTING CODE TO READ FIRST: `scripts/`
+      TASK: E2E Pipeline with unsloth/gemma-4-31B-it-GGUF.
+      MODEL_SPECS: ["unsloth/gemma-4-31B-it-GGUF"]
+      CONCRETE STEPS:
+      1. Run full pipeline evaluation.
+      2. Write {project_root}/results/experiment_1836_gemma31.json
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1837-gemma26-capstone
+    title: 'Exp 1837: Capstone: Dual-GPU SOTA Pipeline with Gemma4-26B-A4B-it-GGUF'
+    prompt: |
+      CONTEXT: Evaluate on middle MoE. Scheduled on {date}.
+      EXISTING CODE TO READ FIRST: `scripts/`
+      TASK: E2E Pipeline with unsloth/gemma-4-26B-A4B-it-GGUF.
+      MODEL_SPECS: ["unsloth/gemma-4-26B-A4B-it-GGUF"]
+      CONCRETE STEPS:
+      1. Run full pipeline evaluation.
+      2. Write {project_root}/results/experiment_1837_gemma26.json
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1838-retro
+    title: 'Exp 1838: Milestone 2026.05.142 Retrospective'
+    max_turns: 20
+    prompt: |
+      CONTEXT: Close out milestone .142 on {date}.
+      EXISTING CODE TO READ FIRST: `ops/status.md`
+      TASK: Operational retrospective.
+      CONCRETE STEPS:
+      1. Analyze logs from experiments 1825-1837.
+      2. Write {project_root}/results/experiment_1838_retro.json
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
