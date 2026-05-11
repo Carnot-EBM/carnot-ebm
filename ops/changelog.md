@@ -5425,3 +5425,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-10: Exp 1744: System-2 Latency vs Accuracy Impact Analysis (⚠️ Research Finding) — honest_verdict=simulated_no_verdict; results/experiment_1744_impact.json
 - 2026-05-10: Exp 1745: Milestone .134 Retrospective (✅ Complete) — honest_verdict=phase_4_synthesis_complete; results/experiment_1745_retro.json
 - 2026-05-10: Milestone 2026.05.134 Operational Retrospective: Completed 309 synthesis-only experiments in 1562.1 minutes. Identified pre-gate blocks as a wall-time bottleneck and recommended a fail-fast mechanism.
+- 2026-05-11: Exp 1746: Profile EqM CUDA overhead with SOTA MoE (✅ Complete) — honest_verdict=profile_completed; results/experiment_1746_profile.json
