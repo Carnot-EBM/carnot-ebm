@@ -1620,3 +1620,4 @@ Ripgrep is |
 | 2026-05-11 03:48 UTC | Milestone 2026.05.136 activated | OK | 12 tasks queued |
 | 2026-05-11 03:53 UTC | Exp 1759: Implement EBFT sequence-level objective | OK | 81 passed, 1 warning in 4.27s |
 | 2026-05-11 03:55 UTC | Exp 1760: gated on Exp 1759: Continual self-learni | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1759-ebft-objective.honest_verdict (act |
+| 2026-05-11 03:57 UTC | Exp 1760: gated on Exp 1759: Continual self-learni | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1759-ebft-objective.honest_verdict (act |
