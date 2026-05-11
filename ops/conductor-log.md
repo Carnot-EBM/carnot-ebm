@@ -1703,3 +1703,4 @@ Ripgrep is |
 | 2026-05-11 09:43 UTC | Plan milestone 2026.05.139 | OK | 13 tasks proposed |
 | 2026-05-11 09:45 UTC | Milestone 2026.05.139 activated | OK | 13 tasks queued |
 | 2026-05-11 09:47 UTC | Exp 1799: Implement partial-trace energy scoring p | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-11 09:49 UTC | Exp 1799: Implement partial-trace energy scoring p | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
