@@ -164,6 +164,24 @@ Then the output artifact uses `ebm_cot_v2_auroc` for the post-training score,
 computes `calibration_auroc_delta = ebm_cot_v2_auroc - baseline_auroc`, and
 sets `variance_worsened` from the measured paraphrase variance comparison.
 
+## REQ-KAN-1819: KAN Verifier Latency Benchmark
+
+The KAN model tier MUST provide a latency benchmark to measure the performance overhead of the CIKAN verifier against a baseline language model (e.g., `unsloth/gemma-4-31B-it-GGUF`).
+
+**Rationale:**
+    To deploy KAN verifiers in a production pipeline, we must verify that the latency overhead per token is within acceptable limits compared to the base model.
+
+**Acceptance criteria:**
+    - `scripts/experiment_1819_kan_latency.py` writes `results/experiment_1819_kan_latency.json`.
+    - The JSON contains `baseline_tps`, `cikan_tps`, and `latency_overhead_percent`.
+    - Tests verify the benchmark generation.
+
+### SCENARIO-KAN-1819: Measure KAN Verifier Latency
+
+Given a CIKAN verifier and a mock language model pipeline,
+When the benchmark script is run,
+Then it outputs the token-per-second (TPS) for both baseline and CIKAN, and `results/experiment_1819_kan_latency.json` is generated.
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
