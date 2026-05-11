@@ -1,0 +1,31 @@
+{
+  "schema_version": "carnot.experiment.v1",
+  "artifact_type": "ebft_pipeline_result",
+  "experiment_id": 1785,
+  "experiment_slug": "exp1785-ebft-pipeline",
+  "status": "complete",
+  "created_at": "2026-05-11",
+  "spec_refs": [
+    "REQ-TRAIN-007",
+    "SCENARIO-TRAIN-007"
+  ],
+  "implementation": {
+    "module": "python/carnot/training/ebft_trainer.py",
+    "tests": "tests/python/carnot/training/test_ebft_trainer.py",
+    "capability_spec": "openspec/capabilities/training-inference/spec.md",
+    "modified_conductor": false
+  },
+  "verification": {
+    "targeted_tests": {
+      "command": ".venv/bin/pytest tests/python/carnot/training/test_ebft_trainer.py -q",
+      "result": "passed",
+      "summary": "8 passed"
+    },
+    "new_code_coverage": {
+      "command": ".venv/bin/pytest tests/python/carnot/training/test_ebft_trainer.py --cov=python/carnot/training/ebft_trainer.py --cov-report=term-missing -q",
+      "result": "passed",
+      "summary": "python/carnot/training/ebft_trainer.py: 50 statements, 0 missed, 100% coverage"
+    }
+  },
+  "honest_verdict": "complete: ebft_trainer_targeted_tests_and_100pct_new_code_coverage_passed"
+}
