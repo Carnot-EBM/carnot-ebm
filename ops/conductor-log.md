@@ -1624,3 +1624,4 @@ Ripgrep is |
 | 2026-05-11 03:59 UTC | Exp 1760: gated on Exp 1759: Continual self-learni | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1759-ebft-objective.honest_verdict (act |
 | 2026-05-11 04:05 UTC | Exp 1761: Semantic pruning for FR-11 memory buffer | OK | 81 passed, 1 warning in 5.83s |
 | 2026-05-11 04:11 UTC | Exp 1762: Continuous stability test on LTLZinc | OK | 81 passed, 1 warning in 5.57s |
+| 2026-05-11 05:23 UTC | Exp 1763: Reasoning-Time Open Constraint Elicitati | OK | 81 passed, 1 warning in 4.66s |
