@@ -3560,3 +3560,15 @@ The workflow shall parse the result JSONs and write an aggregate retrospective t
 **When** the Exp 1798 workflow runs
 **Then** it writes all required REQ-REPORT-1798 fields to `results/experiment_1798_retro.json`
 **And** details `honest_verdict`.
+
+### REQ-REPORT-1824: Milestone .141 Final Evaluation Retrospective
+
+The Exp 1824 retrospective workflow shall read the authoritative artifacts from Exp 1814 through Exp 1823.
+The workflow shall parse the result JSONs and write an aggregate retrospective to `results/experiment_1824_retro.json` detailing the `honest_verdict`, hardware integration results, online distillation metrics, and `top_3_gaps`.
+
+### SCENARIO-REPORT-1824: Exp 1824 Generates Phase 18 Final Evaluation Retrospective
+
+**Given** the completion of Phase 18 Phase 4 Operations experiments (1814-1823)
+**When** the Exp 1824 workflow runs
+**Then** it writes all required REQ-REPORT-1824 fields to `results/experiment_1824_retro.json`
+**And** details `honest_verdict` and top 3 gaps.
