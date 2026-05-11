@@ -2702,3 +2702,13 @@ The system shall implement sequence-level feature matching via EBFT, where:
 Given expert and rollout sequences
 When the EBFT loss is calculated
 Then the gradient properly flows through the energy function to the parameters.
+
+### REQ-SAMPLE-038: Denoising Thermodynamic Model (DTM) Simulation
+
+**Description:** The system SHALL provide a simulation of Denoising Thermodynamic Models (DTM) using `thrml`.
+
+#### SCENARIO-SAMPLE-038-1: DTM Diffusion-like Sampling (Exp 1806)
+
+**Given** an environment with `thrml`
+**When** running the DTM simulation script
+**Then** it SHALL output distribution convergence and `thrml_import_ready`.
