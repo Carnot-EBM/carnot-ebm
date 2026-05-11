@@ -1,0 +1,42 @@
+{
+  "experiment": 1803,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-05-11",
+  "started_at": "2026-05-11T11:09:22.946910+00:00",
+  "finished_at": "2026-05-11T11:09:22.946910+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Exp 1803: Prototype EBM-CoT Langevin updates for latent thought embeddings",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "3 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: no prior_failures field on task",
+  "gates_evaluated": [
+    {
+      "upstream": "exp1293-ebt-arm-ebm-cot-energy-bridge-audit",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Blocked: blocked_gate_check_failed"
+    },
+    {
+      "upstream": "exp1416-ebm-cot-v3-temperature-calibration",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Research Finding: temperature_scaling_reduced_variance_and_preserved_auroc"
+    },
+    {
+      "upstream": "exp458-ebm-cot-calibration",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Research Finding: improvement"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
