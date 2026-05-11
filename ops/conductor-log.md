@@ -1832,3 +1832,4 @@ Ripgrep is |
 | 2026-05-11 17:02 UTC | Exp 1845: Hardware-In-The-Loop Energy Decoding (HI | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: t: 'Too Many Reques |
 | 2026-05-11 17:09 UTC | Exp 1845: Hardware-In-The-Loop Energy Decoding (HI | OK | cache hit: 98 passed, 1 warning in 7.78s |
 | 2026-05-11 17:17 UTC | Exp 1846: gated on Exp 1844 ROCE logic: Dual-GPU S | OK | 81 passed, 1 warning in 5.81s |
+| 2026-05-11 17:34 UTC | Exp 1847: gated on Exp 1844 ROCE logic: Dual-GPU S | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: erateContent?alt=ss |
