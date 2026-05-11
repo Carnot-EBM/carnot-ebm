@@ -3259,3 +3259,15 @@ The class MUST track memory-based constraints across online learning steps and o
 **When** multiple online steps are processed with objective and constraint gradients
 **Then** the parameters are updated such that memory constraints are respected.
 **And** the outcome is recorded in `results/experiment_1831_cocom.json`.
+
+### REQ-PIPELINE-1833: Unknown Constraints Estimation
+The online learner MUST be able to estimate hidden safety constraints via an online regression oracle.
+The `COCOMPipeline` class MUST implement an `estimate_hidden_constraint(features, true_constraint_value)` method that trains a regression oracle online to predict constraints from features.
+It MUST provide a `predict_hidden_constraint(features)` method.
+It MUST write the results artifact to `results/experiment_1833_unknown_constraints.json`.
+
+### SCENARIO-PIPELINE-1833: Online Regression Oracle Estimates Hidden Constraints
+**Given** a COCOM pipeline initialized with an online regression oracle
+**When** hidden constraint values are provided sequentially with their corresponding features
+**Then** the oracle updates its weights to estimate the hidden constraint
+**And** the outcome is recorded in `results/experiment_1833_unknown_constraints.json`.
