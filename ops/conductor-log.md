@@ -1849,3 +1849,4 @@ Ripgrep is |
 | 2026-05-11 18:42 UTC | Plan milestone 2026.05.145 | OK | 10 tasks proposed |
 | 2026-05-11 18:44 UTC | Milestone 2026.05.145 activated | OK | 10 tasks queued |
 | 2026-05-11 18:53 UTC | Exp 1854: Implement Verification Learning (VL) pro | OK | 81 passed, 1 warning in 5.03s |
+| 2026-05-11 18:55 UTC | Exp 1855: Run FR-11 continuous self-learning loop  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1854-vl-proxy.status (actual=None == ex |
