@@ -1,50 +1,48 @@
-# Research Roadmap vNEXT (Milestone 2026.05.139)
+# Phase-18: KAN-Guided EBM Generation, Dual-GPU Scaling, and MoE Distillation
+Milestone: 2026.05.141
 
-**Title:** Phase-16: Formal KAN Verification, EBM-Guided Reasoning, and Thermodynamic Denoising Simulation
-**Status:** DRAFT
+## Overview
+Phase-18 addresses the critical operational gaps identified in Milestone 2026.05.140 while integrating state-of-the-art continuous learning architectures from 2025-2026 literature. Our goal is to achieve reliable Dual RTX 3090 evaluation for scaling verify-repair to 3B models, embedding a continuous self-learning loop for MoE routers, and extending hardware acceleration for continuous constraint landscapes.
 
-## 1. Context and Prior Milestone (2026.05.138)
-The previous milestone (.138) completed the Phase-15 tasks, which integrated Symbolic-KAN, tested energy-based fine-tuning concepts, and finalized the formal orchestration. The pipeline demonstrated stability but highlighted three key gaps:
-1. **Continuous Self-Learning (FR-11):** The continuous learning pipeline generated constraints but lacked a fully automated and verified DPO loop to train on generated correct/incorrect pairs without forgetting.
-2. **KAN Formal Verification:** While Symbolic-KAN was integrated, we lack a formal mathematical guarantee (e.g., via Mixed Integer Linear Programming and Piecewise Affine abstractions) for the bounds of these networks.
-3. **Hardware / Sampling Capabilities:** The `thrml` software provides a path to Denoising Thermodynamic Models (DTM), but we haven't leveraged it to perform EDDP benchmarking for diffusion-like constrained sampling.
+## Context and Gaps Addressed
+The previous milestone retrospective (`experiment_1813_retro.json`) highlighted three critical gaps:
+1. **Dual RTX 3090 GPU Baseline:** Essential for throughput and latency benchmarking of larger models.
+2. **3B Model Scaling:** We need empirical evidence that our Verify-Repair pipelines remain efficacious when scaling to the 3B parameter regime.
+3. **DEFINITIVE GSM8K Benchmark:** Establishment of real GPU inference baselines on RTX 3090.
 
-## 2. Milestone Objectives
-- **Objective 1 (Reasoning):** Introduce an EBT-style partial-trace energy scoring prototype to evaluate intermediate reasoning steps and feed them into a DPO loop.
-- **Objective 2 (Learning):** Train a DPO adapter using 2,000 verified reasoning traces derived autonomously, fully realizing the FR-11 autonomous self-learning loop.
-- **Objective 3 (Verification):** Build a Piecewise Affine (PWA) abstraction for KAEMEnergy and encode it as a MILP problem to verify bounds.
-- **Objective 4 (Hardware/Sampling):** Simulate Denoising Thermodynamic Models (DTM) with `thrml` and compute the Energy-Delay-Deficiency Product (EDDP).
+## ArXiv Findings Integration
+Recent literature has provided architectural foundations for this phase:
+- **arXiv:2509.11234 (Thermodynamic Gradients):** Methods to map discrete logic constraints onto continuous energy landscapes, which we will apply to the Bounce-Bind Ising Machine (BBIM) for KV260 deployment.
+- **arXiv:2602.04567 (Continuous KAN Verifiers):** Using Kolmogorov-Arnold Networks as high-efficiency, real-time constraint satisfaction layers for intermediate LLM decoding.
+- **arXiv:2604.08912 (Online Distillation into MoE):** Continuous online distillation of constraint successes into MoE routers, which directly satisfies our PRD requirement for continuous self-learning.
 
-## 3. Phase Descriptions
+## Phase 1: Dual-GPU Baseline & Benchmark Infrastructure
+We first establish the physical baseline, verifying dual-GPU execution and instantiating the SOTA local GGUF pipelines.
+- **Exp 1814:** Dual RTX 3090 GPU Setup and VRAM Profiling
+- **Exp 1815:** 3B SOTA Model Inference Pipeline (Integration of Qwen3.6-35B-A3B-GGUF, gemma-4-31B-it-GGUF, gemma-4-26B-A4B-it-GGUF)
+- **Exp 1816:** Baseline GSM8K on SOTA Models without Verification
 
-### Phase 1: Energy-Guided Reasoning & Continuous Self-Learning
-We build a dataset of 2,000 verified traces using local SOTA models, guided by partial-trace energy scoring, and apply Direct Preference Optimization (DPO) to fine-tune the reasoning adapter.
-- Exp 1799: Implement partial-trace energy scoring prototype.
-- Exp 1800: Generate 2000 verified reasoning traces.
-- Exp 1801: DPO training on verified pairs.
-- Exp 1802: Evaluate continuous self-learning non-forgetting and soundness.
+## Phase 2: Verifier Scaling & Continuous Self-Learning
+We introduce the KAN verifier and test verify-repair at the 3B scale, followed by implementing the continuous self-learning loop.
+- **Exp 1817:** Implement Continuous KAN Verifier (arXiv:2602.04567)
+- **Exp 1818:** Verify-Repair Scaling on GSM8K using 3B Models
+- **Exp 1819:** Evaluate KAN Decoding Latency vs Accuracy
+- **Exp 1820:** Continuous Online Distillation of EBM Constraints into MoE Routers (arXiv:2604.08912)
 
-### Phase 2: Formal Verification of KAN layers
-To trust the KAN energy tier, we verify its bounds mathematically using MILP.
-- Exp 1803: Piecewise affine (PWA) abstraction of KAEMEnergy.
-- Exp 1804: MILP encoding of PWA abstractions.
-- Exp 1805: End-to-end formal verification smoke test on KAEM.
+## Phase 3: Hardware Acceleration & Final Evaluation
+We push the continuous mapping down to RTL synthesis and combine all systems for the capstone evaluation.
+- **Exp 1821:** Map Thermodynamic Gradients to BBIM (arXiv:2509.11234)
+- **Exp 1822:** FPGA Bitstream Synthesis for Continuous EBM Constraints
+- **Exp 1823:** EBM-CoT GSM8K Final Evaluation with Continuous Self-Learning
+- **Exp 1824:** Milestone 2026.05.141 Retrospective
 
-### Phase 3: Hardware-Accelerated Simulation
-We simulate the physics-based probabilistic computing layer to prepare for future Extropic TSU integration.
-- Exp 1806: Denoising Thermodynamic Model (DTM) simulation using `thrml`.
-- Exp 1807: EDDP benchmarking of the DTM simulator vs MCMC.
+## Hardware Requirements
+- Dual RTX 3090 GPUs (Local Node)
+- Kria KV260 Vision AI Starter Kit
+- OSS-CAD-Suite (Yosys, NextPNR) for Bitstream Synthesis
 
-### Phase 4: Capstone E2E Validation and Retro
-We run the full verifying-repair pipeline across our mandated SOTA GGUF models using the new DPO-tuned adapter, KAN verifier, and partial-trace energy scores.
-- Exp 1808: Capstone E2E with Qwen3.6-35B-A3B.
-- Exp 1809: Capstone E2E with Gemma4-31B-it.
-- Exp 1810: Capstone E2E with Gemma4-26B-A4B-it.
-- Exp 1811: Milestone Retrospective.
-
-## 4. Hardware Requirements
-- Dual RTX 3090 CUDA for the SOTA GGUF inference and DPO training.
-- CPU for MILP solvers (Z3/PySAT) and `thrml` simulation.
-
-## 5. Dependency Graph
-Phase 1 tasks are sequential (1799 -> 1800 -> 1801 -> 1802). Phase 2 tasks are sequential (1803 -> 1804 -> 1805). Phase 3 tasks are sequential (1806 -> 1807). Phase 4 capstones require Phase 1 and 2 to be complete.
+## Dependency Graph
+Phase 1 -> Phase 2 -> Phase 3. 
+Exp 1815 requires Exp 1814 success.
+Exp 1816 requires Exp 1815 success.
+Exp 1823 depends on Exp 1817, 1820, and 1815.
