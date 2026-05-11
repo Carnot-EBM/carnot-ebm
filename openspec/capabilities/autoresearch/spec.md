@@ -3200,3 +3200,20 @@ Spec: REQ-RETRO-1784
 **Then** it writes `experiment_1784_retro.json` with an aggregated view of the milestone.
 
 Spec: SCENARIO-RETRO-1784
+
+### REQ-RETRO-1811: Milestone 1811 Operational Retrospective
+
+**Requirement:** The Exp 1811 retrospective runner MUST aggregate `honest_verdict` and key metrics from
+experiments 1799 through 1810 into `results/experiment_1811_retro.json`.
+
+Spec: REQ-RETRO-1811
+
+### SCENARIO-RETRO-1811: Exp 1811 Aggregates Phase-16 Results
+
+**Given** results for experiments 1799 to 1810 exist,
+
+**When** the retrospective runner executes,
+
+**Then** it writes `experiment_1811_retro.json` with an aggregated view of the Phase-16 milestone.
+
+Spec: SCENARIO-RETRO-1811
