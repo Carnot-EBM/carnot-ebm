@@ -1888,3 +1888,15 @@ Ripgrep is |
 | 2026-05-11 21:46 UTC | Exp 1873: Integrate Energy Matching with Flow mode | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-11 21:48 UTC | Exp 1873: Integrate Energy Matching with Flow mode | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-11 21:50 UTC | Exp 1873: Integrate Energy Matching with Flow mode | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-11 21:54 UTC | Exp 1874: Triple Integration E2E on MoE and Dense  | FAIL | Gemini CLI error: js:309138:14)
+    at async file:///usr/lib/node_modules/@goo |
+| 2026-05-11 21:56 UTC | Exp 1874: Triple Integration E2E on MoE and Dense  | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-11 21:58 UTC | Exp 1874: Triple Integration E2E on MoE and Dense  | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-11 22:01 UTC | Exp 1875: Milestone 146 Retrospective | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-11 22:03 UTC | Exp 1875: Milestone 146 Retrospective | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-11 22:07 UTC | Plan next milestone | FAIL | Gemini CLI error: js:309138:14)
+    at async file:///usr/lib/node_modules/@goo |
+| 2026-05-11 22:12 UTC | Plan next milestone | FAIL | Gemini CLI error: 309138:14)
+    at async file:///usr/lib/node_modules/@google |
+| 2026-05-11 22:16 UTC | Plan next milestone | FAIL | Gemini CLI error: js:309138:14)
+    at async file:///usr/lib/node_modules/@goo |
