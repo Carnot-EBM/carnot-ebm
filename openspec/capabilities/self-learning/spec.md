@@ -5543,3 +5543,22 @@ The deliverable SHALL be written to `results/experiment_1685_live_sota.json`.
 **When** `COCOMPipeline.update` is called
 **Then** the gradient `v` receives a correction of magnitude `0.4` along `constraint_grad`
 **And** the parameters are updated in the direction of `-constraint_grad` to actively reduce the violation.
+
+## REQ-LEARN-1854: Verification Learning (VL) Proxy for Constraint Satisfaction
+
+**Given** unlabelled continuous stream of constraints and model generations
+**When** the Verification Learning proxy evaluates the generations natively
+**Then** it MUST score constraint satisfaction directly without external labeled targets
+**And** the validation MUST write the proxy result to `results/experiment_1854_vl_proxy.json` with an `honest_verdict` and proxy scores.
+
+### REQ-LEARN-1854 Sub-requirements
+
+- REQ-LEARN-1854-1: `verification_learning.py` SHALL implement a `VerificationLearningProxy` with a proxy loss function based on constraint satisfaction.
+- REQ-LEARN-1854-2: The proxy loss function MUST evaluate unlabelled data natively.
+
+### SCENARIO-LEARN-1854: Verification Learning Proxy Execution
+
+**Given** an initialized `VerificationLearningProxy`
+**When** unlabelled model generation data is scored against constraints
+**Then** it calculates a native score and writes the `results/experiment_1854_vl_proxy.json` successfully.
+
