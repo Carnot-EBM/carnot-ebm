@@ -514,3 +514,25 @@ Results MUST be written to `results/experiment_1808_qwen.json`.
 
 **Spec traces:** REQ-E2E-1808
 
+### REQ-E2E-1810: Capstone End-to-end evaluation using Gemma4-26B
+
+Carnot MUST provide an E2E benchmark script to evaluate the flagship MoE model on the Phase 16 capstone pipeline.
+The implementation MUST use `unsloth/gemma-4-26B-A4B-it-GGUF` in MODEL_SPECS.
+Results MUST be written to `results/experiment_1810_gemma26.json`.
+It MUST record accuracy and energy metrics.
+
+**Acceptance criteria:**
+- Script `scripts/experiment_1810_capstone_gemma26.py` exists.
+- Records accuracy and energy metrics.
+- Artifact is written to `results/experiment_1810_gemma26.json`.
+
+### SCENARIO-E2E-1810: Capstone E2E Gemma4-26B Evaluation Execution
+
+**Given** the complete Phase 16 integrated pipeline
+**When** the benchmark script runs using `unsloth/gemma-4-26B-A4B-it-GGUF`
+**Then** it performs the execution evaluation
+**And** produces a valid `results/experiment_1810_gemma26.json` artifact containing accuracy and energy metrics.
+
+**Spec traces:** REQ-E2E-1810
+
+
