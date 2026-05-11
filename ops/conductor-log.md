@@ -1595,3 +1595,4 @@ web search: site:o |
 | 2026-05-11 00:53 UTC | Exp 1746: Profile EqM CUDA overhead with SOTA MoE | OK | 81 passed, 1 warning in 4.79s |
 | 2026-05-11 00:55 UTC | Exp 1747: gated on Exp 1746: Implement sparse upda | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1746-eqm-cuda-profile.honest_verdict (a |
 | 2026-05-11 00:57 UTC | Exp 1747: gated on Exp 1746: Implement sparse upda | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1746-eqm-cuda-profile.honest_verdict (a |
+| 2026-05-11 00:59 UTC | Exp 1747: gated on Exp 1746: Implement sparse upda | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1746-eqm-cuda-profile.honest_verdict (a |
