@@ -1684,3 +1684,4 @@ Ripgrep is |
 - Do NOT perform a self-review revision  |
 | 2026-05-11 08:49 UTC | Exp 1790: Symbolic-KAN Software Implementation | FAIL | Gemini CLI error: ith the reconciler.
 - Do NOT perform a self-review revision  |
+| 2026-05-11 08:53 UTC | Exp 1791: Symbolic-KAN RTL Specification for KV260 | OK | 81 passed, 1 warning in 5.31s |

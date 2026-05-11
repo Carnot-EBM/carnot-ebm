@@ -1,0 +1,27 @@
+{
+  "experiment": 1792,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-05-11",
+  "started_at": "2026-05-11T08:55:14.407498+00:00",
+  "finished_at": "2026-05-11T08:55:14.407498+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Exp 1792: gated on Exp 1791 honest_verdict in success: Synthesize Symbolic-KAN Bitfile",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp1791-symbolic-kan-rtl.honest_verdict (actual='success: RTL structural logic validated theoretically and mapped to Verilog/TCL specification for Symbolic-KAN.' in expected=['success', 'complete'])",
+  "gates_evaluated": [
+    {
+      "upstream": "exp1791-symbolic-kan-rtl",
+      "artifact_field": "honest_verdict",
+      "op": "in",
+      "expected": [
+        "success",
+        "complete"
+      ],
+      "actual": "success: RTL structural logic validated theoretically and mapped to Verilog/TCL specification for Symbolic-KAN.",
+      "passed": false,
+      "reason": "actual='success: RTL structural logic validated theoretically and mapped to Verilog/TCL specification for Symbolic-KAN.' in expected=['success', 'complete']"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
