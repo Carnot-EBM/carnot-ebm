@@ -5524,3 +5524,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-11: Exp 1848: Continuous Self-Learning loop with Epsilon-Constraint on Gemma4-26B (⚠️ Research Finding) — honest_verdict=epsilon_learning_success; results/experiment_1848_gemma26_epsilon.json
 - 2026-05-11: Exp 1849: Semantic Pruning in Continual Energy-Based Models (✅ Complete) — honest_verdict=cocom_pruning_implemented; results/experiment_1849_cocom_pruning.json
 - 2026-05-11: Exp 1850: Milestone 2026.05.143 Retrospective (✅ Complete) — honest_verdict=milestone_complete; results/experiment_1850_retro.json
+- 2026-05-11: Exp 1850: THRML/Carnot Parity Sweep at n=128 (continues n=8/16/32/64 sweep) (❌ Failed) — honest_verdict=complete: thrml_carnot_parity_n128_gate_failed_kl_0.28; results/experiment_1850_thrml_parity_n128.json
