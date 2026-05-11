@@ -1736,3 +1736,4 @@ Ripgrep is |
 | 2026-05-11 11:05 UTC | Plan milestone 2026.05.140 | OK | 11 tasks proposed |
 | 2026-05-11 11:07 UTC | Milestone 2026.05.140 activated | OK | 11 tasks queued |
 | 2026-05-11 11:09 UTC | Exp 1803: Prototype EBM-CoT Langevin updates for l | DOOMED_RERUN_BLOCK | 3 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-11 11:11 UTC | Exp 1803: Prototype EBM-CoT Langevin updates for l | DOOMED_RERUN_BLOCK | 3 prior failure(s) match this task's scope but prior_failures field is missing o |
