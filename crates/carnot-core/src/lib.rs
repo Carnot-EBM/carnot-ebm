@@ -43,6 +43,7 @@ pub mod error;
 pub mod init;
 pub mod serialize;
 pub mod verify;
+pub mod verification_learning;
 
 pub use error::CarnotError;
 
