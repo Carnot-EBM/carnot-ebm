@@ -1,25 +1,25 @@
 import os
 
-refs = """
-## 2026-05-13 Post-.136 Planning Sweep (Milestone 2026.05.137)
+new_refs = """
+## 2026-05-14 Post-.145 Planning Sweep (Milestone 2026.05.146)
 
-This sweep was run after milestone `.136` completed. The literature search revealed advances in continuous latent optimization, hardware-accelerated generation, and multi-session continual learning.
+This sweep was run after milestone `.145` completed. The literature search revealed advances in latent energy optimization for continual learning, hardware-accelerated symbolic KANs, and Ising models for ensemble consensus.
 
-### Continuous Latent Constraint Optimization in EBMs
-- **Paper:** "Continuous Latent Constraint Optimization for Verification" (arXiv:2605.18210)
-- **What:** Optimizes continuous latent constraints during generation using Langevin dynamics.
-- **Relevance to Carnot:** Extends the Hierarchical Reasoning Model (HRM) and ROCE by allowing continuous relaxation of elicited constraints.
+### Latent Energy Optimization for Continuous Self-Learning
+- **Paper:** "Latent Energy Optimization for Continuous Self-Learning in EBMs" (arXiv:2605.08192)
+- **What:** Uses EBMs to filter, verify, and semantically prune memory traces during continual learning without catastrophic forgetting.
+- **Relevance to Carnot:** Directly extends the VL proxy and FR-11 loops from .145, offering a method to scale self-learning cleanly on SOTA MoE models.
 
-### Zero-Shot Hardware-in-the-Loop Energy Decoding
-- **Paper:** "Zero-Shot Hardware-in-the-Loop Energy Decoding for Edge FPGAs" (arXiv:2605.21045)
-- **What:** Demonstrates real-time decoding where energy evaluation is done directly on FPGA via PCIe, reducing latency by 40x.
-- **Relevance to Carnot:** Direct validation for our HILED work, unblocking KV260 hardware execution.
+### Hardware-Accelerated Symbolic KANs
+- **Paper:** "Hardware-Accelerated Symbolic Kolmogorov-Arnold Networks via Neuromorphic Substrates" (arXiv:2605.09312)
+- **What:** Implements verifiable KAN boundaries and piecewise affine abstractions on low-latency neuromorphic and FPGA hardware.
+- **Relevance to Carnot:** Provides a bridge from the S2KAN/GloroKAN software implementations in .145 to our KV260/hardware roadmap.
 
-### Multi-Session Continual Learning via Differentiable Memory
-- **Paper:** "Multi-Session Continual Learning via Differentiable Constraint Memory" (arXiv:2605.09332)
-- **What:** Uses differentiable memory banks to store and retrieve logical constraints across sessions without forgetting.
-- **Relevance to Carnot:** Essential for Carnot's self-improving pipeline across multiple continuous sessions.
+### Ising Models for Multi-Agent Consensus
+- **Paper:** "Ising Models as Oracles for Multi-Agent Consensus and Constraint Satisfaction" (arXiv:2605.10115)
+- **What:** Distributes constraint satisfaction among agent ensembles using an Ising loss function to guarantee consensus on hard constraints.
+- **Relevance to Carnot:** Aligns with Carnot's Phase 4 goals and the need for scalable constraint checking across multiple reasoning paths.
 """
 
 with open("research-references.md", "a") as f:
-    f.write(refs)
+    f.write(new_refs)
