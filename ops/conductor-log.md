@@ -1875,3 +1875,5 @@ Ripgrep is |
 | 2026-05-11 21:02 UTC | Exp 1866: Implement Latent Energy Optimization for | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-11 21:04 UTC | Exp 1866: Implement Latent Energy Optimization for | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-11 21:06 UTC | Exp 1867: Scale FR-11 self-learning with latent pr | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1866-latent-energy-pruning) |
+| 2026-05-11 21:09 UTC | Exp 1868: Evaluate catastrophic forgetting on the  | OK | 81 passed, 1 warning in 5.06s |
+| 2026-05-11 21:11 UTC | Exp 1867: Scale FR-11 self-learning with latent pr | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1866-latent-energy-pruning) |
