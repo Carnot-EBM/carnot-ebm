@@ -5498,3 +5498,15 @@ The deliverable SHALL be written to `results/experiment_1685_live_sota.json`.
 **Given** an instantiated `TelemetryStreamer`
 **When** multiple simulated inference threads submit results
 **Then** the streamer processes them asynchronously without dropping items and outputs the results JSON.
+
+## REQ-LEARN-1754: Continual Memory Semantic Distillation
+
+**Given** a ContinualMemory containing memory states
+**When** distill(n_clusters) is called
+**Then** memory states MUST be grouped by semantic clustering
+**And** only representative vectors for each cluster MUST be retained
+
+### SCENARIO-LEARN-1754: Memory states are pruned to requested clusters
+**Given** 100 memory states representing 5 semantic groups
+**When** distill(n_clusters=5) is called
+**Then** exactly 5 states remain
