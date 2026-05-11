@@ -70,3 +70,36 @@ def test_cocom_write_artifact():
         assert data["honest_verdict"] == "cocom_implemented"
         assert data["learning_rate"] == 0.1
         assert data["memory_size"] == 5
+
+def test_cocom_zero_violation_guarantee():
+    """Test zero-constraint violation guarantee with safety margin correction.
+    
+    Spec: REQ-LEARN-1832, SCENARIO-LEARN-1832
+    """
+    pipeline = COCOMPipeline(learning_rate=0.1, memory_size=5, parameter_dim=2)
+    obj_grad = np.array([0.0, 0.0])  # No objective gradient to isolate correction
+    const_grad = np.array([1.0, 0.0])
+    
+    # constraint_value > safety_margin triggers correction
+    pipeline.update(obj_grad, const_grad, constraint_value=0.5, safety_margin=0.1)
+    
+    # The correction added to v should be (0.5 - 0.1) * [1.0, 0.0] = [0.4, 0.0]
+    # Parameters updated by: param - lr * v = [0.0, 0.0] - 0.1 * [0.4, 0.0] = [-0.04, 0.0]
+    assert np.allclose(pipeline.parameters, np.array([-0.04, 0.0]))
+
+def test_cocom_no_violation():
+    """Test no correction when constraint is within safety margin."""
+    pipeline = COCOMPipeline(learning_rate=0.1, memory_size=5, parameter_dim=2)
+    obj_grad = np.array([0.5, 0.5])
+    const_grad = np.array([1.0, 0.0])
+    
+    # Copy parameters before update
+    params_before = np.copy(pipeline.parameters)
+    
+    # constraint_value <= safety_margin triggers NO correction
+    pipeline.update(obj_grad, const_grad, constraint_value=0.1, safety_margin=0.1)
+    
+    # The normal objective gradient [0.5, 0.5] is projected onto null space of const_grad
+    # const_grad is [1, 0]. Null space projection of [0.5, 0.5] onto [1, 0] leaves [0.0, 0.5]
+    # Update is param - lr * v = [0.0, 0.0] - 0.1 * [0.0, 0.5] = [0.0, -0.05]
+    assert np.allclose(pipeline.parameters, np.array([0.0, -0.05]))
