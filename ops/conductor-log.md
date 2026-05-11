@@ -1806,3 +1806,4 @@ Ripgrep is |
 | 2026-05-11 14:28 UTC | Exp 1828: gated on Exp 1827 honest_verdict in succ | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1827-ebrm-latent-trajectory) |
 | 2026-05-11 14:28 UTC | Exp 1830: Energy-Guided Vision-Language Decoding | DOOMED_RERUN_BLOCK | 3 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-11 14:30 UTC | Exp 1830: Energy-Guided Vision-Language Decoding | DOOMED_RERUN_BLOCK | 3 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-11 14:36 UTC | Exp 1831: COCO-M Online Convex Optimization with M | OK | 81 passed, 1 warning in 4.75s |
