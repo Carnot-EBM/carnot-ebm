@@ -81,3 +81,24 @@ target state
 **Then** it writes a JSON artifact with CPU latency, GPU availability, selected
 device metadata, and a backend verdict
 **And** it records GPU latency and parity only when a GPU backend is available.
+
+### REQ-SAMPLE-1746: EqM Sampler Profiling Experiment
+
+Carnot MUST provide an experiment script `scripts/experiment_1746_eqm_profile.py`
+that profiles the EqM test-time sampler using `torch.profiler` to identify
+the latency bottleneck during gradient updates.
+
+Sub-requirements:
+- REQ-SAMPLE-1746-1: The script SHALL configure `MODEL_SPECS` to use
+  `unsloth/Qwen3.6-35B-A3B-GGUF`.
+- REQ-SAMPLE-1746-2: The script SHALL implement PyTorch/CUDA profiling around
+  the EqM sampling process to capture timing metrics.
+- REQ-SAMPLE-1746-3: The script SHALL write `results/experiment_1746_profile.json`
+  with the captured latency and profiler metrics.
+
+### SCENARIO-SAMPLE-1746: Exp 1746 Profiler Extracts Timing Metrics
+
+**Given** the Exp 1746 EqM profile script
+**When** it is executed
+**Then** it successfully runs the EqM sampler under `torch.profiler`
+**And** it writes a valid JSON artifact with timing metrics.
