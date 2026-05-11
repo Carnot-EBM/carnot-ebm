@@ -5483,3 +5483,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-11: Exp 1811: Milestone .139 Retrospective (⚠️ Research Finding) — honest_verdict=phase_16_aggregated; results/experiment_1811_retro.json
 
 - 2026-05-11: Milestone 2026.05.139 Retrospective: Completed 22 experiments in 40.1 minutes. Synthesis pipeline is the primary bottleneck. GPU utilization was efficient.
+- 2026-05-11: Exp 1806: Implement Semantic Pruning in Continuous EBM Replay Buffer (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_1806_pruning.json
