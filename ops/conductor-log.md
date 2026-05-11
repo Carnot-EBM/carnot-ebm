@@ -1612,3 +1612,4 @@ Ripgrep is |
 | 2026-05-11 03:18 UTC | Exp 1756: Evaluate multi-agent orchestration on Pu | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-11 03:21 UTC | Exp 1756: Evaluate multi-agent orchestration on Pu | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-11 03:23 UTC | Exp 1756: Evaluate multi-agent orchestration on Pu | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-11 03:25 UTC | Exp 1757: E2E Pipeline Live SOTA Eval (EqM + Symbo | DOOMED_RERUN_BLOCK | 3 prior failure(s) match this task's scope but prior_failures field is missing o |
