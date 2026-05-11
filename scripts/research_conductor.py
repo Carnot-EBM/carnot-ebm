@@ -2443,17 +2443,42 @@ def _run_operational_retrospective(push: bool = True) -> bool:
 
     # Build the retrospective prompt
     timing_summary = ""
+    # compute_bound_count is referenced by the prompt + pre-fill skeleton
+    # below; define unconditionally at function scope so it's always
+    # bound (even when experiment_times is empty).
+    compute_bound_count = sum(
+        1 for _e in experiment_times if _e.get("compute_bound")
+    )
     if experiment_times:
         total_min = sum(e["duration_min"] for e in experiment_times)
         slowest = sorted(experiment_times, key=lambda x: x["duration_min"], reverse=True)[:5]
         timing_summary = (
-            f"Total milestone wall time: {total_min:.0f} minutes ({total_min / 60:.1f} hours)\n"
+            f"MILESTONE-SCOPED DATA (commits since activation of {current}):\n"
+            f"Total milestone wall time: {total_min:.0f} minutes "
+            f"({total_min / 60:.1f} hours)\n"
             f"Experiments completed: {len(experiment_times)}\n"
-            f"Average per experiment: {total_min / len(experiment_times):.0f} minutes\n"
-            f"Slowest experiments:\n"
+            f"Compute-bound experiments (GGUF/CUDA/requires_gpu): "
+            f"{compute_bound_count}\n"
+            f"Synthesis-only experiments: "
+            f"{len(experiment_times) - compute_bound_count}\n"
+            f"Average per experiment: "
+            f"{total_min / len(experiment_times):.0f} minutes\n"
+            f"Slowest experiments (compute_bound flag in [..]):\n"
         )
         for e in slowest:
-            timing_summary += f"  - {e['duration_min']:.0f}min: {e['experiment']}\n"
+            cb_flag = (
+                "compute_bound" if e.get("compute_bound") else "synthesis_only"
+            )
+            timing_summary += (
+                f"  - {e['duration_min']:.0f}min [{cb_flag}]: {e['experiment']}\n"
+            )
+    else:
+        timing_summary = (
+            "MILESTONE-SCOPED DATA: no experiment commits found since "
+            f"activation of {current}. The retrospective should report "
+            "this honestly rather than infer numbers from training "
+            "distribution.\n"
+        )
 
     retro_prompt = (
         f"You are working on the Carnot EBM framework in {PROJECT_ROOT}.\n\n"

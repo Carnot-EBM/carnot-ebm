@@ -18,11 +18,11 @@ call. No fine-tuning. No access to model weights.
 Rust + Python/JAX, Apache 2.0, local editable install via `pip install -e ".[dev]"`.
 The public PyPI package remains a Phase-1 ship blocker as of Exp 1582.
 
-Current public research record: **2,049 experiment records tracked through Exp
-1721**. `research-complete.yaml` currently archives **1,872** task records
-across **146** artifact-backed completed milestone records through
-2026.05.132; checked-in result artifacts and `ops/changelog.md` extend through
-milestone 2026.05.132 on 2026-05-10.
+Current public research record: **2,072 experiment records tracked through Exp
+1745**. `research-complete.yaml` currently archives **1,872** task records
+across **148** artifact-backed completed milestone records through
+2026.05.134; checked-in result artifacts and `ops/changelog.md` extend through
+milestone 2026.05.134 on 2026-05-10.
 
 Milestone .106 delivered the critical fix to thinking-mode certificate
 generation: Exp 1366 (CRANE tag-first prefix injection) reached
@@ -35,7 +35,7 @@ continuous self-learning v3 with delta **+1.596429**, non-forgetting rate
 repair pipeline with `certificate_parse_rate=1.0`, `repair_hint_precision=1.0`,
 and `semantic_validation_pass_rate=0.59`; Exp 1388 extended FR-11 self-learning
 v4 to **59 fresh-verified cases** (up from 4 in .106) with self-learning delta
-**+1.791464** and `headline_result_allowed=true`; Exp 1380 produced the arXiv
+**+1.791484** and `headline_result_allowed=true`; Exp 1380 produced the arXiv
 v11 bundle (submission-ready archive, manual upload required); Exp 1379
 completed the paper integrity audit (5/5 issues resolved). Milestone .108
 completed **12 of 13** criteria: Exp 1404 deployed DVI v2 + SECL combined
@@ -90,13 +90,13 @@ artifacts into **547** signal, **138** noise, and **447** ambiguous entries;
 Exp 1455 trimmed active known-issues priorities **24 -> 7**; Exps 1456, 1457,
 and 1458 retired GRPO/VPRM, WOPR puzzle-cartridge, and HardNet++/DSP variant
 lineages; Exp 1459 narrowed self-learning to the Exp 1447 verified-memory
-growth pivot; Exp 1460 narrowed active hardware tracks to **3**; Exp 1461 set
-**6** comparator cites, **1** retirement, and **3** watchlist items; Exp 1462
-narrowed paper-v6 to **4** anchored claims. Exp 1463 repaired the live local
+growth pivot; Exp 1480 narrowed active hardware tracks to **3**; Exp 1481 set
+**6** comparator cites, **1** retirement, and **3** watchlist items; Exp 1482
+narrowed paper-v6 to **4** anchored claims. Exp 1483 repaired the live local
 SOTA GGUF runtime by resolving CUDA library paths and downloading the missing
-Gemma4-26B GGUF; Qwen3.6-35B-A3B completed a live smoke inference. Exp 1464
+Gemma4-26B GGUF; Qwen3.6-35B-A3B completed a live smoke inference. Exp 1484
 then showed validation-error retry context produced **0.0pp** acceptance lift
-on the bounded live test and retired that repair-executor line. Exp 1465
+on the bounded live test and retired that repair-executor line. Exp 1485
 adopted one minimal BEAVER-style deterministic-bounds smoke and deferred broad
 VNN-COMP integration. Milestone .113 completed **12 of 12** criteria: live
 SOTA top-k/logit telemetry became available, HALT/Spilled Energy telemetry was
@@ -378,7 +378,7 @@ experiment artifact under `results/`.
 | .104 hardware/parity audits | THRML import blocked by missing `equinox`; p-bit dual-BRAM packet v2 keeps reuse=4 KL **0.000412** to CPU Gibbs; external dependency/Kona parity claims remain disallowed | Exps 1347-1349 |
 | Milestone .104 status | **9/12 criteria met**; dynamic grammar, environment gate, replay self-learning, and hardware accounting advanced, while triggered SOTA certificates and semantic validator execution remained missing/gated | Exp 1350 |
 | CRANE tag-first prefix injection, full-scale 100-case pipeline | **certificate_parse_rate=1.0** on 100 FoVer cases; repair_hint_precision=1.0; semantic_validation_pass_rate=0.59; full_pipeline_pass_rate=0.29; mcs_repair_localization_rate=1.0; headline_result_allowed=true | Exp 1382 |
-| FR-11 continuous self-learning v4 (DVI + replay) | **59 fresh-verified cases** (up from 4 in .106); self-learning delta **+1.791464**; non-forgetting rate **1.0**; 63 promoted, 41 demoted memory entries; headline_result_allowed=true | Exp 1388 |
+| FR-11 continuous self-learning v4 (DVI + replay) | **59 fresh-verified cases** (up from 4 in .106); self-learning delta **+1.791484**; non-forgetting rate **1.0**; 63 promoted, 41 demoted memory entries; headline_result_allowed=true | Exp 1388 |
 | DVI discriminative verifier training v1 | AUROC delta **+0.003486** (0.3910 → 0.3945) on 7,059 FoVer training rows; checkpoint deployed; `dvi_deployed=true` | Exp 1381 |
 | arXiv v11 bundle + paper integrity audit | Paper integrity audit: **5/5** issues resolved; v11 bundle compiled; submission-ready archive at `carnot-arxiv-v11-20260505.tar.gz`; manual upload required | Exps 1379/1380 |
 | manipulable-signal-dependency constraint template (Issue #6) | `manipulable_signal_dependency` added to ConstraintTemplateLibrary; **114 tests** pass; `CaseMemoryTemplateWiring` wired for `manipulable_*`, `single_source_*`, `rag*` violation types | 2026-05-05 |
@@ -421,14 +421,14 @@ experiment artifact under `results/`.
 | Artifact signal/noise classifier | **1,132** artifacts classified: **547** signal, **138** noise, **447** ambiguous; summary and CSV written for scope control | Exp 1454 |
 | Known-issues priority audit | Active mandatory priorities trimmed **24 -> 7** (**70.83%** reduction), clearing the .112 scope-reduction directive | Exp 1455 |
 | Lineage retirements | GRPO/VPRM, WOPR puzzle-cartridge, and HardNet++/DSP variant expansion retired; demo assets and conservative repair lessons preserved | Exps 1456-1458 |
-| Local SOTA GGUF runtime repair | CUDA library path repaired, missing Gemma4-26B GGUF downloaded, and Qwen3.6-35B-A3B completed live local smoke inference on RTX 3090 | Exp 1463 |
-| Validation-error context A/B | Live Qwen repair test evaluated 1 case with **0.0pp** acceptance/schema/semantic lift; repair-executor retry-context lineage retired | Exp 1464 |
-| Paper and benchmark scope narrowing | Paper-v6 narrowed to **4** anchored claims; external verifier benchmark fit adopts one minimal BEAVER-style bounds smoke and defers broad VNN-COMP | Exps 1462/1465 |
-| Milestone .112 status | **14/14 criteria met**; scope reduction satisfied, runtime recovered, repair context retired, and paper/hardware/comparator/benchmark claims narrowed | Exp 1466 |
+| Local SOTA GGUF runtime repair | CUDA library path repaired, missing Gemma4-26B GGUF downloaded, and Qwen3.6-35B-A3B completed live local smoke inference on RTX 3090 | Exp 1483 |
+| Validation-error context A/B | Live Qwen repair test evaluated 1 case with **0.0pp** acceptance/schema/semantic lift; repair-executor retry-context lineage retired | Exp 1484 |
+| Paper and benchmark scope narrowing | Paper-v6 narrowed to **4** anchored claims; external verifier benchmark fit adopts one minimal BEAVER-style bounds smoke and defers broad VNN-COMP | Exps 1482/1485 |
+| Milestone .112 status | **14/14 criteria met**; scope reduction satisfied, runtime recovered, repair context retired, and paper/hardware/comparator/benchmark claims narrowed | Exp 1486 |
 | Milestone .113 status | **12/12 criteria met**; raw live telemetry preserved, telemetry headline claim blocked, FR-11 verified-memory growth preserved, and hardware/THRML claims kept source-level or simulator-only | Exp 1478 |
 | Live SOTA balanced telemetry v2 | **36** Qwen3.6-35B-A3B rows with logits/top-k logprobs, balanced labels, and superficial baselines recorded | Exp 1480 |
 | Semantic Energy headline audit | Semantic signal AUROC **1.0** matched a lexical-overlap baseline **1.0**; headline telemetry lineage retired as confounded | Exp 1481 |
-| BEAVER-lite live prefix calibration | **18** constraints, sound bounds, **0** empirical violations, p50 slack **0.0000218**, live Exp 1480 + Exp 1468 logprob provenance | Exp 1482 |
+| BEAVER-lite live prefix calibration | **18** constraints, sound bounds, **0** empirical violations, p50 slack **0.0000218**, live Exp 1480 + Exp 1488 logprob provenance | Exp 1482 |
 | FR-11 query-time memory policy | Bounded replay task success **0.5 -> 1.0** with **0** soundness mistakes; completeness audit reduced false rejects **12 -> 0** | Exps 1484/1485 |
 | CCTU executable constraint benchmark | **20** live local-SOTA tool-use cases; verifier catch rate **1.0**, false-accept rate **0.0**, final-answer validity **0.35** | Exp 1486 |
 | V_1 pairwise self-verification audit | Pairwise accuracy **0.05** vs executable energy ranking **1.0** and superficial baselines **1.0**; promotion path not allowed | Exp 1487 |
@@ -476,10 +476,10 @@ experiment artifact under `results/`.
 | Milestone .124 closeout (DualGPURunner Profiling) | Both RTX 3090s completely idle at 0% utilization. Estimated 40% time savings recoverable via DualGPURunner parallelization and addressing bottlenecks | Exp 1626 |
 | Probability Calibration Verifier | Opt-in verifier scores explicit probability claims against simple reference-class evidence; returns structured `VerdictRecord` | Exp 1414 |
 | KANELÉ Validation & Routing | KANELÉ RTL linting, latency accounting vs Ising baseline; adaptive energy reconfiguration and EBM vs LLM Task Allocation Router | Exps 1622-1625 |
-| Milestone .132 closeout | Analyzed 1388 min wall time / 253 experiments. Both RTX 3090s completely idle at 0% utilization. | Exp 1721 |
+| Milestone .134 closeout | Analyzed 1388 min wall time / 253 experiments. Both RTX 3090s completely idle at 0% utilization. | Exp 1745 |
 | Pi-net Projection & ConsFormer | Prototyped Pi-net style differentiable projection layer for continuous latents and a ConsFormer-style refiner | Exps 1633-1635 |
 | SMGI & Energy-Guided Decoding | Integrated SMGI certified update logic and implemented EGD using mandated SOTA GGUFs | Exps 1631/1636 |
-| Current Python test collection | **23,849** Python tests collected; collection-only snapshot, not a full-suite pass claim | 2026-05-10 collection run |
+| Current Python test collection | **24,113** Python tests collected; collection-only snapshot, not a full-suite pass claim | 2026-05-10 collection run |
 | Local Claude/Codex usage snapshot | Codex reads the newest local `token_count` event; Claude aggregates local token usage and reads only subscription/tier metadata from credentials; free-form quota prose is ignored instead of guessed; focused regression tests pass | 2026-05-04 changelog |
 
 Deeper analysis of these — including everything that **didn't** work and
@@ -577,6 +577,10 @@ Semantic verifier v2 reuses the fixed Exp 219 cohort and trims Qwen false positi
 On **116** held-out cases against **344** learning cases, `no_learning`, `tracker_only`, `case_memory`, and `case_memory_plus_policy` all finish at **34.48%** success with **8** false positives. The latest positive signal is narrower and more honest than Exp 223: `case_memory` materially improves retrieval hit rate and precision, but those better matches still do not convert into held-out task gains under the zero-additional-false-positive budget.
 
 ### Latest follow-ons
+- **Constraint-Informed KAN (CIKAN):** FourierCSP constraint compiled into fixed CIKAN boundary and preserved - CIKAN Boundary
+- **EqM Sampler GPU Integration:** Equilibrium Matching (EqM) Gradient Sampler converged faster on GPU - GPU EqM
+- **Live Telemetry Streamer:** Live Telemetry Streamer for Continual Learning load test successful - Streamer load tested
+- **Milestone .134 closeout:** Analyzed wall time / experiments for .134 with phase_4_synthesis_complete - Phase 4 synthesis
 
 - **Semantic calibration + live rerun (Exp 232 / Exp 235):** the new calibration corpus contains **568** rows (**155 TP / 33 FP / 221 FN / 159 TN**), and the semantic-verifier-v2 rerun keeps verify-only explicitly unjustified even after cleaner thresholds and abstention logic.
 - **Spec-aware code verification (Exp 236 / VERIFY-036):** the explicit code-spec corpus now covers **164** HumanEval tasks with **194** trace links, **8** official-test-miss traces, and **5** repaired traces, and the packaged verifier can now combine official tests, PBT, and explicit spec clauses through `verify_generated_code_with_specs()`.
