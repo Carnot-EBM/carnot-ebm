@@ -1704,3 +1704,5 @@ Ripgrep is |
 | 2026-05-11 09:45 UTC | Milestone 2026.05.139 activated | OK | 13 tasks queued |
 | 2026-05-11 09:47 UTC | Exp 1799: Implement partial-trace energy scoring p | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-11 09:49 UTC | Exp 1799: Implement partial-trace energy scoring p | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-11 09:51 UTC | Exp 1799: Implement partial-trace energy scoring p | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-11 09:53 UTC | Exp 1800: gated on Exp 1799 accuracy_delta>0: Gene | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1799-partial-trace-energy) |
