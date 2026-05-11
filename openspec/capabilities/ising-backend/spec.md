@@ -573,3 +573,22 @@ Exp 1675 SHALL write `results/experiment_1675_lagonn.json`, show the LagONN
 multiplier solver reaching zero violated clauses within the configured step
 budget, compare it against the fixed soft-penalty baseline, and keep
 `hardware_claim_allowed=false`.
+
+### REQ-ISING-043
+
+**Ising Consensus Protocol among multiple agent hypotheses.**
+
+**Rationale:**
+Scaling constraint checking across multiple reasoning paths. Implement a consensus protocol among multiple agent hypotheses that minimizes an Ising loss function.
+
+**Acceptance criteria:**
+- The protocol SHALL generate 5 diverse SOTA answers.
+- The protocol SHALL encode their conflicts as an Ising graph.
+- The protocol SHALL solve the graph to find the minimum-energy consensus.
+- The protocol SHALL write the output to `results/experiment_1872_ising_consensus.json`.
+
+**Implementation:** `python/carnot/pipeline/ising_consensus.py`
+
+### SCENARIO-ISING-043
+
+**Ising Consensus artifact:** Given 5 diverse SOTA answers, their conflicts are encoded as an Ising graph, solved for minimum-energy consensus, and results are written to `results/experiment_1872_ising_consensus.json`.
