@@ -29,6 +29,7 @@ def test_rust_available_when_extension_present() -> None:
     assert compat.RustKv260PottsSampler is not None
     assert compat.RustLangevinSampler is not None
     assert compat.RustHMCSampler is not None
+    assert compat.RustS2KANLayer is not None
 
 
 def test_rust_fallback_when_extension_missing() -> None:

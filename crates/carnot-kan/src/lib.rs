@@ -12,6 +12,8 @@
 //!
 //! Spec: REQ-CORE-001, REQ-TIER-005, REQ-TIER-006
 
+pub mod s2kan;
+
 use carnot_core::{CarnotError, EnergyFunction, Float};
 use ndarray::{Array1, ArrayView1};
 
