@@ -493,3 +493,24 @@ Results MUST be written to `results/experiment_1789_math_benchmark.json`.
 **And** produces a valid `results/experiment_1789_math_benchmark.json` artifact containing machine-checkable proof success rate.
 
 **Spec traces:** REQ-BENCH-1789
+
+### REQ-E2E-1808: Capstone End-to-end evaluation using Qwen3.6-35B-A3B
+
+Carnot MUST provide an E2E benchmark script to evaluate the flagship MoE model, incorporating the DPO adapter and KAN MILP verifier.
+The implementation MUST use `unsloth/Qwen3.6-35B-A3B-GGUF` in MODEL_SPECS.
+Results MUST be written to `results/experiment_1808_qwen.json`.
+
+**Acceptance criteria:**
+- Script `scripts/experiment_1808_capstone_qwen.py` exists.
+- Records repair success rate.
+- Artifact is written to `results/experiment_1808_qwen.json`.
+
+### SCENARIO-E2E-1808: Capstone E2E Qwen MoE Evaluation Execution
+
+**Given** the complete Phase 16 integrated pipeline with DPO adapter and KAN MILP verifier
+**When** the benchmark script runs using `unsloth/Qwen3.6-35B-A3B-GGUF`
+**Then** it performs the execution evaluation
+**And** produces a valid `results/experiment_1808_qwen.json` artifact containing repair success rate.
+
+**Spec traces:** REQ-E2E-1808
+
