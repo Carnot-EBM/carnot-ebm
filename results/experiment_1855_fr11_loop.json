@@ -1,0 +1,24 @@
+{
+  "experiment": 1855,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-05-11",
+  "started_at": "2026-05-11T18:55:23.412009+00:00",
+  "finished_at": "2026-05-11T18:55:23.412009+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Exp 1855: Run FR-11 continuous self-learning loop with VL proxy on unsloth/gemma-4-31B-it-GGUF",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp1854-vl-proxy.status (actual=None == expected='success')",
+  "gates_evaluated": [
+    {
+      "upstream": "exp1854-vl-proxy",
+      "artifact_field": "status",
+      "op": "==",
+      "expected": "success",
+      "actual": null,
+      "passed": false,
+      "reason": "actual=None == expected='success'"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
