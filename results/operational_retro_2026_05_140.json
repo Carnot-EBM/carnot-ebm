@@ -1,0 +1,51 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.140",
+  "generated_at": "2026-05-11T12:15:50Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 45.8,
+  "experiments_completed": 19,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "-0400 [conductor] Exp 1806: Implement Semantic Pruning in Continuous EBM Replay ",
+      "duration_minutes": 9.0,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1813: Milestone 2026.05.140 Retrospective",
+      "duration_minutes": 6.9,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1808: Evaluate CIKAN for Symbolic Equation Extraction",
+      "duration_minutes": 4.1,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1811: Analyze cross-layer energy correlation for early exi",
+      "duration_minutes": 3.8,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Doomed-rerun block: Exp 1803: Prototype EBM-CoT Langevin updat",
+      "duration_minutes": 2.0,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Analyzed 45.8 minutes wall time for 19 completed experiments. All 19 tasks were synthesis-only, and GPUs were correctly idle. No data available this milestone for compute-bound tasks.",
+  "bottlenecks_identified": [
+    "Synthesis-only tasks were the primary drivers of wall time, specifically Exp 1806 which took 9.0 minutes."
+  ],
+  "improvements_suggested": [
+    "Focus on optimizing the synthesis pipeline as synthesis-only tasks account for 100% of the workload this milestone."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Profile and optimize the synthesis pipeline to reduce peak latencies like the 9-minute run.",
+    "Ensure fast-pathing for synthesis tasks to lower average per-experiment latency.",
+    "Maintain the current doomed-rerun failure fast execution to continue saving wall-time."
+  ],
+  "estimated_time_savings_pct": 20,
+  "meta_reflection": "The milestone was dominated by synthesis-only tasks, operating correctly without GPU invocation. The doomed-rerun pre-launch check successfully saved time by blocking Exp 1803."
+}
