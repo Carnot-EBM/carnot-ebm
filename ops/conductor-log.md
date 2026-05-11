@@ -1844,3 +1844,4 @@ Ripgrep is |
 | 2026-05-11 18:08 UTC | Exp 1849: Phase 4 Active Inference — verifier-as-f | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-11 18:13 UTC | Exp 1850: THRML/Carnot Parity Sweep at n=128 (cont | OK | 81 passed, 1 warning in 5.34s |
 | 2026-05-11 18:21 UTC | Exp 1851: NLA-Class 16th Verifier Prototype — whit | OK | 81 passed, 1 warning in 5.54s |
+| 2026-05-11 18:26 UTC | Exp 1852: Research Findings Audit — re-read .130-. | OK | 81 passed, 1 warning in 4.84s |
