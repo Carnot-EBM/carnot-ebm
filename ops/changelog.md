@@ -5538,3 +5538,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-11: Exp 1858: GloroKAN integration - forward pass Lipschitz approximation (✅ Complete) — honest_verdict=complete: glorokan_lipschitz_bounds_implemented; results/experiment_1858_glorokan.json
 - 2026-05-11: Exp 1858: GloroKAN integration - forward pass Lipschitz approximation (✅ Complete) — honest_verdict=complete: glorokan_lipschitz_bounds_implemented; results/experiment_1858_glorokan.json
 - 2026-05-11: Exp 1859: Formal verification of S2KAN with Z3 (Python/Rust bridging) (✅ Complete) — honest_verdict=complete: s2kan_z3_transpilation_and_verification; results/experiment_1859_z3_verify.json
+- 2026-05-11: Exp 1861: Cross-language (Rust/Python) equivalence test for Verification Learning (⚠️ Research Finding) — honest_verdict=equivalence_verified; results/experiment_1861_equivalence.json
