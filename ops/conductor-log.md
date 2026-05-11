@@ -1665,3 +1665,4 @@ Ripgrep is |
 | 2026-05-11 07:39 UTC | Exp 1779: gated on Exp 1778 honest_verdict in succ | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1778-kv260-bitfile-synthesis) |
 | 2026-05-11 07:39 UTC | Exp 1780: PyO3/Rust HILED binding boilerplate | FAIL | Gemini CLI error: ith the reconciler.
 - Do NOT perform a self-review revision  |
+| 2026-05-11 07:44 UTC | Exp 1781: Hardware vs Software Latency and Energy  | OK | 84 passed, 1 warning in 4.88s |
