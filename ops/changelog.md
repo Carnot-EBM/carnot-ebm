@@ -5431,3 +5431,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-11: Exp 1750: Evaluate Symbolic-KAN constraint accuracy vs CIKAN (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_1750_symbolic_eval.json
 - 2026-05-11: Exp 1751: End-to-End Symbolic-KAN verifiable tier integration (⚠️ Research Finding) — honest_verdict=symbolic_kan_e2e_integrated; results/experiment_1751_e2e.json
 - 2026-05-11: Exp 1752: Expand LTLZinc benchmark to include spatial reasoning tasks (✅ Complete) — honest_verdict=complete: ltlzinc_spatial_benchmark_ready; results/experiment_1752_spatial.json
+- 2026-05-11: Exp 1753: Continuous self-learning stability test on expanded LTLZinc (✅ Complete) — honest_verdict=complete: stability_evaluation_finished; results/experiment_1753_continual.json
