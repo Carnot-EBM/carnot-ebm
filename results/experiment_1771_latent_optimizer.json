@@ -1,0 +1,31 @@
+{
+  "schema_version": "carnot.experiment.v1",
+  "artifact_type": "latent_optimizer_result",
+  "experiment_id": 1771,
+  "experiment_slug": "exp1771-latent-optimizer",
+  "status": "complete",
+  "created_at": "2026-05-11",
+  "spec_refs": [
+    "REQ-OPT-1771",
+    "SCENARIO-OPT-1771"
+  ],
+  "implementation": {
+    "module": "python/carnot/models/latent_optimizer.py",
+    "tests": "tests/python/test_latent_optimizer.py",
+    "capability_spec": "openspec/capabilities/verifiable-reasoning/spec.md",
+    "modified_conductor": false
+  },
+  "verification": {
+    "targeted_tests": {
+      "command": ".venv/bin/pytest tests/python/test_latent_optimizer.py -q",
+      "result": "passed",
+      "summary": "3 passed"
+    },
+    "new_code_coverage": {
+      "command": "PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 .venv/bin/python -m coverage run --source=python/carnot/models -m pytest tests/python/test_latent_optimizer.py -q -o addopts='' && .venv/bin/python -m coverage report -m --include='*/python/carnot/models/latent_optimizer.py' --fail-under=100",
+      "result": "passed",
+      "summary": "python/carnot/models/latent_optimizer.py: 21 statements, 0 missed, 100% coverage"
+    }
+  },
+  "honest_verdict": "complete: latent_optimizer_targeted_tests_and_100pct_new_code_coverage_passed"
+}

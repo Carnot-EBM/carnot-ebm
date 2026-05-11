@@ -18876,3 +18876,14 @@ The repository shall provide `scripts/experiment_1767_e2e_qwen.py` to evaluate t
 **Then** it uses the model `unsloth/Qwen3.6-35B-A3B-GGUF`
 **And** it outputs a JSON file to `results/experiment_1767_e2e_qwen.json`
 **And** the JSON file contains fields for `latency_ms`, `parse_rate`, and `energy_score`.
+
+### REQ-OPT-1771: Continuous Latent Constraint Optimizer
+Implement the continuous latent constraint optimizer (LatentOptimizer) using Langevin dynamics over HRM outputs to optimize elicited constraints in a continuous latent space during generation.
+- REQ-OPT-1771-1: Initialize with step size, noise scale, and max steps.
+- REQ-OPT-1771-2: Optimize continuous latent constraints by performing Langevin dynamics on an energy scalar returned by an HRM verifier.
+- REQ-OPT-1771-3: Verify energy descent after optimization.
+
+### SCENARIO-OPT-1771: Langevin Dynamics on HRM
+**Given** a continuous latent space and constraints evaluated by an HRM verifier,
+**When** the LatentOptimizer applies Langevin dynamics,
+**Then** the resulting latents minimize the HRM evaluation score (energy) over max steps.
