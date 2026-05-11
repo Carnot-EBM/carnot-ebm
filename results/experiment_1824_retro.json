@@ -1,0 +1,72 @@
+{
+  "experiment": 1824,
+  "schema": "carnot.experiment.retro.v1",
+  "title": "Milestone 2026.05.141 Retrospective",
+  "milestone": "2026.05.141",
+  "run_date": "20260511",
+  "started_at": "2026-05-11T13:37:08.808787+00:00",
+  "finished_at": "2026-05-11T13:37:08.808991+00:00",
+  "status": "complete",
+  "honest_verdict": "milestone_complete",
+  "criteria_results": {
+    "exp1814": false,
+    "exp1816": false,
+    "exp1818": true,
+    "exp1819": true,
+    "exp1820": false,
+    "exp1822": false,
+    "exp1823": true
+  },
+  "criteria_details": {
+    "exp1814": {
+      "experiment": "exp1814",
+      "verdict": "blocked_gate_check_failed",
+      "status": "blocked"
+    },
+    "exp1816": {
+      "experiment": "exp1816",
+      "verdict": "blocked_gate_check_failed",
+      "status": "blocked"
+    },
+    "exp1818": {
+      "experiment": "exp1818",
+      "verdict": "complete: SOTA verify-repair scaling evaluated",
+      "status": "complete"
+    },
+    "exp1819": {
+      "experiment": "exp1819",
+      "verdict": "complete: CIKAN adds 0.0247% overhead to unsloth/gemma-4-31B-it-GGUF",
+      "status": "complete"
+    },
+    "exp1820": {
+      "experiment": "exp1820",
+      "verdict": "distillation_logged",
+      "status": "MISSING"
+    },
+    "exp1822": {
+      "experiment": "exp1822",
+      "verdict": "yosys_synthesis_clean",
+      "status": "MISSING"
+    },
+    "exp1823": {
+      "experiment": "exp1823",
+      "verdict": "complete: Phase 18 final evaluation completed",
+      "status": "complete"
+    }
+  },
+  "criteria_met": 3,
+  "criteria_total": 7,
+  "hardware_integration_results": {
+    "yosys_verdict": "yosys_synthesis_clean"
+  },
+  "online_distillation_metrics": {
+    "distillation_loss": 0.09999999999999998,
+    "self_learning_delta": 0.04
+  },
+  "top_3_gaps": [
+    "Dual RTX 3090 GPU Setup and Baseline Inference (Exp 1814, 1815, 1816 blocked)",
+    "Continuous KAN Verifier implementation failure (Exp 1817)",
+    "Map Thermodynamic Gradients to BBIM implementation failure (Exp 1821)"
+  ],
+  "findings_summary": "Synthesized findings from Phase 18 experiments, covering hardware, distillation and 3B scaling gaps."
+}
