@@ -1,163 +1,164 @@
-milestone: 2026.05.139
-milestone_title: "Phase-16: Formal KAN Verification, EBM-Guided Reasoning, and Thermodynamic Denoising Simulation"
-milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
+milestone: 2026.05.140
+milestone_title: "Phase-17: Latent Reasoning CoT, Hardware Bounce-Bind Dynamics, and Continuous KAN Constraints"
+milestone_doc: "openspec/change-proposals/research-roadmap-v140.md"
 tasks:
-  - id: exp1799-partial-trace-energy
-    title: 'Exp 1799: Implement partial-trace energy scoring prototype'
+  - id: exp1803-ebm-cot-latent-prototyping
+    title: 'Exp 1803: Prototype EBM-CoT Langevin updates for latent thought embeddings'
     prompt: |
-      CONTEXT: The recent shift towards Energy-Based Transformers (EBT) suggests using partial-trace energy to evaluate intermediate steps.
-      EXISTING CODE TO READ FIRST: python/carnot/pipeline/verify_repair.py
-      TASK: Implement an EBT-style partial-trace energy scoring prototype that evaluates intermediate reasoning steps before full certificate generation.
+      CONTEXT: Recent work (arXiv:2511.07124) shows EBMs can calibrate latent thought embeddings via Langevin updates before text decoding.
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/long_run_executor.py, python/carnot/embeddings/
+      TASK: Implement an EBM-CoT prototype that applies Langevin dynamics to intermediate hidden states using a pre-trained Energy scorer.
       CONCRETE STEPS:
-      1. Write `python/carnot/pipeline/partial_trace_energy.py` extending the current verify pipeline.
-      2. Run tests to measure `energy_converges` and `accuracy_delta` on a 50-case benchmark using cached_sota_pair().
-      3. Output results to `{project_root}/results/experiment_1799_partial_trace.json`.
+      1. Write `python/carnot/pipeline/ebm_cot.py` implementing `LangevinLatentCalibrator`.
+      2. Integrate it with `cached_sota_pair()` (e.g. `unsloth/gemma-4-31B-it-GGUF`).
+      3. Run a 50-sample sanity check on GSM8K logic puzzles and measure `energy_reduction`.
+      4. Output results to `{project_root}/results/experiment_1803_ebm_cot.json`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-  - id: exp1800-verified-traces-dataset
-    title: 'Exp 1800: gated on Exp 1799 accuracy_delta>0: Generate 2000 verified reasoning traces'
+      
+  - id: exp1804-cikan-constraint-layer
+    title: 'Exp 1804: gated on Exp 1803 energy_reduction>0: Design Constraint Informed KAN (CIKAN) layer'
     gated_on:
-      - upstream: exp1799-partial-trace-energy
-        artifact_field: accuracy_delta
+      - upstream: exp1803-ebm-cot-latent-prototyping
+        artifact_field: energy_reduction
         op: '>'
         value: 0.0
     prompt: |
-      CONTEXT: To fulfill the continuous self-learning loop (FR-11), we need a dataset of verified traces.
-      EXISTING CODE TO READ FIRST: python/carnot/pipeline/long_run_executor.py
-      TASK: Generate 2000 verified reasoning traces (correct/incorrect pairs) using local SOTA GGUF models.
+      CONTEXT: Based on PMLR 2025 CIKAN research, we need to embed physical/logical constraints directly into the KAN architecture.
+      EXISTING CODE TO READ FIRST: python/carnot/models/carnot-kan/
+      TASK: Implement a custom CIKAN layer that enforces bounds natively without external penalties.
       CONCRETE STEPS:
-      1. Write `scripts/experiment_1800_generate_traces.py` to run Qwen3.6-35B-A3B and Gemma-4-31B-it via `cached_sota_pair()`.
-      2. Use partial-trace energy to rank and filter cases.
-      3. Output `{project_root}/data/verified_traces_1800.jsonl`.
+      1. Write `python/carnot/models/carnot_kan/cikan_layer.py`.
+      2. Verify backward pass gradients don't vanish at the boundaries.
+      3. Output gradients health to `{project_root}/results/experiment_1804_cikan.json`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-  - id: exp1801-dpo-training
-    title: 'Exp 1801: gated on Exp 1800 generated_count>=2000: DPO training on verified pairs'
+      
+  - id: exp1805-bbim-rtl-design
+    title: 'Exp 1805: Design Bounce-Bind Ising Machine (BBIM) v5 RTL for KV260'
+    max_turns: 100
+    model: opus
+    agent_type: codex
+    prompt: |
+      CONTEXT: To overcome local minima in dense constraint graphs, we will implement Bounce-Bind dynamics (BBIM) for the FPGA.
+      EXISTING CODE TO READ FIRST: hardware/kv260/ising_sampler_v4_spec.md
+      TASK: Write the Verilog RTL and Python testbench for a Bounce-Bind Ising Sampler.
+      CONCRETE STEPS:
+      1. Create `hardware/kv260/ising_sampler_v5_bbim.v` implementing tunable Glauber/Gibbs dynamics.
+      2. Write `tests/hardware/test_bbim_v5.py` and run a cocotb/iverilog simulation to prove local minima escape.
+      3. Output simulation results to `{project_root}/results/experiment_1805_bbim.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+      
+  - id: exp1806-semantic-pruning-replay
+    title: 'Exp 1806: Implement Semantic Pruning in Continuous EBM Replay Buffer'
+    prompt: |
+      CONTEXT: To fix the continuous self-learning loop (FR-11), we must mitigate interference in the replay buffer via Semantic Pruning.
+      EXISTING CODE TO READ FIRST: python/carnot/training/replay_buffer.py
+      TASK: Add a semantic pruning mechanism that discards structurally redundant constraints.
+      CONCRETE STEPS:
+      1. Write `python/carnot/training/semantic_pruning.py`.
+      2. Update the replay buffer to filter out samples with high cosine similarity in their AST/logic embeddings.
+      3. Evaluate pruning on the existing 2000-trace verified buffer and measure `retained_ratio`.
+      4. Output to `{project_root}/results/experiment_1806_pruning.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+      
+  - id: exp1807-continuous-self-learning-eval
+    title: 'Exp 1807: gated on Exp 1806 retained_ratio<1.0: E2E Continuous Self-Learning Loop Eval'
     gated_on:
-      - upstream: exp1800-verified-traces-dataset
-        artifact_field: generated_count
-        op: '>='
-        value: 2000
+      - upstream: exp1806-semantic-pruning-replay
+        artifact_field: retained_ratio
+        op: '<'
+        value: 1.0
     prompt: |
-      CONTEXT: GRPO was retired; we now use DPO on verified pairs to fine-tune the reasoning adapter.
-      EXISTING CODE TO READ FIRST: python/carnot/training/
-      TASK: Run DPO training on the 2000 verified pairs generated in Exp 1800.
+      CONTEXT: We must prove that semantic pruning improves continuous learning stability.
+      EXISTING CODE TO READ FIRST: scripts/experiment_1801_dpo_train.py
+      TASK: Run a continuous training session (DPO) simulating 5 epochs of new constraints while pruning the buffer.
       CONCRETE STEPS:
-      1. Write `scripts/experiment_1801_dpo_train.py` applying DPO to the verifier adapter.
-      2. Measure `dpo_improvement_pp` and `dpo_vs_baseline_auroc`.
-      3. Save weights and output metrics to `{project_root}/results/experiment_1801_dpo.json`.
+      1. Write `scripts/experiment_1807_self_learning_loop.py` using `unsloth/gemma-4-26B-A4B-it-GGUF`.
+      2. Measure `forgetting_rate` on old constraints.
+      3. Output results to `{project_root}/results/experiment_1807_continual.json`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-  - id: exp1802-self-learning-eval
-    title: 'Exp 1802: Evaluate continuous self-learning non-forgetting'
+      
+  - id: exp1808-cikan-symbolic-regression
+    title: 'Exp 1808: Evaluate CIKAN for Symbolic Equation Extraction'
+    agent_type: codex
     prompt: |
-      CONTEXT: We must verify that the DPO-trained adapter does not suffer from catastrophic forgetting.
-      EXISTING CODE TO READ FIRST: python/carnot/pipeline/verify_repair.py
-      TASK: Evaluate continuous self-learning non-forgetting and soundness mistakes after DPO.
+      CONTEXT: CIKANs provide perfectly interpretable symbolic equations. We need to verify if our implementation can extract constraint equations.
+      EXISTING CODE TO READ FIRST: python/carnot/models/carnot_kan/cikan_layer.py
+      TASK: Run a symbolic regression task on the CIKAN layer from Exp 1804.
       CONCRETE STEPS:
-      1. Write `scripts/experiment_1802_eval_forgetting.py` running the LTLZinc temporal benchmarks.
-      2. Measure `nonforgetting_rate`, `soundness_mistakes`, and `completeness_mistakes`.
-      3. Write to `{project_root}/results/experiment_1802_eval.json`.
+      1. Write `scripts/experiment_1808_cikan_symbolic.py`.
+      2. Feed a known logical/algebraic dataset, extract the symbolic representation, and compare.
+      3. Log `equation_match_accuracy` to `{project_root}/results/experiment_1808_symbolic.json`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-  - id: exp1803-pwa-abstraction
-    title: 'Exp 1803: Piecewise affine (PWA) abstraction of KAEMEnergy'
+      
+  - id: exp1809-hardware-bbim-synth
+    title: 'Exp 1809: gated on Exp 1805 simulation_passed==True: Synthesize BBIM v5 Bitstream'
+    max_turns: 100
+    model: opus
+    gated_on:
+      - upstream: exp1805-bbim-rtl-design
+        artifact_field: simulation_passed
+        op: '=='
+        value: true
+    prompt: |
+      CONTEXT: Prepare the BBIM v5 design for the KV260 board.
+      EXISTING CODE TO READ FIRST: hardware/kv260/synth_ising.tcl
+      TASK: Generate the synthesis script for BBIM v5 and execute Yosys/Vivado checks if tools are available.
+      CONCRETE STEPS:
+      1. Create `hardware/kv260/synth_bbim_v5.tcl`.
+      2. Attempt a synthesis run. If Vivado is unavailable, record `honest_verdict=vivado_not_installed`.
+      3. Output to `{project_root}/results/experiment_1809_bbim_synth.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+      
+  - id: exp1810-ebm-cot-full-benchmark
+    title: 'Exp 1810: Full benchmark of EBM-CoT on GSM8K using Qwen3.6-35B-A3B-GGUF'
+    max_turns: 50
+    prompt: |
+      CONTEXT: Scale up the Exp 1803 prototype to a full benchmark run.
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/ebm_cot.py
+      TASK: Evaluate EBM-CoT on 1000 GSM8K problems and compare vs vanilla CoT.
+      CONCRETE STEPS:
+      1. Write `scripts/experiment_1810_ebm_cot_benchmark.py` running `unsloth/Qwen3.6-35B-A3B-GGUF`.
+      2. Record `accuracy_with_ebm` and `accuracy_baseline`.
+      3. Output to `{project_root}/results/experiment_1810_benchmark.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+      
+  - id: exp1811-cross-layer-energy-correlation
+    title: 'Exp 1811: Analyze cross-layer energy correlation for early exit'
+    max_turns: 50
+    prompt: |
+      CONTEXT: If energy converges early in the EBT/EBM-CoT framework, we can skip deeper layers.
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/ebm_cot.py
+      TASK: Track Langevin energy gradients across model layers to identify early-exit thresholds.
+      CONCRETE STEPS:
+      1. Write `scripts/experiment_1811_early_exit.py` to record energy at each layer.
+      2. Measure `optimal_exit_layer` distribution.
+      3. Output to `{project_root}/results/experiment_1811_early_exit.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+      
+  - id: exp1812-dual-gpu-verification
+    title: 'Exp 1812: Live constraint verification over DualGPU pipeline'
+    max_turns: 100
+    model: opus
+    prompt: |
+      CONTEXT: Verify the robustness of the runtime across the dual RTX 3090 hardware track.
+      EXISTING CODE TO READ FIRST: ops/e2e-test-plan.md
+      TASK: Execute the continuous learning pipeline concurrently on multiple devices.
+      CONCRETE STEPS:
+      1. Write `scripts/experiment_1812_dual_gpu.py`.
+      2. Check `torch.cuda.device_count()` and spawn EBM evaluations on both.
+      3. Record `honest_verdict` and `throughput_fps` in `{project_root}/results/experiment_1812_dualgpu.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+      
+  - id: exp1813-milestone-retro
+    title: 'Exp 1813: Milestone 2026.05.140 Retrospective'
+    max_turns: 50
     agent_type: gemini
     prompt: |
-      CONTEXT: Recent papers (arXiv:2602.06737) propose Piecewise Affine (PWA) abstractions for verifying KAN properties.
-      EXISTING CODE TO READ FIRST: python/carnot/models/kaem_energy.py
-      TASK: Implement PWA abstractions for the univariate spline layers in KAEMEnergy.
-      CONCRETE STEPS:
-      1. Write `python/carnot/models/pwa_kan.py` to approximate `UnivariateKAEMLayer` with PWA functions.
-      2. Calculate abstraction error bounds.
-      3. Save `{project_root}/results/experiment_1803_pwa.json`.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-  - id: exp1804-milp-encoding
-    title: 'Exp 1804: MILP encoding of PWA abstractions'
-    agent_type: gemini
-    prompt: |
-      CONTEXT: PWA abstractions allow formal verification via Mixed Integer Linear Programming (MILP).
-      EXISTING CODE TO READ FIRST: python/carnot/models/pwa_kan.py
-      TASK: Encode the PWA KAN approximations into a MILP problem using PySAT or Z3.
-      CONCRETE STEPS:
-      1. Write `python/carnot/verify/milp_kan.py` integrating with `carnot-constraints`.
-      2. Test the encoding on small constraint geometries.
-      3. Output `{project_root}/results/experiment_1804_milp.json`.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-  - id: exp1805-formal-verify-smoke
-    title: 'Exp 1805: End-to-end formal verification smoke test on KAEM'
-    prompt: |
-      CONTEXT: We must validate the full formal verification pipeline for KANs.
-      EXISTING CODE TO READ FIRST: python/carnot/verify/milp_kan.py
-      TASK: Run an end-to-end formal verification smoke test of the KAEM model on a 10-constraint task.
-      CONCRETE STEPS:
-      1. Write `scripts/experiment_1805_kan_verify.py` defining 10 formal safety constraints.
-      2. Run the MILP solver and report `verification_time_ms` and `bounds_soundness`.
-      3. Output `{project_root}/results/experiment_1805_smoke.json`.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-  - id: exp1806-dtm-simulation
-    title: 'Exp 1806: Denoising Thermodynamic Model (DTM) simulation using thrml'
-    prompt: |
-      CONTEXT: DTMs (arXiv:2510.23972) repurpose EBMs as denoising steps.
-      EXISTING CODE TO READ FIRST: python/carnot/samplers/parallel_ising.py
-      TASK: Simulate a Denoising Thermodynamic Model using the `thrml` library.
-      CONCRETE STEPS:
-      1. Write `scripts/experiment_1806_dtm_sim.py` using `thrml` to run diffusion-like sampling.
-      2. Measure distribution convergence and `thrml_import_ready`.
-      3. Output `{project_root}/results/experiment_1806_dtm.json`.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-  - id: exp1807-eddp-benchmarking
-    title: 'Exp 1807: EDDP benchmarking of the DTM simulator'
-    prompt: |
-      CONTEXT: The Energy-Delay-Deficiency Product (EDDP) is the new rigorous metric for thermodynamic computers (arXiv:2601.04358).
-      EXISTING CODE TO READ FIRST: scripts/experiment_1806_dtm_sim.py
-      TASK: Benchmark the DTM simulator against baseline MCMC using the EDDP metric.
-      CONCRETE STEPS:
-      1. Write `scripts/experiment_1807_eddp.py`.
-      2. Compute Energy, Delay, and Deficiency metrics for both `thrml` and `ParallelIsingSampler`.
-      3. Output `{project_root}/results/experiment_1807_eddp.json`.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-  - id: exp1808-capstone-qwen
-    title: 'Exp 1808: Capstone E2E Pipeline with Qwen3.6-35B-A3B'
-    max_turns: 50
-    prompt: |
-      CONTEXT: Capstone testing of Phase 16 improvements on flagship MoE.
-      EXISTING CODE TO READ FIRST: python/carnot/pipeline/verify_repair.py
-      TASK: Run the full E2E pipeline incorporating the DPO adapter and KAN MILP verifier on Qwen3.6-35B-A3B.
-      CONCRETE STEPS:
-      1. Write `scripts/experiment_1808_capstone_qwen.py` using the MODEL_SPECS config for `unsloth/Qwen3.6-35B-A3B-GGUF`.
-      2. Run the E2E verification loop and record `repair_success_rate`.
-      3. Output `{project_root}/results/experiment_1808_qwen.json`.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-  - id: exp1809-capstone-gemma31
-    title: 'Exp 1809: Capstone E2E Pipeline with Gemma4-31B-it'
-    max_turns: 50
-    prompt: |
-      CONTEXT: Capstone testing of Phase 16 improvements on flagship dense model.
-      EXISTING CODE TO READ FIRST: scripts/experiment_1808_capstone_qwen.py
-      TASK: Run the E2E pipeline with Gemma4-31B-it-GGUF.
-      CONCRETE STEPS:
-      1. Write `scripts/experiment_1809_capstone_gemma31.py` targeting `unsloth/gemma-4-31B-it-GGUF`.
-      2. Measure end-to-end performance and latency.
-      3. Output `{project_root}/results/experiment_1809_gemma31.json`.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-  - id: exp1810-capstone-gemma26
-    title: 'Exp 1810: Capstone E2E Pipeline with Gemma4-26B-A4B-it'
-    max_turns: 50
-    prompt: |
-      CONTEXT: Capstone testing of Phase 16 improvements on middle MoE.
-      EXISTING CODE TO READ FIRST: scripts/experiment_1808_capstone_qwen.py
-      TASK: Run the E2E pipeline with Gemma4-26B-A4B-it-GGUF.
-      CONCRETE STEPS:
-      1. Write `scripts/experiment_1810_capstone_gemma26.py` targeting `unsloth/gemma-4-26B-A4B-it-GGUF`.
-      2. Record accuracy and energy metrics.
-      3. Output `{project_root}/results/experiment_1810_gemma26.json`.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-  - id: exp1811-retro
-    title: 'Exp 1811: Milestone .139 Retrospective'
-    max_turns: 20
-    prompt: |
-      CONTEXT: End of milestone retrospective and artifact aggregation.
+      CONTEXT: The final step of the milestone. Evaluate all results.
       EXISTING CODE TO READ FIRST: ops/conductor-log.md
-      TASK: Audit all JSON results from Exp 1799 through 1810 and prepare the Phase-16 finding summary.
+      TASK: Summarize findings, evaluate criteria, and log results.
       CONCRETE STEPS:
-      1. Write `scripts/experiment_1811_retro.py`.
-      2. Parse all milestone result JSONs and extract key metrics (accuracy_delta, dpo_improvement_pp, etc.).
-      3. Write `{project_root}/results/experiment_1811_retro.json` detailing honest_verdict.
+      1. Write the retrospective script `scripts/experiment_1813_retro.py`.
+      2. Ensure it reads the artifacts of the previous tasks to declare success/failure ratios.
+      3. Generate the artifact `{project_root}/results/experiment_1813_retro.json` containing the summary and top 3 gaps for the next milestone.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
