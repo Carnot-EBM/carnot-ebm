@@ -5522,3 +5522,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-11: Exp 1845: Hardware-In-The-Loop Energy Decoding (HILED) (⚠️ Research Finding) — honest_verdict=HILED interface successfully simulated.; results/experiment_1845_hiled.json
 - 2026-05-11: Exp 1846: gated on Exp 1844 ROCE logic: Dual-GPU SOTA ROCE on Qwen3.6 (⚠️ Research Finding) — honest_verdict=success; results/experiment_1846_qwen_roce.json
 - 2026-05-11: Exp 1848: Continuous Self-Learning loop with Epsilon-Constraint on Gemma4-26B (⚠️ Research Finding) — honest_verdict=epsilon_learning_success; results/experiment_1848_gemma26_epsilon.json
+- 2026-05-11: Exp 1849: Semantic Pruning in Continual Energy-Based Models (✅ Complete) — honest_verdict=cocom_pruning_implemented; results/experiment_1849_cocom_pruning.json
