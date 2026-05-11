@@ -1,0 +1,27 @@
+{
+  "experiment": 1760,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-05-11",
+  "started_at": "2026-05-11T03:55:49.473896+00:00",
+  "finished_at": "2026-05-11T03:55:49.473896+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Exp 1760: gated on Exp 1759: Continual self-learning with EBFT",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp1759-ebft-objective.honest_verdict (actual='ebft_implemented' in expected=['success', 'complete'])",
+  "gates_evaluated": [
+    {
+      "upstream": "exp1759-ebft-objective",
+      "artifact_field": "honest_verdict",
+      "op": "in",
+      "expected": [
+        "success",
+        "complete"
+      ],
+      "actual": "ebft_implemented",
+      "passed": false,
+      "reason": "actual='ebft_implemented' in expected=['success', 'complete']"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
