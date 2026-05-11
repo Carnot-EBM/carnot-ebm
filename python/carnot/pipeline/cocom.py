@@ -102,6 +102,34 @@ class COCOMPipeline:
         # Update parameters with the projected gradient (gradient descent)
         self.parameters = self.parameters - self.learning_rate * v
 
+    def update_with_epsilon(self, objective_grad: np.ndarray, constraint_grad: np.ndarray, epsilon: float) -> None:
+        """Perform an online learning step with hard epsilon updates.
+        
+        Args:
+            objective_grad: Gradient of the objective function at the current step.
+            constraint_grad: Gradient of the new constraint at the current step.
+            epsilon: The hard epsilon margin constraint to track and update against.
+        """
+        # Store the new constraint gradient
+        if len(self.memory) >= self.memory_size:
+            self.memory.pop(0)
+            
+        norm_c = np.linalg.norm(constraint_grad)
+        if norm_c > 1e-8:
+            self.memory.append(constraint_grad / norm_c)
+            
+        # Project objective gradient
+        v = np.copy(objective_grad)
+        for prior_c in self.memory:
+            v = v - np.dot(v, prior_c) * prior_c
+            
+        # Hard epsilon constraint update
+        if norm_c > 1e-8:
+            v = v + epsilon * (constraint_grad / norm_c)
+            
+        # Update parameters
+        self.parameters = self.parameters - self.learning_rate * v
+
     def write_artifact(self, filepath: str, experiment_id: str = "1831", honest_verdict: str = "cocom_implemented") -> None:
         """Write the experiment artifact to a JSON file.
         

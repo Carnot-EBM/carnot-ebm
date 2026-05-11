@@ -3271,3 +3271,14 @@ It MUST write the results artifact to `results/experiment_1833_unknown_constrain
 **When** hidden constraint values are provided sequentially with their corresponding features
 **Then** the oracle updates its weights to estimate the hidden constraint
 **And** the outcome is recorded in `results/experiment_1833_unknown_constraints.json`.
+
+### REQ-PIPELINE-1843: Gradient-Guided Epsilon Constraint Tracking
+The continuous learning loop MUST be extended with gradient-guided epsilon constraint tracking for the FR-11 non-forgetting loop.
+The `COCOMPipeline` class MUST implement an `update_with_epsilon(objective_grad, constraint_grad, epsilon)` method that updates parameters with hard epsilon updates.
+It MUST write the results artifact to `results/experiment_1843_epsilon_ocl.json`.
+
+### SCENARIO-PIPELINE-1843: Hard Epsilon Updates in Continuous Learning
+**Given** a COCOM pipeline configured for continuous learning
+**When** multiple online steps are processed with objective gradients, constraint gradients, and an epsilon parameter
+**Then** the parameters are updated using gradient-guided epsilon tracking to satisfy the FR-11 non-forgetting constraint
+**And** the outcome is recorded in `results/experiment_1843_epsilon_ocl.json`.
