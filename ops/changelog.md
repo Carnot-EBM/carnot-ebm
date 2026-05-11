@@ -5517,3 +5517,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - Milestone 2026.05.142 completed 28 experiments over 62.1 wall-time minutes. No compute-bound experiments were executed. GPUs correctly idled as all tasks were synthesis-only.
 - 2026-05-11: Exp 1839: Archive .142 and Activate .143 (⚠️ Research Finding) — honest_verdict=milestone_143_activated; results/experiment_1839_activation.json
 - 2026-05-11: Exp 1840: Piecewise Affine (PWA) KAN Abstraction (✅ Complete) — honest_verdict=complete: PWA abstractions implemented and bounding logic verified with test coverage.; results/experiment_1840_pwa_kan.json
+- 2026-05-11: Exp 1843: Gradient-Guided Epsilon Constraint for OCL (✅ Complete) — honest_verdict=cocom_epsilon_implemented; results/experiment_1843_epsilon_ocl.json
