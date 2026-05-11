@@ -1861,3 +1861,4 @@ Ripgrep is |
 | 2026-05-11 19:52 UTC | Exp 1860: Energy Matching generator logic prototyp | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-11 19:54 UTC | Exp 1860: Energy Matching generator logic prototyp | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-11 19:56 UTC | Exp 1860: Energy Matching generator logic prototyp | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-11 20:03 UTC | Exp 1861: Cross-language (Rust/Python) equivalence | OK | 89 passed, 1 warning in 5.01s |
