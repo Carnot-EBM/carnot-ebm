@@ -1767,3 +1767,5 @@ Ripgrep is |
 | 2026-05-11 12:25 UTC | Milestone 2026.05.141 activated | OK | 11 tasks queued |
 | 2026-05-11 12:27 UTC | Exp 1814: Dual RTX 3090 GPU Setup and VRAM Profili | DOOMED_RERUN_BLOCK | 5 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-11 12:29 UTC | Exp 1814: Dual RTX 3090 GPU Setup and VRAM Profili | DOOMED_RERUN_BLOCK | 5 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-11 12:31 UTC | Exp 1814: Dual RTX 3090 GPU Setup and VRAM Profili | DOOMED_RERUN_BLOCK | 5 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-11 12:33 UTC | Exp 1815: 3B SOTA Model Inference Pipeline | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1814-dual-gpu-profiling) |
