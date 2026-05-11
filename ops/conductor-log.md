@@ -1873,3 +1873,5 @@ Ripgrep is |
 | 2026-05-11 20:58 UTC | Exp 1865: Gate ROCE outputs through Z3 with zero f | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1864-roce-prototype.status (actual=None |
 | 2026-05-11 21:00 UTC | Exp 1866: Implement Latent Energy Optimization for | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-11 21:02 UTC | Exp 1866: Implement Latent Energy Optimization for | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-11 21:04 UTC | Exp 1866: Implement Latent Energy Optimization for | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-11 21:06 UTC | Exp 1867: Scale FR-11 self-learning with latent pr | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1866-latent-energy-pruning) |
