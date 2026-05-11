@@ -1759,3 +1759,4 @@ Ripgrep is |
 | 2026-05-11 11:49 UTC | Exp 1809: gated on Exp 1805 simulation_passed==Tru | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1805-bbim-rtl-design) |
 | 2026-05-11 11:49 UTC | Exp 1810: Full benchmark of EBM-CoT on GSM8K using | DOOMED_RERUN_BLOCK | 4 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-11 11:55 UTC | Exp 1811: Analyze cross-layer energy correlation f | OK | 81 passed, 1 warning in 5.89s |
+| 2026-05-11 11:57 UTC | Exp 1812: Live constraint verification over DualGP | DOOMED_RERUN_BLOCK | 4 prior failure(s) match this task's scope but prior_failures field is missing o |
