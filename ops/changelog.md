@@ -5547,3 +5547,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - Milestone 2026.05.145 operational retrospective complete. Analyzed 79.9 min wall time / 23 experiments (avg 3 min). Slowest path: Exp 1858 (29.1 min, synthesis-only). All tasks were synthesis-only, resulting in appropriate 0% GPU utilization. The primary wall-clock bottleneck continues to be lengthy synthesis processes.
 - 2026-05-11: Exp 1864: Reasoning-Time Open Constraint Elicitation (ROCE) prototype (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_1864_roce.json
 - 2026-05-11: Exp 1868: Evaluate catastrophic forgetting on the MoE using LTLZinc (✅ Complete) — honest_verdict=complete: ltlzinc_cerce_nonforgetting_passed; results/experiment_1868_ltlzinc.json
+- 2026-05-11: Exp 1871: Implement Rust backend for S2KAN fast evaluation (✅ Complete) — honest_verdict=complete: s2kan_differentiable_gates_rust_implemented; results/experiment_1871_s2kan_rust.json
