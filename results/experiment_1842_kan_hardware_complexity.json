@@ -1,0 +1,33 @@
+{
+  "experiment": 1842,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-05-11",
+  "started_at": "2026-05-11T16:09:26.955643+00:00",
+  "finished_at": "2026-05-11T16:09:26.955643+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Exp 1842: KAN Hardware Inference Complexity Accounting",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "2 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: no prior_failures field on task",
+  "gates_evaluated": [
+    {
+      "upstream": "exp1319-kan-hardware-complexity-audit",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Research Finding: hardware_portability_audit_only_no_fpga_npu_or_analog_execution"
+    },
+    {
+      "upstream": "exp866-kan-hardware-analysis",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Research Finding: kan_over_budget"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}

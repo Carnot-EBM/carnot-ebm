@@ -1821,3 +1821,4 @@ Ripgrep is |
 | 2026-05-11 16:01 UTC | Exp 1840: Piecewise Affine (PWA) KAN Abstraction | OK | 81 passed, 1 warning in 5.67s |
 | 2026-05-11 16:03 UTC | Exp 1841: gated on Exp 1840 PWA Abstraction: MILP  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1840-pwa-kan-abstraction.status (actual |
 | 2026-05-11 16:05 UTC | Exp 1841: gated on Exp 1840 PWA Abstraction: MILP  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1840-pwa-kan-abstraction.status (actual |
+| 2026-05-11 16:07 UTC | Exp 1841: gated on Exp 1840 PWA Abstraction: MILP  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1840-pwa-kan-abstraction.status (actual |
