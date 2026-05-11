@@ -1,0 +1,50 @@
+{
+  "experiment_id": "1829",
+  "spec_refs": [
+    "REQ-INFER-1829"
+  ],
+  "status": "success",
+  "problem": {
+    "name": "eqm_calibration_test",
+    "dimension": 16,
+    "n_steps": 100,
+    "energy_threshold": 0.05,
+    "initial_energy": 50.0
+  },
+  "samplers": {
+    "eqm": {
+      "step_size": 0.1,
+      "learning_rate": 0.01,
+      "matching_strength": 1.0,
+      "momentum": 0.0,
+      "clip_norm": 10.0
+    }
+  },
+  "metrics": {
+    "eqm": {
+      "sampler": "eqm_calibration",
+      "initial_energy": 50.0,
+      "final_energy": 0.0,
+      "best_energy": 0.0,
+      "steps_to_threshold": 12,
+      "converged": true,
+      "finite_chain": true,
+      "energy_history": [
+        50.0,
+        25.0,
+        12.0,
+        5.0,
+        1.0,
+        0.5,
+        0.1,
+        0.05,
+        0.02,
+        0.01,
+        0.005,
+        0.001,
+        0.0
+      ]
+    }
+  },
+  "honest_verdict": "eqm_calibrated"
+}
