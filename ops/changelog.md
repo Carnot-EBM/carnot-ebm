@@ -1,5 +1,9 @@
 # Carnot — Changelog
 
+## 2026-05-11 (Milestone 2026.05.135 Operational Retrospective)
+
+- 2026-05-11 03:41 UTC: Milestone 2026.05.135 operational retrospective complete. Analyzed 134 min wall time / 30 experiments (avg 4 min). Slowest paths: Exp 1752 (35 min), Exp 1749 (31 min), Exp 1746 (12 min). Synthesis-only experiments dominated the milestone wall-clock time. GPU was correctly utilized for the single compute-bound task without triggering the DualGPURunner, and idled properly during synthesis-only tasks. Estimated 30% savings recoverable by optimizing the synthesis pipeline.
+
 ## 2026-05-10 (Milestone 2026.05.133 Operational Retrospective)
 
 - 2026-05-10 20:58 UTC: Milestone 2026.05.133 operational retrospective complete. Analyzed 1483 min wall time / 280 experiments (avg 5 min). Slowest paths: Exp 1603 (88 min), Exp 1657 (57 min), Pre-gate block Exp 1711 (56 min), Exp 1642 (54 min). Doomed-rerun blocks correctly failed fast. Both RTX 3090s were completely idle at 0% utilization throughout, which is correct behavior as there were no compute-bound tasks. Estimated savings: implement fail-fast for pre-gate blocks.
