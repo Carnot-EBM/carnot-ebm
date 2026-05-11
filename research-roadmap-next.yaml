@@ -1,0 +1,173 @@
+milestone: 2026.05.142
+milestone_title: "Phase-19: Energy-Based Latent Planning, Zero-Violation Online Learning, and Fail-Fast Pipeline Orchestration"
+milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
+tasks:
+  - id: exp1825-archive-activate
+    title: 'Exp 1825: Archive .141 and Activate .142'
+    prompt: |
+      CONTEXT: Milestone transition on {date}.
+      EXISTING CODE TO READ FIRST: `ops/status.md`
+      TASK: Archive .141 logs and activate .142 environment.
+      CONCRETE STEPS:
+      1. Update milestone IDs in ops status.
+      2. Write {project_root}/results/experiment_1825_activation.json
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+    max_turns: 20
+
+  - id: exp1826-conductor-fail-fast
+    title: 'Exp 1826: Implement Conductor Pre-Gate Fail-Fast blocks'
+    agent_type: codex
+    model: gpt-5.5
+    prompt: |
+      CONTEXT: The retro logs continuously highlight synthesis gate waste. Current date is {date}.
+      EXISTING CODE TO READ FIRST: `python/carnot/pipeline/`
+      TASK: Implement activation-time terminal artifacts for doomed reruns.
+      CONCRETE STEPS:
+      1. Add fail-fast check to pipeline API.
+      2. Write {project_root}/results/experiment_1826_fail_fast.json
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+    max_turns: 30
+
+  - id: exp1827-ebrm-latent-trajectory
+    title: 'Exp 1827: Implement EBRM Latent Reasoning Trajectory Optimizer'
+    prompt: |
+      CONTEXT: Energy-Based Reasoning via Structured Latent Planning (arXiv:2603.04948). Task run on {date}.
+      EXISTING CODE TO READ FIRST: `python/carnot/models/`
+      TASK: Build latent trajectory optimization layer.
+      CONCRETE STEPS:
+      1. Create `python/carnot/models/ebrm.py`
+      2. Model trajectory optimization with energy scoring.
+      3. Write {project_root}/results/experiment_1827_ebrm.json
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1828-dca-reasoner
+    title: 'Exp 1828: gated on Exp 1827 honest_verdict in success: DCAReasoner Difference-of-Convex Acceleration'
+    gated_on:
+      - upstream: exp1827-ebrm-latent-trajectory
+        artifact_field: honest_verdict
+        op: 'contains'
+        value: 'success'
+    prompt: |
+      CONTEXT: DCAReasoner speeds up continuous EBM reasoning. Current date is {date}.
+      EXISTING CODE TO READ FIRST: `python/carnot/models/ebrm.py`
+      TASK: Apply Difference-of-Convex functions acceleration to EBRM.
+      CONCRETE STEPS:
+      1. Extend `ebrm.py` with DCA method.
+      2. Write {project_root}/results/experiment_1828_dca.json
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1829-eqm-adaptive-compute
+    title: 'Exp 1829: Equilibrium Matching (EqM) Adaptive Compute Calibration'
+    prompt: |
+      CONTEXT: EqM allows adaptive computation steps for stable valley finding. Date: {date}.
+      EXISTING CODE TO READ FIRST: `python/carnot/inference/`
+      TASK: Integrate EqM (arXiv:2510.02300) into inference stack.
+      CONCRETE STEPS:
+      1. Create `python/carnot/inference/eqm_calibration.py`.
+      2. Write {project_root}/results/experiment_1829_eqm.json
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1830-energy-guided-vision
+    title: 'Exp 1830: Energy-Guided Vision-Language Decoding'
+    prompt: |
+      CONTEXT: Energy-guided decoding for VLM object hallucination mitigation (arXiv:2507.07731). Date is {date}.
+      EXISTING CODE TO READ FIRST: `python/carnot/inference/guided_decoding.py`
+      TASK: Extend guided decoding to vision-language contexts.
+      CONCRETE STEPS:
+      1. Add VLM minimal energy score routing.
+      2. Write {project_root}/results/experiment_1830_vlm_guided.json
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1831-cocom-online-convex
+    title: 'Exp 1831: COCO-M Online Convex Optimization with Memory'
+    prompt: |
+      CONTEXT: Constrained Online Convex Optimization with Memory (arXiv:2603.21375). {date} run.
+      EXISTING CODE TO READ FIRST: `python/carnot/models/continual_gibbs.py`
+      TASK: Update online learning to track memory-based constraints.
+      CONCRETE STEPS:
+      1. Create `python/carnot/pipeline/cocom.py`.
+      2. Write {project_root}/results/experiment_1831_cocom.json
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1832-zero-violation-fr11
+    title: 'Exp 1832: Continuous Self-Learning: Zero Constraint Violation Policy'
+    prompt: |
+      CONTEXT: FR-11 continuous self-learning requires safety bounds (AISTATS 2025). Date: {date}.
+      EXISTING CODE TO READ FIRST: `python/carnot/pipeline/cocom.py`
+      TASK: Implement zero-constraint violation guarantee for self-learning.
+      CONCRETE STEPS:
+      1. Integrate safety policy into continuous replay loop.
+      2. Write {project_root}/results/experiment_1832_zero_violation.json
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1833-unknown-constraints-learning
+    title: 'Exp 1833: Online Learning with Unknown Constraints'
+    prompt: |
+      CONTEXT: Meta-algorithm for unknown constraints (ICML 2025). As of {date}.
+      EXISTING CODE TO READ FIRST: `python/carnot/pipeline/cocom.py`
+      TASK: Allow the online learner to estimate hidden safety constraints.
+      CONCRETE STEPS:
+      1. Build online regression oracle.
+      2. Write {project_root}/results/experiment_1833_unknown_constraints.json
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1834-thrml-turnover-constraints
+    title: 'Exp 1834: THRML Multi-Period Turnover Constraints'
+    model: opus
+    max_turns: 100
+    prompt: |
+      CONTEXT: THRML library hardware updates (arXiv:2601.xxxxx). Testing hardware integration on {date}.
+      EXISTING CODE TO READ FIRST: `python/carnot/samplers/`
+      TASK: Implement multi-period turnover constraint sampling.
+      CONCRETE STEPS:
+      1. Extend Extropic/THRML adapter.
+      2. Write {project_root}/results/experiment_1834_thrml_turnover.json
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1835-qwen-capstone
+    title: 'Exp 1835: Capstone: Dual-GPU SOTA Pipeline with Qwen3.6-35B-A3B-GGUF'
+    prompt: |
+      CONTEXT: Integrate SOTA LLM pipeline with EBRM and Zero-Violation loops. Date: {date}.
+      EXISTING CODE TO READ FIRST: `scripts/`
+      TASK: E2E Pipeline with unsloth/Qwen3.6-35B-A3B-GGUF.
+      MODEL_SPECS: ["unsloth/Qwen3.6-35B-A3B-GGUF"]
+      CONCRETE STEPS:
+      1. Run full verify-repair on Qwen3.6.
+      2. Write {project_root}/results/experiment_1835_qwen.json
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1836-gemma31-capstone
+    title: 'Exp 1836: Capstone: Dual-GPU SOTA Pipeline with Gemma4-31B-it-GGUF'
+    prompt: |
+      CONTEXT: Evaluate on Gemma dense flagship. Scheduled on {date}.
+      EXISTING CODE TO READ FIRST: `scripts/`
+      TASK: E2E Pipeline with unsloth/gemma-4-31B-it-GGUF.
+      MODEL_SPECS: ["unsloth/gemma-4-31B-it-GGUF"]
+      CONCRETE STEPS:
+      1. Run full pipeline evaluation.
+      2. Write {project_root}/results/experiment_1836_gemma31.json
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1837-gemma26-capstone
+    title: 'Exp 1837: Capstone: Dual-GPU SOTA Pipeline with Gemma4-26B-A4B-it-GGUF'
+    prompt: |
+      CONTEXT: Evaluate on middle MoE. Scheduled on {date}.
+      EXISTING CODE TO READ FIRST: `scripts/`
+      TASK: E2E Pipeline with unsloth/gemma-4-26B-A4B-it-GGUF.
+      MODEL_SPECS: ["unsloth/gemma-4-26B-A4B-it-GGUF"]
+      CONCRETE STEPS:
+      1. Run full pipeline evaluation.
+      2. Write {project_root}/results/experiment_1837_gemma26.json
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1838-retro
+    title: 'Exp 1838: Milestone 2026.05.142 Retrospective'
+    max_turns: 20
+    prompt: |
+      CONTEXT: Close out milestone .142 on {date}.
+      EXISTING CODE TO READ FIRST: `ops/status.md`
+      TASK: Operational retrospective.
+      CONCRETE STEPS:
+      1. Analyze logs from experiments 1825-1837.
+      2. Write {project_root}/results/experiment_1838_retro.json
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
