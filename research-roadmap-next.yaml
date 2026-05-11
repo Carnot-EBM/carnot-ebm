@@ -1,0 +1,192 @@
+milestone: 2026.05.137
+milestone_title: "Phase-14: Continuous Latent Optimization, HILED Hardware Bring-up, and Multi-Session Memory"
+milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
+tasks:
+  - id: exp1771-continuous-latent-modeling
+    title: "Exp 1771: Continuous Latent Constraint Modeling"
+    prompt: >
+      CONTEXT: We must optimize elicited constraints in a continuous latent space using Langevin dynamics during generation (arXiv:2605.18210).
+      EXISTING CODE TO READ FIRST: `python/carnot/models/hrm_verifier.py`, `python/carnot/pipeline/roce_extractor.py`.
+      TASK: Implement the continuous latent constraint optimizer.
+      CONCRETE STEPS:
+      1. Create `python/carnot/models/latent_optimizer.py`.
+      2. Implement Langevin dynamics for continuous constraint relaxation and optimization over HRM outputs.
+      3. Add unit tests for energy descent.
+      4. Write `{project_root}/results/experiment_1771_latent_optimizer.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1772-differentiable-elicitation
+    title: "Exp 1772: gated on Exp 1771 honest_verdict in success: Differentiable Constraint Elicitation"
+    gated_on:
+      - upstream: exp1771-continuous-latent-modeling
+        artifact_field: honest_verdict
+        op: in
+        value: ["success", "complete"]
+    prompt: >
+      CONTEXT: ROCE must be integrated with the continuous latent optimizer so elicited constraints can be differentiated.
+      EXISTING CODE TO READ FIRST: `python/carnot/models/latent_optimizer.py`, `python/carnot/pipeline/roce_extractor.py`.
+      TASK: Integrate ROCE with the latent optimizer.
+      CONCRETE STEPS:
+      1. Modify `python/carnot/pipeline/roce_extractor.py` or create a wrapper `python/carnot/pipeline/differentiable_roce.py`.
+      2. Ensure constraint outputs support gradient flow for the latent optimizer.
+      3. Write `{project_root}/results/experiment_1772_diff_roce.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1773-latent-benchmark
+    title: "Exp 1773: Multi-modal constraint benchmark evaluation"
+    prompt: >
+      CONTEXT: Evaluate the continuous latent constraint modeling on our multi-modal constraint benchmark.
+      EXISTING CODE TO READ FIRST: `python/carnot/models/latent_optimizer.py`.
+      TASK: Run the continuous benchmark.
+      CONCRETE STEPS:
+      1. Create `scripts/experiment_1773_latent_benchmark.py`.
+      2. Use `unsloth/gemma-4-31B-it-GGUF` in MODEL_SPECS.
+      3. Record energy convergence and validity rates.
+      4. Write `{project_root}/results/experiment_1773_latent_benchmark.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1774-differentiable-memory-bank
+    title: "Exp 1774: Differentiable Constraint Memory Bank"
+    prompt: >
+      CONTEXT: Multi-session continual learning requires a differentiable memory bank (arXiv:2605.09332) to persist structured constraints without forgetting.
+      EXISTING CODE TO READ FIRST: `python/carnot/pipeline/continual_memory.py`.
+      TASK: Implement the differentiable constraint memory bank.
+      CONCRETE STEPS:
+      1. Create `python/carnot/pipeline/differentiable_memory.py`.
+      2. Implement the memory bank operations (read, write, update) using differentiable attention mechanisms.
+      3. Write `{project_root}/results/experiment_1774_diff_memory.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1775-cross-session-retrieval
+    title: "Exp 1775: Cross-session semantic retrieval mechanism"
+    prompt: >
+      CONTEXT: We need to retrieve constraints across different sessions robustly using semantic keys.
+      EXISTING CODE TO READ FIRST: `python/carnot/pipeline/differentiable_memory.py`.
+      TASK: Build the cross-session retrieval mechanism.
+      CONCRETE STEPS:
+      1. Create `python/carnot/pipeline/cross_session_retrieval.py`.
+      2. Integrate it with the differentiable memory bank.
+      3. Write `{project_root}/results/experiment_1775_cross_session.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1776-multi-session-forgetting
+    title: "Exp 1776: Multi-session forgetting rate evaluation"
+    prompt: >
+      CONTEXT: Test the multi-session memory bank to ensure catastrophic forgetting is mitigated.
+      EXISTING CODE TO READ FIRST: `python/carnot/pipeline/cross_session_retrieval.py`.
+      TASK: Evaluate multi-session forgetting rates.
+      CONCRETE STEPS:
+      1. Create `scripts/experiment_1776_forgetting_eval.py`.
+      2. Simulate 3 sequential sessions and measure constraint retention using `unsloth/gemma-4-26B-A4B-it-GGUF`.
+      3. Write `{project_root}/results/experiment_1776_forgetting_eval.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1777-ltlzinc-scaleup
+    title: "Exp 1777: Self-learning pipeline scale-up on LTLZinc"
+    prompt: >
+      CONTEXT: Scale up the continual learning on the LTLZinc benchmark using the new memory architecture.
+      EXISTING CODE TO READ FIRST: `scripts/experiment_1776_forgetting_eval.py`.
+      TASK: Run the LTLZinc continual learning scale-up.
+      CONCRETE STEPS:
+      1. Create `scripts/experiment_1777_ltlzinc_scaleup.py`.
+      2. Use `unsloth/gemma-4-31B-it-GGUF` and execute the full continuous loop.
+      3. Write `{project_root}/results/experiment_1777_ltlzinc_scaleup.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1778-kv260-bitfile-synthesis
+    title: "Exp 1778: Synthesize KV260 Bitfile for HILED AXI endpoints"
+    model: opus
+    max_turns: 100
+    prompt: >
+      CONTEXT: We must synthesize the bitfile for the KV260 FPGA to execute the HILED software prototype built in .136.
+      EXISTING CODE TO READ FIRST: `hardware/kv260/synth_ising.tcl`, `hardware/kv260/ising_sampler_v2.v`.
+      TASK: Synthesize the HILED FPGA bitfile.
+      CONCRETE STEPS:
+      1. Update TCL scripts to include the HILED endpoints.
+      2. Attempt bitfile synthesis (mock the output if Vivado is unavailable but document the TCL/RTL correctness).
+      3. Write `{project_root}/results/experiment_1778_kv260_synthesis.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1779-kv260-zero-shot-test
+    title: "Exp 1779: gated on Exp 1778 honest_verdict in success: Flash KV260 board and run zero-shot hardware test"
+    model: opus
+    max_turns: 100
+    gated_on:
+      - upstream: exp1778-kv260-bitfile-synthesis
+        artifact_field: honest_verdict
+        op: in
+        value: ["success", "complete"]
+    prompt: >
+      CONTEXT: Validate the synthesized HILED bitfile on the KV260 board.
+      EXISTING CODE TO READ FIRST: `python/carnot/inference/hiled_decoder.py`.
+      TASK: Execute the zero-shot hardware test over AXI.
+      CONCRETE STEPS:
+      1. Create `scripts/experiment_1779_kv260_hiled_test.py`.
+      2. Interface with the PYNQ overlay and execute energy scoring.
+      3. Write `{project_root}/results/experiment_1779_kv260_hiled_test.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1780-hiled-pyo3-bindings
+    title: "Exp 1780: PyO3/Rust HILED binding boilerplate"
+    agent_type: codex
+    prompt: >
+      CONTEXT: The HILED integration needs high-performance Rust bindings for the Python API to minimize bridging latency.
+      EXISTING CODE TO READ FIRST: `crates/carnot-python/src/`, `python/carnot/inference/hiled_decoder.py`.
+      TASK: Implement PyO3 boilerplate for HILED.
+      CONCRETE STEPS:
+      1. Create or update the relevant rust files in `crates/carnot-python/src/hiled.rs`.
+      2. Expose the Rust hardware structs to Python.
+      3. Write `{project_root}/results/experiment_1780_hiled_bindings.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1781-hiled-latency-benchmark
+    title: "Exp 1781: Hardware vs Software Latency and Energy convergence benchmark"
+    prompt: >
+      CONTEXT: Benchmark the new HILED hardware setup against the software fallback.
+      EXISTING CODE TO READ FIRST: `scripts/experiment_1779_kv260_hiled_test.py`.
+      TASK: Run latency and convergence benchmarking.
+      CONCRETE STEPS:
+      1. Create `scripts/experiment_1781_hiled_benchmark.py`.
+      2. Compare inference speed and energy metrics.
+      3. Write `{project_root}/results/experiment_1781_hiled_benchmark.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1782-e2e-qwen
+    title: "Exp 1782: Capstone E2E Pipeline with Qwen3.6-35B-A3B"
+    model: opus
+    max_turns: 100
+    prompt: >
+      CONTEXT: End-to-end evaluation using the flagship MoE model, integrating all Phase 1-3 improvements.
+      EXISTING CODE TO READ FIRST: `scripts/experiment_1781_hiled_benchmark.py`, `scripts/experiment_1777_ltlzinc_scaleup.py`.
+      TASK: Run E2E pipeline.
+      CONCRETE STEPS:
+      1. Create `scripts/experiment_1782_e2e_qwen.py`.
+      2. Configure MODEL_SPECS to use `unsloth/Qwen3.6-35B-A3B-GGUF`.
+      3. Run execution, collect latency, parse rate, and energy scores.
+      4. Write `{project_root}/results/experiment_1782_e2e_qwen.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1783-e2e-gemma31
+    title: "Exp 1783: Capstone E2E Pipeline with Gemma4-31B-it"
+    prompt: >
+      CONTEXT: End-to-end evaluation using the flagship dense model.
+      EXISTING CODE TO READ FIRST: `scripts/experiment_1782_e2e_qwen.py`.
+      TASK: Run E2E pipeline.
+      CONCRETE STEPS:
+      1. Create `scripts/experiment_1783_e2e_gemma31.py`.
+      2. Configure MODEL_SPECS to use `unsloth/gemma-4-31B-it-GGUF`.
+      3. Write `{project_root}/results/experiment_1783_e2e_gemma31.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1784-retro
+    title: "Exp 1784: Milestone .137 Retrospective"
+    max_turns: 20
+    prompt: >
+      CONTEXT: Phase 4 Operations. Aggregate results.
+      EXISTING CODE TO READ FIRST: `results/experiment_1771_*.json` to `results/experiment_1783_*.json`.
+      TASK: Write retrospective.
+      CONCRETE STEPS:
+      1. Create `scripts/experiment_1784_retro.py`.
+      2. Parse all milestone result JSONs.
+      3. Write `{project_root}/results/experiment_1784_retro.json` detailing honest_verdict.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
