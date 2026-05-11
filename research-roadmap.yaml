@@ -1,192 +1,181 @@
-milestone: 2026.05.134
-milestone_title: "Phase-11 Live SOTA Integration, EqM Scaling, and Hardware Resolution"
+milestone: 2026.05.135
+milestone_title: "Phase-12: System-2 Latency Scaling, Symbolic-KAN Integration, and Multi-Agent Verification"
 milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
 tasks:
-  - id: exp1735-dual-gpu-smoke
-    title: "Exp 1735: Dual RTX 3090 SOTA CUDA Runtime Smoke Test"
-    deliverable: results/experiment_1735_dual_gpu_smoke.json
-    model: opus
-    max_turns: 100
-    prompt: |
-      CONTEXT: Milestone .134 Phase 1. We must unblock the dual RTX 3090 CUDA runtime for live SOTA model inference, which has been blocked by llama.cpp runtime errors.
-      EXISTING CODE TO READ FIRST: python/carnot/inference/model_loader.py
-      TASK: Implement a robust smoke test that successfully loads a SOTA GGUF model across two RTX 3090s and generates a valid response.
+  - id: exp1746-eqm-cuda-profile
+    title: "Exp 1746: Profile EqM CUDA overhead with SOTA MoE"
+    max_turns: 30
+    prompt: >
+      CONTEXT: The milestone .134 retrospective identified EqM latency overhead (~150.5 ms/step) as a blocker for real-time inference.
+      EXISTING CODE TO READ FIRST: `python/carnot/pipeline/eqm_sampler.py`, `tests/python/test_eqm.py`.
+      TASK: Profile the EqM sampling bottleneck during test-time guidance using the local SOTA MoE model. The profile should measure where time is spent in the gradient updates.
       CONCRETE STEPS:
-      1. Create `{project_root}/scripts/experiment_1735_dual_gpu_smoke.py`.
-      2. Ensure CUDA is correctly detected. If not, implement a structured fallback/diagnostic.
-      3. Use `MODEL_SPECS` with `unsloth/Qwen3.6-35B-A3B-GGUF` (or `unsloth/gemma-4-31B-it-GGUF`) via the `cached_sota_pair()` pattern.
-      4. Run a simple inference query and record `usable_response=True` upon success.
-      5. Write results to `{project_root}/results/experiment_1735_dual_gpu_smoke.json`.
-      CRITICAL: write artifact FIRST.
+      1. Create `scripts/experiment_1746_eqm_profile.py`.
+      2. Configure MODEL_SPECS to use `unsloth/Qwen3.6-35B-A3B-GGUF`.
+      3. Implement PyTorch/CUDA profiling around the EqM test-time sampler.
+      4. Write `{project_root}/results/experiment_1746_profile.json` with the timing metrics.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp1736-kanele-vivado-synth
-    title: "Exp 1736: KV260 KANELÉ Vivado Synthesis"
-    deliverable: results/experiment_1736_kanele_synth.json
-    model: opus
-    max_turns: 100
-    prompt: |
-      CONTEXT: Phase 1 Hardware unblocking. We need to synthesize the KANELÉ RTL from Milestone .133 into a physical bitfile using Vivado.
-      EXISTING CODE TO READ FIRST: hardware/kv260/kanele_top.v
-      TASK: Generate the bitfile for the KV260 board.
-      CONCRETE STEPS:
-      1. Update `{project_root}/hardware/kv260/synth_kanele.tcl` to properly synthesize `kanele_top.v` for the KV260 target.
-      2. Create `{project_root}/scripts/experiment_1736_kanele_synth.py` to trigger the Vivado batch job (or simulate the success output if Vivado is still globally unavailable, but attempt the actual run first).
-      3. Write results to `{project_root}/results/experiment_1736_kanele_synth.json`.
-      CRITICAL: write artifact FIRST.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp1737-kanele-board-exec
-    title: "Exp 1737: KV260 KANELÉ Live Board Latency Benchmark"
-    deliverable: results/experiment_1737_kanele_board.json
+  - id: exp1747-eqm-sparse-updates
+    title: "Exp 1747: gated on Exp 1746: Implement sparse updates for EqM"
     gated_on:
-      - upstream: exp1736-kanele-vivado-synth
-        artifact_field: status
-        op: ==
-        value: "success"
+      - upstream: exp1746-eqm-cuda-profile
+        artifact_field: honest_verdict
+        op: in
+        value: ["success", "complete", "profiled"]
+    prompt: >
+      CONTEXT: Based on the profile from Exp 1746, we need to implement sparse gradient updates to lower the overhead of EqM sampling.
+      EXISTING CODE TO READ FIRST: `python/carnot/pipeline/eqm_sampler.py`.
+      TASK: Implement sparse tensor updates in the EqM sampling loop to skip near-zero gradients during energy minimization.
+      CONCRETE STEPS:
+      1. Create `scripts/experiment_1747_eqm_sparse.py`.
+      2. Modify the EqM sampler to conditionally apply sparse updates.
+      3. Validate output distribution matches dense updates.
+      4. Write `{project_root}/results/experiment_1747_sparse.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1748-eqm-hardware-benchmark
+    title: "Exp 1748: Hardware benchmark of sparse EqM sampler (Target <100ms)"
     model: opus
     max_turns: 100
-    prompt: |
-      CONTEXT: Phase 1 Hardware unblocking. Assuming the bitfile is available, we must execute the CIKAN inference on the actual FPGA.
-      EXISTING CODE TO READ FIRST: scripts/experiment_1736_kanele_synth.py
-      TASK: Run a latency benchmark of the KANELÉ bitfile on the KV260 using PYNQ AXI interfaces.
+    prompt: >
+      CONTEXT: The goal is to verify if the sparse EqM sampler drops the latency under 100ms on Dual GPU setups.
+      EXISTING CODE TO READ FIRST: `scripts/experiment_1747_eqm_sparse.py`.
+      TASK: Benchmark the new sparse EqM sampler on a hardware setup.
       CONCRETE STEPS:
-      1. Create `{project_root}/scripts/experiment_1737_kanele_board.py`.
-      2. Load the synthesised bitfile into the KV260.
-      3. Pass 1000 input states and measure the hardware latency in microseconds.
-      4. Write results to `{project_root}/results/experiment_1737_kanele_board.json`.
-      CRITICAL: write artifact FIRST.
+      1. Create `scripts/experiment_1748_benchmark.py`.
+      2. Run the hardware benchmark across a batch of 100 samples.
+      3. Write `{project_root}/results/experiment_1748_benchmark.json` detailing latency statistics.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp1738-live-telemetry-streamer
-    title: "Exp 1738: Live Telemetry Streamer for Continual Learning"
-    deliverable: results/experiment_1738_telemetry.json
-    max_turns: 50
-    prompt: |
-      CONTEXT: Phase 2 Continual Self-Learning. To enable continuous updates, we need a mechanism to stream violation feedback from active inference sessions.
-      EXISTING CODE TO READ FIRST: python/carnot/pipeline/verification_loop.py
-      TASK: Implement an asynchronous telemetry streamer.
-      CONCRETE STEPS:
-      1. Create `{project_root}/python/carnot/training/telemetry_streamer.py`.
-      2. Implement a non-blocking queue that records `VerificationResult` instances (both successes and failures).
-      3. Create `{project_root}/scripts/experiment_1738_telemetry.py` to simulate a load test of the streamer.
-      4. Write results to `{project_root}/results/experiment_1738_telemetry.json`.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp1739-online-eorm-update
-    title: "Exp 1739: Tier 3 EORM Live Updates"
-    deliverable: results/experiment_1739_eorm_update.json
-    gated_on:
-      - upstream: exp1738-live-telemetry-streamer
-        artifact_field: status
-        op: ==
-        value: "success"
-    max_turns: 50
-    prompt: |
-      CONTEXT: Phase 2 Continual Self-Learning. Using the telemetry stream, perform micro-batch gradient updates to the Energy-based Reward Model (EORM) and JEPA predictor.
-      EXISTING CODE TO READ FIRST: python/carnot/training/telemetry_streamer.py
-      TASK: Implement the continuous fine-tuning loop.
-      CONCRETE STEPS:
-      1. Create `{project_root}/python/carnot/training/continuous_finetuner.py`.
-      2. Pull from the telemetry stream and run an AdamW update step every N samples.
-      3. Create `{project_root}/scripts/experiment_1739_eorm_update.py` to evaluate the adaptation rate over a synthetic distribution shift.
-      4. Write results to `{project_root}/results/experiment_1739_eorm_update.json`.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp1740-eqm-gpu-port
-    title: "Exp 1740: EqM Sampler GPU Integration"
-    deliverable: results/experiment_1740_eqm_gpu.json
+  - id: exp1749-symbolic-kan-prototype
+    title: "Exp 1749: Symbolic-KAN structure mapping prototype"
     agent_type: codex
     max_turns: 50
-    prompt: |
-      CONTEXT: Phase 3 EqM Scaling. The EqM (Equilibrium Matching) sampler must run on the GPU (via PyTorch/JAX or ROCm) to support the latency required for live SOTA inference.
-      EXISTING CODE TO READ FIRST: python/carnot/samplers/equilibrium_matching.py
-      TASK: Port the EqM sampler core to a GPU-accelerated backend.
+    prompt: >
+      CONTEXT: Based on arXiv:2603.23854, Symbolic-KANs bridge discrete symbolic regression with neural networks. We want to prototype this mapping into Carnot's tensor space.
+      EXISTING CODE TO READ FIRST: `python/carnot/models/kan/`.
+      TASK: Prototype a Symbolic-KAN module that embeds discrete symbolic structures.
       CONCRETE STEPS:
-      1. Modify `{project_root}/python/carnot/samplers/equilibrium_matching.py` to add a JAX/CUDA path.
-      2. Create `{project_root}/scripts/experiment_1740_eqm_gpu.py` to benchmark CPU vs GPU latency for the EqM update rule.
-      3. Write results to `{project_root}/results/experiment_1740_eqm_gpu.json`.
+      1. Create `python/carnot/models/kan/symbolic_kan.py`.
+      2. Implement a symbolic routing layer.
+      3. Add comprehensive unit tests in `tests/python/test_symbolic_kan.py`.
+      4. Write `{project_root}/results/experiment_1749_symbolic_kan.json`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp1741-guided-gen-sota
-    title: "Exp 1741: EqM Guided Generation with SOTA Models"
-    deliverable: results/experiment_1741_eqm_sota.json
-    gated_on:
-      - upstream: exp1740-eqm-gpu-port
-        artifact_field: status
-        op: ==
-        value: "success"
-    max_turns: 50
-    prompt: |
-      CONTEXT: Phase 3 EqM Scaling. Integrate the GPU-accelerated EqM sampler with the `unsloth/Qwen3.6-35B-A3B-GGUF` logit processors to perform energy-guided decoding.
-      EXISTING CODE TO READ FIRST: python/carnot/pipeline/energy_guided_decoder.py
-      TASK: Wire the EqM sampler into the logit processor.
+  - id: exp1750-symbolic-kan-eval
+    title: "Exp 1750: Evaluate Symbolic-KAN constraint accuracy vs CIKAN"
+    prompt: >
+      CONTEXT: Compare the new Symbolic-KAN module against the baseline Constraint-Informed KAN (CIKAN).
+      EXISTING CODE TO READ FIRST: `python/carnot/models/kan/symbolic_kan.py`, `python/carnot/models/kan/cikan.py`.
+      TASK: Run a constraint accuracy evaluation.
       CONCRETE STEPS:
-      1. Create `{project_root}/python/carnot/pipeline/eqm_decoder.py`.
-      2. Create `{project_root}/scripts/experiment_1741_eqm_sota.py` using `MODEL_SPECS` containing the mandated SOTA models.
-      3. Perform a small 10-question evaluation to ensure generation does not collapse and obeys the EqM energy bounds.
-      4. Write results to `{project_root}/results/experiment_1741_eqm_sota.json`.
+      1. Create `scripts/experiment_1750_symbolic_eval.py`.
+      2. Train both models on a toy dataset mapping simple logic rules.
+      3. Compare constraint preservation rate.
+      4. Write `{project_root}/results/experiment_1750_symbolic_eval.json`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp1742-swe-bench-lite
-    title: "Exp 1742: SWE-Bench Lite EqM Harness Preparation"
-    deliverable: results/experiment_1742_swe_bench.json
+  - id: exp1751-symbolic-kan-e2e
+    title: "Exp 1751: End-to-End Symbolic-KAN verifiable tier integration"
+    prompt: >
+      CONTEXT: Integrate the Symbolic-KAN prototype as a verifiable tier in the main reasoning pipeline.
+      EXISTING CODE TO READ FIRST: `python/carnot/pipeline/`.
+      TASK: Plug Symbolic-KANs into the E2E verification tier.
+      CONCRETE STEPS:
+      1. Create `scripts/experiment_1751_e2e.py`.
+      2. Ensure the verifiable tier routes through the Symbolic-KAN when applicable.
+      3. Write `{project_root}/results/experiment_1751_e2e.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1752-ltlzinc-spatial
+    title: "Exp 1752: Expand LTLZinc benchmark to include spatial reasoning tasks"
     agent_type: codex
-    max_turns: 50
-    prompt: |
-      CONTEXT: Phase 3 EqM Scaling. We will test EqM-guided generation on code verification using a subset of SWE-Bench Lite.
-      EXISTING CODE TO READ FIRST: python/carnot/pipeline/humaneval_live_benchmark.py
-      TASK: Create the test harness to fetch and evaluate SWE-Bench Lite problems using Carnot verify-repair.
+    prompt: >
+      CONTEXT: The continual learning curriculum needs broadening. The LTLZinc benchmark must expand to spatial reasoning.
+      EXISTING CODE TO READ FIRST: `data/ltlzinc_benchmark.json`.
+      TASK: Generate new spatial reasoning tasks for LTLZinc.
       CONCRETE STEPS:
-      1. Create `{project_root}/python/carnot/pipeline/swebench_harness.py`.
-      2. Create `{project_root}/scripts/experiment_1742_swe_bench.py` to run 5 targeted SWE-Bench Lite problems through the SOTA models with EqM decoding disabled as a baseline.
-      3. Write results to `{project_root}/results/experiment_1742_swe_bench.json`.
+      1. Create `scripts/experiment_1752_expand_ltlzinc.py`.
+      2. Generate 100 spatial reasoning constraints (e.g. topological map routing).
+      3. Append to or create `data/ltlzinc_spatial_benchmark.json`.
+      4. Write `{project_root}/results/experiment_1752_spatial.json`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp1743-large-scale-system2
-    title: "Exp 1743: Large-Scale System-2 GSM8K/MATH Benchmark"
-    deliverable: results/experiment_1743_large_benchmark.json
-    gated_on:
-      - upstream: exp1741-guided-gen-sota
-        artifact_field: status
-        op: ==
-        value: "success"
-    max_turns: 50
-    prompt: |
-      CONTEXT: Phase 3 EqM Scaling. The definitive benchmark for milestone .134: full-scale System-2 reasoning using EqM + `unsloth/gemma-4-31B-it-GGUF`.
-      EXISTING CODE TO READ FIRST: scripts/experiment_161_full_gsm8k.py
-      TASK: Run a large-scale (500+ question) benchmark across GSM8K and MATH comparing standard greedy decoding with EqM-guided System-2 decoding.
+  - id: exp1753-continual-stability
+    title: "Exp 1753: Continuous self-learning stability test on expanded LTLZinc"
+    prompt: >
+      CONTEXT: Test stability using the new spatial benchmarks on the flagship dense model.
+      EXISTING CODE TO READ FIRST: `scripts/experiment_1752_expand_ltlzinc.py`.
+      TASK: Run a continual learning loop with `unsloth/gemma-4-31B-it-GGUF`.
       CONCRETE STEPS:
-      1. Create `{project_root}/scripts/experiment_1743_large_benchmark.py`.
-      2. Ensure `MODEL_SPECS` includes `unsloth/gemma-4-31B-it-GGUF`.
-      3. Compute 95% bootstrap CIs for the performance delta.
-      4. Write results to `{project_root}/results/experiment_1743_large_benchmark.json`.
+      1. Create `scripts/experiment_1753_continual_stability.py`.
+      2. Run the continual stability evaluation loop over the expanded dataset.
+      3. Write `{project_root}/results/experiment_1753_continual.json`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp1744-latency-accuracy-impact
-    title: "Exp 1744: System-2 Latency vs Accuracy Impact Analysis"
-    deliverable: results/experiment_1744_impact.json
-    agent_type: gemini
-    max_turns: 50
-    prompt: |
-      CONTEXT: Phase 4 Synthesis. We need to analyze the tradeoff between the added latency of EqM-guided decoding and the final accuracy gains on the large benchmark.
-      EXISTING CODE TO READ FIRST: results/experiment_1743_large_benchmark.json
-      TASK: Perform a deep analytical breakdown of the results from Exp 1743.
+  - id: exp1754-semantic-distillation
+    title: "Exp 1754: Continual learning memory buffer semantic distillation"
+    prompt: >
+      CONTEXT: The continual learning buffer scales indefinitely unless distilled. We need semantic distillation to prune redundant memory states.
+      EXISTING CODE TO READ FIRST: `python/carnot/pipeline/continual_memory.py`.
+      TASK: Implement semantic distillation.
       CONCRETE STEPS:
-      1. Create `{project_root}/scripts/experiment_1744_impact.py` to parse the logs and produce a scatter plot / JSON summary of token-latency vs repair-success.
-      2. Write findings to `{project_root}/results/experiment_1744_impact.json`.
+      1. Create `scripts/experiment_1754_distillation.py`.
+      2. Group memory states by semantic clustering and retain only representative vectors.
+      3. Write `{project_root}/results/experiment_1754_distillation.json`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp1745-milestone-retro
-    title: "Exp 1745: Milestone .134 Retrospective"
-    deliverable: results/experiment_1745_retro.json
+  - id: exp1755-multi-agent-framework
+    title: "Exp 1755: Multi-agent orchestrator framework prototype"
+    model: opus
+    max_turns: 100
+    prompt: >
+      CONTEXT: We need parallel System-2 validation where multiple agents independently verify constraints.
+      EXISTING CODE TO READ FIRST: `python/carnot/pipeline/`.
+      TASK: Design a multi-agent orchestrator framework.
+      CONCRETE STEPS:
+      1. Create `python/carnot/pipeline/multi_agent_orchestrator.py`.
+      2. Implement asynchronous dispatch and quorum-based consensus aggregation.
+      3. Write `{project_root}/results/experiment_1755_orchestrator.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1756-multi-agent-putnambench
+    title: "Exp 1756: Evaluate multi-agent orchestration on PutnamBench subset"
+    prompt: >
+      CONTEXT: Evaluate the new multi-agent orchestrator on formal reasoning.
+      EXISTING CODE TO READ FIRST: `python/carnot/pipeline/multi_agent_orchestrator.py`.
+      TASK: Run a PutnamBench subset to see if multi-agent orchestration raises the verification bound.
+      CONCRETE STEPS:
+      1. Create `scripts/experiment_1756_putnambench.py`.
+      2. Route 20 PutnamBench formal math tasks through the multi-agent verifier.
+      3. Write `{project_root}/results/experiment_1756_putnambench.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1757-e2e-multi-agent
+    title: "Exp 1757: E2E Pipeline Live SOTA Eval (EqM + Symbolic-KAN + Multi-Agent)"
+    model: opus
+    max_turns: 100
+    prompt: >
+      CONTEXT: The final E2E test combining latency-optimized EqM, Symbolic-KAN, and Multi-Agent Orchestration on a mandated SOTA GGUF.
+      EXISTING CODE TO READ FIRST: `python/carnot/pipeline/`.
+      TASK: Execute the full combined pipeline.
+      CONCRETE STEPS:
+      1. Create `scripts/experiment_1757_e2e_live.py`.
+      2. Initialize `unsloth/gemma-4-26B-A4B-it-GGUF`.
+      3. Run end-to-end inference incorporating all new milestone capabilities.
+      4. Write `{project_root}/results/experiment_1757_e2e.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1758-retro
+    title: "Exp 1758: Milestone .135 Retrospective"
     max_turns: 20
-    prompt: |
-      CONTEXT: Phase 4 Synthesis. Finalizing milestone .134.
-      EXISTING CODE TO READ FIRST: results/experiment_1744_impact.json
-      TASK: Generate the retrospective document summarizing hardware resolution, continuous learning scale-up, and System-2 EqM accuracy.
+    prompt: >
+      CONTEXT: Phase 5 Operations. Aggregate the results of Milestone .135.
+      EXISTING CODE TO READ FIRST: `results/experiment_1746_*.json` to `results/experiment_1757_*.json`.
+      TASK: Write the retrospective.
       CONCRETE STEPS:
-      1. Create `{project_root}/scripts/experiment_1745_retro.py` that parses the results of Phase 1-3.
-      2. Summarize findings and identify gaps for milestone .135.
-      3. Write `{project_root}/results/experiment_1745_retro.json`.
+      1. Create `scripts/experiment_1758_retro.py`.
+      2. Parse all milestone result JSONs.
+      3. Output `{project_root}/results/experiment_1758_retro.json` detailing honest_verdict and new gaps.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
