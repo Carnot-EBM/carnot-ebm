@@ -1,22 +1,47 @@
-content = """
-### REQ-REPORT-1745: Milestone .134 Synthesis Retrospective
+import re
 
-The Exp 1745 milestone .134 retrospective workflow shall parse the results of Phase 1-3, summarize findings regarding hardware resolution, continuous learning scale-up, and System-2 EqM accuracy, and identify gaps for milestone .135. It shall write `results/experiment_1745_retro.json` containing:
+def append_to_table(filepath, header_text, new_rows):
+    with open(filepath, 'r') as f:
+        content = f.read()
 
-- `milestone` set to `2026.05.134`
-- `hardware_resolution` summarizing hardware findings
-- `continuous_learning_scale_up` summarizing continuous learning
-- `system_2_eqm_accuracy` summarizing System-2 EqM accuracy
-- `gaps_for_135` listing gaps for the next milestone
-- `honest_verdict` recording the overall outcome
+    # Find the end of the markdown table that follows the header_text
+    # We look for the header, then skip to the end of the table
+    header_idx = content.find(header_text)
+    if header_idx == -1:
+        return False
+    
+    # Find the table start after the header
+    table_start_idx = content.find('|', header_idx)
+    if table_start_idx == -1:
+        return False
+        
+    # Find the end of the table (first empty line after the table)
+    match = re.search(r'(\n\|.*)+\n\n', content[table_start_idx-1:])
+    if match:
+        table_end_idx = table_start_idx - 1 + match.end() - 1
+        
+        # Insert new rows
+        new_content = content[:table_end_idx] + new_rows + content[table_end_idx:]
+        with open(filepath, 'w') as f:
+            f.write(new_content)
+        return True
+    return False
 
-### SCENARIO-REPORT-1745: Exp 1745 Generates Phase 4 Synthesis Retrospective
+# New rows based on changelog:
+new_rows = """
+| Constraint-Informed KAN (CIKAN) | Baseline KAN | CIKAN Boundary | FourierCSP constraint compiled into fixed CIKAN boundary and preserved | Exp 1723/1725 |
+| EqM Sampler GPU Integration | CPU Gibbs | GPU EqM | Equilibrium Matching (EqM) Gradient Sampler converged faster on GPU | Exp 1727/1740 |
+| Live Telemetry Streamer | Batch-only telemetry | Streamer load tested | Live Telemetry Streamer for Continual Learning load test successful | Exp 1738 |
+| Milestone .134 closeout | .133 | Phase 4 synthesis | Analyzed wall time / experiments for .134 with phase_4_synthesis_complete | Exp 1745 |"""
 
-**Given** the completion of Phase 1-3 experiments up to 1744
-**When** the Exp 1745 workflow runs
-**Then** it writes all required REQ-REPORT-1745 fields
-**And** identifies clear gaps for milestone .135.
-"""
+append_to_table('docs/technical-report.md', '## Headline Results', new_rows)
+append_to_table('README.md', '## Headline Results', new_rows) # Wait, README.md might not have '## Headline Results'
 
-with open('openspec/capabilities/research-reporting/spec.md', 'a') as f:
-    f.write(content)
+# Let's check README.md table header
+with open('README.md', 'r') as f:
+    readme = f.read()
+    if '### Latest follow-ons' in readme:
+        readme = readme.replace('### Latest follow-ons', '### Latest follow-ons\n' + '\n'.join(['- **' + row.split('|')[1].strip() + ':** ' + row.split('|')[4].strip() + ' - ' + row.split('|')[3].strip() for row in new_rows.strip().split('\n')]))
+        with open('README.md', 'w') as out:
+            out.write(readme)
+

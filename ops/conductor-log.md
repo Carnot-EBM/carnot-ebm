@@ -1589,3 +1589,4 @@ web search: site:o |
 | 2026-05-10 22:32 UTC | Exp 1744: System-2 Latency vs Accuracy Impact Anal | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1744_impact. |
 | 2026-05-10 22:34 UTC | Exp 1743: Large-Scale System-2 GSM8K/MATH Benchmar | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1741-guided-gen-sota) |
 | 2026-05-10 22:36 UTC | Exp 1744: System-2 Latency vs Accuracy Impact Anal | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1744_impact. |
+| 2026-05-10 22:41 UTC | Exp 1745: Milestone .134 Retrospective | OK | 81 passed, 1 warning in 5.08s |

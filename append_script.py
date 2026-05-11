@@ -1,26 +1,17 @@
 import re
 
-# Append to docs/roadmap.md
-with open('docs/roadmap.md', 'r') as f:
-    roadmap = f.read()
+with open('docs/index.html', 'r') as f:
+    content = f.read()
 
-roadmap_new = roadmap + "\n| 2026.05.133 | Operational Efficiency Analysis | 1603-1711+ | 1483 min wall time; GPUs correctly idle; Pre-gate blocks bottleneck; fail-fast needed |\n"
+# Find the end of the Multi-step reasoning paragraph
+pattern = r'(<h3 class="bento-title">Multi-step reasoning</h3>.*?)(</p>)'
 
-with open('docs/roadmap.md', 'w') as f:
-    f.write(roadmap_new)
+def repl(m):
+    return m.group(1) + " Milestone .134 evaluated the EqM Gradient Sampler on System-2 reasoning benchmarks (MATH and GSM8K), successfully deployed CIKAN verification on FPGA hardware, and completed the full E2E pipeline with live telemetry and continual learning.\n        </p>"
 
-# Prepend to ops/changelog.md
-with open('ops/changelog.md', 'r') as f:
-    changelog = f.read()
+new_content = re.sub(pattern, repl, content, flags=re.DOTALL)
 
-new_changelog_entry = """# Carnot — Changelog
+with open('docs/index.html', 'w') as f:
+    f.write(new_content)
 
-## 2026-05-10 (Milestone 2026.05.133 Operational Retrospective)
-
-- 2026-05-10 20:58 UTC: Milestone 2026.05.133 operational retrospective complete. Analyzed 1483 min wall time / 280 experiments (avg 5 min). Slowest paths: Exp 1603 (88 min), Exp 1657 (57 min), Pre-gate block Exp 1711 (56 min), Exp 1642 (54 min). Doomed-rerun blocks correctly failed fast. Both RTX 3090s were completely idle at 0% utilization throughout, which is correct behavior as there were no compute-bound tasks. Estimated savings: implement fail-fast for pre-gate blocks.
-"""
-
-changelog_new = changelog.replace("# Carnot — Changelog\n", new_changelog_entry)
-
-with open('ops/changelog.md', 'w') as f:
-    f.write(changelog_new)
+print("Appended summary to index.html")

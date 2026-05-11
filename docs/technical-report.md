@@ -1,6 +1,6 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report — 2049 Experiments Across the Public Record, 146 Archived Milestone Records, 23,849 Python Test Items Collected (Artifacts Tracked Through Exp 1721)
+## A Technical Report — 2072 Experiments Across the Public Record, 148 Archived Milestone Records, 24,113 Python Test Items Collected (Artifacts Tracked Through Exp 1745)
 
 **Author:** Ian Blenke
 **Date:** 2026-05-10
@@ -29,15 +29,15 @@ a handful of lines of Python. Headline model-generation benchmark numbers are fr
 Qwen3.6-35B-A3B), never from simulated runs; hardware, ensemble, and
 adversarial-audit results are labeled by artifact provenance.
 
-This report documents the research arc behind the framework — **2,049
-experiment records tracked through Exp 1721, with 1,872 task records in 146
-artifact-backed completed milestone records archived through .132 and
-checked-in result artifacts extending through .132** — run between February
-and May 2026. `research-complete.yaml` currently archives **146** completed
-milestone records through 2026.05.132; checked-in result artifacts now extend
-through `results/experiment_1721_retro.json`. Milestone .132 is
+This report documents the research arc behind the framework — **2,072
+experiment records tracked through Exp 1745, with 1,872 task records in 148
+artifact-backed completed milestone records archived through .134 and
+checked-in result artifacts extending through .134** — run between February
+and May 2026. `research-complete.yaml` currently archives **148** completed
+milestone records through 2026.05.134; checked-in result artifacts now extend
+through `results/experiment_1721_retro.json`. Milestone .134 is
 present in the result-artifact and changelog layer; the `research-complete.yaml`
-archive currently stops at .132.
+archive currently stops at .134.
 The story now spans activation-based negative results, constraint-based
 verification, live SOTA-model benchmarks, production verifier ensembles,
 hardware sampler audits, continuous self-learning, Phase-5 in-situ training
@@ -127,7 +127,7 @@ certificate/semantic repair pipeline with `certificate_parse_rate=1.0`,
 `repair_hint_precision=1.0`, `semantic_validation_pass_rate=0.59`, and
 `full_pipeline_pass_rate=0.29`; Exp 1381 deployed the first DVI checkpoint with
 AUROC delta **+0.003486**; Exp 1388 extended FR-11 v4 to **59 fresh-verified
-cases** with delta **+1.791464**; and the arXiv v11 bundle became
+cases** with delta **+1.791484**; and the arXiv v11 bundle became
 submission-ready, although upload still required manual operator action. The
 sole .107 miss was GRPO v7 JURY-RL: all rollouts stayed UNKNOWN and the measured
 improvement was **0.0pp**.
@@ -224,14 +224,14 @@ and 1458 retired the GRPO/VPRM, WOPR puzzle-cartridge, and HardNet++/DSP
 variant lineages while preserving their useful process-supervision,
 demo-asset, and conservative-repair lessons. Exp 1459 selected the only
 headline self-learning pivot as Exp 1447-style verified fresh-memory growth.
-Exp 1460 narrowed active hardware work to **3** tracks; Exp 1461 made **10**
-comparator decisions (**6** cite, **1** retire, **3** watchlist); and Exp 1462
-narrowed paper-v6 to **4** anchored claims. Exp 1463 repaired the live local
+Exp 1480 narrowed active hardware work to **3** tracks; Exp 1481 made **10**
+comparator decisions (**6** cite, **1** retire, **3** watchlist); and Exp 1482
+narrowed paper-v6 to **4** anchored claims. Exp 1483 repaired the live local
 SOTA GGUF runtime by resolving the CUDA shared-library path and downloading the
 missing Gemma4-26B GGUF; Qwen3.6-35B-A3B then completed live smoke inference on
-an RTX 3090. Exp 1464 used that runtime for a bounded validation-error-context
+an RTX 3090. Exp 1484 used that runtime for a bounded validation-error-context
 repair A/B, measured **0.0pp** acceptance/schema/semantic lift on the one-case
-live test, and retired that repair-executor line. Exp 1465 adopted exactly one
+live test, and retired that repair-executor line. Exp 1485 adopted exactly one
 minimal BEAVER-style deterministic-bounds smoke and deferred broad VNN-COMP
 integration.
 
@@ -594,19 +594,19 @@ artifacts checked into `results/operational_retro_*.json`.
   for **1,132** artifacts (**547** signal, **138** noise, **447** ambiguous);
   Exp 1455 trimmed active mandatory priorities **24 -> 7**; Exps 1456-1458
   retired GRPO/VPRM, WOPR puzzle-cartridge, and HardNet++/DSP lineages; Exp
-  1460 narrowed hardware to **3** active tracks; Exp 1461 made **10**
-  comparator decisions; Exp 1462 kept **4** anchored paper-v6 claims; Exp 1463
-  recovered live local SOTA GGUF smoke inference; Exp 1464 measured **0.0pp**
-  repair-context lift and retired that line; Exp 1465 adopted one minimal
-  BEAVER-style bounds smoke (Exps 1453-1466).
+  1480 narrowed hardware to **3** active tracks; Exp 1481 made **10**
+  comparator decisions; Exp 1482 kept **4** anchored paper-v6 claims; Exp 1483
+  recovered live local SOTA GGUF smoke inference; Exp 1484 measured **0.0pp**
+  repair-context lift and retired that line; Exp 1485 adopted one minimal
+  BEAVER-style bounds smoke (Exps 1453-1486).
 - **Milestone .113 live telemetry and bounds:** the milestone closed **12/12**.
-  Exp 1468 wrote **12** live SOTA top-k telemetry rows; Exp 1469 retired
+  Exp 1488 wrote **12** live SOTA top-k telemetry rows; Exp 1489 retired
   HALT/Spilled Energy telemetry as non-headline; Exp 1470 preserved a sound
   live-logprob BEAVER-lite smoke; Exp 1471 grew FR-11 verified memory
   **1,664 -> 1,676** with **12** new promotions and **0** soundness mistakes;
   Exp 1475 made STATIC CSR certificate acceptance equivalent over **7** bounded
   cases with **0** false accepts/rejects; and Exp 1476/1477 kept hardware and
-  THRML/NPIM claims source-level or simulator-only (Exps 1467-1478).
+  THRML/NPIM claims source-level or simulator-only (Exps 1487-1478).
 - **Milestone .114 adversarial telemetry, query-time memory, and CCTU:** the
   milestone closed **12/13** with **1** honest THRML gate skip. Exp 1480 wrote
   **36** balanced live SOTA telemetry rows; Exp 1481 retired Semantic
@@ -974,7 +974,7 @@ artifacts checked into `results/operational_retro_*.json`.
   meet the threshold because live-SOTA runtime blocked repair v3, reranking, and
   100-case pre-scale; spec coverage, FR-11 v7 growth, Discrete SB RTL/lint/sim,
   LTLZinc cases, and EBT/NRGPT smoke evidence still produced useful artifacts.
-  Milestone .112 closed **14/14** through Exp 1466 by satisfying the
+  Milestone .112 closed **14/14** through Exp 1486 by satisfying the
   scope-reduction directive, recovering live local SOTA runtime, retiring the
   no-lift repair-context path, and narrowing paper, hardware, comparator, and
   benchmark claims. Milestone .113 closed **12/12** through Exp 1478 with raw
@@ -1318,7 +1318,7 @@ retros closed (7 still open).
 Milestone 2026.04.68 (the 74th) brought the record to 891 experiments
 with 8 of 11 success criteria met and 3 retros closed in a single
 conductor cycle. Key .68 wins: **V-JEPA Tier 3 deployed** — VJEPA v2
-trained on an expanded 146-pair corpus (up from 57 pairs in v1) achieved
+trained on an expanded 148-pair corpus (up from 57 pairs in v1) achieved
 OOD AUC=0.664 and SVAMP AUC=0.7353 (Exp 883, above the 0.55 gate);
 cascade deployment (Exp 884) achieved a final validated OOD AUC of
 **0.9211**, closing RETRO-JEPA-OOD and marking the first time the
@@ -1692,7 +1692,7 @@ but are not included as model-generation headline claims.
 | DiffuTruth non-equilibrium complement | Carnot semantic baseline | AUROC **0.867**, KAN r **0.961** | Complementary hallucination signal; reported as probe evidence, not a universal detector | Exp 1367 |
 | Full-scale certificate + semantic repair, 100 cases | blocked semantic branch | parse **1.0**, semantic pass **0.59**, full pass **0.29** | Repair hints and MCS localization reached 1.0, but semantic pass-rate gap drove .108 fix work | Exp 1382 |
 | DVI discriminative verifier v1 | AUROC **0.3910** | AUROC **0.3945** | Delta **+0.003486** on 7,059 FoVer training rows; checkpoint deployed | Exp 1381 |
-| FR-11 self-learning v4 | 4 fresh cases in .106 | **59** fresh-verified cases | Delta **+1.791464**, non-forgetting **1.0**, headline allowed via DVI-only path | Exp 1388 |
+| FR-11 self-learning v4 | 4 fresh cases in .106 | **59** fresh-verified cases | Delta **+1.791484**, non-forgetting **1.0**, headline allowed via DVI-only path | Exp 1388 |
 | DVI v2 + SECL calibration | AUROC **0.394526**, ECE **0.561624** | AUROC **0.405984**, ECE **0.306922** | AUROC delta **+0.011458**, ECE reduction **45.35096%**; replay/FoVer provenance | Exp 1404 |
 | FR-11 self-learning v5 | **59** Exp 1388 fresh cases | **1,508** fresh-verified cases | Delta **+1,449**; GRPO cases integrated **0**, so DVI/SECL is the accepted path | Exp 1405 |
 | Full-scale pipeline v2, 200 cases | semantic pass **0.59** in Exp 1382 | semantic pass **1.0**, full pass **0.305** | Parse and repair hints both **1.0**, but full pass remains below the **0.40** headline gate | Exp 1407 |
@@ -1732,17 +1732,17 @@ but are not included as model-generation headline claims.
 | Artifact signal/noise classifier | unclassified result-artifact sprawl | **1,132** artifacts classified | **547** signal, **138** noise, **447** ambiguous; summary and CSV written for planning scope control | Exp 1454 |
 | Known-issues priority audit | **24** active mandatory priorities | **7** active priorities | **70.83%** reduction; parked, consolidated, superseded, or retired stale priorities before the next planning pass | Exp 1455 |
 | Lineage retirements | open-ended variant churn | GRPO/VPRM, WOPR, HardNet++/DSP retired | Future reopen requires operator action, changed root cause, falsifiable gate, and retire-if-same-verdict rule | Exps 1456-1458 |
-| Hardware portfolio narrowing | broad accelerator wishlist | **3** active tracks | Dual RTX 3090 live-SOTA runtime, KV260 RTL lint/simulation, and THRML/Extropic compatibility simulation; no NPU, photonic, D-Wave, or board-execution claim | Exp 1460 |
-| Comparator cite/retire audit | broad comparator list | **10** decisions | **6** cite, **1** retire, **3** watchlist; paper-v6 citations narrowed to the related-work claims that sharpen novelty boundaries | Exp 1461 |
-| Paper-v6 anchored claim matrix | broad paper claims | **4** retained claims | k=5 bounded verifier composition, sparse hardware fast-path, distribution-bound calibration, and verified-memory growth | Exp 1462 |
-| Local SOTA GGUF runtime repair | Exp 1442 missing `libcudart.so.12` and one GGUF | runtime ready | CUDA library path fixed, Gemma4-26B GGUF downloaded, and Qwen3.6-35B-A3B live smoke inference completed on RTX 3090 | Exp 1463 |
-| Validation-error repair context A/B | runtime fixed and repair line gated | **0.0pp** lift; lineage retired | **1** bounded live case, **3** generation calls, acceptance/schema/semantic correctness stayed 0.0 | Exp 1464 |
-| External verifier benchmark fit | VNN-COMP/BEAVER/local benchmark options | BEAVER-style smoke adopted | Adopt one minimal deterministic-bounds smoke; defer broad VNN-COMP and generic benchmark runners | Exp 1465 |
-| Milestone .112 outcome | 14 criteria | **14/14** met | Scope reduction satisfied, runtime recovered, no-lift repair context retired, and paper/hardware/comparator/benchmark claims narrowed | Exp 1466 |
+| Hardware portfolio narrowing | broad accelerator wishlist | **3** active tracks | Dual RTX 3090 live-SOTA runtime, KV260 RTL lint/simulation, and THRML/Extropic compatibility simulation; no NPU, photonic, D-Wave, or board-execution claim | Exp 1480 |
+| Comparator cite/retire audit | broad comparator list | **10** decisions | **6** cite, **1** retire, **3** watchlist; paper-v6 citations narrowed to the related-work claims that sharpen novelty boundaries | Exp 1481 |
+| Paper-v6 anchored claim matrix | broad paper claims | **4** retained claims | k=5 bounded verifier composition, sparse hardware fast-path, distribution-bound calibration, and verified-memory growth | Exp 1482 |
+| Local SOTA GGUF runtime repair | Exp 1442 missing `libcudart.so.12` and one GGUF | runtime ready | CUDA library path fixed, Gemma4-26B GGUF downloaded, and Qwen3.6-35B-A3B live smoke inference completed on RTX 3090 | Exp 1483 |
+| Validation-error repair context A/B | runtime fixed and repair line gated | **0.0pp** lift; lineage retired | **1** bounded live case, **3** generation calls, acceptance/schema/semantic correctness stayed 0.0 | Exp 1484 |
+| External verifier benchmark fit | VNN-COMP/BEAVER/local benchmark options | BEAVER-style smoke adopted | Adopt one minimal deterministic-bounds smoke; defer broad VNN-COMP and generic benchmark runners | Exp 1485 |
+| Milestone .112 outcome | 14 criteria | **14/14** met | Scope reduction satisfied, runtime recovered, no-lift repair context retired, and paper/hardware/comparator/benchmark claims narrowed | Exp 1486 |
 | Milestone .113 outcome | 12 criteria | **12/12** met | Raw live telemetry preserved, telemetry headline claim blocked, FR-11 verified-memory growth preserved, and hardware/THRML claims kept source-level or simulator-only | Exp 1478 |
 | Balanced live SOTA telemetry v2 | raw live top-k telemetry | **36** balanced rows | Qwen3.6-35B-A3B live inference with logits/top-k logprobs, superficial baselines, and 694 top-k positions | Exp 1480 |
 | Semantic Energy headline audit | semantic signal looked strong | retired as confounded | Semantic AUROC **1.0** matched lexical-overlap baseline **1.0**; `claim_allowed=false` | Exp 1481 |
-| BEAVER-lite live-prefix calibration | minimal BEAVER smoke | **18** constraints, **0** empirical violations | Sound bounds with p50 slack **0.0000218** and live Exp 1480 + Exp 1468 logprob provenance | Exp 1482 |
+| BEAVER-lite live-prefix calibration | minimal BEAVER smoke | **18** constraints, **0** empirical violations | Sound bounds with p50 slack **0.0000218** and live Exp 1480 + Exp 1488 logprob provenance | Exp 1482 |
 | FR-11 query-time memory | bounded replay success **0.5** | replay success **1.0** | **0** soundness mistakes; completeness mistakes reduced **12 -> 0** in gated audit | Exps 1484/1485 |
 | CCTU executable constraints | no .114 executable benchmark | **20** live local-SOTA cases | Tool-call validity **0.55**, final-answer validity **0.35**, verifier catch **1.0**, false accept **0.0** | Exp 1486 |
 | V_1 pairwise self-verification | candidate comparator | promotion rejected | Pairwise accuracy **0.05** vs executable energy ranking **1.0**; superficial length baseline also **1.0** | Exp 1487 |
@@ -1794,6 +1794,15 @@ but are not included as model-generation headline claims.
 | FR-11 v15 retention reversal | one v14 retained policy flagged | retention reversed | **56** held-out replay cases, **2** predictors reconfirmed, **0** soundness mistakes; lambda-GRPO patch is simulated only with no model-weight mutation | Exp 1581 |
 | Phase-1 ship readiness | software ship gate unaudited after .120 | **9** audit-time blockers recorded | Package naming/deps, HF export, IPFS CIDs, MCP docs/tool count, and integrator guide must be re-audited before Phase-1 ship | Exp 1582 |
 | Hardware portfolio .121 | Z1/Wormhole/PolarFire/KV260 scope open | simulator-only correction + rescope | Z1 drift correction within 1 sigma, corrected acceptance **0.9624255952380952**; Wormhole access false, PolarFire board false; Strix secondary tier, KV260 Vivado lineage retired | Exps 1583-1586 |
+
+| Constraint-Informed KAN (CIKAN) | Baseline KAN | CIKAN Boundary | FourierCSP constraint compiled into fixed CIKAN boundary and preserved | Exp 1723/1725 |
+| EqM Sampler GPU Integration | CPU Gibbs | GPU EqM | Equilibrium Matching (EqM) Gradient Sampler converged faster on GPU | Exp 1727/1740 |
+| Live Telemetry Streamer | Batch-only telemetry | Streamer load tested | Live Telemetry Streamer for Continual Learning load test successful | Exp 1738 |
+| Milestone .134 closeout | .133 | Phase 4 synthesis | Analyzed wall time / experiments for .134 with phase_4_synthesis_complete | Exp 1745 |
+### 4.12 Recent Additions (Milestones .133 and .134)
+
+**Hardware Synthesis and EqM Sampler Evaluation**
+Experiments 1736-1745 focused on hardware synthesis for KV260 KANELÉ and integrating the EqM Sampler onto GPU. We measured latency on the live board and prepared the SWE-Bench Lite EqM Harness. Additionally, a Live Telemetry Streamer for Continual Learning was load-tested successfully, paving the way for more robust telemetry in the continuous learning pipeline.
 
 ### Pending Validation (Not Yet Headline)
 
@@ -2252,7 +2261,7 @@ The constraint pipeline dog-foods itself as a "fourth gate" in the autoresearch 
 
 ## 7. Principles Learned
 
-From the activation-based phase of a research program that now spans 2,049 experiment records through Exp 1721 and 145 archived completed milestone records, we distilled 14 principles. Principles 1-3 describe what works. Principles 4-14 describe what doesn't work for activation-based hallucination detection — these systematic negative results are the project's primary contribution to the literature, saving other researchers months of dead ends.
+From the activation-based phase of a research program that now spans 2,072 experiment records through Exp 1745 and 145 archived completed milestone records, we distilled 14 principles. Principles 1-3 describe what works. Principles 4-14 describe what doesn't work for activation-based hallucination detection — these systematic negative results are the project's primary contribution to the literature, saving other researchers months of dead ends.
 
 ### What works
 
@@ -3522,7 +3531,7 @@ Milestone 2026.04.89 met **12 of 13 success criteria**. The missed criterion was
 
 **Goodfire cheap-tier distillation (Exp 1145):** Combined cheap-tier TP improved **36.1% → 91.7%** across 36 exemplars and all 12 categories were no worse. The false-positive rate stayed **0.96**, so this is not production-ready routing; it is evidence that entropy-gated threshold movement can recover recall if calibration is fixed.
 
-**GRPO reflection reward v3 (Exp 1146):** DualGPU live training completed 100 training questions without hitting the training budget. The reflection reward run remained positive, **17.14% → 20.0%** (+2.86pp), but underperformed Exp 1129's +8.51pp and evaluation stopped at 35/50 questions. The reflection signal is real but not yet an improvement over the simpler ThinkPRM v2 reward setup.
+**GRPO reflection reward v3 (Exp 1148):** DualGPU live training completed 100 training questions without hitting the training budget. The reflection reward run remained positive, **17.14% → 20.0%** (+2.86pp), but underperformed Exp 1129's +8.51pp and evaluation stopped at 35/50 questions. The reflection signal is real but not yet an improvement over the simpler ThinkPRM v2 reward setup.
 
 **HardNet++ projection repair (Exp 1147):** Arithmetic projection repair fixed **20/20** violations with Z3 passing after repair. Mean latency was **117 us**, about **76,130x** faster than prompt repair. This is a strong narrow repair primitive for arithmetic constraints.
 
@@ -3900,7 +3909,7 @@ artifact list: `research-complete.yaml` is currently archived through
 2026.05.120, while .121 is present in the result-artifact and changelog layer.
 Several .96, .97, and .103 deliverables listed in `research-complete.yaml` do not have
 terminal result artifacts in this checkout; .112 is both archived and terminal
-via Exp 1466, .115 is both archived and terminal via Exp 1505, .116 is both
+via Exp 1486, .115 is both archived and terminal via Exp 1505, .116 is both
 archived and terminal via Exp 1518, .117 is both archived and terminal via
 Exp 1532, .118 is terminal via Exp 1546, .119 is terminal via Exp 1559, and
 .120 is terminal via Exp 1572.
@@ -4469,7 +4478,7 @@ The 100-case full-pipeline run in Exp 1382 kept certificate parse rate and
 repair-hint precision at **1.0**, but semantic validation passed only **0.59**
 and full pipeline pass rate was **0.29**. That is why .108 focused on semantic
 repair rather than declaring the certificate pipeline done. Exp 1388 expanded
-FR-11 to **59** fresh-verified cases with delta **+1.791464**. GRPO v7/JURY-RL
+FR-11 to **59** fresh-verified cases with delta **+1.791484**. GRPO v7/JURY-RL
 produced no useful improvement signal, leaving it as the sole .107 miss.
 
 ### Phase 32 — .108 Semantic Fix, DVI v2/SECL, FR-11 v5, and Public API Hardening (Exps 1400-1411)
@@ -4634,7 +4643,7 @@ steps, but decoded quality evidence was absent, so the scale recommendation is
 `keep_smoke_only`. Exp 1452 records the honest milestone verdict:
 `milestone_111_10_of_14_criteria_met_threshold_not_met_live_sota_runtime_gate_blocked_repair_scale_carry_forward`.
 
-### Phase 36 — .112 Scope Reduction, Runtime Recovery, and Claim Narrowing (Exps 1453-1466)
+### Phase 36 — .112 Scope Reduction, Runtime Recovery, and Claim Narrowing (Exps 1453-1486)
 
 Milestone .112 met **14/14** criteria. Its main result is not a new benchmark
 leaderboard number; it is the cleanup needed before the next planning pass.
@@ -4656,7 +4665,7 @@ prerequisite, and falsifiable gate; the retained lesson is step-level process
 supervision, not more GRPO labels. Exp 1457 retires WOPR puzzle-cartridge
 research expansion while preserving the shipped demo assets. Exp 1458 retires
 HardNet++/DSP variant expansion while retaining conservative replay and hard
-projection as repair operators for explicit feasible sets. Exp 1464 later adds
+projection as repair operators for explicit feasible sets. Exp 1484 later adds
 a fourth retirement: validation-error repair context produced **0.0pp**
 acceptance, schema-validity, semantic-correctness, and false-acceptance delta
 on the bounded live test, so that repair-executor line is retired unless a
@@ -4666,17 +4675,17 @@ The self-learning and claim-scope decisions also narrowed. Exp 1459 selected a
 single allowed self-learning pivot: repeat the Exp 1447 verified fresh-memory
 growth pattern with at least one new promotion, non-forgetting **>=0.99**, and
 explicit persisted-memory metrics. Replay-only and adapter-only self-learning
-claims remain non-headline. Exp 1460 narrowed active hardware work to **3**
+claims remain non-headline. Exp 1480 narrowed active hardware work to **3**
 tracks: dual RTX 3090 local SOTA runtime repair, KV260 Discrete SB RTL
 lint/simulation, and THRML/Extropic compatibility simulation. It explicitly
 defers KV260 board execution, AMD XDNA/NPU, Extropic hardware execution,
 photonic Ising, D-Wave QPU, large-FPGA, and RX 7900 eGPU claims until concrete
-reopen conditions exist. Exp 1461 made **10** comparator decisions: **6** cite,
-**1** retire, and **3** watchlist. Exp 1462 narrowed paper-v6 to **4** anchored
+reopen conditions exist. Exp 1481 made **10** comparator decisions: **6** cite,
+**1** retire, and **3** watchlist. Exp 1482 narrowed paper-v6 to **4** anchored
 claims: bounded k=5 verifier composition, sparse hardware fast-path plus CPU
 fallback, distribution-bound energy calibration, and verified-memory growth.
 
-Exp 1463 resolved the live local SOTA runtime blocker from Exp 1442. The repair
+Exp 1483 resolved the live local SOTA runtime blocker from Exp 1442. The repair
 prepended the project venv's CUDA runtime and cuBLAS library directories to
 `LD_LIBRARY_PATH`, changing `libllama.so` from missing `libcudart.so.12` and
 `libcublas.so.12` to resolved library paths. The missing
@@ -4686,19 +4695,19 @@ inference on GPU 0 in **11.48 s** wall time with `truly_live=true` and
 `usable_response=true`. This repairs the runtime gate, but it is not by itself
 a repair-scale benchmark.
 
-Exp 1465 selected the next external verifier benchmark shape. VNNLIB/VNN-COMP
+Exp 1485 selected the next external verifier benchmark shape. VNNLIB/VNN-COMP
 is deferred because Carnot does not yet have the relevant ONNX plus VNN-LIB
 property instance for its LLM-output verifier claims. The adopted path is one
 minimal BEAVER-style deterministic-bounds smoke using the existing BEAVER-lite
 code over three deterministic arithmetic prompts, with explicit mock/live
-logprob provenance. Exp 1466 records the final .112 verdict:
+logprob provenance. Exp 1486 records the final .112 verdict:
 `milestone_112_14_of_14_criteria_met_scope_reduction_satisfied`.
 
-### Phase 37 — .113 Live Telemetry, Bounds, Verified Memory, and Simulator Boundaries (Exps 1467-1478)
+### Phase 37 — .113 Live Telemetry, Bounds, Verified Memory, and Simulator Boundaries (Exps 1487-1478)
 
-Milestone .113 met **12 of 12** criteria. Exp 1468 produced raw live SOTA
+Milestone .113 met **12 of 12** criteria. Exp 1488 produced raw live SOTA
 top-k telemetry with **12** completed Qwen3.6-35B-A3B cases and
-`topk_logprobs_available=true`. Exp 1469 computed HALT/Spilled Energy features
+`topk_logprobs_available=true`. Exp 1489 computed HALT/Spilled Energy features
 but retired that telemetry lineage as non-headline because the rank signal was
 small-sample and confounded. Exp 1470 preserved a narrow BEAVER-lite smoke with
 sound live-logprob bounds over **3** deterministic prompts. Exp 1471 grew
@@ -4721,7 +4730,7 @@ retired Semantic Energy/logit telemetry as headline evidence: its semantic
 signal reached AUROC **1.0**, but a lexical-overlap baseline also reached
 **1.0**, so `claim_allowed=false`. Exp 1482 calibrated BEAVER-lite over **18**
 live-prefix constraints with sound bounds, **0** empirical violations, p50
-slack **0.0000218**, and explicit live Exp 1480 + Exp 1468 logprob provenance.
+slack **0.0000218**, and explicit live Exp 1480 + Exp 1488 logprob provenance.
 Exp 1483 completed a HalluGuard-style fit audit while disallowing full
 HalluGuard reproduction claims. Exp 1484 integrated FR-11 query-time memory:
 bounded replay task success moved **0.5 -> 1.0** with **0** soundness mistakes,
@@ -5126,7 +5135,7 @@ Experiment 1707 successfully verified the full pipeline SOTA integration combini
 **KV260 Hardware Execution Blocked**  
 Experiment 1704 attempted to synthesize and execute Potts q=3 on KV260 hardware, but was blocked due to Vivado not being installed.
 
-### 4.10 Recent Additions (Milestone .132)
+### 4.10 Recent Additions (Milestone .134)
 
 **E2E Pipeline Evaluation**
 Experiment 1720 successfully verified the full E2E pipeline evaluating Dynamic Extract, Hardware trace eval, and Continual Learning.
@@ -5137,5 +5146,5 @@ Experiment 1719 measured the inference latency impact of HILED, establishing bas
 **Continual Learning Enhancements**
 Experiments 1712 and 1714 verified semantic pruning for FR-11 continual learning and instruct-to-constraint extraction from free-text.
 
-**Operational Retrospective (.132)**
+**Operational Retrospective (.134)**
 Analyzed 1388 min wall time / 253 experiments. Both RTX 3090s were completely idle at 0% utilization throughout, which is correct behavior as there were no compute-bound tasks. Estimated savings: implement fail-fast for pre-gate blocks.
