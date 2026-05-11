@@ -1,0 +1,88 @@
+{
+  "artifact_path": "results/experiment_1749_symbolic_kan.json",
+  "config": {
+    "input_dim": 2,
+    "n_routes": 2,
+    "primitives": [
+      "identity",
+      "square",
+      "sin"
+    ],
+    "temperature": 1.0
+  },
+  "discrete_structure": [
+    {
+      "gate_weight": 1.0,
+      "primitive": "sin",
+      "projection_bias": 0.0,
+      "projection_weights": [
+        1.0,
+        0.0
+      ],
+      "route_index": 0,
+      "route_scale": 1.0
+    },
+    {
+      "gate_weight": 1.0,
+      "primitive": "square",
+      "projection_bias": 0.0,
+      "projection_weights": [
+        0.0,
+        1.0
+      ],
+      "route_index": 1,
+      "route_scale": 1.0
+    }
+  ],
+  "experiment_id": 1749,
+  "explanation": "route_0: sin(1.000*feature_0 + 0.000*feature_1); route_1: square(0.000*feature_0 + 1.000*feature_1)",
+  "hard_gates_one_hot": true,
+  "hard_regularization": 0.0,
+  "honest_verdict": "complete: symbolic_kan_routing_layer_embeds_discrete_primitives",
+  "module": "python/carnot/models/kan/symbolic_kan.py",
+  "paper": "arXiv:2603.23854",
+  "run_date": "20260510",
+  "schema": "carnot.symbolic_kan.experiment_1749.v1",
+  "selected_primitives": [
+    "sin",
+    "square"
+  ],
+  "soft_regularization": 0.00014545395970344543,
+  "spec_traces": [
+    "REQ-KAN-1749",
+    "SCENARIO-KAN-1749"
+  ],
+  "status": "complete",
+  "structure_embedding_shape": [
+    2,
+    3
+  ],
+  "toy_mapping": {
+    "energies": [
+      0.0,
+      0.5419255495071411,
+      1.0914709568023682
+    ],
+    "inputs": [
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.5,
+        0.25
+      ],
+      [
+        1.0,
+        -0.5
+      ]
+    ],
+    "max_abs_error": 0.0,
+    "target": "sin(feature_0) + square(feature_1)",
+    "targets": [
+      0.0,
+      0.5419255495071411,
+      1.0914709568023682
+    ]
+  }
+}
