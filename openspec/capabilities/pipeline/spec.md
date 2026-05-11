@@ -3201,3 +3201,19 @@ The pipeline MUST provide an NRGPT-style explorer that uses energy-guided test-t
 **Given** an energy function
 **When** `NRGPTExplorer.explore()` is called
 **Then** it scales compute based on energy guidance and outputs `results/experiment_1788_nrgpt_exploration.json`.
+
+### REQ-PIPELINE-1797: Formal Orchestrator Adversarial Audit
+
+The pipeline MUST ensure the Formal Orchestrator rejects mathematically invalid or contradictory proofs and achieves zero false accepts.
+
+**Acceptance criteria:**
+- `scripts/experiment_1797_orchestrator_audit.py` injects known contradictory proofs.
+- The experiment confirms the orchestrator never accepts invalid proofs.
+- Writes an experiment artifact to `results/experiment_1797_orchestrator_audit.json` containing metrics.
+
+### SCENARIO-PIPELINE-1797: Adversarial Proof Injection
+
+**Given** the `FormalOrchestrator`
+**When** contradictory or unsatisfiable constraints are injected
+**Then** it MUST NOT return success.
+**And** it outputs `results/experiment_1797_orchestrator_audit.json`.
