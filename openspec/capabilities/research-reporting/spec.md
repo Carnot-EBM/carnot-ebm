@@ -3525,3 +3525,20 @@ The Exp 1745 milestone .134 retrospective workflow shall parse the results of Ph
 **When** the Exp 1745 workflow runs
 **Then** it writes all required REQ-REPORT-1745 fields
 **And** identifies clear gaps for milestone .135.
+
+### REQ-REPORT-1758: Milestone .135 Synthesis Retrospective
+
+The Exp 1758 milestone .135 retrospective workflow shall parse the results of Phase 5 Operations (experiments 1746 to 1757), summarize findings, and identify new gaps. It shall write `results/experiment_1758_retro.json` containing:
+
+- `milestone` set to `2026.05.135`
+- `honest_verdict` recording the overall outcome
+- `new_gaps` listing gaps for the next milestone
+- `details` extracted from the aggregated JSONs.
+
+### SCENARIO-REPORT-1758: Exp 1758 Generates Phase 5 Synthesis Retrospective
+
+**Given** the completion of Phase 5 Operations experiments (1746-1757)
+**When** the Exp 1758 workflow runs
+**Then** it writes all required REQ-REPORT-1758 fields to `results/experiment_1758_retro.json`
+**And** details `honest_verdict` and `new_gaps`.
+
