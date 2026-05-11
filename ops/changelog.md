@@ -5427,3 +5427,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-10: Milestone 2026.05.134 Operational Retrospective: Completed 309 synthesis-only experiments in 1562.1 minutes. Identified pre-gate blocks as a wall-time bottleneck and recommended a fail-fast mechanism.
 - 2026-05-11: Exp 1746: Profile EqM CUDA overhead with SOTA MoE (✅ Complete) — honest_verdict=profile_completed; results/experiment_1746_profile.json
 - 2026-05-11: Exp 1748: Hardware benchmark of sparse EqM sampler (Target <100ms) (⚠️ Research Finding) — honest_verdict=success; results/experiment_1748_benchmark.json
+- 2026-05-11: Exp 1749: Symbolic-KAN structure mapping prototype (✅ Complete) — honest_verdict=complete: symbolic_kan_routing_layer_embeds_discrete_primitives; results/experiment_1749_symbolic_kan.json
