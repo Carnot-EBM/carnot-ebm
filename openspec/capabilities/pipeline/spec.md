@@ -3217,3 +3217,19 @@ The pipeline MUST ensure the Formal Orchestrator rejects mathematically invalid 
 **When** contradictory or unsatisfiable constraints are injected
 **Then** it MUST NOT return success.
 **And** it outputs `results/experiment_1797_orchestrator_audit.json`.
+
+### REQ-EVAL-1823: Phase 18 Final Evaluation Run
+
+The pipeline MUST combine Phase 18 advances into a final evaluation run. It MUST execute the MoE-distilled model with the KAN verifier active on 100 GSM8K problems.
+
+**Acceptance criteria:**
+- Uses models `["unsloth/Qwen3.6-35B-A3B-GGUF", "unsloth/gemma-4-31B-it-GGUF"]`.
+- The evaluation script `python/carnot/eval/phase18_final_eval.py` exposes a function to run the evaluation.
+- Records final accuracy, latency, and self-learning delta.
+- Writes to `results/experiment_1823_final_eval.json`.
+
+### SCENARIO-EVAL-1823: MoE and KAN integration on GSM8K
+
+**Given** the complete system with MoE-distilled model and KAN verifier
+**When** 100 GSM8K problems are evaluated
+**Then** the script completes successfully and outputs `results/experiment_1823_final_eval.json`.
