@@ -1,0 +1,24 @@
+{
+  "experiment": 1841,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-05-11",
+  "started_at": "2026-05-11T16:03:20.039866+00:00",
+  "finished_at": "2026-05-11T16:03:20.039866+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Exp 1841: gated on Exp 1840 PWA Abstraction: MILP KAN Verifier",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp1840-pwa-kan-abstraction.status (actual='complete' == expected='success')",
+  "gates_evaluated": [
+    {
+      "upstream": "exp1840-pwa-kan-abstraction",
+      "artifact_field": "status",
+      "op": "==",
+      "expected": "success",
+      "actual": "complete",
+      "passed": false,
+      "reason": "actual='complete' == expected='success'"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
