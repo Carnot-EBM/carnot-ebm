@@ -142,6 +142,7 @@
 | 2026.05.134 | Operational Retrospective | 1603-1711+ | 1562 min wall time; GPUs correctly idle; pre-gate block bottleneck |
 | 2026.05.135 | Operational Efficiency | 1746-1752 | 30 experiments completed; synthesis pipeline bottleneck identified |
 | 2026.05.136 | Operational Efficiency | 19 experiments | Synthesis pipeline bottleneck (Exp 1763) identified |
+| 2026.05.137 | Operational Efficiency | 28 experiments | Identified synthesis-only tasks as primary workload (24/28) |
 
 ## Breakthrough Results
 

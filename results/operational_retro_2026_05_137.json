@@ -1,0 +1,55 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.137",
+  "generated_at": "2026-05-11T08:06:17Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 51.7,
+  "experiments_completed": 28,
+  "compute_bound_experiments_count": 4,
+  "slowest_experiments": [
+    {
+      "experiment": "-0400 [conductor] Exp 1773: Multi-modal constraint benchmark evaluation",
+      "duration_minutes": 7.2,
+      "compute_bound": true
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1774: Differentiable Constraint Memory Bank",
+      "duration_minutes": 5.3,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1784: Milestone .137 Retrospective",
+      "duration_minutes": 3.4,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1777: Self-learning pipeline scale-up on LTLZinc",
+      "duration_minutes": 3.1,
+      "compute_bound": true
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1781: Hardware vs Software Latency and Energy convergence ",
+      "duration_minutes": 2.8,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "summary": "Milestone 2026.05.137 completed 28 experiments in 51.7 minutes (average 2 minutes per experiment). 24 of these were synthesis-only, and 4 were compute-bound. The slowest compute-bound experiment was Exp 1773 at 7.2 minutes. GPU utilization was efficient on compute-bound tasks.",
+  "bottlenecks_identified": [
+    "Synthesis-only tasks dominate the experiment count (24 out of 28).",
+    "Exp 1773 was the longest compute-bound task at 7.2 minutes, though the specific reason is not available in the timing data.",
+    "Exp 1774 was the slowest synthesis-only task at 5.3 minutes."
+  ],
+  "improvements_suggested": [
+    "Parallelize synthesis-only experiments, as they make up the majority of the milestone's tasks.",
+    "Profile Exp 1773 to identify compute bottlenecks.",
+    "Maintain current DualGPURunner policy, as no 2+ model tasks were present."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Parallelize synthesis-only tasks.",
+    "Profile Exp 1773.",
+    "Maintain pre-launch failure checks."
+  ],
+  "estimated_time_savings_pct": 15,
+  "meta_reflection": "GPU resources were correctly allocated for single-model compute-bound tasks without requiring DualGPURunner. Synthesis-only tasks represent the bulk of the workload and are the primary area for potential time savings."
+}
