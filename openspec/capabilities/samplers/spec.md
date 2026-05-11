@@ -102,3 +102,20 @@ Sub-requirements:
 **When** it is executed
 **Then** it successfully runs the EqM sampler under `torch.profiler`
 **And** it writes a valid JSON artifact with timing metrics.
+
+### REQ-SAMPLE-1748: Sparse EqM Hardware Benchmark
+
+Carnot MUST provide an experiment script `scripts/experiment_1748_benchmark.py`
+that benchmarks the hardware latency of the sparse EqM sampler.
+
+Sub-requirements:
+- REQ-SAMPLE-1748-1: The script SHALL benchmark the sparse EqM latency across a batch of 100 samples.
+- REQ-SAMPLE-1748-2: The script SHALL output a JSON artifact to `results/experiment_1748_benchmark.json`.
+- REQ-SAMPLE-1748-3: The artifact SHALL include the experiment id, spec refs, and latency metrics.
+
+### SCENARIO-SAMPLE-1748: Exp 1748 Computes Hardware Benchmark Latency
+
+**Given** the Exp 1748 benchmark script
+**When** it is executed
+**Then** it successfully runs the sparse EqM sampler
+**And** it writes a valid JSON artifact detailing latency statistics.

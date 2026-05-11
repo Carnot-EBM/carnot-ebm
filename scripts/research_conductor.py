@@ -2391,25 +2391,56 @@ def _run_operational_retrospective(push: bool = True) -> bool:
     logger.info("OPERATIONAL RETROSPECTIVE (milestone %s)", current)
     logger.info("=" * 60)
 
-    # Gather timing data from git log
+    # Gather timing data from git log, BOUNDED TO CURRENT MILESTONE.
+    #
+    # Why: prior to 2026-05-11, this used `--since=7 days ago` and
+    # pulled ~1700+ commits spanning many milestones. The retro agent
+    # (gemini) hallucinated per-milestone numbers from multi-milestone
+    # aggregates — three consecutive retros (.127/.128/.129) cited
+    # identical "1070 min / 180 experiments / exp1603 88min / exp1663
+    # 82min" verbatim. Fix: restrict to commits after the most recent
+    # `[conductor] Activate milestone {current}` commit.
+    experiment_times: list[dict] = []
     try:
-        _, git_log, _ = run_cmd(
+        _, activate_log, _ = run_cmd(
             [
                 "git",
                 "log",
-                "--format=%H %ai %s",
-                "--grep=\\[conductor\\]",
-                "--since=7 days ago",
+                "--format=%H %ai",
+                f"--grep=\\[conductor\\] Activate milestone {current}",
+                "-n",
+                "1",
             ]
         )
-        experiment_times: list[dict] = []
-        commits = git_log.strip().splitlines()
+        since_arg = None
+        if activate_log.strip():
+            activate_hash = activate_log.strip().split()[0]
+            since_arg = f"{activate_hash}..HEAD"
+
+        log_args = [
+            "git",
+            "log",
+            "--format=%H %ai %s",
+            "--grep=\\[conductor\\]",
+        ]
+        if since_arg:
+            log_args.append(since_arg)
+        else:
+            # Fallback for first-ever milestone or grep miss.
+            log_args.append("--since=24 hours ago")
+
+        _, git_log_out, _ = run_cmd(log_args)
+        logger.info(
+            "Retro git-log bounded to %s: got %d commits",
+            since_arg or "since=24h",
+            len(git_log_out.strip().splitlines()),
+        )
+        commits = git_log_out.strip().splitlines()
         prev_time = None
         for line in reversed(commits):
             parts = line.split(maxsplit=3)
             if len(parts) < 4:
                 continue
-            # Parse timestamp (format: 2026-04-12 08:35:46 -0400)
             try:
                 ts_str = f"{parts[1]} {parts[2]}"
                 from datetime import datetime as _dt
@@ -2430,6 +2461,38 @@ def _run_operational_retrospective(push: bool = True) -> bool:
 
     except Exception:
         experiment_times = []
+
+    # Tag compute-bound experiments by scanning the milestone's roadmap
+    # YAML for SOTA-GGUF model references / requires_gpu / cuda markers.
+    compute_bound_titles: set[str] = set()
+    try:
+        with open(ROADMAP_FILE) as _f:
+            _milestone_yaml = yaml.safe_load(_f) or {}
+        _markers = (
+            "unsloth/",
+            "Qwen3.6-",
+            "gemma-4-",
+            "requires_gpu",
+            "model_specs",
+            "DualGPURunner",
+            "DualGPUHarness",
+            "llama.cpp",
+            "GGUF",
+            ".cuda(",
+            "torch.cuda",
+        )
+        for _t in _milestone_yaml.get("tasks", []) or []:
+            _prompt = (_t.get("prompt") or "") + " " + (_t.get("title") or "")
+            if any(m in _prompt for m in _markers):
+                _title = (_t.get("title") or "")[:80]
+                if _title:
+                    compute_bound_titles.add(_title)
+    except Exception:
+        pass
+    for _e in experiment_times:
+        _e["compute_bound"] = any(
+            _ct in _e["experiment"] for _ct in compute_bound_titles
+        )
 
     # Gather GPU utilization data
     gpu_report_text = ""
