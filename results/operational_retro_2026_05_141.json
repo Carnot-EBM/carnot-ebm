@@ -1,0 +1,51 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.141",
+  "generated_at": "2026-05-11T13:48:45Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 46.0,
+  "experiments_completed": 17,
+  "compute_bound_experiments_count": 3,
+  "slowest_experiments": [
+    {
+      "experiment": "-0400 [conductor] Exp 1824: Milestone 2026.05.141 Retrospective",
+      "duration_minutes": 9.5,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1823: EBM-CoT GSM8K Final Evaluation with Continuous Self-",
+      "duration_minutes": 6.8,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1819: Evaluate KAN Decoding Latency vs Accuracy",
+      "duration_minutes": 5.9,
+      "compute_bound": true
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1818: Verify-Repair Scaling on GSM8K using 3B Models",
+      "duration_minutes": 5.6,
+      "compute_bound": true
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1822: FPGA Bitstream Synthesis for Continuous EBM Constrai",
+      "duration_minutes": 5.4,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "summary": "Milestone 2026.05.141 completed 17 experiments in 46.0 minutes. 3 of these were compute-bound, with the slowest being Exp 1819 at 5.9 minutes.",
+  "bottlenecks_identified": [
+    "Synthesis-only tasks like Exp 1824 (9.5 min) and Exp 1823 (6.8 min) took the longest time."
+  ],
+  "improvements_suggested": [
+    "Investigate and optimize the synthesis-only pipeline to reduce non-compute wall time."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Profile synthesis task execution to identify slow non-GPU code paths.",
+    "Optimize retrospective generation tasks.",
+    "Review KAN Decoding latency evaluation task (Exp 1819) for any compute inefficiency."
+  ],
+  "estimated_time_savings_pct": 15,
+  "meta_reflection": "The milestone was dominated by synthesis-only tasks, which accounted for the longest execution times. Optimizing the synthesis pipeline is the clearest path to reducing total milestone duration."
+}
