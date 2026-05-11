@@ -1,0 +1,50 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.142",
+  "generated_at": "2026-05-11T15:38:17Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 62.1,
+  "experiments_completed": 28,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "-0400 [conductor] Exp 1833: Online Learning with Unknown Constraints",
+      "duration_minutes": 7.9,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1834: THRML Multi-Period Turnover Constraints",
+      "duration_minutes": 6.8,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1835: Capstone: Dual-GPU SOTA Pipeline with Qwen3.6-35B-A3",
+      "duration_minutes": 5.7,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1826: Implement Conductor Pre-Gate Fail-Fast blocks",
+      "duration_minutes": 4.5,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1825: Archive .141 and Activate .142",
+      "duration_minutes": 4.3,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Milestone 2026.05.142 completed 28 experiments over 62.1 wall-time minutes. No compute-bound experiments were executed. The GPUs were correctly idle as all 28 experiments were synthesis-only.",
+  "bottlenecks_identified": [
+    "Synthesis-only tasks continue to dominate the wall-time, representing the main bottleneck."
+  ],
+  "improvements_suggested": [
+    "Optimize synthesis-only tasks."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Optimize execution of synthesis-only tasks to reduce base latency.",
+    "Streamline milestone archive and activation tasks."
+  ],
+  "estimated_time_savings_pct": 10,
+  "meta_reflection": "With zero compute-bound tasks, the GPUs were correctly idle throughout. Synthesis-only tasks remain the sole bottleneck."
+}
