@@ -1811,3 +1811,4 @@ Ripgrep is |
 | 2026-05-11 14:47 UTC | Exp 1833: Online Learning with Unknown Constraints | FAIL | Gemini CLI error: usr/lib/node_modules/@google/gemini-cli/bundle/chunk-C5NJ2YR |
 | 2026-05-11 14:57 UTC | Exp 1833: Online Learning with Unknown Constraints | OK | 88 passed, 1 warning in 4.79s |
 | 2026-05-11 15:06 UTC | Exp 1834: THRML Multi-Period Turnover Constraints | OK | 97 passed, 1 warning in 7.26s |
+| 2026-05-11 15:14 UTC | Exp 1835: Capstone: Dual-GPU SOTA Pipeline with Qw | OK | 81 passed, 1 warning in 4.75s |
