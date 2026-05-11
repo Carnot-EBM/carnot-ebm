@@ -1877,3 +1877,6 @@ Ripgrep is |
 | 2026-05-11 21:06 UTC | Exp 1867: Scale FR-11 self-learning with latent pr | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1866-latent-energy-pruning) |
 | 2026-05-11 21:09 UTC | Exp 1868: Evaluate catastrophic forgetting on the  | OK | 81 passed, 1 warning in 5.06s |
 | 2026-05-11 21:11 UTC | Exp 1867: Scale FR-11 self-learning with latent pr | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1866-latent-energy-pruning) |
+| 2026-05-11 21:25 UTC | Exp 1869: Implement HILED (Hardware-In-The-Loop En | FAIL | Post-tests failed: 11 failed, 96 passed, 1 warning in 5.98s |
+| 2026-05-11 21:27 UTC | Exp 1867: Scale FR-11 self-learning with latent pr | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1866-latent-energy-pruning) |
+| 2026-05-11 21:27 UTC | Exp 1869: Implement HILED (Hardware-In-The-Loop En | OK | Deliverable already exists in repo |
