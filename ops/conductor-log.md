@@ -1900,3 +1900,5 @@ Ripgrep is |
     at async file:///usr/lib/node_modules/@google |
 | 2026-05-11 22:16 UTC | Plan next milestone | FAIL | Gemini CLI error: js:309138:14)
     at async file:///usr/lib/node_modules/@goo |
+| 2026-05-11 22:21 UTC | Plan next milestone | FAIL | Gemini CLI error: .js:309138:14)
+    at async file:///usr/lib/node_modules/@go |
