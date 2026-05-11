@@ -1885,3 +1885,4 @@ Ripgrep is |
 | 2026-05-11 21:31 UTC | Exp 1870: Test HILED simulator on live gemma-4-31B | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1869-hiled-simulator.status (actual=Non |
 | 2026-05-11 21:36 UTC | Exp 1871: Implement Rust backend for S2KAN fast ev | OK | 83 passed, 1 warning in 5.75s |
 | 2026-05-11 21:44 UTC | Exp 1872: Prototype Ising loss as an oracle for mu | OK | 81 passed, 1 warning in 5.16s |
+| 2026-05-11 21:46 UTC | Exp 1873: Integrate Energy Matching with Flow mode | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
