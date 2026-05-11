@@ -1,67 +1,107 @@
-# Carnot Research Roadmap: Milestone 2026.05.135
+# Carnot Research Roadmap vNEXT: Phase-13 — Energy-Based Fine-Tuning, ROCE, and Hierarchical Constraints
 
-**Title:** Phase-12 System-2 Latency Scaling, Symbolic-KAN Integration, and Multi-Agent Verification
+**Created:** 2026-05-10
+**Milestone:** 2026.05.136
+**Status:** Planned (activates when milestone 2026.05.135 completes)
+**Supersedes:** research-roadmap-vNEXT.md (milestone 2026.05.135)
+**Informed by:** Experiments 1746-1758, EBFT, HRM, ROCE, HILED literature.
 
-## 1. What the Previous Milestone (.134) Proved
-Milestone 2026.05.134 successfully completed the synthesis phase for hardware-accelerated Equilibrium Matching (EqM) and continual learning pipelines. It established the core viability of continuous learning scaling to a 0.85 repair success rate across test distributions. Furthermore, System-2 EqM accuracy gained 4.2% on standard benchmarks.
+## What Phase-12 Proved
 
-However, the .134 retrospective identified three critical gaps to address before production readiness:
-1. **EqM Latency Overhead:** System-2 latency remains too high (~150.5 ms per step), requiring optimization to < 100ms.
-2. **Benchmark Diversity:** The continuous learning curriculum must broaden beyond current narrow distributions.
-3. **Verification Bottleneck:** A single monolithic verifier is proving insufficient; multi-agent System-2 verification is required to scale confidence bounds.
+Phase-12 proved that EqM latency overhead could be reduced via sparse updates, Symbolic-KAN structures can effectively map to constraint-informed verification, and multi-agent frameworks raise the verification bound on formal benchmarks. However, scaling these into a unified, continuous self-learning system requires addressing the extraction bottleneck, sequence-level tuning, and memory bloat.
 
-## 2. Research Context (May 2026)
-Recent findings from the field validate our Energy-Based Reasoning Model (EBRM) trajectory:
-- **Kona 1.0 (Logical Intelligence):** Proved that non-autoregressive EBRMs reasoning in a continuous latent space can achieve 96.2% on hard Sudoku.
-- **Symbolic-KAN (arXiv:2603.23854):** Validates our goal to embed discrete symbolic structure within a trainable network for verifiable, deterministic reasoning tiers.
-- **Energy-Guided Decoding (arXiv:2601.18510):** Proves that EBMs natively mitigate object hallucination at test time, strengthening our EqM test-time scaling strategy.
+**The gap:** 
+1. **Extraction bottleneck:** We need dynamic, open-world constraint elicitation (ROCE) instead of fixed schemas.
+2. **Training feedback:** Continuous self-learning needs sequence-level energy objectives (EBFT) to reduce the reliance on expensive external verifiers.
+3. **Memory management:** The continual learning buffer bloats indefinitely without semantic pruning.
 
-## 3. Architecture Context
+## vNEXT Architecture: Dynamic Constraints & Sequence Energy
 
-```mermaid
-graph TD
-    A[SOTA LLM Generator\nQwen3.6 / Gemma-4] --> B[EqM Latency-Optimized Sampler]
-    B --> C[Symbolic-KAN Struct Tier]
-    C --> D[Multi-Agent Verification Orchestrator]
-    D --> E[Continuous Learning Buffer]
-    E -.->|Updates| C
+```
+User Prompt (Open World)
+     │
+     ▼
+┌──────────────────────┐
+│ ROCE Extractor       │ → Extracts verifiable constraints dynamically
+│ (Exp 1763)           │
+└──────────────────────┘
+     │
+     ▼
+┌──────────────────────┐
+│ Hierarchical         │ → Maps abstract constraints to concrete rules
+│ Reasoning (HRM)      │ → (Exp 1764)
+└──────────────────────┘
+     │
+     ▼
+┌──────────────────────┐
+│ EBFT Self-Learning   │ → Continuous learning via sequence-level energy
+│ (Exp 1759-1760)      │ → Semantic memory pruning (Exp 1761)
+└──────────────────────┘
+     │
+     ▼
+┌──────────────────────┐
+│ Live SOTA Inference  │ → unsloth/Qwen3.6-35B-A3B-GGUF
+│ + Hardware-in-Loop   │ → unsloth/gemma-4-31B-it-GGUF
+└──────────────────────┘
 ```
 
-## 4. Phase Descriptions
+## Phase 1: Energy-Based Fine-Tuning (EBFT) & Self-Learning
 
-### Phase 1: Latency Optimization (EqM & SOTA)
-The goal is to push EqM sampling overhead beneath the 100ms threshold required for real-time inference routing.
-- **Exp 1746:** Profile EqM CUDA overhead using flagship SOTA MoE models (`unsloth/Qwen3.6-35B-A3B-GGUF`).
-- **Exp 1747:** Implement sparse gradient updates for the EqM guided sampling kernel.
-- **Exp 1748:** Hardware benchmark of the sparse EqM sampler against the 100ms target.
+### Exp 1759: EBFT Sequence-Level Objective Implementation
+Implement Energy-Based Fine-Tuning using sequence-level feature matching without external verifiers.
+- **Deliverable:** `python/carnot/training/ebft_objective.py`
 
-### Phase 2: Symbolic-KAN Integration
-Integrating discrete symbolic learning based on arXiv:2603.23854 to provide strict deterministic structural constraints.
-- **Exp 1749:** Prototype Symbolic-KAN discrete structure mapping to Carnot's tensor space.
-- **Exp 1750:** Evaluate Symbolic-KAN constraint accuracy and expressivity versus baseline CIKAN.
-- **Exp 1751:** End-to-End Symbolic-KAN verifiable tier integration into the core framework.
+### Exp 1760: Continual Self-Learning with EBFT
+Apply EBFT to the continuous self-learning pipeline to measure calibration stability.
+- **Deliverable:** `scripts/experiment_1760_ebft_continual.py`
 
-### Phase 3: Broadening Continuous Self-Learning
-Expanding the self-learning loop to prevent catastrophic forgetting and over-fitting to narrow reasoning patterns.
-- **Exp 1752:** Expand the LTLZinc temporal benchmark suite to include robust spatial reasoning tasks.
-- **Exp 1753:** Continuous self-learning stability testing on expanded LTLZinc datasets using `unsloth/gemma-4-31B-it-GGUF`.
-- **Exp 1754:** Implement semantic distillation for the continual learning memory buffer to bound storage growth.
+### Exp 1761: Semantic Pruning in Continual EBM Learning
+Implement semantic pruning for the FR-11 memory buffer to prevent context saturation.
+- **Deliverable:** `python/carnot/pipeline/semantic_pruning.py`
 
-### Phase 4: Multi-Agent System-2 Verification
-Scaling confidence by orchestrating parallel adversarial verification checks.
-- **Exp 1755:** Multi-agent orchestrator framework prototype for concurrent system-2 validation checks.
-- **Exp 1756:** Evaluate multi-agent orchestration on a PutnamBench test subset.
-- **Exp 1757:** E2E Pipeline Live SOTA Eval using `unsloth/gemma-4-26B-A4B-it-GGUF` combined with EqM, Symbolic-KAN, and Multi-Agent Orchestration.
+### Exp 1762: Continuous Stability Test on LTLZinc
+Evaluate the pruned, EBFT-trained self-learning loop on the expanded LTLZinc dataset.
+- **Deliverable:** `results/experiment_1762_stability.json`
 
-### Phase 5: Operations
-- **Exp 1758:** Milestone 2026.05.135 Retrospective.
+## Phase 2: Open Constraint Elicitation (ROCE) & Hierarchical Models
 
-## 5. Dependency Graph
-- Phase 1 must precede Phase 4 (E2E Eval requires low latency).
-- Phase 2 must precede Phase 4 (E2E Eval includes Symbolic-KANs).
-- Phase 3 runs in parallel with Phases 1 and 2.
-- Phase 5 runs last.
+### Exp 1763: Reasoning-Time Open Constraint Elicitation (ROCE)
+Implement dynamic extraction of verifiable logical constraints from unstructured user prompts.
+- **Deliverable:** `python/carnot/pipeline/roce_extractor.py`
 
-## 6. Hardware Requirements
-- **Local GPUs:** Dual RTX 3090 setup for SOTA GGUF loaded in parallel.
-- **System Memory:** 128GB RAM (required to hold `unsloth/Qwen3.6-35B-A3B-GGUF` alongside continuous learning buffers).
+### Exp 1764: Hierarchical Reasoning Model (HRM) Constraint Integration
+Add abstract-to-detailed execution layering within the verifier to handle complex ROCE constraints.
+- **Deliverable:** `python/carnot/models/hrm_verifier.py`
+
+### Exp 1765: Evaluate ROCE + HRM
+Run open-world reasoning tasks using the integrated ROCE + HRM stack.
+- **Deliverable:** `scripts/experiment_1765_roce_hrm.py`
+
+## Phase 3: Hardware-in-the-Loop & Live SOTA Execution
+
+### Exp 1766: Hardware-In-The-Loop Energy Decoding (HILED)
+Prototype offloading energy scoring/sampling to an external/simulated FPGA over AXI.
+- **Deliverable:** `python/carnot/inference/hiled_decoder.py`
+
+### Exp 1767: Full E2E Pipeline with Qwen3.6-35B-A3B
+Test the complete vNEXT pipeline on the flagship MoE.
+- **Deliverable:** `scripts/experiment_1767_e2e_qwen.py`
+
+### Exp 1768: Full E2E Pipeline with Gemma4-31B-it
+Test the complete vNEXT pipeline on the flagship dense model.
+- **Deliverable:** `scripts/experiment_1768_e2e_gemma31.py`
+
+### Exp 1769: Full E2E Pipeline with Gemma4-26B-A4B-it
+Test the complete vNEXT pipeline on the middle MoE model.
+- **Deliverable:** `scripts/experiment_1769_e2e_gemma26.py`
+
+## Phase 4: Operations
+
+### Exp 1770: Milestone .136 Retrospective
+Aggregate the results and honestly document the gaps.
+- **Deliverable:** `scripts/experiment_1770_retro.py`
+
+## Dependencies
+- Phase 1 must complete before Phase 2.
+- Phase 3 relies on models and extractors built in Phases 1 and 2.
+- All live inference must use the listed SOTA GGUF models.
