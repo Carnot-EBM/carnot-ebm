@@ -564,6 +564,9 @@ The system SHALL provide an Energy-Based Transformer (EBT) abstraction layer tha
 **Then** it returns a valid sequence energy value
 **And** sequences with higher likelihood are assigned lower energy
 
+### REQ-INFER-1829: EqM Calibration
+The system SHALL provide an EqM calibration implementation in `python/carnot/inference/eqm_calibration.py` that computes adaptive computation steps for stable valley finding as described in arXiv:2510.02300.
+
 ## Implementation Status
 
 | Requirement | Python | Tests |
