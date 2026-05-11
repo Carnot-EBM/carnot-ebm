@@ -4730,6 +4730,61 @@ cases are applied.
 
 ---
 
+## REQ-LEARN-1752: LTLZinc Spatial Reasoning Benchmark Expansion
+
+Exp 1752 SHALL broaden the reusable LTLZinc continual-learning curriculum from
+finite temporal traces into deterministic spatial reasoning cases.  The spatial
+benchmark SHALL focus on topological map routing constraints so later FR-11 and
+DVI checks can replay route-validity, obstacle-avoidance, waypoint, and
+simple-path violations without calling an external MiniZinc runtime.
+
+### REQ-LEARN-1752 Sub-requirements
+
+- REQ-LEARN-1752-1: The workflow SHALL write
+  `results/experiment_1752_spatial.json` with a terminal JSON artifact.
+- REQ-LEARN-1752-2: The workflow SHALL create or refresh
+  `data/ltlzinc_spatial_benchmark.json` with exactly 100 deterministic spatial
+  reasoning cases derived from the existing `data/ltlzinc_benchmark.json`
+  provenance.
+- REQ-LEARN-1752-3: The spatial cases SHALL include topological map routing
+  constraints with deterministic case IDs, map IDs, node/edge topology,
+  blocked edges, route traces, LTLZinc-style formulas, MiniZinc-style
+  constraint strings, expected satisfaction labels, certificate states, DVI
+  labels, verifier metadata, retention metadata, and source benchmark
+  provenance.
+- REQ-LEARN-1752-4: The case families SHALL cover route existence, blocked
+  edge avoidance, mandatory waypoint visits, forbidden-zone avoidance, and
+  simple-path/no-revisit checks, with balanced SAT and REPAIR_HINT rows per
+  family.
+- REQ-LEARN-1752-5: The terminal artifact SHALL include `status`, `schema`,
+  `experiment_id`, `benchmark_path`, `spatial_case_count`,
+  `validated_case_count`, `sat_case_count`, `repair_hint_case_count`,
+  `family_counts`, `commands_run`, and `honest_verdict`.
+- REQ-LEARN-1752-6: A complete artifact SHALL require exactly 100 spatial
+  cases, every local spatial verifier result to match the expected label, and
+  balanced SAT and REPAIR_HINT totals.
+
+### SCENARIO-LEARN-1752: Spatial Routes Broaden LTLZinc Replay
+
+**Given** the existing temporal LTLZinc benchmark exists as provenance
+**When** `scripts/experiment_1752_expand_ltlzinc.py` writes
+`data/ltlzinc_spatial_benchmark.json` and
+`results/experiment_1752_spatial.json`
+**Then** the spatial benchmark contains 100 deterministic topological routing
+cases
+**And** every case is validated by the local spatial verifier
+**And** every supported spatial family contains both SAT and REPAIR_HINT rows
+**And** the terminal artifact reports a complete verdict only when those
+conditions hold.
+
+## Implementation Status (REQ-LEARN-1752)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-1752 | Implemented (`scripts/experiment_1752_expand_ltlzinc.py`) | Implemented (`tests/python/test_experiment_1752_expand_ltlzinc.py`) |
+
+---
+
 ## REQ-LEARN-1539: FR-11 External-Feedback Skill Graph Promotion
 
 Exp 1539 SHALL convert rollback-passing FR-11 query-time policy updates into an
