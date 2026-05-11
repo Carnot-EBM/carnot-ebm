@@ -452,3 +452,24 @@ Results MUST be written to `/home/ianblenke/github.com/ianblenke/carnot/results/
 
 **Spec traces:** REQ-E2E-1782
 
+### REQ-E2E-1783: End-to-end evaluation using Gemma 3.1 31B
+
+Carnot MUST provide an E2E benchmark script to evaluate the flagship dense model.
+The implementation MUST use `unsloth/gemma-4-31B-it-GGUF` in MODEL_SPECS.
+Results MUST be written to `/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1783_e2e_gemma31.json`.
+
+**Acceptance criteria:**
+- Script `scripts/experiment_1783_e2e_gemma31.py` exists.
+- Records latency, parse rate, and energy scores.
+- Artifact is written to `results/experiment_1783_e2e_gemma31.json`.
+
+### SCENARIO-E2E-1783: E2E Gemma 3.1 Dense Evaluation Execution
+
+**Given** the complete Phase 1-3 integrated pipeline
+**When** the benchmark script runs using `unsloth/gemma-4-31B-it-GGUF`
+**Then** it performs the execution evaluation
+**And** produces a valid `results/experiment_1783_e2e_gemma31.json` artifact containing latency, parse rate, and energy scores.
+
+**Spec traces:** REQ-E2E-1783
+
+
