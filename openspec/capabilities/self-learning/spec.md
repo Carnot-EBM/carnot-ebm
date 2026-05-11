@@ -4785,6 +4785,30 @@ conditions hold.
 
 ---
 
+## REQ-LEARN-1753: Continual Stability Evaluation Loop
+
+Exp 1753 SHALL run a continual stability evaluation loop over the expanded LTLZinc spatial dataset using `unsloth/gemma-4-31B-it-GGUF`.
+
+### REQ-LEARN-1753 Sub-requirements
+
+- REQ-LEARN-1753-1: The workflow SHALL create `scripts/experiment_1753_continual_stability.py`.
+- REQ-LEARN-1753-2: The workflow SHALL run the evaluation over the expanded dataset.
+- REQ-LEARN-1753-3: The workflow SHALL write the results to `results/experiment_1753_continual.json`.
+
+### SCENARIO-LEARN-1753: Continual Stability Evaluation
+**Given** the expanded LTLZinc spatial dataset
+**When** `scripts/experiment_1753_continual_stability.py` runs
+**Then** it evaluates stability using `unsloth/gemma-4-31B-it-GGUF`
+**And** it outputs a complete artifact to `results/experiment_1753_continual.json`.
+
+## Implementation Status (REQ-LEARN-1753)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-1753 | Implemented (`scripts/experiment_1753_continual_stability.py`) | Implemented (`tests/python/test_experiment_1753_continual_stability.py`) |
+
+---
+
 ## REQ-LEARN-1539: FR-11 External-Feedback Skill Graph Promotion
 
 Exp 1539 SHALL convert rollback-passing FR-11 query-time policy updates into an
