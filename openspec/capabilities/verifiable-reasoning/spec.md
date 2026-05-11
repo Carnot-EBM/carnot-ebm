@@ -18852,3 +18852,12 @@ Carnot MUST provide a multi-level constraint verification architecture in `pytho
 Given an HRM verifier initialized with levels
 When constraints are evaluated
 Then it returns a multi-level verification score.
+
+## REQ-ROCE-HRM-1765: Evaluate ROCE and HRM Components Together
+- REQ-ROCE-HRM-1765-1: Provide a script `scripts/experiment_1765_roce_hrm.py` to evaluate `ROCEExtractor` constraint extraction and `HRMVerifier` scoring.
+- REQ-ROCE-HRM-1765-2: Generate a JSON report `results/experiment_1765_eval.json` with constraint satisfaction rates.
+
+### SCENARIO-ROCE-HRM-1765: Evaluate constraint satisfaction rates
+**Given** an evaluation script utilizing `ROCEExtractor` and `HRMVerifier`
+**When** the evaluation is run with `unsloth/gemma-4-26B-A4B-it-GGUF`
+**Then** the script produces a valid `experiment_1765_eval.json` containing the evaluation results.
