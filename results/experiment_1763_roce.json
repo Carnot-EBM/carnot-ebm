@@ -1,0 +1,75 @@
+{
+  "schema_version": "carnot.experiment.v1",
+  "artifact_type": "roce_extractor_result",
+  "experiment_id": 1763,
+  "experiment_slug": "exp1763-roce-extractor",
+  "status": "complete",
+  "created_at": "2026-05-11",
+  "spec_refs": [
+    "REQ-EXTRACT-1763",
+    "SCENARIO-EXTRACT-1763",
+    "SCENARIO-EXTRACT-1764"
+  ],
+  "implementation": {
+    "module": "python/carnot/pipeline/roce_extractor.py",
+    "tests": "tests/python/test_roce_extractor.py",
+    "capability_spec": "openspec/capabilities/verifiable-reasoning/spec.md",
+    "modified_conductor": false
+  },
+  "supported_domains": [
+    "roce",
+    "prompt",
+    "open_world"
+  ],
+  "formal_predicates": [
+    "required_text",
+    "forbidden_text",
+    "format_json",
+    "json_required_keys",
+    "format_list",
+    "exact_item_count",
+    "word_count_at_most",
+    "word_count_at_least",
+    "numeric_range",
+    "starts_with",
+    "ends_with",
+    "single_line",
+    "final_answer_only",
+    "answer_type"
+  ],
+  "verification": {
+    "targeted_tests": {
+      "command": ".venv/bin/pytest tests/python/test_roce_extractor.py -q --no-cov",
+      "result": "passed",
+      "summary": "8 passed, 4 warnings"
+    },
+    "new_code_coverage": {
+      "command": "PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 .venv/bin/python -m coverage run --source=python/carnot/pipeline -m pytest tests/python/test_roce_extractor.py -q -o addopts='' && .venv/bin/python -m coverage report -m --include='*/python/carnot/pipeline/roce_extractor.py' --fail-under=100",
+      "result": "passed",
+      "summary": "python/carnot/pipeline/roce_extractor.py: 153 statements, 0 missed, 100% coverage"
+    },
+    "lint": {
+      "commands": [
+        "/usr/bin/ruff check python/carnot/pipeline/roce_extractor.py tests/python/test_roce_extractor.py",
+        "/usr/bin/ruff format --check python/carnot/pipeline/roce_extractor.py tests/python/test_roce_extractor.py"
+      ],
+      "result": "passed"
+    },
+    "spec_coverage": {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py",
+      "result": "failed_pre_existing",
+      "summary": "38 unrelated existing tests lack REQ-* or SCENARIO-* references; tests/python/test_roce_extractor.py is spec-referenced."
+    },
+    "full_python_suite": {
+      "command": ".venv/bin/pytest tests/python -q",
+      "result": "failed_baseline_unstable",
+      "summary": "Attempted once against 23916 collected items. The run accumulated broad unrelated failures, xdist worker crashes from a Z3 segmentation fault in tests/python/test_pipeline_errors.py, repeated Exp 561 watchdog timeouts, and was terminated after 57 minutes without a clean terminal summary.",
+      "roce_related_failure_observed": false
+    },
+    "applicable_e2e": {
+      "result": "not_applicable",
+      "summary": "ops/e2e-test-plan.md has no extraction-only ROCE check; E2E-005 covers packaged code verification, not this standalone prompt-constraint extractor."
+    }
+  },
+  "honest_verdict": "complete: roce_extractor_targeted_tests_and_100pct_new_code_coverage_passed_full_suite_baseline_unstable"
+}

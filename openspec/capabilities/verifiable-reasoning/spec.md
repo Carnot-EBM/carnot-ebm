@@ -18779,6 +18779,46 @@ ends_with, no_repetition) with a clearly violating response
 
 **Spec traces:** REQ-EXTRACT-055-4, REQ-EXTRACT-055-5
 
+### REQ-EXTRACT-1763: Reasoning-Time Open Constraint Elicitation Extractor
+
+The repository shall provide `python/carnot/pipeline/roce_extractor.py` with a
+deterministic ROCE extractor that translates unstructured prompts into
+`ConstraintResult` objects suitable for formal verification.
+
+The extractor MUST:
+- REQ-EXTRACT-1763-1: Implement `ROCEExtractor` with `supported_domains`
+  including `roce`, `prompt`, and `open_world`.
+- REQ-EXTRACT-1763-2: Return `ConstraintResult` objects whose metadata contains
+  a formal constraint schema with `predicate`, `arguments`, `raw_phrase`,
+  `confidence`, and `spec_refs` fields.
+- REQ-EXTRACT-1763-3: Extract deterministic prompt constraints for required
+  text, forbidden text, JSON output, JSON required keys, list formatting,
+  exact item counts, word-count bounds, numeric ranges, start text, end text,
+  single-line output, final-answer-only output, and answer type.
+- REQ-EXTRACT-1763-4: Deduplicate repeated prompt constraints by predicate and
+  normalized arguments.
+- REQ-EXTRACT-1763-5: Respect the `ConstraintExtractor` domain filter contract
+  by returning no constraints for unsupported explicit domains.
+
+### SCENARIO-EXTRACT-1763: Open Prompt Becomes Formal Constraints
+
+**Given** a prompt containing JSON-key, no-extra-key, forbidden-text, and
+single-line instructions
+**When** `ROCEExtractor().extract(prompt, domain="roce")` is called
+**Then** the returned constraints include formal predicates for JSON output,
+required JSON keys, forbidden text, and single-line output, each preserving its
+triggering raw phrase.
+
+**Spec traces:** REQ-EXTRACT-1763-2, REQ-EXTRACT-1763-3
+
+### SCENARIO-EXTRACT-1764: Prompt Constraints Are Deduplicated
+
+**Given** a prompt that repeats the same required-text instruction
+**When** `ROCEExtractor().extract(prompt)` is called
+**Then** only one formal required-text constraint is returned for that term.
+
+**Spec traces:** REQ-EXTRACT-1763-4
+
 
 ### REQ-DYNAMIC-EIDOKU-001: Dynamic Eidoku Gate Compiler
 - REQ-DYNAMIC-EIDOKU-001-1: `DynamicEidokuCompiler` shall be implemented in `python/carnot/pipeline/dynamic_eidoku.py`.
