@@ -1,0 +1,28 @@
+{
+  "experiment": 1747,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-05-11",
+  "started_at": "2026-05-11T00:55:16.481735+00:00",
+  "finished_at": "2026-05-11T00:55:16.481735+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Exp 1747: gated on Exp 1746: Implement sparse updates for EqM",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp1746-eqm-cuda-profile.honest_verdict (actual='profile_completed' in expected=['success', 'complete', 'profiled'])",
+  "gates_evaluated": [
+    {
+      "upstream": "exp1746-eqm-cuda-profile",
+      "artifact_field": "honest_verdict",
+      "op": "in",
+      "expected": [
+        "success",
+        "complete",
+        "profiled"
+      ],
+      "actual": "profile_completed",
+      "passed": false,
+      "reason": "actual='profile_completed' in expected=['success', 'complete', 'profiled']"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
