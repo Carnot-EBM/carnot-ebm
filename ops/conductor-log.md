@@ -1592,3 +1592,4 @@ web search: site:o |
 | 2026-05-10 22:41 UTC | Exp 1745: Milestone .134 Retrospective | OK | 81 passed, 1 warning in 5.08s |
 | 2026-05-11 00:37 UTC | Plan milestone 2026.05.135 | OK | 13 tasks proposed |
 | 2026-05-11 00:39 UTC | Milestone 2026.05.135 activated | OK | 13 tasks queued |
+| 2026-05-11 00:53 UTC | Exp 1746: Profile EqM CUDA overhead with SOTA MoE | OK | 81 passed, 1 warning in 4.79s |
