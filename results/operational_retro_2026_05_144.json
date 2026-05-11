@@ -1,0 +1,52 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.144",
+  "generated_at": "2026-05-11T18:39:02Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 19.7,
+  "experiments_completed": 10,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "-0400 [conductor] Exp 1851: NLA-Class 16th Verifier Prototype \u2014 white-box SAE pr",
+      "duration_minutes": 5.7,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1853: Milestone .144 Retrospective",
+      "duration_minutes": 3.7,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1850: THRML/Carnot Parity Sweep at n=128 (continues n=8/16",
+      "duration_minutes": 3.4,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1852: Research Findings Audit \u2014 re-read .130-.143 artifact",
+      "duration_minutes": 2.9,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Doomed-rerun block: Exp 1849: Phase 4 Active Inference \u2014 verif",
+      "duration_minutes": 2.0,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Milestone 2026.05.144 completed 10 experiments in 19.7 minutes. All experiments were synthesis-only, utilizing 0 compute-bound tasks, thus resulting in appropriate 0% GPU utilization.",
+  "bottlenecks_identified": [
+    "Synthesis tasks such as Exp 1851 (5.7 mins) and Exp 1853 (3.7 mins) consumed the majority of milestone time."
+  ],
+  "improvements_suggested": [
+    "Investigate parallelizing independent synthesis tasks.",
+    "Evaluate LLM prompt optimization or caching to accelerate synthesis-only durations."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Identify independent synthesis experiments that can run concurrently.",
+    "Implement output caching for repeated LLM queries across experiments.",
+    "Profile Exp 1851 to optimize the synthesis step."
+  ],
+  "estimated_time_savings_pct": 20,
+  "meta_reflection": "All tasks were correctly identified as synthesis-only, and GPUs remained properly idle since no compute-bound experiments were run."
+}
