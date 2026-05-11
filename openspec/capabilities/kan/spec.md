@@ -1161,3 +1161,22 @@ The KAN capability MUST implement Softly Symbolified KANs (S2KAN) that introduce
 Given the `s2kan.py` module,
 When the differentiable gates and primitives (sin, exp, step) are evaluated and tested,
 Then the tests pass with 100% coverage, and `results/experiment_1857_s2kan.json` is written.
+
+## REQ-KAN-1858: GloroKAN Lipschitz Bounds in S2KAN
+
+The KAN capability MUST implement a Lipschitz approximation pass for the Softly Symbolified KANs (S2KAN).
+
+**Rationale:**
+    Robustness verification for KANs requires Lipschitz bounds (GloroKAN). Extending the KAN model forward pass to output local Lipschitz bounds enables formal property checks.
+
+**Acceptance criteria:**
+    - `python/carnot/models/s2kan.py` extends the model forward pass to output local Lipschitz bounds.
+    - Tests verify the bounds hold mathematically.
+    - Test coverage for the new code in `s2kan.py` is 100%.
+    - `results/experiment_1858_glorokan.json` is generated upon success.
+
+### SCENARIO-KAN-1858: S2KAN Lipschitz bounds
+
+Given the `s2kan.py` module,
+When the forward pass returns Lipschitz bounds and tests mathematically verify the bounds,
+Then the tests pass with 100% coverage, and `results/experiment_1858_glorokan.json` is written.

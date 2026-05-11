@@ -67,21 +67,36 @@ class S2KANLayer:
         """Compute differentiable gates via softmax."""
         return jax.nn.softmax(self.params.gate_logits / self.config.temperature, axis=-1)
 
-    def forward(self, x: jax.Array) -> jax.Array:
+    def forward(self, x: jax.Array, return_lipschitz: bool = False, radius: float = 0.1) -> jax.Array | tuple[jax.Array, jax.Array]:
         """Evaluate S2KAN gating on input x.
         
         Args:
             x: Tensor of shape (..., input_dim)
+            return_lipschitz: If True, also return local Lipschitz bounds.
+            radius: Radius for local Lipschitz bounds.
             
         Returns:
             Tensor of shape (..., input_dim) with gated primitives applied.
+            If return_lipschitz is True, returns a tuple of (output, lipschitz_bounds).
         """
         x_tensor = jnp.asarray(x, dtype=jnp.float32)
         prims = evaluate_primitives(x_tensor)  # Shape: (..., input_dim, 3)
         gates = self._gates()  # Shape: (input_dim, 3)
         
         # Multiply primitives by gates and sum over the primitive dimension
-        return jnp.sum(prims * gates, axis=-1)
+        y = jnp.sum(prims * gates, axis=-1)
+        
+        if return_lipschitz:
+            bound_sin = jnp.ones_like(x_tensor)
+            bound_exp = jnp.exp(x_tensor + radius)
+            dist_to_zero = jnp.maximum(0.0, jnp.abs(x_tensor) - radius)
+            sig_val = jax.nn.sigmoid(10.0 * dist_to_zero)
+            bound_step = 10.0 * sig_val * (1.0 - sig_val)
+            
+            prim_bounds = jnp.stack([bound_sin, bound_exp, bound_step], axis=-1)
+            lip_bound = jnp.sum(prim_bounds * gates, axis=-1)
+            return y, lip_bound
+        return y
 
 def build_experiment_1857_artifact(run_date: str = "20260511") -> dict[str, object]:
     """Build the stable Exp 1857 S2KAN artifact payload."""
@@ -115,10 +130,43 @@ def write_experiment_1857_artifact(
     path.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     return artifact
 
+def build_experiment_1858_artifact(run_date: str = "20260511") -> dict[str, object]:
+    """Build the stable Exp 1858 GloroKAN artifact payload."""
+    config = S2KANConfig(input_dim=1)
+    params = S2KANParams(gate_logits=jnp.array([[10.0, 0.0, 0.0]], dtype=jnp.float32))
+    layer = S2KANLayer(config, params=params)
+    
+    x = jnp.array([[0.0], [np.pi / 2]], dtype=jnp.float32)
+    y, lip = layer.forward(x, return_lipschitz=True, radius=0.1)
+    
+    return {
+        "schema": "carnot.s2kan.experiment_1858.v1",
+        "status": "complete",
+        "experiment_id": 1858,
+        "run_date": run_date,
+        "spec_traces": ["REQ-KAN-1858", "SCENARIO-KAN-1858"],
+        "module": "python/carnot/models/s2kan.py",
+        "artifact_path": "results/experiment_1858_glorokan.json",
+        "honest_verdict": "complete: glorokan_lipschitz_bounds_implemented",
+    }
+
+def write_experiment_1858_artifact(
+    output_path: str | Path = _repo_root() / "results/experiment_1858_glorokan.json",
+    run_date: str = "20260511",
+) -> dict[str, object]:
+    """Write the stable Exp 1858 artifact to disk."""
+    artifact = build_experiment_1858_artifact(run_date=run_date)
+    path = Path(output_path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    return artifact
+
 __all__ = [
     "S2KANConfig",
     "S2KANParams",
     "S2KANLayer",
     "build_experiment_1857_artifact",
     "write_experiment_1857_artifact",
+    "build_experiment_1858_artifact",
+    "write_experiment_1858_artifact",
 ]

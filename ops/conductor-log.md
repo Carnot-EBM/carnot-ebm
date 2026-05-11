@@ -1854,3 +1854,5 @@ Ripgrep is |
 | 2026-05-11 18:59 UTC | Exp 1855: Run FR-11 continuous self-learning loop  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1854-vl-proxy.status (actual=None == ex |
 | 2026-05-11 19:05 UTC | Exp 1856: Evaluate memory retention vs catastrophi | OK | 81 passed, 1 warning in 4.65s |
 | 2026-05-11 19:10 UTC | Exp 1857: S2KAN primitives - implement differentia | OK | 81 passed, 1 warning in 5.26s |
+| 2026-05-11 19:22 UTC | Exp 1858: GloroKAN integration - forward pass Lips | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: Warning: 256-color  |
+| 2026-05-11 19:36 UTC | Exp 1858: GloroKAN integration - forward pass Lips | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: -color support is r |
