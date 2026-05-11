@@ -3290,3 +3290,11 @@ The system shall benchmark ROCE latency and validity limits on the MoE model (un
 **Given** the Qwen3.6 flagship MoE
 **When** the pipeline processes dynamic constraints using ROCE limits
 **Then** the extraction latency and validity are benchmarked successfully.
+
+### REQ-ROCE-1847: ROCE Abstraction for Dynamic Constraint Extraction (Dense)
+The system shall benchmark ROCE latency and validity limits on the flagship Dense model (unsloth/gemma-4-31B-it-GGUF).
+
+### SCENARIO-ROCE-1847: Validate ROCE Latency limits on Dense Model
+**Given** the gemma-4 flagship Dense model
+**When** the pipeline processes dynamic constraints using ROCE limits
+**Then** the extraction latency and validity are benchmarked successfully and written to `results/experiment_1847_gemma31_roce.json`.
