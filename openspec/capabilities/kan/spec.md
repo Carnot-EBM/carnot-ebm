@@ -1141,3 +1141,23 @@ The KAN capability MUST implement Piecewise Affine (PWA) abstractions for nonlin
 Given a nonlinear KAN unit (e.g. spline callable),
 When the PWA abstraction is applied,
 Then it computes piecewise-linear approximations with affine bounds for each segment, tests pass with 100% coverage, and `results/experiment_1840_pwa_kan.json` is written.
+
+
+## REQ-KAN-1857: Softly Symbolified KANs (S2KAN) with Differentiable Gating
+
+The KAN capability MUST implement Softly Symbolified KANs (S2KAN) that introduce symbolic primitives with differentiable gating.
+
+**Rationale:**
+    To enable verifiable KANs, the network needs to use primitive functions (e.g., sin, exp, step) combined using differentiable gates. This allows the network to learn which symbolic function best fits the data while remaining differentiable for training.
+
+**Acceptance criteria:**
+    - `python/carnot/models/s2kan.py` implements the primitive functions (sin, exp, step) and differentiable gating logic.
+    - Tests verify the differentiable gating and primitive evaluations.
+    - Test coverage for `s2kan.py` is 100%.
+    - `results/experiment_1857_s2kan.json` is generated upon success.
+
+### SCENARIO-KAN-1857: S2KAN primitives and differentiable gates
+
+Given the `s2kan.py` module,
+When the differentiable gates and primitives (sin, exp, step) are evaluated and tested,
+Then the tests pass with 100% coverage, and `results/experiment_1857_s2kan.json` is written.
