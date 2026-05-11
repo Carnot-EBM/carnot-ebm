@@ -1,28 +1,42 @@
-# Milestone 2026.05.145: Phase 5 Continuous Verification Learning and Symbolic KANs
+# Carnot Research Roadmap: Milestone 2026.05.146
+**Status:** PROPOSED  
+**Doc Version:** vNEXT  
+**Target:** Continuous Self-Learning Scale, Constraint Elicitation, and Hardware Integration
 
-## Overview
-This milestone addresses three major gaps between Carnot's current state and the PRD vision:
-1. **Continuous Self-Learning (FR-11):** We must move beyond simple replay and implement unsupervised Verification Learning (VL), where constraint optimization replaces labeled data.
-2. **Formal Verification of KANs:** Integration of Softly Symbolified KANs (S2KAN) and GloroKAN-style robustness to ensure our energy tiers are formally verifiable.
-3. **Energy Matching:** Bringing continuous latent constrained generation to our verification loops.
+## 1. What Previous Milestones Proved
+Milestone 2026.05.145 successfully established the Verification Learning (VL) proxy, enabling constraint satisfaction scoring natively without labeled targets. It also integrated Softly Symbolified KANs (S2KAN) with Z3 formal verification over bounded domains, and validated these on the mandated local SOTA models.
 
-## What Previous Milestone Proved
-Milestone 2026.05.144 proved our Active Inference models and THRML scaling, but highlighted that our constraint extraction requires more robust structural guarantees, and our continuous learning pipelines need unsupervised learning paths to scale efficiently.
+## 2. Gaps and Objectives
+The three biggest gaps between the current state and the PRD vision are:
+1. **Dynamic Open Constraint Elicitation (ROCE):** Bridging natural language user instructions to rigorous Carnot constraints automatically at runtime.
+2. **Robust Semantic Continual Learning:** The FR-11 loop runs, but we lack latent semantic pruning to ensure catastrophic forgetting is strictly prevented at SOTA MoE scales.
+3. **Hardware-In-The-Loop Energy Decoding (HILED):** Using our simulation and KV260 hardware targets natively in the autoregressive decoding loop for continuous optimization.
 
-## Phases
+## 3. Architecture Overview
+```mermaid
+graph TD
+    A[SOTA LLM Generation] -->|Draft| B(ROCE Extractor)
+    B -->|Constraints| C{Z3 Gate}
+    C -->|Fail| A
+    C -->|Pass| D[HILED Autoregressive Integration]
+    D --> E[S2KAN Verifier / Ising Oracle]
+    E -->|Feedback| F[Semantic Pruning FR-11 Memory]
+    F -->|Continuous Update| A
+```
 
-### Phase 1: Continuous Verification Learning
-Implementing Verification Learning (arXiv:2503.12917) to allow Carnot to learn directly from constraint satisfaction without labeled data. This directly addresses the FR-11 continuous self-learning requirements.
+## 4. Phases
+### Phase 1: Reasoning-Time Open Constraint Elicitation (ROCE)
+Extracting verifiable constraints directly from unconstrained generation using SOTA GGUFs, bridging the natural language gap.
 
-### Phase 2: Formal KAN Verification
-Integrating S2KAN (symbolic primitives) and GloroKAN (Lipschitz bounding) into our energy tiers to enable formal algebraic and MILP verification of the KAN layers.
+### Phase 2: Scalable Continuous Self-Learning & Semantic Pruning
+Deploying Latent Energy Optimization to filter and semantically prune memory traces, ensuring zero-forgetting in FR-11 self-learning loops.
 
-### Phase 3: Hardware Readiness and E2E Integration
-Running these newly verified tiers and continuous loops against our SOTA GGUF models (`unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF`) and ensuring E2E verification across Rust and Python.
+### Phase 3: Hardware-in-the-Loop Energy Decoding & Ising Consensus
+Integrating simulated HILED within the generation process and using Ising models as an oracle for multi-agent consensus.
 
-## Hardware Requirements
-- Local Dual RTX 3090 CUDA runtime for SOTA GGUF inference.
-- CPU/RAM for Rust verification compilation and testing.
+### Phase 4: Cross-Language E2E Verification
+Formalizing the S2KAN implementation in Rust and running the full cascade test suite to ensure architectural parity and stability.
 
-## Dependency Graph
-Phase 1 (Verification Learning) -> Phase 2 (Symbolic KAN) -> Phase 3 (E2E SOTA Tests)
+## 5. Hardware Requirements
+- **Local SOTA Runtime:** Dual RTX 3090 GPUs (for `unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF`).
+- **Hardware Integration:** Simulator CPU execution required for HILED prototyping; no actual KV260 execution claims in this milestone.
