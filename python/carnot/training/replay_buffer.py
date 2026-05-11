@@ -85,6 +85,7 @@ class ReplayBuffer:
     """
 
     max_size: int = 10000
+    similarity_threshold: float = 1.0
     _buffer: list[jax.Array] = field(default_factory=list)
 
     def add(self, states: jax.Array) -> None:
@@ -95,6 +96,9 @@ class ReplayBuffer:
             or a single state (1-D array). Each state is appended individually.
             If the buffer exceeds max_size, the oldest entries are removed
             from the front of the list.
+
+            If similarity_threshold < 1.0, states with high cosine similarity
+            to existing states in the buffer are pruned (discarded) and not added.
 
             **Performance note:** Python list.pop(0) is O(n) because it shifts
             all elements. For large buffers (>100k), consider using
@@ -107,13 +111,18 @@ class ReplayBuffer:
 
         Spec: REQ-TRAIN-006
         """
-        if states.ndim == 1:
-            # Single state — wrap in a list for uniform handling.
-            self._buffer.append(states)
+        if self.similarity_threshold < 1.0:
+            from carnot.training.semantic_pruning import EmbeddingSemanticPruner
+            pruner = EmbeddingSemanticPruner(self.similarity_threshold)
+            states_to_add = pruner.filter_batch(states, self._buffer)
         else:
-            # Batch of states — add each row individually.
-            for i in range(states.shape[0]):
-                self._buffer.append(states[i])
+            if states.ndim == 1:
+                states_to_add = [states]
+            else:
+                states_to_add = [states[i] for i in range(states.shape[0])]
+
+        for state in states_to_add:
+            self._buffer.append(state)
 
         # Evict oldest entries if we exceeded max_size.
         # This maintains the FIFO (first-in, first-out) invariant.
