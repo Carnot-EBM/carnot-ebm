@@ -1604,3 +1604,4 @@ Ripgrep is |
 | 2026-05-11 02:16 UTC | Exp 1750: Evaluate Symbolic-KAN constraint accurac | OK | 81 passed, 1 warning in 5.17s |
 | 2026-05-11 02:24 UTC | Exp 1751: End-to-End Symbolic-KAN verifiable tier  | OK | 81 passed, 1 warning in 5.61s |
 | 2026-05-11 03:01 UTC | Exp 1752: Expand LTLZinc benchmark to include spat | OK | 81 passed, 1 warning in 5.60s |
+| 2026-05-11 03:06 UTC | Exp 1753: Continuous self-learning stability test  | OK | 81 passed, 1 warning in 4.52s |
