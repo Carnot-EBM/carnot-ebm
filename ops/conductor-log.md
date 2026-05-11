@@ -1628,3 +1628,11 @@ Ripgrep is |
 | 2026-05-11 05:28 UTC | Exp 1764: Hierarchical Reasoning Model (HRM) Integ | OK | 81 passed, 1 warning in 4.84s |
 | 2026-05-11 05:32 UTC | Exp 1765: Evaluate ROCE + HRM | OK | 81 passed, 1 warning in 5.14s |
 | 2026-05-11 05:38 UTC | Exp 1766: Hardware-In-The-Loop Energy Decoding (HI | OK | 81 passed, 1 warning in 5.18s |
+| 2026-05-11 05:51 UTC | Exp 1767: Full E2E Pipeline with Qwen3.6-35B-A3B | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: g: Passing args to  |
+| 2026-05-11 06:07 UTC | Exp 1767: Full E2E Pipeline with Qwen3.6-35B-A3B | FAIL | Post-tests failed: 1 failed, 81 passed, 1 warning in 5.37s |
+| 2026-05-11 06:09 UTC | Exp 1767: Full E2E Pipeline with Qwen3.6-35B-A3B | SKIP | Pre-tests failing, self-heal failed: 1 failed, 83 passed, 1 warning in 4.99s |
+| 2026-05-11 06:11 UTC | Exp 1768: Full E2E Pipeline with Gemma4-31B-it | SKIP | Pre-tests failing, self-heal failed: 1 failed, 83 passed, 1 warning in 5.42s |
+| 2026-05-11 06:14 UTC | Exp 1768: Full E2E Pipeline with Gemma4-31B-it | SKIP | Pre-tests failing, self-heal failed: 1 failed, 83 passed, 1 warning in 4.62s |
+| 2026-05-11 06:16 UTC | Exp 1768: Full E2E Pipeline with Gemma4-31B-it | SKIP | Pre-tests failing, self-heal failed: 1 failed, 83 passed, 1 warning in 5.46s |
+| 2026-05-11 06:18 UTC | Exp 1769: Full E2E Pipeline with Gemma4-26B-A4B-it | SKIP | Pre-tests failing, self-heal failed: 1 failed, 83 passed, 1 warning in 5.21s |
+| 2026-05-11 06:20 UTC | Exp 1769: Full E2E Pipeline with Gemma4-26B-A4B-it | SKIP | Pre-tests failing, self-heal failed: 1 failed, 83 passed, 1 warning in 4.17s |
