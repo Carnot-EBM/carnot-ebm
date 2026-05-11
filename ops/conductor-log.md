@@ -1689,3 +1689,5 @@ Ripgrep is |
 | 2026-05-11 08:57 UTC | Exp 1792: gated on Exp 1791 honest_verdict in succ | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1791-symbolic-kan-rtl.honest_verdict (a |
 | 2026-05-11 08:59 UTC | Exp 1792: gated on Exp 1791 honest_verdict in succ | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1791-symbolic-kan-rtl.honest_verdict (a |
 | 2026-05-11 09:01 UTC | Exp 1793: gated on Exp 1792 honest_verdict in succ | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1792-kv260-symbolic-kan-synth) |
+| 2026-05-11 09:01 UTC | Exp 1794: Multi-Agent Routing for Solver-Guided Re | DOOMED_RERUN_BLOCK | 4 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-11 09:03 UTC | Exp 1793: gated on Exp 1792 honest_verdict in succ | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1792-kv260-symbolic-kan-synth) |
