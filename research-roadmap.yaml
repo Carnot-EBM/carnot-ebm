@@ -36,7 +36,7 @@ tasks:
     title: 'Exp 1805: Design Bounce-Bind Ising Machine (BBIM) v5 RTL for KV260'
     max_turns: 100
     model: opus
-    agent_type: codex
+    agent_type: gemini
     prompt: |
       CONTEXT: To overcome local minima in dense constraint graphs, we will implement Bounce-Bind dynamics (BBIM) for the FPGA.
       EXISTING CODE TO READ FIRST: hardware/kv260/ising_sampler_v4_spec.md
@@ -79,7 +79,7 @@ tasks:
       
   - id: exp1808-cikan-symbolic-regression
     title: 'Exp 1808: Evaluate CIKAN for Symbolic Equation Extraction'
-    agent_type: codex
+    agent_type: gemini
     prompt: |
       CONTEXT: CIKANs provide perfectly interpretable symbolic equations. We need to verify if our implementation can extract constraint equations.
       EXISTING CODE TO READ FIRST: python/carnot/models/carnot_kan/cikan_layer.py
