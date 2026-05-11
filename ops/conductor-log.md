@@ -1668,3 +1668,4 @@ Ripgrep is |
 | 2026-05-11 07:44 UTC | Exp 1781: Hardware vs Software Latency and Energy  | OK | 84 passed, 1 warning in 4.88s |
 | 2026-05-11 07:48 UTC | Exp 1782: Capstone E2E Pipeline with Qwen3.6-35B-A | OK | 81 passed, 1 warning in 4.17s |
 | 2026-05-11 07:52 UTC | Exp 1783: Capstone E2E Pipeline with Gemma4-31B-it | OK | 81 passed, 1 warning in 4.51s |
+| 2026-05-11 07:57 UTC | Exp 1784: Milestone .137 Retrospective | OK | 81 passed, 1 warning in 4.43s |

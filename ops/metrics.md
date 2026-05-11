@@ -2558,3 +2558,12 @@ Note: `scripts/session-metrics.py` referenced by `CLAUDE.md` is not present in t
 | Turn | Start | End | Description | Tokens (est) |
 |------|-------|-----|-------------|------|
 | 1 | 2026-05-11T06:33:47Z | 2026-05-11T06:36:06Z | Milestone 2026.05.136 operational retrospective. Wrote results/operational_retro_2026_05_136.json. | ~1k |
+
+## Session: 2026-05-11 Milestone 2026.05.137 Operational Retrospective
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-05-11T08:06:17Z | 2026-05-11T08:06:39Z | Reading skeleton artifact, roadmap, changelog, and metrics files to prepare the milestone operational retrospective. | TBD |
+| 2 | 2026-05-11T08:06:39Z | 2026-05-11T08:07:30Z | Writing operational retrospective, updating changelog and roadmap. | TBD |
