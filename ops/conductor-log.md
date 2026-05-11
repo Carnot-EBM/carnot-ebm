@@ -1834,3 +1834,4 @@ Ripgrep is |
 | 2026-05-11 17:17 UTC | Exp 1846: gated on Exp 1844 ROCE logic: Dual-GPU S | OK | 81 passed, 1 warning in 5.81s |
 | 2026-05-11 17:34 UTC | Exp 1847: gated on Exp 1844 ROCE logic: Dual-GPU S | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: erateContent?alt=ss |
 | 2026-05-11 17:36 UTC | Exp 1847: gated on Exp 1844 ROCE logic: Dual-GPU S | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-11 17:38 UTC | Exp 1847: gated on Exp 1844 ROCE logic: Dual-GPU S | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
