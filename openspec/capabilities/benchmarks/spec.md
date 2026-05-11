@@ -535,4 +535,25 @@ It MUST record accuracy and energy metrics.
 
 **Spec traces:** REQ-E2E-1810
 
+### REQ-E2E-1835: SOTA LLM Pipeline with EBRM and Zero-Violation loops Qwen3.6-35B-A3B
+
+Carnot MUST provide an E2E benchmark script to evaluate the SOTA LLM pipeline integrated with EBRM and Zero-Violation loops.
+The implementation MUST use `unsloth/Qwen3.6-35B-A3B-GGUF` in MODEL_SPECS.
+Results MUST be written to `results/experiment_1835_qwen.json`.
+It MUST record repair success rate.
+
+**Acceptance criteria:**
+- Script `scripts/experiment_1835_qwen.py` exists.
+- Records repair success rate.
+- Artifact is written to `results/experiment_1835_qwen.json`.
+
+### SCENARIO-E2E-1835: SOTA LLM Pipeline Qwen MoE Evaluation Execution
+
+**Given** the complete SOTA LLM pipeline integrated with EBRM and Zero-Violation loops
+**When** the benchmark script runs using `unsloth/Qwen3.6-35B-A3B-GGUF`
+**Then** it performs the verify-repair evaluation
+**And** produces a valid `results/experiment_1835_qwen.json` artifact containing repair success rate.
+
+**Spec traces:** REQ-E2E-1835
+
 
