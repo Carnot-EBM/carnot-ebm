@@ -5523,3 +5523,23 @@ The deliverable SHALL be written to `results/experiment_1685_live_sota.json`.
 
 - REQ-LEARN-1820-1: `moe_distill.py` SHALL implement the replay buffer and fine-tune router logits.
 - REQ-LEARN-1820-2: The artifact SHALL include required schema fields (e.g. distillation_loss, honest_verdict).
+
+## REQ-LEARN-1832: Zero-Constraint Violation Guarantee for Self-Learning
+
+**Given** the COCOM pipeline running continuous self-learning updates
+**When** a new safety constraint is evaluated and yields a violation (constraint_value > safety_margin)
+**Then** the pipeline MUST enforce a zero-constraint violation guarantee by applying a corrective gradient step
+**And** the corrective step MUST oppose the constraint gradient proportionally to the violation magnitude
+
+### REQ-LEARN-1832 Sub-requirements
+
+- REQ-LEARN-1832-1: `COCOMPipeline.update` SHALL accept optional `constraint_value` (default 0.0) and `safety_margin` (default 0.0) parameters.
+- REQ-LEARN-1832-2: If `constraint_value > safety_margin`, a corrective step `(constraint_value - safety_margin) * normalized_constraint_grad` SHALL be added to the objective gradient `v`.
+- REQ-LEARN-1832-3: The update MUST still perform null-space projection for prior memory constraints.
+
+### SCENARIO-LEARN-1832: Corrective Step Applied on Constraint Violation
+
+**Given** a constraint violation where `constraint_value = 0.5` and `safety_margin = 0.1`
+**When** `COCOMPipeline.update` is called
+**Then** the gradient `v` receives a correction of magnitude `0.4` along `constraint_grad`
+**And** the parameters are updated in the direction of `-constraint_grad` to actively reduce the violation.
