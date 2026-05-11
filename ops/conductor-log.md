@@ -1698,3 +1698,4 @@ Ripgrep is |
 | 2026-05-11 09:09 UTC | Exp 1795: Capstone: Continuous Self-Learning with  | DOOMED_RERUN_BLOCK | 4 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-11 09:11 UTC | Exp 1795: Capstone: Continuous Self-Learning with  | DOOMED_RERUN_BLOCK | 4 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-11 09:16 UTC | Exp 1796: Performance Ablation: Software vs Hardwa | OK | 81 passed, 1 warning in 4.81s |
+| 2026-05-11 09:26 UTC | Exp 1797: Orchestrator Zero-False-Accept Audit | OK | 81 passed, 1 warning in 4.03s |
