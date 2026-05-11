@@ -1774,3 +1774,5 @@ Ripgrep is |
 | 2026-05-11 12:35 UTC | Exp 1816: GSM8K Baseline using 3B Models on Dual G | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1815-sota-inference-pipeline.success (u |
 | 2026-05-11 12:37 UTC | Exp 1815: 3B SOTA Model Inference Pipeline | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1814-dual-gpu-profiling) |
 | 2026-05-11 12:37 UTC | Exp 1816: GSM8K Baseline using 3B Models on Dual G | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1815-sota-inference-pipeline.success (u |
+| 2026-05-11 12:39 UTC | Exp 1817: Implement Continuous KAN Verifier | FAIL | Gemini CLI error: ith the reconciler.
+- Do NOT perform a self-review revision  |
