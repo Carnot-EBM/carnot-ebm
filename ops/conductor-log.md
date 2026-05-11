@@ -1650,3 +1650,4 @@ Ripgrep is |
 | 2026-05-11 07:13 UTC | Exp 1775: Cross-session semantic retrieval mechani | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-11 07:15 UTC | Exp 1775: Cross-session semantic retrieval mechani | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-11 07:17 UTC | Exp 1776: Multi-session forgetting rate evaluation | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-11 07:19 UTC | Exp 1776: Multi-session forgetting rate evaluation | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
