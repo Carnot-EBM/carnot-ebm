@@ -1800,3 +1800,5 @@ Ripgrep is |
 | 2026-05-11 14:16 UTC | Exp 1827: Implement EBRM Latent Reasoning Trajecto | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-11 14:18 UTC | Exp 1827: Implement EBRM Latent Reasoning Trajecto | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-11 14:20 UTC | Exp 1828: gated on Exp 1827 honest_verdict in succ | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1827-ebrm-latent-trajectory) |
+| 2026-05-11 14:24 UTC | Exp 1829: Equilibrium Matching (EqM) Adaptive Comp | OK | 81 passed, 1 warning in 4.77s |
+| 2026-05-11 14:26 UTC | Exp 1828: gated on Exp 1827 honest_verdict in succ | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1827-ebrm-latent-trajectory) |
