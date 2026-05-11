@@ -1,0 +1,27 @@
+{
+  "experiment": 1786,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-05-11",
+  "started_at": "2026-05-11T08:23:56.778305+00:00",
+  "finished_at": "2026-05-11T08:23:56.778305+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Exp 1786: gated on Exp 1785 honest_verdict in success: Run EBFT on continuous latent traces",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp1785-ebft-pipeline.honest_verdict (actual='complete: ebft_trainer_targeted_tests_and_100pct_new_code_coverage_passed' in expected=['success', 'complete'])",
+  "gates_evaluated": [
+    {
+      "upstream": "exp1785-ebft-pipeline",
+      "artifact_field": "honest_verdict",
+      "op": "in",
+      "expected": [
+        "success",
+        "complete"
+      ],
+      "actual": "complete: ebft_trainer_targeted_tests_and_100pct_new_code_coverage_passed",
+      "passed": false,
+      "reason": "actual='complete: ebft_trainer_targeted_tests_and_100pct_new_code_coverage_passed' in expected=['success', 'complete']"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}

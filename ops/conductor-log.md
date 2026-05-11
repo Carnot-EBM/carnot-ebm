@@ -1671,3 +1671,4 @@ Ripgrep is |
 | 2026-05-11 07:57 UTC | Exp 1784: Milestone .137 Retrospective | OK | 81 passed, 1 warning in 4.43s |
 | 2026-05-11 08:12 UTC | Plan milestone 2026.05.138 | OK | 14 tasks proposed |
 | 2026-05-11 08:14 UTC | Milestone 2026.05.138 activated | OK | 14 tasks queued |
+| 2026-05-11 08:21 UTC | Exp 1785: Energy-Based Fine-Tuning (EBFT) Pipeline | OK | 81 passed, 1 warning in 4.92s |
