@@ -1,0 +1,24 @@
+{
+  "experiment": 1870,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-05-11",
+  "started_at": "2026-05-11T21:27:04.976543+00:00",
+  "finished_at": "2026-05-11T21:27:04.976543+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Exp 1870: Test HILED simulator on live gemma-4-31B-it-GGUF inference",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp1869-hiled-simulator.status (actual=None == expected='success')",
+  "gates_evaluated": [
+    {
+      "upstream": "exp1869-hiled-simulator",
+      "artifact_field": "status",
+      "op": "==",
+      "expected": "success",
+      "actual": null,
+      "passed": false,
+      "reason": "actual=None == expected='success'"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}

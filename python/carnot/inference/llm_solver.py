@@ -821,6 +821,7 @@ def logprob_rejection_sample(
     max_new_tokens: int = 20,
     model: Any = None,
     tokenizer: Any = None,
+    hiled_simulator: Any = None,
 ) -> RejectionSampleResult:
     """Generate N candidates and select the one with highest mean logprob.
 
@@ -900,6 +901,8 @@ def logprob_rejection_sample(
             temperature=temperature,
             max_new_tokens=max_new_tokens,
         )
+        if hiled_simulator is not None:
+            mean_lp = hiled_simulator.score_candidate(response, mean_lp)
         candidates.append((response, mean_lp))
 
     # Sort by mean logprob descending (highest confidence first)
