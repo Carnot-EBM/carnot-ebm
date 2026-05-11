@@ -1,0 +1,24 @@
+{
+  "experiment": 1801,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-05-11",
+  "started_at": "2026-05-11T09:53:58.557861+00:00",
+  "finished_at": "2026-05-11T09:53:58.557861+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Exp 1801: gated on Exp 1800 generated_count>=2000: DPO training on verified pairs",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp1800-verified-traces-dataset.generated_count (upstream artifact not found for task id 'exp1800-verified-traces-dataset')",
+  "gates_evaluated": [
+    {
+      "upstream": "exp1800-verified-traces-dataset",
+      "artifact_field": "generated_count",
+      "op": ">=",
+      "expected": 2000,
+      "actual": null,
+      "passed": false,
+      "reason": "upstream artifact not found for task id 'exp1800-verified-traces-dataset'"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
