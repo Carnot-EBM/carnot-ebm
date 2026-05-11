@@ -1199,3 +1199,22 @@ The KAN capability MUST connect S2KAN symbolic primitives to Z3 for formal verif
 Given the `s2kan.py` primitives and a Z3 transpilation script,
 When S2KAN operations are converted to Z3 constraints and verified for a bounded domain,
 Then the proof completes successfully, tests pass with 100% coverage, and `results/experiment_1859_z3_verify.json` is written.
+
+## REQ-KAN-1862: E2E Test Verifying S2KAN Constraints using Flagship MoE
+
+The KAN capability MUST run an E2E test verifying S2KAN constraints using the mandated SOTA model (`unsloth/Qwen3.6-35B-A3B-GGUF`).
+
+**Rationale:**
+    S2KAN constraints must be verified in an end-to-end pipeline using the flagship MoE model to ensure the integration between the SOTA model and S2KAN verifier functions correctly.
+
+**Acceptance criteria:**
+    - `python/carnot/pipeline/experiment_1862.py` (or similar script) loads `unsloth/Qwen3.6-35B-A3B-GGUF`.
+    - The script passes output to the S2KAN verifier to verify constraints.
+    - Test coverage is 100%.
+    - `results/experiment_1862_e2e.json` is written upon success containing the model ID.
+
+### SCENARIO-KAN-1862: S2KAN constraints verified end-to-end with Qwen3.6-35B
+
+Given the S2KAN layer and the mandated flagship MoE,
+When the end-to-end test runs,
+Then it loads the Qwen3.6-35B model, verifies the constraints using S2KAN, and writes the `results/experiment_1862_e2e.json` artifact.
