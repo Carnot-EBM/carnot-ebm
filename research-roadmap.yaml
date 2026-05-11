@@ -32,6 +32,11 @@ tasks:
     deliverable: results/experiment_1849_phase4_active_inference.json
     agent_type: gemini
     max_turns: 100
+    prior_failures:
+      - experiment_id: exp1165-phase4-active-inference-pilot-v1
+        verdict: phase4_better_than_baseline
+        addressed_by: "Prior pilot produced a partial 'better than baseline' verdict without a falsifiable numerical gate. This new attempt has a tight, falsifiable gate (delta_alpha = inf_t_alpha_k6 - inf_t_alpha_k1 > 0.05 over 100 MLD steps on fixed n=8 substrate with seeded randomness), an explicit k=6 vs k=1 ensemble contrast (vs the pilot's single configuration), and an honest_verdict that must report the empirical delta_alpha numerical result regardless of pass/fail."
+        retire_if_same_verdict: true
     prompt: |
       MANDATORY WORKFLOW: read CLAUDE.md project rules (especially
       Phase Prototype + Empirical Validation + Adversarial Check
