@@ -11941,3 +11941,22 @@ This sweep was run after milestone `.138` completed. The literature search revea
 - **Papers:** arXiv:2510.23972, "An efficient probabilistic hardware architecture for diffusion-like models"; arXiv:2601.04358, "Energy-Time-Accuracy Tradeoffs in Thermodynamic Computing".
 - **What:** DTMs repurpose EBMs as denoising steps for hardware, allowing diffusion-like generation. EDDP introduces an engineering metric for thermodynamic computers balancing energy, delay, and deficiency.
 - **Relevance to Carnot:** Provides the algorithmic foundation to evaluate Carnot's EBMs on continuous or diffusion-like processes via `thrml` simulation, bridging toward Extropic hardware paths.
+
+## 2026-05-11 Post-.139 Planning Sweep (Milestone 2026.05.140)
+
+This sweep was run after milestone `.139` completed. The literature search revealed advances in latent space reasoning, constrained physical models, and enhanced hardware dynamics.
+
+### Energy-Based Calibration for Implicit CoT (EBM-CoT)
+- **Paper:** "Think Consistently, Reason Efficiently: Energy-Based Calibration for Implicit CoT" (arXiv:2511.07124)
+- **What:** Uses EBMs to calibrate latent "thought" embeddings in LLMs via Langevin updates, ensuring global logical consistency before text decoding.
+- **Relevance to Carnot:** Extends our continuous latent reasoning (Phase-7) by providing a concrete mechanism to correct hidden states on-the-fly.
+
+### Constraint Informed KANs (CIKAN)
+- **Paper:** "CIKAN: Constraint Informed Kolmogorov-Arnold Networks..." (PMLR 2025)
+- **What:** Integrates hard constraints directly into the KAN architecture to approximate complex control governors.
+- **Relevance to Carnot:** Provides the theoretical basis for Tier-4 Adaptive Energy Landscapes, allowing KANs to natively respect bounds without external penalty loops.
+
+### Bounce-Bind Ising Machine (BBIM) for FPGA
+- **Paper:** "Bounce-Bind Ising Machine..." (2026)
+- **What:** Introduces a tunable parameter to modulate Gibbs sampling/Glauber dynamics on FPGAs to escape local minima faster.
+- **Relevance to Carnot:** A crucial RTL enhancement for the KV260 hardware track to accelerate convergence in dense constraint graphs.
