@@ -1,0 +1,162 @@
+milestone: 2026.05.136
+milestone_title: "Phase-13: Energy-Based Fine-Tuning, ROCE, and Hierarchical Constraints"
+milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
+tasks:
+  - id: exp1759-ebft-objective
+    title: "Exp 1759: Implement EBFT sequence-level objective"
+    max_turns: 50
+    prompt: >
+      CONTEXT: Energy-Based Fine-Tuning (EBFT) allows sequence-level learning without explicit external verifiers, matching features over continuous rollouts.
+      EXISTING CODE TO READ FIRST: `python/carnot/training/`.
+      TASK: Implement the EBFT objective.
+      CONCRETE STEPS:
+      1. Create `python/carnot/training/ebft_objective.py`.
+      2. Implement sequence-level feature matching.
+      3. Add unit tests for gradient flow and objective calculation.
+      4. Write `{project_root}/results/experiment_1759_ebft.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1760-ebft-continual
+    title: "Exp 1760: gated on Exp 1759: Continual self-learning with EBFT"
+    gated_on:
+      - upstream: exp1759-ebft-objective
+        artifact_field: honest_verdict
+        op: in
+        value: ["success", "complete"]
+    prompt: >
+      CONTEXT: Apply EBFT to continuous self-learning to evaluate calibration stability.
+      EXISTING CODE TO READ FIRST: `python/carnot/training/ebft_objective.py`, `python/carnot/pipeline/`.
+      TASK: Train the continuous self-learning loop using EBFT.
+      CONCRETE STEPS:
+      1. Create `scripts/experiment_1760_ebft_continual.py`.
+      2. Set up MODEL_SPECS with `unsloth/gemma-4-26B-A4B-it-GGUF`.
+      3. Execute continual learning loop and measure energy convergence.
+      4. Write `{project_root}/results/experiment_1760_ebft_continual.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1761-semantic-pruning
+    title: "Exp 1761: Semantic pruning for FR-11 memory buffer"
+    prompt: >
+      CONTEXT: The continuous learning memory buffer bloats without semantic pruning. We need to discard redundant constraints.
+      EXISTING CODE TO READ FIRST: `python/carnot/pipeline/continual_memory.py`.
+      TASK: Implement semantic pruning.
+      CONCRETE STEPS:
+      1. Create `python/carnot/pipeline/semantic_pruning.py`.
+      2. Implement redundancy detection based on semantic similarity of constraints.
+      3. Write `{project_root}/results/experiment_1761_semantic_pruning.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1762-stability-ltlzinc
+    title: "Exp 1762: Continuous stability test on LTLZinc"
+    prompt: >
+      CONTEXT: Validate the pruned, EBFT-trained system on LTLZinc spatial dataset.
+      EXISTING CODE TO READ FIRST: `python/carnot/pipeline/semantic_pruning.py`, `scripts/experiment_1760_ebft_continual.py`.
+      TASK: Run stability testing.
+      CONCRETE STEPS:
+      1. Create `scripts/experiment_1762_stability.py`.
+      2. Measure forgetting rates and reasoning stability using `unsloth/gemma-4-31B-it-GGUF`.
+      3. Write `{project_root}/results/experiment_1762_stability.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1763-roce-extractor
+    title: "Exp 1763: Reasoning-Time Open Constraint Elicitation (ROCE)"
+    agent_type: codex
+    prompt: >
+      CONTEXT: Open-world constraints must be dynamically extracted from prompts (ROCE).
+      EXISTING CODE TO READ FIRST: `python/carnot/pipeline/extract.py`.
+      TASK: Implement dynamic ROCE extractor.
+      CONCRETE STEPS:
+      1. Create `python/carnot/pipeline/roce_extractor.py`.
+      2. Build the parsing logic to translate unstructured text into formal verification constraints.
+      3. Write `{project_root}/results/experiment_1763_roce.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1764-hrm-verifier
+    title: "Exp 1764: Hierarchical Reasoning Model (HRM) Integration"
+    prompt: >
+      CONTEXT: Hierarchical layering abstract constraints over concrete execution paths improves complex reasoning.
+      EXISTING CODE TO READ FIRST: `python/carnot/models/`.
+      TASK: Build the HRM verifier.
+      CONCRETE STEPS:
+      1. Create `python/carnot/models/hrm_verifier.py`.
+      2. Implement multi-level constraint verification architecture.
+      3. Write `{project_root}/results/experiment_1764_hrm.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1765-roce-hrm-eval
+    title: "Exp 1765: Evaluate ROCE + HRM"
+    prompt: >
+      CONTEXT: Evaluate the new ROCE and HRM components together.
+      EXISTING CODE TO READ FIRST: `python/carnot/pipeline/roce_extractor.py`, `python/carnot/models/hrm_verifier.py`.
+      TASK: Run evaluations.
+      CONCRETE STEPS:
+      1. Create `scripts/experiment_1765_roce_hrm.py`.
+      2. Evaluate constraint satisfaction rates using `unsloth/gemma-4-26B-A4B-it-GGUF`.
+      3. Write `{project_root}/results/experiment_1765_eval.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1766-hiled-prototype
+    title: "Exp 1766: Hardware-In-The-Loop Energy Decoding (HILED)"
+    model: opus
+    max_turns: 100
+    prompt: >
+      CONTEXT: Hardware integration prototype for offloading energy scoring and decoding to an FPGA simulator over AXI.
+      EXISTING CODE TO READ FIRST: `python/carnot/inference/guided_decoding.py`.
+      TASK: Implement HILED decoder prototype.
+      CONCRETE STEPS:
+      1. Create `python/carnot/inference/hiled_decoder.py`.
+      2. Implement asynchronous hardware polling for energy minimization steps.
+      3. Write `{project_root}/results/experiment_1766_hiled.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1767-e2e-qwen
+    title: "Exp 1767: Full E2E Pipeline with Qwen3.6-35B-A3B"
+    model: opus
+    max_turns: 100
+    prompt: >
+      CONTEXT: End-to-end milestone testing using the flagship MoE model.
+      EXISTING CODE TO READ FIRST: `scripts/experiment_1765_roce_hrm.py`.
+      TASK: Run E2E pipeline.
+      CONCRETE STEPS:
+      1. Create `scripts/experiment_1767_e2e_qwen.py`.
+      2. Configure MODEL_SPECS to use `unsloth/Qwen3.6-35B-A3B-GGUF`.
+      3. Run execution, collect latency, parse rate, and energy scores.
+      4. Write `{project_root}/results/experiment_1767_e2e_qwen.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1768-e2e-gemma31
+    title: "Exp 1768: Full E2E Pipeline with Gemma4-31B-it"
+    prompt: >
+      CONTEXT: End-to-end milestone testing using the flagship dense model.
+      EXISTING CODE TO READ FIRST: `scripts/experiment_1767_e2e_qwen.py`.
+      TASK: Run E2E pipeline.
+      CONCRETE STEPS:
+      1. Create `scripts/experiment_1768_e2e_gemma31.py`.
+      2. Configure MODEL_SPECS to use `unsloth/gemma-4-31B-it-GGUF`.
+      3. Write `{project_root}/results/experiment_1768_e2e_gemma31.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1769-e2e-gemma26
+    title: "Exp 1769: Full E2E Pipeline with Gemma4-26B-A4B-it"
+    prompt: >
+      CONTEXT: End-to-end milestone testing using the middle MoE model.
+      EXISTING CODE TO READ FIRST: `scripts/experiment_1767_e2e_qwen.py`.
+      TASK: Run E2E pipeline.
+      CONCRETE STEPS:
+      1. Create `scripts/experiment_1769_e2e_gemma26.py`.
+      2. Configure MODEL_SPECS to use `unsloth/gemma-4-26B-A4B-it-GGUF`.
+      3. Write `{project_root}/results/experiment_1769_e2e_gemma26.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1770-retro
+    title: "Exp 1770: Milestone .136 Retrospective"
+    max_turns: 20
+    prompt: >
+      CONTEXT: Phase 4 Operations. Aggregate results.
+      EXISTING CODE TO READ FIRST: `results/experiment_1759_*.json` to `results/experiment_1769_*.json`.
+      TASK: Write retrospective.
+      CONCRETE STEPS:
+      1. Create `scripts/experiment_1770_retro.py`.
+      2. Parse all milestone result JSONs.
+      3. Write `{project_root}/results/experiment_1770_retro.json` detailing honest_verdict.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
