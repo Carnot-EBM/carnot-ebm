@@ -1598,3 +1598,4 @@ web search: site:o |
 | 2026-05-11 00:59 UTC | Exp 1747: gated on Exp 1746: Implement sparse upda | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1746-eqm-cuda-profile.honest_verdict (a |
 | 2026-05-11 01:11 UTC | Exp 1748: Hardware benchmark of sparse EqM sampler | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: pproved.
 Ripgrep is |
+| 2026-05-11 01:27 UTC | Exp 1748: Hardware benchmark of sparse EqM sampler | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: nabled. All tool ca |

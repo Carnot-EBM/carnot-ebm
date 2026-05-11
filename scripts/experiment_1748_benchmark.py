@@ -65,7 +65,7 @@ def run_experiment(
     )
 
     # Warmup
-    warmup_chain = sampler.sample_chain(energy_fn, init, n_steps=2)
+    warmup_chain = sampler.sample_chain(energy_fn, init, n_steps=n_steps)
     warmup_chain.block_until_ready()
 
     # Benchmark
