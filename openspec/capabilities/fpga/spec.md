@@ -806,3 +806,31 @@ Experiment 1766 MUST implement the HILED decoder prototype for offloading energy
 **Then:** Polling occurs asynchronously and results are written to `results/experiment_1766_hiled.json`.
 
 **Implementation status:** Implemented (Exp 1766)
+
+---
+
+### REQ-HW-055
+
+**Title:** HILED Hardware Benchmark vs Software Fallback
+
+**Description:**
+Experiment 1781 MUST benchmark the HILED hardware setup against a software fallback. The benchmark must compare inference speed (latency) and energy metrics.
+
+**Acceptance criteria:**
+- A software fallback is implemented and tested.
+- `scripts/experiment_1781_hiled_benchmark.py` is implemented.
+- `results/experiment_1781_hiled_benchmark.json` is generated with speed and energy comparisons.
+
+**Implementation status:** Implemented (Exp 1781)
+
+---
+
+### SCENARIO-HW-055
+
+**Scenario:** Compare HILED hardware decoder against software fallback.
+
+**Given:** An initialized HILED decoder and a software fallback.
+**When:** We run energy minimization on both setups.
+**Then:** The inference speed and energy metrics are compared and written to `results/experiment_1781_hiled_benchmark.json`.
+
+**Implementation status:** Implemented (Exp 1781)

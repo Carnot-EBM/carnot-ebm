@@ -34,3 +34,16 @@ class HiledDecoder:
     def minimize_energy(self, initial_state: List[int]) -> float:
         """Synchronous wrapper for energy minimization."""
         return asyncio.run(self.minimize_energy_async(initial_state))
+
+    def minimize_energy_software(self, initial_state: List[int]) -> float:
+        """Software fallback for energy minimization."""
+        self.steps_polled = 0
+        current_energy = sum(initial_state) * 1.0
+        
+        for _ in range(self.max_steps):
+            self.steps_polled += 1
+            current_energy -= 2.0  # Simulate software loop
+            if current_energy < -5.0:
+                break
+                
+        return current_energy
