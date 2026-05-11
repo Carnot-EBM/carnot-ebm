@@ -1,157 +1,200 @@
-milestone: 2026.05.145
-milestone_title: "Research-Deep: Phase 5 Continuous Verification Learning and Symbolic KANs"
+milestone: 2026.05.146
+milestone_title: "Research-Deep: Phase 6 Advanced Constraint Elicitation and Semantic Pruning"
 milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
 
 tasks:
-  - id: exp1854-vl-proxy
-    title: "Exp 1854: Implement Verification Learning (VL) proxy for continuous self-learning"
-    deliverable: "results/experiment_1854_vl_proxy.json"
-    agent_type: "codex"
+  - id: exp1864-roce-prototype
+    title: "Exp 1864: Reasoning-Time Open Constraint Elicitation (ROCE) prototype"
+    deliverable: "results/experiment_1864_roce.json"
     prompt: |
-      CONTEXT: We are addressing FR-11 continuous self-learning by implementing a Verification Learning (VL) loss proxy based on arXiv:2503.12917.
-      EXISTING CODE TO READ FIRST: python/carnot/pipeline/, tests/python/
-      TASK: Implement a Verification Learning proxy that scores constraint satisfaction natively without labeled targets.
+      CONTEXT: We must bridge the gap between natural language user instructions and rigid Carnot verifiers. ROCE extracts verifiable logic dynamically during generation.
+      EXISTING CODE TO READ FIRST: python/carnot/verify/, python/carnot/pipeline/
+      TASK: Implement an open constraint elicitation prototype that extracts structured logic from unconstrained SOTA generation.
       CONCRETE STEPS:
-      1. Create `python/carnot/pipeline/verification_learning.py`.
-      2. Implement a constraint-based loss function that operates on unlabelled data.
-      3. Write `tests/python/test_verification_learning.py` ensuring 100% coverage.
-      4. Save output to `{project_root}/results/experiment_1854_vl_proxy.json`.
+      1. Create `python/carnot/verify/roce_extractor.py`.
+      2. Implement a method to extract dynamic verifiable logic from `unsloth/Qwen3.6-35B-A3B-GGUF` natural language output.
+      3. Evaluate the extraction success rate on a 20-prompt dataset.
+      4. Save output to `{project_root}/results/experiment_1864_roce.json`.
       
       Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp1855-fr11-loop
-    title: "Exp 1855: Run FR-11 continuous self-learning loop with VL proxy on unsloth/gemma-4-31B-it-GGUF"
-    deliverable: "results/experiment_1855_fr11_loop.json"
+  - id: exp1865-roce-z3-gate
+    title: "Exp 1865: Gate ROCE outputs through Z3 with zero false accepts"
+    deliverable: "results/experiment_1865_roce_z3.json"
     gated_on:
-      - upstream: exp1854-vl-proxy
+      - upstream: exp1864-roce-prototype
         artifact_field: "status"
         op: "=="
         value: "success"
     prompt: |
-      CONTEXT: We must execute a continuous self-learning loop using our SOTA models.
-      EXISTING CODE TO READ FIRST: python/carnot/pipeline/verification_learning.py
-      TASK: Run a self-learning loop using `unsloth/gemma-4-31B-it-GGUF`.
+      CONTEXT: The dynamic constraints from ROCE must be deterministic and verifiable.
+      EXISTING CODE TO READ FIRST: python/carnot/verify/roce_extractor.py, python/carnot/verify/z3_verifier.py
+      TASK: Pipe the output of ROCE to the Z3 verifier to ensure strict deterministic gate checking.
       CONCRETE STEPS:
-      1. Ensure MODEL_SPECS includes `unsloth/gemma-4-31B-it-GGUF`.
-      2. Run the VL proxy on a subset of unlabelled constraints.
-      3. Track the retention and learning curve.
-      4. Save output to `{project_root}/results/experiment_1855_fr11_loop.json`.
+      1. Connect `roce_extractor.py` output to Z3 formulation.
+      2. Test over the 20-prompt dataset to ensure 0% false accepts on constraint checking.
+      3. Save output to `{project_root}/results/experiment_1865_roce_z3.json`.
       
       Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp1856-ltlzinc-eval
-    title: "Exp 1856: Evaluate memory retention vs catastrophic forgetting using LTLZinc"
-    deliverable: "results/experiment_1856_ltlzinc_eval.json"
-    prompt: |
-      CONTEXT: Continuous learning requires checking for catastrophic forgetting.
-      EXISTING CODE TO READ FIRST: python/carnot/pipeline/
-      TASK: Use LTLZinc constraint evaluations to check for memory retention on the model trained in Exp 1855.
-      CONCRETE STEPS:
-      1. Load the updated policy.
-      2. Run evaluations using LTLZinc constraints.
-      3. Record the nonforgetting rate.
-      4. Save output to `{project_root}/results/experiment_1856_ltlzinc_eval.json`.
-      
-      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp1857-s2kan-primitives
-    title: "Exp 1857: S2KAN primitives - implement differentiable symbolic gates"
-    deliverable: "results/experiment_1857_s2kan.json"
+  - id: exp1866-latent-energy-pruning
+    title: "Exp 1866: Implement Latent Energy Optimization for Semantic Pruning"
+    deliverable: "results/experiment_1866_latent_pruning.json"
     agent_type: "codex"
     prompt: |
-      CONTEXT: We need verifiable KANs. Softly Symbolified KANs (S2KAN) introduce symbolic primitives.
-      EXISTING CODE TO READ FIRST: python/carnot/models/
-      TASK: Implement differentiable symbolic gates for KAN.
+      CONTEXT: FR-11 continuous self-learning loops suffer from catastrophic forgetting without efficient pruning.
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/verification_learning.py, python/carnot/memory/
+      TASK: Implement a semantic pruning mechanism that uses latent EBM optimization to discard redundant constraint memories.
       CONCRETE STEPS:
-      1. Create `python/carnot/models/s2kan.py`.
-      2. Implement primitive functions (sin, exp, step) with differentiable gating.
-      3. Write tests with 100% coverage.
-      4. Save output to `{project_root}/results/experiment_1857_s2kan.json`.
+      1. Create `python/carnot/memory/semantic_pruning.py`.
+      2. Implement the pruning logic based on semantic similarity of EBM embeddings.
+      3. Write `tests/python/test_semantic_pruning.py` with 100% coverage.
+      4. Save output to `{project_root}/results/experiment_1866_latent_pruning.json`.
       
       Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp1858-glorokan-lipschitz
-    title: "Exp 1858: GloroKAN integration - forward pass Lipschitz approximation"
-    deliverable: "results/experiment_1858_glorokan.json"
+  - id: exp1867-fr11-scale-moe
+    title: "Exp 1867: Scale FR-11 self-learning with latent pruning on SOTA MoE"
+    deliverable: "results/experiment_1867_fr11_moe.json"
+    gated_on:
+      - upstream: exp1866-latent-energy-pruning
+        artifact_field: "status"
+        op: "=="
+        value: "success"
+    prompt: |
+      CONTEXT: Testing the FR-11 learning loop with semantic pruning at SOTA scale.
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/, python/carnot/memory/semantic_pruning.py
+      TASK: Execute the FR-11 continual learning loop using `unsloth/Qwen3.6-35B-A3B-GGUF`.
+      CONCRETE STEPS:
+      1. Ensure MODEL_SPECS includes the MoE model.
+      2. Run the loop to add constraint memories and trigger semantic pruning.
+      3. Track memory retention and memory size bounds.
+      4. Save output to `{project_root}/results/experiment_1867_fr11_moe.json`.
+      
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1868-ltlzinc-forgetting-check
+    title: "Exp 1868: Evaluate catastrophic forgetting on the MoE using LTLZinc"
+    deliverable: "results/experiment_1868_ltlzinc.json"
+    prompt: |
+      CONTEXT: The semantic pruning mechanism must guarantee zero catastrophic forgetting.
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/, python/carnot/memory/
+      TASK: Use LTLZinc constraint evaluations to check for memory retention on the pruned memory traces.
+      CONCRETE STEPS:
+      1. Load the updated FR-11 memory.
+      2. Run evaluations using temporal LTLZinc constraints.
+      3. Record the nonforgetting rate (must be 1.0).
+      4. Save output to `{project_root}/results/experiment_1868_ltlzinc.json`.
+      
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1869-hiled-simulator
+    title: "Exp 1869: Implement HILED (Hardware-In-The-Loop Energy Decoding) Simulator"
+    deliverable: "results/experiment_1869_hiled.json"
     agent_type: "codex"
     prompt: |
-      CONTEXT: Robustness verification for KANs requires Lipschitz bounds (GloroKAN).
-      EXISTING CODE TO READ FIRST: python/carnot/models/s2kan.py
-      TASK: Add a Lipschitz approximation pass to the KAN models.
+      CONTEXT: Hardware integration must not be post-hoc. HILED integrates energy scoring tightly into autoregressive decoding.
+      EXISTING CODE TO READ FIRST: python/carnot/inference/, hardware/kv260/
+      TASK: Implement a CPU-based HILED simulator that mimics FPGA-based Gibbs/Potts sampling during decoding.
       CONCRETE STEPS:
-      1. Extend the KAN model forward pass to output local Lipschitz bounds.
-      2. Write tests verifying the bounds hold mathematically.
-      3. Save output to `{project_root}/results/experiment_1858_glorokan.json`.
+      1. Create `python/carnot/inference/hiled_simulator.py`.
+      2. Inject the simulator into the logprob rejection sampler.
+      3. Measure the theoretical efficiency gains and constraint enforcement.
+      4. Save output to `{project_root}/results/experiment_1869_hiled.json`.
       
       Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp1859-z3-formal-verify
-    title: "Exp 1859: Formal verification of S2KAN with Z3 (Python/Rust bridging)"
-    deliverable: "results/experiment_1859_z3_verify.json"
+  - id: exp1870-hiled-live-inference
+    title: "Exp 1870: Test HILED simulator on live gemma-4-31B-it-GGUF inference"
+    deliverable: "results/experiment_1870_hiled_live.json"
+    gated_on:
+      - upstream: exp1869-hiled-simulator
+        artifact_field: "status"
+        op: "=="
+        value: "success"
     prompt: |
-      CONTEXT: Verification tiers must be formally proven via Z3/MILP.
-      EXISTING CODE TO READ FIRST: python/carnot/models/s2kan.py
-      TASK: Connect S2KAN symbolic primitives to Z3 for verification.
+      CONTEXT: We must prove HILED works with actual SOTA model logprobs.
+      EXISTING CODE TO READ FIRST: python/carnot/inference/hiled_simulator.py
+      TASK: Execute live autoregressive decoding using the HILED simulator on the Gemma dense model.
       CONCRETE STEPS:
-      1. Write a script that transpiles an S2KAN layer into Z3 constraints.
-      2. Prove consistency over a bounded input domain.
-      3. Save output to `{project_root}/results/experiment_1859_z3_verify.json`.
+      1. Configure `unsloth/gemma-4-31B-it-GGUF` for local inference.
+      2. Decode 50 sequences using HILED constraint checking.
+      3. Report on latency overhead and validation rate.
+      4. Save output to `{project_root}/results/experiment_1870_hiled_live.json`.
       
       Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp1860-energy-matching
-    title: "Exp 1860: Energy Matching generator logic prototyping"
-    deliverable: "results/experiment_1860_energy_matching.json"
+  - id: exp1871-s2kan-rust-binding
+    title: "Exp 1871: Implement Rust backend for S2KAN fast evaluation"
+    deliverable: "results/experiment_1871_s2kan_rust.json"
+    agent_type: "codex"
     prompt: |
-      CONTEXT: Energy matching (arXiv:2504.10612) unites flow matching with EBMs.
+      CONTEXT: The core compute architecture relies on Rust for speed. The previous milestone established S2KAN primitives in Python.
+      EXISTING CODE TO READ FIRST: python/carnot/models/s2kan.py, crates/carnot-kan/
+      TASK: Port S2KAN primitives to Rust and expose them via PyO3.
+      CONCRETE STEPS:
+      1. Implement symbolic differentiable gates in `crates/carnot-kan/`.
+      2. Bind them using PyO3.
+      3. Write tests validating equivalence with the Python implementation.
+      4. Save output to `{project_root}/results/experiment_1871_s2kan_rust.json`.
+      
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1872-ising-consensus-oracle
+    title: "Exp 1872: Prototype Ising loss as an oracle for multi-agent consensus"
+    deliverable: "results/experiment_1872_ising_consensus.json"
+    prompt: |
+      CONTEXT: Scaling constraint checking across multiple reasoning paths.
+      EXISTING CODE TO READ FIRST: python/carnot/models/ising.py
+      TASK: Implement a consensus protocol among multiple agent hypotheses that minimizes an Ising loss function.
+      CONCRETE STEPS:
+      1. Create `python/carnot/pipeline/ising_consensus.py`.
+      2. Generate 5 diverse SOTA answers and encode their conflicts as an Ising graph.
+      3. Solve the graph to find the minimum-energy consensus.
+      4. Save output to `{project_root}/results/experiment_1872_ising_consensus.json`.
+      
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1873-energy-matching-flow
+    title: "Exp 1873: Integrate Energy Matching with Flow models for generation"
+    deliverable: "results/experiment_1873_energy_matching.json"
+    prompt: |
+      CONTEXT: The integration of EBMs and Flow matching (arXiv:2504.10612) provides a continuous latent path for constraint satisfaction.
       EXISTING CODE TO READ FIRST: python/carnot/models/
-      TASK: Prototype a constrained generation loop using energy matching.
+      TASK: Expand the energy matching generator logic.
       CONCRETE STEPS:
-      1. Implement a prototype loop applying partial observation constraints to a dummy flow.
-      2. Test constraint satisfaction rate.
-      3. Save output to `{project_root}/results/experiment_1860_energy_matching.json`.
+      1. Refine the continuous latent path combining Flow matching with an EBM score constraint.
+      2. Compare generation quality against the standard rejection sampling.
+      3. Save output to `{project_root}/results/experiment_1873_energy_matching.json`.
       
       Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp1861-cross-lang-equivalence
-    title: "Exp 1861: Cross-language (Rust/Python) equivalence test for Verification Learning"
-    deliverable: "results/experiment_1861_equivalence.json"
+  - id: exp1874-e2e-triple-sota
+    title: "Exp 1874: Triple Integration E2E on MoE and Dense SOTA models"
+    deliverable: "results/experiment_1874_e2e.json"
+    model: "opus"
     prompt: |
-      CONTEXT: The PRD mandates that Rust and Python produce equivalent results.
-      EXISTING CODE TO READ FIRST: python/carnot/pipeline/verification_learning.py, crates/
-      TASK: Create a Rust implementation of the VL proxy and test equivalence.
-      CONCRETE STEPS:
-      1. Implement the VL proxy logic in `crates/carnot-core/`.
-      2. Expose via PyO3.
-      3. Run a test passing the same inputs to both and asserting identical outputs.
-      4. Save output to `{project_root}/results/experiment_1861_equivalence.json`.
-      
-      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp1862-e2e-sota
-    title: "Exp 1862: E2E Verification of S2KAN model on unsloth/Qwen3.6-35B-A3B-GGUF"
-    deliverable: "results/experiment_1862_e2e.json"
-    prompt: |
-      CONTEXT: All changes must be verified E2E using mandated SOTA models.
+      CONTEXT: The mandatory E2E test to close out the milestone.
       EXISTING CODE TO READ FIRST: ops/e2e-test-plan.md
-      TASK: Run an E2E test verifying S2KAN constraints using Qwen3.6-35B-A3B-GGUF.
+      TASK: Run the complete E2E test plan enforcing ROCE, HILED, and continuous learning updates across all mandated SOTA models.
       CONCRETE STEPS:
-      1. Load `unsloth/Qwen3.6-35B-A3B-GGUF`.
-      2. Run the full e2e test suite passing the output to the S2KAN verifier.
-      3. Save output to `{project_root}/results/experiment_1862_e2e.json`.
+      1. Utilize `unsloth/gemma-4-31B-it-GGUF` and `unsloth/gemma-4-26B-A4B-it-GGUF`.
+      2. Ensure cross-language equivalences, serialization, and sampling pipelines complete without error.
+      3. Save output to `{project_root}/results/experiment_1874_e2e.json`.
       
       Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp1863-retro
-    title: "Exp 1863: Milestone 145 Retrospective"
-    deliverable: "results/experiment_1863_retro.json"
+  - id: exp1875-retro
+    title: "Exp 1875: Milestone 146 Retrospective"
+    deliverable: "results/experiment_1875_retro.json"
     max_turns: 20
     prompt: |
-      CONTEXT: End of milestone retrospective.
+      CONTEXT: Concluding the milestone.
       EXISTING CODE TO READ FIRST: ops/changelog.md, ops/status.md
-      TASK: Synthesize the findings of Milestone .145 and draft updates for ops documents.
+      TASK: Synthesize the findings and update operational status.
       CONCRETE STEPS:
-      1. Summarize the pass/fail rates of the VL proxy and S2KAN tests.
-      2. Write findings to `{project_root}/results/experiment_1863_retro.json`.
+      1. Read the deliverables for ROCE, Semantic Pruning, and HILED.
+      2. Write findings to `{project_root}/results/experiment_1875_retro.json`.
+      3. Draft the next iteration of 'What's working' and 'What's Next'.
       
       Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
