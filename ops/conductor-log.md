@@ -1814,3 +1814,4 @@ Ripgrep is |
 | 2026-05-11 15:14 UTC | Exp 1835: Capstone: Dual-GPU SOTA Pipeline with Qw | OK | 81 passed, 1 warning in 4.75s |
 | 2026-05-11 15:19 UTC | Exp 1836: Capstone: Dual-GPU SOTA Pipeline with Ge | OK | 81 passed, 1 warning in 5.63s |
 | 2026-05-11 15:24 UTC | Exp 1837: Capstone: Dual-GPU SOTA Pipeline with Ge | OK | 81 passed, 1 warning in 4.96s |
+| 2026-05-11 15:30 UTC | Exp 1838: Milestone 2026.05.142 Retrospective | OK | 81 passed, 1 warning in 4.46s |
