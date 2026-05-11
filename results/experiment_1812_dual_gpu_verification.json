@@ -1,0 +1,51 @@
+{
+  "experiment": 1812,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-05-11",
+  "started_at": "2026-05-11T11:57:08.841413+00:00",
+  "finished_at": "2026-05-11T11:57:08.841413+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Exp 1812: Live constraint verification over DualGPU pipeline",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "4 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: no prior_failures field on task",
+  "gates_evaluated": [
+    {
+      "upstream": "exp1735-dual-gpu-smoke",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Blocked: blocked_gate_check_failed"
+    },
+    {
+      "upstream": "exp426-dual-gpu-fix",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Research Finding: zombie_detected"
+    },
+    {
+      "upstream": "exp495-dual-gpu-harness-patch",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Research Finding: all_patched"
+    },
+    {
+      "upstream": "exp517-dual-gpu-controlled-test",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Research Finding: gpu1_idle"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
