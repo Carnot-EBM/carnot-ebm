@@ -207,6 +207,33 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### NEW 2026-05-11 (10:25Z): Codex Quota Exhausted Until 18:34Z (.139+ MANDATORY)
+
+**Operator constraint, 2026-05-11 10:25Z:** codex weekly quota ran out
+overnight. Resets at **18:34Z today (2026-05-11)**. Any task with
+`agent_type: codex` proposed before that time WILL fail immediately
+on quota check and waste retry slots.
+
+**MANDATORY for next planner (`.140+) if planning before 18:34Z:**
+
+- Default ALL experiments to `agent_type: gemini`.
+- Do NOT use `agent_type: codex` for any task. This overrides the
+  CLAUDE.md "Codex-Default" rule for this specific window.
+- After 18:34Z 2026-05-11, the normal Codex-Default / Gemini-Default-
+  Window precedence resumes (whichever applies per current quota state).
+
+**Already-active `.139 fix (operator + outer-loop):** flipped exp1803
+(PWA-KArAt abstraction) and exp1804 (MILP encoding) from `codex` to
+`gemini` in `research-roadmap.yaml` at 10:25Z. These were the only
+codex tasks in `.139.
+
+**Cross-references:**
+- `feedback_anthropic_quota_codex_default.md` — original codex-default rule
+- `feedback_inner_loop_switched_to_gemini.md` — Gemini-Default-Window
+- `feedback_codex_paused.md` — historical codex pause
+
+---
+
 ### NEW 2026-05-10 (14:55Z): Retro Template Hallucination Fix + Harness-Fit Linter Integration (.132+ MANDATORY)
 
 **Pattern (already shipped 2026-05-10 14:55Z):**

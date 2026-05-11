@@ -1727,3 +1727,4 @@ Ripgrep is |
 | 2026-05-11 10:16 UTC | Exp 1804: MILP encoding of PWA abstractions | FAIL | Gemini CLI error: ith the reconciler.
 - Do NOT perform a self-review revision  |
 | 2026-05-11 10:23 UTC | Exp 1805: End-to-end formal verification smoke tes | OK | 81 passed, 1 warning in 4.67s |
+| 2026-05-11 10:29 UTC | Exp 1806: Denoising Thermodynamic Model (DTM) simu | OK | 81 passed, 1 warning in 5.29s |
