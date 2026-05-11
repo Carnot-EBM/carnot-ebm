@@ -1654,3 +1654,4 @@ Ripgrep is |
 | 2026-05-11 07:21 UTC | Exp 1776: Multi-session forgetting rate evaluation | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-11 07:26 UTC | Exp 1777: Self-learning pipeline scale-up on LTLZi | OK | 81 passed, 1 warning in 4.10s |
 | 2026-05-11 07:28 UTC | Exp 1778: Synthesize KV260 Bitfile for HILED AXI e | DOOMED_RERUN_BLOCK | 6 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-11 07:30 UTC | Exp 1778: Synthesize KV260 Bitfile for HILED AXI e | DOOMED_RERUN_BLOCK | 6 prior failure(s) match this task's scope but prior_failures field is missing o |
