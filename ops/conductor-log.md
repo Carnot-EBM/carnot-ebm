@@ -1644,3 +1644,4 @@ Ripgrep is |
 | 2026-05-11 06:48 UTC | Exp 1772: gated on Exp 1771 honest_verdict in succ | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1771-continuous-latent-modeling.honest_ |
 | 2026-05-11 06:50 UTC | Exp 1772: gated on Exp 1771 honest_verdict in succ | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1771-continuous-latent-modeling.honest_ |
 | 2026-05-11 06:52 UTC | Exp 1772: gated on Exp 1771 honest_verdict in succ | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1771-continuous-latent-modeling.honest_ |
+| 2026-05-11 07:02 UTC | Exp 1773: Multi-modal constraint benchmark evaluat | OK | 81 passed, 1 warning in 5.23s |
