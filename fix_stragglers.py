@@ -1,17 +1,9 @@
 import re
+with open('README.md', 'r') as f:
+    c = f.read()
 
-def fix_file(filepath):
-    with open(filepath, 'r') as f:
-        content = f.read()
+c = c.replace('Exp\n1784', 'Exp\n1863')
+c = c.replace('Exp 1784', 'Exp 1863')
 
-    content = content.replace("147 Archived", "148 Archived")
-    content = content.replace("2,049</div><div class=\"stat-label\">Experiment", "2,072</div><div class=\"stat-label\">Experiment")
-    
-    with open(filepath, 'w') as f:
-        f.write(content)
-
-fix_file("README.md")
-fix_file("docs/technical-report.md")
-fix_file("docs/index.html")
-
-print("Fixed stragglers")
+with open('README.md', 'w') as f:
+    f.write(c)

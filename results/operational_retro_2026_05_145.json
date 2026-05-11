@@ -1,0 +1,52 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.145",
+  "generated_at": "2026-05-11T20:40:22Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 79.9,
+  "experiments_completed": 23,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "-0400 [conductor] Exp 1858: GloroKAN integration - forward pass Lipschitz approx",
+      "duration_minutes": 29.1,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1863: Milestone 145 Retrospective",
+      "duration_minutes": 9.6,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1854: Implement Verification Learning (VL) proxy for conti",
+      "duration_minutes": 6.4,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1859: Formal verification of S2KAN with Z3 (Python/Rust br",
+      "duration_minutes": 6.0,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1862: E2E Verification of S2KAN model on unsloth/Qwen3.6-3",
+      "duration_minutes": 4.7,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Milestone 2026.05.145 completed 23 experiments in 79.9 minutes. All 23 experiments were synthesis-only, with no compute-bound tasks requiring GPU execution.",
+  "bottlenecks_identified": [
+    "Exp 1858 (GloroKAN integration - forward pass Lipschitz approx) took 29.1 minutes, accounting for over 36% of the total milestone wall time."
+  ],
+  "improvements_suggested": [
+    "Investigate the root cause of the 29-minute synthesis time for Exp 1858, possibly optimizing symbolic math derivation or documentation generation.",
+    "Consider parallelizing independent synthesis-only experiments to reduce overall milestone wall time."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Profile the execution of symbolic math or complex synthesis tasks like Exp 1858 to identify specific slowdowns.",
+    "Implement concurrent execution for independent synthesis tasks.",
+    "Continue monitoring synthesis time to ensure no regressions."
+  ],
+  "estimated_time_savings_pct": 25,
+  "meta_reflection": "The milestone was highly efficient in terms of GPU usage as it consisted entirely of synthesis tasks, meaning 0% GPU utilization was correct and expected behavior. However, the lengthy synthesis time for a single experiment highlights that non-compute-bound tasks can still be significant wall-clock bottlenecks."
+}

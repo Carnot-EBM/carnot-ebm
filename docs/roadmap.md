@@ -149,6 +149,7 @@
 | 2026.05.141 | Operational Efficiency | 17 experiments | 46 min wall time; GPUs utilized efficiently on compute tasks; synthesis-only bottleneck remains |
 | 2026.05.142 | Operational Efficiency | 1825-1835 | 62.1 min wall time; GPUs correctly idle; synthesis-only bottleneck remains |
 | 2026.05.144 | Operational Efficiency | 1844-1853 | 19.7 min wall time; GPUs correctly idle; synthesis-only bottleneck remains |
+| 2026.05.145 | Operational Efficiency | 1854-1863 | 79.9 min wall time; GPUs correctly idle; Exp 1858 synthesis slow path |
 
 ## Breakthrough Results
 
