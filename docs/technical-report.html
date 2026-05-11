@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Technical Report - A Technical Report — 2111 Experiments Across the Public Record, 151 Archived Milestone Records, 23,946 Python Test Items Collected (Artifacts Tracked Through Exp 1784)</title>
-  <meta name="description" content="Carnot technical report: A Technical Report — 2111 Experiments Across the Public Record, 151 Archived Milestone Records, 23,946 Python Test Items Collected (Artifacts Tracked Through Exp 1784). Live GPU benchmarks with statistical confidence intervals, honest negative results, and a public experiment history with provenance labels for every headline claim.">
+  <title>Technical Report - A Technical Report — 2138 Experiments Across the Public Record, 152 Archived Milestone Records, 23,946 Python Test Items Collected (Artifacts Tracked Through Exp 1811)</title>
+  <meta name="description" content="Carnot technical report: A Technical Report — 2138 Experiments Across the Public Record, 152 Archived Milestone Records, 23,946 Python Test Items Collected (Artifacts Tracked Through Exp 1811). Live GPU benchmarks with statistical confidence intervals, honest negative results, and a public experiment history with provenance labels for every headline claim.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M30,50 Q30,20 50,20 Q70,20 70,50 Q70,80 50,80 Q30,80 30,50' fill='none' stroke='%23f97316' stroke-width='8'/><circle cx='50' cy='50' r='10' fill='%23f97316'/></svg>">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -160,7 +160,7 @@
 
 <article>
 <h1 id="carnot-energy-based-verification-for-llm-output">Carnot: Energy-Based Verification for LLM Output</h1>
-<h2 id="a-technical-report-2111-experiments-across-the-public-record-151-archived-milestone-records-23946-python-test-items-collected-artifacts-tracked-through-exp-1784">A Technical Report — 2111 Experiments Across the Public Record, 151 Archived Milestone Records, 23,946 Python Test Items Collected (Artifacts Tracked Through Exp 1784)</h2>
+<h2 id="a-technical-report-2138-experiments-across-the-public-record-152-archived-milestone-records-23946-python-test-items-collected-artifacts-tracked-through-exp-1811">A Technical Report — 2138 Experiments Across the Public Record, 152 Archived Milestone Records, 23,946 Python Test Items Collected (Artifacts Tracked Through Exp 1811)</h2>
 <p><strong>Author:</strong> Ian Blenke
 <strong>Date:</strong> 2026-05-10
 <strong>Repository:</strong> github.com/Carnot-EBM/carnot-ebm
@@ -6454,6 +6454,9 @@ Analyzed 1388 min wall time / 253 experiments. Both RTX 3090s were completely id
 <h3 id="412-recent-additions-milestone-136">4.12 Recent Additions (Milestone .136)</h3>
 <p><strong>Hardware Synthesis and EqM Sampler Evaluation</strong>
 Experiments 1736-1770 focused on hardware synthesis for KV260 KANELÉ and integrating the EqM Sampler onto GPU. We measured latency on the live board and prepared the SWE-Bench Lite EqM Harness. Additionally, a Live Telemetry Streamer for Continual Learning was load-tested successfully, paving the way for more robust telemetry in the continuous learning pipeline.</p>
+<h3 id="49-latest-operational-profiling-milestones-136-to-138">4.9 Latest Operational Profiling (Milestones .136 to .138)</h3>
+<p><strong>Synthesis-Only Task Bottleneck Identification</strong><br>
+Recent operational retrospectives for milestones .136 through .138 (Experiment 1811) confirm that earlier compute-bound and memory tracking issues have been fully resolved. DualGPURunner now maintains correct hardware utilization. However, synthesis-only tasks have emerged as the primary operational bottleneck, taking up the majority of the wall-clock time in these latest runs. Future scaling efforts will target optimizing the synthesis pipeline.</p>
 </article>
 
 <footer>

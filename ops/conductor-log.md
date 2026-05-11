@@ -1732,3 +1732,4 @@ Ripgrep is |
 | 2026-05-11 10:41 UTC | Exp 1808: Capstone E2E Pipeline with Qwen3.6-35B-A | OK | 81 passed, 1 warning in 5.39s |
 | 2026-05-11 10:45 UTC | Exp 1809: Capstone E2E Pipeline with Gemma4-31B-it | OK | 81 passed, 1 warning in 5.75s |
 | 2026-05-11 10:50 UTC | Exp 1810: Capstone E2E Pipeline with Gemma4-26B-A4 | OK | 81 passed, 1 warning in 4.53s |
+| 2026-05-11 10:55 UTC | Exp 1811: Milestone .139 Retrospective | OK | 81 passed, 1 warning in 5.26s |
