@@ -1676,3 +1676,4 @@ Ripgrep is |
 | 2026-05-11 08:26 UTC | Exp 1786: gated on Exp 1785 honest_verdict in succ | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1785-ebft-pipeline.honest_verdict (actu |
 | 2026-05-11 08:28 UTC | Exp 1786: gated on Exp 1785 honest_verdict in succ | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1785-ebft-pipeline.honest_verdict (actu |
 | 2026-05-11 08:33 UTC | Exp 1787: Aleph-style Formal Verification Orchestr | OK | 81 passed, 1 warning in 4.76s |
+| 2026-05-11 08:38 UTC | Exp 1788: NRGPT-style Energy Landscape Exploration | OK | 81 passed, 1 warning in 4.33s |
