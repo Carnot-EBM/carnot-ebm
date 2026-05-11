@@ -1706,3 +1706,5 @@ Ripgrep is |
 | 2026-05-11 09:49 UTC | Exp 1799: Implement partial-trace energy scoring p | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-11 09:51 UTC | Exp 1799: Implement partial-trace energy scoring p | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-11 09:53 UTC | Exp 1800: gated on Exp 1799 accuracy_delta>0: Gene | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1799-partial-trace-energy) |
+| 2026-05-11 09:54 UTC | Exp 1801: gated on Exp 1800 generated_count>=2000: | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1800-verified-traces-dataset.generated_ |
+| 2026-05-11 09:56 UTC | Exp 1800: gated on Exp 1799 accuracy_delta>0: Gene | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1799-partial-trace-energy) |
