@@ -57,6 +57,9 @@ def test_cocom_write_artifact():
     pipeline = COCOMPipeline(learning_rate=0.1, memory_size=5, parameter_dim=2)
     pipeline.update(np.array([0.5, 0.5]), np.array([0.1, -0.1]))
     
+    # Train oracle so oracle_weights is not None
+    pipeline.estimate_hidden_constraint(np.array([1.0, 2.0]), 5.0)
+    
     with tempfile.TemporaryDirectory() as tmpdir:
         filepath = os.path.join(tmpdir, "experiment_1831_cocom.json")
         pipeline.write_artifact(filepath)
@@ -70,6 +73,7 @@ def test_cocom_write_artifact():
         assert data["honest_verdict"] == "cocom_implemented"
         assert data["learning_rate"] == 0.1
         assert data["memory_size"] == 5
+        assert data["oracle_weights"] is not None
 
 def test_cocom_zero_violation_guarantee():
     """Test zero-constraint violation guarantee with safety margin correction.
@@ -103,3 +107,24 @@ def test_cocom_no_violation():
     # const_grad is [1, 0]. Null space projection of [0.5, 0.5] onto [1, 0] leaves [0.0, 0.5]
     # Update is param - lr * v = [0.0, 0.0] - 0.1 * [0.0, 0.5] = [0.0, -0.05]
     assert np.allclose(pipeline.parameters, np.array([0.0, -0.05]))
+
+def test_cocom_estimate_hidden_constraint():
+    """Test online regression oracle for estimating hidden constraints.
+    
+    Spec: REQ-PIPELINE-1833, SCENARIO-PIPELINE-1833
+    """
+    pipeline = COCOMPipeline(learning_rate=0.1, memory_size=5, parameter_dim=2)
+    features = np.array([1.0, 2.0])
+    
+    # Initially prediction is 0.0
+    pred = pipeline.predict_hidden_constraint(features)
+    assert pred == 0.0
+    
+    # Train oracle
+    true_constraint = 5.0
+    pipeline.estimate_hidden_constraint(features, true_constraint)
+    
+    # Check if prediction moves towards true_constraint
+    pred_after = pipeline.predict_hidden_constraint(features)
+    assert np.allclose(pred_after, 2.5)
+

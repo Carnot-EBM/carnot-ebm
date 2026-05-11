@@ -34,7 +34,36 @@ class COCOMPipeline:
         self.parameter_dim = parameter_dim
         self.memory: list[np.ndarray] = []
         self.parameters = np.zeros(self.parameter_dim)
+        self.oracle_weights = None
         
+    def estimate_hidden_constraint(self, features: np.ndarray, true_constraint_value: float) -> None:
+        """Train the regression oracle online to predict constraints from features.
+        
+        Args:
+            features: Input features for the constraint regression.
+            true_constraint_value: The observed hidden constraint value.
+        """
+        if self.oracle_weights is None:
+            self.oracle_weights = np.zeros(features.shape)
+            
+        prediction = self.predict_hidden_constraint(features)
+        error = true_constraint_value - prediction
+        # Simple SGD update for online linear regression
+        self.oracle_weights = self.oracle_weights + self.learning_rate * error * features
+
+    def predict_hidden_constraint(self, features: np.ndarray) -> float:
+        """Predict the hidden constraint value from features.
+        
+        Args:
+            features: Input features.
+            
+        Returns:
+            The predicted constraint value.
+        """
+        if self.oracle_weights is None:
+            return 0.0
+        return float(np.dot(self.oracle_weights, features))
+
     def update(self, objective_grad: np.ndarray, constraint_grad: np.ndarray, constraint_value: float = 0.0, safety_margin: float = 0.0) -> None:
         """Perform an online learning step with zero-constraint violation guarantee.
         
@@ -89,7 +118,8 @@ class COCOMPipeline:
             "memory_size": self.memory_size,
             "parameter_dim": self.parameter_dim,
             "num_constraints_in_memory": len(self.memory),
-            "final_parameters": self.parameters.tolist()
+            "final_parameters": self.parameters.tolist(),
+            "oracle_weights": self.oracle_weights.tolist() if self.oracle_weights is not None else None
         }
         
         # Ensure directory exists
