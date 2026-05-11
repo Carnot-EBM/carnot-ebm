@@ -5554,3 +5554,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 
 - Milestone 2026.05.146 completed 20 synthesis-only experiments in 52.5 minutes with 0 compute-bound experiments. GPU idle was not a compute-bound bottleneck this milestone; the operational improvement target is better synthesis-only phase timing and batched closeout reconciliation.
 - 2026-05-11: Exp 1876: .146 Completion Ledger and .147 Gate Field Contract (✅ Complete) — honest_verdict=complete: milestone_146_archived_147_gate_contract_ready; results/experiment_1876_146_completion_147_gate_contract.json
+- 2026-05-11: Exp 1877: ROCE/HILED Artifact Contract Normalization (✅ Complete) — honest_verdict=complete: roce_hiled_gate_contract_normalization_ready; results/experiment_1877_artifact_contract_normalization.json
