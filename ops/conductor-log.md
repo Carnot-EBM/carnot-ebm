@@ -1599,3 +1599,4 @@ web search: site:o |
 | 2026-05-11 01:11 UTC | Exp 1748: Hardware benchmark of sparse EqM sampler | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: pproved.
 Ripgrep is |
 | 2026-05-11 01:27 UTC | Exp 1748: Hardware benchmark of sparse EqM sampler | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: nabled. All tool ca |
+| 2026-05-11 01:34 UTC | Exp 1748: Hardware benchmark of sparse EqM sampler | OK | cache hit: 82 passed, 1 warning in 11.01s |
