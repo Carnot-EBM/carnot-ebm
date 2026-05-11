@@ -1,298 +1,157 @@
-milestone: 2026.05.144
-milestone_title: "Research-Deep: Phase 4 Active Inference + THRML Scaling + NLA Probe + Findings Integration"
-milestone_doc: "outer-loop pre-staged 2026-05-11 (research-progress refocus)"
-
-# This milestone is operator-pre-staged per the CLAUDE.md Pre-Staged
-# Roadmap Convention. Rationale: .135-.143 produced velocity (~14
-# tasks/milestone) but few measurable scientific findings. Switching
-# to 5 deep tasks with falsifiable hypotheses and numerical pass/fail
-# gates. Each task gets max_turns: 100 so the agent can iterate on
-# real experiments rather than just write code stubs.
-#
-# Every task includes:
-# - A falsifiable hypothesis stated in CONTEXT
-# - A numerical acceptance gate (REQUIRED ARTIFACT FIELDS lists the
-#   specific metric and threshold)
-# - Live SOTA model invocation where applicable (mandatory per
-#   feedback_sota_models.md): unsloth/Qwen3.6-35B-A3B-GGUF or
-#   unsloth/gemma-4-31B-it-GGUF
-# - honest_verdict prefixed with complete: / success: / passed: /
-#   shipped: per CLAUDE.md Verdict Terminal-Prefix Discipline
-# - prior_failures: block when scope matches a prior retired task
-#   per CLAUDE.md Failed-Experiment Rerun Discipline
-
-scope_reduction_compliance:
-  - "Drop synthesis-only tasks (capstones, vague integrations); only run experiments with falsifiable gates"
-  - "Drop the 13-14 task/milestone pattern; cap at 5 to allow real iteration"
-  - "All compute-bound tasks invoke live SOTA GGUFs per CLAUDE.md mandate"
+milestone: 2026.05.145
+milestone_title: "Research-Deep: Phase 5 Continuous Verification Learning and Symbolic KANs"
+milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
 
 tasks:
-  - id: exp1849-phase4-active-inference-smoke
-    title: "Exp 1849: Phase 4 Active Inference — verifier-as-free-energy smoke (n=8)"
-    deliverable: results/experiment_1849_phase4_active_inference.json
-    agent_type: gemini
-    max_turns: 100
-    prior_failures:
-      - experiment_id: exp1165-phase4-active-inference-pilot-v1
-        verdict: phase4_better_than_baseline
-        addressed_by: "Prior pilot produced a partial 'better than baseline' verdict without a falsifiable numerical gate. This new attempt has a tight, falsifiable gate (delta_alpha = inf_t_alpha_k6 - inf_t_alpha_k1 > 0.05 over 100 MLD steps on fixed n=8 substrate with seeded randomness), an explicit k=6 vs k=1 ensemble contrast (vs the pilot's single configuration), and an honest_verdict that must report the empirical delta_alpha numerical result regardless of pass/fail."
-        retire_if_same_verdict: true
+  - id: exp1854-vl-proxy
+    title: "Exp 1854: Implement Verification Learning (VL) proxy for continuous self-learning"
+    deliverable: "results/experiment_1854_vl_proxy.json"
+    agent_type: "codex"
     prompt: |
-      MANDATORY WORKFLOW: read CLAUDE.md project rules (especially
-      Phase Prototype + Empirical Validation + Adversarial Check
-      Discipline, and the Phase 4 committed track at
-      feedback_active_inference_phase4_committed.md context).
-
-      CONTEXT (falsifiable hypothesis): the active-inference reframing
-      casts Carnot's verifier ensemble V(y) as the surprise term in a
-      free-energy functional F(y) = -log µ(y) + V(y). The Zenil
-      α_t > 0 condition (project_zenil_alpha_grounding.md) requires
-      µ_P > 0 over t MLD (Metropolis-Langevin-Dynamics) steps where
-      µ_P is the verifier's surviving-probability mass on candidate y.
-      We must empirically demonstrate that on n=8 tiny Ising substrate,
-      µ_P stays strictly positive over 100 MLD steps when the verifier
-      ensemble is k=6 base verifiers, AND collapses (µ_P → 0) when the
-      ensemble is k=1.
-
-      EXISTING CODE TO READ FIRST: python/carnot/verify/ (verifier
-      ensemble), python/carnot/samplers/ (MLD sampler if present);
-      python/carnot/models/ising.py for tiny n=8 substrate.
-
+      CONTEXT: We are addressing FR-11 continuous self-learning by implementing a Verification Learning (VL) loss proxy based on arXiv:2503.12917.
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/, tests/python/
+      TASK: Implement a Verification Learning proxy that scores constraint satisfaction natively without labeled targets.
       CONCRETE STEPS:
-      1. Implement (or extend) an MLD step that emits per-step µ_P
-         metric for both k=6 and k=1 verifier configurations on the
-         same n=8 Ising substrate with identical seeds.
-      2. Run 100 MLD steps for each configuration. Record the
-         inf_t α_t lower bound (smallest µ_P over the trajectory).
-      3. ACCEPTANCE GATE (write to artifact):
-         - k=6 case: inf_t_alpha_k6 > 0.10
-         - k=1 case: inf_t_alpha_k1 < 0.05 (collapse confirmed)
-         - delta_alpha = inf_t_alpha_k6 - inf_t_alpha_k1 > 0.05
-      4. Write results to results/experiment_1849_phase4_active_inference.json
-         with REQUIRED ARTIFACT FIELDS:
-         - schema: "carnot.phase4_active_inference.v1"
-         - n_spins: 8
-         - mld_steps: 100
-         - inf_t_alpha_k6: <float>
-         - inf_t_alpha_k1: <float>
-         - delta_alpha: <float>
-         - acceptance_gate_passed: <bool>
-         - honest_verdict: MUST start with "complete:" or "success:"
-           per Verdict Terminal-Prefix Discipline. Examples:
-           "complete: phase4_active_inference_alpha_collapse_confirmed_at_k1"
-           "complete: phase4_active_inference_gate_failed_alpha_collapsed_at_k6_too"
-      5. If the gate fails, document the failure mode honestly in
-         honest_verdict (still prefixed terminal). Do not retry by
-         changing thresholds — report the empirical reality.
-
+      1. Create `python/carnot/pipeline/verification_learning.py`.
+      2. Implement a constraint-based loss function that operates on unlabelled data.
+      3. Write `tests/python/test_verification_learning.py` ensuring 100% coverage.
+      4. Save output to `{project_root}/results/experiment_1854_vl_proxy.json`.
+      
       Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp1850-thrml-carnot-parity-n128
-    title: "Exp 1850: THRML/Carnot Parity Sweep at n=128 (continues n=8/16/32/64 sweep)"
-    deliverable: results/experiment_1850_thrml_parity_n128.json
-    agent_type: gemini
-    max_turns: 100
-    prior_failures:
-      - experiment_id: exp1503-thrml-parity-tiny-n8
-        verdict: "complete: tiny_ising_parity_n8_delta_1.14e-7_exact_0.042_stochastic_mean"
-        addressed_by: "Extending the same parity methodology to n=128 with stochastic-mean delta gate; previous n=8 result was the floor case, this is the scaling check"
-        retire_if_same_verdict: false
+  - id: exp1855-fr11-loop
+    title: "Exp 1855: Run FR-11 continuous self-learning loop with VL proxy on unsloth/gemma-4-31B-it-GGUF"
+    deliverable: "results/experiment_1855_fr11_loop.json"
+    gated_on:
+      - upstream: exp1854-vl-proxy
+        artifact_field: "status"
+        op: "=="
+        value: "success"
     prompt: |
-      MANDATORY WORKFLOW: read CLAUDE.md project rules (Decentralization-
-      Respecting Design Constraints rule 5 on hardware portability;
-      feedback_thrml_vendoring_z1_strengthening.md).
-
-      CONTEXT (falsifiable hypothesis): the .115/.117 THRML/Carnot
-      parity sweep validated bit-identical exact-MLD at n=8 (delta
-      1.14e-7) and stochastic-mean delta 0.042 at the same scale.
-      This experiment continues the queued scaling sweep at n=128 to
-      check whether stochastic-mean parity holds at production scale.
-      If it does, the THRML compatibility claim is validated for
-      Phase 2 hardware migration to Extropic Z1.
-
-      EXISTING CODE TO READ FIRST:
-      python/carnot/integrations/thrml/ (parity harness if present),
-      python/carnot/models/ising.py, results/experiment_1503_thrml_*
-      and results/experiment_1504_thrml_* for the n=8 baseline.
-
+      CONTEXT: We must execute a continuous self-learning loop using our SOTA models.
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/verification_learning.py
+      TASK: Run a self-learning loop using `unsloth/gemma-4-31B-it-GGUF`.
       CONCRETE STEPS:
-      1. Generate a random n=128 Ising substrate (seed-fixed) and run
-         100 independent stochastic samples through both Carnot's
-         native sampler and THRML's JAX-native sampler. Use
-         JAX_PLATFORMS=cpu for headline reproducibility per
-         CLAUDE.md.
-      2. Compute per-sample energy mean, KL(Carnot || THRML) on the
-         empirical energy distribution, and KS p-value.
-      3. ACCEPTANCE GATE (write to artifact):
-         - mean_energy_delta_abs < 0.10
-         - kl_divergence < 0.05
-         - ks_p_value > 0.05
-         All three must hold for the gate to pass.
-      4. Write results to results/experiment_1850_thrml_parity_n128.json
-         with REQUIRED ARTIFACT FIELDS:
-         - schema: "carnot.thrml_parity_sweep.v2"
-         - n_spins: 128
-         - n_samples: 100
-         - mean_energy_delta_abs: <float>
-         - kl_divergence: <float>
-         - ks_p_value: <float>
-         - acceptance_gate_passed: <bool>
-         - independent_rng_paths: true (confirms not shared-seed)
-         - honest_verdict: MUST start with "complete:" or "success:".
-           Examples:
-           "success: thrml_carnot_parity_n128_gate_passed_kl_0.02"
-           "complete: thrml_carnot_parity_n128_gate_failed_kl_0.18_above_threshold"
-
+      1. Ensure MODEL_SPECS includes `unsloth/gemma-4-31B-it-GGUF`.
+      2. Run the VL proxy on a subset of unlabelled constraints.
+      3. Track the retention and learning curve.
+      4. Save output to `{project_root}/results/experiment_1855_fr11_loop.json`.
+      
       Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp1851-nla-class-16th-verifier-prototype
-    title: "Exp 1851: NLA-Class 16th Verifier Prototype — white-box SAE probe"
-    deliverable: results/experiment_1851_nla_probe.json
-    agent_type: gemini
-    max_turns: 120
+  - id: exp1856-ltlzinc-eval
+    title: "Exp 1856: Evaluate memory retention vs catastrophic forgetting using LTLZinc"
+    deliverable: "results/experiment_1856_ltlzinc_eval.json"
     prompt: |
-      MANDATORY WORKFLOW: read CLAUDE.md project rules (especially the
-      MANDATORY-NEXT-MILESTONE PRIORITIES "NLA-Class Probing as 16th
-      Verifier" entry in ops/known-issues.md, and the memory entries
-      reference_anthropic_natural_language_autoencoders.md +
-      feedback_nla_class_16th_verifier_committed.md).
-
-      CONTEXT (falsifiable hypothesis): adding a white-box internal-
-      state probe (SAE-based reconstruction error on target LLM
-      activations) as the 16th verifier in Carnot's ensemble should
-      detect adversarial outputs that all 15 black-box verifiers
-      miss. Anthropic's NLA paper reports 4-5x adversarial-detection
-      lift (12-15% vs <3%). We need to prototype this with a small
-      SAE on Qwen3.6-35B-A3B activations and measure the lift on a
-      tiny adversarial corpus.
-
-      EXISTING CODE TO READ FIRST: python/carnot/verify/ (existing
-      verifier ensemble), python/carnot/models/ (target LLM loader).
-
+      CONTEXT: Continuous learning requires checking for catastrophic forgetting.
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/
+      TASK: Use LTLZinc constraint evaluations to check for memory retention on the model trained in Exp 1855.
       CONCRETE STEPS:
-      1. Implement a minimal SAE-based reconstruction-error probe in
-         python/carnot/verify/nla_probe.py. Apache-2.0 dependency
-         requirement: prefer sparsify or an equivalent OSS SAE crate
-         from PyPI (NO closed-weight upstream). If a tiny custom SAE
-         (single hidden layer, no pretraining) is necessary to meet
-         the time budget, document it as the v0 baseline.
-      2. Generate a tiny adversarial corpus: 10 prompts where the
-         LLM produces outputs that pass naive verifiers but contain
-         specific factual errors. Use unsloth/Qwen3.6-35B-A3B-GGUF
-         as the target model. (If model loading exceeds 30 min, fall
-         back to Qwen3.5-0.8B for the smoke test and clearly label
-         the result as a tier-2 reproduction.)
-      3. Measure: TPR (true positive rate) of the NLA probe at fixed
-         FPR=5%, on the adversarial corpus. Baseline: report the
-         best black-box verifier's TPR at the same FPR on the same
-         corpus.
-      4. ACCEPTANCE GATE:
-         - nla_probe_tpr_at_fpr5 - best_blackbox_tpr_at_fpr5 > 0.05
-           (i.e., NLA adds at least 5 percentage points of detection)
-         - The corpus contains at least one example where ALL black-
-           box verifiers miss but NLA catches (orthogonal coverage
-           demonstrated)
-      5. Write results to results/experiment_1851_nla_probe.json with
-         REQUIRED ARTIFACT FIELDS:
-         - schema: "carnot.nla_probe_prototype.v1"
-         - target_model: "unsloth/Qwen3.6-35B-A3B-GGUF" or fallback
-         - n_adversarial_examples: <int>
-         - nla_probe_tpr_at_fpr5: <float>
-         - best_blackbox_tpr_at_fpr5: <float>
-         - tpr_lift: <float>
-         - orthogonal_coverage_count: <int>
-         - acceptance_gate_passed: <bool>
-         - honest_verdict: MUST start with "complete:" or "success:".
-           Examples:
-           "complete: nla_probe_prototype_tpr_lift_0.08_orthogonal_coverage_3"
-           "complete: nla_probe_prototype_tpr_lift_negative_-0.02_no_lift"
-
+      1. Load the updated policy.
+      2. Run evaluations using LTLZinc constraints.
+      3. Record the nonforgetting rate.
+      4. Save output to `{project_root}/results/experiment_1856_ltlzinc_eval.json`.
+      
       Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp1852-research-findings-audit
-    title: "Exp 1852: Research Findings Audit — re-read .130-.143 artifacts for underclaimed results"
-    deliverable: results/experiment_1852_findings_audit.json
-    agent_type: gemini
-    max_turns: 100
+  - id: exp1857-s2kan-primitives
+    title: "Exp 1857: S2KAN primitives - implement differentiable symbolic gates"
+    deliverable: "results/experiment_1857_s2kan.json"
+    agent_type: "codex"
     prompt: |
-      MANDATORY WORKFLOW: read CLAUDE.md project rules (especially the
-      Literature Priority Discipline at feedback_literature_priority_discipline.md
-      and the Continuous Improvement principle).
-
-      CONTEXT (falsifiable hypothesis): milestones .130-.143 produced
-      ~150 experiments. Some of those artifacts contain measurable
-      research findings that have not been integrated into
-      research-program.md or paper-v6. We hypothesize that at least
-      3 such underclaimed findings exist.
-
-      EXISTING CODE TO READ FIRST: ALL files matching
-      results/experiment_18*.json (range 1800-1845 approximately).
-      Also: docs/research-program.md, _bmad/traceability.md,
-      docs/technical-report.md.
-
+      CONTEXT: We need verifiable KANs. Softly Symbolified KANs (S2KAN) introduce symbolic primitives.
+      EXISTING CODE TO READ FIRST: python/carnot/models/
+      TASK: Implement differentiable symbolic gates for KAN.
       CONCRETE STEPS:
-      1. Read every experiment_*.json from .130-.143 (filename range
-         approximately experiment_1582 through experiment_1845).
-      2. For each artifact, extract: experiment_id, the substantive
-         numerical/empirical finding (if any), and whether the
-         finding is referenced in research-program.md or paper-v6.
-      3. Build a list of "underclaimed findings" — artifacts whose
-         results would be paper-worthy or research-program-update-
-         worthy but are not currently referenced.
-      4. ACCEPTANCE GATE:
-         - underclaimed_findings_count >= 3
-         - For each underclaimed finding, the artifact path AND a
-           one-line summary of the result are included
-         - At least one finding is from .135-.143 (recent work, not
-           just .130-era)
-      5. Write results to results/experiment_1852_findings_audit.json
-         with REQUIRED ARTIFACT FIELDS:
-         - schema: "carnot.findings_audit.v1"
-         - milestones_audited: ["2026.05.130", "2026.05.131", ..., "2026.05.143"]
-         - artifacts_read_count: <int>
-         - underclaimed_findings: [{{"experiment_id": "...", "summary": "...", "artifact_path": "..."}}]
-         - underclaimed_findings_count: <int>
-         - acceptance_gate_passed: <bool>
-         - honest_verdict: MUST start with "complete:" or "success:".
-           Examples:
-           "complete: findings_audit_surfaced_5_underclaimed_results"
-           "complete: findings_audit_underclaimed_findings_below_threshold_only_1"
-
+      1. Create `python/carnot/models/s2kan.py`.
+      2. Implement primitive functions (sin, exp, step) with differentiable gating.
+      3. Write tests with 100% coverage.
+      4. Save output to `{project_root}/results/experiment_1857_s2kan.json`.
+      
       Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp1853-milestone-144-retro
-    title: "Exp 1853: Milestone .144 Retrospective"
-    deliverable: results/experiment_1853_retro.json
-    agent_type: gemini
-    max_turns: 50
+  - id: exp1858-glorokan-lipschitz
+    title: "Exp 1858: GloroKAN integration - forward pass Lipschitz approximation"
+    deliverable: "results/experiment_1858_glorokan.json"
+    agent_type: "codex"
     prompt: |
-      CONTEXT: Close out Milestone 2026.05.144.
-
-      EXISTING FILES TO READ FIRST: All output JSONs from .144 tasks
-      (exp1849-1852).
-
-      TASK: Generate the retrospective report summarizing
-      success/failure of the 4 research tasks, focused on whether
-      each falsifiable hypothesis was empirically resolved (passed
-      gate / failed gate / inconclusive).
-
+      CONTEXT: Robustness verification for KANs requires Lipschitz bounds (GloroKAN).
+      EXISTING CODE TO READ FIRST: python/carnot/models/s2kan.py
+      TASK: Add a Lipschitz approximation pass to the KAN models.
       CONCRETE STEPS:
-      1. Read each of: results/experiment_1849_phase4_active_inference.json,
-         results/experiment_1850_thrml_parity_n128.json,
-         results/experiment_1851_nla_probe.json,
-         results/experiment_1852_findings_audit.json.
-      2. Summarize each: which hypothesis, what the gate was, what
-         the empirical result was.
-      3. Identify which findings should be carried forward into
-         paper-v6 § discussion AND/OR research-program.md updates.
-      4. Write results/experiment_1853_retro.json with:
-         - schema: "carnot.milestone_research_retro.v1"
-         - milestone: "2026.05.144"
-         - tasks_summary: [...]
-         - gates_passed_count: <int>
-         - gates_failed_count: <int>
-         - paper_v6_carryforward_items: [...]
-         - honest_verdict: MUST start with "complete:" or "success:".
-           Example: "complete: milestone_144_retro_3_of_4_gates_passed"
+      1. Extend the KAN model forward pass to output local Lipschitz bounds.
+      2. Write tests verifying the bounds hold mathematically.
+      3. Save output to `{project_root}/results/experiment_1858_glorokan.json`.
+      
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
+  - id: exp1859-z3-formal-verify
+    title: "Exp 1859: Formal verification of S2KAN with Z3 (Python/Rust bridging)"
+    deliverable: "results/experiment_1859_z3_verify.json"
+    prompt: |
+      CONTEXT: Verification tiers must be formally proven via Z3/MILP.
+      EXISTING CODE TO READ FIRST: python/carnot/models/s2kan.py
+      TASK: Connect S2KAN symbolic primitives to Z3 for verification.
+      CONCRETE STEPS:
+      1. Write a script that transpiles an S2KAN layer into Z3 constraints.
+      2. Prove consistency over a bounded input domain.
+      3. Save output to `{project_root}/results/experiment_1859_z3_verify.json`.
+      
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1860-energy-matching
+    title: "Exp 1860: Energy Matching generator logic prototyping"
+    deliverable: "results/experiment_1860_energy_matching.json"
+    prompt: |
+      CONTEXT: Energy matching (arXiv:2504.10612) unites flow matching with EBMs.
+      EXISTING CODE TO READ FIRST: python/carnot/models/
+      TASK: Prototype a constrained generation loop using energy matching.
+      CONCRETE STEPS:
+      1. Implement a prototype loop applying partial observation constraints to a dummy flow.
+      2. Test constraint satisfaction rate.
+      3. Save output to `{project_root}/results/experiment_1860_energy_matching.json`.
+      
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1861-cross-lang-equivalence
+    title: "Exp 1861: Cross-language (Rust/Python) equivalence test for Verification Learning"
+    deliverable: "results/experiment_1861_equivalence.json"
+    prompt: |
+      CONTEXT: The PRD mandates that Rust and Python produce equivalent results.
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/verification_learning.py, crates/
+      TASK: Create a Rust implementation of the VL proxy and test equivalence.
+      CONCRETE STEPS:
+      1. Implement the VL proxy logic in `crates/carnot-core/`.
+      2. Expose via PyO3.
+      3. Run a test passing the same inputs to both and asserting identical outputs.
+      4. Save output to `{project_root}/results/experiment_1861_equivalence.json`.
+      
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1862-e2e-sota
+    title: "Exp 1862: E2E Verification of S2KAN model on unsloth/Qwen3.6-35B-A3B-GGUF"
+    deliverable: "results/experiment_1862_e2e.json"
+    prompt: |
+      CONTEXT: All changes must be verified E2E using mandated SOTA models.
+      EXISTING CODE TO READ FIRST: ops/e2e-test-plan.md
+      TASK: Run an E2E test verifying S2KAN constraints using Qwen3.6-35B-A3B-GGUF.
+      CONCRETE STEPS:
+      1. Load `unsloth/Qwen3.6-35B-A3B-GGUF`.
+      2. Run the full e2e test suite passing the output to the S2KAN verifier.
+      3. Save output to `{project_root}/results/experiment_1862_e2e.json`.
+      
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1863-retro
+    title: "Exp 1863: Milestone 145 Retrospective"
+    deliverable: "results/experiment_1863_retro.json"
+    max_turns: 20
+    prompt: |
+      CONTEXT: End of milestone retrospective.
+      EXISTING CODE TO READ FIRST: ops/changelog.md, ops/status.md
+      TASK: Synthesize the findings of Milestone .145 and draft updates for ops documents.
+      CONCRETE STEPS:
+      1. Summarize the pass/fail rates of the VL proxy and S2KAN tests.
+      2. Write findings to `{project_root}/results/experiment_1863_retro.json`.
+      
       Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
