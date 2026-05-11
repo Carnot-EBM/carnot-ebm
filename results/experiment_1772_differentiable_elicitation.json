@@ -1,0 +1,27 @@
+{
+  "experiment": 1772,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-05-11",
+  "started_at": "2026-05-11T06:48:43.742154+00:00",
+  "finished_at": "2026-05-11T06:48:43.742154+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Exp 1772: gated on Exp 1771 honest_verdict in success: Differentiable Constraint Elicitation",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp1771-continuous-latent-modeling.honest_verdict (actual='complete: latent_optimizer_targeted_tests_and_100pct_new_code_coverage_passed' in expected=['success', 'complete'])",
+  "gates_evaluated": [
+    {
+      "upstream": "exp1771-continuous-latent-modeling",
+      "artifact_field": "honest_verdict",
+      "op": "in",
+      "expected": [
+        "success",
+        "complete"
+      ],
+      "actual": "complete: latent_optimizer_targeted_tests_and_100pct_new_code_coverage_passed",
+      "passed": false,
+      "reason": "actual='complete: latent_optimizer_targeted_tests_and_100pct_new_code_coverage_passed' in expected=['success', 'complete']"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
