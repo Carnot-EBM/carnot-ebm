@@ -182,7 +182,7 @@ semantic correctness **1.0** with **0** false accepts on mandated Qwen3.6-35B
 GGUF rows, FR-11 v15 reversed the collapsed v14 retention, the Phase-1 ship
 ledger recorded **9** audit-time blockers, and hardware scope moved to simulator-only
 Z1 drift correction plus blocked Tenstorrent/PolarFire preflights with no
-hardware claim. The current test collection reports **23,714** items; this is a
+hardware claim. The current test collection reports **24,113** items; this is a
 collection count, not a full-suite pass claim.
 
 ## Install and run
@@ -476,7 +476,7 @@ experiment artifact under `results/`.
 | Milestone .124 closeout (DualGPURunner Profiling) | Both RTX 3090s completely idle at 0% utilization. Estimated 40% time savings recoverable via DualGPURunner parallelization and addressing bottlenecks | Exp 1626 |
 | Probability Calibration Verifier | Opt-in verifier scores explicit probability claims against simple reference-class evidence; returns structured `VerdictRecord` | Exp 1414 |
 | KANELÉ Validation & Routing | KANELÉ RTL linting, latency accounting vs Ising baseline; adaptive energy reconfiguration and EBM vs LLM Task Allocation Router | Exps 1622-1625 |
-| Milestone .134 closeout | Analyzed 1388 min wall time / 253 experiments. Both RTX 3090s completely idle at 0% utilization. | Exp 1745 |
+| Milestone .134 closeout | Analyzed wall time / 11 experiments. Both RTX 3090s completely idle at 0% utilization. | Exp 1745 |
 | Pi-net Projection & ConsFormer | Prototyped Pi-net style differentiable projection layer for continuous latents and a ConsFormer-style refiner | Exps 1633-1635 |
 | SMGI & Energy-Guided Decoding | Integrated SMGI certified update logic and implemented EGD using mandated SOTA GGUFs | Exps 1631/1636 |
 | Current Python test collection | **24,113** Python tests collected; collection-only snapshot, not a full-suite pass claim | 2026-05-10 collection run |

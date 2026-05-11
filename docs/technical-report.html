@@ -544,7 +544,7 @@ Wormhole and PolarFire execution for lack of access/board/toolchain, and Exp
 1586 rescopes Strix Point as secondary tier while retiring the KV260 Vivado
 lineage and preserving source-level KV260 work.</p>
 <p>The current 2026-05-09 Python test collection-only snapshot reports
-<strong>23,714</strong> items; this is a collection count, not a full-suite pass claim. A
+<strong>24,113</strong> items; this is a collection count, not a full-suite pass claim. A
 plain-English summary of that journey is in the next section; deeper analysis
 follows in the body of the report and in the per-milestone retrospective
 artifacts checked into <code>results/operational_retro_*.json</code>.</p>
@@ -3930,7 +3930,7 @@ Verified + Repaired Answer
 </tr>
 </tbody>
 </table>
-<p><strong>Total:</strong> <strong>23,714</strong> Python test items are currently collected in the repo (<code>.venv/bin/pytest tests/python --collect-only -q -o addopts='' --disable-warnings</code>, collected 2026-05-09). This is a collection count, not a claim that the full suite passes. Exp 1402 records zero collection errors after the semantic-validator repair, Exp 1411's focused stream/MCP checks pass <strong>10/10</strong>, Exp 1421 fixes the focused embedding-store runtime-failure cluster with 100% line coverage on the touched module, Exp 1426 records <strong>71</strong> remaining spec-coverage traceability debt items, Exp 1440 reduces that spec-coverage metadata debt <strong>71 -&gt; 0</strong> while recording the required full-suite red result (<strong>101 failed</strong>, <strong>6 errors</strong>) outside the metadata fix, the .115 focused conductor rows report <strong>81</strong> tests passing per task, the .116 artifacts record changed-module checks for the new contract, policy, skill-pack, and source-level conformance modules, the .117 artifacts record focused readiness checks for the runtime-contract harness, CDG/product-line rescue, FR-11 policy promotion, MARCH ablation, and THRML parity manifests, Exp 1534 records the latest broad-suite attempt as still red (<strong>94 failed</strong>, <strong>20,015 passed</strong>, <strong>103 skipped</strong>, <strong>4 errors</strong>) from pre-existing failures, and Exp 1580 records focused DCCD/JSONSchemaBench tests and 100% changed-module coverage while the broad <code>tests/python</code> attempt failed/hung at 91% from unrelated JAX/Z3 worker crashes. Full validation therefore remains command-specific in the relevant experiment artifacts.</p>
+<p><strong>Total:</strong> <strong>24,113</strong> Python test items are currently collected in the repo (<code>.venv/bin/pytest tests/python --collect-only -q -o addopts='' --disable-warnings</code>, collected 2026-05-09). This is a collection count, not a claim that the full suite passes. Exp 1402 records zero collection errors after the semantic-validator repair, Exp 1411's focused stream/MCP checks pass <strong>10/10</strong>, Exp 1421 fixes the focused embedding-store runtime-failure cluster with 100% line coverage on the touched module, Exp 1426 records <strong>71</strong> remaining spec-coverage traceability debt items, Exp 1440 reduces that spec-coverage metadata debt <strong>71 -&gt; 0</strong> while recording the required full-suite red result (<strong>101 failed</strong>, <strong>6 errors</strong>) outside the metadata fix, the .115 focused conductor rows report <strong>81</strong> tests passing per task, the .116 artifacts record changed-module checks for the new contract, policy, skill-pack, and source-level conformance modules, the .117 artifacts record focused readiness checks for the runtime-contract harness, CDG/product-line rescue, FR-11 policy promotion, MARCH ablation, and THRML parity manifests, Exp 1534 records the latest broad-suite attempt as still red (<strong>94 failed</strong>, <strong>20,015 passed</strong>, <strong>103 skipped</strong>, <strong>4 errors</strong>) from pre-existing failures, and Exp 1580 records focused DCCD/JSONSchemaBench tests and 100% changed-module coverage while the broad <code>tests/python</code> attempt failed/hung at 91% from unrelated JAX/Z3 worker crashes. Full validation therefore remains command-specific in the relevant experiment artifacts.</p>
 <hr>
 <h2 id="11-reproduction">11. Reproduction</h2>
 <pre><code class="language-bash"># Clone and setup
@@ -5986,7 +5986,7 @@ threshold. Exp 1439 created the .110 carry-forward activation manifest, and Exp
 remained red outside that metadata fix with <strong>101 failed</strong>, <strong>21191 passed</strong>,
 <strong>103 skipped</strong>, <strong>6 errors</strong>, and <strong>91 warnings</strong> before interruption. The
 current public test number is now the 2026-05-09 collection snapshot:
-<strong>23,714</strong> Python items collected, not a full-suite pass claim.</p>
+<strong>24,113</strong> Python items collected, not a full-suite pass claim.</p>
 <p>The live-SOTA scale branch was correctly blocked. Exp 1442 found local
 Qwen3.6-35B and Gemma4-31B GGUF files cached and both RTX 3090s idle, but
 llama.cpp failed to load <code>libcudart.so.12</code>; the optional Gemma4-26B GGUF was
@@ -6440,15 +6440,18 @@ Experiments 1692 and 1693 successfully completed the Vivado synthesizable Verilo
 Experiment 1707 successfully verified the full pipeline SOTA integration combining GloroKAN, Eidoku, and FR11.</p>
 <p><strong>KV260 Hardware Execution Blocked</strong><br>
 Experiment 1704 attempted to synthesize and execute Potts q=3 on KV260 hardware, but was blocked due to Vivado not being installed.</p>
-<h3 id="410-recent-additions-milestone-134">4.10 Recent Additions (Milestone .134)</h3>
+<h3 id="410-recent-additions-milestone-132">4.10 Recent Additions (Milestone .132)</h3>
 <p><strong>E2E Pipeline Evaluation</strong>
 Experiment 1720 successfully verified the full E2E pipeline evaluating Dynamic Extract, Hardware trace eval, and Continual Learning.</p>
 <p><strong>HILED Inference Latency</strong>
 Experiment 1719 measured the inference latency impact of HILED, establishing baseline constraints for test-time decoding overhead.</p>
 <p><strong>Continual Learning Enhancements</strong>
 Experiments 1712 and 1714 verified semantic pruning for FR-11 continual learning and instruct-to-constraint extraction from free-text.</p>
-<p><strong>Operational Retrospective (.134)</strong>
+<p><strong>Operational Retrospective (.132)</strong>
 Analyzed 1388 min wall time / 253 experiments. Both RTX 3090s were completely idle at 0% utilization throughout, which is correct behavior as there were no compute-bound tasks. Estimated savings: implement fail-fast for pre-gate blocks.</p>
+<h3 id="412-recent-additions-milestone-134">4.12 Recent Additions (Milestone .134)</h3>
+<p><strong>Hardware Synthesis and EqM Sampler Evaluation</strong>
+Experiments 1736-1745 focused on hardware synthesis for KV260 KANELÉ and integrating the EqM Sampler onto GPU. We measured latency on the live board and prepared the SWE-Bench Lite EqM Harness. Additionally, a Live Telemetry Streamer for Continual Learning was load-tested successfully, paving the way for more robust telemetry in the continuous learning pipeline.</p>
 </article>
 
 <footer>
