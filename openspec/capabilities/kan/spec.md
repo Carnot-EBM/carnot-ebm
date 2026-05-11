@@ -191,6 +191,7 @@ sets `variance_worsened` from the measured paraphrase variance comparison.
 | REQ-KAN-1401 | Proposed | Exp 1401 target: EBM-CoT v2 hinge-only calibration on the Exp1384 FoVer split with consistency weight 0.0. |
 | REQ-KAN-1690 | Proposed | Exp 1690 target: GloroKAN-style local Lipschitz forward-pass bounds for rational KArAt attention. |
 | REQ-KAN-1723 | Implemented | Exp 1723: FourierCSP constraints compile into fixed CIKAN architectural boundaries with toy artifact evidence. |
+| REQ-KAN-1749 | Implemented | Exp 1749: Symbolic-KAN routing layer embeds discrete primitive choices as tensor gates over learned scalar projections. |
 
 ## REQ-KAN-020: KAEMEnergy FPGA LUT Budget Analyzability
 
@@ -951,6 +952,43 @@ When the CIKAN verifier compiles it and trains on a toy dataset,
 Then its boundary snapshot before and after training is identical, the violated
 assignment has higher energy than the satisfying assignment, and the Exp 1723
 artifact reports `fixed_boundaries_preserved=true`.
+
+## REQ-KAN-1749: Symbolic-KAN Primitive Routing Tensor Embedding
+
+The KAN model tier MUST provide a CPU/JAX prototype of the arXiv:2603.23854
+Symbolic-KAN mapping in which each route learns a scalar projection of the
+input tensor, evaluates a finite library of analytic primitives on that
+projection, and embeds the route's discrete symbolic structure as a gate tensor
+over the primitive library.
+
+The prototype SHALL:
+
+- keep the symbolic primitive set finite, named, and deterministic;
+- compute soft primitive gates from route logits and temperature;
+- support hard one-hot gate extraction for discretized symbolic structures;
+- return a structured forward-pass report with projections, primitive values,
+  gates, route values, and energies; and
+- expose a symbolic regularization value that decreases as gates sharpen toward
+  one-hot selections.
+
+**Acceptance criteria:**
+    - `python/carnot/models/kan/symbolic_kan.py` exposes
+      `SymbolicRoutingLayer`, `SymbolicKANConfig`, `SymbolicKANParams`,
+      `build_experiment_1749_artifact`, and `write_experiment_1749_artifact`.
+    - Unit tests verify soft routing, hard one-hot routing, batch/vector
+      forward-pass shapes, selected primitive names, entropy-style symbolic
+      regularization, validation failures, and stable artifact schema fields.
+    - `results/experiment_1749_symbolic_kan.json` is written with the required
+      schema fields and an honest verdict.
+
+### SCENARIO-KAN-1749: Symbolic primitive routing maps to tensor space
+
+Given a `SymbolicRoutingLayer` with two scalar projection routes and a finite
+primitive library,
+When the layer evaluates vector and batch inputs with soft and hard routing,
+Then its gate tensor has shape `(n_routes, n_primitives)`, hard gates are
+one-hot, selected primitive names match the maximum route logits, and the Exp
+1749 artifact reports a complete Symbolic-KAN tensor-space prototype.
 
 ## REQ-KAN-1679: Miniature KArAt Attention Block
 
