@@ -1783,3 +1783,5 @@ Ripgrep is |
 | 2026-05-11 12:51 UTC | Exp 1818: Verify-Repair Scaling on GSM8K using 3B  | OK | 81 passed, 1 warning in 4.02s |
 | 2026-05-11 12:59 UTC | Exp 1819: Evaluate KAN Decoding Latency vs Accurac | OK | 81 passed, 1 warning in 4.56s |
 | 2026-05-11 13:04 UTC | Exp 1820: Continuous Online Distillation for MoE R | OK | 81 passed, 1 warning in 5.54s |
+| 2026-05-11 13:06 UTC | Exp 1821: Map Thermodynamic Gradients to BBIM | FAIL | Gemini CLI error: ith the reconciler.
+- Do NOT perform a self-review revision  |
