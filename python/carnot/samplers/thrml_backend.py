@@ -99,3 +99,78 @@ class ThrmlSamplerBackend(SamplerBackend):
         if self.using_hardware:
             self._raise_hardware_not_implemented("sample")
         return self._cpu_backend.sample(biases, couplings, n_samples, config)
+
+    def sample_multi_period(
+        self,
+        biases: np.ndarray,
+        couplings: np.ndarray,
+        turnover_penalty: float,
+        n_samples: int,
+        config: dict[str, Any],
+    ) -> np.ndarray:
+        """Run multi-period fixed-temperature sampling with turnover constraints.
+
+        Spec: REQ-SAMPLE-1834
+        """
+        if self.using_hardware:
+            self._raise_hardware_not_implemented("sample_multi_period")
+        
+        n_periods, n_spins = biases.shape
+        flat_biases = np.zeros(n_periods * n_spins, dtype=biases.dtype)
+        flat_couplings = np.zeros((n_periods * n_spins, n_periods * n_spins), dtype=couplings.dtype)
+        
+        for t in range(n_periods):
+            start = t * n_spins
+            end = start + n_spins
+            flat_biases[start:end] = biases[t]
+            flat_couplings[start:end, start:end] = couplings[t]
+            
+            if t < n_periods - 1:
+                for i in range(n_spins):
+                    idx_t = start + i
+                    idx_next = start + n_spins + i
+                    flat_biases[idx_t] -= turnover_penalty
+                    flat_biases[idx_next] -= turnover_penalty
+                    flat_couplings[idx_t, idx_next] += turnover_penalty
+                    flat_couplings[idx_next, idx_t] += turnover_penalty
+
+        flat_samples = self._cpu_backend.sample(flat_biases, flat_couplings, n_samples, config)
+        return flat_samples.reshape(n_samples, n_periods, n_spins)
+
+    def minimize_energy_multi_period(
+        self,
+        biases: np.ndarray,
+        couplings: np.ndarray,
+        turnover_penalty: float,
+        n_samples: int,
+        n_steps: int,
+        beta: float,
+    ) -> np.ndarray:
+        """Run multi-period annealing with turnover constraints.
+
+        Spec: REQ-SAMPLE-1834
+        """
+        if self.using_hardware:
+            self._raise_hardware_not_implemented("minimize_energy_multi_period")
+            
+        n_periods, n_spins = biases.shape
+        flat_biases = np.zeros(n_periods * n_spins, dtype=biases.dtype)
+        flat_couplings = np.zeros((n_periods * n_spins, n_periods * n_spins), dtype=couplings.dtype)
+        
+        for t in range(n_periods):
+            start = t * n_spins
+            end = start + n_spins
+            flat_biases[start:end] = biases[t]
+            flat_couplings[start:end, start:end] = couplings[t]
+            
+            if t < n_periods - 1:
+                for i in range(n_spins):
+                    idx_t = start + i
+                    idx_next = start + n_spins + i
+                    flat_biases[idx_t] -= turnover_penalty
+                    flat_biases[idx_next] -= turnover_penalty
+                    flat_couplings[idx_t, idx_next] += turnover_penalty
+                    flat_couplings[idx_next, idx_t] += turnover_penalty
+
+        flat_samples = self._cpu_backend.minimize_energy(flat_biases, flat_couplings, n_samples, n_steps, beta)
+        return flat_samples.reshape(n_samples, n_periods, n_spins)

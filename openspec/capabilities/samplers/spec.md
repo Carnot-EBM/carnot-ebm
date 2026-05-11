@@ -119,3 +119,21 @@ Sub-requirements:
 **When** it is executed
 **Then** it successfully runs the sparse EqM sampler
 **And** it writes a valid JSON artifact detailing latency statistics.
+
+### REQ-SAMPLE-1834: THRML Multi-Period Turnover Constraints
+
+Carnot MUST support multi-period sampling with turnover constraints via the
+THRML/Extropic adapter.
+
+Sub-requirements:
+- REQ-SAMPLE-1834-1: The adapter SHALL flatten multi-period biases and couplings
+  into a single space, augmenting them with the required turnover penalty.
+- REQ-SAMPLE-1834-2: Turnover constraints SHALL map such that variables at t and
+  t+1 are encouraged to be equal.
+
+### SCENARIO-SAMPLE-1834: Exp 1834 Writes Terminal JSON Artifact
+
+**Given** the multi-period constraint testing mechanism
+**When** the multi-period sampling API is invoked
+**Then** turnover tests pass and the adapter scales correctly
+**And** it writes `results/experiment_1834_thrml_turnover.json`.
