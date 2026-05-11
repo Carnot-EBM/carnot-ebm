@@ -1696,3 +1696,4 @@ Ripgrep is |
 | 2026-05-11 09:05 UTC | Exp 1794: Multi-Agent Routing for Solver-Guided Re | DOOMED_RERUN_BLOCK | 4 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-11 09:07 UTC | Exp 1795: Capstone: Continuous Self-Learning with  | DOOMED_RERUN_BLOCK | 4 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-11 09:09 UTC | Exp 1795: Capstone: Continuous Self-Learning with  | DOOMED_RERUN_BLOCK | 4 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-11 09:11 UTC | Exp 1795: Capstone: Continuous Self-Learning with  | DOOMED_RERUN_BLOCK | 4 prior failure(s) match this task's scope but prior_failures field is missing o |
