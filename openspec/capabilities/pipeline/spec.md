@@ -3233,3 +3233,13 @@ The pipeline MUST combine Phase 18 advances into a final evaluation run. It MUST
 **Given** the complete system with MoE-distilled model and KAN verifier
 **When** 100 GSM8K problems are evaluated
 **Then** the script completes successfully and outputs `results/experiment_1823_final_eval.json`.
+
+
+### REQ-PIPELINE-1826: Fail-Fast Doomed Reruns
+The pipeline API MUST provide a fail-fast check for doomed reruns at activation time.
+It MUST write a terminal artifact with `status="blocked"` and `honest_verdict="blocked_doomed_rerun"` when a task is doomed.
+
+### SCENARIO-PIPELINE-1826: Fail-Fast Artifact Generation
+**Given** a doomed task definition
+**When** the pipeline fail-fast check is invoked
+**Then** it writes a blocked artifact and returns True.
