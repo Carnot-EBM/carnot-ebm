@@ -411,3 +411,24 @@ and no fabricated resolve-rate headline.
 records baseline and verify-repair outcomes for each selected instance.
 
 **Spec traces:** REQ-BENCH-1742
+
+### REQ-BENCH-1773: Continuous Latent Constraint Benchmark
+
+Carnot MUST provide a benchmark script to evaluate the continuous latent constraint modeling.
+The implementation MUST use `unsloth/gemma-4-31B-it-GGUF` in MODEL_SPECS.
+Results MUST be written to `/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1773_latent_benchmark.json`.
+
+**Acceptance criteria:**
+- Script `scripts/experiment_1773_latent_benchmark.py` exists.
+- Records energy convergence and validity rates.
+- Uses `LatentOptimizer` from `python/carnot/models/latent_optimizer.py`.
+
+### SCENARIO-BENCH-1773: Continuous Latent Constraint Execution
+
+**Given** the LatentOptimizer and an energy function
+**When** the benchmark script runs
+**Then** it performs Langevin dynamics optimization
+**And** produces a valid `results/experiment_1773_latent_benchmark.json` artifact containing energy convergence and validity rates.
+
+**Spec traces:** REQ-BENCH-1773
+
