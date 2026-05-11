@@ -38,6 +38,11 @@ rebuild:
 
 # ─── Build ────────────────────────────────────────────────────────
 
+## Synthesize BBIM constraints module
+synth-constraints:
+	mkdir -p results
+	yosys -p "synth_xilinx -top potts_machine_v2 -flatten" rtl/potts_machine_v2.v > results/experiment_1822_rtl_synth.log
+
 ## Build Rust workspace (excluding Python bindings)
 build:
 	cargo build --workspace --exclude carnot-python
