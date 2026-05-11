@@ -41,7 +41,7 @@ def test_cocom_memory_limit():
     
     Spec: SCENARIO-PIPELINE-1831
     """
-    pipeline = COCOMPipeline(learning_rate=0.1, memory_size=2, parameter_dim=2)
+    pipeline = COCOMPipeline(learning_rate=0.1, memory_size=2, parameter_dim=2, similarity_threshold=None)
     
     pipeline.update(np.array([0.5, 0.5]), np.array([0.1, -0.1]))
     pipeline.update(np.array([0.5, 0.5]), np.array([0.2, -0.2]))
@@ -146,4 +146,51 @@ def test_cocom_update_with_epsilon():
     # param = param - lr * v = [0.0, 0.0] - 0.1 * [0.5, 0.0] = [-0.05, 0.0]
     assert np.allclose(pipeline.parameters, np.array([-0.05, 0.0]))
 
+
+
+def test_cocom_memory_pruning():
+    """Test redundant constraints are pruned based on similarity_threshold.
+    
+    Spec: REQ-PIPELINE-1849, SCENARIO-PIPELINE-1849
+    """
+    pipeline = COCOMPipeline(learning_rate=0.1, memory_size=5, parameter_dim=2, similarity_threshold=0.9)
+    
+    # First constraint
+    pipeline.update(np.array([0.5, 0.5]), np.array([1.0, 0.0]))
+    assert len(pipeline.memory) == 1
+    
+    # Second constraint (identical, should be pruned)
+    pipeline.update(np.array([0.5, 0.5]), np.array([1.0, 0.0]))
+    assert len(pipeline.memory) == 1
+    
+    # Third constraint (similar, should be pruned since cos(0) > 0.9)
+    pipeline.update(np.array([0.5, 0.5]), np.array([1.0, 0.1])) # norm: ~1.005, unit: ~[0.995, 0.099], sim w/ [1, 0] is 0.995 > 0.9
+    assert len(pipeline.memory) == 1
+    
+    # Fourth constraint (orthogonal, should be added)
+    pipeline.update(np.array([0.5, 0.5]), np.array([0.0, 1.0])) # sim w/ [1, 0] is 0 < 0.9
+    assert len(pipeline.memory) == 2
+
+def test_cocom_memory_pruning_update_with_epsilon():
+    """Test redundant constraints are pruned in update_with_epsilon.
+    
+    Spec: REQ-PIPELINE-1849
+    """
+    pipeline = COCOMPipeline(learning_rate=0.1, memory_size=2, parameter_dim=2, similarity_threshold=0.9)
+    
+    # First constraint
+    pipeline.update_with_epsilon(np.array([0.0, 0.0]), np.array([1.0, 0.0]), 0.5)
+    assert len(pipeline.memory) == 1
+    
+    # Second constraint (orthogonal)
+    pipeline.update_with_epsilon(np.array([0.0, 0.0]), np.array([0.0, 1.0]), 0.5)
+    assert len(pipeline.memory) == 2
+    
+    # Third constraint (orthogonal to both, should evict oldest due to memory_size=2)
+    pipeline.update_with_epsilon(np.array([0.0, 0.0]), np.array([-1.0, -1.0]), 0.5)
+    assert len(pipeline.memory) == 2
+    
+    # Fourth constraint (identical to third, should be pruned)
+    pipeline.update_with_epsilon(np.array([0.0, 0.0]), np.array([-1.0, -1.0]), 0.5)
+    assert len(pipeline.memory) == 2
 

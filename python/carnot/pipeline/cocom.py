@@ -21,17 +21,19 @@ class COCOMPipeline:
         parameters: Current parameter vector.
     """
     
-    def __init__(self, learning_rate: float = 0.1, memory_size: int = 10, parameter_dim: int = 16):
+    def __init__(self, learning_rate: float = 0.1, memory_size: int = 10, parameter_dim: int = 16, similarity_threshold: float = 0.9):
         """Initialize the COCOMPipeline.
         
         Args:
             learning_rate: Step size for optimization.
             memory_size: Maximum number of constraints to keep in memory.
             parameter_dim: Dimension of the parameters to optimize.
+            similarity_threshold: Cosine similarity threshold for pruning redundant constraints.
         """
         self.learning_rate = learning_rate
         self.memory_size = memory_size
         self.parameter_dim = parameter_dim
+        self.similarity_threshold = similarity_threshold
         self.memory: list[np.ndarray] = []
         self.parameters = np.zeros(self.parameter_dim)
         self.oracle_weights = None
@@ -77,15 +79,23 @@ class COCOMPipeline:
             constraint_value: Current value of the constraint (violated if > 0).
             safety_margin: Threshold above which corrective action is taken.
         """
-        # Store the new constraint gradient
-        if len(self.memory) >= self.memory_size:
-            # Evict oldest if we hit the memory budget
-            self.memory.pop(0)
-            
         # Normalize the constraint gradient before storing to avoid numerical instability
         norm_c = np.linalg.norm(constraint_grad)
         if norm_c > 1e-8:
-            self.memory.append(constraint_grad / norm_c)
+            new_c = constraint_grad / norm_c
+            is_redundant = False
+            if self.similarity_threshold is not None:
+                for prior_c in self.memory:
+                    if float(np.dot(prior_c, new_c)) >= self.similarity_threshold:
+                        is_redundant = True
+                        break
+            
+            if not is_redundant:
+                # Store the new constraint gradient
+                if len(self.memory) >= self.memory_size:
+                    # Evict oldest if we hit the memory budget
+                    self.memory.pop(0)
+                self.memory.append(new_c)
             
         # Project the objective gradient onto the null space of memory constraints
         # v starts as the objective gradient
@@ -110,13 +120,20 @@ class COCOMPipeline:
             constraint_grad: Gradient of the new constraint at the current step.
             epsilon: The hard epsilon margin constraint to track and update against.
         """
-        # Store the new constraint gradient
-        if len(self.memory) >= self.memory_size:
-            self.memory.pop(0)
-            
         norm_c = np.linalg.norm(constraint_grad)
         if norm_c > 1e-8:
-            self.memory.append(constraint_grad / norm_c)
+            new_c = constraint_grad / norm_c
+            is_redundant = False
+            if self.similarity_threshold is not None:
+                for prior_c in self.memory:
+                    if float(np.dot(prior_c, new_c)) >= self.similarity_threshold:
+                        is_redundant = True
+                        break
+            
+            if not is_redundant:
+                if len(self.memory) >= self.memory_size:
+                    self.memory.pop(0)
+                self.memory.append(new_c)
             
         # Project objective gradient
         v = np.copy(objective_grad)
