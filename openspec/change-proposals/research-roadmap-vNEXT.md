@@ -1,69 +1,68 @@
-# Milestone 2026.05.142: Energy-Based Latent Planning, Zero-Violation Online Learning, and Fail-Fast Pipeline Orchestration
+# Carnot Research Roadmap: vNEXT (Milestone 2026.05.143)
 
-**Milestone ID:** `2026.05.142`  
-**Status:** Active  
-**Sequence:** 142  
+**Document:** `openspec/change-proposals/research-roadmap-vNEXT.md`
+**Title:** Phase-20: Verifiable KAN Abstractions, Epsilon-Constraint Self-Learning, and SOTA Structured Output Scale
+**Status:** DRAFT
 
-## 1. What the Previous Milestone Proved (.141)
-Milestone .141 ("Phase-18: KAN-Guided EBM Generation, Dual-GPU Scaling, and MoE Distillation") verified the scaling capabilities of the Verify-Repair pipelines for 3B models utilizing Dual RTX 3090 architecture. It proved KAN decoding efficacy and integrated continuous online distillation of constraints into MoE routers.
+## 1. What Milestone 2026.05.142 Proved
 
-## 2. Milestone .142 Objectives
-This milestone addresses three foundational gaps from recent retrospectives and latest research:
-1. **Energy-Based Latent Planning:** Shifting from step-level to multi-step structured latent trajectories using the EBRM (arXiv:2603.04948) and DCAReasoner algorithms.
-2. **Zero-Violation Online Learning (FR-11 Mandate):** Ensuring our continuous self-learning system achieves rigorous safety thresholds via Constrained Online Convex Optimization with Memory (COCO-M, arXiv:2603.21375) and zero-constraint violation policies.
-3. **Fail-Fast Pipeline Orchestration:** Addressing the severe 40-55% time waste identified in prior retrospectives by introducing pre-gate failure terminalization within the conductor.
+Milestone 2026.05.142 delivered on bridging energy-based latent planning and zero-violation online learning. Specifically, it showed that latent trajectory tracking can operate via Continuous Convex Optimization with Memory (COCO-M), while also setting the stage for SOTA model evaluation on MoE platforms. However, there remain key gaps:
+1. **Verifiability of KANs:** While KAN components have been integrated, they lack formal verification abstractions (e.g., MILP based on piecewise-affine functions).
+2. **Online Learning Drift:** Zero-violation policies alone are not sufficient to prevent forgetting; hard epsilon-constraint preservation is needed.
+3. **Structured Instruction Constraints:** We lack an open-world elicitation framework to turn user intent into strict verifiable bounds dynamically.
 
-## 3. Architecture Diagram
+## 2. Milestone 2026.05.143 Objectives
+
+This milestone focuses on strictly verifiable abstractions, continuous learning without forgetting via gradient-guided epsilon constraints, and dynamically eliciting logical constraints directly from language.
+
+### Success Criteria
+- **Formal KAN Verifier:** Piecewise-affine (PWA) and MILP abstractions successfully bound the outputs of KAN energy tiers.
+- **Hardware-Oriented Metrics:** Concrete RM, BOP, NABS measurements established for the KAN layer to validate FPGA readiness.
+- **Non-Forgetting OCL:** FR-11 self-learning achieves zero forgetting on baseline constraints using the Gradient-Guided Epsilon Constraint Method.
+- **Constraint Elicitation (ROCE):** Dynamic schema constraints generated dynamically from open-ended SOTA inference.
+
+## 3. Architecture Overview
 
 ```mermaid
 graph TD
-    UserPrompt[User Prompt] --> SOTA[Gemma 4 / Qwen 3.6 SOTA]
-    SOTA --> LatentTrajectory[Latent Trajectory z_1:T]
-    LatentTrajectory --> EBRMOptimizer[EBRM Optimizer / EqM]
-    EBRMOptimizer --> LatentTrajectory
-    LatentTrajectory --> GuidedDecoder[Energy-Guided Decoder]
+    A[Prompt / Latent Trajectory] --> B[ROCE Constraint Elicitation]
+    B --> C[Unsloth SOTA Models]
+    C --> D[Candidate Reasoning Traces]
     
-    GuidedDecoder --> COCOM[COCO-M Constraints]
-    COCOM --> ZeroViolation[Zero-Violation Online Learning]
-    ZeroViolation --> SOTA
+    subgraph Carnot Verifier Stack
+        E[Epsilon-Constraint Self-Learning] --> F[Continuous Gibbs / Potts]
+        G[KAN Energy Tier] --> H[PWA + MILP Verifier]
+    end
     
-    Conductor[Conductor Orchestrator] --> FailFast[Fail-Fast Pre-Gates]
-    FailFast --> EBRMOptimizer
+    D --> E
+    D --> G
+    
+    H --> I[Verified Output]
+    F --> I
 ```
 
 ## 4. Phase Descriptions
 
-### Phase 1: Fail-Fast Orchestration & SOTA Baselines
-Resolve the dominant operational bottleneck by preventing redundant re-evaluations of known gate failures, then instantiate the latest SOTA GGUFs.
-- **Tasks:** Exp 1825 (Archive/Activation), Exp 1826 (Conductor Fail-Fast Pre-Gates).
+### Phase 1: KAN Verification and Hardware Constraints
+We adapt arXiv:2602.06737 to encode KAN safety properties via piecewise-affine approximations into an MILP, and implement arXiv:2604.03345 hardware-complexity metrics to ground FPGA targets.
 
-### Phase 2: Energy-Based Latent Planning
-Implementation of structured latent reasoning. We will build an EBRM optimizer to plan multi-step trajectories over continuous energy landscapes, enhanced by DCAReasoner difference-of-convex speedups.
-- **Tasks:** Exp 1827 (EBRM), Exp 1828 (DCAReasoner), Exp 1829 (EqM Compute Calibration), Exp 1830 (Energy-Guided Vision-Language Decoding).
+### Phase 2: Open Constraint Elicitation and SOTA Integration
+Implement the ROCE framework (Reasoning-Time Open Constraint Elicitation, arXiv:2605.01124) and test it strictly against our dual-GPU pipeline utilizing `unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF`.
 
-### Phase 3: Zero-Violation Continuous Self-Learning
-Fulfilling the FR-11 mandate. We apply COCO-M and robust online learning policies to ensure zero-constraint violations as the model updates in non-stationary environments.
-- **Tasks:** Exp 1831 (COCO-M), Exp 1832 (Zero-Violation FR-11 Continuous Learning), Exp 1833 (Unknown Constraints Online Learning).
+### Phase 3: Continuous Epsilon-Constraint Learning
+Deploy the Gradient-Guided Epsilon Constraint Method to resolve FR-11's memory-forgetting loop, ensuring positive utility growth.
 
-### Phase 4: Full Pipeline Scale-out & Validation
-Applying the complete EBRM and Zero-Violation continuous loop onto our SOTA LLM targets over Dual-GPUs.
-- **Tasks:** Exp 1834 (THRML Turnover Constraints), Exp 1835 (Qwen3.6-35B-A3B-GGUF Capstone), Exp 1836 (Gemma4-31B-it-GGUF Capstone), Exp 1837 (Gemma4-26B Capstone), Exp 1838 (Retro).
+### Phase 4: Capstone and Retrospective
+Close the milestone with a complete E2E validation against the full test suite and log the standard retrospective.
 
 ## 5. Dependency Graph
 
-```text
-Exp 1825 (Activation) ---> Exp 1826 (Fail-Fast)
-     |                     |
-     v                     v
-Exp 1827 (EBRM) ---------> Exp 1828 (DCAReasoner) ---> Exp 1829 (EqM)
-     |                     |
-     v                     v
-Exp 1831 (COCO-M) -------> Exp 1832 (Zero-Violation FR-11) ---> Exp 1833 (Unknown Constraints)
-     |
-     v
-Exp 1835, 1836, 1837 (SOTA Capstones) ---> Exp 1838 (Retro)
-```
+- `exp1840-pwa-kan-abstraction` blocks `exp1841-milp-kan-verifier`
+- `exp1844-roce-constraint-elicitation` blocks `exp1846-qwen-roce-scale` and `exp1847-gemma31-roce-scale`
+- `exp1848-gemma26-epsilon-learning` (Mandatory Self-Learning)
+- `exp1850-retro` must run last.
 
 ## 6. Hardware Requirements
-- **Local SOTA Node:** Minimum 64GB RAM for running Qwen3.6-35B-A3B-GGUF and Gemma-4-31B-it-GGUF.
-- **Dual GPU Track:** Dual RTX 3090s via CUDA for the continuous self-learning pipeline and parallel EBM evaluations.
+
+- **Dual RTX 3090:** Mandated SOTA GGUF models (`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, `unsloth/gemma-4-26B-A4B-it-GGUF`) will run distributed across the dual-GPU pipeline.
+- **KV260 / Simulation:** The KAN inference metrics will remain simulation/accounting only.
