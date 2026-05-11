@@ -778,3 +778,31 @@ Experiment 1737 MUST run a latency benchmark of the KANELÉ bitfile on the KV260
 **Then:** It performs the 1000 state latency test and saves the results to `results/experiment_1737_kanele_board.json`.
 
 **Implementation status:** Implemented (Exp 1737)
+
+---
+
+### REQ-HW-054
+
+**Title:** HILED Hardware Integration Prototype for Energy Scoring and Decoding
+
+**Description:**
+Experiment 1766 MUST implement the HILED decoder prototype for offloading energy scoring and decoding to an FPGA simulator over AXI. The prototype must support asynchronous hardware polling for energy minimization steps.
+
+**Acceptance criteria:**
+- `python/carnot/inference/hiled_decoder.py` is implemented.
+- The decoder implements asynchronous hardware polling for energy minimization.
+- `results/experiment_1766_hiled.json` is generated.
+
+**Implementation status:** Implemented (Exp 1766)
+
+---
+
+### SCENARIO-HW-054
+
+**Scenario:** HILED decoder hardware prototype asynchronously polls FPGA simulator.
+
+**Given:** An AXI interface to an FPGA simulator.
+**When:** The HILED decoder runs energy minimization steps.
+**Then:** Polling occurs asynchronously and results are written to `results/experiment_1766_hiled.json`.
+
+**Implementation status:** Implemented (Exp 1766)
