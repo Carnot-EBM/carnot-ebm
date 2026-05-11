@@ -18842,3 +18842,13 @@ triggering raw phrase.
 **Given** a natural language constraint
 **When** `FourierCSPExtractor.extract()` is called
 **Then** it returns a multilinear polynomial representation of the constraint.
+
+
+## REQ-VERIFY-1764: Hierarchical Reasoning Model (HRM) Verifier
+
+Carnot MUST provide a multi-level constraint verification architecture in `python/carnot/models/hrm_verifier.py`.
+
+### SCENARIO-HRM-001: Multi-level constraint evaluation
+Given an HRM verifier initialized with levels
+When constraints are evaluated
+Then it returns a multi-level verification score.
