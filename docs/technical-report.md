@@ -1,6 +1,6 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report — 2111 Experiments Across the Public Record, 151 Archived Milestone Records, 23,946 Python Test Items Collected (Artifacts Tracked Through Exp 1770)
+## A Technical Report — 2111 Experiments Across the Public Record, 151 Archived Milestone Records, 23,946 Python Test Items Collected (Artifacts Tracked Through Exp 1784)
 
 **Author:** Ian Blenke
 **Date:** 2026-05-10
@@ -408,7 +408,7 @@ Wormhole and PolarFire execution for lack of access/board/toolchain, and Exp
 lineage and preserving source-level KV260 work.
 
 The current 2026-05-09 Python test collection-only snapshot reports
-**24,113** items; this is a collection count, not a full-suite pass claim. A
+**23,946** items; this is a collection count, not a full-suite pass claim. A
 plain-English summary of that journey is in the next section; deeper analysis
 follows in the body of the report and in the per-milestone retrospective
 artifacts checked into `results/operational_retro_*.json`.

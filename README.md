@@ -19,10 +19,10 @@ Rust + Python/JAX, Apache 2.0, local editable install via `pip install -e ".[dev
 The public PyPI package remains a Phase-1 ship blocker as of Exp 1582.
 
 Current public research record: **2,111 experiment records tracked through Exp
-1770**. `research-complete.yaml` currently archives **1,872** task records
+1784**. `research-complete.yaml` currently archives **1,872** task records
 across **148** artifact-backed completed milestone records through
 2026.05.136; checked-in result artifacts and `ops/changelog.md` extend through
-milestone 2026.05.136 on 2026-05-10.
+milestone 2026.05.137 on 2026-05-10.
 
 Milestone .106 delivered the critical fix to thinking-mode certificate
 generation: Exp 1366 (CRANE tag-first prefix injection) reached
@@ -182,7 +182,7 @@ semantic correctness **1.0** with **0** false accepts on mandated Qwen3.6-35B
 GGUF rows, FR-11 v15 reversed the collapsed v14 retention, the Phase-1 ship
 ledger recorded **9** audit-time blockers, and hardware scope moved to simulator-only
 Z1 drift correction plus blocked Tenstorrent/PolarFire preflights with no
-hardware claim. The current test collection reports **24,113** items; this is a
+hardware claim. The current test collection reports **23,946** items; this is a
 collection count, not a full-suite pass claim.
 
 ## Install and run
