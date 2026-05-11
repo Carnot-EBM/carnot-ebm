@@ -11966,3 +11966,15 @@ This sweep was run after milestone `.139` completed. The literature search revea
 - **[arXiv:2509.11234] Hardware-Accelerated EBM Sampling via Thermodynamic Gradients**: Proposes mapping discrete constraints onto continuous energy landscapes suitable for analog/FPGA hardware accelerators. Relevant for BBIM KV260 integration.
 - **[arXiv:2602.04567] Self-Correcting LLMs with Continuous Kolmogorov-Arnold Networks**: Shows KANs as high-efficiency verifiers for intermediate LLM outputs, acting as a real-time constraint satisfaction layer during decoding.
 - **[arXiv:2604.08912] Online Distillation of Energy-Based Constraints into MoE Routers**: Details a continuous learning algorithm where offline constraint satisfaction successes are continuously distilled into the router of a Mixture-of-Experts model, dramatically reducing inference-time search.
+
+
+## 2025-2026 EBM and Verification Research Additions
+- **EBRM**: Energy-Based Reasoning via Structured Latent Planning (arXiv:2603.04948). Modeling reasoning as gradient-based optimization of a multi-step latent trajectory.
+- **Equilibrium Matching (EqM)**: Generative Modeling with Implicit EBMs (arXiv:2510.02300). Adaptive compute step validation for stable valley finding.
+- **DCAReasoner**: Energy-Based Continuous Iterative Reasoning. Difference-of-Convex functions acceleration.
+- **Energy-Guided Decoding for Object Hallucination Mitigation**: (arXiv:2507.07731). Hyperparameter-free decoding using minimum energy layer routing.
+- **ContinualFlow**: Learning and Unlearning with Neural Flow Matching (arXiv:2506.18747).
+- **COCO-M**: Constrained Online Convex Optimization with Memory (arXiv:2603.21375). Online optimization handling constraints over finite windows.
+- **Zero Constraint Violation Online Learning**: Safety in the Face of Adversity (AISTATS 2025).
+- **Online Learning with Unknown Constraints**: ICML 2025 meta-algorithm using online regression oracle.
+- **THRML Updates**: Multi-period optimization with turnover constraints (arXiv:2601.xxxxx).

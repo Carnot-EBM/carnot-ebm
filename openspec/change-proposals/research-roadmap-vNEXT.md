@@ -1,48 +1,69 @@
-# Phase-18: KAN-Guided EBM Generation, Dual-GPU Scaling, and MoE Distillation
-Milestone: 2026.05.141
+# Milestone 2026.05.142: Energy-Based Latent Planning, Zero-Violation Online Learning, and Fail-Fast Pipeline Orchestration
 
-## Overview
-Phase-18 addresses the critical operational gaps identified in Milestone 2026.05.140 while integrating state-of-the-art continuous learning architectures from 2025-2026 literature. Our goal is to achieve reliable Dual RTX 3090 evaluation for scaling verify-repair to 3B models, embedding a continuous self-learning loop for MoE routers, and extending hardware acceleration for continuous constraint landscapes.
+**Milestone ID:** `2026.05.142`  
+**Status:** Active  
+**Sequence:** 142  
 
-## Context and Gaps Addressed
-The previous milestone retrospective (`experiment_1813_retro.json`) highlighted three critical gaps:
-1. **Dual RTX 3090 GPU Baseline:** Essential for throughput and latency benchmarking of larger models.
-2. **3B Model Scaling:** We need empirical evidence that our Verify-Repair pipelines remain efficacious when scaling to the 3B parameter regime.
-3. **DEFINITIVE GSM8K Benchmark:** Establishment of real GPU inference baselines on RTX 3090.
+## 1. What the Previous Milestone Proved (.141)
+Milestone .141 ("Phase-18: KAN-Guided EBM Generation, Dual-GPU Scaling, and MoE Distillation") verified the scaling capabilities of the Verify-Repair pipelines for 3B models utilizing Dual RTX 3090 architecture. It proved KAN decoding efficacy and integrated continuous online distillation of constraints into MoE routers.
 
-## ArXiv Findings Integration
-Recent literature has provided architectural foundations for this phase:
-- **arXiv:2509.11234 (Thermodynamic Gradients):** Methods to map discrete logic constraints onto continuous energy landscapes, which we will apply to the Bounce-Bind Ising Machine (BBIM) for KV260 deployment.
-- **arXiv:2602.04567 (Continuous KAN Verifiers):** Using Kolmogorov-Arnold Networks as high-efficiency, real-time constraint satisfaction layers for intermediate LLM decoding.
-- **arXiv:2604.08912 (Online Distillation into MoE):** Continuous online distillation of constraint successes into MoE routers, which directly satisfies our PRD requirement for continuous self-learning.
+## 2. Milestone .142 Objectives
+This milestone addresses three foundational gaps from recent retrospectives and latest research:
+1. **Energy-Based Latent Planning:** Shifting from step-level to multi-step structured latent trajectories using the EBRM (arXiv:2603.04948) and DCAReasoner algorithms.
+2. **Zero-Violation Online Learning (FR-11 Mandate):** Ensuring our continuous self-learning system achieves rigorous safety thresholds via Constrained Online Convex Optimization with Memory (COCO-M, arXiv:2603.21375) and zero-constraint violation policies.
+3. **Fail-Fast Pipeline Orchestration:** Addressing the severe 40-55% time waste identified in prior retrospectives by introducing pre-gate failure terminalization within the conductor.
 
-## Phase 1: Dual-GPU Baseline & Benchmark Infrastructure
-We first establish the physical baseline, verifying dual-GPU execution and instantiating the SOTA local GGUF pipelines.
-- **Exp 1814:** Dual RTX 3090 GPU Setup and VRAM Profiling
-- **Exp 1815:** 3B SOTA Model Inference Pipeline (Integration of Qwen3.6-35B-A3B-GGUF, gemma-4-31B-it-GGUF, gemma-4-26B-A4B-it-GGUF)
-- **Exp 1816:** Baseline GSM8K on SOTA Models without Verification
+## 3. Architecture Diagram
 
-## Phase 2: Verifier Scaling & Continuous Self-Learning
-We introduce the KAN verifier and test verify-repair at the 3B scale, followed by implementing the continuous self-learning loop.
-- **Exp 1817:** Implement Continuous KAN Verifier (arXiv:2602.04567)
-- **Exp 1818:** Verify-Repair Scaling on GSM8K using 3B Models
-- **Exp 1819:** Evaluate KAN Decoding Latency vs Accuracy
-- **Exp 1820:** Continuous Online Distillation of EBM Constraints into MoE Routers (arXiv:2604.08912)
+```mermaid
+graph TD
+    UserPrompt[User Prompt] --> SOTA[Gemma 4 / Qwen 3.6 SOTA]
+    SOTA --> LatentTrajectory[Latent Trajectory z_1:T]
+    LatentTrajectory --> EBRMOptimizer[EBRM Optimizer / EqM]
+    EBRMOptimizer --> LatentTrajectory
+    LatentTrajectory --> GuidedDecoder[Energy-Guided Decoder]
+    
+    GuidedDecoder --> COCOM[COCO-M Constraints]
+    COCOM --> ZeroViolation[Zero-Violation Online Learning]
+    ZeroViolation --> SOTA
+    
+    Conductor[Conductor Orchestrator] --> FailFast[Fail-Fast Pre-Gates]
+    FailFast --> EBRMOptimizer
+```
 
-## Phase 3: Hardware Acceleration & Final Evaluation
-We push the continuous mapping down to RTL synthesis and combine all systems for the capstone evaluation.
-- **Exp 1821:** Map Thermodynamic Gradients to BBIM (arXiv:2509.11234)
-- **Exp 1822:** FPGA Bitstream Synthesis for Continuous EBM Constraints
-- **Exp 1823:** EBM-CoT GSM8K Final Evaluation with Continuous Self-Learning
-- **Exp 1824:** Milestone 2026.05.141 Retrospective
+## 4. Phase Descriptions
 
-## Hardware Requirements
-- Dual RTX 3090 GPUs (Local Node)
-- Kria KV260 Vision AI Starter Kit
-- OSS-CAD-Suite (Yosys, NextPNR) for Bitstream Synthesis
+### Phase 1: Fail-Fast Orchestration & SOTA Baselines
+Resolve the dominant operational bottleneck by preventing redundant re-evaluations of known gate failures, then instantiate the latest SOTA GGUFs.
+- **Tasks:** Exp 1825 (Archive/Activation), Exp 1826 (Conductor Fail-Fast Pre-Gates).
 
-## Dependency Graph
-Phase 1 -> Phase 2 -> Phase 3. 
-Exp 1815 requires Exp 1814 success.
-Exp 1816 requires Exp 1815 success.
-Exp 1823 depends on Exp 1817, 1820, and 1815.
+### Phase 2: Energy-Based Latent Planning
+Implementation of structured latent reasoning. We will build an EBRM optimizer to plan multi-step trajectories over continuous energy landscapes, enhanced by DCAReasoner difference-of-convex speedups.
+- **Tasks:** Exp 1827 (EBRM), Exp 1828 (DCAReasoner), Exp 1829 (EqM Compute Calibration), Exp 1830 (Energy-Guided Vision-Language Decoding).
+
+### Phase 3: Zero-Violation Continuous Self-Learning
+Fulfilling the FR-11 mandate. We apply COCO-M and robust online learning policies to ensure zero-constraint violations as the model updates in non-stationary environments.
+- **Tasks:** Exp 1831 (COCO-M), Exp 1832 (Zero-Violation FR-11 Continuous Learning), Exp 1833 (Unknown Constraints Online Learning).
+
+### Phase 4: Full Pipeline Scale-out & Validation
+Applying the complete EBRM and Zero-Violation continuous loop onto our SOTA LLM targets over Dual-GPUs.
+- **Tasks:** Exp 1834 (THRML Turnover Constraints), Exp 1835 (Qwen3.6-35B-A3B-GGUF Capstone), Exp 1836 (Gemma4-31B-it-GGUF Capstone), Exp 1837 (Gemma4-26B Capstone), Exp 1838 (Retro).
+
+## 5. Dependency Graph
+
+```text
+Exp 1825 (Activation) ---> Exp 1826 (Fail-Fast)
+     |                     |
+     v                     v
+Exp 1827 (EBRM) ---------> Exp 1828 (DCAReasoner) ---> Exp 1829 (EqM)
+     |                     |
+     v                     v
+Exp 1831 (COCO-M) -------> Exp 1832 (Zero-Violation FR-11) ---> Exp 1833 (Unknown Constraints)
+     |
+     v
+Exp 1835, 1836, 1837 (SOTA Capstones) ---> Exp 1838 (Retro)
+```
+
+## 6. Hardware Requirements
+- **Local SOTA Node:** Minimum 64GB RAM for running Qwen3.6-35B-A3B-GGUF and Gemma-4-31B-it-GGUF.
+- **Dual GPU Track:** Dual RTX 3090s via CUDA for the continuous self-learning pipeline and parallel EBM evaluations.
