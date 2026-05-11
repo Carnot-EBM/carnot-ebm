@@ -10,6 +10,7 @@ use pyo3::prelude::*;
 
 mod kv260;
 mod pipeline;
+mod s2kan;
 mod verification_learning;
 
 use carnot_boltzmann::{BoltzmannConfig, BoltzmannModel};
@@ -359,6 +360,9 @@ fn _rust(m: &Bound<'_, PyModule>) -> PyResult<()> {
 
     // Pipeline (verification)
     pipeline::register_pipeline_module(m)?;
+    
+    // S2KAN
+    s2kan::register_s2kan_module(m)?;
     
     // Verification learning
     verification_learning::register_verification_learning_module(m)?;

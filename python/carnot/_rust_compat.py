@@ -22,6 +22,7 @@ try:
         RustIsingModel,
         RustKv260PottsSampler,
         RustLangevinSampler,
+        RustS2KANLayer,
         RustVerificationResult,
         RustVerifyPipeline,
     )
@@ -35,6 +36,7 @@ except ImportError:
     RustKv260PottsSampler = None  # type: ignore[assignment,misc]
     RustLangevinSampler = None  # type: ignore[assignment,misc]
     RustHMCSampler = None  # type: ignore[assignment,misc]
+    RustS2KANLayer = None  # type: ignore[assignment,misc]
     RustVerifyPipeline = None  # type: ignore[assignment,misc]
     RustVerificationResult = None  # type: ignore[assignment,misc]
 
@@ -46,6 +48,7 @@ __all__ = [
     "RustIsingModel",
     "RustKv260PottsSampler",
     "RustLangevinSampler",
+    "RustS2KANLayer",
     "RustVerificationResult",
     "RustVerifyPipeline",
 ]
