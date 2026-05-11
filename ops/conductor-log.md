@@ -1822,3 +1822,4 @@ Ripgrep is |
 | 2026-05-11 16:03 UTC | Exp 1841: gated on Exp 1840 PWA Abstraction: MILP  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1840-pwa-kan-abstraction.status (actual |
 | 2026-05-11 16:05 UTC | Exp 1841: gated on Exp 1840 PWA Abstraction: MILP  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1840-pwa-kan-abstraction.status (actual |
 | 2026-05-11 16:07 UTC | Exp 1841: gated on Exp 1840 PWA Abstraction: MILP  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1840-pwa-kan-abstraction.status (actual |
+| 2026-05-11 16:09 UTC | Exp 1842: KAN Hardware Inference Complexity Accoun | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
