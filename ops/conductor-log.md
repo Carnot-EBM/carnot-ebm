@@ -1678,3 +1678,5 @@ Ripgrep is |
 | 2026-05-11 08:33 UTC | Exp 1787: Aleph-style Formal Verification Orchestr | OK | 81 passed, 1 warning in 4.76s |
 | 2026-05-11 08:38 UTC | Exp 1788: NRGPT-style Energy Landscape Exploration | OK | 81 passed, 1 warning in 4.33s |
 | 2026-05-11 08:43 UTC | Exp 1789: Evaluate Orchestrator on Putnam-style ma | OK | 81 passed, 1 warning in 5.20s |
+| 2026-05-11 08:45 UTC | Exp 1790: Symbolic-KAN Software Implementation | FAIL | Gemini CLI error: ith the reconciler.
+- Do NOT perform a self-review revision  |
