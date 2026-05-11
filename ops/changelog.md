@@ -5492,3 +5492,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-11: Exp 1811: Analyze cross-layer energy correlation for early exit (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_1811_early_exit.json
 - 2026-05-11: Exp 1813: Milestone 2026.05.140 Retrospective (✅ Complete) — honest_verdict=milestone_complete; results/experiment_1813_retro.json
 - 2026-05-11: Exp 1818: Verify-Repair Scaling on GSM8K using 3B Models (✅ Complete) — honest_verdict=complete: SOTA verify-repair scaling evaluated; results/experiment_1818_vr_scaling.json
+- 2026-05-11: Exp 1819: Evaluate KAN Decoding Latency vs Accuracy (✅ Complete) — honest_verdict=complete: CIKAN adds 0.0247% overhead to unsloth/gemma-4-31B-it-GGUF; results/experiment_1819_kan_latency.json
