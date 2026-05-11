@@ -1,192 +1,196 @@
-milestone: 2026.05.137
-milestone_title: "Phase-14: Continuous Latent Optimization, HILED Hardware Bring-up, and Multi-Session Memory"
+milestone: 2026.05.138
+milestone_title: "Phase-15: Energy-Based Fine-Tuning, Symbolic-KAN Integration, and Formal Orchestration"
 milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
 tasks:
-  - id: exp1771-continuous-latent-modeling
-    title: "Exp 1771: Continuous Latent Constraint Modeling"
+  - id: exp1785-ebft-pipeline
+    title: "Exp 1785: Energy-Based Fine-Tuning (EBFT) Pipeline setup"
     prompt: >
-      CONTEXT: We must optimize elicited constraints in a continuous latent space using Langevin dynamics during generation (arXiv:2605.18210).
-      EXISTING CODE TO READ FIRST: `python/carnot/models/hrm_verifier.py`, `python/carnot/pipeline/roce_extractor.py`.
-      TASK: Implement the continuous latent constraint optimizer.
+      CONTEXT: We must integrate Energy-Based Fine-Tuning (EBFT) (Jiang et al., 2026) to provide dense semantic feedback to our continuous self-learning loop.
+      EXISTING CODE TO READ FIRST: `python/carnot/pipeline/differentiable_memory.py`, `python/carnot/models/latent_optimizer.py`.
+      TASK: Implement the EBFT loss functions and training harness.
       CONCRETE STEPS:
-      1. Create `python/carnot/models/latent_optimizer.py`.
-      2. Implement Langevin dynamics for continuous constraint relaxation and optimization over HRM outputs.
-      3. Add unit tests for energy descent.
-      4. Write `{project_root}/results/experiment_1771_latent_optimizer.json`.
+      1. Create `python/carnot/training/ebft_trainer.py`.
+      2. Implement sequence-level energy loss and alignment logic.
+      3. Write `{project_root}/results/experiment_1785_ebft_pipeline.json`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp1772-differentiable-elicitation
-    title: "Exp 1772: gated on Exp 1771 honest_verdict in success: Differentiable Constraint Elicitation"
+  - id: exp1786-ebft-training
+    title: "Exp 1786: gated on Exp 1785 honest_verdict in success: Run EBFT on continuous latent traces"
     gated_on:
-      - upstream: exp1771-continuous-latent-modeling
+      - upstream: exp1785-ebft-pipeline
         artifact_field: honest_verdict
         op: in
         value: ["success", "complete"]
     prompt: >
-      CONTEXT: ROCE must be integrated with the continuous latent optimizer so elicited constraints can be differentiated.
-      EXISTING CODE TO READ FIRST: `python/carnot/models/latent_optimizer.py`, `python/carnot/pipeline/roce_extractor.py`.
-      TASK: Integrate ROCE with the latent optimizer.
+      CONTEXT: Execute the EBFT loop using the multi-session traces from .137.
+      EXISTING CODE TO READ FIRST: `python/carnot/training/ebft_trainer.py`.
+      TASK: Train with EBFT using `unsloth/gemma-4-31B-it-GGUF`.
       CONCRETE STEPS:
-      1. Modify `python/carnot/pipeline/roce_extractor.py` or create a wrapper `python/carnot/pipeline/differentiable_roce.py`.
-      2. Ensure constraint outputs support gradient flow for the latent optimizer.
-      3. Write `{project_root}/results/experiment_1772_diff_roce.json`.
+      1. Create `scripts/experiment_1786_run_ebft.py`.
+      2. Record validation energy metrics and sequence alignment scores.
+      3. Write `{project_root}/results/experiment_1786_ebft_training.json`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp1773-latent-benchmark
-    title: "Exp 1773: Multi-modal constraint benchmark evaluation"
+  - id: exp1787-formal-orchestrator
+    title: "Exp 1787: Aleph-style Formal Verification Orchestrator"
     prompt: >
-      CONTEXT: Evaluate the continuous latent constraint modeling on our multi-modal constraint benchmark.
-      EXISTING CODE TO READ FIRST: `python/carnot/models/latent_optimizer.py`.
-      TASK: Run the continuous benchmark.
+      CONTEXT: To improve mathematical reasoning, we need an orchestrator that bounds EBM exploration with external formal solvers iteratively.
+      EXISTING CODE TO READ FIRST: `python/carnot/verify/python_types.py`.
+      TASK: Build the formal verification orchestrator.
       CONCRETE STEPS:
-      1. Create `scripts/experiment_1773_latent_benchmark.py`.
-      2. Use `unsloth/gemma-4-31B-it-GGUF` in MODEL_SPECS.
-      3. Record energy convergence and validity rates.
-      4. Write `{project_root}/results/experiment_1773_latent_benchmark.json`.
+      1. Create `python/carnot/pipeline/formal_orchestrator.py`.
+      2. Implement iterative solver-querying (e.g., Z3) within the generation loop.
+      3. Write `{project_root}/results/experiment_1787_formal_orchestrator.json`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp1774-differentiable-memory-bank
-    title: "Exp 1774: Differentiable Constraint Memory Bank"
+  - id: exp1788-nrgpt-exploration
+    title: "Exp 1788: NRGPT-style Energy Landscape Exploration"
     prompt: >
-      CONTEXT: Multi-session continual learning requires a differentiable memory bank (arXiv:2605.09332) to persist structured constraints without forgetting.
-      EXISTING CODE TO READ FIRST: `python/carnot/pipeline/continual_memory.py`.
-      TASK: Implement the differentiable constraint memory bank.
+      CONTEXT: Treat inference as an exploration of an energy landscape to increase test-time compute for better logic generation.
+      EXISTING CODE TO READ FIRST: `python/carnot/pipeline/formal_orchestrator.py`.
+      TASK: Integrate NRGPT-style search into the orchestrator.
       CONCRETE STEPS:
-      1. Create `python/carnot/pipeline/differentiable_memory.py`.
-      2. Implement the memory bank operations (read, write, update) using differentiable attention mechanisms.
-      3. Write `{project_root}/results/experiment_1774_diff_memory.json`.
+      1. Create `python/carnot/inference/nrgpt_explorer.py`.
+      2. Implement energy-guided test-time compute scaling.
+      3. Write `{project_root}/results/experiment_1788_nrgpt_exploration.json`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp1775-cross-session-retrieval
-    title: "Exp 1775: Cross-session semantic retrieval mechanism"
+  - id: exp1789-math-benchmark
+    title: "Exp 1789: Evaluate Orchestrator on Putnam-style math benchmark"
     prompt: >
-      CONTEXT: We need to retrieve constraints across different sessions robustly using semantic keys.
-      EXISTING CODE TO READ FIRST: `python/carnot/pipeline/differentiable_memory.py`.
-      TASK: Build the cross-session retrieval mechanism.
+      CONTEXT: Validate the Aleph-style orchestrator + NRGPT exploration on a rigorous mathematical benchmark.
+      EXISTING CODE TO READ FIRST: `python/carnot/inference/nrgpt_explorer.py`.
+      TASK: Run math reasoning benchmark using SOTA GGUFs.
       CONCRETE STEPS:
-      1. Create `python/carnot/pipeline/cross_session_retrieval.py`.
-      2. Integrate it with the differentiable memory bank.
-      3. Write `{project_root}/results/experiment_1775_cross_session.json`.
+      1. Create `scripts/experiment_1789_math_benchmark.py` using `unsloth/Qwen3.6-35B-A3B-GGUF`.
+      2. Record machine-checkable proof success rate.
+      3. Write `{project_root}/results/experiment_1789_math_benchmark.json`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp1776-multi-session-forgetting
-    title: "Exp 1776: Multi-session forgetting rate evaluation"
-    prompt: >
-      CONTEXT: Test the multi-session memory bank to ensure catastrophic forgetting is mitigated.
-      EXISTING CODE TO READ FIRST: `python/carnot/pipeline/cross_session_retrieval.py`.
-      TASK: Evaluate multi-session forgetting rates.
-      CONCRETE STEPS:
-      1. Create `scripts/experiment_1776_forgetting_eval.py`.
-      2. Simulate 3 sequential sessions and measure constraint retention using `unsloth/gemma-4-26B-A4B-it-GGUF`.
-      3. Write `{project_root}/results/experiment_1776_forgetting_eval.json`.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp1777-ltlzinc-scaleup
-    title: "Exp 1777: Self-learning pipeline scale-up on LTLZinc"
-    prompt: >
-      CONTEXT: Scale up the continual learning on the LTLZinc benchmark using the new memory architecture.
-      EXISTING CODE TO READ FIRST: `scripts/experiment_1776_forgetting_eval.py`.
-      TASK: Run the LTLZinc continual learning scale-up.
-      CONCRETE STEPS:
-      1. Create `scripts/experiment_1777_ltlzinc_scaleup.py`.
-      2. Use `unsloth/gemma-4-31B-it-GGUF` and execute the full continuous loop.
-      3. Write `{project_root}/results/experiment_1777_ltlzinc_scaleup.json`.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp1778-kv260-bitfile-synthesis
-    title: "Exp 1778: Synthesize KV260 Bitfile for HILED AXI endpoints"
-    model: opus
-    max_turns: 100
-    prompt: >
-      CONTEXT: We must synthesize the bitfile for the KV260 FPGA to execute the HILED software prototype built in .136.
-      EXISTING CODE TO READ FIRST: `hardware/kv260/synth_ising.tcl`, `hardware/kv260/ising_sampler_v2.v`.
-      TASK: Synthesize the HILED FPGA bitfile.
-      CONCRETE STEPS:
-      1. Update TCL scripts to include the HILED endpoints.
-      2. Attempt bitfile synthesis (mock the output if Vivado is unavailable but document the TCL/RTL correctness).
-      3. Write `{project_root}/results/experiment_1778_kv260_synthesis.json`.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp1779-kv260-zero-shot-test
-    title: "Exp 1779: gated on Exp 1778 honest_verdict in success: Flash KV260 board and run zero-shot hardware test"
-    model: opus
-    max_turns: 100
-    gated_on:
-      - upstream: exp1778-kv260-bitfile-synthesis
-        artifact_field: honest_verdict
-        op: in
-        value: ["success", "complete"]
-    prompt: >
-      CONTEXT: Validate the synthesized HILED bitfile on the KV260 board.
-      EXISTING CODE TO READ FIRST: `python/carnot/inference/hiled_decoder.py`.
-      TASK: Execute the zero-shot hardware test over AXI.
-      CONCRETE STEPS:
-      1. Create `scripts/experiment_1779_kv260_hiled_test.py`.
-      2. Interface with the PYNQ overlay and execute energy scoring.
-      3. Write `{project_root}/results/experiment_1779_kv260_hiled_test.json`.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp1780-hiled-pyo3-bindings
-    title: "Exp 1780: PyO3/Rust HILED binding boilerplate"
+  - id: exp1790-symbolic-kan-software
+    title: "Exp 1790: Symbolic-KAN Software Implementation"
     agent_type: codex
     prompt: >
-      CONTEXT: The HILED integration needs high-performance Rust bindings for the Python API to minimize bridging latency.
-      EXISTING CODE TO READ FIRST: `crates/carnot-python/src/`, `python/carnot/inference/hiled_decoder.py`.
-      TASK: Implement PyO3 boilerplate for HILED.
+      CONTEXT: Embed discrete symbolic structures into KANs (arXiv:2603.23854) to improve interpretability.
+      EXISTING CODE TO READ FIRST: `python/carnot/models/kan_energy.py`.
+      TASK: Implement Symbolic-KAN.
       CONCRETE STEPS:
-      1. Create or update the relevant rust files in `crates/carnot-python/src/hiled.rs`.
-      2. Expose the Rust hardware structs to Python.
-      3. Write `{project_root}/results/experiment_1780_hiled_bindings.json`.
+      1. Create `python/carnot/models/symbolic_kan.py`.
+      2. Add discrete symbolic mapping logic to the KAN layers.
+      3. Write `{project_root}/results/experiment_1790_symbolic_kan.json`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp1781-hiled-latency-benchmark
-    title: "Exp 1781: Hardware vs Software Latency and Energy convergence benchmark"
-    prompt: >
-      CONTEXT: Benchmark the new HILED hardware setup against the software fallback.
-      EXISTING CODE TO READ FIRST: `scripts/experiment_1779_kv260_hiled_test.py`.
-      TASK: Run latency and convergence benchmarking.
-      CONCRETE STEPS:
-      1. Create `scripts/experiment_1781_hiled_benchmark.py`.
-      2. Compare inference speed and energy metrics.
-      3. Write `{project_root}/results/experiment_1781_hiled_benchmark.json`.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp1782-e2e-qwen
-    title: "Exp 1782: Capstone E2E Pipeline with Qwen3.6-35B-A3B"
+  - id: exp1791-symbolic-kan-rtl
+    title: "Exp 1791: Symbolic-KAN RTL Specification for KV260"
     model: opus
     max_turns: 100
     prompt: >
-      CONTEXT: End-to-end evaluation using the flagship MoE model, integrating all Phase 1-3 improvements.
-      EXISTING CODE TO READ FIRST: `scripts/experiment_1781_hiled_benchmark.py`, `scripts/experiment_1777_ltlzinc_scaleup.py`.
-      TASK: Run E2E pipeline.
+      CONTEXT: To accelerate Symbolic-KANs, we must synthesize an RTL implementation for the KV260 board.
+      EXISTING CODE TO READ FIRST: `python/carnot/models/symbolic_kan.py`, `hardware/kv260/ising_sampler_v2.v`.
+      TASK: Write Verilog/TCL specification for Symbolic-KAN.
       CONCRETE STEPS:
-      1. Create `scripts/experiment_1782_e2e_qwen.py`.
-      2. Configure MODEL_SPECS to use `unsloth/Qwen3.6-35B-A3B-GGUF`.
-      3. Run execution, collect latency, parse rate, and energy scores.
-      4. Write `{project_root}/results/experiment_1782_e2e_qwen.json`.
+      1. Create `hardware/kv260/symbolic_kan.v` and `hardware/kv260/synth_symbolic_kan.tcl`.
+      2. Validate RTL logic structure theoretically.
+      3. Write `{project_root}/results/experiment_1791_symbolic_kan_rtl.json`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp1783-e2e-gemma31
-    title: "Exp 1783: Capstone E2E Pipeline with Gemma4-31B-it"
+  - id: exp1792-kv260-symbolic-kan-synth
+    title: "Exp 1792: gated on Exp 1791 honest_verdict in success: Synthesize Symbolic-KAN Bitfile"
+    model: opus
+    max_turns: 100
+    gated_on:
+      - upstream: exp1791-symbolic-kan-rtl
+        artifact_field: honest_verdict
+        op: in
+        value: ["success", "complete"]
     prompt: >
-      CONTEXT: End-to-end evaluation using the flagship dense model.
-      EXISTING CODE TO READ FIRST: `scripts/experiment_1782_e2e_qwen.py`.
-      TASK: Run E2E pipeline.
+      CONTEXT: Synthesize the KV260 bitfile for the new Symbolic-KAN endpoints.
+      EXISTING CODE TO READ FIRST: `hardware/kv260/synth_symbolic_kan.tcl`.
+      TASK: Run Vivado synthesis for Symbolic-KAN.
       CONCRETE STEPS:
-      1. Create `scripts/experiment_1783_e2e_gemma31.py`.
-      2. Configure MODEL_SPECS to use `unsloth/gemma-4-31B-it-GGUF`.
-      3. Write `{project_root}/results/experiment_1783_e2e_gemma31.json`.
+      1. Execute TCL scripts to build the `.bit` file (or mock if Vivado is unavailable, documenting the attempt).
+      2. Write `{project_root}/results/experiment_1792_symbolic_kan_synth.json`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp1784-retro
-    title: "Exp 1784: Milestone .137 Retrospective"
+  - id: exp1793-hiled-symbolic-kan-test
+    title: "Exp 1793: gated on Exp 1792 honest_verdict in success: HILED Hardware-In-The-Loop with Symbolic-KAN"
+    model: opus
+    max_turns: 100
+    gated_on:
+      - upstream: exp1792-kv260-symbolic-kan-synth
+        artifact_field: honest_verdict
+        op: in
+        value: ["success", "complete"]
+    prompt: >
+      CONTEXT: Test the Symbolic-KAN on the KV260 board over AXI for hardware-in-the-loop energy decoding.
+      EXISTING CODE TO READ FIRST: `python/carnot/inference/hiled_decoder.py`.
+      TASK: Run zero-shot hardware test.
+      CONCRETE STEPS:
+      1. Create `scripts/experiment_1793_hiled_symbolic_kan.py`.
+      2. Record AXI transfer latency and energy accuracy.
+      3. Write `{project_root}/results/experiment_1793_hiled_symbolic_kan.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1794-multi-agent-solver-routing
+    title: "Exp 1794: Multi-Agent Routing for Solver-Guided Repair"
+    agent_type: gemini
+    prompt: >
+      CONTEXT: Coordinate multiple agents efficiently when a solver identifies a constraint violation during NRGPT exploration.
+      EXISTING CODE TO READ FIRST: `python/carnot/pipeline/formal_orchestrator.py`.
+      TASK: Implement multi-agent routing.
+      CONCRETE STEPS:
+      1. Create `python/carnot/pipeline/solver_router.py`.
+      2. Map Z3 failure modes to specific expert repair sub-agents.
+      3. Write `{project_root}/results/experiment_1794_solver_routing.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1795-continuous-self-learning-capstone
+    title: "Exp 1795: Capstone: Continuous Self-Learning with EBFT and Symbolic-KANs"
+    prompt: >
+      CONTEXT: This experiment tests continuous self-learning. Run the E2E continuous learning loop combining EBFT, Symbolic-KAN hardware, and the formal orchestrator.
+      EXISTING CODE TO READ FIRST: `scripts/experiment_1786_run_ebft.py`, `scripts/experiment_1793_hiled_symbolic_kan.py`.
+      TASK: Execute full E2E self-learning.
+      CONCRETE STEPS:
+      1. Create `scripts/experiment_1795_e2e_self_learning.py`.
+      2. Use `unsloth/gemma-4-26B-A4B-it-GGUF` and `unsloth/gemma-4-31B-it-GGUF`.
+      3. Evaluate multi-session forgetting and overall constraint validity.
+      4. Write `{project_root}/results/experiment_1795_e2e_self_learning.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1796-performance-ablation
+    title: "Exp 1796: Performance Ablation: Software vs Hardware Symbolic-KAN"
+    prompt: >
+      CONTEXT: Quantify the speedup and energy accuracy of the KV260 Symbolic-KAN vs the CPU/GPU software fallback.
+      EXISTING CODE TO READ FIRST: `scripts/experiment_1795_e2e_self_learning.py`.
+      TASK: Benchmark the hardware acceleration.
+      CONCRETE STEPS:
+      1. Create `scripts/experiment_1796_performance_ablation.py`.
+      2. Collect and compare end-to-end latency metrics.
+      3. Write `{project_root}/results/experiment_1796_performance_ablation.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1797-orchestrator-audit
+    title: "Exp 1797: Orchestrator Zero-False-Accept Audit"
+    max_turns: 30
+    prompt: >
+      CONTEXT: Ensure the formal orchestrator never accepts a mathematically invalid proof (zero false accepts).
+      EXISTING CODE TO READ FIRST: `python/carnot/pipeline/formal_orchestrator.py`.
+      TASK: Run adversarial audit.
+      CONCRETE STEPS:
+      1. Create `scripts/experiment_1797_orchestrator_audit.py`.
+      2. Inject known contradictory proofs into the orchestrator pipeline.
+      3. Write `{project_root}/results/experiment_1797_orchestrator_audit.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1798-retro
+    title: "Exp 1798: Milestone .138 Retrospective"
     max_turns: 20
     prompt: >
-      CONTEXT: Phase 4 Operations. Aggregate results.
-      EXISTING CODE TO READ FIRST: `results/experiment_1771_*.json` to `results/experiment_1783_*.json`.
+      CONTEXT: Phase 4 Operations. Aggregate results from .138 experiments.
+      EXISTING CODE TO READ FIRST: `results/experiment_1785_*.json` to `results/experiment_1797_*.json`.
       TASK: Write retrospective.
       CONCRETE STEPS:
-      1. Create `scripts/experiment_1784_retro.py`.
+      1. Create `scripts/experiment_1798_retro.py`.
       2. Parse all milestone result JSONs.
-      3. Write `{project_root}/results/experiment_1784_retro.json` detailing honest_verdict.
+      3. Write `{project_root}/results/experiment_1798_retro.json` detailing honest_verdict.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
