@@ -5510,3 +5510,16 @@ The deliverable SHALL be written to `results/experiment_1685_live_sota.json`.
 **Given** 100 memory states representing 5 semantic groups
 **When** distill(n_clusters=5) is called
 **Then** exactly 5 states remain
+
+## REQ-LEARN-1820: Continuous Online Distillation for MoE Routers
+
+**Given** the need for continuous self-learning via online distillation (arXiv:2604.08912)
+**When** the MoE distillation loop runs during inference
+**Then** an online replay buffer MUST be established to fine-tune router logits
+**And** distillation loss MUST be logged to results/experiment_1820_moe_distill.json
+**And** MODEL_SPECS MUST include "unsloth/Qwen3.6-35B-A3B-GGUF"
+
+### REQ-LEARN-1820 Sub-requirements
+
+- REQ-LEARN-1820-1: `moe_distill.py` SHALL implement the replay buffer and fine-tune router logits.
+- REQ-LEARN-1820-2: The artifact SHALL include required schema fields (e.g. distillation_loss, honest_verdict).
