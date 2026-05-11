@@ -1749,3 +1749,4 @@ Ripgrep is |
 - Do NOT perform a self-review revision  |
 | 2026-05-11 11:30 UTC | Exp 1806: Implement Semantic Pruning in Continuous | OK | 90 passed, 1 warning in 6.21s |
 | 2026-05-11 11:32 UTC | Exp 1807: gated on Exp 1806 retained_ratio<1.0: E2 | DOOMED_RERUN_BLOCK | 6 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-11 11:34 UTC | Exp 1807: gated on Exp 1806 retained_ratio<1.0: E2 | DOOMED_RERUN_BLOCK | 6 prior failure(s) match this task's scope but prior_failures field is missing o |
