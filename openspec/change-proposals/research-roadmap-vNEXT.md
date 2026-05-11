@@ -1,107 +1,62 @@
-# Carnot Research Roadmap vNEXT: Phase-13 — Energy-Based Fine-Tuning, ROCE, and Hierarchical Constraints
+# Carnot Research Roadmap v137
 
-**Created:** 2026-05-10
-**Milestone:** 2026.05.136
-**Status:** Planned (activates when milestone 2026.05.135 completes)
-**Supersedes:** research-roadmap-vNEXT.md (milestone 2026.05.135)
-**Informed by:** Experiments 1746-1758, EBFT, HRM, ROCE, HILED literature.
+**Milestone:** 2026.05.137
+**Title:** Phase-14: Continuous Latent Optimization, HILED Hardware Bring-up, and Multi-Session Memory
+**Date:** 2026-05-13
 
-## What Phase-12 Proved
+## 1. Context and Prior Outcomes
 
-Phase-12 proved that EqM latency overhead could be reduced via sparse updates, Symbolic-KAN structures can effectively map to constraint-informed verification, and multi-agent frameworks raise the verification bound on formal benchmarks. However, scaling these into a unified, continuous self-learning system requires addressing the extraction bottleneck, sequence-level tuning, and memory bloat.
+Milestone `.136` successfully shipped Energy-Based Fine-Tuning (EBFT), semantic pruning for continual learning memory, Reasoning-Time Open Constraint Elicitation (ROCE), the Hierarchical Reasoning Model (HRM), and a software prototype for Hardware-In-The-Loop Energy Decoding (HILED). 
 
-**The gap:** 
-1. **Extraction bottleneck:** We need dynamic, open-world constraint elicitation (ROCE) instead of fixed schemas.
-2. **Training feedback:** Continuous self-learning needs sequence-level energy objectives (EBFT) to reduce the reliance on expensive external verifiers.
-3. **Memory management:** The continual learning buffer bloats indefinitely without semantic pruning.
+However, three major gaps remain before achieving the PRD vision for Phase-1 ship readiness:
+1. **Dynamic Generation Optimization:** Elicited constraints (ROCE/HRM) are still evaluated somewhat statically; we need continuous latent constraint optimization (via Langevin dynamics) during autoregressive generation to approach Kona parity.
+2. **True Multi-Session Memory:** Semantic pruning stabilized single-session learning, but true continuous self-learning requires a differentiable memory bank that persists structured constraints across sessions without forgetting.
+3. **Hardware Bring-up:** HILED was prototyped in software, but we must synthesize the bitfile and run the zero-shot hardware integration on the KV260 FPGA to claim actual latency/energy improvements.
 
-## vNEXT Architecture: Dynamic Constraints & Sequence Energy
+This milestone introduces continuous latent constraint optimization, multi-session differentiable memory, and full FPGA hardware integration.
 
-```
-User Prompt (Open World)
-     │
-     ▼
-┌──────────────────────┐
-│ ROCE Extractor       │ → Extracts verifiable constraints dynamically
-│ (Exp 1763)           │
-└──────────────────────┘
-     │
-     ▼
-┌──────────────────────┐
-│ Hierarchical         │ → Maps abstract constraints to concrete rules
-│ Reasoning (HRM)      │ → (Exp 1764)
-└──────────────────────┘
-     │
-     ▼
-┌──────────────────────┐
-│ EBFT Self-Learning   │ → Continuous learning via sequence-level energy
-│ (Exp 1759-1760)      │ → Semantic memory pruning (Exp 1761)
-└──────────────────────┘
-     │
-     ▼
-┌──────────────────────┐
-│ Live SOTA Inference  │ → unsloth/Qwen3.6-35B-A3B-GGUF
-│ + Hardware-in-Loop   │ → unsloth/gemma-4-31B-it-GGUF
-└──────────────────────┘
+## 2. Architecture Diagram
+
+```mermaid
+graph TD
+    subgraph EBM Pipeline
+        A[LLM Output / Candidate] --> B{ROCE Extractor}
+        B --> C[HRM Verifier]
+        C --> D[Continuous Latent Optimizer]
+        D -->|Langevin Dynamics| E[Energy Score]
+    end
+
+    subgraph Hardware Acceleration
+        E -.->|HILED AXI| F[(KV260 FPGA)]
+        F -.->|Hardware Energy| E
+    end
+
+    subgraph Self-Learning
+        C --> G[Differentiable Constraint Memory Bank]
+        G <--> H[Cross-Session Retrieval]
+    end
 ```
 
-## Phase 1: Energy-Based Fine-Tuning (EBFT) & Self-Learning
+## 3. Phase Descriptions
 
-### Exp 1759: EBFT Sequence-Level Objective Implementation
-Implement Energy-Based Fine-Tuning using sequence-level feature matching without external verifiers.
-- **Deliverable:** `python/carnot/training/ebft_objective.py`
+### Phase 1: Continuous Latent Constraint Optimization
+Focuses on migrating ROCE and HRM outputs into a continuous latent space where Langevin dynamics can optimize the representation during generation. This brings Carnot closer to continuous EBM generation (arXiv:2605.18210).
 
-### Exp 1760: Continual Self-Learning with EBFT
-Apply EBFT to the continuous self-learning pipeline to measure calibration stability.
-- **Deliverable:** `scripts/experiment_1760_ebft_continual.py`
+### Phase 2: Multi-Session Continual Learning
+Transitions the FR-11 self-learning pipeline from single-session semantic pruning to a differentiable memory bank (arXiv:2605.09332), ensuring long-term constraint retention and cross-session retrieval without catastrophic forgetting.
 
-### Exp 1761: Semantic Pruning in Continual EBM Learning
-Implement semantic pruning for the FR-11 memory buffer to prevent context saturation.
-- **Deliverable:** `python/carnot/pipeline/semantic_pruning.py`
+### Phase 3: Hardware-In-The-Loop Edge Decoding (HILED) Bring-up
+We have the HILED software prototype; this phase focuses entirely on hardware integration. It requires synthesizing the KV260 bitfile, flashing the board, and executing zero-shot edge decoding over AXI (arXiv:2605.21045).
 
-### Exp 1762: Continuous Stability Test on LTLZinc
-Evaluate the pruned, EBFT-trained self-learning loop on the expanded LTLZinc dataset.
-- **Deliverable:** `results/experiment_1762_stability.json`
+### Phase 4: Capstone E2E Benchmark
+Run the full multi-session, hardware-accelerated, latent-optimized pipeline across the three mandated SOTA GGUF models.
 
-## Phase 2: Open Constraint Elicitation (ROCE) & Hierarchical Models
+## 4. Hardware Requirements
+- **Local CPU/GPU:** Dual RTX 3090 configuration for running the mandated SOTA GGUFs (Qwen3.6-35B-A3B, Gemma4-31B-it, Gemma4-26B-A4B-it).
+- **FPGA:** KV260 Vision AI Starter Kit for HILED synthesis and hardware execution.
+- **Tools:** Xilinx Vivado (required for KV260 bitfile synthesis).
 
-### Exp 1763: Reasoning-Time Open Constraint Elicitation (ROCE)
-Implement dynamic extraction of verifiable logical constraints from unstructured user prompts.
-- **Deliverable:** `python/carnot/pipeline/roce_extractor.py`
-
-### Exp 1764: Hierarchical Reasoning Model (HRM) Constraint Integration
-Add abstract-to-detailed execution layering within the verifier to handle complex ROCE constraints.
-- **Deliverable:** `python/carnot/models/hrm_verifier.py`
-
-### Exp 1765: Evaluate ROCE + HRM
-Run open-world reasoning tasks using the integrated ROCE + HRM stack.
-- **Deliverable:** `scripts/experiment_1765_roce_hrm.py`
-
-## Phase 3: Hardware-in-the-Loop & Live SOTA Execution
-
-### Exp 1766: Hardware-In-The-Loop Energy Decoding (HILED)
-Prototype offloading energy scoring/sampling to an external/simulated FPGA over AXI.
-- **Deliverable:** `python/carnot/inference/hiled_decoder.py`
-
-### Exp 1767: Full E2E Pipeline with Qwen3.6-35B-A3B
-Test the complete vNEXT pipeline on the flagship MoE.
-- **Deliverable:** `scripts/experiment_1767_e2e_qwen.py`
-
-### Exp 1768: Full E2E Pipeline with Gemma4-31B-it
-Test the complete vNEXT pipeline on the flagship dense model.
-- **Deliverable:** `scripts/experiment_1768_e2e_gemma31.py`
-
-### Exp 1769: Full E2E Pipeline with Gemma4-26B-A4B-it
-Test the complete vNEXT pipeline on the middle MoE model.
-- **Deliverable:** `scripts/experiment_1769_e2e_gemma26.py`
-
-## Phase 4: Operations
-
-### Exp 1770: Milestone .136 Retrospective
-Aggregate the results and honestly document the gaps.
-- **Deliverable:** `scripts/experiment_1770_retro.py`
-
-## Dependencies
-- Phase 1 must complete before Phase 2.
-- Phase 3 relies on models and extractors built in Phases 1 and 2.
-- All live inference must use the listed SOTA GGUF models.
+## 5. Dependency Graph
+- Phase 1 (Latent Optimization) unblocks Phase 4 (Benchmarks).
+- Phase 2 (Multi-Session) depends on Phase 1 for advanced constraint representations.
+- Phase 3 (Hardware) is independent but requires Opus/deep-think routing due to HW complexity.
