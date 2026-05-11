@@ -1687,3 +1687,5 @@ Ripgrep is |
 | 2026-05-11 08:53 UTC | Exp 1791: Symbolic-KAN RTL Specification for KV260 | OK | 81 passed, 1 warning in 5.31s |
 | 2026-05-11 08:55 UTC | Exp 1792: gated on Exp 1791 honest_verdict in succ | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1791-symbolic-kan-rtl.honest_verdict (a |
 | 2026-05-11 08:57 UTC | Exp 1792: gated on Exp 1791 honest_verdict in succ | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1791-symbolic-kan-rtl.honest_verdict (a |
+| 2026-05-11 08:59 UTC | Exp 1792: gated on Exp 1791 honest_verdict in succ | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1791-symbolic-kan-rtl.honest_verdict (a |
+| 2026-05-11 09:01 UTC | Exp 1793: gated on Exp 1792 honest_verdict in succ | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1792-kv260-symbolic-kan-synth) |
