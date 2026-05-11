@@ -18,11 +18,11 @@ call. No fine-tuning. No access to model weights.
 Rust + Python/JAX, Apache 2.0, local editable install via `pip install -e ".[dev]"`.
 The public PyPI package remains a Phase-1 ship blocker as of Exp 1582.
 
-Current public research record: **2,072 experiment records tracked through Exp
-1745**. `research-complete.yaml` currently archives **1,872** task records
+Current public research record: **2,097 experiment records tracked through Exp
+1770**. `research-complete.yaml` currently archives **1,872** task records
 across **148** artifact-backed completed milestone records through
-2026.05.134; checked-in result artifacts and `ops/changelog.md` extend through
-milestone 2026.05.134 on 2026-05-10.
+2026.05.136; checked-in result artifacts and `ops/changelog.md` extend through
+milestone 2026.05.136 on 2026-05-10.
 
 Milestone .106 delivered the critical fix to thinking-mode certificate
 generation: Exp 1366 (CRANE tag-first prefix injection) reached
@@ -310,7 +310,7 @@ experiment artifact under `results/`.
 | BEAVER-lite certificate tier | Sound unsafe-mass bound matched empirical violation rate in Exp 1142 (**0.400**); Exp 1158 tightened the bound to **0.3187** vs **0.300** empirical with mock logprobs; Exp 1170 switched to live llama.cpp `logits_all` logprobs with `mock_logprobs_used=false` | Exps 1142/1158/1170 |
 | Phase 3/4 sampler diagnostics | Snap validity **100%** on 10,000 proxy states; HMC classified Regime C, so blocked Gibbs replaced HMC and reached **KL=0.0231** vs Boltzmann | Exps 1154/1155/1156 |
 | MARCH multi-agent claim-check loop | Blinded checker reached **TP=100%**, **FPR=0%** on 36 Goodfire exemplars + 100 FoVer correct examples, above SemEnergy 22.2% and ThinkPRM 13.9% baselines | Exp 1160 |
-| FPGA sampler correctness audit — v6 pivot | **KL(FPGA ‖ Gibbs) = 3.07** (v1 parallel); v4 tuning improved **0.134 → 0.1128**; v5 regressed to **0.4469**; v6 sequential Gibbs reached **KL=0.0000** vs CPU reference | Exps 1094/1134/1149/1161 |
+| FPGA sampler correctness audit — v6 pivot | **KL(FPGA ‖ Gibbs) = 3.07** (v1 parallel); v4 tuning improved **0.136 → 0.1128**; v5 regressed to **0.4469**; v6 sequential Gibbs reached **KL=0.0000** vs CPU reference | Exps 1094/1134/1149/1161 |
 | KANELE SOS-KAN FPGA blueprint | LUTized compressed SOS-KAN datapath estimated **0.12 us** latency and **2,408,333x** speedup vs CPU baseline; specification only, Vivado synthesis not run | Exp 1162 |
 | NRGPT energy-native Phase 3 prototype | Baseline AUROC **0.8874 → 0.9209** with one energy recurrence iteration; three iterations dipped to **0.9158**, so recurrence is positive but not monotone | Exp 1163 |
 | NRGPT frozen-prefix evaluation | Non-monotonicity classified as **Type B causal-context shift**, expected for recurrent EBMs rather than an architecture failure; paper-v6 framing recorded | Exp 1251 |
@@ -476,7 +476,7 @@ experiment artifact under `results/`.
 | Milestone .124 closeout (DualGPURunner Profiling) | Both RTX 3090s completely idle at 0% utilization. Estimated 40% time savings recoverable via DualGPURunner parallelization and addressing bottlenecks | Exp 1626 |
 | Probability Calibration Verifier | Opt-in verifier scores explicit probability claims against simple reference-class evidence; returns structured `VerdictRecord` | Exp 1414 |
 | KANELÉ Validation & Routing | KANELÉ RTL linting, latency accounting vs Ising baseline; adaptive energy reconfiguration and EBM vs LLM Task Allocation Router | Exps 1622-1625 |
-| Milestone .134 closeout | Analyzed wall time / 11 experiments. Both RTX 3090s completely idle at 0% utilization. | Exp 1745 |
+| Milestone .136 closeout | Phase 4 operations aggregated; .136 retrospective complete | Exp 1770 |
 | Pi-net Projection & ConsFormer | Prototyped Pi-net style differentiable projection layer for continuous latents and a ConsFormer-style refiner | Exps 1633-1635 |
 | SMGI & Energy-Guided Decoding | Integrated SMGI certified update logic and implemented EGD using mandated SOTA GGUFs | Exps 1631/1636 |
 | Current Python test collection | **24,113** Python tests collected; collection-only snapshot, not a full-suite pass claim | 2026-05-10 collection run |
@@ -521,7 +521,7 @@ claim we publish.
 ## Where to go next
 
 - **[Technical report](docs/technical-report.md)** — the full research arc
-  through Exp 1708 across 140 archived completed milestone records plus the
+  through Exp 1770 across 150 Archived completed milestone records plus the
   latest .121 result artifacts, with a
   plain-English timeline of what we tried, what failed, what stuck.
 - **[Roadmap](docs/roadmap.md)** — current milestone, upcoming milestones,
@@ -580,7 +580,7 @@ On **116** held-out cases against **344** learning cases, `no_learning`, `tracke
 - **Constraint-Informed KAN (CIKAN):** FourierCSP constraint compiled into fixed CIKAN boundary and preserved - CIKAN Boundary
 - **EqM Sampler GPU Integration:** Equilibrium Matching (EqM) Gradient Sampler converged faster on GPU - GPU EqM
 - **Live Telemetry Streamer:** Live Telemetry Streamer for Continual Learning load test successful - Streamer load tested
-- **Milestone .134 closeout:** Analyzed wall time / experiments for .134 with phase_4_synthesis_complete - Phase 4 synthesis
+- **Milestone .136 closeout:** Analyzed wall time / experiments for .136 with phase_4_synthesis_complete - Phase 4 synthesis
 
 - **Semantic calibration + live rerun (Exp 232 / Exp 235):** the new calibration corpus contains **568** rows (**155 TP / 33 FP / 221 FN / 159 TN**), and the semantic-verifier-v2 rerun keeps verify-only explicitly unjustified even after cleaner thresholds and abstention logic.
 - **Spec-aware code verification (Exp 236 / VERIFY-036):** the explicit code-spec corpus now covers **164** HumanEval tasks with **194** trace links, **8** official-test-miss traces, and **5** repaired traces, and the packaged verifier can now combine official tests, PBT, and explicit spec clauses through `verify_generated_code_with_specs()`.
@@ -732,7 +732,7 @@ See the [technical report](docs/technical-report.md) for the full research recor
 
 ## 14 Principles Learned
 
-Hard-won lessons from the activation-based phase of a research program that now spans 2,023 tracked experiment records through Exp 1708, 140 archived completed milestone records, and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
+Hard-won lessons from the activation-based phase of a research program that now spans 2,097 tracked experiment records through Exp 1770, 150 Archived completed milestone records, and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
 
 ### What works
 1. **The model's own logprobs are the best energy.** No external EBM needed for rejection sampling — the LLM's own confidence is already an energy function. Simple, practical, +10%.
