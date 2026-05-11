@@ -1753,3 +1753,5 @@ Ripgrep is |
 | 2026-05-11 11:36 UTC | Exp 1807: gated on Exp 1806 retained_ratio<1.0: E2 | DOOMED_RERUN_BLOCK | 6 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-11 11:43 UTC | Exp 1808: Evaluate CIKAN for Symbolic Equation Ext | OK | 81 passed, 1 warning in 4.33s |
 | 2026-05-11 11:45 UTC | Exp 1809: gated on Exp 1805 simulation_passed==Tru | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1805-bbim-rtl-design) |
+| 2026-05-11 11:45 UTC | Exp 1810: Full benchmark of EBM-CoT on GSM8K using | DOOMED_RERUN_BLOCK | 4 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-11 11:47 UTC | Exp 1809: gated on Exp 1805 simulation_passed==Tru | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1805-bbim-rtl-design) |
