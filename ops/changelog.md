@@ -5464,3 +5464,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-11: Exp 1784: Milestone .137 Retrospective (⚠️ Research Finding) — honest_verdict=phase_4_operations_aggregated; results/experiment_1784_retro.json
 - 2026-05-11: Exp 1785: Energy-Based Fine-Tuning (EBFT) Pipeline setup (✅ Complete) — honest_verdict=complete: ebft_trainer_targeted_tests_and_100pct_new_code_coverage_passed; results/experiment_1785_ebft_pipeline.json
 - 2026-05-11: Exp 1787: Aleph-style Formal Verification Orchestrator (✅ Complete) — honest_verdict=complete: Formal orchestrator iteratively queried solver.; results/experiment_1787_formal_orchestrator.json
+- 2026-05-11: Exp 1788: NRGPT-style Energy Landscape Exploration (✅ Complete) — honest_verdict=complete: NRGPT explorer scaled compute based on energy.; results/experiment_1788_nrgpt_exploration.json
