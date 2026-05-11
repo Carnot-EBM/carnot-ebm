@@ -1730,3 +1730,4 @@ Ripgrep is |
 | 2026-05-11 10:29 UTC | Exp 1806: Denoising Thermodynamic Model (DTM) simu | OK | 81 passed, 1 warning in 5.29s |
 | 2026-05-11 10:36 UTC | Exp 1807: EDDP benchmarking of the DTM simulator | OK | 81 passed, 1 warning in 5.66s |
 | 2026-05-11 10:41 UTC | Exp 1808: Capstone E2E Pipeline with Qwen3.6-35B-A | OK | 81 passed, 1 warning in 5.39s |
+| 2026-05-11 10:45 UTC | Exp 1809: Capstone E2E Pipeline with Gemma4-31B-it | OK | 81 passed, 1 warning in 5.75s |
