@@ -1655,3 +1655,5 @@ Ripgrep is |
 | 2026-05-11 07:26 UTC | Exp 1777: Self-learning pipeline scale-up on LTLZi | OK | 81 passed, 1 warning in 4.10s |
 | 2026-05-11 07:28 UTC | Exp 1778: Synthesize KV260 Bitfile for HILED AXI e | DOOMED_RERUN_BLOCK | 6 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-11 07:30 UTC | Exp 1778: Synthesize KV260 Bitfile for HILED AXI e | DOOMED_RERUN_BLOCK | 6 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-11 07:33 UTC | Exp 1778: Synthesize KV260 Bitfile for HILED AXI e | DOOMED_RERUN_BLOCK | 6 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-11 07:35 UTC | Exp 1779: gated on Exp 1778 honest_verdict in succ | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1778-kv260-bitfile-synthesis) |
