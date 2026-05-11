@@ -1618,3 +1618,4 @@ Ripgrep is |
 | 2026-05-11 03:34 UTC | Exp 1758: Milestone .135 Retrospective | OK | 81 passed, 1 warning in 4.72s |
 | 2026-05-11 03:46 UTC | Plan milestone 2026.05.136 | OK | 12 tasks proposed |
 | 2026-05-11 03:48 UTC | Milestone 2026.05.136 activated | OK | 12 tasks queued |
+| 2026-05-11 03:53 UTC | Exp 1759: Implement EBFT sequence-level objective | OK | 81 passed, 1 warning in 4.27s |
