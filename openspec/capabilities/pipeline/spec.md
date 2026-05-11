@@ -3140,3 +3140,13 @@ containing at least `status`, `experiment_id`, `experiment`, `model_used`, `ques
 
 **Spec traces:** REQ-PIPELINE-1694, SCENARIO-PIPELINE-1694, Exp 1694
 
+### REQ-PIPELINE-1767: Full E2E Pipeline with Qwen3.6-35B-A3B
+
+The pipeline MUST provide a deterministic script `scripts/experiment_1767_e2e_qwen.py` to evaluate the flagship MoE Qwen model (`unsloth/Qwen3.6-35B-A3B-GGUF`). It MUST collect `latency`, `parse_rate`, and `energy_scores` and output to `results/experiment_1767_e2e_qwen.json`.
+
+### SCENARIO-PIPELINE-1767: Qwen E2E Pipeline Execution
+
+**Given** the Qwen MoE model specification
+**When** `scripts/experiment_1767_e2e_qwen.py` is executed
+**Then** it outputs the evaluation results to `results/experiment_1767_e2e_qwen.json`.
+

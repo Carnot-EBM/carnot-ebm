@@ -18861,3 +18861,18 @@ Then it returns a multi-level verification score.
 **Given** an evaluation script utilizing `ROCEExtractor` and `HRMVerifier`
 **When** the evaluation is run with `unsloth/gemma-4-26B-A4B-it-GGUF`
 **Then** the script produces a valid `experiment_1765_eval.json` containing the evaluation results.
+
+### REQ-E2E-QWEN-1767: Qwen E2E Pipeline Experiment
+
+The repository shall provide `scripts/experiment_1767_e2e_qwen.py` to evaluate the end-to-end pipeline using the flagship MoE model, where:
+- The script configures `MODEL_SPECS` to use `unsloth/Qwen3.6-35B-A3B-GGUF`.
+- The script runs execution and collects latency, parse rate, and energy scores.
+- The results are written to `results/experiment_1767_e2e_qwen.json`.
+
+### SCENARIO-E2E-QWEN-1767: Run Qwen E2E Pipeline Experiment
+
+**Given** the Qwen E2E pipeline experiment script `scripts/experiment_1767_e2e_qwen.py`
+**When** the script is executed
+**Then** it uses the model `unsloth/Qwen3.6-35B-A3B-GGUF`
+**And** it outputs a JSON file to `results/experiment_1767_e2e_qwen.json`
+**And** the JSON file contains fields for `latency_ms`, `parse_rate`, and `energy_score`.
