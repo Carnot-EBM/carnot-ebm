@@ -1,0 +1,51 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.138",
+  "generated_at": "2026-05-11T09:39:30Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 57.5,
+  "experiments_completed": 28,
+  "compute_bound_experiments_count": 1,
+  "slowest_experiments": [
+    {
+      "experiment": "-0400 [conductor] Exp 1797: Orchestrator Zero-False-Accept Audit",
+      "duration_minutes": 8.3,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1785: Energy-Based Fine-Tuning (EBFT) Pipeline setup",
+      "duration_minutes": 5.3,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1798: Milestone .138 Retrospective",
+      "duration_minutes": 3.6,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1787: Aleph-style Formal Verification Orchestrator",
+      "duration_minutes": 3.2,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1788: NRGPT-style Energy Landscape Exploration",
+      "duration_minutes": 3.1,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "summary": "Milestone 2026.05.138 operational retrospective complete. Analyzed 57.5 min wall time for 28 experiments. The single compute-bound task was efficient with no anomalous GPU idling.",
+  "bottlenecks_identified": [
+    "Synthesis-only tasks dominated the wall time, taking the top 5 slowest spots, led by Exp 1797 at 8.3 minutes."
+  ],
+  "improvements_suggested": [
+    "Investigate and optimize the synthesis pipeline to reduce the duration of synthesis-only tasks."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Optimize synthesis pipeline execution time.",
+    "Maintain current efficient GPU utilization for compute-bound tasks.",
+    "Profile synthesis tasks to identify specific script bottlenecks."
+  ],
+  "estimated_time_savings_pct": 15,
+  "meta_reflection": "The milestone was highly efficient on compute-bound tasks. Future optimizations must target the synthesis pipeline, as it is the primary source of wall-time overhead."
+}
