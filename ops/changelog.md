@@ -5526,3 +5526,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-11: Exp 1850: Milestone 2026.05.143 Retrospective (✅ Complete) — honest_verdict=milestone_complete; results/experiment_1850_retro.json
 - 2026-05-11: Exp 1850: THRML/Carnot Parity Sweep at n=128 (continues n=8/16/32/64 sweep) (❌ Failed) — honest_verdict=complete: thrml_carnot_parity_n128_gate_failed_kl_0.28; results/experiment_1850_thrml_parity_n128.json
 - 2026-05-11: Exp 1851: NLA-Class 16th Verifier Prototype — white-box SAE probe (✅ Complete) — honest_verdict=complete: nla_probe_prototype_tpr_lift_0.98_orthogonal_coverage_10; results/experiment_1851_nla_probe.json
+- 2026-05-11: Exp 1852: Research Findings Audit — re-read .130-.143 artifacts for underclaimed results (✅ Complete) — honest_verdict=complete: findings_audit_surfaced_80_underclaimed_results; results/experiment_1852_findings_audit.json
