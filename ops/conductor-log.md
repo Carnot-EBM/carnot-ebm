@@ -1825,3 +1825,4 @@ Ripgrep is |
 | 2026-05-11 16:09 UTC | Exp 1842: KAN Hardware Inference Complexity Accoun | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-11 16:11 UTC | Exp 1842: KAN Hardware Inference Complexity Accoun | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-11 16:13 UTC | Exp 1842: KAN Hardware Inference Complexity Accoun | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-11 16:25 UTC | Exp 1843: Gradient-Guided Epsilon Constraint for O | FAIL | Gemini CLI error: Stalled after 600s silence. Last output:  enabled. All tool  |

@@ -128,3 +128,22 @@ def test_cocom_estimate_hidden_constraint():
     pred_after = pipeline.predict_hidden_constraint(features)
     assert np.allclose(pred_after, 2.5)
 
+def test_cocom_update_with_epsilon():
+    """Test update with hard epsilon updates.
+    
+    Spec: REQ-PIPELINE-1843, SCENARIO-PIPELINE-1843
+    """
+    pipeline = COCOMPipeline(learning_rate=0.1, memory_size=5, parameter_dim=2)
+    obj_grad = np.array([0.0, 0.0])  # Zero obj gradient to isolate epsilon effect
+    const_grad = np.array([1.0, 0.0])
+    epsilon = 0.5
+    
+    # Run the epsilon update
+    pipeline.update_with_epsilon(obj_grad, const_grad, epsilon)
+    
+    # Expected update: v = obj_grad_proj + epsilon * (const_grad / norm)
+    # v = [0.0, 0.0] + 0.5 * [1.0, 0.0] = [0.5, 0.0]
+    # param = param - lr * v = [0.0, 0.0] - 0.1 * [0.5, 0.0] = [-0.05, 0.0]
+    assert np.allclose(pipeline.parameters, np.array([-0.05, 0.0]))
+
+
