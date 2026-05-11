@@ -137,3 +137,19 @@ Sub-requirements:
 **When** the multi-period sampling API is invoked
 **Then** turnover tests pass and the adapter scales correctly
 **And** it writes `results/experiment_1834_thrml_turnover.json`.
+
+### REQ-SAMPLE-1845: Simulated HILED Interface for KV260
+
+Carnot MUST provide a simulated Hardware-In-The-Loop Energy Decoding (HILED) boundary inside `python/carnot/samplers/hiled.py`. This interface acts as a simulator target for Potts integration targeting the KV260 execution pipeline.
+
+Sub-requirements:
+- REQ-SAMPLE-1845-1: The module SHALL provide a `HiledSimulator` class capable of simulating offloaded energy decoding.
+- REQ-SAMPLE-1845-2: The simulator SHALL support executing a mock execution pipeline for the KV260 target.
+- REQ-SAMPLE-1845-3: An experiment deliverable SHALL be written to `results/experiment_1845_hiled.json` to prove the interface is functional.
+
+### SCENARIO-SAMPLE-1845: HILED Interface Execution
+
+**Given** a KV260 target configuration
+**When** the simulated HILED execution pipeline is invoked
+**Then** it successfully mimics offloaded decoding and records metrics
+**And** it writes `results/experiment_1845_hiled.json`.
