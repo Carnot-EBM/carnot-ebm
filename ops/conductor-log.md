@@ -1867,3 +1867,4 @@ Ripgrep is |
 | 2026-05-11 20:34 UTC | Exp 1863: Milestone 145 Retrospective | OK | 81 passed, 1 warning in 4.83s |
 | 2026-05-11 20:44 UTC | Plan milestone 2026.05.146 | OK | 12 tasks proposed |
 | 2026-05-11 20:47 UTC | Milestone 2026.05.146 activated | OK | 12 tasks queued |
+| 2026-05-11 20:51 UTC | Exp 1864: Reasoning-Time Open Constraint Elicitati | OK | 81 passed, 1 warning in 4.96s |
