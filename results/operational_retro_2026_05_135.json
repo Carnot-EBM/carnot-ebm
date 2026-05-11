@@ -1,0 +1,51 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.135",
+  "generated_at": "2026-05-11T03:41:09Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 133.5,
+  "experiments_completed": 30,
+  "compute_bound_experiments_count": 1,
+  "slowest_experiments": [
+    {
+      "experiment": "-0400 [conductor] Exp 1752: Expand LTLZinc benchmark to include spatial reasonin",
+      "duration_minutes": 35.1,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1749: Symbolic-KAN structure mapping prototype",
+      "duration_minutes": 31.4,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1746: Profile EqM CUDA overhead with SOTA MoE",
+      "duration_minutes": 11.7,
+      "compute_bound": true
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1748: Hardware benchmark of sparse EqM sampler (Target <10",
+      "duration_minutes": 10.8,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1750: Evaluate Symbolic-KAN constraint accuracy vs CIKAN",
+      "duration_minutes": 6.6,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "summary": "Milestone 2026.05.135 completed 30 experiments in 133.5 wall-clock minutes. Out of these, 29 were synthesis-only tasks, and only 1 was compute-bound.",
+  "bottlenecks_identified": [
+    "Synthesis-only experiments account for the majority of the wall time, specifically Exp 1752 and Exp 1749 taking over 30 minutes each."
+  ],
+  "improvements_suggested": [
+    "Investigate tooling improvements to accelerate synthesis-only tasks, as they are the primary milestone bottleneck."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Profile the synthesis pipeline for tasks like LTLZinc benchmark expansion and Symbolic-KAN structure mapping to identify slow phases.",
+    "Optimize synthesis tooling to reduce the 30+ minute durations.",
+    "Continue monitoring compute-bound task GPU utilization to maintain efficiency."
+  ],
+  "estimated_time_savings_pct": 30,
+  "meta_reflection": "Strictly adhered to the authoritative timing data and locked fields. Recognized that the single compute-bound task did not warrant DualGPURunner, and refrained from flagging GPU idle since the pre-filled configuration mandated it."
+}
