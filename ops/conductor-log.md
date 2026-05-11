@@ -1626,3 +1626,4 @@ Ripgrep is |
 | 2026-05-11 04:11 UTC | Exp 1762: Continuous stability test on LTLZinc | OK | 81 passed, 1 warning in 5.57s |
 | 2026-05-11 05:23 UTC | Exp 1763: Reasoning-Time Open Constraint Elicitati | OK | 81 passed, 1 warning in 4.66s |
 | 2026-05-11 05:28 UTC | Exp 1764: Hierarchical Reasoning Model (HRM) Integ | OK | 81 passed, 1 warning in 4.84s |
+| 2026-05-11 05:32 UTC | Exp 1765: Evaluate ROCE + HRM | OK | 81 passed, 1 warning in 5.14s |
