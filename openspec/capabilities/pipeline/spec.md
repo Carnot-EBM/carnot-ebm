@@ -3243,3 +3243,19 @@ It MUST write a terminal artifact with `status="blocked"` and `honest_verdict="b
 **Given** a doomed task definition
 **When** the pipeline fail-fast check is invoked
 **Then** it writes a blocked artifact and returns True.
+
+### REQ-PIPELINE-1831: Constrained Online Convex Optimization with Memory (COCOM)
+The pipeline MUST implement Constrained Online Convex Optimization with Memory (COCOM) based on arXiv:2603.21375.
+It MUST provide a `COCOMPipeline` class in `python/carnot/pipeline/cocom.py`.
+The class MUST track memory-based constraints across online learning steps and optimize a defined objective function subject to these tracked memory constraints.
+
+**Acceptance criteria:**
+- `COCOMPipeline` is defined in `python/carnot/pipeline/cocom.py`.
+- It implements `update(objective_grad, constraint_grad)` to perform online learning steps while tracking constraints in memory.
+- It writes the results artifact to `results/experiment_1831_cocom.json`.
+
+### SCENARIO-PIPELINE-1831: COCOM Online Learning Tracks Memory Constraints
+**Given** a COCOM pipeline initialized with a learning rate and memory budget
+**When** multiple online steps are processed with objective and constraint gradients
+**Then** the parameters are updated such that memory constraints are respected.
+**And** the outcome is recorded in `results/experiment_1831_cocom.json`.
