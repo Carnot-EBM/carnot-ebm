@@ -1602,3 +1602,4 @@ Ripgrep is |
 | 2026-05-11 01:34 UTC | Exp 1748: Hardware benchmark of sparse EqM sampler | OK | cache hit: 82 passed, 1 warning in 11.01s |
 | 2026-05-11 02:07 UTC | Exp 1749: Symbolic-KAN structure mapping prototype | OK | 120 passed, 1 warning in 6.69s |
 | 2026-05-11 02:16 UTC | Exp 1750: Evaluate Symbolic-KAN constraint accurac | OK | 81 passed, 1 warning in 5.17s |
+| 2026-05-11 02:24 UTC | Exp 1751: End-to-End Symbolic-KAN verifiable tier  | OK | 81 passed, 1 warning in 5.61s |
