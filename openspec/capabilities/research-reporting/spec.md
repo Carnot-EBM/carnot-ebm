@@ -3347,6 +3347,50 @@ source events
 unchanged by the workflow.
 
 
+### REQ-REPORT-1876: Milestone .146 Completion Ledger and .147 Gate Contract
+
+The Exp 1876 workflow shall archive actionable milestone `2026.05.146`
+evidence into `results/experiment_1876_146_completion_147_gate_contract.json`
+without modifying `research-roadmap.yaml` or `scripts/research_conductor.py`.
+
+The workflow shall read the Exp 1864, 1868, 1869, 1871, and 1872 result
+artifacts, the Exp 1864 through Exp 1875 conductor-log entries, the `.147`
+roadmap, the `.147` planning proposal, and the changelog. It shall classify
+schema-complete evidence separately from malformed-but-actionable evidence,
+record downstream blocks caused by missing standard gate fields, and list
+scopes that must not be rerun without a changed root cause.
+
+The terminal artifact shall include these top-level fields:
+
+- `status`
+- `honest_verdict`
+- `milestone_146_archived`
+- `artifact_schema_contract_ready`
+- `prior_failure_carryforward_ready`
+- `gate_contract_ready`
+- `blocked_scope_summary`
+
+The artifact shall set `artifact_schema_contract_ready=true` only when the
+missing-field failures are explicitly named and the next milestone has an
+explicit gate field for artifact normalization. It shall set
+`prior_failure_carryforward_ready=true` only when blocked or retired scopes are
+carried forward with a changed-root-cause policy instead of being silently
+rerun.
+
+### SCENARIO-REPORT-1876: Exp 1876 Preserves Gate-Field Failures
+
+**Given** `.146` contains useful ROCE, LTLZinc, HILED, S2KAN, and Ising
+consensus evidence
+**And** the conductor log records missing `status` field gate blocks for ROCE
+and HILED downstream tasks
+**When** the Exp 1876 workflow runs
+**Then** it writes the required REQ-REPORT-1876 fields
+**And** records usable evidence, malformed evidence, missing-field blocks, and
+do-not-rerun scopes in machine-readable lists
+**And** `research-roadmap.yaml` and `scripts/research_conductor.py` remain
+unchanged by the workflow.
+
+
 ### REQ-PUBLISH-003: HuggingFace README Accuracy Audit
 
 All HuggingFace model READMEs for Phase 1 per-token activation EBMs shall
@@ -3487,6 +3531,7 @@ embed live-GPU benchmark results from Exp 328 when available.
 | REQ-REPORT-067 | `python/carnot/reporting/milestone_124_archive.py`, `results/experiment_1614_archive.json` | `tests/python/test_milestone_124_archive.py` | Implemented |
 | REQ-REPORT-068 | `scripts/experiment_1652_archive.py`, `results/experiment_1652_archive.json` | `tests/python/test_experiment_1652_archive.py` | Planned |
 | REQ-REPORT-069 | `scripts/experiment_1665_retro.py`, `results/operational_retro_2026_05_127.json` | `tests/python/test_experiment_1665_retro.py` | Implemented |
+| REQ-REPORT-1876 | `python/carnot/reporting/milestone_146_completion_147_gate_contract.py`, `results/experiment_1876_146_completion_147_gate_contract.json` | `tests/python/test_milestone_146_completion_147_gate_contract.py` | Implemented |
 | REQ-REPORT-024 | `python/carnot/reporting/agent_usage.py`, `scripts/agent_plan_usage.py` | `tests/python/test_agent_plan_usage.py` | Implemented |
 | REQ-PUBLISH-003 | `scripts/experiment_317_hf_publish.py` | `tests/python/test_experiment_317_hf_publish.py` | Implemented |
 | REQ-PUBLISH-004 | `scripts/experiment_330_hf_live_publish.py` | `tests/python/test_experiment_330_hf_live_publish.py` | Implemented |
