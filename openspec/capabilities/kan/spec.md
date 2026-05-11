@@ -1085,3 +1085,22 @@ To accelerate CIKANs on FPGA hardware (Phase 3), the trained Python model weight
 Given a CIKAN model,
 When the LUT mapper and RTL generation pipeline run,
 Then the correct Verilog files are generated, the simulation check passes, and `results/experiment_1729_kanele.json` records the success.
+
+## REQ-KAN-1808: Symbolic Regression via CIKAN
+
+The KAN capability MUST support extracting exact logical/algebraic formulas from a trained CIKAN layer.
+By feeding a dataset (e.g., modeling Z = X + Y), the CIKAN layer must discover the correct symbolic operations
+and allow comparison against the ground truth equation.
+
+**Acceptance criteria:**
+    - `python/carnot/models/carnot_kan/cikan_layer.py` exposes a `CIKANLayer` capable of symbolic extraction.
+    - `scripts/experiment_1808_cikan_symbolic.py` fits a known dataset, extracts the symbolic equation, and logs `equation_match_accuracy`.
+    - Unit tests cover the CIKAN layer.
+    - `results/experiment_1808_symbolic.json` contains `equation_match_accuracy`.
+
+### SCENARIO-KAN-1808: Extract symbolic equation correctly
+
+Given a dataset matching an exact arithmetic rule (e.g., Z = X + Y),
+When CIKANLayer is fitted to this dataset,
+Then it extracts the correct symbolic equation, achieving high equation_match_accuracy,
+and `results/experiment_1808_symbolic.json` is logged.
