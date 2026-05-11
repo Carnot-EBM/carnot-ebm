@@ -3282,3 +3282,11 @@ It MUST write the results artifact to `results/experiment_1843_epsilon_ocl.json`
 **When** multiple online steps are processed with objective gradients, constraint gradients, and an epsilon parameter
 **Then** the parameters are updated using gradient-guided epsilon tracking to satisfy the FR-11 non-forgetting constraint
 **And** the outcome is recorded in `results/experiment_1843_epsilon_ocl.json`.
+
+### REQ-ROCE-1846: ROCE Abstraction for Dynamic Constraint Extraction
+The system shall benchmark ROCE latency and validity limits on the MoE model (unsloth/Qwen3.6-35B-A3B-GGUF).
+
+### SCENARIO-ROCE-1846: Validate ROCE Latency limits
+**Given** the Qwen3.6 flagship MoE
+**When** the pipeline processes dynamic constraints using ROCE limits
+**Then** the extraction latency and validity are benchmarked successfully.
