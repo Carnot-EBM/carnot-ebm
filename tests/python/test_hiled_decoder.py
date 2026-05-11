@@ -28,3 +28,13 @@ def test_hiled_decoder_sync_wrapper():
     energy = decoder.minimize_energy(initial_state=[1, -1, 1, -1])
     assert energy < 0
     assert decoder.steps_polled > 0
+
+def test_hiled_decoder_software_fallback():
+    """Test the software fallback for the decoder.
+    
+    Spec: REQ-HW-055, SCENARIO-HW-055
+    """
+    decoder = HiledDecoder(simulator_axi_endpoint="mock_axi", max_steps=5)
+    energy = decoder.minimize_energy_software(initial_state=[1, -1, 1, -1])
+    assert energy < 0
+    assert decoder.steps_polled > 0
