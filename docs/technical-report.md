@@ -1,6 +1,6 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report — 2111 Experiments Across the Public Record, 151 Archived Milestone Records, 23,946 Python Test Items Collected (Artifacts Tracked Through Exp 1784)
+## A Technical Report — 2138 Experiments Across the Public Record, 152 Archived Milestone Records, 23,946 Python Test Items Collected (Artifacts Tracked Through Exp 1811)
 
 **Author:** Ian Blenke
 **Date:** 2026-05-10
@@ -5158,3 +5158,9 @@ Analyzed 1388 min wall time / 253 experiments. Both RTX 3090s were completely id
 
 **Hardware Synthesis and EqM Sampler Evaluation**
 Experiments 1736-1770 focused on hardware synthesis for KV260 KANELÉ and integrating the EqM Sampler onto GPU. We measured latency on the live board and prepared the SWE-Bench Lite EqM Harness. Additionally, a Live Telemetry Streamer for Continual Learning was load-tested successfully, paving the way for more robust telemetry in the continuous learning pipeline.
+
+
+### 4.9 Latest Operational Profiling (Milestones .136 to .138)
+
+**Synthesis-Only Task Bottleneck Identification**  
+Recent operational retrospectives for milestones .136 through .138 (Experiment 1811) confirm that earlier compute-bound and memory tracking issues have been fully resolved. DualGPURunner now maintains correct hardware utilization. However, synthesis-only tasks have emerged as the primary operational bottleneck, taking up the majority of the wall-clock time in these latest runs. Future scaling efforts will target optimizing the synthesis pipeline.

@@ -1,0 +1,51 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.139",
+  "generated_at": "2026-05-11T11:00:21Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 40.1,
+  "experiments_completed": 22,
+  "compute_bound_experiments_count": 3,
+  "slowest_experiments": [
+    {
+      "experiment": "-0400 [conductor] Exp 1805: End-to-end formal verification smoke test on KAEM",
+      "duration_minutes": 5.2,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1807: EDDP benchmarking of the DTM simulator",
+      "duration_minutes": 4.9,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1808: Capstone E2E Pipeline with Qwen3.6-35B-A3B",
+      "duration_minutes": 3.5,
+      "compute_bound": true
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1806: Denoising Thermodynamic Model (DTM) simulation using",
+      "duration_minutes": 3.4,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1811: Milestone .139 Retrospective",
+      "duration_minutes": 2.8,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "summary": "Completed 22 experiments in 40.1 minutes, with synthesis tasks dominating the wall time. GPU utilization was efficient as no compute-bound tasks were incorrectly idle.",
+  "bottlenecks_identified": [
+    "Synthesis-only experiments account for 4 of the top 5 slowest tasks, indicating the synthesis pipeline is the primary bottleneck."
+  ],
+  "improvements_suggested": [
+    "Optimize the synthesis pipeline as it is currently the primary driver of milestone wall time."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Profile and accelerate synthesis-only tasks.",
+    "Ensure synthesis tasks are parallelized where possible.",
+    "Maintain current execution patterns for compute-bound tasks as they are operating efficiently."
+  ],
+  "estimated_time_savings_pct": 35,
+  "meta_reflection": "The focus has appropriately shifted to the synthesis pipeline as compute-bound GPU tasks are now utilizing resources effectively."
+}
