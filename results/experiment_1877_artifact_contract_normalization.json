@@ -1,0 +1,345 @@
+{
+  "blocked_reasons": [],
+  "duration_s": 0.0,
+  "experiment": "1877_artifact_contract_normalization",
+  "finished_at": "2026-05-11T23:57:32Z",
+  "gate_contract_normalization_ready": true,
+  "hiled_simulator_ready": true,
+  "honest_verdict": "complete: roce_hiled_gate_contract_normalization_ready",
+  "normalized_artifacts": [
+    {
+      "duration_s": 0.0,
+      "experiment": 1864,
+      "finished_at": "2026-05-11T23:57:32Z",
+      "honest_verdict": "complete: artifact_contract_normalized",
+      "normalization_kind": "roce",
+      "raw_metrics": {
+        "dataset_size": 20,
+        "results": [
+          {
+            "input": "The response ```json\n{\"constraints\": [{\"type\": \"length\", \"max\": 100}]}\n```",
+            "output": {
+              "extracted_constraints": [
+                {
+                  "max": 100,
+                  "type": "length"
+                }
+              ],
+              "model": "unsloth/Qwen3.6-35B-A3B-GGUF",
+              "success": true
+            }
+          },
+          {
+            "input": "It must contain 'apple'.",
+            "output": {
+              "extracted_constraints": [
+                {
+                  "type": "contains",
+                  "value": "apple"
+                }
+              ],
+              "model": "unsloth/Qwen3.6-35B-A3B-GGUF",
+              "success": true
+            }
+          },
+          {
+            "input": "No constraints found here.",
+            "output": {
+              "extracted_constraints": [],
+              "model": "unsloth/Qwen3.6-35B-A3B-GGUF",
+              "success": false
+            }
+          },
+          {
+            "input": "```json\n{\"type\": \"format\", \"format\": \"csv\"}\n```",
+            "output": {
+              "extracted_constraints": [
+                {
+                  "format": "csv",
+                  "type": "format"
+                }
+              ],
+              "model": "unsloth/Qwen3.6-35B-A3B-GGUF",
+              "success": true
+            }
+          },
+          {
+            "input": "You must contain 'banana'.",
+            "output": {
+              "extracted_constraints": [
+                {
+                  "type": "contains",
+                  "value": "banana"
+                }
+              ],
+              "model": "unsloth/Qwen3.6-35B-A3B-GGUF",
+              "success": true
+            }
+          },
+          {
+            "input": "```{\"constraints\": [{\"type\": \"keyword\", \"word\": \"urgent\"}]}```",
+            "output": {
+              "extracted_constraints": [
+                {
+                  "type": "keyword",
+                  "word": "urgent"
+                }
+              ],
+              "model": "unsloth/Qwen3.6-35B-A3B-GGUF",
+              "success": true
+            }
+          },
+          {
+            "input": "Just a normal text.",
+            "output": {
+              "extracted_constraints": [],
+              "model": "unsloth/Qwen3.6-35B-A3B-GGUF",
+              "success": false
+            }
+          },
+          {
+            "input": "Must contain \"secret\".",
+            "output": {
+              "extracted_constraints": [
+                {
+                  "type": "contains",
+                  "value": "secret"
+                }
+              ],
+              "model": "unsloth/Qwen3.6-35B-A3B-GGUF",
+              "success": true
+            }
+          },
+          {
+            "input": "```json\n{invalid json}\n```",
+            "output": {
+              "extracted_constraints": [],
+              "model": "unsloth/Qwen3.6-35B-A3B-GGUF",
+              "success": false
+            }
+          },
+          {
+            "input": "```json\n{\"constraints\": []}\n```",
+            "output": {
+              "extracted_constraints": [],
+              "model": "unsloth/Qwen3.6-35B-A3B-GGUF",
+              "success": false
+            }
+          },
+          {
+            "input": "must contain 'word'",
+            "output": {
+              "extracted_constraints": [
+                {
+                  "type": "contains",
+                  "value": "word"
+                }
+              ],
+              "model": "unsloth/Qwen3.6-35B-A3B-GGUF",
+              "success": true
+            }
+          },
+          {
+            "input": "must contain 'test'",
+            "output": {
+              "extracted_constraints": [
+                {
+                  "type": "contains",
+                  "value": "test"
+                }
+              ],
+              "model": "unsloth/Qwen3.6-35B-A3B-GGUF",
+              "success": true
+            }
+          },
+          {
+            "input": "must contain 'hello'",
+            "output": {
+              "extracted_constraints": [
+                {
+                  "type": "contains",
+                  "value": "hello"
+                }
+              ],
+              "model": "unsloth/Qwen3.6-35B-A3B-GGUF",
+              "success": true
+            }
+          },
+          {
+            "input": "must contain 'world'",
+            "output": {
+              "extracted_constraints": [
+                {
+                  "type": "contains",
+                  "value": "world"
+                }
+              ],
+              "model": "unsloth/Qwen3.6-35B-A3B-GGUF",
+              "success": true
+            }
+          },
+          {
+            "input": "must contain 'foo'",
+            "output": {
+              "extracted_constraints": [
+                {
+                  "type": "contains",
+                  "value": "foo"
+                }
+              ],
+              "model": "unsloth/Qwen3.6-35B-A3B-GGUF",
+              "success": true
+            }
+          },
+          {
+            "input": "must contain 'bar'",
+            "output": {
+              "extracted_constraints": [
+                {
+                  "type": "contains",
+                  "value": "bar"
+                }
+              ],
+              "model": "unsloth/Qwen3.6-35B-A3B-GGUF",
+              "success": true
+            }
+          },
+          {
+            "input": "must contain 'baz'",
+            "output": {
+              "extracted_constraints": [
+                {
+                  "type": "contains",
+                  "value": "baz"
+                }
+              ],
+              "model": "unsloth/Qwen3.6-35B-A3B-GGUF",
+              "success": true
+            }
+          },
+          {
+            "input": "must contain 'qux'",
+            "output": {
+              "extracted_constraints": [
+                {
+                  "type": "contains",
+                  "value": "qux"
+                }
+              ],
+              "model": "unsloth/Qwen3.6-35B-A3B-GGUF",
+              "success": true
+            }
+          },
+          {
+            "input": "must contain 'quux'",
+            "output": {
+              "extracted_constraints": [
+                {
+                  "type": "contains",
+                  "value": "quux"
+                }
+              ],
+              "model": "unsloth/Qwen3.6-35B-A3B-GGUF",
+              "success": true
+            }
+          },
+          {
+            "input": "must contain 'corge'",
+            "output": {
+              "extracted_constraints": [
+                {
+                  "type": "contains",
+                  "value": "corge"
+                }
+              ],
+              "model": "unsloth/Qwen3.6-35B-A3B-GGUF",
+              "success": true
+            }
+          }
+        ],
+        "success_rate": 0.8,
+        "successes": 16
+      },
+      "roce_success_rate": 0.8,
+      "run_date": "20260511",
+      "schema": [
+        "duration_s",
+        "experiment",
+        "finished_at",
+        "honest_verdict",
+        "normalization_kind",
+        "raw_metrics",
+        "roce_success_rate",
+        "run_date",
+        "source_artifact_path",
+        "source_experiment_id",
+        "started_at",
+        "status",
+        "title"
+      ],
+      "source_artifact_path": "results/experiment_1864_roce.json",
+      "source_experiment_id": "exp1864",
+      "started_at": "2026-05-11T23:57:32Z",
+      "status": "complete",
+      "title": "ROCE Open Constraint Elicitation Prototype (normalized)"
+    },
+    {
+      "duration_s": 0.0,
+      "experiment": 1869,
+      "finished_at": "2026-05-11T23:57:32Z",
+      "hiled_simulator_ready": true,
+      "honest_verdict": "complete: artifact_contract_normalized",
+      "normalization_kind": "hiled",
+      "raw_metrics": {
+        "constraint_enforcement_rate": 1.0,
+        "efficiency_gains_ms": 2.0737648010253906,
+        "hiled_enabled": true,
+        "simulated_steps": 2
+      },
+      "run_date": "20260511",
+      "schema": [
+        "duration_s",
+        "experiment",
+        "finished_at",
+        "hiled_simulator_ready",
+        "honest_verdict",
+        "normalization_kind",
+        "raw_metrics",
+        "run_date",
+        "source_artifact_path",
+        "source_experiment_id",
+        "started_at",
+        "status",
+        "title"
+      ],
+      "source_artifact_path": "results/experiment_1869_hiled.json",
+      "source_experiment_id": "exp1869",
+      "started_at": "2026-05-11T23:57:32Z",
+      "status": "complete",
+      "title": "HILED Simulator Evidence (normalized)"
+    }
+  ],
+  "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+  "roce_success_rate": 0.8,
+  "run_date": "20260511",
+  "schema": "carnot.artifact_contract_normalization.v1",
+  "source_inputs_read": {
+    "results/experiment_1864_roce.json": {
+      "exists": true
+    },
+    "results/experiment_1869_hiled.json": {
+      "exists": true
+    }
+  },
+  "started_at": "2026-05-11T23:57:32Z",
+  "status": "complete",
+  "tests_run": [
+    "ruff check python/carnot/reporting/artifact_contract_normalization.py tests/python/test_artifact_contract_normalization.py (passed)",
+    "ruff format --check python/carnot/reporting/artifact_contract_normalization.py tests/python/test_artifact_contract_normalization.py (passed)",
+    ".venv/bin/coverage run --include='*/artifact_contract_normalization.py' -m pytest -o addopts='' tests/python/test_artifact_contract_normalization.py -q (4 passed)",
+    ".venv/bin/coverage report --include='*/artifact_contract_normalization.py' --fail-under=100 -m (100% new module coverage)",
+    ".venv/bin/python scripts/check_spec_coverage.py (failed: 61 pre-existing tests missing spec references)",
+    ".venv/bin/pytest tests/python -q (failed: 92 failed, 21839 passed, 91 skipped, 6 errors; interrupted after 42:23 following unrelated native worker crashes)"
+  ],
+  "title": "ROCE/HILED Artifact Contract Normalization"
+}

@@ -3391,6 +3391,41 @@ do-not-rerun scopes in machine-readable lists
 unchanged by the workflow.
 
 
+### REQ-REPORT-1877: ROCE/HILED Artifact Contract Normalization
+
+The Exp 1877 workflow shall read malformed-but-actionable ROCE and HILED source
+artifacts from `results/experiment_1864_roce.json` and
+`results/experiment_1869_hiled.json`, preserve their raw metrics, and write a
+standard Carnot wrapper artifact to
+`results/experiment_1877_artifact_contract_normalization.json`.
+
+The terminal artifact shall include these top-level fields:
+
+- `status`
+- `honest_verdict`
+- `gate_contract_normalization_ready`
+- `roce_success_rate`
+- `hiled_simulator_ready`
+- `normalized_artifacts`
+- `tests_run`
+
+The workflow shall set `gate_contract_normalization_ready=true` only when both
+source artifacts are readable, both normalized wrappers expose standard
+`status` and `honest_verdict` fields, the top-level ROCE success-rate gate is
+numeric, and the top-level HILED simulator gate is true.
+
+### SCENARIO-REPORT-1877: Exp 1877 Normalizes ROCE and HILED Gate Fields
+
+**Given** Exp 1864 and Exp 1869 produced useful evidence without standard
+Carnot gate fields
+**When** the Exp 1877 workflow normalizes those source artifacts
+**Then** it writes the required REQ-REPORT-1877 fields
+**And** the normalized ROCE wrapper preserves the raw ROCE metrics while
+exposing `status`, `honest_verdict`, and `roce_success_rate`
+**And** the normalized HILED wrapper preserves the raw HILED metrics while
+exposing `status`, `honest_verdict`, and `hiled_simulator_ready`.
+
+
 ### REQ-PUBLISH-003: HuggingFace README Accuracy Audit
 
 All HuggingFace model READMEs for Phase 1 per-token activation EBMs shall
@@ -3532,6 +3567,7 @@ embed live-GPU benchmark results from Exp 328 when available.
 | REQ-REPORT-068 | `scripts/experiment_1652_archive.py`, `results/experiment_1652_archive.json` | `tests/python/test_experiment_1652_archive.py` | Planned |
 | REQ-REPORT-069 | `scripts/experiment_1665_retro.py`, `results/operational_retro_2026_05_127.json` | `tests/python/test_experiment_1665_retro.py` | Implemented |
 | REQ-REPORT-1876 | `python/carnot/reporting/milestone_146_completion_147_gate_contract.py`, `results/experiment_1876_146_completion_147_gate_contract.json` | `tests/python/test_milestone_146_completion_147_gate_contract.py` | Implemented |
+| REQ-REPORT-1877 | `python/carnot/reporting/artifact_contract_normalization.py`, `results/experiment_1877_artifact_contract_normalization.json` | `tests/python/test_artifact_contract_normalization.py` | Implemented |
 | REQ-REPORT-024 | `python/carnot/reporting/agent_usage.py`, `scripts/agent_plan_usage.py` | `tests/python/test_agent_plan_usage.py` | Implemented |
 | REQ-PUBLISH-003 | `scripts/experiment_317_hf_publish.py` | `tests/python/test_experiment_317_hf_publish.py` | Implemented |
 | REQ-PUBLISH-004 | `scripts/experiment_330_hf_live_publish.py` | `tests/python/test_experiment_330_hf_live_publish.py` | Implemented |
