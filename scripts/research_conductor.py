@@ -4223,6 +4223,26 @@ def research_step(
             task.get("id", "?"),
         )
         task_agent_type = "codex"
+    # 2026-05-11 13:20Z mirror coercion for gemini-only window: codex
+    # quota exhausted until reset (operator directive 10:25Z). When
+    # GEMINI_FORCE_EXPERIMENTS=1 is set, coerce per-task `codex` →
+    # `gemini` unless the task carries `requires_codex: true`. The
+    # planner reads CLAUDE.md "Codex-Default" as input and ignores
+    # transient known-issues.md windows, so a planner-level discipline
+    # rule alone is insufficient. Mechanical defense in depth here.
+    # Unset this env when codex quota recovers.
+    if (
+        os.environ.get("GEMINI_FORCE_EXPERIMENTS") == "1"
+        and task_agent_type == "codex"
+        and not task.get("requires_codex")
+    ):
+        logger.warning(
+            "GEMINI_FORCE_EXPERIMENTS=1: coercing task %r agent_type "
+            "codex → gemini (codex quota window; set requires_codex:true "
+            "to bypass)",
+            task.get("id", "?"),
+        )
+        task_agent_type = "gemini"
     # Per-experiment max_turns hint via YAML "max_turns:" field. Default 50
     # mirrors the historical hard-coded value; simple experiments (CPU-only
     # retros, doc passes, configuration changes) can opt into a smaller budget
