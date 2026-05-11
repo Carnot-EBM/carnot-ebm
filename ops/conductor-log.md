@@ -1883,3 +1883,4 @@ Ripgrep is |
 | 2026-05-11 21:27 UTC | Exp 1870: Test HILED simulator on live gemma-4-31B | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1869-hiled-simulator.status (actual=Non |
 | 2026-05-11 21:29 UTC | Exp 1870: Test HILED simulator on live gemma-4-31B | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1869-hiled-simulator.status (actual=Non |
 | 2026-05-11 21:31 UTC | Exp 1870: Test HILED simulator on live gemma-4-31B | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1869-hiled-simulator.status (actual=Non |
+| 2026-05-11 21:36 UTC | Exp 1871: Implement Rust backend for S2KAN fast ev | OK | 83 passed, 1 warning in 5.75s |
