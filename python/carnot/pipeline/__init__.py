@@ -1043,3 +1043,5 @@ __all__ = [
     "EidokuGate",
     "EidokuGateResult",
 ]
+from carnot.pipeline.fail_fast import pipeline_fail_fast_check  # noqa: E402
+__all__.append("pipeline_fail_fast_check")
