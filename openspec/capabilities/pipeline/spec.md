@@ -3186,3 +3186,18 @@ with external formal solvers iteratively.
 **Given** a set of constraints
 **When** `FormalOrchestrator.run_generation_loop()` is called
 **Then** it iteratively queries the solver and outputs `results/experiment_1787_formal_orchestrator.json`.
+
+### REQ-PIPELINE-1788: NRGPT Explorer
+
+The pipeline MUST provide an NRGPT-style explorer that uses energy-guided test-time compute scaling to improve logic generation.
+
+**Acceptance criteria:**
+- `python/carnot/inference/nrgpt_explorer.py` exposes `NRGPTExplorer`.
+- Implements energy-guided test-time compute scaling.
+- Writes an experiment artifact to `results/experiment_1788_nrgpt_exploration.json` containing metrics.
+
+### SCENARIO-PIPELINE-1788: NRGPT Exploration
+
+**Given** an energy function
+**When** `NRGPTExplorer.explore()` is called
+**Then** it scales compute based on energy guidance and outputs `results/experiment_1788_nrgpt_exploration.json`.
