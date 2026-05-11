@@ -1653,3 +1653,5 @@
 | REQ-VERIFY-1414 | Implemented | `ProbabilityCalibrationVerifier` implemented with `score(chain, probability_claim) -> VerdictRecord`; extracts reference-class evidence from `n out of N`, `n/N`, base-rate, and percentage atoms, returns pass/fail/abstain with claimed probability, implied probability/range, and evidence count in extras. Tests: `tests/python/test_probability_calibration_verifier.py`. | Exp 1414 |
 | REQ-VERIFY-1415 | Implemented | `VerifyRepairPipeline` now accepts optional `probability_calibration_verifier`; default behavior is unchanged, while opt-in verification adds `probability_calibration` metadata constraints and positive calibration-gap energy to the result certificate. | Exp 1414 |
 | SCENARIO-VERIFY-1414 | Implemented | Synthetic 30-out-of-100 reference-class tests show `P(event)=0.30` passes with zero energy, `P(event)=0.80` fails with a positive gap, and the opt-in pipeline reports a probability-calibration violation. | Exp 1414 |
+| REQ-REPORT-1798 | Scaffolding | Milestone .138 Phase 4 Operations Retrospective | Exp 1798 |
+| SCENARIO-REPORT-1798 | Scaffolding | Exp 1798 Generates Phase 4 Synthesis Retrospective | Exp 1798 |
