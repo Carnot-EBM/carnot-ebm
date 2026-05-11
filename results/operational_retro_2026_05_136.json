@@ -1,0 +1,51 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.136",
+  "generated_at": "2026-05-11T06:33:00Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 97.5,
+  "experiments_completed": 19,
+  "compute_bound_experiments_count": 3,
+  "slowest_experiments": [
+    {
+      "experiment": "-0400 [conductor] Exp 1763: Reasoning-Time Open Constraint Elicitation (ROCE)",
+      "duration_minutes": 70.2,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1762: Continuous stability test on LTLZinc",
+      "duration_minutes": 4.1,
+      "compute_bound": true
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1761: Semantic pruning for FR-11 memory buffer",
+      "duration_minutes": 3.5,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1766: Hardware-In-The-Loop Energy Decoding (HILED)",
+      "duration_minutes": 3.3,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1759: Implement EBFT sequence-level objective",
+      "duration_minutes": 3.2,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "summary": "Milestone 2026.05.136 completed 19 experiments in 97.5 minutes. 3 experiments were compute-bound. Exp 1762 was the longest compute-bound task at 4.1 minutes.",
+  "bottlenecks_identified": [
+    "Exp 1763, a synthesis-only task, took 70.2 minutes, acting as the primary bottleneck."
+  ],
+  "improvements_suggested": [
+    "Investigate the root cause of the prolonged duration for synthesis task Exp 1763."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Profile Exp 1763 (ROCE) to understand the 70.2-minute wall time.",
+    "Ensure synthesis tasks have appropriate timeouts or profiling tools attached.",
+    "Review synthesis pipeline for unexpected hanging API calls or loops."
+  ],
+  "estimated_time_savings_pct": 70,
+  "meta_reflection": "The milestone duration was primarily constrained by a single synthesis task rather than compute-bound operations, highlighting the need to profile synthesis stages."
+}
