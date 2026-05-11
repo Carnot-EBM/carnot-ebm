@@ -4,6 +4,141 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-05-11 Post-.146 Planning Sweep (Milestone 2026.05.147)
+
+This sweep was run after milestone `.146` completed. Local outcomes: ROCE
+landed only as a sparse prototype artifact (`exp1864`, success_rate=0.80 but
+missing standard result fields), downstream ROCE/Z3 and HILED live tasks
+gate-blocked on artifact-field mismatches, latent semantic pruning was blocked
+by doomed-rerun discipline, S2KAN Rust backend landed (`exp1871`), Ising
+multi-agent consensus produced a proof-of-concept (`exp1872`), and the milestone
+ended with synthesis-only work and no compute-bound GPU validation.
+
+### Low-Cost Hallucination Telemetry: First-Token Confidence + Spilled Energy
+- **Papers:** arXiv:2605.05166 "The First Token Knows: Single-Decode Confidence
+  for Hallucination Detection"; arXiv:2602.18671 "Spilled Energy in Large
+  Language Models."
+- **Sources:** https://arxiv.org/abs/2605.05166 and
+  https://arxiv.org/abs/2602.18671
+- **What:** First-token confidence reports that normalized entropy at the first
+  content-bearing token reaches mean AUROC 0.820 across factual QA settings,
+  beating or matching multi-sample self-consistency at much lower cost. Spilled
+  Energy reinterprets LLM logits as interacting EBMs and localizes likely
+  factual failures through training-free logit-energy discrepancies.
+- **Relevance to Carnot:** These are advisory signals, not acceptance
+  authorities. The next useful integration is a `VerdictRecord` telemetry row
+  for local GGUF logprobs that never overrides deterministic Z3/PySAT/Python
+  validators.
+- **Concrete experiment hook:** Add `phi_first` and spilled-energy fields to
+  structured verdict artifacts for the mandated SOTA GGUF models; verify that
+  `acceptance_authority_unchanged=true`.
+
+### Prompt-to-Validator Compilation and Deterministic Bounds
+- **Papers:** OpenReview ICLR 2026 submissions/workshop papers BEAVER
+  (deterministic LLM verifier), ConstrainPrompt, NSVIF; arXiv:2603.03305 DCCD.
+- **Sources:** https://openreview.net/forum?id=xO3efBXHM9,
+  https://openreview.net/forum?id=O3Kg4dLdpg,
+  https://openreview.net/forum?id=RZGs4OAH6g, and
+  https://arxiv.org/abs/2603.03305
+- **What:** BEAVER computes deterministic semantic-constraint satisfaction
+  bounds. ConstrainPrompt compiles natural-language prompt constraints into
+  executable validators and reports large gains over LLM-as-judge baselines.
+  NSVIF frames instruction following as a CSP over symbolic and neural
+  constraints. DCCD reduces the semantic damage from hard constrained decoding
+  by drafting freely first, then constraining the final form.
+- **Relevance to Carnot:** `.146` proved the problem: a ROCE extractor with no
+  standard artifact contract cannot safely gate downstream work. The next
+  milestone should turn ROCE into a validator-tree compiler with zero
+  false-accept tests and explicit deterministic bounds before any live SOTA
+  repair claims.
+- **Concrete experiment hook:** Build a ROCE/ConstrainPrompt evaluation tree,
+  compile leaves to local validators, add a BEAVER-lite bound row, and then run
+  DCCD/llguidance repair only when false accepts remain zero.
+
+### Non-Autoregressive and Diffusion Constraint Paths
+- **Papers:** arXiv:2605.04291 "Leveraging Pretrained Language Models as Energy
+  Functions for Glauber Dynamics Text Diffusion"; arXiv:2505.23061 DINGO;
+  arXiv:2508.10111 "Constrained Decoding of Diffusion LLMs with Context-Free
+  Grammars."
+- **Sources:** https://arxiv.org/abs/2605.04291,
+  https://arxiv.org/abs/2505.23061, and https://arxiv.org/abs/2508.10111
+- **What:** Glauber dynamics can use pretrained causal/masked LMs as an energy
+  function for text diffusion, competitive with autoregressive baselines on
+  commonsense/planning tasks. DINGO and CFG-constrained diffusion decoding show
+  that strict formal constraints are no longer autoregressive-only.
+- **Relevance to Carnot:** This strengthens the Phase-3 bridge from
+  llama.cpp/GGUF structured generation to non-autoregressive energy-minimizing
+  generation. It also suggests that Carnot's Ising/Gibbs machinery can become a
+  sampler interface, not just a post-hoc verifier.
+- **Concrete experiment hook:** Keep this as an interface audit this milestone:
+  make constraint adapters expose enough automata/validator metadata to be
+  reusable by future diffusion/Glauber samplers.
+
+### EBT / ARM-as-EBM Citation Watch: Planning Is Becoming Energy Descent
+- **Papers:** arXiv:2507.02092 "Energy-Based Transformers are Scalable Learners
+  and Thinkers"; arXiv:2512.15605 "Autoregressive Language Models are Secretly
+  Energy-Based Models"; citing works arXiv:2512.17846 Planning as Descent,
+  arXiv:2603.23398 Graph Energy Matching, arXiv:2602.02991 False First Steps,
+  and arXiv:2604.00555 Ontology-Constrained Neural Reasoning.
+- **Sources:** https://arxiv.org/abs/2507.02092,
+  https://www.emergentmind.com/papers/2512.15605,
+  https://arxiv.org/abs/2512.17846, https://arxiv.org/abs/2603.23398,
+  https://arxiv.org/abs/2602.02991, and https://arxiv.org/abs/2604.00555.
+  Semantic Scholar citation lookup on 2026-05-11 returned Planning as Descent
+  among EBT citations and Ontology-Constrained Neural Reasoning, Graph Energy
+  Matching, and False First Steps among ARM-as-EBM citations before rate limit.
+- **What:** The citation trail is converging on latent trajectory optimization,
+  graph/ontology constraints, and diagnosis of initial planning bias. Graph
+  Energy Matching is especially relevant because it uses explicit energy to
+  switch between transport toward high-probability regions and local mixing.
+- **Relevance to Carnot:** Carnot should use these as Phase-3 acceptance
+  criteria: local repair must lower explicit energy on whole traces, retain
+  deterministic constraint authority, and report whether first-step bias is
+  being caught early enough.
+- **Concrete experiment hook:** Precondition extracted constraint graphs with a
+  ConsFormer/GEM-style refiner before Ising sampling and require a measurable
+  convergence-speed or solution-quality delta.
+
+### KAN and Ising Hardware Signals
+- **Papers:** arXiv:2602.06737 PWA/MILP verification for KANs; arXiv:2604.03345
+  hardware-oriented KAN complexity; arXiv:2602.07518 physical analog KANs;
+  arXiv:2602.23455 BiKA; arXiv:2602.15985 FPGA decomposition for large-scale
+  Ising machines.
+- **Sources:** https://arxiv.org/abs/2602.06737,
+  https://arxiv.org/abs/2604.03345, https://arxiv.org/abs/2602.07518,
+  https://arxiv.org/abs/2602.23455, and https://arxiv.org/abs/2602.15985
+- **What:** KAN verification and KAN hardware are moving from vague promise to
+  concrete abstractions, complexity metrics, analog primitives, and FPGA
+  prototypes. The Ising FPGA decomposition paper shows that host-device
+  decomposition latency can erase solver speedups unless co-designed.
+- **Relevance to Carnot:** `.145-.146` landed S2KAN and Rust evaluation, but
+  Carnot still needs no-synthesis resource accounting tied to actual extracted
+  constraint graphs. KV260 board claims remain out of scope without Vivado and a
+  bitfile transcript.
+- **Concrete experiment hook:** Run no-synthesis LUT/BOP/NABS/decomposition
+  accounting for ROCE/S2KAN constraint graphs and emit an explicit
+  `kv260_no_synthesis_claim=true` field.
+
+### Public Platform Status: Extropic, Kona, and GitHub Repos
+- **Sources:** https://extropic.ai/software, https://extropic.ai/hardware,
+  https://extropic.ai/writing/thermodynamic-computing-from-zero-to-one,
+  https://logicalintelligence.com/blog/energy-based-models-for-reasoning,
+  https://logicalintelligence.com/kona-ebms-energy-based-models,
+  https://github.com/alexiglad/EBT, https://github.com/guidance-ai/llguidance,
+  https://github.com/guidance-ai/llgtrt, https://github.com/guoqingbao/vllm.rs,
+  https://github.com/eth-sri/constrained-diffusion, and
+  https://github.com/m1balcerak/EnergyMatching
+- **What:** Extropic's public line remains THRML/JAX simulation plus XTR-0/Z1
+  hardware roadmap; no unauthenticated Z1/XTR-0 execution claim is available.
+  Logical Intelligence's public Kona materials emphasize non-autoregressive
+  continuous latent reasoning, partial-trace energy, and constraint enforcement.
+  GitHub signals worth tracking are EBT's Apache-2.0 code, llguidance/llgtrt
+  structured-output runtimes, vllm.rs guided decoding over GGUFs, constrained
+  diffusion, and Energy Matching.
+- **Relevance to Carnot:** These reinforce Carnot's local-first, evidence-first
+  claim boundary. For `.147`, use them to shape architecture and interfaces, but
+  do not claim hardware execution or Kona-equivalent performance.
+
 ## 2026-05-11 Post-.144 Planning Sweep (Milestone 2026.05.145)
 
 This sweep was run after milestone `.144` completed. The literature search revealed advances in Verification Learning, Energy Matching, and symbolic KANs.
