@@ -3585,3 +3585,15 @@ The workflow shall parse the result JSONs and write an aggregate retrospective t
 **Then** it writes all required REQ-REPORT-1838 fields to `results/experiment_1838_retro.json`
 **And** details `honest_verdict`.
 
+### REQ-REPORT-1850: Milestone .143 Retrospective
+
+The Exp 1850 retrospective workflow shall read the authoritative artifacts from Exp 1839 through Exp 1849.
+The workflow shall parse the result JSONs and write an aggregate retrospective to `results/experiment_1850_retro.json` detailing the `honest_verdict`.
+
+### SCENARIO-REPORT-1850: Exp 1850 Generates Milestone .143 Retrospective
+
+**Given** the completion of experiments (1839-1849)
+**When** the Exp 1850 workflow runs
+**Then** it writes all required REQ-REPORT-1850 fields to `results/experiment_1850_retro.json`
+**And** details `honest_verdict` and metrics from the results.
+
