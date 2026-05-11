@@ -1856,3 +1856,4 @@ Ripgrep is |
 | 2026-05-11 19:10 UTC | Exp 1857: S2KAN primitives - implement differentia | OK | 81 passed, 1 warning in 5.26s |
 | 2026-05-11 19:22 UTC | Exp 1858: GloroKAN integration - forward pass Lips | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: Warning: 256-color  |
 | 2026-05-11 19:36 UTC | Exp 1858: GloroKAN integration - forward pass Lips | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: -color support is r |
+| 2026-05-11 19:42 UTC | Exp 1858: GloroKAN integration - forward pass Lips | OK | cache hit: 84 passed, 1 warning in 5.87s |
