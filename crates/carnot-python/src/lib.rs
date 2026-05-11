@@ -10,6 +10,7 @@ use pyo3::prelude::*;
 
 mod kv260;
 mod pipeline;
+mod verification_learning;
 
 use carnot_boltzmann::{BoltzmannConfig, BoltzmannModel};
 use carnot_core::{EnergyFunction, Float};
@@ -358,6 +359,9 @@ fn _rust(m: &Bound<'_, PyModule>) -> PyResult<()> {
 
     // Pipeline (verification)
     pipeline::register_pipeline_module(m)?;
+    
+    // Verification learning
+    verification_learning::register_verification_learning_module(m)?;
 
     // KV260 Potts hardware sampler
     kv260::register_kv260_module(m)?;

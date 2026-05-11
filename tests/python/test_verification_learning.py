@@ -93,3 +93,48 @@ def test_run_experiment_empty_data(tmp_path):
     result_file = tmp_path / "experiment_1854_vl_proxy.json"
     result = proxy.run_experiment_and_save([], str(result_file))
     assert result["honest_verdict"] == "vl_proxy_empty_data"
+
+def test_rust_equivalence_1861(tmp_path):
+    import json
+    from carnot._rust import RustVerificationLearningProxy
+    
+    constraints = [
+        {"type": "must_contain", "value": "hello"},
+        {"type": "must_not_contain", "value": "bad"},
+        {"type": "unknown_type", "value": "whatever"}
+    ]
+    py_proxy = VerificationLearningProxy(constraints=constraints)
+    rs_proxy = RustVerificationLearningProxy(constraints=constraints)
+    
+    unlabelled_data = [
+        {"id": "1", "text": "hello world"},
+        {"id": "2", "text": "hello bad world"},
+        {"id": "3", "text": "good world"},
+    ]
+    
+    # Test scores equivalence
+    py_scores = py_proxy.score_constraint_satisfaction(unlabelled_data)
+    rs_scores = rs_proxy.score_constraint_satisfaction(unlabelled_data)
+    
+    assert py_scores.keys() == rs_scores.keys()
+    for k in py_scores:
+        assert abs(py_scores[k] - rs_scores[k]) < 1e-6
+        
+    # Test loss equivalence
+    py_loss = py_proxy.compute_proxy_loss(unlabelled_data)
+    rs_loss = rs_proxy.compute_proxy_loss(unlabelled_data)
+    
+    assert abs(py_loss - rs_loss) < 1e-6
+    
+    # Save the output to results/experiment_1861_equivalence.json
+    result = {
+        "experiment_id": "1861",
+        "honest_verdict": "equivalence_verified",
+        "py_loss": py_loss,
+        "rs_loss": rs_loss,
+        "scores_match": True
+    }
+    output_path = Path("/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1861_equivalence.json")
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(output_path, "w") as f:
+        json.dump(result, f, indent=2)
