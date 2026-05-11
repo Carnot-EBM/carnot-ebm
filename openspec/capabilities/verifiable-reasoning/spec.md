@@ -18887,3 +18887,12 @@ Implement the continuous latent constraint optimizer (LatentOptimizer) using Lan
 **Given** a continuous latent space and constraints evaluated by an HRM verifier,
 **When** the LatentOptimizer applies Langevin dynamics,
 **Then** the resulting latents minimize the HRM evaluation score (energy) over max steps.
+
+### REQ-EORM-1811: Track Langevin Energy Gradients for Early Exit
+**Requirement:** The system MUST run Experiment 1811 to track Langevin energy gradients across EORM transformer layers and identify early-exit thresholds.
+- Measure `optimal_exit_layer` distribution across a synthetic dataset.
+- Output metrics to `results/experiment_1811_early_exit.json`.
+
+### SCENARIO-EORM-1811: Identify Early Exit Layers
+**When** Experiment 1811 is executed,
+**Then** it writes a JSON artifact containing `optimal_exit_layer_distribution` and `mean_optimal_layer`.
