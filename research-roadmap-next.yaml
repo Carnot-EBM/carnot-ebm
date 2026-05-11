@@ -1,0 +1,163 @@
+milestone: 2026.05.143
+milestone_title: "Phase-20: Verifiable KAN Abstractions, Epsilon-Constraint Self-Learning, and SOTA Structured Output Scale"
+milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
+tasks:
+  - id: exp1839-archive-activate
+    title: 'Exp 1839: Archive .142 and Activate .143'
+    max_turns: 20
+    prompt: |
+      CONTEXT: Milestone transition on {date}.
+      EXISTING CODE TO READ FIRST: `ops/status.md`
+      TASK: Archive .142 logs and activate .143 environment.
+      CONCRETE STEPS:
+      1. Update milestone IDs in ops status.
+      2. Write {project_root}/results/experiment_1839_activation.json
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1840-pwa-kan-abstraction
+    title: 'Exp 1840: Piecewise Affine (PWA) KAN Abstraction'
+    agent_type: codex
+    model: gpt-5.5
+    prompt: |
+      CONTEXT: KAN verification requires piecewise linear approximations (arXiv:2602.06737).
+      EXISTING CODE TO READ FIRST: `python/carnot/models/kan_energy.py`
+      TASK: Implement PWA abstractions for nonlinear KAN units.
+      CONCRETE STEPS:
+      1. Create `python/carnot/verify/pwa_kan.py`.
+      2. Implement spline to PWA conversion with bounds.
+      3. Write {project_root}/results/experiment_1840_pwa_kan.json
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1841-milp-kan-verifier
+    title: 'Exp 1841: gated on Exp 1840 PWA Abstraction: MILP KAN Verifier'
+    agent_type: codex
+    model: gpt-5.5
+    gated_on:
+      - upstream: exp1840-pwa-kan-abstraction
+        artifact_field: status
+        op: '=='
+        value: 'success'
+    prompt: |
+      CONTEXT: Encoding PWA abstractions into Mixed Integer Linear Programming for KAN safety constraints.
+      EXISTING CODE TO READ FIRST: `python/carnot/verify/pwa_kan.py`
+      TASK: Implement the MILP safety verifier.
+      CONCRETE STEPS:
+      1. Create `python/carnot/verify/kan_milp.py` using PySAT/Z3.
+      2. Write {project_root}/results/experiment_1841_kan_milp.json
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1842-kan-hardware-complexity
+    title: 'Exp 1842: KAN Hardware Inference Complexity Accounting'
+    max_turns: 30
+    prompt: |
+      CONTEXT: Hardware-oriented metrics (RM, BOP, NABS) for KANs (arXiv:2604.03345). No board claims permitted.
+      EXISTING CODE TO READ FIRST: `python/carnot/models/kan_energy.py`
+      TASK: Add complexity accounting metrics to KAN components.
+      CONCRETE STEPS:
+      1. Create `python/carnot/verify/kan_hardware_metrics.py`.
+      2. Write {project_root}/results/experiment_1842_kan_complexity.json
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1843-gradient-guided-epsilon-ocl
+    title: 'Exp 1843: Gradient-Guided Epsilon Constraint for OCL'
+    prompt: |
+      CONTEXT: Online Continual Learning with strict epsilon constraints (NeurIPS 2026).
+      EXISTING CODE TO READ FIRST: `python/carnot/pipeline/cocom.py`
+      TASK: Implement gradient-guided epsilon constraint tracking for FR-11 non-forgetting loop.
+      CONCRETE STEPS:
+      1. Extend continuous learning loop with hard epsilon updates.
+      2. Write {project_root}/results/experiment_1843_epsilon_ocl.json
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1844-roce-constraint-elicitation
+    title: 'Exp 1844: Reasoning-Time Open Constraint Elicitation (ROCE)'
+    prompt: |
+      CONTEXT: Extract verifiable constraints dynamically from language (arXiv:2605.01124).
+      EXISTING CODE TO READ FIRST: `python/carnot/verify/`
+      TASK: Build ROCE abstraction for dynamic constraint extraction.
+      CONCRETE STEPS:
+      1. Create `python/carnot/pipeline/roce.py`.
+      2. Write {project_root}/results/experiment_1844_roce.json
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1845-hiled-potts-offload
+    title: 'Exp 1845: Hardware-In-The-Loop Energy Decoding (HILED)'
+    model: opus
+    max_turns: 100
+    prompt: |
+      CONTEXT: Hardware-in-the-loop decoding (arXiv:2604.22105). Simulator target for Potts integration.
+      EXISTING CODE TO READ FIRST: `hardware/`
+      TASK: Prototype HILED interface for KV260 execution pipeline (sim only).
+      CONCRETE STEPS:
+      1. Create simulated HILED boundary inside `python/carnot/samplers/hiled.py`.
+      2. Write {project_root}/results/experiment_1845_hiled.json
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1846-qwen-roce-scale
+    title: 'Exp 1846: gated on Exp 1844 ROCE logic: Dual-GPU SOTA ROCE on Qwen3.6'
+    gated_on:
+      - upstream: exp1844-roce-constraint-elicitation
+        artifact_field: status
+        op: '=='
+        value: 'success'
+    prompt: |
+      CONTEXT: Evaluate dynamic constraints on flagship MoE. Scheduled on {date}.
+      EXISTING CODE TO READ FIRST: `python/carnot/pipeline/roce.py`
+      TASK: Run E2E pipeline via unsloth/Qwen3.6-35B-A3B-GGUF with ROCE limits.
+      MODEL_SPECS: ["unsloth/Qwen3.6-35B-A3B-GGUF"]
+      CONCRETE STEPS:
+      1. Benchmark ROCE latency and validity.
+      2. Write {project_root}/results/experiment_1846_qwen_roce.json
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1847-gemma31-roce-scale
+    title: 'Exp 1847: gated on Exp 1844 ROCE logic: Dual-GPU SOTA ROCE on Gemma4-31B'
+    gated_on:
+      - upstream: exp1844-roce-constraint-elicitation
+        artifact_field: status
+        op: '=='
+        value: 'success'
+    prompt: |
+      CONTEXT: Evaluate dynamic constraints on flagship Dense. Scheduled on {date}.
+      EXISTING CODE TO READ FIRST: `python/carnot/pipeline/roce.py`
+      TASK: Run E2E pipeline via unsloth/gemma-4-31B-it-GGUF with ROCE.
+      MODEL_SPECS: ["unsloth/gemma-4-31B-it-GGUF"]
+      CONCRETE STEPS:
+      1. Benchmark ROCE evaluation trace.
+      2. Write {project_root}/results/experiment_1847_gemma31_roce.json
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1848-gemma26-epsilon-learning
+    title: 'Exp 1848: Continuous Self-Learning loop with Epsilon-Constraint on Gemma4-26B'
+    prompt: |
+      CONTEXT: Validating zero-forgetting FR-11 constraint learning loops via Epsilon constraint.
+      EXISTING CODE TO READ FIRST: `python/carnot/pipeline/cocom.py`
+      TASK: Run self-learning feedback on unsloth/gemma-4-26B-A4B-it-GGUF.
+      MODEL_SPECS: ["unsloth/gemma-4-26B-A4B-it-GGUF"]
+      CONCRETE STEPS:
+      1. Enforce strict utility checks and non-forgetting checks.
+      2. Write {project_root}/results/experiment_1848_gemma26_epsilon.json
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1849-cocom-memory-pruning
+    title: 'Exp 1849: Semantic Pruning in Continual Energy-Based Models'
+    prompt: |
+      CONTEXT: Pruning redundant semantic features to prevent replay saturation (arXiv:2604.19882).
+      EXISTING CODE TO READ FIRST: `python/carnot/pipeline/cocom.py`
+      TASK: Add semantic memory pruning mechanism.
+      CONCRETE STEPS:
+      1. Implement similarity thresholding in replay buffer.
+      2. Write {project_root}/results/experiment_1849_cocom_pruning.json
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1850-retro
+    title: 'Exp 1850: Milestone 2026.05.143 Retrospective'
+    max_turns: 20
+    prompt: |
+      CONTEXT: Close out milestone .143 on {date}.
+      EXISTING CODE TO READ FIRST: `ops/status.md`
+      TASK: Operational retrospective.
+      CONCRETE STEPS:
+      1. Analyze logs from experiments 1839-1849.
+      2. Write {project_root}/results/experiment_1850_retro.json
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
