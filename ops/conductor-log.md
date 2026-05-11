@@ -1798,3 +1798,5 @@ Ripgrep is |
 | 2026-05-11 14:12 UTC | Exp 1826: Implement Conductor Pre-Gate Fail-Fast b | OK | 81 passed, 1 warning in 4.91s |
 | 2026-05-11 14:14 UTC | Exp 1827: Implement EBRM Latent Reasoning Trajecto | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-11 14:16 UTC | Exp 1827: Implement EBRM Latent Reasoning Trajecto | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-11 14:18 UTC | Exp 1827: Implement EBRM Latent Reasoning Trajecto | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-11 14:20 UTC | Exp 1828: gated on Exp 1827 honest_verdict in succ | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1827-ebrm-latent-trajectory) |
