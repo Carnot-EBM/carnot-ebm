@@ -1795,3 +1795,4 @@ Ripgrep is |
 | 2026-05-11 13:57 UTC | Plan milestone 2026.05.142 | OK | 14 tasks proposed |
 | 2026-05-11 13:59 UTC | Milestone 2026.05.142 activated | OK | 14 tasks queued |
 | 2026-05-11 14:05 UTC | Exp 1825: Archive .141 and Activate .142 | OK | 81 passed, 1 warning in 4.79s |
+| 2026-05-11 14:12 UTC | Exp 1826: Implement Conductor Pre-Gate Fail-Fast b | OK | 81 passed, 1 warning in 4.91s |
