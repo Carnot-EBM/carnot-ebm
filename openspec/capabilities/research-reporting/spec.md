@@ -3542,3 +3542,9 @@ The Exp 1758 milestone .135 retrospective workflow shall parse the results of Ph
 **Then** it writes all required REQ-REPORT-1758 fields to `results/experiment_1758_retro.json`
 **And** details `honest_verdict` and `new_gaps`.
 
+### REQ-REPORT-1770: Milestone Phase 4 Operations Retrospective
+
+The Exp 1770 retrospective workflow shall read the authoritative artifacts from Exp 1759 through Exp 1769.
+The workflow shall parse the result JSONs and write an aggregate retrospective to `results/experiment_1770_retro.json` detailing the `honest_verdict`.
+
+
