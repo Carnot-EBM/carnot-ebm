@@ -1720,3 +1720,5 @@ Ripgrep is |
 - Do NOT perform a self-review revision  |
 | 2026-05-11 10:10 UTC | Exp 1803: Piecewise affine (PWA) abstraction of KA | FAIL | Gemini CLI error: ith the reconciler.
 - Do NOT perform a self-review revision  |
+| 2026-05-11 10:12 UTC | Exp 1804: MILP encoding of PWA abstractions | FAIL | Gemini CLI error: ith the reconciler.
+- Do NOT perform a self-review revision  |
