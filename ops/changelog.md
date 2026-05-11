@@ -5454,3 +5454,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-11: Exp 1773: Multi-modal constraint benchmark evaluation (✅ Complete) — honest_verdict=completed_successfully; results/experiment_1773_latent_benchmark.json
 - 2026-05-11: Exp 1774: Differentiable Constraint Memory Bank (⚠️ Research Finding) — honest_verdict=pass; results/experiment_1774_diff_memory.json
 - 2026-05-11: Exp 1777: Self-learning pipeline scale-up on LTLZinc (✅ Complete) — honest_verdict=complete: continual_learning_scaleup_finished; results/experiment_1777_ltlzinc_scaleup.json
+- 2026-05-11: Exp 1781: Hardware vs Software Latency and Energy convergence benchmark (✅ Complete) — honest_verdict=benchmark_completed; results/experiment_1781_hiled_benchmark.json
