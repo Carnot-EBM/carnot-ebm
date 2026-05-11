@@ -147,6 +147,7 @@
 | 2026.05.139 | Operational Efficiency | 22 experiments | GPU utilized efficiently; synthesis tasks identified as primary bottleneck |
 | 2026.05.140 | Operational Efficiency | 19 experiments | 45.8 min wall time; GPUs correctly idle; 0 compute-bound tasks; doomed-rerun block effective |
 | 2026.05.141 | Operational Efficiency | 17 experiments | 46 min wall time; GPUs utilized efficiently on compute tasks; synthesis-only bottleneck remains |
+| 2026.05.142 | Operational Efficiency | 1825-1835 | 62.1 min wall time; GPUs correctly idle; synthesis-only bottleneck remains |
 
 ## Breakthrough Results
 
