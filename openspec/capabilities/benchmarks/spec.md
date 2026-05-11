@@ -577,4 +577,25 @@ It MUST record repair success rate.
 
 **Spec traces:** REQ-E2E-1836
 
+### REQ-E2E-1837: SOTA LLM Pipeline with EBRM and Zero-Violation loops Gemma4-26B-A4B-it
+
+Carnot MUST provide an E2E benchmark script to evaluate the SOTA LLM pipeline integrated with EBRM and Zero-Violation loops.
+The implementation MUST use `unsloth/gemma-4-26B-A4B-it-GGUF` in MODEL_SPECS.
+Results MUST be written to `results/experiment_1837_gemma26.json`.
+It MUST record repair success rate.
+
+**Acceptance criteria:**
+- Script `scripts/experiment_1837_gemma26.py` exists.
+- Records repair success rate.
+- Artifact is written to `results/experiment_1837_gemma26.json`.
+
+### SCENARIO-E2E-1837: SOTA LLM Pipeline Gemma4-26B MoE Evaluation Execution
+
+**Given** the complete SOTA LLM pipeline integrated with EBRM and Zero-Violation loops
+**When** the benchmark script runs using `unsloth/gemma-4-26B-A4B-it-GGUF`
+**Then** it performs the verify-repair evaluation
+**And** produces a valid `results/experiment_1837_gemma26.json` artifact containing repair success rate.
+
+**Spec traces:** REQ-E2E-1837
+
 
