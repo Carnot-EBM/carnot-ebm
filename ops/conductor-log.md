@@ -1724,3 +1724,5 @@ Ripgrep is |
 - Do NOT perform a self-review revision  |
 | 2026-05-11 10:14 UTC | Exp 1804: MILP encoding of PWA abstractions | FAIL | Gemini CLI error: ith the reconciler.
 - Do NOT perform a self-review revision  |
+| 2026-05-11 10:16 UTC | Exp 1804: MILP encoding of PWA abstractions | FAIL | Gemini CLI error: ith the reconciler.
+- Do NOT perform a self-review revision  |
