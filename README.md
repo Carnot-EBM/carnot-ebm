@@ -18,7 +18,7 @@ call. No fine-tuning. No access to model weights.
 Rust + Python/JAX, Apache 2.0, local editable install via `pip install -e ".[dev]"`.
 The public PyPI package remains a Phase-1 ship blocker as of Exp 1582.
 
-Current public research record: **2,142 experiment records tracked through Exp
+Current public research record: **2,153 experiment records tracked through Exp
 1784**. `research-complete.yaml` currently archives **1,872** task records
 across **148** artifact-backed completed milestone records through
 2026.05.136; checked-in result artifacts and `ops/changelog.md` extend through
@@ -182,7 +182,7 @@ semantic correctness **1.0** with **0** false accepts on mandated Qwen3.6-35B
 GGUF rows, FR-11 v15 reversed the collapsed v14 retention, the Phase-1 ship
 ledger recorded **9** audit-time blockers, and hardware scope moved to simulator-only
 Z1 drift correction plus blocked Tenstorrent/PolarFire preflights with no
-hardware claim. The current test collection reports **23,946** items; this is a
+hardware claim. The current test collection reports **24,000** items; this is a
 collection count, not a full-suite pass claim.
 
 ## Install and run
@@ -476,10 +476,10 @@ experiment artifact under `results/`.
 | Milestone .124 closeout (DualGPURunner Profiling) | Both RTX 3090s completely idle at 0% utilization. Estimated 40% time savings recoverable via DualGPURunner parallelization and addressing bottlenecks | Exp 1626 |
 | Probability Calibration Verifier | Opt-in verifier scores explicit probability claims against simple reference-class evidence; returns structured `VerdictRecord` | Exp 1414 |
 | KANELÉ Validation & Routing | KANELÉ RTL linting, latency accounting vs Ising baseline; adaptive energy reconfiguration and EBM vs LLM Task Allocation Router | Exps 1622-1625 |
-| Milestone .138 closeout | Analyzed 28 experiments in 57.5 mins. GPU optimized, synthesis identified as main bottleneck | Exp 1813 |
+| Milestone .138 closeout | Analyzed 28 experiments in 57.5 mins. GPU optimized, synthesis identified as main bottleneck | Exp 1824 |
 | Pi-net Projection & ConsFormer | Prototyped Pi-net style differentiable projection layer for continuous latents and a ConsFormer-style refiner | Exps 1633-1635 |
 | SMGI & Energy-Guided Decoding | Integrated SMGI certified update logic and implemented EGD using mandated SOTA GGUFs | Exps 1631/1636 |
-| Current Python test collection | **23,946** Python tests collected; collection-only snapshot, not a full-suite pass claim | 2026-05-10 collection run |
+| Current Python test collection | **24,000** Python tests collected; collection-only snapshot, not a full-suite pass claim | 2026-05-10 collection run |
 | Local Claude/Codex usage snapshot | Codex reads the newest local `token_count` event; Claude aggregates local token usage and reads only subscription/tier metadata from credentials; free-form quota prose is ignored instead of guessed; focused regression tests pass | 2026-05-04 changelog |
 
 Deeper analysis of these — including everything that **didn't** work and
@@ -521,7 +521,7 @@ claim we publish.
 ## Where to go next
 
 - **[Technical report](docs/technical-report.md)** — the full research arc
-  through Exp 1813 across 154 Archived completed milestone records plus the
+  through Exp 1824 across 155 Archived completed milestone records plus the
   latest .121 result artifacts, with a
   plain-English timeline of what we tried, what failed, what stuck.
 - **[Roadmap](docs/roadmap.md)** — current milestone, upcoming milestones,
@@ -732,7 +732,7 @@ See the [technical report](docs/technical-report.md) for the full research recor
 
 ## 14 Principles Learned
 
-Hard-won lessons from the activation-based phase of a research program that now spans 2,142 tracked experiment records through Exp 1813, 154 Archived completed milestone records, and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
+Hard-won lessons from the activation-based phase of a research program that now spans 2,153 tracked experiment records through Exp 1824, 155 Archived completed milestone records, and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
 
 ### What works
 1. **The model's own logprobs are the best energy.** No external EBM needed for rejection sampling — the LLM's own confidence is already an energy function. Simple, practical, +10%.
