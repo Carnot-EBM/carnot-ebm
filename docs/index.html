@@ -307,7 +307,7 @@
       <div class="r-card">
         <span class="r-tag">Latest closeout</span>
         <h3 class="r-title">SOTA gap unresolved; speedup not proven</h3>
-        <p class="r-desc">Milestone .148 filed the retro with 1 non-retro task complete, 2 blocked artifacts, 6 retired gate skips, and 4 unexpected missing-artifact failures.</p>
+        <p class="r-desc">Milestone .148 filed the retro with 1 non-retro task complete, 2 blocked artifacts, 6 retired gate skips, and 4 unexpected missing-artifact failures; its operational retro measured 112.1 minutes across 10 experiments.</p>
         <div class="r-stats"><span class="r-before">SOTA cache/runtime gap unresolved; 11% speedup target not proven</span> <span class="r-after">Exp 1903</span></div>
       </div>
     </div>
@@ -662,7 +662,10 @@
           Gemma4-31B GGUFs are available. The latest .148 result layer keeps
           that SOTA cache/runtime gap open, retires downstream gate-skipped
           scopes, and records that the .147 11% compute-dedupe speedup target
-          is not proven yet.
+          is not proven yet. The .148 operational retro measured 112.1 minutes
+          across 10 experiments with one compute-bound task; Exp 1890 took
+          41.3 minutes, Exp 1903 took 39.5 minutes, and compute-bound GPU idle
+          was not flagged.
         </p>
       </div>
       <div class="bento-card span-2">
@@ -1556,6 +1559,12 @@
         <h3 class="r-title">1 complete; 2 blocked; 6 retired; 4 failed</h3>
         <div class="r-meter"><div class="r-bar" style="width: 7.69%; background: #f59e0b;"></div></div>
         <div class="r-stats"><span class="r-before">SOTA gap unresolved; expected speedup not proven</span> <span class="r-after">Exp 1903</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Milestone .148 &mdash; operational retro</span>
+        <h3 class="r-title">112.1 minutes; 10 experiments; 1 compute-bound</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 10%; background: #f59e0b;"></div></div>
+        <div class="r-stats"><span class="r-before">Exp 1890 41.3 min; Exp 1903 39.5 min; GPU idle not flagged</span> <span class="r-after">operational_retro_2026_05_148</span></div>
       </div>
       <div class="r-card">
         <span class="r-tag">ROCE &mdash; validator tree compiler</span>

@@ -192,7 +192,11 @@ full-suite pass claim. Milestone .148 then filed the activation/retro layer:
 **1** non-retro task completed, **2** blocked artifacts were written, **6**
 gate-skipped scopes were retired, and **4** unexpected missing-artifact failures
 remained. The SOTA cache/runtime gap is still unresolved, and the **11%**
-same-title compute-dedupe speedup target from .147 is not yet proven.
+same-title compute-dedupe speedup target from .147 is not yet proven. The .148
+operational retrospective analyzed **112.1** minutes across **10** experiments
+with **1** compute-bound task; Exp 1890 was the slowest compute-bound path at
+**41.3** minutes, Exp 1903 was the slowest synthesis-only path at **39.5**
+minutes, and GPU idle was not flagged on the compute-bound task.
 
 ## Install and run
 
@@ -493,6 +497,7 @@ experiment artifact under `results/`.
 | Live SOTA ROCE validator evaluation | **Blocked** before inference because mandated `unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF` were unavailable; no headline accuracy claimed | Exp 1880 |
 | Milestone .147 closeout | **5/14** tasks completed, **9** blocked or missing artifacts; prompt-to-validator work is partial and telemetry, FR-11, and hardware-accounting gates are not ready | Exp 1889 |
 | Milestone .148 closeout | **1** non-retro task completed, **2** blocked artifacts written, **6** gate-skipped scopes retired, and **4** unexpected missing-artifact failures; SOTA cache/runtime gap unresolved and .147's **11%** speedup target not proven | Exp 1903 |
+| Milestone .148 operational retrospective | **112.1 min** across **10** experiments with **1** compute-bound task; Exp 1890 took **41.3 min**, Exp 1903 took **39.5 min**, and no compute-bound GPU-idle flag was supported | operational_retro_2026_05_148 |
 | Pi-net Projection & ConsFormer | Prototyped Pi-net style differentiable projection layer for continuous latents and a ConsFormer-style refiner | Exps 1633-1635 |
 | SMGI & Energy-Guided Decoding | Integrated SMGI certified update logic and implemented EGD using mandated SOTA GGUFs | Exps 1631/1636 |
 | Current Python test collection | **24,251** Python tests collected in the latest broad attempt; collection-only snapshot, not a full-suite pass claim | Exp 1880, 2026-05-12 |

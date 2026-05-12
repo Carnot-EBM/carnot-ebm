@@ -2111,3 +2111,4 @@ IMPORTANT:
 - Do NOT push
 - CalVer milestones: increment  |
 | 2026-05-12 11:02 UTC | Exp 1903: Milestone .148 Retrospective | OK | 81 passed, 1 warning in 4.77s |
+| 2026-05-12 11:47 UTC | Plan next milestone | FAIL | Codex CLI error: Wall-clock+idle timeout after 1363s (300s silence). Last out |
