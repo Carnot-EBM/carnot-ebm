@@ -194,3 +194,21 @@ Ising sweep are each run for 200 steps from the same random initial state
 **And** the benchmark artifact records steps/second for each sampler
 **And** the surrogate skip rate (fraction of steps where full energy was bypassed)
 is recorded and is strictly positive (> 0) when `skip_threshold` < 1.0.
+
+### REQ-SAMPLE-1960: Flow Sampling Density Estimator Prototype
+
+Carnot MUST provide a Flow Sampling density estimator prototype inside `python/carnot/samplers/flow_sampling.py` that allows learning to sample from unnormalized densities via conditional denoising processes.
+
+Sub-requirements:
+- REQ-SAMPLE-1960-1: The sampler SHALL implement conditional denoising forward and reverse steps.
+- REQ-SAMPLE-1960-2: A benchmark script `scripts/experiment_1960_flow_sampling.py` SHALL define an unnormalized continuous target density using existing EBMs (e.g. Gibbs or Ising).
+- REQ-SAMPLE-1960-3: The script SHALL measure the KL divergence against exact block Gibbs baselines.
+- REQ-SAMPLE-1960-4: The script SHALL write the results to `results/experiment_1960_flow_sampling_unnormalized.json`.
+
+### SCENARIO-SAMPLE-1960: Flow Sampling Prototype Execution
+
+**Given** the Exp 1960 Flow Sampling script
+**When** it is executed
+**Then** it successfully runs the conditional denoising forward and reverse steps
+**And** it writes a valid JSON artifact with the KL divergence metric.
+
