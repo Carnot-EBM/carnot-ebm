@@ -2254,3 +2254,4 @@ IMPORTANT:
 | 2026-05-12 21:30 UTC | Exp 1959: Tri-SOTA Constrained Eval | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1956-nco-negative-constraints.success ( |
 | 2026-05-12 21:32 UTC | Exp 1959: Tri-SOTA Constrained Eval | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1956-nco-negative-constraints.success ( |
 | 2026-05-12 21:34 UTC | Exp 1959: Tri-SOTA Constrained Eval | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1956-nco-negative-constraints.success ( |
+| 2026-05-12 21:43 UTC | Exp 1960: Flow Sampling Process | OK | 81 passed, 1 warning in 5.26s |
