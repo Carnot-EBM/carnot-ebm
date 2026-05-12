@@ -1,0 +1,51 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.150",
+  "generated_at": "2026-05-12T16:45:30Z",
+  "retro_type": "operational_retro",
+  "status": "success",
+  "summary": "Milestone 2026.05.150 completed 21 experiments in 63.7 minutes wall time. All 21 tasks were synthesis-only, meaning there were 0 compute-bound experiments. The GPUs correctly remained at 0% utilization throughout, which is expected behavior for synthesis tasks.",
+  "total_wall_time_minutes": 63.7,
+  "experiments_completed": 21,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "-0400 [conductor] Exp 1927: Hard CSP and Neural Solver Reality Check",
+      "duration_minutes": 19.1,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1931: Milestone .150 Retrospective",
+      "duration_minutes": 7.4,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1925: Energy-Based Transformer Gradient Minimization Loop",
+      "duration_minutes": 5.3,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1929: p-bit/p-dit Ising Sampler Accounting v3",
+      "duration_minutes": 5.0,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1926: S2KAN Symbolic Fidelity Constraint Integration",
+      "duration_minutes": 4.9,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "bottlenecks_identified": [
+    "Synthesis tasks (e.g., Exp 1927) took up to 19 minutes and are the primary bottleneck."
+  ],
+  "improvements_suggested": [
+    "Optimize tooling to speed up the code and JSON writing process for synthesis tasks."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Investigate the specific bottlenecks in the synthesis pipeline for Exp 1927.",
+    "Implement tooling changes to speed up the synthesis pipeline."
+  ],
+  "estimated_time_savings_pct": 30,
+  "meta_reflection": "There were 0 compute-bound tasks. Which compute-bound experiments took the longest, and why? No data available this milestone. Was GPU utilization efficient on the compute-bound tasks? No data available this milestone. Did any compute-bound task with 2+ models in parallel fail to engage DualGPURunner? No data available this milestone."
+}
