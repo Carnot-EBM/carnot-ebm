@@ -625,3 +625,16 @@ The system SHALL provide an EqM calibration implementation in `python/carnot/inf
 | REQ-INFER-SOTA-009 | Implemented | 7 Python |
 | REQ-INFER-SOTA-010 | Implemented (`python/carnot/reporting/live_sota_balanced_telemetry_v2.py`) | Implemented (`tests/python/test_experiment_1480_live_sota_balanced_telemetry_v2.py`) |
 | REQ-INFER-SOTA-011 | Proposed | Proposed |
+
+### REQ-INFER-1957: TruncProof Token-Limited LL(1) Parsing
+
+The system SHALL provide a budget-aware LL(1) grammar parser in `python/carnot/inference/grammar.py` that implements a TruncProof-style budget-aware closure. The parser SHALL track a token budget. When the token budget nears exhaustion, the parser SHALL automatically force deterministic closing tokens to seal the structure to avoid structurally invalid JSON.
+The zero-false-accept parsing rate on truncated runs MUST be evaluated.
+The parser SHALL output an artifact `results/experiment_1957_truncproof_ll1_grammar.json`.
+
+### SCENARIO-INFER-1957-001: Budget-Aware Closure Seals Structure
+
+**Given** an LL(1) parser with a token budget of 5
+**When** 4 tokens have been consumed
+**Then** the parser forces the closing token
+**And** the resulting structure is valid
