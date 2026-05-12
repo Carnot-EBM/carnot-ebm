@@ -1,0 +1,294 @@
+milestone: "2026.05.150"
+milestone_title: "SOTA Cache Recovery, EBT Gradient Loops, and Epsilon Continual Learning"
+milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
+
+tasks:
+  - id: exp1918-sota-cache-recovery
+    milestone: "2026.05.150"
+    title: "Exp 1918: SOTA Cache Recovery and Preflight v4"
+    deliverable: "results/experiment_1918_sota_cache_recovery.json"
+    model: "opus"
+    max_turns: 100
+    prompt: |
+      CONTEXT: Today is {date}. Workspace is {project_root}. In milestone .149, SOTA caching failures blocked terminal artifact recovery.
+      EXISTING CODE TO READ FIRST: Read scripts/preflight.py and python/carnot/inference/model_loader.py.
+      TASK: Implement an unconditional recovery of terminal artifacts and harden the SOTA GGUF cache preflight.
+      CONCRETE STEPS:
+      1. Write a diagnostic script to identify caching failures.
+      2. Fix the cache preflight mechanism for unsloth/Qwen3.6-35B-A3B-GGUF.
+      3. Verify cache hits for unsloth/gemma-4-31B-it-GGUF.
+      4. Write the results artifact.
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1919-telemetry-adapter-v4
+    milestone: "2026.05.150"
+    title: "Exp 1919: Terminal Low-Cost Telemetry Adapter v4"
+    deliverable: "results/experiment_1919_telemetry_adapter_v4.json"
+    gated_on:
+      - upstream: exp1918-sota-cache-recovery
+        artifact_field: honest_verdict
+        op: "contains"
+        value: "complete"
+    prior_failures:
+      - exp1906-terminal-low-cost-telemetry-adapter-v3
+    prompt: |
+      CONTEXT: Today is {date}. Workspace is {project_root}. This is a carry-forward from .149.
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/telemetry.py
+      TASK: Implement Terminal Low-Cost Telemetry Adapter v4.
+      CONCRETE STEPS:
+      1. Add low-cost telemetry hooks to the verification pipeline.
+      2. Ensure latency overhead is under 1ms.
+      3. Validate with a fast synthetic run.
+      4. Write the results artifact.
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1920-token-spilled-energy
+    milestone: "2026.05.150"
+    title: "Exp 1920: Token-Level Spilled Energy Diagnostic"
+    deliverable: "results/experiment_1920_token_spilled_energy.json"
+    gated_on:
+      - upstream: exp1919-telemetry-adapter-v4
+        artifact_field: honest_verdict
+        op: "contains"
+        value: "complete"
+    prior_failures:
+      - exp1907-token-level-spilled-energy-diagnostic
+    prompt: |
+      CONTEXT: Today is {date}. Workspace is {project_root}. This is a carry-forward from .149.
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/spilled_energy.py
+      TASK: Implement Token-Level Spilled Energy Diagnostic.
+      CONCRETE STEPS:
+      1. Refine the spilled energy module to track energy at the token level.
+      2. Measure diagnostic capability on 100 benchmark queries.
+      3. Ensure MODEL_SPECS includes unsloth/Qwen3.6-35B-A3B-GGUF for evaluation.
+      4. Write the results artifact.
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1921-structure-guardrail
+    milestone: "2026.05.150"
+    title: "Exp 1921: Structure Snowballing Risk Guardrail"
+    deliverable: "results/experiment_1921_structure_guardrail.json"
+    gated_on:
+      - upstream: exp1918-sota-cache-recovery
+        artifact_field: honest_verdict
+        op: "contains"
+        value: "complete"
+    prior_failures:
+      - exp1908-structure-snowballing-risk-guardrail
+    prompt: |
+      CONTEXT: Today is {date}. Workspace is {project_root}. This is a carry-forward from .149.
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/verify_repair.py
+      TASK: Implement Structure Snowballing Risk Guardrail.
+      CONCRETE STEPS:
+      1. Add a constraint limit guardrail to prevent snowballing failures.
+      2. Test the guardrail under high constraint load.
+      3. Write the results artifact.
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1922-residual-drift-ledger
+    milestone: "2026.05.150"
+    title: "Exp 1922: Residual Drift Validator Ledger v4"
+    deliverable: "results/experiment_1922_residual_drift_ledger.json"
+    max_turns: 80
+    agent_type: "claude"
+    gated_on:
+      - upstream: exp1918-sota-cache-recovery
+        artifact_field: honest_verdict
+        op: "contains"
+        value: "complete"
+    prior_failures:
+      - exp1909-residual-drift-validator-ledger-v3
+    prompt: |
+      CONTEXT: Today is {date}. Workspace is {project_root}. This task failed in .149 due to an agent timeout.
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/tracker.py
+      TASK: Implement Residual Drift Validator Ledger v4.
+      CONCRETE STEPS:
+      1. Review the timeout failure mode of Exp 1909.
+      2. Implement an efficient residual drift tracking ledger.
+      3. Use mock metrics if live metrics take too long, to avoid timeouts.
+      4. Write the results artifact.
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1923-epsilon-continual-learning
+    milestone: "2026.05.150"
+    title: "Exp 1923: Epsilon Constraint Continual Learning"
+    deliverable: "results/experiment_1923_epsilon_continual_learning.json"
+    max_turns: 80
+    prompt: |
+      CONTEXT: Today is {date}. Workspace is {project_root}. We need to address catastrophic forgetting when adding constraints.
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/memory.py, python/carnot/pipeline/session_memory.py
+      TASK: Implement Gradient-Guided Epsilon Constraint Method for Online Continual Learning.
+      CONCRETE STEPS:
+      1. Review continuous_self_learning_task requirements.
+      2. Implement epsilon constraint logic to balance plasticity and stability in constraint retention.
+      3. Test the method across 3 simulated learning sessions.
+      4. Write the results artifact.
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1924-fr11-routing-audit
+    milestone: "2026.05.150"
+    title: "Exp 1924: Routing without Forgetting FR-11 Audit v4"
+    deliverable: "results/experiment_1924_fr11_routing_audit.json"
+    gated_on:
+      - upstream: exp1922-residual-drift-ledger
+        artifact_field: honest_verdict
+        op: "contains"
+        value: "complete"
+    prior_failures:
+      - exp1910-routing-without-forgetting-fr11-audit-v3
+    prompt: |
+      CONTEXT: Today is {date}. Workspace is {project_root}. This is a carry-forward from .149.
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/tracker.py
+      TASK: Conduct FR-11 Audit v4 for routing without forgetting.
+      CONCRETE STEPS:
+      1. Audit the FR-11 relay to ensure no catastrophic forgetting occurs.
+      2. Evaluate retention of 100 historical constraints.
+      3. Write the results artifact.
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1925-ebt-gradient-loop
+    milestone: "2026.05.150"
+    title: "Exp 1925: Energy-Based Transformer Gradient Minimization Loop"
+    deliverable: "results/experiment_1925_ebt_gradient_loop.json"
+    max_turns: 80
+    prompt: |
+      CONTEXT: Today is {date}. Workspace is {project_root}. Based on arXiv:2507.02092, EBTs provide scalable System 2 thinking.
+      EXISTING CODE TO READ FIRST: python/carnot/models/ebt.py
+      TASK: Implement the iterative gradient-based energy minimization loop for EBTs.
+      CONCRETE STEPS:
+      1. Implement a refinement pass algorithm that minimizes energy gradients.
+      2. Validate the loop on a synthetic reasoning task.
+      3. Measure out-of-distribution (OOD) generalization improvements.
+      4. Write the results artifact.
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1926-s2kan-symbolic
+    milestone: "2026.05.150"
+    title: "Exp 1926: S2KAN Symbolic Fidelity Constraint Integration"
+    deliverable: "results/experiment_1926_s2kan_symbolic.json"
+    max_turns: 50
+    prompt: |
+      CONTEXT: Today is {date}. Workspace is {project_root}. KANs need symbolic fidelity to avoid uninterpretable decompositions.
+      EXISTING CODE TO READ FIRST: python/carnot/models/kan.py
+      TASK: Integrate S2KAN symbolic primitives dictionary and learnable gates.
+      CONCRETE STEPS:
+      1. Add a dictionary of symbolic primitives (e.g., sin, exp).
+      2. Integrate learnable gates that enforce symbolic constraints.
+      3. Validate against a known functional form.
+      4. Write the results artifact.
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1927-hard-csp-neural
+    milestone: "2026.05.150"
+    title: "Exp 1927: Hard CSP and Neural Solver Reality Check"
+    deliverable: "results/experiment_1927_hard_csp_neural.json"
+    max_turns: 80
+    agent_type: "codex"
+    prior_failures:
+      - exp1913-hard-csp-neural-solver-reality-check
+    prompt: |
+      CONTEXT: Today is {date}. Workspace is {project_root}. This task failed in .149 due to a timeout. We are using codex with a higher max_turns.
+      EXISTING CODE TO READ FIRST: python/carnot/samplers/backend.py
+      TASK: Implement a reality check for neural solvers on hard CSPs.
+      CONCRETE STEPS:
+      1. Write a script to evaluate the neural solver on a 3-SAT or N-Queens hard CSP.
+      2. Ensure evaluation does not exceed the allotted time budget.
+      3. Record the true constraint satisfaction rate.
+      4. Write the results artifact.
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1928-thrml-parity
+    milestone: "2026.05.150"
+    title: "Exp 1928: Corrected THRML/Carnot Parity Methodology"
+    deliverable: "results/experiment_1928_thrml_parity.json"
+    max_turns: 50
+    prior_failures:
+      - exp1914-corrected-thrml-carnot-parity-methodology
+    prompt: |
+      CONTEXT: Today is {date}. Workspace is {project_root}. This task encountered a DOOMED_RERUN_BLOCK in .149 due to missing prior failures.
+      EXISTING CODE TO READ FIRST: python/carnot/samplers/parallel_ising.py
+      TASK: Fix the THRML vs Carnot simulator parity methodology.
+      CONCRETE STEPS:
+      1. Compare parallel_ising output directly to THRML.
+      2. Implement the parity methodology script.
+      3. Ensure statistical validation of parity.
+      4. Write the results artifact.
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1929-p-bit-ising-v3
+    milestone: "2026.05.150"
+    title: "Exp 1929: p-bit/p-dit Ising Sampler Accounting v3"
+    deliverable: "results/experiment_1929_p_bit_ising_v3.json"
+    gated_on:
+      - upstream: exp1927-hard-csp-neural
+        artifact_field: honest_verdict
+        op: "contains"
+        value: "complete"
+    prior_failures:
+      - exp1915-p-bit-p-dit-ising-sampler-accounting-v2
+    prompt: |
+      CONTEXT: Today is {date}. Workspace is {project_root}. This is a carry-forward from .149.
+      EXISTING CODE TO READ FIRST: python/carnot/samplers/parallel_ising.py
+      TASK: Implement p-bit Ising Sampler Accounting v3.
+      CONCRETE STEPS:
+      1. Extend the Ising sampler to support hardware-accurate p-bit/p-dit states.
+      2. Measure the latency and accuracy changes.
+      3. Write the results artifact.
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1930-tri-sota-e2e
+    milestone: "2026.05.150"
+    title: "Exp 1930: Integrated Tri-SOTA E2E v4"
+    deliverable: "results/experiment_1930_tri_sota_e2e.json"
+    max_turns: 50
+    gated_on:
+      - upstream: exp1918-sota-cache-recovery
+        artifact_field: honest_verdict
+        op: "contains"
+        value: "complete"
+    prior_failures:
+      - exp1916-integrated-tri-sota-e2e-v3
+    prompt: |
+      CONTEXT: Today is {date}. Workspace is {project_root}. Tri-SOTA integration was blocked in .149.
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/verify_repair.py
+      TASK: Run a full end-to-end integration test of all three SOTA models.
+      CONCRETE STEPS:
+      1. Use MODEL_SPECS: ["unsloth/Qwen3.6-35B-A3B-GGUF", "unsloth/gemma-4-31B-it-GGUF", "unsloth/gemma-4-26B-A4B-it-GGUF"].
+      2. Run live evaluation if Dual GPU is available; otherwise run a comprehensive mock evaluation.
+      3. Evaluate verification pipeline accuracy.
+      4. Write the results artifact.
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1931-milestone-150-retro
+    milestone: "2026.05.150"
+    title: "Exp 1931: Milestone .150 Retrospective"
+    deliverable: "results/experiment_1931_milestone_150_retro.json"
+    max_turns: 30
+    prompt: |
+      CONTEXT: Today is {date}. Workspace is {project_root}. We wrap up the milestone by analyzing success vs failure counts.
+      EXISTING CODE TO READ FIRST: results/experiment_1918*.json through results/experiment_1930*.json
+      TASK: Compile the milestone 150 retrospective.
+      CONCRETE STEPS:
+      1. Aggregate the honest_verdicts from all preceding .150 experiments.
+      2. Output the artifact containing:
+         - milestone_150_retro_complete
+         - completed_task_count
+         - blocked_task_count
+         - failed_task_count
+         - next_gate_recommendations
+         - tests_run
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
