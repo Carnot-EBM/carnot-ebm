@@ -490,6 +490,77 @@ class EBTransformer(AutoGradMixin):
         # Linear projection to scalar energy
         return self.output_weight @ h_pooled + self.output_bias
 
+    def energy_from_embeddings(self, h: jax.Array) -> jax.Array:
+        """Compute scalar energy directly from continuous token embeddings.
+
+        **For engineers:**
+            This bypasses the discrete token embedding lookup, allowing
+            gradient descent optimization in the continuous embedding space.
+            The input is expected to be a sequence of embedding vectors.
+
+        Args:
+            h: A 2-D JAX array of continuous token embeddings. Shape: (seq_len, d_model).
+
+        Returns:
+            A scalar JAX array representing the energy.
+        """
+        seq_len = h.shape[0]
+
+        # Add positional embeddings
+        h = h + self.pos_embeddings[:seq_len]
+
+        # Pass through transformer layers
+        for layer in self.layers:
+            h = layer.forward(h)
+
+        # Final layer normalization
+        h = _layer_norm(h, self.final_ln_gamma, self.final_ln_beta)
+
+        # Mean pool across sequence dimension: (seq_len, d_model) → (d_model,)
+        h_pooled = jnp.mean(h, axis=0)
+
+        # Linear projection to scalar energy
+        return self.output_weight @ h_pooled + self.output_bias
+
+    def refine_embeddings(
+        self,
+        input_embeddings: jax.Array,
+        candidate_embeddings: jax.Array,
+        steps: int = 100,
+        lr: float = 0.1,
+    ) -> jax.Array:
+        """Refine candidate embeddings via gradient descent on energy.
+
+        **For engineers:**
+            Optimizes candidate output tokens to minimize E(input, output)
+            while keeping input tokens fixed. Uses simple gradient descent.
+
+        Args:
+            input_embeddings: Fixed context embeddings. Shape: (seq_len_in, d_model).
+            candidate_embeddings: Initial candidate embeddings. Shape: (seq_len_out, d_model).
+            steps: Number of gradient descent steps.
+            lr: Learning rate.
+
+        Returns:
+            Refined candidate embeddings of shape (seq_len_out, d_model).
+
+        Spec: REQ-EBT-003
+        """
+
+        def loss_fn(cand: jax.Array) -> jax.Array:
+            # Concatenate fixed input and variable candidate embeddings
+            h = jnp.concatenate([input_embeddings, cand], axis=0)
+            return self.energy_from_embeddings(h)
+
+        grad_fn = jax.grad(loss_fn)
+
+        def step_fn(_: int, cand: jax.Array) -> jax.Array:
+            g = grad_fn(cand)
+            return cand - lr * g
+
+        # Use jax.lax.fori_loop for efficient compilation of the optimization loop
+        return jax.lax.fori_loop(0, steps, step_fn, candidate_embeddings)
+
     @property
     def input_dim(self) -> int:
         """Maximum sequence length (number of token positions).
