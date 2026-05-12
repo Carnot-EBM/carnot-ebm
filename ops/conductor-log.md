@@ -1975,3 +1975,6 @@ IMPORTANT:
 | 2026-05-12 07:16 UTC | Exp 1895: Residual Drift Validator Ledger | FAIL | Codex CLI error: you finish the real work inside 10 minutes, that is correct  |
 | 2026-05-12 07:19 UTC | Exp 1896: FR-11 Validator-Tree Promotion Ledger v2 | FAIL | Codex CLI error: you finish the real work inside 10 minutes, that is correct  |
 | 2026-05-12 07:21 UTC | Exp 1896: FR-11 Validator-Tree Promotion Ledger v2 | FAIL | Codex CLI error: you finish the real work inside 10 minutes, that is correct  |
+| 2026-05-12 07:23 UTC | Exp 1896: FR-11 Validator-Tree Promotion Ledger v2 | FAIL | Codex CLI error: you finish the real work inside 10 minutes, that is correct  |
+| 2026-05-12 07:25 UTC | Exp 1897: Routing without Forgetting FR-11 Audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1896-fr11-validator-tree-promotion-ledger |
+| 2026-05-12 07:25 UTC | Exp 1898: SOTA FR-11 Promotion Smoke v2 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1891-sota-gguf-cache-runtime-preflight) |
