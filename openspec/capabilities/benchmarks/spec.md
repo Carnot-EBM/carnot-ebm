@@ -620,3 +620,24 @@ It MUST ensure cross-language equivalences, serialization, and sampling pipeline
 **And** produces a valid `results/experiment_1874_e2e.json` artifact containing completion metrics.
 
 **Spec traces:** REQ-E2E-1874
+
+### REQ-E2E-1954: Tri-SOTA E2E v6
+
+Carnot MUST provide an E2E benchmark script to evaluate verifiable reasoning dataset across the continuous latent optimization and multi-agent Ising tiers.
+The implementation MUST use `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and `unsloth/gemma-4-26B-A4B-it-GGUF` in MODEL_SPECS.
+Results MUST be written to `/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1954_tri_sota_e2e_v6.json`.
+It MUST evaluate complete end-to-end trace validity rates against the prior v5 baselines.
+
+**Acceptance criteria:**
+- Script `scripts/experiment_1954_tri_sota_e2e_v6.py` exists.
+- Records end-to-end trace validity rates against the prior v5 baselines.
+- Artifact is written to `results/experiment_1954_tri_sota_e2e_v6.json`.
+
+### SCENARIO-E2E-1954: Tri-SOTA E2E v6 Evaluation Execution
+
+**Given** the verifiable reasoning dataset and continuous latent optimization and multi-agent Ising tiers
+**When** the benchmark script runs using `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and `unsloth/gemma-4-26B-A4B-it-GGUF`
+**Then** it evaluates complete end-to-end trace validity rates against the prior v5 baselines
+**And** produces a valid `results/experiment_1954_tri_sota_e2e_v6.json` artifact containing completion metrics.
+
+**Spec traces:** REQ-E2E-1954
