@@ -11,9 +11,10 @@ def test_run_pre_retro_audit():
     """
     with TemporaryDirectory() as tmpdir:
         files_data = [
-            ("experiment_1956_success.json", {"schema": "v1", "status": "complete"}),
-            ("experiment_1957_gate_fail.json", {"honest_verdict": "gate check failed"}),
-            ("experiment_1958_fail.json", {"status": "failed"}),
+            ("experiment_1956_success.json", {"schema": "v1", "status": "complete", "logprob": 1, "format": 1, "deterministic": 1}),
+            ("experiment_1957_gate_fail.json", {"honest_verdict": "gate check failed", "logprob": 1, "format": 1, "deterministic": 1}),
+            ("experiment_1958_fail.json", {"status": "failed", "logprob": 1, "format": 1, "deterministic": 1}),
+            ("experiment_1959_missing_checks.json", {"status": "complete", "format": 1, "deterministic": 1}), # missing logprobs
         ]
         
         for fname, data in files_data:
@@ -29,10 +30,10 @@ def test_run_pre_retro_audit():
             
         assert result["schema"] == "carnot.milestone_pre_retro_audit.v1"
         assert result["milestone"] == 153
-        assert len(result["missing_files"]) == 8 # 1959 to 1966
+        assert len(result["missing_files"]) == 7 # 1960 to 1966
         assert result["violated_gates"] == 1
         assert result["compliant_artifacts"] == 3
-        assert result["non_compliant_artifacts"] == 0
+        assert result["non_compliant_artifacts"] == 1
 
 def test_run_pre_retro_audit_invalid_json():
     """

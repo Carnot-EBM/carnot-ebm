@@ -34,6 +34,15 @@ def run_pre_retro_audit(output_path: str, results_dir: str = "results"):
             status_str = str(data.get("status", "")).lower() + str(data.get("honest_verdict", "")).lower() + str(data.get("result", "")).lower()
             if "gate" in status_str and "fail" in status_str:
                 violated_gates += 1
+                
+            # Verify logprobs, artifact formatting, and deterministic check compliance
+            content_str = json.dumps(data).lower()
+            has_logprobs = "logprob" in content_str
+            has_formatting = "format" in content_str
+            has_deterministic = "deterministic" in content_str
+            
+            if not (has_logprobs and has_formatting and has_deterministic):
+                is_compliant = False
             
         if is_compliant:
             compliant_artifacts += 1
@@ -41,7 +50,7 @@ def run_pre_retro_audit(output_path: str, results_dir: str = "results"):
             non_compliant_artifacts += 1
             
     honest_verdict = f"Audit complete. {len(missing_files)} missing files. {compliant_artifacts} compliant."
-    if missing_files or violated_gates > 0:
+    if missing_files or violated_gates > 0 or non_compliant_artifacts > 0:
         honest_verdict = "Audit failed: missing files or violated gates found."
         
     artifact = {
