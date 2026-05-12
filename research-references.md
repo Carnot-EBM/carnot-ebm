@@ -12405,3 +12405,9 @@ This sweep was run after milestone `.145` completed. The literature search revea
 - **Paper:** "Ising Models as Oracles for Multi-Agent Consensus and Constraint Satisfaction" (arXiv:2605.10115)
 - **What:** Distributes constraint satisfaction among agent ensembles using an Ising loss function to guarantee consensus on hard constraints.
 - **Relevance to Carnot:** Aligns with Carnot's Phase 4 goals and the need for scalable constraint checking across multiple reasoning paths.
+
+### EBT-Policy and Equilibrium Matching
+- **Papers:** "EBT-Policy: Energy Unlocks Emergent Physical Reasoning Capabilities" (arXiv:2510.27545) and "Equilibrium Matching (EqM): Generative Modeling with Implicit EBMs" (arXiv:2510.02300).
+- **What:** EBT-Policy brings the EBT framework to robotics, showing zero-shot recovery and physical reasoning. EqM replaces time-conditional dynamics of diffusion models with a time-invariant equilibrium gradient over an implicit energy landscape, enabling compositional generation.
+- **Relevance to Carnot:** These reinforce Carnot's trajectory towards compositional constraints and energy minimization. They provide theoretical backing for non-autoregressive integration (Phase 3).
+- **Concrete experiment hook:** Track these as future integration references for physical reasoning/diffusion when Carnot's foundation is scaled to compositional generation.
