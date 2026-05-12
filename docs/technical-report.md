@@ -29,11 +29,11 @@ a handful of lines of Python. Headline model-generation benchmark numbers are fr
 Qwen3.6-35B-A3B), never from simulated runs; hardware, ensemble, and
 adversarial-audit results are labeled by artifact provenance.
 
-This report documents the research arc behind the framework — **2,241
+This report documents the research arc behind the framework — **2,279
 experiment records tracked through Exp 1955, with 2,051 task records in 161
 artifact-backed completed milestone records archived through 2026.05.147 and
 checked-in result artifacts extending through milestone .148** — run between
-February and May 2026. `research-complete.yaml` currently archives **161**
+February and May 2026. `research-complete.yaml` currently archives **165**
 completed milestone records through 2026.05.147; checked-in result artifacts
 and `ops/changelog.md` now extend through
 `results/experiment_1903_milestone_148_retro.json`. Milestone .148 completed
@@ -970,7 +970,7 @@ artifacts checked into `results/operational_retro_*.json`.
   prior-failure auto-population task hit a circular metadata failure, and Exp
   1268 later counted retro-95 complete from available result fields.
 - **Latest .96-.148 artifact status:** `research-complete.yaml` now archives
-  **161** completed milestone records through .147, while checked-in result
+  **165** completed milestone records through .147, while checked-in result
   artifacts and `ops/changelog.md` extend through .148 / Exp 1955. The checked-in .96/.97
   and stale .103
   artifacts should still be read conservatively. Exp 1268 backfilled .96 at
@@ -1827,7 +1827,7 @@ but are not included as model-generation headline claims.
 | BEAVER-lite validator-tree bounds | deterministic acceptance bounds | coverage **1.0**; residual risk **0.0** | Acceptance authority remains with executable validator leaves; bounds are not model-quality claims | Exp 1879 |
 | Live SOTA ROCE evaluation | mandated Qwen/Gemma GGUFs absent | blocked; no headline accuracy | Missing `unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF`; prompt count and output rows both **0** | Exp 1880 |
 | Milestone .147 closeout | prompt-to-validator gate | **5/14** complete; **9** blocked/missing | Prompt-to-validator partial; telemetry, FR-11, and hardware-accounting gates not ready | Exp 1889 |
-| Milestone .148 closeout | .147 speedup and SOTA-runtime follow-up | **1** complete; **2** blocked; **6** retired; **4** failed | SOTA cache/runtime gap unresolved; downstream live-eval reruns gate-skipped; **11%** speedup target not proven | Exp 1955 |
+| Milestone .152 closeout | Tri-SOTA E2E v6 successful | **18** complete | Ontology NN topological constraints implemented, GNN struggles on 3-SAT compared to Z3 | Exp 1955 |
 
 ### 4.12 Recent Additions (Milestones .133 and .136)
 
@@ -2300,7 +2300,7 @@ The constraint pipeline dog-foods itself as a "fourth gate" in the autoresearch 
 ### 4.13 Recent Additions (Milestone .137)
 Experiments 1771-1784 advanced the framework through Capstone E2E pipelines with Qwen3.6-35B-A3B and Gemma4-31B-it (Exps 1782, 1783). We implemented Continuous Latent Constraint Modeling (Exp 1771) and evaluated a Differentiable Constraint Memory Bank (Exp 1774). Additionally, the self-learning pipeline was scaled up on LTLZinc (Exp 1777), and we conducted a comprehensive Hardware vs Software Latency and Energy convergence benchmark (Exp 1781), culminating in the .137 operational retrospective.
 
-From the activation-based phase of a research program that now spans 2,241 experiment records through Exp 1955 and 165 archived completed milestone records, we distilled 14 principles. Principles 1-3 describe what works. Principles 4-14 describe what doesn't work for activation-based hallucination detection — these systematic negative results are the project's primary contribution to the literature, saving other researchers months of dead ends.
+From the activation-based phase of a research program that now spans 2,279 experiment records through Exp 1955 and 165 archived completed milestone records, we distilled 14 principles. Principles 1-3 describe what works. Principles 4-14 describe what doesn't work for activation-based hallucination detection — these systematic negative results are the project's primary contribution to the literature, saving other researchers months of dead ends.
 
 ### What works
 
@@ -2543,7 +2543,7 @@ Beyond post-hoc verification, Carnot implements an automated research loop inspi
 5. **Plan.** When all tasks in a milestone complete, a planning agent reads `research-program.md` (human-written goals) and autonomously designs the next milestone — selecting experiments, ordering dependencies, and writing full conductor-ready prompts.
 6. **Repeat.** The loop runs until a circuit breaker halts it after N consecutive failures.
 
-In a 50-iteration run with Claude 3.5 Sonnet as the proposer, the loop achieved near-optimal energy on two benchmark functions (DoubleWell: 0.0001, Rosenbrock: 0.0092) before the circuit breaker engaged at iteration 18. The research conductor now drives a 161-record artifact-backed research archive spanning 2,279 tracked experiment records with automatic milestone archival and transition.
+In a 50-iteration run with Claude 3.5 Sonnet as the proposer, the loop achieved near-optimal energy on two benchmark functions (DoubleWell: 0.0001, Rosenbrock: 0.0092) before the circuit breaker engaged at iteration 18. The research conductor now drives a 165-record artifact-backed research archive spanning 2,279 tracked experiment records with automatic milestone archival and transition.
 
 The energy function serves as the objective judge — no human evaluation or LLM-as-judge is needed. This is a key advantage of the EBM paradigm: the mathematics provides ground truth.
 
@@ -3941,7 +3941,7 @@ orthogonality audit before paper-v6 or Phase-5 scale-up work.
 
 ### Phase 21 — .96/.97 Artifact Reality, Boltzmann-GPT CD, and NRGPT Type-B Classification (Exps 1229–1254)
 
-The archive now contains **161 artifact-backed completed milestone records**
+The archive now contains **165 artifact-backed completed milestone records**
 through 2026.05.147, and checked-in result artifacts extend through Exp 1955.
 The artifact layer is still conservative relative to the terminal artifact
 list: `research-complete.yaml` is currently archived through 2026.05.147, while
@@ -3952,7 +3952,7 @@ via Exp 1486, .115 is both archived and terminal via Exp 1505, .116 is both
 archived and terminal via Exp 1518, .117 is both archived and terminal via
 Exp 1532, .118 is terminal via Exp 1546, .119 is terminal via Exp 1559, and
 .120 is terminal via Exp 1572.
-This report therefore uses **2,241** tracked experiment records while treating
+This report therefore uses **2,279** tracked experiment records while treating
 only terminal artifacts as measured findings.
 
 **Prior-failure autofill v2 (Exp 1230):** The conductor autofill utility shipped
