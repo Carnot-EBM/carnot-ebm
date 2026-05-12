@@ -638,3 +638,4 @@ The parser SHALL output an artifact `results/experiment_1957_truncproof_ll1_gram
 **When** 4 tokens have been consumed
 **Then** the parser forces the closing token
 **And** the resulting structure is valid
+\n### REQ-INFER-1958: GCoT-Decoding Reasoning Paths\nThe system shall provide a GCoTBranchingSampler that maintains parallel latent reasoning traces, applies partial-trace energy to rank and cull branches, and implements backtracking when all active branches exceed the energy threshold.
