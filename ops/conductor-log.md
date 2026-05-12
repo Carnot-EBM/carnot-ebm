@@ -2238,3 +2238,4 @@ IMPORTANT:
 | 2026-05-12 19:04 UTC | Exp 1950: Latent Semantic Pruning for Self-Learnin | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1947-latent-energy-optimization) |
 | 2026-05-12 19:04 UTC | Exp 1951: Hardware-Accelerated Symbolic KANs Trans | FAIL | Gemini CLI error: you finish the real work inside 10 minutes, that is correct  |
 | 2026-05-12 19:11 UTC | Exp 1952: GNN vs. Classical Benchmarking Audit | OK | 81 passed, 1 warning in 4.00s |
+| 2026-05-12 19:13 UTC | Exp 1953: EqM Compositional Generation Integration | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1949-denoising-thermodynamics.honest_ve |
