@@ -2284,3 +2284,4 @@ IMPORTANT:
 | 2026-05-12 23:18 UTC | Exp 1971: SOTA Benchmark of COLD vs DOMINO | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1969-cold-decoding-langevin) |
 | 2026-05-12 23:23 UTC | Exp 1973: DeepSaDe Hybrid MaxSMT Guarantees | OK | 89 passed, 1 warning in 6.15s |
 | 2026-05-12 23:25 UTC | Exp 1971: SOTA Benchmark of COLD vs DOMINO | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1969-cold-decoding-langevin) |
+| 2026-05-12 23:25 UTC | Exp 1974: RUN-CSP Hardware Accounting | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1972-run-csp-unsupervised.success (actu |
