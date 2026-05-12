@@ -2178,3 +2178,4 @@ IMPORTANT:
 | 2026-05-12 15:47 UTC | Exp 1924: Routing without Forgetting FR-11 Audit v | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1922-residual-drift-ledger) |
 | 2026-05-12 15:52 UTC | Exp 1926: S2KAN Symbolic Fidelity Constraint Integ | OK | 81 passed, 1 warning in 4.63s |
 | 2026-05-12 15:54 UTC | Exp 1924: Routing without Forgetting FR-11 Audit v | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1922-residual-drift-ledger) |
+| 2026-05-12 16:13 UTC | Exp 1927: Hard CSP and Neural Solver Reality Check | OK | 81 passed, 1 warning in 5.44s |
