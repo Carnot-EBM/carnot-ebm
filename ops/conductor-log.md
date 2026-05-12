@@ -2292,3 +2292,4 @@ IMPORTANT:
 | 2026-05-12 23:42 UTC | Exp 1977: Tri-SOTA Constrained Eval with EORM/EBT | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1975-eorm-cot-verification.success (act |
 | 2026-05-12 23:44 UTC | Exp 1977: Tri-SOTA Constrained Eval with EORM/EBT | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1975-eorm-cot-verification.success (act |
 | 2026-05-12 23:46 UTC | Exp 1977: Tri-SOTA Constrained Eval with EORM/EBT | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1975-eorm-cot-verification.success (act |
+| 2026-05-12 23:48 UTC | Exp 1978: DeepSaDe Provable Continuous Learning | DOOMED_RERUN_BLOCK | 3 prior failure(s) match this task's scope but prior_failures field is missing o |
