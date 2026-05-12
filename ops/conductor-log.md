@@ -2157,3 +2157,5 @@ IMPORTANT:
 | 2026-05-12 15:20 UTC | Milestone 2026.05.150 activated | OK | 14 tasks queued |
 | 2026-05-12 15:22 UTC | Exp 1918: SOTA Cache Recovery and Preflight v4 | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-12 15:24 UTC | Exp 1918: SOTA Cache Recovery and Preflight v4 | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-12 15:26 UTC | Exp 1918: SOTA Cache Recovery and Preflight v4 | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-12 15:28 UTC | Exp 1919: Terminal Low-Cost Telemetry Adapter v4 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1918-sota-cache-recovery) |
