@@ -207,6 +207,74 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### NEW 2026-05-11 (23:30Z): exp1850 THRML/Carnot Parity Refile — Methodology Correction (.148+ MANDATORY)
+
+**Origin:** 2026-05-11 23:30Z outer-loop (Claude) corrigendum after
+operator question "does this mean we can't use Extropic's hardware?"
+
+**Background:** exp1850 (`.144) ran a THRML/Carnot parity sweep at
+n=128 with 100 samples and reported `acceptance_gate_passed: false`
+on tight gates (KL < 0.05, mean_delta < 0.10). I previously framed
+this as "THRML/Carnot parity breaks at n=128 — Z1 migration concern."
+**That framing was wrong.**
+
+**The honest interpretation:**
+
+- KS p=0.81: the two empirical distributions are statistically
+  indistinguishable. We CANNOT reject the null that they come from
+  the same distribution.
+- KL=0.278: dominated by sample-size noise. 100 samples in a 2^128
+  state space puts each sample in its own histogram bin, so empirical
+  KL is meaningless without much larger N.
+- Δmean=2.16: 100 samples is far below the budget needed to nail an
+  equilibrium mean at n=128.
+- The gates (KL<0.05, Δmean<0.10) were too tight for the sample size
+  — they would trip on noise alone even if the samplers were
+  identical.
+
+**The corrected verdict: inconclusive, not negative.**
+
+The Z1 migration path is unchanged. The load-bearing Z1 concern
+remains the software detailed-balance correction for analog drift
+(per `reference_carnot_hardware_evaluation_report.md`).
+
+**MANDATORY for .148+ planner:** propose a corrected parity-at-scale
+experiment as exp1880+ with the following structure:
+
+1. **Tractable substrate**: use a ferromagnetic Curie-Weiss model at
+   n=128 (or equivalent mean-field-tractable instance) where the
+   exact partition function and equilibrium mean are computable.
+   This gives a ground truth, not just THRML-vs-Carnot relative
+   agreement.
+2. **Sample budget**: 10k+ samples per side, OR a chain-length
+   convergence criterion (e.g., compare moving-window means until
+   they stabilize within tolerance).
+3. **Gates calibrated to sample-size variance**: derive the expected
+   KL noise floor analytically given the chosen N, and set the KL
+   gate above that floor with a margin.
+4. **Three-way comparison**: report Carnot empirical mean,
+   THRML empirical mean, AND analytic ground-truth mean.
+   Disagreement between Carnot and ground-truth, or THRML and
+   ground-truth, is the real signal.
+5. **prior_failures**: cite exp1850 with the addressed_by note
+   "exp1850 used 100 samples at n=128 which is undersampled; this
+   experiment uses 10k+ samples on a tractable substrate with ground
+   truth."
+
+**Paper-v6 implication:** do NOT cite exp1850 as a Z1
+incompatibility limitation in §6. The corrigendum field on
+`results/experiment_1850_thrml_parity_n128.json` documents the
+correction. If exp1850 was already integrated into §6 prose during
+the `.144 retro, that prose must be updated when this priority lands.
+
+**Files touched:**
+- `results/experiment_1850_thrml_parity_n128.json` — added
+  `interpretation_corrigendum` field; original numbers preserved per
+  CLAUDE.md "never remove existing content"
+- This known-issues entry — files the corrected experiment
+
+---
+
 ### NEW 2026-05-11 (10:25Z): Codex Quota Exhausted Until 18:34Z (.139+ MANDATORY)
 
 **Operator constraint, 2026-05-11 10:25Z:** codex weekly quota ran out

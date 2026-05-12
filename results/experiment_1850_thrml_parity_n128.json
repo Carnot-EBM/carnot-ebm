@@ -7,5 +7,20 @@
   "ks_p_value": 0.8154147124661313,
   "acceptance_gate_passed": false,
   "independent_rng_paths": true,
-  "honest_verdict": "complete: thrml_carnot_parity_n128_gate_failed_kl_0.28"
+  "honest_verdict": "complete: thrml_carnot_parity_n128_gate_failed_kl_0.28",
+  "interpretation_corrigendum": {
+    "filed_at": "2026-05-11T23:30Z",
+    "filed_by": "outer-loop (Claude) per operator directive",
+    "original_claim": "THRML compatibility for Z1 migration does NOT hold at production scale",
+    "corrected_claim": "n=128 parity result is INCONCLUSIVE, not definitively negative. The methodology was undersampled for the scale.",
+    "evidence": {
+      "ks_p_value_high": "KS p=0.81 means we CANNOT reject the null hypothesis that Carnot and THRML samples are drawn from the same distribution. Statistically the distributions are indistinguishable.",
+      "kl_inflated_by_undersampling": "KL=0.278 is computed over an empirical histogram of 100 samples over a 2^128 state space. Each sample lands in its own bin, so the empirical KL is dominated by sample-size noise, not by true distributional divergence.",
+      "mean_delta_underpowered": "100 samples is far below what is needed to nail the equilibrium mean at n=128. The mean_energy_delta_abs=2.16 may be sample-size noise, not real divergence.",
+      "gate_too_tight_for_sample_size": "The acceptance gates (KL<0.05, delta_mean<0.10) were set without accounting for the expected sample-size variance at n=128 with only 100 samples. Gates would trip on noise alone."
+    },
+    "what_this_means_for_extropic_z1": "Z1 migration path is unchanged. THRML 0.1.3 remains the JAX-native abstraction layer; the load-bearing concern for Z1 is the software detailed-balance correction for analog drift, per the 2026-05-08 Carnot Hardware Evaluation Report. exp1850 does NOT refute THRML/Carnot compatibility at scale; it surfaces that we need better methodology.",
+    "what_we_actually_need_next": "A parity-at-scale experiment with: (1) 10k+ samples per side to nail empirical mean within noise bounds; (2) a tractable n=128 instance (e.g., ferromagnetic Curie-Weiss) where the exact partition function is computable for ground-truth comparison; (3) chain-length convergence criterion rather than fixed N samples; (4) gates calibrated to the sample-size variance.",
+    "paper_v6_implication": "Do NOT cite exp1850 as a Z1 incompatibility limitation. Cite it as a methodological lesson and a forward task in section 6 future work, NOT in section 6 limitations."
+  }
 }
