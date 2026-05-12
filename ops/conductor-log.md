@@ -1963,3 +1963,6 @@ IMPORTANT:
 | 2026-05-12 07:04 UTC | Exp 1891: SOTA GGUF Cache and Runtime Preflight | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-12 07:06 UTC | Exp 1892: Terminal Low-Cost Telemetry Adapter | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1891-sota-gguf-cache-runtime-preflight) |
 | 2026-05-12 07:06 UTC | Exp 1893: Live SOTA ROCE Validator Evaluation v2 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1891-sota-gguf-cache-runtime-preflight) |
+| 2026-05-12 07:06 UTC | Exp 1894: DCCD/llguidance Repair with ROCE Validat | GATE_BLOCK | 2 of 2 gate(s) failed; first failure: exp1893-live-sota-roce-validator-eval-v2.s |
+| 2026-05-12 07:08 UTC | Exp 1892: Terminal Low-Cost Telemetry Adapter | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1891-sota-gguf-cache-runtime-preflight) |
+| 2026-05-12 07:08 UTC | Exp 1893: Live SOTA ROCE Validator Evaluation v2 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1891-sota-gguf-cache-runtime-preflight) |
