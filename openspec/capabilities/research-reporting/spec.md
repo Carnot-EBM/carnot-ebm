@@ -3426,6 +3426,43 @@ exposing `status`, `honest_verdict`, and `roce_success_rate`
 exposing `status`, `honest_verdict`, and `hiled_simulator_ready`.
 
 
+### REQ-REPORT-1889: Milestone .147 Research and Operational Retrospective
+
+The Exp 1889 workflow shall read the available milestone `2026.05.147`
+artifacts and conductor-log events, reconcile completed work versus blocked,
+retired, and missing scopes, and write
+`results/experiment_1889_milestone_147_retro.json` without modifying
+`research-roadmap.yaml`, `ops/status.md`, `ops/changelog.md`, or
+`scripts/research_conductor.py`.
+
+The workflow shall classify prompt-to-validator, telemetry, FR-11, and
+hardware-accounting gates from explicit source fields or gate-block evidence
+only. Missing artifacts shall be reported as blocked or missing evidence, not
+as successful work.
+
+The terminal artifact shall include these top-level fields:
+
+- `status`
+- `honest_verdict`
+- `milestone_147_retro_complete`
+- `completed_task_count`
+- `blocked_task_count`
+- `next_gate_recommendations`
+- `tests_run`
+
+### SCENARIO-REPORT-1889: Exp 1889 Reconciles .147 Evidence Without Planning .148
+
+**Given** `.147` completed contract normalization, ROCE validator-tree, and
+BEAVER-lite artifacts
+**And** live SOTA, telemetry, FR-11, hardware-accounting, and integrated E2E
+work is blocked or absent in the artifact set
+**When** the Exp 1889 retrospective workflow runs
+**Then** it writes the required REQ-REPORT-1889 fields
+**And** records the gate readiness for prompt-to-validator, telemetry, FR-11,
+and hardware accounting from source evidence
+**And** it recommends next gate fields without creating a `.148` plan.
+
+
 ### REQ-PUBLISH-003: HuggingFace README Accuracy Audit
 
 All HuggingFace model READMEs for Phase 1 per-token activation EBMs shall
@@ -3568,6 +3605,7 @@ embed live-GPU benchmark results from Exp 328 when available.
 | REQ-REPORT-069 | `scripts/experiment_1665_retro.py`, `results/operational_retro_2026_05_127.json` | `tests/python/test_experiment_1665_retro.py` | Implemented |
 | REQ-REPORT-1876 | `python/carnot/reporting/milestone_146_completion_147_gate_contract.py`, `results/experiment_1876_146_completion_147_gate_contract.json` | `tests/python/test_milestone_146_completion_147_gate_contract.py` | Implemented |
 | REQ-REPORT-1877 | `python/carnot/reporting/artifact_contract_normalization.py`, `results/experiment_1877_artifact_contract_normalization.json` | `tests/python/test_artifact_contract_normalization.py` | Implemented |
+| REQ-REPORT-1889 | `python/carnot/reporting/milestone_retro_147.py`, `results/experiment_1889_milestone_147_retro.json` | `tests/python/test_milestone_retro_147.py` | Implemented |
 | REQ-REPORT-024 | `python/carnot/reporting/agent_usage.py`, `scripts/agent_plan_usage.py` | `tests/python/test_agent_plan_usage.py` | Implemented |
 | REQ-PUBLISH-003 | `scripts/experiment_317_hf_publish.py` | `tests/python/test_experiment_317_hf_publish.py` | Implemented |
 | REQ-PUBLISH-004 | `scripts/experiment_330_hf_live_publish.py` | `tests/python/test_experiment_330_hf_live_publish.py` | Implemented |
