@@ -2230,3 +2230,5 @@ IMPORTANT:
 | 2026-05-12 18:50 UTC | Exp 1948: Multi-Agent Ising Consensus Simulator | DOOMED_RERUN_BLOCK | 6 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-12 18:52 UTC | Exp 1947: Latent Energy Optimization (Continuous V | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1944-hardnet-projection) |
 | 2026-05-12 18:52 UTC | Exp 1948: Multi-Agent Ising Consensus Simulator | DOOMED_RERUN_BLOCK | 6 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-12 18:58 UTC | Exp 1949: Denoising Thermodynamic Sampling Protoco | OK | 81 passed, 1 warning in 5.01s |
+| 2026-05-12 19:00 UTC | Exp 1950: Latent Semantic Pruning for Self-Learnin | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1947-latent-energy-optimization) |
