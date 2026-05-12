@@ -18,11 +18,11 @@ call. No fine-tuning. No access to model weights.
 Rust + Python/JAX, Apache 2.0, local editable install via `pip install -e ".[dev]"`.
 The public PyPI package remains a Phase-1 ship blocker as of Exp 1582.
 
-Current public research record: **2,187 experiment records tracked through Exp
-1863**. `research-complete.yaml` currently archives **1,872** task records
-across **148** artifact-backed completed milestone records through
-2026.05.136; checked-in result artifacts and `ops/changelog.md` extend through
-milestone 2026.05.137 on 2026-05-10.
+Current public research record: **2,213 experiment records tracked through Exp
+1889**. `research-complete.yaml` currently archives **2,037** task records
+across **160** artifact-backed completed milestone records through
+2026.05.146; checked-in result artifacts and `ops/changelog.md` extend through
+milestone 2026.05.147 on 2026-05-12.
 
 Milestone .106 delivered the critical fix to thinking-mode certificate
 generation: Exp 1366 (CRANE tag-first prefix injection) reached
@@ -182,8 +182,13 @@ semantic correctness **1.0** with **0** false accepts on mandated Qwen3.6-35B
 GGUF rows, FR-11 v15 reversed the collapsed v14 retention, the Phase-1 ship
 ledger recorded **9** audit-time blockers, and hardware scope moved to simulator-only
 Z1 drift correction plus blocked Tenstorrent/PolarFire preflights with no
-hardware claim. The current test collection reports **24,209** items; this is a
-collection count, not a full-suite pass claim.
+hardware claim. The latest .146/.147 artifacts add ROCE/HILED artifact
+normalization, ROCE-to-validator-tree compilation, BEAVER-lite deterministic
+bounds for validator trees, and an honest live-SOTA ROCE block because the
+mandated Qwen3.6-35B and Gemma4-31B GGUFs were unavailable. Milestone .147
+closed with **5** completed tasks and **9** blocked/missing-artifact scopes; the
+current collection-only snapshot reports **24,251** Python test items, not a
+full-suite pass claim.
 
 ## Install and run
 
@@ -477,9 +482,15 @@ experiment artifact under `results/`.
 | Probability Calibration Verifier | Opt-in verifier scores explicit probability claims against simple reference-class evidence; returns structured `VerdictRecord` | Exp 1414 |
 | KANELÉ Validation & Routing | KANELÉ RTL linting, latency accounting vs Ising baseline; adaptive energy reconfiguration and EBM vs LLM Task Allocation Router | Exps 1622-1625 |
 | Milestone .145 closeout | Completed 10 experiments in 19.7 minutes. All tasks synthesis-only with appropriate 0% GPU utilization | Exp 1863 |
+| Milestone .146 closeout | 20 synthesis-only experiments in 52.5 minutes; GPU idle was appropriate, and the next operational target is better synthesis-only timing plus batched closeout reconciliation | ops/changelog 2026-05-11 |
+| ROCE/HILED artifact normalization | ROCE raw evidence normalized at **0.8** success rate; HILED simulator evidence normalized with constraint enforcement **1.0** and standard gate fields | Exp 1877 |
+| ROCE-to-validator tree compiler | **8/8** constraints compiled to guarded Python, PySAT-compatible CNF, and Z3-compatible leaves with constraint coverage **1.0** and false accepts **0** | Exp 1878 |
+| BEAVER-lite validator-tree bounds | Deterministic coverage bound **1.0**, residual-risk bound **0.0**, and executable validator leaves retain final acceptance authority | Exp 1879 |
+| Live SOTA ROCE validator evaluation | **Blocked** before inference because mandated `unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF` were unavailable; no headline accuracy claimed | Exp 1880 |
+| Milestone .147 closeout | **5/14** tasks completed, **9** blocked or missing artifacts; prompt-to-validator work is partial and telemetry, FR-11, and hardware-accounting gates are not ready | Exp 1889 |
 | Pi-net Projection & ConsFormer | Prototyped Pi-net style differentiable projection layer for continuous latents and a ConsFormer-style refiner | Exps 1633-1635 |
 | SMGI & Energy-Guided Decoding | Integrated SMGI certified update logic and implemented EGD using mandated SOTA GGUFs | Exps 1631/1636 |
-| Current Python test collection | **24,209** Python tests collected; collection-only snapshot, not a full-suite pass claim | 2026-05-10 collection run |
+| Current Python test collection | **24,251** Python tests collected in the latest broad attempt; collection-only snapshot, not a full-suite pass claim | Exp 1880, 2026-05-12 |
 | Local Claude/Codex usage snapshot | Codex reads the newest local `token_count` event; Claude aggregates local token usage and reads only subscription/tier metadata from credentials; free-form quota prose is ignored instead of guessed; focused regression tests pass | 2026-05-04 changelog |
 
 Deeper analysis of these — including everything that **didn't** work and
@@ -521,8 +532,8 @@ claim we publish.
 ## Where to go next
 
 - **[Technical report](docs/technical-report.md)** — the full research arc
-  through Exp 1863 across 158 Archived completed milestone records plus the
-  latest .121 result artifacts, with a
+  through Exp 1889 across 160 Archived completed milestone records plus the
+  latest .147 result artifacts, with a
   plain-English timeline of what we tried, what failed, what stuck.
 - **[Roadmap](docs/roadmap.md)** — current milestone, upcoming milestones,
   hardware track, and Phase 3 (Kona-parity foundation-model) direction.
@@ -732,7 +743,7 @@ See the [technical report](docs/technical-report.md) for the full research recor
 
 ## 14 Principles Learned
 
-Hard-won lessons from the activation-based phase of a research program that now spans 2,187 tracked experiment records through Exp 1863, 158 Archived completed milestone records, and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
+Hard-won lessons from the activation-based phase of a research program that now spans 2,213 tracked experiment records through Exp 1889, 160 Archived completed milestone records, and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
 
 ### What works
 1. **The model's own logprobs are the best energy.** No external EBM needed for rejection sampling — the LLM's own confidence is already an energy function. Simple, practical, +10%.

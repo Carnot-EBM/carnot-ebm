@@ -300,15 +300,15 @@
       <a href="technical-report.html" class="btn btn-secondary">How it works</a>
     </div>
     <div class="stats-bar" aria-label="Project headline numbers">
-      <div class="stat"><div class="stat-num">2,187</div><div class="stat-label">Experiment records through Exp 1863</div></div>
-      <div class="stat"><div class="stat-num">158</div><div class="stat-label">archived records through .145</div></div>
-      <div class="stat"><div class="stat-num">24,209</div><div class="stat-label">Python items collected, not full pass</div></div>
-      <div class="stat"><div class="stat-num">10/10</div><div class="stat-label">experiments completed in .145</div></div>
+      <div class="stat"><div class="stat-num">2,213</div><div class="stat-label">Experiment records through Exp 1889</div></div>
+      <div class="stat"><div class="stat-num">160</div><div class="stat-label">archived records through .146</div></div>
+      <div class="stat"><div class="stat-num">24,251</div><div class="stat-label">Python items collected, not full pass</div></div>
+      <div class="stat"><div class="stat-num">5/14</div><div class="stat-label">tasks completed in .147</div></div>
       <div class="r-card">
-        <span class="r-tag">Hardware Profiling</span>
-        <h3 class="r-title">DualGPURunner Idle Analysis</h3>
-        <p class="r-desc">Milestone .145 completed 10 experiments in 19.7 minutes. All tasks were synthesis-only, appropriate 0% GPU utilization.</p>
-        <div class="r-stats"><span class="r-before">Sequential bottleneck Exp 1603</span> <span class="r-after">Exp 1863</span></div>
+        <span class="r-tag">Latest closeout</span>
+        <h3 class="r-title">Prompt-to-validator partial; live SOTA blocked</h3>
+        <p class="r-desc">Milestone .147 completed 5 of 14 tasks. Nine scopes were blocked or missing artifacts; no new headline live-SOTA accuracy is claimed.</p>
+        <div class="r-stats"><span class="r-before">Telemetry, FR-11, and hardware gates not ready</span> <span class="r-after">Exp 1889</span></div>
       </div>
     </div>
   </div>
@@ -343,8 +343,8 @@
       <div class="r-card">
         <span class="r-tag">Hardware Profiling</span>
         <h3 class="r-title">DualGPURunner Idle Analysis</h3>
-        <p class="r-desc">Both RTX 3090s completely idle at 4 MB / 0% utilization during .126 runs, revealing a 40% time savings opportunity.</p>
-        <div class="r-stats"><span class="r-before">Sequential bottleneck Exp 1603</span> <span class="r-after">Exp 1863</span></div>
+        <p class="r-desc">Recent milestones keep showing that synthesis-only work and blocked gates, not GPU compute, dominate wall-clock time.</p>
+        <div class="r-stats"><span class="r-before">Sequential bottlenecks and gate blocks remain</span> <span class="r-after">Exp 1889</span></div>
       </div>
     </div>
   </div>
@@ -413,8 +413,8 @@
       <div class="r-card">
         <span class="r-tag">Hardware Profiling</span>
         <h3 class="r-title">DualGPURunner Idle Analysis</h3>
-        <p class="r-desc">Both RTX 3090s completely idle at 4 MB / 0% utilization during .126 runs, revealing a 40% time savings opportunity.</p>
-        <div class="r-stats"><span class="r-before">Sequential bottleneck Exp 1603</span> <span class="r-after">Exp 1863</span></div>
+        <p class="r-desc">Recent closeouts show GPU idleness is expected for synthesis-only work; blocked gates remain the higher operational risk.</p>
+        <div class="r-stats"><span class="r-before">Sequential bottlenecks and gate blocks remain</span> <span class="r-after">Exp 1889</span></div>
       </div>
     </div>
   </div>
@@ -633,7 +633,7 @@
           cluster with 100% line coverage on the touched store module, while
           preserving the full-suite debt disclosure: the collection is clean,
           but the full Python suite remains red on pre-existing failures. The
-          current collection-only snapshot reports 24,209 Python items. The
+          current collection-only snapshot reports 24,251 Python items. The
           .112 scope-reduction pass added artifact signal/noise and mandatory
           priority ledgers. The .116 closeout records runtime-contract,
           FR-11 feedback, product-line solver-oracle, THRML conformance, KAN
@@ -651,11 +651,15 @@
           archive adds sampler-security falsifications,
           candidate-warm-start validation, Soft-Gibbs coverage bounds, k=6
           rho(C) adversarial-curve measurement, and FR-11 retention audits. The
-          latest .121 artifacts settle the BRAIN training-dynamics question,
+          .121 artifacts settle the BRAIN training-dynamics question,
           add a DCCD/JSONSchemaBench structured-output smoke, reverse the
           collapsed FR-11 v14 retention, record nine audit-time Phase-1 ship blockers, and
           rescope hardware around simulator-only Z1 drift correction plus
-          blocked Wormhole/PolarFire access.
+          blocked Wormhole/PolarFire access. The latest .146/.147 artifacts
+          normalize ROCE/HILED evidence, compile ROCE constraints to executable
+          validator trees, add BEAVER-lite bounds with residual risk 0.0, and
+          block live-SOTA ROCE evaluation until the mandated Qwen3.6-35B and
+          Gemma4-31B GGUFs are available.
         </p>
       </div>
       <div class="bento-card span-2">
@@ -686,14 +690,17 @@
           output benchmark rows for mandated SOTA GGUFs, Phase-1 ship-readiness
           ledger evidence, paper-v6 sampler/OT integration artifacts, and
           hardware-access preflight records that preserve the no-hardware-claim
-          boundary.
+          boundary. The .146/.147 surfaces add normalized artifact contracts,
+          ROCE validator-tree compilation to Python/PySAT/Z3 backends, and
+          BEAVER-lite validator-tree bounds while keeping executable validators
+          as the final acceptance authority.
         </p>
       </div>
       <div class="r-card">
         <span class="r-tag">Hardware Profiling</span>
         <h3 class="r-title">DualGPURunner Idle Analysis</h3>
-        <p class="r-desc">Both RTX 3090s completely idle at 4 MB / 0% utilization during .126 runs, revealing a 40% time savings opportunity.</p>
-        <div class="r-stats"><span class="r-before">Sequential bottleneck Exp 1603</span> <span class="r-after">Exp 1863</span></div>
+        <p class="r-desc">Milestone .146 completed 20 synthesis-only experiments in 52.5 minutes. GPU idle was appropriate, not a compute bottleneck.</p>
+        <div class="r-stats"><span class="r-before">Synthesis timing and closeout batching remain the targets</span> <span class="r-after">ops/changelog .146</span></div>
       </div>
     </div>
   </div>
@@ -1055,9 +1062,9 @@
       </div>
       <div class="r-card">
         <span class="r-tag">Infrastructure &mdash; pre-test suite rescue</span>
-        <h3 class="r-title">24,209 Python test items collected, not passed</h3>
+        <h3 class="r-title">24,251 Python test items collected, not passed</h3>
         <div class="r-meter"><div class="r-bar" style="width: 100%; background: #f59e0b;"></div></div>
-        <div class="r-stats"><span class="r-before">Collection count only; latest full-suite attempt still red on pre-existing debt</span> <span class="r-after">2026-05-09 collection-only run</span></div>
+        <div class="r-stats"><span class="r-before">Collection count only; latest full-suite attempt still red on pre-existing debt</span> <span class="r-after">Exp 1880, 2026-05-12</span></div>
       </div>
       <div class="r-card">
         <span class="r-tag">Runtime &mdash; llama.cpp GPU offload</span>
@@ -1534,10 +1541,34 @@
         <div class="r-stats"><span class="r-before">Optimal deployment beta 0.1; convergence proxy retained 0.995 of noiseless baseline</span> <span class="r-after">Exps 1570/1571</span></div>
       </div>
       <div class="r-card">
-        <span class="r-tag">Milestone .121 &mdash; latest checked-in retro</span>
+        <span class="r-tag">Milestone .121 &mdash; structured-output and ship-readiness closeout</span>
         <h3 class="r-title">14/14 criteria met; 9 ship blockers recorded</h3>
         <div class="r-meter"><div class="r-bar" style="width: 100%; background: #f59e0b;"></div></div>
         <div class="r-stats"><span class="r-before">12/14 tasks completed; Wormhole and PolarFire carried forward</span> <span class="r-after">Exp 1587</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Milestone .147 &mdash; latest checked-in retro</span>
+        <h3 class="r-title">5/14 tasks complete; 9 blocked or missing</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 35.71%; background: #f59e0b;"></div></div>
+        <div class="r-stats"><span class="r-before">Prompt-to-validator partial; telemetry, FR-11, and hardware gates not ready</span> <span class="r-after">Exp 1889</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">ROCE &mdash; validator tree compiler</span>
+        <h3 class="r-title">8/8 constraints; 3 backends; false accepts 0</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 100%; background: #22c55e;"></div></div>
+        <div class="r-stats"><span class="r-before">Python, PySAT-compatible CNF, and Z3-compatible leaves compiled</span> <span class="r-after">Exp 1878</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">BEAVER-lite &mdash; validator-tree bounds</span>
+        <h3 class="r-title">Coverage bound 1.0; residual risk 0.0</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 100%; background: #22c55e;"></div></div>
+        <div class="r-stats"><span class="r-before">Bounds do not replace executable validator acceptance authority</span> <span class="r-after">Exp 1879</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Live SOTA ROCE &mdash; honest block</span>
+        <h3 class="r-title">No headline accuracy; 2 mandated GGUFs missing</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 0%; background: #ef4444;"></div></div>
+        <div class="r-stats"><span class="r-before">Qwen3.6-35B and Gemma4-31B unavailable at gate time</span> <span class="r-after">Exp 1880</span></div>
       </div>
       <div class="r-card">
         <span class="r-tag">Structured output &mdash; DCCD/JSONSchemaBench smoke</span>
@@ -1773,8 +1804,8 @@
       <div class="r-card">
         <span class="r-tag">Hardware Profiling</span>
         <h3 class="r-title">DualGPURunner Idle Analysis</h3>
-        <p class="r-desc">Both RTX 3090s completely idle at 4 MB / 0% utilization during .126 runs, revealing a 40% time savings opportunity.</p>
-        <div class="r-stats"><span class="r-before">Sequential bottleneck Exp 1603</span> <span class="r-after">Exp 1863</span></div>
+        <p class="r-desc">Recent closeouts show GPU idleness is expected for synthesis-only work; blocked gates remain the higher operational risk.</p>
+        <div class="r-stats"><span class="r-before">Sequential bottlenecks and gate blocks remain</span> <span class="r-after">Exp 1889</span></div>
       </div>
       <div class="r-card">
         <span class="r-tag">Hardware &mdash; KV260 Vivado Synthesis</span>
@@ -1804,7 +1835,7 @@
         <span class="r-tag">Milestone .136 &mdash; Phase 4 synthesis</span>
         <h3 class="r-title">All tasks completed; RTX 3090s idle</h3>
         <div class="r-meter"><div class="r-bar" style="width: 100%; background: #f59e0b;"></div></div>
-        <div class="r-stats"><span class="r-before">Analyzed 1388 min wall time / 253 experiments</span> <span class="r-after">Exp 1863</span></div>
+        <div class="r-stats"><span class="r-before">Analyzed 1388 min wall time / 253 experiments</span> <span class="r-after">Milestone .132/.136 ops layer</span></div>
       </div>
       <div class="r-card">
         <span class="r-tag">Capstone &mdash; E2E Pipeline</span>
@@ -1822,7 +1853,7 @@
         <span class="r-tag">Milestone .137 &mdash; Phase 4 operations</span>
         <h3 class="r-title">Retrospective complete</h3>
         <div class="r-meter"><div class="r-bar" style="width: 100%; background: #f59e0b;"></div></div>
-        <div class="r-stats"><span class="r-before">Phase 4 operations aggregated</span> <span class="r-after">Exp 1863</span></div>
+        <div class="r-stats"><span class="r-before">Phase 4 operations aggregated</span> <span class="r-after">Exp 1784</span></div>
       </div>
     </div>
   </div>
@@ -1844,7 +1875,7 @@
       <a href="arxiv-metadata.yaml" class="btn btn-secondary">Submission metadata</a>
     </div>
     <p style="margin-top: 1.5rem; font-size: 0.9rem; color: var(--text-muted);">
-      <em>Latest paper audit status 2026-05-09: paper-v6 remains narrowed to
+      <em>Paper audit status from 2026-05-09: paper-v6 remains narrowed to
       four anchored artifact-backed claims; the Section 3 sampler draft has been
       resumed, and the ICLR-26 OT verification framework was adopted with a
       six-item conflict ledger and no publication trigger. The v11 arXiv bundle
