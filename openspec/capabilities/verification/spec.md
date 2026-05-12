@@ -2318,6 +2318,52 @@ accepts,
 And `results/experiment_1666_nsvif.json` records `compilation_rate=1.0` and
 `false_accepts=0`.
 
+### REQ-VERIFY-1878: ROCE Validator-Tree Compiler
+
+The repository shall provide a deterministic ROCE-to-validator-tree compiler
+that reuses Carnot's existing ROCE extractor and NSVIF verifier patterns before
+trusting live SOTA output constraints.
+
+The compiler shall:
+
+- define `python/carnot/pipeline/roce_validator_tree.py`;
+- accept ROCE `ConstraintResult` rows or prompt text that can be processed by
+  the existing `ROCEExtractor`;
+- compile supported ROCE predicates into an explicit local evaluation tree with
+  Python validation leaves and PySAT-compatible plus Z3-compatible hard
+  conjunction metadata;
+- support at least response length, required text, forbidden text, JSON shape
+  or required-key checks, arithmetic equality, and conditional guard
+  constraints;
+- treat conditional constraints as guarded leaves, so the guarded check is
+  enforced exactly when its guard predicate is true and skipped otherwise;
+- fail closed for unsupported constraint categories while recording
+  unsupported categories and constraint coverage;
+- evaluate a deterministic fixture set containing known-good and adversarial
+  invalid outputs, proving zero false accepts on that fixture set; and
+- write `results/experiment_1878_roce_validator_tree.json` with `status`,
+  `honest_verdict`, `validator_tree_compiler_ready`, `zero_false_accepts`,
+  `false_accept_count`, `constraint_coverage_rate`,
+  `unsupported_constraint_types`, and `tests_run`.
+
+`validator_tree_compiler_ready` MUST be true only when every supported fixture
+constraint compiles, known-good fixtures pass, adversarial invalid fixtures are
+rejected, false accepts are zero, and unsupported categories are recorded
+without being silently accepted.
+
+### SCENARIO-VERIFY-1878: ROCE Output Compiles To Guarded Validator Tree
+
+Given ROCE-extracted prompt constraints for length, text inclusion/exclusion,
+JSON shape, arithmetic equality, and an if-then conditional guard,
+When the validator-tree compiler builds local validators and evaluates the
+fixture outputs,
+Then the tree exposes Python, PySAT-compatible, and Z3-compatible validation
+metadata,
+And guarded leaves only fail when their guard is active,
+And adversarial invalid outputs are rejected with `false_accept_count=0`,
+And `results/experiment_1878_roce_validator_tree.json` records complete
+coverage and unsupported-category metrics.
+
 ### REQ-VERIFY-1642: llguidance Adapter For Structured Verdict Generation
 
 The repository shall provide an Exp 1642 llguidance adapter that exposes
@@ -2446,7 +2492,7 @@ the semantic false accept returns a `VerdictRecord` with `verdict="fail"` and
 and `results/experiment_1591_dccd_adapter.json` records complete metrics and
 backend diagnostics for the reusable adapter.
 
-## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487/1495/1496/1499/1500/1501/1507/1508/1509/1510/1520/1521/1522/1525/1537/1538/1541/1542/1551/1552/1553/1554/1557/1562/1571/1578/1580/1588/1591/1642/1666)
+## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487/1495/1496/1499/1500/1501/1507/1508/1509/1510/1520/1521/1522/1525/1537/1538/1541/1542/1551/1552/1553/1554/1557/1562/1571/1578/1580/1588/1591/1642/1666/1878)
 
 | Requirement | Python | Tests |
 |-------------|--------|-------|
@@ -2498,6 +2544,7 @@ backend diagnostics for the reusable adapter.
 | REQ-VERIFY-1642 | Implemented (`scripts/experiment_1642_llguidance.py`) | Implemented (`tests/python/test_experiment_1642_llguidance.py`) |
 | REQ-VERIFY-1646 | Implemented (`scripts/experiment_1646_ebcn.py`) | Implemented (`tests/python/test_experiment_1646_ebcn.py`) |
 | REQ-VERIFY-1666 | Implemented (`python/carnot/pipeline/nsvif_parser.py`) | Implemented (`tests/python/test_pipeline_nsvif_parser.py`) |
+| REQ-VERIFY-1878 | Implemented (`python/carnot/pipeline/roce_validator_tree.py`) | Implemented (`tests/python/test_roce_validator_tree.py`) |
 
 ### REQ-VERIFY-1593: CDG Repair Acceptance Rates
 The repository shall provide a CDG repair analysis tool that builds a CDG over runtime-contract cases, compares repair localization, and contrasts repair acceptance rates between flat check and CDG ordering using the mandated MODEL_SPECS.

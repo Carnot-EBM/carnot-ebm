@@ -111,6 +111,8 @@ class ROCEExtractor:
         constraints.extend(self._extract_numeric_ranges(text))
         constraints.extend(self._extract_boundary_text(text))
         constraints.extend(self._extract_output_shape(text))
+        constraints.extend(self._extract_arithmetic_equalities(text))
+        constraints.extend(self._extract_conditional_guards(text))
         return _dedupe_constraints(constraints)
 
     def _extract_required_text(self, text: str) -> list[ROCEConstraint]:
@@ -119,6 +121,8 @@ class ROCEExtractor:
             r"(?:the\s+)?(?:word|phrase|term)?\s*['\"]([^'\"]+)['\"]",
             r"(?:must|should|required to)\s+(?:include|contain|mention|use)\s+"
             r"the\s+(?:word|phrase|term)\s+([A-Za-z0-9_:-]+)",
+            r"(?:^|[.!?]\s+)(?:please\s+)?(?:include|contain|mention|use)\s+"
+            r"(?:the\s+)?(?:word|phrase|term)?\s*['\"]([^'\"]+)['\"]",
         ]
         results: list[ROCEConstraint] = []
         for pattern in patterns:
@@ -387,6 +391,50 @@ class ROCEExtractor:
                     arguments={"type": answer_type.group(1).lower()},
                     description=f"Response answer type must be {answer_type.group(1).lower()}",
                     raw_phrase=answer_type.group(0),
+                )
+            )
+        return results
+
+    def _extract_arithmetic_equalities(self, text: str) -> list[ROCEConstraint]:
+        results: list[ROCEConstraint] = []
+        pattern = r"(-?\d+(?:\.\d+)?(?:\s*[+\-*/]\s*-?\d+(?:\.\d+)?)+)\s*=\s*(-?\d+(?:\.\d+)?)"
+        for match in re.finditer(pattern, text):
+            left = " ".join(match.group(1).split())
+            right = match.group(2)
+            results.append(
+                ROCEConstraint(
+                    kind="arithmetic",
+                    predicate="arithmetic_equality",
+                    arguments={"left": left, "right": right},
+                    description=f"Response must state arithmetic equality {left} = {right}",
+                    raw_phrase=match.group(0),
+                )
+            )
+        return results
+
+    def _extract_conditional_guards(self, text: str) -> list[ROCEConstraint]:
+        results: list[ROCEConstraint] = []
+        pattern = (
+            r"\bif\s+(?:the\s+)?response\s+(?:contains|includes|mentions)\s+"
+            r"['\"]([^'\"]+)['\"]\s*,?\s*(?:it|the\s+response)\s+must\s+"
+            r"(?:also\s+)?(?:contain|include|mention)\s+['\"]([^'\"]+)['\"]"
+        )
+        for match in re.finditer(pattern, text, re.IGNORECASE):
+            guard_term = match.group(1).strip()
+            required_term = match.group(2).strip()
+            results.append(
+                ROCEConstraint(
+                    kind="conditional",
+                    predicate="conditional_required_text",
+                    arguments={
+                        "guard": {"predicate": "contains_text", "term": guard_term},
+                        "then": {"predicate": "required_text", "term": required_term},
+                    },
+                    description=(
+                        f"If response contains '{guard_term}', it must contain "
+                        f"'{required_term}'"
+                    ),
+                    raw_phrase=match.group(0),
                 )
             )
         return results
