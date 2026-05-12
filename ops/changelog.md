@@ -5591,3 +5591,4 @@ Completed 15 experiments in 28.9 minutes. There were 0 compute-bound experiments
 - 2026-05-12: Exp 1935: Continuous Latent Sampler Prototype (FAR) (✅ Complete) — honest_verdict=complete: FAR-surrogate sampler prototype implemented, all tests pass (16/16), 100% coverage on new module, benchmark shows 1.15x speedup over Langevin at 44.5% surrogate skip rate; results/experiment_1935_continuous_latent_sampler.json
 - 2026-05-12: Exp 1938: NRGPT Energy-Based Loss Probe (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_1938_nrgpt_loss_probe.json
 - 2026-05-12: Exp 1941: EBT Reasoning Bridge (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_1941_ebt_reasoning_bridge.json
+- 2026-05-12: Exp 1942: Integrated Tri-SOTA E2E v5 (✅ Complete) — honest_verdict=complete: tri_sota_e2e_successful; results/experiment_1942_tri_sota_e2e_v5.json
