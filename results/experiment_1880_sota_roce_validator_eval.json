@@ -1,0 +1,64 @@
+{
+  "MODEL_SPECS": [
+    {
+      "gpu": 0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "name": "Qwen3.6-35B-A3B",
+      "preferred_quant": "Q4_K_M",
+      "role": "flagship_moe_primary"
+    },
+    {
+      "gpu": 1,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "name": "Gemma4-31B-it",
+      "preferred_quant": "Q4_K_M",
+      "role": "flagship_dense_secondary"
+    },
+    {
+      "gpu": 0,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "name": "Gemma4-26B-A4B-it",
+      "preferred_quant": "Q4_K_M",
+      "role": "middle_moe_secondary"
+    }
+  ],
+  "case_results": [],
+  "constraint_coverage_rate": 0.0,
+  "constraint_families": [],
+  "experiment": "1880_sota_roce_validator_eval",
+  "experiment_id": 1880,
+  "false_accept_count": 0,
+  "generation_rows": [],
+  "headline_accuracy_claimed": false,
+  "honest_verdict": "blocked: unavailable mandated SOTA GGUF model(s); no headline accuracy claimed; missing=['unsloth/Qwen3.6-35B-A3B-GGUF', 'unsloth/gemma-4-31B-it-GGUF']",
+  "inference_mode": "blocked_missing_mandated_gguf",
+  "missing_models": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "unsloth/gemma-4-31B-it-GGUF"
+  ],
+  "models_used": [
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "output_rows": 0,
+  "prompt_count": 0,
+  "run_date": "20260512",
+  "schema": "carnot.experiment_1880_sota_roce_validator_eval.v1",
+  "sota_roce_eval_ready": false,
+  "spec_traces": [
+    "REQ-VERIFY-1880",
+    "SCENARIO-VERIFY-1880"
+  ],
+  "status": "blocked",
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_sota_roce_validator_eval.py -q --no-cov (passed: 6 passed)",
+    ".venv/bin/coverage run --include='*/python/carnot/verify/sota_roce_validator_eval.py' -m pytest tests/python/test_sota_roce_validator_eval.py -q --no-cov -n 0 && .venv/bin/coverage report --fail-under=100 -m (passed: 100% new-module coverage)",
+    "ruff check python/carnot/verify/sota_roce_validator_eval.py tests/python/test_sota_roce_validator_eval.py (passed)",
+    "python scripts/check_spec_coverage.py (failed: 61 pre-existing tests lack REQ-/SCENARIO refs; new Exp 1880 tests not listed)",
+    ".venv/bin/pytest tests/python -q (failed/interrupted after visible pre-existing failures, JAX xdist worker abort in test_experiment_883_vjepa_v2_expanded_corpus.py::test_weighted_loss_returns_scalar, and ExperimentTimeoutWatchdog for experiment=561; run stopped after ~39 min to avoid leaving pytest active)",
+    "ops/e2e-test-plan.md reviewed (no ROCE/SOTA-validator-specific E2E item; live Exp 1880 path blocked before inference because mandated GGUFs are unavailable)"
+  ],
+  "timestamp": "2026-05-12T01:38:16Z",
+  "unsupported_constraint_types": [],
+  "zero_false_accepts": false
+}
