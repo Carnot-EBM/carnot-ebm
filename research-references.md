@@ -4,6 +4,34 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-05-13 Post-.150 Planning Sweep (Milestone 2026.05.151)
+
+This sweep was run after milestone `.150` completed. Local outcomes established baseline recoveries for SOTA caching, advanced Epsilon Continual Learning, and explored S2KAN and hard CSP baselines. The literature search revealed advances in hardware KAN implementations, self-supervised constraint transformers, and energy-guided generation.
+
+### KANELÉ: Hardware-Efficient Kolmogorov-Arnold Networks
+- **Paper:** "KANELÉ: Kolmogorov-Arnold Networks for Efficient LUT-based Evaluation" (arXiv:2512.12850 / ISFPGA 2026).
+- **What:** Introduces a framework for deploying KANs on FPGAs using Lookup Tables (LUTs), achieving up to 2700x speedup over prior implementations.
+- **Relevance to Carnot:** Directly applies to Carnot's hardware pipeline. Translating Carnot's KAN tiers to a LUT-based formulation provides a concrete path to KV260 deployment.
+- **Concrete experiment hook:** Build a LUT-based representation for the S2KAN tier and perform no-synthesis hardware accounting.
+
+### ConsFormer: Iterative Solution Improvers for Constraint Satisfaction
+- **Paper:** "Self-Supervised Transformers as Iterative Solution Improvers for Constraint Satisfaction" (arXiv:2502.15794 / ICML 2025).
+- **What:** ConsFormer is a self-supervised Transformer that iteratively refines variable assignments to solve CSPs (Sudoku, Graph Coloring) without labeled data.
+- **Relevance to Carnot:** Extends the Phase 3 goal of bridging symbolic and neural constraints. ConsFormer gives a template for iterative neural refinement over constraints.
+- **Concrete experiment hook:** Implement a ConsFormer-style refinement loop for Carnot's verifiable reasoning pipeline and evaluate against deterministic solver baselines.
+
+### Energy-Guided Decoding and Type-Constrained Generation
+- **Papers:** "Energy-Guided Decoding for Object Hallucination Mitigation" (arXiv:2507.07731) and "Type-constrained decoding" (Mündler et al.).
+- **What:** Uses explicit energy landscapes and formal grammars to guide LLM decoding dynamically, ensuring valid outputs and reducing hallucination.
+- **Relevance to Carnot:** Provides immediate value to Carnot's runtime generation. We can integrate energy-guided decoding alongside strict grammar verification to improve structural output without semantic degradation.
+- **Concrete experiment hook:** Apply Energy-Guided Decoding on local SOTA models, comparing semantic validation rates against static-constrained decoding.
+
+### Continuous Latent Generation (FAR)
+- **Paper:** "Fast Autoregressive Models for Continuous Latent Generation" (arXiv:2504.18391).
+- **What:** Establishes efficient continuous-latent autoregressive generation models that run 2.3x faster than diffusion while maintaining fidelity.
+- **Relevance to Carnot:** Carnot's continuous reasoning goals require fast sampling in latent space. FAR provides an architectural template for these layers.
+- **Concrete experiment hook:** Design a continuous-latent constraint sampler prototype inspired by FAR.
+
 ## 2026-05-12 Post-.148 Planning Sweep (Milestone 2026.05.149)
 
 This sweep was run after milestone `.148` completed. Local outcomes: the
