@@ -592,3 +592,42 @@ Scaling constraint checking across multiple reasoning paths. Implement a consens
 ### SCENARIO-ISING-043
 
 **Ising Consensus artifact:** Given 5 diverse SOTA answers, their conflicts are encoded as an Ising graph, solved for minimum-energy consensus, and results are written to `results/experiment_1872_ising_consensus.json`.
+
+### REQ-ISING-044
+
+**Hard CSP neural-solver reality check MUST report true constraint satisfaction under a strict time budget.**
+
+**Rationale:**
+Neural and Ising-style solvers can report low surrogate energy while still
+violating hard CSP constraints. Exp 1927 must make that failure mode visible by
+evaluating a neural-style solver on a deterministic hard 3-SAT instance and
+scoring the actual clauses directly, not a proxy loss.
+
+**Acceptance criteria:**
+- The experiment SHALL define `scripts/experiment_1927_hard_csp_neural.py`.
+- The hard CSP SHALL be a deterministic 3-SAT instance with three-literal
+  clauses and a documented planted satisfying assignment used only for instance
+  construction and validation.
+- The evaluator SHALL enforce a configurable wall-clock time budget and stop
+  launching solver work once the budget is exhausted.
+- The reported constraint satisfaction rate SHALL be computed by directly
+  checking the true 3-SAT clauses for each candidate assignment.
+- `results/experiment_1927_hard_csp_neural.json` SHALL include `status`,
+  `experiment_id`, `spec_refs`, `run_date`, `solver_name`, `csp_family`,
+  `problem`, `config`, `time_budget_s`, `wall_time_s`, `timeout_exceeded`,
+  `assignments_evaluated`, `true_constraint_satisfaction_rate`,
+  `best_satisfied_constraints`, `total_constraints`, `best_assignment`,
+  `attempts`, `cpu_only`, `hardware_execution_performed`,
+  `hardware_claim_allowed`, and `honest_verdict`.
+- `hardware_execution_performed` and `hardware_claim_allowed` SHALL remain
+  false because Exp 1927 is a CPU-only reality check.
+
+**Implementation:** `scripts/experiment_1927_hard_csp_neural.py`
+
+### SCENARIO-ISING-044
+
+**Hard CSP neural reality-check artifact:** Given the deterministic hard 3-SAT
+instance and a bounded CPU solver configuration, Exp 1927 SHALL write
+`results/experiment_1927_hard_csp_neural.json`, report the direct
+clause-satisfaction rate achieved within the allotted wall-clock budget, and
+avoid any hardware execution claim.
