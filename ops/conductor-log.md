@@ -1986,3 +1986,5 @@ IMPORTANT:
 | 2026-05-12 07:29 UTC | Exp 1898: SOTA FR-11 Promotion Smoke v2 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1891-sota-gguf-cache-runtime-preflight) |
 | 2026-05-12 07:29 UTC | Exp 1899: GEM/ConsFormer Validator Graph Precondit | FAIL | Codex CLI error: you finish the real work inside 10 minutes, that is correct  |
 | 2026-05-12 07:31 UTC | Exp 1900: FPGA/S2KAN/Ising Resource Accounting v2 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1899-gem-consformer-validator-graph-preco |
+| 2026-05-12 07:31 UTC | Exp 1901: p-bit/p-dit Ising Sampler Accounting | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1900-fpga-s2kan-ising-resource-accounti |
+| 2026-05-12 07:33 UTC | Exp 1900: FPGA/S2KAN/Ising Resource Accounting v2 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1899-gem-consformer-validator-graph-preco |
