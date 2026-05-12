@@ -2267,3 +2267,5 @@ IMPORTANT:
 | 2026-05-12 22:17 UTC | Exp 1965: Energy-Guided NCO Benchmark | DOOMED_RERUN_BLOCK | 5 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-12 22:19 UTC | Exp 1965: Energy-Guided NCO Benchmark | DOOMED_RERUN_BLOCK | 5 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-12 22:21 UTC | Exp 1966: Tri-SOTA E2E Integration v8 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1959-tri-sota-constrained-eval) |
+| 2026-05-12 22:24 UTC | Exp 1967: Milestone .153 Pre-Retro Audit | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1967_milesto |
+| 2026-05-12 22:26 UTC | Exp 1966: Tri-SOTA E2E Integration v8 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1959-tri-sota-constrained-eval) |
