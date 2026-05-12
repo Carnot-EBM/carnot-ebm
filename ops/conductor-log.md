@@ -2180,3 +2180,4 @@ IMPORTANT:
 | 2026-05-12 15:54 UTC | Exp 1924: Routing without Forgetting FR-11 Audit v | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1922-residual-drift-ledger) |
 | 2026-05-12 16:13 UTC | Exp 1927: Hard CSP and Neural Solver Reality Check | OK | 81 passed, 1 warning in 5.44s |
 | 2026-05-12 16:16 UTC | Exp 1928: Corrected THRML/Carnot Parity Methodolog | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-12 16:18 UTC | Exp 1928: Corrected THRML/Carnot Parity Methodolog | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
