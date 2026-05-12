@@ -89,3 +89,83 @@ class GCoTBranchingSampler:
         else:
             self.branches = []
             self.step_counter = 0
+
+class NISampler:
+    """Neural Indicator (NI) Sampling for discrete diffusion.
+    
+    Optimizes token resolution order by using an energy-based indicator step
+    to dynamically determine which tokens to denoise first, accelerating
+    discrete diffusion convergence.
+    """
+    
+    def __init__(self, indicator_fn: Callable[[List[int], int], float]):
+        """
+        Args:
+            indicator_fn: Function that computes the indicator (energy/loss proxy) 
+                          for denoising a specific token at `token_idx` given `current_sequence`.
+                          Lower indicator values mean higher priority to denoise.
+        """
+        self.indicator_fn = indicator_fn
+        
+    def determine_order(self, current_sequence: List[int], mask: List[bool]) -> List[int]:
+        """
+        Determine the order in which to denoise tokens based on the indicator function.
+        
+        Args:
+            current_sequence: The current token sequence.
+            mask: Boolean mask indicating which tokens are currently noised (True = noised).
+            
+        Returns:
+            List of indices sorted by priority (first to denoise).
+        """
+        priorities = []
+        for idx, is_noised in enumerate(mask):
+            if is_noised:
+                # Compute indicator for this specific token
+                indicator_val = self.indicator_fn(current_sequence, idx)
+                priorities.append((idx, indicator_val))
+                
+        # Sort indices by indicator value (ascending, lower energy/loss first)
+        priorities.sort(key=lambda x: x[1])
+        return [idx for idx, _ in priorities]
+        
+    def sample(self, initial_sequence: List[int], denoise_fn: Callable[[List[int], int], int]) -> List[int]:
+        """
+        Denoise the sequence using the Neural Indicator order.
+        
+        Args:
+            initial_sequence: The initial fully or partially noised sequence.
+            denoise_fn: Function to denoise a single token at a given index.
+            
+        Returns:
+            The fully denoised sequence.
+        """
+        current_sequence = list(initial_sequence)
+        # Assume 0 is the noise token for this mockup
+        mask = [token == 0 for token in current_sequence]
+        
+        # Determine optimal token order using NI
+        order = self.determine_order(current_sequence, mask)
+        
+        for idx in order:
+            current_sequence[idx] = denoise_fn(current_sequence, idx)
+            mask[idx] = False
+            
+        return current_sequence
+
+class RandomDiscreteDiffusionSampler:
+    """Baseline Random Order Discrete Diffusion."""
+    
+    def sample(self, initial_sequence: List[int], denoise_fn: Callable[[List[int], int], int]) -> List[int]:
+        import random
+        current_sequence = list(initial_sequence)
+        mask = [token == 0 for token in current_sequence]
+        order = [idx for idx, is_noised in enumerate(mask) if is_noised]
+        random.shuffle(order)
+        
+        for idx in order:
+            current_sequence[idx] = denoise_fn(current_sequence, idx)
+            mask[idx] = False
+            
+        return current_sequence
+
