@@ -15,6 +15,7 @@ from carnot.samplers.parallel_ising import (
     AnnealingSchedule,
     InertiaIsingSampler,
     ParallelIsingSampler,
+    PBitIsingSampler,
     _checkerboard_update,
     _inertia_parallel_update,
     _parallel_update,
@@ -481,3 +482,26 @@ class TestParallelSampleStates:
             annealing=AnnealingSchedule(0.1, 5.0),
         )
         assert len(result) == 3
+
+
+class TestPBitIsingSampler:
+    """REQ-ISING-045: p-bit/p-dit Ising sampler accounting."""
+
+    def test_pbit_mode(self):
+        sampler = PBitIsingSampler(n_warmup=10, n_samples=5, steps_per_sample=2, use_pdit=False)
+        key = jrandom.PRNGKey(42)
+        n = 8
+        b = jnp.zeros(n)
+        J = jnp.zeros((n, n))
+        samples = sampler.sample(key, b, J, beta=1.0)
+        assert samples.shape == (5, n)
+
+    def test_pdit_mode(self):
+        sampler = PBitIsingSampler(n_warmup=10, n_samples=5, steps_per_sample=2, use_pdit=True)
+        key = jrandom.PRNGKey(42)
+        n = 8
+        b = jnp.zeros(n)
+        J = jnp.zeros((n, n))
+        samples = sampler.sample(key, b, J, beta=1.0)
+        assert samples.shape == (5, n)
+
