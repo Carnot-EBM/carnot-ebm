@@ -18,11 +18,11 @@ call. No fine-tuning. No access to model weights.
 Rust + Python/JAX, Apache 2.0, local editable install via `pip install -e ".[dev]"`.
 The public PyPI package remains a Phase-1 ship blocker as of Exp 1582.
 
-Current public research record: **2,213 experiment records tracked through Exp
-1889**. `research-complete.yaml` currently archives **2,037** task records
-across **160** artifact-backed completed milestone records through
-2026.05.146; checked-in result artifacts and `ops/changelog.md` extend through
-milestone 2026.05.147 on 2026-05-12.
+Current public research record: **2,227 experiment records tracked through Exp
+1903**. `research-complete.yaml` currently archives **2,051** task records
+across **161** artifact-backed completed milestone records through
+2026.05.147; checked-in result artifacts and `ops/changelog.md` extend through
+milestone 2026.05.148 on 2026-05-12.
 
 Milestone .106 delivered the critical fix to thinking-mode certificate
 generation: Exp 1366 (CRANE tag-first prefix injection) reached
@@ -182,13 +182,17 @@ semantic correctness **1.0** with **0** false accepts on mandated Qwen3.6-35B
 GGUF rows, FR-11 v15 reversed the collapsed v14 retention, the Phase-1 ship
 ledger recorded **9** audit-time blockers, and hardware scope moved to simulator-only
 Z1 drift correction plus blocked Tenstorrent/PolarFire preflights with no
-hardware claim. The latest .146/.147 artifacts add ROCE/HILED artifact
+hardware claim. The .146/.147 artifacts add ROCE/HILED artifact
 normalization, ROCE-to-validator-tree compilation, BEAVER-lite deterministic
 bounds for validator trees, and an honest live-SOTA ROCE block because the
 mandated Qwen3.6-35B and Gemma4-31B GGUFs were unavailable. Milestone .147
 closed with **5** completed tasks and **9** blocked/missing-artifact scopes; the
 current collection-only snapshot reports **24,251** Python test items, not a
-full-suite pass claim.
+full-suite pass claim. Milestone .148 then filed the activation/retro layer:
+**1** non-retro task completed, **2** blocked artifacts were written, **6**
+gate-skipped scopes were retired, and **4** unexpected missing-artifact failures
+remained. The SOTA cache/runtime gap is still unresolved, and the **11%**
+same-title compute-dedupe speedup target from .147 is not yet proven.
 
 ## Install and run
 
@@ -488,6 +492,7 @@ experiment artifact under `results/`.
 | BEAVER-lite validator-tree bounds | Deterministic coverage bound **1.0**, residual-risk bound **0.0**, and executable validator leaves retain final acceptance authority | Exp 1879 |
 | Live SOTA ROCE validator evaluation | **Blocked** before inference because mandated `unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF` were unavailable; no headline accuracy claimed | Exp 1880 |
 | Milestone .147 closeout | **5/14** tasks completed, **9** blocked or missing artifacts; prompt-to-validator work is partial and telemetry, FR-11, and hardware-accounting gates are not ready | Exp 1889 |
+| Milestone .148 closeout | **1** non-retro task completed, **2** blocked artifacts written, **6** gate-skipped scopes retired, and **4** unexpected missing-artifact failures; SOTA cache/runtime gap unresolved and .147's **11%** speedup target not proven | Exp 1903 |
 | Pi-net Projection & ConsFormer | Prototyped Pi-net style differentiable projection layer for continuous latents and a ConsFormer-style refiner | Exps 1633-1635 |
 | SMGI & Energy-Guided Decoding | Integrated SMGI certified update logic and implemented EGD using mandated SOTA GGUFs | Exps 1631/1636 |
 | Current Python test collection | **24,251** Python tests collected in the latest broad attempt; collection-only snapshot, not a full-suite pass claim | Exp 1880, 2026-05-12 |
@@ -532,8 +537,8 @@ claim we publish.
 ## Where to go next
 
 - **[Technical report](docs/technical-report.md)** — the full research arc
-  through Exp 1889 across 160 Archived completed milestone records plus the
-  latest .147 result artifacts, with a
+  through Exp 1903 across 161 archived completed milestone records plus the
+  latest .148 result artifacts, with a
   plain-English timeline of what we tried, what failed, what stuck.
 - **[Roadmap](docs/roadmap.md)** — current milestone, upcoming milestones,
   hardware track, and Phase 3 (Kona-parity foundation-model) direction.
@@ -743,7 +748,7 @@ See the [technical report](docs/technical-report.md) for the full research recor
 
 ## 14 Principles Learned
 
-Hard-won lessons from the activation-based phase of a research program that now spans 2,213 tracked experiment records through Exp 1889, 160 Archived completed milestone records, and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
+Hard-won lessons from the activation-based phase of a research program that now spans 2,227 tracked experiment records through Exp 1903, 161 archived completed milestone records, and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
 
 ### What works
 1. **The model's own logprobs are the best energy.** No external EBM needed for rejection sampling — the LLM's own confidence is already an energy function. Simple, practical, +10%.
