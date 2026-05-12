@@ -1,72 +1,58 @@
-# Carnot Research Roadmap: Milestone 2026.05.152
+# Carnot Research Roadmap vNEXT (Milestone 2026.05.153)
 
-**Status:** Proposed
-**Author:** Carnot Planning Agent
-**Date:** 2026-05-13
+**Title:** Negative Constraint Decoding, Flow Sampling Samplers, and Continuous Self-Learning Refinement
 
-## 1. Executive Summary
+## 1. What the Previous Milestone Proved (.152)
+Milestone .152 demonstrated that differentiable projection layers (HardNet++ style) and Physics-Informed KAN extensions effectively enforce hard constraints during energy-based generation. Multi-agent Ising models and denoising thermodynamics validated continuous latent sampling improvements. However, a major gap remains in handling negative constraints dynamically and handling non-autoregressive discrete diffusion, which causes our deterministic verifiers to frequently fail on token-limited or profanity-filtered structural generation.
 
-Milestone `2026.05.152` advances Carnot from basic guided decoding and soft penalties toward mathematically rigorous constraint satisfaction, multi-agent consensus, and continuous self-learning in latent spaces. Milestone `2026.05.151` successfully verified energy-guided decoding and the ConsFormer refinement loop. 
+## 2. The 3 Biggest Gaps to the PRD Vision
+1. **Dynamic Negative Constraints:** We can enforce positive schemas (e.g., valid JSON), but negative constraints (e.g., specific format exclusions or length limits) lead to state explosion in our current validators.
+2. **Efficient Non-Autoregressive Sampling:** Hardware execution simulation still relies on sequential block Gibbs. Recent Flow Sampling and Interleaved Gibbs Diffusion (IGD) work demonstrates orders of magnitude speedups for mixed continuous-discrete EBMs.
+3. **Continual Learning without Forgetting:** While FR-11 showed memory growth, applying verified continuous updates often leads to subtle soundness or completeness degradation without robust parameter routing.
 
-This milestone integrates fresh 2025-2026 research findings to close three critical gaps in our Product Requirements Document (PRD):
-1. **Hard Constraint Architectures:** Shifting from penalty-based soft constraints to differentiable closed-form projection layers (HardNet++ / $\Pi$Net) that guarantee feasibility.
-2. **Continuous Verification & Ensemble Consensus:** Transitioning our discrete Ising solver validations to continuous latent space reasoning (EBM-CoT) and distributing complex constraint satisfaction across multi-agent ensembles using an Ising-based loss.
-3. **Continuous Self-Learning & Memory:** Leveraging latent energy optimization to semantically prune memory traces, ensuring our constraint repositories learn continuously without catastrophic forgetting.
+## 3. Phase Descriptions
 
-## 2. Milestone Phases
+### Phase 1: Advanced Constrained Decoding (Exp 1956 - 1959)
+This phase addresses structural constraints from recent 2026 advances: NCO (Negative Constraints) and TruncProof (maximum token limitations). It integrates these filters into the local GGUF decoding logic.
+- **Exp 1956:** Implement NCO Plug-in for Negative Constraints.
+- **Exp 1957:** TruncProof Token-Limited LL(1) Parsing.
+- **Exp 1958:** GCoT-Decoding Reasoning Paths.
+- **Exp 1959:** Tri-SOTA Constrained Eval (requires Qwen3.6-35B-A3B-GGUF, gemma-4-31B-it-GGUF).
 
-### Phase 1: Hard Constraints & Projection Architectures
-- **Focus:** Eliminate constraint violations by design using topological and differentiable closed-form layers.
-- **Tasks:**
-  - **Exp 1944:** HardNet++ Differentiable Projection Integration
-  - **Exp 1945:** Chebyshev PI-KAN Extrapolation
-  - **Exp 1946:** Ontology NN Topological Constraints
+### Phase 2: Flow Sampling and Diffusion (Exp 1960 - 1962)
+Explores unnormalized density sampling (Flow Sampling) and Interleaved Gibbs Diffusion (IGD) to parallelize discrete generation.
+- **Exp 1960:** Flow Sampling Process.
+- **Exp 1961:** Interleaved Gibbs Diffusion (IGD) Prototype.
+- **Exp 1962:** NI Sampling Optimization.
 
-### Phase 2: Continuous Verification & Multi-Agent Consensus
-- **Focus:** Expand constraint verification from single discrete traces to continuous latent spaces and agent ensembles.
-- **Tasks:**
-  - **Exp 1947:** Latent Energy Optimization (Continuous Verification)
-  - **Exp 1948:** Multi-Agent Ising Consensus Simulator
-  - **Exp 1949:** Denoising Thermodynamic Sampling Protocol
+### Phase 3: Continuous Self-Learning & Reasoning (Exp 1963 - 1965)
+Focuses on the core self-learning objective by applying Routing without Forgetting principles, tracking utility growth while ensuring zero soundness mistakes.
+- **Exp 1963:** Continual Online Learning: Routing without Forgetting.
+- **Exp 1964:** Hardware-Accounted IGD Evaluation.
+- **Exp 1965:** Energy-Guided NCO Benchmark.
 
-### Phase 3: Continuous Self-Learning & Hardware Alignment
-- **Focus:** Continuously curate knowledge graphs and prepare our latest algorithmic advances for deterministic evaluation.
-- **Tasks:**
-  - **Exp 1950:** Latent Semantic Pruning for Self-Learning
-  - **Exp 1951:** Hardware-Accelerated Symbolic KANs Translation
-  - **Exp 1952:** GNN vs. Classical Benchmarking Audit
-
-### Phase 4: Capstone Evaluation & Retrospective
-- **Focus:** Unify these components across our tri-SOTA flagship GGUF models.
-- **Tasks:**
-  - **Exp 1953:** EqM Compositional Generation Integration
-  - **Exp 1954:** Integrated Tri-SOTA E2E v6
-  - **Exp 1955:** Milestone .152 Retrospective
-
-## 3. Dependency Graph
-
-```mermaid
-graph TD
-    1944[Exp 1944: HardNet++ Projection] --> 1947[Exp 1947: Latent Energy Opt]
-    1945[Exp 1945: Chebyshev PI-KAN] --> 1951[Exp 1951: HW Symbolic KANs]
-    1946[Exp 1946: Ontology NNs] --> 1948[Exp 1948: Multi-Agent Ising]
-    
-    1947 --> 1950[Exp 1950: Latent Semantic Pruning]
-    1948 --> 1954[Exp 1954: Tri-SOTA E2E v6]
-    1949[Exp 1949: Denoising Thermodynamics] --> 1953[Exp 1953: EqM Compositional Gen]
-    
-    1950 --> 1954
-    1951 --> 1954
-    1952[Exp 1952: GNN Benchmarking Audit] --> 1954
-    1953 --> 1954
-    
-    1954 --> 1955[Exp 1955: Milestone .152 Retro]
-```
+### Phase 4: Synthesis & E2E (Exp 1966 - 1968)
+End-to-end integration and retrospective accounting.
+- **Exp 1966:** Tri-SOTA E2E Integration v8.
+- **Exp 1967:** Milestone .153 Pre-Retro Audit.
+- **Exp 1968:** Milestone .153 Retrospective.
 
 ## 4. Hardware Requirements
-- **Local GPUs:** Dual RTX 3090 required for Exp 1947, 1954.
-- **GGUF Models:**
-  - `unsloth/Qwen3.6-35B-A3B-GGUF` (Flagship MoE)
-  - `unsloth/gemma-4-31B-it-GGUF` (Flagship Dense)
-  - `unsloth/gemma-4-26B-A4B-it-GGUF` (Middle MoE)
-- **FPGA/KV260:** Exp 1951 focuses on piecewise affine abstractions and simulation; synthesis/deployment remains gated on the board toolchain.
+- **Local Host:** AMD Ryzen AI 9 HX 370 with 2x idle RTX 3090s via CUDA (as verified in .152).
+- **RAM:** Minimum 64GB required for Tri-SOTA model caches.
+- **FPGA:** KV260 reserved strictly for source-level RTL property evidence (no latency claims).
+
+## 5. Dependency Graph
+```mermaid
+graph TD;
+    exp1956-->exp1959;
+    exp1957-->exp1959;
+    exp1958-->exp1959;
+    exp1960-->exp1961;
+    exp1961-->exp1964;
+    exp1959-->exp1966;
+    exp1964-->exp1966;
+    exp1963-->exp1966;
+    exp1966-->exp1967;
+    exp1967-->exp1968;
+```

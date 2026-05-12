@@ -12467,3 +12467,26 @@ This sweep was run during the planning phase for milestone `.152`. The literatur
 - **What:** Enforces topological coherence over constraint dependency graphs.
 - **Relevance to Carnot:** Essential for Phase 4 multi-agent reasoning, keeping mutually exclusive factual rules structurally sound.
 
+
+
+## 2026-05-13 ArXiv Search Discoveries (Milestone 2026.05.153)
+
+### NCO: Versatile Plug-in for Negative Constraints
+- **Paper:** arXiv:2605.10065
+- **What:** Online pattern matching over hard and regex constraints to prevent undesirable content without state explosion.
+- **Relevance:** Essential for integrating negative constraints into the decoding process for real models.
+
+### Interleaved Gibbs Diffusion (IGD) and Flow Sampling
+- **Paper:** ICLR 2026 (IGD) and arXiv:2605.03984 (Flow Sampling)
+- **What:** Frameworks for constrained generation over mixed continuous-discrete data and sampling from unnormalized densities.
+- **Relevance:** Non-autoregressive generation and EBM sampling speedups.
+
+### GCoT-Decoding
+- **Paper:** arXiv:2604.06794
+- **What:** Unlocking deep reasoning paths using branching decoding strategies.
+- **Relevance:** Enhances continuous latent search and multi-agent reasoning paths.
+
+### TruncProof: LL(1)-Constrained Generation
+- **Paper:** ICLR 2026
+- **What:** Enforces strict token limits while maintaining grammatical validity.
+- **Relevance:** Hard constraint integration.
