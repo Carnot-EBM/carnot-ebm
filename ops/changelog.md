@@ -5608,3 +5608,4 @@ Completed 15 experiments in 28.9 minutes. There were 0 compute-bound experiments
 - 2026-05-12: Exp 1955: Milestone .152 Retrospective (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_1955_milestone_152_retro.json
 - 2026-05-12: Exp 1956: NCO Plug-in for Negative Constraints (⚠️ Research Finding) — honest_verdict=complete: nco_negative_constraints_ready; results/experiment_1956_nco_negative_constraints.json
 - 2026-05-12: Exp 1957: TruncProof Token-Limited LL(1) Parsing (⚠️ Research Finding) — honest_verdict=Successfully sealed structural budget.; results/experiment_1957_truncproof_ll1_grammar.json
+- 2026-05-12: Exp 1958: GCoT-Decoding Reasoning Paths (⚠️ Research Finding) — honest_verdict=Successfully prototyped GCoT branching with Carnot partial-trace energy ranking and backtracking.; results/experiment_1958_gcot_branching_prototype.json
