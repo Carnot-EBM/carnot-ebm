@@ -1,4 +1,4 @@
-# Carnot Research Roadmap: Milestone 2026.05.151
+# Carnot Research Roadmap: Milestone 2026.05.152
 
 **Status:** Proposed
 **Author:** Carnot Planning Agent
@@ -6,70 +6,67 @@
 
 ## 1. Executive Summary
 
-Milestone `2026.05.151` transitions Carnot from recovery of foundational SOTA cache/telemetry toward advancing our verifiable reasoning, continuous self-learning, and hardware-efficiency frontiers. The `2026.05.150` milestone stabilized SOTA artifact recovery, tracked token-level spilled energy, and instituted epsilon continual learning.
+Milestone `2026.05.152` advances Carnot from basic guided decoding and soft penalties toward mathematically rigorous constraint satisfaction, multi-agent consensus, and continuous self-learning in latent spaces. Milestone `2026.05.151` successfully verified energy-guided decoding and the ConsFormer refinement loop. 
 
-This milestone integrates fresh 2026 research findings to close the largest gaps between the current state and the Product Requirements Document (PRD):
-1. **Closing the Structured Generation Semantic Gap:** Using Energy-Guided Decoding and Type-constrained decoding to eliminate the semantic reasoning tax of hard constraints.
-2. **Advancing Iterative Neural Solvers:** Applying ConsFormer-style self-supervised iterative refinement for verifiable reasoning without labeled data.
-3. **Hardware-Efficient KAN Tiers:** Formulating our KAN constraints into LUT-based architectures (KANELÉ) to prepare for realistic KV260 deployment.
-4. **Continuous Latent Exploration:** Adding FAR-style fast autoregressive continuous-latent sampling to bridge our discrete token reality and the eventual thermodynamic target.
+This milestone integrates fresh 2025-2026 research findings to close three critical gaps in our Product Requirements Document (PRD):
+1. **Hard Constraint Architectures:** Shifting from penalty-based soft constraints to differentiable closed-form projection layers (HardNet++ / $\Pi$Net) that guarantee feasibility.
+2. **Continuous Verification & Ensemble Consensus:** Transitioning our discrete Ising solver validations to continuous latent space reasoning (EBM-CoT) and distributing complex constraint satisfaction across multi-agent ensembles using an Ising-based loss.
+3. **Continuous Self-Learning & Memory:** Leveraging latent energy optimization to semantically prune memory traces, ensuring our constraint repositories learn continuously without catastrophic forgetting.
 
 ## 2. Milestone Phases
 
-### Phase 1: Guided & Constrained Generation
-- **Focus:** Improve the reliability and semantic quality of constrained generation loops.
+### Phase 1: Hard Constraints & Projection Architectures
+- **Focus:** Eliminate constraint violations by design using topological and differentiable closed-form layers.
 - **Tasks:**
-  - **Exp 1932:** Energy-Guided Decoding
-  - **Exp 1933:** Type-Constrained Generation
+  - **Exp 1944:** HardNet++ Differentiable Projection Integration
+  - **Exp 1945:** Chebyshev PI-KAN Extrapolation
+  - **Exp 1946:** Ontology NN Topological Constraints
 
-### Phase 2: Verifiable Reasoning & Hardware Efficiency
-- **Focus:** Deploy iterative solvers and perform strict resource accounting for hardware execution.
+### Phase 2: Continuous Verification & Multi-Agent Consensus
+- **Focus:** Expand constraint verification from single discrete traces to continuous latent spaces and agent ensembles.
 - **Tasks:**
-  - **Exp 1934:** ConsFormer Iterative Refinement
-  - **Exp 1935:** Continuous Latent Sampler Prototype (FAR)
-  - **Exp 1936:** KANELÉ Hardware Accounting
+  - **Exp 1947:** Latent Energy Optimization (Continuous Verification)
+  - **Exp 1948:** Multi-Agent Ising Consensus Simulator
+  - **Exp 1949:** Denoising Thermodynamic Sampling Protocol
 
-### Phase 3: Continuous Self-Learning & Audits
-- **Focus:** Safely grow the system's reasoning skill graph without catastrophic forgetting.
+### Phase 3: Continuous Self-Learning & Hardware Alignment
+- **Focus:** Continuously curate knowledge graphs and prepare our latest algorithmic advances for deterministic evaluation.
 - **Tasks:**
-  - **Exp 1937:** Continual Epsilon Learning Audit
-  - **Exp 1938:** NRGPT Energy-Based Loss Probe
-  - **Exp 1939:** Auditable Skill Graph Routing
+  - **Exp 1950:** Latent Semantic Pruning for Self-Learning
+  - **Exp 1951:** Hardware-Accelerated Symbolic KANs Translation
+  - **Exp 1952:** GNN vs. Classical Benchmarking Audit
 
-### Phase 4: Integration & Retrospective
-- **Focus:** Close the loop with an end-to-end evaluation across the flagship models and synthesize results.
+### Phase 4: Capstone Evaluation & Retrospective
+- **Focus:** Unify these components across our tri-SOTA flagship GGUF models.
 - **Tasks:**
-  - **Exp 1940:** ROCE Compilation v2
-  - **Exp 1941:** EBT Reasoning Bridge
-  - **Exp 1942:** Integrated Tri-SOTA E2E v5
-  - **Exp 1943:** Milestone .151 Retrospective
+  - **Exp 1953:** EqM Compositional Generation Integration
+  - **Exp 1954:** Integrated Tri-SOTA E2E v6
+  - **Exp 1955:** Milestone .152 Retrospective
 
 ## 3. Dependency Graph
 
 ```mermaid
 graph TD
-    1932[Exp 1932: Energy-Guided Decoding] --> 1933[Exp 1933: Type-Constrained Generation]
-    1933 --> 1940[Exp 1940: ROCE Compilation v2]
+    1944[Exp 1944: HardNet++ Projection] --> 1947[Exp 1947: Latent Energy Opt]
+    1945[Exp 1945: Chebyshev PI-KAN] --> 1951[Exp 1951: HW Symbolic KANs]
+    1946[Exp 1946: Ontology NNs] --> 1948[Exp 1948: Multi-Agent Ising]
     
-    1934[Exp 1934: ConsFormer Refinement] --> 1935[Exp 1935: Continuous Latent Sampler]
-    1935 --> 1941[Exp 1941: EBT Reasoning Bridge]
+    1947 --> 1950[Exp 1950: Latent Semantic Pruning]
+    1948 --> 1954[Exp 1954: Tri-SOTA E2E v6]
+    1949[Exp 1949: Denoising Thermodynamics] --> 1953[Exp 1953: EqM Compositional Gen]
     
-    1936[Exp 1936: KANELÉ Accounting] --> 1942[Exp 1942: Tri-SOTA E2E v5]
+    1950 --> 1954
+    1951 --> 1954
+    1952[Exp 1952: GNN Benchmarking Audit] --> 1954
+    1953 --> 1954
     
-    1937[Exp 1937: Epsilon Audit] --> 1938[Exp 1938: NRGPT Loss Probe]
-    1938 --> 1939[Exp 1939: Skill Graph Routing]
-    
-    1939 --> 1942
-    1940 --> 1942
-    1941 --> 1942
-    
-    1942 --> 1943[Exp 1943: Milestone .151 Retro]
+    1954 --> 1955[Exp 1955: Milestone .152 Retro]
 ```
 
 ## 4. Hardware Requirements
-- **Local GPUs:** Dual RTX 3090 required for Exp 1932, 1933, 1942.
+- **Local GPUs:** Dual RTX 3090 required for Exp 1947, 1954.
 - **GGUF Models:**
   - `unsloth/Qwen3.6-35B-A3B-GGUF` (Flagship MoE)
   - `unsloth/gemma-4-31B-it-GGUF` (Flagship Dense)
   - `unsloth/gemma-4-26B-A4B-it-GGUF` (Middle MoE)
-- **FPGA/KV260:** Exp 1936 is no-synthesis accounting only; board deployment remains deferred.
+- **FPGA/KV260:** Exp 1951 focuses on piecewise affine abstractions and simulation; synthesis/deployment remains gated on the board toolchain.

@@ -12447,3 +12447,23 @@ This sweep was run after milestone `.145` completed. The literature search revea
 - **S2KAN:** Softly Symbolified Kolmogorov-Arnold Networks. Introduces "symbolic fidelity" integrating a dictionary of symbolic primitives with learnable gates.
 - **FS-KAN:** Function Sharing KAN. Introduces permutation-equivariant constraints across edges for reasoning on symmetric data structures.
 - **Epsilon Constraint OCL:** Gradient-Guided Epsilon Constraint Method for Online Continual Learning. Manages forgetting constraints explicitly to balance plasticity and stability.
+
+## 2026-05-13 Planning Sweep (Milestone 2026.05.152)
+
+This sweep was run during the planning phase for milestone `.152`. The literature search revealed advances in closed-form differentiable constraint projections, continuous latent verification, and ensemble consensus.
+
+### Hard Constraint Enforcement Architectures
+- **Papers:** "HardNet++: Differentiable nonlinear constraint layers" (arXiv:2604.19669); "PiNet: Operator Splitting for Convex Sets" (arXiv:2601.12134).
+- **What:** Transitions from penalty-based soft constraints to guaranteed-feasible differentiable projection layers using damped local linearizations and operator splitting. 
+- **Relevance to Carnot:** Upgrades the reliability of the grammar/inference tiers, eliminating false-accept violations by making constraints physically impossible to breach.
+
+### Continuous Latent Verification & EBM-CoT
+- **Paper:** "Think Consistently, Reason Efficiently: Energy-Based Calibration for Implicit CoT" (arXiv:2511.07124)
+- **What:** Uses EBMs to calibrate latent "thought" embeddings in LLMs via Langevin dynamics before text decoding.
+- **Relevance to Carnot:** Allows Carnot's continuous solver tier to refine intermediate hidden states inside flagship models directly.
+
+### Ontology NNs and Topological Logic
+- **Paper:** "Ontology Neural Networks via Forman-Ricci curvature" (arXiv:2601.05304).
+- **What:** Enforces topological coherence over constraint dependency graphs.
+- **Relevance to Carnot:** Essential for Phase 4 multi-agent reasoning, keeping mutually exclusive factual rules structurally sound.
+
