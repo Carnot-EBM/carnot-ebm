@@ -2260,3 +2260,4 @@ IMPORTANT:
 | 2026-05-12 22:03 UTC | Exp 1963: Continual Online Learning: Routing witho | DOOMED_RERUN_BLOCK | 7 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-12 22:05 UTC | Exp 1963: Continual Online Learning: Routing witho | DOOMED_RERUN_BLOCK | 7 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-12 22:07 UTC | Exp 1963: Continual Online Learning: Routing witho | DOOMED_RERUN_BLOCK | 7 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-12 22:09 UTC | Exp 1964: Hardware-Accounted IGD Evaluation | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1961-interleaved-gibbs-diffusion.succes |
