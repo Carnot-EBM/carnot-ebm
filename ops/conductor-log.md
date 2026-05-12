@@ -2195,3 +2195,5 @@ IMPORTANT:
 | 2026-05-12 17:01 UTC | Exp 1933: Type-Constrained Generation Validation | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1932-energy-guided-decoding) |
 | 2026-05-12 17:11 UTC | Exp 1934: ConsFormer Iterative Refinement Loop | OK | 81 passed, 1 warning in 4.19s |
 | 2026-05-12 17:13 UTC | Exp 1933: Type-Constrained Generation Validation | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1932-energy-guided-decoding) |
+| 2026-05-12 17:19 UTC | Exp 1935: Continuous Latent Sampler Prototype (FAR | OK | 81 passed, 1 warning in 4.89s |
+| 2026-05-12 17:21 UTC | Exp 1933: Type-Constrained Generation Validation | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1932-energy-guided-decoding) |
