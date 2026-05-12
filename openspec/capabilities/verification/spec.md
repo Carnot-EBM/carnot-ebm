@@ -2405,6 +2405,47 @@ And `results/experiment_1879_beaver_lite_bounds.json` records complete
 coverage, zero residual risk for the supported fixture, and unchanged
 acceptance authority.
 
+### REQ-VERIFY-1880: Live SOTA ROCE Validator-Tree Evaluation
+
+The repository shall provide an Exp 1880 evaluator for ROCE-compiled validator
+trees on mandated local SOTA GGUF generations.
+
+The evaluator shall:
+
+- define `python/carnot/verify/sota_roce_validator_eval.py`;
+- define `MODEL_SPECS` with `unsloth/Qwen3.6-35B-A3B-GGUF`,
+  `unsloth/gemma-4-31B-it-GGUF`, and
+  `unsloth/gemma-4-26B-A4B-it-GGUF`;
+- use `cached_sota_pair()` where applicable while resolving all three mandated
+  GGUF cache paths before making any headline claim;
+- evaluate at least 30 prompt cases spanning format, arithmetic, lexical, and
+  conditional constraints when all mandated GGUFs are available;
+- validate every model output with the Exp 1878 ROCE validator tree and attach
+  the Exp 1879 deterministic BEAVER-lite bound row summary;
+- report zero-false-accept behavior only from executable validator-tree
+  decisions, not from model self-reporting or BEAVER-lite accounting alone;
+- record live/cache provenance for every attempted model; and
+- write `results/experiment_1880_sota_roce_validator_eval.json` with `status`,
+  `honest_verdict`, `sota_roce_eval_ready`, `inference_mode`, `MODEL_SPECS`,
+  `models_used`, `zero_false_accepts`, `false_accept_count`,
+  `constraint_coverage_rate`, and `tests_run`.
+
+If any mandated model is unavailable, the evaluator MUST write a blocked
+artifact with `models_used`, `sota_roce_eval_ready=false`, and an honest verdict
+that does not claim headline accuracy.
+
+### SCENARIO-VERIFY-1880: Mandated SOTA Outputs Are Gated By ROCE Validators
+
+Given at least 30 ROCE prompt cases spanning format, arithmetic, lexical, and
+conditional constraints,
+When all three mandated local GGUF models are available and generate outputs,
+Then the evaluator validates each output with the compiled ROCE tree,
+And computes deterministic BEAVER-lite coverage from the same tree,
+And reports `zero_false_accepts=true` only when no invalid generated output is
+accepted,
+And unavailable mandated models produce a blocked artifact rather than a
+headline metric.
+
 ### REQ-VERIFY-1642: llguidance Adapter For Structured Verdict Generation
 
 The repository shall provide an Exp 1642 llguidance adapter that exposes
@@ -2533,7 +2574,7 @@ the semantic false accept returns a `VerdictRecord` with `verdict="fail"` and
 and `results/experiment_1591_dccd_adapter.json` records complete metrics and
 backend diagnostics for the reusable adapter.
 
-## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487/1495/1496/1499/1500/1501/1507/1508/1509/1510/1520/1521/1522/1525/1537/1538/1541/1542/1551/1552/1553/1554/1557/1562/1571/1578/1580/1588/1591/1642/1666/1878/1879)
+## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487/1495/1496/1499/1500/1501/1507/1508/1509/1510/1520/1521/1522/1525/1537/1538/1541/1542/1551/1552/1553/1554/1557/1562/1571/1578/1580/1588/1591/1642/1666/1878/1879/1880)
 
 | Requirement | Python | Tests |
 |-------------|--------|-------|
@@ -2587,6 +2628,7 @@ backend diagnostics for the reusable adapter.
 | REQ-VERIFY-1666 | Implemented (`python/carnot/pipeline/nsvif_parser.py`) | Implemented (`tests/python/test_pipeline_nsvif_parser.py`) |
 | REQ-VERIFY-1878 | Implemented (`python/carnot/pipeline/roce_validator_tree.py`) | Implemented (`tests/python/test_roce_validator_tree.py`) |
 | REQ-VERIFY-1879 | Implemented (`python/carnot/verify/roce_beaver_lite_bounds.py`) | Implemented (`tests/python/test_roce_beaver_lite_bounds.py`) |
+| REQ-VERIFY-1880 | Implemented (`python/carnot/verify/sota_roce_validator_eval.py`) | Implemented (`tests/python/test_sota_roce_validator_eval.py`) |
 
 ### REQ-VERIFY-1593: CDG Repair Acceptance Rates
 The repository shall provide a CDG repair analysis tool that builds a CDG over runtime-contract cases, compares repair localization, and contrasts repair acceptance rates between flat check and CDG ordering using the mandated MODEL_SPECS.
