@@ -5616,3 +5616,4 @@ Completed 15 experiments in 28.9 minutes. There were 0 compute-bound experiments
 - 2026-05-12: Exp 1962: NI Sampling Token Optimization (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_1962_ni_sampling_token_order.json
 - 2026-05-12: Exp 1967: Milestone .153 Pre-Retro Audit (❌ Failed) — honest_verdict=Audit failed: missing files or violated gates found.; results/experiment_1967_milestone_153_pre_retro_audit.json
 - 2026-05-12: Exp 1967: Milestone .153 Pre-Retro Audit (❌ Failed) — honest_verdict=Audit failed: missing files or violated gates found.; results/experiment_1967_milestone_153_pre_retro_audit.json
+- 2026-05-12: Exp 1967: Milestone .153 Pre-Retro Audit (❌ Failed) — honest_verdict=Audit failed: missing files or violated gates found.; results/experiment_1967_milestone_153_pre_retro_audit.json
