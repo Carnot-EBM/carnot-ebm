@@ -1,424 +1,294 @@
-milestone: "2026.05.149"
-milestone_title: "Research-Deep: SOTA Runtime Recovery, Terminal Artifact Integration, Validator Ledgers, and EBM Foundations"
+milestone: "2026.05.150"
+milestone_title: "SOTA Cache Recovery, EBT Gradient Loops, and Epsilon Continual Learning"
 milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
 
 tasks:
-  - id: exp1904-148-completion-149-activation-contract
-    milestone: "2026.05.149"
-    title: "Exp 1904: .148 Completion to .149 Activation Contract"
-    deliverable: "results/experiment_1904_148_completion_149_activation_contract.json"
-    max_turns: 20
-    prior_failures:
-      - experiment_id: exp1903-milestone-148-retro
-        verdict: failed
-        addressed_by: "The retro failed due to missing artifacts. This activation contract starts clean and establishes the base state for .149."
-        retire_if_same_verdict: false
-    prompt: |
-      CONTEXT: Today is {date}. Milestone 2026.05.148 completed with most tasks blocked or skipped. We must reset the execution substrate.
-      EXISTING CODE TO READ FIRST: research-roadmap-next.yaml, ops/status.md, ops/changelog.md, ops/conductor-log.md, openspec/change-proposals/research-roadmap-vNEXT.md
-      TASK: Write a `.149` activation contract summarizing the baseline requirements for SOTA models and telemetry. Do not modify `scripts/research_conductor.py`.
-      CONCRETE STEPS:
-      1. Read the provided contextual files.
-      2. Produce an artifact with baseline readiness fields initialized to false.
-      3. Save `{project_root}/results/experiment_1904_148_completion_149_activation_contract.json`.
-      REQUIRED ARTIFACT FIELDS:
-      - status
-      - honest_verdict
-      - milestone_148_archived
-      - live_sota_blocked_missing_models
-      - telemetry_missing_terminal_artifact
-      - next_gate_contract_ready
-      - tests_run
-
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp1905-sota-gguf-cache-runtime-preflight-v3
-    milestone: "2026.05.149"
-    title: "Exp 1905: SOTA GGUF Cache and Runtime Preflight v3"
-    deliverable: "results/experiment_1905_sota_gguf_cache_runtime_preflight_v3.json"
-    requires_gpu: true
-    model: opus
+  - id: exp1918-sota-cache-recovery
+    milestone: "2026.05.150"
+    title: "Exp 1918: SOTA Cache Recovery and Preflight v4"
+    deliverable: "results/experiment_1918_sota_cache_recovery.json"
+    model: "opus"
     max_turns: 100
-    gated_on:
-      - upstream: exp1904-148-completion-149-activation-contract
-        artifact_field: next_gate_contract_ready
-        op: "=="
-        value: true
     prompt: |
-      CONTEXT: Today is {date}. The prior SOTA preflight failed. This run MUST leave a terminal artifact stating exactly what is in the cache, allowing downstream skips to operate cleanly.
-      EXISTING CODE TO READ FIRST: scripts/experiment_template.py, python/carnot/inference/sota_models.py
-      TASK: Verify local availability of mandated SOTA GGUFs and save a terminal artifact. Do not modify `scripts/research_conductor.py`.
+      CONTEXT: Today is {date}. Workspace is {project_root}. In milestone .149, SOTA caching failures blocked terminal artifact recovery.
+      EXISTING CODE TO READ FIRST: Read scripts/preflight.py and python/carnot/inference/model_loader.py.
+      TASK: Implement an unconditional recovery of terminal artifacts and harden the SOTA GGUF cache preflight.
       CONCRETE STEPS:
-      1. Define MODEL_SPECS with `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and `unsloth/gemma-4-26B-A4B-it-GGUF`.
-      2. Check `cached_sota_pair()` or local path.
-      3. Emphasize writing the artifact over attempting massive downloads.
-      4. Save `{project_root}/results/experiment_1905_sota_gguf_cache_runtime_preflight_v3.json`.
-      REQUIRED ARTIFACT FIELDS:
-      - status
-      - honest_verdict
-      - MODEL_SPECS
-      - cache_all_available
-      - cache_any_available
-      - missing_models
-      - runtime_smoke_ready
-      - runtime_backend
-      - models_used
-      - tests_run
+      1. Write a diagnostic script to identify caching failures.
+      2. Fix the cache preflight mechanism for unsloth/Qwen3.6-35B-A3B-GGUF.
+      3. Verify cache hits for unsloth/gemma-4-31B-it-GGUF.
+      4. Write the results artifact.
 
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp1906-terminal-low-cost-telemetry-adapter-v3
-    milestone: "2026.05.149"
-    title: "Exp 1906: Terminal Low-Cost Telemetry Adapter v3"
-    deliverable: "results/experiment_1906_terminal_low_cost_telemetry_adapter_v3.json"
-    agent_type: codex
-    model: gpt-5.5
-    requires_gpu: true
-    max_turns: 30
+  - id: exp1919-telemetry-adapter-v4
+    milestone: "2026.05.150"
+    title: "Exp 1919: Terminal Low-Cost Telemetry Adapter v4"
+    deliverable: "results/experiment_1919_telemetry_adapter_v4.json"
     gated_on:
-      - upstream: exp1905-sota-gguf-cache-runtime-preflight-v3
-        artifact_field: cache_any_available
-        op: "=="
-        value: true
+      - upstream: exp1918-sota-cache-recovery
+        artifact_field: honest_verdict
+        op: "contains"
+        value: "complete"
+    prior_failures:
+      - exp1906-terminal-low-cost-telemetry-adapter-v3
     prompt: |
-      CONTEXT: Today is {date}. Telemetry pipelines must write terminal artifacts.
-      EXISTING CODE TO READ FIRST: python/carnot/pipeline/verdict_record.py
-      TASK: Implement an adapter for logprobs and spilled-energy telemetry. Do not modify `scripts/research_conductor.py`.
+      CONTEXT: Today is {date}. Workspace is {project_root}. This is a carry-forward from .149.
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/telemetry.py
+      TASK: Implement Terminal Low-Cost Telemetry Adapter v4.
       CONCRETE STEPS:
-      1. Define MODEL_SPECS.
-      2. Use available mandated models.
-      3. Adapt the output into a `VerdictRecord` telemetry field.
-      4. Save `{project_root}/results/experiment_1906_terminal_low_cost_telemetry_adapter_v3.json`.
-      REQUIRED ARTIFACT FIELDS:
-      - status
-      - honest_verdict
-      - telemetry_adapter_ready
-      - MODEL_SPECS
-      - models_used
-      - spilled_energy_available
-      - acceptance_authority_unchanged
-      - tests_run
+      1. Add low-cost telemetry hooks to the verification pipeline.
+      2. Ensure latency overhead is under 1ms.
+      3. Validate with a fast synthetic run.
+      4. Write the results artifact.
 
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp1907-token-level-spilled-energy-diagnostic
-    milestone: "2026.05.149"
-    title: "Exp 1907: Token-Level Spilled Energy Diagnostic"
-    deliverable: "results/experiment_1907_token_level_spilled_energy_diagnostic.json"
-    agent_type: codex
-    model: gpt-5.5
+  - id: exp1920-token-spilled-energy
+    milestone: "2026.05.150"
+    title: "Exp 1920: Token-Level Spilled Energy Diagnostic"
+    deliverable: "results/experiment_1920_token_spilled_energy.json"
+    gated_on:
+      - upstream: exp1919-telemetry-adapter-v4
+        artifact_field: honest_verdict
+        op: "contains"
+        value: "complete"
+    prior_failures:
+      - exp1907-token-level-spilled-energy-diagnostic
+    prompt: |
+      CONTEXT: Today is {date}. Workspace is {project_root}. This is a carry-forward from .149.
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/spilled_energy.py
+      TASK: Implement Token-Level Spilled Energy Diagnostic.
+      CONCRETE STEPS:
+      1. Refine the spilled energy module to track energy at the token level.
+      2. Measure diagnostic capability on 100 benchmark queries.
+      3. Ensure MODEL_SPECS includes unsloth/Qwen3.6-35B-A3B-GGUF for evaluation.
+      4. Write the results artifact.
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1921-structure-guardrail
+    milestone: "2026.05.150"
+    title: "Exp 1921: Structure Snowballing Risk Guardrail"
+    deliverable: "results/experiment_1921_structure_guardrail.json"
+    gated_on:
+      - upstream: exp1918-sota-cache-recovery
+        artifact_field: honest_verdict
+        op: "contains"
+        value: "complete"
+    prior_failures:
+      - exp1908-structure-snowballing-risk-guardrail
+    prompt: |
+      CONTEXT: Today is {date}. Workspace is {project_root}. This is a carry-forward from .149.
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/verify_repair.py
+      TASK: Implement Structure Snowballing Risk Guardrail.
+      CONCRETE STEPS:
+      1. Add a constraint limit guardrail to prevent snowballing failures.
+      2. Test the guardrail under high constraint load.
+      3. Write the results artifact.
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1922-residual-drift-ledger
+    milestone: "2026.05.150"
+    title: "Exp 1922: Residual Drift Validator Ledger v4"
+    deliverable: "results/experiment_1922_residual_drift_ledger.json"
+    max_turns: 80
+    agent_type: "claude"
+    gated_on:
+      - upstream: exp1918-sota-cache-recovery
+        artifact_field: honest_verdict
+        op: "contains"
+        value: "complete"
+    prior_failures:
+      - exp1909-residual-drift-validator-ledger-v3
+    prompt: |
+      CONTEXT: Today is {date}. Workspace is {project_root}. This task failed in .149 due to an agent timeout.
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/tracker.py
+      TASK: Implement Residual Drift Validator Ledger v4.
+      CONCRETE STEPS:
+      1. Review the timeout failure mode of Exp 1909.
+      2. Implement an efficient residual drift tracking ledger.
+      3. Use mock metrics if live metrics take too long, to avoid timeouts.
+      4. Write the results artifact.
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1923-epsilon-continual-learning
+    milestone: "2026.05.150"
+    title: "Exp 1923: Epsilon Constraint Continual Learning"
+    deliverable: "results/experiment_1923_epsilon_continual_learning.json"
+    max_turns: 80
+    prompt: |
+      CONTEXT: Today is {date}. Workspace is {project_root}. We need to address catastrophic forgetting when adding constraints.
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/memory.py, python/carnot/pipeline/session_memory.py
+      TASK: Implement Gradient-Guided Epsilon Constraint Method for Online Continual Learning.
+      CONCRETE STEPS:
+      1. Review continuous_self_learning_task requirements.
+      2. Implement epsilon constraint logic to balance plasticity and stability in constraint retention.
+      3. Test the method across 3 simulated learning sessions.
+      4. Write the results artifact.
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1924-fr11-routing-audit
+    milestone: "2026.05.150"
+    title: "Exp 1924: Routing without Forgetting FR-11 Audit v4"
+    deliverable: "results/experiment_1924_fr11_routing_audit.json"
+    gated_on:
+      - upstream: exp1922-residual-drift-ledger
+        artifact_field: honest_verdict
+        op: "contains"
+        value: "complete"
+    prior_failures:
+      - exp1910-routing-without-forgetting-fr11-audit-v3
+    prompt: |
+      CONTEXT: Today is {date}. Workspace is {project_root}. This is a carry-forward from .149.
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/tracker.py
+      TASK: Conduct FR-11 Audit v4 for routing without forgetting.
+      CONCRETE STEPS:
+      1. Audit the FR-11 relay to ensure no catastrophic forgetting occurs.
+      2. Evaluate retention of 100 historical constraints.
+      3. Write the results artifact.
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1925-ebt-gradient-loop
+    milestone: "2026.05.150"
+    title: "Exp 1925: Energy-Based Transformer Gradient Minimization Loop"
+    deliverable: "results/experiment_1925_ebt_gradient_loop.json"
+    max_turns: 80
+    prompt: |
+      CONTEXT: Today is {date}. Workspace is {project_root}. Based on arXiv:2507.02092, EBTs provide scalable System 2 thinking.
+      EXISTING CODE TO READ FIRST: python/carnot/models/ebt.py
+      TASK: Implement the iterative gradient-based energy minimization loop for EBTs.
+      CONCRETE STEPS:
+      1. Implement a refinement pass algorithm that minimizes energy gradients.
+      2. Validate the loop on a synthetic reasoning task.
+      3. Measure out-of-distribution (OOD) generalization improvements.
+      4. Write the results artifact.
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1926-s2kan-symbolic
+    milestone: "2026.05.150"
+    title: "Exp 1926: S2KAN Symbolic Fidelity Constraint Integration"
+    deliverable: "results/experiment_1926_s2kan_symbolic.json"
+    max_turns: 50
+    prompt: |
+      CONTEXT: Today is {date}. Workspace is {project_root}. KANs need symbolic fidelity to avoid uninterpretable decompositions.
+      EXISTING CODE TO READ FIRST: python/carnot/models/kan.py
+      TASK: Integrate S2KAN symbolic primitives dictionary and learnable gates.
+      CONCRETE STEPS:
+      1. Add a dictionary of symbolic primitives (e.g., sin, exp).
+      2. Integrate learnable gates that enforce symbolic constraints.
+      3. Validate against a known functional form.
+      4. Write the results artifact.
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1927-hard-csp-neural
+    milestone: "2026.05.150"
+    title: "Exp 1927: Hard CSP and Neural Solver Reality Check"
+    deliverable: "results/experiment_1927_hard_csp_neural.json"
+    max_turns: 80
+    agent_type: "codex"
+    prior_failures:
+      - exp1913-hard-csp-neural-solver-reality-check
+    prompt: |
+      CONTEXT: Today is {date}. Workspace is {project_root}. This task failed in .149 due to a timeout. We are using codex with a higher max_turns.
+      EXISTING CODE TO READ FIRST: python/carnot/samplers/backend.py
+      TASK: Implement a reality check for neural solvers on hard CSPs.
+      CONCRETE STEPS:
+      1. Write a script to evaluate the neural solver on a 3-SAT or N-Queens hard CSP.
+      2. Ensure evaluation does not exceed the allotted time budget.
+      3. Record the true constraint satisfaction rate.
+      4. Write the results artifact.
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1928-thrml-parity
+    milestone: "2026.05.150"
+    title: "Exp 1928: Corrected THRML/Carnot Parity Methodology"
+    deliverable: "results/experiment_1928_thrml_parity.json"
+    max_turns: 50
+    prior_failures:
+      - exp1914-corrected-thrml-carnot-parity-methodology
+    prompt: |
+      CONTEXT: Today is {date}. Workspace is {project_root}. This task encountered a DOOMED_RERUN_BLOCK in .149 due to missing prior failures.
+      EXISTING CODE TO READ FIRST: python/carnot/samplers/parallel_ising.py
+      TASK: Fix the THRML vs Carnot simulator parity methodology.
+      CONCRETE STEPS:
+      1. Compare parallel_ising output directly to THRML.
+      2. Implement the parity methodology script.
+      3. Ensure statistical validation of parity.
+      4. Write the results artifact.
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1929-p-bit-ising-v3
+    milestone: "2026.05.150"
+    title: "Exp 1929: p-bit/p-dit Ising Sampler Accounting v3"
+    deliverable: "results/experiment_1929_p_bit_ising_v3.json"
+    gated_on:
+      - upstream: exp1927-hard-csp-neural
+        artifact_field: honest_verdict
+        op: "contains"
+        value: "complete"
+    prior_failures:
+      - exp1915-p-bit-p-dit-ising-sampler-accounting-v2
+    prompt: |
+      CONTEXT: Today is {date}. Workspace is {project_root}. This is a carry-forward from .149.
+      EXISTING CODE TO READ FIRST: python/carnot/samplers/parallel_ising.py
+      TASK: Implement p-bit Ising Sampler Accounting v3.
+      CONCRETE STEPS:
+      1. Extend the Ising sampler to support hardware-accurate p-bit/p-dit states.
+      2. Measure the latency and accuracy changes.
+      3. Write the results artifact.
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1930-tri-sota-e2e
+    milestone: "2026.05.150"
+    title: "Exp 1930: Integrated Tri-SOTA E2E v4"
+    deliverable: "results/experiment_1930_tri_sota_e2e.json"
     max_turns: 50
     gated_on:
-      - upstream: exp1906-terminal-low-cost-telemetry-adapter-v3
-        artifact_field: telemetry_adapter_ready
-        op: "=="
-        value: true
+      - upstream: exp1918-sota-cache-recovery
+        artifact_field: honest_verdict
+        op: "contains"
+        value: "complete"
+    prior_failures:
+      - exp1916-integrated-tri-sota-e2e-v3
     prompt: |
-      CONTEXT: Today is {date}. "Spilled Energy" acts as a training-free logit diagnostic.
-      EXISTING CODE TO READ FIRST: research-references.md, python/carnot/pipeline/verdict_record.py
-      TASK: Evaluate if spilled energy metrics correctly predict hallucinations without overriding deterministic validators. Do not modify `scripts/research_conductor.py`.
+      CONTEXT: Today is {date}. Workspace is {project_root}. Tri-SOTA integration was blocked in .149.
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/verify_repair.py
+      TASK: Run a full end-to-end integration test of all three SOTA models.
       CONCRETE STEPS:
-      1. Extract logit energy from the available GGUF.
-      2. Compute spilled energy proxy vs hallucination injection.
-      3. Correlate against deterministic outcomes.
-      4. Save `{project_root}/results/experiment_1907_token_level_spilled_energy_diagnostic.json`.
-      REQUIRED ARTIFACT FIELDS:
-      - status
-      - honest_verdict
-      - spilled_energy_diagnostic_run
-      - models_used
-      - auroc_hallucination_detection
-      - deterministic_validators_final
-      - tests_run
+      1. Use MODEL_SPECS: ["unsloth/Qwen3.6-35B-A3B-GGUF", "unsloth/gemma-4-31B-it-GGUF", "unsloth/gemma-4-26B-A4B-it-GGUF"].
+      2. Run live evaluation if Dual GPU is available; otherwise run a comprehensive mock evaluation.
+      3. Evaluate verification pipeline accuracy.
+      4. Write the results artifact.
 
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp1908-structure-snowballing-risk-guardrail
-    milestone: "2026.05.149"
-    title: "Exp 1908: Structure Snowballing Risk Guardrail"
-    deliverable: "results/experiment_1908_structure_snowballing_risk_guardrail.json"
-    requires_gpu: true
-    max_turns: 50
-    gated_on:
-      - upstream: exp1905-sota-gguf-cache-runtime-preflight-v3
-        artifact_field: cache_any_available
-        op: "=="
-        value: true
-    prompt: |
-      CONTEXT: Today is {date}. Hard constraints may cause "structure snowballing" semantic errors.
-      EXISTING CODE TO READ FIRST: research-references.md
-      TASK: Compare free drafting, constrained decoding, and draft-conditioned repair (DCCD). Do not modify `scripts/research_conductor.py`.
-      CONCRETE STEPS:
-      1. Define test cases that fail semantically under strict grammar masks.
-      2. Execute free draft followed by constraint repair.
-      3. Compare semantic accuracy and validity deltas.
-      4. Save `{project_root}/results/experiment_1908_structure_snowballing_risk_guardrail.json`.
-      REQUIRED ARTIFACT FIELDS:
-      - status
-      - honest_verdict
-      - structure_snowballing_test_run
-      - free_draft_validity
-      - constrained_decoding_semantic_score
-      - dccd_semantic_score
-      - dccd_validity_score
-      - tests_run
-
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp1909-residual-drift-validator-ledger-v3
-    milestone: "2026.05.149"
-    title: "Exp 1909: Residual Drift Validator Ledger v3"
-    deliverable: "results/experiment_1909_residual_drift_validator_ledger_v3.json"
-    agent_type: codex
-    model: gpt-5.5
+  - id: exp1931-milestone-150-retro
+    milestone: "2026.05.150"
+    title: "Exp 1931: Milestone .150 Retrospective"
+    deliverable: "results/experiment_1931_milestone_150_retro.json"
     max_turns: 30
     prompt: |
-      CONTEXT: Today is {date}. Satisfiable drift must be separated from contradiction.
-      EXISTING CODE TO READ FIRST: python/carnot/verify/
-      TASK: Build a residual-drift ledger over compiled validator trees. Do not modify `scripts/research_conductor.py`.
+      CONTEXT: Today is {date}. Workspace is {project_root}. We wrap up the milestone by analyzing success vs failure counts.
+      EXISTING CODE TO READ FIRST: results/experiment_1918*.json through results/experiment_1930*.json
+      TASK: Compile the milestone 150 retrospective.
       CONCRETE STEPS:
-      1. Produce a test suite of validator tree traces.
-      2. Implement a commitment-checking ledger.
-      3. Calculate satisfiable drift occurrences.
-      4. Save `{project_root}/results/experiment_1909_residual_drift_validator_ledger_v3.json`.
-      REQUIRED ARTIFACT FIELDS:
-      - status
-      - honest_verdict
-      - residual_drift_ledger_ready
-      - drift_cases_evaluated
-      - contradiction_count
-      - satisfiable_drift_count
-      - zero_false_accepts
-      - tests_run
-
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp1910-routing-without-forgetting-fr11-audit-v3
-    milestone: "2026.05.149"
-    title: "Exp 1910: Routing without Forgetting FR-11 Audit v3"
-    deliverable: "results/experiment_1910_routing_without_forgetting_fr11_audit_v3.json"
-    agent_type: codex
-    model: gpt-5.5
-    max_turns: 30
-    gated_on:
-      - upstream: exp1909-residual-drift-validator-ledger-v3
-        artifact_field: residual_drift_ledger_ready
-        op: "=="
-        value: true
-    prompt: |
-      CONTEXT: Today is {date}. FR-11 learning loops must not forget prior constraints.
-      EXISTING CODE TO READ FIRST: python/carnot/learning/
-      TASK: Implement routing policy checks for continuous self-learning. Do not modify `scripts/research_conductor.py`.
-      CONCRETE STEPS:
-      1. Implement a validator policy routing ledger.
-      2. Verify utility delta and nonforgetting rates on mock data.
-      3. Save `{project_root}/results/experiment_1910_routing_without_forgetting_fr11_audit_v3.json`.
-      REQUIRED ARTIFACT FIELDS:
-      - status
-      - honest_verdict
-      - routing_without_forgetting_ready
-      - utility_delta
-      - nonforgetting_rate
-      - promotion_gate_passed
-      - tests_run
-
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp1911-sota-fr11-promotion-smoke-v3
-    milestone: "2026.05.149"
-    title: "Exp 1911: SOTA FR-11 Promotion Smoke v3"
-    deliverable: "results/experiment_1911_sota_fr11_promotion_smoke_v3.json"
-    requires_gpu: true
-    max_turns: 50
-    gated_on:
-      - upstream: exp1905-sota-gguf-cache-runtime-preflight-v3
-        artifact_field: cache_any_available
-        op: "=="
-        value: true
-      - upstream: exp1910-routing-without-forgetting-fr11-audit-v3
-        artifact_field: promotion_gate_passed
-        op: "=="
-        value: true
-    prompt: |
-      CONTEXT: Today is {date}. Promoting FR-11 learned skills requires a live SOTA test.
-      EXISTING CODE TO READ FIRST: python/carnot/learning/
-      TASK: Run SOTA promotion smoke for FR-11 skills. Do not modify `scripts/research_conductor.py`.
-      CONCRETE STEPS:
-      1. Use SOTA models to evaluate utility of a new learned validator rule.
-      2. Record soundness and completeness mistakes.
-      3. Save `{project_root}/results/experiment_1911_sota_fr11_promotion_smoke_v3.json`.
-      REQUIRED ARTIFACT FIELDS:
-      - status
-      - honest_verdict
-      - continuous_self_learning_task
-      - utility_delta
-      - soundness_mistakes
-      - completeness_mistakes
-      - rollback_triggered
-      - tests_run
-
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp1912-non-autoregressive-constraint-interface
-    milestone: "2026.05.149"
-    title: "Exp 1912: Non-Autoregressive Constraint Interface Audit"
-    deliverable: "results/experiment_1912_non_autoregressive_constraint_interface.json"
-    max_turns: 20
-    prompt: |
-      CONTEXT: Today is {date}. EBM planning focuses on compositional energy minimization.
-      EXISTING CODE TO READ FIRST: python/carnot/verify/
-      TASK: Ensure existing validators can yield metadata for Glauber/Diffusion loops. Do not modify `scripts/research_conductor.py`.
-      CONCRETE STEPS:
-      1. Audit existing validators for interface compatibility with continuous latent scoring.
-      2. Write a dummy energy extraction proxy.
-      3. Set `generator_integration_claim=false`.
-      4. Save `{project_root}/results/experiment_1912_non_autoregressive_constraint_interface.json`.
-      REQUIRED ARTIFACT FIELDS:
-      - status
-      - honest_verdict
-      - interface_audit_complete
-      - generator_integration_claim
-      - compositional_energy_ready
-      - tests_run
-
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp1913-hard-csp-neural-preconditioning-check
-    milestone: "2026.05.149"
-    title: "Exp 1913: Hard CSP and Neural Solver Reality Check"
-    deliverable: "results/experiment_1913_hard_csp_neural_preconditioning_check.json"
-    agent_type: codex
-    model: gpt-5.5
-    max_turns: 30
-    prompt: |
-      CONTEXT: Today is {date}. Graph preconditioners must show measured convergence deltas.
-      EXISTING CODE TO READ FIRST: python/carnot/samplers/
-      TASK: Compare GEM/ConsFormer style preconditioning on fixed graphs against classical heuristics. Do not modify `scripts/research_conductor.py`.
-      CONCRETE STEPS:
-      1. Measure convergence delta on fixed validator graph.
-      2. Keep deterministic correctness authority unchanged.
-      3. Save `{project_root}/results/experiment_1913_hard_csp_neural_preconditioning_check.json`.
-      REQUIRED ARTIFACT FIELDS:
-      - status
-      - honest_verdict
-      - sampler_preconditioning_ready
-      - convergence_speedup_ratio
-      - classical_baseline_beaten
-      - deterministic_correctness_unchanged
-      - tests_run
-
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp1914-corrected-thrml-parity-methodology
-    milestone: "2026.05.149"
-    title: "Exp 1914: Corrected THRML/Carnot Parity Methodology"
-    deliverable: "results/experiment_1914_corrected_thrml_parity_methodology.json"
-    agent_type: codex
-    model: gpt-5.5
-    max_turns: 30
-    prompt: |
-      CONTEXT: Today is {date}. THRML Parity claims must use analytical ground truth like Curie-Weiss.
-      EXISTING CODE TO READ FIRST: python/carnot/samplers/
-      TASK: Run Curie-Weiss n=128 mean-field parity check. Do not modify `scripts/research_conductor.py`.
-      CONCRETE STEPS:
-      1. Compute analytic ground truth.
-      2. Run 10k samples per side.
-      3. Ensure `hardware_execution_claim=false`.
-      4. Save `{project_root}/results/experiment_1914_corrected_thrml_parity_methodology.json`.
-      REQUIRED ARTIFACT FIELDS:
-      - status
-      - honest_verdict
-      - thrml_parity_check_ready
-      - hardware_execution_claim
-      - curie_weiss_kl_divergence
-      - analytic_mean_delta
-      - tests_run
-
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp1915-pbit-pdit-ising-sampler-accounting-v2
-    milestone: "2026.05.149"
-    title: "Exp 1915: p-bit/p-dit Ising Sampler Accounting v2"
-    deliverable: "results/experiment_1915_pbit_pdit_ising_sampler_accounting_v2.json"
-    max_turns: 30
-    gated_on:
-      - upstream: exp1913-hard-csp-neural-preconditioning-check
-        artifact_field: sampler_preconditioning_ready
-        op: "=="
-        value: true
-    prompt: |
-      CONTEXT: Today is {date}. Hardware accounting must track categorically complex validator graphs.
-      EXISTING CODE TO READ FIRST: python/carnot/samplers/
-      TASK: Reconcile graph preconditioning with p-bit/p-dit accounting without execution claims. Do not modify `scripts/research_conductor.py`.
-      CONCRETE STEPS:
-      1. Track binary and numeric encodings for the preconditioned validator graphs.
-      2. `hardware_execution_claim=false`.
-      3. Save `{project_root}/results/experiment_1915_pbit_pdit_ising_sampler_accounting_v2.json`.
-      REQUIRED ARTIFACT FIELDS:
-      - status
-      - honest_verdict
-      - pbit_pdit_accounting_ready
-      - hardware_execution_claim
-      - categorical_variable_count
-      - numeric_variable_count
-      - tests_run
-
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp1916-integrated-trisota-e2e-v3
-    milestone: "2026.05.149"
-    title: "Exp 1916: Integrated Tri-SOTA E2E v3"
-    deliverable: "results/experiment_1916_integrated_trisota_e2e_v3.json"
-    requires_gpu: true
-    max_turns: 50
-    gated_on:
-      - upstream: exp1905-sota-gguf-cache-runtime-preflight-v3
-        artifact_field: cache_all_available
-        op: "=="
-        value: true
-      - upstream: exp1908-structure-snowballing-risk-guardrail
-        artifact_field: dccd_validity_score
-        op: ">"
-        value: 0.0
-    prompt: |
-      CONTEXT: Today is {date}. The headline integration smoke for the milestone.
-      EXISTING CODE TO READ FIRST: python/carnot/
-      TASK: Run end-to-end extraction, validation, repair, and learning loops. Do not modify `scripts/research_conductor.py`.
-      CONCRETE STEPS:
-      1. Execute full loop with live SOTA models.
-      2. Record validation counts and non-forgetting scores.
-      3. Save `{project_root}/results/experiment_1916_integrated_trisota_e2e_v3.json`.
-      REQUIRED ARTIFACT FIELDS:
-      - status
-      - honest_verdict
-      - milestone_e2e_ready
-      - zero_false_accepts
-      - dccd_repair_delta
-      - tests_run
-
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp1917-milestone-149-retro
-    milestone: "2026.05.149"
-    title: "Exp 1917: Milestone .149 Retrospective"
-    deliverable: "results/experiment_1917_milestone_149_retro.json"
-    max_turns: 20
-    prompt: |
-      CONTEXT: Today is {date}. We wrap up the milestone by analyzing success vs failure counts.
-      EXISTING CODE TO READ FIRST: ops/status.md, research-roadmap-next.yaml
-      TASK: Write the `.149` retro. Do not modify `scripts/research_conductor.py`.
-      CONCRETE STEPS:
-      1. Inspect `{project_root}/results/experiment_1904_*.json` to `1916_*.json`.
-      2. Summarize terminal artifact recovery and SOTA caching.
-      3. Save `{project_root}/results/experiment_1917_milestone_149_retro.json`.
-      REQUIRED ARTIFACT FIELDS:
-      - status
-      - honest_verdict
-      - milestone_149_retro_complete
-      - completed_task_count
-      - blocked_task_count
-      - failed_task_count
-      - next_gate_recommendations
-      - tests_run
+      1. Aggregate the honest_verdicts from all preceding .150 experiments.
+      2. Output the artifact containing:
+         - milestone_150_retro_complete
+         - completed_task_count
+         - blocked_task_count
+         - failed_task_count
+         - next_gate_recommendations
+         - tests_run
 
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
