@@ -1940,3 +1940,5 @@ IMPORTANT:
 | 2026-05-12 02:22 UTC | Exp 1885: SOTA FR-11 Self-Learning Promotion Gate | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1884-fr11-cerce-cnsp-ledger, exp1884-fr11 |
 | 2026-05-12 02:22 UTC | Exp 1886: GEM/ConsFormer Ising Preconditioner for  | FAIL | Codex CLI error: e 10 minutes, that is correct and expected — exit promptly.  |
 | 2026-05-12 02:24 UTC | Exp 1885: SOTA FR-11 Self-Learning Promotion Gate | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1884-fr11-cerce-cnsp-ledger, exp1884-fr11 |
+| 2026-05-12 02:24 UTC | Exp 1886: GEM/ConsFormer Ising Preconditioner for  | FAIL | Codex CLI error: e 10 minutes, that is correct and expected — exit promptly.  |
+| 2026-05-12 02:26 UTC | Exp 1885: SOTA FR-11 Self-Learning Promotion Gate | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1884-fr11-cerce-cnsp-ledger, exp1884-fr11 |
