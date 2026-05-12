@@ -2205,3 +2205,6 @@ IMPORTANT:
 | 2026-05-12 17:33 UTC | Exp 1937: Continual Epsilon Learning Audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1932-energy-guided-decoding) |
 | 2026-05-12 17:33 UTC | Exp 1939: Auditable Skill Graph Routing | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1937-continual-epsilon-audit.honest_ver |
 | 2026-05-12 17:35 UTC | Exp 1937: Continual Epsilon Learning Audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1932-energy-guided-decoding) |
+| 2026-05-12 17:35 UTC | Exp 1939: Auditable Skill Graph Routing | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1937-continual-epsilon-audit.honest_ver |
+| 2026-05-12 17:37 UTC | Exp 1939: Auditable Skill Graph Routing | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1937-continual-epsilon-audit) |
+| 2026-05-12 17:37 UTC | Exp 1940: ROCE Compilation v2 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1933-type-constrained-generation) |
