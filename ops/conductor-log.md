@@ -1925,3 +1925,4 @@ IMPORTANT:
 | 2026-05-12 01:39 UTC | Exp 1880: Live SOTA ROCE Validator Evaluation | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1880_sota_ro |
 | 2026-05-12 02:06 UTC | Exp 1880: Live SOTA ROCE Validator Evaluation | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1880_sota_ro |
 | 2026-05-12 02:08 UTC | Exp 1880: Live SOTA ROCE Validator Evaluation | FAIL | Codex CLI error: e 10 minutes, that is correct and expected — exit promptly.  |
+| 2026-05-12 02:10 UTC | Exp 1881: First-Token and Spilled-Energy Telemetry | FAIL | Codex CLI error: e 10 minutes, that is correct and expected — exit promptly.  |
