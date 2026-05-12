@@ -2130,3 +2130,5 @@ IMPORTANT:
 | 2026-05-12 14:31 UTC | Exp 1908: Structure Snowballing Risk Guardrail | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1905-sota-gguf-cache-runtime-preflight-v3 |
 | 2026-05-12 14:31 UTC | Exp 1909: Residual Drift Validator Ledger v3 | FAIL | Gemini CLI error: u finish the real work inside 10 minutes, that is correct an |
 | 2026-05-12 14:33 UTC | Exp 1908: Structure Snowballing Risk Guardrail | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1905-sota-gguf-cache-runtime-preflight-v3 |
+| 2026-05-12 14:33 UTC | Exp 1909: Residual Drift Validator Ledger v3 | FAIL | Gemini CLI error: u finish the real work inside 10 minutes, that is correct an |
+| 2026-05-12 14:35 UTC | Exp 1908: Structure Snowballing Risk Guardrail | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1905-sota-gguf-cache-runtime-preflight-v3 |
