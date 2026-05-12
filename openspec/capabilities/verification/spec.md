@@ -2364,6 +2364,47 @@ And adversarial invalid outputs are rejected with `false_accept_count=0`,
 And `results/experiment_1878_roce_validator_tree.json` records complete
 coverage and unsupported-category metrics.
 
+### REQ-VERIFY-1879: BEAVER-Lite Bounds For ROCE Validator Trees
+
+The repository shall provide a deterministic BEAVER-lite bound calculator for
+compiled ROCE validator trees that reports prompt coverage without replacing
+the executable validator tree as acceptance authority.
+
+The bound calculator shall:
+
+- define `python/carnot/verify/roce_beaver_lite_bounds.py`;
+- load or reconstruct the Exp 1878 ROCE validator-tree fixture cases;
+- compute one conservative bound row per compiled validator leaf, assigning
+  deterministic coverage only to executable local validator leaves and
+  residual risk to unsupported or uncompiled constraints;
+- aggregate `deterministic_coverage_bound` and `residual_risk_bound` in the
+  closed interval `[0, 1]`;
+- attach the bound summary to a structured `VerdictRecord` without changing
+  the `pass` or `fail` verdict returned by the executable tree validator;
+- prove that BEAVER-lite bound rows cannot promote an invalid output to
+  accepted; and
+- write `results/experiment_1879_beaver_lite_bounds.json` with `status`,
+  `honest_verdict`, `beaver_lite_bounds_ready`,
+  `deterministic_coverage_bound`, `residual_risk_bound`,
+  `acceptance_authority_unchanged`, and `tests_run`.
+
+`beaver_lite_bounds_ready` MUST be true only when every emitted bound is
+finite, aggregate coverage plus residual risk does not exceed one, at least one
+Exp 1878 fixture tree is bounded, and `acceptance_authority_unchanged` is true.
+
+### SCENARIO-VERIFY-1879: Bounds Sit Below Executable Validator Authority
+
+Given the Exp 1878 ROCE fixture with required text, forbidden text, JSON shape,
+arithmetic equality, and a guarded conditional leaf,
+When BEAVER-lite bounds are computed for the compiled validator tree,
+Then each validator leaf receives a deterministic coverage contribution,
+unsupported constraints receive residual-risk contribution instead of silent
+acceptance,
+And an adversarial invalid output still produces a failing `VerdictRecord`,
+And `results/experiment_1879_beaver_lite_bounds.json` records complete
+coverage, zero residual risk for the supported fixture, and unchanged
+acceptance authority.
+
 ### REQ-VERIFY-1642: llguidance Adapter For Structured Verdict Generation
 
 The repository shall provide an Exp 1642 llguidance adapter that exposes
@@ -2492,7 +2533,7 @@ the semantic false accept returns a `VerdictRecord` with `verdict="fail"` and
 and `results/experiment_1591_dccd_adapter.json` records complete metrics and
 backend diagnostics for the reusable adapter.
 
-## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487/1495/1496/1499/1500/1501/1507/1508/1509/1510/1520/1521/1522/1525/1537/1538/1541/1542/1551/1552/1553/1554/1557/1562/1571/1578/1580/1588/1591/1642/1666/1878)
+## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487/1495/1496/1499/1500/1501/1507/1508/1509/1510/1520/1521/1522/1525/1537/1538/1541/1542/1551/1552/1553/1554/1557/1562/1571/1578/1580/1588/1591/1642/1666/1878/1879)
 
 | Requirement | Python | Tests |
 |-------------|--------|-------|
@@ -2545,6 +2586,7 @@ backend diagnostics for the reusable adapter.
 | REQ-VERIFY-1646 | Implemented (`scripts/experiment_1646_ebcn.py`) | Implemented (`tests/python/test_experiment_1646_ebcn.py`) |
 | REQ-VERIFY-1666 | Implemented (`python/carnot/pipeline/nsvif_parser.py`) | Implemented (`tests/python/test_pipeline_nsvif_parser.py`) |
 | REQ-VERIFY-1878 | Implemented (`python/carnot/pipeline/roce_validator_tree.py`) | Implemented (`tests/python/test_roce_validator_tree.py`) |
+| REQ-VERIFY-1879 | Implemented (`python/carnot/verify/roce_beaver_lite_bounds.py`) | Implemented (`tests/python/test_roce_beaver_lite_bounds.py`) |
 
 ### REQ-VERIFY-1593: CDG Repair Acceptance Rates
 The repository shall provide a CDG repair analysis tool that builds a CDG over runtime-contract cases, compares repair localization, and contrasts repair acceptance rates between flat check and CDG ordering using the mandated MODEL_SPECS.
