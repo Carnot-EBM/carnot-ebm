@@ -1930,3 +1930,6 @@ IMPORTANT:
 | 2026-05-12 02:14 UTC | Exp 1881: First-Token and Spilled-Energy Telemetry | FAIL | Codex CLI error: e 10 minutes, that is correct and expected — exit promptly.  |
 | 2026-05-12 02:16 UTC | Exp 1882: DCCD/llguidance Repair with ROCE Validat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1881-low-cost-hallucination-telemetry) |
 | 2026-05-12 02:16 UTC | Exp 1883: HILED Live Logprob Smoke after Contract | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1881-low-cost-hallucination-telemetry) |
+| 2026-05-12 02:16 UTC | Exp 1884: FR-11 CerCE/CNSP Validator-Tree Ledger | FAIL | Codex CLI error: e 10 minutes, that is correct and expected — exit promptly.  |
+| 2026-05-12 02:18 UTC | Exp 1882: DCCD/llguidance Repair with ROCE Validat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1881-low-cost-hallucination-telemetry) |
+| 2026-05-12 02:18 UTC | Exp 1883: HILED Live Logprob Smoke after Contract | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1881-low-cost-hallucination-telemetry) |
