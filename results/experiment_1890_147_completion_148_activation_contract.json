@@ -1,0 +1,282 @@
+{
+  "beaver_bounds_ready": true,
+  "blocked_gates": {
+    "fr11_ledger": {
+      "blocked_scope": {
+        "artifact_missing": true,
+        "blocked_reason": "Codex CLI error: e 10 minutes, that is correct and expected \u2014 exit promptly.",
+        "conductor_status": "FAIL",
+        "experiment_id": "exp1884",
+        "honest_verdict": "missing_artifact",
+        "path": "results/experiment_1884_fr11_cerce_cnsp_ledger.json",
+        "status": "FAIL"
+      },
+      "blocking_field": "promotion_gate_passed",
+      "ledger_status": "missing",
+      "missing_terminal_artifact": true
+    },
+    "hardware_accounting": {
+      "accounting_status": "missing",
+      "blocked_scope": {
+        "artifact_missing": true,
+        "blocked_reason": "Pre-emptive skip: upstream retired (exp1886-gem-consformer-preconditioner)",
+        "conductor_status": "GATE_BLOCK",
+        "experiment_id": "exp1887",
+        "honest_verdict": "missing_artifact",
+        "path": "results/experiment_1887_fpga_s2kan_ising_accounting.json",
+        "status": "GATE_BLOCK"
+      },
+      "blocking_field": "fpga_decomposition_accounting_ready",
+      "missing_terminal_artifact": true
+    },
+    "live_sota": {
+      "blocked": true,
+      "blocking_field": "sota_roce_eval_ready",
+      "missing_models": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF"
+      ]
+    },
+    "telemetry": {
+      "blocked_scope": {
+        "artifact_missing": true,
+        "blocked_reason": "Codex CLI error: e 10 minutes, that is correct and expected \u2014 exit promptly.",
+        "conductor_status": "FAIL",
+        "experiment_id": "exp1881",
+        "honest_verdict": "missing_artifact",
+        "path": "results/experiment_1881_low_cost_hallucination_telemetry.json",
+        "status": "FAIL"
+      },
+      "blocking_field": "telemetry_adapter_ready",
+      "missing_terminal_artifact": true,
+      "source_status": "missing"
+    }
+  },
+  "blocked_reasons": [],
+  "conductor_events_147": {
+    "exp1876": {
+      "details": "81 passed, 1 warning in 5.21s",
+      "experiment_id": "exp1876",
+      "status": "OK",
+      "timestamp": "2026-05-11 23:03 UTC",
+      "title": ".146 Completion Ledger and .147 Gate Fie"
+    },
+    "exp1877": {
+      "details": "81 passed, 1 warning in 5.23s",
+      "experiment_id": "exp1877",
+      "status": "OK",
+      "timestamp": "2026-05-11 23:58 UTC",
+      "title": "ROCE/HILED Artifact Contract Normalizati"
+    },
+    "exp1878": {
+      "details": "81 passed, 1 warning in 5.74s",
+      "experiment_id": "exp1878",
+      "status": "OK",
+      "timestamp": "2026-05-12 00:15 UTC",
+      "title": "ROCE-to-Validator Tree Compiler"
+    },
+    "exp1879": {
+      "details": "81 passed, 1 warning in 5.29s",
+      "experiment_id": "exp1879",
+      "status": "OK",
+      "timestamp": "2026-05-12 00:49 UTC",
+      "title": "BEAVER-lite Deterministic Bounds for Val"
+    },
+    "exp1880": {
+      "details": "Codex CLI error: e 10 minutes, that is correct and expected \u2014 exit promptly.",
+      "experiment_id": "exp1880",
+      "status": "FAIL",
+      "timestamp": "2026-05-12 02:08 UTC",
+      "title": "Live SOTA ROCE Validator Evaluation"
+    },
+    "exp1881": {
+      "details": "Codex CLI error: e 10 minutes, that is correct and expected \u2014 exit promptly.",
+      "experiment_id": "exp1881",
+      "status": "FAIL",
+      "timestamp": "2026-05-12 02:14 UTC",
+      "title": "First-Token and Spilled-Energy Telemetry"
+    },
+    "exp1882": {
+      "details": "Pre-emptive skip: upstream retired (exp1881-low-cost-hallucination-telemetry)",
+      "experiment_id": "exp1882",
+      "status": "GATE_BLOCK",
+      "timestamp": "2026-05-12 02:20 UTC",
+      "title": "DCCD/llguidance Repair with ROCE Validat"
+    },
+    "exp1883": {
+      "details": "Pre-emptive skip: upstream retired (exp1881-low-cost-hallucination-telemetry)",
+      "experiment_id": "exp1883",
+      "status": "GATE_BLOCK",
+      "timestamp": "2026-05-12 02:20 UTC",
+      "title": "HILED Live Logprob Smoke after Contract"
+    },
+    "exp1884": {
+      "details": "Codex CLI error: e 10 minutes, that is correct and expected \u2014 exit promptly.",
+      "experiment_id": "exp1884",
+      "status": "FAIL",
+      "timestamp": "2026-05-12 02:20 UTC",
+      "title": "FR-11 CerCE/CNSP Validator-Tree Ledger"
+    },
+    "exp1885": {
+      "details": "Pre-emptive skip: upstream retired (exp1884-fr11-cerce-cnsp-ledger, exp1884-fr11",
+      "experiment_id": "exp1885",
+      "status": "GATE_BLOCK",
+      "timestamp": "2026-05-12 02:26 UTC",
+      "title": "SOTA FR-11 Self-Learning Promotion Gate"
+    },
+    "exp1886": {
+      "details": "Codex CLI error: e 10 minutes, that is correct and expected \u2014 exit promptly.",
+      "experiment_id": "exp1886",
+      "status": "FAIL",
+      "timestamp": "2026-05-12 02:26 UTC",
+      "title": "GEM/ConsFormer Ising Preconditioner for"
+    },
+    "exp1887": {
+      "details": "Pre-emptive skip: upstream retired (exp1886-gem-consformer-preconditioner)",
+      "experiment_id": "exp1887",
+      "status": "GATE_BLOCK",
+      "timestamp": "2026-05-12 02:33 UTC",
+      "title": "FPGA/S2KAN/Ising Resource Accounting wit"
+    },
+    "exp1888": {
+      "details": "Pre-emptive skip: upstream retired (exp1880-sota-roce-validator-eval, exp1882-dc",
+      "experiment_id": "exp1888",
+      "status": "GATE_BLOCK",
+      "timestamp": "2026-05-12 02:33 UTC",
+      "title": "Integrated Tri-Model E2E Evidence for .1"
+    },
+    "exp1889": {
+      "details": "Deliverable already exists in repo",
+      "experiment_id": "exp1889",
+      "status": "OK",
+      "timestamp": "2026-05-12 05:21 UTC",
+      "title": "Milestone 147 Retrospective"
+    }
+  },
+  "experiment": "1890_147_completion_148_activation_contract",
+  "fr11_ledger_missing_terminal_artifact": true,
+  "gate_recommendations": {
+    "fr11": {
+      "recommendation": "FR-11 promotion must gate on positive utility and retention before SOTA use.",
+      "required_fields": [
+        "promotion_gate_passed",
+        "utility_delta",
+        "fr11_sota_self_learning_ready",
+        "nonforgetting_rate"
+      ]
+    },
+    "hardware_accounting": {
+      "recommendation": "Hardware-accounting work needs no-synthesis estimates before any board claim.",
+      "required_fields": [
+        "sampler_preconditioning_ready",
+        "fpga_decomposition_accounting_ready",
+        "kv260_no_synthesis_claim",
+        "hardware_execution_claim"
+      ]
+    },
+    "prompt_to_validator": {
+      "recommendation": "Gate headline prompt-to-validator claims on live SOTA readiness, not only compiled validator fixtures.",
+      "required_fields": [
+        "validator_tree_compiler_ready",
+        "beaver_lite_bounds_ready",
+        "sota_roce_eval_ready",
+        "inference_mode",
+        "missing_models"
+      ]
+    },
+    "telemetry": {
+      "recommendation": "Telemetry remains an analysis signal until a terminal adapter artifact exists.",
+      "required_fields": [
+        "telemetry_adapter_ready",
+        "phi_first_available",
+        "spilled_energy_available",
+        "acceptance_authority_unchanged"
+      ]
+    }
+  },
+  "hardware_accounting_missing_terminal_artifact": true,
+  "honest_verdict": "complete: milestone_147_archived_148_activation_contract_ready_validator_beaver_ready_live_sota_telemetry_fr11_hardware_blocked",
+  "live_sota_blocked_missing_models": true,
+  "milestone": "2026.05.148",
+  "milestone_147_archived": true,
+  "missing_artifacts": {},
+  "next_gate_contract_ready": true,
+  "operational_speedups_to_track": [
+    {
+      "duplicate_compute_bound_titles": [
+        "Exp 1880: Live SOTA ROCE Validator Evaluation"
+      ],
+      "estimated_time_savings_pct": 11,
+      "name": "same_title_compute_bound_terminal_state_dedupe",
+      "source": "results/operational_retro_2026_05_147.json",
+      "tracking_field": "same_title_compute_dedupe_required"
+    },
+    {
+      "estimated_time_savings_pct": 11,
+      "name": "gpu_model_count_telemetry",
+      "source": "results/operational_retro_2026_05_147.json",
+      "tracking_fields": [
+        "model_count",
+        "parallel_model_count",
+        "gpu_utilization_spans"
+      ]
+    }
+  ],
+  "predecessor_milestone": "2026.05.147",
+  "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+  "ready_substrate": {
+    "beaver_lite_bounds": {
+      "acceptance_authority_unchanged": true,
+      "beaver_lite_bounds_ready": true,
+      "deterministic_coverage_bound": 1.0,
+      "honest_verdict": "complete: BEAVER-lite ROCE validator-tree bounds computed with executable validators retaining acceptance authority",
+      "residual_risk_bound": 0.0,
+      "source": "results/experiment_1879_beaver_lite_bounds.json",
+      "status": "complete"
+    },
+    "validator_tree": {
+      "constraint_coverage_rate": 1.0,
+      "honest_verdict": "complete: ROCE constraints compiled to guarded Python, PySAT-compatible, and Z3-compatible validator leaves with zero false accepts",
+      "source": "results/experiment_1878_roce_validator_tree.json",
+      "status": "complete",
+      "validator_tree_compiler_ready": true,
+      "zero_false_accepts": true
+    }
+  },
+  "run_date": "20260512",
+  "same_title_compute_dedupe_required": true,
+  "schema": "carnot.milestone_147_completion_148_activation_contract.v1",
+  "source_artifacts_checked": {
+    "results/experiment_1876_146_completion_147_gate_contract.json": {
+      "exists": true
+    },
+    "results/experiment_1877_artifact_contract_normalization.json": {
+      "exists": true
+    },
+    "results/experiment_1878_roce_validator_tree.json": {
+      "exists": true
+    },
+    "results/experiment_1879_beaver_lite_bounds.json": {
+      "exists": true
+    },
+    "results/experiment_1889_milestone_147_retro.json": {
+      "exists": true
+    },
+    "results/operational_retro_2026_05_147.json": {
+      "exists": true
+    }
+  },
+  "status": "complete",
+  "telemetry_missing_terminal_artifact": true,
+  "tests_run": [
+    "ruff check python/carnot/reporting/milestone_147_completion_148_activation_contract.py tests/python/test_milestone_147_completion_148_activation_contract.py (passed)",
+    "ruff format --check python/carnot/reporting/milestone_147_completion_148_activation_contract.py tests/python/test_milestone_147_completion_148_activation_contract.py (passed)",
+    ".venv/bin/pytest tests/python/test_milestone_147_completion_148_activation_contract.py -q --no-cov (passed: 4 passed)",
+    ".venv/bin/coverage run --include='*/python/carnot/reporting/milestone_147_completion_148_activation_contract.py' -m pytest tests/python/test_milestone_147_completion_148_activation_contract.py -q --no-cov -n 0 && .venv/bin/coverage report --include='*/python/carnot/reporting/milestone_147_completion_148_activation_contract.py' --fail-under=100 -m (passed: 100% new-module coverage)",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_milestone_147_completion_148_activation_contract.py (passed)",
+    ".venv/bin/python scripts/check_spec_coverage.py (failed: 61 pre-existing tests lack REQ-/SCENARIO refs; new test file passes targeted check)",
+    ".venv/bin/pytest tests/python -q (failed/hung: multiple pre-existing failures; native JAX xdist worker abort in tests/python/test_experiment_883_vjepa_v2_expanded_corpus.py::test_weighted_loss_returns_scalar; no terminal pytest summary after wedging near 71%; terminated single pytest parent after 24:26)",
+    "ops/e2e-test-plan.md reviewed (reporting activation-contract artifact only; no applicable runtime E2E item beyond evidence reconciliation)"
+  ],
+  "validator_tree_ready": true
+}
