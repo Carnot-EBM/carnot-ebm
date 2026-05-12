@@ -5582,3 +5582,4 @@ Completed 15 experiments in 28.9 minutes. There were 0 compute-bound experiments
 - 2026-05-12: Exp 1926: S2KAN Symbolic Fidelity Constraint Integration (✅ Complete) — honest_verdict=complete: s2kan_symbolic_primitives_dict_and_gates_implemented; results/experiment_1926_s2kan_symbolic.json
 - 2026-05-12: Exp 1927: Hard CSP and Neural Solver Reality Check (✅ Complete) — honest_verdict=complete_neural_solver_found_satisfying_assignment_cpu_only; results/experiment_1927_hard_csp_neural.json
 - 2026-05-12: Exp 1929: p-bit/p-dit Ising Sampler Accounting v3 (⚠️ Research Finding) — honest_verdict=Software implementation of p-bit/p-dit states added to Ising sampler. Latency overhead measured correctly without hardware execution.; results/experiment_1929_p_bit_ising_v3.json
+- 2026-05-12: Exp 1931: Milestone .150 Retrospective (✅ Complete) — honest_verdict=complete: aggregated 8 preceding .150 experiments; results/experiment_1931_milestone_150_retro.json
