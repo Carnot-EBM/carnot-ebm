@@ -2189,3 +2189,4 @@ IMPORTANT:
 | 2026-05-12 16:51 UTC | Plan milestone 2026.05.151 | OK | 12 tasks proposed |
 | 2026-05-12 16:53 UTC | Exp 1930: Integrated Tri-SOTA E2E v4 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1918-sota-cache-recovery) |
 | 2026-05-12 16:53 UTC | Milestone 2026.05.151 activated | OK | 12 tasks queued |
+| 2026-05-12 16:55 UTC | Exp 1932: Energy-Guided Decoding Mitigation | DOOMED_RERUN_BLOCK | 6 prior failure(s) match this task's scope but prior_failures field is missing o |
