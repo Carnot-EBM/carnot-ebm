@@ -5572,3 +5572,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - Milestone 2026.05.148 operational retrospective complete. Analyzed 112.1 minutes across 10 experiments with 1 compute-bound task. Exp 1890 was the slowest compute-bound path at 41.3 minutes; Exp 1903 was the slowest synthesis-only path at 39.5 minutes. GPU idle was not flagged on the compute-bound task, and no parallel-model compute-bound DualGPURunner miss is supported by the provided data.
 
 - 2026-05-12: Milestone 2026.05.148 Operational Retrospective: Completed 10 experiments in 112.1 minutes. GPU properly utilized on the 1 compute-bound task.
+- 2026-05-12: Exp 1904: .148 Completion to .149 Activation Contract (⚠️ Research Finding) — honest_verdict=milestone_148_friction_requires_baseline_recovery; results/experiment_1904_148_completion_149_activation_contract.json
