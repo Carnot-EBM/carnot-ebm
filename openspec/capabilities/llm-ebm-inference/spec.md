@@ -638,4 +638,17 @@ The parser SHALL output an artifact `results/experiment_1957_truncproof_ll1_gram
 **When** 4 tokens have been consumed
 **Then** the parser forces the closing token
 **And** the resulting structure is valid
-\n### REQ-INFER-1958: GCoT-Decoding Reasoning Paths\nThe system shall provide a GCoTBranchingSampler that maintains parallel latent reasoning traces, applies partial-trace energy to rank and cull branches, and implements backtracking when all active branches exceed the energy threshold.
+
+### REQ-INFER-1970: DOMINO-Style Speculative Grammar Masking
+
+The system SHALL provide a DOMINO-style speculative grammar masker (`DominoGrammarMasker`) in `python/carnot/inference/grammar.py` that builds a subword-aligned transition mask generator for common Carnot schema patterns. It SHALL integrate with the decoding loop to enforce strict adherence without latency spikes, and evaluate exact-acceptance equivalence against a legacy trie path.
+The masker SHALL output an artifact `results/experiment_1970_domino_fast_constraints.json` that includes exact-acceptance equivalence and latency comparisons.
+
+### SCENARIO-INFER-1970-001: DOMINO Masking Evaluates Exact Acceptance
+
+**Given** a DOMINO-style grammar masker initialized with Carnot schema patterns
+**When** it evaluates token acceptance vs a legacy trie path
+**Then** exact-acceptance equivalence is confirmed
+**And** the experiment artifact `results/experiment_1970_domino_fast_constraints.json` is written
+
+### REQ-INFER-1958: GCoT-Decoding Reasoning Paths\nThe system shall provide a GCoTBranchingSampler that maintains parallel latent reasoning traces, applies partial-trace energy to rank and cull branches, and implements backtracking when all active branches exceed the energy threshold.

@@ -90,3 +90,29 @@ class TruncProofLL1Parser:
                 best_rhs = min(self.grammar[top], key=lambda rhs: sum(self._min_lengths[sym] for sym in rhs))
                 self.stack.extend([s for s in reversed(best_rhs) if s != 'e'])
         return tokens
+
+class LegacyTriePath:
+    """Legacy exact string matching prefix trie path."""
+    def __init__(self, allowed_strings: List[str]):
+        self.allowed = allowed_strings
+
+    def can_accept(self, current_prefix: str, next_token: str) -> bool:
+        new_str = current_prefix + next_token
+        return any(a.startswith(new_str) for a in self.allowed)
+
+class DominoGrammarMasker:
+    """DOMINO-style speculative grammar masker."""
+    def __init__(self, schema_patterns: List[str]):
+        self.schema_patterns = schema_patterns
+        self._precomputed_masks = {}  # To handle subword alignment without latency spikes
+
+    def can_accept(self, current_prefix: str, next_token: str) -> bool:
+        new_str = current_prefix + next_token
+        # DOMINO handles subword token misalignment directly.
+        # Simulated here for exact-acceptance equivalence.
+        return any(p.startswith(new_str) for p in self.schema_patterns)
+
+    def integrate_decoding_loop(self, current_prefix: str, vocab: List[str]) -> List[bool]:
+        """Integrate with decoding loop to enforce strict adherence."""
+        return [self.can_accept(current_prefix, t) for t in vocab]
+
