@@ -5626,3 +5626,4 @@ Completed 15 experiments in 28.9 minutes. There were 0 compute-bound experiments
 - 2026-05-12: Exp 1972: RUN-CSP Prototype for Unsupervised Solvers (✅ Complete) — honest_verdict=complete_generalized_40_to_1000_cpu_only; results/experiment_1972_run_csp_unsupervised.json
 - 2026-05-12: Exp 1973: DeepSaDe Hybrid MaxSMT Guarantees (⚠️ Research Finding) — honest_verdict=zero_false_accept_strictly_guaranteed; results/experiment_1973_deepsade_hybrid_guarantees.json
 - 2026-05-12: Exp 1975: Energy Outcome Reward Model (EORM) (⚠️ Research Finding) — honest_verdict=eorm_verification_layer_reranks_accurately; results/experiment_1975_eorm_cot_verification.json
+- 2026-05-12: Exp 1976: Energy-Based Transformer Prototype (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_1976_ebt_compatibility_prototype.json
