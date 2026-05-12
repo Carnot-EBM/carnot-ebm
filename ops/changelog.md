@@ -5613,3 +5613,4 @@ Completed 15 experiments in 28.9 minutes. There were 0 compute-bound experiments
 - 2026-05-12: Exp 1958: GCoT-Decoding Reasoning Paths (⚠️ Research Finding) — honest_verdict=Successfully prototyped GCoT branching with Carnot partial-trace energy ranking and backtracking.; results/experiment_1958_gcot_branching_prototype.json
 - 2026-05-12: Exp 1960: Flow Sampling Process (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_1960_flow_sampling_unnormalized.json
 - 2026-05-12: Exp 1961: Interleaved Gibbs Diffusion (IGD) Prototype (✅ Complete) — honest_verdict=igd_mixed_sampler_benchmark_complete; results/experiment_1961_interleaved_gibbs_diffusion.json
+- 2026-05-12: Exp 1962: NI Sampling Token Optimization (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_1962_ni_sampling_token_order.json
