@@ -2259,3 +2259,4 @@ IMPORTANT:
 | 2026-05-12 22:01 UTC | Exp 1962: NI Sampling Token Optimization | OK | 81 passed, 1 warning in 5.32s |
 | 2026-05-12 22:03 UTC | Exp 1963: Continual Online Learning: Routing witho | DOOMED_RERUN_BLOCK | 7 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-12 22:05 UTC | Exp 1963: Continual Online Learning: Routing witho | DOOMED_RERUN_BLOCK | 7 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-12 22:07 UTC | Exp 1963: Continual Online Learning: Routing witho | DOOMED_RERUN_BLOCK | 7 prior failure(s) match this task's scope but prior_failures field is missing o |
