@@ -500,7 +500,7 @@ experiment artifact under `results/`.
 | Milestone .148 operational retrospective | **112.1 min** across **10** experiments with **1** compute-bound task; Exp 1890 took **41.3 min**, Exp 1917 took **39.5 min**, and no compute-bound GPU-idle flag was supported | operational_retro_2026_05_148 |
 | Pi-net Projection & ConsFormer | Prototyped Pi-net style differentiable projection layer for continuous latents and a ConsFormer-style refiner | Exps 1633-1635 |
 | SMGI & Energy-Guided Decoding | Integrated SMGI certified update logic and implemented EGD using mandated SOTA GGUFs | Exps 1631/1636 |
-| Current Python test collection | **24,257** Python tests collected in the latest broad attempt; collection-only snapshot, not a full-suite pass claim | Exp 1880, 2026-05-12 |
+| Current Python test collection | **24,268** Python tests collected in the latest broad attempt; collection-only snapshot, not a full-suite pass claim | Exp 1917, 2026-05-12 |
 | Local Claude/Codex usage snapshot | Codex reads the newest local `token_count` event; Claude aggregates local token usage and reads only subscription/tier metadata from credentials; free-form quota prose is ignored instead of guessed; focused regression tests pass | 2026-05-04 changelog |
 
 Deeper analysis of these — including everything that **didn't** work and
