@@ -5560,3 +5560,7 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-05-12: Exp 1880: Live SOTA ROCE Validator Evaluation (⚠️ Blocked) — honest_verdict=blocked: unavailable mandated SOTA GGUF model(s); no headline accuracy claimed; missing=['unsloth/Qwen3.6-35B-A3B-GGUF', 'unsloth/gemma-4-31B-it-GGUF']; results/experiment_1880_sota_roce_validator_eval.json
 - 2026-05-12: Exp 1880: Live SOTA ROCE Validator Evaluation (⚠️ Blocked) — honest_verdict=blocked: unavailable mandated SOTA GGUF model(s); no headline accuracy claimed; missing=['unsloth/Qwen3.6-35B-A3B-GGUF', 'unsloth/gemma-4-31B-it-GGUF']; results/experiment_1880_sota_roce_validator_eval.json
 - 2026-05-12: Exp 1889: Milestone 147 Retrospective (⚠️ Blocked) — honest_verdict=complete: milestone_147_retro_filed_5_completed_9_blocked_prompt_validator_partial_telemetry_fr11_hardware_not_ready; results/experiment_1889_milestone_147_retro.json
+
+## 2026-05-12 (Milestone 2026.05.147 Operational Retrospective)
+
+- Milestone 2026.05.147 completed 14 experiments in 228.1 minutes with 2 compute-bound entries. The slowest compute-bound entries were Exp 1880 at 48.4 and 24.6 minutes; GPU idle was not flagged on compute-bound tasks by the locked retro field, and the next leverage point is per-experiment GPU/model-count telemetry plus same-title compute-bound dedupe.

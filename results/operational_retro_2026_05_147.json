@@ -1,0 +1,56 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.147",
+  "generated_at": "2026-05-12T05:38:41Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 228.1,
+  "experiments_completed": 14,
+  "compute_bound_experiments_count": 2,
+  "slowest_experiments": [
+    {
+      "experiment": "-0400 [conductor] Exp 1877: ROCE/HILED Artifact Contract Normalization",
+      "duration_minutes": 52.7,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1880: Live SOTA ROCE Validator Evaluation",
+      "duration_minutes": 48.4,
+      "compute_bound": true
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1889: Milestone 147 Retrospective",
+      "duration_minutes": 46.9,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1879: BEAVER-lite Deterministic Bounds for Validator Trees",
+      "duration_minutes": 31.2,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1880: Live SOTA ROCE Validator Evaluation",
+      "duration_minutes": 24.6,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "summary": "Milestone 2026.05.147 completed 14 experiments in 228.1 minutes, including 2 compute-bound experiments. The slowest compute-bound work was Exp 1880, which appears twice in the slowest list; GPU idle on compute-bound tasks is not flagged by the locked field.",
+  "bottlenecks_identified": [
+    "Same-titled compute-bound Exp 1880 appears twice in the slowest list at 48.4 and 24.6 minutes, so compute-bound readiness and terminal-state handling need tighter gating.",
+    "The slowest single item was synthesis-only Exp 1877 at 52.7 minutes; this is wall-time pressure, but GPU idle is correct for synthesis-only work.",
+    "The retrospective closeout itself appears as synthesis-only Exp 1889 at 46.9 minutes, making artifact generation and documentation reconciliation a closeout bottleneck."
+  ],
+  "improvements_suggested": [
+    "Record per-experiment GPU utilization spans, model_count, and parallel_model_count so GPU-idle claims are tied to active compute-bound windows instead of a single closeout snapshot.",
+    "Add same-title compute-bound terminal-state dedupe before relaunching a slow evaluation path.",
+    "Generate operational-retro JSON interpretation fields and docs append stubs directly from the locked timing artifact.",
+    "Add phase timing for synthesis-only work so long contract, bounds, and retrospective phases can be split or parallelized without treating GPU idle as a defect."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add GPU/model-count telemetry and only flag DualGPURunner misses when parallel_model_count is at least 2.",
+    "Cache terminal compute-bound readiness outcomes before another same-title evaluation launch.",
+    "Automate the operational-retro JSON, changelog, and roadmap append path from the locked timing data."
+  ],
+  "estimated_time_savings_pct": 11,
+  "meta_reflection": "The estimate is intentionally conservative: it targets the repeated same-title compute-bound slow entry rather than assuming broad synthesis acceleration. No DualGPURunner failure is claimed because the supplied data does not show a compute-bound task with 2 or more models loaded in parallel."
+}

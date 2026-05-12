@@ -1,6 +1,17 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-09 (milestone 2026.05.121 operational retrospective complete)
+**Last Updated:** 2026-05-12 (milestone 2026.05.147 operational retrospective complete)
+
+## Session 2026-05-12 - Milestone 2026.05.147 Operational Retrospective Complete
+
+**Milestone 2026.05.147 operational retro COMPLETE.**
+
+- Retro artifact: `results/operational_retro_2026_05_147.json` (`schema=carnot.operational_retro.v64`).
+- Operational slice: 228.1 minutes, 14 completed experiments, 2 compute-bound entries.
+- Slowest compute-bound entries: Exp 1880 at 48.4 and 24.6 minutes.
+- GPU state: the locked retro field does not flag GPU idle on compute-bound tasks; no DualGPURunner failure is claimed because the supplied data does not show 2 or more models loaded in parallel.
+- Next-milestone speedup target: 11% through same-title compute-bound terminal-state dedupe and per-experiment GPU/model-count telemetry.
+- Did NOT modify `scripts/research_conductor.py` or `research-roadmap.yaml`.
 
 ## Session 2026-05-09 - Milestone 2026.05.121 Operational Retrospective Complete
 
