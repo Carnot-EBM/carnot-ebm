@@ -1942,3 +1942,6 @@ IMPORTANT:
 | 2026-05-12 02:24 UTC | Exp 1885: SOTA FR-11 Self-Learning Promotion Gate | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1884-fr11-cerce-cnsp-ledger, exp1884-fr11 |
 | 2026-05-12 02:24 UTC | Exp 1886: GEM/ConsFormer Ising Preconditioner for  | FAIL | Codex CLI error: e 10 minutes, that is correct and expected — exit promptly.  |
 | 2026-05-12 02:26 UTC | Exp 1885: SOTA FR-11 Self-Learning Promotion Gate | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1884-fr11-cerce-cnsp-ledger, exp1884-fr11 |
+| 2026-05-12 02:26 UTC | Exp 1886: GEM/ConsFormer Ising Preconditioner for  | FAIL | Codex CLI error: e 10 minutes, that is correct and expected — exit promptly.  |
+| 2026-05-12 02:28 UTC | Exp 1887: FPGA/S2KAN/Ising Resource Accounting wit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1886-gem-consformer-preconditioner) |
+| 2026-05-12 02:28 UTC | Exp 1888: Integrated Tri-Model E2E Evidence for .1 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1880-sota-roce-validator-eval, exp1882-dc |
