@@ -153,3 +153,44 @@ Sub-requirements:
 **When** the simulated HILED execution pipeline is invoked
 **Then** it successfully mimics offloaded decoding and records metrics
 **And** it writes `results/experiment_1845_hiled.json`.
+
+### REQ-SAMPLE-1935: Continuous-Latent FAR-Inspired Constraint Sampler
+
+Carnot MUST provide a continuous-latent sampling layer inspired by Fast
+Autoregressive (FAR) models that enables high-speed surrogate shortcut
+constraint checking, implemented in
+`python/carnot/samplers/continuous_latent.py`.
+
+This sampler wraps the standard Langevin or EqM step with a learned low-rank
+surrogate head that predicts whether the current state satisfies a set of soft
+constraints *before* committing a full energy evaluation — allowing the inner
+loop to skip expensive energy calls on clearly-violating candidate states.
+
+Sub-requirements:
+- REQ-SAMPLE-1935-1: The module SHALL provide a `FARSurrogateHead` dataclass
+  that holds a low-rank linear projection (W shape `(latent_dim, n_constraints)`)
+  and a bias vector, and exposes a `predict(z)` method returning a
+  `(n_constraints,)`-shaped JAX array of soft constraint scores in `[0, 1]`.
+- REQ-SAMPLE-1935-2: The module SHALL provide a `ContinuousLatentSampler`
+  dataclass that wraps any `EnergyFunction` and a `FARSurrogateHead`, and
+  exposes a `sample(key, init, n_steps)` method returning the final latent state.
+- REQ-SAMPLE-1935-3: The sampler SHALL skip the full energy gradient call when
+  the surrogate head predicts that ALL constraints are satisfied below a
+  configurable `skip_threshold` (a value in `(0, 1]`), using a cheaper scaled
+  gradient of the surrogate scores instead.
+- REQ-SAMPLE-1935-4: Experiment 1935 SHALL benchmark `ContinuousLatentSampler`
+  against `LangevinSampler` and `ParallelIsingsampler` on an identical quadratic
+  soft-constraint energy, measuring wall-clock steps/second.
+- REQ-SAMPLE-1935-5: The benchmark SHALL run entirely on CPU with a fixed JAX
+  seed, require no GPU or network access, and write
+  `results/experiment_1935_continuous_latent_sampler.json`.
+
+### SCENARIO-SAMPLE-1935: FAR-Inspired Sampler Benchmark
+
+**Given** a quadratic soft-constraint energy (Ising-equivalent) of dimension 32
+**When** `ContinuousLatentSampler`, `LangevinSampler`, and a reference discrete
+Ising sweep are each run for 200 steps from the same random initial state
+**Then** all three produce finite final states with non-NaN energies
+**And** the benchmark artifact records steps/second for each sampler
+**And** the surrogate skip rate (fraction of steps where full energy was bypassed)
+is recorded and is strictly positive (> 0) when `skip_threshold` < 1.0.
