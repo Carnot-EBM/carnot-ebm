@@ -4,6 +4,25 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-05-14 Post-.153 Planning Sweep (Milestone 2026.05.154)
+
+This sweep was run after milestone `.153` completed. The literature search revealed advances in Energy-Based Transformers, continuous latent constraint satisfaction, and Energy Outcome Reward Models.
+
+### Energy-Based Transformers and Verification
+- **Paper:** "Energy-Based Transformers: A Scalable Approach for Learning to Think" (Gladstone et al., 2026) and "A Novel Small and Efficient Energy Reward Model for CoT Verification" (2025).
+- **What:** Introduces EBTs which learn to verify compatibility between input and prediction by minimizing energy, and EORM which uses energy scores for post-hoc verification of CoT reasoning.
+- **Relevance to Carnot:** Directly aligns with Carnot's Phase 3 and Phase 4 goals of using energy models to evaluate and verify reasoning traces.
+
+### RUN-CSP and DeepSaDe for Constraint Satisfaction
+- **Paper:** "RUN-CSP: Unsupervised Learning of Message Passing Networks for Binary CSPs" and "DeepSaDe: Learning Neural Networks that Guarantee Domain Constraint Satisfaction".
+- **What:** Unsupervised GNN architectures for solving Max-CSPs and hybrid training (MaxSMT+SGD) to guarantee constraint satisfaction in neural network predictions.
+- **Relevance to Carnot:** Provides architectures for neural constraint solvers and guarantees that match Carnot's requirement for zero-false-accepts and formal verifiability.
+
+### COLD Decoding and DOMINO for Constrained Generation
+- **Paper:** "COLD Decoding: Energy-based Constrained Text Generation with Langevin Dynamics" and "DOMINO: Fast, Non-Invasive Constrained Generation".
+- **What:** COLD treats constraints as an energy function and uses Langevin dynamics to guide decoding; DOMINO uses speculative decoding for strict grammar constraints with zero overhead.
+- **Relevance to Carnot:** COLD aligns perfectly with Carnot's continuous energy-guided decoding goals, while DOMINO provides a practical baseline for token-aligned structure enforcement.
+
 ## 2026-05-13 Post-.150 Planning Sweep (Milestone 2026.05.151)
 
 This sweep was run after milestone `.150` completed. Local outcomes established baseline recoveries for SOTA caching, advanced Epsilon Continual Learning, and explored S2KAN and hard CSP baselines. The literature search revealed advances in hardware KAN implementations, self-supervised constraint transformers, and energy-guided generation.
