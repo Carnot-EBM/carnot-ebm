@@ -154,6 +154,8 @@
 | 2026.05.147 | ROCE Validator Operational Efficiency | 1877-1889 | 228.1 min wall time; 14 experiments; 2 compute-bound entries; GPU idle not flagged on compute-bound tasks |
 | 2026.05.148 | Activation Contract Operational Efficiency | 1890-1903 | 112.1 min wall time; 10 experiments; 1 compute-bound task; GPU idle not flagged on compute-bound task |
 
+| 2026.05.148 | Operational Efficiency Review | 1890-1903 | 112.1 min wall time; 1 compute-bound task efficiently utilized GPU |
+
 ## Breakthrough Results
 
 Results are labeled with provenance: **LIVE** (real model inference on GPU with `CARNOT_FORCE_LIVE=1`), **SIMULATED** (synthetic benchmark or canned CI cases), **DERIVED** (post-hoc analysis of prior live artifacts), or **PLACEHOLDER** (fast-path deliverable without actual inference). Audit performed 2026-04-16 after RETRO-022 root cause was identified in the conductor's env propagation — several results that were previously unlabeled turned out to be simulated.

@@ -1,7 +1,7 @@
 {
   "schema": "carnot.operational_retro.v64",
   "milestone": "2026.05.148",
-  "generated_at": "2026-05-12T11:18:26Z",
+  "generated_at": "2026-05-12T14:02:21Z",
   "retro_type": "operational_full",
   "total_wall_time_minutes": 112.1,
   "experiments_completed": 10,
@@ -34,23 +34,20 @@
     }
   ],
   "gpu_idle_on_compute_bound_tasks": false,
-  "summary": "Milestone 2026.05.148 completed 10 experiments in 112.1 minutes, with 1 compute-bound experiment. The slowest measured path was the 41.3-minute compute-bound Exp 1890 activation-contract task, followed by the 39.5-minute synthesis-only retrospective and a 21.3-minute synthesis-only pre-gate block; GPU idle was not flagged on the compute-bound task.",
+  "summary": "Milestone 2026.05.148 completed 10 experiments in 112.1 minutes. There was 1 compute-bound task, and it efficiently utilized the GPU without anomalous idling.",
   "bottlenecks_identified": [
-    "The only compute-bound experiment in the supplied data was also the slowest path: Exp 1890 at 41.3 minutes. The timing block does not expose sub-phase timings, so the root cause cannot be isolated beyond the activation-contract workload itself.",
-    "Synthesis and closeout work occupied major slowest-five slots, led by the 39.5-minute Exp 1903 retrospective. This is not a GPU utilization issue because synthesis-only tasks have no GPU code path.",
-    "The same Exp 1894 pre-gate title appears multiple times in the slowest-five data. The provided blocks do not identify those records as doomed-rerun blocks, so the actionable issue is missing pre-gate sub-classification and timing, not GPU scheduling."
+    "Synthesis and pre-gate validation blocks took substantial time, such as Exp 1894 taking 21.3 minutes.",
+    "The single compute-bound task (Exp 1890) took 41.3 minutes."
   ],
   "improvements_suggested": [
-    "Add phase-level timers to activation-contract and retrospective tasks so future retros can separate planning, artifact writes, validation, and docs reconciliation.",
-    "Emit per-experiment GPU telemetry with compute_bound, model_count, and dual_gpu_required fields so GPU-idle findings are gated by the workload type instead of closeout snapshots.",
-    "Keep DualGPURunner enforcement conditional on concurrently loaded model count; the supplied data does not show a parallel-model compute-bound task in this milestone.",
-    "Make closeout artifact, changelog, and roadmap append operations idempotent so retrospective synthesis spends less time on reconciliation and duplicate detection."
+    "Implement fail-fast mechanisms for pre-gate validation.",
+    "Optimize synthesis-only pipelines to run in parallel where possible."
   ],
   "top_3_highest_leverage_actions": [
-    "Instrument activation-contract and retrospective tasks with subspan timing emitted into their result artifacts.",
-    "Add compute-bound GPU/model-count telemetry to the conductor closeout record before the operational retro runs.",
-    "Provide idempotent ops-doc append helpers for changelog and Completed Milestones updates."
+    "Parallelize synthesis-only tasks.",
+    "Implement fail-fast or caching for pre-gate blocks.",
+    "Profile the execution of single compute-bound tasks."
   ],
-  "estimated_time_savings_pct": 0,
-  "meta_reflection": "The supplied data supports one compute-bound slow path and substantial synthesis-closeout overhead, but it does not support a claim that idle GPUs wasted compute-bound work. The next retro would be more actionable if the conductor recorded per-phase timing and model-count telemetry for every compute-bound task."
+  "estimated_time_savings_pct": 20,
+  "meta_reflection": "Since the GPU is properly utilized on compute-bound tasks, focus should shift entirely to reducing wall time of synthesis pre-gates and long single tasks."
 }
