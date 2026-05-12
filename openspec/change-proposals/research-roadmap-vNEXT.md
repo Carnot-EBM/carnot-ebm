@@ -1,59 +1,75 @@
-# Milestone 2026.05.150: SOTA Cache Recovery, EBT Gradient Loops, and Epsilon Continual Learning
+# Carnot Research Roadmap: Milestone 2026.05.151
 
-**Milestone ID:** `2026.05.150`
 **Status:** Proposed
-**Sequence:** 150
+**Author:** Carnot Planning Agent
+**Date:** 2026-05-13
 
-## 1. What the Previous Milestone Proved (.149)
+## 1. Executive Summary
 
-Milestone 2026.05.149 suffered a severe infrastructure disruption. The SOTA GGUF Cache and Runtime Preflight failed, which blocked terminal artifact recovery and caused an almost complete failure to execute the planned scientific tasks. 9 tasks were gate-blocked, and 2 failed due to timeouts. The retrospective confirmed that SOTA caching failures blocked terminal artifact recovery.
+Milestone `2026.05.151` transitions Carnot from recovery of foundational SOTA cache/telemetry toward advancing our verifiable reasoning, continuous self-learning, and hardware-efficiency frontiers. The `2026.05.150` milestone stabilized SOTA artifact recovery, tracked token-level spilled energy, and instituted epsilon continual learning.
 
-## 2. The 3 Biggest Gaps
-1. **Infrastructure Fragility:** The SOTA caching mechanism is fragile and blocks all downstream SOTA integration tasks. We must recover the terminal artifacts and harden the cache preflight.
-2. **Iterative Energy Minimization:** Standard autoregressive next-token prediction lacks the deep "System 2" thinking proposed by Energy-Based Transformers (EBTs). We need to implement iterative, gradient-based energy minimization loops (arXiv:2507.02092).
-3. **Catastrophic Forgetting in Constraints:** As we add new constraints, we risk forgetting old ones. We need an explicit epsilon-constraint online continual learning mechanism to balance plasticity and stability.
+This milestone integrates fresh 2026 research findings to close the largest gaps between the current state and the Product Requirements Document (PRD):
+1. **Closing the Structured Generation Semantic Gap:** Using Energy-Guided Decoding and Type-constrained decoding to eliminate the semantic reasoning tax of hard constraints.
+2. **Advancing Iterative Neural Solvers:** Applying ConsFormer-style self-supervised iterative refinement for verifiable reasoning without labeled data.
+3. **Hardware-Efficient KAN Tiers:** Formulating our KAN constraints into LUT-based architectures (KANELÉ) to prepare for realistic KV260 deployment.
+4. **Continuous Latent Exploration:** Adding FAR-style fast autoregressive continuous-latent sampling to bridge our discrete token reality and the eventual thermodynamic target.
 
-## 3. Architecture Diagram
+## 2. Milestone Phases
+
+### Phase 1: Guided & Constrained Generation
+- **Focus:** Improve the reliability and semantic quality of constrained generation loops.
+- **Tasks:**
+  - **Exp 1932:** Energy-Guided Decoding
+  - **Exp 1933:** Type-Constrained Generation
+
+### Phase 2: Verifiable Reasoning & Hardware Efficiency
+- **Focus:** Deploy iterative solvers and perform strict resource accounting for hardware execution.
+- **Tasks:**
+  - **Exp 1934:** ConsFormer Iterative Refinement
+  - **Exp 1935:** Continuous Latent Sampler Prototype (FAR)
+  - **Exp 1936:** KANELÉ Hardware Accounting
+
+### Phase 3: Continuous Self-Learning & Audits
+- **Focus:** Safely grow the system's reasoning skill graph without catastrophic forgetting.
+- **Tasks:**
+  - **Exp 1937:** Continual Epsilon Learning Audit
+  - **Exp 1938:** NRGPT Energy-Based Loss Probe
+  - **Exp 1939:** Auditable Skill Graph Routing
+
+### Phase 4: Integration & Retrospective
+- **Focus:** Close the loop with an end-to-end evaluation across the flagship models and synthesize results.
+- **Tasks:**
+  - **Exp 1940:** ROCE Compilation v2
+  - **Exp 1941:** EBT Reasoning Bridge
+  - **Exp 1942:** Integrated Tri-SOTA E2E v5
+  - **Exp 1943:** Milestone .151 Retrospective
+
+## 3. Dependency Graph
 
 ```mermaid
 graph TD
-    A[SOTA Cache Recovery] --> B[Telemetry Adapter v4]
-    B --> C[Spilled Energy Diagnostic]
-    A --> D[Validator Ledger v4]
-    A --> E[Snowballing Guardrail]
-    D --> F[Epsilon Constraint Continual Learning]
-    F --> G[FR-11 Routing Audit]
-    H[EBT Gradient Minimization] --> I[S2KAN Symbolic Constraints]
-    J[Hard CSP Neural Solver] --> K[p-bit Ising Sampler v3]
-    A --> L[Tri-SOTA E2E v4]
-    M[THRML Parity Methodology] --> N[Retro .150]
+    1932[Exp 1932: Energy-Guided Decoding] --> 1933[Exp 1933: Type-Constrained Generation]
+    1933 --> 1940[Exp 1940: ROCE Compilation v2]
+    
+    1934[Exp 1934: ConsFormer Refinement] --> 1935[Exp 1935: Continuous Latent Sampler]
+    1935 --> 1941[Exp 1941: EBT Reasoning Bridge]
+    
+    1936[Exp 1936: KANELÉ Accounting] --> 1942[Exp 1942: Tri-SOTA E2E v5]
+    
+    1937[Exp 1937: Epsilon Audit] --> 1938[Exp 1938: NRGPT Loss Probe]
+    1938 --> 1939[Exp 1939: Skill Graph Routing]
+    
+    1939 --> 1942
+    1940 --> 1942
+    1941 --> 1942
+    
+    1942 --> 1943[Exp 1943: Milestone .151 Retro]
 ```
 
-## 4. Phase Descriptions
-
-**Phase 0: Infrastructure Recovery**
-- **exp1918:** Unconditional recovery of terminal artifacts and SOTA GGUF cache preflight.
-
-**Phase 1: Carry-forwards from .149**
-- **exp1919-exp1922:** Telemetry adapter, spilled energy diagnostic, structure guardrail, and validator ledger.
-
-**Phase 2: Continual Learning & Constraints**
-- **exp1923:** Epsilon Constraint Online Learning prototype (continuous self-learning).
-- **exp1924:** FR-11 Routing Audit.
-
-**Phase 3: Symbolic & Energy Advancements**
-- **exp1925:** EBT gradient minimization loop (arXiv:2507.02092).
-- **exp1926:** S2KAN integration for symbolic fidelity.
-- **exp1927:** Hard CSP and Neural Solver Reality Check (with increased timeout).
-
-**Phase 4: Hardware and E2E Integration**
-- **exp1928:** Corrected THRML/Carnot Parity Methodology.
-- **exp1929:** p-bit Ising Sampler v3.
-- **exp1930:** Integrated Tri-SOTA E2E v4.
-
-**Phase 5: Retrospective**
-- **exp1931:** Milestone .150 Retrospective.
-
-## 5. Hardware Requirements
-- Dual RTX 3090s via CUDA for Tri-SOTA E2E validation.
-- Standard CPU for KAN and EBT structural prototyping.
+## 4. Hardware Requirements
+- **Local GPUs:** Dual RTX 3090 required for Exp 1932, 1933, 1942.
+- **GGUF Models:**
+  - `unsloth/Qwen3.6-35B-A3B-GGUF` (Flagship MoE)
+  - `unsloth/gemma-4-31B-it-GGUF` (Flagship Dense)
+  - `unsloth/gemma-4-26B-A4B-it-GGUF` (Middle MoE)
+- **FPGA/KV260:** Exp 1936 is no-synthesis accounting only; board deployment remains deferred.
