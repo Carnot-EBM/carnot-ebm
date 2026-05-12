@@ -1,0 +1,618 @@
+milestone: "2026.05.148"
+milestone_title: "Research-Deep: SOTA Runtime Readiness, Terminal Telemetry, Self-Learning Ledgers, and Hardware-Accounted Validator Graphs"
+milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
+
+tasks:
+  - id: exp1890-147-completion-148-activation-contract
+    milestone: "2026.05.148"
+    title: "Exp 1890: .147 Completion to .148 Activation Contract"
+    deliverable: "results/experiment_1890_147_completion_148_activation_contract.json"
+    max_turns: 20
+    prior_failures:
+      - experiment_id: exp1889-milestone-147-retro
+        verdict: complete_with_downstream_blockers
+        addressed_by: "This is not a rerun of the retro. It converts the `.147` retrospective fields into a `.148` activation contract that downstream gates can read without reaching back to prior-roadmap task IDs."
+        retire_if_same_verdict: false
+    prompt: |
+      CONTEXT: Today is {date}. Milestone 2026.05.147 completed with five completed tasks and nine blocked or retired tasks. The useful evidence is the validator tree and BEAVER-lite bounds; the blockers are missing mandated SOTA GGUF cache/runtime readiness, missing terminal telemetry artifacts, missing FR-11 self-learning ledger, and missing hardware-accounting artifact. The next milestone needs one local activation artifact carrying those facts into `.148` gates.
+      EXISTING CODE TO READ FIRST: research-roadmap.yaml, ops/status.md, ops/changelog.md, ops/conductor-log.md, results/experiment_1876_146_completion_147_gate_contract.json, results/experiment_1877_artifact_contract_normalization.json, results/experiment_1878_roce_validator_tree.json, results/experiment_1879_beaver_lite_bounds.json, results/experiment_1889_milestone_147_retro.json, results/operational_retro_2026_05_147.json, openspec/change-proposals/research-roadmap-vNEXT.md
+      TASK: Write a `.148` activation contract that summarizes which `.147` evidence is ready, which gates remain blocked, and which operational speedups should be tracked. Do not modify `research-roadmap.yaml` or `scripts/research_conductor.py`.
+      CONCRETE STEPS:
+      1. Read the listed `.147` artifacts and conductor/status/changelog entries.
+      2. Record the ready substrate fields for validator-tree compilation and BEAVER-lite bounds.
+      3. Record the blocked fields for live SOTA cache/runtime, terminal telemetry, FR-11 ledger, and hardware accounting.
+      4. Include the `.147` operational finding that same-title compute-bound terminal-state dedupe and GPU/model-count telemetry are expected to save about 11 percent wall time.
+      5. Save `{project_root}/results/experiment_1890_147_completion_148_activation_contract.json` with standard result fields and the required gate fields below.
+      REQUIRED ARTIFACT FIELDS:
+      - status
+      - honest_verdict
+      - milestone_147_archived
+      - validator_tree_ready
+      - beaver_bounds_ready
+      - live_sota_blocked_missing_models
+      - telemetry_missing_terminal_artifact
+      - fr11_ledger_missing_terminal_artifact
+      - hardware_accounting_missing_terminal_artifact
+      - same_title_compute_dedupe_required
+      - next_gate_contract_ready
+      - tests_run
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1891-sota-gguf-cache-runtime-preflight
+    milestone: "2026.05.148"
+    title: "Exp 1891: SOTA GGUF Cache and Runtime Preflight"
+    deliverable: "results/experiment_1891_sota_gguf_cache_runtime_preflight.json"
+    requires_gpu: true
+    model: opus
+    max_turns: 100
+    gated_on:
+      - upstream: exp1890-147-completion-148-activation-contract
+        artifact_field: next_gate_contract_ready
+        op: "=="
+        value: true
+    prior_failures:
+      - experiment_id: exp1880-sota-roce-validator-eval
+        verdict: blocked_missing_mandated_sota_ggufs
+        addressed_by: "The prior live evaluation combined cache readiness and evaluation, then blocked when two mandated GGUFs were unavailable. This task changes scope to a bounded cache/materialization/runtime preflight that writes a terminal artifact before any evaluation claim."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT: Today is {date}. `.147` blocked live SOTA evaluation because the mandated local GGUF cache was incomplete. This task must separate cache/runtime readiness from evaluation so later tasks can skip without spending a synthesis call when models are missing.
+      EXISTING CODE TO READ FIRST: CLAUDE.md, scripts/experiment_template.py, python/carnot/inference/sota_models.py, ops/status.md, ops/changelog.md, research-references.md, results/experiment_1880_sota_roce_validator_eval.json
+      TASK: Run a bounded local cache and runtime preflight for the mandated SOTA GGUF models and save an honest terminal artifact. Do not modify `research-roadmap.yaml` or `scripts/research_conductor.py`.
+      CONCRETE STEPS:
+      1. Define MODEL_SPECS with `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and `unsloth/gemma-4-26B-A4B-it-GGUF`.
+      2. Use the `cached_sota_pair()` pattern from `scripts/experiment_template.py` where applicable, then explicitly inspect whether each mandated GGUF is present in the local Hugging Face cache.
+      3. If safe local configuration allows bounded materialization, attempt it; otherwise record the exact missing model identifiers and do not substitute legacy small models for headline readiness.
+      4. Run the cheapest possible runtime smoke for any available mandated model and record GPU, runtime, model count, and parallel model count telemetry.
+      5. Record fallback runtime candidates such as llama.cpp with llguidance, vLLM.rs, and llgtrt as candidates only, not as fulfilled mandated-model evidence.
+      6. Save `{project_root}/results/experiment_1891_sota_gguf_cache_runtime_preflight.json`.
+      REQUIRED ARTIFACT FIELDS:
+      - status
+      - honest_verdict
+      - MODEL_SPECS
+      - cache_all_available
+      - cache_any_available
+      - missing_models
+      - runtime_smoke_ready
+      - runtime_backend
+      - models_used
+      - gpu_telemetry_available
+      - model_count
+      - parallel_model_count
+      - fallback_runtime_candidates
+      - tests_run
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1892-terminal-low-cost-telemetry-adapter
+    milestone: "2026.05.148"
+    title: "Exp 1892: Terminal Low-Cost Telemetry Adapter"
+    deliverable: "results/experiment_1892_terminal_low_cost_telemetry_adapter.json"
+    agent_type: codex
+    model: gpt-5.5
+    requires_gpu: true
+    max_turns: 30
+    gated_on:
+      - upstream: exp1891-sota-gguf-cache-runtime-preflight
+        artifact_field: cache_any_available
+        op: "=="
+        value: true
+    prior_failures:
+      - experiment_id: exp1881-low-cost-hallucination-telemetry
+        verdict: failed_missing_artifact_after_codex_cli_error
+        addressed_by: "The prior telemetry task did not leave a usable terminal artifact. This changed scope requires an artifact even when logprobs or model cache are unavailable, and it records availability fields separately from acceptance authority."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT: Today is {date}. Low-cost hallucination telemetry is useful only as advisory evidence. `.147` failed to produce a terminal telemetry artifact, which cascade-blocked repair and HILED-like work. This task must leave a schema-complete artifact whether telemetry is available or unavailable.
+      EXISTING CODE TO READ FIRST: scripts/experiment_template.py, python/carnot/pipeline/verdict_record.py, python/carnot/inference/sota_models.py, research-references.md, results/experiment_1891_sota_gguf_cache_runtime_preflight.json
+      TASK: Implement or wire a terminal telemetry adapter for first-token/logprob/spilled-energy signals over available mandated SOTA GGUF outputs. Do not modify `research-roadmap.yaml` or `scripts/research_conductor.py`.
+      CONCRETE STEPS:
+      1. Define MODEL_SPECS with `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and `unsloth/gemma-4-26B-A4B-it-GGUF`.
+      2. Use available mandated models from Exp 1891. If only one mandated model is available, run that model and mark the artifact as partial rather than headline.
+      3. Record whether first-token entropy, first-token confidence, logprob access, and spilled-energy style metrics are available from the local runtime.
+      4. Add telemetry fields to a `VerdictRecord`-compatible artifact without changing validator acceptance decisions.
+      5. Run a small deterministic smoke or targeted unit test for the adapter.
+      6. Save `{project_root}/results/experiment_1892_terminal_low_cost_telemetry_adapter.json`.
+      REQUIRED ARTIFACT FIELDS:
+      - status
+      - honest_verdict
+      - telemetry_adapter_ready
+      - MODEL_SPECS
+      - models_used
+      - phi_first_available
+      - first_token_entropy_available
+      - spilled_energy_available
+      - logprob_provider
+      - acceptance_authority_unchanged
+      - tests_run
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1893-live-sota-roce-validator-eval-v2
+    milestone: "2026.05.148"
+    title: "Exp 1893: Live SOTA ROCE Validator Evaluation v2"
+    deliverable: "results/experiment_1893_live_sota_roce_validator_eval_v2.json"
+    agent_type: codex
+    model: gpt-5.5
+    requires_gpu: true
+    max_turns: 50
+    gated_on:
+      - upstream: exp1890-147-completion-148-activation-contract
+        artifact_field: validator_tree_ready
+        op: "=="
+        value: true
+      - upstream: exp1890-147-completion-148-activation-contract
+        artifact_field: beaver_bounds_ready
+        op: "=="
+        value: true
+      - upstream: exp1891-sota-gguf-cache-runtime-preflight
+        artifact_field: cache_all_available
+        op: "=="
+        value: true
+    prior_failures:
+      - experiment_id: exp1880-sota-roce-validator-eval
+        verdict: blocked_missing_mandated_sota_ggufs
+        addressed_by: "This v2 evaluation is gated on a separate full-cache preflight and uses the completed validator-tree and BEAVER-lite substrate from `.147`, so it will skip before synthesis when the original missing-model condition remains true."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT: Today is {date}. This is the first `.148` headline live evaluation, and it is allowed to run only when all three mandated SOTA GGUFs are cache/runtime-ready. Deterministic validators and BEAVER-lite bounds remain the acceptance authority.
+      EXISTING CODE TO READ FIRST: scripts/experiment_template.py, python/carnot/inference/sota_models.py, python/carnot/verify/, python/carnot/pipeline/verdict_record.py, results/experiment_1878_roce_validator_tree.json, results/experiment_1879_beaver_lite_bounds.json, results/experiment_1891_sota_gguf_cache_runtime_preflight.json
+      TASK: Evaluate compiled ROCE validator trees on live local SOTA GGUF generations and report zero-false-accept behavior. Do not modify `research-roadmap.yaml` or `scripts/research_conductor.py`.
+      CONCRETE STEPS:
+      1. Define MODEL_SPECS with `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and `unsloth/gemma-4-26B-A4B-it-GGUF`.
+      2. Use the cache/runtime path proven in Exp 1891 and record exact model files or cache refs used.
+      3. Run at least 30 prompts spanning format, arithmetic, lexical, and conditional constraints.
+      4. Validate every output through the compiled validator tree and BEAVER-lite row.
+      5. If any mandated model becomes unavailable at runtime, write a blocked artifact and do not claim a headline SOTA result.
+      6. Save `{project_root}/results/experiment_1893_live_sota_roce_validator_eval_v2.json`.
+      REQUIRED ARTIFACT FIELDS:
+      - status
+      - honest_verdict
+      - sota_roce_eval_ready
+      - inference_mode
+      - MODEL_SPECS
+      - models_used
+      - zero_false_accepts
+      - false_accept_count
+      - constraint_coverage_rate
+      - missing_models
+      - tests_run
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1894-dccd-roce-repair-v2
+    milestone: "2026.05.148"
+    title: "Exp 1894: DCCD/llguidance Repair with ROCE Validators v2"
+    deliverable: "results/experiment_1894_dccd_roce_repair_v2.json"
+    agent_type: codex
+    model: gpt-5.5
+    requires_gpu: true
+    max_turns: 50
+    gated_on:
+      - upstream: exp1893-live-sota-roce-validator-eval-v2
+        artifact_field: sota_roce_eval_ready
+        op: "=="
+        value: true
+      - upstream: exp1892-terminal-low-cost-telemetry-adapter
+        artifact_field: telemetry_adapter_ready
+        op: "=="
+        value: true
+    prior_failures:
+      - experiment_id: exp1882-dccd-roce-repair
+        verdict: gate_blocked_on_missing_telemetry_artifact
+        addressed_by: "The prior DCCD repair task was gated on a telemetry artifact that never materialized. This v2 task is structurally gated on Exp 1892 and Exp 1893 terminal artifacts before any repair work runs."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT: Today is {date}. DCCD should reduce the semantic cost of hard constrained decoding by drafting freely and then enforcing structure. In Carnot, DCCD repair is allowed only after live SOTA validation and telemetry artifacts exist, and validators remain the acceptance authority.
+      EXISTING CODE TO READ FIRST: python/carnot/verify/, python/carnot/pipeline/verdict_record.py, python/carnot/inference/sota_models.py, research-references.md, results/experiment_1892_terminal_low_cost_telemetry_adapter.json, results/experiment_1893_live_sota_roce_validator_eval_v2.json
+      TASK: Evaluate DCCD/llguidance-style repair against ROCE validator trees and report whether structured validity improves without increasing false accepts. Do not modify `research-roadmap.yaml` or `scripts/research_conductor.py`.
+      CONCRETE STEPS:
+      1. Define MODEL_SPECS with `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and `unsloth/gemma-4-26B-A4B-it-GGUF`.
+      2. Reuse the same prompt families and model provenance from Exp 1893 where possible.
+      3. Compare baseline constrained decoding, draft-conditioned repair, and best-of-K draft repair when local runtime support exists.
+      4. Measure schema validity, semantic correctness proxies, projection-tax delta, and false accepts under deterministic validators.
+      5. Save `{project_root}/results/experiment_1894_dccd_roce_repair_v2.json`.
+      REQUIRED ARTIFACT FIELDS:
+      - status
+      - honest_verdict
+      - structured_repair_ready
+      - MODEL_SPECS
+      - models_used
+      - schema_validity_delta
+      - semantic_correctness_delta
+      - projection_tax_delta
+      - zero_false_accepts
+      - false_accept_count
+      - acceptance_authority_unchanged
+      - tests_run
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1895-residual-drift-validator-ledger
+    milestone: "2026.05.148"
+    title: "Exp 1895: Residual Drift Validator Ledger"
+    deliverable: "results/experiment_1895_residual_drift_validator_ledger.json"
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 30
+    gated_on:
+      - upstream: exp1890-147-completion-148-activation-contract
+        artifact_field: validator_tree_ready
+        op: "=="
+        value: true
+    prior_failures:
+      - experiment_id: exp1538-residual-drift-commitment-ledger
+        verdict: complete_prior_scope
+        addressed_by: "This is a changed substrate: apply residual-drift accounting to `.147` ROCE validator trees and final-answer commitment checks, not the earlier generic commitment ledger."
+        retire_if_same_verdict: false
+    prompt: |
+      CONTEXT: Today is {date}. Recent DRIFT-Bench work shows that solver-guided repair can eliminate contradictions while leaving satisfiable drift. Carnot needs to know whether final answers still respect earlier commitments in a validator-tree trace.
+      EXISTING CODE TO READ FIRST: python/carnot/verify/, python/carnot/pipeline/verdict_record.py, results/experiment_1878_roce_validator_tree.json, results/experiment_1879_beaver_lite_bounds.json, research-references.md
+      TASK: Build or extend a residual-drift ledger for ROCE validator-tree traces and final-answer commitment checks. Do not modify `research-roadmap.yaml` or `scripts/research_conductor.py`.
+      CONCRETE STEPS:
+      1. Create fixture traces with maintained commitments, contradictions, satisfiable drift, and valid final answers.
+      2. Reuse existing validator-tree leaves to check final answers against maintained commitments.
+      3. Separate contradiction count from satisfiable drift count.
+      4. Ensure validator acceptance still has zero false accepts on adversarial drift fixtures.
+      5. Save `{project_root}/results/experiment_1895_residual_drift_validator_ledger.json`.
+      REQUIRED ARTIFACT FIELDS:
+      - status
+      - honest_verdict
+      - residual_drift_ledger_ready
+      - drift_cases_evaluated
+      - contradiction_count
+      - satisfiable_drift_count
+      - zero_false_accepts
+      - false_accept_count
+      - repair_escalation_policy_ready
+      - tests_run
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1896-fr11-validator-tree-promotion-ledger-v2
+    milestone: "2026.05.148"
+    title: "Exp 1896: FR-11 Validator-Tree Promotion Ledger v2"
+    deliverable: "results/experiment_1896_fr11_validator_tree_promotion_ledger_v2.json"
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 30
+    gated_on:
+      - upstream: exp1890-147-completion-148-activation-contract
+        artifact_field: validator_tree_ready
+        op: "=="
+        value: true
+    prior_failures:
+      - experiment_id: exp1884-fr11-cerce-cnsp-ledger
+        verdict: failed_missing_artifact_after_codex_cli_error
+        addressed_by: "The prior FR-11 ledger task did not leave a terminal artifact. This v2 scope starts from the existing validator-tree substrate and requires explicit promotion, non-forgetting, memory-growth, and rollback fields."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT: Today is {date}. This milestone must include continuous self-learning. FR-11 promotion is useful only if it improves validator utility while retaining prior constraints and providing rollback when it does not.
+      EXISTING CODE TO READ FIRST: research-program.md, _bmad/prd.md, python/carnot/verify/, python/carnot/learning/, python/carnot/pipeline/verdict_record.py, results/experiment_1878_roce_validator_tree.json, results/experiment_1889_milestone_147_retro.json
+      TASK: Build a validator-tree promotion ledger for continuous self-learning with no-forgetting, utility, bounded memory growth, and rollback fields. Do not modify `research-roadmap.yaml` or `scripts/research_conductor.py`.
+      CONCRETE STEPS:
+      1. Identify the existing FR-11/CerCE/CNSP or replay-ledger code paths and reuse them where possible.
+      2. Define a promotion candidate such as a new validator template, threshold, or routing rule learned from prior validator failures.
+      3. Evaluate utility before and after promotion on held-out fixtures.
+      4. Run replay/non-forgetting checks over prior constraints and record rollback behavior when promotion fails.
+      5. Save `{project_root}/results/experiment_1896_fr11_validator_tree_promotion_ledger_v2.json`.
+      REQUIRED ARTIFACT FIELDS:
+      - status
+      - honest_verdict
+      - continuous_self_learning_task
+      - promotion_gate_passed
+      - utility_delta
+      - nonforgetting_rate
+      - replay_retention_rate
+      - violation_bound_delta
+      - memory_growth_bounded
+      - rollback_plan_ready
+      - tests_run
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1897-routing-without-forgetting-fr11-audit
+    milestone: "2026.05.148"
+    title: "Exp 1897: Routing without Forgetting FR-11 Audit"
+    deliverable: "results/experiment_1897_routing_without_forgetting_fr11_audit.json"
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 30
+    gated_on:
+      - upstream: exp1896-fr11-validator-tree-promotion-ledger-v2
+        artifact_field: promotion_gate_passed
+        op: "=="
+        value: true
+      - upstream: exp1896-fr11-validator-tree-promotion-ledger-v2
+        artifact_field: utility_delta
+        op: ">"
+        value: 0.0
+    prior_failures:
+      - experiment_id: exp1885-sota-fr11-promotion-gate
+        verdict: gate_blocked_on_missing_fr11_ledger
+        addressed_by: "The prior SOTA FR-11 task tried to promote without a usable ledger. This intermediate audit tests the routing/no-forgetting abstraction first and gates SOTA promotion on its terminal artifact."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT: Today is {date}. Routing without Forgetting suggests treating online continual learning as dynamic selection of a representational subspace. Carnot can use that idea without changing base model weights by routing validator templates or policies based on verifier context.
+      EXISTING CODE TO READ FIRST: research-program.md, python/carnot/learning/, python/carnot/verify/, results/experiment_1896_fr11_validator_tree_promotion_ledger_v2.json, research-references.md
+      TASK: Audit whether the validator-tree promotion ledger can be represented as a routing-without-forgetting policy with replay retention and rollback. Do not modify `research-roadmap.yaml` or `scripts/research_conductor.py`.
+      CONCRETE STEPS:
+      1. Represent at least two validator-template or policy routes over the Exp 1896 promotion fixtures.
+      2. Evaluate whether routing preserves utility improvement and replay retention without task identifiers.
+      3. Record non-forgetting rate, utility delta, route count, and rollback triggers.
+      4. Add targeted tests or a deterministic smoke command for the routing audit.
+      5. Save `{project_root}/results/experiment_1897_routing_without_forgetting_fr11_audit.json`.
+      REQUIRED ARTIFACT FIELDS:
+      - status
+      - honest_verdict
+      - routing_without_forgetting_ready
+      - route_count
+      - nonforgetting_rate
+      - utility_delta
+      - replay_retention_rate
+      - rollback_triggered
+      - promotion_gate_passed
+      - tests_run
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1898-sota-fr11-promotion-smoke-v2
+    milestone: "2026.05.148"
+    title: "Exp 1898: SOTA FR-11 Promotion Smoke v2"
+    deliverable: "results/experiment_1898_sota_fr11_promotion_smoke_v2.json"
+    agent_type: codex
+    model: gpt-5.5
+    requires_gpu: true
+    max_turns: 50
+    gated_on:
+      - upstream: exp1891-sota-gguf-cache-runtime-preflight
+        artifact_field: cache_any_available
+        op: "=="
+        value: true
+      - upstream: exp1897-routing-without-forgetting-fr11-audit
+        artifact_field: routing_without_forgetting_ready
+        op: "=="
+        value: true
+    prior_failures:
+      - experiment_id: exp1885-sota-fr11-promotion-gate
+        verdict: gate_blocked_on_missing_fr11_ledger
+        addressed_by: "This v2 SOTA smoke is gated on both cache availability and the routing/no-forgetting ledger, and it allows partial-cache smoke while refusing tri-model headline claims unless all mandated models are present."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT: Today is {date}. This is the SOTA-scale smoke for continuous self-learning. It should test whether validator-template promotion improves utility on available mandated SOTA outputs without forgetting prior constraints.
+      EXISTING CODE TO READ FIRST: scripts/experiment_template.py, python/carnot/inference/sota_models.py, python/carnot/learning/, python/carnot/verify/, results/experiment_1891_sota_gguf_cache_runtime_preflight.json, results/experiment_1897_routing_without_forgetting_fr11_audit.json
+      TASK: Run a bounded FR-11 SOTA promotion smoke using available mandated GGUF models and the routing/no-forgetting ledger. Do not modify `research-roadmap.yaml` or `scripts/research_conductor.py`.
+      CONCRETE STEPS:
+      1. Define MODEL_SPECS with `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and `unsloth/gemma-4-26B-A4B-it-GGUF`.
+      2. Use all available mandated models from Exp 1891; if fewer than all three are available, mark the result as partial and not headline.
+      3. Evaluate the promoted validator route against baseline validator behavior on a small live output set.
+      4. Record utility delta, non-forgetting rate, memory growth, rollback status, and exact models used.
+      5. Save `{project_root}/results/experiment_1898_sota_fr11_promotion_smoke_v2.json`.
+      REQUIRED ARTIFACT FIELDS:
+      - status
+      - honest_verdict
+      - fr11_sota_self_learning_ready
+      - continuous_self_learning_task
+      - MODEL_SPECS
+      - models_used
+      - partial_cache_only
+      - utility_delta
+      - nonforgetting_rate
+      - memory_growth_bounded
+      - rollback_triggered
+      - tests_run
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1899-gem-consformer-validator-graph-preconditioner-v2
+    milestone: "2026.05.148"
+    title: "Exp 1899: GEM/ConsFormer Validator Graph Preconditioner v2"
+    deliverable: "results/experiment_1899_gem_consformer_validator_graph_preconditioner_v2.json"
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 30
+    gated_on:
+      - upstream: exp1890-147-completion-148-activation-contract
+        artifact_field: validator_tree_ready
+        op: "=="
+        value: true
+      - upstream: exp1890-147-completion-148-activation-contract
+        artifact_field: beaver_bounds_ready
+        op: "=="
+        value: true
+    prior_failures:
+      - experiment_id: exp1886-gem-consformer-preconditioner
+        verdict: failed_missing_artifact_after_codex_cli_error
+        addressed_by: "The prior preconditioner task did not leave an artifact. This v2 scope is limited to validator-graph fixtures and requires a terminal artifact with convergence and quality fields."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT: Today is {date}. EBT/GEM-style work suggests using graph energy information to improve local search. Carnot should test preconditioning on actual validator graphs before making any hardware or sampler claim.
+      EXISTING CODE TO READ FIRST: python/carnot/verify/, python/carnot/samplers/, python/carnot/kan/, results/experiment_1878_roce_validator_tree.json, results/experiment_1879_beaver_lite_bounds.json, research-references.md
+      TASK: Add or evaluate a GEM/ConsFormer-style preconditioner over ROCE validator graphs and measure Ising/sampler convergence behavior. Do not modify `research-roadmap.yaml` or `scripts/research_conductor.py`.
+      CONCRETE STEPS:
+      1. Convert representative validator trees into graph/energy fixtures using existing sampler interfaces.
+      2. Implement the smallest preconditioning layer needed to prioritize graph structure or constraint weights.
+      3. Compare baseline and preconditioned sampler convergence on identical seeds.
+      4. Record final energy, convergence-speed ratio, and solution-quality delta.
+      5. Save `{project_root}/results/experiment_1899_gem_consformer_validator_graph_preconditioner_v2.json`.
+      REQUIRED ARTIFACT FIELDS:
+      - status
+      - honest_verdict
+      - sampler_preconditioning_ready
+      - convergence_speedup_ratio
+      - solution_quality_delta
+      - baseline_final_energy
+      - preconditioned_final_energy
+      - graph_fixture_count
+      - tests_run
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1900-fpga-s2kan-ising-resource-accounting-v2
+    milestone: "2026.05.148"
+    title: "Exp 1900: FPGA/S2KAN/Ising Resource Accounting v2"
+    deliverable: "results/experiment_1900_fpga_s2kan_ising_resource_accounting_v2.json"
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 30
+    gated_on:
+      - upstream: exp1899-gem-consformer-validator-graph-preconditioner-v2
+        artifact_field: sampler_preconditioning_ready
+        op: "=="
+        value: true
+    prior_failures:
+      - experiment_id: exp1887-fpga-s2kan-ising-accounting
+        verdict: gate_blocked_on_missing_preconditioner_artifact
+        addressed_by: "The prior accounting task was blocked by a missing preconditioner artifact. This v2 task is gated on Exp 1899 and explicitly forbids synthesis or board-execution claims."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT: Today is {date}. Carnot has S2KAN and Ising simulation paths, but hardware claims must be bounded. This task should produce no-synthesis resource accounting over actual validator graphs and keep KV260 board execution out of scope.
+      EXISTING CODE TO READ FIRST: research-hardware-wishlist.md, python/carnot/kan/, python/carnot/samplers/, rust/, results/experiment_1871_s2kan_rust.json, results/experiment_1899_gem_consformer_validator_graph_preconditioner_v2.json, research-references.md
+      TASK: Estimate FPGA/S2KAN/Ising resource requirements for preconditioned validator graphs without Vivado synthesis or board execution. Do not modify `research-roadmap.yaml` or `scripts/research_conductor.py`.
+      CONCRETE STEPS:
+      1. Use the Exp 1899 graph fixtures and existing S2KAN/Ising accounting helpers where available.
+      2. Estimate LUT/BRAM/DSP/BOP/NABS or nearest available resource proxies.
+      3. Include decomposition and host-device transfer risk notes.
+      4. Explicitly set `kv260_no_synthesis_claim=true` and `hardware_execution_claim=false`.
+      5. Save `{project_root}/results/experiment_1900_fpga_s2kan_ising_resource_accounting_v2.json`.
+      REQUIRED ARTIFACT FIELDS:
+      - status
+      - honest_verdict
+      - fpga_decomposition_accounting_ready
+      - kv260_no_synthesis_claim
+      - hardware_execution_claim
+      - estimated_lut_under_budget
+      - decomposition_latency_estimate_us
+      - bop_nabs_summary
+      - host_device_transfer_risk
+      - tests_run
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1901-pbit-pdit-ising-sampler-accounting
+    milestone: "2026.05.148"
+    title: "Exp 1901: p-bit/p-dit Ising Sampler Accounting"
+    deliverable: "results/experiment_1901_pbit_pdit_ising_sampler_accounting.json"
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 30
+    gated_on:
+      - upstream: exp1900-fpga-s2kan-ising-resource-accounting-v2
+        artifact_field: fpga_decomposition_accounting_ready
+        op: "=="
+        value: true
+    prior_failures:
+      - experiment_id: exp1850-thrml-carnot-sampler-comparison
+        verdict: failed_quality_and_backend_gap
+        addressed_by: "This task does not claim a new THRML/backend win. It changes scope to p-bit/p-dit accounting for categorical and numeric constraint encodings and records hardware execution as false."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT: Today is {date}. p-dits and TSU-style sampling are relevant to Carnot's long-term hardware path, but there is no authenticated hardware access. The useful next step is accounting: determine which validator-graph variables are binary, categorical, or numeric and what a p-bit/p-dit mapping would cost.
+      EXISTING CODE TO READ FIRST: research-hardware-wishlist.md, python/carnot/samplers/, results/experiment_1900_fpga_s2kan_ising_resource_accounting_v2.json, research-references.md
+      TASK: Produce p-bit/p-dit accounting for validator-graph sampler variables without claiming hardware execution. Do not modify `research-roadmap.yaml` or `scripts/research_conductor.py`.
+      CONCRETE STEPS:
+      1. Classify representative validator-graph variables as binary, categorical, integer, or continuous proxy variables.
+      2. Estimate p-bit and p-dit encoding costs for those variables.
+      3. Compare expected encoding blow-up against the FPGA/S2KAN/Ising accounting from Exp 1900.
+      4. Record TSU/THRML as comparator context only, with `hardware_execution_claim=false`.
+      5. Save `{project_root}/results/experiment_1901_pbit_pdit_ising_sampler_accounting.json`.
+      REQUIRED ARTIFACT FIELDS:
+      - status
+      - honest_verdict
+      - pbit_pdit_accounting_ready
+      - categorical_state_support
+      - binary_variable_count
+      - categorical_variable_count
+      - numeric_variable_count
+      - projected_sample_rate_note
+      - host_device_transfer_risk
+      - hardware_execution_claim
+      - tests_run
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1902-integrated-trisota-e2e-v2
+    milestone: "2026.05.148"
+    title: "Exp 1902: Integrated Tri-SOTA E2E v2"
+    deliverable: "results/experiment_1902_integrated_trisota_e2e_v2.json"
+    requires_gpu: true
+    max_turns: 50
+    gated_on:
+      - upstream: exp1893-live-sota-roce-validator-eval-v2
+        artifact_field: sota_roce_eval_ready
+        op: "=="
+        value: true
+      - upstream: exp1894-dccd-roce-repair-v2
+        artifact_field: structured_repair_ready
+        op: "=="
+        value: true
+      - upstream: exp1898-sota-fr11-promotion-smoke-v2
+        artifact_field: fr11_sota_self_learning_ready
+        op: "=="
+        value: true
+      - upstream: exp1900-fpga-s2kan-ising-resource-accounting-v2
+        artifact_field: fpga_decomposition_accounting_ready
+        op: "=="
+        value: true
+    prior_failures:
+      - experiment_id: exp1888-integrated-trisota-e2e
+        verdict: gate_blocked_on_missing_live_repair_fr11_hardware_artifacts
+        addressed_by: "This v2 integrated task is gated on terminal artifacts for live SOTA evaluation, structured repair, FR-11 SOTA smoke, and hardware accounting, so it will skip before synthesis unless the cascade is actually ready."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT: Today is {date}. This integrated task should only run after the `.148` live SOTA, repair, FR-11, and hardware-accounting gates all pass. It is the milestone's headline evidence bundle, not a place to debug missing prerequisite artifacts.
+      EXISTING CODE TO READ FIRST: scripts/experiment_template.py, python/carnot/inference/sota_models.py, python/carnot/verify/, python/carnot/learning/, results/experiment_1893_live_sota_roce_validator_eval_v2.json, results/experiment_1894_dccd_roce_repair_v2.json, results/experiment_1898_sota_fr11_promotion_smoke_v2.json, results/experiment_1900_fpga_s2kan_ising_resource_accounting_v2.json
+      TASK: Run an integrated tri-SOTA evidence smoke that ties together validator-tree evaluation, repair, FR-11 self-learning, and hardware-accounting boundaries. Do not modify `research-roadmap.yaml` or `scripts/research_conductor.py`.
+      CONCRETE STEPS:
+      1. Define MODEL_SPECS with `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and `unsloth/gemma-4-26B-A4B-it-GGUF`.
+      2. Reuse the exact model/runtime provenance from upstream tasks and verify all three mandated models are represented.
+      3. Run a compact end-to-end prompt set through extraction, validation, telemetry, repair, FR-11 route selection, and accounting summary.
+      4. Record zero-false-accept status, structured repair delta, non-forgetting rate, and hardware-claim boundary.
+      5. Save `{project_root}/results/experiment_1902_integrated_trisota_e2e_v2.json`.
+      REQUIRED ARTIFACT FIELDS:
+      - status
+      - honest_verdict
+      - milestone_e2e_ready
+      - MODEL_SPECS
+      - models_used
+      - zero_false_accepts
+      - structured_repair_delta
+      - nonforgetting_rate
+      - hardware_claim_boundary_preserved
+      - tests_run
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1903-milestone-148-retro
+    milestone: "2026.05.148"
+    title: "Exp 1903: Milestone .148 Retrospective"
+    deliverable: "results/experiment_1903_milestone_148_retro.json"
+    max_turns: 20
+    prior_failures:
+      - experiment_id: exp1889-milestone-147-retro
+        verdict: complete_with_next_gate_recommendations
+        addressed_by: "Every milestone needs a new retrospective. This one focuses on `.148` terminal artifact readiness, cache/runtime gating, and the same-title compute-bound dedupe speedup target."
+        retire_if_same_verdict: false
+    prompt: |
+      CONTEXT: Today is {date}. This milestone retro should always run, even if upstream tasks gate-block. It must distinguish technical failures from expected gate skips, and it must report whether `.148` improved over `.147` on terminal artifacts and compute-bound dedupe.
+      EXISTING CODE TO READ FIRST: research-roadmap-next.yaml, ops/conductor-log.md, ops/status.md, ops/changelog.md, ops/e2e-test-plan.md, results/experiment_1890_147_completion_148_activation_contract.json
+      TASK: Write the `.148` retrospective artifact and recommend the next milestone gates. Do not modify `research-roadmap.yaml` or `scripts/research_conductor.py`.
+      CONCRETE STEPS:
+      1. Inspect all available `{project_root}/results/experiment_1890_*.json` through `{project_root}/results/experiment_1902_*.json` artifacts.
+      2. Count completed, blocked, retired, and failed tasks; separate expected structured gate skips from unexpected missing-artifact failures.
+      3. Report whether terminal telemetry, FR-11, and hardware-accounting artifacts exist and whether the SOTA cache/runtime gap was resolved.
+      4. Report whether same-title compute-bound terminal-state dedupe and GPU/model-count telemetry produced the expected operational speedup.
+      5. Save `{project_root}/results/experiment_1903_milestone_148_retro.json`.
+      REQUIRED ARTIFACT FIELDS:
+      - status
+      - honest_verdict
+      - milestone_148_retro_complete
+      - completed_task_count
+      - blocked_task_count
+      - failed_task_count
+      - same_title_compute_dedupe_result
+      - next_gate_recommendations
+      - tests_run
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
