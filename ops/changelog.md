@@ -5611,3 +5611,4 @@ Completed 15 experiments in 28.9 minutes. There were 0 compute-bound experiments
 - 2026-05-12: Exp 1958: GCoT-Decoding Reasoning Paths (⚠️ Research Finding) — honest_verdict=Successfully prototyped GCoT branching with Carnot partial-trace energy ranking and backtracking.; results/experiment_1958_gcot_branching_prototype.json
 - 2026-05-12: Exp 1958: GCoT-Decoding Reasoning Paths (⚠️ Research Finding) — honest_verdict=Successfully prototyped GCoT branching with Carnot partial-trace energy ranking and backtracking.; results/experiment_1958_gcot_branching_prototype.json
 - 2026-05-12: Exp 1958: GCoT-Decoding Reasoning Paths (⚠️ Research Finding) — honest_verdict=Successfully prototyped GCoT branching with Carnot partial-trace energy ranking and backtracking.; results/experiment_1958_gcot_branching_prototype.json
+- 2026-05-12: Exp 1960: Flow Sampling Process (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_1960_flow_sampling_unnormalized.json
