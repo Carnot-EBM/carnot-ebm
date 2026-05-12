@@ -1984,3 +1984,5 @@ IMPORTANT:
 | 2026-05-12 07:27 UTC | Exp 1899: GEM/ConsFormer Validator Graph Precondit | FAIL | Codex CLI error: you finish the real work inside 10 minutes, that is correct  |
 | 2026-05-12 07:29 UTC | Exp 1897: Routing without Forgetting FR-11 Audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1896-fr11-validator-tree-promotion-ledger |
 | 2026-05-12 07:29 UTC | Exp 1898: SOTA FR-11 Promotion Smoke v2 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1891-sota-gguf-cache-runtime-preflight) |
+| 2026-05-12 07:29 UTC | Exp 1899: GEM/ConsFormer Validator Graph Precondit | FAIL | Codex CLI error: you finish the real work inside 10 minutes, that is correct  |
+| 2026-05-12 07:31 UTC | Exp 1900: FPGA/S2KAN/Ising Resource Accounting v2 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1899-gem-consformer-validator-graph-preco |
