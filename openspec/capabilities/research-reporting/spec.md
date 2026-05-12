@@ -3867,3 +3867,23 @@ The terminal artifact shall include:
 ### REQ-REPORT-152: Milestone .152 Terminal Retrospective
 
 The Exp 1955 milestone .152 retrospective workflow shall write `results/experiment_1955_milestone_152_retro.json` compiling the preceding .152 experiments. It shall parse honest_verdicts from Exp 1944 through Exp 1954 and record completed, blocked, and failed task metrics. It shall include recommendations for the next milestone.
+
+### REQ-REPORT-1967: Milestone .153 Pre-Retro Audit
+
+The Exp 1967 milestone .153 pre-retro audit workflow shall write `results/experiment_1967_milestone_153_pre_retro_audit.json` by scanning artifacts from Exp 1956 through Exp 1966. It shall verify logprobs, artifact formatting, and deterministic check compliance, and record the missing result files or violated gates.
+
+The terminal artifact shall include:
+- `schema` set to `carnot.milestone_pre_retro_audit.v1`
+- `milestone` set to `153`
+- `missing_files`
+- `violated_gates`
+- `compliant_artifacts`
+- `non_compliant_artifacts`
+- `honest_verdict` formatted as a concise summary.
+
+### SCENARIO-REPORT-1967: Exp 1967 Generates Milestone .153 Pre-Retro Audit
+
+**Given** the completion of experiments (1956-1966)
+**When** the Exp 1967 workflow runs
+**Then** it writes all required REQ-REPORT-1967 fields to `results/experiment_1967_milestone_153_pre_retro_audit.json`
+**And** verifies artifact compliance and details `honest_verdict`.
