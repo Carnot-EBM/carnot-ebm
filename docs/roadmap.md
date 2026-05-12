@@ -152,6 +152,7 @@
 | 2026.05.145 | Operational Efficiency | 1854-1863 | 79.9 min wall time; GPUs correctly idle; Exp 1858 synthesis slow path |
 | 2026.05.146 | Synthesis-Only Operational Efficiency | 20 experiments | 52.5 min wall time; 0 compute-bound tasks; GPU idle not a compute-bound bottleneck |
 | 2026.05.147 | ROCE Validator Operational Efficiency | 1877-1889 | 228.1 min wall time; 14 experiments; 2 compute-bound entries; GPU idle not flagged on compute-bound tasks |
+| 2026.05.148 | Activation Contract Operational Efficiency | 1890-1903 | 112.1 min wall time; 10 experiments; 1 compute-bound task; GPU idle not flagged on compute-bound task |
 
 ## Breakthrough Results
 
