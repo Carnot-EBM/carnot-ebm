@@ -3863,3 +3863,7 @@ The terminal artifact shall include:
 **When** the Exp 1931 workflow runs
 **Then** it writes all required REQ-REPORT-1931 fields to `results/experiment_1931_milestone_150_retro.json`
 **And** details `honest_verdict` and synthesized findings.
+
+### REQ-REPORT-152: Milestone .152 Terminal Retrospective
+
+The Exp 1955 milestone .152 retrospective workflow shall write `results/experiment_1955_milestone_152_retro.json` compiling the preceding .152 experiments. It shall parse honest_verdicts from Exp 1944 through Exp 1954 and record completed, blocked, and failed task metrics. It shall include recommendations for the next milestone.
