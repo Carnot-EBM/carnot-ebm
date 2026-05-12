@@ -1,0 +1,51 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.149",
+  "generated_at": "2026-05-12T15:11:03Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 28.9,
+  "experiments_completed": 15,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "-0400 [conductor] Exp 1917: Milestone .149 Retrospective",
+      "duration_minutes": 6.3,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1904: .148 Completion to .149 Activation Contract",
+      "duration_minutes": 2.8,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Doomed-rerun block: Exp 1914: Corrected THRML/Carnot Parity Me",
+      "duration_minutes": 2.1,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Pre-gate block: Exp 1905: SOTA GGUF Cache and Runtime Prefligh",
+      "duration_minutes": 2.0,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Pre-gate block: Exp 1905: SOTA GGUF Cache and Runtime Prefligh",
+      "duration_minutes": 2.0,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "This milestone completed 15 experiments in 28.9 minutes. There were 0 compute-bound experiments, meaning the GPUs were correctly idle. The slowest task was the synthesis-only retrospective taking 6.3 minutes.",
+  "bottlenecks_identified": [
+    "Synthesis-only tasks like the retrospective and contract completions are the primary drivers of wall time."
+  ],
+  "improvements_suggested": [
+    "Optimize retrospective and contract generation steps to reduce the 6.3-minute and 2.8-minute bottlenecks."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Optimize the conductor's retrospective generation time.",
+    "Investigate fail-fast for pre-gate block checks to further reduce the 2-minute synthesis times.",
+    "Ensure subsequent milestones include compute-bound tasks to fully utilize the DualGPU setup."
+  ],
+  "estimated_time_savings_pct": 20,
+  "meta_reflection": "With 0 compute-bound tasks, the GPUs were correctly idle, which is not a bug. Focus must remain on accelerating the synthesis-only tasks which dominate the 28.9-minute wall time."
+}
