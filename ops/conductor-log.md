@@ -2236,3 +2236,4 @@ IMPORTANT:
 | 2026-05-12 19:02 UTC | Exp 1950: Latent Semantic Pruning for Self-Learnin | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1947-latent-energy-optimization) |
 | 2026-05-12 19:02 UTC | Exp 1951: Hardware-Accelerated Symbolic KANs Trans | FAIL | Gemini CLI error: you finish the real work inside 10 minutes, that is correct  |
 | 2026-05-12 19:04 UTC | Exp 1950: Latent Semantic Pruning for Self-Learnin | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1947-latent-energy-optimization) |
+| 2026-05-12 19:04 UTC | Exp 1951: Hardware-Accelerated Symbolic KANs Trans | FAIL | Gemini CLI error: you finish the real work inside 10 minutes, that is correct  |
