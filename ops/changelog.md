@@ -5600,3 +5600,4 @@ Completed 15 experiments in 28.9 minutes. There were 0 compute-bound experiments
 - 2026-05-12: Exp 1946: Ontology NN Topological Constraints (✅ Complete) — honest_verdict=complete: Topological Verification layer successfully implements Forman-Ricci curvature and Deep Delta Learning to enforce ontology-level constraints.; results/experiment_1946_ontology_nn_topological.json
 - 2026-05-12: Exp 1949: Denoising Thermodynamic Sampling Protocol (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_1949_denoising_thermodynamics.json
 - 2026-05-12: Exp 1952: GNN vs. Classical Benchmarking Audit (✅ Complete) — honest_verdict=complete: Carnot continuous solver struggles on hard random 3-SAT compared to Z3.; results/experiment_1952_gnn_benchmarking_audit.json
+- 2026-05-12: Exp 1954: Integrated Tri-SOTA E2E v6 (✅ Complete) — honest_verdict=complete: tri_sota_e2e_v6_successful; results/experiment_1954_tri_sota_e2e_v6.json
