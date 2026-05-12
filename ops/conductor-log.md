@@ -2223,3 +2223,5 @@ IMPORTANT:
 | 2026-05-12 18:37 UTC | Exp 1945: Chebyshev PI-KAN Extrapolation | FAIL | Gemini CLI error: you finish the real work inside 10 minutes, that is correct  |
 | 2026-05-12 18:39 UTC | Exp 1945: Chebyshev PI-KAN Extrapolation | FAIL | Gemini CLI error: you finish the real work inside 10 minutes, that is correct  |
 | 2026-05-12 18:41 UTC | Exp 1945: Chebyshev PI-KAN Extrapolation | FAIL | Gemini CLI error: you finish the real work inside 10 minutes, that is correct  |
+| 2026-05-12 18:46 UTC | Exp 1946: Ontology NN Topological Constraints | OK | 81 passed, 1 warning in 5.04s |
+| 2026-05-12 18:48 UTC | Exp 1947: Latent Energy Optimization (Continuous V | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1944-hardnet-projection) |
