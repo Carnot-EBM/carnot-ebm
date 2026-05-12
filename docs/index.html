@@ -300,15 +300,15 @@
       <a href="technical-report.html" class="btn btn-secondary">How it works</a>
     </div>
     <div class="stats-bar" aria-label="Project headline numbers">
-      <div class="stat"><div class="stat-num">2,213</div><div class="stat-label">Experiment records through Exp 1889</div></div>
-      <div class="stat"><div class="stat-num">160</div><div class="stat-label">archived records through .146</div></div>
+      <div class="stat"><div class="stat-num">2,227</div><div class="stat-label">Experiment records through Exp 1903</div></div>
+      <div class="stat"><div class="stat-num">161</div><div class="stat-label">archived records through .147</div></div>
       <div class="stat"><div class="stat-num">24,251</div><div class="stat-label">Python items collected, not full pass</div></div>
-      <div class="stat"><div class="stat-num">5/14</div><div class="stat-label">tasks completed in .147</div></div>
+      <div class="stat"><div class="stat-num">1/13</div><div class="stat-label">non-retro tasks completed in .148</div></div>
       <div class="r-card">
         <span class="r-tag">Latest closeout</span>
-        <h3 class="r-title">Prompt-to-validator partial; live SOTA blocked</h3>
-        <p class="r-desc">Milestone .147 completed 5 of 14 tasks. Nine scopes were blocked or missing artifacts; no new headline live-SOTA accuracy is claimed.</p>
-        <div class="r-stats"><span class="r-before">Telemetry, FR-11, and hardware gates not ready</span> <span class="r-after">Exp 1889</span></div>
+        <h3 class="r-title">SOTA gap unresolved; speedup not proven</h3>
+        <p class="r-desc">Milestone .148 filed the retro with 1 non-retro task complete, 2 blocked artifacts, 6 retired gate skips, and 4 unexpected missing-artifact failures.</p>
+        <div class="r-stats"><span class="r-before">SOTA cache/runtime gap unresolved; 11% speedup target not proven</span> <span class="r-after">Exp 1903</span></div>
       </div>
     </div>
   </div>
@@ -343,8 +343,8 @@
       <div class="r-card">
         <span class="r-tag">Hardware Profiling</span>
         <h3 class="r-title">DualGPURunner Idle Analysis</h3>
-        <p class="r-desc">Recent milestones keep showing that synthesis-only work and blocked gates, not GPU compute, dominate wall-clock time.</p>
-        <div class="r-stats"><span class="r-before">Sequential bottlenecks and gate blocks remain</span> <span class="r-after">Exp 1889</span></div>
+        <p class="r-desc">Recent milestones keep showing that synthesis-only work, blocked gates, and missing terminal artifacts dominate wall-clock time.</p>
+        <div class="r-stats"><span class="r-before">SOTA runtime and gate-artifact gaps remain</span> <span class="r-after">Exp 1903</span></div>
       </div>
     </div>
   </div>
@@ -413,8 +413,8 @@
       <div class="r-card">
         <span class="r-tag">Hardware Profiling</span>
         <h3 class="r-title">DualGPURunner Idle Analysis</h3>
-        <p class="r-desc">Recent closeouts show GPU idleness is expected for synthesis-only work; blocked gates remain the higher operational risk.</p>
-        <div class="r-stats"><span class="r-before">Sequential bottlenecks and gate blocks remain</span> <span class="r-after">Exp 1889</span></div>
+        <p class="r-desc">Recent closeouts show GPU idleness is expected for synthesis-only work; blocked gates and missing terminal artifacts remain the higher operational risk.</p>
+        <div class="r-stats"><span class="r-before">SOTA runtime and gate-artifact gaps remain</span> <span class="r-after">Exp 1903</span></div>
       </div>
     </div>
   </div>
@@ -655,11 +655,14 @@
           add a DCCD/JSONSchemaBench structured-output smoke, reverse the
           collapsed FR-11 v14 retention, record nine audit-time Phase-1 ship blockers, and
           rescope hardware around simulator-only Z1 drift correction plus
-          blocked Wormhole/PolarFire access. The latest .146/.147 artifacts
+          blocked Wormhole/PolarFire access. The .146/.147 artifacts
           normalize ROCE/HILED evidence, compile ROCE constraints to executable
           validator trees, add BEAVER-lite bounds with residual risk 0.0, and
           block live-SOTA ROCE evaluation until the mandated Qwen3.6-35B and
-          Gemma4-31B GGUFs are available.
+          Gemma4-31B GGUFs are available. The latest .148 result layer keeps
+          that SOTA cache/runtime gap open, retires downstream gate-skipped
+          scopes, and records that the .147 11% compute-dedupe speedup target
+          is not proven yet.
         </p>
       </div>
       <div class="bento-card span-2">
@@ -693,7 +696,9 @@
           boundary. The .146/.147 surfaces add normalized artifact contracts,
           ROCE validator-tree compilation to Python/PySAT/Z3 backends, and
           BEAVER-lite validator-tree bounds while keeping executable validators
-          as the final acceptance authority.
+          as the final acceptance authority. The .148 surfaces add an
+          activation-contract artifact plus blocked DCCD/llguidance and
+          p-bit/p-dit gate-check artifacts, but no new live model-quality claim.
         </p>
       </div>
       <div class="r-card">
@@ -1547,10 +1552,10 @@
         <div class="r-stats"><span class="r-before">12/14 tasks completed; Wormhole and PolarFire carried forward</span> <span class="r-after">Exp 1587</span></div>
       </div>
       <div class="r-card">
-        <span class="r-tag">Milestone .147 &mdash; latest checked-in retro</span>
-        <h3 class="r-title">5/14 tasks complete; 9 blocked or missing</h3>
-        <div class="r-meter"><div class="r-bar" style="width: 35.71%; background: #f59e0b;"></div></div>
-        <div class="r-stats"><span class="r-before">Prompt-to-validator partial; telemetry, FR-11, and hardware gates not ready</span> <span class="r-after">Exp 1889</span></div>
+        <span class="r-tag">Milestone .148 &mdash; latest checked-in result layer</span>
+        <h3 class="r-title">1 complete; 2 blocked; 6 retired; 4 failed</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 7.69%; background: #f59e0b;"></div></div>
+        <div class="r-stats"><span class="r-before">SOTA gap unresolved; expected speedup not proven</span> <span class="r-after">Exp 1903</span></div>
       </div>
       <div class="r-card">
         <span class="r-tag">ROCE &mdash; validator tree compiler</span>
@@ -1804,8 +1809,8 @@
       <div class="r-card">
         <span class="r-tag">Hardware Profiling</span>
         <h3 class="r-title">DualGPURunner Idle Analysis</h3>
-        <p class="r-desc">Recent closeouts show GPU idleness is expected for synthesis-only work; blocked gates remain the higher operational risk.</p>
-        <div class="r-stats"><span class="r-before">Sequential bottlenecks and gate blocks remain</span> <span class="r-after">Exp 1889</span></div>
+        <p class="r-desc">Recent closeouts show GPU idleness is expected for synthesis-only work; blocked gates and missing terminal artifacts remain the higher operational risk.</p>
+        <div class="r-stats"><span class="r-before">SOTA runtime and gate-artifact gaps remain</span> <span class="r-after">Exp 1903</span></div>
       </div>
       <div class="r-card">
         <span class="r-tag">Hardware &mdash; KV260 Vivado Synthesis</span>
