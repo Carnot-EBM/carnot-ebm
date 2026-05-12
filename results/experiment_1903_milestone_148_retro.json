@@ -1,0 +1,876 @@
+{
+  "available_artifacts": {
+    "exp1890": "results/experiment_1890_147_completion_148_activation_contract.json",
+    "exp1894": "results/experiment_1894_dccd_roce_repair_v2.json",
+    "exp1901": "results/experiment_1901_pbit_pdit_ising_sampler_accounting.json"
+  },
+  "blocked_task_count": 2,
+  "blocked_tasks": [
+    {
+      "artifact_exists": true,
+      "classification": "blocked",
+      "deliverable": "results/experiment_1894_dccd_roce_repair_v2.json",
+      "expected_gate_skip": true,
+      "experiment_id": "exp1894",
+      "reason": "blocked_gate_check_failed",
+      "status": "blocked",
+      "title": "Exp 1894: DCCD/llguidance Repair with ROCE Validators v2",
+      "unexpected_missing_artifact": false
+    },
+    {
+      "artifact_exists": true,
+      "classification": "blocked",
+      "deliverable": "results/experiment_1901_pbit_pdit_ising_sampler_accounting.json",
+      "expected_gate_skip": true,
+      "experiment_id": "exp1901",
+      "reason": "blocked_gate_check_failed",
+      "status": "blocked",
+      "title": "Exp 1901: p-bit/p-dit Ising Sampler Accounting",
+      "unexpected_missing_artifact": false
+    }
+  ],
+  "completed_task_count": 1,
+  "completed_tasks": [
+    {
+      "artifact_exists": true,
+      "classification": "completed",
+      "deliverable": "results/experiment_1890_147_completion_148_activation_contract.json",
+      "expected_gate_skip": false,
+      "experiment_id": "exp1890",
+      "reason": "complete: milestone_147_archived_148_activation_contract_ready_validator_beaver_ready_live_sota_telemetry_fr11_hardware_blocked",
+      "status": "complete",
+      "title": ".147 Completion to .148 Activation Contr",
+      "unexpected_missing_artifact": false
+    }
+  ],
+  "conductor_events_148": {
+    "exp1890": [
+      {
+        "details": "81 passed, 1 warning in 5.91s",
+        "experiment_id": "exp1890",
+        "status": "OK",
+        "timestamp": "2026-05-12 06:43 UTC",
+        "title": ".147 Completion to .148 Activation Contr"
+      }
+    ],
+    "exp1891": [
+      {
+        "details": "Codex CLI error: mbda *_args, **_kwargs: pytest.fail(\"smoke requires cache\"),",
+        "experiment_id": "exp1891",
+        "status": "FAIL",
+        "timestamp": "2026-05-12 06:59 UTC",
+        "title": "SOTA GGUF Cache and Runtime Preflight"
+      },
+      {
+        "details": "Pre-tests failing, self-heal failed:",
+        "experiment_id": "exp1891",
+        "status": "SKIP",
+        "timestamp": "2026-05-12 07:02 UTC",
+        "title": "SOTA GGUF Cache and Runtime Preflight"
+      },
+      {
+        "details": "Pre-tests failing, self-heal failed:",
+        "experiment_id": "exp1891",
+        "status": "SKIP",
+        "timestamp": "2026-05-12 07:04 UTC",
+        "title": "SOTA GGUF Cache and Runtime Preflight"
+      }
+    ],
+    "exp1892": [
+      {
+        "details": "Pre-emptive skip: upstream retired (exp1891-sota-gguf-cache-runtime-preflight)",
+        "experiment_id": "exp1892",
+        "status": "GATE_BLOCK",
+        "timestamp": "2026-05-12 07:06 UTC",
+        "title": "Terminal Low-Cost Telemetry Adapter"
+      },
+      {
+        "details": "Pre-emptive skip: upstream retired (exp1891-sota-gguf-cache-runtime-preflight)",
+        "experiment_id": "exp1892",
+        "status": "GATE_BLOCK",
+        "timestamp": "2026-05-12 07:08 UTC",
+        "title": "Terminal Low-Cost Telemetry Adapter"
+      },
+      {
+        "details": "Pre-emptive skip: upstream retired (exp1891-sota-gguf-cache-runtime-preflight)",
+        "experiment_id": "exp1892",
+        "status": "GATE_BLOCK",
+        "timestamp": "2026-05-12 07:10 UTC",
+        "title": "Terminal Low-Cost Telemetry Adapter"
+      }
+    ],
+    "exp1893": [
+      {
+        "details": "Pre-emptive skip: upstream retired (exp1891-sota-gguf-cache-runtime-preflight)",
+        "experiment_id": "exp1893",
+        "status": "GATE_BLOCK",
+        "timestamp": "2026-05-12 07:06 UTC",
+        "title": "Live SOTA ROCE Validator Evaluation v2"
+      },
+      {
+        "details": "Pre-emptive skip: upstream retired (exp1891-sota-gguf-cache-runtime-preflight)",
+        "experiment_id": "exp1893",
+        "status": "GATE_BLOCK",
+        "timestamp": "2026-05-12 07:08 UTC",
+        "title": "Live SOTA ROCE Validator Evaluation v2"
+      },
+      {
+        "details": "Pre-emptive skip: upstream retired (exp1891-sota-gguf-cache-runtime-preflight)",
+        "experiment_id": "exp1893",
+        "status": "GATE_BLOCK",
+        "timestamp": "2026-05-12 07:10 UTC",
+        "title": "Live SOTA ROCE Validator Evaluation v2"
+      }
+    ],
+    "exp1894": [
+      {
+        "details": "2 of 2 gate(s) failed; first failure: exp1893-live-sota-roce-validator-eval-v2.s",
+        "experiment_id": "exp1894",
+        "status": "GATE_BLOCK",
+        "timestamp": "2026-05-12 07:06 UTC",
+        "title": "DCCD/llguidance Repair with ROCE Validat"
+      },
+      {
+        "details": "2 of 2 gate(s) failed; first failure: exp1893-live-sota-roce-validator-eval-v2.s",
+        "experiment_id": "exp1894",
+        "status": "GATE_BLOCK",
+        "timestamp": "2026-05-12 07:08 UTC",
+        "title": "DCCD/llguidance Repair with ROCE Validat"
+      },
+      {
+        "details": "2 of 2 gate(s) failed; first failure: exp1893-live-sota-roce-validator-eval-v2.s",
+        "experiment_id": "exp1894",
+        "status": "GATE_BLOCK",
+        "timestamp": "2026-05-12 07:10 UTC",
+        "title": "DCCD/llguidance Repair with ROCE Validat"
+      }
+    ],
+    "exp1895": [
+      {
+        "details": "Codex CLI error: you finish the real work inside 10 minutes, that is correct",
+        "experiment_id": "exp1895",
+        "status": "FAIL",
+        "timestamp": "2026-05-12 07:12 UTC",
+        "title": "Residual Drift Validator Ledger"
+      },
+      {
+        "details": "Codex CLI error: you finish the real work inside 10 minutes, that is correct",
+        "experiment_id": "exp1895",
+        "status": "FAIL",
+        "timestamp": "2026-05-12 07:14 UTC",
+        "title": "Residual Drift Validator Ledger"
+      },
+      {
+        "details": "Codex CLI error: you finish the real work inside 10 minutes, that is correct",
+        "experiment_id": "exp1895",
+        "status": "FAIL",
+        "timestamp": "2026-05-12 07:16 UTC",
+        "title": "Residual Drift Validator Ledger"
+      }
+    ],
+    "exp1896": [
+      {
+        "details": "Codex CLI error: you finish the real work inside 10 minutes, that is correct",
+        "experiment_id": "exp1896",
+        "status": "FAIL",
+        "timestamp": "2026-05-12 07:19 UTC",
+        "title": "FR-11 Validator-Tree Promotion Ledger v2"
+      },
+      {
+        "details": "Codex CLI error: you finish the real work inside 10 minutes, that is correct",
+        "experiment_id": "exp1896",
+        "status": "FAIL",
+        "timestamp": "2026-05-12 07:21 UTC",
+        "title": "FR-11 Validator-Tree Promotion Ledger v2"
+      },
+      {
+        "details": "Codex CLI error: you finish the real work inside 10 minutes, that is correct",
+        "experiment_id": "exp1896",
+        "status": "FAIL",
+        "timestamp": "2026-05-12 07:23 UTC",
+        "title": "FR-11 Validator-Tree Promotion Ledger v2"
+      }
+    ],
+    "exp1897": [
+      {
+        "details": "Pre-emptive skip: upstream retired (exp1896-fr11-validator-tree-promotion-ledger",
+        "experiment_id": "exp1897",
+        "status": "GATE_BLOCK",
+        "timestamp": "2026-05-12 07:25 UTC",
+        "title": "Routing without Forgetting FR-11 Audit"
+      },
+      {
+        "details": "Pre-emptive skip: upstream retired (exp1896-fr11-validator-tree-promotion-ledger",
+        "experiment_id": "exp1897",
+        "status": "GATE_BLOCK",
+        "timestamp": "2026-05-12 07:27 UTC",
+        "title": "Routing without Forgetting FR-11 Audit"
+      },
+      {
+        "details": "Pre-emptive skip: upstream retired (exp1896-fr11-validator-tree-promotion-ledger",
+        "experiment_id": "exp1897",
+        "status": "GATE_BLOCK",
+        "timestamp": "2026-05-12 07:29 UTC",
+        "title": "Routing without Forgetting FR-11 Audit"
+      }
+    ],
+    "exp1898": [
+      {
+        "details": "Pre-emptive skip: upstream retired (exp1891-sota-gguf-cache-runtime-preflight)",
+        "experiment_id": "exp1898",
+        "status": "GATE_BLOCK",
+        "timestamp": "2026-05-12 07:25 UTC",
+        "title": "SOTA FR-11 Promotion Smoke v2"
+      },
+      {
+        "details": "Pre-emptive skip: upstream retired (exp1891-sota-gguf-cache-runtime-preflight)",
+        "experiment_id": "exp1898",
+        "status": "GATE_BLOCK",
+        "timestamp": "2026-05-12 07:27 UTC",
+        "title": "SOTA FR-11 Promotion Smoke v2"
+      },
+      {
+        "details": "Pre-emptive skip: upstream retired (exp1891-sota-gguf-cache-runtime-preflight)",
+        "experiment_id": "exp1898",
+        "status": "GATE_BLOCK",
+        "timestamp": "2026-05-12 07:29 UTC",
+        "title": "SOTA FR-11 Promotion Smoke v2"
+      }
+    ],
+    "exp1899": [
+      {
+        "details": "Codex CLI error: you finish the real work inside 10 minutes, that is correct",
+        "experiment_id": "exp1899",
+        "status": "FAIL",
+        "timestamp": "2026-05-12 07:25 UTC",
+        "title": "GEM/ConsFormer Validator Graph Precondit"
+      },
+      {
+        "details": "Codex CLI error: you finish the real work inside 10 minutes, that is correct",
+        "experiment_id": "exp1899",
+        "status": "FAIL",
+        "timestamp": "2026-05-12 07:27 UTC",
+        "title": "GEM/ConsFormer Validator Graph Precondit"
+      },
+      {
+        "details": "Codex CLI error: you finish the real work inside 10 minutes, that is correct",
+        "experiment_id": "exp1899",
+        "status": "FAIL",
+        "timestamp": "2026-05-12 07:29 UTC",
+        "title": "GEM/ConsFormer Validator Graph Precondit"
+      }
+    ],
+    "exp1900": [
+      {
+        "details": "Pre-emptive skip: upstream retired (exp1899-gem-consformer-validator-graph-preco",
+        "experiment_id": "exp1900",
+        "status": "GATE_BLOCK",
+        "timestamp": "2026-05-12 07:31 UTC",
+        "title": "FPGA/S2KAN/Ising Resource Accounting v2"
+      },
+      {
+        "details": "Pre-emptive skip: upstream retired (exp1899-gem-consformer-validator-graph-preco",
+        "experiment_id": "exp1900",
+        "status": "GATE_BLOCK",
+        "timestamp": "2026-05-12 07:33 UTC",
+        "title": "FPGA/S2KAN/Ising Resource Accounting v2"
+      },
+      {
+        "details": "Pre-emptive skip: upstream retired (exp1899-gem-consformer-validator-graph-preco",
+        "experiment_id": "exp1900",
+        "status": "GATE_BLOCK",
+        "timestamp": "2026-05-12 07:35 UTC",
+        "title": "FPGA/S2KAN/Ising Resource Accounting v2"
+      }
+    ],
+    "exp1901": [
+      {
+        "details": "1 of 1 gate(s) failed; first failure: exp1900-fpga-s2kan-ising-resource-accounti",
+        "experiment_id": "exp1901",
+        "status": "GATE_BLOCK",
+        "timestamp": "2026-05-12 07:31 UTC",
+        "title": "p-bit/p-dit Ising Sampler Accounting"
+      },
+      {
+        "details": "1 of 1 gate(s) failed; first failure: exp1900-fpga-s2kan-ising-resource-accounti",
+        "experiment_id": "exp1901",
+        "status": "GATE_BLOCK",
+        "timestamp": "2026-05-12 07:33 UTC",
+        "title": "p-bit/p-dit Ising Sampler Accounting"
+      },
+      {
+        "details": "1 of 1 gate(s) failed; first failure: exp1900-fpga-s2kan-ising-resource-accounti",
+        "experiment_id": "exp1901",
+        "status": "GATE_BLOCK",
+        "timestamp": "2026-05-12 07:35 UTC",
+        "title": "p-bit/p-dit Ising Sampler Accounting"
+      }
+    ],
+    "exp1902": [
+      {
+        "details": "Pre-emptive skip: upstream retired (exp1893-live-sota-roce-validator-eval-v2, ex",
+        "experiment_id": "exp1902",
+        "status": "GATE_BLOCK",
+        "timestamp": "2026-05-12 07:37 UTC",
+        "title": "Integrated Tri-SOTA E2E v2"
+      },
+      {
+        "details": "Pre-emptive skip: upstream retired (exp1893-live-sota-roce-validator-eval-v2, ex",
+        "experiment_id": "exp1902",
+        "status": "GATE_BLOCK",
+        "timestamp": "2026-05-12 07:39 UTC",
+        "title": "Integrated Tri-SOTA E2E v2"
+      },
+      {
+        "details": "Pre-emptive skip: upstream retired (exp1893-live-sota-roce-validator-eval-v2, ex",
+        "experiment_id": "exp1902",
+        "status": "GATE_BLOCK",
+        "timestamp": "2026-05-12 07:41 UTC",
+        "title": "Integrated Tri-SOTA E2E v2"
+      }
+    ]
+  },
+  "expected_structured_gate_skips": [
+    {
+      "artifact_exists": false,
+      "classification": "retired",
+      "deliverable": "results/experiment_1892_terminal_low_cost_telemetry_adapter.json",
+      "expected_gate_skip": true,
+      "experiment_id": "exp1892",
+      "reason": "Pre-emptive skip: upstream retired (exp1891-sota-gguf-cache-runtime-preflight)",
+      "status": "GATE_BLOCK",
+      "title": "Terminal Low-Cost Telemetry Adapter",
+      "unexpected_missing_artifact": false
+    },
+    {
+      "artifact_exists": false,
+      "classification": "retired",
+      "deliverable": "results/experiment_1893_live_sota_roce_validator_eval_v2.json",
+      "expected_gate_skip": true,
+      "experiment_id": "exp1893",
+      "reason": "Pre-emptive skip: upstream retired (exp1891-sota-gguf-cache-runtime-preflight)",
+      "status": "GATE_BLOCK",
+      "title": "Live SOTA ROCE Validator Evaluation v2",
+      "unexpected_missing_artifact": false
+    },
+    {
+      "artifact_exists": true,
+      "classification": "blocked",
+      "deliverable": "results/experiment_1894_dccd_roce_repair_v2.json",
+      "expected_gate_skip": true,
+      "experiment_id": "exp1894",
+      "reason": "blocked_gate_check_failed",
+      "status": "blocked",
+      "title": "Exp 1894: DCCD/llguidance Repair with ROCE Validators v2",
+      "unexpected_missing_artifact": false
+    },
+    {
+      "artifact_exists": false,
+      "classification": "retired",
+      "deliverable": "results/experiment_1897_routing_without_forgetting_fr11_audit.json",
+      "expected_gate_skip": true,
+      "experiment_id": "exp1897",
+      "reason": "Pre-emptive skip: upstream retired (exp1896-fr11-validator-tree-promotion-ledger",
+      "status": "GATE_BLOCK",
+      "title": "Routing without Forgetting FR-11 Audit",
+      "unexpected_missing_artifact": false
+    },
+    {
+      "artifact_exists": false,
+      "classification": "retired",
+      "deliverable": "results/experiment_1898_sota_fr11_promotion_smoke_v2.json",
+      "expected_gate_skip": true,
+      "experiment_id": "exp1898",
+      "reason": "Pre-emptive skip: upstream retired (exp1891-sota-gguf-cache-runtime-preflight)",
+      "status": "GATE_BLOCK",
+      "title": "SOTA FR-11 Promotion Smoke v2",
+      "unexpected_missing_artifact": false
+    },
+    {
+      "artifact_exists": false,
+      "classification": "retired",
+      "deliverable": "results/experiment_1900_fpga_s2kan_ising_resource_accounting_v2.json",
+      "expected_gate_skip": true,
+      "experiment_id": "exp1900",
+      "reason": "Pre-emptive skip: upstream retired (exp1899-gem-consformer-validator-graph-preco",
+      "status": "GATE_BLOCK",
+      "title": "FPGA/S2KAN/Ising Resource Accounting v2",
+      "unexpected_missing_artifact": false
+    },
+    {
+      "artifact_exists": true,
+      "classification": "blocked",
+      "deliverable": "results/experiment_1901_pbit_pdit_ising_sampler_accounting.json",
+      "expected_gate_skip": true,
+      "experiment_id": "exp1901",
+      "reason": "blocked_gate_check_failed",
+      "status": "blocked",
+      "title": "Exp 1901: p-bit/p-dit Ising Sampler Accounting",
+      "unexpected_missing_artifact": false
+    },
+    {
+      "artifact_exists": false,
+      "classification": "retired",
+      "deliverable": "results/experiment_1902_integrated_trisota_e2e_v2.json",
+      "expected_gate_skip": true,
+      "experiment_id": "exp1902",
+      "reason": "Pre-emptive skip: upstream retired (exp1893-live-sota-roce-validator-eval-v2, ex",
+      "status": "GATE_BLOCK",
+      "title": "Integrated Tri-SOTA E2E v2",
+      "unexpected_missing_artifact": false
+    }
+  ],
+  "experiment": "1903_milestone_148_retro",
+  "failed_task_count": 4,
+  "failed_tasks": [
+    {
+      "artifact_exists": false,
+      "classification": "failed",
+      "deliverable": "results/experiment_1891_sota_gguf_cache_runtime_preflight.json",
+      "expected_gate_skip": false,
+      "experiment_id": "exp1891",
+      "reason": "Pre-tests failing, self-heal failed:",
+      "status": "SKIP",
+      "title": "SOTA GGUF Cache and Runtime Preflight",
+      "unexpected_missing_artifact": true
+    },
+    {
+      "artifact_exists": false,
+      "classification": "failed",
+      "deliverable": "results/experiment_1895_residual_drift_validator_ledger.json",
+      "expected_gate_skip": false,
+      "experiment_id": "exp1895",
+      "reason": "Codex CLI error: you finish the real work inside 10 minutes, that is correct",
+      "status": "FAIL",
+      "title": "Residual Drift Validator Ledger",
+      "unexpected_missing_artifact": true
+    },
+    {
+      "artifact_exists": false,
+      "classification": "failed",
+      "deliverable": "results/experiment_1896_fr11_validator_tree_promotion_ledger_v2.json",
+      "expected_gate_skip": false,
+      "experiment_id": "exp1896",
+      "reason": "Codex CLI error: you finish the real work inside 10 minutes, that is correct",
+      "status": "FAIL",
+      "title": "FR-11 Validator-Tree Promotion Ledger v2",
+      "unexpected_missing_artifact": true
+    },
+    {
+      "artifact_exists": false,
+      "classification": "failed",
+      "deliverable": "results/experiment_1899_gem_consformer_validator_graph_preconditioner_v2.json",
+      "expected_gate_skip": false,
+      "experiment_id": "exp1899",
+      "reason": "Codex CLI error: you finish the real work inside 10 minutes, that is correct",
+      "status": "FAIL",
+      "title": "GEM/ConsFormer Validator Graph Precondit",
+      "unexpected_missing_artifact": true
+    }
+  ],
+  "gate_blocked_task_count": 8,
+  "honest_verdict": "complete: milestone_148_retro_filed_1_completed_2_blocked_6_retired_4_failed_sota_gap_unresolved_speedup_not_proven",
+  "milestone": "2026.05.148",
+  "milestone_148_retro_complete": true,
+  "missing_artifacts": {
+    "exp1891": "results/experiment_1891_sota_gguf_cache_runtime_preflight.json",
+    "exp1892": "results/experiment_1892_terminal_low_cost_telemetry_adapter.json",
+    "exp1893": "results/experiment_1893_live_sota_roce_validator_eval_v2.json",
+    "exp1895": "results/experiment_1895_residual_drift_validator_ledger.json",
+    "exp1896": "results/experiment_1896_fr11_validator_tree_promotion_ledger_v2.json",
+    "exp1897": "results/experiment_1897_routing_without_forgetting_fr11_audit.json",
+    "exp1898": "results/experiment_1898_sota_fr11_promotion_smoke_v2.json",
+    "exp1899": "results/experiment_1899_gem_consformer_validator_graph_preconditioner_v2.json",
+    "exp1900": "results/experiment_1900_fpga_s2kan_ising_resource_accounting_v2.json",
+    "exp1902": "results/experiment_1902_integrated_trisota_e2e_v2.json"
+  },
+  "next_gate_recommendations": {
+    "activation_contract": {
+      "action": "Recover Exp 1890 activation evidence before planning downstream gates.",
+      "required_fields": [
+        "next_gate_contract_ready",
+        "same_title_compute_dedupe_required"
+      ]
+    },
+    "fr11": {
+      "recommendation": "FR-11 promotion must gate on positive utility and retention before SOTA use.",
+      "required_fields": [
+        "promotion_gate_passed",
+        "utility_delta",
+        "fr11_sota_self_learning_ready",
+        "nonforgetting_rate"
+      ]
+    },
+    "hardware_accounting": {
+      "recommendation": "Hardware-accounting work needs no-synthesis estimates before any board claim.",
+      "required_fields": [
+        "sampler_preconditioning_ready",
+        "fpga_decomposition_accounting_ready",
+        "kv260_no_synthesis_claim",
+        "hardware_execution_claim"
+      ]
+    },
+    "prompt_to_validator": {
+      "recommendation": "Gate headline prompt-to-validator claims on live SOTA readiness, not only compiled validator fixtures.",
+      "required_fields": [
+        "validator_tree_compiler_ready",
+        "beaver_lite_bounds_ready",
+        "sota_roce_eval_ready",
+        "inference_mode",
+        "missing_models"
+      ]
+    },
+    "retro_always_runs": {
+      "action": "Keep the milestone retrospective ungated and allow it to run after upstream failures.",
+      "required_fields": [
+        "milestone_retro_complete",
+        "completed_task_count",
+        "failed_task_count"
+      ]
+    },
+    "structured_gate_skip_artifacts": {
+      "action": "Emit schema-complete blocked artifacts for pre-emptive upstream-retired gate skips so retros do not need to infer them solely from the conductor log.",
+      "required_fields": [
+        "status",
+        "honest_verdict",
+        "blocked_at_layer",
+        "gates_evaluated"
+      ]
+    },
+    "telemetry": {
+      "recommendation": "Telemetry remains an analysis signal until a terminal adapter artifact exists.",
+      "required_fields": [
+        "telemetry_adapter_ready",
+        "phi_first_available",
+        "spilled_energy_available",
+        "acceptance_authority_unchanged"
+      ]
+    },
+    "terminal_sota_cache_runtime_preflight": {
+      "action": "Run the cache/runtime preflight first and write a terminal blocked artifact when mandated GGUFs or smoke tests are unavailable.",
+      "current_ready": false,
+      "required_fields": [
+        "cache_all_available",
+        "cache_any_available",
+        "runtime_smoke_ready",
+        "missing_models",
+        "model_count",
+        "parallel_model_count"
+      ]
+    }
+  },
+  "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+  "retired_task_count": 6,
+  "retired_tasks": [
+    {
+      "artifact_exists": false,
+      "classification": "retired",
+      "deliverable": "results/experiment_1892_terminal_low_cost_telemetry_adapter.json",
+      "expected_gate_skip": true,
+      "experiment_id": "exp1892",
+      "reason": "Pre-emptive skip: upstream retired (exp1891-sota-gguf-cache-runtime-preflight)",
+      "status": "GATE_BLOCK",
+      "title": "Terminal Low-Cost Telemetry Adapter",
+      "unexpected_missing_artifact": false
+    },
+    {
+      "artifact_exists": false,
+      "classification": "retired",
+      "deliverable": "results/experiment_1893_live_sota_roce_validator_eval_v2.json",
+      "expected_gate_skip": true,
+      "experiment_id": "exp1893",
+      "reason": "Pre-emptive skip: upstream retired (exp1891-sota-gguf-cache-runtime-preflight)",
+      "status": "GATE_BLOCK",
+      "title": "Live SOTA ROCE Validator Evaluation v2",
+      "unexpected_missing_artifact": false
+    },
+    {
+      "artifact_exists": false,
+      "classification": "retired",
+      "deliverable": "results/experiment_1897_routing_without_forgetting_fr11_audit.json",
+      "expected_gate_skip": true,
+      "experiment_id": "exp1897",
+      "reason": "Pre-emptive skip: upstream retired (exp1896-fr11-validator-tree-promotion-ledger",
+      "status": "GATE_BLOCK",
+      "title": "Routing without Forgetting FR-11 Audit",
+      "unexpected_missing_artifact": false
+    },
+    {
+      "artifact_exists": false,
+      "classification": "retired",
+      "deliverable": "results/experiment_1898_sota_fr11_promotion_smoke_v2.json",
+      "expected_gate_skip": true,
+      "experiment_id": "exp1898",
+      "reason": "Pre-emptive skip: upstream retired (exp1891-sota-gguf-cache-runtime-preflight)",
+      "status": "GATE_BLOCK",
+      "title": "SOTA FR-11 Promotion Smoke v2",
+      "unexpected_missing_artifact": false
+    },
+    {
+      "artifact_exists": false,
+      "classification": "retired",
+      "deliverable": "results/experiment_1900_fpga_s2kan_ising_resource_accounting_v2.json",
+      "expected_gate_skip": true,
+      "experiment_id": "exp1900",
+      "reason": "Pre-emptive skip: upstream retired (exp1899-gem-consformer-validator-graph-preco",
+      "status": "GATE_BLOCK",
+      "title": "FPGA/S2KAN/Ising Resource Accounting v2",
+      "unexpected_missing_artifact": false
+    },
+    {
+      "artifact_exists": false,
+      "classification": "retired",
+      "deliverable": "results/experiment_1902_integrated_trisota_e2e_v2.json",
+      "expected_gate_skip": true,
+      "experiment_id": "exp1902",
+      "reason": "Pre-emptive skip: upstream retired (exp1893-live-sota-roce-validator-eval-v2, ex",
+      "status": "GATE_BLOCK",
+      "title": "Integrated Tri-SOTA E2E v2",
+      "unexpected_missing_artifact": false
+    }
+  ],
+  "run_date": "20260512",
+  "same_title_compute_dedupe_result": {
+    "expected_speedup_proven": false,
+    "gpu_model_count_telemetry_produced": false,
+    "improved_over_147": "partial_gate_skips_prevented_live_eval_rerun",
+    "observed_speedup_pct": null,
+    "prior_duplicate_compute_bound_titles": [
+      "Exp 1880: Live SOTA ROCE Validator Evaluation"
+    ],
+    "prior_target_pct": 11,
+    "reason": "No Exp 1891 terminal cache/runtime artifact exists, so the 11 percent target and GPU/model-count telemetry were not proven even though downstream live-eval reruns were gate-skipped.",
+    "same_title_compute_dedupe_required_in_activation": true
+  },
+  "schema": "carnot.milestone_148_retro.v1",
+  "sota_cache_runtime_gap_resolved": false,
+  "status": "complete",
+  "task_outcomes": [
+    {
+      "artifact_exists": true,
+      "classification": "completed",
+      "deliverable": "results/experiment_1890_147_completion_148_activation_contract.json",
+      "expected_gate_skip": false,
+      "experiment_id": "exp1890",
+      "reason": "complete: milestone_147_archived_148_activation_contract_ready_validator_beaver_ready_live_sota_telemetry_fr11_hardware_blocked",
+      "status": "complete",
+      "title": ".147 Completion to .148 Activation Contr",
+      "unexpected_missing_artifact": false
+    },
+    {
+      "artifact_exists": false,
+      "classification": "failed",
+      "deliverable": "results/experiment_1891_sota_gguf_cache_runtime_preflight.json",
+      "expected_gate_skip": false,
+      "experiment_id": "exp1891",
+      "reason": "Pre-tests failing, self-heal failed:",
+      "status": "SKIP",
+      "title": "SOTA GGUF Cache and Runtime Preflight",
+      "unexpected_missing_artifact": true
+    },
+    {
+      "artifact_exists": false,
+      "classification": "retired",
+      "deliverable": "results/experiment_1892_terminal_low_cost_telemetry_adapter.json",
+      "expected_gate_skip": true,
+      "experiment_id": "exp1892",
+      "reason": "Pre-emptive skip: upstream retired (exp1891-sota-gguf-cache-runtime-preflight)",
+      "status": "GATE_BLOCK",
+      "title": "Terminal Low-Cost Telemetry Adapter",
+      "unexpected_missing_artifact": false
+    },
+    {
+      "artifact_exists": false,
+      "classification": "retired",
+      "deliverable": "results/experiment_1893_live_sota_roce_validator_eval_v2.json",
+      "expected_gate_skip": true,
+      "experiment_id": "exp1893",
+      "reason": "Pre-emptive skip: upstream retired (exp1891-sota-gguf-cache-runtime-preflight)",
+      "status": "GATE_BLOCK",
+      "title": "Live SOTA ROCE Validator Evaluation v2",
+      "unexpected_missing_artifact": false
+    },
+    {
+      "artifact_exists": true,
+      "classification": "blocked",
+      "deliverable": "results/experiment_1894_dccd_roce_repair_v2.json",
+      "expected_gate_skip": true,
+      "experiment_id": "exp1894",
+      "reason": "blocked_gate_check_failed",
+      "status": "blocked",
+      "title": "Exp 1894: DCCD/llguidance Repair with ROCE Validators v2",
+      "unexpected_missing_artifact": false
+    },
+    {
+      "artifact_exists": false,
+      "classification": "failed",
+      "deliverable": "results/experiment_1895_residual_drift_validator_ledger.json",
+      "expected_gate_skip": false,
+      "experiment_id": "exp1895",
+      "reason": "Codex CLI error: you finish the real work inside 10 minutes, that is correct",
+      "status": "FAIL",
+      "title": "Residual Drift Validator Ledger",
+      "unexpected_missing_artifact": true
+    },
+    {
+      "artifact_exists": false,
+      "classification": "failed",
+      "deliverable": "results/experiment_1896_fr11_validator_tree_promotion_ledger_v2.json",
+      "expected_gate_skip": false,
+      "experiment_id": "exp1896",
+      "reason": "Codex CLI error: you finish the real work inside 10 minutes, that is correct",
+      "status": "FAIL",
+      "title": "FR-11 Validator-Tree Promotion Ledger v2",
+      "unexpected_missing_artifact": true
+    },
+    {
+      "artifact_exists": false,
+      "classification": "retired",
+      "deliverable": "results/experiment_1897_routing_without_forgetting_fr11_audit.json",
+      "expected_gate_skip": true,
+      "experiment_id": "exp1897",
+      "reason": "Pre-emptive skip: upstream retired (exp1896-fr11-validator-tree-promotion-ledger",
+      "status": "GATE_BLOCK",
+      "title": "Routing without Forgetting FR-11 Audit",
+      "unexpected_missing_artifact": false
+    },
+    {
+      "artifact_exists": false,
+      "classification": "retired",
+      "deliverable": "results/experiment_1898_sota_fr11_promotion_smoke_v2.json",
+      "expected_gate_skip": true,
+      "experiment_id": "exp1898",
+      "reason": "Pre-emptive skip: upstream retired (exp1891-sota-gguf-cache-runtime-preflight)",
+      "status": "GATE_BLOCK",
+      "title": "SOTA FR-11 Promotion Smoke v2",
+      "unexpected_missing_artifact": false
+    },
+    {
+      "artifact_exists": false,
+      "classification": "failed",
+      "deliverable": "results/experiment_1899_gem_consformer_validator_graph_preconditioner_v2.json",
+      "expected_gate_skip": false,
+      "experiment_id": "exp1899",
+      "reason": "Codex CLI error: you finish the real work inside 10 minutes, that is correct",
+      "status": "FAIL",
+      "title": "GEM/ConsFormer Validator Graph Precondit",
+      "unexpected_missing_artifact": true
+    },
+    {
+      "artifact_exists": false,
+      "classification": "retired",
+      "deliverable": "results/experiment_1900_fpga_s2kan_ising_resource_accounting_v2.json",
+      "expected_gate_skip": true,
+      "experiment_id": "exp1900",
+      "reason": "Pre-emptive skip: upstream retired (exp1899-gem-consformer-validator-graph-preco",
+      "status": "GATE_BLOCK",
+      "title": "FPGA/S2KAN/Ising Resource Accounting v2",
+      "unexpected_missing_artifact": false
+    },
+    {
+      "artifact_exists": true,
+      "classification": "blocked",
+      "deliverable": "results/experiment_1901_pbit_pdit_ising_sampler_accounting.json",
+      "expected_gate_skip": true,
+      "experiment_id": "exp1901",
+      "reason": "blocked_gate_check_failed",
+      "status": "blocked",
+      "title": "Exp 1901: p-bit/p-dit Ising Sampler Accounting",
+      "unexpected_missing_artifact": false
+    },
+    {
+      "artifact_exists": false,
+      "classification": "retired",
+      "deliverable": "results/experiment_1902_integrated_trisota_e2e_v2.json",
+      "expected_gate_skip": true,
+      "experiment_id": "exp1902",
+      "reason": "Pre-emptive skip: upstream retired (exp1893-live-sota-roce-validator-eval-v2, ex",
+      "status": "GATE_BLOCK",
+      "title": "Integrated Tri-SOTA E2E v2",
+      "unexpected_missing_artifact": false
+    }
+  ],
+  "terminal_artifact_presence": {
+    "fr11": {
+      "fr11_sota_self_learning_ready": false,
+      "promotion_gate_passed": false,
+      "promotion_ledger_exists": false,
+      "routing_audit_exists": false,
+      "sota_smoke_exists": false
+    },
+    "hardware_accounting": {
+      "fpga_decomposition_accounting_ready": false,
+      "pbit_blocked_artifact_exists": true,
+      "pbit_pdit_accounting_ready": false,
+      "primary_exists": false
+    },
+    "sota_cache_runtime": {
+      "cache_all_available": null,
+      "exists": false,
+      "model_count": null,
+      "parallel_model_count": null,
+      "runtime_smoke_ready": null
+    },
+    "telemetry": {
+      "exists": false,
+      "telemetry_adapter_ready": false
+    }
+  },
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_milestone_retro_148.py -q --no-cov (red first: ImportError before implementation, confirming tests were written first)",
+    "ruff check python/carnot/reporting/milestone_retro_148.py tests/python/test_milestone_retro_148.py (passed)",
+    "ruff format --check python/carnot/reporting/milestone_retro_148.py tests/python/test_milestone_retro_148.py (passed)",
+    ".venv/bin/pytest tests/python/test_milestone_retro_148.py -q --no-cov (passed: 4 passed)",
+    ".venv/bin/coverage run --include='*/python/carnot/reporting/milestone_retro_148.py' -m pytest tests/python/test_milestone_retro_148.py -q --no-cov -n 0 && .venv/bin/coverage report --include='*/python/carnot/reporting/milestone_retro_148.py' --fail-under=100 -m (passed: 100% new-module coverage)",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_milestone_retro_148.py (passed)",
+    ".venv/bin/pytest tests/python -q (failed/hung: visible pre-existing failures, wedged silently near 74%, killed pytest parent after no output; no workers remained)",
+    ".venv/bin/python scripts/check_spec_coverage.py (failed: 61 pre-existing tests lack REQ-/SCENARIO refs; new test file passes targeted check)",
+    "ops/e2e-test-plan.md reviewed (reporting retrospective artifact only; no applicable runtime E2E item beyond evidence reconciliation)"
+  ],
+  "unexpected_missing_artifact_failures": [
+    {
+      "artifact_exists": false,
+      "classification": "failed",
+      "deliverable": "results/experiment_1891_sota_gguf_cache_runtime_preflight.json",
+      "expected_gate_skip": false,
+      "experiment_id": "exp1891",
+      "reason": "Pre-tests failing, self-heal failed:",
+      "status": "SKIP",
+      "title": "SOTA GGUF Cache and Runtime Preflight",
+      "unexpected_missing_artifact": true
+    },
+    {
+      "artifact_exists": false,
+      "classification": "failed",
+      "deliverable": "results/experiment_1895_residual_drift_validator_ledger.json",
+      "expected_gate_skip": false,
+      "experiment_id": "exp1895",
+      "reason": "Codex CLI error: you finish the real work inside 10 minutes, that is correct",
+      "status": "FAIL",
+      "title": "Residual Drift Validator Ledger",
+      "unexpected_missing_artifact": true
+    },
+    {
+      "artifact_exists": false,
+      "classification": "failed",
+      "deliverable": "results/experiment_1896_fr11_validator_tree_promotion_ledger_v2.json",
+      "expected_gate_skip": false,
+      "experiment_id": "exp1896",
+      "reason": "Codex CLI error: you finish the real work inside 10 minutes, that is correct",
+      "status": "FAIL",
+      "title": "FR-11 Validator-Tree Promotion Ledger v2",
+      "unexpected_missing_artifact": true
+    },
+    {
+      "artifact_exists": false,
+      "classification": "failed",
+      "deliverable": "results/experiment_1899_gem_consformer_validator_graph_preconditioner_v2.json",
+      "expected_gate_skip": false,
+      "experiment_id": "exp1899",
+      "reason": "Codex CLI error: you finish the real work inside 10 minutes, that is correct",
+      "status": "FAIL",
+      "title": "GEM/ConsFormer Validator Graph Precondit",
+      "unexpected_missing_artifact": true
+    }
+  ]
+}
