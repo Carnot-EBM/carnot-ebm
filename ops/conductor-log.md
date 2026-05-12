@@ -2289,3 +2289,4 @@ IMPORTANT:
 | 2026-05-12 23:29 UTC | Exp 1974: RUN-CSP Hardware Accounting | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1972-run-csp-unsupervised.success (actu |
 | 2026-05-12 23:36 UTC | Exp 1975: Energy Outcome Reward Model (EORM) | OK | 81 passed, 1 warning in 5.08s |
 | 2026-05-12 23:40 UTC | Exp 1976: Energy-Based Transformer Prototype | OK | 81 passed, 1 warning in 4.59s |
+| 2026-05-12 23:42 UTC | Exp 1977: Tri-SOTA Constrained Eval with EORM/EBT | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1975-eorm-cot-verification.success (act |
