@@ -2193,3 +2193,5 @@ IMPORTANT:
 | 2026-05-12 16:57 UTC | Exp 1932: Energy-Guided Decoding Mitigation | DOOMED_RERUN_BLOCK | 6 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-12 16:59 UTC | Exp 1932: Energy-Guided Decoding Mitigation | DOOMED_RERUN_BLOCK | 6 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-12 17:01 UTC | Exp 1933: Type-Constrained Generation Validation | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1932-energy-guided-decoding) |
+| 2026-05-12 17:11 UTC | Exp 1934: ConsFormer Iterative Refinement Loop | OK | 81 passed, 1 warning in 4.19s |
+| 2026-05-12 17:13 UTC | Exp 1933: Type-Constrained Generation Validation | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1932-energy-guided-decoding) |
