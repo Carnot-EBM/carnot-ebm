@@ -2251,3 +2251,4 @@ IMPORTANT:
 | 2026-05-12 21:17 UTC | Exp 1958: GCoT-Decoding Reasoning Paths | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1958_gcot_br |
 | 2026-05-12 21:22 UTC | Exp 1958: GCoT-Decoding Reasoning Paths | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1958_gcot_br |
 | 2026-05-12 21:28 UTC | Exp 1958: GCoT-Decoding Reasoning Paths | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1958_gcot_br |
+| 2026-05-12 21:30 UTC | Exp 1959: Tri-SOTA Constrained Eval | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1956-nco-negative-constraints.success ( |
