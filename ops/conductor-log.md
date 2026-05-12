@@ -1958,3 +1958,8 @@ IMPORTANT:
 | 2026-05-12 05:57 UTC | Plan milestone 2026.05.148 | OK | 14 tasks proposed |
 | 2026-05-12 05:59 UTC | Milestone 2026.05.148 activated | OK | 14 tasks queued |
 | 2026-05-12 06:43 UTC | Exp 1890: .147 Completion to .148 Activation Contr | OK | 81 passed, 1 warning in 5.91s |
+| 2026-05-12 06:59 UTC | Exp 1891: SOTA GGUF Cache and Runtime Preflight | FAIL | Codex CLI error: mbda *_args, **_kwargs: pytest.fail("smoke requires cache"), |
+| 2026-05-12 07:02 UTC | Exp 1891: SOTA GGUF Cache and Runtime Preflight | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-12 07:04 UTC | Exp 1891: SOTA GGUF Cache and Runtime Preflight | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-12 07:06 UTC | Exp 1892: Terminal Low-Cost Telemetry Adapter | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1891-sota-gguf-cache-runtime-preflight) |
+| 2026-05-12 07:06 UTC | Exp 1893: Live SOTA ROCE Validator Evaluation v2 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1891-sota-gguf-cache-runtime-preflight) |

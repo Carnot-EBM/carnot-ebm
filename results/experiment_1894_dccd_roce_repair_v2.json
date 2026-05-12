@@ -1,0 +1,33 @@
+{
+  "experiment": 1894,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-05-12",
+  "started_at": "2026-05-12T07:06:27.044185+00:00",
+  "finished_at": "2026-05-12T07:06:27.044185+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Exp 1894: DCCD/llguidance Repair with ROCE Validators v2",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "2 of 2 gate(s) failed; first failure: exp1893-live-sota-roce-validator-eval-v2.sota_roce_eval_ready (upstream artifact not found for task id 'exp1893-live-sota-roce-validator-eval-v2')",
+  "gates_evaluated": [
+    {
+      "upstream": "exp1893-live-sota-roce-validator-eval-v2",
+      "artifact_field": "sota_roce_eval_ready",
+      "op": "==",
+      "expected": true,
+      "actual": null,
+      "passed": false,
+      "reason": "upstream artifact not found for task id 'exp1893-live-sota-roce-validator-eval-v2'"
+    },
+    {
+      "upstream": "exp1892-terminal-low-cost-telemetry-adapter",
+      "artifact_field": "telemetry_adapter_ready",
+      "op": "==",
+      "expected": true,
+      "actual": null,
+      "passed": false,
+      "reason": "upstream artifact not found for task id 'exp1892-terminal-low-cost-telemetry-adapter'"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
