@@ -1,235 +1,240 @@
-milestone: "2026.05.153"
-milestone_title: "Negative Constraint Decoding, Flow Sampling Samplers, and Continuous Self-Learning Refinement"
+milestone: "2026.05.154"
+milestone_title: "Energy-Based Continuous Reasoning, Neural Constraint Solvers, and Provable Continuous Self-Learning"
 milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
 
 tasks:
-  - id: exp1956-nco-negative-constraints
-    milestone: "2026.05.153"
-    title: "Exp 1956: NCO Plug-in for Negative Constraints"
-    deliverable: "results/experiment_1956_nco_negative_constraints.json"
+  - id: exp1969-cold-decoding-langevin
+    milestone: "2026.05.154"
+    title: "Exp 1969: COLD Decoding with Langevin Dynamics"
+    deliverable: "results/experiment_1969_cold_decoding_langevin.json"
     agent_type: "codex"
     prompt: |
-      CONTEXT: Today is {date}. Workspace is {project_root}. Recent research on NCO (arXiv:2605.10065) proposes an online pattern matching mechanism to handle negative constraints (like profanity or invalid formats) during decoding without causing state explosion.
-      EXISTING CODE TO READ FIRST: python/carnot/inference/grammar.py and python/carnot/inference/validators.py
-      TASK: Implement an NCO-style pattern matching layer for negative constraints.
+      CONTEXT: Today is {date}. Workspace is {project_root}. COLD Decoding (arXiv:2202.11705) treats text generation as energy-based sampling using Langevin dynamics over continuous constraints.
+      EXISTING CODE TO READ FIRST: python/carnot/inference/samplers.py and python/carnot/models/gibbs.py
+      TASK: Implement a COLD decoding layer for energy-guided constraint generation.
       CONCRETE STEPS:
-      1. Add a negative constraint registry that tracks token exclusion patterns.
-      2. Integrate an efficient regex/token-matching rejection step into the decoding loop.
-      3. Evaluate overhead vs standard positive mask trie decoding.
+      1. Map our existing static validators into differentiable energy proxy functions.
+      2. Implement Langevin dynamics sampling on the latent sequence embeddings.
+      3. Measure the constraint satisfaction improvement vs base sampling.
       4. Write the results artifact.
 
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp1957-truncproof-ll1-grammar
-    milestone: "2026.05.153"
-    title: "Exp 1957: TruncProof Token-Limited LL(1) Parsing"
-    deliverable: "results/experiment_1957_truncproof_ll1_grammar.json"
+  - id: exp1970-domino-fast-constraints
+    milestone: "2026.05.154"
+    title: "Exp 1970: DOMINO Fast Non-Invasive Constrained Generation"
+    deliverable: "results/experiment_1970_domino_fast_constraints.json"
     prompt: |
-      CONTEXT: Today is {date}. Workspace is {project_root}. TruncProof (ICLR 2026) allows LL(1) constraint generation while strictly enforcing maximum token limitations, avoiding structurally invalid JSON when token budgets run out.
+      CONTEXT: Today is {date}. Workspace is {project_root}. DOMINO (ICML 2024) allows non-invasive constrained generation with zero overhead by handling subword token misalignment directly.
       EXISTING CODE TO READ FIRST: python/carnot/inference/grammar.py
-      TASK: Implement a TruncProof-style budget-aware closure for LL(1) grammars.
+      TASK: Implement DOMINO-style speculative grammar masking.
       CONCRETE STEPS:
-      1. Extend the LL(1) parser to monitor remaining token budget.
-      2. If the budget nears exhaustion, automatically force deterministic closing tokens to seal the structure.
-      3. Evaluate the zero-false-accept parsing rate on truncated runs.
+      1. Build a subword-aligned transition mask generator for common Carnot schema patterns.
+      2. Integrate it with the existing decoding loop to enforce strict adherence without latency spikes.
+      3. Evaluate exact-acceptance equivalence vs the legacy trie path.
       4. Write the results artifact.
 
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp1958-gcot-branching-prototype
-    milestone: "2026.05.153"
-    title: "Exp 1958: GCoT-Decoding Reasoning Paths"
-    deliverable: "results/experiment_1958_gcot_branching_prototype.json"
-    prompt: |
-      CONTEXT: Today is {date}. Workspace is {project_root}. GCoT-Decoding (arXiv:2604.06794) unlocks deep reasoning paths using branching sampling and error backtracking.
-      EXISTING CODE TO READ FIRST: python/carnot/inference/samplers.py
-      TASK: Implement a GCoT branching prototype.
-      CONCRETE STEPS:
-      1. Develop a branching mechanism that maintains parallel latent reasoning traces.
-      2. Apply our existing Carnot partial-trace energy to rank and cull branches.
-      3. Implement backtracking when all active branches exceed the energy threshold.
-      4. Write the results artifact.
-
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp1959-tri-sota-constrained-eval
-    milestone: "2026.05.153"
-    title: "Exp 1959: Tri-SOTA Constrained Eval"
-    deliverable: "results/experiment_1959_tri_sota_constrained_eval.json"
+  - id: exp1971-cold-vs-domino-sota
+    milestone: "2026.05.154"
+    title: "Exp 1971: SOTA Benchmark of COLD vs DOMINO"
+    deliverable: "results/experiment_1971_cold_vs_domino_sota.json"
     gated_on:
-      - upstream: exp1956-nco-negative-constraints
+      - upstream: exp1969-cold-decoding-langevin
         artifact_field: success
         op: "=="
         value: true
     prompt: |
-      CONTEXT: Today is {date}. Workspace is {project_root}. We must evaluate our negative constraints and TruncProof limiters on mandated local SOTA models.
+      CONTEXT: Today is {date}. Workspace is {project_root}. We must benchmark continuous energy guidance (COLD) vs strict grammar (DOMINO) on mandated models.
       EXISTING CODE TO READ FIRST: tests/python/test_grammar.py
-      TASK: Run a constrained benchmark using SOTA GGUF models.
+      TASK: Benchmark constraint adherence using SOTA models.
       MODEL_SPECS: unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, unsloth/gemma-4-26B-A4B-it-GGUF
       CONCRETE STEPS:
-      1. Instantiate a constraint pipeline with the new NCO and TruncProof features.
-      2. Run generation against a dataset known to provoke max-token cutoffs and format violations.
-      3. Validate that parsing rates improve and negative constraints are strictly upheld.
-      4. Write the results artifact with `acceptance_authority_unchanged=true`.
-
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp1960-flow-sampling-unnormalized
-    milestone: "2026.05.153"
-    title: "Exp 1960: Flow Sampling Process"
-    deliverable: "results/experiment_1960_flow_sampling_unnormalized.json"
-    prompt: |
-      CONTEXT: Today is {date}. Workspace is {project_root}. Flow Sampling (arXiv:2605.03984) allows learning to sample from unnormalized densities via conditional denoising processes.
-      EXISTING CODE TO READ FIRST: python/carnot/models/gibbs.py and python/carnot/samplers/base.py
-      TASK: Implement a Flow Sampling density estimator prototype.
-      CONCRETE STEPS:
-      1. Define an unnormalized continuous target density using our existing EBM definitions.
-      2. Implement the conditional denoising forward and reverse steps.
-      3. Measure the KL divergence against exact block Gibbs baselines.
+      1. Execute generation runs using both COLD and DOMINO constraint modes.
+      2. Compare semantic coherence, generation latency, and strict syntax validity.
+      3. Synthesize the findings ensuring zero-false-accept bounds.
       4. Write the results artifact.
 
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp1961-interleaved-gibbs-diffusion
-    milestone: "2026.05.153"
-    title: "Exp 1961: Interleaved Gibbs Diffusion (IGD) Prototype"
-    deliverable: "results/experiment_1961_interleaved_gibbs_diffusion.json"
+  - id: exp1972-run-csp-unsupervised
+    milestone: "2026.05.154"
+    title: "Exp 1972: RUN-CSP Prototype for Unsupervised Solvers"
+    deliverable: "results/experiment_1972_run_csp_unsupervised.json"
     agent_type: "codex"
     prompt: |
-      CONTEXT: Today is {date}. Workspace is {project_root}. Interleaved Gibbs Diffusion (ICLR 2026) bridges continuous and discrete states for complex constrained tasks like SAT without autoregressive delays.
-      EXISTING CODE TO READ FIRST: python/carnot/samplers/gibbs.py
-      TASK: Build an IGD-based mixed-variable sampler.
-      CONCRETE STEPS:
-      1. Build a sampler that interleaves discrete variable updates with continuous noise injection.
-      2. Benchmark the sampler on a synthetic MAX-3-SAT instance using Potts state encodings.
-      3. Record mixing times and convergence rates against baseline sequential Gibbs.
-      4. Write the results artifact.
-
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp1962-ni-sampling-token-order
-    milestone: "2026.05.153"
-    title: "Exp 1962: NI Sampling Token Optimization"
-    deliverable: "results/experiment_1962_ni_sampling_token_order.json"
-    prompt: |
-      CONTEXT: Today is {date}. Workspace is {project_root}. Neural Indicator (NI) Sampling (arXiv:2604.18471) accelerates discrete diffusion by optimizing token resolution order.
+      CONTEXT: Today is {date}. Workspace is {project_root}. RUN-CSP (arXiv:1909.08387) trains message passing networks unsupervised to solve binary CSPs.
       EXISTING CODE TO READ FIRST: python/carnot/inference/samplers.py
-      TASK: Implement NI Sampling logic for token ordering.
+      TASK: Implement an unsupervised RUN-CSP network solver.
       CONCRETE STEPS:
-      1. Incorporate an energy-based indicator step to dynamically determine which tokens to denoise first.
-      2. Measure wall-clock acceleration against random-order discrete diffusion.
-      3. Verify structural semantic retention over benchmark traces.
+      1. Map Carnot's validator graphs into RUN-CSP compatible message passing architectures.
+      2. Train the solver entirely unsupervised using Carnot's energy function as the loss.
+      3. Evaluate generalizability from 40-variable to 1000-variable problem graphs.
       4. Write the results artifact.
 
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp1963-continuous-self-learning-routing
-    milestone: "2026.05.153"
-    title: "Exp 1963: Continual Online Learning: Routing without Forgetting"
-    deliverable: "results/experiment_1963_continuous_self_learning_routing.json"
+  - id: exp1973-deepsade-hybrid-guarantees
+    milestone: "2026.05.154"
+    title: "Exp 1973: DeepSaDe Hybrid MaxSMT Guarantees"
+    deliverable: "results/experiment_1973_deepsade_hybrid_guarantees.json"
     prompt: |
-      CONTEXT: Today is {date}. Workspace is {project_root}. Routing without Forgetting (arXiv:2603.09576) uses dynamic routing to enable continual online learning in transformers without catastrophic forgetting.
-      EXISTING CODE TO READ FIRST: python/carnot/training/online.py
-      TASK: Implement the 'Routing without Forgetting' mechanism for our FR-11 continuous self-learning pipeline.
+      CONTEXT: Today is {date}. Workspace is {project_root}. DeepSaDe (arXiv:2303.01141) provides provable guarantees that network predictions satisfy constraints via hybrid MaxSMT and SGD training.
+      EXISTING CODE TO READ FIRST: python/carnot/models/gibbs.py and python/carnot/training/online.py
+      TASK: Implement a DeepSaDe guarantee layer for Carnot verifiers.
       CONCRETE STEPS:
-      1. Integrate parameter-subspace routing for the verifier model updates.
-      2. Ensure old structural coherences are retained while integrating new policy patches.
-      3. Evaluate on the replay buffer to strictly verify `soundness_mistakes=0` and `nonforgetting_rate=1.0`.
+      1. Add a MaxSMT verification pass to the final layer updates of the constraint model.
+      2. Validate that the network never violates domain constraints (zero-false-accept strictly guaranteed).
+      3. Verify the training overhead vs standard SGD.
       4. Write the results artifact.
 
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp1964-hardware-accounted-igd-eval
-    milestone: "2026.05.153"
-    title: "Exp 1964: Hardware-Accounted IGD Evaluation"
-    deliverable: "results/experiment_1964_hardware_accounted_igd_eval.json"
+  - id: exp1974-run-csp-hardware-accounting
+    milestone: "2026.05.154"
+    title: "Exp 1974: RUN-CSP Hardware Accounting"
+    deliverable: "results/experiment_1974_run_csp_hardware_accounting.json"
     gated_on:
-      - upstream: exp1961-interleaved-gibbs-diffusion
+      - upstream: exp1972-run-csp-unsupervised
         artifact_field: success
         op: "=="
         value: true
     prompt: |
-      CONTEXT: Today is {date}. Workspace is {project_root}. We must map the new IGD sampler to hardware capability accounting without making actual execution claims.
-      EXISTING CODE TO READ FIRST: python/carnot/inference/samplers.py
-      TASK: Produce an FPGA BOP/NABS accounting simulation for the IGD logic.
+      CONTEXT: Today is {date}. Workspace is {project_root}. We need no-synthesis logical accounting for the RUN-CSP graph algorithms targeted at the KV260 architecture.
+      EXISTING CODE TO READ FIRST: hardware/kv260/
+      TASK: Perform logical BOP/NABS hardware accounting for RUN-CSP.
       CONCRETE STEPS:
-      1. Extract the arithmetic operations from the Interleaved Gibbs Diffusion algorithm.
-      2. Emit theoretical LUT and arithmetic cycle counts (no-synthesis accounting) suitable for the KV260 architecture.
+      1. Extract the arithmetic operations from the RUN-CSP message passing steps.
+      2. Emit theoretical LUT counts and cycles.
       3. Generate `kv260_no_synthesis_claim=true` explicit field.
       4. Write the results artifact.
 
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp1965-energy-guided-nco-benchmark
-    milestone: "2026.05.153"
-    title: "Exp 1965: Energy-Guided NCO Benchmark"
-    deliverable: "results/experiment_1965_energy_guided_nco_benchmark.json"
+  - id: exp1975-eorm-cot-verification
+    milestone: "2026.05.154"
+    title: "Exp 1975: Energy Outcome Reward Model (EORM)"
+    deliverable: "results/experiment_1975_eorm_cot_verification.json"
     prompt: |
-      CONTEXT: Today is {date}. Workspace is {project_root}. To validate our decoding enhancements, we must pit Energy-Guided Decoding directly against the NCO negative constraints schema.
-      EXISTING CODE TO READ FIRST: python/carnot/inference/grammar.py
-      TASK: Benchmark semantic energy scores alongside NCO masking.
-      MODEL_SPECS: unsloth/gemma-4-31B-it-GGUF, unsloth/Qwen3.6-35B-A3B-GGUF
+      CONTEXT: Today is {date}. Workspace is {project_root}. EORM utilizes energy scores for post-hoc verification and reranking of Chain-of-Thought reasoning.
+      EXISTING CODE TO READ FIRST: python/carnot/models/boltzmann.py
+      TASK: Implement an EORM verification layer.
       CONCRETE STEPS:
-      1. Feed identical prompt inputs through Energy-Guided Decoding vs NCO constrained decoding.
-      2. Record generation latency, sequence coherence, and strict adherence to negative conditions.
-      3. Generate a comparative metric table.
+      1. Train or instantiate a small EBM focused on scoring intermediate reasoning steps.
+      2. Run the EORM on generated trajectories to rerank candidate answers.
+      3. Validate accuracy improvements on logic-heavy subsets.
       4. Write the results artifact.
 
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp1966-tri-sota-e2e-v8
-    milestone: "2026.05.153"
-    title: "Exp 1966: Tri-SOTA E2E Integration v8"
-    deliverable: "results/experiment_1966_tri_sota_e2e_v8.json"
+  - id: exp1976-ebt-compatibility-prototype
+    milestone: "2026.05.154"
+    title: "Exp 1976: Energy-Based Transformer Prototype"
+    deliverable: "results/experiment_1976_ebt_compatibility_prototype.json"
+    prompt: |
+      CONTEXT: Today is {date}. Workspace is {project_root}. Energy-Based Transformers (Gladstone et al., 2026) assess compatibility between input and prediction via energy minimization.
+      EXISTING CODE TO READ FIRST: python/carnot/models/boltzmann.py
+      TASK: Implement a basic EBT compatibility checking prototype.
+      CONCRETE STEPS:
+      1. Design an architecture that outputs scalar compatibility energy for sequence pairs.
+      2. Compare this approach with traditional conditional log-probability.
+      3. Report the energy descent curve during optimization.
+      4. Write the results artifact.
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1977-tri-sota-eorm-ebt
+    milestone: "2026.05.154"
+    title: "Exp 1977: Tri-SOTA Constrained Eval with EORM/EBT"
+    deliverable: "results/experiment_1977_tri_sota_eorm_ebt.json"
     gated_on:
-      - upstream: exp1959-tri-sota-constrained-eval
+      - upstream: exp1975-eorm-cot-verification
         artifact_field: success
         op: "=="
         value: true
     prompt: |
-      CONTEXT: Today is {date}. Workspace is {project_root}. Execute the mandatory E2E test plan enforcing end-to-end integration of all structural and routing changes for the .153 milestone.
-      EXISTING CODE TO READ FIRST: ops/e2e-test-plan.md
-      TASK: Run comprehensive Tri-SOTA E2E tests enforcing our mandatory guidelines.
+      CONTEXT: Today is {date}. Workspace is {project_root}. Test the unified energy verification pipeline on the mandated local SOTA models.
+      EXISTING CODE TO READ FIRST: tests/python/test_logic.py
+      TASK: Run Tri-SOTA evals utilizing EORM and EBT for reasoning trace reranking.
       MODEL_SPECS: unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, unsloth/gemma-4-26B-A4B-it-GGUF
       CONCRETE STEPS:
-      1. Integrate NCO, TruncProof, IGD samplers, and Routing without Forgetting modules into the combined pipeline.
-      2. Run the established E2E verification test suite (`ops/e2e-test-plan.md`).
-      3. Measure full-stack regression metrics ensuring `acceptance_authority_unchanged=true`.
+      1. Use SOTA GGUFs to generate varied solution paths.
+      2. Filter and rerank the traces using EORM and EBT scores.
+      3. Track `pairwise_delta_over_energy` and constraint preservation.
       4. Write the results artifact.
 
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp1967-milestone-153-pre-retro-audit
-    milestone: "2026.05.153"
-    title: "Exp 1967: Milestone .153 Pre-Retro Audit"
-    deliverable: "results/experiment_1967_milestone_153_pre_retro_audit.json"
-    max_turns: 20
+  - id: exp1978-deepsade-continuous-learning
+    milestone: "2026.05.154"
+    title: "Exp 1978: DeepSaDe Provable Continuous Learning"
+    deliverable: "results/experiment_1978_deepsade_continuous_learning.json"
+    agent_type: "gemini"
     prompt: |
-      CONTEXT: Today is {date}. Workspace is {project_root}. Prepare metadata and trace ledgers before the milestone retrospective.
-      EXISTING CODE TO READ FIRST: ops/status.md and ops/changelog.md
-      TASK: Run the pre-retro artifact audit.
+      CONTEXT: Today is {date}. Workspace is {project_root}. Integrate DeepSaDe provable guarantees into Carnot's FR-11 continuous self-learning loop.
+      EXISTING CODE TO READ FIRST: python/carnot/training/online.py
+      TASK: Upgrade FR-11 with MaxSMT constraints to prevent forgetting.
       CONCRETE STEPS:
-      1. Aggregate all artifact results from exp1956 through exp1966.
-      2. Check for missing result files or violated gates.
-      3. Verify logprobs, artifact formatting, and deterministic check compliance.
-      4. Write the pre-retro summary artifact.
+      1. Wire the DeepSaDe verification layers into the online update cycle.
+      2. Execute policy updates ensuring previous commitments strictly validate.
+      3. Assert `soundness_mistakes=0` and `completeness_mistakes=0` post-update.
+      4. Write the results artifact.
 
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp1968-milestone-153-retro
-    milestone: "2026.05.153"
-    title: "Exp 1968: Milestone .153 Retrospective"
-    deliverable: "results/experiment_1968_milestone_153_retro.json"
+  - id: exp1979-tri-sota-e2e-v9
+    milestone: "2026.05.154"
+    title: "Exp 1979: Tri-SOTA E2E Integration v9"
+    deliverable: "results/experiment_1979_tri_sota_e2e_v9.json"
+    gated_on:
+      - upstream: exp1977-tri-sota-eorm-ebt
+        artifact_field: success
+        op: "=="
+        value: true
+    prompt: |
+      CONTEXT: Today is {date}. Workspace is {project_root}. Execute the mandatory E2E test plan enforcing end-to-end integration for the .154 milestone.
+      EXISTING CODE TO READ FIRST: ops/e2e-test-plan.md
+      TASK: Run comprehensive E2E integration validation.
+      MODEL_SPECS: unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, unsloth/gemma-4-26B-A4B-it-GGUF
+      CONCRETE STEPS:
+      1. Assemble COLD, DOMINO, RUN-CSP, and DeepSaDe into the unified testbed.
+      2. Verify all features against the E2E verification test suite (`ops/e2e-test-plan.md`).
+      3. Verify cross-language bindings and structural coherency.
+      4. Write the results artifact ensuring `acceptance_authority_unchanged=true`.
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1980-milestone-154-pre-retro
+    milestone: "2026.05.154"
+    title: "Exp 1980: Milestone .154 Pre-Retro Audit"
+    deliverable: "results/experiment_1980_milestone_154_pre_retro.json"
+    max_turns: 20
+    prompt: |
+      CONTEXT: Today is {date}. Workspace is {project_root}. Pre-retro artifact audit.
+      EXISTING CODE TO READ FIRST: ops/status.md and ops/changelog.md
+      TASK: Audit the .154 artifacts.
+      CONCRETE STEPS:
+      1. Confirm deliverables for Exp 1969 through 1979 exist.
+      2. Validate artifact formatting, logprobs, and zero-false-accept bounds.
+      3. Write the pre-retro summary artifact.
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1981-milestone-154-retro
+    milestone: "2026.05.154"
+    title: "Exp 1981: Milestone .154 Retrospective"
+    deliverable: "results/experiment_1981_milestone_154_retro.json"
     max_turns: 50
     agent_type: "claude"
     prompt: |
-      CONTEXT: Today is {date}. Workspace is {project_root}. Conduct the final .153 milestone retrospective, formulating conclusions on negative constraints, flow sampling, and continual routing.
-      EXISTING CODE TO READ FIRST: ops/changelog.md and ops/status.md
-      TASK: Produce the comprehensive milestone retrospective.
+      CONTEXT: Today is {date}. Workspace is {project_root}. Conduct the .154 milestone retrospective, concluding our evaluation of Energy-Based continuous reasoning and neural solvers.
+      EXISTING CODE TO READ FIRST: ops/status.md and ops/changelog.md
+      TASK: Produce the retrospective analysis.
       CONCRETE STEPS:
-      1. Analyze the aggregated pre-retro data.
-      2. Record completed, blocked, and failed task metrics.
-      3. Formulate recommendations for the .154 milestone.
-      4. Write the final results artifact.
+      1. Analyze data from the pre-retro phase.
+      2. Detail successes in DeepSaDe guarantees, RUN-CSP integration, and COLD decoding.
+      3. Draft constraints and priorities for .155.
+      4. Write the results artifact.
 
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
