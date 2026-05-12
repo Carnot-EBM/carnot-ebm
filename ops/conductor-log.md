@@ -2248,3 +2248,4 @@ IMPORTANT:
 | 2026-05-12 19:58 UTC | Milestone 2026.05.153 activated | OK | 13 tasks queued |
 | 2026-05-12 21:01 UTC | Exp 1956: NCO Plug-in for Negative Constraints | OK | 81 passed, 1 warning in 4.14s |
 | 2026-05-12 21:10 UTC | Exp 1957: TruncProof Token-Limited LL(1) Parsing | OK | 81 passed, 1 warning in 5.39s |
+| 2026-05-12 21:17 UTC | Exp 1958: GCoT-Decoding Reasoning Paths | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1958_gcot_br |
