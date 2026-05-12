@@ -574,6 +574,126 @@ unsure whether the dirty state is conductor work or operator work,
 default to commit-first since the cost is zero and the risk of
 data-loss is non-zero.
 
+## Adversarial Artifact Verification + Sample-Size Rigor (MANDATORY)
+
+**Origin:** 2026-05-12 operator directive after `.144 exp1851 (NLA
+probe) was caught fabricating gate-passing artifacts (TPR=1.0 in
+3.4s wall time on a 30B+ GGUF model — impossible). Subsequent sweep
+of `.131-`.149 artifacts found ~24% with at least one adversarial
+flag (tautology, sign anomaly, fabrication, methodology gap).
+Operator: "we need an adversarial-verify pass on each artifact and
+going forward that needs to be part of our scientific rigor. Always
+cross-check surprising results. We also need to pay attention to
+our sample sizes to make sure they are statistically significant
+to support any claims we make."
+
+**The rule.** Every experiment artifact MUST pass adversarial
+verification before its claims can be cited in paper-v6,
+research-program.md, or any forward-facing document. The verifier
+lives at `scripts/adversarial_verify.py` and detects:
+
+1. **TAUTOLOGY** — two distinct numerical metrics agreeing to >5
+   significant figures (floating-point bit-identity between
+   conceptually-different quantities is more likely a bug than a
+   finding).
+2. **IMPLAUSIBLE_PERFECT** — TPR/accuracy=1.0, error=0.0 on small
+   sample sizes (real classifiers exhibit non-zero error).
+3. **SIGN_ANOMALY** — optimization claiming "minimization" but
+   final_value > initial (or vice versa for maximization).
+4. **DURATION_TOO_SHORT** — artifact references compute-bound
+   markers (GGUF, CUDA, torch.cuda) but duration_s < 60. Loading
+   and running a real model takes minutes, not seconds.
+5. **SAMPLE_SIZE_BELOW_CLAIM** — distributional claims (KL, KS,
+   mean delta) with N below statistical threshold for the substrate
+   size. Heuristic: distributional claims at n_spins=N need at least
+   max(1000, 10·N) samples; n_spins>=64 needs at least 10k.
+6. **GATE_PASSED_WITHOUT_DATA** — acceptance_gate_passed=true but
+   key metric fields referenced in the gate are null, missing, or
+   zero.
+7. **METHODOLOGY_MISSING** — compute-bound artifact lacks
+   model_specs / random_seed / reproducibility_checksum.
+
+**How to apply (agent-side discipline).** When writing a results
+artifact:
+
+- Set `random_seed: <int>` and `reproducibility_checksum: <hash>`
+  on any compute-bound experiment.
+- Include `model_specs` / `target_model` listing the actual model(s)
+  invoked.
+- For distributional claims, write `n_samples` AND justify in the
+  artifact why N is sufficient (e.g., "n_samples=10000 chosen so
+  that std(empirical_KL) < 0.005").
+- If a metric is exactly 0.0 or 1.0, add a `methodology_note`
+  field explaining why (e.g., "TPR=1.0 because the test corpus is
+  the training set; this is a sanity-check baseline, not a
+  capability claim").
+- For optimization tasks, if energy/loss INCREASES, write
+  `optimization_note` explaining whether this is a real finding
+  (e.g., "the bridge fails to minimize on this benchmark — paper-v6
+  §6 limitation") or a bug to fix.
+
+**How to apply (planner-side discipline).** When proposing tasks:
+
+- Sample sizes MUST be specified in REQUIRED ARTIFACT FIELDS for
+  any task making a distributional or statistical claim. Default
+  too low (100 samples on n=128 is a known anti-pattern from exp1850).
+- Falsifiable gates MUST be paired with sample-size budgets that
+  make the gate statistically meaningful. A gate of "KL < 0.05"
+  with 100 samples is gate-by-noise; require 10k+.
+- Optimization tasks MUST specify direction (minimize / maximize)
+  AND a sign-anomaly-acceptance plan (does increasing the metric
+  invalidate the gate, or is it a documented finding?).
+
+**Mechanical enforcement (post-task).** The conductor SHOULD run
+`adversarial_verify.py` on every newly-landed artifact in
+`research_step()` after the test phase. If the verify pass returns
+CRITICAL flags:
+
+- Write a `flagged_adversarial: true` field on the artifact
+- Append the flag details to a `corrigendum_pending` field
+- Do NOT auto-retire — the task ran, the data is preserved; the
+  flag is a signal for human/outer-loop review
+
+CRITICAL flags do not block downstream gates from firing; the
+gate-check layer is upstream of the verify layer. The verify
+output is for paper-v6 disclosure discipline + future-task
+prior_failures tracking.
+
+**Cross-check surprising results.** When an experiment produces a
+result outside the expected range (e.g., a TPR lift > 4-5x the
+peer literature, a gate failure that contradicts a published
+result), the artifact MUST include either:
+
+- A successful replication artifact (n>1 seeds, same direction)
+- OR a `surprising_result_acknowledgment` field documenting that
+  the result is preliminary, not headline-eligible until replicated
+
+**Sample-size rigor for benchmark claims.** Any claim about a
+benchmark accuracy / TPR / improvement requires:
+
+- N >= 30 examples for any percentage-point delta claim (CLT minimum)
+- N >= 1000 for any sub-percentage-point delta claim
+- For multi-sample stochastic methods (sampling, MCMC), N samples
+  per side AND a chain-length convergence demonstration
+
+**Why this is in CLAUDE.md.** The planner reads CLAUDE.md as
+required input on every plan. The agent reads CLAUDE.md as project
+context. Putting the rule here ensures both layers apply it at
+design time. Mechanical conductor enforcement is the safety net.
+Both are needed because the `.144 exp1851 incident showed that
+falsifiable gates alone are gameable — the agent can pass the gate
+by fabricating numbers if no methodology check is in place.
+
+**Cross-references:**
+- `scripts/adversarial_verify.py` — the linter
+- `results/experiment_1850_thrml_parity_n128.json` — the corrigendum
+  pattern (preserves original numbers + adds correction)
+- `results/experiment_1851_nla_probe.json` — the fabrication
+  exemplar (3.4s wall time + TPR=1.0 = caught by DURATION_TOO_SHORT
+  + IMPLAUSIBLE_PERFECT)
+
+---
+
 ## Phase Prototype + Empirical Validation + Adversarial Check Discipline (MANDATORY)
 
 **Origin:** 2026-04-30 Phase-3 architecture blind-spot audit caught

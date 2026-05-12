@@ -4740,6 +4740,58 @@ def _log_experiment_completion(task: dict, test_summary: str) -> None:
         _check_parity_tautology(task)
     except Exception as exc:
         logger.warning("Parity tautology check failed for %s: %s", task.get("id", "?"), exc)
+    # Adversarial-verify pass (2026-05-12 operator directive). Runs the
+    # adversarial_verify.py checks on the just-landed deliverable. If
+    # CRITICAL flags fire, append a `flagged_adversarial` corrigendum
+    # to the artifact so paper-v6 disclosure discipline + future
+    # prior_failures tracking can pick it up. Does NOT block the OK
+    # log_step — the data is preserved; the flag is a review signal.
+    try:
+        from pathlib import Path as _PathAV
+
+        deliverable_path_str = task.get("deliverable", "")
+        if deliverable_path_str:
+            deliverable_path = PROJECT_ROOT / deliverable_path_str
+            if deliverable_path.exists():
+                sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
+                from adversarial_verify import verify_artifact as _verify_artifact
+
+                report = _verify_artifact(deliverable_path)
+                flags = report.get("flags") or []
+                if flags:
+                    critical = [
+                        f for f in flags if f.get("severity") == "critical"
+                    ]
+                    if critical:
+                        logger.warning(
+                            "Adversarial-verify flagged %s with %d critical "
+                            "flag(s): %s",
+                            task.get("id", "?"),
+                            len(critical),
+                            ", ".join(f.get("kind", "?") for f in critical),
+                        )
+                        # Append flagged_adversarial field to the artifact
+                        # (preserving all original fields).
+                        try:
+                            with open(deliverable_path) as _af:
+                                art = json.load(_af)
+                            if isinstance(art, dict):
+                                art["flagged_adversarial"] = True
+                                art.setdefault("corrigendum_pending", []).extend(
+                                    flags
+                                )
+                                with open(deliverable_path, "w") as _af:
+                                    json.dump(art, _af, indent=2)
+                        except Exception as _e:
+                            logger.warning(
+                                "Could not annotate %s with adversarial flags: %s",
+                                deliverable_path.name,
+                                _e,
+                            )
+    except Exception as exc:
+        logger.warning(
+            "Adversarial-verify pass failed for %s: %s", task.get("id", "?"), exc
+        )
     log_step(task["title"], "OK", test_summary)
 
 
