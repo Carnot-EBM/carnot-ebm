@@ -5590,3 +5590,4 @@ Completed 15 experiments in 28.9 minutes. There were 0 compute-bound experiments
 - 2026-05-12: Exp 1934: ConsFormer Iterative Refinement Loop (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_1934_consformer_refinement.json
 - 2026-05-12: Exp 1935: Continuous Latent Sampler Prototype (FAR) (✅ Complete) — honest_verdict=complete: FAR-surrogate sampler prototype implemented, all tests pass (16/16), 100% coverage on new module, benchmark shows 1.15x speedup over Langevin at 44.5% surrogate skip rate; results/experiment_1935_continuous_latent_sampler.json
 - 2026-05-12: Exp 1938: NRGPT Energy-Based Loss Probe (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_1938_nrgpt_loss_probe.json
+- 2026-05-12: Exp 1941: EBT Reasoning Bridge (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_1941_ebt_reasoning_bridge.json
