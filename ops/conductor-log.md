@@ -2218,3 +2218,4 @@ IMPORTANT:
 | 2026-05-12 18:27 UTC | Plan milestone 2026.05.152 | OK | 12 tasks proposed |
 | 2026-05-12 18:29 UTC | Milestone 2026.05.152 activated | OK | 12 tasks queued |
 | 2026-05-12 18:31 UTC | Exp 1944: HardNet++ Differentiable Projection Inte | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-12 18:33 UTC | Exp 1944: HardNet++ Differentiable Projection Inte | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
