@@ -2291,3 +2291,4 @@ IMPORTANT:
 | 2026-05-12 23:40 UTC | Exp 1976: Energy-Based Transformer Prototype | OK | 81 passed, 1 warning in 4.59s |
 | 2026-05-12 23:42 UTC | Exp 1977: Tri-SOTA Constrained Eval with EORM/EBT | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1975-eorm-cot-verification.success (act |
 | 2026-05-12 23:44 UTC | Exp 1977: Tri-SOTA Constrained Eval with EORM/EBT | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1975-eorm-cot-verification.success (act |
+| 2026-05-12 23:46 UTC | Exp 1977: Tri-SOTA Constrained Eval with EORM/EBT | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1975-eorm-cot-verification.success (act |
