@@ -3217,3 +3217,12 @@ Spec: REQ-RETRO-1811
 **Then** it writes `experiment_1811_retro.json` with an aggregated view of the Phase-16 milestone.
 
 Spec: SCENARIO-RETRO-1811
+
+### REQ-AUTO-1904: Activation Contract for Milestone 2026.05.149
+The system shall generate an activation contract for Milestone 2026.05.149 that explicitly asserts baseline readiness states as false.
+The required fields are: status, honest_verdict, milestone_148_archived, live_sota_blocked_missing_models, telemetry_missing_terminal_artifact, next_gate_contract_ready, and tests_run.
+
+### SCENARIO-AUTO-1904: Activation Contract Validation
+**Given** the artifact generator for experiment 1904
+**When** the activation contract is produced
+**Then** all required baseline readiness fields are present and initialized appropriately.
