@@ -2746,3 +2746,18 @@ When the topological verifier evaluates the constraint graph,
 Then it identifies invalid combinations via negative Forman-Ricci curvature,
 and projects them to the feasible manifold using Deep Delta Learning,
 and records the results in the experiment JSON artifact.
+
+### REQ-VERIFY-1952: GNN Benchmarking Audit against Z3/SAT baselines
+The repository shall provide an audit pipeline that:
+- Generates 100 hard 3-SAT constraint networks near the phase transition threshold.
+- Runs the internal continuous solver vs Z3 execution time and success rate.
+- Synthesizes the findings into an objective performance gap report.
+- Writes `results/experiment_1952_gnn_benchmarking_audit.json` with the required fields.
+
+### SCENARIO-VERIFY-1952: Performance Gap is Reported
+Given 100 hard 3-SAT networks near the phase transition threshold,
+When the internal solver and Z3 are executed,
+Then execution time and success rate are compared,
+And an objective performance gap report is synthesized,
+And the JSON artifact is written with all fields populated.
+
