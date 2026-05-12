@@ -230,4 +230,34 @@ Sub-requirements:
 **And** it verifies semantic retention
 **And** it writes a valid JSON artifact with acceleration metrics, showing NI Sampling completes its task.
 
+### REQ-SAMPLE-1972: Unsupervised RUN-CSP Network Solver
+
+Carnot MUST provide a CPU-only RUN-CSP-style solver for binary constraint
+satisfaction problems that maps validator graphs into bipartite
+variable-constraint message passing, trains without labels using Carnot's
+energy as the loss, and evaluates scale generalization.
+
+Sub-requirements:
+- REQ-SAMPLE-1972-1: The solver SHALL expose a graph representation for binary
+  variables, pairwise binary constraints, and an energy callback compatible with
+  Carnot validator energy functions.
+- REQ-SAMPLE-1972-2: The solver SHALL perform iterative message passing from
+  constraints to variables and train unsupervised by minimizing the supplied
+  energy function over continuous Bernoulli probabilities.
+- REQ-SAMPLE-1972-3: Experiment 1972 SHALL train on a 40-variable problem graph,
+  evaluate the same learned message-passing parameters on 40-variable and
+  1000-variable graphs, and write
+  `results/experiment_1972_run_csp_unsupervised.json`.
+- REQ-SAMPLE-1972-4: The artifact SHALL include graph metadata, training
+  history, per-scale energy and satisfaction metrics, CPU-only execution flags,
+  and an honest verdict.
+
+### SCENARIO-SAMPLE-1972: RUN-CSP Unsupervised Generalization Artifact
+
+**Given** the Exp 1972 RUN-CSP experiment runner
+**When** it trains on the deterministic 40-variable binary-CSP graph and
+evaluates on both 40-variable and 1000-variable graphs
+**Then** it writes a terminal JSON artifact with the learned configuration,
+training history, per-scale energy metrics, and satisfaction rates
+**And** the run uses no labels, GPU, network, or hardware backends.
 
