@@ -2271,3 +2271,4 @@ IMPORTANT:
 | 2026-05-12 22:26 UTC | Exp 1966: Tri-SOTA E2E Integration v8 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1959-tri-sota-constrained-eval) |
 | 2026-05-12 22:31 UTC | Exp 1967: Milestone .153 Pre-Retro Audit | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1967_milesto |
 | 2026-05-12 22:33 UTC | Exp 1966: Tri-SOTA E2E Integration v8 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1959-tri-sota-constrained-eval) |
+| 2026-05-12 22:37 UTC | Exp 1967: Milestone .153 Pre-Retro Audit | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1967_milesto |
