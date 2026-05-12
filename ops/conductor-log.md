@@ -2156,3 +2156,4 @@ IMPORTANT:
 | 2026-05-12 15:19 UTC | Exp 1916: Integrated Tri-SOTA E2E v3 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1905-sota-gguf-cache-runtime-preflight-v3 |
 | 2026-05-12 15:20 UTC | Milestone 2026.05.150 activated | OK | 14 tasks queued |
 | 2026-05-12 15:22 UTC | Exp 1918: SOTA Cache Recovery and Preflight v4 | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-12 15:24 UTC | Exp 1918: SOTA Cache Recovery and Preflight v4 | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
