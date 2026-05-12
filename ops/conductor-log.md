@@ -2145,3 +2145,6 @@ IMPORTANT:
 | 2026-05-12 14:46 UTC | Exp 1913: Hard CSP and Neural Solver Reality Check | FAIL | Gemini CLI error: u finish the real work inside 10 minutes, that is correct an |
 | 2026-05-12 14:48 UTC | Exp 1914: Corrected THRML/Carnot Parity Methodolog | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-12 14:50 UTC | Exp 1914: Corrected THRML/Carnot Parity Methodolog | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-12 14:52 UTC | Exp 1914: Corrected THRML/Carnot Parity Methodolog | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-12 14:54 UTC | Exp 1915: p-bit/p-dit Ising Sampler Accounting v2 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1913-hard-csp-neural-preconditioning-chec |
+| 2026-05-12 14:54 UTC | Exp 1916: Integrated Tri-SOTA E2E v3 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1905-sota-gguf-cache-runtime-preflight-v3 |
