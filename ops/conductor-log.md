@@ -2142,3 +2142,4 @@ IMPORTANT:
 | 2026-05-12 14:43 UTC | Exp 1910: Routing without Forgetting FR-11 Audit v | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1909-residual-drift-validator-ledger-v3) |
 | 2026-05-12 14:43 UTC | Exp 1911: SOTA FR-11 Promotion Smoke v3 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1905-sota-gguf-cache-runtime-preflight-v3 |
 | 2026-05-12 14:43 UTC | Exp 1913: Hard CSP and Neural Solver Reality Check | FAIL | Gemini CLI error: u finish the real work inside 10 minutes, that is correct an |
+| 2026-05-12 14:46 UTC | Exp 1913: Hard CSP and Neural Solver Reality Check | FAIL | Gemini CLI error: u finish the real work inside 10 minutes, that is correct an |
