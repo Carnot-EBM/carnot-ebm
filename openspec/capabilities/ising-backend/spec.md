@@ -631,3 +631,22 @@ instance and a bounded CPU solver configuration, Exp 1927 SHALL write
 `results/experiment_1927_hard_csp_neural.json`, report the direct
 clause-satisfaction rate achieved within the allotted wall-clock budget, and
 avoid any hardware execution claim.
+
+### REQ-ISING-045
+
+**p-bit/p-dit Ising Sampler Accounting v3 MUST extend the CPU Ising sampler to support hardware-accurate p-bit/p-dit states and measure latency/accuracy.**
+
+**Rationale:**
+To accurately account for hardware p-bit and p-dit implementations before running on actual hardware, the CPU Ising sampler must simulate p-bit states. This allows tracking the latency overhead and accuracy changes against the standard Ising sampler.
+
+**Acceptance criteria:**
+- Extend the Ising sampler to support hardware-accurate p-bit/p-dit states.
+- Measure the latency and accuracy changes compared to the baseline sampler.
+- Write the output artifact to `results/experiment_1929_p_bit_ising_v3.json`.
+- The artifact SHALL contain `status`, `experiment_id`, `latency_change_ms`, `accuracy_change`, `p_bit_supported`, `hardware_execution_performed` (false), `honest_verdict`.
+
+**Implementation:** `python/carnot/samplers/parallel_ising.py`
+
+### SCENARIO-ISING-045
+
+**p-bit Ising Sampler v3 artifact:** Given the implementation of p-bit states in the Ising sampler, Exp 1929 SHALL measure latency and accuracy changes, write `results/experiment_1929_p_bit_ising_v3.json`, and keep `hardware_execution_performed=false`.
