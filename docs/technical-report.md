@@ -5336,10 +5336,19 @@ not a new speedup claim; it is subspan timing for activation/retro tasks plus
 GPU/model-count telemetry before the retrospective runs.
 
 
-### 4.9 Recent Additions (Milestones .148 and .149)
+### 4.9 Recent Additions (Milestones .148, .149, and .150)
 
 **Non-Autoregressive Constraint Interface Audit**  
 Experiment 1912 confirmed that existing validators can be safely wrapped with DummyEnergyExtractionProxy to yield Glauber/Diffusion loop metadata, demonstrating complete compatibility with continuous latent scoring.
 
 **Probability Calibration Verifier**  
 Experiment 1414 implemented an opt-in verifier that scores explicit probability claims against simple reference-class evidence.
+
+**Continuous Latent Sampler Prototype (FAR)**  
+Experiment 1935 successfully implemented a surrogate-backed continuous latent sampler, achieving a 1.15x speedup over Langevin at a 44.5% surrogate skip rate.
+
+**Hard CSP and Neural Solver Integration**  
+Experiment 1927 delivered a reality check demonstrating the neural solver found satisfying assignments on CPU effectively, while Experiment 1926 integrated S2KAN symbolic fidelity constraints.
+
+**Integrated Tri-SOTA E2E v5**  
+Experiment 1942 successfully executed the tri-sota e2e pipeline, confirming stability of the orchestrator across multiple advanced model tiers.

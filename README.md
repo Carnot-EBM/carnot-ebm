@@ -497,10 +497,10 @@ experiment artifact under `results/`.
 | Live SOTA ROCE validator evaluation | **Blocked** before inference because mandated `unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF` were unavailable; no headline accuracy claimed | Exp 1880 |
 | Milestone .147 closeout | **5/14** tasks completed, **9** blocked or missing artifacts; prompt-to-validator work is partial and telemetry, FR-11, and hardware-accounting gates are not ready | Exp 1889 |
 | Milestone .148 closeout | **1** non-retro task completed, **2** blocked artifacts written, **6** gate-skipped scopes retired, and **4** unexpected missing-artifact failures; SOTA cache/runtime gap unresolved and .147's **11%** speedup target not proven | Exp 1917 |
-| Milestone .148 operational retrospective | **112.1 min** across **10** experiments with **1** compute-bound task; Exp 1890 took **41.3 min**, Exp 1917 took **39.5 min**, and no compute-bound GPU-idle flag was supported | operational_retro_2026_05_148 |
+| Milestone .150 operational retrospective | **63.7 min** across **21** experiments. Slowest path: Exp 1927 (19 min). All 21 tasks synthesis-only, GPUs correctly idled | Exp 1943 |
 | Pi-net Projection & ConsFormer | Prototyped Pi-net style differentiable projection layer for continuous latents and a ConsFormer-style refiner | Exps 1633-1635 |
 | SMGI & Energy-Guided Decoding | Integrated SMGI certified update logic and implemented EGD using mandated SOTA GGUFs | Exps 1631/1636 |
-| Current Python test collection | **24,268** Python tests collected in the latest broad attempt; collection-only snapshot, not a full-suite pass claim | Exp 1917, 2026-05-12 |
+| Current Python test collection | **24,316** Python tests collected in the latest broad attempt; collection-only snapshot, not a full-suite pass claim | Exp 1943, 2026-05-12 |
 | Local Claude/Codex usage snapshot | Codex reads the newest local `token_count` event; Claude aggregates local token usage and reads only subscription/tier metadata from credentials; free-form quota prose is ignored instead of guessed; focused regression tests pass | 2026-05-04 changelog |
 
 Deeper analysis of these — including everything that **didn't** work and
@@ -943,6 +943,11 @@ Papers and resources that have informed Carnot's design and direction.
 | `per-token-ebm-qwen35-9b-nothink` | 85.8% | Qwen3.5-9B | |
 | `per-token-ebm-qwen35-35b-nothink` | 84.5% | Qwen3.5-35B-A3B | MoE, 256 experts |
 | ... | 73-84% | 11 more models | See HuggingFace |
+
+## License
+
+Apache 2.0 — see [LICENSE](LICENSE).
+s | See HuggingFace |
 
 ## License
 

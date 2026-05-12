@@ -2214,3 +2214,4 @@ IMPORTANT:
 | 2026-05-12 17:54 UTC | Exp 1940: ROCE Compilation v2 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1933-type-constrained-generation) |
 | 2026-05-12 18:06 UTC | Exp 1942: Integrated Tri-SOTA E2E v5 | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: tion true can lead  |
 | 2026-05-12 18:10 UTC | Exp 1942: Integrated Tri-SOTA E2E v5 | OK | 81 passed, 1 warning in 4.43s |
+| 2026-05-12 18:15 UTC | Exp 1943: Milestone .151 Retrospective | OK | 81 passed, 1 warning in 5.80s |
