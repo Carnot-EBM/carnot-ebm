@@ -1974,3 +1974,4 @@ IMPORTANT:
 | 2026-05-12 07:14 UTC | Exp 1895: Residual Drift Validator Ledger | FAIL | Codex CLI error: you finish the real work inside 10 minutes, that is correct  |
 | 2026-05-12 07:16 UTC | Exp 1895: Residual Drift Validator Ledger | FAIL | Codex CLI error: you finish the real work inside 10 minutes, that is correct  |
 | 2026-05-12 07:19 UTC | Exp 1896: FR-11 Validator-Tree Promotion Ledger v2 | FAIL | Codex CLI error: you finish the real work inside 10 minutes, that is correct  |
+| 2026-05-12 07:21 UTC | Exp 1896: FR-11 Validator-Tree Promotion Ledger v2 | FAIL | Codex CLI error: you finish the real work inside 10 minutes, that is correct  |
