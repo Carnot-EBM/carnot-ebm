@@ -331,3 +331,52 @@ class TestEBTransformer:
         e_b = model_b.energy(tokens)
         # Different random init should give different energies
         assert not jnp.isclose(e_a, e_b, atol=1e-6)
+
+    def test_energy_from_embeddings(self) -> None:
+        """SCENARIO-EBT-003: energy_from_embeddings matches energy with exact lookups."""
+        config = self._small_config()
+        model = EBTransformer(config, key=jrandom.PRNGKey(42))
+        tokens = jnp.array([1.0, 5.0, 10.0])
+        e_discrete = model.energy(tokens)
+
+        # Do equivalent lookup manually
+        token_ids = jnp.clip(jnp.round(tokens).astype(jnp.int32), 0, config.vocab_size - 1)
+        embeddings = model.token_embeddings[token_ids]
+        e_continuous = model.energy_from_embeddings(embeddings)
+        
+        assert jnp.isclose(e_discrete, e_continuous, atol=1e-5)
+
+    def test_refine_embeddings_reduces_energy(self) -> None:
+        """SCENARIO-EBT-003: Gradient descent loop minimizes energy."""
+        config = self._small_config()
+        model = EBTransformer(config, key=jrandom.PRNGKey(42))
+        
+        # Create some random input and candidate embeddings
+        key1, key2 = jrandom.split(jrandom.PRNGKey(100))
+        input_emb = jrandom.normal(key1, (3, config.d_model))
+        candidate_emb = jrandom.normal(key2, (2, config.d_model))
+        
+        # Calculate initial energy
+        initial_seq = jnp.concatenate([input_emb, candidate_emb], axis=0)
+        initial_energy = model.energy_from_embeddings(initial_seq)
+        
+        # Refine embeddings
+        refined_emb = model.refine_embeddings(input_emb, candidate_emb, steps=20, lr=0.05)
+        
+        # Calculate final energy
+        final_seq = jnp.concatenate([input_emb, refined_emb], axis=0)
+        final_energy = model.energy_from_embeddings(final_seq)
+        
+        assert final_energy < initial_energy
+
+    def test_refine_embeddings_shape(self) -> None:
+        """SCENARIO-EBT-003: Refine embeddings preserves shape."""
+        config = self._small_config()
+        model = EBTransformer(config, key=jrandom.PRNGKey(42))
+        
+        input_emb = jnp.ones((3, config.d_model))
+        candidate_emb = jnp.zeros((2, config.d_model))
+        
+        refined_emb = model.refine_embeddings(input_emb, candidate_emb, steps=5, lr=0.01)
+        
+        assert refined_emb.shape == candidate_emb.shape
