@@ -212,3 +212,22 @@ Sub-requirements:
 **Then** it successfully runs the conditional denoising forward and reverse steps
 **And** it writes a valid JSON artifact with the KL divergence metric.
 
+### REQ-SAMPLE-1962: Neural Indicator Sampling (NI Sampling)
+
+Carnot MUST provide a Neural Indicator (NI) Sampling approach inside `python/carnot/inference/samplers.py` that accelerates discrete diffusion by optimizing token resolution order based on an energy-based indicator step.
+
+Sub-requirements:
+- REQ-SAMPLE-1962-1: The module SHALL provide an `NISampler` class that incorporates an energy-based indicator step to dynamically determine which tokens to denoise first.
+- REQ-SAMPLE-1962-2: A benchmark script `scripts/experiment_1962_ni_sampling_token_order.py` SHALL measure the wall-clock acceleration of NI Sampling against a random-order discrete diffusion baseline.
+- REQ-SAMPLE-1962-3: The script SHALL verify structural semantic retention over benchmark traces by ensuring both samplers converge to valid denoised sequences.
+- REQ-SAMPLE-1962-4: The script SHALL write the results artifact to `results/experiment_1962_ni_sampling_token_order.json`.
+
+### SCENARIO-SAMPLE-1962: Neural Indicator Sampling Wall-Clock Acceleration
+
+**Given** the Exp 1962 NI Sampling script
+**When** it is executed
+**Then** it successfully runs both `NISampler` and the random baseline
+**And** it verifies semantic retention
+**And** it writes a valid JSON artifact with acceleration metrics, showing NI Sampling completes its task.
+
+
