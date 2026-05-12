@@ -5578,3 +5578,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 
 ## Milestone 2026.05.149
 Completed 15 experiments in 28.9 minutes. There were 0 compute-bound experiments, correctly leaving the GPUs idle. The slowest task was the 6.3-minute synthesis-only retrospective. Doomed-rerun and pre-gate blocks saved time successfully.
+- 2026-05-12: Exp 1925: Energy-Based Transformer Gradient Minimization Loop (⚠️ Research Finding) — honest_verdict=success; results/experiment_1925_ebt_gradient_loop.json
