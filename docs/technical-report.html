@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Technical Report - A Technical Report — 2227 Experiments Across the Public Record, 161 Archived Milestone Records, 24,251 Python Test Items Collected (Artifacts Tracked Through Exp 1903)</title>
-  <meta name="description" content="Carnot technical report: A Technical Report — 2227 Experiments Across the Public Record, 161 Archived Milestone Records, 24,251 Python Test Items Collected (Artifacts Tracked Through Exp 1903). Live GPU benchmarks with statistical confidence intervals, honest negative results, and a public experiment history with provenance labels for every headline claim.">
+  <title>Technical Report - A Technical Report — 2,227 Experiments Across the Public Record, 161 Archived Milestone Records, 24,251 Python Test Items Collected (Results and Ops Retros Through Exp 1903)</title>
+  <meta name="description" content="Carnot technical report: A Technical Report — 2,227 Experiments Across the Public Record, 161 Archived Milestone Records, 24,251 Python Test Items Collected (Results and Ops Retros Through Exp 1903). Live GPU benchmarks with statistical confidence intervals, honest negative results, and a public experiment history with provenance labels for every headline claim.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M30,50 Q30,20 50,20 Q70,20 70,50 Q70,80 50,80 Q30,80 30,50' fill='none' stroke='%23f97316' stroke-width='8'/><circle cx='50' cy='50' r='10' fill='%23f97316'/></svg>">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -160,7 +160,7 @@
 
 <article>
 <h1 id="carnot-energy-based-verification-for-llm-output">Carnot: Energy-Based Verification for LLM Output</h1>
-<h2 id="a-technical-report-2227-experiments-across-the-public-record-161-archived-milestone-records-24251-python-test-items-collected-artifacts-tracked-through-exp-1903">A Technical Report — 2227 Experiments Across the Public Record, 161 Archived Milestone Records, 24,251 Python Test Items Collected (Artifacts Tracked Through Exp 1903)</h2>
+<h2 id="a-technical-report-2227-experiments-across-the-public-record-161-archived-milestone-records-24251-python-test-items-collected-results-and-ops-retros-through-exp-1903">A Technical Report — 2,227 Experiments Across the Public Record, 161 Archived Milestone Records, 24,251 Python Test Items Collected (Results and Ops Retros Through Exp 1903)</h2>
 <p><strong>Author:</strong> Ian Blenke
 <strong>Date:</strong> 2026-05-12
 <strong>Repository:</strong> github.com/Carnot-EBM/carnot-ebm
@@ -195,6 +195,10 @@ and <code>ops/changelog.md</code> now extend through
 scopes, and left <strong>4</strong> unexpected missing-artifact failures; the SOTA
 cache/runtime gap is unresolved and the .147 <strong>11%</strong> same-title
 compute-dedupe speedup target is not yet proven.
+The .148 operational retrospective then measured <strong>112.1</strong> minutes across
+<strong>10</strong> experiments with <strong>1</strong> compute-bound task: Exp 1890 took <strong>41.3</strong>
+minutes, Exp 1903 took <strong>39.5</strong> minutes, a repeated Exp 1894 pre-gate block
+took <strong>21.3</strong> minutes, and GPU idle was not flagged on the compute-bound path.
 The story now spans activation-based negative results, constraint-based
 verification, live SOTA-model benchmarks, production verifier ensembles,
 hardware sampler audits, continuous self-learning, Phase-5 in-situ training
@@ -6637,6 +6641,14 @@ artifacts, <strong>6</strong> retired gate-skipped scopes, and <strong>4</strong
 tasks. The SOTA cache/runtime gap is not resolved. The .147 operational target
 of <strong>11%</strong> savings from same-title compute-bound dedupe was not proven, although
 downstream live-evaluation reruns were gate-skipped rather than relaunched.</p>
+<p><strong>Operational retrospective</strong></p>
+<p><code>results/operational_retro_2026_05_148.json</code> analyzed <strong>112.1</strong> minutes across
+<strong>10</strong> experiments with <strong>1</strong> compute-bound entry. The slowest measured path was
+Exp 1890 at <strong>41.3</strong> minutes, followed by Exp 1903 at <strong>39.5</strong> minutes and a
+same-title Exp 1894 pre-gate block at <strong>21.3</strong> minutes. The locked retro field
+did not flag GPU idle on the compute-bound task. The next operations target is
+not a new speedup claim; it is subspan timing for activation/retro tasks plus
+GPU/model-count telemetry before the retrospective runs.</p>
 </article>
 
 <footer>

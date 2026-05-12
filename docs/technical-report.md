@@ -1,6 +1,6 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report — 2227 Experiments Across the Public Record, 161 Archived Milestone Records, 24,251 Python Test Items Collected (Artifacts Tracked Through Exp 1903)
+## A Technical Report — 2,227 Experiments Across the Public Record, 161 Archived Milestone Records, 24,251 Python Test Items Collected (Results and Ops Retros Through Exp 1903)
 
 **Author:** Ian Blenke
 **Date:** 2026-05-12
@@ -41,6 +41,10 @@ and `ops/changelog.md` now extend through
 scopes, and left **4** unexpected missing-artifact failures; the SOTA
 cache/runtime gap is unresolved and the .147 **11%** same-title
 compute-dedupe speedup target is not yet proven.
+The .148 operational retrospective then measured **112.1** minutes across
+**10** experiments with **1** compute-bound task: Exp 1890 took **41.3**
+minutes, Exp 1903 took **39.5** minutes, a repeated Exp 1894 pre-gate block
+took **21.3** minutes, and GPU idle was not flagged on the compute-bound path.
 The story now spans activation-based negative results, constraint-based
 verification, live SOTA-model benchmarks, production verifier ensembles,
 hardware sampler audits, continuous self-learning, Phase-5 in-situ training
@@ -5320,3 +5324,13 @@ artifacts, **6** retired gate-skipped scopes, and **4** failed missing-artifact
 tasks. The SOTA cache/runtime gap is not resolved. The .147 operational target
 of **11%** savings from same-title compute-bound dedupe was not proven, although
 downstream live-evaluation reruns were gate-skipped rather than relaunched.
+
+**Operational retrospective**
+
+`results/operational_retro_2026_05_148.json` analyzed **112.1** minutes across
+**10** experiments with **1** compute-bound entry. The slowest measured path was
+Exp 1890 at **41.3** minutes, followed by Exp 1903 at **39.5** minutes and a
+same-title Exp 1894 pre-gate block at **21.3** minutes. The locked retro field
+did not flag GPU idle on the compute-bound task. The next operations target is
+not a new speedup claim; it is subspan timing for activation/retro tasks plus
+GPU/model-count telemetry before the retrospective runs.

@@ -1,149 +1,147 @@
-# Carnot Research Roadmap: Milestone 2026.05.148
+# Carnot Research Roadmap: Milestone 2026.05.149
 
 **Status:** PROPOSED
 **Doc Version:** vNEXT
-**Target:** SOTA runtime readiness, terminal telemetry artifacts, continuous self-learning ledgers, and hardware-accounted validator graphs
-**Supersedes:** Milestone 2026.05.147
+**Target:** terminal artifact recovery, corrected THRML parity, continuous self-learning promotion ledgers, and SOTA advisory telemetry under deterministic validators
+**Supersedes:** Milestone 2026.05.148
 **Execution queue:** `research-roadmap-next.yaml`
 
-## What Milestone 2026.05.147 Proved
+## What Milestone 2026.05.148 Proved
 
 | Area | Experiments | Finding |
 |---|---:|---|
-| Milestone contract | 1876 | The `.146` evidence could be archived into explicit downstream gate fields. This removed ambiguity around which evidence was usable. |
-| Artifact normalization | 1877 | ROCE/HILED outputs can be wrapped into standard schema-complete artifacts without modifying the conductor. |
-| Prompt-to-validator compilation | 1878 | ROCE constraints can compile to guarded Python/PySAT/Z3 validator-tree leaves with executable acceptance authority and zero false accepts on fixtures. |
-| Deterministic bounds | 1879 | BEAVER-lite bound rows can be attached to validator trees while leaving executable validators as the only acceptance authority. |
-| SOTA live path | 1880 | The live SOTA route blocked honestly because the mandated GGUF cache was incomplete: `unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF` were unavailable. |
-| Downstream tasks | 1881-1888 | Telemetry, repair, FR-11, graph preconditioning, hardware accounting, and integrated E2E were blocked or retired because terminal artifacts were missing or upstream gates did not satisfy the contract. |
-| Operations | 1889 | The retro found 5 completed tasks and 9 blocked tasks. The next speed target is about 11 percent through same-title compute-bound terminal-state dedupe and per-experiment GPU/model-count telemetry. |
+| Activation contract | 1890 | The `.147` evidence was archived into a usable `.148` contract. Validator-tree and BEAVER-lite substrate fields were marked ready. |
+| SOTA cache/runtime | 1891 | The mandated GGUF cache/runtime terminalizer failed before writing a terminal artifact. Live SOTA evidence remains unproven. |
+| Structured gate skip | 1894, 1901 | The conductor can write structured blocked artifacts when upstream gates fail. This should be used deliberately to avoid wasting synthesis calls. |
+| Residual drift, FR-11, graph preconditioning | 1895, 1896, 1899 | These tasks failed without artifacts after repeated Codex CLI/bootstrap failures. Their technical claims are still open. |
+| Downstream SOTA/hardware integration | 1892, 1893, 1897, 1898, 1900, 1902 | These tasks retired or gate-blocked because the cache/runtime, telemetry, FR-11, and hardware artifacts were missing. |
+| Retrospective | 1903 | `.148` ended with 1 completed task, 2 structured blocked artifacts, 6 retired tasks, and 4 failed tasks. The retro explicitly says SOTA speedup and cache readiness were not proven. |
 
-**Operational lesson:** `.147` validated the prompt-to-validator substrate, but not the live SOTA or continuous-learning claims. The next milestone should first prove local SOTA cache/runtime readiness and terminal telemetry artifacts, then use those gates to re-open repair, FR-11, and hardware-accounted integration.
+**Operational lesson:** `.148` was not a research failure in the validator math; it was an artifact-production failure. The next milestone must write terminal artifacts even on blocked outcomes, then gate every downstream experiment on fields emitted by the current roadmap rather than inferred from stale prior state.
 
 ## Three Biggest Gaps to PRD Vision
 
-1. **Local SOTA runtime/provenance gap:** PRD FR-12 requires verifiable reasoning over real model outputs. `.147` could not produce headline live rows because two mandated GGUFs were missing. Carnot needs a cache/materialization/runtime preflight with clear blocked artifacts before any live SOTA evaluation.
-2. **Terminal verifier telemetry and repair gap:** The validator tree and BEAVER-lite bounds exist, but downstream telemetry/repair did not leave usable terminal artifacts. Carnot needs first-token/spilled-energy telemetry and DCCD repair that are explicitly advisory and never acceptance authority.
-3. **FR-11 and hardware-accounted graph gap:** Continuous self-learning and hardware portability remain unproven for the new validator-tree substrate. Carnot needs a no-forgetting promotion ledger, a SOTA self-learning smoke only when gated, and no-synthesis accounting over actual validator graphs.
+1. **Terminal evidence/provenance gap:** PRD FR-12 requires verifiable reasoning over real model outputs. Carnot still lacks a terminal SOTA GGUF cache/runtime artifact, and without it every live-model experiment either retires or burns a synthesis call before blocking.
+2. **Validator-to-learning gap:** PRD FR-11 requires autonomous self-learning with no forgetting. Carnot has validator trees and deterministic bounds, but no terminal residual-drift ledger, promotion ledger, replay-retention gate, or rollback plan attached to that substrate.
+3. **Hardware and non-AR bridge gap:** The long-term PRD vision needs hardware-portable EBM reasoning and a path beyond left-to-right repair. Carnot has no corrected THRML parity at n=128, no no-synthesis accounting over current validator graphs, and no metadata interface for PVF/Glauber-style non-autoregressive samplers.
 
 ## External Findings Incorporated
 
-- **Residual Drift / DRIFT-Bench:** OpenReview ICLR 2026 workshop work shows that residual failures after solver-guided repair are mostly satisfiable drift rather than contradiction. Carnot should add a commitment ledger over validator-tree traces.
-- **Routing without Forgetting:** arXiv:2603.09576 suggests energy-based associative routing as a continual-learning primitive. Carnot should model FR-11 promotion as route/subspace selection with replay retention and rollback.
-- **HalluGuard / Spilled Energy / DCCD:** Recent hallucination telemetry and repair work can be useful as advisory evidence. Carnot should record these signals in artifacts but keep deterministic validators as the authority.
-- **llguidance / vLLM.rs / JSONSchemaBench:** Structured generation runtime work gives fallback implementation options, but the mandated GGUF models remain required for headline rows.
-- **p-dit / KAN / TSU / Kona signals:** Hardware directions are converging on energy/probabilistic sampling and constraint reasoning. Carnot should use them for accounting targets only, with no KV260/TSU/Kona execution claim.
+- **Corrected THRML parity:** `ops/known-issues.md` mandates re-running exp1850 as an inconclusive-methodology correction: Curie-Weiss or equivalent tractable n=128 substrate, analytic ground truth, 10k+ samples or convergence criterion, and gates calibrated to sample-size variance.
+- **Token-level telemetry:** Token-Guard, First Token Knows, and Spilled Energy show cheap token/logit signals are useful for hallucination triage. In Carnot they remain advisory telemetry only.
+- **Structure snowballing:** arXiv:2604.06066 warns that hard constrained decoding can preserve early semantic errors. DCCD/llguidance repair must measure false accepts and projection tax, not just JSON validity.
+- **PVF/Glauber text diffusion:** arXiv:2605.04291 and arXiv:2601.12247 motivate an interface audit where validator trees expose automata and energy metadata for future non-autoregressive samplers.
+- **Hard CSP benchmark caution:** arXiv:2602.18419 shows classical heuristics still outperform GNNs on hard CSP benchmarks. Graph preconditioning in `.149` is therefore framed as a measured convergence/accounting experiment, not a broad solver-superiority claim.
+- **Hardware status:** Extropic THRML/TSU and Logical Intelligence Kona public materials remain comparator architectures. `.149` makes no KV260, TSU, XTR-0/Z1, or Kona execution claim.
 
 ## Architecture
 
 ```mermaid
 flowchart TD
-    A[Mandated Local GGUF Cache] --> B[SOTA Runtime Preflight]
-    B --> C[ROCE Validator Tree + BEAVER-lite Bounds]
-    C --> D[Live SOTA Validator Evaluation]
-    B --> E[First-Token + Spilled-Energy Telemetry]
-    D --> F[DCCD / llguidance Repair]
-    E --> F
-    C --> G[Residual Drift Commitment Ledger]
-    C --> H[FR-11 Promotion Ledger]
-    H --> I[Routing without Forgetting Audit]
-    I --> J[SOTA Self-Learning Smoke]
-    C --> K[GEM / ConsFormer Graph Preconditioner]
-    K --> L[FPGA / S2KAN / Ising Accounting]
-    L --> M[p-bit / p-dit Sampler Accounting]
-    F --> N[Integrated Tri-SOTA E2E]
-    J --> N
-    L --> N
-    G --> N
-    N --> O[Milestone Retro]
+    A[.148 Retro + Activation Evidence] --> B[.149 Activation Contract]
+    B --> C[SOTA GGUF Cache/Runtime Terminalizer]
+    B --> D[Corrected THRML Curie-Weiss Parity]
+    B --> E[Residual Drift Commitment Ledger]
+    E --> F[FR-11 Validator Promotion Ledger]
+    B --> G[GEM/ConsFormer Graph Preconditioner]
+    C --> H[Token/Energy Telemetry Adapter]
+    H --> I[Structure-Snowballing DCCD Guardrail]
+    E --> I
+    B --> J[PVF/Glauber Validator Interface]
+    C --> K[ConstraintBench/NSVIF SOTA Slice]
+    G --> L[Hardware Accounting]
+    D --> L
+    F --> M[Integrated Tri-SOTA Validator Evidence]
+    I --> M
+    K --> M
+    L --> M
+    M --> N[Milestone .149 Retro]
 ```
 
 ## Phase Plan
 
-### Phase 0: Activation and Runtime Readiness
+### Phase 0: Terminal Recovery and Corrected Parity
 
-Experiments 1890-1891 convert `.147` retro output into a `.148` activation contract, then run a bounded cache/runtime preflight for the mandated SOTA GGUFs. This phase exists because `.147` blocked on model availability, not on validator math. The preflight must produce a terminal artifact whether models are available, partially available, or missing.
+Experiments 1904-1906 turn the `.148` retro into a fresh `.149` contract, recover the missing SOTA GGUF cache/runtime terminal artifact, and satisfy the mandatory corrected THRML parity refile. The cache task is intentionally allowed to finish as `blocked:` if models are absent, because the deliverable itself is the gate that prevents downstream waste.
 
-### Phase 1: Terminal Telemetry, Live Evaluation, Repair, and Drift
+### Phase 1: Validator Ledgers and Continuous Self-Learning
 
-Experiments 1892-1895 retry the blocked `.147` live path with stricter gates. They add terminal telemetry, run live SOTA ROCE validation only when the full cache is ready, apply DCCD repair only after validation and telemetry pass, and add a residual-drift ledger so final answers are checked against maintained commitments.
+Experiments 1907-1909 reopen the failed `.148` validator work in smaller terminal-artifact slices. They add a residual-drift ledger, an FR-11 promotion ledger with utility/non-forgetting/rollback gates, and a GEM/ConsFormer-style preconditioning check over real validator graphs. This phase contains the required continuous self-learning experiment.
 
-### Phase 2: Continuous Self-Learning
+### Phase 2: SOTA Advisory Telemetry and Non-AR Interfaces
 
-Experiments 1896-1898 satisfy the required continuous self-learning track. The first task builds a validator-tree promotion ledger with no-forgetting and rollback fields. The second audits a routing-without-forgetting abstraction. The third runs a SOTA FR-11 promotion smoke only if the cache and routing ledger are ready.
+Experiments 1910-1913 use the cache artifact only when a mandated local GGUF is available. They wire token/energy telemetry as advisory evidence, test DCCD against structure snowballing, audit a PVF/Glauber metadata interface, and run a small ConstraintBench/NSVIF-style SOTA slice only under deterministic acceptance authority.
 
-### Phase 3: Hardware-Accounted Validator Graphs
+### Phase 3: Hardware Accounting, Integrated Evidence, and Retro
 
-Experiments 1899-1901 connect validator trees to graph preconditioning and resource accounting. They test whether GEM/ConsFormer-style preconditioning improves Ising convergence, then estimate FPGA/S2KAN/Ising and p-bit/p-dit resource boundaries without making synthesis or board-execution claims.
-
-### Phase 4: Integrated Evidence and Retro
-
-Experiments 1902-1903 run a gated integrated tri-SOTA smoke and a retrospective. The integrated task only runs when live validation, repair, FR-11, and hardware-accounting gates are satisfied. The retro always runs and must report both technical blockers and operational timing/de-dupe results.
+Experiments 1914-1916 reconcile graph preconditioning and corrected THRML parity into no-synthesis resource accounting, run an integrated tri-SOTA evidence task only when all upstream gates pass, and write the milestone retrospective. Hardware execution claims remain explicitly false unless a future artifact includes device transcripts.
 
 ## Dependency Graph
 
 ```mermaid
 flowchart LR
-    E1890[1890 activation contract] --> E1891[1891 SOTA cache/runtime preflight]
-    E1891 --> E1892[1892 terminal telemetry]
-    E1891 --> E1893[1893 live SOTA ROCE eval]
-    E1890 --> E1893
-    E1893 --> E1894[1894 DCCD repair]
-    E1892 --> E1894
-    E1890 --> E1895[1895 residual drift ledger]
-    E1890 --> E1896[1896 FR-11 promotion ledger]
-    E1896 --> E1897[1897 routing without forgetting]
-    E1891 --> E1898[1898 SOTA FR-11 smoke]
-    E1897 --> E1898
-    E1890 --> E1899[1899 graph preconditioner]
-    E1899 --> E1900[1900 FPGA/S2KAN/Ising accounting]
-    E1900 --> E1901[1901 p-bit/p-dit accounting]
-    E1893 --> E1902[1902 integrated E2E]
-    E1894 --> E1902
-    E1898 --> E1902
-    E1900 --> E1902
-    E1902 --> E1903[1903 retro]
+    E1904[1904 activation contract] --> E1905[1905 SOTA cache terminalizer]
+    E1904 --> E1906[1906 corrected THRML parity]
+    E1904 --> E1907[1907 residual drift ledger]
+    E1907 --> E1908[1908 FR-11 promotion ledger]
+    E1904 --> E1909[1909 graph preconditioner]
+    E1905 --> E1910[1910 token telemetry adapter]
+    E1910 --> E1911[1911 DCCD snowballing guard]
+    E1907 --> E1911
+    E1904 --> E1912[1912 PVF/Glauber interface]
+    E1905 --> E1913[1913 ConstraintBench/NSVIF slice]
+    E1904 --> E1913
+    E1909 --> E1914[1914 hardware accounting]
+    E1906 --> E1914
+    E1905 --> E1915[1915 integrated evidence]
+    E1908 --> E1915
+    E1911 --> E1915
+    E1913 --> E1915
+    E1914 --> E1915
+    E1915 --> E1916[1916 retro]
 ```
 
 ## Experiment Summary
 
 | Exp | Title | Deliverable | Primary gate |
 |---:|---|---|---|
-| 1890 | `.147` Completion to `.148` Activation Contract | `results/experiment_1890_147_completion_148_activation_contract.json` | none |
-| 1891 | SOTA GGUF Cache and Runtime Preflight | `results/experiment_1891_sota_gguf_cache_runtime_preflight.json` | 1890 |
-| 1892 | Terminal Low-Cost Telemetry Adapter | `results/experiment_1892_terminal_low_cost_telemetry_adapter.json` | 1891 any cache |
-| 1893 | Live SOTA ROCE Validator Evaluation v2 | `results/experiment_1893_live_sota_roce_validator_eval_v2.json` | 1890, 1891 full cache |
-| 1894 | DCCD/llguidance Repair with ROCE Validators v2 | `results/experiment_1894_dccd_roce_repair_v2.json` | 1892, 1893 |
-| 1895 | Residual Drift Validator Ledger | `results/experiment_1895_residual_drift_validator_ledger.json` | 1890 |
-| 1896 | FR-11 Validator-Tree Promotion Ledger v2 | `results/experiment_1896_fr11_validator_tree_promotion_ledger_v2.json` | 1890 |
-| 1897 | Routing without Forgetting FR-11 Audit | `results/experiment_1897_routing_without_forgetting_fr11_audit.json` | 1896 |
-| 1898 | SOTA FR-11 Promotion Smoke v2 | `results/experiment_1898_sota_fr11_promotion_smoke_v2.json` | 1891, 1897 |
-| 1899 | GEM/ConsFormer Validator Graph Preconditioner v2 | `results/experiment_1899_gem_consformer_validator_graph_preconditioner_v2.json` | 1890 |
-| 1900 | FPGA/S2KAN/Ising Resource Accounting v2 | `results/experiment_1900_fpga_s2kan_ising_resource_accounting_v2.json` | 1899 |
-| 1901 | p-bit/p-dit Ising Sampler Accounting | `results/experiment_1901_pbit_pdit_ising_sampler_accounting.json` | 1900 |
-| 1902 | Integrated Tri-SOTA E2E v2 | `results/experiment_1902_integrated_trisota_e2e_v2.json` | 1893, 1894, 1898, 1900 |
-| 1903 | Milestone `.148` Retrospective | `results/experiment_1903_milestone_148_retro.json` | none |
+| 1904 | `.148` Completion to `.149` Activation Contract | `results/experiment_1904_148_completion_149_activation_contract.json` | none |
+| 1905 | SOTA GGUF Cache/Runtime Terminalizer v3 | `results/experiment_1905_sota_gguf_cache_runtime_terminalizer_v3.json` | 1904 |
+| 1906 | THRML Curie-Weiss Parity Correction | `results/experiment_1906_thrml_curie_weiss_parity_correction.json` | 1904 |
+| 1907 | Residual Drift Validator Ledger Terminal v2 | `results/experiment_1907_residual_drift_validator_ledger_terminal_v2.json` | 1904 |
+| 1908 | FR-11 Validator-Tree Promotion Terminal v3 | `results/experiment_1908_fr11_validator_tree_promotion_terminal_v3.json` | 1907 |
+| 1909 | GEM/ConsFormer Graph Preconditioner Terminal v3 | `results/experiment_1909_gem_consformer_graph_preconditioner_terminal_v3.json` | 1904 |
+| 1910 | Token-Guard Telemetry Adapter v3 | `results/experiment_1910_token_guard_telemetry_adapter_v3.json` | 1905 |
+| 1911 | Structure-Snowballing DCCD Guardrail | `results/experiment_1911_structure_snowballing_dccd_guardrail.json` | 1910, 1907 |
+| 1912 | PVF/Glauber Validator Interface Audit | `results/experiment_1912_pvf_glauber_validator_interface_audit.json` | 1904 |
+| 1913 | ConstraintBench/NSVIF SOTA Slice v2 | `results/experiment_1913_constraintbench_nsvif_sota_slice_v2.json` | 1905, 1904 |
+| 1914 | Hardware Accounting from Preconditioned Validator Graphs | `results/experiment_1914_hardware_accounting_from_preconditioned_validator_graphs.json` | 1909, 1906 |
+| 1915 | Integrated Tri-SOTA Validator Evidence v3 | `results/experiment_1915_integrated_trisota_validator_evidence_v3.json` | 1905, 1908, 1911, 1913, 1914 |
+| 1916 | Milestone `.149` Retrospective | `results/experiment_1916_milestone_149_retro.json` | none |
 
 ## Hardware Requirements
 
 | Requirement | Used by | Boundary |
 |---|---|---|
-| Dual RTX 3090 local GGUF runtime | 1891, 1892, 1893, 1894, 1898, 1902 | Required for headline SOTA rows. If cache/runtime is unavailable, write a blocked terminal artifact and do not claim headline accuracy. |
-| CPU/JAX/PySAT/Z3 | 1890, 1895, 1896, 1897, 1899 | Sufficient for activation contracts, ledgers, and graph-preconditioning fixtures. |
-| Rust/PyO3 toolchain | 1892, 1900, 1901 | Needed for structured-output runtime probes and S2KAN/accounting checks if local paths are available. |
-| KV260/Vivado | none | No Vivado synthesis, bitfile, board transcript, or board-execution claim in this milestone. |
-| THRML/Extropic | 1901 optional read-only comparison | Simulator/public-material comparison only; no XTR-0/Z1/TSU execution claim. |
-| Logical Intelligence Kona | reference only | Architecture comparator only; no Kona-equivalent performance claim. |
+| Dual RTX 3090 local GGUF runtime | 1905, 1910, 1911, 1913, 1915 | Required for headline SOTA rows. If cache/runtime is unavailable, write a blocked terminal artifact and skip downstream tasks through structured gates. |
+| CPU/JAX/PySAT/Z3 | 1904, 1906, 1907, 1908, 1909, 1912, 1914, 1916 | Sufficient for activation contracts, corrected parity, ledgers, interface audits, graph fixtures, and no-synthesis accounting. |
+| THRML simulator | 1906, 1914 | Optional simulator comparison only. No TSU, Z1, XTR-0, or physical Extropic hardware execution claim. |
+| Rust/PyO3/llguidance-compatible runtime | 1910, 1911, 1912 | Useful for telemetry/structured output probes if locally available. Deterministic validators remain the authority. |
+| KV260/Vivado/board hardware | none | Not required and not claimed. No bitfile, synthesis, latency, or board transcript is produced in this milestone. |
+| Logical Intelligence Kona | reference only | Architecture comparator only. No Kona-equivalent performance claim. |
 
 ## Acceptance Gates
 
-- Every artifact used by `gated_on` must contain the exact named field in `REQUIRED ARTIFACT FIELDS`.
-- Every LLM-bearing experiment must list the mandated local GGUFs in `MODEL_SPECS`: `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and `unsloth/gemma-4-26B-A4B-it-GGUF`.
-- Legacy small models may be used only as CPU smoke tests and must not appear as headline-result models.
-- Deterministic validators remain the only acceptance authority. First-token confidence, HalluGuard-like scores, and spilled energy are advisory telemetry.
-- Continuous self-learning is satisfied by Exp 1896 and promoted to SOTA smoke only through Exp 1898 after utility and no-forgetting gates pass.
-- Hardware claims are accounting-only unless an artifact contains authenticated device, bitfile, command transcript, and latency provenance. This milestone intentionally makes no board-execution claim.
+- Every artifact used by `gated_on` contains the exact field named by downstream gates in its `REQUIRED ARTIFACT FIELDS`.
+- Every LLM-bearing experiment includes at least one mandated local GGUF in `MODEL_SPECS`; the SOTA tasks list all three mandated models:
+  `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and `unsloth/gemma-4-26B-A4B-it-GGUF`.
+- Legacy small models may appear only as CPU smoke tests and never as headline-result models.
+- `honest_verdict` values must start with a terminal prefix such as `complete:`, `success:`, `passed:`, `shipped:`, or `blocked:`.
+- Deterministic validators, solvers, and executable checks remain the only acceptance authority. Token-Guard, first-token confidence, and spilled-energy signals are advisory.
+- Continuous self-learning is satisfied by Exp 1908 and must report utility delta, replay retention, non-forgetting rate, memory growth, and rollback fields.
+- Corrected THRML parity must be reported as a three-way Carnot/THRML/analytic comparison with noise-calibrated gates.
+- Hardware work is accounting-only unless a future artifact contains authenticated device, bitfile, command transcript, and latency provenance. This milestone intentionally makes no board-execution claim.
 
 ## Decentralization Implications
 
-The milestone preserves Carnot's local-first posture: headline model work is restricted to local open-weight GGUFs, validators run locally, closed providers are not required, and hardware work remains portable accounting over CPU/GPU/FPGA/TSU-style targets rather than vendor-locked execution.
+The milestone preserves Carnot's local-first posture: headline LLM work is restricted to local open-weight GGUFs, deterministic validators run locally, closed providers are not required, and hardware work remains portable accounting over CPU/GPU/FPGA/TSU-style targets rather than a vendor-locked execution path.

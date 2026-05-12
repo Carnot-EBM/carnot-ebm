@@ -4,6 +4,134 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-05-12 Post-.148 Planning Sweep (Milestone 2026.05.149)
+
+This sweep was run after milestone `.148` completed. Local outcomes: the
+activation contract completed and confirmed the validator-tree and BEAVER-lite
+substrate are ready. The SOTA GGUF cache/runtime terminalizer failed before
+writing a terminal artifact, six downstream tasks retired or gate-blocked, and
+the retro reported that SOTA runtime, telemetry, FR-11 promotion, residual drift,
+graph preconditioning, and hardware accounting remain unresolved. The next
+milestone should therefore recover terminal artifacts first, then reopen
+experiments only through explicit structured gates.
+
+### Corrected THRML/Carnot Parity Methodology
+- **Local corrigendum:** exp1850 THRML/Carnot n=128 parity is inconclusive, not
+  negative. The prior 100-sample sweep at n=128 was dominated by sampling noise;
+  KL and mean-delta gates were too tight for the sample budget.
+- **Sources:** `ops/known-issues.md` and
+  `results/experiment_1850_thrml_parity_n128.json`.
+- **What:** The corrected experiment must use a tractable mean-field substrate
+  such as ferromagnetic Curie-Weiss at n=128, compute analytic ground truth,
+  run 10k+ samples per side or a convergence criterion, calibrate KL gates to
+  sample-size variance, and compare Carnot, THRML, and analytic means.
+- **Relevance to Carnot:** This is mandatory before using THRML parity as a
+  hardware-path signal. It keeps the Z1/TSU migration path open while preserving
+  the rule that hardware claims must be evidence-bound.
+- **Concrete experiment hook:** Refile parity as a corrected Curie-Weiss
+  three-way comparison with `hardware_execution_claim=false`.
+
+### Token-Level and Energy Telemetry for Constrained Decoding
+- **Papers:** "Token-Guard: Towards Token-Level Hallucination Control via
+  Self-Checking Decoding" (arXiv:2601.21969 / ICLR 2026), "The First Token
+  Knows" (arXiv:2605.05166), and "Spilled Energy in Large Language Models"
+  (arXiv:2602.18671 / ICLR 2026).
+- **Sources:** https://arxiv.org/abs/2601.21969,
+  https://huggingface.co/papers/2605.05166,
+  https://arxiv.org/abs/2602.18671, and
+  https://openreview.net/forum?id=EXFKk4Y3yc.
+- **What:** Token-level self-checking, first-token entropy, and training-free
+  logit-energy metrics provide cheap uncertainty signals. They are useful for
+  triage and repair routing, but none supplies deterministic acceptance.
+- **Relevance to Carnot:** `.148` showed telemetry must write terminal artifacts
+  before DCCD or live repair can depend on it. The correct integration is a
+  `VerdictRecord`-compatible advisory adapter with
+  `acceptance_authority_unchanged=true`.
+- **Concrete experiment hook:** Gate DCCD guardrails on a terminal telemetry
+  adapter over at least one mandated local GGUF, with deterministic validators
+  retaining final authority.
+
+### Structure Snowballing and Constrained Decoding Risk
+- **Paper:** "From Hallucination to Structure Snowballing: The Alignment Tax of
+  Constrained Decoding in LLM Reflection" (arXiv:2604.06066).
+- **Source:** https://arxiv.org/abs/2604.06066.
+- **What:** Hard structural constraints can make self-correction worse by
+  preserving early semantic errors in a more polished form. Valid JSON or valid
+  grammar is not enough.
+- **Relevance to Carnot:** This sharpens the DCCD/llguidance evaluation gate:
+  structured validity must improve without increasing semantic false accepts or
+  projection-tax regressions under deterministic validators.
+- **Concrete experiment hook:** Add a structure-snowballing guardrail task that
+  compares free drafting, constrained decoding, and draft-conditioned repair.
+
+### Non-Autoregressive Constraint Interfaces
+- **Papers:** "Leveraging Pretrained Language Models as Energy Functions for
+  Glauber Dynamics Text Diffusion" (arXiv:2605.04291 / OpenReview) and "Plan,
+  Verify and Fill" (arXiv:2601.12247).
+- **Sources:** https://arxiv.org/abs/2605.04291,
+  https://openreview.net/forum?id=NRxPkSrSYA, and
+  https://arxiv.org/abs/2601.12247.
+- **What:** Recent diffusion-language work uses pretrained LMs as energy
+  functions for Glauber dynamics and separates planning from verification and
+  fill-in. This converges with Carnot's validator-first repair path.
+- **Relevance to Carnot:** The next safe step is not a new generator. It is an
+  interface audit: validator trees should expose automata and energy metadata
+  usable by future non-autoregressive samplers.
+- **Concrete experiment hook:** Build a PVF/Glauber metadata roundtrip over
+  existing validators with `generator_integration_claim=false`.
+
+### Hard CSP and Neural Solver Reality Checks
+- **Paper:** "Benchmarking Graph Neural Networks in Solving Hard Constraint
+  Satisfaction Problems" (arXiv:2602.18419).
+- **Source:** https://arxiv.org/abs/2602.18419.
+- **What:** A statistical-physics benchmark finds classical heuristics still
+  outperform GNNs on hard random CSP instances and warns against weak benchmark
+  claims.
+- **Relevance to Carnot:** Claims about neural graph preconditioners or
+  ConsFormer/GEM-style samplers should be modest: measure convergence deltas on
+  fixed validator graphs against classical baselines, not broad solver
+  superiority.
+- **Concrete experiment hook:** Keep graph preconditioning as an accounting and
+  convergence experiment, gated on preserved deterministic correctness.
+
+### Hardware Signals: KAN Complexity, p-bits/p-dits, and Extropic Boundaries
+- **Papers/Platforms:** BiKA (arXiv:2602.23455), hardware-oriented KAN
+  complexity (arXiv:2604.03345), p-bit/p-DNN sampling work, Extropic THRML/TSU
+  public materials, and Logical Intelligence Kona public positioning.
+- **Sources:** https://arxiv.org/abs/2602.23455,
+  https://arxiv.org/abs/2604.03345,
+  https://www.nature.com/articles/s44335-026-00063-7,
+  https://extropic.ai/software,
+  https://extropic.ai/writing/thermodynamic-computing-from-zero-to-one, and
+  https://logicalintelligence.com/kona-ebms-energy-based-models.
+- **What:** Hardware-friendly neural and probabilistic sampling work is moving
+  toward comparator/accumulator designs, platform-independent BOP/NABS metrics,
+  and p-bit/p-dit abstractions. Public Extropic/Kona materials remain strategic
+  comparator sources, not authenticated Carnot execution evidence.
+- **Relevance to Carnot:** Hardware work should stay on no-synthesis resource
+  accounting and corrected sampler parity until a real board/device transcript
+  exists.
+- **Concrete experiment hook:** Reconcile graph preconditioning, corrected
+  THRML parity, and p-bit/p-dit accounting under explicit
+  `hardware_execution_claim=false`.
+
+### EBT / ARM-as-EBM Citation Watch
+- **Papers:** "Energy-Based Transformers are Scalable Learners and Thinkers"
+  (arXiv:2507.02092) and "Autoregressive Language Models are Secretly
+  Energy-Based Models" (arXiv:2512.15605).
+- **Sources:** https://arxiv.org/abs/2507.02092,
+  https://energy-based-transformers.github.io/, and
+  https://dblp.org/rec/journals/corr/abs-2507-02092.html.
+- **What:** The citation trail remains aligned with energy-minimizing inference,
+  but no newly checked public source changes Carnot's immediate need: local
+  GGUF runtime provenance and deterministic validators must come before
+  endgame EBT-style claims.
+- **Relevance to Carnot:** Treat EBT/Kona-style reasoning as a Phase-3 target
+  and keep `.149` focused on evidence production: terminal artifacts, validator
+  ledgers, and portable sampling/accounting interfaces.
+- **Concrete experiment hook:** Use EBT/Kona materials as acceptance-language
+  comparators, not as proof of Carnot capability.
+
 ## 2026-05-12 Post-.147 Planning Sweep (Milestone 2026.05.148)
 
 This sweep was run after milestone `.147` completed. Local outcomes: the
