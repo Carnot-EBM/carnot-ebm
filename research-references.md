@@ -4,6 +4,108 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-05-12 Post-.147 Planning Sweep (Milestone 2026.05.148)
+
+This sweep was run after milestone `.147` completed. Local outcomes: the
+completion/gate contract, ROCE/HILED artifact normalization, ROCE-to-validator
+tree compiler, and BEAVER-lite bounds completed. The SOTA live path blocked on
+missing mandated GGUF models (`unsloth/Qwen3.6-35B-A3B-GGUF` and
+`unsloth/gemma-4-31B-it-GGUF`). Low-cost telemetry, DCCD repair, FR-11
+self-learning, GEM/ConsFormer preconditioning, FPGA accounting, and the
+integrated E2E task were then blocked or retired because terminal artifacts were
+missing. The next milestone should therefore prove runtime readiness and
+terminal artifact contracts before attempting integrated headline claims.
+
+### Residual Drift and Solver-Instrumented Constraint Ledgers
+- **Paper:** "Residual Drift Dominates Contradiction in Multi-Turn Constraint
+  Reasoning" (OpenReview ICLR 2026 Workshop LLM Reasoning).
+- **Source:** https://openreview.net/forum?id=B9gtT1hhEm
+- **What:** DRIFT-Bench separates contradiction from satisfiable drift in
+  multi-turn constraint systems. Its central finding is that after solver-guided
+  repair, residual failures are mostly answers that stay logically consistent
+  internally while silently violating prior commitments.
+- **Relevance to Carnot:** This directly matches Carnot's ROCE validator-tree
+  direction. A validator can pass local satisfiability while the returned answer
+  drifts from maintained commitments unless Carnot records commitment-level
+  ledgers and final-answer checks.
+- **Concrete experiment hook:** Add a residual-drift ledger over compiled ROCE
+  validator trees. Require `zero_false_accepts=true`, explicit drift case
+  counts, and an escalation policy that does not rely on LLM self-judgment.
+
+### Energy-Based Online Continual Learning
+- **Paper:** "Routing without Forgetting" (arXiv:2603.09576).
+- **Source:** https://arxiv.org/abs/2603.09576
+- **What:** Recasts online continual learning for transformers as dynamic
+  routing through energy-based associative retrieval layers, inspired by Modern
+  Hopfield Networks, so inputs select representational subspaces without task
+  identifiers or repeated optimization.
+- **Relevance to Carnot:** FR-11 needs promotion gates that improve utility
+  without forgetting prior verified constraints. Routing-style subspace ledgers
+  are a good abstraction for validator-template promotion, replay retention, and
+  rollback triggers.
+- **Concrete experiment hook:** Build a validator-tree promotion ledger with
+  no-forgetting checks, then gate any SOTA self-learning smoke on
+  `promotion_gate_passed=true`, `utility_delta > 0`, and a non-forgetting rate.
+
+### Hallucination Telemetry as Advisory Evidence
+- **Papers:** HalluGuard (arXiv:2601.18753 / ICLR 2026), "Spilled Energy in
+  Large Language Models" (arXiv:2602.18671), and DCCD (arXiv:2603.03305).
+- **Sources:** https://huggingface.co/papers/2601.18753,
+  https://arxiv.org/abs/2602.18671, and
+  https://huggingface.co/papers/2603.03305
+- **What:** HalluGuard decomposes hallucination risk into data-driven and
+  reasoning-driven terms. Spilled Energy interprets LLM output logits through an
+  EBM lens and extracts training-free energy signals. DCCD separates free
+  semantic drafting from constrained structural enforcement to reduce the
+  quality cost of hard decoding.
+- **Relevance to Carnot:** These signals are useful telemetry, not acceptance
+  authorities. `.147` proved that internal-only telemetry work is not enough:
+  the next task must write a terminal artifact with `acceptance_authority_unchanged=true`.
+- **Concrete experiment hook:** Implement a SOTA GGUF telemetry adapter that
+  records first-token/logprob/spilled-energy availability and model provenance.
+  Gate DCCD repair on that terminal artifact plus compiled validators.
+
+### Structured Generation Runtime and Cache Alternatives
+- **Projects/Papers:** llguidance, vLLM.rs, JSONSchemaBench.
+- **Sources:** https://github.com/guidance-ai/llguidance,
+  https://github.com/guoqingbao/vllm.rs/, and
+  https://arxiv.org/abs/2501.10868
+- **What:** llguidance provides Rust/C/Python structured-output masks for JSON
+  Schema, regexes, and CFGs, and is integrated with llama.cpp, vLLM, SGLang,
+  TensorRT-LLM, and related runtimes. vLLM.rs advertises GGUF and structured
+  output support through llguidance. JSONSchemaBench gives a broad constrained
+  decoding coverage/efficiency test bed.
+- **Relevance to Carnot:** Since `.147` blocked on unavailable mandated SOTA
+  GGUFs, the next milestone should separate model cache/materialization and
+  runtime smoke tests from evaluation. Runtime alternatives can be recorded as
+  fallback candidates, but they must not replace the mandated model requirement
+  for headline rows.
+- **Concrete experiment hook:** Add a cache/runtime preflight artifact with
+  `cache_all_available`, `cache_any_available`, `runtime_smoke_ready`,
+  `missing_models`, and `fallback_runtime_candidates`.
+
+### Hardware-Accounted Energy Sampling
+- **Papers/Platforms:** "Extended-variable probabilistic computing with
+  p-dits" (arXiv:2506.00269), KAN PWA/MILP verification (arXiv:2602.06737),
+  hardware-oriented KAN complexity (arXiv:2604.03345), Extropic TSU/THRML
+  public materials, and Logical Intelligence Kona public positioning.
+- **Sources:** https://arxiv.org/abs/2506.00269,
+  https://arxiv.org/abs/2602.06737, https://arxiv.org/abs/2604.03345,
+  https://extropic.ai/writing/thermodynamic-computing-from-zero-to-one, and
+  https://logicalintelligence.com/blog/energy-based-models-for-reasoning
+- **What:** p-dits generalize probabilistic bits for categorical/numeric
+  optimization and report FPGA/ASIC implementations. KAN verification and KAN
+  hardware metrics give a path from symbolic KAN tiers to formal/resource
+  accounting. Extropic and Logical Intelligence public materials both emphasize
+  probabilistic or energy-based reasoning hardware/model directions, but do not
+  give Carnot authenticated device access.
+- **Relevance to Carnot:** Hardware work should stay evidence-bounded:
+  no-synthesis resource accounting over real validator graphs is useful, but
+  KV260, TSU, XTR-0/Z1, or Kona-equivalent execution claims remain out of scope.
+- **Concrete experiment hook:** Run sampler preconditioning and resource
+  accounting over actual validator graphs, emit `hardware_execution_claim=false`,
+  and keep TSU/Kona as comparator architecture notes only.
+
 ## 2026-05-11 Post-.146 Planning Sweep (Milestone 2026.05.147)
 
 This sweep was run after milestone `.146` completed. Local outcomes: ROCE
@@ -11980,7 +12082,7 @@ This sweep was run after milestone `.124` completed. Local outcomes: KANELÉ RTL
 ### Energy-Guided Decoding for LLMs
 - **Paper:** "Energy-Guided Decoding for Object Hallucination Mitigation" (arXiv:2507.07731).
 - **What:** Proposes dynamically selecting hidden states with the minimal energy score to reduce hallucination bias in vision-language and language models.
-- **Relevance to Carnot:** Re-validates that explicit local energy scoring at the decoding step improves factual validity. 
+- **Relevance to Carnot:** Re-validates that explicit local energy scoring at the decoding step improves factual validity.
 - **Concrete experiment hook:** Incorporate energy-guided decoding using the local explicit Carnot energy to select among generation paths from the mandated SOTA GGUF models.
 
 ### ConsFormer for CSPs
@@ -12014,7 +12116,7 @@ This sweep was run after milestone `.124` completed. Local outcomes: KANELÉ RTL
 ### Energy-Guided Decoding for LLMs
 - **Paper:** "Energy-Guided Decoding for Object Hallucination Mitigation" (arXiv:2507.07731).
 - **What:** Proposes dynamically selecting hidden states with the minimal energy score to reduce hallucination bias in vision-language and language models.
-- **Relevance to Carnot:** Re-validates that explicit local energy scoring at the decoding step improves factual validity. 
+- **Relevance to Carnot:** Re-validates that explicit local energy scoring at the decoding step improves factual validity.
 - **Concrete experiment hook:** Incorporate energy-guided decoding using the local explicit Carnot energy to select among generation paths from the mandated SOTA GGUF models.
 
 ### ConsFormer for CSPs
