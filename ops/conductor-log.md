@@ -2250,3 +2250,4 @@ IMPORTANT:
 | 2026-05-12 21:10 UTC | Exp 1957: TruncProof Token-Limited LL(1) Parsing | OK | 81 passed, 1 warning in 5.39s |
 | 2026-05-12 21:17 UTC | Exp 1958: GCoT-Decoding Reasoning Paths | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1958_gcot_br |
 | 2026-05-12 21:22 UTC | Exp 1958: GCoT-Decoding Reasoning Paths | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1958_gcot_br |
+| 2026-05-12 21:28 UTC | Exp 1958: GCoT-Decoding Reasoning Paths | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1958_gcot_br |
