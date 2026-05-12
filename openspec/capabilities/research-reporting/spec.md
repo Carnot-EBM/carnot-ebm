@@ -3515,6 +3515,51 @@ GPU/model-count telemetry speed target
 in machine-readable structures for `.148` downstream gates.
 
 
+### REQ-REPORT-1903: Milestone .148 Retrospective Artifact
+
+The Exp 1903 workflow shall read all available Exp 1890 through Exp 1902 result
+JSON artifacts, the active `.148` roadmap, and milestone conductor-log entries,
+then write `results/experiment_1903_milestone_148_retro.json` without
+modifying `research-roadmap.yaml`, `ops/status.md`, `ops/changelog.md`, or
+`scripts/research_conductor.py`.
+
+The workflow shall classify completed tasks, structured blocked tasks, retired
+pre-emptive gate skips, and unexpected technical failures separately. Missing
+artifacts caused by expected structured gate skips shall not be conflated with
+unexpected missing-artifact failures from failed synthesis or pre-test runs.
+
+The terminal artifact shall include these top-level fields:
+
+- `status`
+- `honest_verdict`
+- `milestone_148_retro_complete`
+- `completed_task_count`
+- `blocked_task_count`
+- `failed_task_count`
+- `same_title_compute_dedupe_result`
+- `next_gate_recommendations`
+- `tests_run`
+
+The artifact shall report whether terminal telemetry, FR-11, and
+hardware-accounting artifacts exist, whether the SOTA cache/runtime gap closed,
+and whether the `.147` target for same-title compute-bound terminal-state dedupe
+plus GPU/model-count telemetry produced the expected operational speedup.
+
+### SCENARIO-REPORT-1903: Exp 1903 Separates .148 Gate Skips From Failures
+
+**Given** Exp 1890 completed, Exp 1894 and Exp 1901 wrote structured blocked
+gate artifacts, several downstream tasks were pre-emptively skipped because
+upstream tasks retired, and several ungated tasks failed without terminal
+artifacts
+**When** the Exp 1903 retrospective workflow runs
+**Then** it writes the required REQ-REPORT-1903 fields
+**And** separates expected structured gate skips from unexpected
+missing-artifact failures
+**And** reports unresolved SOTA cache/runtime, telemetry, FR-11, and
+hardware-accounting gaps without claiming the `.147` operational speedup target
+was proven.
+
+
 ### REQ-PUBLISH-003: HuggingFace README Accuracy Audit
 
 All HuggingFace model READMEs for Phase 1 per-token activation EBMs shall
@@ -3659,6 +3704,7 @@ embed live-GPU benchmark results from Exp 328 when available.
 | REQ-REPORT-1877 | `python/carnot/reporting/artifact_contract_normalization.py`, `results/experiment_1877_artifact_contract_normalization.json` | `tests/python/test_artifact_contract_normalization.py` | Implemented |
 | REQ-REPORT-1889 | `python/carnot/reporting/milestone_retro_147.py`, `results/experiment_1889_milestone_147_retro.json` | `tests/python/test_milestone_retro_147.py` | Implemented |
 | REQ-REPORT-1890 | `python/carnot/reporting/milestone_147_completion_148_activation_contract.py`, `results/experiment_1890_147_completion_148_activation_contract.json` | `tests/python/test_milestone_147_completion_148_activation_contract.py` | Implemented |
+| REQ-REPORT-1903 | `python/carnot/reporting/milestone_retro_148.py`, `results/experiment_1903_milestone_148_retro.json` | `tests/python/test_milestone_retro_148.py` | Implemented |
 | REQ-REPORT-024 | `python/carnot/reporting/agent_usage.py`, `scripts/agent_plan_usage.py` | `tests/python/test_agent_plan_usage.py` | Implemented |
 | REQ-PUBLISH-003 | `scripts/experiment_317_hf_publish.py` | `tests/python/test_experiment_317_hf_publish.py` | Implemented |
 | REQ-PUBLISH-004 | `scripts/experiment_330_hf_live_publish.py` | `tests/python/test_experiment_330_hf_live_publish.py` | Implemented |
