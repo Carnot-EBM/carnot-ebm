@@ -5624,3 +5624,4 @@ Completed 15 experiments in 28.9 minutes. There were 0 compute-bound experiments
 - 2026-05-12: Exp 1968: Milestone .153 Retrospective (⚠️ Blocked) — honest_verdict=complete: milestone_153_retro_filed_5_completed_4_blocked_3_failed_gate_contract_gap_and_flow_kl_exceed_threshold; results/experiment_1968_milestone_153_retro.json
 - 2026-05-12: Exp 1970: DOMINO Fast Non-Invasive Constrained Generation (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_1970_domino_fast_constraints.json
 - 2026-05-12: Exp 1972: RUN-CSP Prototype for Unsupervised Solvers (✅ Complete) — honest_verdict=complete_generalized_40_to_1000_cpu_only; results/experiment_1972_run_csp_unsupervised.json
+- 2026-05-12: Exp 1973: DeepSaDe Hybrid MaxSMT Guarantees (⚠️ Research Finding) — honest_verdict=zero_false_accept_strictly_guaranteed; results/experiment_1973_deepsade_hybrid_guarantees.json
