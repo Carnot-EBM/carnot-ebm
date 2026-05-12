@@ -551,6 +551,41 @@ blockers
 **And** `claim_allowed=false` without falling back to legacy small model
 headline rows.
 
+### REQ-INFER-SOTA-011: Exp 1891 SOTA GGUF Cache And Runtime Preflight
+
+The system SHALL provide an Exp 1891 local cache/runtime preflight that separates
+mandated SOTA GGUF cache readiness from runtime smoke readiness before any
+downstream evaluation spends a synthesis or generation call.  The preflight
+SHALL define `MODEL_SPECS` for `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`; SHALL inspect local cache state through the
+same safe resolver/cached-pair pattern used by `cached_sota_pair()`; SHALL
+attempt bounded materialization only when an explicit safe local configuration
+enables it; and SHALL NOT substitute legacy small models as evidence of
+headline readiness.
+
+The artifact SHALL be written to
+`results/experiment_1891_sota_gguf_cache_runtime_preflight.json` and SHALL
+expose `status`, `honest_verdict`, `MODEL_SPECS`, `cache_all_available`,
+`cache_any_available`, `missing_models`, `runtime_smoke_ready`,
+`runtime_backend`, `models_used`, `gpu_telemetry_available`, `model_count`,
+`parallel_model_count`, `fallback_runtime_candidates`, and `tests_run`.
+Fallback runtimes such as llama.cpp with llguidance, vLLM.rs, and llgtrt SHALL
+be recorded as candidates only unless a mandated cached GGUF completes the
+runtime smoke.
+
+### SCENARIO-INFER-SOTA-011-001: Cache And Runtime Readiness Are Separated
+
+**Given** only a subset of mandated SOTA GGUF models is present in the local
+cache
+**When** Exp 1891 runs
+**Then** `cache_any_available` reflects the cache hit, `cache_all_available`
+remains false, and `missing_models` lists every absent mandated model
+**And** runtime smoke readiness is true only when an available mandated model
+completes a bounded local smoke through the selected runtime backend
+**And** fallback runtime candidates are not counted as fulfilled mandated-model
+evidence.
+
 ### REQ-INFER-018: EBT Abstraction Layer
 
 The system SHALL provide an Energy-Based Transformer (EBT) abstraction layer that bridges autoregressive LLMs (like the mandated SOTA GGUF models) to an EBT formulation. This enables System-2 gradient refinement at inference time by providing a way to calculate sequence energy.
@@ -589,3 +624,4 @@ The system SHALL provide an EqM calibration implementation in `python/carnot/inf
 | REQ-INFER-SOTA-008 | Implemented | 12 Python |
 | REQ-INFER-SOTA-009 | Implemented | 7 Python |
 | REQ-INFER-SOTA-010 | Implemented (`python/carnot/reporting/live_sota_balanced_telemetry_v2.py`) | Implemented (`tests/python/test_experiment_1480_live_sota_balanced_telemetry_v2.py`) |
+| REQ-INFER-SOTA-011 | Proposed | Proposed |
