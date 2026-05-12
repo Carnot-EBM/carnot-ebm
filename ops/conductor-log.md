@@ -2126,3 +2126,5 @@ IMPORTANT:
 | 2026-05-12 14:27 UTC | Exp 1906: Terminal Low-Cost Telemetry Adapter v3 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1905-sota-gguf-cache-runtime-preflight-v3 |
 | 2026-05-12 14:27 UTC | Exp 1907: Token-Level Spilled Energy Diagnostic | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1906-terminal-low-cost-telemetry-adapte |
 | 2026-05-12 14:29 UTC | Exp 1906: Terminal Low-Cost Telemetry Adapter v3 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1905-sota-gguf-cache-runtime-preflight-v3 |
+| 2026-05-12 14:29 UTC | Exp 1907: Token-Level Spilled Energy Diagnostic | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1906-terminal-low-cost-telemetry-adapte |
+| 2026-05-12 14:31 UTC | Exp 1908: Structure Snowballing Risk Guardrail | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1905-sota-gguf-cache-runtime-preflight-v3 |
