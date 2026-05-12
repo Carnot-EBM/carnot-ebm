@@ -10,6 +10,12 @@ def dummy_energy(content: str) -> float:
     return energy
 
 def test_gcot_branching_initialization():
+    """
+    Test basic initialization.
+    References:
+    - REQ-INFER-1958: GCoT-Decoding Reasoning Paths
+    - SCENARIO-INFER-1958-1: Basic initialization of GCoT branch
+    """
     sampler = GCoTBranchingSampler(energy_fn=dummy_energy, energy_threshold=5.0)
     sampler.initialize("start")
     assert len(sampler.branches) == 1
@@ -17,6 +23,12 @@ def test_gcot_branching_initialization():
     assert sampler.branches[0].energy == 0.5
 
 def test_gcot_branching_step_and_cull():
+    """
+    Test stepping and culling based on energy.
+    References:
+    - REQ-INFER-1958: GCoT-Decoding Reasoning Paths
+    - SCENARIO-INFER-1958-2: Culling branches that exceed energy threshold
+    """
     sampler = GCoTBranchingSampler(energy_fn=dummy_energy, energy_threshold=5.0, max_branches=2)
     sampler.initialize("start")
     # "error" will be culled
@@ -30,6 +42,12 @@ def test_gcot_branching_step_and_cull():
     assert not any("error" in c for c in contents)
 
 def test_gcot_branching_backtrack():
+    """
+    Test backtracking when all active branches exceed the energy threshold.
+    References:
+    - REQ-INFER-1958: GCoT-Decoding Reasoning Paths
+    - SCENARIO-INFER-1958-3: Backtracking on failure
+    """
     sampler = GCoTBranchingSampler(energy_fn=dummy_energy, energy_threshold=5.0, max_branches=2)
     sampler.initialize("start")
     sampler.step(["good"])
@@ -45,6 +63,11 @@ def test_gcot_branching_backtrack():
     assert sampler.branches[0].content == "start"
 
 def test_gcot_branching_backtrack_empty_history():
+    """
+    Test backtracking when history is empty.
+    References:
+    - REQ-INFER-1958: GCoT-Decoding Reasoning Paths
+    """
     sampler = GCoTBranchingSampler(energy_fn=dummy_energy, energy_threshold=5.0, max_branches=2)
     sampler.initialize("start error")
     sampler.backtrack()
