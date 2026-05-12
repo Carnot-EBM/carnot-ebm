@@ -1990,3 +1990,5 @@ IMPORTANT:
 | 2026-05-12 07:33 UTC | Exp 1900: FPGA/S2KAN/Ising Resource Accounting v2 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1899-gem-consformer-validator-graph-preco |
 | 2026-05-12 07:33 UTC | Exp 1901: p-bit/p-dit Ising Sampler Accounting | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1900-fpga-s2kan-ising-resource-accounti |
 | 2026-05-12 07:35 UTC | Exp 1900: FPGA/S2KAN/Ising Resource Accounting v2 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1899-gem-consformer-validator-graph-preco |
+| 2026-05-12 07:35 UTC | Exp 1901: p-bit/p-dit Ising Sampler Accounting | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1900-fpga-s2kan-ising-resource-accounti |
+| 2026-05-12 07:37 UTC | Exp 1902: Integrated Tri-SOTA E2E v2 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1893-live-sota-roce-validator-eval-v2, ex |
