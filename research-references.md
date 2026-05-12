@@ -12411,3 +12411,11 @@ This sweep was run after milestone `.145` completed. The literature search revea
 - **What:** EBT-Policy brings the EBT framework to robotics, showing zero-shot recovery and physical reasoning. EqM replaces time-conditional dynamics of diffusion models with a time-invariant equilibrium gradient over an implicit energy landscape, enabling compositional generation.
 - **Relevance to Carnot:** These reinforce Carnot's trajectory towards compositional constraints and energy minimization. They provide theoretical backing for non-autoregressive integration (Phase 3).
 - **Concrete experiment hook:** Track these as future integration references for physical reasoning/diffusion when Carnot's foundation is scaled to compositional generation.
+
+## 2026-05-12 ArXiv Sweep
+- **EBT:** Energy-Based Transformers are Scalable Learners and Thinkers (arXiv:2507.02092). Replaces standard autoregressive next-token prediction with an iterative, gradient-based energy minimization process.
+- **CEM:** Generalizable Reasoning through Compositional Energy Minimization (arXiv:2510.20607). Proposes Parallel Energy Minimization (PEM) to solve CSPs by learning energy landscapes for simple subproblems.
+- **IRED:** Learning Iterative Reasoning through Energy Diffusion (arXiv:2406.11764). Formulates reasoning as a sequence of annealed energy landscapes, bridging diffusion and EBMs.
+- **S2KAN:** Softly Symbolified Kolmogorov-Arnold Networks. Introduces "symbolic fidelity" integrating a dictionary of symbolic primitives with learnable gates.
+- **FS-KAN:** Function Sharing KAN. Introduces permutation-equivariant constraints across edges for reasoning on symmetric data structures.
+- **Epsilon Constraint OCL:** Gradient-Guided Epsilon Constraint Method for Online Continual Learning. Manages forgetting constraints explicitly to balance plasticity and stability.
