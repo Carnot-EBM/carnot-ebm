@@ -1,0 +1,51 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.153",
+  "generated_at": "2026-05-12T22:48:23Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 140.2,
+  "experiments_completed": 36,
+  "compute_bound_experiments_count": 6,
+  "slowest_experiments": [
+    {
+      "experiment": "-0400 [conductor] Exp 1956: NCO Plug-in for Negative Constraints",
+      "duration_minutes": 61.4,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1961: Interleaved Gibbs Diffusion (IGD) Prototype",
+      "duration_minutes": 10.3,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1960: Flow Sampling Process",
+      "duration_minutes": 7.5,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1957: TruncProof Token-Limited LL(1) Parsing",
+      "duration_minutes": 6.8,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1958: GCoT-Decoding Reasoning Paths",
+      "duration_minutes": 5.0,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "summary": "Milestone 2026.05.153 completed 36 experiments over 140.2 minutes of total wall time. While 6 experiments were compute-bound, the 5 slowest experiments were all synthesis-only tasks. The GPUs remained appropriately idle during these synthesis bottlenecks.",
+  "bottlenecks_identified": [
+    "Exp 1956 (NCO Plug-in for Negative Constraints) took 61.4 minutes, indicating a severe bottleneck in synthesis processes."
+  ],
+  "improvements_suggested": [
+    "Investigate and optimize the synthesis-only pipeline, specifically focusing on the performance of tasks similar to Exp 1956."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Profile Exp 1956 to identify the 61.4-minute synthesis bottleneck.",
+    "Optimize synthesis tooling since all top 5 slowest tasks were synthesis-only.",
+    "Validate synthesis task isolation to ensure large tasks do not block the pipeline."
+  ],
+  "estimated_time_savings_pct": 30,
+  "meta_reflection": "The milestone was dominated by synthesis-only delays, with a single task consuming over 40% of the total wall time. Resolving synthesis bottlenecks provides the highest leverage for accelerating future milestones."
+}

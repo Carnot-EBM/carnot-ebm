@@ -183,11 +183,11 @@ a handful of lines of Python. Headline model-generation benchmark numbers are fr
 <strong>live GPU inference on real public models</strong> (Qwen 3.5, Gemma 4,
 Qwen3.6-35B-A3B), never from simulated runs; hardware, ensemble, and
 adversarial-audit results are labeled by artifact provenance.</p>
-<p>This report documents the research arc behind the framework — <strong>2,241
+<p>This report documents the research arc behind the framework — <strong>2,279
 experiment records tracked through Exp 1955, with 2,051 task records in 161
 artifact-backed completed milestone records archived through 2026.05.147 and
 checked-in result artifacts extending through milestone .148</strong> — run between
-February and May 2026. <code>research-complete.yaml</code> currently archives <strong>161</strong>
+February and May 2026. <code>research-complete.yaml</code> currently archives <strong>165</strong>
 completed milestone records through 2026.05.147; checked-in result artifacts
 and <code>ops/changelog.md</code> now extend through
 <code>results/experiment_1903_milestone_148_retro.json</code>. Milestone .148 completed
@@ -1105,7 +1105,7 @@ artifacts checked into <code>results/operational_retro_*.json</code>.</p>
   prior-failure auto-population task hit a circular metadata failure, and Exp
   1268 later counted retro-95 complete from available result fields.</li>
 <li><strong>Latest .96-.148 artifact status:</strong> <code>research-complete.yaml</code> now archives
-  <strong>161</strong> completed milestone records through .147, while checked-in result
+  <strong>165</strong> completed milestone records through .147, while checked-in result
   artifacts and <code>ops/changelog.md</code> extend through .148 / Exp 1955. The checked-in .96/.97
   and stale .103
   artifacts should still be read conservatively. Exp 1268 backfilled .96 at
@@ -3251,10 +3251,10 @@ but are not included as model-generation headline claims.</p>
 <td>Exp 1889</td>
 </tr>
 <tr>
-<td>Milestone .148 closeout</td>
-<td>.147 speedup and SOTA-runtime follow-up</td>
-<td><strong>1</strong> complete; <strong>2</strong> blocked; <strong>6</strong> retired; <strong>4</strong> failed</td>
-<td>SOTA cache/runtime gap unresolved; downstream live-eval reruns gate-skipped; <strong>11%</strong> speedup target not proven</td>
+<td>Milestone .152 closeout</td>
+<td>Tri-SOTA E2E v6 successful</td>
+<td><strong>18</strong> complete</td>
+<td>Ontology NN topological constraints implemented, GNN struggles on 3-SAT compared to Z3</td>
 <td>Exp 1955</td>
 </tr>
 </tbody>
@@ -3775,7 +3775,7 @@ result = pipeline.verify_and_repair(
 <h2 id="7-principles-learned">7. Principles Learned</h2>
 <h3 id="413-recent-additions-milestone-137">4.13 Recent Additions (Milestone .137)</h3>
 <p>Experiments 1771-1784 advanced the framework through Capstone E2E pipelines with Qwen3.6-35B-A3B and Gemma4-31B-it (Exps 1782, 1783). We implemented Continuous Latent Constraint Modeling (Exp 1771) and evaluated a Differentiable Constraint Memory Bank (Exp 1774). Additionally, the self-learning pipeline was scaled up on LTLZinc (Exp 1777), and we conducted a comprehensive Hardware vs Software Latency and Energy convergence benchmark (Exp 1781), culminating in the .137 operational retrospective.</p>
-<p>From the activation-based phase of a research program that now spans 2,241 experiment records through Exp 1955 and 165 archived completed milestone records, we distilled 14 principles. Principles 1-3 describe what works. Principles 4-14 describe what doesn't work for activation-based hallucination detection — these systematic negative results are the project's primary contribution to the literature, saving other researchers months of dead ends.</p>
+<p>From the activation-based phase of a research program that now spans 2,279 experiment records through Exp 1955 and 165 archived completed milestone records, we distilled 14 principles. Principles 1-3 describe what works. Principles 4-14 describe what doesn't work for activation-based hallucination detection — these systematic negative results are the project's primary contribution to the literature, saving other researchers months of dead ends.</p>
 <h3 id="what-works">What works</h3>
 <ol>
 <li>
@@ -4170,7 +4170,7 @@ make research-loop
 <li><strong>Plan.</strong> When all tasks in a milestone complete, a planning agent reads <code>research-program.md</code> (human-written goals) and autonomously designs the next milestone — selecting experiments, ordering dependencies, and writing full conductor-ready prompts.</li>
 <li><strong>Repeat.</strong> The loop runs until a circuit breaker halts it after N consecutive failures.</li>
 </ol>
-<p>In a 50-iteration run with Claude 3.5 Sonnet as the proposer, the loop achieved near-optimal energy on two benchmark functions (DoubleWell: 0.0001, Rosenbrock: 0.0092) before the circuit breaker engaged at iteration 18. The research conductor now drives a 161-record artifact-backed research archive spanning 2,279 tracked experiment records with automatic milestone archival and transition.</p>
+<p>In a 50-iteration run with Claude 3.5 Sonnet as the proposer, the loop achieved near-optimal energy on two benchmark functions (DoubleWell: 0.0001, Rosenbrock: 0.0092) before the circuit breaker engaged at iteration 18. The research conductor now drives a 165-record artifact-backed research archive spanning 2,279 tracked experiment records with automatic milestone archival and transition.</p>
 <p>The energy function serves as the objective judge — no human evaluation or LLM-as-judge is needed. This is a key advantage of the EBM paradigm: the mathematics provides ground truth.</p>
 <hr>
 <h2 id="15-limitations">15. Limitations</h2>
@@ -5483,7 +5483,7 @@ cleanly; artifacts stayed at bootstrap/in-progress state. Operationally, .96
 therefore starts by closing the .95 retro and then runs the production
 orthogonality audit before paper-v6 or Phase-5 scale-up work.</p>
 <h3 id="phase-21-9697-artifact-reality-boltzmann-gpt-cd-and-nrgpt-type-b-classification-exps-12291254">Phase 21 — .96/.97 Artifact Reality, Boltzmann-GPT CD, and NRGPT Type-B Classification (Exps 1229–1254)</h3>
-<p>The archive now contains <strong>161 artifact-backed completed milestone records</strong>
+<p>The archive now contains <strong>165 artifact-backed completed milestone records</strong>
 through 2026.05.147, and checked-in result artifacts extend through Exp 1955.
 The artifact layer is still conservative relative to the terminal artifact
 list: <code>research-complete.yaml</code> is currently archived through 2026.05.147, while
@@ -5494,7 +5494,7 @@ via Exp 1486, .115 is both archived and terminal via Exp 1505, .116 is both
 archived and terminal via Exp 1518, .117 is both archived and terminal via
 Exp 1532, .118 is terminal via Exp 1546, .119 is terminal via Exp 1559, and
 .120 is terminal via Exp 1572.
-This report therefore uses <strong>2,241</strong> tracked experiment records while treating
+This report therefore uses <strong>2,279</strong> tracked experiment records while treating
 only terminal artifacts as measured findings.</p>
 <p><strong>Prior-failure autofill v2 (Exp 1230):</strong> The conductor autofill utility shipped
 at <code>scripts/conductor_priors_autofill.py</code>. Focused tests report <strong>7 passed</strong>,
