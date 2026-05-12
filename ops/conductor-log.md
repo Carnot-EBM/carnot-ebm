@@ -2163,3 +2163,6 @@ IMPORTANT:
 | 2026-05-12 15:30 UTC | Exp 1919: Terminal Low-Cost Telemetry Adapter v4 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1918-sota-cache-recovery) |
 | 2026-05-12 15:30 UTC | Exp 1920: Token-Level Spilled Energy Diagnostic | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1919-telemetry-adapter-v4.honest_verdic |
 | 2026-05-12 15:32 UTC | Exp 1919: Terminal Low-Cost Telemetry Adapter v4 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1918-sota-cache-recovery) |
+| 2026-05-12 15:32 UTC | Exp 1920: Token-Level Spilled Energy Diagnostic | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1919-telemetry-adapter-v4.honest_verdic |
+| 2026-05-12 15:34 UTC | Exp 1921: Structure Snowballing Risk Guardrail | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1918-sota-cache-recovery) |
+| 2026-05-12 15:34 UTC | Exp 1922: Residual Drift Validator Ledger v4 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1918-sota-cache-recovery) |
