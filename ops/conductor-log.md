@@ -2182,3 +2182,5 @@ IMPORTANT:
 | 2026-05-12 16:16 UTC | Exp 1928: Corrected THRML/Carnot Parity Methodolog | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-12 16:18 UTC | Exp 1928: Corrected THRML/Carnot Parity Methodolog | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-12 16:20 UTC | Exp 1928: Corrected THRML/Carnot Parity Methodolog | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-12 16:27 UTC | Exp 1929: p-bit/p-dit Ising Sampler Accounting v3 | OK | 125 passed, 1 warning in 17.06s |
+| 2026-05-12 16:29 UTC | Exp 1930: Integrated Tri-SOTA E2E v4 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1918-sota-cache-recovery) |
