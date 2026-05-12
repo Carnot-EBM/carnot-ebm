@@ -1,0 +1,52 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.152",
+  "generated_at": "2026-05-12T19:49:13Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 48.9,
+  "experiments_completed": 18,
+  "compute_bound_experiments_count": 2,
+  "slowest_experiments": [
+    {
+      "experiment": "-0400 [conductor] Exp 1955: Milestone .152 Retrospective",
+      "duration_minutes": 16.7,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1954: Integrated Tri-SOTA E2E v6",
+      "duration_minutes": 5.2,
+      "compute_bound": true
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1952: GNN vs. Classical Benchmarking Audit",
+      "duration_minutes": 4.7,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1949: Denoising Thermodynamic Sampling Protocol",
+      "duration_minutes": 3.3,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1946: Ontology NN Topological Constraints",
+      "duration_minutes": 2.9,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "summary": "Milestone 2026.05.152 completed 18 experiments in 48.9 minutes, with 2 compute-bound tasks. The slowest task was a synthesis-only retrospective taking 16.7 minutes.",
+  "bottlenecks_identified": [
+    "Synthesis-only tasks, specifically the retrospective generation (Exp 1955), consumed a significant portion of the milestone's wall time."
+  ],
+  "improvements_suggested": [
+    "Optimize synthesis-only tasks like the retrospective generation to reduce overhead.",
+    "Investigate the execution efficiency of non-compute-bound tasks to reduce their wall time."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Accelerate retrospective and reporting scripts.",
+    "Profile synthesis tasks to identify I/O or token-generation bottlenecks.",
+    "Ensure compute-bound tasks remain efficient as they currently do not exhibit GPU idle issues."
+  ],
+  "estimated_time_savings_pct": 15,
+  "meta_reflection": "Analysis relied strictly on provided timing data. GPU idle suggestions were ignored as they don't apply to single-model tasks, keeping the focus on actual time-consuming synthesis operations."
+}
