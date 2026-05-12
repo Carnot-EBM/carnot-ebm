@@ -1,5 +1,9 @@
 # Carnot — Changelog
 
+## 2026-05-12 (Milestone 2026.05.151 Operational Retrospective)
+
+- Milestone 2026.05.151 operational retrospective complete. Analyzed 40.9 min wall time / 19 experiments (avg 2 min). Slowest path: Exp 1934 (10 min, synthesis-only). GPU correctly idled on non-compute bound tasks and 2 compute-bound tasks did not appear as bottlenecks. Synthesis tasks remain the primary bottleneck for optimization.
+
 ## 2026-05-12 (Milestone 2026.05.150 Operational Retrospective)
 
 - Milestone 2026.05.150 operational retrospective complete. Analyzed 63.7 min wall time / 21 experiments (avg 3 min). Slowest path: Exp 1927 (19 min, synthesis-only). All 21 tasks were synthesis-only, so GPUs correctly idled at 0% utilization throughout. Synthesis tasks remain the primary bottleneck for optimization.

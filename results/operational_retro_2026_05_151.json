@@ -1,0 +1,51 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.151",
+  "generated_at": "2026-05-12T18:23:02Z",
+  "retro_type": "operational_final",
+  "summary": "Milestone 2026.05.151 completed 19 experiments in 40.9 minutes. Synthesis-only tasks dominated the slowest experiments list, while the 2 compute-bound tasks did not appear as bottlenecks.",
+  "total_wall_time_minutes": 40.9,
+  "experiments_completed": 19,
+  "compute_bound_experiments_count": 2,
+  "slowest_experiments": [
+    {
+      "experiment": "-0400 [conductor] Exp 1934: ConsFormer Iterative Refinement Loop",
+      "duration_minutes": 9.7,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1935: Continuous Latent Sampler Prototype (FAR)",
+      "duration_minutes": 6.1,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1938: NRGPT Energy-Based Loss Probe",
+      "duration_minutes": 3.3,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1943: Milestone .151 Retrospective",
+      "duration_minutes": 3.0,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1941: EBT Reasoning Bridge",
+      "duration_minutes": 2.5,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "bottlenecks_identified": [
+    "Synthesis-only tasks (e.g., Exp 1934 and Exp 1935) were the primary bottlenecks, not compute-bound operations."
+  ],
+  "improvements_suggested": [
+    "Optimize synthesis-only processes as they represent the longest-running tasks."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Profile and accelerate the ConsFormer Iterative Refinement Loop synthesis.",
+    "Investigate the Continuous Latent Sampler Prototype synthesis phase for performance gains.",
+    "Ensure future compute-bound tasks utilize GPUs effectively, though no current bottlenecks exist there."
+  ],
+  "estimated_time_savings_pct": 25,
+  "meta_reflection": "The milestone was highly synthesis-heavy, and our primary delays were non-GPU tasks. We should focus on optimizing the synthesis pipelines to reduce overall wall time."
+}
