@@ -2712,3 +2712,32 @@ Then the gradient properly flows through the energy function to the parameters.
 **Given** an environment with `thrml`
 **When** running the DTM simulation script
 **Then** it SHALL output distribution convergence and `thrml_import_ready`.
+
+### REQ-INFER-1956: NCO-style negative constraint pattern matching
+
+The system shall provide a token-level negative constraint layer for decoding
+that:
+- registers forbidden literal and regex patterns without compiling them into a
+  single cross-product automaton;
+- rejects a candidate token before commitment when the current suffix plus that
+  candidate would match a forbidden pattern;
+- works with a positive-mask trie when one is present, applying positive
+  admissibility before negative rejection;
+- records rejected token IDs and the matching constraint names for audit; and
+- writes `results/experiment_1956_nco_negative_constraints.json` with
+  `status`, `nco_negative_constraint_layer_ready`,
+  `negative_constraints_upheld`, `overhead_vs_positive_trie`,
+  `rejected_token_examples`, `tests_run`, and `honest_verdict`.
+
+**Implementation Status:** Implemented (Exp 1956)
+
+### SCENARIO-INFER-1956: Negative constraints reject split-token continuations
+
+Given: a registry containing literal and regex negative constraints and a
+candidate token stream where a forbidden value is split across tokens.
+When: the decoder evaluates each candidate token online.
+Then: the token completing the forbidden pattern is rejected before it is
+committed, the fallback candidate is selected, and the artifact reports the
+measured overhead relative to positive-mask trie decoding.
+
+**Implementation Status:** Implemented (Exp 1956)
