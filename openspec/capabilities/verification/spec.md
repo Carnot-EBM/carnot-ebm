@@ -2729,3 +2729,20 @@ positive evidence contains satisfiable drift failures,
 true contradictions remain exclusion evidence,
 and `results/experiment_1609_context_induction.json` records a complete
 bounded artifact without modifying the research conductor.
+
+
+### REQ-VERIFY-1946: Ontology NN Topological Verification
+
+The repository shall provide an Ontology NN Topological Verification layer that:
+- computes Forman-Ricci curvature over a semantic dependency graph of constraints;
+- applies Deep Delta Learning to project invalid constraint combinations back to the feasible manifold;
+- operates without requiring any legacy small model for headline metrics;
+- includes mutually exclusive logical constraint tests;
+- writes `results/experiment_1946_ontology_nn_topological.json` with fields `status="complete"`, `forman_ricci_curvature_computed`, `deep_delta_projection_applied`, `mutually_exclusive_tests_passed`, and `honest_verdict`.
+
+### SCENARIO-VERIFY-1946: Topological Verification Enforces Coherence
+Given a set of mutually exclusive logical constraints,
+When the topological verifier evaluates the constraint graph,
+Then it identifies invalid combinations via negative Forman-Ricci curvature,
+and projects them to the feasible manifold using Deep Delta Learning,
+and records the results in the experiment JSON artifact.
