@@ -2277,3 +2277,4 @@ IMPORTANT:
 | 2026-05-12 22:54 UTC | Milestone 2026.05.154 activated | OK | 13 tasks queued |
 | 2026-05-12 22:56 UTC | Exp 1969: COLD Decoding with Langevin Dynamics | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-12 22:58 UTC | Exp 1969: COLD Decoding with Langevin Dynamics | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-12 23:00 UTC | Exp 1969: COLD Decoding with Langevin Dynamics | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
