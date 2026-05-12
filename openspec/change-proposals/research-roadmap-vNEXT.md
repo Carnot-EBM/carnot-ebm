@@ -1,58 +1,39 @@
-# Carnot Research Roadmap vNEXT (Milestone 2026.05.153)
+# Carnot Research Roadmap: Milestone 2026.05.154
 
-**Title:** Negative Constraint Decoding, Flow Sampling Samplers, and Continuous Self-Learning Refinement
+## 1. Context and Retrospective
+Milestone `.153` proved the viability of Negative Constraint Decoding, Flow Sampling, and Continual Routing. With these foundational elements verified, the three biggest gaps between the current state and the PRD vision are:
+1. **Dynamic Energy-Guided Decoding:** Moving from static constraint verification to dynamic, continuous energy-guided reasoning and decoding.
+2. **Provable Neural Constraint Solving:** Scaling continual online learning (FR-11) beyond simple routing, ensuring sound updates with zero catastrophic forgetting via hybrid training (MaxSMT+SGD).
+3. **Energy-Based Verification at Scale:** Bridging unstructured natural language instructions to deterministic, graph-based constraints with unsupervised extraction.
 
-## 1. What the Previous Milestone Proved (.152)
-Milestone .152 demonstrated that differentiable projection layers (HardNet++ style) and Physics-Informed KAN extensions effectively enforce hard constraints during energy-based generation. Multi-agent Ising models and denoising thermodynamics validated continuous latent sampling improvements. However, a major gap remains in handling negative constraints dynamically and handling non-autoregressive discrete diffusion, which causes our deterministic verifiers to frequently fail on token-limited or profanity-filtered structural generation.
+The literature sweep revealed promising advances to close these gaps: Energy-Based Transformers (EBTs), COLD Decoding via Langevin Dynamics, DOMINO for strict grammar bounds, and RUN-CSP/DeepSaDe for guaranteed neural constraints.
 
-## 2. The 3 Biggest Gaps to the PRD Vision
-1. **Dynamic Negative Constraints:** We can enforce positive schemas (e.g., valid JSON), but negative constraints (e.g., specific format exclusions or length limits) lead to state explosion in our current validators.
-2. **Efficient Non-Autoregressive Sampling:** Hardware execution simulation still relies on sequential block Gibbs. Recent Flow Sampling and Interleaved Gibbs Diffusion (IGD) work demonstrates orders of magnitude speedups for mixed continuous-discrete EBMs.
-3. **Continual Learning without Forgetting:** While FR-11 showed memory growth, applying verified continuous updates often leads to subtle soundness or completeness degradation without robust parameter routing.
+## 2. Architecture Diagram (Phase 3 -> Phase 4 Bridge)
+
+```mermaid
+graph TD
+    A[Unstructured Prompt] --> B(Energy-Guided Decoding - COLD/DOMINO)
+    B --> C{Neural Constraint Solvers - RUN-CSP}
+    C -->|Unsupervised Graph Constraints| D[EBT Reranking / EORM]
+    D --> E[DeepSaDe Guaranteed Continual Learning]
+    E -->|FR-11 Update| F[Tri-SOTA Validation]
+```
 
 ## 3. Phase Descriptions
 
-### Phase 1: Advanced Constrained Decoding (Exp 1956 - 1959)
-This phase addresses structural constraints from recent 2026 advances: NCO (Negative Constraints) and TruncProof (maximum token limitations). It integrates these filters into the local GGUF decoding logic.
-- **Exp 1956:** Implement NCO Plug-in for Negative Constraints.
-- **Exp 1957:** TruncProof Token-Limited LL(1) Parsing.
-- **Exp 1958:** GCoT-Decoding Reasoning Paths.
-- **Exp 1959:** Tri-SOTA Constrained Eval (requires Qwen3.6-35B-A3B-GGUF, gemma-4-31B-it-GGUF).
+### Phase 1: Energy-Guided and Constrained Decoding Optimization
+Integrate continuous latent energy optimizations into the decoding loop. COLD Decoding treats constraints directly as energy landscapes optimized via Langevin dynamics, while DOMINO ensures zero-overhead formal grammar bounds. 
 
-### Phase 2: Flow Sampling and Diffusion (Exp 1960 - 1962)
-Explores unnormalized density sampling (Flow Sampling) and Interleaved Gibbs Diffusion (IGD) to parallelize discrete generation.
-- **Exp 1960:** Flow Sampling Process.
-- **Exp 1961:** Interleaved Gibbs Diffusion (IGD) Prototype.
-- **Exp 1962:** NI Sampling Optimization.
+### Phase 2: Neural and Unsupervised Constraint Solvers
+Introduce advanced unsupervised network architectures to solve constraints (RUN-CSP) and guarantee zero-false-accept bounds using hybrid Maximum Satisfiability Modulo Theories (DeepSaDe).
 
-### Phase 3: Continuous Self-Learning & Reasoning (Exp 1963 - 1965)
-Focuses on the core self-learning objective by applying Routing without Forgetting principles, tracking utility growth while ensuring zero soundness mistakes.
-- **Exp 1963:** Continual Online Learning: Routing without Forgetting.
-- **Exp 1964:** Hardware-Accounted IGD Evaluation.
-- **Exp 1965:** Energy-Guided NCO Benchmark.
+### Phase 3: Energy-Based Verification and Reward Models
+Implement explicit Energy Outcome Reward Models (EORM) and Energy-Based Transformer (EBT) prototypes to rank reasoning traces and assess compatibility between inputs and candidate outputs without autoregressive dependency.
 
-### Phase 4: Synthesis & E2E (Exp 1966 - 1968)
-End-to-end integration and retrospective accounting.
-- **Exp 1966:** Tri-SOTA E2E Integration v8.
-- **Exp 1967:** Milestone .153 Pre-Retro Audit.
-- **Exp 1968:** Milestone .153 Retrospective.
+### Phase 4: Provable Continuous Self-Learning & E2E
+Deploy the DeepSaDe framework to guarantee that the continuous self-learning pipeline never violates established rules (zero forgetting, zero soundness mistakes). Ensure all developments pass the Tri-SOTA integration tests before standard retrospective workflows.
 
 ## 4. Hardware Requirements
-- **Local Host:** AMD Ryzen AI 9 HX 370 with 2x idle RTX 3090s via CUDA (as verified in .152).
-- **RAM:** Minimum 64GB required for Tri-SOTA model caches.
-- **FPGA:** KV260 reserved strictly for source-level RTL property evidence (no latency claims).
-
-## 5. Dependency Graph
-```mermaid
-graph TD;
-    exp1956-->exp1959;
-    exp1957-->exp1959;
-    exp1958-->exp1959;
-    exp1960-->exp1961;
-    exp1961-->exp1964;
-    exp1959-->exp1966;
-    exp1964-->exp1966;
-    exp1963-->exp1966;
-    exp1966-->exp1967;
-    exp1967-->exp1968;
-```
+- **Local SOTA Testing:** Dual RTX 3090 setup for unsloth GGUF inference (Qwen3.6-35B, gemma-4-31B, gemma-4-26B).
+- **FPGA Accounting:** No-synthesis logical accounting for RUN-CSP graph algorithms targeted at KV260 architecture.
+- **CPU Overheads:** Continual self-learning evaluations constrained by deterministic CPU bound checks.
