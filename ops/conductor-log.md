@@ -2264,3 +2264,4 @@ IMPORTANT:
 | 2026-05-12 22:11 UTC | Exp 1964: Hardware-Accounted IGD Evaluation | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1961-interleaved-gibbs-diffusion.succes |
 | 2026-05-12 22:13 UTC | Exp 1964: Hardware-Accounted IGD Evaluation | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1961-interleaved-gibbs-diffusion.succes |
 | 2026-05-12 22:15 UTC | Exp 1965: Energy-Guided NCO Benchmark | DOOMED_RERUN_BLOCK | 5 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-12 22:17 UTC | Exp 1965: Energy-Guided NCO Benchmark | DOOMED_RERUN_BLOCK | 5 prior failure(s) match this task's scope but prior_failures field is missing o |
