@@ -3841,3 +3841,25 @@ The terminal artifact shall include:
 - `honest_verdict` formatted as a concise milestone outcome
 
 Missing artifacts shall count as unmet criteria.
+
+### REQ-REPORT-1931: Milestone .150 Retrospective
+
+The Exp 1931 milestone .150 retrospective workflow shall write
+`results/experiment_1931_milestone_150_retro.json` summarizing the success and failure rates of the .150 milestone.
+
+The terminal artifact shall include:
+- `schema` set to `carnot.milestone_150_retro.v1`
+- `milestone_150_retro_complete`
+- `completed_task_count`
+- `blocked_task_count`
+- `failed_task_count`
+- `next_gate_recommendations`
+- `tests_run`
+- `honest_verdict` formatted as a concise milestone outcome
+
+### SCENARIO-REPORT-1931: Exp 1931 Generates Milestone .150 Retrospective
+
+**Given** the completion of experiments (1918-1930)
+**When** the Exp 1931 workflow runs
+**Then** it writes all required REQ-REPORT-1931 fields to `results/experiment_1931_milestone_150_retro.json`
+**And** details `honest_verdict` and synthesized findings.
