@@ -2203,3 +2203,5 @@ IMPORTANT:
 | 2026-05-12 17:27 UTC | Exp 1937: Continual Epsilon Learning Audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1932-energy-guided-decoding) |
 | 2026-05-12 17:31 UTC | Exp 1938: NRGPT Energy-Based Loss Probe | OK | 81 passed, 1 warning in 5.07s |
 | 2026-05-12 17:33 UTC | Exp 1937: Continual Epsilon Learning Audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1932-energy-guided-decoding) |
+| 2026-05-12 17:33 UTC | Exp 1939: Auditable Skill Graph Routing | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1937-continual-epsilon-audit.honest_ver |
+| 2026-05-12 17:35 UTC | Exp 1937: Continual Epsilon Learning Audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1932-energy-guided-decoding) |
