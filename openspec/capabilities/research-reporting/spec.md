@@ -3463,6 +3463,58 @@ and hardware accounting from source evidence
 **And** it recommends next gate fields without creating a `.148` plan.
 
 
+### REQ-REPORT-1890: Milestone .147 Completion to .148 Activation Contract
+
+The Exp 1890 workflow shall read the `.147` closeout artifacts, current ops
+entries, and `.148` roadmap proposal, then write
+`results/experiment_1890_147_completion_148_activation_contract.json` without
+modifying `research-roadmap.yaml`, `ops/status.md`, `ops/changelog.md`, or
+`scripts/research_conductor.py`.
+
+The workflow shall carry forward ready substrate fields from explicit source
+artifacts only: validator-tree readiness from Exp 1878 and BEAVER-lite bounds
+readiness from Exp 1879. It shall carry forward blocked gates from Exp 1889 and
+ops evidence only: missing mandated live SOTA cache/runtime models, missing
+terminal telemetry artifact, missing FR-11 ledger artifact, and missing
+hardware-accounting artifact.
+
+The terminal artifact shall include these top-level fields:
+
+- `status`
+- `honest_verdict`
+- `milestone_147_archived`
+- `validator_tree_ready`
+- `beaver_bounds_ready`
+- `live_sota_blocked_missing_models`
+- `telemetry_missing_terminal_artifact`
+- `fr11_ledger_missing_terminal_artifact`
+- `hardware_accounting_missing_terminal_artifact`
+- `same_title_compute_dedupe_required`
+- `next_gate_contract_ready`
+- `tests_run`
+
+The artifact shall set `same_title_compute_dedupe_required=true` only when the
+operational retrospective records same-title compute-bound terminal-state
+dedupe, GPU/model-count telemetry, and the `.147` 11 percent wall-time savings
+target. It shall set `next_gate_contract_ready=true` only when `.147` is
+archived, the validator-tree and BEAVER-lite substrate is ready, every blocked
+gate above is explicitly captured, and `.148` gate-planning text names the
+activation contract path.
+
+### SCENARIO-REPORT-1890: Exp 1890 Activates .148 Gates From .147 Evidence
+
+**Given** Exp 1878 and Exp 1879 completed the validator-tree and BEAVER-lite
+substrate
+**And** Exp 1889 reports live SOTA, telemetry, FR-11, and hardware-accounting
+gates as blocked or missing
+**And** the operational retrospective records the 11 percent dedupe and
+GPU/model-count telemetry speed target
+**When** the Exp 1890 workflow runs
+**Then** it writes the required REQ-REPORT-1890 fields
+**And** records ready substrate, blocked gate fields, and operational speedups
+in machine-readable structures for `.148` downstream gates.
+
+
 ### REQ-PUBLISH-003: HuggingFace README Accuracy Audit
 
 All HuggingFace model READMEs for Phase 1 per-token activation EBMs shall
@@ -3606,6 +3658,7 @@ embed live-GPU benchmark results from Exp 328 when available.
 | REQ-REPORT-1876 | `python/carnot/reporting/milestone_146_completion_147_gate_contract.py`, `results/experiment_1876_146_completion_147_gate_contract.json` | `tests/python/test_milestone_146_completion_147_gate_contract.py` | Implemented |
 | REQ-REPORT-1877 | `python/carnot/reporting/artifact_contract_normalization.py`, `results/experiment_1877_artifact_contract_normalization.json` | `tests/python/test_artifact_contract_normalization.py` | Implemented |
 | REQ-REPORT-1889 | `python/carnot/reporting/milestone_retro_147.py`, `results/experiment_1889_milestone_147_retro.json` | `tests/python/test_milestone_retro_147.py` | Implemented |
+| REQ-REPORT-1890 | `python/carnot/reporting/milestone_147_completion_148_activation_contract.py`, `results/experiment_1890_147_completion_148_activation_contract.json` | `tests/python/test_milestone_147_completion_148_activation_contract.py` | Implemented |
 | REQ-REPORT-024 | `python/carnot/reporting/agent_usage.py`, `scripts/agent_plan_usage.py` | `tests/python/test_agent_plan_usage.py` | Implemented |
 | REQ-PUBLISH-003 | `scripts/experiment_317_hf_publish.py` | `tests/python/test_experiment_317_hf_publish.py` | Implemented |
 | REQ-PUBLISH-004 | `scripts/experiment_330_hf_live_publish.py` | `tests/python/test_experiment_330_hf_live_publish.py` | Implemented |
