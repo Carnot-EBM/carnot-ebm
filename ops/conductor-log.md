@@ -2556,3 +2556,4 @@ IMPORTANT:
 | 2026-05-13 20:13 UTC | Exp 2086: Tier 1 Memory Pattern Constraint Additio | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-13 20:16 UTC | Exp 2087: Tier 3 JEPA Predictive Verification Scaf | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-13 20:18 UTC | Exp 2087: Tier 3 JEPA Predictive Verification Scaf | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-13 20:20 UTC | Exp 2087: Tier 3 JEPA Predictive Verification Scaf | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
