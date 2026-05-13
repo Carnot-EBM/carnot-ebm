@@ -12509,3 +12509,44 @@ This sweep was run during the planning phase for milestone `.152`. The literatur
 - **Paper:** ICLR 2026
 - **What:** Enforces strict token limits while maintaining grammatical validity.
 - **Relevance:** Hard constraint integration.
+
+## 2026-05-15 Post-.154 Planning Sweep (Milestone 2026.05.155)
+
+This sweep was run after milestone `.154` completed. Local outcomes established baselines for COLD decoding, DOMINO speculative masking, and deep solver constraints using RUN-CSP and DeepSaDe. The literature search revealed advances in continuous latent EBM sampling, hardware-oriented accounting, and continual verification skill acquisition.
+
+### Fast Autoregressive Models (FAR) for Continuous Latent Generation
+- **Paper:** "Fast Autoregressive Models for Continuous Latent Generation" (arXiv:2504.18391)
+- **What:** Establishes efficient continuous-latent autoregressive generation models that run much faster than diffusion while maintaining fidelity.
+- **Relevance to Carnot:** Carnot's continuous reasoning goals require fast sampling in latent space. FAR provides an architectural template for these layers.
+- **Concrete experiment hook:** Design a continuous-latent constraint sampler prototype inspired by FAR.
+
+### Energy-Guided Decoding and Object Hallucination Mitigation
+- **Paper:** "Energy-Guided Decoding for Object Hallucination Mitigation" (arXiv:2507.07731)
+- **What:** Uses explicit energy landscapes to dynamically guide LLM decoding, ensuring valid outputs and reducing hallucination without retraining.
+- **Relevance to Carnot:** Provides immediate value to Carnot's runtime generation. We can integrate energy guidance alongside strict grammar verification.
+- **Concrete experiment hook:** Apply Energy-Guided Decoding on local SOTA models, comparing semantic validation rates against static-constrained decoding.
+
+### KANELÉ: Hardware-Efficient Kolmogorov-Arnold Networks
+- **Paper:** "KANELÉ: Kolmogorov-Arnold Networks for Efficient LUT-based Evaluation" (arXiv:2512.12850)
+- **What:** Introduces a framework for deploying KANs on FPGAs using Lookup Tables (LUTs).
+- **Relevance to Carnot:** Directly applies to Carnot's hardware pipeline and S2KAN. Translating Carnot's KAN tiers to a LUT-based formulation provides a path to KV260 deployment.
+- **Concrete experiment hook:** Build a LUT-based representation for the S2KAN tier and perform no-synthesis hardware accounting.
+
+### ConsFormer: Iterative Solution Improvers for Constraint Satisfaction
+- **Paper:** "Self-Supervised Transformers as Iterative Solution Improvers for Constraint Satisfaction" (arXiv:2502.15794)
+- **What:** A self-supervised Transformer that iteratively refines variable assignments to solve CSPs without labeled data.
+- **Relevance to Carnot:** Extends Phase 3 goals of bridging symbolic and neural constraints. Gives a template for iterative neural refinement.
+- **Concrete experiment hook:** Implement a ConsFormer-style refinement loop for verifiable reasoning and evaluate against deterministic solver baselines.
+
+### Routing without Forgetting
+- **Paper:** "Routing without Forgetting in Continual Learning" (arXiv:2603.09576)
+- **What:** Recasts online continual learning as dynamic routing through associative retrieval layers, preventing catastrophic forgetting.
+- **Relevance to Carnot:** Addresses FR-11's retention collapse by explicitly tracking and routing past constraints to avoid overwriting them.
+- **Concrete experiment hook:** Build a validator-tree promotion ledger with no-forgetting checks.
+
+### Audited Skill-Graph Self-Improvement
+- **Paper:** "Audited Skill-Graph Self-Improvement for Agentic LLMs via Verifiable Rewards" (arXiv:2512.23760)
+- **What:** Treats self-improvement as compilation into a growing auditable skill graph managed via verified rewards.
+- **Relevance to Carnot:** Fixes FR-11 governance by converting updates into an auditable skill graph with explicit promotion lineages.
+- **Concrete experiment hook:** Convert FR-11 policy updates into a skill graph with verifier-derived rewards and gate promotion on deterministic replay.
+
