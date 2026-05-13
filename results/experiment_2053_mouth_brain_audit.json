@@ -1,0 +1,16 @@
+{
+  "experiment_id": "2053",
+  "title": "Mouth/Brain Separation Audit",
+  "findings": {
+    "rust_layer": "The Rust layer (carnot-constraints/src/pipeline.rs) is already separated. It only implements verify() and explicitly states that repair (LLM) stays in Python.",
+    "python_layer": "VerifyRepairPipeline in python/carnot/pipeline/verify_repair.py tightly couples the LLM and the verifier. It instantiates AutoModelForCausalLM and AutoTokenizer, manages GPU device placement, and implements the _generate() method alongside constraint extraction.",
+    "coupling_points": [
+      "VerifyRepairPipeline._model",
+      "VerifyRepairPipeline._tokenizer",
+      "VerifyRepairPipeline._generate",
+      "VerifyRepairPipeline.verify_and_repair"
+    ]
+  },
+  "recommendation": "Refactor VerifyRepairPipeline by extracting the LLM generation capabilities into a separate 'Mouth'/'Generator' class. The 'Brain'/'Verifier' should only take text and return verification results. An orchestrator can handle the verify-and-repair loop by calling the Generator and Verifier independently.",
+  "honest_verdict": "audit_complete"
+}
