@@ -2326,3 +2326,5 @@ IMPORTANT:
 | 2026-05-13 01:24 UTC | Exp 1991: Corrected Curie-Weiss Parity | OK | 81 passed, 1 warning in 4.83s |
 | 2026-05-13 01:30 UTC | Exp 1992: Residual-Drift Ledger | OK | 81 passed, 1 warning in 5.49s |
 | 2026-05-13 01:32 UTC | Exp 1993: Tri-SOTA E2E Integration v10 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1987-structure-snowballing-guardrail) |
+| 2026-05-13 01:35 UTC | Exp 1994: Milestone .155 Pre-Retro Audit | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1994_milesto |
+| 2026-05-13 01:37 UTC | Exp 1993: Tri-SOTA E2E Integration v10 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1987-structure-snowballing-guardrail) |
