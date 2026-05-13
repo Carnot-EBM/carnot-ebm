@@ -2478,3 +2478,5 @@ IMPORTANT:
 | 2026-05-13 12:09 UTC | Exp 2056: Soft Bellman Equation Solver | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-13 12:11 UTC | Exp 2056: Soft Bellman Equation Solver | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-13 12:13 UTC | Exp 2057: gated on Exp 2056: ARM-EBM Bijection Val | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2056-soft-bellman-equation-solver) |
+| 2026-05-13 12:20 UTC | Exp 2058: EBFT Fine-Tuning Pipeline | OK | 81 passed, 1 warning in 4.21s |
+| 2026-05-13 12:22 UTC | Exp 2057: gated on Exp 2056: ARM-EBM Bijection Val | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2056-soft-bellman-equation-solver) |
