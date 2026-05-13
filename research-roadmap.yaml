@@ -1,190 +1,209 @@
-milestone: "2026.05.158"
-milestone_title: "SEAL Self-Adaptive Learning, STKAN Continuous Evaluation, and Live SOTA Repair"
-milestone_doc: "openspec/change-proposals/research-roadmap-v158.md"
+milestone: "2026.05.159"
+milestone_title: "Continuous Latent EBRMs, Formal KAN Verification, and GEC Continual Learning"
+milestone_doc: "openspec/change-proposals/research-roadmap-v159.md"
 
 tasks:
-  - id: exp2018-archive-157-activate-158
-    title: "Exp 2018: Archive .157 and Activate .158 (Opus Bootstrapper)"
+  - id: exp2028-archive-158-activate-159
+    title: "Exp 2028: Archive .158 and Activate .159 (Opus Bootstrapper)"
     deliverable: ops/status.md
     model: opus
     max_turns: 30
     prompt: |
-      CONTEXT: We are closing milestone .157 and beginning .158. The previous archive task timed out. We are using Opus to ensure this bootstrapping task succeeds rapidly.
+      CONTEXT: We are closing milestone .158 and beginning .159. The previous archive task timed out. We are using Opus to ensure this bootstrapping task succeeds rapidly.
       EXISTING CODE TO READ FIRST:
       - ops/status.md
-      - openspec/change-proposals/research-roadmap-v158.md
-      TASK: Update the operational status document to reflect the start of milestone 2026.05.158.
+      - openspec/change-proposals/research-roadmap-v159.md
+      TASK: Update the operational status document to reflect the start of milestone 2026.05.159.
       CONCRETE STEPS:
-      1. Move milestone .157 to "Completed Milestones" in ops/status.md.
-      2. Update the "Current Milestone" to 2026.05.158.
+      1. Move milestone .158 to "Completed Milestones" in ops/status.md.
+      2. Update the "Current Milestone" to 2026.05.159.
       3. CRITICAL: write artifact FIRST. Update ops/status.md immediately.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2019-sota-gguf-runtime-repair
-    title: "Exp 2019: Local SOTA GGUF Runtime Repair and Preflight"
-    deliverable: results/experiment_2019_sota_runtime_preflight.json
+  - id: exp2029-sota-gguf-runtime-repair
+    title: "Exp 2029: Local SOTA GGUF Runtime Preflight"
+    deliverable: results/experiment_2029_sota_runtime_preflight.json
     model: opus
     max_turns: 40
     prompt: |
-      CONTEXT: In previous runs, the local SOTA runtime failed due to missing CUDA libraries or cache misses. We must repair this before running SEAL generation.
+      CONTEXT: We must verify the local SOTA runtime is functional before executing continuous latent refinement or SEAL FR-11 loops.
       EXISTING CODE TO READ FIRST:
       - scripts/experiment_template.py
       TASK: Create a Python script that tests the local llama.cpp GGUF runtime with the mandated SOTA models.
       CONCRETE STEPS:
-      1. Write scripts/experiment_2019_sota_runtime_preflight.py.
+      1. Write scripts/experiment_2029_sota_runtime_preflight.py.
       2. It MUST use the `cached_sota_pair()` or attempt to load `unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF`.
       3. Test a simple completion.
-      4. Write the results to results/experiment_2019_sota_runtime_preflight.json. Include `usable_response` and `live_sota_model_inference_used` fields.
+      4. Write the results to results/experiment_2029_sota_runtime_preflight.json. Include `usable_response` and `live_sota_model_inference_used` fields.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2020-uncertainty-quantification-telemetry
-    title: "Exp 2020: Uncertainty Quantification Telemetry Smoke"
-    deliverable: results/experiment_2020_uncertainty_telemetry.json
+  - id: exp2030-compositional-energy-stub
+    title: "Exp 2030: Compositional Energy Minimization Prototype"
+    deliverable: results/experiment_2030_compositional_energy_stub.json
     gated_on:
-      - upstream: exp2019-sota-gguf-runtime-repair
+      - upstream: exp2029-sota-gguf-runtime-repair
         artifact_field: usable_response
         op: "=="
         value: true
     max_turns: 40
     prompt: |
-      CONTEXT: Based on 2025 hallucination detection papers, we want to extract latent uncertainty signals from the SOTA models during generation.
+      CONTEXT: Based on "Generalizable Reasoning through Compositional Energy Minimization", we want to decompose a problem into sub-energies.
       EXISTING CODE TO READ FIRST:
       - scripts/experiment_template.py
-      TASK: Implement an uncertainty quantification smoke test using the SOTA runtime.
+      TASK: Implement a prototype of compositional energy scoring for constraint satisfaction.
       CONCRETE STEPS:
-      1. Write scripts/experiment_2020_uncertainty_telemetry.py.
-      2. Attempt to capture top-k logprobs or semantic energy proxies during a generation task.
-      3. Write the results artifact indicating if `topk_logprobs_available=true` and evaluate basic uncertainty features.
+      1. Write scripts/experiment_2030_compositional_energy_stub.py.
+      2. Define two simple orthogonal constraints as separate continuous energy functions.
+      3. Evaluate parallel energy minimization on mock latent vectors.
+      4. Write the results artifact indicating `compositional_energy_success=true`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2021-seal-synthetic-generation
-    title: "Exp 2021: SEAL Self-Adaptive Learning: Synthetic Trace Generation"
-    deliverable: results/experiment_2021_seal_generation.json
+  - id: exp2031-continuous-latent-ebrm
+    title: "Exp 2031: Continuous Latent EBRM Trace Editing"
+    deliverable: results/experiment_2031_continuous_latent_ebrm.json
     gated_on:
-      - upstream: exp2019-sota-gguf-runtime-repair
-        artifact_field: live_sota_model_inference_used
+      - upstream: exp2030-compositional-energy-stub
+        artifact_field: compositional_energy_success
         op: "=="
         value: true
     max_turns: 50
     prompt: |
-      CONTEXT: SEAL (NeurIPS 2025) advocates for continuous self-learning via synthetic data generation.
+      CONTEXT: We must move beyond autoregressive sampling to continuous latent reasoning, applying energy gradients to trace embeddings.
       EXISTING CODE TO READ FIRST:
-      - python/carnot/pipeline/verify_repair.py
-      TASK: Generate a batch of synthetic reasoning traces using the local SOTA models.
+      - scripts/experiment_2030_compositional_energy_stub.py
+      TASK: Implement gradient-based refinement on continuous embeddings before decoding.
       CONCRETE STEPS:
-      1. Write scripts/experiment_2021_seal_generation.py.
-      2. Use `unsloth/Qwen3.6-35B-A3B-GGUF` to generate 20 reasoning traces on constraint satisfaction tasks (e.g., CCTU or GSM8K format).
-      3. Save the traces to results/experiment_2021_seal_generation.json.
+      1. Write scripts/experiment_2031_continuous_latent_ebrm.py.
+      2. Use an embedding space (simulated or real SOTA embeddings) to represent a reasoning trace.
+      3. Apply energy gradients from the compositional constraints to iteratively edit the trace.
+      4. Save the convergence metrics to results/experiment_2031_continuous_latent_ebrm.json.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2022-seal-verifier-filtering
-    title: "Exp 2022: SEAL Verifier Filtering & Zero-False-Accept Gate"
-    deliverable: results/experiment_2022_seal_filtering.json
+  - id: exp2032-ebrm-deterministic-validation
+    title: "Exp 2032: EBRM Deterministic Zero-False-Accept Gate"
+    deliverable: results/experiment_2032_ebrm_deterministic_validation.json
     gated_on:
-      - upstream: exp2021-seal-synthetic-generation
-        artifact_field: trace_count
-        op: ">="
-        value: 10
+      - upstream: exp2031-continuous-latent-ebrm
+        artifact_field: convergence_success
+        op: "=="
+        value: true
     agent_type: codex
     max_turns: 40
     prompt: |
-      CONTEXT: We must filter the SEAL synthetic traces through our deterministic verifier stack to ensure zero soundness mistakes.
+      CONTEXT: Any continuous latent refinement must be bounded by deterministic validators to prevent "hallucinated feasibility".
       EXISTING CODE TO READ FIRST:
       - python/carnot/pipeline/verify_repair.py
-      TASK: Run the generated traces through the verifier and compute acceptance metrics.
+      TASK: Pass the decoded EBRM traces through PySAT/Z3 to guarantee zero false accepts.
       CONCRETE STEPS:
-      1. Write scripts/experiment_2022_seal_filtering.py.
-      2. Load the traces from exp2021.
-      3. Run deterministic verification.
-      4. Write results artifact. Include `soundness_mistakes`, `completeness_mistakes`, and `valid_traces_retained`.
+      1. Write scripts/experiment_2032_ebrm_deterministic_validation.py.
+      2. Decode the latent embeddings and run the formal verifier.
+      3. Write results artifact. Include `soundness_mistakes`, `completeness_mistakes`, and `valid_traces_retained`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2023-seal-policy-promotion
-    title: "Exp 2023: SEAL Continuous Memory Policy Promotion (FR-11)"
-    deliverable: results/experiment_2023_seal_promotion.json
-    gated_on:
-      - upstream: exp2022-seal-verifier-filtering
-        artifact_field: soundness_mistakes
-        op: "=="
-        value: 0
-    max_turns: 50
+  - id: exp2033-kan-pwa-abstraction
+    title: "Exp 2033: KAN Piecewise Affine (PWA) Abstraction"
+    deliverable: results/experiment_2033_kan_pwa_abstraction.json
+    agent_type: codex
+    max_turns: 40
     prompt: |
-      CONTEXT: Promote the verified traces into Carnot's Tier 2 continuous constraint memory.
+      CONTEXT: To formally verify KANs, we must abstract their nonlinear splines into Piecewise Affine (PWA) regions.
       EXISTING CODE TO READ FIRST:
-      - ops/known-issues.md
-      TASK: Implement the promotion mechanism ensuring non-forgetting.
+      - python/carnot/models/kan_tier.py
+      TASK: Implement a PWA extractor for existing Carnot KAN models.
       CONCRETE STEPS:
-      1. Write scripts/experiment_2023_seal_promotion.py.
-      2. Add the valid traces to the policy buffer.
-      3. Test replay against historical cases to ensure `nonforgetting_rate=1.0`.
-      4. Write the artifact with `utility_delta` and `nonforgetting_rate`.
+      1. Write scripts/experiment_2033_kan_pwa_abstraction.py.
+      2. Load a simple KAN constraint model.
+      3. Extract PWA bounds for its activation functions.
+      4. Save the abstraction metrics to the JSON artifact. Include `pwa_extraction_success=true`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2024-stkan-spatio-temporal-prototype
-    title: "Exp 2024: STKAN Spatio-Temporal Constraint Model Prototype"
-    deliverable: results/experiment_2024_stkan_prototype.json
+  - id: exp2034-kan-milp-verification
+    title: "Exp 2034: KAN Formal Verification via MILP"
+    deliverable: results/experiment_2034_kan_milp_verification.json
+    gated_on:
+      - upstream: exp2033-kan-pwa-abstraction
+        artifact_field: pwa_extraction_success
+        op: "=="
+        value: true
     agent_type: codex
     max_turns: 50
     prompt: |
-      CONTEXT: Based on STKAN (ICLR 2026), we want to evaluate multi-step reasoning traces using a Spatio-Temporal Kolmogorov-Arnold Network.
+      CONTEXT: With PWA abstractions, we can formulate KAN safety bounds as a Mixed Integer Linear Programming (MILP) problem.
       EXISTING CODE TO READ FIRST:
-      - python/carnot/models/kan_tier.py (or similar KAN models if existing)
-      TASK: Prototype an STKAN architecture for sequence scoring.
+      - scripts/experiment_2033_kan_pwa_abstraction.py
+      TASK: Formally verify the KAN model bounds using a MILP solver (e.g., PuLP or SciPy).
       CONCRETE STEPS:
-      1. Write scripts/experiment_2024_stkan_prototype.py.
-      2. Implement a simple STKAN forward pass in JAX/Flax.
-      3. Test it on mock sequence data (representing reasoning steps).
-      4. Write the evaluation results to the artifact.
+      1. Write scripts/experiment_2034_kan_milp_verification.py.
+      2. Encode the PWA constraints into a MILP problem.
+      3. Verify a specific bound (e.g., maximum energy violation).
+      4. Write the formal verification certificate to the artifact. Include `milp_bounds_verified=true`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2025-stkan-hardware-accounting
-    title: "Exp 2025: STKAN No-Synthesis Hardware Inference Accounting"
-    deliverable: results/experiment_2025_stkan_hardware_accounting.json
+  - id: exp2035-fr11-gec-epsilon-constraint
+    title: "Exp 2035: GEC Epsilon-Constraint Continual Learning"
+    deliverable: results/experiment_2035_fr11_gec_epsilon_constraint.json
+    max_turns: 50
+    prompt: |
+      CONTEXT: Gradient-Guided Epsilon Constraints (GEC) rigorously prevent catastrophic forgetting by projecting policy gradients over memory samples.
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/pipeline/verify_repair.py
+      TASK: Implement the GEC update rule for the FR-11 continual learning policy buffer.
+      CONCRETE STEPS:
+      1. Write scripts/experiment_2035_fr11_gec_epsilon_constraint.py.
+      2. Calculate the constraint gradients for historical memory samples.
+      3. Project the new learning update gradient to respect the epsilon slack.
+      4. Write the optimization details to the JSON artifact.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2036-fr11-gec-zero-forgetting
+    title: "Exp 2036: GEC Memory Retention & Zero-Forgetting Verification"
+    deliverable: results/experiment_2036_fr11_gec_zero_forgetting.json
     gated_on:
-      - upstream: exp2024-stkan-spatio-temporal-prototype
-        artifact_field: prototype_success
+      - upstream: exp2035-fr11-gec-epsilon-constraint
+        artifact_field: gec_update_success
         op: "=="
         value: true
-    max_turns: 30
+    max_turns: 40
     prompt: |
-      CONTEXT: We need to estimate the hardware complexity of the STKAN tier using Real Multiplications (RM) and Bit Operations (BOP) without Vivado synthesis.
+      CONTEXT: We must verify that the GEC update rule results in positive utility without any forgetting.
       EXISTING CODE TO READ FIRST:
-      - scripts/experiment_2024_stkan_prototype.py
-      TASK: Compute platform-independent inference complexity metrics for the STKAN prototype.
+      - scripts/experiment_2035_fr11_gec_epsilon_constraint.py
+      TASK: Evaluate the GEC-updated policy against the historical FR-11 memory buffer.
       CONCRETE STEPS:
-      1. Write scripts/experiment_2025_stkan_hardware_accounting.py.
-      2. Calculate the theoretical LUT/BOP/NABS limits.
-      3. Write the artifact, strictly explicitly declaring `kv260_no_synthesis_claim=true` and no FPGA board claims.
+      1. Write scripts/experiment_2036_fr11_gec_zero_forgetting.py.
+      2. Run the updated policy on old tasks.
+      3. Validate that `nonforgetting_rate=1.0` and `utility_delta > 0.0`.
+      4. Write the final evaluation to the artifact.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2026-milestone-158-pre-retro-audit
-    title: "Exp 2026: Milestone .158 Pre-Retro Audit"
-    deliverable: results/experiment_2026_milestone_158_pre_retro.json
+  - id: exp2037-milestone-159-pre-retro
+    title: "Exp 2037: Milestone .159 Pre-Retro Audit"
+    deliverable: results/experiment_2037_milestone_159_pre_retro.json
     agent_type: gemini
     max_turns: 20
     prompt: |
-      CONTEXT: We are approaching the end of milestone .158.
+      CONTEXT: We are approaching the end of milestone .159.
       EXISTING CODE TO READ FIRST:
       - ops/conductor-log.md
       TASK: Summarize the milestone outcomes.
       CONCRETE STEPS:
-      1. Write scripts/experiment_2026_milestone_158_pre_retro.py to parse recent experiment results.
-      2. Verify that SEAL generation and STKAN tasks completed.
+      1. Write scripts/experiment_2037_milestone_159_pre_retro.py to parse recent experiment results.
+      2. Verify that EBRM latent tracking, KAN verification, and GEC continual learning tasks completed.
       3. Output the summary to the JSON artifact.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2027-milestone-158-retrospective
-    title: "Exp 2027: Milestone .158 Retrospective"
-    deliverable: results/experiment_2027_milestone_158_retro.json
+  - id: exp2038-milestone-159-retro
+    title: "Exp 2038: Milestone .159 Retrospective"
+    deliverable: results/experiment_2038_milestone_159_retro.json
     agent_type: gemini
     max_turns: 50
     prompt: |
-      CONTEXT: Final retrospective for milestone .158.
+      CONTEXT: Final retrospective for milestone .159.
       EXISTING CODE TO READ FIRST:
-      - results/experiment_2026_milestone_158_pre_retro.json
+      - results/experiment_2037_milestone_159_pre_retro.json
       TASK: Write a comprehensive retrospective analysis.
       CONCRETE STEPS:
-      1. Analyze the success of the SEAL continuous learning loop and the STKAN prototype.
-      2. Write scripts/experiment_2027_milestone_158_retro.py to format the findings.
+      1. Analyze the success of the continuous latent refinements and formal verification architectures.
+      2. Write scripts/experiment_2038_milestone_159_retro.py to format the findings.
       3. Save the final JSON artifact.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
