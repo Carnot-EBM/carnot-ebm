@@ -1,200 +1,181 @@
-milestone: "2026.05.161"
-milestone_title: "Mouth/Brain EBT Architecture, ARM-EBM Bijection, and Thermodynamic Hardware Sampling"
-milestone_doc: "openspec/change-proposals/research-roadmap-v161.md"
+milestone: "2026.05.162"
+milestone_title: "Continuous Self-Learning, KAN Verification, and Energy-Guided Sampling"
+milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
 
 tasks:
-  - id: exp2053-mouth-brain-architecture-audit
-    title: "Exp 2053: Mouth vs Brain Architecture Audit"
-    deliverable: results/experiment_2053_mouth_brain_audit.json
-    max_turns: 20
-    agent_type: gemini
-    prompt: |
-      CONTEXT: Recent EBT papers (arXiv:2507.02092) dictate separating the language generator ("mouth") from the energy verifier ("brain").
-      EXISTING CODE TO READ FIRST: `_bmad/architecture.md`, `ops/status.md`.
-      TASK: Audit the Carnot codebase to identify coupling between the LLM and the verifier and plan a clean separation.
-      CONCRETE STEPS:
-      1. Analyze Python and Rust layers for LLM/Verifier tight coupling.
-      2. Draft a `_bmad/mouth_brain_separation.md` proposal.
-      3. Format findings as `{project_root}/results/experiment_2053_mouth_brain_audit.json`.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp2054-ebt-scaffolding
-    title: "Exp 2054: EBT Computation Layer Scaffolding"
-    deliverable: results/experiment_2054_ebt_scaffold.json
+  - id: exp2066-continuous-self-learning-framework
+    title: "Exp 2066: Continuous Self-Learning Framework Scaffold"
+    deliverable: results/experiment_2066_self_learning.json
     max_turns: 50
     prompt: |
-      CONTEXT: EBTs assign energy values directly to input-prediction pairs.
-      EXISTING CODE TO READ FIRST: `python/carnot/pipeline/`.
-      TASK: Implement the Energy-Based Transformer computation layer bridging the MoE outputs to PyO3 safetensors.
+      CONTEXT: The PRD mandates continuous self-learning. We need a framework to orchestrate closed-loop verifier updates.
+      EXISTING CODE TO READ FIRST: `_bmad/prd.md`, `python/carnot/pipeline/`.
+      TASK: Scaffold the Continuous Self-Learning framework for the EBM verifier.
       CONCRETE STEPS:
-      1. Scaffold an `EBTLayer` in `python/carnot/models/`.
-      2. Use `cached_sota_pair()` with `unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF` to extract hidden states on 5 queries.
-      3. Evaluate latency overhead. Save results to the deliverable JSON.
+      1. Create a `ContinuousLearner` class in `python/carnot/pipeline/`.
+      2. Set up the training loop using `unsloth/gemma-4-31B-it-GGUF` for generating trace pairs.
+      3. Evaluate the initialization overhead and log to the deliverable JSON.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2055-compositional-energy-minimization
-    title: "Exp 2055: Compositional Energy Minimization"
-    deliverable: results/experiment_2055_comp_energy.json
-    max_turns: 50
-    prompt: |
-      CONTEXT: NeurIPS 2025 demonstrated composing subproblem energy landscapes for complex multi-step reasoning.
-      EXISTING CODE TO READ FIRST: `scripts/experiment_template.py`.
-      TASK: Implement global energy landscape composition over small tractable subproblems.
-      CONCRETE STEPS:
-      1. Create a `CompositionalEnergyMinimizer` class.
-      2. Apply it to a 10-step pathfinding or constraint problem.
-      3. Measure the energy drop per step and record to the deliverable JSON.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp2056-soft-bellman-equation-solver
-    title: "Exp 2056: Soft Bellman Equation Solver"
-    deliverable: results/experiment_2056_soft_bellman.json
-    max_turns: 50
-    agent_type: codex
-    prompt: |
-      CONTEXT: arXiv:2512.15605 shows ARMs are EBMs via the Soft Bellman equation.
-      EXISTING CODE TO READ FIRST: `crates/carnot-boltzmann/src/`.
-      TASK: Implement the Soft Bellman equation solver in Rust to map ARM logprobs to EBM energies.
-      CONCRETE STEPS:
-      1. Implement `soft_bellman_solve` in Rust.
-      2. Expose it via PyO3 to the Python layer.
-      3. Add exhaustive unit tests and save test results to the deliverable JSON.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp2057-arm-ebm-bijection-test
-    title: "Exp 2057: gated on Exp 2056: ARM-EBM Bijection Validation"
-    deliverable: results/experiment_2057_arm_ebm_bijection.json
+  - id: exp2067-nested-learning-distillation
+    title: "Exp 2067: Nested Learning via Self-Distillation"
+    deliverable: results/experiment_2067_nested_distillation.json
     max_turns: 50
     gated_on:
-      - upstream: exp2056-soft-bellman-equation-solver
+      - upstream: exp2066-continuous-self-learning-framework
         artifact_field: success
-        op: '=='
+        op: "=="
         value: true
     prompt: |
-      CONTEXT: Validating the soft Bellman mapping empirically.
-      EXISTING CODE TO READ FIRST: `scripts/experiment_template.py`.
-      TASK: Validate the mathematical bijection on a small Sudoku dataset using the solver from Exp 2056.
+      CONTEXT: Self-distillation over reasoning traces allows continuous improvement.
+      EXISTING CODE TO READ FIRST: `python/carnot/models/`.
+      TASK: Implement nested learning distillation over failed and successful traces.
       CONCRETE STEPS:
-      1. Load a 10-puzzle Sudoku dataset.
-      2. Use `unsloth/gemma-4-26B-A4B-it-GGUF` to generate logits.
-      3. Map logits to energy using the soft Bellman solver. Compare with true constraint energy.
-      4. Save error bounds to the deliverable JSON.
+      1. Write the distillation loss function.
+      2. Use `unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF` via `cached_sota_pair()` to generate 5 trajectory comparisons.
+      3. Update verifier weights and measure energy delta. Save to JSON.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2058-ebft-pipeline-scaffold
-    title: "Exp 2058: EBFT Fine-Tuning Pipeline"
-    deliverable: results/experiment_2058_ebft_scaffold.json
+  - id: exp2068-continuous-verifier-updates
+    title: "Exp 2068: Continuous Verifier Updates from Self-Play"
+    deliverable: results/experiment_2068_verifier_updates.json
     max_turns: 50
     prompt: |
-      CONTEXT: Energy-Based Fine-Tuning (EBFT) targets sequence-level stats instead of next-token prediction.
-      EXISTING CODE TO READ FIRST: `python/carnot/training/`.
-      TASK: Scaffold an EBFT objective function using our new verifiers.
+      CONTEXT: Verifiers must be updated online during self-play generation without catastrophic forgetting.
+      EXISTING CODE TO READ FIRST: `python/carnot/models/`.
+      TASK: Implement online updates to the Brain EBM verifier during generation.
       CONCRETE STEPS:
-      1. Write an `EBFTLoss` function in JAX/Flax.
-      2. Run a micro-training loop for 10 epochs on a simulated dataset.
-      3. Log loss curve to the deliverable JSON.
+      1. Integrate the `ContinuousLearner` into the `Brain` component.
+      2. Run 10 steps of self-play generation and verification.
+      3. Measure the change in acceptance rate and record to JSON.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2059-thrml-sdk-integration-stub
-    title: "Exp 2059: Extropic thrml SDK Integration Stub"
-    deliverable: results/experiment_2059_thrml_integration.json
-    max_turns: 50
-    prompt: |
-      CONTEXT: Extropic AI's TSU requires using the `thrml` Python library for thermodynamic machine learning algorithms.
-      EXISTING CODE TO READ FIRST: `python/carnot/samplers/`.
-      TASK: Create an integration stub for the `thrml` SDK.
-      CONCRETE STEPS:
-      1. Define a `TSUSampler` interface that mocks the `thrml` API.
-      2. Wire it into the Carnot sampler registry.
-      3. Save the interface validation to the deliverable JSON.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp2060-dtm-thermodynamic-model
-    title: "Exp 2060: Denoising Thermodynamic Model Algorithm"
-    deliverable: results/experiment_2060_dtm_algorithm.json
+  - id: exp2069-kan-architecture-scaffold
+    title: "Exp 2069: KAN Architecture Scaffold"
+    deliverable: results/experiment_2069_kan_scaffold.json
     max_turns: 50
     agent_type: codex
-    model: gpt-5.5
     prompt: |
-      CONTEXT: The TSU runs Denoising Thermodynamic Models (DTM) tailored for probability distributions driven by thermal noise.
+      CONTEXT: Kolmogorov-Arnold Networks (KANs) use B-splines and offer inherent verifiable structures.
       EXISTING CODE TO READ FIRST: `python/carnot/models/`.
-      TASK: Implement the mathematical scaffolding for DTM.
+      TASK: Scaffold the base KAN architecture for Carnot.
       CONCRETE STEPS:
-      1. Implement a `DenoisingThermodynamicModel` class.
-      2. Write a unit test simulating a thermal relaxation step.
-      3. Save validation to the deliverable JSON.
+      1. Implement a basic `CarnotKAN` module using B-splines in JAX/Flax.
+      2. Write a unit test ensuring proper gradient flow.
+      3. Save test results and performance metrics to JSON.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2061-tsu-hardware-accounting
-    title: "Exp 2061: TSU Hardware Resource Accounting"
-    deliverable: results/experiment_2061_tsu_accounting.json
+  - id: exp2070-glorokan-robustness-verification
+    title: "Exp 2070: GloroKAN Robustness Verification"
+    deliverable: results/experiment_2070_glorokan.json
+    max_turns: 50
+    prompt: |
+      CONTEXT: GloroKAN (Mar 2025) leverages algebraic geometry of B-splines to verify KAN robustness.
+      EXISTING CODE TO READ FIRST: `python/carnot/models/`.
+      TASK: Implement robustness verification on the `CarnotKAN` using algebraic geometry principles.
+      CONCRETE STEPS:
+      1. Implement local Lipschitz constant approximation via B-splines.
+      2. Verify the robustness of a small synthetic constraint system.
+      3. Record the verification bounds to JSON.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2071-symbolickan-discrete-embedding
+    title: "Exp 2071: Symbolic-KAN Discrete Embedding"
+    deliverable: results/experiment_2071_symbolic_kan.json
+    max_turns: 50
+    prompt: |
+      CONTEXT: Symbolic-KAN (Mar 2026) embeds discrete symbolic structures into KANs for interpretable learning.
+      EXISTING CODE TO READ FIRST: `python/carnot/models/`.
+      TASK: Add discrete symbolic embedding capabilities to `CarnotKAN`.
+      CONCRETE STEPS:
+      1. Implement hierarchical gating for symbolic primitive discovery.
+      2. Train on a simple logic task (e.g., AND/XOR constraints).
+      3. Measure the accuracy of discovered symbols and save to JSON.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2072-ldsb-diffusion-path-optimization
+    title: "Exp 2072: LDSB Diffusion Path Optimization via KAN"
+    deliverable: results/experiment_2072_ldsb.json
+    max_turns: 50
+    agent_type: codex
+    prompt: |
+      CONTEXT: LDSB (2025/2026) uses KANs to optimize diffusion paths, reducing sampling steps drastically.
+      EXISTING CODE TO READ FIRST: `python/carnot/pipeline/`.
+      TASK: Integrate KAN-driven optimization into Carnot's energy sampling process.
+      CONCRETE STEPS:
+      1. Replace standard sampling steps with an LDSB-inspired continuous path optimizer.
+      2. Compare sampling steps required to reach convergence vs baseline.
+      3. Log reduction metrics to JSON.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2073-fast-autoregressive-latent-generation
+    title: "Exp 2073: Fast Autoregressive Latent Generation"
+    deliverable: results/experiment_2073_far.json
+    max_turns: 50
+    prompt: |
+      CONTEXT: Constrained generation requires fast latent proposals to feed the energy verifier.
+      EXISTING CODE TO READ FIRST: `python/carnot/pipeline/`.
+      TASK: Implement FAR (Fast Autoregressive) generation for latent proposals.
+      CONCRETE STEPS:
+      1. Implement the FAR generation loop using SOTA models `unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF`.
+      2. Evaluate latency on 5 reasoning queries.
+      3. Record latency improvements to JSON.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2074-energy-guided-decoding-scaling
+    title: "Exp 2074: Energy-Guided Decoding Scaling"
+    deliverable: results/experiment_2074_decoding_scaling.json
+    max_turns: 50
+    prompt: |
+      CONTEXT: We must scale up the energy-guided decoding to complex multi-step reasoning.
+      EXISTING CODE TO READ FIRST: `python/carnot/pipeline/`.
+      TASK: Scale up the continuous verifier guided decoding to larger constraint problems.
+      CONCRETE STEPS:
+      1. Apply the LDSB sampling + FAR proposals to a 20-step reasoning problem.
+      2. Measure end-to-end decoding time and acceptance rate.
+      3. Save metrics to JSON.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2075-tsu-hardware-sampling-parity
+    title: "Exp 2075: TSU Hardware Sampling Parity"
+    deliverable: results/experiment_2075_tsu_parity.json
     max_turns: 100
     model: opus
     prompt: |
-      CONTEXT: CRITICAL: We need latency and energy estimates for the TSU vs our AIA simulations. Hardware integration tasks require Opus.
-      EXISTING CODE TO READ FIRST: `ops/status.md`.
-      TASK: Estimate the energy efficiency and sampling latency for the upcoming Z1 chip based on Extropic specs.
+      CONTEXT: Sampling optimizations (LDSB) must be compatible with hardware accelerators like TSU.
+      EXISTING CODE TO READ FIRST: `hardware/`.
+      TASK: Simulate TSU hardware parity for KAN-driven sampling.
       CONCRETE STEPS:
-      1. Perform an analytical comparison between the `KnuthYaoSampler` (AIA) and the `TSUSampler`.
-      2. Update the hardware telemetry. Output the metrics with `hardware_execution_claim=false`.
-      3. Save the telemetry to the deliverable JSON.
+      1. Implement software simulation of TSU continuous categorical sampling.
+      2. Verify parity between LDSB software outputs and TSU simulator outputs.
+      3. CRITICAL: write artifact FIRST. Record parity deviation to JSON.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2062-unsupervised-system-2-pretraining
-    title: "Exp 2062: Unsupervised Continuous Self-Learning"
-    deliverable: results/experiment_2062_unsupervised_learning.json
+  - id: exp2076-e2e-self-learning-kan
+    title: "Exp 2076: E2E Test for Self-Learning + KAN"
+    deliverable: results/experiment_2076_e2e.json
     max_turns: 50
     prompt: |
-      CONTEXT: PRD requires continuous self-learning. We must establish an unsupervised loop where the energy landscape refines itself.
-      EXISTING CODE TO READ FIRST: `research-program.md`.
-      TASK: Set up a continuous self-learning loop using `unsloth/Qwen3.6-35B-A3B-GGUF` and the compositional energy minimizer.
+      CONTEXT: The entire Phase 1-3 pipeline must be validated E2E.
+      EXISTING CODE TO READ FIRST: `tests/`.
+      TASK: Write and execute the E2E test for the continuous self-learning EBM with a KAN verifier.
       CONCRETE STEPS:
-      1. Create a `ContinuousSelfLearner` loop processing 5 unlabelled scenarios.
-      2. Run the optimization steps, updating the EBM constraints.
-      3. Save the post-training energy deltas to the deliverable JSON.
+      1. Create an E2E script that runs generation -> KAN verification -> sampling -> verifier update.
+      2. Run the loop on 3 example queries using SOTA models (`unsloth/gemma-4-26B-A4B-it-GGUF`).
+      3. Save test results to JSON.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2063-kona-style-reasoning-benchmark
-    title: "Exp 2063: Kona-Style System Reasoning Benchmark"
-    deliverable: results/experiment_2063_kona_benchmark.json
-    max_turns: 50
-    prompt: |
-      CONTEXT: Evaluate our new architecture against the Kona 1.0 Sudoku/planning constraints approach.
-      EXISTING CODE TO READ FIRST: `scripts/experiment_template.py`.
-      TASK: Run a system-wide reasoning benchmark using the full Mouth/Brain pipeline.
-      CONCRETE STEPS:
-      1. Define a 10-problem reasoning set (Sudoku + Constraints).
-      2. Evaluate using `unsloth/gemma-4-31B-it-GGUF` with our EBM verifier.
-      3. Verify if we achieve < 500ms latency.
-      4. Save benchmark stats to the deliverable JSON.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp2064-milestone-161-audit
-    title: "Exp 2064: Milestone 161 Audit"
-    deliverable: results/experiment_2064_audit.json
+  - id: exp2077-milestone-162-retro
+    title: "Exp 2077: Milestone 162 Retro & Doc Updates"
+    deliverable: results/experiment_2077_retro.json
     max_turns: 20
     agent_type: gemini
     prompt: |
-      CONTEXT: Final verification of deliverables before closing the milestone.
-      EXISTING CODE TO READ FIRST: `openspec/change-proposals/research-roadmap-v161.md`, `ops/changelog.md`.
-      TASK: Audit all milestone artifacts.
+      CONTEXT: Milestone 162 is complete. We need to reconcile specs and prepare for the next phase.
+      EXISTING CODE TO READ FIRST: `ops/status.md`, `_bmad/traceability.md`.
+      TASK: Perform retrospective and documentation update for Milestone 162.
       CONCRETE STEPS:
-      1. Check presence of all deliverables from 2053 to 2063.
-      2. Verify E2E tests pass for the new verifier architecture.
-      3. Save the audit status to the deliverable JSON.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp2065-milestone-161-retro
-    title: "Exp 2065: Milestone 161 Retrospective"
-    deliverable: results/experiment_2065_retro.json
-    max_turns: 20
-    agent_type: gemini
-    prompt: |
-      CONTEXT: Generate the concluding retrospective for the v161 milestone.
-      EXISTING CODE TO READ FIRST: `ops/status.md`, `research-program.md`.
-      TASK: Document the findings of the EBT, Soft Bellman, and TSU integrations.
-      CONCRETE STEPS:
-      1. Summarize the performance of the separated Mouth/Brain system.
-      2. Summarize TSU hardware readiness.
-      3. Format as `experiment_2065_retro.json`.
+      1. Summarize the performance of the KAN integration and continuous self-learning loop.
+      2. Update `ops/status.md` and `_bmad/traceability.md`.
+      3. Format findings as `{project_root}/results/experiment_2077_retro.json`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
