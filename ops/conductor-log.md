@@ -2337,3 +2337,4 @@ IMPORTANT:
 | 2026-05-13 02:19 UTC | Exp 1991: Corrected Curie-Weiss Parity | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1991_curie_w |
 | 2026-05-13 02:28 UTC | Exp 1991: Corrected Curie-Weiss Parity | OK | 84 passed, 1 warning in 5.26s |
 | 2026-05-13 02:30 UTC | Milestone 2026.05.156 activated | OK | 12 tasks queued |
+| 2026-05-13 02:51 UTC | Exp 1996: NSVIF/Z3 SMT Constraint Extractor | OK | 81 passed, 1 warning in 5.68s |
