@@ -2318,3 +2318,5 @@ IMPORTANT:
 | 2026-05-13 01:02 UTC | Exp 1987: Structure Snowballing Guardrail | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1983-energy-guided-decoding-sota) |
 | 2026-05-13 01:02 UTC | Exp 1988: Audited Skill-Graph Self-Improvement | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-13 01:04 UTC | Exp 1987: Structure Snowballing Guardrail | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1983-energy-guided-decoding-sota) |
+| 2026-05-13 01:04 UTC | Exp 1988: Audited Skill-Graph Self-Improvement | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-13 01:06 UTC | Exp 1987: Structure Snowballing Guardrail | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1983-energy-guided-decoding-sota) |
