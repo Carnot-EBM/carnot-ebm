@@ -18905,3 +18905,11 @@ Implement the continuous latent constraint optimizer (LatentOptimizer) using Lan
 ### SCENARIO-VERIFY-2055: Minimizing Compositional Energy
 **When** the CompositionalEnergyMinimizer is applied to a constraint problem,
 **Then** it successfully minimizes the total energy and logs the energy drop per step.
+
+
+### REQ-VERIFY-077: Milestone 161 Deliverable Audit (Exp 2064)
+
+The repository shall provide an audit module in `python/carnot/pipeline/experiment_2064_audit.py` that verifies:
+- The presence of all deliverables from Exp 2053 to Exp 2063 in the `results/` directory.
+- The E2E tests passing for the verifier architecture.
+- The audit saves a JSON report `results/experiment_2064_audit.json` with `audit_passed` and `missing_deliverables`.
