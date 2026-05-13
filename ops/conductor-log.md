@@ -2483,3 +2483,4 @@ IMPORTANT:
 | 2026-05-13 12:25 UTC | Exp 2059: Extropic thrml SDK Integration Stub | OK | 97 passed, 1 warning in 6.78s |
 | 2026-05-13 12:27 UTC | Exp 2057: gated on Exp 2056: ARM-EBM Bijection Val | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2056-soft-bellman-equation-solver) |
 | 2026-05-13 12:28 UTC | Exp 2060: Denoising Thermodynamic Model Algorithm | FAIL | Gemini CLI error: e 10 minutes, that is correct and expected — exit promptly.  |
+| 2026-05-13 12:30 UTC | Exp 2060: Denoising Thermodynamic Model Algorithm | FAIL | Gemini CLI error: e 10 minutes, that is correct and expected — exit promptly.  |
