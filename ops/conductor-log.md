@@ -2450,3 +2450,4 @@ IMPORTANT:
 | 2026-05-13 08:54 UTC | Exp 2041: Equilibrium Matching (EqM) Gradient Prob | OK | 81 passed, 1 warning in 5.15s |
 | 2026-05-13 08:57 UTC | Exp 2042: ARM-EBM Bijection Telemetry Bounds | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-13 08:59 UTC | Exp 2042: ARM-EBM Bijection Telemetry Bounds | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-13 09:01 UTC | Exp 2042: ARM-EBM Bijection Telemetry Bounds | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
