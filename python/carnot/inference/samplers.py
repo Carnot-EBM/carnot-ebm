@@ -169,3 +169,34 @@ class RandomDiscreteDiffusionSampler:
             
         return current_sequence
 
+class ConsFormerRefinementSampler:
+    """Iterative refinement sampler using the ConsFormer model.
+    
+    Spec: REQ-SAMPLE-1985
+    """
+    
+    def __init__(self, d_model: int = 16, num_heads: int = 2, num_layers: int = 1, num_steps: int = 10, step_size: float = 0.1):
+        self.d_model = d_model
+        self.num_heads = num_heads
+        self.num_layers = num_layers
+        self.num_steps = num_steps
+        self.step_size = step_size
+        
+    def sample(self, key, initial_sequence, adj_matrix, params=None):
+        import jax
+        import jax.numpy as jnp
+        from carnot.models.consformer import ConsFormerRefiner, refinement_loop
+        
+        model = ConsFormerRefiner(d_model=self.d_model, num_heads=self.num_heads, num_layers=self.num_layers)
+        
+        if params is None:
+            # Init expects (n_nodes, 1)
+            x_in = jnp.expand_dims(initial_sequence, axis=-1)
+            params = model.init(key, x_in, adj_matrix)
+            
+        final_x, trajectory = refinement_loop(
+            params, model, initial_sequence, adj_matrix, num_steps=self.num_steps, step_size=self.step_size
+        )
+        return final_x, trajectory, params
+
+
