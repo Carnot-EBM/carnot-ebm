@@ -2541,3 +2541,4 @@ IMPORTANT:
 | 2026-05-13 19:42 UTC | Exp 2081: PWA Abstraction for CarnotKAN | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-13 19:44 UTC | Exp 2080: Instruction-Tuned Baseline on Live GPU | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2079-llm-as-extractor) |
 | 2026-05-13 19:44 UTC | Exp 2081: PWA Abstraction for CarnotKAN | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-13 19:46 UTC | Exp 2082: MILP Translation for KAN Constraints | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
