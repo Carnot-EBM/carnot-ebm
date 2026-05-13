@@ -183,18 +183,19 @@ a handful of lines of Python. Headline model-generation benchmark numbers are fr
 <strong>live GPU inference on real public models</strong> (Qwen 3.5, Gemma 4,
 Qwen3.6-35B-A3B), never from simulated runs; hardware, ensemble, and
 adversarial-audit results are labeled by artifact provenance.</p>
-<p>This report documents the research arc behind the framework — <strong>2,366
-experiment records tracked through Exp 2007, with 2,078 task records in 169
-artifact-backed completed milestone records archived through 2026.05.156 and
-checked-in result artifacts extending through milestone .156</strong> — run between
-February and May 2026. <code>research-complete.yaml</code> currently archives <strong>169</strong>
-completed milestone records through 2026.05.156; checked-in result artifacts
+<p>This report documents the research arc behind the framework — <strong>2,386
+experiment records tracked through Exp 2027, with 2,160 task records in 171
+artifact-backed completed milestone records archived through 2026.05.158 and
+checked-in result artifacts extending through milestone .158</strong> — run between
+February and May 2026. <code>research-complete.yaml</code> currently archives <strong>171</strong>
+completed milestone records through 2026.05.158; checked-in result artifacts
 and <code>ops/changelog.md</code> now extend through
-<code>results/experiment_2007_milestone_156_retro.json</code>. Milestone .156 completed
-<strong>7</strong> non-retro tasks, wrote <strong>4</strong> blocked artifacts, and left <strong>0</strong> failed gates,
-successfully implementing the NSVIF/Z3 SMT extractor with zero false positives.
-The .155 operational retrospective measured <strong>53.2</strong> minutes across
-<strong>29</strong> synthesis-only experiments, with Exp 1991 and Exp 1995 as the slowest paths.
+<code>results/experiment_2027_milestone_158_retro.json</code>. Milestone .158 completed
+<strong>13</strong> synthesis-only experiments in <strong>26.5</strong> minutes, with GPUs correctly idled at 0%
+utilization and doomed-rerun blocks saving time. The slowest path was the Exp 2027
+retrospective.
+The .157 operational retrospective measured <strong>102.0</strong> minutes across
+<strong>16</strong> experiments, where GPU utilization on compute-bound tasks was efficient.
 The story now spans activation-based negative results, constraint-based
 verification, live SOTA-model benchmarks, production verifier ensembles,
 hardware sampler audits, continuous self-learning, Phase-5 in-situ training
@@ -274,9 +275,9 @@ downstream gate skips, blocked DCCD/llguidance and p-bit/p-dit gate-check
 artifacts, and an explicit finding that SOTA cache/runtime readiness and the
 .147 operational speedup target remain unresolved.</p>
 <p>The latest archived milestone entry in <code>research-complete.yaml</code> is
-2026.05.147; checked-in result artifacts now extend through Exp 1995, the .148
+2026.05.158; checked-in result artifacts now extend through Exp 2038, the .159
 research retrospective. The latest current-result layer is therefore ahead of
-the archive by one milestone: .147 is archived, while .148 is represented in
+the archive by one milestone: .158 is archived, while .159 is represented in
 <code>ops/changelog.md</code> and result artifacts.
 Milestone .105 diagnosed the SOTA thinking-mode certificate path as a terminal
 negative: <code>&lt;think&gt;</code> output consumed
@@ -6668,6 +6669,12 @@ Experiment 1998 established live baselines for GSM8K, and Experiment 1999 succes
 Experiment 2000 fully implemented and verified DeepSaDe guaranteed constraints for enhanced verification capability.</p>
 <p><strong>Tier 4 Adaptive Energy Landscapes KAN</strong><br>
 Experiment 2005 updated the adaptive KAEM spline topology with +1/-1 knots, completing the Tier 4 Adaptive Energy Landscapes KAN.</p>
+<h3 id="416-recent-additions-milestone-157">4.16 Recent Additions (Milestone .157)</h3>
+<p><strong>GPU Utilization Efficiency and Doomed-Rerun Blocks</strong><br>
+The Milestone .157 operational retrospective (analyzing 16 experiments in 102.0 minutes) confirmed that GPU utilization on compute-bound tasks was highly efficient. Doomed-rerun blocks were successfully applied, saving significant execution time, with the slowest path identified as the Doomed-rerun block on Exp 2009 (71 minutes).</p>
+<h3 id="417-recent-additions-milestone-158">4.17 Recent Additions (Milestone .158)</h3>
+<p><strong>Synthesis and Retrospective Optimization Bottleneck</strong><br>
+The Milestone .158 operational retrospective measured 26.5 minutes of wall time across 13 synthesis-only experiments. GPUs correctly idled at 0% utilization throughout, confirming efficiency when no compute-bound tasks are present. Synthesis tasks and retrospectives remain the primary bottleneck for optimization, with the slowest path being the Exp 2027 Retrospective (7 minutes).</p>
 </article>
 
 <footer>

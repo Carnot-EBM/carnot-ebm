@@ -18,11 +18,7 @@ call. No fine-tuning. No access to model weights.
 Rust + Python/JAX, Apache 2.0, local editable install via `pip install -e ".[dev]"`.
 The public PyPI package remains a Phase-1 ship blocker as of Exp 1582.
 
-Current public research record: **2,366 experiment records tracked through Exp
-2007**. `research-complete.yaml` currently archives **2,078** task records
-across **169** artifact-backed completed milestone records through
-2026.05.156; checked-in result artifacts and `ops/changelog.md` extend through
-milestone 2026.05.156 on 2026-05-13.
+Current public research record: **2,386 experiment records tracked through Exp 2027**. `research-complete.yaml` currently archives **2,160** task records across **171** artifact-backed completed milestone records through 2026.05.158; checked-in result artifacts and `ops/changelog.md` extend through milestone 2026.05.158 on 2026-05-13.
 
 Milestone .106 delivered the critical fix to thinking-mode certificate
 generation: Exp 1366 (CRANE tag-first prefix injection) reached
@@ -402,6 +398,8 @@ experiment artifact under `results/`.
 | Milestone .105 status | **9/12 criteria met**; thinking-mode budget exhaustion diagnosed as terminal negative evidence; hardware/parity work honest; publication hold active | Exp 1363 |
 | Milestone .106 status | **11/13 criteria met**; tag-first CRANE injection resolved certificate_parse_rate=0.0 blocker; pre-test cascade SKIPs on exp1375/1376 required manual closeout | Exp 1376 retro |
 | Milestone .107 status | **13/14 criteria met**; full-scale pipeline headline allowed; arXiv v11 ready; GRPO v7 JURY-RL no improvement (sole miss); publication hold lift recommended | Exp 1389 |
+| Milestone .157 status | **Operational retrospective complete**; 16 experiments in 102.0 min; efficient GPU utilization on compute-bound tasks; doomed-rerun blocks successful | Exp 2009 |
+| Milestone .158 status | **Operational retrospective complete**; 13 synthesis-only experiments in 26.5 min; 0% GPU utilization correctly idled; doomed-rerun blocks successful | Exp 2027 |
 | DVI v2 + SECL combined calibration | DVI AUROC **0.394526 → 0.405984** (+0.011458); SECL ECE **0.561624 → 0.306922** (45.35096% reduction); deployed from 59 fresh cases and 1,770 held-out FoVer cases | Exp 1404 |
 | FR-11 continuous self-learning v5 | **1,508 fresh-verified cases** via DVI v2/SECL path; self-learning delta **+1,449** vs Exp 1388; GRPO v8 cases integrated **0** | Exp 1405 |
 | Full-scale pipeline v2, 200 cases | `certificate_parse_rate=1.0`, `semantic_validation_pass_rate=1.0`, `repair_hint_precision=1.0`, but `full_pipeline_pass_rate=0.305 < 0.40`, so not a headline result | Exp 1407 |

@@ -2440,3 +2440,5 @@ IMPORTANT:
 | 2026-05-13 07:57 UTC | Exp 2036: GEC Memory Retention & Zero-Forgetting V | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2035-fr11-gec-epsilon-constraint) |
 | 2026-05-13 08:01 UTC | Exp 2037: Milestone .159 Pre-Retro Audit | OK | 81 passed, 1 warning in 5.44s |
 | 2026-05-13 08:03 UTC | Exp 2036: GEC Memory Retention & Zero-Forgetting V | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2035-fr11-gec-epsilon-constraint) |
+| 2026-05-13 08:09 UTC | Exp 2038: Milestone .159 Retrospective | OK | 81 passed, 1 warning in 4.28s |
+| 2026-05-13 08:11 UTC | Exp 2036: GEC Memory Retention & Zero-Forgetting V | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2035-fr11-gec-epsilon-constraint) |

@@ -29,18 +29,19 @@ a handful of lines of Python. Headline model-generation benchmark numbers are fr
 Qwen3.6-35B-A3B), never from simulated runs; hardware, ensemble, and
 adversarial-audit results are labeled by artifact provenance.
 
-This report documents the research arc behind the framework — **2,366
-experiment records tracked through Exp 2007, with 2,078 task records in 169
-artifact-backed completed milestone records archived through 2026.05.156 and
-checked-in result artifacts extending through milestone .156** — run between
-February and May 2026. `research-complete.yaml` currently archives **169**
-completed milestone records through 2026.05.156; checked-in result artifacts
+This report documents the research arc behind the framework — **2,386
+experiment records tracked through Exp 2027, with 2,160 task records in 171
+artifact-backed completed milestone records archived through 2026.05.158 and
+checked-in result artifacts extending through milestone .158** — run between
+February and May 2026. `research-complete.yaml` currently archives **171**
+completed milestone records through 2026.05.158; checked-in result artifacts
 and `ops/changelog.md` now extend through
-`results/experiment_2007_milestone_156_retro.json`. Milestone .156 completed
-**7** non-retro tasks, wrote **4** blocked artifacts, and left **0** failed gates,
-successfully implementing the NSVIF/Z3 SMT extractor with zero false positives.
-The .155 operational retrospective measured **53.2** minutes across
-**29** synthesis-only experiments, with Exp 1991 and Exp 1995 as the slowest paths.
+`results/experiment_2027_milestone_158_retro.json`. Milestone .158 completed
+**13** synthesis-only experiments in **26.5** minutes, with GPUs correctly idled at 0%
+utilization and doomed-rerun blocks saving time. The slowest path was the Exp 2027
+retrospective.
+The .157 operational retrospective measured **102.0** minutes across
+**16** experiments, where GPU utilization on compute-bound tasks was efficient.
 The story now spans activation-based negative results, constraint-based
 verification, live SOTA-model benchmarks, production verifier ensembles,
 hardware sampler audits, continuous self-learning, Phase-5 in-situ training
@@ -121,9 +122,9 @@ artifacts, and an explicit finding that SOTA cache/runtime readiness and the
 .147 operational speedup target remain unresolved.
 
 The latest archived milestone entry in `research-complete.yaml` is
-2026.05.147; checked-in result artifacts now extend through Exp 1995, the .148
+2026.05.158; checked-in result artifacts now extend through Exp 2038, the .159
 research retrospective. The latest current-result layer is therefore ahead of
-the archive by one milestone: .147 is archived, while .148 is represented in
+the archive by one milestone: .158 is archived, while .159 is represented in
 `ops/changelog.md` and result artifacts.
 Milestone .105 diagnosed the SOTA thinking-mode certificate path as a terminal
 negative: `<think>` output consumed
@@ -5368,3 +5369,13 @@ Experiment 2000 fully implemented and verified DeepSaDe guaranteed constraints f
 
 **Tier 4 Adaptive Energy Landscapes KAN**  
 Experiment 2005 updated the adaptive KAEM spline topology with +1/-1 knots, completing the Tier 4 Adaptive Energy Landscapes KAN.
+
+### 4.16 Recent Additions (Milestone .157)
+
+**GPU Utilization Efficiency and Doomed-Rerun Blocks**  
+The Milestone .157 operational retrospective (analyzing 16 experiments in 102.0 minutes) confirmed that GPU utilization on compute-bound tasks was highly efficient. Doomed-rerun blocks were successfully applied, saving significant execution time, with the slowest path identified as the Doomed-rerun block on Exp 2009 (71 minutes).
+
+### 4.17 Recent Additions (Milestone .158)
+
+**Synthesis and Retrospective Optimization Bottleneck**  
+The Milestone .158 operational retrospective measured 26.5 minutes of wall time across 13 synthesis-only experiments. GPUs correctly idled at 0% utilization throughout, confirming efficiency when no compute-bound tasks are present. Synthesis tasks and retrospectives remain the primary bottleneck for optimization, with the slowest path being the Exp 2027 Retrospective (7 minutes).
