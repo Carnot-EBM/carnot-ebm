@@ -2307,3 +2307,4 @@ IMPORTANT:
 | 2026-05-13 00:34 UTC | Exp 1982: Continuous Latent EBM Prototype | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-13 00:36 UTC | Exp 1982: Continuous Latent EBM Prototype | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-13 00:38 UTC | Exp 1982: Continuous Latent EBM Prototype | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-13 00:41 UTC | Exp 1983: Energy-Guided Decoding on SOTA Models | DOOMED_RERUN_BLOCK | 8 prior failure(s) match this task's scope but prior_failures field is missing o |
