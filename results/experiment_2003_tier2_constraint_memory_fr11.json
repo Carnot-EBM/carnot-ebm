@@ -1,0 +1,42 @@
+{
+  "experiment": 2003,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-05-13",
+  "started_at": "2026-05-13T03:27:38.174828+00:00",
+  "finished_at": "2026-05-13T03:27:38.174828+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Exp 2003: Tier 2 Constraint Memory (FR-11)",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "3 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: no prior_failures field on task",
+  "gates_evaluated": [
+    {
+      "upstream": "exp1484-fr11-v9-query-time-memory-policy",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Research Finding: query_time_memory_policy_improves_bounded_replay_without_false_accepts"
+    },
+    {
+      "upstream": "exp788-constraint-addition-from-memory",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Research Finding: constraint_addition_zero"
+    },
+    {
+      "upstream": "exp926-fr11-tier2-code-domain",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Blocked: blocked_gate_check_failed"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
