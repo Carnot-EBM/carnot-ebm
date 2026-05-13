@@ -12640,3 +12640,22 @@ This sweep was run after milestone `.158` completed. The literature search revea
 - **What:** Prevents catastrophic forgetting by formulating the continual learning update as an $\epsilon$-constraint optimization problem, projecting gradients to strictly maintain performance on previous tasks.
 - **Relevance to Carnot:** `.158` introduced the SEAL loop but FR-11 requires rigorous parameter-level protection against drift. GEC gives a principled mathematical foundation for updating the policy buffer.
 - **Concrete experiment hook:** Implement GEC for FR-11 policy updates, requiring `utility_delta > 0` and strict `nonforgetting_rate = 1.0` via epsilon constraints.
+
+## 2026-05-13 Post-.159 Planning Sweep (Milestone 2026.05.160)
+
+This sweep was run after milestone .159 completed. The literature search revealed advances in Continuous Latent Reasoning, Equilibrium Matching, and Hardware-Accelerated Sampling.
+
+### Continuous Latent Reasoning (CLaRa) and Generation (FAR)
+- **Papers:** "CLaRa: Bridging Retrieval and Generation with Continuous Latent Reasoning" (arXiv:2511.18659) and "Fast Autoregressive Models for Continuous Latent Generation" (arXiv:2504.18391).
+- **What:** CLaRa uses Semantic Compression with Paraphrasing (SCP) to compress reasoning and constraints into dense continuous embeddings. FAR replaces discrete decoding heads with continuous latent generation steps.
+- **Relevance to Carnot:** Essential for moving Carnot's verification from discrete token generation to fully continuous latent space evaluation, achieving faster and more structurally sound verifiable reasoning.
+
+### Equilibrium Matching (EqM)
+- **Paper:** "Equilibrium Matching" (NeurIPS 2025).
+- **What:** Learns the equilibrium gradient of implicit energy landscapes, enabling optimization-driven inference.
+- **Relevance to Carnot:** Directly bridges the new continuous latent generation spaces with Carnot's energy-based constraint satisfaction models.
+
+### AIA Hardware-Accelerated Sampling
+- **Paper:** "Hardware Design for Probabilistic Computing" (KU Leuven, Oct 2025).
+- **What:** Introduces Approximate Inference Accelerator (AIA) using Knuth-Yao and Gumbel sampling cores to minimize RNG consumption in hardware.
+- **Relevance to Carnot:** Extends Carnot's hardware portfolio to include energy-efficient continuous variable and categorical samplers.

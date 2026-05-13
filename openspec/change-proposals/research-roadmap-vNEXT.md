@@ -1,56 +1,61 @@
-# Research Roadmap: Milestone 2026.05.157
-
+# Change Proposal: Research Roadmap v160
 **Date:** 2026-05-13
+**Milestone:** 2026.05.160
 **Status:** PROPOSED
-**Author:** Carnot Autonomous Planning Agent
 
-## 1. Context and Previous Milestone Findings
+## 1. Context & Motivation
 
-Milestone `2026.05.156` successfully achieved initial implementations of the NSVIF/Z3 SMT Extractor, LLM-as-extractor, COLD Decoding, RUN-CSP, DeepSaDe guaranteed domain constraints, and Tier 2 Constraint Memory. However, the operational retrospective for `.156` showed that extraction and verification remain compute-bound bottlenecks. We must now formalize these implementations with mathematical guarantees (MILP verification for KANs) and push the boundary towards latent-space reasoning (EBM-CoT) and preemptive violation prediction (Tier 3 FR-11).
+Milestone 159 successfully proved the capabilities of continuous latent EBRMs, formal KAN verification, and Gradient-Guided Epsilon Constraint (GEC) for continual learning. However, three critical gaps remain between our current state and the PRD vision:
 
-### The Three Biggest Gaps
-1. **Lack of Formal Verification for Spline Topologies:** While KANs provide constraint flexibility, we lack verifiable safety guarantees for their topologies.
-2. **Latent Space Separation:** Constraint extraction currently operates on discrete tokens. We need to shift towards latent-space refinement (EBM-CoT) for true continuous reasoning.
-3. **Reactive vs. Preemptive Learning:** Tier 2 memory is reactive. FR-11 requires transitioning to Tier 3: JEPA-style predictive verification to catch violations before they manifest in discrete tokens.
+1. **Bridging the Continuous Latent Space with Deterministic Execution**: While continuous latent generation is fast, its integration with Carnot's core deterministic energy layers remains incomplete. Recent literature (CLaRa, FAR) demonstrates that moving completely into a shared continuous latent space for retrieval, planning, and generation is highly efficient, but we must prove this without sacrificing verifiable constraints.
+2. **Hardware Sampling Parity for Continuous Models**: The project holds strong simulator and RTL evidence for discrete Ising/Potts machines (KV260). With the shift towards continuous representations, we need equivalent simulation and accounting (BOP/NABS) for probabilistic hardware targeting continuous variables—specifically Knuth-Yao and Gumbel sampling derived from the AIA (Approximate Inference Accelerator) architecture.
+3. **Continuous Self-Learning without Forgetting**: The PRD (FR-11) mandates autonomous directed self-learning. While GEC laid the groundwork, we must close the loop by allowing the system to update its verifier policies using Equilibrium Matching (EqM) gradients, ensuring positive utility and zero soundness mistakes.
 
-## 2. Architecture Diagram (Phase-8)
+This milestone addresses these gaps directly, moving Carnot into a fully continuous, verifiable, and self-improving latent reasoning state.
+
+## 2. Milestone Objectives
+
+- **Phase 1: Continuous Latent Constraint Generation (FAR + EqM)**
+  Establish the base continuous latent space. Replace token-level generation with Fast Autoregressive (FAR) continuous latent generation using mandated local SOTA GGUF models. Map these states to implicit energy landscapes using Equilibrium Matching (EqM) and ARM-EBM bijections.
+- **Phase 2: Hardware-Accelerated Sampling Abstractions (AIA)**
+  Develop software simulators for AIA-style Knuth-Yao and Gumbel samplers tailored for continuous categorical constraints. Perform analytical hardware resource accounting (no-synthesis) to validate future FPGA feasibility.
+- **Phase 3: Continuous Latent Reasoning & Verification (CLaRa-style)**
+  Integrate Semantic Compression with Paraphrasing (SCP) to compress reasoning rules into the latent space. Construct a continuous verifier that uses InEx-style introspection to reject high-energy latent steps before decoding.
+- **Phase 4: Continuous Self-Learning and Milestone Closure**
+  Execute the FR-11 autonomous self-learning loop. Use EqM gradients to update the verifier policy, measuring utility growth and ensuring zero soundness mistakes across the 20-case CCTU tool-use benchmark.
+
+## 3. Architecture Diagram
 
 ```mermaid
-graph TD
-    A[Instruction-Tuned GGUF] -->|Latent State| B(EBM-CoT Refinement)
-    B -->|Energy Guided| C[Continuous Latent Generator]
-    C -->|Tokens| D(Tier 3 Predictor)
-    D -->|Preemptive Violation| E{KAN4CBC Safety Gate}
-    E -->|Pass| F[Final Output]
-    E -->|Fail| G[COLD Decoding Repair]
-    H[Optimal Abstractions PWA] -->|MILP Verified| E
-    G -->|Update| I[(Tier 3 Constraint Memory)]
+graph TD;
+    A[Unsloth SOTA GGUF] -->|FAR Latent Steps| B(Continuous Latent Space);
+    C[Constraints / Rules] -->|CLaRa SCP Compression| B;
+    B --> D{EqM Gradient Verifier};
+    D -->|High Energy| E[AIA Gumbel Sampler Resampling];
+    D -->|Low Energy| F[Decode to Verified Tokens];
+    F --> G[FR-11 Self-Learning Update];
+    G --> C;
 ```
 
-## 3. Phase Descriptions
-
-### Phase 0: Activation and Housekeeping
-- Archive `.156` artifacts and initialize `.157`.
-- Pre-flight local SOTA GGUFs.
-
-### Phase 1: Latent Reasoning and Continuous Generation
-- Implement EBM-CoT latent "thought" calibration (arXiv:2511.07124).
-- Scale FAR (Fast Autoregressive) continuous latent sampling.
-
-### Phase 2: Formal Verification of Constraints
-- Implement PWA (Piecewise Affine) abstractions for KANs.
-- Interface with MILP solvers to guarantee property verification.
-- Implement KAN4CBC for safety barrier certificates.
-
-### Phase 3: Preemptive Self-Learning (FR-11 Tier 3)
-- Train a JEPA-style predictive verification model.
-- Enable preemptive guided decoding based on prediction scores.
-
-### Phase 4: Hardware Parity and Retro
-- Hardware-oriented LUT accounting for KANs.
-- Milestone retrospective.
-
 ## 4. Hardware Requirements
-- Dual RTX 3090 (24GB each) for `unsloth/Qwen3.6-35B-A3B-GGUF` and `gemma-4-31B-it-GGUF`.
-- CPU inference fallback for MILP solvers.
-- KV260 hardware emulation for LUT accounting tasks.
+
+This milestone rigorously respects the 20260507 scope reduction:
+- **Dual RTX 3090 CUDA Local SOTA Runtime**: Used heavily for the FAR latent generation and CLaRa SCP compression (via `unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF`).
+- **AIA Simulation**: Software simulation only.
+- **Hardware Execution Boundary**: The AIA hardware accounting task will explicitly emit `hardware_execution_claim=false`. No Vivado bitstream synthesis or board execution is required.
+
+## 5. Dependency Graph
+
+- `exp2040-far-latent-smoke` -> `exp2041-eqm-gradient-landscape` -> `exp2047-continuous-verifier-integration`
+- `exp2043-aia-knuth-yao-sim` -> `exp2044-gumbel-sampler-sim` -> `exp2048-inex-introspection`
+- `exp2047-continuous-verifier-integration` -> `exp2048-inex-introspection` -> `exp2049-self-learning-latent-loop`
+- `exp2049-self-learning-latent-loop` -> `exp2050-self-learning-validation` (GATED on `utility_delta > 0`)
+
+## 6. Success Criteria
+
+1. Continuous latent generation smoke tests run successfully on mandated SOTA GGUFs.
+2. EqM gradient optimization demonstrates constraint convergence.
+3. AIA sampler simulators match standard RNG parity and output exact BOP/NABS metrics without FPGA claims.
+4. CLaRa semantic compression is functional and integrated with the EqM continuous verifier.
+5. InEx introspection correctly rejects high-energy continuous configurations.
+6. The FR-11 self-learning loop executes and shows a positive `utility_delta` on the CCTU benchmark with exactly 0 `soundness_mistakes`.
