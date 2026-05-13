@@ -5682,3 +5682,4 @@ Completed 15 experiments in 28.9 minutes. There were 0 compute-bound experiments
 - 2026-05-13: Exp 2044: AIA Gumbel Sampler Simulator (⚠️ Research Finding) — honest_verdict=gumbel_converged_faster; results/experiment_2044_aia_gumbel.json
 - 2026-05-13: Exp 2046: CLaRa Semantic Compression Prototype (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_2046_clara_compression.json
 - 2026-05-13: Exp 2048: InEx-style Continuous Introspection (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_2048_inex_introspection.json
+- 2026-05-13: Exp 2051: Architectural Coherence Audit for Continuous Execution (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_2051_architecture_audit.json
