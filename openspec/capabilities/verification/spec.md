@@ -2801,3 +2801,16 @@ When the internal solver and Z3 are executed,
 Then execution time and success rate are compared,
 And an objective performance gap report is synthesized,
 And the JSON artifact is written with all fields populated.
+
+### REQ-VERIFY-1998: Live IT Baselines with GSM8K
+
+The repository shall establish real baselines with instruction-tuned models on GSM8K using the new SMT extractor.
+- Runs 200 GSM8K questions.
+- Uses `inference_mode="live_gpu"` in all results.
+- Calculates TP and FP rates.
+- Writes `results/experiment_1998_live_it_baselines_gsm8k.json` artifact.
+
+### SCENARIO-VERIFY-1998: Run GSM8K Baseline
+Given 200 GSM8K questions and the new SMT extractor,
+When the models run inference with `live_gpu` mode,
+Then the baselines TP and FP rates are calculated and saved to the JSON artifact.
