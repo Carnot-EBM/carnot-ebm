@@ -1,0 +1,24 @@
+{
+  "experiment": 2022,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-05-13",
+  "started_at": "2026-05-13T06:36:24.070945+00:00",
+  "finished_at": "2026-05-13T06:36:24.070945+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Exp 2022: SEAL Verifier Filtering & Zero-False-Accept Gate",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp2021-seal-synthetic-generation.trace_count (upstream artifact not found for task id 'exp2021-seal-synthetic-generation')",
+  "gates_evaluated": [
+    {
+      "upstream": "exp2021-seal-synthetic-generation",
+      "artifact_field": "trace_count",
+      "op": ">=",
+      "expected": 10,
+      "actual": null,
+      "passed": false,
+      "reason": "upstream artifact not found for task id 'exp2021-seal-synthetic-generation'"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
