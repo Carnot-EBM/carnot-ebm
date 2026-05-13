@@ -284,3 +284,22 @@ Sub-requirements:
 **And** it writes `results/experiment_1985_consformer_refinement_loop.json`
 with convergence metrics and a comparison.
 
+### REQ-SAMPLE-1991: Corrected Curie-Weiss Parity
+
+Carnot MUST provide an experiment script `python/carnot/samplers/thrml_carnot_parity_curie_weiss_1991.py`
+that performs a corrected three-way Curie-Weiss parity test comparing Carnot, THRML, and analytic ground truth.
+
+Sub-requirements:
+- REQ-SAMPLE-1991-1: The script SHALL execute a Curie-Weiss n=128 model in Carnot and THRML.
+- REQ-SAMPLE-1991-2: The script SHALL calculate analytic ground truth for the mean energy.
+- REQ-SAMPLE-1991-3: The script SHALL compare Carnot, THRML, and analytic means using calibrated KL gates.
+- REQ-SAMPLE-1991-4: The script SHALL explicitly state `hardware_execution_claim=false`.
+- REQ-SAMPLE-1991-5: The script SHALL output a JSON artifact to `results/experiment_1991_curie_weiss_parity_correction.json`.
+
+### SCENARIO-SAMPLE-1991: Curie-Weiss Parity Evaluation
+
+**Given** the Exp 1991 Curie-Weiss parity script
+**When** it is executed
+**Then** it successfully calculates the analytic ground truth
+**And** it runs both Carnot and THRML samplers
+**And** it writes a valid JSON artifact with the comparison metrics.
