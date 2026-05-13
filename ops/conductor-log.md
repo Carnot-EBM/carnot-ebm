@@ -2509,3 +2509,4 @@ IMPORTANT:
 | 2026-05-13 18:20 UTC | Exp 2069: KAN Architecture Scaffold | FAIL | Gemini CLI error: e 10 minutes, that is correct and expected — exit promptly.  |
 | 2026-05-13 18:22 UTC | Exp 2069: KAN Architecture Scaffold | FAIL | Gemini CLI error: e 10 minutes, that is correct and expected — exit promptly.  |
 | 2026-05-13 18:24 UTC | Exp 2069: KAN Architecture Scaffold | FAIL | Gemini CLI error: e 10 minutes, that is correct and expected — exit promptly.  |
+| 2026-05-13 18:32 UTC | Exp 2070: GloroKAN Robustness Verification | OK | 81 passed, 1 warning in 5.89s |
