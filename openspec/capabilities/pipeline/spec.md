@@ -3317,3 +3317,13 @@ The system shall implement an open constraint elicitation prototype that extract
 **Given** the Qwen3.6 MoE model output
 **When** ROCE processes the natural language output for 20 prompts
 **Then** dynamic verifiable logic is extracted successfully, success rate is evaluated, and results are written to `results/experiment_1864_roce.json`.
+
+### REQ-PIPELINE-2053: Mouth/Brain Separation Audit
+The system MUST perform an audit of the Python and Rust layers to identify tight coupling between the language generator ("mouth") and the energy verifier ("brain").
+The findings MUST be formatted as a JSON artifact at `results/experiment_2053_mouth_brain_audit.json` with keys `experiment_id`, `title`, `findings`, and `recommendation`.
+The Python module `carnot.verify.mouth_brain_audit` MUST expose a `run_audit()` function returning the dict, and it MUST be tested with 100% coverage.
+
+### SCENARIO-PIPELINE-2053: Audit JSON Generation
+**Given** the Carnot codebase with VerifyRepairPipeline
+**When** `run_audit()` is called
+**Then** it returns the JSON artifact dict with identified coupling points (e.g. `_model`, `_generate`) and a clean separation recommendation.
