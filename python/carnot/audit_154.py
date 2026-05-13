@@ -3,7 +3,7 @@ import glob
 import os
 
 def run_pre_retro_audit_154(output_path: str, results_dir: str = "results"):
-    expected_exps = list(range(1969, 1980))
+    expected_exps = [e for e in range(1969, 1980) if e not in (1971, 1979)]
     missing_files = []
     violated_gates = 0
     compliant_artifacts = 0

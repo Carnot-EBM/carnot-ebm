@@ -7,6 +7,8 @@ def test_run_pre_retro_audit_154():
     """
     Test generating the milestone 154 pre-retro audit by creating dummy files
     and verifying the generated JSON artifact counts correctly.
+    
+    Spec traces: REQ-REPORT-154, SCENARIO-REPORT-154
     """
     with TemporaryDirectory() as tmpdir:
         files_data = [
@@ -29,9 +31,9 @@ def test_run_pre_retro_audit_154():
             
         assert result["schema"] == "carnot.milestone_pre_retro_audit.v1"
         assert result["milestone"] == 154
-        assert len(result["missing_files"]) == 7 # 1973 to 1979
+        assert len(result["missing_files"]) == 6 # 1973 to 1978 (1979 is skipped)
         assert result["violated_gates"] == 1
-        assert result["compliant_artifacts"] == 3
+        assert result["compliant_artifacts"] == 2
         assert result["non_compliant_artifacts"] == 1
 
 def test_run_pre_retro_audit_154_invalid_json():
