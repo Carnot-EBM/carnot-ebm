@@ -2311,3 +2311,4 @@ IMPORTANT:
 | 2026-05-13 00:43 UTC | Exp 1983: Energy-Guided Decoding on SOTA Models | DOOMED_RERUN_BLOCK | 8 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-13 00:45 UTC | Exp 1983: Energy-Guided Decoding on SOTA Models | DOOMED_RERUN_BLOCK | 8 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-13 00:47 UTC | Exp 1984: KANELÉ LUT-Based Hardware Accounting | DOOMED_RERUN_BLOCK | 3 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-13 00:49 UTC | Exp 1984: KANELÉ LUT-Based Hardware Accounting | DOOMED_RERUN_BLOCK | 3 prior failure(s) match this task's scope but prior_failures field is missing o |
