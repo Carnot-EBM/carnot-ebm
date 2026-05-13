@@ -2436,3 +2436,5 @@ IMPORTANT:
 | 2026-05-13 07:53 UTC | Exp 2034: KAN Formal Verification via MILP | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2033-kan-pwa-abstraction) |
 | 2026-05-13 07:53 UTC | Exp 2035: GEC Epsilon-Constraint Continual Learnin | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-13 07:55 UTC | Exp 2034: KAN Formal Verification via MILP | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2033-kan-pwa-abstraction) |
+| 2026-05-13 07:55 UTC | Exp 2035: GEC Epsilon-Constraint Continual Learnin | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-13 07:57 UTC | Exp 2036: GEC Memory Retention & Zero-Forgetting V | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2035-fr11-gec-epsilon-constraint) |
