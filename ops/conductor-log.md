@@ -2324,3 +2324,5 @@ IMPORTANT:
 | 2026-05-13 01:10 UTC | Exp 1989: p-dit Hardware Preflight and Preconditio | OK | 81 passed, 1 warning in 4.68s |
 | 2026-05-13 01:16 UTC | Exp 1990: Non-Autoregressive Interface Audit | OK | 102 passed, 1 warning in 6.81s |
 | 2026-05-13 01:24 UTC | Exp 1991: Corrected Curie-Weiss Parity | OK | 81 passed, 1 warning in 4.83s |
+| 2026-05-13 01:30 UTC | Exp 1992: Residual-Drift Ledger | OK | 81 passed, 1 warning in 5.49s |
+| 2026-05-13 01:32 UTC | Exp 1993: Tri-SOTA E2E Integration v10 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1987-structure-snowballing-guardrail) |
