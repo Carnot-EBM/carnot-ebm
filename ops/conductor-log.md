@@ -2452,3 +2452,4 @@ IMPORTANT:
 | 2026-05-13 08:59 UTC | Exp 2042: ARM-EBM Bijection Telemetry Bounds | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-13 09:01 UTC | Exp 2042: ARM-EBM Bijection Telemetry Bounds | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-13 09:18 UTC | Exp 2043: AIA Knuth-Yao Hardware Simulator | OK | 97 passed, 1 warning in 7.58s |
+| 2026-05-13 09:39 UTC | Exp 2044: AIA Gumbel Sampler Simulator | OK | 97 passed, 1 warning in 6.94s |
