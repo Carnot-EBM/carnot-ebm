@@ -5691,3 +5691,4 @@ Completed 15 experiments in 28.9 minutes. There were 0 compute-bound experiments
 - 2026-05-13: Exp 2053: Mouth vs Brain Architecture Audit (✅ Complete) — honest_verdict=audit_complete; results/experiment_2053_mouth_brain_audit.json
 - 2026-05-13: Exp 2054: EBT Computation Layer Scaffolding (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_2054_ebt_scaffold.json
 - 2026-05-13: Exp 2055: Compositional Energy Minimization (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_2055_comp_energy.json
+- 2026-05-13: Exp 2056: Soft Bellman Equation Solver (⚠️ Blocked) — honest_verdict=targeted_soft_bellman_passed_full_suite_blocked_by_unrelated_repo_failures; results/experiment_2056_soft_bellman.json
