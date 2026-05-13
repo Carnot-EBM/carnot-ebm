@@ -3898,3 +3898,20 @@ The pipeline SHALL evaluate all tasks from the .154 milestone (Exp 1969 through 
 **When** the Exp 1980 audit workflow runs
 **Then** it writes all required REQ-REPORT-154 fields to `results/experiment_1980_milestone_154_pre_retro.json`
 **And** reports the compliance and missing files accurately.
+
+
+### REQ-REPORT-075: Milestone .156 Pre-Retro Audit
+
+The Exp 2006 milestone .156 pre-retro audit workflow shall read the authoritative
+Exp 1996 through Exp 2005 result JSON artifacts and write
+`results/experiment_2006_milestone_156_pre_retro.json` with:
+
+- `experiment` set to 2006
+- `status` set to `success` or `failure`
+- `artifacts_exist`, boolean indicating if all .156 artifacts exist
+- `valid_schema_confirmed`, boolean indicating if they contain a valid schema
+- `sota_models_utilized`, boolean indicating if SOTA models were confirmed to be used
+- `honest_verdict` formatted as a concise audit outcome
+
+The workflow shall verify that the .156 artifacts (1996-2005) exist and have basic schema keys, and confirm at least one utilizes SOTA models in its `model_specs` or `models_utilized` fields.
+
