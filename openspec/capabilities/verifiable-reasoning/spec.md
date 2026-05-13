@@ -18896,3 +18896,12 @@ Implement the continuous latent constraint optimizer (LatentOptimizer) using Lan
 ### SCENARIO-EORM-1811: Identify Early Exit Layers
 **When** Experiment 1811 is executed,
 **Then** it writes a JSON artifact containing `optimal_exit_layer_distribution` and `mean_optimal_layer`.
+
+### REQ-VERIFY-2055: Compositional Energy Minimization
+**Requirement:** The system MUST implement a `CompositionalEnergyMinimizer` that sums multiple sub-energies and performs gradient descent to optimize continuous latent representations.
+- Apply to a 10-step pathfinding or constraint problem.
+- Record the per-step energy drops and final energy.
+
+### SCENARIO-VERIFY-2055: Minimizing Compositional Energy
+**When** the CompositionalEnergyMinimizer is applied to a constraint problem,
+**Then** it successfully minimizes the total energy and logs the energy drop per step.
