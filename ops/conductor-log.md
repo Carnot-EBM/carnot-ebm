@@ -2359,3 +2359,6 @@ IMPORTANT:
 | 2026-05-13 04:02 UTC | Exp 2007: Milestone .156 Retrospective | OK | 81 passed, 1 warning in 4.73s |
 | 2026-05-13 04:14 UTC | Plan milestone 2026.05.157 | OK | 10 tasks proposed |
 | 2026-05-13 04:16 UTC | Milestone 2026.05.157 activated | OK | 10 tasks queued |
+| 2026-05-13 05:22 UTC | Exp 2008: Archive .156 and Activate .157 | FAIL | Gemini CLI error: Wall-clock+idle timeout after 3815s (300s silence). Last out |
+| 2026-05-13 05:24 UTC | Exp 2008: Archive .156 and Activate .157 | FAIL | Gemini CLI error: you finish the real work inside 10 minutes, that is correct  |
+| 2026-05-13 05:27 UTC | Exp 2008: Archive .156 and Activate .157 | FAIL | Gemini CLI error: you finish the real work inside 10 minutes, that is correct  |

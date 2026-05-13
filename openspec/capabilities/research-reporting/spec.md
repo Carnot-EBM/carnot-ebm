@@ -3705,6 +3705,7 @@ embed live-GPU benchmark results from Exp 328 when available.
 | REQ-REPORT-1889 | `python/carnot/reporting/milestone_retro_147.py`, `results/experiment_1889_milestone_147_retro.json` | `tests/python/test_milestone_retro_147.py` | Implemented |
 | REQ-REPORT-1890 | `python/carnot/reporting/milestone_147_completion_148_activation_contract.py`, `results/experiment_1890_147_completion_148_activation_contract.json` | `tests/python/test_milestone_147_completion_148_activation_contract.py` | Implemented |
 | REQ-REPORT-1903 | `python/carnot/reporting/milestone_retro_148.py`, `results/experiment_1903_milestone_148_retro.json` | `tests/python/test_milestone_retro_148.py` | Implemented |
+| REQ-REPORT-2008 | `python/carnot/reporting/milestone_156_archive_157_activation.py`, `results/experiment_2008_archive_156_activate_157.json` | `tests/python/test_milestone_156_archive_157_activation.py` | Implemented |
 | REQ-REPORT-024 | `python/carnot/reporting/agent_usage.py`, `scripts/agent_plan_usage.py` | `tests/python/test_agent_plan_usage.py` | Implemented |
 | REQ-PUBLISH-003 | `scripts/experiment_317_hf_publish.py` | `tests/python/test_experiment_317_hf_publish.py` | Implemented |
 | REQ-PUBLISH-004 | `scripts/experiment_330_hf_live_publish.py` | `tests/python/test_experiment_330_hf_live_publish.py` | Implemented |
@@ -3915,3 +3916,44 @@ Exp 1996 through Exp 2005 result JSON artifacts and write
 
 The workflow shall verify that the .156 artifacts (1996-2005) exist and have basic schema keys, and confirm at least one utilizes SOTA models in its `model_specs` or `models_utilized` fields.
 
+### REQ-REPORT-2008: Milestone .156 Archive and .157 Activation Artifact
+
+The Exp 2008 milestone activation workflow shall read the authoritative
+Exp 1996 through Exp 2007 result JSON artifacts, the active roadmap, the
+research-complete archive, and the conductor log, then write
+`results/experiment_2008_archive_156_activate_157.json` with:
+
+- `schema` set to `carnot.milestone_156_archive_157_activation.v1`
+- `milestone` set to `2026.05.157`
+- `predecessor_milestone` set to `2026.05.156`
+- `success`, true only when the predecessor artifacts are archived and the
+  `.157` environment is active
+- `previous_milestone_artifacts_archived`
+- `archive_move_required`, false when `research-complete.yaml` already records
+  all `.156` deliverables and the canonical `results/` artifacts remain in place
+- `archive_artifacts`, listing every Exp 1996 through Exp 2007 artifact path
+- `missing_artifacts`
+- `milestone_environment_ready`
+- `roadmap_157_active`
+- `conductor_activation_logged`
+- `protected_files_unchanged`
+- `handoff_requirements`
+- `tests_run`
+- `honest_verdict` formatted as a concise terminal outcome with a
+  `complete:` or `blocked:` prefix
+
+The workflow shall not modify `scripts/research_conductor.py`. It shall not
+move canonical result artifacts out of `results/` when the milestone is already
+represented in `research-complete.yaml`; in that case, the terminal artifact
+shall record that no archive-directory move was required.
+
+### SCENARIO-REPORT-2008: Exp 2008 Archives .156 and Activates .157
+
+**Given** the `.156` retro reports completion, Exp 1996 through Exp 2007
+artifacts exist, `research-complete.yaml` records the `.156` deliverables, and
+the active roadmap/log show milestone `2026.05.157`
+**When** the Exp 2008 workflow runs
+**Then** it writes all required REQ-REPORT-2008 fields to
+`results/experiment_2008_archive_156_activate_157.json`
+**And** `success` is true, `archive_move_required` is false, and
+`milestone_environment_ready` is true.
