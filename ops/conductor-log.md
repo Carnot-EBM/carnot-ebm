@@ -2497,3 +2497,4 @@ IMPORTANT:
 | 2026-05-13 17:37 UTC | Exp 2065: Milestone 161 Retrospective | OK | Deliverable already exists in repo |
 | 2026-05-13 18:04 UTC | Plan milestone 2026.05.162 | OK | 12 tasks proposed |
 | 2026-05-13 18:06 UTC | Milestone 2026.05.162 activated | OK | 12 tasks queued |
+| 2026-05-13 18:08 UTC | Exp 2066: Continuous Self-Learning Framework Scaff | DOOMED_RERUN_BLOCK | 10 prior failure(s) match this task's scope but prior_failures field is missing  |
