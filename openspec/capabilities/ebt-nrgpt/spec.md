@@ -23,3 +23,9 @@ The system must be capable of evaluating full, multi-step reasoning traces gener
 
 ## SCENARIO-NRGPT-004: Multi-Step Reasoning Trace Scoring
 Given multi-step reasoning traces and corresponding human-verified truth, the EBT evaluator computes compatibility energies for partial and full traces, outputting an artifact containing the evaluated trace energy scores and distributions.
+
+## REQ-NRGPT-005: EBT Layer MoE Bridge
+The system must support an Energy-Based Transformer computation layer bridging MoE outputs to PyO3 safetensors, assigning energy values directly to input-prediction pairs.
+
+## SCENARIO-NRGPT-005: EBT Layer Latency Overhead
+When extracting hidden states on queries using the EBT Layer MoE Bridge, the system evaluates and records the latency overhead in the deliverable JSON.
