@@ -167,6 +167,7 @@
 | 2026.05.158 | Synthesis-Only Operational Execution | 2019-2027 | 26.5 min wall time; GPUs correctly idle; synthesis and retro tasks identified as bottleneck |
 | 2026.05.160 | Operational Efficiency | 2041-2048 | 3 compute-bound tasks efficiently utilized GPUs, synthesis bottlenecks remain |
 | 2026.05.161 | Operational Efficiency | 25 experiments | 3 compute-bound tasks efficiently utilized GPUs, synthesis bottleneck remains |
+| 2026.05.162 | Operational Efficiency | 23 experiments | GPU efficient on compute tasks; synthesis-only tasks remain primary bottleneck |
 
 ## Breakthrough Results
 

@@ -18,7 +18,7 @@ call. No fine-tuning. No access to model weights.
 Rust + Python/JAX, Apache 2.0, local editable install via `pip install -e ".[dev]"`.
 The public PyPI package remains a Phase-1 ship blocker as of Exp 1582.
 
-Current public research record: **2,399 experiment records tracked through Exp 2065**. `research-complete.yaml` currently archives **2,213** task records across **174** artifact-backed completed milestone records through 2026.05.160; checked-in result artifacts and `ops/changelog.md` extend through milestone 2026.05.160 on 2026-05-13.
+Current public research record: **2,399 experiment records tracked through Exp 2065**. `research-complete.yaml` currently archives **2,223** task records across **175** artifact-backed completed milestone records through 2026.05.161; checked-in result artifacts and `ops/changelog.md` extend through milestone 2026.05.161 on 2026-05-13.
 
 Milestone .106 delivered the critical fix to thinking-mode certificate
 generation: Exp 1366 (CRANE tag-first prefix injection) reached

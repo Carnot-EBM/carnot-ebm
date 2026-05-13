@@ -1,0 +1,52 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.162",
+  "generated_at": "2026-05-13T19:18:27Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 45.2,
+  "experiments_completed": 23,
+  "compute_bound_experiments_count": 3,
+  "slowest_experiments": [
+    {
+      "experiment": "-0400 [conductor] Exp 2070: GloroKAN Robustness Verification",
+      "duration_minutes": 5.1,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 2071: Symbolic-KAN Discrete Embedding",
+      "duration_minutes": 3.2,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 2077: Milestone 162 Retro & Doc Updates",
+      "duration_minutes": 2.8,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Doomed-rerun block: Exp 2073: Fast Autoregressive Latent Gener",
+      "duration_minutes": 2.1,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Doomed-rerun block: Exp 2066: Continuous Self-Learning Framewo",
+      "duration_minutes": 2.0,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "summary": "Milestone 2026.05.162 completed 23 experiments in 45.2 minutes, averaging 2 minutes each. Three compute-bound experiments executed without triggering the GPU idle anomaly. The slowest paths were all synthesis-only tasks.",
+  "bottlenecks_identified": [
+    "Synthesis-only tasks like Exp 2070 (GloroKAN Robustness Verification) and Exp 2071 (Symbolic-KAN Discrete Embedding) dominate execution time."
+  ],
+  "improvements_suggested": [
+    "Optimize execution speed of synthesis-only tasks and retrospectives.",
+    "Investigate parallel execution for non-compute bound verification steps."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Profile and optimize the synthesis pipeline for GloroKAN and Symbolic-KAN.",
+    "Reduce execution time for routine milestone retrospective updates.",
+    "Ensure non-compute tasks are fully parallelized."
+  ],
+  "estimated_time_savings_pct": 20,
+  "meta_reflection": "GPU resources were correctly managed without anomalous idling on compute-bound tasks. Optimization efforts must focus on the synthesis pipeline to yield significant wall-time reductions."
+}
