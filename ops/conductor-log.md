@@ -2515,3 +2515,4 @@ IMPORTANT:
 | 2026-05-13 18:41 UTC | Exp 2072: LDSB Diffusion Path Optimization via KAN | FAIL | Gemini CLI error: e 10 minutes, that is correct and expected — exit promptly.  |
 | 2026-05-13 18:43 UTC | Exp 2072: LDSB Diffusion Path Optimization via KAN | FAIL | Gemini CLI error: e 10 minutes, that is correct and expected — exit promptly.  |
 | 2026-05-13 18:45 UTC | Exp 2073: Fast Autoregressive Latent Generation | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-13 18:47 UTC | Exp 2073: Fast Autoregressive Latent Generation | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
