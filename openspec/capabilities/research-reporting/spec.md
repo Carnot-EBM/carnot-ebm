@@ -4034,3 +4034,7 @@ Soft Bellman, and TSU integrations. The artifact shall include:
   until physical deployment.
 - Formatting adhering to the standard `carnot.milestone_retro.v1` schema.
 - `honest_verdict` reflecting the successful integration analysis.
+
+### REQ-REPORT-2089: Milestone 163 Retrospective
+
+The Exp 2089 milestone 163 retrospective workflow shall summarize the performance of SMT/LLM constraint extraction and JEPA scaffolding. It shall write `results/experiment_2089_retro.json` with the milestone schema, `criteria_met`, `notable_successes`, and `honest_verdict`.
