@@ -5640,3 +5640,4 @@ Completed 15 experiments in 28.9 minutes. There were 0 compute-bound experiments
 - 2026-05-13: Exp 1992: Residual-Drift Ledger (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_1992_residual_drift_ledger.json
 - 2026-05-13: Exp 1994: Milestone .155 Pre-Retro Audit (❌ Failed) — honest_verdict=Audit failed: missing files or violated gates found.; results/experiment_1994_milestone_155_pre_retro.json
 - 2026-05-13: Exp 1994: Milestone .155 Pre-Retro Audit (❌ Failed) — honest_verdict=Audit failed: missing files or violated gates found.; results/experiment_1994_milestone_155_pre_retro.json
+- 2026-05-13: Exp 1995: Milestone .155 Retrospective (⚠️ Blocked) — honest_verdict=complete: milestone_155_retro_filed_6_completed_4_blocked_3_failed_gate_contract_gap_third_consecutive_fr11_curie_weiss_ship; results/experiment_1995_milestone_155_retro.json
