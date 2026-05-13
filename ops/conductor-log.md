@@ -2486,3 +2486,4 @@ IMPORTANT:
 | 2026-05-13 12:30 UTC | Exp 2060: Denoising Thermodynamic Model Algorithm | FAIL | Gemini CLI error: e 10 minutes, that is correct and expected — exit promptly.  |
 | 2026-05-13 12:32 UTC | Exp 2060: Denoising Thermodynamic Model Algorithm | FAIL | Gemini CLI error: ct error or disconnect/reset before headers. retried and the |
 | 2026-05-13 12:34 UTC | Exp 2061: TSU Hardware Resource Accounting | DOOMED_RERUN_BLOCK | 6 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-13 12:36 UTC | Exp 2061: TSU Hardware Resource Accounting | DOOMED_RERUN_BLOCK | 6 prior failure(s) match this task's scope but prior_failures field is missing o |
