@@ -5704,3 +5704,4 @@ Completed 15 experiments in 28.9 minutes. There were 0 compute-bound experiments
 - 2026-05-13: Exp 2065: Milestone 161 Retrospective (✅ Complete) — honest_verdict=complete: milestone_161_retro_filed_mouth_brain_separated_tsu_simulated; results/experiment_2065_retro.json
 - 2026-05-13: Exp 2070: GloroKAN Robustness Verification (⚠️ Research Finding) — honest_verdict=success_verified_glorokan_bounds; results/experiment_2070_glorokan.json
 - 2026-05-13: Exp 2071: Symbolic-KAN Discrete Embedding (⚠️ Research Finding) — honest_verdict=success_verified_symbolic_gating; accuracy=1.0; results/experiment_2071_symbolic_kan.json
+- 2026-05-13: Exp 2077: Milestone 162 Retro & Doc Updates (✅ Complete) — honest_verdict=complete: milestone_162_retro_filed_kan_and_self_learning_integrated; results/experiment_2077_retro.json
