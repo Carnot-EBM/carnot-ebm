@@ -2551,3 +2551,4 @@ IMPORTANT:
 | 2026-05-13 20:03 UTC | Exp 2085: Ising-Guided Fuzzing for Code Repair | FAIL | Gemini CLI error: e 10 minutes, that is correct and expected — exit promptly.  |
 | 2026-05-13 20:05 UTC | Exp 2085: Ising-Guided Fuzzing for Code Repair | FAIL | Gemini CLI error: e 10 minutes, that is correct and expected — exit promptly.  |
 | 2026-05-13 20:07 UTC | Exp 2085: Ising-Guided Fuzzing for Code Repair | FAIL | Gemini CLI error: e 10 minutes, that is correct and expected — exit promptly.  |
+| 2026-05-13 20:09 UTC | Exp 2086: Tier 1 Memory Pattern Constraint Additio | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
