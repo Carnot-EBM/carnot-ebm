@@ -1,5 +1,9 @@
 # Carnot — Changelog
 
+## 2026-05-13 (Milestone 2026.05.157 Operational Retrospective)
+
+- Milestone 2026.05.157 operational retrospective complete. Analyzed 102.0 min wall time / 16 experiments (avg 6.4 min). Slowest path: 71min Doomed-rerun block on Exp 2009. GPU utilization on compute-bound tasks was efficient, and no compute-bound tasks appeared in the slowest experiments list. Doomed-rerun blocks successfully saved time.
+
 ## 2026-05-13 (Milestone 2026.05.156 Operational Retrospective)
 
 - Milestone 2026.05.156 operational retrospective complete. Analyzed 77.0 min wall time / 28 experiments (avg 3 min). Slowest path: Exp 1996 (19 min, compute-bound). GPU correctly maintained efficient utilization on compute-bound tasks, with no anomalous idling flagged. Identified the NSVIF/Z3 SMT Constraint Extractor execution time as the primary bottleneck to investigate.
