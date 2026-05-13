@@ -367,6 +367,10 @@ experiment artifact under `results/`.
 | KANtize SOS-KAN 4-bit quantization | 4-bit SOS-KAN preserved **AUROC=0.990137** vs full-precision **0.990228**, with **0.038 ms/example** inference latency and edge safetensors export | Exp 1199 |
 | Pre-test suite rescue | RLIMIT_AS raised **8 GiB → 32 GiB**; pre-test gate collected **21,413** tests with **472 passed**, **0 failed**, **1 skipped** in the verification slice | Exp 1203 |
 | Tier 1 constraint addition v2 | Added 1 high-signal constraint; precision improved **0.478 → 0.917** and FPR dropped **0.857 → 0.071** on 50 held-out cases | Exp 1212 |
+| NSVIF/Z3 SMT Extractor | **0 false positives** on contradictory CoT | Exp 1996 |
+| Code Verification on HumanEval | **Ising-guided fuzzing** implemented | Exp 1999 |
+| DeepSaDe Guaranteed Constraints | **Strict guarantee enforcement** | Exp 2000 |
+| Tier 4 Adaptive Energy Landscapes KAN | **Dynamic +1/-1 knots** | Exp 2005 |
 | SDPO dense-reward distillation — honest negative | Energy teacher selection was strong (**0.902**), but token coverage was only **22.06%** and the measured delta was **-19.61pp** | Exp 1213 |
 | Milestone .94 status | **13/13 criteria met**; publication hold still active, but critical paper fixes, arXiv v8 bundle, GPU offload, GRPO-VPS, Phase 4 harder puzzles, FoVer v7, Tier 1, SDPO measurement, and Nonogram all produced artifacts | Exp 1215 |
 | Milestone .95 backfilled status | **10/13 criteria met** from Exp 1268 backfill; GRPO-VPS full training, Phase-5 A/B/C, Boltzmann-GPT seed, Futoshiki, and retro count as met; gaming defense, GRPO v6 delta, and prior-failure automation remained not met | Exps 1216-1228/1268 |
