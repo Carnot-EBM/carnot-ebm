@@ -26,5 +26,8 @@ class DummyEnergyExtractionProxy:
             "validator_name": self.validator.name,
             "energy_val": energy_val,
             "grad_norm": grad_norm,
-            "continuous_latent_scoring_ready": True
+            "continuous_latent_scoring_ready": True,
+            "automata_metadata": {},
+            "validator_metadata": {},
+            "generator_integration_claim": False,
         }
