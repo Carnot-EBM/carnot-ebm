@@ -2465,3 +2465,5 @@ IMPORTANT:
 | 2026-05-13 10:15 UTC | Exp 2049: Autonomous Self-Learning Latent Loop (FR | DOOMED_RERUN_BLOCK | 8 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-13 10:17 UTC | Exp 2049: Autonomous Self-Learning Latent Loop (FR | DOOMED_RERUN_BLOCK | 8 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-13 10:19 UTC | Exp 2050: Gated on Exp 2049 Utility > 0 - CCTU Val | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2049-self-learning-latent-loop) |
+| 2026-05-13 10:23 UTC | Exp 2051: Architectural Coherence Audit for Contin | OK | 81 passed, 1 warning in 5.31s |
+| 2026-05-13 10:25 UTC | Exp 2050: Gated on Exp 2049 Utility > 0 - CCTU Val | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2049-self-learning-latent-loop) |
