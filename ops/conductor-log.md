@@ -2407,3 +2407,5 @@ IMPORTANT:
 | 2026-05-13 06:46 UTC | Exp 2023: SEAL Continuous Memory Policy Promotion | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2022-seal-verifier-filtering) |
 | 2026-05-13 06:46 UTC | Exp 2024: STKAN Spatio-Temporal Constraint Model P | FAIL | Gemini CLI error: you finish the real work inside 10 minutes, that is correct  |
 | 2026-05-13 06:48 UTC | Exp 2025: STKAN No-Synthesis Hardware Inference Ac | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2024-stkan-spatio-temporal-prototype) |
+| 2026-05-13 06:53 UTC | Exp 2026: Milestone .158 Pre-Retro Audit | OK | 81 passed, 1 warning in 3.97s |
+| 2026-05-13 06:55 UTC | Exp 2025: STKAN No-Synthesis Hardware Inference Ac | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2024-stkan-spatio-temporal-prototype) |
