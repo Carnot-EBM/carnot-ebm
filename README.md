@@ -18,7 +18,7 @@ call. No fine-tuning. No access to model weights.
 Rust + Python/JAX, Apache 2.0, local editable install via `pip install -e ".[dev]"`.
 The public PyPI package remains a Phase-1 ship blocker as of Exp 1582.
 
-Current public research record: **2,386 experiment records tracked through Exp 2052**. `research-complete.yaml` currently archives **2,160** task records across **171** artifact-backed completed milestone records through 2026.05.160; checked-in result artifacts and `ops/changelog.md` extend through milestone 2026.05.160 on 2026-05-13.
+Current public research record: **2,399 experiment records tracked through Exp 2065**. `research-complete.yaml` currently archives **2,213** task records across **174** artifact-backed completed milestone records through 2026.05.160; checked-in result artifacts and `ops/changelog.md` extend through milestone 2026.05.160 on 2026-05-13.
 
 Milestone .106 delivered the critical fix to thinking-mode certificate
 generation: Exp 1366 (CRANE tag-first prefix injection) reached
@@ -183,7 +183,7 @@ normalization, ROCE-to-validator-tree compilation, BEAVER-lite deterministic
 bounds for validator trees, and an honest live-SOTA ROCE block because the
 mandated Qwen3.6-35B and Gemma4-31B GGUFs were unavailable. Milestone .147
 closed with **5** completed tasks and **9** blocked/missing-artifact scopes; the
-current collection-only snapshot reports **24,472** Python test items, not a
+current collection-only snapshot reports **24,614** Python test items, not a
 full-suite pass claim. Milestone .148 then filed the activation/retro layer:
 **1** non-retro task completed, **2** blocked artifacts were written, **6**
 gate-skipped scopes were retired, and **4** unexpected missing-artifact failures

@@ -1,6 +1,6 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report — 2,411 Experiments Across the Public Record, 173 Archived Milestone Records, 24,535 Python Test Items Collected (Results and Ops Retros Through Exp 2052)
+## A Technical Report — 2,424 Experiments Across the Public Record, 174 Archived Milestone Records, 24,614 Python Test Items Collected (Results and Ops Retros Through Exp 2065)
 
 **Author:** Ian Blenke
 **Date:** 2026-05-12
@@ -29,8 +29,8 @@ a handful of lines of Python. Headline model-generation benchmark numbers are fr
 Qwen3.6-35B-A3B), never from simulated runs; hardware, ensemble, and
 adversarial-audit results are labeled by artifact provenance.
 
-This report documents the research arc behind the framework — **2,386
-experiment records tracked through Exp 2052, with 2,200 task records in 171
+This report documents the research arc behind the framework — **2,399
+experiment records tracked through Exp 2065, with 2,213 task records in 174
 artifact-backed completed milestone records archived through 2026.05.160 and
 checked-in result artifacts extending through milestone .160** — run between
 February and May 2026. `research-complete.yaml` currently archives **171**
@@ -5394,3 +5394,9 @@ Experiments 2046 and 2048 explored CLaRa Semantic Compression and InEx-style Con
 
 **Architectural Coherence Audit**
 Experiment 2051 performed an Architectural Coherence Audit for Continuous Execution.
+
+
+### 4.18 Recent Additions (Milestone .160)
+
+**Operational Efficiency**  
+The Milestone .160 operational retrospective measured 92.5 minutes of wall time across 28 experiments. GPU utilization on the 3 compute-bound tasks was efficient, and no anomalous idling was flagged. Synthesis-only tasks remain the primary bottleneck for optimization.
