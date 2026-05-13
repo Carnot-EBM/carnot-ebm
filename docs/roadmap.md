@@ -162,6 +162,7 @@
 | 2026.05.152 | Operational Efficiency | 1946-1955 | 48.9 min wall time; 18 experiments; 2 compute-bound tasks; synthesis bottleneck remains |
 | 2026.05.153 | Operational Efficiency | 1956-1991 | 140.2 min wall time; 36 experiments; 6 compute-bound tasks; synthesis bottleneck remains |
 | 2026.05.155 | Synthesis-Only Operational Efficiency | 1967-1995 | 53.2 min wall time; 29 experiments; GPU correctly idle |
+| 2026.05.156 | Operational Efficiency Analysis | 1996-2007+ | 77.0 min wall time; GPUs correctly utilized on 12 compute-bound tasks; Exp 1996 SMT Extractor bottleneck |
 
 ## Breakthrough Results
 
