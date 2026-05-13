@@ -2561,3 +2561,4 @@ IMPORTANT:
 | 2026-05-13 20:30 UTC | Exp 2089: Milestone 163 Retro & Doc Updates | OK | 81 passed, 1 warning in 4.07s |
 | 2026-05-13 20:47 UTC | Plan milestone 2026.05.164 | OK | 10 tasks proposed |
 | 2026-05-13 20:49 UTC | Milestone 2026.05.164 activated | OK | 10 tasks queued |
+| 2026-05-13 20:51 UTC | Exp 2090: Schema-Constrained Generation for Agent  | FAIL | Gemini CLI error: e 10 minutes, that is correct and expected — exit promptly.  |
