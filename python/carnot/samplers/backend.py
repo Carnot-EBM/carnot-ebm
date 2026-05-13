@@ -374,10 +374,12 @@ def _build_backend_registry() -> dict[str, type]:
     """Build the sampler backend registry, importing lazily to avoid hard deps."""
     from carnot.samplers.dwave_backend import DWaveNealBackend  # noqa: F401
     from carnot.samplers.parallel_ising import ParallelIsingSampler  # noqa: F401 (used as value)
+    from carnot.samplers.tsu_sampler import TSUSampler
 
     return {
         "cpu": CpuBackend,
         "dwave": DWaveNealBackend,
+        "thrml_tsu": TSUSampler,
     }
 
 
@@ -479,9 +481,14 @@ def get_backend(name: str | None = None) -> SamplerBackend:
         dwave_backend: SamplerBackend = DWaveSampler(mode=mode)
         return dwave_backend
 
+    if name == "thrml_tsu":
+        from carnot.samplers.tsu_sampler import TSUSampler
+
+        return TSUSampler()
+
     if name not in _BACKENDS:
         available = ", ".join(
-            sorted([*_BACKENDS.keys(), "fpga", "dwave_neal", "dwave_tabu", "dwave_qpu"])
+            sorted([*_BACKENDS.keys(), "fpga", "dwave_neal", "dwave_tabu", "dwave_qpu", "thrml_tsu"])
         )
         raise ValueError(f"Unknown sampler backend {name!r}. Available backends: {available}")
 
