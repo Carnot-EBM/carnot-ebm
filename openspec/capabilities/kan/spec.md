@@ -1327,3 +1327,24 @@ Given `CarnotKAN` with discrete symbolic embeddings,
 When trained on a simple logic task (e.g., AND/XOR constraints),
 Then it discovers the correct symbols with measurable accuracy, tests pass,
 and `results/experiment_2071_symbolic_kan.json` is written.
+
+## REQ-KAN-2083: KAN4CBC MILP Z3 Verification
+
+The KAN capability MUST implement formal verification properties for the MILP KAN using the Z3 SMT solver.
+
+**Rationale:**
+    Using techniques from KAN4CBC, we can use SMT solvers to verify the safety and correctness of the KAN.
+    Connecting the MILP representation to the Z3 solver allows asserting robustness properties.
+
+**Acceptance criteria:**
+    - `python/carnot/models/kan/kan4cbc.py` connects a MILP representation to the `z3-solver`.
+    - It asserts a simple robustness property and attempts to verify it.
+    - SMT solver execution time and result are logged to `results/experiment_2083_kan4cbc.json`.
+    - Test coverage is 100%.
+
+### SCENARIO-KAN-2083: Verify KAN MILP robustness using Z3
+
+Given a MILP KAN representation,
+When a simple robustness property is asserted and verified via Z3,
+Then the solver execution time and boolean result are logged to `results/experiment_2083_kan4cbc.json`.
+
