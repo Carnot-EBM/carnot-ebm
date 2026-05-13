@@ -32,9 +32,10 @@ def test_exact_curie_weiss_energy_bounds():
     np.testing.assert_allclose(energy, expected_E_mean, rtol=1e-5)
 
 
+@mock.patch("builtins.open", new_callable=mock.mock_open)
 @mock.patch("carnot.samplers.thrml_carnot_parity_curie_weiss_1991.ThrmlSamplerBackend")
 @mock.patch("carnot.samplers.thrml_carnot_parity_curie_weiss_1991.CpuBackend")
-def test_run_experiment_parity(mock_cpu, mock_thrml):
+def test_run_experiment_parity(mock_cpu, mock_thrml, mock_open_file):
     """Test parity experiment outputs required artifact.
     
     Spec: SCENARIO-SAMPLE-1991
