@@ -5697,3 +5697,4 @@ Completed 15 experiments in 28.9 minutes. There were 0 compute-bound experiments
 - 2026-05-13: Exp 2062: Unsupervised Continuous Self-Learning (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_2062_unsupervised_learning.json
 - 2026-05-13: Exp 2063: Kona-Style System Reasoning Benchmark (⚠️ Research Finding) — honest_verdict=kona_benchmark_passed; results/experiment_2063_kona_benchmark.json
 - 2026-05-13: Exp 2064: Milestone 161 Audit (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_2064_audit.json
+- 2026-05-13: Exp 2065: Milestone 161 Retrospective (✅ Complete) — honest_verdict=complete: milestone_161_retro_filed_mouth_brain_separated_tsu_simulated; results/experiment_2065_retro.json
