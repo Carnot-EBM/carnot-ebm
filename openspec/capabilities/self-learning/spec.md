@@ -5562,3 +5562,17 @@ The deliverable SHALL be written to `results/experiment_1685_live_sota.json`.
 **When** unlabelled model generation data is scored against constraints
 **Then** it calculates a native score and writes the `results/experiment_1854_vl_proxy.json` successfully.
 
+
+## REQ-LEARN-1986: Validator-Tree Promotion Ledger for FR-11 Non-Forgetting
+
+**Given** an FR-11 self-learning promotion loop
+**When** the validator-tree ledger evaluates a proposed model promotion
+**Then** it MUST emit `promotion_gate_passed=true` only if `utility_delta > 0` and non-forgetting conditions hold
+**And** it MUST document `soundness_mistakes` and `completeness_mistakes`
+**And** write the results to `results/experiment_1986_fr11_routing_without_forgetting.json`.
+
+### SCENARIO-LEARN-1986: Validator-Tree Promotion Ledger Gate
+
+**Given** an initialized `ValidatorTreeLedger`
+**When** a promotion is evaluated with positive utility and no forgetting
+**Then** it emits `promotion_gate_passed=true` and records the mistakes.
