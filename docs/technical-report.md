@@ -1,6 +1,6 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report — 2,386 Experiments Across the Public Record, 171 Archived Milestone Records, 24,472 Python Test Items Collected (Results and Ops Retros Through Exp 2027)
+## A Technical Report — 2,411 Experiments Across the Public Record, 173 Archived Milestone Records, 24,535 Python Test Items Collected (Results and Ops Retros Through Exp 2052)
 
 **Author:** Ian Blenke
 **Date:** 2026-05-12
@@ -30,15 +30,15 @@ Qwen3.6-35B-A3B), never from simulated runs; hardware, ensemble, and
 adversarial-audit results are labeled by artifact provenance.
 
 This report documents the research arc behind the framework — **2,386
-experiment records tracked through Exp 2027, with 2,160 task records in 171
-artifact-backed completed milestone records archived through 2026.05.158 and
-checked-in result artifacts extending through milestone .158** — run between
+experiment records tracked through Exp 2052, with 2,200 task records in 171
+artifact-backed completed milestone records archived through 2026.05.160 and
+checked-in result artifacts extending through milestone .160** — run between
 February and May 2026. `research-complete.yaml` currently archives **171**
-completed milestone records through 2026.05.158; checked-in result artifacts
+completed milestone records through 2026.05.160; checked-in result artifacts
 and `ops/changelog.md` now extend through
-`results/experiment_2027_milestone_158_retro.json`. Milestone .158 completed
+`results/experiment_2027_milestone_158_retro.json`. Milestone .160 completed
 **13** synthesis-only experiments in **26.5** minutes, with GPUs correctly idled at 0%
-utilization and doomed-rerun blocks saving time. The slowest path was the Exp 2027
+utilization and doomed-rerun blocks saving time. The slowest path was the Exp 2052
 retrospective.
 The .157 operational retrospective measured **102.0** minutes across
 **16** experiments, where GPU utilization on compute-bound tasks was efficient.
@@ -122,7 +122,7 @@ artifacts, and an explicit finding that SOTA cache/runtime readiness and the
 .147 operational speedup target remain unresolved.
 
 The latest archived milestone entry in `research-complete.yaml` is
-2026.05.158; checked-in result artifacts now extend through Exp 2038, the .159
+2026.05.160; checked-in result artifacts now extend through Exp 2038, the .159
 research retrospective. The latest current-result layer is therefore ahead of
 the archive by one milestone: .158 is archived, while .159 is represented in
 `ops/changelog.md` and result artifacts.
@@ -5378,4 +5378,19 @@ The Milestone .157 operational retrospective (analyzing 16 experiments in 102.0 
 ### 4.17 Recent Additions (Milestone .158)
 
 **Synthesis and Retrospective Optimization Bottleneck**  
-The Milestone .158 operational retrospective measured 26.5 minutes of wall time across 13 synthesis-only experiments. GPUs correctly idled at 0% utilization throughout, confirming efficiency when no compute-bound tasks are present. Synthesis tasks and retrospectives remain the primary bottleneck for optimization, with the slowest path being the Exp 2027 Retrospective (7 minutes).
+The Milestone .158 operational retrospective measured 26.5 minutes of wall time across 13 synthesis-only experiments. GPUs correctly idled at 0% utilization throughout, confirming efficiency when no compute-bound tasks are present. Synthesis tasks and retrospectives remain the primary bottleneck for optimization, with the slowest path being the Exp 2052 Retrospective (7 minutes).
+
+
+## Milestones 159–160 — Continuous Execution and Architecture Audits (Exps 2028–2052, May 2026)
+
+**Equilibrium Matching (EqM) Gradient Probing**
+Experiment 2041 probed Equilibrium Matching (EqM) gradient landscapes.
+
+**AIA Hardware and Sampler Simulators**
+Experiments 2043 and 2044 simulated AIA Knuth-Yao hardware and Gumbel sampling, yielding results favorable to hardware implementation.
+
+**Semantic Compression and Continuous Introspection**
+Experiments 2046 and 2048 explored CLaRa Semantic Compression and InEx-style Continuous Introspection prototypes.
+
+**Architectural Coherence Audit**
+Experiment 2051 performed an Architectural Coherence Audit for Continuous Execution.
