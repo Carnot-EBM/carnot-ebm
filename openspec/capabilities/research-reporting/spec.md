@@ -4019,3 +4019,18 @@ with:
 **When** the Exp 2027 workflow runs
 **Then** it writes all required REQ-REPORT-158 fields to `results/experiment_2027_milestone_158_retro.json`
 **And** it accurately sets `seal_success` and `stkan_success` based on the pre-retro audit, and provides recommendations for the next milestone.
+
+### REQ-REPORT-2065: Milestone 161 Retrospective
+
+The Exp 2065 milestone 161 retrospective workflow shall write
+`results/experiment_2065_retro.json` documenting the findings of the EBT,
+Soft Bellman, and TSU integrations. The artifact shall include:
+
+- `milestone` set to `2026.05.161`
+- A summary of the performance of the separated Mouth/Brain system, clarifying
+  that verification (Brain) can run independently of language generation (Mouth).
+- A summary of TSU hardware readiness, affirming that the Extropic TSU interface
+  is validated via simulation, while authentic hardware execution claims are deferred
+  until physical deployment.
+- Formatting adhering to the standard `carnot.milestone_retro.v1` schema.
+- `honest_verdict` reflecting the successful integration analysis.
