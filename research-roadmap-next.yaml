@@ -1,0 +1,159 @@
+milestone: "2026.05.164"
+milestone_title: "Hard Constraint Projections, EBT Reasoning, and Schema-Constrained Memory"
+milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
+
+tasks:
+  - id: exp2090-scg-mem-trace2skill
+    title: "Exp 2090: Schema-Constrained Generation for Agent Memory (SCG-MEM)"
+    deliverable: results/experiment_2090_scg_mem.json
+    max_turns: 50
+    agent_type: codex
+    prompt: |
+      CONTEXT: We must harden the Tier 2 Continuous Learning memory. Recent work (arXiv:2604.20117) proposes SCG-MEM to constrain memory entry formatting.
+      EXISTING CODE TO READ FIRST: `python/carnot/pipeline/`.
+      TASK: Implement SCG-MEM to ensure that Trace2Skill memory updates conform strictly to Carnot's internal JSON schema constraints.
+      CONCRETE STEPS:
+      1. Define a strict Cognitive Schema for trace records.
+      2. Implement a decoding mask/adapter enforcing this schema on local GGUFs.
+      3. Evaluate the structural validity rate of 50 new memory insertions. Save to JSON.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2091-pinet-projection-layer
+    title: "Exp 2091: $\Pi$Net Differentiable Projection Layer"
+    deliverable: results/experiment_2091_pinet.json
+    max_turns: 50
+    agent_type: codex
+    prompt: |
+      CONTEXT: Recent advances (ICLR 2026) introduce $\Pi$Net, a hard constraint projection layer using Douglas-Rachford splitting.
+      EXISTING CODE TO READ FIRST: `python/carnot/verify/`.
+      TASK: Prototype a differentiable projection layer that forces linear constraint satisfaction.
+      CONCRETE STEPS:
+      1. Implement a JAX-based $\Pi$Net projection module.
+      2. Test the layer against a set of synthetic linear constraints from our SMT extractor.
+      3. Measure constraint violation rate (expected: 0%) and latency. Save to JSON.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2092-hardnet-nonlinear
+    title: "Exp 2092: HardNet++ Non-Linear Constraint Enforcement"
+    deliverable: results/experiment_2092_hardnet.json
+    max_turns: 50
+    gated_on:
+      - upstream: exp2091-pinet-projection-layer
+        artifact_field: violation_rate
+        op: "=="
+        value: 0.0
+    prompt: |
+      CONTEXT: Building on $\Pi$Net, HardNet++ (arXiv:2604.19669) handles non-linear constraints via damped local linearizations.
+      EXISTING CODE TO READ FIRST: `python/carnot/verify/`.
+      TASK: Implement the HardNet++ projection algorithm for non-linear algebraic constraints.
+      CONCRETE STEPS:
+      1. Extend the projection module to support iterative local linearizations.
+      2. Validate on 5 non-linear constraints extracted by the SMT tool.
+      3. Log convergence steps and zero-violation success to JSON.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2093-ebt-prototype
+    title: "Exp 2093: Energy-Based Transformer (EBT) Baseline Prototype"
+    deliverable: results/experiment_2093_ebt_prototype.json
+    max_turns: 50
+    prompt: |
+      CONTEXT: Energy-Based Transformers (ICLR 2026) represent the future of Carnot Phase 3, casting generation as energy minimization.
+      EXISTING CODE TO READ FIRST: `python/carnot/models/`.
+      TASK: Scaffold a minimal EBT architecture in JAX that assigns scalar energy to input-prediction pairs.
+      CONCRETE STEPS:
+      1. Construct an `EBTReasoner` model combining a small transformer body with an energy scalar output head.
+      2. Implement a generation function using gradient descent on the input tokens with respect to the energy landscape.
+      3. Record loss convergence and basic inference latency to JSON.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2094-ets-rl-alignment
+    title: "Exp 2094: Energy-Guided Test-Time Scaling (ETS)"
+    deliverable: results/experiment_2094_ets_scaling.json
+    max_turns: 50
+    prompt: |
+      CONTEXT: ETS (ICML 2026) provides training-free alignment by incorporating energy terms into transition probabilities at test time.
+      EXISTING CODE TO READ FIRST: `python/carnot/pipeline/`.
+      TASK: Apply ETS to our live SOTA GGUF decoding pipeline.
+      CONCRETE STEPS:
+      1. Modify the `score_candidates` step to utilize ETS-style Monte Carlo energy estimation.
+      2. Use `unsloth/gemma-4-26B-A4B-it-GGUF` to decode 10 GSM8K problems with ETS.
+      3. Compare accuracy and latency against the standard generation baseline. Save to JSON.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2095-live-gpu-ebt-evaluation
+    title: "Exp 2095: Live GPU EBT vs Autoregressive Evaluation"
+    deliverable: results/experiment_2095_live_ebt_eval.json
+    max_turns: 50
+    gated_on:
+      - upstream: exp2093-ebt-prototype
+        artifact_field: inference_success
+        op: "=="
+        value: true
+    prompt: |
+      CONTEXT: We must validate if the EBT prototype demonstrates dynamic System 2 thinking properties under constraint pressure.
+      EXISTING CODE TO READ FIRST: `python/carnot/models/`.
+      TASK: Evaluate the `EBTReasoner` against a standard autoregressive model on hard constraint tasks.
+      CONCRETE STEPS:
+      1. Generate constraint-bound traces using the EBT gradient-descent loop.
+      2. Compare with `unsloth/Qwen3.6-35B-A3B-GGUF` performance on the same tasks.
+      3. Log inference times, steps to converge, and final energy to JSON.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2096-tier2-continuous-learning-ets
+    title: "Exp 2096: Tier 2 Memory Updating via ETS Feedback"
+    deliverable: results/experiment_2096_tier2_ets.json
+    max_turns: 50
+    prompt: |
+      CONTEXT: Connect the newly validated ETS decoding logic back to the Continuous Learning loop.
+      EXISTING CODE TO READ FIRST: `python/carnot/pipeline/`.
+      TASK: Update the constraint pattern memory dynamically using feedback from ETS trajectory scoring.
+      CONCRETE STEPS:
+      1. Extract successful ETS trajectories that circumvented constraints.
+      2. Generate new logical constraint templates from these trajectories via SCG-MEM.
+      3. Save the new constraint library updates to JSON.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2097-npu-jepa-execution
+    title: "Exp 2097: NPU Execution of JEPA Predictor"
+    deliverable: results/experiment_2097_npu_jepa.json
+    max_turns: 100
+    model: opus
+    prompt: |
+      CONTEXT: With the NPU toolchain unblocked in .163, we need to execute the JEPA predictor model directly on the XDNA NPU.
+      EXISTING CODE TO READ FIRST: `python/carnot/models/`.
+      TASK: Load and execute the ONNX JEPA model using the VitisAI EP on the NPU.
+      CONCRETE STEPS:
+      1. Load the `JEPAPredictor` ONNX artifact via onnxruntime with VitisAI Execution Provider.
+      2. Run inference on a batch of 50 partial trace tensors.
+      3. Measure end-to-end NPU latency vs CPU latency. Log `honest_verdict` to JSON.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2098-kan-hardware-complexity
+    title: "Exp 2098: Hardware Complexity Accounting for KAN MILP"
+    deliverable: results/experiment_2098_kan_metrics.json
+    max_turns: 50
+    agent_type: gemini
+    prompt: |
+      CONTEXT: Before synthesizing, we must compute hardware-oriented inference complexity (arXiv:2604.03345) for our KAN MILP abstractions.
+      EXISTING CODE TO READ FIRST: `python/carnot/models/`.
+      TASK: Perform no-synthesis hardware accounting (RM, BOP, NABS) for the PWA MILP models.
+      CONCRETE STEPS:
+      1. Write a script calculating Real Multiplications, Bit Operations, and Additions/Bit-Shifts for the current KAN tiers.
+      2. Ensure metric computation reflects Extropic TSU / FPGA constraints.
+      3. Save hardware complexity totals to JSON.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2099-milestone-164-retro
+    title: "Exp 2099: Milestone 164 Retro & Documentation"
+    deliverable: results/experiment_2099_retro.json
+    max_turns: 20
+    agent_type: gemini
+    prompt: |
+      CONTEXT: Milestone 164 is complete. We need to reconcile findings on Hard Constraints, EBTs, and NPU execution.
+      EXISTING CODE TO READ FIRST: `ops/status.md`, `_bmad/traceability.md`.
+      TASK: Perform retrospective and documentation update for Milestone 164.
+      CONCRETE STEPS:
+      1. Summarize $\Pi$Net constraint enforcement success, ETS performance, and NPU benchmarks.
+      2. Update `ops/status.md` with new capabilities.
+      3. Format findings as `{project_root}/results/experiment_2099_retro.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
