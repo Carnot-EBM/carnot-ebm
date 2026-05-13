@@ -1,6 +1,6 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report — 2,424 Experiments Across the Public Record, 175 Archived Milestone Records, 24,614 Python Test Items Collected (Results and Ops Retros Through Exp 2065)
+## A Technical Report — 2,448 Experiments Across the Public Record, 176 Archived Milestone Records, 24,614 Python Test Items Collected (Results and Ops Retros Through Exp 2089)
 
 **Author:** Ian Blenke
 **Date:** 2026-05-12
@@ -29,12 +29,12 @@ a handful of lines of Python. Headline model-generation benchmark numbers are fr
 Qwen3.6-35B-A3B), never from simulated runs; hardware, ensemble, and
 adversarial-audit results are labeled by artifact provenance.
 
-This report documents the research arc behind the framework — **2,399
-experiment records tracked through Exp 2065, with 2,213 task records in 175
-artifact-backed completed milestone records archived through 2026.05.161 and
-checked-in result artifacts extending through milestone .160** — run between
+This report documents the research arc behind the framework — **2,423
+experiment records tracked through Exp 2089, with 2,238 task records in 176
+artifact-backed completed milestone records archived through 2026.05.163 and
+checked-in result artifacts extending through milestone .163** — run between
 February and May 2026. `research-complete.yaml` currently archives **171**
-completed milestone records through 2026.05.160; checked-in result artifacts
+completed milestone records through 2026.05.163; checked-in result artifacts
 and `ops/changelog.md` now extend through
 `results/experiment_2027_milestone_158_retro.json`. Milestone .161 completed
 **25** experiments in **26.5** minutes, with GPUs correctly idled at 0%
@@ -122,7 +122,7 @@ artifacts, and an explicit finding that SOTA cache/runtime readiness and the
 .147 operational speedup target remain unresolved.
 
 The latest archived milestone entry in `research-complete.yaml` is
-2026.05.160; checked-in result artifacts now extend through Exp 2065, the .161
+2026.05.163; checked-in result artifacts now extend through Exp 2089, the .161
 research retrospective. The latest current-result layer is therefore ahead of
 the archive by one milestone: .158 is archived, while .159 is represented in
 `ops/changelog.md` and result artifacts.
@@ -5415,3 +5415,18 @@ Experiment 2051 performed an Architectural Coherence Audit for Continuous Execut
 
 **Operational Efficiency**  
 The Milestone .161 operational retrospective measured 118.9 minutes of wall time across 25 experiments. GPU utilization on the 3 compute-bound tasks was efficient, and no anomalous idling was flagged. Synthesis-only tasks remain the primary bottleneck for optimization.
+
+
+## Milestones 161–163 — Symbolic-KAN, Robustness Verification, and SMT Solvers (Exps 2066–2089, May 2026)
+
+**GloroKAN Robustness Verification**
+Experiment 2070 verified GloroKAN bounds for robustness.
+
+**Symbolic-KAN Discrete Embedding**
+Experiment 2071 successfully verified symbolic gating mechanisms, expanding the Symbolic-KAN discrete embedding capabilities.
+
+**SMT Solver Integration**
+Experiment 2083 completed the integration of SMT Solvers for KAN4CBC robustness verification.
+
+**Hardware and Scaffolding**
+Experiment 2088 established the AMD XDNA NPU SDK toolchain. Experiment 2089 completed the milestone with SMT JEPA scaffolding.

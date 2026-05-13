@@ -2558,3 +2558,4 @@ IMPORTANT:
 | 2026-05-13 20:18 UTC | Exp 2087: Tier 3 JEPA Predictive Verification Scaf | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-13 20:20 UTC | Exp 2087: Tier 3 JEPA Predictive Verification Scaf | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-13 20:24 UTC | CRITICAL: AMD XDNA NPU SDK Toolchain | OK | 81 passed, 1 warning in 4.85s |
+| 2026-05-13 20:30 UTC | Exp 2089: Milestone 163 Retro & Doc Updates | OK | 81 passed, 1 warning in 4.07s |
