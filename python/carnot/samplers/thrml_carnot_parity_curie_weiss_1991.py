@@ -128,5 +128,5 @@ def run_experiment(seed: int = 1991, n_samples: int = 10000) -> Dict[str, Any]:
     return result
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     run_experiment()
