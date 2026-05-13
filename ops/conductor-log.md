@@ -2304,3 +2304,4 @@ IMPORTANT:
 | 2026-05-13 00:20 UTC | Exp 1981: Milestone .154 Retrospective | OK | 81 passed, 1 warning in 3.83s |
 | 2026-05-13 00:30 UTC | Plan milestone 2026.05.155 | OK | 14 tasks proposed |
 | 2026-05-13 00:32 UTC | Milestone 2026.05.155 activated | OK | 14 tasks queued |
+| 2026-05-13 00:34 UTC | Exp 1982: Continuous Latent EBM Prototype | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
