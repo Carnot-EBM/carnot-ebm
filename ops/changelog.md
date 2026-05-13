@@ -5633,3 +5633,4 @@ Completed 15 experiments in 28.9 minutes. There were 0 compute-bound experiments
 - 2026-05-13: Exp 1981: Milestone .154 Retrospective (⚠️ Blocked) — honest_verdict=complete: milestone_154_retro_filed_5_completed_4_blocked_3_failed_gate_contract_gap_repeated_deepsade_and_run_csp_ship; results/experiment_1981_milestone_154_retro.json
 - 2026-05-13: Milestone 2026.05.154 Operational Retrospective: 29 experiments completed in 64.6 minutes, 100% synthesis-only (0 GPU usage).
 - 2026-05-13: Exp 1985: ConsFormer-style Iterative Refinement (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_1985_consformer_refinement_loop.json
+- 2026-05-13: Exp 1986: Routing without Forgetting in FR-11 (✅ Complete) — honest_verdict=Validator-tree promotion ledger implemented and tested successfully.; results/experiment_1986_fr11_routing_without_forgetting.json
