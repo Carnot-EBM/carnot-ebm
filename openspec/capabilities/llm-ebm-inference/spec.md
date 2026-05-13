@@ -602,6 +602,15 @@ The system SHALL provide an Energy-Based Transformer (EBT) abstraction layer tha
 ### REQ-INFER-1829: EqM Calibration
 The system SHALL provide an EqM calibration implementation in `python/carnot/inference/eqm_calibration.py` that computes adaptive computation steps for stable valley finding as described in arXiv:2510.02300.
 
+### REQ-INFER-2041: EqM Gradient Extraction on FAR Continuous Space
+The system SHALL provide an EqM gradient extraction module in `python/carnot/inference/far_eqm.py` that maps continuous hidden states (e.g., from `unsloth/gemma-4-26B-A4B-it-GGUF`) to an energy landscape gradient. It MUST support optimization-driven refinement using EqM and be evaluated against toy constraints.
+
+### SCENARIO-INFER-2041-001: Optimization-driven refinement
+**Given** continuous hidden states mapped to an energy landscape
+**When** the EqM optimization step is applied across 10 toy constraints
+**Then** the energy landscape gradient strictly reduces the total energy
+**And** the experiment validation results are saved to `results/experiment_2041_eqm_gradients.json`.
+
 ## Implementation Status
 
 | Requirement | Python | Tests |
@@ -625,6 +634,7 @@ The system SHALL provide an EqM calibration implementation in `python/carnot/inf
 | REQ-INFER-SOTA-009 | Implemented | 7 Python |
 | REQ-INFER-SOTA-010 | Implemented (`python/carnot/reporting/live_sota_balanced_telemetry_v2.py`) | Implemented (`tests/python/test_experiment_1480_live_sota_balanced_telemetry_v2.py`) |
 | REQ-INFER-SOTA-011 | Proposed | Proposed |
+| REQ-INFER-2041 | Proposed | Proposed |
 
 ### REQ-INFER-1957: TruncProof Token-Limited LL(1) Parsing
 
@@ -651,4 +661,5 @@ The masker SHALL output an artifact `results/experiment_1970_domino_fast_constra
 **Then** exact-acceptance equivalence is confirmed
 **And** the experiment artifact `results/experiment_1970_domino_fast_constraints.json` is written
 
-### REQ-INFER-1958: GCoT-Decoding Reasoning Paths\nThe system shall provide a GCoTBranchingSampler that maintains parallel latent reasoning traces, applies partial-trace energy to rank and cull branches, and implements backtracking when all active branches exceed the energy threshold.
+### REQ-INFER-1958: GCoT-Decoding Reasoning Paths
+The system shall provide a GCoTBranchingSampler that maintains parallel latent reasoning traces, applies partial-trace energy to rank and cull branches, and implements backtracking when all active branches exceed the energy threshold.

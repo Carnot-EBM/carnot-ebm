@@ -28,6 +28,10 @@ def eqm_step(current_state: jnp.ndarray, gradient: jnp.ndarray, energy: jnp.ndar
     # A common stable valley finding approach:
     scale = jnp.exp(-jnp.maximum(delta_e, 0.0))
     
+    # Broadcast scale to match gradient dimensions
+    for _ in range(gradient.ndim - scale.ndim):
+        scale = jnp.expand_dims(scale, -1)
+        
     step = lr * scale * gradient
     return current_state - step
 
