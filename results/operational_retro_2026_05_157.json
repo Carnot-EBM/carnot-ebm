@@ -1,0 +1,53 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.157",
+  "generated_at": "2026-05-13T06:22:33Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 102.0,
+  "experiments_completed": 16,
+  "compute_bound_experiments_count": 3,
+  "slowest_experiments": [
+    {
+      "experiment": "-0400 [conductor] Doomed-rerun block: Exp 2009: EBM-CoT Latent Thought Calibrati",
+      "duration_minutes": 71.2,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 2017: Milestone .157 Retrospective",
+      "duration_minutes": 4.7,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 2016: Milestone .157 Pre-Retro Audit",
+      "duration_minutes": 4.0,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Doomed-rerun block: Exp 2015: KAN LUT Hardware Accounting",
+      "duration_minutes": 2.1,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Doomed-rerun block: Exp 2009: EBM-CoT Latent Thought Calibrati",
+      "duration_minutes": 2.0,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "summary": "Milestone 2026.05.157 completed 16 experiments in 102 minutes. 3 experiments were compute-bound, but none appeared in the slowest experiments list, which was dominated by doomed-rerun blocks and synthesis tasks. GPU utilization on compute-bound tasks was efficient.",
+  "bottlenecks_identified": [
+    "No compute-bound bottlenecks identified, as they were not among the slowest experiments.",
+    "The longest recorded wall-time event was a 71-minute doomed-rerun block, but doomed-reruns are saved time, not bottlenecks."
+  ],
+  "improvements_suggested": [
+    "Continue relying on the failure_ledger pre-launch check to block doomed reruns.",
+    "No data available this milestone to suggest compute-bound or DualGPURunner improvements."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Maintain current failure_ledger functionality.",
+    "Monitor future milestones for compute-bound tasks entering the slowest experiments list.",
+    "Ensure synthesis-only tasks do not trigger GPU idling alerts incorrectly."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The milestone was highly efficient from a compute perspective, with no compute-bound tasks appearing in the top 5 slowest events. The 71-minute block was a successfully avoided doomed rerun."
+}
