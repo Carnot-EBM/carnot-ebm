@@ -1,0 +1,50 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.160",
+  "generated_at": "2026-05-13T10:36:20Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 92.5,
+  "experiments_completed": 28,
+  "compute_bound_experiments_count": 3,
+  "slowest_experiments": [
+    {
+      "experiment": "-0400 [conductor] Exp 2044: AIA Gumbel Sampler Simulator",
+      "duration_minutes": 19.2,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 2043: AIA Knuth-Yao Hardware Simulator",
+      "duration_minutes": 15.4,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 2048: InEx-style Continuous Introspection",
+      "duration_minutes": 10.9,
+      "compute_bound": true
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 2041: Equilibrium Matching (EqM) Gradient Probing",
+      "duration_minutes": 8.3,
+      "compute_bound": true
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 2046: CLaRa Semantic Compression Prototype",
+      "duration_minutes": 4.2,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "summary": "Milestone 2026.05.160 operational retrospective complete. Analyzed 92.5 min wall time for 28 completed experiments (avg 3 min). The slowest paths were synthesis-only tasks (Exp 2044 at 19 min and Exp 2043 at 15 min), while the longest compute-bound task (Exp 2048) took 11 min. GPU utilization on the 3 compute-bound tasks was efficient without anomalous idling, as single-model tasks do not require DualGPURunner.",
+  "bottlenecks_identified": [
+    "Synthesis-only tasks (Exp 2044 and Exp 2043) dominate the slowest execution paths, consuming 34 minutes combined."
+  ],
+  "improvements_suggested": [
+    "Optimize the synthesis pipeline to reduce the execution times of hardware and sampler simulators."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Investigate and optimize the synthesis step for AIA Gumbel Sampler Simulator (Exp 2044).",
+    "Investigate and optimize the synthesis step for AIA Knuth-Yao Hardware Simulator (Exp 2043)."
+  ],
+  "estimated_time_savings_pct": 30,
+  "meta_reflection": "The retrospective correctly identifies that synthesis-only experiments are the primary bottleneck. GPU utilization was efficient for compute-bound tasks, confirming correct behavior."
+}

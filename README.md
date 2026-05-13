@@ -18,7 +18,7 @@ call. No fine-tuning. No access to model weights.
 Rust + Python/JAX, Apache 2.0, local editable install via `pip install -e ".[dev]"`.
 The public PyPI package remains a Phase-1 ship blocker as of Exp 1582.
 
-Current public research record: **2,386 experiment records tracked through Exp 2027**. `research-complete.yaml` currently archives **2,160** task records across **171** artifact-backed completed milestone records through 2026.05.158; checked-in result artifacts and `ops/changelog.md` extend through milestone 2026.05.158 on 2026-05-13.
+Current public research record: **2,386 experiment records tracked through Exp 2052**. `research-complete.yaml` currently archives **2,160** task records across **171** artifact-backed completed milestone records through 2026.05.160; checked-in result artifacts and `ops/changelog.md` extend through milestone 2026.05.160 on 2026-05-13.
 
 Milestone .106 delivered the critical fix to thinking-mode certificate
 generation: Exp 1366 (CRANE tag-first prefix injection) reached
@@ -399,7 +399,7 @@ experiment artifact under `results/`.
 | Milestone .106 status | **11/13 criteria met**; tag-first CRANE injection resolved certificate_parse_rate=0.0 blocker; pre-test cascade SKIPs on exp1375/1376 required manual closeout | Exp 1376 retro |
 | Milestone .107 status | **13/14 criteria met**; full-scale pipeline headline allowed; arXiv v11 ready; GRPO v7 JURY-RL no improvement (sole miss); publication hold lift recommended | Exp 1389 |
 | Milestone .157 status | **Operational retrospective complete**; 16 experiments in 102.0 min; efficient GPU utilization on compute-bound tasks; doomed-rerun blocks successful | Exp 2009 |
-| Milestone .158 status | **Operational retrospective complete**; 13 synthesis-only experiments in 26.5 min; 0% GPU utilization correctly idled; doomed-rerun blocks successful | Exp 2027 |
+| Milestone .158 status | **Operational retrospective complete**; 13 synthesis-only experiments in 26.5 min; 0% GPU utilization correctly idled; doomed-rerun blocks successful | Exp 2052 |
 | DVI v2 + SECL combined calibration | DVI AUROC **0.394526 → 0.405984** (+0.011458); SECL ECE **0.561624 → 0.306922** (45.35096% reduction); deployed from 59 fresh cases and 1,770 held-out FoVer cases | Exp 1404 |
 | FR-11 continuous self-learning v5 | **1,508 fresh-verified cases** via DVI v2/SECL path; self-learning delta **+1,449** vs Exp 1388; GRPO v8 cases integrated **0** | Exp 1405 |
 | Full-scale pipeline v2, 200 cases | `certificate_parse_rate=1.0`, `semantic_validation_pass_rate=1.0`, `repair_hint_precision=1.0`, but `full_pipeline_pass_rate=0.305 < 0.40`, so not a headline result | Exp 1407 |
@@ -497,7 +497,7 @@ experiment artifact under `results/`.
 | ROCE-to-validator tree compiler | **8/8** constraints compiled to guarded Python, PySAT-compatible CNF, and Z3-compatible leaves with constraint coverage **1.0** and false accepts **0** | Exp 1878 |
 | BEAVER-lite validator-tree bounds | Deterministic coverage bound **1.0**, residual-risk bound **0.0**, and executable validator leaves retain final acceptance authority | Exp 1879 |
 | Live SOTA ROCE validator evaluation | **Blocked** before inference because mandated `unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF` were unavailable; no headline accuracy claimed | Exp 1880 |
-| Milestone .158 closeout | Analyzed .158 retro. SEAL and STKAN failed, proving negative empirical bounds. | Exp 2027 |
+| Milestone .158 closeout | Analyzed .158 retro. SEAL and STKAN failed, proving negative empirical bounds. | Exp 2052 |
 | Milestone .147 closeout | **5/14** tasks completed, **9** blocked or missing artifacts; prompt-to-validator work is partial and telemetry, FR-11, and hardware-accounting gates are not ready | Exp 1889 |
 | Milestone .153 closeout | Identified synthesis bottlenecks as primary optimization area; GPU correctly idled on non-compute tasks | Exp 1956 |
 | Milestone .154 closeout | 29 experiments in 64.6 minutes, 100% synthesis-only (0 GPU usage); average 2 mins/exp | ops/changelog 2026-05-13 |
