@@ -5653,3 +5653,4 @@ Completed 15 experiments in 28.9 minutes. There were 0 compute-bound experiments
 - 2026-05-13: Exp 1999: Code Verification on HumanEval (✅ Complete) — honest_verdict=ising_guided_fuzzing_implemented; results/experiment_1999_code_verification_humaneval.json
 - 2026-05-13: Exp 2000: DeepSaDe Guaranteed Constraints (✅ Complete) — honest_verdict=implementation_complete_and_verified; results/experiment_2000_deep_sade_implementation.json
 - 2026-05-13: Exp 2004: EBM Transformer Reasoning Trace Evaluation (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_2004_ebm_transformer_reasoning_evaluation.json
+- 2026-05-13: Exp 2005: Tier 4 Adaptive Energy Landscapes KAN (✅ Complete) — honest_verdict=complete: adaptive KAEM spline topology updated with +1/-1 knots; results/experiment_2005_adaptive_energy_landscapes_kan.json
