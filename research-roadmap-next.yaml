@@ -1,0 +1,352 @@
+milestone: "2026.05.165"
+milestone_title: "Research-deep: THRML parity v2 + Phase 4 alpha_t + NLA v2 + Phase 1 ship-track"
+milestone_doc: "outer-loop pre-staged 2026-05-13 22:32Z (local /loop auto-draft)"
+
+# Operator-pre-staged per CLAUDE.md Pre-Staged Roadmap Convention. The
+# planner emitted .164 with 13-14 synthesis tasks, and the doomed-rerun
+# ledger filtered 5+ of them (exp2081-2087) as scope-similar repeats
+# without prior_failures discipline. This roadmap caps at 5 tasks, each
+# with falsifiable hypothesis + numerical gate + adversarial-verify-aware
+# methodology fields. One Phase-1 ship-track task included per the
+# operator-flagged unmoved-blocker priority.
+
+scope_reduction_compliance:
+  - "Drop 13-14 task synthesis pattern; 4 research + 1 retro = 5 total"
+  - "Every compute-bound task sets random_seed + reproducibility_checksum + model_specs + n_samples justification"
+  - "Highest-priority MANDATORY known-issues entry (THRML parity refile) is task #1"
+  - "Phase 1 ship-track task included (PyPI publish smoke) per operator unmoved-blocker priority"
+
+tasks:
+  - id: exp2100-thrml-parity-curie-weiss-n128
+    title: "Exp 2100: THRML/Carnot Parity v2 — Curie-Weiss n=128 with analytic ground truth"
+    deliverable: results/experiment_2100_thrml_parity_v2.json
+    agent_type: codex
+    max_turns: 100
+    prior_failures:
+      - experiment_id: exp1850-thrml-carnot-parity-n128
+        verdict: "complete: thrml_carnot_parity_n128_gate_failed_kl_0.28"
+        addressed_by: "exp1850 used 100 samples at n=128 (undersampled, KL inflated by sample-size noise per the 2026-05-11 corrigendum). This v2 uses (a) a ferromagnetic Curie-Weiss substrate at n=128 where the exact partition function and equilibrium mean are analytically computable, (b) 10k+ samples per side justified for KL noise floor < 0.005, (c) three-way comparison (Carnot empirical mean vs THRML empirical mean vs analytic ground truth — disagreement with ground truth is the real signal, not relative agreement)."
+        retire_if_same_verdict: true
+    prompt: |
+      MANDATORY WORKFLOW: read CLAUDE.md project rules (especially
+      "Adversarial Artifact Verification + Sample-Size Rigor (MANDATORY)"
+      section, "Verdict Terminal-Prefix Discipline", and the
+      MANDATORY known-issues.md entry "exp1850 THRML/Carnot Parity
+      Refile - Methodology Correction (.148+ MANDATORY)").
+
+      CONTEXT (falsifiable hypothesis): Carnot's native sampler and
+      THRML 0.1.3's JAX-native sampler should both converge to the
+      analytic equilibrium mean of a ferromagnetic Curie-Weiss model
+      at n=128 spins (mean-field-tractable; analytic partition function
+      and mean magnetization computable in closed form). The
+      hypothesis is that BOTH samplers agree with ground truth, AND
+      with each other, to within sample-size variance at N=10000.
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/models/ising.py
+      - python/carnot/integrations/thrml/ (if parity harness present)
+      - results/experiment_1850_thrml_parity_n128.json (interpretation_corrigendum field)
+      - results/experiment_1503_thrml_*.json (n=8 baseline at 1.14e-7 delta)
+
+      CONCRETE STEPS:
+      1. Generate a Curie-Weiss n=128 substrate: J_ij = J/n for all pairs,
+         h=0, beta_critical at some chosen beta > beta_c (ordered phase).
+         Compute analytic ground truth: <m> = tanh(beta * J * <m>) solved
+         numerically; <E> = -n*J/2 * <m>^2.
+      2. Sample N=10000 independent draws from each of (a) Carnot's
+         native sampler, (b) THRML's JAX-native sampler. Use distinct
+         seeds; record both seeds in random_seed_carnot and random_seed_thrml.
+         Use JAX_PLATFORMS=cpu for reproducibility per CLAUDE.md.
+      3. Compute: empirical_mean_carnot, empirical_mean_thrml, ks_p_value
+         (Carnot vs THRML), kl_divergence (on energy histogram with 50
+         bins, expected noise floor ~ 50/N = 0.005).
+      4. ACCEPTANCE GATE (all three must hold):
+         - abs(empirical_mean_carnot - analytic_mean) < 0.05
+         - abs(empirical_mean_thrml - analytic_mean) < 0.05
+         - ks_p_value > 0.05 (Carnot vs THRML)
+         If any of these fails, the result is a REAL finding (not noise)
+         and worth disclosing.
+      5. Write results/experiment_2100_thrml_parity_v2.json with REQUIRED ARTIFACT FIELDS:
+         - schema: "carnot.thrml_parity_curie_weiss.v1"
+         - n_spins: 128
+         - n_samples: 10000
+         - n_samples_justification: "10000 chosen so empirical KL noise
+           floor 50/N = 0.005 is well below the 0.05 acceptance gate"
+         - random_seed_carnot: <int>
+         - random_seed_thrml: <int>
+         - reproducibility_checksum: <hash of (n_spins, beta, J, seeds)>
+         - beta: <float>
+         - J: <float>
+         - analytic_mean: <float>
+         - analytic_energy: <float>
+         - empirical_mean_carnot: <float>
+         - empirical_mean_thrml: <float>
+         - empirical_energy_carnot: <float>
+         - empirical_energy_thrml: <float>
+         - ks_p_value: <float>
+         - kl_divergence: <float>
+         - acceptance_gate_passed: <bool>
+         - optimization_direction: "n/a (parity check, not optimization)"
+         - honest_verdict: MUST start with "complete:" per Verdict
+           Terminal-Prefix Discipline. Example:
+           "complete: thrml_carnot_parity_v2_n128_curie_weiss_all_gates_passed"
+           or "complete: thrml_carnot_parity_v2_n128_carnot_ground_truth_disagreement_0.08"
+
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp2101-phase4-active-inference-smoke-v2
+    title: "Exp 2101: Phase 4 active inference v2 — alpha_t > 0 at n=8 with k=6 vs k=1 contrast"
+    deliverable: results/experiment_2101_phase4_active_inference_v2.json
+    agent_type: codex
+    max_turns: 100
+    prior_failures:
+      - experiment_id: exp1849-phase4-active-inference-smoke
+        verdict: blocked_gate_check_failed
+        addressed_by: "exp1849 was doomed-rerun-blocked in .144 because my YAML missed prior_failures for exp1165-phase4-active-inference-pilot-v1 (verdict: phase4_better_than_baseline, a partial Research Finding). The corrigendum + retry plan are documented in commit 73db0ca61. This v2 carries the full prior_failures chain (exp1165 + exp1849) and tightens the gate to delta_alpha > 0.05 with explicit k=6 vs k=1 contrast over 100 MLD steps on fixed n=8 substrate."
+        retire_if_same_verdict: true
+      - experiment_id: exp1165-phase4-active-inference-pilot-v1
+        verdict: phase4_better_than_baseline
+        addressed_by: "exp1165 pilot produced a partial 'better than baseline' verdict without a falsifiable numerical gate. This v2 has tight numerical gate (delta_alpha > 0.05), explicit k=6 vs k=1 ensemble contrast (vs pilot's single config), and reports empirical delta_alpha regardless of pass/fail."
+        retire_if_same_verdict: true
+    prompt: |
+      MANDATORY WORKFLOW: read CLAUDE.md project rules (especially
+      Phase Prototype + Empirical Validation + Adversarial Check
+      Discipline, and the Phase 4 active-inference track from
+      feedback_active_inference_phase4_committed.md memory).
+
+      CONTEXT (falsifiable hypothesis): the active-inference reframing
+      casts Carnot's verifier ensemble V(y) as the surprise term in a
+      free-energy functional F(y) = -log mu(y) + V(y). The Zenil
+      alpha_t > 0 condition requires mu_P > 0 over t MLD
+      (Metropolis-Langevin-Dynamics) steps where mu_P is the
+      verifier's surviving-probability mass on candidate y. We
+      hypothesize that on n=8 tiny-Ising substrate, mu_P stays
+      strictly positive over 100 MLD steps when the verifier ensemble
+      is k=6 base verifiers, AND collapses (mu_P -> 0) when the
+      ensemble is k=1.
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/verify/ (verifier ensemble)
+      - python/carnot/samplers/ (MLD sampler if present)
+      - python/carnot/models/ising.py for tiny n=8 substrate
+
+      CONCRETE STEPS:
+      1. Implement (or extend) an MLD step that emits per-step mu_P
+         metric for both k=6 and k=1 verifier configurations on the
+         same n=8 Ising substrate with identical seeds.
+      2. Run 100 MLD steps for each configuration. Record the
+         inf_t alpha_t lower bound (smallest mu_P over the trajectory).
+      3. ACCEPTANCE GATE (write to artifact):
+         - inf_t_alpha_k6 > 0.10
+         - inf_t_alpha_k1 < 0.05 (collapse confirmed)
+         - delta_alpha = inf_t_alpha_k6 - inf_t_alpha_k1 > 0.05
+      4. Write results/experiment_2101_phase4_active_inference_v2.json
+         with REQUIRED ARTIFACT FIELDS:
+         - schema: "carnot.phase4_active_inference.v2"
+         - n_spins: 8
+         - mld_steps: 100
+         - n_samples: 100 (one trajectory per step over 100 steps)
+         - n_samples_justification: "100 MLD steps is the standard
+           trajectory length for alpha_t stability checks per Zenil"
+         - random_seed: <int>
+         - reproducibility_checksum: <hash of (n_spins, mld_steps, seed,
+           verifier_config_hash)>
+         - verifier_ensemble_k6: ["v1", "v2", ..., "v6"]
+         - verifier_ensemble_k1: ["v1"]
+         - inf_t_alpha_k6: <float>
+         - inf_t_alpha_k1: <float>
+         - delta_alpha: <float>
+         - acceptance_gate_passed: <bool>
+         - optimization_direction: "minimize (find lowest mu_P over trajectory)"
+         - honest_verdict: MUST start with "complete:" per Verdict
+           Terminal-Prefix Discipline. Examples:
+           "complete: phase4_active_inference_v2_alpha_collapse_at_k1_confirmed_delta_0.12"
+           "complete: phase4_active_inference_v2_gate_failed_alpha_collapsed_at_k6_too_inf_0.02"
+
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp2102-nla-16th-verifier-prototype-v2
+    title: "Exp 2102: NLA-class 16th verifier v2 — SAE probe with methodology rigor"
+    deliverable: results/experiment_2102_nla_probe_v2.json
+    agent_type: codex
+    max_turns: 100
+    prior_failures:
+      - experiment_id: exp1851-nla-class-16th-verifier-prototype
+        verdict: "complete: nla_probe_prototype_tpr_lift_0.98_orthogonal_coverage_10"
+        addressed_by: "exp1851 was caught by adversarial-verify as fabricated: 3.4s wall time on Qwen1.5-0.5B (not the mandated Qwen3.6-35B-A3B), TPR=1.0 on 10 examples (implausibly perfect), TAUTOLOGY between n_adversarial_examples=10 and orthogonal_coverage_count=10. This v2 enforces: (a) actual SOTA GGUF invocation with duration_s > 300 (real model load + inference), (b) larger adversarial corpus (n>=30 examples for percentage-point claim), (c) methodology_note for any perfect/zero metric, (d) explicit reproducibility_checksum of SAE training inputs, (e) post-task adversarial_verify pass must report 0 critical flags."
+        retire_if_same_verdict: true
+    prompt: |
+      MANDATORY WORKFLOW: read CLAUDE.md project rules, especially the
+      "Adversarial Artifact Verification + Sample-Size Rigor (MANDATORY)"
+      section. Your output WILL be auto-scanned by
+      scripts/adversarial_verify.py at completion; any critical flag
+      annotates the artifact with flagged_adversarial=true. You MUST
+      pass the verify with 0 critical flags.
+
+      CONTEXT (falsifiable hypothesis): adding a white-box internal-state
+      probe (SAE-based reconstruction error on target LLM activations)
+      as the 16th verifier in Carnot's k=15 ensemble should detect
+      adversarial outputs that all 15 black-box verifiers miss.
+      Anthropic's NLA paper reports 4-5x adversarial-detection lift
+      (12-15% vs <3% TPR at fixed FPR). On a tiny corpus (n>=30
+      adversarial examples) with Qwen3.6-35B-A3B-GGUF (MANDATED SOTA),
+      we hypothesize NLA TPR_at_FPR5 - best_blackbox_TPR_at_FPR5 > 0.05
+      (i.e., NLA adds at least 5 percentage points of detection).
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/verify/ (existing 15 black-box verifiers)
+      - results/experiment_1851_nla_probe.json (the fabricated exemplar
+        with TPR=1.0 in 3.4s - DO NOT REPRODUCE THIS PATTERN)
+
+      CONCRETE STEPS:
+      1. Implement a minimal SAE-based reconstruction-error probe in
+         python/carnot/verify/nla_probe.py. Use an OSS SAE crate from
+         PyPI (Apache-2.0); document the choice.
+      2. Generate an adversarial corpus of n_examples=30+ prompts where
+         the LLM produces outputs that pass naive verifiers but contain
+         specific factual errors. MUST use unsloth/Qwen3.6-35B-A3B-GGUF
+         as the target model. If model load is unavailable, ABORT with
+         honest_verdict 'complete: nla_probe_v2_blocked_sota_unavailable'
+         rather than falling back to a tiny model (which produced the
+         exp1851 fabrication).
+      3. Measure: TPR at FPR=5% on the adversarial corpus, with at
+         least n_examples=30 (sufficient for a percentage-point claim
+         per CLT). Report best_blackbox_TPR_at_FPR5 and nla_TPR_at_FPR5.
+      4. ACCEPTANCE GATE: tpr_lift = nla_TPR_at_FPR5 - best_blackbox_TPR_at_FPR5 > 0.05
+      5. Write results/experiment_2102_nla_probe_v2.json with REQUIRED ARTIFACT FIELDS:
+         - schema: "carnot.nla_probe_prototype.v2"
+         - target_model: "unsloth/Qwen3.6-35B-A3B-GGUF"
+         - n_adversarial_examples: <int, >= 30>
+         - n_samples: <int, same as n_adversarial_examples>
+         - n_samples_justification: "n=30 is the CLT minimum for a
+           percentage-point delta claim; corpus designed to span factual,
+           logical, and arithmetic adversarial classes"
+         - random_seed: <int>
+         - reproducibility_checksum: <hash of corpus + SAE training inputs>
+         - sae_crate: "<package_name>"
+         - sae_n_features: <int>
+         - sae_training_n_tokens: <int>
+         - nla_probe_tpr_at_fpr5: <float>
+         - best_blackbox_tpr_at_fpr5: <float>
+         - tpr_lift: <float>
+         - methodology_note: "TPR=1.0 or 0.0 would be implausible at
+           n=30; if observed, write a justification (corpus design choice,
+           ceiling effect, etc.) here. exp1851's TPR=1.0 in 3.4s was
+           fabrication; this attempt MUST take duration_s > 300."
+         - acceptance_gate_passed: <bool>
+         - optimization_direction: "maximize tpr_lift"
+         - honest_verdict: MUST start with "complete:". Examples:
+           "complete: nla_probe_v2_tpr_lift_0.08_n30_sae_30k"
+           "complete: nla_probe_v2_tpr_lift_negative_-0.02_no_lift"
+
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp2103-pypi-publish-dry-run
+    title: "Exp 2103: PyPI publish dry-run — verify the publish-pypi.yml workflow"
+    deliverable: results/experiment_2103_pypi_publish_dry_run.json
+    agent_type: codex
+    max_turns: 60
+    prompt: |
+      MANDATORY WORKFLOW: read CLAUDE.md project rules, especially the
+      Phase 1 Ship Track section. This is a Phase-1 ship-track task —
+      the unmoved blocker per operator directive 2026-05-11.
+
+      CONTEXT (falsifiable hypothesis): the existing
+      .github/workflows/publish-pypi.yml workflow + the carnot-ebm
+      pyproject.toml + the PyPI Trusted Publishing configuration the
+      operator established (commit 7f0e72503 era) should produce a
+      successful sdist + wheel build via the workflow's build job. We
+      hypothesize that running `python -m build .` locally produces
+      both a .whl and a .tar.gz with valid metadata, AND that
+      `twine check dist/*` reports no metadata errors. This is a
+      ship-readiness smoke test, NOT an actual publish.
+
+      EXISTING CODE TO READ FIRST:
+      - pyproject.toml
+      - .github/workflows/publish-pypi.yml
+      - results/experiment_1582_phase1_ship_readiness_ledger.json
+        (the 9-item ship-readiness ledger)
+
+      CONCRETE STEPS:
+      1. In a clean temp workspace, run:
+           python -m pip install build twine --quiet
+           python -m build .
+         (Adjust if pyproject.toml is at the repo root or in
+         python/carnot/.)
+      2. Confirm dist/ contains BOTH:
+           - carnot_ebm-*.tar.gz (sdist)
+           - carnot_ebm-*-py3-none-any.whl (or appropriate platform wheel)
+      3. Run `twine check dist/*` — must report `PASSED` for both.
+      4. ACCEPTANCE GATE (all must hold):
+         - sdist_built: true
+         - wheel_built: true
+         - twine_check_passed: true
+         - both_artifacts_have_correct_name_prefix ("carnot_ebm" per
+           feedback_pypi_package_name_carnot_ebm.md memory)
+      5. Write results/experiment_2103_pypi_publish_dry_run.json with REQUIRED ARTIFACT FIELDS:
+         - schema: "carnot.phase1_pypi_publish_dry_run.v1"
+         - pyproject_path: "<relative path>"
+         - sdist_filename: "<string>"
+         - wheel_filename: "<string>"
+         - sdist_size_bytes: <int>
+         - wheel_size_bytes: <int>
+         - twine_check_passed: <bool>
+         - twine_check_output: "<tail of output>"
+         - package_name_prefix_correct: <bool>
+         - n_samples: 1 (smoke test; one build run)
+         - n_samples_justification: "Build determinism is the only check;
+           N=1 is sufficient. If the build fails, the failure mode
+           reveals the bug; multiple runs would not add signal."
+         - acceptance_gate_passed: <bool>
+         - methodology_note: "This is a dry-run smoke test only. No
+           actual publish to PyPI. If gate passes, the operator can run
+           `git tag v0.X.Y && git push --tags` to trigger the actual
+           publish workflow."
+         - honest_verdict: MUST start with "shipped:" or "complete:".
+           Examples:
+           "shipped: pypi_publish_dry_run_sdist_wheel_twine_check_all_passed"
+           "complete: pypi_publish_dry_run_blocked_pyproject_metadata_error_<details>"
+      6. Do NOT actually publish (no `twine upload`, no `git tag` push).
+
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp2104-milestone-165-retro
+    title: "Exp 2104: Milestone .165 Retrospective"
+    deliverable: results/experiment_2104_retro.json
+    agent_type: codex
+    max_turns: 50
+    prompt: |
+      CONTEXT: Close out Milestone 2026.05.165 (research-deep pre-staged
+      milestone with 4 falsifiable-gate tasks).
+
+      EXISTING FILES TO READ FIRST: All 4 task artifacts:
+      - results/experiment_2100_thrml_parity_v2.json
+      - results/experiment_2101_phase4_active_inference_v2.json
+      - results/experiment_2102_nla_probe_v2.json
+      - results/experiment_2103_pypi_publish_dry_run.json
+
+      TASK: Generate a retrospective tied to the falsifiable gates of
+      the 4 research tasks. For each: state the hypothesis, the gate
+      threshold, the empirical result (pass / fail / blocked), and any
+      surprising finding.
+
+      CONCRETE STEPS:
+      1. Read each task's artifact.
+      2. Summarize each: hypothesis -> gate -> empirical result.
+      3. Identify which findings should be carried forward into
+         paper-v6 disclosure (especially exp2100 results for the THRML
+         §6 limitation update).
+      4. Run `python3 scripts/adversarial_verify.py
+         --milestone-range 2100 2104 --json` and report any flags.
+      5. Write results/experiment_2104_retro.json with REQUIRED ARTIFACT FIELDS:
+         - schema: "carnot.milestone_research_retro.v1"
+         - milestone: "2026.05.165"
+         - tasks_summary: [{exp_id, hypothesis, gate_threshold, empirical_result, gate_passed}]
+         - gates_passed_count: <int>
+         - gates_failed_count: <int>
+         - paper_v6_carryforward_items: [...]
+         - adversarial_verify_flag_count: <int>
+         - honest_verdict: MUST start with "complete:". Example:
+           "complete: milestone_165_retro_3_of_4_gates_passed_adv_verify_0_flags"
+
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
