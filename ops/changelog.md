@@ -5630,3 +5630,4 @@ Completed 15 experiments in 28.9 minutes. There were 0 compute-bound experiments
 - 2026-05-12: Exp 1980: Milestone .154 Pre-Retro Audit (❌ Failed) — honest_verdict=Audit failed: missing files or violated gates found.; results/experiment_1980_milestone_154_pre_retro.json
 - 2026-05-13: Exp 1980: Milestone .154 Pre-Retro Audit (❌ Failed) — honest_verdict=Audit failed: missing files or violated gates found.; results/experiment_1980_milestone_154_pre_retro.json
 - 2026-05-13: Exp 1980: Milestone .154 Pre-Retro Audit (❌ Failed) — honest_verdict=Audit failed: missing files or violated gates found.; results/experiment_1980_milestone_154_pre_retro.json
+- 2026-05-13: Exp 1981: Milestone .154 Retrospective (⚠️ Blocked) — honest_verdict=complete: milestone_154_retro_filed_5_completed_4_blocked_3_failed_gate_contract_gap_repeated_deepsade_and_run_csp_ship; results/experiment_1981_milestone_154_retro.json
