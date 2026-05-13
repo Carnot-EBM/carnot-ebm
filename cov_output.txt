@@ -6,26 +6,21 @@ rootdir: /home/ianblenke/github.com/ianblenke/carnot
 configfile: pyproject.toml
 plugins: xdist-3.8.0, cov-7.1.0, anyio-4.13.0, hypothesis-6.152.3, jaxtyping-0.3.9
 created: 4/4 workers
-4 workers [2 items]
+4 workers [4 items]
 
 scheduling tests via LoadScheduling
 
-tests/python/test_ising_consensus.py::test_run_ising_consensus_scenario_ising_043 
-tests/python/test_ising_consensus.py::test_ising_consensus_req_ising_043 
-[gw2] [ 50%] PASSED tests/python/test_ising_consensus.py::test_run_ising_consensus_scenario_ising_043 
-[gw0] [100%] PASSED tests/python/test_ising_consensus.py::test_ising_consensus_req_ising_043 
-ERROR: Coverage failure: total of 7 is less than fail-under=99
+tests/python/test_experiment_2026_milestone_158_pre_retro.py::test_audit_milestone_158_success 
+tests/python/test_experiment_2026_milestone_158_pre_retro.py::test_main 
+tests/python/test_experiment_2026_milestone_158_pre_retro.py::test_audit_milestone_158_failure 
+tests/python/test_experiment_2026_milestone_158_pre_retro.py::test_audit_milestone_158_missing_log 
+[gw1] [ 25%] PASSED tests/python/test_experiment_2026_milestone_158_pre_retro.py::test_audit_milestone_158_missing_log 
+[gw0] [ 50%] PASSED tests/python/test_experiment_2026_milestone_158_pre_retro.py::test_audit_milestone_158_success 
+[gw3] [ 75%] PASSED tests/python/test_experiment_2026_milestone_158_pre_retro.py::test_main 
+[gw2] [100%] PASSED tests/python/test_experiment_2026_milestone_158_pre_retro.py::test_audit_milestone_158_failure 
+ERROR: Coverage failure: total of 2 is less than fail-under=99
 
 
-=============================== warnings summary ===============================
-python/carnot/extraction/coace_extractor.py:122
-python/carnot/extraction/coace_extractor.py:122
-python/carnot/extraction/coace_extractor.py:122
-python/carnot/extraction/coace_extractor.py:122
-  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
-    if hasattr(ast, "Num"):
-
--- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
 ================================ tests coverage ================================
 _______________ coverage: platform linux, python 3.12.13-final-0 _______________
 
@@ -42,6 +37,8 @@ python/carnot/analysis/pbit_sampler_portability.py                              
 python/carnot/analysis/pbit_update_dynamics_dual_bram.py                                      99     99     0%   11-355
 python/carnot/analysis/pdit_certificate_state_mapping.py                                     129    129     0%   12-399
 python/carnot/analysis/thrml_compatibility_parity.py                                         125    125     0%   21-343
+python/carnot/audit_154.py                                                                    44     44     0%   1-67
+python/carnot/audit_155.py                                                                    42     42     0%   1-66
 python/carnot/autoresearch/__init__.py                                                        13     13     0%   27-65
 python/carnot/autoresearch/baselines.py                                                       27     27     0%   8-80
 python/carnot/autoresearch/code_improvement.py                                                56     56     0%   36-455
@@ -71,7 +68,7 @@ python/carnot/conductor/__init__.py                                             
 python/carnot/conductor/environment_gate.py                                                  160    160     0%   12-368
 python/carnot/conductor/single_run_guard.py                                                   31     31     0%   57-129
 python/carnot/core/__init__.py                                                                 3      0   100%
-python/carnot/core/energy.py                                                                  17      2    88%   203, 245
+python/carnot/core/energy.py                                                                  17      3    82%   203, 222, 245
 python/carnot/core/state.py                                                                   38     14    63%   174-193, 220-232
 python/carnot/data/__init__.py                                                                 2      2     0%   3-5
 python/carnot/data/fover.py                                                                   45     45     0%   3-70
@@ -120,19 +117,20 @@ python/carnot/eval/static_csr_certificate_automaton.py                          
 python/carnot/eval/v1_pairwise_self_verification_vs_energy.py                                290    290     0%   13-779
 python/carnot/eval/verifier_ensemble_dry_orthogonality_v2.py                                 141    141     0%   11-532
 python/carnot/eval/zenil_alpha_post_retrain.py                                               132    132     0%   11-309
-python/carnot/extraction/__init__.py                                                          11      0   100%
+python/carnot/experiment_1904_activation.py                                                   11     11     0%   8-46
+python/carnot/extraction/__init__.py                                                          11     11     0%   26-75
 python/carnot/extraction/ast_knowledge_verifier.py                                            83     83     0%   41-349
-python/carnot/extraction/coace_extractor.py                                                   91     52    43%   144-162, 215-241, 275-276, 290-315, 332-344
-python/carnot/extraction/coace_extractor_v2.py                                               110     93    15%   108, 127-176, 202-251, 292-352, 366-367
-python/carnot/extraction/coace_extractor_v3.py                                               213    175    18%   64, 254-257, 266-269, 299-358, 377-413, 433-464, 485-545, 591-650, 664-665
-python/carnot/extraction/coace_extractor_v4.py                                               173    135    22%   166-170, 191-221, 258-259, 274-276, 289-321, 346-418, 449-450, 468-544
-python/carnot/extraction/confidence_filter.py                                                 71     47    34%   89, 155-183, 210-223, 259-260, 283-295, 315
-python/carnot/extraction/extraction_diagnostic.py                                             50     31    38%   117, 178-224
+python/carnot/extraction/coace_extractor.py                                                   91     91     0%   33-344
+python/carnot/extraction/coace_extractor_v2.py                                               110    110     0%   32-367
+python/carnot/extraction/coace_extractor_v3.py                                               213    213     0%   39-665
+python/carnot/extraction/coace_extractor_v4.py                                               173    173     0%   46-544
+python/carnot/extraction/confidence_filter.py                                                 71     71     0%   43-315
+python/carnot/extraction/extraction_diagnostic.py                                             50     50     0%   22-224
 python/carnot/extraction/integrated_extractor.py                                              34     34     0%   25-202
-python/carnot/extraction/llm_extractor_v1.py                                                 164    130    21%   111-142, 187-224, 281-310, 346-350, 380-422, 462-467, 481-490, 499-509, 518-527
-python/carnot/extraction/trust_agents_extractor.py                                            81     67    17%   58-72, 100-131, 151-165, 199-200, 212-218, 226-235
-python/carnot/extraction/vericot_validator.py                                                140    108    23%   113-154, 197-224, 263, 288-289, 329-332, 346-348, 356-359, 374-408, 416-428, 456-457, 462-484, 516-523
-python/carnot/extraction/vprm_verifier.py                                                    148    101    32%   108-112, 180-192, 228-247, 278-290, 324-342, 379-388, 442-462, 494-495, 532, 554-559, 582-587, 610-624
+python/carnot/extraction/llm_extractor_v1.py                                                 164    164     0%   46-527
+python/carnot/extraction/trust_agents_extractor.py                                            81     81     0%   25-235
+python/carnot/extraction/vericot_validator.py                                                140    140     0%   60-523
+python/carnot/extraction/vprm_verifier.py                                                    148    148     0%   37-624
 python/carnot/findings_audit.py                                                               70     70     0%   1-104
 python/carnot/games/__init__.py                                                                5      5     0%   3-8
 python/carnot/games/connect_four.py                                                           96     96     0%   10-153
@@ -154,6 +152,7 @@ python/carnot/hardware/kan_lut_compiler.py                                      
 python/carnot/hardware/kan_shape_normalization_preflight.py                                  186    186     0%   13-738
 python/carnot/hardware/kanele_accounting.py                                                   79     79     0%   11-292
 python/carnot/hardware/kv260_discrete_sb_property_pack.py                                    218    218     0%   11-784
+python/carnot/hardware/pdit_hardware_preflight.py                                             14     14     0%   3-50
 python/carnot/hardware/sampler_sim.py                                                        156    156     0%   53-521
 python/carnot/hardware/tenstorrent_wormhole_preflight.py                                     207    207     0%   12-680
 python/carnot/hardware/thrml_compatibility_audit.py                                          194    194     0%   11-446
@@ -162,38 +161,43 @@ python/carnot/hardware/transpiler/api.py                                        
 python/carnot/hardware/transpiler/diagnostics.py                                              63     63     0%   31-236
 python/carnot/hardware/transpiler/distill.py                                                 143    143     0%   67-436
 python/carnot/hardware/transpiler/gray_code.py                                                64     64     0%   40-203
-python/carnot/inference/__init__.py                                                           21      0   100%
-python/carnot/inference/arm_ebm_bridge.py                                                     37     22    41%   123-140, 172, 201-203, 234, 268-275
+python/carnot/inference/__init__.py                                                           22     22     0%   17-156
+python/carnot/inference/arm_ebm_bridge.py                                                     37     37     0%   43-275
 python/carnot/inference/benchmark.py                                                         101    101     0%   25-272
-python/carnot/inference/code_verifier.py                                                     135     89    34%   126, 134, 142, 150-153, 161, 215-232, 278-340, 442-466, 514-552
-python/carnot/inference/composite_scorer.py                                                   25     14    44%   81, 115-116, 147-160
-python/carnot/inference/diffusion.py                                                          82     53    35%   83-91, 103-129, 150-179, 198-205, 218-225
+python/carnot/inference/code_verifier.py                                                     135    135     0%   37-552
+python/carnot/inference/composite_scorer.py                                                   25     25     0%   33-160
+python/carnot/inference/diffusion.py                                                          82     82     0%   26-225
 python/carnot/inference/diffusion_of_thought.py                                              125    125     0%   12-257
 python/carnot/inference/diffusion_of_thought_v2.py                                            58     58     0%   30-209
-python/carnot/inference/dual_gpu.py                                                          114     76    33%   48-51, 56-57, 80-100, 104-110, 114-124, 129-160, 174-176, 186-187, 194-224
-python/carnot/inference/ebm_loader.py                                                         50     37    26%   154-186, 199-217, 231-233
-python/carnot/inference/ebm_rejection.py                                                      39     12    69%   63-68, 205-210
+python/carnot/inference/dual_gpu.py                                                          114    114     0%   6-227
+python/carnot/inference/ebm_loader.py                                                         50     50     0%   25-233
+python/carnot/inference/ebm_rejection.py                                                      39     39     0%   27-210
 python/carnot/inference/eqm_calibration.py                                                    12     12     0%   5-46
 python/carnot/inference/gibbs_warmstart.py                                                    26     26     0%   26-163
+python/carnot/inference/grammar.py                                                            88     88     0%   5-117
 python/carnot/inference/hiled_decoder.py                                                      30     30     0%   5-49
 python/carnot/inference/hiled_simulator.py                                                    19     19     0%   6-52
-python/carnot/inference/jepa_cpmi_pairs.py                                                   109     86    21%   164-169, 197-207, 233-242, 260, 311-312, 334-403, 432-454, 529-556, 586-591
-python/carnot/inference/jepa_pure_loss.py                                                     52     34    35%   80, 122, 148, 176-179, 186-190, 211-213, 251-285
+python/carnot/inference/jepa_cpmi_pairs.py                                                   109    109     0%   61-591
+python/carnot/inference/jepa_pure_loss.py                                                     52     52     0%   35-285
 python/carnot/inference/jepa_v17_ranknet.py                                                  148    148     0%   41-591
 python/carnot/inference/jepa_v23.py                                                          168    168     0%   42-490
-python/carnot/inference/learned_verifier.py                                                  123     84    32%   114-159, 197-259, 287-289, 293, 297, 304, 322-331, 374-409
-python/carnot/inference/llm_solver.py                                                        265    223    16%   91-101, 124-127, 155-171, 184-200, 226-276, 297-317, 365-378, 424-518, 579-701, 780-813, 873-912
-python/carnot/inference/model_loader.py                                                      159    125    21%   124, 133, 137-142, 146, 156-161, 166-186, 191-193, 214-223, 239-243, 319-454, 504-544
-python/carnot/inference/model_server.py                                                      296    225    24%   62-64, 67-68, 82-126, 131-138, 154-173, 176, 184-185, 189-212, 216-236, 240-241, 245, 255-299, 303-309, 318-342, 345-362, 366, 369-391, 394-409, 412-416, 423-425, 440-457, 562-606
+python/carnot/inference/learned_verifier.py                                                  123    123     0%   36-409
+python/carnot/inference/llm_solver.py                                                        265    265     0%   42-912
+python/carnot/inference/model_loader.py                                                      159    159     0%   50-544
+python/carnot/inference/model_server.py                                                      296    296     0%   7-618
 python/carnot/inference/multi_agent_arbiter.py                                                71     71     0%   46-340
-python/carnot/inference/multi_start.py                                                        31     16    48%   191-223
+python/carnot/inference/multi_start.py                                                        31     31     0%   44-223
+python/carnot/inference/negative_constraints.py                                              224    224     0%   17-593
 python/carnot/inference/nrgpt_explorer.py                                                     21     21     0%   5-72
-python/carnot/inference/reasoning_energy.py                                                   94     59    37%   84-98, 109, 128-138, 169-180, 196-238, 251-253
+python/carnot/inference/reasoning_energy.py                                                   94     94     0%   28-253
 python/carnot/inference/repair_reranker.py                                                   352    352     0%   7-949
-python/carnot/inference/semantic_energy.py                                                    21      9    57%   90-95, 137, 208-211
-python/carnot/inference/sota_models.py                                                        68     52    24%   96, 107, 166-227, 255-272, 300-302
-python/carnot/inference/tensorrt_backend.py                                                  171    105    39%   44-47, 97, 104-116, 119-123, 127-128, 136, 140, 144-148, 160-161, 167-172, 176-178, 182-191, 195-197, 201-208, 223-338, 361-393
-python/carnot/inference/verify_and_repair.py                                                  71     51    28%   106-139, 165-183, 225-257
+python/carnot/inference/run_csp.py                                                           366    366     0%   11-699
+python/carnot/inference/samplers.py                                                           92     92     0%   12-200
+python/carnot/inference/semantic_energy.py                                                    21     21     0%   51-211
+python/carnot/inference/sota_models.py                                                        68     68     0%   33-302
+python/carnot/inference/tensorrt_backend.py                                                  171    171     0%   7-405
+python/carnot/inference/verify_and_repair.py                                                  71     71     0%   29-257
+python/carnot/inference/verify_repair.py                                                      69     69     0%   5-107
 python/carnot/invariants.py                                                                  120    120     0%   61-549
 python/carnot/mcp/__init__.py                                                                  5      5     0%   19-38
 python/carnot/mcp/__main__.py                                                                  2      2     0%   12-14
@@ -208,15 +212,20 @@ python/carnot/models/cikan_energy.py                                            
 python/carnot/models/cikan_reg.py                                                             18     18     0%   11-68
 python/carnot/models/cikan_verifier.py                                                       228    176    23%   47, 60-64, 71-73, 78-81, 84-86, 89-93, 96-101, 104-109, 112-117, 120-123, 126-136, 142-156, 162, 168-170, 196-224, 243, 252-273, 278, 283-284, 289-290, 295-300, 305, 310-311, 316-317, 322, 333-359, 364-376, 386-399, 402-405, 408-411, 415-416
 python/carnot/models/compliance_checker.py                                                   143    110    23%   188-201, 226-245, 289-307, 319-344, 410-422, 438-440, 464-465, 483, 515-570, 587-592, 619, 633-650, 664-678
+python/carnot/models/consformer.py                                                            31     31     0%   16-101
 python/carnot/models/continual_gibbs.py                                                       39     39     0%   65-345
+python/carnot/models/deep_sade.py                                                             19     19     0%   1-51
 python/carnot/models/ebcn_coherence.py                                                        26     26     0%   8-66
 python/carnot/models/ebm_cot_calibrator.py                                                    75     61    19%   105-120, 146, 216-219, 255-274, 302-323, 359-370, 396-423
 python/carnot/models/ebm_cot_calibrator_v3.py                                                 96     76    21%   100, 125-126, 151-152, 189-191, 230-231, 255-285, 342-346, 373-388, 405-422, 458-519
 python/carnot/models/ebm_cot_energy_calibration_probe.py                                     387    387     0%   17-976
 python/carnot/models/ebm_cot_temperature_calibration.py                                      167    167     0%   13-533
 python/carnot/models/ebrm_scorer.py                                                          170    100    41%   112, 123, 137, 142-198, 216, 222, 298-318, 329-336, 342-355, 364-378, 392-399, 407-409, 421-427, 431, 435, 439, 443-448
-python/carnot/models/ebt.py                                                                  137    111    19%   72, 98-102, 162-175, 212-249, 278-320, 398-434, 474-491, 502, 517-551
+python/carnot/models/ebt.py                                                                  154    126    18%   72, 98-102, 162-175, 212-249, 278-320, 398-434, 474-491, 507-523, 550-562, 573, 588-622
 python/carnot/models/ebt_bridge.py                                                             8      8     0%   6-39
+python/carnot/models/ebt_compatibility.py                                                     30     30     0%   6-55
+python/carnot/models/ebt_reasoning_bridge.py                                                  15     15     0%   6-43
+python/carnot/models/ebt_reasoning_eval.py                                                    22     22     0%   6-66
 python/carnot/models/eorm.py                                                                 178    137    23%   147-156, 187-190, 231-241, 303-325, 367-369, 401-435, 470-493, 516, 542-554, 577-585, 665-677, 705-714, 742-746, 772-790, 814-828, 848, 900-902, 935, 973-997, 1028-1037
 python/carnot/models/eorm_retrain.py                                                          89     89     0%   34-416
 python/carnot/models/gibbs.py                                                                 72     50    31%   69, 87-94, 141-142, 156-167, 240-265, 298-302, 307, 323-331
@@ -226,7 +235,7 @@ python/carnot/models/hallusal_sparse_ae.py                                      
 python/carnot/models/hrm_verifier.py                                                          12     12     0%   4-21
 python/carnot/models/igd.py                                                                   39     39     0%   3-65
 python/carnot/models/infonce_loss.py                                                          28     28     0%   30-159
-python/carnot/models/ising.py                                                                 40      8    80%   94, 96, 173-174, 179, 220, 237-238
+python/carnot/models/ising.py                                                                 40     22    45%   93-96, 157-185, 215, 220, 237-238
 python/carnot/models/jepa_curriculum_diagnostic.py                                           125     93    26%   102-104, 115, 131-137, 170-198, 221-246, 281, 305-326, 371-439
 python/carnot/models/jepa_curriculum_trainer.py                                               98     57    42%   113, 161-165, 169-170, 186-194, 203, 228-302, 318-320, 360, 365, 375
 python/carnot/models/jepa_hallusae_v16.py                                                     78     78     0%   30-282
@@ -237,9 +246,10 @@ python/carnot/models/jepa_retrain_v2.py                                         
 python/carnot/models/jepa_retrain_v6.py                                                       93     93     0%   25-355
 python/carnot/models/jepa_retrain_v7.py                                                       27     27     0%   26-148
 python/carnot/models/jepa_retrain_v8.py                                                       16     16     0%   21-91
+python/carnot/models/kaem_adaptive_topology.py                                               169    169     0%   6-401
 python/carnot/models/kaem_crossover.py                                                        27     16    41%   56-66, 82-85, 101, 119, 145-147
 python/carnot/models/kaem_distribution_benchmark.py                                          113     85    25%   125, 133, 140, 181-187, 219-231, 254-259, 282-303, 325-339, 371-381, 415-441, 473-483
-python/carnot/models/kaem_energy.py                                                          238    203    15%   128-148, 174-181, 204-207, 237-260, 268-274, 309-322, 334-346, 379-389, 412-426, 475-487, 510, 534-535, 569-615, 657-659, 677-690, 710, 752-765, 798-825, 851-864, 883-888, 934-939, 979-1019
+python/carnot/models/kaem_energy.py                                                          247    211    15%   128-148, 174-181, 204-207, 237-260, 268-276, 311-324, 336-348, 381-391, 411-413, 444-458, 507-519, 542, 566-567, 601-650, 692-694, 712-725, 745, 787-800, 833-860, 886-899, 918-923, 969-974, 1014-1054
 python/carnot/models/kaem_extended_result.py                                                  20      8    60%   65-66, 82, 105, 126, 146-148
 python/carnot/models/kan/__init__.py                                                         182    136    25%   79-91, 98, 113-144, 148, 174-181, 186-193, 220-261, 274-293, 312-329, 334-336, 352-396, 408, 422-423, 427, 431, 435, 440, 445, 463, 467
 python/carnot/models/kan/glorokan_robustness.py                                              116    116     0%   6-284
@@ -264,6 +274,7 @@ python/carnot/models/pwa_karat.py                                               
 python/carnot/models/rkan.py                                                                 115     82    29%   42-50, 56-58, 75-85, 90-103, 108-109, 134-150, 158-160, 165-174, 179, 184, 189, 194, 207, 224-245, 275-279
 python/carnot/models/rkan_lean_export.py                                                      19     19     0%   6-39
 python/carnot/models/s2kan.py                                                                 74     74     0%   6-164
+python/carnot/models/s2kan_symbolic.py                                                        57     57     0%   6-133
 python/carnot/models/s2kan_z3.py                                                              49     49     0%   6-121
 python/carnot/models/safety_kan.py                                                             1      1     0%   1
 python/carnot/models/sc_energy.py                                                            102    102     0%   51-407
@@ -277,7 +288,7 @@ python/carnot/models/sparse_kan_clustering.py                                   
 python/carnot/models/symbolic_kan.py                                                         130    130     0%   39-402
 python/carnot/models/symbolic_kan_energy.py                                                  121     92    24%   52-64, 75-88, 108, 112, 125-143, 165-170, 184-201, 212-222, 230-237, 267-269, 280-283, 295-315, 326-328
 python/carnot/models/trace_features.py                                                        53     53     0%   44-211
-python/carnot/models/vjepa_predictor.py                                                      236    200    15%   80-102, 106-110, 129-130, 142-146, 150, 163-170, 199-227, 242-251, 255, 273-285, 327-338, 346-347, 382-408, 429-432, 440-447, 451-456, 488-524, 546-554, 567-578, 601-618, 633-652
+python/carnot/models/vjepa_predictor.py                                                      236    236     0%   42-652
 python/carnot/phase3/__init__.py                                                               5      0   100%
 python/carnot/phase3/active_inference_pilot.py                                               322    229    29%   57, 61, 90, 96, 100, 104, 133-148, 159, 162-165, 168, 173-186, 198-201, 204-220, 234-237, 252-257, 262, 265-279, 283, 298-306, 309-310, 318-351, 361-365, 376-392, 395-399, 403-404, 414-423, 435-450, 458-477, 504-506, 527, 544-546, 550-572, 590-615, 626-644, 655-663, 679-705
 python/carnot/phase3/anchored_dual_path_latent_repair.py                                     105    105     0%   12-288
@@ -300,159 +311,161 @@ python/carnot/phase5/adversarial_probe.py                                       
 python/carnot/phase5/insitu_prototype.py                                                     226    226     0%   66-671
 python/carnot/phase5/insitu_training_loop.py                                                 245    245     0%   56-764
 python/carnot/phase5/intermediate_scale_v3.py                                                 38     38     0%   10-129
-python/carnot/pipeline/__init__.py                                                           137      0   100%
-python/carnot/pipeline/activation_jailbreak_probe.py                                          91     69    24%   108-113, 144-171, 208-210, 218-246, 262-272, 305-312, 352-371
+python/carnot/pipeline/__init__.py                                                           137    137     0%   9-1047
+python/carnot/pipeline/activation_jailbreak_probe.py                                          91     91     0%   38-371
 python/carnot/pipeline/adaptive.py                                                            54     54     0%   58-330
 python/carnot/pipeline/adaptive_gate.py                                                       58     58     0%   36-162
 python/carnot/pipeline/adaptive_psv_sampler.py                                                49     49     0%   40-274
-python/carnot/pipeline/adaptive_thresholds.py                                                109     81    26%   115-117, 148-156, 179-185, 206-210, 229-240, 269-298, 325-338, 352-360, 393-394, 421-438, 475, 506-507, 526-528
-python/carnot/pipeline/adaptrack_repairer.py                                                  36     21    42%   106-107, 131-137, 160-164, 192-214
+python/carnot/pipeline/adaptive_thresholds.py                                                109    109     0%   41-531
+python/carnot/pipeline/adaptrack_repairer.py                                                  36     36     0%   29-214
 python/carnot/pipeline/adversarial_benchmark_result.py                                        36     36     0%   35-171
 python/carnot/pipeline/adversarial_gsm8k.py                                                   84     84     0%   45-576
 python/carnot/pipeline/adversarial_v4_result.py                                               31     31     0%   39-162
 python/carnot/pipeline/adversarial_v5_result.py                                               22     22     0%   42-173
-python/carnot/pipeline/agentic.py                                                             94     57    39%   76-78, 94, 110-118, 127-131, 140-144, 151, 158, 165, 172, 179-189, 238-283
-python/carnot/pipeline/atomic_writer.py                                                       25     16    36%   57-59, 91-114, 130
-python/carnot/pipeline/batching_audit.py                                                      43     22    49%   110, 137, 158-191, 218
-python/carnot/pipeline/batching_hook_runner.py                                                51     41    20%   71-72, 101-119, 147-176, 200-207
-python/carnot/pipeline/boltzmann_repair.py                                                    75     53    29%   155-165, 189, 227-252, 331-340, 344-345, 383-420, 469-488
-python/carnot/pipeline/capo_calibration.py                                                    21     15    29%   95-96, 133-154
-python/carnot/pipeline/case_memory.py                                                        269    156    42%   63, 67, 71, 75-82, 86, 93-105, 109-112, 121-123, 131-139, 149-157, 173, 185-187, 211, 223, 234, 281-300, 328, 338, 355-356, 394, 420, 433-434, 459, 470, 473-494, 506, 511-566, 575-590, 593, 600-608, 611-612, 616-620, 659-666, 669
-python/carnot/pipeline/causal_reasoning_verifier.py                                           63     41    35%   122-127, 142-148, 174-203, 230-235, 251-254, 262, 285-294
+python/carnot/pipeline/agentic.py                                                             94     94     0%   25-286
+python/carnot/pipeline/atomic_writer.py                                                       25     25     0%   30-130
+python/carnot/pipeline/batching_audit.py                                                      43     43     0%   41-218
+python/carnot/pipeline/batching_hook_runner.py                                                51     51     0%   33-207
+python/carnot/pipeline/boltzmann_repair.py                                                    75     75     0%   52-488
+python/carnot/pipeline/capo_calibration.py                                                    21     21     0%   54-154
+python/carnot/pipeline/case_memory.py                                                        269    269     0%   8-672
+python/carnot/pipeline/causal_reasoning_verifier.py                                           63     63     0%   26-294
 python/carnot/pipeline/cerce_ledger.py                                                       145    145     0%   12-348
 python/carnot/pipeline/certificate_repair_executor.py                                        119    119     0%   6-279
 python/carnot/pipeline/cocom.py                                                               68     68     0%   5-174
-python/carnot/pipeline/code_learning.py                                                      376    261    31%   64, 86-96, 170-176, 180-197, 201-205, 216-218, 229-232, 236-246, 250-256, 263-314, 321, 324-374, 377-379, 388-398, 407-431, 438, 447-480, 487, 490-560, 568-574, 584-603, 616-618, 622-640, 653-667, 674-677, 688-722, 737-760, 767-775
+python/carnot/pipeline/code_learning.py                                                      376    376     0%   12-775
 python/carnot/pipeline/code_spec_corpus.py                                                   222    222     0%   7-593
-python/carnot/pipeline/code_verification.py                                                    7      3    57%   55-57
-python/carnot/pipeline/conductor_dedup.py                                                     83     56    33%   116, 140-158, 181, 202, 255-259, 287-295, 321-338, 359-378, 391, 399, 403-408, 412-420
+python/carnot/pipeline/code_verification.py                                                    7      7     0%   10-57
+python/carnot/pipeline/conductor_dedup.py                                                     83     83     0%   45-420
 python/carnot/pipeline/conductor_env.py                                                       27     27     0%   29-221
 python/carnot/pipeline/confidence_verifier.py                                                101    101     0%   47-365
-python/carnot/pipeline/confidence_weighted_repair.py                                          86     55    36%   130-159, 197-213, 253, 258, 340-342, 367-375, 403-457
+python/carnot/pipeline/confidence_weighted_repair.py                                          86     86     0%   52-457
 python/carnot/pipeline/consistency_checker.py                                                106    106     0%   58-567
 python/carnot/pipeline/constrained_decoding.py                                                56     56     0%   36-335
-python/carnot/pipeline/constraint_addition.py                                                210    128    39%   113, 125-126, 198, 215, 261, 270-275, 285, 289-292, 330-331, 339-353, 364-370, 379-383, 401-417, 444-446, 473-482, 508-516, 555, 568-575, 600-620, 742-752, 775-778, 815-842, 889-901, 937-946, 959, 968
+python/carnot/pipeline/constraint_addition.py                                                210    210     0%   46-982
 python/carnot/pipeline/constraint_addition_agent.py                                           62     62     0%   33-276
 python/carnot/pipeline/constraint_addition_engine.py                                          82     82     0%   33-406
 python/carnot/pipeline/constraint_extractor.py                                               236    236     0%   51-692
 python/carnot/pipeline/constraint_generator.py                                               148    148     0%   53-773
 python/carnot/pipeline/constraint_graph_builder.py                                             1      1     0%   1
-python/carnot/pipeline/constraint_template_library.py                                        209    152    27%   240-242, 261, 288-289, 316-321, 347-352, 381-387, 407-411, 431-435, 459-491, 534-560, 584-612, 648-693, 723-751, 756-770, 810-844, 923, 947-951, 970-971, 1051-1053, 1064-1073, 1087-1102, 1128-1141, 1165-1170
+python/carnot/pipeline/constraint_template_library.py                                        209    209     0%   55-1173
 python/carnot/pipeline/constraint_template_store.py                                           87     87     0%   29-446
 python/carnot/pipeline/context_induction.py                                                  217    217     0%   14-591
 python/carnot/pipeline/continual_memory.py                                                    37     37     0%   1-49
-python/carnot/pipeline/cot_circuit_verifier.py                                                91     63    31%   177-239, 299-334, 360-363, 396-397, 402, 419-422, 454-481
+python/carnot/pipeline/cot_circuit_verifier.py                                                91     91     0%   50-481
 python/carnot/pipeline/cot_pair_collector.py                                                  22     22     0%   28-102
-python/carnot/pipeline/cpmi_builder.py                                                       112     81    28%   79-84, 92-100, 134-146, 165-174, 183-189, 200-207, 242-256, 278, 290-301, 329-377
+python/carnot/pipeline/cpmi_builder.py                                                       112    112     0%   36-377
 python/carnot/pipeline/crane_decoding.py                                                     191    191     0%   6-466
 python/carnot/pipeline/crane_extractor.py                                                    112    112     0%   41-336
-python/carnot/pipeline/cross_session_relay.py                                                 55     35    36%   188-270, 320-326
+python/carnot/pipeline/cross_session_relay.py                                                 55     55     0%   46-333
 python/carnot/pipeline/dccd_schema_constrained_repair.py                                     177    177     0%   14-476
-python/carnot/pipeline/deliverable_guard.py                                                   25     14    44%   64, 82-83, 106-108, 153-164
-python/carnot/pipeline/deliverable_validator.py                                               81     57    30%   115-145, 183-217, 245-260, 319, 354-387
+python/carnot/pipeline/deliverable_guard.py                                                   25     25     0%   26-164
+python/carnot/pipeline/deliverable_validator.py                                               81     81     0%   40-387
 python/carnot/pipeline/differentiable_memory.py                                               33     33     0%   1-74
 python/carnot/pipeline/draft_conditioned_verifier.py                                          76     76     0%   36-346
 python/carnot/pipeline/drift_probe_v3.py                                                      90     90     0%   36-276
-python/carnot/pipeline/dsvd_adapter.py                                                        91     64    30%   63-73, 83-93, 103, 129-138, 156-166, 179-201, 209-211, 225-236, 262-263, 275, 289-301, 312
-python/carnot/pipeline/dsvd_live_trainer.py                                                  105     85    19%   78, 98-126, 149-150, 173-201, 227-252, 266-307
-python/carnot/pipeline/dual_gpu_assigner.py                                                   24     15    38%   51-52, 71-72, 92-123
+python/carnot/pipeline/dsvd_adapter.py                                                        91     91     0%   21-312
+python/carnot/pipeline/dsvd_live_trainer.py                                                  105    105     0%   29-307
+python/carnot/pipeline/dual_gpu_assigner.py                                                   24     24     0%   26-123
 python/carnot/pipeline/dual_gpu_controlled_test.py                                            53     53     0%   24-194
-python/carnot/pipeline/dual_gpu_harness.py                                                    87     60    31%   118, 132-150, 154-175, 189-206, 240-241, 250-259, 273, 300-328
-python/carnot/pipeline/dual_gpu_health.py                                                    113     83    27%   147, 195-211, 238-250, 270-290, 311-357, 372-398, 440-484, 523-530
-python/carnot/pipeline/dual_gpu_monitor.py                                                    86     64    26%   119-171, 184, 206-228, 250-252, 281, 294-306, 312-324, 328-340
+python/carnot/pipeline/dual_gpu_harness.py                                                    87     87     0%   38-328
+python/carnot/pipeline/dual_gpu_health.py                                                    113    113     0%   66-530
+python/carnot/pipeline/dual_gpu_monitor.py                                                    86     86     0%   24-340
 python/carnot/pipeline/dual_gpu_sweep.py                                                      15     15     0%   21-95
 python/carnot/pipeline/dual_pathway_probe.py                                                 180    180     0%   35-566
-python/carnot/pipeline/dualgpu_retrain.py                                                     54     35    35%   47-52, 92, 115-120, 164-203, 220-223
+python/carnot/pipeline/dualgpu_retrain.py                                                     54     54     0%   27-223
 python/carnot/pipeline/dynamic_eidoku.py                                                      22     22     0%   11-73
 python/carnot/pipeline/ebm_calibrator.py                                                      74     74     0%   33-227
 python/carnot/pipeline/ebrm_baseline.py                                                       79     79     0%   28-278
 python/carnot/pipeline/edu_prm_selector.py                                                   107    107     0%   33-271
 python/carnot/pipeline/eidoku_gate.py                                                         17     17     0%   10-60
-python/carnot/pipeline/embedding_constraint_store.py                                         135    105    22%   85, 90, 95-98, 103-107, 123-136, 180-200, 208-211, 232-242, 262-269, 294-306, 326-333, 356-372, 385-406
+python/carnot/pipeline/embedding_constraint_store.py                                         135    135     0%   38-406
 python/carnot/pipeline/energy_driven_steering.py                                              39     39     0%   1-87
-python/carnot/pipeline/energy_guided_decoder.py                                               28     15    46%   107-108, 133, 156-164, 200-204
+python/carnot/pipeline/energy_guided_decoder.py                                               28     28     0%   33-204
 python/carnot/pipeline/energy_guided_decoding.py                                              31     31     0%   7-81
-python/carnot/pipeline/energy_magnitude_replay.py                                             75     56    25%   85-97, 107, 111-113, 130-139, 145-152, 168, 225-226, 241-245, 261-263, 307-346
+python/carnot/pipeline/energy_magnitude_replay.py                                             75     75     0%   47-346
 python/carnot/pipeline/ensemble_gate.py                                                       10     10     0%   21-65
-python/carnot/pipeline/ensemble_gate_v3.py                                                    19      5    74%   103-108, 135-141
+python/carnot/pipeline/ensemble_gate_v3.py                                                    19     19     0%   27-141
 python/carnot/pipeline/ensemble_gate_v4.py                                                    22     22     0%   15-107
-python/carnot/pipeline/env_autofix.py                                                         44     28    36%   149-184, 243-261
-python/carnot/pipeline/eorm_rectifier.py                                                      42     27    36%   114-115, 135-140, 182-214
-python/carnot/pipeline/errors.py                                                              11      2    82%   47-48
+python/carnot/pipeline/env_autofix.py                                                         44     44     0%   60-261
+python/carnot/pipeline/eorm_rectifier.py                                                      42     42     0%   35-214
+python/carnot/pipeline/eorm_verifier.py                                                       17     17     0%   7-54
+python/carnot/pipeline/errors.py                                                              11     11     0%   25-107
 python/carnot/pipeline/ets_decoder.py                                                         34     34     0%   7-97
-python/carnot/pipeline/exclusion_manifest.py                                                  56     35    38%   78-80, 96-109, 123-126, 140-144, 158-160, 183-191, 210-212, 243-244, 267
+python/carnot/pipeline/exclusion_manifest.py                                                  56     56     0%   23-267
 python/carnot/pipeline/exp274_kb_factual_live.py                                              85     85     0%   67-712
-python/carnot/pipeline/expanded_gpu_reaper.py                                                109     83    24%   157-158, 177-215, 229-237, 250-269, 288-391
+python/carnot/pipeline/expanded_gpu_reaper.py                                                109    109     0%   46-391
 python/carnot/pipeline/experiment_1707.py                                                     34     34     0%   1-75
 python/carnot/pipeline/experiment_1720.py                                                     32     32     0%   1-95
 python/carnot/pipeline/experiment_1856_ltlzinc_eval.py                                        17     17     0%   3-46
 python/carnot/pipeline/experiment_1862.py                                                     26     26     0%   6-74
 python/carnot/pipeline/experiment_1868_ltlzinc.py                                             30     30     0%   6-71
-python/carnot/pipeline/experiment_watchdog.py                                                 73     46    37%   106-109, 162-169, 190-205, 221-225, 242, 251-253, 280-314, 325-326, 337-338, 370
-python/carnot/pipeline/extract.py                                                            323    257    20%   142, 145-177, 208, 211-219, 229-242, 253-270, 276-295, 301-346, 350-401, 407-475, 482-488, 496-500, 511, 516-538, 543-547, 574, 577-591, 595-611, 615-629, 633-647, 651-669, 673-687, 692, 717, 720-732, 736-753, 757-774, 778-812, 817, 870-897, 902-907, 911, 972-1023
+python/carnot/pipeline/experiment_1999.py                                                     23     23     0%   1-49
+python/carnot/pipeline/experiment_watchdog.py                                                 73     73     0%   37-370
+python/carnot/pipeline/extract.py                                                            323    323     0%   32-1023
 python/carnot/pipeline/extraction_autopsy.py                                                  64     64     0%   6-227
 python/carnot/pipeline/extraction_benchmark.py                                                60     60     0%   28-295
 python/carnot/pipeline/extractor_comparison.py                                               106    106     0%   68-594
 python/carnot/pipeline/fact_distortion.py                                                     24     24     0%   10-70
-python/carnot/pipeline/fact_e_probe.py                                                        44     28    36%   73, 91, 105-118, 139-155, 181-194
-python/carnot/pipeline/fail_fast.py                                                           13      9    31%   28-43
-python/carnot/pipeline/flip_calibrator.py                                                     63     47    25%   128, 157-179, 211-216, 249-276
-python/carnot/pipeline/formal_claim_verifier.py                                              154    101    34%   78-82, 120, 153, 161, 184-205, 215-243, 254-271, 287-306, 349-357, 408-431, 449-459, 482-484
+python/carnot/pipeline/fact_e_probe.py                                                        44     44     0%   42-194
+python/carnot/pipeline/fail_fast.py                                                           13     13     0%   6-43
+python/carnot/pipeline/flip_calibrator.py                                                     63     63     0%   35-287
+python/carnot/pipeline/formal_claim_verifier.py                                              154    154     0%   12-487
 python/carnot/pipeline/formal_orchestrator.py                                                 32     32     0%   11-92
 python/carnot/pipeline/formal_step_verifier.py                                                61     61     0%   38-255
 python/carnot/pipeline/fouriercsp_extractor.py                                                42     42     0%   11-112
-python/carnot/pipeline/fover_annotator.py                                                     88     65    26%   171-210, 242-259, 295-344, 392, 418-419, 444-449, 484-505
-python/carnot/pipeline/fover_corpus.py                                                       102     85    17%   123-208, 241-270, 321-367
+python/carnot/pipeline/fover_annotator.py                                                     88     88     0%   53-505
+python/carnot/pipeline/fover_corpus.py                                                       102    102     0%   39-367
 python/carnot/pipeline/fover_eorm_retrain.py                                                  82     82     0%   28-337
 python/carnot/pipeline/fover_live.py                                                          19     19     0%   30-127
 python/carnot/pipeline/fp_autopsy.py                                                          76     76     0%   47-387
 python/carnot/pipeline/fr11_epsilon.py                                                        27     27     0%   5-58
 python/carnot/pipeline/fr11_event_bus.py                                                      29     29     0%   24-156
 python/carnot/pipeline/gemma4_factual_extraction.py                                           83     83     0%   59-704
-python/carnot/pipeline/gemma4_quantized_loader.py                                             90     73    19%   127-138, 178-186, 205-246, 258-271, 287-302, 313, 334-354
-python/carnot/pipeline/gemma_isolation.py                                                    104     76    27%   115-127, 132-141, 152-170, 206-271, 306-338
-python/carnot/pipeline/gemma_loader.py                                                        39     27    31%   89-98, 121-136, 165-186, 212-215
+python/carnot/pipeline/gemma4_quantized_loader.py                                             90     90     0%   53-354
+python/carnot/pipeline/gemma_isolation.py                                                    104    104     0%   28-338
+python/carnot/pipeline/gemma_loader.py                                                        39     39     0%   36-215
 python/carnot/pipeline/generation.py                                                         168    168     0%   56-764
-python/carnot/pipeline/gguf_cache.py                                                          75     54    28%   112-116, 124-127, 155-163, 191-210, 246-291, 323-336, 351-352, 380-381
+python/carnot/pipeline/gguf_cache.py                                                          75     75     0%   34-381
 python/carnot/pipeline/gpu1_routing_fix.py                                                    20     20     0%   43-179
 python/carnot/pipeline/gpu_preflight.py                                                       59     59     0%   36-276
-python/carnot/pipeline/gpu_thermal_gate.py                                                    73     52    29%   96-98, 116-119, 174-177, 209-232, 270-334, 347-354, 358
-python/carnot/pipeline/gpu_vram_gate.py                                                      130    102    22%   93, 107-109, 133-136, 186-188, 211-230, 264-329, 356-393, 401-407, 426-464, 468
-python/carnot/pipeline/gpu_vram_gate_v2.py                                                    44     33    25%   111-113, 145-198, 210-224, 228
-python/carnot/pipeline/gpu_zombie_fix.py                                                      23     10    57%   123-141, 167
-python/carnot/pipeline/gpu_zombie_killer.py                                                   93     69    26%   112-124, 129-133, 166-185, 190-199, 243-321
+python/carnot/pipeline/gpu_thermal_gate.py                                                    73     73     0%   39-358
+python/carnot/pipeline/gpu_vram_gate.py                                                      130    130     0%   48-468
+python/carnot/pipeline/gpu_vram_gate_v2.py                                                    44     44     0%   54-228
+python/carnot/pipeline/gpu_zombie_fix.py                                                      23     23     0%   34-167
+python/carnot/pipeline/gpu_zombie_killer.py                                                   93     93     0%   36-321
 python/carnot/pipeline/grammar_constrained_decoder.py                                         51     51     0%   23-208
-python/carnot/pipeline/hallucination_basin.py                                                 58     42    28%   137-152, 162-165, 225-228, 259-279, 313-330
-python/carnot/pipeline/hallufield_detector.py                                                 52     33    37%   168-176, 212-233, 277-281, 317-334
-python/carnot/pipeline/halp_probe.py                                                          54     40    26%   99-102, 123-131, 156-181, 202-216
-python/carnot/pipeline/hardware_energy_probe.py                                               95     63    34%   126, 134-138, 151-155, 166-179, 188, 200-207, 224-231, 268-304
-python/carnot/pipeline/harness_patcher.py                                                     77     52    32%   113, 140, 174-220, 243-258, 285-290, 308-318, 334-336
-python/carnot/pipeline/hermes_adapter.py                                                      37     19    49%   108-109, 133, 155-157, 180-183, 205-211, 242-245
-python/carnot/pipeline/hermes_v2_live_loop.py                                                 66     40    39%   163-166, 196-218, 244-284
-python/carnot/pipeline/hermes_v2_structured_loop.py                                           34     19    44%   132-135, 159-181
+python/carnot/pipeline/hallucination_basin.py                                                 58     58     0%   46-330
+python/carnot/pipeline/hallufield_detector.py                                                 52     52     0%   43-334
+python/carnot/pipeline/halp_probe.py                                                          54     54     0%   32-216
+python/carnot/pipeline/hardware_energy_probe.py                                               95     95     0%   34-304
+python/carnot/pipeline/harness_patcher.py                                                     77     77     0%   36-336
+python/carnot/pipeline/hermes_adapter.py                                                      37     37     0%   31-245
+python/carnot/pipeline/hermes_v2_live_loop.py                                                 66     66     0%   30-284
+python/carnot/pipeline/hermes_v2_structured_loop.py                                           34     34     0%   31-181
 python/carnot/pipeline/hiled_decoder.py                                                       10     10     0%   1-16
-python/carnot/pipeline/hisr_weights.py                                                        26     13    50%   94, 129-153, 185
+python/carnot/pipeline/hisr_weights.py                                                        26     26     0%   37-185
 python/carnot/pipeline/hls_energy_validator.py                                                48     48     0%   27-199
 python/carnot/pipeline/host_prereq_registry.py                                                74     74     0%   32-286
 python/carnot/pipeline/humaneval_live_benchmark.py                                           174    174     0%   11-456
 python/carnot/pipeline/humaneval_micro.py                                                     26     26     0%   36-203
 python/carnot/pipeline/ias_gate_calibration.py                                                39     39     0%   38-234
 python/carnot/pipeline/incremental_test_selector.py                                          103    103     0%   27-294
-python/carnot/pipeline/interleaved_verifier.py                                                94     73    22%   133-136, 148-156, 184, 207-234, 257-278, 304-327, 349-379
+python/carnot/pipeline/interleaved_verifier.py                                                94     94     0%   43-379
 python/carnot/pipeline/internal_state_probe.py                                                99     99     0%   32-409
-python/carnot/pipeline/interwhen_monitor.py                                                   46     30    35%   126-130, 157-163, 196-212, 242-252, 275
-python/carnot/pipeline/ising_consensus.py                                                     44      0   100%
-python/carnot/pipeline/ising_constraint_injector.py                                           53     28    47%   124-128, 145-151, 171-173, 203-206, 252-275
+python/carnot/pipeline/interwhen_monitor.py                                                   46     46     0%   43-275
+python/carnot/pipeline/ising_consensus.py                                                     44     44     0%   1-95
+python/carnot/pipeline/ising_constraint_injector.py                                           53     53     0%   40-296
 python/carnot/pipeline/iterative_self_repair.py                                               97     97     0%   42-453
 python/carnot/pipeline/jailbreak_detection_kan.py                                            171    171     0%   45-540
 python/carnot/pipeline/jepa_cascade_loader.py                                                 37     37     0%   27-167
-python/carnot/pipeline/jepa_fast_path.py                                                      38     24    37%   105-117, 149-162, 184-187, 196
+python/carnot/pipeline/jepa_fast_path.py                                                      38     38     0%   41-196
 python/carnot/pipeline/jepa_v16.py                                                           129    129     0%   26-414
-python/carnot/pipeline/jepa_wiring_guard.py                                                   25     12    52%   81-109
-python/carnot/pipeline/jit_vram_check.py                                                      52     30    42%   101, 119-137, 175-223, 257-264
+python/carnot/pipeline/jepa_wiring_guard.py                                                   25     25     0%   20-109
+python/carnot/pipeline/jit_vram_check.py                                                      52     52     0%   29-264
 python/carnot/pipeline/jitrl_memory.py                                                        25     25     0%   41-160
 python/carnot/pipeline/lagrange_updater.py                                                   106    106     0%   44-407
-python/carnot/pipeline/latent_cot_calibrator.py                                               59     43    27%   131-133, 169-227, 262-275
+python/carnot/pipeline/latent_cot_calibrator.py                                               59     59     0%   41-275
 python/carnot/pipeline/limo_curator.py                                                        97     97     0%   33-487
 python/carnot/pipeline/live_100q_v7_helpers.py                                               114    114     0%   26-456
 python/carnot/pipeline/live_100q_v8_helpers.py                                                20     20     0%   25-109
@@ -462,126 +475,130 @@ python/carnot/pipeline/live_200q_v3_result.py                                   
 python/carnot/pipeline/live_200q_v4_result.py                                                 37     37     0%   34-166
 python/carnot/pipeline/live_200q_v5_helpers.py                                                32     32     0%   24-148
 python/carnot/pipeline/live_200q_v7_helpers.py                                                31     31     0%   20-162
-python/carnot/pipeline/live_assertion.py                                                      16     11    31%   80-95, 125-129
+python/carnot/pipeline/live_assertion.py                                                      16     16     0%   37-129
 python/carnot/pipeline/live_consistency_eval.py                                              121    121     0%   47-628
-python/carnot/pipeline/live_gpu_diagnostic.py                                                 87     66    24%   106-122, 134-143, 151, 164-178, 198-201, 237-305
-python/carnot/pipeline/live_gpu_gate.py                                                       39     21    46%   86, 118, 148, 173-176, 202-208, 247-251, 282-296
+python/carnot/pipeline/live_gpu_diagnostic.py                                                 87     87     0%   38-305
+python/carnot/pipeline/live_gpu_gate.py                                                       39     39     0%   45-296
 python/carnot/pipeline/live_precision_result.py                                               15     15     0%   25-90
 python/carnot/pipeline/live_think_probe_result.py                                              8      8     0%   21-56
 python/carnot/pipeline/live_trace_memory.py                                                  351    351     0%   7-750
 python/carnot/pipeline/live_trace_trainer.py                                                  33     33     0%   29-203
-python/carnot/pipeline/llm_extractor.py                                                      125     85    32%   34-36, 45-47, 54-55, 59-60, 64, 67-68, 71-72, 89-96, 100, 103-120, 123-137, 141, 157-203, 207-210, 214-225, 229-231, 240-242
-python/carnot/pipeline/llm_z3_formalizer.py                                                  103     76    26%   117, 163-169, 199-202, 236-250, 282-331, 390-393, 429-498
-python/carnot/pipeline/long_run_executor.py                                                   86     54    37%   72-75, 201-202, 228-243, 272-295, 316-331, 374-389, 420-436
+python/carnot/pipeline/llm_extractor.py                                                      125    125     0%   10-242
+python/carnot/pipeline/llm_z3_formalizer.py                                                  103    103     0%   54-498
+python/carnot/pipeline/long_run_executor.py                                                   86     86     0%   38-436
 python/carnot/pipeline/losnet_detector.py                                                     93     93     0%   41-407
-python/carnot/pipeline/lsebm_replayer.py                                                     119     95    20%   100, 105, 127-140, 154-155, 207-215, 244-312, 347-384, 425-431
-python/carnot/pipeline/lsebmcl_replay.py                                                      38     24    37%   66-68, 76-85, 93-97, 110-121
+python/carnot/pipeline/lsebm_replayer.py                                                     119    119     0%   54-438
+python/carnot/pipeline/lsebmcl_replay.py                                                      38     38     0%   19-121
 python/carnot/pipeline/ltlzinc_adapter.py                                                    178    178     0%   12-490
-python/carnot/pipeline/lw_jepa_trainer.py                                                    100     84    16%   76-80, 107-109, 127-129, 145, 169-171, 215-216, 239-273, 291-329, 357-389
-python/carnot/pipeline/manifest_enforcer.py                                                   63     49    22%   35-36, 61-62, 92-112, 131, 149, 174-198, 219, 246-261
-python/carnot/pipeline/mars_margin_gate.py                                                    23     11    52%   79-82, 103, 122-139
+python/carnot/pipeline/lw_jepa_trainer.py                                                    100    100     0%   31-389
+python/carnot/pipeline/manifest_enforcer.py                                                   63     63     0%   26-261
+python/carnot/pipeline/mars_margin_gate.py                                                    23     23     0%   27-139
 python/carnot/pipeline/mcmc_constrained_repair_search.py                                     126    126     0%   11-330
-python/carnot/pipeline/memory.py                                                              64     43    33%   139, 172-191, 233-261, 295-310, 331-346, 371-387, 390-392
+python/carnot/pipeline/memory.py                                                              64     64     0%   48-392
 python/carnot/pipeline/memory_compression.py                                                  44     44     0%   35-173
-python/carnot/pipeline/metajuls_adapter.py                                                    31     19    39%   74, 110-115, 137-162, 177-184
+python/carnot/pipeline/metajuls_adapter.py                                                    31     31     0%   37-184
 python/carnot/pipeline/metajuls_forcing_adapter.py                                            49     49     0%   34-238
-python/carnot/pipeline/mining.py                                                              91     60    34%   363, 400-450, 467, 492-531, 542-547, 568-597
-python/carnot/pipeline/mise_calibrator.py                                                     44     30    32%   114, 144-169, 206-224
-python/carnot/pipeline/multi_agent_arbiter.py                                                 36     12    67%   66, 106, 144, 164-165, 185-216
-python/carnot/pipeline/nl2z3_extractor.py                                                     85     54    36%   105, 143-149, 190-225, 243-246, 286-288, 293, 326-375, 385-388
-python/carnot/pipeline/npu_entropy_probe.py                                                  110     83    25%   89, 93, 136-139, 158-213, 231-252, 273-287, 309-350
+python/carnot/pipeline/mining.py                                                              91     91     0%   51-597
+python/carnot/pipeline/mise_calibrator.py                                                     44     44     0%   34-235
+python/carnot/pipeline/multi_agent_arbiter.py                                                 36     36     0%   32-216
+python/carnot/pipeline/nl2z3_extractor.py                                                     85     85     0%   49-388
+python/carnot/pipeline/npu_entropy_probe.py                                                  110    110     0%   46-350
 python/carnot/pipeline/nsvif_parser.py                                                       166    166     0%   13-531
+python/carnot/pipeline/nsvif_smt_extractor.py                                                275    275     0%   13-664
 python/carnot/pipeline/nsvif_sota.py                                                         121    121     0%   12-418
-python/carnot/pipeline/nup_probe.py                                                           85     56    34%   131-148, 191, 238, 271-277, 305, 336-385, 417-421, 446-449
-python/carnot/pipeline/nup_probe_v2.py                                                       159    119    25%   108, 124, 162-165, 187-208, 236-259, 273-276, 281, 290-294, 304-315, 326-343, 378, 424-425, 450-452, 479-480, 504-543, 556-574
-python/carnot/pipeline/nup_probe_v3.py                                                       143    123    14%   123-129, 168-174, 208-254, 300-306, 310-314, 318-321, 343-392, 410-416, 443-481
-python/carnot/pipeline/nup_probe_v4.py                                                        95     81    15%   83, 102-103, 126-130, 181-191, 221-240, 266-267, 314-364, 400-436
+python/carnot/pipeline/nup_probe.py                                                           85     85     0%   56-449
+python/carnot/pipeline/nup_probe_v2.py                                                       159    159     0%   56-574
+python/carnot/pipeline/nup_probe_v3.py                                                       143    143     0%   65-481
+python/carnot/pipeline/nup_probe_v4.py                                                        95     95     0%   47-436
 python/carnot/pipeline/nup_probe_v5.py                                                        66     66     0%   45-312
-python/carnot/pipeline/oracle_corpus_builder.py                                               36     10    72%   126, 143-163, 184
-python/carnot/pipeline/otv_verifier.py                                                        45     30    33%   83-87, 99-103, 123-147, 158-162
-python/carnot/pipeline/pbt_code_verifier.py                                                  286    220    23%   63-65, 94, 98, 102-104, 128-130, 140-180, 190-278, 286-311, 320-471, 485-498, 502-514, 518-524, 528-544, 551-565, 572-583, 592-599, 608-615, 619-622, 629-636, 640-642, 646, 650-679
-python/carnot/pipeline/pps_constraint_learner.py                                              97     66    32%   115-116, 133-135, 152-155, 189, 202-223, 240, 289-312, 338-374, 397, 428-443, 448
+python/carnot/pipeline/oracle_corpus_builder.py                                               36     36     0%   25-184
+python/carnot/pipeline/otv_verifier.py                                                        45     45     0%   35-162
+python/carnot/pipeline/pbt_code_verifier.py                                                  286    286     0%   12-679
+python/carnot/pipeline/pps_constraint_learner.py                                              97     97     0%   39-455
 python/carnot/pipeline/pps_constraint_selector.py                                             35     35     0%   38-228
-python/carnot/pipeline/ppsebm_real_validator.py                                               38     14    63%   82-84, 103, 120-124, 142-144, 202, 214
-python/carnot/pipeline/pra_eorm_beam.py                                                       57     34    40%   158-159, 189-201, 224-238, 276-320
+python/carnot/pipeline/ppsebm_real_validator.py                                               38     38     0%   35-221
+python/carnot/pipeline/pra_eorm_beam.py                                                       57     57     0%   42-320
 python/carnot/pipeline/precision_100q_result.py                                               32     32     0%   30-130
 python/carnot/pipeline/precision_100q_v4_result.py                                            47     47     0%   23-202
 python/carnot/pipeline/precision_100q_v5_result.py                                            33     33     0%   21-124
-python/carnot/pipeline/precision_100q_v6_result.py                                            33     13    61%   85, 105-115, 120, 128-129
+python/carnot/pipeline/precision_100q_v6_result.py                                            33     33     0%   27-129
 python/carnot/pipeline/precision_benchmark.py                                                 54     54     0%   49-273
 python/carnot/pipeline/precision_micro.py                                                     27     27     0%   37-212
 python/carnot/pipeline/predictive_calibration.py                                             122    122     0%   23-376
 python/carnot/pipeline/predictive_verifier.py                                                175    175     0%   63-876
-python/carnot/pipeline/prefill_uncertainty_probe.py                                           53     34    36%   140-144, 177, 221-292, 358
+python/carnot/pipeline/prefill_uncertainty_probe.py                                           53     53     0%   54-358
 python/carnot/pipeline/prm_guided_repair_selector.py                                          51     51     0%   12-142
 python/carnot/pipeline/prm_v3_online_process_reward_agent.py                                 131    131     0%   11-308
-python/carnot/pipeline/probability_calibration_verifier.py                                   117     81    31%   80-82, 86-98, 102-119, 128-175, 179-203, 220, 224-236, 240-243, 251, 269
-python/carnot/pipeline/process_verifier.py                                                    96     58    40%   93, 128, 138, 148-152, 173-240, 257-295, 313-352, 389-398, 426, 453-467, 498-501
-python/carnot/pipeline/property_code_verifier.py                                             383    317    17%   68-71, 98, 102, 106-108, 119-158, 163-178, 185, 195-423, 437-455, 472-473, 477-485, 489-499, 506-523, 527-531, 535-575, 584-603, 607-615, 623-659, 663-681, 685-693, 697-713, 717, 721, 725, 729-736, 740-746
+python/carnot/pipeline/probability_calibration_verifier.py                                   117    117     0%   6-269
+python/carnot/pipeline/process_verifier.py                                                    96     96     0%   26-501
+python/carnot/pipeline/property_code_verifier.py                                             383    383     0%   12-746
 python/carnot/pipeline/psv_diagnostic.py                                                      95     95     0%   47-466
 python/carnot/pipeline/query_time_memory_policy.py                                            57     57     0%   12-134
 python/carnot/pipeline/repair_rejection_ledger.py                                             79     79     0%   10-182
 python/carnot/pipeline/retro_tracker.py                                                       24     24     0%   22-155
 python/carnot/pipeline/roce.py                                                                85     85     0%   1-114
-python/carnot/pipeline/roce_extractor.py                                                     153    153     0%   18-434
+python/carnot/pipeline/roce_extractor.py                                                     171    171     0%   18-482
+python/carnot/pipeline/roce_validator_tree.py                                                292    292     0%   12-597
 python/carnot/pipeline/run_1854.py                                                             7      7     0%   1-18
-python/carnot/pipeline/saver_verifier.py                                                      63     36    43%   179-180, 223-305, 337-342, 368-371, 405-419
-python/carnot/pipeline/self_learning_policy.py                                               298    160    46%   30, 34-35, 39-42, 46, 50-54, 58-65, 81, 93-95, 127, 143, 176, 189, 219, 232, 263, 277, 314, 326, 361, 369, 383-388, 413, 417-420, 423-425, 429-432, 441-446, 456-466, 469-479, 482-490, 493-501, 514-516, 525-541, 553-591, 597-629, 635-675, 681-708, 712, 731-757
-python/carnot/pipeline/self_learning_relay.py                                                173    138    20%   174-192, 283-331, 365-383, 419-428, 438-441, 480-653, 667, 677, 685, 702, 738-747, 786-810
+python/carnot/pipeline/saver_verifier.py                                                      63     63     0%   52-427
+python/carnot/pipeline/self_learning_policy.py                                               298    298     0%   8-760
+python/carnot/pipeline/self_learning_relay.py                                                173    173     0%   61-821
 python/carnot/pipeline/self_learning_replay.py                                               694    694     0%   7-1917
 python/carnot/pipeline/self_play_discovery.py                                                 69     69     0%   6-175
-python/carnot/pipeline/semantic_energy_boltzmann.py                                           95     77    19%   122, 154-165, 170-176, 260-321, 362-378, 424-450
-python/carnot/pipeline/semantic_energy_extractor.py                                           96     61    36%   116, 126, 174, 184, 212-218, 250-259, 311-312, 333-342, 386-431, 480-481, 506, 533-545
+python/carnot/pipeline/semantic_energy_boltzmann.py                                           95     95     0%   60-450
+python/carnot/pipeline/semantic_energy_extractor.py                                           96     96     0%   54-545
 python/carnot/pipeline/semantic_energy_probe.py                                              127    127     0%   42-475
 python/carnot/pipeline/semantic_energy_scorer.py                                               1      1     0%   1
-python/carnot/pipeline/semantic_grounding.py                                                 322    229    29%   168, 190, 211, 224, 245, 266, 269, 272, 294, 302-329, 344, 352-433, 446-507, 514-534, 538-542, 549-550, 569-613, 621-651, 655-662, 670-693, 697-720, 724-727, 731-743, 747-768, 772, 792-793, 797, 801-802, 808-812, 818-825, 831-844, 848-850, 854-855, 859-865, 869-870
+python/carnot/pipeline/semantic_grounding.py                                                 322    322     0%   7-873
 python/carnot/pipeline/semantic_pruning.py                                                    26     26     0%   1-43
-python/carnot/pipeline/semantic_verifier_v2.py                                               218    144    34%   52, 80, 97-99, 140-147, 150, 166, 185-187, 201-334, 358, 372-415, 428-454, 458-462, 466, 470-476, 483, 496, 519-528, 542-563, 567, 578-584, 594-607, 611-614, 618-620, 624, 628
-python/carnot/pipeline/session_health_check.py                                               132     87    34%   105, 110, 115, 119, 176, 180, 226, 270, 297-347, 359, 370-393, 415-446, 454-460, 482-507
-python/carnot/pipeline/session_memory.py                                                     115     92    20%   71, 101-102, 117-118, 149-169, 198-212, 248-275, 306-315, 336-355, 389-404, 411, 421-427, 454-461
-python/carnot/pipeline/session_memory_pack.py                                                297    250    16%   37, 41, 45-47, 51-55, 59-61, 68-77, 81-88, 92-96, 100-106, 119-129, 133-148, 152-158, 162-179, 183-185, 197-210, 228-256, 264-268, 272-276, 287-345, 349-360, 366-370, 378, 389-434, 452-490, 503-504, 517, 521, 532-553
+python/carnot/pipeline/semantic_verifier_v2.py                                               218    218     0%   7-631
+python/carnot/pipeline/session_health_check.py                                               132    132     0%   46-507
+python/carnot/pipeline/session_memory.py                                                     115    115     0%   36-461
+python/carnot/pipeline/session_memory_pack.py                                                297    297     0%   11-553
 python/carnot/pipeline/session_startup.py                                                     34     34     0%   25-164
 python/carnot/pipeline/sets_baseline.py                                                       59     59     0%   37-287
-python/carnot/pipeline/sink_probe.py                                                          68     41    40%   175-198, 309, 334-335, 388-423
+python/carnot/pipeline/sink_probe.py                                                          68     68     0%   60-423
 python/carnot/pipeline/smgi_updates.py                                                       183    183     0%   13-402
 python/carnot/pipeline/smoke_test.py                                                          69     69     0%   30-365
 python/carnot/pipeline/spec_code_verifier.py                                                 320    320     0%   8-829
-python/carnot/pipeline/specguard_verifier.py                                                  42     25    40%   144-146, 189-193, 242-246, 286-290, 342-349
+python/carnot/pipeline/specguard_verifier.py                                                  42     42     0%   37-349
 python/carnot/pipeline/spilled_energy_detector.py                                             49     49     0%   47-297
-python/carnot/pipeline/spilled_energy_extractor.py                                            59     35    41%   108, 120, 143-146, 189-219, 259-267, 312, 339-343
+python/carnot/pipeline/spilled_energy_extractor.py                                            59     59     0%   49-343
 python/carnot/pipeline/sstar_energy_ranker.py                                                 27     27     0%   34-200
 python/carnot/pipeline/state_machine.py                                                       58     58     0%   34-356
 python/carnot/pipeline/streaming_cot.py                                                       45     45     0%   43-222
-python/carnot/pipeline/structured_equation_forcer.py                                          37     18    51%   117-118, 136, 157-158, 178-183, 206-224
-python/carnot/pipeline/structured_reasoning.py                                               175    125    29%   69-72, 77-81, 86-91, 96, 109, 122-128, 139-145, 155-157, 161-166, 170-186, 220-221, 225-232, 236, 248-263, 273, 286-319, 333-390, 409-432
-python/carnot/pipeline/sure_priority_replay.py                                                57     27    53%   103, 117, 162-177, 189-190, 201-204, 218-233, 252-257, 307, 322
+python/carnot/pipeline/structured_equation_forcer.py                                          37     37     0%   22-224
+python/carnot/pipeline/structured_reasoning.py                                               175    175     0%   8-442
+python/carnot/pipeline/sure_priority_replay.py                                                57     57     0%   49-329
 python/carnot/pipeline/swebench_harness.py                                                   184    184     0%   10-564
 python/carnot/pipeline/symbolic_kan_tier3.py                                                  57     57     0%   25-134
-python/carnot/pipeline/symcode_verifier.py                                                   116     83    28%   131, 159, 183-187, 211-231, 248-269, 285-302, 326-327, 363-428, 451-454
+python/carnot/pipeline/symcode_verifier.py                                                   116    116     0%   34-454
 python/carnot/pipeline/task_router.py                                                         22     22     0%   1-28
-python/carnot/pipeline/think_probe.py                                                         68     41    40%   209, 255-266, 357-370, 423-452
+python/carnot/pipeline/think_probe.py                                                         68     68     0%   63-452
 python/carnot/pipeline/think_probe_live_v3_result.py                                          23     23     0%   25-123
-python/carnot/pipeline/think_probe_v2.py                                                      85     57    33%   133, 138-140, 151-155, 213-215, 267-310, 338-353, 381-393, 403-405
+python/carnot/pipeline/think_probe_v2.py                                                      85     85     0%   54-405
 python/carnot/pipeline/thinkprm_verifier.py                                                   46     46     0%   47-326
-python/carnot/pipeline/three_tier_pipeline.py                                                336    277    18%   262-320, 336, 351, 366, 381, 402, 426, 444-445, 478-507, 544-546, 559, 570, 577-587, 649-749, 798-939, 981, 1033-1034, 1044-1045, 1063-1067, 1104-1107, 1124-1128, 1170-1257, 1299-1374, 1402-1405
+python/carnot/pipeline/three_tier_pipeline.py                                                336    336     0%   72-1405
+python/carnot/pipeline/topological_verifier.py                                                42     42     0%   8-107
 python/carnot/pipeline/tracker.py                                                             63     63     0%   35-356
 python/carnot/pipeline/two_round_repair.py                                                   108    108     0%   35-476
-python/carnot/pipeline/typed_reasoning.py                                                    369    282    24%   38, 55, 74-83, 96-103, 115, 135-164, 168-177, 181, 191-241, 246-249, 256, 260-263, 266-296, 299-316, 321, 328, 332-359, 363-392, 396-431, 435-448, 452-470, 479-497, 508-529, 540-556, 565-584, 588-591, 595-624, 628-639, 643-652, 656-661, 665-667, 671-681, 685, 689-694, 698-701, 705-706, 710-712, 716-722, 726-728
+python/carnot/pipeline/typed_reasoning.py                                                    369    369     0%   7-728
 python/carnot/pipeline/unified_hw_learning.py                                                 15     15     0%   6-29
-python/carnot/pipeline/verdict_record.py                                                     102     70    31%   19-21, 38-54, 71, 79, 88-97, 115-149, 158-166, 190-198, 202-203
-python/carnot/pipeline/verge_refiner.py                                                       70     49    30%   133-160, 200-208, 266-268, 301-353
+python/carnot/pipeline/verdict_record.py                                                     102    102     0%   7-203
+python/carnot/pipeline/verge_refiner.py                                                       70     70     0%   40-353
 python/carnot/pipeline/verification_certificate.py                                            18     18     0%   28-102
 python/carnot/pipeline/verification_learning.py                                               45     45     0%   1-91
 python/carnot/pipeline/verification_loop.py                                                   18     18     0%   6-37
-python/carnot/pipeline/verify_repair.py                                                      715    600    16%   140-147, 160-162, 166-168, 172, 179, 286-316, 500-564, 575, 580, 612-629, 650-676, 700-744, 768-773, 782-801, 805-809, 818-822, 855-921, 939, 959-967, 978-988, 1019-1021, 1048, 1079-1088, 1126-1156, 1193-1206, 1217, 1227-1230, 1316-1752, 1799-1836, 1871-1885, 1921-1930, 1976-2069, 2125-2168, 2213-2317, 2361-2370, 2407-2428, 2476-2485, 2510-2539, 2560-2582, 2590, 2615-2619, 2656-2745, 2755-2757, 2766-2767, 2794-2809, 2837-2849
-python/carnot/pipeline/verify_stream.py                                                      203    171    16%   39-41, 45-50, 54-76, 85, 89-90, 97-101, 116-129, 140-152, 166-167, 186-203, 213-230, 240-262, 289-392, 410-443
-python/carnot/pipeline/vg_search_scheduler.py                                                 28     13    54%   120-122, 141-143, 175-195, 216
+python/carnot/pipeline/verify_repair.py                                                      715    715     0%   43-2849
+python/carnot/pipeline/verify_stream.py                                                      203    203     0%   7-443
+python/carnot/pipeline/vg_search_scheduler.py                                                 28     28     0%   35-216
 python/carnot/pipeline/vjepa_streaming_processor.py                                           34     34     0%   32-156
-python/carnot/pipeline/vram_budget_ledger.py                                                  35     14    60%   85, 89, 139-142, 152, 170, 194-197, 221, 236-242
-python/carnot/pipeline/vram_loop_eviction.py                                                  94     71    24%   101-113, 118-127, 141-167, 224-305
-python/carnot/pipeline/z3_extractor.py                                                       162    119    27%   83, 86-111, 115-144, 148, 151-180, 183-208, 227-231, 234-258, 262-265, 269-271, 275-284, 288-292
-python/carnot/pipeline/z3_gated_repair.py                                                     45     27    40%   117-120, 168-170, 212-263
+python/carnot/pipeline/vram_budget_ledger.py                                                  35     35     0%   36-242
+python/carnot/pipeline/vram_loop_eviction.py                                                  94     94     0%   28-305
+python/carnot/pipeline/z3_extractor.py                                                       162    162     0%   11-292
+python/carnot/pipeline/z3_gated_repair.py                                                     45     45     0%   48-263
 python/carnot/pipeline/z3_live_benchmark.py                                                  124    124     0%   10-512
+python/carnot/pre_retro_audit.py                                                              44     44     0%   1-67
 python/carnot/probes/__init__.py                                                               3      3     0%   9-12
 python/carnot/probes/drift_probe.py                                                           80     80     0%   45-312
 python/carnot/probes/hallusae_geometric_probe.py                                              17     17     0%   35-185
@@ -591,6 +608,7 @@ python/carnot/repair/__init__.py                                                
 python/carnot/repair/projection_repair.py                                                     84     84     0%   6-144
 python/carnot/reporting/__init__.py                                                            0      0   100%
 python/carnot/reporting/agent_usage.py                                                       229    229     0%   7-414
+python/carnot/reporting/artifact_contract_normalization.py                                   125    125     0%   6-286
 python/carnot/reporting/arxiv_bundle_v10.py                                                  122    122     0%   9-316
 python/carnot/reporting/arxiv_bundle_v11_submission.py                                       204    204     0%   9-511
 python/carnot/reporting/arxiv_hold_receipt_v2.py                                              91     91     0%   8-231
@@ -685,6 +703,9 @@ python/carnot/reporting/milestone_123_archive.py                                
 python/carnot/reporting/milestone_124_archive.py                                             136    136     0%   6-353
 python/carnot/reporting/milestone_130_archive.py                                              27     27     0%   6-68
 python/carnot/reporting/milestone_131_archive.py                                              27     27     0%   6-68
+python/carnot/reporting/milestone_146_completion_147_gate_contract.py                        158    158     0%   6-414
+python/carnot/reporting/milestone_147_completion_148_activation_contract.py                  133    133     0%   6-417
+python/carnot/reporting/milestone_156_archive_157_activation.py                              116    116     0%   6-370
 python/carnot/reporting/milestone_retro_96.py                                                 45     45     0%   9-197
 python/carnot/reporting/milestone_retro_98.py                                                 37     37     0%   3-161
 python/carnot/reporting/milestone_retro_99.py                                                156    156     0%   3-383
@@ -713,6 +734,10 @@ python/carnot/reporting/milestone_retro_130.py                                  
 python/carnot/reporting/milestone_retro_131.py                                                37     37     0%   3-78
 python/carnot/reporting/milestone_retro_141.py                                                49     49     0%   3-106
 python/carnot/reporting/milestone_retro_142.py                                                40     40     0%   3-90
+python/carnot/reporting/milestone_retro_147.py                                               117    117     0%   6-391
+python/carnot/reporting/milestone_retro_148.py                                               135    135     0%   6-427
+python/carnot/reporting/milestone_retro_149.py                                                15     15     0%   6-52
+python/carnot/reporting/milestone_retro_150.py                                                46     46     0%   6-90
 python/carnot/reporting/online_verifier_asymmetric_mistake_budget.py                         130    130     0%   14-395
 python/carnot/reporting/paper_v6_anchored_claims_narrowing.py                                187    187     0%   12-636
 python/carnot/reporting/paper_v6_critical_fixes_v2.py                                         36     36     0%   3-123
@@ -749,20 +774,30 @@ python/carnot/reporting/wopr_puzzle_cartridge_retirement.py                     
 python/carnot/reporting/xgrammar2_tagdispatch_certificate_grammar_dryrun.py                  171    171     0%   6-527
 python/carnot/resolvers/__init__.py                                                            0      0   100%
 python/carnot/resolvers/gguf_cache.py                                                         48     48     0%   21-219
+python/carnot/retro_151.py                                                                    35     35     0%   1-56
+python/carnot/retro_152.py                                                                    35     35     0%   1-55
+python/carnot/retro_154.py                                                                    67     67     0%   14-249
+python/carnot/retro_155.py                                                                    67     67     0%   15-328
+python/carnot/retro_156.py                                                                    67     67     0%   18-362
+python/carnot/retro_157.py                                                                    52     52     0%   9-108
 python/carnot/samplers/__init__.py                                                            23      5    78%   43-48
 python/carnot/samplers/backend.py                                                             99     56    43%   172, 176, 180-181, 200-210, 229-244, 285, 305-321, 339-354, 375-378, 393-394, 429-435, 466-488
+python/carnot/samplers/continuous_latent.py                                                   67     67     0%   51-307
 python/carnot/samplers/discrete_simulated_bifurcation.py                                     274    213    22%   67-72, 92-94, 111, 138-145, 159-163, 169-171, 190-222, 249-287, 315-348, 373-389, 412-422, 453-512, 599-655, 726-728, 739-759, 774-792, 798-805, 811, 817-818, 824, 830, 836-837
 python/carnot/samplers/dsl_csr_mask.py                                                       102    102     0%   6-202
+python/carnot/samplers/dtm.py                                                                 45     45     0%   10-104
 python/carnot/samplers/dwave_backend.py                                                       79     65    18%   71-96, 132-170, 187-202, 223-239
 python/carnot/samplers/dwave_neal_backend.py                                                  55     55     0%   32-230
 python/carnot/samplers/dwave_sampler.py                                                      124     97    22%   78-80, 90-92, 106-110, 142-157, 181-203, 250-257, 264, 309-338, 369-385, 418-438, 464-505, 544-557
 python/carnot/samplers/equilibrium_matching.py                                                98     66    33%   65-68, 72-77, 84-97, 104-106, 120-125, 132, 139, 152-172, 182, 203-211, 221-228, 241-242, 255-256
+python/carnot/samplers/flow_sampling.py                                                       29     29     0%   12-84
 python/carnot/samplers/fpga_backend.py                                                        84     52    38%   96-98, 135-146, 183-186, 235-245, 303-305, 367-369, 400-404, 433-438, 480-515
 python/carnot/samplers/fpga_ising.py                                                         301    197    35%   37-38, 42-44, 48, 52, 56-58, 62-70, 78-86, 111, 148, 151, 154, 157, 174-177, 180-187, 199-225, 239-252, 270-271, 275, 278-292, 295, 298-300, 303-357, 384-385, 389, 392-422, 429-440, 451-481, 495-499, 519-526, 548-566
 python/carnot/samplers/gpu_oim_simulator.py                                                   71     42    41%   86-88, 100, 133, 145, 199-213, 244-263, 292-310, 339-348
 python/carnot/samplers/hiled.py                                                               18     18     0%   1-42
 python/carnot/samplers/hmc.py                                                                 45     31    31%   147-150, 195-215, 256-285
 python/carnot/samplers/inertia_ising.py                                                       60     60     0%   36-242
+python/carnot/samplers/interleaved_gibbs_diffusion.py                                        192    192     0%   24-458
 python/carnot/samplers/ising_pimi_sparse_sampler.py                                           71     71     0%   45-342
 python/carnot/samplers/jepa_reasoner_probe.py                                                123    123     0%   36-489
 python/carnot/samplers/jepa_v18_lambdarank.py                                                168    168     0%   35-552
@@ -774,7 +809,7 @@ python/carnot/samplers/langevin.py                                              
 python/carnot/samplers/lsb_sampler.py                                                        107    107     0%   63-428
 python/carnot/samplers/nabla_ets.py                                                           17     17     0%   6-71
 python/carnot/samplers/parallel_dense_ising.py                                                39     23    41%   113-115, 135, 161-162, 187, 228-272
-python/carnot/samplers/parallel_ising.py                                                     194    159    18%   107-117, 208-283, 346-347, 373-422, 452-456, 488-492, 530-541, 572-596, 626-651, 697-742
+python/carnot/samplers/parallel_ising.py                                                     204    161    21%   107-117, 208-283, 346-347, 373-422, 468-474, 504-508, 540-544, 582-593, 624-648, 678-703, 749-794
 python/carnot/samplers/phase4_sampler.py                                                     174    122    30%   79-83, 101-102, 106-107, 111, 116, 152-154, 162-167, 177, 188, 207-222, 234-254, 266-315, 318-340, 349-360, 364-365, 369-376, 380-383, 387-389, 393-403, 407-409, 415-416
 python/carnot/samplers/potts_sampler.py                                                       77     64    17%   48-60, 76-83, 94-98, 102-104, 108-114, 118-123, 127-128, 132-138, 144-155, 159-162
 python/carnot/samplers/self_adaptive_ising.py                                                204    204     0%   29-486
@@ -783,6 +818,7 @@ python/carnot/samplers/sparse_pimi.py                                           
 python/carnot/samplers/synchronous_ising.py                                                   60     51    15%   46, 91-102, 119-120, 148-162, 187-196, 227-274
 python/carnot/samplers/synchronous_pimi.py                                                    82     82     0%   29-388
 python/carnot/samplers/thrml_backend.py                                                       76     54    29%   45, 50, 55, 60-62, 65-66, 84-86, 99-101, 115-138, 153-176
+python/carnot/samplers/thrml_carnot_parity_curie_weiss_1991.py                                63     63     0%   6-128
 python/carnot/samplers/thrml_carnot_parity_independent_rng_audit.py                          373    373     0%   13-873
 python/carnot/samplers/thrml_carnot_parity_n8.py                                             203    203     0%   12-594
 python/carnot/samplers/thrml_carnot_parity_n16.py                                            119    119     0%   13-461
@@ -841,7 +877,8 @@ python/carnot/training/moe_distill.py                                           
 python/carnot/training/multilevel_kan_trainer.py                                              45     34    24%   67-72, 92-106, 150-158, 181-195, 223-224
 python/carnot/training/multilevel_sparse_kaem.py                                              37     27    27%   85-96, 120-132, 162-173, 201-202, 224-225
 python/carnot/training/nce.py                                                                 19     10    47%   142-171, 211-212
-python/carnot/training/online_updater.py                                                      50     50     0%   6-86
+python/carnot/training/online.py                                                              16     16     0%   6-51
+python/carnot/training/online_updater.py                                                      87     87     0%   6-160
 python/carnot/training/optimization_training.py                                               19     12    37%   108-126, 216-238
 python/carnot/training/pddl_labeler.py                                                        96     96     0%   50-383
 python/carnot/training/platt_scaler.py                                                        44     35    20%   68, 103-124, 141, 174-196
@@ -856,7 +893,8 @@ python/carnot/verifiers/__init__.py                                             
 python/carnot/verifiers/cdg_repair_1593.py                                                   124    124     0%   6-269
 python/carnot/verifiers/dccd_adapter.py                                                      223    223     0%   14-522
 python/carnot/verifiers/dsl.py                                                               352    352     0%   13-826
-python/carnot/verify/__init__.py                                                               9      0   100%
+python/carnot/verifiers/roce_drift_ledger.py                                                  36     36     0%   8-76
+python/carnot/verify/__init__.py                                                               9      9     0%   6-54
 python/carnot/verify/and_composition_verifier.py                                             154    154     0%   42-528
 python/carnot/verify/arm_ebm_logprob_telemetry_repair.py                                     207    207     0%   12-516
 python/carnot/verify/arm_ebm_soft_value_diagnostic.py                                        228    228     0%   12-565
@@ -866,22 +904,23 @@ python/carnot/verify/beaver_lite_live.py                                        
 python/carnot/verify/beaver_prefix_bound_contracts.py                                        215    215     0%   13-570
 python/carnot/verify/claim_isolation_router_scale.py                                         253    253     0%   13-760
 python/carnot/verify/claim_isolation_uncertainty_router.py                                   234    234     0%   12-663
-python/carnot/verify/constraint.py                                                           101     51    50%   209, 213, 242, 250, 261, 320-321, 335, 340, 345, 364-367, 375, 391, 413-424, 452-456, 490-495, 572-603
+python/carnot/verify/constraint.py                                                           101    101     0%   39-603
 python/carnot/verify/constraint_dependency_graph_repair.py                                   190    190     0%   20-605
-python/carnot/verify/convergence.py                                                           29     16    45%   82-94, 128-131, 156-158
+python/carnot/verify/convergence.py                                                           29     29     0%   29-158
 python/carnot/verify/dccd_multihop.py                                                        105    105     0%   41-659
 python/carnot/verify/draft_conditioned_verifier.py                                            67     67     0%   41-313
 python/carnot/verify/drift_probe.py                                                           80     80     0%   42-333
 python/carnot/verify/drift_probe_ensemble.py                                                 115    115     0%   29-353
 python/carnot/verify/ebcn_scorer.py                                                          172    172     0%   12-438
 python/carnot/verify/ebrm_scoring.py                                                           8      8     0%   6-22
+python/carnot/verify/energy_proxy.py                                                          12     12     0%   6-23
 python/carnot/verify/estimation_verifier.py                                                   71     71     0%   31-263
 python/carnot/verify/executable_monitor_runtime_adapter.py                                   172    172     0%   11-586
 python/carnot/verify/fover_semantic_calibration.py                                            91     91     0%   6-186
-python/carnot/verify/graph_coloring.py                                                        46     25    46%   61-63, 67, 71, 78-80, 102-104, 108, 112, 119-123, 157-170, 178, 186
+python/carnot/verify/graph_coloring.py                                                        46     46     0%   27-186
 python/carnot/verify/kan_pwa_formal.py                                                       178    178     0%   18-378
 python/carnot/verify/lagrange_ising.py                                                        31     31     0%   33-147
-python/carnot/verify/landscape.py                                                             59     42    29%   172-221, 254-285
+python/carnot/verify/landscape.py                                                             59     59     0%   47-285
 python/carnot/verify/latent_deterministic_gate.py                                             61     61     0%   11-243
 python/carnot/verify/live_sota_contract_guided_repair.py                                     202    202     0%   12-627
 python/carnot/verify/march_claim_isolation_ablation.py                                       272    272     0%   12-802
@@ -893,24 +932,26 @@ python/carnot/verify/pcib_probe.py                                              
 python/carnot/verify/plan_graph_energy_adapter.py                                            303    303     0%   14-868
 python/carnot/verify/plan_graph_structural_contract_gate.py                                  259    259     0%   12-815
 python/carnot/verify/product_line_staged_scale_v4.py                                         221    221     0%   13-608
-python/carnot/verify/property_test.py                                                        107     68    36%   56, 64, 72-74, 82-83, 91, 167-228, 257-262, 266, 270, 280-287, 294, 306-328
+python/carnot/verify/property_test.py                                                        107    107     0%   33-328
 python/carnot/verify/psv_pacore.py                                                            55     55     0%   33-260
 python/carnot/verify/pwa_kan.py                                                               56     56     0%   1-101
-python/carnot/verify/python_types.py                                                         190    153    19%   100-144, 184-188, 193, 198, 211-220, 227, 260-263, 268, 273, 286-295, 302, 340-343, 348, 353, 366-375, 382, 430-449, 470-488, 560-655, 694-726
+python/carnot/verify/python_types.py                                                         190    190     0%   52-726
 python/carnot/verify/residual_drift_commitment_ledger.py                                     174    174     0%   14-571
 python/carnot/verify/residual_drift_repair_policy.py                                         252    252     0%   13-756
 python/carnot/verify/reward_hacking.py                                                       112    112     0%   47-536
+python/carnot/verify/roce_beaver_lite_bounds.py                                              145    145     0%   11-378
 python/carnot/verify/roce_extractor.py                                                        32     32     0%   6-48
 python/carnot/verify/rprm_step_reward.py                                                      52     52     0%   37-242
 python/carnot/verify/runtime_contract_e2e_harness.py                                         189    189     0%   12-723
 python/carnot/verify/safe_dsl_verifier_induction.py                                          331    331     0%   13-1080
 python/carnot/verify/sandbox.py                                                              100    100     0%   22-283
-python/carnot/verify/sat.py                                                                   73     47    36%   105-106, 110, 114, 121-127, 154-155, 159, 163, 170-171, 204-217, 247-276, 284, 292
+python/carnot/verify/sat.py                                                                   73     73     0%   43-292
 python/carnot/verify/sc_energy.py                                                             66     66     0%   32-371
 python/carnot/verify/sc_energy_verifier.py                                                   217    217     0%   10-387
 python/carnot/verify/semantic_consistency_verifier.py                                         84     84     0%   6-133
 python/carnot/verify/semenergy_probe.py                                                       70     70     0%   83-467
 python/carnot/verify/skm_projection.py                                                       128    128     0%   15-395
+python/carnot/verify/sota_roce_validator_eval.py                                             154    154     0%   11-477
 python/carnot/verify/spectral_attention_probe.py                                             163    163     0%   41-471
 python/carnot/verify/spilled_energy.py                                                        85     85     0%   38-283
 python/carnot/verify/sudoku.py                                                                61     61     0%   41-299
@@ -922,6 +963,6 @@ python/carnot/verify/xgrammar_abs_contract_decoder_adapter.py                   
 python/carnot/verify/z3_math.py                                                                2      2     0%   6-8
 python/carnot/verify/z3_math_verifier.py                                                     245    245     0%   6-367
 ------------------------------------------------------------------------------------------------------------------------
-TOTAL                                                                                     101954  94827     7%
-FAIL Required test coverage of 99% not reached. Total coverage: 6.99%
-======================== 2 passed, 4 warnings in 20.80s ========================
+TOTAL                                                                                     105959 104029     2%
+FAIL Required test coverage of 99% not reached. Total coverage: 1.82%
+============================== 4 passed in 10.96s ==============================

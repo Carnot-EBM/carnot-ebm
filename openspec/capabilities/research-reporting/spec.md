@@ -3992,3 +3992,7 @@ and gating behavior based on the blocked artifacts (specifically prior_failures 
 **When** the Exp 2017 workflow runs
 **Then** it writes all required REQ-REPORT-157 fields to `results/experiment_2017_milestone_157_retro.json`
 **And** it accurately categorizes 2009, 2010, 2011, 2015 as blocked, 2008, 2012, 2013, 2014 as failed (missing), and 2016 as failed.
+
+### REQ-ORCH-RETRO-001: Milestone .158 Pre-Retro Audit
+
+The Exp 2026 milestone .158 pre-retro audit workflow shall write `results/experiment_2026_milestone_158_pre_retro.json` by auditing the conductor log for SEAL generation and STKAN tasks, and reporting their completion statuses.
