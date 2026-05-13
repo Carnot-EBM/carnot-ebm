@@ -5638,3 +5638,4 @@ Completed 15 experiments in 28.9 minutes. There were 0 compute-bound experiments
 - 2026-05-13: Exp 1990: Non-Autoregressive Interface Audit (✅ Complete) — honest_verdict=complete; results/experiment_1990_non_autoregressive_interface_audit.json
 - 2026-05-13: Exp 1991: Corrected Curie-Weiss Parity (⚠️ Research Finding) — honest_verdict=success: kl_0.0130_delta_0.1439; results/experiment_1991_curie_weiss_parity_correction.json
 - 2026-05-13: Exp 1992: Residual-Drift Ledger (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_1992_residual_drift_ledger.json
+- 2026-05-13: Exp 1994: Milestone .155 Pre-Retro Audit (❌ Failed) — honest_verdict=Audit failed: missing files or violated gates found.; results/experiment_1994_milestone_155_pre_retro.json
