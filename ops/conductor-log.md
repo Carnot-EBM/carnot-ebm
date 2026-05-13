@@ -2534,3 +2534,5 @@ IMPORTANT:
 | 2026-05-13 19:32 UTC | Exp 2078: SMT-based Constraint Extraction Scaffold | FAIL | Gemini CLI error: e 10 minutes, that is correct and expected — exit promptly.  |
 | 2026-05-13 19:34 UTC | Exp 2079: LLM-as-Extractor Pipeline | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-13 19:36 UTC | Exp 2079: LLM-as-Extractor Pipeline | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-13 19:38 UTC | Exp 2079: LLM-as-Extractor Pipeline | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-13 19:40 UTC | Exp 2080: Instruction-Tuned Baseline on Live GPU | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2079-llm-as-extractor) |
