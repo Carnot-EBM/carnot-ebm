@@ -114,6 +114,185 @@ use carnot_core::init::Initializer;
 use carnot_core::{CarnotError, EnergyFunction, Float};
 use ndarray::{Array1, Array2, ArrayView1};
 
+const LOGPROB_TOLERANCE: Float = 1e-6;
+const LOGPROB_ROW_TOLERANCE: Float = 1e-4;
+
+/// Result of solving the Soft Bellman ARM-to-EBM mapping for one sequence.
+///
+/// # For Researchers
+///
+/// In the canonical probability gauge for normalized ARM log-probabilities,
+/// every soft value is zero, the EBM immediate reward is the token log-prob,
+/// and the EBM energy is its negation. This is the finite-trajectory solution
+/// of the soft Bellman equation used to view an ARM sequence distribution as
+/// an EBM.
+///
+/// # For Engineers
+///
+/// If an LLM says a token had log-probability `-2.0`, this solver records:
+///
+/// - reward = `-2.0` (the model thought the token was unlikely)
+/// - token energy = `2.0` (unlikely tokens cost more energy)
+///
+/// Summing token energies gives one scalar sequence energy.
+///
+/// Spec: REQ-INFER-2056
+#[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize)]
+pub struct SoftBellmanSolution {
+    /// Solved prefix soft values. In the canonical probability gauge this is
+    /// `seq_len + 1` zeros, including the terminal value.
+    pub soft_values: Vec<Float>,
+    /// Per-token EBM immediate rewards, equal to ARM log-probabilities in the
+    /// canonical gauge.
+    pub immediate_rewards: Vec<Float>,
+    /// Per-token EBM energies: `-immediate_reward`.
+    pub token_energies: Vec<Float>,
+    /// Total sequence affinity, `sum(immediate_rewards)`.
+    pub sequence_affinity: Float,
+    /// Total EBM sequence energy, `-sequence_affinity`.
+    pub sequence_energy: Float,
+    /// Root soft value/log-partition for the sequence distribution gauge.
+    pub log_partition: Float,
+    /// ARM/EBM log-probability, `sequence_affinity - log_partition`.
+    pub log_probability: Float,
+    /// Largest Bellman normalization residual observed while validating input.
+    pub max_abs_bellman_residual: Float,
+}
+
+fn validate_token_logprob(logprob: Float, index: usize) -> Result<(), CarnotError> {
+    if !logprob.is_finite() {
+        return Err(CarnotError::Numeric(format!(
+            "soft Bellman logprob at position {index} must be finite"
+        )));
+    }
+    if logprob > LOGPROB_TOLERANCE {
+        return Err(CarnotError::Numeric(format!(
+            "soft Bellman logprob at position {index} is positive ({logprob}); log-probabilities must be <= 0"
+        )));
+    }
+    Ok(())
+}
+
+fn stable_logsumexp(values: &[Float], row_index: usize) -> Result<Float, CarnotError> {
+    if values.is_empty() {
+        return Err(CarnotError::Numeric(format!(
+            "soft Bellman logprob row {row_index} is empty"
+        )));
+    }
+
+    let mut max_value = Float::NEG_INFINITY;
+    for (col_index, value) in values.iter().enumerate() {
+        if !value.is_finite() {
+            return Err(CarnotError::Numeric(format!(
+                "soft Bellman logprob row {row_index}, token {col_index} must be finite"
+            )));
+        }
+        if *value > LOGPROB_TOLERANCE {
+            return Err(CarnotError::Numeric(format!(
+                "soft Bellman logprob row {row_index}, token {col_index} is positive ({value}); log-probabilities must be <= 0"
+            )));
+        }
+        max_value = max_value.max(*value);
+    }
+
+    let exp_sum: Float = values.iter().map(|value| (*value - max_value).exp()).sum();
+    Ok(max_value + exp_sum.ln())
+}
+
+fn build_soft_bellman_solution(
+    logprobs: &[Float],
+    max_abs_bellman_residual: Float,
+) -> SoftBellmanSolution {
+    let immediate_rewards = logprobs.to_vec();
+    let token_energies: Vec<Float> = immediate_rewards.iter().map(|reward| -*reward).collect();
+    let sequence_affinity: Float = immediate_rewards.iter().sum();
+    let sequence_energy = -sequence_affinity;
+    let log_partition = 0.0;
+    let log_probability = sequence_affinity - log_partition;
+    let soft_values = vec![0.0; logprobs.len() + 1];
+
+    SoftBellmanSolution {
+        soft_values,
+        immediate_rewards,
+        token_energies,
+        sequence_affinity,
+        sequence_energy,
+        log_partition,
+        log_probability,
+        max_abs_bellman_residual,
+    }
+}
+
+/// Solve the canonical Soft Bellman ARM-to-EBM mapping for chosen token logprobs.
+///
+/// # For Researchers
+///
+/// The soft Bellman equation gives `V(s)=logsumexp_a(r(s,a)+V(s+a))`.
+/// For normalized ARM log-probabilities, the probability-gauge solution has
+/// terminal value `0`, all prefix values `0`, and `r(s_t,y_t)=log p(y_t|s_t)`.
+/// The EBM energy of a realized sequence is therefore `-sum_t log p(y_t|s_t)`.
+///
+/// # For Engineers
+///
+/// Pass the token logprobs returned by an LLM API. The function returns the
+/// per-token energy costs and their sequence total. More negative logprobs
+/// become larger energy costs.
+///
+/// Spec: REQ-INFER-2056, SCENARIO-INFER-2056-001
+pub fn soft_bellman_solve(logprobs: &[Float]) -> Result<SoftBellmanSolution, CarnotError> {
+    for (index, logprob) in logprobs.iter().enumerate() {
+        validate_token_logprob(*logprob, index)?;
+    }
+
+    Ok(build_soft_bellman_solution(logprobs, 0.0))
+}
+
+/// Solve the Soft Bellman mapping after extracting chosen tokens from logprob rows.
+///
+/// Each row must be a normalized ARM next-token log-probability distribution:
+/// `logsumexp(row) ~= 0`. `token_ids[t]` selects the generated token for row
+/// `t`, then the selected path is solved with [`soft_bellman_solve`].
+///
+/// Spec: REQ-INFER-2056, SCENARIO-INFER-2056-002
+pub fn soft_bellman_solve_path(
+    logprob_rows: &[Vec<Float>],
+    token_ids: &[usize],
+) -> Result<SoftBellmanSolution, CarnotError> {
+    if logprob_rows.len() != token_ids.len() {
+        return Err(CarnotError::DimensionMismatch {
+            expected: logprob_rows.len(),
+            got: token_ids.len(),
+        });
+    }
+
+    let mut chosen_logprobs = Vec::with_capacity(token_ids.len());
+    let mut max_abs_bellman_residual: Float = 0.0;
+
+    for (row_index, (row, token_id)) in logprob_rows.iter().zip(token_ids).enumerate() {
+        let row_logsumexp = stable_logsumexp(row, row_index)?;
+        if *token_id >= row.len() {
+            return Err(CarnotError::Numeric(format!(
+                "soft Bellman token id {token_id} at row {row_index} is out of range for row length {}",
+                row.len()
+            )));
+        }
+
+        let residual = row_logsumexp.abs();
+        if residual > LOGPROB_ROW_TOLERANCE {
+            return Err(CarnotError::Numeric(format!(
+                "soft Bellman logprob row {row_index} is not normalized; logsumexp={row_logsumexp}, expected 0.0"
+            )));
+        }
+        max_abs_bellman_residual = max_abs_bellman_residual.max(residual);
+        chosen_logprobs.push(row[*token_id]);
+    }
+
+    Ok(build_soft_bellman_solution(
+        &chosen_logprobs,
+        max_abs_bellman_residual,
+    ))
+}
+
 /// Configuration for the Boltzmann model.
 ///
 /// # For Researchers
