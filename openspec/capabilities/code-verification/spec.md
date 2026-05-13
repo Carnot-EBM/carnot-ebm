@@ -966,6 +966,16 @@ when ASTKnowledgeVerifier.verify() is called and violations are non-empty, then
 the caller concludes violation_detected=True and skips Ising verification,
 because 100% precision guarantees this is a real error.
 
+### REQ-CODE-035: Ising-Guided Fuzzing for Code Verification
+The system shall verify code execution via Ising-guided fuzzing on live GPU (Exp 1999):
+- Run 50 HumanEval questions generating code.
+- Execute structural CodeExtractor instrumentation.
+- Record baseline vs. repair improvements.
+- Write the results artifact to `results/experiment_1999_code_verification_humaneval.json`.
+
+### SCENARIO-CODE-033: HumanEval Fuzzing Run Completes
+Given a run of 50 HumanEval questions, when Ising-guided fuzzing is applied, then structural constraints are extracted via CodeExtractor, and baseline and repair improvements are tracked and saved to a JSON artifact.
+
 ## S* Energy Pre-Ranking Requirements (arXiv 2502.14382)
 
 ### REQ-RANK-001: SStarEnergyRanker Candidate Energy Computation
