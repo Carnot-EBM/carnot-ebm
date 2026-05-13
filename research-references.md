@@ -12568,3 +12568,32 @@ This sweep was run after milestone `.154` completed. Local outcomes established 
 - **Relevance to Carnot:** Fixes FR-11 governance by converting updates into an auditable skill graph with explicit promotion lineages.
 - **Concrete experiment hook:** Convert FR-11 policy updates into a skill graph with verifier-derived rewards and gate promotion on deterministic replay.
 
+
+
+## 2026-05-13 Post-.156 Planning Sweep (Milestone 2026.05.157)
+
+This sweep was run after milestone `.156` completed. Local outcomes established NSVIF/Z3 constraint extraction, Tier 2 constraint memory, and initial DeepSaDe architectures. The literature search revealed advances in latent space reasoning, formal verification of KANs, and adaptive safety certificates.
+
+### EBM-CoT Latent Refinement
+- **Paper:** "Think Consistently, Reason Efficiently: Energy-Based Calibration for Implicit Chain-of-Thought" (arXiv:2511.07124)
+- **What:** Refines latent "thought" representations using an energy function before discrete token generation.
+- **Relevance to Carnot:** Allows Carnot's continuous solver tier to refine intermediate hidden states inside flagship models directly.
+- **Concrete experiment hook:** Implement latent representation extraction and EBM-CoT calibration loop on local SOTA models.
+
+### Formal Verification of KANs (Optimal Abstractions)
+- **Paper:** "Optimal Abstractions for Verifying Properties of Kolmogorov-Arnold Networks (KANs)" (Schwartz et al., Feb 2026)
+- **What:** Proposes a framework to verify KAN properties by creating Piecewise Affine (PWA) abstractions and translating to MILP.
+- **Relevance to Carnot:** Upgrades the reliability of the KAN inference tiers, moving from empirical checks to formal MILP guarantees.
+- **Concrete experiment hook:** Build a PWA abstraction layer for Carnot's S2KAN tier and interface with a MILP solver.
+
+### KAN4CBC: Formal Synthesis of Safety Certificates
+- **Paper:** "Formal Synthesis of Safe Kolmogorov-Arnold Network Controllers with Barrier Certificates" (Zhang et al., 2026)
+- **What:** Leverages pruning and symbolization properties of KANs to synthesize control barrier certificates verified via SMT.
+- **Relevance to Carnot:** Provides a method for continuous safety verification of dynamic constraint generators.
+- **Concrete experiment hook:** Apply KAN4CBC to the generator outputs to formally verify safety properties at runtime.
+
+### Tier 3 Predictive Verification
+- **Internal Goal:** JEPA-Style Predictive Verification (Tier 3 FR-11)
+- **What:** Train a model to predict constraint violations before the LLM finishes generating the response.
+- **Relevance to Carnot:** Enables preemptive guided decoding, steering away from violations before they happen.
+- **Concrete experiment hook:** Train a small GPU predictor on (partial trace, violation) pairs and emit continuous_self_learning_task metrics.

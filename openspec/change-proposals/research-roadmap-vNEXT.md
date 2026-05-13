@@ -1,29 +1,56 @@
-# Milestone 2026.05.156: Robust Constraint Extraction, Advanced Neural Solvers, and Constraint Memory
+# Research Roadmap: Milestone 2026.05.157
 
-**Status:** Proposed
-**Author:** Carnot Research Conductor
-**Date:** 2026-05-12
+**Date:** 2026-05-13
+**Status:** PROPOSED
+**Author:** Carnot Autonomous Planning Agent
 
-## Overview
-This milestone addresses the critical finding that previous positive GSM8K results were simulation artifacts due to crude regex-based constraint extraction. The primary focus is to rebuild constraint extraction using formal logic (NSVIF/Z3) and LLM-as-extractor patterns on live, instruction-tuned SOTA models. Additionally, we integrate advanced unsupervised neural solvers (RUN-CSP, DeepSaDe) and implement Tier 2 Constraint Memory for continuous self-learning.
+## 1. Context and Previous Milestone Findings
 
-## Architecture Context
-Carnot's constraint verification infrastructure (Ising, KAN) is fast and solid. The weak link is turning model outputs into constraints that the verifier can check. This milestone replaces the `ArithmeticExtractor` with robust formal extractions.
+Milestone `2026.05.156` successfully achieved initial implementations of the NSVIF/Z3 SMT Extractor, LLM-as-extractor, COLD Decoding, RUN-CSP, DeepSaDe guaranteed domain constraints, and Tier 2 Constraint Memory. However, the operational retrospective for `.156` showed that extraction and verification remain compute-bound bottlenecks. We must now formalize these implementations with mathematical guarantees (MILP verification for KANs) and push the boundary towards latent-space reasoning (EBM-CoT) and preemptive violation prediction (Tier 3 FR-11).
 
-## Phase Descriptions
+### The Three Biggest Gaps
+1. **Lack of Formal Verification for Spline Topologies:** While KANs provide constraint flexibility, we lack verifiable safety guarantees for their topologies.
+2. **Latent Space Separation:** Constraint extraction currently operates on discrete tokens. We need to shift towards latent-space refinement (EBM-CoT) for true continuous reasoning.
+3. **Reactive vs. Preemptive Learning:** Tier 2 memory is reactive. FR-11 requires transitioning to Tier 3: JEPA-style predictive verification to catch violations before they manifest in discrete tokens.
 
-### Phase 1: Constraint Extraction & Verification Baselines
-Rebuild the constraint extraction layer to handle real instruction-tuned models. Use NSVIF/Z3 SMT approaches and LLM-as-extractor techniques. Establish live GPU baselines on GSM8K and HumanEval using these new extractors on the mandated SOTA GGUF models.
+## 2. Architecture Diagram (Phase-8)
 
-### Phase 2: Advanced Constraint Solvers
-Implement neural structures that guarantee constraint satisfaction: DeepSaDe for domain constraints and RUN-CSP for message passing networks on binary CSPs. Also integrate COLD Decoding for energy-based constrained text generation.
+```mermaid
+graph TD
+    A[Instruction-Tuned GGUF] -->|Latent State| B(EBM-CoT Refinement)
+    B -->|Energy Guided| C[Continuous Latent Generator]
+    C -->|Tokens| D(Tier 3 Predictor)
+    D -->|Preemptive Violation| E{KAN4CBC Safety Gate}
+    E -->|Pass| F[Final Output]
+    E -->|Fail| G[COLD Decoding Repair]
+    H[Optimal Abstractions PWA] -->|MILP Verified| E
+    G -->|Update| I[(Tier 3 Constraint Memory)]
+```
 
-### Phase 3: Continuous Self-Learning
-Fulfill FR-11 by implementing Tier 2 Constraint Memory. Track constraints across sessions, consolidating patterns into reusable templates that can be hardware-accelerated for pattern matching.
+## 3. Phase Descriptions
 
-### Phase 4: KAN Refinement & Audit
-Deploy adaptive energy landscapes using KAN splines (Tier 4 learning) and perform comprehensive pre-retro audits and the final retrospective.
+### Phase 0: Activation and Housekeeping
+- Archive `.156` artifacts and initialize `.157`.
+- Pre-flight local SOTA GGUFs.
 
-## Hardware Requirements
-- **Primary:** Local GPU (2x RTX 3090) for live SOTA inference (unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF).
-- **Secondary:** CPU for constraint memory tracking and Ising sampling.
+### Phase 1: Latent Reasoning and Continuous Generation
+- Implement EBM-CoT latent "thought" calibration (arXiv:2511.07124).
+- Scale FAR (Fast Autoregressive) continuous latent sampling.
+
+### Phase 2: Formal Verification of Constraints
+- Implement PWA (Piecewise Affine) abstractions for KANs.
+- Interface with MILP solvers to guarantee property verification.
+- Implement KAN4CBC for safety barrier certificates.
+
+### Phase 3: Preemptive Self-Learning (FR-11 Tier 3)
+- Train a JEPA-style predictive verification model.
+- Enable preemptive guided decoding based on prediction scores.
+
+### Phase 4: Hardware Parity and Retro
+- Hardware-oriented LUT accounting for KANs.
+- Milestone retrospective.
+
+## 4. Hardware Requirements
+- Dual RTX 3090 (24GB each) for `unsloth/Qwen3.6-35B-A3B-GGUF` and `gemma-4-31B-it-GGUF`.
+- CPU inference fallback for MILP solvers.
+- KV260 hardware emulation for LUT accounting tasks.
