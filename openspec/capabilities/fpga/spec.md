@@ -862,3 +862,32 @@ Experiment 1822 MUST synthesize the updated BBIM constraints module (`rtl/potts_
 **Then:** The synthesis finishes successfully and outputs utilization metrics.
 
 **Implementation status:** Implemented (Exp 1822)
+
+---
+
+### REQ-HW-057
+
+**Title:** p-dit hardware preflight resource accounting and preconditioning limits
+
+**Description:**
+Experiment 1989 MUST run sampler preconditioning and resource accounting over valid graphs. It MUST build a resource accounting mapping abstract Carnot nodes to p-dits, explicitly emit `hardware_execution_claim=false`, and detail preconditioning limits for Kona-style architecture comparisons.
+
+**Acceptance criteria:**
+- `results/experiment_1989_p_dit_hardware_preflight.json` is generated.
+- The artifact records `hardware_execution_claim=false`.
+- Resource accounting maps abstract nodes to p-dits.
+- Preconditioning limits for Kona-style architecture comparisons are detailed.
+
+**Implementation status:** Implemented (Exp 1989)
+
+---
+
+### SCENARIO-HW-057
+
+**Scenario:** p-dit hardware preflight executes and writes artifact.
+
+**Given:** A valid graph of abstract Carnot nodes.
+**When:** The Exp 1989 preflight runs.
+**Then:** It maps nodes to p-dits, outputs Kona-style limits, emits `hardware_execution_claim=false`, and writes `results/experiment_1989_p_dit_hardware_preflight.json`.
+
+**Implementation status:** Implemented (Exp 1989)
