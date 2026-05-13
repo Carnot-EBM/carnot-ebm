@@ -2388,3 +2388,4 @@ IMPORTANT:
 | 2026-05-13 06:26 UTC | Plan milestone 2026.05.158 | OK | 10 tasks proposed |
 | 2026-05-13 06:28 UTC | Milestone 2026.05.158 activated | OK | 10 tasks queued |
 | 2026-05-13 06:30 UTC | Exp 2018: Archive .157 and Activate .158 (Opus Boo | OK | Deliverable already exists in repo |
+| 2026-05-13 06:30 UTC | Exp 2019: Local SOTA GGUF Runtime Repair and Prefl | DOOMED_RERUN_BLOCK | 11 prior failure(s) match this task's scope but prior_failures field is missing  |
