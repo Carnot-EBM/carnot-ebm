@@ -1,61 +1,50 @@
-# Change Proposal: Research Roadmap v160
+# Change Proposal: Research Roadmap v162
 **Date:** 2026-05-13
-**Milestone:** 2026.05.160
+**Milestone:** 2026.05.162
 **Status:** PROPOSED
 
 ## 1. Context & Motivation
 
-Milestone 159 successfully proved the capabilities of continuous latent EBRMs, formal KAN verification, and Gradient-Guided Epsilon Constraint (GEC) for continual learning. However, three critical gaps remain between our current state and the PRD vision:
+Milestone 161 successfully separated the Mouth/Brain EBT architecture, proved the ARM-EBM Bijection, and verified Thermodynamic Hardware Sampling. However, based on our continuous goal towards the PRD vision and recent literature findings (2025-2026), three critical gaps remain:
 
-1. **Bridging the Continuous Latent Space with Deterministic Execution**: While continuous latent generation is fast, its integration with Carnot's core deterministic energy layers remains incomplete. Recent literature (CLaRa, FAR) demonstrates that moving completely into a shared continuous latent space for retrieval, planning, and generation is highly efficient, but we must prove this without sacrificing verifiable constraints.
-2. **Hardware Sampling Parity for Continuous Models**: The project holds strong simulator and RTL evidence for discrete Ising/Potts machines (KV260). With the shift towards continuous representations, we need equivalent simulation and accounting (BOP/NABS) for probabilistic hardware targeting continuous variables—specifically Knuth-Yao and Gumbel sampling derived from the AIA (Approximate Inference Accelerator) architecture.
-3. **Continuous Self-Learning without Forgetting**: The PRD (FR-11) mandates autonomous directed self-learning. While GEC laid the groundwork, we must close the loop by allowing the system to update its verifier policies using Equilibrium Matching (EqM) gradients, ensuring positive utility and zero soundness mistakes.
+1. **Continuous Self-Learning**: The PRD mandates an autonomous directed self-learning capability. While we have separated the generator (Mouth) from the verifier (Brain), we lack the closed-loop continuous self-learning mechanism where the verifier adapts using self-distillation over reasoning traces.
+2. **KAN Integration for Verifiable Energy Functions**: Recent work like GloroKAN and Symbolic-KAN show that Kolmogorov-Arnold Networks (KANs) with B-spline structures provide inherently verifiable and discrete symbolic structures. We must evaluate them as replacements for standard MLPs in our Energy-Based verifiers to enable formal algebraic verification.
+3. **Energy-Guided Sampling Optimization**: The Local Diffusion Schrödinger Bridge (LDSB) using KANs demonstrates that sampling steps can be drastically reduced. We need to implement KAN-driven sampling optimization for constrained generation and ensure scaling on hardware.
 
-This milestone addresses these gaps directly, moving Carnot into a fully continuous, verifiable, and self-improving latent reasoning state.
+This milestone addresses these gaps directly, advancing Carnot towards a self-learning, KAN-verified EBM framework.
 
 ## 2. Milestone Objectives
 
-- **Phase 1: Continuous Latent Constraint Generation (FAR + EqM)**
-  Establish the base continuous latent space. Replace token-level generation with Fast Autoregressive (FAR) continuous latent generation using mandated local SOTA GGUF models. Map these states to implicit energy landscapes using Equilibrium Matching (EqM) and ARM-EBM bijections.
-- **Phase 2: Hardware-Accelerated Sampling Abstractions (AIA)**
-  Develop software simulators for AIA-style Knuth-Yao and Gumbel samplers tailored for continuous categorical constraints. Perform analytical hardware resource accounting (no-synthesis) to validate future FPGA feasibility.
-- **Phase 3: Continuous Latent Reasoning & Verification (CLaRa-style)**
-  Integrate Semantic Compression with Paraphrasing (SCP) to compress reasoning rules into the latent space. Construct a continuous verifier that uses InEx-style introspection to reject high-energy latent steps before decoding.
-- **Phase 4: Continuous Self-Learning and Milestone Closure**
-  Execute the FR-11 autonomous self-learning loop. Use EqM gradients to update the verifier policy, measuring utility growth and ensuring zero soundness mistakes across the 20-case CCTU tool-use benchmark.
+- **Phase 1: Continuous Self-Learning Foundation**
+  Implement the continuous self-learning framework via nested learning and self-play distillation.
+- **Phase 2: Kolmogorov-Arnold Networks (KAN) Integration**
+  Scaffold the KAN architecture, incorporating GloroKAN robustness verification and Symbolic-KAN discrete embeddings for verifiable energy functions.
+- **Phase 3: Energy-Guided Constrained Generation**
+  Implement LDSB diffusion path optimization for energy-guided decoding and scale up constrained generation using SOTA models.
+- **Phase 4: Milestone Closure**
+  Execute end-to-end tests covering self-learning and KAN verifiers. Validate TSU hardware simulation parity. Complete retrospectives and update docs.
 
 ## 3. Architecture Diagram
 
 ```mermaid
 graph TD;
-    A[Unsloth SOTA GGUF] -->|FAR Latent Steps| B(Continuous Latent Space);
-    C[Constraints / Rules] -->|CLaRa SCP Compression| B;
-    B --> D{EqM Gradient Verifier};
-    D -->|High Energy| E[AIA Gumbel Sampler Resampling];
-    D -->|Low Energy| F[Decode to Verified Tokens];
-    F --> G[FR-11 Self-Learning Update];
-    G --> C;
+    A[Mouth: SOTA GGUF Generator] -->|Drafts| B(Brain: KAN Energy Verifier);
+    B -->|High Energy| C[LDSB KAN-Guided Sampler];
+    C --> B;
+    B -->|Low Energy| D[Verified Outputs];
+    D -->|Self-Distillation| E[Continuous Self-Learning Loop];
+    E -->|Updates| B;
+    E -->|Updates| A;
 ```
 
 ## 4. Hardware Requirements
 
-This milestone rigorously respects the 20260507 scope reduction:
-- **Dual RTX 3090 CUDA Local SOTA Runtime**: Used heavily for the FAR latent generation and CLaRa SCP compression (via `unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF`).
-- **AIA Simulation**: Software simulation only.
-- **Hardware Execution Boundary**: The AIA hardware accounting task will explicitly emit `hardware_execution_claim=false`. No Vivado bitstream synthesis or board execution is required.
+- **Dual RTX 3090 CUDA Local SOTA Runtime**: For running mandated GGUF models (`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`).
+- **TSU Hardware Simulation**: Software abstraction and simulation for verifying hardware scaling parity.
 
 ## 5. Dependency Graph
 
-- `exp2040-far-latent-smoke` -> `exp2041-eqm-gradient-landscape` -> `exp2047-continuous-verifier-integration`
-- `exp2043-aia-knuth-yao-sim` -> `exp2044-gumbel-sampler-sim` -> `exp2048-inex-introspection`
-- `exp2047-continuous-verifier-integration` -> `exp2048-inex-introspection` -> `exp2049-self-learning-latent-loop`
-- `exp2049-self-learning-latent-loop` -> `exp2050-self-learning-validation` (GATED on `utility_delta > 0`)
-
-## 6. Success Criteria
-
-1. Continuous latent generation smoke tests run successfully on mandated SOTA GGUFs.
-2. EqM gradient optimization demonstrates constraint convergence.
-3. AIA sampler simulators match standard RNG parity and output exact BOP/NABS metrics without FPGA claims.
-4. CLaRa semantic compression is functional and integrated with the EqM continuous verifier.
-5. InEx introspection correctly rejects high-energy continuous configurations.
-6. The FR-11 self-learning loop executes and shows a positive `utility_delta` on the CCTU benchmark with exactly 0 `soundness_mistakes`.
+- `exp2066` -> `exp2067` -> `exp2068` (Phase 1)
+- `exp2069` -> `exp2070` -> `exp2071` (Phase 2)
+- `exp2072` -> `exp2073` -> `exp2074` (Phase 3)
+- `exp2068`, `exp2071`, `exp2074` -> `exp2075` -> `exp2076` -> `exp2077` (Phase 4)

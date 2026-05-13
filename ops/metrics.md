@@ -1,5 +1,17 @@
 # Carnot — Session Metrics
 
+## Session: 2026-05-13 Milestone 2026.05.162 Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-05-13T17:55:00Z | 2026-05-13T18:01:18Z | Plan milestone 2026.05.162: read required project context, perform arxiv literature review, update research-references.md with GloroKAN/Symbolic-KAN/LDSB, design research-roadmap-vNEXT.md and research-roadmap-next.yaml containing 12 experiments covering continuous self-learning, KAN integration, and energy-guided sampling. | TBD |
+
+Note: `scripts/session-metrics.py` referenced by `CLAUDE.md` is not present in this checkout, so authoritative token extraction was not available.
+
+---
+
 ## Session: 2026-05-08 Milestone 2026.05.121 Planning
 
 ### Turn Log

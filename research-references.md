@@ -12682,3 +12682,8 @@ Added: 2026-05-13
 ### Industry Updates
 *   **Logical Intelligence (Kona 1.0 Architecture):** Uses EBMs as a "System 2" optimization layer interface with LLMs for hard constraints. Achieved 96.2% on Sudoku benchmarks in ~313ms.
 *   **Extropic AI (TSU Hardware):** Z1 production-scale chip (Early Access 2026). Specialized for thermodynamic sampling algorithms (Denoising Thermodynamic Model, DTM) using thermal noise.
+
+## Recent ArXiv Findings (2025-2026)
+- **GloroKAN: Training and Verifying robust Kolmogorov-Arnold Networks (Mar 2025)**: Explores algebraic geometry to verify KAN robustness via B-splines. Relevant for verifiable energy functions.
+- **Symbolic-KAN: KANs with Discrete Symbolic Structure for Interpretable Learning (Mar 2026)**: Embeds discrete symbolic structures into KANs. Relevant for Mouth/Brain constraints.
+- **LDSB: Local Diffusion Schrödinger Bridge using KAN (2025/2026)**: Uses KANs to optimize diffusion paths, drastically reducing sampling steps. Relevant for sampling EBMs.
