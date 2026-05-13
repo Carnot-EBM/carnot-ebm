@@ -2501,3 +2501,5 @@ IMPORTANT:
 | 2026-05-13 18:10 UTC | Exp 2066: Continuous Self-Learning Framework Scaff | DOOMED_RERUN_BLOCK | 10 prior failure(s) match this task's scope but prior_failures field is missing  |
 | 2026-05-13 18:12 UTC | Exp 2066: Continuous Self-Learning Framework Scaff | DOOMED_RERUN_BLOCK | 10 prior failure(s) match this task's scope but prior_failures field is missing  |
 | 2026-05-13 18:14 UTC | Exp 2067: Nested Learning via Self-Distillation | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2066-continuous-self-learning-framework) |
+| 2026-05-13 18:14 UTC | Exp 2068: Continuous Verifier Updates from Self-Pl | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-13 18:16 UTC | Exp 2067: Nested Learning via Self-Distillation | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2066-continuous-self-learning-framework) |
