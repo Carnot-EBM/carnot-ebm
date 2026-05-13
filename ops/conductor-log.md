@@ -2383,3 +2383,4 @@ IMPORTANT:
 | 2026-05-13 05:55 UTC | Exp 2015: KAN LUT Hardware Accounting | DOOMED_RERUN_BLOCK | 7 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-13 05:57 UTC | Exp 2014: Preemptive Decoding Latency Baseline | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2013-tier3-predictive-verification-fr11) |
 | 2026-05-13 05:57 UTC | Exp 2015: KAN LUT Hardware Accounting | DOOMED_RERUN_BLOCK | 7 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-13 06:04 UTC | Exp 2016: Milestone .157 Pre-Retro Audit | OK | 81 passed, 1 warning in 4.50s |
