@@ -1,3 +1,22 @@
+## 2026-05-14 Post-.163 Planning Sweep (Milestone 2026.05.164)
+
+This sweep was run after milestone `.163` completed. The literature search revealed major advances in Energy-Based Transformers (EBTs), hard constraint projection layers for general nonlinear constraints, and training-free energy-guided decoding for structural and physical alignment.
+
+### Energy-Based Transformers are Scalable Learners and Thinkers
+- **Paper:** "Energy-Based Transformers are Scalable Learners and Thinkers" (Gladstone et al., ICLR 2026 Oral).
+- **What:** Introduces EBTs that assign a scalar energy to input-prediction pairs, performing inference via gradient descent. EBTs out-scale standard transformers and demonstrate emergent "System 2" thinking by allocating dynamic compute based on initial energy.
+- **Relevance to Carnot:** Seminal validation of Carnot's Phase 3 vision. EBTs use the energy scalar itself as an internal verifier, allowing best-of-N sampling and self-correction without separate reward models.
+
+### $\Pi$Net and HardNet++: Differentiable Constraint Projection
+- **Papers:** "$\Pi$Net: Hard Constrained Neural Networks via Operator Splitting" (ICLR 2026 Oral) and "HardNet++: Nonlinear Constraint Enforcement in Neural Networks" (arXiv:2604.19669).
+- **What:** Introduces differentiable projection layers (using Douglas-Rachford splitting and Implicit Function Theorem) and damped local linearizations to guarantee both linear and nonlinear constraint satisfaction during inference.
+- **Relevance to Carnot:** Aligns perfectly with the move from soft penalties to hard constraint enforcement. Provides concrete architectural targets for building zero-false-accept neural solvers.
+
+### Energy-Guided Test-Time Scaling (ETS) and SCG-MEM
+- **Papers:** "ETS: Energy-Guided Test-Time Scaling for Training-Free RL Alignment" (ICML 2026) and "To Know is to Construct: Schema-Constrained Generation for Agent Memory" (arXiv:2604.20117).
+- **What:** ETS replaces costly RL post-training with a training-free inference method that incorporates an energy term into transition probabilities. SCG-MEM uses cognitive schemas to strictly constrain generation to valid memory entries.
+- **Relevance to Carnot:** Enhances the Continuous Self-Learning and Trace2Skill pipelines by ensuring structural integrity via constraints during decoding, eliminating the need for expensive fine-tuning.
+
 # Research References & Future Considerations
 
 Items filed here are technologies, papers, repos, and ideas to consider
