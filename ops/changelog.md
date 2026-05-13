@@ -5695,3 +5695,4 @@ Completed 15 experiments in 28.9 minutes. There were 0 compute-bound experiments
 - 2026-05-13: Exp 2058: EBFT Fine-Tuning Pipeline (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_2058_ebft_scaffold.json
 - 2026-05-13: Exp 2059: Extropic thrml SDK Integration Stub (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_2059_thrml_integration.json
 - 2026-05-13: Exp 2062: Unsupervised Continuous Self-Learning (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_2062_unsupervised_learning.json
+- 2026-05-13: Exp 2063: Kona-Style System Reasoning Benchmark (⚠️ Research Finding) — honest_verdict=kona_benchmark_passed; results/experiment_2063_kona_benchmark.json
