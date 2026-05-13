@@ -210,6 +210,7 @@ Then it outputs the token-per-second (TPS) for both baseline and CIKAN, and `res
 | REQ-KAN-1690 | Proposed | Exp 1690 target: GloroKAN-style local Lipschitz forward-pass bounds for rational KArAt attention. |
 | REQ-KAN-1723 | Implemented | Exp 1723: FourierCSP constraints compile into fixed CIKAN architectural boundaries with toy artifact evidence. |
 | REQ-KAN-1749 | Implemented | Exp 1749: Symbolic-KAN routing layer embeds discrete primitive choices as tensor gates over learned scalar projections. |
+| REQ-KAN-2005 | Proposed | Exp 2005 target: adaptive KAEM/KAN spline mesh refinement emits structural-change metrics and a completed artifact. |
 
 ## REQ-KAN-020: KAEMEnergy FPGA LUT Budget Analyzability
 
@@ -1237,3 +1238,46 @@ The KAN capability MUST implement an extensible dictionary of symbolic primitive
 Given the S2KAN primitives dictionary and learnable gates,
 When validated against a known functional form,
 Then the tests pass with 100% coverage, and `results/experiment_1926_s2kan_symbolic.json` is written.
+
+## REQ-KAN-2005: Adaptive Energy Landscape KAN Topology Updates
+
+The KAEM/KAN energy model tier MUST expose a deterministic adaptive mesh
+refinement pass for one-dimensional energy splines.  The pass MUST measure
+local landscape complexity from spline slope changes, insert knots into
+under-resolved complex intervals, remove interior knots from smooth intervals,
+preserve boundary knots, and keep the spline evaluable after the topology
+change.  It MUST emit JSON-safe structural-change metrics including the knot
+counts before and after refinement, counts of added and removed knots,
+complexity thresholds, and changed interval positions.
+
+The experiment MUST write
+`results/experiment_2005_adaptive_energy_landscapes_kan.json` with `schema`,
+`status`, `experiment_id`, `spec_traces`, `run_date`,
+`structural_change_metrics`, `energy_probe`, `adaptive_mesh_refinement_ready`,
+`tests_run`, and a terminal `honest_verdict`.
+
+**Rationale:**
+    Tier 4 learning needs the energy function's function space to change when
+    the observed landscape changes.  Adding knots around high-curvature regions
+    gives later fitting steps more local capacity, while removing smooth
+    interior knots keeps dormant structure from growing without evidence.
+
+**Acceptance criteria:**
+    - `UnivariateKAEMLayer.adaptive_mesh_refine()` updates knot positions and
+      control points deterministically from local complexity scores.
+    - Complex landscapes add at least one knot when below the configured maximum.
+    - Smooth landscapes remove interior knots when above the configured minimum.
+    - Structural-change metrics are serializable and preserve the before/after
+      topology evidence needed by the conductor.
+    - `write_adaptive_energy_landscape_kan_artifact()` writes a complete Exp
+      2005 JSON artifact with `REQ-KAN-2005` and `SCENARIO-KAN-2005` traces.
+
+### SCENARIO-KAN-2005: Adaptive KAEM spline topology artifact
+
+Given a deterministic KAEM layer containing both complex and smooth marginal
+energy splines,
+When adaptive mesh refinement is applied and the Exp 2005 artifact is written,
+Then complex regions gain knots, smooth regions lose knots where allowed,
+the refined energy remains finite on probe inputs, structural-change metrics
+record the topology delta, and
+`results/experiment_2005_adaptive_energy_landscapes_kan.json` is complete.
