@@ -1,0 +1,47 @@
+{
+  "experiment_id": 2017,
+  "schema": "carnot.milestone_retro.v1",
+  "milestone": "2026.05.157",
+  "milestone_title": "Execution Bottlenecks and Missing Artifacts Diagnosis",
+  "run_date": "2026-05-13",
+  "status": "complete",
+  "completed_task_count": 0,
+  "blocked_task_count": 4,
+  "failed_task_count": 5,
+  "completed_experiments": [],
+  "blocked_experiments": [
+    2009,
+    2010,
+    2011,
+    2015
+  ],
+  "failed_experiments": [
+    2008,
+    2012,
+    2013,
+    2014,
+    2016
+  ],
+  "experiment_honest_verdicts": {
+    "exp2008": "MISSING",
+    "exp2009": "blocked_gate_check_failed",
+    "exp2010": "blocked_gate_check_failed",
+    "exp2011": "blocked_gate_check_failed",
+    "exp2012": "MISSING",
+    "exp2013": "MISSING",
+    "exp2014": "MISSING",
+    "exp2015": "blocked_gate_check_failed",
+    "exp2016": "Audit complete: Missing artifacts [2008, 2012, 2013, 2014]. Continuous self-learning compliance not confirmed."
+  },
+  "recommendations": [
+    "Mandate that prior_failures entries are strictly verified by pre-gates.",
+    "Diagnose why artifacts 2008, 2012, 2013, 2014 failed to write anything.",
+    "Suspend dependent research tracks until the missing artifacts issue is root-caused."
+  ],
+  "bottlenecks_identified": [
+    "Conductor pre-gate rejecting artifacts en masse due to missing prior_failures (e.g. Exp 2009, 2010, 2011, 2015).",
+    "Missing JSON artifacts causing silent gaps in the milestone record."
+  ],
+  "retro_complete": true,
+  "honest_verdict": "complete: milestone_157_retro_filed_0_completed_4_blocked_5_failed"
+}
