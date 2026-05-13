@@ -1,68 +1,29 @@
-# Research Roadmap vNEXT (Milestone 2026.05.155)
+# Milestone 2026.05.156: Robust Constraint Extraction, Advanced Neural Solvers, and Constraint Memory
 
-**Milestone:** 2026.05.155
-**Title:** Energy-Native Trajectory Optimization, Continual Verification Skills, and Scalable Hardware Accounting
-**Status:** DRAFT
+**Status:** Proposed
+**Author:** Carnot Research Conductor
+**Date:** 2026-05-12
 
-## 1. What Previous Milestone Proved
+## Overview
+This milestone addresses the critical finding that previous positive GSM8K results were simulation artifacts due to crude regex-based constraint extraction. The primary focus is to rebuild constraint extraction using formal logic (NSVIF/Z3) and LLM-as-extractor patterns on live, instruction-tuned SOTA models. Additionally, we integrate advanced unsupervised neural solvers (RUN-CSP, DeepSaDe) and implement Tier 2 Constraint Memory for continuous self-learning.
 
-Milestone `.154` established baselines for Continuous Latent Generative paths via COLD decoding, DOMINO speculative masking, and deep solver constraints using RUN-CSP and DeepSaDe. The integration proved that continuous reasoning and deep MaxSMT constraints could be modeled, but we still need scalable hardware accounting for these tiers and a robust continuous skill acquisition mechanism without forgetting.
+## Architecture Context
+Carnot's constraint verification infrastructure (Ising, KAN) is fast and solid. The weak link is turning model outputs into constraints that the verifier can check. This milestone replaces the `ArithmeticExtractor` with robust formal extractions.
 
-## 2. Milestone Objectives
+## Phase Descriptions
 
-1. **Continuous Latent Representation:** Expand Energy-Guided Decoding and ConsFormer iterative refinement, targeting Phase 3 PRD goals.
-2. **Continual Self-Learning:** Implement Routing without Forgetting and Audited Skill-Graph updates to fix FR-11 retention collapse.
-3. **Hardware Accounting:** Translate KAN implementations into LUT-based models (KANELÉ) and integrate p-dit abstraction checks without claiming unauthenticated board execution.
+### Phase 1: Constraint Extraction & Verification Baselines
+Rebuild the constraint extraction layer to handle real instruction-tuned models. Use NSVIF/Z3 SMT approaches and LLM-as-extractor techniques. Establish live GPU baselines on GSM8K and HumanEval using these new extractors on the mandated SOTA GGUF models.
 
-## 3. Architecture Overview
+### Phase 2: Advanced Constraint Solvers
+Implement neural structures that guarantee constraint satisfaction: DeepSaDe for domain constraints and RUN-CSP for message passing networks on binary CSPs. Also integrate COLD Decoding for energy-based constrained text generation.
 
-```text
-User Instruction
-      │
-      ▼
-┌─────────────────────────────────┐
-│ Reasoning-Time Extraction (ROCE)│  <-- Residual Drift Ledger
-└────────────────┬────────────────┘
-                 ▼
-┌─────────────────────────────────┐
-│ Energy-Guided Continuous Latent │  <-- COLD / ConsFormer / FAR layers
-│ Generation (Mandated GGUFs)     │
-└────────────────┬────────────────┘
-                 ▼
-┌─────────────────────────────────┐
-│ Multi-turn FR-11 Skill Graph    │  <-- Routing without Forgetting
-│ (No-Forgetting Promotion)       │
-└────────────────┬────────────────┘
-                 ▼
-┌─────────────────────────────────┐
-│ Deterministic Verifiers         │  <-- KANELÉ LUT Accounting, Curie-Weiss
-└─────────────────────────────────┘
-```
+### Phase 3: Continuous Self-Learning
+Fulfill FR-11 by implementing Tier 2 Constraint Memory. Track constraints across sessions, consolidating patterns into reusable templates that can be hardware-accelerated for pattern matching.
 
-## 4. Phase Descriptions
+### Phase 4: KAN Refinement & Audit
+Deploy adaptive energy landscapes using KAN splines (Tier 4 learning) and perform comprehensive pre-retro audits and the final retrospective.
 
-### Phase 1: Architecture and Diagnostic Foundations
-- **Exp 1982:** Continuous Latent Generative layer setup inspired by FAR.
-- **Exp 1983:** Apply Energy-Guided Decoding on SOTA models for object hallucination mitigation.
-- **Exp 1984:** Build LUT-based representation for the S2KAN tier (KANELÉ hardware accounting).
-
-### Phase 2: Continual Learning and Skill Acquisition
-- **Exp 1985:** ConsFormer refinement loop evaluation against deterministic solver baselines.
-- **Exp 1986:** Validator-tree promotion ledger with no-forgetting checks (Routing without Forgetting).
-- **Exp 1987:** Structure Snowballing guardrail task across constrained paths.
-- **Exp 1988:** Audited skill-graph self-improvement via verifier-backed replay.
-
-### Phase 3: Deep Solvers and Hardware Alignment
-- **Exp 1989:** Graph preconditioning and p-dit accounting preflight.
-- **Exp 1990:** PVF/Glauber metadata roundtrip over validators (interface audit).
-- **Exp 1991:** Corrected Curie-Weiss parity (hardware_execution_claim=false).
-- **Exp 1992:** Residual-drift ledger over compiled ROCE validator trees.
-
-### Phase 4: Synthesis
-- **Exp 1993:** Tri-SOTA E2E Integration v10.
-- **Exp 1994:** Pre-retro Audit.
-- **Exp 1995:** Retrospective and `.156` Planning.
-
-## 5. Hardware Requirements
-
-No new hardware acquisition is required. The dual RTX 3090 CUDA local SOTA runtime is expected to be functioning for the mandated GGUF models. KANELÉ and p-dit tasks are restricted to logic-level and resource accounting only (`hardware_execution_claim=false`).
+## Hardware Requirements
+- **Primary:** Local GPU (2x RTX 3090) for live SOTA inference (unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF).
+- **Secondary:** CPU for constraint memory tracking and Ising sampling.

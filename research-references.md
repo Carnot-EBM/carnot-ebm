@@ -4,6 +4,24 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+
+## 2026-05-12 Post-.155 Planning Sweep (Milestone 2026.05.156)
+
+This sweep was run after milestone `.155` completed. The literature search revealed advances in Continuous Latent Space Reasoning, Energy-Based Reasoning Models (EBRMs), and novel methods for constraint satisfaction.
+
+### Equilibrium Matching (EqM)
+- **Paper:** "Equilibrium Matching" (2025).
+- **What:** A generative framework that learns the equilibrium gradient of an implicit energy landscape, enabling optimization-driven inference.
+- **Relevance to Carnot:** Tighter bridge between continuous flow models and EBMs for inference.
+
+### DeepSaDe and RUN-CSP for Hard Constraints
+- **Papers:** "RUN-CSP: Unsupervised Learning of Message Passing Networks for Binary CSPs" and "DeepSaDe: Learning Neural Networks that Guarantee Domain Constraint Satisfaction".
+- **What:** Unsupervised GNN architectures and guaranteed domain constraint satisfaction.
+- **Relevance to Carnot:** Directly targets the Phase 2 goals of robust neural solvers.
+
+### COLD Decoding and DOMINO
+- **Papers:** "COLD Decoding: Energy-based Constrained Text Generation with Langevin Dynamics" and "DOMINO: Fast, Non-Invasive Constrained Generation".
+- **Relevance to Carnot:** COLD aligns perfectly with Carnot continuous energy-guided decoding goals.
 ## 2026-05-14 Post-.153 Planning Sweep (Milestone 2026.05.154)
 
 This sweep was run after milestone `.153` completed. The literature search revealed advances in Energy-Based Transformers, continuous latent constraint satisfaction, and Energy Outcome Reward Models.

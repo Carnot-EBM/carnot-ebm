@@ -1,0 +1,213 @@
+milestone: "2026.05.156"
+milestone_title: "Robust Constraint Extraction, Advanced Neural Solvers, and Constraint Memory"
+milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
+
+tasks:
+  - id: exp1996-nsvif-smt-extractor
+    milestone: "2026.05.156"
+    title: "Exp 1996: NSVIF/Z3 SMT Constraint Extractor"
+    deliverable: "results/experiment_1996_nsvif_smt_extractor.json"
+    agent_type: "codex"
+    prompt: |
+      CONTEXT: Today is {date}. Workspace is {project_root}. ArithmeticExtractor regex is failing on IT models. We need a formal logic extractor (arxiv 2601.17789).
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/extract.py
+      TASK: Implement an NSVIF/Z3 approach to formalize CoT constraints into first-order logic.
+      MODEL_SPECS: unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, unsloth/gemma-4-26B-A4B-it-GGUF
+      CONCRETE STEPS:
+      1. Build an extractor that parses chain-of-thought into logical steps.
+      2. Integrate Z3 for solving and verifying each step.
+      3. Ensure zero false positives by design.
+      4. Write the results artifact.
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1997-llm-as-extractor
+    milestone: "2026.05.156"
+    title: "Exp 1997: LLM-as-Extractor Pipeline"
+    deliverable: "results/experiment_1997_llm_as_extractor.json"
+    prompt: |
+      CONTEXT: Today is {date}. Workspace is {project_root}. Secondary extraction approach uses a second LLM call to extract claims.
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/extract.py
+      TASK: Build an LLM-as-extractor pipeline.
+      MODEL_SPECS: unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, unsloth/gemma-4-26B-A4B-it-GGUF
+      CONCRETE STEPS:
+      1. Create a prompt template for claim extraction.
+      2. Extract claims and convert to Ising/KAN verifiable constraints.
+      3. Measure extraction latency and precision against regex baselines.
+      4. Write the results artifact.
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1998-live-it-baselines-gsm8k
+    milestone: "2026.05.156"
+    title: "Exp 1998: Live GPU Baselines on GSM8K"
+    deliverable: "results/experiment_1998_live_it_baselines_gsm8k.json"
+    gated_on:
+      - upstream: exp1996-nsvif-smt-extractor
+        artifact_field: success
+        op: "=="
+        value: true
+    prompt: |
+      CONTEXT: Today is {date}. Workspace is {project_root}. We must run benchmarks on real IT models with CARNOT_FORCE_LIVE=1.
+      EXISTING CODE TO READ FIRST: ops/e2e-test-plan.md
+      TASK: Establish real baselines with instruction-tuned models.
+      MODEL_SPECS: unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, unsloth/gemma-4-26B-A4B-it-GGUF
+      CONCRETE STEPS:
+      1. Run 200 GSM8K questions using the new SMT extractor.
+      2. Ensure inference_mode="live_gpu" in all results.
+      3. Calculate TP and FP rates.
+      4. Write the results artifact.
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp1999-code-verification-humaneval
+    milestone: "2026.05.156"
+    title: "Exp 1999: Code Verification on HumanEval"
+    deliverable: "results/experiment_1999_code_verification_humaneval.json"
+    prompt: |
+      CONTEXT: Today is {date}. Workspace is {project_root}. Code verification uses structural execution tests.
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/extract.py
+      TASK: Verify code execution via Ising-guided fuzzing on live GPU.
+      MODEL_SPECS: unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, unsloth/gemma-4-26B-A4B-it-GGUF
+      CONCRETE STEPS:
+      1. Run 50 HumanEval questions generating code.
+      2. Execute structural CodeExtractor instrumentation.
+      3. Record baseline vs. repair improvements.
+      4. Write the results artifact.
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2000-deep-sade-implementation
+    milestone: "2026.05.156"
+    title: "Exp 2000: DeepSaDe Guaranteed Constraints"
+    deliverable: "results/experiment_2000_deep_sade_implementation.json"
+    model: "opus"
+    max_turns: 100
+    prompt: |
+      CONTEXT: Today is {date}. Workspace is {project_root}. DeepSaDe learns neural networks that guarantee domain constraint satisfaction.
+      EXISTING CODE TO READ FIRST: python/carnot/models/
+      TASK: Implement DeepSaDe-style guaranteed constraint layers.
+      CONCRETE STEPS:
+      1. Design a constraint layer using hybrid MaxSMT+SGD logic.
+      2. Integrate into the verifiable pipeline.
+      3. Evaluate constraint satisfaction rate guarantees.
+      4. Write the results artifact.
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2001-run-csp-message-passing
+    milestone: "2026.05.156"
+    title: "Exp 2001: RUN-CSP Unsupervised Message Passing"
+    deliverable: "results/experiment_2001_run_csp_message_passing.json"
+    agent_type: "codex"
+    prompt: |
+      CONTEXT: Today is {date}. Workspace is {project_root}. RUN-CSP provides unsupervised learning of message passing networks for binary CSPs.
+      EXISTING CODE TO READ FIRST: python/carnot/models/
+      TASK: Implement RUN-CSP message passing network.
+      CONCRETE STEPS:
+      1. Build a message passing architecture for binary CSP solvers.
+      2. Train unsupervised on Max-CSP configurations.
+      3. Compare convergence against static Ising dynamics.
+      4. Write the results artifact.
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2002-cold-decoding-integration
+    milestone: "2026.05.156"
+    title: "Exp 2002: COLD Decoding Integration"
+    deliverable: "results/experiment_2002_cold_decoding_integration.json"
+    prompt: |
+      CONTEXT: Today is {date}. Workspace is {project_root}. COLD Decoding uses Langevin dynamics to guide energy-based constrained text generation.
+      EXISTING CODE TO READ FIRST: python/carnot/inference/samplers.py
+      TASK: Integrate COLD Decoding for dynamic text generation.
+      MODEL_SPECS: unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, unsloth/gemma-4-26B-A4B-it-GGUF
+      CONCRETE STEPS:
+      1. Adapt Langevin samplers for text constraints.
+      2. Evaluate generative fluency vs constraint satisfaction.
+      3. Measure generation latency.
+      4. Write the results artifact.
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2003-tier2-constraint-memory-fr11
+    milestone: "2026.05.156"
+    title: "Exp 2003: Tier 2 Constraint Memory (FR-11)"
+    deliverable: "results/experiment_2003_tier2_constraint_memory_fr11.json"
+    prompt: |
+      CONTEXT: Today is {date}. Workspace is {project_root}. We must support continuous self-learning. Tier 2 Constraint Memory caches verified facts and error patterns across sessions.
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/verify_repair.py
+      TASK: Implement FR-11 Tier 2 Constraint Memory.
+      CONCRETE STEPS:
+      1. Track which constraints fire and catch errors across queries.
+      2. Build a pattern consolidation mechanism for common structural failures.
+      3. Emit continuous_self_learning_task metrics in the artifact.
+      4. Write the results artifact.
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2004-ebm-transformer-reasoning-evaluation
+    milestone: "2026.05.156"
+    title: "Exp 2004: EBM Transformer Reasoning Trace Evaluation"
+    deliverable: "results/experiment_2004_ebm_transformer_reasoning_evaluation.json"
+    prompt: |
+      CONTEXT: Today is {date}. Workspace is {project_root}. EBTs (arXiv:2507.02092) evaluate compatibility between input and prediction by minimizing energy.
+      EXISTING CODE TO READ FIRST: python/carnot/models/
+      TASK: Evaluate full reasoning traces via an EBT-style approach.
+      MODEL_SPECS: unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, unsloth/gemma-4-26B-A4B-it-GGUF
+      CONCRETE STEPS:
+      1. Score multi-step reasoning traces generated by GGUF models.
+      2. Record partial-trace energy distributions.
+      3. Compare energy scores with human-verified truth.
+      4. Write the results artifact.
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2005-adaptive-energy-landscapes-kan
+    milestone: "2026.05.156"
+    title: "Exp 2005: Tier 4 Adaptive Energy Landscapes KAN"
+    deliverable: "results/experiment_2005_adaptive_energy_landscapes_kan.json"
+    agent_type: "codex"
+    prompt: |
+      CONTEXT: Today is {date}. Workspace is {project_root}. Tier 4 learning involves adapting the structure of the energy function via KAN splines.
+      EXISTING CODE TO READ FIRST: python/carnot/models/kaem_energy.py
+      TASK: Implement structural updates to KAN topologies.
+      CONCRETE STEPS:
+      1. Build adaptive mesh refinement for KAN splines.
+      2. Add knots where the landscape is complex, remove where smooth.
+      3. Emit structural change metrics.
+      4. Write the results artifact.
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2006-milestone-156-pre-retro
+    milestone: "2026.05.156"
+    title: "Exp 2006: Milestone .156 Pre-Retro Audit"
+    deliverable: "results/experiment_2006_milestone_156_pre_retro.json"
+    max_turns: 20
+    prompt: |
+      CONTEXT: Today is {date}. Workspace is {project_root}.
+      EXISTING CODE TO READ FIRST: ops/status.md and ops/changelog.md
+      TASK: Audit the .156 artifacts.
+      CONCRETE STEPS:
+      1. Verify all .156 artifacts exist and contain valid schema.
+      2. Confirm SOTA models were utilized.
+      3. Write the results artifact.
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2007-milestone-156-retro
+    milestone: "2026.05.156"
+    title: "Exp 2007: Milestone .156 Retrospective"
+    deliverable: "results/experiment_2007_milestone_156_retro.json"
+    max_turns: 50
+    agent_type: "claude"
+    prompt: |
+      CONTEXT: Today is {date}. Workspace is {project_root}.
+      EXISTING CODE TO READ FIRST: ops/status.md and ops/changelog.md
+      TASK: Conduct the retrospective for Milestone .156.
+      CONCRETE STEPS:
+      1. Analyze the performance of NSVIF, COLD Decoding, and Tier 2 Memory.
+      2. Extract lessons and outline goals for .157.
+      3. Write the results artifact.
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
