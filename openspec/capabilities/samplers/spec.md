@@ -261,3 +261,26 @@ evaluates on both 40-variable and 1000-variable graphs
 training history, per-scale energy metrics, and satisfaction rates
 **And** the run uses no labels, GPU, network, or hardware backends.
 
+### REQ-SAMPLE-1985: ConsFormer-style Refinement Loop Sampler
+
+Carnot MUST provide an iterative refinement sampler `ConsFormerRefinementSampler`
+in `python/carnot/inference/samplers.py` that utilizes the ConsFormer model
+to iteratively refine variable assignments for constraint satisfaction problems.
+
+Sub-requirements:
+- REQ-SAMPLE-1985-1: The sampler SHALL initialize the ConsFormer model parameters
+  if not provided, or accept pre-trained parameters.
+- REQ-SAMPLE-1985-2: The `sample()` method SHALL take an initial sequence and an
+  adjacency matrix, then perform the refinement loop to return a final state.
+- REQ-SAMPLE-1985-3: An experiment deliverable SHALL be written to
+  `results/experiment_1985_consformer_refinement_loop.json` that compares the
+  refinement loop's convergence to deterministic baselines like Z3 or PySAT.
+
+### SCENARIO-SAMPLE-1985: ConsFormer Sampler Convergence Comparison
+
+**Given** a simple constraint satisfaction problem encoded as an adjacency matrix
+**When** `ConsFormerRefinementSampler` is used alongside a deterministic solver
+**Then** the sampler produces a refined state sequence
+**And** it writes `results/experiment_1985_consformer_refinement_loop.json`
+with convergence metrics and a comparison.
+
