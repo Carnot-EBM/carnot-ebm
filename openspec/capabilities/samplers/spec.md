@@ -303,3 +303,38 @@ Sub-requirements:
 **Then** it successfully calculates the analytic ground truth
 **And** it runs both Carnot and THRML samplers
 **And** it writes a valid JSON artifact with the comparison metrics.
+
+### REQ-SAMPLE-2043: AIA Knuth-Yao Categorical Sampler Simulator
+
+Carnot MUST provide a CPU-only software simulator for Knuth-Yao categorical
+sampling in `python/carnot/samplers/knuth_yao.py`, representing an Approximate
+Inference Accelerator (AIA) sampler boundary without claiming FPGA or hardware
+execution.
+
+Sub-requirements:
+- REQ-SAMPLE-2043-1: The module SHALL provide a `KnuthYaoSampler` class that
+  accepts a finite discrete probability distribution, builds a dyadic
+  discrete-distribution-generating (DDG) bit matrix, and samples category
+  indices using unbiased random bits.
+- REQ-SAMPLE-2043-2: The sampler SHALL expose RNG-bit accounting so experiments
+  can report average bits consumed per emitted sample and compare that value to
+  a fixed-width categorical sampler baseline.
+- REQ-SAMPLE-2043-3: Experiment 2043 SHALL compare `KnuthYaoSampler` against a
+  standard RNG categorical sampler on 10,000 samples from the same discrete
+  distribution and record empirical frequencies, count deltas, and pass/fail
+  parity thresholds.
+- REQ-SAMPLE-2043-4: Experiment 2043 SHALL write
+  `results/experiment_2043_aia_knuth_yao.json` with required experiment schema
+  fields, spec refs, statistical parity metrics, bit-accounting metrics, and
+  `hardware_execution_claim=false`.
+
+### SCENARIO-SAMPLE-2043: AIA Knuth-Yao Statistical Parity Artifact
+
+**Given** a dyadic non-uniform categorical distribution
+**When** `KnuthYaoSampler` and a standard RNG categorical sampler each emit
+10,000 samples with fixed independent seeds
+**Then** their empirical category frequencies remain within the configured
+parity thresholds
+**And** the artifact records average RNG bits consumed per Knuth-Yao sample
+**And** it writes `results/experiment_2043_aia_knuth_yao.json` without a
+hardware execution claim.

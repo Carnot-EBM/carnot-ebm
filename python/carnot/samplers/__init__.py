@@ -30,6 +30,7 @@ try:
         OIMSpeedupResult,
     )
     from .hmc import HMCSampler
+    from .knuth_yao import KnuthYaoSampler
     from .langevin import LangevinSampler
     from .parallel_dense_ising import (
         ParallelDenseIsingConfig,
@@ -51,6 +52,7 @@ else:
         "LangevinSampler",
         "EquilibriumMatchingSampler",
         "HMCSampler",
+        "KnuthYaoSampler",
         "ParallelIsingSampler",
         "Phase4Sampler",
         "AnnealingSchedule",
