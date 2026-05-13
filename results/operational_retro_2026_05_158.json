@@ -1,0 +1,50 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.158",
+  "generated_at": "2026-05-13T07:22:24Z",
+  "retro_type": "operational_in_progress",
+  "summary": "Milestone 2026.05.158 operational retrospective complete. Analyzed 26 minutes wall time for 13 synthesis-only experiments (avg 2 minutes). Both GPUs correctly idled at 0% utilization throughout, as there were 0 compute-bound tasks. The slowest paths were retrospective and audit tasks.",
+  "total_wall_time_minutes": 26.5,
+  "experiments_completed": 13,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "-0400 [conductor] Exp 2027: Milestone .158 Retrospective",
+      "duration_minutes": 7.2,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 2026: Milestone .158 Pre-Retro Audit",
+      "duration_minutes": 4.7,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 2027: Milestone .158 Retrospective",
+      "duration_minutes": 2.5,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 2027: Milestone .158 Retrospective",
+      "duration_minutes": 2.1,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Doomed-rerun block: Exp 2019: Local SOTA GGUF Runtime Repair a",
+      "duration_minutes": 2.0,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "bottlenecks_identified": [
+    "The slowest experiments were all synthesis-only retrospective and audit tasks, taking up to 7 minutes."
+  ],
+  "improvements_suggested": [
+    "Optimize the synthesis-only tasks and retrospective pipelines to reduce their execution time."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Investigate the execution overhead of milestone retrospective and audit tasks.",
+    "Optimize synthesis-only pipelines to reduce baseline latency."
+  ],
+  "estimated_time_savings_pct": 20,
+  "meta_reflection": "The retro continues to demonstrate that synthesis-only experiments dominate the wall time when compute-bound tasks are absent."
+}

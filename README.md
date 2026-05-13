@@ -499,6 +499,7 @@ experiment artifact under `results/`.
 | ROCE-to-validator tree compiler | **8/8** constraints compiled to guarded Python, PySAT-compatible CNF, and Z3-compatible leaves with constraint coverage **1.0** and false accepts **0** | Exp 1878 |
 | BEAVER-lite validator-tree bounds | Deterministic coverage bound **1.0**, residual-risk bound **0.0**, and executable validator leaves retain final acceptance authority | Exp 1879 |
 | Live SOTA ROCE validator evaluation | **Blocked** before inference because mandated `unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF` were unavailable; no headline accuracy claimed | Exp 1880 |
+| Milestone .158 closeout | Analyzed .158 retro. SEAL and STKAN failed, proving negative empirical bounds. | Exp 2027 |
 | Milestone .147 closeout | **5/14** tasks completed, **9** blocked or missing artifacts; prompt-to-validator work is partial and telemetry, FR-11, and hardware-accounting gates are not ready | Exp 1889 |
 | Milestone .153 closeout | Identified synthesis bottlenecks as primary optimization area; GPU correctly idled on non-compute tasks | Exp 1956 |
 | Milestone .154 closeout | 29 experiments in 64.6 minutes, 100% synthesis-only (0 GPU usage); average 2 mins/exp | ops/changelog 2026-05-13 |
