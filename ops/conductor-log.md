@@ -2368,3 +2368,4 @@ IMPORTANT:
 | 2026-05-13 05:35 UTC | Exp 2010: FAR Continuous Latent Generation | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-13 05:37 UTC | Exp 2010: FAR Continuous Latent Generation | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-13 05:39 UTC | Exp 2010: FAR Continuous Latent Generation | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-13 05:41 UTC | Exp 2011: Optimal Abstractions for KAN Verificatio | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
