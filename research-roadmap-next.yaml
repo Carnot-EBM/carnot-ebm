@@ -1,0 +1,190 @@
+milestone: "2026.05.158"
+milestone_title: "SEAL Self-Adaptive Learning, STKAN Continuous Evaluation, and Live SOTA Repair"
+milestone_doc: "openspec/change-proposals/research-roadmap-v158.md"
+
+tasks:
+  - id: exp2018-archive-157-activate-158
+    title: "Exp 2018: Archive .157 and Activate .158 (Opus Bootstrapper)"
+    deliverable: ops/status.md
+    model: opus
+    max_turns: 30
+    prompt: |
+      CONTEXT: We are closing milestone .157 and beginning .158. The previous archive task timed out. We are using Opus to ensure this bootstrapping task succeeds rapidly.
+      EXISTING CODE TO READ FIRST:
+      - ops/status.md
+      - openspec/change-proposals/research-roadmap-v158.md
+      TASK: Update the operational status document to reflect the start of milestone 2026.05.158.
+      CONCRETE STEPS:
+      1. Move milestone .157 to "Completed Milestones" in ops/status.md.
+      2. Update the "Current Milestone" to 2026.05.158.
+      3. CRITICAL: write artifact FIRST. Update ops/status.md immediately.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2019-sota-gguf-runtime-repair
+    title: "Exp 2019: Local SOTA GGUF Runtime Repair and Preflight"
+    deliverable: results/experiment_2019_sota_runtime_preflight.json
+    model: opus
+    max_turns: 40
+    prompt: |
+      CONTEXT: In previous runs, the local SOTA runtime failed due to missing CUDA libraries or cache misses. We must repair this before running SEAL generation.
+      EXISTING CODE TO READ FIRST:
+      - scripts/experiment_template.py
+      TASK: Create a Python script that tests the local llama.cpp GGUF runtime with the mandated SOTA models.
+      CONCRETE STEPS:
+      1. Write scripts/experiment_2019_sota_runtime_preflight.py.
+      2. It MUST use the `cached_sota_pair()` or attempt to load `unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF`.
+      3. Test a simple completion.
+      4. Write the results to results/experiment_2019_sota_runtime_preflight.json. Include `usable_response` and `live_sota_model_inference_used` fields.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2020-uncertainty-quantification-telemetry
+    title: "Exp 2020: Uncertainty Quantification Telemetry Smoke"
+    deliverable: results/experiment_2020_uncertainty_telemetry.json
+    gated_on:
+      - upstream: exp2019-sota-gguf-runtime-repair
+        artifact_field: usable_response
+        op: "=="
+        value: true
+    max_turns: 40
+    prompt: |
+      CONTEXT: Based on 2025 hallucination detection papers, we want to extract latent uncertainty signals from the SOTA models during generation.
+      EXISTING CODE TO READ FIRST:
+      - scripts/experiment_template.py
+      TASK: Implement an uncertainty quantification smoke test using the SOTA runtime.
+      CONCRETE STEPS:
+      1. Write scripts/experiment_2020_uncertainty_telemetry.py.
+      2. Attempt to capture top-k logprobs or semantic energy proxies during a generation task.
+      3. Write the results artifact indicating if `topk_logprobs_available=true` and evaluate basic uncertainty features.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2021-seal-synthetic-generation
+    title: "Exp 2021: SEAL Self-Adaptive Learning: Synthetic Trace Generation"
+    deliverable: results/experiment_2021_seal_generation.json
+    gated_on:
+      - upstream: exp2019-sota-gguf-runtime-repair
+        artifact_field: live_sota_model_inference_used
+        op: "=="
+        value: true
+    max_turns: 50
+    prompt: |
+      CONTEXT: SEAL (NeurIPS 2025) advocates for continuous self-learning via synthetic data generation.
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/pipeline/verify_repair.py
+      TASK: Generate a batch of synthetic reasoning traces using the local SOTA models.
+      CONCRETE STEPS:
+      1. Write scripts/experiment_2021_seal_generation.py.
+      2. Use `unsloth/Qwen3.6-35B-A3B-GGUF` to generate 20 reasoning traces on constraint satisfaction tasks (e.g., CCTU or GSM8K format).
+      3. Save the traces to results/experiment_2021_seal_generation.json.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2022-seal-verifier-filtering
+    title: "Exp 2022: SEAL Verifier Filtering & Zero-False-Accept Gate"
+    deliverable: results/experiment_2022_seal_filtering.json
+    gated_on:
+      - upstream: exp2021-seal-synthetic-generation
+        artifact_field: trace_count
+        op: ">="
+        value: 10
+    agent_type: codex
+    max_turns: 40
+    prompt: |
+      CONTEXT: We must filter the SEAL synthetic traces through our deterministic verifier stack to ensure zero soundness mistakes.
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/pipeline/verify_repair.py
+      TASK: Run the generated traces through the verifier and compute acceptance metrics.
+      CONCRETE STEPS:
+      1. Write scripts/experiment_2022_seal_filtering.py.
+      2. Load the traces from exp2021.
+      3. Run deterministic verification.
+      4. Write results artifact. Include `soundness_mistakes`, `completeness_mistakes`, and `valid_traces_retained`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2023-seal-policy-promotion
+    title: "Exp 2023: SEAL Continuous Memory Policy Promotion (FR-11)"
+    deliverable: results/experiment_2023_seal_promotion.json
+    gated_on:
+      - upstream: exp2022-seal-verifier-filtering
+        artifact_field: soundness_mistakes
+        op: "=="
+        value: 0
+    max_turns: 50
+    prompt: |
+      CONTEXT: Promote the verified traces into Carnot's Tier 2 continuous constraint memory.
+      EXISTING CODE TO READ FIRST:
+      - ops/known-issues.md
+      TASK: Implement the promotion mechanism ensuring non-forgetting.
+      CONCRETE STEPS:
+      1. Write scripts/experiment_2023_seal_promotion.py.
+      2. Add the valid traces to the policy buffer.
+      3. Test replay against historical cases to ensure `nonforgetting_rate=1.0`.
+      4. Write the artifact with `utility_delta` and `nonforgetting_rate`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2024-stkan-spatio-temporal-prototype
+    title: "Exp 2024: STKAN Spatio-Temporal Constraint Model Prototype"
+    deliverable: results/experiment_2024_stkan_prototype.json
+    agent_type: codex
+    max_turns: 50
+    prompt: |
+      CONTEXT: Based on STKAN (ICLR 2026), we want to evaluate multi-step reasoning traces using a Spatio-Temporal Kolmogorov-Arnold Network.
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/models/kan_tier.py (or similar KAN models if existing)
+      TASK: Prototype an STKAN architecture for sequence scoring.
+      CONCRETE STEPS:
+      1. Write scripts/experiment_2024_stkan_prototype.py.
+      2. Implement a simple STKAN forward pass in JAX/Flax.
+      3. Test it on mock sequence data (representing reasoning steps).
+      4. Write the evaluation results to the artifact.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2025-stkan-hardware-accounting
+    title: "Exp 2025: STKAN No-Synthesis Hardware Inference Accounting"
+    deliverable: results/experiment_2025_stkan_hardware_accounting.json
+    gated_on:
+      - upstream: exp2024-stkan-spatio-temporal-prototype
+        artifact_field: prototype_success
+        op: "=="
+        value: true
+    max_turns: 30
+    prompt: |
+      CONTEXT: We need to estimate the hardware complexity of the STKAN tier using Real Multiplications (RM) and Bit Operations (BOP) without Vivado synthesis.
+      EXISTING CODE TO READ FIRST:
+      - scripts/experiment_2024_stkan_prototype.py
+      TASK: Compute platform-independent inference complexity metrics for the STKAN prototype.
+      CONCRETE STEPS:
+      1. Write scripts/experiment_2025_stkan_hardware_accounting.py.
+      2. Calculate the theoretical LUT/BOP/NABS limits.
+      3. Write the artifact, strictly explicitly declaring `kv260_no_synthesis_claim=true` and no FPGA board claims.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2026-milestone-158-pre-retro-audit
+    title: "Exp 2026: Milestone .158 Pre-Retro Audit"
+    deliverable: results/experiment_2026_milestone_158_pre_retro.json
+    agent_type: gemini
+    max_turns: 20
+    prompt: |
+      CONTEXT: We are approaching the end of milestone .158.
+      EXISTING CODE TO READ FIRST:
+      - ops/conductor-log.md
+      TASK: Summarize the milestone outcomes.
+      CONCRETE STEPS:
+      1. Write scripts/experiment_2026_milestone_158_pre_retro.py to parse recent experiment results.
+      2. Verify that SEAL generation and STKAN tasks completed.
+      3. Output the summary to the JSON artifact.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2027-milestone-158-retrospective
+    title: "Exp 2027: Milestone .158 Retrospective"
+    deliverable: results/experiment_2027_milestone_158_retro.json
+    agent_type: gemini
+    max_turns: 50
+    prompt: |
+      CONTEXT: Final retrospective for milestone .158.
+      EXISTING CODE TO READ FIRST:
+      - results/experiment_2026_milestone_158_pre_retro.json
+      TASK: Write a comprehensive retrospective analysis.
+      CONCRETE STEPS:
+      1. Analyze the success of the SEAL continuous learning loop and the STKAN prototype.
+      2. Write scripts/experiment_2027_milestone_158_retro.py to format the findings.
+      3. Save the final JSON artifact.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
