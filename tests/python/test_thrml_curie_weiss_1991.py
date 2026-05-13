@@ -47,17 +47,44 @@ def test_run_experiment_parity(mock_cpu, mock_thrml):
     
     n_samples = 100
     n_spins = 128
-    rng = np.random.RandomState(42)
     
-    mock_cpu_instance.sample.return_value = rng.binomial(1, 0.5, (n_samples, n_spins))
-    mock_thrml_instance.sample.return_value = rng.binomial(1, 0.5, (n_samples, n_spins))
+    # Guarantee max_e != min_e by providing at least two distinct states
+    samples = np.zeros((n_samples, n_spins))
+    samples[0, :] = 1.0  # state with energy != 0
+    
+    mock_cpu_instance.sample.return_value = samples
+    mock_thrml_instance.sample.return_value = samples
     
     result = run_experiment(n_samples=n_samples)
     
     assert result["schema"] == "carnot.curie_weiss_parity_sweep.v1"
     assert result["hardware_execution_claim"] is False
     assert "analytic_mean_energy" in result
+
+
+@mock.patch("builtins.open", new_callable=mock.mock_open)
+@mock.patch("carnot.samplers.thrml_carnot_parity_curie_weiss_1991.ThrmlSamplerBackend")
+@mock.patch("carnot.samplers.thrml_carnot_parity_curie_weiss_1991.CpuBackend")
+def test_run_experiment_parity_constant_energy(mock_cpu, mock_thrml, mock_open_file):
+    """Test parity experiment when all samples have the same energy."""
+    mock_cpu_instance = mock.MagicMock()
+    mock_cpu.return_value = mock_cpu_instance
+    
+    mock_thrml_instance = mock.MagicMock()
+    mock_thrml.return_value = mock_thrml_instance
+    
+    n_samples = 10
+    n_spins = 128
+    
+    # Guarantee max_e == min_e
+    samples = np.zeros((n_samples, n_spins))
+    
+    mock_cpu_instance.sample.return_value = samples
+    mock_thrml_instance.sample.return_value = samples
+    
+    result = run_experiment(n_samples=n_samples)
+    assert result["schema"] == "carnot.curie_weiss_parity_sweep.v1"
     assert "carnot_mean_energy" in result
     assert "thrml_mean_energy" in result
     assert "acceptance_gate_passed" in result
-    assert os.path.exists("results/experiment_1991_curie_weiss_parity_correction.json")
+    mock_open_file.assert_called_with("results/experiment_1991_curie_weiss_parity_correction.json", "w")
