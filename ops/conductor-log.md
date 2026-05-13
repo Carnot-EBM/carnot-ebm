@@ -2461,3 +2461,4 @@ IMPORTANT:
 | 2026-05-13 09:56 UTC | Exp 2047: Continuous Latent Verifier Integration | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2041-eqm-gradient-landscape.convergence |
 | 2026-05-13 09:58 UTC | Exp 2047: Continuous Latent Verifier Integration | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2041-eqm-gradient-landscape.convergence |
 | 2026-05-13 10:11 UTC | Exp 2048: InEx-style Continuous Introspection | OK | 81 passed, 1 warning in 4.55s |
+| 2026-05-13 10:13 UTC | Exp 2049: Autonomous Self-Learning Latent Loop (FR | DOOMED_RERUN_BLOCK | 8 prior failure(s) match this task's scope but prior_failures field is missing o |
