@@ -2376,3 +2376,5 @@ IMPORTANT:
 | 2026-05-13 05:49 UTC | Exp 2012: KAN4CBC Barrier Certificates | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2011-kan-optimal-abstractions-milp) |
 | 2026-05-13 05:49 UTC | Exp 2013: Tier 3 Predictive Verification (FR-11) | FAIL | Gemini CLI error: you finish the real work inside 10 minutes, that is correct  |
 | 2026-05-13 05:51 UTC | Exp 2012: KAN4CBC Barrier Certificates | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2011-kan-optimal-abstractions-milp) |
+| 2026-05-13 05:51 UTC | Exp 2013: Tier 3 Predictive Verification (FR-11) | FAIL | Gemini CLI error: you finish the real work inside 10 minutes, that is correct  |
+| 2026-05-13 05:53 UTC | Exp 2014: Preemptive Decoding Latency Baseline | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2013-tier3-predictive-verification-fr11) |
