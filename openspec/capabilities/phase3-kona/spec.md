@@ -2030,3 +2030,12 @@ First concrete next experiment:
 the LTI-constrained injection, verify SCENARIO-KONA-001 (fixed-point convergence
 on synthetic landscape) and SCENARIO-KONA-002 (LTI constraint holds). Expected
 to be a 1-week effort; would not require GPU beyond what's already available.
+
+
+### REQ-KONA-038: Continuous Architecture Audit (Exp 2051)
+
+The repository shall provide an audit module in `python/carnot/phase3/architecture_audit.py` that:
+- Reads the preceding 11 experiment JSON artifacts from `results/`.
+- Detects architectural divergence between the continuous execution results and the discrete verification mandate (PRD FR-12).
+- Emits `results/experiment_2051_architecture_audit.json` containing `experiment` (int), `run_date` (str), `analyzed_tasks` (list), and `divergence_conflicts` (list).
+- Provides a function `audit_continuous_execution(results_dir)` that returns a dictionary matching the artifact schema.
