@@ -2446,3 +2446,4 @@ IMPORTANT:
 | 2026-05-13 08:38 UTC | Milestone 2026.05.160 activated | OK | 13 tasks queued |
 | 2026-05-13 08:40 UTC | Exp 2040: FAR Continuous Latent Generation Smoke T | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-13 08:42 UTC | Exp 2040: FAR Continuous Latent Generation Smoke T | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-13 08:44 UTC | Exp 2040: FAR Continuous Latent Generation Smoke T | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
