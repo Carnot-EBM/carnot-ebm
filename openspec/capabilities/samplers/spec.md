@@ -195,6 +195,39 @@ Ising sweep are each run for 200 steps from the same random initial state
 **And** the surrogate skip rate (fraction of steps where full energy was bypassed)
 is recorded and is strictly positive (> 0) when `skip_threshold` < 1.0.
 
+### REQ-SAMPLE-2044: AIA Continuous Gumbel Sampler Simulator
+
+Carnot MUST provide a `ContinuousGumbelSampler` in
+`python/carnot/samplers/continuous_gumbel.py` that uses Gumbel-perturbed
+categorical moves to simulate AIA-style sampling on continuous energy
+landscapes.
+
+Sub-requirements:
+- REQ-SAMPLE-2044-1: The sampler SHALL accept any Python `EnergyFunction` with
+  `energy` and `grad_energy` methods.
+- REQ-SAMPLE-2044-2: Each step SHALL evaluate a categorical support of
+  continuous move values, perturb the move logits with Gumbel noise, and update
+  the continuous state using the selected or relaxed move.
+- REQ-SAMPLE-2044-3: `sample()` SHALL return the final finite state after
+  `n_steps`, and `sample_chain()` SHALL return all intermediate states with
+  shape `(n_steps, *init.shape)`.
+- REQ-SAMPLE-2044-4: Experiment 2044 SHALL apply the sampler to the Exp 2041
+  EqM gradient landscape, compare convergence speed against a
+  Metropolis-Hastings random-walk baseline, and write
+  `results/experiment_2044_aia_gumbel.json`.
+- REQ-SAMPLE-2044-5: The experiment SHALL run deterministically for a fixed
+  seed on CPU and require no network, GPU, or external hardware backend.
+
+### SCENARIO-SAMPLE-2044: Exp 2044 Gumbel Simulator Writes Comparison Artifact
+
+**Given** the Exp 2041 EqM quadratic hidden-state landscape
+**When** `ContinuousGumbelSampler` and a Metropolis-Hastings baseline are run
+from the same initial continuous state
+**Then** both chains remain finite and reduce energy
+**And** the artifact records per-sampler initial energy, final energy, best
+energy, first threshold step, convergence flag, and a Gumbel speedup value
+**And** the artifact is saved to `results/experiment_2044_aia_gumbel.json`.
+
 ### REQ-SAMPLE-1960: Flow Sampling Density Estimator Prototype
 
 Carnot MUST provide a Flow Sampling density estimator prototype inside `python/carnot/samplers/flow_sampling.py` that allows learning to sample from unnormalized densities via conditional denoising processes.
