@@ -2474,3 +2474,4 @@ IMPORTANT:
 | 2026-05-13 10:50 UTC | Exp 2053: Mouth vs Brain Architecture Audit | OK | 81 passed, 1 warning in 4.30s |
 | 2026-05-13 10:56 UTC | Exp 2054: EBT Computation Layer Scaffolding | OK | 81 passed, 1 warning in 4.19s |
 | 2026-05-13 11:01 UTC | Exp 2055: Compositional Energy Minimization | OK | 81 passed, 1 warning in 5.29s |
+| 2026-05-13 12:07 UTC | Exp 2056: Soft Bellman Equation Solver | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2056_soft_be |
