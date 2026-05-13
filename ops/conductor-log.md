@@ -2393,3 +2393,6 @@ IMPORTANT:
 | 2026-05-13 06:34 UTC | Exp 2019: Local SOTA GGUF Runtime Repair and Prefl | DOOMED_RERUN_BLOCK | 11 prior failure(s) match this task's scope but prior_failures field is missing  |
 | 2026-05-13 06:36 UTC | Exp 2020: Uncertainty Quantification Telemetry Smo | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2019-sota-gguf-runtime-repair) |
 | 2026-05-13 06:36 UTC | Exp 2021: SEAL Self-Adaptive Learning: Synthetic T | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2019-sota-gguf-runtime-repair) |
+| 2026-05-13 06:36 UTC | Exp 2022: SEAL Verifier Filtering & Zero-False-Acc | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2021-seal-synthetic-generation.trace_co |
+| 2026-05-13 06:38 UTC | Exp 2020: Uncertainty Quantification Telemetry Smo | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2019-sota-gguf-runtime-repair) |
+| 2026-05-13 06:38 UTC | Exp 2021: SEAL Self-Adaptive Learning: Synthetic T | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2019-sota-gguf-runtime-repair) |
