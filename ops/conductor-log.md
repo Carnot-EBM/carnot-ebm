@@ -2432,3 +2432,5 @@ IMPORTANT:
 | 2026-05-13 07:49 UTC | Exp 2032: EBRM Deterministic Zero-False-Accept Gat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2031-continuous-latent-ebrm) |
 | 2026-05-13 07:49 UTC | Exp 2033: KAN Piecewise Affine (PWA) Abstraction | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-13 07:51 UTC | Exp 2034: KAN Formal Verification via MILP | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2033-kan-pwa-abstraction) |
+| 2026-05-13 07:51 UTC | Exp 2035: GEC Epsilon-Constraint Continual Learnin | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-13 07:53 UTC | Exp 2034: KAN Formal Verification via MILP | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2033-kan-pwa-abstraction) |
