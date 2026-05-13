@@ -1,0 +1,110 @@
+{
+  "case_results": [
+    {
+      "case_id": "qwen-it-addition-wrong",
+      "constraints_extracted": 1,
+      "expected_supported": true,
+      "expected_violation": true,
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "verdicts": [
+        "violation"
+      ],
+      "violation_detected": true
+    },
+    {
+      "case_id": "qwen-it-addition-correct",
+      "constraints_extracted": 1,
+      "expected_supported": true,
+      "expected_violation": false,
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "verdicts": [
+        "verified"
+      ],
+      "violation_detected": false
+    },
+    {
+      "case_id": "gemma-percent-wrong",
+      "constraints_extracted": 1,
+      "expected_supported": true,
+      "expected_violation": true,
+      "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "verdicts": [
+        "violation"
+      ],
+      "violation_detected": true
+    },
+    {
+      "case_id": "gemma-subtract-correct",
+      "constraints_extracted": 1,
+      "expected_supported": true,
+      "expected_violation": false,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "verdicts": [
+        "verified"
+      ],
+      "violation_detected": false
+    },
+    {
+      "case_id": "gemma-logic-contradiction",
+      "constraints_extracted": 3,
+      "expected_supported": true,
+      "expected_violation": true,
+      "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "verdicts": [
+        "asserted",
+        "asserted",
+        "violation"
+      ],
+      "violation_detected": true
+    },
+    {
+      "case_id": "gemma-logic-entailed",
+      "constraints_extracted": 3,
+      "expected_supported": true,
+      "expected_violation": false,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "verdicts": [
+        "asserted",
+        "asserted",
+        "entailed"
+      ],
+      "violation_detected": false
+    },
+    {
+      "case_id": "unsupported-prose-abstain",
+      "constraints_extracted": 0,
+      "expected_supported": false,
+      "expected_violation": false,
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "verdicts": [],
+      "violation_detected": false
+    }
+  ],
+  "cases_attempted": 7,
+  "constraints_extracted": 10,
+  "experiment_id": 1996,
+  "extractor_module": "carnot.pipeline.nsvif_smt_extractor",
+  "false_accepts": 0,
+  "false_positives": 0,
+  "honest_verdict": "complete: NSVIF/Z3 SMT extractor rejects supported contradictory IT CoT steps with zero false positives on bundled fixtures.",
+  "model_specs": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "unsloth/gemma-4-31B-it-GGUF",
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "run_date": "20260513",
+  "schema_version": "carnot.pipeline.nsvif_smt_extractor.v1",
+  "solver_checks": 10,
+  "source_arxiv": "https://arxiv.org/abs/2601.17789",
+  "spec_refs": [
+    "REQ-VERIFY-1996",
+    "SCENARIO-VERIFY-1996"
+  ],
+  "status": "complete",
+  "success": true,
+  "tests_run": [
+    "tests/python/test_nsvif_smt_extractor.py"
+  ],
+  "unsupported_accepted": 0,
+  "zero_false_positives_by_design": true
+}
