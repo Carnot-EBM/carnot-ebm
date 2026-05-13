@@ -2354,3 +2354,4 @@ IMPORTANT:
 | 2026-05-13 03:29 UTC | Exp 2003: Tier 2 Constraint Memory (FR-11) | DOOMED_RERUN_BLOCK | 3 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-13 03:31 UTC | Exp 2003: Tier 2 Constraint Memory (FR-11) | DOOMED_RERUN_BLOCK | 3 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-13 03:36 UTC | Exp 2004: EBM Transformer Reasoning Trace Evaluati | OK | 81 passed, 1 warning in 4.41s |
+| 2026-05-13 03:48 UTC | Exp 2005: Tier 4 Adaptive Energy Landscapes KAN | OK | 81 passed, 1 warning in 5.70s |
