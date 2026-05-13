@@ -3996,3 +3996,26 @@ and gating behavior based on the blocked artifacts (specifically prior_failures 
 ### REQ-ORCH-RETRO-001: Milestone .158 Pre-Retro Audit
 
 The Exp 2026 milestone .158 pre-retro audit workflow shall write `results/experiment_2026_milestone_158_pre_retro.json` by auditing the conductor log for SEAL generation and STKAN tasks, and reporting their completion statuses.
+
+### REQ-REPORT-158: Milestone .158 Retrospective Artifact
+
+The Exp 2027 milestone .158 retrospective workflow shall read the authoritative
+Exp 2026 result JSON artifact. It shall write `results/experiment_2027_milestone_158_retro.json`
+with:
+
+- `schema` set to `carnot.milestone_retro.v1`
+- `milestone` set to `2026.05.158`
+- `experiment_id` set to `2027`
+- `status`
+- `seal_success`
+- `stkan_success`
+- `recommendations`
+- `retro_complete`
+- `honest_verdict`
+
+### SCENARIO-REPORT-158-A: Milestone .158 Retrospective Analyzes SEAL and STKAN
+
+**Given** the .158 milestone pre-retro audit artifact (2026) contains the SEAL and STKAN task completion statuses
+**When** the Exp 2027 workflow runs
+**Then** it writes all required REQ-REPORT-158 fields to `results/experiment_2027_milestone_158_retro.json`
+**And** it accurately sets `seal_success` and `stkan_success` based on the pre-retro audit, and provides recommendations for the next milestone.
