@@ -4,6 +4,25 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-05-13 Post-.162 Planning Sweep (Milestone 2026.05.163)
+
+This sweep was run after milestone `.162` completed. The literature search revealed advances in Formal Verification of Kolmogorov-Arnold Networks (KANs), Piecewise Affine (PWA) abstractions, and Control Barrier Certificates.
+
+### Formal Verification of KANs using PWA and MILP
+- **Paper:** "Optimal Abstractions for Verifying Properties of KANs" (arXiv:2602.06737).
+- **What:** Introduces a framework replacing KAN B-splines with Piecewise Affine (PWA) abstractions and formulating constraint satisfaction as Mixed Integer Linear Programs (MILP).
+- **Relevance to Carnot:** Essential for Carnot's Phase 2/3 goals. Provides a mathematical method to definitively verify the KAN constraints via SMT solvers.
+
+### KAN4CBC: Synthesis of Safe KAN Controllers
+- **Paper:** "Formal Synthesis of Safe KAN Controllers" (IJCAI 2025).
+- **What:** Leverages pruning and symbolization properties of KANs for formal verification of safety constraints via SMT solvers.
+- **Relevance to Carnot:** Complements the PWA abstraction by using inherent KAN symbolization to simplify the verifiable logic paths.
+
+### LLM Constraint Extraction via SMT/Z3
+- **Paper:** "Neuro-Symbolic Verification via SMT" (arxiv 2601.17789).
+- **What:** Formalizing logic constraints as first-order logic and utilizing Z3 for zero-false-positive extraction.
+- **Relevance to Carnot:** Core strategy for rebuilding the constraint extractor (replacing ArithmeticExtractor) for instruction-tuned models.
+
 
 ## 2026-05-12 Post-.155 Planning Sweep (Milestone 2026.05.156)
 
