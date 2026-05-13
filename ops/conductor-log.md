@@ -2363,3 +2363,4 @@ IMPORTANT:
 | 2026-05-13 05:24 UTC | Exp 2008: Archive .156 and Activate .157 | FAIL | Gemini CLI error: you finish the real work inside 10 minutes, that is correct  |
 | 2026-05-13 05:27 UTC | Exp 2008: Archive .156 and Activate .157 | FAIL | Gemini CLI error: you finish the real work inside 10 minutes, that is correct  |
 | 2026-05-13 05:29 UTC | Exp 2009: EBM-CoT Latent Thought Calibration | DOOMED_RERUN_BLOCK | 7 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-13 05:31 UTC | Exp 2009: EBM-CoT Latent Thought Calibration | DOOMED_RERUN_BLOCK | 7 prior failure(s) match this task's scope but prior_failures field is missing o |
