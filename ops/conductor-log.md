@@ -2520,3 +2520,4 @@ IMPORTANT:
 | 2026-05-13 18:51 UTC | Exp 2074: Energy-Guided Decoding Scaling | DOOMED_RERUN_BLOCK | 9 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-13 18:53 UTC | Exp 2074: Energy-Guided Decoding Scaling | DOOMED_RERUN_BLOCK | 9 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-13 18:56 UTC | Exp 2074: Energy-Guided Decoding Scaling | DOOMED_RERUN_BLOCK | 9 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-13 18:58 UTC | Exp 2075: TSU Hardware Sampling Parity | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
