@@ -371,3 +371,20 @@ parity thresholds
 **And** the artifact records average RNG bits consumed per Knuth-Yao sample
 **And** it writes `results/experiment_2043_aia_knuth_yao.json` without a
 hardware execution claim.
+
+### REQ-SAMPLE-2059: TSUSampler thrml API Integration Stub
+
+Carnot MUST provide a `TSUSampler` interface inside `python/carnot/samplers/tsu_sampler.py` that mocks the `thrml` SDK API.
+
+Sub-requirements:
+- REQ-SAMPLE-2059-1: The module SHALL provide a `TSUSampler` class.
+- REQ-SAMPLE-2059-2: The `TSUSampler` SHALL expose a mock `thrml` SDK API.
+- REQ-SAMPLE-2059-3: The `TSUSampler` SHALL be wired into the Carnot sampler registry in `backend.py` as `"thrml_tsu"`.
+- REQ-SAMPLE-2059-4: An experiment deliverable SHALL be written to `results/experiment_2059_thrml_integration.json` to prove the interface is functional.
+
+### SCENARIO-SAMPLE-2059: TSUSampler Registration and Execution
+
+**Given** the Carnot sampler registry
+**When** the `"thrml_tsu"` backend is requested
+**Then** it returns an instance of `TSUSampler`
+**And** it writes `results/experiment_2059_thrml_integration.json`.
