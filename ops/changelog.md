@@ -5647,3 +5647,4 @@ Completed 15 experiments in 28.9 minutes. There were 0 compute-bound experiments
 - 2026-05-13: Exp 1995: Milestone .155 Retrospective (⚠️ Blocked) — honest_verdict=complete: milestone_155_retro_filed_6_completed_4_blocked_3_failed_gate_contract_gap_third_consecutive_fr11_curie_weiss_ship; results/experiment_1995_milestone_155_retro.json
 - 2026-05-13: Exp 1991: Corrected Curie-Weiss Parity (❌ Failed) — honest_verdict=failed: kl_0.0000_delta_88.6516; results/experiment_1991_curie_weiss_parity_correction.json
 - 2026-05-13: Exp 1991: Corrected Curie-Weiss Parity (❌ Failed) — honest_verdict=failed: kl_0.0000_delta_88.6516; results/experiment_1991_curie_weiss_parity_correction.json
+- 2026-05-13: Exp 1991: Corrected Curie-Weiss Parity (⚠️ Research Finding) — honest_verdict=success: kl_0.0130_delta_0.1439; results/experiment_1991_curie_weiss_parity_correction.json
