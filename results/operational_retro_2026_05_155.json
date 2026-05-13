@@ -1,0 +1,51 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.155",
+  "generated_at": "2026-05-13T02:01:59Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 53.2,
+  "experiments_completed": 29,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "-0400 [conductor] Exp 1991: Corrected Curie-Weiss Parity",
+      "duration_minutes": 6.1,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1995: Milestone .155 Retrospective",
+      "duration_minutes": 6.1,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1992: Residual-Drift Ledger",
+      "duration_minutes": 4.0,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1990: Non-Autoregressive Interface Audit",
+      "duration_minutes": 3.9,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1994: Milestone .155 Pre-Retro Audit",
+      "duration_minutes": 2.6,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Milestone 2026.05.155 completed 29 synthesis-only experiments in 53 minutes. The slowest tasks were Exp 1991 and Exp 1995 taking 6 minutes each.",
+  "bottlenecks_identified": [
+    "Synthesis-only tasks are the sole contributors to the 53 minutes of wall time."
+  ],
+  "improvements_suggested": [
+    "Optimize synthesis-only paths since they dominate the execution wall time."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Optimize the synthesis execution path.",
+    "Preserve fast-failing doomed-rerun blocks.",
+    "Maintain correct GPU idling on non-compute tasks."
+  ],
+  "estimated_time_savings_pct": 10,
+  "meta_reflection": "1. Which compute-bound experiments took the longest? No data available this milestone. 2. Was GPU utilization efficient? No data available this milestone. 3. Did parallel tasks fail to engage DualGPURunner? No data available this milestone. 4. Tooling change: optimize the synthesis path to reduce the 53-minute wall time for the 29 synthesis tasks."
+}

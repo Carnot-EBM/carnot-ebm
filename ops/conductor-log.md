@@ -2331,3 +2331,4 @@ IMPORTANT:
 | 2026-05-13 01:40 UTC | Exp 1994: Milestone .155 Pre-Retro Audit | FAIL | No file changes produced |
 | 2026-05-13 01:42 UTC | Exp 1993: Tri-SOTA E2E Integration v10 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1987-structure-snowballing-guardrail) |
 | 2026-05-13 01:47 UTC | Exp 1994: Milestone .155 Pre-Retro Audit | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1994_milesto |
+| 2026-05-13 01:55 UTC | Exp 1995: Milestone .155 Retrospective | OK | 81 passed, 1 warning in 5.47s |
