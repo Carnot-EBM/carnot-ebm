@@ -2463,3 +2463,5 @@ IMPORTANT:
 | 2026-05-13 10:11 UTC | Exp 2048: InEx-style Continuous Introspection | OK | 81 passed, 1 warning in 4.55s |
 | 2026-05-13 10:13 UTC | Exp 2049: Autonomous Self-Learning Latent Loop (FR | DOOMED_RERUN_BLOCK | 8 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-13 10:15 UTC | Exp 2049: Autonomous Self-Learning Latent Loop (FR | DOOMED_RERUN_BLOCK | 8 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-13 10:17 UTC | Exp 2049: Autonomous Self-Learning Latent Loop (FR | DOOMED_RERUN_BLOCK | 8 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-13 10:19 UTC | Exp 2050: Gated on Exp 2049 Utility > 0 - CCTU Val | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2049-self-learning-latent-loop) |
