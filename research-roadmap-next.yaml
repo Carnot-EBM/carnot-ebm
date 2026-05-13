@@ -1,0 +1,182 @@
+milestone: "2026.05.157"
+milestone_title: "Formal Verification, EBM-CoT Latent Refinement, and Tier 3 Predictive Learning"
+milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
+
+tasks:
+  - id: exp2008-archive-156-activate-157
+    milestone: "2026.05.157"
+    title: "Exp 2008: Archive .156 and Activate .157"
+    deliverable: "results/experiment_2008_archive_156_activate_157.json"
+    agent_type: "codex"
+    max_turns: 20
+    prompt: |
+      CONTEXT: Today is {date}. Workspace is {project_root}. We must archive the .156 deliverables.
+      EXISTING CODE TO READ FIRST: ops/status.md and ops/changelog.md
+      TASK: Move the project from .156 to .157.
+      CONCRETE STEPS:
+      1. Move previous milestone artifacts to an archive directory if needed.
+      2. Set up the milestone environment.
+      3. Write the results artifact.
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2009-ebm-cot-latent-calibration
+    milestone: "2026.05.157"
+    title: "Exp 2009: EBM-CoT Latent Thought Calibration"
+    deliverable: "results/experiment_2009_ebm_cot_latent_calibration.json"
+    agent_type: "codex"
+    prompt: |
+      CONTEXT: Today is {date}. Workspace is {project_root}. Recent research (arXiv:2511.07124) shows that refining latent "thought" representations via energy functions prevents cascading reasoning errors.
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/verify_repair.py
+      TASK: Implement EBM-CoT latent representation refinement.
+      MODEL_SPECS: unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, unsloth/gemma-4-26B-A4B-it-GGUF
+      CONCRETE STEPS:
+      1. Extract intermediate hidden states from local SOTA models.
+      2. Apply an energy function and Langevin dynamics to pull the representations to lower-energy regions.
+      3. Evaluate downstream accuracy compared to uncalibrated generation.
+      4. Write the results artifact.
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2010-far-continuous-latent-generation
+    milestone: "2026.05.157"
+    title: "Exp 2010: FAR Continuous Latent Generation"
+    deliverable: "results/experiment_2010_far_continuous_latent_generation.json"
+    prompt: |
+      CONTEXT: Today is {date}. Workspace is {project_root}. We need fast sampling in continuous latent space (FAR framework).
+      EXISTING CODE TO READ FIRST: python/carnot/inference/samplers.py
+      TASK: Implement FAR (Fast Autoregressive) continuous latent constraint sampler.
+      MODEL_SPECS: unsloth/gemma-4-31B-it-GGUF
+      CONCRETE STEPS:
+      1. Design a continuous latent sampler.
+      2. Compare sampling speed to traditional discrete MCMC methods.
+      3. Record latency distributions.
+      4. Write the results artifact.
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2011-kan-optimal-abstractions-milp
+    milestone: "2026.05.157"
+    title: "Exp 2011: Optimal Abstractions for KAN Verification (MILP)"
+    deliverable: "results/experiment_2011_kan_optimal_abstractions_milp.json"
+    model: "opus"
+    max_turns: 100
+    prompt: |
+      CONTEXT: Today is {date}. Workspace is {project_root}. KANs need formal safety verification (Schwartz et al., Feb 2026).
+      EXISTING CODE TO READ FIRST: python/carnot/models/kaem_energy.py
+      TASK: Implement Piecewise Affine (PWA) abstractions and MILP verification for KAN tiers.
+      CONCRETE STEPS:
+      1. Build a translation layer to convert spline components into PWA abstractions.
+      2. Interface with an external MILP solver to prove bounds constraints.
+      3. Evaluate the abstraction accuracy vs solve time trade-off.
+      4. Write the results artifact.
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2012-kan4cbc-safety-certificates
+    milestone: "2026.05.157"
+    title: "Exp 2012: KAN4CBC Barrier Certificates"
+    deliverable: "results/experiment_2012_kan4cbc_safety_certificates.json"
+    gated_on:
+      - upstream: exp2011-kan-optimal-abstractions-milp
+        artifact_field: success
+        op: "=="
+        value: true
+    prompt: |
+      CONTEXT: Today is {date}. Workspace is {project_root}. We can formally synthesize safe KAN controllers using control barrier certificates (Zhang et al., 2026).
+      EXISTING CODE TO READ FIRST: python/carnot/models/kaem_energy.py
+      TASK: Synthesize Control Barrier Certificates (CBC) using KAN representations.
+      CONCRETE STEPS:
+      1. Extend the KAN layers to enforce barrier certificates during inference.
+      2. Evaluate formal safety bounds against traditional constraint generators.
+      3. Write the results artifact.
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2013-tier3-predictive-verification-fr11
+    milestone: "2026.05.157"
+    title: "Exp 2013: Tier 3 Predictive Verification (FR-11)"
+    deliverable: "results/experiment_2013_tier3_predictive_verification_fr11.json"
+    agent_type: "codex"
+    prompt: |
+      CONTEXT: Today is {date}. Workspace is {project_root}. Mandatory continuous self-learning task. Tier 3 requires preemptively predicting constraint violations before LLMs finish generation.
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/verify_repair.py
+      TASK: Train and implement a JEPA-style predictor for preemptive verification.
+      MODEL_SPECS: unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-26B-A4B-it-GGUF
+      CONCRETE STEPS:
+      1. Construct a small predictor model mapping partial generated tokens to eventual constraint violations.
+      2. Integrate into a preemptive guided decoding loop.
+      3. Emit `continuous_self_learning_task` metrics.
+      4. Write the results artifact.
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2014-preemptive-decoding-latency-benchmark
+    milestone: "2026.05.157"
+    title: "Exp 2014: Preemptive Decoding Latency Baseline"
+    deliverable: "results/experiment_2014_preemptive_decoding_latency_benchmark.json"
+    gated_on:
+      - upstream: exp2013-tier3-predictive-verification-fr11
+        artifact_field: success
+        op: "=="
+        value: true
+    prompt: |
+      CONTEXT: Today is {date}. Workspace is {project_root}. We need hardware-level proof that Tier 3 learning can run continuously.
+      EXISTING CODE TO READ FIRST: ops/e2e-test-plan.md
+      TASK: Benchmark Tier 3 predictive decoding against standard reactive verification.
+      MODEL_SPECS: unsloth/gemma-4-31B-it-GGUF
+      CONCRETE STEPS:
+      1. Measure inference latency across 100 benchmark queries using preemptive decoding.
+      2. Output comparison to standard VerifyRepairPipeline bounds.
+      3. Write the results artifact.
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2015-kan-lut-hardware-accounting
+    milestone: "2026.05.157"
+    title: "Exp 2015: KAN LUT Hardware Accounting"
+    deliverable: "results/experiment_2015_kan_lut_hardware_accounting.json"
+    model: "opus"
+    max_turns: 100
+    prompt: |
+      CONTEXT: Today is {date}. Workspace is {project_root}. KANELÉ (arXiv:2512.12850) shows how to deploy KANs on FPGAs via LUTs. We need this for KV260 integration.
+      EXISTING CODE TO READ FIRST: python/carnot/models/kaem_energy.py
+      TASK: Perform no-synthesis hardware accounting for LUT-based KAN representations.
+      CONCRETE STEPS:
+      1. Convert S2KAN energy functions into generic LUT approximations.
+      2. Measure simulated inference speed and FPGA area estimation.
+      3. Write the results artifact.
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2016-milestone-157-pre-retro
+    milestone: "2026.05.157"
+    title: "Exp 2016: Milestone .157 Pre-Retro Audit"
+    deliverable: "results/experiment_2016_milestone_157_pre_retro.json"
+    max_turns: 20
+    prompt: |
+      CONTEXT: Today is {date}. Workspace is {project_root}. We need to prepare for the milestone retrospective.
+      EXISTING CODE TO READ FIRST: ops/status.md and ops/changelog.md
+      TASK: Audit the .157 artifacts.
+      CONCRETE STEPS:
+      1. Verify all .157 artifacts exist and contain valid schema.
+      2. Check continuous self-learning compliance.
+      3. Write the results artifact.
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2017-milestone-157-retro
+    milestone: "2026.05.157"
+    title: "Exp 2017: Milestone .157 Retrospective"
+    deliverable: "results/experiment_2017_milestone_157_retro.json"
+    max_turns: 50
+    prompt: |
+      CONTEXT: Today is {date}. Workspace is {project_root}.
+      EXISTING CODE TO READ FIRST: ops/status.md and ops/changelog.md
+      TASK: Perform the operational retrospective.
+      CONCRETE STEPS:
+      1. Summarize milestone .157 execution.
+      2. Record execution bottlenecks and gating behavior.
+      3. Write the results artifact.
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
