@@ -1,0 +1,50 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.154",
+  "generated_at": "2026-05-13T00:26:39Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 64.6,
+  "experiments_completed": 29,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "-0400 [conductor] Exp 1972: RUN-CSP Prototype for Unsupervised Solvers",
+      "duration_minutes": 10.2,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1981: Milestone .154 Retrospective",
+      "duration_minutes": 7.1,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1973: DeepSaDe Hybrid MaxSMT Guarantees",
+      "duration_minutes": 5.1,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1975: Energy Outcome Reward Model (EORM)",
+      "duration_minutes": 4.4,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1980: Milestone .154 Pre-Retro Audit",
+      "duration_minutes": 4.4,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Milestone 2026.05.154 completed 29 experiments in 64.6 minutes. All experiments were synthesis-only, resulting in an average duration of 2 minutes per experiment with no compute-bound tasks executed.",
+  "bottlenecks_identified": [
+    "No GPU bottlenecks were identified as all tasks were synthesis-only. The longest experiment (-0400 [conductor] Exp 1972) took 10.2 minutes, which is longer than the average."
+  ],
+  "improvements_suggested": [
+    "Investigate synthesis task profiling for the longest running experiments (like Exp 1972) to see if code generation or reasoning can be accelerated."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Profile Exp 1972 (RUN-CSP Prototype) to find slow synthesis steps.",
+    "Review overall prompt sizes and synthesis loops for tasks taking longer than 5 minutes."
+  ],
+  "estimated_time_savings_pct": 10,
+  "meta_reflection": "A highly efficient synthesis-only milestone with zero doomed-rerun overhead or compute-bound bottlenecks."
+}
