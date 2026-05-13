@@ -1303,3 +1303,27 @@ Given a trained or initialized CarnotKAN,
 When GloroKAN robustness verification is applied via B-splines algebraic geometry,
 Then it computes the local Lipschitz bounds, records them, and outputs to
 `results/experiment_2070_glorokan.json`.
+
+## REQ-KAN-2071: Discrete Symbolic Embedding in CarnotKAN
+
+The KAN capability MUST add discrete symbolic embedding capabilities to `CarnotKAN`.
+It MUST implement hierarchical gating for symbolic primitive discovery and be able to
+train on a simple logic task (e.g., AND/XOR constraints) to measure the accuracy of
+discovered symbols.
+
+**Rationale:**
+    To support interpretable symbolic primitives, `CarnotKAN` needs hierarchical
+    gating that can discover correct symbolic operations from data.
+
+**Acceptance criteria:**
+    - `python/carnot/models/kan/glorokan.py` (or appropriate module) implements
+      hierarchical gating in `CarnotKAN`.
+    - Tests verify the logic on a simple logic task and achieve 100% test coverage.
+    - `results/experiment_2071_symbolic_kan.json` is generated correctly.
+
+### SCENARIO-KAN-2071: Symbolic primitive discovery via hierarchical gating
+
+Given `CarnotKAN` with discrete symbolic embeddings,
+When trained on a simple logic task (e.g., AND/XOR constraints),
+Then it discovers the correct symbols with measurable accuracy, tests pass,
+and `results/experiment_2071_symbolic_kan.json` is written.
