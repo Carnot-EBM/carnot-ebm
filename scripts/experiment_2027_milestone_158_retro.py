@@ -1,69 +1,88 @@
-"""Exp 2027: Milestone .158 Retrospective."""
+#!/usr/bin/env python3
+"""
+Generate Milestone 158 Retrospective based on pre-retro audit.
+"""
+
 import json
 import os
 from pathlib import Path
 
-
 def generate_retro(project_root: str) -> dict:
     """Generate the milestone 158 retrospective based on the pre-retro audit."""
-    results_dir = Path(project_root) / "results"
+    root = Path(project_root)
+    results_dir = root / "results"
     pre_retro_file = results_dir / "experiment_2026_milestone_158_pre_retro.json"
     
-    seal_success = False
-    stkan_success = False
-    status = "failure"
+    if not pre_retro_file.exists():
+        return {
+            "schema": "carnot.milestone_retro.v1",
+            "milestone": "2026.05.158",
+            "experiment_id": 2027,
+            "status": "failure",
+            "seal_success": False,
+            "stkan_success": False,
+            "recommendations": ["Ensure pre-retro artifact is generated."],
+            "retro_complete": False,
+            "honest_verdict": "Pre-retro artifact missing"
+        }
+        
+    try:
+        with pre_retro_file.open("r") as f:
+            pre_retro = json.load(f)
+    except Exception as e:
+        return {
+            "schema": "carnot.milestone_retro.v1",
+            "milestone": "2026.05.158",
+            "experiment_id": 2027,
+            "status": "failure",
+            "seal_success": False,
+            "stkan_success": False,
+            "recommendations": [f"Fix unreadable pre-retro artifact: {e}"],
+            "retro_complete": False,
+            "honest_verdict": "Pre-retro artifact unreadable"
+        }
+        
+    seal_success = pre_retro.get("seal_tasks_completed", False)
+    stkan_success = pre_retro.get("stkan_tasks_completed", False)
     
-    if pre_retro_file.exists():
-        try:
-            with open(pre_retro_file, "r", encoding="utf-8") as f:
-                data = json.load(f)
-                
-            seal_success = data.get("seal_tasks_completed", False)
-            stkan_success = data.get("stkan_tasks_completed", False)
-            status = data.get("status", "failure")
-            
-        except json.JSONDecodeError:
-            pass
-            
-    # Formulate recommendations based on the outcome
     recommendations = []
-    if not seal_success:
-        recommendations.append("SEAL learning loop requires debugging and stabilization before next phase.")
-    if not stkan_success:
-        recommendations.append("STKAN prototype failed to complete; investigate constraints and model boundaries.")
     if seal_success and stkan_success:
-        recommendations.append("Proceed to next milestone; SEAL and STKAN are stable.")
-        
-    honest_verdict = f"Milestone .158 Retrospective: SEAL success={seal_success}, STKAN success={stkan_success}. "
-    if seal_success and stkan_success:
-        honest_verdict += "All key capabilities validated."
+        recommendations.append("Both SEAL and STKAN goals were met. Proceed to next milestone.")
+        verdict = "Milestone .158 retrospective complete. Both SEAL and STKAN succeeded."
+    elif not seal_success and not stkan_success:
+        recommendations.append("Investigate GATE_BLOCK in SEAL loop and failures in STKAN prototype before attempting to proceed.")
+        verdict = "Milestone .158 retrospective complete. Both SEAL and STKAN failed."
     else:
-        honest_verdict += "Failed capabilities must be addressed in the next cycle."
+        if not seal_success:
+            recommendations.append("SEAL tasks failed. Investigate continuous learning loop gate blocks.")
+        if not stkan_success:
+            recommendations.append("STKAN tasks failed. Debug spatio-temporal constraint model errors.")
+        verdict = "Milestone .158 retrospective complete. Partial success."
         
-    return {
+    result = {
         "schema": "carnot.milestone_retro.v1",
         "milestone": "2026.05.158",
         "experiment_id": 2027,
-        "status": status,
+        "status": "complete",
         "seal_success": seal_success,
         "stkan_success": stkan_success,
         "recommendations": recommendations,
         "retro_complete": True,
-        "honest_verdict": honest_verdict
+        "honest_verdict": verdict
     }
+    
+    return result
 
-
-def main() -> None:
+def main():
     """Execute the retrospective generation and write the JSON deliverable."""
-    root = os.environ.get("PROJECT_ROOT", ".")
-    res = generate_retro(root)
-    out_path = Path(root) / "results" / "experiment_2027_milestone_158_retro.json"
-    out_path.parent.mkdir(parents=True, exist_ok=True)
-    with open(out_path, "w", encoding="utf-8") as f:
-        json.dump(res, f, indent=2)
+    project_root = os.environ.get("PROJECT_ROOT", os.getcwd())
+    result = generate_retro(project_root)
+    
+    out_file = Path(project_root) / "results" / "experiment_2027_milestone_158_retro.json"
+    out_file.parent.mkdir(parents=True, exist_ok=True)
+    with out_file.open("w") as f:
+        json.dump(result, f, indent=2)
         f.write("\n")
-    print(f"Wrote {out_path}")
-
-
+        
 if __name__ == "__main__":
     main()
