@@ -2338,3 +2338,4 @@ IMPORTANT:
 | 2026-05-13 02:28 UTC | Exp 1991: Corrected Curie-Weiss Parity | OK | 84 passed, 1 warning in 5.26s |
 | 2026-05-13 02:30 UTC | Milestone 2026.05.156 activated | OK | 12 tasks queued |
 | 2026-05-13 02:51 UTC | Exp 1996: NSVIF/Z3 SMT Constraint Extractor | OK | 81 passed, 1 warning in 5.68s |
+| 2026-05-13 02:53 UTC | Exp 1997: LLM-as-Extractor Pipeline | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
