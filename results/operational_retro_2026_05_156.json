@@ -1,0 +1,49 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.156",
+  "generated_at": "2026-05-13T04:09:36Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 77.0,
+  "experiments_completed": 28,
+  "compute_bound_experiments_count": 12,
+  "slowest_experiments": [
+    {
+      "experiment": "-0400 [conductor] Exp 1996: NSVIF/Z3 SMT Constraint Extractor",
+      "duration_minutes": 18.8,
+      "compute_bound": true
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 2005: Tier 4 Adaptive Energy Landscapes KAN",
+      "duration_minutes": 10.3,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 2007: Milestone .156 Retrospective",
+      "duration_minutes": 6.5,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 2006: Milestone .156 Pre-Retro Audit",
+      "duration_minutes": 5.0,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1998: Live GPU Baselines on GSM8K",
+      "duration_minutes": 4.6,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "summary": "In milestone 2026.05.156, a total of 28 experiments were completed over 77.0 wall-clock minutes. Out of these, 12 were compute-bound experiments, while the rest were synthesis-only.",
+  "bottlenecks_identified": [
+    "The primary bottleneck was the 19-minute execution time of the compute-bound Exp 1996: NSVIF/Z3 SMT Constraint Extractor."
+  ],
+  "improvements_suggested": [
+    "Investigate performance bottlenecks in the NSVIF/Z3 SMT Constraint Extractor to reduce its 19-minute execution time."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Profile Exp 1996 to identify optimization opportunities for the SMT constraint extractor."
+  ],
+  "estimated_time_savings_pct": 10,
+  "meta_reflection": "Execution was generally efficient, with a 3-minute average per experiment and no inappropriate GPU idling flagged on compute-bound tasks. Optimizing the longest compute-bound task would yield the greatest time savings for future milestones."
+}

@@ -1,5 +1,9 @@
 # Carnot — Changelog
 
+## 2026-05-13 (Milestone 2026.05.156 Operational Retrospective)
+
+- Milestone 2026.05.156 operational retrospective complete. Analyzed 77.0 min wall time / 28 experiments (avg 3 min). Slowest path: Exp 1996 (19 min, compute-bound). GPU correctly maintained efficient utilization on compute-bound tasks, with no anomalous idling flagged. Identified the NSVIF/Z3 SMT Constraint Extractor execution time as the primary bottleneck to investigate.
+
 ## 2026-05-13 (Milestone 2026.05.155 Operational Retrospective)
 
 - Milestone 2026.05.155 operational retrospective complete. Analyzed 53.2 min wall time / 29 synthesis-only experiments (avg 2 min). Slowest path: Exp 1991 and Exp 1995 (6 min each, synthesis-only). GPU correctly idled at 0% utilization because all 29 tasks were synthesis-only (0 compute-bound tasks). Identified synthesis pipeline optimization as the primary tooling change needed for the next milestone.
