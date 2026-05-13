@@ -2349,3 +2349,4 @@ IMPORTANT:
 | 2026-05-13 03:19 UTC | Exp 2001: RUN-CSP Unsupervised Message Passing | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-13 03:21 UTC | Exp 2002: COLD Decoding Integration | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-13 03:23 UTC | Exp 2002: COLD Decoding Integration | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-13 03:25 UTC | Exp 2002: COLD Decoding Integration | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
