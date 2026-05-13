@@ -1281,3 +1281,25 @@ Then complex regions gain knots, smooth regions lose knots where allowed,
 the refined energy remains finite on probe inputs, structural-change metrics
 record the topology delta, and
 `results/experiment_2005_adaptive_energy_landscapes_kan.json` is complete.
+
+## REQ-KAN-2070: GloroKAN Robustness Verification for CarnotKAN
+
+The KAN capability MUST implement local Lipschitz constant approximation via B-splines
+to verify the robustness of `CarnotKAN`. It MUST record verification bounds to JSON.
+
+**Rationale:**
+    GloroKAN leverages algebraic geometry of B-splines to verify KAN robustness.
+    By finding the local Lipschitz constant, we can ensure the network's behavior
+    is bounded under small perturbations.
+
+**Acceptance criteria:**
+    - `python/carnot/models/kan/glorokan.py` implements the GloroKAN robustness verifier and `CarnotKAN`.
+    - Tests verify the robustness of a small synthetic constraint system.
+    - `results/experiment_2070_glorokan.json` is written with bounds and status.
+
+### SCENARIO-KAN-2070: Verify CarnotKAN robustness
+
+Given a trained or initialized CarnotKAN,
+When GloroKAN robustness verification is applied via B-splines algebraic geometry,
+Then it computes the local Lipschitz bounds, records them, and outputs to
+`results/experiment_2070_glorokan.json`.
