@@ -1,209 +1,205 @@
-milestone: "2026.05.159"
-milestone_title: "Continuous Latent EBRMs, Formal KAN Verification, and GEC Continual Learning"
-milestone_doc: "openspec/change-proposals/research-roadmap-v159.md"
+milestone: "2026.05.160"
+milestone_title: "Continuous Latent Equilibrium Matching, AIA Hardware Simulation, and Self-Improving Latent Verification"
+milestone_doc: "openspec/change-proposals/research-roadmap-v160.md"
 
 tasks:
-  - id: exp2028-archive-158-activate-159
-    title: "Exp 2028: Archive .158 and Activate .159 (Opus Bootstrapper)"
-    deliverable: ops/status.md
-    model: opus
+  - id: exp2040-far-latent-smoke
+    title: "Exp 2040: FAR Continuous Latent Generation Smoke Test"
+    deliverable: results/experiment_2040_far_latent_smoke.json
+    max_turns: 50
+    prompt: |
+      CONTEXT: We need to transition from discrete token generation to continuous latent spaces for faster, verifiable generation (FAR - Fast Autoregressive models).
+      EXISTING CODE TO READ FIRST: `scripts/experiment_template.py`, `ops/status.md`.
+      TASK: Implement a CPU-only smoke test simulating FAR continuous latent steps using mandated SOTA GGUF models.
+      CONCRETE STEPS:
+      1. Create a minimal Fast Autoregressive (FAR) continuous latent simulation script.
+      2. Use `cached_sota_pair()`: `unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF`.
+      3. Evaluate generation latency and energy coherence.
+      4. Save results to the deliverable JSON.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2041-eqm-gradient-landscape
+    title: "Exp 2041: Equilibrium Matching (EqM) Gradient Probing"
+    deliverable: results/experiment_2041_eqm_gradients.json
+    max_turns: 50
+    prompt: |
+      CONTEXT: Equilibrium Matching (EqM) provides a framework to learn the equilibrium gradient of implicit energy landscapes for optimization-driven inference.
+      EXISTING CODE TO READ FIRST: `scripts/experiment_template.py`.
+      TASK: Prototype an EqM gradient extraction step on top of the FAR continuous space.
+      CONCRETE STEPS:
+      1. Build a script to map hidden states from `unsloth/gemma-4-26B-A4B-it-GGUF` to an energy landscape gradient.
+      2. Test optimization-driven refinement on 10 toy constraints.
+      3. Save validation results.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2042-arm-ebm-bijection-telemetry
+    title: "Exp 2042: ARM-EBM Bijection Telemetry Bounds"
+    deliverable: results/experiment_2042_arm_ebm_bijection.json
     max_turns: 30
     prompt: |
-      CONTEXT: We are closing milestone .158 and beginning .159. The previous archive task timed out. We are using Opus to ensure this bootstrapping task succeeds rapidly.
-      EXISTING CODE TO READ FIRST:
-      - ops/status.md
-      - openspec/change-proposals/research-roadmap-v159.md
-      TASK: Update the operational status document to reflect the start of milestone 2026.05.159.
+      CONTEXT: The Blondel et al. paper establishes a mathematical bijection between ARMs and EBMs. We will use this to convert logprobs to energy bounds.
+      EXISTING CODE TO READ FIRST: `scripts/experiment_template.py`, telemetry artifacts from `.159`.
+      TASK: Create a telemetry adapter mapping top-k logprobs to EBM bounds.
       CONCRETE STEPS:
-      1. Move milestone .158 to "Completed Milestones" in ops/status.md.
-      2. Update the "Current Milestone" to 2026.05.159.
-      3. CRITICAL: write artifact FIRST. Update ops/status.md immediately.
+      1. Extract logprobs from `unsloth/Qwen3.6-35B-A3B-GGUF` on 5 prompts.
+      2. Apply the ARM-EBM bijection to estimate partition function bounds and local energy.
+      3. Save telemetry data to JSON.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2029-sota-gguf-runtime-repair
-    title: "Exp 2029: Local SOTA GGUF Runtime Preflight"
-    deliverable: results/experiment_2029_sota_runtime_preflight.json
+  - id: exp2043-aia-knuth-yao-sim
+    title: "Exp 2043: AIA Knuth-Yao Hardware Simulator"
+    deliverable: results/experiment_2043_aia_knuth_yao.json
+    max_turns: 50
+    agent_type: codex
+    model: gpt-5.5
+    prompt: |
+      CONTEXT: Approximate Inference Accelerator (AIA) designs use Knuth-Yao samplers to reduce RNG consumption in probabilistic hardware.
+      EXISTING CODE TO READ FIRST: `scripts/experiment_template.py`.
+      TASK: Write a software simulator for Knuth-Yao sampling in Carnot's sampler abstractions.
+      CONCRETE STEPS:
+      1. Implement `KnuthYaoSampler` in Python.
+      2. Test parity against standard RNG for 10,000 samples on a discrete distribution.
+      3. Save statistical parity test results.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2044-gumbel-sampler-sim
+    title: "Exp 2044: AIA Gumbel Sampler Simulator"
+    deliverable: results/experiment_2044_aia_gumbel.json
+    max_turns: 50
+    agent_type: codex
+    model: gpt-5.5
+    prompt: |
+      CONTEXT: AIA architectures utilize Gumbel samplers for continuous categorical constraints.
+      EXISTING CODE TO READ FIRST: `scripts/experiment_template.py`.
+      TASK: Implement a Gumbel sampler simulator for continuous energy landscapes.
+      CONCRETE STEPS:
+      1. Implement `ContinuousGumbelSampler` in Python.
+      2. Apply it to the EqM gradient landscape from Exp 2041.
+      3. Evaluate convergence speed vs Metropolis-Hastings.
+      4. Save simulation results.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2045-hardware-accounting-aia
+    title: "Exp 2045: AIA Hardware Resource Accounting (No Synthesis)"
+    deliverable: results/experiment_2045_aia_accounting.json
+    max_turns: 20
     model: opus
-    max_turns: 40
     prompt: |
-      CONTEXT: We must verify the local SOTA runtime is functional before executing continuous latent refinement or SEAL FR-11 loops.
-      EXISTING CODE TO READ FIRST:
-      - scripts/experiment_template.py
-      TASK: Create a Python script that tests the local llama.cpp GGUF runtime with the mandated SOTA models.
+      CONTEXT: We need hardware complexity metrics (BOP/NABS) for the AIA Knuth-Yao and Gumbel samplers before any future FPGA deployment.
+      EXISTING CODE TO READ FIRST: `ops/status.md`, hardware accounting artifacts from `.159`.
+      TASK: Compute Bit Operations (BOP) and Number of Additions/Bit-Shifts (NABS) for the samplers.
       CONCRETE STEPS:
-      1. Write scripts/experiment_2029_sota_runtime_preflight.py.
-      2. It MUST use the `cached_sota_pair()` or attempt to load `unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF`.
-      3. Test a simple completion.
-      4. Write the results to results/experiment_2029_sota_runtime_preflight.json. Include `usable_response` and `live_sota_model_inference_used` fields.
+      1. Calculate BOP and NABS bounds analytically based on the simulator logic.
+      2. Output the metrics with `hardware_execution_claim=false`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2030-compositional-energy-stub
-    title: "Exp 2030: Compositional Energy Minimization Prototype"
-    deliverable: results/experiment_2030_compositional_energy_stub.json
-    gated_on:
-      - upstream: exp2029-sota-gguf-runtime-repair
-        artifact_field: usable_response
-        op: "=="
-        value: true
-    max_turns: 40
-    prompt: |
-      CONTEXT: Based on "Generalizable Reasoning through Compositional Energy Minimization", we want to decompose a problem into sub-energies.
-      EXISTING CODE TO READ FIRST:
-      - scripts/experiment_template.py
-      TASK: Implement a prototype of compositional energy scoring for constraint satisfaction.
-      CONCRETE STEPS:
-      1. Write scripts/experiment_2030_compositional_energy_stub.py.
-      2. Define two simple orthogonal constraints as separate continuous energy functions.
-      3. Evaluate parallel energy minimization on mock latent vectors.
-      4. Write the results artifact indicating `compositional_energy_success=true`.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp2031-continuous-latent-ebrm
-    title: "Exp 2031: Continuous Latent EBRM Trace Editing"
-    deliverable: results/experiment_2031_continuous_latent_ebrm.json
-    gated_on:
-      - upstream: exp2030-compositional-energy-stub
-        artifact_field: compositional_energy_success
-        op: "=="
-        value: true
+  - id: exp2046-clara-latent-compression
+    title: "Exp 2046: CLaRa Semantic Compression Prototype"
+    deliverable: results/experiment_2046_clara_compression.json
     max_turns: 50
     prompt: |
-      CONTEXT: We must move beyond autoregressive sampling to continuous latent reasoning, applying energy gradients to trace embeddings.
-      EXISTING CODE TO READ FIRST:
-      - scripts/experiment_2030_compositional_energy_stub.py
-      TASK: Implement gradient-based refinement on continuous embeddings before decoding.
+      CONTEXT: CLaRa uses Semantic Compression with Paraphrasing (SCP) to build a dense continuous latent space for retrieval and generation.
+      EXISTING CODE TO READ FIRST: `scripts/experiment_template.py`.
+      TASK: Prototype SCP on a small constraint rulebook using local SOTA models.
       CONCRETE STEPS:
-      1. Write scripts/experiment_2031_continuous_latent_ebrm.py.
-      2. Use an embedding space (simulated or real SOTA embeddings) to represent a reasoning trace.
-      3. Apply energy gradients from the compositional constraints to iteratively edit the trace.
-      4. Save the convergence metrics to results/experiment_2031_continuous_latent_ebrm.json.
+      1. Use `unsloth/Qwen3.6-35B-A3B-GGUF` to paraphrase and compress 50 CCTU constraints into dense vector embeddings.
+      2. Evaluate reconstruction/retrieval accuracy.
+      3. Save the compression metrics.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2032-ebrm-deterministic-validation
-    title: "Exp 2032: EBRM Deterministic Zero-False-Accept Gate"
-    deliverable: results/experiment_2032_ebrm_deterministic_validation.json
+  - id: exp2047-continuous-verifier-integration
+    title: "Exp 2047: Continuous Latent Verifier Integration"
+    deliverable: results/experiment_2047_continuous_verifier.json
+    max_turns: 50
     gated_on:
-      - upstream: exp2031-continuous-latent-ebrm
+      - upstream: exp2041-eqm-gradient-landscape
         artifact_field: convergence_success
-        op: "=="
+        op: '=='
         value: true
-    agent_type: codex
-    max_turns: 40
     prompt: |
-      CONTEXT: Any continuous latent refinement must be bounded by deterministic validators to prevent "hallucinated feasibility".
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/pipeline/verify_repair.py
-      TASK: Pass the decoded EBRM traces through PySAT/Z3 to guarantee zero false accepts.
+      CONTEXT: Integrate the EqM gradients and CLaRa latent compression into a single continuous verifier.
+      EXISTING CODE TO READ FIRST: `scripts/experiment_template.py`.
+      TASK: Build a verifier that evaluates FAR-generated continuous latents against CLaRa-compressed constraints.
       CONCRETE STEPS:
-      1. Write scripts/experiment_2032_ebrm_deterministic_validation.py.
-      2. Decode the latent embeddings and run the formal verifier.
-      3. Write results artifact. Include `soundness_mistakes`, `completeness_mistakes`, and `valid_traces_retained`.
+      1. Connect the FAR latent outputs to the EqM landscape structured by the SCP vectors.
+      2. Score 20 reasoning traces in the continuous domain.
+      3. Save the verification accuracy compared to discrete token evaluation.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2033-kan-pwa-abstraction
-    title: "Exp 2033: KAN Piecewise Affine (PWA) Abstraction"
-    deliverable: results/experiment_2033_kan_pwa_abstraction.json
-    agent_type: codex
-    max_turns: 40
-    prompt: |
-      CONTEXT: To formally verify KANs, we must abstract their nonlinear splines into Piecewise Affine (PWA) regions.
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/models/kan_tier.py
-      TASK: Implement a PWA extractor for existing Carnot KAN models.
-      CONCRETE STEPS:
-      1. Write scripts/experiment_2033_kan_pwa_abstraction.py.
-      2. Load a simple KAN constraint model.
-      3. Extract PWA bounds for its activation functions.
-      4. Save the abstraction metrics to the JSON artifact. Include `pwa_extraction_success=true`.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp2034-kan-milp-verification
-    title: "Exp 2034: KAN Formal Verification via MILP"
-    deliverable: results/experiment_2034_kan_milp_verification.json
-    gated_on:
-      - upstream: exp2033-kan-pwa-abstraction
-        artifact_field: pwa_extraction_success
-        op: "=="
-        value: true
-    agent_type: codex
+  - id: exp2048-inex-introspection
+    title: "Exp 2048: InEx-style Continuous Introspection"
+    deliverable: results/experiment_2048_inex_introspection.json
     max_turns: 50
     prompt: |
-      CONTEXT: With PWA abstractions, we can formulate KAN safety bounds as a Mixed Integer Linear Programming (MILP) problem.
-      EXISTING CODE TO READ FIRST:
-      - scripts/experiment_2033_kan_pwa_abstraction.py
-      TASK: Formally verify the KAN model bounds using a MILP solver (e.g., PuLP or SciPy).
+      CONTEXT: InEx mitigates hallucinations through introspection before final output. We apply this to our continuous verifier.
+      EXISTING CODE TO READ FIRST: `scripts/experiment_template.py`.
+      TASK: Implement an introspection gate that rejects high-energy FAR latent steps before decoding to tokens.
       CONCRETE STEPS:
-      1. Write scripts/experiment_2034_kan_milp_verification.py.
-      2. Encode the PWA constraints into a MILP problem.
-      3. Verify a specific bound (e.g., maximum energy violation).
-      4. Write the formal verification certificate to the artifact. Include `milp_bounds_verified=true`.
+      1. Set an energy threshold using the continuous verifier.
+      2. Generate responses with `unsloth/gemma-4-31B-it-GGUF`.
+      3. If a continuous step exceeds the threshold, resample using the Gumbel simulator.
+      4. Save false accept/reject rates.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2035-fr11-gec-epsilon-constraint
-    title: "Exp 2035: GEC Epsilon-Constraint Continual Learning"
-    deliverable: results/experiment_2035_fr11_gec_epsilon_constraint.json
+  - id: exp2049-self-learning-latent-loop
+    title: "Exp 2049: Autonomous Self-Learning Latent Loop (FR-11)"
+    deliverable: results/experiment_2049_self_learning_loop.json
     max_turns: 50
     prompt: |
-      CONTEXT: Gradient-Guided Epsilon Constraints (GEC) rigorously prevent catastrophic forgetting by projecting policy gradients over memory samples.
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/pipeline/verify_repair.py
-      TASK: Implement the GEC update rule for the FR-11 continual learning policy buffer.
+      CONTEXT: The PRD requires autonomous self-learning without forgetting (FR-11).
+      EXISTING CODE TO READ FIRST: `ops/status.md`.
+      TASK: Run a self-learning loop using EqM and Gumbel sampling, measuring soundness vs completeness.
       CONCRETE STEPS:
-      1. Write scripts/experiment_2035_fr11_gec_epsilon_constraint.py.
-      2. Calculate the constraint gradients for historical memory samples.
-      3. Project the new learning update gradient to respect the epsilon slack.
-      4. Write the optimization details to the JSON artifact.
+      1. Initialize a baseline verifier policy.
+      2. Run 10 iterations of policy updates driven by continuous energy gradients.
+      3. Measure `soundness_mistakes`, `completeness_mistakes`, and `utility_delta`.
+      4. Save the learning trajectory.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2036-fr11-gec-zero-forgetting
-    title: "Exp 2036: GEC Memory Retention & Zero-Forgetting Verification"
-    deliverable: results/experiment_2036_fr11_gec_zero_forgetting.json
+  - id: exp2050-self-learning-validation
+    title: "Exp 2050: Gated on Exp 2049 Utility > 0 - CCTU Validation"
+    deliverable: results/experiment_2050_cctu_validation.json
+    max_turns: 50
     gated_on:
-      - upstream: exp2035-fr11-gec-epsilon-constraint
-        artifact_field: gec_update_success
-        op: "=="
-        value: true
-    max_turns: 40
+      - upstream: exp2049-self-learning-latent-loop
+        artifact_field: utility_delta
+        op: '>'
+        value: 0.0
     prompt: |
-      CONTEXT: We must verify that the GEC update rule results in positive utility without any forgetting.
-      EXISTING CODE TO READ FIRST:
-      - scripts/experiment_2035_fr11_gec_epsilon_constraint.py
-      TASK: Evaluate the GEC-updated policy against the historical FR-11 memory buffer.
+      CONTEXT: Validate the self-learned verifier policy on the 20-case CCTU tool-use benchmark.
+      EXISTING CODE TO READ FIRST: `scripts/experiment_template.py`.
+      TASK: Run the CCTU benchmark with the updated policy.
       CONCRETE STEPS:
-      1. Write scripts/experiment_2036_fr11_gec_zero_forgetting.py.
-      2. Run the updated policy on old tasks.
-      3. Validate that `nonforgetting_rate=1.0` and `utility_delta > 0.0`.
-      4. Write the final evaluation to the artifact.
+      1. Execute the 20-case CCTU suite.
+      2. Record execution validity, zero false accepts, and semantic correctness.
+      3. Ensure `soundness_mistakes` is 0.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2037-milestone-159-pre-retro
-    title: "Exp 2037: Milestone .159 Pre-Retro Audit"
-    deliverable: results/experiment_2037_milestone_159_pre_retro.json
+  - id: exp2051-milestone-160-audit
+    title: "Exp 2051: Architectural Coherence Audit for Continuous Execution"
+    deliverable: results/experiment_2051_architecture_audit.json
+    max_turns: 30
     agent_type: gemini
+    model: gemini-3.1-pro-preview
+    prompt: |
+      CONTEXT: We must ensure our new continuous latent architecture aligns with PRD FR-12 (Verifiable Reasoning) and Phase-3 logic.
+      EXISTING CODE TO READ FIRST: `_bmad/architecture.md`, `_bmad/prd.md`.
+      TASK: Audit the continuous execution results for architectural divergence.
+      CONCRETE STEPS:
+      1. Analyze results from the preceding 11 tasks.
+      2. Document any conflicts between EqM continuous constraints and the discrete verification mandate.
+      3. Output an audit JSON.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2052-milestone-160-retro
+    title: "Exp 2052: Milestone 160 Retro and Completion"
+    deliverable: results/experiment_2052_milestone_160_retro.json
     max_turns: 20
     prompt: |
-      CONTEXT: We are approaching the end of milestone .159.
-      EXISTING CODE TO READ FIRST:
-      - ops/conductor-log.md
-      TASK: Summarize the milestone outcomes.
+      CONTEXT: Close out the milestone by synthesizing the results.
+      EXISTING CODE TO READ FIRST: `scripts/experiment_template.py`.
+      TASK: Write the final JSON artifact for the milestone retro.
       CONCRETE STEPS:
-      1. Write scripts/experiment_2037_milestone_159_pre_retro.py to parse recent experiment results.
-      2. Verify that EBRM latent tracking, KAN verification, and GEC continual learning tasks completed.
-      3. Output the summary to the JSON artifact.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp2038-milestone-159-retro
-    title: "Exp 2038: Milestone .159 Retrospective"
-    deliverable: results/experiment_2038_milestone_159_retro.json
-    agent_type: gemini
-    max_turns: 50
-    prompt: |
-      CONTEXT: Final retrospective for milestone .159.
-      EXISTING CODE TO READ FIRST:
-      - results/experiment_2037_milestone_159_pre_retro.json
-      TASK: Write a comprehensive retrospective analysis.
-      CONCRETE STEPS:
-      1. Analyze the success of the continuous latent refinements and formal verification architectures.
-      2. Write scripts/experiment_2038_milestone_159_retro.py to format the findings.
-      3. Save the final JSON artifact.
+      1. Summarize the FAR latent transition, AIA hardware metrics, and FR-11 self-learning utility.
+      2. Format as `experiment_2052_milestone_160_retro.json`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
