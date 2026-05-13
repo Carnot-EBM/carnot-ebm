@@ -5648,3 +5648,4 @@ Completed 15 experiments in 28.9 minutes. There were 0 compute-bound experiments
 - 2026-05-13: Exp 1991: Corrected Curie-Weiss Parity (❌ Failed) — honest_verdict=failed: kl_0.0000_delta_88.6516; results/experiment_1991_curie_weiss_parity_correction.json
 - 2026-05-13: Exp 1991: Corrected Curie-Weiss Parity (❌ Failed) — honest_verdict=failed: kl_0.0000_delta_88.6516; results/experiment_1991_curie_weiss_parity_correction.json
 - 2026-05-13: Exp 1991: Corrected Curie-Weiss Parity (⚠️ Research Finding) — honest_verdict=success: kl_0.0130_delta_0.1439; results/experiment_1991_curie_weiss_parity_correction.json
+- 2026-05-13: Exp 1996: NSVIF/Z3 SMT Constraint Extractor (✅ Complete) — honest_verdict=complete: NSVIF/Z3 SMT extractor rejects supported contradictory IT CoT steps with zero false positives on bundled fixtures.; results/experiment_1996_nsvif_smt_extractor.json
