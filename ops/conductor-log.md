@@ -2409,3 +2409,5 @@ IMPORTANT:
 | 2026-05-13 06:48 UTC | Exp 2025: STKAN No-Synthesis Hardware Inference Ac | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2024-stkan-spatio-temporal-prototype) |
 | 2026-05-13 06:53 UTC | Exp 2026: Milestone .158 Pre-Retro Audit | OK | 81 passed, 1 warning in 3.97s |
 | 2026-05-13 06:55 UTC | Exp 2025: STKAN No-Synthesis Hardware Inference Ac | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2024-stkan-spatio-temporal-prototype) |
+| 2026-05-13 06:58 UTC | Exp 2027: Milestone .158 Retrospective | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2027_milesto |
+| 2026-05-13 07:00 UTC | Exp 2025: STKAN No-Synthesis Hardware Inference Ac | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2024-stkan-spatio-temporal-prototype) |
