@@ -2476,3 +2476,5 @@ IMPORTANT:
 | 2026-05-13 11:01 UTC | Exp 2055: Compositional Energy Minimization | OK | 81 passed, 1 warning in 5.29s |
 | 2026-05-13 12:07 UTC | Exp 2056: Soft Bellman Equation Solver | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2056_soft_be |
 | 2026-05-13 12:09 UTC | Exp 2056: Soft Bellman Equation Solver | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-13 12:11 UTC | Exp 2056: Soft Bellman Equation Solver | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-13 12:13 UTC | Exp 2057: gated on Exp 2056: ARM-EBM Bijection Val | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2056-soft-bellman-equation-solver) |
