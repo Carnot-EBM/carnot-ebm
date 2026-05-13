@@ -2365,3 +2365,4 @@ IMPORTANT:
 | 2026-05-13 05:29 UTC | Exp 2009: EBM-CoT Latent Thought Calibration | DOOMED_RERUN_BLOCK | 7 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-13 05:31 UTC | Exp 2009: EBM-CoT Latent Thought Calibration | DOOMED_RERUN_BLOCK | 7 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-13 05:33 UTC | Exp 2009: EBM-CoT Latent Thought Calibration | DOOMED_RERUN_BLOCK | 7 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-13 05:35 UTC | Exp 2010: FAR Continuous Latent Generation | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
