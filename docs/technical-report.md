@@ -1,6 +1,6 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report — 2,424 Experiments Across the Public Record, 174 Archived Milestone Records, 24,614 Python Test Items Collected (Results and Ops Retros Through Exp 2065)
+## A Technical Report — 2,424 Experiments Across the Public Record, 175 Archived Milestone Records, 24,614 Python Test Items Collected (Results and Ops Retros Through Exp 2065)
 
 **Author:** Ian Blenke
 **Date:** 2026-05-12
@@ -30,14 +30,14 @@ Qwen3.6-35B-A3B), never from simulated runs; hardware, ensemble, and
 adversarial-audit results are labeled by artifact provenance.
 
 This report documents the research arc behind the framework — **2,399
-experiment records tracked through Exp 2065, with 2,213 task records in 174
-artifact-backed completed milestone records archived through 2026.05.160 and
+experiment records tracked through Exp 2065, with 2,213 task records in 175
+artifact-backed completed milestone records archived through 2026.05.161 and
 checked-in result artifacts extending through milestone .160** — run between
 February and May 2026. `research-complete.yaml` currently archives **171**
 completed milestone records through 2026.05.160; checked-in result artifacts
 and `ops/changelog.md` now extend through
-`results/experiment_2027_milestone_158_retro.json`. Milestone .160 completed
-**13** synthesis-only experiments in **26.5** minutes, with GPUs correctly idled at 0%
+`results/experiment_2027_milestone_158_retro.json`. Milestone .161 completed
+**25** experiments in **26.5** minutes, with GPUs correctly idled at 0%
 utilization and doomed-rerun blocks saving time. The slowest path was the Exp 2052
 retrospective.
 The .157 operational retrospective measured **102.0** minutes across
@@ -122,7 +122,7 @@ artifacts, and an explicit finding that SOTA cache/runtime readiness and the
 .147 operational speedup target remain unresolved.
 
 The latest archived milestone entry in `research-complete.yaml` is
-2026.05.160; checked-in result artifacts now extend through Exp 2038, the .159
+2026.05.160; checked-in result artifacts now extend through Exp 2065, the .161
 research retrospective. The latest current-result layer is therefore ahead of
 the archive by one milestone: .158 is archived, while .159 is represented in
 `ops/changelog.md` and result artifacts.
@@ -5381,6 +5381,21 @@ The Milestone .157 operational retrospective (analyzing 16 experiments in 102.0 
 The Milestone .158 operational retrospective measured 26.5 minutes of wall time across 13 synthesis-only experiments. GPUs correctly idled at 0% utilization throughout, confirming efficiency when no compute-bound tasks are present. Synthesis tasks and retrospectives remain the primary bottleneck for optimization, with the slowest path being the Exp 2052 Retrospective (7 minutes).
 
 
+
+## Milestone 161 — DTM Thermodynamic Model and Soft Bellman Equation Solver (Exps 2053–2065, May 2026)
+
+**Soft Bellman Equation Solver**
+Experiment 2056 implemented a soft Bellman equation solver.
+
+**DTM Thermodynamic Model**
+Experiment 2060 explored the DTM Thermodynamic Model.
+
+**Unsupervised System 2 Pretraining**
+Experiment 2062 evaluated Unsupervised System 2 pretraining.
+
+**Kona-Style Reasoning Benchmark**
+Experiment 2063 ran a Kona-style reasoning benchmark.
+
 ## Milestones 159–160 — Continuous Execution and Architecture Audits (Exps 2028–2052, May 2026)
 
 **Equilibrium Matching (EqM) Gradient Probing**
@@ -5396,7 +5411,7 @@ Experiments 2046 and 2048 explored CLaRa Semantic Compression and InEx-style Con
 Experiment 2051 performed an Architectural Coherence Audit for Continuous Execution.
 
 
-### 4.18 Recent Additions (Milestone .160)
+### 4.18 Recent Additions (Milestone .161)
 
 **Operational Efficiency**  
-The Milestone .160 operational retrospective measured 92.5 minutes of wall time across 28 experiments. GPU utilization on the 3 compute-bound tasks was efficient, and no anomalous idling was flagged. Synthesis-only tasks remain the primary bottleneck for optimization.
+The Milestone .161 operational retrospective measured 118.9 minutes of wall time across 25 experiments. GPU utilization on the 3 compute-bound tasks was efficient, and no anomalous idling was flagged. Synthesis-only tasks remain the primary bottleneck for optimization.
