@@ -2399,3 +2399,5 @@ IMPORTANT:
 | 2026-05-13 06:38 UTC | Exp 2022: SEAL Verifier Filtering & Zero-False-Acc | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2021-seal-synthetic-generation.trace_co |
 | 2026-05-13 06:40 UTC | Exp 2020: Uncertainty Quantification Telemetry Smo | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2019-sota-gguf-runtime-repair) |
 | 2026-05-13 06:40 UTC | Exp 2021: SEAL Self-Adaptive Learning: Synthetic T | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2019-sota-gguf-runtime-repair) |
+| 2026-05-13 06:40 UTC | Exp 2022: SEAL Verifier Filtering & Zero-False-Acc | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2021-seal-synthetic-generation.trace_co |
+| 2026-05-13 06:42 UTC | Exp 2023: SEAL Continuous Memory Policy Promotion | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2022-seal-verifier-filtering) |
