@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Technical Report - A Technical Report — 2,354 Experiments Across the Public Record, 167 Archived Milestone Records, 24,316 Python Test Items Collected (Results and Ops Retros Through Exp 1995)</title>
-  <meta name="description" content="Carnot technical report: A Technical Report — 2,354 Experiments Across the Public Record, 167 Archived Milestone Records, 24,316 Python Test Items Collected (Results and Ops Retros Through Exp 1995). Live GPU benchmarks with statistical confidence intervals, honest negative results, and a public experiment history with provenance labels for every headline claim.">
+  <title>Technical Report - A Technical Report — 2,366 Experiments Across the Public Record, 169 Archived Milestone Records, 24,472 Python Test Items Collected (Results and Ops Retros Through Exp 2007)</title>
+  <meta name="description" content="Carnot technical report: A Technical Report — 2,366 Experiments Across the Public Record, 169 Archived Milestone Records, 24,472 Python Test Items Collected (Results and Ops Retros Through Exp 2007). Live GPU benchmarks with statistical confidence intervals, honest negative results, and a public experiment history with provenance labels for every headline claim.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M30,50 Q30,20 50,20 Q70,20 70,50 Q70,80 50,80 Q30,80 30,50' fill='none' stroke='%23f97316' stroke-width='8'/><circle cx='50' cy='50' r='10' fill='%23f97316'/></svg>">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -160,7 +160,7 @@
 
 <article>
 <h1 id="carnot-energy-based-verification-for-llm-output">Carnot: Energy-Based Verification for LLM Output</h1>
-<h2 id="a-technical-report-2354-experiments-across-the-public-record-167-archived-milestone-records-24316-python-test-items-collected-results-and-ops-retros-through-exp-1995">A Technical Report — 2,354 Experiments Across the Public Record, 167 Archived Milestone Records, 24,316 Python Test Items Collected (Results and Ops Retros Through Exp 1995)</h2>
+<h2 id="a-technical-report-2366-experiments-across-the-public-record-169-archived-milestone-records-24472-python-test-items-collected-results-and-ops-retros-through-exp-2007">A Technical Report — 2,366 Experiments Across the Public Record, 169 Archived Milestone Records, 24,472 Python Test Items Collected (Results and Ops Retros Through Exp 2007)</h2>
 <p><strong>Author:</strong> Ian Blenke
 <strong>Date:</strong> 2026-05-12
 <strong>Repository:</strong> github.com/Carnot-EBM/carnot-ebm
@@ -183,22 +183,18 @@ a handful of lines of Python. Headline model-generation benchmark numbers are fr
 <strong>live GPU inference on real public models</strong> (Qwen 3.5, Gemma 4,
 Qwen3.6-35B-A3B), never from simulated runs; hardware, ensemble, and
 adversarial-audit results are labeled by artifact provenance.</p>
-<p>This report documents the research arc behind the framework — <strong>2,354
-experiment records tracked through Exp 1995, with 2,051 task records in 161
-artifact-backed completed milestone records archived through 2026.05.154 and
-checked-in result artifacts extending through milestone .154</strong> — run between
-February and May 2026. <code>research-complete.yaml</code> currently archives <strong>167</strong>
-completed milestone records through 2026.05.154; checked-in result artifacts
+<p>This report documents the research arc behind the framework — <strong>2,366
+experiment records tracked through Exp 2007, with 2,078 task records in 169
+artifact-backed completed milestone records archived through 2026.05.156 and
+checked-in result artifacts extending through milestone .156</strong> — run between
+February and May 2026. <code>research-complete.yaml</code> currently archives <strong>169</strong>
+completed milestone records through 2026.05.156; checked-in result artifacts
 and <code>ops/changelog.md</code> now extend through
-<code>results/experiment_1903_milestone_148_retro.json</code>. Milestone .154 completed
-<strong>1</strong> non-retro task, wrote <strong>2</strong> blocked artifacts, retired <strong>6</strong> gate-skipped
-scopes, and left <strong>4</strong> unexpected missing-artifact failures; the SOTA
-cache/runtime gap is unresolved and the .147 <strong>11%</strong> same-title
-compute-dedupe speedup target is not yet proven.
-The .148 operational retrospective then measured <strong>112.1</strong> minutes across
-<strong>10</strong> experiments with <strong>1</strong> compute-bound task: Exp 1890 took <strong>41.3</strong>
-minutes, Exp 1995 took <strong>39.5</strong> minutes, a repeated Exp 1894 pre-gate block
-took <strong>21.3</strong> minutes, and GPU idle was not flagged on the compute-bound path.
+<code>results/experiment_2007_milestone_156_retro.json</code>. Milestone .156 completed
+<strong>7</strong> non-retro tasks, wrote <strong>4</strong> blocked artifacts, and left <strong>0</strong> failed gates,
+successfully implementing the NSVIF/Z3 SMT extractor with zero false positives.
+The .155 operational retrospective measured <strong>53.2</strong> minutes across
+<strong>29</strong> synthesis-only experiments, with Exp 1991 and Exp 1995 as the slowest paths.
 The story now spans activation-based negative results, constraint-based
 verification, live SOTA-model benchmarks, production verifier ensembles,
 hardware sampler audits, continuous self-learning, Phase-5 in-situ training
@@ -6663,6 +6659,15 @@ Experiment 1942 successfully executed the tri-sota e2e pipeline, confirming stab
 <h3 id="414-recent-additions-milestone-153">4.14 Recent Additions (Milestone .153)</h3>
 <p><strong>Synthesis Bottleneck Identification</strong><br>
 Experiment 1956 demonstrated that non-compute bound synthesis tasks are now the primary bottleneck for optimization, taking 61.4 minutes on average, while GPU correctly idled for all 36 experiments in the milestone.</p>
+<h3 id="415-recent-additions-milestone-156">4.15 Recent Additions (Milestone .156)</h3>
+<p><strong>NSVIF/Z3 SMT Constraint Extractor</strong><br>
+Experiment 1996 implemented a specialized SMT constraint extractor via NSVIF and Z3, which rejects supported contradictory Chain-of-Thought steps with zero false positives on bundled fixtures.</p>
+<p><strong>Live GPU Baselines on GSM8K and Code Verification on HumanEval</strong><br>
+Experiment 1998 established live baselines for GSM8K, and Experiment 1999 successfully implemented Ising-guided fuzzing for code verification on HumanEval.</p>
+<p><strong>DeepSaDe Guaranteed Constraints</strong><br>
+Experiment 2000 fully implemented and verified DeepSaDe guaranteed constraints for enhanced verification capability.</p>
+<p><strong>Tier 4 Adaptive Energy Landscapes KAN</strong><br>
+Experiment 2005 updated the adaptive KAEM spline topology with +1/-1 knots, completing the Tier 4 Adaptive Energy Landscapes KAN.</p>
 </article>
 
 <footer>
