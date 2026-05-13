@@ -1,0 +1,122 @@
+{
+  "experiment": 2056,
+  "experiment_id": "2056",
+  "name": "Soft Bellman ARM-to-EBM Solver",
+  "schema": "carnot.soft_bellman.v1",
+  "run_date": "2026-05-13",
+  "finished_at": "2026-05-13T12:04:28Z",
+  "status": "partial",
+  "result": "partial",
+  "honest_verdict": "targeted_soft_bellman_passed_full_suite_blocked_by_unrelated_repo_failures",
+  "spec_refs": [
+    "REQ-INFER-2056",
+    "SCENARIO-INFER-2056-001",
+    "SCENARIO-INFER-2056-002"
+  ],
+  "implementation": {
+    "rust_solver": "crates/carnot-boltzmann/src/lib.rs",
+    "pyo3_binding": "crates/carnot-python/src/lib.rs",
+    "rust_tests": "crates/carnot-boltzmann/tests/soft_bellman.rs",
+    "python_tests": "tests/python/test_soft_bellman_pyo3.py",
+    "openspec": "openspec/capabilities/llm-ebm-inference/spec.md"
+  },
+  "solver_contract": {
+    "function": "soft_bellman_solve",
+    "path_solver_function": "soft_bellman_solve_path",
+    "python_function": "carnot._rust.soft_bellman_solve",
+    "inputs": [
+      "flat chosen token logprobs",
+      "normalized logprob rows plus token_ids"
+    ],
+    "outputs": [
+      "soft_values",
+      "immediate_rewards",
+      "token_energies",
+      "sequence_affinity",
+      "sequence_energy",
+      "log_partition",
+      "log_probability",
+      "max_abs_bellman_residual"
+    ],
+    "canonical_probability_gauge": true
+  },
+  "metrics": {
+    "rust_soft_bellman_tests_passed": 9,
+    "rust_soft_bellman_tests_failed": 0,
+    "pyo3_soft_bellman_tests_passed": 4,
+    "pyo3_soft_bellman_tests_failed": 0,
+    "pyo3_binding_e2e_tests_passed": 28,
+    "new_rust_solver_line_coverage_percent": 100.0,
+    "new_rust_solver_validation_branches_covered": true,
+    "full_python_suite_completed": false
+  },
+  "commands": [
+    {
+      "cmd": "cargo test -p carnot-boltzmann",
+      "status": "passed",
+      "summary": "7 existing unit tests, 9 Soft Bellman integration tests, and 1 doctest passed."
+    },
+    {
+      "cmd": "cargo clippy -p carnot-boltzmann -- -D warnings",
+      "status": "passed"
+    },
+    {
+      "cmd": "cargo fmt --all -- --check",
+      "status": "failed_preexisting_unrelated",
+      "summary": "Failed on pre-existing formatting drift in carnot-core, carnot-kan, carnot-python/s2kan.rs, and carnot-python/verification_learning.rs. The touched carnot-boltzmann package formats cleanly."
+    },
+    {
+      "cmd": "cargo fmt --package carnot-boltzmann -- --check",
+      "status": "passed"
+    },
+    {
+      "cmd": "PYO3_USE_ABI3_FORWARD_COMPATIBILITY=1 cargo build -p carnot-python",
+      "status": "passed_with_preexisting_warnings",
+      "summary": "Build passed; pre-existing warnings remain in crates/carnot-python/src/s2kan.rs."
+    },
+    {
+      "cmd": "PYO3_USE_ABI3_FORWARD_COMPATIBILITY=1 .venv/bin/maturin develop --manifest-path crates/carnot-python/Cargo.toml",
+      "status": "passed_with_preexisting_warnings",
+      "summary": "Editable wheel installed for CPython 3.12; same pre-existing s2kan.rs warnings."
+    },
+    {
+      "cmd": ".venv/bin/pytest tests/python/test_soft_bellman_pyo3.py -q --no-cov",
+      "status": "passed",
+      "summary": "4 passed."
+    },
+    {
+      "cmd": ".venv/bin/pytest tests/python/test_pyo3_integration.py tests/python/test_soft_bellman_pyo3.py -q --no-cov",
+      "status": "passed",
+      "summary": "28 passed."
+    },
+    {
+      "cmd": "LLVM_PROFILE_FILE=$PWD/target/coverage/soft_bellman/manual/%p.profraw RUSTFLAGS='-C instrument-coverage' cargo test -p carnot-boltzmann --test soft_bellman --no-run && target/debug/deps/soft_bellman-* --nocapture && llvm-cov show ...",
+      "status": "passed",
+      "summary": "Focused llvm-cov line output showed every non-doc line in the new solver and validation helpers executed at least once."
+    },
+    {
+      "cmd": "python scripts/check_spec_coverage.py",
+      "status": "failed_preexisting",
+      "summary": "Failed on 99 pre-existing tests without REQ-/SCENARIO- traceability; the new Soft Bellman tests are not listed."
+    },
+    {
+      "cmd": ".venv/bin/pytest tests/python -q",
+      "status": "attempted_interrupted_after_failures",
+      "summary": "Required full suite reached 94% after more than 45 minutes, with many unrelated failures, collection errors, memory-leak teardown errors, a Z3 segfault, a JAX abort, and an experiment watchdog timeout. It was terminated to avoid leaving runaway xdist workers active."
+    }
+  ],
+  "full_suite_blockers_observed": [
+    "ModuleNotFoundError: carnot.reporting.sota_gguf_cache_runtime_preflight",
+    "ModuleNotFoundError: pre_retro_audit",
+    "import file mismatch between tests/python/inference/test_samplers.py and tests/python/test_samplers.py",
+    "Memory leak teardown errors from pytest-memory-watchdog",
+    "Fatal Python segmentation fault in z3 during tests/python/test_pipeline_errors.py::test_concurrent_verify_calls",
+    "Fatal Python abort in JAX compilation during tests/python/test_experiment_898_fr11_tier4_kan_seed.py",
+    "ExperimentTimeoutWatchdog fired for experiment 561 after 25 minutes",
+    "Multiple unrelated artifact/status expectation failures in older experiment tests"
+  ],
+  "notes": [
+    "No changes were made to scripts/research_conductor.py.",
+    "ops/changelog.md, ops/status.md, and _bmad/traceability.md were intentionally not touched per the stop-when-done rule in the task prompt."
+  ]
+}

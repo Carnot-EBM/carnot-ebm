@@ -611,6 +611,37 @@ The system SHALL provide an EqM gradient extraction module in `python/carnot/inf
 **Then** the energy landscape gradient strictly reduces the total energy
 **And** the experiment validation results are saved to `results/experiment_2041_eqm_gradients.json`.
 
+### REQ-INFER-2056: Soft Bellman ARM-to-EBM Solver
+
+The system SHALL provide a Rust `soft_bellman_solve` implementation that maps
+autoregressive token log-probabilities into an EBM-compatible sequence energy.
+For normalized ARM log-probabilities, the solver SHALL use the canonical
+probability gauge of the soft Bellman equation: terminal soft value is zero,
+all prefix soft values solve to zero, immediate rewards equal token log
+probabilities, and token energies are their negation.  The solver SHALL return
+per-token rewards, per-token energies, solved soft values, sequence affinity,
+sequence energy, sequence log-probability, and the root log-partition value.
+
+The PyO3 layer SHALL expose the solver to Python as `soft_bellman_solve`.
+The implementation SHALL reject non-finite or positive token log-probabilities
+instead of silently producing invalid EBM energies.
+
+### SCENARIO-INFER-2056-001: ARM Logprobs Produce EBM Energies
+
+**Given** a finite sequence of ARM token log-probabilities
+**When** `soft_bellman_solve` is called
+**Then** each immediate reward equals the corresponding log-probability
+**And** each token energy equals `-logprob`
+**And** the sequence energy equals the negative sum of token log-probabilities
+**And** the returned soft values satisfy the canonical zero-value Bellman gauge.
+
+### SCENARIO-INFER-2056-002: Exhaustive Sequence Energies Normalize
+
+**Given** all token paths from a small normalized ARM distribution
+**When** each path is converted with `soft_bellman_solve`
+**Then** `exp(-sequence_energy)` for all paths sums to one
+**And** lower ARM likelihood paths receive higher EBM energy.
+
 ## Implementation Status
 
 | Requirement | Python | Tests |
@@ -635,6 +666,7 @@ The system SHALL provide an EqM gradient extraction module in `python/carnot/inf
 | REQ-INFER-SOTA-010 | Implemented (`python/carnot/reporting/live_sota_balanced_telemetry_v2.py`) | Implemented (`tests/python/test_experiment_1480_live_sota_balanced_telemetry_v2.py`) |
 | REQ-INFER-SOTA-011 | Proposed | Proposed |
 | REQ-INFER-2041 | Proposed | Proposed |
+| REQ-INFER-2056 | Implemented (`crates/carnot-boltzmann/src/lib.rs`, `crates/carnot-python/src/lib.rs`) | Implemented (`crates/carnot-boltzmann/tests/soft_bellman.rs`, `tests/python/test_soft_bellman_pyo3.py`) |
 
 ### REQ-INFER-1957: TruncProof Token-Limited LL(1) Parsing
 
