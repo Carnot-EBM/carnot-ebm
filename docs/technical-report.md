@@ -1,6 +1,6 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report — 2,354 Experiments Across the Public Record, 167 Archived Milestone Records, 24,316 Python Test Items Collected (Results and Ops Retros Through Exp 1995)
+## A Technical Report — 2,366 Experiments Across the Public Record, 169 Archived Milestone Records, 24,472 Python Test Items Collected (Results and Ops Retros Through Exp 2007)
 
 **Author:** Ian Blenke
 **Date:** 2026-05-12
@@ -29,22 +29,18 @@ a handful of lines of Python. Headline model-generation benchmark numbers are fr
 Qwen3.6-35B-A3B), never from simulated runs; hardware, ensemble, and
 adversarial-audit results are labeled by artifact provenance.
 
-This report documents the research arc behind the framework — **2,354
-experiment records tracked through Exp 1995, with 2,051 task records in 161
-artifact-backed completed milestone records archived through 2026.05.154 and
-checked-in result artifacts extending through milestone .154** — run between
-February and May 2026. `research-complete.yaml` currently archives **167**
-completed milestone records through 2026.05.154; checked-in result artifacts
+This report documents the research arc behind the framework — **2,366
+experiment records tracked through Exp 2007, with 2,078 task records in 169
+artifact-backed completed milestone records archived through 2026.05.156 and
+checked-in result artifacts extending through milestone .156** — run between
+February and May 2026. `research-complete.yaml` currently archives **169**
+completed milestone records through 2026.05.156; checked-in result artifacts
 and `ops/changelog.md` now extend through
-`results/experiment_1903_milestone_148_retro.json`. Milestone .154 completed
-**1** non-retro task, wrote **2** blocked artifacts, retired **6** gate-skipped
-scopes, and left **4** unexpected missing-artifact failures; the SOTA
-cache/runtime gap is unresolved and the .147 **11%** same-title
-compute-dedupe speedup target is not yet proven.
-The .148 operational retrospective then measured **112.1** minutes across
-**10** experiments with **1** compute-bound task: Exp 1890 took **41.3**
-minutes, Exp 1995 took **39.5** minutes, a repeated Exp 1894 pre-gate block
-took **21.3** minutes, and GPU idle was not flagged on the compute-bound path.
+`results/experiment_2007_milestone_156_retro.json`. Milestone .156 completed
+**7** non-retro tasks, wrote **4** blocked artifacts, and left **0** failed gates,
+successfully implementing the NSVIF/Z3 SMT extractor with zero false positives.
+The .155 operational retrospective measured **53.2** minutes across
+**29** synthesis-only experiments, with Exp 1991 and Exp 1995 as the slowest paths.
 The story now spans activation-based negative results, constraint-based
 verification, live SOTA-model benchmarks, production verifier ensembles,
 hardware sampler audits, continuous self-learning, Phase-5 in-situ training
@@ -5358,3 +5354,17 @@ Experiment 1942 successfully executed the tri-sota e2e pipeline, confirming stab
 
 **Synthesis Bottleneck Identification**  
 Experiment 1956 demonstrated that non-compute bound synthesis tasks are now the primary bottleneck for optimization, taking 61.4 minutes on average, while GPU correctly idled for all 36 experiments in the milestone.
+
+### 4.15 Recent Additions (Milestone .156)
+
+**NSVIF/Z3 SMT Constraint Extractor**  
+Experiment 1996 implemented a specialized SMT constraint extractor via NSVIF and Z3, which rejects supported contradictory Chain-of-Thought steps with zero false positives on bundled fixtures.
+
+**Live GPU Baselines on GSM8K and Code Verification on HumanEval**  
+Experiment 1998 established live baselines for GSM8K, and Experiment 1999 successfully implemented Ising-guided fuzzing for code verification on HumanEval.
+
+**DeepSaDe Guaranteed Constraints**  
+Experiment 2000 fully implemented and verified DeepSaDe guaranteed constraints for enhanced verification capability.
+
+**Tier 4 Adaptive Energy Landscapes KAN**  
+Experiment 2005 updated the adaptive KAEM spline topology with +1/-1 knots, completing the Tier 4 Adaptive Energy Landscapes KAN.
