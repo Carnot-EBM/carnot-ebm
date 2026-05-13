@@ -5634,3 +5634,4 @@ Completed 15 experiments in 28.9 minutes. There were 0 compute-bound experiments
 - 2026-05-13: Milestone 2026.05.154 Operational Retrospective: 29 experiments completed in 64.6 minutes, 100% synthesis-only (0 GPU usage).
 - 2026-05-13: Exp 1985: ConsFormer-style Iterative Refinement (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_1985_consformer_refinement_loop.json
 - 2026-05-13: Exp 1986: Routing without Forgetting in FR-11 (✅ Complete) — honest_verdict=Validator-tree promotion ledger implemented and tested successfully.; results/experiment_1986_fr11_routing_without_forgetting.json
+- 2026-05-13: Exp 1989: p-dit Hardware Preflight and Preconditioning (✅ Complete) — honest_verdict=p_dit_hardware_preflight_complete_no_hardware_execution_claim; results/experiment_1989_p_dit_hardware_preflight.json
