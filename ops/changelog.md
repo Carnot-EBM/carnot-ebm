@@ -5680,3 +5680,4 @@ Completed 15 experiments in 28.9 minutes. There were 0 compute-bound experiments
 - 2026-05-13: Exp 2041: Equilibrium Matching (EqM) Gradient Probing (⚠️ Research Finding) — honest_verdict=eqm_gradients_extracted; results/experiment_2041_eqm_gradients.json
 - 2026-05-13: Exp 2043: AIA Knuth-Yao Hardware Simulator (⚠️ Research Finding) — honest_verdict=knuth_yao_statistical_parity_passed; results/experiment_2043_aia_knuth_yao.json
 - 2026-05-13: Exp 2044: AIA Gumbel Sampler Simulator (⚠️ Research Finding) — honest_verdict=gumbel_converged_faster; results/experiment_2044_aia_gumbel.json
+- 2026-05-13: Exp 2046: CLaRa Semantic Compression Prototype (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_2046_clara_compression.json
