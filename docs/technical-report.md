@@ -1,6 +1,6 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report — 2,366 Experiments Across the Public Record, 169 Archived Milestone Records, 24,472 Python Test Items Collected (Results and Ops Retros Through Exp 2007)
+## A Technical Report — 2,376 Experiments Across the Public Record, 170 Archived Milestone Records, 24,472 Python Test Items Collected (Results and Ops Retros Through Exp 2017)
 
 **Author:** Ian Blenke
 **Date:** 2026-05-12
