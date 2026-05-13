@@ -2374,3 +2374,5 @@ IMPORTANT:
 | 2026-05-13 05:47 UTC | Exp 2012: KAN4CBC Barrier Certificates | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2011-kan-optimal-abstractions-milp) |
 | 2026-05-13 05:47 UTC | Exp 2013: Tier 3 Predictive Verification (FR-11) | FAIL | Gemini CLI error: es_websocket: failed to connect to websocket: HTTP error: 50 |
 | 2026-05-13 05:49 UTC | Exp 2012: KAN4CBC Barrier Certificates | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2011-kan-optimal-abstractions-milp) |
+| 2026-05-13 05:49 UTC | Exp 2013: Tier 3 Predictive Verification (FR-11) | FAIL | Gemini CLI error: you finish the real work inside 10 minutes, that is correct  |
+| 2026-05-13 05:51 UTC | Exp 2012: KAN4CBC Barrier Certificates | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2011-kan-optimal-abstractions-milp) |
