@@ -1,0 +1,49 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.163",
+  "generated_at": "2026-05-13T20:42:28Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 42.7,
+  "experiments_completed": 22,
+  "compute_bound_experiments_count": 3,
+  "slowest_experiments": [
+    {
+      "experiment": "-0400 [conductor] Exp 2089: Milestone 163 Retro & Doc Updates",
+      "duration_minutes": 4.1,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 2083: SMT Solver Integration for KAN4CBC verification",
+      "duration_minutes": 2.4,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Doomed-rerun block: Exp 2079: LLM-as-Extractor Pipeline",
+      "duration_minutes": 2.1,
+      "compute_bound": true
+    },
+    {
+      "experiment": "-0400 [conductor] Doomed-rerun block: Exp 2086: Tier 1 Memory Pattern Constraint",
+      "duration_minutes": 2.1,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Doomed-rerun block: Exp 2079: LLM-as-Extractor Pipeline",
+      "duration_minutes": 2.0,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "summary": "Analyzed 42.7 min wall time for 22 experiments. The slowest path was Exp 2089 (4 min, synthesis-only), while compute-bound tasks correctly utilized the GPU without anomalous idling.",
+  "bottlenecks_identified": [
+    "Synthesis-only tasks like Exp 2089 and Exp 2083 are the primary wall-time consumers."
+  ],
+  "improvements_suggested": [
+    "Optimize synthesis pipeline and documentation update tasks."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Optimize synthesis pipeline and documentation update tasks."
+  ],
+  "estimated_time_savings_pct": 10,
+  "meta_reflection": "Doomed-rerun blocks successfully saved execution time on Exp 2079 and Exp 2086 without acting as bottlenecks. Synthesis tasks remain the primary area for optimization."
+}
