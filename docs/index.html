@@ -300,15 +300,15 @@
       <a href="technical-report.html" class="btn btn-secondary">How it works</a>
     </div>
     <div class="stats-bar" aria-label="Project headline numbers">
-      <div class="stat"><div class="stat-num">2,279</div><div class="stat-label">Experiment records through Exp 1955</div></div>
-      <div class="stat"><div class="stat-num">165</div><div class="stat-label">archived records through .152</div></div>
+      <div class="stat"><div class="stat-num">2,315</div><div class="stat-label">Experiment records through Exp 1956</div></div>
+      <div class="stat"><div class="stat-num">166</div><div class="stat-label">archived records through .153</div></div>
       <div class="stat"><div class="stat-num">24,330</div><div class="stat-label">Python items collected, not full pass</div></div>
-      <div class="stat"><div class="stat-num">19/19</div><div class="stat-label">synthesis-only tasks completed in .151</div></div>
+      <div class="stat"><div class="stat-num">36/36</div><div class="stat-label">experiments completed in .153</div></div>
       <div class="r-card">
         <span class="r-tag">Latest closeout</span>
-        <h3 class="r-title">Synthesis-only paths run cleanly</h3>
-        <p class="r-desc">Milestone .150 filed the retro with 21 experiments. All 21 tasks were synthesis-only, so GPUs correctly idled at 0% utilization throughout; its operational retro measured 63.7 minutes across 21 experiments.</p>
-        <div class="r-stats"><span class="r-before">Synthesis tasks remain the primary bottleneck for optimization</span> <span class="r-after">Exp 1943</span></div>
+        <h3 class="r-title">Synthesis bottlenecks identified</h3>
+        <p class="r-desc">Milestone .153 filed the retro with 36 experiments. GPU correctly idled during non-compute bound tasks and compute-bound tasks did not appear as bottlenecks. Identified synthesis bottlenecks as the primary area for optimization; its operational retro measured 140.2 minutes across 36 experiments.</p>
+        <div class="r-stats"><span class="r-before">Synthesis bottlenecks are the primary area for optimization</span> <span class="r-after">Exp 1956</span></div>
       </div>
     </div>
   </div>
@@ -344,7 +344,7 @@
         <span class="r-tag">Hardware Profiling</span>
         <h3 class="r-title">DualGPURunner Idle Analysis</h3>
         <p class="r-desc">Recent milestones keep showing that synthesis-only work, blocked gates, and missing terminal artifacts dominate wall-clock time.</p>
-        <div class="r-stats"><span class="r-before">SOTA runtime and gate-artifact gaps remain</span> <span class="r-after">Exp 1955</span></div>
+        <div class="r-stats"><span class="r-before">SOTA runtime and gate-artifact gaps remain</span> <span class="r-after">Exp 1956</span></div>
       </div>
     </div>
   </div>
@@ -414,7 +414,7 @@
         <span class="r-tag">Hardware Profiling</span>
         <h3 class="r-title">DualGPURunner Idle Analysis</h3>
         <p class="r-desc">Recent closeouts show GPU idleness is expected for synthesis-only work; blocked gates and missing terminal artifacts remain the higher operational risk.</p>
-        <div class="r-stats"><span class="r-before">SOTA runtime and gate-artifact gaps remain</span> <span class="r-after">Exp 1955</span></div>
+        <div class="r-stats"><span class="r-before">SOTA runtime and gate-artifact gaps remain</span> <span class="r-after">Exp 1956</span></div>
       </div>
     </div>
   </div>
@@ -664,7 +664,7 @@
           scopes, and records that the .147 11% compute-dedupe speedup target
           is not proven yet. The .148 operational retro measured 112.1 minutes
           across 10 experiments with one compute-bound task; Exp 1890 took
-          41.3 minutes, Exp 1955 took 39.5 minutes, and compute-bound GPU idle
+          41.3 minutes, Exp 1956 took 39.5 minutes, and compute-bound GPU idle
           was not flagged.
         </p>
       </div>
@@ -1558,13 +1558,13 @@
         <span class="r-tag">Milestone .148 &mdash; latest checked-in result layer</span>
         <h3 class="r-title">1 complete; 2 blocked; 6 retired; 4 failed</h3>
         <div class="r-meter"><div class="r-bar" style="width: 7.69%; background: #f59e0b;"></div></div>
-        <div class="r-stats"><span class="r-before">SOTA gap unresolved; expected speedup not proven</span> <span class="r-after">Exp 1955</span></div>
+        <div class="r-stats"><span class="r-before">SOTA gap unresolved; expected speedup not proven</span> <span class="r-after">Exp 1956</span></div>
       </div>
       <div class="r-card">
         <span class="r-tag">Milestone .148 &mdash; operational retro</span>
         <h3 class="r-title">112.1 minutes; 10 experiments; 1 compute-bound</h3>
         <div class="r-meter"><div class="r-bar" style="width: 10%; background: #f59e0b;"></div></div>
-        <div class="r-stats"><span class="r-before">Exp 1890 41.3 min; Exp 1955 39.5 min; GPU idle not flagged</span> <span class="r-after">operational_retro_2026_05_148</span></div>
+        <div class="r-stats"><span class="r-before">Exp 1890 41.3 min; Exp 1956 39.5 min; GPU idle not flagged</span> <span class="r-after">operational_retro_2026_05_148</span></div>
       </div>
       <div class="r-card">
         <span class="r-tag">ROCE &mdash; validator tree compiler</span>
@@ -1819,7 +1819,7 @@
         <span class="r-tag">Hardware Profiling</span>
         <h3 class="r-title">DualGPURunner Idle Analysis</h3>
         <p class="r-desc">Recent closeouts show GPU idleness is expected for synthesis-only work; blocked gates and missing terminal artifacts remain the higher operational risk.</p>
-        <div class="r-stats"><span class="r-before">SOTA runtime and gate-artifact gaps remain</span> <span class="r-after">Exp 1955</span></div>
+        <div class="r-stats"><span class="r-before">SOTA runtime and gate-artifact gaps remain</span> <span class="r-after">Exp 1956</span></div>
       </div>
       <div class="r-card">
         <span class="r-tag">Hardware &mdash; KV260 Vivado Synthesis</span>
@@ -1976,4 +1976,6 @@ fixed = pipeline.<span class="fn">verify_and_repair</span>(
 </footer>
 
 </body>
+</html>
+
 </html>
