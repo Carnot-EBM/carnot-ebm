@@ -2318,6 +2318,47 @@ accepts,
 And `results/experiment_1666_nsvif.json` records `compilation_rate=1.0` and
 `false_accepts=0`.
 
+### REQ-VERIFY-1996: NSVIF/Z3 CoT SMT Extractor
+
+The repository shall provide a deterministic NSVIF-style SMT extractor for Exp
+1996 that formalizes supported chain-of-thought constraints into local Z3
+formulas without calling an LLM or executing generated code.
+
+The extractor shall:
+
+- define an importable extractor under `python/carnot/pipeline/`;
+- parse instruction-tuned prose arithmetic steps such as `47 plus 28 gives 76`
+  into first-order arithmetic equalities and verify them with Z3;
+- parse a bounded categorical-logic subset including universal class
+  constraints, individual membership facts, negated membership facts, and
+  `therefore` conclusions into Z3 formulas;
+- fail closed on unsupported or ambiguous reasoning text by abstaining rather
+  than emitting violated constraints;
+- report per-step formula metadata, solver status, verdict, and zero false
+  positives on the bundled correct-case fixtures; and
+- write `results/experiment_1996_nsvif_smt_extractor.json` with `status`,
+  `success`, `experiment_id`, `spec_refs`, `model_specs`, `cases_attempted`,
+  `constraints_extracted`, `solver_checks`, `false_positives`,
+  `false_accepts`, `zero_false_positives_by_design`, `tests_run`, and
+  `honest_verdict`.
+
+`success` MUST be true only when the bundled supported incorrect cases are
+rejected, bundled supported correct cases are not flagged, no unsupported case
+is accepted as verified, and `false_positives=0`.
+
+### SCENARIO-VERIFY-1996: IT CoT Constraints Are Checked By Z3
+
+Given instruction-tuned chain-of-thought prose containing supported arithmetic
+or categorical-logic constraints,
+When the NSVIF/Z3 SMT extractor processes the trace,
+Then each supported claim is formalized into solver metadata tied to its step
+index,
+And arithmetic contradictions and direct logical contradictions return
+`satisfied=false`,
+And correct supported steps return `satisfied=true`,
+And unsupported or non-entailed prose conclusions abstain instead of becoming
+false positives.
+
 ### REQ-VERIFY-1878: ROCE Validator-Tree Compiler
 
 The repository shall provide a deterministic ROCE-to-validator-tree compiler
@@ -2760,4 +2801,3 @@ When the internal solver and Z3 are executed,
 Then execution time and success rate are compared,
 And an objective performance gap report is synthesized,
 And the JSON artifact is written with all fields populated.
-
