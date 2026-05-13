@@ -172,12 +172,12 @@ class UnivariateKAEMLayer:
         """
         # Clamp x to [-1, 1] to handle boundary floating point noise
         x_clamped = jnp.clip(x, -1.0, 1.0)
-        # Map x from [-1, 1] to [0, n_knots - 1] (knot index space)
-        scaled = (x_clamped + 1.0) / 2.0 * (self.n_knots - 1)
-        left = jnp.floor(scaled).astype(jnp.int32)
-        left = jnp.clip(left, 0, self.n_knots - 2)
-        right = left + 1
-        t = scaled - left.astype(jnp.float32)
+        right = jnp.searchsorted(self._knots, x_clamped, side="right")
+        right = jnp.clip(right, 1, self.n_knots - 1).astype(jnp.int32)
+        left = right - 1
+        x0 = self._knots[left]
+        x1 = self._knots[right]
+        t = (x_clamped - x0) / jnp.maximum(x1 - x0, 1e-12)
         return ctrl[left] + t * (ctrl[right] - ctrl[left])
 
     # ------------------------------------------------------------------
@@ -266,11 +266,13 @@ class UnivariateKAEMLayer:
         This avoids JAX tracing overhead in the numerical integration loop.
         """
         xs_clamped = np.clip(xs, -1.0, 1.0)
-        scaled = (xs_clamped + 1.0) / 2.0 * (self.n_knots - 1)
-        left = np.floor(scaled).astype(np.int32)
-        left = np.clip(left, 0, self.n_knots - 2)
-        right = left + 1
-        t = scaled - left.astype(np.float32)
+        knots = np.array(self._knots, dtype=np.float64)
+        right = np.searchsorted(knots, xs_clamped, side="right")
+        right = np.clip(right, 1, self.n_knots - 1).astype(np.int32)
+        left = right - 1
+        x0 = knots[left]
+        x1 = knots[right]
+        t = (xs_clamped - x0) / np.maximum(x1 - x0, 1e-12)
         return ctrl[left] + t * (ctrl[right] - ctrl[left])
 
     # ------------------------------------------------------------------
@@ -387,6 +389,36 @@ class UnivariateKAEMLayer:
         scale = np.where(per_var_max > 1.0, 1.0 / np.maximum(per_var_max, 1e-12), 1.0)
         ctrl = ctrl * scale
         self.control_points = jnp.array(ctrl)
+
+    def adaptive_mesh_refine(
+        self,
+        *,
+        high_complexity_threshold: float | None = None,
+        low_complexity_threshold: float | None = None,
+        min_knots: int = 3,
+        max_knots: int = 64,
+        max_additions: int = 2,
+        max_removals: int = 2,
+    ) -> Any:
+        """Adapt the spline topology by adding complex knots and pruning smooth ones.
+
+        The implementation lives in ``kaem_adaptive_topology`` to keep the AMR
+        experiment logic separate from core sampling. This method is the public
+        layer-level hook required by REQ-KAN-2005.
+
+        Spec: REQ-KAN-2005, SCENARIO-KAN-2005
+        """
+        from carnot.models.kaem_adaptive_topology import adaptive_mesh_refine_layer
+
+        return adaptive_mesh_refine_layer(
+            self,
+            high_complexity_threshold=high_complexity_threshold,
+            low_complexity_threshold=low_complexity_threshold,
+            min_knots=min_knots,
+            max_knots=max_knots,
+            max_additions=max_additions,
+            max_removals=max_removals,
+        )
 
     def _invert_cdf(self, cdf_table: tuple[np.ndarray, np.ndarray], u: float) -> float:
         """Invert CDF via table lookup + linear interpolation.
@@ -578,6 +610,8 @@ class KAEMEnergy:
             for i in range(self.n_vars):
                 xi = data[:, i]  # marginal data for variable i
                 ctrl = self.layer.control_points[i]
+                n_ctrl = self.layer.n_knots
+                knots = np.array(self.layer._knots)
 
                 # Simple score: push control points toward matching data density.
                 # For each data point, compute grad of energy w.r.t. control points
@@ -587,13 +621,14 @@ class KAEMEnergy:
                     x_val = float(xi[j])
                     # Gradient of spline w.r.t. control points at x_val
                     x_clamped = np.clip(x_val, -1.0, 1.0)
-                    scaled = (x_clamped + 1.0) / 2.0 * (self.n_hidden - 1)
-                    left_idx = int(np.clip(np.floor(scaled), 0, self.n_hidden - 2))
-                    right_idx = left_idx + 1
-                    t = scaled - left_idx
+                    right_idx = int(np.searchsorted(knots, x_clamped, side="right"))
+                    right_idx = int(np.clip(right_idx, 1, n_ctrl - 1))
+                    left_idx = right_idx - 1
+                    denom = max(float(knots[right_idx] - knots[left_idx]), 1e-12)
+                    t = (x_clamped - float(knots[left_idx])) / denom
 
                     # Gradient: reduce energy at data points (pull control points down)
-                    grad = np.zeros(self.n_hidden)
+                    grad = np.zeros(n_ctrl)
                     grad[left_idx] = 1.0 - t
                     grad[right_idx] = t
 
