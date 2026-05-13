@@ -5678,3 +5678,4 @@ Completed 15 experiments in 28.9 minutes. There were 0 compute-bound experiments
 - 2026-05-13: Exp 2038: Milestone .159 Retrospective (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_2038_milestone_159_retro.json
 - 2026-05-13: Milestone 2026.05.159 operational retrospective completed. 15 experiments in 31.3 mins. Zero compute-bound tasks.
 - 2026-05-13: Exp 2041: Equilibrium Matching (EqM) Gradient Probing (⚠️ Research Finding) — honest_verdict=eqm_gradients_extracted; results/experiment_2041_eqm_gradients.json
+- 2026-05-13: Exp 2043: AIA Knuth-Yao Hardware Simulator (⚠️ Research Finding) — honest_verdict=knuth_yao_statistical_parity_passed; results/experiment_2043_aia_knuth_yao.json
