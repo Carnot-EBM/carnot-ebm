@@ -2426,3 +2426,5 @@ IMPORTANT:
 | 2026-05-13 07:43 UTC | Exp 2030: Compositional Energy Minimization Protot | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2029-sota-gguf-runtime-repair) |
 | 2026-05-13 07:43 UTC | Exp 2031: Continuous Latent EBRM Trace Editing | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2030-compositional-energy-stub.composit |
 | 2026-05-13 07:45 UTC | Exp 2032: EBRM Deterministic Zero-False-Accept Gat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2031-continuous-latent-ebrm) |
+| 2026-05-13 07:45 UTC | Exp 2033: KAN Piecewise Affine (PWA) Abstraction | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-13 07:47 UTC | Exp 2032: EBRM Deterministic Zero-False-Accept Gat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2031-continuous-latent-ebrm) |
