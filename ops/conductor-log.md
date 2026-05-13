@@ -2296,3 +2296,5 @@ IMPORTANT:
 | 2026-05-12 23:51 UTC | Exp 1978: DeepSaDe Provable Continuous Learning | DOOMED_RERUN_BLOCK | 3 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-12 23:53 UTC | Exp 1978: DeepSaDe Provable Continuous Learning | DOOMED_RERUN_BLOCK | 3 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-12 23:55 UTC | Exp 1979: Tri-SOTA E2E Integration v9 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1977-tri-sota-eorm-ebt) |
+| 2026-05-12 23:59 UTC | Exp 1980: Milestone .154 Pre-Retro Audit | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1980_milesto |
+| 2026-05-13 00:01 UTC | Exp 1979: Tri-SOTA E2E Integration v9 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1977-tri-sota-eorm-ebt) |
