@@ -2525,3 +2525,4 @@ IMPORTANT:
 | 2026-05-13 19:02 UTC | Exp 2075: TSU Hardware Sampling Parity | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-13 19:04 UTC | Exp 2076: E2E Test for Self-Learning + KAN | DOOMED_RERUN_BLOCK | 10 prior failure(s) match this task's scope but prior_failures field is missing  |
 | 2026-05-13 19:06 UTC | Exp 2076: E2E Test for Self-Learning + KAN | DOOMED_RERUN_BLOCK | 10 prior failure(s) match this task's scope but prior_failures field is missing  |
+| 2026-05-13 19:08 UTC | Exp 2076: E2E Test for Self-Learning + KAN | DOOMED_RERUN_BLOCK | 10 prior failure(s) match this task's scope but prior_failures field is missing  |
