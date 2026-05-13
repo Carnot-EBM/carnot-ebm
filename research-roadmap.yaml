@@ -1,205 +1,200 @@
-milestone: "2026.05.160"
-milestone_title: "Continuous Latent Equilibrium Matching, AIA Hardware Simulation, and Self-Improving Latent Verification"
-milestone_doc: "openspec/change-proposals/research-roadmap-v160.md"
+milestone: "2026.05.161"
+milestone_title: "Mouth/Brain EBT Architecture, ARM-EBM Bijection, and Thermodynamic Hardware Sampling"
+milestone_doc: "openspec/change-proposals/research-roadmap-v161.md"
 
 tasks:
-  - id: exp2040-far-latent-smoke
-    title: "Exp 2040: FAR Continuous Latent Generation Smoke Test"
-    deliverable: results/experiment_2040_far_latent_smoke.json
-    max_turns: 50
-    prompt: |
-      CONTEXT: We need to transition from discrete token generation to continuous latent spaces for faster, verifiable generation (FAR - Fast Autoregressive models).
-      EXISTING CODE TO READ FIRST: `scripts/experiment_template.py`, `ops/status.md`.
-      TASK: Implement a CPU-only smoke test simulating FAR continuous latent steps using mandated SOTA GGUF models.
-      CONCRETE STEPS:
-      1. Create a minimal Fast Autoregressive (FAR) continuous latent simulation script.
-      2. Use `cached_sota_pair()`: `unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF`.
-      3. Evaluate generation latency and energy coherence.
-      4. Save results to the deliverable JSON.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp2041-eqm-gradient-landscape
-    title: "Exp 2041: Equilibrium Matching (EqM) Gradient Probing"
-    deliverable: results/experiment_2041_eqm_gradients.json
-    max_turns: 50
-    prompt: |
-      CONTEXT: Equilibrium Matching (EqM) provides a framework to learn the equilibrium gradient of implicit energy landscapes for optimization-driven inference.
-      EXISTING CODE TO READ FIRST: `scripts/experiment_template.py`.
-      TASK: Prototype an EqM gradient extraction step on top of the FAR continuous space.
-      CONCRETE STEPS:
-      1. Build a script to map hidden states from `unsloth/gemma-4-26B-A4B-it-GGUF` to an energy landscape gradient.
-      2. Test optimization-driven refinement on 10 toy constraints.
-      3. Save validation results.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp2042-arm-ebm-bijection-telemetry
-    title: "Exp 2042: ARM-EBM Bijection Telemetry Bounds"
-    deliverable: results/experiment_2042_arm_ebm_bijection.json
-    max_turns: 30
-    prompt: |
-      CONTEXT: The Blondel et al. paper establishes a mathematical bijection between ARMs and EBMs. We will use this to convert logprobs to energy bounds.
-      EXISTING CODE TO READ FIRST: `scripts/experiment_template.py`, telemetry artifacts from `.159`.
-      TASK: Create a telemetry adapter mapping top-k logprobs to EBM bounds.
-      CONCRETE STEPS:
-      1. Extract logprobs from `unsloth/Qwen3.6-35B-A3B-GGUF` on 5 prompts.
-      2. Apply the ARM-EBM bijection to estimate partition function bounds and local energy.
-      3. Save telemetry data to JSON.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp2043-aia-knuth-yao-sim
-    title: "Exp 2043: AIA Knuth-Yao Hardware Simulator"
-    deliverable: results/experiment_2043_aia_knuth_yao.json
-    max_turns: 50
-    agent_type: codex
-    model: gpt-5.5
-    prompt: |
-      CONTEXT: Approximate Inference Accelerator (AIA) designs use Knuth-Yao samplers to reduce RNG consumption in probabilistic hardware.
-      EXISTING CODE TO READ FIRST: `scripts/experiment_template.py`.
-      TASK: Write a software simulator for Knuth-Yao sampling in Carnot's sampler abstractions.
-      CONCRETE STEPS:
-      1. Implement `KnuthYaoSampler` in Python.
-      2. Test parity against standard RNG for 10,000 samples on a discrete distribution.
-      3. Save statistical parity test results.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp2044-gumbel-sampler-sim
-    title: "Exp 2044: AIA Gumbel Sampler Simulator"
-    deliverable: results/experiment_2044_aia_gumbel.json
-    max_turns: 50
-    agent_type: codex
-    model: gpt-5.5
-    prompt: |
-      CONTEXT: AIA architectures utilize Gumbel samplers for continuous categorical constraints.
-      EXISTING CODE TO READ FIRST: `scripts/experiment_template.py`.
-      TASK: Implement a Gumbel sampler simulator for continuous energy landscapes.
-      CONCRETE STEPS:
-      1. Implement `ContinuousGumbelSampler` in Python.
-      2. Apply it to the EqM gradient landscape from Exp 2041.
-      3. Evaluate convergence speed vs Metropolis-Hastings.
-      4. Save simulation results.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp2045-hardware-accounting-aia
-    title: "Exp 2045: AIA Hardware Resource Accounting (No Synthesis)"
-    deliverable: results/experiment_2045_aia_accounting.json
+  - id: exp2053-mouth-brain-architecture-audit
+    title: "Exp 2053: Mouth vs Brain Architecture Audit"
+    deliverable: results/experiment_2053_mouth_brain_audit.json
     max_turns: 20
-    model: opus
+    agent_type: gemini
     prompt: |
-      CONTEXT: We need hardware complexity metrics (BOP/NABS) for the AIA Knuth-Yao and Gumbel samplers before any future FPGA deployment.
-      EXISTING CODE TO READ FIRST: `ops/status.md`, hardware accounting artifacts from `.159`.
-      TASK: Compute Bit Operations (BOP) and Number of Additions/Bit-Shifts (NABS) for the samplers.
+      CONTEXT: Recent EBT papers (arXiv:2507.02092) dictate separating the language generator ("mouth") from the energy verifier ("brain").
+      EXISTING CODE TO READ FIRST: `_bmad/architecture.md`, `ops/status.md`.
+      TASK: Audit the Carnot codebase to identify coupling between the LLM and the verifier and plan a clean separation.
       CONCRETE STEPS:
-      1. Calculate BOP and NABS bounds analytically based on the simulator logic.
-      2. Output the metrics with `hardware_execution_claim=false`.
+      1. Analyze Python and Rust layers for LLM/Verifier tight coupling.
+      2. Draft a `_bmad/mouth_brain_separation.md` proposal.
+      3. Format findings as `{project_root}/results/experiment_2053_mouth_brain_audit.json`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2046-clara-latent-compression
-    title: "Exp 2046: CLaRa Semantic Compression Prototype"
-    deliverable: results/experiment_2046_clara_compression.json
+  - id: exp2054-ebt-scaffolding
+    title: "Exp 2054: EBT Computation Layer Scaffolding"
+    deliverable: results/experiment_2054_ebt_scaffold.json
     max_turns: 50
     prompt: |
-      CONTEXT: CLaRa uses Semantic Compression with Paraphrasing (SCP) to build a dense continuous latent space for retrieval and generation.
-      EXISTING CODE TO READ FIRST: `scripts/experiment_template.py`.
-      TASK: Prototype SCP on a small constraint rulebook using local SOTA models.
+      CONTEXT: EBTs assign energy values directly to input-prediction pairs.
+      EXISTING CODE TO READ FIRST: `python/carnot/pipeline/`.
+      TASK: Implement the Energy-Based Transformer computation layer bridging the MoE outputs to PyO3 safetensors.
       CONCRETE STEPS:
-      1. Use `unsloth/Qwen3.6-35B-A3B-GGUF` to paraphrase and compress 50 CCTU constraints into dense vector embeddings.
-      2. Evaluate reconstruction/retrieval accuracy.
-      3. Save the compression metrics.
+      1. Scaffold an `EBTLayer` in `python/carnot/models/`.
+      2. Use `cached_sota_pair()` with `unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF` to extract hidden states on 5 queries.
+      3. Evaluate latency overhead. Save results to the deliverable JSON.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2047-continuous-verifier-integration
-    title: "Exp 2047: Continuous Latent Verifier Integration"
-    deliverable: results/experiment_2047_continuous_verifier.json
+  - id: exp2055-compositional-energy-minimization
+    title: "Exp 2055: Compositional Energy Minimization"
+    deliverable: results/experiment_2055_comp_energy.json
+    max_turns: 50
+    prompt: |
+      CONTEXT: NeurIPS 2025 demonstrated composing subproblem energy landscapes for complex multi-step reasoning.
+      EXISTING CODE TO READ FIRST: `scripts/experiment_template.py`.
+      TASK: Implement global energy landscape composition over small tractable subproblems.
+      CONCRETE STEPS:
+      1. Create a `CompositionalEnergyMinimizer` class.
+      2. Apply it to a 10-step pathfinding or constraint problem.
+      3. Measure the energy drop per step and record to the deliverable JSON.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2056-soft-bellman-equation-solver
+    title: "Exp 2056: Soft Bellman Equation Solver"
+    deliverable: results/experiment_2056_soft_bellman.json
+    max_turns: 50
+    agent_type: codex
+    prompt: |
+      CONTEXT: arXiv:2512.15605 shows ARMs are EBMs via the Soft Bellman equation.
+      EXISTING CODE TO READ FIRST: `crates/carnot-boltzmann/src/`.
+      TASK: Implement the Soft Bellman equation solver in Rust to map ARM logprobs to EBM energies.
+      CONCRETE STEPS:
+      1. Implement `soft_bellman_solve` in Rust.
+      2. Expose it via PyO3 to the Python layer.
+      3. Add exhaustive unit tests and save test results to the deliverable JSON.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2057-arm-ebm-bijection-test
+    title: "Exp 2057: gated on Exp 2056: ARM-EBM Bijection Validation"
+    deliverable: results/experiment_2057_arm_ebm_bijection.json
     max_turns: 50
     gated_on:
-      - upstream: exp2041-eqm-gradient-landscape
-        artifact_field: convergence_success
+      - upstream: exp2056-soft-bellman-equation-solver
+        artifact_field: success
         op: '=='
         value: true
     prompt: |
-      CONTEXT: Integrate the EqM gradients and CLaRa latent compression into a single continuous verifier.
+      CONTEXT: Validating the soft Bellman mapping empirically.
       EXISTING CODE TO READ FIRST: `scripts/experiment_template.py`.
-      TASK: Build a verifier that evaluates FAR-generated continuous latents against CLaRa-compressed constraints.
+      TASK: Validate the mathematical bijection on a small Sudoku dataset using the solver from Exp 2056.
       CONCRETE STEPS:
-      1. Connect the FAR latent outputs to the EqM landscape structured by the SCP vectors.
-      2. Score 20 reasoning traces in the continuous domain.
-      3. Save the verification accuracy compared to discrete token evaluation.
+      1. Load a 10-puzzle Sudoku dataset.
+      2. Use `unsloth/gemma-4-26B-A4B-it-GGUF` to generate logits.
+      3. Map logits to energy using the soft Bellman solver. Compare with true constraint energy.
+      4. Save error bounds to the deliverable JSON.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2048-inex-introspection
-    title: "Exp 2048: InEx-style Continuous Introspection"
-    deliverable: results/experiment_2048_inex_introspection.json
+  - id: exp2058-ebft-pipeline-scaffold
+    title: "Exp 2058: EBFT Fine-Tuning Pipeline"
+    deliverable: results/experiment_2058_ebft_scaffold.json
     max_turns: 50
     prompt: |
-      CONTEXT: InEx mitigates hallucinations through introspection before final output. We apply this to our continuous verifier.
-      EXISTING CODE TO READ FIRST: `scripts/experiment_template.py`.
-      TASK: Implement an introspection gate that rejects high-energy FAR latent steps before decoding to tokens.
+      CONTEXT: Energy-Based Fine-Tuning (EBFT) targets sequence-level stats instead of next-token prediction.
+      EXISTING CODE TO READ FIRST: `python/carnot/training/`.
+      TASK: Scaffold an EBFT objective function using our new verifiers.
       CONCRETE STEPS:
-      1. Set an energy threshold using the continuous verifier.
-      2. Generate responses with `unsloth/gemma-4-31B-it-GGUF`.
-      3. If a continuous step exceeds the threshold, resample using the Gumbel simulator.
-      4. Save false accept/reject rates.
+      1. Write an `EBFTLoss` function in JAX/Flax.
+      2. Run a micro-training loop for 10 epochs on a simulated dataset.
+      3. Log loss curve to the deliverable JSON.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2049-self-learning-latent-loop
-    title: "Exp 2049: Autonomous Self-Learning Latent Loop (FR-11)"
-    deliverable: results/experiment_2049_self_learning_loop.json
+  - id: exp2059-thrml-sdk-integration-stub
+    title: "Exp 2059: Extropic thrml SDK Integration Stub"
+    deliverable: results/experiment_2059_thrml_integration.json
     max_turns: 50
     prompt: |
-      CONTEXT: The PRD requires autonomous self-learning without forgetting (FR-11).
+      CONTEXT: Extropic AI's TSU requires using the `thrml` Python library for thermodynamic machine learning algorithms.
+      EXISTING CODE TO READ FIRST: `python/carnot/samplers/`.
+      TASK: Create an integration stub for the `thrml` SDK.
+      CONCRETE STEPS:
+      1. Define a `TSUSampler` interface that mocks the `thrml` API.
+      2. Wire it into the Carnot sampler registry.
+      3. Save the interface validation to the deliverable JSON.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2060-dtm-thermodynamic-model
+    title: "Exp 2060: Denoising Thermodynamic Model Algorithm"
+    deliverable: results/experiment_2060_dtm_algorithm.json
+    max_turns: 50
+    agent_type: codex
+    model: gpt-5.5
+    prompt: |
+      CONTEXT: The TSU runs Denoising Thermodynamic Models (DTM) tailored for probability distributions driven by thermal noise.
+      EXISTING CODE TO READ FIRST: `python/carnot/models/`.
+      TASK: Implement the mathematical scaffolding for DTM.
+      CONCRETE STEPS:
+      1. Implement a `DenoisingThermodynamicModel` class.
+      2. Write a unit test simulating a thermal relaxation step.
+      3. Save validation to the deliverable JSON.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2061-tsu-hardware-accounting
+    title: "Exp 2061: TSU Hardware Resource Accounting"
+    deliverable: results/experiment_2061_tsu_accounting.json
+    max_turns: 100
+    model: opus
+    prompt: |
+      CONTEXT: CRITICAL: We need latency and energy estimates for the TSU vs our AIA simulations. Hardware integration tasks require Opus.
       EXISTING CODE TO READ FIRST: `ops/status.md`.
-      TASK: Run a self-learning loop using EqM and Gumbel sampling, measuring soundness vs completeness.
+      TASK: Estimate the energy efficiency and sampling latency for the upcoming Z1 chip based on Extropic specs.
       CONCRETE STEPS:
-      1. Initialize a baseline verifier policy.
-      2. Run 10 iterations of policy updates driven by continuous energy gradients.
-      3. Measure `soundness_mistakes`, `completeness_mistakes`, and `utility_delta`.
-      4. Save the learning trajectory.
+      1. Perform an analytical comparison between the `KnuthYaoSampler` (AIA) and the `TSUSampler`.
+      2. Update the hardware telemetry. Output the metrics with `hardware_execution_claim=false`.
+      3. Save the telemetry to the deliverable JSON.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2050-self-learning-validation
-    title: "Exp 2050: Gated on Exp 2049 Utility > 0 - CCTU Validation"
-    deliverable: results/experiment_2050_cctu_validation.json
+  - id: exp2062-unsupervised-system-2-pretraining
+    title: "Exp 2062: Unsupervised Continuous Self-Learning"
+    deliverable: results/experiment_2062_unsupervised_learning.json
     max_turns: 50
-    gated_on:
-      - upstream: exp2049-self-learning-latent-loop
-        artifact_field: utility_delta
-        op: '>'
-        value: 0.0
     prompt: |
-      CONTEXT: Validate the self-learned verifier policy on the 20-case CCTU tool-use benchmark.
+      CONTEXT: PRD requires continuous self-learning. We must establish an unsupervised loop where the energy landscape refines itself.
+      EXISTING CODE TO READ FIRST: `research-program.md`.
+      TASK: Set up a continuous self-learning loop using `unsloth/Qwen3.6-35B-A3B-GGUF` and the compositional energy minimizer.
+      CONCRETE STEPS:
+      1. Create a `ContinuousSelfLearner` loop processing 5 unlabelled scenarios.
+      2. Run the optimization steps, updating the EBM constraints.
+      3. Save the post-training energy deltas to the deliverable JSON.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2063-kona-style-reasoning-benchmark
+    title: "Exp 2063: Kona-Style System Reasoning Benchmark"
+    deliverable: results/experiment_2063_kona_benchmark.json
+    max_turns: 50
+    prompt: |
+      CONTEXT: Evaluate our new architecture against the Kona 1.0 Sudoku/planning constraints approach.
       EXISTING CODE TO READ FIRST: `scripts/experiment_template.py`.
-      TASK: Run the CCTU benchmark with the updated policy.
+      TASK: Run a system-wide reasoning benchmark using the full Mouth/Brain pipeline.
       CONCRETE STEPS:
-      1. Execute the 20-case CCTU suite.
-      2. Record execution validity, zero false accepts, and semantic correctness.
-      3. Ensure `soundness_mistakes` is 0.
+      1. Define a 10-problem reasoning set (Sudoku + Constraints).
+      2. Evaluate using `unsloth/gemma-4-31B-it-GGUF` with our EBM verifier.
+      3. Verify if we achieve < 500ms latency.
+      4. Save benchmark stats to the deliverable JSON.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2051-milestone-160-audit
-    title: "Exp 2051: Architectural Coherence Audit for Continuous Execution"
-    deliverable: results/experiment_2051_architecture_audit.json
-    max_turns: 30
-    agent_type: gemini
-    model: gemini-3.1-pro-preview
-    prompt: |
-      CONTEXT: We must ensure our new continuous latent architecture aligns with PRD FR-12 (Verifiable Reasoning) and Phase-3 logic.
-      EXISTING CODE TO READ FIRST: `_bmad/architecture.md`, `_bmad/prd.md`.
-      TASK: Audit the continuous execution results for architectural divergence.
-      CONCRETE STEPS:
-      1. Analyze results from the preceding 11 tasks.
-      2. Document any conflicts between EqM continuous constraints and the discrete verification mandate.
-      3. Output an audit JSON.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp2052-milestone-160-retro
-    title: "Exp 2052: Milestone 160 Retro and Completion"
-    deliverable: results/experiment_2052_milestone_160_retro.json
+  - id: exp2064-milestone-161-audit
+    title: "Exp 2064: Milestone 161 Audit"
+    deliverable: results/experiment_2064_audit.json
     max_turns: 20
+    agent_type: gemini
     prompt: |
-      CONTEXT: Close out the milestone by synthesizing the results.
-      EXISTING CODE TO READ FIRST: `scripts/experiment_template.py`.
-      TASK: Write the final JSON artifact for the milestone retro.
+      CONTEXT: Final verification of deliverables before closing the milestone.
+      EXISTING CODE TO READ FIRST: `openspec/change-proposals/research-roadmap-v161.md`, `ops/changelog.md`.
+      TASK: Audit all milestone artifacts.
       CONCRETE STEPS:
-      1. Summarize the FAR latent transition, AIA hardware metrics, and FR-11 self-learning utility.
-      2. Format as `experiment_2052_milestone_160_retro.json`.
+      1. Check presence of all deliverables from 2053 to 2063.
+      2. Verify E2E tests pass for the new verifier architecture.
+      3. Save the audit status to the deliverable JSON.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2065-milestone-161-retro
+    title: "Exp 2065: Milestone 161 Retrospective"
+    deliverable: results/experiment_2065_retro.json
+    max_turns: 20
+    agent_type: gemini
+    prompt: |
+      CONTEXT: Generate the concluding retrospective for the v161 milestone.
+      EXISTING CODE TO READ FIRST: `ops/status.md`, `research-program.md`.
+      TASK: Document the findings of the EBT, Soft Bellman, and TSU integrations.
+      CONCRETE STEPS:
+      1. Summarize the performance of the separated Mouth/Brain system.
+      2. Summarize TSU hardware readiness.
+      3. Format as `experiment_2065_retro.json`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
