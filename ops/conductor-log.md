@@ -2456,3 +2456,4 @@ IMPORTANT:
 | 2026-05-13 09:41 UTC | Exp 2045: AIA Hardware Resource Accounting (No Syn | DOOMED_RERUN_BLOCK | 5 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-13 09:44 UTC | Exp 2045: AIA Hardware Resource Accounting (No Syn | DOOMED_RERUN_BLOCK | 5 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-13 09:46 UTC | Exp 2045: AIA Hardware Resource Accounting (No Syn | DOOMED_RERUN_BLOCK | 5 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-13 09:52 UTC | Exp 2046: CLaRa Semantic Compression Prototype | OK | 81 passed, 1 warning in 4.50s |
