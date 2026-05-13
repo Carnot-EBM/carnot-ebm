@@ -2544,3 +2544,4 @@ IMPORTANT:
 | 2026-05-13 19:46 UTC | Exp 2082: MILP Translation for KAN Constraints | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-13 19:48 UTC | Exp 2082: MILP Translation for KAN Constraints | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-13 19:50 UTC | Exp 2082: MILP Translation for KAN Constraints | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-13 19:55 UTC | Exp 2083: SMT Solver Integration for KAN4CBC verif | OK | 81 passed, 1 warning in 5.85s |
