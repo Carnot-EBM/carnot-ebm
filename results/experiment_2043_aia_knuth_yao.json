@@ -1,0 +1,124 @@
+{
+  "experiment": 2043,
+  "title": "AIA Knuth-Yao Hardware Simulator",
+  "run_date": "20260513",
+  "started_at": "2026-05-13T09:16:12Z",
+  "finished_at": "2026-05-13T09:16:12Z",
+  "duration_s": 0.053,
+  "status": "success",
+  "random_seed": 2043,
+  "reproducibility_checksum": "f84c52eca84317bb",
+  "metrics_used": [
+    "categorical_frequency_delta",
+    "total_variation_delta",
+    "rng_bit_accounting"
+  ],
+  "metrics_provenance": {
+    "categorical_frequency_delta": "carnot.eval.metrics.categorical_frequency_delta:v1.0",
+    "total_variation_delta": "carnot.eval.metrics.total_variation_delta:v1.0",
+    "rng_bit_accounting": "carnot.eval.metrics.rng_bit_accounting:v1.0"
+  },
+  "honest_verdict": "knuth_yao_statistical_parity_passed",
+  "spec_refs": [
+    "REQ-SAMPLE-2043",
+    "SCENARIO-SAMPLE-2043"
+  ],
+  "sampler": "KnuthYaoSampler",
+  "distribution": [
+    0.125,
+    0.375,
+    0.25,
+    0.25
+  ],
+  "parity_metrics": {
+    "spec_refs": [
+      "REQ-SAMPLE-2043",
+      "SCENARIO-SAMPLE-2043"
+    ],
+    "n_samples": 10000,
+    "precision_bits": 3,
+    "input_probabilities": [
+      0.125,
+      0.375,
+      0.25,
+      0.25
+    ],
+    "quantized_probabilities": [
+      0.125,
+      0.375,
+      0.25,
+      0.25
+    ],
+    "dyadic_counts": [
+      1,
+      3,
+      2,
+      2
+    ],
+    "knuth_yao_seed": 2043,
+    "standard_rng_seed": 2044,
+    "knuth_yao_counts": [
+      1300,
+      3683,
+      2535,
+      2482
+    ],
+    "standard_rng_counts": [
+      1244,
+      3823,
+      2513,
+      2420
+    ],
+    "knuth_yao_frequencies": [
+      0.13,
+      0.3683,
+      0.2535,
+      0.2482
+    ],
+    "standard_rng_frequencies": [
+      0.1244,
+      0.3823,
+      0.2513,
+      0.242
+    ],
+    "max_abs_frequency_delta": 0.013999999999999957,
+    "total_variation_delta": 0.013999999999999978,
+    "knuth_yao_chi_square_vs_expected": 3.8166666666666664,
+    "standard_rng_chi_square_vs_expected": 4.077466666666666,
+    "thresholds": {
+      "max_abs_frequency_delta": 0.03,
+      "total_variation_delta": 0.04
+    },
+    "parity_passed": true,
+    "bit_metrics": {
+      "bits_consumed": 22510,
+      "samples_drawn": 10000,
+      "average_bits_per_sample": 2.251,
+      "fixed_width_bits_per_sample": 3,
+      "rng_bit_reduction_vs_fixed_width": 0.2496666666666667
+    }
+  },
+  "hardware_execution_claim": false,
+  "aia_simulation_only": true,
+  "schema": [
+    "aia_simulation_only",
+    "distribution",
+    "duration_s",
+    "experiment",
+    "finished_at",
+    "hardware_execution_claim",
+    "honest_verdict",
+    "metrics_provenance",
+    "metrics_used",
+    "parity_metrics",
+    "random_seed",
+    "reproducibility_checksum",
+    "run_date",
+    "sampler",
+    "spec_refs",
+    "started_at",
+    "status",
+    "title"
+  ],
+  "invariant_violations": []
+}
