@@ -1,182 +1,159 @@
-milestone: "2026.05.163"
-milestone_title: "Live GPU Constraint Extraction, Formal KAN Verification, and Predictive Learning"
+milestone: "2026.05.164"
+milestone_title: "Hard Constraint Projections, EBT Reasoning, and Schema-Constrained Memory"
 milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
 
 tasks:
-  - id: exp2078-smt-constraint-extraction
-    title: "Exp 2078: SMT-based Constraint Extraction Scaffold"
-    deliverable: results/experiment_2078_smt_extraction.json
+  - id: exp2090-scg-mem-trace2skill
+    title: "Exp 2090: Schema-Constrained Generation for Agent Memory (SCG-MEM)"
+    deliverable: results/experiment_2090_scg_mem.json
     max_turns: 50
     agent_type: codex
     prompt: |
-      CONTEXT: The regex `ArithmeticExtractor` failed on instruction-tuned models. We are implementing an SMT/Z3 approach (arxiv 2601.17789) to formalize constraints.
+      CONTEXT: We must harden the Tier 2 Continuous Learning memory. Recent work (arXiv:2604.20117) proposes SCG-MEM to constrain memory entry formatting.
       EXISTING CODE TO READ FIRST: `python/carnot/pipeline/`.
-      TASK: Scaffold the `SMTExtractor` using Z3 to parse logical steps from chain-of-thought.
+      TASK: Implement SCG-MEM to ensure that Trace2Skill memory updates conform strictly to Carnot's internal JSON schema constraints.
       CONCRETE STEPS:
-      1. Create `SMTExtractor` class in `python/carnot/pipeline/extractors/`.
-      2. Integrate `z3-solver` for parsing basic arithmetic logic from generic text.
-      3. Evaluate against 5 synthetic IT-model style responses. Save to JSON.
+      1. Define a strict Cognitive Schema for trace records.
+      2. Implement a decoding mask/adapter enforcing this schema on local GGUFs.
+      3. Evaluate the structural validity rate of 50 new memory insertions. Save to JSON.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2079-llm-as-extractor
-    title: "Exp 2079: LLM-as-Extractor Pipeline"
-    deliverable: results/experiment_2079_llm_extractor.json
+  - id: exp2091-pinet-projection-layer
+    title: "Exp 2091: $\Pi$Net Differentiable Projection Layer"
+    deliverable: results/experiment_2091_pinet.json
     max_turns: 50
+    agent_type: codex
     prompt: |
-      CONTEXT: We need an LLM-based constraint extractor as an alternative to SMT.
-      EXISTING CODE TO READ FIRST: `python/carnot/pipeline/`.
-      TASK: Implement `LLMExtractor` utilizing `unsloth/gemma-4-31B-it-GGUF`.
+      CONTEXT: Recent advances (ICLR 2026) introduce $\Pi$Net, a hard constraint projection layer using Douglas-Rachford splitting.
+      EXISTING CODE TO READ FIRST: `python/carnot/verify/`.
+      TASK: Prototype a differentiable projection layer that forces linear constraint satisfaction.
       CONCRETE STEPS:
-      1. Implement `LLMExtractor` that prompts the model to output JSON verifiable claims.
-      2. Connect this extractor to the `VerifyRepairPipeline`.
-      3. Measure extraction success rate on 10 GSM8K samples. Save to JSON.
+      1. Implement a JAX-based $\Pi$Net projection module.
+      2. Test the layer against a set of synthetic linear constraints from our SMT extractor.
+      3. Measure constraint violation rate (expected: 0%) and latency. Save to JSON.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2080-live-gpu-gsm8k-baseline
-    title: "Exp 2080: Instruction-Tuned Baseline on Live GPU"
-    deliverable: results/experiment_2080_live_gpu_baseline.json
+  - id: exp2092-hardnet-nonlinear
+    title: "Exp 2092: HardNet++ Non-Linear Constraint Enforcement"
+    deliverable: results/experiment_2092_hardnet.json
     max_turns: 50
     gated_on:
-      - upstream: exp2079-llm-as-extractor
-        artifact_field: success_rate
-        op: ">"
-        value: 0.5
+      - upstream: exp2091-pinet-projection-layer
+        artifact_field: violation_rate
+        op: "=="
+        value: 0.0
     prompt: |
-      CONTEXT: We must establish real baselines using live GPU inference and instruction-tuned models (Priority 2).
-      EXISTING CODE TO READ FIRST: `scripts/`.
-      TASK: Run a live GPU baseline of GSM8K using the new constraint extractors.
+      CONTEXT: Building on $\Pi$Net, HardNet++ (arXiv:2604.19669) handles non-linear constraints via damped local linearizations.
+      EXISTING CODE TO READ FIRST: `python/carnot/verify/`.
+      TASK: Implement the HardNet++ projection algorithm for non-linear algebraic constraints.
       CONCRETE STEPS:
-      1. Create a script to run 200 GSM8K questions through `VerifyRepairPipeline`.
-      2. Force `CARNOT_FORCE_LIVE=1` and use `unsloth/Qwen3.6-35B-A3B-GGUF`.
-      3. Report `inference_mode="live_gpu"` and record verification metrics to JSON.
+      1. Extend the projection module to support iterative local linearizations.
+      2. Validate on 5 non-linear constraints extracted by the SMT tool.
+      3. Log convergence steps and zero-violation success to JSON.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2081-kan-pwa-abstraction
-    title: "Exp 2081: PWA Abstraction for CarnotKAN"
-    deliverable: results/experiment_2081_pwa_abstraction.json
+  - id: exp2093-ebt-prototype
+    title: "Exp 2093: Energy-Based Transformer (EBT) Baseline Prototype"
+    deliverable: results/experiment_2093_ebt_prototype.json
     max_turns: 50
-    agent_type: codex
     prompt: |
-      CONTEXT: Recent research (arxiv 2602.06737) uses Piecewise Affine (PWA) abstractions for KAN verification.
+      CONTEXT: Energy-Based Transformers (ICLR 2026) represent the future of Carnot Phase 3, casting generation as energy minimization.
       EXISTING CODE TO READ FIRST: `python/carnot/models/`.
-      TASK: Implement PWA abstractions for the B-splines in `CarnotKAN`.
+      TASK: Scaffold a minimal EBT architecture in JAX that assigns scalar energy to input-prediction pairs.
       CONCRETE STEPS:
-      1. Write logic to convert trained KAN B-splines into PWA representations.
-      2. Measure the approximation error of the PWA vs original spline.
-      3. Save bounds and metrics to JSON.
+      1. Construct an `EBTReasoner` model combining a small transformer body with an energy scalar output head.
+      2. Implement a generation function using gradient descent on the input tokens with respect to the energy landscape.
+      3. Record loss convergence and basic inference latency to JSON.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2082-kan-milp-translation
-    title: "Exp 2082: MILP Translation for KAN Constraints"
-    deliverable: results/experiment_2082_kan_milp.json
+  - id: exp2094-ets-rl-alignment
+    title: "Exp 2094: Energy-Guided Test-Time Scaling (ETS)"
+    deliverable: results/experiment_2094_ets_scaling.json
     max_turns: 50
     prompt: |
-      CONTEXT: To use SMT solvers, the PWA KAN abstractions must be formulated as Mixed Integer Linear Programs (MILP).
-      EXISTING CODE TO READ FIRST: `python/carnot/models/`.
-      TASK: Translate `CarnotKAN` PWA representations into MILP constraints.
-      CONCRETE STEPS:
-      1. Implement MILP export logic for the PWA abstractions.
-      2. Validate the formulation on a 2-layer KAN.
-      3. Save the generated MILP formulation and latency to JSON.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp2083-kan4cbc-smt-verification
-    title: "Exp 2083: SMT Solver Integration for KAN4CBC verification"
-    deliverable: results/experiment_2083_kan4cbc.json
-    max_turns: 50
-    prompt: |
-      CONTEXT: Using techniques from KAN4CBC, we can use SMT solvers to verify the safety and correctness of the KAN.
-      EXISTING CODE TO READ FIRST: `python/carnot/models/`.
-      TASK: Integrate the Z3 SMT solver to formally verify properties of the MILP KAN.
-      CONCRETE STEPS:
-      1. Connect the MILP representation to the `z3-solver`.
-      2. Assert a simple robustness property and attempt to verify it.
-      3. Log the SMT solver execution time and result to JSON.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp2084-code-verification-live-gpu
-    title: "Exp 2084: HumanEval Code Verification Pipeline"
-    deliverable: results/experiment_2084_humaneval.json
-    max_turns: 50
-    prompt: |
-      CONTEXT: Code verification uses structural tests and should be robust. It needs to run on live GPU (Priority 3).
+      CONTEXT: ETS (ICML 2026) provides training-free alignment by incorporating energy terms into transition probabilities at test time.
       EXISTING CODE TO READ FIRST: `python/carnot/pipeline/`.
-      TASK: Integrate `CodeExtractor` with runtime instrumentation for live GPU tests.
+      TASK: Apply ETS to our live SOTA GGUF decoding pipeline.
       CONCRETE STEPS:
-      1. Prepare `CodeExtractor` to accept inputs from `unsloth/gemma-4-31B-it-GGUF`.
-      2. Ensure execution environment is isolated for evaluating generated code.
-      3. Run a smoke test on 5 HumanEval problems and log to JSON.
+      1. Modify the `score_candidates` step to utilize ETS-style Monte Carlo energy estimation.
+      2. Use `unsloth/gemma-4-26B-A4B-it-GGUF` to decode 10 GSM8K problems with ETS.
+      3. Compare accuracy and latency against the standard generation baseline. Save to JSON.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2085-ising-guided-fuzzing
-    title: "Exp 2085: Ising-Guided Fuzzing for Code Repair"
-    deliverable: results/experiment_2085_ising_fuzzing.json
+  - id: exp2095-live-gpu-ebt-evaluation
+    title: "Exp 2095: Live GPU EBT vs Autoregressive Evaluation"
+    deliverable: results/experiment_2095_live_ebt_eval.json
     max_turns: 50
-    agent_type: codex
+    gated_on:
+      - upstream: exp2093-ebt-prototype
+        artifact_field: inference_success
+        op: "=="
+        value: true
     prompt: |
-      CONTEXT: Ising-guided fuzzing leverages our fast sampler to mutate code toward constraint satisfaction.
-      EXISTING CODE TO READ FIRST: `python/carnot/pipeline/`.
-      TASK: Implement Ising-guided fuzzing as a repair mechanism for failed CodeExtractor executions.
-      CONCRETE STEPS:
-      1. Implement a fuzzer that maps AST mutations to Ising spin flips.
-      2. Measure repair success on the failed outputs from Exp 2084.
-      3. Save repair delta metrics to JSON.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp2086-tier1-memory-pattern-addition
-    title: "Exp 2086: Tier 1 Memory Pattern Constraint Addition"
-    deliverable: results/experiment_2086_tier1_addition.json
-    max_turns: 50
-    prompt: |
-      CONTEXT: Continuous Learning Tier 1 needs constraint ADDITION from memory patterns, not just weight changes.
-      EXISTING CODE TO READ FIRST: `python/carnot/pipeline/`.
-      TASK: Wire the Tier 2 memory pattern data into the constraint generation pipeline.
-      CONCRETE STEPS:
-      1. Modify `VerifyRepairPipeline` to query persistent memory for frequent error patterns.
-      2. Implement dynamic generation of new constraints when a threshold is met.
-      3. Test constraint addition and log behavior to JSON.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp2087-jepa-predictive-verification
-    title: "Exp 2087: Tier 3 JEPA Predictive Verification Scaffold"
-    deliverable: results/experiment_2087_jepa_scaffold.json
-    max_turns: 50
-    prompt: |
-      CONTEXT: JEPA Predictive Verification predicts constraint violations from partial LLM responses before generation completes.
+      CONTEXT: We must validate if the EBT prototype demonstrates dynamic System 2 thinking properties under constraint pressure.
       EXISTING CODE TO READ FIRST: `python/carnot/models/`.
-      TASK: Scaffold the JEPA predictor model for partial trace evaluation.
+      TASK: Evaluate the `EBTReasoner` against a standard autoregressive model on hard constraint tasks.
       CONCRETE STEPS:
-      1. Create the `JEPAPredictor` class in `python/carnot/models/`.
-      2. Write a mock training loop using simulated `(partial_response, final_violation)` pairs.
-      3. Record architecture size and inference latency to JSON.
+      1. Generate constraint-bound traces using the EBT gradient-descent loop.
+      2. Compare with `unsloth/Qwen3.6-35B-A3B-GGUF` performance on the same tasks.
+      3. Log inference times, steps to converge, and final energy to JSON.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2088-npu-driver-setup
-    title: "CRITICAL: AMD XDNA NPU SDK Toolchain"
-    deliverable: results/experiment_2088_npu_setup.json
+  - id: exp2096-tier2-continuous-learning-ets
+    title: "Exp 2096: Tier 2 Memory Updating via ETS Feedback"
+    deliverable: results/experiment_2096_tier2_ets.json
+    max_turns: 50
+    prompt: |
+      CONTEXT: Connect the newly validated ETS decoding logic back to the Continuous Learning loop.
+      EXISTING CODE TO READ FIRST: `python/carnot/pipeline/`.
+      TASK: Update the constraint pattern memory dynamically using feedback from ETS trajectory scoring.
+      CONCRETE STEPS:
+      1. Extract successful ETS trajectories that circumvented constraints.
+      2. Generate new logical constraint templates from these trajectories via SCG-MEM.
+      3. Save the new constraint library updates to JSON.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2097-npu-jepa-execution
+    title: "Exp 2097: NPU Execution of JEPA Predictor"
+    deliverable: results/experiment_2097_npu_jepa.json
     max_turns: 100
     model: opus
     prompt: |
-      CONTEXT: We need to unblock NPU edge inference. Human intervention was required, but Opus should attempt toolchain installation via `mlir-aie` or package managers if possible.
-      EXISTING CODE TO READ FIRST: `research-hardware-wishlist.md`.
-      TASK: Attempt to install NPU prerequisites (`ninja-build`, `libopenblas-dev`, or `mlir-aie` from GitHub wheel).
+      CONTEXT: With the NPU toolchain unblocked in .163, we need to execute the JEPA predictor model directly on the XDNA NPU.
+      EXISTING CODE TO READ FIRST: `python/carnot/models/`.
+      TASK: Load and execute the ONNX JEPA model using the VitisAI EP on the NPU.
       CONCRETE STEPS:
-      1. Attempt package installation of ninja and openblas using subprocess package managers.
-      2. If blocked, download and install `mlir_aie` wheel from AMD's GitHub releases.
-      3. CRITICAL: write artifact FIRST. Log `honest_verdict` to JSON.
+      1. Load the `JEPAPredictor` ONNX artifact via onnxruntime with VitisAI Execution Provider.
+      2. Run inference on a batch of 50 partial trace tensors.
+      3. Measure end-to-end NPU latency vs CPU latency. Log `honest_verdict` to JSON.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2089-milestone-163-retro
-    title: "Exp 2089: Milestone 163 Retro & Doc Updates"
-    deliverable: results/experiment_2089_retro.json
+  - id: exp2098-kan-hardware-complexity
+    title: "Exp 2098: Hardware Complexity Accounting for KAN MILP"
+    deliverable: results/experiment_2098_kan_metrics.json
+    max_turns: 50
+    agent_type: gemini
+    prompt: |
+      CONTEXT: Before synthesizing, we must compute hardware-oriented inference complexity (arXiv:2604.03345) for our KAN MILP abstractions.
+      EXISTING CODE TO READ FIRST: `python/carnot/models/`.
+      TASK: Perform no-synthesis hardware accounting (RM, BOP, NABS) for the PWA MILP models.
+      CONCRETE STEPS:
+      1. Write a script calculating Real Multiplications, Bit Operations, and Additions/Bit-Shifts for the current KAN tiers.
+      2. Ensure metric computation reflects Extropic TSU / FPGA constraints.
+      3. Save hardware complexity totals to JSON.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2099-milestone-164-retro
+    title: "Exp 2099: Milestone 164 Retro & Documentation"
+    deliverable: results/experiment_2099_retro.json
     max_turns: 20
     agent_type: gemini
     prompt: |
-      CONTEXT: Milestone 163 is complete. We need to reconcile specs.
+      CONTEXT: Milestone 164 is complete. We need to reconcile findings on Hard Constraints, EBTs, and NPU execution.
       EXISTING CODE TO READ FIRST: `ops/status.md`, `_bmad/traceability.md`.
-      TASK: Perform retrospective and documentation update for Milestone 163.
+      TASK: Perform retrospective and documentation update for Milestone 164.
       CONCRETE STEPS:
-      1. Summarize the performance of SMT/LLM constraint extraction and JEPA scaffolding.
-      2. Update `ops/status.md` and `_bmad/traceability.md`.
-      3. Format findings as `{project_root}/results/experiment_2089_retro.json`.
+      1. Summarize $\Pi$Net constraint enforcement success, ETS performance, and NPU benchmarks.
+      2. Update `ops/status.md` with new capabilities.
+      3. Format findings as `{project_root}/results/experiment_2099_retro.json`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
