@@ -1,0 +1,51 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.161",
+  "generated_at": "2026-05-13T17:52:05Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 118.9,
+  "experiments_completed": 25,
+  "compute_bound_experiments_count": 3,
+  "slowest_experiments": [
+    {
+      "experiment": "-0400 [conductor] Exp 2056: Soft Bellman Equation Solver",
+      "duration_minutes": 63.7,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 2064: Milestone 161 Audit",
+      "duration_minutes": 10.3,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 2058: EBFT Fine-Tuning Pipeline",
+      "duration_minutes": 6.3,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 2063: Kona-Style System Reasoning Benchmark",
+      "duration_minutes": 5.0,
+      "compute_bound": true
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 2065: Milestone 161 Retrospective",
+      "duration_minutes": 4.8,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "summary": "Milestone 2026.05.161 completed 25 experiments in 118.9 minutes. Synthesis-only tasks dominated the wall time, particularly Exp 2056. GPU utilization on the 3 compute-bound tasks was efficient with no anomalous idling.",
+  "bottlenecks_identified": [
+    "Synthesis-only task Exp 2056 was the primary bottleneck, consuming 63.7 minutes."
+  ],
+  "improvements_suggested": [
+    "Optimize the synthesis pipeline to address the significant wall-time consumed by tasks like Exp 2056."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Investigate and reduce the execution time of Soft Bellman Equation Solver (Exp 2056).",
+    "Identify optimization opportunities for milestone audits and retrospectives.",
+    "Maintain efficient GPU utilization for future compute-bound experiments."
+  ],
+  "estimated_time_savings_pct": 30,
+  "meta_reflection": "Synthesis-only tasks continue to be the primary driver of milestone wall time, overshadowing compute-bound tasks. Ensuring the synthesis pipeline is as efficient as possible will yield the most significant time savings in future milestones."
+}
