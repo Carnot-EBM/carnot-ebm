@@ -223,3 +223,4 @@ The long-term vision: an open-source foundation model based on hardware-accelera
 - Non-autoregressive reasoning (generate via energy minimization)
 - Language-free verification (learn constraint structure directly)
 - Open-source (Apache 2.0) and hardware-portable (Vulkan/FPGA/D-Wave/TSU)
+| 2026.05.159 | Operational Retrospective | 2026-2038 | Zero compute-bound tasks, failure_ledger savings |
