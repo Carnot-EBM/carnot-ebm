@@ -2413,3 +2413,6 @@ IMPORTANT:
 | 2026-05-13 07:00 UTC | Exp 2025: STKAN No-Synthesis Hardware Inference Ac | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2024-stkan-spatio-temporal-prototype) |
 | 2026-05-13 07:07 UTC | Exp 2027: Milestone .158 Retrospective | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2027_milesto |
 | 2026-05-13 07:11 UTC | Exp 2027: Milestone .158 Retrospective | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2027_milesto |
+| 2026-05-13 07:29 UTC | Plan milestone 2026.05.159 | OK | 11 tasks proposed |
+| 2026-05-13 07:31 UTC | Milestone 2026.05.159 activated | OK | 11 tasks queued |
+| 2026-05-13 07:33 UTC | Exp 2028: Archive .158 and Activate .159 (Opus Boo | OK | Deliverable already exists in repo |
