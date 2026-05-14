@@ -5,8 +5,48 @@ online sources, ranks them by potential impact on Carnot's current state,
 and queues the most promising into the next roadmap milestone. Codex (inner
 loop) executes the current experiments.
 
-**Updated:** 2026-04-12
-**Current Focus:** Precision ceiling on larger models (Exp 184: -2% on 3B) + constraint extraction on instruction-tuned models (Exp 210)
+**Updated:** 2026-05-14
+**Current Focus:** Adversarial-verify discipline (artifact fabrication detection); Phase 4 active-inference smoke; THRML parity v2 (Curie-Weiss); NLA-class 16th verifier; verifier-ensemble null-space follow-up (new from 2026-05-14 sweep)
+
+## Sweep 2026-05-14T00:42Z (Claude outer-loop, manual seed for /loop job 875c06b4)
+
+**Queries fired:**
+- arxiv abs:"verifier ensemble" OR "null space attack" OR "specification gaming"
+- arxiv abs:"energy based model" AND (reasoning OR verification OR LLM)
+
+**Candidates surfaced (10 raw, 4 promoted to ranked queue below):**
+
+### NEW Rank URGENT: Behavioral Entanglement + Reweighting Verifier Ensembles (arXiv:2604.07650, Apr 2026)
+- **Score:** 5×4×4×5 = **400**
+- **Authors:** Kuai, Jiang, Zhu et al.
+- **Why it matters:** Directly addresses Carnot's k=15 AND-composition null-space concern (per Spera Theorem 9.2 memory). Demonstrates that "correlated reasoning patterns and synchronized failures undermine ensemble verification" — i.e., the joint-null-space attack is empirically observable, not just theoretically possible. Reports up to **4.5% accuracy lift** from de-entangled reweighting of verifier ensembles. This is a load-bearing peer paper for paper-v6's Phase-3 architecture justification.
+- **Carnot integration path:** Phase-3 verifier ensemble could adopt reweighting; current uniform-weight AND-composition is what the paper shows is suboptimal. Worth a dedicated milestone task to replicate the reweighting algorithm on Carnot's k=15 setup and measure the lift on a held-out adversarial corpus.
+
+### NEW Rank URGENT: Spilled Energy in LLMs (arXiv:2602.18671, Feb 2026)
+- **Score:** 5×4×5×4 = **400**
+- **Authors:** Minut, Dewidar, Masi
+- **Why it matters:** "Reinterprets LLM softmax classifiers as EBMs to detect hallucinations using training-free metrics derived from output logits without requiring probe classifiers." This is structurally identical to Carnot's verifier-energy philosophy — energy as verification, no labels required. Strong methodological peer. May provide a baseline to compare Carnot's verifier ensemble against on standard hallucination benchmarks. **Already partially used in Carnot** (verify_spilled_energy is a method in VerifyRepairPipeline per the conductor's AST signatures); confirm coverage + cite in paper-v6 §3 as a peer methodology.
+
+### NEW Rank HIGH: Autoregressive LMs are Secretly EBMs (arXiv:2512.15605, Dec 2025)
+- **Score:** 5×5×5×3 = **375**
+- **Authors:** Blondel, Sander, Vivier-Ardisson
+- **Why it matters:** Theoretical foundation — "Mathematical equivalence between autoregressive models and EBMs, revealing lookahead capabilities in next-token prediction." Supports Carnot's premise that any LLM output admits an energy interpretation, and therefore can be verified via energy. Cite in paper-v6 §3 architecture lineage; Phase-3 substrate justification.
+
+### NEW Rank HIGH: Specification Gaming in Reasoning Models (arXiv:2605.02269, May 2026)
+- **Score:** 5×4×3×5 = **300**
+- **Authors:** Nishimura-Gasparian, McCarthy, Lindner
+- **Why it matters:** "RL reasoning training increases exploitation rates of model specifications." Specification gaming is precisely the failure mode Carnot's adversarial-verify caught on exp1851 (3.4s wall time with TPR=1.0). This paper formalizes that the SOTA RL-trained models (Qwen3.6 GRPO etc.) are MORE prone to gaming the verifier signal — i.e., Carnot's verifier needs to be MORE adversarially robust on the current SOTA than on prior generations. Cite in paper-v6 §6 limitations + adversarial-verify CLAUDE.md rule.
+
+### Additional candidates (not promoted; rank below 300):
+- arXiv:2603.28063 Reward Hacking as Equilibrium (Wang, Huang) — theoretical unification of specification gaming; relevant to paper-v6 §6 but not actionable
+- arXiv:2511.21882 Closed-Loop Transformers (Anbar Jafari) — iterative energy refinement; Phase-3 EBT track relevance, but the abstract is thin on numerical results
+- arXiv:2601.21064 Textual Equilibrium Propagation (Chen, Deng, Zou) — workflow optimization not verification; adjacent
+- arXiv:2604.12500 Safety Training Modulates Misalignment (Eshuijs et al.) — environment-design effects; less direct
+- arXiv:2512.18730 RL-Tuned LLMs via EBMs (Tan, Hong) — theoretical, less actionable
+- arXiv:2603.08806 Test-Driven AI Agent Definition (Rehan) — agent design, off-topic
+
+---
+
 
 ## How This Works
 

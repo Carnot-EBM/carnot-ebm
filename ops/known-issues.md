@@ -92,6 +92,29 @@ historical record per CLAUDE.md no-pruning policy.
 > - ~~Multi-agent routing infrastructure changes are still allowed,
 >   but treat codex as deprecated until this constraint is lifted.~~
 
+## RESEARCH-STUDYING CANDIDATES (low-priority pickup — fresh from sweeps)
+
+**Maintained by:** the local /loop job `875c06b4` (study-phase sweep every 4h at :13).
+Candidates surfaced from arxiv/HN/Semantic Scholar literature scans. Full ranking + scoring at `research-studying.md`. Promoted here only if score > 400 OR genuinely novel-to-Carnot.
+
+### 2026-05-14 sweep candidates (top scores)
+
+- **arXiv:2604.07650** — Behavioral Entanglement + Reweighting Verifier Ensembles
+  (Kuai et al., Apr 2026). Score 400. Demonstrates that uniform-weight AND-composition
+  of LLM verifiers is suboptimal due to correlated failures; de-entangled reweighting
+  yields up to 4.5% accuracy lift. **Direct relevance to Carnot's k=15 Phase-3
+  architecture** (Spera Theorem 9.2 null-space concern). Candidate for future
+  milestone task: replicate reweighting algorithm on Carnot's k=15 setup, measure
+  lift on adversarial corpus. NOT urgent — Phase 3 substrate not yet built.
+
+- **arXiv:2602.18671** — Spilled Energy in LLMs (Minut, Dewidar, Masi, Feb 2026).
+  Score 400. Reinterprets LLM softmax as EBMs for training-free hallucination
+  detection. Already partially used in Carnot (`verify_spilled_energy` method
+  exists in VerifyRepairPipeline); confirm coverage + cite in paper-v6 §3 peer
+  methodology.
+
+---
+
 ## DEFERRED / PARKED ITEMS (planner may propose, not mandatory)
 
 ### 2026-05-01: paperbanana for diagrams + infographics (parked, not yet adopted)
