@@ -162,7 +162,7 @@ tasks:
          - schema: "carnot.gatemate_flash.v1"
          - board: "Olimex GateMateA1-EVB-2M (CC GM1A1)"
          - idcode_verified: "0x20000001"
-         - toolchain: {yosys_version, nextpnr_version, openFPGALoader_version}
+         - toolchain: {{yosys_version, nextpnr_version, openFPGALoader_version}}
          - yosys_invocation: "<the exact command that worked>"
          - synthesis_completed: <bool>
          - pnr_completed: <bool>
@@ -305,6 +305,6 @@ tasks:
       - gates_passed_count, gates_failed_count
       - actual_agent_backend_distribution
       - paper_v6_carryforward_items
-      - hardware_sovereignty_data_points: [{board, gate_passed}]
+      - hardware_sovereignty_data_points: [{{board, gate_passed}}]
       - adversarial_verify_flag_count
       - honest_verdict: prefix "complete:".

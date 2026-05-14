@@ -1,0 +1,53 @@
+{
+  "experiment": "1680",
+  "description": "SCG-MEM structural enforcer for FR-11",
+  "total_traces_processed": 4,
+  "valid_traces_retained": 2,
+  "traces": [
+    {
+      "trace_id": "trace-001",
+      "memory_embedding": [
+        0.12,
+        0.34,
+        -0.56
+      ],
+      "cognitive_context": "FR-11 self-learning promotion loop",
+      "utility_score": 0.85
+    },
+    {
+      "trace_id": "trace-003",
+      "memory_embedding": [
+        -0.1,
+        0.9,
+        0.4
+      ],
+      "cognitive_context": "Valid schema trace",
+      "utility_score": 0.92
+    }
+  ],
+  "schema_enforced": {
+    "type": "object",
+    "properties": {
+      "trace_id": {
+        "type": "string"
+      },
+      "memory_embedding": {
+        "type": "array",
+        "items": {
+          "type": "number"
+        }
+      },
+      "cognitive_context": {
+        "type": "string"
+      },
+      "utility_score": {
+        "type": "number"
+      }
+    },
+    "required": [
+      "trace_id",
+      "memory_embedding",
+      "cognitive_context"
+    ]
+  }
+}
