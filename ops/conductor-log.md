@@ -3180,3 +3180,4 @@ IMPORTANT:
 | 2026-05-14 23:26 UTC | Exp 1695: Benchmark SineKAN vs KAEMEnergy baseline | OK | 81 passed, 1 warning in 5.10s |
 | 2026-05-14 23:31 UTC | Exp 1696: Milestone .170 Retrospective | OK | 81 passed, 1 warning in 5.81s |
 | 2026-05-14 23:33 UTC | Milestone 2026.05.171 activated | OK | 6 tasks queued |
+| 2026-05-14 23:44 UTC | Exp 1692: THRML/Carnot Curie-Weiss n=128 parity wi | OK | cache hit: 81 passed, 1 warning in 5.81s |
