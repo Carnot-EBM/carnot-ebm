@@ -5733,3 +5733,4 @@ Completed 15 experiments in 28.9 minutes. There were 0 compute-bound experiments
 - 2026-05-14: Exp 1680: Schema-Constrained Generation (SCG-MEM) for Trace Memory (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_1680_scg_mem.json
 - 2026-05-14: Exp 1681: Energy-Guided Test-Time Scaling (ETS) for Policy Evaluation (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_1681_ets_policy.json
 - 2026-05-14: Exp 1683: Self-learning regression audit (zero soundness mistakes) (⚠️ Research Finding) — honest_verdict=soundness_audit_passed; results/experiment_1683_fr11_soundness.json
+- 2026-05-14: Exp 1676: GateMate A1 bitstream synth + flash via DirtyJTAG (⚠️ Research Finding) — honest_verdict=success: gatemate_flash_succeeded_lut_0.08pct_at_514mhz; results/experiment_1676_gatemate_flash.json
