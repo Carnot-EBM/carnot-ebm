@@ -122,6 +122,16 @@ Candidates surfaced from arxiv/HN/Semantic Scholar literature scans. Full rankin
   Otherwise the SAE could be discriminating feature-class identity, not output-
   distinguishing signal.
 
+- **arXiv:2512.02080** — The 4/δ Bound: Designing Predictable LLM-Verifier Systems
+  (Dantas, Cordeiro, Sun, Junior, Dec 2025). Score 400. **Theoretical convergence
+  bound for verifier-loop systems** — models LLM-verifier pipeline as absorbing
+  Markov chain (CodeGen → Compilation → InvariantSynth → SMTSolving), proves
+  termination and E[n] ≤ 4/δ expected iterations. Validated over 90,000 trials.
+  **Carnot's verify-repair pipeline is structurally this architecture**; citing
+  this paper grounds our convergence claims in published theory. Action item:
+  compute Carnot's empirical δ from recent verify-repair runs and validate
+  against the 4/δ prediction. Cite in paper-v6 §3 architecture lineage.
+
 ---
 
 ## DEFERRED / PARKED ITEMS (planner may propose, not mandatory)

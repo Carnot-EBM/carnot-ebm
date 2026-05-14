@@ -5,8 +5,73 @@ online sources, ranks them by potential impact on Carnot's current state,
 and queues the most promising into the next roadmap milestone. Codex (inner
 loop) executes the current experiments.
 
-**Updated:** 2026-05-14
-**Current Focus:** Adversarial-verify discipline (artifact fabrication detection); Phase 4 active-inference smoke; THRML parity v2 (Curie-Weiss); NLA-class 16th verifier; verifier-ensemble null-space follow-up (new from 2026-05-14 sweep)
+**Updated:** 2026-05-14 (3 sweeps today)
+**Current Focus:** Adversarial-verify discipline; Phase 4 active-inference smoke; THRML parity v2 (Curie-Weiss); NLA-class 16th verifier (with description-collision audit per arXiv:2605.12874); verifier-ensemble null-space + 4/δ convergence bound (new from 2026-05-14T08:20Z sweep)
+
+## Sweep 2026-05-14T08:20Z (Claude outer-loop /loop job 875c06b4 fire #3)
+
+**Queries fired:**
+- arxiv abs:"test time compute" AND (verification OR reasoning OR sampling) → **HTTP 429 rate-limited**
+- HN search: `LLM verifier` (timestamp filter created_at_i > 1746000000)
+- arxiv abs page: 2512.02080 (deep-dive on top HN hit)
+- arxiv listing /list/cs.LG/2605 → HTTP 404 (URL format issue; skipped)
+
+**Candidates surfaced (10 HN stories, 1 deep-dive, 2 promoted):**
+
+### NEW Rank URGENT: The 4/δ Bound — Predictable LLM-Verifier Convergence (arXiv:2512.02080, Dec 2025)
+- **Score:** 5×5×4×4 = **400**
+- **Authors:** Pierre Dantas, Lucas Cordeiro, Youcheng Sun, Waldir Junior
+- **Surfaced via:** Hacker News (59 points, 13 comments)
+- **Why it matters:** This is a **theoretical convergence bound for verifier-loop
+  systems with formal guarantees** — exactly the kind of architectural
+  justification paper-v6 §3 needs. Models the LLM-verifier loop as an
+  absorbing Markov chain with 4 stages (CodeGen → Compilation →
+  InvariantSynth → SMTSolving) and proves: (1) termination for any δ > 0
+  success rate per stage, (2) expected latency E[n] ≤ 4/δ iterations.
+  Validated over 90,000 trials. **Carnot's verify-repair pipeline is
+  structurally this exact architecture** (different specific stages, but
+  same absorbing-Markov-chain shape). Citing this paper grounds Carnot's
+  pipeline in published convergence theory rather than empirical hand-wave.
+- **Action items:**
+  1. Cite in paper-v6 §3 architecture lineage discussion
+  2. Compute Carnot's empirical δ (stage success rate) from recent
+     verify-repair runs and validate against the 4/δ prediction
+  3. The "three operational zones (marginal, practical, high-performance)"
+     calibration strategy is directly applicable to Carnot's tier system
+
+### NEW Rank HIGH: BEAVER — Efficient Deterministic LLM Verifier (arXiv:2512.05439, Dec 2025)
+- **Score:** 5×4×5×3 = **300**
+- **Surfaced via:** Hacker News
+- **Why it matters:** Carnot already has a "BEAVER-lite" task in `.147 (exp1879
+  Deterministic Bounds for Validators ran OK). This is the **source paper**.
+  Confirms our existing implementation is literature-grounded; should be
+  cited in paper-v6 alongside Spera Theorem 9.2 + the 4/δ Bound. Worth
+  reading the full paper to identify any features we're missing in the
+  exp1879 implementation.
+
+### Additional HN candidates (not promoted; below score 200):
+- **Aura-State** (GitHub, Mar 2026, 23 pts) — Formally verified LLM state
+  machine compiler using Z3 + CTL model checking. Z3 is already in Carnot;
+  conceptual sibling. Score ~48.
+- **Terminal-Bench-RL** (GitHub, July 2025, 125 pts) — "Hybrid reward
+  signal of unit test verifiers & a behavioural LLM judge." Adjacent
+  verifier-design pattern. Score ~36.
+- **VR.dev** (Show HN, Mar 2026, 3 pts) — HARD/SOFT/AGENTIC verifier
+  taxonomy; "deterministic probes against databases." Adjacent.
+- **Sigma Guard** (Show HN, May 2026, 3 pts) — Cellular sheaf cohomology
+  for consistency verification. Mathematically interesting, far from Carnot's
+  current path.
+- 5 others (Pencil Puzzle Bench, PupiBot1.0 triple-agent, Maestro orchestrator,
+  Probus AI vuln scanner) — off-topic or low-signal.
+
+### Cron-prompt bug status
+
+Fire #3 confirmed the rotation issue: `hour mod 4` at fire-times :13 every 4h
+always equals 0. Manual cluster selection used each fire instead. Should fix
+the prompt formula to `day_of_year mod 4` OR `fire_counter mod 4` in a future
+cron-prompt revision. Flagged but not fixed this fire.
+
+---
 
 ## Sweep 2026-05-14T04:15Z (Claude outer-loop /loop job 875c06b4 fire #2)
 
