@@ -19,16 +19,16 @@ tasks:
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
   - id: exp2091-pinet-projection-layer
-    title: "Exp 2091: $\Pi$Net Differentiable Projection Layer"
+    title: "Exp 2091: PiNet Differentiable Projection Layer"
     deliverable: results/experiment_2091_pinet.json
     max_turns: 50
     agent_type: codex
     prompt: |
-      CONTEXT: Recent advances (ICLR 2026) introduce $\Pi$Net, a hard constraint projection layer using Douglas-Rachford splitting.
+      CONTEXT: Recent advances (ICLR 2026) introduce PiNet, a hard constraint projection layer using Douglas-Rachford splitting.
       EXISTING CODE TO READ FIRST: `python/carnot/verify/`.
       TASK: Prototype a differentiable projection layer that forces linear constraint satisfaction.
       CONCRETE STEPS:
-      1. Implement a JAX-based $\Pi$Net projection module.
+      1. Implement a JAX-based PiNet projection module.
       2. Test the layer against a set of synthetic linear constraints from our SMT extractor.
       3. Measure constraint violation rate (expected: 0%) and latency. Save to JSON.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
@@ -43,7 +43,7 @@ tasks:
         op: "=="
         value: 0.0
     prompt: |
-      CONTEXT: Building on $\Pi$Net, HardNet++ (arXiv:2604.19669) handles non-linear constraints via damped local linearizations.
+      CONTEXT: Building on PiNet, HardNet++ (arXiv:2604.19669) handles non-linear constraints via damped local linearizations.
       EXISTING CODE TO READ FIRST: `python/carnot/verify/`.
       TASK: Implement the HardNet++ projection algorithm for non-linear algebraic constraints.
       CONCRETE STEPS:
@@ -153,7 +153,7 @@ tasks:
       EXISTING CODE TO READ FIRST: `ops/status.md`, `_bmad/traceability.md`.
       TASK: Perform retrospective and documentation update for Milestone 164.
       CONCRETE STEPS:
-      1. Summarize $\Pi$Net constraint enforcement success, ETS performance, and NPU benchmarks.
+      1. Summarize PiNet constraint enforcement success, ETS performance, and NPU benchmarks.
       2. Update `ops/status.md` with new capabilities.
       3. Format findings as `{project_root}/results/experiment_2099_retro.json`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
