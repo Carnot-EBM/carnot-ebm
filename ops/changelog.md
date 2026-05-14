@@ -5717,3 +5717,4 @@ Completed 15 experiments in 28.9 minutes. There were 0 compute-bound experiments
 
 - Milestone 2026.05.163 operational retrospective complete. Analyzed 42.7 min wall time / 22 experiments. Slowest path: Exp 2089 (4 min, synthesis-only). GPU utilization on the 3 compute-bound tasks was efficient, and no anomalous idling was flagged. Synthesis-only tasks remain the primary bottleneck for optimization.
 - 2026-05-14: Exp 2103: PyPI publish dry-run — verify the publish-pypi.yml workflow (⚠️ Research Finding) — honest_verdict=shipped: pypi_publish_dry_run_sdist_wheel_twine_check_all_passed; results/experiment_2103_pypi_publish_dry_run.json
+- 2026-05-14: Exp 2104: Milestone .165 Retrospective (✅ Complete) — honest_verdict=complete: milestone_165_retro_1_of_4_gates_passed_adv_verify_0_flags; results/experiment_2104_retro.json
