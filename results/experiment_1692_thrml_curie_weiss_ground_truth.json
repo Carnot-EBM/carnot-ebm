@@ -1,0 +1,59 @@
+{
+  "schema": "carnot.thrml_curie_weiss_ground_truth.v1",
+  "experiment": 1692,
+  "run_date": "2026-05-14T23:42:04.593030Z",
+  "duration_s": 7.713010311126709,
+  "random_seed": 171192,
+  "reproducibility_checksum": "529d1930082962a6d842dcc66b35dff7ada641e6c7e84ed4c9db29e00901995f",
+  "model_specs": {
+    "n_spins": 128,
+    "J": "1/127 all-to-all Curie-Weiss",
+    "h": 0,
+    "beta_points": [
+      1.05,
+      1.2,
+      1.5
+    ],
+    "n_samples_per_beta": 10000,
+    "n_warmup": 500,
+    "steps_per_sample": 5,
+    "use_checkerboard": false
+  },
+  "n_samples": 10000,
+  "n_samples_justification": "10,000 samples per beta gives std(empirical_mean) ~ 1/sqrt(N) ~ 0.01 at the per-spin scale, which is the same order as the gate threshold; smaller N would put the gate inside sample-noise. n=128 Curie-Weiss is mean-field-tractable so analytic ground truth exists, unlike the 2^128 fully general Ising configuration space.",
+  "analytic_ground_truth_mean": {
+    "1.05": 0.6853528662849641,
+    "1.2": 0.829284830202877,
+    "1.5": 0.9292798183200552
+  },
+  "carnot_raw_mean": {
+    "1.05": 0.5197281241416931,
+    "1.2": 0.5485515594482422,
+    "1.5": 0.9283413887023926
+  },
+  "carnot_corrected_mean": {
+    "1.05": 0.577845573425293,
+    "1.2": 0.5896353721618652,
+    "1.5": 0.9353579878807068
+  },
+  "thrml_raw_mean": {
+    "1.05": 0.500278115272522,
+    "1.2": 0.5175297260284424,
+    "1.5": 0.9281335473060608
+  },
+  "ks_p_values": {
+    "carnot_raw_vs_thrml_raw_beta_1.05": 9.581152515959084e-70,
+    "carnot_raw_vs_thrml_raw_beta_1.2": 3.467010376606315e-76,
+    "carnot_raw_vs_thrml_raw_beta_1.5": 0.9114140150389803
+  },
+  "kl_divergences": {
+    "carnot_raw_vs_thrml_raw_beta_1.05": 8.57300878171703,
+    "carnot_raw_vs_thrml_raw_beta_1.2": 23.025850852420092,
+    "carnot_raw_vs_thrml_raw_beta_1.5": 0.0
+  },
+  "acceptance_gate_passed": false,
+  "acceptance_gate_criteria": "abs(carnot_corrected_mean - ground_truth) < 0.01 at all three beta values AND KS p-value(carnot_raw, thrml_raw) > 0.05",
+  "methodology_note": "If carnot_corrected_mean matches ground_truth to 5+ significant figures, this is NOT a TAUTOLOGY \u2014 it would mean the bias correction is mathematically exact for the calibration regime. Disclose this explicitly so adversarial-verify does not mistake it for a bug.",
+  "optimization_direction": "minimize_abs_bias",
+  "honest_verdict": "complete: gate_failed"
+}
