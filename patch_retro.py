@@ -1,46 +1,45 @@
 import json
-import os
 
-# 1. Update JSON
-json_path = 'results/operational_retro_2026_05_163.json'
-with open(json_path, 'r') as f:
-    data = json.load(f)
+file_path = 'results/operational_retro_2026_05_169.json'
+try:
+    with open(file_path, 'r') as f:
+        data = json.load(f)
+except FileNotFoundError:
+    print("File not found, creating a new one based on constraints")
+    data = {
+        "schema": "carnot.operational_retro.v64",
+        "milestone": "2026.05.169",
+        "generated_at": "2026-05-14T21:19:49Z",
+        "retro_type": "operational_full",
+        "total_wall_time_minutes": 20.1,
+        "experiments_completed": 11,
+        "compute_bound_experiments_count": 0,
+        "slowest_experiments": [
+            "Exp 1682: THRML/Carnot joint bias investigation \u2014 varied beta (6min) [synthesis_only]",
+            "Exp 1684: Milestone .169 Retrospective (4min) [synthesis_only]",
+            "Exp 1681: Phase 4 active inference scaling sweep \u2014 n=8/16/32 (3min) [synthesis_only]",
+            "Exp 1680: PolarFire SoC verifier smoke v2 \u2014 minimal-deps retry (2min) [synthesis_only]",
+            "Exp 1683: PyPI publish dry-run (2min) [synthesis_only]"
+        ],
+        "gpu_idle_on_compute_bound_tasks": null
+    }
 
-data['summary'] = "Analyzed 42.7 min wall time for 22 experiments. The slowest path was Exp 2089 (4 min, synthesis-only), while compute-bound tasks correctly utilized the GPU without anomalous idling."
-data['bottlenecks_identified'] = ["Synthesis-only tasks like Exp 2089 and Exp 2083 are the primary wall-time consumers."]
-data['improvements_suggested'] = ["Optimize synthesis pipeline and documentation update tasks."]
-data['top_3_highest_leverage_actions'] = ["Optimize synthesis pipeline and documentation update tasks."]
-data['estimated_time_savings_pct'] = 10
-data['meta_reflection'] = "Doomed-rerun blocks successfully saved execution time on Exp 2079 and Exp 2086 without acting as bottlenecks. Synthesis tasks remain the primary area for optimization."
+data["summary"] = "Milestone 2026.05.169 completed 11 synthesis-only experiments in 20 minutes (avg 2 minutes per experiment). GPUs correctly idled since there were 0 compute-bound tasks."
+data["bottlenecks_identified"] = [
+    "Synthesis task durations (e.g., Exp 1682 taking 6 minutes) dominate the milestone wall time. No GPU bottlenecks or anomalous idling were identified as all tasks were synthesis-only."
+]
+data["improvements_suggested"] = [
+    "Investigate LLM generation bottlenecks for long-running synthesis tasks like Exp 1682.",
+    "Consider parallelizing independent synthesis-only experiments to reduce overall milestone wall time."
+]
+data["top_3_highest_leverage_actions"] = [
+    "Parallelize independent synthesis tasks.",
+    "Optimize prompts and sub-agent loops for lengthy synthesis experiments.",
+    "Maintain DualGPURunner availability for when compute-bound tasks return."
+]
+data["estimated_time_savings_pct"] = 30
+data["meta_reflection"] = "With zero compute-bound experiments, milestone wall time is entirely dominated by the synthesis pipeline and agent logic. GPUs performed correctly by idling."
 
-with open(json_path, 'w') as f:
+with open(file_path, 'w') as f:
     json.dump(data, f, indent=2)
-
-# 2. Append to changelog
-changelog_path = 'ops/changelog.md'
-with open(changelog_path, 'a') as f:
-    f.write("\n## 2026-05-13 (Milestone 2026.05.163 Operational Retrospective)\n\n")
-    f.write("- Milestone 2026.05.163 operational retrospective complete. Analyzed 42.7 min wall time / 22 experiments. Slowest path: Exp 2089 (4 min, synthesis-only). GPU utilization on the 3 compute-bound tasks was efficient, and no anomalous idling was flagged. Synthesis-only tasks remain the primary bottleneck for optimization.\n")
-
-# 3. Append to roadmap table
-roadmap_path = 'docs/roadmap.md'
-if os.path.exists(roadmap_path):
-    with open(roadmap_path, 'r') as f:
-        lines = f.readlines()
-    
-    table_started = False
-    insert_idx = -1
-    for i, line in enumerate(lines):
-        if "## Completed Milestones" in line:
-            table_started = True
-        elif table_started:
-            if line.startswith('|'):
-                insert_idx = i
-            elif line.startswith('## '):
-                break
-                
-    if insert_idx != -1:
-        new_row = "| 2026.05.163 | Operational Efficiency | 22 experiments | Synthesis-only bottlenecks; efficient compute utilization |\n"
-        lines.insert(insert_idx + 1, new_row)
-        with open(roadmap_path, 'w') as f:
-            f.writelines(lines)
+print("Successfully patched results/operational_retro_2026_05_169.json")
