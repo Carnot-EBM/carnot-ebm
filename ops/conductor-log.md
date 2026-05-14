@@ -3116,3 +3116,4 @@ IMPORTANT:
 | 2026-05-14 18:25 UTC | Exp 1672: End-to-end PiNet/HardNet++ solver vs PyS | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1670-pinet-splitting.pinet_success (act |
 | 2026-05-14 18:27 UTC | Exp 1672: End-to-end PiNet/HardNet++ solver vs PyS | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1670-pinet-splitting.pinet_success (act |
 | 2026-05-14 18:29 UTC | Exp 1672: End-to-end PiNet/HardNet++ solver vs PyS | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1670-pinet-splitting.pinet_success (act |
+| 2026-05-14 18:34 UTC | Exp 1673: Hybrid Constraint Layer (Continuous + Z3 | OK | 81 passed, 1 warning in 4.99s |
