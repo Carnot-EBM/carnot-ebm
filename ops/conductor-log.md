@@ -3092,3 +3092,4 @@ IMPORTANT:
 | 2026-05-14 15:57 UTC | Exp 2099: Milestone 164 Retro & Documentation | FAIL | Gemini CLI error: usr/lib/node_modules/@google/gemini-cli/bundle/chunk-C5NJ2YR |
 | 2026-05-14 16:03 UTC | Exp 2099: Milestone 164 Retro & Documentation | FAIL | Gemini CLI error: usr/lib/node_modules/@google/gemini-cli/bundle/chunk-C5NJ2YR |
 | 2026-05-14 16:05 UTC | Milestone 2026.05.165 activated | OK | 5 tasks queued |
+| 2026-05-14 16:09 UTC | Exp 2100: THRML/Carnot Parity v2 — Curie-Weiss n=1 | FAIL | Gemini CLI error: e 10 minutes, that is correct and expected — exit promptly.  |
