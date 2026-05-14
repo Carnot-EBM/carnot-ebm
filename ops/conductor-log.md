@@ -3105,3 +3105,4 @@ IMPORTANT:
 | 2026-05-14 17:02 UTC | Exp 2104: Milestone .165 Retrospective | OK | 81 passed, 1 warning in 5.48s |
 | 2026-05-14 17:04 UTC | Milestone 2026.05.166 activated | OK | 5 tasks queued |
 | 2026-05-14 17:19 UTC | Exp 2105: GateMate A1 toolchain bring-up + Ising-t | OK | 81 passed, 1 warning in 4.57s |
+| 2026-05-14 17:31 UTC | Exp 2106: THRML/Carnot Parity v3 — retry of .165 e | OK | 81 passed, 1 warning in 5.57s |
