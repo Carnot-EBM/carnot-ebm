@@ -17,6 +17,7 @@ import pytest
 from carnot.models.kaem_energy import (
     KAEMEnergy,
     UnivariateKAEMLayer,
+    SineKANLayer,
     _N_QUAD,
     benchmark_kaem_vs_mcmc,
 )
@@ -31,10 +32,19 @@ def _layer(n_vars: int = 3, n_knots: int = 8) -> UnivariateKAEMLayer:
     """Small UnivariateKAEMLayer for fast unit tests."""
     return UnivariateKAEMLayer(n_vars=n_vars, n_knots=n_knots, key=jrandom.PRNGKey(0))
 
+def _sinekan_layer(n_vars: int = 3, n_freqs: int = 8) -> SineKANLayer:
+    """Small SineKANLayer for fast unit tests."""
+    return SineKANLayer(n_vars=n_vars, n_freqs=n_freqs, key=jrandom.PRNGKey(0))
+
 
 def _model(n_vars: int = 5, n_hidden: int = 8) -> KAEMEnergy:
     """Small KAEMEnergy for fast unit tests."""
     return KAEMEnergy(n_vars=n_vars, n_hidden=n_hidden, key=jrandom.PRNGKey(42))
+
+def _sinekan_model(n_vars: int = 5, n_hidden: int = 8) -> KAEMEnergy:
+    """Small KAEMEnergy with SineKANLayer for fast unit tests."""
+    return KAEMEnergy(n_vars=n_vars, n_hidden=n_hidden, key=jrandom.PRNGKey(42), layer_type="sinekan")
+
 
 
 # ---------------------------------------------------------------------------
