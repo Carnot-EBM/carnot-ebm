@@ -84,4 +84,5 @@ else:
         "run_fover_inertial_ising_probe",
         "run_gibbs_ising_baseline",
         "run_inertial_discrete_sb",
+        "casal_sample",
     ]
