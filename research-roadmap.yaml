@@ -1,287 +1,243 @@
-milestone: "2026.05.166"
-milestone_title: "Phase 2 hardware bring-up + THRML/Phase-4 v3 carry-forward + 4/delta bound validation"
-milestone_doc: "outer-loop pre-staged 2026-05-14 16:11Z (local /loop auto-draft after .165 activation)"
-
-# Operator-pre-staged per CLAUDE.md Pre-Staged Roadmap Convention.
-#
-# Context for .166:
-# - .165 just activated 16:05Z with the prior pre-stage's tasks.
-#   exp2100 (THRML parity v2) already hit gemini-CLI bail-out at 16:09Z.
-#   Other .165 tasks likely to face the same gemini-CLI prompt-echo bug.
-# - Phase 2 hardware NOW PHYSICALLY ON BENCH: PolarFire SoC Discovery
-#   Kit enumerated as USB 1514:2008 (Microsemi FlashPro5, /dev/ttyUSB0),
-#   plus a DirtyJTAG adapter (USB 1209:c0ca, /dev/ttyACM0+1) for the
-#   GateMate A1-EVB-2M which doesn't auto-enumerate. Per operator
-#   2026-05-14 message: both boards attached.
-# - Two literature finds from study-phase sweeps land in .166:
-#   1. arXiv:2512.02080 The 4/delta Bound (verifier-loop convergence)
-#   2. arXiv:2605.12874 SAE description-collision (NLA probe audit)
-#
-# Agent routing concern: per-task agent_type:codex may NOT be honored
-# when env AGENT_TYPE=gemini. exp2091, exp2100 both bailing as gemini
-# despite codex YAML. Carrying-forward tasks must work AROUND this
-# until structural fix lands; we note in REQUIRED ARTIFACT FIELDS that
-# the agent should report which backend actually ran the task.
-
-scope_reduction_compliance:
-  - "5 tasks total (4 research/hardware + 1 retro); not 13-14 synthesis"
-  - "First Phase-2 hardware task with PHYSICAL board on bench (vs prior FPGA tasks that were code-only)"
-  - "Two new literature-grounded tasks (arXiv:2512.02080 4/delta Bound, arXiv:2605.12874 SAE collision)"
-  - "All compute-bound tasks include random_seed + reproducibility_checksum + n_samples justification"
-  - "Carry-forward of THRML + Phase 4 explicitly cites .165 prior_failures (likely on gemini-CLI bail)"
-
+milestone: "2026.05.167"
+milestone_title: "Phase 3/4 Pivot: Differentiable Constraint Projection, KAN Hardware Prep, and Continuous Self-Learning"
+milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
 tasks:
-  - id: exp2105-gatemate-a1-toolchain-smoke
-    title: "Exp 2105: GateMate A1 toolchain bring-up + Ising-tile bitstream smoke"
-    deliverable: results/experiment_2105_gatemate_smoke.json
-    agent_type: gemini
-    max_turns: 100
-    prompt: |
-      MANDATORY WORKFLOW: read CLAUDE.md project rules (especially
-      Decentralization-Respecting Design Constraints rule 5 on hardware
-      portability; "Phase Prototype + Empirical Validation + Adversarial
-      Check Discipline").
-
-      CONTEXT (falsifiable hypothesis): the Cologne Chip GateMate A1-EVB-2M
-      is physically on bench (operator confirmation 2026-05-14). A
-      DirtyJTAG adapter (USB 1209:c0ca, /dev/ttyACM0+1) is available.
-      The open-source GateMate toolchain (yosys + nextpnr-himbaechel +
-      p_r) should produce a synthesizable bitstream for a minimal
-      n=16 quadratic Ising tile and flash it via openFPGALoader. This
-      is a Phase-2 hardware POC unblocker — first time the loop has had
-      a non-KV260 Cologne Chip board physically present.
-
-      EXISTING CODE TO READ FIRST:
-      - rtl/ (any prior Verilog/SystemVerilog Ising fabric)
-      - ops/known-issues.md "Phase 2 PRIORITY" section
-      - results/experiment_1041*, results/experiment_1068*,
-        results/experiment_1081* (KV260 Potts/Ising precedents)
-
-      CONCRETE STEPS:
-      1. Check toolchain availability: `which yosys nextpnr-himbaechel
-         openFPGALoader` — if missing, document install commands but
-         do NOT install system-wide; emit honest_verdict
-         "complete: gatemate_smoke_blocked_toolchain_missing".
-      2. Verify USB enumeration: `lsusb | grep -iE "cologne|gateMate|0403:"`.
-         The board may not enumerate directly (no FT2232H on bare
-         EVB-2M); confirm via DirtyJTAG path (/dev/ttyACM0 USB
-         1209:c0ca) OR document that the board needs a separate USB
-         programmer wired to its JTAG header.
-      3. Write a minimal n=16 quadratic Ising tile in Verilog
-         (rtl/gatemate_ising_n16.v) — d-flip-flop array + XOR-based
-         energy delta computation + clocked sign update. Synthesize
-         with yosys for the GateMate A1 target.
-      4. Run nextpnr-himbaechel for place-and-route. Record:
-         - lut_utilization (out of ~5k LUT4s on A1)
-         - max_clock_mhz from STA report
-         - bitstream_size_bytes
-      5. IF a JTAG path to the board is confirmed working, attempt to
-         flash with openFPGALoader. Record success/failure. If JTAG
-         wiring is incomplete (DirtyJTAG to GateMate JTAG header not
-         physically connected), emit
-         "complete: gatemate_smoke_pnr_only_jtag_wiring_pending".
-      6. ACCEPTANCE GATE (all must hold for SUCCESS):
-         - synthesis_completed: true
-         - pnr_completed: true
-         - lut_utilization < 0.30 (n=16 should be tiny)
-         - bitstream_emitted: true
-      7. Write results/experiment_2105_gatemate_smoke.json with REQUIRED ARTIFACT FIELDS:
-         - schema: "carnot.gatemate_smoke.v1"
-         - board: "Cologne Chip GateMate A1-EVB-2M"
-         - toolchain: {{yosys_version, nextpnr_version, openFPGALoader_version}}
-         - usb_enumeration: <output of lsusb FPGA lines>
-         - n_spins: 16
-         - random_seed: <int>
-         - reproducibility_checksum: <hash of rtl + yosys.ys + p_r script>
-         - synthesis_completed: <bool>
-         - pnr_completed: <bool>
-         - lut_utilization: <float, 0-1>
-         - max_clock_mhz: <float>
-         - bitstream_size_bytes: <int>
-         - bitstream_path: "<rel path>" or null
-         - jtag_flashed: <bool> or null if path not confirmed
-         - n_samples: 1 (smoke test — one synthesis run)
-         - n_samples_justification: "Synthesis determinism is the check;
-           N=1 sufficient. If it fails, the failure mode reveals the bug."
-         - actual_agent_backend: "<codex|gemini|claude>" — REPORT WHICH BACKEND THE CONDUCTOR ACTUALLY ROUTED THIS TO
-         - acceptance_gate_passed: <bool>
-         - honest_verdict: MUST start with "complete:" / "success:" /
-           "shipped:" / "passed:" per Verdict Terminal-Prefix Discipline.
-
-      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp2106-thrml-parity-v3-retry
-    title: "Exp 2106: THRML/Carnot Parity v3 — retry of .165 exp2100 with codex routing verified"
-    deliverable: results/experiment_2106_thrml_parity_v3.json
-    agent_type: gemini
-    max_turns: 100
-    prior_failures:
-      - experiment_id: exp2100-thrml-parity-curie-weiss-n128
-        verdict: gemini_cli_bail_out
-        addressed_by: "exp2100 bailed in .165 within 4 minutes with the gemini-CLI prompt-echo signature, despite agent_type:codex in the YAML. Hypothesis: per-task agent_type override is being ignored by the conductor when env AGENT_TYPE=gemini. This v3 explicitly reports actual_agent_backend in the artifact so we can verify which backend the conductor used. Same falsifiable hypothesis and 10k+ sample budget."
-        retire_if_same_verdict: true
-      - experiment_id: exp1850-thrml-carnot-parity-n128
-        verdict: "complete: thrml_carnot_parity_n128_gate_failed_kl_0.28"
-        addressed_by: "Same as exp2100's addressed_by: undersampled at 100 samples; v3 uses Curie-Weiss substrate + 10k+ samples + analytic ground truth."
-        retire_if_same_verdict: true
-    prompt: |
-      MANDATORY WORKFLOW: read CLAUDE.md project rules. This task's
-      prompt is intentionally minimal to avoid the conductor's
-      "STOP-WHEN-DONE RULE" trailer pattern that may be triggering the
-      gemini-CLI bail-out on .165's exp2100.
-
-      CONTEXT (falsifiable hypothesis): Carnot's native sampler and
-      THRML 0.1.3's JAX-native sampler should both converge to the
-      analytic equilibrium mean of a ferromagnetic Curie-Weiss n=128
-      Ising model. Gates: abs(empirical_mean_X - analytic_mean) < 0.05
-      for both X=carnot AND X=thrml; ks_p_value(carnot, thrml) > 0.05.
-
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/models/ising.py
-      - results/experiment_1850_thrml_parity_n128.json (corrigendum)
-      - results/experiment_2100_thrml_parity_v2.json (if it exists from .165)
-
-      CONCRETE STEPS:
-      1. Curie-Weiss substrate: J_ij = J/n for all pairs, h=0, beta > beta_c.
-      2. N=10000 independent draws from each sampler; distinct seeds.
-      3. Compute: empirical_mean_carnot, empirical_mean_thrml,
-         analytic_mean (closed form), ks_p_value, kl_divergence.
-      4. ACCEPTANCE GATE: all three above.
-      5. Write artifact with REQUIRED ARTIFACT FIELDS:
-         - schema: "carnot.thrml_parity_curie_weiss.v2"
-         - n_spins: 128, n_samples: 10000
-         - random_seed_carnot, random_seed_thrml, reproducibility_checksum
-         - analytic_mean, analytic_energy
-         - empirical_mean_carnot, empirical_mean_thrml
-         - ks_p_value, kl_divergence
-         - acceptance_gate_passed
-         - actual_agent_backend: "<codex|gemini|claude>"
-         - honest_verdict: prefix "complete:" or "success:".
-
-  - id: exp2107-phase4-alpha-v3
-    title: "Exp 2107: Phase 4 active inference v3 — n=8 alpha_t with k=6 vs k=1 contrast"
-    deliverable: results/experiment_2107_phase4_v3.json
-    agent_type: gemini
-    max_turns: 100
-    prior_failures:
-      - experiment_id: exp2101-phase4-active-inference-smoke-v2
-        verdict: pending_or_gemini_cli_bail
-        addressed_by: "exp2101 is in flight as part of .165 and will likely face the same gemini-CLI bail pattern as exp2100. v3 carries forward the same falsifiable gate (delta_alpha > 0.05) with explicit actual_agent_backend reporting."
-        retire_if_same_verdict: true
-      - experiment_id: exp1849-phase4-active-inference-smoke
-        verdict: blocked_gate_check_failed
-        addressed_by: "exp1849 (.144) was doomed-rerun-blocked. v2 / v3 carry the full prior_failures chain back to exp1165."
-        retire_if_same_verdict: true
-      - experiment_id: exp1165-phase4-active-inference-pilot-v1
-        verdict: phase4_better_than_baseline
-        addressed_by: "Pilot lacked falsifiable gate. v3 has tight gate (delta_alpha > 0.05) with k=6 vs k=1 contrast."
-        retire_if_same_verdict: true
-    prompt: |
-      CONTEXT (falsifiable hypothesis): on n=8 Ising substrate, the
-      verifier-as-free-energy ensemble keeps inf_t alpha_t > 0.10
-      when k=6 verifiers, AND collapses to inf_t alpha_t < 0.05 when
-      k=1. Gate: delta_alpha = (inf_t_alpha_k6 - inf_t_alpha_k1) > 0.05.
-
-      CONCRETE STEPS: 100 MLD steps each for k=6 and k=1 configs; same
-      seed; same n=8 substrate. Record per-step mu_P; compute inf_t.
-
-      REQUIRED ARTIFACT FIELDS: schema "carnot.phase4_active_inference.v3",
-      n_spins=8, mld_steps=100, random_seed, reproducibility_checksum,
-      verifier_ensemble_k6/k1, inf_t_alpha_k6, inf_t_alpha_k1,
-      delta_alpha, optimization_direction "minimize", acceptance_gate_passed,
-      actual_agent_backend, honest_verdict prefix "complete:".
-
-  - id: exp2108-four-delta-bound-empirical-validation
-    title: "Exp 2108: 4/delta Bound — measure Carnot's verify-repair empirical convergence"
-    deliverable: results/experiment_2108_four_delta_bound.json
-    agent_type: gemini
-    max_turns: 100
-    prompt: |
-      MANDATORY WORKFLOW: read CLAUDE.md rules. This task is grounded in
-      arXiv:2512.02080 "The 4/delta Bound: Designing Predictable
-      LLM-Verifier Systems for Formal Method Guarantee" (Dantas,
-      Cordeiro, Sun, Junior; Dec 2025) — see research-studying.md
-      sweep 2026-05-14T08:20Z entry.
-
-      CONTEXT (falsifiable hypothesis): Carnot's verify-repair pipeline
-      is structurally an absorbing Markov chain (constraint extraction
-      -> verification -> repair attempt -> re-verify). The 4/delta
-      Bound predicts E[n] <= 4/delta iterations where delta is the
-      per-stage success probability. We hypothesize that **Carnot's
-      empirical mean number of repair iterations on a held-out
-      benchmark <= 4/delta_empirical**, where delta_empirical is
-      measured from the last 50 successful repair traces in
-      research-complete.yaml or from results/experiment_*.json
-      artifacts containing per-stage success counters.
-
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/pipeline/verify_repair.py (VerifyRepairPipeline.verify_and_repair)
-      - research-complete.yaml (historical iteration counts)
-
-      CONCRETE STEPS:
-      1. Scan research-complete.yaml + results/experiment_*.json for
-         the last 50 verify-repair runs that include per-iteration
-         outcome data (success / fail / retry). If <50 are available,
-         use whatever exists and document n_runs explicitly.
-      2. Compute delta_empirical = (count of successful stage
-         transitions) / (count of total stage attempts).
-      3. Compute mean_iterations = mean across runs of (n iterations
-         to terminal state).
-      4. Compute predicted_bound = 4 / delta_empirical.
-      5. ACCEPTANCE GATE: mean_iterations <= predicted_bound. If yes,
-         Carnot's pipeline conforms to the Dantas et al. theoretical
-         bound. If no, the deviation is a finding worth reporting
-         (Carnot may be over- or under-performing the bound).
-      6. Write artifact with REQUIRED ARTIFACT FIELDS:
-         - schema: "carnot.four_delta_bound_empirical.v1"
-         - n_runs: <int>
-         - delta_empirical: <float>
-         - mean_iterations: <float>
-         - predicted_bound: <float>
-         - acceptance_gate_passed: <bool>
-         - random_seed: 0 (deterministic data scan)
-         - reproducibility_checksum: <hash of input artifact list>
-         - n_samples: <n_runs, justified above>
-         - n_samples_justification: "Using historical runs since no
-           live data was generated. n_runs is bounded by available
-           archived runs."
-         - methodology_note: "Result interpretation requires context
-           about whether Carnot's verify-repair pipeline maps cleanly
-           onto Dantas et al.'s 4-stage Markov chain. If structural
-           mismatch is identified, that's a paper-v6 disclosure item."
-         - actual_agent_backend: "<codex|gemini|claude>"
-         - honest_verdict: prefix "complete:". Example:
-           "complete: four_delta_bound_validated_empirical_delta_0.65_mean_n_3.8_predicted_6.15"
-
-  - id: exp2109-milestone-166-retro
-    title: "Exp 2109: Milestone .166 Retrospective"
-    deliverable: results/experiment_2109_retro.json
-    agent_type: gemini
+  - id: exp1670-pinet-splitting
+    title: "Exp 1670: PiNet convex operator splitting forward pass prototype"
+    deliverable: "results/experiment_1670_pinet_splitting.json"
+    agent_type: "codex"
     max_turns: 50
     prompt: |
-      CONTEXT: Close out .166 (4 research/hardware tasks).
+      CONTEXT: The previous milestone identified synthesis tasks as the primary bottleneck. We are pivoting to differentiable constraint projections using the PiNet (arXiv:2508.10480) methodology.
+      EXISTING CODE TO READ FIRST: python/carnot/solvers/
+      TASK: Implement a prototype of PiNet's Douglas-Rachford operator splitting for convex constraint projection in JAX.
+      CONCRETE STEPS:
+      1. Write `python/carnot/solvers/pinet_prototype.py`.
+      2. Implement a Douglas-Rachford splitting loop that enforces a simple linear equality constraint in the forward pass.
+      3. Create a unit test against PySAT.
+      4. Write output to deliverable JSON.
+      Run command: DATE="{date}" python {project_root}/scripts/run_experiment_1670.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-      EXISTING FILES TO READ FIRST:
-      - results/experiment_2105_gatemate_smoke.json
-      - results/experiment_2106_thrml_parity_v3.json
-      - results/experiment_2107_phase4_v3.json
-      - results/experiment_2108_four_delta_bound.json
+  - id: exp1671-hardnet-linearization
+    title: "Exp 1671: HardNet++ damped local linearization layer prototype"
+    deliverable: "results/experiment_1671_hardnet_layer.json"
+    max_turns: 50
+    prompt: |
+      CONTEXT: Based on HardNet++ (arXiv:2604.19669), nonlinear constraints require damped local linearizations to project predictions successfully.
+      EXISTING CODE TO READ FIRST: python/carnot/solvers/pinet_prototype.py
+      TASK: Create a HardNet++ projection prototype targeting nonlinear inequalities.
+      CONCRETE STEPS:
+      1. Implement `hardnet_projection.py` in `python/carnot/solvers/`.
+      2. Define a damped root-finding logic block based on HardNet++ equations.
+      3. Simulate 5 random nonlinear constraint configurations and evaluate error delta.
+      4. Write output to deliverable JSON.
+      Run command: DATE="{date}" python {project_root}/scripts/run_experiment_1671.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-      TASK: For each task above, state hypothesis -> gate threshold ->
-      empirical result -> any surprising finding. Note: if multiple
-      tasks share an "actual_agent_backend != codex" pattern, escalate
-      it in this retro's meta_reflection section — the agent-routing
-      structural issue is a recurring theme.
+  - id: exp1672-differentiable-vs-pysat
+    title: "Exp 1672: End-to-end PiNet/HardNet++ solver vs PySAT equivalence check"
+    deliverable: "results/experiment_1672_solver_equivalence.json"
+    gated_on:
+      - upstream: exp1670-pinet-splitting
+        artifact_field: pinet_success
+        op: "=="
+        value: true
+    max_turns: 50
+    prompt: |
+      CONTEXT: We must verify that differentiable layers respect zero-false-accept bounds.
+      EXISTING CODE TO READ FIRST: python/carnot/solvers/pinet_prototype.py
+      TASK: Evaluate the continuous projection layer against a PySAT ground truth baseline.
+      CONCRETE STEPS:
+      1. Construct a batch of 100 constraint sets.
+      2. Record execution time and accuracy of PiNet/HardNet++ vs PySAT.
+      3. Assert zero-false-accepts on the final verification check.
+      4. Write output to deliverable JSON.
+      Run command: DATE="{date}" python {project_root}/scripts/run_experiment_1672.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-      Run `python3 scripts/adversarial_verify.py --milestone-range 2105 2109
-      --json` and report flag count.
+  - id: exp1673-hybrid-constraint-layer
+    title: "Exp 1673: Hybrid Constraint Layer (Continuous + Z3 validation)"
+    deliverable: "results/experiment_1673_hybrid_constraint.json"
+    max_turns: 50
+    prompt: |
+      CONTEXT: Integrating differentiable methods into Carnot's verifier stack.
+      EXISTING CODE TO READ FIRST: python/carnot/solvers/
+      TASK: Create a unified pipeline where the neural generator predicts, PiNet projects, and Z3 verifies.
+      CONCRETE STEPS:
+      1. Write `python/carnot/solvers/hybrid_verifier.py`.
+      2. Create a test module utilizing the hybrid stack.
+      3. Output pass rates and validation latency to the deliverable JSON.
+      Run command: DATE="{date}" python {project_root}/scripts/run_experiment_1673.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-      REQUIRED ARTIFACT FIELDS:
-      - schema: "carnot.milestone_research_retro.v1"
-      - milestone: "2026.05.166"
-      - tasks_summary: [...]
-      - gates_passed_count, gates_failed_count
-      - actual_agent_backend_distribution: {{codex: N, gemini: M, claude: K}}
-      - paper_v6_carryforward_items: [...]
-      - adversarial_verify_flag_count
-      - honest_verdict: prefix "complete:".
+  - id: exp1674-kan-hardware-complexity
+    title: "Exp 1674: KAN Hardware Inference Complexity (RM/BOP/NABS) accounting"
+    deliverable: "results/experiment_1674_kan_accounting.json"
+    agent_type: "codex"
+    max_turns: 30
+    prompt: |
+      CONTEXT: Preparing for FPGA/LUT deployments using complexity metrics from arXiv:2604.03345 without running Vivado synthesis.
+      EXISTING CODE TO READ FIRST: python/carnot/models/
+      TASK: Implement platform-independent accounting scripts for KAN layers.
+      CONCRETE STEPS:
+      1. Create `scripts/kan_hardware_accounting.py`.
+      2. Implement RM (Real Multiplications), BOP (Bit Operations), and NABS (Additions/Bit-Shifts) estimators for B-spline and Fourier representations.
+      3. Write output metrics to the deliverable JSON.
+      Run command: DATE="{date}" python {project_root}/scripts/run_experiment_1674.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1675-s2kan-metrics-apply
+    title: "Exp 1675: Apply KAN complexity metrics to S2KAN tiers"
+    deliverable: "results/experiment_1675_s2kan_metrics.json"
+    gated_on:
+      - upstream: exp1674-kan-hardware-complexity
+        artifact_field: accounting_ready
+        op: "=="
+        value: true
+    max_turns: 50
+    prompt: |
+      CONTEXT: Applying the new metrics to the S2KAN tier.
+      EXISTING CODE TO READ FIRST: scripts/kan_hardware_accounting.py
+      TASK: Evaluate S2KAN configurations using RM/BOP/NABS limits to assure they fit within KV260 budgets.
+      CONCRETE STEPS:
+      1. Define S2KAN parameter sizes matching previous milestones.
+      2. Run the accounting logic.
+      3. Ensure `kv260_no_synthesis_claim=true` is in the output.
+      4. Write output to deliverable JSON.
+      Run command: DATE="{date}" python {project_root}/scripts/run_experiment_1675.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1676-kanele-lut-simulation
+    title: "Exp 1676: KANELÉ LUT-based Approximation for S2KAN on CPU"
+    deliverable: "results/experiment_1676_kanele_lut.json"
+    max_turns: 50
+    prompt: |
+      CONTEXT: Translating KAN evaluations into Lookup Tables (LUTs) following arXiv:2512.12850 (KANELÉ) for hardware efficiency.
+      EXISTING CODE TO READ FIRST: python/carnot/models/
+      TASK: Implement a CPU-based LUT representation of the KAN activation functions.
+      CONCRETE STEPS:
+      1. Write a LUT-converter class in python/carnot/models/lut_kan.py.
+      2. Verify equivalence (KL divergence) between exact splines and LUT output.
+      3. Write output to deliverable JSON.
+      Run command: DATE="{date}" python {project_root}/scripts/run_experiment_1676.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1677-fpga-decomposition-bounds
+    title: "Exp 1677: FPGA Decomposition simulation bounds for LUT-KAN"
+    deliverable: "results/experiment_1677_fpga_decomposition.json"
+    gated_on:
+      - upstream: exp1676-kanele-lut-simulation
+        artifact_field: lut_fidelity_ok
+        op: "=="
+        value: true
+    model: "opus"
+    max_turns: 100
+    prompt: |
+      CONTEXT: Simulating the host-device decomposition latency for LUT-KAN based on arXiv:2602.15985.
+      EXISTING CODE TO READ FIRST: hardware/kv260/
+      TASK: Perform no-synthesis hardware accounting and decomposition timing for LUT-KAN.
+      CONCRETE STEPS:
+      1. Write simulation logic to model PCIe/AXI data transfer and LUT memory read latency.
+      2. Ensure no Vivado commands are executed.
+      3. Emit explicit `hardware_execution_claim=false`.
+      4. Write output to deliverable JSON.
+      Run command: DATE="{date}" python {project_root}/scripts/run_experiment_1677.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1678-continuous-latent-far
+    title: "Exp 1678: Continuous Latent Generation (FAR) Prototype"
+    deliverable: "results/experiment_1678_far_latent.json"
+    max_turns: 50
+    prompt: |
+      CONTEXT: Moving towards non-autoregressive reasoning using Fast Autoregressive Models for Continuous Latent Generation (arXiv:2504.18391).
+      EXISTING CODE TO READ FIRST: python/carnot/models/
+      TASK: Design a continuous-latent constraint sampler prototype.
+      CONCRETE STEPS:
+      1. Draft a continuous-latent sampler skeleton `python/carnot/samplers/far_latent.py`.
+      2. Implement the latent-space vector sampling.
+      3. Provide benchmarking hooks (latency vs diffusion).
+      4. Write output to deliverable JSON.
+      Run command: DATE="{date}" python {project_root}/scripts/run_experiment_1678.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1679-energy-guided-qwen
+    title: "Exp 1679: Energy-Guided Decoding with Local SOTA Models"
+    deliverable: "results/experiment_1679_energy_decoding.json"
+    max_turns: 50
+    prompt: |
+      CONTEXT: Applying explicit energy-guided decoding (arXiv:2507.07731) to mitigate hallucination structurally.
+      EXISTING CODE TO READ FIRST: python/carnot/
+      TASK: Integrate energy scores dynamically during decoding using local SOTA models.
+      CONCRETE STEPS:
+      1. MUST INCLUDE `unsloth/Qwen3.6-35B-A3B-GGUF` or `unsloth/gemma-4-31B-it-GGUF` in MODEL_SPECS.
+      2. Evaluate a 20-case structural benchmark.
+      3. Compare semantic validation rates against static decoding.
+      4. Write output to deliverable JSON.
+      Run command: DATE="{date}" python {project_root}/scripts/run_experiment_1679.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1680-scg-mem-adapter
+    title: "Exp 1680: Schema-Constrained Generation (SCG-MEM) for Trace Memory"
+    deliverable: "results/experiment_1680_scg_mem.json"
+    max_turns: 50
+    prompt: |
+      CONTEXT: Enforcing strict schema limits on continuous memory using SCG-MEM (arXiv:2604.20117).
+      EXISTING CODE TO READ FIRST: python/carnot/
+      TASK: Build the SCG-MEM structural enforcer for Carnot's FR-11 self-learning traces.
+      CONCRETE STEPS:
+      1. Write `python/carnot/memory/scg_adapter.py`.
+      2. Apply schema constraints (valid JSON/cognitive schema) to generated memory embeddings.
+      3. Write output to deliverable JSON.
+      Run command: DATE="{date}" python {project_root}/scripts/run_experiment_1680.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1681-ets-policy
+    title: "Exp 1681: Energy-Guided Test-Time Scaling (ETS) for Policy Evaluation"
+    deliverable: "results/experiment_1681_ets_policy.json"
+    max_turns: 50
+    prompt: |
+      CONTEXT: Replacing costly RLHF with ETS (ICML 2026) for policy evaluation in the FR-11 loop.
+      EXISTING CODE TO READ FIRST: python/carnot/memory/
+      TASK: Modify the FR-11 loop to incorporate energy-term transition probabilities.
+      CONCRETE STEPS:
+      1. Update the self-learning promotion function to incorporate test-time energy scaling.
+      2. Ensure test-time compute scales with measured energy uncertainty.
+      3. Write output to deliverable JSON.
+      Run command: DATE="{date}" python {project_root}/scripts/run_experiment_1681.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1682-scg-ets-integration
+    title: "Exp 1682: SCG-MEM + ETS combined evaluation on local GGUF models"
+    deliverable: "results/experiment_1682_scg_ets_integration.json"
+    gated_on:
+      - upstream: exp1680-scg-mem-adapter
+        artifact_field: scg_ready
+        op: "=="
+        value: true
+    max_turns: 50
+    prompt: |
+      CONTEXT: Combine SCG-MEM structurally valid generation and ETS test-time scaling.
+      EXISTING CODE TO READ FIRST: python/carnot/memory/
+      TASK: Execute an E2E trace-collection and trace-verification task on local SOTA GGUFs.
+      CONCRETE STEPS:
+      1. MUST INCLUDE `unsloth/gemma-4-26B-A4B-it-GGUF` or `unsloth/Qwen3.6-35B-A3B-GGUF` in MODEL_SPECS.
+      2. Process 50 memory items, projecting energy deltas and schema adherence.
+      3. Write output to deliverable JSON.
+      Run command: DATE="{date}" python {project_root}/scripts/run_experiment_1682.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1683-fr11-soundness-audit
+    title: "Exp 1683: Self-learning regression audit (zero soundness mistakes)"
+    deliverable: "results/experiment_1683_fr11_soundness.json"
+    max_turns: 20
+    prompt: |
+      CONTEXT: The PRD and .166 retrospect demand a rigorous ledger checking for zero soundness mistakes during FR-11 updates.
+      EXISTING CODE TO READ FIRST: python/carnot/memory/
+      TASK: Evaluate the updated FR-11 policy for non-forgetting and soundness mistakes.
+      CONCRETE STEPS:
+      1. Execute a rollback-passing audit script against the results of Exp 1682.
+      2. Emit `soundness_mistakes=0`, `completeness_mistakes`, and `nonforgetting_rate`.
+      3. Write output to deliverable JSON.
+      Run command: DATE="{date}" python {project_root}/scripts/run_experiment_1683.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
