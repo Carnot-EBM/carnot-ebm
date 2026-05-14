@@ -1,0 +1,19 @@
+## yosys synthesis script for gatemate_ising_n16 → GateMate A1.
+##
+## Usage (from repo root):
+##   cd rtl
+##   yosys -l gatemate_ising_n16.log -p 'read_verilog -sv gatemate_ising_n16.v' \
+##         -p 'synth_gatemate -top gatemate_ising_n16 -nomx8 -json gatemate_ising_n16.json'
+##
+## Then place-and-route with nextpnr-himbaechel:
+##   nextpnr-himbaechel --device CCGM1A1 --json gatemate_ising_n16.json \
+##                      --vopt out=gatemate_ising_n16.cfg --vopt allow-unconstrained=true
+##
+## Then flash via openFPGALoader + DirtyJTAG (operator's adapter):
+##   openFPGALoader -c dirtyJtag -b olimex_gatemateevb gatemate_ising_n16.cfg
+##
+## The exp2105 conductor task will execute these steps, capture LUT
+## utilization + bitstream size + JTAG status, and write the artifact.
+
+read_verilog -sv gatemate_ising_n16.v
+synth_gatemate -top gatemate_ising_n16 -nomx8 -json gatemate_ising_n16.json
