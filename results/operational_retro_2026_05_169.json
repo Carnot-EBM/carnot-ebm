@@ -1,0 +1,52 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.169",
+  "generated_at": "2026-05-14T21:19:49Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 20.1,
+  "experiments_completed": 11,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "-0400 [conductor] Exp 1682: THRML/Carnot joint bias investigation \u2014 varied beta ",
+      "duration_minutes": 5.6,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1684: Milestone .169 Retrospective",
+      "duration_minutes": 3.7,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1681: Phase 4 active inference scaling sweep \u2014 n=8/16/32",
+      "duration_minutes": 2.8,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1680: PolarFire SoC verifier smoke v2 \u2014 minimal-deps retry",
+      "duration_minutes": 2.0,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Doomed-rerun block: Exp 1683: PyPI publish dry-run \u2014 Phase 1 s",
+      "duration_minutes": 2.0,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Milestone 2026.05.169 completed 11 synthesis-only experiments in 20 minutes (avg 2 minutes per experiment). GPUs correctly idled since there were 0 compute-bound tasks.",
+  "bottlenecks_identified": [
+    "Synthesis task durations (e.g., Exp 1682 taking 6 minutes) dominate the milestone wall time. No GPU bottlenecks or anomalous idling were identified as all tasks were synthesis-only."
+  ],
+  "improvements_suggested": [
+    "Investigate LLM generation bottlenecks for long-running synthesis tasks like Exp 1682.",
+    "Consider parallelizing independent synthesis-only experiments to reduce overall milestone wall time."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Parallelize independent synthesis tasks.",
+    "Optimize prompts and sub-agent loops for lengthy synthesis experiments.",
+    "Maintain DualGPURunner availability for when compute-bound tasks return."
+  ],
+  "estimated_time_savings_pct": 30,
+  "meta_reflection": "With zero compute-bound experiments, milestone wall time is entirely dominated by the synthesis pipeline and agent logic. GPUs performed correctly by idling."
+}
