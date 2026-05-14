@@ -1,0 +1,26 @@
+{
+  "schema": "carnot.gatemate_flash.v1",
+  "board": "Olimex GateMateA1-EVB-2M (CC GM1A1)",
+  "idcode_verified": "0x20000001",
+  "toolchain": {
+    "yosys_version": "0.64+149",
+    "nextpnr_version": "0.10-45",
+    "openFPGALoader_version": "v1.1.1"
+  },
+  "yosys_invocation": "yosys -p 'read_verilog -sv gatemate_ising_n16.v; synth_gatemate -top gatemate_ising_n16 -nomx8; chtype -map t:CC_LUT3 CC_LUT4; write_json gatemate_ising_n16.json'",
+  "synthesis_completed": true,
+  "pnr_completed": true,
+  "lut_utilization": 0.000805,
+  "ff_utilization": 0.00039,
+  "max_clock_mhz": 514.67,
+  "flash_succeeded": true,
+  "bitstream_size_bytes": 16392,
+  "random_seed": 0,
+  "reproducibility_checksum": "a097974b712c62bf5cd228e8bab596ba4006cf17319fba1b35355f28e1e81634",
+  "n_samples": 1,
+  "n_samples_justification": "Synthesis + P&R are deterministic; N=1 sufficient",
+  "actual_agent_backend": "gemini",
+  "thermal_note": "passively cooled per operator note 2026-05-14 22:15Z; GateMate has no exposed thermal sensor — watch for unexplained logic failure mid-flash as a proxy",
+  "acceptance_gate_passed": true,
+  "honest_verdict": "success: gatemate_flash_succeeded_lut_0.08pct_at_514mhz"
+}
