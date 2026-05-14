@@ -8,6 +8,72 @@ loop) executes the current experiments.
 **Updated:** 2026-05-14
 **Current Focus:** Adversarial-verify discipline (artifact fabrication detection); Phase 4 active-inference smoke; THRML parity v2 (Curie-Weiss); NLA-class 16th verifier; verifier-ensemble null-space follow-up (new from 2026-05-14 sweep)
 
+## Sweep 2026-05-14T04:15Z (Claude outer-loop /loop job 875c06b4 fire #2)
+
+**Queries fired** (rotated to clusters 2+3 since the rotation formula `hour mod 4`
+in the cron always lands on the same residue when fires are every 4h — flagged
+as a cron-prompt bug to fix later):
+
+- arxiv abs:"sparse autoencoder" OR "white box probe" OR "reconstruction error" AND "LLM"
+- arxiv abs:"active inference" OR "free energy" AND "LLM"
+
+**Candidates surfaced (13 raw, 3 promoted to ranked queue below):**
+
+### NEW Rank URGENT: Descriptive Collision in SAE Auto-Interpretability (arXiv:2605.12874, May 13 2026)
+- **Score:** 5×5×4×4 = **400**
+- **Author:** Jordan F. McCann
+- **Why it matters:** **Direct adversarial-verify critique of SAE-based
+  interpretability** — the foundational technique for Carnot's NLA-class 16th
+  verifier (per `feedback_nla_class_16th_verifier_committed.md`). McCann shows
+  that distinct SAE features receive identical text-descriptions, inflating
+  reported interpretability by ~⅓ of feature identity bits. **This means the
+  exp1851 NLA probe v2 must include a description-collision check before
+  claiming the SAE features actually discriminate adversarial outputs.** If
+  the 16-features-with-1-description pattern shows up in our SAE, the TPR
+  lift claim is artificial (the probe is detecting feature-class identity,
+  not output-distinguishing signal).
+- **Action items:**
+  1. Add a `feature_description_collision_rate` check to the planned exp2102
+     NLA probe v2 artifact schema
+  2. Cite McCann in paper-v6 §6 as a methodology limitation for white-box
+     verifiers
+  3. Sanity-check whether existing carnot SAE code (if any) already audits
+     for this
+
+### NEW Rank MEDIUM: Domain Restriction via Multi SAE Layer Transitions (arXiv:2605.11920, May 12 2026)
+- **Score:** 4×4×4×3 = **192**
+- **Authors:** Elias Shaheen, Avi Mendelson
+- **Why it matters:** OOD detection via cross-layer SAE activation analysis.
+  Carnot's verifier ensemble is structurally an OOD-detection problem for
+  LLM outputs (verifier ensemble = "is this output in the support of valid
+  outputs?"). Cross-layer SAE signal as an OOD verifier is a natural fit for
+  the 16th verifier methodology. Lower priority than McCann because it's a
+  technique to adopt rather than a methodology critique to defend against.
+
+### NEW Rank MEDIUM: Do LMs Encode Linguistic Constraint Violations? (arXiv:2605.12055, May 12 2026)
+- **Score:** 4×3×3×3 = **108**
+- **Authors:** Hardy, Sebastian Padó
+- **Why it matters:** "Employs sparse autoencoders to investigate whether
+  LLMs encode grammatical violation detection through monosemantic feature
+  activation patterns." Direct conceptual sibling to Carnot's verifier
+  ensemble — constraint-violation detection via white-box SAE features. If
+  the answer is yes, that's a baseline Carnot can adopt for the linguistic-
+  constraint class of verifiers. If no, that's a known limitation.
+
+### Additional candidates (not promoted; rank below 100):
+- arXiv:2605.12809 Correcting Influence: Unboxing LLM Outputs (Yu, Ghosal, Gan) — SAE-based training-data attribution; tangential to verification
+- arXiv:2605.12770 WriteSAE: SAEs for Recurrent State (Young) — SSM-targeted; relevant if Phase-3 substrate becomes recurrent
+- arXiv:2605.12245 SOAR: Scale Optimization for NVFP4 Quantization — efficient deployment, not verification
+- arXiv:2605.12225 Mechanistic Interpretability of ASR — audio domain
+- arXiv:2605.12122 Disentangled Sparse Representations for Diffusion Unlearning — diffusion concept suppression
+- arXiv:2605.11638 Learning U-Statistics with Active Inference — statistical estimation, not LLM
+- arXiv:2605.07639 Tacit Knowledge Extraction via Logic Augmented Generation + Active Inference — adjacent to NSVIF
+- arXiv:2605.12536 Information as Maximum-Caliber Deviation (Kearney) — FEP/IIT bridge, theoretical only
+- arXiv:2605.01290 How Light Reshapes the Mind — cognition modeling, off-topic
+- arXiv:2604.27935 Flying by Inference: UAV Swarms — robotics, off-topic
+
+---
+
 ## Sweep 2026-05-14T00:42Z (Claude outer-loop, manual seed for /loop job 875c06b4)
 
 **Queries fired:**
