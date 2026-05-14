@@ -3170,3 +3170,4 @@ IMPORTANT:
 | 2026-05-14 21:54 UTC | Exp 1688: CASAL Primal-Dual sampler implementation | OK | 97 passed, 1 warning in 7.55s |
 | 2026-05-14 22:04 UTC | Exp 1689: CASAL vs MCMC Langevin verification on P | OK | 81 passed, 1 warning in 5.41s |
 | 2026-05-14 22:12 UTC | Exp 1690: Integrate CASAL as Fast-Path Tier in Ver | OK | 145 passed, 1 warning in 5.93s |
+| 2026-05-14 22:24 UTC | Exp 1691: Implement EBFT loss function in JAX | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: s enabled. All tool |
