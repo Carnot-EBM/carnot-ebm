@@ -18,6 +18,70 @@
 | GateMate A1 board profile in openFPGALoader | yes (`-b olimex_gatemateevb`) | `openFPGALoader --list-boards` |
 | User serial-port group membership | `ianblenke` in `uucp` group | `id` |
 
+## 2026-05-14 18:30Z update — PolarFire SoC Discovery Kit BOOTED + SSH-ACCESSIBLE
+
+| Item | State |
+|---|---|
+| Boot chain | HSS (2026.04, programmed via FPExpress + .job) → U-Boot → Linux ✓ |
+| OS | Microchip Distro 1.0 (Yocto), Linux 6.18.17-linux4microchip-2026.04.1 |
+| CPU | SiFive U54-MC, 4 cores, riscv64, sv39 MMU |
+| RAM | 545 MiB total, 478 MiB available |
+| SD card | 119.3 GiB, mmcblk0; rootfs auto-resized to 119.2 GiB ✓ (sgdisk -e was the fix — pre-extend the GPT before insertion) |
+| Network | eth0 via DHCP at 192.168.51.197 (lease should be reserved on router); mDNS works via `mpfs-disco-kit.local` |
+| SSH | `ssh root@mpfs-disco-kit.local` works with key-based auth ✓ |
+| Local alias | `ssh polarfire` (configured in `~/.ssh/config` on this host) |
+| Python | 3.12.12 + pip3 pre-installed |
+| Outbound network | works (ICMP to 1.1.1.1: 10.8ms) |
+
+### Working FPExpress flash recipe (for future re-flash)
+
+```bash
+# (one-time prerequisites)
+sudo cp /tmp/99-fpga-boards.rules /etc/udev/rules.d/ && sudo udevadm control --reload && sudo udevadm trigger
+mv /usr/local/microchip/Program_Debug_v2024.1/Program_Debug_Tool/lib64/rhel/libstdc++.so.6 \
+   /usr/local/microchip/Program_Debug_v2024.1/Program_Debug_Tool/lib64/rhel/libstdc++.so.6.microchip
+# (libstdc++ moves let the system's newer libstdc++ be picked up by ld)
+
+# (per-flash)
+mkdir -p ~/fpx_create_job/MPFS
+cat > /tmp/flash.tcl <<TCL
+create_job_project -job_project_location "\$env(HOME)/fpx_create_job/MPFS" -job_file "/tmp/MPFS_DISCOVERY.job"
+TCL
+QT_QPA_PLATFORM=offscreen /usr/local/microchip/Program_Debug_v2024.1/Program_Debug_Tool/bin64/FPExpress SCRIPT:/tmp/flash.tcl
+
+# Then read the chip name from $HOME/fpx_create_job/MPFS/MPFS_DISCOVERY/MPFS_DISCOVERY.pro
+# (look for <Device type="ACTEL"><Name>...</Name></Device>)
+# For Discovery Kit MPFS095T: device name is "MPFS095T"
+
+cat > /tmp/flash_run.tcl <<TCL
+open_project -project "\$env(HOME)/fpx_create_job/MPFS/MPFS_DISCOVERY/MPFS_DISCOVERY.pro"
+set_programming_action -name "MPFS095T" -action "PROGRAM"
+run_selected_actions
+TCL
+QT_QPA_PLATFORM=offscreen /usr/local/microchip/Program_Debug_v2024.1/Program_Debug_Tool/bin64/FPExpress SCRIPT:/tmp/flash_run.tcl
+```
+
+### SD card prep recipe (for future re-flash)
+
+```bash
+# Download
+cd /tmp
+curl -fsSL -O "https://github.com/linux4microchip/meta-mchp/releases/download/linux4microchip-2026.04/mchp-base-image-mpfs-disco-kit.rootfs-20260430114629.wic.gz"
+gzip -t mchp-base-image-mpfs-disco-kit.rootfs-*.wic.gz
+
+# Write + extend GPT (run extension BEFORE first U-Boot read, otherwise U-Boot can't find backup GPT and may hang on mmc reads)
+gunzip -c mchp-base-image-mpfs-disco-kit.rootfs-*.wic.gz | sudo dd of=/dev/sdb bs=4M status=progress conv=fsync
+sudo sgdisk -e /dev/sdb
+sync
+```
+
+### Open issue: SDCARD #1 (29GB SanDisk SL32G) had U-Boot read failures at UHS SDR104
+
+- `mmc info` worked, `mmc part` failed with "mmc fail to send stop cmd"
+- Same image on the new 119GB card works fine
+- Likely card-vs-controller signal-integrity issue at 208MHz UHS SDR104
+- Not chasing further; the 119GB card is functional
+
 ## What's NOT yet working
 
 | Component | Issue | Fix path |
