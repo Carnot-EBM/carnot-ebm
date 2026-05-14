@@ -459,6 +459,116 @@ class UnivariateKAEMLayer:
 
 
 # ---------------------------------------------------------------------------
+# SineKANLayer
+# ---------------------------------------------------------------------------
+
+
+class SineKANLayer:
+    """Per-variable marginal energy using periodic sine grids (SineKAN).
+
+    This replaces the B-spline implementation of UnivariateKAEMLayer with
+    re-weighted sine functions to accelerate exact inverse-transform sampling.
+    """
+
+    def __init__(
+        self,
+        n_vars: int,
+        n_freqs: int = 8,
+        key: jax.Array | None = None,
+    ) -> None:
+        if n_vars < 1:
+            raise ValueError(f"n_vars must be >= 1, got {n_vars}")
+        if n_freqs < 1:
+            raise ValueError(f"n_freqs must be >= 1, got {n_freqs}")
+
+        self.n_vars = n_vars
+        self.n_freqs = n_freqs
+
+        if key is None:
+            key = jrandom.PRNGKey(0)
+
+        k1, k2 = jrandom.split(key)
+        self.amplitudes = jrandom.normal(k1, (n_vars, n_freqs)) * 0.1
+        self.phases = jrandom.uniform(k2, (n_vars, n_freqs)) * 2 * jnp.pi
+
+    def _eval_sine_single(self, amps: jax.Array, phases: jax.Array, x: jax.Array) -> jax.Array:
+        freqs = jnp.arange(1, self.n_freqs + 1, dtype=jnp.float32)
+        return jnp.sum(amps * jnp.sin(jnp.pi * freqs * x + phases))
+
+    def energy(self, x: jax.Array) -> jax.Array:
+        total = jnp.array(0.0)
+        for i in range(self.n_vars):
+            total = total + self._eval_sine_single(self.amplitudes[i], self.phases[i], x[i])
+        return total
+
+    def _eval_sine_np(self, amps: np.ndarray, phases: np.ndarray, xs: np.ndarray) -> np.ndarray:
+        freqs = np.arange(1, self.n_freqs + 1, dtype=np.float64)
+        angles = np.pi * np.outer(xs, freqs) + phases
+        return np.sum(amps * np.sin(angles), axis=1)
+
+    def marginal_cdf(self, var_idx: int, x: float) -> float:
+        x_clamped = float(np.clip(x, -1.0, 1.0))
+        amps = np.array(self.amplitudes[var_idx])
+        phases = np.array(self.phases[var_idx])
+
+        grid = np.linspace(-1.0, 1.0, _N_QUAD)
+        energies = self._eval_sine_np(amps, phases, grid)
+        energies = energies - np.max(energies)
+        density = np.exp(-energies)
+
+        x_idx = np.searchsorted(grid, x_clamped)
+        x_idx = int(np.clip(x_idx, 1, _N_QUAD))
+        partial_density = density[:x_idx]
+        partial_grid = grid[:x_idx]
+        partial_integral = float(np.trapezoid(partial_density, partial_grid))
+        total_integral = float(np.trapezoid(density, grid))
+
+        return float(np.clip(partial_integral / total_integral, 0.0, 1.0))
+
+    def sample_exact(self, n_samples: int, rng_key: jax.Array) -> jax.Array:
+        uniforms = np.array(jrandom.uniform(rng_key, (n_samples, self.n_vars)))
+        samples = np.zeros((n_samples, self.n_vars), dtype=np.float32)
+
+        for i in range(self.n_vars):
+            amps = np.array(self.amplitudes[i])
+            phases = np.array(self.phases[i])
+            cdf_table = self._build_cdf_table(amps, phases)
+            for s in range(n_samples):
+                u = float(uniforms[s, i])
+                samples[s, i] = self._invert_cdf(cdf_table, u)
+
+        return jnp.array(samples)
+
+    def _build_cdf_table(self, amps: np.ndarray, phases: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+        grid = np.linspace(-1.0, 1.0, _N_QUAD)
+        energies = self._eval_sine_np(amps, phases, grid)
+        energies = energies - np.max(energies)
+        density = np.exp(-energies)
+
+        cdf_vals = np.zeros(_N_QUAD, dtype=np.float64)
+        for k in range(1, _N_QUAD):
+            dx = grid[k] - grid[k - 1]
+            cdf_vals[k] = cdf_vals[k - 1] + 0.5 * (density[k - 1] + density[k]) * dx
+        total = cdf_vals[-1]
+        cdf_vals /= total
+        return grid, cdf_vals
+
+    def _invert_cdf(self, cdf_table: tuple[np.ndarray, np.ndarray], u: float) -> float:
+        grid, cdf_vals = cdf_table
+        idx = int(np.searchsorted(cdf_vals, u))
+        idx = int(np.clip(idx, 1, _N_QUAD - 1))
+
+        x0, x1 = grid[idx - 1], grid[idx]
+        c0, c1 = cdf_vals[idx - 1], cdf_vals[idx]
+
+        if abs(c1 - c0) < 1e-12:
+            return float(x0)
+
+        t = (u - c0) / (c1 - c0)
+        return float(x0 + t * (x1 - x0))
+
+
+# ---------------------------------------------------------------------------
 # KAEMEnergy
 # ---------------------------------------------------------------------------
 
@@ -503,19 +613,26 @@ class KAEMEnergy:
         n_vars: int,
         n_hidden: int = 16,
         key: jax.Array | None = None,
+        layer_type: str = "spline",
     ) -> None:
         if n_vars < 1:
             raise ValueError(f"n_vars must be >= 1, got {n_vars}")
         if n_hidden < 2:
             raise ValueError(f"n_hidden must be >= 2, got {n_hidden}")
+        if layer_type not in ["spline", "sinekan"]:
+            raise ValueError(f"layer_type must be 'spline' or 'sinekan', got {layer_type}")
 
         self.n_vars = n_vars
         self.n_hidden = n_hidden
+        self.layer_type = layer_type
 
         if key is None:
             key = jrandom.PRNGKey(0)
 
-        self.layer = UnivariateKAEMLayer(n_vars=n_vars, n_knots=n_hidden, key=key)
+        if layer_type == "sinekan":
+            self.layer = SineKANLayer(n_vars=n_vars, n_freqs=n_hidden, key=key)
+        else:
+            self.layer = UnivariateKAEMLayer(n_vars=n_vars, n_knots=n_hidden, key=key)
         self._rng_key = jrandom.split(key, 2)[1]
 
     # ------------------------------------------------------------------
