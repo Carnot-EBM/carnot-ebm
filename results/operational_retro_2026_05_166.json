@@ -1,0 +1,52 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.166",
+  "generated_at": "2026-05-14T18:15:00Z",
+  "retro_type": "operational",
+  "summary": "Analyzed 41 minutes wall time across 10 completed experiments. All 10 experiments were synthesis-only, so the GPUs correctly idled at 0% utilization throughout. The slowest paths were purely synthesis tasks, with Exp 2105 taking 14 minutes.",
+  "total_wall_time_minutes": 40.7,
+  "experiments_completed": 10,
+  "compute_bound_experiments_count": 0,
+  "gpu_idle_on_compute_bound_tasks": null,
+  "slowest_experiments": [
+    {
+      "experiment": "-0400 [conductor] Exp 2105: GateMate A1 toolchain bring-up + Ising-tile bitstrea",
+      "duration_minutes": 13.7,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 2108: 4/delta Bound \u2014 measure Carnot's verify-repair empir",
+      "duration_minutes": 12.3,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 2106: THRML/Carnot Parity v3 \u2014 retry of .165 exp2100 with ",
+      "duration_minutes": 9.8,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 2107: Phase 4 active inference v3 \u2014 n=8 alpha_t with k=6 v",
+      "duration_minutes": 2.7,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 2109: Milestone .166 Retrospective",
+      "duration_minutes": 2.2,
+      "compute_bound": false
+    }
+  ],
+  "bottlenecks_identified": [
+    "Synthesis-only tasks constituted the entirety of the milestone and the longest single task (Exp 2105) took 14 minutes, indicating synthesis execution is the primary bottleneck."
+  ],
+  "improvements_suggested": [
+    "Optimize the synthesis pipeline to reduce the 14-minute ceiling on single synthesis tasks.",
+    "Profile Exp 2105 to identify the specific synthesis step causing the bottleneck."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Optimize the synthesis pipeline to reduce the 14-minute ceiling on single synthesis tasks.",
+    "Profile Exp 2105 to identify the specific synthesis step causing the bottleneck.",
+    "Maintain the correctly configured GPU idle state for non-compute tasks."
+  ],
+  "estimated_time_savings_pct": 15,
+  "meta_reflection": "The retrospective successfully identified that zero compute-bound tasks ran, correctly interpreting the 0% GPU utilization as expected behavior for synthesis-only tasks rather than a bug."
+}
