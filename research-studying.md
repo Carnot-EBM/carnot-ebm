@@ -8,6 +8,21 @@ loop) executes the current experiments.
 **Updated:** 2026-05-14 (3 sweeps today)
 **Current Focus:** Adversarial-verify discipline; Phase 4 active-inference smoke; THRML parity v2 (Curie-Weiss); NLA-class 16th verifier (with description-collision audit per arXiv:2605.12874); verifier-ensemble null-space + 4/δ convergence bound (new from 2026-05-14T08:20Z sweep)
 
+## Sweep 2026-05-14T16:55Z (Claude outer-loop /loop job 875c06b4 fire #5)
+
+**Queries fired:**
+- arxiv abs:"sparse autoencoder" OR "white box probe" OR "reconstruction error" → **HTTP 429**
+- arxiv abs:"formal verification" AND "LLM" → **HTTP 429**
+- HN search: `energy verifier hallucination` → 0 hits
+- HN search: `energy based model` → same 10 results as sweep #4 (no churn)
+- Semantic Scholar API → **HTTP 429**
+
+**Result: low-yield fire.** Both arxiv and Semantic Scholar API rate-limited this hour. HN hadn't churned since sweep #4. No new candidates promoted.
+
+**Operational observation:** the cron is firing every 4 hours but arxiv's API has been 429-throttled on 2 of the last 3 fires. This is consistent with the rest-of-the-world also hammering it. Recommendation for cron-prompt revision: stagger by day_of_year mod 4 AND add a 60-90s delay between WebFetches to spread the request load.
+
+---
+
 ## Sweep 2026-05-14T12:40Z (Claude outer-loop /loop job 875c06b4 fire #4)
 
 **Queries fired:**
