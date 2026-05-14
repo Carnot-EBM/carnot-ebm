@@ -5745,3 +5745,4 @@ Completed 15 experiments in 28.9 minutes. There were 0 compute-bound experiments
 - 2026-05-14: Exp 1681: Phase 4 active inference scaling sweep — n=8/16/32 (✅ Complete) — honest_verdict=complete: Scaling simulation finished with collapse_scale=None and acceptance=True.; results/experiment_1681_phase4_scaling.json
 - 2026-05-14: Exp 1682: THRML/Carnot joint bias investigation — varied beta sweep (✅ Complete) — honest_verdict=complete: sweep_finished_with_verdict_systematic; results/experiment_1682_thrml_bias.json
 - 2026-05-14: Exp 1684: Milestone .169 Retrospective (✅ Complete) — honest_verdict=complete: retro generated for milestone 2026.05.169; results/experiment_1684_retro.json
+- 2026-05-14: Exp 1686: THRML/Carnot joint bias correction implementation (✅ Complete) — honest_verdict=complete: bias_correction_implemented_and_verified_on_10k_curie_weiss; results/experiment_1686_thrml_bias_fix.json
