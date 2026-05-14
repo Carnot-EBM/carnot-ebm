@@ -18,6 +18,56 @@
 | GateMate A1 board profile in openFPGALoader | yes (`-b olimex_gatemateevb`) | `openFPGALoader --list-boards` |
 | User serial-port group membership | `ianblenke` in `uucp` group | `id` |
 
+## 2026-05-14 22:15Z note — THERMAL CONSTRAINTS (operator)
+
+**Neither the PolarFire SoC Discovery Kit nor the GateMate A1-EVB-2M has
+active cooling.** The KV260 has a small fan + heatsink; these two boards
+are bare / passively cooled.
+
+**Implications:**
+
+- **Sustained high-load workloads risk thermal throttling.** RISC-V cores
+  on the MPFS095T may down-clock under sustained 100% utilization.
+  FPGA fabric on either board may degrade or warp under extended
+  high-toggle-rate operation.
+- **Benchmark results may not be representative of production sustained
+  load.** A 30-minute hot run could give different numbers than a 30-
+  second smoke test.
+- **Avoid long sustained-100%-load tests** without external cooling
+  (small USB fan, etc.) — the boards aren't designed for it.
+
+**Required artifact field for hardware experiments going forward:**
+
+Hardware experiments on PolarFire / GateMate should include in the
+artifact:
+
+```
+- thermal_note: "passively cooled; no active fan; sustained-load results
+  may differ from production with active cooling"
+- run_duration_s: <int>      # so retro can assess thermal exposure
+- soc_temp_max_c: <float|null>  # if readable via /sys/class/thermal on
+                                # PolarFire; null on GateMate (no thermal
+                                # sensor exposed)
+```
+
+**For sustained workload tests (>5 min wall time):**
+
+- Monitor `/sys/class/thermal/thermal_zone*/temp` on the PolarFire
+  (millidegrees C) periodically
+- If `soc_temp_max_c > 85`, abort the run and note thermal_aborted in
+  the artifact
+- For GateMate, watch for unexplained logic failures mid-run as a proxy
+  for thermal issues (the fabric doesn't have an integrated thermal sensor
+  in the chip)
+
+**Paper-v6 implications:** any "Carnot runs on $130 of open hardware"
+sovereignty claim must explicitly disclose the passive-cooling
+limitation. Sustained verifier-deployment latencies + accuracies on
+these boards represent burst-mode capability, not production sustained
+load.
+
+---
+
 ## 2026-05-14 18:30Z update — PolarFire SoC Discovery Kit BOOTED + SSH-ACCESSIBLE
 
 | Item | State |
