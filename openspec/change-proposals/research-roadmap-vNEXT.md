@@ -1,53 +1,48 @@
-# Research Roadmap vNEXT (2026.05.164)
+# Carnot Research Roadmap: Milestone 2026.05.167 (vNEXT)
 
-**Milestone:** 2026.05.164
-**Status:** Planned
-**Focus:** Energy-Based Transformers, Differentiable Hard Constraints, and Schema-Constrained Inference
+**Milestone:** 2026.05.167
+**Theme:** Differentiable Constraint Projection, KAN Hardware Prep, and Continuous Self-Learning
 
-## Executive Summary
+## 1. What the Previous Milestone Proved (.166)
+Milestone `.166` completed its core objectives but identified **synthesis tasks as the primary bottleneck** for optimization. The hardware tracks (dual RTX 3090 SOTA runtime, KV260 Discrete SB RTL, and THRML compatibility) were stabilized but deferred aggressive expansion to avoid out-of-scope hardware claims. Continuous self-learning requires a structural integrity update to ensure zero soundness mistakes and avoid recursive drift during policy promotion.
 
-Milestone `.163` successfully implemented SMT-based constraint extraction and KAN piecewise-affine (PWA) MILP verification, establishing a bridge between real instruction-tuned responses and rigorous mathematical bounds. However, significant gaps remain between the current pipeline and the long-term vision of autonomous, continuous self-learning via energy landscapes (Phase 3). 
+## 2. Milestone Objectives
+1. **Bridge the Synthesis Bottleneck:** Implement HardNet++ and PiNet-style differentiable projection layers to enforce constraints within the neural forward pass, falling back to Z3/PySAT only for final formal verification.
+2. **KAN Hardware Preparedness:** Apply the new hardware-oriented inference complexity metrics (RM, BOP, NABS) and PWA MILP abstraction to KAN units to provide definitive KV260 accounting without requiring full Vivado synthesis.
+3. **Advanced Continuous Self-Learning (FR-11):** Implement Schema-Constrained Generation (SCG-MEM) for memory traces and Energy-Guided Test-Time Scaling (ETS) using the mandated local SOTA GGUFs to ensure safe, scalable self-improvement.
 
-Recent arXiv literature (April/May 2026) underscores that "hard" constraint projection layers ($\Pi$Net, HardNet++) and Energy-Based Transformers (EBTs) are the prevailing state-of-the-art for embedding constraints directly into neural generation. Furthermore, training-free energy-guided decoding techniques such as Energy-Guided Test-Time Scaling (ETS) and Schema-Constrained Generation for Agent Memory (SCG-MEM) provide immediate pathways for applying constraint energy to inference loops without RLHF.
-
-This milestone will:
-1. Rebuild and scale constraint enforcement around differentiable hard constraint projections.
-2. Introduce a proof-of-concept EBT module for generative reasoning.
-3. Integrate SCG-MEM and ETS to upgrade Carnot’s Continuous Self-Learning Tier 2 (Memory Pattern Constraint Addition).
-
-## Biggest Gaps to PRD Vision
-
-1. **Verification-Generation Disconnect:** Carnot currently relies on post-hoc MCMC/Ising sampling to verify constraint satisfaction. The PRD goal of zero-false-accept continuous reasoning requires differentiable hard constraints ($\Pi$Net / HardNet++) or energy-guided decoders (EBT) integrated directly into the LLM loop.
-2. **Brittle Constraint Memory (Tier 2):** Pattern extraction relies on hand-crafted or generalized rules. Applying Schema-Constrained Generation (SCG-MEM) will enforce strict structural alignment on Trace2Skill operations, resolving formatting hallucinations in memory storage.
-3. **NPU / Hardware Activation:** The XDNA NPU toolchain was attempted in `.163` but needs verified models deployed to it. KAN hardware metrics (RM/BOP/NABS) must also be computed to ensure PWA/MILP abstraction scales to Extropic TSU / FPGA budgets.
-
-## Architecture Evolution
-
+## 3. Architecture Overview
 ```mermaid
 graph TD
-    A[Instruction-Tuned LLM] --> B{Draft Output}
-    B --> C[SMT/LLM Extractor]
-    C --> D[SCG-MEM / ETS Constraints]
-    D --> E{Energy-Based Decoder}
-    E --> F[$\Pi$Net Projection Layer]
-    F --> G[Valid, Low-Energy Output]
-    G --> H[Continuous Self-Learning (Tier 2 Memory)]
+    A[Unstructured Prompt] --> B[ROCE Extractor]
+    B --> C{Differentiable Projection Layer}
+    C -->|PiNet/HardNet++| D[Constraint Graph / KAN Tier]
+    D --> E[Energy-Guided Generation - Qwen3.6 / Gemma-4]
+    E --> F[Z3 / PySAT Verifier]
+    F -->|Zero False Accepts| G[Valid Output]
+    F -->|Reject| C
+    G --> H[Continuous Self-Learning / SCG-MEM]
 ```
 
-## Milestone Phases
+## 4. Phase Descriptions
 
-### Phase 1: Hard Constraints and Schema Enforcement
-We begin by adapting the recent $\Pi$Net and HardNet++ architectures to Carnot's symbolic verifiers. Simultaneously, we implement SCG-MEM for our Continuous Learning trace pipelines to ensure strict memory integrity.
+### Phase 1: Differentiable Constraint Projection
+Targets the symbolic synthesis bottleneck by moving constraint satisfaction into continuous neural layers. 
+- **Experiments 1670-1673:** Prototype PiNet (Douglas-Rachford splitting) and HardNet++ (damped local linearization) on CPU. Validate that continuous projections exactly match PySAT boundaries for linear constraints. 
 
-### Phase 2: Energy-Based Transformer Prototype
-Implementing a baseline EBT (Energy-Based Transformer) to model inference as gradient descent over an energy landscape. This aligns with Phase 3 foundation goals.
+### Phase 2: Hardware-Oriented Inference & KAN Deployment Prep
+Moves KAN infrastructure from theory towards actionable hardware translation by adhering to the established bounds (no new unauthenticated hardware execution claims).
+- **Experiments 1674-1677:** Implements RM, BOP, NABS accounting; tests piecewise affine abstractions (MILP); and prototypes KANELÉ LUT-based logic for the S2KAN tier.
 
-### Phase 3: Hardware & Pre-flight 
-Following up on `.163`, we push the JEPA model to the NPU and perform necessary hardware resource counting on the new MILP abstractions.
+### Phase 3: Energy-Guided Generation & Trace Constraints
+Links the energy functions directly to the decoding process of local SOTA GGUF models. 
+- **Experiments 1678-1681:** Probes FAR (Continuous Latent Generation) for rapid inference, then applies Energy-Guided Decoding to `unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF`.
 
-### Phase 4: Retro & Docs
-Synthesize findings, log constraint efficacy, and update spec traceability.
+### Phase 4: Continuous Self-Learning Integration
+Ensures FR-11 is stable by structurally constraining memory and scaling test-time search.
+- **Experiments 1682-1683:** Enforces Schema-Constrained Generation (SCG-MEM) during policy trace collection. Concludes with a rigorous soundness-mistake audit.
 
-## Hardware Requirements
-- Dual RTX 3090 (for SOTA GGUF generation)
-- AMD XDNA NPU (for JEPA model offloading)
+## 5. Hardware Requirements
+- **Local CPU/RAM:** Standard computation for PySAT, JAX PiNet simulations, and KAN accounting.
+- **GPU (Dual RTX 3090):** Required for executing the mandated SOTA GGUF models in Phase 3 and Phase 4 (`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`).
+- **FPGA:** No active board claims allowed. KAN LUT translations will remain strictly at the software simulation and synthesis-accounting level (RM/BOP/NABS).
