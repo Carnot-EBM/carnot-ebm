@@ -12,6 +12,16 @@ claim hardware correctness.
 
 ## Requirements
 
+### REQ-VERIFY-1673: Hybrid Verifier Pipeline
+
+The system shall provide a unified pipeline (`python/carnot/solvers/hybrid_verifier.py`) where a neural generator predicts, PiNet projects the predictions to satisfy continuous constraints, and Z3 formally verifies the boolean logic of the projected continuous constraints. The hybrid verifier MUST expose pass rates and validation latency.
+
+### SCENARIO-VERIFY-1673: Hybrid Verifier E2E Evaluation
+
+Given a set of constraints,
+When the hybrid verifier runs the unified pipeline (generator predicts, PiNet projects, Z3 verifies),
+Then it should produce a deliverable JSON (`results/experiment_1673_hybrid_constraint.json`) with pass rates, validation latency, and an honest verdict.
+
 ### REQ-VERIFY-1372: GS-KAN PWA Energy-Bound Verification
 
 The repository shall provide a deterministic verification path for a small
