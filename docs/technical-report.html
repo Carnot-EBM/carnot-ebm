@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Technical Report - A Technical Report — 2,448 Experiments Across the Public Record, 176 Archived Milestone Records, 24,614 Python Test Items Collected (Results and Ops Retros Through Exp 2089)</title>
-  <meta name="description" content="Carnot technical report: A Technical Report — 2,448 Experiments Across the Public Record, 176 Archived Milestone Records, 24,614 Python Test Items Collected (Results and Ops Retros Through Exp 2089). Live GPU benchmarks with statistical confidence intervals, honest negative results, and a public experiment history with provenance labels for every headline claim.">
+  <title>Technical Report - A Technical Report — 2,468 Experiments Across the Public Record, 179 Archived Milestone Records, 24,584 Python Test Items Collected (Results and Ops Retros Through Exp 2109)</title>
+  <meta name="description" content="Carnot technical report: A Technical Report — 2,468 Experiments Across the Public Record, 179 Archived Milestone Records, 24,584 Python Test Items Collected (Results and Ops Retros Through Exp 2109). Live GPU benchmarks with statistical confidence intervals, honest negative results, and a public experiment history with provenance labels for every headline claim.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M30,50 Q30,20 50,20 Q70,20 70,50 Q70,80 50,80 Q30,80 30,50' fill='none' stroke='%23f97316' stroke-width='8'/><circle cx='50' cy='50' r='10' fill='%23f97316'/></svg>">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -160,7 +160,7 @@
 
 <article>
 <h1 id="carnot-energy-based-verification-for-llm-output">Carnot: Energy-Based Verification for LLM Output</h1>
-<h2 id="a-technical-report-2448-experiments-across-the-public-record-176-archived-milestone-records-24614-python-test-items-collected-results-and-ops-retros-through-exp-2089">A Technical Report — 2,448 Experiments Across the Public Record, 176 Archived Milestone Records, 24,614 Python Test Items Collected (Results and Ops Retros Through Exp 2089)</h2>
+<h2 id="a-technical-report-2468-experiments-across-the-public-record-179-archived-milestone-records-24584-python-test-items-collected-results-and-ops-retros-through-exp-2109">A Technical Report — 2,468 Experiments Across the Public Record, 179 Archived Milestone Records, 24,584 Python Test Items Collected (Results and Ops Retros Through Exp 2109)</h2>
 <p><strong>Author:</strong> Ian Blenke
 <strong>Date:</strong> 2026-05-12
 <strong>Repository:</strong> github.com/Carnot-EBM/carnot-ebm
@@ -184,11 +184,11 @@ a handful of lines of Python. Headline model-generation benchmark numbers are fr
 Qwen3.6-35B-A3B), never from simulated runs; hardware, ensemble, and
 adversarial-audit results are labeled by artifact provenance.</p>
 <p>This report documents the research arc behind the framework — <strong>2,423
-experiment records tracked through Exp 2089, with 2,238 task records in 176
-artifact-backed completed milestone records archived through 2026.05.163 and
-checked-in result artifacts extending through milestone .163</strong> — run between
+experiment records tracked through Exp 2089, with 2,258 task records in 179
+artifact-backed completed milestone records archived through 2026.05.166 and
+checked-in result artifacts extending through milestone .166</strong> — run between
 February and May 2026. <code>research-complete.yaml</code> currently archives <strong>171</strong>
-completed milestone records through 2026.05.163; checked-in result artifacts
+completed milestone records through 2026.05.166; checked-in result artifacts
 and <code>ops/changelog.md</code> now extend through
 <code>results/experiment_2027_milestone_158_retro.json</code>. Milestone .161 completed
 <strong>25</strong> experiments in <strong>26.5</strong> minutes, with GPUs correctly idled at 0%
@@ -6705,6 +6705,17 @@ Experiment 2071 successfully verified symbolic gating mechanisms, expanding the 
 Experiment 2083 completed the integration of SMT Solvers for KAN4CBC robustness verification.</p>
 <p><strong>Hardware and Scaffolding</strong>
 Experiment 2088 established the AMD XDNA NPU SDK toolchain. Experiment 2089 completed the milestone with SMT JEPA scaffolding.</p>
+<h2 id="milestones-164166-energy-guided-test-time-scaling-npu-execution-and-empirical-convergence-exps-20902109-may-2026">Milestones 164–166 — Energy-Guided Test-Time Scaling, NPU Execution, and Empirical Convergence (Exps 2090–2109, May 2026)</h2>
+<p><strong>Energy-Guided Test-Time Scaling (ETS)</strong>
+Experiments 2094 and 2096 introduced Energy-Guided Test-Time Scaling (ETS), demonstrating Tier 2 memory updating via ETS feedback.</p>
+<p><strong>Live GPU EBT vs Autoregressive Evaluation</strong>
+Experiment 2095 established Live GPU Evaluation of Energy-Based Training vs Autoregressive models.</p>
+<p><strong>Hardware: NPU Execution of JEPA Predictor</strong>
+Experiment 2097 successfully ported the JEPA predictor to execute on the AMD XDNA NPU, fulfilling NPU hardware acceleration requirements.</p>
+<p><strong>THRML/Carnot Parity and Phase 4 Active Inference</strong>
+Experiments 2100 and 2106 achieved THRML/Carnot Parity v2 and v3 (Curie-Weiss n=128), proving semantic equivalence with analytic ground truth. Experiments 2101 and 2107 evaluated Phase 4 active inference.</p>
+<p><strong>Verify-Repair Empirical Convergence</strong>
+Experiment 2108 validated the 4/delta Bound, measuring Carnot's verify-repair empirical convergence successfully.</p>
 </article>
 
 <footer>
