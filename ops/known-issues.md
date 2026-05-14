@@ -113,6 +113,15 @@ Candidates surfaced from arxiv/HN/Semantic Scholar literature scans. Full rankin
   exists in VerifyRepairPipeline); confirm coverage + cite in paper-v6 §3 peer
   methodology.
 
+- **arXiv:2605.12874** — Descriptive Collision in SAE Auto-Interpretability
+  (McCann, May 13 2026). Score 400. **Direct adversarial-verify critique of SAE
+  methodology.** Distinct SAE features receive identical text-descriptions,
+  inflating reported interpretability by ~⅓ of feature identity bits. **Affects
+  Carnot's planned NLA-class 16th verifier** — exp2102 NLA probe v2 must include
+  a `feature_description_collision_rate` audit before claiming TPR lift.
+  Otherwise the SAE could be discriminating feature-class identity, not output-
+  distinguishing signal.
+
 ---
 
 ## DEFERRED / PARKED ITEMS (planner may propose, not mandatory)
