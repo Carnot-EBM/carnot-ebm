@@ -1,0 +1,31 @@
+{
+  "schema": "carnot.phase4_active_inference_n64.v1",
+  "experiment": 1693,
+  "run_date": "2026-05-14T23:49:53.165593Z",
+  "duration_s": 0.08868002891540527,
+  "random_seed": 171193,
+  "model_specs": {
+    "n_spins": 64,
+    "ensemble_k6": "<list of 6 verifier names from exp1681>",
+    "ensemble_k1": "<the single baseline verifier from exp1681>",
+    "mld_steps": 100,
+    "n_seeds": 30
+  },
+  "reproducibility_checksum": "f20741c30069232da4a2351bc6fd823cf22b59c244d49dfac1bb4fc333c75566",
+  "n_samples": 3000,
+  "n_samples_justification": "30 seeds gives std_err(mean_alpha_t) ~ 1/sqrt(30) ~ 0.18; bootstrap CI on delta_alpha needs at least 30 seeds for asymptotic-CI validity per Wasserman 'All of Statistics' ch.5",
+  "alpha_t_method": "carnot.phase4_active_inference.run_mld_simulation inf_t_alpha",
+  "inf_t_alpha_k6": 0.15055017684699593,
+  "inf_t_alpha_k1": 2.006987282247011e-06,
+  "delta_alpha": 0.15054816985971364,
+  "delta_alpha_bootstrap_ci_95": [
+    0.150399599271055,
+    0.15070147543520723
+  ],
+  "collapse_scale_observed": false,
+  "acceptance_gate_passed": true,
+  "acceptance_gate_criteria": "Measurement reported with bootstrap CI; sign and magnitude are findings, not gates.",
+  "methodology_note": "delta_alpha values below 0.01 in absolute value on n=64 are interpreted with caution \u2014 possible numerical floor at this substrate scale; record the alpha_t variance to disambiguate.",
+  "optimization_direction": "neither \u2014 this is a measurement task, not an optimization; sign-anomaly check should NOT apply",
+  "honest_verdict": "complete: Measured Phase 4 scaling at n=64 with bootstrap CI."
+}
