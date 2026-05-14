@@ -3154,3 +3154,4 @@ IMPORTANT:
 | 2026-05-14 20:46 UTC | Exp 1680: PolarFire SoC verifier smoke v2 — minima | OK | 81 passed, 1 warning in 5.46s |
 | 2026-05-14 20:51 UTC | Exp 1681: Phase 4 active inference scaling sweep — | OK | 81 passed, 1 warning in 4.39s |
 | 2026-05-14 20:59 UTC | Exp 1682: THRML/Carnot joint bias investigation —  | OK | 81 passed, 1 warning in 5.43s |
+| 2026-05-14 21:01 UTC | Exp 1683: PyPI publish dry-run — Phase 1 ship-trac | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
