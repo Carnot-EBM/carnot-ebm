@@ -94,7 +94,14 @@ tasks:
            per CLAUDE.md rule 5; this is the first physical deployment.
            Performance regression vs x86 baseline is expected (single-core
            U54 @ 600MHz vs RTX 3090); the claim is sovereignty-feasibility,
-           not perf parity."
+           not perf parity. Board is PASSIVELY COOLED (no heatsink/fan)
+           per operator note 2026-05-14 22:15Z — sustained results may
+           differ from production with active cooling."
+         - thermal_note: "passively cooled; no active fan; sustained-load
+           results may differ from production with active cooling"
+         - run_duration_s: <int> (capture total wall time)
+         - soc_temp_max_c: <float> (max value seen during run from
+           /sys/class/thermal/thermal_zone*/temp; abort if > 85)
          - acceptance_gate_passed: <bool>
          - honest_verdict: MUST start with "complete:" / "success:" /
            "shipped:" per Verdict Terminal-Prefix Discipline. Examples:
@@ -169,6 +176,9 @@ tasks:
          - n_samples: 1 (synthesis determinism is the check)
          - n_samples_justification: "Synthesis + P&R are deterministic; N=1 sufficient"
          - actual_agent_backend: "<gemini|codex|claude>"
+         - thermal_note: "passively cooled per operator note 2026-05-14
+           22:15Z; GateMate has no exposed thermal sensor — watch for
+           unexplained logic failure mid-flash as a proxy"
          - acceptance_gate_passed: <bool>
          - honest_verdict: MUST start with "shipped:" / "success:" /
            "complete:". Example:
