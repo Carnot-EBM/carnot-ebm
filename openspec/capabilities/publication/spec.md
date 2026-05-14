@@ -867,6 +867,17 @@ AND `blocking_items_count` equals the number of unresolved ship blockers
 AND `honest_verdict` is `phase1_software_ship_ready` only when all five
 software gates are ready.
 
+### REQ-PUBLISH-025: PyPI Publish Dry Run Artifact
+
+The PyPI publish dry run MUST produce an artifact at `results/experiment_2103_pypi_publish_dry_run.json` that conforms to the `carnot.phase1_pypi_publish_dry_run.v1` schema. The artifact MUST record the sdist and wheel sizes, the result of `twine check`, and an honest verdict indicating readiness without actually publishing to PyPI.
+
+### SCENARIO-PUBLISH-027: PyPI Publish Dry Run Passes
+
+**Given** the package build is deterministic and produces valid metadata
+**When** the PyPI publish dry run executes
+**Then** it writes a complete artifact with `twine_check_passed == true`,
+`acceptance_gate_passed == true`, and an `honest_verdict` indicating the dry run was successful.
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -895,3 +906,4 @@ software gates are ready.
 | REQ-PUBLISH-022 | Proposed | Exp 1576 paper-v6 Section 3 sampler/verifier draft |
 | REQ-PUBLISH-023 | Proposed | Exp 1579 ICLR 2026 OT verification framework adoption |
 | REQ-PUBLISH-024 | Proposed | Exp 1582 Phase 1 software ship readiness ledger |
+| REQ-PUBLISH-025 | Implemented | Exp 2103 PyPI publish dry run artifact |

@@ -88,7 +88,7 @@ tasks:
       7. Write results/experiment_2105_gatemate_smoke.json with REQUIRED ARTIFACT FIELDS:
          - schema: "carnot.gatemate_smoke.v1"
          - board: "Cologne Chip GateMate A1-EVB-2M"
-         - toolchain: {yosys_version, nextpnr_version, openFPGALoader_version}
+         - toolchain: {{yosys_version, nextpnr_version, openFPGALoader_version}}
          - usb_enumeration: <output of lsusb FPGA lines>
          - n_spins: 16
          - random_seed: <int>
@@ -281,7 +281,7 @@ tasks:
       - milestone: "2026.05.166"
       - tasks_summary: [...]
       - gates_passed_count, gates_failed_count
-      - actual_agent_backend_distribution: {codex: N, gemini: M, claude: K}
+      - actual_agent_backend_distribution: {{codex: N, gemini: M, claude: K}}
       - paper_v6_carryforward_items: [...]
       - adversarial_verify_flag_count
       - honest_verdict: prefix "complete:".

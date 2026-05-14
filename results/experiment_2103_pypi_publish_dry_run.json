@@ -1,0 +1,16 @@
+{
+  "schema": "carnot.phase1_pypi_publish_dry_run.v1",
+  "pyproject_path": "pyproject.toml",
+  "sdist_filename": "carnot_ebm-0.1.0b1.tar.gz",
+  "wheel_filename": "carnot_ebm-0.1.0b1-py3-none-any.whl",
+  "sdist_size_bytes": 85167208,
+  "wheel_size_bytes": 4859915,
+  "twine_check_passed": true,
+  "twine_check_output": "Checking dist/carnot_ebm-0.1.0b1-py3-none-any.whl: PASSED\nChecking dist/carnot_ebm-0.1.0b1.tar.gz: PASSED",
+  "package_name_prefix_correct": true,
+  "n_samples": 1,
+  "n_samples_justification": "Build determinism is the only check; N=1 is sufficient. If the build fails, the failure mode reveals the bug; multiple runs would not add signal.",
+  "acceptance_gate_passed": true,
+  "methodology_note": "This is a dry-run smoke test only. No actual publish to PyPI. If gate passes, the operator can run `git tag v0.X.Y && git push --tags` to trigger the actual publish workflow.",
+  "honest_verdict": "shipped: pypi_publish_dry_run_sdist_wheel_twine_check_all_passed"
+}
