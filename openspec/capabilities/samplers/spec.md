@@ -447,3 +447,27 @@ Sub-requirements:
 **Then** the constraint violation rate is 0.0
 **And** the required JSON artifact is produced.
 
+### REQ-SAMPLE-1689: CASAL vs Langevin Scaling Comparison
+
+Carnot MUST compare the CASAL primal-dual sampler against the baseline Langevin
+sampler on n=16 and n=32 random continuous EBMs and write
+`results/experiment_1689_casal_scaling.json`.
+
+Sub-requirements:
+- REQ-SAMPLE-1689-1: Both samplers SHALL run for 1000 steps on the same
+  random n-variable ContinuousEBM (random symmetric J, random h, same seed).
+- REQ-SAMPLE-1689-2: The artifact SHALL include `schema`, `casal_energy`,
+  `langevin_energy`, `speedup_ratio`, and `acceptance_gate_passed` fields.
+- REQ-SAMPLE-1689-3: `speedup_ratio` SHALL be the ratio of CASAL's energy
+  improvement to Langevin's energy improvement over 1000 steps.
+- REQ-SAMPLE-1689-4: `acceptance_gate_passed` SHALL be True when both samplers
+  produce finite results on both n=16 and n=32.
+
+### SCENARIO-SAMPLE-1689: CASAL vs Langevin comparison writes terminal artifact
+
+**Given** a random n=16 and n=32 ContinuousEBM
+**When** both CASAL and Langevin run for 1000 steps
+**Then** both produce finite final states
+**And** the required JSON artifact is written with all required fields
+**And** `honest_verdict` begins with a terminal prefix (complete:/success:).
+
