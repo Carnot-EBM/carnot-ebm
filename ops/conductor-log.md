@@ -3111,3 +3111,4 @@ IMPORTANT:
 | 2026-05-14 17:55 UTC | Exp 2109: Milestone .166 Retrospective | OK | 81 passed, 1 warning in 4.80s |
 | 2026-05-14 18:11 UTC | Plan milestone 2026.05.167 | OK | 14 tasks proposed |
 | 2026-05-14 18:13 UTC | Milestone 2026.05.167 activated | OK | 14 tasks queued |
+| 2026-05-14 18:18 UTC | Exp 1670: PiNet convex operator splitting forward  | OK | 81 passed, 1 warning in 5.58s |
