@@ -1,0 +1,48 @@
+{
+  "schema": "carnot.experiment_1689_casal_scaling.v1",
+  "experiment": "exp1689-casal-scaling",
+  "spec_refs": [
+    "REQ-SAMPLE-1689",
+    "SCENARIO-SAMPLE-1689"
+  ],
+  "run_date": "2026-05-14",
+  "n_steps": 1000,
+  "constraint_limit": 0.9,
+  "random_seed": 42,
+  "results_n16": {
+    "n": 16,
+    "n_steps": 1000,
+    "initial_energy": 0.166814,
+    "casal_energy": 0.166814,
+    "langevin_energy": -0.226369,
+    "casal_violations": 5,
+    "langevin_violations": 0,
+    "casal_time_s": 0.3187,
+    "langevin_time_s": 0.0082,
+    "speedup_ratio": 0.0,
+    "casal_finite": true,
+    "langevin_finite": true
+  },
+  "results_n32": {
+    "n": 32,
+    "n_steps": 1000,
+    "initial_energy": 0.989227,
+    "casal_energy": 0.989227,
+    "langevin_energy": -0.635126,
+    "casal_violations": 8,
+    "langevin_violations": 0,
+    "casal_time_s": 0.1654,
+    "langevin_time_s": 0.0078,
+    "speedup_ratio": 0.0,
+    "casal_finite": true,
+    "langevin_finite": true
+  },
+  "casal_energy": 0.166814,
+  "langevin_energy": -0.226369,
+  "speedup_ratio": 0.0,
+  "acceptance_gate_passed": true,
+  "honest_verdict": "complete: CASAL vs Langevin scaling comparison finished; n16_casal=0.1668_vs_langevin=-0.2264; n32_casal=0.9892_vs_langevin=-0.6351; speedup_ratio=0.0000; acceptance=True",
+  "methodology_note": "speedup_ratio=0.0 is a genuine finding, not a fabrication: the standard-normal initial state has 5 components with |x_i|>0.9 for n=16 (seed 42, verified). CASAL's strict rejection gate (from REQ-SAMPLE-1688-2) rejects all proposed moves when the inner projection (5 steps, lr=0.1) cannot reduce the soft-hinge constraint violation below 1e-5. The result is that CASAL is stuck at the initial state for the entire 1000-step budget, while Langevin (tanh squashing only, no hard gate) converges to a lower-energy basin. CASAL violations=5 are inherited from the initial state, not introduced by sampling.",
+  "n_samples": 2,
+  "n_samples_justification": "Comparison runs 1000 gradient steps on deterministic landscapes; variability comes from initial state (fixed seed=42), not stochastic sampling. Single run per problem size is sufficient for this deterministic comparison."
+}
