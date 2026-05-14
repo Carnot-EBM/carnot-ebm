@@ -5738,3 +5738,4 @@ Completed 15 experiments in 28.9 minutes. There were 0 compute-bound experiments
 - 2026-05-14: Exp 1678: Phase 4 active inference v3 — alpha_t at n=8 k=6 vs k=1 (✅ Complete) — honest_verdict=complete: successfully validated delta_alpha > 0.05 for k=6 vs k=1 verifiers.; results/experiment_1678_phase4_v3.json
 - 2026-05-14: Exp 1679: Milestone .168 Retrospective (✅ Complete) — honest_verdict=complete: successfully generated milestone 2026.05.168 retro.; results/experiment_1679_retro.json
 - 2026-05-14: Exp 1680: PolarFire SoC verifier smoke v2 — minimal-deps retry (✅ Complete) — honest_verdict=complete: PolarFire SoC smoke test successfully executed semantic_consistency_verifier; results/experiment_1680_polarfire_smoke_v2.json
+- 2026-05-14: Exp 1681: Phase 4 active inference scaling sweep — n=8/16/32 (✅ Complete) — honest_verdict=complete: Scaling simulation finished with collapse_scale=None and acceptance=True.; results/experiment_1681_phase4_scaling.json
