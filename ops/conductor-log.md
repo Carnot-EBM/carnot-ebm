@@ -3098,3 +3098,4 @@ IMPORTANT:
 | 2026-05-14 16:16 UTC | Exp 2101: Phase 4 active inference v2 — alpha_t >  | FAIL | Gemini CLI error: e 10 minutes, that is correct and expected — exit promptly.  |
 | 2026-05-14 16:18 UTC | Exp 2101: Phase 4 active inference v2 — alpha_t >  | FAIL | Gemini CLI error: e 10 minutes, that is correct and expected — exit promptly.  |
 | 2026-05-14 16:24 UTC | Exp 2101: Phase 4 active inference v2 — alpha_t >  | FAIL | Gemini CLI error: usr/lib/node_modules/@google/gemini-cli/bundle/chunk-C5NJ2YR |
+| 2026-05-14 16:30 UTC | Exp 2102: NLA-class 16th verifier v2 — SAE probe w | FAIL | Gemini CLI error: usr/lib/node_modules/@google/gemini-cli/bundle/chunk-C5NJ2YR |
