@@ -5747,3 +5747,4 @@ Completed 15 experiments in 28.9 minutes. There were 0 compute-bound experiments
 - 2026-05-14: Exp 1684: Milestone .169 Retrospective (✅ Complete) — honest_verdict=complete: retro generated for milestone 2026.05.169; results/experiment_1684_retro.json
 - 2026-05-14: Exp 1686: THRML/Carnot joint bias correction implementation (✅ Complete) — honest_verdict=complete: bias_correction_implemented_and_verified_on_10k_curie_weiss; results/experiment_1686_thrml_bias_fix.json
 - 2026-05-14: Exp 1688: CASAL Primal-Dual sampler implementation (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_1688_casal_sampler.json
+- 2026-05-14: Exp 1689: CASAL vs MCMC Langevin verification on Phase 4 substrate (✅ Complete) — honest_verdict=complete: CASAL vs Langevin scaling comparison finished; n16_casal=0.1668_vs_langevin=-0.2264; n32_casal=0.9892_vs_langevin=-0.6351; speedup_ratio=0.0000; acceptance=True; results/experiment_1689_casal_scaling.json
