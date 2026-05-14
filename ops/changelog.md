@@ -5749,3 +5749,4 @@ Completed 15 experiments in 28.9 minutes. There were 0 compute-bound experiments
 - 2026-05-14: Exp 1688: CASAL Primal-Dual sampler implementation (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_1688_casal_sampler.json
 - 2026-05-14: Exp 1689: CASAL vs MCMC Langevin verification on Phase 4 substrate (✅ Complete) — honest_verdict=complete: CASAL vs Langevin scaling comparison finished; n16_casal=0.1668_vs_langevin=-0.2264; n32_casal=0.9892_vs_langevin=-0.6351; speedup_ratio=0.0000; acceptance=True; results/experiment_1689_casal_scaling.json
 - 2026-05-14: Exp 1690: Integrate CASAL as Fast-Path Tier in VerifyRepairPipeline (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_1690_verify_repair_casal.json
+- 2026-05-14: Exp 1691: Implement EBFT loss function in JAX (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_1691_ebft_loss.json
