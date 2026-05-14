@@ -1,0 +1,300 @@
+milestone: "2026.05.168"
+milestone_title: "Phase-2 hardware sovereignty + THRML/Phase-4 carry-forward"
+milestone_doc: "outer-loop pre-staged 2026-05-14 22:00Z (local /loop, post-hardware-bringup)"
+
+# Operator-pre-staged per CLAUDE.md Pre-Staged Roadmap Convention.
+#
+# Context for .168 (drafted post-hardware-bringup 2026-05-14):
+# - PolarFire SoC Discovery Kit: BOOTED on RISC-V Linux, SSH-accessible
+#   at `ssh polarfire` (mpfs-disco-kit.local / 192.168.51.197). 4× U54 cores,
+#   545MiB RAM, Python 3.12.12, 111GB free rootfs. First-ever physical
+#   sovereignty-anchor platform for Carnot's verifier ensemble.
+# - GateMate A1-EVB-2M: JTAG-accessible via onboard RP2040 + DirtyJTAG.
+#   `openFPGALoader -c dirtyJtag -b olimex_gatemateevb --detect` confirms
+#   IDCODE 0x20000001 (CC GM1Ax, family GateMate Series). RTL synth works
+#   (rtl/gatemate_ising_n16.v ~136 cells); place-and-route blocked on
+#   yosys-vs-nextpnr-himbaechel CC_LUT3 mapping mismatch — addressable.
+# - Carry-forwards still live: THRML parity v2 (exp1850 corrigendum) +
+#   Phase 4 active inference (exp1849 + exp1165).
+# - GEMINI_FORCE_EXPERIMENTS=1 is active until codex quota resets
+#   2026-05-18 8:20 PM. All tasks here are effectively gemini-routed at
+#   launch regardless of YAML agent_type.
+
+scope_reduction_compliance:
+  - "5 tasks total (4 research/hardware + 1 retro); not the 13-14 synthesis"
+  - "TWO hardware tasks targeting newly-accessible Phase-2 boards (PolarFire + GateMate); first time Carnot can do physical-board experiments since KV260"
+  - "All compute-bound tasks include random_seed + reproducibility_checksum + n_samples justification"
+  - "All task agent_type:codex will be coerced to gemini via GEMINI_FORCE_EXPERIMENTS=1 (active until 2026-05-18); explicit_agent_used field documents the actual backend"
+
+tasks:
+  - id: exp1675-polarfire-verifier-sovereignty-smoke
+    title: "Exp 1675: PolarFire SoC verifier sovereignty smoke — Carnot on RISC-V"
+    deliverable: results/experiment_1675_polarfire_smoke.json
+    agent_type: codex
+    max_turns: 100
+    prompt: |
+      MANDATORY WORKFLOW: read CLAUDE.md (Decentralization-Respecting Design
+      Constraints, especially rule 5 on hardware portability as political
+      requirement; Phase Prototype + Empirical Validation discipline).
+
+      CONTEXT (falsifiable hypothesis): Carnot's verifier ensemble can run
+      on a fully-sovereign open-hardware platform (PolarFire SoC Discovery
+      Kit, MPFS095T, RISC-V SiFive U54-MC, Microchip Distro / Yocto Linux)
+      with comparable correctness to the x86/CUDA baseline. The board is
+      SSH-accessible from this host as `ssh polarfire`
+      (mpfs-disco-kit.local, 192.168.51.197). 4× cores, 545MiB RAM, Python
+      3.12.12, 111GB free, internet works (ICMP to 1.1.1.1 ~10ms).
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/verify/ (verifier ensemble entry points)
+      - python/carnot/pipeline/verify_repair.py (VerifyRepairPipeline)
+      - ops/hardware-bringup-prep.md (board state + SSH config)
+
+      CONCRETE STEPS:
+      1. Build a Carnot sdist locally (`python -m build .` from repo root).
+         Capture sdist_filename + sdist_size_bytes.
+      2. `scp` the sdist to the PolarFire and `ssh polarfire pip3 install`
+         it. Capture install_succeeded + any error tail. If a heavy
+         transitive dep (e.g., torch, jax, llama-cpp-python) fails to
+         build/install on RISC-V, document the dep + the specific failure
+         mode AND continue with a minimal-deps install path (verifier
+         ensemble's pure-Python subset).
+      3. Run a 30-example FoVer verification subset on the board. The
+         corpus is the same one the x86 baseline uses; copy if needed.
+         Capture TPR_at_FPR5 + per-example latency_ms_p50 + RAM peak
+         usage.
+      4. ACCEPTANCE GATE (all must hold for SUCCESS):
+         - install_succeeded: true (at least minimal-deps path)
+         - n_examples >= 30
+         - per_example_latency_ms_p50 < 5000 (5s/example is generous for
+           a 600MHz U54 core; real number informs whether PolarFire is
+           viable for live verifier deployment)
+         - tpr_at_fpr5 >= 0.20 (compare to historical x86 baselines on
+           the same FoVer subset; absolute number is the measurement,
+           the >= 0.20 is a sanity gate to catch total breakage)
+      5. Write results/experiment_1675_polarfire_smoke.json with REQUIRED
+         ARTIFACT FIELDS:
+         - schema: "carnot.polarfire_sovereignty_smoke.v1"
+         - hardware: "Microchip MPFS095T PolarFire SoC Discovery Kit"
+         - kernel: "<uname -r output>"
+         - host_alias: "polarfire" (or full SSH target if alias missing)
+         - n_examples: 30
+         - n_samples: 30 (single pass; smoke test)
+         - n_samples_justification: "30 is the CLT minimum for a TPR
+           percentage-point claim; this is a smoke test, not a headline
+           benchmark"
+         - random_seed: <int> (fix for reproducibility)
+         - reproducibility_checksum: <hash of corpus selection + verifier config>
+         - install_succeeded: <bool>
+         - tpr_at_fpr5: <float>
+         - per_example_latency_ms_p50: <float>
+         - ram_peak_mib: <float>
+         - actual_agent_backend: "<gemini|codex|claude>" — REPORT WHICH
+         - methodology_note: "PolarFire is sovereignty-anchor hardware
+           per CLAUDE.md rule 5; this is the first physical deployment.
+           Performance regression vs x86 baseline is expected (single-core
+           U54 @ 600MHz vs RTX 3090); the claim is sovereignty-feasibility,
+           not perf parity."
+         - acceptance_gate_passed: <bool>
+         - honest_verdict: MUST start with "complete:" / "success:" /
+           "shipped:" per Verdict Terminal-Prefix Discipline. Examples:
+           "shipped: polarfire_verifier_smoke_tpr_0.27_latency_p50_2400ms"
+           "complete: polarfire_verifier_smoke_blocked_torch_unavailable_minimal_install_failed"
+
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1676-gatemate-fpga-bitstream-flash
+    title: "Exp 1676: GateMate A1 bitstream synth + flash via DirtyJTAG"
+    deliverable: results/experiment_1676_gatemate_flash.json
+    agent_type: codex
+    max_turns: 100
+    prior_failures:
+      - experiment_id: exp2105-gatemate-a1-toolchain-smoke
+        verdict: not_run (drafted in .166 but milestone superseded)
+        addressed_by: "exp2105 was drafted in .166 pre-stage but the conductor's planner ran .166 with different content. exp1676 carries forward the same task scope (synth rtl/gatemate_ising_n16.v, P&R, flash) with the toolchain workaround for the CC_LUT3 mapping mismatch noted in ops/hardware-bringup-prep.md."
+        retire_if_same_verdict: false
+    prompt: |
+      MANDATORY WORKFLOW: read CLAUDE.md project rules.
+
+      CONTEXT (falsifiable hypothesis): the rtl/gatemate_ising_n16.v
+      design (minimal 16-spin Ising tile with LFSR + LED output) can be
+      synthesized, placed-and-routed, AND successfully flashed to the
+      Olimex GateMateA1-EVB-2M via the onboard RP2040 + DirtyJTAG. The
+      board is JTAG-accessible from this host:
+      `openFPGALoader -c dirtyJtag -b olimex_gatemateevb --detect`
+      returns IDCODE 0x20000001 (CC GM1Ax). Known toolchain issue:
+      yosys 0.64 synth_gatemate emits CC_LUT3 cells that
+      nextpnr-himbaechel 0.10 doesn't accept; the workaround is to use
+      `synth_gatemate -abc9` OR techmap-pass to map LUT3 to LUT4. After
+      bitstream is flashed, the on-board LED should blink at ~1Hz.
+
+      EXISTING CODE TO READ FIRST:
+      - rtl/gatemate_ising_n16.v (the design)
+      - rtl/gatemate_ising_n16.ys (yosys script)
+      - ops/hardware-bringup-prep.md (toolchain issue + bring-up state)
+
+      CONCRETE STEPS:
+      1. Resolve the CC_LUT3 issue. Try yosys `-abc9` flag first:
+         `yosys -p 'read_verilog -sv gatemate_ising_n16.v; synth_gatemate -top gatemate_ising_n16 -abc9 -json gatemate_ising_n16.json'`
+         If still emits LUT3, try `synth_gatemate -abc9 -noaddf -nomx4
+         -nomx8`. If still fails, add a techmap pass to map LUT3 → LUT4
+         via `chtype -map t:CC_LUT3 CC_LUT4`. Document the exact yosys
+         command that worked.
+      2. Run nextpnr-himbaechel for place-and-route:
+         `nextpnr-himbaechel --device CCGM1A1 --json gatemate_ising_n16.json --vopt out=gatemate_ising_n16.cfg --vopt allow-unconstrained`
+         Capture lut_utilization, ff_utilization, max_clock_mhz.
+      3. Flash via openFPGALoader:
+         `openFPGALoader -c dirtyJtag -b olimex_gatemateevb gatemate_ising_n16.cfg`
+         Capture flash_succeeded boolean.
+      4. ACCEPTANCE GATE:
+         - synthesis_completed: true
+         - pnr_completed: true (LUT3 issue resolved)
+         - lut_utilization < 0.30 (n=16 tile is tiny)
+         - flash_succeeded: true
+      5. Write artifact with REQUIRED ARTIFACT FIELDS:
+         - schema: "carnot.gatemate_flash.v1"
+         - board: "Olimex GateMateA1-EVB-2M (CC GM1A1)"
+         - idcode_verified: "0x20000001"
+         - toolchain: {yosys_version, nextpnr_version, openFPGALoader_version}
+         - yosys_invocation: "<the exact command that worked>"
+         - synthesis_completed: <bool>
+         - pnr_completed: <bool>
+         - lut_utilization: <float, 0-1>
+         - ff_utilization: <float, 0-1>
+         - max_clock_mhz: <float>
+         - flash_succeeded: <bool>
+         - bitstream_size_bytes: <int>
+         - random_seed: 0 (deterministic synth; LFSR seed is in RTL)
+         - reproducibility_checksum: <hash of rtl file + yosys command + nextpnr command>
+         - n_samples: 1 (synthesis determinism is the check)
+         - n_samples_justification: "Synthesis + P&R are deterministic; N=1 sufficient"
+         - actual_agent_backend: "<gemini|codex|claude>"
+         - acceptance_gate_passed: <bool>
+         - honest_verdict: MUST start with "shipped:" / "success:" /
+           "complete:". Example:
+           "shipped: gatemate_flash_succeeded_lut_0.7pct_at_50mhz"
+
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1677-thrml-parity-v3-curie-weiss
+    title: "Exp 1677: THRML/Carnot Parity v3 — Curie-Weiss n=128 with 10k samples"
+    deliverable: results/experiment_1677_thrml_parity_v3.json
+    agent_type: codex
+    max_turns: 100
+    prior_failures:
+      - experiment_id: exp1850-thrml-carnot-parity-n128
+        verdict: "complete: thrml_carnot_parity_n128_gate_failed_kl_0.28"
+        addressed_by: "exp1850 used 100 samples at n=128, which is sample-size-noise dominated (KL inflated). v3 uses Curie-Weiss substrate with analytic ground truth + 10k samples per side + three-way comparison (Carnot vs THRML vs analytic). Gate calibrated to expected noise floor."
+        retire_if_same_verdict: true
+      - experiment_id: exp2100-thrml-parity-curie-weiss-n128
+        verdict: gemini_cli_bail_out
+        addressed_by: "exp2100 was bailed out by the codex CLI quota issue (since cleared via GEMINI_FORCE_EXPERIMENTS=1). Same falsifiable hypothesis carries forward."
+        retire_if_same_verdict: true
+    prompt: |
+      MANDATORY WORKFLOW: read CLAUDE.md "Adversarial Artifact Verification +
+      Sample-Size Rigor" section.
+
+      CONTEXT (falsifiable hypothesis): Carnot's native sampler and THRML
+      0.1.3's JAX-native sampler both converge to the analytic equilibrium
+      mean of a Curie-Weiss n=128 Ising model (mean-field tractable;
+      closed-form <m> = tanh(beta·J·<m>) and <E>). Hypothesis: with
+      10k samples per sampler, both agree with analytic ground truth to
+      within sample-size variance, AND agree with each other (ks_p > 0.05).
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/models/ising.py
+      - python/carnot/integrations/thrml/ if present
+      - results/experiment_1850_thrml_parity_n128.json (interpretation_corrigendum)
+
+      CONCRETE STEPS:
+      1. Generate a Curie-Weiss n=128 substrate: J_ij = J/n for all pairs,
+         h=0, beta = 1.2 * beta_c (ordered phase).
+      2. Compute analytic_mean (solve <m> = tanh(beta·J·<m>) numerically),
+         analytic_energy = -(n·J/2)·analytic_mean^2.
+      3. Run N=10000 independent samples per sampler. Distinct seeds.
+         Use JAX_PLATFORMS=cpu for reproducibility per CLAUDE.md.
+      4. Compute empirical_mean_carnot, empirical_mean_thrml,
+         ks_p_value(carnot, thrml), kl_divergence on energy histogram.
+      5. ACCEPTANCE GATE (all must hold):
+         - abs(empirical_mean_carnot - analytic_mean) < 0.05
+         - abs(empirical_mean_thrml - analytic_mean) < 0.05
+         - ks_p_value > 0.05
+      6. Write artifact with REQUIRED ARTIFACT FIELDS:
+         - schema: "carnot.thrml_parity_curie_weiss.v3"
+         - n_spins: 128
+         - n_samples: 10000
+         - n_samples_justification: "10k chosen so empirical KL noise
+           floor ~50/N=0.005 is well below the 0.05 acceptance gate"
+         - random_seed_carnot: <int>, random_seed_thrml: <int>
+         - reproducibility_checksum: <hash>
+         - beta, J, analytic_mean, analytic_energy
+         - empirical_mean_carnot, empirical_mean_thrml
+         - ks_p_value, kl_divergence
+         - acceptance_gate_passed: <bool>
+         - actual_agent_backend: "<gemini|codex|claude>"
+         - honest_verdict: prefix "complete:" / "success:".
+
+  - id: exp1678-phase4-active-inference-v3
+    title: "Exp 1678: Phase 4 active inference v3 — alpha_t at n=8 k=6 vs k=1"
+    deliverable: results/experiment_1678_phase4_v3.json
+    agent_type: codex
+    max_turns: 100
+    prior_failures:
+      - experiment_id: exp1849-phase4-active-inference-smoke
+        verdict: blocked_gate_check_failed
+        addressed_by: "exp1849 was doomed-rerun-blocked in .144 due to my prior YAML missing prior_failures cite. v3 carries proper chain back to exp1165 pilot. Tight gate delta_alpha > 0.05."
+        retire_if_same_verdict: true
+      - experiment_id: exp1165-phase4-active-inference-pilot-v1
+        verdict: phase4_better_than_baseline
+        addressed_by: "Pilot lacked falsifiable numerical gate. v3 has explicit k=6 vs k=1 ensemble contrast + tight numerical gate."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT (falsifiable hypothesis): on n=8 Ising substrate, the
+      verifier-as-free-energy ensemble keeps inf_t alpha_t > 0.10 when
+      k=6, and collapses to inf_t alpha_t < 0.05 when k=1. Gate:
+      delta_alpha = (inf_t_alpha_k6 - inf_t_alpha_k1) > 0.05.
+
+      CONCRETE STEPS: 100 MLD steps each for k=6 and k=1; same seed;
+      same n=8 substrate. Record per-step mu_P; compute inf_t.
+
+      REQUIRED ARTIFACT FIELDS: schema "carnot.phase4_active_inference.v3",
+      n_spins=8, mld_steps=100, n_samples=100, random_seed,
+      reproducibility_checksum, verifier_ensemble_k6/k1, inf_t_alpha_k6,
+      inf_t_alpha_k1, delta_alpha, optimization_direction "minimize"
+      (find lowest mu_P over trajectory), acceptance_gate_passed,
+      actual_agent_backend, honest_verdict prefix "complete:".
+
+  - id: exp1679-milestone-168-retro
+    title: "Exp 1679: Milestone .168 Retrospective"
+    deliverable: results/experiment_1679_retro.json
+    agent_type: codex
+    max_turns: 50
+    prompt: |
+      CONTEXT: Close out Milestone 2026.05.168 (4 research/hardware
+      tasks including 2 first-time-physical-board experiments).
+
+      EXISTING FILES TO READ FIRST:
+      - results/experiment_1675_polarfire_smoke.json
+      - results/experiment_1676_gatemate_flash.json
+      - results/experiment_1677_thrml_parity_v3.json
+      - results/experiment_1678_phase4_v3.json
+
+      TASK: For each task above, state hypothesis → gate threshold →
+      empirical result → any surprising finding. If exp1675 or exp1676
+      succeeded, this is the first physical-board sovereignty data point
+      for Carnot since the KV260 work — highlight as paper-v6
+      carryforward.
+
+      Run `python3 scripts/adversarial_verify.py --milestone-range 1675
+      1679 --json` and report flag count.
+
+      REQUIRED ARTIFACT FIELDS:
+      - schema: "carnot.milestone_research_retro.v1"
+      - milestone: "2026.05.168"
+      - tasks_summary: [...]
+      - gates_passed_count, gates_failed_count
+      - actual_agent_backend_distribution
+      - paper_v6_carryforward_items
+      - hardware_sovereignty_data_points: [{board, gate_passed}]
+      - adversarial_verify_flag_count
+      - honest_verdict: prefix "complete:".
