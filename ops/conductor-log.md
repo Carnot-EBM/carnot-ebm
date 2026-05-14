@@ -3075,3 +3075,5 @@ IMPORTANT:
 | 2026-05-14 14:53 UTC | Exp 2093: Energy-Based Transformer (EBT) Baseline  | FAIL | Gemini CLI error: usr/lib/node_modules/@google/gemini-cli/bundle/chunk-C5NJ2YR |
 | 2026-05-14 14:59 UTC | Exp 2094: Energy-Guided Test-Time Scaling (ETS) | FAIL | Gemini CLI error: usr/lib/node_modules/@google/gemini-cli/bundle/chunk-C5NJ2YR |
 | 2026-05-14 15:06 UTC | Exp 2094: Energy-Guided Test-Time Scaling (ETS) | FAIL | Gemini CLI error: usr/lib/node_modules/@google/gemini-cli/bundle/chunk-C5NJ2YR |
+| 2026-05-14 15:13 UTC | Exp 2094: Energy-Guided Test-Time Scaling (ETS) | FAIL | Gemini CLI error: usr/lib/node_modules/@google/gemini-cli/bundle/chunk-C5NJ2YR |
+| 2026-05-14 15:15 UTC | Exp 2095: Live GPU EBT vs Autoregressive Evaluatio | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2093-ebt-prototype) |
