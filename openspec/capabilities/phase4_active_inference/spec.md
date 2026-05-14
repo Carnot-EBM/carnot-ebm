@@ -15,3 +15,9 @@
 
 ### SCENARIO-PHASE4-1
 **Description:** Running 100 MLD steps with `k=6` and `k=1` on `n=8` substrate yields a `delta_alpha > 0.05`.
+
+### REQ-PHASE4-003: MLD Substrate Scaling
+**Description:** The system SHALL simulate MLD steps on scaling Ising substrates (n=8, n=16, n=32) and track `delta_alpha` scaling behavior to identify potential substrate size collapse points.
+
+### SCENARIO-PHASE4-2
+**Description:** Running scaling simulation on n=8, 16, 32 yields recorded delta_alpha scaling points, correctly identifying if and where delta_alpha collapses below 0.05.

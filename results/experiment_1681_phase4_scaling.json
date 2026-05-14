@@ -1,0 +1,38 @@
+{
+  "schema": "carnot.phase4_active_inference_scaling.v1",
+  "n_values": [
+    8,
+    16,
+    32
+  ],
+  "mld_steps": 100,
+  "n_samples_per_n": 100,
+  "n_samples_justification": "100 MLD steps per Zenil; for scaling the question is the trajectory's inf_t, not chain convergence",
+  "random_seeds": [
+    42,
+    43,
+    44
+  ],
+  "reproducibility_checksum": "206373a67369add7100c7a648059e59c9d418ba23c0e717f01ac0c60ea4f2ebb",
+  "inf_t_alpha_k6": [
+    0.15036811348755028,
+    0.15020388624929942,
+    0.1509731055401672
+  ],
+  "inf_t_alpha_k1": [
+    2.006987282247011e-06,
+    2.006987282247011e-06,
+    2.006987282247011e-06
+  ],
+  "delta_alpha": [
+    0.15036610650026802,
+    0.15020187926201717,
+    0.15097109855288496
+  ],
+  "collapse_scale": null,
+  "optimization_direction": "track minimum",
+  "actual_agent_backend": "gemini",
+  "methodology_note": "exp1678 baseline at n=8 was delta_alpha=0.150. If v1681 reproduces this at n=8 to within 10%, the methodology is sound.",
+  "acceptance_gate_passed": true,
+  "honest_verdict": "complete: Scaling simulation finished with collapse_scale=None and acceptance=True."
+}
