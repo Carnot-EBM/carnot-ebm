@@ -3148,3 +3148,4 @@ IMPORTANT:
 | 2026-05-14 20:08 UTC | Exp 1676: GateMate A1 bitstream synth + flash via  | OK | 81 passed, 1 warning in 4.65s |
 | 2026-05-14 20:17 UTC | Exp 1677: THRML/Carnot Parity v3 — Curie-Weiss n=1 | OK | 100 passed, 1 warning in 7.27s |
 | 2026-05-14 20:22 UTC | Exp 1678: Phase 4 active inference v3 — alpha_t at | OK | 82 passed, 1 warning in 4.18s |
+| 2026-05-14 20:34 UTC | Exp 1679: Milestone .168 Retrospective | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: -color support is r |
