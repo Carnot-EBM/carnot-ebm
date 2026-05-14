@@ -5729,3 +5729,4 @@ Completed 15 experiments in 28.9 minutes. There were 0 compute-bound experiments
 - 2026-05-14: Exp 2109: Milestone .166 Retrospective (✅ Complete) — honest_verdict=complete: retro generated for milestone 166, all tasks summarized, agent backend routing issue escalated.; results/experiment_2109_retro.json
 - 2026-05-14: Exp 1670: PiNet convex operator splitting forward pass prototype (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_1670_pinet_splitting.json
 - 2026-05-14: Exp 1671: HardNet++ damped local linearization layer prototype (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_1671_hardnet_layer.json
+- 2026-05-14: Exp 1673: Hybrid Constraint Layer (Continuous + Z3 validation) (⚠️ Research Finding) — honest_verdict=verified; results/experiment_1673_hybrid_constraint.json
