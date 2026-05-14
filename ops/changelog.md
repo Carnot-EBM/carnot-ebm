@@ -5735,3 +5735,4 @@ Completed 15 experiments in 28.9 minutes. There were 0 compute-bound experiments
 - 2026-05-14: Exp 1683: Self-learning regression audit (zero soundness mistakes) (⚠️ Research Finding) — honest_verdict=soundness_audit_passed; results/experiment_1683_fr11_soundness.json
 - 2026-05-14: Exp 1676: GateMate A1 bitstream synth + flash via DirtyJTAG (⚠️ Research Finding) — honest_verdict=success: gatemate_flash_succeeded_lut_0.08pct_at_514mhz; results/experiment_1676_gatemate_flash.json
 - 2026-05-14: Exp 1677: THRML/Carnot Parity v3 — Curie-Weiss n=128 with 10k samples (✅ Complete) — honest_verdict=complete: thrml_parity_cw_v3_passed; results/experiment_1677_thrml_parity_v3.json
+- 2026-05-14: Exp 1678: Phase 4 active inference v3 — alpha_t at n=8 k=6 vs k=1 (✅ Complete) — honest_verdict=complete: successfully validated delta_alpha > 0.05 for k=6 vs k=1 verifiers.; results/experiment_1678_phase4_v3.json
