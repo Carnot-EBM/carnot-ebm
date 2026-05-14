@@ -5636,3 +5636,33 @@ The deliverable SHALL be written to `results/experiment_1685_live_sota.json`.
 **Then** the audit MUST return `soundness_mistakes=0`, `completeness_mistakes=0`, and `nonforgetting_rate=1.0`.
 
 **Spec traces:** REQ-FR11-1683
+
+---
+
+## REQ-LOOP-001: EBFT Autoresearch Loop Measures Energy Delta on Validation Set
+
+**Statement:** The EBFT autoresearch loop SHALL load a dataset of verification trajectories,
+apply the EBFT loss to fine-tune a small energy model over multiple steps, measure the
+energy on a held-out validation set before and after training, and emit a results artifact
+with `baseline_energy`, `final_energy`, `energy_delta`, and `acceptance_gate_passed`.
+
+### REQ-LOOP-001 Sub-requirements
+
+- REQ-LOOP-001-1: `EBFTAutoResearchLoop.__init__` SHALL accept `model_spec`, `n_train_steps`,
+  `batch_size`, `lr`, and `seed` parameters.
+- REQ-LOOP-001-2: `EBFTAutoResearchLoop.build_dataset` SHALL return `(train_seqs, val_seqs)` as
+  JAX arrays of shape `(N, feature_dim)` drawn from a deterministic fixed constraint corpus.
+- REQ-LOOP-001-3: `EBFTAutoResearchLoop.measure_energy` SHALL return a scalar float equal to
+  the mean L2 energy of a batch of sequences under the current energy model parameters.
+- REQ-LOOP-001-4: `EBFTAutoResearchLoop.run` SHALL return a dict with keys `baseline_energy`,
+  `final_energy`, `energy_delta`, and `acceptance_gate_passed`; `acceptance_gate_passed` is
+  True iff `energy_delta > 0` (energy decreased from baseline to final).
+
+### SCENARIO-LOOP-001: Energy Decreases After Training on Expert Trajectories
+
+**Given** a small energy model initialized with random weights
+**When** the EBFT loop trains for `n_train_steps` steps on expert verification trajectories
+**Then** the final validation energy is lower than the baseline validation energy
+**And** `acceptance_gate_passed` is True
+
+**Spec traces:** REQ-LOOP-001
