@@ -8,6 +8,41 @@ loop) executes the current experiments.
 **Updated:** 2026-05-14 (3 sweeps today)
 **Current Focus:** Adversarial-verify discipline; Phase 4 active-inference smoke; THRML parity v2 (Curie-Weiss); NLA-class 16th verifier (with description-collision audit per arXiv:2605.12874); verifier-ensemble null-space + 4/δ convergence bound (new from 2026-05-14T08:20Z sweep)
 
+## Sweep 2026-05-14T20:45Z (Claude outer-loop /loop job 875c06b4 fire #6)
+
+**Queries fired:**
+- arxiv abs:"active inference" OR "free energy" AND "LLM" → 8 results (this hour the API responded)
+- arxiv abs:"verifier ensemble" OR "null space attack" OR "specification gaming" → 8 results
+
+**Result: 1 NEW candidate promoted; 2 re-hits of papers already in queue.**
+
+### NEW Rank MEDIUM: AlphaGRPO Decompositional Verifiable Reward (arXiv:2605.12495, May 12 2026)
+- **Score:** 4×4×3×3 = **144**
+- **Authors:** Runhui Huang, Jie Wu, Rui Yang
+- **Why it matters:** Introduces "Decompositional Verifiable Reward" that
+  decomposes requests into verifiable semantic queries during GRPO training.
+  Structurally similar to Carnot's NSVIF constraint extraction (DSL →
+  PySAT/Z3 verifiable constraints). Worth investigating whether the
+  decomposition primitive transfers to Carnot's pipeline, OR whether the
+  reverse — Carnot's NSVIF-style constraint extraction — could enhance
+  AlphaGRPO's reward decomposition. For paper-v6 §3 peer mention.
+
+### Repeat hits (already in queue from prior sweeps, no action needed)
+- arXiv:2604.07650 Behavioral Entanglement (already Score 400)
+- arXiv:2605.02269 Specification Gaming in Reasoning (already Score 300)
+- arXiv:2605.11638 U-Statistics with Active Inference (already Score 36, not promoted)
+- arXiv:2605.07639 Tacit Knowledge Extraction (already not promoted)
+- arXiv:2605.12536 Maximum-Caliber Deviation (already Score 48)
+
+### Sweep-#6 takeaways
+- arxiv API is responsive again this hour (vs the 429/timeout streak earlier today)
+- Yield is low because we've already harvested the high-relevance recent
+  submissions in prior sweeps. The corpus refreshes weekly-ish on arxiv;
+  expect sweep-#7+ to be similarly thin until the next batch of relevant
+  preprints lands.
+
+---
+
 ## Sweep 2026-05-14T16:55Z (Claude outer-loop /loop job 875c06b4 fire #5)
 
 **Queries fired:**
