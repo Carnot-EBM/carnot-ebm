@@ -3069,3 +3069,4 @@ IMPORTANT:
 | 2026-05-14 14:30 UTC | Exp 2091: PiNet Differentiable Projection Layer | OK | Excluded by manifest: exp_id=2091 in manifest |
 | 2026-05-14 14:30 UTC | Exp 2092: HardNet++ Non-Linear Constraint Enforcem | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2091-pinet-projection-layer) |
 | 2026-05-14 14:35 UTC | Exp 2093: Energy-Based Transformer (EBT) Baseline  | FAIL | Gemini CLI error: usr/lib/node_modules/@google/gemini-cli/bundle/chunk-C5NJ2YR |
+| 2026-05-14 14:37 UTC | Exp 2092: HardNet++ Non-Linear Constraint Enforcem | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2091-pinet-projection-layer.violation_r |
